@@ -18,6 +18,9 @@
 10. 创建 `CoreSmokeTests` 最小冒烟测试。
 11. Milestone 2.2：新增 `EntityId` 值对象。
 12. Milestone 2.2：新增 `EntityId` 单元测试。
+13. Milestone 2.3：新增 `TimeStep` 时间步长值对象。
+14. Milestone 2.3：新增 `SimulationTime` 模拟累计时间值对象。
+15. Milestone 2.3：新增 `TimeStep` 与 `SimulationTime` 单元测试。
 
 ### 修改
 

@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 18:45
+最后编辑：2026-06-10 19:05
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -28,6 +28,10 @@
 10. 创建 `FluidWarfare.Tests/CoreSmokeTests.cs`。
 11. 创建 `FluidWarfare.Core/Identity/EntityId.cs`。
 12. 创建 `FluidWarfare.Tests/Core/Identity/EntityIdTests.cs`。
+13. 创建 `FluidWarfare.Core/Time/TimeStep.cs`。
+14. 创建 `FluidWarfare.Core/Time/SimulationTime.cs`。
+15. 创建 `FluidWarfare.Tests/Core/Time/TimeStepTests.cs`。
+16. 创建 `FluidWarfare.Tests/Core/Time/SimulationTimeTests.cs`。
 
 ### 修改
 
@@ -59,9 +63,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 2.2：只实现 EntityId 值对象和对应单元测试。
+当前执行 Milestone 2.3：只实现 TimeStep / SimulationTime 值对象和对应单元测试。
 
-本轮不进入 ECS、Vector3d、YawRotation、TimeStep、SimulationTime、EngineResult、EngineLogEntry、Vulkan、Android 或 Avalonia UI 具体实现。
+本轮不进入 SimulationClock、SimulationTick、FixedTickRunner、SimulationWorld、ECS、Vector3d、YawRotation、EngineResult、EngineLogEntry、Vulkan、Android 或 Avalonia UI 具体实现。
 
 ## 3. 顶层目录结构
 
@@ -74,8 +78,11 @@ FluidWarfare/
 |-- FluidWarfare.Core/
 |   |-- .gitkeep
 |   |-- FluidWarfare.Core.csproj
-|   `-- Identity/
-|       `-- EntityId.cs
+|   |-- Identity/
+|   |   `-- EntityId.cs
+|   `-- Time/
+|       |-- SimulationTime.cs
+|       `-- TimeStep.cs
 |-- FluidWarfare.Ecs/
 |   `-- .gitkeep
 |-- FluidWarfare.World/
@@ -103,8 +110,11 @@ FluidWarfare/
 |-- FluidWarfare.Tests/
 |   |-- .gitkeep
 |   |-- Core/
-|   |   `-- Identity/
-|   |       `-- EntityIdTests.cs
+|   |   |-- Identity/
+|   |   |   `-- EntityIdTests.cs
+|   |   `-- Time/
+|   |       |-- SimulationTimeTests.cs
+|   |       `-- TimeStepTests.cs
 |   |-- CoreSmokeTests.cs
 |   `-- FluidWarfare.Tests.csproj
 |-- game_data/
@@ -148,7 +158,7 @@ get_tree.bat
 
 | 模块 | 职责 | 状态 |
 |---|---|---|
-| FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / EntityId 测试通过 |
+| FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / TimeStep 与 SimulationTime 测试通过 |
 | FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Simulation | 固定 Tick、暂停、单步和模拟世界 | 已创建 / 仅 `.gitkeep` |
@@ -161,7 +171,7 @@ get_tree.bat
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Editor.Windows | Windows Avalonia 编辑器 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Exporter | Windows 与 Android 导出流程 | 已创建 / 仅 `.gitkeep` |
-| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / EntityId 测试通过 |
+| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / TimeStep 与 SimulationTime 测试通过 |
 
 ## 5. 关键文件职责
 
@@ -170,9 +180,13 @@ get_tree.bat
 | `FluidWarfare.sln` | 解决方案容器 | 已创建 / 已引用 Core 与 Tests |
 | `FluidWarfare.Core/FluidWarfare.Core.csproj` | Core 纯 C# 类库项目 | 已创建 |
 | `FluidWarfare.Core/Identity/EntityId.cs` | 引擎实体唯一标识值对象，封装有效实体编号与 None 无效编号 | 测试通过 |
+| `FluidWarfare.Core/Time/TimeStep.cs` | 表示单次模拟推进时间长度，统一秒与毫秒换算，拒绝非正数和非法浮点值 | 测试通过 |
+| `FluidWarfare.Core/Time/SimulationTime.cs` | 表示模拟世界累计时间，支持从零开始并通过 TimeStep 推进 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
 | `FluidWarfare.Tests/Core/Identity/EntityIdTests.cs` | 验证 EntityId 的有效性、异常、相等比较与稳定字符串输出 | 测试通过 |
+| `FluidWarfare.Tests/Core/Time/TimeStepTests.cs` | 验证 TimeStep 的创建、单位换算、非法输入、相等比较与稳定字符串输出 | 测试通过 |
+| `FluidWarfare.Tests/Core/Time/SimulationTimeTests.cs` | 验证 SimulationTime 的零点、创建、推进、不变性、非法输入与稳定字符串输出 | 测试通过 |
 | `.gitattributes` | 固定文本文件行尾规则 | 已创建 |
 | `docs/PROJECT_CHARTER.md` | 项目目标和第一阶段闭环 | 已创建 |
 | `docs/ENGINE_ARCHITECTURE.md` | 模块边界和依赖方向 | 已创建 |
@@ -223,17 +237,17 @@ Part2
 
 ## 8. 当前不做的内容
 
-当前已经进入 Milestone 2.2 EntityId 任务。
+当前已经进入 Milestone 2.3 TimeStep / SimulationTime 任务。
 
 本轮不做以下内容：
 
-1. ECS 实现。
-2. ComponentStore 实现。
-3. EcsWorld 实现。
-4. Vector3d 实现。
-5. YawRotation 实现。
-6. TimeStep 实现。
-7. SimulationTime 实现。
+1. SimulationClock 实现。
+2. SimulationTick 实现。
+3. FixedTickRunner 实现。
+4. SimulationWorld 实现。
+5. ECS 实现。
+6. Vector3d 实现。
+7. YawRotation 实现。
 8. EngineResult 实现。
 9. EngineLogEntry 实现。
 10. Vulkan 实现。
