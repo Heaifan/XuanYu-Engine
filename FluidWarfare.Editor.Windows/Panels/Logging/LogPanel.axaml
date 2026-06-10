@@ -3,9 +3,9 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Border
-      Padding="16"
-      Background="#1C2025"
-      BorderBrush="#414852"
+      Padding="18,14"
+      Background="#1B2026"
+      BorderBrush="#48515C"
       BorderThickness="0,1,0,0">
     <Grid RowDefinitions="Auto,*">
       <TextBlock
@@ -13,6 +13,7 @@
           Margin="0,0,0,10"
           FontSize="18"
           FontWeight="SemiBold"
+          Foreground="#F0F4F8"
           Text="日志" />
       <ItemsControl Grid.Row="1" x:Name="LogList">
         <ItemsControl.ItemTemplate>

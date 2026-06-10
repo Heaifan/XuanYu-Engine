@@ -4,14 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Border
       Margin="0"
-      Background="#171A1F"
-      BorderBrush="#414852"
+      Background="#15191E"
+      BorderBrush="#48515C"
       BorderThickness="0,0,1,0">
-    <Grid RowDefinitions="Auto,*" Margin="18">
+    <Grid RowDefinitions="Auto,*" Margin="20">
       <TextBlock
           Grid.Row="0"
           FontSize="18"
           FontWeight="SemiBold"
+          Foreground="#F0F4F8"
           Text="3D 视口" />
       <StackPanel
           Grid.Row="1"
@@ -21,6 +22,7 @@
         <TextBlock
             HorizontalAlignment="Center"
             FontSize="22"
+            Foreground="#F0F4F8"
             Text="Vulkan 渲染器尚未接入" />
         <TextBlock
             HorizontalAlignment="Center"

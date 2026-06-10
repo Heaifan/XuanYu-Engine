@@ -53,6 +53,10 @@
 37. Milestone 3.3：Editor 启动日志改为由 `EngineLogEntry` 创建。
 38. Milestone 3.3：日志面板继续显示中文日志文本。
 39. Milestone 3.3：确认日志前缀由 `EngineLogLevel` / `EngineLogEntry` 生成，而不是 UI 手写。
+40. Milestone 3.4：新增 Editor 底部状态栏。
+41. Milestone 3.4：状态栏显示就绪状态、GUI 原型阶段、Core 加载状态与 Vulkan 未接入状态。
+42. Milestone 3.4：整理项目面板、视口占位、检查器和日志面板的视觉层级。
+43. Milestone 3.4：保持日志面板由 `EngineLogEntry` 生成中文日志文本。
 
 ### 修改
 

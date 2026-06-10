@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 22:50
+最后编辑：2026-06-10 23:05
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -46,6 +46,8 @@
 28. 创建 `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs`。
 29. Milestone 3.1：创建 `FluidWarfare.Editor.Windows` Avalonia 编辑器项目。
 30. Milestone 3.2：创建 `FluidWarfare Editor` 五区 GUI 最小壳。
+31. Milestone 3.4：新增 `FluidWarfare.Editor.Windows/Panels/Status/StatusBarPanel.axaml`。
+32. Milestone 3.4：新增 `FluidWarfare.Editor.Windows/Panels/Status/StatusBarPanel.axaml.cs`。
 
 ### 修改
 
@@ -74,6 +76,8 @@
 23. Milestone 3.1：将 FluidWarfare.Editor.Windows 加入 FluidWarfare.sln，并引用 FluidWarfare.Core。
 24. Milestone 3.2：实现顶部菜单、项目面板、3D 视口占位、检查器和日志面板。
 25. Milestone 3.3：Editor 日志面板接入 EngineLogEntry，启动日志由 Core 日志对象生成。
+26. Milestone 3.4：新增 Editor 状态栏面板。
+27. Milestone 3.4：整理 Editor 五区 GUI 面板视觉层级。
 
 ### 删除
 
@@ -95,9 +99,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 3.3：Editor 日志面板接入 EngineLogEntry，启动日志由 Core 日志对象生成。
+当前执行 Milestone 3.4：整理 Editor GUI 面板视觉层级，并新增底部状态栏。
 
-本轮只处理 Editor 启动日志数据源，不实现日志写入器、文件日志、控制台日志、过滤器、ECS、Vulkan、Runtime 或 Android。
+本轮只处理 Editor GUI 外观与静态状态栏，不实现 ECS、Vulkan、Runtime、Android、日志写入器、文件日志或复杂 MVVM。
 
 ## 3. 顶层目录结构
 
@@ -161,6 +165,9 @@ FluidWarfare/
 |   |   |-- Project/
 |   |   |   |-- ProjectPanel.axaml
 |   |   |   `-- ProjectPanel.axaml.cs
+|   |   |-- Status/
+|   |   |   |-- StatusBarPanel.axaml
+|   |   |   `-- StatusBarPanel.axaml.cs
 |   |   `-- Viewport/
 |   |       |-- ViewportPlaceholderPanel.axaml
 |   |       `-- ViewportPlaceholderPanel.axaml.cs
@@ -276,7 +283,7 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/App.axaml.cs` | Editor 应用启动逻辑，创建主窗口 | 可运行 |
 | `FluidWarfare.Editor.Windows/MainWindow.axaml` | 编辑器主窗口 XAML 容器，承载 EditorShell | 可运行 |
 | `FluidWarfare.Editor.Windows/MainWindow.axaml.cs` | 编辑器主窗口 code-behind | 可运行 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器五区布局壳，组织菜单栏、项目面板、视口占位、检查器和日志面板 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器五区布局壳，组织菜单栏、项目面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器五区布局壳的后台逻辑，创建启动日志并传递给日志面板 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板占位，显示当前未打开项目、场景、单位、资源和配置 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板 code-behind | 可运行 |
@@ -286,6 +293,8 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml.cs` | 检查器面板 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml` | 编辑器日志面板，显示中文日志文本 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml.cs` | 编辑器日志面板后台逻辑，接收日志显示文本并提供给 UI 绑定 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Status/StatusBarPanel.axaml` | 编辑器底部状态栏 UI，显示当前状态、阶段、Core 加载状态与 Vulkan 接入状态 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Status/StatusBarPanel.axaml.cs` | 编辑器底部状态栏后台逻辑，提供静态状态显示初始化 | 可运行 |
 | `.gitattributes` | 固定文本文件行尾规则 | 已创建 |
 | `docs/PROJECT_CHARTER.md` | 项目目标和第一阶段闭环 | 已创建 |
 | `docs/ENGINE_ARCHITECTURE.md` | 模块边界和依赖方向 | 已创建 |
@@ -336,25 +345,25 @@ Part2
 
 ## 8. 当前不做的内容
 
-当前已经进入 Milestone 3.3 Editor 日志面板接入 EngineLogEntry 任务。
+当前已经进入 Milestone 3.4 GUI 面板视觉整理与状态栏任务。
 
 本轮不做以下内容：
 
-1. EngineLogFormatter 实现。
-2. 日志写入器实现。
-3. 文件日志实现。
-4. 控制台日志实现。
-5. 日志过滤实现。
-6. 日志等级筛选实现。
-7. 复杂 MVVM 框架。
-8. ECS 实现。
-9. World 实现。
-10. Data Loader 实现。
-11. Vulkan 接入。
-12. Runtime.Windows 实现。
-13. Android 实现。
-14. 项目打开或保存。
-15. 真实场景树。
+1. ECS 实现。
+2. Entity 列表。
+3. Component Inspector。
+4. World 实现。
+5. 真实项目打开。
+6. 真实资源管理器。
+7. 场景保存。
+8. Vulkan 接入。
+9. 真实 3D 渲染。
+10. Runtime.Windows 实现。
+11. Android 实现。
+12. 日志写入器实现。
+13. 文件日志实现。
+14. 控制台日志系统实现。
+15. 复杂 MVVM 框架。
 
 ## 9. 版本历史索引
 

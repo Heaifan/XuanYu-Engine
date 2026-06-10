@@ -1,0 +1,23 @@
+<UserControl
+    x:Class="FluidWarfare.Editor.Windows.Panels.Status.StatusBarPanel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Border
+      Padding="14,0"
+      Background="#252A31"
+      BorderBrush="#48515C"
+      BorderThickness="0,1,0,0">
+    <StackPanel
+        VerticalAlignment="Center"
+        Orientation="Horizontal"
+        Spacing="18">
+      <TextBlock Foreground="#E6EDF3" Text="状态：就绪" />
+      <TextBlock Foreground="#7D8792" Text="|" />
+      <TextBlock Foreground="#E6EDF3" Text="阶段：GUI 原型" />
+      <TextBlock Foreground="#7D8792" Text="|" />
+      <TextBlock Foreground="#E6EDF3" Text="Core：已加载" />
+      <TextBlock Foreground="#7D8792" Text="|" />
+      <TextBlock Foreground="#E6EDF3" Text="Vulkan：未接入" />
+    </StackPanel>
+  </Border>
+</UserControl>
