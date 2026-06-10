@@ -15,12 +15,28 @@ public sealed partial class EditorShell : UserControl
 
     private void InitializeLogs()
     {
-        var logs = new[]
-        {
-            EngineLogEntry.Create(0.0, EngineLogLevel.Info, "Editor", "FluidWarfare Editor 启动完成。").ToDisplayString(),
-            EngineLogEntry.Create(0.0, EngineLogLevel.Info, "Core", "Core 基础模块已加载。").ToDisplayString()
-        };
+        var logs = CreateStartupLogs()
+            .Select(entry => entry.ToDisplayString())
+            .ToArray();
 
         this.FindControl<LogPanel>("EditorLogPanel")?.SetLogMessages(logs);
+    }
+
+    private static IReadOnlyList<EngineLogEntry> CreateStartupLogs()
+    {
+        return
+        [
+            EngineLogEntry.Create(
+                0.0,
+                EngineLogLevel.Info,
+                "Editor",
+                "FluidWarfare Editor 启动完成。"),
+
+            EngineLogEntry.Create(
+                0.0,
+                EngineLogLevel.Info,
+                "Core",
+                "Core 基础模块已加载。")
+        ];
     }
 }

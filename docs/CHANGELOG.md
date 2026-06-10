@@ -50,6 +50,9 @@
 34. Milestone 3.2：新增 `FluidWarfare Editor` 主窗口。
 35. Milestone 3.2：新增顶部菜单、项目面板、3D 视口占位、检查器、日志面板。
 36. Milestone 3.2：日志面板显示中文 `EngineLogEntry` 输出。
+37. Milestone 3.3：Editor 启动日志改为由 `EngineLogEntry` 创建。
+38. Milestone 3.3：日志面板继续显示中文日志文本。
+39. Milestone 3.3：确认日志前缀由 `EngineLogLevel` / `EngineLogEntry` 生成，而不是 UI 手写。
 
 ### 修改
 
