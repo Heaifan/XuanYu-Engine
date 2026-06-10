@@ -96,6 +96,20 @@ public sealed class EngineLogEntryTests
         Assert.Contains("日志内容不应包含日志等级前缀。", exception.Message);
     }
 
+    [Theory]
+    [InlineData("【追踪】")]
+    [InlineData("【信息】")]
+    [InlineData("【警告】")]
+    [InlineData("【报错】")]
+    [InlineData("【严重】")]
+    public void Create_WithMessageContainingAnyCurrentPrefix_ShouldThrow(string prefix)
+    {
+        var exception = Assert.Throws<ArgumentException>(() =>
+            EngineLogEntry.Create(1.5, EngineLogLevel.Info, "Test", $"{prefix}测试完成。"));
+
+        Assert.Contains("日志内容不应包含日志等级前缀。", exception.Message);
+    }
+
     [Fact]
     public void ToDisplayString_ForInfo_ShouldUseChinesePrefix()
     {

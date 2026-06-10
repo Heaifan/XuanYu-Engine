@@ -60,6 +60,7 @@
 11. Milestone 2.5.1：确认日志等级前缀统一使用【】。
 12. Milestone 2.5.2：统一日志等级前缀符号为【追踪】【信息】【警告】【报错】【严重】。
 13. Milestone 2.6：固定日志分层规则：Message 只保存正文，显示输出时再添加等级前缀。
+14. Milestone 2.6.1：修复日志等级前缀统一校验，确认 `EngineLogLevel` 与 `EngineLogEntry` 只使用【】。
 
 ### 删除
 

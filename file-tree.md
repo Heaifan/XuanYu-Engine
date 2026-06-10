@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 21:45
+最后编辑：2026-06-10 22:05
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -68,6 +68,7 @@
 19. Milestone 2.6：新增 EngineLogLevel。
 20. Milestone 2.6：新增 EngineLogEntry。
 21. Milestone 2.6：新增日志等级与日志记录单元测试。
+22. Milestone 2.6.1：修复日志等级前缀统一校验，确认 EngineLogLevel 与 EngineLogEntry 只使用【】。
 
 ### 删除
 
@@ -89,7 +90,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 2.5.2 + 2.6：统一日志前缀符号，并实现 EngineLogLevel / EngineLogEntry。
+当前执行 Milestone 2.6.1：修复日志前缀符号统一校验，确认日志基础类型只使用【】。
 
 本轮只处理 Core 日志基础类型，不进入日志写入器、EngineLogFormatter、Data Loader、ScenarioJsonReader、ECS、SimulationClock、FixedTickRunner、World、Render、Vulkan、Android 或 Avalonia UI 具体实现。
 
@@ -293,7 +294,7 @@ Part2
 
 ## 8. 当前不做的内容
 
-当前已经进入 Milestone 2.5.2 + 2.6 日志前缀统一与日志基础类型任务。
+当前已经进入 Milestone 2.6.1 日志前缀符号统一修复任务。
 
 本轮不做以下内容：
 

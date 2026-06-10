@@ -4,11 +4,11 @@ public readonly record struct EngineLogEntry
 {
     private static readonly string[] LogLevelPrefixes =
     [
-        "【追踪】",
-        "【信息】",
-        "【警告】",
-        "【报错】",
-        "【严重】"
+        EngineLogLevelExtensions.TraceChineseLabel,
+        EngineLogLevelExtensions.InfoChineseLabel,
+        EngineLogLevelExtensions.WarningChineseLabel,
+        EngineLogLevelExtensions.ErrorChineseLabel,
+        EngineLogLevelExtensions.CriticalChineseLabel
     ];
 
     private EngineLogEntry(
