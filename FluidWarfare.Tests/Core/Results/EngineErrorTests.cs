@@ -73,6 +73,7 @@ public sealed class EngineErrorTests
     {
         var message = CreateSample().Message;
 
+        Assert.DoesNotContain("【追踪】", message);
         Assert.DoesNotContain("【报错】", message);
         Assert.DoesNotContain("【信息】", message);
         Assert.DoesNotContain("【警告】", message);

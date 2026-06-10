@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 20:35
+最后编辑：2026-06-10 21:45
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -40,6 +40,10 @@
 22. 创建 `FluidWarfare.Core/Results/EngineResult.cs`。
 23. 创建 `FluidWarfare.Tests/Core/Results/EngineErrorTests.cs`。
 24. 创建 `FluidWarfare.Tests/Core/Results/EngineResultTests.cs`。
+25. 创建 `FluidWarfare.Core/Logging/EngineLogLevel.cs`。
+26. 创建 `FluidWarfare.Core/Logging/EngineLogEntry.cs`。
+27. 创建 `FluidWarfare.Tests/Core/Logging/EngineLogLevelTests.cs`。
+28. 创建 `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs`。
 
 ### 修改
 
@@ -60,6 +64,10 @@
 15. Milestone 2.5.1：修复 EngineResult 默认值语义，明确 default(EngineResult) 为无效结果。
 16. Milestone 2.5.1：调整 EngineResult.IsFailure，仅有效失败结果返回 true。
 17. Milestone 2.5.1：确认日志等级前缀统一使用【】。
+18. Milestone 2.5.2：统一日志等级前缀符号为【】。
+19. Milestone 2.6：新增 EngineLogLevel。
+20. Milestone 2.6：新增 EngineLogEntry。
+21. Milestone 2.6：新增日志等级与日志记录单元测试。
 
 ### 删除
 
@@ -81,9 +89,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 2.5.1：修复 EngineResult 默认值语义，并确认日志前缀符号统一为【】。
+当前执行 Milestone 2.5.2 + 2.6：统一日志前缀符号，并实现 EngineLogLevel / EngineLogEntry。
 
-本轮不进入日志层、Data Loader、ScenarioJsonReader、ECS、SimulationClock、FixedTickRunner、World、Render、Vulkan、Android 或 Avalonia UI 具体实现。
+本轮只处理 Core 日志基础类型，不进入日志写入器、EngineLogFormatter、Data Loader、ScenarioJsonReader、ECS、SimulationClock、FixedTickRunner、World、Render、Vulkan、Android 或 Avalonia UI 具体实现。
 
 ## 3. 顶层目录结构
 
@@ -98,6 +106,9 @@ FluidWarfare/
 |   |-- FluidWarfare.Core.csproj
 |   |-- Identity/
 |   |   `-- EntityId.cs
+|   |-- Logging/
+|   |   |-- EngineLogEntry.cs
+|   |   `-- EngineLogLevel.cs
 |   |-- Math/
 |   |   |-- Vector3d.cs
 |   |   `-- YawRotation.cs
@@ -136,6 +147,9 @@ FluidWarfare/
 |   |-- Core/
 |   |   |-- Identity/
 |   |   |   `-- EntityIdTests.cs
+|   |   |-- Logging/
+|   |   |   |-- EngineLogEntryTests.cs
+|   |   |   `-- EngineLogLevelTests.cs
 |   |   |-- Math/
 |   |   |   |-- Vector3dTests.cs
 |   |   |   `-- YawRotationTests.cs
@@ -188,7 +202,7 @@ get_tree.bat
 
 | 模块 | 职责 | 状态 |
 |---|---|---|
-| FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / EngineError 与 EngineResult 测试通过 |
+| FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / EngineLogLevel 与 EngineLogEntry 测试通过 |
 | FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Simulation | 固定 Tick、暂停、单步和模拟世界 | 已创建 / 仅 `.gitkeep` |
@@ -201,7 +215,7 @@ get_tree.bat
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Editor.Windows | Windows Avalonia 编辑器 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Exporter | Windows 与 Android 导出流程 | 已创建 / 仅 `.gitkeep` |
-| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / EngineError 与 EngineResult 测试通过 |
+| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / EngineLogLevel 与 EngineLogEntry 测试通过 |
 
 ## 5. 关键文件职责
 
@@ -216,6 +230,8 @@ get_tree.bat
 | `FluidWarfare.Core/Math/YawRotation.cs` | 水平朝向角值对象，统一绕 Y 轴的方向约定、角度归一化与 XZ 平面前向向量 | 测试通过 |
 | `FluidWarfare.Core/Results/EngineError.cs` | 引擎错误值对象，承载稳定英文错误代码与中文可读错误信息，不包含【报错】等日志等级前缀 | 测试通过 |
 | `FluidWarfare.Core/Results/EngineResult.cs` | 引擎操作结果值对象，统一表达成功或失败，要求失败结果携带有效 EngineError，并明确默认值无效 | 测试通过 |
+| `FluidWarfare.Core/Logging/EngineLogLevel.cs` | 引擎日志等级枚举与中文等级标签映射，统一【追踪】【信息】【警告】【报错】【严重】显示前缀 | 测试通过 |
+| `FluidWarfare.Core/Logging/EngineLogEntry.cs` | 引擎日志记录值对象，保存模拟时间、日志等级、分类和中文日志内容，并提供基础中文显示输出 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
 | `FluidWarfare.Tests/Core/Identity/EntityIdTests.cs` | 验证 EntityId 的有效性、异常、相等比较与稳定字符串输出 | 测试通过 |
@@ -225,6 +241,8 @@ get_tree.bat
 | `FluidWarfare.Tests/Core/Math/YawRotationTests.cs` | 验证 YawRotation 的角度归一化、弧度换算、前向方向约定、异常输入、相等比较与稳定字符串输出 | 测试通过 |
 | `FluidWarfare.Tests/Core/Results/EngineErrorTests.cs` | 验证 EngineError 的创建、非法输入、默认无效值、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
 | `FluidWarfare.Tests/Core/Results/EngineResultTests.cs` | 验证 EngineResult 的成功/失败语义、默认值无效、错误携带、默认错误拒绝、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
+| `FluidWarfare.Tests/Core/Logging/EngineLogLevelTests.cs` | 验证日志等级到中文显示前缀的映射 | 测试通过 |
+| `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs` | 验证日志记录创建、非法输入、日志前缀隔离、中文显示输出与相等比较 | 测试通过 |
 | `.gitattributes` | 固定文本文件行尾规则 | 已创建 |
 | `docs/PROJECT_CHARTER.md` | 项目目标和第一阶段闭环 | 已创建 |
 | `docs/ENGINE_ARCHITECTURE.md` | 模块边界和依赖方向 | 已创建 |
@@ -275,14 +293,14 @@ Part2
 
 ## 8. 当前不做的内容
 
-当前已经进入 Milestone 2.5.1 EngineResult 默认值语义补丁任务。
+当前已经进入 Milestone 2.5.2 + 2.6 日志前缀统一与日志基础类型任务。
 
 本轮不做以下内容：
 
-1. EngineLogLevel 实现。
-2. EngineLogEntry 实现。
-3. EngineLogFormatter 实现。
-4. 日志等级前缀格式化。
+1. EngineLogFormatter 实现。
+2. 日志写入器实现。
+3. 文件日志实现。
+4. 控制台日志系统实现。
 5. Data Loader 实现。
 6. ScenarioJsonReader 实现。
 7. ECS 实现。

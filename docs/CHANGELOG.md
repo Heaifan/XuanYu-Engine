@@ -40,6 +40,10 @@
 24. Milestone 2.5：固定结果语义，Success 不携带错误，Failure 必须携带有效错误。
 25. Milestone 2.5：固定错误文本规则，Code 使用英文，Message 使用中文。
 26. Milestone 2.5：固定分层规则，【报错】【信息】等日志等级前缀不写入 `EngineError.Message`。
+27. Milestone 2.6：新增 `EngineLogLevel` 日志等级枚举。
+28. Milestone 2.6：新增 `EngineLogEntry` 日志记录值对象。
+29. Milestone 2.6：新增日志等级中文前缀映射。
+30. Milestone 2.6：新增 `EngineLogLevel` 与 `EngineLogEntry` 单元测试。
 
 ### 修改
 
@@ -54,6 +58,8 @@
 9. Milestone 2.5.1：修复 `EngineResult` 默认值语义，明确 `default(EngineResult)` 为无效结果。
 10. Milestone 2.5.1：调整 `EngineResult.IsFailure`，只有携带有效 `EngineError` 的失败结果才返回 true。
 11. Milestone 2.5.1：确认日志等级前缀统一使用【】。
+12. Milestone 2.5.2：统一日志等级前缀符号为【追踪】【信息】【警告】【报错】【严重】。
+13. Milestone 2.6：固定日志分层规则：Message 只保存正文，显示输出时再添加等级前缀。
 
 ### 删除
 
