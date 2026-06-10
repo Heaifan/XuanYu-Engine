@@ -1,0 +1,21 @@
+<UserControl
+    x:Class="FluidWarfare.Editor.Windows.Panels.Project.ProjectPanel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Border
+      Margin="0"
+      Padding="16"
+      Background="#24282E"
+      BorderBrush="#414852"
+      BorderThickness="0,0,1,0">
+    <StackPanel Spacing="12">
+      <TextBlock FontSize="18" FontWeight="SemiBold" Text="项目" />
+      <TextBlock Foreground="#C9D1D9" Text="当前未打开项目" />
+      <Separator />
+      <TextBlock Text="场景" />
+      <TextBlock Text="单位" />
+      <TextBlock Text="资源" />
+      <TextBlock Text="配置" />
+    </StackPanel>
+  </Border>
+</UserControl>

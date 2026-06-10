@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 22:05
+最后编辑：2026-06-10 22:35
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -44,6 +44,8 @@
 26. 创建 `FluidWarfare.Core/Logging/EngineLogEntry.cs`。
 27. 创建 `FluidWarfare.Tests/Core/Logging/EngineLogLevelTests.cs`。
 28. 创建 `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs`。
+29. Milestone 3.1：创建 `FluidWarfare.Editor.Windows` Avalonia 编辑器项目。
+30. Milestone 3.2：创建 `FluidWarfare Editor` 五区 GUI 最小壳。
 
 ### 修改
 
@@ -69,6 +71,8 @@
 20. Milestone 2.6：新增 EngineLogEntry。
 21. Milestone 2.6：新增日志等级与日志记录单元测试。
 22. Milestone 2.6.1：修复日志等级前缀统一校验，确认 EngineLogLevel 与 EngineLogEntry 只使用【】。
+23. Milestone 3.1：将 FluidWarfare.Editor.Windows 加入 FluidWarfare.sln，并引用 FluidWarfare.Core。
+24. Milestone 3.2：实现顶部菜单、项目面板、3D 视口占位、检查器和日志面板。
 
 ### 删除
 
@@ -90,9 +94,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 2.6.1：修复日志前缀符号统一校验，确认日志基础类型只使用【】。
+当前执行 Milestone 3.1 + 3.2：创建 Windows Editor Avalonia 项目，并实现五区 GUI 最小壳。
 
-本轮只处理 Core 日志基础类型，不进入日志写入器、EngineLogFormatter、Data Loader、ScenarioJsonReader、ECS、SimulationClock、FixedTickRunner、World、Render、Vulkan、Android 或 Avalonia UI 具体实现。
+本轮只处理 Windows Editor GUI 外壳，不接 Vulkan、不做真实 3D 渲染、不做 ECS、不做 World、不做 Data Loader、不做 Runtime 或 Android。
 
 ## 3. 顶层目录结构
 
@@ -140,7 +144,28 @@ FluidWarfare/
 |-- FluidWarfare.Runtime.Android/
 |   `-- .gitkeep
 |-- FluidWarfare.Editor.Windows/
-|   `-- .gitkeep
+|   |-- App.axaml
+|   |-- App.axaml.cs
+|   |-- FluidWarfare.Editor.Windows.csproj
+|   |-- MainWindow.axaml
+|   |-- MainWindow.axaml.cs
+|   |-- Program.cs
+|   |-- Panels/
+|   |   |-- Inspector/
+|   |   |   |-- InspectorPanel.axaml
+|   |   |   `-- InspectorPanel.axaml.cs
+|   |   |-- Logging/
+|   |   |   |-- LogPanel.axaml
+|   |   |   `-- LogPanel.axaml.cs
+|   |   |-- Project/
+|   |   |   |-- ProjectPanel.axaml
+|   |   |   `-- ProjectPanel.axaml.cs
+|   |   `-- Viewport/
+|   |       |-- ViewportPlaceholderPanel.axaml
+|   |       `-- ViewportPlaceholderPanel.axaml.cs
+|   `-- Shell/
+|       |-- EditorShell.axaml
+|       `-- EditorShell.axaml.cs
 |-- FluidWarfare.Exporter/
 |   `-- .gitkeep
 |-- FluidWarfare.Tests/
@@ -214,7 +239,7 @@ get_tree.bat
 | FluidWarfare.Render.Vulkan | Vulkan 后端实现 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Runtime.Windows | Windows 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
-| FluidWarfare.Editor.Windows | Windows Avalonia 编辑器 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Editor.Windows | Windows 桌面编辑器，使用 Avalonia 构建 GUI，只用于开发、调试和导出，不进入 Android Runtime | 可运行 |
 | FluidWarfare.Exporter | Windows 与 Android 导出流程 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / EngineLogLevel 与 EngineLogEntry 测试通过 |
 
@@ -244,6 +269,22 @@ get_tree.bat
 | `FluidWarfare.Tests/Core/Results/EngineResultTests.cs` | 验证 EngineResult 的成功/失败语义、默认值无效、错误携带、默认错误拒绝、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogLevelTests.cs` | 验证日志等级到中文显示前缀的映射 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs` | 验证日志记录创建、非法输入、日志前缀隔离、中文显示输出与相等比较 | 测试通过 |
+| `FluidWarfare.Editor.Windows/FluidWarfare.Editor.Windows.csproj` | Windows Editor Avalonia 项目文件，引用 Core 并声明 Avalonia 桌面依赖 | 可运行 |
+| `FluidWarfare.Editor.Windows/Program.cs` | Editor 进程入口，配置 Avalonia 桌面生命周期 | 可运行 |
+| `FluidWarfare.Editor.Windows/App.axaml` | Editor 应用 XAML 根对象，加载 Fluent 主题 | 可运行 |
+| `FluidWarfare.Editor.Windows/App.axaml.cs` | Editor 应用启动逻辑，创建主窗口 | 可运行 |
+| `FluidWarfare.Editor.Windows/MainWindow.axaml` | 编辑器主窗口 XAML 容器，承载 EditorShell | 可运行 |
+| `FluidWarfare.Editor.Windows/MainWindow.axaml.cs` | 编辑器主窗口 code-behind | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器五区布局壳，组织菜单栏、项目面板、视口占位、检查器和日志面板 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器五区布局初始化逻辑，使用 EngineLogEntry 生成启动日志 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板占位，显示当前未打开项目、场景、单位、资源和配置 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板 code-behind | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位面板，提示 Vulkan 渲染器尚未接入 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板 code-behind | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml.cs` | 检查器面板 code-behind | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml` | 编辑器日志面板，显示中文日志文本 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml.cs` | 日志面板 code-behind，接收并显示日志字符串列表 | 可运行 |
 | `.gitattributes` | 固定文本文件行尾规则 | 已创建 |
 | `docs/PROJECT_CHARTER.md` | 项目目标和第一阶段闭环 | 已创建 |
 | `docs/ENGINE_ARCHITECTURE.md` | 模块边界和依赖方向 | 已创建 |
@@ -294,26 +335,24 @@ Part2
 
 ## 8. 当前不做的内容
 
-当前已经进入 Milestone 2.6.1 日志前缀符号统一修复任务。
+当前已经进入 Milestone 3.1 + 3.2 Windows Editor GUI 最小壳任务。
 
 本轮不做以下内容：
 
-1. EngineLogFormatter 实现。
-2. 日志写入器实现。
-3. 文件日志实现。
-4. 控制台日志系统实现。
+1. Vulkan 接入。
+2. 真实 3D 渲染。
+3. ECS 实现。
+4. World 实现。
 5. Data Loader 实现。
-6. ScenarioJsonReader 实现。
-7. ECS 实现。
-8. SimulationClock 实现。
-9. FixedTickRunner 实现。
-10. World 实现。
-11. Render 实现。
-12. Vulkan 实现。
-13. Avalonia UI 实现。
-14. Android 实现。
-15. Runtime 实现。
-16. 泛型 `EngineResult<T>`。
+6. 场景保存。
+7. 项目文件打开。
+8. Android 实现。
+9. Runtime.Windows 实现。
+10. 复杂 MVVM 框架。
+11. 插件系统。
+12. 真实资源管理器。
+13. 地图编辑。
+14. 蓝图系统。
 
 ## 9. 版本历史索引
 

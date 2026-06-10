@@ -1,0 +1,32 @@
+<UserControl
+    x:Class="FluidWarfare.Editor.Windows.Panels.Viewport.ViewportPlaceholderPanel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Border
+      Margin="0"
+      Background="#171A1F"
+      BorderBrush="#414852"
+      BorderThickness="0,0,1,0">
+    <Grid RowDefinitions="Auto,*" Margin="18">
+      <TextBlock
+          Grid.Row="0"
+          FontSize="18"
+          FontWeight="SemiBold"
+          Text="3D 视口" />
+      <StackPanel
+          Grid.Row="1"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          Spacing="10">
+        <TextBlock
+            HorizontalAlignment="Center"
+            FontSize="22"
+            Text="Vulkan 渲染器尚未接入" />
+        <TextBlock
+            HorizontalAlignment="Center"
+            Foreground="#AEB7C2"
+            Text="后续将在此显示 3D 战场" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

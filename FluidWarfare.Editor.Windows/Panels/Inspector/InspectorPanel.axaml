@@ -1,0 +1,15 @@
+<UserControl
+    x:Class="FluidWarfare.Editor.Windows.Panels.Inspector.InspectorPanel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Border
+      Padding="16"
+      Background="#24282E"
+      BorderBrush="#414852"
+      BorderThickness="0,0,0,0">
+    <StackPanel Spacing="12">
+      <TextBlock FontSize="18" FontWeight="SemiBold" Text="检查器" />
+      <TextBlock Foreground="#C9D1D9" Text="未选择对象" />
+    </StackPanel>
+  </Border>
+</UserControl>

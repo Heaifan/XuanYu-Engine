@@ -1,0 +1,37 @@
+<UserControl
+    x:Class="FluidWarfare.Editor.Windows.Shell.EditorShell"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:inspector="clr-namespace:FluidWarfare.Editor.Windows.Panels.Inspector"
+    xmlns:logging="clr-namespace:FluidWarfare.Editor.Windows.Panels.Logging"
+    xmlns:project="clr-namespace:FluidWarfare.Editor.Windows.Panels.Project"
+    xmlns:viewport="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport">
+  <Grid Background="#202327" RowDefinitions="44,*,180">
+    <Border
+        Grid.Row="0"
+        Background="#2A2F36"
+        BorderBrush="#414852"
+        BorderThickness="0,0,0,1">
+      <StackPanel
+          Margin="18,0"
+          VerticalAlignment="Center"
+          Orientation="Horizontal"
+          Spacing="24">
+        <TextBlock Text="文件" />
+        <TextBlock Text="编辑" />
+        <TextBlock Text="视图" />
+        <TextBlock Text="运行" />
+        <TextBlock Text="导出" />
+        <TextBlock Text="帮助" />
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Row="1" ColumnDefinitions="260,*,300">
+      <project:ProjectPanel Grid.Column="0" />
+      <viewport:ViewportPlaceholderPanel Grid.Column="1" />
+      <inspector:InspectorPanel Grid.Column="2" />
+    </Grid>
+
+    <logging:LogPanel Grid.Row="2" x:Name="EditorLogPanel" />
+  </Grid>
+</UserControl>

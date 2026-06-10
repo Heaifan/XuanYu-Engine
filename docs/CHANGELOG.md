@@ -44,6 +44,12 @@
 28. Milestone 2.6：新增 `EngineLogEntry` 日志记录值对象。
 29. Milestone 2.6：新增日志等级中文前缀映射。
 30. Milestone 2.6：新增 `EngineLogLevel` 与 `EngineLogEntry` 单元测试。
+31. Milestone 3.1：新增 `FluidWarfare.Editor.Windows` Avalonia 编辑器项目。
+32. Milestone 3.1：将 Editor 项目加入 `FluidWarfare.sln`。
+33. Milestone 3.1：Editor 引用 `FluidWarfare.Core`。
+34. Milestone 3.2：新增 `FluidWarfare Editor` 主窗口。
+35. Milestone 3.2：新增顶部菜单、项目面板、3D 视口占位、检查器、日志面板。
+36. Milestone 3.2：日志面板显示中文 `EngineLogEntry` 输出。
 
 ### 修改
 
