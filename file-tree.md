@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 17:55
+最后编辑：2026-06-10 18:20
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -23,6 +23,9 @@
 5. 为当前空目录创建 `.gitkeep` 占位文件，确保模块目录和资源目录能提交到 Git。
 6. 创建 `.gitattributes`，固定 Markdown 等文本文件使用 LF 行尾。
 7. 创建 `docs/MILESTONE1_PUBLIC_VALIDATION.md`，记录公开 Raw 验收方式。
+8. 创建 `FluidWarfare.Core/FluidWarfare.Core.csproj`。
+9. 创建 `FluidWarfare.Tests/FluidWarfare.Tests.csproj`。
+10. 创建 `FluidWarfare.Tests/CoreSmokeTests.cs`。
 
 ### 修改
 
@@ -32,6 +35,7 @@
 4. 核对本地与远端 `origin/main`，确认新仓库当前没有旧项目目录残留。
 5. 将 Markdown 文件重写为 UTF-8 无 BOM 与 LF 行尾，方便 GitHub Raw 公开验收。
 6. 使用 Python 以 `newline="\n"` 重新写入 `.gitattributes`、`file-tree.md` 和所有 `docs/*.md`。
+7. 将 Core 与 Tests 项目加入 `FluidWarfare.sln`。
 
 ### 删除
 
@@ -53,7 +57,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前不进入 Core、ECS、Vulkan、Android 或 Avalonia UI 具体实现。
+当前执行 Milestone 2.1：只创建 Core / Tests 项目骨架和最小 smoke test。
+
+本轮不进入 EntityId、Vector3d、TimeStep、EngineResult、EngineLogEntry、ECS、Vulkan、Android 或 Avalonia UI 具体实现。
 
 ## 3. 顶层目录结构
 
@@ -64,7 +70,8 @@ FluidWarfare/
 |-- .git/
 |-- .gitattributes
 |-- FluidWarfare.Core/
-|   `-- .gitkeep
+|   |-- .gitkeep
+|   `-- FluidWarfare.Core.csproj
 |-- FluidWarfare.Ecs/
 |   `-- .gitkeep
 |-- FluidWarfare.World/
@@ -90,7 +97,9 @@ FluidWarfare/
 |-- FluidWarfare.Exporter/
 |   `-- .gitkeep
 |-- FluidWarfare.Tests/
-|   `-- .gitkeep
+|   |-- .gitkeep
+|   |-- CoreSmokeTests.cs
+|   `-- FluidWarfare.Tests.csproj
 |-- game_data/
 |   `-- .gitkeep
 |-- assets/
@@ -132,7 +141,7 @@ get_tree.bat
 
 | 模块 | 职责 | 状态 |
 |---|---|---|
-| FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / 项目骨架 |
 | FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Simulation | 固定 Tick、暂停、单步和模拟世界 | 已创建 / 仅 `.gitkeep` |
@@ -145,13 +154,16 @@ get_tree.bat
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Editor.Windows | Windows Avalonia 编辑器 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Exporter | Windows 与 Android 导出流程 | 已创建 / 仅 `.gitkeep` |
-| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / 项目骨架 |
 
 ## 5. 关键文件职责
 
 | 文件 | 职责 | 状态 |
 |---|---|---|
-| `FluidWarfare.sln` | 解决方案容器 | 已创建 / 暂无项目引用 |
+| `FluidWarfare.sln` | 解决方案容器 | 已创建 / 已引用 Core 与 Tests |
+| `FluidWarfare.Core/FluidWarfare.Core.csproj` | Core 纯 C# 类库项目 | 已创建 |
+| `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core | 已创建 |
+| `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
 | `.gitattributes` | 固定文本文件行尾规则 | 已创建 |
 | `docs/PROJECT_CHARTER.md` | 项目目标和第一阶段闭环 | 已创建 |
 | `docs/ENGINE_ARCHITECTURE.md` | 模块边界和依赖方向 | 已创建 |
@@ -202,18 +214,22 @@ Part2
 
 ## 8. 当前不做的内容
 
-本轮修复只处理 Milestone 1 审计问题。
+当前已经进入 Milestone 2.1 项目骨架任务。
 
 本轮不做以下内容：
 
-1. Core 类型实现。
-2. ECS 实现。
-3. Vulkan 实现。
-4. Android 实现。
-5. Avalonia UI 实现。
-6. 战斗系统。
-7. AI。
-8. 第三方框架引入。
+1. EntityId 实现。
+2. Vector3d 实现。
+3. TimeStep 实现。
+4. EngineResult 实现。
+5. EngineLogEntry 实现。
+6. ECS 实现。
+7. Vulkan 实现。
+8. Android 实现。
+9. Avalonia UI 实现。
+10. 战斗系统。
+11. AI。
+12. 第三方框架引入。
 
 ## 9. 版本历史索引
 
