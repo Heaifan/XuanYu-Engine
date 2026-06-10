@@ -71,6 +71,12 @@ public sealed class SimulationTimeTests
     }
 
     [Fact]
+    public void Advance_WithDefaultTimeStep_ShouldThrow()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => SimulationTime.Zero.Advance(default));
+    }
+
+    [Fact]
     public void SameValue_ShouldBeEqual()
     {
         Assert.Equal(SimulationTime.FromSeconds(0.5), SimulationTime.FromMilliseconds(500.0));
@@ -80,5 +86,11 @@ public sealed class SimulationTimeTests
     public void ToString_ShouldBeStable()
     {
         Assert.Equal("SimulationTime(1.5s)", SimulationTime.FromSeconds(1.5).ToString());
+    }
+
+    [Fact]
+    public void ToString_ForZero_ShouldBeStable()
+    {
+        Assert.Equal("SimulationTime(0s)", SimulationTime.Zero.ToString());
     }
 }

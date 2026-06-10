@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FluidWarfare.Core.Time;
 
 public readonly record struct TimeStep
@@ -35,6 +37,6 @@ public readonly record struct TimeStep
 
     public override string ToString()
     {
-        return $"TimeStep({Seconds:0.###}s)";
+        return $"TimeStep({Seconds.ToString("0.###", CultureInfo.InvariantCulture)}s)";
     }
 }

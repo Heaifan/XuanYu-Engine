@@ -50,6 +50,15 @@ public sealed class TimeStepTests
     }
 
     [Fact]
+    public void Default_ShouldNotBePositive()
+    {
+        var step = default(TimeStep);
+
+        Assert.Equal(0.0, step.Seconds);
+        Assert.False(step.IsPositive);
+    }
+
+    [Fact]
     public void Milliseconds_ShouldConvertFromSeconds()
     {
         Assert.Equal(250.0, TimeStep.FromSeconds(0.25).Milliseconds);
@@ -65,5 +74,11 @@ public sealed class TimeStepTests
     public void ToString_ShouldBeStable()
     {
         Assert.Equal("TimeStep(0.05s)", TimeStep.FromSeconds(0.05).ToString());
+    }
+
+    [Fact]
+    public void ToString_WithWholeSeconds_ShouldBeStable()
+    {
+        Assert.Equal("TimeStep(1s)", TimeStep.FromSeconds(1.0).ToString());
     }
 }

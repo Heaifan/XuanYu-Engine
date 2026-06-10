@@ -21,6 +21,11 @@
 13. Milestone 2.3：新增 `TimeStep` 时间步长值对象。
 14. Milestone 2.3：新增 `SimulationTime` 模拟累计时间值对象。
 15. Milestone 2.3：新增 `TimeStep` 与 `SimulationTime` 单元测试。
+16. Milestone 2.4：新增 `Vector3d` 3D 坐标与向量值对象。
+17. Milestone 2.4：新增 `YawRotation` 水平朝向角值对象。
+18. Milestone 2.4：新增 `Vector3d` 与 `YawRotation` 单元测试。
+19. Milestone 2.4：固定核心坐标约定，XZ 为地面平面，Y 为高度。
+20. Milestone 2.4：固定朝向约定，0 度朝 +Z，90 度朝 +X。
 
 ### 修改
 
@@ -29,6 +34,9 @@
 3. 将 Markdown 文件重写为 UTF-8 无 BOM 与 LF 行尾，方便 GitHub Raw 公开验收。
 4. 使用 Python 以 `newline="\n"` 重新写入 `.gitattributes`、`file-tree.md` 和所有 `docs/*.md`。
 5. 将 Core 与 Tests 项目加入 `FluidWarfare.sln`。
+6. Milestone 2.3.1：修复 `TimeStep` 默认值边界。
+7. Milestone 2.3.1：修复 `SimulationTime.Advance` 对 `default(TimeStep)` 的处理。
+8. Milestone 2.3.1：稳定 `TimeStep` / `SimulationTime` 的 `ToString` 输出。
 
 ### 删除
 

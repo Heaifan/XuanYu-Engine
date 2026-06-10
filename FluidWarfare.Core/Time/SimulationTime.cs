@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FluidWarfare.Core.Time;
 
 public readonly record struct SimulationTime
@@ -37,11 +39,16 @@ public readonly record struct SimulationTime
 
     public SimulationTime Advance(TimeStep step)
     {
+        if (!step.IsPositive)
+        {
+            throw new ArgumentOutOfRangeException(nameof(step), step, "Time step must be positive.");
+        }
+
         return new SimulationTime(Seconds + step.Seconds);
     }
 
     public override string ToString()
     {
-        return $"SimulationTime({Seconds:0.###}s)";
+        return $"SimulationTime({Seconds.ToString("0.###", CultureInfo.InvariantCulture)}s)";
     }
 }
