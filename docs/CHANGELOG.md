@@ -51,6 +51,9 @@
 6. Milestone 2.3.1：修复 `TimeStep` 默认值边界。
 7. Milestone 2.3.1：修复 `SimulationTime.Advance` 对 `default(TimeStep)` 的处理。
 8. Milestone 2.3.1：稳定 `TimeStep` / `SimulationTime` 的 `ToString` 输出。
+9. Milestone 2.5.1：修复 `EngineResult` 默认值语义，明确 `default(EngineResult)` 为无效结果。
+10. Milestone 2.5.1：调整 `EngineResult.IsFailure`，只有携带有效 `EngineError` 的失败结果才返回 true。
+11. Milestone 2.5.1：确认日志等级前缀统一使用【】。
 
 ### 删除
 

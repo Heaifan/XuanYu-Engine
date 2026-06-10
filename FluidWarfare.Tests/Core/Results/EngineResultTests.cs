@@ -35,6 +35,24 @@ public sealed class EngineResultTests
     }
 
     [Fact]
+    public void Default_ShouldBeInvalid()
+    {
+        Assert.False(default(EngineResult).IsValid);
+    }
+
+    [Fact]
+    public void Default_ShouldNotBeSuccessful()
+    {
+        Assert.False(default(EngineResult).IsSuccess);
+    }
+
+    [Fact]
+    public void Default_ShouldNotBeFailure()
+    {
+        Assert.False(default(EngineResult).IsFailure);
+    }
+
+    [Fact]
     public void IsFailure_ShouldBeOppositeOfIsSuccess()
     {
         var success = EngineResult.Success();

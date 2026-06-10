@@ -10,9 +10,11 @@ public readonly record struct EngineResult
 
     public bool IsSuccess { get; }
 
-    public bool IsFailure => !IsSuccess;
+    public bool IsFailure => Error.HasValue && Error.Value.IsValid;
 
     public EngineError? Error { get; }
+
+    public bool IsValid => IsSuccess || IsFailure;
 
     public static EngineResult Success()
     {

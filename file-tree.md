@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 20:20
+最后编辑：2026-06-10 20:35
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -57,6 +57,9 @@
 12. Core 时间类型提示：将 TimeStep / SimulationTime 的异常提示改为中文。
 13. EntityId 提示：将实体编号错误提示改为中文。
 14. Core 数学类型提示：将 Vector3d / YawRotation 的异常提示改为中文。
+15. Milestone 2.5.1：修复 EngineResult 默认值语义，明确 default(EngineResult) 为无效结果。
+16. Milestone 2.5.1：调整 EngineResult.IsFailure，仅有效失败结果返回 true。
+17. Milestone 2.5.1：确认日志等级前缀统一使用【】。
 
 ### 删除
 
@@ -78,7 +81,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 2.5：只实现 EngineError / EngineResult 值对象和对应单元测试。
+当前执行 Milestone 2.5.1：修复 EngineResult 默认值语义，并确认日志前缀符号统一为【】。
 
 本轮不进入日志层、Data Loader、ScenarioJsonReader、ECS、SimulationClock、FixedTickRunner、World、Render、Vulkan、Android 或 Avalonia UI 具体实现。
 
@@ -212,7 +215,7 @@ get_tree.bat
 | `FluidWarfare.Core/Math/Vector3d.cs` | 引擎核心 3D 坐标与向量值对象，统一 X/Y/Z 坐标、长度、距离、标准化、点积与基础运算 | 测试通过 |
 | `FluidWarfare.Core/Math/YawRotation.cs` | 水平朝向角值对象，统一绕 Y 轴的方向约定、角度归一化与 XZ 平面前向向量 | 测试通过 |
 | `FluidWarfare.Core/Results/EngineError.cs` | 引擎错误值对象，承载稳定英文错误代码与中文可读错误信息，不包含【报错】等日志等级前缀 | 测试通过 |
-| `FluidWarfare.Core/Results/EngineResult.cs` | 引擎操作结果值对象，统一表达成功或失败，并要求失败结果携带有效 EngineError | 测试通过 |
+| `FluidWarfare.Core/Results/EngineResult.cs` | 引擎操作结果值对象，统一表达成功或失败，要求失败结果携带有效 EngineError，并明确默认值无效 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
 | `FluidWarfare.Tests/Core/Identity/EntityIdTests.cs` | 验证 EntityId 的有效性、异常、相等比较与稳定字符串输出 | 测试通过 |
@@ -221,7 +224,7 @@ get_tree.bat
 | `FluidWarfare.Tests/Core/Math/Vector3dTests.cs` | 验证 Vector3d 的静态值、长度、距离、运算符、点积、标准化、相等比较与稳定字符串输出 | 测试通过 |
 | `FluidWarfare.Tests/Core/Math/YawRotationTests.cs` | 验证 YawRotation 的角度归一化、弧度换算、前向方向约定、异常输入、相等比较与稳定字符串输出 | 测试通过 |
 | `FluidWarfare.Tests/Core/Results/EngineErrorTests.cs` | 验证 EngineError 的创建、非法输入、默认无效值、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
-| `FluidWarfare.Tests/Core/Results/EngineResultTests.cs` | 验证 EngineResult 的成功/失败语义、错误携带、默认错误拒绝、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
+| `FluidWarfare.Tests/Core/Results/EngineResultTests.cs` | 验证 EngineResult 的成功/失败语义、默认值无效、错误携带、默认错误拒绝、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
 | `.gitattributes` | 固定文本文件行尾规则 | 已创建 |
 | `docs/PROJECT_CHARTER.md` | 项目目标和第一阶段闭环 | 已创建 |
 | `docs/ENGINE_ARCHITECTURE.md` | 模块边界和依赖方向 | 已创建 |
@@ -272,7 +275,7 @@ Part2
 
 ## 8. 当前不做的内容
 
-当前已经进入 Milestone 2.5 EngineError / EngineResult 任务。
+当前已经进入 Milestone 2.5.1 EngineResult 默认值语义补丁任务。
 
 本轮不做以下内容：
 
