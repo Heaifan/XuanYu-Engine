@@ -1,11 +1,16 @@
-# 项目文件树 - FluidWarfare
+﻿# 项目文件树 - FluidWarfare
 
 当前阶段：Phase 1
-当前版本：0.0.1-dev
-创建时间：2026-06-10
-最后编辑：2026-06-10 17:12
 
-本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。每次新增、删除、重命名或移动文件与目录时，都必须同步更新本文档。
+当前版本：0.0.1-dev
+
+创建时间：2026-06-10
+
+最后编辑：2026-06-10 17:25
+
+本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
+
+每次新增、删除、重命名或移动文件与目录时，都必须同步更新本文档。
 
 ## 1. 未发布变更日志
 
@@ -21,6 +26,8 @@
 
 1. 将 `docs/` 下所有 Markdown 文档正文改为中文。
 2. 将 `file-tree.md` 正文改为中文。
+3. 重新排版 `docs/*.md` 和 `file-tree.md`，确保标题、段落、表格、列表和代码块独立换行。
+4. 核对本地与远端 `origin/main`，确认新仓库当前没有旧项目目录残留。
 
 ### 删除
 
@@ -32,59 +39,113 @@
 
 ## 2. 当前阶段目标
 
-Phase 1 证明最小闭环：Windows Editor 创建简单 3D 场景，保存为 JSON，Windows Runtime 和 Android Runtime 读取同一份数据，Exporter 打包运行时输出。
+Phase 1 证明最小闭环。
+
+目标流程如下：
+
+1. Windows Editor 创建简单 3D 场景。
+2. 场景保存为 JSON。
+3. Windows Runtime 读取同一份数据并运行。
+4. Android Runtime 读取同一份数据并运行。
+5. Exporter 打包运行时输出。
+
+当前不进入 Core、ECS、Vulkan、Android 或 Avalonia UI 具体实现。
 
 ## 3. 顶层目录结构
 
+当前真实顶层结构如下：
+
 ```text
 FluidWarfare/
+|-- .git/
 |-- FluidWarfare.Core/
+|   `-- .gitkeep
 |-- FluidWarfare.Ecs/
+|   `-- .gitkeep
 |-- FluidWarfare.World/
+|   `-- .gitkeep
 |-- FluidWarfare.Simulation/
+|   `-- .gitkeep
 |-- FluidWarfare.Combat/
+|   `-- .gitkeep
 |-- FluidWarfare.AI/
+|   `-- .gitkeep
 |-- FluidWarfare.Data/
+|   `-- .gitkeep
 |-- FluidWarfare.Render/
+|   `-- .gitkeep
 |-- FluidWarfare.Render.Vulkan/
+|   `-- .gitkeep
 |-- FluidWarfare.Runtime.Windows/
+|   `-- .gitkeep
 |-- FluidWarfare.Runtime.Android/
+|   `-- .gitkeep
 |-- FluidWarfare.Editor.Windows/
+|   `-- .gitkeep
 |-- FluidWarfare.Exporter/
+|   `-- .gitkeep
 |-- FluidWarfare.Tests/
+|   `-- .gitkeep
 |-- game_data/
+|   `-- .gitkeep
 |-- assets/
+|   `-- .gitkeep
 |-- shaders/
+|   `-- .gitkeep
 |-- replays/
+|   `-- .gitkeep
 |-- docs/
+|   |-- AI_DEVELOPMENT_RULES.md
+|   |-- CHANGELOG.md
+|   |-- CODE_CONSTITUTION.md
+|   |-- ENGINE_ARCHITECTURE.md
+|   |-- LEGACY_FLUIDWARFARE_OLD_AUDIT.md
+|   |-- NAMING_RULES.md
+|   |-- PHASE1_SCOPE.md
+|   `-- PROJECT_CHARTER.md
 |-- FluidWarfare.sln
 `-- file-tree.md
 ```
+
+以下旧项目目录和文件不应存在于新仓库：
+
+```text
+.dotnet_home/
+Docs/
+Prj_Graphics/
+Prj_UI/
+FluidWarfare.slnx
+get_tree.bat
+```
+
+本地核对结果：上述旧目录和文件未在新仓库真实结构中保留。
+
+说明：Windows 文件系统大小写不敏感，`Test-Path Docs` 会匹配当前合法目录 `docs`，不能用它单独判断是否存在旧目录 `Docs`。
 
 ## 4. 模块职责说明
 
 | 模块 | 职责 | 状态 |
 |---|---|---|
-| FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 计划中 |
-| FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 计划中 |
-| FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 计划中 |
-| FluidWarfare.Simulation | 固定 Tick、暂停、单步和模拟世界 | 计划中 |
-| FluidWarfare.Combat | 未来的接敌、士气、伤亡和战斗日志 | 计划中 |
-| FluidWarfare.AI | 未来的战术 AI、编队 AI 和战略 AI | 计划中 |
-| FluidWarfare.Data | 场景 JSON 与资源数据读取 | 计划中 |
-| FluidWarfare.Render | 渲染抽象契约 | 计划中 |
-| FluidWarfare.Render.Vulkan | Vulkan 后端实现 | 计划中 |
-| FluidWarfare.Runtime.Windows | Windows 游戏运行时 | 计划中 |
-| FluidWarfare.Runtime.Android | Android 游戏运行时 | 计划中 |
-| FluidWarfare.Editor.Windows | Windows Avalonia 编辑器 | 计划中 |
-| FluidWarfare.Exporter | Windows 与 Android 导出流程 | 计划中 |
-| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 计划中 |
+| FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Simulation | 固定 Tick、暂停、单步和模拟世界 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Combat | 未来的接敌、士气、伤亡和战斗日志 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.AI | 未来的战术 AI、编队 AI 和战略 AI | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Data | 场景 JSON 与资源数据读取 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Render | 渲染抽象契约 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Render.Vulkan | Vulkan 后端实现 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Runtime.Windows | Windows 游戏运行时 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Editor.Windows | Windows Avalonia 编辑器 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Exporter | Windows 与 Android 导出流程 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / 仅 `.gitkeep` |
 
 ## 5. 关键文件职责
 
 | 文件 | 职责 | 状态 |
 |---|---|---|
-| `FluidWarfare.sln` | 解决方案容器 | 已创建 |
+| `FluidWarfare.sln` | 解决方案容器 | 已创建 / 暂无项目引用 |
 | `docs/PROJECT_CHARTER.md` | 项目目标和第一阶段闭环 | 已创建 |
 | `docs/ENGINE_ARCHITECTURE.md` | 模块边界和依赖方向 | 已创建 |
 | `docs/AI_DEVELOPMENT_RULES.md` | AI 辅助开发规则 | 已创建 |
@@ -98,15 +159,53 @@ FluidWarfare/
 
 ## 6. 模块依赖方向
 
-Core 是基础层。ECS、World、Simulation、Data、Combat、AI 和 Render 抽象可以向内依赖，但不能反向依赖外层。Runtime、Editor、Exporter 和具体 Vulkan 代码属于外层。
+Core 是基础层。
+
+ECS、World、Simulation、Data、Combat、AI 和 Render 抽象可以向内依赖 Core。
+
+Runtime、Editor、Exporter 和具体 Vulkan 代码属于外层。
+
+外层模块不得反向污染内层模块。
+
+Vulkan 依赖只能进入 `FluidWarfare.Render.Vulkan`。
+
+Avalonia 依赖只能进入 `FluidWarfare.Editor.Windows`。
 
 ## 7. 文件命名与目录纪律
 
-C# 代码使用 `FluidWarfare.*` 命名空间。不得使用 `BingWuChangShiEngine`、`Bwc.*`、`cls_`、`fuc_`、泛化工具目录或编号 Part 文件。
+C# 代码使用 `FluidWarfare.*` 命名空间。
+
+不得使用以下旧命名或泛化命名：
+
+```text
+BingWuChangShiEngine
+Bwc.*
+cls_
+fuc_
+utils
+helpers
+managers
+processors
+Part1
+Part2
+```
+
+数据与资源文件可以使用领域前缀，例如 `scn_`、`cfg_`、`dat_`、`mesh_`、`tex_`、`mat_` 和 `shd_`。
 
 ## 8. 当前不做的内容
 
-第一轮不实现 ECS、Vulkan、Android、Avalonia UI 细节、战斗系统或 AI。
+本轮修复只处理 Milestone 1 审计问题。
+
+本轮不做以下内容：
+
+1. Core 类型实现。
+2. ECS 实现。
+3. Vulkan 实现。
+4. Android 实现。
+5. Avalonia UI 实现。
+6. 战斗系统。
+7. AI。
+8. 第三方框架引入。
 
 ## 9. 版本历史索引
 

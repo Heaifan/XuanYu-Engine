@@ -1,10 +1,10 @@
-# FluidWarfare 命名规则
+﻿# FluidWarfare 命名规则
 
 创建时间：2026-06-10
 
 ## C# 命名
 
-使用标准 C# 命名风格：
+使用标准 C# 命名风格。
 
 | 项目 | 规则 |
 |---|---|
@@ -19,15 +19,25 @@
 
 C# 代码中不得使用以下前缀：
 
-`cls_`、`fuc_`、`var_`、`obj_`、`str_`、`int_`
+```text
+cls_
+fuc_
+var_
+obj_
+str_
+int_
+```
 
 不得使用旧命名空间或旧项目名：
 
-`BingWuChangShiEngine`、`Bwc.*`
+```text
+BingWuChangShiEngine
+Bwc.*
+```
 
 ## 数据与资源文件前缀
 
-数据和资源文件允许使用领域前缀：
+数据和资源文件允许使用领域前缀。
 
 | 前缀 | 含义 |
 |---|---|
@@ -43,4 +53,8 @@ C# 代码中不得使用以下前缀：
 | `spv_` | 编译后的 Shader |
 | `loc_` | 本地化 |
 
-示例：`game_data/scn_phase1_test_field.json`。
+示例：
+
+```text
+game_data/scn_phase1_test_field.json
+```
