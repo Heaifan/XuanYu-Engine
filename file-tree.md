@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 17:40
+最后编辑：2026-06-10 17:55
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -22,6 +22,7 @@
 4. 创建初始文档目录 `docs` 及其中的项目文档。
 5. 为当前空目录创建 `.gitkeep` 占位文件，确保模块目录和资源目录能提交到 Git。
 6. 创建 `.gitattributes`，固定 Markdown 等文本文件使用 LF 行尾。
+7. 创建 `docs/MILESTONE1_PUBLIC_VALIDATION.md`，记录公开 Raw 验收方式。
 
 ### 修改
 
@@ -30,6 +31,7 @@
 3. 重新排版 `docs/*.md` 和 `file-tree.md`，确保标题、段落、表格、列表和代码块独立换行。
 4. 核对本地与远端 `origin/main`，确认新仓库当前没有旧项目目录残留。
 5. 将 Markdown 文件重写为 UTF-8 无 BOM 与 LF 行尾，方便 GitHub Raw 公开验收。
+6. 使用 Python 以 `newline="\n"` 重新写入 `.gitattributes`、`file-tree.md` 和所有 `docs/*.md`。
 
 ### 删除
 
@@ -103,6 +105,7 @@ FluidWarfare/
 |   |-- CODE_CONSTITUTION.md
 |   |-- ENGINE_ARCHITECTURE.md
 |   |-- LEGACY_FLUIDWARFARE_OLD_AUDIT.md
+|   |-- MILESTONE1_PUBLIC_VALIDATION.md
 |   |-- NAMING_RULES.md
 |   |-- PHASE1_SCOPE.md
 |   `-- PROJECT_CHARTER.md
@@ -157,6 +160,7 @@ get_tree.bat
 | `docs/NAMING_RULES.md` | C# 与资源命名规则 | 已创建 |
 | `docs/PHASE1_SCOPE.md` | Phase 1 范围和排除项 | 已创建 |
 | `docs/LEGACY_FLUIDWARFARE_OLD_AUDIT.md` | 旧仓库只读考古报告 | 已创建 |
+| `docs/MILESTONE1_PUBLIC_VALIDATION.md` | 公开 Raw 验收命令与结果记录 | 已创建 |
 | `docs/CHANGELOG.md` | 版本历史 | 已创建 |
 | `file-tree.md` | 项目结构地图 | 已创建 |
 | `*/.gitkeep` | 保留当前尚未写入代码或资源的目录 | 已创建 |

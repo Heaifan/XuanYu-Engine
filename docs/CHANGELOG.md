@@ -12,12 +12,14 @@
 4. 创建 `file-tree.md`，作为项目结构地图。
 5. 为当前空目录创建 `.gitkeep` 占位文件。
 6. 创建 `.gitattributes`，固定 Markdown、解决方案、C# 和 JSON 文件使用 LF 行尾。
+7. 创建 `docs/MILESTONE1_PUBLIC_VALIDATION.md`，记录公开 GitHub Raw 验收命令与旧目录核对命令。
 
 ### 修改
 
 1. 将 `docs/` 下所有 Markdown 文档正文改为中文。
 2. 修复 `docs/` 文档和 `file-tree.md` 的 Markdown 排版，使标题、段落、表格、列表和代码块独立换行。
 3. 将 Markdown 文件重写为 UTF-8 无 BOM 与 LF 行尾，方便 GitHub Raw 公开验收。
+4. 使用 Python 以 `newline="\n"` 重新写入 `.gitattributes`、`file-tree.md` 和所有 `docs/*.md`。
 
 ### 删除
 
