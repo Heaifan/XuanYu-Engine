@@ -34,6 +34,12 @@
 18. Milestone 2.4：新增 `Vector3d` 与 `YawRotation` 单元测试。
 19. Milestone 2.4：固定核心坐标约定，XZ 为地面平面，Y 为高度。
 20. Milestone 2.4：固定朝向约定，0 度朝 +Z，90 度朝 +X。
+21. Milestone 2.5：新增 `EngineError` 错误值对象。
+22. Milestone 2.5：新增 `EngineResult` 操作结果值对象。
+23. Milestone 2.5：新增 `EngineError` 与 `EngineResult` 单元测试。
+24. Milestone 2.5：固定结果语义，Success 不携带错误，Failure 必须携带有效错误。
+25. Milestone 2.5：固定错误文本规则，Code 使用英文，Message 使用中文。
+26. Milestone 2.5：固定分层规则，【报错】【信息】等日志等级前缀不写入 `EngineError.Message`。
 
 ### 修改
 
