@@ -21,7 +21,7 @@ public readonly record struct SimulationTime
     {
         if (!double.IsFinite(seconds) || seconds < 0.0)
         {
-            throw new ArgumentOutOfRangeException(nameof(seconds), seconds, "Simulation time must be finite and zero or greater.");
+            throw new ArgumentOutOfRangeException(nameof(seconds), seconds, "模拟时间必须是有限数，并且不能为负数。");
         }
 
         return new SimulationTime(seconds);
@@ -31,7 +31,7 @@ public readonly record struct SimulationTime
     {
         if (!double.IsFinite(milliseconds) || milliseconds < 0.0)
         {
-            throw new ArgumentOutOfRangeException(nameof(milliseconds), milliseconds, "Simulation time must be finite and zero or greater.");
+            throw new ArgumentOutOfRangeException(nameof(milliseconds), milliseconds, "模拟时间必须是有限数，并且不能为负数。");
         }
 
         return new SimulationTime(milliseconds / 1000.0);
@@ -41,7 +41,7 @@ public readonly record struct SimulationTime
     {
         if (!step.IsPositive)
         {
-            throw new ArgumentOutOfRangeException(nameof(step), step, "Time step must be positive.");
+            throw new ArgumentOutOfRangeException(nameof(step), step, "时间步长必须大于 0。");
         }
 
         return new SimulationTime(Seconds + step.Seconds);

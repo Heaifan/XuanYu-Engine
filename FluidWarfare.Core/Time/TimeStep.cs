@@ -19,7 +19,7 @@ public readonly record struct TimeStep
     {
         if (!double.IsFinite(seconds) || seconds <= 0.0)
         {
-            throw new ArgumentOutOfRangeException(nameof(seconds), seconds, "Time step must be finite and greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(seconds), seconds, "时间步长必须是有限数，并且必须大于 0。");
         }
 
         return new TimeStep(seconds);
@@ -29,7 +29,7 @@ public readonly record struct TimeStep
     {
         if (!double.IsFinite(milliseconds) || milliseconds <= 0.0)
         {
-            throw new ArgumentOutOfRangeException(nameof(milliseconds), milliseconds, "Time step must be finite and greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(milliseconds), milliseconds, "时间步长必须是有限数，并且必须大于 0。");
         }
 
         return new TimeStep(milliseconds / 1000.0);

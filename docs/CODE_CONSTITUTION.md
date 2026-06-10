@@ -45,6 +45,34 @@
 3. `MoraleDeltaCalculator`
 4. `VulkanSwapchain`
 
+## 中文化规则
+
+机器读取的标识保持英文，人类读取的文本使用中文。
+
+必须使用中文的内容包括：
+
+1. `EngineError.Message`
+2. 异常 message。
+3. 日志 message。
+4. 编辑器提示。
+5. 导出提示。
+6. 验收结果。
+7. `file-tree.md`。
+8. `CHANGELOG.md`。
+9. 开发任务说明。
+
+必须保留英文的内容包括：
+
+1. 命名空间。
+2. 类名。
+3. 方法名。
+4. 文件名。
+5. 测试方法名。
+6. `EngineError.Code`。
+7. 程序内部枚举名。
+
+示例：`Core.InvalidArgument` 作为错误代码保持英文，`参数无效。` 作为错误信息使用中文。
+
 ## 平台隔离
 
 Core、ECS、Simulation、World、Combat、AI、Data 和 Render 抽象项目不得依赖 Windows、Android、Avalonia 或具体 Vulkan 实现。

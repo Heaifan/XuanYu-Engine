@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 19:35
+最后编辑：2026-06-10 19:55
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -49,6 +49,10 @@
 8. Milestone 2.3.1：修复 TimeStep 默认值边界，明确 default(TimeStep) 为无效时间步。
 9. Milestone 2.3.1：SimulationTime.Advance 拒绝无效 TimeStep。
 10. Milestone 2.3.1：TimeStep / SimulationTime 的 ToString 改用 InvariantCulture。
+11. 中文化规则：明确人类可读报错、日志、提示、验收输出和文档说明默认使用中文。
+12. Core 时间类型提示：将 TimeStep / SimulationTime 的异常提示改为中文。
+13. EntityId 提示：将实体编号错误提示改为中文。
+14. Core 数学类型提示：将 Vector3d / YawRotation 的异常提示改为中文。
 
 ### 删除
 
@@ -70,9 +74,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 2.3.1 + Milestone 2.4：修复 TimeStep / SimulationTime 边界，并实现 Vector3d / YawRotation 值对象和对应单元测试。
+当前执行中文化补丁：统一人类可读异常提示和项目文档中的中文化规则。
 
-本轮不进入 SimulationClock、SimulationTick、FixedTickRunner、SimulationWorld、World、ECS、Render、EngineResult、EngineLogEntry、Vulkan、Android 或 Avalonia UI 具体实现。
+本轮不进入 2.5、2.6、SimulationClock、FixedTickRunner、World、ECS、Render、EngineResult、EngineLogEntry、Vulkan、Android 或 Avalonia UI 具体实现。
 
 ## 3. 顶层目录结构
 
@@ -254,26 +258,23 @@ Part2
 
 ## 8. 当前不做的内容
 
-当前已经进入 Milestone 2.3.1 + Milestone 2.4 任务。
+当前已经进入中文化补丁任务。
 
 本轮不做以下内容：
 
-1. SimulationClock 实现。
-2. SimulationTick 实现。
-3. FixedTickRunner 实现。
-4. SimulationWorld 实现。
-5. World 实现。
-6. ECS 实现。
-7. Render 实现。
-8. EngineResult 实现。
-9. EngineLogEntry 实现。
-10. Vulkan 实现。
-11. Android 实现。
-12. Avalonia UI 实现。
-13. Runtime 实现。
-14. 战斗系统。
-15. AI。
-16. 第三方框架引入。
+1. EngineResult 实现。
+2. EngineError 实现。
+3. EngineLogLevel 实现。
+4. EngineLogEntry 实现。
+5. ECS 实现。
+6. Vulkan 实现。
+7. Avalonia UI 实现。
+8. Android 实现。
+9. Runtime 实现。
+10. 战斗系统。
+11. AI。
+12. 第三方框架引入。
+13. 中文命名空间、中文类名、中文方法名或中文文件名。
 
 ## 9. 版本历史索引
 

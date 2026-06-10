@@ -21,7 +21,7 @@ public readonly record struct YawRotation
     {
         if (!double.IsFinite(degrees))
         {
-            throw new ArgumentOutOfRangeException(nameof(degrees), degrees, "Yaw degrees must be finite.");
+            throw new ArgumentOutOfRangeException(nameof(degrees), degrees, "Yaw 角度必须是有限数。");
         }
 
         return new YawRotation(degrees);
@@ -31,7 +31,7 @@ public readonly record struct YawRotation
     {
         if (!double.IsFinite(radians))
         {
-            throw new ArgumentOutOfRangeException(nameof(radians), radians, "Yaw radians must be finite.");
+            throw new ArgumentOutOfRangeException(nameof(radians), radians, "Yaw 弧度必须是有限数。");
         }
 
         return new YawRotation(radians * 180.0 / global::System.Math.PI);

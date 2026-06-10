@@ -53,7 +53,7 @@ public readonly record struct Vector3d
     {
         if (scalar == 0.0)
         {
-            throw new DivideByZeroException("Vector3d cannot be divided by zero.");
+            throw new DivideByZeroException("Vector3d 不能除以 0。");
         }
 
         return new Vector3d(vector.X / scalar, vector.Y / scalar, vector.Z / scalar);

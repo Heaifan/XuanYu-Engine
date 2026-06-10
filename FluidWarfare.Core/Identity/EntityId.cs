@@ -17,7 +17,7 @@ public readonly record struct EntityId
     {
         if (value <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(value), value, "Entity id must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(value), value, "实体编号必须大于 0。");
         }
 
         return new EntityId(value);

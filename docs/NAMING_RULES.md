@@ -58,3 +58,32 @@ Bwc.*
 ```text
 game_data/scn_phase1_test_field.json
 ```
+
+## 中文化规则
+
+FluidWarfare 遵循“机器读英文，人类读中文”。
+
+保持英文的内容：
+
+1. 命名空间。
+2. 类名。
+3. 方法名。
+4. 文件名。
+5. 测试方法名。
+6. `EngineError.Code`。
+7. 程序内部枚举名。
+
+使用中文的内容：
+
+1. `EngineError.Message`。
+2. 异常 message。
+3. 日志 message。
+4. 编辑器提示。
+5. 导出提示。
+6. 验收结果。
+7. 文档说明。
+8. 开发任务说明。
+
+错误代码示例：`Core.InvalidArgument`。
+
+错误信息示例：`参数无效。`。
