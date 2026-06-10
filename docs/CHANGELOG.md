@@ -57,6 +57,12 @@
 41. Milestone 3.4：状态栏显示就绪状态、GUI 原型阶段、Core 加载状态与 Vulkan 未接入状态。
 42. Milestone 3.4：整理项目面板、视口占位、检查器和日志面板的视觉层级。
 43. Milestone 3.4：保持日志面板由 `EngineLogEntry` 生成中文日志文本。
+44. Milestone 3.5：顶部菜单占位项支持点击后追加中文日志。
+45. Milestone 3.5：项目面板占位项支持点击后发出选择事件。
+46. Milestone 3.5：检查器面板支持显示项目占位项说明。
+47. Milestone 3.5：状态栏新增当前选择显示。
+48. Milestone 3.5：日志反馈继续由 `EngineLogEntry` 生成中文显示文本。
+49. Milestone 3.5：明确 `ProjectPanel` 不直接写日志、不直接更新检查器、不直接更新状态栏。
 
 ### 修改
 

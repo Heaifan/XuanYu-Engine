@@ -13,7 +13,15 @@
           FontWeight="SemiBold"
           Foreground="#F0F4F8"
           Text="检查器" />
-      <TextBlock Foreground="#C9D1D9" Text="未选择对象" />
+      <TextBlock x:Name="EmptySelectionText" Foreground="#C9D1D9" Text="未选择对象" />
+      <StackPanel x:Name="SelectionDetails" IsVisible="False" Spacing="10">
+        <TextBlock x:Name="SelectionKindText" Foreground="#C9D1D9" />
+        <TextBlock x:Name="SelectionNameText" Foreground="#C9D1D9" />
+        <TextBlock
+            x:Name="SelectionDescriptionText"
+            Foreground="#C9D1D9"
+            TextWrapping="Wrap" />
+      </StackPanel>
     </StackPanel>
   </Border>
 </UserControl>

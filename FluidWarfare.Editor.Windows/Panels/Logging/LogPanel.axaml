@@ -19,8 +19,9 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <TextBlock
-                Margin="0,0,0,6"
+                Margin="0,0,0,2"
                 FontFamily="Consolas, Microsoft YaHei UI"
+                FontSize="12"
                 Foreground="#DCE3EA"
                 Text="{Binding}" />
           </DataTemplate>

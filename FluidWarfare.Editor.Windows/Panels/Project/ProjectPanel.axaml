@@ -16,10 +16,10 @@
           Text="项目" />
       <TextBlock Foreground="#C9D1D9" Text="当前未打开项目" />
       <Separator />
-      <TextBlock Foreground="#E6EDF3" Text="场景" />
-      <TextBlock Foreground="#E6EDF3" Text="单位" />
-      <TextBlock Foreground="#E6EDF3" Text="资源" />
-      <TextBlock Foreground="#E6EDF3" Text="配置" />
+      <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="SelectScene">场景</Button>
+      <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="SelectUnit">单位</Button>
+      <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="SelectAsset">资源</Button>
+      <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="SelectConfig">配置</Button>
     </StackPanel>
   </Border>
 </UserControl>
