@@ -1,4 +1,4 @@
-﻿# 项目文件树 - FluidWarfare
+# 项目文件树 - FluidWarfare
 
 当前阶段：Phase 1
 
@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 17:25
+最后编辑：2026-06-10 17:40
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -21,6 +21,7 @@
 3. 创建资源目录：`game_data`、`assets`、`shaders` 和 `replays`。
 4. 创建初始文档目录 `docs` 及其中的项目文档。
 5. 为当前空目录创建 `.gitkeep` 占位文件，确保模块目录和资源目录能提交到 Git。
+6. 创建 `.gitattributes`，固定 Markdown 等文本文件使用 LF 行尾。
 
 ### 修改
 
@@ -28,6 +29,7 @@
 2. 将 `file-tree.md` 正文改为中文。
 3. 重新排版 `docs/*.md` 和 `file-tree.md`，确保标题、段落、表格、列表和代码块独立换行。
 4. 核对本地与远端 `origin/main`，确认新仓库当前没有旧项目目录残留。
+5. 将 Markdown 文件重写为 UTF-8 无 BOM 与 LF 行尾，方便 GitHub Raw 公开验收。
 
 ### 删除
 
@@ -58,6 +60,7 @@ Phase 1 证明最小闭环。
 ```text
 FluidWarfare/
 |-- .git/
+|-- .gitattributes
 |-- FluidWarfare.Core/
 |   `-- .gitkeep
 |-- FluidWarfare.Ecs/
@@ -146,6 +149,7 @@ get_tree.bat
 | 文件 | 职责 | 状态 |
 |---|---|---|
 | `FluidWarfare.sln` | 解决方案容器 | 已创建 / 暂无项目引用 |
+| `.gitattributes` | 固定文本文件行尾规则 | 已创建 |
 | `docs/PROJECT_CHARTER.md` | 项目目标和第一阶段闭环 | 已创建 |
 | `docs/ENGINE_ARCHITECTURE.md` | 模块边界和依赖方向 | 已创建 |
 | `docs/AI_DEVELOPMENT_RULES.md` | AI 辅助开发规则 | 已创建 |

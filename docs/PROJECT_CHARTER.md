@@ -1,4 +1,4 @@
-﻿# FluidWarfare 项目宪章
+# FluidWarfare 项目宪章
 
 创建时间：2026-06-10
 
@@ -9,6 +9,16 @@ FluidWarfare 是一个面向 RTS、RTT、大战略态势推演和大规模编队
 本项目不是 Unity、Unreal、Godot 或 MonoGame 的通用替代品。
 
 FluidWarfare 的目标是服务于战争模拟、战术推演、态势表达、可解释战斗、可回放模拟和编辑器驱动的场景制作。
+
+## 目标类型
+
+FluidWarfare 优先面向以下类型：
+
+1. RTS，即时战略。
+2. RTT，即时战术。
+3. GSG，大战略态势。
+4. Total War 式编队战斗。
+5. HOI4 式战略态势表达。
 
 ## 核心原则
 
@@ -39,3 +49,9 @@ Phase 1 需要证明最小跨平台闭环。
 所有新代码、新文档和新工程结构都写入新的 FluidWarfare 仓库。
 
 旧仓库 FluidWarfare-old 只作为只读历史资料，不继续承载新引擎开发。
+
+## 第一阶段边界
+
+Phase 1 只追求最小闭环。
+
+真实战斗、AI、复杂地形、PBR、联网、Mod 和完整地图编辑器都不进入第一阶段。

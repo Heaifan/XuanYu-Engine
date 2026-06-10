@@ -1,0 +1,4 @@
+*.md text eol=lf
+*.sln text eol=lf
+*.cs text eol=lf
+*.json text eol=lf

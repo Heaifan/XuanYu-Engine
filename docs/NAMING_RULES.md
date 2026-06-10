@@ -1,4 +1,4 @@
-﻿# FluidWarfare 命名规则
+# FluidWarfare 命名规则
 
 创建时间：2026-06-10
 

@@ -1,4 +1,4 @@
-﻿# FluidWarfare 引擎架构
+# FluidWarfare 引擎架构
 
 创建时间：2026-06-10
 
@@ -36,6 +36,20 @@ ECS、World、Simulation、Data、Combat、AI 和 Render 抽象可以构建在 C
 
 Vulkan 必须被隔离在渲染后端内，不得泄漏到 Simulation 或 World。
 
+## 平台边界
+
+Windows Runtime 用于运行导出的 Windows 游戏。
+
+Android Runtime 用于运行导出的 Android 游戏。
+
+Windows Editor 用于开发、编辑、调试、查看 ECS、查看日志和启动预览。
+
+Android 不做编辑器。
+
+Avalonia 不进入 Android Runtime。
+
+Avalonia 不进入 Windows Runtime。
+
 ## Phase 1 架构目标
 
 Phase 1 需要完成以下架构验证：
@@ -47,3 +61,13 @@ Phase 1 需要完成以下架构验证：
 5. 支持基础 ECS 检查。
 6. 支持固定 Tick 模拟。
 7. 保持 Windows 与 Android 运行时路径分离。
+
+## 当前骨架状态
+
+当前只创建目录、文档和解决方案。
+
+各模块目录暂时只有 `.gitkeep`。
+
+`FluidWarfare.sln` 暂无项目引用。
+
+下一步进入 Core 前，才创建 `FluidWarfare.Core.csproj` 和 `FluidWarfare.Tests.csproj`。
