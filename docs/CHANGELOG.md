@@ -16,6 +16,8 @@
 8. 创建 `FluidWarfare.Core` 纯 C# 类库项目。
 9. 创建 `FluidWarfare.Tests` xUnit 测试项目。
 10. 创建 `CoreSmokeTests` 最小冒烟测试。
+11. Milestone 2.2：新增 `EntityId` 值对象。
+12. Milestone 2.2：新增 `EntityId` 单元测试。
 
 ### 修改
 
