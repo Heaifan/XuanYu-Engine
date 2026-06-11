@@ -174,10 +174,10 @@ public sealed partial class EditorShell : UserControl
         _vulkanViewportRendering = true;
         try
         {
-            // resize/maximize 时只执行 3D 场景渲染 probe（含自带的清屏 + 绘制 + Present）。
-            // 不重新执行 Swapchain/Clear/MarkerDraw 等 probe，避免在同一 HWND 上反复
-            // create/destroy Vulkan Instance+Surface+Device+Swapchain 导致驱动崩溃。
-            ProbeVulkanScene3D();
+            // resize/maximize 时只执行最小清屏 probe（已在 8.0.1 验证不闪退）。
+            // Scene3D probe（Shader/Pipeline/VertexBuffer）在 resize 时创建
+            // GraphicsPipeline 可能触发驱动级崩溃，只在首次启动执行一次。
+            ProbeVulkanClear();
         }
         finally
         {
