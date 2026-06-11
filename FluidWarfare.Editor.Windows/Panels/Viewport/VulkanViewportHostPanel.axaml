@@ -18,6 +18,10 @@
           x:Name="HostInfoText"
           Foreground="#8B949E"
           Text="正在初始化..." />
+      <TextBlock
+          x:Name="SurfaceInfoText"
+          Foreground="#8B949E"
+          Text="Surface 尚未检查。" />
     </StackPanel>
   </Border>
 </UserControl>

@@ -325,6 +325,21 @@
 4. 本轮不创建 Surface、Swapchain、RenderPass、CommandBuffer，也不做真实清屏。
 5. Vulkan Device 创建继续返回耗时信息，便于后续性能分析。
 
+### Milestone 7.5：Vulkan Surface 宿主边界
+
+#### 新增
+
+1. 新增 `VulkanSurfaceStatus`、`VulkanSurfaceInfo` 与 `VulkanSurfaceProbe`。
+2. 新增 `VulkanSurfaceInfoTests`，只验证 Surface 探测结果模型，不在单元测试中创建真实 Surface。
+3. 新增 `VulkanViewportNativeHostInfo`，描述 Editor 视口宿主是否提供可用于 Surface 的原生窗口句柄。
+
+#### 修改
+
+1. `VulkanSurfaceProbe` 只接收外部传入的 Windows 原生句柄，创建 `VkInstance` 与 `VkSurfaceKHR` 后立即释放，不选择 Device，不创建 Swapchain。
+2. `VulkanViewportHostPanel` 新增 Surface 状态显示，并明确当前 Avalonia 宿主尚未提供独立 Windows 视口句柄。
+3. `EditorShell` 在 Vulkan Device 探测后尝试 Surface 探测；当前未取得独立视口句柄时，输出中文警告并保持编辑器可运行。
+4. 本轮不创建 Swapchain、ImageView、RenderPass、Framebuffer、CommandBuffer、同步对象，不做真实渲染、不清屏、不绘制 `unit_marker`。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

@@ -21,6 +21,7 @@ using FluidWarfare.Render.Scene;
 using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
+using FluidWarfare.Render.Vulkan.Surface;
 using FluidWarfare.Render.World;
 
 namespace FluidWarfare.Editor.Windows.Shell;
@@ -43,6 +44,7 @@ public sealed partial class EditorShell : UserControl
     private VulkanBackendInfo _vulkanBackendInfo = VulkanBackendInfo.NotChecked;
     private VulkanInstanceInfo _vulkanInstanceInfo = VulkanInstanceInfo.NotChecked;
     private VulkanDeviceInfo _vulkanDeviceInfo = VulkanDeviceInfo.NotChecked;
+    private VulkanSurfaceInfo _vulkanSurfaceInfo = VulkanSurfaceInfo.NotChecked;
 
     public EditorShell()
     {
@@ -449,6 +451,7 @@ public sealed partial class EditorShell : UserControl
                 0);
 
             _viewportPlaceholderPanel?.ShowVulkanDeviceStatus(_vulkanDeviceInfo.Message);
+            ProbeVulkanSurface();
             return;
         }
 
@@ -466,6 +469,61 @@ public sealed partial class EditorShell : UserControl
 
         _viewportPlaceholderPanel?.ShowVulkanDeviceStatus(
             $"{_vulkanDeviceInfo.Message} 显卡：{_vulkanDeviceInfo.PhysicalDeviceName}，类型：{_vulkanDeviceInfo.PhysicalDeviceTypeText}，图形队列族：{_vulkanDeviceInfo.GraphicsQueueFamilyIndex}。");
+
+        ProbeVulkanSurface();
+    }
+
+    private void ProbeVulkanSurface()
+    {
+        if (!_vulkanDeviceInfo.IsCreated)
+        {
+            _vulkanSurfaceInfo = new VulkanSurfaceInfo(
+                VulkanSurfaceStatus.Failed,
+                "Vulkan Device 未创建，跳过 Surface 创建。",
+                "未知",
+                false,
+                0);
+
+            ShowVulkanSurfaceInfo();
+            return;
+        }
+
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!nativeHostInfo.HasNativeHandle)
+        {
+            _vulkanSurfaceInfo = new VulkanSurfaceInfo(
+                VulkanSurfaceStatus.Failed,
+                nativeHostInfo.Message,
+                nativeHostInfo.PlatformText,
+                false,
+                0);
+
+            ShowVulkanSurfaceInfo();
+            return;
+        }
+
+        _vulkanSurfaceInfo = VulkanSurfaceProbe.ProbeWindows(
+            nativeHostInfo.InstanceHandle,
+            nativeHostInfo.WindowHandle);
+
+        ShowVulkanSurfaceInfo();
+    }
+
+    private void ShowVulkanSurfaceInfo()
+    {
+        if (_vulkanSurfaceInfo.IsCreated)
+        {
+            AppendInfoLog(
+                $"Vulkan Surface 创建成功，平台：{_vulkanSurfaceInfo.PlatformText}，用时：{_vulkanSurfaceInfo.ElapsedMilliseconds:F2} ms。");
+        }
+        else
+        {
+            AppendWarningLog(_vulkanSurfaceInfo.Message);
+        }
+
+        _vulkanViewportHostPanel?.ShowSurfaceInfo(_vulkanSurfaceInfo.Message);
     }
 
     private void UpdateVulkanViewportHost()
