@@ -23,6 +23,7 @@ using FluidWarfare.Render.Scene;
 using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
+using FluidWarfare.Render.Vulkan.Clear;
 using FluidWarfare.Render.Vulkan.Context;
 using FluidWarfare.Render.Vulkan.Surface;
 using FluidWarfare.Render.Vulkan.Swapchain;
@@ -51,6 +52,7 @@ public sealed partial class EditorShell : UserControl
     private VulkanSurfaceInfo _vulkanSurfaceInfo = VulkanSurfaceInfo.NotChecked;
     private VulkanRenderContext? _vulkanRenderContext;
     private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
+    private VulkanClearInfo _vulkanClearInfo = VulkanClearInfo.NotChecked;
     private DispatcherTimer? _renderTimer;
     private bool _vulkanViewportNativeHostReported;
 
@@ -569,6 +571,7 @@ public sealed partial class EditorShell : UserControl
                 $"Windows Vulkan 视口子窗口已创建，HWND：0x{nativeHostInfo.WindowHandle.ToInt64():X16}。");
             InitializeVulkanRenderContext();
             ProbeVulkanSwapchain();
+            ProbeVulkanClear();
         }
         else
         {
@@ -620,6 +623,47 @@ public sealed partial class EditorShell : UserControl
             _vulkanSwapchainInfo.IsCreated
                 ? $"Swapchain：可用 | {_vulkanSwapchainInfo.SurfaceFormatText} | {_vulkanSwapchainInfo.PresentModeText} | {_vulkanSwapchainInfo.Width}x{_vulkanSwapchainInfo.Height}"
                 : $"Swapchain：{_vulkanSwapchainInfo.Message}");
+    }
+
+    private void ProbeVulkanClear()
+    {
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
+        {
+            _vulkanClearInfo = new VulkanClearInfo(
+                VulkanClearStatus.Failed, "缺少原生句柄，跳过清屏。", "未知", 0, 0, 0);
+            ShowVulkanClearInfo();
+            return;
+        }
+
+        _vulkanClearInfo = VulkanClearProbe.ProbeWindows(
+            nativeHostInfo.InstanceHandle,
+            nativeHostInfo.WindowHandle,
+            640, 360);
+
+        ShowVulkanClearInfo();
+    }
+
+    private void ShowVulkanClearInfo()
+    {
+        if (_vulkanClearInfo.IsSucceeded)
+        {
+            AppendInfoLog(
+                $"Vulkan 最小清屏成功，颜色：{_vulkanClearInfo.ClearColorText}，" +
+                $"尺寸：{_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}，" +
+                $"用时：{_vulkanClearInfo.ElapsedMilliseconds:F2} ms。");
+        }
+        else if (_vulkanClearInfo.Status != VulkanClearStatus.NotChecked)
+        {
+            AppendWarningLog($"Vulkan 最小清屏失败：{_vulkanClearInfo.Message}");
+        }
+
+        _vulkanViewportHostPanel?.ShowSurfaceInfo(
+            _vulkanClearInfo.IsSucceeded
+                ? $"清屏成功 | {_vulkanClearInfo.ClearColorText} | {_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}"
+                : $"清屏失败：{_vulkanClearInfo.Message}");
     }
 
     private void InitializeVulkanRenderContext()

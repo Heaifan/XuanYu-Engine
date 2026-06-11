@@ -92,6 +92,10 @@
 72c. Milestone 7.8.1：新增 `FluidWarfare.Render.Vulkan/Swapchain/VulkanSwapchainInfo.cs`。
 72d. Milestone 7.8.1：新增 `FluidWarfare.Render.Vulkan/Swapchain/VulkanSwapchainProbe.cs`。
 72e. Milestone 7.8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Swapchain/VulkanSwapchainInfoTests.cs`。
+72f. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearStatus.cs`。
+72g. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearInfo.cs`。
+72h. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearProbe.cs`。
+72i. Milestone 7.8.2：新增 `FluidWarfare.Tests/Render/Vulkan/Clear/VulkanClearInfoTests.cs`。
 72. Milestone 7.0：新增 `FluidWarfare.Tests/Render/Vulkan/Backend/VulkanBackendInfoTests.cs`。
 73. Milestone 7.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml`。
 74. Milestone 7.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs`。
@@ -230,6 +234,7 @@
 108. Milestone 7.6：EditorShell 在窗口附加后报告独立 HWND 获取结果。
 109. Milestone 7.6：7.6 阶段不调用 VulkanSurfaceProbe，不创建 VkSurfaceKHR。
 110. Milestone 7.7：EditorShell 移除 7.6 占位逻辑，真正调用 VulkanSurfaceProbe.ProbeWindows 创建 VkSurfaceKHR。
+111. Milestone 7.8.2：EditorShell 新增 ProbeVulkanClear 与 ShowVulkanClearInfo。
 
 ### 删除
 
@@ -251,7 +256,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 7.8.1：Swapchain 扩展加载修复。
+当前执行 Milestone 7.8.2：Vulkan 最小清屏。
 
 本轮只让 Editor 中的 VulkanViewportHostPanel 通过 Avalonia NativeControlHost 创建独立 Windows 原生子窗口 HWND，并显示 HWND / HINSTANCE 获取状态。不创建 Vulkan Surface、Swapchain、RenderPass、Framebuffer、CommandBuffer，不做真实清屏，不做 Runtime，不做 Android。
 

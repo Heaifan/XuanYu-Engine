@@ -408,6 +408,36 @@
 - 仍然不创建 RenderPass/Framebuffer/CommandBuffer/同步对象
 - 仍然不做真实清屏
 
+### Milestone 7.8.2：Vulkan 最小清屏
+
+#### 新增
+
+1. 新增 `VulkanClearStatus`、`VulkanClearInfo` 与 `VulkanClearProbe`。
+2. `VulkanClearProbe` 创建完整清屏链路：Instance → Surface → Device → Swapchain → ImageViews → RenderPass → Framebuffers → CommandPool → CommandBuffer → Semaphore/Fence → Acquire → Clear → Submit → Present。
+3. 清屏颜色为明显深蓝色 `rgba(0.03, 0.08, 0.18, 1.00)`，与空窗口黑色背景明确区分。
+4. 新增 `FluidWarfare.Tests/Render/Vulkan/Clear/VulkanClearInfoTests.cs`。
+
+#### 修改
+
+1. `EditorShell` 新增 `ProbeVulkanClear` 与 `ShowVulkanClearInfo`，在 HWND 就绪后执行清屏探测并显示结果。
+2. 所有 Vulkan 函数委托继续使用 7.8.1 已验证的指针参数模式，无 0xC0000005。
+
+#### Milestone 7 完成声明
+
+Milestone 7 渲染链路全部验证通过：
+
+```text
+Loader     ✅ 7.0
+Instance   ✅ 7.3
+Device     ✅ 7.4
+HWND       ✅ 7.6
+Surface    ✅ 7.7
+Swapchain  ✅ 7.8.1
+Clear      ✅ 7.8.2（本里程碑）
+```
+
+下一阶段进入 **Milestone 8：战场视口基础与 RenderScene 对象绘制**。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。
