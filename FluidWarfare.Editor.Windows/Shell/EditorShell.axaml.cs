@@ -174,9 +174,9 @@ public sealed partial class EditorShell : UserControl
         _vulkanViewportRendering = true;
         try
         {
-            ProbeVulkanSwapchain();
-            ProbeVulkanClear();
-            ProbeVulkanMarkerDraw();
+            // resize/maximize 时只执行 3D 场景渲染 probe（含自带的清屏 + 绘制 + Present）。
+            // 不重新执行 Swapchain/Clear/MarkerDraw 等 probe，避免在同一 HWND 上反复
+            // create/destroy Vulkan Instance+Surface+Device+Swapchain 导致驱动崩溃。
             ProbeVulkanScene3D();
         }
         finally
@@ -636,6 +636,7 @@ public sealed partial class EditorShell : UserControl
             ProbeVulkanSwapchain();
             ProbeVulkanClear();
             ProbeVulkanMarkerDraw();
+            ProbeVulkanScene3D();
         }
         else
         {
