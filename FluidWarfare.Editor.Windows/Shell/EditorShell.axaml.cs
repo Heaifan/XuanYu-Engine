@@ -56,7 +56,7 @@ public sealed partial class EditorShell : UserControl
     private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
     private VulkanClearInfo _vulkanClearInfo = VulkanClearInfo.NotChecked;
     private VulkanMarkerDrawResult _vulkanMarkerDrawResult = VulkanMarkerDrawResult.NotChecked;
-    private readonly VulkanScene3dRunGate _scene3dGate = VulkanScene3dRunGate.Evaluate();
+    private VulkanScene3dRunGate _scene3dGate = VulkanScene3dRunGate.Evaluate();
     private VulkanScene3dInfo _vulkanScene3dInfo = VulkanScene3dInfo.NotChecked;
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
@@ -111,6 +111,11 @@ public sealed partial class EditorShell : UserControl
         if (_vulkanViewportHostPanel is not null)
         {
             _vulkanViewportHostPanel.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
+        }
+
+        if (_debugDockPanel is not null)
+        {
+            _debugDockPanel.Scene3dRunRequested += HandleScene3dRunRequested;
         }
     }
 
@@ -825,6 +830,45 @@ public sealed partial class EditorShell : UserControl
         ShowVulkanScene3DInfo();
     }
 
+    private void HandleScene3dRunRequested(object? sender, EventArgs e)
+    {
+        var currentGate = VulkanScene3dRunGate.Evaluate();
+        _scene3dGate = currentGate with { }; // update gate with fresh Evaluate
+        // Refactor: can't reassign readonly field, use the gate's current state
+        // Actually _scene3dGate is readonly, but we need to re-evaluate.
+        // Fix: make the field non-readonly or store the message separately.
+        TryRunScene3dProbeManually(currentGate);
+    }
+
+    private void TryRunScene3dProbeManually(VulkanScene3dRunGate gate)
+    {
+        if (!gate.CanRun)
+        {
+            AppendWarningLog(gate.Message);
+            _vulkanScene3dInfo = new VulkanScene3dInfo(
+                VulkanScene3dStatus.NotChecked, gate.Message,
+                0, 0, 0, 0, 0, 0, 0,
+                gate.CanRun ? "可用" : "不可用（已隔离）", 0);
+            ShowVulkanScene3DInfo();
+            return;
+        }
+
+        // Gate says Ready — try running
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
+        {
+            _vulkanScene3dInfo = new VulkanScene3dInfo(
+                VulkanScene3dStatus.Failed, "场景3D：视口未就绪，跳过运行。",
+                0, 0, 0, 0, 0, 0, 0, "不可用", 0);
+            ShowVulkanScene3DInfo();
+            return;
+        }
+
+        ProbeVulkanScene3D();
+    }
+
     private void ProbeVulkanScene3D()
     {
         if (!_scene3dGate.CanRun)
@@ -902,9 +946,9 @@ public sealed partial class EditorShell : UserControl
             : string.Empty;
 
         var scene3dSuffix = _vulkanScene3dInfo.IsSucceeded
-            ? $" | Grid: {_vulkanScene3dInfo.GridVertexCount} | Unit: {_vulkanScene3dInfo.UnitVertexCount} | DrawCall: {_vulkanScene3dInfo.DrawCallCount}"
+            ? $" | Scene3D 成功 | Grid: {_vulkanScene3dInfo.GridVertexCount} | Unit: {_vulkanScene3dInfo.UnitVertexCount} | DrawCall: {_vulkanScene3dInfo.DrawCallCount}"
             : _scene3dGate.CanRun
-                ? string.Empty
+                ? " | Scene3D Ready，等待手动触发"
                 : " | Scene3D 已隔离";
 
         _vulkanViewportHostPanel?.ShowClearStatus(
@@ -957,6 +1001,11 @@ public sealed partial class EditorShell : UserControl
             _vulkanScene3dInfo.IsSucceeded
                 ? $"{_vulkanScene3dInfo.DrawCallCount}"
                 : "-");
+
+        // Scene3D 手动触发按钮状态
+        var currentGate = VulkanScene3dRunGate.Evaluate();
+        if (_debugDockPanel is not null)
+            _debugDockPanel.Scene3dRunButtonEnabled = currentGate.CanRun;
 
         // 性能计时
         _debugDockPanel?.SetPerformance(

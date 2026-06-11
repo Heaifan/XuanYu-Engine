@@ -27,6 +27,12 @@
             <TextBlock x:Name="DiagGrid" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagUnit" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagDrawCall" Foreground="#C9D1D9" TextWrapping="Wrap" />
+            <Separator Margin="0,8" Height="1" Background="#48515C" />
+            <Button x:Name="Scene3dRunButton" Content="运行 Scene3D 探针" HorizontalAlignment="Left"
+                    Background="#30363D" Foreground="#C9D1D9" BorderBrush="#48515C"
+                    Padding="12,4" FontSize="12"
+                    Click="HandleScene3dRunButtonClicked"
+                    IsEnabled="False" />
           </StackPanel>
         </ScrollViewer>
       </TabItem>

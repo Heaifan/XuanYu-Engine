@@ -734,4 +734,54 @@ FluidWarfare.Render.Vulkan/Shaders/Compiled/.gitkeep
 
 ---
 
-下一阶段：**Milestone 8.R.3 — SPIR-V 验证闸门与运行接入**。
+---
+
+### Milestone 8.R.3 — SPIR-V 验证闸门与运行接入
+
+#### 新增
+
+1. 新增 `tools/shaders/embed_basic_3d_shaders.ps1`：在 spirv-val 验证通过后将 .spv 字节写入 CompiledShaders.cs。脚本独立执行 spirv-val 并检查 SPIR-V 魔数，不依赖外部验证步骤。
+2. 新增 `DebugDockPanel` 渲染诊断 Tab 的 "运行 Scene3D 探针" 按钮（默认禁用）。
+3. 新增 `DebugDockPanel.Scene3dRunRequested` 事件，EditorShell 订阅后调用 `TryRunScene3dProbeManually`。
+4. 新增 `CompiledShaders.HasValidatedBasic3dShaders` 属性，用于 RunGate 判断 shader 是否就绪。
+5. 新增 `CompiledShaders.Reset()` 供测试重置状态。
+6. 新增 `FluidWarfare.Tests/Render/Vulkan/Shaders/CompiledShadersTests.cs`（6 个测试）。
+7. RunGateTests 新增 3 个测试：缺失 shader 时隔离、验证后 Ready、Ready 消息。
+
+#### 修改
+
+1. `CompiledShaders.cs`：从静态空数组改为含验证标记的结构，`Basic3dVert`/`Basic3dFrag` 改为 `internal set`，新增 `HasValidatedBasic3dShaders`、`Basic3dVertexValidatedBySpirvVal`、`Basic3dFragmentValidatedBySpirvVal`、`Reset()`。
+2. `VulkanScene3dRunGate.Evaluate()`：新增 `CompiledShaders.HasValidatedBasic3dShaders` 检查。FW_ENABLE_SCENE3D=1 且 shader 已验证时返回 Ready。
+3. EditorShell：新增 `HandleScene3dRunRequested`、`TryRunScene3dProbeManually` 方法，执行闸门前检查。
+4. `UpdateVulkanViewportStatusLine`：新增 "Scene3D Ready，等待手动触发" 状态行。
+5. `UpdateAllDiagnostics`：同步 Scene3D 手动触发按钮启用状态。
+
+#### 运行闸门规则
+
+```csharp
+FW_ENABLE_SCENE3D 未设置                     → Isolated
+FW_ENABLE_SCENE3D=1 但 shader 未验证           → Isolated
+FW_ENABLE_SCENE3D=1 且 shader 已验证           → Ready（仅允许手动触发）
+```
+
+#### 工具链状态
+
+本机 `glslangValidator` 和 `spirv-val` 均不可用，.spv 未实际生成。
+`CompiledShaders.cs` 保持空数组。所有脚本已创建、闸门已就绪，只待工具链执行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/shaders/compile_basic_3d.ps1
+powershell -ExecutionPolicy Bypass -File tools/shaders/validate_basic_3d.ps1
+powershell -ExecutionPolicy Bypass -File tools/shaders/embed_basic_3d_shaders.ps1
+```
+
+#### 新增文件
+
+```text
+tools/shaders/embed_basic_3d_shaders.ps1
+FluidWarfare.Tests/Render/Vulkan/Shaders/CompiledShadersTests.cs
+```
+
+---
+
+下一阶段：**Milestone 8.R.4 — Vulkan Validation Layer 开关**

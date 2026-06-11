@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 09:00
+最后编辑：2026-06-11 09:30
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -118,6 +118,8 @@
 72β. Milestone 8.R.2：新增 `tools/shaders/validate_basic_3d.ps1`。
 72γ. Milestone 8.R.2：新增 `tools/shaders/README.md`。
 72δ. Milestone 8.R.2：新增 `FluidWarfare.Render.Vulkan/Shaders/Compiled/.gitkeep`。
+72ε. Milestone 8.R.3：新增 `tools/shaders/embed_basic_3d_shaders.ps1`。
+72ζ. Milestone 8.R.3：新增 `FluidWarfare.Tests/Render/Vulkan/Shaders/CompiledShadersTests.cs`。
 72y. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dInfoTests.cs`。
 72z. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs`。
 72α. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs`。
@@ -292,15 +294,15 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.R.2：标准 Shader 编译链。
+当前执行 Milestone 8.R.3：SPIR-V 验证闸门与运行接入。
 
-8.R 系列目标：稳定主线闸门（8.R.1）→ 标准 Shader 编译链（8.R.2）→ SPIR-V 验证闸门与运行接入（8.R.3）。
+8.R 系列进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ⬆️（当前） → Validation Layer → 3D 重启
 
 当前状态：
-- Scene3D 实验性 3D 管线已隔离，不参与 Editor 自动启动（8.R.1）。
-- 标准 Shader 编译链已建立：GLSL → glslangValidator → .spv → spirv-val 验证（8.R.2）。
-- tools/gen_spirv（手写 SPIR-V 编码器）已废弃。
-- 3D 管线在 SPIR-V 验证闸门完成前保持隔离。
+- Scene3D 默认隔离，仅在 FW_ENABLE_SCENE3D=1 且 CompiledShaders 通过 spirv-val 后允许手动触发（8.R.3）。
+- 所有脚本已就绪（compile → validate → embed），本机 glslangValidator/spirv-val 均不可用，.spv 未生成。
+- 手动触发入口（DebugDock 按钮）已就绪，但闸门默认不打开。
+- 下一步：安装 Vulkan SDK / glslangValidator / spirv-val，执行完整 8.R.3 流程。
 
 ## 3. 顶层目录结构
 
@@ -419,7 +421,8 @@ FluidWarfare/
 |   `-- shaders/
 |       |-- README.md
 |       |-- compile_basic_3d.ps1
-|       `-- validate_basic_3d.ps1
+|       |-- validate_basic_3d.ps1
+|       `-- embed_basic_3d_shaders.ps1
 |-- FluidWarfare.Runtime.Windows/
 |   `-- .gitkeep
 |-- FluidWarfare.Runtime.Android/
@@ -670,10 +673,12 @@ get_tree.bat
 | `FluidWarfare.Render.Vulkan/Shaders/basic_3d.frag` | 基础 3D 片段着色器 GLSL 源文件，颜色传递 | 已生成 |
 | `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.vert.spv` | ❌ 已废弃：手写 SPIR-V 编码错误，从 git 移除 | 废弃 |
 | `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.frag.spv` | ❌ 已废弃：手写 SPIR-V 编码错误，从 git 移除 | 废弃 |
-| `FluidWarfare.Render.Vulkan/Shaders/CompiledShaders.cs` | ⛔ 已隔离：原内嵌 SPIR-V，现改为空数组占位，等待标准编译链就绪 | 已隔离 |
+| `FluidWarfare.Render.Vulkan/Shaders/CompiledShaders.cs` | 8.R.3：含 HasValidatedBasic3dShaders 验证标记，由 embed_basic_3d_shaders.ps1 写入真实字节。当前为空数组（本机无 glslangValidator/spirv-val） | 已隔离 |
 | `tools/shaders/compile_basic_3d.ps1` | 使用 glslangValidator 编译 basic_3d.vert/frag 到 SPIR-V，找不到工具时输出中文提示并失败 | 可运行 |
 | `tools/shaders/validate_basic_3d.ps1` | 使用 spirv-val 验证 basic_3d.vert/frag.spv，找不到工具或文件时输出中文提示并失败 | 可运行 |
 | `tools/shaders/README.md` | Shader 编译链文档，包含工具安装步骤、编译/验证命令和废弃 gen_spirv 说明 | 已创建 |
+| `tools/shaders/embed_basic_3d_shaders.ps1` | 在 spirv-val 通过后将 .spv 写入 CompiledShaders.cs，独立执行 spirv-val 并检查魔数 | 可运行 |
+| `FluidWarfare.Tests/Render/Vulkan/Shaders/CompiledShadersTests.cs` | 验证 CompiledShaders 的字节存在性、SPIR-V 魔数和验证状态 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dInfoTests.cs` | 验证 3D 场景渲染结果模型的基础语义 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs` | 验证网格生成、立方体生成、坐标轴生成和交错格式转换 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dRunGateTests.cs` | 验证 Scene3D 运行闸门的隔离状态、提示文本和 Ready/Isolated 语义 | 测试通过 |

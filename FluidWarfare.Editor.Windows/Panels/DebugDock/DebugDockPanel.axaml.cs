@@ -39,13 +39,39 @@ public sealed partial class DebugDockPanel : UserControl
     private TextBlock? _perfMarker;
     private TextBlock? _perfScene3d;
 
+    private Button? _scene3dRunButton;
+
     // 公开属性：让 EditorShell 可以访问 LogPanel
     public LogPanel? LogPanel => _logPanel;
+
+    /// <summary>
+    /// 手动触发 Scene3D 运行请求。
+    /// </summary>
+    public event EventHandler? Scene3dRunRequested;
+
+    /// <summary>
+    /// 启用或禁用 Scene3D 运行按钮。
+    /// </summary>
+    public bool Scene3dRunButtonEnabled
+    {
+        set
+        {
+            if (_scene3dRunButton is not null)
+            {
+                _scene3dRunButton.IsEnabled = value;
+            }
+        }
+    }
 
     public DebugDockPanel()
     {
         InitializeComponent();
         CacheControls();
+    }
+
+    private void HandleScene3dRunButtonClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        Scene3dRunRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void CacheControls()
@@ -73,6 +99,7 @@ public sealed partial class DebugDockPanel : UserControl
         _perfClear = this.FindControl<TextBlock>("PerfClear");
         _perfMarker = this.FindControl<TextBlock>("PerfMarker");
         _perfScene3d = this.FindControl<TextBlock>("PerfScene3d");
+        _scene3dRunButton = this.FindControl<Button>("Scene3dRunButton");
     }
 
     // ─── 渲染诊断 ──────────────────────────────────────────────

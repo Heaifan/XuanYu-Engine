@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="FluidWarfare.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FluidWarfare.Core\FluidWarfare.Core.csproj" />
     <ProjectReference Include="..\FluidWarfare.Render\FluidWarfare.Render.csproj" />
   </ItemGroup>
