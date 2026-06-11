@@ -200,6 +200,20 @@
 2. `EditorShell.axaml.cs` 接入 `WorldEntityListPanel`，在 World 创建后显示实体列表，响应实体选择事件并更新检查器、状态栏与日志。
 3. `file-tree.md` 新增 World 实体列表面板结构。
 
+### Milestone 5.3：World 实体选择与视口联动占位
+
+#### 新增
+
+1. 新增 `ViewportEntitySummary`，用于向视口占位面板传递当前选中 World 实体摘要。
+2. `ViewportPlaceholderPanel` 支持三种显示状态：默认提示、World 为空、当前选中实体摘要。
+
+#### 修改
+
+1. `ViewportPlaceholderPanel.axaml` 重构为三状态布局：默认内容 / 空 World / 实体摘要。
+2. `ViewportPlaceholderPanel.axaml.cs` 新增 `ShowNoWorldEntity`、`ShowEmptyWorld`、`ShowEntitySummary` 方法。
+3. `EditorShell` 新增 `_selectedWorldEntity` 状态跟踪，点击 World 实体列表后同步更新视口显示，点击视口时保留选中实体或自动选择第一个实体。
+4. `file-tree.md` 更新视口面板职责说明。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

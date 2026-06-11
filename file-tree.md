@@ -74,6 +74,7 @@
 56. Milestone 5.1：新增 `FluidWarfare.Tests/Bridge/ProjectEngine/World/ProjectContentWorldSeederTests.cs`。
 57. Milestone 5.2：新增 `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml`。
 58. Milestone 5.2：新增 `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs`。
+59. Milestone 5.3：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs`。
 
 ### 修改
 
@@ -150,6 +151,8 @@
 71. Milestone 5.1：EditorShell 改为从项目内容文件生成 World 占位实体。
 72. Milestone 5.2：EditorShell.axaml 左侧导航区拆分为项目内容面板和 World 实体列表面板。
 73. Milestone 5.2：EditorShell 接入 WorldEntityListPanel，创建 World 后显示实体列表并响应选择事件。
+74. Milestone 5.3：ViewportPlaceholderPanel 重构为三状态布局，支持实体摘要显示。
+75. Milestone 5.3：EditorShell 新增 _selectedWorldEntity 状态，选择实体后同步更新视口显示。
 
 ### 删除
 
@@ -171,7 +174,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 5.2：最小 World 实体列表面板。
+当前执行 Milestone 5.3：World 实体选择与视口联动占位。
 
 本轮只完成项目内容到 Engine World 的桥接层、ProjectContentWorldSeeder、World 实体 Source 支持和 Editor 从 sample_unit.json 生成占位实体，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做完整 ECS 调度系统，不做 Query，不做 Archetype，不做 Chunk，不做 Vulkan，不做 Runtime，不做 Android。
 
@@ -459,12 +462,13 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/MainWindow.axaml` | 编辑器主窗口 XAML 容器，承载 EditorShell | 可运行 |
 | `FluidWarfare.Editor.Windows/MainWindow.axaml.cs` | 编辑器主窗口 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器布局壳，组织菜单栏、项目内容面板、World 实体列表面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建与实体列表显示，响应菜单、项目、实体和视口事件，更新检查器、状态栏与日志 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、实体列表选择、检查器、状态栏、日志和视口占位显示 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责显示项目名、显示分类项，并在分类点击时发出选择事件 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位区 UI，显示 Vulkan 未接入提示，并提供可点击聚焦区域 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 3D 视口占位区后台逻辑，只负责响应视口点击并发出 ViewportFocused 事件 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs` | 视口占位显示模型，保存当前选中实体的名称、EntityId、来源路径与位置文本 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位区 UI，支持默认提示、World 为空和当前选中实体摘要三种状态 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板逻辑，提供显示实体摘要、无选择和空 World 的三种方法，并发出 ViewportFocused 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，显示当前 World 实体列表 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs` | World 实体列表面板后台逻辑，接收 WorldEntityInfo 列表并在点击时发出 EntitySelected 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |

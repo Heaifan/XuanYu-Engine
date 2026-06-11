@@ -32,6 +32,7 @@ public sealed partial class EditorShell : UserControl
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
     private WorldState? _worldState;
     private EntityId _firstEntityId;
+    private WorldEntityInfo? _selectedWorldEntity;
 
     public EditorShell()
     {
@@ -103,19 +104,42 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleViewportFocused(object? sender, EventArgs e)
     {
-        var selection = CreateViewportSelection();
-
-        _inspectorPanel?.ShowSelection(selection);
-        _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
-        AppendInfoLog("视口获得焦点。");
-
-        if (_worldState is not null && _worldState.ContainsEntity(_firstEntityId))
+        if (_selectedWorldEntity is not null && _worldState is not null)
         {
-            var entityInfo = _worldState.FindEntity(_firstEntityId);
-            if (entityInfo is not null)
+            // 已有选中实体，保持选择
+            _inspectorPanel?.ShowSelection(CreateEntitySelection(_selectedWorldEntity));
+            _statusBarPanel?.SetCurrentSelection(_selectedWorldEntity.DisplayName);
+            AppendInfoLog("视口获得焦点。");
+            AppendInfoLog($"当前 World 占位实体：{_selectedWorldEntity.DisplayName}。");
+        }
+        else if (_worldState is not null)
+        {
+            var entities = _worldState.ListEntities();
+            if (entities.Count > 0)
             {
-                AppendInfoLog($"当前 World 占位实体：{entityInfo.DisplayName}。");
+                // 自动选中第一个实体
+                _selectedWorldEntity = entities[0];
+                _firstEntityId = _selectedWorldEntity.EntityId;
+                ShowWorldEntitySelection(_selectedWorldEntity);
+                AppendInfoLog("视口获得焦点。");
             }
+            else
+            {
+                // World 为空
+                _viewportPlaceholderPanel?.ShowEmptyWorld();
+                _inspectorPanel?.ShowSelection(CreateDefaultViewportSelection());
+                _statusBarPanel?.SetCurrentSelection("3D 视口");
+                AppendInfoLog("视口获得焦点。");
+                AppendWarningLog("当前 World 没有可显示实体。");
+            }
+        }
+        else
+        {
+            // World 未创建
+            var selection = CreateDefaultViewportSelection();
+            _inspectorPanel?.ShowSelection(selection);
+            _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
+            AppendInfoLog("视口获得焦点。");
         }
     }
 
@@ -151,23 +175,33 @@ public sealed partial class EditorShell : UserControl
 
     private void OnWorldEntitySelected(WorldEntityInfo entityInfo)
     {
+        _selectedWorldEntity = entityInfo;
         ShowWorldEntitySelection(entityInfo);
+        UpdateViewportForEntity(entityInfo);
     }
 
     private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
     {
-        var position = _worldState?.FindPosition(entityInfo.EntityId);
-
-        var typeLabel = entityInfo.Source is not null ? "World 占位实体" : "World 实体";
-        var description = position is not null
-            ? $"EntityId({entityInfo.EntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}，位置：({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
-            : $"EntityId({entityInfo.EntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}";
-
-        var selection = new EditorSelection(typeLabel, entityInfo.DisplayName, description);
+        var selection = CreateEntitySelection(entityInfo);
 
         _inspectorPanel?.ShowSelection(selection);
         _statusBarPanel?.SetCurrentSelection(entityInfo.DisplayName);
-        AppendInfoLog($"已选择 {typeLabel}：{entityInfo.DisplayName}。");
+        AppendInfoLog($"已选择 {selection.Kind}：{entityInfo.DisplayName}。");
+    }
+
+    private void UpdateViewportForEntity(WorldEntityInfo entityInfo)
+    {
+        var position = _worldState?.FindPosition(entityInfo.EntityId);
+
+        var summary = new ViewportEntitySummary(
+            entityInfo.DisplayName,
+            entityInfo.EntityId.ToString(),
+            position is not null
+                ? $"({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
+                : "未知",
+            entityInfo.Source?.RelativePath);
+
+        _viewportPlaceholderPanel?.ShowEntitySummary(summary);
     }
 
     private void HandleMenuClicked(string menuName)
@@ -232,6 +266,7 @@ public sealed partial class EditorShell : UserControl
     {
         _projectPanel?.ShowNoProject();
         _worldEntityListPanel?.ShowEntities([]);
+        _viewportPlaceholderPanel?.ShowNoWorldEntity();
 
         var selection = new EditorSelection(
             "项目加载",
@@ -251,10 +286,12 @@ public sealed partial class EditorShell : UserControl
     private void CreateWorldFromProject(GameProjectInfo project)
     {
         _worldState = new WorldState();
+        _selectedWorldEntity = null;
 
         if (_contentFiles is null || _contentFiles.Count == 0)
         {
             _worldEntityListPanel?.ShowEntities([]);
+            _viewportPlaceholderPanel?.ShowNoWorldEntity();
             AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
             return;
         }
@@ -266,6 +303,7 @@ public sealed partial class EditorShell : UserControl
         if (seedResult.CreatedEntityCount == 0)
         {
             _worldEntityListPanel?.ShowEntities([]);
+            _viewportPlaceholderPanel?.ShowNoWorldEntity();
             AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
             return;
         }
@@ -281,8 +319,9 @@ public sealed partial class EditorShell : UserControl
             AppendInfoLog($"已从项目内容生成 World 占位实体：{sourcePath}。");
         }
 
-        // 更新实体列表
+        // 更新实体列表，视口保持默认状态等待用户选择
         _worldEntityListPanel?.ShowEntities(entities);
+        _viewportPlaceholderPanel?.ShowNoWorldEntity();
     }
 
     private void ShowLoadedProject(GameProjectInfo project)
@@ -327,27 +366,20 @@ public sealed partial class EditorShell : UserControl
             "当前项目内容目录没有说明。");
     }
 
-    private EditorSelection CreateViewportSelection()
+    private EditorSelection CreateEntitySelection(WorldEntityInfo entityInfo)
     {
-        if (_worldState is not null && _worldState.ContainsEntity(_firstEntityId))
-        {
-            var entityInfo = _worldState.FindEntity(_firstEntityId);
-            var position = _worldState.FindPosition(_firstEntityId);
+        var position = _worldState?.FindPosition(entityInfo.EntityId);
 
-            if (entityInfo is not null)
-            {
-                var typeLabel = entityInfo.Source is not null ? "World 占位实体" : "World 实体";
-                var description = position is not null
-                    ? $"EntityId({_firstEntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}，位置：({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
-                    : $"EntityId({_firstEntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}";
+        var typeLabel = entityInfo.Source is not null ? "World 占位实体" : "World 实体";
+        var description = position is not null
+            ? $"EntityId({entityInfo.EntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}，位置：({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
+            : $"EntityId({entityInfo.EntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}";
 
-                return new EditorSelection(
-                    typeLabel,
-                    entityInfo.DisplayName,
-                    description);
-            }
-        }
+        return new EditorSelection(typeLabel, entityInfo.DisplayName, description);
+    }
 
+    private static EditorSelection CreateDefaultViewportSelection()
+    {
         return new EditorSelection(
             "编辑器占位区",
             "3D 视口",
