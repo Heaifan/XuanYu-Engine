@@ -187,6 +187,19 @@
 6. `EditorShell` 不再硬编码“示例单位”，改为从 `SampleProject` 的 `units/sample_unit.json` 内容文件入口创建 World 占位实体。
 7. 点击视口时检查器显示占位实体名称、来源路径与位置。
 
+### Milestone 5.2：最小 World 实体列表面板
+
+#### 新增
+
+1. 新增 `WorldEntityListPanel.axaml` + `.axaml.cs`，显示当前 World 实体列表。
+2. 新增 `FluidWarfare.Editor.Windows/Panels/WorldEntities/` 目录。
+
+#### 修改
+
+1. `EditorShell.axaml` 左侧导航区拆分为上下两块：项目内容面板与 World 实体列表面板。
+2. `EditorShell.axaml.cs` 接入 `WorldEntityListPanel`，在 World 创建后显示实体列表，响应实体选择事件并更新检查器、状态栏与日志。
+3. `file-tree.md` 新增 World 实体列表面板结构。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

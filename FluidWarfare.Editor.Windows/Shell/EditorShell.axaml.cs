@@ -10,6 +10,7 @@ using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Project;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
+using FluidWarfare.Editor.Windows.Panels.WorldEntities;
 using FluidWarfare.Engine.World;
 using FluidWarfare.Project.Content;
 using FluidWarfare.Project.Loading;
@@ -26,6 +27,7 @@ public sealed partial class EditorShell : UserControl
     private ProjectPanel? _projectPanel;
     private StatusBarPanel? _statusBarPanel;
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
+    private WorldEntityListPanel? _worldEntityListPanel;
     private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByDisplayName = [];
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
     private WorldState? _worldState;
@@ -47,6 +49,7 @@ public sealed partial class EditorShell : UserControl
         _projectPanel = this.FindControl<ProjectPanel>("ProjectPanel");
         _statusBarPanel = this.FindControl<StatusBarPanel>("EditorStatusBarPanel");
         _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
+        _worldEntityListPanel = this.FindControl<WorldEntityListPanel>("WorldEntityListPanel");
     }
 
     private void SubscribePanelEvents()
@@ -59,6 +62,11 @@ public sealed partial class EditorShell : UserControl
         if (_viewportPlaceholderPanel is not null)
         {
             _viewportPlaceholderPanel.ViewportFocused += HandleViewportFocused;
+        }
+
+        if (_worldEntityListPanel is not null)
+        {
+            _worldEntityListPanel.EntitySelected += OnWorldEntitySelected;
         }
     }
 
@@ -141,6 +149,27 @@ public sealed partial class EditorShell : UserControl
         HandleMenuClicked("帮助");
     }
 
+    private void OnWorldEntitySelected(WorldEntityInfo entityInfo)
+    {
+        ShowWorldEntitySelection(entityInfo);
+    }
+
+    private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
+    {
+        var position = _worldState?.FindPosition(entityInfo.EntityId);
+
+        var typeLabel = entityInfo.Source is not null ? "World 占位实体" : "World 实体";
+        var description = position is not null
+            ? $"EntityId({entityInfo.EntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}，位置：({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
+            : $"EntityId({entityInfo.EntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}";
+
+        var selection = new EditorSelection(typeLabel, entityInfo.DisplayName, description);
+
+        _inspectorPanel?.ShowSelection(selection);
+        _statusBarPanel?.SetCurrentSelection(entityInfo.DisplayName);
+        AppendInfoLog($"已选择 {typeLabel}：{entityInfo.DisplayName}。");
+    }
+
     private void HandleMenuClicked(string menuName)
     {
         AppendInfoLog($"点击菜单：{menuName}。");
@@ -202,6 +231,7 @@ public sealed partial class EditorShell : UserControl
     private void ShowProjectLoadFailure(string message, ProjectValidationReport report)
     {
         _projectPanel?.ShowNoProject();
+        _worldEntityListPanel?.ShowEntities([]);
 
         var selection = new EditorSelection(
             "项目加载",
@@ -224,6 +254,7 @@ public sealed partial class EditorShell : UserControl
 
         if (_contentFiles is null || _contentFiles.Count == 0)
         {
+            _worldEntityListPanel?.ShowEntities([]);
             AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
             return;
         }
@@ -234,6 +265,7 @@ public sealed partial class EditorShell : UserControl
 
         if (seedResult.CreatedEntityCount == 0)
         {
+            _worldEntityListPanel?.ShowEntities([]);
             AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
             return;
         }
@@ -248,6 +280,9 @@ public sealed partial class EditorShell : UserControl
         {
             AppendInfoLog($"已从项目内容生成 World 占位实体：{sourcePath}。");
         }
+
+        // 更新实体列表
+        _worldEntityListPanel?.ShowEntities(entities);
     }
 
     private void ShowLoadedProject(GameProjectInfo project)
