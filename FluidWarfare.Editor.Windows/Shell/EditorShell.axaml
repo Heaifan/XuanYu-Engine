@@ -2,13 +2,13 @@
     x:Class="FluidWarfare.Editor.Windows.Shell.EditorShell"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:debugDock="clr-namespace:FluidWarfare.Editor.Windows.Panels.DebugDock"
     xmlns:inspector="clr-namespace:FluidWarfare.Editor.Windows.Panels.Inspector"
-    xmlns:logging="clr-namespace:FluidWarfare.Editor.Windows.Panels.Logging"
     xmlns:project="clr-namespace:FluidWarfare.Editor.Windows.Panels.Project"
     xmlns:status="clr-namespace:FluidWarfare.Editor.Windows.Panels.Status"
     xmlns:viewport="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport"
     xmlns:worldEntities="clr-namespace:FluidWarfare.Editor.Windows.Panels.WorldEntities">
-  <Grid Background="#202327" RowDefinitions="44,*,220,28">
+  <Grid Background="#202327" RowDefinitions="44,*,200,28">
     <Border
         Grid.Row="0"
         Background="#2A2F36"
@@ -33,14 +33,11 @@
         <project:ProjectPanel Grid.Row="0" x:Name="ProjectPanel" />
         <worldEntities:WorldEntityListPanel Grid.Row="1" x:Name="WorldEntityListPanel" />
       </Grid>
-      <Grid Grid.Column="1" RowDefinitions="Auto,*">
-        <viewport:VulkanViewportHostPanel Grid.Row="0" x:Name="VulkanViewportHostPanel" />
-        <viewport:ViewportPlaceholderPanel Grid.Row="1" x:Name="ViewportPlaceholderPanel" />
-      </Grid>
+      <viewport:VulkanViewportHostPanel Grid.Column="1" x:Name="VulkanViewportHostPanel" />
       <inspector:InspectorPanel Grid.Column="2" x:Name="InspectorPanel" />
     </Grid>
 
-    <logging:LogPanel Grid.Row="2" x:Name="EditorLogPanel" />
+    <debugDock:DebugDockPanel Grid.Row="2" x:Name="DebugDockPanel" />
     <status:StatusBarPanel Grid.Row="3" x:Name="EditorStatusBarPanel" />
   </Grid>
 </UserControl>

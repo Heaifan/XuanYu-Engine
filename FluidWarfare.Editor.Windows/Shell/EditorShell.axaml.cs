@@ -7,6 +7,7 @@ using FluidWarfare.Bridge.ProjectEngine.World;
 using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
 using FluidWarfare.Core.Math;
+using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Project;
@@ -34,7 +35,7 @@ namespace FluidWarfare.Editor.Windows.Shell;
 public sealed partial class EditorShell : UserControl
 {
     private InspectorPanel? _inspectorPanel;
-    private LogPanel? _logPanel;
+    private DebugDockPanel? _debugDockPanel;
     private ProjectPanel? _projectPanel;
     private StatusBarPanel? _statusBarPanel;
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
@@ -71,7 +72,7 @@ public sealed partial class EditorShell : UserControl
     private void FindShellControls()
     {
         _inspectorPanel = this.FindControl<InspectorPanel>("InspectorPanel");
-        _logPanel = this.FindControl<LogPanel>("EditorLogPanel");
+        _debugDockPanel = this.FindControl<DebugDockPanel>("DebugDockPanel");
         _projectPanel = this.FindControl<ProjectPanel>("ProjectPanel");
         _statusBarPanel = this.FindControl<StatusBarPanel>("EditorStatusBarPanel");
         _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
@@ -114,7 +115,7 @@ public sealed partial class EditorShell : UserControl
             .Select(entry => entry.ToDisplayString())
             .ToArray();
 
-        _logPanel?.SetLogMessages(logs);
+        _debugDockPanel?.LogPanel?.SetLogMessages(logs);
     }
 
     private void HandleProjectItemSelected(object? sender, ProjectContentFolderSelection selectedFolder)
@@ -306,7 +307,7 @@ public sealed partial class EditorShell : UserControl
             "Editor",
             message);
 
-        _logPanel?.AppendLogMessage(entry.ToDisplayString());
+        _debugDockPanel?.LogPanel?.AppendLogMessage(entry.ToDisplayString());
     }
 
     private void LoadSampleProject()
@@ -421,9 +422,6 @@ public sealed partial class EditorShell : UserControl
         _statusBarPanel?.SetVulkanStatus(
             _vulkanBackendInfo.IsAvailable ? "已接入" : "不可用");
 
-        _viewportPlaceholderPanel?.ShowVulkanBackendStatus(
-            _vulkanBackendInfo.Message);
-
         UpdateVulkanViewportHost();
         ProbeVulkanInstance();
     }
@@ -438,8 +436,6 @@ public sealed partial class EditorShell : UserControl
                 "未知",
                 0,
                 0);
-
-            _viewportPlaceholderPanel?.ShowVulkanInstanceStatus(_vulkanInstanceInfo.Message);
             return;
         }
 
@@ -455,9 +451,6 @@ public sealed partial class EditorShell : UserControl
             AppendWarningLog(_vulkanInstanceInfo.Message);
         }
 
-        _viewportPlaceholderPanel?.ShowVulkanInstanceStatus(
-            $"{_vulkanInstanceInfo.Message} API 版本：{_vulkanInstanceInfo.ApiVersionText}，扩展数量：{_vulkanInstanceInfo.ExtensionCount}。");
-
         ProbeVulkanDevice();
     }
 
@@ -472,8 +465,6 @@ public sealed partial class EditorShell : UserControl
                 "未知",
                 -1,
                 0);
-
-            _viewportPlaceholderPanel?.ShowVulkanDeviceStatus(_vulkanDeviceInfo.Message);
             ProbeVulkanSurface();
             return;
         }
@@ -489,9 +480,6 @@ public sealed partial class EditorShell : UserControl
         {
             AppendWarningLog(_vulkanDeviceInfo.Message);
         }
-
-        _viewportPlaceholderPanel?.ShowVulkanDeviceStatus(
-            $"{_vulkanDeviceInfo.Message} 显卡：{_vulkanDeviceInfo.PhysicalDeviceName}，类型：{_vulkanDeviceInfo.PhysicalDeviceTypeText}，图形队列族：{_vulkanDeviceInfo.GraphicsQueueFamilyIndex}。");
 
         ProbeVulkanSurface();
     }
@@ -550,7 +538,7 @@ public sealed partial class EditorShell : UserControl
             AppendWarningLog(_vulkanSurfaceInfo.Message);
         }
 
-        _vulkanViewportHostPanel?.ShowSurfaceInfo(_vulkanSurfaceInfo.Message);
+        UpdateAllDiagnostics();
     }
 
     private void ReportVulkanViewportNativeHost()
@@ -619,10 +607,7 @@ public sealed partial class EditorShell : UserControl
             AppendWarningLog($"Vulkan Swapchain 创建失败：{_vulkanSwapchainInfo.Message}");
         }
 
-        _vulkanViewportHostPanel?.ShowSurfaceInfo(
-            _vulkanSwapchainInfo.IsCreated
-                ? $"Swapchain：可用 | {_vulkanSwapchainInfo.SurfaceFormatText} | {_vulkanSwapchainInfo.PresentModeText} | {_vulkanSwapchainInfo.Width}x{_vulkanSwapchainInfo.Height}"
-                : $"Swapchain：{_vulkanSwapchainInfo.Message}");
+        UpdateAllDiagnostics();
     }
 
     private void ProbeVulkanClear()
@@ -660,10 +645,63 @@ public sealed partial class EditorShell : UserControl
             AppendWarningLog($"Vulkan 最小清屏失败：{_vulkanClearInfo.Message}");
         }
 
-        _vulkanViewportHostPanel?.ShowSurfaceInfo(
+        // 更新主视口清屏状态
+        _vulkanViewportHostPanel?.ShowClearStatus(
             _vulkanClearInfo.IsSucceeded
                 ? $"清屏成功 | {_vulkanClearInfo.ClearColorText} | {_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}"
-                : $"清屏失败：{_vulkanClearInfo.Message}");
+                : $"清屏：{_vulkanClearInfo.Message}");
+
+        UpdateAllDiagnostics();
+    }
+
+    private void UpdateAllDiagnostics()
+    {
+        // 渲染诊断
+        var nativeHostMsg = _vulkanSurfaceInfo.HasNativeHandle
+            ? "已获取独立子窗口 HWND"
+            : "未获取";
+        _debugDockPanel?.SetDiagnostics(
+            _vulkanBackendInfo.Message,
+            _vulkanInstanceInfo.IsCreated
+                ? $"创建成功，API 版本：{_vulkanInstanceInfo.ApiVersionText}，扩展数量：{_vulkanInstanceInfo.ExtensionCount}，用时：{_vulkanInstanceInfo.ElapsedMilliseconds:F2} ms"
+                : _vulkanInstanceInfo.Message,
+            _vulkanDeviceInfo.IsCreated
+                ? $"创建成功，显卡：{_vulkanDeviceInfo.PhysicalDeviceName}，类型：{_vulkanDeviceInfo.PhysicalDeviceTypeText}，队列族：{_vulkanDeviceInfo.GraphicsQueueFamilyIndex}，用时：{_vulkanDeviceInfo.ElapsedMilliseconds:F2} ms"
+                : _vulkanDeviceInfo.Message,
+            nativeHostMsg,
+            _vulkanSurfaceInfo.IsCreated
+                ? $"创建成功，平台：{_vulkanSurfaceInfo.PlatformText}，用时：{_vulkanSurfaceInfo.ElapsedMilliseconds:F2} ms"
+                : _vulkanSurfaceInfo.Message,
+            _vulkanSwapchainInfo.IsCreated
+                ? $"创建成功，图像：{_vulkanSwapchainInfo.ImageCount}，格式：{_vulkanSwapchainInfo.SurfaceFormatText}，Present：{_vulkanSwapchainInfo.PresentModeText}，尺寸：{_vulkanSwapchainInfo.Width}x{_vulkanSwapchainInfo.Height}，用时：{_vulkanSwapchainInfo.ElapsedMilliseconds:F2} ms"
+                : _vulkanSwapchainInfo.Message,
+            _vulkanClearInfo.IsSucceeded
+                ? $"成功，{_vulkanClearInfo.ClearColorText}，尺寸：{_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}，用时：{_vulkanClearInfo.ElapsedMilliseconds:F2} ms"
+                : _vulkanClearInfo.Message);
+
+        // 性能计时
+        _debugDockPanel?.SetPerformance(
+            _vulkanInstanceInfo.ElapsedMilliseconds.ToString("F2"),
+            _vulkanDeviceInfo.ElapsedMilliseconds.ToString("F2"),
+            _vulkanSwapchainInfo.ElapsedMilliseconds.ToString("F2"),
+            _vulkanClearInfo.ElapsedMilliseconds.ToString("F2"));
+
+        // RenderScene 调试列表
+        if (_renderScene.Objects.Count > 0)
+        {
+            var entries = _renderScene.Objects.Select(o =>
+                $"{o.DisplayName} | unit_marker | ({o.Position.X}, {o.Position.Y}, {o.Position.Z}) | {o.SourcePath ?? "无"}").ToList();
+            _debugDockPanel?.SetRenderSceneSummary(
+                $"RenderScene 调试对象（共 {entries.Count} 个）", entries);
+        }
+        else
+        {
+            _debugDockPanel?.SetRenderSceneSummary("RenderScene 调试对象", []);
+        }
+
+        // 主视口和状态栏
+        _statusBarPanel?.SetVulkanStatus(
+            _vulkanBackendInfo.IsAvailable ? "已接入" : "不可用");
     }
 
     private void InitializeVulkanRenderContext()
@@ -681,10 +719,7 @@ public sealed partial class EditorShell : UserControl
         if (_vulkanRenderContext.Initialize(nativeHostInfo.InstanceHandle, nativeHostInfo.WindowHandle, out var message))
         {
             AppendInfoLog($"Vulkan 渲染上下文初始化成功。{message}");
-            _vulkanViewportHostPanel?.ShowHostInfo(new VulkanViewportHostInfo(
-                VulkanViewportHostState.WaitingForSurface,
-                "Vulkan 渲染上下文已创建。"));
-            _vulkanViewportHostPanel?.ShowSurfaceInfo(
+            _vulkanViewportHostPanel?.ShowClearStatus(
                 $"Vulkan 就绪 | Device：{_vulkanRenderContext.PhysicalDeviceName} | Swapchain 图像：{_vulkanRenderContext.SwapchainImageCount}");
 
             if (_vulkanRenderContext.IsInitialized)
@@ -700,28 +735,19 @@ public sealed partial class EditorShell : UserControl
             AppendWarningLog($"Vulkan 渲染上下文初始化不完整：{message}");
             _vulkanRenderContext?.Dispose();
             _vulkanRenderContext = null;
-            _vulkanViewportHostPanel?.ShowSurfaceInfo(message);
         }
     }
 
     private void UpdateVulkanViewportHost()
     {
-        VulkanViewportHostInfo hostInfo;
-
         if (_vulkanBackendInfo.IsAvailable)
         {
-            hostInfo = new VulkanViewportHostInfo(
-                VulkanViewportHostState.WaitingForSurface,
-                "已创建占位宿主，等待 Surface / Swapchain 接入。");
+            _vulkanViewportHostPanel?.ShowClearStatus("Vulkan 后端就绪，等待 Surface/Swapchain。");
         }
         else
         {
-            hostInfo = new VulkanViewportHostInfo(
-                VulkanViewportHostState.Disabled,
-                "不可启用，Vulkan 后端不可用。");
+            _vulkanViewportHostPanel?.ShowClearStatus("Vulkan 后端不可用。");
         }
-
-        _vulkanViewportHostPanel?.ShowHostInfo(hostInfo);
     }
 
     private void ShowLoadedProject(GameProjectInfo project)

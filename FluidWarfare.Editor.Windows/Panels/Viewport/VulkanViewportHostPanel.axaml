@@ -5,35 +5,33 @@
     xmlns:nativeHost="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost">
   <Border
       Margin="0"
-      Background="#1A1F26"
+      Background="#15191E"
       BorderBrush="#48515C"
       BorderThickness="0,0,1,1"
-      Padding="20,12">
-    <StackPanel Spacing="6">
+      Padding="0">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="0">
       <TextBlock
+          Grid.Row="0"
+          Margin="20,12,20,4"
           FontSize="16"
           FontWeight="SemiBold"
           Foreground="#F0F4F8"
-          Text="Vulkan 视口宿主" />
-      <TextBlock
-          x:Name="HostInfoText"
-          Foreground="#8B949E"
-          Text="正在初始化..." />
+          Text="Vulkan 战场视口" />
       <Border
-          Height="96"
+          Grid.Row="1"
+          Margin="0"
           Background="#0D1117"
           BorderBrush="#30363D"
-          BorderThickness="1">
+          BorderThickness="0">
         <nativeHost:WindowsVulkanViewportHostControl x:Name="NativeHostControl" />
       </Border>
       <TextBlock
-          x:Name="NativeHostInfoText"
+          Grid.Row="2"
+          x:Name="ClearStatusText"
+          Margin="20,6,20,10"
           Foreground="#8B949E"
-          Text="Windows 原生子窗口尚未创建。" />
-      <TextBlock
-          x:Name="SurfaceInfoText"
-          Foreground="#8B949E"
-          Text="Surface 尚未检查。" />
-    </StackPanel>
+          FontSize="12"
+          Text="Vulkan 清屏状态：等待初始化..." />
+    </Grid>
   </Border>
 </UserControl>

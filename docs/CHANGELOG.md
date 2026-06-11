@@ -438,6 +438,22 @@ Clear      ✅ 7.8.2（本里程碑）
 
 下一阶段进入 **Milestone 8：战场视口基础与 RenderScene 对象绘制**。
 
+### Milestone 7.8.3：底部调试终端与主视口收束
+
+#### 新增
+
+1. 新增 `DebugDockPanel`，底部日志区域升级为调试终端，包含“日志 / 渲染诊断 / RenderScene / 性能”四个页签。
+2. 新增 `RenderDiagnosticsPanel` 内容（内嵌在 DebugDockPanel 中），汇总 Vulkan 全链路状态。
+
+#### 修改
+
+1. `VulkanViewportHostPanel` 收束为纯战场视口，只保留标题、NativeControlHost 和一行清屏状态文本，移除大段诊断文本。
+2. `EditorShell.axaml` 底部 Row 2 从直接 LogPanel 替换为 DebugDockPanel。
+3. `EditorShell` 新增 `UpdateAllDiagnostics`，将 Vulkan 后端、Instance、Device、Surface、Swapchain、Clear 状态集中发送到渲染诊断页签。
+4. `EditorShell` 更新 RenderScene 调试列表到 RenderScene 页签。
+5. Vulkan/Instance/Device 调试文本不再显示在主视口中。
+6. Vulkan 清屏区域高度不再受限（NativeControlHost 占满视口区域）。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。
