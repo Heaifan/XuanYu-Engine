@@ -23,6 +23,7 @@ using FluidWarfare.Render.Scene;
 using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
+using FluidWarfare.Render.Vulkan.Context;
 using FluidWarfare.Render.Vulkan.Surface;
 using FluidWarfare.Render.World;
 
@@ -47,6 +48,8 @@ public sealed partial class EditorShell : UserControl
     private VulkanInstanceInfo _vulkanInstanceInfo = VulkanInstanceInfo.NotChecked;
     private VulkanDeviceInfo _vulkanDeviceInfo = VulkanDeviceInfo.NotChecked;
     private VulkanSurfaceInfo _vulkanSurfaceInfo = VulkanSurfaceInfo.NotChecked;
+    private VulkanRenderContext? _vulkanRenderContext;
+    private DispatcherTimer? _renderTimer;
     private bool _vulkanViewportNativeHostReported;
 
     public EditorShell()
@@ -58,6 +61,7 @@ public sealed partial class EditorShell : UserControl
         LoadSampleProject();
         ProbeVulkanBackend();
         AttachedToVisualTree += OnAttachedToVisualTree;
+        DetachedFromVisualTree += OnDetachedFromVisualTree;
     }
 
     private void FindShellControls()
@@ -92,6 +96,12 @@ public sealed partial class EditorShell : UserControl
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         Dispatcher.UIThread.Post(ReportVulkanViewportNativeHost);
+    }
+
+    private void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        _renderTimer?.Stop();
+        _vulkanRenderContext?.Shutdown();
     }
 
     private void InitializeLogs()
@@ -555,13 +565,51 @@ public sealed partial class EditorShell : UserControl
         {
             AppendInfoLog(
                 $"Windows Vulkan 视口子窗口已创建，HWND：0x{nativeHostInfo.WindowHandle.ToInt64():X16}。");
+            InitializeVulkanRenderContext();
         }
         else
         {
             AppendWarningLog(nativeHostInfo.Message);
+            ProbeVulkanSurface();
+        }
+    }
+
+    private void InitializeVulkanRenderContext()
+    {
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!nativeHostInfo.HasNativeHandle)
+        {
+            AppendWarningLog("无法初始化 Vulkan 渲染上下文：缺少原生窗口句柄。");
+            return;
         }
 
-        ProbeVulkanSurface();
+        _vulkanRenderContext = new VulkanRenderContext();
+        if (_vulkanRenderContext.Initialize(nativeHostInfo.InstanceHandle, nativeHostInfo.WindowHandle, out var message))
+        {
+            AppendInfoLog($"Vulkan 渲染上下文初始化成功。{message}");
+            _vulkanViewportHostPanel?.ShowHostInfo(new VulkanViewportHostInfo(
+                VulkanViewportHostState.WaitingForSurface,
+                "Vulkan 渲染上下文已创建。"));
+            _vulkanViewportHostPanel?.ShowSurfaceInfo(
+                $"Vulkan 就绪 | Device：{_vulkanRenderContext.PhysicalDeviceName} | Swapchain 图像：{_vulkanRenderContext.SwapchainImageCount}");
+
+            if (_vulkanRenderContext.IsInitialized)
+            {
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+                timer.Tick += (_, _) => _vulkanRenderContext?.RenderFrame();
+                timer.Start();
+                _renderTimer = timer;
+            }
+        }
+        else
+        {
+            AppendWarningLog($"Vulkan 渲染上下文初始化不完整：{message}");
+            _vulkanRenderContext?.Dispose();
+            _vulkanRenderContext = null;
+            _vulkanViewportHostPanel?.ShowSurfaceInfo(message);
+        }
     }
 
     private void UpdateVulkanViewportHost()

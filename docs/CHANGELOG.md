@@ -365,6 +365,25 @@
 3. Windows Vulkan Surface 创建回归成功。
 4. 本轮不创建 Swapchain、RenderPass、Framebuffer、CommandBuffer，也不做真实清屏。
 
+### Milestone 7.8：Vulkan 最小可见渲染闭环
+
+#### 新增
+
+1. 新增 `VulkanRenderContext`，可持久管理 Vulkan Instance/Device/Surface 的生命周期，不在探测后销毁。
+2. EditorShell 在获取独立 HWND 后创建 `VulkanRenderContext`，展示 Vulkan 就绪状态。
+
+#### 修改
+
+1. `EditorShell` 启动时不再只做探针式创建/销毁，接入持久化 Instance/Device/Surface。
+2. `EditorShell` 从可视树分离时自动释放 Vulkan 资源。
+3. 渲染诊断信息集中到 `VulkanViewportHostPanel` 显示。
+
+#### 已知问题
+
+1. Swapchain 创建在当前 Windows 驱动上因 `vkGetDeviceProcAddr` 返回的函数指针与调用约定兼容性问题，调用时触发原生访问冲突（0xC0000005）。
+2. Instance/Device/Surface 创建正常，Editor 不崩溃，Vulkan 状态正常显示。
+3. Swapchain/清屏问题待后续排查：设备扩展启用确认、函数指针加载方式、Silk.NET KHR 扩展类加载。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。
