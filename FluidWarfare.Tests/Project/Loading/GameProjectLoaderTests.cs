@@ -34,6 +34,7 @@ public sealed class GameProjectLoaderTests
         Assert.True(result.Result.IsSuccess);
         Assert.NotNull(result.Project);
         Assert.Equal("test_project", result.Project.ProjectId);
+        Assert.Equal(1, result.Project.SchemaVersion);
         Assert.Equal("TestProject", result.Project.DisplayName);
         Assert.Equal(2, result.Project.ContentFolders.Count);
         Assert.Equal("units", result.Project.ContentFolders[0].FolderName);
@@ -83,6 +84,7 @@ public sealed class GameProjectLoaderTests
         using var scope = ProjectTestDirectory.Create();
         scope.WriteManifest("""
             {
+              "schemaVersion": 1,
               "displayName": "TestProject",
               "contentFolders": []
             }
@@ -99,6 +101,7 @@ public sealed class GameProjectLoaderTests
         using var scope = ProjectTestDirectory.Create();
         scope.WriteManifest("""
             {
+              "schemaVersion": 1,
               "projectId": "test_project",
               "contentFolders": []
             }
@@ -115,6 +118,7 @@ public sealed class GameProjectLoaderTests
         using var scope = ProjectTestDirectory.Create();
         scope.WriteManifest("""
             {
+              "schemaVersion": 1,
               "projectId": "test_project",
               "displayName": "TestProject",
               "contentFolders": [ "units" ]
@@ -132,6 +136,7 @@ public sealed class GameProjectLoaderTests
         using var scope = ProjectTestDirectory.Create();
         scope.WriteManifest("""
             {
+              "schemaVersion": 1,
               "projectId": "test_project",
               "displayName": "TestProject"
             }
@@ -140,6 +145,41 @@ public sealed class GameProjectLoaderTests
         var result = GameProjectLoader.LoadFromDirectory(scope.Path);
 
         AssertFailure(result, "Project.ContentFoldersMissing");
+    }
+
+    [Fact]
+    public void LoadFromDirectory_WithMissingSchemaVersion_ShouldFail()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.WriteManifest("""
+            {
+              "projectId": "test_project",
+              "displayName": "TestProject",
+              "contentFolders": []
+            }
+            """);
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        AssertFailure(result, "Project.SchemaVersionMissing");
+    }
+
+    [Fact]
+    public void LoadFromDirectory_WithUnsupportedSchemaVersion_ShouldFail()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.WriteManifest("""
+            {
+              "schemaVersion": 999,
+              "projectId": "test_project",
+              "displayName": "TestProject",
+              "contentFolders": []
+            }
+            """);
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        AssertFailure(result, "Project.SchemaVersionUnsupported");
     }
 
     [Fact]
@@ -505,6 +545,7 @@ public sealed class GameProjectLoaderTests
     {
         return $$"""
             {
+              "schemaVersion": 1,
               "projectId": "test_project",
               "displayName": "TestProject",
               "description": "测试项目。",

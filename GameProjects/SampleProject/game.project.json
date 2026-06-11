@@ -1,4 +1,5 @@
 {
+  "schemaVersion": 1,
   "projectId": "sample_project",
   "displayName": "SampleProject",
   "description": "FluidWarfare 示例项目，用于验证项目内容目录声明。",

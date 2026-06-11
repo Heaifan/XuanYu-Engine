@@ -277,6 +277,22 @@
 2. `EditorShell.axaml.cs` 新增 `UpdateVulkanViewportHost`，根据 `VulkanBackendInfo` 更新宿主状态。
 3. `file-tree.md` 新增 VulkanViewportHostPanel 结构。
 
+### Milestone 7.2：项目契约与选择链路稳定化
+
+#### 新增
+
+1. 新增 `ProjectContentFolderSelection`，用于让项目面板发出稳定的内容目录选择值对象。
+2. 新增 `SampleProjectSmokeTests`，验证仓库内 `GameProjects/SampleProject` 可加载，并暴露内容目录与内容文件入口。
+3. 新增 `ProjectDependencyDirectionTests`，自动检查 Core、Project、Engine、Bridge、Render、Render.Vulkan 与 Tests 的项目依赖方向。
+
+#### 修改
+
+1. `game.project.json` 新增 `schemaVersion: 1`。
+2. `GameProjectLoader` 只接受当前项目契约版本，缺失或未知版本会返回中文错误。
+3. `GameProjectInfo` 新增 `SchemaVersion`。
+4. `ProjectPanel` 选择事件从显示名字符串升级为 `ProjectContentFolderSelection`，`EditorShell` 改用 `FolderName` 查找项目内容目录。
+5. 测试补充 Project / World / Render 稳定 ID 链路与依赖边界验收。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

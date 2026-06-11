@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 03:30
+最后编辑：2026-06-11 04:20
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -92,6 +92,9 @@
 74. Milestone 7.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs`。
 75. Milestone 7.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostState.cs`。
 76. Milestone 7.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostInfo.cs`。
+77. Milestone 7.2：新增 `FluidWarfare.Editor.Windows/Panels/Project/ProjectContentFolderSelection.cs`。
+78. Milestone 7.2：新增 `FluidWarfare.Tests/Project/Loading/SampleProjectSmokeTests.cs`。
+79. Milestone 7.2：新增 `FluidWarfare.Tests/Architecture/ProjectDependencyDirectionTests.cs`。
 
 ### 修改
 
@@ -183,6 +186,12 @@
 86. Milestone 7.0：ViewportPlaceholderPanel 新增 Vulkan 后端状态文本区域。
 87. Milestone 7.1：EditorShell.axaml 中央视口区域拆分为 Vulkan 视口宿主面板和调试视口。
 88. Milestone 7.1：EditorShell 新增 UpdateVulkanViewportHost 方法。
+89. Milestone 7.2：SampleProject 清单新增 schemaVersion。
+90. Milestone 7.2：GameProjectLoader 只接受当前项目契约版本，缺失或未知版本返回中文错误。
+91. Milestone 7.2：GameProjectInfo 新增 SchemaVersion。
+92. Milestone 7.2：ProjectPanel 选择事件改为发出 ProjectContentFolderSelection，不再用 DisplayName 作为查找键。
+93. Milestone 7.2：EditorShell 改用 FolderName 查找项目内容目录，DisplayName 只负责 UI 显示。
+94. Milestone 7.2：测试新增 SampleProject 冒烟验收与 csproj 依赖方向自动检查。
 
 ### 删除
 
@@ -204,9 +213,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 7.1：Vulkan 视口宿主占位。
+当前执行 Milestone 7.2：项目契约与选择链路稳定化。
 
-本轮只完成项目内容到 Engine World 的桥接层、ProjectContentWorldSeeder、World 实体 Source 支持和 Editor 从 sample_unit.json 生成占位实体，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做完整 ECS 调度系统，不做 Query，不做 Archetype，不做 Chunk，不做 Vulkan，不做 Runtime，不做 Android。
+本轮只稳定项目清单契约、项目内容目录选择值对象、示例项目冒烟测试、项目依赖方向检查和已有 EntityId 链路，不做复杂 MVVM、不做真实 Vulkan Surface / Swapchain、不做清屏、不做 Runtime、不做 Android。
 
 ## 3. 顶层目录结构
 
@@ -312,6 +321,7 @@ FluidWarfare/
 |   |   |   `-- LogPanel.axaml.cs
 |   |   |-- Project/
 |   |   |   |-- ProjectPanel.axaml
+|   |   |   |-- ProjectContentFolderSelection.cs
 |   |   |   `-- ProjectPanel.axaml.cs
 |   |   |-- Status/
 |   |   |   |-- StatusBarPanel.axaml
@@ -337,6 +347,8 @@ FluidWarfare/
 |   `-- .gitkeep
 |-- FluidWarfare.Tests/
 |   |-- .gitkeep
+|   |-- Architecture/
+|   |   `-- ProjectDependencyDirectionTests.cs
 |   |-- Bridge/
 |   |-- Render/
 |   |   |-- Vulkan/
@@ -369,7 +381,8 @@ FluidWarfare/
 |   |   |-- Content/
 |   |   |   `-- GameContentFileScannerTests.cs
 |   |   |-- Loading/
-|   |   |   `-- GameProjectLoaderTests.cs
+|   |   |   |-- GameProjectLoaderTests.cs
+|   |   |   `-- SampleProjectSmokeTests.cs
 |   |   |-- Paths/
 |   |   |   `-- SampleProjectPathTests.cs
 |   |   `-- Validation/
@@ -454,7 +467,7 @@ get_tree.bat
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Editor.Windows | Windows 桌面编辑器，使用 Avalonia 构建 GUI，启动时加载示例项目，只用于开发、调试和导出，不进入 Android Runtime | 可运行 |
 | FluidWarfare.Exporter | Windows 与 Android 导出流程 | 已创建 / 仅 `.gitkeep` |
-| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / EngineLogLevel 与 EngineLogEntry 测试通过 |
+| FluidWarfare.Tests | 单元测试和聚焦集成测试 | 测试通过 |
 
 ## 5. 关键文件职责
 
@@ -476,8 +489,8 @@ get_tree.bat
 | `FluidWarfare.Project/Content/GameContentFileScanResult.cs` | 内容文件扫描结果模型，保存合法内容文件入口和扫描中的校验问题 | 测试通过 |
 | `FluidWarfare.Project/Content/GameContentFileScanner.cs` | 扫描已声明内容目录中的一级内容文件，返回合法文件入口并收集文件级校验问题 | 测试通过 |
 | `FluidWarfare.Project/Content/GameContentFolderInfo.cs` | 项目内容目录声明模型，保存目录名、显示名、说明、内容类型、是否必需与允许扩展名 | 测试通过 |
-| `FluidWarfare.Project/Metadata/GameProjectInfo.cs` | 游戏项目元数据模型，保存项目编号、显示名称、说明、内容目录声明列表和合法内容文件入口列表 | 测试通过 |
-| `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 从项目目录读取 game.project.json，校验项目元数据与内容目录声明，协调内容文件入口扫描，拒绝未声明一级内容目录、未允许扩展名文件与嵌套内容目录 | 测试通过 |
+| `FluidWarfare.Project/Metadata/GameProjectInfo.cs` | 游戏项目元数据模型，保存项目契约版本、项目编号、显示名称、说明、内容目录声明列表和合法内容文件入口列表 | 测试通过 |
+| `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 从项目目录读取 game.project.json，校验项目契约版本、项目元数据与内容目录声明，协调内容文件入口扫描，拒绝未声明一级内容目录、未允许扩展名文件与嵌套内容目录 | 测试通过 |
 | `FluidWarfare.Project/Loading/GameProjectLoadResult.cs` | 项目加载结果模型，组合 EngineResult、可选 GameProjectInfo 与项目校验报告 | 测试通过 |
 | `FluidWarfare.Project/Validation/ProjectValidationIssue.cs` | 项目校验问题模型，保存错误码、中文信息和问题路径，不读取文件不写日志 | 测试通过 |
 | `FluidWarfare.Project/Validation/ProjectValidationReport.cs` | 项目校验报告模型，汇总项目加载与内容扫描中的校验问题，支持空报告 | 测试通过 |
@@ -512,6 +525,8 @@ get_tree.bat
 | `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs` | 验证日志记录创建、非法输入、日志前缀隔离、中文显示输出与相等比较 | 测试通过 |
 | `FluidWarfare.Tests/Project/Content/GameContentFileScannerTests.cs` | 验证内容文件入口扫描，包括合法扩展名、非法扩展名、.gitkeep、嵌套目录、大/小写扩展名、空 allowedExtensions、多目录、隐藏文件和多问题收集 | 测试通过 |
 | `FluidWarfare.Tests/Project/Loading/GameProjectLoaderTests.cs` | 验证最小项目加载器的有效项目、缺失目录、缺失清单、无效 JSON、必要字段缺失、内容目录声明校验、未声明目录拒绝、内容文件入口扫描集成、嵌套目录拒绝和校验报告多问题收集 | 测试通过 |
+| `FluidWarfare.Tests/Project/Loading/SampleProjectSmokeTests.cs` | 验证仓库内 SampleProject 可加载，且内容目录、内容文件入口与校验报告正常 | 测试通过 |
+| `FluidWarfare.Tests/Architecture/ProjectDependencyDirectionTests.cs` | 自动检查项目依赖方向，防止 Project、Engine、Bridge、Render、Render.Vulkan 与 Tests 出现反向依赖 | 测试通过 |
 | `FluidWarfare.Tests/Project/Validation/ProjectValidationReportTests.cs` | 验证空报告、问题数量和首个问题 | 测试通过 |
 | `FluidWarfare.Tests/Project/Paths/SampleProjectPathTests.cs` | 验证示例项目路径定位逻辑，包括根目录、嵌套目录、缺失项目与空起始目录 | 测试通过 |
 | `FluidWarfare.Editor.Windows/FluidWarfare.Editor.Windows.csproj` | Windows Editor Avalonia 项目文件，引用 Core 与 Project，并声明 Avalonia 桌面依赖 | 可运行 |
@@ -524,7 +539,8 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、Vulkan 后端探测、Vulkan 视口宿主状态、实体选择与 UI 显示 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责显示项目名、显示分类项，并在分类点击时发出选择事件 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Project/ProjectContentFolderSelection.cs` | 项目内容目录选择值对象，保存稳定 FolderName、DisplayName 和 ContentKind | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责显示项目名、显示内容目录，并在点击时发出 ProjectContentFolderSelection | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs` | 视口占位显示模型，保存当前选中实体的名称、EntityId、来源路径、位置文本与视觉类型 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderObjectSummary.cs` | 视口 RenderScene 调试列表中的单个渲染对象显示摘要 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderSceneSummary.cs` | 视口 RenderScene 调试列表显示模型，保存多个渲染对象摘要 | 可运行 |
@@ -553,7 +569,7 @@ get_tree.bat
 | `docs/MILESTONE1_PUBLIC_VALIDATION.md` | 公开 Raw 验收命令与结果记录 | 已创建 |
 | `docs/CHANGELOG.md` | 版本历史 | 已创建 |
 | `file-tree.md` | 项目结构地图 | 已创建 |
-| `GameProjects/SampleProject/game.project.json` | FluidWarfare 示例项目清单，用于验证最小项目系统与内容文件入口扫描 | 可加载 |
+| `GameProjects/SampleProject/game.project.json` | FluidWarfare 示例项目清单，声明 schemaVersion 与内容目录，用于验证最小项目系统与内容文件入口扫描 | 可加载 |
 | `GameProjects/SampleProject/units/sample_unit.json` | SampleProject 单位内容入口占位文件，仅用于验证内容文件扫描，不代表正式单位 schema | 占位 |
 | `GameProjects/SampleProject/weapons/sample_weapon.json` | SampleProject 武器内容入口占位文件，仅用于验证内容文件扫描，不代表正式武器 schema | 占位 |
 | `GameProjects/SampleProject/icons/sample_icon.svg` | SampleProject 图标内容入口占位文件，仅用于验证内容文件扫描，不代表正式图标加载 | 占位 |

@@ -32,7 +32,7 @@ public sealed partial class EditorShell : UserControl
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
     private VulkanViewportHostPanel? _vulkanViewportHostPanel;
     private WorldEntityListPanel? _worldEntityListPanel;
-    private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByDisplayName = [];
+    private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByFolderName = [];
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
     private WorldState? _worldState;
     private EntityId _firstEntityId;
@@ -88,15 +88,15 @@ public sealed partial class EditorShell : UserControl
         _logPanel?.SetLogMessages(logs);
     }
 
-    private void HandleProjectItemSelected(object? sender, string itemName)
+    private void HandleProjectItemSelected(object? sender, ProjectContentFolderSelection selectedFolder)
     {
-        var selection = CreateProjectSelection(itemName);
+        var selection = CreateProjectSelection(selectedFolder);
 
         _inspectorPanel?.ShowSelection(selection);
         _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
         AppendInfoLog($"选择项目内容目录：{selection.DisplayName}。");
 
-        if (_contentFoldersByDisplayName.TryGetValue(itemName, out var contentFolder) &&
+        if (_contentFoldersByFolderName.TryGetValue(selectedFolder.FolderName, out var contentFolder) &&
             _contentFiles is not null)
         {
             var folderFiles = _contentFiles
@@ -420,25 +420,27 @@ public sealed partial class EditorShell : UserControl
 
     private void ShowLoadedProject(GameProjectInfo project)
     {
-        _contentFoldersByDisplayName.Clear();
+        _contentFoldersByFolderName.Clear();
         _contentFiles = project.ContentFiles;
 
         foreach (var contentFolder in project.ContentFolders)
         {
-            _contentFoldersByDisplayName[contentFolder.DisplayName] = contentFolder;
+            _contentFoldersByFolderName[contentFolder.FolderName] = contentFolder;
         }
 
-        var categoryNames = project.ContentFolders
-            .Select(folder => folder.DisplayName)
-            .Append("配置")
+        var contentFolderSelections = project.ContentFolders
+            .Select(folder => new ProjectContentFolderSelection(
+                folder.FolderName,
+                folder.DisplayName,
+                folder.ContentKind))
             .ToArray();
 
-        _projectPanel?.ShowProject(project.DisplayName, categoryNames);
+        _projectPanel?.ShowProject(project.DisplayName, contentFolderSelections);
     }
 
-    private EditorSelection CreateProjectSelection(string itemName)
+    private EditorSelection CreateProjectSelection(ProjectContentFolderSelection selectedFolder)
     {
-        if (_contentFoldersByDisplayName.TryGetValue(itemName, out var contentFolder))
+        if (_contentFoldersByFolderName.TryGetValue(selectedFolder.FolderName, out var contentFolder))
         {
             return new EditorSelection(
                 "项目内容目录",
@@ -446,17 +448,9 @@ public sealed partial class EditorShell : UserControl
                 contentFolder.Description);
         }
 
-        if (itemName == "配置")
-        {
-            return new EditorSelection(
-                "项目分类",
-                "配置",
-                "这里将显示项目配置、模拟参数与编辑器设置。");
-        }
-
         return new EditorSelection(
             "未知项目内容目录",
-            itemName,
+            selectedFolder.DisplayName,
             "当前项目内容目录没有说明。");
     }
 

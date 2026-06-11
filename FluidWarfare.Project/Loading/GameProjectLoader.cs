@@ -10,6 +10,7 @@ namespace FluidWarfare.Project.Loading;
 public static partial class GameProjectLoader
 {
     private const string ManifestFileName = "game.project.json";
+    private const int CurrentSchemaVersion = 1;
 
     public static GameProjectLoadResult LoadFromDirectory(string projectDirectory)
     {
@@ -47,6 +48,18 @@ public static partial class GameProjectLoader
         if (manifest is null)
         {
             return Fail("Project.ManifestInvalid", "项目文件格式无效。");
+        }
+
+        if (manifest.SchemaVersion is null)
+        {
+            return Fail("Project.SchemaVersionMissing", "项目契约版本不能为空。");
+        }
+
+        if (manifest.SchemaVersion.Value != CurrentSchemaVersion)
+        {
+            return Fail(
+                "Project.SchemaVersionUnsupported",
+                $"项目契约版本不受支持：{manifest.SchemaVersion.Value}。");
         }
 
         if (string.IsNullOrWhiteSpace(manifest.ProjectId))
@@ -105,6 +118,7 @@ public static partial class GameProjectLoader
         }
 
         var project = new GameProjectInfo(
+            manifest.SchemaVersion.Value,
             manifest.ProjectId.Trim(),
             manifest.DisplayName.Trim(),
             manifest.Description?.Trim() ?? string.Empty,
@@ -322,6 +336,7 @@ public static partial class GameProjectLoader
     private static partial Regex AllowedExtensionRegex();
 
     private sealed record ProjectManifestDto(
+        int? SchemaVersion,
         string? ProjectId,
         string? DisplayName,
         string? Description,

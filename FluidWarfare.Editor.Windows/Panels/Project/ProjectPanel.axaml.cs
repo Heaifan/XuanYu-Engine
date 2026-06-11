@@ -7,7 +7,7 @@ public sealed partial class ProjectPanel : UserControl
     private StackPanel? _projectItemList;
     private TextBlock? _projectNameText;
 
-    public event EventHandler<string>? ProjectItemSelected;
+    public event EventHandler<ProjectContentFolderSelection>? ProjectItemSelected;
 
     public ProjectPanel()
     {
@@ -16,7 +16,7 @@ public sealed partial class ProjectPanel : UserControl
         _projectItemList = this.FindControl<StackPanel>("ProjectItemList");
     }
 
-    public void ShowProject(string displayName, IEnumerable<string> categoryNames)
+    public void ShowProject(string displayName, IEnumerable<ProjectContentFolderSelection> contentFolders)
     {
         _projectNameText ??= this.FindControl<TextBlock>("ProjectNameText");
         _projectItemList ??= this.FindControl<StackPanel>("ProjectItemList");
@@ -33,16 +33,16 @@ public sealed partial class ProjectPanel : UserControl
 
         _projectItemList.Children.Clear();
 
-        foreach (var categoryName in categoryNames)
+        foreach (var contentFolder in contentFolders)
         {
             var button = new Button
             {
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
                 HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-                Content = categoryName
+                Content = contentFolder.DisplayName
             };
 
-            button.Click += (_, _) => SelectProjectItem(categoryName);
+            button.Click += (_, _) => SelectProjectItem(contentFolder);
             _projectItemList.Children.Add(button);
         }
     }
@@ -60,8 +60,8 @@ public sealed partial class ProjectPanel : UserControl
         _projectItemList?.Children.Clear();
     }
 
-    private void SelectProjectItem(string itemName)
+    private void SelectProjectItem(ProjectContentFolderSelection selection)
     {
-        ProjectItemSelected?.Invoke(this, itemName);
+        ProjectItemSelected?.Invoke(this, selection);
     }
 }
