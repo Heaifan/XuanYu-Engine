@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 05:10
+最后编辑：2026-06-11 05:45
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -99,6 +99,10 @@
 81. Milestone 7.3：新增 `FluidWarfare.Render.Vulkan/Instance/VulkanInstanceInfo.cs`。
 82. Milestone 7.3：新增 `FluidWarfare.Render.Vulkan/Instance/VulkanInstanceProbe.cs`。
 83. Milestone 7.3：新增 `FluidWarfare.Tests/Render/Vulkan/Instance/VulkanInstanceInfoTests.cs`。
+84. Milestone 7.4：新增 `FluidWarfare.Render.Vulkan/Device/VulkanDeviceStatus.cs`。
+85. Milestone 7.4：新增 `FluidWarfare.Render.Vulkan/Device/VulkanDeviceInfo.cs`。
+86. Milestone 7.4：新增 `FluidWarfare.Render.Vulkan/Device/VulkanDeviceProbe.cs`。
+87. Milestone 7.4：新增 `FluidWarfare.Tests/Render/Vulkan/Device/VulkanDeviceInfoTests.cs`。
 
 ### 修改
 
@@ -201,6 +205,10 @@
 97. Milestone 7.3：EditorShell 启动时探测 Vulkan Instance 并输出中文日志。
 98. Milestone 7.3：ViewportPlaceholderPanel 新增 Vulkan Instance 状态显示。
 99. Milestone 7.3：ProjectDependencyDirectionTests 新增 NuGet 包白名单检查。
+100. Milestone 7.4：VulkanDeviceProbe 枚举 PhysicalDevice，选择支持 Graphics Queue 的设备，创建 LogicalDevice 并获取 Graphics Queue。
+101. Milestone 7.4：VulkanDeviceProbe 立即释放 LogicalDevice 与 VkInstance。
+102. Milestone 7.4：EditorShell 启动时探测 Vulkan Device 并输出显卡名称、设备类型、图形队列族和耗时。
+103. Milestone 7.4：ViewportPlaceholderPanel 新增 Vulkan Device 状态显示。
 
 ### 删除
 
@@ -222,9 +230,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 7.3：Vulkan Instance 最小创建与释放。
+当前执行 Milestone 7.4：Vulkan PhysicalDevice / LogicalDevice 最小选择与释放。
 
-本轮只在 Render.Vulkan 中创建并释放 VkInstance，读取 Vulkan API 版本、Instance 扩展数量和创建耗时；不创建 PhysicalDevice、Device、Surface、Swapchain、RenderPass、CommandBuffer，不做真实清屏，不做 Runtime，不做 Android。
+本轮只在 Render.Vulkan 中创建 VkInstance，枚举 PhysicalDevice，选择支持 Graphics Queue 的设备，创建 LogicalDevice，获取 Graphics Queue，并立即释放 LogicalDevice 与 VkInstance；不创建 Surface、Swapchain、RenderPass、Framebuffer、CommandBuffer，不做真实清屏，不做 Runtime，不做 Android。
 
 ## 3. 顶层目录结构
 
@@ -308,6 +316,10 @@ FluidWarfare/
 |   |   |-- VulkanBackendInfo.cs
 |   |   |-- VulkanBackendProbe.cs
 |   |   `-- VulkanBackendStatus.cs
+|   |-- Device/
+|   |   |-- VulkanDeviceInfo.cs
+|   |   |-- VulkanDeviceProbe.cs
+|   |   `-- VulkanDeviceStatus.cs
 |   `-- Instance/
 |       |-- VulkanInstanceInfo.cs
 |       |-- VulkanInstanceProbe.cs
@@ -367,6 +379,8 @@ FluidWarfare/
 |   |   |-- Vulkan/
 |   |   |   |-- Backend/
 |   |   |   |   `-- VulkanBackendInfoTests.cs
+|   |   |   |-- Device/
+|   |   |   |   `-- VulkanDeviceInfoTests.cs
 |   |   |   `-- Instance/
 |   |   |       `-- VulkanInstanceInfoTests.cs
 |   |   `-- World/
@@ -477,7 +491,7 @@ get_tree.bat
 | FluidWarfare.AI | 未来的战术 AI、编队 AI 和战略 AI | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Data | 场景 JSON 与资源数据读取 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Render | 抽象渲染层，负责渲染场景数据结构与 World 到 RenderScene 的转换，不依赖具体渲染后端 | 测试通过 |
-| FluidWarfare.Render.Vulkan | Vulkan 具体渲染后端模块。当前实现 Vulkan Loader 探测、VkInstance 最小创建释放与 Editor 状态显示 | 测试通过 |
+| FluidWarfare.Render.Vulkan | Vulkan 具体渲染后端模块。当前实现 Vulkan Loader 探测、VkInstance 最小创建释放、PhysicalDevice / LogicalDevice 最小选择释放与 Editor 状态显示 | 测试通过 |
 | FluidWarfare.Runtime.Windows | Windows 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Editor.Windows | Windows 桌面编辑器，使用 Avalonia 构建 GUI，启动时加载示例项目，只用于开发、调试和导出，不进入 Android Runtime | 可运行 |
@@ -528,6 +542,10 @@ get_tree.bat
 | `FluidWarfare.Render.Vulkan/Instance/VulkanInstanceInfo.cs` | Vulkan Instance 创建探测结果模型，保存状态、中文说明、API 版本、扩展数量与耗时 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Instance/VulkanInstanceProbe.cs` | 创建并释放 Vulkan Instance，读取 API 版本与扩展数量，不创建 Device 或 Surface | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Instance/VulkanInstanceInfoTests.cs` | 验证 Vulkan Instance 探测结果模型的基础语义与轻量 Probe 输出 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Device/VulkanDeviceStatus.cs` | Vulkan Device 创建探测状态枚举 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Device/VulkanDeviceInfo.cs` | Vulkan Device 创建探测结果模型，保存状态、中文说明、显卡名称、设备类型、图形队列族索引与耗时 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Device/VulkanDeviceProbe.cs` | 枚举 PhysicalDevice，选择支持 Graphics Queue 的设备，创建并释放 LogicalDevice，不创建 Surface 或 Swapchain | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Device/VulkanDeviceInfoTests.cs` | 验证 Vulkan Device 探测结果模型的基础语义与轻量 Probe 输出 | 测试通过 |
 | `FluidWarfare.Engine/Components/PositionComponent.cs` | 实体位置组件，包装 Vector3d | 测试通过 |
 | `FluidWarfare.Engine/Components/DisplayNameComponent.cs` | 实体显示名组件，保存用于 Editor 显示的名称 | 测试通过 |
 | `FluidWarfare.Tests/Engine/World/WorldStateTests.cs` | 验证最小 World 实体创建、查询、位置读取与枚举 | 测试通过 |
@@ -556,7 +574,7 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/MainWindow.axaml` | 编辑器主窗口 XAML 容器，承载 EditorShell | 可运行 |
 | `FluidWarfare.Editor.Windows/MainWindow.axaml.cs` | 编辑器主窗口 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器布局壳，组织菜单栏、项目内容面板、World 实体列表面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、Vulkan 后端探测、Vulkan Instance 探测、Vulkan 视口宿主状态、实体选择与 UI 显示 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、Vulkan 后端探测、Vulkan Instance 探测、Vulkan Device 探测、Vulkan 视口宿主状态、实体选择与 UI 显示 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectContentFolderSelection.cs` | 项目内容目录选择值对象，保存稳定 FolderName、DisplayName 和 ContentKind | 可运行 |
@@ -564,8 +582,8 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs` | 视口占位显示模型，保存当前选中实体的名称、EntityId、来源路径、位置文本与视觉类型 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderObjectSummary.cs` | 视口 RenderScene 调试列表中的单个渲染对象显示摘要 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderSceneSummary.cs` | 视口 RenderScene 调试列表显示模型，保存多个渲染对象摘要 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位界面，显示默认提示、World 为空提示、当前选中实体摘要、Vulkan 后端状态、Vulkan Instance 状态与 RenderScene 调试对象列表 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板逻辑，显示 Vulkan 后端状态、Vulkan Instance 状态、实体摘要与 RenderScene 调试对象 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位界面，显示默认提示、World 为空提示、当前选中实体摘要、Vulkan 后端状态、Vulkan Instance 状态、Vulkan Device 状态与 RenderScene 调试对象列表 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板逻辑，显示 Vulkan 后端状态、Vulkan Instance 状态、Vulkan Device 状态、实体摘要与 RenderScene 调试对象 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostState.cs` | Vulkan 视口宿主占位状态枚举 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostInfo.cs` | Vulkan 视口宿主占位显示信息 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml` | Vulkan 视口宿主占位 UI，显示宿主状态文本 | 可运行 |

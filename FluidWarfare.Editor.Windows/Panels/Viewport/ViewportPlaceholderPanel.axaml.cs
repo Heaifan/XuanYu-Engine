@@ -19,6 +19,7 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
     private StackPanel? _debugListPanel;
     private TextBlock? _vulkanBackendStatusText;
     private TextBlock? _vulkanInstanceStatusText;
+    private TextBlock? _vulkanDeviceStatusText;
 
     public event EventHandler? ViewportFocused;
 
@@ -43,6 +44,7 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
         _debugListPanel = this.FindControl<StackPanel>("DebugListPanel");
         _vulkanBackendStatusText = this.FindControl<TextBlock>("VulkanBackendStatusText");
         _vulkanInstanceStatusText = this.FindControl<TextBlock>("VulkanInstanceStatusText");
+        _vulkanDeviceStatusText = this.FindControl<TextBlock>("VulkanDeviceStatusText");
     }
 
     /// <summary>
@@ -120,6 +122,17 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
         if (_vulkanInstanceStatusText is not null)
         {
             _vulkanInstanceStatusText.Text = statusText;
+        }
+    }
+
+    /// <summary>
+    /// 显示 Vulkan Device 状态文本。
+    /// </summary>
+    public void ShowVulkanDeviceStatus(string statusText)
+    {
+        if (_vulkanDeviceStatusText is not null)
+        {
+            _vulkanDeviceStatusText.Text = statusText;
         }
     }
 

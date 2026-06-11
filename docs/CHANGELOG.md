@@ -310,6 +310,21 @@
 5. 本轮不创建 PhysicalDevice、Device、Surface、Swapchain、RenderPass、CommandBuffer，也不做真实清屏。
 6. 从本里程碑开始，Vulkan 初始化类操作需要返回耗时信息，便于后续性能分析。
 
+### Milestone 7.4：Vulkan Device 最小选择与释放
+
+#### 新增
+
+1. 新增 `VulkanDeviceStatus`、`VulkanDeviceInfo` 与 `VulkanDeviceProbe`。
+2. 新增 `VulkanDeviceInfoTests`，验证 Vulkan Device 探测结果模型和轻量 Probe 结果。
+
+#### 修改
+
+1. `VulkanDeviceProbe` 枚举 PhysicalDevice，选择支持 Graphics Queue 的设备，创建 LogicalDevice 并获取 Graphics Queue，然后立即释放。
+2. `EditorShell` 启动时显示 Vulkan Device 创建结果、显卡名称、设备类型、图形队列族与耗时。
+3. `ViewportPlaceholderPanel` 新增 Vulkan Device 状态显示区域。
+4. 本轮不创建 Surface、Swapchain、RenderPass、CommandBuffer，也不做真实清屏。
+5. Vulkan Device 创建继续返回耗时信息，便于后续性能分析。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

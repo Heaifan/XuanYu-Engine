@@ -19,6 +19,7 @@ using FluidWarfare.Project.Paths;
 using FluidWarfare.Project.Validation;
 using FluidWarfare.Render.Scene;
 using FluidWarfare.Render.Vulkan.Backend;
+using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
 using FluidWarfare.Render.World;
 
@@ -41,6 +42,7 @@ public sealed partial class EditorShell : UserControl
     private RenderScene _renderScene = RenderScene.Empty;
     private VulkanBackendInfo _vulkanBackendInfo = VulkanBackendInfo.NotChecked;
     private VulkanInstanceInfo _vulkanInstanceInfo = VulkanInstanceInfo.NotChecked;
+    private VulkanDeviceInfo _vulkanDeviceInfo = VulkanDeviceInfo.NotChecked;
 
     public EditorShell()
     {
@@ -430,6 +432,40 @@ public sealed partial class EditorShell : UserControl
 
         _viewportPlaceholderPanel?.ShowVulkanInstanceStatus(
             $"{_vulkanInstanceInfo.Message} API 版本：{_vulkanInstanceInfo.ApiVersionText}，扩展数量：{_vulkanInstanceInfo.ExtensionCount}。");
+
+        ProbeVulkanDevice();
+    }
+
+    private void ProbeVulkanDevice()
+    {
+        if (!_vulkanInstanceInfo.IsCreated)
+        {
+            _vulkanDeviceInfo = new VulkanDeviceInfo(
+                VulkanDeviceStatus.Failed,
+                "Vulkan Instance 未创建，跳过 Device 创建。",
+                "未知",
+                "未知",
+                -1,
+                0);
+
+            _viewportPlaceholderPanel?.ShowVulkanDeviceStatus(_vulkanDeviceInfo.Message);
+            return;
+        }
+
+        _vulkanDeviceInfo = VulkanDeviceProbe.Probe();
+
+        if (_vulkanDeviceInfo.IsCreated)
+        {
+            AppendInfoLog(
+                $"Vulkan Device 创建成功，显卡：{_vulkanDeviceInfo.PhysicalDeviceName}，类型：{_vulkanDeviceInfo.PhysicalDeviceTypeText}，图形队列族：{_vulkanDeviceInfo.GraphicsQueueFamilyIndex}，用时：{_vulkanDeviceInfo.ElapsedMilliseconds:F2} ms。");
+        }
+        else
+        {
+            AppendWarningLog(_vulkanDeviceInfo.Message);
+        }
+
+        _viewportPlaceholderPanel?.ShowVulkanDeviceStatus(
+            $"{_vulkanDeviceInfo.Message} 显卡：{_vulkanDeviceInfo.PhysicalDeviceName}，类型：{_vulkanDeviceInfo.PhysicalDeviceTypeText}，图形队列族：{_vulkanDeviceInfo.GraphicsQueueFamilyIndex}。");
     }
 
     private void UpdateVulkanViewportHost()
