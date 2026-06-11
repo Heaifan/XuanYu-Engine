@@ -636,7 +636,9 @@ public sealed partial class EditorShell : UserControl
             ProbeVulkanSwapchain();
             ProbeVulkanClear();
             ProbeVulkanMarkerDraw();
-            ProbeVulkanScene3D();
+            // Scene3D probe（Shader/Pipeline/VertexBuffer/Draw）目前触发驱动级闪退，
+            // 待排查后在独立测试中重新启用，暂时不随 Editor 启动自动执行。
+            // ProbeVulkanScene3D();
         }
         else
         {
