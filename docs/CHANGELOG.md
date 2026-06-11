@@ -264,6 +264,19 @@
 5. `ViewportPlaceholderPanel` 新增 Vulkan 后端状态文本区域。
 6. 本轮不创建 Vulkan Instance、Device、Surface、Swapchain，也不做真实渲染。
 
+### Milestone 7.1：Vulkan 视口宿主占位
+
+#### 新增
+
+1. 新增 `VulkanViewportHostPanel`，作为未来 Vulkan Surface / Swapchain 的 Editor 视口宿主占位。
+2. 新增 `VulkanViewportHostState` 与 `VulkanViewportHostInfo`，用于描述宿主占位状态。
+
+#### 修改
+
+1. `EditorShell.axaml` 中央视口区域拆分为上下两块：上方为 Vulkan 视口宿主面板，下方为文本调试视口。
+2. `EditorShell.axaml.cs` 新增 `UpdateVulkanViewportHost`，根据 `VulkanBackendInfo` 更新宿主状态。
+3. `file-tree.md` 新增 VulkanViewportHostPanel 结构。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

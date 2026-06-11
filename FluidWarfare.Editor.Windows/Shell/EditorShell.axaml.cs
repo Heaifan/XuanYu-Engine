@@ -30,6 +30,7 @@ public sealed partial class EditorShell : UserControl
     private ProjectPanel? _projectPanel;
     private StatusBarPanel? _statusBarPanel;
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
+    private VulkanViewportHostPanel? _vulkanViewportHostPanel;
     private WorldEntityListPanel? _worldEntityListPanel;
     private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByDisplayName = [];
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
@@ -56,6 +57,7 @@ public sealed partial class EditorShell : UserControl
         _projectPanel = this.FindControl<ProjectPanel>("ProjectPanel");
         _statusBarPanel = this.FindControl<StatusBarPanel>("EditorStatusBarPanel");
         _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
+        _vulkanViewportHostPanel = this.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanel");
         _worldEntityListPanel = this.FindControl<WorldEntityListPanel>("WorldEntityListPanel");
     }
 
@@ -392,6 +394,28 @@ public sealed partial class EditorShell : UserControl
 
         _viewportPlaceholderPanel?.ShowVulkanBackendStatus(
             _vulkanBackendInfo.Message);
+
+        UpdateVulkanViewportHost();
+    }
+
+    private void UpdateVulkanViewportHost()
+    {
+        VulkanViewportHostInfo hostInfo;
+
+        if (_vulkanBackendInfo.IsAvailable)
+        {
+            hostInfo = new VulkanViewportHostInfo(
+                VulkanViewportHostState.WaitingForSurface,
+                "已创建占位宿主，等待 Surface / Swapchain 接入。");
+        }
+        else
+        {
+            hostInfo = new VulkanViewportHostInfo(
+                VulkanViewportHostState.Disabled,
+                "不可启用，Vulkan 后端不可用。");
+        }
+
+        _vulkanViewportHostPanel?.ShowHostInfo(hostInfo);
     }
 
     private void ShowLoadedProject(GameProjectInfo project)

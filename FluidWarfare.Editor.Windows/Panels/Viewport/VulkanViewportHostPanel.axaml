@@ -1,0 +1,23 @@
+<UserControl
+    x:Class="FluidWarfare.Editor.Windows.Panels.Viewport.VulkanViewportHostPanel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Border
+      Margin="0"
+      Background="#1A1F26"
+      BorderBrush="#48515C"
+      BorderThickness="0,0,1,1"
+      Padding="20,12">
+    <StackPanel Spacing="6">
+      <TextBlock
+          FontSize="16"
+          FontWeight="SemiBold"
+          Foreground="#F0F4F8"
+          Text="Vulkan 视口宿主" />
+      <TextBlock
+          x:Name="HostInfoText"
+          Foreground="#8B949E"
+          Text="正在初始化..." />
+    </StackPanel>
+  </Border>
+</UserControl>
