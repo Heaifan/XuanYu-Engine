@@ -67,6 +67,11 @@
 49. Milestone 5.0：新增 `FluidWarfare.Engine/Components/PositionComponent.cs`。
 50. Milestone 5.0：新增 `FluidWarfare.Engine/Components/DisplayNameComponent.cs`。
 51. Milestone 5.0：新增 `FluidWarfare.Tests/Engine/World/WorldStateTests.cs`。
+52. Milestone 5.1：新增 `FluidWarfare.Bridge.ProjectEngine/FluidWarfare.Bridge.ProjectEngine.csproj`。
+53. Milestone 5.1：新增 `FluidWarfare.Bridge.ProjectEngine/World/ProjectContentWorldSeeder.cs`。
+54. Milestone 5.1：新增 `FluidWarfare.Bridge.ProjectEngine/World/ProjectContentWorldSeedResult.cs`。
+55. Milestone 5.1：新增 `FluidWarfare.Engine/World/ProjectContentEntitySource.cs`。
+56. Milestone 5.1：新增 `FluidWarfare.Tests/Bridge/ProjectEngine/World/ProjectContentWorldSeederTests.cs`。
 
 ### 修改
 
@@ -136,6 +141,11 @@
 64. Milestone 5.0：Editor.csproj 新增 Engine 引用。
 65. Milestone 5.0：Tests.csproj 新增 Engine 引用。
 66. Milestone 5.0：EditorShell 启动时创建最小 World 与示例实体，点击视口后检查器显示实体信息。
+67. Milestone 5.1：WorldEntityInfo 新增 Source 字段。
+68. Milestone 5.1：WorldState.CreateEntity 支持 Source 参数。
+69. Milestone 5.1：FluidWarfare.sln 新增 Bridge.ProjectEngine 项目。
+70. Milestone 5.1：Editor 和 Tests csproj 新增 Bridge 引用。
+71. Milestone 5.1：EditorShell 改为从项目内容文件生成 World 占位实体。
 
 ### 删除
 
@@ -157,9 +167,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 5.0：最小 World 实体。
+当前执行 Milestone 5.1：从项目内容生成占位实体。
 
-本轮只完成 Engine 项目创建、最小 WorldState、实体组件模型和 Editor 实体显示，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做完整 ECS 调度系统，不做 Query，不做 Archetype，不做 Chunk，不做 Vulkan，不做 Runtime，不做 Android。
+本轮只完成项目内容到 Engine World 的桥接层、ProjectContentWorldSeeder、World 实体 Source 支持和 Editor 从 sample_unit.json 生成占位实体，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做完整 ECS 调度系统，不做 Query，不做 Archetype，不做 Chunk，不做 Vulkan，不做 Runtime，不做 Android。
 
 ## 3. 顶层目录结构
 
@@ -203,12 +213,18 @@ FluidWarfare/
 |   `-- Validation/
 |       |-- ProjectValidationIssue.cs
 |       `-- ProjectValidationReport.cs
+|-- FluidWarfare.Bridge.ProjectEngine/
+|   |-- FluidWarfare.Bridge.ProjectEngine.csproj
+|   `-- World/
+|       |-- ProjectContentWorldSeedResult.cs
+|       `-- ProjectContentWorldSeeder.cs
 |-- FluidWarfare.Engine/
 |   |-- FluidWarfare.Engine.csproj
 |   |-- Components/
 |   |   |-- DisplayNameComponent.cs
 |   |   `-- PositionComponent.cs
 |   `-- World/
+|       |-- ProjectContentEntitySource.cs
 |       |-- WorldEntityInfo.cs
 |       `-- WorldState.cs
 |-- FluidWarfare.Ecs/
@@ -264,6 +280,10 @@ FluidWarfare/
 |   `-- .gitkeep
 |-- FluidWarfare.Tests/
 |   |-- .gitkeep
+|   |-- Bridge/
+|   |   `-- ProjectEngine/
+|   |       `-- World/
+|   |           `-- ProjectContentWorldSeederTests.cs
 |   |-- Core/
 |   |-- Engine/
 |   |   `-- World/
@@ -357,6 +377,7 @@ get_tree.bat
 |---|---|---|
 | FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / EngineLogLevel 与 EngineLogEntry 测试通过 |
 | FluidWarfare.Project | 游戏项目元数据与最小项目加载层，负责读取 game.project.json，不依赖 Editor 或 Avalonia | 测试通过 |
+| FluidWarfare.Bridge.ProjectEngine | Project 层与 Engine 层的桥接模块，用于把项目内容入口转换为 Engine World 占位实体 | 测试通过 |
 | FluidWarfare.Engine | 引擎运行层，负责 World、实体、组件与模拟状态。当前仅实现最小 World 实体 | 测试通过 |
 | FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 已创建 / 仅 `.gitkeep` |
@@ -398,8 +419,13 @@ get_tree.bat
 | `FluidWarfare.Project/Validation/ProjectValidationIssue.cs` | 项目校验问题模型，保存错误码、中文信息和问题路径，不读取文件不写日志 | 测试通过 |
 | `FluidWarfare.Project/Validation/ProjectValidationReport.cs` | 项目校验报告模型，汇总项目加载与内容扫描中的校验问题，支持空报告 | 测试通过 |
 | `FluidWarfare.Engine/FluidWarfare.Engine.csproj` | Engine 引擎层项目文件，引用 Core | 测试通过 |
-| `FluidWarfare.Engine/World/WorldState.cs` | 最小世界状态，支持创建、查询和枚举带显示名与位置的实体 | 测试通过 |
-| `FluidWarfare.Engine/World/WorldEntityInfo.cs` | World 实体显示信息模型，保存 EntityId 与显示名 | 测试通过 |
+| `FluidWarfare.Engine/World/ProjectContentEntitySource.cs` | 保存 World 实体的项目内容来源路径与内容类型，不读取文件不解析 JSON | 测试通过 |
+| `FluidWarfare.Engine/World/WorldState.cs` | 最小世界状态，支持创建、查询和枚举带显示名、位置与可选来源的实体 | 测试通过 |
+| `FluidWarfare.Engine/World/WorldEntityInfo.cs` | World 实体显示信息模型，保存 EntityId、显示名与可选项目内容来源 | 测试通过 |
+| `FluidWarfare.Bridge.ProjectEngine/FluidWarfare.Bridge.ProjectEngine.csproj` | Bridge 桥接层项目文件，依赖 Core + Engine + Project | 测试通过 |
+| `FluidWarfare.Bridge.ProjectEngine/World/ProjectContentWorldSeeder.cs` | 根据 GameContentFileInfo 中的 unitTemplate 文件入口，在 WorldState 中创建占位实体 | 测试通过 |
+| `FluidWarfare.Bridge.ProjectEngine/World/ProjectContentWorldSeedResult.cs` | 保存项目内容生成 World 占位实体的结果，包括创建数量和来源路径 | 测试通过 |
+| `FluidWarfare.Tests/Bridge/ProjectEngine/World/ProjectContentWorldSeederTests.cs` | 验证 Seeder 的 unitTemplate 过滤、命名、稳定排序和多文件创建 | 测试通过 |
 | `FluidWarfare.Engine/Components/PositionComponent.cs` | 实体位置组件，包装 Vector3d | 测试通过 |
 | `FluidWarfare.Engine/Components/DisplayNameComponent.cs` | 实体显示名组件，保存用于 Editor 显示的名称 | 测试通过 |
 | `FluidWarfare.Tests/Engine/World/WorldStateTests.cs` | 验证最小 World 实体创建、查询、位置读取与枚举 | 测试通过 |
@@ -576,7 +602,7 @@ EditorShell：
 
 ## 10. 当前不做的内容
 
-当前已经进入 Milestone 5.0 最小 World 实体任务。
+当前已经进入 Milestone 5.1 从项目内容生成占位实体任务。
 
 本轮不做以下内容：
 

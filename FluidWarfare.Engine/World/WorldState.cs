@@ -5,7 +5,7 @@ using FluidWarfare.Engine.Components;
 namespace FluidWarfare.Engine.World;
 
 /// <summary>
-/// 最小世界状态，支持创建、查询和枚举带显示名与位置的实体。
+/// 最小世界状态，支持创建、查询和枚举带显示名、位置与可选来源的实体。
 /// 不读取项目文件，不写日志，不依赖 Editor。
 /// </summary>
 public sealed class WorldState
@@ -13,15 +13,25 @@ public sealed class WorldState
     private int _nextEntityValue = 1;
     private readonly Dictionary<EntityId, DisplayNameComponent> _displayNames = [];
     private readonly Dictionary<EntityId, PositionComponent> _positions = [];
+    private readonly Dictionary<EntityId, ProjectContentEntitySource> _sources = [];
 
     /// <summary>
-    /// 创建一个新实体。
+    /// 创建一个新实体（无来源）。
+    /// </summary>
+    public EntityId CreateEntity(string displayName, Vector3d position)
+    {
+        return CreateEntity(displayName, position, null);
+    }
+
+    /// <summary>
+    /// 创建一个新实体（可携带项目内容来源）。
     /// </summary>
     /// <param name="displayName">实体显示名称，不能为空。</param>
     /// <param name="position">实体位置，必须为有效 Vector3d。</param>
+    /// <param name="source">可选的项目内容来源信息。</param>
     /// <returns>新创建的实体编号。</returns>
     /// <exception cref="ArgumentException">displayName 为空时抛出。</exception>
-    public EntityId CreateEntity(string displayName, Vector3d position)
+    public EntityId CreateEntity(string displayName, Vector3d position, ProjectContentEntitySource? source)
     {
         if (string.IsNullOrWhiteSpace(displayName))
         {
@@ -33,6 +43,11 @@ public sealed class WorldState
 
         _displayNames[entityId] = new DisplayNameComponent(displayName);
         _positions[entityId] = new PositionComponent(position);
+
+        if (source is not null)
+        {
+            _sources[entityId] = source;
+        }
 
         return entityId;
     }
@@ -52,7 +67,8 @@ public sealed class WorldState
     {
         if (_displayNames.TryGetValue(entityId, out var nameComponent))
         {
-            return new WorldEntityInfo(entityId, nameComponent.Value);
+            _sources.TryGetValue(entityId, out var source);
+            return new WorldEntityInfo(entityId, nameComponent.Value, source);
         }
 
         return null;
@@ -77,7 +93,11 @@ public sealed class WorldState
     public IReadOnlyList<WorldEntityInfo> ListEntities()
     {
         return _displayNames
-            .Select(kvp => new WorldEntityInfo(kvp.Key, kvp.Value.Value))
+            .Select(kvp =>
+            {
+                _sources.TryGetValue(kvp.Key, out var source);
+                return new WorldEntityInfo(kvp.Key, kvp.Value.Value, source);
+            })
             .ToList();
     }
 }

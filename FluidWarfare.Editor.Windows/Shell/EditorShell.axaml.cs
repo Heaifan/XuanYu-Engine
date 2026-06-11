@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using FluidWarfare.Bridge.ProjectEngine.World;
 using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
 using FluidWarfare.Core.Math;
@@ -28,7 +29,7 @@ public sealed partial class EditorShell : UserControl
     private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByDisplayName = [];
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
     private WorldState? _worldState;
-    private EntityId _sampleEntityId;
+    private EntityId _firstEntityId;
 
     public EditorShell()
     {
@@ -37,7 +38,6 @@ public sealed partial class EditorShell : UserControl
         SubscribePanelEvents();
         InitializeLogs();
         LoadSampleProject();
-        CreateSampleWorld();
     }
 
     private void FindShellControls()
@@ -101,12 +101,12 @@ public sealed partial class EditorShell : UserControl
         _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
         AppendInfoLog("视口获得焦点。");
 
-        if (_worldState is not null && _worldState.ContainsEntity(_sampleEntityId))
+        if (_worldState is not null && _worldState.ContainsEntity(_firstEntityId))
         {
-            var entityInfo = _worldState.FindEntity(_sampleEntityId);
+            var entityInfo = _worldState.FindEntity(_firstEntityId);
             if (entityInfo is not null)
             {
-                AppendInfoLog($"当前 World 实体：{entityInfo.DisplayName}。");
+                AppendInfoLog($"当前 World 占位实体：{entityInfo.DisplayName}。");
             }
         }
     }
@@ -189,6 +189,7 @@ public sealed partial class EditorShell : UserControl
         if (loadResult.Result.IsSuccess && loadResult.Project is not null)
         {
             ShowLoadedProject(loadResult.Project);
+            CreateWorldFromProject(loadResult.Project);
             AppendInfoLog($"已加载示例项目：{loadResult.Project.DisplayName}。");
             return;
         }
@@ -217,13 +218,36 @@ public sealed partial class EditorShell : UserControl
         }
     }
 
-    private void CreateSampleWorld()
+    private void CreateWorldFromProject(GameProjectInfo project)
     {
         _worldState = new WorldState();
-        _sampleEntityId = _worldState.CreateEntity("示例单位", Vector3d.Zero);
+
+        if (_contentFiles is null || _contentFiles.Count == 0)
+        {
+            AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
+            return;
+        }
+
+        var seedResult = ProjectContentWorldSeeder.SeedUnitTemplatePlaceholders(
+            _worldState,
+            _contentFiles);
+
+        if (seedResult.CreatedEntityCount == 0)
+        {
+            AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
+            return;
+        }
+
+        // 记录第一个实体 ID，用于视口点击显示
+        var entities = _worldState.ListEntities();
+        _firstEntityId = entities.Count > 0 ? entities[0].EntityId : default;
 
         AppendInfoLog("最小 World 已创建。");
-        AppendInfoLog($"World 示例实体已创建：示例单位。");
+
+        foreach (var sourcePath in seedResult.SourcePaths)
+        {
+            AppendInfoLog($"已从项目内容生成 World 占位实体：{sourcePath}。");
+        }
     }
 
     private void ShowLoadedProject(GameProjectInfo project)
@@ -270,19 +294,20 @@ public sealed partial class EditorShell : UserControl
 
     private EditorSelection CreateViewportSelection()
     {
-        if (_worldState is not null && _worldState.ContainsEntity(_sampleEntityId))
+        if (_worldState is not null && _worldState.ContainsEntity(_firstEntityId))
         {
-            var entityInfo = _worldState.FindEntity(_sampleEntityId);
-            var position = _worldState.FindPosition(_sampleEntityId);
+            var entityInfo = _worldState.FindEntity(_firstEntityId);
+            var position = _worldState.FindPosition(_firstEntityId);
 
             if (entityInfo is not null)
             {
+                var typeLabel = entityInfo.Source is not null ? "World 占位实体" : "World 实体";
                 var description = position is not null
-                    ? $"EntityId({_sampleEntityId.Value})，位置：({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
-                    : $"EntityId({_sampleEntityId.Value})";
+                    ? $"EntityId({_firstEntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}，位置：({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
+                    : $"EntityId({_firstEntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}";
 
                 return new EditorSelection(
-                    "World 实体",
+                    typeLabel,
                     entityInfo.DisplayName,
                     description);
             }

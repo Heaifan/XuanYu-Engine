@@ -166,6 +166,27 @@
 4. `EditorShell` 在启动时创建最小 World 和示例实体，点击视口后检查器显示实体信息。
 5. `file-tree.md` 新增 Engine 模块结构。
 
+### Milestone 5.1：从项目内容生成占位实体
+
+#### 新增
+
+1. 新增项目内容到 Engine World 的桥接层 `FluidWarfare.Bridge.ProjectEngine`。
+2. 新增 `ProjectContentWorldSeeder`，根据 `unitTemplate` 内容文件入口生成 World 占位实体。
+3. 新增 `ProjectContentWorldSeedResult`，保存生成数量和来源路径。
+4. 新增 `ProjectContentEntitySource`，保存 World 实体的项目内容来源信息。
+5. 新增 `FluidWarfare.Tests/Bridge/ProjectEngine/World/ProjectContentWorldSeederTests.cs`。
+6. 新增 `FluidWarfare.Bridge.ProjectEngine/World/` 目录。
+
+#### 修改
+
+1. `WorldEntityInfo` 新增可选 `Source` 字段，用于表示实体来源。
+2. `WorldState.CreateEntity` 支持可选 `ProjectContentEntitySource` 参数。
+3. `FluidWarfare.sln` 新增 `FluidWarfare.Bridge.ProjectEngine` 项目。
+4. `Editor.Windows.csproj` 新增 Bridge 引用。
+5. `Tests.csproj` 新增 Bridge 引用。
+6. `EditorShell` 不再硬编码“示例单位”，改为从 `SampleProject` 的 `units/sample_unit.json` 内容文件入口创建 World 占位实体。
+7. 点击视口时检查器显示占位实体名称、来源路径与位置。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

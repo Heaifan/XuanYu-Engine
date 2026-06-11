@@ -100,6 +100,33 @@ public sealed class WorldStateTests
     }
 
     [Fact]
+    public void CreateEntity_WithSource_ShouldStoreSource()
+    {
+        var world = new WorldState();
+        var source = new ProjectContentEntitySource("units/test.json", "unitTemplate");
+
+        var entityId = world.CreateEntity("测试单位", Vector3d.Zero, source);
+
+        var info = world.FindEntity(entityId);
+        Assert.NotNull(info);
+        Assert.NotNull(info.Source);
+        Assert.Equal("units/test.json", info.Source.RelativePath);
+        Assert.Equal("unitTemplate", info.Source.ContentKind);
+    }
+
+    [Fact]
+    public void CreateEntity_WithoutSource_ShouldReturnNullSource()
+    {
+        var world = new WorldState();
+
+        var entityId = world.CreateEntity("测试单位", Vector3d.Zero);
+
+        var info = world.FindEntity(entityId);
+        Assert.NotNull(info);
+        Assert.Null(info.Source);
+    }
+
+    [Fact]
     public void ListEntities_AfterCreatingEntities_ShouldReturnAllEntities()
     {
         var world = new WorldState();

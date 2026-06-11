@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FluidWarfare.Bridge.ProjectEngine\FluidWarfare.Bridge.ProjectEngine.csproj" />
     <ProjectReference Include="..\FluidWarfare.Core\FluidWarfare.Core.csproj" />
     <ProjectReference Include="..\FluidWarfare.Engine\FluidWarfare.Engine.csproj" />
     <ProjectReference Include="..\FluidWarfare.Project\FluidWarfare.Project.csproj" />
