@@ -18,6 +18,7 @@ using FluidWarfare.Project.Metadata;
 using FluidWarfare.Project.Paths;
 using FluidWarfare.Project.Validation;
 using FluidWarfare.Render.Scene;
+using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.World;
 
 namespace FluidWarfare.Editor.Windows.Shell;
@@ -36,6 +37,7 @@ public sealed partial class EditorShell : UserControl
     private EntityId _firstEntityId;
     private WorldEntityInfo? _selectedWorldEntity;
     private RenderScene _renderScene = RenderScene.Empty;
+    private VulkanBackendInfo _vulkanBackendInfo = VulkanBackendInfo.NotChecked;
 
     public EditorShell()
     {
@@ -44,6 +46,7 @@ public sealed partial class EditorShell : UserControl
         SubscribePanelEvents();
         InitializeLogs();
         LoadSampleProject();
+        ProbeVulkanBackend();
     }
 
     private void FindShellControls()
@@ -369,6 +372,26 @@ public sealed partial class EditorShell : UserControl
         _worldEntityListPanel?.ShowEntities(entities);
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
         _viewportPlaceholderPanel?.ShowRenderSceneSummary(CreateViewportRenderSceneSummary());
+    }
+
+    private void ProbeVulkanBackend()
+    {
+        _vulkanBackendInfo = VulkanBackendProbe.Probe();
+
+        if (_vulkanBackendInfo.IsAvailable)
+        {
+            AppendInfoLog($"Vulkan 后端状态：{_vulkanBackendInfo.Message}");
+        }
+        else
+        {
+            AppendWarningLog($"Vulkan 后端不可用：{_vulkanBackendInfo.Message}");
+        }
+
+        _statusBarPanel?.SetVulkanStatus(
+            _vulkanBackendInfo.IsAvailable ? "已接入" : "不可用");
+
+        _viewportPlaceholderPanel?.ShowVulkanBackendStatus(
+            _vulkanBackendInfo.Message);
     }
 
     private void ShowLoadedProject(GameProjectInfo project)

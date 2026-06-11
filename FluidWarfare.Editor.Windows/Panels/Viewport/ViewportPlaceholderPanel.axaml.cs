@@ -17,6 +17,7 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
     private TextBlock? _entityVisualKindText;
     private TextBlock? _debugListEmptyText;
     private StackPanel? _debugListPanel;
+    private TextBlock? _vulkanBackendStatusText;
 
     public event EventHandler? ViewportFocused;
 
@@ -39,6 +40,7 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
         _entityVisualKindText = this.FindControl<TextBlock>("EntityVisualKindText");
         _debugListEmptyText = this.FindControl<TextBlock>("DebugListEmptyText");
         _debugListPanel = this.FindControl<StackPanel>("DebugListPanel");
+        _vulkanBackendStatusText = this.FindControl<TextBlock>("VulkanBackendStatusText");
     }
 
     /// <summary>
@@ -95,6 +97,17 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
         }
 
         ShowSinglePanel(_entitySummaryContent);
+    }
+
+    /// <summary>
+    /// 显示 Vulkan 后端状态文本。
+    /// </summary>
+    public void ShowVulkanBackendStatus(string statusText)
+    {
+        if (_vulkanBackendStatusText is not null)
+        {
+            _vulkanBackendStatusText.Text = statusText;
+        }
     }
 
     /// <summary>

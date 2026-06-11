@@ -83,6 +83,11 @@
 65. Milestone 6.0：新增 `FluidWarfare.Tests/Render/World/WorldToRenderSceneBuilderTests.cs`。
 66. Milestone 6.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderObjectSummary.cs`。
 67. Milestone 6.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderSceneSummary.cs`。
+68. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/FluidWarfare.Render.Vulkan.csproj`。
+69. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/Backend/VulkanBackendStatus.cs`。
+70. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/Backend/VulkanBackendInfo.cs`。
+71. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/Backend/VulkanBackendProbe.cs`。
+72. Milestone 7.0：新增 `FluidWarfare.Tests/Render/Vulkan/Backend/VulkanBackendInfoTests.cs`。
 
 ### 修改
 
@@ -167,6 +172,11 @@
 79. Milestone 6.0：ViewportEntitySummary 新增 VisualKindText。
 80. Milestone 6.1：ViewportPlaceholderPanel 新增 RenderScene 调试对象区域。
 81. Milestone 6.1：EditorShell 新增 CreateViewportRenderSceneSummary。
+82. Milestone 7.0：FluidWarfare.sln 新增 Render.Vulkan 项目。
+83. Milestone 7.0：Editor.csproj 和 Tests.csproj 新增 Render.Vulkan 引用。
+84. Milestone 7.0：EditorShell 启动时探测 Vulkan 后端并输出状态日志。
+85. Milestone 7.0：StatusBarPanel 新增 SetVulkanStatus 方法。
+86. Milestone 7.0：ViewportPlaceholderPanel 新增 Vulkan 后端状态文本区域。
 
 ### 删除
 
@@ -188,7 +198,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 6.1：视口 RenderScene 调试显示。
+当前执行 Milestone 7.0：Vulkan 最小清屏。
 
 本轮只完成项目内容到 Engine World 的桥接层、ProjectContentWorldSeeder、World 实体 Source 支持和 Editor 从 sample_unit.json 生成占位实体，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做完整 ECS 调度系统，不做 Query，不做 Archetype，不做 Chunk，不做 Vulkan，不做 Runtime，不做 Android。
 
@@ -269,7 +279,11 @@ FluidWarfare/
 |   `-- World/
 |       `-- WorldToRenderSceneBuilder.cs
 |-- FluidWarfare.Render.Vulkan/
-|   `-- .gitkeep
+|   |-- FluidWarfare.Render.Vulkan.csproj
+|   `-- Backend/
+|       |-- VulkanBackendInfo.cs
+|       |-- VulkanBackendProbe.cs
+|       `-- VulkanBackendStatus.cs
 |-- FluidWarfare.Runtime.Windows/
 |   `-- .gitkeep
 |-- FluidWarfare.Runtime.Android/
@@ -312,6 +326,9 @@ FluidWarfare/
 |   |-- .gitkeep
 |   |-- Bridge/
 |   |-- Render/
+|   |   |-- Vulkan/
+|   |   |   `-- Backend/
+|   |   |       `-- VulkanBackendInfoTests.cs
 |   |   `-- World/
 |   |       `-- WorldToRenderSceneBuilderTests.cs
 |   |   `-- ProjectEngine/
@@ -419,7 +436,7 @@ get_tree.bat
 | FluidWarfare.AI | 未来的战术 AI、编队 AI 和战略 AI | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Data | 场景 JSON 与资源数据读取 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Render | 抽象渲染层，负责渲染场景数据结构与 World 到 RenderScene 的转换，不依赖具体渲染后端 | 测试通过 |
-| FluidWarfare.Render.Vulkan | Vulkan 后端实现 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Render.Vulkan | Vulkan 具体渲染后端模块。当前仅实现 Vulkan Loader 探测与 Editor 状态显示 | 测试通过 |
 | FluidWarfare.Runtime.Windows | Windows 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Editor.Windows | Windows 桌面编辑器，使用 Avalonia 构建 GUI，启动时加载示例项目，只用于开发、调试和导出，不进入 Android Runtime | 可运行 |

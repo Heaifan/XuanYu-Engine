@@ -246,6 +246,24 @@
 3. `EditorShell` 新增 `CreateViewportRenderSceneSummary` 和 `ToVisualKindText`，生成 RenderScene 后同步视口调试摘要。
 4. `file-tree.md` 更新视口面板职责说明。
 
+### Milestone 7.0：Vulkan 最小清屏
+
+#### 新增
+
+1. 启用 `FluidWarfare.Render.Vulkan` 项目层，作为 Vulkan 具体后端模块。
+2. 新增 `VulkanBackendStatus`、`VulkanBackendInfo` 与 `VulkanBackendProbe`。
+3. `VulkanBackendProbe` 在 Windows 下尝试探测 `vulkan-1.dll`，报告 Vulkan Loader 是否可用。
+4. 新增 `FluidWarfare.Tests/Render/Vulkan/Backend/VulkanBackendInfoTests.cs`。
+
+#### 修改
+
+1. `FluidWarfare.sln` 新增 `FluidWarfare.Render.Vulkan` 项目。
+2. `Editor.csproj` 和 `Tests.csproj` 新增 Render.Vulkan 引用。
+3. `EditorShell` 启动时调用 `VulkanBackendProbe.Probe()`，输出 Vulkan 状态日志。
+4. `StatusBarPanel` 新增 `SetVulkanStatus` 方法，状态栏显示 Vulkan 已接入/不可用。
+5. `ViewportPlaceholderPanel` 新增 Vulkan 后端状态文本区域。
+6. 本轮不创建 Vulkan Instance、Device、Surface、Swapchain，也不做真实渲染。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

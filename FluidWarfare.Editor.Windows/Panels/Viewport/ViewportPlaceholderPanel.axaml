@@ -8,7 +8,7 @@
       BorderBrush="#48515C"
       BorderThickness="0,0,1,0"
       PointerPressed="HandleViewportPointerPressed">
-    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Margin="20">
       <TextBlock
           Grid.Row="0"
           FontSize="18"
@@ -97,9 +97,29 @@
         </StackPanel>
       </StackPanel>
 
-      <!-- 底部：RenderScene 调试对象列表 -->
+      <!-- 底部：Vulkan 后端状态 -->
       <Border
           Grid.Row="2"
+          Background="#1A1F26"
+          BorderBrush="#48515C"
+          BorderThickness="0,1,0,0"
+          Padding="16,6">
+        <StackPanel Spacing="4">
+          <TextBlock
+              FontSize="14"
+              FontWeight="SemiBold"
+              Foreground="#F0F4F8"
+              Text="Vulkan 后端" />
+          <TextBlock
+              x:Name="VulkanBackendStatusText"
+              Foreground="#8B949E"
+              Text="正在探测..." />
+        </StackPanel>
+      </Border>
+
+      <!-- 底部：RenderScene 调试对象列表 -->
+      <Border
+          Grid.Row="3"
           Background="#1A1F26"
           BorderBrush="#48515C"
           BorderThickness="0,1,0,0"
