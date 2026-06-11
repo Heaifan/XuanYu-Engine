@@ -2,6 +2,7 @@ using FluidWarfare.Render.Vulkan.Shaders;
 
 namespace FluidWarfare.Tests.Render.Vulkan.Shaders;
 
+[Collection("CompiledShadersState")]
 public sealed class CompiledShadersTests
 {
     public CompiledShadersTests()

@@ -3,6 +3,7 @@ using FluidWarfare.Render.Vulkan.Shaders;
 
 namespace FluidWarfare.Tests.Render.Vulkan.Scene3D;
 
+[Collection("CompiledShadersState")]
 public sealed class VulkanScene3dRunGateTests
 {
     [Fact]
