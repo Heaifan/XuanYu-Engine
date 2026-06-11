@@ -22,6 +22,11 @@
             <TextBlock x:Name="DiagSwapchain" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagClear" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagMarker" Foreground="#C9D1D9" TextWrapping="Wrap" />
+            <TextBlock x:Name="DiagScene3d" Foreground="#C9D1D9" TextWrapping="Wrap" />
+            <TextBlock x:Name="DiagCamera" Foreground="#C9D1D9" TextWrapping="Wrap" />
+            <TextBlock x:Name="DiagGrid" Foreground="#C9D1D9" TextWrapping="Wrap" />
+            <TextBlock x:Name="DiagUnit" Foreground="#C9D1D9" TextWrapping="Wrap" />
+            <TextBlock x:Name="DiagDrawCall" Foreground="#C9D1D9" TextWrapping="Wrap" />
           </StackPanel>
         </ScrollViewer>
       </TabItem>
@@ -43,8 +48,9 @@
             <TextBlock x:Name="PerfSwapchain" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="PerfClear" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="PerfMarker" Foreground="#C9D1D9" TextWrapping="Wrap" />
+            <TextBlock x:Name="PerfScene3d" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <Separator />
-            <TextBlock Foreground="#7F8B98" Text="Milestone 8：RenderScene 对象数量与点位绘制耗时。" TextWrapping="Wrap" />
+            <TextBlock Foreground="#7F8B98" Text="Milestone 8.1：3D 管线渲染耗时。" TextWrapping="Wrap" />
           </StackPanel>
         </ScrollViewer>
       </TabItem>

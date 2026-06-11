@@ -26,6 +26,8 @@ using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
 using FluidWarfare.Render.Vulkan.Clear;
 using FluidWarfare.Render.Vulkan.Markers;
+using FluidWarfare.Render.Vulkan.Camera;
+using FluidWarfare.Render.Vulkan.Scene3D;
 using FluidWarfare.Render.Vulkan.Surface;
 using FluidWarfare.Render.Vulkan.Swapchain;
 using FluidWarfare.Render.World;
@@ -54,8 +56,10 @@ public sealed partial class EditorShell : UserControl
     private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
     private VulkanClearInfo _vulkanClearInfo = VulkanClearInfo.NotChecked;
     private VulkanMarkerDrawResult _vulkanMarkerDrawResult = VulkanMarkerDrawResult.NotChecked;
+    private VulkanScene3dInfo _vulkanScene3dInfo = VulkanScene3dInfo.NotChecked;
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
+    private bool _vulkanViewportRendering;
 
     public EditorShell()
     {
@@ -110,7 +114,14 @@ public sealed partial class EditorShell : UserControl
 
     private void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        _viewportResizeRenderTimer?.Stop();
+        _vulkanViewportNativeHostReported = false;
+        _vulkanViewportRendering = false;
+        if (_viewportResizeRenderTimer is not null)
+        {
+            _viewportResizeRenderTimer.Stop();
+            _viewportResizeRenderTimer.Tick -= HandleViewportResizeRenderTimerTick;
+            _viewportResizeRenderTimer = null;
+        }
     }
 
     private void HandleVulkanViewportNativeHostInfoChanged(object? sender, VulkanViewportNativeHostInfo nativeHostInfo)
@@ -155,9 +166,23 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        ProbeVulkanSwapchain();
-        ProbeVulkanClear();
-        ProbeVulkanMarkerDraw();
+        if (_vulkanViewportRendering)
+        {
+            return;
+        }
+
+        _vulkanViewportRendering = true;
+        try
+        {
+            ProbeVulkanSwapchain();
+            ProbeVulkanClear();
+            ProbeVulkanMarkerDraw();
+            ProbeVulkanScene3D();
+        }
+        finally
+        {
+            _vulkanViewportRendering = false;
+        }
     }
 
     private void InitializeLogs()
@@ -786,15 +811,83 @@ public sealed partial class EditorShell : UserControl
         UpdateAllDiagnostics();
     }
 
+    private void ProbeVulkanScene3D()
+    {
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
+        {
+            _vulkanScene3dInfo = new VulkanScene3dInfo(
+                VulkanScene3dStatus.Failed, "缺少原生句柄，跳过 3D 场景绘制。",
+                0, 0, 0, 0, 0, 0, 0, "无", 0);
+            ShowVulkanScene3DInfo();
+            return;
+        }
+
+        // 使用视口实际尺寸（避免 maximize 时硬编码出错）
+        var vpW = (uint)Math.Max(nativeHostInfo.Width, 1);
+        var vpH = (uint)Math.Max(nativeHostInfo.Height, 1);
+
+        // 生成地面网格（范围 -20 到 +20，间隔 2）
+        var gridVertices = VulkanScene3dVertices.BuildGrid(20, 2);
+
+        // 从 RenderScene 取第一个对象的位置
+        VulkanScene3dVertex[] unitVertices;
+        if (_renderScene.Objects.Count > 0)
+        {
+            var obj = _renderScene.Objects[0];
+            var cx = obj.Position.X;
+            var cy = obj.Position.Y + 0.5;
+            var cz = obj.Position.Z;
+            unitVertices = VulkanScene3dVertices.BuildCube(
+                (float)cx, (float)cy, (float)cz, 1.0f);
+        }
+        else
+        {
+            unitVertices = VulkanScene3dVertices.BuildCube(0, 0.5f, 0, 1.0f);
+        }
+
+        var camera = VulkanCameraInfo.DefaultBattlefield;
+
+        _vulkanScene3dInfo = VulkanScene3dRenderer.RenderWindows(
+            nativeHostInfo.InstanceHandle,
+            nativeHostInfo.WindowHandle,
+            vpW, vpH, camera,
+            gridVertices.AsSpan(),
+            unitVertices.AsSpan());
+
+        ShowVulkanScene3DInfo();
+    }
+
+    private void ShowVulkanScene3DInfo()
+    {
+        if (_vulkanScene3dInfo.IsSucceeded)
+        {
+            AppendInfoLog(_vulkanScene3dInfo.Message);
+        }
+        else if (_vulkanScene3dInfo.Status != VulkanScene3dStatus.NotChecked)
+        {
+            AppendWarningLog($"Vulkan 3D 场景绘制失败：{_vulkanScene3dInfo.Message}");
+        }
+
+        UpdateVulkanViewportStatusLine();
+        UpdateAllDiagnostics();
+    }
+
     private void UpdateVulkanViewportStatusLine()
     {
         var markerSuffix = _vulkanMarkerDrawResult.IsSucceeded
             ? $" | 点位：{_vulkanMarkerDrawResult.DrawnMarkerCount}"
             : string.Empty;
 
+        var scene3dSuffix = _vulkanScene3dInfo.IsSucceeded
+            ? $" | Grid: {_vulkanScene3dInfo.GridVertexCount} | Unit: {_vulkanScene3dInfo.UnitVertexCount} | DrawCall: {_vulkanScene3dInfo.DrawCallCount}"
+            : string.Empty;
+
         _vulkanViewportHostPanel?.ShowClearStatus(
             _vulkanClearInfo.IsSucceeded
-                ? $"清屏成功{markerSuffix} | {_vulkanClearInfo.ClearColorText} | {_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}"
+                ? $"3D 场景成功{scene3dSuffix} | {_vulkanClearInfo.ClearColorText}"
                 : $"清屏：{_vulkanClearInfo.Message}");
     }
 
@@ -828,6 +921,21 @@ public sealed partial class EditorShell : UserControl
                 ? $"绘制成功，数量 {_vulkanMarkerDrawResult.DrawnMarkerCount}，尺寸：{nativeHostInfo.Width}x{nativeHostInfo.Height}，用时 {_vulkanMarkerDrawResult.ElapsedMilliseconds:F2} ms"
                 : _vulkanMarkerDrawResult.Message);
 
+        _debugDockPanel?.SetScene3d(
+            _vulkanScene3dInfo.IsSucceeded
+                ? "成功"
+                : _vulkanScene3dInfo.Message,
+            _vulkanScene3dInfo.CameraSummary,
+            _vulkanScene3dInfo.IsSucceeded
+                ? $"{_vulkanScene3dInfo.GridVertexCount} 顶点/{_vulkanScene3dInfo.GridLineCount} 线段"
+                : "-",
+            _vulkanScene3dInfo.IsSucceeded
+                ? $"{_vulkanScene3dInfo.UnitVertexCount} 顶点/{_vulkanScene3dInfo.UnitTriangleCount} 三角形"
+                : "-",
+            _vulkanScene3dInfo.IsSucceeded
+                ? $"{_vulkanScene3dInfo.DrawCallCount}"
+                : "-");
+
         // 性能计时
         _debugDockPanel?.SetPerformance(
             _vulkanInstanceInfo.ElapsedMilliseconds.ToString("F2"),
@@ -836,6 +944,9 @@ public sealed partial class EditorShell : UserControl
             _vulkanClearInfo.ElapsedMilliseconds.ToString("F2"),
             _vulkanMarkerDrawResult.IsSucceeded
                 ? _vulkanMarkerDrawResult.ElapsedMilliseconds.ToString("F2")
+                : "-",
+            _vulkanScene3dInfo.IsSucceeded
+                ? _vulkanScene3dInfo.ElapsedMilliseconds.ToString("F2")
                 : "-");
 
         // RenderScene 调试列表

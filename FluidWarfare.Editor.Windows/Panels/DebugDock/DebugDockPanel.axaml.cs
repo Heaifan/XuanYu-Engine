@@ -20,6 +20,11 @@ public sealed partial class DebugDockPanel : UserControl
     private TextBlock? _diagSwapchain;
     private TextBlock? _diagClear;
     private TextBlock? _diagMarker;
+    private TextBlock? _diagScene3d;
+    private TextBlock? _diagCamera;
+    private TextBlock? _diagGrid;
+    private TextBlock? _diagUnit;
+    private TextBlock? _diagDrawCall;
 
     // RenderScene
     private TextBlock? _renderSceneTitle;
@@ -32,6 +37,7 @@ public sealed partial class DebugDockPanel : UserControl
     private TextBlock? _perfSwapchain;
     private TextBlock? _perfClear;
     private TextBlock? _perfMarker;
+    private TextBlock? _perfScene3d;
 
     // 公开属性：让 EditorShell 可以访问 LogPanel
     public LogPanel? LogPanel => _logPanel;
@@ -53,6 +59,11 @@ public sealed partial class DebugDockPanel : UserControl
         _diagSwapchain = this.FindControl<TextBlock>("DiagSwapchain");
         _diagClear = this.FindControl<TextBlock>("DiagClear");
         _diagMarker = this.FindControl<TextBlock>("DiagMarker");
+        _diagScene3d = this.FindControl<TextBlock>("DiagScene3d");
+        _diagCamera = this.FindControl<TextBlock>("DiagCamera");
+        _diagGrid = this.FindControl<TextBlock>("DiagGrid");
+        _diagUnit = this.FindControl<TextBlock>("DiagUnit");
+        _diagDrawCall = this.FindControl<TextBlock>("DiagDrawCall");
         _renderSceneTitle = this.FindControl<TextBlock>("RenderSceneTitle");
         _renderSceneEmpty = this.FindControl<TextBlock>("RenderSceneEmpty");
         _renderSceneList = this.FindControl<StackPanel>("RenderSceneList");
@@ -61,6 +72,7 @@ public sealed partial class DebugDockPanel : UserControl
         _perfSwapchain = this.FindControl<TextBlock>("PerfSwapchain");
         _perfClear = this.FindControl<TextBlock>("PerfClear");
         _perfMarker = this.FindControl<TextBlock>("PerfMarker");
+        _perfScene3d = this.FindControl<TextBlock>("PerfScene3d");
     }
 
     // ─── 渲染诊断 ──────────────────────────────────────────────
@@ -76,6 +88,15 @@ public sealed partial class DebugDockPanel : UserControl
         if (_diagSwapchain is not null) _diagSwapchain.Text = $"Swapchain：{swapchain}";
         if (_diagClear is not null) _diagClear.Text = $"Clear：{clear}";
         if (_diagMarker is not null) _diagMarker.Text = $"Marker：{marker}";
+    }
+
+    public void SetScene3d(string scene3d, string camera, string grid, string unit, string drawCall)
+    {
+        if (_diagScene3d is not null) _diagScene3d.Text = $"Scene3D：{scene3d}";
+        if (_diagCamera is not null) _diagCamera.Text = $"Camera：{camera}";
+        if (_diagGrid is not null) _diagGrid.Text = $"Grid：{grid}";
+        if (_diagUnit is not null) _diagUnit.Text = $"Unit：{unit}";
+        if (_diagDrawCall is not null) _diagDrawCall.Text = $"DrawCall：{drawCall}";
     }
 
     // ─── RenderScene 列表 ──────────────────────────────────────
@@ -109,12 +130,13 @@ public sealed partial class DebugDockPanel : UserControl
 
     // ─── 性能计时 ──────────────────────────────────────────────
 
-    public void SetPerformance(string instanceMs, string deviceMs, string swapchainMs, string clearMs, string markerMs)
+    public void SetPerformance(string instanceMs, string deviceMs, string swapchainMs, string clearMs, string markerMs, string scene3dMs)
     {
         if (_perfInstance is not null) _perfInstance.Text = $"Instance：{instanceMs} ms";
         if (_perfDevice is not null) _perfDevice.Text = $"Device：{deviceMs} ms";
         if (_perfSwapchain is not null) _perfSwapchain.Text = $"Swapchain：{swapchainMs} ms";
         if (_perfClear is not null) _perfClear.Text = $"Clear：{clearMs} ms";
         if (_perfMarker is not null) _perfMarker.Text = $"MarkerDraw：{markerMs} ms";
+        if (_perfScene3d is not null) _perfScene3d.Text = $"Scene3D：{scene3dMs} ms";
     }
 }

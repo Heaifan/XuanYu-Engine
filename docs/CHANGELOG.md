@@ -548,4 +548,82 @@ FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawResultTests.cs
 
 ---
 
-下一阶段进入 **Milestone 8.1：多对象点位绘制**。
+---
+
+### Milestone 8.1：Vulkan 3D 基础管线
+
+#### 新增
+
+1. 新增 `FluidWarfare.Render.Vulkan/Scene3D/` 目录，包含 3D 场景渲染模型与渲染器。
+2. 新增 `VulkanScene3dStatus` 枚举（NotChecked / Succeeded / Failed）。
+3. 新增 `VulkanScene3dInfo` 记录模型，包含状态、消息、GridVertexCount、GridLineCount、UnitVertexCount、UnitTriangleCount、DrawCallCount、ViewportWidth/Height、CameraSummary 和 ElapsedMilliseconds。
+4. 新增 `VulkanScene3dVertex` 结构（Position + Color）和 `VulkanScene3dVertices` 顶点生成工具（BuildGrid / BuildCube / BuildAxes / ToInterleaved）。
+5. 新增 `VulkanScene3dRenderer` 渲染器：完整全链路（Instance → Surface → Device → Swapchain → ImageViews → RenderPass → ShaderModules → PipelineLayout → GraphicsPipelines → Framebuffers → VertexBuffers → CommandPool → CommandBuffer → PushConstant → Draw → Present → Cleanup）。
+6. 新增 `FluidWarfare.Render.Vulkan/Camera/` 目录，`VulkanCameraInfo` 记录模型（默认战场相机 Position(0,18,24) → Target(0,0,0)，FOV 60°）和 `VulkanCameraMatrices` 矩阵计算（LookAt、PerspectiveVulkan、MVP 合成）。
+7. 新增 `FluidWarfare.Render.Vulkan/Shaders/` 目录：`basic_3d.vert` / `.frag` GLSL 源文件和预编译 SPIR-V 二进制文件。
+8. 新增 `CompiledShaders.cs`：内嵌 SPIR-V 字节码的 C# 类，用于运行时创建 VkShaderModule。
+9. 新增 `DebugDockPanel` 渲染诊断 Tab 的五行 3D 状态（Scene3D / Camera / Grid / Unit / DrawCall）。
+10. 新增 `DebugDockPanel` 性能 Tab 的 Scene3D 耗时行。
+11. EditorShell 新增 `_vulkanScene3dInfo` 状态、`ProbeVulkanScene3D` 方法和 `ShowVulkanScene3DInfo` 方法。
+12. 主视口标题更新为 "Vulkan 3D 战场视口"，状态行显示 Grid / Unit / DrawCall 信息。
+13. 新增测试：`VulkanScene3dInfoTests`（8 个）、`VulkanScene3dVertexTests`（8 个）、`VulkanCameraInfoTests`（7 个）。
+
+#### 技术要点
+
+1. **Shader 编译策略**：使用自定义 `tools/gen_spirv` 工具通过 SPIR-V 字节编码生成预编译二进制。GLSL 源码与 SPIR-V 同时提交。
+   - `tools/gen_spirv` 是极其精简的 SPIR-V 编码器，只生成当前 `basic_3d.vert`/`basic_3d.frag` 所需的最小 SPIR-V，不是通用 shader 编译器。
+   - 正式路线应切换至 glslangValidator / shaderc / DXC + SPIR-V 等标准编译链。`tools/gen_spirv` 定位为临时占位方案，长期将被替代。
+2. **Graphics Pipeline**：两个独立 Pipeline — 地面网格用 `LineList`（PrimitiveTopology.LineList），单位立方体用 `TriangleList`（PrimitiveTopology.TriangleList）。
+3. **Vertex Format**：交错 7×float32（xyz + rgba），stride 28 字节，`R32G32B32_SFLOAT` + `R32G32B32A32_SFLOAT`。
+4. **MVP 传递**：通过 Push Constant（64 字节，mat4）在每帧传入，无 Uniform Buffer 或 Descriptor 开销。
+5. **相机系统**：固定 LookAt 相机，使用 Vulkan 坐标约定（NDC 深度 0..1，Y 翻转）。
+6. **地面网格**：范围 -20 到 +20，间隔 2，Y=0，共 84 个顶点（42 条线段），蓝灰色。
+7. **单位占位物**：1×1×1 立方体，36 顶点（12 三角形），浅黄色 `rgba(1.00, 0.82, 0.20, 1.00)`。
+8. **全链路探测模式**：与 ClearProbe / MarkerRenderer 一致的一次性创建→渲染→清理模式。
+9. **内存管理**：Host Visible + Host Coherent 内存，不做 staging buffer 或 GPU-only 优化。
+
+#### 新增文件清单
+
+```text
+FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dStatus.cs
+FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dInfo.cs
+FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dVertex.cs
+FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRenderer.cs
+FluidWarfare.Render.Vulkan/Camera/VulkanCameraInfo.cs
+FluidWarfare.Render.Vulkan/Camera/VulkanCameraMatrices.cs
+FluidWarfare.Render.Vulkan/Shaders/basic_3d.vert
+FluidWarfare.Render.Vulkan/Shaders/basic_3d.frag
+FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.vert.spv
+FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.frag.spv
+FluidWarfare.Render.Vulkan/Shaders/CompiledShaders.cs
+FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dInfoTests.cs
+FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs
+FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs
+tools/gen_spirv/Program.cs
+tools/gen_spirv/gen_spirv.csproj
+```
+
+#### 通过规则
+
+1. ✅ 3D 坐标约定：XZ 地面平面，+Y 高度。
+2. ✅ 固定相机：斜俯视 (0,18,24) → (0,0,0)，FOV 60°。
+3. ✅ View / Projection / MVP 矩阵正确计算。
+4. ✅ 预编译 SPIR-V 成功加载并创建 ShaderModule。
+5. ✅ 两个 Graphics Pipeline 创建成功（LineList + TriangleList）。
+6. ✅ Vertex Buffer 创建成功并上传顶点数据。
+7. ✅ 地面网格绘制 84 顶点/42 线段。
+8. ✅ 单位占位立方体绘制 36 顶点/12 三角形。
+9. ✅ RenderScene Position 被当作 3D 世界坐标。
+10. ✅ 不再把单位位置直接映射为 2D 像素点。
+11. ✅ Pipeline / Shader / Buffer 创建成功，无崩溃。
+12. ✅ build 0 错误 0 警告。
+13. ✅ test 282/282 全部通过（新增 22 个测试：Scene3dInfo 8 + Scene3dVertex 7 + CameraInfo 7）。
+14. ✅ 渲染诊断 Tab 显示 Scene3D / Camera / Grid / Unit / DrawCall。
+15. ✅ 性能 Tab 显示 Scene3D 耗时。
+16. ✅ 不做纹理 / 材质 / 光照 / 阴影 / 模型加载。
+17. ✅ 不做 Android / Runtime。
+18. ✅ 文档同步。
+
+---
+
+下一阶段进入 **Milestone 8.2：多对象 3D 绘制与基础深度测试**。

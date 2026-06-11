@@ -18,7 +18,7 @@
           FontSize="16"
           FontWeight="SemiBold"
           Foreground="#F0F4F8"
-          Text="Vulkan 战场视口" />
+          Text="Vulkan 3D 战场视口" />
       <Border
           Grid.Row="1"
           Margin="0"
