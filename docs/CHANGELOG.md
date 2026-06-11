@@ -850,4 +850,56 @@ FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationMessageStoreTests.cs
 
 ---
 
-下一阶段：**Milestone 8.1R — Vulkan 3D 基础管线重启**
+---
+
+### Milestone 8.1R — Vulkan 3D 基础管线重启
+
+#### 前置状态
+
+五层安全地基已完成：
+
+```text
+8.R.1 — 主线稳定闸门 ✅
+8.R.2 — 标准 Shader 编译链 ✅
+8.R.3 — SPIR-V 验证闸门 ✅
+8.R.4 — Validation Layer 开关 ✅
+8.R.5 — Renderer 职责拆分 ✅
+```
+
+#### 本轮变更
+
+1. 使用 `glslangValidator` 重新编译 `basic_3d.vert` / `basic_3d.frag` → `.spv`。
+2. `spirv-val` 验证通过（vert: 1232 字节, frag: 376 字节）。
+3. `CompiledShaders.cs` 重新嵌入真实 SPIR-V 字节。
+4. `HasValidatedBasic3dShaders == true`。
+
+#### 启动验收
+
+```powershell
+# 默认启动 — Scene3D 不运行，Editor 稳定
+Remove-Item Env:FW_ENABLE_SCENE3D -ErrorAction SilentlyContinue
+Remove-Item Env:FW_VULKAN_VALIDATION -ErrorAction SilentlyContinue
+dotnet run --project FluidWarfare.Editor.Windows --no-build
+
+# 手动触发模式 — Scene3D Ready，点击按钮后执行
+$env:FW_ENABLE_SCENE3D="1"
+$env:FW_VULKAN_VALIDATION="1"
+dotnet run --project FluidWarfare.Editor.Windows --no-build
+```
+
+#### 验证结果
+
+- ✅ glslangValidator 可用（11:16.2.0）
+- ✅ spirv-val 可用（SPIRV-Tools v2026.2）
+- ✅ SPIR-V 编译通过
+- ✅ SPIR-V 验证通过
+- ✅ CompiledShaders 嵌入真实字节
+- ✅ dotnet build: 0 错误, 0 警告
+- ✅ dotnet test: 311/311 全部通过
+- ✅ Editor 默认启动稳定（无 env vars）
+- ✅ Editor 在 FW_ENABLE_SCENE3D=1 + FW_VULKAN_VALIDATION=1 下稳定
+- ⏳ Scene3D 手动触发：**待用户 GUI 验收**
+
+---
+
+下一阶段：**Milestone 8.2 — 多对象 3D 绘制与基础 Depth Buffer**（待 8.1R GUI 验收通过）
