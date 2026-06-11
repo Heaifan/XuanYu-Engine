@@ -119,7 +119,7 @@
 3. 新增 `FluidWarfare.Tests/Project/Content/GameContentFileScannerTests.cs`，验证内容文件入口扫描的多种场景。
 4. `SampleProject` 新增 `units/sample_unit.json`、`weapons/sample_weapon.json`、`icons/sample_icon.svg` 占位内容文件，用于验证内容文件入口识别。
 5. 新增 `FluidWarfare.Editor.Windows/Properties/launchSettings.json` Editor 启动配置，支持 Visual Studio 启动配置与 `dotnet run` 直接从 Editor 项目目录启动。
-6. 新增 `run.ps1` 根目录启动脚本，支持通过 `.\run.ps1` 快捷启动 Editor。
+6. 新增 `run.bat` 根目录一键构建并启动脚本，支持双击或 `run` 命令启动 Editor。
 
 #### 修改
 

@@ -56,7 +56,7 @@
 38. Milestone 4.3：新增 `GameProjects/SampleProject/weapons/sample_weapon.json`。
 39. Milestone 4.3：新增 `GameProjects/SampleProject/icons/sample_icon.svg`。
 40. Milestone 4.3：新增 `FluidWarfare.Editor.Windows/Properties/launchSettings.json`。
-41. Milestone 4.3：新增 `run.ps1`。
+41. Milestone 4.3：新增 `run.bat`。
 
 ### 修改
 
@@ -296,7 +296,7 @@ FluidWarfare/
 |   `-- PROJECT_CHARTER.md
 |-- FluidWarfare.sln
 |-- file-tree.md
-`-- run.ps1
+`-- run.bat
 ```
 
 以下旧项目目录和文件不应存在于新仓库：
