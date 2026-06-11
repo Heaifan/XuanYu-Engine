@@ -666,4 +666,72 @@ Scene3D 3D 渲染在以下条件全部满足后方可重新启用：
 
 ---
 
-下一阶段：**不进入 8.2**。先恢复 3D Pipeline 稳定性。
+---
+
+### Milestone 8.R.1 — 主线稳定闸门
+
+#### 新增
+
+1. 新增 `VulkanScene3dRunGate`，用于隔离实验性 Scene3D 运行路径。
+2. 新增 `VulkanScene3dRunGateTests`（6 个测试），验证闸门隔离状态和 `FW_ENABLE_SCENE3D` 环境变量处理。
+
+#### 修改
+
+1. EditorShell 启动路径不再调用 `ProbeVulkanScene3D()`，改为 `ReportScene3dIsolation()`。
+2. resize / 最大化路径只执行稳定的 `ProbeVulkanClear()`。
+3. `ProbeVulkanScene3D()` 内部增加闸门检查：`_scene3dGate.CanRun` 为 false 时调用 `ReportScene3dIsolation()` 并返回。
+4. DebugDock 诊断面板显示隔离原因（"Scene3D：已隔离，未设置 FW_ENABLE_SCENE3D=1。"）。
+5. 主视口状态行显示 "Scene3D 已隔离"。
+
+#### 闸门设计
+
+```csharp
+VulkanScene3dRunGate.Evaluate()
+  ↓
+FW_ENABLE_SCENE3D == "1" ?
+  ├── No  → Isolated("未设置 FW_ENABLE_SCENE3D=1。")
+  └── Yes → Isolated("SPIR-V 编译链未通过 spirv-val 验证。")
+            （8.R.3 之前不可能返回 Ready）
+```
+
+双重闸门：即使设置了 `FW_ENABLE_SCENE3D=1`，因为 SPIR-V 未通过 spirv-val 验证，
+`CanRun` 仍为 false。Editor 不会因 Scene3D 自动崩溃。
+
+#### 新增文件
+
+```text
+FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRunGate.cs
+FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dRunGateTests.cs
+```
+
+---
+
+### Milestone 8.R.2 — 标准 Shader 编译链
+
+#### 新增
+
+1. 新增 `tools/shaders/compile_basic_3d.ps1`：使用 `glslangValidator` 编译 GLSL → SPIR-V。
+2. 新增 `tools/shaders/validate_basic_3d.ps1`：使用 `spirv-val` 验证 SPIR-V 合法性。
+3. 新增 `tools/shaders/README.md`：记录 shader 编译链与工具链说明。
+4. 新增 `FluidWarfare.Render.Vulkan/Shaders/Compiled/.gitkeep`，确保目录被 git 跟踪。
+
+#### 技术要点
+
+1. **Shader 编译链**：GLSL 源码 → `glslangValidator` → `.spv` → `spirv-val` 验证。
+2. **禁止手写 SPIR-V**：`tools/gen_spirv` 已确认为 Milestone 8.1 闪退根因，后续不再使用。
+3. **编译脚本行为**：找不到 `glslangValidator` 时输出中文错误提示并返回非 0 退出码，不生成伪造 `.spv`。
+4. **验证脚本行为**：找不到 `spirv-val` 或 `.spv` 文件缺失时输出中文错误提示并返回非 0 退出码。
+5. **Scene3D 保持隔离**：本轮只建立工具链，不恢复 3D 自动启动。
+
+#### 新增文件
+
+```text
+tools/shaders/compile_basic_3d.ps1
+tools/shaders/validate_basic_3d.ps1
+tools/shaders/README.md
+FluidWarfare.Render.Vulkan/Shaders/Compiled/.gitkeep
+```
+
+---
+
+下一阶段：**Milestone 8.R.3 — SPIR-V 验证闸门与运行接入**。
