@@ -57,6 +57,10 @@
 39. Milestone 4.3：新增 `GameProjects/SampleProject/icons/sample_icon.svg`。
 40. Milestone 4.3：新增 `FluidWarfare.Editor.Windows/Properties/launchSettings.json`。
 41. Milestone 4.3：新增 `run.bat`。
+42. Milestone 4.4：新增 `FluidWarfare.Project/Validation/ProjectValidationIssue.cs`。
+43. Milestone 4.4：新增 `FluidWarfare.Project/Validation/ProjectValidationReport.cs`。
+44. Milestone 4.4：新增 `FluidWarfare.Project/Content/GameContentFileScanResult.cs`。
+45. Milestone 4.4：新增 `FluidWarfare.Tests/Project/Validation/ProjectValidationReportTests.cs`。
 
 ### 修改
 
@@ -116,6 +120,12 @@
 54. Milestone 4.3：GameProjectLoader 接入 GameContentFileScanner，拒绝未允许扩展名文件与嵌套内容目录。
 55. Milestone 4.3：GameProjectLoaderTests 新增内容文件入口扫描集成测试。
 56. Milestone 4.3：EditorShell 接入 ContentFiles，点击内容目录时追加文件入口数量日志。
+57. Milestone 4.4：GameProjectLoadResult 新增 ValidationReport。
+58. Milestone 4.4：GameContentFileScanner 改为收集多个问题而非中断。
+59. Milestone 4.4：GameProjectLoader 汇总目录声明、未声明目录、文件扩展名和嵌套目录问题。
+60. Milestone 4.4：GameProjectLoaderTests 新增四个校验报告集成测试，AssertFailure 新增 ValidationReport 校验。
+61. Milestone 4.4：GameContentFileScannerTests 新增三个多问题收集测试。
+62. Milestone 4.4：EditorShell 加载失败时显示问题数量警告。
 
 ### 删除
 
@@ -137,9 +147,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 4.3：项目内容文件入口声明与扩展名校验。
+当前执行 Milestone 4.4：项目校验报告。
 
-本轮只完成内容文件入口模型定义、声明目录内容文件扫描、扩展名白名单校验、.gitkeep 与隐藏文件忽略、合法内容文件入口保存、嵌套内容目录拒绝和 Editor 轻量反馈，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做资源浏览器完整 UI，不做 ECS，不做 Vulkan，不做 Runtime，不做 Android。
+本轮只完成校验问题模型、校验报告模型、扫描结果模型、多错误收集改造、加载结果报告挂载和 Editor 问题数量提示，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做资源浏览器完整 UI，不做 ECS，不做 Vulkan，不做 Runtime，不做 Android。
 
 ## 3. 顶层目录结构
 
@@ -170,6 +180,7 @@ FluidWarfare/
 |   |-- FluidWarfare.Project.csproj
 |   |-- Content/
 |   |   |-- GameContentFileInfo.cs
+|   |   |-- GameContentFileScanResult.cs
 |   |   |-- GameContentFileScanner.cs
 |   |   `-- GameContentFolderInfo.cs
 |   |-- Loading/
@@ -177,8 +188,11 @@ FluidWarfare/
 |   |   `-- GameProjectLoadResult.cs
 |   |-- Metadata/
 |   |   `-- GameProjectInfo.cs
-|   `-- Paths/
-|       `-- SampleProjectPath.cs
+|   |-- Paths/
+|   |   `-- SampleProjectPath.cs
+|   `-- Validation/
+|       |-- ProjectValidationIssue.cs
+|       `-- ProjectValidationReport.cs
 |-- FluidWarfare.Ecs/
 |   `-- .gitkeep
 |-- FluidWarfare.World/
@@ -252,8 +266,10 @@ FluidWarfare/
 |   |   |   `-- GameContentFileScannerTests.cs
 |   |   |-- Loading/
 |   |   |   `-- GameProjectLoaderTests.cs
-|   |   `-- Paths/
-|   |       `-- SampleProjectPathTests.cs
+|   |   |-- Paths/
+|   |   |   `-- SampleProjectPathTests.cs
+|   |   `-- Validation/
+|   |       `-- ProjectValidationReportTests.cs
 |   |-- CoreSmokeTests.cs
 |   `-- FluidWarfare.Tests.csproj
 |-- GameProjects/
@@ -351,11 +367,14 @@ get_tree.bat
 | `FluidWarfare.Core/Logging/EngineLogEntry.cs` | 引擎日志记录值对象，保存模拟时间、日志等级、分类和中文日志内容，并提供基础中文显示输出 | 测试通过 |
 | `FluidWarfare.Project/FluidWarfare.Project.csproj` | Project 项目层项目文件，引用 Core，不引用 Editor 或 Avalonia | 测试通过 |
 | `FluidWarfare.Project/Content/GameContentFileInfo.cs` | 项目内容文件入口模型，保存所属目录、内容类型、文件名、相对路径和扩展名，不读取文件内容 | 测试通过 |
-| `FluidWarfare.Project/Content/GameContentFileScanner.cs` | 扫描已声明内容目录中的一级内容文件，根据 allowedExtensions 校验扩展名，拒绝嵌套目录 | 测试通过 |
+| `FluidWarfare.Project/Content/GameContentFileScanResult.cs` | 内容文件扫描结果模型，保存合法内容文件入口和扫描中的校验问题 | 测试通过 |
+| `FluidWarfare.Project/Content/GameContentFileScanner.cs` | 扫描已声明内容目录中的一级内容文件，返回合法文件入口并收集文件级校验问题 | 测试通过 |
 | `FluidWarfare.Project/Content/GameContentFolderInfo.cs` | 项目内容目录声明模型，保存目录名、显示名、说明、内容类型、是否必需与允许扩展名 | 测试通过 |
 | `FluidWarfare.Project/Metadata/GameProjectInfo.cs` | 游戏项目元数据模型，保存项目编号、显示名称、说明、内容目录声明列表和合法内容文件入口列表 | 测试通过 |
 | `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 从项目目录读取 game.project.json，校验项目元数据与内容目录声明，协调内容文件入口扫描，拒绝未声明一级内容目录、未允许扩展名文件与嵌套内容目录 | 测试通过 |
-| `FluidWarfare.Project/Loading/GameProjectLoadResult.cs` | 项目加载结果模型，组合 EngineResult 与可选 GameProjectInfo | 测试通过 |
+| `FluidWarfare.Project/Loading/GameProjectLoadResult.cs` | 项目加载结果模型，组合 EngineResult、可选 GameProjectInfo 与项目校验报告 | 测试通过 |
+| `FluidWarfare.Project/Validation/ProjectValidationIssue.cs` | 项目校验问题模型，保存错误码、中文信息和问题路径，不读取文件不写日志 | 测试通过 |
+| `FluidWarfare.Project/Validation/ProjectValidationReport.cs` | 项目校验报告模型，汇总项目加载与内容扫描中的校验问题，支持空报告 | 测试通过 |
 | `FluidWarfare.Project/Paths/SampleProjectPath.cs` | 从指定起始目录向上查找 GameProjects/SampleProject/game.project.json，用于稳定定位示例项目路径 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core 与 Project | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
@@ -368,8 +387,9 @@ get_tree.bat
 | `FluidWarfare.Tests/Core/Results/EngineResultTests.cs` | 验证 EngineResult 的成功/失败语义、默认值无效、错误携带、默认错误拒绝、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogLevelTests.cs` | 验证日志等级到中文显示前缀的映射 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs` | 验证日志记录创建、非法输入、日志前缀隔离、中文显示输出与相等比较 | 测试通过 |
-| `FluidWarfare.Tests/Project/Content/GameContentFileScannerTests.cs` | 验证内容文件入口扫描，包括合法扩展名、非法扩展名、.gitkeep、嵌套目录、大/小写扩展名、空 allowedExtensions、多目录和隐藏文件 | 测试通过 |
-| `FluidWarfare.Tests/Project/Loading/GameProjectLoaderTests.cs` | 验证最小项目加载器的有效项目、缺失目录、缺失清单、无效 JSON、必要字段缺失、内容目录声明校验、未声明目录拒绝、内容文件入口扫描集成与嵌套目录拒绝 | 测试通过 |
+| `FluidWarfare.Tests/Project/Content/GameContentFileScannerTests.cs` | 验证内容文件入口扫描，包括合法扩展名、非法扩展名、.gitkeep、嵌套目录、大/小写扩展名、空 allowedExtensions、多目录、隐藏文件和多问题收集 | 测试通过 |
+| `FluidWarfare.Tests/Project/Loading/GameProjectLoaderTests.cs` | 验证最小项目加载器的有效项目、缺失目录、缺失清单、无效 JSON、必要字段缺失、内容目录声明校验、未声明目录拒绝、内容文件入口扫描集成、嵌套目录拒绝和校验报告多问题收集 | 测试通过 |
+| `FluidWarfare.Tests/Project/Validation/ProjectValidationReportTests.cs` | 验证空报告、问题数量和首个问题 | 测试通过 |
 | `FluidWarfare.Tests/Project/Paths/SampleProjectPathTests.cs` | 验证示例项目路径定位逻辑，包括根目录、嵌套目录、缺失项目与空起始目录 | 测试通过 |
 | `FluidWarfare.Editor.Windows/FluidWarfare.Editor.Windows.csproj` | Windows Editor Avalonia 项目文件，引用 Core 与 Project，并声明 Avalonia 桌面依赖 | 可运行 |
 | `FluidWarfare.Editor.Windows/Program.cs` | Editor 进程入口，配置 Avalonia 桌面生命周期 | 可运行 |
@@ -504,18 +524,20 @@ EditorShell：
 当前阶段允许协调 SampleProjectPath、GameProjectLoader、ProjectPanel、InspectorPanel、StatusBarPanel 和 LogPanel。
 当前阶段允许将 GameContentFolderInfo 转换为 ProjectPanel 显示项，并根据 GameContentFolderInfo 更新检查器、状态栏与日志。
 当前阶段允许读取 GameProjectInfo.ContentFiles 做轻量文件入口数量日志反馈。
+当前阶段允许读取 ValidationReport 显示首个错误和问题数量。
 不得承载真实项目系统。
 不得硬编码英文目录到中文显示名的映射。
 不得解析内容文件。
 不得显示资源预览。
 不得实现资源管理器。
+不得负责项目校验。
 不得承载 ECS。
 不得承载 Vulkan。
 不得变成长期业务总管。
 
 ## 10. 当前不做的内容
 
-当前已经进入 Milestone 4.3 项目内容文件入口声明与扩展名校验任务。
+当前已经进入 Milestone 4.4 项目校验报告任务。
 
 本轮不做以下内容：
 

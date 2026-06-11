@@ -11,6 +11,7 @@ using FluidWarfare.Project.Content;
 using FluidWarfare.Project.Loading;
 using FluidWarfare.Project.Metadata;
 using FluidWarfare.Project.Paths;
+using FluidWarfare.Project.Validation;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -135,6 +136,11 @@ public sealed partial class EditorShell : UserControl
         AppendLog(EngineLogLevel.Info, message);
     }
 
+    private void AppendWarningLog(string message)
+    {
+        AppendLog(EngineLogLevel.Warning, message);
+    }
+
     private void AppendErrorLog(string message)
     {
         AppendLog(EngineLogLevel.Error, message);
@@ -159,7 +165,7 @@ public sealed partial class EditorShell : UserControl
 
         if (!pathResult.IsSuccess)
         {
-            ShowProjectLoadFailure(pathResult.Error?.Message ?? "未知错误。");
+            ShowProjectLoadFailure(pathResult.Error?.Message ?? "未知错误。", ProjectValidationReport.Empty);
             return;
         }
 
@@ -172,10 +178,12 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        ShowProjectLoadFailure(loadResult.Result.Error?.Message ?? "未知错误。");
+        ShowProjectLoadFailure(
+            loadResult.Result.Error?.Message ?? "未知错误。",
+            loadResult.ValidationReport);
     }
 
-    private void ShowProjectLoadFailure(string message)
+    private void ShowProjectLoadFailure(string message, ProjectValidationReport report)
     {
         _projectPanel?.ShowNoProject();
 
@@ -187,6 +195,11 @@ public sealed partial class EditorShell : UserControl
         _inspectorPanel?.ShowSelection(selection);
         _statusBarPanel?.SetCurrentSelection("项目加载失败");
         AppendErrorLog($"项目加载失败：{message}");
+
+        if (report.IssueCount > 1)
+        {
+            AppendWarningLog($"项目校验发现 {report.IssueCount} 个问题，请先修复项目结构。");
+        }
     }
 
     private void ShowLoadedProject(GameProjectInfo project)

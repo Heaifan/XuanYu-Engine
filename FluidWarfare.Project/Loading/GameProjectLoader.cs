@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using FluidWarfare.Core.Results;
 using FluidWarfare.Project.Content;
 using FluidWarfare.Project.Metadata;
+using FluidWarfare.Project.Validation;
 
 namespace FluidWarfare.Project.Loading;
 
@@ -58,35 +59,62 @@ public static partial class GameProjectLoader
             return Fail("Project.DisplayNameMissing", "项目显示名称不能为空。");
         }
 
-        var contentFoldersResult = LoadContentFolders(projectDirectory, manifest.ContentFolders);
+        // 解析并校验 contentFolders 声明
+        var contentFoldersResult = LoadContentFolders(manifest.ContentFolders);
         if (contentFoldersResult.Result.IsFailure || contentFoldersResult.ContentFolders is null)
         {
-            return new GameProjectLoadResult(contentFoldersResult.Result, null);
+            return WithReport(contentFoldersResult.Result, null, contentFoldersResult.Issues);
         }
 
-        var scanResult = GameContentFileScanner.Scan(
-            projectDirectory,
-            contentFoldersResult.ContentFolders,
-            out var contentFiles);
+        var issues = new List<ProjectValidationIssue>();
+        var folders = contentFoldersResult.ContentFolders;
+        var folderNames = new HashSet<string>(folders.Select(f => f.FolderName), StringComparer.Ordinal);
 
-        if (scanResult.IsFailure)
+        // 检查声明目录是否存在
+        foreach (var folder in folders)
         {
-            return new GameProjectLoadResult(scanResult, null);
+            if (!Directory.Exists(Path.Combine(projectDirectory, folder.FolderName)))
+            {
+                issues.Add(new ProjectValidationIssue(
+                    "Project.ContentFolderDirectoryMissing",
+                    $"项目内容目录不存在：{folder.FolderName}。",
+                    folder.FolderName));
+            }
+        }
+
+        // 查找所有未声明的一级目录
+        var undeclaredDirectories = FindAllUndeclaredDirectories(projectDirectory, folderNames);
+        foreach (var dirName in undeclaredDirectories)
+        {
+            issues.Add(new ProjectValidationIssue(
+                "Project.UndeclaredContentFolder",
+                $"项目存在未声明的内容目录：{dirName}。",
+                dirName));
+        }
+
+        // 扫描内容文件入口（Scanner 已改为收集所有问题）
+        var scanResult = GameContentFileScanner.Scan(projectDirectory, folders);
+        issues.AddRange(scanResult.Issues);
+
+        // 构建报告
+        if (issues.Count > 0)
+        {
+            var report = new ProjectValidationReport(issues);
+            var firstError = EngineError.Create(issues[0].Code, issues[0].Message);
+            return new GameProjectLoadResult(EngineResult.Fail(firstError), null, report);
         }
 
         var project = new GameProjectInfo(
             manifest.ProjectId.Trim(),
             manifest.DisplayName.Trim(),
             manifest.Description?.Trim() ?? string.Empty,
-            contentFoldersResult.ContentFolders,
-            contentFiles);
+            folders,
+            scanResult.ContentFiles);
 
-        return new GameProjectLoadResult(EngineResult.Success(), project);
+        return new GameProjectLoadResult(EngineResult.Success(), project, ProjectValidationReport.Empty);
     }
 
-    private static ContentFoldersLoadResult LoadContentFolders(
-        string projectDirectory,
-        JsonElement contentFoldersElement)
+    private static ContentFoldersLoadResult LoadContentFolders(JsonElement contentFoldersElement)
     {
         if (contentFoldersElement.ValueKind is JsonValueKind.Undefined or JsonValueKind.Null)
         {
@@ -114,7 +142,7 @@ public static partial class GameProjectLoader
                 return ContentFoldersLoadResult.Fail("Project.ContentFolderInvalid", "项目内容目录声明格式无效。");
             }
 
-            var folderResult = LoadContentFolder(projectDirectory, folderElement, folderNames);
+            var folderResult = LoadContentFolder(folderElement, folderNames);
             if (folderResult.Result.IsFailure || folderResult.ContentFolder is null)
             {
                 return ContentFoldersLoadResult.Fail(folderResult.Result);
@@ -123,19 +151,10 @@ public static partial class GameProjectLoader
             folders.Add(folderResult.ContentFolder);
         }
 
-        var undeclaredDirectory = FindUndeclaredDirectory(projectDirectory, folderNames);
-        if (undeclaredDirectory is not null)
-        {
-            return ContentFoldersLoadResult.Fail(
-                "Project.UndeclaredContentFolder",
-                $"项目存在未声明的内容目录：{undeclaredDirectory}。");
-        }
-
-        return new ContentFoldersLoadResult(EngineResult.Success(), folders);
+        return new ContentFoldersLoadResult(EngineResult.Success(), folders, []);
     }
 
     private static ContentFolderLoadResult LoadContentFolder(
-        string projectDirectory,
         JsonElement folderElement,
         HashSet<string> folderNames)
     {
@@ -192,13 +211,6 @@ public static partial class GameProjectLoader
             return ContentFolderLoadResult.Fail(extensionsResult.Result);
         }
 
-        if (!Directory.Exists(Path.Combine(projectDirectory, folderName)))
-        {
-            return ContentFolderLoadResult.Fail(
-                "Project.ContentFolderDirectoryMissing",
-                $"项目内容目录不存在：{folderName}。");
-        }
-
         var contentFolder = new GameContentFolderInfo(
             folderName,
             displayName.Trim(),
@@ -249,13 +261,20 @@ public static partial class GameProjectLoader
         return new AllowedExtensionsLoadResult(EngineResult.Success(), extensions);
     }
 
-    private static string? FindUndeclaredDirectory(string projectDirectory, HashSet<string> declaredFolderNames)
+    /// <summary>
+    /// 查找项目根目录下所有未声明的一级目录。
+    /// </summary>
+    private static IReadOnlyList<string> FindAllUndeclaredDirectories(
+        string projectDirectory,
+        HashSet<string> declaredFolderNames)
     {
         return Directory.EnumerateDirectories(projectDirectory)
             .Select(Path.GetFileName)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Where(name => !name!.StartsWith(".", StringComparison.Ordinal))
-            .FirstOrDefault(name => !declaredFolderNames.Contains(name!));
+            .Where(name => !declaredFolderNames.Contains(name!))
+            .Select(name => name!)
+            .ToList();
     }
 
     private static string? GetString(JsonElement element, string propertyName)
@@ -274,12 +293,23 @@ public static partial class GameProjectLoader
     private static GameProjectLoadResult Fail(string code, string message)
     {
         var error = EngineError.Create(code, message);
-        return new GameProjectLoadResult(EngineResult.Fail(error), null);
+        var issue = new ProjectValidationIssue(code, message, "");
+        var report = new ProjectValidationReport([issue]);
+        return new GameProjectLoadResult(EngineResult.Fail(error), null, report);
     }
 
     private static EngineResult FailResult(string code, string message)
     {
         return EngineResult.Fail(EngineError.Create(code, message));
+    }
+
+    private static GameProjectLoadResult WithReport(
+        EngineResult result,
+        GameProjectInfo? project,
+        IReadOnlyList<ProjectValidationIssue> issues)
+    {
+        var report = new ProjectValidationReport(issues);
+        return new GameProjectLoadResult(result, project, report);
     }
 
     [GeneratedRegex("^[a-z0-9_-]+$")]
@@ -299,16 +329,24 @@ public static partial class GameProjectLoader
 
     private sealed record ContentFoldersLoadResult(
         EngineResult Result,
-        IReadOnlyList<GameContentFolderInfo>? ContentFolders)
+        IReadOnlyList<GameContentFolderInfo>? ContentFolders,
+        IReadOnlyList<ProjectValidationIssue> Issues)
     {
         public static ContentFoldersLoadResult Fail(string code, string message)
         {
-            return new ContentFoldersLoadResult(FailResult(code, message), null);
+            var issue = new ProjectValidationIssue(code, message, "");
+            return new ContentFoldersLoadResult(FailResult(code, message), null, [issue]);
         }
 
         public static ContentFoldersLoadResult Fail(EngineResult result)
         {
-            return new ContentFoldersLoadResult(result, null);
+            var issues = result.Error is { IsValid: true }
+                ? new List<ProjectValidationIssue>
+                {
+                    new(result.Error.Value.Code, result.Error.Value.Message, "")
+                }
+                : [];
+            return new ContentFoldersLoadResult(result, null, issues);
         }
     }
 

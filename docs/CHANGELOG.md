@@ -128,6 +128,25 @@
 3. `GameProjectLoaderTests` 新增三个集成测试，覆盖合法内容文件、非法扩展名和嵌套子目录场景。
 4. `EditorShell` 接入 `GameProjectInfo.ContentFiles`，在点击包含内容文件的内容目录时追加轻量文件入口数量日志。
 
+### Milestone 4.4：项目校验报告
+
+#### 新增
+
+1. 新增 `ProjectValidationIssue`，用于表示项目校验中的单个问题，保存错误码、中文信息和问题路径。
+2. 新增 `ProjectValidationReport`，用于汇总项目加载与内容扫描中的校验问题，支持 `HasIssues`、`IssueCount`、`FirstIssue` 和 `Empty`。
+3. 新增 `GameContentFileScanResult`，用于表示内容文件扫描结果，包含合法内容文件入口和校验问题。
+4. 新增 `FluidWarfare.Tests/Project/Validation/ProjectValidationReportTests.cs`，验证空报告、问题和数量和首个问题。
+5. 新增 `FluidWarfare.Project/Validation/` 校验目录。
+
+#### 修改
+
+1. `GameContentFileScanner` 改为尽量收集多个内容文件问题，而不是只返回第一个错误。
+2. `GameProjectLoadResult` 新增 `ValidationReport`，使项目加载失败时也能返回完整校验信息。
+3. `GameProjectLoader` 汇总目录声明、未声明目录、内容文件扩展名和嵌套目录问题；`FindAllUndeclaredDirectories` 改为收集所有未声明目录而非只返回第一个。
+4. `GameProjectLoaderTests` 新增四个集成测试，覆盖多问题报告、首个错误兼容和有效项目空报告；`AssertFailure` 新增 `ValidationReport` 校验。
+5. `EditorShell` 项目加载失败时显示首个错误，并提示项目校验问题数量。
+6. `GameContentFileScannerTests` 新增三个多问题收集测试。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

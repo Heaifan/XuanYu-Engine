@@ -16,15 +16,15 @@ public sealed class GameContentFileScannerTests
             new("icons", "图标", "图标说明。", "icon", false, [".svg"])
         };
 
-        var result = GameContentFileScanner.Scan(scope.Path, folders, out var files);
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
 
-        Assert.True(result.IsSuccess);
-        Assert.Single(files);
-        Assert.Equal("icons", files[0].FolderName);
-        Assert.Equal("icon", files[0].ContentKind);
-        Assert.Equal("sample_icon.svg", files[0].FileName);
-        Assert.Equal("icons/sample_icon.svg", files[0].RelativePath);
-        Assert.Equal(".svg", files[0].Extension);
+        Assert.Single(result.ContentFiles);
+        Assert.False(result.HasIssues);
+        Assert.Equal("icons", result.ContentFiles[0].FolderName);
+        Assert.Equal("icon", result.ContentFiles[0].ContentKind);
+        Assert.Equal("sample_icon.svg", result.ContentFiles[0].FileName);
+        Assert.Equal("icons/sample_icon.svg", result.ContentFiles[0].RelativePath);
+        Assert.Equal(".svg", result.ContentFiles[0].Extension);
     }
 
     [Fact]
@@ -39,14 +39,14 @@ public sealed class GameContentFileScannerTests
             new("icons", "图标", "图标说明。", "icon", false, [".svg"])
         };
 
-        var result = GameContentFileScanner.Scan(scope.Path, folders, out var files);
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
 
-        Assert.True(result.IsSuccess);
-        Assert.Empty(files);
+        Assert.Empty(result.ContentFiles);
+        Assert.False(result.HasIssues);
     }
 
     [Fact]
-    public void Scan_WithDisallowedExtension_ShouldFail()
+    public void Scan_WithDisallowedExtension_ShouldCollectIssue()
     {
         using var scope = TestContentDirectory.Create();
         scope.CreateContentFolder("icons");
@@ -57,15 +57,15 @@ public sealed class GameContentFileScannerTests
             new("icons", "图标", "图标说明。", "icon", false, [".svg", ".png"])
         };
 
-        var result = GameContentFileScanner.Scan(scope.Path, folders, out var files);
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
 
-        Assert.True(result.IsFailure);
-        Assert.Equal("Project.ContentFileExtensionNotAllowed", result.Error?.Code);
-        Assert.Empty(files);
+        Assert.Empty(result.ContentFiles);
+        Assert.True(result.HasIssues);
+        Assert.Equal("Project.ContentFileExtensionNotAllowed", result.Issues[0].Code);
     }
 
     [Fact]
-    public void Scan_WithNestedDirectory_ShouldFail()
+    public void Scan_WithNestedDirectory_ShouldCollectIssue()
     {
         using var scope = TestContentDirectory.Create();
         scope.CreateContentFolder("units");
@@ -76,11 +76,11 @@ public sealed class GameContentFileScannerTests
             new("units", "单位", "单位说明。", "unitTemplate", true, [".json"])
         };
 
-        var result = GameContentFileScanner.Scan(scope.Path, folders, out var files);
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
 
-        Assert.True(result.IsFailure);
-        Assert.Equal("Project.NestedContentDirectoryUnsupported", result.Error?.Code);
-        Assert.Empty(files);
+        Assert.Empty(result.ContentFiles);
+        Assert.True(result.HasIssues);
+        Assert.Equal("Project.NestedContentDirectoryUnsupported", result.Issues[0].Code);
     }
 
     [Fact]
@@ -95,15 +95,15 @@ public sealed class GameContentFileScannerTests
             new("icons", "图标", "图标说明。", "icon", false, [".svg"])
         };
 
-        var result = GameContentFileScanner.Scan(scope.Path, folders, out var files);
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
 
-        Assert.True(result.IsSuccess);
-        Assert.Single(files);
-        Assert.Equal(".svg", files[0].Extension);
+        Assert.Single(result.ContentFiles);
+        Assert.False(result.HasIssues);
+        Assert.Equal(".svg", result.ContentFiles[0].Extension);
     }
 
     [Fact]
-    public void Scan_WithEmptyAllowedExtensionsAndRegularFile_ShouldFail()
+    public void Scan_WithEmptyAllowedExtensionsAndRegularFile_ShouldCollectIssue()
     {
         using var scope = TestContentDirectory.Create();
         scope.CreateContentFolder("icons");
@@ -114,11 +114,11 @@ public sealed class GameContentFileScannerTests
             new("icons", "图标", "图标说明。", "icon", false, [])
         };
 
-        var result = GameContentFileScanner.Scan(scope.Path, folders, out var files);
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
 
-        Assert.True(result.IsFailure);
-        Assert.Equal("Project.ContentFileExtensionNotAllowed", result.Error?.Code);
-        Assert.Empty(files);
+        Assert.Empty(result.ContentFiles);
+        Assert.True(result.HasIssues);
+        Assert.Equal("Project.ContentFileExtensionNotAllowed", result.Issues[0].Code);
     }
 
     [Fact]
@@ -136,17 +136,17 @@ public sealed class GameContentFileScannerTests
             new("icons", "图标", "图标说明。", "icon", false, [".svg"])
         };
 
-        var result = GameContentFileScanner.Scan(scope.Path, folders, out var files);
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
 
-        Assert.True(result.IsSuccess);
-        Assert.Equal(2, files.Count);
+        Assert.False(result.HasIssues);
+        Assert.Equal(2, result.ContentFiles.Count);
 
-        var unitFile = files.First(f => f.FolderName == "units");
+        var unitFile = result.ContentFiles.First(f => f.FolderName == "units");
         Assert.Equal("sample_unit.json", unitFile.FileName);
         Assert.Equal("units/sample_unit.json", unitFile.RelativePath);
         Assert.Equal(".json", unitFile.Extension);
 
-        var iconFile = files.First(f => f.FolderName == "icons");
+        var iconFile = result.ContentFiles.First(f => f.FolderName == "icons");
         Assert.Equal("sample_icon.svg", iconFile.FileName);
         Assert.Equal("icons/sample_icon.svg", iconFile.RelativePath);
         Assert.Equal(".svg", iconFile.Extension);
@@ -164,10 +164,79 @@ public sealed class GameContentFileScannerTests
             new("icons", "图标", "图标说明。", "icon", false, [".svg"])
         };
 
-        var result = GameContentFileScanner.Scan(scope.Path, folders, out var files);
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
 
-        Assert.True(result.IsSuccess);
-        Assert.Empty(files);
+        Assert.Empty(result.ContentFiles);
+        Assert.False(result.HasIssues);
+    }
+
+    [Fact]
+    public void Scan_WithMultipleInvalidFiles_ShouldCollectAllIssues()
+    {
+        using var scope = TestContentDirectory.Create();
+        scope.CreateContentFolder("icons");
+        scope.CreateContentFile("icons", "icon_a.psd");
+        scope.CreateContentFile("icons", "icon_b.txt");
+        scope.CreateContentFile("icons", "icon_c.bmp");
+
+        var folders = new List<GameContentFolderInfo>
+        {
+            new("icons", "图标", "图标说明。", "icon", false, [".png", ".svg"])
+        };
+
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
+
+        Assert.Empty(result.ContentFiles);
+        Assert.True(result.HasIssues);
+        Assert.Equal(3, result.Issues.Count);
+        Assert.All(result.Issues, i => Assert.Equal("Project.ContentFileExtensionNotAllowed", i.Code));
+    }
+
+    [Fact]
+    public void Scan_WithValidAndInvalidFiles_ShouldReturnBoth()
+    {
+        using var scope = TestContentDirectory.Create();
+        scope.CreateContentFolder("icons");
+        scope.CreateContentFile("icons", "good.svg");
+        scope.CreateContentFile("icons", "bad.psd");
+        scope.CreateContentFile("icons", "also_bad.txt");
+
+        var folders = new List<GameContentFolderInfo>
+        {
+            new("icons", "图标", "图标说明。", "icon", false, [".svg"])
+        };
+
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
+
+        Assert.Single(result.ContentFiles);
+        Assert.Equal("good.svg", result.ContentFiles[0].FileName);
+        Assert.Equal(2, result.Issues.Count);
+    }
+
+    [Fact]
+    public void Scan_WithNestedDirectoryAndInvalidExtension_ShouldCollectBothIssues()
+    {
+        using var scope = TestContentDirectory.Create();
+        scope.CreateContentFolder("units");
+        scope.CreateContentFile("units", "good_unit.json");
+        scope.CreateContentFile("units", "bad.txt");
+        scope.CreateNestedSubdirectory("units", "infantry");
+
+        var folders = new List<GameContentFolderInfo>
+        {
+            new("units", "单位", "单位说明。", "unitTemplate", true, [".json"])
+        };
+
+        var result = GameContentFileScanner.Scan(scope.Path, folders);
+
+        // 合法文件仍然返回
+        Assert.Single(result.ContentFiles);
+        Assert.Equal("good_unit.json", result.ContentFiles[0].FileName);
+
+        // 两个问题：嵌套目录和非法扩展名
+        Assert.Equal(2, result.Issues.Count);
+        Assert.Contains(result.Issues, i => i.Code == "Project.NestedContentDirectoryUnsupported");
+        Assert.Contains(result.Issues, i => i.Code == "Project.ContentFileExtensionNotAllowed");
     }
 
     private sealed class TestContentDirectory : IDisposable

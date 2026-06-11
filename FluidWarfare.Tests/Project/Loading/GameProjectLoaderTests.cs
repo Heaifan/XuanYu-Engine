@@ -43,6 +43,7 @@ public sealed class GameProjectLoaderTests
         Assert.Equal([".json"], result.Project.ContentFolders[0].AllowedExtensions);
         Assert.Equal("icons", result.Project.ContentFolders[1].FolderName);
         Assert.Equal([".png", ".svg", ".webp"], result.Project.ContentFolders[1].AllowedExtensions);
+        Assert.False(result.ValidationReport.HasIssues);
     }
 
     [Fact]
@@ -375,11 +376,115 @@ public sealed class GameProjectLoaderTests
         AssertFailure(result, "Project.NestedContentDirectoryUnsupported");
     }
 
+    [Fact]
+    public void LoadFromDirectory_WithMultipleProjectIssues_ShouldReturnValidationReport()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.CreateContentDirectory("units");
+        scope.CreateContentDirectory("icons");
+        scope.CreateContentFile("units", "good.json");
+        scope.CreateContentFile("units", "bad.txt");
+        scope.CreateContentFile("icons", "raw.psd");
+        scope.CreateContentDirectory("backup");
+        scope.CreateContentFile("backup", "old.json");
+        scope.WriteManifest(CreateManifest("""
+            {
+              "folderName": "units",
+              "displayName": "单位",
+              "description": "保存项目中的单位模板。",
+              "contentKind": "unitTemplate",
+              "isRequired": true,
+              "allowedExtensions": [ ".json" ]
+            },
+            {
+              "folderName": "icons",
+              "displayName": "图标",
+              "description": "保存项目中的界面图标资源。",
+              "contentKind": "icon",
+              "isRequired": false,
+              "allowedExtensions": [ ".png", ".svg", ".webp" ]
+            }
+            """));
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        Assert.True(result.Result.IsFailure);
+        Assert.Null(result.Project);
+        Assert.True(result.ValidationReport.HasIssues);
+        Assert.True(result.ValidationReport.IssueCount >= 3);
+
+        // 应包含未声明目录
+        Assert.Contains(result.ValidationReport.Issues,
+            i => i.Code == "Project.UndeclaredContentFolder" && i.Path == "backup");
+
+        // 应包含非法扩展名
+        Assert.Contains(result.ValidationReport.Issues,
+            i => i.Code == "Project.ContentFileExtensionNotAllowed" && i.Path == "units/bad.txt");
+
+        Assert.Contains(result.ValidationReport.Issues,
+            i => i.Code == "Project.ContentFileExtensionNotAllowed" && i.Path == "icons/raw.psd");
+
+        // 第一个错误仍作为 EngineError
+        Assert.Equal(result.ValidationReport.FirstIssue?.Code, result.Result.Error?.Code);
+    }
+
+    [Fact]
+    public void LoadFromDirectory_WithUndeclaredDirectoryAndInvalidFile_ShouldReportBothIssues()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.CreateContentDirectory("units");
+        scope.CreateContentFile("units", "good.json");
+        scope.CreateContentFile("units", "bad.txt");
+        scope.CreateContentDirectory("extra");
+        scope.WriteManifest(CreateSingleFolderManifest("units", "unitTemplate", ".json"));
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        Assert.True(result.Result.IsFailure);
+        Assert.Equal(2, result.ValidationReport.IssueCount);
+        Assert.Contains(result.ValidationReport.Issues, i => i.Code == "Project.UndeclaredContentFolder");
+        Assert.Contains(result.ValidationReport.Issues, i => i.Code == "Project.ContentFileExtensionNotAllowed");
+    }
+
+    [Fact]
+    public void LoadFromDirectory_WithValidationIssues_ShouldUseFirstIssueAsEngineError()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.CreateContentDirectory("units");
+        scope.CreateContentFile("units", "bad.txt");
+        scope.CreateContentDirectory("extra");
+        scope.WriteManifest(CreateSingleFolderManifest("units", "unitTemplate", ".json"));
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        Assert.True(result.Result.IsFailure);
+        Assert.True(result.ValidationReport.IssueCount >= 2);
+        Assert.Equal(result.ValidationReport.FirstIssue?.Code, result.Result.Error?.Code);
+    }
+
+    [Fact]
+    public void LoadFromDirectory_WithValidProject_ShouldReturnEmptyValidationReport()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.CreateContentDirectory("units");
+        scope.CreateContentFile("units", "good.json");
+        scope.WriteManifest(CreateSingleFolderManifest("units", "unitTemplate", ".json"));
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        Assert.True(result.Result.IsSuccess);
+        Assert.NotNull(result.Project);
+        Assert.False(result.ValidationReport.HasIssues);
+        Assert.Equal(0, result.ValidationReport.IssueCount);
+    }
+
     private static void AssertFailure(GameProjectLoadResult result, string code)
     {
         Assert.True(result.Result.IsFailure);
         Assert.Null(result.Project);
         Assert.Equal(code, result.Result.Error?.Code);
+        Assert.True(result.ValidationReport.HasIssues);
+        Assert.Equal(code, result.ValidationReport.FirstIssue?.Code);
     }
 
     private static string CreateSingleFolderManifest(string folderName, string contentKind, string extension)
