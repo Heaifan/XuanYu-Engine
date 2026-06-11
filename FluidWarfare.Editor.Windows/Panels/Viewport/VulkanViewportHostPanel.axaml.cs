@@ -9,12 +9,19 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     private WindowsVulkanViewportHostControl? _nativeHostControl;
     private TextBlock? _clearStatusText;
 
+    public event EventHandler<VulkanViewportNativeHostInfo>? NativeHostInfoChanged;
+
     public VulkanViewportHostPanel()
     {
         InitializeComponent();
         _nativeHostInfoText = this.FindControl<TextBlock>("NativeHostInfoText");
         _nativeHostControl = this.FindControl<WindowsVulkanViewportHostControl>("NativeHostControl");
         _clearStatusText = this.FindControl<TextBlock>("ClearStatusText");
+
+        if (_nativeHostControl is not null)
+        {
+            _nativeHostControl.HostInfoChanged += HandleHostInfoChanged;
+        }
     }
 
     /// <summary>
@@ -68,5 +75,17 @@ public sealed partial class VulkanViewportHostPanel : UserControl
                 : hostInfo.Message;
         }
         return hostInfo;
+    }
+
+    private void HandleHostInfoChanged(object? sender, WindowsVulkanViewportHostInfo hostInfo)
+    {
+        if (_nativeHostInfoText is not null)
+        {
+            _nativeHostInfoText.Text = hostInfo.HasWindowHandle
+                ? $"{hostInfo.Message} 平台：{hostInfo.PlatformText}。"
+                : hostInfo.Message;
+        }
+
+        NativeHostInfoChanged?.Invoke(this, GetNativeHostInfo());
     }
 }

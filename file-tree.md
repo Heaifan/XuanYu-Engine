@@ -244,6 +244,9 @@
 110. Milestone 8.0.1：WindowsVulkanViewportHostControl 根据 Avalonia Bounds 调用 SetWindowPos 同步 HWND 尺寸。
 111. Milestone 8.0.1：EditorShell 的 Swapchain / Clear / Marker 绘制改用真实 NativeHost 宽高。
 112. Milestone 8.0.1：DebugDockPanel 压缩底部页签字号与 Padding。
+113. Milestone 8.0.1：WindowsVulkanViewportHostControl 在尺寸变化后上报 HostInfoChanged。
+114. Milestone 8.0.1：VulkanViewportHostPanel 向 EditorShell 透传 NativeHostInfoChanged。
+115. Milestone 8.0.1：EditorShell 移除旧 VulkanRenderContext 定时渲染路径，resize 后防抖重建 Swapchain / Clear / MarkerDraw。
 110. Milestone 7.7：EditorShell 移除 7.6 占位逻辑，真正调用 VulkanSurfaceProbe.ProbeWindows 创建 VkSurfaceKHR。
 111. Milestone 7.8.2：EditorShell 新增 ProbeVulkanClear 与 ShowVulkanClearInfo。
 112. Milestone 7.8.3：EditorShell.axaml 底部替换为 DebugDockPanel。
@@ -270,9 +273,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.0.1：视口尺寸同步与底部调试栏压缩。
+当前执行 Milestone 8.0.1：Vulkan 战场视口填充与重绘修复。
 
-本轮基于 RenderScene 第一个对象生成 Vulkan 点位绘制信息，在 Vulkan 战场视口中绘制第一个 GPU 点位（浅黄色小方块），用于验证 RenderScene → Vulkan 绘制链路。本轮不创建 Shader、Pipeline、Mesh、Texture 或 GPU Buffer，不绘制正式单位图标。下一阶段 8.1 再做多对象点位绘制。
+本轮修复 8.0 点位绘制后的视口尺寸适配问题：Windows 原生子窗口跟随 Avalonia Bounds 同步真实宽高，EditorShell 在 resize 后重新执行 Swapchain / Clear / MarkerDraw 一次，让蓝色 Vulkan 战场区域填满中央视口。本轮不进入 8.1，不新增多对象绘制，不创建 Shader、Pipeline、Mesh、Texture 或 GPU Buffer。
 
 ## 3. 顶层目录结构
 
@@ -642,7 +645,7 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/MainWindow.axaml` | 编辑器主窗口 XAML 容器，承载 EditorShell | 可运行 |
 | `FluidWarfare.Editor.Windows/MainWindow.axaml.cs` | 编辑器主窗口 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器布局壳，组织菜单栏、项目内容面板、World 实体列表面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、Vulkan 后端/Instance/Device 探测、Windows 原生视口宿主状态、真实视口尺寸绘制、实体选择与 UI 显示 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、Vulkan 后端/Instance/Device 探测、Windows 原生视口宿主状态、真实视口尺寸绘制、resize 防抖重绘、实体选择与 UI 显示 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectContentFolderSelection.cs` | 项目内容目录选择值对象，保存稳定 FolderName、DisplayName 和 ContentKind | 可运行 |
@@ -656,10 +659,10 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostInfo.cs` | Vulkan 视口宿主占位显示信息 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostState.cs` | Windows Vulkan 视口子窗口宿主状态枚举 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostInfo.cs` | Windows Vulkan 视口子窗口宿主信息模型，保存状态、平台、HWND、HINSTANCE、真实宽高与中文说明 | 测试通过 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostControl.cs` | 使用 Avalonia NativeControlHost 创建并持有 Windows 原生子窗口 HWND，并在 Bounds 变化时同步子窗口尺寸 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostControl.cs` | 使用 Avalonia NativeControlHost 创建并持有 Windows 原生子窗口 HWND，在 Bounds 变化时同步子窗口尺寸并上报 HostInfoChanged | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportNativeHostInfo.cs` | Vulkan 视口宿主原生窗口句柄信息，描述平台、句柄可用性、HWND、HINSTANCE、真实宽高与中文说明 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml` | Vulkan 视口宿主显示区域，包含可伸展原生子窗口、Windows 原生子窗口状态与清屏状态 | 测试通过 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs` | 显示 Vulkan 视口宿主状态，查询 Windows 原生子窗口句柄和真实尺寸，并显示清屏状态 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs` | 显示 Vulkan 视口宿主状态，查询 Windows 原生子窗口句柄和真实尺寸，透传 NativeHostInfoChanged，并显示清屏状态 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，显示当前 World 实体列表 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs` | World 实体列表面板后台逻辑，接收 WorldEntityInfo 列表并在点击时发出 EntitySelected 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |

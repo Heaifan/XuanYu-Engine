@@ -25,6 +25,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private int _height;
     private WindowsVulkanViewportHostInfo _hostInfo = WindowsVulkanViewportHostInfo.NotCreated;
 
+    public event EventHandler<WindowsVulkanViewportHostInfo>? HostInfoChanged;
+
     public WindowsVulkanViewportHostControl()
     {
         PropertyChanged += (_, args) =>
@@ -142,6 +144,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             return;
         }
 
+        var hasChanged = !_hostInfo.HasWindowHandle || _width != width || _height != height;
+
         SetWindowPos(
             _windowHandle,
             0,
@@ -162,6 +166,11 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             _instanceHandle,
             _width,
             _height);
+
+        if (hasChanged)
+        {
+            HostInfoChanged?.Invoke(this, _hostInfo);
+        }
     }
 
     private static void RegisterWindowClass(nint instanceHandle)

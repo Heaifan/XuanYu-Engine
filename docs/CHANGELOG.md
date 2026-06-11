@@ -472,7 +472,7 @@ Clear      ✅ 7.8.2（本里程碑）
 6. 新增 `DebugDockPanel` 渲染诊断 Tab 的 Marker 状态行（`DiagMarker`）。
 7. 新增 `DebugDockPanel` 性能 Tab 的 `MarkerDraw` 耗时行（`PerfMarker`）。
 8. EditorShell 新增 `_vulkanMarkerDrawResult` 状态、`ProbeVulkanMarkerDraw` 方法和 `ShowVulkanMarkerDrawInfo` 方法。
-9. EditorShell 清屏状态行新增点位数量显示（如“清屏成功 | 点位：1 | rgba(0.03, ...) | 719x458”）。
+9. EditorShell 清屏状态行新增点位数量显示（如“清屏成功 | 点位：1 | rgba(0.03, ...) | 真实宽高”）。
 10. 新增 `VulkanMarkerDrawInfoTests`（7 个测试）和 `VulkanMarkerDrawResultTests`（7 个测试）。
 11. 基于 RenderScene 第一个对象绘制 Vulkan GPU 点位。
 
@@ -523,6 +523,27 @@ FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawResultTests.cs
 11. ✅ RenderScene Tab 仍显示 sample_unit 信息。
 12. ✅ 性能 Tab 显示 MarkerDraw 耗时。
 13. ✅ 文档同步。
+
+---
+
+### Milestone 8.0.1：Vulkan 战场视口填充与重绘修复
+
+#### 修改
+
+1. `WindowsVulkanViewportHostControl` 在 Avalonia `Bounds` 变化时调用 Win32 `SetWindowPos`，同步原生子窗口真实宽高。
+2. `WindowsVulkanViewportHostControl` 新增 `HostInfoChanged` 事件，尺寸变化后向上报告最新 HWND、HINSTANCE、Width 与 Height。
+3. `VulkanViewportHostPanel` 新增 `NativeHostInfoChanged` 事件，将原生宿主尺寸变化转交给 `EditorShell`。
+4. `EditorShell` 移除旧的 `VulkanRenderContext` 16ms 定时渲染路径，避免旧 Swapchain extent 在最大化后覆盖左上角区域。
+5. `EditorShell` 增加 resize 防抖重绘路径：宿主尺寸变化后重新执行 Swapchain / Clear / MarkerDraw 一次。
+6. `EditorShell` 的主视口状态行在 Marker 绘制完成后同步刷新，显示本轮真实清屏尺寸与点位数量。
+7. `DebugDockPanel` 压缩底部页签字号与 Padding，减少底部调试区对中央战场视口的挤压。
+
+#### 验收重点
+
+1. Vulkan 蓝色战场区域跟随中央视口真实尺寸铺满，不再停留在旧的小尺寸。
+2. 窗口最大化或 resize 后，会重新 Clear 并绘制 sample_unit 点位。
+3. 点位仍来自 RenderScene 第一个对象，并位于蓝色区域中心附近。
+4. 本补丁不进入 8.1，不新增多对象绘制，不创建 Shader、Pipeline、Mesh、Texture 或 GPU Buffer。
 14. ✅ 最大化后 NativeHost 审计尺寸不再固定为 640x360。
 
 ---
