@@ -356,6 +356,15 @@
 4. 本轮不创建 Vulkan Surface、Swapchain、RenderPass、Framebuffer、CommandBuffer，也不做真实清屏。
 5. 明确禁止使用主窗口 HWND 冒充视口 HWND。
 
+### Milestone 7.7：Vulkan Surface 创建成功回归
+
+#### 修改
+
+1. `EditorShell.ProbeVulkanSurface` 移除 7.6 占位逻辑，改为复用 `VulkanViewportHostPanel` 提供的独立 HWND 与 HINSTANCE，调用 `VulkanSurfaceProbe.ProbeWindows` 创建 `VkSurfaceKHR`。
+2. Surface 创建成功后立即释放，Editor 日志显示平台与耗时；失败时显示中文原因。
+3. Windows Vulkan Surface 创建回归成功。
+4. 本轮不创建 Swapchain、RenderPass、Framebuffer、CommandBuffer，也不做真实清屏。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

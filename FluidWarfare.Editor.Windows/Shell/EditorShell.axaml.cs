@@ -513,12 +513,9 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        _vulkanSurfaceInfo = new VulkanSurfaceInfo(
-            VulkanSurfaceStatus.NotChecked,
-            "已获取 Windows 原生视口句柄；Milestone 7.6 不创建 Vulkan Surface。",
-            nativeHostInfo.PlatformText,
-            true,
-            0);
+        _vulkanSurfaceInfo = VulkanSurfaceProbe.ProbeWindows(
+            nativeHostInfo.InstanceHandle,
+            nativeHostInfo.WindowHandle);
 
         ShowVulkanSurfaceInfo();
     }

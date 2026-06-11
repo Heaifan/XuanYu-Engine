@@ -224,6 +224,7 @@
 107. Milestone 7.6：VulkanViewportHostPanel 嵌入 Windows 原生视口子窗口宿主。
 108. Milestone 7.6：EditorShell 在窗口附加后报告独立 HWND 获取结果。
 109. Milestone 7.6：7.6 阶段不调用 VulkanSurfaceProbe，不创建 VkSurfaceKHR。
+110. Milestone 7.7：EditorShell 移除 7.6 占位逻辑，真正调用 VulkanSurfaceProbe.ProbeWindows 创建 VkSurfaceKHR。
 
 ### 删除
 
@@ -245,7 +246,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 7.6：Windows 原生视口子窗口宿主。
+当前执行 Milestone 7.7：Vulkan Surface 创建成功回归。
 
 本轮只让 Editor 中的 VulkanViewportHostPanel 通过 Avalonia NativeControlHost 创建独立 Windows 原生子窗口 HWND，并显示 HWND / HINSTANCE 获取状态。不创建 Vulkan Surface、Swapchain、RenderPass、Framebuffer、CommandBuffer，不做真实清屏，不做 Runtime，不做 Android。
 
