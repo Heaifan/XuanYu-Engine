@@ -8,7 +8,7 @@
       BorderBrush="#48515C"
       BorderThickness="0,0,1,0"
       PointerPressed="HandleViewportPointerPressed">
-    <Grid RowDefinitions="Auto,*" Margin="20">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
       <TextBlock
           Grid.Row="0"
           FontSize="18"
@@ -16,7 +16,7 @@
           Foreground="#F0F4F8"
           Text="3D 视口" />
 
-      <!-- 默认状态：未选择 World 实体 -->
+      <!-- 主体内容 — 三状态面板 -->
       <StackPanel
           x:Name="DefaultContent"
           Grid.Row="1"
@@ -38,7 +38,6 @@
             Text="点击此区域可聚焦视口占位区" />
       </StackPanel>
 
-      <!-- 无实体状态：World 为空 -->
       <StackPanel
           x:Name="EmptyWorldContent"
           Grid.Row="1"
@@ -61,7 +60,6 @@
             Text="请检查项目内容目录中是否存在单位模板文件。" />
       </StackPanel>
 
-      <!-- 实体摘要状态：显示当前选中实体 -->
       <StackPanel
           x:Name="EntitySummaryContent"
           Grid.Row="1"
@@ -98,6 +96,28 @@
           <TextBlock x:Name="EntityVisualKindText" Foreground="#58A6FF" HorizontalAlignment="Center" />
         </StackPanel>
       </StackPanel>
+
+      <!-- 底部：RenderScene 调试对象列表 -->
+      <Border
+          Grid.Row="2"
+          Background="#1A1F26"
+          BorderBrush="#48515C"
+          BorderThickness="0,1,0,0"
+          Padding="16,10">
+        <StackPanel Spacing="6">
+          <TextBlock
+              FontSize="14"
+              FontWeight="SemiBold"
+              Foreground="#F0F4F8"
+              Text="RenderScene 调试对象" />
+          <TextBlock
+              x:Name="DebugListEmptyText"
+              Foreground="#8B949E"
+              IsVisible="False"
+              Text="暂无渲染对象" />
+          <StackPanel x:Name="DebugListPanel" IsVisible="False" Spacing="4" />
+        </StackPanel>
+      </Border>
     </Grid>
   </Border>
 </UserControl>

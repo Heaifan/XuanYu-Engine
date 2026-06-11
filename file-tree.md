@@ -81,6 +81,8 @@
 63. Milestone 6.0：新增 `FluidWarfare.Render/Scene/RenderScene.cs`。
 64. Milestone 6.0：新增 `FluidWarfare.Render/World/WorldToRenderSceneBuilder.cs`。
 65. Milestone 6.0：新增 `FluidWarfare.Tests/Render/World/WorldToRenderSceneBuilderTests.cs`。
+66. Milestone 6.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderObjectSummary.cs`。
+67. Milestone 6.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderSceneSummary.cs`。
 
 ### 修改
 
@@ -163,6 +165,8 @@
 77. Milestone 6.0：Editor.csproj 和 Tests.csproj 新增 Render 引用。
 78. Milestone 6.0：EditorShell 创建 World 后生成 RenderScene 并记录对象数量。
 79. Milestone 6.0：ViewportEntitySummary 新增 VisualKindText。
+80. Milestone 6.1：ViewportPlaceholderPanel 新增 RenderScene 调试对象区域。
+81. Milestone 6.1：EditorShell 新增 CreateViewportRenderSceneSummary。
 
 ### 删除
 
@@ -184,7 +188,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 6.0：RenderScene 最小抽象。
+当前执行 Milestone 6.1：视口 RenderScene 调试显示。
 
 本轮只完成项目内容到 Engine World 的桥接层、ProjectContentWorldSeeder、World 实体 Source 支持和 Editor 从 sample_unit.json 生成占位实体，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做完整 ECS 调度系统，不做 Query，不做 Archetype，不做 Chunk，不做 Vulkan，不做 Runtime，不做 Android。
 
@@ -487,13 +491,15 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/MainWindow.axaml` | 编辑器主窗口 XAML 容器，承载 EditorShell | 可运行 |
 | `FluidWarfare.Editor.Windows/MainWindow.axaml.cs` | 编辑器主窗口 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器布局壳，组织菜单栏、项目内容面板、World 实体列表面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、实体列表选择、检查器、状态栏、日志和视口占位显示 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、实体列表选择、检查器、状态栏、日志和视口调试显示 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责显示项目名、显示分类项，并在分类点击时发出选择事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs` | 视口占位显示模型，保存当前选中实体的名称、EntityId、来源路径、位置文本与视觉类型 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位区 UI，支持默认提示、World 为空和当前选中实体摘要三种状态 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板逻辑，提供显示实体摘要、无选择和空 World 的三种方法，并发出 ViewportFocused 事件 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderObjectSummary.cs` | 视口 RenderScene 调试列表中的单个渲染对象显示摘要 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportRenderSceneSummary.cs` | 视口 RenderScene 调试列表显示模型，保存多个渲染对象摘要 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位界面，显示默认提示、World 为空提示、当前选中实体摘要与 RenderScene 调试对象列表 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板逻辑，提供实体摘要、空 World、默认提示与 RenderScene 调试对象列表显示方法 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，显示当前 World 实体列表 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs` | World 实体列表面板后台逻辑，接收 WorldEntityInfo 列表并在点击时发出 EntitySelected 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |

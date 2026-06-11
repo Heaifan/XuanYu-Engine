@@ -233,6 +233,19 @@
 5. `ViewportPlaceholderPanel.axaml` 实体摘要区新增渲染对象行。
 6. `file-tree.md` 新增 Render 模块结构。
 
+### Milestone 6.1：视口 RenderScene 调试显示
+
+#### 新增
+
+1. 新增 `ViewportRenderObjectSummary` 与 `ViewportRenderSceneSummary`，用于在视口占位区显示 RenderScene 调试对象列表。
+
+#### 修改
+
+1. `ViewportPlaceholderPanel` 底部新增 RenderScene 调试对象区域，显示所有渲染对象的名称、视觉类型、位置与来源路径。
+2. `ViewportPlaceholderPanel.axaml.cs` 新增 `ShowRenderSceneSummary` 方法。
+3. `EditorShell` 新增 `CreateViewportRenderSceneSummary` 和 `ToVisualKindText`，生成 RenderScene 后同步视口调试摘要。
+4. `file-tree.md` 更新视口面板职责说明。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

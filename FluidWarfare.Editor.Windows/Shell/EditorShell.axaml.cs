@@ -213,12 +213,35 @@ public sealed partial class EditorShell : UserControl
     {
         var renderObj = _renderScene.Objects.FirstOrDefault(o => o.EntityId == entityId);
         return renderObj is not null
-            ? renderObj.VisualKind switch
-            {
-                RenderObjectVisualKind.UnitMarker => "unit_marker",
-                _ => renderObj.VisualKind.ToString()
-            }
+            ? ToVisualKindText(renderObj.VisualKind)
             : "未生成";
+    }
+
+    private static string ToVisualKindText(RenderObjectVisualKind kind)
+    {
+        return kind switch
+        {
+            RenderObjectVisualKind.UnitMarker => "unit_marker",
+            _ => kind.ToString()
+        };
+    }
+
+    private ViewportRenderSceneSummary CreateViewportRenderSceneSummary()
+    {
+        if (_renderScene.Objects.Count == 0)
+        {
+            return ViewportRenderSceneSummary.Empty;
+        }
+
+        var objects = _renderScene.Objects
+            .Select(o => new ViewportRenderObjectSummary(
+                o.DisplayName,
+                ToVisualKindText(o.VisualKind),
+                $"({o.Position.X}, {o.Position.Y}, {o.Position.Z})",
+                o.SourcePath))
+            .ToArray();
+
+        return new ViewportRenderSceneSummary(objects);
     }
 
     private void HandleMenuClicked(string menuName)
@@ -309,6 +332,7 @@ public sealed partial class EditorShell : UserControl
         {
             _worldEntityListPanel?.ShowEntities([]);
             _viewportPlaceholderPanel?.ShowNoWorldEntity();
+            _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
             AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
             return;
         }
@@ -321,6 +345,7 @@ public sealed partial class EditorShell : UserControl
         {
             _worldEntityListPanel?.ShowEntities([]);
             _viewportPlaceholderPanel?.ShowNoWorldEntity();
+            _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
             AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
             return;
         }
@@ -343,6 +368,7 @@ public sealed partial class EditorShell : UserControl
         // 更新实体列表，视口保持默认状态等待用户选择
         _worldEntityListPanel?.ShowEntities(entities);
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
+        _viewportPlaceholderPanel?.ShowRenderSceneSummary(CreateViewportRenderSceneSummary());
     }
 
     private void ShowLoadedProject(GameProjectInfo project)
