@@ -340,6 +340,22 @@
 3. `EditorShell` 在 Vulkan Device 探测后尝试 Surface 探测；当前未取得独立视口句柄时，输出中文警告并保持编辑器可运行。
 4. 本轮不创建 Swapchain、ImageView、RenderPass、Framebuffer、CommandBuffer、同步对象，不做真实渲染、不清屏、不绘制 `unit_marker`。
 
+### Milestone 7.6：Windows 原生视口子窗口宿主
+
+#### 新增
+
+1. 新增 Windows Vulkan 视口原生子窗口宿主，用于为后续 `VkSurfaceKHR` 提供独立 HWND。
+2. 新增 `WindowsVulkanViewportHostState`、`WindowsVulkanViewportHostInfo` 与 `WindowsVulkanViewportHostControl`。
+3. 新增 Editor Windows 应用 manifest，声明 Windows 10 兼容性，满足 Avalonia `NativeControlHost` 创建子窗口要求。
+
+#### 修改
+
+1. `VulkanViewportHostPanel` 增加 Windows 原生宿主状态显示。
+2. `EditorShell` 在窗口附加到可视树后显示原生视口句柄获取结果。
+3. `VulkanViewportNativeHostInfo` 成功时返回独立子窗口 HWND 与 HINSTANCE。
+4. 本轮不创建 Vulkan Surface、Swapchain、RenderPass、Framebuffer、CommandBuffer，也不做真实清屏。
+5. 明确禁止使用主窗口 HWND 冒充视口 HWND。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

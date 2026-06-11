@@ -1,7 +1,8 @@
 <UserControl
     x:Class="FluidWarfare.Editor.Windows.Panels.Viewport.VulkanViewportHostPanel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:nativeHost="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost">
   <Border
       Margin="0"
       Background="#1A1F26"
@@ -18,6 +19,17 @@
           x:Name="HostInfoText"
           Foreground="#8B949E"
           Text="正在初始化..." />
+      <Border
+          Height="96"
+          Background="#0D1117"
+          BorderBrush="#30363D"
+          BorderThickness="1">
+        <nativeHost:WindowsVulkanViewportHostControl x:Name="NativeHostControl" />
+      </Border>
+      <TextBlock
+          x:Name="NativeHostInfoText"
+          Foreground="#8B949E"
+          Text="Windows 原生子窗口尚未创建。" />
       <TextBlock
           x:Name="SurfaceInfoText"
           Foreground="#8B949E"

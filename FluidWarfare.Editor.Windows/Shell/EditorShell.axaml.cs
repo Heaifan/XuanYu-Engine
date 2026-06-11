@@ -1,6 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using FluidWarfare.Bridge.ProjectEngine.World;
 using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
@@ -45,6 +47,7 @@ public sealed partial class EditorShell : UserControl
     private VulkanInstanceInfo _vulkanInstanceInfo = VulkanInstanceInfo.NotChecked;
     private VulkanDeviceInfo _vulkanDeviceInfo = VulkanDeviceInfo.NotChecked;
     private VulkanSurfaceInfo _vulkanSurfaceInfo = VulkanSurfaceInfo.NotChecked;
+    private bool _vulkanViewportNativeHostReported;
 
     public EditorShell()
     {
@@ -54,6 +57,7 @@ public sealed partial class EditorShell : UserControl
         InitializeLogs();
         LoadSampleProject();
         ProbeVulkanBackend();
+        AttachedToVisualTree += OnAttachedToVisualTree;
     }
 
     private void FindShellControls()
@@ -83,6 +87,11 @@ public sealed partial class EditorShell : UserControl
         {
             _worldEntityListPanel.EntitySelected += OnWorldEntitySelected;
         }
+    }
+
+    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        Dispatcher.UIThread.Post(ReportVulkanViewportNativeHost);
     }
 
     private void InitializeLogs()
@@ -504,9 +513,12 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        _vulkanSurfaceInfo = VulkanSurfaceProbe.ProbeWindows(
-            nativeHostInfo.InstanceHandle,
-            nativeHostInfo.WindowHandle);
+        _vulkanSurfaceInfo = new VulkanSurfaceInfo(
+            VulkanSurfaceStatus.NotChecked,
+            "已获取 Windows 原生视口句柄；Milestone 7.6 不创建 Vulkan Surface。",
+            nativeHostInfo.PlatformText,
+            true,
+            0);
 
         ShowVulkanSurfaceInfo();
     }
@@ -518,12 +530,41 @@ public sealed partial class EditorShell : UserControl
             AppendInfoLog(
                 $"Vulkan Surface 创建成功，平台：{_vulkanSurfaceInfo.PlatformText}，用时：{_vulkanSurfaceInfo.ElapsedMilliseconds:F2} ms。");
         }
+        else if (_vulkanSurfaceInfo.Status == VulkanSurfaceStatus.NotChecked)
+        {
+            AppendInfoLog(_vulkanSurfaceInfo.Message);
+        }
         else
         {
             AppendWarningLog(_vulkanSurfaceInfo.Message);
         }
 
         _vulkanViewportHostPanel?.ShowSurfaceInfo(_vulkanSurfaceInfo.Message);
+    }
+
+    private void ReportVulkanViewportNativeHost()
+    {
+        if (_vulkanViewportNativeHostReported)
+        {
+            return;
+        }
+
+        _vulkanViewportNativeHostReported = true;
+
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (nativeHostInfo.HasNativeHandle)
+        {
+            AppendInfoLog(
+                $"Windows Vulkan 视口子窗口已创建，HWND：0x{nativeHostInfo.WindowHandle.ToInt64():X16}。");
+        }
+        else
+        {
+            AppendWarningLog(nativeHostInfo.Message);
+        }
+
+        ProbeVulkanSurface();
     }
 
     private void UpdateVulkanViewportHost()
