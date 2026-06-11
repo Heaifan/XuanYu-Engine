@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-12 10:00
+最后编辑：2026-06-12 10:30
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -130,6 +130,12 @@
 72ξ. Milestone 8.R.4：新增 `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationOptionsTests.cs`。
 72ο. Milestone 8.R.4：新增 `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationInfoTests.cs`。
 72π. Milestone 8.R.4：新增 `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationMessageStoreTests.cs`。
+72ρ. Milestone 8.R.5：新增 `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dShaderModules.cs`。
+72σ. Milestone 8.R.5：新增 `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dPipelineLayout.cs`。
+72τ. Milestone 8.R.5：新增 `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dPipelines.cs`。
+72υ. Milestone 8.R.5：新增 `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dVertexBuffers.cs`。
+72φ. Milestone 8.R.5：新增 `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dCommandRecorder.cs`。
+72χ. Milestone 8.R.5：新增 `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRenderResources.cs`。
 72y. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dInfoTests.cs`。
 72z. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs`。
 72α. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs`。
@@ -304,9 +310,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.R.4：Vulkan Validation Layer 开关。
+当前执行 Milestone 8.R.5：Scene3D Renderer 拆分。
 
-8.R 系列进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ✅ → Validation Layer ⬆️（当前） → 3D 重启
+8.R 系列进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ✅ → Validation Layer ✅ → Renderer 拆分 ⬆️ → 3D 重启
 
 当前状态：
 - Vulkan Validation Layer 默认不启用。FW_VULKAN_VALIDATION=1 时检测 VK_LAYER_KHRONOS_validation 与 VK_EXT_debug_utils，可用时创建 Debug Messenger。
@@ -683,7 +689,13 @@ get_tree.bat
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dStatus.cs` | Vulkan 3D 场景渲染状态枚举 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dInfo.cs` | 3D 场景渲染结果模型，保存顶点数、线段数、三角形数、DrawCall 数、视口尺寸与耗时 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dVertex.cs` | 3D 场景顶点结构（位置+颜色），包含 BuildGrid/BuildCube/BuildAxes/ToInterleaved 顶点生成工具 | 测试通过 |
-| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRenderer.cs` | 完整 3D 场景渲染器，创建 Instance→Surface→Device→Swapchain→Shader→Pipeline→Buffer→Framebuffer→Command→Submit→Present 全链路 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRenderer.cs` | Scene3D 渲染流程编排层，调用各子模块 + Instance/Surface/Device/Swapchain 创建 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dShaderModules.cs` | 使用 CompiledShaders 已验证 SPIR-V 字节创建 ShaderModule | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dPipelineLayout.cs` | 创建 PipelineLayout 与 MVP PushConstantRange | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dPipelines.cs` | 创建 Grid LineList Pipeline 与 Unit TriangleList Pipeline | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dVertexBuffers.cs` | 创建并上传 Grid/Unit 顶点 Buffer | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dCommandRecorder.cs` | 录制 Scene3D CommandBuffer，顺序为 BindPipeline/PushConstants/BindVBs/Draw | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRenderResources.cs` | 持有 Scene3D 创建的 Vulkan 资源句柄，按依赖逆序 Dispose | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Camera/VulkanCameraInfo.cs` | 固定 3D 相机参数，含 DefaultBattlefield 默认战场相机 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Camera/VulkanCameraMatrices.cs` | 3D 矩阵计算，LookAt、PerspectiveVulkan（NDC 0..1）与 MVP 合成 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Shaders/basic_3d.vert` | 基础 3D 顶点着色器 GLSL 源文件，position+color 输入，MVP push constant | 已生成 |

@@ -826,4 +826,28 @@ FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationMessageStoreTests.cs
 
 ---
 
-下一阶段：**Milestone 8.R.5 — Scene3D Renderer 拆分**
+---
+
+### Milestone 8.R.5 — Scene3D Renderer 拆分
+
+#### 改动
+
+1. **VulkanScene3dShaderModules**（71 行）：使用 CompiledShaders 已验证 SPIR-V 创建 ShaderModule，检查字节非空和验证标记。
+2. **VulkanScene3dPipelineLayout**（50 行）：创建 PipelineLayout 与 64 字节 MVP PushConstant。
+3. **VulkanScene3dPipelines**（139 行）：创建 Grid (LineList) 和 Unit (TriangleList) Pipeline。
+4. **VulkanScene3dVertexBuffers**（139 行）：创建并上传 Host Visible 顶点 Buffer，检查输入保护和内存类型。
+5. **VulkanScene3dCommandRecorder**（116 行）：录制 CommandBuffer，录制顺序为 BindPipeline → PushConstants → BindVertexBuffers → Draw（两条），检查 Begin/EndCommandBuffer 返回值。
+6. **VulkanScene3dRenderResources**（114 行）：集中持有 Scene3D 创建的 Vulkan 资源，按依赖逆序在 Dispose 中释放。
+7. **VulkanScene3dRenderer**（386 行，含公共基础设施）：收束为流程编排层，调用各子模块 + 公共 Instance/Surface/Device/Swapchain 创建。
+
+#### 行为保持
+
+- Scene3D 仍不进入默认启动或 resize 路径。
+- resize / 最大化仍只走 Clear。
+- FW_ENABLE_SCENE3D=1 只允许手动触发。
+- Draw 前明确 BindPipeline。
+- Begin/EndCommandBuffer 结果被检查。
+
+---
+
+下一阶段：**Milestone 8.1R — Vulkan 3D 基础管线重启**
