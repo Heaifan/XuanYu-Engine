@@ -110,6 +110,22 @@
 42. Milestone 4.2：`SampleProject` 新增 `icons` 扩展目录声明，用于验证项目自定义内容目录。
 43. Milestone 4.2：Editor 项目面板改为根据项目目录声明显示分类，不再硬编码英文目录到中文显示名的映射。
 
+### Milestone 4.3：项目内容文件入口声明与扩展名校验
+
+#### 新增
+
+1. 新增 `GameContentFileInfo`，用于表示项目中合法的内容文件入口模型，保存所属目录、内容类型、文件名、相对路径和扩展名。
+2. 新增 `GameContentFileScanner`，用于扫描已声明内容目录中的一级内容文件，并根据 `allowedExtensions` 校验扩展名。
+3. 新增 `FluidWarfare.Tests/Project/Content/GameContentFileScannerTests.cs`，验证内容文件入口扫描的多种场景。
+4. `SampleProject` 新增 `units/sample_unit.json`、`weapons/sample_weapon.json`、`icons/sample_icon.svg` 占位内容文件，用于验证内容文件入口识别。
+
+#### 修改
+
+1. `GameProjectInfo` 新增 `ContentFiles`，用于保存项目加载后识别出的合法内容文件入口。
+2. `GameProjectLoader` 接入 `GameContentFileScanner`，在目录声明校验后扫描合法内容文件入口，拒绝未允许扩展名文件和暂不支持的嵌套内容目录。
+3. `GameProjectLoaderTests` 新增三个集成测试，覆盖合法内容文件、非法扩展名和嵌套子目录场景。
+4. `EditorShell` 接入 `GameProjectInfo.ContentFiles`，在点击包含内容文件的内容目录时追加轻量文件入口数量日志。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

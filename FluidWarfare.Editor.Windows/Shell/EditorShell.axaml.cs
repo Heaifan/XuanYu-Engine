@@ -22,6 +22,7 @@ public sealed partial class EditorShell : UserControl
     private StatusBarPanel? _statusBarPanel;
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
     private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByDisplayName = [];
+    private IReadOnlyList<GameContentFileInfo>? _contentFiles;
 
     public EditorShell()
     {
@@ -70,6 +71,19 @@ public sealed partial class EditorShell : UserControl
         _inspectorPanel?.ShowSelection(selection);
         _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
         AppendInfoLog($"选择项目内容目录：{selection.DisplayName}。");
+
+        if (_contentFoldersByDisplayName.TryGetValue(itemName, out var contentFolder) &&
+            _contentFiles is not null)
+        {
+            var folderFiles = _contentFiles
+                .Where(f => f.FolderName == contentFolder.FolderName)
+                .ToList();
+
+            if (folderFiles.Count > 0)
+            {
+                AppendInfoLog($"项目内容目录“{contentFolder.DisplayName}”包含 {folderFiles.Count} 个合法内容文件入口。");
+            }
+        }
     }
 
     private void HandleViewportFocused(object? sender, EventArgs e)
@@ -178,6 +192,8 @@ public sealed partial class EditorShell : UserControl
     private void ShowLoadedProject(GameProjectInfo project)
     {
         _contentFoldersByDisplayName.Clear();
+        _contentFiles = project.ContentFiles;
+
         foreach (var contentFolder in project.ContentFolders)
         {
             _contentFoldersByDisplayName[contentFolder.DisplayName] = contentFolder;

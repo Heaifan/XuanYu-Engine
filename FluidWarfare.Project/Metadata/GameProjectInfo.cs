@@ -6,4 +6,5 @@ public sealed record GameProjectInfo(
     string ProjectId,
     string DisplayName,
     string Description,
-    IReadOnlyList<GameContentFolderInfo> ContentFolders);
+    IReadOnlyList<GameContentFolderInfo> ContentFolders,
+    IReadOnlyList<GameContentFileInfo> ContentFiles);

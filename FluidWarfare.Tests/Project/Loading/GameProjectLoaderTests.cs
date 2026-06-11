@@ -303,6 +303,78 @@ public sealed class GameProjectLoaderTests
         AssertFailure(result, "Project.UndeclaredContentFolder");
     }
 
+    [Fact]
+    public void LoadFromDirectory_WithValidContentFiles_ShouldSucceedAndExposeContentFiles()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.CreateContentDirectory("units");
+        scope.CreateContentDirectory("icons");
+        scope.CreateContentFile("units", "sample_unit.json");
+        scope.CreateContentFile("icons", "sample_icon.svg");
+        scope.WriteManifest(CreateManifest("""
+            {
+              "folderName": "units",
+              "displayName": "单位",
+              "description": "保存项目中的单位模板。",
+              "contentKind": "unitTemplate",
+              "isRequired": true,
+              "allowedExtensions": [ ".json" ]
+            },
+            {
+              "folderName": "icons",
+              "displayName": "图标",
+              "description": "保存项目中的界面图标资源。",
+              "contentKind": "icon",
+              "isRequired": false,
+              "allowedExtensions": [ ".png", ".svg", ".webp" ]
+            }
+            """));
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        Assert.True(result.Result.IsSuccess);
+        Assert.NotNull(result.Project);
+        Assert.Equal(2, result.Project.ContentFiles.Count);
+
+        var unitFile = result.Project.ContentFiles.First(f => f.FolderName == "units");
+        Assert.Equal("sample_unit.json", unitFile.FileName);
+        Assert.Equal("units/sample_unit.json", unitFile.RelativePath);
+        Assert.Equal(".json", unitFile.Extension);
+        Assert.Equal("unitTemplate", unitFile.ContentKind);
+
+        var iconFile = result.Project.ContentFiles.First(f => f.FolderName == "icons");
+        Assert.Equal("sample_icon.svg", iconFile.FileName);
+        Assert.Equal("icons/sample_icon.svg", iconFile.RelativePath);
+        Assert.Equal(".svg", iconFile.Extension);
+        Assert.Equal("icon", iconFile.ContentKind);
+    }
+
+    [Fact]
+    public void LoadFromDirectory_WithDisallowedContentFileExtension_ShouldFail()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.CreateContentDirectory("icons");
+        scope.CreateContentFile("icons", "sample_icon.psd");
+        scope.WriteManifest(CreateSingleFolderManifest("icons", "icon", ".svg"));
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        AssertFailure(result, "Project.ContentFileExtensionNotAllowed");
+    }
+
+    [Fact]
+    public void LoadFromDirectory_WithNestedContentDirectory_ShouldFail()
+    {
+        using var scope = ProjectTestDirectory.Create();
+        scope.CreateContentDirectory("units");
+        scope.CreateNestedSubdirectory("units", "infantry");
+        scope.WriteManifest(CreateSingleFolderManifest("units", "unitTemplate", ".json"));
+
+        var result = GameProjectLoader.LoadFromDirectory(scope.Path);
+
+        AssertFailure(result, "Project.NestedContentDirectoryUnsupported");
+    }
+
     private static void AssertFailure(GameProjectLoadResult result, string code)
     {
         Assert.True(result.Result.IsFailure);
@@ -360,6 +432,23 @@ public sealed class GameProjectLoaderTests
         public void CreateContentDirectory(string name)
         {
             Directory.CreateDirectory(System.IO.Path.Combine(Path, name));
+        }
+
+        public void CreateContentFile(string folderName, string fileName)
+        {
+            var filePath = System.IO.Path.Combine(Path, folderName, fileName);
+            var dir = System.IO.Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir!);
+            }
+
+            File.WriteAllText(filePath, string.Empty);
+        }
+
+        public void CreateNestedSubdirectory(string parentFolder, string subDirName)
+        {
+            Directory.CreateDirectory(System.IO.Path.Combine(Path, parentFolder, subDirName));
         }
 
         public void WriteManifest(string json)

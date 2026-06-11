@@ -64,11 +64,22 @@ public static partial class GameProjectLoader
             return new GameProjectLoadResult(contentFoldersResult.Result, null);
         }
 
+        var scanResult = GameContentFileScanner.Scan(
+            projectDirectory,
+            contentFoldersResult.ContentFolders,
+            out var contentFiles);
+
+        if (scanResult.IsFailure)
+        {
+            return new GameProjectLoadResult(scanResult, null);
+        }
+
         var project = new GameProjectInfo(
             manifest.ProjectId.Trim(),
             manifest.DisplayName.Trim(),
             manifest.Description?.Trim() ?? string.Empty,
-            contentFoldersResult.ContentFolders);
+            contentFoldersResult.ContentFolders,
+            contentFiles);
 
         return new GameProjectLoadResult(EngineResult.Success(), project);
     }
