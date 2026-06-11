@@ -15,8 +15,8 @@
 ## 代码纪律
 
 1. 优先使用小文件，每个文件只承担清晰职责。
-2. 不创建 `Part1`、`Part2` 或编号拆分文件。
-3. 避免 `GameManager`、`CommonUtils`、`DataProcessor`、`SystemHelper` 等含糊名称。
+2. 不创建编号拆分文件。
+3. 避免总管类、通用工具类、泛化处理器和辅助类等含糊名称。
 4. 只使用 `FluidWarfare.*` 命名空间。
 5. 不使用 `BingWuChangShiEngine`、`Bwc.*`、`cls_` 或 `fuc_` 命名。
 

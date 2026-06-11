@@ -82,7 +82,7 @@ public sealed class EngineLogEntryTests
     public void Create_WithMessageContainingInfoPrefix_ShouldThrow()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            EngineLogEntry.Create(1.5, EngineLogLevel.Info, "Test", "【信息】测试完成。"));
+            EngineLogEntry.Create(1.5, EngineLogLevel.Info, "Test", "[信息]测试完成。"));
 
         Assert.Contains("日志内容不应包含日志等级前缀。", exception.Message);
     }
@@ -91,17 +91,17 @@ public sealed class EngineLogEntryTests
     public void Create_WithMessageContainingErrorPrefix_ShouldThrow()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            EngineLogEntry.Create(1.5, EngineLogLevel.Error, "Core", "【报错】参数无效。"));
+            EngineLogEntry.Create(1.5, EngineLogLevel.Error, "Core", "[报错]参数无效。"));
 
         Assert.Contains("日志内容不应包含日志等级前缀。", exception.Message);
     }
 
     [Theory]
-    [InlineData("【追踪】")]
-    [InlineData("【信息】")]
-    [InlineData("【警告】")]
-    [InlineData("【报错】")]
-    [InlineData("【严重】")]
+    [InlineData("[追踪]")]
+    [InlineData("[信息]")]
+    [InlineData("[警告]")]
+    [InlineData("[报错]")]
+    [InlineData("[严重]")]
     public void Create_WithMessageContainingAnyCurrentPrefix_ShouldThrow(string prefix)
     {
         var exception = Assert.Throws<ArgumentException>(() =>
@@ -113,7 +113,7 @@ public sealed class EngineLogEntryTests
     [Fact]
     public void ToDisplayString_ForInfo_ShouldUseChinesePrefix()
     {
-        Assert.Equal("【信息】测试完成。", CreateSample().ToDisplayString());
+        Assert.Equal("[信息]测试完成。", CreateSample().ToDisplayString());
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public sealed class EngineLogEntryTests
     {
         var entry = EngineLogEntry.Create(2.0, EngineLogLevel.Error, "Core", "参数无效。");
 
-        Assert.Equal("【报错】参数无效。", entry.ToDisplayString());
+        Assert.Equal("[报错]参数无效。", entry.ToDisplayString());
     }
 
     [Fact]

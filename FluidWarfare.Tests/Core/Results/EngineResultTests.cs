@@ -79,11 +79,11 @@ public sealed class EngineResultTests
     {
         var text = EngineResult.Fail(CreateSampleError()).ToString();
 
-        Assert.DoesNotContain("【追踪】", text);
-        Assert.DoesNotContain("【报错】", text);
-        Assert.DoesNotContain("【信息】", text);
-        Assert.DoesNotContain("【警告】", text);
-        Assert.DoesNotContain("【严重】", text);
+        Assert.DoesNotContain("[追踪]", text);
+        Assert.DoesNotContain("[报错]", text);
+        Assert.DoesNotContain("[信息]", text);
+        Assert.DoesNotContain("[警告]", text);
+        Assert.DoesNotContain("[严重]", text);
     }
 
     [Fact]

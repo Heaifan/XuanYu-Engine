@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-10 23:20
+最后编辑：2026-06-11 00:20
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -68,12 +68,12 @@
 14. Core 数学类型提示：将 Vector3d / YawRotation 的异常提示改为中文。
 15. Milestone 2.5.1：修复 EngineResult 默认值语义，明确 default(EngineResult) 为无效结果。
 16. Milestone 2.5.1：调整 EngineResult.IsFailure，仅有效失败结果返回 true。
-17. Milestone 2.5.1：确认日志等级前缀统一使用【】。
-18. Milestone 2.5.2：统一日志等级前缀符号为【】。
+17. Milestone 2.5.1：确认日志等级前缀统一使用[]。
+18. Milestone 2.5.2：统一日志等级前缀符号为[]。
 19. Milestone 2.6：新增 EngineLogLevel。
 20. Milestone 2.6：新增 EngineLogEntry。
 21. Milestone 2.6：新增日志等级与日志记录单元测试。
-22. Milestone 2.6.1：修复日志等级前缀统一校验，确认 EngineLogLevel 与 EngineLogEntry 只使用【】。
+22. Milestone 2.6.1：修复日志等级前缀统一校验，确认 EngineLogLevel 与 EngineLogEntry 只使用[]。
 23. Milestone 3.1：将 FluidWarfare.Editor.Windows 加入 FluidWarfare.sln，并引用 FluidWarfare.Core。
 24. Milestone 3.2：实现顶部菜单、项目面板、3D 视口占位、检查器和日志面板。
 25. Milestone 3.3：Editor 日志面板接入 EngineLogEntry，启动日志由 Core 日志对象生成。
@@ -84,6 +84,9 @@
 30. Milestone 3.5：检查器面板支持显示项目占位项信息。
 31. Milestone 3.5：状态栏支持显示当前选择。
 32. Milestone 3.5：明确 ProjectPanel 只负责发出选择事件，不直接写日志或更新其他面板。
+33. Milestone 3.6：日志等级前缀统一改为 ASCII 方括号格式。
+34. Milestone 3.6：清理中文全角日志括号。
+35. Milestone 3.6：补充 Editor GUI 面板 SRP 职责说明。
 
 ### 删除
 
@@ -105,9 +108,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 3.5：在保持 SRP 的前提下实现菜单响应与项目面板占位交互。
+当前执行 Milestone 3.6：日志前缀改为 ASCII 方括号，并补充 GUI SRP 文档审计。
 
-本轮只处理 Editor GUI 壳的最小交互反馈，不实现真实项目系统、ECS、Vulkan、Runtime、Android、日志写入器、文件日志或复杂 MVVM。
+本轮只处理日志前缀格式统一和 GUI SRP 文档审计，不新增 GUI 功能，不实现真实项目系统、ECS、Vulkan、Runtime、Android、文件日志或复杂 MVVM。
 
 ## 3. 顶层目录结构
 
@@ -269,9 +272,9 @@ get_tree.bat
 | `FluidWarfare.Core/Time/SimulationTime.cs` | 表示模拟世界累计时间，支持从零开始并通过 TimeStep 推进 | 测试通过 |
 | `FluidWarfare.Core/Math/Vector3d.cs` | 引擎核心 3D 坐标与向量值对象，统一 X/Y/Z 坐标、长度、距离、标准化、点积与基础运算 | 测试通过 |
 | `FluidWarfare.Core/Math/YawRotation.cs` | 水平朝向角值对象，统一绕 Y 轴的方向约定、角度归一化与 XZ 平面前向向量 | 测试通过 |
-| `FluidWarfare.Core/Results/EngineError.cs` | 引擎错误值对象，承载稳定英文错误代码与中文可读错误信息，不包含【报错】等日志等级前缀 | 测试通过 |
+| `FluidWarfare.Core/Results/EngineError.cs` | 引擎错误值对象，承载稳定英文错误代码与中文可读错误信息，不包含[报错]等日志等级前缀 | 测试通过 |
 | `FluidWarfare.Core/Results/EngineResult.cs` | 引擎操作结果值对象，统一表达成功或失败，要求失败结果携带有效 EngineError，并明确默认值无效 | 测试通过 |
-| `FluidWarfare.Core/Logging/EngineLogLevel.cs` | 引擎日志等级枚举与中文等级标签映射，统一【追踪】【信息】【警告】【报错】【严重】显示前缀 | 测试通过 |
+| `FluidWarfare.Core/Logging/EngineLogLevel.cs` | 引擎日志等级枚举与中文等级标签映射，统一[追踪][信息][警告][报错][严重]显示前缀 | 测试通过 |
 | `FluidWarfare.Core/Logging/EngineLogEntry.cs` | 引擎日志记录值对象，保存模拟时间、日志等级、分类和中文日志内容，并提供基础中文显示输出 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
@@ -341,42 +344,83 @@ BingWuChangShiEngine
 Bwc.*
 cls_
 fuc_
-utils
-helpers
-managers
-processors
-Part1
-Part2
+泛化工具命名
+泛化辅助命名
+泛化总管命名
+泛化处理器命名
+编号拆分文件名
 ```
 
 数据与资源文件可以使用领域前缀，例如 `scn_`、`cfg_`、`dat_`、`mesh_`、`tex_`、`mat_` 和 `shd_`。
 
-## 8. 当前不做的内容
+## 8. 日志前缀规则
 
-当前已经进入 Milestone 3.5 SRP 加强版菜单响应与项目面板占位交互任务。
+日志等级前缀统一使用：
+
+```text
+[追踪]
+[信息]
+[警告]
+[报错]
+[严重]
+```
+
+禁止使用中文全角日志括号和旧式日志括号。
+
+## 9. Editor GUI SRP 规则
+
+ProjectPanel：
+只负责显示项目占位项，并发出 ProjectItemSelected 事件。
+不得创建 EngineLogEntry。
+不得调用 LogPanel。
+不得调用 InspectorPanel。
+不得调用 StatusBarPanel。
+
+InspectorPanel：
+只负责显示传入的 EditorSelection。
+不得监听 ProjectPanel。
+不得创建日志。
+不得更新状态栏。
+
+LogPanel：
+只负责显示和追加外部传入的日志文本。
+不得创建 EngineLogEntry。
+不得判断菜单或项目点击来源。
+
+StatusBarPanel：
+只负责显示状态文本和当前选择文本。
+不得判断项目项含义。
+不得创建日志。
+
+EditorShell：
+当前阶段允许作为轻量协调层，负责接收菜单与项目项事件，并调用日志、检查器和状态栏面板。
+不得承载真实项目系统。
+不得承载 ECS。
+不得承载 Vulkan。
+不得变成长期业务总管。
+
+## 10. 当前不做的内容
+
+当前已经进入 Milestone 3.6 日志前缀 ASCII 方括号统一与 GUI SRP 文档审计任务。
 
 本轮不做以下内容：
 
-1. 真实项目打开。
-2. 真实文件系统扫描。
-3. 项目保存。
-4. 场景保存。
-5. ECS 实现。
-6. Entity 实现。
-7. Component 实现。
-8. World 实现。
-9. Data Loader 实现。
-10. JSON 场景读取。
-11. Vulkan 接入。
-12. 真实 3D 渲染。
-13. Runtime.Windows 实现。
-14. Android 实现。
+1. 新增 GUI 功能。
+2. ECS 实现。
+3. Entity 实现。
+4. Component 实现。
+5. World 实现。
+6. Data Loader 实现。
+7. JSON 场景读取。
+8. Vulkan 接入。
+9. Runtime.Windows 实现。
+10. Android 实现。
+11. 真实项目系统。
+12. 真实资源管理器。
+13. 场景保存。
+14. 文件日志实现。
 15. 复杂 MVVM 框架。
-16. 命令系统。
-17. 快捷键系统。
-18. 日志写入器实现。
-19. 文件日志实现。
 
-## 9. 版本历史索引
+## 11. 版本历史索引
 
 详见 `docs/CHANGELOG.md`。
