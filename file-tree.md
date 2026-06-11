@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 00:20
+最后编辑：2026-06-11 00:45
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -87,6 +87,7 @@
 33. Milestone 3.6：日志等级前缀统一改为 ASCII 方括号格式。
 34. Milestone 3.6：清理中文全角日志括号。
 35. Milestone 3.6：补充 Editor GUI 面板 SRP 职责说明。
+36. Milestone 3.6：日志面板改为可滚动、可选中、可复制的只读文本区域。
 
 ### 删除
 
@@ -108,9 +109,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 3.6：日志前缀改为 ASCII 方括号，并补充 GUI SRP 文档审计。
+当前执行 Milestone 3.6：日志面板滚动条与可复制文本调整。
 
-本轮只处理日志前缀格式统一和 GUI SRP 文档审计，不新增 GUI 功能，不实现真实项目系统、ECS、Vulkan、Runtime、Android、文件日志或复杂 MVVM。
+本轮只处理日志面板滚动查看、文本选中和复制体验，不实现真实项目系统、ECS、Vulkan、Runtime、Android、文件日志或复杂 MVVM。
 
 ## 3. 顶层目录结构
 
@@ -302,8 +303,8 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml.cs` | 检查器面板 code-behind | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml` | 编辑器日志面板，显示中文日志文本 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml.cs` | 编辑器日志面板后台逻辑，接收日志显示文本并提供给 UI 绑定 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml` | 编辑器日志面板 UI，使用只读文本区域显示中文日志，支持滚动查看与复制 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml.cs` | 编辑器日志面板后台逻辑，只负责设置、追加和刷新外部传入的日志文本，不创建 EngineLogEntry | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Status/StatusBarPanel.axaml` | 编辑器底部状态栏 UI，显示当前状态、阶段、Core 加载状态与 Vulkan 接入状态 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Status/StatusBarPanel.axaml.cs` | 编辑器底部状态栏后台逻辑，提供静态状态显示初始化并显示当前选择 | 可运行 |
 | `.gitattributes` | 固定文本文件行尾规则 | 已创建 |
@@ -384,6 +385,8 @@ InspectorPanel：
 
 LogPanel：
 只负责显示和追加外部传入的日志文本。
+负责提供滚动查看能力。
+负责提供文本选中与复制能力。
 不得创建 EngineLogEntry。
 不得判断菜单或项目点击来源。
 

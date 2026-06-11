@@ -84,6 +84,10 @@
 16. Milestone 3.6：移除文档与源码中的中文全角日志括号。
 17. Milestone 3.6：保持 Message 只保存正文，显示输出时由 `EngineLogEntry` 添加等级前缀。
 18. Milestone 3.6：补充 Editor GUI 面板 SRP 职责说明。
+19. Milestone 3.6：日志面板改为只读多行文本区域。
+20. Milestone 3.6：日志面板支持垂直滚动查看。
+21. Milestone 3.6：日志文本支持选中与复制。
+22. Milestone 3.6：保持日志内容由 `EngineLogEntry` 生成，`LogPanel` 只负责显示与追加文本。
 
 ### 删除
 
