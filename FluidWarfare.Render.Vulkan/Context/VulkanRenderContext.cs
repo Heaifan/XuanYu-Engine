@@ -146,26 +146,27 @@ public sealed unsafe class VulkanRenderContext : IDisposable
 
     private void Cleanup()
     {
-        if (_vk is null) return;
-        // Skip device operations if device handle looks invalid
-        var devOk = _device.Handle != 0 && _vk is not null;
-        if (devOk)
+        var vk = _vk;
+        if (vk is null) return;
+
+        var hasDevice = _device.Handle != 0;
+        if (hasDevice)
         {
-            _vk.DeviceWaitIdle(_device);
-            if (_inFlightFence.Handle != 0) _vk.DestroyFence(_device, _inFlightFence, null);
-            if (_imageAvailableSemaphore.Handle != 0) _vk.DestroySemaphore(_device, _imageAvailableSemaphore, null);
-            if (_renderFinishedSemaphore.Handle != 0) _vk.DestroySemaphore(_device, _renderFinishedSemaphore, null);
-            if (_commandPool.Handle != 0) _vk.DestroyCommandPool(_device, _commandPool, null);
-            foreach (var fb in _framebuffers) if (fb.Handle != 0) _vk.DestroyFramebuffer(_device, fb, null);
-            if (_renderPass.Handle != 0) _vk.DestroyRenderPass(_device, _renderPass, null);
-            foreach (var iv in _swapchainImageViews) if (iv.Handle != 0) _vk.DestroyImageView(_device, iv, null);
+            vk.DeviceWaitIdle(_device);
+            if (_inFlightFence.Handle != 0) vk.DestroyFence(_device, _inFlightFence, null);
+            if (_imageAvailableSemaphore.Handle != 0) vk.DestroySemaphore(_device, _imageAvailableSemaphore, null);
+            if (_renderFinishedSemaphore.Handle != 0) vk.DestroySemaphore(_device, _renderFinishedSemaphore, null);
+            if (_commandPool.Handle != 0) vk.DestroyCommandPool(_device, _commandPool, null);
+            foreach (var fb in _framebuffers) if (fb.Handle != 0) vk.DestroyFramebuffer(_device, fb, null);
+            if (_renderPass.Handle != 0) vk.DestroyRenderPass(_device, _renderPass, null);
+            foreach (var iv in _swapchainImageViews) if (iv.Handle != 0) vk.DestroyImageView(_device, iv, null);
             if (_swapchainCreated && _swapchain.Handle != 0 && _fnDestroySwapchainKHR != 0)
                 Marshal.GetDelegateForFunctionPointer<DestroySwapchainKHRDelegate>(_fnDestroySwapchainKHR)(_device, _swapchain, null);
-            _vk.DestroyDevice(_device, null);
+            vk.DestroyDevice(_device, null);
         }
         if (_surface.Handle != 0 && _fnDestroySurfaceKHR != 0 && _instance.Handle != 0)
             Marshal.GetDelegateForFunctionPointer<DestroySurfaceKHRDelegate>(_fnDestroySurfaceKHR)(_instance, _surface, null);
-        if (_instance.Handle != 0) _vk.DestroyInstance(_instance, null);
+        if (_instance.Handle != 0) vk.DestroyInstance(_instance, null);
         _initialized = false; _swapchainCreated = false;
     }
 
@@ -201,15 +202,17 @@ public sealed unsafe class VulkanRenderContext : IDisposable
 
     private nint GetInstanceProc(string name)
     {
+        var vk = _vk ?? throw new InvalidOperationException("Vulkan API 尚未初始化。");
         var p = Marshal.StringToHGlobalAnsi(name);
-        try { return (nint)_vk!.GetInstanceProcAddr(_instance, (byte*)p); }
+        try { return (nint)vk.GetInstanceProcAddr(_instance, (byte*)p); }
         finally { Marshal.FreeHGlobal(p); }
     }
 
     private nint GetDeviceProc(string name)
     {
+        var vk = _vk ?? throw new InvalidOperationException("Vulkan API 尚未初始化。");
         var p = Marshal.StringToHGlobalAnsi(name);
-        try { return (nint)_vk!.GetDeviceProcAddr(_device, (byte*)p); }
+        try { return (nint)vk.GetDeviceProcAddr(_device, (byte*)p); }
         finally { Marshal.FreeHGlobal(p); }
     }
 
