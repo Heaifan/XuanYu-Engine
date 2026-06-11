@@ -104,6 +104,11 @@
 36. Milestone 4.1：Editor 启动时改为通过 `SampleProjectPath` 定位示例项目，降低不同启动目录导致加载失败的风险。
 37. Milestone 4.1：项目加载失败时，项目面板显示未打开项目，检查器、状态栏与日志给出明确反馈。
 38. Milestone 4.1：新增 `SampleProjectPath` 单元测试。
+39. Milestone 4.2：将 `game.project.json` 的 `contentFolders` 从字符串数组升级为内容目录声明对象数组。
+40. Milestone 4.2：新增 `GameContentFolderInfo`，用于描述项目内容目录的名称、显示名、用途、内容类型、是否必需和允许扩展名。
+41. Milestone 4.2：`GameProjectLoader` 新增内容目录声明校验，包括字段完整性、目录名格式、内容类型格式、扩展名格式、重复声明、目录存在性与未声明目录拒绝。
+42. Milestone 4.2：`SampleProject` 新增 `icons` 扩展目录声明，用于验证项目自定义内容目录。
+43. Milestone 4.2：Editor 项目面板改为根据项目目录声明显示分类，不再硬编码英文目录到中文显示名的映射。
 
 ### 删除
 

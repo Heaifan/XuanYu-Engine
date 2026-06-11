@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 02:15
+最后编辑：2026-06-11 02:55
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -99,6 +99,11 @@
 45. Milestone 4.1：新增 SampleProjectPath，稳定定位示例项目路径。
 46. Milestone 4.1：Editor 启动时通过路径定位结果加载 SampleProject。
 47. Milestone 4.1：项目加载失败时更新项目面板、检查器、状态栏与日志。
+48. Milestone 4.2：contentFolders 升级为内容目录声明对象数组。
+49. Milestone 4.2：新增 GameContentFolderInfo。
+50. Milestone 4.2：项目加载器拒绝未声明一级内容目录。
+51. Milestone 4.2：SampleProject 新增 icons 扩展目录声明。
+52. Milestone 4.2：Editor 根据项目声明显示内容目录。
 
 ### 删除
 
@@ -120,9 +125,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 4.1：项目路径与加载状态稳定化。
+当前执行 Milestone 4.2：项目内容目录声明与未声明目录拒绝。
 
-本轮只处理 SampleProject 路径定位和项目加载成功/失败反馈，不实现 ECS、真实单位数据解析、真实武器数据解析、真实地图加载、Vulkan、Runtime、Android、项目创建向导、文件选择器、最近项目列表、保存项目、热重载、数据库或复杂 MVVM。
+本轮只处理项目内容目录声明、目录声明校验、未声明目录拒绝和 Editor 根据声明显示内容目录，不解析单位、武器、地图、剧本或图标内容，不做内容计数、内容清单扫描、资源预览、ECS、Vulkan、Runtime、Android、脚本执行、项目创建向导或文件选择器。
 
 ## 3. 顶层目录结构
 
@@ -151,6 +156,8 @@ FluidWarfare/
 |       `-- TimeStep.cs
 |-- FluidWarfare.Project/
 |   |-- FluidWarfare.Project.csproj
+|   |-- Content/
+|   |   `-- GameContentFolderInfo.cs
 |   |-- Loading/
 |   |   |-- GameProjectLoader.cs
 |   |   `-- GameProjectLoadResult.cs
@@ -244,7 +251,9 @@ FluidWarfare/
 |       |   `-- .gitkeep
 |       |-- scenarios/
 |       |   `-- .gitkeep
-|       `-- rules/
+|       |-- rules/
+|       |   `-- .gitkeep
+|       `-- icons/
 |           `-- .gitkeep
 |-- game_data/
 |   `-- .gitkeep
@@ -319,8 +328,9 @@ get_tree.bat
 | `FluidWarfare.Core/Logging/EngineLogLevel.cs` | 引擎日志等级枚举与中文等级标签映射，统一[追踪][信息][警告][报错][严重]显示前缀 | 测试通过 |
 | `FluidWarfare.Core/Logging/EngineLogEntry.cs` | 引擎日志记录值对象，保存模拟时间、日志等级、分类和中文日志内容，并提供基础中文显示输出 | 测试通过 |
 | `FluidWarfare.Project/FluidWarfare.Project.csproj` | Project 项目层项目文件，引用 Core，不引用 Editor 或 Avalonia | 测试通过 |
-| `FluidWarfare.Project/Metadata/GameProjectInfo.cs` | 游戏项目元数据模型，保存项目编号、显示名称、说明和内容目录列表 | 测试通过 |
-| `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 从项目目录读取 game.project.json，并返回项目加载结果 | 测试通过 |
+| `FluidWarfare.Project/Content/GameContentFolderInfo.cs` | 项目内容目录声明模型，保存目录名、显示名、说明、内容类型、是否必需与允许扩展名 | 测试通过 |
+| `FluidWarfare.Project/Metadata/GameProjectInfo.cs` | 游戏项目元数据模型，保存项目编号、显示名称、说明和内容目录声明列表 | 测试通过 |
+| `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 从项目目录读取 game.project.json，校验项目元数据与内容目录声明，并拒绝未声明一级内容目录 | 测试通过 |
 | `FluidWarfare.Project/Loading/GameProjectLoadResult.cs` | 项目加载结果模型，组合 EngineResult 与可选 GameProjectInfo | 测试通过 |
 | `FluidWarfare.Project/Paths/SampleProjectPath.cs` | 从指定起始目录向上查找 GameProjects/SampleProject/game.project.json，用于稳定定位示例项目路径 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core 与 Project | 已创建 |
@@ -334,7 +344,7 @@ get_tree.bat
 | `FluidWarfare.Tests/Core/Results/EngineResultTests.cs` | 验证 EngineResult 的成功/失败语义、默认值无效、错误携带、默认错误拒绝、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogLevelTests.cs` | 验证日志等级到中文显示前缀的映射 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs` | 验证日志记录创建、非法输入、日志前缀隔离、中文显示输出与相等比较 | 测试通过 |
-| `FluidWarfare.Tests/Project/Loading/GameProjectLoaderTests.cs` | 验证最小项目加载器的有效项目、缺失目录、缺失清单、无效 JSON 和必要字段缺失处理 | 测试通过 |
+| `FluidWarfare.Tests/Project/Loading/GameProjectLoaderTests.cs` | 验证最小项目加载器的有效项目、缺失目录、缺失清单、无效 JSON、必要字段缺失、内容目录声明校验与未声明目录拒绝 | 测试通过 |
 | `FluidWarfare.Tests/Project/Paths/SampleProjectPathTests.cs` | 验证示例项目路径定位逻辑，包括根目录、嵌套目录、缺失项目与空起始目录 | 测试通过 |
 | `FluidWarfare.Editor.Windows/FluidWarfare.Editor.Windows.csproj` | Windows Editor Avalonia 项目文件，引用 Core 与 Project，并声明 Avalonia 桌面依赖 | 可运行 |
 | `FluidWarfare.Editor.Windows/Program.cs` | Editor 进程入口，配置 Avalonia 桌面生命周期 | 可运行 |
@@ -367,13 +377,14 @@ get_tree.bat
 | `docs/CHANGELOG.md` | 版本历史 | 已创建 |
 | `file-tree.md` | 项目结构地图 | 已创建 |
 | `GameProjects/SampleProject/game.project.json` | FluidWarfare 示例项目清单，用于验证最小项目系统 | 可加载 |
+| `GameProjects/SampleProject/icons/.gitkeep` | SampleProject 图标扩展目录占位文件，用于验证项目自定义内容目录声明 | 可加载 |
 | `*/.gitkeep` | 保留当前尚未写入代码或资源的目录 | 已创建 |
 
 ## 6. 模块依赖方向
 
 Core 是基础层。
 
-Project 位于 Core 之上，负责项目元数据、示例项目路径定位与最小项目加载，可以依赖 Core。
+Project 位于 Core 之上，负责项目元数据、内容目录声明、示例项目路径定位与最小项目加载，可以依赖 Core。
 
 ECS、World、Simulation、Data、Combat、AI 和 Render 抽象可以向内依赖 Core。
 
@@ -424,8 +435,9 @@ fuc_
 ## 9. Editor GUI SRP 规则
 
 ProjectPanel：
-只负责显示项目名称和项目分类项，并发出 ProjectItemSelected 事件。
+只负责显示项目名称和项目内容目录显示名，并发出 ProjectItemSelected 事件。
 不得读取路径。
+不得扫描目录。
 不得读取 game.project.json。
 不得创建 EngineLogEntry。
 不得调用 LogPanel。
@@ -462,36 +474,40 @@ StatusBarPanel：
 EditorShell：
 当前阶段允许作为轻量协调层，负责接收菜单与项目项事件，并调用日志、检查器和状态栏面板。
 当前阶段允许协调 SampleProjectPath、GameProjectLoader、ProjectPanel、InspectorPanel、StatusBarPanel 和 LogPanel。
+当前阶段允许将 GameContentFolderInfo 转换为 ProjectPanel 显示项，并根据 GameContentFolderInfo 更新检查器、状态栏与日志。
 不得承载真实项目系统。
+不得硬编码英文目录到中文显示名的映射。
+不得解析内容文件。
 不得承载 ECS。
 不得承载 Vulkan。
 不得变成长期业务总管。
 
 ## 10. 当前不做的内容
 
-当前已经进入 Milestone 4.1 项目路径与加载状态稳定化任务。
+当前已经进入 Milestone 4.2 项目内容目录声明与未声明目录拒绝任务。
 
 本轮不做以下内容：
 
-1. ECS 实现。
-2. Entity 实现。
-3. Component 实现。
-4. World 实现。
-5. 真实单位数据解析。
-6. 真实武器数据解析。
-7. 真实地图加载。
-8. 真实剧本运行。
-9. Vulkan 接入。
-10. Runtime.Windows 实现。
-11. Android 实现。
-12. 复杂 MVVM 框架。
-13. 项目创建向导。
-14. 文件选择器。
-15. 最近项目列表。
-16. 保存项目。
-17. 项目热重载。
-18. 数据库。
-19. 第三方 JSON 包。
+1. 单位 JSON 解析。
+2. 武器 JSON 解析。
+3. 地图 JSON 解析。
+4. 剧本 JSON 解析。
+5. 图标文件解析。
+6. png / svg / webp 加载。
+7. 内容计数。
+8. 内容清单扫描。
+9. 资源预览。
+10. ECS 实现。
+11. Entity 实现。
+12. Component 实现。
+13. World 实现。
+14. Runtime.Windows 实现。
+15. Android 实现。
+16. Vulkan 接入。
+17. 项目创建向导。
+18. 文件选择器。
+19. 脚本执行。
+20. 第三方 JSON 包。
 
 ## 11. 版本历史索引
 

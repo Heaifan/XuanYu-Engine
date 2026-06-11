@@ -1,13 +1,63 @@
 {
   "projectId": "sample_project",
   "displayName": "SampleProject",
-  "description": "FluidWarfare 示例项目，用于验证最小项目系统。",
+  "description": "FluidWarfare 示例项目，用于验证项目内容目录声明。",
   "contentFolders": [
-    "factions",
-    "units",
-    "weapons",
-    "maps",
-    "scenarios",
-    "rules"
+    {
+      "folderName": "factions",
+      "displayName": "阵营",
+      "description": "保存项目中的阵营定义。",
+      "contentKind": "faction",
+      "isRequired": true,
+      "allowedExtensions": [".json"]
+    },
+    {
+      "folderName": "units",
+      "displayName": "单位",
+      "description": "保存项目中的单位模板。",
+      "contentKind": "unitTemplate",
+      "isRequired": true,
+      "allowedExtensions": [".json"]
+    },
+    {
+      "folderName": "weapons",
+      "displayName": "武器",
+      "description": "保存项目中的武器参数。",
+      "contentKind": "weapon",
+      "isRequired": true,
+      "allowedExtensions": [".json"]
+    },
+    {
+      "folderName": "maps",
+      "displayName": "地图",
+      "description": "保存项目中的地图资源。",
+      "contentKind": "map",
+      "isRequired": true,
+      "allowedExtensions": [".json"]
+    },
+    {
+      "folderName": "scenarios",
+      "displayName": "剧本",
+      "description": "保存项目中的剧本配置。",
+      "contentKind": "scenario",
+      "isRequired": true,
+      "allowedExtensions": [".json"]
+    },
+    {
+      "folderName": "rules",
+      "displayName": "规则",
+      "description": "保存项目中的规则配置。",
+      "contentKind": "rule",
+      "isRequired": true,
+      "allowedExtensions": [".json"]
+    },
+    {
+      "folderName": "icons",
+      "displayName": "图标",
+      "description": "保存项目中的界面图标资源。",
+      "contentKind": "icon",
+      "isRequired": false,
+      "allowedExtensions": [".png", ".svg", ".webp"]
+    }
   ]
 }

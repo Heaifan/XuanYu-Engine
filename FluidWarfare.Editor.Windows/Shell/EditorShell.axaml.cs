@@ -7,6 +7,7 @@ using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Project;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
+using FluidWarfare.Project.Content;
 using FluidWarfare.Project.Loading;
 using FluidWarfare.Project.Metadata;
 using FluidWarfare.Project.Paths;
@@ -20,6 +21,7 @@ public sealed partial class EditorShell : UserControl
     private ProjectPanel? _projectPanel;
     private StatusBarPanel? _statusBarPanel;
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
+    private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByDisplayName = [];
 
     public EditorShell()
     {
@@ -67,7 +69,7 @@ public sealed partial class EditorShell : UserControl
 
         _inspectorPanel?.ShowSelection(selection);
         _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
-        AppendInfoLog($"选择项目分类：{selection.DisplayName}。");
+        AppendInfoLog($"选择项目内容目录：{selection.DisplayName}。");
     }
 
     private void HandleViewportFocused(object? sender, EventArgs e)
@@ -175,72 +177,42 @@ public sealed partial class EditorShell : UserControl
 
     private void ShowLoadedProject(GameProjectInfo project)
     {
+        _contentFoldersByDisplayName.Clear();
+        foreach (var contentFolder in project.ContentFolders)
+        {
+            _contentFoldersByDisplayName[contentFolder.DisplayName] = contentFolder;
+        }
+
         var categoryNames = project.ContentFolders
-            .Select(ToProjectCategoryDisplayName)
+            .Select(folder => folder.DisplayName)
             .Append("配置")
             .ToArray();
 
         _projectPanel?.ShowProject(project.DisplayName, categoryNames);
     }
 
-    private static EditorSelection CreateProjectSelection(string itemName)
+    private EditorSelection CreateProjectSelection(string itemName)
     {
-        return itemName switch
+        if (_contentFoldersByDisplayName.TryGetValue(itemName, out var contentFolder))
         {
-            "阵营" => new EditorSelection(
-                "项目分类",
-                "阵营",
-                "这里将显示项目中的阵营定义。"),
+            return new EditorSelection(
+                "项目内容目录",
+                contentFolder.DisplayName,
+                contentFolder.Description);
+        }
 
-            "单位" => new EditorSelection(
-                "项目分类",
-                "单位",
-                "这里将显示项目中的单位模板。"),
-
-            "武器" => new EditorSelection(
-                "项目分类",
-                "武器",
-                "这里将显示项目中的武器参数。"),
-
-            "地图" => new EditorSelection(
-                "项目分类",
-                "地图",
-                "这里将显示项目中的地图资源。"),
-
-            "剧本" => new EditorSelection(
-                "项目分类",
-                "剧本",
-                "这里将显示项目中的剧本配置。"),
-
-            "规则" => new EditorSelection(
-                "项目分类",
-                "规则",
-                "这里将显示项目中的规则配置。"),
-
-            "配置" => new EditorSelection(
+        if (itemName == "配置")
+        {
+            return new EditorSelection(
                 "项目分类",
                 "配置",
-                "这里将显示项目配置、模拟参数与编辑器设置。"),
+                "这里将显示项目配置、模拟参数与编辑器设置。");
+        }
 
-            _ => new EditorSelection(
-                "未知项目分类",
-                itemName,
-                "当前项目分类没有说明。")
-        };
-    }
-
-    private static string ToProjectCategoryDisplayName(string folderName)
-    {
-        return folderName switch
-        {
-            "factions" => "阵营",
-            "units" => "单位",
-            "weapons" => "武器",
-            "maps" => "地图",
-            "scenarios" => "剧本",
-            "rules" => "规则",
-            _ => folderName
-        };
+        return new EditorSelection(
+            "未知项目内容目录",
+            itemName,
+            "当前项目内容目录没有说明。");
     }
 
     private static EditorSelection CreateViewportSelection()
