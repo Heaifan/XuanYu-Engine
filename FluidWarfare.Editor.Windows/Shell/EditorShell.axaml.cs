@@ -19,6 +19,7 @@ using FluidWarfare.Project.Paths;
 using FluidWarfare.Project.Validation;
 using FluidWarfare.Render.Scene;
 using FluidWarfare.Render.Vulkan.Backend;
+using FluidWarfare.Render.Vulkan.Instance;
 using FluidWarfare.Render.World;
 
 namespace FluidWarfare.Editor.Windows.Shell;
@@ -39,6 +40,7 @@ public sealed partial class EditorShell : UserControl
     private WorldEntityInfo? _selectedWorldEntity;
     private RenderScene _renderScene = RenderScene.Empty;
     private VulkanBackendInfo _vulkanBackendInfo = VulkanBackendInfo.NotChecked;
+    private VulkanInstanceInfo _vulkanInstanceInfo = VulkanInstanceInfo.NotChecked;
 
     public EditorShell()
     {
@@ -396,6 +398,38 @@ public sealed partial class EditorShell : UserControl
             _vulkanBackendInfo.Message);
 
         UpdateVulkanViewportHost();
+        ProbeVulkanInstance();
+    }
+
+    private void ProbeVulkanInstance()
+    {
+        if (!_vulkanBackendInfo.IsAvailable)
+        {
+            _vulkanInstanceInfo = new VulkanInstanceInfo(
+                VulkanInstanceStatus.Failed,
+                "Vulkan 后端不可用，跳过 Instance 创建。",
+                "未知",
+                0,
+                0);
+
+            _viewportPlaceholderPanel?.ShowVulkanInstanceStatus(_vulkanInstanceInfo.Message);
+            return;
+        }
+
+        _vulkanInstanceInfo = VulkanInstanceProbe.Probe();
+
+        if (_vulkanInstanceInfo.IsCreated)
+        {
+            AppendInfoLog(
+                $"Vulkan Instance 创建成功，API 版本：{_vulkanInstanceInfo.ApiVersionText}，扩展数量：{_vulkanInstanceInfo.ExtensionCount}，用时：{_vulkanInstanceInfo.ElapsedMilliseconds:F2} ms。");
+        }
+        else
+        {
+            AppendWarningLog(_vulkanInstanceInfo.Message);
+        }
+
+        _viewportPlaceholderPanel?.ShowVulkanInstanceStatus(
+            $"{_vulkanInstanceInfo.Message} API 版本：{_vulkanInstanceInfo.ApiVersionText}，扩展数量：{_vulkanInstanceInfo.ExtensionCount}。");
     }
 
     private void UpdateVulkanViewportHost()

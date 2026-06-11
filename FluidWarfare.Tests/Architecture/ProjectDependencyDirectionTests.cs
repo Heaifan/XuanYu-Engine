@@ -53,6 +53,43 @@ public sealed class ProjectDependencyDirectionTests
         Assert.Empty(packageReferences);
     }
 
+    [Fact]
+    public void PackageReferences_ShouldMatchAllowedPackages()
+    {
+        var allowedPackages = new Dictionary<string, string[]>
+        {
+            ["FluidWarfare.Core"] = [],
+            ["FluidWarfare.Project"] = [],
+            ["FluidWarfare.Engine"] = [],
+            ["FluidWarfare.Bridge.ProjectEngine"] = [],
+            ["FluidWarfare.Render"] = [],
+            ["FluidWarfare.Render.Vulkan"] = ["Silk.NET.Vulkan"],
+            ["FluidWarfare.Editor.Windows"] =
+            [
+                "Avalonia",
+                "Avalonia.Desktop",
+                "Avalonia.Fonts.Inter",
+                "Avalonia.Themes.Fluent"
+            ],
+            ["FluidWarfare.Tests"] =
+            [
+                "coverlet.collector",
+                "Microsoft.NET.Test.Sdk",
+                "xunit",
+                "xunit.runner.visualstudio"
+            ]
+        };
+
+        foreach (var (projectName, allowedProjectNames) in allowedPackages)
+        {
+            var references = ReadPackageReferences(projectName);
+
+            Assert.Equal(
+                allowedProjectNames.Order(StringComparer.Ordinal),
+                references.Order(StringComparer.Ordinal));
+        }
+    }
+
     private static IReadOnlyList<string> ReadProjectReferences(string projectName)
     {
         var projectFile = FindProjectFile(projectName);

@@ -293,6 +293,23 @@
 4. `ProjectPanel` 选择事件从显示名字符串升级为 `ProjectContentFolderSelection`，`EditorShell` 改用 `FolderName` 查找项目内容目录。
 5. 测试补充 Project / World / Render 稳定 ID 链路与依赖边界验收。
 
+### Milestone 7.3：Vulkan Instance 最小创建与释放
+
+#### 新增
+
+1. `Render.Vulkan` 引入 `Silk.NET.Vulkan`，开始真实调用 Vulkan API。
+2. 新增 `VulkanInstanceStatus`、`VulkanInstanceInfo` 与 `VulkanInstanceProbe`。
+3. 新增 `VulkanInstanceInfoTests`，验证 Vulkan Instance 探测结果模型和轻量 Probe 结果。
+
+#### 修改
+
+1. `VulkanInstanceProbe` 创建 `VkInstance`，读取 API 版本与 Instance 扩展数量，并立即释放。
+2. `EditorShell` 启动时显示 Vulkan Instance 创建结果、API 版本、扩展数量与耗时。
+3. `ViewportPlaceholderPanel` 新增 Vulkan Instance 状态显示区域。
+4. `ProjectDependencyDirectionTests` 新增 NuGet 包白名单检查，确认 `Silk.NET.Vulkan` 只进入 `Render.Vulkan`。
+5. 本轮不创建 PhysicalDevice、Device、Surface、Swapchain、RenderPass、CommandBuffer，也不做真实清屏。
+6. 从本里程碑开始，Vulkan 初始化类操作需要返回耗时信息，便于后续性能分析。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

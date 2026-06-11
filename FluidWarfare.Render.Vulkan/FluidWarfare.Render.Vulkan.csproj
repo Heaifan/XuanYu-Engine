@@ -3,10 +3,15 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FluidWarfare.Core\FluidWarfare.Core.csproj" />
     <ProjectReference Include="..\FluidWarfare.Render\FluidWarfare.Render.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Silk.NET.Vulkan" Version="2.23.0" />
   </ItemGroup>
 </Project>
