@@ -147,6 +147,25 @@
 5. `EditorShell` 项目加载失败时显示首个错误，并提示项目校验问题数量。
 6. `GameContentFileScannerTests` 新增三个多问题收集测试。
 
+### Milestone 5.0：最小 World 实体
+
+#### 新增
+
+1. 新增 `FluidWarfare.Engine` 项目层，用于承载最小 World 状态。
+2. 新增 `WorldState`，支持创建、查询和枚举带显示名与位置的实体。
+3. 新增 `WorldEntityInfo`、`PositionComponent`、`DisplayNameComponent`。
+4. 新增 `FluidWarfare.Tests/Engine/World/WorldStateTests.cs`，验证最小 World 实体的创建、查询、位置和枚举。
+5. Editor 启动时创建最小示例 World，并在视口聚焦时显示示例实体信息。
+6. 新增 `FluidWarfare.Engine/World/` 和 `FluidWarfare.Engine/Components/` 目录。
+
+#### 修改
+
+1. `FluidWarfare.sln` 新增 `FluidWarfare.Engine` 项目。
+2. `FluidWarfare.Editor.Windows.csproj` 新增 Engine 引用。
+3. `FluidWarfare.Tests.csproj` 新增 Engine 引用。
+4. `EditorShell` 在启动时创建最小 World 和示例实体，点击视口后检查器显示实体信息。
+5. `file-tree.md` 新增 Engine 模块结构。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

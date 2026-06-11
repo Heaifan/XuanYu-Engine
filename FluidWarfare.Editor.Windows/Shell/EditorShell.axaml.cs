@@ -1,12 +1,15 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
+using FluidWarfare.Core.Math;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Project;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
+using FluidWarfare.Engine.World;
 using FluidWarfare.Project.Content;
 using FluidWarfare.Project.Loading;
 using FluidWarfare.Project.Metadata;
@@ -24,6 +27,8 @@ public sealed partial class EditorShell : UserControl
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
     private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByDisplayName = [];
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
+    private WorldState? _worldState;
+    private EntityId _sampleEntityId;
 
     public EditorShell()
     {
@@ -32,6 +37,7 @@ public sealed partial class EditorShell : UserControl
         SubscribePanelEvents();
         InitializeLogs();
         LoadSampleProject();
+        CreateSampleWorld();
     }
 
     private void FindShellControls()
@@ -94,6 +100,15 @@ public sealed partial class EditorShell : UserControl
         _inspectorPanel?.ShowSelection(selection);
         _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
         AppendInfoLog("视口获得焦点。");
+
+        if (_worldState is not null && _worldState.ContainsEntity(_sampleEntityId))
+        {
+            var entityInfo = _worldState.FindEntity(_sampleEntityId);
+            if (entityInfo is not null)
+            {
+                AppendInfoLog($"当前 World 实体：{entityInfo.DisplayName}。");
+            }
+        }
     }
 
     private void HandleFileMenuClicked(object? sender, RoutedEventArgs e)
@@ -202,6 +217,15 @@ public sealed partial class EditorShell : UserControl
         }
     }
 
+    private void CreateSampleWorld()
+    {
+        _worldState = new WorldState();
+        _sampleEntityId = _worldState.CreateEntity("示例单位", Vector3d.Zero);
+
+        AppendInfoLog("最小 World 已创建。");
+        AppendInfoLog($"World 示例实体已创建：示例单位。");
+    }
+
     private void ShowLoadedProject(GameProjectInfo project)
     {
         _contentFoldersByDisplayName.Clear();
@@ -244,8 +268,26 @@ public sealed partial class EditorShell : UserControl
             "当前项目内容目录没有说明。");
     }
 
-    private static EditorSelection CreateViewportSelection()
+    private EditorSelection CreateViewportSelection()
     {
+        if (_worldState is not null && _worldState.ContainsEntity(_sampleEntityId))
+        {
+            var entityInfo = _worldState.FindEntity(_sampleEntityId);
+            var position = _worldState.FindPosition(_sampleEntityId);
+
+            if (entityInfo is not null)
+            {
+                var description = position is not null
+                    ? $"EntityId({_sampleEntityId.Value})，位置：({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
+                    : $"EntityId({_sampleEntityId.Value})";
+
+                return new EditorSelection(
+                    "World 实体",
+                    entityInfo.DisplayName,
+                    description);
+            }
+        }
+
         return new EditorSelection(
             "编辑器占位区",
             "3D 视口",

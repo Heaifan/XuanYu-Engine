@@ -61,6 +61,12 @@
 43. Milestone 4.4：新增 `FluidWarfare.Project/Validation/ProjectValidationReport.cs`。
 44. Milestone 4.4：新增 `FluidWarfare.Project/Content/GameContentFileScanResult.cs`。
 45. Milestone 4.4：新增 `FluidWarfare.Tests/Project/Validation/ProjectValidationReportTests.cs`。
+46. Milestone 5.0：新增 `FluidWarfare.Engine/FluidWarfare.Engine.csproj`。
+47. Milestone 5.0：新增 `FluidWarfare.Engine/World/WorldState.cs`。
+48. Milestone 5.0：新增 `FluidWarfare.Engine/World/WorldEntityInfo.cs`。
+49. Milestone 5.0：新增 `FluidWarfare.Engine/Components/PositionComponent.cs`。
+50. Milestone 5.0：新增 `FluidWarfare.Engine/Components/DisplayNameComponent.cs`。
+51. Milestone 5.0：新增 `FluidWarfare.Tests/Engine/World/WorldStateTests.cs`。
 
 ### 修改
 
@@ -126,6 +132,10 @@
 60. Milestone 4.4：GameProjectLoaderTests 新增四个校验报告集成测试，AssertFailure 新增 ValidationReport 校验。
 61. Milestone 4.4：GameContentFileScannerTests 新增三个多问题收集测试。
 62. Milestone 4.4：EditorShell 加载失败时显示问题数量警告。
+63. Milestone 5.0：FluidWarfare.sln 新增 Engine 项目。
+64. Milestone 5.0：Editor.csproj 新增 Engine 引用。
+65. Milestone 5.0：Tests.csproj 新增 Engine 引用。
+66. Milestone 5.0：EditorShell 启动时创建最小 World 与示例实体，点击视口后检查器显示实体信息。
 
 ### 删除
 
@@ -147,9 +157,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 4.4：项目校验报告。
+当前执行 Milestone 5.0：最小 World 实体。
 
-本轮只完成校验问题模型、校验报告模型、扫描结果模型、多错误收集改造、加载结果报告挂载和 Editor 问题数量提示，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做资源浏览器完整 UI，不做 ECS，不做 Vulkan，不做 Runtime，不做 Android。
+本轮只完成 Engine 项目创建、最小 WorldState、实体组件模型和 Editor 实体显示，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做完整 ECS 调度系统，不做 Query，不做 Archetype，不做 Chunk，不做 Vulkan，不做 Runtime，不做 Android。
 
 ## 3. 顶层目录结构
 
@@ -193,6 +203,14 @@ FluidWarfare/
 |   `-- Validation/
 |       |-- ProjectValidationIssue.cs
 |       `-- ProjectValidationReport.cs
+|-- FluidWarfare.Engine/
+|   |-- FluidWarfare.Engine.csproj
+|   |-- Components/
+|   |   |-- DisplayNameComponent.cs
+|   |   `-- PositionComponent.cs
+|   `-- World/
+|       |-- WorldEntityInfo.cs
+|       `-- WorldState.cs
 |-- FluidWarfare.Ecs/
 |   `-- .gitkeep
 |-- FluidWarfare.World/
@@ -247,6 +265,9 @@ FluidWarfare/
 |-- FluidWarfare.Tests/
 |   |-- .gitkeep
 |   |-- Core/
+|   |-- Engine/
+|   |   `-- World/
+|   |       `-- WorldStateTests.cs
 |   |   |-- Identity/
 |   |   |   `-- EntityIdTests.cs
 |   |   |-- Logging/
@@ -336,6 +357,7 @@ get_tree.bat
 |---|---|---|
 | FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / EngineLogLevel 与 EngineLogEntry 测试通过 |
 | FluidWarfare.Project | 游戏项目元数据与最小项目加载层，负责读取 game.project.json，不依赖 Editor 或 Avalonia | 测试通过 |
+| FluidWarfare.Engine | 引擎运行层，负责 World、实体、组件与模拟状态。当前仅实现最小 World 实体 | 测试通过 |
 | FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Simulation | 固定 Tick、暂停、单步和模拟世界 | 已创建 / 仅 `.gitkeep` |
@@ -375,6 +397,12 @@ get_tree.bat
 | `FluidWarfare.Project/Loading/GameProjectLoadResult.cs` | 项目加载结果模型，组合 EngineResult、可选 GameProjectInfo 与项目校验报告 | 测试通过 |
 | `FluidWarfare.Project/Validation/ProjectValidationIssue.cs` | 项目校验问题模型，保存错误码、中文信息和问题路径，不读取文件不写日志 | 测试通过 |
 | `FluidWarfare.Project/Validation/ProjectValidationReport.cs` | 项目校验报告模型，汇总项目加载与内容扫描中的校验问题，支持空报告 | 测试通过 |
+| `FluidWarfare.Engine/FluidWarfare.Engine.csproj` | Engine 引擎层项目文件，引用 Core | 测试通过 |
+| `FluidWarfare.Engine/World/WorldState.cs` | 最小世界状态，支持创建、查询和枚举带显示名与位置的实体 | 测试通过 |
+| `FluidWarfare.Engine/World/WorldEntityInfo.cs` | World 实体显示信息模型，保存 EntityId 与显示名 | 测试通过 |
+| `FluidWarfare.Engine/Components/PositionComponent.cs` | 实体位置组件，包装 Vector3d | 测试通过 |
+| `FluidWarfare.Engine/Components/DisplayNameComponent.cs` | 实体显示名组件，保存用于 Editor 显示的名称 | 测试通过 |
+| `FluidWarfare.Tests/Engine/World/WorldStateTests.cs` | 验证最小 World 实体创建、查询、位置读取与枚举 | 测试通过 |
 | `FluidWarfare.Project/Paths/SampleProjectPath.cs` | 从指定起始目录向上查找 GameProjects/SampleProject/game.project.json，用于稳定定位示例项目路径 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core 与 Project | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
@@ -432,7 +460,9 @@ get_tree.bat
 
 Core 是基础层。
 
-Project 位于 Core 之上，负责项目元数据、内容目录声明、示例项目路径定位与最小项目加载，可以依赖 Core。
+Engine 位于 Core 之上，负责 World、实体与组件状态。
+
+Project 位于 Core 之上，负责项目元数据、内容目录声明、示例项目路径定位与最小项目加载。
 
 ECS、World、Simulation、Data、Combat、AI 和 Render 抽象可以向内依赖 Core。
 
@@ -444,7 +474,16 @@ Vulkan 依赖只能进入 `FluidWarfare.Render.Vulkan`。
 
 Avalonia 依赖只能进入 `FluidWarfare.Editor.Windows`。
 
-Editor 可以依赖 Project，Project 不得依赖 Editor 或 Avalonia，Core 不得依赖 Project。
+依赖方向：
+
+```text
+Core  ←  Engine  ←  Editor
+Core  ←  Project ←  Editor
+Engine    不依赖   Project
+Engine    不依赖   Editor
+Project   不依赖   Engine
+Project   不依赖   Editor
+```
 
 ## 7. 文件命名与目录纪律
 
@@ -537,11 +576,17 @@ EditorShell：
 
 ## 10. 当前不做的内容
 
-当前已经进入 Milestone 4.4 项目校验报告任务。
+当前已经进入 Milestone 5.0 最小 World 实体任务。
 
 本轮不做以下内容：
 
-1. 单位 JSON 业务字段解析。
+1. 完整 ECS 调度系统。
+2. Query / Archetype / Chunk。
+3. 并行调度。
+4. 事件系统。
+5. 序列化。
+6. 从 sample_unit.json 生成实体。
+7. 单位 JSON 业务字段解析。
 2. 武器 JSON 业务字段解析。
 3. 地图 JSON 业务字段解析。
 4. 剧本 JSON 业务字段解析。
