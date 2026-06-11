@@ -6,7 +6,8 @@
       Margin="0"
       Background="#15191E"
       BorderBrush="#48515C"
-      BorderThickness="0,0,1,0">
+      BorderThickness="0,0,1,0"
+      PointerPressed="HandleViewportPointerPressed">
     <Grid RowDefinitions="Auto,*" Margin="20">
       <TextBlock
           Grid.Row="0"
@@ -28,6 +29,10 @@
             HorizontalAlignment="Center"
             Foreground="#AEB7C2"
             Text="后续将在此显示 3D 战场" />
+        <TextBlock
+            HorizontalAlignment="Center"
+            Foreground="#7F8B98"
+            Text="点击此区域可聚焦视口占位区" />
       </StackPanel>
     </Grid>
   </Border>

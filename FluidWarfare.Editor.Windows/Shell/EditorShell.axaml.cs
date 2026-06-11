@@ -6,6 +6,7 @@ using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Project;
 using FluidWarfare.Editor.Windows.Panels.Status;
+using FluidWarfare.Editor.Windows.Panels.Viewport;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -15,6 +16,7 @@ public sealed partial class EditorShell : UserControl
     private LogPanel? _logPanel;
     private ProjectPanel? _projectPanel;
     private StatusBarPanel? _statusBarPanel;
+    private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
 
     public EditorShell()
     {
@@ -30,6 +32,7 @@ public sealed partial class EditorShell : UserControl
         _logPanel = this.FindControl<LogPanel>("EditorLogPanel");
         _projectPanel = this.FindControl<ProjectPanel>("ProjectPanel");
         _statusBarPanel = this.FindControl<StatusBarPanel>("EditorStatusBarPanel");
+        _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
     }
 
     private void SubscribePanelEvents()
@@ -37,6 +40,11 @@ public sealed partial class EditorShell : UserControl
         if (_projectPanel is not null)
         {
             _projectPanel.ProjectItemSelected += HandleProjectItemSelected;
+        }
+
+        if (_viewportPlaceholderPanel is not null)
+        {
+            _viewportPlaceholderPanel.ViewportFocused += HandleViewportFocused;
         }
     }
 
@@ -56,6 +64,15 @@ public sealed partial class EditorShell : UserControl
         _inspectorPanel?.ShowSelection(selection);
         _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
         AppendInfoLog($"选择项目项：{selection.DisplayName}。");
+    }
+
+    private void HandleViewportFocused(object? sender, EventArgs e)
+    {
+        var selection = CreateViewportSelection();
+
+        _inspectorPanel?.ShowSelection(selection);
+        _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
+        AppendInfoLog("视口获得焦点。");
     }
 
     private void HandleFileMenuClicked(object? sender, RoutedEventArgs e)
@@ -133,6 +150,14 @@ public sealed partial class EditorShell : UserControl
                 itemName,
                 "当前项目项没有说明。")
         };
+    }
+
+    private static EditorSelection CreateViewportSelection()
+    {
+        return new EditorSelection(
+            "编辑器占位区",
+            "3D 视口",
+            "这里将显示 Vulkan 渲染的 3D 战场。");
     }
 
     private static IReadOnlyList<EngineLogEntry> CreateStartupLogs()

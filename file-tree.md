@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 00:45
+最后编辑：2026-06-11 01:10
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -88,6 +88,9 @@
 34. Milestone 3.6：清理中文全角日志括号。
 35. Milestone 3.6：补充 Editor GUI 面板 SRP 职责说明。
 36. Milestone 3.6：日志面板改为可滚动、可选中、可复制的只读文本区域。
+37. Milestone 3.7：新增 3D 视口占位区点击反馈。
+38. Milestone 3.7：视口占位区点击后更新检查器、状态栏与日志面板。
+39. Milestone 3.7：明确 ViewportPlaceholderPanel 只负责显示占位区并发出视口聚焦事件。
 
 ### 删除
 
@@ -109,9 +112,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 3.6：日志面板滚动条与可复制文本调整。
+当前执行 Milestone 3.7：视口占位交互。
 
-本轮只处理日志面板滚动查看、文本选中和复制体验，不实现真实项目系统、ECS、Vulkan、Runtime、Android、文件日志或复杂 MVVM。
+本轮只处理 3D 视口占位区点击反馈，不实现真实 3D 渲染、摄像机、实体选择、真实项目系统、ECS、Vulkan、Runtime、Android、文件日志或复杂 MVVM。
 
 ## 3. 顶层目录结构
 
@@ -295,12 +298,12 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/MainWindow.axaml` | 编辑器主窗口 XAML 容器，承载 EditorShell | 可运行 |
 | `FluidWarfare.Editor.Windows/MainWindow.axaml.cs` | 编辑器主窗口 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器五区布局壳，组织菜单栏、项目面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器五区布局壳后台逻辑，创建启动日志，响应菜单与项目占位项选择事件，并协调日志、检查器和状态栏更新 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器五区布局壳后台逻辑，创建启动日志，接收菜单、项目占位项和视口聚焦事件，并协调日志、检查器与状态栏更新 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板占位，显示当前未打开项目、场景、单位、资源和配置 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责响应项目占位项点击并发出选择事件 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位面板，提示 Vulkan 渲染器尚未接入 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板 code-behind | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位区 UI，显示 Vulkan 未接入提示，并提供可点击聚焦区域 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 3D 视口占位区后台逻辑，只负责响应视口点击并发出 ViewportFocused 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml.cs` | 检查器面板 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml` | 编辑器日志面板 UI，使用只读文本区域显示中文日志，支持滚动查看与复制 | 可运行 |
@@ -390,6 +393,15 @@ LogPanel：
 不得创建 EngineLogEntry。
 不得判断菜单或项目点击来源。
 
+ViewportPlaceholderPanel：
+只负责显示 3D 视口占位区。
+只负责发出 ViewportFocused 事件。
+不得创建 EngineLogEntry。
+不得调用 LogPanel。
+不得调用 InspectorPanel。
+不得调用 StatusBarPanel。
+不得实现 Vulkan、真实 3D 渲染、摄像机或鼠标拖拽。
+
 StatusBarPanel：
 只负责显示状态文本和当前选择文本。
 不得判断项目项含义。
@@ -404,25 +416,34 @@ EditorShell：
 
 ## 10. 当前不做的内容
 
-当前已经进入 Milestone 3.6 日志前缀 ASCII 方括号统一与 GUI SRP 文档审计任务。
+当前已经进入 Milestone 3.7 视口占位交互任务。
 
 本轮不做以下内容：
 
-1. 新增 GUI 功能。
-2. ECS 实现。
-3. Entity 实现。
-4. Component 实现。
-5. World 实现。
-6. Data Loader 实现。
-7. JSON 场景读取。
-8. Vulkan 接入。
-9. Runtime.Windows 实现。
-10. Android 实现。
-11. 真实项目系统。
-12. 真实资源管理器。
-13. 场景保存。
-14. 文件日志实现。
-15. 复杂 MVVM 框架。
+1. 真实渲染功能。
+2. 真实 3D 渲染。
+3. 摄像机。
+4. 鼠标拖拽。
+5. 缩放。
+6. 旋转。
+7. 实体选中。
+8. 坐标拾取。
+9. 网格。
+10. 地形。
+11. ECS 实现。
+12. Entity 实现。
+13. Component 实现。
+14. World 实现。
+15. Data Loader 实现。
+16. JSON 场景读取。
+17. Vulkan 接入。
+18. Runtime.Windows 实现。
+19. Android 实现。
+20. 真实项目系统。
+21. 真实资源管理器。
+22. 场景保存。
+23. 文件日志实现。
+24. 复杂 MVVM 框架。
 
 ## 11. 版本历史索引
 

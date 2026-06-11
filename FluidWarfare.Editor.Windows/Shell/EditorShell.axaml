@@ -29,7 +29,7 @@
 
     <Grid Grid.Row="1" ColumnDefinitions="260,*,300">
       <project:ProjectPanel Grid.Column="0" x:Name="ProjectPanel" />
-      <viewport:ViewportPlaceholderPanel Grid.Column="1" />
+      <viewport:ViewportPlaceholderPanel Grid.Column="1" x:Name="ViewportPlaceholderPanel" />
       <inspector:InspectorPanel Grid.Column="2" x:Name="InspectorPanel" />
     </Grid>
 

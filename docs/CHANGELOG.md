@@ -88,6 +88,11 @@
 20. Milestone 3.6：日志面板支持垂直滚动查看。
 21. Milestone 3.6：日志文本支持选中与复制。
 22. Milestone 3.6：保持日志内容由 `EngineLogEntry` 生成，`LogPanel` 只负责显示与追加文本。
+23. Milestone 3.7：3D 视口占位区支持点击后发出聚焦事件。
+24. Milestone 3.7：点击视口占位区后，检查器显示视口占位说明。
+25. Milestone 3.7：点击视口占位区后，状态栏显示当前选择为 3D 视口。
+26. Milestone 3.7：点击视口占位区后，日志面板追加 `[信息]视口获得焦点。`。
+27. Milestone 3.7：保持 ViewportPlaceholderPanel 只负责发出事件，不直接写日志或更新其他面板。
 
 ### 删除
 
