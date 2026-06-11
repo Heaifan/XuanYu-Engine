@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 01:50
+最后编辑：2026-06-11 02:15
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -96,6 +96,9 @@
 42. Milestone 4.0：Editor 启动时加载示例项目。
 43. Milestone 4.0：项目面板显示真实项目名与内容分类。
 44. Milestone 4.0：新增 GameProjectLoader 单元测试。
+45. Milestone 4.1：新增 SampleProjectPath，稳定定位示例项目路径。
+46. Milestone 4.1：Editor 启动时通过路径定位结果加载 SampleProject。
+47. Milestone 4.1：项目加载失败时更新项目面板、检查器、状态栏与日志。
 
 ### 删除
 
@@ -117,9 +120,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 4.0：最小项目系统。
+当前执行 Milestone 4.1：项目路径与加载状态稳定化。
 
-本轮只处理固定示例项目的元数据读取、项目面板显示和分类点击反馈，不实现 ECS、真实单位数据解析、真实武器数据解析、真实地图加载、Vulkan、Runtime、Android、项目创建向导、文件选择器、保存项目、热重载、数据库或复杂 MVVM。
+本轮只处理 SampleProject 路径定位和项目加载成功/失败反馈，不实现 ECS、真实单位数据解析、真实武器数据解析、真实地图加载、Vulkan、Runtime、Android、项目创建向导、文件选择器、最近项目列表、保存项目、热重载、数据库或复杂 MVVM。
 
 ## 3. 顶层目录结构
 
@@ -151,8 +154,10 @@ FluidWarfare/
 |   |-- Loading/
 |   |   |-- GameProjectLoader.cs
 |   |   `-- GameProjectLoadResult.cs
-|   `-- Metadata/
-|       `-- GameProjectInfo.cs
+|   |-- Metadata/
+|   |   `-- GameProjectInfo.cs
+|   `-- Paths/
+|       `-- SampleProjectPath.cs
 |-- FluidWarfare.Ecs/
 |   `-- .gitkeep
 |-- FluidWarfare.World/
@@ -220,8 +225,10 @@ FluidWarfare/
 |   |       |-- SimulationTimeTests.cs
 |   |       `-- TimeStepTests.cs
 |   |-- Project/
-|   |   `-- Loading/
-|   |       `-- GameProjectLoaderTests.cs
+|   |   |-- Loading/
+|   |   |   `-- GameProjectLoaderTests.cs
+|   |   `-- Paths/
+|   |       `-- SampleProjectPathTests.cs
 |   |-- CoreSmokeTests.cs
 |   `-- FluidWarfare.Tests.csproj
 |-- GameProjects/
@@ -315,6 +322,7 @@ get_tree.bat
 | `FluidWarfare.Project/Metadata/GameProjectInfo.cs` | 游戏项目元数据模型，保存项目编号、显示名称、说明和内容目录列表 | 测试通过 |
 | `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 从项目目录读取 game.project.json，并返回项目加载结果 | 测试通过 |
 | `FluidWarfare.Project/Loading/GameProjectLoadResult.cs` | 项目加载结果模型，组合 EngineResult 与可选 GameProjectInfo | 测试通过 |
+| `FluidWarfare.Project/Paths/SampleProjectPath.cs` | 从指定起始目录向上查找 GameProjects/SampleProject/game.project.json，用于稳定定位示例项目路径 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core 与 Project | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
 | `FluidWarfare.Tests/Core/Identity/EntityIdTests.cs` | 验证 EntityId 的有效性、异常、相等比较与稳定字符串输出 | 测试通过 |
@@ -327,6 +335,7 @@ get_tree.bat
 | `FluidWarfare.Tests/Core/Logging/EngineLogLevelTests.cs` | 验证日志等级到中文显示前缀的映射 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs` | 验证日志记录创建、非法输入、日志前缀隔离、中文显示输出与相等比较 | 测试通过 |
 | `FluidWarfare.Tests/Project/Loading/GameProjectLoaderTests.cs` | 验证最小项目加载器的有效项目、缺失目录、缺失清单、无效 JSON 和必要字段缺失处理 | 测试通过 |
+| `FluidWarfare.Tests/Project/Paths/SampleProjectPathTests.cs` | 验证示例项目路径定位逻辑，包括根目录、嵌套目录、缺失项目与空起始目录 | 测试通过 |
 | `FluidWarfare.Editor.Windows/FluidWarfare.Editor.Windows.csproj` | Windows Editor Avalonia 项目文件，引用 Core 与 Project，并声明 Avalonia 桌面依赖 | 可运行 |
 | `FluidWarfare.Editor.Windows/Program.cs` | Editor 进程入口，配置 Avalonia 桌面生命周期 | 可运行 |
 | `FluidWarfare.Editor.Windows/App.axaml` | Editor 应用 XAML 根对象，加载 Fluent 主题 | 可运行 |
@@ -364,7 +373,7 @@ get_tree.bat
 
 Core 是基础层。
 
-Project 位于 Core 之上，负责项目元数据与最小项目加载，可以依赖 Core。
+Project 位于 Core 之上，负责项目元数据、示例项目路径定位与最小项目加载，可以依赖 Core。
 
 ECS、World、Simulation、Data、Combat、AI 和 Render 抽象可以向内依赖 Core。
 
@@ -416,6 +425,7 @@ fuc_
 
 ProjectPanel：
 只负责显示项目名称和项目分类项，并发出 ProjectItemSelected 事件。
+不得读取路径。
 不得读取 game.project.json。
 不得创建 EngineLogEntry。
 不得调用 LogPanel。
@@ -451,6 +461,7 @@ StatusBarPanel：
 
 EditorShell：
 当前阶段允许作为轻量协调层，负责接收菜单与项目项事件，并调用日志、检查器和状态栏面板。
+当前阶段允许协调 SampleProjectPath、GameProjectLoader、ProjectPanel、InspectorPanel、StatusBarPanel 和 LogPanel。
 不得承载真实项目系统。
 不得承载 ECS。
 不得承载 Vulkan。
@@ -458,7 +469,7 @@ EditorShell：
 
 ## 10. 当前不做的内容
 
-当前已经进入 Milestone 4.0 最小项目系统任务。
+当前已经进入 Milestone 4.1 项目路径与加载状态稳定化任务。
 
 本轮不做以下内容：
 
@@ -476,10 +487,11 @@ EditorShell：
 12. 复杂 MVVM 框架。
 13. 项目创建向导。
 14. 文件选择器。
-15. 保存项目。
-16. 热重载。
-17. 数据库。
-18. 第三方 JSON 包。
+15. 最近项目列表。
+16. 保存项目。
+17. 项目热重载。
+18. 数据库。
+19. 第三方 JSON 包。
 
 ## 11. 版本历史索引
 

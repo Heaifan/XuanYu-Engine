@@ -9,6 +9,7 @@ using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
 using FluidWarfare.Project.Loading;
 using FluidWarfare.Project.Metadata;
+using FluidWarfare.Project.Paths;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -136,7 +137,16 @@ public sealed partial class EditorShell : UserControl
 
     private void LoadSampleProject()
     {
-        var projectDirectory = Path.Combine("GameProjects", "SampleProject");
+        var pathResult = SampleProjectPath.TryFindFrom(
+            Environment.CurrentDirectory,
+            out var projectDirectory);
+
+        if (!pathResult.IsSuccess)
+        {
+            ShowProjectLoadFailure(pathResult.Error?.Message ?? "未知错误。");
+            return;
+        }
+
         var loadResult = GameProjectLoader.LoadFromDirectory(projectDirectory);
 
         if (loadResult.Result.IsSuccess && loadResult.Project is not null)
@@ -146,8 +156,20 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
+        ShowProjectLoadFailure(loadResult.Result.Error?.Message ?? "未知错误。");
+    }
+
+    private void ShowProjectLoadFailure(string message)
+    {
         _projectPanel?.ShowNoProject();
-        var message = loadResult.Result.Error?.Message ?? "未知错误。";
+
+        var selection = new EditorSelection(
+            "项目加载",
+            "加载失败",
+            $"项目加载失败：{message}");
+
+        _inspectorPanel?.ShowSelection(selection);
+        _statusBarPanel?.SetCurrentSelection("项目加载失败");
         AppendErrorLog($"项目加载失败：{message}");
     }
 

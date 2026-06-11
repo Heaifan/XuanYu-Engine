@@ -100,6 +100,10 @@
 32. Milestone 4.0：Editor 启动时加载示例项目，并在项目面板显示项目分类。
 33. Milestone 4.0：新增项目加载器单元测试。
 34. Milestone 4.0：保持 Core 不依赖 Project 或 Editor。
+35. Milestone 4.1：新增 `SampleProjectPath`，用于从当前工作目录向上查找 `GameProjects/SampleProject/game.project.json`。
+36. Milestone 4.1：Editor 启动时改为通过 `SampleProjectPath` 定位示例项目，降低不同启动目录导致加载失败的风险。
+37. Milestone 4.1：项目加载失败时，项目面板显示未打开项目，检查器、状态栏与日志给出明确反馈。
+38. Milestone 4.1：新增 `SampleProjectPath` 单元测试。
 
 ### 删除
 
