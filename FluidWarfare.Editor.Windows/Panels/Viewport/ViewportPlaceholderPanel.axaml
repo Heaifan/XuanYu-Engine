@@ -93,6 +93,10 @@
           <TextBlock Foreground="#AEB7C2" HorizontalAlignment="Center" Text="位置" />
           <TextBlock x:Name="EntityPositionText" Foreground="#F0F4F8" HorizontalAlignment="Center" />
         </StackPanel>
+        <StackPanel Spacing="4" HorizontalAlignment="Center">
+          <TextBlock Foreground="#AEB7C2" HorizontalAlignment="Center" Text="渲染对象" />
+          <TextBlock x:Name="EntityVisualKindText" Foreground="#58A6FF" HorizontalAlignment="Center" />
+        </StackPanel>
       </StackPanel>
     </Grid>
   </Border>

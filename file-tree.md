@@ -75,6 +75,12 @@
 57. Milestone 5.2：新增 `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml`。
 58. Milestone 5.2：新增 `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs`。
 59. Milestone 5.3：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs`。
+60. Milestone 6.0：新增 `FluidWarfare.Render/FluidWarfare.Render.csproj`。
+61. Milestone 6.0：新增 `FluidWarfare.Render/Scene/RenderObjectVisualKind.cs`。
+62. Milestone 6.0：新增 `FluidWarfare.Render/Scene/RenderObjectInfo.cs`。
+63. Milestone 6.0：新增 `FluidWarfare.Render/Scene/RenderScene.cs`。
+64. Milestone 6.0：新增 `FluidWarfare.Render/World/WorldToRenderSceneBuilder.cs`。
+65. Milestone 6.0：新增 `FluidWarfare.Tests/Render/World/WorldToRenderSceneBuilderTests.cs`。
 
 ### 修改
 
@@ -153,6 +159,10 @@
 73. Milestone 5.2：EditorShell 接入 WorldEntityListPanel，创建 World 后显示实体列表并响应选择事件。
 74. Milestone 5.3：ViewportPlaceholderPanel 重构为三状态布局，支持实体摘要显示。
 75. Milestone 5.3：EditorShell 新增 _selectedWorldEntity 状态，选择实体后同步更新视口显示。
+76. Milestone 6.0：FluidWarfare.sln 新增 Render 项目。
+77. Milestone 6.0：Editor.csproj 和 Tests.csproj 新增 Render 引用。
+78. Milestone 6.0：EditorShell 创建 World 后生成 RenderScene 并记录对象数量。
+79. Milestone 6.0：ViewportEntitySummary 新增 VisualKindText。
 
 ### 删除
 
@@ -174,7 +184,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 5.3：World 实体选择与视口联动占位。
+当前执行 Milestone 6.0：RenderScene 最小抽象。
 
 本轮只完成项目内容到 Engine World 的桥接层、ProjectContentWorldSeeder、World 实体 Source 支持和 Editor 从 sample_unit.json 生成占位实体，不解析单位 / 武器 / 地图 / 剧本 / 规则 / 图标业务内容，不做完整 ECS 调度系统，不做 Query，不做 Archetype，不做 Chunk，不做 Vulkan，不做 Runtime，不做 Android。
 
@@ -247,7 +257,13 @@ FluidWarfare/
 |-- FluidWarfare.Data/
 |   `-- .gitkeep
 |-- FluidWarfare.Render/
-|   `-- .gitkeep
+|   |-- FluidWarfare.Render.csproj
+|   |-- Scene/
+|   |   |-- RenderObjectInfo.cs
+|   |   |-- RenderObjectVisualKind.cs
+|   |   `-- RenderScene.cs
+|   `-- World/
+|       `-- WorldToRenderSceneBuilder.cs
 |-- FluidWarfare.Render.Vulkan/
 |   `-- .gitkeep
 |-- FluidWarfare.Runtime.Windows/
@@ -291,6 +307,9 @@ FluidWarfare/
 |-- FluidWarfare.Tests/
 |   |-- .gitkeep
 |   |-- Bridge/
+|   |-- Render/
+|   |   `-- World/
+|   |       `-- WorldToRenderSceneBuilderTests.cs
 |   |   `-- ProjectEngine/
 |   |       `-- World/
 |   |           `-- ProjectContentWorldSeederTests.cs
@@ -395,7 +414,7 @@ get_tree.bat
 | FluidWarfare.Combat | 未来的接敌、士气、伤亡和战斗日志 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.AI | 未来的战术 AI、编队 AI 和战略 AI | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Data | 场景 JSON 与资源数据读取 | 已创建 / 仅 `.gitkeep` |
-| FluidWarfare.Render | 渲染抽象契约 | 已创建 / 仅 `.gitkeep` |
+| FluidWarfare.Render | 抽象渲染层，负责渲染场景数据结构与 World 到 RenderScene 的转换，不依赖具体渲染后端 | 测试通过 |
 | FluidWarfare.Render.Vulkan | Vulkan 后端实现 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Runtime.Windows | Windows 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
@@ -436,6 +455,12 @@ get_tree.bat
 | `FluidWarfare.Bridge.ProjectEngine/World/ProjectContentWorldSeeder.cs` | 根据 GameContentFileInfo 中的 unitTemplate 文件入口，在 WorldState 中创建占位实体 | 测试通过 |
 | `FluidWarfare.Bridge.ProjectEngine/World/ProjectContentWorldSeedResult.cs` | 保存项目内容生成 World 占位实体的结果，包括创建数量和来源路径 | 测试通过 |
 | `FluidWarfare.Tests/Bridge/ProjectEngine/World/ProjectContentWorldSeederTests.cs` | 验证 Seeder 的 unitTemplate 过滤、命名、稳定排序和多文件创建 | 测试通过 |
+| `FluidWarfare.Render/FluidWarfare.Render.csproj` | Render 抽象渲染层项目文件，依赖 Core + Engine | 测试通过 |
+| `FluidWarfare.Render/Scene/RenderScene.cs` | 最小渲染场景模型，保存可渲染对象列表 | 测试通过 |
+| `FluidWarfare.Render/Scene/RenderObjectInfo.cs` | 渲染对象信息模型，保存 EntityId、显示名、位置、视觉类型与来源路径 | 测试通过 |
+| `FluidWarfare.Render/Scene/RenderObjectVisualKind.cs` | 渲染对象视觉类型枚举，当前仅包含 UnitMarker | 测试通过 |
+| `FluidWarfare.Render/World/WorldToRenderSceneBuilder.cs` | 将 Engine.WorldState 转换为 RenderScene | 测试通过 |
+| `FluidWarfare.Tests/Render/World/WorldToRenderSceneBuilderTests.cs` | 验证 World 到 RenderScene 的最小转换逻辑 | 测试通过 |
 | `FluidWarfare.Engine/Components/PositionComponent.cs` | 实体位置组件，包装 Vector3d | 测试通过 |
 | `FluidWarfare.Engine/Components/DisplayNameComponent.cs` | 实体显示名组件，保存用于 Editor 显示的名称 | 测试通过 |
 | `FluidWarfare.Tests/Engine/World/WorldStateTests.cs` | 验证最小 World 实体创建、查询、位置读取与枚举 | 测试通过 |
@@ -466,7 +491,7 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责显示项目名、显示分类项，并在分类点击时发出选择事件 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs` | 视口占位显示模型，保存当前选中实体的名称、EntityId、来源路径与位置文本 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs` | 视口占位显示模型，保存当前选中实体的名称、EntityId、来源路径、位置文本与视觉类型 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位区 UI，支持默认提示、World 为空和当前选中实体摘要三种状态 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板逻辑，提供显示实体摘要、无选择和空 World 的三种方法，并发出 ViewportFocused 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，显示当前 World 实体列表 | 可运行 |

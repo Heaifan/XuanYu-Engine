@@ -214,6 +214,25 @@
 3. `EditorShell` 新增 `_selectedWorldEntity` 状态跟踪，点击 World 实体列表后同步更新视口显示，点击视口时保留选中实体或自动选择第一个实体。
 4. `file-tree.md` 更新视口面板职责说明。
 
+### Milestone 6.0：RenderScene 最小抽象
+
+#### 新增
+
+1. 新增 `FluidWarfare.Render` 抽象渲染层项目。
+2. 新增 `RenderScene`、`RenderObjectInfo`、`RenderObjectVisualKind` 最小渲染场景模型。
+3. 新增 `WorldToRenderSceneBuilder`，将 `WorldState` 转换为最小可渲染场景数据。
+4. 新增 `FluidWarfare.Tests/Render/World/WorldToRenderSceneBuilderTests.cs`。
+5. `ViewportEntitySummary` 新增 `VisualKindText`，视口占位区显示 `unit_marker`。
+
+#### 修改
+
+1. `FluidWarfare.sln` 新增 `FluidWarfare.Render` 项目。
+2. `Editor.csproj` 和 `Tests.csproj` 新增 Render 引用。
+3. `EditorShell` 创建 World 后生成 RenderScene，日志显示渲染对象数量。
+4. `EditorShell.FindVisualKindText` 根据 RenderScene 查找当前实体的视觉类型。
+5. `ViewportPlaceholderPanel.axaml` 实体摘要区新增渲染对象行。
+6. `file-tree.md` 新增 Render 模块结构。
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。

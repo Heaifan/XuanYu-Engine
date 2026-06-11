@@ -13,6 +13,7 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
     private TextBlock? _entityIdText;
     private TextBlock? _entitySourceText;
     private TextBlock? _entityPositionText;
+    private TextBlock? _entityVisualKindText;
 
     public event EventHandler? ViewportFocused;
 
@@ -32,6 +33,7 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
         _entityIdText = this.FindControl<TextBlock>("EntityIdText");
         _entitySourceText = this.FindControl<TextBlock>("EntitySourceText");
         _entityPositionText = this.FindControl<TextBlock>("EntityPositionText");
+        _entityVisualKindText = this.FindControl<TextBlock>("EntityVisualKindText");
     }
 
     /// <summary>
@@ -80,6 +82,11 @@ public sealed partial class ViewportPlaceholderPanel : UserControl
         if (_entityPositionText is not null)
         {
             _entityPositionText.Text = summary.PositionText;
+        }
+
+        if (_entityVisualKindText is not null)
+        {
+            _entityVisualKindText.Text = summary.VisualKindText;
         }
 
         ShowSinglePanel(_entitySummaryContent);

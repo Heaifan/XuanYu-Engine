@@ -17,6 +17,8 @@ using FluidWarfare.Project.Loading;
 using FluidWarfare.Project.Metadata;
 using FluidWarfare.Project.Paths;
 using FluidWarfare.Project.Validation;
+using FluidWarfare.Render.Scene;
+using FluidWarfare.Render.World;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -33,6 +35,7 @@ public sealed partial class EditorShell : UserControl
     private WorldState? _worldState;
     private EntityId _firstEntityId;
     private WorldEntityInfo? _selectedWorldEntity;
+    private RenderScene _renderScene = RenderScene.Empty;
 
     public EditorShell()
     {
@@ -192,6 +195,7 @@ public sealed partial class EditorShell : UserControl
     private void UpdateViewportForEntity(WorldEntityInfo entityInfo)
     {
         var position = _worldState?.FindPosition(entityInfo.EntityId);
+        var visualKind = FindVisualKindText(entityInfo.EntityId);
 
         var summary = new ViewportEntitySummary(
             entityInfo.DisplayName,
@@ -199,9 +203,22 @@ public sealed partial class EditorShell : UserControl
             position is not null
                 ? $"({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
                 : "未知",
-            entityInfo.Source?.RelativePath);
+            entityInfo.Source?.RelativePath,
+            visualKind);
 
         _viewportPlaceholderPanel?.ShowEntitySummary(summary);
+    }
+
+    private string FindVisualKindText(EntityId entityId)
+    {
+        var renderObj = _renderScene.Objects.FirstOrDefault(o => o.EntityId == entityId);
+        return renderObj is not null
+            ? renderObj.VisualKind switch
+            {
+                RenderObjectVisualKind.UnitMarker => "unit_marker",
+                _ => renderObj.VisualKind.ToString()
+            }
+            : "未生成";
     }
 
     private void HandleMenuClicked(string menuName)
@@ -318,6 +335,10 @@ public sealed partial class EditorShell : UserControl
         {
             AppendInfoLog($"已从项目内容生成 World 占位实体：{sourcePath}。");
         }
+
+        // 生成 RenderScene
+        _renderScene = WorldToRenderSceneBuilder.Build(_worldState);
+        AppendInfoLog($"RenderScene 已生成，渲染对象数量：{_renderScene.Objects.Count}。");
 
         // 更新实体列表，视口保持默认状态等待用户选择
         _worldEntityListPanel?.ShowEntities(entities);

@@ -19,6 +19,7 @@
     <ProjectReference Include="..\FluidWarfare.Core\FluidWarfare.Core.csproj" />
     <ProjectReference Include="..\FluidWarfare.Engine\FluidWarfare.Engine.csproj" />
     <ProjectReference Include="..\FluidWarfare.Project\FluidWarfare.Project.csproj" />
+    <ProjectReference Include="..\FluidWarfare.Render\FluidWarfare.Render.csproj" />
   </ItemGroup>
 
   <ItemGroup>
