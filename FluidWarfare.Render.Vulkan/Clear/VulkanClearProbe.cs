@@ -62,26 +62,31 @@ public static unsafe class VulkanClearProbe
             if (!CreateDevice(vk, pd, qi, out dev)) return Fail("Device 创建失败。", clearText, sw);
             devOk = true;
 
-            // Load device functions
+            // Surface 查询函数：用 vkGetInstanceProcAddr 加载（Instance 层扩展）
+            var fnGetCaps = LoadProc(vk, inst, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+            var fnGetFmts = LoadProc(vk, inst, "vkGetPhysicalDeviceSurfaceFormatsKHR");
+            var fnGetModes = LoadProc(vk, inst, "vkGetPhysicalDeviceSurfacePresentModesKHR");
+
+            if (fnGetCaps == 0 || fnGetFmts == 0 || fnGetModes == 0)
+                return Fail("无法加载 Surface 查询函数（vkGetInstanceProcAddr）。", clearText, sw);
+
+            // Swapchain 设备函数：用 vkGetDeviceProcAddr 加载
             fnDestroySwapchain = LoadDeviceProc(vk, dev, "vkDestroySwapchainKHR");
             var fnCreateSwapchain = LoadDeviceProc(vk, dev, "vkCreateSwapchainKHR");
-            var fnGetCaps = LoadDeviceProc(vk, dev, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
-            var fnGetFmts = LoadDeviceProc(vk, dev, "vkGetPhysicalDeviceSurfaceFormatsKHR");
-            var fnGetModes = LoadDeviceProc(vk, dev, "vkGetPhysicalDeviceSurfacePresentModesKHR");
             var fnGetImages = LoadDeviceProc(vk, dev, "vkGetSwapchainImagesKHR");
             var fnAcquire = LoadDeviceProc(vk, dev, "vkAcquireNextImageKHR");
             var fnQueuePresent = LoadDeviceProc(vk, dev, "vkQueuePresentKHR");
 
-            if (fnCreateSwapchain == 0 || fnGetCaps == 0 || fnGetFmts == 0 || fnGetModes == 0 ||
-                fnGetImages == 0 || fnAcquire == 0 || fnQueuePresent == 0 || fnDestroySwapchain == 0)
-                return Fail("无法加载 Swapchain 扩展函数。", clearText, sw);
+            if (fnCreateSwapchain == 0 || fnDestroySwapchain == 0 || fnGetImages == 0 ||
+                fnAcquire == 0 || fnQueuePresent == 0)
+                return Fail("无法加载 Swapchain 设备扩展函数（vkGetDeviceProcAddr）。", clearText, sw);
 
-            // 5. Query capabilities
-            var caps = QueryCaps(pd, inst, surf, fnGetCaps);
-            var formats = QueryFormats(pd, inst, surf, fnGetFmts);
+            // 5. Query capabilities（不传 inst，函数签名只有 PhysicalDevice + Surface）
+            var caps = QueryCaps(pd, surf, fnGetCaps);
+            var formats = QueryFormats(pd, surf, fnGetFmts);
             if (formats.Length == 0) return Fail("无可用 Surface 格式。", clearText, sw);
             chosenFmt = ChooseFormat(formats).Format;
-            var chosenMode = ChoosePresentMode(QueryModes(pd, inst, surf, fnGetModes));
+            var chosenMode = ChoosePresentMode(QueryModes(pd, surf, fnGetModes));
 
             imageCount = Math.Clamp(caps.MinImageCount + 1, caps.MinImageCount, caps.MaxImageCount > 0 ? caps.MaxImageCount : uint.MaxValue);
             var extent = ChooseExtent(caps, reqW, reqH);
@@ -351,21 +356,34 @@ public static unsafe class VulkanClearProbe
         finally { Marshal.FreeHGlobal(se); }
     }
 
-    // ─── 查询 ──────────────────────────────────────────────────
+    // ─── 查询（Vulkan 官方签名：只有 PhysicalDevice + Surface，没有 Instance）──
 
-    private static SurfaceCapabilitiesKHR QueryCaps(Silk.NET.Vulkan.PhysicalDevice pd, Silk.NET.Vulkan.Instance inst, SurfaceKHR surf, nint fn)
-    { var f = Marshal.GetDelegateForFunctionPointer<GetCapsPtr>(fn); f(pd, inst, surf, out var c); return c; }
-
-    private static SurfaceFormatKHR[] QueryFormats(Silk.NET.Vulkan.PhysicalDevice pd, Silk.NET.Vulkan.Instance inst, SurfaceKHR surf, nint fn)
+    private static SurfaceCapabilitiesKHR QueryCaps(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR surf, nint fn)
     {
-        var f = Marshal.GetDelegateForFunctionPointer<GetFormatsPtr>(fn); uint c = 0; f(pd, inst, surf, &c, null);
-        if (c == 0) return []; var r = new SurfaceFormatKHR[c]; fixed (SurfaceFormatKHR* p = r) f(pd, inst, surf, &c, p); return r;
+        var f = Marshal.GetDelegateForFunctionPointer<GetCapsPtr>(fn);
+        SurfaceCapabilitiesKHR c;
+        f(pd, surf, &c);
+        return c;
     }
 
-    private static PresentModeKHR[] QueryModes(Silk.NET.Vulkan.PhysicalDevice pd, Silk.NET.Vulkan.Instance inst, SurfaceKHR surf, nint fn)
+    private static SurfaceFormatKHR[] QueryFormats(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR surf, nint fn)
     {
-        var f = Marshal.GetDelegateForFunctionPointer<GetModesPtr>(fn); uint c = 0; f(pd, inst, surf, &c, null);
-        if (c == 0) return []; var r = new PresentModeKHR[c]; fixed (PresentModeKHR* p = r) f(pd, inst, surf, &c, p); return r;
+        var f = Marshal.GetDelegateForFunctionPointer<GetFormatsPtr>(fn);
+        uint c = 0;
+        if (f(pd, surf, &c, null) != Result.Success || c == 0) return [];
+        var r = new SurfaceFormatKHR[c];
+        fixed (SurfaceFormatKHR* p = r) f(pd, surf, &c, p);
+        return r;
+    }
+
+    private static PresentModeKHR[] QueryModes(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR surf, nint fn)
+    {
+        var f = Marshal.GetDelegateForFunctionPointer<GetModesPtr>(fn);
+        uint c = 0;
+        if (f(pd, surf, &c, null) != Result.Success || c == 0) return [];
+        var r = new PresentModeKHR[c];
+        fixed (PresentModeKHR* p = r) f(pd, surf, &c, p);
+        return r;
     }
 
     // ─── 选择 ──────────────────────────────────────────────────
@@ -387,9 +405,9 @@ public static unsafe class VulkanClearProbe
     [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result CreateWin32SurfacePtr(Silk.NET.Vulkan.Instance i, Win32SurfaceCreateInfoKHR* ci, AllocationCallbacks* a, SurfaceKHR* s);
     [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate void DestroySurfacePtr(Silk.NET.Vulkan.Instance i, SurfaceKHR s, AllocationCallbacks* a);
     [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result SurfaceSupportPtr(Silk.NET.Vulkan.PhysicalDevice pd, uint qi, SurfaceKHR s, int* supported);
-    [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate void GetCapsPtr(Silk.NET.Vulkan.PhysicalDevice pd, Silk.NET.Vulkan.Instance i, SurfaceKHR s, out SurfaceCapabilitiesKHR c);
-    [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result GetFormatsPtr(Silk.NET.Vulkan.PhysicalDevice pd, Silk.NET.Vulkan.Instance i, SurfaceKHR s, uint* c, SurfaceFormatKHR* f);
-    [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result GetModesPtr(Silk.NET.Vulkan.PhysicalDevice pd, Silk.NET.Vulkan.Instance i, SurfaceKHR s, uint* c, PresentModeKHR* m);
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result GetCapsPtr(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, SurfaceCapabilitiesKHR* c);
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result GetFormatsPtr(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, uint* c, SurfaceFormatKHR* f);
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result GetModesPtr(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, uint* c, PresentModeKHR* m);
     [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result CreateSwapchainPtr(Silk.NET.Vulkan.Device d, SwapchainCreateInfoKHR* ci, AllocationCallbacks* a, SwapchainKHR* sc);
     [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate void DestroySwapchainPtr(Silk.NET.Vulkan.Device d, SwapchainKHR sc, AllocationCallbacks* a);
     [UnmanagedFunctionPointer(CallingConvention.Winapi)] private delegate Result GetSwapchainImagesPtr(Silk.NET.Vulkan.Device d, SwapchainKHR sc, uint* c, Image* imgs);
