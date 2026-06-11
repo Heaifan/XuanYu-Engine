@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 07:30
+最后编辑：2026-06-11 08:30
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -111,6 +111,7 @@
 72v. Milestone 8.1：新增 `FluidWarfare.Render.Vulkan/Shaders/basic_3d.vert` 和 `.frag` 着色器源文件。
 72w. Milestone 8.1：新增 `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.vert.spv` 和 `.frag.spv` 预编译 SPIR-V。
 72x. Milestone 8.1：新增 `FluidWarfare.Render.Vulkan/Shaders/CompiledShaders.cs` 内嵌 SPIR-V 字节码。
+72x2. Milestone 8.1.3：`CompiledShaders.cs` 改为空数组占位，`Compiled/` 目录废弃，`.spv` 文件从 git 移除。
 72y. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dInfoTests.cs`。
 72z. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs`。
 72α. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs`。
@@ -285,9 +286,12 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.1：Vulkan 3D 基础管线。
+当前执行 Milestone 8.1.3：Scene3D 隔离与 SPIR-V 编译链修复。
 
-本轮建立最小 3D 渲染能力：3D 坐标约定（XZ 地面，+Y 高度）、固定斜俯视相机、MVP 矩阵、基础 Shader、双 Graphics Pipeline（LineList 网格 + TriangleList 单位立方体）、Vertex Buffer、Push Constant。画面显示 3D 网格与中央浅黄色单位占位立方体。下一阶段 8.2 再做多对象 3D 绘制与深度测试。
+Milestone 8.1（c30de44）引入的手写 SPIR-V 编码器（tools/gen_spirv）存在指令操作数顺序错误，
+生成的 .spv 文件非法，触发驱动级崩溃。当前 Scene3D 自动启动已禁用，Editor 回退到 Clear probe 稳定状态。
+3D 渲染（Shader/Pipeline/VertexBuffer）在标准 SPIR-V 编译链（glslangValidator / shaderc / DXC + spirv-val）
+就绪之前保持隔离。
 
 ## 3. 顶层目录结构
 
@@ -399,10 +403,7 @@ FluidWarfare/
 |   `-- Shaders/
 |       |-- basic_3d.frag
 |       |-- basic_3d.vert
-|       |-- Compiled/
-|       |   |-- basic_3d.frag.spv
-|       |   `-- basic_3d.vert.spv
-|       `-- CompiledShaders.cs
+|       `-- CompiledShaders.cs  (⛔ 空数组占位)
 |-- FluidWarfare.Runtime.Windows/
 |   `-- .gitkeep
 |-- FluidWarfare.Runtime.Android/
@@ -651,9 +652,9 @@ get_tree.bat
 | `FluidWarfare.Render.Vulkan/Camera/VulkanCameraMatrices.cs` | 3D 矩阵计算，LookAt、PerspectiveVulkan（NDC 0..1）与 MVP 合成 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Shaders/basic_3d.vert` | 基础 3D 顶点着色器 GLSL 源文件，position+color 输入，MVP push constant | 已生成 |
 | `FluidWarfare.Render.Vulkan/Shaders/basic_3d.frag` | 基础 3D 片段着色器 GLSL 源文件，颜色传递 | 已生成 |
-| `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.vert.spv` | 预编译顶点着色器 SPIR-V（824 字节） | 已生成 |
-| `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.frag.spv` | 预编译片段着色器 SPIR-V（352 字节） | 已生成 |
-| `FluidWarfare.Render.Vulkan/Shaders/CompiledShaders.cs` | 内嵌 SPIR-V 字节码的 C# 类，用于运行时创建 VkShaderModule | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.vert.spv` | ❌ 已废弃：手写 SPIR-V 编码错误，从 git 移除 | 废弃 |
+| `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.frag.spv` | ❌ 已废弃：手写 SPIR-V 编码错误，从 git 移除 | 废弃 |
+| `FluidWarfare.Render.Vulkan/Shaders/CompiledShaders.cs` | ⛔ 已隔离：原内嵌 SPIR-V，现改为空数组占位，等待标准编译链就绪 | 已隔离 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dInfoTests.cs` | 验证 3D 场景渲染结果模型的基础语义 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs` | 验证网格生成、立方体生成、坐标轴生成和交错格式转换 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs` | 验证默认相机参数和自定义相机 | 测试通过 |

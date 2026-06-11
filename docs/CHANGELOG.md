@@ -626,4 +626,44 @@ tools/gen_spirv/gen_spirv.csproj
 
 ---
 
-下一阶段进入 **Milestone 8.2：多对象 3D 绘制与基础深度测试**。
+---
+
+### Milestone 8.1.3 — Scene3D 隔离、手写 SPIR-V 废弃
+
+#### 变更记录
+
+```text
+稳定基线：7f5870b — Milestone 8.0.1（Clear / Marker / Resize，Editor 稳定运行）
+问题引入：c30de44 — Milestone 8.1（手写 SPIR-V 生成器，指令操作数顺序错误）
+部分回退：e0b9602 — resize 回退 Clear probe
+硬编码修：69e4aad — 补 CmdBindPipeline（但 SPIR-V 本身非法，仍闪退）
+当前提交：1687842 — Scene3D 自动启动禁用
+```
+
+#### 根因总结
+
+`tools/gen_spirv` 手写的 SPIR-V 编码器中，所有结果型指令（OpConstant、OpVariable、OpLoad、OpFunction、OpAccessChain、OpMatrixTimesVector 等）的 **Result Type 和 Result <id> 操作数顺序写反**，导致生成的 `.spv` 文件语义非法，在 driver 编译 shader 时触发崩溃。
+
+完整证据链见 `tools/gen_spirv/README.md`。
+
+#### 改动
+
+1. **Scene3D 已隔离**：Editor 启动和 resize 均不再自动调用 `ProbeVulkanScene3D()`。
+2. **`tools/gen_spirv` 已废弃**：目录保留 `README.md` 说明，不参与构建。
+3. **`CompiledShaders.cs` 改为空数组占位**：等标准工具链就绪后替换。
+4. **`.spv` 文件从 git 移除**：非法的预编译二进制不再提交。
+5. **`basic_3d.vert` / `basic_3d.frag` 恢复标准多行 GLSL 格式**：`#version 450` 独立一行，可被标准编译器正确解析。
+6. **诊断面板显示**：Scene3D 状态为"已隔离：当前 SPIR-V 编译链未通过合法性验证。"
+
+#### 恢复条件
+
+Scene3D 3D 渲染在以下条件全部满足后方可重新启用：
+
+1. 使用 `glslangValidator` / `shaderc` / DXC 等标准工具编译 SPIR-V。
+2. `spirv-val` 通过生成的 `.spv` 文件。
+3. `tools/gen_spirv` 不再参与构建。
+4. `VulkanScene3dRenderer.cs` 拆分为小文件。
+
+---
+
+下一阶段：**不进入 8.2**。先恢复 3D Pipeline 稳定性。

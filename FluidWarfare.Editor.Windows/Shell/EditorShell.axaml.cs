@@ -56,7 +56,9 @@ public sealed partial class EditorShell : UserControl
     private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
     private VulkanClearInfo _vulkanClearInfo = VulkanClearInfo.NotChecked;
     private VulkanMarkerDrawResult _vulkanMarkerDrawResult = VulkanMarkerDrawResult.NotChecked;
-    private VulkanScene3dInfo _vulkanScene3dInfo = VulkanScene3dInfo.NotChecked;
+    private VulkanScene3dInfo _vulkanScene3dInfo = new(VulkanScene3dStatus.NotChecked,
+        "已隔离：当前 SPIR-V 编译链未通过合法性验证。",
+        0, 0, 0, 0, 0, 0, 0, "不可用（SPIR-V 待修复）", 0);
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
     private bool _vulkanViewportRendering;
