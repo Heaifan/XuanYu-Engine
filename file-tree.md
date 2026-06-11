@@ -88,6 +88,10 @@
 70. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/Backend/VulkanBackendInfo.cs`。
 71. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/Backend/VulkanBackendProbe.cs`。
 72a. Milestone 7.8：新增 `FluidWarfare.Render.Vulkan/Context/VulkanRenderContext.cs`。
+72b. Milestone 7.8.1：新增 `FluidWarfare.Render.Vulkan/Swapchain/VulkanSwapchainStatus.cs`。
+72c. Milestone 7.8.1：新增 `FluidWarfare.Render.Vulkan/Swapchain/VulkanSwapchainInfo.cs`。
+72d. Milestone 7.8.1：新增 `FluidWarfare.Render.Vulkan/Swapchain/VulkanSwapchainProbe.cs`。
+72e. Milestone 7.8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Swapchain/VulkanSwapchainInfoTests.cs`。
 72. Milestone 7.0：新增 `FluidWarfare.Tests/Render/Vulkan/Backend/VulkanBackendInfoTests.cs`。
 73. Milestone 7.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml`。
 74. Milestone 7.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs`。
@@ -247,7 +251,7 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 7.8：Vulkan 最小可见渲染闭环。
+当前执行 Milestone 7.8.1：Swapchain 扩展加载修复。
 
 本轮只让 Editor 中的 VulkanViewportHostPanel 通过 Avalonia NativeControlHost 创建独立 Windows 原生子窗口 HWND，并显示 HWND / HINSTANCE 获取状态。不创建 Vulkan Surface、Swapchain、RenderPass、Framebuffer、CommandBuffer，不做真实清屏，不做 Runtime，不做 Android。
 

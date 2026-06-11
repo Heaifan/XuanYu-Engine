@@ -25,6 +25,7 @@ using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
 using FluidWarfare.Render.Vulkan.Context;
 using FluidWarfare.Render.Vulkan.Surface;
+using FluidWarfare.Render.Vulkan.Swapchain;
 using FluidWarfare.Render.World;
 
 namespace FluidWarfare.Editor.Windows.Shell;
@@ -49,6 +50,7 @@ public sealed partial class EditorShell : UserControl
     private VulkanDeviceInfo _vulkanDeviceInfo = VulkanDeviceInfo.NotChecked;
     private VulkanSurfaceInfo _vulkanSurfaceInfo = VulkanSurfaceInfo.NotChecked;
     private VulkanRenderContext? _vulkanRenderContext;
+    private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
     private DispatcherTimer? _renderTimer;
     private bool _vulkanViewportNativeHostReported;
 
@@ -566,12 +568,58 @@ public sealed partial class EditorShell : UserControl
             AppendInfoLog(
                 $"Windows Vulkan 视口子窗口已创建，HWND：0x{nativeHostInfo.WindowHandle.ToInt64():X16}。");
             InitializeVulkanRenderContext();
+            ProbeVulkanSwapchain();
         }
         else
         {
             AppendWarningLog(nativeHostInfo.Message);
             ProbeVulkanSurface();
         }
+    }
+
+    private void ProbeVulkanSwapchain()
+    {
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
+        {
+            _vulkanSwapchainInfo = new VulkanSwapchainInfo(
+                VulkanSwapchainStatus.Failed,
+                "缺少 Windows 原生视口句柄，跳过 Swapchain 创建。",
+                0, "未知", "未知", 0, 0, 0);
+            ShowVulkanSwapchainInfo();
+            return;
+        }
+
+        _vulkanSwapchainInfo = VulkanSwapchainProbe.ProbeWindows(
+            nativeHostInfo.InstanceHandle,
+            nativeHostInfo.WindowHandle,
+            640, 360);
+
+        ShowVulkanSwapchainInfo();
+    }
+
+    private void ShowVulkanSwapchainInfo()
+    {
+        if (_vulkanSwapchainInfo.IsCreated)
+        {
+            AppendInfoLog(
+                $"Vulkan Swapchain 创建成功，图像数量：{_vulkanSwapchainInfo.ImageCount}，" +
+                $"格式：{_vulkanSwapchainInfo.SurfaceFormatText}，" +
+                $"Present：{_vulkanSwapchainInfo.PresentModeText}，" +
+                $"尺寸：{_vulkanSwapchainInfo.Width}x{_vulkanSwapchainInfo.Height}，" +
+                $"用时：{_vulkanSwapchainInfo.ElapsedMilliseconds:F2} ms。");
+        }
+        else if (_vulkanSwapchainInfo.Status != VulkanSwapchainStatus.NotChecked)
+        {
+            AppendWarningLog($"Vulkan Swapchain 创建失败：{_vulkanSwapchainInfo.Message}");
+        }
+
+        _vulkanViewportHostPanel?.ShowSurfaceInfo(
+            _vulkanSwapchainInfo.IsCreated
+                ? $"Swapchain：可用 | {_vulkanSwapchainInfo.SurfaceFormatText} | {_vulkanSwapchainInfo.PresentModeText} | {_vulkanSwapchainInfo.Width}x{_vulkanSwapchainInfo.Height}"
+                : $"Swapchain：{_vulkanSwapchainInfo.Message}");
     }
 
     private void InitializeVulkanRenderContext()

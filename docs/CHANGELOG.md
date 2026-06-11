@@ -384,6 +384,30 @@
 2. Instance/Device/Surface 创建正常，Editor 不崩溃，Vulkan 状态正常显示。
 3. Swapchain/清屏问题待后续排查：设备扩展启用确认、函数指针加载方式、Silk.NET KHR 扩展类加载。
 
+### Milestone 7.8.1：Swapchain 扩展加载修复
+
+#### 新增
+
+1. 新增 `VulkanSwapchainStatus`、`VulkanSwapchainInfo` 与 `VulkanSwapchainProbe`。
+2. `VulkanSwapchainProbe` 在独立探针中创建 Swapchain，不污染持久上下文。
+3. 新增 `FluidWarfare.Tests/Render/Vulkan/Swapchain/VulkanSwapchainInfoTests.cs`。
+
+#### 修改
+
+1. 修复 Swapchain 创建：使用 `SwapchainKHR*` 指针参数替代 `out SwapchainKHR`，避免调用约定不匹配导致的原生访问冲突。
+2. `EditorShell` 新增 `ProbeVulkanSwapchain` 调用，显示 Swapchain 创建状态。
+3. Device 创建时启用 `VK_KHR_swapchain`。
+4. 查询 `SurfaceCapabilities`、`SurfaceFormats`、`PresentModes`，选择 Graphics+Present 队列族。
+5. 使用 `vkGetDeviceProcAddr` 加载 swapchain 设备级函数。
+
+#### 当前状态
+
+- Instance/Device/Surface/Swapchain 创建全链路验证通过 ✅
+- 不再有 0xC0000005 ✅
+- Editor 不崩溃 ✅
+- 仍然不创建 RenderPass/Framebuffer/CommandBuffer/同步对象
+- 仍然不做真实清屏
+
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。
