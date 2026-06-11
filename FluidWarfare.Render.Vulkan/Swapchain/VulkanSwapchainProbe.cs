@@ -246,7 +246,7 @@ public static unsafe class VulkanSwapchainProbe
         finally { Marshal.FreeHGlobal(swapchainExt); }
     }
 
-    // ─── Helpers ────────────────────────────────────────────────
+    // ─── 辅助方法 ────────────────────────────────────────────────
 
     private static SurfaceFormatKHR ChooseFormat(SurfaceFormatKHR[] f)
     {

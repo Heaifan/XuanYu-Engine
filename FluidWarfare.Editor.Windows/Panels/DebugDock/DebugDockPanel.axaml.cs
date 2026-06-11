@@ -19,6 +19,7 @@ public sealed partial class DebugDockPanel : UserControl
     private TextBlock? _diagSurface;
     private TextBlock? _diagSwapchain;
     private TextBlock? _diagClear;
+    private TextBlock? _diagMarker;
 
     // RenderScene
     private TextBlock? _renderSceneTitle;
@@ -30,6 +31,7 @@ public sealed partial class DebugDockPanel : UserControl
     private TextBlock? _perfDevice;
     private TextBlock? _perfSwapchain;
     private TextBlock? _perfClear;
+    private TextBlock? _perfMarker;
 
     // 公开属性：让 EditorShell 可以访问 LogPanel
     public LogPanel? LogPanel => _logPanel;
@@ -50,6 +52,7 @@ public sealed partial class DebugDockPanel : UserControl
         _diagSurface = this.FindControl<TextBlock>("DiagSurface");
         _diagSwapchain = this.FindControl<TextBlock>("DiagSwapchain");
         _diagClear = this.FindControl<TextBlock>("DiagClear");
+        _diagMarker = this.FindControl<TextBlock>("DiagMarker");
         _renderSceneTitle = this.FindControl<TextBlock>("RenderSceneTitle");
         _renderSceneEmpty = this.FindControl<TextBlock>("RenderSceneEmpty");
         _renderSceneList = this.FindControl<StackPanel>("RenderSceneList");
@@ -57,12 +60,13 @@ public sealed partial class DebugDockPanel : UserControl
         _perfDevice = this.FindControl<TextBlock>("PerfDevice");
         _perfSwapchain = this.FindControl<TextBlock>("PerfSwapchain");
         _perfClear = this.FindControl<TextBlock>("PerfClear");
+        _perfMarker = this.FindControl<TextBlock>("PerfMarker");
     }
 
     // ─── 渲染诊断 ──────────────────────────────────────────────
 
     public void SetDiagnostics(string loader, string instance, string device, string nativeHost,
-        string surface, string swapchain, string clear)
+        string surface, string swapchain, string clear, string marker)
     {
         if (_diagLoader is not null) _diagLoader.Text = $"Vulkan 后端：{loader}";
         if (_diagInstance is not null) _diagInstance.Text = $"Instance：{instance}";
@@ -71,6 +75,7 @@ public sealed partial class DebugDockPanel : UserControl
         if (_diagSurface is not null) _diagSurface.Text = $"Surface：{surface}";
         if (_diagSwapchain is not null) _diagSwapchain.Text = $"Swapchain：{swapchain}";
         if (_diagClear is not null) _diagClear.Text = $"Clear：{clear}";
+        if (_diagMarker is not null) _diagMarker.Text = $"Marker：{marker}";
     }
 
     // ─── RenderScene 列表 ──────────────────────────────────────
@@ -104,11 +109,12 @@ public sealed partial class DebugDockPanel : UserControl
 
     // ─── 性能计时 ──────────────────────────────────────────────
 
-    public void SetPerformance(string instanceMs, string deviceMs, string swapchainMs, string clearMs)
+    public void SetPerformance(string instanceMs, string deviceMs, string swapchainMs, string clearMs, string markerMs)
     {
         if (_perfInstance is not null) _perfInstance.Text = $"Instance：{instanceMs} ms";
         if (_perfDevice is not null) _perfDevice.Text = $"Device：{deviceMs} ms";
         if (_perfSwapchain is not null) _perfSwapchain.Text = $"Swapchain：{swapchainMs} ms";
         if (_perfClear is not null) _perfClear.Text = $"Clear：{clearMs} ms";
+        if (_perfMarker is not null) _perfMarker.Text = $"MarkerDraw：{markerMs} ms";
     }
 }

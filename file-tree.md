@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 05:45
+最后编辑：2026-06-11 06:15
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -96,6 +96,12 @@
 72g. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearInfo.cs`。
 72h. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearProbe.cs`。
 72i. Milestone 7.8.2：新增 `FluidWarfare.Tests/Render/Vulkan/Clear/VulkanClearInfoTests.cs`。
+72j. Milestone 8.0：新增 `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawStatus.cs`。
+72k. Milestone 8.0：新增 `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawInfo.cs`。
+72l. Milestone 8.0：新增 `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawResult.cs`。
+72m. Milestone 8.0：新增 `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerClearRectRenderer.cs`。
+72n. Milestone 8.0：新增 `FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawInfoTests.cs`。
+72o. Milestone 8.0：新增 `FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawResultTests.cs`。
 72j. Milestone 7.8.3：新增 `FluidWarfare.Editor.Windows/Panels/DebugDock/DebugDockPanel.axaml`。
 72k. Milestone 7.8.3：新增 `FluidWarfare.Editor.Windows/Panels/DebugDock/DebugDockPanel.axaml.cs`。
 72. Milestone 7.0：新增 `FluidWarfare.Tests/Render/Vulkan/Backend/VulkanBackendInfoTests.cs`。
@@ -235,6 +241,9 @@
 107. Milestone 7.6：VulkanViewportHostPanel 嵌入 Windows 原生视口子窗口宿主。
 108. Milestone 7.6：EditorShell 在窗口附加后报告独立 HWND 获取结果。
 109. Milestone 7.6：7.6 阶段不调用 VulkanSurfaceProbe，不创建 VkSurfaceKHR。
+110. Milestone 8.0.1：WindowsVulkanViewportHostControl 根据 Avalonia Bounds 调用 SetWindowPos 同步 HWND 尺寸。
+111. Milestone 8.0.1：EditorShell 的 Swapchain / Clear / Marker 绘制改用真实 NativeHost 宽高。
+112. Milestone 8.0.1：DebugDockPanel 压缩底部页签字号与 Padding。
 110. Milestone 7.7：EditorShell 移除 7.6 占位逻辑，真正调用 VulkanSurfaceProbe.ProbeWindows 创建 VkSurfaceKHR。
 111. Milestone 7.8.2：EditorShell 新增 ProbeVulkanClear 与 ShowVulkanClearInfo。
 112. Milestone 7.8.3：EditorShell.axaml 底部替换为 DebugDockPanel。
@@ -261,9 +270,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 7.8.3：底部调试终端与主视口收束。
+当前执行 Milestone 8.0.1：视口尺寸同步与底部调试栏压缩。
 
-本轮只让 Editor 中的 VulkanViewportHostPanel 通过 Avalonia NativeControlHost 创建独立 Windows 原生子窗口 HWND，并显示 HWND / HINSTANCE 获取状态。不创建 Vulkan Surface、Swapchain、RenderPass、Framebuffer、CommandBuffer，不做真实清屏，不做 Runtime，不做 Android。
+本轮基于 RenderScene 第一个对象生成 Vulkan 点位绘制信息，在 Vulkan 战场视口中绘制第一个 GPU 点位（浅黄色小方块），用于验证 RenderScene → Vulkan 绘制链路。本轮不创建 Shader、Pipeline、Mesh、Texture 或 GPU Buffer，不绘制正式单位图标。下一阶段 8.1 再做多对象点位绘制。
 
 ## 3. 顶层目录结构
 
@@ -359,6 +368,11 @@ FluidWarfare/
 |       |-- VulkanSurfaceInfo.cs
 |       |-- VulkanSurfaceProbe.cs
 |       `-- VulkanSurfaceStatus.cs
+|   `-- Markers/
+|       |-- VulkanMarkerDrawInfo.cs
+|       |-- VulkanMarkerDrawResult.cs
+|       |-- VulkanMarkerDrawStatus.cs
+|       `-- VulkanMarkerClearRectRenderer.cs
 |-- FluidWarfare.Runtime.Windows/
 |   `-- .gitkeep
 |-- FluidWarfare.Runtime.Android/
@@ -593,6 +607,12 @@ get_tree.bat
 | `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceInfo.cs` | Vulkan Surface 创建探测结果模型，保存状态、中文说明、平台、原生句柄状态与耗时 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceProbe.cs` | 接收 Windows 原生句柄，创建并立即释放 VkSurfaceKHR 与 VkInstance，不创建 Device 或 Swapchain | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Surface/VulkanSurfaceInfoTests.cs` | 验证 Vulkan Surface 探测结果模型的基础语义，不创建真实 Surface | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawStatus.cs` | Vulkan 点位绘制状态枚举 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawInfo.cs` | 点位绘制信息模型，包含显示名、像素坐标、尺寸与颜色，支持基于真实视口宽高的 FromWorldPosition 坐标映射 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawResult.cs` | 点位绘制结果模型，保存状态、中文说明、绘制点位数与耗时 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerClearRectRenderer.cs` | 使用 vkCmdClearAttachments 在 RenderPass 内绘制点位小方块，不创建 Shader/Pipeline/Mesh/Texture | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawInfoTests.cs` | 验证点位绘制信息模型的坐标映射、颜色与尺寸 | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawResultTests.cs` | 验证点位绘制结果模型的基础语义 | 测试通过 |
 | `FluidWarfare.Engine/Components/PositionComponent.cs` | 实体位置组件，包装 Vector3d | 测试通过 |
 | `FluidWarfare.Engine/Components/DisplayNameComponent.cs` | 实体显示名组件，保存用于 Editor 显示的名称 | 测试通过 |
 | `FluidWarfare.Tests/Engine/World/WorldStateTests.cs` | 验证最小 World 实体创建、查询、位置读取与枚举 | 测试通过 |
@@ -622,7 +642,7 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/MainWindow.axaml` | 编辑器主窗口 XAML 容器，承载 EditorShell | 可运行 |
 | `FluidWarfare.Editor.Windows/MainWindow.axaml.cs` | 编辑器主窗口 code-behind | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器布局壳，组织菜单栏、项目内容面板、World 实体列表面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、Vulkan 后端/Instance/Device 探测、Windows 原生视口宿主状态、实体选择与 UI 显示 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、Vulkan 后端/Instance/Device 探测、Windows 原生视口宿主状态、真实视口尺寸绘制、实体选择与 UI 显示 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectContentFolderSelection.cs` | 项目内容目录选择值对象，保存稳定 FolderName、DisplayName 和 ContentKind | 可运行 |
@@ -634,12 +654,12 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 视口占位面板逻辑，显示 Vulkan 后端状态、Vulkan Instance 状态、Vulkan Device 状态、实体摘要与 RenderScene 调试对象 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostState.cs` | Vulkan 视口宿主占位状态枚举 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostInfo.cs` | Vulkan 视口宿主占位显示信息 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportNativeHostInfo.cs` | Vulkan 视口宿主原生窗口句柄信息，描述平台、句柄可用性与中文说明 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostState.cs` | Windows Vulkan 视口子窗口宿主状态枚举 | 测试通过 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostInfo.cs` | Windows Vulkan 视口子窗口宿主信息模型，保存状态、平台、HWND、HINSTANCE 与中文说明 | 测试通过 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostControl.cs` | 使用 Avalonia NativeControlHost 创建并持有 Windows 原生子窗口 HWND，作为未来 Vulkan Surface 宿主 | 测试通过 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml` | Vulkan 视口宿主显示区域，包含宿主状态、Windows 原生子窗口状态与 Surface 状态 | 测试通过 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs` | 显示 Vulkan 视口宿主状态，查询 Windows 原生子窗口句柄，并显示 Surface 状态 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostInfo.cs` | Windows Vulkan 视口子窗口宿主信息模型，保存状态、平台、HWND、HINSTANCE、真实宽高与中文说明 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostControl.cs` | 使用 Avalonia NativeControlHost 创建并持有 Windows 原生子窗口 HWND，并在 Bounds 变化时同步子窗口尺寸 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportNativeHostInfo.cs` | Vulkan 视口宿主原生窗口句柄信息，描述平台、句柄可用性、HWND、HINSTANCE、真实宽高与中文说明 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml` | Vulkan 视口宿主显示区域，包含可伸展原生子窗口、Windows 原生子窗口状态与清屏状态 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs` | 显示 Vulkan 视口宿主状态，查询 Windows 原生子窗口句柄和真实尺寸，并显示清屏状态 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，显示当前 World 实体列表 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs` | World 实体列表面板后台逻辑，接收 WorldEntityInfo 列表并在点击时发出 EntitySelected 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |

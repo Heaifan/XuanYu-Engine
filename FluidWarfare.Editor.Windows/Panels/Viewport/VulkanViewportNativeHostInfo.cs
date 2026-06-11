@@ -8,13 +8,17 @@ public sealed record VulkanViewportNativeHostInfo(
     bool HasNativeHandle,
     string Message,
     nint WindowHandle,
-    nint InstanceHandle)
+    nint InstanceHandle,
+    int Width,
+    int Height)
 {
     public static VulkanViewportNativeHostInfo NotAvailable { get; } =
         new(
             "未知",
             false,
             "当前视口宿主尚未提供可用于 Vulkan Surface 的原生窗口句柄。",
+            0,
+            0,
             0,
             0);
 }

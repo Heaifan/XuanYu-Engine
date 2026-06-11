@@ -36,16 +36,23 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     {
         if (!OperatingSystem.IsWindows())
         {
-            return new VulkanViewportNativeHostInfo("非 Windows", false, "当前平台不支持 Windows Vulkan Surface 创建。", 0, 0);
+            return new VulkanViewportNativeHostInfo("非 Windows", false, "当前平台不支持 Windows Vulkan Surface 创建。", 0, 0, 0, 0);
         }
 
         var hostInfo = GetWindowsNativeHostInfo();
         if (!hostInfo.HasWindowHandle)
         {
-            return new VulkanViewportNativeHostInfo(hostInfo.PlatformText, false, hostInfo.Message, 0, hostInfo.InstanceHandle);
+            return new VulkanViewportNativeHostInfo(hostInfo.PlatformText, false, hostInfo.Message, 0, hostInfo.InstanceHandle, hostInfo.Width, hostInfo.Height);
         }
 
-        return new VulkanViewportNativeHostInfo("Windows", true, "已获取 Windows Vulkan 视口原生子窗口句柄。", hostInfo.WindowHandle, hostInfo.InstanceHandle);
+        return new VulkanViewportNativeHostInfo(
+            "Windows",
+            true,
+            "已获取 Windows Vulkan 视口原生子窗口句柄。",
+            hostInfo.WindowHandle,
+            hostInfo.InstanceHandle,
+            hostInfo.Width,
+            hostInfo.Height);
     }
 
     /// <summary>

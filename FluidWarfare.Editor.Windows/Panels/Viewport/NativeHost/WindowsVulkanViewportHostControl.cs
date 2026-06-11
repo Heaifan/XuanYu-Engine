@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 
@@ -20,7 +21,20 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     private nint _windowHandle;
     private nint _instanceHandle;
+    private int _width;
+    private int _height;
     private WindowsVulkanViewportHostInfo _hostInfo = WindowsVulkanViewportHostInfo.NotCreated;
+
+    public WindowsVulkanViewportHostControl()
+    {
+        PropertyChanged += (_, args) =>
+        {
+            if (args.Property == BoundsProperty)
+            {
+                ResizeNativeWindowToControlBounds();
+            }
+        };
+    }
 
     public WindowsVulkanViewportHostInfo GetHostInfo()
     {
@@ -37,6 +51,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                 "非 Windows",
                 false,
                 0,
+                0,
+                0,
                 0);
 
             return new PlatformHandle(0, "HWND");
@@ -49,6 +65,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                 "Avalonia 未提供可嵌入原生子窗口的父级句柄。",
                 "Windows",
                 false,
+                0,
+                0,
                 0,
                 0);
 
@@ -86,13 +104,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                 return new PlatformHandle(0, "HWND");
             }
 
-            _hostInfo = new WindowsVulkanViewportHostInfo(
-                WindowsVulkanViewportHostState.Created,
-                $"Windows 原生子窗口已创建，HWND：{FormatHandle(_windowHandle)}。",
-                "Windows",
-                true,
-                _windowHandle,
-                _instanceHandle);
+            ResizeNativeWindowToControlBounds();
 
             return new PlatformHandle(_windowHandle, "HWND");
         }
@@ -113,6 +125,43 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
         _hostInfo = WindowsVulkanViewportHostInfo.NotCreated;
         base.DestroyNativeControlCore(control);
+    }
+
+    private void ResizeNativeWindowToControlBounds()
+    {
+        if (_windowHandle == 0)
+        {
+            return;
+        }
+
+        var width = Math.Max(1, (int)Math.Round(Bounds.Width));
+        var height = Math.Max(1, (int)Math.Round(Bounds.Height));
+
+        if (width < 1 || height < 1)
+        {
+            return;
+        }
+
+        SetWindowPos(
+            _windowHandle,
+            0,
+            0,
+            0,
+            width,
+            height,
+            SwpNoZOrder | SwpNoActivate);
+
+        _width = width;
+        _height = height;
+        _hostInfo = new WindowsVulkanViewportHostInfo(
+            WindowsVulkanViewportHostState.Created,
+            $"Windows 原生子窗口已创建，HWND：{FormatHandle(_windowHandle)}，尺寸：{_width}x{_height}。",
+            "Windows",
+            true,
+            _windowHandle,
+            _instanceHandle,
+            _width,
+            _height);
     }
 
     private static void RegisterWindowClass(nint instanceHandle)
@@ -157,7 +206,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             "Windows",
             false,
             0,
-            _instanceHandle);
+            _instanceHandle,
+            _width,
+            _height);
     }
 
     private static string FormatHandle(nint handle)
@@ -189,6 +240,20 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     [DllImport("user32.dll", EntryPoint = "DestroyWindow", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool DestroyWindow(nint windowHandle);
+
+    private const uint SwpNoZOrder = 0x0004;
+    private const uint SwpNoActivate = 0x0010;
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowPos", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool SetWindowPos(
+        nint windowHandle,
+        nint insertAfter,
+        int x,
+        int y,
+        int width,
+        int height,
+        uint flags);
 
     [DllImport("user32.dll", EntryPoint = "DefWindowProcW")]
     private static extern nint DefWindowProc(nint windowHandle, uint message, nint wParam, nint lParam);

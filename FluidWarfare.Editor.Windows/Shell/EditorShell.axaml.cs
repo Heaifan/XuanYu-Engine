@@ -26,6 +26,7 @@ using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
 using FluidWarfare.Render.Vulkan.Clear;
 using FluidWarfare.Render.Vulkan.Context;
+using FluidWarfare.Render.Vulkan.Markers;
 using FluidWarfare.Render.Vulkan.Surface;
 using FluidWarfare.Render.Vulkan.Swapchain;
 using FluidWarfare.Render.World;
@@ -54,6 +55,7 @@ public sealed partial class EditorShell : UserControl
     private VulkanRenderContext? _vulkanRenderContext;
     private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
     private VulkanClearInfo _vulkanClearInfo = VulkanClearInfo.NotChecked;
+    private VulkanMarkerDrawResult _vulkanMarkerDrawResult = VulkanMarkerDrawResult.NotChecked;
     private DispatcherTimer? _renderTimer;
     private bool _vulkanViewportNativeHostReported;
 
@@ -560,6 +562,7 @@ public sealed partial class EditorShell : UserControl
             InitializeVulkanRenderContext();
             ProbeVulkanSwapchain();
             ProbeVulkanClear();
+            ProbeVulkanMarkerDraw();
         }
         else
         {
@@ -572,6 +575,16 @@ public sealed partial class EditorShell : UserControl
     {
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
             ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!TryGetValidViewportSize(nativeHostInfo, out var viewportWidth, out var viewportHeight, out var viewportSizeMessage))
+        {
+            _vulkanSwapchainInfo = new VulkanSwapchainInfo(
+                VulkanSwapchainStatus.Failed,
+                viewportSizeMessage,
+                0, "未知", "未知", 0, 0, 0);
+            ShowVulkanSwapchainInfo();
+            return;
+        }
 
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
         {
@@ -586,7 +599,8 @@ public sealed partial class EditorShell : UserControl
         _vulkanSwapchainInfo = VulkanSwapchainProbe.ProbeWindows(
             nativeHostInfo.InstanceHandle,
             nativeHostInfo.WindowHandle,
-            640, 360);
+            viewportWidth,
+            viewportHeight);
 
         ShowVulkanSwapchainInfo();
     }
@@ -615,6 +629,14 @@ public sealed partial class EditorShell : UserControl
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
             ?? VulkanViewportNativeHostInfo.NotAvailable;
 
+        if (!TryGetValidViewportSize(nativeHostInfo, out var viewportWidth, out var viewportHeight, out var viewportSizeMessage))
+        {
+            _vulkanClearInfo = new VulkanClearInfo(
+                VulkanClearStatus.Failed, viewportSizeMessage, "未知", 0, 0, 0);
+            ShowVulkanClearInfo();
+            return;
+        }
+
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
         {
             _vulkanClearInfo = new VulkanClearInfo(
@@ -626,7 +648,8 @@ public sealed partial class EditorShell : UserControl
         _vulkanClearInfo = VulkanClearProbe.ProbeWindows(
             nativeHostInfo.InstanceHandle,
             nativeHostInfo.WindowHandle,
-            640, 360);
+            viewportWidth,
+            viewportHeight);
 
         ShowVulkanClearInfo();
     }
@@ -646,10 +669,77 @@ public sealed partial class EditorShell : UserControl
         }
 
         // 更新主视口清屏状态
+        var markerSuffix = _vulkanMarkerDrawResult.IsSucceeded
+            ? $" | 点位：{_vulkanMarkerDrawResult.DrawnMarkerCount}"
+            : string.Empty;
         _vulkanViewportHostPanel?.ShowClearStatus(
             _vulkanClearInfo.IsSucceeded
-                ? $"清屏成功 | {_vulkanClearInfo.ClearColorText} | {_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}"
+                ? $"清屏成功{markerSuffix} | {_vulkanClearInfo.ClearColorText} | {_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}"
                 : $"清屏：{_vulkanClearInfo.Message}");
+
+        UpdateAllDiagnostics();
+    }
+
+    private void ProbeVulkanMarkerDraw()
+    {
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!TryGetValidViewportSize(nativeHostInfo, out var viewportWidth, out var viewportHeight, out var viewportSizeMessage))
+        {
+            _vulkanMarkerDrawResult = new VulkanMarkerDrawResult(
+                VulkanMarkerDrawStatus.Failed, viewportSizeMessage, 0, 0);
+            ShowVulkanMarkerDrawInfo();
+            return;
+        }
+
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
+        {
+            _vulkanMarkerDrawResult = new VulkanMarkerDrawResult(
+                VulkanMarkerDrawStatus.Failed, "缺少原生句柄，跳过点位绘制。", 0, 0);
+            ShowVulkanMarkerDrawInfo();
+            return;
+        }
+
+        if (_renderScene.Objects.Count == 0)
+        {
+            _vulkanMarkerDrawResult = new VulkanMarkerDrawResult(
+                VulkanMarkerDrawStatus.Failed, "RenderScene 没有可绘制对象，跳过 Vulkan 点位绘制。", 0, 0);
+            ShowVulkanMarkerDrawInfo();
+            return;
+        }
+
+        // 取 RenderScene 第一个对象
+        var firstObject = _renderScene.Objects[0];
+
+        // 初版坐标映射：(0,0,0) → 视口中心
+        var markerInfo = VulkanMarkerDrawInfo.FromWorldPosition(
+            firstObject.DisplayName,
+            (float)firstObject.Position.X,
+            (float)firstObject.Position.Z,
+            (int)viewportWidth,
+            (int)viewportHeight);
+
+        _vulkanMarkerDrawResult = VulkanMarkerClearRectRenderer.RenderWindows(
+            nativeHostInfo.InstanceHandle,
+            nativeHostInfo.WindowHandle,
+            viewportWidth,
+            viewportHeight,
+            markerInfo);
+
+        ShowVulkanMarkerDrawInfo();
+    }
+
+    private void ShowVulkanMarkerDrawInfo()
+    {
+        if (_vulkanMarkerDrawResult.IsSucceeded)
+        {
+            AppendInfoLog(_vulkanMarkerDrawResult.Message);
+        }
+        else if (_vulkanMarkerDrawResult.Status != VulkanMarkerDrawStatus.NotChecked)
+        {
+            AppendWarningLog($"Vulkan 点位绘制失败：{_vulkanMarkerDrawResult.Message}");
+        }
 
         UpdateAllDiagnostics();
     }
@@ -657,8 +747,10 @@ public sealed partial class EditorShell : UserControl
     private void UpdateAllDiagnostics()
     {
         // 渲染诊断
-        var nativeHostMsg = _vulkanSurfaceInfo.HasNativeHandle
-            ? "已获取独立子窗口 HWND"
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+        var nativeHostMsg = nativeHostInfo.HasNativeHandle
+            ? $"已获取独立子窗口 HWND，尺寸：{nativeHostInfo.Width}x{nativeHostInfo.Height}"
             : "未获取";
         _debugDockPanel?.SetDiagnostics(
             _vulkanBackendInfo.Message,
@@ -677,14 +769,20 @@ public sealed partial class EditorShell : UserControl
                 : _vulkanSwapchainInfo.Message,
             _vulkanClearInfo.IsSucceeded
                 ? $"成功，{_vulkanClearInfo.ClearColorText}，尺寸：{_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}，用时：{_vulkanClearInfo.ElapsedMilliseconds:F2} ms"
-                : _vulkanClearInfo.Message);
+                : _vulkanClearInfo.Message,
+            _vulkanMarkerDrawResult.IsSucceeded
+                ? $"绘制成功，数量 {_vulkanMarkerDrawResult.DrawnMarkerCount}，尺寸：{nativeHostInfo.Width}x{nativeHostInfo.Height}，用时 {_vulkanMarkerDrawResult.ElapsedMilliseconds:F2} ms"
+                : _vulkanMarkerDrawResult.Message);
 
         // 性能计时
         _debugDockPanel?.SetPerformance(
             _vulkanInstanceInfo.ElapsedMilliseconds.ToString("F2"),
             _vulkanDeviceInfo.ElapsedMilliseconds.ToString("F2"),
             _vulkanSwapchainInfo.ElapsedMilliseconds.ToString("F2"),
-            _vulkanClearInfo.ElapsedMilliseconds.ToString("F2"));
+            _vulkanClearInfo.ElapsedMilliseconds.ToString("F2"),
+            _vulkanMarkerDrawResult.IsSucceeded
+                ? _vulkanMarkerDrawResult.ElapsedMilliseconds.ToString("F2")
+                : "-");
 
         // RenderScene 调试列表
         if (_renderScene.Objects.Count > 0)
@@ -736,6 +834,27 @@ public sealed partial class EditorShell : UserControl
             _vulkanRenderContext?.Dispose();
             _vulkanRenderContext = null;
         }
+    }
+
+    private static bool TryGetValidViewportSize(
+        VulkanViewportNativeHostInfo nativeHostInfo,
+        out uint width,
+        out uint height,
+        out string message)
+    {
+        width = 0;
+        height = 0;
+
+        if (nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
+        {
+            message = "Vulkan 视口尺寸尚未就绪，跳过本次绘制。";
+            return false;
+        }
+
+        width = checked((uint)nativeHostInfo.Width);
+        height = checked((uint)nativeHostInfo.Height);
+        message = string.Empty;
+        return true;
     }
 
     private void UpdateVulkanViewportHost()

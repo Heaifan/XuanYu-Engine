@@ -457,3 +457,74 @@ Clear      ✅ 7.8.2（本里程碑）
 ### 删除
 
 1. 删除由 .NET SDK 默认模板临时生成的 `FluidWarfare.slnx`。
+
+---
+
+### Milestone 8.0：RenderScene 单对象 GPU 点位绘制
+
+#### 新增
+
+1. 新增 `FluidWarfare.Render.Vulkan/Markers/` 目录，包含点位绘制模型与渲染器。
+2. 新增 `VulkanMarkerDrawStatus` 枚举（NotChecked / Succeeded / Failed）。
+3. 新增 `VulkanMarkerDrawInfo` 记录模型，包含 DisplayName、PixelX、PixelY、PixelSize、ColorText，以及 `FromWorldPosition` 和 `CreateAtCenter` 工厂方法。
+4. 新增 `VulkanMarkerDrawResult` 记录模型，包含 Status、Message、DrawnMarkerCount、ElapsedMilliseconds 和 IsSucceeded 快捷属性。
+5. 新增 `VulkanMarkerClearRectRenderer` 探测类，使用 `vkCmdClearAttachments` 在 RenderPass 内绘制点位小方块（浅黄色），不创建 Shader/Pipeline/Mesh/Texture。
+6. 新增 `DebugDockPanel` 渲染诊断 Tab 的 Marker 状态行（`DiagMarker`）。
+7. 新增 `DebugDockPanel` 性能 Tab 的 `MarkerDraw` 耗时行（`PerfMarker`）。
+8. EditorShell 新增 `_vulkanMarkerDrawResult` 状态、`ProbeVulkanMarkerDraw` 方法和 `ShowVulkanMarkerDrawInfo` 方法。
+9. EditorShell 清屏状态行新增点位数量显示（如“清屏成功 | 点位：1 | rgba(0.03, ...) | 719x458”）。
+10. 新增 `VulkanMarkerDrawInfoTests`（7 个测试）和 `VulkanMarkerDrawResultTests`（7 个测试）。
+11. 基于 RenderScene 第一个对象绘制 Vulkan GPU 点位。
+
+#### 修改
+
+1. `DebugDockPanel.axaml.cs` — `SetDiagnostics` 新增 `marker` 参数，`SetPerformance` 新增 `markerMs` 参数。
+2. `EditorShell` — `UpdateAllDiagnostics` 新增 Marker 诊断与 MarkerDraw 耗时上报到 DebugDockPanel。
+3. `EditorShell` — 在 `ReportVulkanViewportNativeHost` 的 Vulkan Clear 探测后新增 `ProbeVulkanMarkerDraw` 调用。
+4. `file-tree.md` — 新增 Markers 目录、Milestone 8.0 新增文件列表和文件表条目。
+5. 修复 Vulkan 原生子窗口尺寸同步，NativeControlHost 的 HWND 会跟随 Avalonia 控件 Bounds 调整。
+6. 修复清屏与点位绘制使用固定 640x360 的问题，改为使用真实视口尺寸。
+7. 修复全屏后 Vulkan 画面只占左上角的问题。
+8. 压缩底部调试终端页签字号和 Padding，降低调试区对主视口的干扰。
+
+#### 技术要点
+
+1. **无 Shader 方案**：使用 `vkCmdClearAttachments` 在 RenderPass 内直接绘制矩形色块，避免 Shader/Pipeline/Buffer 依赖。
+2. **坐标映射初版**：`pixelX = 实际视口宽度 / 2 + worldX * 10`、`pixelY = 实际视口高度 / 2 - worldZ * 10`。
+3. **点位颜色**：`rgba(1.00, 0.82, 0.20, 1.00)`（浅黄色），与深蓝背景明显区分。
+4. **全链路探测模式**：与 VulkanClearProbe 一致的 Instance → Surface → Device → Swapchain → 渲染 → Present → 清理模式。
+5. **点位大小**：固定 12x12 像素，自动限制在视口范围内。
+6. **空场景处理**：RenderScene 无对象时输出警告并跳过绘制。
+7. **尺寸同步**：Avalonia 控件 Bounds → Win32 子窗口 `SetWindowPos` → NativeHostInfo Width/Height → Swapchain/Clear/Marker 参数。
+
+#### 新增文件（4 项 Render.Vulkan + 2 项 Tests）
+
+```text
+FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawStatus.cs
+FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawInfo.cs
+FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawResult.cs
+FluidWarfare.Render.Vulkan/Markers/VulkanMarkerClearRectRenderer.cs
+FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawInfoTests.cs
+FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawResultTests.cs
+```
+
+#### 通过规则
+
+1. ✅ Vulkan 视口显示深蓝色清屏背景 + 中央浅黄色小方块（12x12 px）。
+2. ✅ 小方块来自 RenderScene 第一个对象（sample_unit）。
+3. ✅ 坐标初版映射为视口中心（world 0,0 → viewport center）。
+4. ✅ 不写 Shader、Pipeline、Mesh、Texture、GPU Buffer。
+5. ✅ 不绘制正式单位图标。
+6. ✅ Render.Vulkan 不依赖 Editor，Tests 不依赖 Editor.Windows。
+7. ✅ build 0 错误 0 警告（已验证）。
+8. ✅ test 全部通过（260/260，新增 14 个测试）。
+9. ✅ 日志显示“Vulkan 清屏 + 点位绘制成功”。
+10. ✅ 渲染诊断 Tab 显示 Marker 绘制结果。
+11. ✅ RenderScene Tab 仍显示 sample_unit 信息。
+12. ✅ 性能 Tab 显示 MarkerDraw 耗时。
+13. ✅ 文档同步。
+14. ✅ 最大化后 NativeHost 审计尺寸不再固定为 640x360。
+
+---
+
+下一阶段进入 **Milestone 8.1：多对象点位绘制**。

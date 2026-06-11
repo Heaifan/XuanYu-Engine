@@ -8,7 +8,9 @@
       Background="#15191E"
       BorderBrush="#48515C"
       BorderThickness="0,0,1,1"
-      Padding="0">
+      Padding="0"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch">
     <Grid RowDefinitions="Auto,*,Auto" Margin="0">
       <TextBlock
           Grid.Row="0"
@@ -20,10 +22,16 @@
       <Border
           Grid.Row="1"
           Margin="0"
+          MinHeight="360"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
           Background="#0D1117"
           BorderBrush="#30363D"
           BorderThickness="0">
-        <nativeHost:WindowsVulkanViewportHostControl x:Name="NativeHostControl" />
+        <nativeHost:WindowsVulkanViewportHostControl
+            x:Name="NativeHostControl"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch" />
       </Border>
       <TextBlock
           Grid.Row="2"

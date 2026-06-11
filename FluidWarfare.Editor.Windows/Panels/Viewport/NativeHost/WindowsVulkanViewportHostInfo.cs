@@ -6,7 +6,9 @@ public sealed record WindowsVulkanViewportHostInfo(
     string PlatformText,
     bool HasWindowHandle,
     nint WindowHandle,
-    nint InstanceHandle)
+    nint InstanceHandle,
+    int Width,
+    int Height)
 {
     public bool IsCreated => State == WindowsVulkanViewportHostState.Created;
 
@@ -16,6 +18,8 @@ public sealed record WindowsVulkanViewportHostInfo(
             "Windows Vulkan 视口子窗口尚未创建。",
             "Windows",
             false,
+            0,
+            0,
             0,
             0);
 }
