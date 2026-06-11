@@ -372,7 +372,8 @@ public static unsafe class VulkanScene3dRenderer
             // 19. Record Command Buffer
             vk.ResetCommandBuffer(cmdBuf, CommandBufferResetFlags.None);
             var beginInfo = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo, Flags = CommandBufferUsageFlags.OneTimeSubmitBit };
-            vk.BeginCommandBuffer(cmdBuf, &beginInfo);
+            if (vk.BeginCommandBuffer(cmdBuf, &beginInfo) != Result.Success)
+                return Fail("BeginCommandBuffer 失败。", sw);
 
             var clearVal = new ClearValue { Color = new ClearColorValue { Float32_0 = ClearR, Float32_1 = ClearG, Float32_2 = ClearB, Float32_3 = ClearA } };
             var rpBegin = new RenderPassBeginInfo
@@ -385,30 +386,32 @@ public static unsafe class VulkanScene3dRenderer
             vk.CmdBeginRenderPass(cmdBuf, &rpBegin, SubpassContents.Inline);
 
             // 19a. Draw grid (LineList)
+            vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, gridPipeline);
             fixed (float* mvpPtr = mvp)
             {
                 vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit, 0, 64, mvpPtr);
             }
-            // Bind vertex buffer and draw
-            var bufferPtr = stackalloc[] { gridBuffer };
+            var gridBufs = stackalloc[] { gridBuffer };
             var offsets = stackalloc[] { 0ul };
-            vk.CmdBindVertexBuffers(cmdBuf, 0, 1, bufferPtr, offsets);
+            vk.CmdBindVertexBuffers(cmdBuf, 0, 1, gridBufs, offsets);
             vk.CmdDraw(cmdBuf, (uint)gridVertices.Length, 1, 0, 0);
             drawCalls++;
 
             // 19b. Draw unit (TriangleList)
-            var bufferPtr2 = stackalloc[] { unitBuffer };
-            vk.CmdBindVertexBuffers(cmdBuf, 0, 1, bufferPtr2, offsets);
-            // Re-push constants (same MVP)
+            vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, unitPipeline);
             fixed (float* mvpPtr2 = mvp)
             {
                 vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit, 0, 64, mvpPtr2);
             }
+            var unitBufs = stackalloc[] { unitBuffer };
+            vk.CmdBindVertexBuffers(cmdBuf, 0, 1, unitBufs, offsets);
             vk.CmdDraw(cmdBuf, (uint)unitVertices.Length, 1, 0, 0);
             drawCalls++;
 
             vk.CmdEndRenderPass(cmdBuf);
-            vk.EndCommandBuffer(cmdBuf);
+
+            if (vk.EndCommandBuffer(cmdBuf) != Result.Success)
+                return Fail("EndCommandBuffer 失败。", sw);
 
             var queue = default(Queue);
             vk.GetDeviceQueue(dev, qi, 0, out queue);
