@@ -20,6 +20,7 @@ public sealed partial class DebugDockPanel : UserControl
     private TextBlock? _diagSwapchain;
     private TextBlock? _diagClear;
     private TextBlock? _diagMarker;
+    private TextBlock? _diagValidation;
     private TextBlock? _diagScene3d;
     private TextBlock? _diagCamera;
     private TextBlock? _diagGrid;
@@ -85,6 +86,7 @@ public sealed partial class DebugDockPanel : UserControl
         _diagSwapchain = this.FindControl<TextBlock>("DiagSwapchain");
         _diagClear = this.FindControl<TextBlock>("DiagClear");
         _diagMarker = this.FindControl<TextBlock>("DiagMarker");
+        _diagValidation = this.FindControl<TextBlock>("DiagValidation");
         _diagScene3d = this.FindControl<TextBlock>("DiagScene3d");
         _diagCamera = this.FindControl<TextBlock>("DiagCamera");
         _diagGrid = this.FindControl<TextBlock>("DiagGrid");
@@ -105,7 +107,7 @@ public sealed partial class DebugDockPanel : UserControl
     // ─── 渲染诊断 ──────────────────────────────────────────────
 
     public void SetDiagnostics(string loader, string instance, string device, string nativeHost,
-        string surface, string swapchain, string clear, string marker)
+        string surface, string swapchain, string clear, string marker, string validation)
     {
         if (_diagLoader is not null) _diagLoader.Text = $"Vulkan 后端：{loader}";
         if (_diagInstance is not null) _diagInstance.Text = $"Instance：{instance}";
@@ -115,6 +117,7 @@ public sealed partial class DebugDockPanel : UserControl
         if (_diagSwapchain is not null) _diagSwapchain.Text = $"Swapchain：{swapchain}";
         if (_diagClear is not null) _diagClear.Text = $"Clear：{clear}";
         if (_diagMarker is not null) _diagMarker.Text = $"Marker：{marker}";
+        if (_diagValidation is not null) _diagValidation.Text = $"Validation：{validation}";
     }
 
     public void SetScene3d(string scene3d, string camera, string grid, string unit, string drawCall)

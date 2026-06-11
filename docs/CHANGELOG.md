@@ -784,4 +784,46 @@ FluidWarfare.Tests/Render/Vulkan/Shaders/CompiledShadersTests.cs
 
 ---
 
-下一阶段：**Milestone 8.R.4 — Vulkan Validation Layer 开关**
+---
+
+### Milestone 8.R.4 — Vulkan Validation Layer 开关
+
+#### 新增
+
+1. 新增 `FluidWarfare.Render.Vulkan/Validation/` 目录（6 个文件 + 3 个测试文件）。
+2. 新增 `VulkanValidationOptions`：从 `FW_VULKAN_VALIDATION=1` 环境变量读取是否请求启用 Validation。
+3. 新增 `VulkanValidationAvailabilityProbe`：检测 `VK_LAYER_KHRONOS_validation` 和 `VK_EXT_debug_utils` 是否可用。
+4. 新增 `VulkanDebugMessengerScope`：持有 `DebugUtilsMessengerEXT` 生命周期，持有 callback delegate 防止 GC 回收。
+5. 新增 `VulkanValidationMessageStore`：保存最近 20 条 Validation 消息。
+6. 新增 `VulkanValidationStatus` / `VulkanValidationInfo` / `VulkanValidationMessageInfo` 模型。
+7. EditorShell 启动时自动执行 `ProbeVulkanValidation`。
+8. DebugDock 渲染诊断 Tab 新增 `Validation` 状态行。
+9. 新增测试 15 个（Options 3 + Info 7 + MessageStore 5）。
+
+#### 技术要点
+
+1. **环境变量分离**：`FW_VULKAN_VALIDATION` 只控制诊断层，`FW_ENABLE_SCENE3D` 只控制 Scene3D 运行，互不替代。
+2. **Availability Probe**：不创建 Instance，只调用 `EnumerateInstanceLayerProperties` 和 `EnumerateInstanceExtensionProperties`。
+3. **Debug Messenger**：使用函数指针加载 `vkCreateDebugUtilsMessengerEXT` / `vkDestroyDebugUtilsMessengerEXT`，通过 `vkGetInstanceProcAddr` 获取。
+4. **Delegate 生命周期**：`VulkanDebugMessengerScope` 持有 `_callback` 字段防止 GC 回收。
+5. **Instance 扩展追加**：启用 Validation 时 Instance 只能追加 `VK_EXT_debug_utils`，不能替换原有 Surface 扩展。
+6. **安全原则**：所有检测失败均以中文提示返回，不导致 Editor 崩溃。
+
+#### 新增文件
+
+```text
+FluidWarfare.Render.Vulkan/Validation/VulkanValidationStatus.cs
+FluidWarfare.Render.Vulkan/Validation/VulkanValidationInfo.cs
+FluidWarfare.Render.Vulkan/Validation/VulkanValidationOptions.cs
+FluidWarfare.Render.Vulkan/Validation/VulkanValidationMessageInfo.cs
+FluidWarfare.Render.Vulkan/Validation/VulkanValidationMessageStore.cs
+FluidWarfare.Render.Vulkan/Validation/VulkanValidationAvailabilityProbe.cs
+FluidWarfare.Render.Vulkan/Validation/VulkanDebugMessengerScope.cs
+FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationOptionsTests.cs
+FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationInfoTests.cs
+FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationMessageStoreTests.cs
+```
+
+---
+
+下一阶段：**Milestone 8.R.5 — Scene3D Renderer 拆分**

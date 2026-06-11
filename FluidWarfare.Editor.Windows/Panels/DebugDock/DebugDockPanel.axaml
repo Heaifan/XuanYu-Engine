@@ -22,6 +22,7 @@
             <TextBlock x:Name="DiagSwapchain" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagClear" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagMarker" Foreground="#C9D1D9" TextWrapping="Wrap" />
+            <TextBlock x:Name="DiagValidation" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagScene3d" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagCamera" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagGrid" Foreground="#C9D1D9" TextWrapping="Wrap" />

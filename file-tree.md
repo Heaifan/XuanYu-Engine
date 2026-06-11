@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 09:30
+最后编辑：2026-06-12 10:00
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -120,6 +120,16 @@
 72δ. Milestone 8.R.2：新增 `FluidWarfare.Render.Vulkan/Shaders/Compiled/.gitkeep`。
 72ε. Milestone 8.R.3：新增 `tools/shaders/embed_basic_3d_shaders.ps1`。
 72ζ. Milestone 8.R.3：新增 `FluidWarfare.Tests/Render/Vulkan/Shaders/CompiledShadersTests.cs`。
+72η. Milestone 8.R.4：新增 `FluidWarfare.Render.Vulkan/Validation/VulkanValidationStatus.cs`。
+72θ. Milestone 8.R.4：新增 `FluidWarfare.Render.Vulkan/Validation/VulkanValidationInfo.cs`。
+72ι. Milestone 8.R.4：新增 `FluidWarfare.Render.Vulkan/Validation/VulkanValidationOptions.cs`。
+72κ. Milestone 8.R.4：新增 `FluidWarfare.Render.Vulkan/Validation/VulkanValidationMessageInfo.cs`。
+72λ. Milestone 8.R.4：新增 `FluidWarfare.Render.Vulkan/Validation/VulkanValidationMessageStore.cs`。
+72μ. Milestone 8.R.4：新增 `FluidWarfare.Render.Vulkan/Validation/VulkanValidationAvailabilityProbe.cs`。
+72ν. Milestone 8.R.4：新增 `FluidWarfare.Render.Vulkan/Validation/VulkanDebugMessengerScope.cs`。
+72ξ. Milestone 8.R.4：新增 `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationOptionsTests.cs`。
+72ο. Milestone 8.R.4：新增 `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationInfoTests.cs`。
+72π. Milestone 8.R.4：新增 `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationMessageStoreTests.cs`。
 72y. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dInfoTests.cs`。
 72z. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs`。
 72α. Milestone 8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs`。
@@ -294,15 +304,14 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.R.3：SPIR-V 验证闸门与运行接入。
+当前执行 Milestone 8.R.4：Vulkan Validation Layer 开关。
 
-8.R 系列进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ⬆️（当前） → Validation Layer → 3D 重启
+8.R 系列进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ✅ → Validation Layer ⬆️（当前） → 3D 重启
 
 当前状态：
-- Scene3D 默认隔离，仅在 FW_ENABLE_SCENE3D=1 且 CompiledShaders 通过 spirv-val 后允许手动触发（8.R.3）。
-- 所有脚本已就绪（compile → validate → embed），本机 glslangValidator/spirv-val 均不可用，.spv 未生成。
-- 手动触发入口（DebugDock 按钮）已就绪，但闸门默认不打开。
-- 下一步：安装 Vulkan SDK / glslangValidator / spirv-val，执行完整 8.R.3 流程。
+- Vulkan Validation Layer 默认不启用。FW_VULKAN_VALIDATION=1 时检测 VK_LAYER_KHRONOS_validation 与 VK_EXT_debug_utils，可用时创建 Debug Messenger。
+- Scene3D 保持隔离，仅 FW_ENABLE_SCENE3D=1 且 shader 已验证时允许手动触发。
+- SPIR-V 已由标准工具编译并通过 spirv-val 验证。
 
 ## 3. 顶层目录结构
 
@@ -416,7 +425,15 @@ FluidWarfare/
 |       |-- basic_3d.vert
 |       |-- Compiled/
 |       |   `-- .gitkeep
-|       `-- CompiledShaders.cs  (⛔ 空数组占位)
+|       `-- CompiledShaders.cs  (已验证真实 SPIR-V 字节)
+|   |-- Validation/
+|   |   |-- VulkanDebugMessengerScope.cs
+|   |   |-- VulkanValidationAvailabilityProbe.cs
+|   |   |-- VulkanValidationInfo.cs
+|   |   |-- VulkanValidationMessageInfo.cs
+|   |   |-- VulkanValidationMessageStore.cs
+|   |   |-- VulkanValidationOptions.cs
+|   |   `-- VulkanValidationStatus.cs
 |-- tools/
 |   `-- shaders/
 |       |-- README.md
@@ -671,9 +688,9 @@ get_tree.bat
 | `FluidWarfare.Render.Vulkan/Camera/VulkanCameraMatrices.cs` | 3D 矩阵计算，LookAt、PerspectiveVulkan（NDC 0..1）与 MVP 合成 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Shaders/basic_3d.vert` | 基础 3D 顶点着色器 GLSL 源文件，position+color 输入，MVP push constant | 已生成 |
 | `FluidWarfare.Render.Vulkan/Shaders/basic_3d.frag` | 基础 3D 片段着色器 GLSL 源文件，颜色传递 | 已生成 |
-| `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.vert.spv` | ❌ 已废弃：手写 SPIR-V 编码错误，从 git 移除 | 废弃 |
-| `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.frag.spv` | ❌ 已废弃：手写 SPIR-V 编码错误，从 git 移除 | 废弃 |
-| `FluidWarfare.Render.Vulkan/Shaders/CompiledShaders.cs` | 8.R.3：含 HasValidatedBasic3dShaders 验证标记，由 embed_basic_3d_shaders.ps1 写入真实字节。当前为空数组（本机无 glslangValidator/spirv-val） | 已隔离 |
+| `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.vert.spv` | 由 glslangValidator 编译，1232 字节，spirv-val 验证通过 | 已验证 |
+| `FluidWarfare.Render.Vulkan/Shaders/Compiled/basic_3d.frag.spv` | 由 glslangValidator 编译，376 字节，spirv-val 验证通过 | 已验证 |
+| `FluidWarfare.Render.Vulkan/Shaders/CompiledShaders.cs` | 含 HasValidatedBasic3dShaders 验证标记，由 embed_basic_3d_shaders.ps1 写入真实 SPIR-V 字节 | 已验证 |
 | `tools/shaders/compile_basic_3d.ps1` | 使用 glslangValidator 编译 basic_3d.vert/frag 到 SPIR-V，找不到工具时输出中文提示并失败 | 可运行 |
 | `tools/shaders/validate_basic_3d.ps1` | 使用 spirv-val 验证 basic_3d.vert/frag.spv，找不到工具或文件时输出中文提示并失败 | 可运行 |
 | `tools/shaders/README.md` | Shader 编译链文档，包含工具安装步骤、编译/验证命令和废弃 gen_spirv 说明 | 已创建 |
@@ -684,6 +701,16 @@ get_tree.bat
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dRunGateTests.cs` | 验证 Scene3D 运行闸门的隔离状态、提示文本和 Ready/Isolated 语义 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRunGate.cs` | Scene3D 实验渲染路径运行闸门，当前用于阻止未验证 SPIR-V/Pipeline 路径进入 Editor 启动流程 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs` | 验证默认相机参数和自定义相机 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Validation/VulkanValidationStatus.cs` | Vulkan Validation 启用状态枚举 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Validation/VulkanValidationInfo.cs` | Validation 状态信息，含状态、中文消息和消息数量 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Validation/VulkanValidationOptions.cs` | 从 FW_VULKAN_VALIDATION 环境变量读取是否请求启用 Validation | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Validation/VulkanValidationMessageInfo.cs` | 单条 Validation 消息（严重级别/类型/文本） | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Validation/VulkanValidationMessageStore.cs` | 保存最近 20 条 Validation 消息，线程安全 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Validation/VulkanValidationAvailabilityProbe.cs` | 检测 VK_LAYER_KHRONOS_validation 和 VK_EXT_debug_utils | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Validation/VulkanDebugMessengerScope.cs` | 持有 DebugUtilsMessengerEXT 生命周期和 callback delegate | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationOptionsTests.cs` | 验证环境变量读取 | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationInfoTests.cs` | 验证 Validation 状态模型 | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationMessageStoreTests.cs` | 验证消息存储的上限和快照 | 测试通过 |
 | `FluidWarfare.Engine/Components/PositionComponent.cs` | 实体位置组件，包装 Vector3d | 测试通过 |
 | `FluidWarfare.Engine/Components/DisplayNameComponent.cs` | 实体显示名组件，保存用于 Editor 显示的名称 | 测试通过 |
 | `FluidWarfare.Tests/Engine/World/WorldStateTests.cs` | 验证最小 World 实体创建、查询、位置读取与枚举 | 测试通过 |

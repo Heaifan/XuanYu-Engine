@@ -29,6 +29,7 @@ using FluidWarfare.Render.Vulkan.Markers;
 using FluidWarfare.Render.Vulkan.Camera;
 using FluidWarfare.Render.Vulkan.Scene3D;
 using FluidWarfare.Render.Vulkan.Surface;
+using FluidWarfare.Render.Vulkan.Validation;
 using FluidWarfare.Render.Vulkan.Swapchain;
 using FluidWarfare.Render.World;
 
@@ -58,6 +59,7 @@ public sealed partial class EditorShell : UserControl
     private VulkanMarkerDrawResult _vulkanMarkerDrawResult = VulkanMarkerDrawResult.NotChecked;
     private VulkanScene3dRunGate _scene3dGate = VulkanScene3dRunGate.Evaluate();
     private VulkanScene3dInfo _vulkanScene3dInfo = VulkanScene3dInfo.NotChecked;
+    private VulkanValidationInfo _vulkanValidationInfo = VulkanValidationInfo.Disabled;
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
     private bool _vulkanViewportRendering;
@@ -76,6 +78,7 @@ public sealed partial class EditorShell : UserControl
         InitializeLogs();
         LoadSampleProject();
         ProbeVulkanBackend();
+        ProbeVulkanValidation();
         AttachedToVisualTree += OnAttachedToVisualTree;
         DetachedFromVisualTree += OnDetachedFromVisualTree;
     }
@@ -512,6 +515,22 @@ public sealed partial class EditorShell : UserControl
 
         UpdateVulkanViewportHost();
         ProbeVulkanInstance();
+    }
+
+    private void ProbeVulkanValidation()
+    {
+        _vulkanValidationInfo = VulkanValidationAvailabilityProbe.Probe();
+
+        if (_vulkanValidationInfo.IsEnabled)
+        {
+            AppendInfoLog(_vulkanValidationInfo.Message);
+        }
+        else if (_vulkanValidationInfo.Status != VulkanValidationStatus.Disabled)
+        {
+            AppendWarningLog(_vulkanValidationInfo.Message);
+        }
+
+        UpdateAllDiagnostics();
     }
 
     private void ProbeVulkanInstance()
@@ -985,7 +1004,10 @@ public sealed partial class EditorShell : UserControl
                 : _vulkanClearInfo.Message,
             _vulkanMarkerDrawResult.IsSucceeded
                 ? $"绘制成功，数量 {_vulkanMarkerDrawResult.DrawnMarkerCount}，尺寸：{nativeHostInfo.Width}x{nativeHostInfo.Height}，用时 {_vulkanMarkerDrawResult.ElapsedMilliseconds:F2} ms"
-                : _vulkanMarkerDrawResult.Message);
+                : _vulkanMarkerDrawResult.Message,
+            _vulkanValidationInfo.IsEnabled
+                ? $"已启用，消息 {_vulkanValidationInfo.MessageCount} 条"
+                : _vulkanValidationInfo.Message);
 
         _debugDockPanel?.SetScene3d(
             _vulkanScene3dInfo.IsSucceeded
