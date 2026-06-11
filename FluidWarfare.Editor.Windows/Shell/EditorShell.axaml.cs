@@ -7,6 +7,8 @@ using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Project;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
+using FluidWarfare.Project.Loading;
+using FluidWarfare.Project.Metadata;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -24,6 +26,7 @@ public sealed partial class EditorShell : UserControl
         FindShellControls();
         SubscribePanelEvents();
         InitializeLogs();
+        LoadSampleProject();
     }
 
     private void FindShellControls()
@@ -63,7 +66,7 @@ public sealed partial class EditorShell : UserControl
 
         _inspectorPanel?.ShowSelection(selection);
         _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
-        AppendInfoLog($"选择项目项：{selection.DisplayName}。");
+        AppendInfoLog($"选择项目分类：{selection.DisplayName}。");
     }
 
     private void HandleViewportFocused(object? sender, EventArgs e)
@@ -112,43 +115,109 @@ public sealed partial class EditorShell : UserControl
 
     private void AppendInfoLog(string message)
     {
+        AppendLog(EngineLogLevel.Info, message);
+    }
+
+    private void AppendErrorLog(string message)
+    {
+        AppendLog(EngineLogLevel.Error, message);
+    }
+
+    private void AppendLog(EngineLogLevel level, string message)
+    {
         var entry = EngineLogEntry.Create(
             0.0,
-            EngineLogLevel.Info,
+            level,
             "Editor",
             message);
 
         _logPanel?.AppendLogMessage(entry.ToDisplayString());
     }
 
+    private void LoadSampleProject()
+    {
+        var projectDirectory = Path.Combine("GameProjects", "SampleProject");
+        var loadResult = GameProjectLoader.LoadFromDirectory(projectDirectory);
+
+        if (loadResult.Result.IsSuccess && loadResult.Project is not null)
+        {
+            ShowLoadedProject(loadResult.Project);
+            AppendInfoLog($"已加载示例项目：{loadResult.Project.DisplayName}。");
+            return;
+        }
+
+        _projectPanel?.ShowNoProject();
+        var message = loadResult.Result.Error?.Message ?? "未知错误。";
+        AppendErrorLog($"项目加载失败：{message}");
+    }
+
+    private void ShowLoadedProject(GameProjectInfo project)
+    {
+        var categoryNames = project.ContentFolders
+            .Select(ToProjectCategoryDisplayName)
+            .Append("配置")
+            .ToArray();
+
+        _projectPanel?.ShowProject(project.DisplayName, categoryNames);
+    }
+
     private static EditorSelection CreateProjectSelection(string itemName)
     {
         return itemName switch
         {
-            "场景" => new EditorSelection(
-                "项目占位项",
-                "场景",
-                "这里将显示场景列表与场景配置。"),
+            "阵营" => new EditorSelection(
+                "项目分类",
+                "阵营",
+                "这里将显示项目中的阵营定义。"),
 
             "单位" => new EditorSelection(
-                "项目占位项",
+                "项目分类",
                 "单位",
-                "这里将显示单位模板与编队配置。"),
+                "这里将显示项目中的单位模板。"),
 
-            "资源" => new EditorSelection(
-                "项目占位项",
-                "资源",
-                "这里将显示模型、贴图、材质与音频资源。"),
+            "武器" => new EditorSelection(
+                "项目分类",
+                "武器",
+                "这里将显示项目中的武器参数。"),
+
+            "地图" => new EditorSelection(
+                "项目分类",
+                "地图",
+                "这里将显示项目中的地图资源。"),
+
+            "剧本" => new EditorSelection(
+                "项目分类",
+                "剧本",
+                "这里将显示项目中的剧本配置。"),
+
+            "规则" => new EditorSelection(
+                "项目分类",
+                "规则",
+                "这里将显示项目中的规则配置。"),
 
             "配置" => new EditorSelection(
-                "项目占位项",
+                "项目分类",
                 "配置",
                 "这里将显示项目配置、模拟参数与编辑器设置。"),
 
             _ => new EditorSelection(
-                "未知占位项",
+                "未知项目分类",
                 itemName,
-                "当前项目项没有说明。")
+                "当前项目分类没有说明。")
+        };
+    }
+
+    private static string ToProjectCategoryDisplayName(string folderName)
+    {
+        return folderName switch
+        {
+            "factions" => "阵营",
+            "units" => "单位",
+            "weapons" => "武器",
+            "maps" => "地图",
+            "scenarios" => "剧本",
+            "rules" => "规则",
+            _ => folderName
         };
     }
 

@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -7,6 +8,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Tests", "FluidWarfare.Tests\FluidWarfare.Tests.csproj", "{A3DBE986-E145-45A0-9F9D-4A346B37189F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Editor.Windows", "FluidWarfare.Editor.Windows\FluidWarfare.Editor.Windows.csproj", "{F1E6E479-A32C-492A-AD70-0DD4945D1D02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Project", "FluidWarfare.Project\FluidWarfare.Project.csproj", "{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +57,18 @@ Global
 		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|x64.Build.0 = Release|Any CPU
 		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|x86.Build.0 = Release|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|x86.Build.0 = Debug|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Release|x64.Build.0 = Release|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

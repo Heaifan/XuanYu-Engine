@@ -14,12 +14,12 @@
           FontWeight="SemiBold"
           Foreground="#F0F4F8"
           Text="项目" />
-      <TextBlock Foreground="#C9D1D9" Text="当前未打开项目" />
+      <TextBlock
+          x:Name="ProjectNameText"
+          Foreground="#C9D1D9"
+          Text="当前未打开项目" />
       <Separator />
-      <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="SelectScene">场景</Button>
-      <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="SelectUnit">单位</Button>
-      <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="SelectAsset">资源</Button>
-      <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="SelectConfig">配置</Button>
+      <StackPanel x:Name="ProjectItemList" Spacing="8" />
     </StackPanel>
   </Border>
 </UserControl>

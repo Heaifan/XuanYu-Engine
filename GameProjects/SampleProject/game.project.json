@@ -1,0 +1,13 @@
+{
+  "projectId": "sample_project",
+  "displayName": "SampleProject",
+  "description": "FluidWarfare 示例项目，用于验证最小项目系统。",
+  "contentFolders": [
+    "factions",
+    "units",
+    "weapons",
+    "maps",
+    "scenarios",
+    "rules"
+  ]
+}

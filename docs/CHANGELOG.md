@@ -93,6 +93,13 @@
 25. Milestone 3.7：点击视口占位区后，状态栏显示当前选择为 3D 视口。
 26. Milestone 3.7：点击视口占位区后，日志面板追加 `[信息]视口获得焦点。`。
 27. Milestone 3.7：保持 ViewportPlaceholderPanel 只负责发出事件，不直接写日志或更新其他面板。
+28. Milestone 4.0：新增 `FluidWarfare.Project` 项目层。
+29. Milestone 4.0：新增 `GameProjectInfo` 项目元数据模型。
+30. Milestone 4.0：新增 `GameProjectLoader` 最小项目加载器。
+31. Milestone 4.0：新增 `GameProjects/SampleProject` 示例项目。
+32. Milestone 4.0：Editor 启动时加载示例项目，并在项目面板显示项目分类。
+33. Milestone 4.0：新增项目加载器单元测试。
+34. Milestone 4.0：保持 Core 不依赖 Project 或 Editor。
 
 ### 删除
 

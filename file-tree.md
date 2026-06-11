@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-11 01:10
+最后编辑：2026-06-11 01:50
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -91,6 +91,11 @@
 37. Milestone 3.7：新增 3D 视口占位区点击反馈。
 38. Milestone 3.7：视口占位区点击后更新检查器、状态栏与日志面板。
 39. Milestone 3.7：明确 ViewportPlaceholderPanel 只负责显示占位区并发出视口聚焦事件。
+40. Milestone 4.0：新增 FluidWarfare.Project 项目层。
+41. Milestone 4.0：新增 GameProjects/SampleProject 示例项目。
+42. Milestone 4.0：Editor 启动时加载示例项目。
+43. Milestone 4.0：项目面板显示真实项目名与内容分类。
+44. Milestone 4.0：新增 GameProjectLoader 单元测试。
 
 ### 删除
 
@@ -112,9 +117,9 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 3.7：视口占位交互。
+当前执行 Milestone 4.0：最小项目系统。
 
-本轮只处理 3D 视口占位区点击反馈，不实现真实 3D 渲染、摄像机、实体选择、真实项目系统、ECS、Vulkan、Runtime、Android、文件日志或复杂 MVVM。
+本轮只处理固定示例项目的元数据读取、项目面板显示和分类点击反馈，不实现 ECS、真实单位数据解析、真实武器数据解析、真实地图加载、Vulkan、Runtime、Android、项目创建向导、文件选择器、保存项目、热重载、数据库或复杂 MVVM。
 
 ## 3. 顶层目录结构
 
@@ -141,6 +146,13 @@ FluidWarfare/
 |   `-- Time/
 |       |-- SimulationTime.cs
 |       `-- TimeStep.cs
+|-- FluidWarfare.Project/
+|   |-- FluidWarfare.Project.csproj
+|   |-- Loading/
+|   |   |-- GameProjectLoader.cs
+|   |   `-- GameProjectLoadResult.cs
+|   `-- Metadata/
+|       `-- GameProjectInfo.cs
 |-- FluidWarfare.Ecs/
 |   `-- .gitkeep
 |-- FluidWarfare.World/
@@ -207,8 +219,26 @@ FluidWarfare/
 |   |   `-- Time/
 |   |       |-- SimulationTimeTests.cs
 |   |       `-- TimeStepTests.cs
+|   |-- Project/
+|   |   `-- Loading/
+|   |       `-- GameProjectLoaderTests.cs
 |   |-- CoreSmokeTests.cs
 |   `-- FluidWarfare.Tests.csproj
+|-- GameProjects/
+|   `-- SampleProject/
+|       |-- game.project.json
+|       |-- factions/
+|       |   `-- .gitkeep
+|       |-- units/
+|       |   `-- .gitkeep
+|       |-- weapons/
+|       |   `-- .gitkeep
+|       |-- maps/
+|       |   `-- .gitkeep
+|       |-- scenarios/
+|       |   `-- .gitkeep
+|       `-- rules/
+|           `-- .gitkeep
 |-- game_data/
 |   `-- .gitkeep
 |-- assets/
@@ -251,6 +281,7 @@ get_tree.bat
 | 模块 | 职责 | 状态 |
 |---|---|---|
 | FluidWarfare.Core | 数学、时间、结果、日志和身份等基础类型 | 已创建 / EngineLogLevel 与 EngineLogEntry 测试通过 |
+| FluidWarfare.Project | 游戏项目元数据与最小项目加载层，负责读取 game.project.json，不依赖 Editor 或 Avalonia | 测试通过 |
 | FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Simulation | 固定 Tick、暂停、单步和模拟世界 | 已创建 / 仅 `.gitkeep` |
@@ -261,7 +292,7 @@ get_tree.bat
 | FluidWarfare.Render.Vulkan | Vulkan 后端实现 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Runtime.Windows | Windows 游戏运行时 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Runtime.Android | Android 游戏运行时 | 已创建 / 仅 `.gitkeep` |
-| FluidWarfare.Editor.Windows | Windows 桌面编辑器，使用 Avalonia 构建 GUI，只用于开发、调试和导出，不进入 Android Runtime | 可运行 |
+| FluidWarfare.Editor.Windows | Windows 桌面编辑器，使用 Avalonia 构建 GUI，启动时加载示例项目，只用于开发、调试和导出，不进入 Android Runtime | 可运行 |
 | FluidWarfare.Exporter | Windows 与 Android 导出流程 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Tests | 单元测试和聚焦集成测试 | 已创建 / EngineLogLevel 与 EngineLogEntry 测试通过 |
 
@@ -280,7 +311,11 @@ get_tree.bat
 | `FluidWarfare.Core/Results/EngineResult.cs` | 引擎操作结果值对象，统一表达成功或失败，要求失败结果携带有效 EngineError，并明确默认值无效 | 测试通过 |
 | `FluidWarfare.Core/Logging/EngineLogLevel.cs` | 引擎日志等级枚举与中文等级标签映射，统一[追踪][信息][警告][报错][严重]显示前缀 | 测试通过 |
 | `FluidWarfare.Core/Logging/EngineLogEntry.cs` | 引擎日志记录值对象，保存模拟时间、日志等级、分类和中文日志内容，并提供基础中文显示输出 | 测试通过 |
-| `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core | 已创建 |
+| `FluidWarfare.Project/FluidWarfare.Project.csproj` | Project 项目层项目文件，引用 Core，不引用 Editor 或 Avalonia | 测试通过 |
+| `FluidWarfare.Project/Metadata/GameProjectInfo.cs` | 游戏项目元数据模型，保存项目编号、显示名称、说明和内容目录列表 | 测试通过 |
+| `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 从项目目录读取 game.project.json，并返回项目加载结果 | 测试通过 |
+| `FluidWarfare.Project/Loading/GameProjectLoadResult.cs` | 项目加载结果模型，组合 EngineResult 与可选 GameProjectInfo | 测试通过 |
+| `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core 与 Project | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
 | `FluidWarfare.Tests/Core/Identity/EntityIdTests.cs` | 验证 EntityId 的有效性、异常、相等比较与稳定字符串输出 | 测试通过 |
 | `FluidWarfare.Tests/Core/Time/TimeStepTests.cs` | 验证 TimeStep 的创建、单位换算、非法输入、相等比较与稳定字符串输出 | 测试通过 |
@@ -291,7 +326,8 @@ get_tree.bat
 | `FluidWarfare.Tests/Core/Results/EngineResultTests.cs` | 验证 EngineResult 的成功/失败语义、默认值无效、错误携带、默认错误拒绝、相等比较、中文 ToString 输出与日志等级前缀隔离 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogLevelTests.cs` | 验证日志等级到中文显示前缀的映射 | 测试通过 |
 | `FluidWarfare.Tests/Core/Logging/EngineLogEntryTests.cs` | 验证日志记录创建、非法输入、日志前缀隔离、中文显示输出与相等比较 | 测试通过 |
-| `FluidWarfare.Editor.Windows/FluidWarfare.Editor.Windows.csproj` | Windows Editor Avalonia 项目文件，引用 Core 并声明 Avalonia 桌面依赖 | 可运行 |
+| `FluidWarfare.Tests/Project/Loading/GameProjectLoaderTests.cs` | 验证最小项目加载器的有效项目、缺失目录、缺失清单、无效 JSON 和必要字段缺失处理 | 测试通过 |
+| `FluidWarfare.Editor.Windows/FluidWarfare.Editor.Windows.csproj` | Windows Editor Avalonia 项目文件，引用 Core 与 Project，并声明 Avalonia 桌面依赖 | 可运行 |
 | `FluidWarfare.Editor.Windows/Program.cs` | Editor 进程入口，配置 Avalonia 桌面生命周期 | 可运行 |
 | `FluidWarfare.Editor.Windows/App.axaml` | Editor 应用 XAML 根对象，加载 Fluent 主题 | 可运行 |
 | `FluidWarfare.Editor.Windows/App.axaml.cs` | Editor 应用启动逻辑，创建主窗口 | 可运行 |
@@ -300,8 +336,8 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器五区布局壳，组织菜单栏、项目面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器五区布局壳后台逻辑，创建启动日志，接收菜单、项目占位项和视口聚焦事件，并协调日志、检查器与状态栏更新 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板占位，显示当前未打开项目、场景、单位、资源和配置 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责响应项目占位项点击并发出选择事件 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责显示项目名、显示分类项，并在分类点击时发出选择事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml` | 3D 视口占位区 UI，显示 Vulkan 未接入提示，并提供可点击聚焦区域 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportPlaceholderPanel.axaml.cs` | 3D 视口占位区后台逻辑，只负责响应视口点击并发出 ViewportFocused 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |
@@ -321,11 +357,14 @@ get_tree.bat
 | `docs/MILESTONE1_PUBLIC_VALIDATION.md` | 公开 Raw 验收命令与结果记录 | 已创建 |
 | `docs/CHANGELOG.md` | 版本历史 | 已创建 |
 | `file-tree.md` | 项目结构地图 | 已创建 |
+| `GameProjects/SampleProject/game.project.json` | FluidWarfare 示例项目清单，用于验证最小项目系统 | 可加载 |
 | `*/.gitkeep` | 保留当前尚未写入代码或资源的目录 | 已创建 |
 
 ## 6. 模块依赖方向
 
 Core 是基础层。
+
+Project 位于 Core 之上，负责项目元数据与最小项目加载，可以依赖 Core。
 
 ECS、World、Simulation、Data、Combat、AI 和 Render 抽象可以向内依赖 Core。
 
@@ -336,6 +375,8 @@ Runtime、Editor、Exporter 和具体 Vulkan 代码属于外层。
 Vulkan 依赖只能进入 `FluidWarfare.Render.Vulkan`。
 
 Avalonia 依赖只能进入 `FluidWarfare.Editor.Windows`。
+
+Editor 可以依赖 Project，Project 不得依赖 Editor 或 Avalonia，Core 不得依赖 Project。
 
 ## 7. 文件命名与目录纪律
 
@@ -374,7 +415,8 @@ fuc_
 ## 9. Editor GUI SRP 规则
 
 ProjectPanel：
-只负责显示项目占位项，并发出 ProjectItemSelected 事件。
+只负责显示项目名称和项目分类项，并发出 ProjectItemSelected 事件。
+不得读取 game.project.json。
 不得创建 EngineLogEntry。
 不得调用 LogPanel。
 不得调用 InspectorPanel。
@@ -416,34 +458,28 @@ EditorShell：
 
 ## 10. 当前不做的内容
 
-当前已经进入 Milestone 3.7 视口占位交互任务。
+当前已经进入 Milestone 4.0 最小项目系统任务。
 
 本轮不做以下内容：
 
-1. 真实渲染功能。
-2. 真实 3D 渲染。
-3. 摄像机。
-4. 鼠标拖拽。
-5. 缩放。
-6. 旋转。
-7. 实体选中。
-8. 坐标拾取。
-9. 网格。
-10. 地形。
-11. ECS 实现。
-12. Entity 实现。
-13. Component 实现。
-14. World 实现。
-15. Data Loader 实现。
-16. JSON 场景读取。
-17. Vulkan 接入。
-18. Runtime.Windows 实现。
-19. Android 实现。
-20. 真实项目系统。
-21. 真实资源管理器。
-22. 场景保存。
-23. 文件日志实现。
-24. 复杂 MVVM 框架。
+1. ECS 实现。
+2. Entity 实现。
+3. Component 实现。
+4. World 实现。
+5. 真实单位数据解析。
+6. 真实武器数据解析。
+7. 真实地图加载。
+8. 真实剧本运行。
+9. Vulkan 接入。
+10. Runtime.Windows 实现。
+11. Android 实现。
+12. 复杂 MVVM 框架。
+13. 项目创建向导。
+14. 文件选择器。
+15. 保存项目。
+16. 热重载。
+17. 数据库。
+18. 第三方 JSON 包。
 
 ## 11. 版本历史索引
 
