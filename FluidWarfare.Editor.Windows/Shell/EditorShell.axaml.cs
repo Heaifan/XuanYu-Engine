@@ -56,15 +56,20 @@ public sealed partial class EditorShell : UserControl
     private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
     private VulkanClearInfo _vulkanClearInfo = VulkanClearInfo.NotChecked;
     private VulkanMarkerDrawResult _vulkanMarkerDrawResult = VulkanMarkerDrawResult.NotChecked;
-    private VulkanScene3dInfo _vulkanScene3dInfo = new(VulkanScene3dStatus.NotChecked,
-        "已隔离：当前 SPIR-V 编译链未通过合法性验证。",
-        0, 0, 0, 0, 0, 0, 0, "不可用（SPIR-V 待修复）", 0);
+    private readonly VulkanScene3dRunGate _scene3dGate = VulkanScene3dRunGate.Evaluate();
+    private VulkanScene3dInfo _vulkanScene3dInfo = VulkanScene3dInfo.NotChecked;
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
     private bool _vulkanViewportRendering;
 
     public EditorShell()
     {
+        // _scene3dGate 由字段初始化器在构造函数体之前执行
+        _vulkanScene3dInfo = new VulkanScene3dInfo(
+            VulkanScene3dStatus.NotChecked,
+            _scene3dGate.Message,
+            0, 0, 0, 0, 0, 0, 0,
+            _scene3dGate.CanRun ? "可用" : "不可用（已隔离）", 0);
         AvaloniaXamlLoader.Load(this);
         FindShellControls();
         SubscribePanelEvents();
@@ -638,9 +643,7 @@ public sealed partial class EditorShell : UserControl
             ProbeVulkanSwapchain();
             ProbeVulkanClear();
             ProbeVulkanMarkerDraw();
-            // Scene3D probe（Shader/Pipeline/VertexBuffer/Draw）目前触发驱动级闪退，
-            // 待排查后在独立测试中重新启用，暂时不随 Editor 启动自动执行。
-            // ProbeVulkanScene3D();
+            ReportScene3dIsolation();
         }
         else
         {
@@ -816,8 +819,20 @@ public sealed partial class EditorShell : UserControl
         UpdateAllDiagnostics();
     }
 
+    private void ReportScene3dIsolation()
+    {
+        AppendInfoLog(_scene3dGate.Message);
+        ShowVulkanScene3DInfo();
+    }
+
     private void ProbeVulkanScene3D()
     {
+        if (!_scene3dGate.CanRun)
+        {
+            ReportScene3dIsolation();
+            return;
+        }
+
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
             ?? VulkanViewportNativeHostInfo.NotAvailable;
 
@@ -888,11 +903,13 @@ public sealed partial class EditorShell : UserControl
 
         var scene3dSuffix = _vulkanScene3dInfo.IsSucceeded
             ? $" | Grid: {_vulkanScene3dInfo.GridVertexCount} | Unit: {_vulkanScene3dInfo.UnitVertexCount} | DrawCall: {_vulkanScene3dInfo.DrawCallCount}"
-            : string.Empty;
+            : _scene3dGate.CanRun
+                ? string.Empty
+                : " | Scene3D 已隔离";
 
         _vulkanViewportHostPanel?.ShowClearStatus(
             _vulkanClearInfo.IsSucceeded
-                ? $"3D 场景成功{scene3dSuffix} | {_vulkanClearInfo.ClearColorText}"
+                ? $"Vulkan Clear 稳定{scene3dSuffix} | {_vulkanClearInfo.ClearColorText}"
                 : $"清屏：{_vulkanClearInfo.Message}");
     }
 
