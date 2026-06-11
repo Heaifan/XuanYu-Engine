@@ -118,6 +118,8 @@
 2. 新增 `GameContentFileScanner`，用于扫描已声明内容目录中的一级内容文件，并根据 `allowedExtensions` 校验扩展名。
 3. 新增 `FluidWarfare.Tests/Project/Content/GameContentFileScannerTests.cs`，验证内容文件入口扫描的多种场景。
 4. `SampleProject` 新增 `units/sample_unit.json`、`weapons/sample_weapon.json`、`icons/sample_icon.svg` 占位内容文件，用于验证内容文件入口识别。
+5. 新增 `FluidWarfare.Editor.Windows/Properties/launchSettings.json` Editor 启动配置，支持 Visual Studio 启动配置与 `dotnet run` 直接从 Editor 项目目录启动。
+6. 新增 `run.ps1` 根目录启动脚本，支持通过 `.\run.ps1` 快捷启动 Editor。
 
 #### 修改
 

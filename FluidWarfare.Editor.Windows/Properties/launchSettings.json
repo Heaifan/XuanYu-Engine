@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "FluidWarfare.Editor.Windows": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "",
+      "environmentVariables": {}
+    }
+  }
+}
