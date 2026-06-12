@@ -284,6 +284,8 @@
 113. Milestone 8.0.1：WindowsVulkanViewportHostControl 在尺寸变化后上报 HostInfoChanged。
 114. Milestone 8.0.1：VulkanViewportHostPanel 向 EditorShell 透传 NativeHostInfoChanged。
 115. Milestone 8.0.1：EditorShell 移除旧 VulkanRenderContext 定时渲染路径，resize 后防抖重建 Swapchain / Clear / MarkerDraw。
+116. Editor UI 布局补丁：收紧面板标题字号、底部页签高度与日志区域内边距。
+117. Editor UI 布局补丁：移除 LogPanel 内部重复的“日志”标题，让日志 TextBox 占满日志页签内容区。
 110. Milestone 7.7：EditorShell 移除 7.6 占位逻辑，真正调用 VulkanSurfaceProbe.ProbeWindows 创建 VkSurfaceKHR。
 111. Milestone 7.8.2：EditorShell 新增 ProbeVulkanClear 与 ShowVulkanClearInfo。
 112. Milestone 7.8.3：EditorShell.axaml 底部替换为 DebugDockPanel。
@@ -318,6 +320,7 @@ Phase 1 证明最小闭环。
 - Vulkan Validation Layer 默认不启用。FW_VULKAN_VALIDATION=1 时检测 VK_LAYER_KHRONOS_validation 与 VK_EXT_debug_utils，可用时创建 Debug Messenger。
 - Scene3D 保持隔离，仅 FW_ENABLE_SCENE3D=1 且 shader 已验证时允许手动触发。
 - SPIR-V 已由标准工具编译并通过 spirv-val 验证。
+- Editor UI 已收紧面板标题字号和底部日志区域，日志页签不再重复显示内部“日志”标题。
 
 ## 3. 顶层目录结构
 
@@ -754,7 +757,7 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml` | 编辑器布局壳，组织菜单栏、项目内容面板、World 实体列表面板、视口占位、检查器、日志面板与状态栏 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | 编辑器布局壳后台逻辑，协调项目加载、World 创建、RenderScene 生成、Vulkan 后端/Instance/Device 探测、Windows 原生视口宿主状态、真实视口尺寸绘制、resize 防抖重绘、实体选择与 UI 显示 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Shell/EditorSelection.cs` | 编辑器 GUI 占位选择信息值对象，用于在项目面板、检查器和状态栏之间传递当前选择 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，显示当前示例项目名称与外部传入的项目分类 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml` | 编辑器项目面板 UI，使用收紧标题与间距显示当前示例项目名称和外部传入的项目分类 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectContentFolderSelection.cs` | 项目内容目录选择值对象，保存稳定 FolderName、DisplayName 和 ContentKind | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Project/ProjectPanel.axaml.cs` | 项目面板后台逻辑，只负责显示项目名、显示内容目录，并在点击时发出 ProjectContentFolderSelection | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/ViewportEntitySummary.cs` | 视口占位显示模型，保存当前选中实体的名称、EntityId、来源路径、位置文本与视觉类型 | 可运行 |
@@ -768,13 +771,13 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostInfo.cs` | Windows Vulkan 视口子窗口宿主信息模型，保存状态、平台、HWND、HINSTANCE、真实宽高与中文说明 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostControl.cs` | 使用 Avalonia NativeControlHost 创建并持有 Windows 原生子窗口 HWND，在 Bounds 变化时同步子窗口尺寸并上报 HostInfoChanged | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportNativeHostInfo.cs` | Vulkan 视口宿主原生窗口句柄信息，描述平台、句柄可用性、HWND、HINSTANCE、真实宽高与中文说明 | 测试通过 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml` | Vulkan 视口宿主显示区域，包含可伸展原生子窗口、Windows 原生子窗口状态与清屏状态 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml` | Vulkan 视口宿主显示区域，使用收紧标题栏，包含可伸展原生子窗口、Windows 原生子窗口状态与清屏状态 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs` | 显示 Vulkan 视口宿主状态，查询 Windows 原生子窗口句柄和真实尺寸，透传 NativeHostInfoChanged，并显示清屏状态 | 测试通过 |
-| `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，显示当前 World 实体列表 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，使用收紧标题与间距显示当前 World 实体列表 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs` | World 实体列表面板后台逻辑，接收 WorldEntityInfo 列表并在点击时发出 EntitySelected 事件 | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，显示未选择对象 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，使用收紧标题与间距显示未选择对象或当前选择详情 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml.cs` | 检查器面板 code-behind | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml` | 编辑器日志面板 UI，使用只读文本区域显示中文日志，支持滚动查看与复制 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml` | 编辑器日志面板 UI，去掉内部重复标题，使用占满页签内容区的只读文本区域显示中文日志，支持滚动查看与复制 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Logging/LogPanel.axaml.cs` | 编辑器日志面板后台逻辑，只负责设置、追加和刷新外部传入的日志文本，不创建 EngineLogEntry | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Status/StatusBarPanel.axaml` | 编辑器底部状态栏 UI，显示当前状态、阶段、Core 加载状态与 Vulkan 接入状态 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Status/StatusBarPanel.axaml.cs` | 编辑器底部状态栏后台逻辑，提供静态状态显示初始化并显示当前选择 | 可运行 |

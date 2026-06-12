@@ -40,6 +40,7 @@ public sealed partial class DebugDockPanel : UserControl
     private TextBlock? _perfMarker;
     private TextBlock? _perfScene3d;
 
+    private Separator? _scene3dRunSeparator;
     private Button? _scene3dRunButton;
 
     // 公开属性：让 EditorShell 可以访问 LogPanel
@@ -60,6 +61,12 @@ public sealed partial class DebugDockPanel : UserControl
             if (_scene3dRunButton is not null)
             {
                 _scene3dRunButton.IsEnabled = value;
+                _scene3dRunButton.IsVisible = value;
+            }
+
+            if (_scene3dRunSeparator is not null)
+            {
+                _scene3dRunSeparator.IsVisible = value;
             }
         }
     }
@@ -101,6 +108,7 @@ public sealed partial class DebugDockPanel : UserControl
         _perfClear = this.FindControl<TextBlock>("PerfClear");
         _perfMarker = this.FindControl<TextBlock>("PerfMarker");
         _perfScene3d = this.FindControl<TextBlock>("PerfScene3d");
+        _scene3dRunSeparator = this.FindControl<Separator>("Scene3dRunSeparator");
         _scene3dRunButton = this.FindControl<Button>("Scene3dRunButton");
     }
 

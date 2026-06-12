@@ -544,6 +544,7 @@ FluidWarfare.Tests/Render/Vulkan/Markers/VulkanMarkerDrawResultTests.cs
 2. 窗口最大化或 resize 后，会重新 Clear 并绘制 sample_unit 点位。
 3. 点位仍来自 RenderScene 第一个对象，并位于蓝色区域中心附近。
 4. 本补丁不进入 8.1，不新增多对象绘制，不创建 Shader、Pipeline、Mesh、Texture 或 GPU Buffer。
+
 14. ✅ 最大化后 NativeHost 审计尺寸不再固定为 640x360。
 
 ---
@@ -899,6 +900,22 @@ dotnet run --project FluidWarfare.Editor.Windows --no-build
 - ✅ Editor 默认启动稳定（无 env vars）
 - ✅ Editor 在 FW_ENABLE_SCENE3D=1 + FW_VULKAN_VALIDATION=1 下稳定
 - ⏳ Scene3D 手动触发：**待用户 GUI 验收**
+
+---
+
+### Editor UI 布局补丁 — 面板标题与日志区域整理
+
+#### 修改
+
+1. 收紧 ProjectPanel、WorldEntityListPanel、InspectorPanel 与 VulkanViewportHostPanel 的标题字号和内边距。
+2. 收紧 DebugDockPanel 底部页签字号、Padding 与内容区 Padding。
+3. 移除 LogPanel 内部重复的“日志”标题，让日志 TextBox 直接占满底部日志页签内容区。
+
+#### 验收重点
+
+1. 左侧、右侧与视口标题不再显得过大。
+2. 底部日志页签中不再重复显示第二个“日志”标题。
+3. 日志文本框占满日志页签内容区域。
 
 ---
 

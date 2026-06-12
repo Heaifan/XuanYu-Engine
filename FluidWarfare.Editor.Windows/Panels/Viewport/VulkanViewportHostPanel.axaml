@@ -14,8 +14,8 @@
     <Grid RowDefinitions="Auto,*,Auto" Margin="0">
       <TextBlock
           Grid.Row="0"
-          Margin="20,12,20,4"
-          FontSize="16"
+          Margin="14,8,14,4"
+          FontSize="14"
           FontWeight="SemiBold"
           Foreground="#F0F4F8"
           Text="Vulkan 3D 战场视口" />

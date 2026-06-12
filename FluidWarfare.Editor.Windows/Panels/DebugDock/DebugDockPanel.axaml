@@ -7,12 +7,12 @@
       Background="#1B2026"
       BorderBrush="#48515C"
       BorderThickness="0,1,0,0">
-    <TabControl Margin="0" FontSize="13">
-      <TabItem Header="日志" FontSize="14" Padding="10,4">
+    <TabControl Margin="0" FontSize="12">
+      <TabItem Header="日志" FontSize="12" Padding="8,3">
         <logging:LogPanel x:Name="EditorLogPanel" />
       </TabItem>
-      <TabItem x:Name="RenderDiagnosticsTab" Header="渲染诊断" FontSize="14" Padding="10,4">
-        <ScrollViewer Padding="12,8" Background="#11161C">
+      <TabItem x:Name="RenderDiagnosticsTab" Header="渲染诊断" FontSize="12" Padding="8,3">
+        <ScrollViewer Padding="10,6" Background="#11161C">
           <StackPanel Spacing="6">
             <TextBlock x:Name="DiagVulkanLoader" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagVulkanInstance" Foreground="#C9D1D9" TextWrapping="Wrap" />
@@ -28,17 +28,18 @@
             <TextBlock x:Name="DiagGrid" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagUnit" Foreground="#C9D1D9" TextWrapping="Wrap" />
             <TextBlock x:Name="DiagDrawCall" Foreground="#C9D1D9" TextWrapping="Wrap" />
-            <Separator Margin="0,8" Height="1" Background="#48515C" />
+            <Separator x:Name="Scene3dRunSeparator" Margin="0,8" Height="1" Background="#48515C" IsVisible="False" />
             <Button x:Name="Scene3dRunButton" Content="运行 Scene3D 探针" HorizontalAlignment="Left"
                     Background="#30363D" Foreground="#C9D1D9" BorderBrush="#48515C"
                     Padding="12,4" FontSize="12"
                     Click="HandleScene3dRunButtonClicked"
-                    IsEnabled="False" />
+                    IsEnabled="False"
+                    IsVisible="False" />
           </StackPanel>
         </ScrollViewer>
       </TabItem>
-      <TabItem x:Name="RenderSceneTab" Header="RenderScene" FontSize="14" Padding="10,4">
-        <ScrollViewer Padding="12,8" Background="#11161C">
+      <TabItem x:Name="RenderSceneTab" Header="RenderScene" FontSize="12" Padding="8,3">
+        <ScrollViewer Padding="10,6" Background="#11161C">
           <StackPanel Spacing="6">
             <TextBlock x:Name="RenderSceneTitle" Foreground="#F0F4F8" FontWeight="SemiBold" Text="RenderScene 调试对象" />
             <TextBlock x:Name="RenderSceneEmpty" Foreground="#8B949E" Text="暂无渲染对象" />
@@ -46,8 +47,8 @@
           </StackPanel>
         </ScrollViewer>
       </TabItem>
-      <TabItem x:Name="PerformanceTab" Header="性能" FontSize="14" Padding="10,4">
-        <ScrollViewer Padding="12,8" Background="#11161C">
+      <TabItem x:Name="PerformanceTab" Header="性能" FontSize="12" Padding="8,3">
+        <ScrollViewer Padding="10,6" Background="#11161C">
           <StackPanel Spacing="6">
             <TextBlock x:Name="PerfTitle" Foreground="#F0F4F8" FontWeight="SemiBold" Text="性能计时" />
             <TextBlock x:Name="PerfInstance" Foreground="#C9D1D9" TextWrapping="Wrap" />
