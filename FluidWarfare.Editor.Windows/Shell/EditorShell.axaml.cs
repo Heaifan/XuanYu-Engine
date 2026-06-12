@@ -7,12 +7,12 @@ using FluidWarfare.Bridge.ProjectEngine.World;
 using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
 using FluidWarfare.Core.Math;
-using FluidWarfare.Editor.Windows.Panels.DebugDock;
+using FluidWarfare.Editor.ProjectContentTreeModel;
 using FluidWarfare.Editor.WorldHierarchy;
-using FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+using FluidWarfare.Editor.Windows.Panels.DebugDock;
+using FluidWarfare.Editor.Windows.Panels.LeftDock;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Logging;
-using FluidWarfare.Editor.Windows.Panels.Project;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
 using FluidWarfare.Engine.World;
@@ -42,13 +42,12 @@ public sealed partial class EditorShell : UserControl
 {
     private InspectorPanel? _inspectorPanel;
     private DebugDockPanel? _debugDockPanel;
-    private ProjectPanel? _projectPanel;
     private StatusBarPanel? _statusBarPanel;
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
     private VulkanViewportHostPanel? _vulkanViewportHostPanel;
-    private WorldHierarchyTreePanel? _hierarchyTreePanel;
-    private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByFolderName = [];
+    private ProjectWorldDockPanel? _dockPanel;
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
+    private GameProjectInfo? _projectInfo;
     private WorldState? _worldState;
     private EntityId _firstEntityId;
     private WorldEntityInfo? _selectedWorldEntity;
@@ -101,29 +100,24 @@ public sealed partial class EditorShell : UserControl
     {
         _inspectorPanel = this.FindControl<InspectorPanel>("InspectorPanel");
         _debugDockPanel = this.FindControl<DebugDockPanel>("DebugDockPanel");
-        _projectPanel = this.FindControl<ProjectPanel>("ProjectPanel");
         _statusBarPanel = this.FindControl<StatusBarPanel>("EditorStatusBarPanel");
         _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
         _vulkanViewportHostPanel = this.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanel");
-        _hierarchyTreePanel = this.FindControl<WorldHierarchyTreePanel>("WorldHierarchyTreePanel");
+        _dockPanel = this.FindControl<ProjectWorldDockPanel>("ProjectWorldDockPanel");
         _runMenuButton = this.FindControl<Button>("RunMenuButton");
     }
 
     private void SubscribePanelEvents()
     {
-        if (_projectPanel is not null)
-        {
-            _projectPanel.ProjectItemSelected += HandleProjectItemSelected;
-        }
-
         if (_viewportPlaceholderPanel is not null)
         {
             _viewportPlaceholderPanel.ViewportFocused += HandleViewportFocused;
         }
 
-        if (_hierarchyTreePanel is not null)
+        if (_dockPanel is not null)
         {
-            _hierarchyTreePanel.EntitySelectionRequested += OnHierarchyEntitySelected;
+            _dockPanel.EntitySelectionRequested += OnHierarchyEntitySelected;
+            _dockPanel.ContentSelectionRequested += OnProjectContentSelected;
         }
 
         if (_vulkanViewportHostPanel is not null)
@@ -256,28 +250,6 @@ public sealed partial class EditorShell : UserControl
         _debugDockPanel?.LogPanel?.SetLogMessages(logs);
     }
 
-    private void HandleProjectItemSelected(object? sender, ProjectContentFolderSelection selectedFolder)
-    {
-        var selection = CreateProjectSelection(selectedFolder);
-
-        _inspectorPanel?.ShowSelection(selection);
-        _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
-        AppendInfoLog($"选择项目内容目录：{selection.DisplayName}。");
-
-        if (_contentFoldersByFolderName.TryGetValue(selectedFolder.FolderName, out var contentFolder) &&
-            _contentFiles is not null)
-        {
-            var folderFiles = _contentFiles
-                .Where(f => f.FolderName == contentFolder.FolderName)
-                .ToList();
-
-            if (folderFiles.Count > 0)
-            {
-                AppendInfoLog($"项目内容目录“{contentFolder.DisplayName}”包含 {folderFiles.Count} 个合法内容文件入口。");
-            }
-        }
-    }
-
     private void HandleViewportFocused(object? sender, EventArgs e)
     {
         if (_selectedWorldEntity is not null && _worldState is not null)
@@ -352,6 +324,12 @@ public sealed partial class EditorShell : UserControl
     private void OnHierarchyEntitySelected(string? entityId)
     {
         ApplyEntitySelection(entityId, EditorSelectionOrigin.WorldList);
+    }
+
+    private void OnProjectContentSelected(string? relativePath)
+    {
+        // 项目文件选择：只保存路径，不修改 EntityId，不影响 3D 场景
+        AppendInfoLog($"项目文件已选择：{relativePath}");
     }
 
     private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
@@ -475,7 +453,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ShowProjectLoadFailure(string message, ProjectValidationReport report)
     {
-        _projectPanel?.ShowNoProject();
+        // 旧项目面板已移除，使用左侧双树代替
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
 
         var selection = new EditorSelection(
@@ -1103,7 +1081,7 @@ public sealed partial class EditorShell : UserControl
                 }
 
                 // 更新左侧列表（从 Viewport 选择时同步到列表）
-                _hierarchyTreePanel?.RevealEntity(entityInfo.EntityId.Value.ToString());
+                _dockPanel?.RevealEntity(entityInfo.EntityId.Value.ToString());
 
                 // 更新检查器和状态栏
                 ShowWorldEntitySelection(entityInfo);
@@ -1136,7 +1114,7 @@ public sealed partial class EditorShell : UserControl
             }
         }
 
-        _hierarchyTreePanel?.ClearEntitySelection();
+        _dockPanel?.ClearEntitySelection();
         _inspectorPanel?.ShowNoSelection();
         _statusBarPanel?.SetCurrentSelection("无");
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
@@ -1207,9 +1185,24 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void RebuildAndShowHierarchy()
     {
+        // 项目内容树
+        if (_projectInfo is not null)
+        {
+            try
+            {
+                var projectTree = ProjectContentTreeBuilder.Build(_projectInfo);
+                _dockPanel?.ShowProjectContent(projectTree);
+            }
+            catch (Exception ex)
+            {
+                AppendErrorLog($"项目内容树构建失败：{ex.Message}");
+            }
+        }
+
+        // 世界层级树
         if (_worldState is null)
         {
-            _hierarchyTreePanel?.ShowHierarchy(WorldHierarchyTree.Empty);
+            _dockPanel?.ShowWorldHierarchy(WorldHierarchyTree.Empty);
             return;
         }
 
@@ -1230,7 +1223,7 @@ public sealed partial class EditorShell : UserControl
         }
 
         var tree = WorldHierarchyTreeBuilder.Build(_worldState, groupLookup);
-        _hierarchyTreePanel?.ShowHierarchy(tree);
+        _dockPanel?.ShowWorldHierarchy(tree);
     }
 
     private List<VulkanScene3dUnitDrawInfo> BuildUnitDrawList()
@@ -1461,38 +1454,11 @@ public sealed partial class EditorShell : UserControl
 
     private void ShowLoadedProject(GameProjectInfo project)
     {
-        _contentFoldersByFolderName.Clear();
+        _projectInfo = project;
         _contentFiles = project.ContentFiles;
 
-        foreach (var contentFolder in project.ContentFolders)
-        {
-            _contentFoldersByFolderName[contentFolder.FolderName] = contentFolder;
-        }
-
-        var contentFolderSelections = project.ContentFolders
-            .Select(folder => new ProjectContentFolderSelection(
-                folder.FolderName,
-                folder.DisplayName,
-                folder.ContentKind))
-            .ToArray();
-
-        _projectPanel?.ShowProject(project.DisplayName, contentFolderSelections);
-    }
-
-    private EditorSelection CreateProjectSelection(ProjectContentFolderSelection selectedFolder)
-    {
-        if (_contentFoldersByFolderName.TryGetValue(selectedFolder.FolderName, out var contentFolder))
-        {
-            return new EditorSelection(
-                "项目内容目录",
-                contentFolder.DisplayName,
-                contentFolder.Description);
-        }
-
-        return new EditorSelection(
-            "未知项目内容目录",
-            selectedFolder.DisplayName,
-            "当前项目内容目录没有说明。");
+        // 项目加载后重建左侧双树
+        RebuildAndShowHierarchy();
     }
 
     private EditorSelection CreateEntitySelection(WorldEntityInfo entityInfo)

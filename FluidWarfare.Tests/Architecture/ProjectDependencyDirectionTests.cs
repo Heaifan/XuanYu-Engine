@@ -12,7 +12,7 @@ public sealed class ProjectDependencyDirectionTests
             ["FluidWarfare.Core"] = [],
             ["FluidWarfare.Project"] = ["FluidWarfare.Core"],
             ["FluidWarfare.Engine"] = ["FluidWarfare.Core"],
-            ["FluidWarfare.Editor"] = ["FluidWarfare.Core", "FluidWarfare.Engine"],
+            ["FluidWarfare.Editor"] = ["FluidWarfare.Core", "FluidWarfare.Engine", "FluidWarfare.Project"],
             ["FluidWarfare.Bridge.ProjectEngine"] = ["FluidWarfare.Core", "FluidWarfare.Engine", "FluidWarfare.Project"],
             ["FluidWarfare.Render"] = ["FluidWarfare.Core", "FluidWarfare.Engine"],
             ["FluidWarfare.Render.Vulkan"] = ["FluidWarfare.Core", "FluidWarfare.Render"],

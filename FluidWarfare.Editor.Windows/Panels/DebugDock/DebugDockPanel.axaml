@@ -31,10 +31,10 @@
           </StackPanel>
         </ScrollViewer>
       </TabItem>
-      <TabItem x:Name="RenderSceneTab" Header="RenderScene" FontSize="12" Padding="8,3">
+      <TabItem x:Name="RenderSceneTab" Header="渲染场景" FontSize="12" Padding="8,3">
         <ScrollViewer Padding="10,6" Background="#11161C">
           <StackPanel Spacing="6">
-            <SelectableTextBlock x:Name="RenderSceneTitle" Foreground="#F0F4F8" FontWeight="SemiBold" Text="RenderScene 调试对象" />
+            <SelectableTextBlock x:Name="RenderSceneTitle" Foreground="#F0F4F8" FontWeight="SemiBold" Text="渲染场景调试对象" />
             <SelectableTextBlock x:Name="RenderSceneEmpty" Foreground="#8B949E" Text="暂无渲染对象" />
             <StackPanel x:Name="RenderSceneList" Spacing="4" />
           </StackPanel>
