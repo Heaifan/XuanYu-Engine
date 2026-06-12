@@ -5,6 +5,7 @@ namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Surface;
 
 /// <summary>
 /// 两阶段枚举 PresentModeKHR，处理 Success / Incomplete，有限重试。
+/// 每次 Incomplete 都重新查询 count，不使用上次 written 作为新容量。
 /// 职责单一：仅枚举 PresentMode。
 /// </summary>
 public static unsafe class VulkanScene3dPresentModes
@@ -14,12 +15,6 @@ public static unsafe class VulkanScene3dPresentModes
     /// <summary>
     /// 枚举 Surface 支持的 PresentMode。
     /// </summary>
-    /// <param name="getPresentModes">vkGetPhysicalDeviceSurfacePresentModesKHR 委托。</param>
-    /// <param name="physicalDevice">物理设备。</param>
-    /// <param name="surface">Surface。</param>
-    /// <param name="modes">输出 PresentMode 数组。</param>
-    /// <param name="errorMessage">失败时的诊断信息。</param>
-    /// <returns>成功返回 true，失败返回 false。</returns>
     public static bool TryEnumerate(
         VulkanScene3dSwapchainFunctions.GetPresentModesFunc getPresentModes,
         PhysicalDevice physicalDevice,
@@ -30,46 +25,48 @@ public static unsafe class VulkanScene3dPresentModes
         modes = [];
         errorMessage = string.Empty;
 
-        uint count = 0;
-        var firstResult = getPresentModes(physicalDevice, surface, &count, null);
-        if (firstResult != Result.Success)
-        {
-            errorMessage =
-                $"PresentMode 枚举第一阶段失败。\n" +
-                $"VkResult：{firstResult}\n" +
-                $"返回数量：{count}";
-            return false;
-        }
-
-        if (count == 0)
-        {
-            errorMessage = "PresentMode 枚举返回 0 个可用模式。";
-            return false;
-        }
-
         for (var attempt = 0; attempt < MaxRetries; attempt++)
         {
+            // 第一阶段：查询容量
+            uint count = 0;
+            var countResult = getPresentModes(physicalDevice, surface, &count, null);
+            if (countResult != Result.Success)
+            {
+                errorMessage =
+                    $"PresentMode 枚举第一阶段失败。\n" +
+                    $"VkResult：{countResult}\n" +
+                    $"尝试次数：{attempt + 1}";
+                return false;
+            }
+
+            if (count == 0)
+            {
+                errorMessage = "PresentMode 枚举返回 0 个可用模式。";
+                return false;
+            }
+
+            // 第二阶段：填充数组
             var buffer = new PresentModeKHR[count];
             uint written = count;
             fixed (PresentModeKHR* p = buffer)
             {
-                var result = getPresentModes(physicalDevice, surface, &written, p);
+                var fillResult = getPresentModes(physicalDevice, surface, &written, p);
 
-                if (result == Result.Success)
+                if (fillResult == Result.Success)
                 {
                     modes = buffer;
                     return true;
                 }
 
-                if (result == Result.Incomplete)
+                if (fillResult == Result.Incomplete)
                 {
-                    count = written;
+                    // 容量不足，回到循环顶部重新查询最新 count 再试
                     continue;
                 }
 
                 errorMessage =
                     $"PresentMode 枚举失败。\n" +
-                    $"VkResult：{result}\n" +
+                    $"VkResult：{fillResult}\n" +
                     $"尝试次数：{attempt + 1}\n" +
                     $"返回数量：{written}";
                 return false;

@@ -134,49 +134,51 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         r.Swapchain = sc;
         TotalCreateCount++;
 
-        // Get images (two-stage + Incomplete retry)
-        uint actualCount = 0;
-        if (functions.GetImages(device, sc, &actualCount, null) != Result.Success)
+        // Get images (two-stage + Incomplete retry with re-query)
+        const int maxImageRetries = 3;
+        Image[] swapchainImages = [];
+        for (var attempt = 0; attempt < maxImageRetries; attempt++)
+        {
+            uint count = 0;
+            var countResult = functions.GetImages(device, sc, &count, null);
+            if (countResult != Result.Success)
+                return Fail(VulkanScene3dSwapchainStage.GetSwapchainImages, countResult,
+                    $"GetSwapchainImages 第一阶段失败（尝试 {attempt + 1}）。");
+
+            if (count == 0)
+                return Fail(
+                    VulkanScene3dSwapchainStage.GetSwapchainImages, null,
+                    "Swapchain 图像数为 0。");
+
+            var buffer = new Image[count];
+            uint written = count;
+            fixed (Image* imgPtr = buffer)
+            {
+                var fillResult = functions.GetImages(device, sc, &written, imgPtr);
+
+                if (fillResult == Result.Success)
+                {
+                    swapchainImages = buffer;
+                    r.ImageCount = (int)count;
+                    break;
+                }
+
+                if (fillResult != Result.Incomplete)
+                    return Fail(VulkanScene3dSwapchainStage.GetSwapchainImages, fillResult,
+                        $"GetSwapchainImages 第二阶段失败：{fillResult}。");
+                // Incomplete：回到循环顶部重新查询 count
+            }
+        }
+        if (swapchainImages.Length == 0)
             return Fail(
                 VulkanScene3dSwapchainStage.GetSwapchainImages, null,
-                "GetSwapchainImages 第一阶段（获取数量）失败。");
-        if (actualCount == 0)
-            return Fail(
-                VulkanScene3dSwapchainStage.GetSwapchainImages, null, "Swapchain 图像数为 0。");
-
-        var swapchainImages = new Image[actualCount];
-        uint written = actualCount;
-        Result fillResult;
-        fixed (Image* imgPtr = swapchainImages)
-        {
-            fillResult = functions.GetImages(device, sc, &written, imgPtr);
-        }
-
-        if (fillResult == Result.Incomplete)
-        {
-            // 驱动返回的图像数少于预期，用新数量重试一次
-            if (written == 0)
-                return Fail(
-                    VulkanScene3dSwapchainStage.GetSwapchainImages, fillResult,
-                    "GetSwapchainImages 第二阶段 Incomplete 且 written=0。");
-            actualCount = written;
-            // 缩小数组
-            var trimmed = new Image[actualCount];
-            Array.Copy(swapchainImages, trimmed, actualCount);
-            swapchainImages = trimmed;
-        }
-        else if (fillResult != Result.Success)
-        {
-            return Fail(
-                VulkanScene3dSwapchainStage.GetSwapchainImages, fillResult,
-                $"GetSwapchainImages 第二阶段（填充数组）失败：{fillResult}。");
-        }
-        r.ImageCount = (int)actualCount;
+                $"GetSwapchainImages 超过最大重试次数（{maxImageRetries}）。");
         r.Extent = extent;
 
         // Color ImageViews
-        r.ColorViews = new ImageView[actualCount];
-        for (var i = 0; i < actualCount; i++)
+        var imageCount = swapchainImages.Length;
+        r.ColorViews = new ImageView[imageCount];
+        for (var i = 0; i < imageCount; i++)
         {
             var ivCI = new ImageViewCreateInfo
             {
@@ -209,11 +211,11 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
             return Fail(
                 VulkanScene3dSwapchainStage.DepthAttachments, null, depthInfo.Message);
         r.DepthFormat = depthInfo.ChosenFormat;
-        r.DepthImages = new Image[actualCount];
-        r.DepthMemories = new DeviceMemory[actualCount];
-        r.DepthViews = new ImageView[actualCount];
+        r.DepthImages = new Image[imageCount];
+        r.DepthMemories = new DeviceMemory[imageCount];
+        r.DepthViews = new ImageView[imageCount];
         if (!VulkanScene3dDepthAttachments.Create(vk, physicalDevice, device,
-                extent, depthInfo.ChosenFormat, (uint)actualCount,
+                extent, depthInfo.ChosenFormat, (uint)imageCount,
                 r.DepthImages, r.DepthMemories, r.DepthViews, out var depthErr))
             return Fail(
                 VulkanScene3dSwapchainStage.DepthAttachments, null, depthErr);
@@ -256,9 +258,9 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         r.RenderPass = newRp;
 
         // Framebuffers
-        r.Framebuffers = new Framebuffer[actualCount];
+        r.Framebuffers = new Framebuffer[imageCount];
         var fba = stackalloc ImageView[2];
-        for (var i = 0; i < actualCount; i++)
+        for (var i = 0; i < imageCount; i++)
         {
             fba[0] = r.ColorViews[i];
             fba[1] = r.DepthViews[i];

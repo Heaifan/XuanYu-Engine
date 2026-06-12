@@ -5,6 +5,7 @@ namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Surface;
 
 /// <summary>
 /// 两阶段枚举 SurfaceFormatKHR，处理 Success / Incomplete，有限重试。
+/// 每次 Incomplete 都重新查询 count，不使用上次 written 作为新容量（written 仅表示已写入数，不表示总容量）。
 /// 不进行 Swapchain 创建以外的职责。
 /// </summary>
 public static unsafe class VulkanScene3dSurfaceFormats
@@ -14,12 +15,6 @@ public static unsafe class VulkanScene3dSurfaceFormats
     /// <summary>
     /// 枚举 Surface 支持的格式。
     /// </summary>
-    /// <param name="getFormats">vkGetPhysicalDeviceSurfaceFormatsKHR 委托。</param>
-    /// <param name="physicalDevice">物理设备。</param>
-    /// <param name="surface">Surface。</param>
-    /// <param name="formats">输出格式数组。</param>
-    /// <param name="errorMessage">失败时的诊断信息。</param>
-    /// <returns>成功返回 true，失败返回 false。</returns>
     public static bool TryEnumerate(
         VulkanScene3dSwapchainFunctions.GetFormatsFunc getFormats,
         PhysicalDevice physicalDevice,
@@ -30,48 +25,49 @@ public static unsafe class VulkanScene3dSurfaceFormats
         formats = [];
         errorMessage = string.Empty;
 
-        uint count = 0;
-        var firstResult = getFormats(physicalDevice, surface, &count, null);
-        if (firstResult != Result.Success)
-        {
-            errorMessage =
-                $"Surface 格式枚举第一阶段失败。\n" +
-                $"VkResult：{firstResult}\n" +
-                $"返回数量：{count}";
-            return false;
-        }
-
-        if (count == 0)
-        {
-            errorMessage = "Surface 格式枚举返回 0 个可用格式。";
-            return false;
-        }
-
         for (var attempt = 0; attempt < MaxRetries; attempt++)
         {
+            // 第一阶段：查询容量
+            uint count = 0;
+            var countResult = getFormats(physicalDevice, surface, &count, null);
+            if (countResult != Result.Success)
+            {
+                errorMessage =
+                    $"Surface 格式枚举第一阶段失败。\n" +
+                    $"VkResult：{countResult}\n" +
+                    $"尝试次数：{attempt + 1}";
+                return false;
+            }
+
+            if (count == 0)
+            {
+                errorMessage = "Surface 格式枚举返回 0 个可用格式。";
+                return false;
+            }
+
+            // 第二阶段：填充数组
             var buffer = new SurfaceFormatKHR[count];
             uint written = count;
             fixed (SurfaceFormatKHR* p = buffer)
             {
-                var result = getFormats(physicalDevice, surface, &written, p);
+                var fillResult = getFormats(physicalDevice, surface, &written, p);
 
-                if (result == Result.Success)
+                if (fillResult == Result.Success)
                 {
                     formats = buffer;
                     return true;
                 }
 
-                if (result == Result.Incomplete)
+                if (fillResult == Result.Incomplete)
                 {
-                    // 驱动返回的数量比实际少，用新数量重试
-                    count = written;
+                    // 容量不足，回到循环顶部重新查询最新 count 再试
                     continue;
                 }
 
                 // 其他错误
                 errorMessage =
                     $"Surface 格式枚举失败。\n" +
-                    $"VkResult：{result}\n" +
+                    $"VkResult：{fillResult}\n" +
                     $"尝试次数：{attempt + 1}\n" +
                     $"返回数量：{written}";
                 return false;
