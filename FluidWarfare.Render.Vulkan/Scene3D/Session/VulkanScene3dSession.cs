@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FluidWarfare.Render.Vulkan.Camera;
+using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
 using FluidWarfare.Render.Vulkan.Validation;
 using Silk.NET.Vulkan;
 
@@ -44,6 +45,12 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private nint _fnGetCaps;
     private nint _fnGetFormats;
     private nint _fnGetModes;
+
+    // Swapchain 函数集合（从上述指针创建，验证完整性）
+    private VulkanScene3dSwapchainFunctions? _swapchainFunctions;
+
+    // Fence 超时常量
+    private const ulong FrameFenceTimeoutNanoseconds = 500_000_000;
 
     // ─── Swapchain 级资源 ───────────────────────────────────────
     private VulkanScene3dSwapchainResources? _swapchainRes;
@@ -133,18 +140,23 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             if (!CreateVertexBuffers(gridVertices, unitVertices))
                 return FailFrame(VulkanScene3dFrameReason.SessionStart, "VertexBuffer 创建失败。");
 
+            // Create SwapchainFunctions from loaded pointers
+            var scFuncs = VulkanScene3dSwapchainFunctions.TryLoad(
+                _fnCreateSwapchain, _fnDestroySwapchain, _fnGetSwapchainImages,
+                _fnAcquireNextImage, _fnQueuePresent,
+                _fnGetCaps, _fnGetFormats, _fnGetModes);
+            if (scFuncs is null)
+                return FailFrame(VulkanScene3dFrameReason.SessionStart, "Swapchain 函数指针加载不完整。");
+            _swapchainFunctions = scFuncs;
+
             // Swapchain resources (includes RenderPass, Framebuffers, etc.)
-            _swapchainRes = new VulkanScene3dSwapchainResources();
-            if (!VulkanScene3dSwapchainResources.Create(
-                    _vk, _device, _physicalDevice, _instance, _surface,
-                    reqW, reqH, _queueIndex,
-                    _fnGetCaps, _fnGetFormats, _fnGetModes,
-                    _fnCreateSwapchain, _fnGetSwapchainImages,
-                    out _swapchainRes, out var scErr))
-            {
-                _swapchainRes = null;
-                return FailFrame(VulkanScene3dFrameReason.SessionStart, scErr);
-            }
+            var createResult = VulkanScene3dSwapchainResources.TryCreate(
+                _vk, _device, _physicalDevice, _surface,
+                reqW, reqH, _queueIndex,
+                _swapchainFunctions, default); // oldSwapchain = default (首次启动)
+            if (!createResult.IsSucceeded)
+                return FailFrame(VulkanScene3dFrameReason.SessionStart, createResult.Message);
+            _swapchainRes = createResult.Resources!;
             _swapchainGeneration++;
 
             // Create pipelines now that we have a render pass
@@ -203,6 +215,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
     /// <summary>
     /// 在 resize 后重建 swapchain 资源。
+    /// 使用"创建新资源 → 事务切换 → 销毁旧资源"模式，避免旧 Swapchain 泄漏。
     /// </summary>
     public VulkanScene3dFrameResult Resize(
         uint newWidth, uint newHeight,
@@ -210,64 +223,134 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         ReadOnlySpan<VulkanScene3dUnitDrawInfo> unitDraws)
     {
         if (_status != VulkanScene3dSessionStatus.Active)
-            return VulkanScene3dFrameResult.Failed(_frameIndex, VulkanScene3dFrameReason.Resize,
+            return FailFrame(VulkanScene3dFrameReason.Resize,
                 $"Session 状态不允许 Resize（当前 {_status}，仅 Active 允许）。");
 
-        if (_rendering) return VulkanScene3dFrameResult.Failed(_frameIndex, VulkanScene3dFrameReason.Resize, "渲染进行中，跳过 Resize。");
+        if (_rendering)
+            return VulkanScene3dFrameResult.Failed(_frameIndex, VulkanScene3dFrameReason.Resize, "渲染进行中，跳过 Resize。");
 
         _status = VulkanScene3dSessionStatus.RecreatingSwapchain;
         var sw = Stopwatch.StartNew();
 
+        if (_swapchainFunctions is null)
+            return FailFrame(VulkanScene3dFrameReason.Resize, "SwapchainFunctions 未初始化。");
+
+        // 等待 GPU 安全点
+        var idleResult = _vk!.DeviceWaitIdle(_device);
+        if (idleResult != Result.Success)
+        {
+            DisposeResources();
+            _status = VulkanScene3dSessionStatus.Failed;
+            return VulkanScene3dFrameResult.Failed(_frameIndex,
+                VulkanScene3dFrameReason.Resize, $"DeviceWaitIdle 失败：{idleResult}。");
+        }
+
+        // 保存旧资源引用
+        var oldResources = _swapchainRes;
+        var oldGridPipeline = _gridPipeline;
+        var oldUnitPipeline = _unitPipeline;
+        var oldGridPipeOk = _gridPipeOk;
+        var oldUnitPipeOk = _unitPipeOk;
+
+        // 用旧 Swapchain 作为 OldSwapchain 创建新资源
+        var oldSc = oldResources?.Swapchain ?? default;
+        var createResult = VulkanScene3dSwapchainResources.TryCreate(
+            _vk, _device, _physicalDevice, _surface,
+            newWidth, newHeight, _queueIndex,
+            _swapchainFunctions, oldSc);
+
+        if (!createResult.IsSucceeded)
+        {
+            // 创建失败：旧 Swapchain 已被 retired，不能继续使用
+            // 必须完整销毁 Session
+            DisposeResources();
+            _status = VulkanScene3dSessionStatus.Failed;
+            sw.Stop();
+            return VulkanScene3dFrameResult.Failed(_frameIndex,
+                VulkanScene3dFrameReason.Resize, createResult.Message);
+        }
+
+        // 新资源成功：事务切换
+        var newResources = createResult.Resources!;
+        Pipeline newGridPipeline = default, newUnitPipeline = default;
+        bool newGridPipeOk = false, newUnitPipeOk = false;
+
         try
         {
-            // Dispose old swapchain resources (keep session-level resources)
-            _swapchainRes?.Dispose();
-            _swapchainRes = null;
-
-            // Destroy old pipelines (they reference the old render pass)
-            if (_gridPipeOk) { _vk?.DestroyPipeline(_device, _gridPipeline, null); _gridPipeOk = false; }
-            if (_unitPipeOk) { _vk?.DestroyPipeline(_device, _unitPipeline, null); _unitPipeOk = false; }
-
-            // Create new swapchain resources
-            var newRes = new VulkanScene3dSwapchainResources();
-            if (!VulkanScene3dSwapchainResources.Create(
-                    _vk, _device, _physicalDevice, _instance, _surface,
-                    newWidth, newHeight, _queueIndex,
-                    _fnGetCaps, _fnGetFormats, _fnGetModes,
-                    _fnCreateSwapchain, _fnGetSwapchainImages,
-                    out newRes, out var scErr))
-            {
-                newRes.Dispose();
-                _status = VulkanScene3dSessionStatus.Failed;
-                return VulkanScene3dFrameResult.Failed(_frameIndex,
-                    VulkanScene3dFrameReason.Resize, scErr);
-            }
-            _swapchainRes = newRes;
-            _swapchainGeneration++;
-
-            // Recreate pipelines with new render pass
+            // 创建新 Pipeline（与新 RenderPass 匹配）
             if (!VulkanScene3dPipelines.Create(_vk, _device,
-                    _swapchainRes.RenderPass, _pipelineLayout,
+                    newResources.RenderPass, _pipelineLayout,
                     _vertModule, _fragModule,
-                    _swapchainRes.Extent.Width, _swapchainRes.Extent.Height,
-                    out _gridPipeline, out _unitPipeline, out var pipeErr))
+                    newResources.Extent.Width, newResources.Extent.Height,
+                    out newGridPipeline, out newUnitPipeline, out var pipeErr))
             {
+                newResources.Dispose();
+                DisposeResources();
                 _status = VulkanScene3dSessionStatus.Failed;
                 return VulkanScene3dFrameResult.Failed(_frameIndex,
                     VulkanScene3dFrameReason.Resize, pipeErr);
             }
-            _gridPipeOk = true; _unitPipeOk = true;
+            newGridPipeOk = true;
+            newUnitPipeOk = true;
             _pipelineCreateCount++;
-
-            _status = VulkanScene3dSessionStatus.Active;
-            sw.Stop();
-            return RenderFrameInternal(VulkanScene3dFrameReason.Resize, cameraState, unitDraws, sw);
         }
-        catch (Exception ex)
+        catch
         {
+            newResources.Dispose();
+            if (newGridPipeOk) _vk.DestroyPipeline(_device, newGridPipeline, null);
+            if (newUnitPipeOk) _vk.DestroyPipeline(_device, newUnitPipeline, null);
+            DisposeResources();
             _status = VulkanScene3dSessionStatus.Failed;
-            return VulkanScene3dFrameResult.Failed(_frameIndex, VulkanScene3dFrameReason.Resize,
-                $"Resize 异常：{ex.Message}");
+            throw;
+        }
+
+        // 全部成功 → 原子切换
+        _swapchainRes = newResources;
+        _gridPipeline = newGridPipeline;
+        _unitPipeline = newUnitPipeline;
+        _gridPipeOk = true;
+        _unitPipeOk = true;
+        _swapchainGeneration++;
+
+        // 安全释放旧资源
+        if (oldGridPipeOk && oldGridPipeline.Handle != 0)
+            _vk.DestroyPipeline(_device, oldGridPipeline, null);
+        if (oldUnitPipeOk && oldUnitPipeline.Handle != 0)
+            _vk.DestroyPipeline(_device, oldUnitPipeline, null);
+        oldResources?.Dispose();
+
+        _status = VulkanScene3dSessionStatus.Active;
+        sw.Stop();
+        return RenderFrameInternal(VulkanScene3dFrameReason.Resize, cameraState, unitDraws, sw);
+    }
+
+    /// <summary>
+    /// 完整释放所有会话级 Vulkan 资源（不含 Instance/Device/Surface 等）。
+    /// 由 FallBackToVulkanClear 或 Resize 失败时调用。
+    /// </summary>
+    private void DisposeResources()
+    {
+        _swapchainRes?.Dispose();
+        _swapchainRes = null;
+
+        if (_vk is null || _device.Handle == 0) return;
+
+        if (_unitPipeOk) { _vk.DestroyPipeline(_device, _unitPipeline, null); _unitPipeOk = false; }
+        if (_gridPipeOk) { _vk.DestroyPipeline(_device, _gridPipeline, null); _gridPipeOk = false; }
+        if (_layoutOk) { _vk.DestroyPipelineLayout(_device, _pipelineLayout, null); _layoutOk = false; }
+        if (_fragModOk) { _vk.DestroyShaderModule(_device, _fragModule, null); _fragModOk = false; }
+        if (_vertModOk) { _vk.DestroyShaderModule(_device, _vertModule, null); _vertModOk = false; }
+        if (_unitBufOk)
+        {
+            if (_unitBuffer.Handle != 0) _vk.DestroyBuffer(_device, _unitBuffer, null);
+            if (_unitMemory.Handle != 0) _vk.FreeMemory(_device, _unitMemory, null);
+            _unitBufOk = false;
+        }
+        if (_gridBufOk)
+        {
+            if (_gridBuffer.Handle != 0) _vk.DestroyBuffer(_device, _gridBuffer, null);
+            if (_gridMemory.Handle != 0) _vk.FreeMemory(_device, _gridMemory, null);
+            _gridBufOk = false;
         }
     }
 
@@ -289,8 +372,16 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         try
         {
             // Wait for fence
-            _vk.WaitForFences(_device, 1, ref _swapchainRes.Fence, Vk.True, 500_000_000); // 500ms 超时
-            _vk.ResetFences(_device, 1, ref _swapchainRes.Fence);
+            var fence = _swapchainRes.Fence;
+            var waitResult = _vk.WaitForFences(_device, 1, ref fence, Vk.True, FrameFenceTimeoutNanoseconds);
+            if (waitResult == Result.Timeout)
+                return FailFrame(reason, $"GPU Fence 等待超时：{FrameFenceTimeoutNanoseconds / 1_000_000} ms。");
+            if (waitResult != Result.Success)
+                return FailFrame(reason, $"GPU Fence 等待失败：{waitResult}。");
+
+            var resetResult = _vk.ResetFences(_device, 1, ref fence);
+            if (resetResult != Result.Success)
+                return FailFrame(reason, $"GPU Fence 重置失败：{resetResult}。");
 
             // Acquire next image
             uint imgIndex = 0;
