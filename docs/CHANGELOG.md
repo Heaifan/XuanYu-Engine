@@ -1113,6 +1113,48 @@ file-tree.md
 
 ---
 
+---
+
+### Milestone 8.5 — World Hierarchy 节点树与编辑器选择收口
+
+#### 新增
+
+1. **平台无关 `FluidWarfare.Editor` 项目**：承载编辑器层级模型，依赖 Core + Engine，不依赖 Avalonia/Vulkan。
+2. **WorldHierarchy 数据模型**（5 个文件）：
+   - `WorldHierarchyNodeKind`：WorldRoot / EntityGroup / Entity
+   - `WorldHierarchyNode`：NodeId、DisplayName、EntityId、Children、DescendantCount
+   - `WorldHierarchyTree`：EntityId → Node 索引 + 祖先路径索引，O(1) 查找
+   - `WorldHierarchyTreeBuilder`：从 WorldState + 分组映射构建树
+   - `WorldHierarchySearch`：按 DisplayName/EntityId/Source 搜索，保留祖先路径
+3. **WorldHierarchyTreePanel**（4 个文件）：
+   - 基于 TreeView 的层级树，支持展开/折叠
+   - 搜索框实时过滤（150ms 防抖）
+   - RevealEntity：展开祖先 + 定位 + 滚动
+   - ViewState 保存/恢复（展开节点、选择、搜索）
+4. **EditorShell 统一选择收口**：
+   - 3D Picking → 自动 RevealEntity（清除搜索）
+   - 树节点选择 → Scene3D 高亮 → Inspector 同步
+   - `_isSynchronizingSelection` 防递归
+
+#### 删除
+
+1. `WorldEntityListPanel.axaml` + `.axaml.cs`：平铺列表已被节点树替代
+
+#### 修改
+
+1. `EditorShell.axaml`：左侧下半区替换为 WorldHierarchyTreePanel
+2. `EditorShell.axaml.cs`：所有 ShowEntities/SelectEntity/ClearSelection 替换为层级树等价入口
+3. `ProjectDependencyDirectionTests.cs`：新增 FluidWarfare.Editor 依赖规则
+
+#### 验证
+
+- ✅ build: 0 错误、0 警告
+- ✅ test: 330/330 全部通过
+- ✅ FluidWarfare.Editor 不依赖 Avalonia/Vulkan/Editor.Windows
+- ✅ Tests 不依赖 Editor.Windows
+- ✅ WorldEntityListPanel 运行代码零匹配
+- ✅ 不越界：无拖拽层级、多选、重命名、删除、Prefab、Transform 继承
+
 ### Milestone 8.4 — 3D Picking 与单位选择
 
 #### 新增

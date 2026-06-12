@@ -311,7 +311,10 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.4：3D Picking、单位选择与视口高亮。
+当前执行 Milestone 8.5：World Hierarchy 节点树与编辑器选择收口。
+- 新增 FluidWarfare.Editor 平台无关项目（FluidWarfare.Editor.csproj）
+- 平铺 World 实体列表已升级为层级节点树
+- 支持展开/折叠、搜索、自动定位与三向同步
 
 管线进度：... → 持久会话 ✅ → 默认 3D 主视口 ✅ → 结果加固 ✅ → Picking ⬆️
 
@@ -647,6 +650,7 @@ get_tree.bat
 | FluidWarfare.Project | 游戏项目元数据与最小项目加载层，负责读取 game.project.json，不依赖 Editor 或 Avalonia | 测试通过 |
 | FluidWarfare.Bridge.ProjectEngine | Project 层与 Engine 层的桥接模块，用于把项目内容入口转换为 Engine World 占位实体 | 测试通过 |
 | FluidWarfare.Engine | 引擎运行层，负责 World、实体、组件与模拟状态。当前仅实现最小 World 实体 | 测试通过 |
+| FluidWarfare.Editor | 平台无关的编辑器模型层，承载 WorldHierarchy 层级树、搜索与选择状态，不依赖 Avalonia 或 Vulkan | 测试通过 |
 | FluidWarfare.Ecs | ECS-lite 实体、组件、系统和查询 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.World | 地面、边界、相机出生点和空间场景数据 | 已创建 / 仅 `.gitkeep` |
 | FluidWarfare.Simulation | 固定 Tick、暂停、单步和模拟世界 | 已创建 / 仅 `.gitkeep` |
