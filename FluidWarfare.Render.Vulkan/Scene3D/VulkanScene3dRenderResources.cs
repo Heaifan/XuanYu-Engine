@@ -34,11 +34,19 @@ public sealed unsafe class VulkanScene3dRenderResources : IDisposable
     public Silk.NET.Vulkan.Buffer GridBuffer, UnitBuffer;
     public DeviceMemory GridMemory, UnitMemory;
 
+    // Depth 资源
+    public Image[] DepthImages = [];
+    public DeviceMemory[] DepthMemories = [];
+    public ImageView[] DepthViews = [];
+    public Format DepthFormat;
+    public int DepthAttachmentCount;
+
     // 成功标记
     public bool InstOk, SurfOk, DevOk, ScOk, RpOk, PoolOk, SyncOk;
     public bool VertModOk, FragModOk, LayoutOk;
     public bool GridPipeOk, UnitPipeOk;
     public bool GridBufOk, UnitBufOk;
+    public bool DepthOk;
 
     /// <summary>
     /// 按 Vulkan 资源依赖逆序释放。
@@ -86,6 +94,18 @@ public sealed unsafe class VulkanScene3dRenderResources : IDisposable
         // Framebuffers
         if (Device.Handle != 0)
             foreach (var fb in Framebuffers) if (fb.Handle != 0) Vk.DestroyFramebuffer(Device, fb, null);
+
+        // Depth ImageViews (依赖：Framebuffer 先销毁)
+        if (Device.Handle != 0)
+            foreach (var dv in DepthViews) if (dv.Handle != 0) Vk.DestroyImageView(Device, dv, null);
+
+        // Depth Images (依赖：ImageView 先销毁)
+        if (DepthOk && Device.Handle != 0)
+            foreach (var di in DepthImages) if (di.Handle != 0) Vk.DestroyImage(Device, di, null);
+
+        // Depth Memory (依赖：Image 先销毁)
+        if (DepthOk && Device.Handle != 0)
+            foreach (var dm in DepthMemories) if (dm.Handle != 0) Vk.FreeMemory(Device, dm, null);
 
         // RenderPass
         if (RpOk && Device.Handle != 0 && RenderPass.Handle != 0)

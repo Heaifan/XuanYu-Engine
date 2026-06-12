@@ -1,13 +1,14 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FluidWarfare.Render.Vulkan.Camera;
+using FluidWarfare.Render.Vulkan.Scene3D.Depth;
 using Silk.NET.Vulkan;
 
 namespace FluidWarfare.Render.Vulkan.Scene3D;
 
 /// <summary>
 /// Scene3D 渲染流程编排层。
-/// 各子步骤由专用模块完成：ShaderModules / PipelineLayout / Pipelines / VertexBuffers / CommandRecorder。
+/// 各子步骤由专用模块完成：ShaderModules / PipelineLayout / Pipelines / VertexBuffers / CommandRecorder / Depth。
 /// 资源持有与释放由 RenderResources 统一管理。
 /// </summary>
 public static unsafe class VulkanScene3dRenderer
@@ -18,11 +19,17 @@ public static unsafe class VulkanScene3dRenderer
         nint hinstance, nint hwnd, uint reqW, uint reqH,
         VulkanCameraInfo camera,
         ReadOnlySpan<VulkanScene3dVertex> gridVertices,
-        ReadOnlySpan<VulkanScene3dVertex> unitVertices)
+        ReadOnlySpan<VulkanScene3dVertex> unitVertices,
+        ReadOnlySpan<VulkanScene3dUnitDrawInfo> unitDraws)
     {
         var sw = Stopwatch.StartNew();
         var r = new VulkanScene3dRenderResources();
         var drawCalls = 0;
+        var renderedUnitCount = 0;
+        var ignoredObjectCount = 0;
+        Format depthFormat = Format.Undefined;
+        int depthAttachmentCount = 0;
+        bool depthTestEnabled = false;
 
         try
         {
@@ -96,7 +103,7 @@ public static unsafe class VulkanScene3dRenderer
             var images = new Image[imgCount];
             fixed (Image* ip = images) getImgsFn(r.Device, r.Swapchain, &imgCount, ip);
 
-            // 6. ImageViews
+            // 6. Color ImageViews
             r.ImageViews = new ImageView[imgCount];
             for (var i = 0; i < imgCount; i++)
             {
@@ -111,36 +118,83 @@ public static unsafe class VulkanScene3dRenderer
                     return Fail($"ImageView {i} 创建失败。", sw);
             }
 
-            // 7. RenderPass
-            var colorAtt = new AttachmentDescription
+            // 7. Depth format selection
+            var depthInfo = VulkanScene3dDepthFormatSelector.Select(r.Vk, pd);
+            if (!depthInfo.IsSupported)
+                return Fail(depthInfo.Message, sw);
+
+            depthFormat = depthInfo.ChosenFormat;
+            depthAttachmentCount = (int)imgCount;
+            depthTestEnabled = true;
+            r.DepthFormat = depthFormat;
+            r.DepthAttachmentCount = (int)imgCount;
+
+            // 7b. Depth attachments
+            r.DepthImages = new Image[imgCount];
+            r.DepthMemories = new DeviceMemory[imgCount];
+            r.DepthViews = new ImageView[imgCount];
+            if (!VulkanScene3dDepthAttachments.Create(r.Vk, pd, r.Device,
+                    extent, depthFormat, imgCount,
+                    r.DepthImages, r.DepthMemories, r.DepthViews, out var depthErr))
+                return Fail(depthErr, sw);
+            r.DepthOk = true;
+
+            // 8. RenderPass (color + depth)
+            var colorAttDesc = new AttachmentDescription
             {
                 Format = chosenFmt, Samples = SampleCountFlags.Count1Bit,
                 LoadOp = AttachmentLoadOp.Clear, StoreOp = AttachmentStoreOp.Store,
                 StencilLoadOp = AttachmentLoadOp.DontCare, StencilStoreOp = AttachmentStoreOp.DontCare,
                 InitialLayout = ImageLayout.Undefined, FinalLayout = ImageLayout.PresentSrcKhr
             };
+            var depthAttDesc = new AttachmentDescription
+            {
+                Format = depthFormat, Samples = SampleCountFlags.Count1Bit,
+                LoadOp = AttachmentLoadOp.Clear, StoreOp = AttachmentStoreOp.DontCare,
+                StencilLoadOp = AttachmentLoadOp.DontCare, StencilStoreOp = AttachmentStoreOp.DontCare,
+                InitialLayout = ImageLayout.Undefined,
+                FinalLayout = ImageLayout.DepthStencilAttachmentOptimal
+            };
+            var attachments = stackalloc[] { colorAttDesc, depthAttDesc };
+
             var colorRef = new AttachmentReference { Attachment = 0, Layout = ImageLayout.ColorAttachmentOptimal };
-            var subpass = new SubpassDescription { PipelineBindPoint = PipelineBindPoint.Graphics, ColorAttachmentCount = 1, PColorAttachments = &colorRef };
-            var rpCI = new RenderPassCreateInfo { SType = StructureType.RenderPassCreateInfo, AttachmentCount = 1, PAttachments = &colorAtt, SubpassCount = 1, PSubpasses = &subpass };
+            var depthRef = new AttachmentReference { Attachment = 1, Layout = ImageLayout.DepthStencilAttachmentOptimal };
+
+            var subpass = new SubpassDescription
+            {
+                PipelineBindPoint = PipelineBindPoint.Graphics,
+                ColorAttachmentCount = 1,
+                PColorAttachments = &colorRef,
+                PDepthStencilAttachment = &depthRef
+            };
+
+            var rpCI = new RenderPassCreateInfo
+            {
+                SType = StructureType.RenderPassCreateInfo,
+                AttachmentCount = 2,
+                PAttachments = attachments,
+                SubpassCount = 1,
+                PSubpasses = &subpass
+            };
             if (r.Vk.CreateRenderPass(r.Device, &rpCI, null, out r.RenderPass) != Result.Success)
-                return Fail("RenderPass 创建失败。", sw);
+                return Fail("RenderPass 创建失败（含 Depth）。", sw);
             r.RpOk = true;
 
             // === Scene3D 专用资源 ===
 
-            // 8. Shader Modules
+            // 9. Shader Modules
             if (!VulkanScene3dShaderModules.Create(r.Vk, r.Device,
                     out r.VertModule, out r.FragModule, out var shaderErr))
                 return Fail(shaderErr, sw);
             r.VertModOk = true; r.FragModOk = true;
 
-            // 9. Pipeline Layout
+            // 10. Pipeline Layout
             if (!VulkanScene3dPipelineLayout.Create(r.Vk, r.Device,
                     out r.PipelineLayout, out var layoutErr))
                 return Fail(layoutErr, sw);
             r.LayoutOk = true;
 
-            // 10. Graphics Pipelines
+            // 11. Graphics Pipelines (with depth state)
             if (!VulkanScene3dPipelines.Create(r.Vk, r.Device,
                     r.RenderPass, r.PipelineLayout,
                     r.VertModule, r.FragModule,
@@ -149,7 +203,7 @@ public static unsafe class VulkanScene3dRenderer
                 return Fail(pipeErr, sw);
             r.GridPipeOk = true; r.UnitPipeOk = true;
 
-            // 11. Vertex Buffers
+            // 12. Vertex Buffers
             if (!VulkanScene3dVertexBuffers.Create(r.Vk, pd, r.Device,
                     gridVertices, unitVertices,
                     out r.GridBuffer, out r.GridMemory,
@@ -158,17 +212,26 @@ public static unsafe class VulkanScene3dRenderer
                 return Fail(bufErr, sw);
             r.GridBufOk = true; r.UnitBufOk = true;
 
-            // 12. Framebuffers
+            // 13. Framebuffers (color + depth)
             r.Framebuffers = new Framebuffer[imgCount];
             for (var i = 0; i < imgCount; i++)
             {
-                var att = stackalloc[] { r.ImageViews[i] };
-                var fbCI = new FramebufferCreateInfo { SType = StructureType.FramebufferCreateInfo, RenderPass = r.RenderPass, AttachmentCount = 1, PAttachments = att, Width = extent.Width, Height = extent.Height, Layers = 1 };
+                var fba = stackalloc ImageView[] { r.ImageViews[i], r.DepthViews[i] };
+                var fbCI = new FramebufferCreateInfo
+                {
+                    SType = StructureType.FramebufferCreateInfo,
+                    RenderPass = r.RenderPass,
+                    AttachmentCount = 2,
+                    PAttachments = (ImageView*)fba,
+                    Width = extent.Width,
+                    Height = extent.Height,
+                    Layers = 1
+                };
                 if (r.Vk.CreateFramebuffer(r.Device, &fbCI, null, out r.Framebuffers[i]) != Result.Success)
-                    return Fail($"Framebuffer {i} 创建失败。", sw);
+                    return Fail($"Framebuffer {i} 创建失败（含 Depth）。", sw);
             }
 
-            // 13. Command Pool + Buffer
+            // 14. Command Pool + Buffer
             var poolCI = new CommandPoolCreateInfo { SType = StructureType.CommandPoolCreateInfo, QueueFamilyIndex = qi };
             if (r.Vk.CreateCommandPool(r.Device, &poolCI, null, out r.CommandPool) != Result.Success)
                 return Fail("CommandPool 创建失败。", sw);
@@ -178,7 +241,7 @@ public static unsafe class VulkanScene3dRenderer
             if (r.Vk.AllocateCommandBuffers(r.Device, &allocCI, out r.CommandBuffer) != Result.Success)
                 return Fail("CommandBuffer 创建失败。", sw);
 
-            // 14. Sync Objects
+            // 15. Sync Objects
             var semCI = new SemaphoreCreateInfo { SType = StructureType.SemaphoreCreateInfo };
             var fenceCI = new FenceCreateInfo { SType = StructureType.FenceCreateInfo, Flags = FenceCreateFlags.SignaledBit };
             if (r.Vk.CreateSemaphore(r.Device, &semCI, null, out r.SemAvail) != Result.Success ||
@@ -187,7 +250,7 @@ public static unsafe class VulkanScene3dRenderer
                 return Fail("同步对象创建失败。", sw);
             r.SyncOk = true;
 
-            // 15. Acquire image
+            // 16. Acquire image
             r.Vk.WaitForFences(r.Device, 1, ref r.Fence, Vk.True, ulong.MaxValue);
             r.Vk.ResetFences(r.Device, 1, ref r.Fence);
             uint imgIndex = 0;
@@ -197,19 +260,35 @@ public static unsafe class VulkanScene3dRenderer
             if (acqRes != Result.Success && acqRes != Result.SuboptimalKhr)
                 return Fail($"AcquireNextImage 失败：{acqRes}。", sw);
 
-            // 16. MVP
+            // 17. VP matrix (shared view-projection)
             var aspect = extent.Width / (float)extent.Height;
-            var mvp = VulkanCameraMatrices.ComputeVulkanMVP(camera, aspect);
+            var vp = VulkanCameraMatrices.ComputeVulkanMVP(camera, aspect);
 
-            // 17. Record Command Buffer
+            // 18. Per-object unit MVP array
+            var unitMvpList = new List<float[]>();
+            foreach (var draw in unitDraws)
+            {
+                // Model = translation * scale (column-major)
+                var trans = VulkanCameraMatrices.CreateTranslation(draw.X, draw.Y, draw.Z);
+                var scale = VulkanCameraMatrices.CreateScale(draw.Scale);
+                var model = VulkanCameraMatrices.Mul(trans, scale);
+                // MVP = VP * Model
+                var mvp = VulkanCameraMatrices.Mul(vp, model);
+                unitMvpList.Add(mvp);
+                renderedUnitCount++;
+            }
+
+            // 19. Record Command Buffer
             if (!VulkanScene3dCommandRecorder.Record(r.Vk, r.CommandBuffer,
                     r.RenderPass, r.Framebuffers[imgIndex], extent,
                     r.GridPipeline, r.UnitPipeline, r.PipelineLayout,
-                    mvp, r.GridBuffer, gVc, r.UnitBuffer, uVc,
+                    vp, r.GridBuffer, gVc,
+                    r.UnitBuffer, uVc,
+                    [.. unitMvpList],
                     out drawCalls, out var cmdErr))
                 return Fail(cmdErr, sw);
 
-            // 18. Submit
+            // 20. Submit
             var queue = default(Queue);
             r.Vk.GetDeviceQueue(r.Device, qi, 0, out queue);
             var waitSem = stackalloc[] { r.SemAvail };
@@ -227,7 +306,7 @@ public static unsafe class VulkanScene3dRenderer
             if (r.Vk.QueueSubmit(queue, 1, &submitInfo, r.Fence) != Result.Success)
                 return Fail("QueueSubmit 失败。", sw);
 
-            // 19. Present
+            // 21. Present
             var presentFn = Marshal.GetDelegateForFunctionPointer<QueuePresentPtr>(fnQueuePresent);
             var scArr = stackalloc[] { r.Swapchain };
             var idxArr = stackalloc[] { imgIndex };
@@ -245,12 +324,21 @@ public static unsafe class VulkanScene3dRenderer
             r.Vk.DeviceWaitIdle(r.Device);
             sw.Stop();
 
+            var depthFmtName = VulkanScene3dDepthFormatSelector.FormatName(depthFormat);
             return new VulkanScene3dInfo(
                 VulkanScene3dStatus.Succeeded,
-                $"Vulkan 3D 场景绘制成功，Grid：{gVc} 顶点/{gVc / 2} 线段，" +
-                $"Unit：{uVc} 顶点/{uVc / 3} 三角形，" +
-                $"DrawCall：{drawCalls}，用时：{sw.Elapsed.TotalMilliseconds:F2} ms。",
+                $"Vulkan 3D 场景绘制成功：" +
+                $"RenderObject {unitDraws.Length}，" +
+                $"Unit {renderedUnitCount}，" +
+                $"单体顶点 {uVc}，" +
+                $"Grid {gVc}，" +
+                $"Depth {depthFmtName}，" +
+                $"DepthAttachment {depthAttachmentCount}，" +
+                $"DrawCall {drawCalls}，" +
+                $"用时 {sw.Elapsed.TotalMilliseconds:F2} ms。",
                 gVc, gVc / 2, uVc, uVc / 3,
+                unitDraws.Length, renderedUnitCount, ignoredObjectCount,
+                depthFmtName, depthAttachmentCount, depthTestEnabled,
                 drawCalls, (int)extent.Width, (int)extent.Height,
                 camera.ToSummary(),
                 sw.Elapsed.TotalMilliseconds);
@@ -348,18 +436,10 @@ public static unsafe class VulkanScene3dRenderer
     { var f = Marshal.GetDelegateForFunctionPointer<GetCapsPtr>(fn); SurfaceCapabilitiesKHR c; f(pd, surf, &c); return c; }
 
     private static SurfaceFormatKHR[] QueryFormats(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR surf, nint fn)
-    {
-        var f = Marshal.GetDelegateForFunctionPointer<GetFormatsPtr>(fn);
-        uint c = 0; if (f(pd, surf, &c, null) != Result.Success || c == 0) return [];
-        var r = new SurfaceFormatKHR[c]; fixed (SurfaceFormatKHR* p = r) f(pd, surf, &c, p); return r;
-    }
+    { var f = Marshal.GetDelegateForFunctionPointer<GetFormatsPtr>(fn); uint c = 0; if (f(pd, surf, &c, null) != Result.Success || c == 0) return []; var r = new SurfaceFormatKHR[c]; fixed (SurfaceFormatKHR* p = r) f(pd, surf, &c, p); return r; }
 
     private static PresentModeKHR[] QueryModes(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR surf, nint fn)
-    {
-        var f = Marshal.GetDelegateForFunctionPointer<GetModesPtr>(fn);
-        uint c = 0; if (f(pd, surf, &c, null) != Result.Success || c == 0) return [];
-        var r = new PresentModeKHR[c]; fixed (PresentModeKHR* p = r) f(pd, surf, &c, p); return r;
-    }
+    { var f = Marshal.GetDelegateForFunctionPointer<GetModesPtr>(fn); uint c = 0; if (f(pd, surf, &c, null) != Result.Success || c == 0) return []; var r = new PresentModeKHR[c]; fixed (PresentModeKHR* p = r) f(pd, surf, &c, p); return r; }
 
     private static SurfaceFormatKHR ChooseFormat(SurfaceFormatKHR[] f)
     { foreach (var x in f) if (x.Format == Format.B8G8R8A8Srgb || x.Format == Format.R8G8B8A8Srgb) return x; return f[0]; }
@@ -371,7 +451,7 @@ public static unsafe class VulkanScene3dRenderer
     { if (c.CurrentExtent.Width != uint.MaxValue) return c.CurrentExtent; return new Extent2D(Math.Clamp(fw, c.MinImageExtent.Width, c.MaxImageExtent.Width), Math.Clamp(fh, c.MinImageExtent.Height, c.MaxImageExtent.Height)); }
 
     private static VulkanScene3dInfo Fail(string msg, Stopwatch sw) =>
-        new(VulkanScene3dStatus.Failed, msg, 0, 0, 0, 0, 0, 0, 0, "无", sw.Elapsed.TotalMilliseconds);
+        new(VulkanScene3dStatus.Failed, msg, 0, 0, 0, 0, 0, 0, 0, "无", 0, false, 0, 0, 0, "无", sw.Elapsed.TotalMilliseconds);
 
     private static uint PackVer(uint a, uint b, uint c) => (a << 22) | (b << 12) | c;
 

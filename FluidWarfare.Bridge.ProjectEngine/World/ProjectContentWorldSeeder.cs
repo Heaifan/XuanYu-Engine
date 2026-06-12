@@ -13,6 +13,18 @@ public static class ProjectContentWorldSeeder
     private const string TargetContentKind = "unitTemplate";
 
     /// <summary>
+    /// 临时开发占位布局。
+    /// 这是 SampleProject 的临时单位位置分配，不是最终单位模板位置语义，
+    /// 未来由场景/地图实例文件替代。
+    /// </summary>
+    private static readonly Vector3d[] PlaceholderPositions =
+    [
+        new(-4, 0,  1),
+        new( 0, 0,  0),
+        new( 1, 0, -3),
+    ];
+
+    /// <summary>
     /// 根据 unitTemplate 内容文件入口在 WorldState 中创建占位实体。
     /// </summary>
     /// <param name="worldState">目标 World 状态。</param>
@@ -43,7 +55,9 @@ public static class ProjectContentWorldSeeder
         foreach (var file in targetFiles)
         {
             var displayName = Path.GetFileNameWithoutExtension(file.FileName);
-            var position = new Vector3d(index * 10.0, 0.0, 0.0);
+            var position = index < PlaceholderPositions.Length
+                ? PlaceholderPositions[index]
+                : new Vector3d(index * 5.0, 0.0, 0.0);
             var source = new ProjectContentEntitySource(file.RelativePath, file.ContentKind);
 
             worldState.CreateEntity(displayName, position, source);

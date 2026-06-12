@@ -9,8 +9,8 @@ public sealed class VulkanCameraInfoTests
     {
         var cam = VulkanCameraInfo.DefaultBattlefield;
         Assert.Equal(0, cam.PositionX);
-        Assert.Equal(18, cam.PositionY);
-        Assert.Equal(24, cam.PositionZ);
+        Assert.Equal(22, cam.PositionY);
+        Assert.Equal(32, cam.PositionZ);
     }
 
     [Fact]
@@ -32,10 +32,10 @@ public sealed class VulkanCameraInfoTests
     }
 
     [Fact]
-    public void DefaultBattlefield_ShouldUse60Fov()
+    public void DefaultBattlefield_ShouldUse55Fov()
     {
         var cam = VulkanCameraInfo.DefaultBattlefield;
-        Assert.Equal(60, cam.FieldOfViewDegrees);
+        Assert.Equal(55, cam.FieldOfViewDegrees);
     }
 
     [Fact]

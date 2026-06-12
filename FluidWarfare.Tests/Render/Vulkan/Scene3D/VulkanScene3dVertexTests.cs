@@ -16,9 +16,19 @@ public sealed class VulkanScene3dVertexTests
     }
 
     [Fact]
-    public void BuildGrid_AllVerticesShouldBeAtY0()
+    public void BuildGrid_ShouldUseDefaultYOffset()
     {
         var vertices = VulkanScene3dVertices.BuildGrid(10, 5);
+        foreach (var v in vertices)
+        {
+            Assert.Equal(-0.01f, v.Y);
+        }
+    }
+
+    [Fact]
+    public void BuildGrid_ShouldAllowCustomYOffset()
+    {
+        var vertices = VulkanScene3dVertices.BuildGrid(10, 5, yOffset: 0);
         foreach (var v in vertices)
         {
             Assert.Equal(0, v.Y);

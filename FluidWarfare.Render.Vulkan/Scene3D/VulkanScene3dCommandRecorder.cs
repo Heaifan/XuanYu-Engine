@@ -4,23 +4,22 @@ namespace FluidWarfare.Render.Vulkan.Scene3D;
 
 /// <summary>
 /// 录制 Scene3D CommandBuffer。
-/// 录制顺序：Begin → Clear → BindPipeline(Grid) → PushConstants → BindVBs → Draw
-///   → BindPipeline(Unit) → PushConstants → BindVBs → Draw → EndRenderPass → End
+/// 录制顺序：Begin → ClearColor+Depth → BindPipeline(Grid) → PushConstants(VP) → Draw(Grid)
+///   → BindPipeline(Unit) → BindVBs → for each object: PushConstants(MVP) → Draw
+///   → EndRenderPass → End
 /// </summary>
 public static unsafe class VulkanScene3dCommandRecorder
 {
-    /// <summary>
-    /// 录制命令缓冲区。
-    /// </summary>
     public static bool Record(
         Vk vk, CommandBuffer cmdBuf,
         RenderPass renderPass, Framebuffer framebuffer,
         Extent2D extent,
         Pipeline gridPipeline, Pipeline unitPipeline,
         PipelineLayout pipelineLayout,
-        float[] mvp,
+        float[] vpMvp,
         Silk.NET.Vulkan.Buffer gridBuffer, int gridVertexCount,
         Silk.NET.Vulkan.Buffer unitBuffer, int unitVertexCount,
+        float[][] unitMvpArray,
         out int drawCalls,
         out string errorMessage)
     {
@@ -65,26 +64,32 @@ public static unsafe class VulkanScene3dCommandRecorder
             return false;
         }
 
-        // Clear to deep blue
+        // Clear: color + depth
         const float clearR = 0.03f, clearG = 0.08f, clearB = 0.18f, clearA = 1.0f;
-        var clearVal = new ClearValue
+        var clearVals = stackalloc ClearValue[2];
+        clearVals[0] = new ClearValue
         {
             Color = new ClearColorValue { Float32_0 = clearR, Float32_1 = clearG, Float32_2 = clearB, Float32_3 = clearA }
         };
+        clearVals[1] = new ClearValue
+        {
+            DepthStencil = new ClearDepthStencilValue { Depth = 1.0f, Stencil = 0 }
+        };
+
         var rpBegin = new RenderPassBeginInfo
         {
             SType = StructureType.RenderPassBeginInfo,
             RenderPass = renderPass,
             Framebuffer = framebuffer,
             RenderArea = new Rect2D(new Offset2D(0, 0), extent),
-            ClearValueCount = 1,
-            PClearValues = &clearVal
+            ClearValueCount = 2,
+            PClearValues = clearVals
         };
         vk.CmdBeginRenderPass(cmdBuf, &rpBegin, SubpassContents.Inline);
 
-        // Draw grid (LineList)
+        // Draw grid (LineList) — uses VP-only MVP
         vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, gridPipeline);
-        fixed (float* mvpPtr = mvp)
+        fixed (float* mvpPtr = vpMvp)
         {
             vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit, 0, 64, mvpPtr);
         }
@@ -94,16 +99,20 @@ public static unsafe class VulkanScene3dCommandRecorder
         vk.CmdDraw(cmdBuf, (uint)gridVertexCount, 1, 0, 0);
         drawCalls++;
 
-        // Draw unit (TriangleList)
+        // Draw units (shared buffer, per-object MVP)
         vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, unitPipeline);
-        fixed (float* mvpPtr2 = mvp)
-        {
-            vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit, 0, 64, mvpPtr2);
-        }
         var unitBufs = stackalloc[] { unitBuffer };
         vk.CmdBindVertexBuffers(cmdBuf, 0, 1, unitBufs, offsets);
-        vk.CmdDraw(cmdBuf, (uint)unitVertexCount, 1, 0, 0);
-        drawCalls++;
+
+        foreach (var unitMvp in unitMvpArray)
+        {
+            fixed (float* mvpPtr = unitMvp)
+            {
+                vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit, 0, 64, mvpPtr);
+            }
+            vk.CmdDraw(cmdBuf, (uint)unitVertexCount, 1, 0, 0);
+            drawCalls++;
+        }
 
         vk.CmdEndRenderPass(cmdBuf);
 

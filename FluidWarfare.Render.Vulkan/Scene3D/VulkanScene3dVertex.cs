@@ -14,6 +14,16 @@ public readonly record struct VulkanScene3dVertex(
     float A);
 
 /// <summary>
+/// 单位 3D 绘制信息：世界坐标和缩放。
+/// 由 Editor 从 RenderScene 对象转换而来，Vulkan 层据此计算每对象 MVP。
+/// </summary>
+public readonly record struct VulkanScene3dUnitDrawInfo(
+    float X,
+    float Y,
+    float Z,
+    float Scale);
+
+/// <summary>
 /// 3D 场景顶点数据生成工具。
 /// </summary>
 public static class VulkanScene3dVertices
@@ -22,24 +32,26 @@ public static class VulkanScene3dVertices
     /// 生成地面网格顶点（线段列表）。
     /// 范围：-gridExtent 到 +gridExtent，间隔 gridSpacing。
     /// 每两条线段需要 2 个顶点。
+    /// yOffset 用于将网格略微下沉以避免与单位底面的 Z-fighting。
     /// </summary>
     public static VulkanScene3dVertex[] BuildGrid(int gridExtent, int gridSpacing,
-        float r = 0.35f, float g = 0.40f, float b = 0.50f, float a = 1.0f)
+        float r = 0.35f, float g = 0.40f, float b = 0.50f, float a = 1.0f,
+        float yOffset = -0.01f)
     {
         var vertices = new List<VulkanScene3dVertex>();
 
         for (var x = -gridExtent; x <= gridExtent; x += gridSpacing)
         {
             // Z 方向线段
-            vertices.Add(new VulkanScene3dVertex(x, 0, -gridExtent, r, g, b, a));
-            vertices.Add(new VulkanScene3dVertex(x, 0, gridExtent, r, g, b, a));
+            vertices.Add(new VulkanScene3dVertex(x, yOffset, -gridExtent, r, g, b, a));
+            vertices.Add(new VulkanScene3dVertex(x, yOffset, gridExtent, r, g, b, a));
         }
 
         for (var z = -gridExtent; z <= gridExtent; z += gridSpacing)
         {
             // X 方向线段
-            vertices.Add(new VulkanScene3dVertex(-gridExtent, 0, z, r, g, b, a));
-            vertices.Add(new VulkanScene3dVertex(gridExtent, 0, z, r, g, b, a));
+            vertices.Add(new VulkanScene3dVertex(-gridExtent, yOffset, z, r, g, b, a));
+            vertices.Add(new VulkanScene3dVertex(gridExtent, yOffset, z, r, g, b, a));
         }
 
         return [.. vertices];

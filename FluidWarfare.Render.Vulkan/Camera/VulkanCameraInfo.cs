@@ -19,20 +19,20 @@ public sealed record VulkanCameraInfo(
     float FarPlane)
 {
     /// <summary>
-    /// 默认战场相机：斜俯视 45 度。
+    /// 默认战场相机（8.2 调整：更高更远，FOV 略窄，改善画面构图）。
     /// </summary>
     public static VulkanCameraInfo DefaultBattlefield { get; } =
         new(
             PositionX: 0,
-            PositionY: 18,
-            PositionZ: 24,
+            PositionY: 22,
+            PositionZ: 32,
             TargetX: 0,
             TargetY: 0,
             TargetZ: 0,
             UpX: 0,
             UpY: 1,
             UpZ: 0,
-            FieldOfViewDegrees: 60,
+            FieldOfViewDegrees: 55,
             NearPlane: 0.1f,
             FarPlane: 1000f);
 

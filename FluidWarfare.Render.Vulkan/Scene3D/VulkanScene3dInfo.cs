@@ -10,6 +10,12 @@ public sealed record VulkanScene3dInfo(
     int GridLineCount,
     int UnitVertexCount,
     int UnitTriangleCount,
+    int RenderObjectCount,
+    int RenderedUnitCount,
+    int IgnoredObjectCount,
+    string DepthFormat,
+    int DepthAttachmentCount,
+    bool DepthTestEnabled,
     int DrawCallCount,
     int ViewportWidth,
     int ViewportHeight,
@@ -20,5 +26,6 @@ public sealed record VulkanScene3dInfo(
 
     public static VulkanScene3dInfo NotChecked { get; } =
         new(VulkanScene3dStatus.NotChecked, "Vulkan 3D 场景尚未绘制。",
-            0, 0, 0, 0, 0, 0, 0, "未知", 0);
+            0, 0, 0, 0, 0, 0, 0, "无", 0, false,
+            0, 0, 0, "未知", 0);
 }

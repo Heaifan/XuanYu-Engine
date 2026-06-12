@@ -74,7 +74,8 @@ public sealed partial class EditorShell : UserControl
         _vulkanScene3dInfo = new VulkanScene3dInfo(
             VulkanScene3dStatus.NotChecked,
             _scene3dGate.Message,
-            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, "无", 0, false,
+            0, 0, 0,
             _scene3dGate.CanRun ? "可用" : "不可用（已隔离）", 0);
         AvaloniaXamlLoader.Load(this);
         FindShellControls();
@@ -874,7 +875,8 @@ public sealed partial class EditorShell : UserControl
             AppendWarningLog(gate.Message);
             _vulkanScene3dInfo = new VulkanScene3dInfo(
                 VulkanScene3dStatus.NotChecked, gate.Message,
-                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, "无", 0, false,
+                0, 0, 0,
                 gate.CanRun ? "可用" : "不可用（已隔离）", 0);
             ShowVulkanScene3DInfo();
             return;
@@ -888,7 +890,8 @@ public sealed partial class EditorShell : UserControl
         {
             _vulkanScene3dInfo = new VulkanScene3dInfo(
                 VulkanScene3dStatus.Failed, "场景3D：视口未就绪，跳过运行。",
-                0, 0, 0, 0, 0, 0, 0, "不可用", 0);
+                0, 0, 0, 0, 0, 0, 0, "无", 0, false,
+                0, 0, 0, "不可用", 0);
             ShowVulkanScene3DInfo();
             return;
         }
@@ -930,7 +933,8 @@ public sealed partial class EditorShell : UserControl
         {
             _vulkanScene3dInfo = new VulkanScene3dInfo(
                 VulkanScene3dStatus.Failed, "缺少原生句柄，跳过 3D 场景绘制。",
-                0, 0, 0, 0, 0, 0, 0, "无", 0);
+                0, 0, 0, 0, 0, 0, 0, "无", 0, false,
+                0, 0, 0, "无", 0);
             ShowVulkanScene3DInfo();
             return;
         }
@@ -942,20 +946,22 @@ public sealed partial class EditorShell : UserControl
         // 生成地面网格（范围 -20 到 +20，间隔 2）
         var gridVertices = VulkanScene3dVertices.BuildGrid(20, 2);
 
-        // 从 RenderScene 取第一个对象的位置
-        VulkanScene3dVertex[] unitVertices;
-        if (_renderScene.Objects.Count > 0)
+        // 共享单位网格（单位立方体，位置由 per-object MVP 控制）
+        var unitVertices = VulkanScene3dVertices.BuildCube(0, 0, 0, 1.0f);
+
+        // 单位绘制信息：从 RenderScene 收集所有 UnitMarker 对象
+        var unitDraws = new List<VulkanScene3dUnitDrawInfo>();
+        foreach (var obj in _renderScene.Objects)
         {
-            var obj = _renderScene.Objects[0];
-            var cx = obj.Position.X;
-            var cy = obj.Position.Y + 0.5;
-            var cz = obj.Position.Z;
-            unitVertices = VulkanScene3dVertices.BuildCube(
-                (float)cx, (float)cy, (float)cz, 1.0f);
-        }
-        else
-        {
-            unitVertices = VulkanScene3dVertices.BuildCube(0, 0.5f, 0, 1.0f);
+            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker)
+                continue;
+
+            var cy = (float)obj.Position.Y + 0.5f;
+            unitDraws.Add(new VulkanScene3dUnitDrawInfo(
+                (float)obj.Position.X,
+                cy,
+                (float)obj.Position.Z,
+                1.25f));
         }
 
         var camera = VulkanCameraInfo.DefaultBattlefield;
@@ -968,7 +974,8 @@ public sealed partial class EditorShell : UserControl
             nativeHostInfo.WindowHandle,
             vpW, vpH, camera,
             gridVertices.AsSpan(),
-            unitVertices.AsSpan());
+            unitVertices.AsSpan(),
+            [.. unitDraws]);
 
         ShowVulkanScene3DInfo();
     }
@@ -996,7 +1003,7 @@ public sealed partial class EditorShell : UserControl
             : string.Empty;
 
         var scene3dSuffix = _vulkanScene3dInfo.IsSucceeded
-            ? $" | Scene3D 成功 | Grid: {_vulkanScene3dInfo.GridVertexCount} | Unit: {_vulkanScene3dInfo.UnitVertexCount} | DrawCall: {_vulkanScene3dInfo.DrawCallCount}"
+            ? $" | Scene3D 成功 | 对象: {_vulkanScene3dInfo.RenderedUnitCount} | Depth: {_vulkanScene3dInfo.DepthFormat} | DrawCall: {_vulkanScene3dInfo.DrawCallCount}"
             : _scene3dGate.CanRun
                 ? " | Scene3D Ready，等待手动触发"
                 : " | Scene3D 已隔离";
@@ -1044,17 +1051,17 @@ public sealed partial class EditorShell : UserControl
 
         _debugDockPanel?.SetScene3d(
             _vulkanScene3dInfo.IsSucceeded
-                ? "成功"
+                ? $"成功"
                 : _vulkanScene3dInfo.Message,
             _vulkanScene3dInfo.CameraSummary,
             _vulkanScene3dInfo.IsSucceeded
                 ? $"{_vulkanScene3dInfo.GridVertexCount} 顶点/{_vulkanScene3dInfo.GridLineCount} 线段"
                 : "-",
             _vulkanScene3dInfo.IsSucceeded
-                ? $"{_vulkanScene3dInfo.UnitVertexCount} 顶点/{_vulkanScene3dInfo.UnitTriangleCount} 三角形"
+                ? $"{_vulkanScene3dInfo.UnitVertexCount} 顶点/{_vulkanScene3dInfo.UnitTriangleCount} 三角形 | 渲染 {_vulkanScene3dInfo.RenderedUnitCount}/{_vulkanScene3dInfo.RenderObjectCount} | 忽略 {_vulkanScene3dInfo.IgnoredObjectCount}"
                 : "-",
             _vulkanScene3dInfo.IsSucceeded
-                ? $"{_vulkanScene3dInfo.DrawCallCount}"
+                ? $"{_vulkanScene3dInfo.DrawCallCount} | Depth {_vulkanScene3dInfo.DepthFormat} x{_vulkanScene3dInfo.DepthAttachmentCount} {( _vulkanScene3dInfo.DepthTestEnabled ? "已启用" : "未启用")}"
                 : "-");
 
         // Scene3D 菜单项状态同步

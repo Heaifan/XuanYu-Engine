@@ -99,10 +99,38 @@ public static class VulkanCameraMatrices
     }
 
     /// <summary>
+    /// 创建平移矩阵（列优先 float[16]）。
+    /// </summary>
+    public static float[] CreateTranslation(float x, float y, float z)
+    {
+        return
+        [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            x, y, z, 1
+        ];
+    }
+
+    /// <summary>
+    /// 创建均匀缩放矩阵（列优先 float[16]）。
+    /// </summary>
+    public static float[] CreateScale(float s)
+    {
+        return
+        [
+            s, 0, 0, 0,
+            0, s, 0, 0,
+            0, 0, s, 0,
+            0, 0, 0, 1
+        ];
+    }
+
+    /// <summary>
     /// 4x4 矩阵乘法（列优先）。
     /// result = a × b
     /// </summary>
-    private static float[] Mul(float[] a, float[] b)
+    public static float[] Mul(float[] a, float[] b)
     {
         var r = new float[16];
         for (var col = 0; col < 4; col++)

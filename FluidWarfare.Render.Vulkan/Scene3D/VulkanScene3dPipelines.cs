@@ -62,6 +62,15 @@ public static unsafe class VulkanScene3dPipelines
                 FrontFace = FrontFace.Clockwise,
                 DepthBiasEnable = Vk.False, LineWidth = 1.0f
             };
+            var dsCI = new PipelineDepthStencilStateCreateInfo
+            {
+                SType = StructureType.PipelineDepthStencilStateCreateInfo,
+                DepthTestEnable = Vk.True,
+                DepthWriteEnable = Vk.True,
+                DepthCompareOp = CompareOp.Less,
+                DepthBoundsTestEnable = Vk.False,
+                StencilTestEnable = Vk.False
+            };
             var msCI = new PipelineMultisampleStateCreateInfo
             {
                 SType = StructureType.PipelineMultisampleStateCreateInfo,
@@ -97,7 +106,8 @@ public static unsafe class VulkanScene3dPipelines
                 StageCount = 2, PStages = stages,
                 PVertexInputState = &viCI, PInputAssemblyState = &iaCI,
                 PViewportState = &vsCI, PRasterizationState = &rsCI,
-                PMultisampleState = &msCI, PColorBlendState = &cbCI,
+                PMultisampleState = &msCI, PDepthStencilState = &dsCI,
+                PColorBlendState = &cbCI,
                 Layout = pipelineLayout, RenderPass = renderPass, Subpass = 0
             };
             var gridRes = vk.CreateGraphicsPipelines(dev, default, 1, &gpCI, null, out gridPipeline);
@@ -121,7 +131,8 @@ public static unsafe class VulkanScene3dPipelines
                 StageCount = 2, PStages = stages,
                 PVertexInputState = &viCI, PInputAssemblyState = &iaCI2,
                 PViewportState = &vsCI, PRasterizationState = &rsCI,
-                PMultisampleState = &msCI, PColorBlendState = &cbCI,
+                PMultisampleState = &msCI, PDepthStencilState = &dsCI,
+                PColorBlendState = &cbCI,
                 Layout = pipelineLayout, RenderPass = renderPass, Subpass = 0
             };
             var unitRes = vk.CreateGraphicsPipelines(dev, default, 1, &gpCI2, null, out unitPipeline);

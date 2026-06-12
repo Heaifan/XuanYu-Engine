@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-12 11:30
+最后编辑：2026-06-12 14:00
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -312,17 +312,20 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.1R.3：Scene3D 可见性修复与 DebugDock 清理。
+当前执行 Milestone 8.2：多对象 3D 绘制与基础 Depth Buffer。
 
-8.R 系列进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ✅ → Validation Layer ✅ → Renderer 拆分 ✅ → 3D 重启 ✅ → 可见性修复 ⬆️
+管线进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ✅ → Validation Layer ✅ → Renderer 拆分 ✅ → 3D 重启 ✅ → 可见性修复 ✅ → Depth + 多对象 ⬆️
 
 当前状态：
 - Vulkan Validation Layer 默认不启用。FW_VULKAN_VALIDATION=1 时检测 VK_LAYER_KHRONOS_validation 与 VK_EXT_debug_utils，可用时创建 Debug Messenger。
 - Scene3D 保持隔离，仅 FW_ENABLE_SCENE3D=1 且 shader 已验证时允许手动触发。
 - SPIR-V 已由标准工具编译并通过 spirv-val 验证。
-- 透视矩阵已修复（near/range → far/range），Vulkan NDC 裁剪问题已解决。
+- 透视矩阵已修复，Vulkan NDC 裁剪问题已解决。
 - DebugDock 底部按钮已移除，顶部「运行」菜单为唯一手动入口。
 - 渲染模式追踪与 RenderSeq 日志已启用。
+- Depth Buffer: D32Sfloat（自动选择），每 Swapchain Image 一个 Depth Attachment。
+- 多对象：3 个 World 实体 → 3 个 RenderObject → 3 个立方体，共享 Vertex Buffer + 每对象 MVP。
+- 测试 321/321 全部通过。
 
 ## 3. 顶层目录结构
 

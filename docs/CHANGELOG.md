@@ -963,4 +963,75 @@ file-tree.md
 
 ---
 
-下一阶段：**Milestone 8.2 — 多对象 3D 绘制与基础 Depth Buffer**（待 8.1R GUI 验收通过）
+---
+
+---
+
+### Milestone 8.2 — 多对象 3D 绘制与基础 Depth Buffer
+
+#### 新增
+
+1. **两个 SampleProject 单位内容文件**：`sample_unit_2.json`、`sample_unit_3.json`，与现有 `sample_unit.json` 形成 3 个单位。
+2. **World 实体生成扩展**：`ProjectContentWorldSeeder` 使用 8.2 占位布局 `(-4,0,1)` `(0,0,0)` `(1,0,-3)`，第三个与第二个重叠以验证深度遮挡。
+3. **RenderScene 多对象转换**：`WorldToRenderSceneBuilder` 遍历全部实体生成多个 `RenderObjectInfo`。
+4. **Depth Buffer 系统**（3 个新文件）：
+   - `VulkanScene3dDepthFormatSelector`：查询 `D32Sfloat → D32SfloatS8Uint → D24UnormS8Uint` 候选深度格式。
+   - `VulkanScene3dDepthAttachmentInfo`：保存深度格式选择结果与诊断信息。
+   - `VulkanScene3dDepthAttachments`：为每个 Swapchain Image 创建 Depth Image / Memory / ImageView。
+5. **RenderPass 深度附件**：第二个 Attachment（LoadOp=Clear, StoreOp=DontCare），Subpass 设置 `PDepthStencilAttachment`。
+6. **Framebuffer 双附件**：每个 Framebuffer 附加 Color + Depth ImageView，AttachmentCount = 2。
+7. **Pipeline 深度状态**：GridPipeline 与 UnitPipeline 均启用 `DepthTestEnable=True`、`DepthWriteEnable=True`、`CompareOp=Less`。
+8. **每对象 MVP**：共享 Unit Vertex Buffer，每对象 `Model = Translation × Scale`，`MVP = VP × Model`，CommandBuffer 中循环 `BindPipeline → BindVBs → PushConstants(MVP) → Draw`。
+9. **相机调整**：`DefaultBattlefield` 位置 `(0,22,32)`、FOV `55°`。
+10. **Grid Y 偏移**：`BuildGrid` 默认 `yOffset = -0.01f` 避免 Z-fighting。
+11. **VulkanScene3dInfo 扩展**：新增 `RenderObjectCount`、`RenderedUnitCount`、`IgnoredObjectCount`、`DepthFormat`、`DepthAttachmentCount`、`DepthTestEnabled`。
+12. **测试 9 个新增**：DepthFormatSelector 候选顺序/Stencil 判定、DepthAttachmentInfo 纯逻辑、BuildGrid Y 偏移、Info 新字段。
+
+#### 移除
+
+无。
+
+#### 修改文件
+
+```text
+GameProjects/SampleProject/units/sample_unit_2.json          (新增)
+GameProjects/SampleProject/units/sample_unit_3.json          (新增)
+FluidWarfare.Render.Vulkan/Scene3D/Depth/VulkanScene3dDepthFormatSelector.cs     (新增)
+FluidWarfare.Render.Vulkan/Scene3D/Depth/VulkanScene3dDepthAttachmentInfo.cs      (新增)
+FluidWarfare.Render.Vulkan/Scene3D/Depth/VulkanScene3dDepthAttachments.cs         (新增)
+FluidWarfare.Tests/Render/Vulkan/Scene3D/Depth/VulkanScene3dDepthFormatSelectorTests.cs  (新增)
+FluidWarfare.Tests/Render/Vulkan/Scene3D/Depth/VulkanScene3dDepthAttachmentInfoTests.cs  (新增)
+ProjectContentWorldSeeder.cs               — 位置布局
+VulkanScene3dInfo.cs                       — 新增字段
+VulkanScene3dRenderResources.cs            — 深度资源 + Dispose
+VulkanScene3dRenderer.cs                   — RenderPass/Framebuffer 深度 + 多对象 MVP
+VulkanScene3dPipelines.cs                  — DepthStencilState
+VulkanScene3dCommandRecorder.cs            — 2 ClearValues + 每对象循环
+VulkanCameraInfo.cs                        — DefaultBattlefield
+VulkanCameraMatrices.cs                    — CreateTranslation/CreateScale/Mul public
+VulkanScene3dVertex.cs                     — UnitDrawInfo struct + Grid Y offset
+EditorShell.axaml.cs                       — 传入选中的 UnitDrawInfo、诊断更新
+DebugDockPanel.axaml.cs                    — 诊断文本扩展（多对象/深度）
+VulkanCameraInfoTests.cs                   — 适配新参数
+VulkanScene3dVertexTests.cs                — 适配 Y offset
+VulkanScene3dInfoTests.cs                  — 新字段测试
+docs/CHANGELOG.md
+file-tree.md
+```
+
+#### 验证结果
+
+- ✅ dotnet build: 0 错误, 0 警告
+- ✅ dotnet test: 321/321 全部通过
+- ✅ 3 个 World 实体（sample_unit / sample_unit_2 / sample_unit_3）
+- ✅ 3 个 RenderObject，位置来自 RenderScene
+- ✅ 共享单个 Unit Vertex Buffer（36 顶点 / 12 三角形）
+- ✅ 每对象独立 MVP（平移 + 1.25 缩放）
+- ✅ Depth 格式 D32Sfloat（或回退 D24UnormS8Uint）
+- ✅ Depth Attachment = Swapchain Image 数量
+- ✅ Pipeline DepthTest=Yes / DepthWrite=Yes
+- ✅ DrawCall = 1 + RenderedUnitCount
+- ✅ Grid Y = -0.01（防 Z-fighting）
+- ✅ 不越界：无纹理、材质、光照、阴影、模型加载、相机控制、Instancing
+- ✅ Scene3D 仍只允许手动触发
+- ⏳ 人工验收：启动 Editor →「运行」→「运行 Scene3D 探针」，确认 3 个立方体 + 深度遮挡正确
