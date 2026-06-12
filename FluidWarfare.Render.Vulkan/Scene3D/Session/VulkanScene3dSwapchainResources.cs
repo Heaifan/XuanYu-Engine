@@ -69,6 +69,14 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         var r = new VulkanScene3dSwapchainResources(vk, device, functions);
         uint w = requestedWidth, h = requestedHeight;
 
+        // 局部失败出口：清理已创建资源后返回结构化错误
+        VulkanScene3dSwapchainCreateResult Fail(
+            VulkanScene3dSwapchainStage stage, Result? result, string message)
+        {
+            r.Dispose();
+            return VulkanScene3dSwapchainCreateResult.Failed(stage, result, w, h, message);
+        }
+
         // Surface capabilities
         SurfaceCapabilitiesKHR caps;
         functions.GetCapabilities(physicalDevice, surface, &caps);
@@ -77,8 +85,7 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         uint fmtCount = 0;
         functions.GetFormats(physicalDevice, surface, &fmtCount, null);
         if (fmtCount == 0)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.SurfaceFormats, null, w, h, "无可用 Surface 格式。");
+            return Fail(VulkanScene3dSwapchainStage.SurfaceFormats, null, "无可用 Surface 格式。");
         var fmts = new SurfaceFormatKHR[fmtCount];
         fixed (SurfaceFormatKHR* fp = fmts) functions.GetFormats(physicalDevice, surface, &fmtCount, fp);
 
@@ -92,8 +99,8 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         uint modeCount = 0;
         functions.GetPresentModes(physicalDevice, surface, &modeCount, null);
         if (modeCount == 0)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.PresentModes, null, w, h, "无可用 PresentMode。");
+            return Fail(
+                VulkanScene3dSwapchainStage.PresentModes, null, "无可用 PresentMode。");
         var modes = new PresentModeKHR[modeCount];
         fixed (PresentModeKHR* mp = modes) functions.GetPresentModes(physicalDevice, surface, &modeCount, mp);
         var presentMode = ChoosePresentMode(modes);
@@ -120,8 +127,8 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         SwapchainKHR sc;
         var createResult = functions.Create(device, &scCI, null, &sc);
         if (createResult != Result.Success)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.CreateSwapchain, createResult, w, h,
+            return Fail(
+                VulkanScene3dSwapchainStage.CreateSwapchain, createResult,
                 $"Swapchain 创建失败：{createResult}（请求尺寸 {w}x{h}）。");
         r.Swapchain = sc;
         TotalCreateCount++;
@@ -129,11 +136,11 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         // Get images
         uint actualCount = 0;
         if (functions.GetImages(device, sc, &actualCount, null) != Result.Success)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.GetSwapchainImages, null, w, h, "GetSwapchainImages 第一阶段失败。");
+            return Fail(
+                VulkanScene3dSwapchainStage.GetSwapchainImages, null, "GetSwapchainImages 第一阶段失败。");
         if (actualCount == 0)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.GetSwapchainImages, null, w, h, "Swapchain 图像数为 0。");
+            return Fail(
+                VulkanScene3dSwapchainStage.GetSwapchainImages, null, "Swapchain 图像数为 0。");
         var swapchainImages = new Image[actualCount];
         fixed (Image* ip = swapchainImages) functions.GetImages(device, sc, &actualCount, ip);
         r.ImageCount = (int)actualCount;
@@ -163,16 +170,16 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
             };
             ImageView newCv = default;
             if (vk.CreateImageView(device, &ivCI, null, out newCv) != Result.Success)
-                return VulkanScene3dSwapchainCreateResult.Failed(
-                    VulkanScene3dSwapchainStage.ColorImageViews, null, w, h, $"Color ImageView {i} 创建失败。");
+                return Fail(
+                    VulkanScene3dSwapchainStage.ColorImageViews, null, $"Color ImageView {i} 创建失败。");
             r.ColorViews[i] = newCv;
         }
 
         // Depth format + attachments
         var depthInfo = VulkanScene3dDepthFormatSelector.Select(vk, physicalDevice);
         if (!depthInfo.IsSupported)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.DepthAttachments, null, w, h, depthInfo.Message);
+            return Fail(
+                VulkanScene3dSwapchainStage.DepthAttachments, null, depthInfo.Message);
         r.DepthFormat = depthInfo.ChosenFormat;
         r.DepthImages = new Image[actualCount];
         r.DepthMemories = new DeviceMemory[actualCount];
@@ -180,8 +187,8 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         if (!VulkanScene3dDepthAttachments.Create(vk, physicalDevice, device,
                 extent, depthInfo.ChosenFormat, (uint)actualCount,
                 r.DepthImages, r.DepthMemories, r.DepthViews, out var depthErr))
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.DepthAttachments, null, w, h, depthErr);
+            return Fail(
+                VulkanScene3dSwapchainStage.DepthAttachments, null, depthErr);
 
         // RenderPass
         var colorAttDesc = new AttachmentDescription
@@ -216,8 +223,8 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         };
         RenderPass newRp = default;
         if (vk.CreateRenderPass(device, &rpCI, null, out newRp) != Result.Success)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.RenderPass, null, w, h, "RenderPass 创建失败。");
+            return Fail(
+                VulkanScene3dSwapchainStage.RenderPass, null, "RenderPass 创建失败。");
         r.RenderPass = newRp;
 
         // Framebuffers
@@ -235,8 +242,8 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
             };
             Framebuffer newFb = default;
             if (vk.CreateFramebuffer(device, &fbCI, null, out newFb) != Result.Success)
-                return VulkanScene3dSwapchainCreateResult.Failed(
-                    VulkanScene3dSwapchainStage.Framebuffers, null, w, h, $"Framebuffer {i} 创建失败。");
+                return Fail(
+                    VulkanScene3dSwapchainStage.Framebuffers, null, $"Framebuffer {i} 创建失败。");
             r.Framebuffers[i] = newFb;
         }
 
@@ -244,8 +251,8 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         var poolCI = new CommandPoolCreateInfo { SType = StructureType.CommandPoolCreateInfo, QueueFamilyIndex = queueFamilyIndex };
         CommandPool newPool = default;
         if (vk.CreateCommandPool(device, &poolCI, null, out newPool) != Result.Success)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.CommandPool, null, w, h, "CommandPool 创建失败。");
+            return Fail(
+                VulkanScene3dSwapchainStage.CommandPool, null, "CommandPool 创建失败。");
         r.CommandPool = newPool;
 
         // CommandBuffer
@@ -258,8 +265,8 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         };
         CommandBuffer newCmd = default;
         if (vk.AllocateCommandBuffers(device, &allocCI, out newCmd) != Result.Success)
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.CommandBuffer, null, w, h, "CommandBuffer 创建失败。");
+            return Fail(
+                VulkanScene3dSwapchainStage.CommandBuffer, null, "CommandBuffer 创建失败。");
         r.CommandBuffer = newCmd;
 
         // Sync objects
@@ -273,14 +280,12 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         {
             if (newAvail.Handle != 0) vk.DestroySemaphore(device, newAvail, null);
             if (newFin.Handle != 0) vk.DestroySemaphore(device, newFin, null);
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.Synchronization, null, w, h, "同步对象创建失败。");
+            return Fail(
+                VulkanScene3dSwapchainStage.Synchronization, null, "同步对象创建失败。");
         }
         r.SemAvail = newAvail;
         r.SemFin = newFin;
         r.Fence = newFence;
-            return VulkanScene3dSwapchainCreateResult.Failed(
-                VulkanScene3dSwapchainStage.Synchronization, null, w, h, "同步对象创建失败。");
 
         return new VulkanScene3dSwapchainCreateResult(true, r,
             VulkanScene3dSwapchainStage.CreateSwapchain, Result.Success, w, h,
