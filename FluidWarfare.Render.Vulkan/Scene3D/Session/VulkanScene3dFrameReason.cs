@@ -18,5 +18,8 @@ public enum VulkanScene3dFrameReason
     CameraReset,
 
     /// <summary>窗口 resize 触发。</summary>
-    Resize
+    Resize,
+
+    /// <summary>选择变化触发。</summary>
+    SelectionChanged
 }

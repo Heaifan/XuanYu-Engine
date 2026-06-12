@@ -21,6 +21,23 @@ public sealed partial class InspectorPanel : UserControl
         _selectionDescriptionText = this.FindControl<TextBlock>("SelectionDescriptionText");
     }
 
+    /// <summary>
+    /// 显示"未选择"状态。
+    /// </summary>
+    public void ShowNoSelection()
+    {
+        if (_emptySelectionText is not null)
+        {
+            _emptySelectionText.IsVisible = true;
+            _emptySelectionText.Text = "未选择对象";
+        }
+
+        if (_selectionDetails is not null)
+        {
+            _selectionDetails.IsVisible = false;
+        }
+    }
+
     public void ShowSelection(EditorSelection selection)
     {
         if (_emptySelectionText is not null)

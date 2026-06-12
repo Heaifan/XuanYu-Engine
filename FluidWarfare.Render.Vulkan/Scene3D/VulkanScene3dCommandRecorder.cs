@@ -4,12 +4,18 @@ namespace FluidWarfare.Render.Vulkan.Scene3D;
 
 /// <summary>
 /// 录制 Scene3D CommandBuffer。
-/// 录制顺序：Begin → ClearColor+Depth → BindPipeline(Grid) → PushConstants(VP) → Draw(Grid)
-///   → BindPipeline(Unit) → BindVBs → for each object: PushConstants(MVP) → Draw
-///   → EndRenderPass → End
+/// Push Constant 布局：MVP (mat4, 64 字节) + Tint (vec4, 16 字节) = 80 字节。
+/// Grid 使用无色 Tint，单位使用普通色或选中高亮色。
 /// </summary>
 public static unsafe class VulkanScene3dCommandRecorder
 {
+    /// <summary>
+    /// 每个单位对象的绘制信息。
+    /// </summary>
+    /// <param name="Mvp">列优先 MVP 矩阵 (16 floats)。</param>
+    /// <param name="Tint">颜色覆盖 (rgba, alpha=0 使用顶点色, alpha=1 使用覆盖色)。</param>
+    public sealed record UnitDrawData(float[] Mvp, float[] Tint);
+
     public static bool Record(
         Vk vk, CommandBuffer cmdBuf,
         RenderPass renderPass, Framebuffer framebuffer,
@@ -19,7 +25,7 @@ public static unsafe class VulkanScene3dCommandRecorder
         float[] vpMvp,
         Silk.NET.Vulkan.Buffer gridBuffer, int gridVertexCount,
         Silk.NET.Vulkan.Buffer unitBuffer, int unitVertexCount,
-        float[][] unitMvpArray,
+        UnitDrawData[] unitDrawData,
         out int drawCalls,
         out string errorMessage)
     {
@@ -87,28 +93,39 @@ public static unsafe class VulkanScene3dCommandRecorder
         };
         vk.CmdBeginRenderPass(cmdBuf, &rpBegin, SubpassContents.Inline);
 
-        // Draw grid (LineList) — uses VP-only MVP
+        // Draw grid (LineList) — VP-only MVP, grid tint
         vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, gridPipeline);
-        fixed (float* mvpPtr = vpMvp)
-        {
-            vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit, 0, 64, mvpPtr);
-        }
+        var pushConstants = stackalloc float[VulkanScene3dPushConstants.FloatCount];
+        for (var i = 0; i < 16; i++) pushConstants[i] = vpMvp[i];
+        for (var i = 0; i < 4; i++) pushConstants[16 + i] = VulkanScene3dPushConstants.GridTint[i];
+        vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit,
+            0, (uint)VulkanScene3dPushConstants.ByteSize, pushConstants);
         var gridBufs = stackalloc[] { gridBuffer };
         var offsets = stackalloc[] { 0ul };
         vk.CmdBindVertexBuffers(cmdBuf, 0, 1, gridBufs, offsets);
         vk.CmdDraw(cmdBuf, (uint)gridVertexCount, 1, 0, 0);
         drawCalls++;
 
-        // Draw units (shared buffer, per-object MVP)
+        // Draw units (shared buffer, per-object MVP + Tint)
         vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, unitPipeline);
         var unitBufs = stackalloc[] { unitBuffer };
         vk.CmdBindVertexBuffers(cmdBuf, 0, 1, unitBufs, offsets);
 
-        foreach (var unitMvp in unitMvpArray)
+        foreach (var draw in unitDrawData)
         {
-            fixed (float* mvpPtr = unitMvp)
+            var mvp = draw.Mvp;
+            var tint = draw.Tint;
+            fixed (float* mvpPtr = mvp)
+            fixed (float* tintPtr = tint)
             {
-                vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit, 0, 64, mvpPtr);
+                // MVP (64 bytes)
+                vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit,
+                    (uint)VulkanScene3dPushConstants.MvpOffset,
+                    (uint)VulkanScene3dPushConstants.MvpByteSize, mvpPtr);
+                // Tint (16 bytes)
+                vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit,
+                    (uint)VulkanScene3dPushConstants.TintOffset,
+                    (uint)VulkanScene3dPushConstants.TintByteSize, tintPtr);
             }
             vk.CmdDraw(cmdBuf, (uint)unitVertexCount, 1, 0, 0);
             drawCalls++;

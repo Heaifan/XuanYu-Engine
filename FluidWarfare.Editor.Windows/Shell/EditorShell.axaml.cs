@@ -21,6 +21,7 @@ using FluidWarfare.Project.Metadata;
 using FluidWarfare.Project.Paths;
 using FluidWarfare.Project.Validation;
 using FluidWarfare.Render.Scene;
+using FluidWarfare.Render.Selection;
 using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
@@ -72,6 +73,7 @@ public sealed partial class EditorShell : UserControl
     private bool _framePending;
     private bool _sessionActive;
     private bool _scene3dAutoStartAttempted;
+    private bool _isSynchronizingSelection;
 
     public EditorShell()
     {
@@ -129,6 +131,7 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel.CameraPanRequested += HandleCameraPan;
             _vulkanViewportHostPanel.CameraZoomRequested += HandleCameraZoom;
             _vulkanViewportHostPanel.CameraResetRequested += HandleCameraReset;
+            _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
         }
     }
 
@@ -347,9 +350,7 @@ public sealed partial class EditorShell : UserControl
 
     private void OnWorldEntitySelected(WorldEntityInfo entityInfo)
     {
-        _selectedWorldEntity = entityInfo;
-        ShowWorldEntitySelection(entityInfo);
-        UpdateViewportForEntity(entityInfo);
+        ApplyEntitySelection(entityInfo.EntityId.Value.ToString(), EditorSelectionOrigin.WorldList);
     }
 
     private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
@@ -966,6 +967,7 @@ public sealed partial class EditorShell : UserControl
         {
             if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
             unitDraws.Add(new VulkanScene3dUnitDrawInfo(
+                obj.EntityId.Value.ToString(),
                 (float)obj.Position.X,
                 (float)obj.Position.Y + 0.5f,
                 (float)obj.Position.Z,
@@ -1061,6 +1063,145 @@ public sealed partial class EditorShell : UserControl
         });
     }
 
+    // ─── 选择系统 ────────────────────────────────────────────
+
+    private enum EditorSelectionOrigin { WorldList, ViewportPicking, Programmatic }
+
+    /// <summary>
+    /// 统一选择入口。接收 EntityId 字符串，同步更新 World 列表、Inspector、状态栏和 Scene3D。
+    /// 通过 _isSynchronizingSelection 防止双向递归。
+    /// </summary>
+    private void ApplyEntitySelection(string? entityIdStr, EditorSelectionOrigin origin)
+    {
+        if (_isSynchronizingSelection) return;
+        _isSynchronizingSelection = true;
+
+        try
+        {
+            WorldEntityInfo? entityInfo = null;
+
+            // 通过 EntityId 查找
+            if (entityIdStr is not null && int.TryParse(entityIdStr, out var entityIdVal) && entityIdVal > 0)
+            {
+                var targetId = EntityId.FromInt(entityIdVal);
+                var entities = _worldState?.ListEntities() ?? [];
+                entityInfo = entities.FirstOrDefault(e => e.EntityId == targetId);
+            }
+
+            if (entityInfo is not null)
+            {
+                // 选中
+                _selectedWorldEntity = entityInfo;
+
+                // Scene3D 高亮
+                if (_scene3dSession is not null && _sessionActive)
+                {
+                    if (_scene3dSession.SetSelectedEntity(entityInfo.EntityId.Value.ToString()))
+                    {
+                        ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
+                    }
+                }
+
+                // 更新左侧列表（从 Viewport 选择时同步到列表）
+                _worldEntityListPanel?.SelectEntity(entityInfo.EntityId);
+
+                // 更新检查器和状态栏
+                ShowWorldEntitySelection(entityInfo);
+                UpdateViewportForEntity(entityInfo);
+            }
+            else
+            {
+                // 清除选择
+                ClearSelection();
+            }
+        }
+        finally
+        {
+            _isSynchronizingSelection = false;
+        }
+    }
+
+    /// <summary>
+    /// 清除当前选择。
+    /// </summary>
+    private void ClearSelection()
+    {
+        _selectedWorldEntity = null;
+
+        if (_scene3dSession is not null && _sessionActive)
+        {
+            if (_scene3dSession.SetSelectedEntity(null))
+            {
+                ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
+            }
+        }
+
+        _worldEntityListPanel?.ClearSelection();
+        _inspectorPanel?.ShowNoSelection();
+        _statusBarPanel?.SetCurrentSelection("无");
+        _viewportPlaceholderPanel?.ShowNoWorldEntity();
+    }
+
+    /// <summary>
+    /// 视口点击 Picking 处理。
+    /// 像素坐标 → 世界射线 → RenderScene Picker → 统一选择入口。
+    /// </summary>
+    private void HandleViewportPick(int pixelX, int pixelY)
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
+            return;
+
+        // 计算当前 VP 矩阵
+        var (dirX, dirY, dirZ) = SceneCameraState.DefaultViewDirection();
+        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
+        var targetX = camX + dirX * _lastCameraState.Distance;
+        var targetY = camY + dirY * _lastCameraState.Distance;
+        var targetZ = camZ + dirZ * _lastCameraState.Distance;
+
+        var camInfo = new VulkanCameraInfo(
+            (float)camX, (float)camY, (float)camZ,
+            (float)targetX, (float)targetY, (float)targetZ,
+            0, 1, 0,
+            (float)_lastCameraState.FieldOfViewDegrees,
+            (float)_lastCameraState.NearPlane,
+            (float)_lastCameraState.FarPlane);
+
+        var aspect = nativeHostInfo.Width / (float)nativeHostInfo.Height;
+        var vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
+
+        // 构建射线
+        if (!VulkanSceneRayBuilder.TryBuild(
+                pixelX, pixelY,
+                (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
+                vp,
+                new Vector3d(camX, camY, camZ),
+                out var ray, out var rayErr))
+        {
+            AppendWarningLog($"Picking 射线构建失败：{rayErr}");
+            return;
+        }
+
+        // 执行 Picking
+        var pickResult = RenderScenePicker.Pick(ray, _renderScene);
+
+        if (pickResult.IsHit && pickResult.EntityId is not null)
+        {
+            ApplyEntitySelection(pickResult.EntityId.Value.Value.ToString(), EditorSelectionOrigin.ViewportPicking);
+        }
+        else
+        {
+            ApplyEntitySelection(null, EditorSelectionOrigin.ViewportPicking);
+        }
+
+        // 更新诊断信息
+        UpdateAllDiagnostics();
+    }
+
     private List<VulkanScene3dUnitDrawInfo> BuildUnitDrawList()
     {
         var list = new List<VulkanScene3dUnitDrawInfo>();
@@ -1068,6 +1209,7 @@ public sealed partial class EditorShell : UserControl
         {
             if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
             list.Add(new VulkanScene3dUnitDrawInfo(
+                obj.EntityId.Value.ToString(),
                 (float)obj.Position.X,
                 (float)obj.Position.Y + 0.5f,
                 (float)obj.Position.Z,
@@ -1116,6 +1258,7 @@ public sealed partial class EditorShell : UserControl
 
             var cy = (float)obj.Position.Y + 0.5f;
             unitDraws.Add(new VulkanScene3dUnitDrawInfo(
+                obj.EntityId.Value.ToString(),
                 (float)obj.Position.X,
                 cy,
                 (float)obj.Position.Z,

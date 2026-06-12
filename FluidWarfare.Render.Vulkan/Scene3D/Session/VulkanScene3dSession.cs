@@ -66,6 +66,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private int _bufferCreateCount;
     private int _swapchainGeneration;
     private int _consecutiveAcquireTimeouts;
+    private string? _selectedEntityId;
     private bool _rendering; // 防重入
     private bool _recreateRequested; // Acquire/Present 返回 OutOfDate/Suboptimal 时标记
 
@@ -91,6 +92,18 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     public int SwapchainGeneration => _swapchainGeneration;
     public int GridVertexCount => _gridVertexCount;
     public int UnitVertexCount => _unitVertexCount;
+    public string? SelectedEntityId => _selectedEntityId;
+
+    /// <summary>
+    /// 设置当前选中实体。EntityId 无变化时不触发帧。
+    /// </summary>
+    public bool SetSelectedEntity(string? entityId)
+    {
+        if (_selectedEntityId == entityId)
+            return false;
+        _selectedEntityId = entityId;
+        return true; // 触发帧重绘
+    }
 
     // ─── 启动 ───────────────────────────────────────────────────
 
@@ -463,15 +476,19 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             var aspect = _swapchainRes.Extent.Width / (float)_swapchainRes.Extent.Height;
             var vp = VulkanCameraMatrices.ComputeVulkanMVP(camWithTarget, aspect);
 
-            // 6. Per-object MVPs
-            var unitMvpList = new List<float[]>();
-            foreach (var draw in unitDraws)
+            // 6. Per-object MVP + Tint
+            var unitDrawData = new VulkanScene3dCommandRecorder.UnitDrawData[unitDraws.Length];
+            for (var i = 0; i < unitDraws.Length; i++)
             {
+                var draw = unitDraws[i];
                 var trans = VulkanCameraMatrices.CreateTranslation(draw.X, draw.Y, draw.Z);
                 var scale = VulkanCameraMatrices.CreateScale(draw.Scale);
                 var model = VulkanCameraMatrices.Mul(trans, scale);
                 var mvp = VulkanCameraMatrices.Mul(vp, model);
-                unitMvpList.Add(mvp);
+                var tint = draw.EntityId == _selectedEntityId
+                    ? VulkanScene3dPushConstants.SelectedTint
+                    : VulkanScene3dPushConstants.NormalTint;
+                unitDrawData[i] = new VulkanScene3dCommandRecorder.UnitDrawData(mvp, tint);
                 renderedUnitCount++;
             }
 
@@ -482,7 +499,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                     _gridPipeline, _unitPipeline, _pipelineLayout,
                     vp, _gridBuffer, _gridVertexCount,
                     _unitBuffer, _unitVertexCount,
-                    [.. unitMvpList],
+                    unitDrawData,
                     out drawCalls, out var cmdErr))
                 return FailFrame(reason, cmdErr);
 
@@ -846,7 +863,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
     private bool CreatePipelineLayout()
     {
-        if (!VulkanScene3dPipelineLayout.Create(_vk!, _device,
+        if (!VulkanScene3dPipelineLayout.Create(_vk!, _device, _physicalDevice,
                 out _pipelineLayout, out var err))
             return false;
         _layoutOk = true;

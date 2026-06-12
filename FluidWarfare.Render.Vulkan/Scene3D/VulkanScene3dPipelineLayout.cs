@@ -3,34 +3,48 @@ using Silk.NET.Vulkan;
 namespace FluidWarfare.Render.Vulkan.Scene3D;
 
 /// <summary>
-/// 创建 Scene3D PipelineLayout 与 MVP PushConstantRange。
-/// MVP 为 4x4 float，共 16 × 4 = 64 字节。
+/// 创建 Scene3D PipelineLayout 与 PushConstantRange。
+/// MVP (mat4, 64 字节) + Tint (vec4, 16 字节) = 80 字节。
 /// </summary>
 public static unsafe class VulkanScene3dPipelineLayout
 {
-    public const uint MvpPushConstantBytes = 64;
+    /// <summary>Push Constant 总字节数。</summary>
+    public const uint TotalPushConstantBytes = VulkanScene3dPushConstants.ByteSize;
 
     /// <summary>
     /// 创建 PipelineLayout。
+    /// 检查设备最大 PushConstants 大小是否 >= 80。
     /// </summary>
     public static bool Create(Vk vk, Silk.NET.Vulkan.Device dev,
+        Silk.NET.Vulkan.PhysicalDevice physicalDevice,
         out PipelineLayout pipelineLayout, out string errorMessage)
     {
         pipelineLayout = default;
         errorMessage = string.Empty;
 
+        // 检查设备 Push Constants 支持
+        var limits = default(PhysicalDeviceLimits);
+        unsafe
+        {
+            var props = new PhysicalDeviceProperties();
+            vk.GetPhysicalDeviceProperties(physicalDevice, &props);
+            limits = props.Limits;
+        }
+
+        if (limits.MaxPushConstantsSize < TotalPushConstantBytes)
+        {
+            errorMessage =
+                $"Scene3D PipelineLayout：设备 MaxPushConstantsSize ({limits.MaxPushConstantsSize}) " +
+                $"小于所需 {TotalPushConstantBytes} 字节。";
+            return false;
+        }
+
         var pcRange = new PushConstantRange
         {
             StageFlags = ShaderStageFlags.VertexBit,
             Offset = 0,
-            Size = MvpPushConstantBytes
+            Size = TotalPushConstantBytes
         };
-
-        if (pcRange.Size == 0)
-        {
-            errorMessage = "Scene3D PipelineLayout：PushConstantRange 字节数为 0。";
-            return false;
-        }
 
         var ci = new PipelineLayoutCreateInfo
         {

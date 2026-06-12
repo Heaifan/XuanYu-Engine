@@ -189,7 +189,7 @@ public static unsafe class VulkanScene3dRenderer
             r.VertModOk = true; r.FragModOk = true;
 
             // 10. Pipeline Layout
-            if (!VulkanScene3dPipelineLayout.Create(r.Vk, r.Device,
+            if (!VulkanScene3dPipelineLayout.Create(r.Vk, r.Device, pd,
                     out r.PipelineLayout, out var layoutErr))
                 return Fail(layoutErr, sw);
             r.LayoutOk = true;
@@ -281,12 +281,16 @@ public static unsafe class VulkanScene3dRenderer
             }
 
             // 19. Record Command Buffer
+            // 旧探针使用默认着色，无选中高亮
+            var oldUnitDrawData = unitMvpList.Select(mvp =>
+                new VulkanScene3dCommandRecorder.UnitDrawData(
+                    mvp, VulkanScene3dPushConstants.NormalTint)).ToArray();
             if (!VulkanScene3dCommandRecorder.Record(r.Vk, r.CommandBuffer,
                     r.RenderPass, r.Framebuffers[imgIndex], extent,
                     r.GridPipeline, r.UnitPipeline, r.PipelineLayout,
                     vp, r.GridBuffer, gVc,
                     r.UnitBuffer, uVc,
-                    [.. unitMvpList],
+                    oldUnitDrawData,
                     out drawCalls, out var cmdErr))
                 return Fail(cmdErr, sw);
 

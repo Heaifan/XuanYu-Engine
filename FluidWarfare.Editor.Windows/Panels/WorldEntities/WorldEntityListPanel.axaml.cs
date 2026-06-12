@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Media;
 using FluidWarfare.Core.Identity;
 using FluidWarfare.Engine.World;
 
@@ -8,6 +9,7 @@ public sealed partial class WorldEntityListPanel : UserControl
 {
     private StackPanel? _entityListPanel;
     private TextBlock? _emptyText;
+    private readonly Dictionary<EntityId, Button> _entityButtons = [];
 
     public event Action<WorldEntityInfo>? EntitySelected;
 
@@ -25,6 +27,7 @@ public sealed partial class WorldEntityListPanel : UserControl
     {
         _entityListPanel ??= this.FindControl<StackPanel>("WorldEntityList");
         _emptyText ??= this.FindControl<TextBlock>("WorldEntityEmptyText");
+        _entityButtons.Clear();
 
         if (entities is null || entities.Count == 0)
         {
@@ -49,14 +52,39 @@ public sealed partial class WorldEntityListPanel : UserControl
                 {
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
                     HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-                    Content = displayText
+                    Content = displayText,
+                    Tag = entity.EntityId
                 };
 
                 var captured = entity;
                 button.Click += (_, _) => OnEntityClicked(captured);
                 _entityListPanel.Children.Add(button);
+                _entityButtons[entity.EntityId] = button;
             }
         }
+    }
+
+    /// <summary>
+    /// 选中指定实体，高亮显示。
+    /// </summary>
+    public void SelectEntity(EntityId entityId)
+    {
+        // 清除所有高亮
+        foreach (var btn in _entityButtons.Values)
+            btn.Background = null;
+
+        // 高亮目标
+        if (_entityButtons.TryGetValue(entityId, out var target))
+            target.Background = new SolidColorBrush(Color.FromRgb(60, 120, 200));
+    }
+
+    /// <summary>
+    /// 清除所有高亮。
+    /// </summary>
+    public void ClearSelection()
+    {
+        foreach (var btn in _entityButtons.Values)
+            btn.Background = null;
     }
 
     private void OnEntityClicked(WorldEntityInfo entity)

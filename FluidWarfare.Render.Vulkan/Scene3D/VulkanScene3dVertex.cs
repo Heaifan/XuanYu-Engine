@@ -18,6 +18,7 @@ public readonly record struct VulkanScene3dVertex(
 /// 由 Editor 从 RenderScene 对象转换而来，Vulkan 层据此计算每对象 MVP。
 /// </summary>
 public readonly record struct VulkanScene3dUnitDrawInfo(
+    string? EntityId,
     float X,
     float Y,
     float Z,

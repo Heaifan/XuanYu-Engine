@@ -23,6 +23,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private const uint WmMouseWheel = 0x020A;
     private const uint WmKeyDown = 0x0100;
     private const uint WmKillFocus = 0x0008;
+    private const uint WmLButtonDown = 0x0201;
+    private const uint WmLButtonUp = 0x0202;
+    private const uint WmNcHitTest = 0x0084;
     private const int VkHome = 0x24;
     private const int MkMbutton = 0x0010;
 
@@ -54,7 +57,13 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     /// <summary>Home 相机重置。</summary>
     public event Action? CameraResetRequested;
 
+    /// <summary>左键点击拾取（pixelX, pixelY）。</summary>
+    public event Action<int, int>? PickRequested;
+
     public event EventHandler<WindowsVulkanViewportHostInfo>? HostInfoChanged;
+
+    // 左键点击跟踪
+    private readonly WindowsVulkanViewportPickInput _pickInput = new();
 
     public WindowsVulkanViewportHostControl()
     {
@@ -65,6 +74,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             if (args.Property == BoundsProperty)
                 ResizeNativeWindowToControlBounds();
         };
+
+        _pickInput.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
     }
 
     public WindowsVulkanViewportHostInfo GetHostInfo() => _hostInfo;
@@ -161,6 +172,18 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     instance.HandleMouseWheel(wParam);
                     return 0;
 
+                case WmLButtonDown:
+                    instance._pickInput.OnDown(
+                        (short)(lParam.ToInt64() & 0xFFFF),
+                        (short)((lParam.ToInt64() >> 16) & 0xFFFF));
+                    return 0;
+
+                case WmLButtonUp:
+                    instance._pickInput.OnUp(
+                        (short)(lParam.ToInt64() & 0xFFFF),
+                        (short)((lParam.ToInt64() >> 16) & 0xFFFF));
+                    return 0;
+
                 case WmKeyDown when (int)wParam == VkHome:
                     instance.CameraResetRequested?.Invoke();
                     return 0;
@@ -168,6 +191,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                 case WmKillFocus:
                     instance.HandleKillFocus();
                     return 0;
+
+                case WmNcHitTest:
+                    // 允许窗口拖动
+                    return DefWindowProc(hwnd, msg, wParam, lParam);
             }
         }
 

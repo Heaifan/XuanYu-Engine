@@ -1,14 +1,32 @@
+using FluidWarfare.Core.Math;
 using FluidWarfare.Engine.World;
 using FluidWarfare.Render.Scene;
+using FluidWarfare.Render.Selection;
 
 namespace FluidWarfare.Render.World;
 
 /// <summary>
 /// 把 Engine.WorldState 转换为 RenderScene。
-/// 不写日志，不依赖 Editor，不依赖 Project。
+/// 为每个 UnitMarker 对象创建与渲染尺寸一致的 SelectionBounds，
+/// 确保绘制和 Picking 使用同一数据源。
 /// </summary>
 public static class WorldToRenderSceneBuilder
 {
+    /// <summary>
+    /// 单位立方体缩放系数（与 VulkanScene3dUnitDrawInfo.Scale 一致）。
+    /// </summary>
+    private const double UnitScale = 1.25;
+
+    /// <summary>
+    /// BuildCube size=1 → half=0.5，缩放后 half=0.5*UnitScale。
+    /// </summary>
+    private const double UnitHalfExtent = 0.5 * UnitScale;
+
+    /// <summary>
+    /// Y 偏移使单位底部与地面接触（与 EditorShell BuildUnitDrawList 一致）。
+    /// </summary>
+    private const double UnitYOffset = 0.5;
+
     /// <summary>
     /// 将 WorldState 中的所有实体转换为可渲染对象。
     /// </summary>
@@ -39,12 +57,20 @@ public static class WorldToRenderSceneBuilder
                 continue;
             }
 
+            var pos = position.Value.Value;
+
+            // 与渲染尺寸一致的 SelectionBounds（单位缩放 1.25，Y 偏移 0.5）
+            var bounds = new SceneAxisAlignedBounds(
+                new Vector3d(pos.X, pos.Y + UnitYOffset, pos.Z),
+                new Vector3d(UnitHalfExtent, UnitHalfExtent, UnitHalfExtent));
+
             objects.Add(new RenderObjectInfo(
                 entity.EntityId,
                 entity.DisplayName,
-                position.Value.Value,
+                pos,
                 RenderObjectVisualKind.UnitMarker,
-                entity.Source?.RelativePath));
+                entity.Source?.RelativePath,
+                bounds));
         }
 
         return new RenderScene(objects);
