@@ -1109,6 +1109,64 @@ file-tree.md
 
 ---
 
+---
+
+### Milestone 8.3.3 — Swapchain API 结果加固与生命周期规则收口
+
+#### 修复
+
+1. **Surface 查询委托签名修正**：`GetCapsFunc`、`GetFormatsFunc`、`GetPresentModesFunc` 返回类型从 `void` 改为 `Result`，确保返回值被检查。
+2. **两阶段枚举 Incomplete 处理**：
+   - 新建 `VulkanScene3dSurfaceFormats.cs`：有限重试（最多 3 次）处理 Incomplete，输出阶段、VkResult、尝试次数。
+   - 新建 `VulkanScene3dPresentModes.cs`：同 SurfaceFormats 模式处理 PresentMode 枚举。
+3. **GetSwapchainImages 返回值检查**：第一阶段（获取数量）和第二阶段（填充数组）均检查结果；Incomplete 时缩减数组并重试。
+4. **Acquire 有限等待**：从 `ulong.MaxValue` 改为 `100ms` 超时（`AcquireImageTimeoutNanoseconds`）
+5. **Acquire 分类处理**：
+   - `Success` → 继续
+   - `Timeout` / `NotReady` → 跳过本帧，不 Reset Fence，不 Submit，不 Present
+   - `SuboptimalKhr` → 继续，标记重建请求
+   - `ErrorOutOfDateKhr` → 标记重建请求
+   - `ErrorSurfaceLostKhr` / `ErrorDeviceLost` → Session Failed，完整退出
+6. **Present 分类处理**：Success / Suboptimal / OutOfDate / SurfaceLost / DeviceLost 各状态分别处理。
+7. **Fence Reset 规则**：只有 Acquire 成功后（Success / Suboptimal）才 Reset Fence，防止下一帧等待未签名的 Fence。
+8. **ZeroExtent 处理**：Resize 收到 0×0 尺寸时忽略，Session 保持 Active，等待下一次非零事件。
+9. **连续超时保护**：`_consecutiveAcquireTimeouts` 计数器，达到 10 次后 Session Failed 并输出诊断。
+10. **Swapchain 生命周期不变量**：
+    - 新建 `VulkanScene3dSwapchainInvariant.cs`，提供 `IsActiveValid()` (Live=1) 和 `IsDisposedValid()` (Live=0) 断言
+    - Session Start 成功后校验 Active 不变量
+    - Resize 成功后校验 Active 不变量
+    - Dispose 后校验 Disposed 不变量（仅诊断日志）
+
+#### 新增
+
+1. `VulkanScene3dFrameStatus.cs`：Presented / Skipped / RecreateRequested / Failed 四种帧状态。
+2. `VulkanScene3dSurfaceFormats.cs`：SurfaceFormatKHR 两阶段枚举 + Incomplete 有限重试。
+3. `VulkanScene3dPresentModes.cs`：PresentModeKHR 两阶段枚举 + Incomplete 有限重试。
+4. `VulkanScene3dSwapchainInvariant.cs`：Swapchain 生命周期不变量断言类。
+
+#### 修改
+
+1. `VulkanScene3dSwapchainFunctions.cs`：三个 Surface 查询委托改为返回 `Result`。
+2. `VulkanScene3dSwapchainResources.cs`：Surface 查询改为使用新委托签名 + 两阶段枚举类；GetSwapchainImages 两阶段检查返回值并处理 Incomplete。
+3. `VulkanScene3dFrameResult.cs`：扩展为包含 `FrameStatus`、`VulkanResult`、`FailureStage`、`SwapchainGeneration`、`AcquireTimeoutCount` 的结构化记录。
+4. `VulkanScene3dSession.cs`：帧循环重写 — Acquire 有限等待 + 分类处理 + Present 分类 + ZeroExtent 跳过 + 连续超时保护 + 生命周期不变量检查点。
+5. `CODE_CONSTITUTION.md`：新增 Vulkan 返回值、两阶段枚举、等待、native 资源、Swapchain 唯一入口和生命周期测试规则。
+6. `EditorShell.axaml.cs`：重启 Session 前已使用 `LiveCount != 0` 校验（8.3.2 已有）。
+
+#### 验证
+
+- ✅ dotnet build: 0 错误, 0 警告
+- ✅ `ulong.MaxValue` 在 Acquire 路径中不再出现
+- ✅ Surface 查询委托返回类型已修正为 `Result`
+- ✅ Incomplete 有限重试逻辑就位
+- ✅ Acquire / Present 全状态分类处理
+- ✅ Fence 不在 Acquire 失败时 Reset
+- ✅ ZeroExtent 不导致 Session Failed
+- ✅ 连续超时 10 次后 Session 终止
+- ✅ 生命周期不变量校验集成
+- ✅ 代码宪法已同步 Vulkan 规则
+- ✅ CHANGELOG / file-tree 已同步
+
 ### Milestone 8.3.1 — 默认 3D 主视口、俯视矩阵修复与旧点位路径退役
 
 #### 修复

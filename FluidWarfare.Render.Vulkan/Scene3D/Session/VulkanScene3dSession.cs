@@ -51,6 +51,8 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
     // Fence 超时常量
     private const ulong FrameFenceTimeoutNanoseconds = 500_000_000;
+    private const ulong AcquireImageTimeoutNanoseconds = 100_000_000;
+    private const int MaxConsecutiveAcquireTimeouts = 10;
 
     // ─── Swapchain 级资源 ───────────────────────────────────────
     private VulkanScene3dSwapchainResources? _swapchainRes;
@@ -63,7 +65,9 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private int _pipelineCreateCount;
     private int _bufferCreateCount;
     private int _swapchainGeneration;
+    private int _consecutiveAcquireTimeouts;
     private bool _rendering; // 防重入
+    private bool _recreateRequested; // Acquire/Present 返回 OutOfDate/Suboptimal 时标记
 
     // Validation
     private readonly VulkanValidationOptions _validationOptions = VulkanValidationOptions.FromEnvironment();
@@ -170,6 +174,19 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             _pipelineCreateCount++;
 
             _status = VulkanScene3dSessionStatus.Active;
+            _recreateRequested = false;
+            _consecutiveAcquireTimeouts = 0;
+
+            // 不变量：活跃 Session 应有且仅有一个 Live Swapchain
+            if (!VulkanScene3dSwapchainInvariant.IsActiveValid())
+            {
+                var diag = VulkanScene3dSwapchainInvariant.GetDiagnosticReport();
+                DisposeResources();
+                _status = VulkanScene3dSessionStatus.Failed;
+                return VulkanScene3dFrameResult.Failed(0, VulkanScene3dFrameReason.SessionStart,
+                    $"[严重]Swapchain 生命周期不变量启动校验失败。\n{diag}");
+            }
+
             sw.Stop();
 
             // Render first frame
@@ -228,6 +245,17 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
         if (_rendering)
             return VulkanScene3dFrameResult.Failed(_frameIndex, VulkanScene3dFrameReason.Resize, "渲染进行中，跳过 Resize。");
+
+        // ZeroExtent：窗口最小化时忽略，不创建 0×0 Swapchain
+        if (newWidth == 0 || newHeight == 0)
+        {
+            return VulkanScene3dFrameResult.Skipped(
+                _frameIndex, VulkanScene3dFrameReason.Resize,
+                _swapchainGeneration, _consecutiveAcquireTimeouts,
+                null, $"Resize 忽略 0×0 尺寸（{newWidth}x{newHeight}），等待非零尺寸。");
+        }
+
+        _recreateRequested = false;
 
         _status = VulkanScene3dSessionStatus.RecreatingSwapchain;
         var sw = Stopwatch.StartNew();
@@ -320,6 +348,20 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         oldResources?.Dispose();
 
         _status = VulkanScene3dSessionStatus.Active;
+        _recreateRequested = false;
+        _consecutiveAcquireTimeouts = 0;
+
+        // 不变量：Resize 后应为 1 个活 Swapchain
+        if (!VulkanScene3dSwapchainInvariant.IsActiveValid())
+        {
+            var diag = VulkanScene3dSwapchainInvariant.GetDiagnosticReport();
+            newResources.Dispose();
+            DisposeResources();
+            _status = VulkanScene3dSessionStatus.Failed;
+            return VulkanScene3dFrameResult.Failed(_frameIndex,
+                VulkanScene3dFrameReason.Resize, $"[严重]Resize 后不变量失败。\n{diag}");
+        }
+
         sw.Stop();
         return RenderFrameInternal(VulkanScene3dFrameReason.Resize, cameraState, unitDraws, sw);
     }
@@ -371,7 +413,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
         try
         {
-            // Wait for fence
+            // 1. Wait for fence (有限等待：500ms)
             var fence = _swapchainRes.Fence;
             var waitResult = _vk.WaitForFences(_device, 1, ref fence, Vk.True, FrameFenceTimeoutNanoseconds);
             if (waitResult == Result.Timeout)
@@ -379,37 +421,33 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             if (waitResult != Result.Success)
                 return FailFrame(reason, $"GPU Fence 等待失败：{waitResult}。");
 
+            // 2. Acquire next image (有限等待：100ms)
+            uint imgIndex = 0;
+            var acquireFn = Marshal.GetDelegateForFunctionPointer<AcquireNextImageFn>(_fnAcquireNextImage);
+            var acqRes = acquireFn(_device, _swapchainRes.Swapchain, AcquireImageTimeoutNanoseconds,
+                _swapchainRes.SemAvail, default, &imgIndex);
+
+            // 3. 分类处理 Acquire 结果
+            //    关键规则：Acquire 没成功时，不得 Reset Fence。
+            var acquireResult = ClassifyAcquireResult(acqRes, reason);
+            if (acquireResult is not null)
+                return acquireResult; // 跳过或致命失败，不继续 Present
+
+            // Acquire 成功（Success / Suboptimal），继续
+            // Suboptimal 时标记重建请求
+            if (acqRes == Result.SuboptimalKhr)
+                _recreateRequested = true;
+
+            _consecutiveAcquireTimeouts = 0; // 重置连续超时计数
+
+            // 4. Reset Fence（只有 Acquire 成功后才执行）
             var resetResult = _vk.ResetFences(_device, 1, ref fence);
             if (resetResult != Result.Success)
                 return FailFrame(reason, $"GPU Fence 重置失败：{resetResult}。");
 
-            // Acquire next image
-            uint imgIndex = 0;
-            var acquireFn = Marshal.GetDelegateForFunctionPointer<AcquireNextImageFn>(_fnAcquireNextImage);
-            var acqRes = acquireFn(_device, _swapchainRes.Swapchain, ulong.MaxValue,
-                _swapchainRes.SemAvail, default, &imgIndex);
-
-            if (acqRes == Result.ErrorOutOfDateKhr)
-                return FailFrame(reason, "Acquire 返回 OutOfDate（需要 Resize）。");
-
-            if (acqRes != Result.Success && acqRes != Result.SuboptimalKhr)
-                return FailFrame(reason, $"AcquireNextImage 失败：{acqRes}。");
-
-            // Compute camera position from state
-            var (camX, camY, camZ) = cameraState.ComputePosition();
-            var camInfo = new VulkanCameraInfo(
-                camX, camY, camZ,
-                0, 0, 0,  // Target at origin (used by LookAt)
-                0, 1, 0,
-                cameraState.FieldOfViewDegrees,
-                cameraState.NearPlane,
-                cameraState.FarPlane);
-
-            // Note: The camera's Target should be the actual target, not (0,0,0).
-            // But the ViewDirection is fixed, so we compute position from Target + Distance.
-            // For LookAt, we need to compute what target would give us the right view.
-            // Since direction is fixed, target = position + viewDirection * distance
+            // 5. Compute camera
             var (dirX, dirY, dirZ) = FluidWarfare.Render.Camera.SceneCameraState.DefaultViewDirection();
+            var (camX, camY, camZ) = cameraState.ComputePosition();
             var targetX = camX + dirX * cameraState.Distance;
             var targetY = camY + dirY * cameraState.Distance;
             var targetZ = camZ + dirZ * cameraState.Distance;
@@ -422,11 +460,10 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 cameraState.NearPlane,
                 cameraState.FarPlane);
 
-            // MVP computation
             var aspect = _swapchainRes.Extent.Width / (float)_swapchainRes.Extent.Height;
             var vp = VulkanCameraMatrices.ComputeVulkanMVP(camWithTarget, aspect);
 
-            // Per-object MVPs
+            // 6. Per-object MVPs
             var unitMvpList = new List<float[]>();
             foreach (var draw in unitDraws)
             {
@@ -438,7 +475,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 renderedUnitCount++;
             }
 
-            // Record command buffer
+            // 7. Record command buffer
             if (!VulkanScene3dCommandRecorder.Record(_vk, _swapchainRes.CommandBuffer,
                     _swapchainRes.RenderPass, _swapchainRes.Framebuffers[imgIndex],
                     _swapchainRes.Extent,
@@ -449,7 +486,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                     out drawCalls, out var cmdErr))
                 return FailFrame(reason, cmdErr);
 
-            // Submit
+            // 8. Submit
             _vk.GetDeviceQueue(_device, _queueIndex, 0, out _queue);
             var waitSem = stackalloc[] { _swapchainRes.SemAvail };
             var waitStage = stackalloc[] { PipelineStageFlags.ColorAttachmentOutputBit };
@@ -466,7 +503,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             if (_vk.QueueSubmit(_queue, 1, &submitInfo, _swapchainRes.Fence) != Result.Success)
                 return FailFrame(reason, "QueueSubmit 失败。");
 
-            // Present
+            // 9. Present
             var presentFn = Marshal.GetDelegateForFunctionPointer<QueuePresentFn>(_fnQueuePresent);
             var scArr = stackalloc[] { _swapchainRes.Swapchain };
             var idxArr = stackalloc[] { imgIndex };
@@ -478,10 +515,18 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 PImageIndices = idxArr
             };
             var presentRes = presentFn(_queue, &presentInfo);
-            if (presentRes != Result.Success && presentRes != Result.SuboptimalKhr)
-                return FailFrame(reason, $"QueuePresent 失败：{presentRes}。");
+
+            // 10. 分类处理 Present 结果
+            var presentResult = ClassifyPresentResult(presentRes, reason);
+            if (presentResult is not null)
+                return presentResult; // 致命失败
 
             sw.Stop();
+
+            // 11. 判断是否需要标记重建请求
+            var finalStatus = _recreateRequested
+                ? VulkanScene3dFrameStatus.RecreateRequested
+                : VulkanScene3dFrameStatus.Presented;
 
             return new VulkanScene3dFrameResult(
                 true,
@@ -489,6 +534,8 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 $"Unit {renderedUnitCount} | DrawCall {drawCalls} | " +
                 $"{sw.Elapsed.TotalMilliseconds:F2} ms",
                 _frameIndex, reason,
+                finalStatus, presentRes, null,
+                _swapchainGeneration, _consecutiveAcquireTimeouts,
                 (int)_swapchainRes.Extent.Width, (int)_swapchainRes.Extent.Height,
                 renderedUnitCount, drawCalls,
                 sw.Elapsed.TotalMilliseconds);
@@ -498,6 +545,115 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             _status = VulkanScene3dSessionStatus.Failed;
             return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
                 $"帧渲染异常：{ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 分类处理 AcquireNextImage 结果。
+    /// 返回非 null 表示需要中断当前帧（跳过或失败）。
+    /// </summary>
+    private VulkanScene3dFrameResult? ClassifyAcquireResult(Result acqRes, VulkanScene3dFrameReason reason)
+    {
+        switch (acqRes)
+        {
+            case Result.Success:
+            case Result.SuboptimalKhr:
+                return null; // 继续
+
+            case Result.Timeout:
+                _consecutiveAcquireTimeouts++;
+                if (_consecutiveAcquireTimeouts >= MaxConsecutiveAcquireTimeouts)
+                {
+                    _status = VulkanScene3dSessionStatus.Failed;
+                    return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
+                        VulkanScene3dFrameStatus.Failed, acqRes, null,
+                        _swapchainGeneration, _consecutiveAcquireTimeouts,
+                        $"Acquire 连续超时 {MaxConsecutiveAcquireTimeouts} 次，Session 终止。");
+                }
+                // 跳过本帧
+                return VulkanScene3dFrameResult.Skipped(
+                    _frameIndex, reason,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    acqRes, $"Acquire 超时（{_consecutiveAcquireTimeouts}/{MaxConsecutiveAcquireTimeouts}），本帧跳过。");
+
+            case Result.NotReady:
+                // 与 Timeout 类似：跳过本帧
+                return VulkanScene3dFrameResult.Skipped(
+                    _frameIndex, reason,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    acqRes, "Acquire NotReady，本帧跳过。");
+
+            case Result.ErrorOutOfDateKhr:
+                _recreateRequested = true;
+                return VulkanScene3dFrameResult.RecreateRequested(
+                    _frameIndex, reason,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    acqRes, "Acquire 返回 OutOfDate，请求重建。");
+
+            case Result.ErrorSurfaceLostKhr:
+                _status = VulkanScene3dSessionStatus.Failed;
+                return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
+                    VulkanScene3dFrameStatus.Failed, acqRes, VulkanScene3dSwapchainStage.SurfaceCapabilities,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    "[严重]Surface 已丢失，Acquire 返回 SurfaceLost。");
+
+            case Result.ErrorDeviceLost:
+                _status = VulkanScene3dSessionStatus.Failed;
+                return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
+                    VulkanScene3dFrameStatus.Failed, acqRes, null,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    "[严重]Device 已丢失，Acquire 返回 DeviceLost。");
+
+            default:
+                _status = VulkanScene3dSessionStatus.Failed;
+                return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
+                    VulkanScene3dFrameStatus.Failed, acqRes, VulkanScene3dSwapchainStage.GetSwapchainImages,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    $"Acquire 未预期错误：{acqRes}。");
+        }
+    }
+
+    /// <summary>
+    /// 分类处理 QueuePresent 结果。
+    /// 返回非 null 表示需要中断当前帧（致命失败）。
+    /// </summary>
+    private VulkanScene3dFrameResult? ClassifyPresentResult(Result presentRes, VulkanScene3dFrameReason reason)
+    {
+        switch (presentRes)
+        {
+            case Result.Success:
+            case Result.SuboptimalKhr:
+                if (presentRes == Result.SuboptimalKhr)
+                    _recreateRequested = true;
+                return null; // 继续
+
+            case Result.ErrorOutOfDateKhr:
+                _recreateRequested = true;
+                return VulkanScene3dFrameResult.RecreateRequested(
+                    _frameIndex, reason,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    presentRes, "Present 返回 OutOfDate，请求重建。");
+
+            case Result.ErrorSurfaceLostKhr:
+                _status = VulkanScene3dSessionStatus.Failed;
+                return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
+                    VulkanScene3dFrameStatus.Failed, presentRes, VulkanScene3dSwapchainStage.SurfaceCapabilities,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    "[严重]Surface 已丢失，Present 返回 SurfaceLost。");
+
+            case Result.ErrorDeviceLost:
+                _status = VulkanScene3dSessionStatus.Failed;
+                return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
+                    VulkanScene3dFrameStatus.Failed, presentRes, null,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    "[严重]Device 已丢失，Present 返回 DeviceLost。");
+
+            default:
+                _status = VulkanScene3dSessionStatus.Failed;
+                return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
+                    VulkanScene3dFrameStatus.Failed, presentRes, VulkanScene3dSwapchainStage.CreateSwapchain,
+                    _swapchainGeneration, _consecutiveAcquireTimeouts,
+                    $"Present 未预期错误：{presentRes}。");
         }
     }
 
@@ -799,6 +955,15 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         // Instance
         if (_instOk)
             _vk.DestroyInstance(_instance, null);
+
+        // 不变量：Dispose 后应为 0 个活 Swapchain
+        if (!VulkanScene3dSwapchainInvariant.IsDisposedValid())
+        {
+            var diag = VulkanScene3dSwapchainInvariant.GetDiagnosticReport();
+            // 仅诊断日志，不抛异常（Dispose 中不应抛出）
+            System.Diagnostics.Debug.WriteLine(
+                $"[严重]Session Dispose 后 Swapchain 不变量失效。\n{diag}");
+        }
     }
 
     // ─── 委托 ────────────────────────────────────────────────────

@@ -88,3 +88,34 @@ FluidWarfare-old 只作为历史参考。
 旧仓库中的思想可以被重新表达。
 
 旧仓库中的实现不得被直接迁移。
+
+## Vulkan 返回值规则
+
+除规范明确返回 void 的 Vulkan 函数外，所有 Result 必须被保存并分类处理。
+禁止直接丢弃 VkResult。
+
+## 两阶段枚举规则
+
+所有 count → array 的 Vulkan 枚举必须处理 Incomplete，并设置有限重试次数。
+
+## 等待规则
+
+Editor UI 线程不得使用 ulong.MaxValue 等无限 Vulkan 等待。
+所有 Fence / Acquire 等待必须有上限和超时处理。
+
+## native 资源规则
+
+每个 native 创建入口必须在构造时具备对应销毁能力。
+禁止先创建资源、后续再"可选赋值"销毁函数。
+
+## Swapchain 唯一入口
+
+vkCreateSwapchainKHR 与 vkDestroySwapchainKHR 只能由 Scene3D Swapchain 模块调用。
+
+## 生命周期测试
+
+新增 Vulkan 资源类型时，必须同时增加：
+1. 创建成功测试
+2. 部分失败清理测试
+3. Dispose 幂等测试
+4. 创建/销毁数量不变量测试

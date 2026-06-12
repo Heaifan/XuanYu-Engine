@@ -15,7 +15,6 @@
 ## 1. 未发布变更日志
 
 ### 新增
-
 1. 创建 `FluidWarfare.sln`。
 2. 创建 Core、ECS、World、Simulation、Combat、AI、Data、Render、Vulkan 渲染后端、运行时、编辑器、导出器和测试等顶层模块目录。
 3. 创建资源目录：`game_data`、`assets`、`shaders` 和 `replays`。
@@ -312,21 +311,23 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.3.1：默认 3D 主视口、俯视矩阵修复与旧点位路径退役。
+当前执行 Milestone 8.3.3：Swapchain API 结果加固与生命周期规则收口。
 
-管线进度：... → 持久会话 ✅ → 默认 3D 主视口 ⬆️
+管线进度：... → 持久会话 ✅ → 默认 3D 主视口 ✅ → 结果加固 ⬆️
 
 当前状态：
 - Scene3D 为 Editor 默认主视口，自动启动持久 Session。
 - Vulkan Validation Layer 默认在 Session Instance 中启用（FW_VULKAN_VALIDATION=1）。
 - LookAt 矩阵已修复为列优先，画面为正确 RTS 俯视。
-- FW_DISABLE_SCENE3D=1 可紧急关闭 3D，回退 Vulkan Clear。
-- 旧 2D MarkerDraw 点位路径已删除。
-- 中键拖拽平移、滚轮缩放（指数缩放 8~120）、Home 重置相机。
-- Depth Buffer: D32Sfloat，每 Swapchain Image 一个 Depth Attachment。
-- 多对象：3 个 World 实体 → 3 个 RenderObject → 3 个立方体。
-- GPU Fence 使用 500ms 有限等待，Failed Session 不允许 Resize。
-- 测试 330/330 全部通过。
+- FW_DISABLE_SCENE3D=1 可紧急关闭 3D。
+- Surface 查询委托返回类型修正为 Result，两阶段枚举处理 Incomplete。
+- AcquireNextImage 使用 100ms 有限等待，分类处理 Timeout/NotReady/OutOfDate/Suboptimal/SurfaceLost/DeviceLost。
+- QueuePresent 分类处理各 VkResult。
+- Acquire 超时或失败时不得 Reset Fence。
+- ZeroExtent (0×0) 忽略，Session 保持 Active。
+- 连续 10 次 Acquire 超时后 Session 终止。
+- 生命周期不变量校验集成到 Start/Resize/Dispose 关键点。
+- 代码宪法新增 Vulkan 返回值、两阶段枚举、有限等待、native 资源对称、Swapchain 唯一入口规则。
 
 ## 3. 顶层目录结构
 
@@ -431,7 +432,26 @@ FluidWarfare/
 |   |   |-- VulkanScene3dInfo.cs
 |   |   |-- VulkanScene3dRenderer.cs
 |   |   |-- VulkanScene3dStatus.cs
-|   |   `-- VulkanScene3dVertex.cs
+|   |   |-- VulkanScene3dVertex.cs
+|   |   |-- Depth/
+|   |   |   |-- VulkanScene3dDepthFormatSelector.cs
+|   |   |   |-- VulkanScene3dDepthAttachmentInfo.cs
+|   |   |   `-- VulkanScene3dDepthAttachments.cs
+|   |   |-- Session/
+|   |   |   |-- VulkanScene3dSession.cs
+|   |   |   |-- VulkanScene3dSessionStatus.cs
+|   |   |   |-- VulkanScene3dFrameReason.cs
+|   |   |   |-- VulkanScene3dFrameResult.cs
+|   |   |   |-- VulkanScene3dFrameStatus.cs
+|   |   |   |-- VulkanScene3dSwapchainResources.cs
+|   |   |   |-- Swapchain/
+|   |   |   |   |-- VulkanScene3dSwapchainFunctions.cs
+|   |   |   |   |-- VulkanScene3dSwapchainCreateResult.cs
+|   |   |   |   |-- VulkanScene3dSwapchainStage.cs
+|   |   |   |   `-- VulkanScene3dSwapchainInvariant.cs
+|   |   |   `-- Surface/
+|   |   |       |-- VulkanScene3dSurfaceFormats.cs
+|   |   |       `-- VulkanScene3dPresentModes.cs
 |   |-- Camera/
 |   |   |-- VulkanCameraInfo.cs
 |   |   `-- VulkanCameraMatrices.cs
@@ -721,6 +741,10 @@ get_tree.bat
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs` | 验证网格生成、立方体生成、坐标轴生成和交错格式转换 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dRunGateTests.cs` | 验证 Scene3D 运行闸门的隔离状态、提示文本和 Ready/Isolated 语义 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRunGate.cs` | Scene3D 实验渲染路径运行闸门，当前用于阻止未验证 SPIR-V/Pipeline 路径进入 Editor 启动流程 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dFrameStatus.cs` | 帧状态枚举：Presented / Skipped / RecreateRequested / Failed | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/Session/Swapchain/VulkanScene3dSwapchainInvariant.cs` | Swapchain 生命周期不变量断言（Active Live=1 / Disposed Live=0） | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/Session/Surface/VulkanScene3dSurfaceFormats.cs` | SurfaceFormatKHR 两阶段枚举 + Incomplete 有限重试（最多 3 次） | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/Session/Surface/VulkanScene3dPresentModes.cs` | PresentModeKHR 两阶段枚举 + Incomplete 有限重试（最多 3 次） | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs` | 验证默认相机参数和自定义相机 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Validation/VulkanValidationStatus.cs` | Vulkan Validation 启用状态枚举 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Validation/VulkanValidationInfo.cs` | Validation 状态信息，含状态、中文消息和消息数量 | 测试通过 |

@@ -214,9 +214,11 @@ public static unsafe class VulkanScene3dRenderer
 
             // 13. Framebuffers (color + depth)
             r.Framebuffers = new Framebuffer[imgCount];
+            var fba = stackalloc ImageView[2];
             for (var i = 0; i < imgCount; i++)
             {
-                var fba = stackalloc ImageView[] { r.ImageViews[i], r.DepthViews[i] };
+                fba[0] = r.ImageViews[i];
+                fba[1] = r.DepthViews[i];
                 var fbCI = new FramebufferCreateInfo
                 {
                     SType = StructureType.FramebufferCreateInfo,

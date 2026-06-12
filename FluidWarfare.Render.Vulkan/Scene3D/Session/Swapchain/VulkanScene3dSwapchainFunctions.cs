@@ -63,9 +63,9 @@ public sealed unsafe class VulkanScene3dSwapchainFunctions
     [UnmanagedFunctionPointer(CallingConvention.Winapi)]
     public delegate Result QueuePresentFunc(Queue q, PresentInfoKHR* p);
     [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-    public delegate void GetCapsFunc(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, SurfaceCapabilitiesKHR* c);
+    public delegate Result GetCapsFunc(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, SurfaceCapabilitiesKHR* c);
     [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-    public delegate void GetFormatsFunc(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, uint* c, SurfaceFormatKHR* f);
+    public delegate Result GetFormatsFunc(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, uint* c, SurfaceFormatKHR* f);
     [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-    public delegate void GetPresentModesFunc(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, uint* c, PresentModeKHR* m);
+    public delegate Result GetPresentModesFunc(Silk.NET.Vulkan.PhysicalDevice pd, SurfaceKHR s, uint* c, PresentModeKHR* m);
 }

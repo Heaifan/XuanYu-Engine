@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using FluidWarfare.Render.Vulkan.Scene3D.Depth;
+using FluidWarfare.Render.Vulkan.Scene3D.Session.Surface;
 using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
 using Silk.NET.Vulkan;
 
@@ -78,17 +79,18 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
             return VulkanScene3dSwapchainCreateResult.Failed(stage, result, w, h, message);
         }
 
-        // Surface capabilities
+        // ── Surface capabilities ──────────────────────────────────
         SurfaceCapabilitiesKHR caps;
-        functions.GetCapabilities(physicalDevice, surface, &caps);
+        var capsResult = functions.GetCapabilities(physicalDevice, surface, &caps);
+        if (capsResult != Result.Success)
+            return Fail(VulkanScene3dSwapchainStage.SurfaceCapabilities, capsResult,
+                $"查询 Surface 能力失败：{capsResult}（请求尺寸 {w}x{h}）。");
 
-        // Surface formats
-        uint fmtCount = 0;
-        functions.GetFormats(physicalDevice, surface, &fmtCount, null);
-        if (fmtCount == 0)
-            return Fail(VulkanScene3dSwapchainStage.SurfaceFormats, null, "无可用 Surface 格式。");
-        var fmts = new SurfaceFormatKHR[fmtCount];
-        fixed (SurfaceFormatKHR* fp = fmts) functions.GetFormats(physicalDevice, surface, &fmtCount, fp);
+        // ── Surface formats (two-stage + Incomplete retry) ─────────
+        if (!VulkanScene3dSurfaceFormats.TryEnumerate(
+                functions.GetFormats, physicalDevice, surface,
+                out var fmts, out var fmtErr))
+            return Fail(VulkanScene3dSwapchainStage.SurfaceFormats, null, fmtErr);
 
         var chosenFmt = ChooseFormat(fmts);
         var extent = ChooseExtent(caps, w, h);
@@ -96,14 +98,12 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
             caps.MinImageCount,
             caps.MaxImageCount > 0 ? caps.MaxImageCount : uint.MaxValue);
 
-        // Present modes
-        uint modeCount = 0;
-        functions.GetPresentModes(physicalDevice, surface, &modeCount, null);
-        if (modeCount == 0)
-            return Fail(
-                VulkanScene3dSwapchainStage.PresentModes, null, "无可用 PresentMode。");
-        var modes = new PresentModeKHR[modeCount];
-        fixed (PresentModeKHR* mp = modes) functions.GetPresentModes(physicalDevice, surface, &modeCount, mp);
+        // ── Present modes (two-stage + Incomplete retry) ──────────
+        if (!VulkanScene3dPresentModes.TryEnumerate(
+                functions.GetPresentModes, physicalDevice, surface,
+                out var modes, out var modeErr))
+            return Fail(VulkanScene3dSwapchainStage.PresentModes, null, modeErr);
+
         var presentMode = ChoosePresentMode(modes);
 
         // Create swapchain with OldSwapchain
@@ -134,16 +134,43 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         r.Swapchain = sc;
         TotalCreateCount++;
 
-        // Get images
+        // Get images (two-stage + Incomplete retry)
         uint actualCount = 0;
         if (functions.GetImages(device, sc, &actualCount, null) != Result.Success)
             return Fail(
-                VulkanScene3dSwapchainStage.GetSwapchainImages, null, "GetSwapchainImages 第一阶段失败。");
+                VulkanScene3dSwapchainStage.GetSwapchainImages, null,
+                "GetSwapchainImages 第一阶段（获取数量）失败。");
         if (actualCount == 0)
             return Fail(
                 VulkanScene3dSwapchainStage.GetSwapchainImages, null, "Swapchain 图像数为 0。");
+
         var swapchainImages = new Image[actualCount];
-        fixed (Image* ip = swapchainImages) functions.GetImages(device, sc, &actualCount, ip);
+        uint written = actualCount;
+        Result fillResult;
+        fixed (Image* imgPtr = swapchainImages)
+        {
+            fillResult = functions.GetImages(device, sc, &written, imgPtr);
+        }
+
+        if (fillResult == Result.Incomplete)
+        {
+            // 驱动返回的图像数少于预期，用新数量重试一次
+            if (written == 0)
+                return Fail(
+                    VulkanScene3dSwapchainStage.GetSwapchainImages, fillResult,
+                    "GetSwapchainImages 第二阶段 Incomplete 且 written=0。");
+            actualCount = written;
+            // 缩小数组
+            var trimmed = new Image[actualCount];
+            Array.Copy(swapchainImages, trimmed, actualCount);
+            swapchainImages = trimmed;
+        }
+        else if (fillResult != Result.Success)
+        {
+            return Fail(
+                VulkanScene3dSwapchainStage.GetSwapchainImages, fillResult,
+                $"GetSwapchainImages 第二阶段（填充数组）失败：{fillResult}。");
+        }
         r.ImageCount = (int)actualCount;
         r.Extent = extent;
 
