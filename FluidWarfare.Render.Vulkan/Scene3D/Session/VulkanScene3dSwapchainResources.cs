@@ -37,6 +37,7 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
     // 生命周期计数器
     public static int TotalCreateCount;
     public static int TotalDestroyCount;
+    public static int LiveCount => TotalCreateCount - TotalDestroyCount;
     public int SwapchainDestroyCount { get; private set; }
 
     // ─── 私有构造 ──────────────────────────────────────────────
@@ -229,15 +230,17 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
 
         // Framebuffers
         r.Framebuffers = new Framebuffer[actualCount];
+        var fba = stackalloc ImageView[2];
         for (var i = 0; i < actualCount; i++)
         {
-            var fba = stackalloc ImageView[] { r.ColorViews[i], r.DepthViews[i] };
+            fba[0] = r.ColorViews[i];
+            fba[1] = r.DepthViews[i];
             var fbCI = new FramebufferCreateInfo
             {
                 SType = StructureType.FramebufferCreateInfo,
                 RenderPass = r.RenderPass,
                 AttachmentCount = 2,
-                PAttachments = (ImageView*)fba,
+                PAttachments = fba,
                 Width = extent.Width, Height = extent.Height, Layers = 1
             };
             Framebuffer newFb = default;
@@ -269,23 +272,39 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
                 VulkanScene3dSwapchainStage.CommandBuffer, null, "CommandBuffer 创建失败。");
         r.CommandBuffer = newCmd;
 
-        // Sync objects
+        // Sync objects (individual creation with per-object VkResult logging)
         var semCI = new SemaphoreCreateInfo { SType = StructureType.SemaphoreCreateInfo };
         var fenceCI = new FenceCreateInfo { SType = StructureType.FenceCreateInfo, Flags = FenceCreateFlags.SignaledBit };
-        Silk.NET.Vulkan.Semaphore newAvail = default, newFin = default;
-        Fence newFence = default;
-        if (vk.CreateSemaphore(device, &semCI, null, out newAvail) != Result.Success ||
-            vk.CreateSemaphore(device, &semCI, null, out newFin) != Result.Success ||
-            vk.CreateFence(device, &fenceCI, null, out newFence) != Result.Success)
+        Silk.NET.Vulkan.Semaphore imageAvail = default;
+        var availResult = vk.CreateSemaphore(device, &semCI, null, out imageAvail);
+        if (availResult != Result.Success)
+            return Fail(VulkanScene3dSwapchainStage.Synchronization, availResult,
+                $"图像可用 Semaphore 创建失败：{availResult}。");
+
+        Silk.NET.Vulkan.Semaphore renderFin = default;
+        var finResult = vk.CreateSemaphore(device, &semCI, null, out renderFin);
+        if (finResult != Result.Success)
         {
-            if (newAvail.Handle != 0) vk.DestroySemaphore(device, newAvail, null);
-            if (newFin.Handle != 0) vk.DestroySemaphore(device, newFin, null);
-            return Fail(
-                VulkanScene3dSwapchainStage.Synchronization, null, "同步对象创建失败。");
+            vk.DestroySemaphore(device, imageAvail, null);
+            return Fail(VulkanScene3dSwapchainStage.Synchronization, finResult,
+                $"渲染完成 Semaphore 创建失败：{finResult}。");
         }
-        r.SemAvail = newAvail;
-        r.SemFin = newFin;
-        r.Fence = newFence;
+
+        Fence frameFence = default;
+        var fenceResult = vk.CreateFence(device, &fenceCI, null, out frameFence);
+        if (fenceResult != Result.Success)
+        {
+            vk.DestroySemaphore(device, renderFin, null);
+            vk.DestroySemaphore(device, imageAvail, null);
+            return Fail(VulkanScene3dSwapchainStage.Synchronization, fenceResult,
+                $"帧 Fence 创建失败：{fenceResult}。");
+        }
+
+        r.SemAvail = imageAvail;
+        r.SemFin = renderFin;
+        r.Fence = frameFence;
+
+        // 成功后不得再有 return Failed
 
         return new VulkanScene3dSwapchainCreateResult(true, r,
             VulkanScene3dSwapchainStage.CreateSwapchain, Result.Success, w, h,

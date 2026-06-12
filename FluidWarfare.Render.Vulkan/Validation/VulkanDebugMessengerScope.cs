@@ -42,16 +42,14 @@ public sealed unsafe class VulkanDebugMessengerScope : IDisposable
         _vk = vk;
         _instance = instance;
         _messageStore = messageStore;
+        _callback = DebugCallback; // 必须在任何提前返回前初始化，防止 GC
 
         // 加载函数指针
         _fnCreateDebugUtilsMessenger = LoadProc("vkCreateDebugUtilsMessengerEXT");
         _fnDestroyDebugUtilsMessenger = LoadProc("vkDestroyDebugUtilsMessengerEXT");
 
         if (_fnCreateDebugUtilsMessenger == 0 || _fnDestroyDebugUtilsMessenger == 0)
-            return;
-
-        // 创建 callback（必须持有）
-        _callback = DebugCallback;
+            throw new InvalidOperationException("Validation 已请求，但无法加载 Debug Utils 函数。");
 
         var ci = new DebugUtilsMessengerCreateInfoEXT
         {

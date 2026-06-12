@@ -920,9 +920,18 @@ public sealed partial class EditorShell : UserControl
     {
         if (_scene3dSession is not null)
         {
-            // 会话已存在，重新绘制
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
-            return;
+            // 重新启动：先清理旧 Session
+            var oldSession = _scene3dSession;
+            _scene3dSession = null;
+            oldSession.Dispose();
+
+            if (VulkanScene3dSwapchainResources.LiveCount != 0)
+            {
+                AppendErrorLog(
+                    $"拒绝重启 Scene3D：仍有 {VulkanScene3dSwapchainResources.LiveCount} 个 Swapchain 存活。");
+                _sessionActive = false;
+                return;
+            }
         }
 
         if (!_scene3dGate.CanRun)
@@ -987,9 +996,11 @@ public sealed partial class EditorShell : UserControl
         }
         else
         {
+            _scene3dSession = null;
             session.Dispose();
             _sessionActive = false;
             AppendErrorLog($"Scene3D 会话启动失败：{result.Message}");
+            AppendInfoLog($"Swapchain LiveCount：{VulkanScene3dSwapchainResources.LiveCount}");
         }
 
         UpdateVulkanViewportStatusLine();

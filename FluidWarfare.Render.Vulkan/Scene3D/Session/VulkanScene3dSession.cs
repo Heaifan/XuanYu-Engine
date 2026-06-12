@@ -66,8 +66,8 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private bool _rendering; // 防重入
 
     // Validation
-    private VulkanValidationOptions _validationOptions = VulkanValidationOptions.FromEnvironment();
-    private VulkanValidationMessageStore? _validationMessageStore;
+    private readonly VulkanValidationOptions _validationOptions = VulkanValidationOptions.FromEnvironment();
+    private readonly VulkanValidationMessageStore _validationMessageStore = new();
     private Validation.VulkanDebugMessengerScope? _debugMessengerScope;
 
     // Success flags for session-level resources
@@ -549,7 +549,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             _instanceCreateCount++;
 
             // Create Debug Messenger after Instance
-            if (enableValidation && _validationMessageStore is not null)
+            if (enableValidation)
             {
                 try
                 {
@@ -731,6 +731,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
     private VulkanScene3dFrameResult FailFrame(VulkanScene3dFrameReason reason, string message)
     {
+        DisposeResources();
         _status = VulkanScene3dSessionStatus.Failed;
         return VulkanScene3dFrameResult.Failed(_frameIndex, reason, message);
     }
