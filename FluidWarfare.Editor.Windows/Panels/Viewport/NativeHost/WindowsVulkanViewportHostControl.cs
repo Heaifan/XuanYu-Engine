@@ -29,7 +29,12 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private const uint WmNcHitTest = 0x0084;
     private const int VkHome = 0x24;
     private const int VkEscape = 0x1B;
+    private const int VkShift = 0x10;
+    private const int VkControl = 0x11;
+    private const int VkDecimal = 0x6E; // Numpad period
     private const int MkMbutton = 0x0010;
+
+    private enum MouseDragMode { None, Orbit, Pan, Dolly }
 
     private static bool _classRegistered;
 
@@ -44,21 +49,30 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private WindowsVulkanViewportHostInfo _hostInfo = WindowsVulkanViewportHostInfo.NotCreated;
 
     // Input state
-    private bool _isDragging;
+    private MouseDragMode _mouseDragMode = MouseDragMode.None;
     private int _lastMouseX;
     private int _lastMouseY;
     private bool _trackingMouseLeave;
 
     // ─── 输入事件 ────────────────────────────────────────────
 
-    /// <summary>鼠标中键拖拽平移（deltaPixelX, deltaPixelY, viewportWidth, viewportHeight）。</summary>
+    /// <summary>鼠标中键拖拽环绕旋转（deltaYaw, deltaPitch）。</summary>
+    public event Action<float, float>? CameraOrbitRequested;
+
+    /// <summary>Shift + 中键拖拽平移（deltaPixelX, deltaPixelY, viewportWidth, viewportHeight）。</summary>
     public event Action<int, int, int, int>? CameraPanRequested;
+
+    /// <summary>Ctrl + 中键拖拽推拉（deltaPixels）。</summary>
+    public event Action<float>? CameraDollyRequested;
 
     /// <summary>鼠标滚轮缩放（wheelNotches）。</summary>
     public event Action<float>? CameraZoomRequested;
 
     /// <summary>Home 相机重置。</summary>
     public event Action? CameraResetRequested;
+
+    /// <summary>小键盘句点聚焦选中实体。</summary>
+    public event Action? NumpadPeriodRequested;
 
     /// <summary>Esc 键按下。</summary>
     public event Action? EscapeRequested;
@@ -208,6 +222,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     instance.EscapeRequested?.Invoke();
                     return 0;
 
+                case WmKeyDown when (int)wParam == VkDecimal:
+                    instance.NumpadPeriodRequested?.Invoke();
+                    return 0;
+
                 case WmKillFocus:
                     instance.HandleKillFocus();
                     return 0;
@@ -223,15 +241,25 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     private void HandleMButtonDown(nint lParam)
     {
-        _isDragging = true;
         _lastMouseX = (short)(lParam.ToInt64() & 0xFFFF);
         _lastMouseY = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+
+        var shiftDown = (GetKeyState(VkShift) & 0x8000) != 0;
+        var ctrlDown = (GetKeyState(VkControl) & 0x8000) != 0;
+
+        if (ctrlDown)
+            _mouseDragMode = MouseDragMode.Dolly;
+        else if (shiftDown)
+            _mouseDragMode = MouseDragMode.Pan;
+        else
+            _mouseDragMode = MouseDragMode.Orbit;
+
         SetCapture(_windowHandle);
     }
 
     private void HandleMButtonUp()
     {
-        _isDragging = false;
+        _mouseDragMode = MouseDragMode.None;
         ReleaseCapture();
     }
 
@@ -239,6 +267,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     {
         var x = (short)(lParam.ToInt64() & 0xFFFF);
         var y = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+        var deltaX = x - _lastMouseX;
+        var deltaY = y - _lastMouseY;
+        _lastMouseX = x;
+        _lastMouseY = y;
 
         // Track WM_MOUSELEAVE on first mouse move
         if (!_trackingMouseLeave && _windowHandle != 0)
@@ -256,16 +288,21 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         // Fire pointer move for ground tracking (always)
         PointerMoved?.Invoke(x, y);
 
-        // Handle camera pan (only when dragging)
-        if (!_isDragging) return;
+        // Handle camera drag modes
+        switch (_mouseDragMode)
+        {
+            case MouseDragMode.Orbit:
+                CameraOrbitRequested?.Invoke(-deltaX, -deltaY); // invert for natural feel
+                break;
 
-        var deltaX = x - _lastMouseX;
-        var deltaY = y - _lastMouseY;
+            case MouseDragMode.Pan:
+                CameraPanRequested?.Invoke(deltaX, deltaY, _width, _height);
+                break;
 
-        _lastMouseX = x;
-        _lastMouseY = y;
-
-        CameraPanRequested?.Invoke(deltaX, deltaY, _width, _height);
+            case MouseDragMode.Dolly:
+                CameraDollyRequested?.Invoke(-deltaY);
+                break;
+        }
     }
 
     private void HandleMouseWheel(nint wParam)
@@ -278,9 +315,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     private void HandleKillFocus()
     {
-        if (_isDragging)
+        if (_mouseDragMode != MouseDragMode.None)
         {
-            _isDragging = false;
+            _mouseDragMode = MouseDragMode.None;
             ReleaseCapture();
         }
     }
@@ -390,6 +427,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     [DllImport("user32.dll", EntryPoint = "TrackMouseEvent", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool TrackMouseEvent(ref TRACKMOUSEEVENT tme);
+
+    [DllImport("user32.dll", EntryPoint = "GetKeyState")]
+    private static extern short GetKeyState(int nVirtKey);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct TRACKMOUSEEVENT

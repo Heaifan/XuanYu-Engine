@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using FluidWarfare.Core.Math;
 using FluidWarfare.Editor.Windows.Shell;
@@ -23,7 +24,13 @@ public sealed partial class InspectorPanel : UserControl
     private Button? _resetButton;
     private Button? _groundPlaceButton;
 
+    // ─── 状态 ──────────────────────────────────────────────────────
+    private bool _isUpdatingTransformTexts;
+
     // ─── 事件 ──────────────────────────────────────────────────────
+
+    /// <summary>用户修改了 Transform 输入草稿（每次输入变化时触发）。</summary>
+    public event Action<string, string, string>? TransformDraftChanged;
 
     /// <summary>用户点击"应用坐标"。</summary>
     public event Action<string, string, string>? TransformApplyRequested;
@@ -38,6 +45,7 @@ public sealed partial class InspectorPanel : UserControl
     {
         InitializeComponent();
         CacheControls();
+        AttachKeyboardHandlers();
     }
 
     private void CacheControls()
@@ -58,17 +66,39 @@ public sealed partial class InspectorPanel : UserControl
         _groundPlaceButton = this.FindControl<Button>("GroundPlaceButton");
     }
 
+    private void AttachKeyboardHandlers()
+    {
+        // Enter → apply, Esc → reset when TextBox is focused
+        void HandleKeyDown(TextBox tb, object? sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var (x, y, z) = GetTransformTexts();
+                TransformApplyRequested?.Invoke(x, y, z);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                TransformResetRequested?.Invoke();
+                e.Handled = true;
+            }
+        }
+
+        if (_transformXText is not null)
+            _transformXText.KeyDown += (s, e) => HandleKeyDown(_transformXText, s, e);
+        if (_transformYText is not null)
+            _transformYText.KeyDown += (s, e) => HandleKeyDown(_transformYText, s, e);
+        if (_transformZText is not null)
+            _transformZText.KeyDown += (s, e) => HandleKeyDown(_transformZText, s, e);
+    }
+
     // ─── 公共方法 ──────────────────────────────────────────────────
 
-    /// <summary>
-    /// 兼容旧 API：显示基本选择文本（无 Transform 编辑区）。
-    /// </summary>
     public void ShowSelection(EditorSelection selection)
     {
         ShowProjectFileSelection(selection);
     }
 
-    /// <summary>显示"未选择"状态。</summary>
     public void ShowNoSelection()
     {
         SetEmptyVisible(true);
@@ -76,9 +106,6 @@ public sealed partial class InspectorPanel : UserControl
         SetTransformVisible(false);
     }
 
-    /// <summary>
-    /// 显示项目文件选择（无 Transform 编辑区）。
-    /// </summary>
     public void ShowProjectFileSelection(EditorSelection selection)
     {
         ShowSelectionCore(selection);
@@ -87,11 +114,8 @@ public sealed partial class InspectorPanel : UserControl
 
     /// <summary>
     /// 显示世界实体选择（含 Transform 编辑区）。
+    /// 程序化设置输入框，不触发 TransformDraftChanged。
     /// </summary>
-    /// <param name="selection">显示信息。</param>
-    /// <param name="entityId">实体 ID 字符串。</param>
-    /// <param name="position">实体当前位置。</param>
-    /// <param name="sourcePath">来源路径（可为 null）。</param>
     public void ShowWorldEntitySelection(
         EditorSelection selection,
         string? entityId,
@@ -109,16 +133,17 @@ public sealed partial class InspectorPanel : UserControl
         if (_selectionSourceText is not null)
             _selectionSourceText.Text = sourcePath is not null ? $"来源：{sourcePath}" : string.Empty;
 
-        // 更新 Transform 输入
-        if (_transformXText is not null && position is not null)
-            _transformXText.Text = position.Value.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture);
-        if (_transformYText is not null && position is not null)
-            _transformYText.Text = position.Value.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture);
-        if (_transformZText is not null && position is not null)
-            _transformZText.Text = position.Value.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture);
+        // 程序化填值，抑制草稿事件
+        if (position is not null)
+            SetTransformTexts(
+                position.Value.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+                position.Value.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+                position.Value.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
+        else
+            SetTransformTexts(string.Empty, string.Empty, string.Empty);
 
         ClearTransformError();
-        UpdateApplyButtonState();
+        SetTransformDraftState(false, false, null);
     }
 
     /// <summary>
@@ -132,15 +157,25 @@ public sealed partial class InspectorPanel : UserControl
     }
 
     /// <summary>
-    /// 更新 Transform 输入框内容（外部程序化修改时调用）。
+    /// 程序化更新 Transform 输入框内容。
+    /// 使用 _isUpdatingTransformTexts 抑制 TransformDraftChanged 事件。
     /// </summary>
     public void SetTransformTexts(string x, string y, string z)
     {
-        if (_transformXText is not null) _transformXText.Text = x;
-        if (_transformYText is not null) _transformYText.Text = y;
-        if (_transformZText is not null) _transformZText.Text = z;
+        _isUpdatingTransformTexts = true;
+        try
+        {
+            if (_transformXText is not null) _transformXText.Text = x;
+            if (_transformYText is not null) _transformYText.Text = y;
+            if (_transformZText is not null) _transformZText.Text = z;
+        }
+        finally
+        {
+            _isUpdatingTransformTexts = false;
+        }
+
         ClearTransformError();
-        UpdateApplyButtonState();
+        SetTransformDraftState(false, false, null);
     }
 
     /// <summary>
@@ -151,21 +186,48 @@ public sealed partial class InspectorPanel : UserControl
          _transformYText?.Text ?? string.Empty,
          _transformZText?.Text ?? string.Empty);
 
-    /// <summary>
-    /// 启用或禁用地面放置按钮。
-    /// </summary>
     public void SetGroundPlaceEnabled(bool enabled)
     {
         if (_groundPlaceButton is not null)
             _groundPlaceButton.IsEnabled = enabled;
     }
 
+    // ─── 统一的 Transform 草稿状态 ────────────────────────────────
+
+    /// <summary>
+    /// 统一设置 Transform 草稿状态。外部调用方（EditorShell）在每次
+    /// TransformDraftChanged 后调用此方法更新按钮和错误。
+    /// </summary>
+    /// <param name="canApply">是否可应用（坐标合法且与正式值不同）。</param>
+    /// <param name="canReset">是否可重置（草稿与正式值不同）。</param>
+    /// <param name="error">校验错误信息，null 表示无错误。</param>
+    public void SetTransformDraftState(bool canApply, bool canReset, string? error)
+    {
+        if (_applyButton is not null)
+            _applyButton.IsEnabled = canApply;
+
+        if (_resetButton is not null)
+            _resetButton.IsEnabled = canReset;
+
+        if (_transformErrorText is not null)
+        {
+            var hasError = !string.IsNullOrWhiteSpace(error);
+            _transformErrorText.IsVisible = hasError;
+            _transformErrorText.Text = error ?? string.Empty;
+        }
+    }
+
     // ─── UI 事件处理 ──────────────────────────────────────────────
 
     private void OnTransformTextChanged(object? sender, TextChangedEventArgs e)
     {
+        if (_isUpdatingTransformTexts)
+            return;
+
         ClearTransformError();
-        UpdateApplyButtonState();
+        SetTransformDraftState(false, false, null);
+        var (x, y, z) = GetTransformTexts();
+        TransformDraftChanged?.Invoke(x, y, z);
     }
 
     private void OnApplyClicked(object? sender, RoutedEventArgs e)
@@ -195,7 +257,6 @@ public sealed partial class InspectorPanel : UserControl
             _selectionKindText.Text = $"类型：{selection.Kind}";
         if (_selectionNameText is not null)
             _selectionNameText.Text = $"名称：{selection.DisplayName}";
-        // Description is replaced by structured fields for world entities
     }
 
     private void SetEmptyVisible(bool visible)
@@ -229,42 +290,10 @@ public sealed partial class InspectorPanel : UserControl
     }
 
     /// <summary>
-    /// 显示 Transform 校验错误信息。
+    /// 显示 Transform 校验错误信息（临时兼容，逐步迁移到 SetTransformDraftState）。
     /// </summary>
     public void ShowTransformError(string errorMessage)
     {
-        if (_transformErrorText is not null)
-        {
-            _transformErrorText.Text = errorMessage;
-            _transformErrorText.IsVisible = true;
-        }
-        if (_applyButton is not null)
-            _applyButton.IsEnabled = false;
-    }
-
-    /// <summary>
-    /// 更新"应用坐标"按钮启用状态（输入与正式值不同时启用）。
-    /// </summary>
-    public void UpdateApplyButtonState()
-    {
-        // Button state is managed externally via SetApplyEnabled
-    }
-
-    /// <summary>
-    /// 设置"应用坐标"按钮启用状态。
-    /// </summary>
-    public void SetApplyEnabled(bool enabled)
-    {
-        if (_applyButton is not null)
-            _applyButton.IsEnabled = enabled;
-    }
-
-    /// <summary>
-    /// 设置"重置"按钮启用状态。
-    /// </summary>
-    public void SetResetEnabled(bool enabled)
-    {
-        if (_resetButton is not null)
-            _resetButton.IsEnabled = enabled;
+        SetTransformDraftState(false, true, errorMessage);
     }
 }

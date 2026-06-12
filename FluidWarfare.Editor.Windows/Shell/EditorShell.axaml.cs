@@ -74,7 +74,7 @@ public sealed partial class EditorShell : UserControl
     private int _renderSeq;
     private string _renderLastMode = "无";
     private VulkanScene3dSession? _scene3dSession;
-    private SceneCameraState _lastCameraState = SceneCameraDefaults.CreateDefault();
+    private SceneOrbitCameraState _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
     private bool _framePending;
     private bool _sessionActive;
     private bool _scene3dAutoStartAttempted;
@@ -136,9 +136,12 @@ public sealed partial class EditorShell : UserControl
         if (_vulkanViewportHostPanel is not null)
         {
             _vulkanViewportHostPanel.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
+            _vulkanViewportHostPanel.CameraOrbitRequested += HandleCameraOrbit;
             _vulkanViewportHostPanel.CameraPanRequested += HandleCameraPan;
+            _vulkanViewportHostPanel.CameraDollyRequested += HandleCameraDolly;
             _vulkanViewportHostPanel.CameraZoomRequested += HandleCameraZoom;
             _vulkanViewportHostPanel.CameraResetRequested += HandleCameraReset;
+            _vulkanViewportHostPanel.NumpadPeriodRequested += HandleNumpadPeriod;
             _vulkanViewportHostPanel.EscapeRequested += HandleViewportEscape;
             _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
             _vulkanViewportHostPanel.PointerMoved += HandleViewportPointerMoved;
@@ -147,6 +150,7 @@ public sealed partial class EditorShell : UserControl
 
         if (_inspectorPanel is not null)
         {
+            _inspectorPanel.TransformDraftChanged += HandleTransformDraftChanged;
             _inspectorPanel.TransformApplyRequested += HandleTransformApply;
             _inspectorPanel.TransformResetRequested += HandleTransformReset;
             _inspectorPanel.GroundPlacementRequested += HandleGroundPlacementToggle;
@@ -234,7 +238,7 @@ public sealed partial class EditorShell : UserControl
                     var result = _scene3dSession.Resize(
                         (uint)nativeHostInfo.Width,
                         (uint)nativeHostInfo.Height,
-                        _lastCameraState,
+                        OrbitToSessionState(_lastCameraState),
                         [.. BuildUnitDrawList()]);
 
                     if (result.Success)
@@ -1003,7 +1007,17 @@ public sealed partial class EditorShell : UserControl
                 1.25f));
         }
 
-        _lastCameraState = SceneCameraDefaults.CreateDefault();
+        _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
+        var (sx, sy, sz) = _lastCameraState.ComputePosition();
+        var sessionCam = new SceneCameraState
+        {
+            TargetX = _lastCameraState.PivotX,
+            TargetZ = _lastCameraState.PivotZ,
+            Distance = _lastCameraState.Distance,
+            FieldOfViewDegrees = _lastCameraState.FieldOfViewDegrees,
+            NearPlane = _lastCameraState.NearPlane,
+            FarPlane = _lastCameraState.FarPlane
+        };
 
         var session = new VulkanScene3dSession();
         var result = session.Start(
@@ -1011,7 +1025,7 @@ public sealed partial class EditorShell : UserControl
             nativeHostInfo.WindowHandle,
             (uint)nativeHostInfo.Width,
             (uint)nativeHostInfo.Height,
-            _lastCameraState,
+            sessionCam,
             gridVertices.AsSpan(),
             unitVertices.AsSpan(),
             [.. unitDraws]);
@@ -1040,13 +1054,31 @@ public sealed partial class EditorShell : UserControl
 
     // ─── 相机输入处理 ─────────────────────────────────────────
 
+    private void HandleCameraOrbit(float deltaYaw, float deltaPitch)
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        _lastCameraState = SceneOrbitCameraMotion.Orbit(_lastCameraState, deltaYaw, deltaPitch);
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraPan);
+    }
+
     private void HandleCameraPan(int deltaX, int deltaY, int viewportW, int viewportH)
     {
         if (!_sessionActive || _scene3dSession is null) return;
         if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
 
-        _lastCameraState = SceneCameraMotion.Pan(_lastCameraState, deltaX, deltaY, viewportH);
+        _lastCameraState = SceneOrbitCameraMotion.Pan(_lastCameraState, deltaX, deltaY, viewportH);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraPan);
+    }
+
+    private void HandleCameraDolly(float deltaPixels)
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        _lastCameraState = SceneOrbitCameraMotion.Dolly(_lastCameraState, deltaPixels);
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraZoom);
     }
 
     private void HandleCameraZoom(float wheelNotches)
@@ -1054,7 +1086,7 @@ public sealed partial class EditorShell : UserControl
         if (!_sessionActive || _scene3dSession is null) return;
         if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
 
-        _lastCameraState = SceneCameraMotion.Zoom(_lastCameraState, wheelNotches);
+        _lastCameraState = SceneOrbitCameraMotion.Zoom(_lastCameraState, wheelNotches);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraZoom);
     }
 
@@ -1062,7 +1094,27 @@ public sealed partial class EditorShell : UserControl
     {
         if (!_sessionActive || _scene3dSession is null) return;
 
-        _lastCameraState = SceneCameraMotion.Reset();
+        _lastCameraState = SceneOrbitCameraMotion.FrameAll();
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+    }
+
+    private void HandleNumpadPeriod()
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_selectedWorldEntity is null)
+        {
+            _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
+            return;
+        }
+
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) return;
+
+        var p = pos.Value.Value;
+        _lastCameraState = SceneOrbitCameraMotion.FrameSelected(
+            _lastCameraState,
+            (float)p.X, (float)p.Y, (float)p.Z, 2.5f);
+
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
     }
 
@@ -1087,7 +1139,18 @@ public sealed partial class EditorShell : UserControl
             if (_scene3dSession is null) return;
 
             var unitDraws = BuildUnitDrawList();
-            var result = _scene3dSession.RenderFrame(reason, _lastCameraState, [.. unitDraws]);
+            // Convert orbit camera to old SceneCameraState for Session compat
+            var (px, py, pz) = _lastCameraState.ComputePosition();
+            var sessionCam = new SceneCameraState
+            {
+                TargetX = _lastCameraState.PivotX,
+                TargetZ = _lastCameraState.PivotZ,
+                Distance = _lastCameraState.Distance,
+                FieldOfViewDegrees = _lastCameraState.FieldOfViewDegrees,
+                NearPlane = _lastCameraState.NearPlane,
+                FarPlane = _lastCameraState.FarPlane
+            };
+            var result = _scene3dSession.RenderFrame(reason, sessionCam, [.. unitDraws]);
 
             if (result.Success)
             {
@@ -1292,21 +1355,9 @@ public sealed partial class EditorShell : UserControl
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
-        var (dirX, dirY, dirZ) = SceneCameraState.DefaultViewDirection();
         var (camX, camY, camZ) = _lastCameraState.ComputePosition();
-        var targetX = camX + dirX * _lastCameraState.Distance;
-        var targetY = camY + dirY * _lastCameraState.Distance;
-        var targetZ = camZ + dirZ * _lastCameraState.Distance;
-
-        var camInfo = new VulkanCameraInfo(
-            (float)camX, (float)camY, (float)camZ,
-            (float)targetX, (float)targetY, (float)targetZ,
-            0, 1, 0,
-            (float)_lastCameraState.FieldOfViewDegrees,
-            (float)_lastCameraState.NearPlane,
-            (float)_lastCameraState.FarPlane);
-
         var aspect = nativeHostInfo.Width / (float)nativeHostInfo.Height;
+        var camInfo = OrbitToCameraInfo(_lastCameraState, aspect);
         var vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
 
         if (!VulkanSceneRayBuilder.TryBuild(
@@ -1338,6 +1389,42 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
+    /// 将轨道相机转换为 Session 所需的 VulkanCameraInfo。
+    /// </summary>
+    private VulkanCameraInfo OrbitToCameraInfo(SceneOrbitCameraState orbit, float aspect)
+    {
+        var (camX, camY, camZ) = orbit.ComputePosition();
+        return new VulkanCameraInfo(
+            camX, camY, camZ,
+            orbit.PivotX, orbit.PivotY, orbit.PivotZ,
+            0, 1, 0,
+            orbit.FieldOfViewDegrees,
+            orbit.NearPlane,
+            orbit.FarPlane);
+    }
+
+    /// <summary>
+    /// 将轨道相机转换为 Session 兼容的 SceneCameraState。
+    /// </summary>
+    private static SceneCameraState OrbitToSessionState(SceneOrbitCameraState orbit)
+    {
+        var (px, py, pz) = orbit.ComputePosition();
+        var dx = px - orbit.PivotX;
+        var dy = py - orbit.PivotY;
+        var dz = pz - orbit.PivotZ;
+        var dist = MathF.Sqrt(dx * dx + dy * dy + dz * dz);
+        return new SceneCameraState
+        {
+            TargetX = orbit.PivotX,
+            TargetZ = orbit.PivotZ,
+            Distance = dist,
+            FieldOfViewDegrees = orbit.FieldOfViewDegrees,
+            NearPlane = orbit.NearPlane,
+            FarPlane = orbit.FarPlane
+        };
+    }
+
+    /// <summary>
     /// 清除选择。
     /// </summary>
     private void ClearSelection()
@@ -1359,23 +1446,10 @@ public sealed partial class EditorShell : UserControl
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
-        // 计算当前 VP 矩阵
-        var (dirX, dirY, dirZ) = SceneCameraState.DefaultViewDirection();
-        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
-        var targetX = camX + dirX * _lastCameraState.Distance;
-        var targetY = camY + dirY * _lastCameraState.Distance;
-        var targetZ = camZ + dirZ * _lastCameraState.Distance;
-
-        var camInfo = new VulkanCameraInfo(
-            (float)camX, (float)camY, (float)camZ,
-            (float)targetX, (float)targetY, (float)targetZ,
-            0, 1, 0,
-            (float)_lastCameraState.FieldOfViewDegrees,
-            (float)_lastCameraState.NearPlane,
-            (float)_lastCameraState.FarPlane);
-
         var aspect = nativeHostInfo.Width / (float)nativeHostInfo.Height;
+        var camInfo = OrbitToCameraInfo(_lastCameraState, aspect);
         var vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
+        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
 
         // 构建射线
         if (!VulkanSceneRayBuilder.TryBuild(
@@ -1491,8 +1565,36 @@ public sealed partial class EditorShell : UserControl
             v.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
             v.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
             v.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
-        _inspectorPanel?.SetApplyEnabled(false);
-        _inspectorPanel?.SetResetEnabled(false);
+        _inspectorPanel?.SetTransformDraftState(false, false, null);
+    }
+
+    private void HandleTransformDraftChanged(string xText, string yText, string zText)
+    {
+        if (_selectedWorldEntity is null)
+        {
+            _inspectorPanel?.SetTransformDraftState(false, false, null);
+            return;
+        }
+
+        if (!EditorEntityTransformValidation.TryParse(xText, yText, zText,
+                out var newPos, out var error))
+        {
+            _inspectorPanel?.SetTransformDraftState(false, true, error);
+            return;
+        }
+
+        var currentPos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (currentPos is null)
+        {
+            _inspectorPanel?.SetTransformDraftState(false, false, null);
+            return;
+        }
+
+        var changed = newPos != currentPos.Value.Value;
+        _inspectorPanel?.SetTransformDraftState(
+            canApply: changed && !_groundPlacementState.IsActive,
+            canReset: changed,
+            error: null);
     }
 
     private void HandleGroundPlacementToggle()
@@ -1534,7 +1636,7 @@ public sealed partial class EditorShell : UserControl
         if (!_worldState.SetPosition(entityId, newPosition))
         {
             // NoOp: 相同位置
-            _inspectorPanel?.SetApplyEnabled(false);
+            _inspectorPanel?.SetTransformDraftState(false, false, null);
             return;
         }
 
@@ -1567,8 +1669,7 @@ public sealed partial class EditorShell : UserControl
             newPosition.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
             newPosition.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
             newPosition.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
-        _inspectorPanel?.SetApplyEnabled(false);
-        _inspectorPanel?.SetResetEnabled(false);
+        _inspectorPanel?.SetTransformDraftState(false, false, null);
 
         // 6. 请求一帧
         ScheduleScene3dFrame(VulkanScene3dFrameReason.EntityTransformChanged);

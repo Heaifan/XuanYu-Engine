@@ -12,9 +12,12 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     public event EventHandler<VulkanViewportNativeHostInfo>? NativeHostInfoChanged;
 
     // 相机输入事件转发（来自 Win32 原生窗口消息）
+    public event Action<float, float>? CameraOrbitRequested;
     public event Action<int, int, int, int>? CameraPanRequested;
+    public event Action<float>? CameraDollyRequested;
     public event Action<float>? CameraZoomRequested;
     public event Action? CameraResetRequested;
+    public event Action? NumpadPeriodRequested;
     public event Action? EscapeRequested;
     public event Action<int, int>? PickRequested;
 
@@ -34,9 +37,12 @@ public sealed partial class VulkanViewportHostPanel : UserControl
         if (_nativeHostControl is not null)
         {
             _nativeHostControl.HostInfoChanged += HandleHostInfoChanged;
+            _nativeHostControl.CameraOrbitRequested += (dy, dp) => CameraOrbitRequested?.Invoke(dy, dp);
             _nativeHostControl.CameraPanRequested += (dx, dy, w, h) => CameraPanRequested?.Invoke(dx, dy, w, h);
+            _nativeHostControl.CameraDollyRequested += p => CameraDollyRequested?.Invoke(p);
             _nativeHostControl.CameraZoomRequested += n => CameraZoomRequested?.Invoke(n);
             _nativeHostControl.CameraResetRequested += () => CameraResetRequested?.Invoke();
+            _nativeHostControl.NumpadPeriodRequested += () => NumpadPeriodRequested?.Invoke();
             _nativeHostControl.EscapeRequested += () => EscapeRequested?.Invoke();
             _nativeHostControl.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
             _nativeHostControl.PointerMoved += (x, y) => PointerMoved?.Invoke(x, y);
