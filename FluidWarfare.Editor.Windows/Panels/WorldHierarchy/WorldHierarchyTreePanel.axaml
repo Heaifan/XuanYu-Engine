@@ -1,12 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="FluidWarfare.Editor.Windows.Panels.WorldHierarchy.WorldHierarchyTreePanel">
-  <DockPanel>
-    <TextBox Name="SearchTextBox"
-             DockPanel.Dock="Top"
-             PlaceholderText="搜索实体……"
-             Margin="0,0,0,4" />
-    <TreeView Name="HierarchyTree"
-              BorderThickness="0" />
-  </DockPanel>
+  <TreeView Name="HierarchyTree" BorderThickness="0" />
 </UserControl>

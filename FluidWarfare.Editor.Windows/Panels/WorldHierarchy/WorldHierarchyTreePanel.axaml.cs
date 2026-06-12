@@ -8,8 +8,14 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
 {
     private TreeView? _treeView;
     private WorldHierarchyTree? _currentTree;
-    private WorldHierarchyTreeViewState _viewState = new();
+    private readonly WorldHierarchyTreeViewState _viewState = new();
     private bool _isInternalUpdate;
+
+    // 索引：NodeId → TreeViewItem，用于 RevealEntity 不重建树
+    private readonly Dictionary<string, TreeViewItem> _itemsByNodeId = [];
+
+    // 程序化选中抑制：防止 RevealEntity → SelectionChanged → 反向触发
+    private string? _pendingProgrammaticEntityId;
 
     /// <summary>
     /// 实体选择请求事件（EntityId string）。
@@ -25,36 +31,46 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
     }
 
     /// <summary>
-    /// 加载层级树。
+    /// 加载层级树（全量重建）。
     /// </summary>
     public void ShowHierarchy(WorldHierarchyTree tree)
     {
         _currentTree = tree;
-        ApplySearchAndRebuild();
+        FullRebuild();
     }
 
     /// <summary>
-    /// 定位并选中实体节点。自动展开祖先。
+    /// 定位并选中实体节点。只操作现有 TreeViewItem，不重建树。
     /// </summary>
     public bool RevealEntity(string entityId)
     {
-        if (_currentTree is null) return false;
+        if (_currentTree is null || _treeView is null) return false;
 
         var node = _currentTree.FindEntity(entityId);
         if (node is null) return false;
 
-        // 展开祖先
         var ancestors = _currentTree.GetAncestorNodeIds(entityId);
         if (ancestors is not null)
         {
             foreach (var anc in ancestors)
+            {
                 _viewState.ExpandedNodeIds.Add(anc);
+                if (_itemsByNodeId.TryGetValue(anc, out var ancItem))
+                    ancItem.IsExpanded = true;
+            }
         }
 
-        // 选中目标
-        _viewState.SelectedEntityId = entityId;
-        ApplySearchAndRebuild();
-        return true;
+        // 通过索引找到目标 TreeViewItem 并选中
+        if (_itemsByNodeId.TryGetValue(node.NodeId, out var targetItem))
+        {
+            _pendingProgrammaticEntityId = entityId;
+            _viewState.SelectedEntityId = entityId;
+            targetItem.IsSelected = true;
+            targetItem.BringIntoView();
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -63,43 +79,76 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
     public void ClearEntitySelection()
     {
         _viewState.SelectedEntityId = null;
-        ApplySearchAndRebuild();
+        FullRebuild();
+    }
+
+    /// <summary>
+    /// 获取当前 ViewState。
+    /// </summary>
+    public WorldHierarchyTreeViewState GetViewState() => _viewState;
+
+    /// <summary>
+    /// 搜索过滤重建（由外部 ProjectWorldDockPanel 调用）。
+    /// </summary>
+    public void ApplySearchFilter(WorldHierarchyNode? filteredRoot, WorldHierarchyTree originalTree)
+    {
+        if (filteredRoot is not null)
+        {
+            _currentTree = new WorldHierarchyTree(
+                filteredRoot, originalTree.NodeCount,
+                originalTree.EntityNodeCount,
+                originalTree.EntityNodes,
+                originalTree.EntityAncestorNodeIds);
+        }
+        else
+        {
+            _currentTree = originalTree;
+        }
+        FullRebuild();
     }
 
     private void OnTreeSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_isInternalUpdate) return;
 
-        // 关键修复：SelectedItem 是 TreeViewItem，不是 WorldHierarchyNode！
-        // 通过 Tag (NodeId) 反向查找节点
         if (_treeView?.SelectedItem is TreeViewItem selectedItem &&
             selectedItem.Tag is string nodeId)
         {
             var selectedNode = FindNode(nodeId);
-            if (selectedNode is not null && selectedNode.IsSelectable)
+            if (selectedNode is null || !selectedNode.IsSelectable) return;
+
+            var entityId = selectedNode.EntityId?.Value.ToString();
+
+            // 程序化选中抑制：本次是 RevealEntity 触发的，消费掉不转发
+            if (_pendingProgrammaticEntityId == entityId)
             {
-                var entityId = selectedNode.EntityId?.Value.ToString();
+                _pendingProgrammaticEntityId = null;
                 _viewState.SelectedEntityId = entityId;
-                EntitySelectionRequested?.Invoke(entityId);
+                return;
             }
+
+            // 相同 EntityId 幂等
+            if (entityId == _viewState.SelectedEntityId)
+                return;
+
+            _viewState.SelectedEntityId = entityId;
+            EntitySelectionRequested?.Invoke(entityId);
         }
     }
 
-    private void ApplySearchAndRebuild()
+    /// <summary>
+    /// 全量重建（加载新树、搜索过滤、清除选择时调用）。
+    /// </summary>
+    private void FullRebuild()
     {
         if (_currentTree is null || _treeView is null) return;
 
-        // 收集当前展开状态
-        foreach (var item in _treeView.Items)
-            if (item is TreeViewItem tvi)
-                CollectExpanded(tvi);
+        _itemsByNodeId.Clear();
 
-        // 搜索过滤
         var displayTree = string.IsNullOrWhiteSpace(_viewState.SearchText)
             ? _currentTree.Root
             : WorldHierarchySearch.Search(_currentTree, _viewState.SearchText);
 
-        // 重建
         _isInternalUpdate = true;
         try
         {
@@ -108,8 +157,9 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
             {
                 var rootItem = BuildTreeItem(displayTree);
                 _treeView.Items.Add(rootItem);
-                rootItem.IsExpanded = _viewState.ExpandedNodeIds.Contains(displayTree.NodeId)
-                    || string.IsNullOrWhiteSpace(_viewState.SearchText);
+                if (_viewState.ExpandedNodeIds.Contains(displayTree.NodeId)
+                    || string.IsNullOrWhiteSpace(_viewState.SearchText))
+                    rootItem.IsExpanded = true;
             }
         }
         finally
@@ -121,6 +171,7 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
     private TreeViewItem BuildTreeItem(WorldHierarchyNode node)
     {
         var item = new TreeViewItem();
+        _itemsByNodeId[node.NodeId] = item;
 
         var iconText = node.IconKind switch
         {
@@ -150,7 +201,6 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
         item.Header = displayPanel;
         item.Tag = node.NodeId;
 
-        // 展开状态
         if (_viewState.ExpandedNodeIds.Contains(node.NodeId))
             item.IsExpanded = true;
 
@@ -165,24 +215,13 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
             }
         };
 
-        // 选中高亮（关键：在重建时根据 _viewState 设置）
         if (node.IsSelectable && node.EntityId?.Value.ToString() == _viewState.SelectedEntityId)
             item.IsSelected = true;
 
-        // 子节点
         foreach (var child in node.Children)
             item.Items.Add(BuildTreeItem(child));
 
         return item;
-    }
-
-    private void CollectExpanded(TreeViewItem item)
-    {
-        if (item.IsExpanded && item.Tag is string nodeId)
-            _viewState.ExpandedNodeIds.Add(nodeId);
-        foreach (var child in item.Items)
-            if (child is TreeViewItem tvi)
-                CollectExpanded(tvi);
     }
 
     private WorldHierarchyNode? FindNode(string nodeId)

@@ -72,10 +72,6 @@ public sealed partial class ProjectContentTreePanel : UserControl
 
         item.Header = displayPanel;
         item.Tag = node.NodeId;
-        item.IsHitTestVisible = node.IsSelectable;
-
-        if (node.IsSelectable && node.RelativePath is not null)
-            item.IsSelected = false;
 
         foreach (var child in node.Children)
             item.Items.Add(BuildTreeItem(child));

@@ -25,6 +25,9 @@ public sealed partial class ProjectWorldDockPanel : UserControl
     private WorldHierarchyTree? _currentWorldTree;
     private ProjectContentTreeModel.ProjectContentTree? _currentProjectTree;
 
+    // 防止程序化修改搜索框时再次触发搜索事件
+    private bool _isUpdatingSearchText;
+
     // ─── Events ────────────────────────────────────────────────
 
     /// <summary>实体选择请求（EntityId string）。</summary>
@@ -57,20 +60,22 @@ public sealed partial class ProjectWorldDockPanel : UserControl
 
     // ─── Public API ────────────────────────────────────────────
 
-    /// <summary>显示世界层级树。</summary>
+    /// <summary>显示世界层级树。更新页签计数。</summary>
     public void ShowWorldHierarchy(WorldHierarchyTree tree)
     {
         _currentWorldTree = tree;
         _worldTree.ShowHierarchy(tree);
-        if (!_isProjectTabActive)
-            ShowWorldTab();
+        _worldTabButton!.Content = $"世界层级 ({tree.EntityNodeCount})";
+
+        // 当前在世界页签时不再强制切换
     }
 
-    /// <summary>显示项目内容树。</summary>
+    /// <summary>显示项目内容树。更新页签计数。</summary>
     public void ShowProjectContent(ProjectContentTreeModel.ProjectContentTree tree)
     {
         _currentProjectTree = tree;
         _projectTree.ShowContentTree(tree);
+        _projectTabButton!.Content = $"项目内容 ({tree.FileCount})";
     }
 
     /// <summary>定位到世界实体节点（自动切换到世界层级页签）。</summary>
@@ -83,8 +88,7 @@ public sealed partial class ProjectWorldDockPanel : UserControl
         if (!string.IsNullOrWhiteSpace(_worldSearchText))
         {
             _worldSearchText = string.Empty;
-            if (_searchBox is not null)
-                _searchBox.Text = string.Empty;
+            SetSearchText(string.Empty);
         }
 
         _worldTree.RevealEntity(entityId);
@@ -96,7 +100,7 @@ public sealed partial class ProjectWorldDockPanel : UserControl
         _worldTree.ClearEntitySelection();
     }
 
-    /// <summary>设置世界树的 ViewState（展开/选择/搜索恢复）。</summary>
+    /// <summary>设置世界树的 ViewState。</summary>
     public void SetWorldViewState(WorldHierarchyTreeViewState state)
     {
         _worldViewState.ExpandedNodeIds.Clear();
@@ -128,7 +132,7 @@ public sealed partial class ProjectWorldDockPanel : UserControl
         _isProjectTabActive = isProject;
         if (_contentArea is null) return;
 
-        // 保存当前搜索词，切换后恢复
+        // 保存当前搜索词
         if (isProject)
         {
             _worldSearchText = _searchBox?.Text ?? string.Empty;
@@ -146,7 +150,7 @@ public sealed partial class ProjectWorldDockPanel : UserControl
             if (_searchBox is not null)
             {
                 _searchBox.PlaceholderText = "搜索项目文件……";
-                _searchBox.Text = _projectSearchText;
+                SetSearchText(_projectSearchText);
             }
             _projectTabButton!.Background = new SolidColorBrush(Color.FromRgb(60, 80, 120));
             _worldTabButton!.Background = new SolidColorBrush(Color.FromRgb(40, 50, 70));
@@ -157,7 +161,7 @@ public sealed partial class ProjectWorldDockPanel : UserControl
             if (_searchBox is not null)
             {
                 _searchBox.PlaceholderText = "搜索世界实体……";
-                _searchBox.Text = _worldSearchText;
+                SetSearchText(_worldSearchText);
             }
             _worldTabButton!.Background = new SolidColorBrush(Color.FromRgb(60, 80, 120));
             _projectTabButton!.Background = new SolidColorBrush(Color.FromRgb(40, 50, 70));
@@ -171,6 +175,7 @@ public sealed partial class ProjectWorldDockPanel : UserControl
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
     {
+        if (_isUpdatingSearchText) return;
         var query = _searchBox?.Text ?? string.Empty;
 
         if (_isProjectTabActive)
@@ -188,19 +193,23 @@ public sealed partial class ProjectWorldDockPanel : UserControl
             if (_currentWorldTree is not null)
             {
                 var filtered = WorldHierarchySearch.Search(_currentWorldTree, query);
-                if (filtered is not null)
-                {
-                    _worldTree.ShowHierarchy(new WorldHierarchyTree(
-                        filtered, _currentWorldTree.NodeCount,
-                        _currentWorldTree.EntityNodeCount,
-                        _currentWorldTree.EntityNodes,
-                        _currentWorldTree.EntityAncestorNodeIds));
-                }
-                else
-                {
-                    _worldTree.ShowHierarchy(_currentWorldTree);
-                }
+                _worldTree.ApplySearchFilter(filtered, _currentWorldTree);
             }
+        }
+    }
+
+    /// <summary>程序化设置搜索框文本，不触发 TextChanged 搜索事件。</summary>
+    private void SetSearchText(string text)
+    {
+        if (_searchBox is null) return;
+        _isUpdatingSearchText = true;
+        try
+        {
+            _searchBox.Text = text;
+        }
+        finally
+        {
+            _isUpdatingSearchText = false;
         }
     }
 }

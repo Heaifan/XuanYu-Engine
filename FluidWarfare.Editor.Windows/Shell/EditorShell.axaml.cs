@@ -73,8 +73,6 @@ public sealed partial class EditorShell : UserControl
     private bool _framePending;
     private bool _sessionActive;
     private bool _scene3dAutoStartAttempted;
-    private bool _isSynchronizingSelection;
-
     public EditorShell()
     {
         // _scene3dGate 由字段初始化器在构造函数体之前执行
@@ -1064,56 +1062,54 @@ public sealed partial class EditorShell : UserControl
     private enum EditorSelectionOrigin { WorldList, ViewportPicking, Programmatic }
 
     /// <summary>
-    /// 统一选择入口。接收 EntityId 字符串，同步更新 World 列表、Inspector、状态栏和 Scene3D。
-    /// 通过 _isSynchronizingSelection 防止双向递归。
+    /// 统一选择入口。关键规则：
+    ///   1. 相同 EntityId 不重复操作。
+    ///   2. 树来源的选择不反过来再次 RevealEntity（避免死循环）。
+    ///   3. 视口/程序化来源的选择需要 RevealEntity 定位到树节点。
     /// </summary>
     private void ApplyEntitySelection(string? entityIdStr, EditorSelectionOrigin origin)
     {
-        if (_isSynchronizingSelection) return;
-        _isSynchronizingSelection = true;
+        var currentEntityId = _selectedWorldEntity?.EntityId.Value.ToString();
 
-        try
+        // 相同 EntityId 幂等 —— 但视口来源仍可定位树（跨页签）
+        if (currentEntityId == entityIdStr)
         {
-            WorldEntityInfo? entityInfo = null;
+            if (origin == EditorSelectionOrigin.ViewportPicking && entityIdStr is not null)
+                _dockPanel?.RevealEntity(entityIdStr);
+            return;
+        }
 
-            // 通过 EntityId 查找
-            if (entityIdStr is not null && int.TryParse(entityIdStr, out var entityIdVal) && entityIdVal > 0)
+        WorldEntityInfo? entityInfo = null;
+
+        if (entityIdStr is not null && int.TryParse(entityIdStr, out var entityIdVal) && entityIdVal > 0)
+        {
+            var targetId = EntityId.FromInt(entityIdVal);
+            var entities = _worldState?.ListEntities() ?? [];
+            entityInfo = entities.FirstOrDefault(e => e.EntityId == targetId);
+        }
+
+        if (entityInfo is not null)
+        {
+            _selectedWorldEntity = entityInfo;
+
+            // Scene3D 高亮
+            if (_scene3dSession is not null && _sessionActive)
             {
-                var targetId = EntityId.FromInt(entityIdVal);
-                var entities = _worldState?.ListEntities() ?? [];
-                entityInfo = entities.FirstOrDefault(e => e.EntityId == targetId);
+                if (_scene3dSession.SetSelectedEntity(entityInfo.EntityId.Value.ToString()))
+                    ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
             }
 
-            if (entityInfo is not null)
-            {
-                // 选中
-                _selectedWorldEntity = entityInfo;
-
-                // Scene3D 高亮
-                if (_scene3dSession is not null && _sessionActive)
-                {
-                    if (_scene3dSession.SetSelectedEntity(entityInfo.EntityId.Value.ToString()))
-                    {
-                        ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
-                    }
-                }
-
-                // 更新左侧列表（从 Viewport 选择时同步到列表）
+            // 非树来源的选择才 RevealEntity 定位到树节点
+            if (origin != EditorSelectionOrigin.WorldList)
                 _dockPanel?.RevealEntity(entityInfo.EntityId.Value.ToString());
 
-                // 更新检查器和状态栏
-                ShowWorldEntitySelection(entityInfo);
-                UpdateViewportForEntity(entityInfo);
-            }
-            else
-            {
-                // 清除选择
-                ClearSelection();
-            }
+            // 更新检查器和状态栏
+            ShowWorldEntitySelection(entityInfo);
+            UpdateViewportForEntity(entityInfo);
         }
-        finally
+        else
         {
-            _isSynchronizingSelection = false;
+            ClearSelection();
         }
     }
 
