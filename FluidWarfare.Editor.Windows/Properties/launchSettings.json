@@ -5,7 +5,10 @@
       "dotnetRunMessages": true,
       "launchBrowser": false,
       "applicationUrl": "",
-      "environmentVariables": {}
+      "environmentVariables": {
+        "FW_ENABLE_SCENE3D": "1",
+        "FW_VULKAN_VALIDATION": "1"
+      }
     }
   }
 }
