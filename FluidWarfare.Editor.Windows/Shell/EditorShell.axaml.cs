@@ -59,6 +59,8 @@ public sealed partial class EditorShell : UserControl
     private VulkanMarkerDrawResult _vulkanMarkerDrawResult = VulkanMarkerDrawResult.NotChecked;
     private VulkanScene3dRunGate _scene3dGate = VulkanScene3dRunGate.Evaluate();
     private VulkanScene3dInfo _vulkanScene3dInfo = VulkanScene3dInfo.NotChecked;
+    private Button? _runMenuButton;
+    private MenuItem? _runScene3dMenuItem;
     private VulkanValidationInfo _vulkanValidationInfo = VulkanValidationInfo.Disabled;
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
@@ -75,6 +77,7 @@ public sealed partial class EditorShell : UserControl
         AvaloniaXamlLoader.Load(this);
         FindShellControls();
         SubscribePanelEvents();
+        SetupRunMenuFlyout();
         InitializeLogs();
         LoadSampleProject();
         ProbeVulkanBackend();
@@ -92,6 +95,7 @@ public sealed partial class EditorShell : UserControl
         _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
         _vulkanViewportHostPanel = this.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanel");
         _worldEntityListPanel = this.FindControl<WorldEntityListPanel>("WorldEntityListPanel");
+        _runMenuButton = this.FindControl<Button>("RunMenuButton");
     }
 
     private void SubscribePanelEvents()
@@ -888,6 +892,25 @@ public sealed partial class EditorShell : UserControl
         ProbeVulkanScene3D();
     }
 
+    private void SetupRunMenuFlyout()
+    {
+        if (_runMenuButton is null) return;
+
+        var flyout = new MenuFlyout();
+        flyout.Opened += (_, _) => HandleMenuClicked("运行");
+
+        _runScene3dMenuItem = new MenuItem { Header = "运行 Scene3D 探针" };
+        _runScene3dMenuItem.Click += HandleRunScene3dMenuClicked;
+        flyout.Items.Add(_runScene3dMenuItem);
+
+        _runMenuButton.Flyout = flyout;
+    }
+
+    private void HandleRunScene3dMenuClicked(object? sender, RoutedEventArgs e)
+    {
+        HandleScene3dRunRequested(sender, EventArgs.Empty);
+    }
+
     private void ProbeVulkanScene3D()
     {
         if (!_scene3dGate.CanRun)
@@ -1024,10 +1047,12 @@ public sealed partial class EditorShell : UserControl
                 ? $"{_vulkanScene3dInfo.DrawCallCount}"
                 : "-");
 
-        // Scene3D 手动触发按钮状态
+        // Scene3D 手动触发按钮/菜单状态
         var currentGate = VulkanScene3dRunGate.Evaluate();
         if (_debugDockPanel is not null)
             _debugDockPanel.Scene3dRunButtonEnabled = currentGate.CanRun;
+        if (_runScene3dMenuItem is not null)
+            _runScene3dMenuItem.IsEnabled = currentGate.CanRun;
 
         // 性能计时
         _debugDockPanel?.SetPerformance(

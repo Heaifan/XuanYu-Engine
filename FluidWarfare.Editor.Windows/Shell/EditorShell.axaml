@@ -22,7 +22,7 @@
         <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleFileMenuClicked">文件</Button>
         <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleEditMenuClicked">编辑</Button>
         <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleViewMenuClicked">视图</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleRunMenuClicked">运行</Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="RunMenuButton">运行</Button>
         <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleExportMenuClicked">导出</Button>
         <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleHelpMenuClicked">帮助</Button>
       </StackPanel>

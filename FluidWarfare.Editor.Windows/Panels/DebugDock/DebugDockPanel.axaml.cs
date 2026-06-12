@@ -12,33 +12,33 @@ public sealed partial class DebugDockPanel : UserControl
     private LogPanel? _logPanel;
 
     // 渲染诊断
-    private TextBlock? _diagLoader;
-    private TextBlock? _diagInstance;
-    private TextBlock? _diagDevice;
-    private TextBlock? _diagNativeHost;
-    private TextBlock? _diagSurface;
-    private TextBlock? _diagSwapchain;
-    private TextBlock? _diagClear;
-    private TextBlock? _diagMarker;
-    private TextBlock? _diagValidation;
-    private TextBlock? _diagScene3d;
-    private TextBlock? _diagCamera;
-    private TextBlock? _diagGrid;
-    private TextBlock? _diagUnit;
-    private TextBlock? _diagDrawCall;
+    private SelectableTextBlock?_diagLoader;
+    private SelectableTextBlock?_diagInstance;
+    private SelectableTextBlock?_diagDevice;
+    private SelectableTextBlock?_diagNativeHost;
+    private SelectableTextBlock?_diagSurface;
+    private SelectableTextBlock?_diagSwapchain;
+    private SelectableTextBlock?_diagClear;
+    private SelectableTextBlock?_diagMarker;
+    private SelectableTextBlock?_diagValidation;
+    private SelectableTextBlock?_diagScene3d;
+    private SelectableTextBlock?_diagCamera;
+    private SelectableTextBlock?_diagGrid;
+    private SelectableTextBlock?_diagUnit;
+    private SelectableTextBlock?_diagDrawCall;
 
     // RenderScene
-    private TextBlock? _renderSceneTitle;
-    private TextBlock? _renderSceneEmpty;
+    private SelectableTextBlock?_renderSceneTitle;
+    private SelectableTextBlock?_renderSceneEmpty;
     private StackPanel? _renderSceneList;
 
     // 性能
-    private TextBlock? _perfInstance;
-    private TextBlock? _perfDevice;
-    private TextBlock? _perfSwapchain;
-    private TextBlock? _perfClear;
-    private TextBlock? _perfMarker;
-    private TextBlock? _perfScene3d;
+    private SelectableTextBlock?_perfInstance;
+    private SelectableTextBlock?_perfDevice;
+    private SelectableTextBlock?_perfSwapchain;
+    private SelectableTextBlock?_perfClear;
+    private SelectableTextBlock?_perfMarker;
+    private SelectableTextBlock?_perfScene3d;
 
     private Separator? _scene3dRunSeparator;
     private Button? _scene3dRunButton;
@@ -85,29 +85,29 @@ public sealed partial class DebugDockPanel : UserControl
     private void CacheControls()
     {
         _logPanel = this.FindControl<LogPanel>("EditorLogPanel");
-        _diagLoader = this.FindControl<TextBlock>("DiagVulkanLoader");
-        _diagInstance = this.FindControl<TextBlock>("DiagVulkanInstance");
-        _diagDevice = this.FindControl<TextBlock>("DiagVulkanDevice");
-        _diagNativeHost = this.FindControl<TextBlock>("DiagNativeHost");
-        _diagSurface = this.FindControl<TextBlock>("DiagSurface");
-        _diagSwapchain = this.FindControl<TextBlock>("DiagSwapchain");
-        _diagClear = this.FindControl<TextBlock>("DiagClear");
-        _diagMarker = this.FindControl<TextBlock>("DiagMarker");
-        _diagValidation = this.FindControl<TextBlock>("DiagValidation");
-        _diagScene3d = this.FindControl<TextBlock>("DiagScene3d");
-        _diagCamera = this.FindControl<TextBlock>("DiagCamera");
-        _diagGrid = this.FindControl<TextBlock>("DiagGrid");
-        _diagUnit = this.FindControl<TextBlock>("DiagUnit");
-        _diagDrawCall = this.FindControl<TextBlock>("DiagDrawCall");
-        _renderSceneTitle = this.FindControl<TextBlock>("RenderSceneTitle");
-        _renderSceneEmpty = this.FindControl<TextBlock>("RenderSceneEmpty");
+        _diagLoader = this.FindControl<SelectableTextBlock>("DiagVulkanLoader");
+        _diagInstance = this.FindControl<SelectableTextBlock>("DiagVulkanInstance");
+        _diagDevice = this.FindControl<SelectableTextBlock>("DiagVulkanDevice");
+        _diagNativeHost = this.FindControl<SelectableTextBlock>("DiagNativeHost");
+        _diagSurface = this.FindControl<SelectableTextBlock>("DiagSurface");
+        _diagSwapchain = this.FindControl<SelectableTextBlock>("DiagSwapchain");
+        _diagClear = this.FindControl<SelectableTextBlock>("DiagClear");
+        _diagMarker = this.FindControl<SelectableTextBlock>("DiagMarker");
+        _diagValidation = this.FindControl<SelectableTextBlock>("DiagValidation");
+        _diagScene3d = this.FindControl<SelectableTextBlock>("DiagScene3d");
+        _diagCamera = this.FindControl<SelectableTextBlock>("DiagCamera");
+        _diagGrid = this.FindControl<SelectableTextBlock>("DiagGrid");
+        _diagUnit = this.FindControl<SelectableTextBlock>("DiagUnit");
+        _diagDrawCall = this.FindControl<SelectableTextBlock>("DiagDrawCall");
+        _renderSceneTitle = this.FindControl<SelectableTextBlock>("RenderSceneTitle");
+        _renderSceneEmpty = this.FindControl<SelectableTextBlock>("RenderSceneEmpty");
         _renderSceneList = this.FindControl<StackPanel>("RenderSceneList");
-        _perfInstance = this.FindControl<TextBlock>("PerfInstance");
-        _perfDevice = this.FindControl<TextBlock>("PerfDevice");
-        _perfSwapchain = this.FindControl<TextBlock>("PerfSwapchain");
-        _perfClear = this.FindControl<TextBlock>("PerfClear");
-        _perfMarker = this.FindControl<TextBlock>("PerfMarker");
-        _perfScene3d = this.FindControl<TextBlock>("PerfScene3d");
+        _perfInstance = this.FindControl<SelectableTextBlock>("PerfInstance");
+        _perfDevice = this.FindControl<SelectableTextBlock>("PerfDevice");
+        _perfSwapchain = this.FindControl<SelectableTextBlock>("PerfSwapchain");
+        _perfClear = this.FindControl<SelectableTextBlock>("PerfClear");
+        _perfMarker = this.FindControl<SelectableTextBlock>("PerfMarker");
+        _perfScene3d = this.FindControl<SelectableTextBlock>("PerfScene3d");
         _scene3dRunSeparator = this.FindControl<Separator>("Scene3dRunSeparator");
         _scene3dRunButton = this.FindControl<Button>("Scene3dRunButton");
     }
@@ -157,7 +157,7 @@ public sealed partial class DebugDockPanel : UserControl
 
         foreach (var entry in entries)
         {
-            _renderSceneList.Children.Add(new TextBlock
+            _renderSceneList.Children.Add(new SelectableTextBlock
             {
                 Text = entry,
                 Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#C9D1D9")),
