@@ -1,16 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:FluidWarfare.Editor.Windows.Panels.WorldHierarchy"
              x:Class="FluidWarfare.Editor.Windows.Panels.WorldHierarchy.WorldHierarchyTreePanel">
-  <TreeView Name="HierarchyTree" BorderThickness="0">
-    <TreeView.ItemTemplate>
-      <TreeDataTemplate ItemsSource="{Binding Children}"
-                        DataType="{x:Type local:WorldHierarchyNodeView}">
-        <StackPanel Orientation="Horizontal" Spacing="4" Margin="4,2">
-          <TextBlock Text="{Binding DisplayNameWithBranch}" FontSize="13" />
-          <TextBlock Text="{Binding SecondaryText}" FontSize="11" Foreground="#888" />
-        </StackPanel>
-      </TreeDataTemplate>
-    </TreeView.ItemTemplate>
-  </TreeView>
+  <TreeView Name="HierarchyTree" BorderThickness="0" />
 </UserControl>

@@ -73,7 +73,8 @@ public sealed class ProjectDependencyDirectionTests
                 "Avalonia",
                 "Avalonia.Desktop",
                 "Avalonia.Fonts.Inter",
-                "Avalonia.Themes.Fluent"
+                "Avalonia.Themes.Fluent",
+                "Svg.Skia"
             ],
             ["FluidWarfare.Tests"] =
             [

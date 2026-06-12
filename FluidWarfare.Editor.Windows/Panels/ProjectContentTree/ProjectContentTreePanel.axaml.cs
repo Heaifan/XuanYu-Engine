@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
 using ProjectContentTreeType = FluidWarfare.Editor.ProjectContentTreeModel.ProjectContentTree;
 using ProjectContentTreeNodeType = FluidWarfare.Editor.ProjectContentTreeModel.ProjectContentTreeNode;
 
@@ -11,7 +13,6 @@ public sealed partial class ProjectContentTreePanel : UserControl
     private ProjectContentTreeIndex? _currentIndex;
     private List<ProjectContentNodeView>? _rootViews;
 
-    /// <summary>文件选择请求事件（相对路径）。</summary>
     public event Action<string?>? ContentSelectionRequested;
 
     public ProjectContentTreePanel()
@@ -19,7 +20,12 @@ public sealed partial class ProjectContentTreePanel : UserControl
         InitializeComponent();
         _treeView = this.FindControl<TreeView>("ContentTree");
         if (_treeView is not null)
+        {
             _treeView.SelectionChanged += OnSelectionChanged;
+            _treeView.ItemTemplate = new FuncTreeDataTemplate<ProjectContentNodeView>(
+                (node, _) => BuildRow(node),
+                (node) => node.Children);
+        }
     }
 
     public void ShowContentTree(ProjectContentTreeType tree)
@@ -45,6 +51,19 @@ public sealed partial class ProjectContentTreePanel : UserControl
         }
     }
 
+    private Control BuildRow(ProjectContentNodeView node)
+    {
+        return new HierarchyNodeRow
+        {
+            BranchInfo = node.BranchInfo,
+            IconName = node.IsFile ? "file" : "folder",
+            CanExpand = node.Children.Count > 0,
+            IsExpanded = node.IsExpanded,
+            Primary = node.DisplayName,
+            Secondary = node.RelativePath
+        };
+    }
+
     private void FullRebuild(ProjectContentTreeType? tree = null)
     {
         var source = tree ?? _currentTree;
@@ -53,7 +72,23 @@ public sealed partial class ProjectContentTreePanel : UserControl
         var (roots, index) = ProjectContentTreeIndex.Build(source);
         _rootViews = roots;
         _currentIndex = index;
+
+        // 默认全部展开
+        ExpandAll(_rootViews);
+
         _treeView.ItemsSource = _rootViews;
+    }
+
+    private static void ExpandAll(List<ProjectContentNodeView> roots)
+    {
+        void Expand(ProjectContentNodeView v)
+        {
+            if (v.Children.Count > 0)
+                v.IsExpanded = true;
+            foreach (var c in v.Children)
+                Expand(c);
+        }
+        foreach (var r in roots) Expand(r);
     }
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -62,10 +97,7 @@ public sealed partial class ProjectContentTreePanel : UserControl
         {
             var path = selectedView.FileRelativePath;
             if (path is not null)
-            {
-                System.Diagnostics.Debug.WriteLine($"[ProjectTree] file selected: {path}");
                 ContentSelectionRequested?.Invoke(path);
-            }
         }
     }
 }

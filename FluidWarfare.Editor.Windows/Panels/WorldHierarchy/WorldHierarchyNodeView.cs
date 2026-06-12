@@ -27,18 +27,9 @@ public sealed class WorldHierarchyNodeView : INotifyPropertyChanged
 
     public string? EntityId => Node.EntityId?.Value.ToString();
 
-    public string DisplayName => Node.DisplayName;
+    public string? IconKind => Node.IconKind;
 
-    /// <summary>带分支前缀的显示名称（如 "└─ sample_unit"）。</summary>
-    public string DisplayNameWithBranch
-    {
-        get
-        {
-            if (BranchInfo is null || BranchInfo.Depth <= 0) return DisplayName;
-            var prefix = BranchInfo.IsLastSibling ? "└─ " : "├─ ";
-            return prefix + DisplayName;
-        }
-    }
+    public string DisplayName => Node.DisplayName;
 
     public string? SecondaryText => Node.SecondaryText;
 

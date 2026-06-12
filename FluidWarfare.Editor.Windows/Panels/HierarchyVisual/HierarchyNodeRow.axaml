@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:FluidWarfare.Editor.Windows.Panels.HierarchyVisual"
+             x:Class="FluidWarfare.Editor.Windows.Panels.HierarchyVisual.HierarchyNodeRow"
+             x:DataType="local:HierarchyNodeRow">
+  <Grid ColumnDefinitions="Auto,Auto,Auto,*" MinHeight="26">
+    <!-- 树干线 -->
+    <local:HierarchyBranchCanvas Grid.Column="0" Name="BranchCanvas"
+                                 BranchInfo="{Binding BranchInfo}"
+                                 Width="{Binding BranchCanvasWidth}" />
+    <!-- 展开箭头（叶节点相同宽度占位） -->
+    <Image Grid.Column="1" Name="ArrowImage"
+           Width="12" Height="12" Margin="2,0,2,0"
+           Stretch="Uniform" />
+    <!-- 类型图标 -->
+    <Image Grid.Column="2" Name="IconImage"
+           Width="15" Height="15" Margin="0,0,4,0"
+           Stretch="Uniform" />
+    <!-- 文字内容 -->
+    <Grid Grid.Column="3">
+      <TextBlock Name="PrimaryText" FontSize="13" VerticalAlignment="Center" />
+      <TextBlock Name="SecondaryText" FontSize="10.5"
+                 Foreground="#888" VerticalAlignment="Bottom" />
+    </Grid>
+  </Grid>
+</UserControl>
