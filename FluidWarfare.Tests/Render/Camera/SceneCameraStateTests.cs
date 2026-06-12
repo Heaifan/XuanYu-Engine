@@ -10,10 +10,10 @@ public sealed class SceneCameraStateTests
         var state = SceneCameraDefaults.CreateDefault();
         var (px, py, pz) = state.ComputePosition();
 
-        // 默认位置应接近 (0, 22, 32)
+        // 默认位置应为 (0, 32, 24)
         Assert.Equal(0, px, 1);
-        Assert.Equal(22, py, 1);
-        Assert.Equal(32, pz, 1);
+        Assert.Equal(32, py, 1);
+        Assert.Equal(24, pz, 1);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public sealed class SceneCameraStateTests
     public void Default_ShouldUseCorrectDistance()
     {
         var state = SceneCameraDefaults.CreateDefault();
-        Assert.Equal(38.83f, state.Distance, 0.01f);
+        Assert.Equal(40f, state.Distance, 0.01f);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public sealed class SceneCameraStateTests
         {
             TargetX = 10,
             TargetZ = 20,
-            Distance = 38.83f,
+            Distance = 40f,
             FieldOfViewDegrees = 55,
             NearPlane = 0.1f,
             FarPlane = 1000f
@@ -54,14 +54,13 @@ public sealed class SceneCameraStateTests
         var (px, _, pz) = state.ComputePosition();
         // 平移 Target 后 Position 应跟随移动
         Assert.Equal(10, px, 1);
-        // pz = TargetZ - ViewDirection.Z * Distance = 20 - (-0.8238 * 38.83) ≈ 52
-        Assert.Equal(52, pz, 1);
+        // pz = TargetZ - ViewDirection.Z * Distance = 20 - (-0.6 * 40) = 20 + 24 = 44
+        Assert.Equal(44, pz, 1);
     }
 
     [Fact]
     public void ComputePosition_ZeroViewport_ShouldNotThrow()
     {
-        // 视口高度为 0 时不应产生异常
         var state = SceneCameraDefaults.CreateDefault();
         var (_, py, _) = state.ComputePosition();
         Assert.True(py > 0);

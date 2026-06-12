@@ -27,11 +27,9 @@ public sealed record SceneCameraState
     public float FarPlane { get; init; }
 
     /// <summary>
-    /// 从默认位置 (0,22,32) → 目标 (0,0,0) 归一化的视线方向。
+    /// 获取默认视线方向（从默认相机位置指向目标 (0,0,0) 的归一化向量）。
     /// 相机始终沿此方向观察目标。
-    /// </summary>
-    /// <summary>
-    /// 获取默认视线方向（从 (0,22,32) 指向 (0,0,0) 的归一化向量）。
+    /// 默认位置 (0,32,24) → 方向 = normalize(0, -32, -24) = (0, -0.8, -0.6)
     /// </summary>
     public static (float X, float Y, float Z) DefaultViewDirection() => ViewDirection;
 
@@ -39,8 +37,8 @@ public sealed record SceneCameraState
 
     private static (float X, float Y, float Z) ComputeViewDirection()
     {
-        var len = (float)Math.Sqrt(22.0 * 22.0 + 32.0 * 32.0);
-        return (0, -22.0f / len, -32.0f / len);
+        var len = (float)Math.Sqrt(32.0 * 32.0 + 24.0 * 24.0);
+        return (0, -32.0f / len, -24.0f / len);
     }
 
     /// <summary>

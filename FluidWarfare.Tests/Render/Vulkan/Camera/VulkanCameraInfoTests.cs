@@ -9,8 +9,8 @@ public sealed class VulkanCameraInfoTests
     {
         var cam = VulkanCameraInfo.DefaultBattlefield;
         Assert.Equal(0, cam.PositionX);
-        Assert.Equal(22, cam.PositionY);
-        Assert.Equal(32, cam.PositionZ);
+        Assert.Equal(32, cam.PositionY);
+        Assert.Equal(24, cam.PositionZ);
     }
 
     [Fact]

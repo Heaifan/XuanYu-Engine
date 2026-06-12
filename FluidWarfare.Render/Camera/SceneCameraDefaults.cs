@@ -12,10 +12,10 @@ public static class SceneCameraDefaults
     public const float DefaultTargetZ = 0f;
 
     /// <summary>
-    /// 默认距离（等价于 Position (0,22,32) 到目标 (0,0,0) 的 Euclidean 距离）。
-    /// sqrt(22² + 32²) ≈ 38.83
+    /// 默认距离（等价于 Position (0,32,24) 到目标 (0,0,0) 的 Euclidean 距离）。
+    /// sqrt(32² + 24²) = 40
     /// </summary>
-    public const float DefaultDistance = 38.83f;
+    public const float DefaultDistance = 40f;
 
     /// <summary>
     /// 默认 FOV。

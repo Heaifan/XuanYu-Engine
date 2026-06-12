@@ -25,7 +25,6 @@ using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
 using FluidWarfare.Render.Vulkan.Clear;
-using FluidWarfare.Render.Vulkan.Markers;
 using FluidWarfare.Render.Vulkan.Camera;
 using FluidWarfare.Render.Camera;
 using FluidWarfare.Render.Vulkan.Scene3D;
@@ -58,7 +57,6 @@ public sealed partial class EditorShell : UserControl
     private VulkanSurfaceInfo _vulkanSurfaceInfo = VulkanSurfaceInfo.NotChecked;
     private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
     private VulkanClearInfo _vulkanClearInfo = VulkanClearInfo.NotChecked;
-    private VulkanMarkerDrawResult _vulkanMarkerDrawResult = VulkanMarkerDrawResult.NotChecked;
     private VulkanScene3dRunGate _scene3dGate = VulkanScene3dRunGate.Evaluate();
     private VulkanScene3dInfo _vulkanScene3dInfo = VulkanScene3dInfo.NotChecked;
     private Button? _runMenuButton;
@@ -73,6 +71,7 @@ public sealed partial class EditorShell : UserControl
     private SceneCameraState _lastCameraState = SceneCameraDefaults.CreateDefault();
     private bool _framePending;
     private bool _sessionActive;
+    private bool _scene3dAutoStartAttempted;
 
     public EditorShell()
     {
@@ -710,8 +709,8 @@ public sealed partial class EditorShell : UserControl
                 $"Windows Vulkan 视口子窗口已创建，HWND：0x{nativeHostInfo.WindowHandle.ToInt64():X16}。");
             ProbeVulkanSwapchain();
             ProbeVulkanClear("初始启动");
-            ProbeVulkanMarkerDraw();
             ReportScene3dIsolation();
+            TryAutoStartScene3dSession();
         }
         else
         {
@@ -826,75 +825,37 @@ public sealed partial class EditorShell : UserControl
         UpdateAllDiagnostics();
     }
 
-    private void ProbeVulkanMarkerDraw()
+    private void ReportScene3dIsolation()
     {
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
+        AppendInfoLog(_scene3dGate.Message);
+        ShowVulkanScene3DInfo();
+    }
 
-        if (!TryGetValidViewportSize(nativeHostInfo, out var viewportWidth, out var viewportHeight, out var viewportSizeMessage))
+    private void TryAutoStartScene3dSession()
+    {
+        if (_scene3dAutoStartAttempted) return;
+        _scene3dAutoStartAttempted = true;
+
+        if (!_scene3dGate.CanRun)
         {
-            _vulkanMarkerDrawResult = new VulkanMarkerDrawResult(
-                VulkanMarkerDrawStatus.Failed, viewportSizeMessage, 0, 0);
-            ShowVulkanMarkerDrawInfo();
+            AppendWarningLog($"Scene3D 自动启动跳过：{_scene3dGate.Message}");
             return;
         }
 
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
+        if (_scene3dSession is not null || _sessionActive)
         {
-            _vulkanMarkerDrawResult = new VulkanMarkerDrawResult(
-                VulkanMarkerDrawStatus.Failed, "缺少原生句柄，跳过点位绘制。", 0, 0);
-            ShowVulkanMarkerDrawInfo();
+            AppendInfoLog("Scene3D 会话已存在，跳过自动启动。");
             return;
         }
 
         if (_renderScene.Objects.Count == 0)
         {
-            _vulkanMarkerDrawResult = new VulkanMarkerDrawResult(
-                VulkanMarkerDrawStatus.Failed, "RenderScene 没有可绘制对象，跳过 Vulkan 点位绘制。", 0, 0);
-            ShowVulkanMarkerDrawInfo();
+            AppendWarningLog("Scene3D 自动启动跳过：RenderScene 为空。");
             return;
         }
 
-        // 取 RenderScene 第一个对象
-        var firstObject = _renderScene.Objects[0];
-
-        // 初版坐标映射：(0,0,0) → 视口中心
-        var markerInfo = VulkanMarkerDrawInfo.FromWorldPosition(
-            firstObject.DisplayName,
-            (float)firstObject.Position.X,
-            (float)firstObject.Position.Z,
-            (int)viewportWidth,
-            (int)viewportHeight);
-
-        _vulkanMarkerDrawResult = VulkanMarkerClearRectRenderer.RenderWindows(
-            nativeHostInfo.InstanceHandle,
-            nativeHostInfo.WindowHandle,
-            viewportWidth,
-            viewportHeight,
-            markerInfo);
-
-        ShowVulkanMarkerDrawInfo();
-    }
-
-    private void ShowVulkanMarkerDrawInfo()
-    {
-        if (_vulkanMarkerDrawResult.IsSucceeded)
-        {
-            AppendInfoLog(_vulkanMarkerDrawResult.Message);
-        }
-        else if (_vulkanMarkerDrawResult.Status != VulkanMarkerDrawStatus.NotChecked)
-        {
-            AppendWarningLog($"Vulkan 点位绘制失败：{_vulkanMarkerDrawResult.Message}");
-        }
-
-        UpdateVulkanViewportStatusLine();
-        UpdateAllDiagnostics();
-    }
-
-    private void ReportScene3dIsolation()
-    {
-        AppendInfoLog(_scene3dGate.Message);
-        ShowVulkanScene3DInfo();
+        AppendInfoLog("Scene3D 自动启动...");
+        StartScene3dSession();
     }
 
     private void HandleScene3dRunRequested(object? sender, EventArgs e)
@@ -948,7 +909,7 @@ public sealed partial class EditorShell : UserControl
         var flyout = new MenuFlyout();
         flyout.Opened += (_, _) => HandleMenuClicked("运行");
 
-        _runScene3dMenuItem = new MenuItem { Header = "启动 Scene3D 会话" };
+        _runScene3dMenuItem = new MenuItem { Header = "重新启动 Scene3D 会话" };
         _runScene3dMenuItem.Click += HandleRunScene3dMenuClicked;
         flyout.Items.Add(_runScene3dMenuItem);
 
@@ -1184,14 +1145,13 @@ public sealed partial class EditorShell : UserControl
 
     private void UpdateVulkanViewportStatusLine()
     {
-        var markerSuffix = _vulkanMarkerDrawResult.IsSucceeded
-            ? $" | 点位：{_vulkanMarkerDrawResult.DrawnMarkerCount}"
-            : string.Empty;
+        var isActive = _sessionActive && _scene3dSession is not null &&
+            _scene3dSession.Status == VulkanScene3dSessionStatus.Active;
 
-        var scene3dSuffix = _vulkanScene3dInfo.IsSucceeded
-            ? $" | Scene3D 成功 | 对象: {_vulkanScene3dInfo.RenderedUnitCount} | Depth: {_vulkanScene3dInfo.DepthFormat} | DrawCall: {_vulkanScene3dInfo.DrawCallCount}"
+        var scene3dSuffix = isActive
+            ? $" | Scene3D Active | Frame #{_scene3dSession!.FrameIndex}"
             : _scene3dGate.CanRun
-                ? " | Scene3D Ready，等待手动触发"
+                ? " | Scene3D Ready"
                 : " | Scene3D 已隔离";
 
         var lastRenderSuffix = $" | 最近渲染：{_renderLastMode}";
@@ -1228,9 +1188,7 @@ public sealed partial class EditorShell : UserControl
             _vulkanClearInfo.IsSucceeded
                 ? $"成功，{_vulkanClearInfo.ClearColorText}，尺寸：{_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}，用时：{_vulkanClearInfo.ElapsedMilliseconds:F2} ms"
                 : _vulkanClearInfo.Message,
-            _vulkanMarkerDrawResult.IsSucceeded
-                ? $"绘制成功，数量 {_vulkanMarkerDrawResult.DrawnMarkerCount}，尺寸：{nativeHostInfo.Width}x{nativeHostInfo.Height}，用时 {_vulkanMarkerDrawResult.ElapsedMilliseconds:F2} ms"
-                : _vulkanMarkerDrawResult.Message,
+            "已退役（MarkerDraw 路径在 8.3.1 移除）",
             _vulkanValidationInfo.IsEnabled
                 ? $"已启用，消息 {_vulkanValidationInfo.MessageCount} 条"
                 : _vulkanValidationInfo.Message);
@@ -1260,9 +1218,7 @@ public sealed partial class EditorShell : UserControl
             _vulkanDeviceInfo.ElapsedMilliseconds.ToString("F2"),
             _vulkanSwapchainInfo.ElapsedMilliseconds.ToString("F2"),
             _vulkanClearInfo.ElapsedMilliseconds.ToString("F2"),
-            _vulkanMarkerDrawResult.IsSucceeded
-                ? _vulkanMarkerDrawResult.ElapsedMilliseconds.ToString("F2")
-                : "-",
+            "-",
             _vulkanScene3dInfo.IsSucceeded
                 ? _vulkanScene3dInfo.ElapsedMilliseconds.ToString("F2")
                 : "-");

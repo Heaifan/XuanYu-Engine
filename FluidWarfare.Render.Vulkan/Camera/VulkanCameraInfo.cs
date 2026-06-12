@@ -19,13 +19,13 @@ public sealed record VulkanCameraInfo(
     float FarPlane)
 {
     /// <summary>
-    /// 默认战场相机（8.2 调整：更高更远，FOV 略窄，改善画面构图）。
+    /// 默认战场相机（8.3.1 调整：更俯视，改善 RTS 构图）。
     /// </summary>
     public static VulkanCameraInfo DefaultBattlefield { get; } =
         new(
             PositionX: 0,
-            PositionY: 22,
-            PositionZ: 32,
+            PositionY: 32,
+            PositionZ: 24,
             TargetX: 0,
             TargetY: 0,
             TargetZ: 0,

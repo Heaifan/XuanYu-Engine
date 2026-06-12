@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FluidWarfare.Render.Vulkan.Camera;
+using FluidWarfare.Render.Vulkan.Validation;
 using Silk.NET.Vulkan;
 
 namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
@@ -55,6 +56,12 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private int _pipelineCreateCount;
     private int _bufferCreateCount;
     private int _swapchainGeneration;
+    private bool _rendering; // 防重入
+
+    // Validation
+    private VulkanValidationOptions _validationOptions = VulkanValidationOptions.FromEnvironment();
+    private VulkanValidationMessageStore? _validationMessageStore;
+    private Validation.VulkanDebugMessengerScope? _debugMessengerScope;
 
     // Success flags for session-level resources
     private bool _instOk, _surfOk, _devOk;
@@ -179,8 +186,19 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             return VulkanScene3dFrameResult.Failed(_frameIndex, reason,
                 $"Session 状态不允许渲染：{_status}");
 
-        var sw = Stopwatch.StartNew();
-        return RenderFrameInternal(reason, cameraState, unitDraws, sw);
+        if (_rendering)
+            return VulkanScene3dFrameResult.Failed(_frameIndex, reason, "渲染进行中，跳过。");
+
+        _rendering = true;
+        try
+        {
+            var sw = Stopwatch.StartNew();
+            return RenderFrameInternal(reason, cameraState, unitDraws, sw);
+        }
+        finally
+        {
+            _rendering = false;
+        }
     }
 
     /// <summary>
@@ -191,9 +209,11 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         FluidWarfare.Render.Camera.SceneCameraState cameraState,
         ReadOnlySpan<VulkanScene3dUnitDrawInfo> unitDraws)
     {
-        if (_status != VulkanScene3dSessionStatus.Active && _status != VulkanScene3dSessionStatus.Failed)
+        if (_status != VulkanScene3dSessionStatus.Active)
             return VulkanScene3dFrameResult.Failed(_frameIndex, VulkanScene3dFrameReason.Resize,
-                $"Session 状态不允许 Resize：{_status}");
+                $"Session 状态不允许 Resize（当前 {_status}，仅 Active 允许）。");
+
+        if (_rendering) return VulkanScene3dFrameResult.Failed(_frameIndex, VulkanScene3dFrameReason.Resize, "渲染进行中，跳过 Resize。");
 
         _status = VulkanScene3dSessionStatus.RecreatingSwapchain;
         var sw = Stopwatch.StartNew();
@@ -269,7 +289,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         try
         {
             // Wait for fence
-            _vk.WaitForFences(_device, 1, ref _swapchainRes.Fence, Vk.True, ulong.MaxValue);
+            _vk.WaitForFences(_device, 1, ref _swapchainRes.Fence, Vk.True, 500_000_000); // 500ms 超时
             _vk.ResetFences(_device, 1, ref _swapchainRes.Fence);
 
             // Acquire next image
@@ -395,35 +415,64 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private bool CreateInstance()
     {
         var a = Marshal.StringToHGlobalAnsi("FluidWarfare");
-        var e = Marshal.StringToHGlobalAnsi("FluidWarfare");
-        var s = Marshal.StringToHGlobalAnsi("VK_KHR_surface");
-        var w = Marshal.StringToHGlobalAnsi("VK_KHR_win32_surface");
+        var eg = Marshal.StringToHGlobalAnsi("FluidWarfare");
+        var surf = Marshal.StringToHGlobalAnsi("VK_KHR_surface");
+        var win = Marshal.StringToHGlobalAnsi("VK_KHR_win32_surface");
+        var debug = Marshal.StringToHGlobalAnsi("VK_EXT_debug_utils");
+        var layer = Marshal.StringToHGlobalAnsi("VK_LAYER_KHRONOS_validation");
         try
         {
-            var exts = stackalloc byte*[] { (byte*)s, (byte*)w };
+            var enableValidation = _validationOptions.IsRequested;
+            var extCount = enableValidation ? 3u : 2u;
+            var extPtrs = stackalloc byte*[3];
+            extPtrs[0] = (byte*)surf;
+            extPtrs[1] = (byte*)win;
+            if (enableValidation) extPtrs[2] = (byte*)debug;
+
             var ai = new ApplicationInfo
             {
                 SType = StructureType.ApplicationInfo,
                 PApplicationName = (byte*)a, ApplicationVersion = 1,
-                PEngineName = (byte*)e, EngineVersion = 1,
+                PEngineName = (byte*)eg, EngineVersion = 1,
                 ApiVersion = (1 << 22) | (0 << 12) | 0
             };
             var ci = new InstanceCreateInfo
             {
                 SType = StructureType.InstanceCreateInfo,
                 PApplicationInfo = &ai,
-                EnabledExtensionCount = 2,
-                PpEnabledExtensionNames = exts
+                EnabledExtensionCount = extCount,
+                PpEnabledExtensionNames = extPtrs
             };
-            var result = _vk!.CreateInstance(&ci, null, out _instance);
-            if (result == Result.Success)
+
+            if (enableValidation)
             {
-                _instOk = true;
-                _instanceCreateCount++;
+                var layerPtrs = stackalloc byte*[1];
+                layerPtrs[0] = (byte*)layer;
+                ci.EnabledLayerCount = 1;
+                ci.PpEnabledLayerNames = layerPtrs;
             }
-            return result == Result.Success;
+
+            var result = _vk!.CreateInstance(&ci, null, out _instance);
+            if (result != Result.Success) return false;
+            _instOk = true;
+            _instanceCreateCount++;
+
+            // Create Debug Messenger after Instance
+            if (enableValidation && _validationMessageStore is not null)
+            {
+                try
+                {
+                    _debugMessengerScope = new VulkanDebugMessengerScope(_vk!, _instance, _validationMessageStore);
+                }
+                catch
+                {
+                    // Debug messenger creation failure is non-fatal
+                }
+            }
+
+            return true;
         }
-        finally { Marshal.FreeHGlobal(a); Marshal.FreeHGlobal(e); Marshal.FreeHGlobal(s); Marshal.FreeHGlobal(w); }
+        finally { Marshal.FreeHGlobal(a); Marshal.FreeHGlobal(eg); Marshal.FreeHGlobal(surf); Marshal.FreeHGlobal(win); Marshal.FreeHGlobal(debug); Marshal.FreeHGlobal(layer); }
     }
 
     private bool CreateSurface(nint hinstance, nint hwnd)
@@ -646,6 +695,13 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         {
             var fn = Marshal.GetDelegateForFunctionPointer<DestroySurfaceFn>(_fnDestroySurface);
             fn(_instance, _surface, null);
+        }
+
+        // Debug Messenger (must precede Instance)
+        if (_debugMessengerScope is not null)
+        {
+            _debugMessengerScope.Dispose();
+            _debugMessengerScope = null;
         }
 
         // Instance

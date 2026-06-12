@@ -99,7 +99,7 @@ public sealed class SceneCameraMotionTests
         var reset = SceneCameraMotion.Reset();
         Assert.Equal(0, reset.TargetX);
         Assert.Equal(0, reset.TargetZ);
-        Assert.Equal(38.83f, reset.Distance, 0.01f);
+        Assert.Equal(40f, reset.Distance, 0.01f);
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public sealed class SceneCameraMotionTests
     {
         var state = new SceneCameraState
         {
-            TargetX = 0, TargetZ = 0, Distance = 38.83f,
+            TargetX = 0, TargetZ = 0, Distance = 40f,
             FieldOfViewDegrees = 55, NearPlane = 0.1f, FarPlane = 1000f
         };
         // 尝试大幅平移

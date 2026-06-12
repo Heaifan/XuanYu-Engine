@@ -1104,3 +1104,63 @@ file-tree.md
 - ✅ Validation Error = 0
 - ✅ Scene3D 仍只允许手动启动
 - ⏳ 人工验收：中键拖拽 + 滚轮缩放 + Home 重置 + resize 稳定
+
+---
+
+---
+
+### Milestone 8.3.1 — 默认 3D 主视口、俯视矩阵修复与旧点位路径退役
+
+#### 修复
+
+1. **LookAt 矩阵修复**：3×3 旋转部分之前按行优先排列在列优先 float[16] 中，导致 `eye` 经 View 变换后不为原点。修正为正确的列优先排布，恢复从上向下的 RTS 俯视画面。
+2. **Session Validation 接入**：`VulkanScene3dSession.CreateInstance()` 现在支持 `VK_LAYER_KHRONOS_validation` 与 `VK_EXT_debug_utils`，按需启用并创建 `VulkanDebugMessengerScope`。
+3. **Session 状态加固**：`Resize()` 只允许 `Active` 状态；GPU Fence 等待从无限改为 500ms 超时；增加 `_rendering` 防重入标志。
+
+#### 变更
+
+1. **默认 Scene3D**：`FW_ENABLE_SCENE3D=1` 不再需要；改为 `FW_DISABLE_SCENE3D=1` 可紧急关闭。Editor 启动后自动尝试启动 Scene3D 会话。
+2. **菜单**：改为「重新启动 Scene3D 会话」，支持 Active 时重新创建。
+3. **状态栏**：读取 Session.Status 显示 `Scene3D Active | Frame #N`。
+4. **相机默认值**：从 (0,22,32) / Distance 38.83 调整为 (0,32,24) / Distance 40，更俯视。
+5. **`launchSettings.json`**：删除 `FW_ENABLE_SCENE3D`，保留 `FW_VULKAN_VALIDATION=1`。
+
+#### 删除
+
+1. **Vulkan MarkerDraw 2D 点位路径**：6 个文件（4 源文件 + 2 测试文件），对应 EditorShell 中的 `ProbeVulkanMarkerDraw()`、`ShowVulkanMarkerDrawInfo()`、`_vulkanMarkerDrawResult` 字段及全部诊断/性能项。
+2. **旧 `FW_ENABLE_SCENE3D` 环境变量语义**：运行代码中零匹配。
+
+#### 修改文件
+
+```text
+VulkanCameraMatrices.cs                 — LookAt 列优先修复
+SceneCameraDefaults.cs                  — Distance 40
+SceneCameraState.cs                     — ViewDirection (0,-0.8,-0.6)
+VulkanCameraInfo.cs                     — DefaultBattlefield (0,32,24)
+VulkanScene3dSession.cs                 — Validation + Resize 加固 + Fence 超时
+VulkanScene3dRunGate.cs                 — FW_DISABLE_SCENE3D 反转
+EditorShell.axaml.cs                    — 自动启动 + MarkerDraw 清理 + 状态栏
+launchSettings.json                     — 删除 FW_ENABLE_SCENE3D
+VulkanScene3dRunGateTests.cs            — 适配新语义
+VulkanCameraInfoTests.cs                — 适配新默认值
+SceneCameraStateTests.cs                — 适配新默认值
+SceneCameraMotionTests.cs               — 适配新默认值
+FluidWarfare.Render.Vulkan/Markers/*    — 删除 4 个文件
+FluidWarfare.Tests/.../Markers/*        — 删除 2 个文件
+CHANGELOG.md
+file-tree.md
+```
+
+#### 验证结果
+
+- ✅ dotnet build: 0 错误, 0 警告
+- ✅ dotnet test: 330/330 全部通过
+- ✅ Editor 默认自动显示 3D 俯视场景，无需手动点击
+- ✅ 中键拖拽平移、滚轮缩放、Home 重置正常
+- ✅ Session Instance 按需启用 Validation
+- ✅ Active resize 仅重建 Swapchain 资源
+- ✅ Failed Session 不允许 Resize
+- ✅ GPU Fence 使用 500ms 有限等待
+- ✅ `FW_DISABLE_SCENE3D=1` 可关闭 3D
+- ✅ MarkerDraw 路径完全删除
+- ✅ 不越界：无相机旋转/Picking/单位选择/纹理/材质/光照/阴影/模型加载

@@ -312,20 +312,21 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.3：持久 Scene3D 渲染会话与 RTS 相机基础控制。
+当前执行 Milestone 8.3.1：默认 3D 主视口、俯视矩阵修复与旧点位路径退役。
 
-管线进度：... → Depth + 多对象 ✅ → 持久会话 + 相机控制 ⬆️
+管线进度：... → 持久会话 ✅ → 默认 3D 主视口 ⬆️
 
 当前状态：
-- Vulkan Validation Layer 默认不启用。FW_VULKAN_VALIDATION=1 时检测 VK_LAYER_KHRONOS_validation 与 VK_EXT_debug_utils，可用时创建 Debug Messenger。
-- Scene3D 已从一次性 Probe 升级为持久 Session（Instance/Device/Shader/Buffer 仅创建一次）。
-- 中键拖拽沿 XZ 地面平移、滚轮缩放（指数缩放 8~120）、Home 重置相机。
-- 相机操作按需重绘，无持续空转定时器。
-- Active 时 resize 仅重建 Swapchain 级资源。
-- 顶部「运行」→「启动 Scene3D 会话」为唯一手动入口。
+- Scene3D 为 Editor 默认主视口，自动启动持久 Session。
+- Vulkan Validation Layer 默认在 Session Instance 中启用（FW_VULKAN_VALIDATION=1）。
+- LookAt 矩阵已修复为列优先，画面为正确 RTS 俯视。
+- FW_DISABLE_SCENE3D=1 可紧急关闭 3D，回退 Vulkan Clear。
+- 旧 2D MarkerDraw 点位路径已删除。
+- 中键拖拽平移、滚轮缩放（指数缩放 8~120）、Home 重置相机。
 - Depth Buffer: D32Sfloat，每 Swapchain Image 一个 Depth Attachment。
 - 多对象：3 个 World 实体 → 3 个 RenderObject → 3 个立方体。
-- 测试 343/343 全部通过。
+- GPU Fence 使用 500ms 有限等待，Failed Session 不允许 Resize。
+- 测试 330/330 全部通过。
 
 ## 3. 顶层目录结构
 

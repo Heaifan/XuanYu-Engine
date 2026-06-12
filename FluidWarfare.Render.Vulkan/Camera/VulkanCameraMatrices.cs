@@ -62,16 +62,20 @@ public static class VulkanCameraMatrices
         var uY = sZ * fX - sX * fZ;
         var uZ = sX * fY - sY * fX;
 
-        // View matrix (column-major):
-        // [ side.x    up.x    -forward.x    0 ]
-        // [ side.y    up.y    -forward.y    0 ]
-        // [ side.z    up.z    -forward.z    0 ]
-        // [ -s·e     -u·e      f·e          1 ]
+        // View matrix (column-major float[16]):
+        // Col 0: (side.x, up.x, -forward.x, 0)
+        // Col 1: (side.y, up.y, -forward.y, 0)
+        // Col 2: (side.z, up.z, -forward.z, 0)
+        // Col 3: (-dot(s,e), -dot(u,e), dot(f,e), 1)
+        //
+        // GLSL mat4 读取列优先：
+        //   view[0] = col0, view[1] = col1, view[2] = col2, view[3] = col3
+        //   gl_Position = view × vec4(eye, 1) → 平移后 eye 在 View Space 中为原点
         return
         [
-            sX, sY, sZ, 0,
-            uX, uY, uZ, 0,
-            -fX, -fY, -fZ, 0,
+            sX, uX, -fX, 0,
+            sY, uY, -fY, 0,
+            sZ, uZ, -fZ, 0,
             -(sX * eyeX + sY * eyeY + sZ * eyeZ),
             -(uX * eyeX + uY * eyeY + uZ * eyeZ),
             fX * eyeX + fY * eyeY + fZ * eyeZ,
