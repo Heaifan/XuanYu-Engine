@@ -82,9 +82,13 @@ public sealed partial class ProjectContentTreePanel : UserControl
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         var selectedItem = _treeView?.SelectedItem;
-        if (selectedItem is TreeViewItem tvi && tvi.Tag is string nodeId && nodeId.StartsWith("file:"))
+        if (selectedItem is TreeViewItem tvi && tvi.Tag is string nodeId)
         {
+            if (!nodeId.StartsWith("file:"))
+                return;
+
             var relativePath = nodeId["file:".Length..];
+            System.Diagnostics.Debug.WriteLine($"[ProjectTree] file selected: {relativePath}");
             ContentSelectionRequested?.Invoke(relativePath);
         }
     }

@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Media;
 using FluidWarfare.Editor.WorldHierarchy;
 
 namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
@@ -8,26 +7,26 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
 {
     private TreeView? _treeView;
     private WorldHierarchyTree? _currentTree;
+    private WorldHierarchyTreeIndex? _currentIndex;
+    private List<WorldHierarchyNodeView>? _rootViews;
+
     private readonly WorldHierarchyTreeViewState _viewState = new();
-    private bool _isInternalUpdate;
-
-    // 索引：NodeId → TreeViewItem，用于 RevealEntity 不重建树
-    private readonly Dictionary<string, TreeViewItem> _itemsByNodeId = [];
-
-    // 程序化选中抑制：防止 RevealEntity → SelectionChanged → 反向触发
-    private string? _pendingProgrammaticEntityId;
+    private readonly WorldHierarchyProgrammaticSelection _programmatic = new();
 
     /// <summary>
-    /// 实体选择请求事件（EntityId string）。
+    /// 用户点击实体节点时触发（EntityId string）。
+    /// Root 和 Group 不会触发此事件。
     /// </summary>
-    public event Action<string?>? EntitySelectionRequested;
+    public event Action<string>? EntitySelectionRequested;
 
     public WorldHierarchyTreePanel()
     {
         InitializeComponent();
         _treeView = this.FindControl<TreeView>("HierarchyTree");
         if (_treeView is not null)
+        {
             _treeView.SelectionChanged += OnTreeSelectionChanged;
+        }
     }
 
     /// <summary>
@@ -40,37 +39,36 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
     }
 
     /// <summary>
-    /// 定位并选中实体节点。只操作现有 TreeViewItem，不重建树。
+    /// 静默定位并选中实体——不发选择命令。
+    /// 只展开祖先、滚动、选中节点。
     /// </summary>
     public bool RevealEntity(string entityId)
     {
-        if (_currentTree is null || _treeView is null) return false;
+        if (_currentIndex is null) return false;
+        if (!_currentIndex.EntityViewsById.TryGetValue(entityId, out var view))
+            return false;
 
-        var node = _currentTree.FindEntity(entityId);
-        if (node is null) return false;
-
-        var ancestors = _currentTree.GetAncestorNodeIds(entityId);
-        if (ancestors is not null)
+        // 展开祖先
+        if (_currentIndex.AncestorViewsByEntityId.TryGetValue(entityId, out var ancestors))
         {
             foreach (var anc in ancestors)
             {
-                _viewState.ExpandedNodeIds.Add(anc);
-                if (_itemsByNodeId.TryGetValue(anc, out var ancItem))
-                    ancItem.IsExpanded = true;
+                anc.IsExpanded = true;
+                _viewState.ExpandedNodeIds.Add(anc.NodeId);
             }
         }
 
-        // 通过索引找到目标 TreeViewItem 并选中
-        if (_itemsByNodeId.TryGetValue(node.NodeId, out var targetItem))
-        {
-            _pendingProgrammaticEntityId = entityId;
-            _viewState.SelectedEntityId = entityId;
-            targetItem.IsSelected = true;
-            targetItem.BringIntoView();
-            return true;
-        }
+        // 静默选中
+        ShowSelectedEntityView(view);
+        return true;
+    }
 
-        return false;
+    /// <summary>
+    /// 静默显示选中节点——不发选择命令。
+    /// </summary>
+    public void ShowSelectedEntity(WorldHierarchyNodeView view)
+    {
+        ShowSelectedEntityView(view);
     }
 
     /// <summary>
@@ -78,17 +76,14 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
     /// </summary>
     public void ClearEntitySelection()
     {
+        if (_currentIndex is null) return;
+        foreach (var view in _currentIndex.EntityViewsById.Values)
+            view.IsSelected = false;
         _viewState.SelectedEntityId = null;
-        FullRebuild();
     }
 
     /// <summary>
-    /// 获取当前 ViewState。
-    /// </summary>
-    public WorldHierarchyTreeViewState GetViewState() => _viewState;
-
-    /// <summary>
-    /// 搜索过滤重建（由外部 ProjectWorldDockPanel 调用）。
+    /// 搜索过滤重建（由 ProjectWorldDockPanel 调用）。
     /// </summary>
     public void ApplySearchFilter(WorldHierarchyNode? filteredRoot, WorldHierarchyTree originalTree)
     {
@@ -107,137 +102,104 @@ public sealed partial class WorldHierarchyTreePanel : UserControl
         FullRebuild();
     }
 
+    public WorldHierarchyTreeViewState GetViewState() => _viewState;
+
     private void OnTreeSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_isInternalUpdate) return;
-
-        if (_treeView?.SelectedItem is TreeViewItem selectedItem &&
-            selectedItem.Tag is string nodeId)
+        if (_treeView?.SelectedItem is WorldHierarchyNodeView selectedView)
         {
-            var selectedNode = FindNode(nodeId);
-            if (selectedNode is null || !selectedNode.IsSelectable) return;
-
-            var entityId = selectedNode.EntityId?.Value.ToString();
-
-            // 程序化选中抑制：本次是 RevealEntity 触发的，消费掉不转发
-            if (_pendingProgrammaticEntityId == entityId)
+            // 程序化选中令牌：如果匹配，消费掉不转发
+            var entityId = selectedView.EntityId;
+            if (entityId is not null &&
+                _programmatic.TryConsume(entityId, 0))
             {
-                _pendingProgrammaticEntityId = null;
                 _viewState.SelectedEntityId = entityId;
                 return;
             }
 
-            // 相同 EntityId 幂等
-            if (entityId == _viewState.SelectedEntityId)
-                return;
-
-            _viewState.SelectedEntityId = entityId;
-            EntitySelectionRequested?.Invoke(entityId);
+            // 仅 Entity 节点可发出选择命令
+            if (selectedView.IsSelectable && entityId is not null)
+            {
+                _viewState.SelectedEntityId = entityId;
+                EntitySelectionRequested?.Invoke(entityId);
+            }
         }
     }
 
-    /// <summary>
-    /// 全量重建（加载新树、搜索过滤、清除选择时调用）。
-    /// </summary>
     private void FullRebuild()
     {
         if (_currentTree is null || _treeView is null) return;
-
-        _itemsByNodeId.Clear();
 
         var displayTree = string.IsNullOrWhiteSpace(_viewState.SearchText)
             ? _currentTree.Root
             : WorldHierarchySearch.Search(_currentTree, _viewState.SearchText);
 
-        _isInternalUpdate = true;
-        try
+        if (displayTree is null)
         {
-            _treeView.Items.Clear();
-            if (displayTree is not null)
+            // 搜索未命中，显示空状态 Root
+            var emptyRoot = new WorldHierarchyNode(
+                "world:root", WorldHierarchyNodeKind.WorldRoot,
+                "世界", null, null, "world", false, []);
+            var emptyTree = new WorldHierarchyTree(
+                emptyRoot, 1, 0,
+                new Dictionary<string, WorldHierarchyNode>(),
+                new Dictionary<string, IReadOnlyList<string>>());
+            var (roots, index) = WorldHierarchyTreeIndex.Build(emptyTree);
+            _rootViews = roots;
+            _currentIndex = index;
+        }
+        else
+        {
+            var filteredTree = _currentTree;
+            var (roots, index) = WorldHierarchyTreeIndex.Build(filteredTree);
+            _rootViews = roots;
+            _currentIndex = index;
+        }
+
+        _treeView.ItemsSource = _rootViews;
+
+        // 恢复展开状态
+        if (_currentIndex is not null)
+        {
+            foreach (var kvp in _currentIndex.EntityViewsById)
             {
-                var rootItem = BuildTreeItem(displayTree);
-                _treeView.Items.Add(rootItem);
-                if (_viewState.ExpandedNodeIds.Contains(displayTree.NodeId)
-                    || string.IsNullOrWhiteSpace(_viewState.SearchText))
-                    rootItem.IsExpanded = true;
+                var view = kvp.Value;
+                if (_viewState.ExpandedNodeIds.Contains(view.NodeId))
+                    view.IsExpanded = true;
+            }
+
+            // 恢复选中
+            if (_viewState.SelectedEntityId is not null &&
+                _currentIndex.EntityViewsById.TryGetValue(_viewState.SelectedEntityId, out var selectedView))
+            {
+                _programmatic.Begin(_viewState.SelectedEntityId, 0);
+                selectedView.IsSelected = true;
             }
         }
-        finally
-        {
-            _isInternalUpdate = false;
-        }
     }
 
-    private TreeViewItem BuildTreeItem(WorldHierarchyNode node)
+    private void ShowSelectedEntityView(WorldHierarchyNodeView view)
     {
-        var item = new TreeViewItem();
-        _itemsByNodeId[node.NodeId] = item;
-
-        var iconText = node.IconKind switch
+        // 取消旧选中
+        if (_viewState.SelectedEntityId is not null &&
+            _currentIndex?.EntityViewsById.TryGetValue(_viewState.SelectedEntityId, out var oldView) == true)
         {
-            "world" => "\U0001F310",
-            "group" => "◉",
-            "entity" => "◼",
-            _ => ""
-        };
-
-        var displayPanel = new StackPanel { Margin = new Avalonia.Thickness(4, 2) };
-        displayPanel.Children.Add(new TextBlock
-        {
-            Text = string.IsNullOrEmpty(iconText) ? node.DisplayName : $"{iconText} {node.DisplayName}",
-            FontSize = 13
-        });
-
-        if (!string.IsNullOrEmpty(node.SecondaryText))
-        {
-            displayPanel.Children.Add(new TextBlock
-            {
-                Text = node.SecondaryText,
-                Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
-                FontSize = 11
-            });
+            oldView.IsSelected = false;
         }
 
-        item.Header = displayPanel;
-        item.Tag = node.NodeId;
+        _viewState.SelectedEntityId = view.EntityId;
+        _programmatic.Begin(view.EntityId, 0);
+        view.IsSelected = true;
 
-        if (_viewState.ExpandedNodeIds.Contains(node.NodeId))
-            item.IsExpanded = true;
-
-        item.PropertyChanged += (_, args) =>
+        // 展开祖先
+        if (view.EntityId is not null &&
+            _currentIndex?.AncestorViewsByEntityId.TryGetValue(view.EntityId, out var ancestors) == true)
         {
-            if (args.Property.Name == nameof(TreeViewItem.IsExpanded))
+            foreach (var anc in ancestors)
             {
-                if (item.IsExpanded)
-                    _viewState.ExpandedNodeIds.Add(node.NodeId);
-                else
-                    _viewState.ExpandedNodeIds.Remove(node.NodeId);
+                anc.IsExpanded = true;
+                _viewState.ExpandedNodeIds.Add(anc.NodeId);
             }
-        };
-
-        if (node.IsSelectable && node.EntityId?.Value.ToString() == _viewState.SelectedEntityId)
-            item.IsSelected = true;
-
-        foreach (var child in node.Children)
-            item.Items.Add(BuildTreeItem(child));
-
-        return item;
-    }
-
-    private WorldHierarchyNode? FindNode(string nodeId)
-    {
-        if (_currentTree is null) return null;
-        return FindNodeRecursive(_currentTree.Root, nodeId);
-    }
-
-    private static WorldHierarchyNode? FindNodeRecursive(WorldHierarchyNode root, string nodeId)
-    {
-        if (root.NodeId == nodeId) return root;
-        foreach (var child in root.Children)
-        {
-            var found = FindNodeRecursive(child, nodeId);
-            if (found is not null) return found;
         }
-        return null;
     }
 }

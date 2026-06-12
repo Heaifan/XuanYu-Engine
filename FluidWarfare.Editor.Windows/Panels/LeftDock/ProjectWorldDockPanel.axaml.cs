@@ -46,7 +46,11 @@ public sealed partial class ProjectWorldDockPanel : UserControl
 
         // Wire sub-panel events
         _worldTree.EntitySelectionRequested += id => EntitySelectionRequested?.Invoke(id);
-        _projectTree.ContentSelectionRequested += path => ContentSelectionRequested?.Invoke(path);
+        _projectTree.ContentSelectionRequested += path =>
+        {
+            System.Diagnostics.Debug.WriteLine($"[Dock] content selection forwarded: {path}");
+            ContentSelectionRequested?.Invoke(path);
+        };
 
         if (_searchBox is not null)
         {

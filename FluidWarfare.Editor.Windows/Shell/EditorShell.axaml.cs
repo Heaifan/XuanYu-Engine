@@ -8,6 +8,7 @@ using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
 using FluidWarfare.Core.Math;
 using FluidWarfare.Editor.ProjectContentTreeModel;
+using FluidWarfare.Editor.Selection;
 using FluidWarfare.Editor.WorldHierarchy;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -321,7 +322,7 @@ public sealed partial class EditorShell : UserControl
 
     private void OnHierarchyEntitySelected(string? entityId)
     {
-        ApplyEntitySelection(entityId, EditorSelectionOrigin.WorldList);
+        ApplyEntitySelection(entityId, EditorEntitySelectionOrigin.WorldHierarchy);
     }
 
     private void OnProjectContentSelected(string? relativePath)
@@ -1057,81 +1058,126 @@ public sealed partial class EditorShell : UserControl
         });
     }
 
-    // ─── 选择系统 ────────────────────────────────────────────
+    // ─── 单向选择状态流 ──────────────────────────────────────
 
-    private enum EditorSelectionOrigin { WorldList, ViewportPicking, Programmatic }
+    private readonly EditorEntitySelectionState _selectionState = new();
+    private readonly EditorSelectionDiagnostics _selectionDiag = new();
+    private int _selectionDispatchDepth;
 
     /// <summary>
-    /// 统一选择入口。关键规则：
-    ///   1. 相同 EntityId 不重复操作。
-    ///   2. 树来源的选择不反过来再次 RevealEntity（避免死循环）。
-    ///   3. 视口/程序化来源的选择需要 RevealEntity 定位到树节点。
+    /// 唯一选择入口。单向流：TryApply 幂等 → 顺序刷新各界面。
+    /// _selectionDispatchDepth 熔断反馈递归。
     /// </summary>
-    private void ApplyEntitySelection(string? entityIdStr, EditorSelectionOrigin origin)
+    private void ApplyEntitySelection(string? entityIdStr, EditorEntitySelectionOrigin origin)
     {
-        var currentEntityId = _selectedWorldEntity?.EntityId.Value.ToString();
+        _selectionDiag.SelectionRequestCount++;
 
-        // 相同 EntityId 幂等 —— 但视口来源仍可定位树（跨页签）
-        if (currentEntityId == entityIdStr)
+        if (_selectionDispatchDepth > 0)
         {
-            if (origin == EditorSelectionOrigin.ViewportPicking && entityIdStr is not null)
-                _dockPanel?.RevealEntity(entityIdStr);
+            _selectionDiag.FeedbackLoopBlockedCount++;
+            System.Diagnostics.Debug.WriteLine(
+                $"[严重] 检测到选择反馈环，已熔断。EntityId={entityIdStr} Origin={origin}");
             return;
         }
 
-        WorldEntityInfo? entityInfo = null;
-
-        if (entityIdStr is not null && int.TryParse(entityIdStr, out var entityIdVal) && entityIdVal > 0)
+        _selectionDispatchDepth++;
+        try
         {
-            var targetId = EntityId.FromInt(entityIdVal);
-            var entities = _worldState?.ListEntities() ?? [];
-            entityInfo = entities.FirstOrDefault(e => e.EntityId == targetId);
-        }
+            var change = _selectionState.TryApply(entityIdStr, origin);
 
+            if (!change.IsChanged)
+            {
+                _selectionDiag.SelectionNoOpCount++;
+                if (origin == EditorEntitySelectionOrigin.ViewportPicking && entityIdStr is not null)
+                    _dockPanel?.RevealEntity(entityIdStr);
+                return;
+            }
+
+            _selectionDiag.SelectionChangeCount++;
+            _selectionDiag.LastRevision = change.Revision;
+
+            WorldEntityInfo? entityInfo = null;
+            if (entityIdStr is not null && int.TryParse(entityIdStr, out var entityIdVal) && entityIdVal > 0)
+            {
+                var targetId = EntityId.FromInt(entityIdVal);
+                var entities = _worldState?.ListEntities() ?? [];
+                entityInfo = entities.FirstOrDefault(e => e.EntityId == targetId);
+            }
+
+            ApplySelectionToScene3d(change, entityInfo);
+            ApplySelectionToInspector(change, entityInfo);
+            ApplySelectionToStatusBar(change, entityInfo);
+            ApplySelectionToHierarchy(change, entityInfo);
+            ApplySelectionLog(change, entityInfo);
+        }
+        finally
+        {
+            _selectionDispatchDepth--;
+        }
+    }
+
+    private void ApplySelectionToScene3d(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
+    {
+        if (_scene3dSession is null || !_sessionActive) return;
+        if (change.CurrentEntityId is not null &&
+            _scene3dSession.SetSelectedEntity(change.CurrentEntityId))
+        {
+            _selectionDiag.SceneSelectionFrameCount++;
+            ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
+        }
+    }
+
+    private void ApplySelectionToInspector(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
+    {
         if (entityInfo is not null)
         {
             _selectedWorldEntity = entityInfo;
-
-            // Scene3D 高亮
-            if (_scene3dSession is not null && _sessionActive)
-            {
-                if (_scene3dSession.SetSelectedEntity(entityInfo.EntityId.Value.ToString()))
-                    ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
-            }
-
-            // 非树来源的选择才 RevealEntity 定位到树节点
-            if (origin != EditorSelectionOrigin.WorldList)
-                _dockPanel?.RevealEntity(entityInfo.EntityId.Value.ToString());
-
-            // 更新检查器和状态栏
             ShowWorldEntitySelection(entityInfo);
             UpdateViewportForEntity(entityInfo);
         }
         else
         {
-            ClearSelection();
+            _selectedWorldEntity = null;
+            _inspectorPanel?.ShowNoSelection();
         }
     }
 
+    private void ApplySelectionToStatusBar(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
+    {
+        if (entityInfo is not null)
+            _statusBarPanel?.SetCurrentSelection(entityInfo.DisplayName);
+        else
+            _statusBarPanel?.SetCurrentSelection("无");
+    }
+
+    private void ApplySelectionToHierarchy(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
+    {
+        if (change.CurrentEntityId is not null &&
+            change.Origin != EditorEntitySelectionOrigin.WorldHierarchy)
+        {
+            _selectionDiag.HierarchyRevealCount++;
+            _dockPanel?.RevealEntity(change.CurrentEntityId);
+        }
+        else if (change.CurrentEntityId is null)
+        {
+            _dockPanel?.ClearEntitySelection();
+        }
+    }
+
+    private void ApplySelectionLog(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
+    {
+        if (entityInfo is not null)
+            AppendInfoLog($"已选择 World 实体：{entityInfo.DisplayName} (Rev#{change.Revision}, {change.Origin})");
+        else
+            AppendInfoLog($"清除选择 (Rev#{change.Revision}, {change.Origin})");
+    }
+
     /// <summary>
-    /// 清除当前选择。
+    /// 清除选择。
     /// </summary>
     private void ClearSelection()
     {
-        _selectedWorldEntity = null;
-
-        if (_scene3dSession is not null && _sessionActive)
-        {
-            if (_scene3dSession.SetSelectedEntity(null))
-            {
-                ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
-            }
-        }
-
-        _dockPanel?.ClearEntitySelection();
-        _inspectorPanel?.ShowNoSelection();
-        _statusBarPanel?.SetCurrentSelection("无");
-        _viewportPlaceholderPanel?.ShowNoWorldEntity();
+        ApplyEntitySelection(null, EditorEntitySelectionOrigin.SelectionRestore);
     }
 
     /// <summary>
@@ -1181,13 +1227,18 @@ public sealed partial class EditorShell : UserControl
         // 执行 Picking
         var pickResult = RenderScenePicker.Pick(ray, _renderScene);
 
+        System.Diagnostics.Debug.WriteLine(
+            $"[Pick] scene objects={_renderScene.Objects.Count}" +
+            $" tested={pickResult.TestedObjectCount} hit={pickResult.IsHit}" +
+            $" entity={pickResult.EntityId?.Value} dist={pickResult.Distance:F2}");
+
         if (pickResult.IsHit && pickResult.EntityId is not null)
         {
-            ApplyEntitySelection(pickResult.EntityId.Value.Value.ToString(), EditorSelectionOrigin.ViewportPicking);
+            ApplyEntitySelection(pickResult.EntityId.Value.Value.ToString(), EditorEntitySelectionOrigin.ViewportPicking);
         }
         else
         {
-            ApplyEntitySelection(null, EditorSelectionOrigin.ViewportPicking);
+            ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
         }
 
         // 更新诊断信息
