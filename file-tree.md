@@ -791,6 +791,7 @@ get_tree.bat
 | `FluidWarfare.Tests/Project/Content/GameContentFileScannerTests.cs` | 验证内容文件入口扫描，包括合法扩展名、非法扩展名、.gitkeep、嵌套目录、大/小写扩展名、空 allowedExtensions、多目录、隐藏文件和多问题收集 | 测试通过 |
 | `FluidWarfare.Tests/Project/Loading/GameProjectLoaderTests.cs` | 验证最小项目加载器的有效项目、缺失目录、缺失清单、无效 JSON、必要字段缺失、内容目录声明校验、未声明目录拒绝、内容文件入口扫描集成、嵌套目录拒绝和校验报告多问题收集 | 测试通过 |
 | `FluidWarfare.Tests/Project/Loading/SampleProjectSmokeTests.cs` | 验证仓库内 SampleProject 可加载，且内容目录、内容文件入口与校验报告正常 | 测试通过 |
+| `FluidWarfare.Tests/Editor/WorldHierarchy/WorldHierarchyTreeBuilderTests.cs` | 验证 WorldHierarchyTreeBuilder 的空树/分组排序/实体排序/祖先映射/后代计数 | 测试通过 |
 | `FluidWarfare.Tests/Architecture/ProjectDependencyDirectionTests.cs` | 自动检查项目依赖方向和 NuGet 包白名单，防止 Project、Engine、Bridge、Render、Render.Vulkan 与 Tests 出现反向依赖或越界包引用 | 测试通过 |
 | `FluidWarfare.Tests/Project/Validation/ProjectValidationReportTests.cs` | 验证空报告、问题数量和首个问题 | 测试通过 |
 | `FluidWarfare.Tests/Project/Paths/SampleProjectPathTests.cs` | 验证示例项目路径定位逻辑，包括根目录、嵌套目录、缺失项目与空起始目录 | 测试通过 |
@@ -820,6 +821,40 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportNativeHostInfo.cs` | Vulkan 视口宿主原生窗口句柄信息，描述平台、句柄可用性、HWND、HINSTANCE、真实宽高与中文说明 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml` | Vulkan 视口宿主显示区域，使用收紧标题栏，包含可伸展原生子窗口、Windows 原生子窗口状态与清屏状态 | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs` | 显示 Vulkan 视口宿主状态，查询 Windows 原生子窗口句柄和真实尺寸，透传 NativeHostInfoChanged，并显示清屏状态 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/LeftDock/ProjectWorldDockPanel.axaml` | 左侧双页签面板 UI：[世界层级] [项目内容] 页签 + 共享搜索栏 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/LeftDock/ProjectWorldDockPanel.axaml.cs` | 双页签切换、搜索独立维护、实体 Reveal 自动切换页签 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/HierarchyVisual/HierarchyNodeViewContract.cs` | IHierarchyNodeView 接口 + HierarchyVisibleRows 静态展开方法 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/HierarchyVisual/HierarchyBranchInfo.cs` | 树干位置记录：Depth、IsLastSibling、AncestorHasNextSibling[] | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/HierarchyVisual/HierarchyBranchCanvas.cs` | OnRender 自绘虚线树干，连续竖线 + 折线，无 Border 拼缝 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/HierarchyVisual/HierarchyNodeRow.axaml` | 共享行 UI：四列 Grid（树干线｜展开按钮｜SVG 图标｜主副文字），使用 Svg.Controls.Skia.Avalonia | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/HierarchyVisual/HierarchyNodeRow.axaml.cs` | 展开按钮 Bubble 事件处理 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyNodeView.cs` | 世界树视图模型，实现 IHierarchyNodeView，按节点类型解析 SVG 图标路径 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyTreeIndex.cs` | 世界树扁平索引构建，返回 NodeViewsById、EntityViewsById、AncestorViewsByEntityId + HierarchyBranchInfo | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyTreePanel.axaml` | 世界层级 ListBox：hierarchyList 样式 + HierarchyNodeRow DataTemplate | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyTreePanel.axaml.cs` | 世界树 ListBox 后台：扁平可见行 / 展开状态恢复 / RevealEntity / 程序化选择熔断 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyTreeViewState.cs` | 世界树状态快照：ExpandedNodeIds、SelectedEntityId、SearchText | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyProgrammaticSelection.cs` | 程序化选择一次性令牌，防止反馈环 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/ProjectContentTree/ProjectContentNodeView.cs` | 项目内容树视图模型，实现 IHierarchyNodeView，按节点类型/扩展名解析语义 SVG 图标 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/ProjectContentTree/ProjectContentTreeIndex.cs` | 项目内容树扁平索引构建，返回 NodeViewsById、FileViewsByPath + HierarchyBranchInfo | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/ProjectContentTree/ProjectContentTreePanel.axaml` | 项目内容 ListBox：hierarchyList 样式 + HierarchyNodeRow DataTemplate | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/ProjectContentTree/ProjectContentTreePanel.axaml.cs` | 项目内容树 ListBox 后台：扁平可见行 / 展开状态恢复 / 搜索过滤 | 测试通过 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/project.svg` | 项目根 SVG 图标（24×24 viewBox，stroke 矢量） | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/world.svg` | 世界根 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/folder.svg` | 文件夹 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/folder-open.svg` | 展开文件夹 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/folder-closed.svg` | 折叠文件夹 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/file.svg` | 通用文件 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/file-json.svg` | JSON 文件 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/units.svg` | 单位分组 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/unit-entity.svg` | 实体 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/faction.svg` | 派系目录 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/weapon.svg` | 武器目录 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/map.svg` | 地图/地形目录 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/script.svg` | 脚本目录/脚本文件 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/rule.svg` | 规则/触发器目录 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/image.svg` | 图片目录/图片文件 SVG 图标 | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/toggle-plus.svg` | 展开按钮 `+` SVG 图标（方框 24×24） | 已创建 |
+| `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/toggle-minus.svg` | 折叠按钮 `-` SVG 图标（方框 24×24） | 已创建 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，使用收紧标题与间距显示当前 World 实体列表 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs` | World 实体列表面板后台逻辑，接收 WorldEntityInfo 列表并在点击时发出 EntitySelected 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，使用收紧标题与间距显示未选择对象或当前选择详情 | 可运行 |

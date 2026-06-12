@@ -1,60 +1,114 @@
 using System.ComponentModel;
 using FluidWarfare.Editor.ProjectContentTreeModel;
+using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
 
 namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
 
-/// <summary>
-/// 项目内容树的数据绑定节点视图模型。
-/// </summary>
-public sealed class ProjectContentNodeView : INotifyPropertyChanged
+public sealed class ProjectContentNodeView : IHierarchyNodeView
 {
     private bool _isExpanded;
 
     public ProjectContentNodeView(ProjectContentTreeNode node)
     {
         Node = node;
+        _isExpanded = node.Children.Count > 0;
     }
 
     public ProjectContentTreeNode Node { get; }
     public string NodeId => Node.NodeId;
     public string DisplayName => Node.DisplayName;
-
-    public string DisplayNameWithBranch
-    {
-        get
-        {
-            if (BranchInfo is null || BranchInfo.Depth <= 0) return DisplayName;
-            var prefix = BranchInfo.IsLastSibling ? "└─ " : "├─ ";
-            return prefix + DisplayName;
-        }
-    }
-
-    public string? RelativePath => Node.RelativePath;
+    public string? SecondaryText => null;
+    public string ToolTipText => Node.RelativePath ?? Node.DisplayName;
+    public bool HasSecondaryText => false;
     public bool IsSelectable => Node.IsSelectable;
     public bool IsFile => Node.Kind == ProjectContentTreeNodeKind.ContentFile;
+    public bool HasChildren => Children.Count > 0;
 
-    /// <summary>从 NodeId 提取相对路径。</summary>
     public string? FileRelativePath =>
-        IsFile && NodeId.StartsWith("file:") ? NodeId["file:".Length..] : null;
+        IsFile && NodeId.StartsWith("file:", StringComparison.Ordinal)
+            ? NodeId["file:".Length..]
+            : null;
+
+    public string NodeIconPath =>
+        Node.Kind switch
+        {
+            ProjectContentTreeNodeKind.ProjectRoot =>
+                "/Assets/Icons/Hierarchy/project.svg",
+            ProjectContentTreeNodeKind.ContentFolder =>
+                ResolveFolderIcon(),
+            ProjectContentTreeNodeKind.ContentFile =>
+                ResolveFileIcon(),
+            _ => "/Assets/Icons/Hierarchy/file.svg"
+        };
+
+    public string ToggleIconPath =>
+        IsExpanded
+            ? "/Assets/Icons/Hierarchy/toggle-minus.svg"
+            : "/Assets/Icons/Hierarchy/toggle-plus.svg";
 
     public bool IsExpanded
     {
         get => _isExpanded;
         set
         {
-            if (_isExpanded == value) return;
+            if (_isExpanded == value)
+                return;
+
             _isExpanded = value;
             OnPropertyChanged(nameof(IsExpanded));
+            OnPropertyChanged(nameof(NodeIconPath));
+            OnPropertyChanged(nameof(ToggleIconPath));
         }
     }
 
     public List<ProjectContentNodeView> Children { get; } = [];
+    public IEnumerable<IHierarchyNodeView> ChildNodes => Children;
+    public HierarchyBranchInfo? BranchInfo { get; set; }
 
-    /// <summary>树干分支信息（由树索引构建时设置）。</summary>
-    public FluidWarfare.Editor.Windows.Panels.HierarchyVisual.HierarchyBranchInfo? BranchInfo { get; set; }
+    public double BranchGuideWidth =>
+        BranchInfo is { Depth: > 0 } info
+            ? info.Depth * 18.0
+            : 0.0;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    private string ResolveFolderIcon()
+    {
+        var semanticIcon = Node.NodeId switch
+        {
+            "folder:factions" => "/Assets/Icons/Hierarchy/faction.svg",
+            "folder:units" => "/Assets/Icons/Hierarchy/units.svg",
+            "folder:weapons" => "/Assets/Icons/Hierarchy/weapon.svg",
+            "folder:maps" => "/Assets/Icons/Hierarchy/map.svg",
+            "folder:scripts" => "/Assets/Icons/Hierarchy/script.svg",
+            "folder:rules" => "/Assets/Icons/Hierarchy/rule.svg",
+            "folder:icons" => "/Assets/Icons/Hierarchy/image.svg",
+            _ => null
+        };
+
+        return semanticIcon ??
+            (IsExpanded
+                ? "/Assets/Icons/Hierarchy/folder-open.svg"
+                : "/Assets/Icons/Hierarchy/folder-closed.svg");
+    }
+
+    private string ResolveFileIcon()
+    {
+        var extension = Path.GetExtension(Node.RelativePath ?? string.Empty);
+
+        return extension.ToLowerInvariant() switch
+        {
+            ".json" => "/Assets/Icons/Hierarchy/file-json.svg",
+            ".svg" or ".png" or ".jpg" or ".jpeg" or ".webp" =>
+                "/Assets/Icons/Hierarchy/image.svg",
+            ".cs" or ".lua" or ".js" or ".ts" =>
+                "/Assets/Icons/Hierarchy/script.svg",
+            _ => "/Assets/Icons/Hierarchy/file.svg"
+        };
+    }
+
     private void OnPropertyChanged(string name) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        PropertyChanged?.Invoke(
+            this,
+            new PropertyChangedEventArgs(name));
 }

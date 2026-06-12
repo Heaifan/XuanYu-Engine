@@ -1,5 +1,5 @@
+using System.Collections.ObjectModel;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
 using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
 using FluidWarfare.Editor.WorldHierarchy;
 
@@ -7,168 +7,223 @@ namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
 
 public sealed partial class WorldHierarchyTreePanel : UserControl
 {
-    private TreeView? _treeView;
-    private WorldHierarchyTree? _currentTree;
-    private WorldHierarchyTreeIndex? _currentIndex;
-    private List<WorldHierarchyNodeView>? _rootViews;
+    private readonly ObservableCollection<WorldHierarchyNodeView>
+        _visibleRows = [];
+
     private readonly WorldHierarchyTreeViewState _viewState = new();
     private readonly WorldHierarchyProgrammaticSelection _programmatic = new();
-    private bool _isInternalUpdate;
+
+    private ListBox? _list;
+    private WorldHierarchyTree? _currentTree;
+    private WorldHierarchyTreeIndex? _currentIndex;
+    private List<WorldHierarchyNodeView> _rootViews = [];
 
     public event Action<string>? EntitySelectionRequested;
 
     public WorldHierarchyTreePanel()
     {
         InitializeComponent();
-        _treeView = this.FindControl<TreeView>("HierarchyTree");
-        if (_treeView is not null)
-        {
-            _treeView.SelectionChanged += OnTreeSelectionChanged;
-            _treeView.ItemTemplate = new FuncTreeDataTemplate<WorldHierarchyNodeView>(
-                (node, _) => BuildRow(node),
-                (node) => node.Children);
-        }
+
+        _list = this.FindControl<ListBox>("HierarchyList");
+
+        if (_list is null)
+            return;
+
+        _list.ItemsSource = _visibleRows;
+        _list.SelectionChanged += OnSelectionChanged;
+        _list.AddHandler(
+            HierarchyNodeRow.ExpansionRequestedEvent,
+            OnExpansionRequested);
     }
 
     public void ShowHierarchy(WorldHierarchyTree tree)
     {
         _currentTree = tree;
-        FullRebuild();
+        FullRebuild(tree);
+    }
+
+    public void ApplySearchFilter(
+        WorldHierarchyNode? filteredRoot,
+        WorldHierarchyTree originalTree)
+    {
+        _currentTree = originalTree;
+
+        var displayTree = filteredRoot is null
+            ? originalTree
+            : new WorldHierarchyTree(
+                filteredRoot,
+                originalTree.NodeCount,
+                originalTree.EntityNodeCount,
+                originalTree.EntityNodes,
+                originalTree.EntityAncestorNodeIds);
+
+        FullRebuild(displayTree);
     }
 
     public bool RevealEntity(string entityId)
     {
-        if (_currentIndex is null) return false;
-        if (!_currentIndex.EntityViewsById.TryGetValue(entityId, out var view))
+        if (_currentIndex is null ||
+            !_currentIndex.EntityViewsById.TryGetValue(
+                entityId,
+                out var target))
+        {
             return false;
+        }
 
-        if (_currentIndex.AncestorViewsByEntityId.TryGetValue(entityId, out var ancestors))
-            foreach (var anc in ancestors)
-                anc.IsExpanded = true;
+        ExpandAncestors(entityId);
+        RefreshVisibleRows();
 
-        // 静默选中
         _programmatic.Begin(entityId, 0);
+        _list!.SelectedItem = target;
+        _list.ScrollIntoView(target);
         _viewState.SelectedEntityId = entityId;
-        view.IsSelected = true;
+
         return true;
+    }
+
+    public void ShowSelectedEntity(WorldHierarchyNodeView view)
+    {
+        if (view.EntityId is not null)
+            RevealEntity(view.EntityId);
     }
 
     public void ClearEntitySelection()
     {
-        if (_currentIndex is null) return;
-        foreach (var view in _currentIndex.EntityViewsById.Values)
-            view.IsSelected = false;
+        _programmatic.Begin(null, 0);
+        _list?.UnselectAll();
         _viewState.SelectedEntityId = null;
-    }
-
-    public void ApplySearchFilter(WorldHierarchyNode? filteredRoot, WorldHierarchyTree originalTree)
-    {
-        if (filteredRoot is not null)
-        {
-            _currentTree = new WorldHierarchyTree(
-                filteredRoot, originalTree.NodeCount,
-                originalTree.EntityNodeCount,
-                originalTree.EntityNodes,
-                originalTree.EntityAncestorNodeIds);
-        }
-        else
-        {
-            _currentTree = originalTree;
-        }
-        FullRebuild();
     }
 
     public WorldHierarchyTreeViewState GetViewState() => _viewState;
 
-    private Control BuildRow(WorldHierarchyNodeView node)
+    private void OnExpansionRequested(
+        object? sender,
+        HierarchyExpansionRequestedEventArgs eventArgs)
     {
-        var row = new HierarchyNodeRow
-        {
-            BranchInfo = node.BranchInfo,
-            IconName = node.IconKind,
-            CanExpand = node.Children.Count > 0,
-            IsExpanded = node.IsExpanded,
-            Primary = node.DisplayName,
-            Secondary = node.SecondaryText
-        };
+        if (eventArgs.Node is not WorldHierarchyNodeView node)
+            return;
 
-        node.PropertyChanged += (_, args) =>
-        {
-            if (args.PropertyName == nameof(WorldHierarchyNodeView.IsExpanded))
-                row.IsExpanded = node.IsExpanded;
-            if (args.PropertyName == nameof(WorldHierarchyNodeView.IsSelected))
-            {
-                // 选中高亮通过 TreeView SelectionChanged 处理
-            }
-        };
+        node.IsExpanded = !node.IsExpanded;
 
-        return row;
-    }
-
-    private void OnTreeSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_isInternalUpdate) return;
-        if (_treeView?.SelectedItem is WorldHierarchyNodeView selectedView)
-        {
-            var entityId = selectedView.EntityId;
-            if (entityId is not null && _programmatic.TryConsume(entityId, 0))
-            {
-                _viewState.SelectedEntityId = entityId;
-                return;
-            }
-
-            if (selectedView.IsSelectable && entityId is not null)
-            {
-                _viewState.SelectedEntityId = entityId;
-                EntitySelectionRequested?.Invoke(entityId);
-            }
-        }
-    }
-
-    private void FullRebuild()
-    {
-        if (_currentTree is null || _treeView is null) return;
-
-        var displayTree = string.IsNullOrWhiteSpace(_viewState.SearchText)
-            ? _currentTree.Root
-            : WorldHierarchySearch.Search(_currentTree, _viewState.SearchText);
-
-        if (displayTree is null)
-        {
-            var emptyRoot = new WorldHierarchyNode(
-                "world:root", WorldHierarchyNodeKind.WorldRoot,
-                "世界", null, null, "world", false, []);
-            var emptyTree = new WorldHierarchyTree(
-                emptyRoot, 1, 0,
-                new Dictionary<string, WorldHierarchyNode>(),
-                new Dictionary<string, IReadOnlyList<string>>());
-            var (roots, index) = WorldHierarchyTreeIndex.Build(emptyTree);
-            _rootViews = roots;
-            _currentIndex = index;
-        }
+        if (node.IsExpanded)
+            _viewState.ExpandedNodeIds.Add(node.NodeId);
         else
-        {
-            var (roots, index) = WorldHierarchyTreeIndex.Build(_currentTree);
-            _rootViews = roots;
-            _currentIndex = index;
-        }
+            _viewState.ExpandedNodeIds.Remove(node.NodeId);
 
-        // 默认全部展开
-        if (_rootViews is not null)
-            ExpandAll(_rootViews);
-
-        _treeView.ItemsSource = _rootViews;
+        RefreshVisibleRows();
     }
 
-    private static void ExpandAll(List<WorldHierarchyNodeView> roots)
+    private void OnSelectionChanged(
+        object? sender,
+        SelectionChangedEventArgs eventArgs)
     {
-        void Expand(WorldHierarchyNodeView v)
+        if (_list?.SelectedItem is not WorldHierarchyNodeView selected)
+            return;
+
+        if (!selected.IsSelectable || selected.EntityId is null)
         {
-            if (v.Children.Count > 0)
-                v.IsExpanded = true;
-            foreach (var c in v.Children)
-                Expand(c);
+            RestoreEntitySelection();
+            return;
         }
-        foreach (var r in roots) Expand(r);
+
+        if (_programmatic.TryConsume(selected.EntityId, 0))
+        {
+            _viewState.SelectedEntityId = selected.EntityId;
+            return;
+        }
+
+        if (_viewState.SelectedEntityId == selected.EntityId)
+            return;
+
+        _viewState.SelectedEntityId = selected.EntityId;
+        EntitySelectionRequested?.Invoke(selected.EntityId);
+    }
+
+    private void FullRebuild(WorldHierarchyTree displayTree)
+    {
+        var (roots, index) =
+            WorldHierarchyTreeIndex.Build(displayTree);
+
+        _rootViews = roots;
+        _currentIndex = index;
+
+        RestoreExpansionState();
+        RefreshVisibleRows();
+        RestoreEntitySelection();
+    }
+
+    private void RestoreExpansionState()
+    {
+        if (_currentIndex is null)
+            return;
+
+        if (_viewState.ExpandedNodeIds.Count == 0)
+        {
+            foreach (var view in _currentIndex.NodeViewsById.Values)
+            {
+                if (view.HasChildren)
+                    _viewState.ExpandedNodeIds.Add(view.NodeId);
+            }
+        }
+
+        foreach (var view in _currentIndex.NodeViewsById.Values)
+        {
+            view.IsExpanded =
+                view.HasChildren &&
+                _viewState.ExpandedNodeIds.Contains(view.NodeId);
+        }
+    }
+
+    private void ExpandAncestors(string entityId)
+    {
+        if (_currentIndex?.AncestorViewsByEntityId.TryGetValue(
+                entityId,
+                out var ancestors) != true)
+        {
+            return;
+        }
+
+        foreach (var ancestor in ancestors!)
+        {
+            ancestor.IsExpanded = true;
+            _viewState.ExpandedNodeIds.Add(ancestor.NodeId);
+        }
+    }
+
+    private void RestoreEntitySelection()
+    {
+        var entityId = _viewState.SelectedEntityId;
+
+        if (entityId is null ||
+            _currentIndex?.EntityViewsById.TryGetValue(
+                entityId,
+                out var selected) != true)
+        {
+            _list?.UnselectAll();
+            return;
+        }
+
+        ExpandAncestors(entityId);
+        RefreshVisibleRows();
+
+        _programmatic.Begin(entityId, 0);
+        _list!.SelectedItem = selected;
+        _list.ScrollIntoView(selected!);
+    }
+
+    private void RefreshVisibleRows()
+    {
+        var selected = _list?.SelectedItem;
+
+        _visibleRows.Clear();
+
+        foreach (var row in HierarchyVisibleRows.Build(_rootViews))
+            _visibleRows.Add(row);
+
+        if (selected is WorldHierarchyNodeView selectedView &&
+            _visibleRows.Contains(selectedView))
+        {
+            _list!.SelectedItem = selectedView;
+        }
     }
 }

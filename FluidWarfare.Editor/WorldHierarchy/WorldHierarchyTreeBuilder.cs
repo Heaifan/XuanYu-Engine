@@ -96,7 +96,7 @@ public static class WorldHierarchyTreeBuilder
 
         var root = new WorldHierarchyNode(
             "world:root", WorldHierarchyNodeKind.WorldRoot,
-            "World", null, null, "world", false,
+            "世界", null, null, "world", false,
             groupNodes.AsReadOnly());
         UpdateDescendantCount(root);
 

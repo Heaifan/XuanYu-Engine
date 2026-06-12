@@ -1,5 +1,5 @@
+using System.Collections.ObjectModel;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
 using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
 using ProjectContentTreeType = FluidWarfare.Editor.ProjectContentTreeModel.ProjectContentTree;
 using ProjectContentTreeNodeType = FluidWarfare.Editor.ProjectContentTreeModel.ProjectContentTreeNode;
@@ -8,96 +8,161 @@ namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
 
 public sealed partial class ProjectContentTreePanel : UserControl
 {
-    private TreeView? _treeView;
+    private readonly ObservableCollection<ProjectContentNodeView>
+        _visibleRows = [];
+
+    private readonly HashSet<string> _expandedNodeIds = [];
+
+    private ListBox? _list;
     private ProjectContentTreeType? _currentTree;
     private ProjectContentTreeIndex? _currentIndex;
-    private List<ProjectContentNodeView>? _rootViews;
+    private List<ProjectContentNodeView> _rootViews = [];
+    private string? _selectedFilePath;
 
-    public event Action<string?>? ContentSelectionRequested;
+    public event Action<string>? ContentSelectionRequested;
 
     public ProjectContentTreePanel()
     {
         InitializeComponent();
-        _treeView = this.FindControl<TreeView>("ContentTree");
-        if (_treeView is not null)
-        {
-            _treeView.SelectionChanged += OnSelectionChanged;
-            _treeView.ItemTemplate = new FuncTreeDataTemplate<ProjectContentNodeView>(
-                (node, _) => BuildRow(node),
-                (node) => node.Children);
-        }
+
+        _list = this.FindControl<ListBox>("ContentList");
+
+        if (_list is null)
+            return;
+
+        _list.ItemsSource = _visibleRows;
+        _list.SelectionChanged += OnSelectionChanged;
+        _list.AddHandler(
+            HierarchyNodeRow.ExpansionRequestedEvent,
+            OnExpansionRequested);
     }
 
     public void ShowContentTree(ProjectContentTreeType tree)
     {
         _currentTree = tree;
-        FullRebuild();
+        FullRebuild(tree);
     }
 
-    public void ApplySearchFilter(ProjectContentTreeNodeType? filteredRoot)
+    public void ApplySearchFilter(
+        ProjectContentTreeNodeType? filteredRoot)
     {
-        if (filteredRoot is not null)
+        if (_currentTree is null)
+            return;
+
+        var displayTree = filteredRoot is null
+            ? _currentTree
+            : new ProjectContentTreeType(
+                filteredRoot,
+                _currentTree.NodeCount,
+                _currentTree.FolderCount,
+                _currentTree.FileCount,
+                _currentTree.FileNodes);
+
+        FullRebuild(displayTree);
+    }
+
+    private void OnExpansionRequested(
+        object? sender,
+        HierarchyExpansionRequestedEventArgs eventArgs)
+    {
+        if (eventArgs.Node is not ProjectContentNodeView node)
+            return;
+
+        node.IsExpanded = !node.IsExpanded;
+
+        if (node.IsExpanded)
+            _expandedNodeIds.Add(node.NodeId);
+        else
+            _expandedNodeIds.Remove(node.NodeId);
+
+        RefreshVisibleRows();
+    }
+
+    private void OnSelectionChanged(
+        object? sender,
+        SelectionChangedEventArgs eventArgs)
+    {
+        if (_list?.SelectedItem is not ProjectContentNodeView selected)
+            return;
+
+        var path = selected.FileRelativePath;
+
+        if (path is null)
         {
-            var dummyTree = new ProjectContentTreeType(
-                filteredRoot, 0, 0, 0,
-                _currentIndex?.FileViewsByPath
-                    .ToDictionary(kv => kv.Key, kv => kv.Value.Node)
-                ?? new Dictionary<string, ProjectContentTreeNodeType>());
-            FullRebuild(dummyTree);
+            RestoreFileSelection();
+            return;
         }
-        else if (_currentTree is not null)
-        {
-            FullRebuild();
-        }
+
+        if (_selectedFilePath == path)
+            return;
+
+        _selectedFilePath = path;
+        ContentSelectionRequested?.Invoke(path);
     }
 
-    private Control BuildRow(ProjectContentNodeView node)
+    private void FullRebuild(ProjectContentTreeType displayTree)
     {
-        return new HierarchyNodeRow
-        {
-            BranchInfo = node.BranchInfo,
-            IconName = node.IsFile ? "file" : "folder",
-            CanExpand = node.Children.Count > 0,
-            IsExpanded = node.IsExpanded,
-            Primary = node.DisplayName,
-            Secondary = node.RelativePath
-        };
-    }
+        var (roots, index) =
+            ProjectContentTreeIndex.Build(displayTree);
 
-    private void FullRebuild(ProjectContentTreeType? tree = null)
-    {
-        var source = tree ?? _currentTree;
-        if (source is null || _treeView is null) return;
-
-        var (roots, index) = ProjectContentTreeIndex.Build(source);
         _rootViews = roots;
         _currentIndex = index;
 
-        // 默认全部展开
-        ExpandAll(_rootViews);
-
-        _treeView.ItemsSource = _rootViews;
+        RestoreExpansionState();
+        RefreshVisibleRows();
+        RestoreFileSelection();
     }
 
-    private static void ExpandAll(List<ProjectContentNodeView> roots)
+    private void RestoreExpansionState()
     {
-        void Expand(ProjectContentNodeView v)
+        if (_currentIndex is null)
+            return;
+
+        if (_expandedNodeIds.Count == 0)
         {
-            if (v.Children.Count > 0)
-                v.IsExpanded = true;
-            foreach (var c in v.Children)
-                Expand(c);
+            foreach (var view in _currentIndex.NodeViewsById.Values)
+            {
+                if (view.HasChildren)
+                    _expandedNodeIds.Add(view.NodeId);
+            }
         }
-        foreach (var r in roots) Expand(r);
+
+        foreach (var view in _currentIndex.NodeViewsById.Values)
+        {
+            view.IsExpanded =
+                view.HasChildren &&
+                _expandedNodeIds.Contains(view.NodeId);
+        }
     }
 
-    private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void RestoreFileSelection()
     {
-        if (_treeView?.SelectedItem is ProjectContentNodeView selectedView)
+        if (_selectedFilePath is null ||
+            _currentIndex?.FileViewsByPath.TryGetValue(
+                _selectedFilePath,
+                out var selected) != true)
         {
-            var path = selectedView.FileRelativePath;
-            if (path is not null)
-                ContentSelectionRequested?.Invoke(path);
+            _list?.UnselectAll();
+            return;
+        }
+
+        _list!.SelectedItem = selected;
+        _list.ScrollIntoView(selected!);
+    }
+
+    private void RefreshVisibleRows()
+    {
+        var selected = _list?.SelectedItem;
+
+        _visibleRows.Clear();
+
+        foreach (var row in HierarchyVisibleRows.Build(_rootViews))
+            _visibleRows.Add(row);
+
+        if (selected is ProjectContentNodeView selectedView &&
+            _visibleRows.Contains(selectedView))
+        {
+            _list!.SelectedItem = selectedView;
         }
     }
 }

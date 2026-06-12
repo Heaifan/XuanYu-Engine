@@ -1,26 +1,71 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:FluidWarfare.Editor.Windows.Panels.HierarchyVisual"
+             xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Svg.Controls.Skia.Avalonia"
              x:Class="FluidWarfare.Editor.Windows.Panels.HierarchyVisual.HierarchyNodeRow"
-             x:DataType="local:HierarchyNodeRow">
-  <Grid ColumnDefinitions="Auto,Auto,Auto,*" MinHeight="26">
-    <!-- 树干线 -->
-    <local:HierarchyBranchCanvas Grid.Column="0" Name="BranchCanvas"
+             x:DataType="local:IHierarchyNodeView"
+             UseLayoutRounding="True"
+             ToolTip.Tip="{Binding ToolTipText}">
+  <UserControl.Styles>
+    <Style Selector="Button.hierarchyToggle">
+      <Setter Property="Width" Value="14" />
+      <Setter Property="Height" Value="14" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.hierarchyToggle:pointerover">
+      <Setter Property="Background" Value="#26323D" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="Auto,16,18,*"
+        MinHeight="24"
+        Background="Transparent">
+    <local:HierarchyBranchCanvas Grid.Column="0"
+                                 Width="{Binding BranchGuideWidth}"
                                  BranchInfo="{Binding BranchInfo}"
-                                 Width="{Binding BranchCanvasWidth}" />
-    <!-- 展开箭头（叶节点相同宽度占位） -->
-    <Image Grid.Column="1" Name="ArrowImage"
-           Width="12" Height="12" Margin="2,0,2,0"
-           Stretch="Uniform" />
-    <!-- 类型图标 -->
-    <Image Grid.Column="2" Name="IconImage"
-           Width="15" Height="15" Margin="0,0,4,0"
-           Stretch="Uniform" />
-    <!-- 文字内容 -->
-    <Grid Grid.Column="3">
-      <TextBlock Name="PrimaryText" FontSize="13" VerticalAlignment="Center" />
-      <TextBlock Name="SecondaryText" FontSize="10.5"
-                 Foreground="#888" VerticalAlignment="Bottom" />
+                                 Indent="18" />
+
+    <Button Grid.Column="1"
+            Name="ToggleButton"
+            Classes="hierarchyToggle"
+            IsVisible="{Binding HasChildren}"
+            Click="OnToggleClicked">
+      <svg:Svg Path="{Binding ToggleIconPath}"
+               Width="11"
+               Height="11"
+               Stretch="Uniform"
+               EnableCache="True" />
+    </Button>
+
+    <svg:Svg Grid.Column="2"
+             Path="{Binding NodeIconPath}"
+             Width="15"
+             Height="15"
+             Margin="1,0,2,0"
+             VerticalAlignment="Center"
+             Stretch="Uniform"
+             EnableCache="True" />
+
+    <Grid Grid.Column="3"
+          RowDefinitions="Auto,Auto"
+          Margin="3,0,6,0"
+          VerticalAlignment="Center">
+      <TextBlock Text="{Binding DisplayName}"
+                 FontSize="13"
+                 VerticalAlignment="Center"
+                 TextTrimming="CharacterEllipsis" />
+      <TextBlock Grid.Row="1"
+                 Classes="hierarchySecondary"
+                 Text="{Binding SecondaryText}"
+                 IsVisible="{Binding HasSecondaryText}"
+                 FontSize="10.5"
+                 Foreground="#84909D"
+                 TextTrimming="CharacterEllipsis" />
     </Grid>
   </Grid>
 </UserControl>

@@ -1,51 +1,92 @@
-using FluidWarfare.Editor.ProjectContentTreeModel;
 using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+using ProjectContentTreeType = FluidWarfare.Editor.ProjectContentTreeModel.ProjectContentTree;
+using ProjectContentTreeNodeType = FluidWarfare.Editor.ProjectContentTreeModel.ProjectContentTreeNode;
 
 namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
 
-/// <summary>
-/// 项目内容树索引，提供 RelativePath → 节点视图的 O(1) 查找。
-/// 构建时同时生成树干分支信息。
-/// </summary>
 public sealed class ProjectContentTreeIndex
 {
-    public Dictionary<string, ProjectContentNodeView> FileViewsByPath { get; } = [];
+    public Dictionary<string, ProjectContentNodeView>
+        NodeViewsById { get; } = [];
 
-    public static (List<ProjectContentNodeView> Roots, ProjectContentTreeIndex Index) Build(ProjectContentTreeModel.ProjectContentTree tree)
+    public Dictionary<string, ProjectContentNodeView>
+        FileViewsByPath { get; } = [];
+
+    public static (
+        List<ProjectContentNodeView> Roots,
+        ProjectContentTreeIndex Index)
+        Build(ProjectContentTreeType tree)
     {
         var index = new ProjectContentTreeIndex();
-        var roots = new List<ProjectContentNodeView>();
 
-        var rootView = BuildView(tree.Root, index, 0, true, []);
-        roots.Add(rootView);
+        var root = BuildView(
+            tree.Root,
+            index,
+            depth: 0,
+            isLast: true,
+            []);
 
-        return (roots, index);
+        return ([root], index);
     }
 
     private static ProjectContentNodeView BuildView(
-        ProjectContentTreeModel.ProjectContentTreeNode node,
+        ProjectContentTreeNodeType node,
         ProjectContentTreeIndex index,
-        int depth, bool isLast, bool[] ancestorHasNext)
+        int depth,
+        bool isLast,
+        bool[] ancestorHasNext)
     {
-        var view = new ProjectContentNodeView(node);
-        view.BranchInfo = new HierarchyBranchInfo(depth, isLast, ancestorHasNext);
+        var view = new ProjectContentNodeView(node)
+        {
+            BranchInfo = new HierarchyBranchInfo(
+                depth,
+                isLast,
+                ancestorHasNext)
+        };
+
+        index.NodeViewsById[node.NodeId] = view;
 
         if (node.RelativePath is not null)
             index.FileViewsByPath[node.RelativePath] = view;
 
-        var childCount = node.Children.Count;
-        for (var i = 0; i < childCount; i++)
-        {
-            var child = node.Children[i];
-            var childIsLast = i == childCount - 1;
-            var childAncestorHasNext = new bool[depth + 1];
-            Array.Copy(ancestorHasNext, childAncestorHasNext, depth);
-            childAncestorHasNext[depth] = !isLast;
-
-            var childView = BuildView(child, index, depth + 1, childIsLast, childAncestorHasNext);
-            view.Children.Add(childView);
-        }
+        AddChildren(
+            node,
+            view,
+            index,
+            depth,
+            isLast,
+            ancestorHasNext);
 
         return view;
+    }
+
+    private static void AddChildren(
+        ProjectContentTreeNodeType node,
+        ProjectContentNodeView view,
+        ProjectContentTreeIndex index,
+        int depth,
+        bool isLast,
+        bool[] ancestorHasNext)
+    {
+        for (var i = 0; i < node.Children.Count; i++)
+        {
+            var childIsLast = i == node.Children.Count - 1;
+            var childLines = new bool[depth + 1];
+
+            Array.Copy(
+                ancestorHasNext,
+                childLines,
+                Math.Min(depth, ancestorHasNext.Length));
+
+            childLines[depth] = !isLast;
+
+            view.Children.Add(
+                BuildView(
+                    node.Children[i],
+                    index,
+                    depth + 1,
+                    childIsLast,
+                    childLines));
+        }
     }
 }

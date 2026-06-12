@@ -1,20 +1,23 @@
 using Avalonia;
-using Avalonia.Media;
 using Avalonia.Controls;
+using Avalonia.Media;
 
 namespace FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
 
 /// <summary>
-/// 自绘连续树干线控件。覆盖节点行左侧整个缩进区域。
-/// 一次性绘制所有祖先竖线和当前折线，避免多 Border 拼线产生 1px 缝隙。
+/// 绘制经典文件树的连续虚线树干。
+/// 每行自行绘制祖先竖线和当前折线，不创建额外 Border。
 /// </summary>
-public class HierarchyBranchCanvas : Control
+public sealed class HierarchyBranchCanvas : Control
 {
     public static readonly StyledProperty<HierarchyBranchInfo?> BranchInfoProperty =
-        AvaloniaProperty.Register<HierarchyBranchCanvas, HierarchyBranchInfo?>(nameof(BranchInfo));
+        AvaloniaProperty.Register<HierarchyBranchCanvas, HierarchyBranchInfo?>(
+            nameof(BranchInfo));
 
     public static readonly StyledProperty<double> IndentProperty =
-        AvaloniaProperty.Register<HierarchyBranchCanvas, double>(nameof(Indent), 18.0);
+        AvaloniaProperty.Register<HierarchyBranchCanvas, double>(
+            nameof(Indent),
+            18.0);
 
     public HierarchyBranchInfo? BranchInfo
     {
@@ -31,36 +34,51 @@ public class HierarchyBranchCanvas : Control
     public override void Render(DrawingContext context)
     {
         base.Render(context);
+
         var info = BranchInfo;
-        if (info is null || info.Depth <= 0) return;
+        if (info is null || info.Depth <= 0 || Bounds.Height <= 0)
+            return;
 
-        var pen = new Pen(new SolidColorBrush(Color.FromRgb(0x52, 0x60, 0x6D)), 1);
-        var h = Bounds.Height;
-        var halfIndent = Indent / 2;
-        var branchCenter = halfIndent - 0.5;
-        var lineLen = halfIndent - 1;
+        var brush = new SolidColorBrush(Color.FromRgb(0x62, 0x6F, 0x7C));
+        var dash = new DashStyle([1.0, 2.0], 0);
+        var pen = new Pen(brush, 1.0, dashStyle: dash);
 
-        // 祖先竖线：从行顶贯穿到底
-        for (var d = 0; d < info.Depth; d++)
-        {
-            if (d < info.AncestorHasNextSibling.Length && info.AncestorHasNextSibling[d])
-            {
-                var x = d * Indent + branchCenter;
-                context.DrawLine(pen, new Point(x, 0), new Point(x, h));
-            }
-        }
-
-        // 当前节点折线
-        var cx = (info.Depth - 1) * Indent + branchCenter;
-        var cy = h / 2;
-
-        // 竖线段
-        if (info.IsLastSibling)
-            context.DrawLine(pen, new Point(cx, 0), new Point(cx, cy)); // └ 从顶到中心
-        else
-            context.DrawLine(pen, new Point(cx, 0), new Point(cx, h)); // ├ 从顶到底
-
-        // 横线段
-        context.DrawLine(pen, new Point(cx, cy), new Point(cx + lineLen, cy));
+        DrawAncestorLines(context, pen, info);
+        DrawCurrentBranch(context, pen, info);
     }
+
+    private void DrawAncestorLines(
+        DrawingContext context,
+        Pen pen,
+        HierarchyBranchInfo info)
+    {
+        for (var level = 1; level < info.Depth; level++)
+        {
+            if (level >= info.AncestorHasNextSibling.Length ||
+                !info.AncestorHasNextSibling[level])
+            {
+                continue;
+            }
+
+            var x = PixelSnap((level - 1) * Indent + Indent / 2);
+            context.DrawLine(pen, new Point(x, 0), new Point(x, Bounds.Height));
+        }
+    }
+
+    private void DrawCurrentBranch(
+        DrawingContext context,
+        Pen pen,
+        HierarchyBranchInfo info)
+    {
+        var x = PixelSnap((info.Depth - 1) * Indent + Indent / 2);
+        var y = PixelSnap(Bounds.Height / 2);
+        var endX = PixelSnap(info.Depth * Indent);
+
+        var verticalEnd = info.IsLastSibling ? y : Bounds.Height;
+        context.DrawLine(pen, new Point(x, 0), new Point(x, verticalEnd));
+        context.DrawLine(pen, new Point(x, y), new Point(endX, y));
+    }
+
+    private static double PixelSnap(double value) =>
+        Math.Floor(value) + 0.5;
 }

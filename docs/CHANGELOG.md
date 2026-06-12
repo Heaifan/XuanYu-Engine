@@ -1117,6 +1117,49 @@ file-tree.md
 
 ---
 
+### Milestone 8.5.1.3 — SVG 经典资源管理器式双树菜单
+
+#### 新增
+
+1. **SVG 图标 15 枚**：`Assets/Icons/Hierarchy/project.svg`、`world.svg`、`folder.svg`、`folder-open.svg`、`folder-closed.svg`、`file.svg`、`file-json.svg`、`units.svg`、`unit-entity.svg`、`faction.svg`、`weapon.svg`、`map.svg`、`script.svg`、`rule.svg`、`image.svg`。
+2. **展开按钮 SVG 图标**：`toggle-plus.svg`（方框 `+`）、`toggle-minus.svg`（方框 `-`），替换旧的 chevron 箭头。
+3. **`HierarchyNodeViewContract.cs`**：`IHierarchyNodeView` 接口 + `HierarchyVisibleRows` 静态展开类。
+4. **`HierarchyNodeRow.axaml`+`.cs`**：共享行控件，四列 Grid 布局（树干线 | 展开按钮 | 类型图标 | 主副文字），使用 `Svg.Controls.Skia.Avalonia` 直接渲染 SVG。
+5. **`WorldHierarchyNodeView.cs`** 重构：实现 `IHierarchyNodeView`，`NodeIconPath` / `ToggleIconPath` 返回 SVG 路径，`BranchGuideWidth` 按深度缩放。
+6. **`ProjectContentNodeView.cs`** 重构：实现 `IHierarchyNodeView`，按节点类型/扩展名解析语义图标。
+7. **`WorldHierarchyTreeIndex.cs`** 重构：树构建返回扁平 `HierarchyBranchInfo`（Depth、IsLastSibling、AncestorHasNextSibling[]）。
+8. **`ProjectContentTreeIndex.cs`** 重构：与 World 树一致的扁平索引构建。
+
+#### 修改
+
+1. `WorldHierarchyTreePanel.axaml+cs`：从 `TreeView` + `FuncTreeDataTemplate` 重构为 `ListBox` + `ObservableCollection` + `HierarchyVisibleRows.Build()` 扁平可见行列表。
+2. `ProjectContentTreePanel.axaml+cs`：同上 `ListBox` 重构，`_expandedNodeIds` HashSet 恢复展开状态。
+3. `HierarchyBranchCanvas.cs`：`OnRender` 自绘虚线树干，每行绘制祖先竖线和当前折线，无 Border 拼缝。
+4. `HierarchyBranchInfo.cs`：不变。
+5. `FluidWarfare.Editor.Windows.csproj`：`Svg.Skia` → `Svg.Controls.Skia.Avalonia 12.0.0.11`。
+6. `WorldHierarchyTreeBuilder.cs`：WorldRoot DisplayName `"World"` → `"世界"`。
+
+#### 删除
+
+1. `HierarchySvgIcon.cs`：SVG 位图缓存类（由 `Svg.Controls.Skia.Avalonia` 控件取代）。
+2. `HierarchyBranchGuide.cs`：旧树干线辅助类（由 `HierarchyBranchCanvas.OnRender` 取代）。
+3. `chevron-right.svg`、`chevron-down.svg`：由 `toggle-plus.svg`、`toggle-minus.svg` 取代。
+4. 所有文本树枝（`DisplayNameWithBranch`、`├─`、`└─`）前端拼接逻辑。
+
+#### 验证
+
+- ✅ dotnet build: 0 错误, 0 警告
+- ✅ dotnet test: 338/338 全部通过（新增 8 个 WorldHierarchyTreeBuilderTests，覆盖空树/分组排序/实体排序/祖先映射/后代计数）
+- ✅ 两个页签均显示 SVG 图标
+- ✅ 两棵树首次加载全部展开
+- ✅ 树干从上一节点到下一节点连续（虚线，无 1px 空隙）
+- ✅ 最后一个兄弟竖线只到行中心，中间竖线贯穿整行
+- ✅ 点击 `sample_unit_1/2/3` 均能命中
+- ✅ 点击 3D 单位后世界树自动展开并定位
+- ✅ 项目文件点击不改变 SelectedEntityId
+- ✅ 不越界：不修改 EditorEntitySelectionState、Selection Revision、反馈环熔断器
+- ✅ 不进入地面拾取、单位移动、框选、多选
+
 ### Milestone 8.5.1 — 左侧双树页签、项目文件树与中文界面收口
 
 #### 新增
