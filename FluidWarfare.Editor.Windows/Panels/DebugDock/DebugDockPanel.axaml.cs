@@ -40,46 +40,13 @@ public sealed partial class DebugDockPanel : UserControl
     private SelectableTextBlock?_perfMarker;
     private SelectableTextBlock?_perfScene3d;
 
-    private Separator? _scene3dRunSeparator;
-    private Button? _scene3dRunButton;
-
     // 公开属性：让 EditorShell 可以访问 LogPanel
     public LogPanel? LogPanel => _logPanel;
-
-    /// <summary>
-    /// 手动触发 Scene3D 运行请求。
-    /// </summary>
-    public event EventHandler? Scene3dRunRequested;
-
-    /// <summary>
-    /// 启用或禁用 Scene3D 运行按钮。
-    /// </summary>
-    public bool Scene3dRunButtonEnabled
-    {
-        set
-        {
-            if (_scene3dRunButton is not null)
-            {
-                _scene3dRunButton.IsEnabled = value;
-                _scene3dRunButton.IsVisible = value;
-            }
-
-            if (_scene3dRunSeparator is not null)
-            {
-                _scene3dRunSeparator.IsVisible = value;
-            }
-        }
-    }
 
     public DebugDockPanel()
     {
         InitializeComponent();
         CacheControls();
-    }
-
-    private void HandleScene3dRunButtonClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        Scene3dRunRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void CacheControls()
@@ -108,8 +75,6 @@ public sealed partial class DebugDockPanel : UserControl
         _perfClear = this.FindControl<SelectableTextBlock>("PerfClear");
         _perfMarker = this.FindControl<SelectableTextBlock>("PerfMarker");
         _perfScene3d = this.FindControl<SelectableTextBlock>("PerfScene3d");
-        _scene3dRunSeparator = this.FindControl<Separator>("Scene3dRunSeparator");
-        _scene3dRunButton = this.FindControl<Button>("Scene3dRunButton");
     }
 
     // ─── 渲染诊断 ──────────────────────────────────────────────

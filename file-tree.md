@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-12 10:30
+最后编辑：2026-06-12 11:30
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -312,15 +312,17 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.R.5：Scene3D Renderer 拆分。
+当前执行 Milestone 8.1R.3：Scene3D 可见性修复与 DebugDock 清理。
 
-8.R 系列进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ✅ → Validation Layer ✅ → Renderer 拆分 ⬆️ → 3D 重启
+8.R 系列进度：稳定闸门 ✅ → 编译链 ✅ → 验证闸门 ✅ → Validation Layer ✅ → Renderer 拆分 ✅ → 3D 重启 ✅ → 可见性修复 ⬆️
 
 当前状态：
 - Vulkan Validation Layer 默认不启用。FW_VULKAN_VALIDATION=1 时检测 VK_LAYER_KHRONOS_validation 与 VK_EXT_debug_utils，可用时创建 Debug Messenger。
 - Scene3D 保持隔离，仅 FW_ENABLE_SCENE3D=1 且 shader 已验证时允许手动触发。
 - SPIR-V 已由标准工具编译并通过 spirv-val 验证。
-- Editor UI 已收紧面板标题字号和底部日志区域，日志页签不再重复显示内部“日志”标题。
+- 透视矩阵已修复（near/range → far/range），Vulkan NDC 裁剪问题已解决。
+- DebugDock 底部按钮已移除，顶部「运行」菜单为唯一手动入口。
+- 渲染模式追踪与 RenderSeq 日志已启用。
 
 ## 3. 顶层目录结构
 

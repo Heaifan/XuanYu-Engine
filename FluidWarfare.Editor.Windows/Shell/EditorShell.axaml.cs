@@ -65,6 +65,8 @@ public sealed partial class EditorShell : UserControl
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
     private bool _vulkanViewportRendering;
+    private int _renderSeq;
+    private string _renderLastMode = "无";
 
     public EditorShell()
     {
@@ -118,11 +120,6 @@ public sealed partial class EditorShell : UserControl
         if (_vulkanViewportHostPanel is not null)
         {
             _vulkanViewportHostPanel.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
-        }
-
-        if (_debugDockPanel is not null)
-        {
-            _debugDockPanel.Scene3dRunRequested += HandleScene3dRunRequested;
         }
     }
 
@@ -669,7 +666,7 @@ public sealed partial class EditorShell : UserControl
             AppendInfoLog(
                 $"Windows Vulkan 视口子窗口已创建，HWND：0x{nativeHostInfo.WindowHandle.ToInt64():X16}。");
             ProbeVulkanSwapchain();
-            ProbeVulkanClear();
+            ProbeVulkanClear("初始启动");
             ProbeVulkanMarkerDraw();
             ReportScene3dIsolation();
         }
@@ -733,7 +730,7 @@ public sealed partial class EditorShell : UserControl
         UpdateAllDiagnostics();
     }
 
-    private void ProbeVulkanClear()
+    private void ProbeVulkanClear(string reason = "resize")
     {
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
             ?? VulkanViewportNativeHostInfo.NotAvailable;
@@ -754,6 +751,9 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
+        _renderSeq++;
+        AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Clear | {viewportWidth}x{viewportHeight} | {reason}");
+
         _vulkanClearInfo = VulkanClearProbe.ProbeWindows(
             nativeHostInfo.InstanceHandle,
             nativeHostInfo.WindowHandle,
@@ -767,6 +767,7 @@ public sealed partial class EditorShell : UserControl
     {
         if (_vulkanClearInfo.IsSucceeded)
         {
+            _renderLastMode = "Clear";
             AppendInfoLog(
                 $"Vulkan 最小清屏成功，颜色：{_vulkanClearInfo.ClearColorText}，" +
                 $"尺寸：{_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}，" +
@@ -865,6 +866,9 @@ public sealed partial class EditorShell : UserControl
 
     private void TryRunScene3dProbeManually(VulkanScene3dRunGate gate)
     {
+        // 取消 pending resize 防抖，防止 Clear 覆盖 Scene3D 画面
+        _viewportResizeRenderTimer?.Stop();
+
         if (!gate.CanRun)
         {
             AppendWarningLog(gate.Message);
@@ -956,6 +960,9 @@ public sealed partial class EditorShell : UserControl
 
         var camera = VulkanCameraInfo.DefaultBattlefield;
 
+        _renderSeq++;
+        AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Scene3D | {vpW}x{vpH} | 手动触发");
+
         _vulkanScene3dInfo = VulkanScene3dRenderer.RenderWindows(
             nativeHostInfo.InstanceHandle,
             nativeHostInfo.WindowHandle,
@@ -970,6 +977,7 @@ public sealed partial class EditorShell : UserControl
     {
         if (_vulkanScene3dInfo.IsSucceeded)
         {
+            _renderLastMode = "Scene3D";
             AppendInfoLog(_vulkanScene3dInfo.Message);
         }
         else if (_vulkanScene3dInfo.Status != VulkanScene3dStatus.NotChecked)
@@ -993,10 +1001,12 @@ public sealed partial class EditorShell : UserControl
                 ? " | Scene3D Ready，等待手动触发"
                 : " | Scene3D 已隔离";
 
+        var lastRenderSuffix = $" | 最近渲染：{_renderLastMode}";
+
         _vulkanViewportHostPanel?.ShowClearStatus(
             _vulkanClearInfo.IsSucceeded
-                ? $"Vulkan Clear 稳定{scene3dSuffix} | {_vulkanClearInfo.ClearColorText}"
-                : $"清屏：{_vulkanClearInfo.Message}");
+                ? $"Vulkan Clear 稳定{scene3dSuffix}{lastRenderSuffix} | {_vulkanClearInfo.ClearColorText}"
+                : $"清屏：{_vulkanClearInfo.Message}{lastRenderSuffix}");
     }
 
     private void UpdateAllDiagnostics()
@@ -1047,12 +1057,9 @@ public sealed partial class EditorShell : UserControl
                 ? $"{_vulkanScene3dInfo.DrawCallCount}"
                 : "-");
 
-        // Scene3D 手动触发按钮/菜单状态
-        var currentGate = VulkanScene3dRunGate.Evaluate();
-        if (_debugDockPanel is not null)
-            _debugDockPanel.Scene3dRunButtonEnabled = currentGate.CanRun;
+        // Scene3D 菜单项状态同步
         if (_runScene3dMenuItem is not null)
-            _runScene3dMenuItem.IsEnabled = currentGate.CanRun;
+            _runScene3dMenuItem.IsEnabled = VulkanScene3dRunGate.Evaluate().CanRun;
 
         // 性能计时
         _debugDockPanel?.SetPerformance(

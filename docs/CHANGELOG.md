@@ -903,6 +903,50 @@ dotnet run --project FluidWarfare.Editor.Windows --no-build
 
 ---
 
+---
+
+### Milestone 8.1R.3 — Scene3D 可见性修复与 DebugDock 清理
+
+#### 修复
+
+1. **Scene3D 不可见根因修复**：`VulkanCameraMatrices.cs` 透视矩阵 `[2][2]` 从 `near/range` 改为 `far/range`，修复 Vulkan NDC 深度裁剪导致全部几何体被裁剪的问题。此前所有顶点 `clip_z < 0`，被 Vulkan 裁剪阶段剔除。
+2. **清屏覆盖问题修复**：手动触发 Scene3D 前取消待执行的 resize 防抖定时器 `_viewportResizeRenderTimer.Stop()`，防止异步 Clear 覆盖 Scene3D 画面。
+
+#### 移除
+
+1. **DebugDockPanel Scene3D 按钮与分隔线完全移除**：XAML 删除 `Scene3dRunSeparator` 与 `Scene3dRunButton`；code-behind 删除 `_scene3dRunSeparator`、`_scene3dRunButton`、`Scene3dRunRequested` 事件、`Scene3dRunButtonEnabled` 属性、`HandleScene3dRunButtonClicked` 方法及对应 `FindControl` 调用。
+2. **EditorShell DebugDock 按钮引用移除**：删除 `Scene3dRunRequested` 订阅与 `Scene3dRunButtonEnabled` 设置。
+
+#### 新增
+
+1. **渲染模式追踪**：新增 `_renderLastMode` 字段，Clear 成功后设为 `"Clear"`，Scene3D 成功后设为 `"Scene3D"`。
+2. **RenderSeq 日志**：每次 Clear/Scene3D 输出 `[信息] RenderSeq-NNN | Mode | WxH | reason` 格式日志，含序列号、尺寸和触发原因。
+3. **状态栏最近渲染模式显示**：视口状态行追加 ` | 最近渲染：Clear/Scene3D`。
+
+#### 修改文件
+
+```text
+FluidWarfare.Render.Vulkan/Camera/VulkanCameraMatrices.cs
+FluidWarfare.Editor.Windows/Panels/DebugDock/DebugDockPanel.axaml
+FluidWarfare.Editor.Windows/Panels/DebugDock/DebugDockPanel.axaml.cs
+FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs
+docs/CHANGELOG.md
+file-tree.md
+```
+
+#### 验证结果
+
+- ✅ dotnet build: 0 错误, 0 警告
+- ✅ dotnet test: 311/311 全部通过
+- ✅ `grep Scene3dRunButton|Scene3dRunSeparator|Scene3dRunButtonEnabled` 零匹配
+- ✅ `ProbeVulkanClear()` 调用时传入 reason（初始启动、resize）
+- ✅ `TryRunScene3dProbeManually()` 开头 `_viewportResizeRenderTimer?.Stop()`
+- ⏳ 人工验证：启动 Editor →「运行」→「运行 Scene3D 探针」，确认主视口显示 Grid + Cube
+
+---
+
+---
+
 ### Editor UI 布局补丁 — 面板标题与日志区域整理
 
 #### 修改
