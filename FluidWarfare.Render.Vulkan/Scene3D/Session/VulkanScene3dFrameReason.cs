@@ -21,5 +21,8 @@ public enum VulkanScene3dFrameReason
     Resize,
 
     /// <summary>选择变化触发。</summary>
-    SelectionChanged
+    SelectionChanged,
+
+    /// <summary>地面落点标记变化触发。</summary>
+    GroundCursorChanged
 }

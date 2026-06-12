@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using FluidWarfare.Core.Math;
 using FluidWarfare.Render.Vulkan.Camera;
+using FluidWarfare.Render.Vulkan.Scene3D.GroundCursor;
 using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
 using FluidWarfare.Render.Vulkan.Validation;
 using Silk.NET.Vulkan;
@@ -34,6 +36,13 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private DeviceMemory _gridMemory, _unitMemory;
     private int _gridVertexCount;
     private int _unitVertexCount;
+
+    // Ground Cursor Buffer
+    private Silk.NET.Vulkan.Buffer _cursorBuffer;
+    private DeviceMemory _cursorMemory;
+    private int _cursorVertexCount;
+    private bool _cursorBufOk;
+    private readonly VulkanGroundCursorState _cursorState = new();
 
     // Function pointers (loaded once per session)
     private nint _fnDestroySurface;
@@ -93,6 +102,12 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     public int GridVertexCount => _gridVertexCount;
     public int UnitVertexCount => _unitVertexCount;
     public string? SelectedEntityId => _selectedEntityId;
+    public VulkanGroundCursorInfo GroundCursorInfo =>
+        _cursorState.IsVisible
+            ? new VulkanGroundCursorInfo(
+                true, _cursorState.WorldPosition, _cursorState.Revision,
+                _cursorVertexCount, _cursorState.IsVisible ? 1 : 0)
+            : VulkanGroundCursorInfo.Hidden;
 
     /// <summary>
     /// 设置当前选中实体。EntityId 无变化时不触发帧。
@@ -106,6 +121,17 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     }
 
     // ─── 启动 ───────────────────────────────────────────────────
+
+    /// <summary>
+    /// 设置地面落点标记。相同坐标或相同隐藏状态返回 false（NoOp）。
+    /// 调用方在返回 true 时应请求帧重绘。
+    /// </summary>
+    public bool SetGroundCursor(Vector3d? worldPosition)
+    {
+        if (_status != VulkanScene3dSessionStatus.Active)
+            return false;
+        return _cursorState.Set(worldPosition);
+    }
 
     /// <summary>
     /// 启动 Scene3D 会话。创建会话级资源和 swapchain 级资源。
@@ -156,6 +182,10 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             // Vertex Buffers
             if (!CreateVertexBuffers(gridVertices, unitVertices))
                 return FailFrame(VulkanScene3dFrameReason.SessionStart, "VertexBuffer 创建失败。");
+
+            // Ground Cursor Buffer (session-constant geometry, created once)
+            if (!CreateGroundCursorBuffer())
+                return FailFrame(VulkanScene3dFrameReason.SessionStart, "GroundCursor VertexBuffer 创建失败。");
 
             // Create SwapchainFunctions from loaded pointers
             var scFuncs = VulkanScene3dSwapchainFunctions.TryLoad(
@@ -407,6 +437,13 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             if (_gridMemory.Handle != 0) _vk.FreeMemory(_device, _gridMemory, null);
             _gridBufOk = false;
         }
+
+        if (_cursorBufOk)
+        {
+            if (_cursorBuffer.Handle != 0) _vk.DestroyBuffer(_device, _cursorBuffer, null);
+            if (_cursorMemory.Handle != 0) _vk.FreeMemory(_device, _cursorMemory, null);
+            _cursorBufOk = false;
+        }
     }
 
     // ─── 内部渲染 ───────────────────────────────────────────────
@@ -492,7 +529,20 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 renderedUnitCount++;
             }
 
-            // 7. Record command buffer
+            // 7. Build ground cursor data if visible
+            VulkanScene3dCommandRecorder.GroundCursorDrawData? cursorData = null;
+            if (_cursorState.IsVisible && _cursorState.WorldPosition is not null &&
+                _cursorBufOk && _cursorBuffer.Handle != 0)
+            {
+                var pos = _cursorState.WorldPosition.Value;
+                var ct = VulkanCameraMatrices.CreateTranslation(
+                    (float)pos.X, (float)pos.Y + 0.02f, (float)pos.Z);
+                var cursorMvp = VulkanCameraMatrices.Mul(vp, ct);
+                cursorData = new VulkanScene3dCommandRecorder.GroundCursorDrawData(
+                    _cursorBuffer, _cursorVertexCount, cursorMvp);
+            }
+
+            // 8. Record command buffer
             if (!VulkanScene3dCommandRecorder.Record(_vk, _swapchainRes.CommandBuffer,
                     _swapchainRes.RenderPass, _swapchainRes.Framebuffers[imgIndex],
                     _swapchainRes.Extent,
@@ -500,6 +550,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                     vp, _gridBuffer, _gridVertexCount,
                     _unitBuffer, _unitVertexCount,
                     unitDrawData,
+                    cursorData,
                     out drawCalls, out var cmdErr))
                 return FailFrame(reason, cmdErr);
 
@@ -886,6 +937,17 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         return true;
     }
 
+    private bool CreateGroundCursorBuffer()
+    {
+        var verts = VulkanGroundCursorGeometry.Create();
+        if (!VulkanScene3dVertexBuffers.CreateCursor(_vk!, _physicalDevice, _device,
+                verts, out _cursorBuffer, out _cursorMemory, out _cursorVertexCount, out var err))
+            return false;
+        _cursorBufOk = true;
+        _bufferCreateCount++;
+        return true;
+    }
+
     // ─── 辅助 ────────────────────────────────────────────────────
 
     private nint LoadProc(string name)
@@ -949,6 +1011,12 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         {
             if (_gridBuffer.Handle != 0) _vk.DestroyBuffer(_device, _gridBuffer, null);
             if (_gridMemory.Handle != 0) _vk.FreeMemory(_device, _gridMemory, null);
+        }
+
+        if (_cursorBufOk && _device.Handle != 0)
+        {
+            if (_cursorBuffer.Handle != 0) _vk.DestroyBuffer(_device, _cursorBuffer, null);
+            if (_cursorMemory.Handle != 0) _vk.FreeMemory(_device, _cursorMemory, null);
         }
 
         // Device

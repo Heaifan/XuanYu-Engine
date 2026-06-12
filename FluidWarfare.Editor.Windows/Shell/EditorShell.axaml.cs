@@ -24,6 +24,8 @@ using FluidWarfare.Project.Paths;
 using FluidWarfare.Project.Validation;
 using FluidWarfare.Render.Scene;
 using FluidWarfare.Render.Selection;
+using FluidWarfare.Render.Selection.Ground;
+using FluidWarfare.Render.Selection.Pointer;
 using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
@@ -74,6 +76,12 @@ public sealed partial class EditorShell : UserControl
     private bool _framePending;
     private bool _sessionActive;
     private bool _scene3dAutoStartAttempted;
+
+    // ─── 地面拾取状态 ─────────────────────────────────────────────
+    private readonly FluidWarfare.Editor.ViewportGround.EditorGroundPointerState _groundPointerState = new();
+    private bool _groundPointerUpdatePending; // 调度合并
+    private long _lastGroundPointerUpdateTicks;
+
     public EditorShell()
     {
         // _scene3dGate 由字段初始化器在构造函数体之前执行
@@ -126,6 +134,8 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel.CameraZoomRequested += HandleCameraZoom;
             _vulkanViewportHostPanel.CameraResetRequested += HandleCameraReset;
             _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
+            _vulkanViewportHostPanel.PointerMoved += HandleViewportPointerMoved;
+            _vulkanViewportHostPanel.PointerLeft += HandleViewportPointerLeft;
         }
     }
 
@@ -1172,6 +1182,127 @@ public sealed partial class EditorShell : UserControl
             AppendInfoLog($"清除选择 (Rev#{change.Revision}, {change.Origin})");
     }
 
+    // ─── 地面指针移动 ─────────────────────────────────────────────
+
+    /// <summary>
+    /// 鼠标在视口内移动 → 地面射线求交 → 状态栏反馈。
+    /// 采用"最新值覆盖 + 单次调度"合并模式，最多约每 16ms 更新一次。
+    /// </summary>
+    private void HandleViewportPointerMoved(int pixelX, int pixelY)
+    {
+        if (!_sessionActive || _scene3dSession is null)
+            return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active)
+            return;
+
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
+            return;
+
+        // 调度合并：如果已有待执行更新，只保存最新坐标，不重复调度
+        if (_groundPointerUpdatePending)
+        {
+            _lastGroundPointerUpdateTicks = (pixelX << 16) | (pixelY & 0xFFFF); // 暂存最新坐标
+            return;
+        }
+
+        _groundPointerUpdatePending = true;
+        var capturedX = pixelX;
+        var capturedY = pixelY;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            _groundPointerUpdatePending = false;
+
+            // 读取最新坐标（如果有暂存值）
+            var curX = capturedX;
+            var curY = capturedY;
+            if (_lastGroundPointerUpdateTicks != 0)
+            {
+                curX = (int)(_lastGroundPointerUpdateTicks >> 16);
+                curY = (int)(_lastGroundPointerUpdateTicks & 0xFFFF);
+                _lastGroundPointerUpdateTicks = 0;
+            }
+
+            UpdateGroundHover(curX, curY);
+        }, DispatcherPriority.Background);
+    }
+
+    /// <summary>
+    /// 鼠标离开视口 → 清除地面坐标显示。
+    /// </summary>
+    private void HandleViewportPointerLeft()
+    {
+        if (_statusBarPanel is null) return;
+
+        _groundPointerState.SetHover(null, null);
+        _statusBarPanel.SetCurrentSelection(
+            _selectedWorldEntity is not null
+                ? _selectedWorldEntity.DisplayName
+                : "无");
+
+        // 更新状态栏额外行显示地面坐标不可用
+        _statusBarPanel.SetGroundPosition("地面坐标：无");
+    }
+
+    /// <summary>
+    /// 执行地面 Hover 射线求交并更新状态栏。
+    /// 只执行 CPU 数学，不提交 GPU 帧。
+    /// </summary>
+    private void UpdateGroundHover(int pixelX, int pixelY)
+    {
+        if (_scene3dSession is null || _vulkanViewportHostPanel is null) return;
+
+        var nativeHostInfo = _vulkanViewportHostPanel.GetNativeHostInfo();
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
+            return;
+
+        var (dirX, dirY, dirZ) = SceneCameraState.DefaultViewDirection();
+        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
+        var targetX = camX + dirX * _lastCameraState.Distance;
+        var targetY = camY + dirY * _lastCameraState.Distance;
+        var targetZ = camZ + dirZ * _lastCameraState.Distance;
+
+        var camInfo = new VulkanCameraInfo(
+            (float)camX, (float)camY, (float)camZ,
+            (float)targetX, (float)targetY, (float)targetZ,
+            0, 1, 0,
+            (float)_lastCameraState.FieldOfViewDegrees,
+            (float)_lastCameraState.NearPlane,
+            (float)_lastCameraState.FarPlane);
+
+        var aspect = nativeHostInfo.Width / (float)nativeHostInfo.Height;
+        var vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
+
+        if (!VulkanSceneRayBuilder.TryBuild(
+                pixelX, pixelY,
+                (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
+                vp,
+                new Vector3d(camX, camY, camZ),
+                out var ray, out _))
+        {
+            _groundPointerState.SetHover(null, null);
+            _statusBarPanel?.SetGroundPosition("地面坐标：无");
+            return;
+        }
+
+        var groundHit = SceneRayGroundIntersection.Intersect(ray, SceneGroundPlane.Default);
+
+        if (groundHit.IsHit && groundHit.WorldPosition is not null)
+        {
+            var pos = groundHit.WorldPosition.Value;
+            _groundPointerState.SetHover(pos, "鼠标");
+            _statusBarPanel?.SetGroundPosition(
+                $"地面坐标：X {pos.X:F2} | Y {pos.Y:F2} | Z {pos.Z:F2}");
+        }
+        else
+        {
+            _groundPointerState.SetHover(null, null);
+            _statusBarPanel?.SetGroundPosition("地面坐标：无");
+        }
+    }
+
     /// <summary>
     /// 清除选择。
     /// </summary>
@@ -1224,25 +1355,64 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        // 执行 Picking
-        var pickResult = RenderScenePicker.Pick(ray, _renderScene);
+        // 统一 Picking：Entity 优先 → Ground → None
+        var pointerResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
 
-        System.Diagnostics.Debug.WriteLine(
-            $"[Pick] scene objects={_renderScene.Objects.Count}" +
-            $" tested={pickResult.TestedObjectCount} hit={pickResult.IsHit}" +
-            $" entity={pickResult.EntityId?.Value} dist={pickResult.Distance:F2}");
+        switch (pointerResult.Kind)
+        {
+            case ScenePointerPickKind.Entity when pointerResult.EntityId is not null:
+                // 点击单位：选择 + 隐藏地面标记
+                ApplyEntitySelection(
+                    pointerResult.EntityId.Value.Value.ToString(),
+                    EditorEntitySelectionOrigin.ViewportPicking);
+                HideGroundCursor();
+                System.Diagnostics.Debug.WriteLine(
+                    $"[Pick] Entity hit: {pointerResult.EntityId.Value.Value}");
+                break;
 
-        if (pickResult.IsHit && pickResult.EntityId is not null)
-        {
-            ApplyEntitySelection(pickResult.EntityId.Value.Value.ToString(), EditorEntitySelectionOrigin.ViewportPicking);
-        }
-        else
-        {
-            ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
+            case ScenePointerPickKind.Ground when pointerResult.GroundPosition is not null:
+                // 点击空白地面：清除实体选择 + 显示地面标记
+                ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
+                ShowGroundCursor(pointerResult.GroundPosition.Value);
+                AppendInfoLog(
+                    $"地面落点：X {pointerResult.GroundPosition.Value.X:F2}，" +
+                    $"Y {pointerResult.GroundPosition.Value.Y:F2}，" +
+                    $"Z {pointerResult.GroundPosition.Value.Z:F2}。");
+                break;
+
+            default:
+                // 点击天空：清除选择 + 隐藏地面标记
+                ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
+                HideGroundCursor();
+                break;
         }
 
         // 更新诊断信息
         UpdateAllDiagnostics();
+    }
+
+    // ─── 地面标记控制 ─────────────────────────────────────────────
+
+    private void ShowGroundCursor(Vector3d worldPosition)
+    {
+        _groundPointerState.Commit(worldPosition);
+        if (_scene3dSession is not null && _scene3dSession.SetGroundCursor(worldPosition))
+        {
+            ScheduleScene3dFrame(VulkanScene3dFrameReason.GroundCursorChanged);
+        }
+    }
+
+    private void HideGroundCursor()
+    {
+        _groundPointerState.ClearCommit();
+        if (_scene3dSession is not null)
+        {
+            // SetGroundCursor(null) hides the cursor
+            // If the cursor was already hidden, this returns false and no frame is submitted
+            _scene3dSession.SetGroundCursor(null);
+            // Force a frame to clear the cursor from the display
+            ScheduleScene3dFrame(VulkanScene3dFrameReason.GroundCursorChanged);
+        }
     }
 
     /// <summary>

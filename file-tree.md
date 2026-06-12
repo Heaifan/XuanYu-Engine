@@ -732,7 +732,10 @@ get_tree.bat
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dPipelineLayout.cs` | 创建 PipelineLayout 与 MVP PushConstantRange | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dPipelines.cs` | 创建 Grid LineList Pipeline 与 Unit TriangleList Pipeline | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dVertexBuffers.cs` | 创建并上传 Grid/Unit 顶点 Buffer | 测试通过 |
-| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dCommandRecorder.cs` | 录制 Scene3D CommandBuffer，顺序为 BindPipeline/PushConstants/BindVBs/Draw | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dCommandRecorder.cs` | 录制 Scene3D CommandBuffer，顺序为 Grid/GroundCursor/Units | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/GroundCursor/VulkanGroundCursorGeometry.cs` | Ground Cursor 顶点数据（青色十字+方框，12 顶点 6 线段） | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/GroundCursor/VulkanGroundCursorState.cs` | Ground Cursor 运行时状态（可见性+世界坐标+Revision） | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/GroundCursor/VulkanGroundCursorInfo.cs` | Ground Cursor 诊断信息 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRenderResources.cs` | 持有 Scene3D 创建的 Vulkan 资源句柄，按依赖逆序 Dispose | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Camera/VulkanCameraInfo.cs` | 固定 3D 相机参数，含 DefaultBattlefield 默认战场相机 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Camera/VulkanCameraMatrices.cs` | 3D 矩阵计算，LookAt、PerspectiveVulkan（NDC 0..1）与 MVP 合成 | 测试通过 |
@@ -748,6 +751,8 @@ get_tree.bat
 | `FluidWarfare.Tests/Render/Vulkan/Shaders/CompiledShadersTests.cs` | 验证 CompiledShaders 的字节存在性、SPIR-V 魔数和验证状态 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dInfoTests.cs` | 验证 3D 场景渲染结果模型的基础语义 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dVertexTests.cs` | 验证网格生成、立方体生成、坐标轴生成和交错格式转换 | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Scene3D/GroundCursor/VulkanGroundCursorStateTests.cs` | 验证 Ground Cursor 状态：相同坐标 NoOp、Revision、显示/隐藏 | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Camera/ProjectionUnprojectionRoundTripTests.cs` | 投影→反投影闭环测试：7 个已知地面点，误差 < 3cm | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dRunGateTests.cs` | 验证 Scene3D 运行闸门的隔离状态、提示文本和 Ready/Isolated 语义 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRunGate.cs` | Scene3D 实验渲染路径运行闸门，当前用于阻止未验证 SPIR-V/Pipeline 路径进入 Editor 启动流程 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dFrameStatus.cs` | 帧状态枚举：Presented / Skipped / RecreateRequested / Failed | 测试通过 |
@@ -758,11 +763,21 @@ get_tree.bat
 | `FluidWarfare.Render/Selection/SceneRayBoundsIntersection.cs` | Slab 法射线-AABB 相交检测 | 测试通过 |
 | `FluidWarfare.Render/Selection/RenderScenePickResult.cs` | Picking 结构化结果（IsHit / EntityId / Distance / WorldHitPosition） | 测试通过 |
 | `FluidWarfare.Render/Selection/RenderScenePicker.cs` | CPU 线性遍历 RenderScene 选择最近命中 UnitMarker | 测试通过 |
+| `FluidWarfare.Render/Selection/Ground/SceneGroundPlane.cs` | 水平地面平面定义（Height），默认 Y=0 | 测试通过 |
+| `FluidWarfare.Render/Selection/Ground/SceneGroundHit.cs` | 地面求交结果（IsHit / Distance / WorldPosition） | 测试通过 |
+| `FluidWarfare.Render/Selection/Ground/SceneRayGroundIntersection.cs` | 水平地面射线求交数学（t = (H - Oy) / Dy），不依赖 Avalonia/Win32/Vulkan | 测试通过 |
+| `FluidWarfare.Render/Selection/Pointer/ScenePointerPickKind.cs` | Picking 结果类型枚举：None / Entity / Ground | 测试通过 |
+| `FluidWarfare.Render/Selection/Pointer/ScenePointerPickResult.cs` | 统一 Pointer Picking 结果（Kind + EntityResult + GroundHit） | 测试通过 |
+| `FluidWarfare.Render/Selection/Pointer/ScenePointerPicker.cs` | 统一 Picking 调度器：Entity AABB 优先→Ground→None | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportPickInput.cs` | Win32 左键点击检测（阈值 4px），转发 PickRequested 事件 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Swapchain/VulkanScene3dSwapchainInvariant.cs` | Swapchain 生命周期不变量断言（Active Live=1 / Disposed Live=0） | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Surface/VulkanScene3dSurfaceFormats.cs` | SurfaceFormatKHR 两阶段枚举 + Incomplete 有限重试（最多 3 次） | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Surface/VulkanScene3dPresentModes.cs` | PresentModeKHR 两阶段枚举 + Incomplete 有限重试（最多 3 次） | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs` | 验证默认相机参数和自定义相机 | 测试通过 |
+| `FluidWarfare.Tests/Render/Vulkan/Camera/ProjectionUnprojectionRoundTripTests.cs` | 投影→反投影闭环测试：7 个已知地面点，误差 < 3cm | 测试通过 |
+| `FluidWarfare.Tests/Render/Selection/Ground/SceneRayGroundIntersectionTests.cs` | 验证地面求交：向下/平行/背后/起点/自定义高度/射线方程/对角线 | 测试通过 |
+| `FluidWarfare.Tests/Render/Selection/Pointer/ScenePointerPickerTests.cs` | 验证统一 Picking：实体优先、地面命中、都未命中、最近实体优先 | 测试通过 |
+| `FluidWarfare.Tests/Editor/ViewportGround/EditorGroundPointerStateTests.cs` | 验证地面指针状态：Hover/Commit 独立、相同 NoOp、Revision 递增 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Validation/VulkanValidationStatus.cs` | Vulkan Validation 启用状态枚举 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Validation/VulkanValidationInfo.cs` | Validation 状态信息，含状态、中文消息和消息数量 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Validation/VulkanValidationOptions.cs` | 从 FW_VULKAN_VALIDATION 环境变量读取是否请求启用 Validation | 测试通过 |
@@ -855,6 +870,8 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/image.svg` | 图片目录/图片文件 SVG 图标 | 已创建 |
 | `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/toggle-plus.svg` | 展开按钮 `+` SVG 图标（方框 24×24） | 已创建 |
 | `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/toggle-minus.svg` | 折叠按钮 `-` SVG 图标（方框 24×24） | 已创建 |
+| `FluidWarfare.Editor/ViewportGround/EditorGroundPointerState.cs` | 平台无关地面指针状态：HoverHit（状态栏）+ CommittedHit（Scene3D 标记）+ Revision | 测试通过 |
+| `FluidWarfare.Editor/ViewportGround/EditorGroundPointerChange.cs` | 地面指针状态变更结果（IsChanged / IsCommit） | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，使用收紧标题与间距显示当前 World 实体列表 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs` | World 实体列表面板后台逻辑，接收 WorldEntityInfo 列表并在点击时发出 EntitySelected 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，使用收紧标题与间距显示未选择对象或当前选择详情 | 可运行 |

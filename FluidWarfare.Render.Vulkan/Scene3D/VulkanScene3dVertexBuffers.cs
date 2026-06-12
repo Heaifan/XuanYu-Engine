@@ -58,6 +58,35 @@ public static unsafe class VulkanScene3dVertexBuffers
         return true;
     }
 
+    /// <summary>
+    /// 创建 Ground Cursor 顶点 Buffer。
+    /// </summary>
+    public static bool CreateCursor(Vk vk, Silk.NET.Vulkan.PhysicalDevice pd,
+        Silk.NET.Vulkan.Device dev,
+        ReadOnlySpan<VulkanScene3dVertex> cursorVertices,
+        out Silk.NET.Vulkan.Buffer cursorBuffer, out DeviceMemory cursorMemory,
+        out int cursorVertexCount,
+        out string errorMessage)
+    {
+        cursorBuffer = default; cursorMemory = default; cursorVertexCount = 0; errorMessage = string.Empty;
+
+        if (cursorVertices.Length == 0)
+        {
+            errorMessage = "Ground Cursor VertexBuffer：顶点数据为空。";
+            return false;
+        }
+
+        var data = VulkanScene3dVertices.ToInterleaved(cursorVertices);
+        if (!CreateOne(vk, pd, dev, data, out cursorBuffer, out cursorMemory, out var err))
+        {
+            errorMessage = $"Ground Cursor VertexBuffer：{err}";
+            return false;
+        }
+
+        cursorVertexCount = cursorVertices.Length;
+        return true;
+    }
+
     private static bool CreateOne(Vk vk, Silk.NET.Vulkan.PhysicalDevice pd,
         Silk.NET.Vulkan.Device dev, float[] data,
         out Silk.NET.Vulkan.Buffer buffer, out DeviceMemory memory,

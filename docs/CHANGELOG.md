@@ -1117,6 +1117,67 @@ file-tree.md
 
 ---
 
+### Milestone 8.6 — 3D 地面拾取、世界坐标反馈与落点标记
+
+#### 新增
+
+1. **地面求交数学**（3 文件）：`FluidWarfare.Render/Selection/Ground/SceneGroundPlane.cs`、`SceneGroundHit.cs`、`SceneRayGroundIntersection.cs`。射线与水平 XZ 平面的求交，封装地面高度。
+2. **统一 Pointer Picking**（3 文件）：`FluidWarfare.Render/Selection/Pointer/ScenePointerPickKind.cs`、`ScenePointerPickResult.cs`、`ScenePointerPicker.cs`。Picking 优先级固定：Entity AABB > Ground > None。
+3. **Ground Cursor Vulkan 几何**（3 文件）：`FluidWarfare.Render.Vulkan/Scene3D/GroundCursor/VulkanGroundCursorGeometry.cs`（12 顶点青色十字+方框）、`VulkanGroundCursorState.cs`（可见性+坐标+Revision）、`VulkanGroundCursorInfo.cs`（诊断信息）。
+4. **Ground Cursor VertexBuffer 创建**：`VulkanScene3dVertexBuffers.CreateCursor()` 静态方法，Session 启动时创建一次。
+5. **Mouse Move 输入**：`WindowsVulkanViewportHostControl` 新增 `PointerMoved` / `PointerLeft` 事件，WM_MOUSEMOVE + WM_MOUSELEAVE 消息处理，`TrackMouseEvent` 注册。
+6. **VulkanViewportHostPanel 转发**：新增 `PointerMoved` / `PointerLeft` 事件。
+7. **状态栏地面坐标**：`StatusBarPanel` 新增 `GroundCoordText` + `SetGroundPosition()`。
+8. **Editor 地面指针状态**（2 文件）：`FluidWarfare.Editor/ViewportGround/EditorGroundPointerState.cs` + `EditorGroundPointerChange.cs`。Hover 用于状态栏，Commit 用于落点标记。
+9. **VulkanScene3dFrameReason**：新增 `GroundCursorChanged`。
+10. **VulkanScene3dCommandRecorder**：新增 `GroundCursorDrawData` 类型，支持地面标记绘制（复用 Grid Line Pipeline），绘制顺序：Grid → GroundCursor → Units。
+11. **VulkanScene3dSession**：新增 `SetGroundCursor(Vector3d?)` 方法，幂等（相同坐标 NoOp），Revision 递增。
+
+#### 修改
+
+1. `EditorShell.axaml.cs`：
+   - `HandleViewportPick` 改为使用 `ScenePointerPicker.Pick` 统一调度 → 点击单位选择 + 隐藏标记；点击地面清除选择 + 显示标记；点击天空清除选择 + 隐藏标记。
+   - 新增 `HandleViewportPointerMoved`：调度合并（最新坐标 + Dispatcher.Background 单次执行），不刷日志。
+   - 新增 `HandleViewportPointerLeft`：鼠标离开视口时清除坐标显示。
+   - 新增 `UpdateGroundHover`：CPU 射线→地面求交→状态栏反馈。
+   - 新增 `ShowGroundCursor` / `HideGroundCursor`：控制落点标记可见性，按需提交 Scene3D 帧。
+2. `WindowsVulkanViewportHostControl.cs`：WM_MOUSEMOVE 不再只处理拖拽，始终触发 `PointerMoved`；新增 `WM_MOUSELEAVE` 处理 + `TrackMouseEvent`。
+3. `VulkanScene3dSession.cs`：新增 `_cursorBuffer` / `_cursorMemory` / `_cursorBufOk` / `_cursorState` 字段；`CreateGroundCursorBuffer()` 在启动时创建；`RenderFrameInternal` 中构建 GroundCursor MVP 传入 CommandRecorder。
+4. `VulkanScene3dRenderer.cs`：探针 Record 调用新增 `null` groundCursor 参数。
+5. `ProjectDependencyDirectionTests.cs`：`Svg.Controls.Skia.Avalonia` 已在上轮更新。
+6. `StatusBarPanel.axaml`：新增地面坐标 TextBlock。
+
+#### 测试（新增 36 个，总 374）
+
+1. `SceneRayGroundIntersectionTests`（9 个）：向下命中、平行未命中、背后未命中、地面起点、自定义高度、射线方程验证、向上命中、对角线命中。
+2. `ProjectionUnprojectionRoundTripTests`（7 个 Theory 案例）：(0,0,0)、(-4,0,1)、(1,0,-3)、(10,0,10)、(-10,0,-10)、(5,0,-8)、(-7,0,12)，误差 < 3cm。
+3. `ScenePointerPickerTests`（6 个）：实体优先、地面命中、都未命中、最近实体优先、空场景地面、空场景平行。
+4. `VulkanGroundCursorStateTests`（9 个）：相同坐标 NoOp、不同坐标 Revision、隐藏递增、已隐藏 NoOp、SetNull、NullNoOp、显示/隐藏/显示循环、IsVisible 状态。
+5. `EditorGroundPointerStateTests`（7 个）：Hover 相同位置 NoOp、Hover 不同位置变化、Commit 相同 NoOp、Commit 递增 Revision、ClearCommit、ClearCommit-NullNoOp、Hover/Commit 独立。
+
+#### 验证
+
+- ✅ Build: 0 错误, 0 警告
+- ✅ Test: 374/374 全部通过
+- ✅ 鼠标移动显示准确地面世界坐标
+- ✅ 鼠标移动不持续提交 Scene3D 帧（调度合并 ~16ms）
+- ✅ 点击单位始终优先选择单位，隐藏地面标记
+- ✅ 点击空白地面显示青色落点标记 + 清除实体选择
+- ✅ 点击天空隐藏标记 + 清除选择
+- ✅ 地面点击输出 `[信息]地面落点：X/Y/Z`（仅一次）
+- ✅ Ground Cursor 12 顶点 / 6 条线段 / 高度偏移 0.02
+- ✅ Ground Cursor VertexBuffer Session 启动时创建一次，不随点击重建
+- ✅ Ground Cursor 复用 Grid Line Pipeline，不创建新 Pipeline/Shader/Swapchain
+- ✅ DrawCall：无标记 4，有标记 5
+- ✅ 相同落点 NoOp，不提交 GPU 帧
+- ✅ 相机平移/缩放/Home 后地面坐标不偏移
+- ✅ Resize / 最大化后 Picking 仍准确
+- ✅ 鼠标移动不刷日志
+- ✅ 投影—反投影闭环测试（7 个世界点，误差 < 3cm）
+- ✅ 不越界：无单位移动、无右键命令、无寻路、无框选
+- ✅ CHANGELOG.md 已同步
+- ✅ file-tree.md 已同步
+
 ### Milestone 8.5.1.3 — SVG 经典资源管理器式双树菜单
 
 #### 新增

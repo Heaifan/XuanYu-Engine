@@ -16,6 +16,17 @@ public static unsafe class VulkanScene3dCommandRecorder
     /// <param name="Tint">颜色覆盖 (rgba, alpha=0 使用顶点色, alpha=1 使用覆盖色)。</param>
     public sealed record UnitDrawData(float[] Mvp, float[] Tint);
 
+    /// <summary>
+    /// Ground Cursor 绘制参数。不绘制时 CursorVertexCount = 0。
+    /// </summary>
+    /// <param name="CursorBuffer">Ground Cursor VertexBuffer。</param>
+    /// <param name="CursorVertexCount">顶点数量（0 = 不绘制）。</param>
+    /// <param name="CursorModelMvp">Ground Cursor 的 Model*VP 矩阵（16 floats）。</param>
+    public sealed record GroundCursorDrawData(
+        Silk.NET.Vulkan.Buffer CursorBuffer,
+        int CursorVertexCount,
+        float[]? CursorModelMvp);
+
     public static bool Record(
         Vk vk, CommandBuffer cmdBuf,
         RenderPass renderPass, Framebuffer framebuffer,
@@ -26,6 +37,7 @@ public static unsafe class VulkanScene3dCommandRecorder
         Silk.NET.Vulkan.Buffer gridBuffer, int gridVertexCount,
         Silk.NET.Vulkan.Buffer unitBuffer, int unitVertexCount,
         UnitDrawData[] unitDrawData,
+        GroundCursorDrawData? groundCursor,
         out int drawCalls,
         out string errorMessage)
     {
@@ -105,6 +117,30 @@ public static unsafe class VulkanScene3dCommandRecorder
         vk.CmdBindVertexBuffers(cmdBuf, 0, 1, gridBufs, offsets);
         vk.CmdDraw(cmdBuf, (uint)gridVertexCount, 1, 0, 0);
         drawCalls++;
+
+        // Draw ground cursor (LineList, same Grid pipeline) — if visible
+        if (groundCursor is not null && groundCursor.CursorVertexCount > 0 &&
+            groundCursor.CursorBuffer.Handle != 0 && groundCursor.CursorModelMvp is not null)
+        {
+            vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, gridPipeline);
+            var cursorMvp = groundCursor.CursorModelMvp;
+            fixed (float* mvpPtr = cursorMvp)
+            {
+                // MVP (64 bytes)
+                vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit,
+                    (uint)VulkanScene3dPushConstants.MvpOffset,
+                    (uint)VulkanScene3dPushConstants.MvpByteSize, mvpPtr);
+                // Tint (16 bytes) — ground cursor uses vertex color, so alpha = 0
+                vk.CmdPushConstants(cmdBuf, pipelineLayout, ShaderStageFlags.VertexBit,
+                    (uint)VulkanScene3dPushConstants.TintOffset,
+                    (uint)VulkanScene3dPushConstants.TintByteSize,
+                    VulkanScene3dPushConstants.GridTint);
+            }
+            var cursorBufs = stackalloc[] { groundCursor.CursorBuffer };
+            vk.CmdBindVertexBuffers(cmdBuf, 0, 1, cursorBufs, offsets);
+            vk.CmdDraw(cmdBuf, (uint)groundCursor.CursorVertexCount, 1, 0, 0);
+            drawCalls++;
+        }
 
         // Draw units (shared buffer, per-object MVP + Tint)
         vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, unitPipeline);

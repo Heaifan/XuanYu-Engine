@@ -20,6 +20,8 @@
       <TextBlock x:Name="VulkanStatusText" Foreground="#E6EDF3" Text="Vulkan：未接入" />
       <TextBlock Foreground="#7D8792" Text="|" />
       <TextBlock x:Name="CurrentSelectionText" Foreground="#E6EDF3" Text="当前选择：无" />
+      <TextBlock Foreground="#7D8792" Text="|" />
+      <TextBlock x:Name="GroundCoordText" Foreground="#7D8792" Text="地面坐标：无" />
     </StackPanel>
   </Border>
 </UserControl>

@@ -20,6 +20,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private const uint WmMButtonDown = 0x0207;
     private const uint WmMButtonUp = 0x0208;
     private const uint WmMouseMove = 0x0200;
+    private const uint WmMouseLeave = 0x02A3;
     private const uint WmMouseWheel = 0x020A;
     private const uint WmKeyDown = 0x0100;
     private const uint WmKillFocus = 0x0008;
@@ -45,6 +46,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private bool _isDragging;
     private int _lastMouseX;
     private int _lastMouseY;
+    private bool _trackingMouseLeave;
 
     // ─── 输入事件 ────────────────────────────────────────────
 
@@ -59,6 +61,12 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     /// <summary>左键点击拾取（pixelX, pixelY）。</summary>
     public event Action<int, int>? PickRequested;
+
+    /// <summary>鼠标在视口内移动（pixelX, pixelY）。</summary>
+    public new event Action<int, int>? PointerMoved;
+
+    /// <summary>鼠标离开视口。</summary>
+    public event Action? PointerLeft;
 
     public event EventHandler<WindowsVulkanViewportHostInfo>? HostInfoChanged;
 
@@ -168,6 +176,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     instance.HandleMouseMove(lParam);
                     return 0;
 
+                case WmMouseLeave:
+                    instance.PointerLeft?.Invoke();
+                    return 0;
+
                 case WmMouseWheel:
                     instance.HandleMouseWheel(wParam);
                     return 0;
@@ -217,10 +229,27 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     private void HandleMouseMove(nint lParam)
     {
-        if (!_isDragging) return;
-
         var x = (short)(lParam.ToInt64() & 0xFFFF);
         var y = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+
+        // Track WM_MOUSELEAVE on first mouse move
+        if (!_trackingMouseLeave && _windowHandle != 0)
+        {
+            var tme = new TRACKMOUSEEVENT
+            {
+                cbSize = System.Runtime.InteropServices.Marshal.SizeOf<TRACKMOUSEEVENT>(),
+                dwFlags = 0x00000002u, // TME_LEAVE
+                hwndTrack = _windowHandle
+            };
+            TrackMouseEvent(ref tme);
+            _trackingMouseLeave = true;
+        }
+
+        // Fire pointer move for ground tracking (always)
+        PointerMoved?.Invoke(x, y);
+
+        // Handle camera pan (only when dragging)
+        if (!_isDragging) return;
 
         var deltaX = x - _lastMouseX;
         var deltaY = y - _lastMouseY;
@@ -349,6 +378,19 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private static extern bool ReleaseCapture();
 
     private delegate nint WndProc(nint hwnd, uint msg, nint wParam, nint lParam);
+
+    [DllImport("user32.dll", EntryPoint = "TrackMouseEvent", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool TrackMouseEvent(ref TRACKMOUSEEVENT tme);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct TRACKMOUSEEVENT
+    {
+        public int cbSize;
+        public uint dwFlags;
+        public nint hwndTrack;
+        public uint dwHoverTime;
+    }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     private struct WndClass

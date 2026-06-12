@@ -291,6 +291,7 @@ public static unsafe class VulkanScene3dRenderer
                     vp, r.GridBuffer, gVc,
                     r.UnitBuffer, uVc,
                     oldUnitDrawData,
+                    null,
                     out drawCalls, out var cmdErr))
                 return Fail(cmdErr, sw);
 
