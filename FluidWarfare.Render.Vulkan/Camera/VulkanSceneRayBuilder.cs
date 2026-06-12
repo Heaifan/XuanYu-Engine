@@ -45,9 +45,11 @@ public static class VulkanSceneRayBuilder
             return false;
         }
 
-        // NDC 坐标：Vulkan 原点左上角，Y 向下，[0,0]→[-1,+1]，[w,h]→[+1,-1]
+        // NDC 坐标。投影矩阵已处理 Vulkan Y 翻转（PerspectiveVulkan 使用 -f），
+        // Viewport Height 为正数，因此像素到 NDC 不再取负。
+        // Win32: y=0 → NDC -1（画面上方）, y=height → NDC +1（画面下方）
         var ndcX = 2.0 * pixelX / viewportWidth - 1.0;
-        var ndcY = -(2.0 * pixelY / viewportHeight - 1.0);
+        var ndcY = 2.0 * pixelY / viewportHeight - 1.0;
 
         // 计算逆矩阵
         if (!TryInvert(viewProjection, out var invVp, out var invErr))

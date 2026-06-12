@@ -3,8 +3,8 @@
              x:Class="FluidWarfare.Editor.Windows.Panels.LeftDock.ProjectWorldDockPanel">
   <Grid RowDefinitions="Auto,Auto,*">
     <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="0">
-      <Button Name="ProjectTabButton" Content="项目内容" Padding="12,4" FontSize="13" BorderThickness="0" />
-      <Button Name="WorldTabButton" Content="世界层级" Padding="12,4" FontSize="13" BorderThickness="0" />
+      <Button Name="ProjectTabButton" Content="项目内容" Click="OnProjectTabClicked" Padding="12,4" FontSize="13" BorderThickness="0" />
+      <Button Name="WorldTabButton" Content="世界层级" Click="OnWorldTabClicked" Padding="12,4" FontSize="13" BorderThickness="0" />
     </StackPanel>
     <TextBox Grid.Row="1" Name="SearchTextBox" PlaceholderText="搜索世界实体……" Margin="0,0,0,4" />
     <Grid Grid.Row="2" Name="ContentArea" />

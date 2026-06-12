@@ -1,3 +1,4 @@
+using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
 using FluidWarfare.Editor.WorldHierarchy;
 
 namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
@@ -19,7 +20,7 @@ public sealed class WorldHierarchyTreeIndex
         var index = new WorldHierarchyTreeIndex();
         var roots = new List<WorldHierarchyNodeView>();
 
-        var rootView = BuildView(tree.Root, null, index, []);
+        var rootView = BuildView(tree.Root, null, index, [], 0, true, []);
         roots.Add(rootView);
 
         return (roots, index);
@@ -29,9 +30,14 @@ public sealed class WorldHierarchyTreeIndex
         WorldHierarchyNode node,
         WorldHierarchyNodeView? parent,
         WorldHierarchyTreeIndex index,
-        List<WorldHierarchyNodeView> ancestorPath)
+        List<WorldHierarchyNodeView> ancestorPath,
+        int depth,
+        bool isLast,
+        bool[] ancestorHasNext)
     {
         var view = new WorldHierarchyNodeView(node, parent);
+
+        view.BranchInfo = new HierarchyBranchInfo(depth, isLast, ancestorHasNext);
 
         if (node.EntityId?.Value is not null)
         {
@@ -40,10 +46,18 @@ public sealed class WorldHierarchyTreeIndex
             index.AncestorViewsByEntityId[entityId] = [.. ancestorPath];
         }
 
-        foreach (var child in node.Children)
+        var childCount = node.Children.Count;
+        for (var i = 0; i < childCount; i++)
         {
+            var child = node.Children[i];
+            var childIsLast = i == childCount - 1;
+            var childAncestorHasNext = new bool[depth + 1];
+            Array.Copy(ancestorHasNext, childAncestorHasNext, depth);
+            childAncestorHasNext[depth] = !isLast;
+
             var childPath = new List<WorldHierarchyNodeView>(ancestorPath) { view };
-            var childView = BuildView(child, view, index, childPath);
+            var childView = BuildView(child, view, index, childPath,
+                depth + 1, childIsLast, childAncestorHasNext);
             view.Children.Add(childView);
         }
 

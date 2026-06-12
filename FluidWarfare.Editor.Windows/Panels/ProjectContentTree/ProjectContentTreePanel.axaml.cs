@@ -1,13 +1,15 @@
 using Avalonia.Controls;
-using Avalonia.Media;
-using FluidWarfare.Editor.ProjectContentTreeModel;
+using ProjectContentTreeType = FluidWarfare.Editor.ProjectContentTreeModel.ProjectContentTree;
+using ProjectContentTreeNodeType = FluidWarfare.Editor.ProjectContentTreeModel.ProjectContentTreeNode;
 
 namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
 
 public sealed partial class ProjectContentTreePanel : UserControl
 {
     private TreeView? _treeView;
-    private ProjectContentTreeModel.ProjectContentTree? _currentTree;
+    private ProjectContentTreeType? _currentTree;
+    private ProjectContentTreeIndex? _currentIndex;
+    private List<ProjectContentNodeView>? _rootViews;
 
     /// <summary>文件选择请求事件（相对路径）。</summary>
     public event Action<string?>? ContentSelectionRequested;
@@ -20,76 +22,50 @@ public sealed partial class ProjectContentTreePanel : UserControl
             _treeView.SelectionChanged += OnSelectionChanged;
     }
 
-    public void ShowContentTree(ProjectContentTreeModel.ProjectContentTree tree)
+    public void ShowContentTree(ProjectContentTreeType tree)
     {
         _currentTree = tree;
-        Rebuild(tree.Root);
+        FullRebuild();
     }
 
-    public void ApplySearchFilter(ProjectContentTreeModel.ProjectContentTreeNode? filteredRoot)
+    public void ApplySearchFilter(ProjectContentTreeNodeType? filteredRoot)
     {
-        Rebuild(filteredRoot ?? _currentTree?.Root);
-    }
-
-    private void Rebuild(ProjectContentTreeModel.ProjectContentTreeNode? root)
-    {
-        _treeView?.Items.Clear();
-        if (root is null) return;
-
-        var rootItem = BuildTreeItem(root);
-        _treeView?.Items.Add(rootItem);
-        rootItem.IsExpanded = true;
-    }
-
-    private TreeViewItem BuildTreeItem(ProjectContentTreeModel.ProjectContentTreeNode node)
-    {
-        var item = new TreeViewItem();
-
-        var iconText = node.IconKind switch
+        if (filteredRoot is not null)
         {
-            "project" => "\U0001F4C1", // 📁
-            "folder" => "\U0001F4C2",  // 📂
-            "file" => "\U0001F4C4",    // 📄
-            _ => ""
-        };
-
-        var displayPanel = new StackPanel { Margin = new Avalonia.Thickness(4, 2) };
-        displayPanel.Children.Add(new TextBlock
-        {
-            Text = string.IsNullOrEmpty(iconText) ? node.DisplayName : $"{iconText} {node.DisplayName}",
-            FontSize = 13
-        });
-
-        if (!string.IsNullOrEmpty(node.RelativePath))
-        {
-            displayPanel.Children.Add(new TextBlock
-            {
-                Text = node.RelativePath,
-                Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
-                FontSize = 11
-            });
+            var dummyTree = new ProjectContentTreeType(
+                filteredRoot, 0, 0, 0,
+                _currentIndex?.FileViewsByPath
+                    .ToDictionary(kv => kv.Key, kv => kv.Value.Node)
+                ?? new Dictionary<string, ProjectContentTreeNodeType>());
+            FullRebuild(dummyTree);
         }
+        else if (_currentTree is not null)
+        {
+            FullRebuild();
+        }
+    }
 
-        item.Header = displayPanel;
-        item.Tag = node.NodeId;
+    private void FullRebuild(ProjectContentTreeType? tree = null)
+    {
+        var source = tree ?? _currentTree;
+        if (source is null || _treeView is null) return;
 
-        foreach (var child in node.Children)
-            item.Items.Add(BuildTreeItem(child));
-
-        return item;
+        var (roots, index) = ProjectContentTreeIndex.Build(source);
+        _rootViews = roots;
+        _currentIndex = index;
+        _treeView.ItemsSource = _rootViews;
     }
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        var selectedItem = _treeView?.SelectedItem;
-        if (selectedItem is TreeViewItem tvi && tvi.Tag is string nodeId)
+        if (_treeView?.SelectedItem is ProjectContentNodeView selectedView)
         {
-            if (!nodeId.StartsWith("file:"))
-                return;
-
-            var relativePath = nodeId["file:".Length..];
-            System.Diagnostics.Debug.WriteLine($"[ProjectTree] file selected: {relativePath}");
-            ContentSelectionRequested?.Invoke(relativePath);
+            var path = selectedView.FileRelativePath;
+            if (path is not null)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ProjectTree] file selected: {path}");
+                ContentSelectionRequested?.Invoke(path);
+            }
         }
     }
 }

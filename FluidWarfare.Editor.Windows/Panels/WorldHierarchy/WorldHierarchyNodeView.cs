@@ -29,6 +29,17 @@ public sealed class WorldHierarchyNodeView : INotifyPropertyChanged
 
     public string DisplayName => Node.DisplayName;
 
+    /// <summary>带分支前缀的显示名称（如 "└─ sample_unit"）。</summary>
+    public string DisplayNameWithBranch
+    {
+        get
+        {
+            if (BranchInfo is null || BranchInfo.Depth <= 0) return DisplayName;
+            var prefix = BranchInfo.IsLastSibling ? "└─ " : "├─ ";
+            return prefix + DisplayName;
+        }
+    }
+
     public string? SecondaryText => Node.SecondaryText;
 
     public bool IsSelectable => Node.IsSelectable;
@@ -59,6 +70,9 @@ public sealed class WorldHierarchyNodeView : INotifyPropertyChanged
     /// 子节点视图（由树索引构建时填充）。
     /// </summary>
     public List<WorldHierarchyNodeView> Children { get; } = [];
+
+    /// <summary>树干分支信息（由树索引构建时设置）。</summary>
+    public FluidWarfare.Editor.Windows.Panels.HierarchyVisual.HierarchyBranchInfo? BranchInfo { get; set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
