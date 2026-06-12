@@ -24,7 +24,6 @@ public sealed partial class ProjectWorldDockPanel : UserControl
 
     private WorldHierarchyTree? _currentWorldTree;
     private ProjectContentTreeModel.ProjectContentTree? _currentProjectTree;
-    private bool _isInternalUpdate;
 
     // ─── Events ────────────────────────────────────────────────
 
@@ -42,16 +41,18 @@ public sealed partial class ProjectWorldDockPanel : UserControl
         _searchBox = this.FindControl<TextBox>("SearchTextBox");
         _contentArea = this.FindControl<Grid>("ContentArea");
 
-        // 默认：世界层级
-        if (_searchBox is not null)
-            _searchBox.Watermark = "搜索世界实体……";
-        ShowWorldTab();
-
         // Wire sub-panel events
         _worldTree.EntitySelectionRequested += id => EntitySelectionRequested?.Invoke(id);
+        _projectTree.ContentSelectionRequested += path => ContentSelectionRequested?.Invoke(path);
 
         if (_searchBox is not null)
+        {
+            _searchBox.PlaceholderText = "搜索世界实体……";
             _searchBox.TextChanged += OnSearchTextChanged;
+        }
+
+        // 默认：世界层级
+        ShowWorldTab();
     }
 
     // ─── Public API ────────────────────────────────────────────
@@ -60,10 +61,6 @@ public sealed partial class ProjectWorldDockPanel : UserControl
     public void ShowWorldHierarchy(WorldHierarchyTree tree)
     {
         _currentWorldTree = tree;
-        if (_worldViewState.SelectedEntityId is not null)
-        {
-            // 重建树前恢复选择
-        }
         _worldTree.ShowHierarchy(tree);
         if (!_isProjectTabActive)
             ShowWorldTab();
@@ -79,14 +76,14 @@ public sealed partial class ProjectWorldDockPanel : UserControl
     /// <summary>定位到世界实体节点（自动切换到世界层级页签）。</summary>
     public void RevealEntity(string entityId)
     {
-        if (!_isProjectTabActive)
+        if (_isProjectTabActive)
             SwitchToWorldTab();
 
         // 清除搜索
         if (!string.IsNullOrWhiteSpace(_worldSearchText))
         {
             _worldSearchText = string.Empty;
-            if (_searchBox is not null && !_isInternalUpdate)
+            if (_searchBox is not null)
                 _searchBox.Text = string.Empty;
         }
 
@@ -113,15 +110,8 @@ public sealed partial class ProjectWorldDockPanel : UserControl
 
     // ─── Tab switching ─────────────────────────────────────────
 
-    private void ShowProjectTab()
-    {
-        SwitchToTab(true);
-    }
-
-    private void ShowWorldTab()
-    {
-        SwitchToTab(false);
-    }
+    private void ShowProjectTab() => SwitchToTab(true);
+    private void ShowWorldTab() => SwitchToTab(false);
 
     private void OnProjectTabClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
@@ -138,27 +128,24 @@ public sealed partial class ProjectWorldDockPanel : UserControl
         _isProjectTabActive = isProject;
         if (_contentArea is null) return;
 
-        // 保存搜索
+        // 保存当前搜索词，切换后恢复
         if (isProject)
         {
             _worldSearchText = _searchBox?.Text ?? string.Empty;
             _worldViewState.SearchText = _worldSearchText;
-            _projectSearchText = string.Empty;
         }
         else
         {
             _projectSearchText = _searchBox?.Text ?? string.Empty;
-            _worldSearchText = string.Empty;
         }
 
-        // Clear content area
         _contentArea.Children.Clear();
 
         if (isProject)
         {
             if (_searchBox is not null)
             {
-                _searchBox.Watermark = "搜索项目文件……";
+                _searchBox.PlaceholderText = "搜索项目文件……";
                 _searchBox.Text = _projectSearchText;
             }
             _projectTabButton!.Background = new SolidColorBrush(Color.FromRgb(60, 80, 120));
@@ -169,7 +156,7 @@ public sealed partial class ProjectWorldDockPanel : UserControl
         {
             if (_searchBox is not null)
             {
-                _searchBox.Watermark = "搜索世界实体……";
+                _searchBox.PlaceholderText = "搜索世界实体……";
                 _searchBox.Text = _worldSearchText;
             }
             _worldTabButton!.Background = new SolidColorBrush(Color.FromRgb(60, 80, 120));
@@ -178,16 +165,12 @@ public sealed partial class ProjectWorldDockPanel : UserControl
         }
     }
 
-    private void SwitchToWorldTab()
-    {
-        SwitchToTab(false);
-    }
+    private void SwitchToWorldTab() => SwitchToTab(false);
 
     // ─── Search ────────────────────────────────────────────────
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_isInternalUpdate) return;
         var query = _searchBox?.Text ?? string.Empty;
 
         if (_isProjectTabActive)
@@ -205,10 +188,8 @@ public sealed partial class ProjectWorldDockPanel : UserControl
             if (_currentWorldTree is not null)
             {
                 var filtered = WorldHierarchySearch.Search(_currentWorldTree, query);
-                // World tree needs rebuild with filter
                 if (filtered is not null)
                 {
-                    // Apply filter by showing only matching nodes
                     _worldTree.ShowHierarchy(new WorldHierarchyTree(
                         filtered, _currentWorldTree.NodeCount,
                         _currentWorldTree.EntityNodeCount,

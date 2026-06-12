@@ -329,6 +329,24 @@ public sealed partial class EditorShell : UserControl
     private void OnProjectContentSelected(string? relativePath)
     {
         // 项目文件选择：只保存路径，不修改 EntityId，不影响 3D 场景
+        if (relativePath is null) return;
+
+        // 在检查器中显示文件信息
+        var fileInfo = _contentFiles?.FirstOrDefault(f => f.RelativePath.Replace('\\', '/') == relativePath);
+        if (fileInfo is not null)
+        {
+            var selection = new EditorSelection(
+                "项目文件",
+                fileInfo.FileName,
+                $"路径：{fileInfo.RelativePath}\n类型：{fileInfo.ContentKind}\n目录：{fileInfo.FolderName}");
+            _inspectorPanel?.ShowSelection(selection);
+            _statusBarPanel?.SetCurrentSelection(fileInfo.FileName);
+        }
+        else
+        {
+            _inspectorPanel?.ShowNoSelection();
+            _statusBarPanel?.SetCurrentSelection(relativePath);
+        }
         AppendInfoLog($"项目文件已选择：{relativePath}");
     }
 
