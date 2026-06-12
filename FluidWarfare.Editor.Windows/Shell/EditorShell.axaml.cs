@@ -27,7 +27,9 @@ using FluidWarfare.Render.Vulkan.Instance;
 using FluidWarfare.Render.Vulkan.Clear;
 using FluidWarfare.Render.Vulkan.Markers;
 using FluidWarfare.Render.Vulkan.Camera;
+using FluidWarfare.Render.Camera;
 using FluidWarfare.Render.Vulkan.Scene3D;
+using FluidWarfare.Render.Vulkan.Scene3D.Session;
 using FluidWarfare.Render.Vulkan.Surface;
 using FluidWarfare.Render.Vulkan.Validation;
 using FluidWarfare.Render.Vulkan.Swapchain;
@@ -67,6 +69,10 @@ public sealed partial class EditorShell : UserControl
     private bool _vulkanViewportRendering;
     private int _renderSeq;
     private string _renderLastMode = "无";
+    private VulkanScene3dSession? _scene3dSession;
+    private SceneCameraState _lastCameraState = SceneCameraDefaults.CreateDefault();
+    private bool _framePending;
+    private bool _sessionActive;
 
     public EditorShell()
     {
@@ -121,6 +127,9 @@ public sealed partial class EditorShell : UserControl
         if (_vulkanViewportHostPanel is not null)
         {
             _vulkanViewportHostPanel.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
+            _vulkanViewportHostPanel.CameraPanRequested += HandleCameraPan;
+            _vulkanViewportHostPanel.CameraZoomRequested += HandleCameraZoom;
+            _vulkanViewportHostPanel.CameraResetRequested += HandleCameraReset;
         }
     }
 
@@ -133,6 +142,9 @@ public sealed partial class EditorShell : UserControl
     {
         _vulkanViewportNativeHostReported = false;
         _vulkanViewportRendering = false;
+        _sessionActive = false;
+        _scene3dSession?.Dispose();
+        _scene3dSession = null;
         if (_viewportResizeRenderTimer is not null)
         {
             _viewportResizeRenderTimer.Stop();
@@ -191,10 +203,40 @@ public sealed partial class EditorShell : UserControl
         _vulkanViewportRendering = true;
         try
         {
-            // resize/maximize 时只执行最小清屏 probe（已在 8.0.1 验证不闪退）。
-            // Scene3D probe（Shader/Pipeline/VertexBuffer）在 resize 时创建
-            // GraphicsPipeline 可能触发驱动级崩溃，只在首次启动执行一次。
-            ProbeVulkanClear();
+            if (_sessionActive && _scene3dSession is not null)
+            {
+                // 会话活跃时 resize 只重建 swapchain
+                var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+                    ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+                if (nativeHostInfo.Width > 0 && nativeHostInfo.Height > 0)
+                {
+                    var result = _scene3dSession.Resize(
+                        (uint)nativeHostInfo.Width,
+                        (uint)nativeHostInfo.Height,
+                        _lastCameraState,
+                        [.. BuildUnitDrawList()]);
+
+                    if (result.Success)
+                    {
+                        AppendInfoLog($"Scene3D resize：{result.ViewportWidth}x{result.ViewportHeight}");
+                    }
+                    else
+                    {
+                        AppendWarningLog($"Scene3D resize 失败：{result.Message}，回退 Clear。");
+                        // 回退：销毁会话，Clear
+                        _scene3dSession.Dispose();
+                        _scene3dSession = null;
+                        _sessionActive = false;
+                        ProbeVulkanClear("resize");
+                    }
+                }
+            }
+            else
+            {
+                // resize/maximize 时只执行最小清屏 probe
+                ProbeVulkanClear("resize");
+            }
         }
         finally
         {
@@ -906,7 +948,7 @@ public sealed partial class EditorShell : UserControl
         var flyout = new MenuFlyout();
         flyout.Opened += (_, _) => HandleMenuClicked("运行");
 
-        _runScene3dMenuItem = new MenuItem { Header = "运行 Scene3D 探针" };
+        _runScene3dMenuItem = new MenuItem { Header = "启动 Scene3D 会话" };
         _runScene3dMenuItem.Click += HandleRunScene3dMenuClicked;
         flyout.Items.Add(_runScene3dMenuItem);
 
@@ -915,7 +957,151 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleRunScene3dMenuClicked(object? sender, RoutedEventArgs e)
     {
-        HandleScene3dRunRequested(sender, EventArgs.Empty);
+        if (_scene3dSession is not null)
+        {
+            // 会话已存在，重新绘制
+            ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+            return;
+        }
+
+        if (!_scene3dGate.CanRun)
+        {
+            AppendWarningLog(_scene3dGate.Message);
+            return;
+        }
+
+        StartScene3dSession();
+    }
+
+    private void StartScene3dSession()
+    {
+        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
+            ?? VulkanViewportNativeHostInfo.NotAvailable;
+
+        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
+        {
+            AppendWarningLog("Scene3D 会话：视口未就绪。");
+            return;
+        }
+
+        AppendInfoLog("正在启动 Scene3D 会话...");
+        _sessionActive = true;
+
+        // 保存 RenderScene 快照
+        var gridVertices = VulkanScene3dVertices.BuildGrid(20, 2);
+        var unitVertices = VulkanScene3dVertices.BuildCube(0, 0, 0, 1.0f);
+
+        var unitDraws = new List<VulkanScene3dUnitDrawInfo>();
+        foreach (var obj in _renderScene.Objects)
+        {
+            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
+            unitDraws.Add(new VulkanScene3dUnitDrawInfo(
+                (float)obj.Position.X,
+                (float)obj.Position.Y + 0.5f,
+                (float)obj.Position.Z,
+                1.25f));
+        }
+
+        _lastCameraState = SceneCameraDefaults.CreateDefault();
+
+        var session = new VulkanScene3dSession();
+        var result = session.Start(
+            nativeHostInfo.InstanceHandle,
+            nativeHostInfo.WindowHandle,
+            (uint)nativeHostInfo.Width,
+            (uint)nativeHostInfo.Height,
+            _lastCameraState,
+            gridVertices.AsSpan(),
+            unitVertices.AsSpan(),
+            [.. unitDraws]);
+
+        if (result.Success)
+        {
+            _scene3dSession = session;
+            _renderLastMode = "Scene3D";
+            _renderSeq++;
+            AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Scene3D Session 启动 | " +
+                $"{result.ViewportWidth}x{result.ViewportHeight}");
+            AppendInfoLog(result.Message);
+        }
+        else
+        {
+            session.Dispose();
+            _sessionActive = false;
+            AppendErrorLog($"Scene3D 会话启动失败：{result.Message}");
+        }
+
+        UpdateVulkanViewportStatusLine();
+        UpdateAllDiagnostics();
+    }
+
+    // ─── 相机输入处理 ─────────────────────────────────────────
+
+    private void HandleCameraPan(int deltaX, int deltaY, int viewportW, int viewportH)
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        _lastCameraState = SceneCameraMotion.Pan(_lastCameraState, deltaX, deltaY, viewportH);
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraPan);
+    }
+
+    private void HandleCameraZoom(float wheelNotches)
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        _lastCameraState = SceneCameraMotion.Zoom(_lastCameraState, wheelNotches);
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraZoom);
+    }
+
+    private void HandleCameraReset()
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+
+        _lastCameraState = SceneCameraMotion.Reset();
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+    }
+
+    private void ScheduleScene3dFrame(VulkanScene3dFrameReason reason)
+    {
+        if (_framePending) return;
+        _framePending = true;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            _framePending = false;
+            if (_scene3dSession is null) return;
+
+            var unitDraws = BuildUnitDrawList();
+            var result = _scene3dSession.RenderFrame(reason, _lastCameraState, [.. unitDraws]);
+
+            if (result.Success)
+            {
+                _renderSeq++;
+                _renderLastMode = "Scene3D";
+                UpdateVulkanViewportStatusLine();
+            }
+            else
+            {
+                AppendWarningLog($"Scene3D 帧失败：{result.Message}");
+            }
+        });
+    }
+
+    private List<VulkanScene3dUnitDrawInfo> BuildUnitDrawList()
+    {
+        var list = new List<VulkanScene3dUnitDrawInfo>();
+        foreach (var obj in _renderScene.Objects)
+        {
+            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
+            list.Add(new VulkanScene3dUnitDrawInfo(
+                (float)obj.Position.X,
+                (float)obj.Position.Y + 0.5f,
+                (float)obj.Position.Z,
+                1.25f));
+        }
+        return list;
     }
 
     private void ProbeVulkanScene3D()

@@ -11,6 +11,11 @@ public sealed partial class VulkanViewportHostPanel : UserControl
 
     public event EventHandler<VulkanViewportNativeHostInfo>? NativeHostInfoChanged;
 
+    // 相机输入事件转发（来自 Win32 原生窗口消息）
+    public event Action<int, int, int, int>? CameraPanRequested;
+    public event Action<float>? CameraZoomRequested;
+    public event Action? CameraResetRequested;
+
     public VulkanViewportHostPanel()
     {
         InitializeComponent();
@@ -21,6 +26,9 @@ public sealed partial class VulkanViewportHostPanel : UserControl
         if (_nativeHostControl is not null)
         {
             _nativeHostControl.HostInfoChanged += HandleHostInfoChanged;
+            _nativeHostControl.CameraPanRequested += (dx, dy, w, h) => CameraPanRequested?.Invoke(dx, dy, w, h);
+            _nativeHostControl.CameraZoomRequested += n => CameraZoomRequested?.Invoke(n);
+            _nativeHostControl.CameraResetRequested += () => CameraResetRequested?.Invoke();
         }
     }
 

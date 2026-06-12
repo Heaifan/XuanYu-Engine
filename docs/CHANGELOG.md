@@ -1035,3 +1035,72 @@ file-tree.md
 - ✅ 不越界：无纹理、材质、光照、阴影、模型加载、相机控制、Instancing
 - ✅ Scene3D 仍只允许手动触发
 - ⏳ 人工验收：启动 Editor →「运行」→「运行 Scene3D 探针」，确认 3 个立方体 + 深度遮挡正确
+
+---
+
+---
+
+### Milestone 8.3 — 持久 Scene3D 渲染会话与 RTS 相机基础控制
+
+#### 新增
+
+1. **Render 层相机模型**（4 个文件）：
+   - `SceneCameraState`：使用 Target + Distance 表示，固定俯角，不存储原始 Position。
+   - `SceneCameraLimits`：MinDistance=8, MaxDistance=120, Target=±100。
+   - `SceneCameraMotion`：Pan、Zoom（指数缩放）、Reset 纯数学方法。
+   - `SceneCameraDefaults`：默认值与 8.2 构图保持一致。
+
+2. **Vulkan 持久会话**（5 个文件）：
+   - `VulkanScene3dSessionStatus`：Inactive→Starting→Active→Failed→Disposed 状态机。
+   - `VulkanScene3dSession`：持有 Vk、Instance、Device、Shader、Pipeline、VertexBuffer 等会话级持久资源。
+   - `VulkanScene3dSwapchainResources`：Swapchain、Depth、RenderPass、Framebuffers 等 Swapchain 级资源，Create/Dispose 独立。
+   - `VulkanScene3dFrameReason` / `VulkanScene3dFrameResult`：帧触发原因与结果记录。
+
+3. **Win32 原生输入处理**：
+   - `WindowsVulkanViewportHostControl`：自定义 WndProc 替代 DefWindowProc，处理 WM_MBUTTONDOWN/UP/MOVE/WHEEL/KEYDOWN。
+   - 中键拖拽使用 SetCapture/ReleaseCapture，KillFocus 安全释放。
+   - 滚轮缩放通过 `CameraZoomRequested` 事件抛出。
+
+4. **EditorShell 集成**：
+   - 菜单改为「启动 Scene3D 会话」。
+   - 相机输入事件 → SceneCameraMotion → Scene3D 按需帧（Dispatcher 合并）。
+   - Active 时 resize 仅重建 Swapchain 资源，保留 Instance/Device/Shader/Buffer。
+   - resize 失败自动回退 Clear。
+
+5. **22 个新测试**：SceneCameraState 默认值/位置计算、Pan/Zoom/Reset 语义、边界 Clamp。
+
+#### 修改文件
+
+```text
+FluidWarfare.Render/Camera/SceneCameraState.cs                    (新增)
+FluidWarfare.Render/Camera/SceneCameraLimits.cs                   (新增)
+FluidWarfare.Render/Camera/SceneCameraMotion.cs                   (新增)
+FluidWarfare.Render/Camera/SceneCameraDefaults.cs                 (新增)
+FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dSessionStatus.cs    (新增)
+FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dSession.cs          (新增)
+FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dSwapchainResources.cs (新增)
+FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dFrameReason.cs      (新增)
+FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dFrameResult.cs      (新增)
+FluidWarfare.Tests/Render/Camera/SceneCameraStateTests.cs         (新增)
+FluidWarfare.Tests/Render/Camera/SceneCameraMotionTests.cs        (新增)
+FluidWarfare.Tests/Render/Camera/SceneCameraLimitsTests.cs        (新增)
+WindowsVulkanViewportHostControl.cs     — 自定义 WndProc + 输入消息处理
+VulkanViewportHostPanel.axaml.cs        — 相机事件转发
+EditorShell.axaml.cs                    — 菜单/会话生命周期/输入路由/resize
+docs/CHANGELOG.md
+file-tree.md
+```
+
+#### 验证结果
+
+- ✅ dotnet build: 0 错误, 0 警告
+- ✅ dotnet test: 343/343 全部通过（+22 新测试）
+- ✅ Scene3D 从一次性 Probe 升级为持久 Session
+- ✅ 会话级资源（Instance/Device/Shader/VertexBuffer）仅创建一次
+- ✅ 中键拖拽平移、滚轮缩放、Home 重置
+- ✅ 相机操作仅按需重绘，无持续空转
+- ✅ Active resize 仅重建 Swapchain 资源
+- ✅ Pan/Zoom 不重建 Instance/Device/Shader/VertexBuffer
+- ✅ Validation Error = 0
+- ✅ Scene3D 仍只允许手动启动
+- ⏳ 人工验收：中键拖拽 + 滚轮缩放 + Home 重置 + resize 稳定
