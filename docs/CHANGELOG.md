@@ -1115,6 +1115,37 @@ file-tree.md
 
 ---
 
+---
+
+### Milestone 8.5.1 — 左侧双树页签、项目文件树与中文界面收口
+
+#### 新增
+
+1. **平台无关 ProjectContentTree 模型**（5 个文件）：ProjectContentTreeNodeKind / Node / Tree / Builder / Search，基于 GameProjectInfo contentFolders 声明构建文件树。
+2. **项目内容树 UI**（2 个文件）：TreeView 显示项目名 → 内容目录 → 文件，支持搜索和选择隔离。
+3. **LeftDock 双页签面板**（2 个文件）：[项目内容] 和 [世界层级] 页签，共享搜索栏，独立维护搜索文本和展开状态。
+
+#### 修改
+
+1. `EditorShell.axaml`：左侧从 ProjectPanel + WorldHierarchyTreePanel 堆叠改为 ProjectWorldDockPanel 单一控件。
+2. `EditorShell.axaml.cs`：选择链隔离 — SelectedEntityId 与 SelectedContentPath 互不干扰。
+3. `DebugDockPanel.axaml`：RenderScene 页签改为“渲染场景”。
+
+#### 删除
+
+1. `ProjectPanel.axaml` + `.axaml.cs`：旧的按钮式项目内容面板。
+2. `ProjectContentFolderSelection.cs`：旧面板专属选择模型。
+
+#### 验证
+
+- ✅ build：0 错误、0 警告
+- ✅ test：330/330
+- ✅ 项目资源选择与世界实体选择完全隔离
+- ✅ 3D Picking 自动切换至世界层级页签
+- ✅ 两个页签搜索独立
+- ✅ Editor 不依赖 Avalonia/Vulkan
+- ✅ Tests 不依赖 Editor.Windows
+
 ### Milestone 8.5 — World Hierarchy 节点树与编辑器选择收口
 
 #### 新增

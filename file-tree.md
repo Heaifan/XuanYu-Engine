@@ -311,10 +311,11 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.5：World Hierarchy 节点树与编辑器选择收口。
-- 新增 FluidWarfare.Editor 平台无关项目（FluidWarfare.Editor.csproj）
-- 平铺 World 实体列表已升级为层级节点树
-- 支持展开/折叠、搜索、自动定位与三向同步
+当前执行 Milestone 8.5.1：左侧双树页签、项目文件树与中文界面收口。
+- 左侧改为 [项目内容] / [世界层级] 双页签
+- 项目内容基于 contentFolders 声明构建文件树
+- 底部 RenderScene 页签已中文化为“渲染场景”
+- 项目资源选择与 World 实体选择完全隔离
 
 管线进度：... → 持久会话 ✅ → 默认 3D 主视口 ✅ → 结果加固 ✅ → Picking ⬆️
 
