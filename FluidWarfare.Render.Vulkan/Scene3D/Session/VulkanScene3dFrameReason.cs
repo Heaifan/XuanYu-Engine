@@ -24,5 +24,8 @@ public enum VulkanScene3dFrameReason
     SelectionChanged,
 
     /// <summary>地面落点标记变化触发。</summary>
-    GroundCursorChanged
+    GroundCursorChanged,
+
+    /// <summary>实体位置变化触发。</summary>
+    EntityTransformChanged
 }

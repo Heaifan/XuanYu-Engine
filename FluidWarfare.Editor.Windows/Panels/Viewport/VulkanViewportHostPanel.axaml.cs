@@ -15,13 +15,14 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     public event Action<int, int, int, int>? CameraPanRequested;
     public event Action<float>? CameraZoomRequested;
     public event Action? CameraResetRequested;
+    public event Action? EscapeRequested;
     public event Action<int, int>? PickRequested;
 
     /// <summary>鼠标在视口内移动（pixelX, pixelY）。</summary>
     public new event Action<int, int>? PointerMoved;
 
     /// <summary>鼠标离开视口。</summary>
-    public new event Action? PointerLeft;
+    public event Action? PointerLeft;
 
     public VulkanViewportHostPanel()
     {
@@ -36,6 +37,7 @@ public sealed partial class VulkanViewportHostPanel : UserControl
             _nativeHostControl.CameraPanRequested += (dx, dy, w, h) => CameraPanRequested?.Invoke(dx, dy, w, h);
             _nativeHostControl.CameraZoomRequested += n => CameraZoomRequested?.Invoke(n);
             _nativeHostControl.CameraResetRequested += () => CameraResetRequested?.Invoke();
+            _nativeHostControl.EscapeRequested += () => EscapeRequested?.Invoke();
             _nativeHostControl.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
             _nativeHostControl.PointerMoved += (x, y) => PointerMoved?.Invoke(x, y);
             _nativeHostControl.PointerLeft += () => PointerLeft?.Invoke();

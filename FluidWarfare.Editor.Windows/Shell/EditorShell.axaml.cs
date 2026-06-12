@@ -8,6 +8,7 @@ using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
 using FluidWarfare.Core.Math;
 using FluidWarfare.Editor.ProjectContentTreeModel;
+using FluidWarfare.Editor.EntityTransform;
 using FluidWarfare.Editor.Selection;
 using FluidWarfare.Editor.WorldHierarchy;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
@@ -23,6 +24,7 @@ using FluidWarfare.Project.Metadata;
 using FluidWarfare.Project.Paths;
 using FluidWarfare.Project.Validation;
 using FluidWarfare.Render.Scene;
+using FluidWarfare.Render.Scene.Position;
 using FluidWarfare.Render.Selection;
 using FluidWarfare.Render.Selection.Ground;
 using FluidWarfare.Render.Selection.Pointer;
@@ -82,6 +84,10 @@ public sealed partial class EditorShell : UserControl
     private bool _groundPointerUpdatePending; // 调度合并
     private long _lastGroundPointerUpdateTicks;
 
+    // ─── Transform 编辑状态 ─────────────────────────────────────────
+    private readonly EditorGroundPlacementState _groundPlacementState = new();
+    private readonly EditorWorldDirtyState _worldDirtyState = new();
+
     public EditorShell()
     {
         // _scene3dGate 由字段初始化器在构造函数体之前执行
@@ -133,9 +139,17 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel.CameraPanRequested += HandleCameraPan;
             _vulkanViewportHostPanel.CameraZoomRequested += HandleCameraZoom;
             _vulkanViewportHostPanel.CameraResetRequested += HandleCameraReset;
+            _vulkanViewportHostPanel.EscapeRequested += HandleViewportEscape;
             _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
             _vulkanViewportHostPanel.PointerMoved += HandleViewportPointerMoved;
             _vulkanViewportHostPanel.PointerLeft += HandleViewportPointerLeft;
+        }
+
+        if (_inspectorPanel is not null)
+        {
+            _inspectorPanel.TransformApplyRequested += HandleTransformApply;
+            _inspectorPanel.TransformResetRequested += HandleTransformReset;
+            _inspectorPanel.GroundPlacementRequested += HandleGroundPlacementToggle;
         }
     }
 
@@ -348,7 +362,7 @@ public sealed partial class EditorShell : UserControl
                 "项目文件",
                 fileInfo.FileName,
                 $"路径：{fileInfo.RelativePath}\n类型：{fileInfo.ContentKind}\n目录：{fileInfo.FolderName}");
-            _inspectorPanel?.ShowSelection(selection);
+            _inspectorPanel?.ShowProjectFileSelection(selection);
             _statusBarPanel?.SetCurrentSelection(fileInfo.FileName);
         }
         else
@@ -362,9 +376,19 @@ public sealed partial class EditorShell : UserControl
     private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
     {
         var selection = CreateEntitySelection(entityInfo);
+        var position = _worldState?.FindPosition(entityInfo.EntityId);
 
-        _inspectorPanel?.ShowSelection(selection);
+        _inspectorPanel?.ShowWorldEntitySelection(
+            selection,
+            entityInfo.EntityId.Value.ToString(),
+            position?.Value,
+            entityInfo.Source?.RelativePath);
         _statusBarPanel?.SetCurrentSelection(entityInfo.DisplayName);
+
+        // 启用地面放置按钮（Session 激活时）
+        _inspectorPanel?.SetGroundPlaceEnabled(
+            _sessionActive && _scene3dSession?.Status == VulkanScene3dSessionStatus.Active);
+
         AppendInfoLog($"已选择 {selection.Kind}：{entityInfo.DisplayName}。");
     }
 
@@ -1042,6 +1066,16 @@ public sealed partial class EditorShell : UserControl
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
     }
 
+    private void HandleViewportEscape()
+    {
+        if (_groundPlacementState.IsActive)
+        {
+            _groundPlacementState.Cancel();
+            _inspectorPanel?.SetPlacementMode(false);
+            AppendInfoLog("放置模式已取消。");
+        }
+    }
+
     private void ScheduleScene3dFrame(VulkanScene3dFrameReason reason)
     {
         if (_framePending) return;
@@ -1358,33 +1392,52 @@ public sealed partial class EditorShell : UserControl
         // 统一 Picking：Entity 优先 → Ground → None
         var pointerResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
 
-        switch (pointerResult.Kind)
+        if (_groundPlacementState.IsActive)
         {
-            case ScenePointerPickKind.Entity when pointerResult.EntityId is not null:
-                // 点击单位：选择 + 隐藏地面标记
-                ApplyEntitySelection(
-                    pointerResult.EntityId.Value.Value.ToString(),
-                    EditorEntitySelectionOrigin.ViewportPicking);
-                HideGroundCursor();
-                System.Diagnostics.Debug.WriteLine(
-                    $"[Pick] Entity hit: {pointerResult.EntityId.Value.Value}");
-                break;
+            // ─── 地面放置模式：只接受空白 Ground ──────────────────
+            switch (pointerResult.Kind)
+            {
+                case ScenePointerPickKind.Ground when pointerResult.GroundPosition is not null:
+                    CompleteGroundPlacement(pointerResult.GroundPosition.Value);
+                    break;
 
-            case ScenePointerPickKind.Ground when pointerResult.GroundPosition is not null:
-                // 点击空白地面：清除实体选择 + 显示地面标记
-                ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
-                ShowGroundCursor(pointerResult.GroundPosition.Value);
-                AppendInfoLog(
-                    $"地面落点：X {pointerResult.GroundPosition.Value.X:F2}，" +
-                    $"Y {pointerResult.GroundPosition.Value.Y:F2}，" +
-                    $"Z {pointerResult.GroundPosition.Value.Z:F2}。");
-                break;
+                case ScenePointerPickKind.Entity:
+                    _statusBarPanel?.SetCurrentSelection("请点击空白地面完成放置");
+                    break;
 
-            default:
-                // 点击天空：清除选择 + 隐藏地面标记
-                ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
-                HideGroundCursor();
-                break;
+                default:
+                    _statusBarPanel?.SetCurrentSelection("当前位置未命中地面，请调整相机或点击其他区域");
+                    break;
+            }
+        }
+        else
+        {
+            // ─── 普通模式：Entity → Ground → None ────────────────
+            switch (pointerResult.Kind)
+            {
+                case ScenePointerPickKind.Entity when pointerResult.EntityId is not null:
+                    ApplyEntitySelection(
+                        pointerResult.EntityId.Value.Value.ToString(),
+                        EditorEntitySelectionOrigin.ViewportPicking);
+                    HideGroundCursor();
+                    System.Diagnostics.Debug.WriteLine(
+                        $"[Pick] Entity hit: {pointerResult.EntityId.Value.Value}");
+                    break;
+
+                case ScenePointerPickKind.Ground when pointerResult.GroundPosition is not null:
+                    ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
+                    ShowGroundCursor(pointerResult.GroundPosition.Value);
+                    AppendInfoLog(
+                        $"地面落点：X {pointerResult.GroundPosition.Value.X:F2}，" +
+                        $"Y {pointerResult.GroundPosition.Value.Y:F2}，" +
+                        $"Z {pointerResult.GroundPosition.Value.Z:F2}。");
+                    break;
+
+                default:
+                    ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
+                    HideGroundCursor();
+                    break;
+            }
         }
 
         // 更新诊断信息
@@ -1407,11 +1460,152 @@ public sealed partial class EditorShell : UserControl
         _groundPointerState.ClearCommit();
         if (_scene3dSession is not null)
         {
-            // SetGroundCursor(null) hides the cursor
-            // If the cursor was already hidden, this returns false and no frame is submitted
             _scene3dSession.SetGroundCursor(null);
-            // Force a frame to clear the cursor from the display
             ScheduleScene3dFrame(VulkanScene3dFrameReason.GroundCursorChanged);
+        }
+    }
+
+    // ─── Transform 编辑 ─────────────────────────────────────────────
+
+    private void HandleTransformApply(string xText, string yText, string zText)
+    {
+        if (_selectedWorldEntity is null) return;
+
+        if (!EditorEntityTransformValidation.TryParse(xText, yText, zText,
+                out var newPos, out var error))
+        {
+            _inspectorPanel?.ShowTransformError(error);
+            return;
+        }
+
+        ApplyEntityTransform(newPos, EditorEntityTransformOrigin.InspectorInput);
+    }
+
+    private void HandleTransformReset()
+    {
+        if (_selectedWorldEntity is null) return;
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) return;
+        var v = pos.Value.Value;
+        _inspectorPanel?.SetTransformTexts(
+            v.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            v.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            v.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
+        _inspectorPanel?.SetApplyEnabled(false);
+        _inspectorPanel?.SetResetEnabled(false);
+    }
+
+    private void HandleGroundPlacementToggle()
+    {
+        if (_selectedWorldEntity is null) return;
+        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+        {
+            AppendWarningLog("Scene3D 未激活，无法进入放置模式。");
+            return;
+        }
+
+        if (_groundPlacementState.IsActive)
+        {
+            _groundPlacementState.Cancel();
+            _inspectorPanel?.SetPlacementMode(false);
+            _statusBarPanel?.SetCurrentSelection(
+                _selectedWorldEntity?.DisplayName ?? "无");
+        }
+        else
+        {
+            _groundPlacementState.Begin(_selectedWorldEntity.EntityId.Value.ToString());
+            _inspectorPanel?.SetPlacementMode(true);
+            _statusBarPanel?.SetCurrentSelection(
+                $"放置模式：点击空白地面放置 {_selectedWorldEntity.DisplayName}，Esc 取消");
+        }
+    }
+
+    /// <summary>
+    /// 原子式 Transform 提交。
+    /// </summary>
+    private void ApplyEntityTransform(Vector3d newPosition, EditorEntityTransformOrigin origin)
+    {
+        if (_worldState is null || _selectedWorldEntity is null) return;
+
+        var entityId = _selectedWorldEntity.EntityId;
+        var entityIdStr = entityId.Value.ToString();
+
+        // 1. 写入 WorldState
+        if (!_worldState.SetPosition(entityId, newPosition))
+        {
+            // NoOp: 相同位置
+            _inspectorPanel?.SetApplyEnabled(false);
+            return;
+        }
+
+        // 2. 同步 RenderScene
+        var renderResult = RenderSceneObjectPositionWriter.Update(
+            _renderScene, entityId, newPosition);
+        if (!renderResult.IsSuccess)
+        {
+            // 回滚 WorldState
+            _worldState.SetPosition(entityId, _renderScene.Objects
+                .FirstOrDefault(o => o.EntityId == entityId)?.Position ?? newPosition);
+            AppendErrorLog($"RenderScene 同步失败：{renderResult.Message}");
+            return;
+        }
+        if (renderResult.NewScene is not null)
+            _renderScene = renderResult.NewScene;
+
+        // 3. 同步 Scene3D Session
+        var unitPos = EntityToScene3dPosition(newPosition);
+        if (_scene3dSession is not null)
+            _scene3dSession.UpdateEntityPosition(
+                entityIdStr, unitPos.X, unitPos.Y, unitPos.Z);
+
+        // 4. 标记场景 Dirty
+        _worldDirtyState.MarkDirty(entityIdStr);
+        _statusBarPanel?.SetDirtyState(true);
+
+        // 5. 更新 Inspector 显示的坐标
+        _inspectorPanel?.SetTransformTexts(
+            newPosition.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            newPosition.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            newPosition.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
+        _inspectorPanel?.SetApplyEnabled(false);
+        _inspectorPanel?.SetResetEnabled(false);
+
+        // 6. 请求一帧
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.EntityTransformChanged);
+
+        // 7. 日志
+        var prevPos = renderResult.Change?.OldPosition;
+        if (prevPos is not null)
+        {
+            AppendInfoLog(
+                $"实体 {_selectedWorldEntity.DisplayName} 坐标已修改：" +
+                $"({prevPos.Value.X:F2}, {prevPos.Value.Y:F2}, {prevPos.Value.Z:F2}) → " +
+                $"({newPosition.X:F2}, {newPosition.Y:F2}, {newPosition.Z:F2})。");
+        }
+    }
+
+    private static (float X, float Y, float Z) EntityToScene3dPosition(Vector3d position) =>
+        ((float)position.X, (float)position.Y + 0.5f, (float)position.Z);
+
+    // ─── 地面放置 ──────────────────────────────────────────────────
+
+    private void CompleteGroundPlacement(Vector3d groundPosition)
+    {
+        if (!_groundPlacementState.IsActive || _selectedWorldEntity is null) return;
+
+        // 地面放置：实体在地面锚点，Y = 平面高度（0）
+        var entityPos = new Vector3d(groundPosition.X, 0, groundPosition.Z);
+
+        ApplyEntityTransform(entityPos, EditorEntityTransformOrigin.GroundPlacement);
+
+        if (_groundPlacementState.IsActive)
+        {
+            _groundPlacementState.Complete();
+            _inspectorPanel?.SetPlacementMode(false);
+            HideGroundCursor();
+            AppendInfoLog(
+                $"实体 {_selectedWorldEntity.DisplayName} 已放置到 " +
+                $"X {entityPos.X:F2}，Y {entityPos.Y:F2}，Z {entityPos.Z:F2}。");
         }
     }
 

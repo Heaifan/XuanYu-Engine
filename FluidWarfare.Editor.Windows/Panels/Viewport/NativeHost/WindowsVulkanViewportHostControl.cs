@@ -28,6 +28,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private const uint WmLButtonUp = 0x0202;
     private const uint WmNcHitTest = 0x0084;
     private const int VkHome = 0x24;
+    private const int VkEscape = 0x1B;
     private const int MkMbutton = 0x0010;
 
     private static bool _classRegistered;
@@ -58,6 +59,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     /// <summary>Home 相机重置。</summary>
     public event Action? CameraResetRequested;
+
+    /// <summary>Esc 键按下。</summary>
+    public event Action? EscapeRequested;
 
     /// <summary>左键点击拾取（pixelX, pixelY）。</summary>
     public event Action<int, int>? PickRequested;
@@ -198,6 +202,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
                 case WmKeyDown when (int)wParam == VkHome:
                     instance.CameraResetRequested?.Invoke();
+                    return 0;
+
+                case WmKeyDown when (int)wParam == VkEscape:
+                    instance.EscapeRequested?.Invoke();
                     return 0;
 
                 case WmKillFocus:

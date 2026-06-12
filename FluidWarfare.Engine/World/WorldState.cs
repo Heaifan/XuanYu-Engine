@@ -88,6 +88,24 @@ public sealed class WorldState
     }
 
     /// <summary>
+    /// 修改实体的位置。相同位置为 NoOp。
+    /// </summary>
+    /// <param name="entityId">目标实体 ID。</param>
+    /// <param name="newPosition">新位置。</param>
+    /// <returns>位置是否实际变化。</returns>
+    public bool SetPosition(EntityId entityId, Vector3d newPosition)
+    {
+        if (!_positions.TryGetValue(entityId, out var current))
+            return false; // Entity not found
+
+        if (current.Value == newPosition)
+            return false; // NoOp — same position
+
+        _positions[entityId] = new PositionComponent(newPosition);
+        return true;
+    }
+
+    /// <summary>
     /// 枚举所有实体。
     /// </summary>
     public IReadOnlyList<WorldEntityInfo> ListEntities()

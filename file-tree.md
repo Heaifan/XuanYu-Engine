@@ -772,12 +772,23 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportPickInput.cs` | Win32 左键点击检测（阈值 4px），转发 PickRequested 事件 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Swapchain/VulkanScene3dSwapchainInvariant.cs` | Swapchain 生命周期不变量断言（Active Live=1 / Disposed Live=0） | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Surface/VulkanScene3dSurfaceFormats.cs` | SurfaceFormatKHR 两阶段枚举 + Incomplete 有限重试（最多 3 次） | 测试通过 |
+| `FluidWarfare.Render/Scene/Position/RenderObjectPositionChange.cs` | RenderObject 位置变更记录 | 测试通过 |
+| `FluidWarfare.Render/Scene/Position/RenderObjectPositionWriteResult.cs` | RenderObject 位置写入结果 | 测试通过 |
+| `FluidWarfare.Render/Scene/Position/RenderSceneObjectPositionWriter.cs` | 替换 RenderScene 中指定 EntityId 的位置 + SelectionBounds | 测试通过 |
+| `FluidWarfare.Engine/World/EntityPosition/WorldEntityPositionChange.cs` | World 实体位置变更记录 | 测试通过 |
+| `FluidWarfare.Engine/World/EntityPosition/WorldEntityPositionWriteResult.cs` | World 实体位置写入结果 | 测试通过 |
+| `FluidWarfare.Engine/World/EntityPosition/WorldEntityPositionWriter.cs` | 对 WorldState 执行位置修改（检查 EntityId + NoOp） | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Surface/VulkanScene3dPresentModes.cs` | PresentModeKHR 两阶段枚举 + Incomplete 有限重试（最多 3 次） | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Camera/VulkanCameraInfoTests.cs` | 验证默认相机参数和自定义相机 | 测试通过 |
 | `FluidWarfare.Tests/Render/Vulkan/Camera/ProjectionUnprojectionRoundTripTests.cs` | 投影→反投影闭环测试：7 个已知地面点，误差 < 3cm | 测试通过 |
 | `FluidWarfare.Tests/Render/Selection/Ground/SceneRayGroundIntersectionTests.cs` | 验证地面求交：向下/平行/背后/起点/自定义高度/射线方程/对角线 | 测试通过 |
 | `FluidWarfare.Tests/Render/Selection/Pointer/ScenePointerPickerTests.cs` | 验证统一 Picking：实体优先、地面命中、都未命中、最近实体优先 | 测试通过 |
 | `FluidWarfare.Tests/Editor/ViewportGround/EditorGroundPointerStateTests.cs` | 验证地面指针状态：Hover/Commit 独立、相同 NoOp、Revision 递增 | 测试通过 |
+| `FluidWarfare.Tests/Editor/EntityTransform/EditorEntityTransformValidationTests.cs` | 验证 Transform 输入校验：合法/空/NaN/Infinity→中文错误 | 测试通过 |
+| `FluidWarfare.Tests/Editor/EntityTransform/EditorGroundPlacementStateTests.cs` | 验证放置模式状态：Begin/Complete/Cancel/Revision | 测试通过 |
+| `FluidWarfare.Tests/Editor/EntityTransform/EditorWorldDirtyStateTests.cs` | 验证场景修改状态：MarkDirty/Reset/Revision | 测试通过 |
+| `FluidWarfare.Tests/Render/Scene/Position/RenderSceneObjectPositionWriterTests.cs` | 验证 RenderScene 位置修改：同步 SelectionBounds/NoOp/其他实体不变 | 测试通过 |
+| `FluidWarfare.Tests/Engine/World/EntityPosition/WorldEntityPositionWriterTests.cs` | 验证 World 实体位置写入：存在/不存在/相同位置 NoOp | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Validation/VulkanValidationStatus.cs` | Vulkan Validation 启用状态枚举 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Validation/VulkanValidationInfo.cs` | Validation 状态信息，含状态、中文消息和消息数量 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Validation/VulkanValidationOptions.cs` | 从 FW_VULKAN_VALIDATION 环境变量读取是否请求启用 Validation | 测试通过 |
@@ -790,7 +801,7 @@ get_tree.bat
 | `FluidWarfare.Tests/Render/Vulkan/Validation/VulkanValidationMessageStoreTests.cs` | 验证消息存储的上限和快照 | 测试通过 |
 | `FluidWarfare.Engine/Components/PositionComponent.cs` | 实体位置组件，包装 Vector3d | 测试通过 |
 | `FluidWarfare.Engine/Components/DisplayNameComponent.cs` | 实体显示名组件，保存用于 Editor 显示的名称 | 测试通过 |
-| `FluidWarfare.Tests/Engine/World/WorldStateTests.cs` | 验证最小 World 实体创建、查询、位置读取与枚举 | 测试通过 |
+| `FluidWarfare.Tests/Engine/World/WorldStateTests.cs` | 验证最小 World 实体创建、查询、位置读写与枚举 | 测试通过 |
 | `FluidWarfare.Project/Paths/SampleProjectPath.cs` | 从指定起始目录向上查找 GameProjects/SampleProject/game.project.json，用于稳定定位示例项目路径 | 测试通过 |
 | `FluidWarfare.Tests/FluidWarfare.Tests.csproj` | xUnit 测试项目，引用 Core 与 Project | 已创建 |
 | `FluidWarfare.Tests/CoreSmokeTests.cs` | 最小 Core 项目可用性测试 | 已创建 |
@@ -872,6 +883,11 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Assets/Icons/Hierarchy/toggle-minus.svg` | 折叠按钮 `-` SVG 图标（方框 24×24） | 已创建 |
 | `FluidWarfare.Editor/ViewportGround/EditorGroundPointerState.cs` | 平台无关地面指针状态：HoverHit（状态栏）+ CommittedHit（Scene3D 标记）+ Revision | 测试通过 |
 | `FluidWarfare.Editor/ViewportGround/EditorGroundPointerChange.cs` | 地面指针状态变更结果（IsChanged / IsCommit） | 测试通过 |
+| `FluidWarfare.Editor/EntityTransform/EditorEntityTransformDraft.cs` | 检查器 Transform 草稿（EntityId + X/Y/Z Text + IsDirty） | 测试通过 |
+| `FluidWarfare.Editor/EntityTransform/EditorEntityTransformValidation.cs` | Transform 输入校验（空/NaN/Infinity→中文错误） | 测试通过 |
+| `FluidWarfare.Editor/EntityTransform/EditorEntityTransformChange.cs` | 正式实体位置修改记录（Previous/Current + Origin + Revision） | 测试通过 |
+| `FluidWarfare.Editor/EntityTransform/EditorGroundPlacementState.cs` | 地面放置模式状态（IsActive/TargetEntityId） | 测试通过 |
+| `FluidWarfare.Editor/EntityTransform/EditorWorldDirtyState.cs` | 场景修改状态跟踪（IsDirty/LastChangedEntityId/Revision） | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml` | World 实体列表面板 UI，使用收紧标题与间距显示当前 World 实体列表 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/WorldEntities/WorldEntityListPanel.axaml.cs` | World 实体列表面板后台逻辑，接收 WorldEntityInfo 列表并在点击时发出 EntitySelected 事件 | 可运行 |
 | `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml` | 检查器面板占位，使用收紧标题与间距显示未选择对象或当前选择详情 | 可运行 |

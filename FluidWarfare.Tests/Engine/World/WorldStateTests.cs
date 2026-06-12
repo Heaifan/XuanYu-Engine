@@ -139,4 +139,68 @@ public sealed class WorldStateTests
         Assert.Contains(entities, e => e.EntityId == id1 && e.DisplayName == "实体甲");
         Assert.Contains(entities, e => e.EntityId == id2 && e.DisplayName == "实体乙");
     }
+
+    [Fact]
+    public void SetPosition_ExistingEntity_UpdatesPosition()
+    {
+        var world = new WorldState();
+        var id = world.CreateEntity("测试单位", new Vector3d(0, 0, 0));
+
+        var changed = world.SetPosition(id, new Vector3d(10, 20, 30));
+        Assert.True(changed);
+
+        var pos = world.FindPosition(id);
+        Assert.NotNull(pos);
+        Assert.Equal(new Vector3d(10, 20, 30), pos.Value.Value);
+    }
+
+    [Fact]
+    public void SetPosition_UnknownEntity_ReturnsFalse()
+    {
+        var world = new WorldState();
+        var unknownId = EntityId.FromInt(999);
+
+        Assert.False(world.SetPosition(unknownId, Vector3d.Zero));
+    }
+
+    [Fact]
+    public void SetPosition_SamePosition_DoesNotChange()
+    {
+        var world = new WorldState();
+        var id = world.CreateEntity("测试单位", new Vector3d(5, 0, -3));
+
+        var changed = world.SetPosition(id, new Vector3d(5, 0, -3));
+        Assert.False(changed);
+
+        var pos = world.FindPosition(id);
+        Assert.NotNull(pos);
+        Assert.Equal(new Vector3d(5, 0, -3), pos.Value.Value);
+    }
+
+    [Fact]
+    public void SetPosition_DifferentPosition_IncreasesRevision()
+    {
+        var world = new WorldState();
+        var id = world.CreateEntity("测试单位", new Vector3d(0, 0, 0));
+
+        world.SetPosition(id, new Vector3d(1, 0, 0));
+        world.SetPosition(id, new Vector3d(2, 0, 0));
+        var pos = world.FindPosition(id);
+        Assert.NotNull(pos);
+        Assert.Equal(new Vector3d(2, 0, 0), pos.Value.Value);
+    }
+
+    [Fact]
+    public void SetPosition_OtherEntities_RemainUnchanged()
+    {
+        var world = new WorldState();
+        var id1 = world.CreateEntity("实体1", new Vector3d(0, 0, 0));
+        var id2 = world.CreateEntity("实体2", new Vector3d(100, 100, 100));
+
+        world.SetPosition(id1, new Vector3d(10, 10, 10));
+
+        var pos2 = world.FindPosition(id2);
+        Assert.NotNull(pos2);
+        Assert.Equal(new Vector3d(100, 100, 100), pos2.Value.Value);
+    }
 }

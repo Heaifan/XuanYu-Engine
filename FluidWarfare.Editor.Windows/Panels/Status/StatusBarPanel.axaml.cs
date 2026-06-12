@@ -7,6 +7,7 @@ public sealed partial class StatusBarPanel : UserControl
     private TextBlock? _currentSelectionText;
     private TextBlock? _vulkanStatusText;
     private TextBlock? _groundCoordText;
+    private TextBlock? _dirtyStateText;
 
     public StatusBarPanel()
     {
@@ -14,6 +15,7 @@ public sealed partial class StatusBarPanel : UserControl
         _currentSelectionText = this.FindControl<TextBlock>("CurrentSelectionText");
         _vulkanStatusText = this.FindControl<TextBlock>("VulkanStatusText");
         _groundCoordText = this.FindControl<TextBlock>("GroundCoordText");
+        _dirtyStateText = this.FindControl<TextBlock>("DirtyStateText");
     }
 
     public void SetVulkanStatus(string vulkanStatus)
@@ -37,6 +39,14 @@ public sealed partial class StatusBarPanel : UserControl
         if (_groundCoordText is not null)
         {
             _groundCoordText.Text = text;
+        }
+    }
+
+    public void SetDirtyState(bool isDirty)
+    {
+        if (_dirtyStateText is not null)
+        {
+            _dirtyStateText.Text = isDirty ? "场景：已修改" : "场景：未修改";
         }
     }
 }

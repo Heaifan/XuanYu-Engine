@@ -13,14 +13,66 @@
           FontWeight="SemiBold"
           Foreground="#F0F4F8"
           Text="检查器" />
+
+      <!-- 未选择状态 -->
       <TextBlock x:Name="EmptySelectionText" Foreground="#C9D1D9" Text="未选择对象" />
+
+      <!-- 选择详情区域（含实体信息和 Transform） -->
       <StackPanel x:Name="SelectionDetails" IsVisible="False" Spacing="10">
+        <!-- 实体信息 -->
+        <TextBlock Text="实体信息" FontSize="12" FontWeight="SemiBold" Foreground="#7D8792" />
         <TextBlock x:Name="SelectionKindText" Foreground="#C9D1D9" />
         <TextBlock x:Name="SelectionNameText" Foreground="#C9D1D9" />
-        <TextBlock
-            x:Name="SelectionDescriptionText"
-            Foreground="#C9D1D9"
-            TextWrapping="Wrap" />
+        <TextBlock x:Name="SelectionEntityIdText" Foreground="#7D8792" FontSize="11" />
+        <TextBlock x:Name="SelectionSourceText" Foreground="#7D8792" FontSize="11" TextWrapping="Wrap" />
+
+        <Rectangle Height="1" Fill="#48515C" Margin="0,4" />
+
+        <!-- Transform 编辑区（仅世界实体显示） -->
+        <StackPanel x:Name="TransformSection" IsVisible="False" Spacing="6">
+          <TextBlock Text="Transform" FontSize="12" FontWeight="SemiBold" Foreground="#7D8792" />
+
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock Grid.Column="0" Text="X" Foreground="#C9D1D9" VerticalAlignment="Center" />
+            <TextBox Grid.Column="2" x:Name="TransformXText" Text="0.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
+                     TextChanged="OnTransformTextChanged" UseFloatingPlaceholder="False" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock Grid.Column="0" Text="Y" Foreground="#C9D1D9" VerticalAlignment="Center" />
+            <TextBox Grid.Column="2" x:Name="TransformYText" Text="0.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
+                     TextChanged="OnTransformTextChanged" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock Grid.Column="0" Text="Z" Foreground="#C9D1D9" VerticalAlignment="Center" />
+            <TextBox Grid.Column="2" x:Name="TransformZText" Text="0.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
+                     TextChanged="OnTransformTextChanged" />
+          </Grid>
+
+          <!-- 错误信息 -->
+          <TextBlock x:Name="TransformErrorText" Foreground="#F85149" FontSize="11"
+                     TextWrapping="Wrap" IsVisible="False" />
+
+          <!-- 按钮行 -->
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <Button x:Name="ApplyButton" Content="应用坐标"
+                    Click="OnApplyClicked"
+                    IsEnabled="False"
+                    Foreground="#FFFFFF" Background="#1769AA"
+                    BorderThickness="0" Padding="10,4" />
+            <Button x:Name="ResetButton" Content="重置"
+                    Click="OnResetClicked"
+                    Foreground="#E6EDF3" Background="#30363D"
+                    BorderThickness="0" Padding="10,4" />
+            <Button x:Name="GroundPlaceButton" Content="在地面放置"
+                    Click="OnGroundPlaceClicked"
+                    IsEnabled="False"
+                    Foreground="#FFFFFF" Background="#238636"
+                    BorderThickness="0" Padding="10,4" />
+          </StackPanel>
+        </StackPanel>
       </StackPanel>
     </StackPanel>
   </Border>

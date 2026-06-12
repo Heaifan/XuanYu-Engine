@@ -1117,6 +1117,50 @@ file-tree.md
 
 ---
 
+### Milestone 8.7 — 单实体 Transform 编辑与地面放置
+
+#### 新增
+
+1. **WorldState.SetPosition**：`FluidWarfare.Engine/World/WorldState.cs` 新增位置修改方法，支持 NoOp 检测。
+2. **Editor Transform 模型**（5 文件）：`FluidWarfare.Editor/EntityTransform/EditorEntityTransformDraft.cs`（UI 草稿）、`EditorEntityTransformValidation.cs`（输入校验）、`EditorEntityTransformChange.cs`（变更记录）、`EditorGroundPlacementState.cs`（放置模式状态）、`EditorWorldDirtyState.cs`（场景修改跟踪）。
+3. **WorldEntityPositionWriter**（3 文件）：`FluidWarfare.Engine/World/EntityPosition/WorldEntityPositionChange.cs`、`WriteResult.cs`、`Writer.cs`。
+4. **RenderSceneObjectPositionWriter**（3 文件）：`FluidWarfare.Render/Scene/Position/RenderObjectPositionChange.cs`、`WriteResult.cs`、`RenderSceneObjectPositionWriter.cs`。
+5. **VulkanScene3dFrameReason**：新增 `EntityTransformChanged`。
+6. **VulkanScene3dSession**：新增 `UpdateEntityPosition(entityId, x, y, z)` 方法 + `_cachedUnitDraws` 缓存 + `TransformRevision`。
+7. **InspectorPanel 重写**：实体信息区（Kind/Name/EntityId/Source）+ Transform 编辑区（X/Y/Z 输入 + 应用/重置/地面放置按钮 + 错误信息）+ 项目文件模式。
+8. **Esc 键处理**：`WindowsVulkanViewportHostControl` 新增 `EscapeRequested` 事件，转发至 `VulkanViewportHostPanel`。
+9. **StatusBarPanel**：新增 `DirtyStateText` + `SetDirtyState()`。
+
+#### 修改
+
+1. `EditorShell.axaml.cs`：订阅 InspectorPanel Transform 事件；`HandleTransformApply` 实现原子式坐标提交（World → RenderScene → Session 三同步）；`HandleGroundPlacementToggle` 进入/退出地面放置模式；`HandleViewportPick` 在放置模式中只接受空白地面；`HandleViewportEscape` 取消放置。
+2. `ShowWorldEntitySelection` 使用新 `InspectorPanel.ShowWorldEntitySelection` API 传入 EntityId + Position + Source。
+3. `OnProjectContentSelected` 使用 `InspectorPanel.ShowProjectFileSelection`（隐藏 Transform 区）。
+4. `WindowsVulkanViewportHostControl`：新增 `VkEscape = 0x1B` + `EscapeRequested` 事件 + WndProc 处理。
+5. `VulkanViewportHostPanel`：转发 `EscapeRequested`。
+
+#### 验证
+
+- ✅ Build: 0 错误, 0 警告
+- ✅ Test: 413/413 全部通过（新增 39 个）
+- ✅ 检查器可修改单实体 X/Y/Z 坐标
+- ✅ 无效输入（空/NaN/Infinity）显示中文错误，不污染状态
+- ✅ 相同坐标提交为 NoOp（World/RenderScene/Session 均不变）
+- ✅ WorldState 是唯一数据真源
+- ✅ RenderScene + SelectionBounds 同步更新
+- ✅ 旧位置不能再选中实体
+- ✅ 新位置可以准确选中实体
+- ✅ 一次修改最多提交一帧
+- ✅ 地面放置模式可移动当前实体至地面点击位置（Y=0）
+- ✅ Esc 可无副作用取消放置
+- ✅ 放置后实体保持选中
+- ✅ 项目模板 JSON 不被修改
+- ✅ Scene3D Session 不重启
+- ✅ Instance/Device/Pipeline/VertexBuffer/Swapchain 创建计数不变
+- ✅ 场景 Dirty State 正确（"场景：已修改"/"场景：未修改"）
+- ✅ 不越界：无寻路、移动命令、Gizmo、多选
+- ✅ CHANGELOG.md 已同步
+
 ### Milestone 8.6 — 3D 地面拾取、世界坐标反馈与落点标记
 
 #### 新增

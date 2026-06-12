@@ -22,6 +22,8 @@
       <TextBlock x:Name="CurrentSelectionText" Foreground="#E6EDF3" Text="当前选择：无" />
       <TextBlock Foreground="#7D8792" Text="|" />
       <TextBlock x:Name="GroundCoordText" Foreground="#7D8792" Text="地面坐标：无" />
+      <TextBlock Foreground="#7D8792" Text="|" />
+      <TextBlock x:Name="DirtyStateText" Foreground="#E6EDF3" Text="场景：未修改" />
     </StackPanel>
   </Border>
 </UserControl>

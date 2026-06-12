@@ -39,6 +39,10 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
     // Ground Cursor Buffer
     private Silk.NET.Vulkan.Buffer _cursorBuffer;
+
+    // UnitDrawData 缓存（避免每帧重新分配）
+    private VulkanScene3dUnitDrawInfo[] _cachedUnitDraws = [];
+    private int _transformRevision;
     private DeviceMemory _cursorMemory;
     private int _cursorVertexCount;
     private bool _cursorBufOk;
@@ -109,6 +113,9 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 _cursorVertexCount, _cursorState.IsVisible ? 1 : 0)
             : VulkanGroundCursorInfo.Hidden;
 
+    /// <summary>实体 Transform 修订号（位置变化递增）。</summary>
+    public int TransformRevision => _transformRevision;
+
     /// <summary>
     /// 设置当前选中实体。EntityId 无变化时不触发帧。
     /// </summary>
@@ -131,6 +138,39 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         if (_status != VulkanScene3dSessionStatus.Active)
             return false;
         return _cursorState.Set(worldPosition);
+    }
+
+    /// <summary>
+    /// 更新一个实体的绘制位置。修改缓存的 UnitDrawData。
+    /// 不创建 Instance/Device/Swapchain/Pipeline/VertexBuffer。
+    /// </summary>
+    /// <param name="entityId">实体 ID 字符串。</param>
+    /// <param name="x">新 X 坐标。</param>
+    /// <param name="y">新 Y 坐标。</param>
+    /// <param name="z">新 Z 坐标。</param>
+    /// <returns>是否实际变化（相同坐标返回 false）。</returns>
+    public bool UpdateEntityPosition(string entityId, float x, float y, float z)
+    {
+        for (var i = 0; i < _cachedUnitDraws.Length; i++)
+        {
+            var draw = _cachedUnitDraws[i];
+            if (draw.EntityId == entityId)
+            {
+                if (Math.Abs(draw.X - x) < 1e-6f &&
+                    Math.Abs(draw.Y - y) < 1e-6f &&
+                    Math.Abs(draw.Z - z) < 1e-6f)
+                {
+                    return false; // NoOp
+                }
+
+                _cachedUnitDraws[i] = new VulkanScene3dUnitDrawInfo(
+                    entityId, x, y, z, draw.Scale);
+                _transformRevision++;
+                return true;
+            }
+        }
+
+        return false; // EntityId not found in session
     }
 
     /// <summary>
@@ -513,11 +553,17 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             var aspect = _swapchainRes.Extent.Width / (float)_swapchainRes.Extent.Height;
             var vp = VulkanCameraMatrices.ComputeVulkanMVP(camWithTarget, aspect);
 
-            // 6. Per-object MVP + Tint
-            var unitDrawData = new VulkanScene3dCommandRecorder.UnitDrawData[unitDraws.Length];
-            for (var i = 0; i < unitDraws.Length; i++)
+            // 6. Sync cached unit draws from incoming data (first call or after resize)
+            if (_cachedUnitDraws.Length != unitDraws.Length)
             {
-                var draw = unitDraws[i];
+                _cachedUnitDraws = unitDraws.ToArray();
+            }
+
+            // 7. Build per-object MVP + Tint from cached UnitDrawData
+            var unitDrawData = new VulkanScene3dCommandRecorder.UnitDrawData[_cachedUnitDraws.Length];
+            for (var i = 0; i < _cachedUnitDraws.Length; i++)
+            {
+                var draw = _cachedUnitDraws[i];
                 var trans = VulkanCameraMatrices.CreateTranslation(draw.X, draw.Y, draw.Z);
                 var scale = VulkanCameraMatrices.CreateScale(draw.Scale);
                 var model = VulkanCameraMatrices.Mul(trans, scale);
@@ -529,7 +575,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 renderedUnitCount++;
             }
 
-            // 7. Build ground cursor data if visible
+            // 9. Build ground cursor data if visible
             VulkanScene3dCommandRecorder.GroundCursorDrawData? cursorData = null;
             if (_cursorState.IsVisible && _cursorState.WorldPosition is not null &&
                 _cursorBufOk && _cursorBuffer.Handle != 0)
@@ -542,7 +588,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                     _cursorBuffer, _cursorVertexCount, cursorMvp);
             }
 
-            // 8. Record command buffer
+            // 10. Record command buffer
             if (!VulkanScene3dCommandRecorder.Record(_vk, _swapchainRes.CommandBuffer,
                     _swapchainRes.RenderPass, _swapchainRes.Framebuffers[imgIndex],
                     _swapchainRes.Extent,
