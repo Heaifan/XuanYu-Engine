@@ -311,23 +311,18 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.3.3：Swapchain API 结果加固与生命周期规则收口。
+当前执行 Milestone 8.4：3D Picking、单位选择与视口高亮。
 
-管线进度：... → 持久会话 ✅ → 默认 3D 主视口 ✅ → 结果加固 ⬆️
+管线进度：... → 持久会话 ✅ → 默认 3D 主视口 ✅ → 结果加固 ✅ → Picking ⬆️
 
 当前状态：
 - Scene3D 为 Editor 默认主视口，自动启动持久 Session。
-- Vulkan Validation Layer 默认在 Session Instance 中启用（FW_VULKAN_VALIDATION=1）。
-- LookAt 矩阵已修复为列优先，画面为正确 RTS 俯视。
-- FW_DISABLE_SCENE3D=1 可紧急关闭 3D。
-- Surface 查询委托返回类型修正为 Result，两阶段枚举处理 Incomplete。
-- AcquireNextImage 使用 100ms 有限等待，分类处理 Timeout/NotReady/OutOfDate/Suboptimal/SurfaceLost/DeviceLost。
-- QueuePresent 分类处理各 VkResult。
-- Acquire 超时或失败时不得 Reset Fence。
-- ZeroExtent (0×0) 忽略，Session 保持 Active。
-- 连续 10 次 Acquire 超时后 Session 终止。
-- 生命周期不变量校验集成到 Start/Resize/Dispose 关键点。
-- 代码宪法新增 Vulkan 返回值、两阶段枚举、有限等待、native 资源对称、Swapchain 唯一入口规则。
+- 左键点击 3D 单位 → CPU Ray-AABB Picking → 选中最近单位。
+- 选中单位通过 Push Constant Tint 实现橙黄色高亮。
+- 视口、World 实体列表、检查器三向同步，使用稳定 EntityId。
+- 普通单位：rgba(1.00, 0.82, 0.20, 1.00) / 选中单位：rgba(1.00, 0.35, 0.05, 1.00)。
+- Picking 不创建任何 Vulkan 资源。
+- 不做框选、多选、地面拾取、单位移动、GPU Picking、轮廓后处理。
 
 ## 3. 顶层目录结构
 
@@ -403,6 +398,12 @@ FluidWarfare/
 |   |   |-- RenderObjectInfo.cs
 |   |   |-- RenderObjectVisualKind.cs
 |   |   `-- RenderScene.cs
+|   |-- Selection/
+|   |   |-- SceneRay.cs
+|   |   |-- SceneAxisAlignedBounds.cs
+|   |   |-- SceneRayBoundsIntersection.cs
+|   |   |-- RenderScenePickResult.cs
+|   |   `-- RenderScenePicker.cs
 |   `-- World/
 |       `-- WorldToRenderSceneBuilder.cs
 |-- FluidWarfare.Render.Vulkan/
@@ -430,6 +431,7 @@ FluidWarfare/
 |       `-- VulkanMarkerClearRectRenderer.cs
 |   |-- Scene3D/
 |   |   |-- VulkanScene3dInfo.cs
+|   |   |-- VulkanScene3dPushConstants.cs
 |   |   |-- VulkanScene3dRenderer.cs
 |   |   |-- VulkanScene3dStatus.cs
 |   |   |-- VulkanScene3dVertex.cs
@@ -454,7 +456,8 @@ FluidWarfare/
 |   |   |       `-- VulkanScene3dPresentModes.cs
 |   |-- Camera/
 |   |   |-- VulkanCameraInfo.cs
-|   |   `-- VulkanCameraMatrices.cs
+|   |   |-- VulkanCameraMatrices.cs
+|   |   `-- VulkanSceneRayBuilder.cs
 |   `-- Shaders/
 |       |-- basic_3d.frag
 |       |-- basic_3d.vert
@@ -512,7 +515,8 @@ FluidWarfare/
 |   |       |-- NativeHost/
 |   |       |   |-- WindowsVulkanViewportHostControl.cs
 |   |       |   |-- WindowsVulkanViewportHostInfo.cs
-|   |       |   `-- WindowsVulkanViewportHostState.cs
+|   |       |   |-- WindowsVulkanViewportHostState.cs
+|   |       |   `-- WindowsVulkanViewportPickInput.cs
 |   |       |-- VulkanViewportHostInfo.cs
 |   |       |-- VulkanViewportNativeHostInfo.cs
 |   |       |-- VulkanViewportHostPanel.axaml
@@ -742,6 +746,14 @@ get_tree.bat
 | `FluidWarfare.Tests/Render/Vulkan/Scene3D/VulkanScene3dRunGateTests.cs` | 验证 Scene3D 运行闸门的隔离状态、提示文本和 Ready/Isolated 语义 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dRunGate.cs` | Scene3D 实验渲染路径运行闸门，当前用于阻止未验证 SPIR-V/Pipeline 路径进入 Editor 启动流程 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dFrameStatus.cs` | 帧状态枚举：Presented / Skipped / RecreateRequested / Failed | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/VulkanScene3dPushConstants.cs` | Push Constant 布局（MVP 64B + Tint 16B = 80B）与选中/普通色常量 | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Camera/VulkanSceneRayBuilder.cs` | 从视口像素坐标经逆 ViewProjection 生成世界空间射线 | 测试通过 |
+| `FluidWarfare.Render/Selection/SceneRay.cs` | 世界空间射线（Origin + Normalized Direction） | 测试通过 |
+| `FluidWarfare.Render/Selection/SceneAxisAlignedBounds.cs` | 轴对齐包围盒（Center + HalfExtents） | 测试通过 |
+| `FluidWarfare.Render/Selection/SceneRayBoundsIntersection.cs` | Slab 法射线-AABB 相交检测 | 测试通过 |
+| `FluidWarfare.Render/Selection/RenderScenePickResult.cs` | Picking 结构化结果（IsHit / EntityId / Distance / WorldHitPosition） | 测试通过 |
+| `FluidWarfare.Render/Selection/RenderScenePicker.cs` | CPU 线性遍历 RenderScene 选择最近命中 UnitMarker | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportPickInput.cs` | Win32 左键点击检测（阈值 4px），转发 PickRequested 事件 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Swapchain/VulkanScene3dSwapchainInvariant.cs` | Swapchain 生命周期不变量断言（Active Live=1 / Disposed Live=0） | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Surface/VulkanScene3dSurfaceFormats.cs` | SurfaceFormatKHR 两阶段枚举 + Incomplete 有限重试（最多 3 次） | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Scene3D/Session/Surface/VulkanScene3dPresentModes.cs` | PresentModeKHR 两阶段枚举 + Incomplete 有限重试（最多 3 次） | 测试通过 |

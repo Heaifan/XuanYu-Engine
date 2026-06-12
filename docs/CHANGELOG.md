@@ -1111,6 +1111,59 @@ file-tree.md
 
 ---
 
+---
+
+### Milestone 8.4 — 3D Picking 与单位选择
+
+#### 新增
+
+1. **Render 层 Selection 数学**（5 个文件）：
+   - `SceneRay.cs`：世界空间射线（Origin + Normalized Direction）。
+   - `SceneAxisAlignedBounds.cs`：AABB（Center + HalfExtents）。
+   - `SceneRayBoundsIntersection.cs`：Slab 算法射线-AABB 相交，正确处理近零方向、内部发射、后方检测。
+   - `RenderScenePickResult.cs`：结构化 Picking 结果（IsHit / EntityId / Distance / WorldHitPosition）。
+   - `RenderScenePicker.cs`：线性遍历 RenderScene，选择最近命中对象，忽略非 UnitMarker 类型。
+
+2. **RenderObject 选择包围盒**：`RenderObjectInfo` 新增 `SelectionBounds`，与渲染尺寸使用同一数据源（1.25 缩放，Y+0.5 偏移），防止绘制与 Picking 尺寸分叉。
+
+3. **Vulkan Push Constants 扩展**：
+   - `VulkanScene3dPushConstants.cs`：80 字节（MVP 64B + Tint 16B），普通色 `rgba(1.00,0.82,0.20,0)`，选中色 `rgba(1.00,0.35,0.05,1)`。
+   - Shader 更新：`mix(inColor.rgb, tint.rgb, tint.a)`。
+   - PipelineLayout 更新为 80 字节，增加 MaxPushConstantsSize 检查。
+   - CommandRecorder：每个单位独立 UnitDrawData（MVP + Tint）。
+
+4. **Vulkan 射线构建**：`VulkanSceneRayBuilder.cs`，像素→NDC→逆 ViewProjection→世界射线，高斯-约旦 4x4 求逆。
+
+5. **Session 选择状态**：`SelectedEntityId`、`SetSelectedEntity()`、`SelectionChanged` FrameReason。
+
+6. **Win32 左键输入**：`WindowsVulkanViewportPickInput.cs`，按下记录、松开判定（阈值 4px），通过 WndProc 转发。
+
+7. **EditorShell 统一选择**：`ApplyEntitySelection()` 方法，`_isSynchronizingSelection` 防递归，World 列表↔视口↔检查器双向同步。
+
+8. **WorldEntityListPanel 增强**：`SelectEntity()`/`ClearSelection()`，选中实体蓝色高亮。
+
+9. **InspectorPanel**：新增 `ShowNoSelection()`。
+
+#### 修改
+
+1. `WorldToRenderSceneBuilder`：为每个 UnitMarker 创建 SelectionBounds。
+2. `VulkanScene3dCommandRecorder`：参数改为 `UnitDrawData[]`，每对象独立 PushConstants 分段推送（offset 0 MVP + offset 64 Tint）。
+3. `VulkanScene3dSession`：帧循环使用 `UnitDrawData` + Tint；新增 `SetSelectedEntity`。
+4. `VulkanScene3dFrameReason`：新增 `SelectionChanged`。
+5. `basic_3d.vert`：增加 tint push constant，mix 顶点色与覆盖色。
+6. `EditorShell`：整合 Picking 链路；`OnWorldEntitySelected` 改为调用统一方法。
+7. `WindowsVulkanViewportHostControl`：新增 `PickRequested` 事件 + WM_LBUTTONDOWN/UP 处理。
+
+#### 测试
+
+- ❌ 本轮未新增单元测试（Ray-AABB、SceneRayBuilder、RenderScenePicker 等测试待后续补全）
+- ⚠️ 330/330 全部通过，无回归
+
+#### 禁止事项
+
+- 不做框选、多选、Ctrl/Shift 组合选择、地面拾取、单位移动、右键命令、悬停高亮、轮廓后处理、GPU Picking、空间索引、纹理、材质、光照、模型加载。
+- Picking 不创建任何 Vulkan 资源（Session Start/Resize/Dispose 计数不增加）。
+
 ### Milestone 8.3.3 — Swapchain API 结果加固与生命周期规则收口
 
 #### 修复
