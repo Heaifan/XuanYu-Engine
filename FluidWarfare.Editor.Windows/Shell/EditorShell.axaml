@@ -7,7 +7,7 @@
     xmlns:project="clr-namespace:FluidWarfare.Editor.Windows.Panels.Project"
     xmlns:status="clr-namespace:FluidWarfare.Editor.Windows.Panels.Status"
     xmlns:viewport="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport"
-    xmlns:worldEntities="clr-namespace:FluidWarfare.Editor.Windows.Panels.WorldEntities">
+    xmlns:worldHierarchy="clr-namespace:FluidWarfare.Editor.Windows.Panels.WorldHierarchy">
   <Grid Background="#202327" RowDefinitions="44,*,200,28">
     <Border
         Grid.Row="0"
@@ -31,7 +31,7 @@
     <Grid Grid.Row="1" ColumnDefinitions="260,*,300">
       <Grid Grid.Column="0" RowDefinitions="2*,*">
         <project:ProjectPanel Grid.Row="0" x:Name="ProjectPanel" />
-        <worldEntities:WorldEntityListPanel Grid.Row="1" x:Name="WorldEntityListPanel" />
+        <worldHierarchy:WorldHierarchyTreePanel Grid.Row="1" x:Name="WorldHierarchyTreePanel" />
       </Grid>
       <viewport:VulkanViewportHostPanel Grid.Column="1" x:Name="VulkanViewportHostPanel" />
       <inspector:InspectorPanel Grid.Column="2" x:Name="InspectorPanel" />

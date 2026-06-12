@@ -8,12 +8,13 @@ using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
 using FluidWarfare.Core.Math;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
+using FluidWarfare.Editor.WorldHierarchy;
+using FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Project;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
-using FluidWarfare.Editor.Windows.Panels.WorldEntities;
 using FluidWarfare.Engine.World;
 using FluidWarfare.Project.Content;
 using FluidWarfare.Project.Loading;
@@ -45,7 +46,7 @@ public sealed partial class EditorShell : UserControl
     private StatusBarPanel? _statusBarPanel;
     private ViewportPlaceholderPanel? _viewportPlaceholderPanel;
     private VulkanViewportHostPanel? _vulkanViewportHostPanel;
-    private WorldEntityListPanel? _worldEntityListPanel;
+    private WorldHierarchyTreePanel? _hierarchyTreePanel;
     private readonly Dictionary<string, GameContentFolderInfo> _contentFoldersByFolderName = [];
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
     private WorldState? _worldState;
@@ -104,7 +105,7 @@ public sealed partial class EditorShell : UserControl
         _statusBarPanel = this.FindControl<StatusBarPanel>("EditorStatusBarPanel");
         _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
         _vulkanViewportHostPanel = this.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanel");
-        _worldEntityListPanel = this.FindControl<WorldEntityListPanel>("WorldEntityListPanel");
+        _hierarchyTreePanel = this.FindControl<WorldHierarchyTreePanel>("WorldHierarchyTreePanel");
         _runMenuButton = this.FindControl<Button>("RunMenuButton");
     }
 
@@ -120,9 +121,9 @@ public sealed partial class EditorShell : UserControl
             _viewportPlaceholderPanel.ViewportFocused += HandleViewportFocused;
         }
 
-        if (_worldEntityListPanel is not null)
+        if (_hierarchyTreePanel is not null)
         {
-            _worldEntityListPanel.EntitySelected += OnWorldEntitySelected;
+            _hierarchyTreePanel.EntitySelectionRequested += OnHierarchyEntitySelected;
         }
 
         if (_vulkanViewportHostPanel is not null)
@@ -348,9 +349,9 @@ public sealed partial class EditorShell : UserControl
         HandleMenuClicked("帮助");
     }
 
-    private void OnWorldEntitySelected(WorldEntityInfo entityInfo)
+    private void OnHierarchyEntitySelected(string? entityId)
     {
-        ApplyEntitySelection(entityInfo.EntityId.Value.ToString(), EditorSelectionOrigin.WorldList);
+        ApplyEntitySelection(entityId, EditorSelectionOrigin.WorldList);
     }
 
     private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
@@ -475,7 +476,6 @@ public sealed partial class EditorShell : UserControl
     private void ShowProjectLoadFailure(string message, ProjectValidationReport report)
     {
         _projectPanel?.ShowNoProject();
-        _worldEntityListPanel?.ShowEntities([]);
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
 
         var selection = new EditorSelection(
@@ -500,7 +500,7 @@ public sealed partial class EditorShell : UserControl
 
         if (_contentFiles is null || _contentFiles.Count == 0)
         {
-            _worldEntityListPanel?.ShowEntities([]);
+            RebuildAndShowHierarchy();
             _viewportPlaceholderPanel?.ShowNoWorldEntity();
             _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
             AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
@@ -513,7 +513,7 @@ public sealed partial class EditorShell : UserControl
 
         if (seedResult.CreatedEntityCount == 0)
         {
-            _worldEntityListPanel?.ShowEntities([]);
+            RebuildAndShowHierarchy();
             _viewportPlaceholderPanel?.ShowNoWorldEntity();
             _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
             AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
@@ -535,8 +535,8 @@ public sealed partial class EditorShell : UserControl
         _renderScene = WorldToRenderSceneBuilder.Build(_worldState);
         AppendInfoLog($"RenderScene 已生成，渲染对象数量：{_renderScene.Objects.Count}。");
 
-        // 更新实体列表，视口保持默认状态等待用户选择
-        _worldEntityListPanel?.ShowEntities(entities);
+        // 构建层级树并显示
+        RebuildAndShowHierarchy();
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
         _viewportPlaceholderPanel?.ShowRenderSceneSummary(CreateViewportRenderSceneSummary());
     }
@@ -1103,7 +1103,7 @@ public sealed partial class EditorShell : UserControl
                 }
 
                 // 更新左侧列表（从 Viewport 选择时同步到列表）
-                _worldEntityListPanel?.SelectEntity(entityInfo.EntityId);
+                _hierarchyTreePanel?.RevealEntity(entityInfo.EntityId.Value.ToString());
 
                 // 更新检查器和状态栏
                 ShowWorldEntitySelection(entityInfo);
@@ -1136,7 +1136,7 @@ public sealed partial class EditorShell : UserControl
             }
         }
 
-        _worldEntityListPanel?.ClearSelection();
+        _hierarchyTreePanel?.ClearEntitySelection();
         _inspectorPanel?.ShowNoSelection();
         _statusBarPanel?.SetCurrentSelection("无");
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
@@ -1200,6 +1200,37 @@ public sealed partial class EditorShell : UserControl
 
         // 更新诊断信息
         UpdateAllDiagnostics();
+    }
+
+    /// <summary>
+    /// 从当前 WorldState + RenderScene 构建层级树并显示。
+    /// </summary>
+    private void RebuildAndShowHierarchy()
+    {
+        if (_worldState is null)
+        {
+            _hierarchyTreePanel?.ShowHierarchy(WorldHierarchyTree.Empty);
+            return;
+        }
+
+        // 从 RenderScene 构建 EntityId → 分组名映射
+        Dictionary<EntityId, string>? groupLookup = null;
+        if (_renderScene.Objects.Count > 0)
+        {
+            groupLookup = new Dictionary<EntityId, string>();
+            foreach (var obj in _renderScene.Objects)
+            {
+                var groupName = obj.VisualKind switch
+                {
+                    RenderObjectVisualKind.UnitMarker => "单位",
+                    _ => "其他"
+                };
+                groupLookup[obj.EntityId] = groupName;
+            }
+        }
+
+        var tree = WorldHierarchyTreeBuilder.Build(_worldState, groupLookup);
+        _hierarchyTreePanel?.ShowHierarchy(tree);
     }
 
     private List<VulkanScene3dUnitDrawInfo> BuildUnitDrawList()

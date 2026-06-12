@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Render", "Flui
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Render.Vulkan", "FluidWarfare.Render.Vulkan\FluidWarfare.Render.Vulkan.csproj", "{4EE76D0B-B8AF-48DD-994E-289A6A698A89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Editor", "FluidWarfare.Editor\FluidWarfare.Editor.csproj", "{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,18 @@ Global
 		{4EE76D0B-B8AF-48DD-994E-289A6A698A89}.Release|x64.Build.0 = Release|Any CPU
 		{4EE76D0B-B8AF-48DD-994E-289A6A698A89}.Release|x86.ActiveCfg = Release|Any CPU
 		{4EE76D0B-B8AF-48DD-994E-289A6A698A89}.Release|x86.Build.0 = Release|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Debug|x64.Build.0 = Debug|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Debug|x86.Build.0 = Debug|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Release|x64.ActiveCfg = Release|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Release|x64.Build.0 = Release|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Release|x86.ActiveCfg = Release|Any CPU
+		{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
