@@ -17,27 +17,32 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private const int WsClipSiblings = 0x04000000;
     private const int WindowStyle = WsChild | WsVisible | WsClipChildren | WsClipSiblings;
 
-    // Win32 message constants
+    // Win32 消息常量
     private const uint WmMButtonDown = 0x0207;
     private const uint WmMButtonUp = 0x0208;
     private const uint WmMouseMove = 0x0200;
     private const uint WmMouseLeave = 0x02A3;
     private const uint WmMouseWheel = 0x020A;
     private const uint WmKeyDown = 0x0100;
+    private const uint WmKeyUp = 0x0101;
     private const uint WmKillFocus = 0x0008;
     private const uint WmLButtonDown = 0x0201;
     private const uint WmLButtonUp = 0x0202;
     private const uint WmCaptureChanged = 0x0215;
     private const uint WmNcHitTest = 0x0084;
+    // 虚拟键码
     private const int VkHome = 0x24;
     private const int VkEscape = 0x1B;
     private const int VkShift = 0x10;
     private const int VkControl = 0x11;
-    private const int VkDecimal = 0x6E; // Numpad period
-    private const int VkNumpad5 = 0x65; // Projection toggle (Blender numpad 5)
+    private const int VkMenu = 0x12;
+    private const int VkDecimal = 0x6E;
+    private const int VkNumpad5 = 0x65;
+    private const int VkMButton = 0x04;    // VK_MBUTTON (中键按钮码)
+    // 鼠标按钮码 (WM 消息 MK_* 标志，用于 wParam 低位)
+    private const int MkLButton = 0x0001;
+    private const int MkRButton = 0x0002;
     private const int MkMbutton = 0x0010;
-
-    private enum MouseDragMode { None, Orbit, Pan, Dolly }
 
     private static bool _classRegistered;
 
@@ -51,40 +56,25 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private int _height;
     private WindowsVulkanViewportHostInfo _hostInfo = WindowsVulkanViewportHostInfo.NotCreated;
 
-    // Input state
-    private MouseDragMode _mouseDragMode = MouseDragMode.None;
-    private int _lastMouseX;
-    private int _lastMouseY;
-    private bool _trackingMouseLeave;
+    // ─── 原始输入事件（Win32 层只转发原始消息，不含业务逻辑）──
 
-    // ─── 输入事件 ────────────────────────────────────────────
+    /// <summary>鼠标按钮按下（buttonCode: 1=Left, 2=Right, 4=Middle, x, y）。</summary>
+    public event Action<int, int, int>? RawPointerButtonDown;
 
-    /// <summary>鼠标中键拖拽环绕旋转（deltaYaw, deltaPitch）。</summary>
-    public event Action<float, float>? CameraOrbitRequested;
+    /// <summary>鼠标按钮抬起（buttonCode, x, y）。</summary>
+    public event Action<int, int, int>? RawPointerButtonUp;
 
-    /// <summary>Shift + 中键拖拽平移（deltaPixelX, deltaPixelY, viewportWidth, viewportHeight）。</summary>
-    public event Action<int, int, int, int>? CameraPanRequested;
+    /// <summary>鼠标在视口内原始移动（x, y）。</summary>
+    public event Action<int, int>? RawPointerMoved;
 
-    /// <summary>Ctrl + 中键拖拽推拉（deltaPixels）。</summary>
-    public event Action<float>? CameraDollyRequested;
+    /// <summary>键盘键按下（virtualKeyCode）。</summary>
+    public event Action<int>? RawKeyDown;
 
-    /// <summary>鼠标滚轮缩放（wheelNotches）。</summary>
-    public event Action<float>? CameraZoomRequested;
+    /// <summary>键盘键抬起（virtualKeyCode）。</summary>
+    public event Action<int>? RawKeyUp;
 
-    /// <summary>Home 相机重置。</summary>
-    public event Action? CameraResetRequested;
-
-    /// <summary>小键盘句点聚焦选中实体。</summary>
-    public event Action? NumpadPeriodRequested;
-
-    /// <summary>小键盘 5 切换投影模式（透视/正交）。</summary>
-    public event Action? CameraProjectionToggleRequested;
-
-    /// <summary>Esc 键按下。</summary>
-    public event Action? EscapeRequested;
-
-    /// <summary>左键点击拾取（pixelX, pixelY）。</summary>
-    public event Action<int, int>? PickRequested;
+    /// <summary>鼠标滚轮（HIWORD delta, modifiers-packed）。</summary>
+    public event Action<int, int>? RawMouseWheel;
 
     // ─── Overlay 导航输入事件 ────────────────────────────────────
 
@@ -100,18 +90,26 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     /// <summary>Overlay 导航鼠标捕获丢失。</summary>
     public event Action? NavigationCaptureLost;
 
-    /// <summary>鼠标在视口内移动（pixelX, pixelY）。</summary>
+    // ─── 遗留事件 ──────────────────────────────────────────
+
+    /// <summary>左键点击拾取（pixelX, pixelY）。遗留：未来迁移到 RawPointerButtonUp+Translator。</summary>
+    public event Action<int, int>? PickRequested;
+
+    /// <summary>鼠标在视口内移动（pixelX, pixelY，地面 hover 用）。</summary>
     public new event Action<int, int>? PointerMoved;
 
     /// <summary>鼠标离开视口。</summary>
     public event Action? PointerLeft;
 
+    // ─── 状态 ──────────────────────────────────────────────
+
+    private bool _trackingMouseLeave;
     private bool _leftButtonHandledByNavigation;
     private bool _navigationDragCaptured;
 
     public event EventHandler<WindowsVulkanViewportHostInfo>? HostInfoChanged;
 
-    // 左键点击跟踪
+    // 左键点击跟踪（遗留拾取）
     private readonly WindowsVulkanViewportPickInput _pickInput = new();
 
     public WindowsVulkanViewportHostControl()
@@ -206,16 +204,57 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             switch (msg)
             {
                 case WmMButtonDown:
-                    instance.HandleMButtonDown(lParam);
+                {
+                    SetFocus(instance._windowHandle);
+                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
+                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+                    System.Diagnostics.Debug.WriteLine(
+                        $"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={mx} y={my}");
+                    SetCapture(instance._windowHandle);
+                    instance.RawPointerButtonDown?.Invoke(VkMButton /* 4=Middle */, mx, my);
                     return 0;
+                }
 
                 case WmMButtonUp:
-                    instance.HandleMButtonUp();
+                {
+                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
+                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+                    System.Diagnostics.Debug.WriteLine(
+                        $"[InputTrace-NativeHost] WM_MBUTTONUP code=4(Middle)");
+                    ReleaseCapture();
+                    instance.RawPointerButtonUp?.Invoke(VkMButton, mx, my);
                     return 0;
+                }
 
                 case WmMouseMove:
-                    instance.HandleMouseMove(lParam);
+                {
+                    var x = (short)(lParam.ToInt64() & 0xFFFF);
+                    var y = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+
+                    // Track WM_MOUSELEAVE on first move
+                    if (!instance._trackingMouseLeave)
+                    {
+                        var tme = new TRACKMOUSEEVENT
+                        {
+                            cbSize = System.Runtime.InteropServices.Marshal.SizeOf<TRACKMOUSEEVENT>(),
+                            dwFlags = 0x00000002u,
+                            hwndTrack = instance._windowHandle
+                        };
+                        TrackMouseEvent(ref tme);
+                        instance._trackingMouseLeave = true;
+                    }
+
+                    // Overlay navigation gets first chance to consume
+                    var navConsumed = instance.NavigationPointerMoved?.Invoke(x, y) == true;
+                    if (instance._navigationDragCaptured) navConsumed = true;
+
+                    if (!navConsumed)
+                    {
+                        instance.RawPointerMoved?.Invoke(x, y);
+                        instance.PointerMoved?.Invoke(x, y); // 遗留地面 hover
+                    }
                     return 0;
+                }
 
                 case WmMouseLeave:
                     instance._trackingMouseLeave = false;
@@ -223,8 +262,16 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     return 0;
 
                 case WmMouseWheel:
-                    instance.HandleMouseWheel(wParam);
+                {
+                    var delta = (short)((wParam.ToInt64() >> 16) & 0xFFFF);
+                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
+                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+                    var mkFlags = (int)wParam & 0xFFFF;
+                    System.Diagnostics.Debug.WriteLine(
+                        $"[InputTrace-NativeHost] WM_MOUSEWHEEL delta={delta} mk=0x{mkFlags:X4}");
+                    instance.RawMouseWheel?.Invoke(delta, mkFlags);
                     return 0;
+                }
 
                 case WmLButtonDown:
                 {
@@ -244,9 +291,11 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     }
                     else if (!instance._leftButtonHandledByNavigation)
                     {
+                        // 遗留拾取
                         instance._pickInput.OnDown(mx, my);
+                        // 同时转发原始按钮事件
+                        instance.RawPointerButtonDown?.Invoke(1 /* Left */, mx, my);
                     }
-
                     return 0;
                 }
 
@@ -257,7 +306,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
                     if (instance._leftButtonHandledByNavigation)
                     {
-                        // 先清理本地标志，再 ReleaseCapture，避免 WM_CAPTURECHANGED 重复派发。
                         instance._leftButtonHandledByNavigation = false;
                         var hadCapture = instance._navigationDragCaptured;
                         instance._navigationDragCaptured = false;
@@ -267,25 +315,18 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     else
                     {
                         instance._pickInput.OnUp(mx, my);
+                        instance.RawPointerButtonUp?.Invoke(1 /* Left */, mx, my);
                     }
-
                     return 0;
                 }
 
-                case WmKeyDown when (int)wParam == VkHome:
-                    instance.CameraResetRequested?.Invoke();
+                case WmKeyDown:
+                    SetFocus(instance._windowHandle);
+                    instance.RawKeyDown?.Invoke((int)wParam);
                     return 0;
 
-                case WmKeyDown when (int)wParam == VkEscape:
-                    instance.EscapeRequested?.Invoke();
-                    return 0;
-
-                case WmKeyDown when (int)wParam == VkDecimal:
-                    instance.NumpadPeriodRequested?.Invoke();
-                    return 0;
-
-                case WmKeyDown when (int)wParam == VkNumpad5:
-                    instance.CameraProjectionToggleRequested?.Invoke();
+                case WmKeyUp:
+                    instance.RawKeyUp?.Invoke((int)wParam);
                     return 0;
 
                 case WmKillFocus:
@@ -297,7 +338,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     return 0;
 
                 case WmNcHitTest:
-                    // 允许窗口拖动
                     return DefWindowProc(hwnd, msg, wParam, lParam);
             }
         }
@@ -305,91 +345,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         return DefWindowProc(hwnd, msg, wParam, lParam);
     }
 
-    private void HandleMButtonDown(nint lParam)
-    {
-        _lastMouseX = (short)(lParam.ToInt64() & 0xFFFF);
-        _lastMouseY = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-
-        var shiftDown = (GetKeyState(VkShift) & 0x8000) != 0;
-        var ctrlDown = (GetKeyState(VkControl) & 0x8000) != 0;
-
-        if (ctrlDown)
-            _mouseDragMode = MouseDragMode.Dolly;
-        else if (shiftDown)
-            _mouseDragMode = MouseDragMode.Pan;
-        else
-            _mouseDragMode = MouseDragMode.Orbit;
-
-        SetCapture(_windowHandle);
-    }
-
-    private void HandleMButtonUp()
-    {
-        _mouseDragMode = MouseDragMode.None;
-        ReleaseCapture();
-    }
-
-    private void HandleMouseMove(nint lParam)
-    {
-        var x = (short)(lParam.ToInt64() & 0xFFFF);
-        var y = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-        var deltaX = x - _lastMouseX;
-        var deltaY = y - _lastMouseY;
-        _lastMouseX = x;
-        _lastMouseY = y;
-
-        // Track WM_MOUSELEAVE on first mouse move
-        if (!_trackingMouseLeave && _windowHandle != 0)
-        {
-            var tme = new TRACKMOUSEEVENT
-            {
-                cbSize = System.Runtime.InteropServices.Marshal.SizeOf<TRACKMOUSEEVENT>(),
-                dwFlags = 0x00000002u, // TME_LEAVE
-                hwndTrack = _windowHandle
-            };
-            TrackMouseEvent(ref tme);
-            _trackingMouseLeave = true;
-        }
-
-        var navigationConsumed = NavigationPointerMoved?.Invoke(x, y) == true;
-        if (_navigationDragCaptured) navigationConsumed = true;
-
-        if (!navigationConsumed)
-            PointerMoved?.Invoke(x, y);
-
-        // Handle camera drag modes
-        switch (_mouseDragMode)
-        {
-            case MouseDragMode.Orbit:
-                CameraOrbitRequested?.Invoke(-deltaX, -deltaY); // invert for natural feel
-                break;
-
-            case MouseDragMode.Pan:
-                CameraPanRequested?.Invoke(deltaX, deltaY, _width, _height);
-                break;
-
-            case MouseDragMode.Dolly:
-                CameraDollyRequested?.Invoke(-deltaY);
-                break;
-        }
-    }
-
-    private void HandleMouseWheel(nint wParam)
-    {
-        // HIWORD(wParam) = wheel delta (positive = up/away)
-        var wheelDelta = (short)((wParam.ToInt64() >> 16) & 0xFFFF);
-        var notches = wheelDelta / 120.0f;
-        CameraZoomRequested?.Invoke(notches);
-    }
-
     private void HandleKillFocus()
     {
-        if (_mouseDragMode != MouseDragMode.None)
-        {
-            _mouseDragMode = MouseDragMode.None;
-            ReleaseCapture();
-        }
-
         _pickInput.OnKillFocus();
         var hadNavigationCapture = _navigationDragCaptured || _leftButtonHandledByNavigation;
         EndNavigationCapture();

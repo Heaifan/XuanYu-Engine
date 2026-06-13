@@ -71,4 +71,63 @@ public sealed class EditorInputConflictDetectorTests
             kind: EditorInputGestureKind.MouseDrag);
         Assert.False(EditorInputConflictDetector.IsReservedGesture(gesture));
     }
+
+    [Fact]
+    public void SameContextDiffGesture_NoConflict()
+    {
+        var orbitBinding = new EditorInputBinding
+        {
+            ActionId = "viewport.orbit",
+            PrimaryGesture = new(EditorInputDevice.Mouse, "Middle",
+                kind: EditorInputGestureKind.MouseDrag)
+        };
+
+        var conflict = EditorInputConflictDetector.DetectConflict(
+            [orbitBinding],
+            "viewport.pan",
+            new(EditorInputDevice.Mouse, "Right",
+                EditorInputModifiers.Shift,
+                EditorInputGestureKind.MouseDrag),
+            out _, out _);
+
+        Assert.False(conflict);
+    }
+
+    [Fact]
+    public void GlobalAndViewport_SameGesture_NoCrossContextConflict()
+    {
+        var globalBinding = new EditorInputBinding
+        {
+            ActionId = "editor.open_preferences",
+            PrimaryGesture = new(EditorInputDevice.Keyboard, "Comma", EditorInputModifiers.Control)
+        };
+
+        var conflict = EditorInputConflictDetector.DetectConflict(
+            [globalBinding],
+            "viewport.frame_all",
+            new(EditorInputDevice.Keyboard, "Comma", EditorInputModifiers.Control),
+            out _, out _);
+
+        Assert.False(conflict);
+    }
+
+    [Fact]
+    public void SameContextSameGesture_TwoDifferentActions_Conflicts()
+    {
+        var orbitBinding = new EditorInputBinding
+        {
+            ActionId = "viewport.orbit",
+            PrimaryGesture = new(EditorInputDevice.Mouse, "Middle",
+                kind: EditorInputGestureKind.MouseDrag)
+        };
+
+        var conflict = EditorInputConflictDetector.DetectConflict(
+            [orbitBinding],
+            "viewport.pan",
+            new(EditorInputDevice.Mouse, "Middle", kind: EditorInputGestureKind.MouseDrag),
+            out var conflictActionId, out _);
+
+        Assert.True(conflict);
+        Assert.Equal("viewport.orbit", conflictActionId);
+    }
 }

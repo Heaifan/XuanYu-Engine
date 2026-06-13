@@ -12,15 +12,15 @@ public sealed partial class VulkanViewportHostPanel : UserControl
 
     public event EventHandler<VulkanViewportNativeHostInfo>? NativeHostInfoChanged;
 
-    // 相机输入事件转发（来自 Win32 原生窗口消息）
-    public event Action<float, float>? CameraOrbitRequested;
-    public event Action<int, int, int, int>? CameraPanRequested;
-    public event Action<float>? CameraDollyRequested;
-    public event Action<float>? CameraZoomRequested;
-    public event Action? CameraResetRequested;
-    public event Action? CameraProjectionToggleRequested;
-    public event Action? NumpadPeriodRequested;
-    public event Action? EscapeRequested;
+    // ─── 原始输入事件转发（来自 Win32 原生窗口消息，不含业务逻辑）──
+    public event Action<int, int, int>? RawPointerButtonDown;
+    public event Action<int, int, int>? RawPointerButtonUp;
+    public event Action<int, int>? RawPointerMoved;
+    public event Action<int>? RawKeyDown;
+    public event Action<int>? RawKeyUp;
+    public event Action<int, int>? RawMouseWheel;
+
+    /// <summary>左键点击拾取（pixelX, pixelY）。遗留。</summary>
     public event Action<int, int>? PickRequested;
 
     // ─── Overlay 导航输入事件 ────────────────────────────────────
@@ -29,7 +29,7 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     public event Action? NavigationPointerReleased;
     public event Action? NavigationCaptureLost;
 
-    /// <summary>鼠标在视口内移动（pixelX, pixelY）。</summary>
+    /// <summary>鼠标在视口内移动（pixelX, pixelY，地面 hover 用）。</summary>
     public new event Action<int, int>? PointerMoved;
 
     /// <summary>鼠标离开视口。</summary>
@@ -45,15 +45,19 @@ public sealed partial class VulkanViewportHostPanel : UserControl
         if (_nativeHostControl is not null)
         {
             _nativeHostControl.HostInfoChanged += HandleHostInfoChanged;
-            _nativeHostControl.CameraOrbitRequested += (dy, dp) => CameraOrbitRequested?.Invoke(dy, dp);
-            _nativeHostControl.CameraPanRequested += (dx, dy, w, h) => CameraPanRequested?.Invoke(dx, dy, w, h);
-            _nativeHostControl.CameraDollyRequested += p => CameraDollyRequested?.Invoke(p);
-            _nativeHostControl.CameraZoomRequested += n => CameraZoomRequested?.Invoke(n);
-            _nativeHostControl.CameraResetRequested += () => CameraResetRequested?.Invoke();
-            _nativeHostControl.CameraProjectionToggleRequested += () => CameraProjectionToggleRequested?.Invoke();
-            _nativeHostControl.NumpadPeriodRequested += () => NumpadPeriodRequested?.Invoke();
-            _nativeHostControl.EscapeRequested += () => EscapeRequested?.Invoke();
+
+            // 原始输入事件转发
+            _nativeHostControl.RawPointerButtonDown += (b, x, y) => RawPointerButtonDown?.Invoke(b, x, y);
+            _nativeHostControl.RawPointerButtonUp += (b, x, y) => RawPointerButtonUp?.Invoke(b, x, y);
+            _nativeHostControl.RawPointerMoved += (x, y) => RawPointerMoved?.Invoke(x, y);
+            _nativeHostControl.RawKeyDown += vk => RawKeyDown?.Invoke(vk);
+            _nativeHostControl.RawKeyUp += vk => RawKeyUp?.Invoke(vk);
+            _nativeHostControl.RawMouseWheel += (d, m) => RawMouseWheel?.Invoke(d, m);
+
+            // 遗留
             _nativeHostControl.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
+
+            // Overlay 导航
             _nativeHostControl.NavigationPointerPressed += (x, y) =>
                 NavigationPointerPressed?.Invoke(x, y) ?? ViewportNavigationPressResult.NotHandled;
             _nativeHostControl.NavigationPointerMoved += (x, y) => NavigationPointerMoved?.Invoke(x, y) == true;

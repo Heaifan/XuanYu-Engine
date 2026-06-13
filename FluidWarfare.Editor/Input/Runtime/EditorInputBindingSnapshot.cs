@@ -143,26 +143,20 @@ public sealed class EditorInputBindingSnapshot
     {
         if (presetName == "blender")
         {
-            var preset = EditorInputActionCatalog.BlenderPreset;
-            var allBindings = new List<EditorInputBinding>();
+            // 使用实际的 Blender 默认绑定数据
+            var defaultBindings = EditorInputActionCatalog.BlenderDefaultBindings;
+            var defs = allActions.ToDictionary(a => a.Id, a => a);
 
-            // 从目录构建：每个动作创建一个绑定，填入预设中对应的手势
-            foreach (var action in allActions)
+            // 为每个默认绑定注入 Definition
+            var result = new List<EditorInputBinding>(defaultBindings.Count);
+            foreach (var b in defaultBindings)
             {
-                // 查找预设中是否有这个动作
-                var hasPreset = false;
-                // 从 BlenderPreset 提取 (但它是空的 overrides, 没有直接 binding list)
-                // 实际上我们需要从动作名字推断默认绑定
-                // 实际场景中这里会从预设的 Blender 绑定列表构建
-                // 简化实现：为每个动作创建空绑定
-                allBindings.Add(new EditorInputBinding
-                {
-                    ActionId = action.Id,
-                    Definition = action
-                });
+                if (defs.TryGetValue(b.ActionId, out var def))
+                    result.Add(b with { Definition = def });
+                else
+                    result.Add(b);
             }
-
-            return allBindings;
+            return result;
         }
 
         return new List<EditorInputBinding>();

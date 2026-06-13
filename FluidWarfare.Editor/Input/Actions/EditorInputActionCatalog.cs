@@ -13,6 +13,9 @@ public static class EditorInputActionCatalog
     /// <summary>Blender 默认绑定集。</summary>
     public static EditorInputBindingSet BlenderPreset { get; } = BuildBlenderPreset();
 
+    /// <summary>Blender 默认绑定的平铺列表（每个动作的 PrimaryGesture 和 SecondaryGesture）。</summary>
+    public static IReadOnlyList<EditorInputBinding> BlenderDefaultBindings { get; } = BuildBlenderDefaultBindings();
+
     /// <summary>按 ID 查找动作。</summary>
     public static EditorInputActionDefinition? FindById(string id) =>
         All.FirstOrDefault(a => a.Id == id);
@@ -72,52 +75,58 @@ public static class EditorInputActionCatalog
         return list;
     }
 
-    private static EditorInputBindingSet BuildBlenderPreset()
+    private static List<EditorInputBinding> BuildBlenderDefaultBindings()
     {
-        var primary = new List<EditorInputBinding>();
+        var list = new List<EditorInputBinding>();
 
         // 全局
-        primary.Add(new() { ActionId = "editor.open_preferences",
+        list.Add(new() { ActionId = "editor.open_preferences",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Comma", EditorInputModifiers.Control) });
-        primary.Add(new() { ActionId = "tool.cancel_current",
+        list.Add(new() { ActionId = "tool.cancel_current",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Escape") });
 
         // 视口导航
-        primary.Add(new() { ActionId = "viewport.orbit",
+        list.Add(new() { ActionId = "viewport.orbit",
             PrimaryGesture = new(EditorInputDevice.Mouse, "Middle", kind: EditorInputGestureKind.MouseDrag) });
-        primary.Add(new() { ActionId = "viewport.pan",
+        list.Add(new() { ActionId = "viewport.pan",
             PrimaryGesture = new(EditorInputDevice.Mouse, "Middle", EditorInputModifiers.Shift, EditorInputGestureKind.MouseDrag) });
-        primary.Add(new() { ActionId = "viewport.dolly",
+        list.Add(new() { ActionId = "viewport.dolly",
             PrimaryGesture = new(EditorInputDevice.Mouse, "Middle", EditorInputModifiers.Control, EditorInputGestureKind.MouseDrag) });
-        primary.Add(new() { ActionId = "viewport.zoom",
+        list.Add(new() { ActionId = "viewport.zoom",
             PrimaryGesture = new(EditorInputDevice.Wheel, "Y", kind: EditorInputGestureKind.MouseWheel) });
-        primary.Add(new() { ActionId = "viewport.frame_all",
+        list.Add(new() { ActionId = "viewport.frame_all",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Home") });
-        primary.Add(new() { ActionId = "viewport.frame_selected",
+        list.Add(new() { ActionId = "viewport.frame_selected",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Decimal") });
-        primary.Add(new() { ActionId = "viewport.toggle_projection",
+        list.Add(new() { ActionId = "viewport.toggle_projection",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad5") });
 
         // 标准视图
-        primary.Add(new() { ActionId = "viewport.view_front",
+        list.Add(new() { ActionId = "viewport.view_front",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad1") });
-        primary.Add(new() { ActionId = "viewport.view_back",
+        list.Add(new() { ActionId = "viewport.view_back",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad1", EditorInputModifiers.Control) });
-        primary.Add(new() { ActionId = "viewport.view_right",
+        list.Add(new() { ActionId = "viewport.view_right",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad3") });
-        primary.Add(new() { ActionId = "viewport.view_left",
+        list.Add(new() { ActionId = "viewport.view_left",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad3", EditorInputModifiers.Control) });
-        primary.Add(new() { ActionId = "viewport.view_top",
+        list.Add(new() { ActionId = "viewport.view_top",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad7") });
-        primary.Add(new() { ActionId = "viewport.view_bottom",
+        list.Add(new() { ActionId = "viewport.view_bottom",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad7", EditorInputModifiers.Control) });
 
         // Transform
-        primary.Add(new() { ActionId = "transform.apply",
+        list.Add(new() { ActionId = "transform.apply",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Enter") });
-        primary.Add(new() { ActionId = "transform.reset_draft",
+        list.Add(new() { ActionId = "transform.reset_draft",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Escape") });
 
+        return list;
+    }
+
+    private static EditorInputBindingSet BuildBlenderPreset()
+    {
+        // 地面放置（无默认快捷键）
         return new EditorInputBindingSet
         {
             Preset = "blender",

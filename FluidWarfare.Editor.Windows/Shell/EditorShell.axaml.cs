@@ -11,8 +11,11 @@ using FluidWarfare.Editor.ProjectContentTreeModel;
 using FluidWarfare.Editor.EntityTransform;
 using FluidWarfare.Editor.Selection;
 using FluidWarfare.Editor.WorldHierarchy;
+using FluidWarfare.Editor.Input.Actions;
+using FluidWarfare.Editor.Input.Runtime;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
+using FluidWarfare.Editor.Windows.Panels.Viewport.Input;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Status;
@@ -87,6 +90,15 @@ public sealed partial class EditorShell : UserControl
     private int _navigationLastPixelX;
     private int _navigationLastPixelY;
 
+    // ─── 输入动作映射系统 ───────────────────────────────────
+    private EditorInputService _inputService = EditorInputService.Instance;
+    private WindowsViewportInputTranslator? _inputTranslator;
+
+    // ─── 输入上下文栈 ──────────────────────────────────────
+    private EditorInputActionContext _activeContext = EditorInputActionContext.Global;
+    private int _lastPointerX;
+    private int _lastPointerY;
+
     // ─── 地面拾取状态 ─────────────────────────────────────────────
     private readonly FluidWarfare.Editor.ViewportGround.EditorGroundPointerState _groundPointerState = new();
     private bool _groundPointerUpdatePending; // 调度合并
@@ -152,14 +164,14 @@ public sealed partial class EditorShell : UserControl
         if (_vulkanViewportHostPanel is not null)
         {
             _vulkanViewportHostPanel.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
-            _vulkanViewportHostPanel.CameraOrbitRequested += HandleCameraOrbit;
-            _vulkanViewportHostPanel.CameraPanRequested += HandleCameraPan;
-            _vulkanViewportHostPanel.CameraDollyRequested += HandleCameraDolly;
-            _vulkanViewportHostPanel.CameraZoomRequested += HandleCameraZoom;
-            _vulkanViewportHostPanel.CameraResetRequested += HandleCameraReset;
-            _vulkanViewportHostPanel.CameraProjectionToggleRequested += HandleCameraProjectionToggle;
-            _vulkanViewportHostPanel.NumpadPeriodRequested += HandleNumpadPeriod;
-            _vulkanViewportHostPanel.EscapeRequested += HandleViewportEscape;
+            // 原始输入事件转发由 WindowsViewportInputTranslator + ExecuteInputAction 处理
+            // 在 AttachedToVisualTree 后初始化
+            _vulkanViewportHostPanel.RawPointerButtonDown += HandleRawPointerButtonDown;
+            _vulkanViewportHostPanel.RawPointerButtonUp += HandleRawPointerButtonUp;
+            _vulkanViewportHostPanel.RawPointerMoved += HandleRawPointerMoved;
+            _vulkanViewportHostPanel.RawKeyDown += HandleRawKeyDown;
+            _vulkanViewportHostPanel.RawKeyUp += HandleRawKeyUp;
+            _vulkanViewportHostPanel.RawMouseWheel += HandleRawMouseWheel;
             _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
             _vulkanViewportHostPanel.NavigationPointerPressed += HandleOverlayPointerPressed;
             _vulkanViewportHostPanel.NavigationPointerMoved += HandleOverlayPointerMoved;
@@ -180,7 +192,11 @@ public sealed partial class EditorShell : UserControl
 
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        Dispatcher.UIThread.Post(ReportVulkanViewportNativeHost);
+        Dispatcher.UIThread.Post(() =>
+        {
+            ReportVulkanViewportNativeHost();
+            InitializeInputPipeline();
+        });
     }
 
     private void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
@@ -1075,6 +1091,312 @@ public sealed partial class EditorShell : UserControl
         UpdateAllDiagnostics();
     }
 
+    // ─── 输入动作映射系统 ──────────────────────────────────
+    // 数据流：Win32 WM_ → RawPointerButtonDown/KeyDown 等
+    //       → WindowsViewportInputTranslator.OnRaw*()
+    //       → EditorInputMatch → ExecuteInputAction() → 统一执行方法
+
+    private void InitializeInputPipeline()
+    {
+        _inputService.Initialize();
+        _inputTranslator = new WindowsViewportInputTranslator(_inputService.CurrentSnapshot);
+        _inputService.SnapshotReplaced += snapshot =>
+        {
+            _inputTranslator?.OnSnapshotReplaced(snapshot);
+        };
+    }
+
+    private void HandleRawKeyDown(int virtualKeyCode)
+    {
+        System.Diagnostics.Debug.WriteLine(
+            $"[InputTrace-Shell] RawKeyDown vk=0x{virtualKeyCode:X2}");
+        if (_inputTranslator is null)
+        {
+            System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
+            return;
+        }
+        var match = _inputTranslator.OnRawKeyDown(virtualKeyCode, _lastPointerX, _lastPointerY);
+        ExecuteInputAction(match);
+    }
+
+    private void HandleRawKeyUp(int virtualKeyCode)
+    {
+        _inputTranslator?.OnRawKeyUp(virtualKeyCode);
+    }
+
+    private void HandleRawPointerButtonDown(int buttonCode, int x, int y)
+    {
+        System.Diagnostics.Debug.WriteLine(
+            $"[InputTrace-Shell] RawPointerButtonDown btn={buttonCode} x={x} y={y}");
+        _lastPointerX = x;
+        _lastPointerY = y;
+        if (_inputTranslator is null)
+        {
+            System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
+            return;
+        }
+        var match = _inputTranslator.OnRawPointerButtonDown(buttonCode, x, y);
+        ExecuteInputAction(match);
+    }
+
+    private void HandleRawPointerMoved(int x, int y)
+    {
+        _lastPointerX = x;
+        _lastPointerY = y;
+        if (_inputTranslator is null) return;
+        var match = _inputTranslator.OnRawPointerMoved(x, y);
+        ExecuteInputAction(match);
+    }
+
+    private void HandleRawPointerButtonUp(int buttonCode, int x, int y)
+    {
+        _inputTranslator?.OnRawPointerButtonUp(buttonCode);
+    }
+
+    private void HandleRawMouseWheel(int delta, int packedModifiers)
+    {
+        System.Diagnostics.Debug.WriteLine(
+            $"[InputTrace-Shell] RawMouseWheel delta={delta} mk=0x{packedModifiers:X4}");
+        if (_inputTranslator is null)
+        {
+            System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
+            return;
+        }
+        var match = _inputTranslator.OnRawMouseWheel(delta, packedModifiers,
+            _lastPointerX, _lastPointerY);
+        ExecuteInputAction(match);
+    }
+
+    /// <summary>
+    /// 统一动作调度入口。所有动作 —— 键盘快捷键、鼠标手势、覆盖层按钮 ——
+    /// 最终都调用此方法分发到具体执行函数。
+    /// </summary>
+    private void ExecuteInputAction(EditorInputMatch match)
+    {
+        if (!match.IsMatch || match.Definition is null) return;
+
+        // 上下文过滤：当前活动上下文必须允许该动作的上下文
+        if (!CanExecuteInCurrentContext(match.Definition.Context))
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Shell] BLOCKED action=\"{match.ActionId}\" " +
+                $"ctx={match.Definition.Context} activeCtx={_activeContext}");
+            return;
+        }
+
+        System.Diagnostics.Debug.WriteLine(
+            $"[InputTrace-Shell] Executing action=\"{match.ActionId}\" " +
+            $"kind={match.ValueKind} dx={match.DeltaX} dy={match.DeltaY} wheel={match.WheelDelta}");
+
+        switch (match.ActionId)
+        {
+            case "viewport.orbit":
+                ExecuteViewportOrbit(match.DeltaY, match.DeltaX);
+                break;
+            case "viewport.pan":
+                ExecuteViewportPan(match.DeltaX, match.DeltaY);
+                break;
+            case "viewport.dolly":
+                ExecuteViewportDolly(match.DeltaY);
+                break;
+            case "viewport.zoom":
+                ExecuteViewportZoom(match.WheelDelta);
+                break;
+            case "viewport.frame_all":
+                ExecuteViewportFrameAll();
+                break;
+            case "viewport.frame_selected":
+                ExecuteViewportFrameSelected();
+                break;
+            case "viewport.toggle_projection":
+                ExecuteViewportToggleProjection();
+                break;
+            case "viewport.view_front":
+            case "viewport.view_back":
+            case "viewport.view_right":
+            case "viewport.view_left":
+            case "viewport.view_top":
+            case "viewport.view_bottom":
+                ExecuteViewportSnapToView(match.ActionId);
+                break;
+            case "editor.open_preferences":
+                ExecuteOpenPreferences();
+                break;
+            case "tool.cancel_current":
+                ExecuteCancelCurrentTool();
+                break;
+            case "transform.apply":
+                ExecuteTransformApply();
+                break;
+            case "transform.reset_draft":
+                ExecuteTransformResetDraft();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 上下文优先级过滤。
+    /// 枚举值越小优先级越高：BindingCapture=0 > TextInput=1 > ... > Global=5。
+    /// 当活动上下文优先级高于动作的上下文时，动作被拦截。
+    /// 默认 _activeContext=Global(5)，允许所有动作。
+    /// </summary>
+    private bool CanExecuteInCurrentContext(EditorInputActionContext actionContext)
+    {
+        // Global 动作始终允许（如 open_preferences、tool.cancel_current）
+        if (actionContext == EditorInputActionContext.Global)
+            return true;
+
+        // 活动上下文优先级不高于动作上下文 = 允许
+        // 例：_activeContext=Global(5), action=Viewport3D(4): 5>=4 → 允许
+        // 例：_activeContext=TextInput(1), action=Viewport3D(4): 1>=4 → 拦截
+        return (int)_activeContext >= (int)actionContext;
+    }
+
+    /// <summary>
+    /// 推送输入上下文（更高优先级上下文会拦截低优先级动作）。
+    /// </summary>
+    public void PushInputContext(EditorInputActionContext context)
+    {
+        // 只允许提升优先级（值更小）
+        if ((int)context < (int)_activeContext)
+            _activeContext = context;
+    }
+
+    /// <summary>
+    /// 弹出输入上下文（恢复到更低优先级）。
+    /// </summary>
+    public void PopInputContext(EditorInputActionContext context)
+    {
+        if (_activeContext == context)
+            _activeContext = EditorInputActionContext.Global;
+    }
+
+    // ─── 统一动作执行方法 ──────────────────────────────────
+
+    private void ExecuteViewportOrbit(float deltaYaw, float deltaPitch)
+    {
+        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+            return;
+        if (deltaYaw == 0 && deltaPitch == 0) return;
+        _lastCameraState = SceneOrbitCameraMotion.Orbit(_lastCameraState, deltaYaw, deltaPitch);
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraPan);
+    }
+
+    private void ExecuteViewportPan(int deltaX, int deltaY)
+    {
+        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+            return;
+        if (deltaX == 0 && deltaY == 0) return;
+        var h = _vulkanViewportHostPanel?.GetNativeHostInfo().Height ?? 1;
+        _lastCameraState = SceneOrbitCameraMotion.Pan(_lastCameraState, deltaX, deltaY, Math.Max(1, h));
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraPan);
+    }
+
+    private void ExecuteViewportDolly(float deltaPixels)
+    {
+        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+            return;
+        if (deltaPixels == 0) return;
+        _lastCameraState = SceneOrbitCameraMotion.Dolly(_lastCameraState, deltaPixels);
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraZoom);
+    }
+
+    private void ExecuteViewportZoom(float wheelNotches)
+    {
+        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+            return;
+        if (wheelNotches == 0) return;
+        _lastCameraState = SceneOrbitCameraMotion.Zoom(_lastCameraState, wheelNotches);
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraZoom);
+    }
+
+    private void ExecuteViewportFrameAll()
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        _lastCameraState = SceneOrbitCameraMotion.FrameAll();
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+    }
+
+    private void ExecuteViewportFrameSelected()
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_selectedWorldEntity is null)
+        {
+            _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
+            return;
+        }
+
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) return;
+
+        var p = pos.Value.Value;
+        var placement = new RenderUnitPlacement(p);
+        _lastCameraState = SceneOrbitCameraMotion.FrameSelected(
+            _lastCameraState,
+            (float)placement.VisualCenter.X,
+            (float)placement.VisualCenter.Y,
+            (float)placement.VisualCenter.Z,
+            (float)RenderUnitPlacement.HalfExtent);
+        _statusBarPanel?.SetCurrentSelection($"已聚焦实体 {_selectedWorldEntity.DisplayName}。");
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+    }
+
+    private void ExecuteViewportToggleProjection()
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        _lastCameraState = SceneNavigationCameraMotion.ToggleProjection(_lastCameraState);
+        var mode = _lastCameraState.ProjectionMode;
+        AppendInfoLog($"投影模式切换为：{mode}");
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+    }
+
+    private void ExecuteViewportSnapToView(string actionId)
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        var view = actionId switch
+        {
+            "viewport.view_front" => SceneNavigationView.PositiveY,
+            "viewport.view_back" => SceneNavigationView.NegativeY,
+            "viewport.view_right" => SceneNavigationView.PositiveX,
+            "viewport.view_left" => SceneNavigationView.NegativeX,
+            "viewport.view_top" => SceneNavigationView.PositiveZ,
+            "viewport.view_bottom" => SceneNavigationView.NegativeZ,
+            _ => SceneNavigationView.Free
+        };
+        if (view == SceneNavigationView.Free) return;
+
+        _lastCameraState = SceneNavigationCameraMotion.SnapToView(_lastCameraState, view);
+        AppendInfoLog($"切换到：{actionId}");
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+    }
+
+    private void ExecuteOpenPreferences()
+    {
+        OpenPreferencesWindow();
+    }
+
+    private void ExecuteCancelCurrentTool()
+    {
+        HandleViewportEscape();
+    }
+
+    private void ExecuteTransformApply()
+    {
+        // 应用 Transform 需要由 Inspector 面板提供当前草稿值，此处不自动执行
+    }
+
+    private void ExecuteTransformResetDraft()
+    {
+        // 重置 Transform 草稿（通过面板的 Reset 事件）
+        HandleTransformReset();
+    }
+
     // ─── 相机输入处理 ─────────────────────────────────────────
 
     private void HandleCameraOrbit(float deltaYaw, float deltaPitch)
@@ -1194,11 +1516,11 @@ public sealed partial class EditorShell : UserControl
                 return ViewportNavigationPressResult.BeginDrag;
 
             case ViewportNavigationElement.FrameButton:
-                FrameNavigationTarget();
+                ExecuteViewportFrameAll();
                 return ViewportNavigationPressResult.HandledClick;
 
             case ViewportNavigationElement.ProjectionButton:
-                HandleCameraProjectionToggle();
+                ExecuteViewportToggleProjection();
                 return ViewportNavigationPressResult.HandledClick;
 
             default:
