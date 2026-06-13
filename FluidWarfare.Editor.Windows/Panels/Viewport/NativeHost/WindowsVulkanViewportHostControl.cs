@@ -32,6 +32,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private const int VkShift = 0x10;
     private const int VkControl = 0x11;
     private const int VkDecimal = 0x6E; // Numpad period
+    private const int VkNumpad5 = 0x65; // Projection toggle (Blender numpad 5)
     private const int MkMbutton = 0x0010;
 
     private enum MouseDragMode { None, Orbit, Pan, Dolly }
@@ -73,6 +74,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     /// <summary>小键盘句点聚焦选中实体。</summary>
     public event Action? NumpadPeriodRequested;
+
+    /// <summary>小键盘 5 切换投影模式（透视/正交）。</summary>
+    public event Action? CameraProjectionToggleRequested;
 
     /// <summary>Esc 键按下。</summary>
     public event Action? EscapeRequested;
@@ -224,6 +228,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
                 case WmKeyDown when (int)wParam == VkDecimal:
                     instance.NumpadPeriodRequested?.Invoke();
+                    return 0;
+
+                case WmKeyDown when (int)wParam == VkNumpad5:
+                    instance.CameraProjectionToggleRequested?.Invoke();
                     return 0;
 
                 case WmKillFocus:

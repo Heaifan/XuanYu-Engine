@@ -1,11 +1,14 @@
 namespace FluidWarfare.Render.Camera;
 
+using Navigation;
+
 /// <summary>
 /// Blender 风格轨道相机状态（Z-Up）。
 /// Position = Pivot + OrbitDirection(Yaw, Pitch) × Distance。
 /// Target (LookAt 目标) = Pivot。
 ///
 /// Yaw 绕 Z 轴旋转（改变水平方向），Pitch 改变俯仰角。
+/// 支持透视和正交投影模式。
 /// </summary>
 public sealed record SceneOrbitCameraState
 {
@@ -35,6 +38,12 @@ public sealed record SceneOrbitCameraState
 
     /// <summary>远裁剪面。</summary>
     public float FarPlane { get; init; }
+
+    /// <summary>投影模式（透视 / 正交）。</summary>
+    public SceneProjectionMode ProjectionMode { get; init; } = SceneProjectionMode.Perspective;
+
+    /// <summary>正交投影高度范围（仅 Orthographic 模式使用）。</summary>
+    public float OrthographicHeight { get; init; } = 40f;
 
     /// <summary>
     /// 计算相机世界位置（Z-Up）。

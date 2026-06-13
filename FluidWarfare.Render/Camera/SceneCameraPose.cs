@@ -1,9 +1,11 @@
 namespace FluidWarfare.Render.Camera;
 
+using Navigation;
+
 /// <summary>
 /// 完整的相机姿态 — 渲染、Picking、Ground Hover 的唯一真源。
 /// 由 SceneOrbitCameraState 计算生成，直接传递给渲染层和拾取层。
-/// 包含位置、目标、上方向、视场角和裁剪面。
+/// 包含位置、目标、上方向、视场角、裁剪面和投影模式。
 /// </summary>
 public sealed record SceneCameraPose
 {
@@ -43,6 +45,12 @@ public sealed record SceneCameraPose
     /// <summary>远裁剪面。</summary>
     public required float FarPlane { get; init; }
 
+    /// <summary>投影模式。</summary>
+    public SceneProjectionMode ProjectionMode { get; init; } = SceneProjectionMode.Perspective;
+
+    /// <summary>正交投影高度（仅 Orthographic 模式使用）。</summary>
+    public float OrthographicHeight { get; init; } = 40f;
+
     /// <summary>
     /// 修订号。每次相机状态变更递增，用于缓存失效判断。
     /// </summary>
@@ -71,6 +79,8 @@ public sealed record SceneCameraPose
             FieldOfViewDegrees = orbit.FieldOfViewDegrees,
             NearPlane = orbit.NearPlane,
             FarPlane = orbit.FarPlane,
+            ProjectionMode = orbit.ProjectionMode,
+            OrthographicHeight = orbit.OrthographicHeight,
             Revision = revision
         };
     }

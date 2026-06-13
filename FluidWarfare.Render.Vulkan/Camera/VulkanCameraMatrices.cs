@@ -11,17 +11,13 @@ namespace FluidWarfare.Render.Vulkan.Camera;
 public static class VulkanCameraMatrices
 {
     /// <summary>
-    /// 计算 ViewProjection 矩阵，以列优先 float[16] 格式返回。
+    /// 计算透视 ViewProjection 矩阵，以列优先 float[16] 格式返回。
     /// </summary>
     public static float[] ComputeVulkanMVP(
         VulkanCameraInfo camera,
         float aspectRatio)
     {
-        var view = LookAt(
-            camera.PositionX, camera.PositionY, camera.PositionZ,
-            camera.TargetX, camera.TargetY, camera.TargetZ,
-            camera.UpX, camera.UpY, camera.UpZ);
-
+        var view = LookAt(camera);
         var proj = PerspectiveVulkan(
             camera.FieldOfViewDegrees,
             aspectRatio,
@@ -29,6 +25,45 @@ public static class VulkanCameraMatrices
             camera.FarPlane);
 
         return Mul(proj, view);
+    }
+
+    /// <summary>
+    /// 计算正交 ViewProjection 矩阵，以列优先 float[16] 格式返回。
+    /// </summary>
+    /// <param name="camera">相机信息（Position/Target/Up）。</param>
+    /// <param name="aspectRatio">视口宽高比。</param>
+    /// <param name="orthoHeight">正交投影的世界高度范围。</param>
+    public static float[] ComputeVulkanOrthoMVP(
+        VulkanCameraInfo camera,
+        float aspectRatio,
+        float orthoHeight)
+    {
+        var view = LookAt(camera);
+        var halfH = orthoHeight / 2f;
+        var halfW = halfH * aspectRatio;
+        var range = camera.NearPlane - camera.FarPlane;
+
+        // Vulkan 正交矩阵（深度 0..1，Y 翻转）
+        var proj = new float[]
+        {
+            1f / halfW, 0, 0, 0,
+            0, -1f / halfH, 0, 0,
+            0, 0, 1f / range, 0,
+            0, 0, camera.NearPlane / range, 1
+        };
+
+        return Mul(proj, view);
+    }
+
+    /// <summary>
+    /// LookAt 矩阵（列优先 float[16]），使用 VulkanCameraInfo 输入。
+    /// </summary>
+    private static float[] LookAt(VulkanCameraInfo camera)
+    {
+        return LookAt(
+            camera.PositionX, camera.PositionY, camera.PositionZ,
+            camera.TargetX, camera.TargetY, camera.TargetZ,
+            camera.UpX, camera.UpY, camera.UpZ);
     }
 
     /// <summary>

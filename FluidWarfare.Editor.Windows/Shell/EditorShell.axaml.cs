@@ -142,6 +142,7 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel.CameraDollyRequested += HandleCameraDolly;
             _vulkanViewportHostPanel.CameraZoomRequested += HandleCameraZoom;
             _vulkanViewportHostPanel.CameraResetRequested += HandleCameraReset;
+            _vulkanViewportHostPanel.CameraProjectionToggleRequested += HandleCameraProjectionToggle;
             _vulkanViewportHostPanel.NumpadPeriodRequested += HandleNumpadPeriod;
             _vulkanViewportHostPanel.EscapeRequested += HandleViewportEscape;
             _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
@@ -994,8 +995,12 @@ public sealed partial class EditorShell : UserControl
         AppendInfoLog("正在启动 Scene3D 会话...");
         _sessionActive = true;
 
-        // 保存 RenderScene 快照
-        var gridVertices = VulkanScene3dVertices.BuildGrid(20, 2);
+        // 保存 RenderScene 快照（网格 + 世界主轴共享同一 LineList Pipeline）
+        var gridOnly = VulkanScene3dVertices.BuildGrid(20, 2);
+        var axisVerts = VulkanScene3dVertices.BuildAxes(20, 8);
+        var combinedGridVertices = new VulkanScene3dVertex[gridOnly.Length + axisVerts.Length];
+        Array.Copy(gridOnly, 0, combinedGridVertices, 0, gridOnly.Length);
+        Array.Copy(axisVerts, 0, combinedGridVertices, gridOnly.Length, axisVerts.Length);
         var unitVertices = VulkanScene3dVertices.BuildCube(0, 0, 0, 1.0f);
 
         var unitDraws = new List<VulkanScene3dUnitDrawInfo>();
@@ -1021,7 +1026,7 @@ public sealed partial class EditorShell : UserControl
             (uint)nativeHostInfo.Width,
             (uint)nativeHostInfo.Height,
             sessionPose,
-            gridVertices.AsSpan(),
+            combinedGridVertices.AsSpan(),
             unitVertices.AsSpan(),
             [.. unitDraws]);
 
@@ -1090,6 +1095,17 @@ public sealed partial class EditorShell : UserControl
         if (!_sessionActive || _scene3dSession is null) return;
 
         _lastCameraState = SceneOrbitCameraMotion.FrameAll();
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+    }
+
+    private void HandleCameraProjectionToggle()
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        _lastCameraState = FluidWarfare.Render.Camera.Navigation.SceneNavigationCameraMotion.ToggleProjection(_lastCameraState);
+        var mode = _lastCameraState.ProjectionMode;
+        AppendInfoLog($"投影模式切换为：{mode}");
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
     }
 

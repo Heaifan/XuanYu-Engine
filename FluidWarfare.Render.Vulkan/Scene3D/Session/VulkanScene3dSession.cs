@@ -546,7 +546,17 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 cameraPose.FieldOfViewDegrees,
                 cameraPose.NearPlane, cameraPose.FarPlane);
             var aspect = _swapchainRes.Extent.Width / (float)_swapchainRes.Extent.Height;
-            var vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
+
+            // 5a. Select projection based on mode
+            float[] vp;
+            if (cameraPose.ProjectionMode == FluidWarfare.Render.Camera.Navigation.SceneProjectionMode.Orthographic)
+            {
+                vp = VulkanCameraMatrices.ComputeVulkanOrthoMVP(camInfo, aspect, cameraPose.OrthographicHeight);
+            }
+            else
+            {
+                vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
+            }
 
             // 6. Sync cached unit draws from incoming data (first call or after resize)
             if (_cachedUnitDraws.Length != unitDraws.Length)

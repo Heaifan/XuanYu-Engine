@@ -1,4 +1,5 @@
 using FluidWarfare.Render.Camera;
+using FluidWarfare.Render.Camera.Navigation;
 
 namespace FluidWarfare.Render.Vulkan.Camera;
 
@@ -27,6 +28,9 @@ public sealed record PresentedCameraSnapshot
 
     /// <summary>相机修订号。</summary>
     public required int CameraRevision { get; init; }
+
+    /// <summary>投影模式（透视/正交）。</summary>
+    public SceneProjectionMode ProjectionMode { get; init; } = SceneProjectionMode.Perspective;
 
     /// <summary>
     /// 场景为空时的静态空快照（Picking 返回无命中）。

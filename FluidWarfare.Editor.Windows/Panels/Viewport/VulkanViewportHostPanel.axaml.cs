@@ -17,6 +17,7 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     public event Action<float>? CameraDollyRequested;
     public event Action<float>? CameraZoomRequested;
     public event Action? CameraResetRequested;
+    public event Action? CameraProjectionToggleRequested;
     public event Action? NumpadPeriodRequested;
     public event Action? EscapeRequested;
     public event Action<int, int>? PickRequested;
@@ -42,6 +43,7 @@ public sealed partial class VulkanViewportHostPanel : UserControl
             _nativeHostControl.CameraDollyRequested += p => CameraDollyRequested?.Invoke(p);
             _nativeHostControl.CameraZoomRequested += n => CameraZoomRequested?.Invoke(n);
             _nativeHostControl.CameraResetRequested += () => CameraResetRequested?.Invoke();
+            _nativeHostControl.CameraProjectionToggleRequested += () => CameraProjectionToggleRequested?.Invoke();
             _nativeHostControl.NumpadPeriodRequested += () => NumpadPeriodRequested?.Invoke();
             _nativeHostControl.EscapeRequested += () => EscapeRequested?.Invoke();
             _nativeHostControl.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
