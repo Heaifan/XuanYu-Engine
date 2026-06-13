@@ -1,5 +1,4 @@
 using FluidWarfare.Render.Camera;
-using FluidWarfare.Render.Camera.Navigation;
 using FluidWarfare.Render.ViewportNavigation;
 
 namespace FluidWarfare.Tests.Render.ViewportNavigation;

@@ -1,7 +1,5 @@
 namespace FluidWarfare.Render.Camera;
 
-using Navigation;
-
 /// <summary>
 /// Blender 风格轨道相机运动计算。
 /// 纯数学方法，不依赖 Vulkan/Avalonia/Win32/Editor。

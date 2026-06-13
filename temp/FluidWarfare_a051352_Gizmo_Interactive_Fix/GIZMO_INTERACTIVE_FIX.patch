@@ -1,0 +1,1010 @@
+--- a/FluidWarfare.Render/ViewportNavigation/ViewportNavigationPressResult.cs
++++ b/FluidWarfare.Render/ViewportNavigation/ViewportNavigationPressResult.cs
+@@ -0,0 +1,17 @@
++namespace FluidWarfare.Render.ViewportNavigation;
++
++/// <summary>
++/// 视口导航 Overlay 对左键按下的处理结果。
++/// NativeHost 依据结果决定是否阻断世界 Picking，以及是否捕获鼠标。
++/// </summary>
++public enum ViewportNavigationPressResult
++{
++    /// <summary>未命中 Overlay，继续世界实体/地面 Picking。</summary>
++    NotHandled,
++
++    /// <summary>命中一次性操作，不进入拖动，但阻断世界 Picking。</summary>
++    HandledClick,
++
++    /// <summary>命中拖动操作，阻断世界 Picking 并捕获鼠标。</summary>
++    BeginDrag
++}
+--- a/FluidWarfare.Render/ViewportNavigation/ViewportNavigationLayout.cs
++++ b/FluidWarfare.Render/ViewportNavigation/ViewportNavigationLayout.cs
+@@ -27,6 +27,9 @@
+     /// <summary>轴线长度。</summary>
+     public const float AxisLength = 34f;
+ 
++    /// <summary>Gizmo 可拖动环绕区域半径。轴端优先命中，此区域用于提高拖动容错。</summary>
++    public const float GizmoOrbitRadius = AxisLength + FrontAxisRadius + 8f;
++
+     /// <summary>导航按钮尺寸。</summary>
+     public const float ButtonSize = 30f;
+     /// <summary>按钮间距。</summary>
+@@ -79,8 +82,11 @@
+     /// <summary>投影按钮矩形。</summary>
+     public Rect ProjectionButtonRect { get; init; }
+ 
+-    /// <summary>Gizmo 中心圆区域（拖动检测）。</summary>
++    /// <summary>Gizmo 中心可见圆盘。</summary>
+     public Circle GizmoCenterCircle { get; init; }
++
++    /// <summary>Gizmo 环绕拖动命中区域。绘制仍使用 GizmoCenterCircle。</summary>
++    public Circle GizmoOrbitCircle { get; init; }
+ 
+     // ─── 类型 ──────────────────────────────────────────────────
+ 
+@@ -140,6 +146,7 @@
+             ButtonAreaY = btnY,
+             AxisProjections = projections,
+             GizmoCenterCircle = new Circle(gizmoX, gizmoY, CenterRadius * scale),
++            GizmoOrbitCircle = new Circle(gizmoX, gizmoY, GizmoOrbitRadius * scale),
+             ZoomButtonRect = new Rect(btnX, btnY, btnS, btnS),
+             PanButtonRect = new Rect(btnX, btnY + (btnS + spacing), btnS, btnS),
+             FrameButtonRect = new Rect(btnX, btnY + 2 * (btnS + spacing), btnS, btnS),
+@@ -160,20 +167,54 @@
+         if (fwdLen < 1e-10f) fwdLen = 1f;
+         fwdX /= fwdLen; fwdY /= fwdLen; fwdZ /= fwdLen;
+ 
+-        // WorldUp = (0, 0, 1)
+-        // Right = normalize(Forward × WorldUp)
+-        var rightX = fwdY * 1 - fwdZ * 0;
+-        var rightY = fwdZ * 0 - fwdX * 1;
+-        var rightZ = fwdX * 0 - fwdY * 0;
+-        var rightLen = (float)Math.Sqrt(rightX * rightX + rightY * rightY);
+-        if (rightLen > 1e-10f) { rightX /= rightLen; rightY /= rightLen; }
++        // 使用相机 Up 构造屏幕基向量。接近顶视/底视时切换备用参考轴，避免 NaN。
++        var refUpX = cameraPose.UpX;
++        var refUpY = cameraPose.UpY;
++        var refUpZ = cameraPose.UpZ;
++        var refUpLen = MathF.Sqrt(refUpX * refUpX + refUpY * refUpY + refUpZ * refUpZ);
++        if (refUpLen < 1e-10f)
++        {
++            refUpX = 0f; refUpY = 0f; refUpZ = 1f;
++        }
++        else
++        {
++            refUpX /= refUpLen; refUpY /= refUpLen; refUpZ /= refUpLen;
++        }
++
++        var forwardUpDot = fwdX * refUpX + fwdY * refUpY + fwdZ * refUpZ;
++        if (MathF.Abs(forwardUpDot) > 0.995f)
++        {
++            // 顶视/底视：优先以世界 +Y 作为屏幕上方向参考。
++            refUpX = 0f; refUpY = 1f; refUpZ = 0f;
++        }
++
++        // Right = normalize(Forward × ReferenceUp)
++        var rightX = fwdY * refUpZ - fwdZ * refUpY;
++        var rightY = fwdZ * refUpX - fwdX * refUpZ;
++        var rightZ = fwdX * refUpY - fwdY * refUpX;
++        var rightLen = MathF.Sqrt(rightX * rightX + rightY * rightY + rightZ * rightZ);
++        if (rightLen < 1e-10f)
++        {
++            rightX = 1f; rightY = 0f; rightZ = 0f;
++        }
++        else
++        {
++            rightX /= rightLen; rightY /= rightLen; rightZ /= rightLen;
++        }
+ 
+         // ViewUp = normalize(Right × Forward)
+         var vupX = rightY * fwdZ - rightZ * fwdY;
+         var vupY = rightZ * fwdX - rightX * fwdZ;
+         var vupZ = rightX * fwdY - rightY * fwdX;
+-        var vupLen = (float)Math.Sqrt(vupX * vupX + vupY * vupY + vupZ * vupZ);
+-        if (vupLen > 1e-10f) { vupX /= vupLen; vupY /= vupLen; vupZ /= vupLen; }
++        var vupLen = MathF.Sqrt(vupX * vupX + vupY * vupY + vupZ * vupZ);
++        if (vupLen < 1e-10f)
++        {
++            vupX = 0f; vupY = 1f; vupZ = 0f;
++        }
++        else
++        {
++            vupX /= vupLen; vupY /= vupLen; vupZ /= vupLen;
++        }
+ 
+         // 六个世界轴
+         var worldAxes = new[]
+@@ -216,20 +257,21 @@
+     /// </summary>
+     public ViewportNavigationElement HitTest(float pixelX, float pixelY)
+     {
+-        // 1. 轴端（精确匹配，半径内最近者优先）
+-        // 从未命中不可能超过两个轴端（正/负背对），先检测所有轴端
+-        foreach (var proj in AxisProjections)
+-        {
++        // 1. 轴端。AxisProjections 按“背面 → 正面”排序，HitTest 必须反向，
++        // 保证重叠时屏幕最前方的轴端获得点击。
++        for (var i = AxisProjections.Count - 1; i >= 0; i--)
++        {
++            var proj = AxisProjections[i];
+             var dx = pixelX - proj.ScreenX;
+             var dy = pixelY - proj.ScreenY;
+             if (dx * dx + dy * dy <= proj.Radius * proj.Radius)
+                 return proj.Element;
+         }
+ 
+-        // 2. Gizmo 中心区域
+-        var gdx = pixelX - GizmoCenterCircle.CenterX;
+-        var gdy = pixelY - GizmoCenterCircle.CenterY;
+-        if (gdx * gdx + gdy * gdy <= GizmoCenterCircle.Radius * GizmoCenterCircle.Radius)
++        // 2. 整个导航球区域均可拖动 Orbit，而不要求精确点中中心小圆。
++        var gdx = pixelX - GizmoOrbitCircle.CenterX;
++        var gdy = pixelY - GizmoOrbitCircle.CenterY;
++        if (gdx * gdx + gdy * gdy <= GizmoOrbitCircle.Radius * GizmoOrbitCircle.Radius)
+             return ViewportNavigationElement.GizmoCenter;
+ 
+         // 3. 导航按钮
+--- a/FluidWarfare.Render/Camera/Navigation/SceneNavigationCameraMotion.cs
++++ b/FluidWarfare.Render/Camera/Navigation/SceneNavigationCameraMotion.cs
+@@ -21,11 +21,18 @@
+     /// <returns>(Yaw, Pitch) 角度。</returns>
+     public static (float Yaw, float Pitch) DirectionToYawPitch(Vector3d direction)
+     {
+-        var dirX = (float)direction.X;
+-        var dirY = (float)direction.Y;
+-        var dirZ = (float)direction.Z;
++        var length = Math.Sqrt(
++            direction.X * direction.X +
++            direction.Y * direction.Y +
++            direction.Z * direction.Z);
++        if (length < 1e-10)
++            return (0f, 0f);
+ 
+-        var pitch = (float)Math.Asin(Math.Clamp(dirZ, -1.0, 1.0));
++        var dirX = (float)(direction.X / length);
++        var dirY = (float)(direction.Y / length);
++        var dirZ = (float)(direction.Z / length);
++
++        var pitch = (float)Math.Asin(Math.Clamp(dirZ, -1.0f, 1.0f));
+         var yaw = (float)Math.Atan2(dirX, -dirY);
+ 
+         // 转换为角度
+@@ -55,7 +62,7 @@
+         return state with
+         {
+             Yaw = yaw,
+-            Pitch = Math.Clamp(pitch, 5f, 89f),
++            Pitch = Math.Clamp(pitch, -89f, 89f),
+             ProjectionMode = SceneProjectionMode.Orthographic
+         };
+     }
+@@ -101,11 +108,27 @@
+     /// <returns>新投影模式的状态。</returns>
+     public static SceneOrbitCameraState ToggleProjection(SceneOrbitCameraState state)
+     {
+-        var newMode = state.ProjectionMode == SceneProjectionMode.Perspective
+-            ? SceneProjectionMode.Orthographic
+-            : SceneProjectionMode.Perspective;
++        var halfFovRadians = state.FieldOfViewDegrees * MathF.PI / 360f;
++        var tangent = MathF.Max(0.0001f, MathF.Tan(halfFovRadians));
+ 
+-        return state with { ProjectionMode = newMode };
++        if (state.ProjectionMode == SceneProjectionMode.Perspective)
++        {
++            // 以 Pivot 深度处的可见高度作为正交高度，避免切换时画面突变。
++            var visibleHeight = Math.Clamp(2f * state.Distance * tangent, 2f, 200f);
++            return state with
++            {
++                ProjectionMode = SceneProjectionMode.Orthographic,
++                OrthographicHeight = visibleHeight
++            };
++        }
++
++        var fittedDistance = Math.Clamp(
++            state.OrthographicHeight / (2f * tangent), 2f, 200f);
++        return state with
++        {
++            ProjectionMode = SceneProjectionMode.Perspective,
++            Distance = fittedDistance
++        };
+     }
+ 
+     /// <summary>
+--- a/FluidWarfare.Render/Camera/SceneOrbitCameraMotion.cs
++++ b/FluidWarfare.Render/Camera/SceneOrbitCameraMotion.cs
+@@ -6,7 +6,7 @@
+ /// </summary>
+ public static class SceneOrbitCameraMotion
+ {
+-    private const float MinPitch = 5f;
++    private const float MinPitch = -89f;
+     private const float MaxPitch = 89f;
+     private const float MinDistance = 2f;
+     private const float MaxDistance = 200f;
+@@ -40,9 +40,7 @@
+         float deltaYaw,
+         float deltaPitch)
+     {
+-        var newYaw = state.Yaw + deltaYaw;
+-        // Yaw 可循环
+-        if (newYaw > 360f) newYaw -= 360f;
++        var newYaw = (state.Yaw + deltaYaw) % 360f;
+         if (newYaw < 0f) newYaw += 360f;
+ 
+         var newPitch = Math.Clamp(
+@@ -62,8 +60,10 @@
+     {
+         if (viewportHeight <= 0) return state;
+ 
+-        var fovRad = state.FieldOfViewDegrees * MathF.PI / 180f;
+-        var worldPerPixel = 2.0f * state.Distance * MathF.Tan(fovRad * 0.5f) / viewportHeight;
++        var worldPerPixel = state.ProjectionMode == SceneProjectionMode.Orthographic
++            ? state.OrthographicHeight / viewportHeight
++            : 2.0f * state.Distance *
++              MathF.Tan(state.FieldOfViewDegrees * MathF.PI / 360f) / viewportHeight;
+ 
+         // 从轨道状态计算 Forward/Right/ViewUp (Z-Up)
+         var yawRad = state.Yaw * MathF.PI / 180f;
+@@ -114,7 +114,15 @@
+         SceneOrbitCameraState state,
+         float deltaPixels)
+     {
+-        var factor = 1f + deltaPixels * 0.005f;
++        var factor = MathF.Exp(deltaPixels * 0.005f);
++
++        if (state.ProjectionMode == SceneProjectionMode.Orthographic)
++        {
++            var newHeight = Math.Clamp(
++                state.OrthographicHeight * factor, MinDistance, MaxDistance);
++            return state with { OrthographicHeight = newHeight };
++        }
++
+         var newDistance = Math.Clamp(
+             state.Distance * factor, MinDistance, MaxDistance);
+         return state with { Distance = newDistance };
+@@ -127,9 +135,17 @@
+         SceneOrbitCameraState state,
+         float wheelNotches)
+     {
++        var factor = MathF.Pow(0.9f, wheelNotches);
++
++        if (state.ProjectionMode == SceneProjectionMode.Orthographic)
++        {
++            var newHeight = Math.Clamp(
++                state.OrthographicHeight * factor, MinDistance, MaxDistance);
++            return state with { OrthographicHeight = newHeight };
++        }
++
+         var newDistance = Math.Clamp(
+-            state.Distance * MathF.Pow(0.9f, wheelNotches),
+-            MinDistance, MaxDistance);
++            state.Distance * factor, MinDistance, MaxDistance);
+         return state with { Distance = newDistance };
+     }
+ 
+@@ -156,7 +172,8 @@
+             PivotX = centerX,
+             PivotY = centerY,
+             PivotZ = centerZ,
+-            Distance = fitDist
++            Distance = fitDist,
++            OrthographicHeight = Math.Clamp(radius * 4f, MinDistance, MaxDistance)
+         };
+     }
+ 
+@@ -164,4 +181,20 @@
+     /// 显示全部（重置到默认状态）。
+     /// </summary>
+     public static SceneOrbitCameraState FrameAll() => CreateDefault();
++
++    /// <summary>
++    /// 查看全部但保留当前观察方向和投影模式。用于导航 Overlay 的聚焦按钮。
++    /// </summary>
++    public static SceneOrbitCameraState FrameAll(SceneOrbitCameraState state)
++    {
++        var defaults = CreateDefault();
++        return state with
++        {
++            PivotX = defaults.PivotX,
++            PivotY = defaults.PivotY,
++            PivotZ = defaults.PivotZ,
++            Distance = defaults.Distance,
++            OrthographicHeight = defaults.OrthographicHeight
++        };
++    }
+ }
+--- a/FluidWarfare.Render/Camera/SceneOrbitCameraState.cs
++++ b/FluidWarfare.Render/Camera/SceneOrbitCameraState.cs
+@@ -24,7 +24,7 @@
+     /// <summary>水平旋转角（度）。0 = 看向 +Y 方向。</summary>
+     public float Yaw { get; init; }
+ 
+-    /// <summary>垂直旋转角（度）。0 = 水平，限制 5..89。</summary>
++    /// <summary>垂直旋转角（度）。0 = 水平，限制 -89..89，支持底视图。</summary>
+     public float Pitch { get; init; }
+ 
+     /// <summary>相机到 Pivot 的距离。</summary>
+--- a/FluidWarfare.Render.Vulkan/Scene3D/Overlay/VulkanNavigationOverlayGeometry.cs
++++ b/FluidWarfare.Render.Vulkan/Scene3D/Overlay/VulkanNavigationOverlayGeometry.cs
+@@ -41,6 +41,15 @@
+         var cx = layout.GizmoCenterX;
+         var cy = layout.GizmoCenterY;
+ 
++        // 0. 导航球整体轮廓。整个圆形区域都可拖动 Orbit，视觉与 HitTest 保持一致。
++        var orbitOutline = pressed == ViewportNavigationElement.GizmoCenter
++            ? (0.92f, 0.92f, 0.96f)
++            : hovered == ViewportNavigationElement.GizmoCenter
++                ? (0.72f, 0.72f, 0.78f)
++                : (0.30f, 0.30f, 0.35f);
++        DrawCircleOutline(verts, cx, cy, layout.GizmoOrbitCircle.Radius,
++            1.2f * scale, orbitOutline);
++
+         // 1. 背面轴端（先画）
+         foreach (var proj in layout.AxisProjections)
+         {
+@@ -66,9 +75,11 @@
+         }
+ 
+         // 3. 中心圆
+-        var centerColor = hovered == ViewportNavigationElement.GizmoCenter
+-            ? (0.6f, 0.6f, 0.65f)
+-            : (0.4f, 0.4f, 0.45f);
++        var centerColor = pressed == ViewportNavigationElement.GizmoCenter
++            ? (0.85f, 0.85f, 0.90f)
++            : hovered == ViewportNavigationElement.GizmoCenter
++                ? (0.65f, 0.65f, 0.72f)
++                : (0.40f, 0.40f, 0.45f);
+         DrawFilledCircle(verts, cx, cy, layout.GizmoCenterCircle.Radius, centerColor);
+         // 中心外圈
+         DrawCircleOutline(verts, cx, cy, layout.GizmoCenterCircle.Radius + 2f * scale, 1.5f * scale,
+@@ -89,10 +100,10 @@
+             var label = GetAxisLabel(proj.Element);
+             if (label.Length > 0)
+             {
+-                var lr = AdjustColor(proj.Color, false, false);
++                var lr = (0.96f, 0.96f, 0.98f);
+                 // Only draw letter when radius > 4
+                 if (proj.Radius > 4f)
+-                    DrawLetter(verts, proj.ScreenX, proj.ScreenY, proj.Radius * 0.5f, label, lr);
++                    DrawLetter(verts, proj.ScreenX, proj.ScreenY, proj.Radius * 0.42f, label, lr);
+             }
+         }
+ 
+--- a/FluidWarfare.Render.Vulkan/Scene3D/Overlay/VulkanOverlayResources.cs
++++ b/FluidWarfare.Render.Vulkan/Scene3D/Overlay/VulkanOverlayResources.cs
+@@ -5,7 +5,7 @@
+ 
+ /// <summary>
+ /// Overlay 全部 Vulkan 资源。
+-/// Session 启动创建一次，Session Dispose 释放一次。
++/// Session 启动创建；Swapchain Resize 时随 RenderPass/Viewport 事务式重建；Session Dispose 释放。
+ /// </summary>
+ public sealed unsafe class VulkanOverlayResources : IDisposable
+ {
+@@ -215,12 +215,21 @@
+ 
+     public void Dispose()
+     {
++        if (!IsValid) return;
++
+         if (Pipeline.Handle != 0) _vk.DestroyPipeline(_device, Pipeline, null);
+         if (Layout.Handle != 0) _vk.DestroyPipelineLayout(_device, Layout, null);
+         if (FragModule.Handle != 0) _vk.DestroyShaderModule(_device, FragModule, null);
+         if (VertModule.Handle != 0) _vk.DestroyShaderModule(_device, VertModule, null);
+         if (VertexBuffer.Handle != 0) _vk.DestroyBuffer(_device, VertexBuffer, null);
+         if (VertexMemory.Handle != 0) _vk.FreeMemory(_device, VertexMemory, null);
++
++        Pipeline = default;
++        Layout = default;
++        FragModule = default;
++        VertModule = default;
++        VertexBuffer = default;
++        VertexMemory = default;
+         IsValid = false;
+     }
+ }
+--- a/FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dSession.cs
++++ b/FluidWarfare.Render.Vulkan/Scene3D/Session/VulkanScene3dSession.cs
+@@ -423,6 +423,7 @@
+         var oldUnitPipeline = _unitPipeline;
+         var oldGridPipeOk = _gridPipeOk;
+         var oldUnitPipeOk = _unitPipeOk;
++        var oldOverlayResources = _overlayResources;
+ 
+         // 用旧 Swapchain 作为 OldSwapchain 创建新资源
+         var oldSc = oldResources?.Swapchain ?? default;
+@@ -446,6 +447,7 @@
+         var newResources = createResult.Resources!;
+         Pipeline newGridPipeline = default, newUnitPipeline = default;
+         bool newGridPipeOk = false, newUnitPipeOk = false;
++        Overlay.VulkanOverlayResources? newOverlayResources = null;
+ 
+         try
+         {
+@@ -465,9 +467,23 @@
+             newGridPipeOk = true;
+             newUnitPipeOk = true;
+             _pipelineCreateCount++;
++
++            // Overlay Pipeline 使用静态 Viewport，并绑定新 RenderPass。Resize 必须同步重建，
++            // 否则画面会按旧尺寸绘制，而 CPU HitTest 使用新尺寸，导致 Gizmo 看得见却点不中。
++            newOverlayResources = Overlay.VulkanOverlayResources.TryCreate(
++                _vk, _device, _physicalDevice,
++                newResources.RenderPass,
++                newResources.Extent.Width, newResources.Extent.Height,
++                out var overlayResizeError);
++            if (newOverlayResources is null)
++            {
++                System.Diagnostics.Debug.WriteLine(
++                    $"[Overlay] Resize 后资源重建失败：{overlayResizeError}。场景继续运行，但导航 Overlay 暂停。");
++            }
+         }
+         catch
+         {
++            newOverlayResources?.Dispose();
+             newResources.Dispose();
+             if (newGridPipeOk) _vk.DestroyPipeline(_device, newGridPipeline, null);
+             if (newUnitPipeOk) _vk.DestroyPipeline(_device, newUnitPipeline, null);
+@@ -480,15 +496,19 @@
+         _swapchainRes = newResources;
+         _gridPipeline = newGridPipeline;
+         _unitPipeline = newUnitPipeline;
++        _overlayResources = newOverlayResources;
+         _gridPipeOk = true;
+         _unitPipeOk = true;
+         _swapchainGeneration++;
++        _lastPresentedOverlaySnapshot = Overlay.PresentedNavigationOverlaySnapshot.Empty;
++        _pendingOverlayLayout = null;
+ 
+         // 安全释放旧资源
+         if (oldGridPipeOk && oldGridPipeline.Handle != 0)
+             _vk.DestroyPipeline(_device, oldGridPipeline, null);
+         if (oldUnitPipeOk && oldUnitPipeline.Handle != 0)
+             _vk.DestroyPipeline(_device, oldUnitPipeline, null);
++        oldOverlayResources?.Dispose();
+         oldResources?.Dispose();
+ 
+         _status = VulkanScene3dSessionStatus.Active;
+@@ -499,7 +519,6 @@
+         if (!VulkanScene3dSwapchainInvariant.IsActiveValid())
+         {
+             var diag = VulkanScene3dSwapchainInvariant.GetDiagnosticReport();
+-            newResources.Dispose();
+             DisposeResources();
+             _status = VulkanScene3dSessionStatus.Failed;
+             return VulkanScene3dFrameResult.Failed(_frameIndex,
+@@ -551,6 +570,10 @@
+             _overlayResources.Dispose();
+             _overlayResources = null;
+         }
++
++        _pendingOverlayLayout = null;
++        _lastPresentedOverlaySnapshot = Overlay.PresentedNavigationOverlaySnapshot.Empty;
++        _lastOverlayVertexCount = 0;
+     }
+ 
+     // ─── 内部渲染 ───────────────────────────────────────────────
+@@ -658,7 +681,9 @@
+             }
+ 
+             // 10. Record command buffer
+-            // Pre-generate overlay geometry
++            // Pre-generate overlay geometry。每帧先清空 pending，防止上传失败后发布旧布局。
++            _pendingOverlayLayout = null;
++            _lastOverlayVertexCount = 0;
+             int overlayVtxCount = 0;
+             Silk.NET.Vulkan.Buffer? overlayBuf = null;
+             Pipeline? overlayPipe = null;
+@@ -674,19 +699,23 @@
+ 
+                     _lastOverlayLayout = FluidWarfare.Render.ViewportNavigation.ViewportNavigationLayout.Compute(
+                         extentW, extentH, cameraPose);
+-                    _pendingOverlayLayout = _lastOverlayLayout;
+ 
+                     var overlayVerts = Overlay.VulkanNavigationOverlayGeometry.Build(
+                         _lastOverlayLayout, _overlayHovered, _overlayActive, projText);
+ 
+-                    _lastOverlayVertexCount = overlayVerts.Length;
+-
+-                    if (_overlayResources.UploadVertices(overlayVerts, out _))
++                    if (_overlayResources.UploadVertices(overlayVerts, out var overlayUploadError))
+                     {
++                        _lastOverlayVertexCount = overlayVerts.Length;
++                        _pendingOverlayLayout = _lastOverlayLayout;
+                         overlayVtxCount = overlayVerts.Length;
+                         overlayBuf = _overlayResources.VertexBuffer;
+                         overlayPipe = _overlayResources.Pipeline;
+                         overlayLayout = _overlayResources.Layout;
++                    }
++                    else
++                    {
++                        System.Diagnostics.Debug.WriteLine(
++                            $"[Overlay] 顶点上传失败：{overlayUploadError}。本帧跳过 Overlay。");
+                     }
+                 }
+                 catch (Exception exO)
+@@ -769,6 +798,10 @@
+                     CameraRevision = cameraPose.Revision,
+                     OverlayRevision = _overlayRevision
+                 };
++            }
++            else
++            {
++                _lastPresentedOverlaySnapshot = Overlay.PresentedNavigationOverlaySnapshot.Empty;
+             }
+             // 12. 判断是否需要标记重建请求
+             var finalStatus = _recreateRequested
+--- a/FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostControl.cs
++++ b/FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostControl.cs
+@@ -3,6 +3,7 @@
+ using Avalonia;
+ using Avalonia.Controls;
+ using Avalonia.Platform;
++using FluidWarfare.Render.ViewportNavigation;
+ 
+ namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
+ 
+@@ -88,7 +89,7 @@
+     // ─── Overlay 导航输入事件 ────────────────────────────────────
+ 
+     /// <summary>Overlay 导航左键按下（pixelX, pixelY）。</summary>
+-    public event Func<int, int, bool>? NavigationPointerPressed;
++    public event Func<int, int, ViewportNavigationPressResult>? NavigationPointerPressed;
+ 
+     /// <summary>Overlay 导航鼠标移动（pixelX, pixelY）。</summary>
+     public event Func<int, int, bool>? NavigationPointerMoved;
+@@ -105,12 +106,8 @@
+     /// <summary>鼠标离开视口。</summary>
+     public event Action? PointerLeft;
+ 
+-    /// <summary>Overlay 导航拖动模式。</summary>
+-    public enum ViewportNavigationDragMode { None, GizmoOrbit, Pan, Zoom }
+-
+-    private ViewportNavigationDragMode _navDragMode = ViewportNavigationDragMode.None;
+-    private bool _leftButtonConsumedByNavigation;
+-    private bool _hasNavigationMouseCapture;
++    private bool _leftButtonHandledByNavigation;
++    private bool _navigationDragCaptured;
+ 
+     public event EventHandler<WindowsVulkanViewportHostInfo>? HostInfoChanged;
+ 
+@@ -233,38 +230,45 @@
+                 {
+                     var mx = (short)(lParam.ToInt64() & 0xFFFF);
+                     var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+-                    instance._leftButtonConsumedByNavigation =
+-                        instance.NavigationPointerPressed?.Invoke(mx, my) == true;
+-                    if (instance._leftButtonConsumedByNavigation)
++                    SetFocus(instance._windowHandle);
++
++                    var pressResult = instance.NavigationPointerPressed?.Invoke(mx, my)
++                        ?? ViewportNavigationPressResult.NotHandled;
++                    instance._leftButtonHandledByNavigation =
++                        pressResult != ViewportNavigationPressResult.NotHandled;
++
++                    if (pressResult == ViewportNavigationPressResult.BeginDrag)
+                     {
+                         SetCapture(instance._windowHandle);
+-                        instance._hasNavigationMouseCapture = true;
++                        instance._navigationDragCaptured = true;
++                    }
++                    else if (!instance._leftButtonHandledByNavigation)
++                    {
++                        instance._pickInput.OnDown(mx, my);
++                    }
++
++                    return 0;
++                }
++
++                case WmLButtonUp:
++                {
++                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
++                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
++
++                    if (instance._leftButtonHandledByNavigation)
++                    {
++                        // 先清理本地标志，再 ReleaseCapture，避免 WM_CAPTURECHANGED 重复派发。
++                        instance._leftButtonHandledByNavigation = false;
++                        var hadCapture = instance._navigationDragCaptured;
++                        instance._navigationDragCaptured = false;
++                        instance.NavigationPointerReleased?.Invoke();
++                        if (hadCapture) ReleaseCapture();
+                     }
+                     else
+                     {
+-                        instance._pickInput.OnDown(mx, my);
++                        instance._pickInput.OnUp(mx, my);
+                     }
+-                    return 0;
+-                }
+-
+-                case WmLButtonUp:
+-                {
+-                    instance.NavigationPointerReleased?.Invoke();
+-                    if (instance._leftButtonConsumedByNavigation)
+-                    {
+-                        instance._leftButtonConsumedByNavigation = false;
+-                        if (instance._hasNavigationMouseCapture)
+-                        {
+-                            instance._hasNavigationMouseCapture = false;
+-                            ReleaseCapture();
+-                        }
+-                    }
+-                    else
+-                    {
+-                        instance._pickInput.OnUp(
+-                            (short)(lParam.ToInt64() & 0xFFFF),
+-                            (short)((lParam.ToInt64() >> 16) & 0xFFFF));
+-                    }
++
+                     return 0;
+                 }
+ 
+@@ -348,6 +352,7 @@
+         }
+ 
+         var navigationConsumed = NavigationPointerMoved?.Invoke(x, y) == true;
++        if (_navigationDragCaptured) navigationConsumed = true;
+ 
+         if (!navigationConsumed)
+             PointerMoved?.Invoke(x, y);
+@@ -385,7 +390,8 @@
+             ReleaseCapture();
+         }
+ 
+-        var hadNavigationCapture = _hasNavigationMouseCapture || _leftButtonConsumedByNavigation;
++        _pickInput.OnKillFocus();
++        var hadNavigationCapture = _navigationDragCaptured || _leftButtonHandledByNavigation;
+         EndNavigationCapture();
+         if (hadNavigationCapture)
+             NavigationCaptureLost?.Invoke();
+@@ -393,7 +399,7 @@
+ 
+     private void HandleCaptureChanged()
+     {
+-        if (_hasNavigationMouseCapture || _leftButtonConsumedByNavigation)
++        if (_navigationDragCaptured || _leftButtonHandledByNavigation)
+         {
+             EndNavigationCapture();
+             NavigationCaptureLost?.Invoke();
+@@ -402,9 +408,9 @@
+ 
+     private void EndNavigationCapture()
+     {
+-        _navDragMode = ViewportNavigationDragMode.None;
+-        _leftButtonConsumedByNavigation = false;
+-        _hasNavigationMouseCapture = false;
++        _leftButtonHandledByNavigation = false;
++        _navigationDragCaptured = false;
++        _pickInput.OnKillFocus();
+     }
+ 
+     // ─── 窗口调整大小 ────────────────────────────────────────
+@@ -490,6 +496,9 @@
+     [return: MarshalAs(UnmanagedType.Bool)]
+     private static extern bool DestroyWindow(nint hwnd);
+ 
++    [DllImport("user32.dll")]
++    private static extern nint SetFocus(nint hwnd);
++
+     private const uint SwpNoZOrder = 0x0004;
+     private const uint SwpNoActivate = 0x0010;
+ 
+--- a/FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs
++++ b/FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostPanel.axaml.cs
+@@ -1,5 +1,6 @@
+ using Avalonia.Controls;
+ using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
++using FluidWarfare.Render.ViewportNavigation;
+ 
+ namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+ 
+@@ -23,7 +24,7 @@
+     public event Action<int, int>? PickRequested;
+ 
+     // ─── Overlay 导航输入事件 ────────────────────────────────────
+-    public event Func<int, int, bool>? NavigationPointerPressed;
++    public event Func<int, int, ViewportNavigationPressResult>? NavigationPointerPressed;
+     public event Func<int, int, bool>? NavigationPointerMoved;
+     public event Action? NavigationPointerReleased;
+     public event Action? NavigationCaptureLost;
+@@ -53,7 +54,8 @@
+             _nativeHostControl.NumpadPeriodRequested += () => NumpadPeriodRequested?.Invoke();
+             _nativeHostControl.EscapeRequested += () => EscapeRequested?.Invoke();
+             _nativeHostControl.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
+-            _nativeHostControl.NavigationPointerPressed += (x, y) => NavigationPointerPressed?.Invoke(x, y) == true;
++            _nativeHostControl.NavigationPointerPressed += (x, y) =>
++                NavigationPointerPressed?.Invoke(x, y) ?? ViewportNavigationPressResult.NotHandled;
+             _nativeHostControl.NavigationPointerMoved += (x, y) => NavigationPointerMoved?.Invoke(x, y) == true;
+             _nativeHostControl.NavigationPointerReleased += () => NavigationPointerReleased?.Invoke();
+             _nativeHostControl.NavigationCaptureLost += () => NavigationCaptureLost?.Invoke();
+--- a/FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs
++++ b/FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs
+@@ -1144,14 +1144,14 @@
+ 
+     // ─── Overlay 导航输入 ──────────────────────────────
+     // HitTest uses the last presented overlay snapshot so input matches visible pixels.
+-    private bool HandleOverlayPointerPressed(int pixelX, int pixelY)
++    private ViewportNavigationPressResult HandleOverlayPointerPressed(int pixelX, int pixelY)
+     {
+         var layout = GetPresentedNavigationLayout();
+-        if (layout is null) return false;
++        if (layout is null) return ViewportNavigationPressResult.NotHandled;
+ 
+         var element = layout.HitTest(pixelX, pixelY);
+         if (element == ViewportNavigationElement.None)
+-            return false;
++            return ViewportNavigationPressResult.NotHandled;
+ 
+         _navigationActiveElement = element;
+         _navigationLastPixelX = pixelX;
+@@ -1169,38 +1169,37 @@
+                 SnapCameraToNavigationElement(element);
+                 SetOverlayVisualState(element, ViewportNavigationElement.None);
+                 EndOverlayDrag(false);
+-                return true;
++                return ViewportNavigationPressResult.HandledClick;
+ 
+             case ViewportNavigationElement.GizmoCenter:
+                 _navigationDragMode = ViewportNavigationDragMode.GizmoOrbit;
+-                return true;
++                return ViewportNavigationPressResult.BeginDrag;
+ 
+             case ViewportNavigationElement.PanButton:
+                 _navigationDragMode = ViewportNavigationDragMode.Pan;
+-                return true;
++                return ViewportNavigationPressResult.BeginDrag;
+ 
+             case ViewportNavigationElement.ZoomButton:
+                 _navigationDragMode = ViewportNavigationDragMode.Zoom;
+-                return true;
++                return ViewportNavigationPressResult.BeginDrag;
+ 
+             case ViewportNavigationElement.FrameButton:
+                 FrameNavigationTarget();
+-                return true;
++                return ViewportNavigationPressResult.HandledClick;
+ 
+             case ViewportNavigationElement.ProjectionButton:
+                 HandleCameraProjectionToggle();
+-                return true;
++                return ViewportNavigationPressResult.HandledClick;
+ 
+             default:
+-                return true;
++                return ViewportNavigationPressResult.HandledClick;
+         }
+     }
+ 
+     private bool HandleOverlayPointerMoved(int pixelX, int pixelY)
+     {
+-        var layout = GetPresentedNavigationLayout();
+-        if (layout is null) return false;
+-
++        // 拖动已由 NativeHost 捕获后，即使 resize 期间 Presented Layout 暂时不可用，
++        // 也必须继续吞掉鼠标消息，避免穿透到地面 Hover/Picking。
+         if (_navigationDragMode != ViewportNavigationDragMode.None)
+         {
+             var deltaX = pixelX - _navigationLastPixelX;
+@@ -1211,13 +1210,19 @@
+             if (deltaX == 0 && deltaY == 0)
+                 return true;
+ 
+-            ApplyNavigationDrag(deltaX, deltaY, layout.ViewportHeight);
++            var viewportHeight = GetPresentedNavigationLayout()?.ViewportHeight
++                ?? _vulkanViewportHostPanel?.GetNativeHostInfo().Height
++                ?? 1;
++            ApplyNavigationDrag(deltaX, deltaY, Math.Max(1, viewportHeight));
+             return true;
+         }
++
++        var layout = GetPresentedNavigationLayout();
++        if (layout is null) return false;
+ 
+         var element = layout.HitTest(pixelX, pixelY);
+         if (element != _navigationHoverElement)
+-            SetOverlayVisualState(element, _navigationActiveElement);
++            SetOverlayVisualState(element, ViewportNavigationElement.None);
+ 
+         return element != ViewportNavigationElement.None;
+     }
+@@ -1296,20 +1301,8 @@
+ 
+     private static SceneOrbitCameraState ApplyNavigationZoom(
+         SceneOrbitCameraState state,
+-        float deltaPixels)
+-    {
+-        if (state.ProjectionMode == SceneProjectionMode.Orthographic)
+-        {
+-            var factor = 1f + deltaPixels * 0.005f;
+-            return state with
+-            {
+-                OrthographicHeight = Math.Clamp(
+-                    state.OrthographicHeight * factor, 2f, 200f)
+-            };
+-        }
+-
+-        return SceneOrbitCameraMotion.Dolly(state, deltaPixels);
+-    }
++        float deltaPixels) =>
++        SceneOrbitCameraMotion.Dolly(state, deltaPixels);
+ 
+     private void SnapCameraToNavigationElement(ViewportNavigationElement element)
+     {
+@@ -1331,7 +1324,7 @@
+             return;
+ 
+         _lastCameraState = SceneNavigationCameraMotion.SnapToView(_lastCameraState, view);
+-        AppendInfoLog($"View snapped to {view}.");
++        AppendInfoLog($"视图已切换到 {view}。");
+         ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
+     }
+ 
+@@ -1339,8 +1332,8 @@
+     {
+         if (_selectedWorldEntity is null)
+         {
+-            _lastCameraState = SceneOrbitCameraMotion.FrameAll();
+-            AppendInfoLog("View framed all scene objects.");
++            _lastCameraState = SceneOrbitCameraMotion.FrameAll(_lastCameraState);
++            AppendInfoLog("已显示全部场景对象。");
+             ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
+             return;
+         }
+@@ -1355,7 +1348,7 @@
+             (float)placement.VisualCenter.Y,
+             (float)placement.VisualCenter.Z,
+             (float)RenderUnitPlacement.HalfExtent);
+-        AppendInfoLog($"View framed {_selectedWorldEntity.DisplayName}.");
++        AppendInfoLog($"已聚焦实体 {_selectedWorldEntity.DisplayName}。");
+         ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
+     }
+ 
+--- a/FluidWarfare.Tests/Render/ViewportNavigation/ViewportNavigationLayoutTests.cs
++++ b/FluidWarfare.Tests/Render/ViewportNavigation/ViewportNavigationLayoutTests.cs
+@@ -225,4 +225,76 @@
+         Assert.Contains(depths, d => d > 0);
+         Assert.Contains(depths, d => d < 0);
+     }
++
++    [Fact]
++    public void HitTest_OverlappingAxes_ReturnsFrontAxis()
++    {
++        var state = SceneNavigationCameraMotion.SnapToView(
++            SceneOrbitCameraMotion.CreateDefault(),
++            FluidWarfare.Render.Camera.Navigation.SceneNavigationView.PositiveX);
++        var pose = SceneCameraPose.FromOrbitState(state, 2);
++        var layout = ViewportNavigationLayout.Compute(1280, 720, pose);
++
++        // 从 +X 看向场景时，±X 轴端投影重叠；-X 朝向相机，应获得点击。
++        var hit = layout.HitTest(layout.GizmoCenterX, layout.GizmoCenterY);
++        Assert.Equal(ViewportNavigationElement.NegativeX, hit);
++    }
++
++    [Fact]
++    public void HitTest_InsideGizmoOrbitArea_ReturnsGizmoCenter()
++    {
++        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
++        var offset = layout.GizmoOrbitCircle.Radius * 0.70f;
++
++        var hit = layout.HitTest(
++            layout.GizmoCenterX + offset,
++            layout.GizmoCenterY + offset);
++
++        Assert.Equal(ViewportNavigationElement.GizmoCenter, hit);
++    }
++
++    [Theory]
++    [InlineData(FluidWarfare.Render.Camera.Navigation.SceneNavigationView.PositiveZ)]
++    [InlineData(FluidWarfare.Render.Camera.Navigation.SceneNavigationView.NegativeZ)]
++    public void VerticalViews_ProduceFiniteLayout(
++        FluidWarfare.Render.Camera.Navigation.SceneNavigationView view)
++    {
++        var state = SceneNavigationCameraMotion.SnapToView(
++            SceneOrbitCameraMotion.CreateDefault(), view);
++        var pose = SceneCameraPose.FromOrbitState(state, 3);
++        var layout = ViewportNavigationLayout.Compute(1280, 720, pose);
++
++        Assert.All(layout.AxisProjections, axis =>
++        {
++            Assert.True(float.IsFinite(axis.ScreenX));
++            Assert.True(float.IsFinite(axis.ScreenY));
++            Assert.True(float.IsFinite(axis.Depth));
++            Assert.True(float.IsFinite(axis.Radius));
++        });
++    }
++
++    [Fact]
++    public void EveryInteractiveElement_MapsToAction()
++    {
++        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
++        foreach (var element in Enum.GetValues<ViewportNavigationElement>())
++        {
++            var action = layout.ElementToAction(element);
++            if (element == ViewportNavigationElement.None)
++                Assert.Equal(ViewportNavigationAction.None, action);
++            else
++                Assert.NotEqual(ViewportNavigationAction.None, action);
++        }
++    }
++
++    [Fact]
++    public void TinyViewport_InteractiveBoundsRemainFinite()
++    {
++        var layout = ViewportNavigationLayout.Compute(180, 140, DefaultPose);
++        Assert.True(float.IsFinite(layout.GizmoCenterX));
++        Assert.True(float.IsFinite(layout.GizmoCenterY));
++        Assert.True(layout.Scale > 0f);
++        Assert.True(layout.ZoomButtonRect.W > 0f);
++        Assert.True(layout.ProjectionButtonRect.H > 0f);
++    }
+ }
+--- a/FluidWarfare.Tests/Render/Camera/Navigation/SceneNavigationCameraMotionTests.cs
++++ b/FluidWarfare.Tests/Render/Camera/Navigation/SceneNavigationCameraMotionTests.cs
+@@ -48,8 +48,8 @@
+         var result = SceneNavigationCameraMotion.SnapToDirection(
+             cam, new Vector3d(0, 0, -1));
+ 
+-        // Looking up from below: Pitch should be ~-90° (clamped to 5° = MinPitch)
+-        Assert.True(result.Pitch >= 5);
++        // Looking up from below: Pitch should be close to -90° without singularity.
++        Assert.True(result.Pitch <= -85);
+     }
+ 
+     [Fact]
+@@ -147,4 +147,54 @@
+         // Yaw=0 looking toward -Y (offsetY = -cos(0) = -1)
+         Assert.Equal(SceneNavigationView.NegativeY, view);
+     }
++
++    [Fact]
++    public void ToggleProjection_PreservesApproximateViewHeight()
++    {
++        var perspective = SceneOrbitCameraMotion.CreateDefault() with
++        {
++            Distance = 30f,
++            FieldOfViewDegrees = 60f
++        };
++
++        var orthographic = SceneNavigationCameraMotion.ToggleProjection(perspective);
++        var restored = SceneNavigationCameraMotion.ToggleProjection(orthographic);
++
++        Assert.Equal(SceneProjectionMode.Orthographic, orthographic.ProjectionMode);
++        Assert.InRange(Math.Abs(restored.Distance - perspective.Distance), 0f, 0.01f);
++    }
++
++    [Fact]
++    public void OrthographicZoom_ChangesOrthographicHeight()
++    {
++        var state = SceneOrbitCameraMotion.CreateDefault() with
++        {
++            ProjectionMode = SceneProjectionMode.Orthographic,
++            OrthographicHeight = 40f
++        };
++
++        var result = SceneOrbitCameraMotion.Zoom(state, 1f);
++
++        Assert.True(result.OrthographicHeight < state.OrthographicHeight);
++        Assert.Equal(state.Distance, result.Distance);
++    }
++
++    [Fact]
++    public void OrthographicPan_UsesOrthographicHeightInsteadOfDistance()
++    {
++        var first = SceneOrbitCameraMotion.CreateDefault() with
++        {
++            ProjectionMode = SceneProjectionMode.Orthographic,
++            OrthographicHeight = 20f,
++            Distance = 10f
++        };
++        var second = first with { Distance = 100f };
++
++        var movedFirst = SceneOrbitCameraMotion.Pan(first, 20f, 10f, 500f);
++        var movedSecond = SceneOrbitCameraMotion.Pan(second, 20f, 10f, 500f);
++
++        Assert.Equal(movedFirst.PivotX, movedSecond.PivotX, 5);
++        Assert.Equal(movedFirst.PivotY, movedSecond.PivotY, 5);
++        Assert.Equal(movedFirst.PivotZ, movedSecond.PivotZ, 5);
++    }
+ }
