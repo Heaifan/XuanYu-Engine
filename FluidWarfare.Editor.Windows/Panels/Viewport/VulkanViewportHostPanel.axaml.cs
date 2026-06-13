@@ -22,6 +22,12 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     public event Action? EscapeRequested;
     public event Action<int, int>? PickRequested;
 
+    // ─── Overlay 导航输入事件 ────────────────────────────────────
+    public event Action<int, int>? NavigationPointerPressed;
+    public event Action<int, int>? NavigationPointerMoved;
+    public event Action? NavigationPointerReleased;
+    public event Action? NavigationCaptureLost;
+
     /// <summary>鼠标在视口内移动（pixelX, pixelY）。</summary>
     public new event Action<int, int>? PointerMoved;
 
@@ -47,6 +53,10 @@ public sealed partial class VulkanViewportHostPanel : UserControl
             _nativeHostControl.NumpadPeriodRequested += () => NumpadPeriodRequested?.Invoke();
             _nativeHostControl.EscapeRequested += () => EscapeRequested?.Invoke();
             _nativeHostControl.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
+            _nativeHostControl.NavigationPointerPressed += (x, y) => NavigationPointerPressed?.Invoke(x, y);
+            _nativeHostControl.NavigationPointerMoved += (x, y) => NavigationPointerMoved?.Invoke(x, y);
+            _nativeHostControl.NavigationPointerReleased += () => NavigationPointerReleased?.Invoke();
+            _nativeHostControl.NavigationCaptureLost += () => NavigationCaptureLost?.Invoke();
             _nativeHostControl.PointerMoved += (x, y) => PointerMoved?.Invoke(x, y);
             _nativeHostControl.PointerLeft += () => PointerLeft?.Invoke();
         }

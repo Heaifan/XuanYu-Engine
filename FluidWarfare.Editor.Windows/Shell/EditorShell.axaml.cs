@@ -146,6 +146,10 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel.NumpadPeriodRequested += HandleNumpadPeriod;
             _vulkanViewportHostPanel.EscapeRequested += HandleViewportEscape;
             _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
+            _vulkanViewportHostPanel.NavigationPointerPressed += HandleOverlayPointerPressed;
+            _vulkanViewportHostPanel.NavigationPointerMoved += HandleOverlayPointerMoved;
+            _vulkanViewportHostPanel.NavigationPointerReleased += HandleOverlayPointerReleased;
+            _vulkanViewportHostPanel.NavigationCaptureLost += HandleOverlayCaptureLost;
             _vulkanViewportHostPanel.PointerMoved += HandleViewportPointerMoved;
             _vulkanViewportHostPanel.PointerLeft += HandleViewportPointerLeft;
         }
@@ -1130,6 +1134,15 @@ public sealed partial class EditorShell : UserControl
 
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
     }
+
+    // ─── Overlay 导航输入（预留） ──────────────────────────────
+    // Overlay 鼠标交互（HitTest、轴端点击、拖动 Orbit、按钮操作）
+    // 将在下一子阶段实现。当前版本：Overlay 正确渲染，支持静态显示。
+    // 鼠标事件已通过 Win32 → Panel → Shell 链路到达，等待实现 Handler 体。
+    private void HandleOverlayPointerPressed(int pixelX, int pixelY) { }
+    private void HandleOverlayPointerMoved(int pixelX, int pixelY) { }
+    private void HandleOverlayPointerReleased() { }
+    private void HandleOverlayCaptureLost() { }
 
     private void HandleViewportEscape()
     {

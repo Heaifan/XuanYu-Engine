@@ -12,23 +12,23 @@ public sealed record ViewportNavigationLayout
 {
     // ─── 布局参数 ──────────────────────────────────────────────
     /// <summary>右上边距。</summary>
-    public const float MarginRight = 14f;
+    public const float MarginRight = 18f;
     /// <summary>上边距。</summary>
-    public const float MarginTop = 14f;
+    public const float MarginTop = 16f;
 
     /// <summary>Gizmo 区域尺寸。</summary>
-    public const float GizmoSize = 96f;
+    public const float GizmoSize = 104f;
     /// <summary>中心球半径。</summary>
-    public const float CenterRadius = 10f;
+    public const float CenterRadius = 12f;
     /// <summary>前端轴端半径。</summary>
-    public const float FrontAxisRadius = 9f;
+    public const float FrontAxisRadius = 10f;
     /// <summary>后端轴端半径。</summary>
-    public const float BackAxisRadius = 6f;
+    public const float BackAxisRadius = 7f;
     /// <summary>轴线长度。</summary>
-    public const float AxisLength = 30f;
+    public const float AxisLength = 34f;
 
     /// <summary>导航按钮尺寸。</summary>
-    public const float ButtonSize = 28f;
+    public const float ButtonSize = 30f;
     /// <summary>按钮间距。</summary>
     public const float ButtonSpacing = 6f;
 

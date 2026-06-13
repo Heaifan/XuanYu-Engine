@@ -84,11 +84,30 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     /// <summary>左键点击拾取（pixelX, pixelY）。</summary>
     public event Action<int, int>? PickRequested;
 
+    // ─── Overlay 导航输入事件 ────────────────────────────────────
+
+    /// <summary>Overlay 导航左键按下（pixelX, pixelY）。</summary>
+    public event Action<int, int>? NavigationPointerPressed;
+
+    /// <summary>Overlay 导航鼠标移动（pixelX, pixelY）。</summary>
+    public event Action<int, int>? NavigationPointerMoved;
+
+    /// <summary>Overlay 导航左键释放。</summary>
+    public event Action? NavigationPointerReleased;
+
+    /// <summary>Overlay 导航鼠标捕获丢失。</summary>
+    public event Action? NavigationCaptureLost;
+
     /// <summary>鼠标在视口内移动（pixelX, pixelY）。</summary>
     public new event Action<int, int>? PointerMoved;
 
     /// <summary>鼠标离开视口。</summary>
     public event Action? PointerLeft;
+
+    /// <summary>Overlay 导航拖动模式。</summary>
+    public enum ViewportNavigationDragMode { None, GizmoOrbit, Pan, Zoom }
+
+    private ViewportNavigationDragMode _navDragMode = ViewportNavigationDragMode.None;
 
     public event EventHandler<WindowsVulkanViewportHostInfo>? HostInfoChanged;
 
@@ -207,16 +226,23 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     return 0;
 
                 case WmLButtonDown:
-                    instance._pickInput.OnDown(
-                        (short)(lParam.ToInt64() & 0xFFFF),
-                        (short)((lParam.ToInt64() >> 16) & 0xFFFF));
+                {
+                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
+                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
+                    // Overlay navigation fires NavigationPointerPressed (EditorShell handles hit test)
+                    instance.NavigationPointerPressed?.Invoke(mx, my);
+                    instance._pickInput.OnDown(mx, my);
                     return 0;
+                }
 
                 case WmLButtonUp:
+                {
+                    instance.NavigationPointerReleased?.Invoke();
                     instance._pickInput.OnUp(
                         (short)(lParam.ToInt64() & 0xFFFF),
                         (short)((lParam.ToInt64() >> 16) & 0xFFFF));
                     return 0;
+                }
 
                 case WmKeyDown when (int)wParam == VkHome:
                     instance.CameraResetRequested?.Invoke();
@@ -293,7 +319,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             _trackingMouseLeave = true;
         }
 
-        // Fire pointer move for ground tracking (always)
+        // Fire overlay navigation move (for hover and drag)
+        NavigationPointerMoved?.Invoke(x, y);
+
+        // Fire pointer move for ground tracking
         PointerMoved?.Invoke(x, y);
 
         // Handle camera drag modes

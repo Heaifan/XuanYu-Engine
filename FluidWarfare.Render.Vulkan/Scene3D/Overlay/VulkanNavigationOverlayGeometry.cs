@@ -236,43 +236,53 @@ public static class VulkanNavigationOverlayGeometry
         DrawThickLine(verts, bx + bw, by + bh, bx, by + bh, border, (borderBrightness, borderBrightness, borderBrightness));
         DrawThickLine(verts, bx, by + bh, bx, by, border, (borderBrightness, borderBrightness, borderBrightness));
 
-        // Button label as simple icon shapes
+        // Button label as larger icon shapes
         var icx = bx + bw / 2f;
         var icy = by + bh / 2f;
-        var isize = bw * 0.25f;
-        var iconColor = (borderBrightness, borderBrightness, borderBrightness);
+        var isize = bw * 0.35f;
+        var iconColor = (borderBrightness * 1.3f, borderBrightness * 1.3f, borderBrightness * 1.3f);
+        var lineW = 2.5f;
 
         switch (label)
         {
             case "Zoom":
                 // Magnifying glass: circle + handle
-                DrawCircleOutline(verts, icx - isize * 0.2f, icy - isize * 0.2f, isize * 0.6f, 2f, iconColor);
-                DrawThickLine(verts, icx + isize * 0.3f, icy + isize * 0.3f, icx + isize * 0.8f, icy + isize * 0.8f, 3f, iconColor);
+                DrawCircleOutline(verts, icx - isize * 0.15f, icy - isize * 0.15f, isize * 0.55f, lineW, iconColor);
+                DrawThickLine(verts, icx + isize * 0.3f, icy + isize * 0.3f, icx + isize * 0.9f, icy + isize * 0.9f, lineW + 0.5f, iconColor);
                 break;
             case "Pan":
-                // Small cross/hand shape
-                DrawThickLine(verts, icx - isize, icy, icx + isize, icy, 2f, iconColor);
-                DrawThickLine(verts, icx, icy - isize, icx, icy + isize, 2f, iconColor);
+                // Hand: palm (rounded rect approximation) + 4 short fingers
+                var palmR = isize * 0.35f;
+                DrawCircleOutline(verts, icx - palmR * 0.2f, icy + palmR * 0.3f, palmR, 2f, iconColor);
+                // 4 finger nubs on top
+                for (var fi = 0; fi < 4; fi++)
+                {
+                    var fx = icx - isize * 0.4f + fi * isize * 0.27f;
+                    var fy = icy - isize * 0.15f;
+                    if (fi == 3) fx += isize * 0.08f; // thumb offset
+                    DrawThickLine(verts, fx, fy, fx, fy - isize * 0.35f, 2.5f, iconColor);
+                    DrawFilledCircle(verts, fx, fy - isize * 0.35f, 2f, iconColor);
+                }
                 break;
             case "Frame":
                 // Crosshair: circle + cross
-                DrawCircleOutline(verts, icx, icy, isize * 0.5f, 2f, iconColor);
-                DrawThickLine(verts, icx - isize * 0.8f, icy, icx + isize * 0.8f, icy, 2f, iconColor);
-                DrawThickLine(verts, icx, icy - isize * 0.8f, icx, icy + isize * 0.8f, 2f, iconColor);
+                DrawCircleOutline(verts, icx, icy, isize * 0.45f, 2.5f, iconColor);
+                DrawThickLine(verts, icx - isize * 0.8f, icy, icx + isize * 0.8f, icy, 2.5f, iconColor);
+                DrawThickLine(verts, icx, icy - isize * 0.8f, icx, icy + isize * 0.8f, 2.5f, iconColor);
                 break;
             case "Persp":
-                // Perspective: trapezoid
-                DrawThickLine(verts, icx - isize * 0.8f, icy + isize * 0.6f, icx + isize * 0.8f, icy + isize * 0.6f, 2f, iconColor);
-                DrawThickLine(verts, icx + isize * 0.8f, icy + isize * 0.6f, icx + isize * 0.5f, icy - isize * 0.6f, 2f, iconColor);
-                DrawThickLine(verts, icx + isize * 0.5f, icy - isize * 0.6f, icx - isize * 0.5f, icy - isize * 0.6f, 2f, iconColor);
-                DrawThickLine(verts, icx - isize * 0.5f, icy - isize * 0.6f, icx - isize * 0.8f, icy + isize * 0.6f, 2f, iconColor);
+                // Perspective: trapezoid (near big, far small)
+                DrawThickLine(verts, icx - isize * 0.9f, icy + isize * 0.7f, icx + isize * 0.9f, icy + isize * 0.7f, 2.5f, iconColor);
+                DrawThickLine(verts, icx + isize * 0.9f, icy + isize * 0.7f, icx + isize * 0.5f, icy - isize * 0.7f, 2.5f, iconColor);
+                DrawThickLine(verts, icx + isize * 0.5f, icy - isize * 0.7f, icx - isize * 0.5f, icy - isize * 0.7f, 2.5f, iconColor);
+                DrawThickLine(verts, icx - isize * 0.5f, icy - isize * 0.7f, icx - isize * 0.9f, icy + isize * 0.7f, 2.5f, iconColor);
                 break;
             case "Ortho":
-                // Orthographic: rectangle
-                DrawThickLine(verts, icx - isize * 0.6f, icy - isize * 0.6f, icx + isize * 0.6f, icy - isize * 0.6f, 2f, iconColor);
-                DrawThickLine(verts, icx + isize * 0.6f, icy - isize * 0.6f, icx + isize * 0.6f, icy + isize * 0.6f, 2f, iconColor);
-                DrawThickLine(verts, icx + isize * 0.6f, icy + isize * 0.6f, icx - isize * 0.6f, icy + isize * 0.6f, 2f, iconColor);
-                DrawThickLine(verts, icx - isize * 0.6f, icy + isize * 0.6f, icx - isize * 0.6f, icy - isize * 0.6f, 2f, iconColor);
+                // Orthographic: parallel rectangle
+                DrawThickLine(verts, icx - isize * 0.7f, icy - isize * 0.7f, icx + isize * 0.7f, icy - isize * 0.7f, 2.5f, iconColor);
+                DrawThickLine(verts, icx + isize * 0.7f, icy - isize * 0.7f, icx + isize * 0.7f, icy + isize * 0.7f, 2.5f, iconColor);
+                DrawThickLine(verts, icx + isize * 0.7f, icy + isize * 0.7f, icx - isize * 0.7f, icy + isize * 0.7f, 2.5f, iconColor);
+                DrawThickLine(verts, icx - isize * 0.7f, icy + isize * 0.7f, icx - isize * 0.7f, icy - isize * 0.7f, 2.5f, iconColor);
                 break;
         }
     }
