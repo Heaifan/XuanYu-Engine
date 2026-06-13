@@ -6,6 +6,7 @@
     xmlns:inspector="clr-namespace:FluidWarfare.Editor.Windows.Panels.Inspector"
     xmlns:status="clr-namespace:FluidWarfare.Editor.Windows.Panels.Status"
     xmlns:viewport="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport"
+    xmlns:tools="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport.Tools"
     xmlns:leftDock="clr-namespace:FluidWarfare.Editor.Windows.Panels.LeftDock">
   <Grid Background="#202327" RowDefinitions="44,*,200,28">
     <Border
@@ -44,7 +45,12 @@
 
     <Grid Grid.Row="1" ColumnDefinitions="260,*,300">
       <leftDock:ProjectWorldDockPanel Grid.Column="0" x:Name="ProjectWorldDockPanel" />
-      <viewport:VulkanViewportHostPanel Grid.Column="1" x:Name="VulkanViewportHostPanel" />
+      <Grid Grid.Column="1">
+        <viewport:VulkanViewportHostPanel x:Name="VulkanViewportHostPanel" />
+        <tools:ViewportToolPalette x:Name="ViewportToolPalette"
+            HorizontalAlignment="Left" VerticalAlignment="Center"
+            Margin="4,0,0,0" IsVisible="True" />
+      </Grid>
       <inspector:InspectorPanel Grid.Column="2" x:Name="InspectorPanel" />
     </Grid>
 

@@ -18,5 +18,7 @@ public sealed record EditorEntityTransformChange(
 public enum EditorEntityTransformOrigin
 {
     InspectorInput,
-    GroundPlacement
+    GroundPlacement,
+    MoveTool,
+    DragScrub,
 }

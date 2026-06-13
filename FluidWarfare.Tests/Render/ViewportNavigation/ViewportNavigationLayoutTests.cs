@@ -33,13 +33,12 @@ public sealed class ViewportNavigationLayoutTests
     {
         var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
 
-        Assert.Equal(layout.GizmoCenterX, layout.ZoomButtonRect.X + layout.ZoomButtonRect.W / 2f, 3);
-        Assert.Equal(layout.ZoomButtonRect.X, layout.PanButtonRect.X, 3);
+        Assert.Equal(layout.GizmoCenterX, layout.PanButtonRect.X + layout.PanButtonRect.W / 2f, 3);
         Assert.Equal(layout.PanButtonRect.X, layout.FrameButtonRect.X, 3);
         Assert.Equal(layout.FrameButtonRect.X, layout.ProjectionButtonRect.X, 3);
-        Assert.True(layout.ZoomButtonRect.Y > layout.GizmoCenterY);
+        Assert.True(layout.PanButtonRect.Y > layout.GizmoCenterY);
         Assert.Equal(ViewportNavigationLayout.ButtonSize + ViewportNavigationLayout.ButtonSpacing,
-            layout.PanButtonRect.Y - layout.ZoomButtonRect.Y, 3);
+            layout.FrameButtonRect.Y - layout.PanButtonRect.Y, 3);
     }
 
     [Fact]
@@ -118,15 +117,6 @@ public sealed class ViewportNavigationLayoutTests
     }
 
     [Fact]
-    public void HitTest_ZoomButton_ReturnsZoom()
-    {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
-        var btn = layout.ZoomButtonRect;
-        var hit = layout.HitTest(btn.X + 1, btn.Y + 1);
-        Assert.Equal(ViewportNavigationElement.ZoomButton, hit);
-    }
-
-    [Fact]
     public void HitTest_PanButton_ReturnsPan()
     {
         var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
@@ -169,7 +159,6 @@ public sealed class ViewportNavigationLayoutTests
         Assert.Equal(ViewportNavigationAction.SnapPositiveX, layout.ElementToAction(ViewportNavigationElement.PositiveX));
         Assert.Equal(ViewportNavigationAction.SnapNegativeX, layout.ElementToAction(ViewportNavigationElement.NegativeX));
         Assert.Equal(ViewportNavigationAction.Orbit, layout.ElementToAction(ViewportNavigationElement.GizmoCenter));
-        Assert.Equal(ViewportNavigationAction.Zoom, layout.ElementToAction(ViewportNavigationElement.ZoomButton));
         Assert.Equal(ViewportNavigationAction.Pan, layout.ElementToAction(ViewportNavigationElement.PanButton));
         Assert.Equal(ViewportNavigationAction.Frame, layout.ElementToAction(ViewportNavigationElement.FrameButton));
         Assert.Equal(ViewportNavigationAction.ToggleProjection, layout.ElementToAction(ViewportNavigationElement.ProjectionButton));
@@ -203,9 +192,9 @@ public sealed class ViewportNavigationLayoutTests
         Assert.NotEqual(small.ViewportWidth, large.ViewportWidth);
         Assert.NotEqual(small.GizmoCenterX, large.GizmoCenterX);
 
-        var oldZoomCenterX = small.ZoomButtonRect.X + small.ZoomButtonRect.W / 2f;
-        var oldZoomCenterY = small.ZoomButtonRect.Y + small.ZoomButtonRect.H / 2f;
-        Assert.Equal(ViewportNavigationElement.None, large.HitTest(oldZoomCenterX, oldZoomCenterY));
+        var oldPx = small.PanButtonRect.X + small.PanButtonRect.W / 2f;
+        var oldPy = small.PanButtonRect.Y + small.PanButtonRect.H / 2f;
+        Assert.Equal(ViewportNavigationElement.None, large.HitTest(oldPx, oldPy));
     }
 
     [Fact]
@@ -295,7 +284,7 @@ public sealed class ViewportNavigationLayoutTests
         Assert.True(float.IsFinite(layout.GizmoCenterX));
         Assert.True(float.IsFinite(layout.GizmoCenterY));
         Assert.True(layout.Scale > 0f);
-        Assert.True(layout.ZoomButtonRect.W > 0f);
+        Assert.True(layout.PanButtonRect.W > 0f);
         Assert.True(layout.ProjectionButtonRect.H > 0f);
     }
 }

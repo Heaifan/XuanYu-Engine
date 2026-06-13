@@ -1,0 +1,15 @@
+<UserControl
+    x:Class="FluidWarfare.Editor.Windows.Panels.Viewport.Tools.ViewportToolPalette"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Border Background="#1A1D23" Padding="6">
+    <StackPanel Spacing="4">
+      <Button x:Name="SelectButton" Content="选择" Width="32" Height="32"
+              Background="#353B44" Foreground="#CCC" BorderThickness="1" BorderBrush="#555"
+              Padding="0" FontSize="10" Click="OnSelectClicked" />
+      <Button x:Name="MoveButton" Content="移动" Width="32" Height="32"
+              Background="#353B44" Foreground="#CCC" BorderThickness="1" BorderBrush="#555"
+              Padding="0" FontSize="10" Click="OnMoveClicked" />
+    </StackPanel>
+  </Border>
+</UserControl>

@@ -16,6 +16,7 @@ using FluidWarfare.Editor.Input.Runtime;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
 using FluidWarfare.Editor.Windows.Panels.Viewport.Input;
+using FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Status;
@@ -94,6 +95,9 @@ public sealed partial class EditorShell : UserControl
     private EditorInputService _inputService = EditorInputService.Instance;
     private WindowsViewportInputTranslator? _inputTranslator;
 
+    // ─── 视口编辑工具 ────────────────────────────────────
+    private ViewportToolPalette? _viewportToolPalette;
+
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
 
@@ -144,6 +148,7 @@ public sealed partial class EditorShell : UserControl
         _statusBarPanel = this.FindControl<StatusBarPanel>("EditorStatusBarPanel");
         _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
         _vulkanViewportHostPanel = this.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanel");
+        _viewportToolPalette = this.FindControl<ViewportToolPalette>("ViewportToolPalette");
         _dockPanel = this.FindControl<ProjectWorldDockPanel>("ProjectWorldDockPanel");
         _runMenuButton = this.FindControl<Button>("RunMenuButton");
 
@@ -1243,6 +1248,12 @@ public sealed partial class EditorShell : UserControl
             case "viewport.view_bottom":
                 ExecuteViewportSnapToView(match.ActionId);
                 break;
+            case "tool.select":
+                _viewportToolPalette?.SetActiveTool(ViewportEditorTool.Select);
+                break;
+            case "tool.move":
+                _viewportToolPalette?.SetActiveTool(ViewportEditorTool.Move);
+                break;
             case "editor.open_preferences":
                 ExecuteOpenPreferences();
                 break;
@@ -1531,10 +1542,6 @@ public sealed partial class EditorShell : UserControl
 
             case ViewportNavigationElement.PanButton:
                 _navigationDragMode = ViewportNavigationDragMode.Pan;
-                return ViewportNavigationPressResult.BeginDrag;
-
-            case ViewportNavigationElement.ZoomButton:
-                _navigationDragMode = ViewportNavigationDragMode.Zoom;
                 return ViewportNavigationPressResult.BeginDrag;
 
             case ViewportNavigationElement.FrameButton:

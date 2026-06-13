@@ -70,9 +70,6 @@ public sealed record ViewportNavigationLayout
 
     // ─── 按钮矩形 ──────────────────────────────────────────────
 
-    /// <summary>缩放按钮矩形。</summary>
-    public Rect ZoomButtonRect { get; init; }
-
     /// <summary>平移按钮矩形。</summary>
     public Rect PanButtonRect { get; init; }
 
@@ -147,10 +144,9 @@ public sealed record ViewportNavigationLayout
             AxisProjections = projections,
             GizmoCenterCircle = new Circle(gizmoX, gizmoY, CenterRadius * scale),
             GizmoOrbitCircle = new Circle(gizmoX, gizmoY, GizmoOrbitRadius * scale),
-            ZoomButtonRect = new Rect(btnX, btnY, btnS, btnS),
-            PanButtonRect = new Rect(btnX, btnY + (btnS + spacing), btnS, btnS),
-            FrameButtonRect = new Rect(btnX, btnY + 2 * (btnS + spacing), btnS, btnS),
-            ProjectionButtonRect = new Rect(btnX, btnY + 3 * (btnS + spacing), btnS, btnS),
+            PanButtonRect = new Rect(btnX, btnY, btnS, btnS),
+            FrameButtonRect = new Rect(btnX, btnY + (btnS + spacing), btnS, btnS),
+            ProjectionButtonRect = new Rect(btnX, btnY + 2 * (btnS + spacing), btnS, btnS),
         };
     }
 
@@ -275,7 +271,6 @@ public sealed record ViewportNavigationLayout
             return ViewportNavigationElement.GizmoCenter;
 
         // 3. 导航按钮
-        if (IsInRect(pixelX, pixelY, ZoomButtonRect)) return ViewportNavigationElement.ZoomButton;
         if (IsInRect(pixelX, pixelY, PanButtonRect)) return ViewportNavigationElement.PanButton;
         if (IsInRect(pixelX, pixelY, FrameButtonRect)) return ViewportNavigationElement.FrameButton;
         if (IsInRect(pixelX, pixelY, ProjectionButtonRect)) return ViewportNavigationElement.ProjectionButton;
@@ -295,7 +290,6 @@ public sealed record ViewportNavigationLayout
             ViewportNavigationElement.PositiveZ => ViewportNavigationAction.SnapPositiveZ,
             ViewportNavigationElement.NegativeZ => ViewportNavigationAction.SnapNegativeZ,
             ViewportNavigationElement.GizmoCenter => ViewportNavigationAction.Orbit,
-            ViewportNavigationElement.ZoomButton => ViewportNavigationAction.Zoom,
             ViewportNavigationElement.PanButton => ViewportNavigationAction.Pan,
             ViewportNavigationElement.FrameButton => ViewportNavigationAction.Frame,
             ViewportNavigationElement.ProjectionButton => ViewportNavigationAction.ToggleProjection,

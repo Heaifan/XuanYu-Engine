@@ -107,9 +107,7 @@ public static class VulkanNavigationOverlayGeometry
             }
         }
 
-        // 6. 四个导航按钮
-        DrawNavigationButton(verts, layout.ZoomButtonRect, hovered == ViewportNavigationElement.ZoomButton,
-            pressed == ViewportNavigationElement.ZoomButton, "Zoom");
+        // 6. 三个导航按钮
         DrawNavigationButton(verts, layout.PanButtonRect, hovered == ViewportNavigationElement.PanButton,
             pressed == ViewportNavigationElement.PanButton, "Pan");
         DrawNavigationButton(verts, layout.FrameButtonRect, hovered == ViewportNavigationElement.FrameButton,

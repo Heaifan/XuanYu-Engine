@@ -64,6 +64,12 @@ public static class EditorInputActionCatalog
         list.Add(new("viewport.view_bottom", "底视图", "标准视图",
             EditorInputActionContext.Viewport3D, EditorInputValueKind.Trigger));
 
+        // ─── 工具 ──────────────────────────────────────────
+        list.Add(new("tool.select", "选择工具", "工具",
+            EditorInputActionContext.Global, EditorInputValueKind.Trigger));
+        list.Add(new("tool.move", "移动工具", "工具",
+            EditorInputActionContext.Global, EditorInputValueKind.Trigger));
+
         // ─── Transform ──────────────────────────────────────
         list.Add(new("transform.apply", "应用 Transform", "Transform",
             EditorInputActionContext.InspectorTransform, EditorInputValueKind.Trigger));
@@ -114,6 +120,12 @@ public static class EditorInputActionCatalog
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad7") });
         list.Add(new() { ActionId = "viewport.view_bottom",
             PrimaryGesture = new(EditorInputDevice.Keyboard, "Numpad7", EditorInputModifiers.Control) });
+
+        // 工具
+        list.Add(new() { ActionId = "tool.select",
+            PrimaryGesture = new(EditorInputDevice.Keyboard, "S") });
+        list.Add(new() { ActionId = "tool.move",
+            PrimaryGesture = new(EditorInputDevice.Keyboard, "G") });
 
         // Transform
         list.Add(new() { ActionId = "transform.apply",

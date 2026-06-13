@@ -288,8 +288,8 @@ public sealed class EditorInputBindingSnapshotTests
     {
         var bindings = EditorInputActionCatalog.BlenderDefaultBindings;
 
-        // 17 个动作有默认主绑定（ground_placement.begin 没有默认绑定）
-        Assert.Equal(17, bindings.Count);
+        // 19 个动作有默认主绑定（ground_placement.begin 没有默认绑定）
+        Assert.Equal(19, bindings.Count);
 
         foreach (var b in bindings)
         {

@@ -27,8 +27,6 @@ public enum ViewportNavigationElement
     GizmoCenter,
 
     // ─── 导航按钮 ──────────────────────────────────────────
-    /// <summary>缩放按钮。</summary>
-    ZoomButton,
     /// <summary>平移按钮。</summary>
     PanButton,
     /// <summary>聚焦按钮。</summary>
