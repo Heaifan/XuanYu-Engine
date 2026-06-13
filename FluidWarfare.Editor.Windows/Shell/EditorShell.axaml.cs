@@ -1007,12 +1007,14 @@ public sealed partial class EditorShell : UserControl
         foreach (var obj in _renderScene.Objects)
         {
             if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
+            var p = obj.Placement;
+            var center = p?.VisualCenter ?? new Vector3d(obj.Position.X, obj.Position.Y, obj.Position.Z + 0.5);
             unitDraws.Add(new VulkanScene3dUnitDrawInfo(
                 obj.EntityId.Value.ToString(),
-                (float)obj.Position.X,
-                (float)obj.Position.Z + 0.5f,
-                (float)obj.Position.Z,
-                1.25f));
+                (float)center.X,
+                (float)center.Y,
+                (float)center.Z,
+                (float)RenderUnitPlacement.Scale));
         }
 
         _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
@@ -1671,8 +1673,14 @@ public sealed partial class EditorShell : UserControl
         }
     }
 
-    private static (float X, float Y, float Z) EntityToScene3dPosition(Vector3d position) =>
-        ((float)position.X, (float)position.Y, (float)position.Z + 0.5f);
+    private static (float X, float Y, float Z) EntityToScene3dPosition(Vector3d position)
+    {
+        // 使用 RenderUnitPlacement 统一计算视觉中心
+        var placement = new RenderUnitPlacement(position);
+        return ((float)placement.VisualCenter.X,
+                (float)placement.VisualCenter.Y,
+                (float)placement.VisualCenter.Z);
+    }
 
     // ─── 地面放置 ──────────────────────────────────────────────────
 
@@ -1748,12 +1756,27 @@ public sealed partial class EditorShell : UserControl
         foreach (var obj in _renderScene.Objects)
         {
             if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
-            list.Add(new VulkanScene3dUnitDrawInfo(
-                obj.EntityId.Value.ToString(),
-                (float)obj.Position.X,
-                (float)obj.Position.Z + 0.5f,
-                (float)obj.Position.Z,
-                1.25f));
+            // 从 RenderUnitPlacement 读取视觉中心和缩放（单一真源）
+            var p = obj.Placement;
+            if (p is not null)
+            {
+                list.Add(new VulkanScene3dUnitDrawInfo(
+                    obj.EntityId.Value.ToString(),
+                    (float)p.VisualCenter.X,
+                    (float)p.VisualCenter.Y,
+                    (float)p.VisualCenter.Z,
+                    (float)RenderUnitPlacement.Scale));
+            }
+            else
+            {
+                // 防御性回退
+                list.Add(new VulkanScene3dUnitDrawInfo(
+                    obj.EntityId.Value.ToString(),
+                    (float)obj.Position.X,
+                    (float)obj.Position.Y,
+                    (float)obj.Position.Z + (float)RenderUnitPlacement.HalfExtent,
+                    (float)RenderUnitPlacement.Scale));
+            }
         }
         return list;
     }
@@ -1796,13 +1819,13 @@ public sealed partial class EditorShell : UserControl
             if (obj.VisualKind != RenderObjectVisualKind.UnitMarker)
                 continue;
 
-            var cz = (float)obj.Position.Z + 0.5f;
+            var p = obj.Placement;
             unitDraws.Add(new VulkanScene3dUnitDrawInfo(
                 obj.EntityId.Value.ToString(),
-                (float)obj.Position.X,
-                (float)obj.Position.Y,
-                cz,
-                1.25f));
+                (float)(p?.VisualCenter.X ?? obj.Position.X),
+                (float)(p?.VisualCenter.Y ?? obj.Position.Y),
+                (float)(p?.VisualCenter.Z ?? obj.Position.Z + RenderUnitPlacement.HalfExtent),
+                (float)RenderUnitPlacement.Scale));
         }
 
         var camera = VulkanCameraInfo.DefaultBattlefield;

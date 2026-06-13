@@ -74,8 +74,9 @@ public sealed class RenderSceneObjectPositionWriterTests
         Assert.NotNull(result.NewScene);
         var bounds = result.NewScene.Objects[0].SelectionBounds;
         Assert.NotNull(bounds);
-        // SelectionBounds center should be at (newPos.X, newPos.Y, newPos.Z + 0.5) [Z-Up]
-        Assert.Equal(new Vector3d(10, 0, -4.5), bounds.Center);
+        // SelectionBounds center should be at (newPos.X, newPos.Y, newPos.Z + HalfExtent) [Z-Up]
+        // HalfExtent = 1.0 * 1.25 / 2 = 0.625
+        Assert.Equal(new Vector3d(10, 0, -4.375), bounds.Center);
     }
 
     [Fact]
@@ -99,10 +100,10 @@ public sealed class RenderSceneObjectPositionWriterTests
         var id2 = EntityId.FromInt(2);
         var obj1 = new RenderObjectInfo(id1, "a", new Vector3d(0, 0, 0),
             RenderObjectVisualKind.UnitMarker, null,
-            new SceneAxisAlignedBounds(new Vector3d(0, 0, 0.5), new Vector3d(0.625, 0.625, 0.625)));
+            new SceneAxisAlignedBounds(new Vector3d(0, 0, 0.625), new Vector3d(0.625, 0.625, 0.625)));
         var obj2 = new RenderObjectInfo(id2, "b", new Vector3d(100, 0, 0),
             RenderObjectVisualKind.UnitMarker, null,
-            new SceneAxisAlignedBounds(new Vector3d(100, 0, 0.5), new Vector3d(0.625, 0.625, 0.625)));
+            new SceneAxisAlignedBounds(new Vector3d(100, 0, 0.625), new Vector3d(0.625, 0.625, 0.625)));
         var scene = new RenderScene([obj1, obj2]);
 
         var result = RenderSceneObjectPositionWriter.Update(

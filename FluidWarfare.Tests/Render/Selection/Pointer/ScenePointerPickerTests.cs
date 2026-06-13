@@ -21,9 +21,9 @@ public sealed class ScenePointerPickerTests
     [Fact]
     public void RayHitsEntityAndGround_ReturnsEntity()
     {
-        // Entity at (0, 0, 0.5) with 1.25 bounds (Z-Up: visual center at Z+0.5)
+        // Entity at (0, 0, 0.625) with 1.25 bounds (visual center at Z+HalfExtent)
         var id = EntityId.FromInt(1);
-        var scene = MakeSceneWithEntity(id, new Vector3d(0, 0, 0.5), 0.625, RenderObjectVisualKind.UnitMarker);
+        var scene = MakeSceneWithEntity(id, new Vector3d(0, 0, 0.625), 0.625, RenderObjectVisualKind.UnitMarker);
 
         var ray = new SceneRay(new Vector3d(0, 0, 10), new Vector3d(0, 0, -1));
         var result = ScenePointerPicker.Pick(ray, scene, DefaultGround);
@@ -36,9 +36,9 @@ public sealed class ScenePointerPickerTests
     [Fact]
     public void RayMissesEntityButHitsGround_ReturnsGround()
     {
-        // Entity at (100, 0, 0.5) — far away
+        // Entity at (100, 0, 0.625) — far away
         var id = EntityId.FromInt(1);
-        var scene = MakeSceneWithEntity(id, new Vector3d(100, 0, 0.5), 0.625, RenderObjectVisualKind.UnitMarker);
+        var scene = MakeSceneWithEntity(id, new Vector3d(100, 0, 0.625), 0.625, RenderObjectVisualKind.UnitMarker);
 
         // Ray through origin downward along -Z
         var ray = new SceneRay(new Vector3d(0, 0, 10), new Vector3d(0, 0, -1));
@@ -66,14 +66,14 @@ public sealed class ScenePointerPickerTests
     [Fact]
     public void NearestEntityStillWinsBeforeGround()
     {
-        // Two entities in Z-Up: center Z = 0.5
+        // Two entities in Z-Up: visual center Z = 0.625 (HalfExtent)
         var id1 = EntityId.FromInt(1);
         var id2 = EntityId.FromInt(2);
-        var bounds1 = new SceneAxisAlignedBounds(new Vector3d(0, 0, 0.5), new Vector3d(0.625, 0.625, 0.625));
-        var obj1 = new RenderObjectInfo(id1, "near", new Vector3d(0, 0, 0.5),
+        var bounds1 = new SceneAxisAlignedBounds(new Vector3d(0, 0, 0.625), new Vector3d(0.625, 0.625, 0.625));
+        var obj1 = new RenderObjectInfo(id1, "near", new Vector3d(0, 0, 0.625),
             RenderObjectVisualKind.UnitMarker, "a.json", bounds1);
-        var bounds2 = new SceneAxisAlignedBounds(new Vector3d(5, 0, 0.5), new Vector3d(0.625, 0.625, 0.625));
-        var obj2 = new RenderObjectInfo(id2, "far", new Vector3d(5, 0, 0.5),
+        var bounds2 = new SceneAxisAlignedBounds(new Vector3d(5, 0, 0.625), new Vector3d(0.625, 0.625, 0.625));
+        var obj2 = new RenderObjectInfo(id2, "far", new Vector3d(5, 0, 0.625),
             RenderObjectVisualKind.UnitMarker, "b.json", bounds2);
         var scene = new RenderScene([obj1, obj2]);
 

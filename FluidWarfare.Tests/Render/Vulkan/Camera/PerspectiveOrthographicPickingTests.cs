@@ -35,9 +35,9 @@ public sealed class PerspectiveOrthographicPickingTests
     private static RenderScene CreateSampleScene()
     {
         const double half = 0.625;
-        var b1 = new SceneAxisAlignedBounds(new Vector3d(-4, -1, 0.5), new Vector3d(half, half, half));
-        var b2 = new SceneAxisAlignedBounds(new Vector3d(0, 0, 0.5), new Vector3d(half, half, half));
-        var b3 = new SceneAxisAlignedBounds(new Vector3d(1, 3, 0.5), new Vector3d(half, half, half));
+        var b1 = new SceneAxisAlignedBounds(new Vector3d(-4, -1, half), new Vector3d(half, half, half));
+        var b2 = new SceneAxisAlignedBounds(new Vector3d(0, 0, half), new Vector3d(half, half, half));
+        var b3 = new SceneAxisAlignedBounds(new Vector3d(1, 3, half), new Vector3d(half, half, half));
 
         return new RenderScene([
             new RenderObjectInfo(Id1, "sample_unit", Pos1, RenderObjectVisualKind.UnitMarker, "a.json", b1),

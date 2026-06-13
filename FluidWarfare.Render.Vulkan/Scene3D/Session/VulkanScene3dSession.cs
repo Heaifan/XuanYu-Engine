@@ -148,9 +148,9 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     /// 不创建 Instance/Device/Swapchain/Pipeline/VertexBuffer。
     /// </summary>
     /// <param name="entityId">实体 ID 字符串。</param>
-    /// <param name="x">新 X 坐标。</param>
-    /// <param name="y">新 Y 坐标。</param>
-    /// <param name="z">新 Z 坐标。</param>
+    /// <param name="x">新 X 坐标（视觉中心）。</param>
+    /// <param name="y">新 Y 坐标（视觉中心）。</param>
+    /// <param name="z">新 Z 坐标（视觉中心）。</param>
     /// <returns>是否实际变化（相同坐标返回 false）。</returns>
     public bool UpdateEntityPosition(string entityId, float x, float y, float z)
     {
@@ -175,6 +175,8 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
         return false; // EntityId not found in session
     }
+
+    // 运行时一致性检查由 EditorShell 在 BuildUnitDrawList 时通过 RenderUnitPlacement 保障。
 
     /// <summary>
     /// 启动 Scene3D 会话。创建会话级资源和 swapchain 级资源。
