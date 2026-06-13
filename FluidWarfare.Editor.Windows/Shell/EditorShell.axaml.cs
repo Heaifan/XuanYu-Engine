@@ -9,6 +9,7 @@ using FluidWarfare.Core.Logging;
 using FluidWarfare.Core.Math;
 using FluidWarfare.Editor.ProjectContentTreeModel;
 using FluidWarfare.Editor.EntityTransform;
+using FluidWarfare.Editor.Transform.Move;
 using FluidWarfare.Editor.Selection;
 using FluidWarfare.Editor.WorldHierarchy;
 using FluidWarfare.Editor.Input.Actions;
@@ -97,6 +98,9 @@ public sealed partial class EditorShell : UserControl
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
+    private readonly EntityMoveSession _moveSession = new();
+    private bool _moveToolActive;
+    private bool _movePointerCaptured;
 
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
@@ -149,6 +153,8 @@ public sealed partial class EditorShell : UserControl
         _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
         _vulkanViewportHostPanel = this.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanel");
         _viewportToolPalette = this.FindControl<ViewportToolPalette>("ViewportToolPalette");
+        if (_viewportToolPalette is not null)
+            _viewportToolPalette.ToolChanged += HandleViewportToolChanged;
         _dockPanel = this.FindControl<ProjectWorldDockPanel>("ProjectWorldDockPanel");
         _runMenuButton = this.FindControl<Button>("RunMenuButton");
 
@@ -1161,19 +1167,129 @@ public sealed partial class EditorShell : UserControl
     {
         _lastPointerX = x;
         _lastPointerY = y;
+
+        // 移动工具活动时：计算世界射线→更新实体位置
+        if (_moveSession.IsMoving)
+        {
+            if (_movePointerCaptured)
+                UpdateMoveSessionPosition(x, y);
+            return;
+        }
+
         if (_inputTranslator is null) return;
         var match = _inputTranslator.OnRawPointerMoved(x, y);
         ExecuteInputAction(match);
     }
 
+    private void UpdateMoveSessionPosition(int pixelX, int pixelY)
+    {
+        if (!_sessionActive || _scene3dSession is null) return;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+
+        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
+        if (host.Width < 1 || host.Height < 1) return;
+
+        var snapshot = _scene3dSession.LastPresentedSnapshot;
+        var status = VulkanSceneRayBuilder.TryBuild(
+            pixelX, pixelY, snapshot,
+            (uint)host.Width, (uint)host.Height,
+            out var ray);
+        if (status != SceneRayBuildStatus.Success) return;
+
+        // 默认地面模式：与 Z = InitialZ 平面求交
+        var targetZ = _moveSession.InitialPosition.Z;
+        var d = ray.Direction;
+        var o = ray.Origin;
+        var t = (targetZ - o.Z) / d.Z;
+        if (t <= 0) return;
+
+        var worldPos = new Vector3d(o.X + t * d.X, o.Y + t * d.Y, o.Z + t * d.Z);
+
+        _moveSession.UpdatePosition(worldPos);
+
+        // 同步到引擎和渲染
+        var entityId = _selectedWorldEntity?.EntityId;
+        if (entityId is null) return;
+        ApplyEntityTransform(_moveSession.CurrentPosition, EditorEntityTransformOrigin.MoveTool);
+    }
+
     private void HandleRawPointerButtonUp(int buttonCode, int x, int y)
     {
         _inputTranslator?.OnRawPointerButtonUp(buttonCode);
+
+        // 移动工具：左键抬起 → 确认，右键抬起 → 取消
+        if (_moveSession.IsMoving)
+        {
+            if (buttonCode == 1) // Left
+                ConfirmMoveSession();
+            else if (buttonCode == 2) // Right
+                CancelMoveSession();
+        }
+    }
+
+    private void ConfirmMoveSession()
+    {
+        if (!_moveSession.IsMoving) return;
+        _moveSession.Completed += OnMoveCompleted;
+        _moveSession.Confirm();
+        _movePointerCaptured = false;
+    }
+
+    private void CancelMoveSession()
+    {
+        if (!_moveSession.IsMoving) return;
+        _moveSession.Completed += OnMoveCompleted;
+        _moveSession.Cancel();
+        _movePointerCaptured = false;
+    }
+
+    private void OnMoveCompleted(EntityMoveResult result)
+    {
+        _moveSession.Completed -= OnMoveCompleted;
+
+        if (result.IsConfirmed && result.HasPositionChanged && result.FinalPosition is not null)
+        {
+            var pos = result.FinalPosition.Value;
+            ApplyEntityTransform(pos, EditorEntityTransformOrigin.MoveTool);
+            AppendInfoLog($"移动完成 ({pos.X:F3}, {pos.Y:F3}, {pos.Z:F3})");
+        }
+        else if (result.IsCancelled)
+        {
+            // 恢复初始位置
+            var entityId = _selectedWorldEntity?.EntityId;
+            if (entityId is not null)
+            {
+                var initPos = _moveSession.InitialPosition;
+                ApplyEntityTransform(initPos, EditorEntityTransformOrigin.MoveTool);
+                // 恢复操作前的 Dirty 状态
+                _worldDirtyState.Reset();
+                AppendInfoLog("移动已取消");
+            }
+        }
     }
 
     private void HandleRawInputFocusLost()
     {
         _inputTranslator?.OnRawInputFocusLost();
+        // 移动工具也需响应 capture lost
+        if (_moveSession.IsMoving)
+        {
+            _moveSession.Abort();
+            _movePointerCaptured = false;
+        }
+    }
+
+    // ─── 视口工具 ──────────────────────────────────────
+
+    private void HandleViewportToolChanged(ViewportEditorTool tool)
+    {
+        // 切换工具时取消任何活动移动会话
+        if (_moveSession.IsMoving)
+            _moveSession.Abort();
+        _moveToolActive = tool == ViewportEditorTool.Move;
+
+        if (_moveToolActive && _selectedWorldEntity is null)
+            _statusBarPanel?.SetCurrentSelection("请先选择实体。");
     }
 
     private void HandleRawMouseWheel(int delta, int packedModifiers)
@@ -1715,6 +1831,12 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleViewportEscape()
     {
+        if (_moveSession.IsMoving)
+        {
+            CancelMoveSession();
+            return;
+        }
+
         if (_groundPlacementState.IsActive)
         {
             _groundPlacementState.Cancel();
@@ -2041,6 +2163,29 @@ public sealed partial class EditorShell : UserControl
 
         // 统一 Picking：Entity 优先 → Ground → None
         var pointerResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
+
+        // ─── 移动工具模式：点击已选实体开始移动 ─────────────────
+        var pickedEntityId = pointerResult.EntityId;
+        var pickedEntityIdStr = pickedEntityId?.Value.ToString();
+        var isSelectedEntity = pickedEntityIdStr is not null &&
+            _selectionState.SelectedEntityId == pickedEntityIdStr;
+
+        if (_moveToolActive && !_moveSession.IsMoving &&
+            pointerResult.Kind == ScenePointerPickKind.Entity &&
+            isSelectedEntity)
+        {
+            var pos = _worldState?.FindPosition(_selectedWorldEntity!.EntityId);
+            if (pos is not null)
+            {
+                _moveSession.Begin(
+                    pickedEntityIdStr!,
+                    pos.Value.Value,
+                    EntityMoveAxis.GroundPlane);
+                _movePointerCaptured = true;
+                AppendInfoLog($"开始移动实体 {_selectedWorldEntity!.DisplayName}");
+            }
+            return;
+        }
 
         if (_groundPlacementState.IsActive)
         {
