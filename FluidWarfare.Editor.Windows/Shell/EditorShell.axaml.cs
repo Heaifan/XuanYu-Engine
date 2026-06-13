@@ -1197,7 +1197,9 @@ public sealed partial class EditorShell : UserControl
         switch (match.ActionId)
         {
             case "viewport.orbit":
-                ExecuteViewportOrbit(match.DeltaY, match.DeltaX);
+                // DeltaX → Yaw（左右旋转），DeltaY → Pitch（上下俯仰）
+                // 负号与已正常工作的 Gizmo Orbit 方向保持一致
+                ExecuteViewportOrbit(-match.DeltaX, -match.DeltaY);
                 break;
             case "viewport.pan":
                 ExecuteViewportPan(match.DeltaX, match.DeltaY);

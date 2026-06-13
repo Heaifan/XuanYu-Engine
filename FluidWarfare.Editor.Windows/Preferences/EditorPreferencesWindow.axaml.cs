@@ -27,27 +27,28 @@ public sealed partial class EditorPreferencesWindow : Window
     private string? _conflictSlot;
 
     // ─── 草稿模型 ────────────────────────────────────────
+    // _draftBindingSet: 当前窗口编辑的完整绑定集（已保存 + 本次改动）
+    // _originalBindingSet: 打开窗口时的快照（用于判断是否有未保存改动）
 
     private EditorInputBindingSet _originalBindingSet;
-    private readonly Dictionary<string, EditorInputBindingOverride> _pendingOverrides = new();
-    private bool _hasChanges;
+    private EditorInputBindingSet _draftBindingSet;
 
     public EditorPreferencesWindow()
     {
         InitializeComponent();
         Title = "偏好设置";
-        LoadOriginalBindings();
+        LoadDraftFromService();
     }
 
-    private void LoadOriginalBindings()
+    private void LoadDraftFromService()
     {
         var service = EditorInputService.Instance;
         _originalBindingSet = service.GetCurrentBindingSet();
-        _pendingOverrides.Clear();
-        _hasChanges = false;
+        _draftBindingSet = _originalBindingSet with
+        {
+            Overrides = _originalBindingSet.Overrides.ToArray()
+        };
     }
-
-    // ─── 生命周期 ─────────────────────────────────────────
 
     private void OnOpened(object? sender, EventArgs e)
     {
@@ -62,8 +63,7 @@ public sealed partial class EditorPreferencesWindow : Window
         BindingsContainer.Children.Clear();
 
         var categories = new[] { "全局", "视口导航", "标准视图", "Transform", "工具" };
-        var actions = EditorInputActionCatalog.All
-            .Where(a => a.IsUserConfigurable);
+        var actions = EditorInputActionCatalog.All.Where(a => a.IsUserConfigurable);
 
         if (!string.IsNullOrWhiteSpace(searchFilter))
         {
@@ -78,7 +78,6 @@ public sealed partial class EditorPreferencesWindow : Window
             var catActions = actions.Where(a => a.Category == cat).ToList();
             if (catActions.Count == 0) continue;
 
-            // 分类标题
             BindingsContainer.Children.Add(new TextBlock
             {
                 Text = cat,
@@ -89,9 +88,7 @@ public sealed partial class EditorPreferencesWindow : Window
             });
 
             foreach (var def in catActions)
-            {
                 BindingsContainer.Children.Add(CreateBindingRow(def));
-            }
         }
 
         UpdateButtonStates();
@@ -108,32 +105,25 @@ public sealed partial class EditorPreferencesWindow : Window
             Margin = new Thickness(0, 1)
         };
 
-        var grid = new Grid
-        {
-            ColumnDefinitions = new ColumnDefinitions("160,Auto,8,Auto,8,Auto")
-        };
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("160,Auto,8,Auto,8,Auto") };
 
-        // 动作名
         grid.Children.Add(new TextBlock
         {
             Text = def.DisplayName,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
             Foreground = new SolidColorBrush(AM.Color.Parse("#DDD")),
             FontSize = 12
         });
         Grid.SetColumn(grid.Children[^1], 0);
 
-        // 主绑定按钮
         var primaryBtn = CreateBindingButton(def.Id, "primary", true);
         Grid.SetColumn(primaryBtn, 1);
         grid.Children.Add(primaryBtn);
 
-        // 备用绑定按钮
         var secondaryBtn = CreateBindingButton(def.Id, "secondary", false);
         Grid.SetColumn(secondaryBtn, 3);
         grid.Children.Add(secondaryBtn);
 
-        // 恢复单项按钮
         var restoreBtn = new Button
         {
             Content = "恢复",
@@ -197,39 +187,20 @@ public sealed partial class EditorPreferencesWindow : Window
         {
             EditorInputDevice.Keyboard => gesture.Code switch
             {
-                "Escape" => "Esc",
-                "Space" => "空格",
-                "Enter" => "回车",
-                "Back" => "退格",
-                "Delete" => "Del",
-                "Insert" => "Ins",
-                "PageUp" => "PgUp",
-                "PageDown" => "PgDn",
-                "Left" => "←",
-                "Right" => "→",
-                "Up" => "↑",
-                "Down" => "↓",
-                "Decimal" => "小键盘.",
-                "Comma" => ",",
-                "Period" => ".",
-                "Slash" => "/",
-                "Semicolon" => ";",
-                "Quote" => "'",
-                "Minus" => "-",
-                "Equals" => "=",
-                "Backtick" => "`",
-                "Backslash" => "\\",
-                "LeftBracket" => "[",
-                "RightBracket" => "]",
+                "Escape" => "Esc", "Space" => "空格", "Enter" => "回车",
+                "Back" => "退格", "Delete" => "Del", "Insert" => "Ins",
+                "PageUp" => "PgUp", "PageDown" => "PgDn",
+                "Left" => "←", "Right" => "→", "Up" => "↑", "Down" => "↓",
+                "Decimal" => "小键盘.", "Comma" => ",", "Period" => ".",
+                "Slash" => "/", "Semicolon" => ";", "Quote" => "'",
+                "Minus" => "-", "Equals" => "=", "Backtick" => "`",
+                "Backslash" => "\\", "LeftBracket" => "[", "RightBracket" => "]",
                 _ => gesture.Code
             },
             EditorInputDevice.Mouse => gesture.Code switch
             {
-                "Left" => "左键",
-                "Right" => "右键",
-                "Middle" => "中键",
-                "X1" => "侧键1",
-                "X2" => "侧键2",
+                "Left" => "左键", "Right" => "右键", "Middle" => "中键",
+                "X1" => "侧键1", "X2" => "侧键2",
                 _ => gesture.Code
             },
             EditorInputDevice.Wheel => "滚轮",
@@ -247,65 +218,67 @@ public sealed partial class EditorPreferencesWindow : Window
     }
 
     // ─── 草稿查询 ─────────────────────────────────────────
+    // _draftBindingSet.Overrides 是唯一的数据源。
 
     private EditorInputGesture? GetEffectiveGesture(string actionId, string slot)
     {
-        // 先查草稿
-        var key = $"{actionId}:{slot}";
-        if (_pendingOverrides.TryGetValue(key, out var ov))
-            return ov.Gesture;
-
-        // 再查原始设置
-        return GetOriginalGesture(actionId, slot);
+        var ov = _draftBindingSet.Overrides
+            .FirstOrDefault(o => o.ActionId == actionId && o.Slot == slot);
+        if (ov is not null)
+            return ov.Gesture; // null = cleared
+        return GetBlenderDefaultGesture(actionId, slot);
     }
 
-    /// <summary>
-    /// 获取已保存设置中的有效手势（Blender 默认 + _originalBindingSet.Overrides）。
-    /// 不返回草稿值。
-    /// </summary>
-    private EditorInputGesture? GetOriginalGesture(string actionId, string slot)
+    private static EditorInputGesture? GetBlenderDefaultGesture(string actionId, string slot)
     {
-        // 1. 从 Blender 默认获取基础手势
         var blenderBindings = EditorInputActionCatalog.BlenderDefaultBindings;
         var binding = blenderBindings.FirstOrDefault(b => b.ActionId == actionId);
-        var defaultGesture = binding is null
-            ? null
-            : slot == "primary" ? binding.PrimaryGesture : binding.SecondaryGesture;
-
-        // 2. 检查已保存的设置是否有 override
-        var overrideKey = $"{actionId}:{slot}";
-        var savedOverride = _originalBindingSet.Overrides
-            .FirstOrDefault(o => o.ActionId == actionId && o.Slot == slot);
-
-        if (savedOverride is not null)
-        {
-            // Override 中 Gesture 为 null 表示已清除绑定
-            return savedOverride.Gesture;
-        }
-
-        return defaultGesture;
+        if (binding is null) return null;
+        return slot == "primary" ? binding.PrimaryGesture : binding.SecondaryGesture;
     }
 
-    /// <summary>
-    /// 是否有任何程度的 override（草稿或已保存），用于显示恢复按钮。
-    /// </summary>
     private bool HasEffectiveOverride(string actionId)
     {
-        // 草稿中有 override
-        if (_pendingOverrides.ContainsKey($"{actionId}:primary") ||
-            _pendingOverrides.ContainsKey($"{actionId}:secondary"))
-            return true;
-
-        // 已保存的设置中有 override
-        if (_originalBindingSet.Overrides.Any(o => o.ActionId == actionId))
-            return true;
-
-        return false;
+        return _draftBindingSet.Overrides.Any(o => o.ActionId == actionId);
     }
 
     private bool HasAnyChanges()
     {
-        return _pendingOverrides.Count > 0;
+        var draftKeys = _draftBindingSet.Overrides
+            .Select(o => $"{o.ActionId}:{o.Slot}").OrderBy(x => x);
+        var originalKeys = _originalBindingSet.Overrides
+            .Select(o => $"{o.ActionId}:{o.Slot}").OrderBy(x => x);
+        return !draftKeys.SequenceEqual(originalKeys);
+    }
+
+    // ─── 草稿修改方法 ─────────────────────────────────────
+
+    private void SetDraftOverride(string actionId, string slot, EditorInputGesture? gesture)
+    {
+        var list = _draftBindingSet.Overrides.ToList();
+        list.RemoveAll(o => o.ActionId == actionId && o.Slot == slot);
+        list.Add(new EditorInputBindingOverride
+        {
+            ActionId = actionId, Slot = slot, Gesture = gesture
+        });
+        _draftBindingSet = _draftBindingSet with { Overrides = list.ToArray() };
+    }
+
+    private void RemoveDraftOverrides(string actionId)
+    {
+        _draftBindingSet = _draftBindingSet with
+        {
+            Overrides = _draftBindingSet.Overrides
+                .Where(o => o.ActionId != actionId).ToArray()
+        };
+    }
+
+    private void ClearAllDraftOverrides()
+    {
+        _draftBindingSet = _draftBindingSet with
+        {
+            Overrides = Array.Empty<EditorInputBindingOverride>()
+        };
     }
 
     // ─── 绑定按钮点击 → 进入捕获 ─────────────────────────
@@ -314,59 +287,46 @@ public sealed partial class EditorPreferencesWindow : Window
     {
         if (sender is not Button btn) return;
         if (btn.Tag is not (string actionId, string slot)) return;
-
         BeginCapture(actionId, slot, btn);
     }
 
     private void BeginCapture(string actionId, string slot, Button button)
     {
-        CancelCapture(); // 确保清理之前的捕获状态
-
+        CancelCapture();
         _captureState = CaptureState.WaitingForInput;
         _captureActionId = actionId;
         _captureSlot = slot;
         _captureButton = button;
-
-        // 保存原始文本
         _captureButton.Content = "按下按键或鼠标…";
         _captureButton.Background = new SolidColorBrush(AM.Color.Parse("#5A3F3F"));
         _captureButton.Foreground = new SolidColorBrush(AM.Color.Parse("#FFF"));
-
-        // 窗口级捕获输入
         Focus();
     }
 
     private void CancelCapture()
     {
         if (_captureState == CaptureState.Idle) return;
-
         _captureState = CaptureState.Idle;
-
-        // 先保存捕获字段，再恢复按钮（button 需要 actionId/slot 查 gesture）
         var btn = _captureButton;
-        var actionId = _captureActionId;
+        var aId = _captureActionId;
         var slot = _captureSlot;
-
         _captureActionId = string.Empty;
         _captureSlot = "primary";
         _capturedGesture = null;
         _conflictActionId = null;
         _conflictSlot = null;
         _captureButton = null;
-
-        if (btn is not null && !string.IsNullOrEmpty(actionId))
+        if (btn is not null && !string.IsNullOrEmpty(aId))
         {
             btn.Background = new SolidColorBrush(AM.Color.Parse("#353B44"));
             btn.Foreground = new SolidColorBrush(AM.Color.Parse("#CCC"));
-            btn.Content = FormatGestureText(GetEffectiveGesture(actionId, slot));
+            btn.Content = FormatGestureText(GetEffectiveGesture(aId, slot));
         }
     }
 
     private void CompleteCapture(EditorInputGesture gesture)
     {
         if (string.IsNullOrEmpty(_captureActionId)) return;
-
-        // 同一动作的主/备用绑定不允许相同手势
         var otherSlot = _captureSlot == "primary" ? "secondary" : "primary";
         var otherGesture = GetEffectiveGesture(_captureActionId, otherSlot);
         if (otherGesture is not null && otherGesture.Signature == gesture.Signature)
@@ -378,15 +338,12 @@ public sealed partial class EditorPreferencesWindow : Window
             }
             return;
         }
-
-        // 冲突检测
         if (DetectConflict(_captureActionId, gesture, out var conflictActionId, out var conflictSlot))
         {
             _capturedGesture = gesture;
             _conflictActionId = conflictActionId;
             _conflictSlot = conflictSlot;
             _captureState = CaptureState.ConflictConfirmation;
-
             if (_captureButton is not null)
             {
                 _captureButton.Content = $"冲突：{conflictActionId} → 替换？";
@@ -394,40 +351,22 @@ public sealed partial class EditorPreferencesWindow : Window
             }
             return;
         }
-
         ApplyCapture(gesture);
     }
 
     private void ApplyCapture(EditorInputGesture gesture)
     {
         if (string.IsNullOrEmpty(_captureActionId)) return;
-
-        var key = $"{_captureActionId}:{_captureSlot}";
-        _pendingOverrides[key] = new EditorInputBindingOverride
-        {
-            ActionId = _captureActionId,
-            Slot = _captureSlot,
-            Gesture = gesture
-        };
-
-        _hasChanges = true;
+        SetDraftOverride(_captureActionId, _captureSlot, gesture);
         UpdateButtonStates();
-        PopulateBindings(); // 刷新 UI
+        PopulateBindings();
         _captureState = CaptureState.Idle;
         _captureButton = null;
     }
 
     private void ClearBinding(string actionId, string slot)
     {
-        var key = $"{actionId}:{slot}";
-        _pendingOverrides[key] = new EditorInputBindingOverride
-        {
-            ActionId = actionId,
-            Slot = slot,
-            Gesture = null
-        };
-
-        _hasChanges = true;
+        SetDraftOverride(actionId, slot, null);
         UpdateButtonStates();
         PopulateBindings();
     }
@@ -439,49 +378,28 @@ public sealed partial class EditorPreferencesWindow : Window
     {
         conflictActionId = null;
         conflictSlot = null;
-
-        // 从草稿 + 原始设置构建当前完整绑定集
-        var allBindings = BuildEffectiveBindingList();
-
         return EditorInputConflictDetector.DetectConflict(
-            allBindings, actionId, gesture,
+            BuildEffectiveBindingList(), actionId, gesture,
             out conflictActionId, out conflictSlot);
     }
 
-    /// <summary>
-    /// 构建当前完整绑定列表（Blender 默认 + 已保存 Overrides + 草稿 Overrides）。
-    /// 用于冲突检测，必须包含已保存的设置。
-    /// </summary>
     private List<EditorInputBinding> BuildEffectiveBindingList()
     {
         var blenderBindings = EditorInputActionCatalog.BlenderDefaultBindings;
         var result = new List<EditorInputBinding>();
-
         foreach (var bb in blenderBindings)
         {
-            var actionId = bb.ActionId;
-            var primarySaved = _originalBindingSet.Overrides
-                .FirstOrDefault(o => o.ActionId == actionId && o.Slot == "primary");
-            var secondarySaved = _originalBindingSet.Overrides
-                .FirstOrDefault(o => o.ActionId == actionId && o.Slot == "secondary");
-
-            var primaryKey = $"{actionId}:primary";
-            var secondaryKey = $"{actionId}:secondary";
-
-            // 已保存覆盖 > 草稿覆盖 > Blender 默认
-            var savedPrimary = primarySaved is not null
-                ? primarySaved.Gesture : bb.PrimaryGesture;
-            var savedSecondary = secondarySaved is not null
-                ? secondarySaved.Gesture : bb.SecondaryGesture;
-
-            var primary = _pendingOverrides.TryGetValue(primaryKey, out var ovP)
-                ? ovP.Gesture : savedPrimary;
-            var secondary = _pendingOverrides.TryGetValue(secondaryKey, out var ovS)
-                ? ovS.Gesture : savedSecondary;
-
-            result.Add(bb with { PrimaryGesture = primary, SecondaryGesture = secondary });
+            var aId = bb.ActionId;
+            var pOv = _draftBindingSet.Overrides
+                .FirstOrDefault(o => o.ActionId == aId && o.Slot == "primary");
+            var sOv = _draftBindingSet.Overrides
+                .FirstOrDefault(o => o.ActionId == aId && o.Slot == "secondary");
+            result.Add(bb with
+            {
+                PrimaryGesture = pOv is not null ? pOv.Gesture : bb.PrimaryGesture,
+                SecondaryGesture = sOv is not null ? sOv.Gesture : bb.SecondaryGesture
+            });
         }
-
         return result;
     }
 
@@ -492,43 +410,22 @@ public sealed partial class EditorPreferencesWindow : Window
         if (_captureState != CaptureState.WaitingForInput &&
             _captureState != CaptureState.ConflictConfirmation)
             return;
-
         e.Handled = true;
 
         if (_captureState == CaptureState.ConflictConfirmation)
         {
-            if (e.Key == Key.Escape)
-            {
-                CancelCapture();
-                return;
-            }
+            if (e.Key == Key.Escape) { CancelCapture(); return; }
             if (e.Key == Key.Enter)
             {
-                // 确认替换
                 if (_capturedGesture is not null && _conflictActionId is not null && _conflictSlot is not null)
-                {
-                    // 清除冲突动作的现有绑定
-                    var conflictKey = $"{_conflictActionId}:{_conflictSlot}";
-                    _pendingOverrides[conflictKey] = new EditorInputBindingOverride
-                    {
-                        ActionId = _conflictActionId,
-                        Slot = _conflictSlot,
-                        Gesture = null
-                    };
-                }
+                    SetDraftOverride(_conflictActionId, _conflictSlot, null);
                 ApplyCapture(_capturedGesture!);
                 return;
             }
             return;
         }
 
-        // WaitingForInput
-        if (e.Key == Key.Escape)
-        {
-            CancelCapture();
-            return;
-        }
-
+        if (e.Key == Key.Escape) { CancelCapture(); return; }
         if (e.Key == Key.Back || e.Key == Key.Delete)
         {
             ClearBinding(_captureActionId, _captureSlot);
@@ -536,69 +433,46 @@ public sealed partial class EditorPreferencesWindow : Window
             return;
         }
 
-        // 捕获键盘手势
         var mods = GetModifiersFromAvalonia(e.KeyModifiers);
         var code = AvaloniaKeyToCode(e.Key);
         if (code is null) return;
-
-        var gesture = new EditorInputGesture(
-            EditorInputDevice.Keyboard, code, mods);
-        CompleteCapture(gesture);
+        CompleteCapture(new EditorInputGesture(EditorInputDevice.Keyboard, code, mods));
     }
 
     private void OnWindowPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (_captureState != CaptureState.WaitingForInput) return;
-
         var point = e.GetCurrentPoint(this);
         var props = point.Properties;
-        var keyMods = e.KeyModifiers;
-
         string? btnCode = null;
         if (props.IsLeftButtonPressed) btnCode = "Left";
         else if (props.IsMiddleButtonPressed) btnCode = "Middle";
         else if (props.IsRightButtonPressed) btnCode = "Right";
         else if (props.IsXButton1Pressed) btnCode = "X1";
         else if (props.IsXButton2Pressed) btnCode = "X2";
-
         if (btnCode is null) return;
         e.Handled = true;
-
         if (btnCode == "Left" || btnCode == "Right")
         {
-            // 未修饰的左/右键是预留的（用于拾取和上下文菜单），不允许绑定
-            _captureButton!.Content = $"左/右键已预留，请用组合键或中键";
+            _captureButton!.Content = "左/右键已预留，请用组合键或中键";
             _captureButton.Foreground = new SolidColorBrush(AM.Color.Parse("#FF6B6B"));
             return;
         }
-
-        var mods = GetModifiersFromAvalonia(keyMods);
+        var mods = GetModifiersFromAvalonia(e.KeyModifiers);
         var gesture = new EditorInputGesture(
             EditorInputDevice.Mouse, btnCode, mods, EditorInputGestureKind.MouseDrag);
-
-        if (EditorInputConflictDetector.IsReservedGesture(gesture))
-        {
-            _captureButton!.Content = "该手势已预留";
-            _captureButton.Foreground = new SolidColorBrush(AM.Color.Parse("#FF6B6B"));
-            return;
-        }
-
-        CompleteCapture(gesture);
+        if (!EditorInputConflictDetector.IsReservedGesture(gesture))
+            CompleteCapture(gesture);
     }
 
     private void OnWindowPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         if (_captureState != CaptureState.WaitingForInput) return;
         e.Handled = true;
-
         var mods = GetModifiersFromAvalonia(e.KeyModifiers);
-        var gesture = new EditorInputGesture(
-            EditorInputDevice.Wheel, "Y", mods, EditorInputGestureKind.MouseWheel);
-
-        CompleteCapture(gesture);
+        CompleteCapture(new EditorInputGesture(
+            EditorInputDevice.Wheel, "Y", mods, EditorInputGestureKind.MouseWheel));
     }
-
-    // ─── 修饰键工具 ───────────────────────────────────────
 
     private static EditorInputModifiers GetModifiersFromAvalonia(KeyModifiers km)
     {
@@ -608,8 +482,6 @@ public sealed partial class EditorPreferencesWindow : Window
         if ((km & KeyModifiers.Alt) != 0) result |= EditorInputModifiers.Alt;
         return result;
     }
-
-    // ─── 纯字典（Avalonia Key → 抽象代码）─────────────────
 
     private static string? AvaloniaKeyToCode(Key key) => key switch
     {
@@ -645,16 +517,13 @@ public sealed partial class EditorPreferencesWindow : Window
         _ => null
     };
 
-    // ─── 按钮、搜索、恢复 ────────────────────────────────
+    // ─── 恢复 / 搜索 ────────────────────────────────────
 
     private void OnRestoreSingleClicked(object? sender, RoutedEventArgs e)
     {
         if (sender is Button btn && btn.Tag is string actionId)
         {
-            // 移除该动作的所有草稿
-            _pendingOverrides.Remove($"{actionId}:primary");
-            _pendingOverrides.Remove($"{actionId}:secondary");
-            _hasChanges = HasAnyChanges();
+            RemoveDraftOverrides(actionId);
             UpdateButtonStates();
             PopulateBindings();
         }
@@ -662,9 +531,7 @@ public sealed partial class EditorPreferencesWindow : Window
 
     private void OnRestoreAllClicked(object? sender, RoutedEventArgs e)
     {
-        // 简单确认：没有复杂对话框，直接执行
-        _pendingOverrides.Clear();
-        _hasChanges = false;
+        ClearAllDraftOverrides();
         UpdateButtonStates();
         PopulateBindings();
     }
@@ -678,75 +545,38 @@ public sealed partial class EditorPreferencesWindow : Window
 
     private void OnCancelClicked(object? sender, RoutedEventArgs e)
     {
-        // 丢弃所有草稿，不写文件，不替换 snapshot
         Close();
     }
 
     private void OnApplyClicked(object? sender, RoutedEventArgs e)
     {
-        if (!_hasChanges) return;
-        SaveBindings(closeAfterSave: false);
+        if (!HasAnyChanges()) return;
+        FlushDraft(closeAfterSave: false);
     }
 
     private void OnSaveClicked(object? sender, RoutedEventArgs e)
     {
-        if (!_hasChanges)
-        {
-            Close();
-            return;
-        }
-        SaveBindings(closeAfterSave: true);
+        if (!HasAnyChanges()) { Close(); return; }
+        FlushDraft(closeAfterSave: true);
     }
 
-    private void SaveBindings(bool closeAfterSave)
+    private void FlushDraft(bool closeAfterSave)
     {
-        var newSet = BuildBindingSetFromDraft();
-
-        // 写入设置文件
-        var doc = new EditorSettingsDocument { Input = newSet };
+        var doc = new EditorSettingsDocument { Input = _draftBindingSet };
         if (!EditorSettingsWriter.TrySave(doc, out var error))
         {
             ShowError($"保存设置失败：{error}");
             return;
         }
-
-        // 替换运行时快照
-        if (!EditorInputService.Instance.TryApplyNewBindingSet(newSet, out var applyError))
+        if (!EditorInputService.Instance.TryApplyNewBindingSet(_draftBindingSet, out var applyError))
         {
             ShowError($"应用绑定失败：{applyError}");
             return;
         }
-
-        // 更新本地状态
-        _originalBindingSet = newSet;
-        _pendingOverrides.Clear();
-        _hasChanges = false;
+        _originalBindingSet = _draftBindingSet;
+        _draftBindingSet = _draftBindingSet with { Overrides = _draftBindingSet.Overrides.ToArray() };
         UpdateButtonStates();
-
-        if (closeAfterSave)
-            Close();
-    }
-
-    /// <summary>
-    /// 合并已保存的 Overrides 与窗口中的草稿。
-    /// 已保存但未在本次窗口中修改的项目必须保留，否则会丢失。
-    /// 草稿中的项（包括 Gesture=null 清除操作）覆盖已保存项。
-    /// </summary>
-    private EditorInputBindingSet BuildBindingSetFromDraft()
-    {
-        // 已保存 Overrides → 按 (ActionId:Slot) 建字典
-        var merged = new Dictionary<string, EditorInputBindingOverride>();
-        foreach (var ov in _originalBindingSet.Overrides)
-            merged[$"{ov.ActionId}:{ov.Slot}"] = ov;
-
-        // 草稿覆盖
-        foreach (var (key, ov) in _pendingOverrides)
-            merged[key] = ov;
-
-        return _originalBindingSet with
-        {
-            Overrides = merged.Values.ToArray()
-        };
+        if (closeAfterSave) Close();
     }
 
     private void UpdateButtonStates()
@@ -758,10 +588,6 @@ public sealed partial class EditorPreferencesWindow : Window
 
     private void ShowError(string message)
     {
-        if (Avalonia.Controls.TopLevel.GetTopLevel(this) is Window parent)
-        {
-            // 简单文本通知
-            Title = $"⚠ {message}";
-        }
+        Title = $"⚠ {message}";
     }
 }
