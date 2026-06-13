@@ -1,9 +1,11 @@
 namespace FluidWarfare.Render.Camera;
 
 /// <summary>
-/// Blender 风格轨道相机状态。
+/// Blender 风格轨道相机状态（Z-Up）。
 /// Position = Pivot + OrbitDirection(Yaw, Pitch) × Distance。
 /// Target (LookAt 目标) = Pivot。
+///
+/// Yaw 绕 Z 轴旋转（改变水平方向），Pitch 改变俯仰角。
 /// </summary>
 public sealed record SceneOrbitCameraState
 {
@@ -16,7 +18,7 @@ public sealed record SceneOrbitCameraState
     /// <summary>轨道中心 Z。</summary>
     public float PivotZ { get; init; }
 
-    /// <summary>水平旋转角（度）。0 = 看向 -Z。</summary>
+    /// <summary>水平旋转角（度）。0 = 看向 +Y 方向。</summary>
     public float Yaw { get; init; }
 
     /// <summary>垂直旋转角（度）。0 = 水平，限制 5..89。</summary>
@@ -35,21 +37,30 @@ public sealed record SceneOrbitCameraState
     public float FarPlane { get; init; }
 
     /// <summary>
-    /// 计算相机世界位置。
+    /// 计算相机世界位置（Z-Up）。
+    /// Yaw = 绕 Z 旋转，Pitch = 俯仰角。
+    ///
+    /// offsetX = sin(yaw) * cos(pitch)
+    /// offsetY = -cos(yaw) * cos(pitch)
+    /// offsetZ = sin(pitch)
+    ///
+    /// Yaw=0° 时看向 +Y 方向。
     /// </summary>
     public (float X, float Y, float Z) ComputePosition()
     {
         var yawRad = Yaw * MathF.PI / 180f;
         var pitchRad = Pitch * MathF.PI / 180f;
         var cp = MathF.Cos(pitchRad);
-        var dirX = MathF.Sin(yawRad) * cp;
-        var dirY = MathF.Sin(pitchRad);
-        var dirZ = -MathF.Cos(yawRad) * cp;
+
+        // Z-Up 轨道公式：X/Y 构成水平面，Z 为高度
+        var offsetX = MathF.Sin(yawRad) * cp;
+        var offsetY = -MathF.Cos(yawRad) * cp;
+        var offsetZ = MathF.Sin(pitchRad);
 
         return (
-            PivotX + dirX * Distance,
-            PivotY + dirY * Distance,
-            PivotZ + dirZ * Distance
+            PivotX + offsetX * Distance,
+            PivotY + offsetY * Distance,
+            PivotZ + offsetZ * Distance
         );
     }
 

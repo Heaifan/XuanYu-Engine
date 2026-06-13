@@ -14,14 +14,15 @@ public static class SceneOrbitCameraMotion
     private const float MaxPivot = 500f;
 
     /// <summary>
-    /// 创建默认轨道相机状态（从右上俯视原点）。
+    /// 创建默认轨道相机状态（Z-Up，从右上俯视原点）。
+    /// Yaw=135° 从 +X/+Y 象限俯瞰，Pitch=45° 俯角。
     /// </summary>
     public static SceneOrbitCameraState CreateDefault()
     {
         return new SceneOrbitCameraState
         {
             PivotX = 0, PivotY = 0, PivotZ = 0,
-            Yaw = 135f,    // 看向 -Z 方向偏 135° = 从 +X/+Z 象限看
+            Yaw = 135f,    // 看向 +Y 方向偏 135° = 从 +X/+Y 象限看
             Pitch = 45f,   // 45° 俯角
             Distance = 40f,
             FieldOfViewDegrees = 55f,
@@ -31,7 +32,8 @@ public static class SceneOrbitCameraMotion
     }
 
     /// <summary>
-    /// 绕 Pivot 旋转（中键拖动）。
+    /// 绕 Pivot 旋转（中键拖动，Z-Up）。
+    /// Yaw 绕 Z 轴旋转，Pitch 改变俯仰角。
     /// </summary>
     public static SceneOrbitCameraState Orbit(
         SceneOrbitCameraState state,
@@ -50,13 +52,9 @@ public static class SceneOrbitCameraMotion
     }
 
     /// <summary>
-    /// 沿相机视平面平移 Pivot（Shift+中键拖动）。
+    /// 沿相机视平面平移 Pivot（Shift+中键拖动，Z-Up）。
+    /// 使用 CameraPose 计算 Forward/Right/ViewUp 做 3D 平移。
     /// </summary>
-    /// <param name="state">当前相机状态。</param>
-    /// <param name="deltaX">水平像素增量。</param>
-    /// <param name="deltaY">垂直像素增量。</param>
-    /// <param name="viewportHeight">视口高度。</param>
-    /// <returns>平移后的新状态。</returns>
     public static SceneOrbitCameraState Pan(
         SceneOrbitCameraState state,
         float deltaX, float deltaY,
@@ -66,24 +64,45 @@ public static class SceneOrbitCameraMotion
 
         var fovRad = state.FieldOfViewDegrees * MathF.PI / 180f;
         var worldPerPixel = 2.0f * state.Distance * MathF.Tan(fovRad * 0.5f) / viewportHeight;
+
+        // 从轨道状态计算 Forward/Right/ViewUp (Z-Up)
         var yawRad = state.Yaw * MathF.PI / 180f;
+        var pitchRad = state.Pitch * MathF.PI / 180f;
+        var cp = MathF.Cos(pitchRad);
 
-        // Camera right vector (in XZ plane, perpendicular to view direction)
-        var rightX = MathF.Cos(yawRad);
-        var rightZ = MathF.Sin(yawRad);
+        // Forward = normalize(Target - Position) = -normalize(offset)
+        var forwardX = -MathF.Sin(yawRad) * cp;
+        var forwardY = MathF.Cos(yawRad) * cp;
+        var forwardZ = -MathF.Sin(pitchRad);
 
-        // Camera up vector (in XZ plane, perpendicular to right)
-        var upX = -rightZ;
-        var upZ = rightX;
+        // WorldUp = (0, 0, 1)
+        // Right = normalize(Forward × WorldUp)
+        var rightX = forwardY * 1 - forwardZ * 0; // cross Y*1 - Z*0
+        var rightY = forwardZ * 0 - forwardX * 1; // cross Z*0 - X*1
+        var rightZ = forwardX * 0 - forwardY * 0; // cross X*0 - Y*0 (should be 0)
+        // Actually compute: Forward × (0,0,1) = (forwardY*1 - forwardZ*0, forwardZ*0 - forwardX*1, forwardX*0 - forwardY*0)
+        // = (forwardY, -forwardX, 0)
+        var rightLen = MathF.Sqrt(rightX * rightX + rightY * rightY);
+        if (rightLen > 1e-10f)
+        {
+            rightX /= rightLen;
+            rightY /= rightLen;
+        }
+
+        // ViewUp = normalize(Right × Forward)
+        var viewUpX = rightY * forwardZ - rightZ * forwardY;
+        var viewUpY = rightZ * forwardX - rightX * forwardZ;
+        var viewUpZ = rightX * forwardY - rightY * forwardX;
 
         // Pan: negative deltaX = move right (drag left), positive deltaY = move down (drag up)
-        var moveX = (-deltaX * rightX + deltaY * upX) * worldPerPixel;
-        var moveZ = (-deltaX * rightZ + deltaY * upZ) * worldPerPixel;
+        var moveX = (-deltaX * rightX + deltaY * viewUpX) * worldPerPixel;
+        var moveY = (-deltaX * rightY + deltaY * viewUpY) * worldPerPixel;
+        var moveZ = (-deltaX * rightZ + deltaY * viewUpZ) * worldPerPixel;
 
         return state with
         {
             PivotX = Math.Clamp(state.PivotX + moveX, MinPivot, MaxPivot),
-            PivotY = state.PivotY,
+            PivotY = Math.Clamp(state.PivotY + moveY, MinPivot, MaxPivot),
             PivotZ = Math.Clamp(state.PivotZ + moveZ, MinPivot, MaxPivot)
         };
     }

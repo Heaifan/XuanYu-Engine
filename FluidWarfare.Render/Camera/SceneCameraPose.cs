@@ -49,10 +49,10 @@ public sealed record SceneCameraPose
     public int Revision { get; init; }
 
     /// <summary>
-    /// 从轨道相机状态计算完整相机姿态。
+    /// 从轨道相机状态计算完整相机姿态（Z-Up）。
     /// Position = Pivot + OrbitDirection(Yaw, Pitch) × Distance
     /// Target = Pivot
-    /// Up = (0, 1, 0)
+    /// Up = (0, 0, 1)
     /// </summary>
     public static SceneCameraPose FromOrbitState(SceneOrbitCameraState orbit, int revision)
     {
@@ -66,8 +66,8 @@ public sealed record SceneCameraPose
             TargetY = orbit.PivotY,
             TargetZ = orbit.PivotZ,
             UpX = 0,
-            UpY = 1,
-            UpZ = 0,
+            UpY = 0,
+            UpZ = 1,
             FieldOfViewDegrees = orbit.FieldOfViewDegrees,
             NearPlane = orbit.NearPlane,
             FarPlane = orbit.FarPlane,

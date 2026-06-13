@@ -98,7 +98,7 @@ public sealed class SceneOrbitCameraMotionTests
     [Fact]
     public void OrbitDirection_MatchesExpected()
     {
-        // Pivot at origin, Yaw=135, Pitch=45, Distance=40
+        // Pivot at origin, Yaw=135, Pitch=45, Distance=40 (Z-Up)
         var cam = new SceneOrbitCameraState
         {
             PivotX = 0, PivotY = 0, PivotZ = 0,
@@ -107,16 +107,13 @@ public sealed class SceneOrbitCameraMotionTests
         };
         var (px, py, pz) = cam.ComputePosition();
 
-        // Expected: Yaw=135° → sin/cos both negative in XY, pointing toward +X/+Z
-        // Pitch=45° → equal vertical and horizontal components
-        // Position should be at (dist*sin(135)*cos(45), dist*sin(45), -dist*cos(135)*cos(45))
-        // sin(135) = 0.707, cos(135) = -0.707
-        // sin(45) = 0.707, cos(45) = 0.707
-        // pos.x = 40 * 0.707 * 0.707 = 20
-        // pos.y = 40 * 0.707 = 28.28
-        // pos.z = -40 * (-0.707) * 0.707 = 20
+        // Expected (Z-Up): Yaw=135° → sin/cos produce +X/+Y direction.
+        // offsetX = sin(135)*cos(45) = 0.707*0.707 = 0.5
+        // offsetY = -cos(135)*cos(45) = -(-0.707)*0.707 = 0.5
+        // offsetZ = sin(45) = 0.707
+        // Position = (0.5*40, 0.5*40, 0.707*40) = (20, 20, 28.28)
         Assert.True(px > 10);  // +X
-        Assert.True(py > 20);  // +Y (above)
-        Assert.True(pz > 10);  // +Z
+        Assert.True(py > 10);  // +Y (ground plane)
+        Assert.True(pz > 20);  // +Z (up)
     }
 }

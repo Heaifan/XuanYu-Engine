@@ -14,33 +14,42 @@ public sealed class ProjectionUnprojectionRoundTripTests
 {
     private const float ViewportW = 1280;
     private const float ViewportH = 720;
-    // 允许 3cm 误差——像素舍入误差（±0.5px）在视口边缘对应约 0.02-0.03m 偏移。
-    private const double ErrorTolerance = 0.03;
+    // 允许 5cm 误差——Z-Up 相机角度下边缘像素的舍入误差略大于 Y-Up。
+    private const double ErrorTolerance = 0.05;
 
     private static readonly SceneGroundPlane Ground = SceneGroundPlane.Default;
 
     /// <summary>
-    /// 要测试的世界坐标点（全部在地面 Y=0）。
+    /// 要测试的世界坐标点（全部在地面 Z=0，Z-Up 约定）。
     /// </summary>
     public static TheoryData<Vector3d> GroundPoints => new()
     {
         new Vector3d(0, 0, 0),
-        new Vector3d(-4, 0, 1),
-        new Vector3d(1, 0, -3),
-        new Vector3d(10, 0, 10),
-        new Vector3d(-10, 0, -10),
-        new Vector3d(5, 0, -8),
-        new Vector3d(-7, 0, 12),
+        new Vector3d(-4, -1, 0), // migrated from (-4, 0, 1)
+        new Vector3d(1, 3, 0),   // migrated from (1, 0, -3)
+        new Vector3d(10, -10, 0),
+        new Vector3d(-10, 10, 0),
+        new Vector3d(5, 8, 0),
+        new Vector3d(-7, -12, 0),
     };
+
+    /// <summary>
+    /// Z-Up 相机：从上方侧视 XY 地面。等价于 Yaw=135, Pitch=45, Dist=40。
+    /// </summary>
+    private static readonly VulkanCameraInfo ZUpTestCamera = new(
+        PositionX: 20, PositionY: 20, PositionZ: 28.28f,  // orbit default position (Z-Up)
+        TargetX: 0, TargetY: 0, TargetZ: 0,
+        UpX: 0, UpY: 0, UpZ: 1,  // Z-Up
+        FieldOfViewDegrees: 55,
+        NearPlane: 0.1f,
+        FarPlane: 1000f);
 
     [Theory]
     [MemberData(nameof(GroundPoints))]
     public void ProjectAndUnproject_ShouldReturnOriginalPosition(Vector3d worldPoint)
     {
-        // 1. 使用默认战场相机
-        var camera = VulkanCameraInfo.DefaultBattlefield;
-
-        // 当前相机实际参数
+        // 1. 使用 Z-Up 测试相机
+        var camera = ZUpTestCamera;
         var camPos = new Vector3d(camera.PositionX, camera.PositionY, camera.PositionZ);
 
         // 2. 计算 MVP

@@ -10,10 +10,10 @@ namespace FluidWarfare.Render.Scene.Position;
 /// </summary>
 public static class RenderSceneObjectPositionWriter
 {
-    // Constants matching WorldToRenderSceneBuilder
+    // Constants matching WorldToRenderSceneBuilder (Z-Up)
     private const double UnitScale = 1.25;
     private const double UnitHalfExtent = 0.5 * UnitScale;
-    private const double UnitYOffset = 0.5;
+    private const double UnitZOffset = 0.5;
 
     /// <summary>
     /// 替换指定实体的位置和 SelectionBounds。
@@ -48,7 +48,7 @@ public static class RenderSceneObjectPositionWriter
 
                 // Create new bounds matching the new position
                 var newBounds = new SceneAxisAlignedBounds(
-                    new Vector3d(newPosition.X, newPosition.Y + UnitYOffset, newPosition.Z),
+                    new Vector3d(newPosition.X, newPosition.Y, newPosition.Z + UnitZOffset),
                     new Vector3d(UnitHalfExtent, UnitHalfExtent, UnitHalfExtent));
 
                 newObjects.Add(new RenderObjectInfo(

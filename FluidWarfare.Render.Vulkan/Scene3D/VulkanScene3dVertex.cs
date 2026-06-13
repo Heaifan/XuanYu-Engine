@@ -30,29 +30,29 @@ public readonly record struct VulkanScene3dUnitDrawInfo(
 public static class VulkanScene3dVertices
 {
     /// <summary>
-    /// 生成地面网格顶点（线段列表）。
+    /// 生成地面网格顶点（线段列表，Z-Up / XY 地面）。
     /// 范围：-gridExtent 到 +gridExtent，间隔 gridSpacing。
     /// 每两条线段需要 2 个顶点。
-    /// yOffset 用于将网格略微下沉以避免与单位底面的 Z-fighting。
+    /// groundOffsetZ 用于将网格略微下沉以避免与单位底面的 Z-fighting。
     /// </summary>
     public static VulkanScene3dVertex[] BuildGrid(int gridExtent, int gridSpacing,
         float r = 0.35f, float g = 0.40f, float b = 0.50f, float a = 1.0f,
-        float yOffset = -0.01f)
+        float groundOffsetZ = -0.01f)
     {
         var vertices = new List<VulkanScene3dVertex>();
 
         for (var x = -gridExtent; x <= gridExtent; x += gridSpacing)
         {
-            // Z 方向线段
-            vertices.Add(new VulkanScene3dVertex(x, yOffset, -gridExtent, r, g, b, a));
-            vertices.Add(new VulkanScene3dVertex(x, yOffset, gridExtent, r, g, b, a));
+            // Y 方向线段
+            vertices.Add(new VulkanScene3dVertex(x, -gridExtent, groundOffsetZ, r, g, b, a));
+            vertices.Add(new VulkanScene3dVertex(x, gridExtent, groundOffsetZ, r, g, b, a));
         }
 
-        for (var z = -gridExtent; z <= gridExtent; z += gridSpacing)
+        for (var y = -gridExtent; y <= gridExtent; y += gridSpacing)
         {
             // X 方向线段
-            vertices.Add(new VulkanScene3dVertex(-gridExtent, yOffset, z, r, g, b, a));
-            vertices.Add(new VulkanScene3dVertex(gridExtent, yOffset, z, r, g, b, a));
+            vertices.Add(new VulkanScene3dVertex(-gridExtent, y, groundOffsetZ, r, g, b, a));
+            vertices.Add(new VulkanScene3dVertex(gridExtent, y, groundOffsetZ, r, g, b, a));
         }
 
         return [.. vertices];
@@ -123,21 +123,27 @@ public static class VulkanScene3dVertices
     }
 
     /// <summary>
-    /// 生成 X/Y/Z 轴线（调试用），LineList。
+    /// 生成世界 X/Y/Z 主轴（Z-Up），LineList。
+    /// X 红：沿 XY 地面水平 → +X
+    /// Y 绿：沿 XY 地面水平 → +Y
+    /// Z 蓝：垂直向上 → +Z（从原点出发）
     /// </summary>
-    public static VulkanScene3dVertex[] BuildAxes(float length = 2.0f)
+    public static VulkanScene3dVertex[] BuildAxes(
+        float xyLength = 20f,
+        float zUpLength = 8f,
+        float axisAlpha = 1.0f)
     {
         return
         [
-            // X axis (red)
-            new VulkanScene3dVertex(-length, 0, 0, 1, 0.2f, 0.2f, 1),
-            new VulkanScene3dVertex(length, 0, 0, 1, 0.2f, 0.2f, 1),
-            // Y axis (green)
-            new VulkanScene3dVertex(0, -length, 0, 0.2f, 1, 0.2f, 1),
-            new VulkanScene3dVertex(0, length, 0, 0.2f, 1, 0.2f, 1),
-            // Z axis (blue)
-            new VulkanScene3dVertex(0, 0, -length, 0.2f, 0.2f, 1, 1),
-            new VulkanScene3dVertex(0, 0, length, 0.2f, 0.2f, 1, 1),
+            // X axis (red) — horizontal along XY ground
+            new VulkanScene3dVertex(-xyLength, 0, 0, 1, 0, 0, axisAlpha),
+            new VulkanScene3dVertex(xyLength, 0, 0, 1, 0, 0, axisAlpha),
+            // Y axis (green) — horizontal along XY ground
+            new VulkanScene3dVertex(0, -xyLength, 0, 0, 1, 0, axisAlpha),
+            new VulkanScene3dVertex(0, xyLength, 0, 0, 1, 0, axisAlpha),
+            // Z axis (blue) — vertical up from origin
+            new VulkanScene3dVertex(0, 0, 0, 0, 0, 1, axisAlpha),
+            new VulkanScene3dVertex(0, 0, zUpLength, 0, 0, 1, axisAlpha),
         ];
     }
 

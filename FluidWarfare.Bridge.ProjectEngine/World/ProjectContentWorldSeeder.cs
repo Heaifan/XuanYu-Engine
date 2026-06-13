@@ -13,15 +13,21 @@ public static class ProjectContentWorldSeeder
     private const string TargetContentKind = "unitTemplate";
 
     /// <summary>
-    /// 临时开发占位布局。
+    /// 临时开发占位布局（Z-Up）。
+    /// 所有实体位于地面（Z=0），分布在 XY 平面。
     /// 这是 SampleProject 的临时单位位置分配，不是最终单位模板位置语义，
     /// 未来由场景/地图实例文件替代。
+    ///
+    /// 迁移映射（旧 Y-Up → Z-Up）：
+    ///   (-4, 0,  1) → (-4, -1, 0)
+    ///   ( 0, 0,  0) → ( 0,  0, 0)
+    ///   ( 1, 0, -3) → ( 1,  3, 0)
     /// </summary>
     private static readonly Vector3d[] PlaceholderPositions =
     [
-        new(-4, 0,  1),
-        new( 0, 0,  0),
-        new( 1, 0, -3),
+        new(-4, -1, 0),
+        new( 0,  0, 0),
+        new( 1,  3, 0),
     ];
 
     /// <summary>

@@ -577,7 +577,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             {
                 var pos = _cursorState.WorldPosition.Value;
                 var ct = VulkanCameraMatrices.CreateTranslation(
-                    (float)pos.X, (float)pos.Y + 0.02f, (float)pos.Z);
+                    (float)pos.X, (float)pos.Y, (float)pos.Z + 0.02f);
                 var cursorMvp = VulkanCameraMatrices.Mul(vp, ct);
                 cursorData = new VulkanScene3dCommandRecorder.GroundCursorDrawData(
                     _cursorBuffer, _cursorVertexCount, cursorMvp);

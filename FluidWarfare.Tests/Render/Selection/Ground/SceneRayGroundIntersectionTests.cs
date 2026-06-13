@@ -10,9 +10,10 @@ public sealed class SceneRayGroundIntersectionTests
     private const double Epsilon = 1e-10;
 
     [Fact]
-    public void DownwardRay_HitsGround()
+    public void DownwardZRay_HitsGround()
     {
-        var ray = new SceneRay(new Vector3d(0, 10, 0), new Vector3d(0, -1, 0));
+        // Ray pointing down along -Z, starting at Z=10
+        var ray = new SceneRay(new Vector3d(0, 0, 10), new Vector3d(0, 0, -1));
         var hit = SceneRayGroundIntersection.Intersect(ray, DefaultGround);
 
         Assert.True(hit.IsHit);
@@ -24,9 +25,10 @@ public sealed class SceneRayGroundIntersectionTests
     }
 
     [Fact]
-    public void ParallelRay_ReturnsNoHit()
+    public void ParallelToXYGround_ReturnsNoHit()
     {
-        var ray = new SceneRay(new Vector3d(0, 10, 0), new Vector3d(1, 0, 0));
+        // Ray along XY plane (Direction.Z = 0) — parallel to ground
+        var ray = new SceneRay(new Vector3d(0, 0, 10), new Vector3d(1, 0, 0));
         var hit = SceneRayGroundIntersection.Intersect(ray, DefaultGround);
 
         Assert.False(hit.IsHit);
@@ -35,8 +37,8 @@ public sealed class SceneRayGroundIntersectionTests
     [Fact]
     public void BackwardIntersection_ReturnsNoHit()
     {
-        // Ray starts below ground and goes further down
-        var ray = new SceneRay(new Vector3d(0, -5, 0), new Vector3d(0, -1, 0));
+        // Ray starts below ground and goes further down (-Z)
+        var ray = new SceneRay(new Vector3d(0, 0, -5), new Vector3d(0, 0, -1));
         var hit = SceneRayGroundIntersection.Intersect(ray, DefaultGround);
 
         Assert.False(hit.IsHit);
@@ -45,44 +47,44 @@ public sealed class SceneRayGroundIntersectionTests
     [Fact]
     public void RayStartingOnGround_ReturnsZeroDistance()
     {
-        var ray = new SceneRay(new Vector3d(2, 0, 3), new Vector3d(0, -1, 0));
+        var ray = new SceneRay(new Vector3d(2, 3, 0), new Vector3d(0, 0, -1));
         var hit = SceneRayGroundIntersection.Intersect(ray, DefaultGround);
 
         Assert.True(hit.IsHit);
         Assert.Equal(0, hit.Distance, Epsilon);
         Assert.NotNull(hit.WorldPosition);
         Assert.Equal(2, hit.WorldPosition.Value.X, Epsilon);
-        Assert.Equal(0, hit.WorldPosition.Value.Y, Epsilon);
-        Assert.Equal(3, hit.WorldPosition.Value.Z, Epsilon);
+        Assert.Equal(3, hit.WorldPosition.Value.Y, Epsilon);
+        Assert.Equal(0, hit.WorldPosition.Value.Z, Epsilon);
     }
 
     [Fact]
-    public void CustomGroundHeight_ReturnsExpectedPosition()
+    public void CustomGroundElevation_ReturnsExpectedPosition()
     {
         var ground = new SceneGroundPlane(5.0);
-        var ray = new SceneRay(new Vector3d(0, 10, 0), new Vector3d(0, -1, 0));
+        var ray = new SceneRay(new Vector3d(0, 0, 10), new Vector3d(0, 0, -1));
         var hit = SceneRayGroundIntersection.Intersect(ray, ground);
 
         Assert.True(hit.IsHit);
         Assert.Equal(5, hit.Distance, Epsilon);
         Assert.NotNull(hit.WorldPosition);
         Assert.Equal(0, hit.WorldPosition.Value.X, Epsilon);
-        Assert.Equal(5, hit.WorldPosition.Value.Y, Epsilon);
-        Assert.Equal(0, hit.WorldPosition.Value.Z, Epsilon);
+        Assert.Equal(0, hit.WorldPosition.Value.Y, Epsilon);
+        Assert.Equal(5, hit.WorldPosition.Value.Z, Epsilon);
     }
 
     [Fact]
     public void HitPosition_SatisfiesRayEquation()
     {
-        var origin = new Vector3d(4, 8, -3);
-        var dir = new Vector3d(0.3, -0.8, 0.5);
+        var origin = new Vector3d(4, -3, 8);
+        var dir = new Vector3d(0.3, 0.5, -0.8);
         dir = Normalize(dir);
         var ray = new SceneRay(origin, dir);
 
         var hit = SceneRayGroundIntersection.Intersect(ray, DefaultGround);
         Assert.True(hit.IsHit);
 
-        // P(t) = Origin + Direction * t 应等于 HitPosition
+        // P(t) = Origin + Direction * t should equal HitPosition
         var expected = new Vector3d(
             origin.X + dir.X * hit.Distance,
             origin.Y + dir.Y * hit.Distance,
@@ -94,10 +96,10 @@ public sealed class SceneRayGroundIntersectionTests
     }
 
     [Fact]
-    public void UpwardRayFromBelow_HitsGround()
+    public void UpwardZRayFromBelow_HitsGround()
     {
-        // Ray starts below ground and goes up — intersection at Y=0 is in front
-        var ray = new SceneRay(new Vector3d(0, -10, 0), new Vector3d(0, 1, 0));
+        // Ray starts at Z=-10 and points up (+Z), intersection at Z=0
+        var ray = new SceneRay(new Vector3d(0, 0, -10), new Vector3d(0, 0, 1));
         var hit = SceneRayGroundIntersection.Intersect(ray, DefaultGround);
 
         Assert.True(hit.IsHit);
@@ -107,10 +109,10 @@ public sealed class SceneRayGroundIntersectionTests
     [Fact]
     public void DiagonalDownwardRay_HitsGroundAtCorrectPosition()
     {
-        // From (10, 20, 0) at 45 degrees downward toward +X
-        var dir = new Vector3d(1, -1, 0);
+        // From (10, 0, 20) at 45 degrees downward along -Z and +X
+        var dir = new Vector3d(1, 0, -1);
         dir = Normalize(dir);
-        var ray = new SceneRay(new Vector3d(10, 20, 0), dir);
+        var ray = new SceneRay(new Vector3d(10, 0, 20), dir);
 
         var hit = SceneRayGroundIntersection.Intersect(ray, DefaultGround);
         Assert.True(hit.IsHit);

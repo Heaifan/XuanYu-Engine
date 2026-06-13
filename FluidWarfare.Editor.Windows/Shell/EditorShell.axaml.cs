@@ -1005,7 +1005,7 @@ public sealed partial class EditorShell : UserControl
             unitDraws.Add(new VulkanScene3dUnitDrawInfo(
                 obj.EntityId.Value.ToString(),
                 (float)obj.Position.X,
-                (float)obj.Position.Y + 0.5f,
+                (float)obj.Position.Z + 0.5f,
                 (float)obj.Position.Z,
                 1.25f));
         }
@@ -1379,7 +1379,7 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 将轨道相机转换为 VulkanCameraInfo（用于 Picking 和 Ground Hover 射线构建）。
+    /// 将轨道相机转换为 VulkanCameraInfo（Z-Up，Up = (0,0,1)）。
     /// </summary>
     private VulkanCameraInfo OrbitToCameraInfo(SceneOrbitCameraState orbit, float aspect)
     {
@@ -1387,7 +1387,7 @@ public sealed partial class EditorShell : UserControl
         return new VulkanCameraInfo(
             camX, camY, camZ,
             orbit.PivotX, orbit.PivotY, orbit.PivotZ,
-            0, 1, 0,
+            0, 0, 1,  // Z-Up
             orbit.FieldOfViewDegrees,
             orbit.NearPlane,
             orbit.FarPlane);
@@ -1659,7 +1659,7 @@ public sealed partial class EditorShell : UserControl
     }
 
     private static (float X, float Y, float Z) EntityToScene3dPosition(Vector3d position) =>
-        ((float)position.X, (float)position.Y + 0.5f, (float)position.Z);
+        ((float)position.X, (float)position.Y, (float)position.Z + 0.5f);
 
     // ─── 地面放置 ──────────────────────────────────────────────────
 
@@ -1667,8 +1667,8 @@ public sealed partial class EditorShell : UserControl
     {
         if (!_groundPlacementState.IsActive || _selectedWorldEntity is null) return;
 
-        // 地面放置：实体在地面锚点，Y = 平面高度（0）
-        var entityPos = new Vector3d(groundPosition.X, 0, groundPosition.Z);
+        // 地面放置：实体在地面锚点，Z = 平面高程（0）
+        var entityPos = new Vector3d(groundPosition.X, groundPosition.Y, 0);
 
         ApplyEntityTransform(entityPos, EditorEntityTransformOrigin.GroundPlacement);
 
@@ -1738,7 +1738,7 @@ public sealed partial class EditorShell : UserControl
             list.Add(new VulkanScene3dUnitDrawInfo(
                 obj.EntityId.Value.ToString(),
                 (float)obj.Position.X,
-                (float)obj.Position.Y + 0.5f,
+                (float)obj.Position.Z + 0.5f,
                 (float)obj.Position.Z,
                 1.25f));
         }
@@ -1783,12 +1783,12 @@ public sealed partial class EditorShell : UserControl
             if (obj.VisualKind != RenderObjectVisualKind.UnitMarker)
                 continue;
 
-            var cy = (float)obj.Position.Y + 0.5f;
+            var cz = (float)obj.Position.Z + 0.5f;
             unitDraws.Add(new VulkanScene3dUnitDrawInfo(
                 obj.EntityId.Value.ToString(),
                 (float)obj.Position.X,
-                cy,
-                (float)obj.Position.Z,
+                (float)obj.Position.Y,
+                cz,
                 1.25f));
         }
 
