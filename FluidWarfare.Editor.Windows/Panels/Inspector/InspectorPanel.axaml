@@ -33,19 +33,34 @@
           <TextBlock Text="Transform" FontSize="12" FontWeight="SemiBold" Foreground="#7D8792" />
 
           <Grid ColumnDefinitions="Auto,8,*">
-            <TextBlock Grid.Column="0" Text="X" Foreground="#C9D1D9" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" x:Name="ScrubLabelX" Text="X" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast"
+                       PointerPressed="OnScrubPointerPressed"
+                       PointerMoved="OnScrubPointerMoved"
+                       PointerReleased="OnScrubPointerReleased"
+                       PointerCaptureLost="OnScrubCaptureLost" />
             <TextBox Grid.Column="2" x:Name="TransformXText" Text="0.000"
                      Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
                      TextChanged="OnTransformTextChanged" UseFloatingPlaceholder="False" />
           </Grid>
           <Grid ColumnDefinitions="Auto,8,*">
-            <TextBlock Grid.Column="0" Text="Y" Foreground="#C9D1D9" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" x:Name="ScrubLabelY" Text="Y" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast"
+                       PointerPressed="OnScrubPointerPressed"
+                       PointerMoved="OnScrubPointerMoved"
+                       PointerReleased="OnScrubPointerReleased"
+                       PointerCaptureLost="OnScrubCaptureLost" />
             <TextBox Grid.Column="2" x:Name="TransformYText" Text="0.000"
                      Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
                      TextChanged="OnTransformTextChanged" />
           </Grid>
           <Grid ColumnDefinitions="Auto,8,*">
-            <TextBlock Grid.Column="0" Text="Z" Foreground="#C9D1D9" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" x:Name="ScrubLabelZ" Text="Z" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast"
+                       PointerPressed="OnScrubPointerPressed"
+                       PointerMoved="OnScrubPointerMoved"
+                       PointerReleased="OnScrubPointerReleased"
+                       PointerCaptureLost="OnScrubCaptureLost" />
             <TextBox Grid.Column="2" x:Name="TransformZText" Text="0.000"
                      Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
                      TextChanged="OnTransformTextChanged" />

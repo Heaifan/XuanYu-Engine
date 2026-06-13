@@ -24,6 +24,25 @@ public sealed partial class InspectorPanel : UserControl
     private Button? _resetButton;
     private Button? _groundPlaceButton;
 
+    // ─── 数值拖拽 ────────────────────────────────────────────────
+    private TextBlock? _scrubLabelX;
+    private TextBlock? _scrubLabelY;
+    private TextBlock? _scrubLabelZ;
+    private readonly Transform.TransformAxisScrubState _scrubState = new();
+    private string _scrubEntityId = string.Empty;
+
+    /// <summary>数值拖拽时触发。</summary>
+    public event Action<string, Transform.TransformPositionAxis, double>? ScrubValueChanged;
+
+    /// <summary>数值拖拽完成时触发。</summary>
+    public event Action<string, Transform.TransformPositionAxis, double>? ScrubCompleted;
+
+    /// <summary>数值拖拽取消时触发。</summary>
+    public event Action<string, Transform.TransformPositionAxis, double>? ScrubCancelled;
+
+    /// <summary>获取当前选中的实体 ID（EditorShell 设置）。</summary>
+    public string ScrubEntityId { get => _scrubEntityId; set => _scrubEntityId = value; }
+
     // ─── 状态 ──────────────────────────────────────────────────────
     private bool _isUpdatingTransformTexts;
 
@@ -64,6 +83,9 @@ public sealed partial class InspectorPanel : UserControl
         _applyButton = this.FindControl<Button>("ApplyButton");
         _resetButton = this.FindControl<Button>("ResetButton");
         _groundPlaceButton = this.FindControl<Button>("GroundPlaceButton");
+        _scrubLabelX = this.FindControl<TextBlock>("ScrubLabelX");
+        _scrubLabelY = this.FindControl<TextBlock>("ScrubLabelY");
+        _scrubLabelZ = this.FindControl<TextBlock>("ScrubLabelZ");
     }
 
     private void AttachKeyboardHandlers()
@@ -244,6 +266,63 @@ public sealed partial class InspectorPanel : UserControl
     private void OnGroundPlaceClicked(object? sender, RoutedEventArgs e)
     {
         GroundPlacementRequested?.Invoke();
+    }
+
+    // ─── 数值拖拽（X/Y/Z 标签拖拽微调）───────────────────────────
+
+    private void OnScrubPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is not TextBlock label) return;
+        if (string.IsNullOrEmpty(_scrubEntityId)) return;
+
+        var axis = label == _scrubLabelX ? Transform.TransformPositionAxis.X
+                 : label == _scrubLabelY ? Transform.TransformPositionAxis.Y
+                 : label == _scrubLabelZ ? Transform.TransformPositionAxis.Z
+                 : Transform.TransformPositionAxis.X;
+
+        var text = axis switch
+        {
+            Transform.TransformPositionAxis.X => _transformXText?.Text,
+            Transform.TransformPositionAxis.Y => _transformYText?.Text,
+            _ => _transformZText?.Text
+        };
+
+        if (!double.TryParse(text, out var value)) return;
+
+        e.Pointer.Capture(label);
+        _scrubState.Begin(axis, value, e.GetPosition(this).X, e.KeyModifiers);
+    }
+
+    private void OnScrubPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (!_scrubState.IsScrubbing) return;
+        _scrubState.Update(e.GetPosition(this).X, e.KeyModifiers);
+
+        var text = _scrubState.CurrentValue.ToString("F3");
+        switch (_scrubState.Axis)
+        {
+            case Transform.TransformPositionAxis.X: if (_transformXText is not null) _transformXText.Text = text; break;
+            case Transform.TransformPositionAxis.Y: if (_transformYText is not null) _transformYText.Text = text; break;
+            case Transform.TransformPositionAxis.Z: if (_transformZText is not null) _transformZText.Text = text; break;
+        }
+
+        ScrubValueChanged?.Invoke(_scrubEntityId, _scrubState.Axis, _scrubState.CurrentValue);
+    }
+
+    private void OnScrubPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (!_scrubState.IsScrubbing) return;
+        var value = _scrubState.CurrentValue;
+        _scrubState.Complete();
+        ScrubCompleted?.Invoke(_scrubEntityId, _scrubState.Axis, value);
+    }
+
+    private void OnScrubCaptureLost(object? sender, PointerCaptureLostEventArgs e)
+    {
+        if (!_scrubState.IsScrubbing) return;
+        var initialValue = _scrubState.InitialValue;
+        _scrubState.Cancel();
+        ScrubCancelled?.Invoke(_scrubEntityId, _scrubState.Axis, initialValue);
     }
 
     // ─── 内部辅助 ──────────────────────────────────────────────────

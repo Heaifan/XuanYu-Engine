@@ -19,6 +19,7 @@ using FluidWarfare.Editor.Windows.Panels.LeftDock;
 using FluidWarfare.Editor.Windows.Panels.Viewport.Input;
 using FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
+using FluidWarfare.Editor.Windows.Panels.Inspector.Transform;
 using FluidWarfare.Editor.Windows.Panels.Logging;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
@@ -207,6 +208,9 @@ public sealed partial class EditorShell : UserControl
             _inspectorPanel.TransformApplyRequested += HandleTransformApply;
             _inspectorPanel.TransformResetRequested += HandleTransformReset;
             _inspectorPanel.GroundPlacementRequested += HandleGroundPlacementToggle;
+            _inspectorPanel.ScrubValueChanged += HandleScrubValueChanged;
+            _inspectorPanel.ScrubCompleted += HandleScrubCompleted;
+            _inspectorPanel.ScrubCancelled += HandleScrubCancelled;
         }
     }
 
@@ -448,11 +452,12 @@ public sealed partial class EditorShell : UserControl
         var selection = CreateEntitySelection(entityInfo);
         var position = _worldState?.FindPosition(entityInfo.EntityId);
 
-        _inspectorPanel?.ShowWorldEntitySelection(
+        _inspectorPanel!.ShowWorldEntitySelection(
             selection,
             entityInfo.EntityId.Value.ToString(),
             position?.Value,
             entityInfo.Source?.RelativePath);
+        _inspectorPanel.ScrubEntityId = entityInfo.EntityId.Value.ToString();
         _statusBarPanel?.SetCurrentSelection(entityInfo.DisplayName);
 
         // 启用地面放置按钮（Session 激活时）
@@ -2316,6 +2321,48 @@ public sealed partial class EditorShell : UserControl
             canApply: changed && !_groundPlacementState.IsActive,
             canReset: changed,
             error: null);
+    }
+
+    // ─── 数值拖拽处理 ──────────────────────────────────────
+
+    private void HandleScrubValueChanged(string entityId, TransformPositionAxis axis, double value)
+    {
+        if (_selectedWorldEntity is null) return;
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) return;
+
+        var current = pos.Value.Value;
+        var newPos = axis switch
+        {
+            TransformPositionAxis.X => new Vector3d(value, current.Y, current.Z),
+            TransformPositionAxis.Y => new Vector3d(current.X, value, current.Z),
+            _ => new Vector3d(current.X, current.Y, value),
+        };
+
+        ApplyEntityTransform(newPos, EditorEntityTransformOrigin.DragScrub);
+    }
+
+    private void HandleScrubCompleted(string entityId, TransformPositionAxis axis, double value)
+    {
+        AppendInfoLog($"数值拖拽完成：{axis} = {value:F3}");
+    }
+
+    private void HandleScrubCancelled(string entityId, TransformPositionAxis axis, double initialValue)
+    {
+        if (_selectedWorldEntity is null) return;
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) return;
+
+        var current = pos.Value.Value;
+        var restoredPos = axis switch
+        {
+            TransformPositionAxis.X => new Vector3d(initialValue, current.Y, current.Z),
+            TransformPositionAxis.Y => new Vector3d(current.X, initialValue, current.Z),
+            _ => new Vector3d(current.X, current.Y, initialValue),
+        };
+
+        ApplyEntityTransform(restoredPos, EditorEntityTransformOrigin.DragScrub);
+        AppendInfoLog("数值拖拽已取消");
     }
 
     private void HandleGroundPlacementToggle()
