@@ -82,6 +82,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private string? _selectedEntityId;
     private bool _rendering; // 防重入
     private bool _recreateRequested; // Acquire/Present 返回 OutOfDate/Suboptimal 时标记
+    private PresentedCameraSnapshot _lastPresentedSnapshot = PresentedCameraSnapshot.Empty;
 
     // Validation
     private readonly VulkanValidationOptions _validationOptions = VulkanValidationOptions.FromEnvironment();
@@ -106,6 +107,8 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     public int GridVertexCount => _gridVertexCount;
     public int UnitVertexCount => _unitVertexCount;
     public string? SelectedEntityId => _selectedEntityId;
+    /// <summary>最近成功 Present 的相机快照（用于 Picking 对齐）。</summary>
+    public PresentedCameraSnapshot LastPresentedSnapshot => _lastPresentedSnapshot;
     public VulkanGroundCursorInfo GroundCursorInfo =>
         _cursorState.IsVisible
             ? new VulkanGroundCursorInfo(
@@ -179,7 +182,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     public VulkanScene3dFrameResult Start(
         nint hinstance, nint hwnd,
         uint reqW, uint reqH,
-        FluidWarfare.Render.Camera.SceneCameraState cameraState,
+        FluidWarfare.Render.Camera.SceneCameraPose cameraPose,
         ReadOnlySpan<VulkanScene3dVertex> gridVertices,
         ReadOnlySpan<VulkanScene3dVertex> unitVertices,
         ReadOnlySpan<VulkanScene3dUnitDrawInfo> unitDraws)
@@ -274,7 +277,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
             // Render first frame
             return RenderFrameInternal(
-                VulkanScene3dFrameReason.SessionStart, cameraState, unitDraws, sw);
+                VulkanScene3dFrameReason.SessionStart, cameraPose, unitDraws, sw);
         }
         catch (Exception ex)
         {
@@ -287,11 +290,11 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     // ─── 帧绘制 ───────────────────────────────────────────────────
 
     /// <summary>
-    /// 使用当前相机状态渲染一帧。
+    /// 使用当前相机姿态渲染一帧。
     /// </summary>
     public VulkanScene3dFrameResult RenderFrame(
         VulkanScene3dFrameReason reason,
-        FluidWarfare.Render.Camera.SceneCameraState cameraState,
+        FluidWarfare.Render.Camera.SceneCameraPose cameraPose,
         ReadOnlySpan<VulkanScene3dUnitDrawInfo> unitDraws)
     {
         if (_status != VulkanScene3dSessionStatus.Active)
@@ -305,7 +308,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         try
         {
             var sw = Stopwatch.StartNew();
-            return RenderFrameInternal(reason, cameraState, unitDraws, sw);
+            return RenderFrameInternal(reason, cameraPose, unitDraws, sw);
         }
         finally
         {
@@ -319,7 +322,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     /// </summary>
     public VulkanScene3dFrameResult Resize(
         uint newWidth, uint newHeight,
-        FluidWarfare.Render.Camera.SceneCameraState cameraState,
+        FluidWarfare.Render.Camera.SceneCameraPose cameraPose,
         ReadOnlySpan<VulkanScene3dUnitDrawInfo> unitDraws)
     {
         if (_status != VulkanScene3dSessionStatus.Active)
@@ -446,7 +449,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         }
 
         sw.Stop();
-        return RenderFrameInternal(VulkanScene3dFrameReason.Resize, cameraState, unitDraws, sw);
+        return RenderFrameInternal(VulkanScene3dFrameReason.Resize, cameraPose, unitDraws, sw);
     }
 
     /// <summary>
@@ -490,7 +493,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
     private VulkanScene3dFrameResult RenderFrameInternal(
         VulkanScene3dFrameReason reason,
-        FluidWarfare.Render.Camera.SceneCameraState cameraState,
+        FluidWarfare.Render.Camera.SceneCameraPose cameraPose,
         ReadOnlySpan<VulkanScene3dUnitDrawInfo> unitDraws,
         Stopwatch sw)
     {
@@ -535,23 +538,15 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             if (resetResult != Result.Success)
                 return FailFrame(reason, $"GPU Fence 重置失败：{resetResult}。");
 
-            // 5. Compute camera
-            var (dirX, dirY, dirZ) = FluidWarfare.Render.Camera.SceneCameraState.DefaultViewDirection();
-            var (camX, camY, camZ) = cameraState.ComputePosition();
-            var targetX = camX + dirX * cameraState.Distance;
-            var targetY = camY + dirY * cameraState.Distance;
-            var targetZ = camZ + dirZ * cameraState.Distance;
-
-            var camWithTarget = new VulkanCameraInfo(
-                camX, camY, camZ,
-                targetX, targetY, targetZ,
-                0, 1, 0,
-                cameraState.FieldOfViewDegrees,
-                cameraState.NearPlane,
-                cameraState.FarPlane);
-
+            // 5. Compute camera from full pose (Yaw/Pitch preserved)
+            var camInfo = new VulkanCameraInfo(
+                cameraPose.PositionX, cameraPose.PositionY, cameraPose.PositionZ,
+                cameraPose.TargetX, cameraPose.TargetY, cameraPose.TargetZ,
+                cameraPose.UpX, cameraPose.UpY, cameraPose.UpZ,
+                cameraPose.FieldOfViewDegrees,
+                cameraPose.NearPlane, cameraPose.FarPlane);
             var aspect = _swapchainRes.Extent.Width / (float)_swapchainRes.Extent.Height;
-            var vp = VulkanCameraMatrices.ComputeVulkanMVP(camWithTarget, aspect);
+            var vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
 
             // 6. Sync cached unit draws from incoming data (first call or after resize)
             if (_cachedUnitDraws.Length != unitDraws.Length)
@@ -637,7 +632,18 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
 
             sw.Stop();
 
-            // 11. 判断是否需要标记重建请求
+            // 11. 已成功 Present → 发布相机快照供 Picking 使用
+            _lastPresentedSnapshot = new PresentedCameraSnapshot
+            {
+                CameraPose = cameraPose,
+                ViewProjection = vp,
+                ViewportWidth = (int)_swapchainRes.Extent.Width,
+                ViewportHeight = (int)_swapchainRes.Extent.Height,
+                FrameIndex = _frameIndex,
+                CameraRevision = cameraPose.Revision
+            };
+
+            // 12. 判断是否需要标记重建请求
             var finalStatus = _recreateRequested
                 ? VulkanScene3dFrameStatus.RecreateRequested
                 : VulkanScene3dFrameStatus.Presented;
@@ -1022,6 +1028,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     public void Dispose()
     {
         _status = VulkanScene3dSessionStatus.Disposed;
+        _lastPresentedSnapshot = PresentedCameraSnapshot.Empty;
         if (_vk is null) return;
 
         if (_devOk && _device.Handle != 0)

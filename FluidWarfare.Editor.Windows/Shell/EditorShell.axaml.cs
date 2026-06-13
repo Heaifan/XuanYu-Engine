@@ -75,6 +75,7 @@ public sealed partial class EditorShell : UserControl
     private string _renderLastMode = "无";
     private VulkanScene3dSession? _scene3dSession;
     private SceneOrbitCameraState _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
+    private int _cameraRevision;
     private bool _framePending;
     private bool _sessionActive;
     private bool _scene3dAutoStartAttempted;
@@ -235,10 +236,12 @@ public sealed partial class EditorShell : UserControl
 
                 if (nativeHostInfo.Width > 0 && nativeHostInfo.Height > 0)
                 {
+                    _cameraRevision++;
+                    var resizePose = SceneCameraPose.FromOrbitState(_lastCameraState, _cameraRevision);
                     var result = _scene3dSession.Resize(
                         (uint)nativeHostInfo.Width,
                         (uint)nativeHostInfo.Height,
-                        OrbitToSessionState(_lastCameraState),
+                        resizePose,
                         [.. BuildUnitDrawList()]);
 
                     if (result.Success)
@@ -1008,16 +1011,8 @@ public sealed partial class EditorShell : UserControl
         }
 
         _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
-        var (sx, sy, sz) = _lastCameraState.ComputePosition();
-        var sessionCam = new SceneCameraState
-        {
-            TargetX = _lastCameraState.PivotX,
-            TargetZ = _lastCameraState.PivotZ,
-            Distance = _lastCameraState.Distance,
-            FieldOfViewDegrees = _lastCameraState.FieldOfViewDegrees,
-            NearPlane = _lastCameraState.NearPlane,
-            FarPlane = _lastCameraState.FarPlane
-        };
+        _cameraRevision++;
+        var sessionPose = SceneCameraPose.FromOrbitState(_lastCameraState, _cameraRevision);
 
         var session = new VulkanScene3dSession();
         var result = session.Start(
@@ -1025,7 +1020,7 @@ public sealed partial class EditorShell : UserControl
             nativeHostInfo.WindowHandle,
             (uint)nativeHostInfo.Width,
             (uint)nativeHostInfo.Height,
-            sessionCam,
+            sessionPose,
             gridVertices.AsSpan(),
             unitVertices.AsSpan(),
             [.. unitDraws]);
@@ -1139,18 +1134,9 @@ public sealed partial class EditorShell : UserControl
             if (_scene3dSession is null) return;
 
             var unitDraws = BuildUnitDrawList();
-            // Convert orbit camera to old SceneCameraState for Session compat
-            var (px, py, pz) = _lastCameraState.ComputePosition();
-            var sessionCam = new SceneCameraState
-            {
-                TargetX = _lastCameraState.PivotX,
-                TargetZ = _lastCameraState.PivotZ,
-                Distance = _lastCameraState.Distance,
-                FieldOfViewDegrees = _lastCameraState.FieldOfViewDegrees,
-                NearPlane = _lastCameraState.NearPlane,
-                FarPlane = _lastCameraState.FarPlane
-            };
-            var result = _scene3dSession.RenderFrame(reason, sessionCam, [.. unitDraws]);
+            _cameraRevision++;
+            var sessionPose = SceneCameraPose.FromOrbitState(_lastCameraState, _cameraRevision);
+            var result = _scene3dSession.RenderFrame(reason, sessionPose, [.. unitDraws]);
 
             if (result.Success)
             {
@@ -1355,10 +1341,14 @@ public sealed partial class EditorShell : UserControl
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
-        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
-        var aspect = nativeHostInfo.Width / (float)nativeHostInfo.Height;
-        var camInfo = OrbitToCameraInfo(_lastCameraState, aspect);
-        var vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
+        // 使用已呈现快照的矩阵和相机位置，确保与屏幕显示一致
+        var snapshot = _scene3dSession.LastPresentedSnapshot;
+        if (!snapshot.IsValid) return;
+        var vp = snapshot.ViewProjection;
+        var (camX, camY, camZ) = (
+            snapshot.CameraPose.PositionX,
+            snapshot.CameraPose.PositionY,
+            snapshot.CameraPose.PositionZ);
 
         if (!VulkanSceneRayBuilder.TryBuild(
                 pixelX, pixelY,
@@ -1389,7 +1379,7 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 将轨道相机转换为 Session 所需的 VulkanCameraInfo。
+    /// 将轨道相机转换为 VulkanCameraInfo（用于 Picking 和 Ground Hover 射线构建）。
     /// </summary>
     private VulkanCameraInfo OrbitToCameraInfo(SceneOrbitCameraState orbit, float aspect)
     {
@@ -1401,27 +1391,6 @@ public sealed partial class EditorShell : UserControl
             orbit.FieldOfViewDegrees,
             orbit.NearPlane,
             orbit.FarPlane);
-    }
-
-    /// <summary>
-    /// 将轨道相机转换为 Session 兼容的 SceneCameraState。
-    /// </summary>
-    private static SceneCameraState OrbitToSessionState(SceneOrbitCameraState orbit)
-    {
-        var (px, py, pz) = orbit.ComputePosition();
-        var dx = px - orbit.PivotX;
-        var dy = py - orbit.PivotY;
-        var dz = pz - orbit.PivotZ;
-        var dist = MathF.Sqrt(dx * dx + dy * dy + dz * dz);
-        return new SceneCameraState
-        {
-            TargetX = orbit.PivotX,
-            TargetZ = orbit.PivotZ,
-            Distance = dist,
-            FieldOfViewDegrees = orbit.FieldOfViewDegrees,
-            NearPlane = orbit.NearPlane,
-            FarPlane = orbit.FarPlane
-        };
     }
 
     /// <summary>
@@ -1446,10 +1415,14 @@ public sealed partial class EditorShell : UserControl
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
-        var aspect = nativeHostInfo.Width / (float)nativeHostInfo.Height;
-        var camInfo = OrbitToCameraInfo(_lastCameraState, aspect);
-        var vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
-        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
+        // 使用已呈现快照的矩阵和相机位置，确保射线与屏幕显示一致
+        var snapshot = _scene3dSession.LastPresentedSnapshot;
+        if (!snapshot.IsValid) return;
+        var vp = snapshot.ViewProjection;
+        var (camX, camY, camZ) = (
+            snapshot.CameraPose.PositionX,
+            snapshot.CameraPose.PositionY,
+            snapshot.CameraPose.PositionZ);
 
         // 构建射线
         if (!VulkanSceneRayBuilder.TryBuild(
