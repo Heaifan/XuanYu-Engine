@@ -126,6 +126,14 @@ public sealed partial class EditorShell : UserControl
         _vulkanViewportHostPanel = this.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanel");
         _dockPanel = this.FindControl<ProjectWorldDockPanel>("ProjectWorldDockPanel");
         _runMenuButton = this.FindControl<Button>("RunMenuButton");
+
+        // 设置/帮助菜单
+        var prefsItem = this.FindControl<MenuItem>("PreferencesMenuItem");
+        if (prefsItem is not null) prefsItem.Click += HandlePreferencesClicked;
+        var bindingsItem = this.FindControl<MenuItem>("ShowInputBindingsMenuItem");
+        if (bindingsItem is not null) bindingsItem.Click += HandleShowInputBindingsClicked;
+        var aboutItem = this.FindControl<MenuItem>("AboutFluidWarfareMenuItem");
+        if (aboutItem is not null) aboutItem.Click += HandleAboutFluidWarfareClicked;
     }
 
     private void SubscribePanelEvents()
@@ -333,34 +341,41 @@ public sealed partial class EditorShell : UserControl
         }
     }
 
-    private void HandleFileMenuClicked(object? sender, RoutedEventArgs e)
+    private void HandlePreferencesClicked(object? sender, RoutedEventArgs e)
     {
-        HandleMenuClicked("文件");
+        AppendInfoLog("已打开偏好设置。");
+        OpenPreferencesWindow();
     }
 
-    private void HandleEditMenuClicked(object? sender, RoutedEventArgs e)
+    private void HandleShowInputBindingsClicked(object? sender, RoutedEventArgs e)
     {
-        HandleMenuClicked("编辑");
+        AppendInfoLog("已打开键位设置。");
+        OpenPreferencesWindow();
     }
 
-    private void HandleViewMenuClicked(object? sender, RoutedEventArgs e)
+    private void HandleAboutFluidWarfareClicked(object? sender, RoutedEventArgs e)
     {
-        HandleMenuClicked("视图");
+        AppendInfoLog("已打开关于 FluidWarfare。");
+        OpenAboutWindow();
     }
 
-    private void HandleRunMenuClicked(object? sender, RoutedEventArgs e)
+    private Window? _preferencesWindow;
+    private Window? _aboutWindow;
+
+    private void OpenPreferencesWindow()
     {
-        HandleMenuClicked("运行");
+        if (_preferencesWindow is { IsVisible: true }) { _preferencesWindow.Activate(); return; }
+        _preferencesWindow = new Preferences.EditorPreferencesWindow();
+        _preferencesWindow.Closed += (_, _) => _preferencesWindow = null;
+        _preferencesWindow.Show();
     }
 
-    private void HandleExportMenuClicked(object? sender, RoutedEventArgs e)
+    private void OpenAboutWindow()
     {
-        HandleMenuClicked("导出");
-    }
-
-    private void HandleHelpMenuClicked(object? sender, RoutedEventArgs e)
-    {
-        HandleMenuClicked("帮助");
+        if (_aboutWindow is { IsVisible: true }) { _aboutWindow.Activate(); return; }
+        _aboutWindow = new About.AboutFluidWarfareWindow();
+        _aboutWindow.Closed += (_, _) => _aboutWindow = null;
+        _aboutWindow.Show();
     }
 
     private void OnHierarchyEntitySelected(string? entityId)
@@ -461,11 +476,6 @@ public sealed partial class EditorShell : UserControl
             .ToArray();
 
         return new ViewportRenderSceneSummary(objects);
-    }
-
-    private void HandleMenuClicked(string menuName)
-    {
-        AppendInfoLog($"点击菜单：{menuName}。");
     }
 
     private void AppendInfoLog(string message)
@@ -956,7 +966,7 @@ public sealed partial class EditorShell : UserControl
         if (_runMenuButton is null) return;
 
         var flyout = new MenuFlyout();
-        flyout.Opened += (_, _) => HandleMenuClicked("运行");
+        flyout.Opened += (_, _) => AppendInfoLog("运行菜单已打开。");
 
         _runScene3dMenuItem = new MenuItem { Header = "重新启动 Scene3D 会话" };
         _runScene3dMenuItem.Click += HandleRunScene3dMenuClicked;

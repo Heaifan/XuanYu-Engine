@@ -18,12 +18,27 @@
           VerticalAlignment="Center"
           Orientation="Horizontal"
           Spacing="24">
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleFileMenuClicked">文件</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleEditMenuClicked">编辑</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleViewMenuClicked">视图</Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0">文件</Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0">编辑</Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0">视图</Button>
         <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="RunMenuButton">运行</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleExportMenuClicked">导出</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" Click="HandleHelpMenuClicked">帮助</Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0">导出</Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="SettingsMenuButton">设置
+          <Button.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="偏好设置……" x:Name="PreferencesMenuItem" />
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="HelpMenuButton">帮助
+          <Button.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="查看默认键位" x:Name="ShowInputBindingsMenuItem" />
+              <Separator />
+              <MenuItem Header="关于 FluidWarfare" x:Name="AboutFluidWarfareMenuItem" />
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
       </StackPanel>
     </Border>
 

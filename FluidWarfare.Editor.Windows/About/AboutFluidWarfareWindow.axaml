@@ -1,0 +1,31 @@
+<Window
+    x:Class="FluidWarfare.Editor.Windows.About.AboutFluidWarfareWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="关于 FluidWarfare"
+    Width="380"
+    Height="320"
+    WindowStartupLocation="CenterOwner"
+    Background="#202327"
+    Foreground="#E0E0E0"
+    CanResize="False">
+  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Margin="32">
+    <TextBlock Text="FluidWarfare Editor" FontSize="20" FontWeight="Bold" Foreground="#FFF" HorizontalAlignment="Center" />
+    <Rectangle Height="1" Fill="#414852" Margin="0,4" />
+
+    <StackPanel Spacing="6">
+      <TextBlock Text="当前阶段：GUI 原型" Foreground="#AAA" />
+      <TextBlock Text="渲染后端：Vulkan" Foreground="#AAA" />
+      <TextBlock Text="坐标系：右手 Z-Up" Foreground="#AAA" />
+      <TextBlock Text="输入预设：Blender" Foreground="#AAA" />
+      <TextBlock Text="当前版本：Milestone 8.7.2" Foreground="#AAA" />
+    </StackPanel>
+
+    <Rectangle Height="1" Fill="#414852" Margin="0,4" />
+    <TextBlock Text="©2026 FluidWarfare Contributors" Foreground="#666" FontSize="11" HorizontalAlignment="Center" />
+
+    <Button Content="关闭" HorizontalAlignment="Center" Width="100" Margin="0,8,0,0"
+            Background="#353B44" Foreground="#CCC" BorderThickness="1" BorderBrush="#555"
+            Click="OnCloseClicked" />
+  </StackPanel>
+</Window>
