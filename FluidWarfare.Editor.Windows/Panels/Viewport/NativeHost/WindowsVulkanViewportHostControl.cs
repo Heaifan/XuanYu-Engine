@@ -76,6 +76,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     /// <summary>鼠标滚轮（HIWORD delta, modifiers-packed）。</summary>
     public event Action<int, int>? RawMouseWheel;
 
+    /// <summary>焦点丢失（修饰键状态需重置，活动拖动需取消）。</summary>
+    public event Action? RawInputFocusLost;
+
     // ─── Overlay 导航输入事件 ────────────────────────────────────
 
     /// <summary>Overlay 导航左键按下（pixelX, pixelY）。</summary>
@@ -348,6 +351,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private void HandleKillFocus()
     {
         _pickInput.OnKillFocus();
+
+        // 通知 Translator 清空修饰键状态并结束活动拖动
+        RawInputFocusLost?.Invoke();
+
         var hadNavigationCapture = _navigationDragCaptured || _leftButtonHandledByNavigation;
         EndNavigationCapture();
         if (hadNavigationCapture)

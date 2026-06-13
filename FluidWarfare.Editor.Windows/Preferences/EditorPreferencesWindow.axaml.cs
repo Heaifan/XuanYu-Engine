@@ -341,25 +341,43 @@ public sealed partial class EditorPreferencesWindow : Window
         if (_captureState == CaptureState.Idle) return;
 
         _captureState = CaptureState.Idle;
+
+        // 先保存捕获字段，再恢复按钮（button 需要 actionId/slot 查 gesture）
+        var btn = _captureButton;
+        var actionId = _captureActionId;
+        var slot = _captureSlot;
+
         _captureActionId = string.Empty;
         _captureSlot = "primary";
         _capturedGesture = null;
         _conflictActionId = null;
         _conflictSlot = null;
+        _captureButton = null;
 
-        if (_captureButton is not null)
+        if (btn is not null && !string.IsNullOrEmpty(actionId))
         {
-            _captureButton.Background = new SolidColorBrush(AM.Color.Parse("#353B44"));
-            _captureButton.Foreground = new SolidColorBrush(AM.Color.Parse("#CCC"));
-            _captureButton.Content = FormatGestureText(
-                GetEffectiveGesture(_captureActionId, _captureSlot));
-            _captureButton = null;
+            btn.Background = new SolidColorBrush(AM.Color.Parse("#353B44"));
+            btn.Foreground = new SolidColorBrush(AM.Color.Parse("#CCC"));
+            btn.Content = FormatGestureText(GetEffectiveGesture(actionId, slot));
         }
     }
 
     private void CompleteCapture(EditorInputGesture gesture)
     {
         if (string.IsNullOrEmpty(_captureActionId)) return;
+
+        // 同一动作的主/备用绑定不允许相同手势
+        var otherSlot = _captureSlot == "primary" ? "secondary" : "primary";
+        var otherGesture = GetEffectiveGesture(_captureActionId, otherSlot);
+        if (otherGesture is not null && otherGesture.Signature == gesture.Signature)
+        {
+            if (_captureButton is not null)
+            {
+                _captureButton.Content = "主/备用绑定不能相同";
+                _captureButton.Foreground = new SolidColorBrush(AM.Color.Parse("#FF6B6B"));
+            }
+            return;
+        }
 
         // 冲突检测
         if (DetectConflict(_captureActionId, gesture, out var conflictActionId, out var conflictSlot))
@@ -709,12 +727,25 @@ public sealed partial class EditorPreferencesWindow : Window
             Close();
     }
 
+    /// <summary>
+    /// 合并已保存的 Overrides 与窗口中的草稿。
+    /// 已保存但未在本次窗口中修改的项目必须保留，否则会丢失。
+    /// 草稿中的项（包括 Gesture=null 清除操作）覆盖已保存项。
+    /// </summary>
     private EditorInputBindingSet BuildBindingSetFromDraft()
     {
-        return new EditorInputBindingSet
+        // 已保存 Overrides → 按 (ActionId:Slot) 建字典
+        var merged = new Dictionary<string, EditorInputBindingOverride>();
+        foreach (var ov in _originalBindingSet.Overrides)
+            merged[$"{ov.ActionId}:{ov.Slot}"] = ov;
+
+        // 草稿覆盖
+        foreach (var (key, ov) in _pendingOverrides)
+            merged[key] = ov;
+
+        return _originalBindingSet with
         {
-            Preset = "blender",
-            Overrides = _pendingOverrides.Values.ToArray()
+            Overrides = merged.Values.ToArray()
         };
     }
 

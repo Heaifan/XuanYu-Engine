@@ -172,6 +172,7 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel.RawKeyDown += HandleRawKeyDown;
             _vulkanViewportHostPanel.RawKeyUp += HandleRawKeyUp;
             _vulkanViewportHostPanel.RawMouseWheel += HandleRawMouseWheel;
+            _vulkanViewportHostPanel.RawInputFocusLost += HandleRawInputFocusLost;
             _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
             _vulkanViewportHostPanel.NavigationPointerPressed += HandleOverlayPointerPressed;
             _vulkanViewportHostPanel.NavigationPointerMoved += HandleOverlayPointerMoved;
@@ -1151,6 +1152,11 @@ public sealed partial class EditorShell : UserControl
     private void HandleRawPointerButtonUp(int buttonCode, int x, int y)
     {
         _inputTranslator?.OnRawPointerButtonUp(buttonCode);
+    }
+
+    private void HandleRawInputFocusLost()
+    {
+        _inputTranslator?.OnRawInputFocusLost();
     }
 
     private void HandleRawMouseWheel(int delta, int packedModifiers)

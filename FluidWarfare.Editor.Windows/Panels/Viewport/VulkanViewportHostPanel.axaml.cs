@@ -20,6 +20,9 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     public event Action<int>? RawKeyUp;
     public event Action<int, int>? RawMouseWheel;
 
+    /// <summary>原始焦点丢失（修饰键需重置、活动拖动需取消）。</summary>
+    public event Action? RawInputFocusLost;
+
     /// <summary>左键点击拾取（pixelX, pixelY）。遗留。</summary>
     public event Action<int, int>? PickRequested;
 
@@ -53,6 +56,7 @@ public sealed partial class VulkanViewportHostPanel : UserControl
             _nativeHostControl.RawKeyDown += vk => RawKeyDown?.Invoke(vk);
             _nativeHostControl.RawKeyUp += vk => RawKeyUp?.Invoke(vk);
             _nativeHostControl.RawMouseWheel += (d, m) => RawMouseWheel?.Invoke(d, m);
+            _nativeHostControl.RawInputFocusLost += () => RawInputFocusLost?.Invoke();
 
             // 遗留
             _nativeHostControl.PickRequested += (x, y) => PickRequested?.Invoke(x, y);

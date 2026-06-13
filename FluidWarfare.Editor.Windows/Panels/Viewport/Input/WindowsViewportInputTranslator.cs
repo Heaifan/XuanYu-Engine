@@ -129,7 +129,8 @@ public sealed class WindowsViewportInputTranslator
 
     /// <summary>
     /// 处理鼠标移动事件。
-    /// 如果在拖拽中，通过 GetActiveDragActionId 获取动作 ID（O(1) 零字典查找）。
+    /// 如果在拖拽中，通过 GetActiveDragDefinition 获取完整动作定义（O(1) 零字典查找）。
+    /// ExecuteInputAction 要求 Match 必须携带 Definition，否则直接丢弃。
     /// </summary>
     public EditorInputMatch OnRawPointerMoved(int x, int y)
     {
@@ -139,13 +140,14 @@ public sealed class WindowsViewportInputTranslator
         _lastMouseY = y;
 
         // 没有活动拖拽 → 不产生任何 match
-        var actionId = _snapshot.GetActiveDragActionId();
-        if (actionId is null)
+        var definition = _snapshot.GetActiveDragDefinition();
+        if (definition is null)
             return EditorInputMatch.NoMatch;
 
         return new EditorInputMatch
         {
-            ActionId = actionId,
+            ActionId = definition.Id,
+            Definition = definition,
             ValueKind = EditorInputValueKind.PointerDelta,
             DeltaX = deltaX,
             DeltaY = deltaY,
@@ -162,16 +164,18 @@ public sealed class WindowsViewportInputTranslator
     }
 
     /// <summary>
-    /// 处理鼠标滚轮事件。支持修饰键。
+    /// 处理鼠标滚轮事件。仅使用 Win32 消息发生时的修饰键快照。
+    /// 不使用可能因焦点切换而过期的 _currentModifiers。
     /// </summary>
     public EditorInputMatch OnRawMouseWheel(int delta, int packedModifiers, int pointerX, int pointerY)
     {
-        // 从 LOWORD(wParam) 提取 MK_* 标志以更新修饰键
+        // 从 LOWORD(wParam) 提取 MK_* 标志。
+        // 这些是 WM_MOUSEWHEEL 消息被发送时的真实修饰键状态，
+        // 不依赖可能因焦点丢失而卡住的 _currentModifiers。
         var mkControl = (packedModifiers & 0x0008) != 0; // MK_CONTROL
         var mkShift = (packedModifiers & 0x0004) != 0;   // MK_SHIFT
 
-        // 合并当前修饰键状态与消息时的 MK_* 状态
-        var mods = _currentModifiers;
+        EditorInputModifiers mods = EditorInputModifiers.None;
         if (mkControl) mods |= EditorInputModifiers.Control;
         if (mkShift) mods |= EditorInputModifiers.Shift;
 
@@ -207,6 +211,18 @@ public sealed class WindowsViewportInputTranslator
     /// </summary>
     public void CancelActiveDrag()
     {
+        _snapshot.EndDrag();
+    }
+
+    /// <summary>
+    /// 焦点丢失时重置修饰键状态并结束活动拖动。
+    /// 防止 Ctrl 因焦点转移到其他窗口而永久卡在 _currentModifiers 中。
+    /// </summary>
+    public void OnRawInputFocusLost()
+    {
+        System.Diagnostics.Debug.WriteLine(
+            "[InputTrace-Translator] FocusLost — clearing modifiers and ending drag");
+        _currentModifiers = EditorInputModifiers.None;
         _snapshot.EndDrag();
     }
 

@@ -129,6 +129,17 @@ public sealed class EditorInputBindingSnapshot
     public string? GetActiveDragActionId() => ActiveDragBinding?.ActionId;
 
     /// <summary>
+    /// 获取当前拖动的完整动作定义（移动时调用，不重新查表）。
+    /// 用于 OnRawPointerMoved 构造完整 EditorInputMatch。
+    /// </summary>
+    public EditorInputActionDefinition? GetActiveDragDefinition()
+    {
+        var binding = ActiveDragBinding;
+        if (binding is null) return null;
+        return binding.Definition ?? _definitions.GetValueOrDefault(binding.ActionId);
+    }
+
+    /// <summary>
     /// 结束拖动。
     /// </summary>
     public void EndDrag()
