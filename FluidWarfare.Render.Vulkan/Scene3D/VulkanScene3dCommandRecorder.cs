@@ -38,6 +38,10 @@ public static unsafe class VulkanScene3dCommandRecorder
         Silk.NET.Vulkan.Buffer unitBuffer, int unitVertexCount,
         UnitDrawData[] unitDrawData,
         GroundCursorDrawData? groundCursor,
+        // Overlay (optional, rendered last)
+        Silk.NET.Vulkan.Buffer? overlayBuffer, int overlayVertexCount,
+        Pipeline? overlayPipeline, PipelineLayout? overlayPipelineLayout,
+        uint overlayViewportWidth, uint overlayViewportHeight,
         out int drawCalls,
         out string errorMessage)
     {
@@ -164,6 +168,22 @@ public static unsafe class VulkanScene3dCommandRecorder
                     (uint)VulkanScene3dPushConstants.TintByteSize, tintPtr);
             }
             vk.CmdDraw(cmdBuf, (uint)unitVertexCount, 1, 0, 0);
+            drawCalls++;
+        }
+
+        // Draw overlay (TriangleList, Depth=off, Blend=on) — last on top of everything
+        if (overlayBuffer.HasValue && overlayBuffer.Value.Handle != 0 &&
+            overlayVertexCount > 0 && overlayPipeline.HasValue && overlayPipeline.Value.Handle != 0)
+        {
+            vk.CmdBindPipeline(cmdBuf, PipelineBindPoint.Graphics, overlayPipeline.Value);
+            var pc2 = stackalloc float[2];
+            pc2[0] = overlayViewportWidth;
+            pc2[1] = overlayViewportHeight;
+            vk.CmdPushConstants(cmdBuf, overlayPipelineLayout!.Value, ShaderStageFlags.VertexBit,
+                0, 8, pc2);
+            var olBufs = stackalloc[] { overlayBuffer.Value };
+            vk.CmdBindVertexBuffers(cmdBuf, 0, 1, olBufs, offsets);
+            vk.CmdDraw(cmdBuf, (uint)overlayVertexCount, 1, 0, 0);
             drawCalls++;
         }
 

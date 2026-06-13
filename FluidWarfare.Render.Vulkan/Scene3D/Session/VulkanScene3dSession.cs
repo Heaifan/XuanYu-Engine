@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FluidWarfare.Core.Math;
+using FluidWarfare.Render.Camera.Navigation;
+using FluidWarfare.Render.ViewportNavigation;
 using FluidWarfare.Render.Vulkan.Camera;
 using FluidWarfare.Render.Vulkan.Scene3D.GroundCursor;
 using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
@@ -84,6 +86,13 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private bool _recreateRequested; // Acquire/Present 返回 OutOfDate/Suboptimal 时标记
     private PresentedCameraSnapshot _lastPresentedSnapshot = PresentedCameraSnapshot.Empty;
 
+    // Overlay
+    private Overlay.VulkanOverlayResources? _overlayResources;
+    private ViewportNavigation.ViewportNavigationElement _overlayHovered
+        = ViewportNavigation.ViewportNavigationElement.None;
+    private ViewportNavigation.ViewportNavigationElement _overlayActive
+        = ViewportNavigation.ViewportNavigationElement.None;
+
     // Validation
     private readonly VulkanValidationOptions _validationOptions = VulkanValidationOptions.FromEnvironment();
     private readonly VulkanValidationMessageStore _validationMessageStore = new();
@@ -109,6 +118,24 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     public string? SelectedEntityId => _selectedEntityId;
     /// <summary>最近成功 Present 的相机快照（用于 Picking 对齐）。</summary>
     public PresentedCameraSnapshot LastPresentedSnapshot => _lastPresentedSnapshot;
+
+    /// <summary>Overlay 诊断信息。</summary>
+    public Overlay.VulkanNavigationOverlayInfo OverlayInfo
+    {
+        get
+        {
+            if (_overlayResources is null || !_overlayResources.IsValid)
+                return new Overlay.VulkanNavigationOverlayInfo(false, 0, 0, 0,
+                    ViewportNavigation.ViewportNavigationElement.None, "Overlay 不可用");
+            return new Overlay.VulkanNavigationOverlayInfo(true,
+                _lastOverlayVertexCount, Overlay.VulkanNavigationOverlayGeometry.MaxVertexCapacity,
+                1, _overlayHovered, "Overlay 运行中");
+        }
+    }
+
+    private int _lastOverlayVertexCount;
+    private Render.ViewportNavigation.ViewportNavigationLayout _lastOverlayLayout =
+        null!;
     public VulkanGroundCursorInfo GroundCursorInfo =>
         _cursorState.IsVisible
             ? new VulkanGroundCursorInfo(
@@ -260,6 +287,17 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                 return FailFrame(VulkanScene3dFrameReason.SessionStart, pipeErr);
             _gridPipeOk = true; _unitPipeOk = true;
             _pipelineCreateCount++;
+
+            // Create overlay resources (optional — failure is non-fatal for 3D scene)
+            _overlayResources = Overlay.VulkanOverlayResources.TryCreate(
+                _vk, _device, _physicalDevice,
+                _swapchainRes.RenderPass,
+                _swapchainRes.Extent.Width, _swapchainRes.Extent.Height,
+                out var overlayErr);
+            if (_overlayResources is null)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Overlay] 创建失败：{overlayErr}，将继续运行无 Overlay 的 3D 场景。");
+            }
 
             _status = VulkanScene3dSessionStatus.Active;
             _recreateRequested = false;
@@ -489,6 +527,12 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             if (_cursorMemory.Handle != 0) _vk.FreeMemory(_device, _cursorMemory, null);
             _cursorBufOk = false;
         }
+
+        if (_overlayResources is not null)
+        {
+            _overlayResources.Dispose();
+            _overlayResources = null;
+        }
     }
 
     // ─── 内部渲染 ───────────────────────────────────────────────
@@ -596,6 +640,42 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             }
 
             // 10. Record command buffer
+            // Pre-generate overlay geometry
+            int overlayVtxCount = 0;
+            Silk.NET.Vulkan.Buffer? overlayBuf = null;
+            Pipeline? overlayPipe = null;
+            PipelineLayout? overlayLayout = null;
+            if (_overlayResources is not null && _overlayResources.IsValid)
+            {
+                try
+                {
+                    // Overlay geometry doesn't need camInfo — it uses layout directly
+                    var extentW = (int)_swapchainRes.Extent.Width;
+                    var extentH = (int)_swapchainRes.Extent.Height;
+                    var projText = cameraPose.ProjectionMode == SceneProjectionMode.Perspective ? "Persp" : "Ortho";
+
+                    _lastOverlayLayout = FluidWarfare.Render.ViewportNavigation.ViewportNavigationLayout.Compute(
+                        extentW, extentH, cameraPose);
+
+                    var overlayVerts = Overlay.VulkanNavigationOverlayGeometry.Build(
+                        _lastOverlayLayout, _overlayHovered, _overlayActive, projText);
+
+                    _lastOverlayVertexCount = overlayVerts.Length;
+
+                    if (_overlayResources.UploadVertices(overlayVerts, out _))
+                    {
+                        overlayVtxCount = overlayVerts.Length;
+                        overlayBuf = _overlayResources.VertexBuffer;
+                        overlayPipe = _overlayResources.Pipeline;
+                        overlayLayout = _overlayResources.Layout;
+                    }
+                }
+                catch (Exception exO)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[Overlay] 几何生成异常：{exO.Message}");
+                }
+            }
+
             if (!VulkanScene3dCommandRecorder.Record(_vk, _swapchainRes.CommandBuffer,
                     _swapchainRes.RenderPass, _swapchainRes.Framebuffers[imgIndex],
                     _swapchainRes.Extent,
@@ -604,6 +684,9 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                     _unitBuffer, _unitVertexCount,
                     unitDrawData,
                     cursorData,
+                    overlayBuf, overlayVtxCount,
+                    overlayPipe, overlayLayout,
+                    _swapchainRes.Extent.Width, _swapchainRes.Extent.Height,
                     out drawCalls, out var cmdErr))
                 return FailFrame(reason, cmdErr);
 
