@@ -1357,22 +1357,21 @@ public sealed partial class EditorShell : UserControl
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
-        // 使用已呈现快照的矩阵和相机位置，确保与屏幕显示一致
+        // 使用已呈现快照构建射线（只能从 Snapshot 读取参数）
         var snapshot = _scene3dSession.LastPresentedSnapshot;
-        if (!snapshot.IsValid) return;
-        var vp = snapshot.ViewProjection;
-        var (camX, camY, camZ) = (
-            snapshot.CameraPose.PositionX,
-            snapshot.CameraPose.PositionY,
-            snapshot.CameraPose.PositionZ);
+        var status = VulkanSceneRayBuilder.TryBuild(
+            pixelX, pixelY,
+            snapshot,
+            (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
+            out var ray);
 
-        if (!VulkanSceneRayBuilder.TryBuild(
-                pixelX, pixelY,
-                (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
-                vp,
-                new Vector3d(camX, camY, camZ),
-                out var ray, out _))
+        if (status != SceneRayBuildStatus.Success)
         {
+            // 技术失败（Snapshot 不可用、尺寸不匹配等）不清除 Hover
+            if (status == SceneRayBuildStatus.SnapshotUnavailable ||
+                status == SceneRayBuildStatus.SnapshotExtentMismatch)
+                return;
+
             _groundPointerState.SetHover(null, null);
             _statusBarPanel?.SetGroundPosition("地面坐标：无");
             return;
@@ -1431,24 +1430,22 @@ public sealed partial class EditorShell : UserControl
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
-        // 使用已呈现快照的矩阵和相机位置，确保射线与屏幕显示一致
+        // 使用已呈现快照构建射线（统一透视/正交，尺寸闸门）
         var snapshot = _scene3dSession.LastPresentedSnapshot;
-        if (!snapshot.IsValid) return;
-        var vp = snapshot.ViewProjection;
-        var (camX, camY, camZ) = (
-            snapshot.CameraPose.PositionX,
-            snapshot.CameraPose.PositionY,
-            snapshot.CameraPose.PositionZ);
+        var buildStatus = VulkanSceneRayBuilder.TryBuild(
+            pixelX, pixelY,
+            snapshot,
+            (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
+            out var ray);
 
-        // 构建射线
-        if (!VulkanSceneRayBuilder.TryBuild(
-                pixelX, pixelY,
-                (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
-                vp,
-                new Vector3d(camX, camY, camZ),
-                out var ray, out var rayErr))
+        // Phase D：技术失败（Snapshot 不可用、尺寸不匹配、矩阵无效）不清除选择
+        if (buildStatus != SceneRayBuildStatus.Success)
         {
-            AppendWarningLog($"Picking 射线构建失败：{rayErr}");
+            if (buildStatus != SceneRayBuildStatus.Success)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[Pick] 射线构建非成功：{buildStatus}，保持当前选择。");
+            }
             return;
         }
 

@@ -1,8 +1,9 @@
 using FluidWarfare.Core.Math;
+using FluidWarfare.Render.Camera;
+using FluidWarfare.Render.Camera.Navigation;
 using FluidWarfare.Render.Selection;
 using FluidWarfare.Render.Selection.Ground;
 using FluidWarfare.Render.Vulkan.Camera;
-using FluidWarfare.Render.Camera;
 
 namespace FluidWarfare.Tests.Render.Vulkan.Camera;
 
@@ -50,32 +51,46 @@ public sealed class ProjectionUnprojectionRoundTripTests
     {
         // 1. 使用 Z-Up 测试相机
         var camera = ZUpTestCamera;
-        var camPos = new Vector3d(camera.PositionX, camera.PositionY, camera.PositionZ);
 
-        // 2. 计算 MVP
+        // 2. 计算 MVP 和逆矩阵
         var aspect = ViewportW / ViewportH;
         var mvp = VulkanCameraMatrices.ComputeVulkanMVP(camera, aspect);
+        VulkanSceneRayBuilder.TryInvert(mvp, out var invMvp, out var invErr);
+        Assert.NotNull(invMvp);
 
-        // 3. 将世界点投影到屏幕
+        // 3. 创建模拟 Present 的快照
+        var pose = SceneCameraPose.FromOrbitState(
+            SceneOrbitCameraMotion.CreateDefault(), 1);
+        var snapshot = new PresentedCameraSnapshot
+        {
+            CameraPose = pose,
+            ViewProjection = mvp,
+            InverseViewProjection = invMvp!,
+            ViewportWidth = (int)ViewportW,
+            ViewportHeight = (int)ViewportH,
+            FrameIndex = 1,
+            CameraRevision = 1
+        };
+
+        // 4. 将世界点投影到屏幕
         var (pixelX, pixelY) = WorldToPixel(mvp, worldPoint);
 
-        // 4. 从屏幕点构建射线
-        if (!VulkanSceneRayBuilder.TryBuild(
-                pixelX, pixelY,
-                (uint)ViewportW, (uint)ViewportH,
-                mvp,
-                camPos,
-                out var ray, out var error))
-        {
-            Assert.Fail($"射线构建失败：{error}，世界点 ({worldPoint.X}, {worldPoint.Y}, {worldPoint.Z})");
-        }
+        // 5. 从屏幕点构建射线（使用新 API：Snapshot + nearWorld 起点）
+        var buildStatus = VulkanSceneRayBuilder.TryBuild(
+            pixelX, pixelY,
+            snapshot,
+            (uint)ViewportW, (uint)ViewportH,
+            out var ray);
 
-        // 5. 射线与地面求交
-        var hit = SceneRayGroundIntersection.Intersect(ray, Ground);
+        Assert.Equal(SceneRayBuildStatus.Success, buildStatus);
+        Assert.NotNull(ray);
+
+        // 6. 射线与地面求交
+        var hit = SceneRayGroundIntersection.Intersect(ray!, Ground);
         Assert.True(hit.IsHit, $"地面求交未命中，世界点 ({worldPoint.X}, {worldPoint.Y}, {worldPoint.Z})");
         Assert.NotNull(hit.WorldPosition);
 
-        // 6. 验证误差
+        // 7. 验证误差
         var result = hit.WorldPosition.Value;
         var dx = Math.Abs(result.X - worldPoint.X);
         var dz = Math.Abs(result.Z - worldPoint.Z);

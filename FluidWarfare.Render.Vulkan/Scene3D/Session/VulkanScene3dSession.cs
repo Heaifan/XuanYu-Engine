@@ -643,10 +643,12 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
             sw.Stop();
 
             // 11. 已成功 Present → 发布相机快照供 Picking 使用
+            VulkanSceneRayBuilder.TryInvert(vp, out var invVp, out _);
             _lastPresentedSnapshot = new PresentedCameraSnapshot
             {
                 CameraPose = cameraPose,
                 ViewProjection = vp,
+                InverseViewProjection = invVp ?? Array.Empty<double>(),
                 ViewportWidth = (int)_swapchainRes.Extent.Width,
                 ViewportHeight = (int)_swapchainRes.Extent.Height,
                 FrameIndex = _frameIndex,
