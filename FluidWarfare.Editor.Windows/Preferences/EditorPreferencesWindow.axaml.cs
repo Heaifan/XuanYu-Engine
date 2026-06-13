@@ -30,8 +30,8 @@ public sealed partial class EditorPreferencesWindow : Window
     // _draftBindingSet: 当前窗口编辑的完整绑定集（已保存 + 本次改动）
     // _originalBindingSet: 打开窗口时的快照（用于判断是否有未保存改动）
 
-    private EditorInputBindingSet _originalBindingSet;
-    private EditorInputBindingSet _draftBindingSet;
+    private EditorInputBindingSet _originalBindingSet = null!;
+    private EditorInputBindingSet _draftBindingSet = null!;
 
     public EditorPreferencesWindow()
     {
@@ -243,13 +243,7 @@ public sealed partial class EditorPreferencesWindow : Window
     }
 
     private bool HasAnyChanges()
-    {
-        var draftKeys = _draftBindingSet.Overrides
-            .Select(o => $"{o.ActionId}:{o.Slot}").OrderBy(x => x);
-        var originalKeys = _originalBindingSet.Overrides
-            .Select(o => $"{o.ActionId}:{o.Slot}").OrderBy(x => x);
-        return !draftKeys.SequenceEqual(originalKeys);
-    }
+        => !_draftBindingSet.HasSameEffectiveBindingsAs(_originalBindingSet);
 
     // ─── 草稿修改方法 ─────────────────────────────────────
 

@@ -12,6 +12,8 @@ namespace FluidWarfare.Editor.Windows.Panels.Viewport.Input;
 /// </summary>
 public sealed class WindowsViewportInputTranslator
 {
+    private static readonly bool s_traceEnabled = Environment.GetEnvironmentVariable("FW_INPUT_TRACE") == "1";
+
     private EditorInputBindingSnapshot _snapshot;
 
     // 鼠标位置跟踪（用于 delta 计算）
@@ -99,8 +101,9 @@ public sealed class WindowsViewportInputTranslator
         var sig = BuildSignature(EditorInputDevice.Mouse, code,
             EditorInputGestureKind.MouseDrag, _currentModifiers);
 
-        System.Diagnostics.Debug.WriteLine(
-            $"[InputTrace-Translator] OnPointerButtonDown btn={buttonCode}->\"{code}\" sig=\"{sig}\"");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Translator] OnPointerButtonDown btn={buttonCode}->\"{code}\" sig=\"{sig}\"");
 
         // 锁定拖拽（O(1) 后续移动不再查表）
         _snapshot.BeginDrag(sig, x, y);
@@ -108,13 +111,15 @@ public sealed class WindowsViewportInputTranslator
         var action = _snapshot.Resolve(sig);
         if (action is null)
         {
-            System.Diagnostics.Debug.WriteLine(
-                $"[InputTrace-Translator] Resolve sig=\"{sig}\" → null (no match)");
+            if (s_traceEnabled)
+                System.Diagnostics.Debug.WriteLine(
+                    $"[InputTrace-Translator] Resolve sig=\"{sig}\" → null (no match)");
             return EditorInputMatch.NoMatch;
         }
 
-        System.Diagnostics.Debug.WriteLine(
-            $"[InputTrace-Translator] Resolve sig=\"{sig}\" → action=\"{action.Id}\"");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Translator] Resolve sig=\"{sig}\" → action=\"{action.Id}\"");
 
         return new EditorInputMatch
         {
@@ -182,19 +187,22 @@ public sealed class WindowsViewportInputTranslator
         var sig = BuildSignature(EditorInputDevice.Wheel, "Y",
             EditorInputGestureKind.MouseWheel, mods);
 
-        System.Diagnostics.Debug.WriteLine(
-            $"[InputTrace-Translator] OnMouseWheel delta={delta} mods={mods} sig=\"{sig}\"");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Translator] OnMouseWheel delta={delta} mods={mods} sig=\"{sig}\"");
 
         var action = _snapshot.Resolve(sig);
         if (action is null)
         {
-            System.Diagnostics.Debug.WriteLine(
-                $"[InputTrace-Translator] Resolve wheel sig=\"{sig}\" → null");
+            if (s_traceEnabled)
+                System.Diagnostics.Debug.WriteLine(
+                    $"[InputTrace-Translator] Resolve wheel sig=\"{sig}\" → null");
             return EditorInputMatch.NoMatch;
         }
 
-        System.Diagnostics.Debug.WriteLine(
-            $"[InputTrace-Translator] Resolve wheel sig=\"{sig}\" → action=\"{action.Id}\"");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Translator] Resolve wheel sig=\"{sig}\" → action=\"{action.Id}\"");
 
         return new EditorInputMatch
         {
@@ -220,8 +228,9 @@ public sealed class WindowsViewportInputTranslator
     /// </summary>
     public void OnRawInputFocusLost()
     {
-        System.Diagnostics.Debug.WriteLine(
-            "[InputTrace-Translator] FocusLost — clearing modifiers and ending drag");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                "[InputTrace-Translator] FocusLost — clearing modifiers and ending drag");
         _currentModifiers = EditorInputModifiers.None;
         _snapshot.EndDrag();
     }

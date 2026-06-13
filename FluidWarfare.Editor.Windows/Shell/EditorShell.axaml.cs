@@ -94,10 +94,18 @@ public sealed partial class EditorShell : UserControl
     private EditorInputService _inputService = EditorInputService.Instance;
     private WindowsViewportInputTranslator? _inputTranslator;
 
+    // ─── 动作去重守卫 ──────────────────────────────────────
+    private bool _frameSelectedPending;
+
     // ─── 输入上下文栈 ──────────────────────────────────────
-    private EditorInputActionContext _activeContext = EditorInputActionContext.Global;
+    // 使用 List 作为栈，栈顶 = 当前活动上下文。
+    // 优先级由 EditorInputContextChain.ContextChain 中的顺序决定。
+    private readonly List<EditorInputActionContext> _inputContextStack = new() { EditorInputActionContext.Global };
+    private EditorInputActionContext _activeContext => _inputContextStack[^1];
     private int _lastPointerX;
     private int _lastPointerY;
+
+    private static readonly bool s_traceEnabled = Environment.GetEnvironmentVariable("FW_INPUT_TRACE") == "1";
 
     // ─── 地面拾取状态 ─────────────────────────────────────────────
     private readonly FluidWarfare.Editor.ViewportGround.EditorGroundPointerState _groundPointerState = new();
@@ -1109,11 +1117,13 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleRawKeyDown(int virtualKeyCode)
     {
-        System.Diagnostics.Debug.WriteLine(
-            $"[InputTrace-Shell] RawKeyDown vk=0x{virtualKeyCode:X2}");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Shell] RawKeyDown vk=0x{virtualKeyCode:X2}");
         if (_inputTranslator is null)
         {
-            System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
+            if (s_traceEnabled)
+                System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
             return;
         }
         var match = _inputTranslator.OnRawKeyDown(virtualKeyCode, _lastPointerX, _lastPointerY);
@@ -1127,13 +1137,15 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleRawPointerButtonDown(int buttonCode, int x, int y)
     {
-        System.Diagnostics.Debug.WriteLine(
-            $"[InputTrace-Shell] RawPointerButtonDown btn={buttonCode} x={x} y={y}");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Shell] RawPointerButtonDown btn={buttonCode} x={x} y={y}");
         _lastPointerX = x;
         _lastPointerY = y;
         if (_inputTranslator is null)
         {
-            System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
+            if (s_traceEnabled)
+                System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
             return;
         }
         var match = _inputTranslator.OnRawPointerButtonDown(buttonCode, x, y);
@@ -1161,11 +1173,13 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleRawMouseWheel(int delta, int packedModifiers)
     {
-        System.Diagnostics.Debug.WriteLine(
-            $"[InputTrace-Shell] RawMouseWheel delta={delta} mk=0x{packedModifiers:X4}");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Shell] RawMouseWheel delta={delta} mk=0x{packedModifiers:X4}");
         if (_inputTranslator is null)
         {
-            System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
+            if (s_traceEnabled)
+                System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
             return;
         }
         var match = _inputTranslator.OnRawMouseWheel(delta, packedModifiers,
@@ -1184,15 +1198,17 @@ public sealed partial class EditorShell : UserControl
         // 上下文过滤：当前活动上下文必须允许该动作的上下文
         if (!CanExecuteInCurrentContext(match.Definition.Context))
         {
-            System.Diagnostics.Debug.WriteLine(
-                $"[InputTrace-Shell] BLOCKED action=\"{match.ActionId}\" " +
-                $"ctx={match.Definition.Context} activeCtx={_activeContext}");
+            if (s_traceEnabled)
+                System.Diagnostics.Debug.WriteLine(
+                    $"[InputTrace-Shell] BLOCKED action=\"{match.ActionId}\" " +
+                    $"ctx={match.Definition.Context} activeCtx={_activeContext}");
             return;
         }
 
-        System.Diagnostics.Debug.WriteLine(
-            $"[InputTrace-Shell] Executing action=\"{match.ActionId}\" " +
-            $"kind={match.ValueKind} dx={match.DeltaX} dy={match.DeltaY} wheel={match.WheelDelta}");
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                $"[InputTrace-Shell] Executing action=\"{match.ActionId}\" " +
+                $"kind={match.ValueKind} dx={match.DeltaX} dy={match.DeltaY} wheel={match.WheelDelta}");
 
         switch (match.ActionId)
         {
@@ -1245,40 +1261,29 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 上下文优先级过滤。
-    /// 枚举值越小优先级越高：BindingCapture=0 > TextInput=1 > ... > Global=5。
-    /// 当活动上下文优先级高于动作的上下文时，动作被拦截。
-    /// 默认 _activeContext=Global(5)，允许所有动作。
+    /// 上下文过滤。使用 EditorInputContextChain 的显式候选链判断
+    /// 动作上下文在当前活动上下文中是否允许执行。
     /// </summary>
     private bool CanExecuteInCurrentContext(EditorInputActionContext actionContext)
-    {
-        // Global 动作始终允许（如 open_preferences、tool.cancel_current）
-        if (actionContext == EditorInputActionContext.Global)
-            return true;
-
-        // 活动上下文优先级不高于动作上下文 = 允许
-        // 例：_activeContext=Global(5), action=Viewport3D(4): 5>=4 → 允许
-        // 例：_activeContext=TextInput(1), action=Viewport3D(4): 1>=4 → 拦截
-        return (int)_activeContext >= (int)actionContext;
-    }
+        => EditorInputContextChain.IsContextAllowed(actionContext, _activeContext);
 
     /// <summary>
     /// 推送输入上下文（更高优先级上下文会拦截低优先级动作）。
+    /// 只在严格提升优先级时压栈。
     /// </summary>
     public void PushInputContext(EditorInputActionContext context)
     {
-        // 只允许提升优先级（值更小）
-        if ((int)context < (int)_activeContext)
-            _activeContext = context;
+        if (EditorInputContextChain.IndexOf(context) < EditorInputContextChain.IndexOf(_activeContext))
+            _inputContextStack.Add(context);
     }
 
     /// <summary>
-    /// 弹出输入上下文（恢复到更低优先级）。
+    /// 弹出输入上下文（恢复到栈中上一层）。
     /// </summary>
     public void PopInputContext(EditorInputActionContext context)
     {
-        if (_activeContext == context)
-            _activeContext = EditorInputActionContext.Global;
+        if (_inputContextStack.Count > 1 && _inputContextStack[^1] == context)
+            _inputContextStack.RemoveAt(_inputContextStack.Count - 1);
     }
 
     // ─── 统一动作执行方法 ──────────────────────────────────
@@ -1329,26 +1334,35 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteViewportFrameSelected()
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_selectedWorldEntity is null)
+        if (_frameSelectedPending) return;
+        _frameSelectedPending = true;
+        try
         {
-            _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
-            return;
+            if (!_sessionActive || _scene3dSession is null) return;
+            if (_selectedWorldEntity is null)
+            {
+                _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
+                return;
+            }
+
+            var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+            if (pos is null) return;
+
+            var p = pos.Value.Value;
+            var placement = new RenderUnitPlacement(p);
+            _lastCameraState = SceneOrbitCameraMotion.FrameSelected(
+                _lastCameraState,
+                (float)placement.VisualCenter.X,
+                (float)placement.VisualCenter.Y,
+                (float)placement.VisualCenter.Z,
+                (float)RenderUnitPlacement.HalfExtent);
+            _statusBarPanel?.SetCurrentSelection($"已聚焦实体 {_selectedWorldEntity.DisplayName}。");
+            ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
         }
-
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
-        if (pos is null) return;
-
-        var p = pos.Value.Value;
-        var placement = new RenderUnitPlacement(p);
-        _lastCameraState = SceneOrbitCameraMotion.FrameSelected(
-            _lastCameraState,
-            (float)placement.VisualCenter.X,
-            (float)placement.VisualCenter.Y,
-            (float)placement.VisualCenter.Z,
-            (float)RenderUnitPlacement.HalfExtent);
-        _statusBarPanel?.SetCurrentSelection($"已聚焦实体 {_selectedWorldEntity.DisplayName}。");
-        ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
+        finally
+        {
+            Dispatcher.UIThread.Post(() => _frameSelectedPending = false);
+        }
     }
 
     private void ExecuteViewportToggleProjection()

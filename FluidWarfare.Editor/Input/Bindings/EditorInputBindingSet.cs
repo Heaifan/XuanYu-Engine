@@ -14,6 +14,30 @@ public sealed record EditorInputBindingSet
 
     /// <summary>架构版本。</summary>
     public int SchemaVersion { get; init; } = 1;
+
+    /// <summary>
+    /// 与另一个 BindingSet 的有效绑定是否完全相同。
+    /// 比较 Preset 和所有 Override 的签名，用于判断是否有未保存的改动。
+    /// </summary>
+    public bool HasSameEffectiveBindingsAs(EditorInputBindingSet other)
+    {
+        if (Preset != other.Preset) return false;
+        if (Overrides.Count != other.Overrides.Count) return false;
+
+        // 按 (ActionId, Slot) 分组后比较 Gesture 签名
+        var mine = Overrides.ToDictionary(o => (o.ActionId, o.Slot), o => o.Gesture?.Signature);
+        var theirs = other.Overrides.ToDictionary(o => (o.ActionId, o.Slot), o => o.Gesture?.Signature);
+
+        foreach (var (key, mySig) in mine)
+        {
+            if (!theirs.TryGetValue(key, out var theirSig))
+                return false;
+            if (mySig != theirSig)
+                return false;
+        }
+
+        return true;
+    }
 }
 
 /// <summary>

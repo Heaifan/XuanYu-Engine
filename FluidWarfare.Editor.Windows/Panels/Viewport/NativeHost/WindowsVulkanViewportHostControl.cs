@@ -109,6 +109,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     private bool _trackingMouseLeave;
     private bool _leftButtonHandledByNavigation;
     private bool _navigationDragCaptured;
+    private bool _rawPointerDragCaptured;
+    private readonly bool _traceEnabled;
 
     public event EventHandler<WindowsVulkanViewportHostInfo>? HostInfoChanged;
 
@@ -118,6 +120,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     public WindowsVulkanViewportHostControl()
     {
         _currentInstance = this;
+        _traceEnabled = Environment.GetEnvironmentVariable("FW_INPUT_TRACE") == "1";
 
         PropertyChanged += (_, args) =>
         {
@@ -211,9 +214,11 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     SetFocus(instance._windowHandle);
                     var mx = (short)(lParam.ToInt64() & 0xFFFF);
                     var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-                    System.Diagnostics.Debug.WriteLine(
-                        $"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={mx} y={my}");
+                    if (instance._traceEnabled)
+                        System.Diagnostics.Debug.WriteLine(
+                            $"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={mx} y={my}");
                     SetCapture(instance._windowHandle);
+                    instance._rawPointerDragCaptured = true;
                     instance.RawPointerButtonDown?.Invoke(VkMButton /* 4=Middle */, mx, my);
                     return 0;
                 }
@@ -222,8 +227,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                 {
                     var mx = (short)(lParam.ToInt64() & 0xFFFF);
                     var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-                    System.Diagnostics.Debug.WriteLine(
-                        $"[InputTrace-NativeHost] WM_MBUTTONUP code=4(Middle)");
+                    if (instance._traceEnabled)
+                        System.Diagnostics.Debug.WriteLine(
+                            $"[InputTrace-NativeHost] WM_MBUTTONUP code=4(Middle)");
+                    instance._rawPointerDragCaptured = false;
                     ReleaseCapture();
                     instance.RawPointerButtonUp?.Invoke(VkMButton, mx, my);
                     return 0;
@@ -270,8 +277,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     var mx = (short)(lParam.ToInt64() & 0xFFFF);
                     var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
                     var mkFlags = (int)wParam & 0xFFFF;
-                    System.Diagnostics.Debug.WriteLine(
-                        $"[InputTrace-NativeHost] WM_MOUSEWHEEL delta={delta} mk=0x{mkFlags:X4}");
+                    if (instance._traceEnabled)
+                        System.Diagnostics.Debug.WriteLine(
+                            $"[InputTrace-NativeHost] WM_MOUSEWHEEL delta={delta} mk=0x{mkFlags:X4}");
                     instance.RawMouseWheel?.Invoke(delta, mkFlags);
                     return 0;
                 }
@@ -352,8 +360,12 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     {
         _pickInput.OnKillFocus();
 
-        // 通知 Translator 清空修饰键状态并结束活动拖动
-        RawInputFocusLost?.Invoke();
+        // 通知 Translator 清空修饰键状态并结束活动拖动（覆盖 MMB 和覆盖层两种拖拽）
+        if (_rawPointerDragCaptured)
+        {
+            _rawPointerDragCaptured = false;
+            RawInputFocusLost?.Invoke();
+        }
 
         var hadNavigationCapture = _navigationDragCaptured || _leftButtonHandledByNavigation;
         EndNavigationCapture();
@@ -363,6 +375,12 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     private void HandleCaptureChanged()
     {
+        if (_rawPointerDragCaptured)
+        {
+            _rawPointerDragCaptured = false;
+            RawInputFocusLost?.Invoke();
+        }
+
         if (_navigationDragCaptured || _leftButtonHandledByNavigation)
         {
             EndNavigationCapture();
