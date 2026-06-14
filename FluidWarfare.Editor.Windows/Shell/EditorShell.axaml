@@ -45,11 +45,11 @@
 
     <Grid Grid.Row="1" ColumnDefinitions="260,*,300">
       <leftDock:ProjectWorldDockPanel Grid.Column="0" x:Name="ProjectWorldDockPanel" />
-      <Grid Grid.Column="1">
-        <viewport:VulkanViewportHostPanel x:Name="VulkanViewportHostPanel" />
-        <tools:ViewportToolPalette x:Name="ViewportToolPalette"
-            HorizontalAlignment="Left" VerticalAlignment="Center"
-            Margin="4,0,0,0" IsVisible="True" />
+      <Grid Grid.Column="1" ColumnDefinitions="44,*">
+        <tools:ViewportToolPalette Grid.Column="0" x:Name="ViewportToolPalette"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            IsVisible="True" />
+        <viewport:VulkanViewportHostPanel Grid.Column="1" x:Name="VulkanViewportHostPanel" />
       </Grid>
       <inspector:InspectorPanel Grid.Column="2" x:Name="InspectorPanel" />
     </Grid>

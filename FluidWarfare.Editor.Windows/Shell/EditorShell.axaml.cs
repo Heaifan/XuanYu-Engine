@@ -1136,6 +1136,25 @@ public sealed partial class EditorShell : UserControl
         if (s_traceEnabled)
             System.Diagnostics.Debug.WriteLine(
                 $"[InputTrace-Shell] RawKeyDown vk=0x{virtualKeyCode:X2}");
+
+        // 移动工具期间：X/Y/Z 切换轴向约束，不经过 Translator
+        if (_moveSession.IsMoving)
+        {
+            var newAxis = virtualKeyCode switch
+            {
+                0x58 => EntityMoveAxis.X,       // VK_X
+                0x59 => EntityMoveAxis.Y,       // VK_Y
+                0x5A => EntityMoveAxis.Z,       // VK_Z
+                _ => (EntityMoveAxis?)null,
+            };
+            if (newAxis is not null)
+            {
+                _moveSession.SetAxisConstraint(newAxis.Value);
+                AppendInfoLog($"轴向约束：{newAxis.Value}");
+                return;
+            }
+        }
+
         if (_inputTranslator is null)
         {
             if (s_traceEnabled)
@@ -1207,12 +1226,19 @@ public sealed partial class EditorShell : UserControl
 
         _moveSession.Begin(_selectedWorldEntity.EntityId.Value.ToString(),
             pos.Value.Value, EntityMoveAxis.GroundPlane, _worldDirtyState.IsDirty);
+        _vulkanViewportHostPanel?.RequestCapture();
         AppendInfoLog($"开始移动实体 {_selectedWorldEntity.DisplayName}");
         return true;
     }
 
+    /// <summary>
+    /// 原始鼠标移动入口。先计算 delta，再更新 _lastPointer，最后分发。
+    /// 禁止提前更新 _lastPointerY 后计算 delta（会导致 deltaY 永远为 0）。
+    /// </summary>
     private void HandleRawPointerMoved(int x, int y)
     {
+        var prevX = _lastPointerX;
+        var prevY = _lastPointerY;
         _lastPointerX = x;
         _lastPointerY = y;
 
@@ -1220,7 +1246,7 @@ public sealed partial class EditorShell : UserControl
         if (_moveSession.IsMoving)
         {
             if (_movePointerCaptured)
-                UpdateMoveSessionPosition(x, y);
+                UpdateMoveSessionPosition(x, y, x - prevX, y - prevY);
             return;
         }
 
@@ -1233,8 +1259,9 @@ public sealed partial class EditorShell : UserControl
     /// 根据当前轴向约束更新移动位置。
     /// GroundPlane/X/Y：射线与 Z = InitialZ 平面求交。
     /// Z：屏幕垂直位移 × world-per-pixel，不使用射线求交。
+    /// deltaX/deltaY 由调用方在更新 _lastPointer 之前计算并传入。
     /// </summary>
-    private void UpdateMoveSessionPosition(int pixelX, int pixelY)
+    private void UpdateMoveSessionPosition(int pixelX, int pixelY, int deltaX, int deltaY)
     {
         if (!_sessionActive || _scene3dSession is null) return;
         if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
@@ -1245,7 +1272,6 @@ public sealed partial class EditorShell : UserControl
         // ─── Z 轴约束：屏幕垂直位移 × world-per-pixel ──────────
         if (_moveSession.Axis == EntityMoveAxis.Z)
         {
-            var deltaY = pixelY - _lastPointerY;
             if (deltaY == 0) return;
 
             var vpHeight = Math.Max(1, host.Height);
@@ -1313,6 +1339,7 @@ public sealed partial class EditorShell : UserControl
     private void ConfirmMoveSession()
     {
         if (!_moveSession.IsMoving) return;
+        _vulkanViewportHostPanel?.RequestReleaseCapture();
         _moveSession.Completed += OnMoveCompleted;
         _moveSession.Confirm();
         _movePointerCaptured = false;
@@ -1321,6 +1348,7 @@ public sealed partial class EditorShell : UserControl
     private void CancelMoveSession()
     {
         if (!_moveSession.IsMoving) return;
+        _vulkanViewportHostPanel?.RequestReleaseCapture();
         _moveSession.Completed += OnMoveCompleted;
         _moveSession.Cancel();
         _movePointerCaptured = false;
@@ -1355,6 +1383,7 @@ public sealed partial class EditorShell : UserControl
         _inputTranslator?.OnRawInputFocusLost();
         if (_moveSession.IsMoving)
         {
+            _vulkanViewportHostPanel?.RequestReleaseCapture();
             _moveSession.Completed += OnMoveCompleted;
             _moveSession.Abort();
             _movePointerCaptured = false;

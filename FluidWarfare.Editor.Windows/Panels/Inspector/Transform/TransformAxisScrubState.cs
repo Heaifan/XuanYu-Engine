@@ -16,7 +16,6 @@ public sealed class TransformAxisScrubState
     private double _initialValue;
     private double _currentValue;
     private double _lastPixelX;
-    private double _lastCommittedValue;
     private double _sensitivity;
 
     /// <summary>是否正在拖拽中。</summary>
@@ -52,30 +51,25 @@ public sealed class TransformAxisScrubState
         _initialValue = initialValue;
         _currentValue = initialValue;
         _lastPixelX = pointerX;
-        _lastCommittedValue = initialValue;
         _sensitivity = CalcSensitivity(modifiers);
         IsScrubbing = true;
     }
 
     /// <summary>
-    /// 更新拖拽值（增量算法，修饰键变化时重新锚定，避免跳值）。
+    /// 更新拖拽值（增量累计，修饰键变化时重新锚定当前值，避免跳值）。
     /// </summary>
     public void Update(double pointerX, KeyModifiers modifiers)
     {
         if (!IsScrubbing) return;
 
-        var newSensitivity = CalcSensitivity(modifiers);
         var deltaPx = pointerX - _lastPixelX;
         _lastPixelX = pointerX;
 
-        // 修饰键变化：重新锚定
+        var newSensitivity = CalcSensitivity(modifiers);
         if (newSensitivity != _sensitivity)
-        {
-            _lastCommittedValue = _currentValue;
             _sensitivity = newSensitivity;
-        }
 
-        _currentValue = _lastCommittedValue + deltaPx * _sensitivity;
+        _currentValue += deltaPx * _sensitivity;
         ValueChanged?.Invoke(_currentValue);
     }
 

@@ -113,6 +113,16 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     /// <summary>
     /// 返回 Windows 原生子窗口宿主状态。
     /// </summary>
+    /// <summary>
+    /// 请求原生鼠标捕获（用于移动工具拖拽）。
+    /// </summary>
+    public void RequestCapture() => _nativeHostControl?.RequestCapture();
+
+    /// <summary>
+    /// 释放原生鼠标捕获。
+    /// </summary>
+    public void RequestReleaseCapture() => _nativeHostControl?.RequestReleaseCapture();
+
     public WindowsVulkanViewportHostInfo GetWindowsNativeHostInfo()
     {
         var hostInfo = _nativeHostControl?.GetHostInfo() ?? WindowsVulkanViewportHostInfo.NotCreated;

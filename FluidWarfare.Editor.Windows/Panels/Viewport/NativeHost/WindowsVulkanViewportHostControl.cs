@@ -133,6 +133,23 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     public WindowsVulkanViewportHostInfo GetHostInfo() => _hostInfo;
 
+    /// <summary>
+    /// 请求原生鼠标捕获（用于移动工具等非 Overlay 拖拽）。
+    /// </summary>
+    public void RequestCapture()
+    {
+        if (_windowHandle != 0)
+            SetCapture(_windowHandle);
+    }
+
+    /// <summary>
+    /// 释放原生鼠标捕获。
+    /// </summary>
+    public void RequestReleaseCapture()
+    {
+        ReleaseCapture();
+    }
+
     // ─── 生命周期 ────────────────────────────────────────────
 
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
