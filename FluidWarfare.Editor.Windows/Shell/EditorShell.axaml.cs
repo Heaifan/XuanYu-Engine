@@ -1158,6 +1158,17 @@ public sealed partial class EditorShell : UserControl
                 $"[InputTrace-Shell] RawPointerButtonDown btn={buttonCode} x={x} y={y}");
         _lastPointerX = x;
         _lastPointerY = y;
+
+        // 移动工具：左键按下时在已选实体上开始移动会话
+        if (buttonCode == 1 && _moveToolActive && !_moveSession.IsMoving)
+        {
+            if (TryStartMoveSession(x, y))
+            {
+                _movePointerCaptured = true;
+                return; // 跳过 Translator，不解析其他左键动作
+            }
+        }
+
         if (_inputTranslator is null)
         {
             if (s_traceEnabled)
@@ -1166,6 +1177,38 @@ public sealed partial class EditorShell : UserControl
         }
         var match = _inputTranslator.OnRawPointerButtonDown(buttonCode, x, y);
         ExecuteInputAction(match);
+    }
+
+    /// <summary>
+    /// 拾取测试：在指定像素位置对实体进行射线求交，若命中已选实体则开始移动。
+    /// </summary>
+    private bool TryStartMoveSession(int pixelX, int pixelY)
+    {
+        if (!_sessionActive || _scene3dSession is null) return false;
+        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return false;
+        if (_selectedWorldEntity is null) return false;
+
+        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
+        if (host.Width < 1 || host.Height < 1) return false;
+
+        var snapshot = _scene3dSession.LastPresentedSnapshot;
+        var status = VulkanSceneRayBuilder.TryBuild(pixelX, pixelY, snapshot,
+            (uint)host.Width, (uint)host.Height, out var ray);
+        if (status != SceneRayBuildStatus.Success) return false;
+
+        var result = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
+        if (result.Kind != ScenePointerPickKind.Entity || result.EntityId is null) return false;
+
+        // 只命中当前已选实体时开始移动
+        if (result.EntityId.Value.Value != _selectedWorldEntity.EntityId.Value) return false;
+
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) return false;
+
+        _moveSession.Begin(_selectedWorldEntity.EntityId.Value.ToString(),
+            pos.Value.Value, EntityMoveAxis.GroundPlane, _worldDirtyState.IsDirty);
+        AppendInfoLog($"开始移动实体 {_selectedWorldEntity.DisplayName}");
+        return true;
     }
 
     private void HandleRawPointerMoved(int x, int y)
@@ -1186,6 +1229,11 @@ public sealed partial class EditorShell : UserControl
         ExecuteInputAction(match);
     }
 
+    /// <summary>
+    /// 根据当前轴向约束更新移动位置。
+    /// GroundPlane/X/Y：射线与 Z = InitialZ 平面求交。
+    /// Z：屏幕垂直位移 × world-per-pixel，不使用射线求交。
+    /// </summary>
     private void UpdateMoveSessionPosition(int pixelX, int pixelY)
     {
         if (!_sessionActive || _scene3dSession is null) return;
@@ -1194,23 +1242,53 @@ public sealed partial class EditorShell : UserControl
         var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
         if (host.Width < 1 || host.Height < 1) return;
 
-        var snapshot = _scene3dSession.LastPresentedSnapshot;
-        var status = VulkanSceneRayBuilder.TryBuild(
-            pixelX, pixelY, snapshot,
-            (uint)host.Width, (uint)host.Height,
-            out var ray);
-        if (status != SceneRayBuildStatus.Success) return;
+        // ─── Z 轴约束：屏幕垂直位移 × world-per-pixel ──────────
+        if (_moveSession.Axis == EntityMoveAxis.Z)
+        {
+            var deltaY = pixelY - _lastPointerY;
+            if (deltaY == 0) return;
 
-        // 默认地面模式：与 Z = InitialZ 平面求交
-        var targetZ = _moveSession.InitialPosition.Z;
-        var d = ray.Direction;
-        var o = ray.Origin;
-        var t = (targetZ - o.Z) / d.Z;
-        if (t <= 0) return;
+            var vpHeight = Math.Max(1, host.Height);
+            double worldPerPixel;
+            if (_lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic)
+                worldPerPixel = _lastCameraState.OrthographicHeight / vpHeight;
+            else
+                worldPerPixel = 2.0 * _lastCameraState.Distance
+                    * Math.Tan(_lastCameraState.FieldOfViewDegrees * Math.PI / 360.0) / vpHeight;
 
-        var worldPos = new Vector3d(o.X + t * d.X, o.Y + t * d.Y, o.Z + t * d.Z);
+            var dz = -deltaY * worldPerPixel;
+            var newPos = new Vector3d(
+                _moveSession.InitialPosition.X,
+                _moveSession.InitialPosition.Y,
+                _moveSession.CurrentPosition.Z + dz);
 
-        _moveSession.UpdatePosition(worldPos);
+            _moveSession.UpdatePosition(newPos);
+        }
+        else
+        {
+            // ─── GroundPlane / X / Y 约束：射线与 Z = InitialZ 平面求交 ──
+            var snapshot = _scene3dSession.LastPresentedSnapshot;
+            var status = VulkanSceneRayBuilder.TryBuild(
+                pixelX, pixelY, snapshot,
+                (uint)host.Width, (uint)host.Height,
+                out var ray);
+            if (status != SceneRayBuildStatus.Success) return;
+
+            var targetZ = _moveSession.InitialPosition.Z;
+            var d = ray.Direction;
+            var o = ray.Origin;
+
+            // 安全检查：射线方向与平面近似平行或被零除
+            if (Math.Abs(d.Z) < 1e-10) return;
+            var t = (targetZ - o.Z) / d.Z;
+            if (t <= 0 || !double.IsFinite(t)) return;
+
+            var worldPos = new Vector3d(o.X + t * d.X, o.Y + t * d.Y, o.Z + t * d.Z);
+            if (!double.IsFinite(worldPos.X) || !double.IsFinite(worldPos.Y) || !double.IsFinite(worldPos.Z))
+                return;
+
+            _moveSession.UpdatePosition(worldPos);
+        }
 
         // 同步到引擎和渲染
         var entityId = _selectedWorldEntity?.EntityId;
@@ -1261,13 +1339,12 @@ public sealed partial class EditorShell : UserControl
         else if (result.IsCancelled)
         {
             // 恢复初始位置
-            var entityId = _selectedWorldEntity?.EntityId;
-            if (entityId is not null)
+            if (_selectedWorldEntity is not null && result.FinalPosition is not null)
             {
-                var initPos = _moveSession.InitialPosition;
-                ApplyEntityTransform(initPos, EditorEntityTransformOrigin.MoveTool);
-                // 恢复操作前的 Dirty 状态
-                _worldDirtyState.Reset();
+                ApplyEntityTransform(result.FinalPosition.Value, EditorEntityTransformOrigin.MoveTool);
+                // 恢复操作前的 Dirty 状态（不全局 Reset，只恢复移动前的值）
+                if (!result.InitialWasDirty)
+                    _worldDirtyState.Reset();
                 AppendInfoLog("移动已取消");
             }
         }
@@ -1276,9 +1353,9 @@ public sealed partial class EditorShell : UserControl
     private void HandleRawInputFocusLost()
     {
         _inputTranslator?.OnRawInputFocusLost();
-        // 移动工具也需响应 capture lost
         if (_moveSession.IsMoving)
         {
+            _moveSession.Completed += OnMoveCompleted;
             _moveSession.Abort();
             _movePointerCaptured = false;
         }
@@ -1290,7 +1367,10 @@ public sealed partial class EditorShell : UserControl
     {
         // 切换工具时取消任何活动移动会话
         if (_moveSession.IsMoving)
+        {
+            _moveSession.Completed += OnMoveCompleted;
             _moveSession.Abort();
+        }
         _moveToolActive = tool == ViewportEditorTool.Move;
 
         if (_moveToolActive && _selectedWorldEntity is null)
@@ -2137,10 +2217,17 @@ public sealed partial class EditorShell : UserControl
     /// 视口点击 Picking 处理。
     /// 像素坐标 → 世界射线 → RenderScene Picker → 统一选择入口。
     /// </summary>
+    /// <summary>
+    /// 视口点击 Picking 处理。
+    /// 注意：移动工具的会话开始在 HandleRawPointerButtonDown（LButtonDown）中，
+    /// 不在此处。此处如果 _moveSession.IsMoving 则跳过。
+    /// </summary>
     private void HandleViewportPick(int pixelX, int pixelY)
     {
         if (!_sessionActive || _scene3dSession is null) return;
         if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        // 移动工具活动期间，LButtonUp 的 PickRequested 不处理选择变更
+        if (_moveSession.IsMoving) return;
 
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
             ?? VulkanViewportNativeHostInfo.NotAvailable;
@@ -2168,29 +2255,6 @@ public sealed partial class EditorShell : UserControl
 
         // 统一 Picking：Entity 优先 → Ground → None
         var pointerResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
-
-        // ─── 移动工具模式：点击已选实体开始移动 ─────────────────
-        var pickedEntityId = pointerResult.EntityId;
-        var pickedEntityIdStr = pickedEntityId?.Value.ToString();
-        var isSelectedEntity = pickedEntityIdStr is not null &&
-            _selectionState.SelectedEntityId == pickedEntityIdStr;
-
-        if (_moveToolActive && !_moveSession.IsMoving &&
-            pointerResult.Kind == ScenePointerPickKind.Entity &&
-            isSelectedEntity)
-        {
-            var pos = _worldState?.FindPosition(_selectedWorldEntity!.EntityId);
-            if (pos is not null)
-            {
-                _moveSession.Begin(
-                    pickedEntityIdStr!,
-                    pos.Value.Value,
-                    EntityMoveAxis.GroundPlane);
-                _movePointerCaptured = true;
-                AppendInfoLog($"开始移动实体 {_selectedWorldEntity!.DisplayName}");
-            }
-            return;
-        }
 
         if (_groundPlacementState.IsActive)
         {
@@ -2328,6 +2392,12 @@ public sealed partial class EditorShell : UserControl
     private void HandleScrubValueChanged(string entityId, TransformPositionAxis axis, double value)
     {
         if (_selectedWorldEntity is null) return;
+        // 防串写：事件携带的 entityId 必须与当前选中实体一致
+        if (_selectedWorldEntity.EntityId.Value.ToString() != entityId)
+        {
+            AppendWarningLog("数值拖拽目标实体已变化，忽略本次更新。");
+            return;
+        }
         var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
         if (pos is null) return;
 
@@ -2350,6 +2420,9 @@ public sealed partial class EditorShell : UserControl
     private void HandleScrubCancelled(string entityId, TransformPositionAxis axis, double initialValue)
     {
         if (_selectedWorldEntity is null) return;
+        if (_selectedWorldEntity.EntityId.Value.ToString() != entityId)
+            return;
+
         var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
         if (pos is null) return;
 
@@ -2442,14 +2515,17 @@ public sealed partial class EditorShell : UserControl
         // 6. 请求一帧
         ScheduleScene3dFrame(VulkanScene3dFrameReason.EntityTransformChanged);
 
-        // 7. 日志
-        var prevPos = renderResult.Change?.OldPosition;
-        if (prevPos is not null)
+        // 7. 日志（数值拖拽不逐帧写日志，移动工具只在完成时写日志）
+        if (origin != EditorEntityTransformOrigin.DragScrub && origin != EditorEntityTransformOrigin.MoveTool)
         {
-            AppendInfoLog(
-                $"实体 {_selectedWorldEntity.DisplayName} 坐标已修改：" +
-                $"({prevPos.Value.X:F2}, {prevPos.Value.Y:F2}, {prevPos.Value.Z:F2}) → " +
-                $"({newPosition.X:F2}, {newPosition.Y:F2}, {newPosition.Z:F2})。");
+            var prevPos = renderResult.Change?.OldPosition;
+            if (prevPos is not null)
+            {
+                AppendInfoLog(
+                    $"实体 {_selectedWorldEntity.DisplayName} 坐标已修改：" +
+                    $"({prevPos.Value.X:F2}, {prevPos.Value.Y:F2}, {prevPos.Value.Z:F2}) → " +
+                    $"({newPosition.X:F2}, {newPosition.Y:F2}, {newPosition.Z:F2})。");
+            }
         }
     }
 

@@ -15,6 +15,7 @@ public sealed class EntityMoveSession
     private EntityMoveAxis _axis;
     private string _entityId = string.Empty;
     private bool _positionChanged;
+    private bool _initialWasDirty;
 
     // ─── 公共属性 ──────────────────────────────────────
 
@@ -36,23 +37,27 @@ public sealed class EntityMoveSession
     /// <summary>当前位置是否与初始位置不同。</summary>
     public bool HasPositionChanged => _positionChanged;
 
+    /// <summary>移动开始时的 Dirty 状态（用于取消恢复）。</summary>
+    public bool InitialWasDirty => _initialWasDirty;
+
     // ─── 事件 ──────────────────────────────────────────
 
-    /// <summary>移动确认（提交最终位置）。</summary>
+    /// <summary>移动确认或取消时触发。</summary>
     public event Action<EntityMoveResult>? Completed;
 
     // ─── 方法 ──────────────────────────────────────────
 
     /// <summary>
-    /// 开始新移动会话。
+    /// 开始新移动会话。调用方提供实体 ID、初始位置和 Dirty 状态。
     /// </summary>
-    public void Begin(string entityId, Vector3d initialPosition, EntityMoveAxis axis)
+    public void Begin(string entityId, Vector3d initialPosition, EntityMoveAxis axis, bool initialSceneDirty = false)
     {
         _entityId = entityId;
         _initialPosition = initialPosition;
         _currentPosition = initialPosition;
         _axis = axis;
         _positionChanged = false;
+        _initialWasDirty = initialSceneDirty;
     }
 
     /// <summary>
@@ -102,7 +107,7 @@ public sealed class EntityMoveSession
     }
 
     /// <summary>
-    /// 取消移动并恢复到初始位置。
+    /// 取消移动并恢复到初始位置和初始 Dirty 状态。
     /// </summary>
     public void Cancel()
     {
@@ -111,17 +116,18 @@ public sealed class EntityMoveSession
             IsConfirmed: false,
             IsCancelled: true,
             HasPositionChanged: false,
-            FinalPosition: _initialPosition);
+            FinalPosition: _initialPosition,
+            InitialWasDirty: _initialWasDirty);
         Completed?.Invoke(result);
         Reset();
     }
 
     /// <summary>
-    /// 强行中止（如 CaptureLost），不触发事件。
+    /// 强行中止（如 CaptureLost、切换工具），与 Cancel 相同 —— 事务式恢复。
     /// </summary>
     public void Abort()
     {
-        Reset();
+        Cancel();
     }
 
     private void Reset()
