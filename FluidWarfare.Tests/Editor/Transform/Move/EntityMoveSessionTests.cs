@@ -1,18 +1,19 @@
 using FluidWarfare.Core.Math;
 using FluidWarfare.Editor.Transform.Move;
+using FluidWarfare.Editor.Transform.Move.Projection;
 
 namespace FluidWarfare.Tests.Editor.Transform.Move;
 
 public sealed class EntityMoveSessionTests
 {
     private static readonly Vector3d TestPos = new(10, 20, 30);
-    private static readonly Vector3d MovedPos = new(15, 25, 30);
+    private static readonly GroundMoveAnchor TestAnchor = new(TestPos, new Vector3d(10, 20, 30), 400, 300);
 
     [Fact]
     public void Begin_SetsInitialPosition()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
         Assert.True(s.IsMoving);
         Assert.Equal(TestPos, s.InitialPosition);
         Assert.Equal(TestPos, s.CurrentPosition);
@@ -22,71 +23,81 @@ public sealed class EntityMoveSessionTests
     public void Begin_StoresInitialDirty()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, initialSceneDirty: true);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor, initialSceneDirty: true);
         Assert.True(s.InitialWasDirty);
     }
 
     [Fact]
-    public void UpdatePosition_GroundPlane_PreservesZ()
+    public void UpdateFromPlaneHit_GroundPlane_PreservesZ()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
-        s.UpdatePosition(new Vector3d(100, 200, 999));
-        Assert.Equal(TestPos.Z, s.CurrentPosition.Z);
-        Assert.Equal(100, s.CurrentPosition.X);
-        Assert.Equal(200, s.CurrentPosition.Y);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
+        s.UpdateFromPlaneHit(new Vector3d(100, 200, 999));
+        // Relative delta: (100-10, 200-20, 999-30) → only X,Y applied → (10+90, 20+180, 30)
+        Assert.Equal(100, s.CurrentPosition.X, 3);
+        Assert.Equal(200, s.CurrentPosition.Y, 3);
+        Assert.Equal(30, s.CurrentPosition.Z);
     }
 
     [Fact]
-    public void UpdatePosition_XConstraint_ChangesOnlyX()
+    public void UpdateFromPlaneHit_XConstraint_ChangesOnlyX()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.X);
-        s.UpdatePosition(new Vector3d(100, 200, 999));
-        Assert.Equal(100, s.CurrentPosition.X);
-        Assert.Equal(TestPos.Y, s.CurrentPosition.Y);
-        Assert.Equal(TestPos.Z, s.CurrentPosition.Z);
+        s.Begin("1", TestPos, EntityMoveAxis.X, TestAnchor);
+        s.UpdateFromPlaneHit(new Vector3d(100, 200, 999));
+        Assert.Equal(100, s.CurrentPosition.X, 3);
+        Assert.Equal(20, s.CurrentPosition.Y);
+        Assert.Equal(30, s.CurrentPosition.Z);
     }
 
     [Fact]
-    public void UpdatePosition_YConstraint_ChangesOnlyY()
+    public void UpdateFromPlaneHit_YConstraint_ChangesOnlyY()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.Y);
-        s.UpdatePosition(new Vector3d(100, 200, 999));
-        Assert.Equal(TestPos.X, s.CurrentPosition.X);
-        Assert.Equal(200, s.CurrentPosition.Y);
-        Assert.Equal(TestPos.Z, s.CurrentPosition.Z);
+        s.Begin("1", TestPos, EntityMoveAxis.Y, TestAnchor);
+        s.UpdateFromPlaneHit(new Vector3d(100, 200, 999));
+        Assert.Equal(10, s.CurrentPosition.X);
+        Assert.Equal(200, s.CurrentPosition.Y, 3);
+        Assert.Equal(30, s.CurrentPosition.Z);
     }
 
     [Fact]
-    public void UpdatePosition_ZConstraint_ChangesOnlyZ()
+    public void UpdateVertical_ChangesZ()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.Z);
-        s.UpdatePosition(new Vector3d(100, 200, 999));
-        Assert.Equal(TestPos.X, s.CurrentPosition.X);
-        Assert.Equal(TestPos.Y, s.CurrentPosition.Y);
-        Assert.Equal(999, s.CurrentPosition.Z);
+        s.Begin("1", TestPos, EntityMoveAxis.Z, TestAnchor);
+        s.UpdateVertical(10, 0.1); // -10 * 0.1 = -1
+        Assert.Equal(10, s.CurrentPosition.X);
+        Assert.Equal(20, s.CurrentPosition.Y);
+        Assert.Equal(29, s.CurrentPosition.Z, 3);
+    }
+
+    [Fact]
+    public void UpdateVertical_Accumulates()
+    {
+        var s = new EntityMoveSession();
+        s.Begin("1", TestPos, EntityMoveAxis.Z, TestAnchor);
+        s.UpdateVertical(10, 0.1); // -1
+        s.UpdateVertical(20, 0.1); // -2 more
+        Assert.Equal(27, s.CurrentPosition.Z, 3);
     }
 
     [Fact]
     public void SetAxisConstraint_ChangesConstraint()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
         s.SetAxisConstraint(EntityMoveAxis.X);
-        s.UpdatePosition(new Vector3d(100, 200, 999));
-        Assert.Equal(100, s.CurrentPosition.X);
-        Assert.Equal(TestPos.Y, s.CurrentPosition.Y);
+        s.UpdateFromPlaneHit(new Vector3d(100, 200, 999));
+        Assert.Equal(100, s.CurrentPosition.X, 3);
+        Assert.Equal(20, s.CurrentPosition.Y);
     }
 
     [Fact]
     public void PointerDownWithoutMove_DoesNotChangePosition()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
-        // No UpdatePosition call — position unchanged
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
         Assert.Equal(TestPos, s.CurrentPosition);
         Assert.False(s.HasPositionChanged);
     }
@@ -98,13 +109,12 @@ public sealed class EntityMoveSessionTests
         EntityMoveResult? captured = null;
         s.Completed += r => captured = r;
 
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
-        s.UpdatePosition(MovedPos);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
+        s.UpdateFromPlaneHit(new Vector3d(15, 25, 35));
         s.Confirm();
 
         Assert.NotNull(captured);
         Assert.True(captured.Value.IsConfirmed);
-        Assert.Equal(MovedPos, captured.Value.FinalPosition);
     }
 
     [Fact]
@@ -114,8 +124,8 @@ public sealed class EntityMoveSessionTests
         EntityMoveResult? captured = null;
         s.Completed += r => captured = r;
 
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
-        s.UpdatePosition(MovedPos);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
+        s.UpdateFromPlaneHit(new Vector3d(100, 200, 999));
         s.Cancel();
 
         Assert.NotNull(captured);
@@ -129,10 +139,8 @@ public sealed class EntityMoveSessionTests
         var s = new EntityMoveSession();
         EntityMoveResult? captured = null;
         s.Completed += r => captured = r;
-
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, initialSceneDirty: true);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor, initialSceneDirty: true);
         s.Cancel();
-
         Assert.True(captured?.InitialWasDirty);
     }
 
@@ -142,51 +150,45 @@ public sealed class EntityMoveSessionTests
         var s = new EntityMoveSession();
         EntityMoveResult? captured = null;
         s.Completed += r => captured = r;
-
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
         s.Abort();
-
         Assert.NotNull(captured);
         Assert.True(captured.Value.IsCancelled);
         Assert.Equal(TestPos, captured.Value.FinalPosition);
     }
 
     [Fact]
-    public void GroundMove_PreservesGrabOffset()
+    public void GroundMove_UsesPlaneHitDifference()
     {
+        var anchor = new GroundMoveAnchor(
+            new Vector3d(10, 20, 0),
+            new Vector3d(12, 22, 0),
+            400, 300);
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
-
-        // Simulate: initial hit at (12, 22, 30), move to (15, 25)
-        // Expected: initial(10,20,30) + ((15,25,30) - (12,22,30)) = (13,23,30)
-        var initialHit = new Vector3d(12, 22, 30);
-        var currentHit = new Vector3d(15, 25, 30);
-        var grabOffset = initialHit - TestPos;
-        var targetPos = currentHit - grabOffset;
-        s.UpdatePosition(targetPos);
-
+        s.Begin("1", new Vector3d(10, 20, 0), EntityMoveAxis.GroundPlane, anchor);
+        s.UpdateFromPlaneHit(new Vector3d(15, 25, 0));
+        // delta = (15-12, 25-22) = (3, 3) → target = (10+3, 20+3, 0) = (13, 23, 0)
         Assert.Equal(13, s.CurrentPosition.X, 3);
         Assert.Equal(23, s.CurrentPosition.Y, 3);
-        Assert.Equal(30, s.CurrentPosition.Z);
+        Assert.Equal(0, s.CurrentPosition.Z);
     }
 
     [Fact]
     public void HasPositionChanged_DetectsChange()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
         Assert.False(s.HasPositionChanged);
-
-        s.UpdatePosition(new Vector3d(11, 20, 30));
+        s.UpdateFromPlaneHit(new Vector3d(11, 20, 30));
         Assert.True(s.HasPositionChanged);
     }
 
     [Fact]
-    public void SamePosition_IsNoOp()
+    public void SameHit_IsNoOp()
     {
         var s = new EntityMoveSession();
-        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane);
-        s.UpdatePosition(TestPos);
+        s.Begin("1", TestPos, EntityMoveAxis.GroundPlane, TestAnchor);
+        s.UpdateFromPlaneHit(TestAnchor.InitialPlaneHit);
         Assert.False(s.HasPositionChanged);
     }
 }

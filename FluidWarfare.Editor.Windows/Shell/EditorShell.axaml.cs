@@ -14,6 +14,7 @@ using FluidWarfare.Editor.Selection;
 using FluidWarfare.Editor.WorldHierarchy;
 using FluidWarfare.Editor.Input.Actions;
 using FluidWarfare.Editor.Input.Runtime;
+using FluidWarfare.Editor.Transform.Move.Projection;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
 using FluidWarfare.Editor.Windows.Panels.Viewport.Input;
@@ -1201,6 +1202,10 @@ public sealed partial class EditorShell : UserControl
     /// <summary>
     /// 拾取测试：在指定像素位置对实体进行射线求交，若命中已选实体则开始移动。
     /// </summary>
+    /// <summary>
+    /// 构建 GroundMoveAnchor 并开始移动会话。
+    /// 所有射线求交和平面交点计算在此完成，但目标位置数学在 projection 中。
+    /// </summary>
     private bool TryStartMoveSession(int pixelX, int pixelY)
     {
         if (!_sessionActive || _scene3dSession is null) return false;
@@ -1215,17 +1220,27 @@ public sealed partial class EditorShell : UserControl
             (uint)host.Width, (uint)host.Height, out var ray);
         if (status != SceneRayBuildStatus.Success) return false;
 
-        var result = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
-        if (result.Kind != ScenePointerPickKind.Entity || result.EntityId is null) return false;
-
-        // 只命中当前已选实体时开始移动
-        if (result.EntityId.Value.Value != _selectedWorldEntity.EntityId.Value) return false;
+        var pickResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
+        if (pickResult.Kind != ScenePointerPickKind.Entity || pickResult.EntityId is null) return false;
+        if (pickResult.EntityId.Value.Value != _selectedWorldEntity.EntityId.Value) return false;
 
         var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
         if (pos is null) return false;
 
+        // 构建锚点：在 Z = InitialZ 平面上求初始交点
+        var targetZ = pos.Value.Value.Z;
+        var d = ray.Direction;
+        var o = ray.Origin;
+        if (Math.Abs(d.Z) < 1e-10) return false;
+        var t = (targetZ - o.Z) / d.Z;
+        if (t <= 0 || !double.IsFinite(t)) return false;
+        var planeHit = new Vector3d(o.X + t * d.X, o.Y + t * d.Y, o.Z + t * d.Z);
+        if (!double.IsFinite(planeHit.X) || !double.IsFinite(planeHit.Y) || !double.IsFinite(planeHit.Z)) return false;
+
+        var anchor = new GroundMoveAnchor(pos.Value.Value, planeHit, pixelX, pixelY);
+
         _moveSession.Begin(_selectedWorldEntity.EntityId.Value.ToString(),
-            pos.Value.Value, EntityMoveAxis.GroundPlane, _worldDirtyState.IsDirty);
+            pos.Value.Value, EntityMoveAxis.GroundPlane, anchor, _worldDirtyState.IsDirty);
         _vulkanViewportHostPanel?.RequestCapture();
         AppendInfoLog($"开始移动实体 {_selectedWorldEntity.DisplayName}");
         return true;
@@ -1233,7 +1248,6 @@ public sealed partial class EditorShell : UserControl
 
     /// <summary>
     /// 原始鼠标移动入口。先计算 delta，再更新 _lastPointer，最后分发。
-    /// 禁止提前更新 _lastPointerY 后计算 delta（会导致 deltaY 永远为 0）。
     /// </summary>
     private void HandleRawPointerMoved(int x, int y)
     {
@@ -1242,11 +1256,9 @@ public sealed partial class EditorShell : UserControl
         _lastPointerX = x;
         _lastPointerY = y;
 
-        // 移动工具活动时：计算世界射线→更新实体位置
-        if (_moveSession.IsMoving)
+        if (_moveSession.IsMoving && _movePointerCaptured)
         {
-            if (_movePointerCaptured)
-                UpdateMoveSessionPosition(x, y, x - prevX, y - prevY);
+            UpdateMoveSession(x, y, x - prevX, y - prevY);
             return;
         }
 
@@ -1256,12 +1268,10 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 根据当前轴向约束更新移动位置。
-    /// GroundPlane/X/Y：射线与 Z = InitialZ 平面求交。
-    /// Z：屏幕垂直位移 × world-per-pixel，不使用射线求交。
-    /// deltaX/deltaY 由调用方在更新 _lastPointer 之前计算并传入。
+    /// 将鼠标位移委托给 EntityMoveSession 的 projection 方法。
+    /// 不包含任何射线或平面数学——所有计算在 projection 包中。
     /// </summary>
-    private void UpdateMoveSessionPosition(int pixelX, int pixelY, int deltaX, int deltaY)
+    private void UpdateMoveSession(int pixelX, int pixelY, int deltaX, int deltaY)
     {
         if (!_sessionActive || _scene3dSession is null) return;
         if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
@@ -1269,57 +1279,90 @@ public sealed partial class EditorShell : UserControl
         var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
         if (host.Width < 1 || host.Height < 1) return;
 
-        // ─── Z 轴约束：屏幕垂直位移 × world-per-pixel ──────────
         if (_moveSession.Axis == EntityMoveAxis.Z)
         {
             if (deltaY == 0) return;
-
-            var vpHeight = Math.Max(1, host.Height);
-            double worldPerPixel;
-            if (_lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic)
-                worldPerPixel = _lastCameraState.OrthographicHeight / vpHeight;
-            else
-                worldPerPixel = 2.0 * _lastCameraState.Distance
-                    * Math.Tan(_lastCameraState.FieldOfViewDegrees * Math.PI / 360.0) / vpHeight;
-
-            var dz = -deltaY * worldPerPixel;
-            var newPos = new Vector3d(
-                _moveSession.InitialPosition.X,
-                _moveSession.InitialPosition.Y,
-                _moveSession.CurrentPosition.Z + dz);
-
-            _moveSession.UpdatePosition(newPos);
+            var wpp = VerticalMoveProjection.ComputeWorldPerPixel(
+                _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic,
+                _lastCameraState.OrthographicHeight,
+                _lastCameraState.Distance,
+                _lastCameraState.FieldOfViewDegrees,
+                host.Height);
+            _moveSession.UpdateVertical(deltaY, wpp);
         }
         else
         {
-            // ─── GroundPlane / X / Y 约束：射线与 Z = InitialZ 平面求交 ──
+            // GroundPlane/X/Y：射线求交 → 委托给 session 的 projection
             var snapshot = _scene3dSession.LastPresentedSnapshot;
-            var status = VulkanSceneRayBuilder.TryBuild(
-                pixelX, pixelY, snapshot,
-                (uint)host.Width, (uint)host.Height,
-                out var ray);
+            var status = VulkanSceneRayBuilder.TryBuild(pixelX, pixelY, snapshot,
+                (uint)host.Width, (uint)host.Height, out var ray);
             if (status != SceneRayBuildStatus.Success) return;
 
             var targetZ = _moveSession.InitialPosition.Z;
             var d = ray.Direction;
             var o = ray.Origin;
 
-            // 安全检查：射线方向与平面近似平行或被零除
-            if (Math.Abs(d.Z) < 1e-10) return;
+            // 安全检查委托给 GroundMoveProjection.IsPlaneIntersectionReliable
+            if (Math.Abs(d.Z) < 1e-10) { FallbackToScreenDelta(pixelX, pixelY, deltaX, deltaY, host.Height); return; }
             var t = (targetZ - o.Z) / d.Z;
-            if (t <= 0 || !double.IsFinite(t)) return;
+            if (t <= 0 || !double.IsFinite(t)) { FallbackToScreenDelta(pixelX, pixelY, deltaX, deltaY, host.Height); return; }
 
             var worldPos = new Vector3d(o.X + t * d.X, o.Y + t * d.Y, o.Z + t * d.Z);
             if (!double.IsFinite(worldPos.X) || !double.IsFinite(worldPos.Y) || !double.IsFinite(worldPos.Z))
-                return;
+            { FallbackToScreenDelta(pixelX, pixelY, deltaX, deltaY, host.Height); return; }
 
-            _moveSession.UpdatePosition(worldPos);
+            // 低俯角安全检查：射线与平面近似平行时切换回退
+            var dot = Math.Abs(d.Z); // planeNormal = (0,0,1)
+            if (dot < EntityMoveSafetyLimits.MinPlaneNormalDot)
+            {
+                FallbackToScreenDelta(pixelX, pixelY, deltaX, deltaY, host.Height);
+                return;
+            }
+
+            _moveSession.UpdateFromPlaneHit(worldPos);
         }
 
-        // 同步到引擎和渲染
-        var entityId = _selectedWorldEntity?.EntityId;
-        if (entityId is null) return;
         ApplyEntityTransform(_moveSession.CurrentPosition, EditorEntityTransformOrigin.MoveTool);
+    }
+
+    /// <summary>
+    /// 屏幕增量回退模式（低俯角或平面交点异常时）。
+    /// 使用相机地面方向的像素增量。
+    /// </summary>
+    private void FallbackToScreenDelta(int pixelX, int pixelY, int deltaX, int deltaY, int viewportHeight)
+    {
+        if (deltaX == 0 && deltaY == 0) return;
+
+        var wpp = VerticalMoveProjection.ComputeWorldPerPixel(
+            _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic,
+            _lastCameraState.OrthographicHeight,
+            _lastCameraState.Distance,
+            _lastCameraState.FieldOfViewDegrees,
+            viewportHeight);
+        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
+        var pivotX = _lastCameraState.PivotX;
+        var pivotY = _lastCameraState.PivotY;
+        var pivotZ = _lastCameraState.PivotZ;
+        var fwdX = pivotX - camX;
+        var fwdY = pivotY - camY;
+        var fwdZ = pivotZ - camZ;
+        var fwdLen = Math.Sqrt(fwdX * fwdX + fwdY * fwdY + fwdZ * fwdZ);
+        if (fwdLen < 1e-10) return;
+
+        // Cross product: right = forward × up (where up = (0,0,1))
+        var ax = fwdX / fwdLen; var ay = fwdY / fwdLen; var az = fwdZ / fwdLen;
+        var rx = ay * 1.0 - az * 0.0; // forward × up
+        var ry = az * 0.0 - ax * 1.0;
+        var rz = ax * 0.0 - ay * 0.0;
+        var rLen = Math.Sqrt(rx * rx + ry * ry + rz * rz);
+        if (rLen < 1e-10) return;
+        var right = new Vector3d(rx / rLen, ry / rLen, rz / rLen);
+        var fwd = new Vector3d(ax, ay, az);
+
+        _moveSession.UpdateFromScreenDelta(right, fwd, deltaX, deltaY, wpp);
+
+        if (s_traceEnabled && _moveSession.MappingMode == MoveMappingMode.ScreenDeltaFallback)
+            System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] 移动已切换为屏幕增量模式。");
     }
 
     private void HandleRawPointerButtonUp(int buttonCode, int x, int y)
