@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using FluidWarfare.Core.Math;
+using FluidWarfare.Editor.Transform.Scrub;
 using FluidWarfare.Editor.Windows.Shell;
 
 namespace FluidWarfare.Editor.Windows.Panels.Inspector;
@@ -28,7 +29,7 @@ public sealed partial class InspectorPanel : UserControl
     private TextBlock? _scrubLabelX;
     private TextBlock? _scrubLabelY;
     private TextBlock? _scrubLabelZ;
-    private readonly Transform.TransformAxisScrubState _scrubState = new();
+    private readonly TransformAxisScrubState _scrubState = new();
     private string _scrubEntityId = string.Empty;
 
     /// <summary>数值拖拽时触发。</summary>
@@ -270,6 +271,13 @@ public sealed partial class InspectorPanel : UserControl
 
     // ─── 数值拖拽（X/Y/Z 标签拖拽微调）───────────────────────────
 
+    private static double CalcScrubSensitivity(KeyModifiers km)
+    {
+        if ((km & KeyModifiers.Shift) != 0) return TransformAxisScrubState.FineSensitivity;
+        if ((km & KeyModifiers.Control) != 0) return TransformAxisScrubState.CoarseSensitivity;
+        return TransformAxisScrubState.NormalSensitivity;
+    }
+
     private void OnScrubPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (sender is not TextBlock label) return;
@@ -290,23 +298,24 @@ public sealed partial class InspectorPanel : UserControl
         if (!double.TryParse(text, out var value)) return;
 
         e.Pointer.Capture(label);
-        _scrubState.Begin(axis, value, e.GetPosition(this).X, e.KeyModifiers);
+        _scrubState.Begin((int)axis, value, e.GetPosition(this).X, CalcScrubSensitivity(e.KeyModifiers));
     }
 
     private void OnScrubPointerMoved(object? sender, PointerEventArgs e)
     {
         if (!_scrubState.IsScrubbing) return;
-        _scrubState.Update(e.GetPosition(this).X, e.KeyModifiers);
+        _scrubState.Update(e.GetPosition(this).X, CalcScrubSensitivity(e.KeyModifiers));
 
         var text = _scrubState.CurrentValue.ToString("F3");
-        switch (_scrubState.Axis)
+        var axisEnum = (Transform.TransformPositionAxis)_scrubState.Axis;
+        switch (axisEnum)
         {
             case Transform.TransformPositionAxis.X: if (_transformXText is not null) _transformXText.Text = text; break;
             case Transform.TransformPositionAxis.Y: if (_transformYText is not null) _transformYText.Text = text; break;
             case Transform.TransformPositionAxis.Z: if (_transformZText is not null) _transformZText.Text = text; break;
         }
 
-        ScrubValueChanged?.Invoke(_scrubEntityId, _scrubState.Axis, _scrubState.CurrentValue);
+        ScrubValueChanged?.Invoke(_scrubEntityId, axisEnum, _scrubState.CurrentValue);
     }
 
     private void OnScrubPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -314,7 +323,7 @@ public sealed partial class InspectorPanel : UserControl
         if (!_scrubState.IsScrubbing) return;
         var value = _scrubState.CurrentValue;
         _scrubState.Complete();
-        ScrubCompleted?.Invoke(_scrubEntityId, _scrubState.Axis, value);
+        ScrubCompleted?.Invoke(_scrubEntityId, (Transform.TransformPositionAxis)_scrubState.Axis, value);
     }
 
     private void OnScrubCaptureLost(object? sender, PointerCaptureLostEventArgs e)
@@ -322,7 +331,7 @@ public sealed partial class InspectorPanel : UserControl
         if (!_scrubState.IsScrubbing) return;
         var initialValue = _scrubState.InitialValue;
         _scrubState.Cancel();
-        ScrubCancelled?.Invoke(_scrubEntityId, _scrubState.Axis, initialValue);
+        ScrubCancelled?.Invoke(_scrubEntityId, (Transform.TransformPositionAxis)_scrubState.Axis, initialValue);
     }
 
     // ─── 内部辅助 ──────────────────────────────────────────────────

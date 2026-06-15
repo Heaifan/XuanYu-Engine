@@ -1,9 +1,9 @@
-using Avalonia.Input;
+using FluidWarfare.Core.Math;
 
-namespace FluidWarfare.Editor.Windows.Panels.Inspector.Transform;
+namespace FluidWarfare.Editor.Transform.Scrub;
 
 /// <summary>
-/// Transform 数值拖拽状态机。
+/// Transform 数值拖拽状态机（平台无关）。
 /// 灵敏度：普通 0.02/px, Shift 0.002/px, Ctrl 0.20/px。
 /// </summary>
 public sealed class TransformAxisScrubState
@@ -12,8 +12,8 @@ public sealed class TransformAxisScrubState
     public const double FineSensitivity = 0.002;
     public const double CoarseSensitivity = 0.20;
 
-    private TransformPositionAxis _axis;
     private double _initialValue;
+    private int _axis; // 0=X, 1=Y, 2=Z — generic, caller assigns meaning
     private double _currentValue;
     private double _lastPixelX;
     private double _sensitivity;
@@ -21,17 +21,14 @@ public sealed class TransformAxisScrubState
     /// <summary>是否正在拖拽中。</summary>
     public bool IsScrubbing { get; private set; }
 
-    /// <summary>当前轴向。</summary>
-    public TransformPositionAxis Axis => _axis;
-
     /// <summary>初始值（用于取消恢复）。</summary>
     public double InitialValue => _initialValue;
 
     /// <summary>当前草稿值。</summary>
     public double CurrentValue => _currentValue;
 
-    /// <summary>值是否发生了变化。</summary>
-    public bool HasChanged => _currentValue != _initialValue;
+    /// <summary>当前轴向（调用方赋予的含义：0=X, 1=Y, 2=Z 等）。</summary>
+    public int Axis => _axis;
 
     /// <summary>值变化时触发。</summary>
     public event Action<double>? ValueChanged;
@@ -45,29 +42,26 @@ public sealed class TransformAxisScrubState
     /// <summary>
     /// 开始拖拽。
     /// </summary>
-    public void Begin(TransformPositionAxis axis, double initialValue, double pointerX, KeyModifiers modifiers)
+    public void Begin(int axis, double initialValue, double pointerX, double sensitivity)
     {
         _axis = axis;
         _initialValue = initialValue;
         _currentValue = initialValue;
         _lastPixelX = pointerX;
-        _sensitivity = CalcSensitivity(modifiers);
+        _sensitivity = sensitivity;
         IsScrubbing = true;
     }
 
     /// <summary>
-    /// 更新拖拽值（增量累计，修饰键变化时重新锚定当前值，避免跳值）。
+    /// 更新拖拽值（增量累计，修饰键变化会切换灵敏度但不跳值）。
     /// </summary>
-    public void Update(double pointerX, KeyModifiers modifiers)
+    public void Update(double pointerX, double sensitivity)
     {
         if (!IsScrubbing) return;
 
         var deltaPx = pointerX - _lastPixelX;
         _lastPixelX = pointerX;
-
-        var newSensitivity = CalcSensitivity(modifiers);
-        if (newSensitivity != _sensitivity)
-            _sensitivity = newSensitivity;
+        _sensitivity = sensitivity;
 
         _currentValue += deltaPx * _sensitivity;
         ValueChanged?.Invoke(_currentValue);
@@ -92,12 +86,5 @@ public sealed class TransformAxisScrubState
         IsScrubbing = false;
         _currentValue = _initialValue;
         ScrubCancelled?.Invoke();
-    }
-
-    private static double CalcSensitivity(KeyModifiers modifiers)
-    {
-        if ((modifiers & KeyModifiers.Shift) != 0) return FineSensitivity;
-        if ((modifiers & KeyModifiers.Control) != 0) return CoarseSensitivity;
-        return NormalSensitivity;
     }
 }
