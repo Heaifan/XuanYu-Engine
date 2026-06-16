@@ -142,6 +142,9 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private int _lastOverlayVertexCount;
     private Render.ViewportNavigation.ViewportNavigationLayout _lastOverlayLayout =
         null!;
+
+    // ─── Move Gizmo 覆盖层 ─────────────────────────────────
+    private Overlay.VulkanOverlayVertex[]? _pendingGizmoVerts;
     public VulkanGroundCursorInfo GroundCursorInfo =>
         _cursorState.IsVisible
             ? new VulkanGroundCursorInfo(
@@ -186,6 +189,12 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
         if (_status != VulkanScene3dSessionStatus.Active)
             return false;
         return _cursorState.Set(worldPosition);
+    }
+
+    /// <summary>设置 Move Gizmo 覆盖层顶点，下一帧渲染。</summary>
+    public void SetMoveGizmoVertices(Overlay.VulkanOverlayVertex[]? vertices)
+    {
+        _pendingGizmoVerts = vertices;
     }
 
     /// <summary>
@@ -703,11 +712,27 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                     var overlayVerts = Overlay.VulkanNavigationOverlayGeometry.Build(
                         _lastOverlayLayout, _overlayHovered, _overlayActive, projText);
 
-                    if (_overlayResources.UploadVertices(overlayVerts, out var overlayUploadError))
+                    // 合并 Move Gizmo 顶点（如果有）
+                    Overlay.VulkanOverlayVertex[] mergedVerts;
+                    if (_pendingGizmoVerts is { Length: > 0 })
                     {
-                        _lastOverlayVertexCount = overlayVerts.Length;
+                        mergedVerts = new Overlay.VulkanOverlayVertex[
+                            overlayVerts.Length + _pendingGizmoVerts.Length];
+                        Array.Copy(overlayVerts, 0, mergedVerts, 0, overlayVerts.Length);
+                        Array.Copy(_pendingGizmoVerts, 0, mergedVerts,
+                            overlayVerts.Length, _pendingGizmoVerts.Length);
+                        _pendingGizmoVerts = null;
+                    }
+                    else
+                    {
+                        mergedVerts = overlayVerts;
+                    }
+
+                    if (_overlayResources.UploadVertices(mergedVerts, out var overlayUploadError))
+                    {
+                        _lastOverlayVertexCount = mergedVerts.Length;
                         _pendingOverlayLayout = _lastOverlayLayout;
-                        overlayVtxCount = overlayVerts.Length;
+                        overlayVtxCount = mergedVerts.Length;
                         overlayBuf = _overlayResources.VertexBuffer;
                         overlayPipe = _overlayResources.Pipeline;
                         overlayLayout = _overlayResources.Layout;

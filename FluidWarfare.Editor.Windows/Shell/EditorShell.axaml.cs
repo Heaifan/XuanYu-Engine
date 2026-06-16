@@ -1822,6 +1822,10 @@ public sealed partial class EditorShell : UserControl
             var unitDraws = BuildUnitDrawList();
             _cameraRevision++;
             var sessionPose = SceneCameraPose.FromOrbitState(_lastCameraState, _cameraRevision);
+
+            // 提交 Move Gizmo 顶点
+            SubmitMoveGizmoVertices();
+
             var result = _scene3dSession.RenderFrame(reason, sessionPose, [.. unitDraws]);
 
             if (result.Success)
@@ -1835,6 +1839,110 @@ public sealed partial class EditorShell : UserControl
                 AppendWarningLog($"Scene3D 帧失败：{result.Message}");
             }
         });
+    }
+
+    // ─── Move Gizmo 顶点提交 ──────────────────────────────
+
+    private void SubmitMoveGizmoVertices()
+    {
+        if (!_moveToolActive || _selectedWorldEntity is null)
+        {
+            ClearGizmo();
+            return;
+        }
+
+        var session = _scene3dSession;
+        if (session is null) { ClearGizmo(); return; }
+
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) { ClearGizmo(); return; }
+
+        var snapshot = session.LastPresentedSnapshot;
+        if (!snapshot.IsValid) { ClearGizmo(); return; }
+
+        var pivot = pos.Value.Value;
+        var vp = snapshot.ViewProjection;
+        var w = snapshot.ViewportWidth;
+        var h = snapshot.ViewportHeight;
+
+        // 投影 Pivot 到屏幕
+        if (!TryProjectToScreen(pivot, vp, w, h, out var pp))
+        { session.SetMoveGizmoVertices(null); return; }
+
+        // 计算世界单位每像素
+        var cameraDist = _lastCameraState.Distance;
+        var fov = _lastCameraState.FieldOfViewDegrees;
+        var isOrtho = _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic;
+        var orthoH = _lastCameraState.OrthographicHeight;
+        var wpp = isOrtho ? orthoH / Math.Max(1, h)
+            : 2.0 * cameraDist * Math.Tan(fov * Math.PI / 360.0) / Math.Max(1, h);
+
+        const double gizmoScreenLen = 80.0;
+        var worldLen = gizmoScreenLen * wpp;
+
+        // 计算三轴端点像素坐标
+        var axes = new[] { Vector3d.UnitX, Vector3d.UnitY, Vector3d.UnitZ };
+        var endPixels = new (double X, double Y)[3];
+        var degenerate = new bool[3];
+
+        for (var i = 0; i < 3; i++)
+        {
+            var endWorld = pivot + axes[i] * worldLen;
+            if (TryProjectToScreen(endWorld, vp, w, h, out var ep))
+            {
+                endPixels[i] = ep;
+                degenerate[i] = false;
+            }
+            else
+            {
+                endPixels[i] = pp;
+                degenerate[i] = true;
+            }
+        }
+
+        // 构建布局并生成顶点
+        var layout = MoveGizmoLayout.Build(
+            (pp.X, pp.Y),
+            (endPixels[0].X, endPixels[0].Y),
+            (endPixels[1].X, endPixels[1].Y),
+            (endPixels[2].X, endPixels[2].Y),
+            degenerate[0], degenerate[1], degenerate[2]);
+
+        if (layout is null) { session.SetMoveGizmoVertices(null); return; }
+
+        var drawVerts = MoveGizmoDrawList.Build(layout,
+            MoveGizmoVisualState.Normal, MoveGizmoElement.None);
+
+        var overlayVerts = new FluidWarfare.Render.Vulkan.Scene3D.Overlay.VulkanOverlayVertex[drawVerts.Length];
+        for (var i = 0; i < drawVerts.Length; i++)
+        {
+            overlayVerts[i] = new FluidWarfare.Render.Vulkan.Scene3D.Overlay.VulkanOverlayVertex(
+                drawVerts[i].X, drawVerts[i].Y,
+                drawVerts[i].R, drawVerts[i].G,
+                drawVerts[i].B, drawVerts[i].A);
+        }
+
+        session.SetMoveGizmoVertices(overlayVerts);
+    }
+
+    private static bool TryProjectToScreen(
+        Vector3d world, float[] vp, int w, int h,
+        out (double X, double Y) pixel)
+    {
+        pixel = default;
+        if (vp is not { Length: 16 } || w <= 0 || h <= 0) return false;
+        var cw = vp[3] * world.X + vp[7] * world.Y + vp[11] * world.Z + vp[15];
+        if (!double.IsFinite(cw) || Math.Abs(cw) < 1e-6) return false;
+        var nx = (vp[0] * world.X + vp[4] * world.Y + vp[8] * world.Z + vp[12]) / cw;
+        var ny = (vp[1] * world.X + vp[5] * world.Y + vp[9] * world.Z + vp[13]) / cw;
+        if (!double.IsFinite(nx) || !double.IsFinite(ny)) return false;
+        pixel = ((nx * 0.5 + 0.5) * w, (ny * 0.5 + 0.5) * h);
+        return true;
+    }
+
+    private void ClearGizmo()
+    {
+        _scene3dSession?.SetMoveGizmoVertices(null);
     }
 
     // ─── 单向选择状态流 ──────────────────────────────────────
