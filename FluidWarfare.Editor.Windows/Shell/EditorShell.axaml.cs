@@ -1925,7 +1925,8 @@ public sealed partial class EditorShell : UserControl
         if (layout is null) { session.SetMoveGizmoVertices(null); return; }
 
         var drawVerts = MoveGizmoDrawList.Build(layout,
-            MoveGizmoVisualState.Normal, MoveGizmoElement.None);
+            MoveGizmoVisualState.Normal, MoveGizmoElement.None,
+            _transformRoute.Gizmo.HoveredElement);
 
         var overlayVerts = new FluidWarfare.Render.Vulkan.Scene3D.Overlay.VulkanOverlayVertex[drawVerts.Length];
         for (var i = 0; i < drawVerts.Length; i++)
