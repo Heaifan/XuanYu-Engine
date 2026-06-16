@@ -106,6 +106,7 @@ public sealed partial class EditorShell : UserControl
     // ─── Transform 路由 ────────────────────────────────────
     private readonly TransformInputRoute _transformRoute = new();
     private bool _moveToolActive;
+    private PresentedMoveGizmoSnapshot _presentedGizmo = PresentedMoveGizmoSnapshot.None;
 
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
@@ -1201,6 +1202,10 @@ public sealed partial class EditorShell : UserControl
         _lastPointerX = x;
         _lastPointerY = y;
 
+        // 更新 Gizmo Hover
+        if (_moveToolActive && _presentedGizmo.IsAvailable)
+            _transformRoute.UpdateGizmoHover(x, y, _presentedGizmo.Layout);
+
         if (_inputTranslator is null) return;
         var match = _inputTranslator.OnRawPointerMoved(x, y);
         ExecuteInputAction(match);
@@ -1233,7 +1238,16 @@ public sealed partial class EditorShell : UserControl
             return ViewportSceneToolPressResult.NotHandled;
 
         var pivot = pos.Value.Value;
-        var result = _transformRoute.OnPointerPressed(1, x, y, pivot);
+        var snapshot = _scene3dSession?.LastPresentedSnapshot;
+        var hasCam = snapshot is not null && snapshot.IsValid;
+        var result = _transformRoute.OnPointerPressed(1, x, y, pivot,
+            hasCam ? snapshot!.ViewProjection : Array.Empty<float>(),
+            hasCam ? snapshot!.ViewportWidth : 1,
+            hasCam ? snapshot!.ViewportHeight : 1,
+            _lastCameraState.Distance,
+            _lastCameraState.FieldOfViewDegrees,
+            _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic,
+            _lastCameraState.OrthographicHeight);
         if (!result.Started)
         {
             _transformRoute.Session.Cancel();
@@ -1923,6 +1937,10 @@ public sealed partial class EditorShell : UserControl
         }
 
         session.SetMoveGizmoVertices(overlayVerts);
+
+        // 保存 Present 快照供 HitTest 使用
+        _presentedGizmo = new PresentedMoveGizmoSnapshot(
+            true, layout, w, h, snapshot.CameraRevision);
     }
 
     private static bool TryProjectToScreen(

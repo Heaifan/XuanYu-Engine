@@ -19,12 +19,6 @@ public static class AxisTranslationSolver
         if (!anchor.IsValid || anchor.Mode == AxisTranslationMode.Disabled)
             return anchor.InitialPosition;
 
-        if (anchor.Mode == AxisTranslationMode.DragPlane)
-        {
-            // 拖动平面模式暂未实现，回退到屏幕投影
-            return anchor.InitialPosition;
-        }
-
         var dx = pointerX - anchor.StartPointerX;
         var dy = pointerY - anchor.StartPointerY;
         var pixelDist = dx * anchor.ScreenDirection.X + dy * anchor.ScreenDirection.Y;

@@ -23,30 +23,29 @@ public sealed class TransformInputRoute
     public TransformEditSession Session => _session;
     public MoveGizmoInteraction Gizmo => _gizmoInteraction;
 
-    public TransformInputResult OnPointerPressed(int button, double x, double y, Vector3d pivot)
+    public TransformInputResult OnPointerPressed(
+        int button, double x, double y, Vector3d pivot,
+        float[] viewProjection, int viewportWidth, int viewportHeight,
+        double cameraDistance, double fovDeg, bool isOrtho, double orthoHeight)
     {
         if (button != 1 || _session.IsActive) return default;
 
-        // 没有 Gizmo 悬停时默认为自由移动（Blender G 模式）
         var element = _gizmoInteraction.HoveredElement;
         if (element == MoveGizmoElement.None)
             element = MoveGizmoElement.ViewPlane;
 
         if (!_gizmoInteraction.TryBeginDrag(element)) return default;
 
-        return StartDragFromElement(element, x, y, pivot);
+        return StartDragFromElement(element, x, y, pivot,
+            viewProjection, viewportWidth, viewportHeight,
+            cameraDistance, fovDeg, isOrtho, orthoHeight);
     }
 
-    public TransformInputResult OnPointerMoved(double x, double y, Vector3d pivot)
+    public TransformInputResult OnPointerMoved(double x, double y)
     {
-        // Gizmo hover
-        // (layout must be set externally from the latest camera)
-        _gizmoInteraction.SetHover(MoveGizmoElement.None); // simplified
-
         if (!_gizmoInteraction.IsDragging || !_hasAnchor)
             return default;
 
-        // Axis drag
         var target = AxisTranslationSolver.Solve(_axisAnchor, x, y);
         _session.Preview(SceneTransformDefaults.FromPosition(target));
         return new TransformInputResult(true, false, false, target.X, target.Y, target.Z);
@@ -76,8 +75,13 @@ public sealed class TransformInputRoute
         _gizmoInteraction.SetHover(element);
     }
 
+    public bool HasHoveredElement =>
+        _gizmoInteraction.HoveredElement != MoveGizmoElement.None;
+
     private TransformInputResult StartDragFromElement(
-        MoveGizmoElement element, double x, double y, Vector3d pivot)
+        MoveGizmoElement element, double x, double y, Vector3d pivot,
+        float[] vp, int vw, int vh,
+        double camDist, double fovDeg, bool isOrtho, double orthoH)
     {
         var axis = element switch
         {
@@ -87,13 +91,33 @@ public sealed class TransformInputRoute
             MoveGizmoElement.ViewPlane => Vector3d.UnitX,
             _ => Vector3d.Zero,
         };
-
         if (axis == Vector3d.Zero) return default;
 
-        _axisAnchor = new AxisTranslationAnchor(
-            _session.PreviewTransform.Position,
-            axis, pivot, 50, new Vector2d(1, 0),
-            x, y, AxisTranslationMode.ScreenProjection);
+        // 从真实相机计算屏幕投影参数
+        var hasMetric = AxisScreenMetric.TryCompute(
+            pivot, axis, vp, vw, vh, out var dir, out var ppu);
+
+        if (!hasMetric)
+        {
+            // 轴正对相机退化：使用深度灵敏度
+            var vh2 = Math.Max(1, vh);
+            var fallbackPpu = isOrtho
+                ? orthoH / vh2
+                : 2.0 * camDist * Math.Tan(fovDeg * Math.PI / 360.0) / vh2;
+            if (fallbackPpu <= 0) return default;
+            _axisAnchor = new AxisTranslationAnchor(
+                _session.PreviewTransform.Position,
+                axis, pivot, 1.0 / fallbackPpu, new Vector2d(0, -1),
+                x, y, AxisTranslationMode.ScreenProjection);
+        }
+        else
+        {
+            _axisAnchor = new AxisTranslationAnchor(
+                _session.PreviewTransform.Position,
+                axis, pivot, ppu, dir,
+                x, y, AxisTranslationMode.ScreenProjection);
+        }
+
         _hasAnchor = true;
         return new TransformInputResult(true, true, false, x, y, 0);
     }
