@@ -2,6 +2,32 @@
 
 本文档记录项目的重要变更。
 
+## Codex Phase 0 takeover audit - 2026-06-15
+
+### Added
+
+1. Added `docs/codex/CODEX_TAKEOVER_AUDIT.md` to record current HEAD, dirty worktree, build/test status, long-file audit, transform/move files, risks, and next Phase 1/2 files.
+2. Added `docs/codex/Z_AXIS_CURRENT_PATH.md` to record the current Z-axis input-to-transform path, legacy and anchor-based Z algorithms, camera snapshot behavior, input consumption, confirmed failure cause, and test gaps.
+
+### Verification
+
+1. `dotnet build FluidWarfare.sln` restored packages after escalation but failed because `FluidWarfare.Editor.Windows (8168)` locked output DLLs.
+2. `dotnet test FluidWarfare.sln --no-build` ran 629 tests: 626 passed, 3 failed in `LegacyUpdateVertical_*`.
+
+## Z-axis move repair - 2026-06-15
+
+### Fixed
+
+1. Fixed legacy Z movement so `UpdateVertical` keeps the current preview X/Y instead of snapping back to the move start X/Y.
+2. Reconnected in-drag `Z` axis switching to the anchor-based vertical move path.
+3. Added ground re-anchoring when switching back from Z to X/Y movement, avoiding stale anchors.
+
+### Verification
+
+1. `dotnet test FluidWarfare.Tests\FluidWarfare.Tests.csproj --no-restore`: 630 passed.
+2. `dotnet test FluidWarfare.sln --no-build`: 630 passed.
+3. `dotnet build FluidWarfare.Editor.Windows\FluidWarfare.Editor.Windows.csproj --no-restore -p:OutDir=.codex-build\editor-windows\`: 0 errors, 7 existing warnings.
+
 ## 0.0.1-dev - 2026-06-10
 
 ### Milestone 2.x 中文化补丁

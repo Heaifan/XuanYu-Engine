@@ -3,21 +3,22 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using System.Runtime.InteropServices;
 using FluidWarfare.Bridge.ProjectEngine.World;
 using FluidWarfare.Core.Identity;
 using FluidWarfare.Core.Logging;
 using FluidWarfare.Core.Math;
 using FluidWarfare.Editor.ProjectContentTreeModel;
 using FluidWarfare.Editor.EntityTransform;
-using FluidWarfare.Editor.Transform.Move;
+using FluidWarfare.Editor.Transform.Translate;
 using FluidWarfare.Editor.Selection;
 using FluidWarfare.Editor.WorldHierarchy;
 using FluidWarfare.Editor.Input.Actions;
 using FluidWarfare.Editor.Input.Runtime;
-using FluidWarfare.Editor.Transform.Move.Projection;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
 using FluidWarfare.Editor.Windows.Panels.Viewport.Input;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Inspector.Transform;
@@ -100,9 +101,10 @@ public sealed partial class EditorShell : UserControl
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
-    private readonly EntityMoveSession _moveSession = new();
+    private readonly EntityTranslationSession _translationSession = new();
     private bool _moveToolActive;
     private bool _movePointerCaptured;
+    private TranslationConstraint _pendingTranslationConstraint = TranslationConstraint.GroundPlane;
 
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
@@ -199,6 +201,8 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel.NavigationPointerMoved += HandleOverlayPointerMoved;
             _vulkanViewportHostPanel.NavigationPointerReleased += HandleOverlayPointerReleased;
             _vulkanViewportHostPanel.NavigationCaptureLost += HandleOverlayCaptureLost;
+            _vulkanViewportHostPanel.SceneToolPointerPressed += HandleSceneToolPointerPressed;
+            _vulkanViewportHostPanel.SceneToolPointerReleased += HandleSceneToolPointerReleased;
             _vulkanViewportHostPanel.PointerMoved += HandleViewportPointerMoved;
             _vulkanViewportHostPanel.PointerLeft += HandleViewportPointerLeft;
         }
@@ -1138,20 +1142,23 @@ public sealed partial class EditorShell : UserControl
             System.Diagnostics.Debug.WriteLine(
                 $"[InputTrace-Shell] RawKeyDown vk=0x{virtualKeyCode:X2}");
 
-        // 移动工具期间：X/Y/Z 切换轴向约束，不经过 Translator
-        if (_moveSession.IsMoving)
+        // 移动工具期间：X/Y/Z 切换轴向约束，不经过 Translator。
+        if (_moveToolActive)
+        if (_moveToolActive)
         {
-            var newAxis = virtualKeyCode switch
+            var newConstraint = virtualKeyCode switch
             {
-                0x58 => EntityMoveAxis.X,       // VK_X
-                0x59 => EntityMoveAxis.Y,       // VK_Y
-                0x5A => EntityMoveAxis.Z,       // VK_Z
-                _ => (EntityMoveAxis?)null,
+                0x58 => TranslationConstraint.X,
+                0x59 => TranslationConstraint.Y,
+                0x5A => TranslationConstraint.Z,
+                _ => (TranslationConstraint?)null,
             };
-            if (newAxis is not null)
+            if (newConstraint is not null)
             {
-                _moveSession.SetAxisConstraint(newAxis.Value);
-                AppendInfoLog($"轴向约束：{newAxis.Value}");
+                if (_translationSession.IsActive)
+                    SwitchTranslationConstraint(newConstraint.Value);
+                else
+                    SetPendingTranslationConstraint(newConstraint.Value);
                 return;
             }
         }
@@ -1166,6 +1173,27 @@ public sealed partial class EditorShell : UserControl
         ExecuteInputAction(match);
     }
 
+    private void SwitchTranslationConstraint(TranslationConstraint constraint)
+    {
+        var camera = _translationSession.Camera;
+        if (camera is null ||
+            !TranslationRayBuilder.TryBuild(_lastPointerX, _lastPointerY, camera, out var ray))
+        {
+            AppendWarningLog("移动约束切换失败：当前相机射线不可用。");
+            return;
+        }
+
+        if (!_translationSession.SwitchConstraint(constraint, ray, _lastPointerX, _lastPointerY))
+            AppendWarningLog($"移动约束切换失败：{constraint}");
+        else
+            AppendInfoLog($"移动约束：{constraint}");
+    }
+
+    private void SetPendingTranslationConstraint(TranslationConstraint constraint)
+    {
+        _pendingTranslationConstraint = constraint;
+        AppendInfoLog($"移动约束预设：{constraint}");
+    }
     private void HandleRawKeyUp(int virtualKeyCode)
     {
         _inputTranslator?.OnRawKeyUp(virtualKeyCode);
@@ -1179,13 +1207,13 @@ public sealed partial class EditorShell : UserControl
         _lastPointerX = x;
         _lastPointerY = y;
 
-        // 移动工具：左键按下时在已选实体上开始移动会话
-        if (buttonCode == 1 && _moveToolActive && !_moveSession.IsMoving)
+        // 保留 SceneTool 未接线时的安全回退（正常情况下 SceneToolPointerPressed 已拦截）
+        if (buttonCode == 1 && _moveToolActive && !_translationSession.IsActive)
         {
-            if (TryStartMoveSession(x, y))
+            if (TryStartTranslationSession(x, y))
             {
                 _movePointerCaptured = true;
-                return; // 跳过 Translator，不解析其他左键动作
+                return;
             }
         }
 
@@ -1200,13 +1228,51 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 拾取测试：在指定像素位置对实体进行射线求交，若命中已选实体则开始移动。
+    /// 场景工具左键按下回调。由 NativeHost WndProc 在 Overlay 导航之后、
+    /// 遗留 Picking 之前同步调用。在 WndProc 线程中执行射线求交。
     /// </summary>
+    private ViewportSceneToolPressResult HandleSceneToolPointerPressed(int x, int y)
+    {
+        _lastPointerX = x;
+        _lastPointerY = y;
+
+        // 移动工具消费左键
+        if (_moveToolActive && !_translationSession.IsActive)
+        {
+            if (TryStartTranslationSession(x, y))
+            {
+                _movePointerCaptured = true;
+                if (s_traceEnabled)
+                    System.Diagnostics.Debug.WriteLine(
+                        "[InputTrace-Shell] 场景工具消费左键按下，开始拖拽。");
+                return ViewportSceneToolPressResult.BeginDrag;
+            }
+        }
+
+        return ViewportSceneToolPressResult.NotHandled;
+    }
+
     /// <summary>
-    /// 构建 GroundMoveAnchor 并开始移动会话。
-    /// 所有射线求交和平面交点计算在此完成，但目标位置数学在 projection 中。
+    /// 场景工具左键释放回调。由 NativeHost WndProc 在拖拽结束时调用。
+    /// 确认移动会话（右键取消由 HandleRawPointerButtonUp 处理）。
     /// </summary>
-    private bool TryStartMoveSession(int pixelX, int pixelY)
+    private void HandleSceneToolPointerReleased(int x, int y)
+    {
+        if (s_traceEnabled)
+            System.Diagnostics.Debug.WriteLine(
+                "[InputTrace-Shell] 场景工具左键释放，确认移动。");
+
+        // SceneToolPointerReleased 仅在 BeginDrag 后触发，此时一定是左键确认
+        if (_translationSession.IsActive)
+            ConfirmTranslationSession();
+    }
+
+    /// <summary>
+    /// 构建 translation anchor 并开始移动会话。
+    /// 计算初始射线-平面交点的几何参数，预判 PlaneIntersection 模式是否可靠。
+    /// 不再在此处调用 RequestCapture（由 WndProc 的 SceneTool 仲裁负责）。
+    /// </summary>
+    private bool TryStartTranslationSession(int pixelX, int pixelY)
     {
         if (!_sessionActive || _scene3dSession is null) return false;
         if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return false;
@@ -1217,38 +1283,70 @@ public sealed partial class EditorShell : UserControl
 
         var snapshot = _scene3dSession.LastPresentedSnapshot;
         var status = VulkanSceneRayBuilder.TryBuild(pixelX, pixelY, snapshot,
-            (uint)host.Width, (uint)host.Height, out var ray);
-        if (status != SceneRayBuildStatus.Success) return false;
+            (uint)host.Width, (uint)host.Height, out var pickRay);
+        if (status != SceneRayBuildStatus.Success || pickRay is null) return false;
 
-        var pickResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
+        var pickResult = ScenePointerPicker.Pick(pickRay, _renderScene, SceneGroundPlane.Default);
         if (pickResult.Kind != ScenePointerPickKind.Entity || pickResult.EntityId is null) return false;
         if (pickResult.EntityId.Value.Value != _selectedWorldEntity.EntityId.Value) return false;
 
         var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
         if (pos is null) return false;
 
-        // 构建锚点：在 Z = InitialZ 平面上求初始交点
-        var targetZ = pos.Value.Value.Z;
-        var d = ray.Direction;
-        var o = ray.Origin;
-        if (Math.Abs(d.Z) < 1e-10) return false;
-        var t = (targetZ - o.Z) / d.Z;
-        if (t <= 0 || !double.IsFinite(t)) return false;
-        var planeHit = new Vector3d(o.X + t * d.X, o.Y + t * d.Y, o.Z + t * d.Z);
-        if (!double.IsFinite(planeHit.X) || !double.IsFinite(planeHit.Y) || !double.IsFinite(planeHit.Z)) return false;
+        var camera = CreateTranslationCameraSnapshot(snapshot);
+        if (camera is null || !TranslationRayBuilder.TryBuild(pixelX, pixelY, camera, out var startRay))
+            return false;
 
-        var anchor = new GroundMoveAnchor(pos.Value.Value, planeHit, pixelX, pixelY);
+        var constraint = GetHeldTranslationConstraint() ?? _pendingTranslationConstraint;
+        if (!_translationSession.Begin(
+                _selectedWorldEntity.EntityId.Value.ToString(),
+                pos.Value.Value,
+                constraint,
+                startRay,
+                pixelX,
+                pixelY,
+                camera,
+                _worldDirtyState.IsDirty))
+        {
+            AppendWarningLog($"开始移动失败：{constraint} 约束无法建立。");
+            return false;
+        }
 
-        _moveSession.Begin(_selectedWorldEntity.EntityId.Value.ToString(),
-            pos.Value.Value, EntityMoveAxis.GroundPlane, anchor, _worldDirtyState.IsDirty);
-        _vulkanViewportHostPanel?.RequestCapture();
-        AppendInfoLog($"开始移动实体 {_selectedWorldEntity.DisplayName}");
+        AppendInfoLog($"开始移动实体 {_selectedWorldEntity.DisplayName} ({constraint})");
         return true;
     }
 
-    /// <summary>
-    /// 原始鼠标移动入口。先计算 delta，再更新 _lastPointer，最后分发。
-    /// </summary>
+    private static TranslationConstraint? GetHeldTranslationConstraint()
+    {
+        if (!OperatingSystem.IsWindows())
+            return null;
+
+        if (IsKeyDown(0x5A)) return TranslationConstraint.Z;
+        if (IsKeyDown(0x58)) return TranslationConstraint.X;
+        if (IsKeyDown(0x59)) return TranslationConstraint.Y;
+        return null;
+    }
+
+    private static bool IsKeyDown(int virtualKeyCode) =>
+        (GetAsyncKeyState(virtualKeyCode) & 0x8000) != 0;
+
+    private static TranslationCameraSnapshot? CreateTranslationCameraSnapshot(PresentedCameraSnapshot snapshot)
+    {
+        if (snapshot is null || !snapshot.IsValid || snapshot.CameraPose is null)
+            return null;
+
+        return new TranslationCameraSnapshot
+        {
+            Position = new Vector3d(
+                snapshot.CameraPose.PositionX,
+                snapshot.CameraPose.PositionY,
+                snapshot.CameraPose.PositionZ),
+            ViewProjection = Array.ConvertAll(snapshot.ViewProjection, value => (double)value),
+            InverseViewProjection = (double[])snapshot.InverseViewProjection.Clone(),
+            ViewportWidth = snapshot.ViewportWidth,
+            ViewportHeight = snapshot.ViewportHeight
+        };
+    }
     private void HandleRawPointerMoved(int x, int y)
     {
         var prevX = _lastPointerX;
@@ -1256,9 +1354,9 @@ public sealed partial class EditorShell : UserControl
         _lastPointerX = x;
         _lastPointerY = y;
 
-        if (_moveSession.IsMoving && _movePointerCaptured)
+        if (_translationSession.IsActive && _movePointerCaptured)
         {
-            UpdateMoveSession(x, y, x - prevX, y - prevY);
+            UpdateTranslationSession(x, y);
             return;
         }
 
@@ -1268,138 +1366,54 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 将鼠标位移委托给 EntityMoveSession 的 projection 方法。
-    /// 不包含任何射线或平面数学——所有计算在 projection 包中。
+    /// 将鼠标位置委托给 EntityTranslationSession 的 projection 方法。
+    /// 使用 IsPlaneCandidateReliable 安全闸门；检测失败时切换到回退模式。
+    /// 无论哪种路径，最终都调用 ApplyEntityTransform 更新可视变换。
     /// </summary>
-    private void UpdateMoveSession(int pixelX, int pixelY, int deltaX, int deltaY)
+    private void UpdateTranslationSession(int pixelX, int pixelY)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        var camera = _translationSession.Camera;
+        if (camera is null ||
+            !TranslationRayBuilder.TryBuild(pixelX, pixelY, camera, out var ray))
+            return;
 
-        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
-        if (host.Width < 1 || host.Height < 1) return;
-
-        if (_moveSession.Axis == EntityMoveAxis.Z)
-        {
-            if (deltaY == 0) return;
-            var wpp = VerticalMoveProjection.ComputeWorldPerPixel(
-                _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic,
-                _lastCameraState.OrthographicHeight,
-                _lastCameraState.Distance,
-                _lastCameraState.FieldOfViewDegrees,
-                host.Height);
-            _moveSession.UpdateVertical(deltaY, wpp);
-        }
-        else
-        {
-            // GroundPlane/X/Y：射线求交 → 委托给 session 的 projection
-            var snapshot = _scene3dSession.LastPresentedSnapshot;
-            var status = VulkanSceneRayBuilder.TryBuild(pixelX, pixelY, snapshot,
-                (uint)host.Width, (uint)host.Height, out var ray);
-            if (status != SceneRayBuildStatus.Success) return;
-
-            var targetZ = _moveSession.InitialPosition.Z;
-            var d = ray.Direction;
-            var o = ray.Origin;
-
-            // 安全检查委托给 GroundMoveProjection.IsPlaneIntersectionReliable
-            if (Math.Abs(d.Z) < 1e-10) { FallbackToScreenDelta(pixelX, pixelY, deltaX, deltaY, host.Height); return; }
-            var t = (targetZ - o.Z) / d.Z;
-            if (t <= 0 || !double.IsFinite(t)) { FallbackToScreenDelta(pixelX, pixelY, deltaX, deltaY, host.Height); return; }
-
-            var worldPos = new Vector3d(o.X + t * d.X, o.Y + t * d.Y, o.Z + t * d.Z);
-            if (!double.IsFinite(worldPos.X) || !double.IsFinite(worldPos.Y) || !double.IsFinite(worldPos.Z))
-            { FallbackToScreenDelta(pixelX, pixelY, deltaX, deltaY, host.Height); return; }
-
-            // 低俯角安全检查：射线与平面近似平行时切换回退
-            var dot = Math.Abs(d.Z); // planeNormal = (0,0,1)
-            if (dot < EntityMoveSafetyLimits.MinPlaneNormalDot)
-            {
-                FallbackToScreenDelta(pixelX, pixelY, deltaX, deltaY, host.Height);
-                return;
-            }
-
-            _moveSession.UpdateFromPlaneHit(worldPos);
-        }
-
-        ApplyEntityTransform(_moveSession.CurrentPosition, EditorEntityTransformOrigin.MoveTool);
+        if (_translationSession.Preview(ray, pixelX, pixelY, out var position))
+            ApplyEntityTransform(position, EditorEntityTransformOrigin.MoveTool);
     }
-
-    /// <summary>
-    /// 屏幕增量回退模式（低俯角或平面交点异常时）。
-    /// 使用相机地面方向的像素增量。
-    /// </summary>
-    private void FallbackToScreenDelta(int pixelX, int pixelY, int deltaX, int deltaY, int viewportHeight)
-    {
-        if (deltaX == 0 && deltaY == 0) return;
-
-        var wpp = VerticalMoveProjection.ComputeWorldPerPixel(
-            _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic,
-            _lastCameraState.OrthographicHeight,
-            _lastCameraState.Distance,
-            _lastCameraState.FieldOfViewDegrees,
-            viewportHeight);
-        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
-        var pivotX = _lastCameraState.PivotX;
-        var pivotY = _lastCameraState.PivotY;
-        var pivotZ = _lastCameraState.PivotZ;
-        var fwdX = pivotX - camX;
-        var fwdY = pivotY - camY;
-        var fwdZ = pivotZ - camZ;
-        var fwdLen = Math.Sqrt(fwdX * fwdX + fwdY * fwdY + fwdZ * fwdZ);
-        if (fwdLen < 1e-10) return;
-
-        // Cross product: right = forward × up (where up = (0,0,1))
-        var ax = fwdX / fwdLen; var ay = fwdY / fwdLen; var az = fwdZ / fwdLen;
-        var rx = ay * 1.0 - az * 0.0; // forward × up
-        var ry = az * 0.0 - ax * 1.0;
-        var rz = ax * 0.0 - ay * 0.0;
-        var rLen = Math.Sqrt(rx * rx + ry * ry + rz * rz);
-        if (rLen < 1e-10) return;
-        var right = new Vector3d(rx / rLen, ry / rLen, rz / rLen);
-        var fwd = new Vector3d(ax, ay, az);
-
-        _moveSession.UpdateFromScreenDelta(right, fwd, deltaX, deltaY, wpp);
-
-        if (s_traceEnabled && _moveSession.MappingMode == MoveMappingMode.ScreenDeltaFallback)
-            System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] 移动已切换为屏幕增量模式。");
-    }
-
     private void HandleRawPointerButtonUp(int buttonCode, int x, int y)
     {
         _inputTranslator?.OnRawPointerButtonUp(buttonCode);
 
-        // 移动工具：左键抬起 → 确认，右键抬起 → 取消
-        if (_moveSession.IsMoving)
+        if (_translationSession.IsActive)
         {
-            if (buttonCode == 1) // Left
-                ConfirmMoveSession();
-            else if (buttonCode == 2) // Right
-                CancelMoveSession();
+            if (buttonCode == 1)
+                ConfirmTranslationSession();
+            else if (buttonCode == 2)
+                CancelTranslationSession();
         }
     }
 
-    private void ConfirmMoveSession()
+    private void ConfirmTranslationSession()
     {
-        if (!_moveSession.IsMoving) return;
+        if (!_translationSession.IsActive) return;
         _vulkanViewportHostPanel?.RequestReleaseCapture();
-        _moveSession.Completed += OnMoveCompleted;
-        _moveSession.Confirm();
+        _translationSession.Completed += OnTranslationCompleted;
+        _translationSession.Confirm();
         _movePointerCaptured = false;
     }
 
-    private void CancelMoveSession()
+    private void CancelTranslationSession()
     {
-        if (!_moveSession.IsMoving) return;
+        if (!_translationSession.IsActive) return;
         _vulkanViewportHostPanel?.RequestReleaseCapture();
-        _moveSession.Completed += OnMoveCompleted;
-        _moveSession.Cancel();
+        _translationSession.Completed += OnTranslationCompleted;
+        _translationSession.Cancel();
         _movePointerCaptured = false;
     }
 
-    private void OnMoveCompleted(EntityMoveResult result)
+    private void OnTranslationCompleted(TranslationResult result)
     {
-        _moveSession.Completed -= OnMoveCompleted;
+        _translationSession.Completed -= OnTranslationCompleted;
 
         if (result.IsConfirmed && result.HasPositionChanged && result.FinalPosition is not null)
         {
@@ -1407,48 +1421,42 @@ public sealed partial class EditorShell : UserControl
             ApplyEntityTransform(pos, EditorEntityTransformOrigin.MoveTool);
             AppendInfoLog($"移动完成 ({pos.X:F3}, {pos.Y:F3}, {pos.Z:F3})");
         }
-        else if (result.IsCancelled)
+        else if (result.IsCancelled && _selectedWorldEntity is not null && result.FinalPosition is not null)
         {
-            // 恢复初始位置
-            if (_selectedWorldEntity is not null && result.FinalPosition is not null)
-            {
-                ApplyEntityTransform(result.FinalPosition.Value, EditorEntityTransformOrigin.MoveTool);
-                // 恢复操作前的 Dirty 状态（不全局 Reset，只恢复移动前的值）
-                if (!result.InitialWasDirty)
-                    _worldDirtyState.Reset();
-                AppendInfoLog("移动已取消");
-            }
+            ApplyEntityTransform(result.FinalPosition.Value, EditorEntityTransformOrigin.MoveTool);
+            if (!result.InitialWasDirty)
+                _worldDirtyState.Reset();
+            AppendInfoLog("移动已取消");
         }
     }
 
     private void HandleRawInputFocusLost()
     {
         _inputTranslator?.OnRawInputFocusLost();
-        if (_moveSession.IsMoving)
+        if (_translationSession.IsActive)
         {
             _vulkanViewportHostPanel?.RequestReleaseCapture();
-            _moveSession.Completed += OnMoveCompleted;
-            _moveSession.Abort();
+            _translationSession.Completed += OnTranslationCompleted;
+            _translationSession.Abort();
             _movePointerCaptured = false;
         }
     }
 
-    // ─── 视口工具 ──────────────────────────────────────
+    // 鈹€鈹€鈹€ 瑙嗗彛宸ュ叿 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
 
     private void HandleViewportToolChanged(ViewportEditorTool tool)
     {
-        // 切换工具时取消任何活动移动会话
-        if (_moveSession.IsMoving)
+        if (_translationSession.IsActive)
         {
-            _moveSession.Completed += OnMoveCompleted;
-            _moveSession.Abort();
+            _translationSession.Completed += OnTranslationCompleted;
+            _translationSession.Abort();
         }
         _moveToolActive = tool == ViewportEditorTool.Move;
+        _pendingTranslationConstraint = TranslationConstraint.GroundPlane;
 
         if (_moveToolActive && _selectedWorldEntity is null)
-            _statusBarPanel?.SetCurrentSelection("请先选择实体。");
+            _statusBarPanel?.SetCurrentSelection("璇峰厛閫夋嫨瀹炰綋銆?");
     }
-
     private void HandleRawMouseWheel(int delta, int packedModifiers)
     {
         if (s_traceEnabled)
@@ -1988,9 +1996,9 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleViewportEscape()
     {
-        if (_moveSession.IsMoving)
+        if (_translationSession.IsActive)
         {
-            CancelMoveSession();
+            CancelTranslationSession();
             return;
         }
 
@@ -2292,14 +2300,14 @@ public sealed partial class EditorShell : UserControl
     /// <summary>
     /// 视口点击 Picking 处理。
     /// 注意：移动工具的会话开始在 HandleRawPointerButtonDown（LButtonDown）中，
-    /// 不在此处。此处如果 _moveSession.IsMoving 则跳过。
+    /// 不在此处。此处如果 translation session 正在运行则跳过。
     /// </summary>
     private void HandleViewportPick(int pixelX, int pixelY)
     {
         if (!_sessionActive || _scene3dSession is null) return;
         if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
         // 移动工具活动期间，LButtonUp 的 PickRequested 不处理选择变更
-        if (_moveSession.IsMoving) return;
+        if (_translationSession.IsActive) return;
 
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
             ?? VulkanViewportNativeHostInfo.NotAvailable;
@@ -2965,4 +2973,7 @@ public sealed partial class EditorShell : UserControl
                 "Core 基础模块已加载。")
         ];
     }
+
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
 }

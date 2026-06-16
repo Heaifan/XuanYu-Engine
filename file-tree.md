@@ -1,5 +1,10 @@
 # 项目文件树 - FluidWarfare
 
+## Codex Phase 0 takeover docs
+
+- `docs/codex/CODEX_TAKEOVER_AUDIT.md`: records the repository HEAD, dirty worktree, build/test results, oversized files, move/transform audit, risks, and Phase 1/2 target files.
+- `docs/codex/Z_AXIS_CURRENT_PATH.md`: records the current Z-axis move call path, state variables, projection algorithms, camera snapshot behavior, input consumption, and test gaps.
+
 当前阶段：Phase 1
 
 当前版本：0.0.1-dev
