@@ -13,6 +13,10 @@ using FluidWarfare.Editor.Selection;
 using FluidWarfare.Editor.WorldHierarchy;
 using FluidWarfare.Editor.Input.Actions;
 using FluidWarfare.Editor.Input.Runtime;
+using FluidWarfare.Editor.Transform.Edit;
+using FluidWarfare.Editor.Windows.Viewport.Transform.Input;
+using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
 using FluidWarfare.Editor.Windows.Panels.Viewport.Input;
@@ -98,6 +102,10 @@ public sealed partial class EditorShell : UserControl
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
+
+    // ─── Transform 路由 ────────────────────────────────────
+    private readonly TransformInputRoute _transformRoute = new();
+    private bool _moveToolActive;
 
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
@@ -194,6 +202,8 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel.NavigationPointerMoved += HandleOverlayPointerMoved;
             _vulkanViewportHostPanel.NavigationPointerReleased += HandleOverlayPointerReleased;
             _vulkanViewportHostPanel.NavigationCaptureLost += HandleOverlayCaptureLost;
+            _vulkanViewportHostPanel.SceneToolPointerPressed += HandleSceneToolPointerPressed;
+            _vulkanViewportHostPanel.SceneToolPointerReleased += HandleSceneToolPointerReleased;
             _vulkanViewportHostPanel.PointerMoved += HandleViewportPointerMoved;
             _vulkanViewportHostPanel.PointerLeft += HandleViewportPointerLeft;
         }
@@ -1133,6 +1143,23 @@ public sealed partial class EditorShell : UserControl
             System.Diagnostics.Debug.WriteLine(
                 $"[InputTrace-Shell] RawKeyDown vk=0x{virtualKeyCode:X2}");
 
+        // Esc: 取消活动变换
+        if (virtualKeyCode == 0x1B && _transformRoute.Session.IsActive)
+        {
+            _transformRoute.CancelDrag();
+            AppendInfoLog("变换已取消");
+            return;
+        }
+
+        // G: 进入移动模式（Blender 风格）
+        if (virtualKeyCode == 0x47 && _selectedWorldEntity is not null)
+        {
+            _moveToolActive = true;
+            _viewportToolPalette?.SetActiveTool(ViewportEditorTool.Move);
+            AppendInfoLog("移动模式（使用 Gizmo 拖动）");
+            return;
+        }
+
         if (_inputTranslator is null)
         {
             if (s_traceEnabled)
@@ -1187,14 +1214,51 @@ public sealed partial class EditorShell : UserControl
     private void HandleRawInputFocusLost()
     {
         _inputTranslator?.OnRawInputFocusLost();
+        _transformRoute.CancelDrag();
+    }
+
+    // ─── 场景工具仲裁 ──────────────────────────────────
+
+    private ViewportSceneToolPressResult HandleSceneToolPointerPressed(int x, int y)
+    {
+        if (!_moveToolActive || _selectedWorldEntity is null)
+            return ViewportSceneToolPressResult.NotHandled;
+
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) return ViewportSceneToolPressResult.NotHandled;
+
+        // 启动编辑事务
+        if (!TransformEditSessionStart.TryBegin(_worldState, _selectedWorldEntity.EntityId,
+                TransformEditKind.Translation, _worldDirtyState.IsDirty, _transformRoute.Session))
+            return ViewportSceneToolPressResult.NotHandled;
+
+        var pivot = pos.Value.Value;
+        var result = _transformRoute.OnPointerPressed(1, x, y, pivot);
+        if (!result.Started)
+        {
+            _transformRoute.Session.Cancel();
+            return ViewportSceneToolPressResult.NotHandled;
+        }
+
+        return ViewportSceneToolPressResult.BeginDrag;
+    }
+
+    private void HandleSceneToolPointerReleased(int x, int y)
+    {
+        var result = _transformRoute.OnPointerReleased();
+        if (!result.Handled) return;
+
+        var finalPos = _transformRoute.Session.PreviewTransform.Position;
+        ApplyEntityTransform(finalPos, EditorEntityTransformOrigin.MoveTool);
+        AppendInfoLog($"移动完成 ({finalPos.X:F3}, {finalPos.Y:F3}, {finalPos.Z:F3})");
     }
 
     // ─── 视口工具 ──────────────────────────────────────
 
     private void HandleViewportToolChanged(ViewportEditorTool tool)
     {
-        var isMove = tool == ViewportEditorTool.Move;
-        if (isMove && _selectedWorldEntity is null)
+        _moveToolActive = tool == ViewportEditorTool.Move;
+        if (_moveToolActive && _selectedWorldEntity is null)
             _statusBarPanel?.SetCurrentSelection("请先选择实体。");
     }
 
