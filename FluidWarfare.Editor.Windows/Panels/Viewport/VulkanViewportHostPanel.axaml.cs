@@ -26,6 +26,10 @@ public sealed partial class VulkanViewportHostPanel : UserControl
     /// <summary>左键点击拾取（pixelX, pixelY）。遗留。</summary>
     public event Action<int, int>? PickRequested;
 
+    // ─── 场景工具输入事件 ────────────────────────────────────
+    public event Func<int, int, ViewportSceneToolPressResult>? SceneToolPointerPressed;
+    public event Action<int, int>? SceneToolPointerReleased;
+
     // ─── Overlay 导航输入事件 ────────────────────────────────────
     public event Func<int, int, ViewportNavigationPressResult>? NavigationPointerPressed;
     public event Func<int, int, bool>? NavigationPointerMoved;
@@ -60,6 +64,11 @@ public sealed partial class VulkanViewportHostPanel : UserControl
 
             // 遗留
             _nativeHostControl.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
+
+            // 场景工具
+            _nativeHostControl.SceneToolPointerPressed += (x, y) =>
+                SceneToolPointerPressed?.Invoke(x, y) ?? ViewportSceneToolPressResult.NotHandled;
+            _nativeHostControl.SceneToolPointerReleased += (x, y) => SceneToolPointerReleased?.Invoke(x, y);
 
             // Overlay 导航
             _nativeHostControl.NavigationPointerPressed += (x, y) =>

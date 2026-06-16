@@ -104,11 +104,26 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     /// <summary>鼠标离开视口。</summary>
     public event Action? PointerLeft;
 
+    // ─── 场景工具输入事件 ────────────────────────────────────
+
+    /// <summary>
+    /// 场景工具（移动、旋转等）左键按下。
+    /// 在 Overlay 导航之后、遗留 Picking 之前同步调用。
+    /// 用于仲裁输入消费顺序：导航 → 场景工具 → 遗留 Picking。
+    /// 返回 BeginDrag 时，WndProc 会捕获鼠标并阻断遗留 Picking。
+    /// </summary>
+    public event Func<int, int, ViewportSceneToolPressResult>? SceneToolPointerPressed;
+
+    /// <summary>场景工具左键释放（仅当 BeginDrag 后才会触发）。</summary>
+    public event Action<int, int>? SceneToolPointerReleased;
+
     // ─── 状态 ──────────────────────────────────────────────
 
     private bool _trackingMouseLeave;
     private bool _leftButtonHandledByNavigation;
     private bool _navigationDragCaptured;
+    private bool _leftButtonHandledBySceneTool;
+    private bool _sceneToolDragCaptured;
     private bool _rawPointerDragCaptured;
     private readonly bool _traceEnabled;
 
@@ -307,6 +322,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
                     SetFocus(instance._windowHandle);
 
+                    // 第一优先级：Overlay 导航
                     var pressResult = instance.NavigationPointerPressed?.Invoke(mx, my)
                         ?? ViewportNavigationPressResult.NotHandled;
                     instance._leftButtonHandledByNavigation =
@@ -319,10 +335,23 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     }
                     else if (!instance._leftButtonHandledByNavigation)
                     {
-                        // 遗留拾取
-                        instance._pickInput.OnDown(mx, my);
-                        // 同时转发原始按钮事件
-                        instance.RawPointerButtonDown?.Invoke(1 /* Left */, mx, my);
+                        // 第二优先级：场景工具（移动/旋转等）
+                        var toolResult = instance.SceneToolPointerPressed?.Invoke(mx, my)
+                            ?? ViewportSceneToolPressResult.NotHandled;
+
+                        if (toolResult == ViewportSceneToolPressResult.BeginDrag)
+                        {
+                            instance._leftButtonHandledBySceneTool = true;
+                            instance._sceneToolDragCaptured = true;
+                            SetCapture(instance._windowHandle);
+                            // 不触发 _pickInput.OnDown()，阻断遗留 Picking
+                        }
+                        else
+                        {
+                            // 第三优先级：遗留 Picking
+                            instance._pickInput.OnDown(mx, my);
+                            instance.RawPointerButtonDown?.Invoke(1 /* Left */, mx, my);
+                        }
                     }
                     return 0;
                 }
@@ -338,6 +367,15 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                         var hadCapture = instance._navigationDragCaptured;
                         instance._navigationDragCaptured = false;
                         instance.NavigationPointerReleased?.Invoke();
+                        if (hadCapture) ReleaseCapture();
+                    }
+                    else if (instance._leftButtonHandledBySceneTool)
+                    {
+                        instance._leftButtonHandledBySceneTool = false;
+                        var hadCapture = instance._sceneToolDragCaptured;
+                        instance._sceneToolDragCaptured = false;
+                        instance.SceneToolPointerReleased?.Invoke(mx, my);
+                        // 不调用 _pickInput.OnUp() — 阻断遗留 Picking
                         if (hadCapture) ReleaseCapture();
                     }
                     else
@@ -377,7 +415,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     {
         _pickInput.OnKillFocus();
 
-        // 通知 Translator 清空修饰键状态并结束活动拖动（覆盖 MMB 和覆盖层两种拖拽）
         if (_rawPointerDragCaptured)
         {
             _rawPointerDragCaptured = false;
@@ -386,8 +423,14 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
         var hadNavigationCapture = _navigationDragCaptured || _leftButtonHandledByNavigation;
         EndNavigationCapture();
+
+        var hadSceneToolCapture = _sceneToolDragCaptured || _leftButtonHandledBySceneTool;
+        EndSceneToolCapture();
+
         if (hadNavigationCapture)
             NavigationCaptureLost?.Invoke();
+        if (hadSceneToolCapture)
+            RawInputFocusLost?.Invoke();
     }
 
     private void HandleCaptureChanged()
@@ -403,6 +446,12 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             EndNavigationCapture();
             NavigationCaptureLost?.Invoke();
         }
+
+        if (_sceneToolDragCaptured || _leftButtonHandledBySceneTool)
+        {
+            EndSceneToolCapture();
+            RawInputFocusLost?.Invoke();
+        }
     }
 
     private void EndNavigationCapture()
@@ -410,6 +459,12 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         _leftButtonHandledByNavigation = false;
         _navigationDragCaptured = false;
         _pickInput.OnKillFocus();
+    }
+
+    private void EndSceneToolCapture()
+    {
+        _leftButtonHandledBySceneTool = false;
+        _sceneToolDragCaptured = false;
     }
 
     // ─── 窗口调整大小 ────────────────────────────────────────
