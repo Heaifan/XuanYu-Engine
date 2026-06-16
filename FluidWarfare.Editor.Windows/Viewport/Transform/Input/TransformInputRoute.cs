@@ -27,12 +27,13 @@ public sealed class TransformInputRoute
     {
         if (button != 1 || _session.IsActive) return default;
 
+        // 没有 Gizmo 悬停时默认为自由移动（Blender G 模式）
         var element = _gizmoInteraction.HoveredElement;
-        if (element == MoveGizmoElement.None) return default;
+        if (element == MoveGizmoElement.None)
+            element = MoveGizmoElement.ViewPlane;
 
         if (!_gizmoInteraction.TryBeginDrag(element)) return default;
 
-        // 根据命中的 Gizmo 元素创建约束和锚点
         return StartDragFromElement(element, x, y, pivot);
     }
 
@@ -83,6 +84,7 @@ public sealed class TransformInputRoute
             MoveGizmoElement.AxisX => Vector3d.UnitX,
             MoveGizmoElement.AxisY => Vector3d.UnitY,
             MoveGizmoElement.AxisZ => Vector3d.UnitZ,
+            MoveGizmoElement.ViewPlane => Vector3d.UnitX,
             _ => Vector3d.Zero,
         };
 
