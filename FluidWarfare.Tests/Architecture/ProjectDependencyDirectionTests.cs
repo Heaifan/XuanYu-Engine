@@ -31,6 +31,7 @@ public sealed class ProjectDependencyDirectionTests
                 "FluidWarfare.Bridge.ProjectEngine",
                 "FluidWarfare.Core",
                 "FluidWarfare.Editor",
+                "FluidWarfare.Editor.Windows",
                 "FluidWarfare.Engine",
                 "FluidWarfare.Project",
                 "FluidWarfare.Render",

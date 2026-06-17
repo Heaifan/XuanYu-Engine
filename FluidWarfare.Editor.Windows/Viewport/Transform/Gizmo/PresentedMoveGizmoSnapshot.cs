@@ -6,10 +6,14 @@ namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 /// </summary>
 public readonly record struct PresentedMoveGizmoSnapshot(
     bool IsAvailable,
-    MoveGizmoLayout Layout,
+    string EntityId,
+    long SelectionRevision,
+    long TransformRevision,
+    int CameraRevision,
     int ViewportWidth,
     int ViewportHeight,
-    int CameraRevision)
+    MoveGizmoLayout Layout)
 {
-    public static readonly PresentedMoveGizmoSnapshot None = new(false, null!, 0, 0, 0);
+    public static readonly PresentedMoveGizmoSnapshot None = new(
+        false, string.Empty, 0, 0, 0, 0, 0, null!);
 }

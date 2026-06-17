@@ -1,3 +1,5 @@
+using FluidWarfare.Core.Math;
+
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 
 /// <summary>
@@ -7,13 +9,19 @@ namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 /// </summary>
 public sealed class MoveGizmoLayout
 {
-    private const double PlaneBlockOffset = 30.0;
+    // ─── 尺寸常量（像素） ──────────────────────────────────
+    public const double CenterRadius = 10.0;
+    public const double AxisStartPixels = 14.0;
+    public const double AxisEndPixels = 110.0;
+    public const double ArrowLength = 14.0;
+    public const double ShaftHalfWidth = 1.5;
+    public const double PlaneInner = 24.0;
+    public const double PlaneOuter = 44.0;
 
     public required double PivotPixelX { get; init; }
     public required double PivotPixelY { get; init; }
 
     // ─── 三轴端点 ────────────────────────────────────────
-
     public required double AxisEndPixelX_AxisX { get; init; }
     public required double AxisEndPixelY_AxisX { get; init; }
     public required double AxisEndPixelX_AxisY { get; init; }
@@ -25,8 +33,7 @@ public sealed class MoveGizmoLayout
     public required bool AxisDegenerateY { get; init; }
     public required bool AxisDegenerateZ { get; init; }
 
-    // ─── 三轴屏幕方向（单位向量） ────────────────────────
-
+    /// <summary>轴在屏幕上的单位方向向量。</summary>
     public double AxisDirX_X => Normalize(AxisEndPixelX_AxisX - PivotPixelX, AxisEndPixelY_AxisX - PivotPixelY).X;
     public double AxisDirX_Y => Normalize(AxisEndPixelX_AxisX - PivotPixelX, AxisEndPixelY_AxisX - PivotPixelY).Y;
     public double AxisDirY_X => Normalize(AxisEndPixelX_AxisY - PivotPixelX, AxisEndPixelY_AxisY - PivotPixelY).X;
@@ -34,52 +41,13 @@ public sealed class MoveGizmoLayout
     public double AxisDirZ_X => Normalize(AxisEndPixelX_AxisZ - PivotPixelX, AxisEndPixelY_AxisZ - PivotPixelY).X;
     public double AxisDirZ_Y => Normalize(AxisEndPixelX_AxisZ - PivotPixelX, AxisEndPixelY_AxisZ - PivotPixelY).Y;
 
-    // ─── 平面块四角（30px 偏移） ─────────────────────────
-
-    public double PlaneXY_Corner0X => PivotPixelX;
-    public double PlaneXY_Corner0Y => PivotPixelY;
-    public double PlaneXY_Corner1X => PivotPixelX + AxisDirX_X * PlaneBlockOffset;
-    public double PlaneXY_Corner1Y => PivotPixelY + AxisDirX_Y * PlaneBlockOffset;
-    public double PlaneXY_Corner2X => PivotPixelX + AxisDirX_X * PlaneBlockOffset + AxisDirY_X * PlaneBlockOffset;
-    public double PlaneXY_Corner2Y => PivotPixelY + AxisDirX_Y * PlaneBlockOffset + AxisDirY_Y * PlaneBlockOffset;
-    public double PlaneXY_Corner3X => PivotPixelX + AxisDirY_X * PlaneBlockOffset;
-    public double PlaneXY_Corner3Y => PivotPixelY + AxisDirY_Y * PlaneBlockOffset;
-
-    public double PlaneXZ_Corner0X => PivotPixelX;
-    public double PlaneXZ_Corner0Y => PivotPixelY;
-    public double PlaneXZ_Corner1X => PivotPixelX + AxisDirX_X * PlaneBlockOffset;
-    public double PlaneXZ_Corner1Y => PivotPixelY + AxisDirX_Y * PlaneBlockOffset;
-    public double PlaneXZ_Corner2X => PivotPixelX + AxisDirX_X * PlaneBlockOffset + AxisDirZ_X * PlaneBlockOffset;
-    public double PlaneXZ_Corner2Y => PivotPixelY + AxisDirX_Y * PlaneBlockOffset + AxisDirZ_Y * PlaneBlockOffset;
-    public double PlaneXZ_Corner3X => PivotPixelX + AxisDirZ_X * PlaneBlockOffset;
-    public double PlaneXZ_Corner3Y => PivotPixelY + AxisDirZ_Y * PlaneBlockOffset;
-
-    public double PlaneYZ_Corner0X => PivotPixelX;
-    public double PlaneYZ_Corner0Y => PivotPixelY;
-    public double PlaneYZ_Corner1X => PivotPixelX + AxisDirY_X * PlaneBlockOffset;
-    public double PlaneYZ_Corner1Y => PivotPixelY + AxisDirY_Y * PlaneBlockOffset;
-    public double PlaneYZ_Corner2X => PivotPixelX + AxisDirY_X * PlaneBlockOffset + AxisDirZ_X * PlaneBlockOffset;
-    public double PlaneYZ_Corner2Y => PivotPixelY + AxisDirY_Y * PlaneBlockOffset + AxisDirZ_Y * PlaneBlockOffset;
-    public double PlaneYZ_Corner3X => PivotPixelX + AxisDirZ_X * PlaneBlockOffset;
-    public double PlaneYZ_Corner3Y => PivotPixelY + AxisDirZ_Y * PlaneBlockOffset;
-
-    // ─── 中心手柄半径 ────────────────────────────────────
-
-    public double CenterHandleRadius => CenterHandleRadiusValue;
-
-    private const double CenterHandleRadiusValue = 6.0;
-
-    // ─── 辅助 ─────────────────────────────────────────────
-
-    public double AxisScreenLengthX =>
-        Dist(PivotPixelX, PivotPixelY, AxisEndPixelX_AxisX, AxisEndPixelY_AxisX);
-    public double AxisScreenLengthY =>
-        Dist(PivotPixelX, PivotPixelY, AxisEndPixelX_AxisY, AxisEndPixelY_AxisY);
-    public double AxisScreenLengthZ =>
-        Dist(PivotPixelX, PivotPixelY, AxisEndPixelX_AxisZ, AxisEndPixelY_AxisZ);
-
-    private static double Dist(double x1, double y1, double x2, double y2) =>
-        Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    /// <summary>轴杆起点（从中心偏移 AxisStartPixels）。</summary>
+    public double AxisStartX_X => PivotPixelX + AxisDirX_X * AxisStartPixels;
+    public double AxisStartY_X => PivotPixelY + AxisDirX_Y * AxisStartPixels;
+    public double AxisStartX_Y => PivotPixelX + AxisDirY_X * AxisStartPixels;
+    public double AxisStartY_Y => PivotPixelY + AxisDirY_Y * AxisStartPixels;
+    public double AxisStartX_Z => PivotPixelX + AxisDirZ_X * AxisStartPixels;
+    public double AxisStartY_Z => PivotPixelY + AxisDirZ_Y * AxisStartPixels;
 
     private static (double X, double Y) Normalize(double dx, double dy)
     {

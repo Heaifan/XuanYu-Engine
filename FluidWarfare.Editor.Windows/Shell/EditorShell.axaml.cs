@@ -1195,7 +1195,7 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 原始鼠标移动入口。转发到输入转换器。
+    /// 原始鼠标移动入口。转发到输入转换器，并驱动变换拖动。
     /// </summary>
     private void HandleRawPointerMoved(int x, int y)
     {
@@ -1205,6 +1205,16 @@ public sealed partial class EditorShell : UserControl
         // 更新 Gizmo Hover
         if (_moveToolActive && _presentedGizmo.IsAvailable)
             _transformRoute.UpdateGizmoHover(x, y, _presentedGizmo.Layout);
+
+        // 驱动变换拖动（轴/平面实时更新）
+        if (_transformRoute.Session.IsActive)
+        {
+            var result = _transformRoute.OnPointerMoved(x, y,
+                _lastCameraState.FieldOfViewDegrees,
+                _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic);
+            if (result.Handled)
+                return; // Session 已更新预览，释放时统一提交
+        }
 
         if (_inputTranslator is null) return;
         var match = _inputTranslator.OnRawPointerMoved(x, y);
@@ -1240,6 +1250,15 @@ public sealed partial class EditorShell : UserControl
         var pivot = pos.Value.Value;
         var snapshot = _scene3dSession?.LastPresentedSnapshot;
         var hasCam = snapshot is not null && snapshot.IsValid;
+
+        // 计算相机位置和前方向（用于平面拖动射线）
+        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
+        var camPos = new Vector3d(camX, camY, camZ);
+        var fwd = new Vector3d(
+            _lastCameraState.PivotX - camX,
+            _lastCameraState.PivotY - camY,
+            _lastCameraState.PivotZ - camZ).Normalize();
+
         var result = _transformRoute.OnPointerPressed(1, x, y, pivot,
             hasCam ? snapshot!.ViewProjection : Array.Empty<float>(),
             hasCam ? snapshot!.ViewportWidth : 1,
@@ -1247,7 +1266,8 @@ public sealed partial class EditorShell : UserControl
             _lastCameraState.Distance,
             _lastCameraState.FieldOfViewDegrees,
             _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic,
-            _lastCameraState.OrthographicHeight);
+            _lastCameraState.OrthographicHeight,
+            camPos, fwd);
         if (!result.Started)
         {
             _transformRoute.Session.Cancel();
@@ -1940,8 +1960,9 @@ public sealed partial class EditorShell : UserControl
         session.SetMoveGizmoVertices(overlayVerts);
 
         // 保存 Present 快照供 HitTest 使用
+        var entityId = _selectedWorldEntity?.EntityId.Value.ToString() ?? string.Empty;
         _presentedGizmo = new PresentedMoveGizmoSnapshot(
-            true, layout, w, h, snapshot.CameraRevision);
+            true, entityId, 0, 0, snapshot.CameraRevision, w, h, layout);
     }
 
     private static bool TryProjectToScreen(
