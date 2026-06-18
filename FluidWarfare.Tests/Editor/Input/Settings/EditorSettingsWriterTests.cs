@@ -51,12 +51,12 @@ public sealed class EditorSettingsWriterTests
         };
 
         var json = JsonSerializer.Serialize(doc, JsonOptions);
-        var read = JsonSerializer.Deserialize<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions);
-        Assert.NotNull(read);
+        var read = Assert.IsType<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(
+            JsonSerializer.Deserialize<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions));
         Assert.Single(read.Input.Overrides);
         Assert.Equal("viewport.pan", read.Input.Overrides[0].ActionId);
-        Assert.NotNull(read.Input.Overrides[0].Gesture);
-        Assert.Equal("Right", read.Input.Overrides[0].Gesture.Code);
+        var gesture = Assert.IsType<FluidWarfare.Editor.Input.Bindings.EditorInputGesture>(read.Input.Overrides[0].Gesture);
+        Assert.Equal("Right", gesture.Code);
     }
 
     [Fact]

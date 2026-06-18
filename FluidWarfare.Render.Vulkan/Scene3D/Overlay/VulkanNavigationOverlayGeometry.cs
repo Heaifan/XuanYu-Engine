@@ -224,7 +224,7 @@ public static class VulkanNavigationOverlayGeometry
     // ─── 导航按钮 ───────────────────────────────────────────────
 
     private static void DrawNavigationButton(List<VulkanOverlayVertex> verts,
-        ViewportNavigationLayout.Rect rect, bool hovered, bool pressed, string label)
+        Rect rect, bool hovered, bool pressed, string label)
     {
         var brightness = pressed ? 0.3f : (hovered ? 0.5f : 0.2f);
         var borderBrightness = pressed ? 0.6f : (hovered ? 0.9f : 0.4f);

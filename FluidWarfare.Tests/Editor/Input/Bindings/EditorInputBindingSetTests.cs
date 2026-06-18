@@ -32,15 +32,14 @@ public sealed class EditorInputBindingSetTests
         };
 
         var json = JsonSerializer.Serialize(set, JsonOptions);
-        var read = JsonSerializer.Deserialize<EditorInputBindingSet>(json, JsonOptions);
-
-        Assert.NotNull(read);
+        var read = Assert.IsType<EditorInputBindingSet>(
+            JsonSerializer.Deserialize<EditorInputBindingSet>(json, JsonOptions));
         Assert.Equal("blender", read.Preset);
         Assert.Single(read.Overrides);
         Assert.Equal("viewport.pan", read.Overrides[0].ActionId);
         Assert.Equal("primary", read.Overrides[0].Slot);
-        Assert.NotNull(read.Overrides[0].Gesture);
-        Assert.Equal("Right", read.Overrides[0].Gesture.Code);
+        var gesture = Assert.IsType<EditorInputGesture>(read.Overrides[0].Gesture);
+        Assert.Equal("Right", gesture.Code);
     }
 
     [Fact]

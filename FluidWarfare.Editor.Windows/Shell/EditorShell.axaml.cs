@@ -1804,7 +1804,7 @@ public sealed partial class EditorShell : UserControl
         var layout = GetPresentedNavigationLayout();
         if (layout is null) return ViewportNavigationPressResult.NotHandled;
 
-        var element = layout.HitTest(pixelX, pixelY);
+        var element = ViewportNavigationHitTest.HitTest(pixelX, pixelY, layout);
         if (element == ViewportNavigationElement.None)
             return ViewportNavigationPressResult.NotHandled;
 
@@ -1871,7 +1871,7 @@ public sealed partial class EditorShell : UserControl
         var layout = GetPresentedNavigationLayout();
         if (layout is null) return false;
 
-        var element = layout.HitTest(pixelX, pixelY);
+        var element = ViewportNavigationHitTest.HitTest(pixelX, pixelY, layout);
         if (element != _navigationHoverElement)
             SetOverlayVisualState(element, ViewportNavigationElement.None);
 
@@ -2367,9 +2367,8 @@ public sealed partial class EditorShell : UserControl
             (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
             out var ray);
 
-        if (status != SceneRayBuildStatus.Success)
+        if (status != SceneRayBuildStatus.Success || ray is null)
         {
-            // 技术失败（Snapshot 不可用、尺寸不匹配等）不清除 Hover
             if (status == SceneRayBuildStatus.SnapshotUnavailable ||
                 status == SceneRayBuildStatus.SnapshotExtentMismatch)
                 return;
@@ -2444,7 +2443,7 @@ public sealed partial class EditorShell : UserControl
             out var ray);
 
         // Phase D：技术失败（Snapshot 不可用、尺寸不匹配、矩阵无效）不清除选择
-        if (buildStatus != SceneRayBuildStatus.Success)
+        if (buildStatus != SceneRayBuildStatus.Success || ray is null)
         {
             if (buildStatus != SceneRayBuildStatus.Success)
             {

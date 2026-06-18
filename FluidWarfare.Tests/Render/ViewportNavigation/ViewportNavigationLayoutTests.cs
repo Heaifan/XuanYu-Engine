@@ -12,7 +12,7 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void Compute_ReturnsLayout()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         Assert.NotNull(layout);
         Assert.Equal(1280, layout.ViewportWidth);
         Assert.Equal(720, layout.ViewportHeight);
@@ -21,7 +21,7 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void GizmoCenter_IsInTopRightCorner()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         Assert.Equal(1280 - ViewportNavigationLayout.MarginRight - ViewportNavigationLayout.GizmoSize / 2f,
             layout.GizmoCenterX, 3);
         Assert.Equal(ViewportNavigationLayout.MarginTop + ViewportNavigationLayout.GizmoSize / 2f,
@@ -31,8 +31,7 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void NavigationButtons_AreStackedUnderCenteredGizmo()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
-
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         Assert.Equal(layout.GizmoCenterX, layout.PanButtonRect.X + layout.PanButtonRect.W / 2f, 3);
         Assert.Equal(layout.PanButtonRect.X, layout.FrameButtonRect.X, 3);
         Assert.Equal(layout.FrameButtonRect.X, layout.ProjectionButtonRect.X, 3);
@@ -44,14 +43,14 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void Compute_HasSixAxisProjections()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         Assert.Equal(6, layout.AxisProjections.Count);
     }
 
     [Fact]
     public void AxisProjections_HaveCorrectElements()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var elements = layout.AxisProjections.Select(a => a.Element).ToHashSet();
         Assert.Contains(ViewportNavigationElement.PositiveX, elements);
         Assert.Contains(ViewportNavigationElement.NegativeX, elements);
@@ -64,7 +63,7 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void AxisProjections_UseExpectedColors()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var posX = layout.AxisProjections.First(a => a.Element == ViewportNavigationElement.PositiveX);
         Assert.Equal(0xF0 / 255f, posX.Color.R, 3);
         Assert.Equal(0x4B / 255f, posX.Color.G, 3);
@@ -84,12 +83,9 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void PositiveAxis_HasLargerRadiusThanNegative()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
-        // For any axis, positive should have larger radius when depth > 0
-        // In default view (Yaw=135,Pitch=45), +X faces roughly toward camera
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var posX = layout.AxisProjections.First(a => a.Element == ViewportNavigationElement.PositiveX);
         var negX = layout.AxisProjections.First(a => a.Element == ViewportNavigationElement.NegativeX);
-
         if (posX.Depth > 0)
             Assert.True(posX.Radius > negX.Radius);
         else
@@ -99,11 +95,10 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void HitTest_AxisEnd_ReturnsCorrectElement()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
-        // Click on the center of each axis projection
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         foreach (var proj in layout.AxisProjections)
         {
-            var hit = layout.HitTest(proj.ScreenX, proj.ScreenY);
+            var hit = ViewportNavigationHitTest.HitTest(proj.ScreenX, proj.ScreenY, layout);
             Assert.Equal(proj.Element, hit);
         }
     }
@@ -111,72 +106,73 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void HitTest_GizmoCenter_ReturnsGizmoCenter()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
-        var hit = layout.HitTest(layout.GizmoCenterX, layout.GizmoCenterY);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
+        var hit = ViewportNavigationHitTest.HitTest(layout.GizmoCenterX, layout.GizmoCenterY, layout);
         Assert.Equal(ViewportNavigationElement.GizmoCenter, hit);
     }
 
     [Fact]
     public void HitTest_PanButton_ReturnsPan()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var btn = layout.PanButtonRect;
-        var hit = layout.HitTest(btn.X + 1, btn.Y + 1);
+        var hit = ViewportNavigationHitTest.HitTest(btn.X + 1, btn.Y + 1, layout);
         Assert.Equal(ViewportNavigationElement.PanButton, hit);
     }
 
     [Fact]
     public void HitTest_FrameButton_ReturnsFrame()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var btn = layout.FrameButtonRect;
-        var hit = layout.HitTest(btn.X + 1, btn.Y + 1);
+        var hit = ViewportNavigationHitTest.HitTest(btn.X + 1, btn.Y + 1, layout);
         Assert.Equal(ViewportNavigationElement.FrameButton, hit);
     }
 
     [Fact]
     public void HitTest_ProjectionButton_ReturnsProjection()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var btn = layout.ProjectionButtonRect;
-        var hit = layout.HitTest(btn.X + 1, btn.Y + 1);
+        var hit = ViewportNavigationHitTest.HitTest(btn.X + 1, btn.Y + 1, layout);
         Assert.Equal(ViewportNavigationElement.ProjectionButton, hit);
     }
 
     [Fact]
     public void HitTest_OutsideOverlay_ReturnsNone()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
-        // Bottom-left corner — far from overlay
-        var hit = layout.HitTest(10, 700);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
+        var hit = ViewportNavigationHitTest.HitTest(10, 700, layout);
         Assert.Equal(ViewportNavigationElement.None, hit);
     }
 
     [Fact]
     public void ElementToAction_MapsCorrectly()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
-        Assert.Equal(ViewportNavigationAction.SnapPositiveX, layout.ElementToAction(ViewportNavigationElement.PositiveX));
-        Assert.Equal(ViewportNavigationAction.SnapNegativeX, layout.ElementToAction(ViewportNavigationElement.NegativeX));
-        Assert.Equal(ViewportNavigationAction.Orbit, layout.ElementToAction(ViewportNavigationElement.GizmoCenter));
-        Assert.Equal(ViewportNavigationAction.Pan, layout.ElementToAction(ViewportNavigationElement.PanButton));
-        Assert.Equal(ViewportNavigationAction.Frame, layout.ElementToAction(ViewportNavigationElement.FrameButton));
-        Assert.Equal(ViewportNavigationAction.ToggleProjection, layout.ElementToAction(ViewportNavigationElement.ProjectionButton));
-        Assert.Equal(ViewportNavigationAction.None, layout.ElementToAction(ViewportNavigationElement.None));
+        Assert.Equal(ViewportNavigationAction.SnapPositiveX,
+            ViewportNavigationHitTest.ElementToAction(ViewportNavigationElement.PositiveX));
+        Assert.Equal(ViewportNavigationAction.SnapNegativeX,
+            ViewportNavigationHitTest.ElementToAction(ViewportNavigationElement.NegativeX));
+        Assert.Equal(ViewportNavigationAction.Orbit,
+            ViewportNavigationHitTest.ElementToAction(ViewportNavigationElement.GizmoCenter));
+        Assert.Equal(ViewportNavigationAction.Pan,
+            ViewportNavigationHitTest.ElementToAction(ViewportNavigationElement.PanButton));
+        Assert.Equal(ViewportNavigationAction.Frame,
+            ViewportNavigationHitTest.ElementToAction(ViewportNavigationElement.FrameButton));
+        Assert.Equal(ViewportNavigationAction.ToggleProjection,
+            ViewportNavigationHitTest.ElementToAction(ViewportNavigationElement.ProjectionButton));
+        Assert.Equal(ViewportNavigationAction.None,
+            ViewportNavigationHitTest.ElementToAction(ViewportNavigationElement.None));
     }
 
     [Fact]
     public void CameraRotation_ChangesAxisProjection()
     {
-        // Default Yaw=135, Pitch=45
-        var defaultLayout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
-
-        // After orbit to Yaw=0, Pitch=45 (looking toward -Y)
+        var defaultLayout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var rotatedState = SceneOrbitCameraMotion.CreateDefault() with { Yaw = 0 };
         var rotatedPose = SceneCameraPose.FromOrbitState(rotatedState, 2);
-        var rotatedLayout = ViewportNavigationLayout.Compute(1280, 720, rotatedPose);
+        var rotatedLayout = ViewportNavigationLayoutCompute.Compute(1280, 720, rotatedPose);
 
-        // The +Y axis should be at a different screen position after rotation
         var defaultPosY = defaultLayout.AxisProjections.First(a => a.Element == ViewportNavigationElement.PositiveY);
         var rotatedPosY = rotatedLayout.AxisProjections.First(a => a.Element == ViewportNavigationElement.PositiveY);
         Assert.NotEqual(defaultPosY.ScreenX, rotatedPosY.ScreenX, 1);
@@ -185,33 +181,30 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void Resize_RebuildsLayout()
     {
-        var small = ViewportNavigationLayout.Compute(640, 480, DefaultPose);
-        var large = ViewportNavigationLayout.Compute(1920, 1080, DefaultPose);
+        var small = ViewportNavigationLayoutCompute.Compute(640, 480, DefaultPose);
+        var large = ViewportNavigationLayoutCompute.Compute(1920, 1080, DefaultPose);
 
-        // Different viewport sizes -> different gizmo positions
         Assert.NotEqual(small.ViewportWidth, large.ViewportWidth);
         Assert.NotEqual(small.GizmoCenterX, large.GizmoCenterX);
 
         var oldPx = small.PanButtonRect.X + small.PanButtonRect.W / 2f;
         var oldPy = small.PanButtonRect.Y + small.PanButtonRect.H / 2f;
-        Assert.Equal(ViewportNavigationElement.None, large.HitTest(oldPx, oldPy));
+        Assert.Equal(ViewportNavigationElement.None,
+            ViewportNavigationHitTest.HitTest(oldPx, oldPy, large));
     }
 
     [Fact]
     public void SmallViewport_ScalesDown()
     {
-        var tiny = ViewportNavigationLayout.Compute(200, 150, DefaultPose);
+        var tiny = ViewportNavigationLayoutCompute.Compute(200, 150, DefaultPose);
         Assert.True(tiny.Scale < 1f);
     }
 
     [Fact]
     public void AxisProjections_HaveVaryingDepth()
     {
-        // Verify that front-facing axes have depth > 0 and back-facing have depth < 0
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var depths = layout.AxisProjections.Select(a => a.Depth).ToArray();
-
-        // In default pose (Yaw=135, Pitch=45), some axes face toward camera, some away
         Assert.Contains(depths, d => d > 0);
         Assert.Contains(depths, d => d < 0);
     }
@@ -220,39 +213,34 @@ public sealed class ViewportNavigationLayoutTests
     public void HitTest_OverlappingAxes_ReturnsFrontAxis()
     {
         var state = SceneNavigationCameraMotion.SnapToView(
-            SceneOrbitCameraMotion.CreateDefault(),
-            FluidWarfare.Render.Camera.Navigation.SceneNavigationView.PositiveX);
+            SceneOrbitCameraMotion.CreateDefault(), SceneNavigationView.PositiveX);
         var pose = SceneCameraPose.FromOrbitState(state, 2);
-        var layout = ViewportNavigationLayout.Compute(1280, 720, pose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, pose);
 
-        // 从 +X 看向场景时，±X 轴端投影重叠；-X 朝向相机，应获得点击。
-        var hit = layout.HitTest(layout.GizmoCenterX, layout.GizmoCenterY);
+        var hit = ViewportNavigationHitTest.HitTest(
+            layout.GizmoCenterX, layout.GizmoCenterY, layout);
         Assert.Equal(ViewportNavigationElement.NegativeX, hit);
     }
 
     [Fact]
     public void HitTest_InsideGizmoOrbitArea_ReturnsGizmoCenter()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, DefaultPose);
         var offset = layout.GizmoOrbitCircle.Radius * 0.70f;
-
-        var hit = layout.HitTest(
-            layout.GizmoCenterX + offset,
-            layout.GizmoCenterY + offset);
-
+        var hit = ViewportNavigationHitTest.HitTest(
+            layout.GizmoCenterX + offset, layout.GizmoCenterY + offset, layout);
         Assert.Equal(ViewportNavigationElement.GizmoCenter, hit);
     }
 
     [Theory]
-    [InlineData(FluidWarfare.Render.Camera.Navigation.SceneNavigationView.PositiveZ)]
-    [InlineData(FluidWarfare.Render.Camera.Navigation.SceneNavigationView.NegativeZ)]
-    public void VerticalViews_ProduceFiniteLayout(
-        FluidWarfare.Render.Camera.Navigation.SceneNavigationView view)
+    [InlineData(SceneNavigationView.PositiveZ)]
+    [InlineData(SceneNavigationView.NegativeZ)]
+    public void VerticalViews_ProduceFiniteLayout(SceneNavigationView view)
     {
         var state = SceneNavigationCameraMotion.SnapToView(
             SceneOrbitCameraMotion.CreateDefault(), view);
         var pose = SceneCameraPose.FromOrbitState(state, 3);
-        var layout = ViewportNavigationLayout.Compute(1280, 720, pose);
+        var layout = ViewportNavigationLayoutCompute.Compute(1280, 720, pose);
 
         Assert.All(layout.AxisProjections, axis =>
         {
@@ -266,10 +254,9 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void EveryInteractiveElement_MapsToAction()
     {
-        var layout = ViewportNavigationLayout.Compute(1280, 720, DefaultPose);
         foreach (var element in Enum.GetValues<ViewportNavigationElement>())
         {
-            var action = layout.ElementToAction(element);
+            var action = ViewportNavigationHitTest.ElementToAction(element);
             if (element == ViewportNavigationElement.None)
                 Assert.Equal(ViewportNavigationAction.None, action);
             else
@@ -280,7 +267,7 @@ public sealed class ViewportNavigationLayoutTests
     [Fact]
     public void TinyViewport_InteractiveBoundsRemainFinite()
     {
-        var layout = ViewportNavigationLayout.Compute(180, 140, DefaultPose);
+        var layout = ViewportNavigationLayoutCompute.Compute(180, 140, DefaultPose);
         Assert.True(float.IsFinite(layout.GizmoCenterX));
         Assert.True(float.IsFinite(layout.GizmoCenterY));
         Assert.True(layout.Scale > 0f);

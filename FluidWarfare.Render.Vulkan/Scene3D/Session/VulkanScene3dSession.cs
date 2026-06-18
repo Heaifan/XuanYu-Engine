@@ -706,7 +706,7 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
                     var extentH = (int)_swapchainRes.Extent.Height;
                     var projText = cameraPose.ProjectionMode == SceneProjectionMode.Perspective ? "Persp" : "Ortho";
 
-                    _lastOverlayLayout = FluidWarfare.Render.ViewportNavigation.ViewportNavigationLayout.Compute(
+                    _lastOverlayLayout = FluidWarfare.Render.ViewportNavigation.ViewportNavigationLayoutCompute.Compute(
                         extentW, extentH, cameraPose);
 
                     var overlayVerts = Overlay.VulkanNavigationOverlayGeometry.Build(
