@@ -1309,8 +1309,9 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 实时 Preview：将拖动的预览位置同步到 Vulkan Scene 但不修改 WorldState。
+    /// 实时 Preview：将拖动的预览位置同步到 _renderScene + Vulkan，但不修改 WorldState。
     /// 鼠标释放时由 HandleSceneToolPointerReleased 统一提交。
+    /// Preview 必须更新 _renderScene，否则 ScenePointerPicker.Pick 读到的仍是旧位置。
     /// </summary>
     private void ApplyPreviewPosition()
     {
@@ -1320,8 +1321,14 @@ public sealed partial class EditorShell : UserControl
         var entityIdStr = _selectedWorldEntity.EntityId.Value.ToString();
         var unitPos = EntityToScene3dPosition(previewPos);
 
-        // 更新 Vulkan 内部缓存绘制数据（不修改 _renderScene / WorldState）
+        // 更新 Vulkan 内部缓存绘制数据
         _scene3dSession.UpdateEntityPosition(entityIdStr, unitPos.X, unitPos.Y, unitPos.Z);
+
+        // 同步更新 _renderScene（ScenePointerPicker.Pick 和 BuildUnitDrawList 读取它）
+        var writeResult = RenderSceneObjectPositionWriter.Update(
+            _renderScene, _selectedWorldEntity.EntityId, previewPos);
+        if (writeResult.IsSuccess && writeResult.NewScene is not null)
+            _renderScene = writeResult.NewScene;
 
         // 更新 Inspector 数值
         _inspectorPanel?.SetTransformTexts(
@@ -1329,40 +1336,40 @@ public sealed partial class EditorShell : UserControl
             previewPos.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
             previewPos.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
 
-        // 请求一帧：ScheduleScene3dFrame 会重新 BuildUnitDrawList + SubmitMoveGizmoVertices
+        // 请求一帧
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
     // ─── 统一取消 ──────────────────────────────────────────────
 
     /// <summary>
-    /// 统一取消活动变换。恢复视觉位置、Inspector，重置模态状态。
-    /// 所有取消路径（Esc、右键、CaptureLost、FocusLost、工具切换）只能通过此入口。
+    /// 统一取消活动变换。恢复视觉位置、_renderScene、Inspector，重置模态状态。
     /// </summary>
     private void CancelActiveTransform()
     {
         if (!_transformRoute.Session.IsActive && !_blenderMoveActive) return;
 
-        // Session.Cancel 恢复 InitialTransform 到 _preview
         var initialPos = _transformRoute.Session.InitialPosition;
         _transformRoute.CancelDrag();
         _blenderMoveActive = false;
 
-        // 恢复 Vulkan 内部缓存绘制数据到初始位置
         if (_selectedWorldEntity is not null && _scene3dSession is not null)
         {
             var entityIdStr = _selectedWorldEntity.EntityId.Value.ToString();
             var unitPos = EntityToScene3dPosition(initialPos);
             _scene3dSession.UpdateEntityPosition(entityIdStr, unitPos.X, unitPos.Y, unitPos.Z);
+
+            // 同步恢复 _renderScene（Picker 和 BuildUnitDrawList 读取它）
+            var writeResult = RenderSceneObjectPositionWriter.Update(
+                _renderScene, _selectedWorldEntity.EntityId, initialPos);
+            if (writeResult.IsSuccess && writeResult.NewScene is not null)
+                _renderScene = writeResult.NewScene;
         }
 
-        // 恢复 Inspector
         _inspectorPanel?.SetTransformTexts(
             initialPos.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
             initialPos.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
             initialPos.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
-
-        // 请求帧刷新画面
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
@@ -2453,8 +2460,22 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        // 统一 Picking：Entity 优先 → Ground → None
+        // 统一 Picking：精确 Ray-AABB → 5px 屏幕容错 → Ground → None
         var pointerResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
+
+        // 精确 AABB 未命中 → 5px 屏幕空间容错
+        if (pointerResult.Kind != ScenePointerPickKind.Entity && snapshot.IsValid)
+        {
+            var tolerant = TryScreenSpacePick(pixelX, pixelY, snapshot, ray);
+            if (tolerant is not null)
+            {
+                pointerResult = ScenePointerPickResult.FromEntity(
+                    RenderScenePickResult.Hit(
+                        tolerant.Value.EntityId,
+                        tolerant.Value.DisplayName,
+                        0, ray.Origin, 0));
+            }
+        }
 
         if (_groundPlacementState.IsActive)
         {
@@ -2506,6 +2527,110 @@ public sealed partial class EditorShell : UserControl
 
         // 更新诊断信息
         UpdateAllDiagnostics();
+
+        // Debug: 精确 AABB Miss 时输出诊断
+        if (pointerResult.Kind != ScenePointerPickKind.Entity)
+            DebugPickTrace(pixelX, pixelY, snapshot, ray);
+    }
+
+    /// <summary>
+    /// 5px 屏幕空间容错 Picking：实体 AABB 投影像素矩形扩展后是否包含点击点。
+    /// 多候选时选择相机深度最近者。
+    /// </summary>
+    private (EntityId EntityId, string DisplayName)? TryScreenSpacePick(
+        int pixelX, int pixelY, PresentedCameraSnapshot snapshot, SceneRay ray)
+    {
+        var vp = snapshot.ViewProjection;
+        var w = snapshot.ViewportWidth;
+        var h = snapshot.ViewportHeight;
+
+        (EntityId Id, string Name, double ViewDepth) best = default;
+        var found = false;
+
+        foreach (var obj in _renderScene.Objects)
+        {
+            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
+            if (obj.SelectionBounds is null) continue;
+
+            var corners = GetBoundsScreenCorners(obj.SelectionBounds, vp, w, h);
+            if (corners.Count == 0) continue;
+
+            var minX = corners.Min(c => c.X);
+            var minY = corners.Min(c => c.Y);
+            var maxX = corners.Max(c => c.X);
+            var maxY = corners.Max(c => c.Y);
+
+            if (pixelX >= minX - 5 && pixelX <= maxX + 5 &&
+                pixelY >= minY - 5 && pixelY <= maxY + 5)
+            {
+                var toCenter = obj.SelectionBounds.Center - new Vector3d(
+                    snapshot.CameraPose.PositionX,
+                    snapshot.CameraPose.PositionY,
+                    snapshot.CameraPose.PositionZ);
+                var viewDepth = toCenter.Dot(ray.Direction);
+
+                if (!found || viewDepth < best.ViewDepth)
+                {
+                    best = (obj.EntityId, obj.DisplayName ?? string.Empty, viewDepth);
+                    found = true;
+                }
+            }
+        }
+        return found ? (best.Id, best.Name) : null;
+    }
+
+    /// <summary>获取 AABB 八个角在屏幕空间的所有投影点。</summary>
+    private static List<(double X, double Y)> GetBoundsScreenCorners(
+        SceneAxisAlignedBounds bounds, float[] vp, int w, int h)
+    {
+        var min = bounds.Minimum;
+        var max = bounds.Maximum;
+        Vector3d[] corners =
+        [
+            new(min.X, min.Y, min.Z), new(max.X, min.Y, min.Z),
+            new(min.X, max.Y, min.Z), new(min.X, min.Y, max.Z),
+            new(max.X, max.Y, min.Z), new(max.X, min.Y, max.Z),
+            new(min.X, max.Y, max.Z), new(max.X, max.Y, max.Z),
+        ];
+
+        var result = new List<(double X, double Y)>(8);
+        foreach (var c in corners)
+        {
+            if (TryProjectToScreen(c, vp, w, h, out var px))
+                result.Add(px);
+        }
+        return result;
+    }
+
+    /// <summary>Debug Picking 诊断：记录射线命中的实体和距离细节。</summary>
+    private void DebugPickTrace(int pixelX, int pixelY,
+        PresentedCameraSnapshot snapshot, SceneRay ray)
+    {
+        System.Diagnostics.Debug.WriteLine(
+            $"[PickTrace] Click({pixelX},{pixelY}) " +
+            $"RO({ray.Origin.X:F2},{ray.Origin.Y:F2},{ray.Origin.Z:F2}) " +
+            $"RD({ray.Direction.X:F3},{ray.Direction.Y:F3},{ray.Direction.Z:F3})");
+
+        var vp = snapshot.ViewProjection;
+        var w = snapshot.ViewportWidth;
+        var h = snapshot.ViewportHeight;
+
+        foreach (var obj in _renderScene.Objects)
+        {
+            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
+            if (obj.SelectionBounds is null) continue;
+
+            var p = obj.Placement;
+            var b = obj.SelectionBounds;
+            var sc = TryProjectToScreen(b.Center, vp, w, h, out var scPx) ? $"({scPx.X:F1},{scPx.Y:F1})" : "N/A";
+            var hit = SceneRayBoundsIntersection.Test(ray, b, out var d) ? $"HIT d={d:F3}" : "MISS";
+
+            System.Diagnostics.Debug.WriteLine(
+                $"[PickTrace]  E{obj.EntityId.Value} " +
+                $"Draw({p?.VisualCenter.X:F2},{p?.VisualCenter.Y:F2},{p?.VisualCenter.Z:F2}) " +
+                $"BC({b.Center.X:F2},{b.Center.Y:F2},{b.Center.Z:F2}) " +
+                $"SC{sc} Pick:{hit}");
+        }
     }
 
     // ─── 地面标记控制 ─────────────────────────────────────────────
