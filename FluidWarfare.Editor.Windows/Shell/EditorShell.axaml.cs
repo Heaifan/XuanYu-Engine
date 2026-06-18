@@ -38,6 +38,7 @@ using FluidWarfare.Render.Selection;
 using FluidWarfare.Render.Selection.Ground;
 using FluidWarfare.Render.Selection.Pointer;
 using FluidWarfare.Render.Selection.Presented;
+using FluidWarfare.Render.Selection.Screen;
 using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
@@ -2472,22 +2473,29 @@ public sealed partial class EditorShell : UserControl
 
         // 统一 Picking：使用 Presented Snapshot（画面同步）
         var pickSnapshot = _presentedPickSnapshot;
-        var pointerResult = pickSnapshot.IsValid
-            ? ScenePointerPicker.Pick(ray, pickSnapshot, SceneGroundPlane.Default)
-            : ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
+        ScenePointerPickResult pointerResult;
 
-        // 精确 AABB 未命中 → 5px 屏幕空间容错
-        if (pointerResult.Kind != ScenePointerPickKind.Entity && snapshot.IsValid)
+        if (pickSnapshot.IsValid)
         {
-            var tolerant = TryScreenSpacePick(pixelX, pixelY, snapshot, ray);
-            if (tolerant is not null)
+            pointerResult = ScenePointerPicker.Pick(ray, pickSnapshot, SceneGroundPlane.Default);
+
+            if (pointerResult.Kind != ScenePointerPickKind.Entity && snapshot.IsValid)
             {
-                pointerResult = ScenePointerPickResult.FromEntity(
-                    RenderScenePickResult.Hit(
-                        tolerant.Value.EntityId,
-                        tolerant.Value.DisplayName,
-                        0, ray.Origin, 0));
+                var entities = pickSnapshot.Entities;
+                var span = new ReadOnlySpan<PresentedEntityBounds>(
+                    [.. entities]);
+                var screenHit = ScreenEntityPicker.Pick(
+                    pixelX, pixelY, snapshot.ViewProjection,
+                    snapshot.ViewportWidth, snapshot.ViewportHeight, span);
+                if (screenHit is not null)
+                    pointerResult = ScenePointerPickResult.FromEntity(
+                        RenderScenePickResult.Hit(
+                            EntityId.FromInt(screenHit.Value.EntityId), "", 0, ray.Origin, 0));
             }
+        }
+        else
+        {
+            pointerResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
         }
 
         if (_groundPlacementState.IsActive)
@@ -2544,75 +2552,6 @@ public sealed partial class EditorShell : UserControl
         // Debug: 精确 AABB Miss 时输出诊断
         if (pointerResult.Kind != ScenePointerPickKind.Entity)
             DebugPickTrace(pixelX, pixelY, snapshot, ray);
-    }
-
-    /// <summary>
-    /// 5px 屏幕空间容错 Picking：实体 AABB 投影像素矩形扩展后是否包含点击点。
-    /// 多候选时选择相机深度最近者。
-    /// </summary>
-    private (EntityId EntityId, string DisplayName)? TryScreenSpacePick(
-        int pixelX, int pixelY, PresentedCameraSnapshot snapshot, SceneRay ray)
-    {
-        var vp = snapshot.ViewProjection;
-        var w = snapshot.ViewportWidth;
-        var h = snapshot.ViewportHeight;
-
-        (EntityId Id, string Name, double ViewDepth) best = default;
-        var found = false;
-
-        foreach (var obj in _renderScene.Objects)
-        {
-            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
-            if (obj.SelectionBounds is null) continue;
-
-            var corners = GetBoundsScreenCorners(obj.SelectionBounds, vp, w, h);
-            if (corners.Count == 0) continue;
-
-            var minX = corners.Min(c => c.X);
-            var minY = corners.Min(c => c.Y);
-            var maxX = corners.Max(c => c.X);
-            var maxY = corners.Max(c => c.Y);
-
-            if (pixelX >= minX - 5 && pixelX <= maxX + 5 &&
-                pixelY >= minY - 5 && pixelY <= maxY + 5)
-            {
-                var toCenter = obj.SelectionBounds.Center - new Vector3d(
-                    snapshot.CameraPose.PositionX,
-                    snapshot.CameraPose.PositionY,
-                    snapshot.CameraPose.PositionZ);
-                var viewDepth = toCenter.Dot(ray.Direction);
-
-                if (!found || viewDepth < best.ViewDepth)
-                {
-                    best = (obj.EntityId, obj.DisplayName ?? string.Empty, viewDepth);
-                    found = true;
-                }
-            }
-        }
-        return found ? (best.Id, best.Name!) : null;
-    }
-
-    /// <summary>获取 AABB 八个角在屏幕空间的所有投影点。</summary>
-    private static List<(double X, double Y)> GetBoundsScreenCorners(
-        SceneAxisAlignedBounds bounds, float[] vp, int w, int h)
-    {
-        var min = bounds.Minimum;
-        var max = bounds.Maximum;
-        Vector3d[] corners =
-        [
-            new(min.X, min.Y, min.Z), new(max.X, min.Y, min.Z),
-            new(min.X, max.Y, min.Z), new(min.X, min.Y, max.Z),
-            new(max.X, max.Y, min.Z), new(max.X, min.Y, max.Z),
-            new(min.X, max.Y, max.Z), new(max.X, max.Y, max.Z),
-        ];
-
-        var result = new List<(double X, double Y)>(8);
-        foreach (var c in corners)
-        {
-            if (TryProjectToScreen(c, vp, w, h, out var px))
-                result.Add(px);
-        }
-        return result;
     }
 
     /// <summary>Debug Picking 诊断：记录射线命中的实体和距离细节。</summary>
