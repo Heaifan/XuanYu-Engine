@@ -35,10 +35,22 @@ public sealed class TransformInputRoute
 
         var element = _gizmoInteraction.HoveredElement;
         if (element == MoveGizmoElement.None) return default;
-        if (!_gizmoInteraction.TryBeginDrag(element)) return default;
+
+        // 原子事务：TryBeginDrag + StartDrag，任一失败则回滚全部
+        if (!_gizmoInteraction.TryBeginDrag(element))
+            return default;
 
         _cameraSnapshot = cameraSnapshot;
-        return StartDragFromElement(element, x, y, pivot);
+        var result = StartDragFromElement(element, x, y, pivot);
+
+        if (!result.Started)
+        {
+            _gizmoInteraction.EndDrag();
+            _activeKind = TransformDragKind.None;
+            _cameraSnapshot = null;
+        }
+
+        return result;
     }
 
     public TransformInputResult OnPointerMoved(double x, double y)

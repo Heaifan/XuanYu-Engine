@@ -108,6 +108,7 @@ public sealed partial class EditorShell : UserControl
     private bool _moveToolActive;
     private bool _blenderMoveActive;
     private PresentedMoveGizmoSnapshot _presentedGizmo = PresentedMoveGizmoSnapshot.None;
+    private PresentedMoveGizmoSnapshot _pendingGizmo = PresentedMoveGizmoSnapshot.None;
 
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
@@ -1148,7 +1149,7 @@ public sealed partial class EditorShell : UserControl
         // Esc: 取消活动变换
         if (virtualKeyCode == 0x1B && _transformRoute.Session.IsActive)
         {
-            _transformRoute.CancelDrag();
+            CancelActiveTransform();
             AppendInfoLog("变换已取消");
             return;
         }
@@ -1256,7 +1257,8 @@ public sealed partial class EditorShell : UserControl
     private void HandleRawInputFocusLost()
     {
         _inputTranslator?.OnRawInputFocusLost();
-        _transformRoute.CancelDrag();
+        if (_transformRoute.Session.IsActive || _blenderMoveActive)
+            CancelActiveTransform();
     }
 
     // ─── 场景工具仲裁 ──────────────────────────────────
@@ -1331,6 +1333,39 @@ public sealed partial class EditorShell : UserControl
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
+    // ─── 统一取消 ──────────────────────────────────────────────
+
+    /// <summary>
+    /// 统一取消活动变换。恢复视觉位置、Inspector，重置模态状态。
+    /// 所有取消路径（Esc、右键、CaptureLost、FocusLost、工具切换）只能通过此入口。
+    /// </summary>
+    private void CancelActiveTransform()
+    {
+        if (!_transformRoute.Session.IsActive && !_blenderMoveActive) return;
+
+        // Session.Cancel 恢复 InitialTransform 到 _preview
+        var initialPos = _transformRoute.Session.InitialPosition;
+        _transformRoute.CancelDrag();
+        _blenderMoveActive = false;
+
+        // 恢复 Vulkan 内部缓存绘制数据到初始位置
+        if (_selectedWorldEntity is not null && _scene3dSession is not null)
+        {
+            var entityIdStr = _selectedWorldEntity.EntityId.Value.ToString();
+            var unitPos = EntityToScene3dPosition(initialPos);
+            _scene3dSession.UpdateEntityPosition(entityIdStr, unitPos.X, unitPos.Y, unitPos.Z);
+        }
+
+        // 恢复 Inspector
+        _inspectorPanel?.SetTransformTexts(
+            initialPos.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            initialPos.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            initialPos.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
+
+        // 请求帧刷新画面
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
+    }
+
     // ─── G 模态自由移动 ──────────────────────────────────────
 
     /// <summary>
@@ -1380,8 +1415,7 @@ public sealed partial class EditorShell : UserControl
     private void CancelGModalMove()
     {
         if (!_blenderMoveActive) return;
-        _blenderMoveActive = false;
-        _transformRoute.CancelDrag();
+        CancelActiveTransform();
         AppendInfoLog("移动已取消");
     }
 
@@ -2000,6 +2034,10 @@ public sealed partial class EditorShell : UserControl
 
             if (result.Success)
             {
+                // Present 成功 → 提升 Gizmo 快照供 HitTest 使用
+                if (_pendingGizmo.IsAvailable)
+                    _presentedGizmo = _pendingGizmo;
+
                 _renderSeq++;
                 _renderLastMode = "Scene3D";
                 UpdateVulkanViewportStatusLine();
@@ -2098,9 +2136,9 @@ public sealed partial class EditorShell : UserControl
 
         session.SetMoveGizmoVertices(overlayVerts);
 
-        // 保存 Present 快照供 HitTest 使用（Note：Present 成功后由 ScheduleScene3dFrame 回调）
+        // 保存 Pending 快照，Present 成功后提升为 _presentedGizmo
         var entityId = _selectedWorldEntity?.EntityId.Value.ToString() ?? string.Empty;
-        _presentedGizmo = new PresentedMoveGizmoSnapshot(
+        _pendingGizmo = new PresentedMoveGizmoSnapshot(
             true, entityId, 0, _worldDirtyState.Revision, snapshot.CameraRevision, w, h, layout);
     }
 
@@ -2122,6 +2160,7 @@ public sealed partial class EditorShell : UserControl
     private void ClearGizmo()
     {
         _scene3dSession?.SetMoveGizmoVertices(null);
+        _pendingGizmo = PresentedMoveGizmoSnapshot.None;
     }
 
     // ─── 单向选择状态流 ──────────────────────────────────────

@@ -1,3 +1,4 @@
+using FluidWarfare.Core.Math;
 using FluidWarfare.Project.World.Transform;
 
 namespace FluidWarfare.Editor.Transform.Edit;
@@ -18,6 +19,7 @@ public sealed class TransformEditSession
     public bool IsActive => _active;
     public SceneTransform PreviewTransform => _preview;
     public string EntityId => _snapshot.EntityId;
+    public Vector3d InitialPosition => _snapshot.InitialTransform.Position;
 
     public void Begin(TransformEditSnapshot snapshot)
     {
