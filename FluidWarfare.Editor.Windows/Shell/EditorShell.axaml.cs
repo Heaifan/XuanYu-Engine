@@ -16,6 +16,7 @@ using FluidWarfare.Editor.Input.Runtime;
 using FluidWarfare.Editor.Transform.Edit;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Input;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
+using FluidWarfare.Editor.Windows.Viewport.Picking;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
@@ -89,6 +90,7 @@ public sealed partial class EditorShell : UserControl
     private string _renderLastMode = "无";
     private VulkanScene3dSession? _scene3dSession;
     private Scene3dFrameRoute? _scene3dFrameRoute;
+    private readonly ViewportPointerPickRoute _viewportPickRoute = new();
     private SceneOrbitCameraState _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
     private int _cameraRevision;
     private bool _sessionActive;
@@ -2431,138 +2433,54 @@ public sealed partial class EditorShell : UserControl
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
-        // 使用已呈现快照构建射线（统一透视/正交，尺寸闸门）
         var snapshot = _scene3dSession.LastPresentedSnapshot;
-        var buildStatus = VulkanSceneRayBuilder.TryBuild(
-            pixelX, pixelY,
-            snapshot,
-            (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
-            out var ray);
+        if (!snapshot.IsValid) return;
 
-        // Phase D：技术失败（Snapshot 不可用、尺寸不匹配、矩阵无效）不清除选择
-        if (buildStatus != SceneRayBuildStatus.Success || ray is null)
-        {
-            if (buildStatus != SceneRayBuildStatus.Success)
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    $"[Pick] 射线构建非成功：{buildStatus}，保持当前选择。");
-            }
-            return;
-        }
-
-        // 统一 Picking：使用 Presented Snapshot（画面同步）
-        var pickSnapshot = _presentedPickSnapshot;
-        ScenePointerPickResult pointerResult;
-
-        if (pickSnapshot.IsValid)
-        {
-            pointerResult = ScenePointerPicker.Pick(ray, pickSnapshot, SceneGroundPlane.Default);
-
-            if (pointerResult.Kind != ScenePointerPickKind.Entity && snapshot.IsValid)
-            {
-                var entities = pickSnapshot.Entities;
-                var span = new ReadOnlySpan<PresentedEntityBounds>(
-                    [.. entities]);
-                var screenHit = ScreenEntityPicker.Pick(
-                    pixelX, pixelY, snapshot.ViewProjection,
-                    snapshot.ViewportWidth, snapshot.ViewportHeight, span);
-                if (screenHit is not null)
-                    pointerResult = ScenePointerPickResult.FromEntity(
-                        RenderScenePickResult.Hit(
-                            EntityId.FromInt(screenHit.Value.EntityId), "", 0, ray.Origin, 0));
-            }
-        }
-        else
-        {
-            pointerResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
-        }
+        var pickSnapshot = _scene3dFrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None;
+        var req = new ViewportPickRequest(pixelX, pixelY, snapshot, pickSnapshot, _renderScene, SceneGroundPlane.Default);
+        var result = _viewportPickRoute.Pick(req);
 
         if (_groundPlacementState.IsActive)
         {
-            // ─── 地面放置模式：只接受空白 Ground ──────────────────
-            switch (pointerResult.Kind)
+            switch (result.Kind)
             {
-                case ScenePointerPickKind.Ground when pointerResult.GroundPosition is not null:
-                    CompleteGroundPlacement(pointerResult.GroundPosition.Value);
-                    break;
-
-                case ScenePointerPickKind.Entity:
-                    _statusBarPanel?.SetCurrentSelection("请点击空白地面完成放置");
-                    break;
-
+                case ViewportPickKind.Ground when result.GroundPosition is not null:
+                    CompleteGroundPlacement(result.GroundPosition.Value); break;
+                case ViewportPickKind.Entity:
+                    _statusBarPanel?.SetCurrentSelection("请点击空白地面完成放置"); break;
                 default:
-                    _statusBarPanel?.SetCurrentSelection("当前位置未命中地面，请调整相机或点击其他区域");
-                    break;
+                    _statusBarPanel?.SetCurrentSelection("当前位置未命中地面，请调整相机或点击其他区域"); break;
             }
         }
         else
         {
-            // ─── 普通模式：Entity → Ground → None ────────────────
-            switch (pointerResult.Kind)
+            switch (result.Kind)
             {
-                case ScenePointerPickKind.Entity when pointerResult.EntityId is not null:
-                    ApplyEntitySelection(
-                        pointerResult.EntityId.Value.Value.ToString(),
-                        EditorEntitySelectionOrigin.ViewportPicking);
+                case ViewportPickKind.Entity when result.EntityId is not null:
+                    ApplyEntitySelection(result.EntityId.Value.Value.ToString(), EditorEntitySelectionOrigin.ViewportPicking);
                     HideGroundCursor();
-                    System.Diagnostics.Debug.WriteLine(
-                        $"[Pick] Entity hit: {pointerResult.EntityId.Value.Value}");
+                    System.Diagnostics.Debug.WriteLine($"[Pick] Entity hit: {result.EntityId.Value.Value}");
                     break;
-
-                case ScenePointerPickKind.Ground when pointerResult.GroundPosition is not null:
+                case ViewportPickKind.Ground when result.GroundPosition is not null:
                     ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
-                    ShowGroundCursor(pointerResult.GroundPosition.Value);
-                    AppendInfoLog(
-                        $"地面落点：X {pointerResult.GroundPosition.Value.X:F2}，" +
-                        $"Y {pointerResult.GroundPosition.Value.Y:F2}，" +
-                        $"Z {pointerResult.GroundPosition.Value.Z:F2}。");
+                    ShowGroundCursor(result.GroundPosition.Value);
+                    AppendInfoLog($"地面落点：X {result.GroundPosition.Value.X:F2}，Y {result.GroundPosition.Value.Y:F2}，Z {result.GroundPosition.Value.Z:F2}。");
                     break;
-
                 default:
                     ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
-                    HideGroundCursor();
-                    break;
+                    HideGroundCursor(); break;
             }
         }
-
-        // 更新诊断信息
         UpdateAllDiagnostics();
-
-        // Debug: 精确 AABB Miss 时输出诊断
-        if (pointerResult.Kind != ScenePointerPickKind.Entity)
-            DebugPickTrace(pixelX, pixelY, snapshot, ray);
+        if (result.Kind != ViewportPickKind.Entity)
+        {
+            var rb = RayBuilder.Build(req);
+            if (rb is not null) ViewportPickTrace.Write(pixelX, pixelY, snapshot, rb, _renderScene);
+        }
     }
 
     /// <summary>Debug Picking 诊断：记录射线命中的实体和距离细节。</summary>
-    private void DebugPickTrace(int pixelX, int pixelY,
-        PresentedCameraSnapshot snapshot, SceneRay ray)
-    {
-        System.Diagnostics.Debug.WriteLine(
-            $"[PickTrace] Click({pixelX},{pixelY}) " +
-            $"RO({ray.Origin.X:F2},{ray.Origin.Y:F2},{ray.Origin.Z:F2}) " +
-            $"RD({ray.Direction.X:F3},{ray.Direction.Y:F3},{ray.Direction.Z:F3})");
 
-        var vp = snapshot.ViewProjection;
-        var w = snapshot.ViewportWidth;
-        var h = snapshot.ViewportHeight;
-
-        foreach (var obj in _renderScene.Objects)
-        {
-            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
-            if (obj.SelectionBounds is null) continue;
-
-            var p = obj.Placement;
-            var b = obj.SelectionBounds;
-            var sc = TryProjectToScreen(b.Center, vp, w, h, out var scPx) ? $"({scPx.X:F1},{scPx.Y:F1})" : "N/A";
-            var hit = SceneRayBoundsIntersection.Test(ray, b, out var d) ? $"HIT d={d:F3}" : "MISS";
-
-            System.Diagnostics.Debug.WriteLine(
-                $"[PickTrace]  E{obj.EntityId.Value} " +
-                $"Draw({p?.VisualCenter.X:F2},{p?.VisualCenter.Y:F2},{p?.VisualCenter.Z:F2}) " +
-                $"BC({b.Center.X:F2},{b.Center.Y:F2},{b.Center.Z:F2}) " +
-                $"SC{sc} Pick:{hit}");
-        }
-    }
 
     // ─── 地面标记控制 ─────────────────────────────────────────────
 
