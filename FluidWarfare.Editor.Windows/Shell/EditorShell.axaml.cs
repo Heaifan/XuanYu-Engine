@@ -15,6 +15,7 @@ using FluidWarfare.Editor.Input.Actions;
 using FluidWarfare.Editor.Input.Runtime;
 using FluidWarfare.Editor.Transform.Edit;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Input;
+using FluidWarfare.Editor.Windows.Viewport.Scene3D;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
@@ -87,6 +88,7 @@ public sealed partial class EditorShell : UserControl
     private int _renderSeq;
     private string _renderLastMode = "无";
     private VulkanScene3dSession? _scene3dSession;
+    private Scene3dPresentation? _scene3dPresentation;
     private SceneOrbitCameraState _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
     private int _cameraRevision;
     private bool _framePending;
