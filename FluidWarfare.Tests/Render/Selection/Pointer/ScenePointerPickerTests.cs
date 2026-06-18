@@ -89,7 +89,7 @@ public sealed class ScenePointerPickerTests
     public void EmptySceneRayHitsGround_ReturnsGround()
     {
         var ray = new SceneRay(new Vector3d(0, 0, 10), new Vector3d(0, 0, -1));
-        var result = ScenePointerPicker.Pick(ray, null, DefaultGround);
+        var result = ScenePointerPicker.Pick(ray, (RenderScene?)null, DefaultGround);
 
         Assert.Equal(ScenePointerPickKind.Ground, result.Kind);
     }
@@ -98,7 +98,7 @@ public sealed class ScenePointerPickerTests
     public void EmptySceneParallelRay_ReturnsNone()
     {
         var ray = new SceneRay(new Vector3d(0, 0, 10), new Vector3d(1, 0, 0));
-        var result = ScenePointerPicker.Pick(ray, null, DefaultGround);
+        var result = ScenePointerPicker.Pick(ray, (RenderScene?)null, DefaultGround);
 
         Assert.Equal(ScenePointerPickKind.None, result.Kind);
     }

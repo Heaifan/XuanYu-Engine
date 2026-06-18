@@ -37,6 +37,7 @@ using FluidWarfare.Render.Scene.Position;
 using FluidWarfare.Render.Selection;
 using FluidWarfare.Render.Selection.Ground;
 using FluidWarfare.Render.Selection.Pointer;
+using FluidWarfare.Render.Selection.Presented;
 using FluidWarfare.Render.Vulkan.Backend;
 using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
@@ -109,6 +110,8 @@ public sealed partial class EditorShell : UserControl
     private bool _blenderMoveActive;
     private PresentedMoveGizmoSnapshot _presentedGizmo = PresentedMoveGizmoSnapshot.None;
     private PresentedMoveGizmoSnapshot _pendingGizmo = PresentedMoveGizmoSnapshot.None;
+    private PresentedScenePickSnapshot _presentedPickSnapshot = PresentedScenePickSnapshot.None;
+    private PresentedScenePickSnapshot _pendingPickSnapshot = PresentedScenePickSnapshot.None;
 
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
@@ -2037,13 +2040,20 @@ public sealed partial class EditorShell : UserControl
             // 提交 Move Gizmo 顶点
             SubmitMoveGizmoVertices();
 
+            // 构建 Pending Scene Pick Snapshot（使用当前 _renderScene）
+            _pendingPickSnapshot = PresentedScenePickSnapshotBuilder.Build(
+                _renderScene, _renderSeq, _cameraRevision,
+                _presentedGizmo.ViewportWidth, _presentedGizmo.ViewportHeight);
+
             var result = _scene3dSession.RenderFrame(reason, sessionPose, [.. unitDraws]);
 
             if (result.Success)
             {
-                // Present 成功 → 提升 Gizmo 快照供 HitTest 使用
+                // Present 成功 → 提升 Gizmo 快照 + Pick Snapshot
                 if (_pendingGizmo.IsAvailable)
                     _presentedGizmo = _pendingGizmo;
+                if (_pendingPickSnapshot.IsValid)
+                    _presentedPickSnapshot = _pendingPickSnapshot;
 
                 _renderSeq++;
                 _renderLastMode = "Scene3D";
@@ -2460,8 +2470,11 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        // 统一 Picking：精确 Ray-AABB → 5px 屏幕容错 → Ground → None
-        var pointerResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
+        // 统一 Picking：使用 Presented Snapshot（画面同步）
+        var pickSnapshot = _presentedPickSnapshot;
+        var pointerResult = pickSnapshot.IsValid
+            ? ScenePointerPicker.Pick(ray, pickSnapshot, SceneGroundPlane.Default)
+            : ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
 
         // 精确 AABB 未命中 → 5px 屏幕空间容错
         if (pointerResult.Kind != ScenePointerPickKind.Entity && snapshot.IsValid)
@@ -2576,7 +2589,7 @@ public sealed partial class EditorShell : UserControl
                 }
             }
         }
-        return found ? (best.Id, best.Name) : null;
+        return found ? (best.Id, best.Name!) : null;
     }
 
     /// <summary>获取 AABB 八个角在屏幕空间的所有投影点。</summary>

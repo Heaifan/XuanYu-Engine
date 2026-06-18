@@ -1,40 +1,57 @@
+using FluidWarfare.Core.Identity;
 using FluidWarfare.Render.Selection.Ground;
 using FluidWarfare.Render.Scene;
+using FluidWarfare.Render.Selection.Presented;
 
 namespace FluidWarfare.Render.Selection.Pointer;
 
 /// <summary>
 /// 统一 Pointer Picking 调度器。
-/// Picking 优先级固定：Entity AABB > Ground Ray > None。
+/// 支持从 PresentedScenePickSnapshot 拾取（与画面同步）。
 /// </summary>
 public static class ScenePointerPicker
 {
     /// <summary>
-    /// 执行统一 Picking 检测。
+    /// 使用 PresentedScenePickSnapshot 执行 Picking。
     /// </summary>
-    /// <param name="ray">世界空间射线。</param>
-    /// <param name="scene">渲染场景（可为空）。</param>
-    /// <param name="ground">地面平面定义。</param>
-    /// <returns>结构化的 Picking 结果。</returns>
     public static ScenePointerPickResult Pick(
         SceneRay ray,
-        RenderScene? scene,
+        PresentedScenePickSnapshot snap,
         SceneGroundPlane ground)
     {
-        // 1. 实体 AABB 优先
-        if (scene is not null && scene.Objects.Count > 0)
+        if (snap.IsValid && snap.Entities.Count > 0)
         {
-            var entityResult = RenderScenePicker.Pick(ray, scene);
-            if (entityResult.IsHit)
-                return ScenePointerPickResult.FromEntity(entityResult);
+            EntityId? bestId = null;
+            double bestDist = double.MaxValue;
+            foreach (var e in snap.Entities)
+            {
+                if (!SceneRayBoundsIntersection.Test(ray, e.Bounds, out var d))
+                    continue;
+                if (d >= 0 && d < bestDist) { bestDist = d; bestId = EntityId.FromInt(e.EntityId); }
+            }
+            if (bestId is not null)
+                return ScenePointerPickResult.FromEntity(
+                    RenderScenePickResult.Hit(bestId.Value, "", bestDist, ray.At(bestDist), 0));
         }
 
-        // 2. 地面求交
         var groundHit = SceneRayGroundIntersection.Intersect(ray, ground);
-        if (groundHit.IsHit)
-            return ScenePointerPickResult.FromGround(groundHit);
+        if (groundHit.IsHit) return ScenePointerPickResult.FromGround(groundHit);
+        return ScenePointerPickResult.None;
+    }
 
-        // 3. 未命中
+    /// <summary>
+    /// 使用 RenderScene 执行 Picking（兼容旧路径）。
+    /// </summary>
+    public static ScenePointerPickResult Pick(
+        SceneRay ray, RenderScene? scene, SceneGroundPlane ground)
+    {
+        if (scene is not null && scene.Objects.Count > 0)
+        {
+            var r = RenderScenePicker.Pick(ray, scene);
+            if (r.IsHit) return ScenePointerPickResult.FromEntity(r);
+        }
+        var gh = SceneRayGroundIntersection.Intersect(ray, ground);
+        if (gh.IsHit) return ScenePointerPickResult.FromGround(gh);
         return ScenePointerPickResult.None;
     }
 }
