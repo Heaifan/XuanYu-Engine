@@ -15,7 +15,7 @@ using FluidWarfare.Editor.Input.Actions;
 using FluidWarfare.Editor.Input.Runtime;
 using FluidWarfare.Editor.Transform.Edit;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Input;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D;
+using FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
@@ -88,10 +88,9 @@ public sealed partial class EditorShell : UserControl
     private int _renderSeq;
     private string _renderLastMode = "无";
     private VulkanScene3dSession? _scene3dSession;
-    private Scene3dPresentation? _scene3dPresentation;
+    private Scene3dFrameRoute? _scene3dFrameRoute;
     private SceneOrbitCameraState _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
     private int _cameraRevision;
-    private bool _framePending;
     private bool _sessionActive;
     private bool _scene3dAutoStartAttempted;
     private ViewportNavigationDragMode _navigationDragMode = ViewportNavigationDragMode.None;
@@ -317,7 +316,7 @@ public sealed partial class EditorShell : UserControl
                         (uint)nativeHostInfo.Width,
                         (uint)nativeHostInfo.Height,
                         resizePose,
-                        [.. BuildUnitDrawList()]);
+                        [.. Scene3dDrawListBuilder.Build(_renderScene)]);
 
                     if (result.Success)
                     {
@@ -1112,6 +1111,7 @@ public sealed partial class EditorShell : UserControl
         if (result.Success)
         {
             _scene3dSession = session;
+            _scene3dFrameRoute = new Scene3dFrameRoute(session);
             _renderLastMode = "Scene3D";
             _renderSeq++;
             AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Scene3D Session 启动 | " +
@@ -2028,44 +2028,21 @@ public sealed partial class EditorShell : UserControl
 
     private void ScheduleScene3dFrame(VulkanScene3dFrameReason reason)
     {
-        if (_framePending) return;
-        _framePending = true;
+        var route = _scene3dFrameRoute;
+        if (route is null) return;
 
-        Dispatcher.UIThread.Post(() =>
+        SubmitMoveGizmoVertices();
+        var pickSnapshot = PresentedScenePickSnapshotBuilder.Build(
+            _renderScene, _renderSeq, _cameraRevision,
+            _presentedGizmo.ViewportWidth, _presentedGizmo.ViewportHeight);
+
+        route.Request(reason, _lastCameraState, _cameraRevision, _renderScene,
+            _pendingGizmo, pickSnapshot, () =>
         {
-            _framePending = false;
-            if (_scene3dSession is null) return;
-
-            var unitDraws = BuildUnitDrawList();
-            _cameraRevision++;
-            var sessionPose = SceneCameraPose.FromOrbitState(_lastCameraState, _cameraRevision);
-
-            // 提交 Move Gizmo 顶点
-            SubmitMoveGizmoVertices();
-
-            // 构建 Pending Scene Pick Snapshot（使用当前 _renderScene）
-            _pendingPickSnapshot = PresentedScenePickSnapshotBuilder.Build(
-                _renderScene, _renderSeq, _cameraRevision,
-                _presentedGizmo.ViewportWidth, _presentedGizmo.ViewportHeight);
-
-            var result = _scene3dSession.RenderFrame(reason, sessionPose, [.. unitDraws]);
-
-            if (result.Success)
-            {
-                // Present 成功 → 提升 Gizmo 快照 + Pick Snapshot
-                if (_pendingGizmo.IsAvailable)
-                    _presentedGizmo = _pendingGizmo;
-                if (_pendingPickSnapshot.IsValid)
-                    _presentedPickSnapshot = _pendingPickSnapshot;
-
-                _renderSeq++;
-                _renderLastMode = "Scene3D";
-                UpdateVulkanViewportStatusLine();
-            }
-            else
-            {
-                AppendWarningLog($"Scene3D 帧失败：{result.Message}");
-            }
+            _presentedGizmo = route.Snapshots.PresentedGizmo;
+            _presentedPickSnapshot = route.Snapshots.PresentedPick;
+            _renderSeq = route.RenderSeq;
+            UpdateVulkanViewportStatusLine();
         });
     }
 
@@ -2885,36 +2862,7 @@ public sealed partial class EditorShell : UserControl
         _dockPanel?.ShowWorldHierarchy(tree);
     }
 
-    private List<VulkanScene3dUnitDrawInfo> BuildUnitDrawList()
-    {
-        var list = new List<VulkanScene3dUnitDrawInfo>();
-        foreach (var obj in _renderScene.Objects)
-        {
-            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
-            // 从 RenderUnitPlacement 读取视觉中心和缩放（单一真源）
-            var p = obj.Placement;
-            if (p is not null)
-            {
-                list.Add(new VulkanScene3dUnitDrawInfo(
-                    obj.EntityId.Value.ToString(),
-                    (float)p.VisualCenter.X,
-                    (float)p.VisualCenter.Y,
-                    (float)p.VisualCenter.Z,
-                    (float)RenderUnitPlacement.Scale));
-            }
-            else
-            {
-                // 防御性回退
-                list.Add(new VulkanScene3dUnitDrawInfo(
-                    obj.EntityId.Value.ToString(),
-                    (float)obj.Position.X,
-                    (float)obj.Position.Y,
-                    (float)obj.Position.Z + (float)RenderUnitPlacement.HalfExtent,
-                    (float)RenderUnitPlacement.Scale));
-            }
-        }
-        return list;
-    }
+
 
     private void ProbeVulkanScene3D()
     {
