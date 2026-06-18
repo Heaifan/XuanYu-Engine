@@ -1206,14 +1206,15 @@ public sealed partial class EditorShell : UserControl
         if (_moveToolActive && _presentedGizmo.IsAvailable)
             _transformRoute.UpdateGizmoHover(x, y, _presentedGizmo.Layout);
 
-        // 驱动变换拖动（轴/平面实时更新）
+        // 驱动变换拖动（实时预览：位置同步到 Vulkan + 请求帧）
         if (_transformRoute.Session.IsActive)
         {
-            var result = _transformRoute.OnPointerMoved(x, y,
-                _lastCameraState.FieldOfViewDegrees,
-                _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic);
+            var result = _transformRoute.OnPointerMoved(x, y);
             if (result.Handled)
-                return; // Session 已更新预览，释放时统一提交
+            {
+                ApplyPreviewPosition();
+                return;
+            }
         }
 
         if (_inputTranslator is null) return;
@@ -1248,26 +1249,9 @@ public sealed partial class EditorShell : UserControl
             return ViewportSceneToolPressResult.NotHandled;
 
         var pivot = pos.Value.Value;
-        var snapshot = _scene3dSession?.LastPresentedSnapshot;
-        var hasCam = snapshot is not null && snapshot.IsValid;
-
-        // 计算相机位置和前方向（用于平面拖动射线）
-        var (camX, camY, camZ) = _lastCameraState.ComputePosition();
-        var camPos = new Vector3d(camX, camY, camZ);
-        var fwd = new Vector3d(
-            _lastCameraState.PivotX - camX,
-            _lastCameraState.PivotY - camY,
-            _lastCameraState.PivotZ - camZ).Normalize();
-
+        var camSnapshot = _scene3dSession?.LastPresentedSnapshot;
         var result = _transformRoute.OnPointerPressed(1, x, y, pivot,
-            hasCam ? snapshot!.ViewProjection : Array.Empty<float>(),
-            hasCam ? snapshot!.ViewportWidth : 1,
-            hasCam ? snapshot!.ViewportHeight : 1,
-            _lastCameraState.Distance,
-            _lastCameraState.FieldOfViewDegrees,
-            _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic,
-            _lastCameraState.OrthographicHeight,
-            camPos, fwd);
+            camSnapshot is { IsValid: true } ? camSnapshot : null);
         if (!result.Started)
         {
             _transformRoute.Session.Cancel();
@@ -1285,6 +1269,31 @@ public sealed partial class EditorShell : UserControl
         var finalPos = _transformRoute.Session.PreviewTransform.Position;
         ApplyEntityTransform(finalPos, EditorEntityTransformOrigin.MoveTool);
         AppendInfoLog($"移动完成 ({finalPos.X:F3}, {finalPos.Y:F3}, {finalPos.Z:F3})");
+    }
+
+    /// <summary>
+    /// 实时 Preview：将拖动的预览位置同步到 Vulkan Scene 但不修改 WorldState。
+    /// 鼠标释放时由 HandleSceneToolPointerReleased 统一提交。
+    /// </summary>
+    private void ApplyPreviewPosition()
+    {
+        if (_selectedWorldEntity is null || _scene3dSession is null) return;
+
+        var previewPos = _transformRoute.Session.PreviewTransform.Position;
+        var entityIdStr = _selectedWorldEntity.EntityId.Value.ToString();
+        var unitPos = EntityToScene3dPosition(previewPos);
+
+        // 更新 Vulkan 内部缓存绘制数据（不修改 _renderScene / WorldState）
+        _scene3dSession.UpdateEntityPosition(entityIdStr, unitPos.X, unitPos.Y, unitPos.Z);
+
+        // 更新 Inspector 数值
+        _inspectorPanel?.SetTransformTexts(
+            previewPos.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            previewPos.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            previewPos.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
+
+        // 请求一帧：ScheduleScene3dFrame 会重新 BuildUnitDrawList + SubmitMoveGizmoVertices
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
     // ─── 视口工具 ──────────────────────────────────────
@@ -1894,7 +1903,10 @@ public sealed partial class EditorShell : UserControl
         var snapshot = session.LastPresentedSnapshot;
         if (!snapshot.IsValid) { ClearGizmo(); return; }
 
-        var pivot = pos.Value.Value;
+        // 拖动中使用预览位置，否则用 WorldState
+        var pivot = _transformRoute.Session.IsActive
+            ? _transformRoute.Session.PreviewTransform.Position
+            : pos.Value.Value;
         var vp = snapshot.ViewProjection;
         var w = snapshot.ViewportWidth;
         var h = snapshot.ViewportHeight;
@@ -1959,10 +1971,10 @@ public sealed partial class EditorShell : UserControl
 
         session.SetMoveGizmoVertices(overlayVerts);
 
-        // 保存 Present 快照供 HitTest 使用
+        // 保存 Present 快照供 HitTest 使用（Note：Present 成功后由 ScheduleScene3dFrame 回调）
         var entityId = _selectedWorldEntity?.EntityId.Value.ToString() ?? string.Empty;
         _presentedGizmo = new PresentedMoveGizmoSnapshot(
-            true, entityId, 0, 0, snapshot.CameraRevision, w, h, layout);
+            true, entityId, 0, _worldDirtyState.Revision, snapshot.CameraRevision, w, h, layout);
     }
 
     private static bool TryProjectToScreen(

@@ -10,5 +10,6 @@ public enum VulkanScene3dFrameReason
     SelectionChanged,
     GroundCursorChanged,
     OverlayNavigationChanged,
-    EntityTransformChanged
+    EntityTransformChanged,
+    TransformPreview,
 }
