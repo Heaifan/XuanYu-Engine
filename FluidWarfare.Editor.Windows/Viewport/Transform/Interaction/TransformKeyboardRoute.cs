@@ -13,40 +13,37 @@ public static class TransformKeyboardRoute
 {
     public static TransformInteractionResult HandleKeyDown(
         int vkCode,
-        TransformInteractionState state,
         TransformPointerRoute pointerRoute,
         EntityId? selectedEntity,
         TransformStartSnapshot? gModalSnapshot,
         int lastPointerX, int lastPointerY)
     {
         // Esc: 取消活动变换或 G 模态
-        if (vkCode == 0x1B && (state.BlenderMoveActive || pointerRoute.IsDragActive))
+        if (vkCode == 0x1B && (pointerRoute.IsBlenderGActive || pointerRoute.IsDragActive))
         {
-            state.SetBlenderGActive(false);
-            pointerRoute.Cancel();
-            return new TransformInteractionResult(
-                TransformInteractionAction.Cancelled, default, TransformInteractionReason.Escape);
+            pointerRoute.SetBlenderGActive(false);
+            return pointerRoute.Cancel(TransformInteractionReason.Escape);
         }
 
         // G: 启动 Blender G 模态自由移动
         if (vkCode == 0x47 && selectedEntity is not null && gModalSnapshot is not null
             && !pointerRoute.IsDragActive)
         {
-            if (!state.MoveToolActive) state.SetToolActive(true);
+            if (!pointerRoute.IsMoveToolActive) pointerRoute.ActivateMoveTool(true);
 
             var req = new TransformStartRequest(
                 TransformStartSource.BlenderG, MoveGizmoElement.ViewPlane,
                 lastPointerX, lastPointerY);
             var result = pointerRoute.OnPointerPressed(req, gModalSnapshot.Value);
             if (result.Action == TransformInteractionAction.Started)
-                state.SetBlenderGActive(true);
+                pointerRoute.SetBlenderGActive(true);
             return result;
         }
 
         // Enter: G 模态确认
-        if (vkCode == 0x0D && state.BlenderMoveActive)
+        if (vkCode == 0x0D && pointerRoute.IsBlenderGActive)
         {
-            state.SetBlenderGActive(false);
+            pointerRoute.SetBlenderGActive(false);
             return pointerRoute.OnPointerReleased();
         }
 

@@ -3,7 +3,6 @@ using FluidWarfare.Project.World.Transform;
 using FluidWarfare.Editor.Transform.Edit;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Input;
 
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
 
@@ -68,11 +67,24 @@ public sealed class TransformPointerRoute
             TransformInteractionAction.Confirmed, finalTransform,
             TransformInteractionReason.None);
     }
-    public void Cancel()
+    /// <summary>取消拖动。返回 Cancelled + InitialTransform，可独立驱动视觉恢复。</summary>
+    public TransformInteractionResult Cancel(TransformInteractionReason reason)
     {
         _gizmo.EndDrag();
-        _dragRoute.Cancel();
+        var initial = _dragRoute.Cancel();
+        return new TransformInteractionResult(
+            TransformInteractionAction.Cancelled, initial ?? default, reason);
     }
+
+    // ── 状态控制封装 ──
+
+    /// <summary>激活或关闭 Move 工具。外部读取通过 State.MoveToolActive。</summary>
+    public void ActivateMoveTool(bool active) => _state.SetToolActive(active);
+    /// <summary>G 模态标志。外部读取通过 State.BlenderMoveActive。</summary>
+    public void SetBlenderGActive(bool active) => _state.SetBlenderGActive(active);
+    public bool IsMoveToolActive => _state.MoveToolActive;
+    public bool IsBlenderGActive => _state.BlenderMoveActive;
+
     static TransformInteractionReason ReasonFromSource(
         TransformStartSource src, MoveGizmoElement el) => src switch
     {

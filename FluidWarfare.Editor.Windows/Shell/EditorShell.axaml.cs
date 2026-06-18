@@ -1157,7 +1157,7 @@ public sealed partial class EditorShell : UserControl
         var gModalSnapshot = (virtualKeyCode is 0x47 or 0x1B) && _selectedWorldEntity is not null
             ? BuildTransformStartSnapshot() : null;
         var keyResult = TransformKeyboardRoute.HandleKeyDown(
-            virtualKeyCode, _pointerRoute.State, _pointerRoute,
+            virtualKeyCode, _pointerRoute,
             _selectedWorldEntity?.EntityId, gModalSnapshot,
             _lastPointerX, _lastPointerY);
 
@@ -1175,7 +1175,7 @@ public sealed partial class EditorShell : UserControl
         }
         if (keyResult.Action == TransformInteractionAction.Cancelled)
         {
-            CancelActiveTransform();
+            CancelActiveTransform(keyResult);
             AppendInfoLog("变换已取消");
             return;
         }
@@ -1206,13 +1206,13 @@ public sealed partial class EditorShell : UserControl
         _lastPointerY = y;
 
         // G 模态：左键确认，右键取消
-        if (_pointerRoute.State.BlenderMoveActive)
+        if (_pointerRoute.IsBlenderGActive)
         {
-            _pointerRoute.State.SetBlenderGActive(false);
+            _pointerRoute.SetBlenderGActive(false);
             if (buttonCode == 1)
                 HandleSceneToolPointerReleased(x, y);
             else if (buttonCode == 2)
-                { CancelActiveTransform(); AppendInfoLog("移动已取消"); }
+                { var r = _pointerRoute.Cancel(TransformInteractionReason.Escape); CancelActiveTransform(r); AppendInfoLog("移动已取消"); }
             return;
         }
 
@@ -1235,7 +1235,7 @@ public sealed partial class EditorShell : UserControl
         _lastPointerY = y;
 
         // 更新 Gizmo Hover
-        if (_pointerRoute.State.MoveToolActive)
+        if (_pointerRoute.IsMoveToolActive)
         {
             var g = _scene3dFrameRoute?.Snapshots.PresentedGizmo;
             if (g?.IsAvailable == true)
@@ -1266,10 +1266,10 @@ public sealed partial class EditorShell : UserControl
     private void HandleRawInputFocusLost()
     {
         _inputTranslator?.OnRawInputFocusLost();
-        if (_pointerRoute.IsDragActive || _pointerRoute.State.BlenderMoveActive)
+        if (_pointerRoute.IsDragActive || _pointerRoute.IsBlenderGActive)
         {
-            _pointerRoute.State.SetBlenderGActive(false);
-            CancelActiveTransform();
+            _pointerRoute.SetBlenderGActive(false);
+            CancelActiveTransform(_pointerRoute.Cancel(TransformInteractionReason.FocusLost));
         }
     }
 
@@ -1277,7 +1277,7 @@ public sealed partial class EditorShell : UserControl
 
     private ViewportSceneToolPressResult HandleSceneToolPointerPressed(int x, int y)
     {
-        if (!_pointerRoute.State.MoveToolActive || _selectedWorldEntity is null)
+        if (!_pointerRoute.IsMoveToolActive || _selectedWorldEntity is null)
             return ViewportSceneToolPressResult.NotHandled;
 
         var camSnapshot = _scene3dSession?.LastPresentedSnapshot;
@@ -1380,31 +1380,24 @@ public sealed partial class EditorShell : UserControl
     /// <summary>
     /// 统一取消活动变换。恢复视觉位置、_renderScene、Inspector，重置模态状态。
     /// </summary>
-    private void CancelActiveTransform()
+    private void CancelActiveTransform(TransformInteractionResult r)
     {
-        if (!_pointerRoute.IsDragActive && !_pointerRoute.State.BlenderMoveActive) return;
-
-        var initialPos = _pointerRoute.Session.InitialPosition;
-        _pointerRoute.State.SetBlenderGActive(false);
-        _pointerRoute.Cancel();
+        if (r.Action != TransformInteractionAction.Cancelled) return;
+        var p = r.Transform.Position;
 
         if (_selectedWorldEntity is not null && _scene3dSession is not null)
         {
-            var entityIdStr = _selectedWorldEntity.EntityId.Value.ToString();
-            var unitPos = EntityToScene3dPosition(initialPos);
-            _scene3dSession.UpdateEntityPosition(entityIdStr, unitPos.X, unitPos.Y, unitPos.Z);
-
-            // 同步恢复 _renderScene（Picker 和 BuildUnitDrawList 读取它）
-            var writeResult = RenderSceneObjectPositionWriter.Update(
-                _renderScene, _selectedWorldEntity.EntityId, initialPos);
-            if (writeResult.IsSuccess && writeResult.NewScene is not null)
-                _renderScene = writeResult.NewScene;
+            var id = _selectedWorldEntity.EntityId.Value.ToString();
+            var u = EntityToScene3dPosition(p);
+            _scene3dSession.UpdateEntityPosition(id, u.X, u.Y, u.Z);
+            var w = RenderSceneObjectPositionWriter.Update(_renderScene, _selectedWorldEntity.EntityId, p);
+            if (w.IsSuccess && w.NewScene is not null) _renderScene = w.NewScene;
         }
 
         _inspectorPanel?.SetTransformTexts(
-            initialPos.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            initialPos.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            initialPos.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
+            p.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            p.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
+            p.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
@@ -1412,7 +1405,7 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleViewportToolChanged(ViewportEditorTool tool)
     {
-        _pointerRoute.State.SetToolActive(tool == ViewportEditorTool.Move);
+        _pointerRoute.ActivateMoveTool(tool == ViewportEditorTool.Move);
         if (tool == ViewportEditorTool.Move && _selectedWorldEntity is null)
             _statusBarPanel?.SetCurrentSelection("请先选择实体。");
     }
@@ -1987,7 +1980,7 @@ public sealed partial class EditorShell : UserControl
 
     private void SubmitMoveGizmoVertices()
     {
-        if (!_pointerRoute.State.MoveToolActive || _selectedWorldEntity is null)
+        if (!_pointerRoute.IsMoveToolActive || _selectedWorldEntity is null)
         {
             ClearGizmo();
             return;
