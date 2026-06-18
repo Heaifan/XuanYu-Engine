@@ -106,6 +106,7 @@ public sealed partial class EditorShell : UserControl
     // ─── Transform 路由 ────────────────────────────────────
     private readonly TransformInputRoute _transformRoute = new();
     private bool _moveToolActive;
+    private bool _blenderMoveActive;
     private PresentedMoveGizmoSnapshot _presentedGizmo = PresentedMoveGizmoSnapshot.None;
 
     // ─── 动作去重守卫 ──────────────────────────────────────
@@ -1152,12 +1153,27 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        // G: 进入移动模式（Blender 风格）
+        // G: G 模态自由移动（Blender 风格）
         if (virtualKeyCode == 0x47 && _selectedWorldEntity is not null)
         {
-            _moveToolActive = true;
-            _viewportToolPalette?.SetActiveTool(ViewportEditorTool.Move);
-            AppendInfoLog("移动模式（使用 Gizmo 拖动）");
+            if (!_moveToolActive)
+            {
+                _moveToolActive = true;
+                _viewportToolPalette?.SetActiveTool(ViewportEditorTool.Move);
+            }
+            if (!_transformRoute.Session.IsActive)
+            {
+                _blenderMoveActive = StartBlenderGModalDrag();
+                if (_blenderMoveActive)
+                    AppendInfoLog("G 移动：移动鼠标拖动，左键/Enter 确认，右键/Esc 取消");
+            }
+            return;
+        }
+
+        // Enter: G 模态确认
+        if (virtualKeyCode == 0x0D && _blenderMoveActive)
+        {
+            CompleteGModalMove();
             return;
         }
 
@@ -1183,6 +1199,16 @@ public sealed partial class EditorShell : UserControl
                 $"[InputTrace-Shell] RawPointerButtonDown btn={buttonCode} x={x} y={y}");
         _lastPointerX = x;
         _lastPointerY = y;
+
+        // G 模态：左键确认，右键取消
+        if (_blenderMoveActive)
+        {
+            if (buttonCode == 1)
+                CompleteGModalMove();
+            else if (buttonCode == 2)
+                CancelGModalMove();
+            return;
+        }
 
         if (_inputTranslator is null)
         {
@@ -1243,22 +1269,31 @@ public sealed partial class EditorShell : UserControl
         var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
         if (pos is null) return ViewportSceneToolPressResult.NotHandled;
 
-        // 启动编辑事务
-        if (!TransformEditSessionStart.TryBegin(_worldState, _selectedWorldEntity.EntityId,
-                TransformEditKind.Translation, _worldDirtyState.IsDirty, _transformRoute.Session))
-            return ViewportSceneToolPressResult.NotHandled;
-
         var pivot = pos.Value.Value;
         var camSnapshot = _scene3dSession?.LastPresentedSnapshot;
-        var result = _transformRoute.OnPointerPressed(1, x, y, pivot,
-            camSnapshot is { IsValid: true } ? camSnapshot : null);
-        if (!result.Started)
+
+        // 优先级 1: Gizmo 命中
+        if (_transformRoute.HasHoveredElement)
         {
-            _transformRoute.Session.Cancel();
-            return ViewportSceneToolPressResult.NotHandled;
+            if (!TransformEditSessionStart.TryBegin(_worldState, _selectedWorldEntity.EntityId,
+                    TransformEditKind.Translation, _worldDirtyState.IsDirty, _transformRoute.Session))
+                return ViewportSceneToolPressResult.NotHandled;
+
+            var result = _transformRoute.OnPointerPressed(1, x, y, pivot,
+                camSnapshot is { IsValid: true } ? camSnapshot : null);
+            if (!result.Started)
+            {
+                _transformRoute.Session.Cancel();
+                return ViewportSceneToolPressResult.NotHandled;
+            }
+            return ViewportSceneToolPressResult.BeginDrag;
         }
 
-        return ViewportSceneToolPressResult.BeginDrag;
+        // 优先级 2: 未命中 Gizmo → 命中当前选中实体本体 → ViewPlane 拖动
+        if (TryStartEntityBodyDrag(x, y, pivot, camSnapshot))
+            return ViewportSceneToolPressResult.BeginDrag;
+
+        return ViewportSceneToolPressResult.NotHandled;
     }
 
     private void HandleSceneToolPointerReleased(int x, int y)
@@ -1294,6 +1329,98 @@ public sealed partial class EditorShell : UserControl
 
         // 请求一帧：ScheduleScene3dFrame 会重新 BuildUnitDrawList + SubmitMoveGizmoVertices
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
+    }
+
+    // ─── G 模态自由移动 ──────────────────────────────────────
+
+    /// <summary>
+    /// 启动 Blender 风格 G 模态 ViewPlane 自由移动。
+    /// 由 HandleRawKeyDown (G 键) 触发。
+    /// </summary>
+    private bool StartBlenderGModalDrag()
+    {
+        if (_selectedWorldEntity is null) return false;
+
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (pos is null) return false;
+
+        if (!TransformEditSessionStart.TryBegin(_worldState, _selectedWorldEntity.EntityId,
+                TransformEditKind.Translation, _worldDirtyState.IsDirty, _transformRoute.Session))
+            return false;
+
+        var pivot = pos.Value.Value;
+        var camSnapshot = _scene3dSession?.LastPresentedSnapshot;
+        _transformRoute.Gizmo.SetHover(MoveGizmoElement.ViewPlane);
+        var result = _transformRoute.OnPointerPressed(1,
+            _lastPointerX, _lastPointerY, pivot,
+            camSnapshot is { IsValid: true } ? camSnapshot : null);
+
+        if (!result.Started)
+        {
+            _transformRoute.Session.Cancel();
+            return false;
+        }
+        _blenderMoveActive = true;
+        return true;
+    }
+
+    /// <summary>
+    /// G 模态确认（左键 / Enter）。
+    /// </summary>
+    private void CompleteGModalMove()
+    {
+        if (!_blenderMoveActive) return;
+        _blenderMoveActive = false;
+        HandleSceneToolPointerReleased(_lastPointerX, _lastPointerY);
+    }
+
+    /// <summary>
+    /// G 模态取消（右键 / Esc 也由 HandleRawKeyDown 处理）。
+    /// </summary>
+    private void CancelGModalMove()
+    {
+        if (!_blenderMoveActive) return;
+        _blenderMoveActive = false;
+        _transformRoute.CancelDrag();
+        AppendInfoLog("移动已取消");
+    }
+
+    // ─── 实体本体拖动 ─────────────────────────────────────────
+
+    /// <summary>
+    /// 未命中 Gizmo 时检测是否点击了当前选中实体本体。
+    /// 是则启动 ViewPlane 自由移动。
+    /// </summary>
+    private bool TryStartEntityBodyDrag(int x, int y, Vector3d pivot,
+        PresentedCameraSnapshot? camSnapshot)
+    {
+        if (camSnapshot is not { IsValid: true }) return false;
+
+        var buildStatus = VulkanSceneRayBuilder.TryBuild(
+            x, y, camSnapshot,
+            (uint)camSnapshot.ViewportWidth, (uint)camSnapshot.ViewportHeight,
+            out var ray);
+        if (buildStatus != SceneRayBuildStatus.Success || ray is null) return false;
+
+        var pickResult = ScenePointerPicker.Pick(ray, _renderScene, SceneGroundPlane.Default);
+        if (pickResult.Kind != ScenePointerPickKind.Entity) return false;
+        if (pickResult.EntityId is null) return false;
+        if (_selectedWorldEntity is null) return false;
+        if (pickResult.EntityId.Value != _selectedWorldEntity.EntityId) return false;
+
+        if (!TransformEditSessionStart.TryBegin(_worldState, _selectedWorldEntity.EntityId,
+                TransformEditKind.Translation, _worldDirtyState.IsDirty, _transformRoute.Session))
+            return false;
+
+        _transformRoute.Gizmo.SetHover(MoveGizmoElement.ViewPlane);
+        var result = _transformRoute.OnPointerPressed(1, x, y, pivot, camSnapshot);
+        if (!result.Started)
+        {
+            _transformRoute.Session.Cancel();
+            return false;
+        }
+        AppendInfoLog("实体本体拖动");
+        return true;
     }
 
     // ─── 视口工具 ──────────────────────────────────────
