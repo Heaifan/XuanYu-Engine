@@ -19,6 +19,7 @@ using FluidWarfare.Editor.Windows.Viewport.Picking;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -115,6 +116,12 @@ public sealed partial class EditorShell : UserControl
     private PresentedMoveGizmoSnapshot _presentedGizmo = PresentedMoveGizmoSnapshot.None;
     private PresentedMoveGizmoSnapshot _pendingGizmo = PresentedMoveGizmoSnapshot.None;
     // _interactState via _pointerRoute.State
+
+    // ─── Transform Application 层 ───────────────────────────
+    private readonly ViewportRenderSceneStore _renderSceneStore = new();
+    private EntityTransformPreview? _previewApplier;
+    private EntityTransformCommit? _commitApplier;
+    private EntityTransformCancel? _cancelApplier;
 
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
@@ -647,6 +654,7 @@ public sealed partial class EditorShell : UserControl
 
         // 生成 RenderScene
         _renderScene = WorldToRenderSceneBuilder.Build(_worldState);
+        _renderSceneStore.Initialize(_renderScene);
         AppendInfoLog($"RenderScene 已生成，渲染对象数量：{_renderScene.Objects.Count}。");
 
         // 构建层级树并显示
@@ -1113,6 +1121,7 @@ public sealed partial class EditorShell : UserControl
         {
             _scene3dSession = session;
             _scene3dFrameRoute = new Scene3dFrameRoute(session);
+            InitTransformApplication();
             _renderLastMode = "Scene3D";
             _renderSeq++;
             AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Scene3D Session 启动 | " +
@@ -1327,6 +1336,22 @@ public sealed partial class EditorShell : UserControl
         AppendInfoLog($"移动完成 ({finalPos.X:F3}, {finalPos.Y:F3}, {finalPos.Z:F3})");
     }
 
+    /// <summary>初始化 Transform Application 层（Session 启动后调用）。</summary>
+    private void InitTransformApplication()
+    {
+        if (_scene3dSession is null) return;
+        var vulkan = new Scene3dEntityPositionWriter(_scene3dSession);
+        var inspect = new InspectorTransformDisplay(_inspectorPanel);
+        var frame = new Scene3dFrameRequest(r => ScheduleScene3dFrame(r));
+        _previewApplier = new EntityTransformPreview(_renderSceneStore, vulkan, inspect, frame);
+        _cancelApplier = new EntityTransformCancel(_renderSceneStore, vulkan, inspect, frame);
+        if (_worldState is not null)
+        {
+            var world = new WorldTransformWriter(_worldState, _worldDirtyState, _statusBarPanel);
+            _commitApplier = new EntityTransformCommit(world, _renderSceneStore, vulkan, inspect, frame);
+        }
+    }
+
     /// <summary>从当前 Shell 状态构建 TransformStartSnapshot。返回 null 当缺实体或相机快照。</summary>
     private TransformStartSnapshot? BuildTransformStartSnapshot()
     {
@@ -1350,29 +1375,10 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void ApplyPreviewPosition()
     {
-        if (_selectedWorldEntity is null || _scene3dSession is null) return;
-
-        var previewPos = _pointerRoute.Session.PreviewTransform.Position;
-        var entityIdStr = _selectedWorldEntity.EntityId.Value.ToString();
-        var unitPos = EntityToScene3dPosition(previewPos);
-
-        // 更新 Vulkan 内部缓存绘制数据
-        _scene3dSession.UpdateEntityPosition(entityIdStr, unitPos.X, unitPos.Y, unitPos.Z);
-
-        // 同步更新 _renderScene（ScenePointerPicker.Pick 和 BuildUnitDrawList 读取它）
-        var writeResult = RenderSceneObjectPositionWriter.Update(
-            _renderScene, _selectedWorldEntity.EntityId, previewPos);
-        if (writeResult.IsSuccess && writeResult.NewScene is not null)
-            _renderScene = writeResult.NewScene;
-
-        // 更新 Inspector 数值
-        _inspectorPanel?.SetTransformTexts(
-            previewPos.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            previewPos.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            previewPos.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
-
-        // 请求一帧
-        ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
+        if (_selectedWorldEntity is null || _previewApplier is null) return;
+        var pos = _pointerRoute.Session.PreviewTransform.Position;
+        _previewApplier.Apply(pos, _selectedWorldEntity.EntityId);
+        _renderScene = _renderSceneStore.Current;
     }
 
     // ─── 统一取消 ──────────────────────────────────────────────
@@ -1382,23 +1388,10 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void CancelActiveTransform(TransformInteractionResult r)
     {
-        if (r.Action != TransformInteractionAction.Cancelled) return;
-        var p = r.Transform.Position;
-
-        if (_selectedWorldEntity is not null && _scene3dSession is not null)
-        {
-            var id = _selectedWorldEntity.EntityId.Value.ToString();
-            var u = EntityToScene3dPosition(p);
-            _scene3dSession.UpdateEntityPosition(id, u.X, u.Y, u.Z);
-            var w = RenderSceneObjectPositionWriter.Update(_renderScene, _selectedWorldEntity.EntityId, p);
-            if (w.IsSuccess && w.NewScene is not null) _renderScene = w.NewScene;
-        }
-
-        _inspectorPanel?.SetTransformTexts(
-            p.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            p.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            p.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
-        ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
+        if (r.Action != TransformInteractionAction.Cancelled || _selectedWorldEntity is null) return;
+        if (_cancelApplier is not null)
+            _cancelApplier.Apply(r.Transform.Position, _selectedWorldEntity.EntityId);
+        _renderScene = _renderSceneStore.Current;
     }
 
     // ─── 视口工具 ──────────────────────────────────────
@@ -2570,74 +2563,17 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void ApplyEntityTransform(Vector3d newPosition, EditorEntityTransformOrigin origin)
     {
-        if (_worldState is null || _selectedWorldEntity is null) return;
+        if (_selectedWorldEntity is null || _commitApplier is null) return;
+        _commitApplier.Apply(newPosition, _selectedWorldEntity.EntityId);
+        _renderScene = _renderSceneStore.Current;
 
-        var entityId = _selectedWorldEntity.EntityId;
-        var entityIdStr = entityId.Value.ToString();
-
-        // 1. 写入 WorldState
-        if (!_worldState.SetPosition(entityId, newPosition))
-        {
-            // NoOp: 相同位置
-            _inspectorPanel?.SetTransformDraftState(false, false, null);
-            return;
-        }
-
-        // 2. 同步 RenderScene
-        var renderResult = RenderSceneObjectPositionWriter.Update(
-            _renderScene, entityId, newPosition);
-        if (!renderResult.IsSuccess)
-        {
-            // 回滚 WorldState
-            _worldState.SetPosition(entityId, _renderScene.Objects
-                .FirstOrDefault(o => o.EntityId == entityId)?.Position ?? newPosition);
-            AppendErrorLog($"RenderScene 同步失败：{renderResult.Message}");
-            return;
-        }
-        if (renderResult.NewScene is not null)
-            _renderScene = renderResult.NewScene;
-
-        // 3. 同步 Scene3D Session
-        var unitPos = EntityToScene3dPosition(newPosition);
-        if (_scene3dSession is not null)
-            _scene3dSession.UpdateEntityPosition(
-                entityIdStr, unitPos.X, unitPos.Y, unitPos.Z);
-
-        // 4. 标记场景 Dirty
-        _worldDirtyState.MarkDirty(entityIdStr);
-        _statusBarPanel?.SetDirtyState(true);
-
-        // 5. 更新 Inspector 显示的坐标
-        _inspectorPanel?.SetTransformTexts(
-            newPosition.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            newPosition.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            newPosition.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
-        _inspectorPanel?.SetTransformDraftState(false, false, null);
-
-        // 6. 请求一帧
-        ScheduleScene3dFrame(VulkanScene3dFrameReason.EntityTransformChanged);
-
-        // 7. 日志（数值拖拽不逐帧写日志，移动工具只在完成时写日志）
+        // 日志（数值拖拽和移动工具已完成时不写日志，由调用层写）
         if (origin != EditorEntityTransformOrigin.DragScrub && origin != EditorEntityTransformOrigin.MoveTool)
         {
-            var prevPos = renderResult.Change?.OldPosition;
-            if (prevPos is not null)
-            {
-                AppendInfoLog(
-                    $"实体 {_selectedWorldEntity.DisplayName} 坐标已修改：" +
-                    $"({prevPos.Value.X:F2}, {prevPos.Value.Y:F2}, {prevPos.Value.Z:F2}) → " +
-                    $"({newPosition.X:F2}, {newPosition.Y:F2}, {newPosition.Z:F2})。");
-            }
+            AppendInfoLog(
+                $"实体 {_selectedWorldEntity.DisplayName} 坐标修改为 " +
+                $"({newPosition.X:F2}, {newPosition.Y:F2}, {newPosition.Z:F2})。");
         }
-    }
-
-    private static (float X, float Y, float Z) EntityToScene3dPosition(Vector3d position)
-    {
-        // 使用 RenderUnitPlacement 统一计算视觉中心
-        var placement = new RenderUnitPlacement(position);
-        return ((float)placement.VisualCenter.X,
-                (float)placement.VisualCenter.Y,
-                (float)placement.VisualCenter.Z);
     }
 
     // ─── 地面放置 ──────────────────────────────────────────────────

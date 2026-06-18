@@ -8,7 +8,7 @@ using FluidWarfare.Render.Vulkan.Camera;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
 
-sealed class TransformDragRoute
+public sealed class TransformDragRoute
 {
     readonly TransformEditSession _session = new();
     TransformDragKind _activeKind;
