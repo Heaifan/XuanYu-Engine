@@ -655,152 +655,35 @@ public sealed partial class EditorShell : UserControl
 
     private void ProbeVulkanBackend()
     {
-        _probeRoute.State.Backend = VulkanBackendProbe.Probe();
-
-        if (_probeRoute.State.Backend.IsAvailable)
-        {
-            AppendInfoLog($"Vulkan 后端状态：{_probeRoute.State.Backend.Message}");
-        }
-        else
-        {
-            AppendWarningLog($"Vulkan 后端不可用：{_probeRoute.State.Backend.Message}");
-        }
-
+        _probeRoute.ProbeBackend(AppendInfoLog, AppendWarningLog);
         _statusBarPanel?.SetVulkanStatus(
             _probeRoute.State.Backend.IsAvailable ? "已接入" : "不可用");
-
         UpdateVulkanViewportHost();
         ProbeVulkanInstance();
     }
 
     private void ProbeVulkanValidation()
     {
-        _probeRoute.State.Validation = VulkanValidationAvailabilityProbe.Probe();
-
-        if (_probeRoute.State.Validation.IsEnabled)
-        {
-            AppendInfoLog(_probeRoute.State.Validation.Message);
-        }
-        else if (_probeRoute.State.Validation.Status != VulkanValidationStatus.Disabled)
-        {
-            AppendWarningLog(_probeRoute.State.Validation.Message);
-        }
-
+        _probeRoute.ProbeValidation(AppendInfoLog, AppendWarningLog);
         UpdateAllDiagnostics();
     }
 
     private void ProbeVulkanInstance()
     {
-        if (!_probeRoute.State.Backend.IsAvailable)
-        {
-            _probeRoute.State.Instance = new VulkanInstanceInfo(
-                VulkanInstanceStatus.Failed,
-                "Vulkan 后端不可用，跳过 Instance 创建。",
-                "未知",
-                0,
-                0);
-            return;
-        }
-
-        _probeRoute.State.Instance = VulkanInstanceProbe.Probe();
-
-        if (_probeRoute.State.Instance.IsCreated)
-        {
-            AppendInfoLog(
-                $"Vulkan Instance 创建成功，API 版本：{_probeRoute.State.Instance.ApiVersionText}，扩展数量：{_probeRoute.State.Instance.ExtensionCount}，用时：{_probeRoute.State.Instance.ElapsedMilliseconds:F2} ms。");
-        }
-        else
-        {
-            AppendWarningLog(_probeRoute.State.Instance.Message);
-        }
-
+        _probeRoute.ProbeInstance(AppendInfoLog, AppendWarningLog);
         ProbeVulkanDevice();
     }
 
     private void ProbeVulkanDevice()
     {
-        if (!_probeRoute.State.Instance.IsCreated)
-        {
-            _probeRoute.State.Device = new VulkanDeviceInfo(
-                VulkanDeviceStatus.Failed,
-                "Vulkan Instance 未创建，跳过 Device 创建。",
-                "未知",
-                "未知",
-                -1,
-                0);
-            ProbeVulkanSurface();
-            return;
-        }
-
-        _probeRoute.State.Device = VulkanDeviceProbe.Probe();
-
-        if (_probeRoute.State.Device.IsCreated)
-        {
-            AppendInfoLog(
-                $"Vulkan Device 创建成功，显卡：{_probeRoute.State.Device.PhysicalDeviceName}，类型：{_probeRoute.State.Device.PhysicalDeviceTypeText}，图形队列族：{_probeRoute.State.Device.GraphicsQueueFamilyIndex}，用时：{_probeRoute.State.Device.ElapsedMilliseconds:F2} ms。");
-        }
-        else
-        {
-            AppendWarningLog(_probeRoute.State.Device.Message);
-        }
-
+        _probeRoute.ProbeDevice(AppendInfoLog, AppendWarningLog);
         ProbeVulkanSurface();
     }
 
     private void ProbeVulkanSurface()
     {
-        if (!_probeRoute.State.Device.IsCreated)
-        {
-            _probeRoute.State.Surface = new VulkanSurfaceInfo(
-                VulkanSurfaceStatus.Failed,
-                "Vulkan Device 未创建，跳过 Surface 创建。",
-                "未知",
-                false,
-                0);
-
-            ShowVulkanSurfaceInfo();
-            return;
-        }
-
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-
-        if (!nativeHostInfo.HasNativeHandle)
-        {
-            _probeRoute.State.Surface = new VulkanSurfaceInfo(
-                VulkanSurfaceStatus.Failed,
-                nativeHostInfo.Message,
-                nativeHostInfo.PlatformText,
-                false,
-                0);
-
-            ShowVulkanSurfaceInfo();
-            return;
-        }
-
-        _probeRoute.State.Surface = VulkanSurfaceProbe.ProbeWindows(
-            nativeHostInfo.InstanceHandle,
-            nativeHostInfo.WindowHandle);
-
-        ShowVulkanSurfaceInfo();
-    }
-
-    private void ShowVulkanSurfaceInfo()
-    {
-        if (_probeRoute.State.Surface.IsCreated)
-        {
-            AppendInfoLog(
-                $"Vulkan Surface 创建成功，平台：{_probeRoute.State.Surface.PlatformText}，用时：{_probeRoute.State.Surface.ElapsedMilliseconds:F2} ms。");
-        }
-        else if (_probeRoute.State.Surface.Status == VulkanSurfaceStatus.NotChecked)
-        {
-            AppendInfoLog(_probeRoute.State.Surface.Message);
-        }
-        else
-        {
-            AppendWarningLog(_probeRoute.State.Surface.Message);
-        }
-
+        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
+        _probeRoute.ProbeSurface(host, AppendInfoLog, AppendWarningLog);
         UpdateAllDiagnostics();
     }
 
@@ -834,107 +717,26 @@ public sealed partial class EditorShell : UserControl
 
     private void ProbeVulkanSwapchain()
     {
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-
-        if (!TryGetValidViewportSize(nativeHostInfo, out var viewportWidth, out var viewportHeight, out var viewportSizeMessage))
-        {
-            _probeRoute.State.Swapchain = new VulkanSwapchainInfo(
-                VulkanSwapchainStatus.Failed,
-                viewportSizeMessage,
-                0, "未知", "未知", 0, 0, 0);
-            ShowVulkanSwapchainInfo();
-            return;
-        }
-
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
-        {
-            _probeRoute.State.Swapchain = new VulkanSwapchainInfo(
-                VulkanSwapchainStatus.Failed,
-                "缺少 Windows 原生视口句柄，跳过 Swapchain 创建。",
-                0, "未知", "未知", 0, 0, 0);
-            ShowVulkanSwapchainInfo();
-            return;
-        }
-
-        _probeRoute.State.Swapchain = VulkanSwapchainProbe.ProbeWindows(
-            nativeHostInfo.InstanceHandle,
-            nativeHostInfo.WindowHandle,
-            viewportWidth,
-            viewportHeight);
-
-        ShowVulkanSwapchainInfo();
-    }
-
-    private void ShowVulkanSwapchainInfo()
-    {
-        if (_probeRoute.State.Swapchain.IsCreated)
-        {
-            AppendInfoLog(
-                $"Vulkan Swapchain 创建成功，图像数量：{_probeRoute.State.Swapchain.ImageCount}，" +
-                $"格式：{_probeRoute.State.Swapchain.SurfaceFormatText}，" +
-                $"Present：{_probeRoute.State.Swapchain.PresentModeText}，" +
-                $"尺寸：{_probeRoute.State.Swapchain.Width}x{_probeRoute.State.Swapchain.Height}，" +
-                $"用时：{_probeRoute.State.Swapchain.ElapsedMilliseconds:F2} ms。");
-        }
-        else if (_probeRoute.State.Swapchain.Status != VulkanSwapchainStatus.NotChecked)
-        {
-            AppendWarningLog($"Vulkan Swapchain 创建失败：{_probeRoute.State.Swapchain.Message}");
-        }
-
+        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
+        if (!TryGetValidViewportSize(host, out var w, out var h, out var msg))
+        { _probeRoute.State.Swapchain = new(VulkanSwapchainStatus.Failed, msg, 0, "未知", "未知", 0, 0, 0); UpdateAllDiagnostics(); return; }
+        _probeRoute.ProbeSwapchain(host, w, h, AppendInfoLog, AppendWarningLog);
         UpdateAllDiagnostics();
     }
 
     private void ProbeVulkanClear(string reason = "resize")
     {
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-
-        if (!TryGetValidViewportSize(nativeHostInfo, out var viewportWidth, out var viewportHeight, out var viewportSizeMessage))
-        {
-            _probeRoute.State.Clear = new VulkanClearInfo(
-                VulkanClearStatus.Failed, viewportSizeMessage, "未知", 0, 0, 0);
-            ShowVulkanClearInfo();
-            return;
-        }
-
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
-        {
-            _probeRoute.State.Clear = new VulkanClearInfo(
-                VulkanClearStatus.Failed, "缺少原生句柄，跳过清屏。", "未知", 0, 0, 0);
-            ShowVulkanClearInfo();
-            return;
-        }
-
-        _renderSeq++;
-        AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Clear | {viewportWidth}x{viewportHeight} | {reason}");
-
-        _probeRoute.State.Clear = VulkanClearProbe.ProbeWindows(
-            nativeHostInfo.InstanceHandle,
-            nativeHostInfo.WindowHandle,
-            viewportWidth,
-            viewportHeight);
-
+        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
+        if (!TryGetValidViewportSize(host, out var w, out var h, out var msg))
+        { _probeRoute.State.Clear = new(VulkanClearStatus.Failed, msg, "未知", 0, 0, 0); ShowVulkanClearInfo(); return; }
+        _renderSeq++; AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Clear | {w}x{h} | {reason}");
+        _probeRoute.ProbeClear(host, w, h, reason, AppendInfoLog, AppendWarningLog);
         ShowVulkanClearInfo();
     }
-
     private void ShowVulkanClearInfo()
     {
-        if (_probeRoute.State.Clear.IsSucceeded)
-        {
-            _renderLastMode = "Clear";
-            AppendInfoLog(
-                $"Vulkan 最小清屏成功，颜色：{_probeRoute.State.Clear.ClearColorText}，" +
-                $"尺寸：{_probeRoute.State.Clear.Width}x{_probeRoute.State.Clear.Height}，" +
-                $"用时：{_probeRoute.State.Clear.ElapsedMilliseconds:F2} ms。");
-        }
-        else if (_probeRoute.State.Clear.Status != VulkanClearStatus.NotChecked)
-        {
-            AppendWarningLog($"Vulkan 最小清屏失败：{_probeRoute.State.Clear.Message}");
-        }
-
+        if (_probeRoute.State.Clear.IsSucceeded) _renderLastMode = "Clear";
         UpdateVulkanViewportStatusLine();
-
         UpdateAllDiagnostics();
     }
 
