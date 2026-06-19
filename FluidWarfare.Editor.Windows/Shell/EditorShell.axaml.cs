@@ -1342,13 +1342,12 @@ public sealed partial class EditorShell : UserControl
         if (_scene3dSession is null) return;
         var vulkan = new Scene3dEntityPositionWriter(_scene3dSession);
         var inspect = new InspectorTransformDisplay(_inspectorPanel);
-        var frame = new Scene3dFrameRequest(r => ScheduleScene3dFrame(r));
-        _previewApplier = new EntityTransformPreview(_renderSceneStore, vulkan, inspect, frame);
-        _cancelApplier = new EntityTransformCancel(_renderSceneStore, vulkan, inspect, frame);
+        _previewApplier = new EntityTransformPreview(_renderSceneStore, vulkan, inspect);
+        _cancelApplier = new EntityTransformCancel(_renderSceneStore, vulkan, inspect);
         if (_worldState is not null)
         {
             var world = new WorldTransformWriter(_worldState, _worldDirtyState, _statusBarPanel);
-            _commitApplier = new EntityTransformCommit(world, _renderSceneStore, vulkan, inspect, frame);
+            _commitApplier = new EntityTransformCommit(world, _renderSceneStore, vulkan, inspect);
         }
     }
 
@@ -1377,8 +1376,9 @@ public sealed partial class EditorShell : UserControl
     {
         if (_selectedWorldEntity is null || _previewApplier is null) return;
         var pos = _pointerRoute.Session.PreviewTransform.Position;
-        _previewApplier.Apply(pos, _selectedWorldEntity.EntityId);
+        _previewApplier.Apply(new SceneTransform(pos, default, default), _selectedWorldEntity.EntityId);
         _renderScene = _renderSceneStore.Current;
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
     // ─── 统一取消 ──────────────────────────────────────────────
@@ -1390,8 +1390,9 @@ public sealed partial class EditorShell : UserControl
     {
         if (r.Action != TransformInteractionAction.Cancelled || _selectedWorldEntity is null) return;
         if (_cancelApplier is not null)
-            _cancelApplier.Apply(r.Transform.Position, _selectedWorldEntity.EntityId);
+            _cancelApplier.Apply(r.Transform, _selectedWorldEntity.EntityId);
         _renderScene = _renderSceneStore.Current;
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
     // ─── 视口工具 ──────────────────────────────────────
@@ -2564,8 +2565,10 @@ public sealed partial class EditorShell : UserControl
     private void ApplyEntityTransform(Vector3d newPosition, EditorEntityTransformOrigin origin)
     {
         if (_selectedWorldEntity is null || _commitApplier is null) return;
-        _commitApplier.Apply(newPosition, _selectedWorldEntity.EntityId);
+        var t = new SceneTransform(newPosition, default, default);
+        _commitApplier.Apply(t, _selectedWorldEntity.EntityId);
         _renderScene = _renderSceneStore.Current;
+        ScheduleScene3dFrame(VulkanScene3dFrameReason.EntityTransformChanged);
 
         // 日志（数值拖拽和移动工具已完成时不写日志，由调用层写）
         if (origin != EditorEntityTransformOrigin.DragScrub && origin != EditorEntityTransformOrigin.MoveTool)

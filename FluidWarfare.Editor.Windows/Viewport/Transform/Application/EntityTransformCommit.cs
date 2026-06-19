@@ -1,12 +1,11 @@
 using FluidWarfare.Core.Identity;
-using FluidWarfare.Core.Math;
-using FluidWarfare.Render.Vulkan.Scene3D.Session;
+using FluidWarfare.Project.World.Transform;
 
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>
-/// Commit：原子式提交最终 Transform。写入 WorldState + RenderScene + Vulkan + Inspector + Dirty。
-/// 只提交一次，不做多次增量更新。
+/// Commit：原子提交。先同步 RenderScene + Vulkan，再写 WorldState + Dirty。
+/// 如果 RenderScene 更新失败，不写入 WorldState（不残留半提交状态）。
 /// </summary>
 public sealed class EntityTransformCommit
 {
@@ -14,28 +13,35 @@ public sealed class EntityTransformCommit
     readonly ViewportRenderSceneStore _renderScene;
     readonly Scene3dEntityPositionWriter _vulkan;
     readonly InspectorTransformDisplay _inspector;
-    readonly Scene3dFrameRequest _frame;
 
     public EntityTransformCommit(
         WorldTransformWriter world,
         ViewportRenderSceneStore renderScene,
         Scene3dEntityPositionWriter vulkan,
-        InspectorTransformDisplay inspector,
-        Scene3dFrameRequest frame)
+        InspectorTransformDisplay inspector)
     {
         _world = world; _renderScene = renderScene;
-        _vulkan = vulkan; _inspector = inspector; _frame = frame;
+        _vulkan = vulkan; _inspector = inspector;
     }
 
-    public TransformApplyResult Apply(Vector3d position, EntityId entityId)
+    public TransformApplyResult Apply(SceneTransform transform, EntityId entityId)
     {
-        if (!_world.TrySetPosition(entityId, position))
-            return TransformApplyResult.SuccessResult; // NoOp: 位置未变化
+        var pos = transform.Position;
 
-        _vulkan.Write(entityId, position);
-        _renderScene.UpdatePosition(entityId, position);
-        _inspector.SetPosition(position);
-        _frame.Request(VulkanScene3dFrameReason.EntityTransformChanged);
+        // Phase 1: 更新视觉层（可回滚 — 只有内存状态）
+        if (!_renderScene.UpdatePosition(entityId, pos))
+            return TransformApplyResult.Failure(TransformFailureReason.RenderSceneSyncFailed);
+        _vulkan.Write(entityId, pos);
+
+        // Phase 2: 写入 WorldState + Dirty（不可回滚 — 此处是提交点）
+        if (!_world.TrySetPosition(entityId, pos))
+        {
+            // 位置未变化但视觉已更新 → 仍是有效状态
+            _inspector.SetPosition(pos);
+            return TransformApplyResult.NoChangeResult;
+        }
+
+        _inspector.SetPosition(pos);
         return TransformApplyResult.SuccessResult;
     }
 }

@@ -11,4 +11,21 @@ public sealed class TransformApplyResultTests
         Assert.Equal(TransformApplyStatus.Success, r.Status);
         Assert.True(r.IsSuccess);
     }
+
+    [Fact]
+    public void NoChangeResult_HasStatusNoChange()
+    {
+        var r = TransformApplyResult.NoChangeResult;
+        Assert.Equal(TransformApplyStatus.NoChange, r.Status);
+        Assert.False(r.IsSuccess);
+    }
+
+    [Fact]
+    public void FailureResult_HasFailureReason()
+    {
+        var r = TransformApplyResult.Failure(TransformFailureReason.RenderSceneSyncFailed);
+        Assert.Equal(TransformApplyStatus.Failure, r.Status);
+        Assert.Equal(TransformFailureReason.RenderSceneSyncFailed, r.FailureReason);
+        Assert.False(r.IsSuccess);
+    }
 }

@@ -1,37 +1,34 @@
 using FluidWarfare.Core.Identity;
-using FluidWarfare.Core.Math;
-using FluidWarfare.Render.Vulkan.Scene3D.Session;
+using FluidWarfare.Project.World.Transform;
 
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>
-/// Preview：将预览位置同步到 Vulkan + RenderScene + Inspector，请求一帧。
-/// 不修改 WorldState / Dirty / 日志。
+/// Preview：验证 RenderScene 可更新 → 写 Vulkan → 更新 Inspector。
+/// 不修改 WorldState/Dirty。不安排帧（由 Shell 在调用后统一调度）。
 /// </summary>
 public sealed class EntityTransformPreview
 {
     readonly ViewportRenderSceneStore _renderScene;
     readonly Scene3dEntityPositionWriter _vulkan;
     readonly InspectorTransformDisplay _inspector;
-    readonly Scene3dFrameRequest _frame;
 
     public EntityTransformPreview(
         ViewportRenderSceneStore renderScene,
         Scene3dEntityPositionWriter vulkan,
-        InspectorTransformDisplay inspector,
-        Scene3dFrameRequest frame)
+        InspectorTransformDisplay inspector)
     {
-        _renderScene = renderScene; _vulkan = vulkan;
-        _inspector = inspector; _frame = frame;
+        _renderScene = renderScene; _vulkan = vulkan; _inspector = inspector;
     }
 
-    public TransformApplyResult Apply(Vector3d position, EntityId entityId)
+    public TransformApplyResult Apply(SceneTransform transform, EntityId entityId)
     {
-        _vulkan.Write(entityId, position);
-        if (!_renderScene.UpdatePosition(entityId, position))
-            return TransformApplyResult.Failure("RenderScene 同步失败");
-        _inspector.SetPosition(position);
-        _frame.Request(VulkanScene3dFrameReason.TransformPreview);
+        var pos = transform.Position;
+        // 先验证 RenderScene 可更新，再写 Vulkan
+        if (!_renderScene.UpdatePosition(entityId, pos))
+            return TransformApplyResult.Failure(TransformFailureReason.RenderSceneSyncFailed);
+        _vulkan.Write(entityId, pos);
+        _inspector.SetPosition(pos);
         return TransformApplyResult.SuccessResult;
     }
 }
