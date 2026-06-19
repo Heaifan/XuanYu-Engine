@@ -22,6 +22,7 @@ using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
+using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -92,9 +93,7 @@ public sealed partial class EditorShell : UserControl
     private bool _vulkanViewportRendering;
     private int _renderSeq;
     private string _renderLastMode = "无";
-    private VulkanScene3dSession? _scene3dSession;
-    private Scene3dFrameRoute? _scene3dFrameRoute;
-    private Scene3dFrameSubmitRoute? _scene3dFrameSubmitRoute;
+    private Scene3dSessionLifecycle _lifecycle = null!;
     private readonly ViewportPointerPickRoute _viewportPickRoute = new();
     private SceneOrbitCameraState _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
     private int _cameraRevision;
@@ -250,8 +249,7 @@ public sealed partial class EditorShell : UserControl
         _vulkanViewportNativeHostReported = false;
         _vulkanViewportRendering = false;
         _sessionActive = false;
-        _scene3dSession?.Dispose();
-        _scene3dSession = null;
+        _lifecycle.Stop();
         if (_viewportResizeRenderTimer is not null)
         {
             _viewportResizeRenderTimer.Stop();
@@ -310,7 +308,7 @@ public sealed partial class EditorShell : UserControl
         _vulkanViewportRendering = true;
         try
         {
-            if (_sessionActive && _scene3dSession is not null)
+            if (_sessionActive && _lifecycle.State.Session is not null)
             {
                 // 会话活跃时 resize 只重建 swapchain
                 var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
@@ -320,7 +318,7 @@ public sealed partial class EditorShell : UserControl
                 {
                     _cameraRevision++;
                     var resizePose = SceneCameraPose.FromOrbitState(_lastCameraState, _cameraRevision);
-                    var result = _scene3dSession.Resize(
+                    var result = _lifecycle.State.Session.Resize(
                         (uint)nativeHostInfo.Width,
                         (uint)nativeHostInfo.Height,
                         resizePose,
@@ -334,8 +332,8 @@ public sealed partial class EditorShell : UserControl
                     {
                         AppendWarningLog($"Scene3D resize 失败：{result.Message}，回退 Clear。");
                         // 回退：销毁会话，Clear
-                        _scene3dSession.Dispose();
-                        _scene3dSession = null;
+                        // REMOVED: _lifecycle.State.Session.Dispose() — handled by Stop()
+                        _lifecycle.Stop();
                         _sessionActive = false;
                         ProbeVulkanClear("resize");
                     }
@@ -484,7 +482,7 @@ public sealed partial class EditorShell : UserControl
 
         // 启用地面放置按钮（Session 激活时）
         _inspectorPanel?.SetGroundPlaceEnabled(
-            _sessionActive && _scene3dSession?.Status == VulkanScene3dSessionStatus.Active);
+            _sessionActive && _lifecycle.State.Session?.Status == VulkanScene3dSessionStatus.Active);
 
         AppendInfoLog($"已选择 {selection.Kind}：{entityInfo.DisplayName}。");
     }
@@ -964,7 +962,7 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        if (_scene3dSession is not null || _sessionActive)
+        if (_lifecycle.State.Session is not null || _sessionActive)
         {
             AppendInfoLog("Scene3D 会话已存在，跳过自动启动。");
             return;
@@ -1040,12 +1038,9 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleRunScene3dMenuClicked(object? sender, RoutedEventArgs e)
     {
-        if (_scene3dSession is not null)
+        if (_lifecycle.State.Session is not null)
         {
-            // 重新启动：先清理旧 Session
-            var oldSession = _scene3dSession;
-            _scene3dSession = null;
-            oldSession.Dispose();
+            _lifecycle.Stop();
 
             if (VulkanScene3dSwapchainResources.LiveCount != 0)
             {
@@ -1069,73 +1064,34 @@ public sealed partial class EditorShell : UserControl
     {
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
             ?? VulkanViewportNativeHostInfo.NotAvailable;
-
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
-        {
-            AppendWarningLog("Scene3D 会话：视口未就绪。");
-            return;
-        }
+        { AppendWarningLog("Scene3D 会话：视口未就绪。"); return; }
 
         AppendInfoLog("正在启动 Scene3D 会话...");
         _sessionActive = true;
 
-        // 保存 RenderScene 快照（网格 + 世界主轴共享同一 LineList Pipeline）
-        var gridOnly = VulkanScene3dVertices.BuildGrid(20, 2);
-        var axisVerts = VulkanScene3dVertices.BuildAxes(20, 8);
-        var combinedGridVertices = new VulkanScene3dVertex[gridOnly.Length + axisVerts.Length];
-        Array.Copy(gridOnly, 0, combinedGridVertices, 0, gridOnly.Length);
-        Array.Copy(axisVerts, 0, combinedGridVertices, gridOnly.Length, axisVerts.Length);
-        var unitVertices = VulkanScene3dVertices.BuildCube(0, 0, 0, 1.0f);
-
-        var unitDraws = new List<VulkanScene3dUnitDrawInfo>();
-        foreach (var obj in _renderSceneStore.Current.Objects)
-        {
-            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
-            var p = obj.Placement;
-            var center = p?.VisualCenter ?? new Vector3d(obj.Position.X, obj.Position.Y, obj.Position.Z + 0.5);
-            unitDraws.Add(new VulkanScene3dUnitDrawInfo(
-                obj.EntityId.Value.ToString(),
-                (float)center.X,
-                (float)center.Y,
-                (float)center.Z,
-                (float)RenderUnitPlacement.Scale));
-        }
-
         _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
         _cameraRevision++;
-        var sessionPose = SceneCameraPose.FromOrbitState(_lastCameraState, _cameraRevision);
+        var pose = SceneCameraPose.FromOrbitState(_lastCameraState, _cameraRevision);
 
-        var session = new VulkanScene3dSession();
-        var result = session.Start(
-            nativeHostInfo.InstanceHandle,
-            nativeHostInfo.WindowHandle,
-            (uint)nativeHostInfo.Width,
-            (uint)nativeHostInfo.Height,
-            sessionPose,
-            combinedGridVertices.AsSpan(),
-            unitVertices.AsSpan(),
-            [.. unitDraws]);
+        var request = new Scene3dSessionStartRequest(
+            nativeHostInfo.InstanceHandle, nativeHostInfo.WindowHandle,
+            (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height, pose);
+        var result = _lifecycle.Start(request);
 
         if (result.Success)
         {
-            _scene3dSession = session;
-            _scene3dFrameRoute = new Scene3dFrameRoute(session);
-            _scene3dFrameSubmitRoute = new Scene3dFrameSubmitRoute(
-                _scene3dFrameRoute, session, _renderSceneStore);
             InitTransformApplication();
             _renderLastMode = "Scene3D";
             _renderSeq++;
             AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Scene3D Session 启动 | " +
-                $"{result.ViewportWidth}x{result.ViewportHeight}");
+                $"{nativeHostInfo.Width}x{nativeHostInfo.Height}");
             AppendInfoLog(result.Message);
         }
         else
         {
-            _scene3dSession = null;
-            session.Dispose();
             _sessionActive = false;
             AppendErrorLog($"Scene3D 会话启动失败：{result.Message}");
-            AppendInfoLog($"Swapchain LiveCount：{VulkanScene3dSwapchainResources.LiveCount}");
         }
 
         UpdateVulkanViewportStatusLine();
@@ -1247,7 +1203,7 @@ public sealed partial class EditorShell : UserControl
         // 更新 Gizmo Hover
         if (_pointerRoute.IsMoveToolActive)
         {
-            var g = _scene3dFrameRoute?.Snapshots.PresentedGizmo;
+            var g = _lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo;
             if (g?.IsAvailable == true)
                 _pointerRoute.UpdateGizmoHover(x, y, g.Value.Layout);
         }
@@ -1290,7 +1246,7 @@ public sealed partial class EditorShell : UserControl
         if (!_pointerRoute.IsMoveToolActive || _selectedWorldEntity is null)
             return ViewportSceneToolPressResult.NotHandled;
 
-        var camSnapshot = _scene3dSession?.LastPresentedSnapshot;
+        var camSnapshot = _lifecycle.State.Session?.LastPresentedSnapshot;
         if (camSnapshot is not { IsValid: true }) return ViewportSceneToolPressResult.NotHandled;
 
         var startSnap = BuildTransformStartSnapshot();
@@ -1310,7 +1266,7 @@ public sealed partial class EditorShell : UserControl
         // 优先级 2: 未命中 Gizmo → 命中当前选中实体本体 → ViewPlane 拖动
         var pick = _viewportPickRoute.Pick(new ViewportPickRequest(
             x, y, camSnapshot,
-            _scene3dFrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None,
+            _lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None,
             _renderSceneStore.Current, SceneGroundPlane.Default));
         if (pick.Kind == ViewportPickKind.Entity && pick.EntityId == _selectedWorldEntity.EntityId)
         {
@@ -1339,8 +1295,8 @@ public sealed partial class EditorShell : UserControl
     /// <summary>初始化 Transform Application 层（Session 启动后调用）。</summary>
     private void InitTransformApplication()
     {
-        if (_scene3dSession is null) return;
-        var vulkan = new Scene3dEntityPositionWriter(_scene3dSession);
+        if (_lifecycle.State.Session is null) return;
+        var vulkan = new Scene3dEntityPositionWriter(_lifecycle.State.Session);
         var inspect = new InspectorTransformDisplay(_inspectorPanel);
         _previewApplier = new EntityTransformPreview(_renderSceneStore, vulkan, inspect);
         _cancelApplier = new EntityTransformCancel(_renderSceneStore, vulkan, inspect);
@@ -1357,14 +1313,14 @@ public sealed partial class EditorShell : UserControl
         if (_selectedWorldEntity is null) return null;
         var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
         if (pos is null) return null;
-        var cam = _scene3dSession?.LastPresentedSnapshot;
+        var cam = _lifecycle.State.Session?.LastPresentedSnapshot;
         if (cam is not { IsValid: true }) return null;
         return new TransformStartSnapshot(
             _selectedWorldEntity.EntityId,
             new SceneTransform(pos.Value.Value, default, default),
             _worldDirtyState.IsDirty,
             cam,
-            _scene3dFrameRoute?.Snapshots.PresentedGizmo ?? PresentedMoveGizmoSnapshot.None);
+            _lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo ?? PresentedMoveGizmoSnapshot.None);
     }
 
     /// <summary>
@@ -1526,7 +1482,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteViewportOrbit(float deltaYaw, float deltaPitch)
     {
-        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
             return;
         if (deltaYaw == 0 && deltaPitch == 0) return;
         _lastCameraState = SceneOrbitCameraMotion.Orbit(_lastCameraState, deltaYaw, deltaPitch);
@@ -1535,7 +1491,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteViewportPan(int deltaX, int deltaY)
     {
-        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
             return;
         if (deltaX == 0 && deltaY == 0) return;
         var h = _vulkanViewportHostPanel?.GetNativeHostInfo().Height ?? 1;
@@ -1545,7 +1501,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteViewportDolly(float deltaPixels)
     {
-        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
             return;
         if (deltaPixels == 0) return;
         _lastCameraState = SceneOrbitCameraMotion.Dolly(_lastCameraState, deltaPixels);
@@ -1554,7 +1510,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteViewportZoom(float wheelNotches)
     {
-        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
             return;
         if (wheelNotches == 0) return;
         _lastCameraState = SceneOrbitCameraMotion.Zoom(_lastCameraState, wheelNotches);
@@ -1563,7 +1519,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteViewportFrameAll()
     {
-        if (!_sessionActive || _scene3dSession is null) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
         _lastCameraState = SceneOrbitCameraMotion.FrameAll();
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
     }
@@ -1574,7 +1530,7 @@ public sealed partial class EditorShell : UserControl
         _frameSelectedPending = true;
         try
         {
-            if (!_sessionActive || _scene3dSession is null) return;
+            if (!_sessionActive || _lifecycle.State.Session is null) return;
             if (_selectedWorldEntity is null)
             {
                 _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
@@ -1603,8 +1559,8 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteViewportToggleProjection()
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         _lastCameraState = SceneNavigationCameraMotion.ToggleProjection(_lastCameraState);
         var mode = _lastCameraState.ProjectionMode;
@@ -1614,8 +1570,8 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteViewportSnapToView(string actionId)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         var view = actionId switch
         {
@@ -1659,8 +1615,8 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleCameraOrbit(float deltaYaw, float deltaPitch)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         _lastCameraState = SceneOrbitCameraMotion.Orbit(_lastCameraState, deltaYaw, deltaPitch);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraPan);
@@ -1668,8 +1624,8 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleCameraPan(int deltaX, int deltaY, int viewportW, int viewportH)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         _lastCameraState = SceneOrbitCameraMotion.Pan(_lastCameraState, deltaX, deltaY, viewportH);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraPan);
@@ -1677,8 +1633,8 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleCameraDolly(float deltaPixels)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         _lastCameraState = SceneOrbitCameraMotion.Dolly(_lastCameraState, deltaPixels);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraZoom);
@@ -1686,8 +1642,8 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleCameraZoom(float wheelNotches)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         _lastCameraState = SceneOrbitCameraMotion.Zoom(_lastCameraState, wheelNotches);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraZoom);
@@ -1695,7 +1651,7 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleCameraReset()
     {
-        if (!_sessionActive || _scene3dSession is null) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
 
         _lastCameraState = SceneOrbitCameraMotion.FrameAll();
         ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
@@ -1703,8 +1659,8 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleCameraProjectionToggle()
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         _lastCameraState = FluidWarfare.Render.Camera.Navigation.SceneNavigationCameraMotion.ToggleProjection(_lastCameraState);
         var mode = _lastCameraState.ProjectionMode;
@@ -1714,7 +1670,7 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleNumpadPeriod()
     {
-        if (!_sessionActive || _scene3dSession is null) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
         if (_selectedWorldEntity is null)
         {
             _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
@@ -1825,10 +1781,10 @@ public sealed partial class EditorShell : UserControl
 
     private ViewportNavigationLayout? GetPresentedNavigationLayout()
     {
-        if (_scene3dSession is null || _vulkanViewportHostPanel is null)
+        if (_lifecycle.State.Session is null || _vulkanViewportHostPanel is null)
             return null;
 
-        var snapshot = _scene3dSession.LastPresentedOverlaySnapshot;
+        var snapshot = _lifecycle.State.Session.LastPresentedOverlaySnapshot;
         if (!snapshot.IsAvailable || snapshot.Layout is null)
             return null;
 
@@ -1846,7 +1802,7 @@ public sealed partial class EditorShell : UserControl
         _navigationHoverElement = hovered;
         _navigationActiveElement = active;
 
-        if (_scene3dSession?.SetNavigationOverlayState(hovered, active) == true)
+        if (_lifecycle.State.Session?.SetNavigationOverlayState(hovered, active) == true)
             ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
     }
 
@@ -1866,8 +1822,8 @@ public sealed partial class EditorShell : UserControl
 
     private void ApplyNavigationDrag(int deltaX, int deltaY, int viewportHeight)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         var previous = _lastCameraState;
         _lastCameraState = _navigationDragMode switch
@@ -1892,8 +1848,8 @@ public sealed partial class EditorShell : UserControl
 
     private void SnapCameraToNavigationElement(ViewportNavigationElement element)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         var view = element switch
         {
@@ -1950,7 +1906,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ScheduleScene3dFrame(VulkanScene3dFrameReason reason)
     {
-        if (_scene3dFrameSubmitRoute is null) return;
+        if (_lifecycle.State.FrameSubmitRoute is null) return;
 
         var entityPos = _pointerRoute.Session.IsActive
             ? _pointerRoute.Session.PreviewTransform.Position
@@ -1958,7 +1914,7 @@ public sealed partial class EditorShell : UserControl
                 ? _worldState?.FindPosition(_selectedWorldEntity.EntityId)?.Value ?? Vector3d.Zero
                 : Vector3d.Zero;
 
-        _scene3dFrameSubmitRoute.Request(new Scene3dFrameSubmitInput(
+        _lifecycle.State.FrameSubmitRoute.Request(new Scene3dFrameSubmitInput(
             reason, _lastCameraState, _cameraRevision, _renderSeq,
             _pointerRoute.IsMoveToolActive,
             _selectedWorldEntity?.EntityId ?? default,
@@ -1966,7 +1922,7 @@ public sealed partial class EditorShell : UserControl
             _pointerRoute.HoveredElement,
             _worldDirtyState.Revision), () =>
         {
-            _renderSeq = _scene3dFrameSubmitRoute.RenderSeq;
+            _renderSeq = _lifecycle.State.FrameSubmitRoute.RenderSeq;
             UpdateVulkanViewportStatusLine();
         });
     }
@@ -2031,9 +1987,9 @@ public sealed partial class EditorShell : UserControl
 
     private void ApplySelectionToScene3d(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
     {
-        if (_scene3dSession is null || !_sessionActive) return;
+        if (_lifecycle.State.Session is null || !_sessionActive) return;
         if (change.CurrentEntityId is not null &&
-            _scene3dSession.SetSelectedEntity(change.CurrentEntityId))
+            _lifecycle.State.Session.SetSelectedEntity(change.CurrentEntityId))
         {
             _selectionDiag.SceneSelectionFrameCount++;
             ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
@@ -2093,9 +2049,9 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void HandleViewportPointerMoved(int pixelX, int pixelY)
     {
-        if (!_sessionActive || _scene3dSession is null)
+        if (!_sessionActive || _lifecycle.State.Session is null)
             return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active)
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active)
             return;
 
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
@@ -2161,14 +2117,14 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void UpdateGroundHover(int pixelX, int pixelY)
     {
-        if (_scene3dSession is null || _vulkanViewportHostPanel is null) return;
+        if (_lifecycle.State.Session is null || _vulkanViewportHostPanel is null) return;
 
         var nativeHostInfo = _vulkanViewportHostPanel.GetNativeHostInfo();
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
         // 使用已呈现快照构建射线（只能从 Snapshot 读取参数）
-        var snapshot = _scene3dSession.LastPresentedSnapshot;
+        var snapshot = _lifecycle.State.Session.LastPresentedSnapshot;
         var status = VulkanSceneRayBuilder.TryBuild(
             pixelX, pixelY,
             snapshot,
@@ -2234,18 +2190,18 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void HandleViewportPick(int pixelX, int pixelY)
     {
-        if (!_sessionActive || _scene3dSession is null) return;
-        if (_scene3dSession.Status != VulkanScene3dSessionStatus.Active) return;
+        if (!_sessionActive || _lifecycle.State.Session is null) return;
+        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
 
         var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
             ?? VulkanViewportNativeHostInfo.NotAvailable;
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
             return;
 
-        var snapshot = _scene3dSession.LastPresentedSnapshot;
+        var snapshot = _lifecycle.State.Session.LastPresentedSnapshot;
         if (!snapshot.IsValid) return;
 
-        var pickSnapshot = _scene3dFrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None;
+        var pickSnapshot = _lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None;
         var req = new ViewportPickRequest(pixelX, pixelY, snapshot, pickSnapshot, _renderSceneStore.Current, SceneGroundPlane.Default);
         var result = _viewportPickRoute.Pick(req);
 
@@ -2296,7 +2252,7 @@ public sealed partial class EditorShell : UserControl
     private void ShowGroundCursor(Vector3d worldPosition)
     {
         _groundPointerState.Commit(worldPosition);
-        if (_scene3dSession is not null && _scene3dSession.SetGroundCursor(worldPosition))
+        if (_lifecycle.State.Session is not null && _lifecycle.State.Session.SetGroundCursor(worldPosition))
         {
             ScheduleScene3dFrame(VulkanScene3dFrameReason.GroundCursorChanged);
         }
@@ -2305,9 +2261,9 @@ public sealed partial class EditorShell : UserControl
     private void HideGroundCursor()
     {
         _groundPointerState.ClearCommit();
-        if (_scene3dSession is not null)
+        if (_lifecycle.State.Session is not null)
         {
-            _scene3dSession.SetGroundCursor(null);
+            _lifecycle.State.Session.SetGroundCursor(null);
             ScheduleScene3dFrame(VulkanScene3dFrameReason.GroundCursorChanged);
         }
     }
@@ -2424,7 +2380,7 @@ public sealed partial class EditorShell : UserControl
     private void HandleGroundPlacementToggle()
     {
         if (_selectedWorldEntity is null) return;
-        if (!_sessionActive || _scene3dSession?.Status != VulkanScene3dSessionStatus.Active)
+        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
         {
             AppendWarningLog("Scene3D 未激活，无法进入放置模式。");
             return;
@@ -2623,11 +2579,11 @@ public sealed partial class EditorShell : UserControl
 
     private void UpdateVulkanViewportStatusLine()
     {
-        var isActive = _sessionActive && _scene3dSession is not null &&
-            _scene3dSession.Status == VulkanScene3dSessionStatus.Active;
+        var isActive = _sessionActive && _lifecycle.State.Session is not null &&
+            _lifecycle.State.Session.Status == VulkanScene3dSessionStatus.Active;
 
         var scene3dSuffix = isActive
-            ? $" | Scene3D Active | Frame #{_scene3dSession!.FrameIndex}"
+            ? $" | Scene3D Active | Frame #{_lifecycle.State.Session!.FrameIndex}"
             : _scene3dGate.CanRun
                 ? " | Scene3D Ready"
                 : " | Scene3D 已隔离";
