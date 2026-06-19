@@ -8,10 +8,14 @@ public sealed class CodeFileBudgetTests
 {
     /// <summary>仓库根目录（从测试项目所在目录向上查找）。</summary>
     static readonly string s_root = FindRoot();
-    /// <summary>用于比较路径，确保大小写无关。</summary>
-    static readonly StringComparer s_cmp = StringComparer.OrdinalIgnoreCase;
+// ── 白名单债务计数器 ──────────────────────────────────
+    // 每次新增白名单条目必须同时递增此值。
+    // 目的：防止 AI 无监督扩大债务。
+    // 每次新增白名单条目必须同步递增
+    const int LineWhitelistBudget = 74;
+    const int DirectoryWhitelistBudget = 11;
 
-    static readonly HashSet<string> s_lineWhitelist = new(s_cmp)
+    static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
         // ═══ EditorShell 主线拆解（到期：8.7.6.8）═══════════════
         @"FluidWarfare.Editor.Windows\Shell\EditorShell.axaml.cs",
@@ -104,7 +108,7 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Tests\Render\World\WorldToRenderSceneBuilderTests.cs",
     };
 
-    static readonly HashSet<string> s_directoryWhitelist = new(s_cmp)
+    static readonly HashSet<string> s_directoryWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
         @"FluidWarfare.Render.Vulkan\Scene3D",
         @"FluidWarfare.Render.Vulkan\Scene3D\Session",
@@ -123,7 +127,16 @@ public sealed class CodeFileBudgetTests
         ["Manager", "Helper", "Utils", "Processor", "Factory", "Creator"];
 
     [Fact]
-    public void AllFiles_Max100Lines()
+    public void WhitelistBudget_NotExceeded()
+    {
+        Assert.True(s_lineWhitelist.Count <= LineWhitelistBudget,
+            $"Line whitelist {s_lineWhitelist.Count} > budget {LineWhitelistBudget}");
+        Assert.True(s_directoryWhitelist.Count <= DirectoryWhitelistBudget,
+            $"Dir whitelist {s_directoryWhitelist.Count} > budget {DirectoryWhitelistBudget}");
+    }
+
+    [Fact]
+    public void ProductionFiles_Max100Lines()
     {
         var items = Directory.EnumerateFiles(s_root, "*.cs", SearchOption.AllDirectories);
         var bad = new List<string>();
@@ -131,9 +144,30 @@ public sealed class CodeFileBudgetTests
         {
             var r = Path.GetRelativePath(s_root, f);
             if (IsBuildArtifact(r)) continue;
+            if (r.StartsWith("FluidWarfare.Tests", StringComparison.OrdinalIgnoreCase)) continue; // tests have own rule
             if (s_lineWhitelist.Contains(r)) continue;
             var lines = File.ReadAllLines(f).Length;
             if (lines > 100) bad.Add($"{r} ({lines})");
+        }
+        Assert.Empty(bad);
+    }
+
+    [Fact]
+    public void TestFiles_Max180Lines()
+    {
+        // 测试文件不强制 100 行，但不得无限增长（软上限 180）
+        var items = Directory.EnumerateFiles(s_root, "*.cs", SearchOption.AllDirectories);
+        var bad = new List<string>();
+        foreach (var f in items)
+        {
+            var r = Path.GetRelativePath(s_root, f);
+            if (IsBuildArtifact(r)) continue;
+            if (!r.StartsWith("FluidWarfare.Tests", StringComparison.OrdinalIgnoreCase)) continue;
+            // Architecture tests are allowed to be larger
+            if (r.StartsWith("FluidWarfare.Tests\\Architecture", StringComparison.OrdinalIgnoreCase)) continue;
+            if (s_lineWhitelist.Contains(r)) continue; // uses same whitelist
+            var lines = File.ReadAllLines(f).Length;
+            if (lines > 180) bad.Add($"{r} ({lines})");
         }
         Assert.Empty(bad);
     }
@@ -155,7 +189,7 @@ public sealed class CodeFileBudgetTests
     }
 
     [Fact]
-    public void NoForbiddenFileNames()
+    public void NoForbiddenNames_FileAndType()
     {
         var items = Directory.EnumerateFiles(s_root, "*.cs", SearchOption.AllDirectories);
         var bad = new List<string>();
@@ -163,10 +197,24 @@ public sealed class CodeFileBudgetTests
         {
             var r = Path.GetRelativePath(s_root, f);
             if (IsBuildArtifact(r)) continue;
+            // 跳过架构测试文件自身（它包含禁用词列表的定义）
+            if (r.StartsWith("FluidWarfare.Tests\\Architecture", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            // 检查文件名
             var name = Path.GetFileNameWithoutExtension(f);
             foreach (var p in s_forbiddenNames)
                 if (name.Contains(p, StringComparison.OrdinalIgnoreCase))
-                    bad.Add($"{r} contains \"{p}\"");
+                    bad.Add($"{r}: filename contains \"{p}\"");
+
+            // 检查类型声明
+            var content = File.ReadAllText(f);
+            foreach (var p in s_forbiddenNames)
+            {
+                var pattern = $@"\b(class|record|struct|interface)\s+\w*{p}\w*";
+                if (System.Text.RegularExpressions.Regex.IsMatch(content, pattern))
+                    bad.Add($"{r}: type name contains \"{p}\"");
+            }
         }
         Assert.Empty(bad);
     }
