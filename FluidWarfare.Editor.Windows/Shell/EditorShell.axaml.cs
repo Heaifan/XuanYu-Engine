@@ -26,6 +26,7 @@ using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
 using FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
 using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
+using FluidWarfare.Editor.Windows.Viewport.Project;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -79,6 +80,7 @@ public sealed partial class EditorShell : UserControl
     private GameProjectInfo? _projectInfo;
     private WorldState? _worldState;
     private readonly EditorSelectionRoute _selectionRoute = new();
+    private readonly ProjectBootstrapRoute _projectBootstrap = new();
     private readonly VulkanViewportProbeRoute _probeRoute = new();
     private Button? _runMenuButton;
     private MenuItem? _runScene3dMenuItem;
@@ -496,29 +498,21 @@ public sealed partial class EditorShell : UserControl
 
     private void LoadSampleProject()
     {
-        var pathResult = SampleProjectPath.TryFindFrom(
-            Environment.CurrentDirectory,
-            out var projectDirectory);
-
-        if (!pathResult.IsSuccess)
+        var result = _projectBootstrap.LoadSampleProject();
+        if (!result.Success)
         {
-            ShowProjectLoadFailure(pathResult.Error?.Message ?? "未知错误。", ProjectValidationReport.Empty);
+            ShowProjectLoadFailure(result.LogMessage, FluidWarfare.Project.Validation.ProjectValidationReport.Empty);
             return;
         }
 
-        var loadResult = GameProjectLoader.LoadFromDirectory(projectDirectory);
-
-        if (loadResult.Result.IsSuccess && loadResult.Project is not null)
+        // 项目加载成功，创建 World 并恢复 UI
+        var project = _projectBootstrap.Project;
+        if (project is not null)
         {
-            ShowLoadedProject(loadResult.Project);
-            CreateWorldFromProject(loadResult.Project);
-            AppendInfoLog($"已加载示例项目：{loadResult.Project.DisplayName}。");
-            return;
+            ShowLoadedProject(project);
+            CreateWorldFromProject(project);
+            AppendInfoLog(result.LogMessage);
         }
-
-        ShowProjectLoadFailure(
-            loadResult.Result.Error?.Message ?? "未知错误。",
-            loadResult.ValidationReport);
     }
 
     private void ShowProjectLoadFailure(string message, ProjectValidationReport report)
