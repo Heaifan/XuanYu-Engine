@@ -24,6 +24,7 @@ using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
+using FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -114,6 +115,11 @@ public sealed partial class EditorShell : UserControl
     private EntityTransformPreview? _previewApplier;
     private EntityTransformCommit? _commitApplier;
     private EntityTransformCancel? _cancelApplier;
+
+    // ─── Selection Presentation ──────────────────────────────
+    private readonly WorldEntitySelectionPresenter _worldSelectionPresenter = new();
+    private readonly ProjectContentSelectionPresenter _contentSelectionPresenter = new();
+    private readonly ViewportSelectionPresenter _viewportSelectionPresenter = new();
 
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
@@ -438,98 +444,28 @@ public sealed partial class EditorShell : UserControl
 
     private void OnProjectContentSelected(string? relativePath)
     {
-        // 项目文件选择：只保存路径，不修改 EntityId，不影响 3D 场景
-        if (relativePath is null) return;
-
-        // 在检查器中显示文件信息
-        var fileInfo = _contentFiles?.FirstOrDefault(f => f.RelativePath.Replace('\\', '/') == relativePath);
-        if (fileInfo is not null)
-        {
-            var selection = new EditorSelection(
-                "项目文件",
-                fileInfo.FileName,
-                $"路径：{fileInfo.RelativePath}\n类型：{fileInfo.ContentKind}\n目录：{fileInfo.FolderName}");
-            _inspectorPanel?.ShowProjectFileSelection(selection);
-            _statusBarPanel?.SetCurrentSelection(fileInfo.FileName);
-        }
-        else
-        {
-            _inspectorPanel?.ShowNoSelection();
-            _statusBarPanel?.SetCurrentSelection(relativePath);
-        }
-        AppendInfoLog($"项目文件已选择：{relativePath}");
+        var result = _contentSelectionPresenter.Present(relativePath, _contentFiles);
+        _inspectorPanel?.ShowProjectFileSelection(result.InspectorSelection);
+        _statusBarPanel?.SetCurrentSelection(result.StatusBarSelection ?? "无");
+        if (!string.IsNullOrEmpty(result.LogMessage))
+            AppendInfoLog(result.LogMessage);
     }
 
     private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
     {
-        var selection = CreateEntitySelection(entityInfo);
-        var position = _worldState?.FindPosition(entityInfo.EntityId);
+        var isScene3dActive = _sessionActive && _lifecycle.State.Session?.Status == VulkanScene3dSessionStatus.Active;
+        var result = _worldSelectionPresenter.Present(entityInfo, _worldState,
+            _renderSceneStore.Current, isScene3dActive);
 
         _inspectorPanel!.ShowWorldEntitySelection(
-            selection,
-            entityInfo.EntityId.Value.ToString(),
-            position?.Value,
-            entityInfo.Source?.RelativePath);
-        _inspectorPanel.ScrubEntityId = entityInfo.EntityId.Value.ToString();
-        _statusBarPanel?.SetCurrentSelection(entityInfo.DisplayName);
-
-        // 启用地面放置按钮（Session 激活时）
-        _inspectorPanel?.SetGroundPlaceEnabled(
-            _sessionActive && _lifecycle.State.Session?.Status == VulkanScene3dSessionStatus.Active);
-
-        AppendInfoLog($"已选择 {selection.Kind}：{entityInfo.DisplayName}。");
-    }
-
-    private void UpdateViewportForEntity(WorldEntityInfo entityInfo)
-    {
-        var position = _worldState?.FindPosition(entityInfo.EntityId);
-        var visualKind = FindVisualKindText(entityInfo.EntityId);
-
-        var summary = new ViewportEntitySummary(
-            entityInfo.DisplayName,
-            entityInfo.EntityId.ToString(),
-            position is not null
-                ? $"({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
-                : "未知",
-            entityInfo.Source?.RelativePath,
-            visualKind);
-
-        _viewportPlaceholderPanel?.ShowEntitySummary(summary);
-    }
-
-    private string FindVisualKindText(EntityId entityId)
-    {
-        var renderObj = _renderSceneStore.Current.Objects.FirstOrDefault(o => o.EntityId == entityId);
-        return renderObj is not null
-            ? ToVisualKindText(renderObj.VisualKind)
-            : "未生成";
-    }
-
-    private static string ToVisualKindText(RenderObjectVisualKind kind)
-    {
-        return kind switch
-        {
-            RenderObjectVisualKind.UnitMarker => "unit_marker",
-            _ => kind.ToString()
-        };
-    }
-
-    private ViewportRenderSceneSummary CreateViewportRenderSceneSummary()
-    {
-        if (_renderSceneStore.Current.Objects.Count == 0)
-        {
-            return ViewportRenderSceneSummary.Empty;
-        }
-
-        var objects = _renderSceneStore.Current.Objects
-            .Select(o => new ViewportRenderObjectSummary(
-                o.DisplayName,
-                ToVisualKindText(o.VisualKind),
-                $"({o.Position.X}, {o.Position.Y}, {o.Position.Z})",
-                o.SourcePath))
-            .ToArray();
-
-        return new ViewportRenderSceneSummary(objects);
+            result.InspectorSelection, result.InspectorEntityId ?? "",
+            result.EntityPosition, result.EntitySourcePath);
+        _inspectorPanel.ScrubEntityId = result.InspectorEntityId ?? "";
+        _statusBarPanel?.SetCurrentSelection(result.StatusBarSelection ?? "无");
+        _inspectorPanel?.SetGroundPlaceEnabled(result.GroundPlaceEnabled);
+        if (result.ViewportSummary is not null)
+            _viewportPlaceholderPanel?.ShowEntitySummary(result.ViewportSummary);
+        AppendInfoLog(result.LogMessage);
     }
 
     private void AppendInfoLog(string message)
@@ -650,7 +586,8 @@ public sealed partial class EditorShell : UserControl
         // 构建层级树并显示
         RebuildAndShowHierarchy();
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
-        _viewportPlaceholderPanel?.ShowRenderSceneSummary(CreateViewportRenderSceneSummary());
+        _viewportPlaceholderPanel?.ShowRenderSceneSummary(
+            _viewportSelectionPresenter.CreateRenderSceneSummary(_renderSceneStore.Current));
     }
 
     private void ProbeVulkanBackend()
@@ -1797,7 +1734,6 @@ public sealed partial class EditorShell : UserControl
         {
             _selectedWorldEntity = entityInfo;
             ShowWorldEntitySelection(entityInfo);
-            UpdateViewportForEntity(entityInfo);
         }
         else
         {
