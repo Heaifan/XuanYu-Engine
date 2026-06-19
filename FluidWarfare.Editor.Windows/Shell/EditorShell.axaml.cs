@@ -20,6 +20,7 @@ using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -112,8 +113,6 @@ public sealed partial class EditorShell : UserControl
 
     // ─── Transform 路由 ────────────────────────────────────
     private readonly TransformPointerRoute _pointerRoute = new();
-    private PresentedMoveGizmoSnapshot _presentedGizmo = PresentedMoveGizmoSnapshot.None;
-    private PresentedMoveGizmoSnapshot _pendingGizmo = PresentedMoveGizmoSnapshot.None;
     // _interactState via _pointerRoute.State
 
     // ─── Transform Application 层 ───────────────────────────
@@ -1950,132 +1949,36 @@ public sealed partial class EditorShell : UserControl
         var route = _scene3dFrameRoute;
         if (route is null) return;
 
-        SubmitMoveGizmoVertices();
+        // Gizmo 顶点（纯计算，不含 Vulkan 副作用）
+        var entityPos = _pointerRoute.Session.IsActive
+            ? _pointerRoute.Session.PreviewTransform.Position
+            : _selectedWorldEntity is not null
+                ? _worldState?.FindPosition(_selectedWorldEntity.EntityId)?.Value ?? Vector3d.Zero
+                : Vector3d.Zero;
+        var gizmoInput = new MoveGizmoFrameInput(
+            _pointerRoute.IsMoveToolActive,
+            _selectedWorldEntity?.EntityId ?? default,
+            entityPos,
+            _scene3dSession?.LastPresentedSnapshot ?? PresentedCameraSnapshot.Empty,
+            _pointerRoute.HoveredElement,
+            _worldDirtyState.Revision);
+        var gizmoResult = MoveGizmoFrameSource.Build(gizmoInput);
+
+        // Vulkan 副作用（清理旧顶点或提交新顶点）
+        _scene3dSession?.SetMoveGizmoVertices(gizmoResult.IsEmpty ? null : gizmoResult.Vertices);
+
+        // Pick Snapshot（从 route 的 Presented 状态读取视口尺寸）
+        var presented = route.Snapshots.PresentedGizmo;
         var pickSnapshot = PresentedScenePickSnapshotBuilder.Build(
             _renderSceneStore.Current, _renderSeq, _cameraRevision,
-            _presentedGizmo.ViewportWidth, _presentedGizmo.ViewportHeight);
+            presented.ViewportWidth, presented.ViewportHeight);
 
         route.Request(reason, _lastCameraState, _cameraRevision, _renderSceneStore.Current,
-            _pendingGizmo, pickSnapshot, () =>
+            gizmoResult.PendingSnapshot, pickSnapshot, () =>
         {
-            _presentedGizmo = route.Snapshots.PresentedGizmo;
             _renderSeq = route.RenderSeq;
             UpdateVulkanViewportStatusLine();
         });
-    }
-
-    // ─── Move Gizmo 顶点提交 ──────────────────────────────
-
-    private void SubmitMoveGizmoVertices()
-    {
-        if (!_pointerRoute.IsMoveToolActive || _selectedWorldEntity is null)
-        {
-            ClearGizmo();
-            return;
-        }
-
-        var session = _scene3dSession;
-        if (session is null) { ClearGizmo(); return; }
-
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
-        if (pos is null) { ClearGizmo(); return; }
-
-        var snapshot = session.LastPresentedSnapshot;
-        if (!snapshot.IsValid) { ClearGizmo(); return; }
-
-        // 拖动中使用预览位置，否则用 WorldState
-        var pivot = _pointerRoute.Session.IsActive
-            ? _pointerRoute.Session.PreviewTransform.Position
-            : pos.Value.Value;
-        var vp = snapshot.ViewProjection;
-        var w = snapshot.ViewportWidth;
-        var h = snapshot.ViewportHeight;
-
-        // 投影 Pivot 到屏幕
-        if (!TryProjectToScreen(pivot, vp, w, h, out var pp))
-        { session.SetMoveGizmoVertices(null); return; }
-
-        // 计算世界单位每像素
-        var cameraDist = _lastCameraState.Distance;
-        var fov = _lastCameraState.FieldOfViewDegrees;
-        var isOrtho = _lastCameraState.ProjectionMode == SceneProjectionMode.Orthographic;
-        var orthoH = _lastCameraState.OrthographicHeight;
-        var wpp = isOrtho ? orthoH / Math.Max(1, h)
-            : 2.0 * cameraDist * Math.Tan(fov * Math.PI / 360.0) / Math.Max(1, h);
-
-        const double gizmoScreenLen = 80.0;
-        var worldLen = gizmoScreenLen * wpp;
-
-        // 计算三轴端点像素坐标
-        var axes = new[] { Vector3d.UnitX, Vector3d.UnitY, Vector3d.UnitZ };
-        var endPixels = new (double X, double Y)[3];
-        var degenerate = new bool[3];
-
-        for (var i = 0; i < 3; i++)
-        {
-            var endWorld = pivot + axes[i] * worldLen;
-            if (TryProjectToScreen(endWorld, vp, w, h, out var ep))
-            {
-                endPixels[i] = ep;
-                degenerate[i] = false;
-            }
-            else
-            {
-                endPixels[i] = pp;
-                degenerate[i] = true;
-            }
-        }
-
-        // 构建布局并生成顶点
-        var layout = MoveGizmoLayout.Build(
-            (pp.X, pp.Y),
-            (endPixels[0].X, endPixels[0].Y),
-            (endPixels[1].X, endPixels[1].Y),
-            (endPixels[2].X, endPixels[2].Y),
-            degenerate[0], degenerate[1], degenerate[2]);
-
-        if (layout is null) { session.SetMoveGizmoVertices(null); return; }
-
-        var drawVerts = MoveGizmoDrawList.Build(layout,
-            MoveGizmoVisualState.Normal, MoveGizmoElement.None,
-            _pointerRoute.HoveredElement);
-
-        var overlayVerts = new FluidWarfare.Render.Vulkan.Scene3D.Overlay.VulkanOverlayVertex[drawVerts.Length];
-        for (var i = 0; i < drawVerts.Length; i++)
-        {
-            overlayVerts[i] = new FluidWarfare.Render.Vulkan.Scene3D.Overlay.VulkanOverlayVertex(
-                drawVerts[i].X, drawVerts[i].Y,
-                drawVerts[i].R, drawVerts[i].G,
-                drawVerts[i].B, drawVerts[i].A);
-        }
-
-        session.SetMoveGizmoVertices(overlayVerts);
-
-        // 保存 Pending 快照，Present 成功后提升为 _presentedGizmo
-        var entityId = _selectedWorldEntity?.EntityId.Value.ToString() ?? string.Empty;
-        _pendingGizmo = new PresentedMoveGizmoSnapshot(
-            true, entityId, 0, _worldDirtyState.Revision, snapshot.CameraRevision, w, h, layout);
-    }
-
-    private static bool TryProjectToScreen(
-        Vector3d world, float[] vp, int w, int h,
-        out (double X, double Y) pixel)
-    {
-        pixel = default;
-        if (vp is not { Length: 16 } || w <= 0 || h <= 0) return false;
-        var cw = vp[3] * world.X + vp[7] * world.Y + vp[11] * world.Z + vp[15];
-        if (!double.IsFinite(cw) || Math.Abs(cw) < 1e-6) return false;
-        var nx = (vp[0] * world.X + vp[4] * world.Y + vp[8] * world.Z + vp[12]) / cw;
-        var ny = (vp[1] * world.X + vp[5] * world.Y + vp[9] * world.Z + vp[13]) / cw;
-        if (!double.IsFinite(nx) || !double.IsFinite(ny)) return false;
-        pixel = ((nx * 0.5 + 0.5) * w, (ny * 0.5 + 0.5) * h);
-        return true;
-    }
-
-    private void ClearGizmo()
-    {
-        _scene3dSession?.SetMoveGizmoVertices(null);
-        _pendingGizmo = PresentedMoveGizmoSnapshot.None;
     }
 
     // ─── 单向选择状态流 ──────────────────────────────────────
