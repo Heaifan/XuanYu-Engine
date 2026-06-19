@@ -21,6 +21,7 @@ using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
+using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -93,6 +94,7 @@ public sealed partial class EditorShell : UserControl
     private string _renderLastMode = "无";
     private VulkanScene3dSession? _scene3dSession;
     private Scene3dFrameRoute? _scene3dFrameRoute;
+    private Scene3dFrameSubmitRoute? _scene3dFrameSubmitRoute;
     private readonly ViewportPointerPickRoute _viewportPickRoute = new();
     private SceneOrbitCameraState _lastCameraState = SceneOrbitCameraMotion.CreateDefault();
     private int _cameraRevision;
@@ -1118,6 +1120,8 @@ public sealed partial class EditorShell : UserControl
         {
             _scene3dSession = session;
             _scene3dFrameRoute = new Scene3dFrameRoute(session);
+            _scene3dFrameSubmitRoute = new Scene3dFrameSubmitRoute(
+                _scene3dFrameRoute, session, _renderSceneStore);
             InitTransformApplication();
             _renderLastMode = "Scene3D";
             _renderSeq++;
@@ -1946,37 +1950,23 @@ public sealed partial class EditorShell : UserControl
 
     private void ScheduleScene3dFrame(VulkanScene3dFrameReason reason)
     {
-        var route = _scene3dFrameRoute;
-        if (route is null) return;
+        if (_scene3dFrameSubmitRoute is null) return;
 
-        // Gizmo 顶点（纯计算，不含 Vulkan 副作用）
         var entityPos = _pointerRoute.Session.IsActive
             ? _pointerRoute.Session.PreviewTransform.Position
             : _selectedWorldEntity is not null
                 ? _worldState?.FindPosition(_selectedWorldEntity.EntityId)?.Value ?? Vector3d.Zero
                 : Vector3d.Zero;
-        var gizmoInput = new MoveGizmoFrameInput(
+
+        _scene3dFrameSubmitRoute.Request(new Scene3dFrameSubmitInput(
+            reason, _lastCameraState, _cameraRevision, _renderSeq,
             _pointerRoute.IsMoveToolActive,
             _selectedWorldEntity?.EntityId ?? default,
             entityPos,
-            _scene3dSession?.LastPresentedSnapshot ?? PresentedCameraSnapshot.Empty,
             _pointerRoute.HoveredElement,
-            _worldDirtyState.Revision);
-        var gizmoResult = MoveGizmoFrameSource.Build(gizmoInput);
-
-        // Vulkan 副作用（清理旧顶点或提交新顶点）
-        _scene3dSession?.SetMoveGizmoVertices(gizmoResult.IsEmpty ? null : gizmoResult.Vertices);
-
-        // Pick Snapshot（从 route 的 Presented 状态读取视口尺寸）
-        var presented = route.Snapshots.PresentedGizmo;
-        var pickSnapshot = PresentedScenePickSnapshotBuilder.Build(
-            _renderSceneStore.Current, _renderSeq, _cameraRevision,
-            presented.ViewportWidth, presented.ViewportHeight);
-
-        route.Request(reason, _lastCameraState, _cameraRevision, _renderSceneStore.Current,
-            gizmoResult.PendingSnapshot, pickSnapshot, () =>
+            _worldDirtyState.Revision), () =>
         {
-            _renderSeq = route.RenderSeq;
+            _renderSeq = _scene3dFrameSubmitRoute.RenderSeq;
             UpdateVulkanViewportStatusLine();
         });
     }
