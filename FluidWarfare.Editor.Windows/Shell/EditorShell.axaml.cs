@@ -23,6 +23,7 @@ using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
+using FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -77,17 +78,9 @@ public sealed partial class EditorShell : UserControl
     private WorldState? _worldState;
     private EntityId _firstEntityId;
     private WorldEntityInfo? _selectedWorldEntity;
-    private VulkanBackendInfo _vulkanBackendInfo = VulkanBackendInfo.NotChecked;
-    private VulkanInstanceInfo _vulkanInstanceInfo = VulkanInstanceInfo.NotChecked;
-    private VulkanDeviceInfo _vulkanDeviceInfo = VulkanDeviceInfo.NotChecked;
-    private VulkanSurfaceInfo _vulkanSurfaceInfo = VulkanSurfaceInfo.NotChecked;
-    private VulkanSwapchainInfo _vulkanSwapchainInfo = VulkanSwapchainInfo.NotChecked;
-    private VulkanClearInfo _vulkanClearInfo = VulkanClearInfo.NotChecked;
-    private VulkanScene3dRunGate _scene3dGate = VulkanScene3dRunGate.Evaluate();
-    private VulkanScene3dInfo _vulkanScene3dInfo = VulkanScene3dInfo.NotChecked;
+    private readonly VulkanViewportProbeRoute _probeRoute = new();
     private Button? _runMenuButton;
     private MenuItem? _runScene3dMenuItem;
-    private VulkanValidationInfo _vulkanValidationInfo = VulkanValidationInfo.Disabled;
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
     private bool _vulkanViewportRendering;
@@ -146,13 +139,13 @@ public sealed partial class EditorShell : UserControl
 
     public EditorShell()
     {
-        // _scene3dGate 由字段初始化器在构造函数体之前执行
-        _vulkanScene3dInfo = new VulkanScene3dInfo(
+        // _probeRoute.State.Gate 由字段初始化器在构造函数体之前执行
+        _probeRoute.State.Scene3d = new VulkanScene3dInfo(
             VulkanScene3dStatus.NotChecked,
-            _scene3dGate.Message,
+            _probeRoute.State.Gate.Message,
             0, 0, 0, 0, 0, 0, 0, "无", 0, false,
             0, 0, 0,
-            _scene3dGate.CanRun ? "可用" : "不可用（已隔离）", 0);
+            _probeRoute.State.Gate.CanRun ? "可用" : "不可用（已隔离）", 0);
         AvaloniaXamlLoader.Load(this);
         FindShellControls();
         SubscribePanelEvents();
@@ -295,7 +288,7 @@ public sealed partial class EditorShell : UserControl
 
     private void RedrawVulkanViewportOnce()
     {
-        if (!_vulkanBackendInfo.IsAvailable || !_vulkanDeviceInfo.IsCreated)
+        if (!_probeRoute.State.Backend.IsAvailable || !_probeRoute.State.Device.IsCreated)
         {
             return;
         }
@@ -662,19 +655,19 @@ public sealed partial class EditorShell : UserControl
 
     private void ProbeVulkanBackend()
     {
-        _vulkanBackendInfo = VulkanBackendProbe.Probe();
+        _probeRoute.State.Backend = VulkanBackendProbe.Probe();
 
-        if (_vulkanBackendInfo.IsAvailable)
+        if (_probeRoute.State.Backend.IsAvailable)
         {
-            AppendInfoLog($"Vulkan 后端状态：{_vulkanBackendInfo.Message}");
+            AppendInfoLog($"Vulkan 后端状态：{_probeRoute.State.Backend.Message}");
         }
         else
         {
-            AppendWarningLog($"Vulkan 后端不可用：{_vulkanBackendInfo.Message}");
+            AppendWarningLog($"Vulkan 后端不可用：{_probeRoute.State.Backend.Message}");
         }
 
         _statusBarPanel?.SetVulkanStatus(
-            _vulkanBackendInfo.IsAvailable ? "已接入" : "不可用");
+            _probeRoute.State.Backend.IsAvailable ? "已接入" : "不可用");
 
         UpdateVulkanViewportHost();
         ProbeVulkanInstance();
@@ -682,15 +675,15 @@ public sealed partial class EditorShell : UserControl
 
     private void ProbeVulkanValidation()
     {
-        _vulkanValidationInfo = VulkanValidationAvailabilityProbe.Probe();
+        _probeRoute.State.Validation = VulkanValidationAvailabilityProbe.Probe();
 
-        if (_vulkanValidationInfo.IsEnabled)
+        if (_probeRoute.State.Validation.IsEnabled)
         {
-            AppendInfoLog(_vulkanValidationInfo.Message);
+            AppendInfoLog(_probeRoute.State.Validation.Message);
         }
-        else if (_vulkanValidationInfo.Status != VulkanValidationStatus.Disabled)
+        else if (_probeRoute.State.Validation.Status != VulkanValidationStatus.Disabled)
         {
-            AppendWarningLog(_vulkanValidationInfo.Message);
+            AppendWarningLog(_probeRoute.State.Validation.Message);
         }
 
         UpdateAllDiagnostics();
@@ -698,9 +691,9 @@ public sealed partial class EditorShell : UserControl
 
     private void ProbeVulkanInstance()
     {
-        if (!_vulkanBackendInfo.IsAvailable)
+        if (!_probeRoute.State.Backend.IsAvailable)
         {
-            _vulkanInstanceInfo = new VulkanInstanceInfo(
+            _probeRoute.State.Instance = new VulkanInstanceInfo(
                 VulkanInstanceStatus.Failed,
                 "Vulkan 后端不可用，跳过 Instance 创建。",
                 "未知",
@@ -709,16 +702,16 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        _vulkanInstanceInfo = VulkanInstanceProbe.Probe();
+        _probeRoute.State.Instance = VulkanInstanceProbe.Probe();
 
-        if (_vulkanInstanceInfo.IsCreated)
+        if (_probeRoute.State.Instance.IsCreated)
         {
             AppendInfoLog(
-                $"Vulkan Instance 创建成功，API 版本：{_vulkanInstanceInfo.ApiVersionText}，扩展数量：{_vulkanInstanceInfo.ExtensionCount}，用时：{_vulkanInstanceInfo.ElapsedMilliseconds:F2} ms。");
+                $"Vulkan Instance 创建成功，API 版本：{_probeRoute.State.Instance.ApiVersionText}，扩展数量：{_probeRoute.State.Instance.ExtensionCount}，用时：{_probeRoute.State.Instance.ElapsedMilliseconds:F2} ms。");
         }
         else
         {
-            AppendWarningLog(_vulkanInstanceInfo.Message);
+            AppendWarningLog(_probeRoute.State.Instance.Message);
         }
 
         ProbeVulkanDevice();
@@ -726,9 +719,9 @@ public sealed partial class EditorShell : UserControl
 
     private void ProbeVulkanDevice()
     {
-        if (!_vulkanInstanceInfo.IsCreated)
+        if (!_probeRoute.State.Instance.IsCreated)
         {
-            _vulkanDeviceInfo = new VulkanDeviceInfo(
+            _probeRoute.State.Device = new VulkanDeviceInfo(
                 VulkanDeviceStatus.Failed,
                 "Vulkan Instance 未创建，跳过 Device 创建。",
                 "未知",
@@ -739,16 +732,16 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        _vulkanDeviceInfo = VulkanDeviceProbe.Probe();
+        _probeRoute.State.Device = VulkanDeviceProbe.Probe();
 
-        if (_vulkanDeviceInfo.IsCreated)
+        if (_probeRoute.State.Device.IsCreated)
         {
             AppendInfoLog(
-                $"Vulkan Device 创建成功，显卡：{_vulkanDeviceInfo.PhysicalDeviceName}，类型：{_vulkanDeviceInfo.PhysicalDeviceTypeText}，图形队列族：{_vulkanDeviceInfo.GraphicsQueueFamilyIndex}，用时：{_vulkanDeviceInfo.ElapsedMilliseconds:F2} ms。");
+                $"Vulkan Device 创建成功，显卡：{_probeRoute.State.Device.PhysicalDeviceName}，类型：{_probeRoute.State.Device.PhysicalDeviceTypeText}，图形队列族：{_probeRoute.State.Device.GraphicsQueueFamilyIndex}，用时：{_probeRoute.State.Device.ElapsedMilliseconds:F2} ms。");
         }
         else
         {
-            AppendWarningLog(_vulkanDeviceInfo.Message);
+            AppendWarningLog(_probeRoute.State.Device.Message);
         }
 
         ProbeVulkanSurface();
@@ -756,9 +749,9 @@ public sealed partial class EditorShell : UserControl
 
     private void ProbeVulkanSurface()
     {
-        if (!_vulkanDeviceInfo.IsCreated)
+        if (!_probeRoute.State.Device.IsCreated)
         {
-            _vulkanSurfaceInfo = new VulkanSurfaceInfo(
+            _probeRoute.State.Surface = new VulkanSurfaceInfo(
                 VulkanSurfaceStatus.Failed,
                 "Vulkan Device 未创建，跳过 Surface 创建。",
                 "未知",
@@ -774,7 +767,7 @@ public sealed partial class EditorShell : UserControl
 
         if (!nativeHostInfo.HasNativeHandle)
         {
-            _vulkanSurfaceInfo = new VulkanSurfaceInfo(
+            _probeRoute.State.Surface = new VulkanSurfaceInfo(
                 VulkanSurfaceStatus.Failed,
                 nativeHostInfo.Message,
                 nativeHostInfo.PlatformText,
@@ -785,7 +778,7 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        _vulkanSurfaceInfo = VulkanSurfaceProbe.ProbeWindows(
+        _probeRoute.State.Surface = VulkanSurfaceProbe.ProbeWindows(
             nativeHostInfo.InstanceHandle,
             nativeHostInfo.WindowHandle);
 
@@ -794,18 +787,18 @@ public sealed partial class EditorShell : UserControl
 
     private void ShowVulkanSurfaceInfo()
     {
-        if (_vulkanSurfaceInfo.IsCreated)
+        if (_probeRoute.State.Surface.IsCreated)
         {
             AppendInfoLog(
-                $"Vulkan Surface 创建成功，平台：{_vulkanSurfaceInfo.PlatformText}，用时：{_vulkanSurfaceInfo.ElapsedMilliseconds:F2} ms。");
+                $"Vulkan Surface 创建成功，平台：{_probeRoute.State.Surface.PlatformText}，用时：{_probeRoute.State.Surface.ElapsedMilliseconds:F2} ms。");
         }
-        else if (_vulkanSurfaceInfo.Status == VulkanSurfaceStatus.NotChecked)
+        else if (_probeRoute.State.Surface.Status == VulkanSurfaceStatus.NotChecked)
         {
-            AppendInfoLog(_vulkanSurfaceInfo.Message);
+            AppendInfoLog(_probeRoute.State.Surface.Message);
         }
         else
         {
-            AppendWarningLog(_vulkanSurfaceInfo.Message);
+            AppendWarningLog(_probeRoute.State.Surface.Message);
         }
 
         UpdateAllDiagnostics();
@@ -846,7 +839,7 @@ public sealed partial class EditorShell : UserControl
 
         if (!TryGetValidViewportSize(nativeHostInfo, out var viewportWidth, out var viewportHeight, out var viewportSizeMessage))
         {
-            _vulkanSwapchainInfo = new VulkanSwapchainInfo(
+            _probeRoute.State.Swapchain = new VulkanSwapchainInfo(
                 VulkanSwapchainStatus.Failed,
                 viewportSizeMessage,
                 0, "未知", "未知", 0, 0, 0);
@@ -856,7 +849,7 @@ public sealed partial class EditorShell : UserControl
 
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
         {
-            _vulkanSwapchainInfo = new VulkanSwapchainInfo(
+            _probeRoute.State.Swapchain = new VulkanSwapchainInfo(
                 VulkanSwapchainStatus.Failed,
                 "缺少 Windows 原生视口句柄，跳过 Swapchain 创建。",
                 0, "未知", "未知", 0, 0, 0);
@@ -864,7 +857,7 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        _vulkanSwapchainInfo = VulkanSwapchainProbe.ProbeWindows(
+        _probeRoute.State.Swapchain = VulkanSwapchainProbe.ProbeWindows(
             nativeHostInfo.InstanceHandle,
             nativeHostInfo.WindowHandle,
             viewportWidth,
@@ -875,18 +868,18 @@ public sealed partial class EditorShell : UserControl
 
     private void ShowVulkanSwapchainInfo()
     {
-        if (_vulkanSwapchainInfo.IsCreated)
+        if (_probeRoute.State.Swapchain.IsCreated)
         {
             AppendInfoLog(
-                $"Vulkan Swapchain 创建成功，图像数量：{_vulkanSwapchainInfo.ImageCount}，" +
-                $"格式：{_vulkanSwapchainInfo.SurfaceFormatText}，" +
-                $"Present：{_vulkanSwapchainInfo.PresentModeText}，" +
-                $"尺寸：{_vulkanSwapchainInfo.Width}x{_vulkanSwapchainInfo.Height}，" +
-                $"用时：{_vulkanSwapchainInfo.ElapsedMilliseconds:F2} ms。");
+                $"Vulkan Swapchain 创建成功，图像数量：{_probeRoute.State.Swapchain.ImageCount}，" +
+                $"格式：{_probeRoute.State.Swapchain.SurfaceFormatText}，" +
+                $"Present：{_probeRoute.State.Swapchain.PresentModeText}，" +
+                $"尺寸：{_probeRoute.State.Swapchain.Width}x{_probeRoute.State.Swapchain.Height}，" +
+                $"用时：{_probeRoute.State.Swapchain.ElapsedMilliseconds:F2} ms。");
         }
-        else if (_vulkanSwapchainInfo.Status != VulkanSwapchainStatus.NotChecked)
+        else if (_probeRoute.State.Swapchain.Status != VulkanSwapchainStatus.NotChecked)
         {
-            AppendWarningLog($"Vulkan Swapchain 创建失败：{_vulkanSwapchainInfo.Message}");
+            AppendWarningLog($"Vulkan Swapchain 创建失败：{_probeRoute.State.Swapchain.Message}");
         }
 
         UpdateAllDiagnostics();
@@ -899,7 +892,7 @@ public sealed partial class EditorShell : UserControl
 
         if (!TryGetValidViewportSize(nativeHostInfo, out var viewportWidth, out var viewportHeight, out var viewportSizeMessage))
         {
-            _vulkanClearInfo = new VulkanClearInfo(
+            _probeRoute.State.Clear = new VulkanClearInfo(
                 VulkanClearStatus.Failed, viewportSizeMessage, "未知", 0, 0, 0);
             ShowVulkanClearInfo();
             return;
@@ -907,7 +900,7 @@ public sealed partial class EditorShell : UserControl
 
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
         {
-            _vulkanClearInfo = new VulkanClearInfo(
+            _probeRoute.State.Clear = new VulkanClearInfo(
                 VulkanClearStatus.Failed, "缺少原生句柄，跳过清屏。", "未知", 0, 0, 0);
             ShowVulkanClearInfo();
             return;
@@ -916,7 +909,7 @@ public sealed partial class EditorShell : UserControl
         _renderSeq++;
         AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Clear | {viewportWidth}x{viewportHeight} | {reason}");
 
-        _vulkanClearInfo = VulkanClearProbe.ProbeWindows(
+        _probeRoute.State.Clear = VulkanClearProbe.ProbeWindows(
             nativeHostInfo.InstanceHandle,
             nativeHostInfo.WindowHandle,
             viewportWidth,
@@ -927,17 +920,17 @@ public sealed partial class EditorShell : UserControl
 
     private void ShowVulkanClearInfo()
     {
-        if (_vulkanClearInfo.IsSucceeded)
+        if (_probeRoute.State.Clear.IsSucceeded)
         {
             _renderLastMode = "Clear";
             AppendInfoLog(
-                $"Vulkan 最小清屏成功，颜色：{_vulkanClearInfo.ClearColorText}，" +
-                $"尺寸：{_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}，" +
-                $"用时：{_vulkanClearInfo.ElapsedMilliseconds:F2} ms。");
+                $"Vulkan 最小清屏成功，颜色：{_probeRoute.State.Clear.ClearColorText}，" +
+                $"尺寸：{_probeRoute.State.Clear.Width}x{_probeRoute.State.Clear.Height}，" +
+                $"用时：{_probeRoute.State.Clear.ElapsedMilliseconds:F2} ms。");
         }
-        else if (_vulkanClearInfo.Status != VulkanClearStatus.NotChecked)
+        else if (_probeRoute.State.Clear.Status != VulkanClearStatus.NotChecked)
         {
-            AppendWarningLog($"Vulkan 最小清屏失败：{_vulkanClearInfo.Message}");
+            AppendWarningLog($"Vulkan 最小清屏失败：{_probeRoute.State.Clear.Message}");
         }
 
         UpdateVulkanViewportStatusLine();
@@ -947,7 +940,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ReportScene3dIsolation()
     {
-        AppendInfoLog(_scene3dGate.Message);
+        AppendInfoLog(_probeRoute.State.Gate.Message);
         ShowVulkanScene3DInfo();
     }
 
@@ -956,9 +949,9 @@ public sealed partial class EditorShell : UserControl
         if (_scene3dAutoStartAttempted) return;
         _scene3dAutoStartAttempted = true;
 
-        if (!_scene3dGate.CanRun)
+        if (!_probeRoute.State.Gate.CanRun)
         {
-            AppendWarningLog($"Scene3D 自动启动跳过：{_scene3dGate.Message}");
+            AppendWarningLog($"Scene3D 自动启动跳过：{_probeRoute.State.Gate.Message}");
             return;
         }
 
@@ -981,9 +974,9 @@ public sealed partial class EditorShell : UserControl
     private void HandleScene3dRunRequested(object? sender, EventArgs e)
     {
         var currentGate = VulkanScene3dRunGate.Evaluate();
-        _scene3dGate = currentGate with { }; // update gate with fresh Evaluate
+        _probeRoute.State.Gate = currentGate with { }; // update gate with fresh Evaluate
         // Refactor: can't reassign readonly field, use the gate's current state
-        // Actually _scene3dGate is readonly, but we need to re-evaluate.
+        // Actually _probeRoute.State.Gate is readonly, but we need to re-evaluate.
         // Fix: make the field non-readonly or store the message separately.
         TryRunScene3dProbeManually(currentGate);
     }
@@ -996,7 +989,7 @@ public sealed partial class EditorShell : UserControl
         if (!gate.CanRun)
         {
             AppendWarningLog(gate.Message);
-            _vulkanScene3dInfo = new VulkanScene3dInfo(
+            _probeRoute.State.Scene3d = new VulkanScene3dInfo(
                 VulkanScene3dStatus.NotChecked, gate.Message,
                 0, 0, 0, 0, 0, 0, 0, "无", 0, false,
                 0, 0, 0,
@@ -1011,7 +1004,7 @@ public sealed partial class EditorShell : UserControl
 
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
         {
-            _vulkanScene3dInfo = new VulkanScene3dInfo(
+            _probeRoute.State.Scene3d = new VulkanScene3dInfo(
                 VulkanScene3dStatus.Failed, "场景3D：视口未就绪，跳过运行。",
                 0, 0, 0, 0, 0, 0, 0, "无", 0, false,
                 0, 0, 0, "不可用", 0);
@@ -1051,9 +1044,9 @@ public sealed partial class EditorShell : UserControl
             }
         }
 
-        if (!_scene3dGate.CanRun)
+        if (!_probeRoute.State.Gate.CanRun)
         {
-            AppendWarningLog(_scene3dGate.Message);
+            AppendWarningLog(_probeRoute.State.Gate.Message);
             return;
         }
 
@@ -2500,7 +2493,7 @@ public sealed partial class EditorShell : UserControl
 
     private void ProbeVulkanScene3D()
     {
-        if (!_scene3dGate.CanRun)
+        if (!_probeRoute.State.Gate.CanRun)
         {
             ReportScene3dIsolation();
             return;
@@ -2511,7 +2504,7 @@ public sealed partial class EditorShell : UserControl
 
         if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
         {
-            _vulkanScene3dInfo = new VulkanScene3dInfo(
+            _probeRoute.State.Scene3d = new VulkanScene3dInfo(
                 VulkanScene3dStatus.Failed, "缺少原生句柄，跳过 3D 场景绘制。",
                 0, 0, 0, 0, 0, 0, 0, "无", 0, false,
                 0, 0, 0, "无", 0);
@@ -2550,7 +2543,7 @@ public sealed partial class EditorShell : UserControl
         _renderSeq++;
         AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Scene3D | {vpW}x{vpH} | 手动触发");
 
-        _vulkanScene3dInfo = VulkanScene3dRenderer.RenderWindows(
+        _probeRoute.State.Scene3d = VulkanScene3dRenderer.RenderWindows(
             nativeHostInfo.InstanceHandle,
             nativeHostInfo.WindowHandle,
             vpW, vpH, camera,
@@ -2563,14 +2556,14 @@ public sealed partial class EditorShell : UserControl
 
     private void ShowVulkanScene3DInfo()
     {
-        if (_vulkanScene3dInfo.IsSucceeded)
+        if (_probeRoute.State.Scene3d.IsSucceeded)
         {
             _renderLastMode = "Scene3D";
-            AppendInfoLog(_vulkanScene3dInfo.Message);
+            AppendInfoLog(_probeRoute.State.Scene3d.Message);
         }
-        else if (_vulkanScene3dInfo.Status != VulkanScene3dStatus.NotChecked)
+        else if (_probeRoute.State.Scene3d.Status != VulkanScene3dStatus.NotChecked)
         {
-            AppendWarningLog($"Vulkan 3D 场景绘制失败：{_vulkanScene3dInfo.Message}");
+            AppendWarningLog($"Vulkan 3D 场景绘制失败：{_probeRoute.State.Scene3d.Message}");
         }
 
         UpdateVulkanViewportStatusLine();
@@ -2584,16 +2577,16 @@ public sealed partial class EditorShell : UserControl
 
         var scene3dSuffix = isActive
             ? $" | Scene3D Active | Frame #{_lifecycle.State.Session!.FrameIndex}"
-            : _scene3dGate.CanRun
+            : _probeRoute.State.Gate.CanRun
                 ? " | Scene3D Ready"
                 : " | Scene3D 已隔离";
 
         var lastRenderSuffix = $" | 最近渲染：{_renderLastMode}";
 
         _vulkanViewportHostPanel?.ShowClearStatus(
-            _vulkanClearInfo.IsSucceeded
-                ? $"Vulkan Clear 稳定{scene3dSuffix}{lastRenderSuffix} | {_vulkanClearInfo.ClearColorText}"
-                : $"清屏：{_vulkanClearInfo.Message}{lastRenderSuffix}");
+            _probeRoute.State.Clear.IsSucceeded
+                ? $"Vulkan Clear 稳定{scene3dSuffix}{lastRenderSuffix} | {_probeRoute.State.Clear.ClearColorText}"
+                : $"清屏：{_probeRoute.State.Clear.Message}{lastRenderSuffix}");
     }
 
     private void UpdateAllDiagnostics()
@@ -2605,41 +2598,41 @@ public sealed partial class EditorShell : UserControl
             ? $"已获取独立子窗口 HWND，尺寸：{nativeHostInfo.Width}x{nativeHostInfo.Height}"
             : "未获取";
         _debugDockPanel?.SetDiagnostics(
-            _vulkanBackendInfo.Message,
-            _vulkanInstanceInfo.IsCreated
-                ? $"创建成功，API 版本：{_vulkanInstanceInfo.ApiVersionText}，扩展数量：{_vulkanInstanceInfo.ExtensionCount}，用时：{_vulkanInstanceInfo.ElapsedMilliseconds:F2} ms"
-                : _vulkanInstanceInfo.Message,
-            _vulkanDeviceInfo.IsCreated
-                ? $"创建成功，显卡：{_vulkanDeviceInfo.PhysicalDeviceName}，类型：{_vulkanDeviceInfo.PhysicalDeviceTypeText}，队列族：{_vulkanDeviceInfo.GraphicsQueueFamilyIndex}，用时：{_vulkanDeviceInfo.ElapsedMilliseconds:F2} ms"
-                : _vulkanDeviceInfo.Message,
+            _probeRoute.State.Backend.Message,
+            _probeRoute.State.Instance.IsCreated
+                ? $"创建成功，API 版本：{_probeRoute.State.Instance.ApiVersionText}，扩展数量：{_probeRoute.State.Instance.ExtensionCount}，用时：{_probeRoute.State.Instance.ElapsedMilliseconds:F2} ms"
+                : _probeRoute.State.Instance.Message,
+            _probeRoute.State.Device.IsCreated
+                ? $"创建成功，显卡：{_probeRoute.State.Device.PhysicalDeviceName}，类型：{_probeRoute.State.Device.PhysicalDeviceTypeText}，队列族：{_probeRoute.State.Device.GraphicsQueueFamilyIndex}，用时：{_probeRoute.State.Device.ElapsedMilliseconds:F2} ms"
+                : _probeRoute.State.Device.Message,
             nativeHostMsg,
-            _vulkanSurfaceInfo.IsCreated
-                ? $"创建成功，平台：{_vulkanSurfaceInfo.PlatformText}，用时：{_vulkanSurfaceInfo.ElapsedMilliseconds:F2} ms"
-                : _vulkanSurfaceInfo.Message,
-            _vulkanSwapchainInfo.IsCreated
-                ? $"创建成功，图像：{_vulkanSwapchainInfo.ImageCount}，格式：{_vulkanSwapchainInfo.SurfaceFormatText}，Present：{_vulkanSwapchainInfo.PresentModeText}，尺寸：{_vulkanSwapchainInfo.Width}x{_vulkanSwapchainInfo.Height}，用时：{_vulkanSwapchainInfo.ElapsedMilliseconds:F2} ms"
-                : _vulkanSwapchainInfo.Message,
-            _vulkanClearInfo.IsSucceeded
-                ? $"成功，{_vulkanClearInfo.ClearColorText}，尺寸：{_vulkanClearInfo.Width}x{_vulkanClearInfo.Height}，用时：{_vulkanClearInfo.ElapsedMilliseconds:F2} ms"
-                : _vulkanClearInfo.Message,
+            _probeRoute.State.Surface.IsCreated
+                ? $"创建成功，平台：{_probeRoute.State.Surface.PlatformText}，用时：{_probeRoute.State.Surface.ElapsedMilliseconds:F2} ms"
+                : _probeRoute.State.Surface.Message,
+            _probeRoute.State.Swapchain.IsCreated
+                ? $"创建成功，图像：{_probeRoute.State.Swapchain.ImageCount}，格式：{_probeRoute.State.Swapchain.SurfaceFormatText}，Present：{_probeRoute.State.Swapchain.PresentModeText}，尺寸：{_probeRoute.State.Swapchain.Width}x{_probeRoute.State.Swapchain.Height}，用时：{_probeRoute.State.Swapchain.ElapsedMilliseconds:F2} ms"
+                : _probeRoute.State.Swapchain.Message,
+            _probeRoute.State.Clear.IsSucceeded
+                ? $"成功，{_probeRoute.State.Clear.ClearColorText}，尺寸：{_probeRoute.State.Clear.Width}x{_probeRoute.State.Clear.Height}，用时：{_probeRoute.State.Clear.ElapsedMilliseconds:F2} ms"
+                : _probeRoute.State.Clear.Message,
             "已退役（MarkerDraw 路径在 8.3.1 移除）",
-            _vulkanValidationInfo.IsEnabled
-                ? $"已启用，消息 {_vulkanValidationInfo.MessageCount} 条"
-                : _vulkanValidationInfo.Message);
+            _probeRoute.State.Validation.IsEnabled
+                ? $"已启用，消息 {_probeRoute.State.Validation.MessageCount} 条"
+                : _probeRoute.State.Validation.Message);
 
         _debugDockPanel?.SetScene3d(
-            _vulkanScene3dInfo.IsSucceeded
+            _probeRoute.State.Scene3d.IsSucceeded
                 ? $"成功"
-                : _vulkanScene3dInfo.Message,
-            _vulkanScene3dInfo.CameraSummary,
-            _vulkanScene3dInfo.IsSucceeded
-                ? $"{_vulkanScene3dInfo.GridVertexCount} 顶点/{_vulkanScene3dInfo.GridLineCount} 线段"
+                : _probeRoute.State.Scene3d.Message,
+            _probeRoute.State.Scene3d.CameraSummary,
+            _probeRoute.State.Scene3d.IsSucceeded
+                ? $"{_probeRoute.State.Scene3d.GridVertexCount} 顶点/{_probeRoute.State.Scene3d.GridLineCount} 线段"
                 : "-",
-            _vulkanScene3dInfo.IsSucceeded
-                ? $"{_vulkanScene3dInfo.UnitVertexCount} 顶点/{_vulkanScene3dInfo.UnitTriangleCount} 三角形 | 渲染 {_vulkanScene3dInfo.RenderedUnitCount}/{_vulkanScene3dInfo.RenderObjectCount} | 忽略 {_vulkanScene3dInfo.IgnoredObjectCount}"
+            _probeRoute.State.Scene3d.IsSucceeded
+                ? $"{_probeRoute.State.Scene3d.UnitVertexCount} 顶点/{_probeRoute.State.Scene3d.UnitTriangleCount} 三角形 | 渲染 {_probeRoute.State.Scene3d.RenderedUnitCount}/{_probeRoute.State.Scene3d.RenderObjectCount} | 忽略 {_probeRoute.State.Scene3d.IgnoredObjectCount}"
                 : "-",
-            _vulkanScene3dInfo.IsSucceeded
-                ? $"{_vulkanScene3dInfo.DrawCallCount} | Depth {_vulkanScene3dInfo.DepthFormat} x{_vulkanScene3dInfo.DepthAttachmentCount} {( _vulkanScene3dInfo.DepthTestEnabled ? "已启用" : "未启用")}"
+            _probeRoute.State.Scene3d.IsSucceeded
+                ? $"{_probeRoute.State.Scene3d.DrawCallCount} | Depth {_probeRoute.State.Scene3d.DepthFormat} x{_probeRoute.State.Scene3d.DepthAttachmentCount} {( _probeRoute.State.Scene3d.DepthTestEnabled ? "已启用" : "未启用")}"
                 : "-");
 
         // Scene3D 菜单项状态同步
@@ -2648,13 +2641,13 @@ public sealed partial class EditorShell : UserControl
 
         // 性能计时
         _debugDockPanel?.SetPerformance(
-            _vulkanInstanceInfo.ElapsedMilliseconds.ToString("F2"),
-            _vulkanDeviceInfo.ElapsedMilliseconds.ToString("F2"),
-            _vulkanSwapchainInfo.ElapsedMilliseconds.ToString("F2"),
-            _vulkanClearInfo.ElapsedMilliseconds.ToString("F2"),
+            _probeRoute.State.Instance.ElapsedMilliseconds.ToString("F2"),
+            _probeRoute.State.Device.ElapsedMilliseconds.ToString("F2"),
+            _probeRoute.State.Swapchain.ElapsedMilliseconds.ToString("F2"),
+            _probeRoute.State.Clear.ElapsedMilliseconds.ToString("F2"),
             "-",
-            _vulkanScene3dInfo.IsSucceeded
-                ? _vulkanScene3dInfo.ElapsedMilliseconds.ToString("F2")
+            _probeRoute.State.Scene3d.IsSucceeded
+                ? _probeRoute.State.Scene3d.ElapsedMilliseconds.ToString("F2")
                 : "-");
 
         // RenderScene 调试列表
@@ -2672,7 +2665,7 @@ public sealed partial class EditorShell : UserControl
 
         // 主视口和状态栏
         _statusBarPanel?.SetVulkanStatus(
-            _vulkanBackendInfo.IsAvailable ? "已接入" : "不可用");
+            _probeRoute.State.Backend.IsAvailable ? "已接入" : "不可用");
     }
 
     private static bool TryGetValidViewportSize(
@@ -2698,7 +2691,7 @@ public sealed partial class EditorShell : UserControl
 
     private void UpdateVulkanViewportHost()
     {
-        if (_vulkanBackendInfo.IsAvailable)
+        if (_probeRoute.State.Backend.IsAvailable)
         {
             _vulkanViewportHostPanel?.ShowClearStatus("Vulkan 后端就绪，等待 Surface/Swapchain。");
         }
