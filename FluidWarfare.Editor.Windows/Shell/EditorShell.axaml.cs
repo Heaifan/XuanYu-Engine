@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -74,7 +74,6 @@ public sealed partial class EditorShell : UserControl
     private WorldState? _worldState;
     private EntityId _firstEntityId;
     private WorldEntityInfo? _selectedWorldEntity;
-    private RenderScene _renderScene = RenderScene.Empty;
     private VulkanBackendInfo _vulkanBackendInfo = VulkanBackendInfo.NotChecked;
     private VulkanInstanceInfo _vulkanInstanceInfo = VulkanInstanceInfo.NotChecked;
     private VulkanDeviceInfo _vulkanDeviceInfo = VulkanDeviceInfo.NotChecked;
@@ -324,7 +323,7 @@ public sealed partial class EditorShell : UserControl
                         (uint)nativeHostInfo.Width,
                         (uint)nativeHostInfo.Height,
                         resizePose,
-                        [.. Scene3dDrawListBuilder.Build(_renderScene)]);
+                        [.. Scene3dDrawListBuilder.Build(_renderSceneStore.Current)]);
 
                     if (result.Success)
                     {
@@ -508,7 +507,7 @@ public sealed partial class EditorShell : UserControl
 
     private string FindVisualKindText(EntityId entityId)
     {
-        var renderObj = _renderScene.Objects.FirstOrDefault(o => o.EntityId == entityId);
+        var renderObj = _renderSceneStore.Current.Objects.FirstOrDefault(o => o.EntityId == entityId);
         return renderObj is not null
             ? ToVisualKindText(renderObj.VisualKind)
             : "未生成";
@@ -525,12 +524,12 @@ public sealed partial class EditorShell : UserControl
 
     private ViewportRenderSceneSummary CreateViewportRenderSceneSummary()
     {
-        if (_renderScene.Objects.Count == 0)
+        if (_renderSceneStore.Current.Objects.Count == 0)
         {
             return ViewportRenderSceneSummary.Empty;
         }
 
-        var objects = _renderScene.Objects
+        var objects = _renderSceneStore.Current.Objects
             .Select(o => new ViewportRenderObjectSummary(
                 o.DisplayName,
                 ToVisualKindText(o.VisualKind),
@@ -653,9 +652,8 @@ public sealed partial class EditorShell : UserControl
         }
 
         // 生成 RenderScene
-        _renderScene = WorldToRenderSceneBuilder.Build(_worldState);
-        _renderSceneStore.Initialize(_renderScene);
-        AppendInfoLog($"RenderScene 已生成，渲染对象数量：{_renderScene.Objects.Count}。");
+        _renderSceneStore.Initialize(WorldToRenderSceneBuilder.Build(_worldState));
+        AppendInfoLog($"RenderScene 已生成，渲染对象数量：{_renderSceneStore.Current.Objects.Count}。");
 
         // 构建层级树并显示
         RebuildAndShowHierarchy();
@@ -971,7 +969,7 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        if (_renderScene.Objects.Count == 0)
+        if (_renderSceneStore.Current.Objects.Count == 0)
         {
             AppendWarningLog("Scene3D 自动启动跳过：RenderScene 为空。");
             return;
@@ -1089,7 +1087,7 @@ public sealed partial class EditorShell : UserControl
         var unitVertices = VulkanScene3dVertices.BuildCube(0, 0, 0, 1.0f);
 
         var unitDraws = new List<VulkanScene3dUnitDrawInfo>();
-        foreach (var obj in _renderScene.Objects)
+        foreach (var obj in _renderSceneStore.Current.Objects)
         {
             if (obj.VisualKind != RenderObjectVisualKind.UnitMarker) continue;
             var p = obj.Placement;
@@ -1178,7 +1176,7 @@ public sealed partial class EditorShell : UserControl
         }
         if (keyResult.Action == TransformInteractionAction.Confirmed)
         {
-            ApplyEntityTransform(keyResult.Transform.Position, EditorEntityTransformOrigin.MoveTool);
+            ApplyEntityTransform(keyResult.Transform, EditorEntityTransformOrigin.MoveTool);
             AppendInfoLog($"移动完成 ({keyResult.Transform.Position.X:F3}, {keyResult.Transform.Position.Y:F3}, {keyResult.Transform.Position.Z:F3})");
             return;
         }
@@ -1310,7 +1308,7 @@ public sealed partial class EditorShell : UserControl
         var pick = _viewportPickRoute.Pick(new ViewportPickRequest(
             x, y, camSnapshot,
             _scene3dFrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None,
-            _renderScene, SceneGroundPlane.Default));
+            _renderSceneStore.Current, SceneGroundPlane.Default));
         if (pick.Kind == ViewportPickKind.Entity && pick.EntityId == _selectedWorldEntity.EntityId)
         {
             var request = new TransformStartRequest(
@@ -1331,9 +1329,8 @@ public sealed partial class EditorShell : UserControl
         var result = _pointerRoute.OnPointerReleased();
         if (result.Action != TransformInteractionAction.Confirmed) return;
 
-        var finalPos = result.Transform.Position;
-        ApplyEntityTransform(finalPos, EditorEntityTransformOrigin.MoveTool);
-        AppendInfoLog($"移动完成 ({finalPos.X:F3}, {finalPos.Y:F3}, {finalPos.Z:F3})");
+        ApplyEntityTransform(result.Transform, EditorEntityTransformOrigin.MoveTool);
+        AppendInfoLog($"移动完成 ({result.Transform.Position.X:F3}, {result.Transform.Position.Y:F3}, {result.Transform.Position.Z:F3})");
     }
 
     /// <summary>初始化 Transform Application 层（Session 启动后调用）。</summary>
@@ -1368,30 +1365,27 @@ public sealed partial class EditorShell : UserControl
     }
 
     /// <summary>
-    /// 实时 Preview：将拖动的预览位置同步到 _renderScene + Vulkan，但不修改 WorldState。
+    /// 实时 Preview：将拖动的预览位置同步到 _renderSceneStore.Current + Vulkan，但不修改 WorldState。
     /// 鼠标释放时由 HandleSceneToolPointerReleased 统一提交。
-    /// Preview 必须更新 _renderScene，否则 ScenePointerPicker.Pick 读到的仍是旧位置。
+    /// Preview 必须更新 _renderSceneStore.Current，否则 ScenePointerPicker.Pick 读到的仍是旧位置。
     /// </summary>
     private void ApplyPreviewPosition()
     {
         if (_selectedWorldEntity is null || _previewApplier is null) return;
-        var pos = _pointerRoute.Session.PreviewTransform.Position;
-        _previewApplier.Apply(new SceneTransform(pos, default, default), _selectedWorldEntity.EntityId);
-        _renderScene = _renderSceneStore.Current;
+        _previewApplier.Apply(_pointerRoute.Session.PreviewTransform, _selectedWorldEntity.EntityId);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
     // ─── 统一取消 ──────────────────────────────────────────────
 
     /// <summary>
-    /// 统一取消活动变换。恢复视觉位置、_renderScene、Inspector，重置模态状态。
+    /// 统一取消活动变换。恢复视觉位置、_renderSceneStore.Current、Inspector，重置模态状态。
     /// </summary>
     private void CancelActiveTransform(TransformInteractionResult r)
     {
         if (r.Action != TransformInteractionAction.Cancelled || _selectedWorldEntity is null) return;
         if (_cancelApplier is not null)
             _cancelApplier.Apply(r.Transform, _selectedWorldEntity.EntityId);
-        _renderScene = _renderSceneStore.Current;
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
@@ -1958,10 +1952,10 @@ public sealed partial class EditorShell : UserControl
 
         SubmitMoveGizmoVertices();
         var pickSnapshot = PresentedScenePickSnapshotBuilder.Build(
-            _renderScene, _renderSeq, _cameraRevision,
+            _renderSceneStore.Current, _renderSeq, _cameraRevision,
             _presentedGizmo.ViewportWidth, _presentedGizmo.ViewportHeight);
 
-        route.Request(reason, _lastCameraState, _cameraRevision, _renderScene,
+        route.Request(reason, _lastCameraState, _cameraRevision, _renderSceneStore.Current,
             _pendingGizmo, pickSnapshot, () =>
         {
             _presentedGizmo = route.Snapshots.PresentedGizmo;
@@ -2359,7 +2353,7 @@ public sealed partial class EditorShell : UserControl
         if (!snapshot.IsValid) return;
 
         var pickSnapshot = _scene3dFrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None;
-        var req = new ViewportPickRequest(pixelX, pixelY, snapshot, pickSnapshot, _renderScene, SceneGroundPlane.Default);
+        var req = new ViewportPickRequest(pixelX, pixelY, snapshot, pickSnapshot, _renderSceneStore.Current, SceneGroundPlane.Default);
         var result = _viewportPickRoute.Pick(req);
 
         if (_groundPlacementState.IsActive)
@@ -2397,7 +2391,7 @@ public sealed partial class EditorShell : UserControl
         if (result.Kind != ViewportPickKind.Entity)
         {
             var rb = RayBuilder.Build(req);
-            if (rb is not null) ViewportPickTrace.Write(pixelX, pixelY, snapshot, rb, _renderScene);
+            if (rb is not null) ViewportPickTrace.Write(pixelX, pixelY, snapshot, rb, _renderSceneStore.Current);
         }
     }
 
@@ -2438,7 +2432,7 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        ApplyEntityTransform(newPos, EditorEntityTransformOrigin.InspectorInput);
+        ApplyEntityTransform(CurrentEntityTransform() with { Position = newPos }, EditorEntityTransformOrigin.InspectorInput);
     }
 
     private void HandleTransformReset()
@@ -2505,7 +2499,7 @@ public sealed partial class EditorShell : UserControl
             _ => new Vector3d(current.X, current.Y, value),
         };
 
-        ApplyEntityTransform(newPos, EditorEntityTransformOrigin.DragScrub);
+        ApplyEntityTransform(CurrentEntityTransform() with { Position = newPos }, EditorEntityTransformOrigin.DragScrub);
     }
 
     private void HandleScrubCompleted(string entityId, TransformPositionAxis axis, double value)
@@ -2530,7 +2524,7 @@ public sealed partial class EditorShell : UserControl
             _ => new Vector3d(current.X, current.Y, initialValue),
         };
 
-        ApplyEntityTransform(restoredPos, EditorEntityTransformOrigin.DragScrub);
+        ApplyEntityTransform(CurrentEntityTransform() with { Position = restoredPos }, EditorEntityTransformOrigin.DragScrub);
         AppendInfoLog("数值拖拽已取消");
     }
 
@@ -2562,12 +2556,10 @@ public sealed partial class EditorShell : UserControl
     /// <summary>
     /// 原子式 Transform 提交。
     /// </summary>
-    private void ApplyEntityTransform(Vector3d newPosition, EditorEntityTransformOrigin origin)
+    private void ApplyEntityTransform(SceneTransform transform, EditorEntityTransformOrigin origin)
     {
         if (_selectedWorldEntity is null || _commitApplier is null) return;
-        var t = new SceneTransform(newPosition, default, default);
-        _commitApplier.Apply(t, _selectedWorldEntity.EntityId);
-        _renderScene = _renderSceneStore.Current;
+        _commitApplier.Apply(transform, _selectedWorldEntity.EntityId);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.EntityTransformChanged);
 
         // 日志（数值拖拽和移动工具已完成时不写日志，由调用层写）
@@ -2575,8 +2567,16 @@ public sealed partial class EditorShell : UserControl
         {
             AppendInfoLog(
                 $"实体 {_selectedWorldEntity.DisplayName} 坐标修改为 " +
-                $"({newPosition.X:F2}, {newPosition.Y:F2}, {newPosition.Z:F2})。");
+                $"({transform.Position.X:F2}, {transform.Position.Y:F2}, {transform.Position.Z:F2})。");
         }
+    }
+
+    /// <summary>从当前选中实体的 WorldState 位置构造 SceneTransform。</summary>
+    private SceneTransform CurrentEntityTransform()
+    {
+        if (_selectedWorldEntity is null) return default;
+        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        return pos is not null ? new SceneTransform(pos.Value.Value, default, default) : default;
     }
 
     // ─── 地面放置 ──────────────────────────────────────────────────
@@ -2588,7 +2588,7 @@ public sealed partial class EditorShell : UserControl
         // 地面放置：实体在地面锚点，Z = 平面高程（0）
         var entityPos = new Vector3d(groundPosition.X, groundPosition.Y, 0);
 
-        ApplyEntityTransform(entityPos, EditorEntityTransformOrigin.GroundPlacement);
+        ApplyEntityTransform(CurrentEntityTransform() with { Position = entityPos }, EditorEntityTransformOrigin.GroundPlacement);
 
         if (_groundPlacementState.IsActive)
         {
@@ -2629,10 +2629,10 @@ public sealed partial class EditorShell : UserControl
 
         // 从 RenderScene 构建 EntityId → 分组名映射
         Dictionary<EntityId, string>? groupLookup = null;
-        if (_renderScene.Objects.Count > 0)
+        if (_renderSceneStore.Current.Objects.Count > 0)
         {
             groupLookup = new Dictionary<EntityId, string>();
-            foreach (var obj in _renderScene.Objects)
+            foreach (var obj in _renderSceneStore.Current.Objects)
             {
                 var groupName = obj.VisualKind switch
                 {
@@ -2682,7 +2682,7 @@ public sealed partial class EditorShell : UserControl
 
         // 单位绘制信息：从 RenderScene 收集所有 UnitMarker 对象
         var unitDraws = new List<VulkanScene3dUnitDrawInfo>();
-        foreach (var obj in _renderScene.Objects)
+        foreach (var obj in _renderSceneStore.Current.Objects)
         {
             if (obj.VisualKind != RenderObjectVisualKind.UnitMarker)
                 continue;
@@ -2809,9 +2809,9 @@ public sealed partial class EditorShell : UserControl
                 : "-");
 
         // RenderScene 调试列表
-        if (_renderScene.Objects.Count > 0)
+        if (_renderSceneStore.Current.Objects.Count > 0)
         {
-            var entries = _renderScene.Objects.Select(o =>
+            var entries = _renderSceneStore.Current.Objects.Select(o =>
                 $"{o.DisplayName} | unit_marker | ({o.Position.X}, {o.Position.Y}, {o.Position.Z}) | {o.SourcePath ?? "无"}").ToList();
             _debugDockPanel?.SetRenderSceneSummary(
                 $"RenderScene 调试对象（共 {entries.Count} 个）", entries);

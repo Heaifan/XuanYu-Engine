@@ -6,6 +6,9 @@ using FluidWarfare.Engine.World;
 
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 
+/// <summary>WorldState Transform 写入结果。</summary>
+public enum WorldTransformWriteStatus { Changed, NoChange, EntityNotFound }
+
 /// <summary>WorldState Transform 写入能力。负责原子写入 + Dirty 标记。</summary>
 public sealed class WorldTransformWriter
 {
@@ -18,12 +21,19 @@ public sealed class WorldTransformWriter
         _world = world; _dirty = dirty; _statusBar = statusBar;
     }
 
-    /// <summary>写入实体位置。返回 true 表示写入成功（位置可能未变化）。</summary>
-    public bool TrySetPosition(EntityId entityId, Vector3d position)
+    /// <summary>写入实体位置。返回明确写入状态：Changed / NoChange / EntityNotFound。</summary>
+    /// <summary>查询实体是否存在。用于 Commit 预检。</summary>
+    public bool EntityExists(EntityId entityId) => _world.FindPosition(entityId) is not null;
+
+    /// <summary>写入实体位置。返回明确写入状态：Changed / NoChange / EntityNotFound。</summary>
+    public WorldTransformWriteStatus TrySetPosition(EntityId entityId, Vector3d position)
     {
-        if (!_world.SetPosition(entityId, position)) return false;
+        if (_world.FindPosition(entityId) is null)
+            return WorldTransformWriteStatus.EntityNotFound;
+        if (!_world.SetPosition(entityId, position))
+            return WorldTransformWriteStatus.NoChange;
         _dirty.MarkDirty(entityId.Value.ToString());
         _statusBar?.SetDirtyState(true);
-        return true;
+        return WorldTransformWriteStatus.Changed;
     }
 }
