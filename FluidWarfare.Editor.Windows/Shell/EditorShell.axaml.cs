@@ -27,6 +27,7 @@ using FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
 using FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
 using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
 using FluidWarfare.Editor.Windows.Viewport.Project;
+using FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -81,6 +82,7 @@ public sealed partial class EditorShell : UserControl
     private WorldState? _worldState;
     private readonly EditorSelectionRoute _selectionRoute = new();
     private readonly ProjectBootstrapRoute _projectBootstrap = new();
+    private readonly WorldBootstrapRoute _worldBootstrap = new();
     private readonly VulkanViewportProbeRoute _probeRoute = new();
     private Button? _runMenuButton;
     private MenuItem? _runScene3dMenuItem;
@@ -537,51 +539,35 @@ public sealed partial class EditorShell : UserControl
 
     private void CreateWorldFromProject(GameProjectInfo project)
     {
-        _worldState = new WorldState();
-        _selectionRoute.ClearSelection(EditorSelectionReason.SelectionRestore);
-
         if (_contentFiles is null || _contentFiles.Count == 0)
-        {
-            RebuildAndShowHierarchy();
-            _viewportPlaceholderPanel?.ShowNoWorldEntity();
-            _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
-            AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
-            return;
-        }
+        { RebuildAndShowHierarchy(); EmptyWorldFallback(); return; }
 
-        var seedResult = ProjectContentWorldSeeder.SeedUnitTemplatePlaceholders(
-            _worldState,
-            _contentFiles);
+        var input = new WorldBootstrapInput(project, _contentFiles);
+        var result = _worldBootstrap.Build(input);
 
-        if (seedResult.CreatedEntityCount == 0)
-        {
-            RebuildAndShowHierarchy();
-            _viewportPlaceholderPanel?.ShowNoWorldEntity();
-            _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
-            AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
-            return;
-        }
+        if (!result.HasEntities)
+        { RebuildAndShowHierarchy(); EmptyWorldFallback(); return; }
 
-        // 记录第一个实体 ID，用于视口点击显示
-        var entities = _worldState.ListEntities();
-        _selectionRoute.State.SetFirstEntityId(entities.Count > 0 ? entities[0].EntityId : default);
+        _worldState = result.World;
+        _renderSceneStore.Initialize(result.RenderScene);
+        _selectionRoute.State.SetFirstEntityId(result.FirstEntityId);
 
         AppendInfoLog("最小 World 已创建。");
+        foreach (var s in result.SeedSourcePaths)
+            AppendInfoLog($"已从项目内容生成 World 占位实体：{s}。");
+        AppendInfoLog($"RenderScene 已生成，渲染对象数量：{result.RenderScene.Objects.Count}。");
 
-        foreach (var sourcePath in seedResult.SourcePaths)
-        {
-            AppendInfoLog($"已从项目内容生成 World 占位实体：{sourcePath}。");
-        }
-
-        // 生成 RenderScene
-        _renderSceneStore.Initialize(WorldToRenderSceneBuilder.Build(_worldState));
-        AppendInfoLog($"RenderScene 已生成，渲染对象数量：{_renderSceneStore.Current.Objects.Count}。");
-
-        // 构建层级树并显示
         RebuildAndShowHierarchy();
         _viewportPlaceholderPanel?.ShowNoWorldEntity();
         _viewportPlaceholderPanel?.ShowRenderSceneSummary(
-            _viewportSelectionPresenter.CreateRenderSceneSummary(_renderSceneStore.Current));
+            _viewportSelectionPresenter.CreateRenderSceneSummary(result.RenderScene));
+    }
+
+    private void EmptyWorldFallback()
+    {
+        _viewportPlaceholderPanel?.ShowNoWorldEntity();
+        _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
+        AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
     }
 
     private void ProbeVulkanBackend()

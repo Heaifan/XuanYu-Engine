@@ -1,0 +1,12 @@
+using FluidWarfare.Engine.World;
+using FluidWarfare.Render.Scene;
+using FluidWarfare.Render.World;
+
+namespace FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
+
+/// <summary>从 WorldState 生成 RenderScene。纯数据逻辑。</summary>
+public static class WorldBootstrapRenderSeed
+{
+    public static RenderScene BuildRenderScene(WorldState world) =>
+        WorldToRenderSceneBuilder.Build(world);
+}
