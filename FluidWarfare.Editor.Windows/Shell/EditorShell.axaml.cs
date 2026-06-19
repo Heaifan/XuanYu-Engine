@@ -25,6 +25,7 @@ using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
 using FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
+using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -77,8 +78,7 @@ public sealed partial class EditorShell : UserControl
     private IReadOnlyList<GameContentFileInfo>? _contentFiles;
     private GameProjectInfo? _projectInfo;
     private WorldState? _worldState;
-    private EntityId _firstEntityId;
-    private WorldEntityInfo? _selectedWorldEntity;
+    private readonly EditorSelectionRoute _selectionRoute = new();
     private readonly VulkanViewportProbeRoute _probeRoute = new();
     private Button? _runMenuButton;
     private MenuItem? _runScene3dMenuItem;
@@ -361,23 +361,23 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleViewportFocused(object? sender, EventArgs e)
     {
-        if (_selectedWorldEntity is not null && _worldState is not null)
+        if (_selectionRoute.State.SelectedWorldEntity is not null && _worldState is not null)
         {
             // 已有选中实体，保持选择
-            _inspectorPanel?.ShowSelection(CreateEntitySelection(_selectedWorldEntity));
-            _statusBarPanel?.SetCurrentSelection(_selectedWorldEntity.DisplayName);
+            _inspectorPanel?.ShowSelection(CreateEntitySelection(_selectionRoute.State.SelectedWorldEntity));
+            _statusBarPanel?.SetCurrentSelection(_selectionRoute.State.SelectedWorldEntity.DisplayName);
             AppendInfoLog("视口获得焦点。");
-            AppendInfoLog($"当前 World 占位实体：{_selectedWorldEntity.DisplayName}。");
+            AppendInfoLog($"当前 World 占位实体：{_selectionRoute.State.SelectedWorldEntity.DisplayName}。");
         }
         else if (_worldState is not null)
         {
             var entities = _worldState.ListEntities();
             if (entities.Count > 0)
             {
-                // 自动选中第一个实体
-                _selectedWorldEntity = entities[0];
-                _firstEntityId = _selectedWorldEntity.EntityId;
-                ShowWorldEntitySelection(_selectedWorldEntity);
+                var r = _selectionRoute.SelectEntity(new EditorSelectionRequest(
+                    entities[0].EntityId.Value.ToString(),
+                    EditorSelectionReason.ViewportFocused, _worldState));
+                if (r.Entity is not null) ShowWorldEntitySelection(r.Entity);
                 AppendInfoLog("视口获得焦点。");
             }
             else
@@ -544,7 +544,7 @@ public sealed partial class EditorShell : UserControl
     private void CreateWorldFromProject(GameProjectInfo project)
     {
         _worldState = new WorldState();
-        _selectedWorldEntity = null;
+        _selectionRoute.ClearSelection(EditorSelectionReason.SelectionRestore);
 
         if (_contentFiles is null || _contentFiles.Count == 0)
         {
@@ -570,7 +570,7 @@ public sealed partial class EditorShell : UserControl
 
         // 记录第一个实体 ID，用于视口点击显示
         var entities = _worldState.ListEntities();
-        _firstEntityId = entities.Count > 0 ? entities[0].EntityId : default;
+        _selectionRoute.State.SetFirstEntityId(entities.Count > 0 ? entities[0].EntityId : default);
 
         AppendInfoLog("最小 World 已创建。");
 
@@ -852,11 +852,11 @@ public sealed partial class EditorShell : UserControl
                 $"[InputTrace-Shell] RawKeyDown vk=0x{virtualKeyCode:X2}");
 
         // 变换按键：G/Enter/Esc → TransformKeyboardRoute
-        var gModalSnapshot = (virtualKeyCode is 0x47 or 0x1B) && _selectedWorldEntity is not null
+        var gModalSnapshot = (virtualKeyCode is 0x47 or 0x1B) && _selectionRoute.State.SelectedWorldEntity is not null
             ? BuildTransformStartSnapshot() : null;
         var keyResult = TransformKeyboardRoute.HandleKeyDown(
             virtualKeyCode, _pointerRoute,
-            _selectedWorldEntity?.EntityId, gModalSnapshot,
+            _selectionRoute.State.SelectedWorldEntity?.EntityId, gModalSnapshot,
             _lastPointerX, _lastPointerY);
 
         if (keyResult.Action == TransformInteractionAction.Started)
@@ -975,7 +975,7 @@ public sealed partial class EditorShell : UserControl
 
     private ViewportSceneToolPressResult HandleSceneToolPointerPressed(int x, int y)
     {
-        if (!_pointerRoute.IsMoveToolActive || _selectedWorldEntity is null)
+        if (!_pointerRoute.IsMoveToolActive || _selectionRoute.State.SelectedWorldEntity is null)
             return ViewportSceneToolPressResult.NotHandled;
 
         var camSnapshot = _lifecycle.State.Session?.LastPresentedSnapshot;
@@ -1000,7 +1000,7 @@ public sealed partial class EditorShell : UserControl
             x, y, camSnapshot,
             _lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None,
             _renderSceneStore.Current, SceneGroundPlane.Default));
-        if (pick.Kind == ViewportPickKind.Entity && pick.EntityId == _selectedWorldEntity.EntityId)
+        if (pick.Kind == ViewportPickKind.Entity && pick.EntityId == _selectionRoute.State.SelectedWorldEntity.EntityId)
         {
             var request = new TransformStartRequest(
                 TransformStartSource.EntityBody, MoveGizmoElement.ViewPlane, x, y);
@@ -1042,13 +1042,13 @@ public sealed partial class EditorShell : UserControl
     /// <summary>从当前 Shell 状态构建 TransformStartSnapshot。返回 null 当缺实体或相机快照。</summary>
     private TransformStartSnapshot? BuildTransformStartSnapshot()
     {
-        if (_selectedWorldEntity is null) return null;
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (_selectionRoute.State.SelectedWorldEntity is null) return null;
+        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (pos is null) return null;
         var cam = _lifecycle.State.Session?.LastPresentedSnapshot;
         if (cam is not { IsValid: true }) return null;
         return new TransformStartSnapshot(
-            _selectedWorldEntity.EntityId,
+            _selectionRoute.State.SelectedWorldEntity.EntityId,
             new SceneTransform(pos.Value.Value, default, default),
             _worldDirtyState.IsDirty,
             cam,
@@ -1062,8 +1062,8 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void ApplyPreviewPosition()
     {
-        if (_selectedWorldEntity is null || _previewApplier is null) return;
-        _previewApplier.Apply(_pointerRoute.Session.PreviewTransform, _selectedWorldEntity.EntityId);
+        if (_selectionRoute.State.SelectedWorldEntity is null || _previewApplier is null) return;
+        _previewApplier.Apply(_pointerRoute.Session.PreviewTransform, _selectionRoute.State.SelectedWorldEntity.EntityId);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
@@ -1074,9 +1074,9 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void CancelActiveTransform(TransformInteractionResult r)
     {
-        if (r.Action != TransformInteractionAction.Cancelled || _selectedWorldEntity is null) return;
+        if (r.Action != TransformInteractionAction.Cancelled || _selectionRoute.State.SelectedWorldEntity is null) return;
         if (_cancelApplier is not null)
-            _cancelApplier.Apply(r.Transform, _selectedWorldEntity.EntityId);
+            _cancelApplier.Apply(r.Transform, _selectionRoute.State.SelectedWorldEntity.EntityId);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
     }
 
@@ -1085,7 +1085,7 @@ public sealed partial class EditorShell : UserControl
     private void HandleViewportToolChanged(ViewportEditorTool tool)
     {
         _pointerRoute.ActivateMoveTool(tool == ViewportEditorTool.Move);
-        if (tool == ViewportEditorTool.Move && _selectedWorldEntity is null)
+        if (tool == ViewportEditorTool.Move && _selectionRoute.State.SelectedWorldEntity is null)
             _statusBarPanel?.SetCurrentSelection("请先选择实体。");
     }
 
@@ -1263,13 +1263,13 @@ public sealed partial class EditorShell : UserControl
         try
         {
             if (!_sessionActive || _lifecycle.State.Session is null) return;
-            if (_selectedWorldEntity is null)
+            if (_selectionRoute.State.SelectedWorldEntity is null)
             {
                 _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
                 return;
             }
 
-            var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+            var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
             if (pos is null) return;
 
             var p = pos.Value.Value;
@@ -1280,7 +1280,7 @@ public sealed partial class EditorShell : UserControl
                 (float)placement.VisualCenter.Y,
                 (float)placement.VisualCenter.Z,
                 (float)RenderUnitPlacement.HalfExtent);
-            _statusBarPanel?.SetCurrentSelection($"已聚焦实体 {_selectedWorldEntity.DisplayName}。");
+            _statusBarPanel?.SetCurrentSelection($"已聚焦实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName}。");
             ScheduleScene3dFrame(VulkanScene3dFrameReason.CameraReset);
         }
         finally
@@ -1403,13 +1403,13 @@ public sealed partial class EditorShell : UserControl
     private void HandleNumpadPeriod()
     {
         if (!_sessionActive || _lifecycle.State.Session is null) return;
-        if (_selectedWorldEntity is null)
+        if (_selectionRoute.State.SelectedWorldEntity is null)
         {
             _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
             return;
         }
 
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (pos is null) return;
 
         var p = pos.Value.Value;
@@ -1604,7 +1604,7 @@ public sealed partial class EditorShell : UserControl
 
     private void FrameNavigationTarget()
     {
-        if (_selectedWorldEntity is null)
+        if (_selectionRoute.State.SelectedWorldEntity is null)
         {
             _lastCameraState = SceneOrbitCameraMotion.FrameAll(_lastCameraState);
             AppendInfoLog("已显示全部场景对象。");
@@ -1612,7 +1612,7 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (pos is null) return;
 
         var placement = new RenderUnitPlacement(pos.Value.Value);
@@ -1622,7 +1622,7 @@ public sealed partial class EditorShell : UserControl
             (float)placement.VisualCenter.Y,
             (float)placement.VisualCenter.Z,
             (float)RenderUnitPlacement.HalfExtent);
-        AppendInfoLog($"已聚焦实体 {_selectedWorldEntity.DisplayName}。");
+        AppendInfoLog($"已聚焦实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName}。");
         ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
     }
 
@@ -1642,14 +1642,14 @@ public sealed partial class EditorShell : UserControl
 
         var entityPos = _pointerRoute.Session.IsActive
             ? _pointerRoute.Session.PreviewTransform.Position
-            : _selectedWorldEntity is not null
-                ? _worldState?.FindPosition(_selectedWorldEntity.EntityId)?.Value ?? Vector3d.Zero
+            : _selectionRoute.State.SelectedWorldEntity is not null
+                ? _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId)?.Value ?? Vector3d.Zero
                 : Vector3d.Zero;
 
         _lifecycle.State.FrameSubmitRoute.Request(new Scene3dFrameSubmitInput(
             reason, _lastCameraState, _cameraRevision, _renderSeq,
             _pointerRoute.IsMoveToolActive,
-            _selectedWorldEntity?.EntityId ?? default,
+            _selectionRoute.State.SelectedWorldEntity?.EntityId ?? default,
             entityPos,
             _pointerRoute.HoveredElement,
             _worldDirtyState.Revision), () =>
@@ -1659,118 +1659,51 @@ public sealed partial class EditorShell : UserControl
         });
     }
 
-    // ─── 单向选择状态流 ──────────────────────────────────────
+    // ─── 选择路由 ────────────────────────────────────────────
 
-    private readonly EditorEntitySelectionState _selectionState = new();
-    private readonly EditorSelectionDiagnostics _selectionDiag = new();
-    private int _selectionDispatchDepth;
-
-    /// <summary>
-    /// 唯一选择入口。单向流：TryApply 幂等 → 顺序刷新各界面。
-    /// _selectionDispatchDepth 熔断反馈递归。
-    /// </summary>
     private void ApplyEntitySelection(string? entityIdStr, EditorEntitySelectionOrigin origin)
     {
-        _selectionDiag.SelectionRequestCount++;
+        var reason = MapReason(origin);
+        var req = new EditorSelectionRequest(entityIdStr, reason, _worldState);
+        var result = entityIdStr is null
+            ? _selectionRoute.ClearSelection(reason)
+            : _selectionRoute.SelectEntity(req);
 
-        if (_selectionDispatchDepth > 0)
+        if (!result.IsChanged) return;
+
+        if (result.Entity is not null)
         {
-            _selectionDiag.FeedbackLoopBlockedCount++;
-            System.Diagnostics.Debug.WriteLine(
-                $"[严重] 检测到选择反馈环，已熔断。EntityId={entityIdStr} Origin={origin}");
-            return;
-        }
-
-        _selectionDispatchDepth++;
-        try
-        {
-            var change = _selectionState.TryApply(entityIdStr, origin);
-
-            if (!change.IsChanged)
-            {
-                _selectionDiag.SelectionNoOpCount++;
-                if (origin == EditorEntitySelectionOrigin.ViewportPicking && entityIdStr is not null)
-                    _dockPanel?.RevealEntity(entityIdStr);
-                return;
-            }
-
-            _selectionDiag.SelectionChangeCount++;
-            _selectionDiag.LastRevision = change.Revision;
-
-            WorldEntityInfo? entityInfo = null;
-            if (entityIdStr is not null && int.TryParse(entityIdStr, out var entityIdVal) && entityIdVal > 0)
-            {
-                var targetId = EntityId.FromInt(entityIdVal);
-                var entities = _worldState?.ListEntities() ?? [];
-                entityInfo = entities.FirstOrDefault(e => e.EntityId == targetId);
-            }
-
-            ApplySelectionToScene3d(change, entityInfo);
-            ApplySelectionToInspector(change, entityInfo);
-            ApplySelectionToStatusBar(change, entityInfo);
-            ApplySelectionToHierarchy(change, entityInfo);
-            ApplySelectionLog(change, entityInfo);
-        }
-        finally
-        {
-            _selectionDispatchDepth--;
-        }
-    }
-
-    private void ApplySelectionToScene3d(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
-    {
-        if (_lifecycle.State.Session is null || !_sessionActive) return;
-        if (change.CurrentEntityId is not null &&
-            _lifecycle.State.Session.SetSelectedEntity(change.CurrentEntityId))
-        {
-            _selectionDiag.SceneSelectionFrameCount++;
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
-        }
-    }
-
-    private void ApplySelectionToInspector(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
-    {
-        if (entityInfo is not null)
-        {
-            _selectedWorldEntity = entityInfo;
-            ShowWorldEntitySelection(entityInfo);
+            ShowWorldEntitySelection(result.Entity);
+            SyncSceneSelection(result.Entity.EntityId.Value.ToString());
         }
         else
         {
-            _selectedWorldEntity = null;
             _inspectorPanel?.ShowNoSelection();
-        }
-    }
-
-    private void ApplySelectionToStatusBar(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
-    {
-        if (entityInfo is not null)
-            _statusBarPanel?.SetCurrentSelection(entityInfo.DisplayName);
-        else
             _statusBarPanel?.SetCurrentSelection("无");
-    }
-
-    private void ApplySelectionToHierarchy(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
-    {
-        if (change.CurrentEntityId is not null &&
-            change.Origin != EditorEntitySelectionOrigin.WorldHierarchy)
-        {
-            _selectionDiag.HierarchyRevealCount++;
-            _dockPanel?.RevealEntity(change.CurrentEntityId);
-        }
-        else if (change.CurrentEntityId is null)
-        {
             _dockPanel?.ClearEntitySelection();
         }
     }
 
-    private void ApplySelectionLog(EditorEntitySelectionChange change, WorldEntityInfo? entityInfo)
+    private void SyncSceneSelection(string entityId)
     {
-        if (entityInfo is not null)
-            AppendInfoLog($"已选择 World 实体：{entityInfo.DisplayName} (Rev#{change.Revision}, {change.Origin})");
-        else
-            AppendInfoLog($"清除选择 (Rev#{change.Revision}, {change.Origin})");
+        if (_lifecycle.State.Session is null || !_sessionActive) return;
+        if (_lifecycle.State.Session.SetSelectedEntity(entityId))
+            ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
     }
+
+    private void ClearSelection()
+    {
+        var r = _selectionRoute.ClearSelection(EditorSelectionReason.SelectionRestore);
+        _inspectorPanel?.ShowNoSelection();
+        _statusBarPanel?.SetCurrentSelection("无");
+    }
+
+    static EditorSelectionReason MapReason(EditorEntitySelectionOrigin o) => o switch
+    {
+        EditorEntitySelectionOrigin.ViewportPicking => EditorSelectionReason.ViewportPicking,
+        EditorEntitySelectionOrigin.WorldHierarchy => EditorSelectionReason.WorldHierarchy,
+        _ => EditorSelectionReason.ViewportFocused,
+    };
 
     // ─── 地面指针移动 ─────────────────────────────────────────────
 
@@ -1834,8 +1767,8 @@ public sealed partial class EditorShell : UserControl
 
         _groundPointerState.SetHover(null, null);
         _statusBarPanel.SetCurrentSelection(
-            _selectedWorldEntity is not null
-                ? _selectedWorldEntity.DisplayName
+            _selectionRoute.State.SelectedWorldEntity is not null
+                ? _selectionRoute.State.SelectedWorldEntity.DisplayName
                 : "无");
 
         // 更新状态栏额外行显示地面坐标不可用
@@ -1907,11 +1840,6 @@ public sealed partial class EditorShell : UserControl
     /// <summary>
     /// 清除选择。
     /// </summary>
-    private void ClearSelection()
-    {
-        ApplyEntitySelection(null, EditorEntitySelectionOrigin.SelectionRestore);
-    }
-
     /// <summary>
     /// 视口点击 Picking 处理。
     /// 像素坐标 → 世界射线 → RenderScene Picker → 统一选择入口。
@@ -2003,7 +1931,7 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleTransformApply(string xText, string yText, string zText)
     {
-        if (_selectedWorldEntity is null) return;
+        if (_selectionRoute.State.SelectedWorldEntity is null) return;
 
         if (!EditorEntityTransformValidation.TryParse(xText, yText, zText,
                 out var newPos, out var error))
@@ -2017,8 +1945,8 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleTransformReset()
     {
-        if (_selectedWorldEntity is null) return;
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (_selectionRoute.State.SelectedWorldEntity is null) return;
+        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (pos is null) return;
         var v = pos.Value.Value;
         _inspectorPanel?.SetTransformTexts(
@@ -2030,7 +1958,7 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleTransformDraftChanged(string xText, string yText, string zText)
     {
-        if (_selectedWorldEntity is null)
+        if (_selectionRoute.State.SelectedWorldEntity is null)
         {
             _inspectorPanel?.SetTransformDraftState(false, false, null);
             return;
@@ -2043,7 +1971,7 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        var currentPos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        var currentPos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (currentPos is null)
         {
             _inspectorPanel?.SetTransformDraftState(false, false, null);
@@ -2061,14 +1989,14 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleScrubValueChanged(string entityId, TransformPositionAxis axis, double value)
     {
-        if (_selectedWorldEntity is null) return;
+        if (_selectionRoute.State.SelectedWorldEntity is null) return;
         // 防串写：事件携带的 entityId 必须与当前选中实体一致
-        if (_selectedWorldEntity.EntityId.Value.ToString() != entityId)
+        if (_selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString() != entityId)
         {
             AppendWarningLog("数值拖拽目标实体已变化，忽略本次更新。");
             return;
         }
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (pos is null) return;
 
         var current = pos.Value.Value;
@@ -2089,11 +2017,11 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleScrubCancelled(string entityId, TransformPositionAxis axis, double initialValue)
     {
-        if (_selectedWorldEntity is null) return;
-        if (_selectedWorldEntity.EntityId.Value.ToString() != entityId)
+        if (_selectionRoute.State.SelectedWorldEntity is null) return;
+        if (_selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString() != entityId)
             return;
 
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (pos is null) return;
 
         var current = pos.Value.Value;
@@ -2110,7 +2038,7 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleGroundPlacementToggle()
     {
-        if (_selectedWorldEntity is null) return;
+        if (_selectionRoute.State.SelectedWorldEntity is null) return;
         if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
         {
             AppendWarningLog("Scene3D 未激活，无法进入放置模式。");
@@ -2122,14 +2050,14 @@ public sealed partial class EditorShell : UserControl
             _groundPlacementState.Cancel();
             _inspectorPanel?.SetPlacementMode(false);
             _statusBarPanel?.SetCurrentSelection(
-                _selectedWorldEntity?.DisplayName ?? "无");
+                _selectionRoute.State.SelectedWorldEntity?.DisplayName ?? "无");
         }
         else
         {
-            _groundPlacementState.Begin(_selectedWorldEntity.EntityId.Value.ToString());
+            _groundPlacementState.Begin(_selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString());
             _inspectorPanel?.SetPlacementMode(true);
             _statusBarPanel?.SetCurrentSelection(
-                $"放置模式：点击空白地面放置 {_selectedWorldEntity.DisplayName}，Esc 取消");
+                $"放置模式：点击空白地面放置 {_selectionRoute.State.SelectedWorldEntity.DisplayName}，Esc 取消");
         }
     }
 
@@ -2138,15 +2066,15 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void ApplyEntityTransform(SceneTransform transform, EditorEntityTransformOrigin origin)
     {
-        if (_selectedWorldEntity is null || _commitApplier is null) return;
-        _commitApplier.Apply(transform, _selectedWorldEntity.EntityId);
+        if (_selectionRoute.State.SelectedWorldEntity is null || _commitApplier is null) return;
+        _commitApplier.Apply(transform, _selectionRoute.State.SelectedWorldEntity.EntityId);
         ScheduleScene3dFrame(VulkanScene3dFrameReason.EntityTransformChanged);
 
         // 日志（数值拖拽和移动工具已完成时不写日志，由调用层写）
         if (origin != EditorEntityTransformOrigin.DragScrub && origin != EditorEntityTransformOrigin.MoveTool)
         {
             AppendInfoLog(
-                $"实体 {_selectedWorldEntity.DisplayName} 坐标修改为 " +
+                $"实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName} 坐标修改为 " +
                 $"({transform.Position.X:F2}, {transform.Position.Y:F2}, {transform.Position.Z:F2})。");
         }
     }
@@ -2154,8 +2082,8 @@ public sealed partial class EditorShell : UserControl
     /// <summary>从当前选中实体的 WorldState 位置构造 SceneTransform。</summary>
     private SceneTransform CurrentEntityTransform()
     {
-        if (_selectedWorldEntity is null) return default;
-        var pos = _worldState?.FindPosition(_selectedWorldEntity.EntityId);
+        if (_selectionRoute.State.SelectedWorldEntity is null) return default;
+        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         return pos is not null ? new SceneTransform(pos.Value.Value, default, default) : default;
     }
 
@@ -2163,7 +2091,7 @@ public sealed partial class EditorShell : UserControl
 
     private void CompleteGroundPlacement(Vector3d groundPosition)
     {
-        if (!_groundPlacementState.IsActive || _selectedWorldEntity is null) return;
+        if (!_groundPlacementState.IsActive || _selectionRoute.State.SelectedWorldEntity is null) return;
 
         // 地面放置：实体在地面锚点，Z = 平面高程（0）
         var entityPos = new Vector3d(groundPosition.X, groundPosition.Y, 0);
@@ -2176,7 +2104,7 @@ public sealed partial class EditorShell : UserControl
             _inspectorPanel?.SetPlacementMode(false);
             HideGroundCursor();
             AppendInfoLog(
-                $"实体 {_selectedWorldEntity.DisplayName} 已放置到 " +
+                $"实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName} 已放置到 " +
                 $"X {entityPos.X:F2}，Y {entityPos.Y:F2}，Z {entityPos.Z:F2}。");
         }
     }
