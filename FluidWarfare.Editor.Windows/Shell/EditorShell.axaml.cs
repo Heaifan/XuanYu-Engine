@@ -30,6 +30,7 @@ using FluidWarfare.Editor.Windows.Viewport.Project;
 using FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
 using FluidWarfare.Editor.Windows.Viewport.Camera;
 using FluidWarfare.Editor.Windows.Viewport.Navigation;
+using FluidWarfare.Editor.Windows.Viewport.Selection.Focus;
 using FluidWarfare.Editor.Windows.Shell.Feedback;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -100,6 +101,7 @@ public sealed partial class EditorShell : UserControl
     private bool _sessionActive;
     private bool _scene3dAutoStartAttempted;
     private readonly ViewportNavigationRoute _navigationRoute = new();
+    private readonly ViewportFocusSelectionRoute _viewportFocusRoute = new();
 
     // ─── 输入动作映射系统 ───────────────────────────────────
     private EditorInputService _inputService = EditorInputService.Instance;
@@ -360,43 +362,13 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleViewportFocused(object? sender, EventArgs e)
     {
-        if (_selectionRoute.State.SelectedWorldEntity is not null && _worldState is not null)
-        {
-            // 已有选中实体，保持选择
-            _inspectorPanel?.ShowSelection(CreateEntitySelection(_selectionRoute.State.SelectedWorldEntity));
-            _statusBarPanel?.SetCurrentSelection(_selectionRoute.State.SelectedWorldEntity.DisplayName);
-            AppendInfoLog("视口获得焦点。");
-            AppendInfoLog($"当前 World 占位实体：{_selectionRoute.State.SelectedWorldEntity.DisplayName}。");
-        }
-        else if (_worldState is not null)
-        {
-            var entities = _worldState.ListEntities();
-            if (entities.Count > 0)
-            {
-                var r = _selectionRoute.SelectEntity(new EditorSelectionRequest(
-                    entities[0].EntityId.Value.ToString(),
-                    EditorSelectionReason.ViewportFocused, _worldState));
-                if (r.Entity is not null) ShowWorldEntitySelection(r.Entity);
-                AppendInfoLog("视口获得焦点。");
-            }
-            else
-            {
-                // World 为空
-                _viewportPlaceholderPanel?.ShowEmptyWorld();
-                _inspectorPanel?.ShowSelection(CreateDefaultViewportSelection());
-                _statusBarPanel?.SetCurrentSelection("3D 视口");
-                AppendInfoLog("视口获得焦点。");
-                AppendWarningLog("当前 World 没有可显示实体。");
-            }
-        }
-        else
-        {
-            // World 未创建
-            var selection = CreateDefaultViewportSelection();
-            _inspectorPanel?.ShowSelection(selection);
-            _statusBarPanel?.SetCurrentSelection(selection.DisplayName);
-            AppendInfoLog("视口获得焦点。");
-        }
+        var result = _viewportFocusRoute.Focus(_worldState, _selectionRoute);
+        _inspectorPanel?.ShowSelection(result.InspectorSelection);
+        _statusBarPanel?.SetCurrentSelection(result.StatusBarText);
+        if (result.ShowEmptyWorld) _viewportPlaceholderPanel?.ShowEmptyWorld();
+        foreach (var m in result.LogMessages) AppendInfoLog(m);
+        foreach (var w in result.LogWarnings) AppendWarningLog(w);
+        if (result.EntityToShow is not null) ShowWorldEntitySelection(result.EntityToShow);
     }
 
     private void HandlePreferencesClicked(object? sender, RoutedEventArgs e)
@@ -1987,24 +1959,5 @@ public sealed partial class EditorShell : UserControl
         RebuildAndShowHierarchy();
     }
 
-    private EditorSelection CreateEntitySelection(WorldEntityInfo entityInfo)
-    {
-        var position = _worldState?.FindPosition(entityInfo.EntityId);
-
-        var typeLabel = entityInfo.Source is not null ? "World 占位实体" : "World 实体";
-        var description = position is not null
-            ? $"EntityId({entityInfo.EntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}，位置：({position.Value.Value.X}, {position.Value.Value.Y}, {position.Value.Value.Z})"
-            : $"EntityId({entityInfo.EntityId.Value})，来源：{entityInfo.Source?.RelativePath ?? "无"}";
-
-        return new EditorSelection(typeLabel, entityInfo.DisplayName, description);
-    }
-
-    private static EditorSelection CreateDefaultViewportSelection()
-    {
-        return new EditorSelection(
-            "编辑器占位区",
-            "3D 视口",
-            "这里将显示 Vulkan 渲染的 3D 战场。");
-    }
 
 }
