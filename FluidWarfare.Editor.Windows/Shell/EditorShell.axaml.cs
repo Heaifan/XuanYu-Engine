@@ -29,6 +29,7 @@ using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
 using FluidWarfare.Editor.Windows.Viewport.Project;
 using FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
 using FluidWarfare.Editor.Windows.Viewport.Camera;
+using FluidWarfare.Editor.Windows.Viewport.Navigation;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
@@ -58,7 +59,6 @@ using FluidWarfare.Render.Vulkan.Device;
 using FluidWarfare.Render.Vulkan.Instance;
 using FluidWarfare.Render.Vulkan.Clear;
 using FluidWarfare.Render.Vulkan.Camera;
-using FluidWarfare.Render.Camera;
 using FluidWarfare.Render.Camera.Navigation;
 using FluidWarfare.Render.ViewportNavigation;
 using FluidWarfare.Render.Vulkan.Scene3D;
@@ -97,11 +97,7 @@ public sealed partial class EditorShell : UserControl
     private readonly ViewportCameraRoute _cameraRoute = new();
     private bool _sessionActive;
     private bool _scene3dAutoStartAttempted;
-    private ViewportNavigationDragMode _navigationDragMode = ViewportNavigationDragMode.None;
-    private ViewportNavigationElement _navigationActiveElement = ViewportNavigationElement.None;
-    private ViewportNavigationElement _navigationHoverElement = ViewportNavigationElement.None;
-    private int _navigationLastPixelX;
-    private int _navigationLastPixelY;
+    private readonly ViewportNavigationRoute _navigationRoute = new();
 
     // ─── 输入动作映射系统 ───────────────────────────────────
     private EditorInputService _inputService = EditorInputService.Instance;
@@ -1311,96 +1307,6 @@ public sealed partial class EditorShell : UserControl
     }
 
     // ─── Overlay 导航输入 ──────────────────────────────
-    // HitTest uses the last presented overlay snapshot so input matches visible pixels.
-    private ViewportNavigationPressResult HandleOverlayPointerPressed(int pixelX, int pixelY)
-    {
-        var layout = GetPresentedNavigationLayout();
-        if (layout is null) return ViewportNavigationPressResult.NotHandled;
-
-        var element = ViewportNavigationHitTest.HitTest(pixelX, pixelY, layout);
-        if (element == ViewportNavigationElement.None)
-            return ViewportNavigationPressResult.NotHandled;
-
-        _navigationActiveElement = element;
-        _navigationLastPixelX = pixelX;
-        _navigationLastPixelY = pixelY;
-        SetOverlayVisualState(element, element);
-
-        switch (element)
-        {
-            case ViewportNavigationElement.PositiveX:
-            case ViewportNavigationElement.NegativeX:
-            case ViewportNavigationElement.PositiveY:
-            case ViewportNavigationElement.NegativeY:
-            case ViewportNavigationElement.PositiveZ:
-            case ViewportNavigationElement.NegativeZ:
-                SnapCameraToNavigationElement(element);
-                SetOverlayVisualState(element, ViewportNavigationElement.None);
-                EndOverlayDrag(false);
-                return ViewportNavigationPressResult.HandledClick;
-
-            case ViewportNavigationElement.GizmoCenter:
-                _navigationDragMode = ViewportNavigationDragMode.GizmoOrbit;
-                return ViewportNavigationPressResult.BeginDrag;
-
-            case ViewportNavigationElement.PanButton:
-                _navigationDragMode = ViewportNavigationDragMode.Pan;
-                return ViewportNavigationPressResult.BeginDrag;
-
-            case ViewportNavigationElement.FrameButton:
-                ExecuteViewportFrameAll();
-                return ViewportNavigationPressResult.HandledClick;
-
-            case ViewportNavigationElement.ProjectionButton:
-                ExecuteViewportToggleProjection();
-                return ViewportNavigationPressResult.HandledClick;
-
-            default:
-                return ViewportNavigationPressResult.HandledClick;
-        }
-    }
-
-    private bool HandleOverlayPointerMoved(int pixelX, int pixelY)
-    {
-        // 拖动已由 NativeHost 捕获后，即使 resize 期间 Presented Layout 暂时不可用，
-        // 也必须继续吞掉鼠标消息，避免穿透到地面 Hover/Picking。
-        if (_navigationDragMode != ViewportNavigationDragMode.None)
-        {
-            var deltaX = pixelX - _navigationLastPixelX;
-            var deltaY = pixelY - _navigationLastPixelY;
-            _navigationLastPixelX = pixelX;
-            _navigationLastPixelY = pixelY;
-
-            if (deltaX == 0 && deltaY == 0)
-                return true;
-
-            var viewportHeight = GetPresentedNavigationLayout()?.ViewportHeight
-                ?? _vulkanViewportHostPanel?.GetNativeHostInfo().Height
-                ?? 1;
-            ApplyNavigationDrag(deltaX, deltaY, Math.Max(1, viewportHeight));
-            return true;
-        }
-
-        var layout = GetPresentedNavigationLayout();
-        if (layout is null) return false;
-
-        var element = ViewportNavigationHitTest.HitTest(pixelX, pixelY, layout);
-        if (element != _navigationHoverElement)
-            SetOverlayVisualState(element, ViewportNavigationElement.None);
-
-        return element != ViewportNavigationElement.None;
-    }
-
-    private void HandleOverlayPointerReleased()
-    {
-        EndOverlayDrag(true);
-    }
-
-    private void HandleOverlayCaptureLost()
-    {
-        EndOverlayDrag(true);
-    }
-
     private ViewportNavigationLayout? GetPresentedNavigationLayout()
     {
         if (_lifecycle.State.Session is null || _vulkanViewportHostPanel is null)
@@ -1417,98 +1323,60 @@ public sealed partial class EditorShell : UserControl
         return snapshot.Layout;
     }
 
-    private void SetOverlayVisualState(
-        ViewportNavigationElement hovered,
-        ViewportNavigationElement active)
+    private bool ApplyOverlayVisualState(ViewportNavigationElement hovered, ViewportNavigationElement active)
     {
-        _navigationHoverElement = hovered;
-        _navigationActiveElement = active;
-
         if (_lifecycle.State.Session?.SetNavigationOverlayState(hovered, active) == true)
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
+        { ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged); return true; }
+        return false;
     }
 
-    private void EndOverlayDrag(bool requestCleanupFrame)
+    private ViewportNavigationPressResult HandleOverlayPointerPressed(int pixelX, int pixelY)
     {
-        var hadVisualState = _navigationActiveElement != ViewportNavigationElement.None ||
-            _navigationDragMode != ViewportNavigationDragMode.None;
+        var layout = GetPresentedNavigationLayout();
+        if (layout is null) return ViewportNavigationPressResult.NotHandled;
 
-        _navigationDragMode = ViewportNavigationDragMode.None;
-        _navigationActiveElement = ViewportNavigationElement.None;
-        _navigationLastPixelX = 0;
-        _navigationLastPixelY = 0;
+        var response = _navigationRoute.Press(pixelX, pixelY, layout);
+        if (response.Result == ViewportNavigationPressResult.NotHandled)
+            return response.Result;
 
-        if (requestCleanupFrame && hadVisualState)
-            SetOverlayVisualState(_navigationHoverElement, ViewportNavigationElement.None);
-    }
+        ApplyOverlayVisualState(response.Element, response.Element);
 
-    private void ApplyNavigationDrag(int deltaX, int deltaY, int viewportHeight)
-    {
-        if (!_sessionActive || _lifecycle.State.Session is null) return;
-        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
-
-        var previous = _cameraRoute.LastCameraState;
-        var newState = _navigationDragMode switch
+        if (response.CameraCommand is not null)
         {
-            ViewportNavigationDragMode.GizmoOrbit =>
-                SceneOrbitCameraMotion.Orbit(previous, -deltaX, -deltaY),
-            ViewportNavigationDragMode.Pan =>
-                SceneOrbitCameraMotion.Pan(previous, deltaX, deltaY, viewportHeight),
-            ViewportNavigationDragMode.Zoom =>
-                SceneOrbitCameraMotion.Dolly(previous, -deltaY),
-            _ => previous
-        };
-
-        if (newState != previous)
-        {
-            _cameraRoute.SetState(newState);
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
-        }
-    }
-
-    private void SnapCameraToNavigationElement(ViewportNavigationElement element)
-    {
-        if (!_sessionActive || _lifecycle.State.Session is null) return;
-        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
-
-        var view = element switch
-        {
-            ViewportNavigationElement.PositiveX => SceneNavigationView.PositiveX,
-            ViewportNavigationElement.NegativeX => SceneNavigationView.NegativeX,
-            ViewportNavigationElement.PositiveY => SceneNavigationView.PositiveY,
-            ViewportNavigationElement.NegativeY => SceneNavigationView.NegativeY,
-            ViewportNavigationElement.PositiveZ => SceneNavigationView.PositiveZ,
-            ViewportNavigationElement.NegativeZ => SceneNavigationView.NegativeZ,
-            _ => SceneNavigationView.Free
-        };
-
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.SnapToView(view));
-        if (result.StateChanged)
-        {
-            AppendInfoLog($"视图已切换到 {view}。");
-            if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
-        }
-    }
-
-    private void FrameNavigationTarget()
-    {
-        if (_selectionRoute.State.SelectedWorldEntity is null)
-        {
-            var prev = _cameraRoute.LastCameraState;
-            _cameraRoute.SetState(SceneOrbitCameraMotion.FrameAll(prev));
-            AppendInfoLog("已显示全部场景对象。");
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
-            return;
+            var camResult = _cameraRoute.Apply(response.CameraCommand);
+            if (camResult.StateChanged && camResult.NeedsFrame)
+                ScheduleScene3dFrame(camResult.Reason);
+            ApplyOverlayVisualState(response.Element, ViewportNavigationElement.None);
+            _navigationRoute.Release(false);
         }
 
-        var target = ViewportCameraFocusTarget.Compute(
-            _selectionRoute.State.SelectedWorldEntity.EntityId, _worldState!);
-        if (target is null) return;
+        return response.Result;
+    }
 
-        var (cx, cy, cz, r) = target.Value;
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.FrameSelected(cx, cy, cz, r));
-        AppendInfoLog($"已聚焦实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName}。");
-        if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
+    private bool HandleOverlayPointerMoved(int pixelX, int pixelY)
+    {
+        var layout = GetPresentedNavigationLayout();
+        var vhFallback = _vulkanViewportHostPanel?.GetNativeHostInfo().Height ?? 1;
+        var response = _navigationRoute.Move(pixelX, pixelY, layout, _cameraRoute, vhFallback);
+        if (response.VisualStateChanged)
+            ApplyOverlayVisualState(response.Hovered, response.Active);
+        if (response.NeedsFrame)
+            ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
+        return response.Handled;
+    }
+
+    private void HandleOverlayPointerReleased()
+    {
+        var r = _navigationRoute.Release(true);
+        if (r.NeedsCleanupFrame)
+            ApplyOverlayVisualState(_navigationRoute.HoverElement, ViewportNavigationElement.None);
+    }
+
+    private void HandleOverlayCaptureLost()
+    {
+        var r = _navigationRoute.Release(true);
+        if (r.NeedsCleanupFrame)
+            ApplyOverlayVisualState(_navigationRoute.HoverElement, ViewportNavigationElement.None);
     }
 
     private void HandleViewportEscape()
@@ -1642,10 +1510,10 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void HandleViewportPointerLeft()
     {
-        if (_navigationDragMode == ViewportNavigationDragMode.None &&
-            _navigationHoverElement != ViewportNavigationElement.None)
+        if (_navigationRoute.DragMode == ViewportNavigationDragMode.None)
         {
-            SetOverlayVisualState(ViewportNavigationElement.None, ViewportNavigationElement.None);
+            var r = _navigationRoute.ClearHover();
+            if (r.VisualStateChanged) ApplyOverlayVisualState(r.Hovered, r.Active);
         }
 
         if (_statusBarPanel is null) return;
