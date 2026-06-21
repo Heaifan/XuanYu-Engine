@@ -34,6 +34,7 @@ using FluidWarfare.Editor.Windows.Viewport.Selection.Focus;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Resize;
 using FluidWarfare.Editor.Windows.Shell.Feedback;
 using FluidWarfare.Editor.Windows.Shell.Windows;
+using FluidWarfare.Editor.Windows.Shell.Startup;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
@@ -105,6 +106,7 @@ public sealed partial class EditorShell : UserControl
     private readonly ViewportFocusSelectionRoute _viewportFocusRoute = new();
     private readonly Scene3dResizeRenderRoute _resizeRenderRoute = new();
     private readonly EditorShellWindowRoute _windowRoute = new();
+    private readonly EditorStartupBootstrapRoute _startupRoute;
 
     // ─── 输入动作映射系统 ───────────────────────────────────
     private EditorInputService _inputService = EditorInputService.Instance;
@@ -159,6 +161,7 @@ public sealed partial class EditorShell : UserControl
             0, 0, 0, 0, 0, 0, 0, "无", 0, false,
             0, 0, 0,
             _probeRoute.State.Gate.CanRun ? "可用" : "不可用（已隔离）", 0);
+        _startupRoute = new(_projectBootstrap, _worldBootstrap, _renderSceneStore, _selectionRoute);
         AvaloniaXamlLoader.Load(this);
         FindShellControls();
         SubscribePanelEvents();
@@ -393,74 +396,41 @@ public sealed partial class EditorShell : UserControl
 
     private void LoadSampleProject()
     {
-        var result = _projectBootstrap.LoadSampleProject();
+        var result = _startupRoute.LoadSampleProject();
+        ApplyStartupBootstrapResult(result);
+    }
+
+    private void ApplyStartupBootstrapResult(EditorStartupBootstrapResult result)
+    {
         if (!result.Success)
         {
-            ShowProjectLoadFailure(result.LogMessage, FluidWarfare.Project.Validation.ProjectValidationReport.Empty);
+            _viewportPlaceholderPanel?.ShowNoWorldEntity();
+            var sel = new EditorSelection("项目加载", "加载失败", $"项目加载失败：{result.FailureMessage}");
+            _inspectorPanel?.ShowSelection(sel);
+            _statusBarPanel?.SetCurrentSelection("项目加载失败");
+            AppendErrorLog($"项目加载失败：{result.FailureMessage}");
             return;
         }
 
-        // 项目加载成功，创建 World 并恢复 UI
-        var project = _projectBootstrap.Project;
-        if (project is not null)
-        {
-            ShowLoadedProject(project);
-            CreateWorldFromProject(project);
-            AppendInfoLog(result.LogMessage);
-        }
-    }
-
-    private void ShowProjectLoadFailure(string message, ProjectValidationReport report)
-    {
-        // 旧项目面板已移除，使用左侧双树代替
-        _viewportPlaceholderPanel?.ShowNoWorldEntity();
-
-        var selection = new EditorSelection(
-            "项目加载",
-            "加载失败",
-            $"项目加载失败：{message}");
-
-        _inspectorPanel?.ShowSelection(selection);
-        _statusBarPanel?.SetCurrentSelection("项目加载失败");
-        AppendErrorLog($"项目加载失败：{message}");
-
-        if (report.IssueCount > 1)
-        {
-            AppendWarningLog($"项目校验发现 {report.IssueCount} 个问题，请先修复项目结构。");
-        }
-    }
-
-    private void CreateWorldFromProject(GameProjectInfo project)
-    {
-        if (_contentFiles is null || _contentFiles.Count == 0)
-        { RebuildAndShowHierarchy(); EmptyWorldFallback(); return; }
-
-        var input = new WorldBootstrapInput(project, _contentFiles);
-        var result = _worldBootstrap.Build(input);
-
-        if (!result.HasEntities)
-        { RebuildAndShowHierarchy(); EmptyWorldFallback(); return; }
-
-        _worldState = result.World;
-        _renderSceneStore.Initialize(result.RenderScene);
-        _selectionRoute.State.SetFirstEntityId(result.FirstEntityId);
-
-        AppendInfoLog("最小 World 已创建。");
-        foreach (var s in result.SeedSourcePaths)
-            AppendInfoLog($"已从项目内容生成 World 占位实体：{s}。");
-        AppendInfoLog($"RenderScene 已生成，渲染对象数量：{result.RenderScene.Objects.Count}。");
-
+        _projectInfo = result.Project;
+        _contentFiles = result.Project?.ContentFiles;
         RebuildAndShowHierarchy();
-        _viewportPlaceholderPanel?.ShowNoWorldEntity();
-        _viewportPlaceholderPanel?.ShowRenderSceneSummary(
-            _viewportSelectionPresenter.CreateRenderSceneSummary(result.RenderScene));
-    }
 
-    private void EmptyWorldFallback()
-    {
-        _viewportPlaceholderPanel?.ShowNoWorldEntity();
-        _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
-        AppendWarningLog("项目中没有可生成 World 占位实体的单位模板文件。");
+        if (result.WorldResult is { HasEntities: true })
+        {
+            _worldState = result.WorldResult.World;
+            var summary = _viewportSelectionPresenter.CreateRenderSceneSummary(result.WorldResult.RenderScene);
+            _viewportPlaceholderPanel?.ShowNoWorldEntity();
+            _viewportPlaceholderPanel?.ShowRenderSceneSummary(summary);
+        }
+        else
+        {
+            _viewportPlaceholderPanel?.ShowNoWorldEntity();
+            _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
+        }
+
+        foreach (var m in result.LogMessages) AppendInfoLog(m);
+        foreach (var w in result.LogWarnings) AppendWarningLog(w);
     }
 
     private void ProbeVulkanBackend()
@@ -1898,15 +1868,4 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel?.ShowClearStatus("Vulkan 后端不可用。");
         }
     }
-
-    private void ShowLoadedProject(GameProjectInfo project)
-    {
-        _projectInfo = project;
-        _contentFiles = project.ContentFiles;
-
-        // 项目加载后重建左侧双树
-        RebuildAndShowHierarchy();
-    }
-
-
 }
