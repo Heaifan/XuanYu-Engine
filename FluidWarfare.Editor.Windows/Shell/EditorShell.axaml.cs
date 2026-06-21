@@ -40,6 +40,7 @@ using FluidWarfare.Editor.Windows.Shell.Input;
 using FluidWarfare.Editor.Windows.Shell.Input.Picking;
 using FluidWarfare.Editor.Windows.Shell.Panels;
 using FluidWarfare.Editor.Windows.Shell.Scene3D.Commands;
+using FluidWarfare.Editor.Windows.Shell.Diagnostics;
 using FluidWarfare.Editor.Windows.Shell.Transform;
 using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
 using FluidWarfare.Editor.Windows.Shell.Menu;
@@ -122,6 +123,7 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorPanelApplyRoute _panelApplyRoute = new();
     private readonly EditorTransformApplyRoute _transformApplyRoute = new();
     private readonly EditorGroundPlacementRoute _groundPlacementRoute = new();
+    private readonly EditorDiagnosticsRefreshRoute _diagnosticsRoute = new();
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
@@ -169,10 +171,13 @@ public sealed partial class EditorShell : UserControl
         AvaloniaXamlLoader.Load(this);
         FindShellControls();
         _panelApplyRoute.SetPanels(new(_inspectorPanel, _statusBarPanel, _viewportPlaceholderPanel, _dockPanel));
+        _lifecycle = new Scene3dSessionLifecycle(_renderSceneStore);
+        _diagnosticsRoute.SetContext(new(_probeRoute, _feedback, _lifecycle, _renderSceneStore, _cameraRoute, _runMenu,
+            () => _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
+            _vulkanViewportHostPanel, _statusBarPanel, _selectionRoute, _pointerRoute, _worldDirtyState, _worldState));
         SubscribePanelEvents();
         InitializeFeedback();
         LoadSampleProject();
-        _lifecycle = new Scene3dSessionLifecycle(_renderSceneStore);
         RunStartupVulkanProbe();
         ProbeVulkanValidation();
     }
@@ -358,15 +363,11 @@ public sealed partial class EditorShell : UserControl
 
     private void ApplyResizeRenderResult(Scene3dResizeRenderResult result)
     {
-        if (result.LogMessage is not null)
-        { if (result.LogIsWarning) AppendWarningLog(result.LogMessage); else AppendInfoLog(result.LogMessage); }
-        if (result.NewRenderSeq > 0) _renderSeq = result.NewRenderSeq;
+        var seq = _diagnosticsRoute.ApplyResizeResult(result, AppendInfoLog, AppendWarningLog);
+        if (seq > 0) _renderSeq = seq;
         if (result.Action == Scene3dResizeAction.ClearFallbackAfterFailure) _sessionActive = false;
         if (result.Action is Scene3dResizeAction.ClearFallback or Scene3dResizeAction.ClearFallbackAfterFailure)
-        {
-            if (_probeRoute.State.Clear.IsSucceeded) _renderLastMode = "Clear";
-            RefreshDiagnostics();
-        }
+        { if (_probeRoute.State.Clear.IsSucceeded) _renderLastMode = "Clear"; RefreshDiagnostics(); }
     }
 
     private void InitializeFeedback()
@@ -445,11 +446,7 @@ public sealed partial class EditorShell : UserControl
         foreach (var w in result.LogWarnings) AppendWarningLog(w);
     }
 
-    private void ProbeVulkanValidation()
-    {
-        _probeRoute.ProbeValidation(AppendInfoLog, AppendWarningLog);
-        RefreshDiagnostics();
-    }
+    private void ProbeVulkanValidation() => _diagnosticsRoute.ProbeValidation(AppendInfoLog, AppendWarningLog);
 
     private void HandleScene3dRunRequested(object? sender, EventArgs e)
     {
@@ -723,25 +720,8 @@ public sealed partial class EditorShell : UserControl
 
     private void ScheduleScene3dFrame(VulkanScene3dFrameReason reason)
     {
-        if (_lifecycle.State.FrameSubmitRoute is null) return;
-
-        var entityPos = _pointerRoute.Session.IsActive
-            ? _pointerRoute.Session.PreviewTransform.Position
-            : _selectionRoute.State.SelectedWorldEntity is not null
-                ? _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId)?.Value ?? Vector3d.Zero
-                : Vector3d.Zero;
-
-        _lifecycle.State.FrameSubmitRoute.Request(new Scene3dFrameSubmitInput(
-            reason, _cameraRoute.LastCameraState, _cameraRoute.CameraRevision, _renderSeq,
-            _pointerRoute.IsMoveToolActive,
-            _selectionRoute.State.SelectedWorldEntity?.EntityId ?? default,
-            entityPos,
-            _pointerRoute.HoveredElement,
-            _worldDirtyState.Revision), () =>
-        {
-            _renderSeq = _lifecycle.State.FrameSubmitRoute.RenderSeq;
-            RefreshDiagnostics();
-        });
+        _diagnosticsRoute.ScheduleFrame(reason, _renderSeq, _selectionRoute, _worldState,
+            () => { _renderSeq = _lifecycle.State.FrameSubmitRoute?.RenderSeq ?? _renderSeq; RefreshDiagnostics(); });
     }
 
     // ─── 选择路由 ────────────────────────────────────────────
@@ -983,20 +963,7 @@ public sealed partial class EditorShell : UserControl
 
 
 
-    private void RefreshDiagnostics()
-    {
-        _feedback.RefreshViewportStatusLine(_sessionActive, _lifecycle.State, _probeRoute.State, _renderLastMode);
-        var ps = _probeRoute.State;
-        var nh = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
-        var s3d = ps.Scene3d;
-        _feedback.RefreshAllDiagnostics(ps, nh, _renderSceneStore.Current.Objects, s3d.IsSucceeded, s3d.Message, s3d.CameraSummary,
-            s3d.GridVertexCount, s3d.GridLineCount, s3d.UnitVertexCount, s3d.UnitTriangleCount,
-            s3d.RenderedUnitCount, s3d.RenderObjectCount, s3d.IgnoredObjectCount, s3d.DrawCallCount, s3d.DepthFormat,
-            s3d.DepthAttachmentCount, s3d.DepthTestEnabled, ps.Instance.ElapsedMilliseconds, ps.Device.ElapsedMilliseconds,
-            ps.Swapchain.ElapsedMilliseconds, ps.Clear.ElapsedMilliseconds, s3d.ElapsedMilliseconds);
-        _runMenu.SetScene3dEnabled(VulkanScene3dRunGate.Evaluate().CanRun);
-        _statusBarPanel?.SetVulkanStatus(ps.Backend.IsAvailable ? "已接入" : "不可用");
-    }
+    private void RefreshDiagnostics() => _diagnosticsRoute.Refresh(_sessionActive, _renderLastMode);
 
 
     private static bool TryGetValidViewportSize(
@@ -1020,15 +987,5 @@ public sealed partial class EditorShell : UserControl
         return true;
     }
 
-    private void UpdateVulkanViewportHost()
-    {
-        if (_probeRoute.State.Backend.IsAvailable)
-        {
-            _vulkanViewportHostPanel?.ShowClearStatus("Vulkan 后端就绪，等待 Surface/Swapchain。");
-        }
-        else
-        {
-            _vulkanViewportHostPanel?.ShowClearStatus("Vulkan 后端不可用。");
-        }
-    }
+    private void UpdateVulkanViewportHost() => _diagnosticsRoute.UpdateViewportHost();
 }

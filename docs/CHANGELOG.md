@@ -1777,15 +1777,40 @@ EditorShell (1348 行)
   - `HandleScrubValueChanged` / `HandleScrubCancelled` → `_transformApplyRoute`
   - `HandleTransformApply` / `CurrentEntityTransform` → `_transformApplyRoute`
 
+---
+
+### 8.7.6.8E-2 — Diagnostics / Refresh / Probe Residual 收口
+
+#### 新增（5 文件 `Shell/Diagnostics/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorDiagnosticsRefreshRoute.cs` | 53 | RefreshDiagnostics / ScheduleFrame / ProbeValidation / Resize / ViewportHost |
+| `EditorDiagnosticsRefreshRequest.cs` | 31 | 诊断上下文依赖集合 |
+| `EditorDiagnosticsRefreshResult.cs` | 3 | DiagnosticsRefreshed / NewRenderSeq |
+| `EditorDiagnosticsRefreshState.cs` | 6 | RenderSeq 追踪 |
+| `EditorDiagnosticsRefreshKind.cs` | 3 | 操作类型枚举 |
+
+#### 修改
+
+- `EditorShell.axaml.cs`（1034→991，-43 行）：
+  - `RefreshDiagnostics` → `_diagnosticsRoute.Refresh()`
+  - `ScheduleScene3dFrame` → `_diagnosticsRoute.ScheduleFrame()`
+  - `ProbeVulkanValidation` → `_diagnosticsRoute.ProbeValidation()`
+  - `ApplyResizeRenderResult` → `_diagnosticsRoute.ApplyResizeResult()`
+  - `UpdateVulkanViewportHost` → `_diagnosticsRoute.UpdateViewportHost()`
+  - 构造期 `_lifecycle` 初始化提前到 Context 设置之前，修复 NRE
+
 #### Shell 现状
 
 ```text
-EditorShell (1034 行)
+EditorShell (991 行)
 ├── Input 子系统（423 行，3 目录 15 文件）
 ├── Scene3D Commands（106 行，5 文件）
 ├── Panels（85 行，5 文件）
 ├── Panels（85 行，5 文件）
 ├── Transform（145 行，5 文件）
+├── Diagnostics（96 行，5 文件）
 ├── Startup（4 个 Route 文件）
 ├── Lifecycle（5 个 Route 文件）
 └── 剩余：面板/选择/状态/诊断/Probe 约 500 行
