@@ -33,6 +33,7 @@ using FluidWarfare.Editor.Windows.Viewport.Navigation;
 using FluidWarfare.Editor.Windows.Viewport.Selection.Focus;
 using FluidWarfare.Editor.Windows.Viewport.Scene3D.Resize;
 using FluidWarfare.Editor.Windows.Shell.Feedback;
+using FluidWarfare.Editor.Windows.Shell.Windows;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
@@ -103,6 +104,7 @@ public sealed partial class EditorShell : UserControl
     private readonly ViewportNavigationRoute _navigationRoute = new();
     private readonly ViewportFocusSelectionRoute _viewportFocusRoute = new();
     private readonly Scene3dResizeRenderRoute _resizeRenderRoute = new();
+    private readonly EditorShellWindowRoute _windowRoute = new();
 
     // ─── 输入动作映射系统 ───────────────────────────────────
     private EditorInputService _inputService = EditorInputService.Instance;
@@ -341,42 +343,18 @@ public sealed partial class EditorShell : UserControl
         if (result.EntityToShow is not null) ShowWorldEntitySelection(result.EntityToShow);
     }
 
-    private void HandlePreferencesClicked(object? sender, RoutedEventArgs e)
-    {
-        AppendInfoLog("已打开偏好设置。");
-        OpenPreferencesWindow();
-    }
+    private void HandlePreferencesClicked(object? sender, RoutedEventArgs e) =>
+        ApplyWindowResult(_windowRoute.Open(EditorShellWindowCommand.Preferences));
 
-    private void HandleShowInputBindingsClicked(object? sender, RoutedEventArgs e)
-    {
-        AppendInfoLog("已打开键位设置。");
-        OpenPreferencesWindow();
-    }
+    private void HandleShowInputBindingsClicked(object? sender, RoutedEventArgs e) =>
+        ApplyWindowResult(_windowRoute.Open(EditorShellWindowCommand.InputBindings));
 
-    private void HandleAboutFluidWarfareClicked(object? sender, RoutedEventArgs e)
-    {
-        AppendInfoLog("已打开关于 FluidWarfare。");
-        OpenAboutWindow();
-    }
+    private void HandleAboutFluidWarfareClicked(object? sender, RoutedEventArgs e) =>
+        ApplyWindowResult(_windowRoute.Open(EditorShellWindowCommand.About));
 
-    private Window? _preferencesWindow;
-    private Window? _aboutWindow;
+    private void ApplyWindowResult(EditorShellWindowResult r)
+    { if (r.LogMessage is not null) AppendInfoLog(r.LogMessage); }
 
-    private void OpenPreferencesWindow()
-    {
-        if (_preferencesWindow is { IsVisible: true }) { _preferencesWindow.Activate(); return; }
-        _preferencesWindow = new Preferences.EditorPreferencesWindow();
-        _preferencesWindow.Closed += (_, _) => _preferencesWindow = null;
-        _preferencesWindow.Show();
-    }
-
-    private void OpenAboutWindow()
-    {
-        if (_aboutWindow is { IsVisible: true }) { _aboutWindow.Activate(); return; }
-        _aboutWindow = new About.AboutFluidWarfareWindow();
-        _aboutWindow.Closed += (_, _) => _aboutWindow = null;
-        _aboutWindow.Show();
-    }
 
     private void OnHierarchyEntitySelected(string? entityId)
     {
@@ -1193,7 +1171,8 @@ public sealed partial class EditorShell : UserControl
 
     private void ExecuteOpenPreferences()
     {
-        OpenPreferencesWindow();
+        var r = _windowRoute.Open(EditorShellWindowCommand.Preferences);
+        if (r.LogMessage is not null) AppendInfoLog(r.LogMessage);
     }
 
     private void ExecuteCancelCurrentTool()
