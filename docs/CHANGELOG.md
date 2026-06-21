@@ -1865,6 +1865,26 @@ EditorShell (970 行)
 8E 系列：1129 → 970（-159，4 个子阶段）
 累计减少：2071 行
 ```
+
+---
+
+### 8.7.7A — InspectorPanel SRP 拆分
+
+`InspectorPanel.axaml.cs` 从 387 行拆至 84 行。主面板只保留控件查找、事件声明和薄转发方法。
+
+#### 新增（4 文件 `Panels/Inspector/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `InspectorSelectionView.cs` | 35 | 空选择/项目文件/世界实体展示切换 |
+| `InspectorTransformView.cs` | 45 | 坐标输入框、校验错误、按钮状态管理 |
+| `InspectorScrubInput.cs` | 53 | X/Y/Z 标签拖拽微调输入处理 |
+| `InspectorTransformBinder.cs` | 38 | Enter/Esc 键盘 + Apply/Reset/GroundPlace 按钮绑定 |
+
+#### 修改
+
+- `InspectorPanel.axaml.cs`（387→84 行）
+- `InspectorPanel.axaml`（94→77 行）：移除 XAML 事件绑定（事件现在通过子模块程序化绑定）
   - `RefreshDiagnostics` → `_diagnosticsRoute.Refresh()`
   - `ScheduleScene3dFrame` → `_diagnosticsRoute.ScheduleFrame()`
   - `ProbeVulkanValidation` → `_diagnosticsRoute.ProbeValidation()`

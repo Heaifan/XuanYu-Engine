@@ -34,36 +34,22 @@
 
           <Grid ColumnDefinitions="Auto,8,*">
             <TextBlock Grid.Column="0" x:Name="ScrubLabelX" Text="X" Foreground="#C9D1D9"
-                       VerticalAlignment="Center" Cursor="SizeWestEast"
-                       PointerPressed="OnScrubPointerPressed"
-                       PointerMoved="OnScrubPointerMoved"
-                       PointerReleased="OnScrubPointerReleased"
-                       PointerCaptureLost="OnScrubCaptureLost" />
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
             <TextBox Grid.Column="2" x:Name="TransformXText" Text="0.000"
                      Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
-                     TextChanged="OnTransformTextChanged" UseFloatingPlaceholder="False" />
+                     UseFloatingPlaceholder="False" />
           </Grid>
           <Grid ColumnDefinitions="Auto,8,*">
             <TextBlock Grid.Column="0" x:Name="ScrubLabelY" Text="Y" Foreground="#C9D1D9"
-                       VerticalAlignment="Center" Cursor="SizeWestEast"
-                       PointerPressed="OnScrubPointerPressed"
-                       PointerMoved="OnScrubPointerMoved"
-                       PointerReleased="OnScrubPointerReleased"
-                       PointerCaptureLost="OnScrubCaptureLost" />
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
             <TextBox Grid.Column="2" x:Name="TransformYText" Text="0.000"
-                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
-                     TextChanged="OnTransformTextChanged" />
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
           </Grid>
           <Grid ColumnDefinitions="Auto,8,*">
             <TextBlock Grid.Column="0" x:Name="ScrubLabelZ" Text="Z" Foreground="#C9D1D9"
-                       VerticalAlignment="Center" Cursor="SizeWestEast"
-                       PointerPressed="OnScrubPointerPressed"
-                       PointerMoved="OnScrubPointerMoved"
-                       PointerReleased="OnScrubPointerReleased"
-                       PointerCaptureLost="OnScrubCaptureLost" />
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
             <TextBox Grid.Column="2" x:Name="TransformZText" Text="0.000"
-                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
-                     TextChanged="OnTransformTextChanged" />
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
           </Grid>
 
           <!-- 错误信息 -->
@@ -73,16 +59,13 @@
           <!-- 按钮行 -->
           <StackPanel Orientation="Horizontal" Spacing="6">
             <Button x:Name="ApplyButton" Content="应用坐标"
-                    Click="OnApplyClicked"
                     IsEnabled="False"
                     Foreground="#FFFFFF" Background="#1769AA"
                     BorderThickness="0" Padding="10,4" />
             <Button x:Name="ResetButton" Content="重置"
-                    Click="OnResetClicked"
                     Foreground="#E6EDF3" Background="#30363D"
                     BorderThickness="0" Padding="10,4" />
             <Button x:Name="GroundPlaceButton" Content="在地面放置"
-                    Click="OnGroundPlaceClicked"
                     IsEnabled="False"
                     Foreground="#FFFFFF" Background="#238636"
                     BorderThickness="0" Padding="10,4" />
