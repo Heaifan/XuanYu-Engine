@@ -40,6 +40,7 @@ using FluidWarfare.Editor.Windows.Shell.Input;
 using FluidWarfare.Editor.Windows.Shell.Input.Picking;
 using FluidWarfare.Editor.Windows.Shell.Panels;
 using FluidWarfare.Editor.Windows.Shell.Scene3D.Commands;
+using FluidWarfare.Editor.Windows.Shell.Composition;
 using FluidWarfare.Editor.Windows.Shell.Diagnostics;
 using FluidWarfare.Editor.Windows.Shell.Transform;
 using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
@@ -124,6 +125,8 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorTransformApplyRoute _transformApplyRoute = new();
     private readonly EditorGroundPlacementRoute _groundPlacementRoute = new();
     private readonly EditorDiagnosticsRefreshRoute _diagnosticsRoute = new();
+    private EditorShellRouteSet _r = null!;
+    private EditorShellControlRefs _c = null!;
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
@@ -160,21 +163,29 @@ public sealed partial class EditorShell : UserControl
 
     public EditorShell()
     {
-        // _probeRoute.State.Gate 由字段初始化器在构造函数体之前执行
-        _probeRoute.State.Scene3d = new VulkanScene3dInfo(
-            VulkanScene3dStatus.NotChecked,
-            _probeRoute.State.Gate.Message,
-            0, 0, 0, 0, 0, 0, 0, "无", 0, false,
-            0, 0, 0,
-            _probeRoute.State.Gate.CanRun ? "可用" : "不可用（已隔离）", 0);
-        _startupRoute = new(_projectBootstrap, _worldBootstrap, _renderSceneStore, _selectionRoute);
         AvaloniaXamlLoader.Load(this);
-        FindShellControls();
-        _panelApplyRoute.SetPanels(new(_inspectorPanel, _statusBarPanel, _viewportPlaceholderPanel, _dockPanel));
-        _lifecycle = new Scene3dSessionLifecycle(_renderSceneStore);
+        var c = EditorShellControlRefs.Find(this);
+        _inspectorPanel = c.Inspector; _debugDockPanel = c.DebugDock; _statusBarPanel = c.StatusBar;
+        _viewportPlaceholderPanel = c.ViewportPlaceholder; _vulkanViewportHostPanel = c.VulkanViewportHost;
+        _dockPanel = c.DockPanel; _viewportToolPalette = c.ToolPalette;
+
+        _r = EditorShellRouteBuild.Build(c, out _lifecycle);
+        _c = c;
+        // Apply route fields from composition
+        _selectionRoute = _r.Selection; _projectBootstrap = _r.ProjectBootstrap; _worldBootstrap = _r.WorldBootstrap;
+        _probeRoute = _r.Probe; _feedback = _r.Feedback; _runMenu = _r.RunMenu; _startupVulkanRoute = _r.StartupVulkan;
+        _viewportPickRoute = _r.Pick; _cameraRoute = _r.Camera; _navigationRoute = _r.Navigation;
+        _viewportFocusRoute = _r.Focus; _resizeRenderRoute = _r.ResizeRender; _windowRoute = _r.Window;
+        _startupRoute = _r.Startup; _attachRoute = _r.Attach; _detachRoute = _r.Detach;
+        _viewportInputRoute = _r.Input; _groundHoverRoute = _r.GroundHover; _pickInputRoute = _r.PickInput;
+        _scene3dCommandRoute = _r.Scene3dCommand; _panelApplyRoute = _r.PanelApply;
+        _transformApplyRoute = _r.TransformApply; _groundPlacementRoute = _r.GroundPlacement;
+        _diagnosticsRoute = _r.Diagnostics; _renderSceneStore = _r.RenderSceneStore; _pointerRoute = _r.Pointer;
+
         _diagnosticsRoute.SetContext(new(_probeRoute, _feedback, _lifecycle, _renderSceneStore, _cameraRoute, _runMenu,
             () => _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
             _vulkanViewportHostPanel, _statusBarPanel, _selectionRoute, _pointerRoute, _worldDirtyState, _worldState));
+
         SubscribePanelEvents();
         InitializeFeedback();
         LoadSampleProject();
@@ -182,75 +193,29 @@ public sealed partial class EditorShell : UserControl
         ProbeVulkanValidation();
     }
 
-    private void FindShellControls()
-    {
-        _inspectorPanel = this.FindControl<InspectorPanel>("InspectorPanel");
-        _debugDockPanel = this.FindControl<DebugDockPanel>("DebugDockPanel");
-        _statusBarPanel = this.FindControl<StatusBarPanel>("EditorStatusBarPanel");
-        _viewportPlaceholderPanel = this.FindControl<ViewportPlaceholderPanel>("ViewportPlaceholderPanel");
-        _vulkanViewportHostPanel = this.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanel");
-        _viewportToolPalette = this.FindControl<ViewportToolPalette>("ViewportToolPalette");
-        if (_viewportToolPalette is not null)
-            _viewportToolPalette.ToolChanged += HandleViewportToolChanged;
-        _dockPanel = this.FindControl<ProjectWorldDockPanel>("ProjectWorldDockPanel");
-        var runMenuBtn = this.FindControl<Button>("RunMenuButton");
-        if (runMenuBtn is not null) _runMenu.Attach(runMenuBtn);
-        _runMenu.RestartScene3dRequested += HandleRestartScene3d;
-
-        // 设置/帮助菜单
-        var prefsItem = this.FindControl<MenuItem>("PreferencesMenuItem");
-        if (prefsItem is not null) prefsItem.Click += HandlePreferencesClicked;
-        var bindingsItem = this.FindControl<MenuItem>("ShowInputBindingsMenuItem");
-        if (bindingsItem is not null) bindingsItem.Click += HandleShowInputBindingsClicked;
-        var aboutItem = this.FindControl<MenuItem>("AboutFluidWarfareMenuItem");
-        if (aboutItem is not null) aboutItem.Click += HandleAboutFluidWarfareClicked;
-    }
+    private void FindShellControls() { } // Controls found via EditorShellControlRefs.Find in constructor
 
     private void SubscribePanelEvents()
     {
-        if (_viewportPlaceholderPanel is not null)
+        if (_c.ViewportPlaceholder is not null) _c.ViewportPlaceholder.ViewportFocused += HandleViewportFocused;
+        if (_c.DockPanel is not null) { _c.DockPanel.EntitySelectionRequested += OnHierarchyEntitySelected; _c.DockPanel.ContentSelectionRequested += OnProjectContentSelected; }
+        if (_c.VulkanViewportHost is not null)
         {
-            _viewportPlaceholderPanel.ViewportFocused += HandleViewportFocused;
+            _c.VulkanViewportHost.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
+            _c.VulkanViewportHost.RawPointerButtonDown += HandleRawPointerButtonDown; _c.VulkanViewportHost.RawPointerButtonUp += HandleRawPointerButtonUp;
+            _c.VulkanViewportHost.RawPointerMoved += HandleRawPointerMoved; _c.VulkanViewportHost.RawKeyDown += HandleRawKeyDown; _c.VulkanViewportHost.RawKeyUp += HandleRawKeyUp;
+            _c.VulkanViewportHost.RawMouseWheel += HandleRawMouseWheel; _c.VulkanViewportHost.RawInputFocusLost += HandleRawInputFocusLost;
+            _c.VulkanViewportHost.PickRequested += HandleViewportPick; _c.VulkanViewportHost.NavigationPointerPressed += HandleOverlayPointerPressed;
+            _c.VulkanViewportHost.NavigationPointerMoved += HandleOverlayPointerMoved; _c.VulkanViewportHost.NavigationPointerReleased += HandleOverlayPointerReleased;
+            _c.VulkanViewportHost.NavigationCaptureLost += HandleOverlayCaptureLost; _c.VulkanViewportHost.SceneToolPointerPressed += HandleSceneToolPointerPressed;
+            _c.VulkanViewportHost.SceneToolPointerReleased += HandleSceneToolPointerReleased; _c.VulkanViewportHost.PointerMoved += HandleViewportPointerMoved;
+            _c.VulkanViewportHost.PointerLeft += HandleViewportPointerLeft;
         }
-
-        if (_dockPanel is not null)
+        if (_c.Inspector is not null)
         {
-            _dockPanel.EntitySelectionRequested += OnHierarchyEntitySelected;
-            _dockPanel.ContentSelectionRequested += OnProjectContentSelected;
-        }
-
-        if (_vulkanViewportHostPanel is not null)
-        {
-            _vulkanViewportHostPanel.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
-            // 原始输入事件转发由 WindowsViewportInputTranslator + ExecuteInputAction 处理
-            // 在 AttachedToVisualTree 后初始化
-            _vulkanViewportHostPanel.RawPointerButtonDown += HandleRawPointerButtonDown;
-            _vulkanViewportHostPanel.RawPointerButtonUp += HandleRawPointerButtonUp;
-            _vulkanViewportHostPanel.RawPointerMoved += HandleRawPointerMoved;
-            _vulkanViewportHostPanel.RawKeyDown += HandleRawKeyDown;
-            _vulkanViewportHostPanel.RawKeyUp += HandleRawKeyUp;
-            _vulkanViewportHostPanel.RawMouseWheel += HandleRawMouseWheel;
-            _vulkanViewportHostPanel.RawInputFocusLost += HandleRawInputFocusLost;
-            _vulkanViewportHostPanel.PickRequested += HandleViewportPick;
-            _vulkanViewportHostPanel.NavigationPointerPressed += HandleOverlayPointerPressed;
-            _vulkanViewportHostPanel.NavigationPointerMoved += HandleOverlayPointerMoved;
-            _vulkanViewportHostPanel.NavigationPointerReleased += HandleOverlayPointerReleased;
-            _vulkanViewportHostPanel.NavigationCaptureLost += HandleOverlayCaptureLost;
-            _vulkanViewportHostPanel.SceneToolPointerPressed += HandleSceneToolPointerPressed;
-            _vulkanViewportHostPanel.SceneToolPointerReleased += HandleSceneToolPointerReleased;
-            _vulkanViewportHostPanel.PointerMoved += HandleViewportPointerMoved;
-            _vulkanViewportHostPanel.PointerLeft += HandleViewportPointerLeft;
-        }
-
-        if (_inspectorPanel is not null)
-        {
-            _inspectorPanel.TransformDraftChanged += HandleTransformDraftChanged;
-            _inspectorPanel.TransformApplyRequested += HandleTransformApply;
-            _inspectorPanel.TransformResetRequested += HandleTransformReset;
-            _inspectorPanel.GroundPlacementRequested += HandleGroundPlacementToggle;
-            _inspectorPanel.ScrubValueChanged += HandleScrubValueChanged;
-            _inspectorPanel.ScrubCompleted += HandleScrubCompleted;
-            _inspectorPanel.ScrubCancelled += HandleScrubCancelled;
+            _c.Inspector.TransformDraftChanged += HandleTransformDraftChanged; _c.Inspector.TransformApplyRequested += HandleTransformApply;
+            _c.Inspector.TransformResetRequested += HandleTransformReset; _c.Inspector.GroundPlacementRequested += HandleGroundPlacementToggle;
+            _c.Inspector.ScrubValueChanged += HandleScrubValueChanged; _c.Inspector.ScrubCompleted += HandleScrubCompleted; _c.Inspector.ScrubCancelled += HandleScrubCancelled;
         }
     }
 

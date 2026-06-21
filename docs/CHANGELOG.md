@@ -1794,6 +1794,44 @@ EditorShell (1348 行)
 #### 修改
 
 - `EditorShell.axaml.cs`（1034→991，-43 行）：
+
+---
+
+### 8.7.6.8E-3 — Constructor / FindControls / Route Wiring
+
+#### 新增（5 文件 `Shell/Composition/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShellRouteBuild.cs` | 75 | 创建并初始化全部 Route（RouteBuild.Build） |
+| `EditorShellRouteSet.cs` | 56 | 统一 Route 引用集合（26 个 Route 的类型安全记录） |
+| `EditorShellControlRefs.cs` | 40 | FindControl 结果记录 + Find() 静态方法 |
+| `EditorShellCompositionResult.cs` | 9 | Routes + Controls + Lifecycle 组合根结果 |
+| `EditorShellEventBinder.cs` | 6 | 占位（事件绑定保留在 Shell 中） |
+
+#### 修改
+
+- `EditorShell.axaml.cs`（991→956，-35 行）：
+  - 构造函数从 22 行压缩为 12 行
+  - `FindShellControls` 主体 → `EditorShellControlRefs.Find(this)`
+  - Route 创建/Scene3dInfo 初始化/Context 设置 → `EditorShellRouteBuild.Build()`
+  - `SubscribePanelEvents` 改用 `_c.xxx` 引用
+  - 新增 `_r / _c` 字段持有 RouteSet/ControlRefs
+
+#### Shell 现状
+
+```text
+EditorShell (956 行)
+├── Input 子系统（3 目录 15 文件）
+├── Scene3D Commands（5 文件）
+├── Panels（5 文件）
+├── Transform（5 文件）
+├── Diagnostics（5 文件）
+├── Lifecycle（5 文件）
+├── Composition（5 文件）
+├── Startup（4 Route 文件）
+└── 剩余：事件处理 + 业务 Apply ~600 行
+```
   - `RefreshDiagnostics` → `_diagnosticsRoute.Refresh()`
   - `ScheduleScene3dFrame` → `_diagnosticsRoute.ScheduleFrame()`
   - `ProbeVulkanValidation` → `_diagnosticsRoute.ProbeValidation()`

@@ -1,0 +1,56 @@
+using FluidWarfare.Editor.Windows.Panels.Viewport;
+using FluidWarfare.Editor.Windows.Shell.Diagnostics;
+using FluidWarfare.Editor.Windows.Shell.Feedback;
+using FluidWarfare.Editor.Windows.Shell.Input;
+using FluidWarfare.Editor.Windows.Shell.Input.Picking;
+using FluidWarfare.Editor.Windows.Shell.Input.Transform;
+using FluidWarfare.Editor.Windows.Shell.Lifecycle;
+using FluidWarfare.Editor.Windows.Shell.Menu;
+using FluidWarfare.Editor.Windows.Shell.Transform;
+using FluidWarfare.Editor.Windows.Shell.Panels;
+using FluidWarfare.Editor.Windows.Shell.Scene3D.Commands;
+using FluidWarfare.Editor.Windows.Shell.Startup;
+using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
+using FluidWarfare.Editor.Windows.Shell.Windows;
+using FluidWarfare.Editor.Windows.Viewport.Camera;
+using FluidWarfare.Editor.Windows.Viewport.Navigation;
+using FluidWarfare.Editor.Windows.Viewport.Picking;
+using FluidWarfare.Editor.Windows.Viewport.Project;
+using FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
+using FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
+using FluidWarfare.Editor.Windows.Viewport.Scene3D.Resize;
+using FluidWarfare.Editor.Windows.Viewport.Selection.Focus;
+using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
+using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+
+namespace FluidWarfare.Editor.Windows.Shell.Composition;
+
+/// <summary>EditorShell 的全部 Route 引用。通过 RouteBuild.Build() 创建并初始化。</summary>
+public sealed record EditorShellRouteSet(
+    EditorSelectionRoute Selection,
+    ProjectBootstrapRoute ProjectBootstrap,
+    WorldBootstrapRoute WorldBootstrap,
+    VulkanViewportProbeRoute Probe,
+    EditorFeedbackRoute Feedback,
+    EditorRunMenuRoute RunMenu,
+    EditorStartupVulkanRoute StartupVulkan,
+    ViewportPointerPickRoute Pick,
+    ViewportCameraRoute Camera,
+    ViewportNavigationRoute Navigation,
+    ViewportFocusSelectionRoute Focus,
+    Scene3dResizeRenderRoute ResizeRender,
+    EditorShellWindowRoute Window,
+    EditorStartupBootstrapRoute Startup,
+    EditorShellAttachRoute Attach,
+    EditorShellDetachRoute Detach,
+    EditorViewportInputRoute Input,
+    EditorGroundHoverInputRoute GroundHover,
+    EditorPickInputRoute PickInput,
+    EditorScene3dCommandRoute Scene3dCommand,
+    EditorPanelApplyRoute PanelApply,
+    EditorTransformApplyRoute TransformApply,
+    EditorGroundPlacementRoute GroundPlacement,
+    EditorDiagnosticsRefreshRoute Diagnostics,
+    ViewportRenderSceneStore RenderSceneStore,
+    TransformPointerRoute Pointer);
