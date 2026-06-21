@@ -1633,3 +1633,33 @@ file-tree.md
 修改：
   Shell/EditorShell.axaml.cs（1796 → 1467，-329 行）
 ```
+
+---
+
+### 8.7.6.8D-2 — Transform / SceneTool Input Bridge
+
+从 `EditorViewportInputRoute` 拆出 Transform 和 SceneTool 专用子 Route，防止主路由膨胀为新 God Object。
+
+#### 新增（5 文件 `Shell/Input/Transform/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorTransformInputRoute.cs` | 45 | G 键/Esc/Enter 模态、BlenderG 确认/取消、Gizmo Hover、拖拽 Preview、失焦 Cancel |
+| `EditorTransformInputRequest.cs` | 23 | Transform 专用轻量请求（13 字段 vs 全量 22 字段） |
+| `EditorTransformInputResult.cs` | 4 | `bool Handled` |
+| `EditorSceneToolInputRoute.cs` | 54 | GizmoHandle/EntityBody 点按启动 + 释放 Confirm |
+| `EditorSceneToolInputResult.cs` | 8 | `PressResult` + `Released` |
+
+#### 修改
+
+- `EditorViewportInputRoute.cs`（92→75 行）：拆出 Transform/SceneTool → 保持纯输入分发 + Camera/Tool 调度
+- `EditorTransformInputRequest` 只携带 Transform 业务所需字段，不携带 Camera/Pick/RenderSceneStore 等无关依赖
+
+#### 架构改善
+
+```text
+EditorViewportInputRoute (75 行)
+├── EditorTransformInputRoute (45 行)  ← G 键 / BlenderG / 拖拽 Preview
+├── EditorSceneToolInputRoute (54 行)   ← Gizmo/Entity 点按启动 / 释放确认
+└── Trans + Exec (Camera/Tool 调度)
+```
