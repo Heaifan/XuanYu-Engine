@@ -164,13 +164,11 @@ public sealed partial class EditorShell : UserControl
     public EditorShell()
     {
         AvaloniaXamlLoader.Load(this);
-        var c = EditorShellControlRefs.Find(this);
-        _inspectorPanel = c.Inspector; _debugDockPanel = c.DebugDock; _statusBarPanel = c.StatusBar;
-        _viewportPlaceholderPanel = c.ViewportPlaceholder; _vulkanViewportHostPanel = c.VulkanViewportHost;
-        _dockPanel = c.DockPanel; _viewportToolPalette = c.ToolPalette;
-
-        _r = EditorShellRouteBuild.Build(c, out _lifecycle);
-        _c = c;
+        _c = EditorShellControlRefs.Find(this);
+        _inspectorPanel = _c.Inspector; _debugDockPanel = _c.DebugDock; _statusBarPanel = _c.StatusBar;
+        _viewportPlaceholderPanel = _c.ViewportPlaceholder; _vulkanViewportHostPanel = _c.VulkanViewportHost;
+        _dockPanel = _c.DockPanel; _viewportToolPalette = _c.ToolPalette;
+        _r = EditorShellRouteBuild.Build(_c, out _lifecycle);
         // Apply route fields from composition
         _selectionRoute = _r.Selection; _projectBootstrap = _r.ProjectBootstrap; _worldBootstrap = _r.WorldBootstrap;
         _probeRoute = _r.Probe; _feedback = _r.Feedback; _runMenu = _r.RunMenu; _startupVulkanRoute = _r.StartupVulkan;
@@ -193,29 +191,44 @@ public sealed partial class EditorShell : UserControl
         ProbeVulkanValidation();
     }
 
-    private void FindShellControls() { } // Controls found via EditorShellControlRefs.Find in constructor
-
     private void SubscribePanelEvents()
     {
-        if (_c.ViewportPlaceholder is not null) _c.ViewportPlaceholder.ViewportFocused += HandleViewportFocused;
-        if (_c.DockPanel is not null) { _c.DockPanel.EntitySelectionRequested += OnHierarchyEntitySelected; _c.DockPanel.ContentSelectionRequested += OnProjectContentSelected; }
+        if (_c.ViewportPlaceholder is not null)
+            _c.ViewportPlaceholder.ViewportFocused += HandleViewportFocused;
+        if (_c.DockPanel is not null)
+        {
+            _c.DockPanel.EntitySelectionRequested += OnHierarchyEntitySelected;
+            _c.DockPanel.ContentSelectionRequested += OnProjectContentSelected;
+        }
         if (_c.VulkanViewportHost is not null)
         {
             _c.VulkanViewportHost.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
-            _c.VulkanViewportHost.RawPointerButtonDown += HandleRawPointerButtonDown; _c.VulkanViewportHost.RawPointerButtonUp += HandleRawPointerButtonUp;
-            _c.VulkanViewportHost.RawPointerMoved += HandleRawPointerMoved; _c.VulkanViewportHost.RawKeyDown += HandleRawKeyDown; _c.VulkanViewportHost.RawKeyUp += HandleRawKeyUp;
-            _c.VulkanViewportHost.RawMouseWheel += HandleRawMouseWheel; _c.VulkanViewportHost.RawInputFocusLost += HandleRawInputFocusLost;
-            _c.VulkanViewportHost.PickRequested += HandleViewportPick; _c.VulkanViewportHost.NavigationPointerPressed += HandleOverlayPointerPressed;
-            _c.VulkanViewportHost.NavigationPointerMoved += HandleOverlayPointerMoved; _c.VulkanViewportHost.NavigationPointerReleased += HandleOverlayPointerReleased;
-            _c.VulkanViewportHost.NavigationCaptureLost += HandleOverlayCaptureLost; _c.VulkanViewportHost.SceneToolPointerPressed += HandleSceneToolPointerPressed;
-            _c.VulkanViewportHost.SceneToolPointerReleased += HandleSceneToolPointerReleased; _c.VulkanViewportHost.PointerMoved += HandleViewportPointerMoved;
+            _c.VulkanViewportHost.RawPointerButtonDown += HandleRawPointerButtonDown;
+            _c.VulkanViewportHost.RawPointerButtonUp += HandleRawPointerButtonUp;
+            _c.VulkanViewportHost.RawPointerMoved += HandleRawPointerMoved;
+            _c.VulkanViewportHost.RawKeyDown += HandleRawKeyDown;
+            _c.VulkanViewportHost.RawKeyUp += HandleRawKeyUp;
+            _c.VulkanViewportHost.RawMouseWheel += HandleRawMouseWheel;
+            _c.VulkanViewportHost.RawInputFocusLost += HandleRawInputFocusLost;
+            _c.VulkanViewportHost.PickRequested += HandleViewportPick;
+            _c.VulkanViewportHost.NavigationPointerPressed += HandleOverlayPointerPressed;
+            _c.VulkanViewportHost.NavigationPointerMoved += HandleOverlayPointerMoved;
+            _c.VulkanViewportHost.NavigationPointerReleased += HandleOverlayPointerReleased;
+            _c.VulkanViewportHost.NavigationCaptureLost += HandleOverlayCaptureLost;
+            _c.VulkanViewportHost.SceneToolPointerPressed += HandleSceneToolPointerPressed;
+            _c.VulkanViewportHost.SceneToolPointerReleased += HandleSceneToolPointerReleased;
+            _c.VulkanViewportHost.PointerMoved += HandleViewportPointerMoved;
             _c.VulkanViewportHost.PointerLeft += HandleViewportPointerLeft;
         }
         if (_c.Inspector is not null)
         {
-            _c.Inspector.TransformDraftChanged += HandleTransformDraftChanged; _c.Inspector.TransformApplyRequested += HandleTransformApply;
-            _c.Inspector.TransformResetRequested += HandleTransformReset; _c.Inspector.GroundPlacementRequested += HandleGroundPlacementToggle;
-            _c.Inspector.ScrubValueChanged += HandleScrubValueChanged; _c.Inspector.ScrubCompleted += HandleScrubCompleted; _c.Inspector.ScrubCancelled += HandleScrubCancelled;
+            _c.Inspector.TransformDraftChanged += HandleTransformDraftChanged;
+            _c.Inspector.TransformApplyRequested += HandleTransformApply;
+            _c.Inspector.TransformResetRequested += HandleTransformReset;
+            _c.Inspector.GroundPlacementRequested += HandleGroundPlacementToggle;
+            _c.Inspector.ScrubValueChanged += HandleScrubValueChanged;
+            _c.Inspector.ScrubCompleted += HandleScrubCompleted;
+            _c.Inspector.ScrubCancelled += HandleScrubCancelled;
         }
     }
 

@@ -1821,7 +1821,7 @@ EditorShell (1348 行)
 #### Shell 现状
 
 ```text
-EditorShell (956 行)
+EditorShell (970 行)
 ├── Input 子系统（3 目录 15 文件）
 ├── Scene3D Commands（5 文件）
 ├── Panels（5 文件）
@@ -1831,6 +1831,39 @@ EditorShell (956 行)
 ├── Composition（5 文件）
 ├── Startup（4 Route 文件）
 └── 剩余：事件处理 + 业务 Apply ~600 行
+```
+
+---
+
+### 8.7.6.8E-3R / 8E-4 — Composition Cleanup + Final Stabilization
+
+删除空占位类，Shell 构造函数和事件接线可读性整理。
+
+#### 修改
+
+- 删除 `EditorShellEventBinder.cs`（空占位）和 `EditorShellCompositionResult.cs`（未使用）
+- Shell 构造函数从使用局部变量改为 `_c` 字段
+- `SubscribePanelEvents` 展开为每行一个事件
+- 移除空的 `FindShellControls()` 方法
+
+#### Shell 收口指标
+
+| 指标 | 值 |
+|------|-----|
+| EditorShell 行数 | **970** |
+| `dotnet build` | ✅ 0 Error, 0 Warning |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 所有 Route 文件 ≤100 行 | ✅ 全部通过 |
+| 无空占位类 | ✅ 已删除 |
+
+#### 累计 Shell 3041 → 970
+
+```text
+8C 系列：3041 → 1796（-1245，6 个子阶段）
+8D 系列：1796 → 1129（-667，5 个子阶段）
+8E 系列：1129 → 970（-159，4 个子阶段）
+累计减少：2071 行
 ```
   - `RefreshDiagnostics` → `_diagnosticsRoute.Refresh()`
   - `ScheduleScene3dFrame` → `_diagnosticsRoute.ScheduleFrame()`
