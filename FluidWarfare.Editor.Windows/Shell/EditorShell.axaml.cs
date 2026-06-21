@@ -37,6 +37,7 @@ using FluidWarfare.Editor.Windows.Shell.Windows;
 using FluidWarfare.Editor.Windows.Shell.Startup;
 using FluidWarfare.Editor.Windows.Shell.Lifecycle;
 using FluidWarfare.Editor.Windows.Shell.Input;
+using FluidWarfare.Editor.Windows.Shell.Input.Picking;
 using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -112,6 +113,8 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorShellAttachRoute _attachRoute = new();
     private readonly EditorShellDetachRoute _detachRoute = new();
     private readonly EditorViewportInputRoute _viewportInputRoute = new();
+    private readonly EditorGroundHoverInputRoute _groundHoverRoute = new();
+    private readonly EditorPickInputRoute _pickInputRoute = new();
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
@@ -916,42 +919,21 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void HandleViewportPointerMoved(int pixelX, int pixelY)
     {
-        if (!_sessionActive || _lifecycle.State.Session is null)
-            return;
-        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active)
-            return;
+        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active) return;
+        var nh = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
+        if (!nh.HasNativeHandle || nh.Width < 1 || nh.Height < 1) return;
 
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
-            return;
-
-        // 调度合并：如果已有待执行更新，只保存最新坐标，不重复调度
-        if (_groundPointerUpdatePending)
-        {
-            _lastGroundPointerUpdateTicks = (pixelX << 16) | (pixelY & 0xFFFF); // 暂存最新坐标
-            return;
-        }
-
+        if (_groundPointerUpdatePending) { _lastGroundPointerUpdateTicks = (pixelX << 16) | (pixelY & 0xFFFF); return; }
         _groundPointerUpdatePending = true;
-        var capturedX = pixelX;
-        var capturedY = pixelY;
-
+        var cx = pixelX; var cy = pixelY;
         Dispatcher.UIThread.Post(() =>
         {
             _groundPointerUpdatePending = false;
-
-            // 读取最新坐标（如果有暂存值）
-            var curX = capturedX;
-            var curY = capturedY;
-            if (_lastGroundPointerUpdateTicks != 0)
-            {
-                curX = (int)(_lastGroundPointerUpdateTicks >> 16);
-                curY = (int)(_lastGroundPointerUpdateTicks & 0xFFFF);
-                _lastGroundPointerUpdateTicks = 0;
-            }
-
-            UpdateGroundHover(curX, curY);
+            if (_lastGroundPointerUpdateTicks != 0) { cx = (int)(_lastGroundPointerUpdateTicks >> 16); cy = (int)(_lastGroundPointerUpdateTicks & 0xFFFF); _lastGroundPointerUpdateTicks = 0; }
+            var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
+            _groundHoverRoute.HandlePointerMoved(new(cx, cy, _lifecycle, _groundPointerState, _navigationRoute,
+                msg => { if (_statusBarPanel is not null) _statusBarPanel.SetGroundPosition(msg); },
+                msg => { if (_statusBarPanel is not null) _statusBarPanel.SetCurrentSelection(msg); }), host);
         }, DispatcherPriority.Background);
     }
 
@@ -960,74 +942,13 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void HandleViewportPointerLeft()
     {
-        if (_navigationRoute.DragMode == ViewportNavigationDragMode.None)
-        {
-            var r = _navigationRoute.ClearHover();
-            if (r.VisualStateChanged) ApplyOverlayVisualState(r.Hovered, r.Active);
-        }
-
-        if (_statusBarPanel is null) return;
-
-        _groundPointerState.SetHover(null, null);
-        _statusBarPanel.SetCurrentSelection(
-            _selectionRoute.State.SelectedWorldEntity is not null
-                ? _selectionRoute.State.SelectedWorldEntity.DisplayName
-                : "无");
-
-        // 更新状态栏额外行显示地面坐标不可用
-        _statusBarPanel.SetGroundPosition("地面坐标：无");
+        var nav = _groundHoverRoute.HandlePointerLeft(new(0, 0, _lifecycle, _groundPointerState, _navigationRoute,
+            msg => { if (_statusBarPanel is not null) _statusBarPanel.SetGroundPosition(msg); },
+            msg => { if (_statusBarPanel is not null) _statusBarPanel.SetCurrentSelection(msg); }),
+            _selectionRoute);
+        if (nav.VisualStateChanged) ApplyOverlayVisualState(nav.Hovered, nav.Active);
     }
 
-    /// <summary>
-    /// 执行地面 Hover 射线求交并更新状态栏。
-    /// 只执行 CPU 数学，不提交 GPU 帧。
-    /// </summary>
-    private void UpdateGroundHover(int pixelX, int pixelY)
-    {
-        if (_lifecycle.State.Session is null || _vulkanViewportHostPanel is null) return;
-
-        var nativeHostInfo = _vulkanViewportHostPanel.GetNativeHostInfo();
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
-            return;
-
-        // 使用已呈现快照构建射线（只能从 Snapshot 读取参数）
-        var snapshot = _lifecycle.State.Session.LastPresentedSnapshot;
-        var status = VulkanSceneRayBuilder.TryBuild(
-            pixelX, pixelY,
-            snapshot,
-            (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height,
-            out var ray);
-
-        if (status != SceneRayBuildStatus.Success || ray is null)
-        {
-            if (status == SceneRayBuildStatus.SnapshotUnavailable ||
-                status == SceneRayBuildStatus.SnapshotExtentMismatch)
-                return;
-
-            _groundPointerState.SetHover(null, null);
-            _statusBarPanel?.SetGroundPosition("地面坐标：无");
-            return;
-        }
-
-        var groundHit = SceneRayGroundIntersection.Intersect(ray, SceneGroundPlane.Default);
-
-        if (groundHit.IsHit && groundHit.WorldPosition is not null)
-        {
-            var pos = groundHit.WorldPosition.Value;
-            _groundPointerState.SetHover(pos, "鼠标");
-            _statusBarPanel?.SetGroundPosition(
-                $"地面坐标：X {pos.X:F2} | Y {pos.Y:F2} | Z {pos.Z:F2}");
-        }
-        else
-        {
-            _groundPointerState.SetHover(null, null);
-            _statusBarPanel?.SetGroundPosition("地面坐标：无");
-        }
-    }
-
-    /// <summary>
-    /// 清除选择。
-    /// </summary>
     /// <summary>
     /// 视口点击 Picking 处理。
     /// 像素坐标 → 世界射线 → RenderScene Picker → 统一选择入口。
@@ -1037,57 +958,17 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void HandleViewportPick(int pixelX, int pixelY)
     {
-        if (!_sessionActive || _lifecycle.State.Session is null) return;
-        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
-
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
-            return;
-
-        var snapshot = _lifecycle.State.Session.LastPresentedSnapshot;
-        if (!snapshot.IsValid) return;
-
-        var pickSnapshot = _lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None;
-        var req = new ViewportPickRequest(pixelX, pixelY, snapshot, pickSnapshot, _renderSceneStore.Current, SceneGroundPlane.Default);
-        var result = _viewportPickRoute.Pick(req);
-
-        if (_groundPlacementState.IsActive)
+        var r = _pickInputRoute.Pick(pixelX, pixelY, _lifecycle, _viewportPickRoute, _renderSceneStore,
+            _selectionRoute, _groundPlacementState, _groundPointerState,
+            ApplyEntitySelection, AppendInfoLog,
+            msg => { if (_statusBarPanel is not null) _statusBarPanel.SetCurrentSelection(msg); },
+            RefreshDiagnostics, ShowGroundCursor, HideGroundCursor, CompleteGroundPlacement,
+            ScheduleScene3dFrame);
+        if (!r.SelectionChanged)
         {
-            switch (result.Kind)
-            {
-                case ViewportPickKind.Ground when result.GroundPosition is not null:
-                    CompleteGroundPlacement(result.GroundPosition.Value); break;
-                case ViewportPickKind.Entity:
-                    _statusBarPanel?.SetCurrentSelection("请点击空白地面完成放置"); break;
-                default:
-                    _statusBarPanel?.SetCurrentSelection("当前位置未命中地面，请调整相机或点击其他区域"); break;
-            }
-        }
-        else
-        {
-            switch (result.Kind)
-            {
-                case ViewportPickKind.Entity when result.EntityId is not null:
-                    ApplyEntitySelection(result.EntityId.Value.Value.ToString(), EditorEntitySelectionOrigin.ViewportPicking);
-                    HideGroundCursor();
-                    System.Diagnostics.Debug.WriteLine($"[Pick] Entity hit: {result.EntityId.Value.Value}");
-                    break;
-                case ViewportPickKind.Ground when result.GroundPosition is not null:
-                    ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
-                    ShowGroundCursor(result.GroundPosition.Value);
-                    AppendInfoLog($"地面落点：X {result.GroundPosition.Value.X:F2}，Y {result.GroundPosition.Value.Y:F2}，Z {result.GroundPosition.Value.Z:F2}。");
-                    break;
-                default:
-                    ApplyEntitySelection(null, EditorEntitySelectionOrigin.ViewportPicking);
-                    HideGroundCursor(); break;
-            }
-        }
-        RefreshDiagnostics();
-        if (result.Kind != ViewportPickKind.Entity)
-        {
-            var rb = RayBuilder.Build(req);
-            if (rb is not null) ViewportPickTrace.Write(pixelX, pixelY, snapshot, rb, _renderSceneStore.Current);
+            var snap = _lifecycle.State.Session?.LastPresentedSnapshot;
+            if (snap?.IsValid == true && _vulkanViewportHostPanel is not null)
+            { var nh = _vulkanViewportHostPanel.GetNativeHostInfo(); if (nh.HasNativeHandle) { var rb = RayBuilder.Build(new(pixelX, pixelY, snap, _lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None, _renderSceneStore.Current, SceneGroundPlane.Default)); if (rb is not null) ViewportPickTrace.Write(pixelX, pixelY, snap, rb, _renderSceneStore.Current); } }
         }
     }
 

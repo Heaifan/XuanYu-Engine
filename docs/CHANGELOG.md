@@ -1663,3 +1663,46 @@ EditorViewportInputRoute (75 行)
 ├── EditorSceneToolInputRoute (54 行)   ← Gizmo/Entity 点按启动 / 释放确认
 └── Trans + Exec (Camera/Tool 调度)
 ```
+
+---
+
+### 8.7.6.8D-3 — Ground Hover / Pick Bridge
+
+将 Shell 中的视口 Picking 和地面悬停逻辑提取到独立 Route。
+
+#### 新增（5 文件 `Shell/Input/Picking/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorPickInputRoute.cs` | 79 | 视口点击 Picking（Entity/Ground/Placement 三种模式决策） |
+| `EditorPickInputResult.cs` | 7 | SelectionChanged / GroundCursorShown / PlacementCompleted |
+| `EditorGroundHoverInputRoute.cs` | 46 | CPU 射线求交 + 状态栏坐标 + 导航悬停清除 |
+| `EditorGroundHoverInputRequest.cs` | 14 | 轻量请求（6 字段） |
+| `EditorGroundHoverInputResult.cs` | 4 | 布尔结果 |
+
+#### Request 设计
+
+- `EditorGroundHoverInputRequest` 只携带 6 个 Picking 相关字段（X/Y/Lifecycle/GroundPointerState/NavigationRoute + 2 状态栏回调），无 Camera/Transform/ToolPalette 等无关依赖
+- `EditorPickInputRoute.Pick()` 使用显式参数，不创建 Request 包装，避免 8D-1 式"参数包"债务
+
+#### 修改
+
+- `EditorShell.axaml.cs`（1467→1348，-119 行）：
+  - `HandleViewportPick` → `_pickInputRoute.Pick(...)`（只保留 RayBuilder/ViewportPickTrace Debug 尾调用）
+  - `HandleViewportPointerMoved` → 调度合并外壳 + `_groundHoverRoute.HandlePointerMoved(...)`
+  - `HandleViewportPointerLeft` → `_groundHoverRoute.HandlePointerLeft(...)`
+  - 移除 `UpdateGroundHover`（42 行，已移入 Route）
+
+#### 架构现状
+
+```text
+EditorShell (1348 行)
+└── Input 子系统（423 行，3 目录 15 文件）
+    ├── EditorViewportInputRoute.cs         75 行  纯分发
+    ├── Transform/
+    │   ├── EditorTransformInputRoute.cs    45 行  G 键 / BlenderG
+    │   └── EditorSceneToolInputRoute.cs    54 行  Gizmo/Entity 拖动
+    └── Picking/
+        ├── EditorPickInputRoute.cs         79 行  视口点击选择
+        └── EditorGroundHoverInputRoute.cs  46 行  地面悬停反馈
+```
