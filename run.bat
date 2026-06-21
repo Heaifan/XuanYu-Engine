@@ -19,10 +19,14 @@ if %ERRORLEVEL% neq 0 (
 echo.
 echo [2/2] 正在启动 Editor...
 echo.
+echo --- dotnet output start ---
 call dotnet run --project FluidWarfare.Editor.Windows --no-build
-if %ERRORLEVEL% neq 0 (
-    echo.
-    echo [失败] Editor 启动失败。
+set EDITOR_EXIT_CODE=%ERRORLEVEL%
+echo --- dotnet output end ---
+echo.
+if %EDITOR_EXIT_CODE% neq 0 (
+    echo [失败] Editor 启动失败。退出码：%EDITOR_EXIT_CODE%
+    echo 如果上方有异常堆栈，请优先关注异常类型与行号。
     pause
-    exit /b %ERRORLEVEL%
+    exit /b %EDITOR_EXIT_CODE%
 )

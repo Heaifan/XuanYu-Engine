@@ -1496,3 +1496,87 @@ file-tree.md
 - ✅ `FW_DISABLE_SCENE3D=1` 可关闭 3D
 - ✅ MarkerDraw 路径完全删除
 - ✅ 不越界：无相机旋转/Picking/单位选择/纹理/材质/光照/阴影/模型加载
+
+---
+
+### 8.7.6.8C — Shell Route 化重构 Phase 3：Startup Bootstrap / Lifecycle / Vulkan Probe
+
+#### 概述
+
+8C 系列完成 EditorShell 启动路径的 Route 化拆分 — Startup Bootstrap Apply（8C-1）、VisualTree Attach/Detach（8C-2）、Vulkan 启动探测（8C-3）。Shell 从 3041 行降至 1796 行，累计减少 1245 行。所有提取均在 `dotnet run Editor --no-build` 启动验证通过的前提下完成。
+
+#### 8C-1 — Editor Startup Bootstrap Apply 提取（`e715c61`）
+
+- 新建 `EditorStartupBootstrapRoute`：编排 `LoadSampleProject` 流程（ProjectBootstrap → WorldBootstrap → RenderSceneStore → SelectionRoute）
+- 新建 `EditorStartupBootstrapResult`：统一返回 `Success`、`Project`、`WorldResult`、`FailureMessage`、`LogMessages`、`LogWarnings`
+- 新建 `EditorStartupWorldResult`：封装 `WorldState`、`RenderScene`、`FirstEntityId`、`SeedSourcePaths`、日志
+- Shell 的 `LoadSampleProject` / `CreateWorldFromProject` / `EmptyWorldFallback` / `ShowProjectLoadFailure` → `EditorStartupBootstrapRoute` + `ApplyStartupBootstrapResult`
+
+#### 8C-1R — Editor Startup Failure Fix
+
+- **根因**：`_lifecycle`（`Scene3dSessionLifecycle`）字段声明为 `null!`，从未初始化。构造期 `ProbeVulkanBackend()` 链路上 `RefreshDiagnostics()` 访问 `_lifecycle.State` 抛出 `NullReferenceException`。该 Bug 潜伏已久，因此前从未执行 `dotnet run Editor` 验证而未被发现。
+- **修复**：构造函数中在 `ProbeVulkanBackend()` 之前添加 `_lifecycle = new Scene3dSessionLifecycle(_renderSceneStore)`
+- **验收链改进**：从本提交起，每个阶段验收强制包含 `dotnet run Editor --no-build`
+- **`run.bat` 改进**：失败时输出 `dotnet` 原始日志与退出码，替代旧的 `[失败] Editor 启动失败。` 无信息提示
+
+#### 8C-2 — VisualTree Attach / Detach Route
+
+- 新建 5 文件 `Shell/Lifecycle/`：
+  - `EditorShellAttachRequest.cs`（6 行）：`NativeHostReportAction` + `InputPipelineInitAction` 委托
+  - `EditorShellAttachResult.cs`（4 行）：`AttachDispatched`
+  - `EditorShellAttachRoute.cs`（29 行）：`Dispatcher.UIThread.Post` 时序 + `_dispatched` 守卫
+  - `EditorShellDetachRoute.cs`（41 行）：`Scene3dSessionLifecycle.Stop()` + `DispatcherTimer` 清理
+  - `EditorShellDetachResult.cs`（6 行）：`SessionStopped` + `TimerCleanedUp`
+- `OnAttachedToVisualTree` / `OnDetachedFromVisualTree` 从事件订阅模式改为 `protected override` 标准 Avalonia 模式，职责委托到 Route
+
+#### 8C-2R — Warning 清零
+
+- `Scene3dResizeRenderResult.Failure(string log, int newSeq)` → `Failure(string? log, int newSeq)`，消除 CS8625
+- 验收口径恢复 `0 Error, 0 Warning`
+
+#### 8C-3 — Startup Vulkan Probe Route
+
+- 新建 5 文件 `Shell/Startup/Vulkan/`：
+  - `EditorStartupVulkanRequest.cs`（25 行）：携带 `ProbeRoute`、`Lifecycle`、`RenderSceneStore`、`GetNativeHostInfo` 委托、日志/刷新/启动委托
+  - `EditorStartupVulkanResult.cs`（8 行）：`DiagnosticsRefreshRequested` + `Scene3dStartRequested`
+  - `EditorStartupVulkanState.cs`（11 行）：`NativeHostReported` + `Scene3dAutoStartAttempted`
+  - `EditorStartupVulkanStep.cs`（14 行）：步骤枚举
+  - `EditorStartupVulkanRoute.cs`（94 行）：`RunConstructProbes`（构造期 Backend→Instance→Device→Surface）+ `TryRunAttachProbes`（附加期 Swapchain→Clear→AutoStart）
+- 从 Shell 移出 118 行启动探测代码
+- `_vulkanViewportNativeHostReported` / `_scene3dAutoStartAttempted` 两个标志移入 Route State
+- `HandleVulkanViewportNativeHostInfoChanged` 改为查询 `_startupVulkanRoute.State.NativeHostReported`
+
+#### 变更文件清单
+
+```text
+新增：
+  Shell/Lifecycle/EditorShellAttachRequest.cs
+  Shell/Lifecycle/EditorShellAttachResult.cs
+  Shell/Lifecycle/EditorShellAttachRoute.cs
+  Shell/Lifecycle/EditorShellDetachRoute.cs
+  Shell/Lifecycle/EditorShellDetachResult.cs
+  Shell/Startup/Vulkan/EditorStartupVulkanRequest.cs
+  Shell/Startup/Vulkan/EditorStartupVulkanResult.cs
+  Shell/Startup/Vulkan/EditorStartupVulkanRoute.cs
+  Shell/Startup/Vulkan/EditorStartupVulkanState.cs
+  Shell/Startup/Vulkan/EditorStartupVulkanStep.cs
+  Shell/Startup/EditorStartupBootstrapRoute.cs
+  Shell/Startup/EditorStartupBootstrapResult.cs
+  Shell/Startup/EditorStartupWorldResult.cs
+
+修改：
+  Shell/EditorShell.axaml.cs （3041 → 1796，-1245 行）
+  Viewport/Scene3D/Resize/Scene3dResizeRenderResult.cs（Failure string? 修复）
+  run.bat（失败时输出原始 dotnet 日志）
+```
+
+#### 验证结果
+
+| 检查项 | 结果 |
+|--------|------|
+| `dotnet build` | ✅ 0 Error, 0 Warning |
+| `dotnet test` (625) | ✅ 全过 |
+| `dotnet run Editor --no-build` | ✅ 启动成功 |
+| Shell 行数 | ✅ 1796（目标 ≤1800） |
+| 新增文件 ≤100 行 | ✅ 全部通过 |
+| 代码宪法测试 | ✅ 通过 |

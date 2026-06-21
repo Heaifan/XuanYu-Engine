@@ -35,6 +35,8 @@ using FluidWarfare.Editor.Windows.Viewport.Scene3D.Resize;
 using FluidWarfare.Editor.Windows.Shell.Feedback;
 using FluidWarfare.Editor.Windows.Shell.Windows;
 using FluidWarfare.Editor.Windows.Shell.Startup;
+using FluidWarfare.Editor.Windows.Shell.Lifecycle;
+using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 using FluidWarfare.Editor.Windows.Panels.DebugDock;
@@ -93,20 +95,21 @@ public sealed partial class EditorShell : UserControl
     private readonly VulkanViewportProbeRoute _probeRoute = new();
     private readonly EditorFeedbackRoute _feedback = new();
     private readonly EditorRunMenuRoute _runMenu = new();
+    private readonly EditorStartupVulkanRoute _startupVulkanRoute = new();
     private DispatcherTimer? _viewportResizeRenderTimer;
-    private bool _vulkanViewportNativeHostReported;
     private int _renderSeq;
     private string _renderLastMode = "无";
     private Scene3dSessionLifecycle _lifecycle = null!;
     private readonly ViewportPointerPickRoute _viewportPickRoute = new();
     private readonly ViewportCameraRoute _cameraRoute = new();
     private bool _sessionActive;
-    private bool _scene3dAutoStartAttempted;
     private readonly ViewportNavigationRoute _navigationRoute = new();
     private readonly ViewportFocusSelectionRoute _viewportFocusRoute = new();
     private readonly Scene3dResizeRenderRoute _resizeRenderRoute = new();
     private readonly EditorShellWindowRoute _windowRoute = new();
     private readonly EditorStartupBootstrapRoute _startupRoute;
+    private readonly EditorShellAttachRoute _attachRoute = new();
+    private readonly EditorShellDetachRoute _detachRoute = new();
 
     // ─── 输入动作映射系统 ───────────────────────────────────
     private EditorInputService _inputService = EditorInputService.Instance;
@@ -167,10 +170,9 @@ public sealed partial class EditorShell : UserControl
         SubscribePanelEvents();
         InitializeFeedback();
         LoadSampleProject();
-        ProbeVulkanBackend();
+        _lifecycle = new Scene3dSessionLifecycle(_renderSceneStore);
+        RunStartupVulkanProbe();
         ProbeVulkanValidation();
-        AttachedToVisualTree += OnAttachedToVisualTree;
-        DetachedFromVisualTree += OnDetachedFromVisualTree;
     }
 
     private void FindShellControls()
@@ -245,26 +247,62 @@ public sealed partial class EditorShell : UserControl
         }
     }
 
-    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            ReportVulkanViewportNativeHost();
-            InitializeInputPipeline();
-        });
+        base.OnAttachedToVisualTree(e);
+        ApplyAttachResult(_attachRoute.Attach(BuildAttachRequest()));
     }
 
-    private void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        _vulkanViewportNativeHostReported = false;
+        ApplyDetachResult(_detachRoute.Detach(BuildDetachRequest()));
+        base.OnDetachedFromVisualTree(e);
+    }
+
+    private EditorShellAttachRequest BuildAttachRequest() => new(
+        NativeHostReportAction: () => { var r = _startupVulkanRoute.TryRunAttachProbes(BuildStartupVulkanRequest()); ApplyStartupVulkanResult(r); },
+        InputPipelineInitAction: InitializeInputPipeline);
+
+    private static void ApplyAttachResult(EditorShellAttachResult result)
+    {
+        // 路由已通过 Dispatcher.UIThread.Post 调度 NativeHostReport + InputPipelineInit。
+        // 后续附加不再重复调度（AttachRoute 内含 _dispatched 守卫）。
+    }
+
+    private EditorShellDetachRequest BuildDetachRequest() => new(
+        Lifecycle: _lifecycle,
+        ResizeRenderTimer: _viewportResizeRenderTimer,
+        ResizeRenderTimerTickHandler: HandleViewportResizeRenderTimerTick);
+
+    private void ApplyDetachResult(EditorShellDetachResult result)
+    {
         _sessionActive = false;
-        _lifecycle.Stop();
-        if (_viewportResizeRenderTimer is not null)
-        {
-            _viewportResizeRenderTimer.Stop();
-            _viewportResizeRenderTimer.Tick -= HandleViewportResizeRenderTimerTick;
-            _viewportResizeRenderTimer = null;
-        }
+        _startupVulkanRoute.Reset();
+        if (result.TimerCleanedUp) _viewportResizeRenderTimer = null;
+    }
+
+    private void RunStartupVulkanProbe()
+    {
+        ApplyStartupVulkanResult(_startupVulkanRoute.RunConstructProbes(BuildStartupVulkanRequest()));
+    }
+
+    private EditorStartupVulkanRequest BuildStartupVulkanRequest()
+    {
+        return new EditorStartupVulkanRequest(
+            ProbeRoute: _probeRoute,
+            Lifecycle: _lifecycle,
+            RenderSceneStore: _renderSceneStore,
+            GetNativeHostInfo: () => _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
+            InfoLog: AppendInfoLog,
+            WarnLog: AppendWarningLog,
+            RefreshDiagnostics: RefreshDiagnostics,
+            RequestScene3dStart: StartScene3dSession);
+    }
+
+    private void ApplyStartupVulkanResult(EditorStartupVulkanResult result)
+    {
+        if (result.DiagnosticsRefreshRequested)
+            RefreshDiagnostics();
     }
 
     private void HandleVulkanViewportNativeHostInfoChanged(object? sender, VulkanViewportNativeHostInfo nativeHostInfo)
@@ -274,9 +312,9 @@ public sealed partial class EditorShell : UserControl
             return;
         }
 
-        if (!_vulkanViewportNativeHostReported)
+        if (!_startupVulkanRoute.State.NativeHostReported)
         {
-            Dispatcher.UIThread.Post(ReportVulkanViewportNativeHost);
+            Dispatcher.UIThread.Post(RunStartupVulkanProbe);
             return;
         }
 
@@ -433,124 +471,10 @@ public sealed partial class EditorShell : UserControl
         foreach (var w in result.LogWarnings) AppendWarningLog(w);
     }
 
-    private void ProbeVulkanBackend()
-    {
-        _probeRoute.ProbeBackend(AppendInfoLog, AppendWarningLog);
-        _statusBarPanel?.SetVulkanStatus(
-            _probeRoute.State.Backend.IsAvailable ? "已接入" : "不可用");
-        UpdateVulkanViewportHost();
-        ProbeVulkanInstance();
-    }
-
     private void ProbeVulkanValidation()
     {
         _probeRoute.ProbeValidation(AppendInfoLog, AppendWarningLog);
         RefreshDiagnostics();
-    }
-
-    private void ProbeVulkanInstance()
-    {
-        _probeRoute.ProbeInstance(AppendInfoLog, AppendWarningLog);
-        ProbeVulkanDevice();
-    }
-
-    private void ProbeVulkanDevice()
-    {
-        _probeRoute.ProbeDevice(AppendInfoLog, AppendWarningLog);
-        ProbeVulkanSurface();
-    }
-
-    private void ProbeVulkanSurface()
-    {
-        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
-        _probeRoute.ProbeSurface(host, AppendInfoLog, AppendWarningLog);
-        RefreshDiagnostics();
-    }
-
-    private void ReportVulkanViewportNativeHost()
-    {
-        if (_vulkanViewportNativeHostReported)
-        {
-            return;
-        }
-
-        _vulkanViewportNativeHostReported = true;
-
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-
-        if (nativeHostInfo.HasNativeHandle)
-        {
-            AppendInfoLog(
-                $"Windows Vulkan 视口子窗口已创建，HWND：0x{nativeHostInfo.WindowHandle.ToInt64():X16}。");
-            ProbeVulkanSwapchain();
-            ProbeVulkanClear("初始启动");
-            ReportScene3dIsolation();
-            TryAutoStartScene3dSession();
-        }
-        else
-        {
-            AppendWarningLog(nativeHostInfo.Message);
-            ProbeVulkanSurface();
-        }
-    }
-
-    private void ProbeVulkanSwapchain()
-    {
-        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
-        if (!TryGetValidViewportSize(host, out var w, out var h, out var msg))
-        { _probeRoute.State.Swapchain = new(VulkanSwapchainStatus.Failed, msg, 0, "未知", "未知", 0, 0, 0); RefreshDiagnostics(); return; }
-        _probeRoute.ProbeSwapchain(host, w, h, AppendInfoLog, AppendWarningLog);
-        RefreshDiagnostics();
-    }
-
-    private void ProbeVulkanClear(string reason = "resize")
-    {
-        var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
-        if (!TryGetValidViewportSize(host, out var w, out var h, out var msg))
-        { _probeRoute.State.Clear = new(VulkanClearStatus.Failed, msg, "未知", 0, 0, 0); ShowVulkanClearInfo(); return; }
-        _renderSeq++; AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Clear | {w}x{h} | {reason}");
-        _probeRoute.ProbeClear(host, w, h, reason, AppendInfoLog, AppendWarningLog);
-        ShowVulkanClearInfo();
-    }
-    private void ShowVulkanClearInfo()
-    {
-        if (_probeRoute.State.Clear.IsSucceeded) _renderLastMode = "Clear";
-        RefreshDiagnostics();
-        RefreshDiagnostics();
-    }
-
-    private void ReportScene3dIsolation()
-    {
-        AppendInfoLog(_probeRoute.State.Gate.Message);
-        ShowVulkanScene3DInfo();
-    }
-
-    private void TryAutoStartScene3dSession()
-    {
-        if (_scene3dAutoStartAttempted) return;
-        _scene3dAutoStartAttempted = true;
-
-        if (!_probeRoute.State.Gate.CanRun)
-        {
-            AppendWarningLog($"Scene3D 自动启动跳过：{_probeRoute.State.Gate.Message}");
-            return;
-        }
-
-        if (_lifecycle.State.Session is not null || _sessionActive)
-        {
-            AppendInfoLog("Scene3D 会话已存在，跳过自动启动。");
-            return;
-        }
-
-        if (_renderSceneStore.Current.Objects.Count == 0)
-        {
-            AppendWarningLog("Scene3D 自动启动跳过：RenderScene 为空。");
-            return;
-        }
-
-        AppendInfoLog("Scene3D 自动启动...");
-        StartScene3dSession();
     }
 
     private void HandleScene3dRunRequested(object? sender, EventArgs e)
@@ -1754,7 +1678,8 @@ public sealed partial class EditorShell : UserControl
     {
         if (!_probeRoute.State.Gate.CanRun)
         {
-            ReportScene3dIsolation();
+            AppendInfoLog(_probeRoute.State.Gate.Message);
+            ShowVulkanScene3DInfo();
             return;
         }
 

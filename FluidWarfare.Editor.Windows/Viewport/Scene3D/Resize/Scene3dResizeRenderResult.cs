@@ -13,7 +13,7 @@ public sealed record Scene3dResizeRenderResult(
     public static Scene3dResizeRenderResult Resized(string log) =>
         new(Scene3dResizeAction.Resized, log, false, 0);
 
-    public static Scene3dResizeRenderResult Failure(string log, int newSeq) =>
+    public static Scene3dResizeRenderResult Failure(string? log, int newSeq) =>
         new(Scene3dResizeAction.ClearFallbackAfterFailure, log, true, newSeq);
 
     public static Scene3dResizeRenderResult ClearOnly(int newSeq) =>
