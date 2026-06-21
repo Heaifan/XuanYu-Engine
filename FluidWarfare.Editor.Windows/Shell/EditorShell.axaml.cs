@@ -31,6 +31,7 @@ using FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
 using FluidWarfare.Editor.Windows.Viewport.Camera;
 using FluidWarfare.Editor.Windows.Viewport.Navigation;
 using FluidWarfare.Editor.Windows.Viewport.Selection.Focus;
+using FluidWarfare.Editor.Windows.Viewport.Scene3D.Resize;
 using FluidWarfare.Editor.Windows.Shell.Feedback;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -92,7 +93,6 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorRunMenuRoute _runMenu = new();
     private DispatcherTimer? _viewportResizeRenderTimer;
     private bool _vulkanViewportNativeHostReported;
-    private bool _vulkanViewportRendering;
     private int _renderSeq;
     private string _renderLastMode = "无";
     private Scene3dSessionLifecycle _lifecycle = null!;
@@ -102,6 +102,7 @@ public sealed partial class EditorShell : UserControl
     private bool _scene3dAutoStartAttempted;
     private readonly ViewportNavigationRoute _navigationRoute = new();
     private readonly ViewportFocusSelectionRoute _viewportFocusRoute = new();
+    private readonly Scene3dResizeRenderRoute _resizeRenderRoute = new();
 
     // ─── 输入动作映射系统 ───────────────────────────────────
     private EditorInputService _inputService = EditorInputService.Instance;
@@ -251,7 +252,6 @@ public sealed partial class EditorShell : UserControl
     private void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         _vulkanViewportNativeHostReported = false;
-        _vulkanViewportRendering = false;
         _sessionActive = false;
         _lifecycle.Stop();
         if (_viewportResizeRenderTimer is not null)
@@ -299,58 +299,28 @@ public sealed partial class EditorShell : UserControl
 
     private void RedrawVulkanViewportOnce()
     {
-        if (!_probeRoute.State.Backend.IsAvailable || !_probeRoute.State.Device.IsCreated)
-        {
-            return;
-        }
+        var request = new Scene3dResizeRenderRequest(
+            _probeRoute.State.Backend.IsAvailable, _probeRoute.State.Device.IsCreated,
+            _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
+            _sessionActive, _lifecycle.State.Session,
+            _cameraRoute, _renderSceneStore.Current, _renderSeq);
 
-        if (_vulkanViewportRendering)
-        {
-            return;
-        }
+        var result = _resizeRenderRoute.RenderOnce(
+            request, _lifecycle, _probeRoute, AppendInfoLog, AppendWarningLog);
 
-        _vulkanViewportRendering = true;
-        try
-        {
-            if (_sessionActive && _lifecycle.State.Session is not null)
-            {
-                // 会话活跃时 resize 只重建 swapchain
-                var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-                    ?? VulkanViewportNativeHostInfo.NotAvailable;
+        ApplyResizeRenderResult(result);
+    }
 
-                if (nativeHostInfo.Width > 0 && nativeHostInfo.Height > 0)
-                {
-                    var resizePose = _cameraRoute.CreatePose();
-                    var result = _lifecycle.State.Session.Resize(
-                        (uint)nativeHostInfo.Width,
-                        (uint)nativeHostInfo.Height,
-                        resizePose,
-                        [.. Scene3dDrawListBuilder.Build(_renderSceneStore.Current)]);
-
-                    if (result.Success)
-                    {
-                        AppendInfoLog($"Scene3D resize：{result.ViewportWidth}x{result.ViewportHeight}");
-                    }
-                    else
-                    {
-                        AppendWarningLog($"Scene3D resize 失败：{result.Message}，回退 Clear。");
-                        // 回退：销毁会话，Clear
-                        // REMOVED: _lifecycle.State.Session.Dispose() — handled by Stop()
-                        _lifecycle.Stop();
-                        _sessionActive = false;
-                        ProbeVulkanClear("resize");
-                    }
-                }
-            }
-            else
-            {
-                // resize/maximize 时只执行最小清屏 probe
-                ProbeVulkanClear("resize");
-            }
-        }
-        finally
+    private void ApplyResizeRenderResult(Scene3dResizeRenderResult result)
+    {
+        if (result.LogMessage is not null)
+        { if (result.LogIsWarning) AppendWarningLog(result.LogMessage); else AppendInfoLog(result.LogMessage); }
+        if (result.NewRenderSeq > 0) _renderSeq = result.NewRenderSeq;
+        if (result.Action == Scene3dResizeAction.ClearFallbackAfterFailure) _sessionActive = false;
+        if (result.Action is Scene3dResizeAction.ClearFallback or Scene3dResizeAction.ClearFallbackAfterFailure)
         {
-            _vulkanViewportRendering = false;
+            if (_probeRoute.State.Clear.IsSucceeded) _renderLastMode = "Clear";
+            RefreshDiagnostics();
         }
     }
 
