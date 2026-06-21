@@ -1706,3 +1706,39 @@ EditorShell (1348 行)
         ├── EditorPickInputRoute.cs         79 行  视口点击选择
         └── EditorGroundHoverInputRoute.cs  46 行  地面悬停反馈
 ```
+
+---
+
+### 8.7.6.8D-4 — Scene3D Manual Run / Session Commands
+
+将 Shell 中的 Scene3D 手动运行/重启/Probe 命令提取到独立 Route。
+
+#### 新增（5 文件 `Shell/Scene3D/Commands/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorScene3dCommandRoute.cs` | 67 | Scene3D Run/Restart 命令编排 + Session Start |
+| `EditorScene3dCommandRequest.cs` | 20 | 请求（ProbeRoute / Lifecycle / RenderSceneStore / CameraRoute） |
+| `EditorScene3dCommandResult.cs` | 8 | SessionStarted / NeedsDiagnosticsRefresh / NeedsTransformInit |
+| `EditorScene3dCommandKind.cs` | 4 | Run / Restart 枚举 |
+| `EditorScene3dCommandState.cs` | 7 | 扩展用状态 |
+
+#### 修改
+
+- `EditorShell.axaml.cs`（1348→1193，-155 行）：
+  - `HandleScene3dRunRequested` + `TryRunScene3dProbeManually` → 1 行 Route 委托
+  - `HandleRestartScene3d` + `StartScene3dSession` → 1 行 Route 委托
+  - 移除 `ProbeVulkanScene3D`（64 行）+ `ShowVulkanScene3DInfo`（7 行）
+  - `InitTransformApplication` 保留在 Shell（Route 通过 Result.NeedsTransformInit 通知）
+  - 启动自动在 `BuildStartupVulkanRequest` 的回调改为通过 `Scene3dCommandRoute.Execute(Restart)`
+
+#### Shell 现状
+
+```text
+EditorShell (1193 行)
+├── Input 子系统（423 行，3 目录 15 文件）
+├── Scene3D Commands（106 行，5 文件）
+├── Startup（4 个 Route 文件）
+├── Lifecycle（5 个 Route 文件）
+└── 剩余：面板/选择/状态/诊断/Probe 约 500 行
+```

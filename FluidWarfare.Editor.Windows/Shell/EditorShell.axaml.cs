@@ -38,6 +38,7 @@ using FluidWarfare.Editor.Windows.Shell.Startup;
 using FluidWarfare.Editor.Windows.Shell.Lifecycle;
 using FluidWarfare.Editor.Windows.Shell.Input;
 using FluidWarfare.Editor.Windows.Shell.Input.Picking;
+using FluidWarfare.Editor.Windows.Shell.Scene3D.Commands;
 using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -115,6 +116,7 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorViewportInputRoute _viewportInputRoute = new();
     private readonly EditorGroundHoverInputRoute _groundHoverRoute = new();
     private readonly EditorPickInputRoute _pickInputRoute = new();
+    private readonly EditorScene3dCommandRoute _scene3dCommandRoute = new();
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
@@ -290,7 +292,7 @@ public sealed partial class EditorShell : UserControl
             InfoLog: AppendInfoLog,
             WarnLog: AppendWarningLog,
             RefreshDiagnostics: RefreshDiagnostics,
-            RequestScene3dStart: StartScene3dSession);
+            RequestScene3dStart: () => ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(BuildScene3dCommandRequest(EditorScene3dCommandKind.Restart))));
     }
 
     private void ApplyStartupVulkanResult(EditorStartupVulkanResult result)
@@ -473,113 +475,14 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleScene3dRunRequested(object? sender, EventArgs e)
     {
-        var currentGate = VulkanScene3dRunGate.Evaluate();
-        _probeRoute.State.Gate = currentGate with { }; // update gate with fresh Evaluate
-        // Refactor: can't reassign readonly field, use the gate's current state
-        // Actually _probeRoute.State.Gate is readonly, but we need to re-evaluate.
-        // Fix: make the field non-readonly or store the message separately.
-        TryRunScene3dProbeManually(currentGate);
-    }
-
-    private void TryRunScene3dProbeManually(VulkanScene3dRunGate gate)
-    {
-        // 取消 pending resize 防抖，防止 Clear 覆盖 Scene3D 画面
         _viewportResizeRenderTimer?.Stop();
-
-        if (!gate.CanRun)
-        {
-            AppendWarningLog(gate.Message);
-            _probeRoute.State.Scene3d = new VulkanScene3dInfo(
-                VulkanScene3dStatus.NotChecked, gate.Message,
-                0, 0, 0, 0, 0, 0, 0, "无", 0, false,
-                0, 0, 0,
-                gate.CanRun ? "可用" : "不可用（已隔离）", 0);
-            ShowVulkanScene3DInfo();
-            return;
-        }
-
-        // Gate says Ready — try running
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
-        {
-            _probeRoute.State.Scene3d = new VulkanScene3dInfo(
-                VulkanScene3dStatus.Failed, "场景3D：视口未就绪，跳过运行。",
-                0, 0, 0, 0, 0, 0, 0, "无", 0, false,
-                0, 0, 0, "不可用", 0);
-            ShowVulkanScene3DInfo();
-            return;
-        }
-
-        ProbeVulkanScene3D();
+        ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(BuildScene3dCommandRequest(EditorScene3dCommandKind.Run)));
     }
 
     private void HandleRestartScene3d()
     {
-        if (_lifecycle.State.Session is not null)
-        {
-            _lifecycle.Stop();
-
-            if (VulkanScene3dSwapchainResources.LiveCount != 0)
-            {
-                AppendErrorLog(
-                    $"拒绝重启 Scene3D：仍有 {VulkanScene3dSwapchainResources.LiveCount} 个 Swapchain 存活。");
-                _sessionActive = false;
-                return;
-            }
-        }
-
-        if (!_probeRoute.State.Gate.CanRun)
-        {
-            AppendWarningLog(_probeRoute.State.Gate.Message);
-            return;
-        }
-
-        StartScene3dSession();
+        ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(BuildScene3dCommandRequest(EditorScene3dCommandKind.Restart)));
     }
-
-    private void StartScene3dSession()
-    {
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
-        { AppendWarningLog("Scene3D 会话：视口未就绪。"); return; }
-
-        AppendInfoLog("正在启动 Scene3D 会话...");
-        _sessionActive = true;
-
-        _cameraRoute.Reset();
-        var pose = _cameraRoute.CreatePose();
-
-        var request = new Scene3dSessionStartRequest(
-            nativeHostInfo.InstanceHandle, nativeHostInfo.WindowHandle,
-            (uint)nativeHostInfo.Width, (uint)nativeHostInfo.Height, pose);
-        var result = _lifecycle.Start(request);
-
-        if (result.Success)
-        {
-            InitTransformApplication();
-            _renderLastMode = "Scene3D";
-            _renderSeq++;
-            AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Scene3D Session 启动 | " +
-                $"{nativeHostInfo.Width}x{nativeHostInfo.Height}");
-            AppendInfoLog(result.Message);
-        }
-        else
-        {
-            _sessionActive = false;
-            AppendErrorLog($"Scene3D 会话启动失败：{result.Message}");
-        }
-
-        RefreshDiagnostics();
-        RefreshDiagnostics();
-    }
-
-    // ─── 输入动作映射系统 ──────────────────────────────────
-    // 数据流：Win32 WM_ → RawPointerButtonDown/KeyDown 等
-    //       → WindowsViewportInputTranslator.OnRaw*()
-    //       → EditorInputMatch → ExecuteInputAction() → 统一执行方法
 
     private void InitializeInputPipeline()
     {
@@ -735,6 +638,19 @@ public sealed partial class EditorShell : UserControl
             _groundPlacementState, _worldDirtyState,
             AppendInfoLog, AppendWarningLog, ScheduleScene3dFrame, BuildTransformStartSnapshot,
             ApplyEntityTransform, CancelActiveTransform, ApplyPreviewPosition, ExecuteViewportFrameSelected);
+    }
+
+    private EditorScene3dCommandRequest BuildScene3dCommandRequest(EditorScene3dCommandKind kind) => new(kind,
+        _probeRoute, _lifecycle, _renderSceneStore,
+        _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
+        _cameraRoute, _renderSeq, AppendInfoLog, AppendWarningLog);
+
+    private void ApplyScene3dCommandResult(EditorScene3dCommandResult r)
+    {
+        if (r.SessionStarted) { _sessionActive = true; _renderLastMode = "Scene3D"; _renderSeq = r.NewRenderSeq; InitTransformApplication(); }
+        if (!r.SessionStarted && r.NeedsTransformInit) _sessionActive = false;
+        if (r.NeedsDiagnosticsRefresh) RefreshDiagnostics();
+        if (r.NewRenderSeq > _renderSeq) _renderSeq = r.NewRenderSeq;
     }
 
     private void ExecuteOpenPreferences()
@@ -1225,77 +1141,6 @@ public sealed partial class EditorShell : UserControl
     }
 
 
-
-    private void ProbeVulkanScene3D()
-    {
-        if (!_probeRoute.State.Gate.CanRun)
-        {
-            AppendInfoLog(_probeRoute.State.Gate.Message);
-            ShowVulkanScene3DInfo();
-            return;
-        }
-
-        var nativeHostInfo = _vulkanViewportHostPanel?.GetNativeHostInfo()
-            ?? VulkanViewportNativeHostInfo.NotAvailable;
-
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.InstanceHandle == 0 || nativeHostInfo.WindowHandle == 0)
-        {
-            _probeRoute.State.Scene3d = new VulkanScene3dInfo(
-                VulkanScene3dStatus.Failed, "缺少原生句柄，跳过 3D 场景绘制。",
-                0, 0, 0, 0, 0, 0, 0, "无", 0, false,
-                0, 0, 0, "无", 0);
-            ShowVulkanScene3DInfo();
-            return;
-        }
-
-        // 使用视口实际尺寸（避免 maximize 时硬编码出错）
-        var vpW = (uint)Math.Max(nativeHostInfo.Width, 1);
-        var vpH = (uint)Math.Max(nativeHostInfo.Height, 1);
-
-        // 生成地面网格（范围 -20 到 +20，间隔 2）
-        var gridVertices = VulkanScene3dVertices.BuildGrid(20, 2);
-
-        // 共享单位网格（单位立方体，位置由 per-object MVP 控制）
-        var unitVertices = VulkanScene3dVertices.BuildCube(0, 0, 0, 1.0f);
-
-        // 单位绘制信息：从 RenderScene 收集所有 UnitMarker 对象
-        var unitDraws = new List<VulkanScene3dUnitDrawInfo>();
-        foreach (var obj in _renderSceneStore.Current.Objects)
-        {
-            if (obj.VisualKind != RenderObjectVisualKind.UnitMarker)
-                continue;
-
-            var p = obj.Placement;
-            unitDraws.Add(new VulkanScene3dUnitDrawInfo(
-                obj.EntityId.Value.ToString(),
-                (float)(p?.VisualCenter.X ?? obj.Position.X),
-                (float)(p?.VisualCenter.Y ?? obj.Position.Y),
-                (float)(p?.VisualCenter.Z ?? obj.Position.Z + RenderUnitPlacement.HalfExtent),
-                (float)RenderUnitPlacement.Scale));
-        }
-
-        var camera = VulkanCameraInfo.DefaultBattlefield;
-
-        _renderSeq++;
-        AppendInfoLog($"RenderSeq-{_renderSeq:D3} | Scene3D | {vpW}x{vpH} | 手动触发");
-
-        _probeRoute.State.Scene3d = VulkanScene3dRenderer.RenderWindows(
-            nativeHostInfo.InstanceHandle,
-            nativeHostInfo.WindowHandle,
-            vpW, vpH, camera,
-            gridVertices.AsSpan(),
-            unitVertices.AsSpan(),
-            [.. unitDraws]);
-
-        ShowVulkanScene3DInfo();
-    }
-
-    private void ShowVulkanScene3DInfo()
-    {
-        if (_probeRoute.State.Scene3d.IsSucceeded) { _renderLastMode = "Scene3D"; AppendInfoLog(_probeRoute.State.Scene3d.Message); }
-        else if (_probeRoute.State.Scene3d.Status != VulkanScene3dStatus.NotChecked) AppendWarningLog($"Vulkan 3D 场景绘制失败：{_probeRoute.State.Scene3d.Message}");
-        RefreshDiagnostics();
-    }
 
     private void RefreshDiagnostics()
     {
