@@ -40,6 +40,7 @@ using FluidWarfare.Editor.Windows.Shell.Input;
 using FluidWarfare.Editor.Windows.Shell.Input.Picking;
 using FluidWarfare.Editor.Windows.Shell.Panels;
 using FluidWarfare.Editor.Windows.Shell.Scene3D.Commands;
+using FluidWarfare.Editor.Windows.Shell.Transform;
 using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -119,6 +120,8 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorPickInputRoute _pickInputRoute = new();
     private readonly EditorScene3dCommandRoute _scene3dCommandRoute = new();
     private readonly EditorPanelApplyRoute _panelApplyRoute = new();
+    private readonly EditorTransformApplyRoute _transformApplyRoute = new();
+    private readonly EditorGroundPlacementRoute _groundPlacementRoute = new();
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
@@ -542,29 +545,14 @@ public sealed partial class EditorShell : UserControl
             _lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo ?? PresentedMoveGizmoSnapshot.None);
     }
 
-    /// <summary>
-    /// 实时 Preview：将拖动的预览位置同步到 _renderSceneStore.Current + Vulkan，但不修改 WorldState。
-    /// 鼠标释放时由 HandleSceneToolPointerReleased 统一提交。
-    /// Preview 必须更新 _renderSceneStore.Current，否则 ScenePointerPicker.Pick 读到的仍是旧位置。
-    /// </summary>
     private void ApplyPreviewPosition()
     {
-        if (_selectionRoute.State.SelectedWorldEntity is null || _previewApplier is null) return;
-        _previewApplier.Apply(_pointerRoute.Session.PreviewTransform, _selectionRoute.State.SelectedWorldEntity.EntityId);
-        ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
+        _transformApplyRoute.Preview(_selectionRoute, _previewApplier, _pointerRoute, ScheduleScene3dFrame);
     }
 
-    // ─── 统一取消 ──────────────────────────────────────────────
-
-    /// <summary>
-    /// 统一取消活动变换。恢复视觉位置、_renderSceneStore.Current、Inspector，重置模态状态。
-    /// </summary>
     private void CancelActiveTransform(TransformInteractionResult r)
     {
-        if (r.Action != TransformInteractionAction.Cancelled || _selectionRoute.State.SelectedWorldEntity is null) return;
-        if (_cancelApplier is not null)
-            _cancelApplier.Apply(r.Transform, _selectionRoute.State.SelectedWorldEntity.EntityId);
-        ScheduleScene3dFrame(VulkanScene3dFrameReason.TransformPreview);
+        _transformApplyRoute.Cancel(r, _selectionRoute, _cancelApplier, ScheduleScene3dFrame);
     }
 
     // ─── 视口工具 ──────────────────────────────────────
@@ -880,16 +868,9 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleTransformApply(string xText, string yText, string zText)
     {
-        if (_selectionRoute.State.SelectedWorldEntity is null) return;
-
-        if (!EditorEntityTransformValidation.TryParse(xText, yText, zText,
-                out var newPos, out var error))
-        {
-            _inspectorPanel?.ShowTransformError(error);
-            return;
-        }
-
-        ApplyEntityTransform(CurrentEntityTransform() with { Position = newPos }, EditorEntityTransformOrigin.InspectorInput);
+        _transformApplyRoute.HandleInspectorApply(xText, yText, zText, _selectionRoute, _worldState,
+            _commitApplier, ScheduleScene3dFrame, AppendInfoLog,
+            err => { if (_inspectorPanel is not null) _inspectorPanel.ShowTransformError(err); });
     }
 
     private void HandleTransformReset()
@@ -939,123 +920,47 @@ public sealed partial class EditorShell : UserControl
     private void HandleScrubValueChanged(string entityId, TransformPositionAxis axis, double value)
     {
         if (_selectionRoute.State.SelectedWorldEntity is null) return;
-        // 防串写：事件携带的 entityId 必须与当前选中实体一致
-        if (_selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString() != entityId)
-        {
-            AppendWarningLog("数值拖拽目标实体已变化，忽略本次更新。");
-            return;
-        }
+        if (_selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString() != entityId) { AppendWarningLog("数值拖拽目标实体已变化，忽略本次更新。"); return; }
         var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (pos is null) return;
-
-        var current = pos.Value.Value;
-        var newPos = axis switch
-        {
-            TransformPositionAxis.X => new Vector3d(value, current.Y, current.Z),
-            TransformPositionAxis.Y => new Vector3d(current.X, value, current.Z),
-            _ => new Vector3d(current.X, current.Y, value),
-        };
-
-        ApplyEntityTransform(CurrentEntityTransform() with { Position = newPos }, EditorEntityTransformOrigin.DragScrub);
+        var cur = pos.Value.Value;
+        var newPos = axis switch { TransformPositionAxis.X => new Vector3d(value, cur.Y, cur.Z), TransformPositionAxis.Y => new Vector3d(cur.X, value, cur.Z), _ => new Vector3d(cur.X, cur.Y, value) };
+        _transformApplyRoute.Apply(_transformApplyRoute.CurrentEntityTransform(_selectionRoute, _worldState) with { Position = newPos }, EditorEntityTransformOrigin.DragScrub, _selectionRoute, _worldState, _commitApplier, ScheduleScene3dFrame, AppendInfoLog);
     }
 
-    private void HandleScrubCompleted(string entityId, TransformPositionAxis axis, double value)
-    {
-        AppendInfoLog($"数值拖拽完成：{axis} = {value:F3}");
-    }
+    private void HandleScrubCompleted(string entityId, TransformPositionAxis axis, double value) => AppendInfoLog($"数值拖拽完成：{axis} = {value:F3}");
 
     private void HandleScrubCancelled(string entityId, TransformPositionAxis axis, double initialValue)
     {
-        if (_selectionRoute.State.SelectedWorldEntity is null) return;
-        if (_selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString() != entityId)
-            return;
-
+        if (_selectionRoute.State.SelectedWorldEntity is null || _selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString() != entityId) return;
         var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
         if (pos is null) return;
-
-        var current = pos.Value.Value;
-        var restoredPos = axis switch
-        {
-            TransformPositionAxis.X => new Vector3d(initialValue, current.Y, current.Z),
-            TransformPositionAxis.Y => new Vector3d(current.X, initialValue, current.Z),
-            _ => new Vector3d(current.X, current.Y, initialValue),
-        };
-
-        ApplyEntityTransform(CurrentEntityTransform() with { Position = restoredPos }, EditorEntityTransformOrigin.DragScrub);
+        var cur = pos.Value.Value;
+        var restored = axis switch { TransformPositionAxis.X => new Vector3d(initialValue, cur.Y, cur.Z), TransformPositionAxis.Y => new Vector3d(cur.X, initialValue, cur.Z), _ => new Vector3d(cur.X, cur.Y, initialValue) };
+        _transformApplyRoute.Apply(_transformApplyRoute.CurrentEntityTransform(_selectionRoute, _worldState) with { Position = restored }, EditorEntityTransformOrigin.DragScrub, _selectionRoute, _worldState, _commitApplier, ScheduleScene3dFrame, AppendInfoLog);
         AppendInfoLog("数值拖拽已取消");
     }
 
     private void HandleGroundPlacementToggle()
     {
-        if (_selectionRoute.State.SelectedWorldEntity is null) return;
-        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
-        {
-            AppendWarningLog("Scene3D 未激活，无法进入放置模式。");
-            return;
-        }
-
-        if (_groundPlacementState.IsActive)
-        {
-            _groundPlacementState.Cancel();
-            _inspectorPanel?.SetPlacementMode(false);
-            _statusBarPanel?.SetCurrentSelection(
-                _selectionRoute.State.SelectedWorldEntity?.DisplayName ?? "无");
-        }
-        else
-        {
-            _groundPlacementState.Begin(_selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString());
-            _inspectorPanel?.SetPlacementMode(true);
-            _statusBarPanel?.SetCurrentSelection(
-                $"放置模式：点击空白地面放置 {_selectionRoute.State.SelectedWorldEntity.DisplayName}，Esc 取消");
-        }
+        _groundPlacementRoute.Toggle(_selectionRoute, _groundPlacementState, _sessionActive, _lifecycle, _inspectorPanel, _statusBarPanel, AppendWarningLog);
     }
 
-    /// <summary>
-    /// 原子式 Transform 提交。
-    /// </summary>
     private void ApplyEntityTransform(SceneTransform transform, EditorEntityTransformOrigin origin)
     {
-        if (_selectionRoute.State.SelectedWorldEntity is null || _commitApplier is null) return;
-        _commitApplier.Apply(transform, _selectionRoute.State.SelectedWorldEntity.EntityId);
-        ScheduleScene3dFrame(VulkanScene3dFrameReason.EntityTransformChanged);
-
-        // 日志（数值拖拽和移动工具已完成时不写日志，由调用层写）
-        if (origin != EditorEntityTransformOrigin.DragScrub && origin != EditorEntityTransformOrigin.MoveTool)
-        {
-            AppendInfoLog(
-                $"实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName} 坐标修改为 " +
-                $"({transform.Position.X:F2}, {transform.Position.Y:F2}, {transform.Position.Z:F2})。");
-        }
+        _transformApplyRoute.Apply(transform, origin, _selectionRoute, _worldState, _commitApplier, ScheduleScene3dFrame, AppendInfoLog);
     }
 
-    /// <summary>从当前选中实体的 WorldState 位置构造 SceneTransform。</summary>
     private SceneTransform CurrentEntityTransform()
     {
-        if (_selectionRoute.State.SelectedWorldEntity is null) return default;
-        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
-        return pos is not null ? new SceneTransform(pos.Value.Value, default, default) : default;
+        return _transformApplyRoute.CurrentEntityTransform(_selectionRoute, _worldState);
     }
-
-    // ─── 地面放置 ──────────────────────────────────────────────────
 
     private void CompleteGroundPlacement(Vector3d groundPosition)
     {
-        if (!_groundPlacementState.IsActive || _selectionRoute.State.SelectedWorldEntity is null) return;
-
-        // 地面放置：实体在地面锚点，Z = 平面高程（0）
-        var entityPos = new Vector3d(groundPosition.X, groundPosition.Y, 0);
-
-        ApplyEntityTransform(CurrentEntityTransform() with { Position = entityPos }, EditorEntityTransformOrigin.GroundPlacement);
-
-        if (_groundPlacementState.IsActive)
-        {
-            _groundPlacementState.Complete();
-            _inspectorPanel?.SetPlacementMode(false);
-            HideGroundCursor();
-            AppendInfoLog(
-                $"实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName} 已放置到 " +
-                $"X {entityPos.X:F2}，Y {entityPos.Y:F2}，Z {entityPos.Z:F2}。");
-        }
+        var r = _groundPlacementRoute.Complete(groundPosition, _selectionRoute, _groundPlacementState,
+            _worldState, _commitApplier, ScheduleScene3dFrame, _inspectorPanel, AppendInfoLog);
+        if (r.Completed) HideGroundCursor();
     }
 
     /// <summary>

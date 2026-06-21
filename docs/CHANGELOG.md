@@ -1755,14 +1755,37 @@ EditorShell (1348 行)
   - `ClearSelection` → panelApplyRoute
   - `ApplyStartupBootstrapResult` UI 部分 → panelApplyRoute
 
+---
+
+### 8.7.6.8E-1 — Transform / Ground Placement Apply 收口
+
+#### 新增（5 文件 `Shell/Transform/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorTransformApplyRoute.cs` | 70 | Transform 提交 / Preview / Cancel / Inspector Apply |
+| `EditorGroundPlacementRoute.cs` | 58 | 地面放置 Toggle / Complete |
+| `EditorTransformApplyRequest.cs` | 11 | Applier 依赖集合 |
+| `EditorTransformApplyResult.cs` | 3 | Applied / FrameRequested |
+| `EditorGroundPlacementResult.cs` | 3 | ModeActive / Completed |
+
+#### 修改
+
+- `EditorShell.axaml.cs`（1129→1034，-95 行）：
+  - `ApplyEntityTransform` / `CancelActiveTransform` / `ApplyPreviewPosition` → `_transformApplyRoute`
+  - `CompleteGroundPlacement` / `HandleGroundPlacementToggle` → `_groundPlacementRoute`
+  - `HandleScrubValueChanged` / `HandleScrubCancelled` → `_transformApplyRoute`
+  - `HandleTransformApply` / `CurrentEntityTransform` → `_transformApplyRoute`
+
 #### Shell 现状
 
 ```text
-EditorShell (1129 行)
+EditorShell (1034 行)
 ├── Input 子系统（423 行，3 目录 15 文件）
 ├── Scene3D Commands（106 行，5 文件）
 ├── Panels（85 行，5 文件）
 ├── Panels（85 行，5 文件）
+├── Transform（145 行，5 文件）
 ├── Startup（4 个 Route 文件）
 ├── Lifecycle（5 个 Route 文件）
 └── 剩余：面板/选择/状态/诊断/Probe 约 500 行
