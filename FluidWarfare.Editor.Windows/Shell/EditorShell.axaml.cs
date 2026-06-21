@@ -36,6 +36,7 @@ using FluidWarfare.Editor.Windows.Shell.Feedback;
 using FluidWarfare.Editor.Windows.Shell.Windows;
 using FluidWarfare.Editor.Windows.Shell.Startup;
 using FluidWarfare.Editor.Windows.Shell.Lifecycle;
+using FluidWarfare.Editor.Windows.Shell.Input;
 using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
 using FluidWarfare.Editor.Windows.Shell.Menu;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -110,10 +111,7 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorStartupBootstrapRoute _startupRoute;
     private readonly EditorShellAttachRoute _attachRoute = new();
     private readonly EditorShellDetachRoute _detachRoute = new();
-
-    // ─── 输入动作映射系统 ───────────────────────────────────
-    private EditorInputService _inputService = EditorInputService.Instance;
-    private WindowsViewportInputTranslator? _inputTranslator;
+    private readonly EditorViewportInputRoute _viewportInputRoute = new();
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
@@ -136,15 +134,8 @@ public sealed partial class EditorShell : UserControl
     // ─── 动作去重守卫 ──────────────────────────────────────
     private bool _frameSelectedPending;
 
-    // ─── 输入上下文栈 ──────────────────────────────────────
-    // 使用 List 作为栈，栈顶 = 当前活动上下文。
-    // 优先级由 EditorInputContextChain.ContextChain 中的顺序决定。
-    private readonly List<EditorInputActionContext> _inputContextStack = new() { EditorInputActionContext.Global };
-    private EditorInputActionContext _activeContext => _inputContextStack[^1];
-    private int _lastPointerX;
-    private int _lastPointerY;
+    // ─── 输入上下文栈（由 InputRoute 管理后暂未外移） ──────
 
-    private static readonly bool s_traceEnabled = Environment.GetEnvironmentVariable("FW_INPUT_TRACE") == "1";
 
     // ─── 地面拾取状态 ─────────────────────────────────────────────
     private readonly FluidWarfare.Editor.ViewportGround.EditorGroundPointerState _groundPointerState = new();
@@ -589,191 +580,54 @@ public sealed partial class EditorShell : UserControl
 
     private void InitializeInputPipeline()
     {
-        _inputService.Initialize();
-        _inputTranslator = new WindowsViewportInputTranslator(_inputService.CurrentSnapshot);
-        _inputService.SnapshotReplaced += snapshot =>
+        EditorInputService.Instance.Initialize();
+        _viewportInputRoute.State.Translator = new WindowsViewportInputTranslator(EditorInputService.Instance.CurrentSnapshot);
+        EditorInputService.Instance.SnapshotReplaced += snapshot =>
         {
-            _inputTranslator?.OnSnapshotReplaced(snapshot);
+            _viewportInputRoute.State.Translator?.OnSnapshotReplaced(snapshot);
         };
     }
 
     private void HandleRawKeyDown(int virtualKeyCode)
     {
-        if (s_traceEnabled)
-            System.Diagnostics.Debug.WriteLine(
-                $"[InputTrace-Shell] RawKeyDown vk=0x{virtualKeyCode:X2}");
-
-        // 变换按键：G/Enter/Esc → TransformKeyboardRoute
-        var gModalSnapshot = (virtualKeyCode is 0x47 or 0x1B) && _selectionRoute.State.SelectedWorldEntity is not null
-            ? BuildTransformStartSnapshot() : null;
-        var keyResult = TransformKeyboardRoute.HandleKeyDown(
-            virtualKeyCode, _pointerRoute,
-            _selectionRoute.State.SelectedWorldEntity?.EntityId, gModalSnapshot,
-            _lastPointerX, _lastPointerY);
-
-        if (keyResult.Action == TransformInteractionAction.Started)
-        {
-            _viewportToolPalette?.SetActiveTool(ViewportEditorTool.Move);
-            AppendInfoLog("G 移动：移动鼠标拖动，左键/Enter 确认，右键/Esc 取消");
-            return;
-        }
-        if (keyResult.Action == TransformInteractionAction.Confirmed)
-        {
-            ApplyEntityTransform(keyResult.Transform, EditorEntityTransformOrigin.MoveTool);
-            AppendInfoLog($"移动完成 ({keyResult.Transform.Position.X:F3}, {keyResult.Transform.Position.Y:F3}, {keyResult.Transform.Position.Z:F3})");
-            return;
-        }
-        if (keyResult.Action == TransformInteractionAction.Cancelled)
-        {
-            CancelActiveTransform(keyResult);
-            AppendInfoLog("变换已取消");
-            return;
-        }
-        if (keyResult.Action != TransformInteractionAction.NotHandled)
-            return;
-
-        if (_inputTranslator is null)
-        {
-            if (s_traceEnabled)
-                System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
-            return;
-        }
-        var match = _inputTranslator.OnRawKeyDown(virtualKeyCode, _lastPointerX, _lastPointerY);
-        ExecuteInputAction(match);
+        _viewportInputRoute.HandleKeyDown(BuildInputRequest(EditorViewportInputKind.KeyDown, keyCode: virtualKeyCode));
     }
 
     private void HandleRawKeyUp(int virtualKeyCode)
     {
-        _inputTranslator?.OnRawKeyUp(virtualKeyCode);
+        _viewportInputRoute.HandleKeyUp(BuildInputRequest(EditorViewportInputKind.KeyUp, keyCode: virtualKeyCode));
     }
 
     private void HandleRawPointerButtonDown(int buttonCode, int x, int y)
     {
-        if (s_traceEnabled)
-            System.Diagnostics.Debug.WriteLine(
-                $"[InputTrace-Shell] RawPointerButtonDown btn={buttonCode} x={x} y={y}");
-        _lastPointerX = x;
-        _lastPointerY = y;
-
-        // G 模态：左键确认，右键取消
-        if (_pointerRoute.IsBlenderGActive)
-        {
-            _pointerRoute.SetBlenderGActive(false);
-            if (buttonCode == 1)
-                HandleSceneToolPointerReleased(x, y);
-            else if (buttonCode == 2)
-                { var r = _pointerRoute.Cancel(TransformInteractionReason.Escape); CancelActiveTransform(r); AppendInfoLog("移动已取消"); }
-            return;
-        }
-
-        if (_inputTranslator is null)
-        {
-            if (s_traceEnabled)
-                System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
-            return;
-        }
-        var match = _inputTranslator.OnRawPointerButtonDown(buttonCode, x, y);
-        ExecuteInputAction(match);
+        _viewportInputRoute.HandlePointerDown(BuildInputRequest(EditorViewportInputKind.PointerDown, buttonCode: buttonCode, x: x, y: y));
     }
 
-    /// <summary>
-    /// 原始鼠标移动入口。转发到输入转换器，并驱动变换拖动。
-    /// </summary>
     private void HandleRawPointerMoved(int x, int y)
     {
-        _lastPointerX = x;
-        _lastPointerY = y;
-
-        // 更新 Gizmo Hover
-        if (_pointerRoute.IsMoveToolActive)
-        {
-            var g = _lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo;
-            if (g?.IsAvailable == true)
-                _pointerRoute.UpdateGizmoHover(x, y, g.Value.Layout);
-        }
-
-        // 驱动变换拖动（实时预览：位置同步到 Vulkan + 请求帧）
-        if (_pointerRoute.IsDragActive)
-        {
-            var r = _pointerRoute.OnPointerMoved(x, y);
-            if (r.Action == TransformInteractionAction.Previewed)
-            {
-                ApplyPreviewPosition();
-                return;
-            }
-        }
-
-        if (_inputTranslator is null) return;
-        var match = _inputTranslator.OnRawPointerMoved(x, y);
-        ExecuteInputAction(match);
+        _viewportInputRoute.HandlePointerMoved(BuildInputRequest(EditorViewportInputKind.PointerMoved, x: x, y: y));
     }
 
     private void HandleRawPointerButtonUp(int buttonCode, int x, int y)
     {
-        _inputTranslator?.OnRawPointerButtonUp(buttonCode);
+        _viewportInputRoute.HandlePointerUp(BuildInputRequest(EditorViewportInputKind.PointerUp, buttonCode: buttonCode, x: x, y: y));
     }
 
     private void HandleRawInputFocusLost()
     {
-        _inputTranslator?.OnRawInputFocusLost();
-        if (_pointerRoute.IsDragActive || _pointerRoute.IsBlenderGActive)
-        {
-            _pointerRoute.SetBlenderGActive(false);
-            CancelActiveTransform(_pointerRoute.Cancel(TransformInteractionReason.FocusLost));
-        }
+        _viewportInputRoute.HandleFocusLost(BuildInputRequest(EditorViewportInputKind.FocusLost));
     }
 
     // ─── 场景工具仲裁 ──────────────────────────────────
 
     private ViewportSceneToolPressResult HandleSceneToolPointerPressed(int x, int y)
     {
-        if (!_pointerRoute.IsMoveToolActive || _selectionRoute.State.SelectedWorldEntity is null)
-            return ViewportSceneToolPressResult.NotHandled;
-
-        var camSnapshot = _lifecycle.State.Session?.LastPresentedSnapshot;
-        if (camSnapshot is not { IsValid: true }) return ViewportSceneToolPressResult.NotHandled;
-
-        var startSnap = BuildTransformStartSnapshot();
-        if (startSnap is null) return ViewportSceneToolPressResult.NotHandled;
-
-        // 优先级 1: Gizmo 命中
-        if (_pointerRoute.HasHoveredElement)
-        {
-            var request = new TransformStartRequest(
-                TransformStartSource.GizmoHandle, MoveGizmoElement.ViewPlane, x, y);
-            var result = _pointerRoute.OnPointerPressed(request, startSnap.Value);
-            return result.Action == TransformInteractionAction.Started
-                ? ViewportSceneToolPressResult.BeginDrag
-                : ViewportSceneToolPressResult.NotHandled;
-        }
-
-        // 优先级 2: 未命中 Gizmo → 命中当前选中实体本体 → ViewPlane 拖动
-        var pick = _viewportPickRoute.Pick(new ViewportPickRequest(
-            x, y, camSnapshot,
-            _lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None,
-            _renderSceneStore.Current, SceneGroundPlane.Default));
-        if (pick.Kind == ViewportPickKind.Entity && pick.EntityId == _selectionRoute.State.SelectedWorldEntity.EntityId)
-        {
-            var request = new TransformStartRequest(
-                TransformStartSource.EntityBody, MoveGizmoElement.ViewPlane, x, y);
-            var result = _pointerRoute.OnPointerPressed(request, startSnap.Value);
-            if (result.Action == TransformInteractionAction.Started)
-            {
-                AppendInfoLog("实体本体拖动");
-                return ViewportSceneToolPressResult.BeginDrag;
-            }
-        }
-
-        return ViewportSceneToolPressResult.NotHandled;
+        return _viewportInputRoute.HandleSceneToolPressed(BuildInputRequest(EditorViewportInputKind.PointerDown, x: x, y: y));
     }
 
     private void HandleSceneToolPointerReleased(int x, int y)
     {
-        var result = _pointerRoute.OnPointerReleased();
-        if (result.Action != TransformInteractionAction.Confirmed) return;
-
-        ApplyEntityTransform(result.Transform, EditorEntityTransformOrigin.MoveTool);
-        AppendInfoLog($"移动完成 ({result.Transform.Position.X:F3}, {result.Transform.Position.Y:F3}, {result.Transform.Position.Z:F3})");
+        _viewportInputRoute.HandleSceneToolReleased(BuildInputRequest(EditorViewportInputKind.PointerUp, x: x, y: y));
     }
 
     /// <summary>初始化 Transform Application 层（Session 启动后调用）。</summary>
@@ -843,165 +697,7 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleRawMouseWheel(int delta, int packedModifiers)
     {
-        if (s_traceEnabled)
-            System.Diagnostics.Debug.WriteLine(
-                $"[InputTrace-Shell] RawMouseWheel delta={delta} mk=0x{packedModifiers:X4}");
-        if (_inputTranslator is null)
-        {
-            if (s_traceEnabled)
-                System.Diagnostics.Debug.WriteLine("[InputTrace-Shell] _inputTranslator is NULL!");
-            return;
-        }
-        var match = _inputTranslator.OnRawMouseWheel(delta, packedModifiers,
-            _lastPointerX, _lastPointerY);
-        ExecuteInputAction(match);
-    }
-
-    /// <summary>
-    /// 统一动作调度入口。所有动作 —— 键盘快捷键、鼠标手势、覆盖层按钮 ——
-    /// 最终都调用此方法分发到具体执行函数。
-    /// </summary>
-    private void ExecuteInputAction(EditorInputMatch match)
-    {
-        if (!match.IsMatch || match.Definition is null) return;
-
-        // 上下文过滤：当前活动上下文必须允许该动作的上下文
-        if (!CanExecuteInCurrentContext(match.Definition.Context))
-        {
-            if (s_traceEnabled)
-                System.Diagnostics.Debug.WriteLine(
-                    $"[InputTrace-Shell] BLOCKED action=\"{match.ActionId}\" " +
-                    $"ctx={match.Definition.Context} activeCtx={_activeContext}");
-            return;
-        }
-
-        if (s_traceEnabled)
-            System.Diagnostics.Debug.WriteLine(
-                $"[InputTrace-Shell] Executing action=\"{match.ActionId}\" " +
-                $"kind={match.ValueKind} dx={match.DeltaX} dy={match.DeltaY} wheel={match.WheelDelta}");
-
-        switch (match.ActionId)
-        {
-            case "viewport.orbit":
-                // DeltaX → Yaw（左右旋转），DeltaY → Pitch（上下俯仰）
-                // 负号与已正常工作的 Gizmo Orbit 方向保持一致
-                ExecuteViewportOrbit(-match.DeltaX, -match.DeltaY);
-                break;
-            case "viewport.pan":
-                ExecuteViewportPan(match.DeltaX, match.DeltaY);
-                break;
-            case "viewport.dolly":
-                ExecuteViewportDolly(match.DeltaY);
-                break;
-            case "viewport.zoom":
-                ExecuteViewportZoom(match.WheelDelta);
-                break;
-            case "viewport.frame_all":
-                ExecuteViewportFrameAll();
-                break;
-            case "viewport.frame_selected":
-                ExecuteViewportFrameSelected();
-                break;
-            case "viewport.toggle_projection":
-                ExecuteViewportToggleProjection();
-                break;
-            case "viewport.view_front":
-            case "viewport.view_back":
-            case "viewport.view_right":
-            case "viewport.view_left":
-            case "viewport.view_top":
-            case "viewport.view_bottom":
-                ExecuteViewportSnapToView(match.ActionId);
-                break;
-            case "tool.select":
-                _viewportToolPalette?.SetActiveTool(ViewportEditorTool.Select);
-                break;
-            case "tool.move":
-                _viewportToolPalette?.SetActiveTool(ViewportEditorTool.Move);
-                break;
-            case "editor.open_preferences":
-                ExecuteOpenPreferences();
-                break;
-            case "tool.cancel_current":
-                ExecuteCancelCurrentTool();
-                break;
-            case "transform.apply":
-                ExecuteTransformApply();
-                break;
-            case "transform.reset_draft":
-                ExecuteTransformResetDraft();
-                break;
-            default:
-                break;
-        }
-    }
-
-    /// <summary>
-    /// 上下文过滤。使用 EditorInputContextChain 的显式候选链判断
-    /// 动作上下文在当前活动上下文中是否允许执行。
-    /// </summary>
-    private bool CanExecuteInCurrentContext(EditorInputActionContext actionContext)
-        => EditorInputContextChain.IsContextAllowed(actionContext, _activeContext);
-
-    /// <summary>
-    /// 推送输入上下文（更高优先级上下文会拦截低优先级动作）。
-    /// 只在严格提升优先级时压栈。
-    /// </summary>
-    public void PushInputContext(EditorInputActionContext context)
-    {
-        if (EditorInputContextChain.IndexOf(context) < EditorInputContextChain.IndexOf(_activeContext))
-            _inputContextStack.Add(context);
-    }
-
-    /// <summary>
-    /// 弹出输入上下文（恢复到栈中上一层）。
-    /// </summary>
-    public void PopInputContext(EditorInputActionContext context)
-    {
-        if (_inputContextStack.Count > 1 && _inputContextStack[^1] == context)
-            _inputContextStack.RemoveAt(_inputContextStack.Count - 1);
-    }
-
-    // ─── 统一动作执行方法 ──────────────────────────────────
-
-    private void ExecuteViewportOrbit(float deltaYaw, float deltaPitch)
-    {
-        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
-            return;
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.Orbit(deltaYaw, deltaPitch));
-        if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
-    }
-
-    private void ExecuteViewportPan(int deltaX, int deltaY)
-    {
-        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
-            return;
-        var h = _vulkanViewportHostPanel?.GetNativeHostInfo().Height ?? 1;
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.Pan(deltaX, deltaY, Math.Max(1, h)));
-        if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
-    }
-
-    private void ExecuteViewportDolly(float deltaPixels)
-    {
-        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
-            return;
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.Dolly(deltaPixels));
-        if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
-    }
-
-    private void ExecuteViewportZoom(float wheelNotches)
-    {
-        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active)
-            return;
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.Zoom(wheelNotches));
-        if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
-    }
-
-    private void ExecuteViewportFrameAll()
-    {
-        if (!_sessionActive || _lifecycle.State.Session is null) return;
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.FrameAll());
-        if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
+        _viewportInputRoute.HandleMouseWheel(BuildInputRequest(EditorViewportInputKind.MouseWheel, wheelDelta: delta));
     }
 
     private void ExecuteViewportFrameSelected()
@@ -1016,51 +712,26 @@ public sealed partial class EditorShell : UserControl
                 _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
                 return;
             }
-
             var target = ViewportCameraFocusTarget.Compute(
                 _selectionRoute.State.SelectedWorldEntity.EntityId, _worldState!);
             if (target is null) return;
-
             var (cx, cy, cz, r) = target.Value;
             var result = _cameraRoute.Apply(new ViewportCameraCommand.FrameSelected(cx, cy, cz, r));
             _statusBarPanel?.SetCurrentSelection($"已聚焦实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName}。");
             if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
         }
-        finally
-        {
-            Dispatcher.UIThread.Post(() => _frameSelectedPending = false);
-        }
+        finally { Dispatcher.UIThread.Post(() => _frameSelectedPending = false); }
     }
 
-    private void ExecuteViewportToggleProjection()
+    private EditorViewportInputRequest BuildInputRequest(
+        EditorViewportInputKind kind, int keyCode = 0, int buttonCode = 0, int x = 0, int y = 0, int wheelDelta = 0)
     {
-        if (!_sessionActive || _lifecycle.State.Session is null) return;
-        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
-
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.ToggleProjection());
-        AppendInfoLog($"投影模式切换为：{_cameraRoute.LastCameraState.ProjectionMode}");
-        if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
-    }
-
-    private void ExecuteViewportSnapToView(string actionId)
-    {
-        if (!_sessionActive || _lifecycle.State.Session is null) return;
-        if (_lifecycle.State.Session.Status != VulkanScene3dSessionStatus.Active) return;
-
-        var view = actionId switch
-        {
-            "viewport.view_front" => SceneNavigationView.PositiveY,
-            "viewport.view_back" => SceneNavigationView.NegativeY,
-            "viewport.view_right" => SceneNavigationView.PositiveX,
-            "viewport.view_left" => SceneNavigationView.NegativeX,
-            "viewport.view_top" => SceneNavigationView.PositiveZ,
-            "viewport.view_bottom" => SceneNavigationView.NegativeZ,
-            _ => SceneNavigationView.Free
-        };
-        var result = _cameraRoute.Apply(new ViewportCameraCommand.SnapToView(view));
-        if (result.StateChanged)
-            AppendInfoLog($"切换到：{actionId}");
-        if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
+        return new EditorViewportInputRequest(kind, keyCode, buttonCode, x, y, wheelDelta,
+            _viewportInputRoute.State, _pointerRoute, _selectionRoute, _viewportToolPalette,
+            _cameraRoute, _lifecycle, _viewportPickRoute, _renderSceneStore,
+            _groundPlacementState, _worldDirtyState,
+            AppendInfoLog, AppendWarningLog, ScheduleScene3dFrame, BuildTransformStartSnapshot,
+            ApplyEntityTransform, CancelActiveTransform, ApplyPreviewPosition, ExecuteViewportFrameSelected);
     }
 
     private void ExecuteOpenPreferences()

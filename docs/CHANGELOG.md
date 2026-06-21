@@ -1580,3 +1580,56 @@ file-tree.md
 | Shell 行数 | ✅ 1796（目标 ≤1800） |
 | 新增文件 ≤100 行 | ✅ 全部通过 |
 | 代码宪法测试 | ✅ 通过 |
+
+---
+
+### 8.7.6.8D-1 — Input Pipeline / Raw Viewport Events
+
+#### 概述
+
+将 Shell 中的原始输入分发逻辑（RawKeyDown/Up、RawPointerButtonDown/Moved/Up、RawMouseWheel、RawInputFocusLost）提取到 `EditorViewportInputRoute`。Shell 的 8 个输入事件处理器从平均 25 行减为 1 行 Route 委托调用。
+
+#### 新增
+
+- `Shell/Input/` 目录下 5 个文件：
+  - `EditorViewportInputKind.cs`（13 行）：输入事件类型枚举
+  - `EditorViewportInputState.cs`（10 行）：`LastPointerX/Y`、`Translator`
+  - `EditorViewportInputRequest.cs`（37 行）：统一请求记录，携带原始数据 + 外部依赖快照
+  - `EditorViewportInputResult.cs`（4 行）：布尔结果
+  - `EditorViewportInputRoute.cs`（92 行）：完整输入分发编排 — Transform 交互仲裁、InputTranslator 转换、Action 执行（Orbit/Pan/Zoom/Dolly/FrameAll/FrameSelected/SnapToView/Tool 切换）
+
+#### 修改
+
+- `EditorShell.axaml.cs`（1796→1467，-329 行）：
+  - 8 个原始事件处理器改为 `_viewportInputRoute.Handle*(BuildInputRequest(...))` 一行委托
+  - `ExecuteInputAction`（74 行统一动作调度）→ 移入 Route
+  - `ExecuteViewportOrbit/Pan/Dolly/Zoom/FrameAll/ToggleProjection/SnapToView` → 移入 Route（共 ~100 行）
+  - `CanExecuteInCurrentContext`、`PushInputContext`、`PopInputContext` → 移除（不再使用）
+  - `_inputTranslator`、`_lastPointerX/Y`、`s_traceEnabled` → 移入 Route State
+
+#### 行为验证
+
+| 功能 | 状态 |
+|------|------|
+| 中键 Orbit | ✅ Route 内 `ViewportCameraCommand.Orbit` |
+| Shift+中键 Pan | ✅ Route 内 `ViewportCameraCommand.Pan` |
+| 滚轮 Zoom | ✅ Route 内 `ViewportCameraCommand.Zoom` |
+| G 键移动 | ✅ Route 内 `TransformKeyboardRoute.HandleKeyDown` |
+| ESC/Enter/G modal | ✅ Route 内完整 G 模态仲裁 |
+| Gizmo 拖动 | ✅ Route 内 `HandleSceneToolPressed/Released` |
+| 选中实体拖动 | ✅ Route 内 Picking + Body dragging |
+| 窗口失焦取消 | ✅ Route 内 `HandleFocusLost` |
+
+#### 变更文件
+
+```text
+新增：
+  Shell/Input/EditorViewportInputKind.cs
+  Shell/Input/EditorViewportInputRequest.cs
+  Shell/Input/EditorViewportInputResult.cs
+  Shell/Input/EditorViewportInputRoute.cs
+  Shell/Input/EditorViewportInputState.cs
+
+修改：
+  Shell/EditorShell.axaml.cs（1796 → 1467，-329 行）
+```
