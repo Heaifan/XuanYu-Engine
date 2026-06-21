@@ -1732,12 +1732,37 @@ EditorShell (1348 行)
   - `InitTransformApplication` 保留在 Shell（Route 通过 Result.NeedsTransformInit 通知）
   - 启动自动在 `BuildStartupVulkanRequest` 的回调改为通过 `Scene3dCommandRoute.Execute(Restart)`
 
+---
+
+### 8.7.6.8D-5 — Panel Operation Apply
+
+#### 新增（5 文件 `Shell/Panels/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorPanelApplyRoute.cs` | 53 | 面板展示应用层（Inspector/StatusBar/Viewport/Tree 同步） |
+| `EditorPanelApplyRequest.cs` | 13 | 面板引用记录（SetPanels 初始化） |
+| `EditorPanelApplyKind.cs` | 10 | 操作类型枚举 |
+| `EditorPanelApplyState.cs` | 6 | 上次选中实体 ID |
+| `EditorPanelApplyResult.cs` | 3 | 布尔结果 |
+
+#### 修改
+
+- `EditorShell.axaml.cs`（1193→1129，-64 行）：
+  - `ShowWorldEntitySelection` → panelApplyRoute
+  - `HandleViewportFocused` → panelApplyRoute
+  - `OnProjectContentSelected` → panelApplyRoute
+  - `ClearSelection` → panelApplyRoute
+  - `ApplyStartupBootstrapResult` UI 部分 → panelApplyRoute
+
 #### Shell 现状
 
 ```text
-EditorShell (1193 行)
+EditorShell (1129 行)
 ├── Input 子系统（423 行，3 目录 15 文件）
 ├── Scene3D Commands（106 行，5 文件）
+├── Panels（85 行，5 文件）
+├── Panels（85 行，5 文件）
 ├── Startup（4 个 Route 文件）
 ├── Lifecycle（5 个 Route 文件）
 └── 剩余：面板/选择/状态/诊断/Probe 约 500 行

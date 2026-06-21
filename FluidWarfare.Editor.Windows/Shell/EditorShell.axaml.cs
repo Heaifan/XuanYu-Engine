@@ -38,6 +38,7 @@ using FluidWarfare.Editor.Windows.Shell.Startup;
 using FluidWarfare.Editor.Windows.Shell.Lifecycle;
 using FluidWarfare.Editor.Windows.Shell.Input;
 using FluidWarfare.Editor.Windows.Shell.Input.Picking;
+using FluidWarfare.Editor.Windows.Shell.Panels;
 using FluidWarfare.Editor.Windows.Shell.Scene3D.Commands;
 using FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
 using FluidWarfare.Editor.Windows.Shell.Menu;
@@ -117,6 +118,7 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorGroundHoverInputRoute _groundHoverRoute = new();
     private readonly EditorPickInputRoute _pickInputRoute = new();
     private readonly EditorScene3dCommandRoute _scene3dCommandRoute = new();
+    private readonly EditorPanelApplyRoute _panelApplyRoute = new();
 
     // ─── 视口编辑工具 ────────────────────────────────────
     private ViewportToolPalette? _viewportToolPalette;
@@ -163,6 +165,7 @@ public sealed partial class EditorShell : UserControl
         _startupRoute = new(_projectBootstrap, _worldBootstrap, _renderSceneStore, _selectionRoute);
         AvaloniaXamlLoader.Load(this);
         FindShellControls();
+        _panelApplyRoute.SetPanels(new(_inspectorPanel, _statusBarPanel, _viewportPlaceholderPanel, _dockPanel));
         SubscribePanelEvents();
         InitializeFeedback();
         LoadSampleProject();
@@ -371,13 +374,11 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleViewportFocused(object? sender, EventArgs e)
     {
-        var result = _viewportFocusRoute.Focus(_worldState, _selectionRoute);
-        _inspectorPanel?.ShowSelection(result.InspectorSelection);
-        _statusBarPanel?.SetCurrentSelection(result.StatusBarText);
-        if (result.ShowEmptyWorld) _viewportPlaceholderPanel?.ShowEmptyWorld();
-        foreach (var m in result.LogMessages) AppendInfoLog(m);
-        foreach (var w in result.LogWarnings) AppendWarningLog(w);
-        if (result.EntityToShow is not null) ShowWorldEntitySelection(result.EntityToShow);
+        var r = _viewportFocusRoute.Focus(_worldState, _selectionRoute);
+        _panelApplyRoute.ShowViewportFocused(r.InspectorSelection, r.StatusBarText, r.ShowEmptyWorld);
+        foreach (var m in r.LogMessages) AppendInfoLog(m);
+        foreach (var w in r.LogWarnings) AppendWarningLog(w);
+        if (r.EntityToShow is not null) ShowWorldEntitySelection(r.EntityToShow);
     }
 
     private void HandlePreferencesClicked(object? sender, RoutedEventArgs e) =>
@@ -400,28 +401,17 @@ public sealed partial class EditorShell : UserControl
 
     private void OnProjectContentSelected(string? relativePath)
     {
-        var result = _contentSelectionPresenter.Present(relativePath, _contentFiles);
-        _inspectorPanel?.ShowProjectFileSelection(result.InspectorSelection);
-        _statusBarPanel?.SetCurrentSelection(result.StatusBarSelection ?? "无");
-        if (!string.IsNullOrEmpty(result.LogMessage))
-            AppendInfoLog(result.LogMessage);
+        var r = _contentSelectionPresenter.Present(relativePath, _contentFiles);
+        _panelApplyRoute.ApplyProjectContentSelection(r.InspectorSelection, r.StatusBarSelection, r.LogMessage, AppendInfoLog);
     }
 
     private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
     {
-        var isScene3dActive = _sessionActive && _lifecycle.State.Session?.Status == VulkanScene3dSessionStatus.Active;
-        var result = _worldSelectionPresenter.Present(entityInfo, _worldState,
-            _renderSceneStore.Current, isScene3dActive);
-
-        _inspectorPanel!.ShowWorldEntitySelection(
-            result.InspectorSelection, result.InspectorEntityId ?? "",
-            result.EntityPosition, result.EntitySourcePath);
-        _inspectorPanel.ScrubEntityId = result.InspectorEntityId ?? "";
-        _statusBarPanel?.SetCurrentSelection(result.StatusBarSelection ?? "无");
-        _inspectorPanel?.SetGroundPlaceEnabled(result.GroundPlaceEnabled);
-        if (result.ViewportSummary is not null)
-            _viewportPlaceholderPanel?.ShowEntitySummary(result.ViewportSummary);
-        AppendInfoLog(result.LogMessage);
+        var is3d = _sessionActive && _lifecycle.State.Session?.Status == VulkanScene3dSessionStatus.Active;
+        var r = _worldSelectionPresenter.Present(entityInfo, _worldState, _renderSceneStore.Current, is3d);
+        _panelApplyRoute.ApplyEntitySelection(r.InspectorSelection, r.InspectorEntityId, r.EntityPosition,
+            r.EntitySourcePath, r.GroundPlaceEnabled, r.StatusBarSelection,
+            r.ViewportSummary, r.LogMessage, AppendInfoLog);
     }
 
     private void AppendInfoLog(string message) => _feedback.Info(message);
@@ -436,32 +426,17 @@ public sealed partial class EditorShell : UserControl
 
     private void ApplyStartupBootstrapResult(EditorStartupBootstrapResult result)
     {
-        if (!result.Success)
-        {
-            _viewportPlaceholderPanel?.ShowNoWorldEntity();
-            var sel = new EditorSelection("项目加载", "加载失败", $"项目加载失败：{result.FailureMessage}");
-            _inspectorPanel?.ShowSelection(sel);
-            _statusBarPanel?.SetCurrentSelection("项目加载失败");
-            AppendErrorLog($"项目加载失败：{result.FailureMessage}");
-            return;
-        }
+        if (!result.Success) { _panelApplyRoute.ShowProjectLoadFailure(result.FailureMessage ?? "未知错误", AppendErrorLog); return; }
 
         _projectInfo = result.Project;
         _contentFiles = result.Project?.ContentFiles;
         RebuildAndShowHierarchy();
 
-        if (result.WorldResult is { HasEntities: true })
-        {
-            _worldState = result.WorldResult.World;
-            var summary = _viewportSelectionPresenter.CreateRenderSceneSummary(result.WorldResult.RenderScene);
-            _viewportPlaceholderPanel?.ShowNoWorldEntity();
-            _viewportPlaceholderPanel?.ShowRenderSceneSummary(summary);
-        }
-        else
-        {
-            _viewportPlaceholderPanel?.ShowNoWorldEntity();
-            _viewportPlaceholderPanel?.ShowRenderSceneSummary(ViewportRenderSceneSummary.Empty);
-        }
+        _worldState = result.WorldResult?.World;
+        var summary = result.WorldResult is not null
+            ? _viewportSelectionPresenter.CreateRenderSceneSummary(result.WorldResult.RenderScene)
+            : ViewportRenderSceneSummary.Empty;
+        _panelApplyRoute.ApplyStartupWorld(new(result.WorldResult?.HasEntities ?? false, summary));
 
         foreach (var m in result.LogMessages) AppendInfoLog(m);
         foreach (var w in result.LogWarnings) AppendWarningLog(w);
@@ -786,24 +761,14 @@ public sealed partial class EditorShell : UserControl
     private void ApplyEntitySelection(string? entityIdStr, EditorEntitySelectionOrigin origin)
     {
         var reason = MapReason(origin);
-        var req = new EditorSelectionRequest(entityIdStr, reason, _worldState);
         var result = entityIdStr is null
             ? _selectionRoute.ClearSelection(reason)
-            : _selectionRoute.SelectEntity(req);
-
+            : _selectionRoute.SelectEntity(new(entityIdStr, reason, _worldState));
         if (!result.IsChanged) return;
-
         if (result.Entity is not null)
-        {
-            ShowWorldEntitySelection(result.Entity);
-            SyncSceneSelection(result.Entity.EntityId.Value.ToString());
-        }
+        { ShowWorldEntitySelection(result.Entity); SyncSceneSelection(result.Entity.EntityId.Value.ToString()); }
         else
-        {
-            _inspectorPanel?.ShowNoSelection();
-            _statusBarPanel?.SetCurrentSelection("无");
-            _dockPanel?.ClearEntitySelection();
-        }
+            _panelApplyRoute.ClearSelection();
     }
 
     private void SyncSceneSelection(string entityId)
@@ -815,9 +780,8 @@ public sealed partial class EditorShell : UserControl
 
     private void ClearSelection()
     {
-        var r = _selectionRoute.ClearSelection(EditorSelectionReason.SelectionRestore);
-        _inspectorPanel?.ShowNoSelection();
-        _statusBarPanel?.SetCurrentSelection("无");
+        _selectionRoute.ClearSelection(EditorSelectionReason.SelectionRestore);
+        _panelApplyRoute.ClearSelection();
     }
 
     static EditorSelectionReason MapReason(EditorEntitySelectionOrigin o) => o switch
@@ -1099,45 +1063,17 @@ public sealed partial class EditorShell : UserControl
     /// </summary>
     private void RebuildAndShowHierarchy()
     {
-        // 项目内容树
-        if (_projectInfo is not null)
-        {
-            try
-            {
-                var projectTree = ProjectContentTreeBuilder.Build(_projectInfo);
-                _dockPanel?.ShowProjectContent(projectTree);
-            }
-            catch (Exception ex)
-            {
-                AppendErrorLog($"项目内容树构建失败：{ex.Message}");
-            }
-        }
+        if (_projectInfo is not null) try { _dockPanel?.ShowProjectContent(ProjectContentTreeBuilder.Build(_projectInfo)); } catch (Exception ex) { AppendErrorLog($"项目内容树构建失败：{ex.Message}"); }
+        if (_worldState is not null) try { _dockPanel?.ShowWorldHierarchy(WorldHierarchyTreeBuilder.Build(_worldState, BuildGroupLookup())); } catch (Exception ex) { AppendErrorLog($"世界层级树构建失败：{ex.Message}"); }
+    }
 
-        // 世界层级树
-        if (_worldState is null)
-        {
-            _dockPanel?.ShowWorldHierarchy(WorldHierarchyTree.Empty);
-            return;
-        }
-
-        // 从 RenderScene 构建 EntityId → 分组名映射
-        Dictionary<EntityId, string>? groupLookup = null;
-        if (_renderSceneStore.Current.Objects.Count > 0)
-        {
-            groupLookup = new Dictionary<EntityId, string>();
-            foreach (var obj in _renderSceneStore.Current.Objects)
-            {
-                var groupName = obj.VisualKind switch
-                {
-                    RenderObjectVisualKind.UnitMarker => "单位",
-                    _ => "其他"
-                };
-                groupLookup[obj.EntityId] = groupName;
-            }
-        }
-
-        var tree = WorldHierarchyTreeBuilder.Build(_worldState, groupLookup);
-        _dockPanel?.ShowWorldHierarchy(tree);
+    private Dictionary<EntityId, string>? BuildGroupLookup()
+    {
+        if (_renderSceneStore.Current.Objects.Count == 0) return null;
+        var map = new Dictionary<EntityId, string>();
+        foreach (var obj in _renderSceneStore.Current.Objects)
+            map[obj.EntityId] = obj.VisualKind == RenderObjectVisualKind.UnitMarker ? "单位" : "其他";
+        return map;
     }
 
 
