@@ -2724,3 +2724,37 @@ Vertex/
 | `Vertex/` 根目录 | 5 文件 ✅ ≤5 |
 | `Vertex/Buffer/` 子目录 | 1 文件 ✅ ≤5 |
 | `VertexBuffers.cs` | 59 行 ✅ ≤100 |
+
+---
+
+### 8.7.7E-2B-3 — CommandRecorder 模块收口
+
+`VulkanScene3dCommandRecorder.cs` 从 200 行拆至 45 行。按录制阶段分拆到 3 个辅助文件。
+
+#### 新增
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `Commands/VulkanScene3dCommandRenderPass.cs` | 49 | RecordBegin / RecordBeginRenderPass / RecordEnd（ClearValues + RenderPass 开始/结束） |
+| `Commands/VulkanScene3dCommandGrid.cs` | 52 | RecordDrawGrid + RecordDrawGroundCursor（Grid LineList + Cursor LineList，共享 Grid Pipeline） |
+| `Commands/VulkanScene3dCommandUnits.cs` | 56 | RecordDrawUnits + RecordDrawOverlay（Unit TriangleList 循环 + Overlay 最后叠加） |
+
+#### 修改
+
+- `Commands/VulkanScene3dCommandRecorder.cs`：200→45 行
+  - 编排器：Record() 入口调用 6 个录制阶段
+  - 数据记录 UnitDrawData / GroundCursorDrawData 保留在编排器
+
+#### 指针安全
+
+所有 stackalloc / fixed 在辅助方法内创建并立即使用，不返回带栈指针的 struct。
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error / 0 新 Warning |
+| `dotnet test` | ✅ 625/625 |
+| `Commands/` 文件数 | 4 ✅ ≤5 |
+| `CommandRecorder.cs` | 45 行 ✅ ≤100 |
+| 录制顺序不变 | ✅ Begin→RenderPass→Grid→Cursor→Units→Overlay→End |

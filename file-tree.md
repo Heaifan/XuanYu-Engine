@@ -469,7 +469,8 @@ Phase 1 证明最小闭环。
   ├─ E-2A Scene3D 目录合规            ✅
   ├─ E-2B-1 Pipeline 模块收口         ✅
   ├─ E-2B-2A Vertex 结构收口          ✅
-  └─ E-2B-2B VertexBuffers 收口       ✅ (最新)
+  ├─ E-2B-2B VertexBuffers 收口       ✅
+  └─ E-2B-3 CommandRecorder 收口      ✅ (最新)
 8.7.7F 全仓白名单债务清算             ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```
@@ -944,7 +945,10 @@ FluidWarfare/
 |   |   |   |-- VulkanScene3dInfo.cs (31 行)
 |   |   |   `-- VulkanScene3dStatus.cs (11 行)
 |   |   |-- Commands/
-|   |   |   `-- VulkanScene3dCommandRecorder.cs (200 行)
+|   |   |   |-- VulkanScene3dCommandRecorder.cs (45 行) [200→45 ✅]
+|   |   |   |-- VulkanScene3dCommandRenderPass.cs (49 行)
+|   |   |   |-- VulkanScene3dCommandGrid.cs (52 行)
+|   |   |   `-- VulkanScene3dCommandUnits.cs (56 行)
 |   |   |-- Depth/
 |   |   |   |-- VulkanScene3dDepthFormatSelector.cs
 |   |   |   |-- VulkanScene3dDepthAttachmentInfo.cs / DepthAttachments.cs
