@@ -467,7 +467,8 @@ Phase 1 证明最小闭环。
 8.7.7E VulkanScene3dRenderer          ✅
   ├─ E-1 Renderer 审计               ✅
   ├─ E-2A Scene3D 目录合规            ✅
-  └─ E-2B-1 Pipeline 模块收口         ✅ (最新)
+  ├─ E-2B-1 Pipeline 模块收口         ✅
+  └─ E-2B-2A Vertex 结构收口          ✅ (最新)
 8.7.7F 全仓白名单债务清算             ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```
@@ -928,7 +929,9 @@ FluidWarfare/
 |   |   |   |-- VulkanScene3dShaderModules.cs (74 行)
 |   |   |   `-- VulkanScene3dPushConstants.cs (38 行)
 |   |   |-- Vertex/
-|   |   |   |-- VulkanScene3dVertex.cs (171 行)
+|   |   |   |-- VulkanScene3dVertex.cs (9 行) [171→9 ✅]
+|   |   |   |-- VulkanScene3dVertexGrid.cs (43 行)
+|   |   |   |-- VulkanScene3dVertexCube.cs (34 行)
 |   |   |   |-- VulkanScene3dVertexBuffers.cs (171 行)
 |   |   |   `-- VulkanSceneAxisGeometry.cs (33 行)
 |   |   |-- Render/
