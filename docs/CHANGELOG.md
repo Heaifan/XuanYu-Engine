@@ -2820,3 +2820,44 @@ Commands/Draw/   (4文件) Grid / GroundCursor / Units / Overlay
 | `dotnet test` | ✅ 625/625 |
 | `Resources/` 文件数 | 3 ✅ ≤5 |
 | `RenderResources.cs` | 48 行 ✅ ≤100 |
+
+---
+
+### 8.7.7E-2C — VulkanScene3dRenderer 去重式 SRP 收口
+
+`VulkanScene3dRenderer.cs` 从 477 行拆至 36 行，按 SRP 分为 5 文件。
+
+#### 新增（`Render/Probe/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `Probe/VulkanScene3dRenderer.cs` | 36 | 编排器：RenderWindows 三阶段调用 |
+| `Probe/VulkanScene3dRendererSetup.cs` | 99 | ProbeCreateSession（Instance→Device→Swapchain→Resources 全流程编排） |
+| `Probe/VulkanScene3dRendererCreate.cs` | 67 | CreateInstance/CreateSurface/SelectDevice/CreateDevice/LoadProc/Fail |
+| `Probe/VulkanScene3dRendererSurface.cs` | 27 | QueryCaps/Formats/Modes + ChooseFormat/PresentMode/Extent |
+| `Probe/VulkanScene3dRendererFrame.cs` | 78 | ProbeRenderFrame（Acquire→MVP→Record→Submit→Present→Result） |
+
+#### 白名单
+
+- `VulkanScene3dRenderer.cs` 从 `s_lineWhitelist` 删除（36 行 ✅ ≤100）
+- E-2C 不新增白名单
+
+#### 结构
+
+```
+Render/
+├── RunGate.cs / Info.cs / Status.cs           (3 根文件)
+├── Resources/                                  (RenderResources)
+└── Probe/                                      (诊断探针, 5 文件)
+```
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error / 0 新 Warning |
+| `dotnet test` | ✅ 625/625 |
+| `Render/` 根目录 | 3 文件 ✅ ≤5 |
+| `Render/Probe/` 目录 | 5 文件 ✅ ≤5 |
+| `Renderer.cs` | 36 行 ✅ ≤100 |
+| 全部 Probe 文件 | ≤99 行 ✅ |

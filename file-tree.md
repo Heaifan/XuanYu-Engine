@@ -472,7 +472,8 @@ Phase 1 证明最小闭环。
   ├─ E-2B-2B VertexBuffers 收口       ✅
   ├─ E-2B-3 CommandRecorder 收口      ✅
   ├─ E-2B-3R Commands SRP 复核        ✅
-  └─ E-2B-4 RenderResources 收口      ✅ (最新)
+  ├─ E-2B-4 RenderResources 收口      ✅
+  └─ E-2C Renderer 去重式 SRP 收口    ✅ (最新)
 8.7.7F 全仓白名单债务清算             ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```
@@ -941,11 +942,16 @@ FluidWarfare/
 |   |   |   |   `-- VulkanScene3dVertexBufferCreate.cs (53 行)
 |   |   |   `-- VulkanSceneAxisGeometry.cs (33 行)
 |   |   |-- Render/
-|   |   |   |-- VulkanScene3dRenderer.cs (477 行)
-|   |   |   |-- VulkanScene3dRenderResources.cs (138 行)
 |   |   |   |-- VulkanScene3dRunGate.cs (58 行)
 |   |   |   |-- VulkanScene3dInfo.cs (31 行)
-|   |   |   `-- VulkanScene3dStatus.cs (11 行)
+|   |   |   |-- VulkanScene3dStatus.cs (11 行)
+|   |   |   |-- Probe/                           [477→36 ✅ 白名单删除]
+|   |   |   |   |-- VulkanScene3dRenderer.cs (36 行)
+|   |   |   |   |-- VulkanScene3dRendererCreate.cs (67 行)
+|   |   |   |   |-- VulkanScene3dRendererFrame.cs (78 行)
+|   |   |   |   |-- VulkanScene3dRendererSetup.cs (99 行)
+|   |   |   |   `-- VulkanScene3dRendererSurface.cs (27 行)
+|   |   |   |-- Resources/
 |   |   |-- Commands/
 |   |   |   |-- VulkanScene3dCommandRecorder.cs (45 行) [200→45 ✅]
 |   |   |   |-- VulkanScene3dCommandRenderPass.cs (49 行)
