@@ -682,10 +682,16 @@ FluidWarfare/
 |   |   |   |   |   `-- Focus/
 |   |   |   |   |       |-- NativeViewportFocusMessages.cs (19 行)
 |   |   |   |   |       `-- NativeViewportHitTestMessages.cs
+|   |   |   |   |   |-- Arbitration/
+|   |   |   |   |   |   |-- NativeViewportInputArbitration.cs (77 行)
+|   |   |   |   |   |   |-- NativeViewportInputArbitrationRequest.cs
+|   |   |   |   |   |   |-- NativeViewportInputArbitrationResult.cs
+|   |   |   |   |   |   |-- NativeViewportNavigationCapture.cs (26 行)
+|   |   |   |   |   |   `-- NativeViewportSceneToolCapture.cs (29 行)
 |   |   |   |   |-- NativeViewportHostInfo.cs
 |   |   |   |   |-- ViewportSceneToolPressResult.cs
 |   |   |   |   |-- Win32ViewportWindowClass.cs (56 行)
-|   |   |   |   |-- WindowsVulkanViewportHostControl.cs (369 行, 待继续拆分)
+|   |   |   |   |-- WindowsVulkanViewportHostControl.cs (328 行, 待继续拆分)
 |   |   |   |   |-- WindowsVulkanViewportHostInfo.cs
 |   |   |   |   |-- WindowsVulkanViewportHostState.cs
 |   |   |   |   `-- WindowsVulkanViewportPickInput.cs (53 行)

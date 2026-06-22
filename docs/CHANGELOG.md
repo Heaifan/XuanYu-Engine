@@ -2025,3 +2025,38 @@ Pointer 消息机械翻译层提取（wParam/lParam 解析 + capture/track）。
 | `dotnet test` | ✅ 625/625 |
 | `dotnet run Editor --no-build` | ✅ 成功 |
 | 白名单 | 无变更（Pointer/Keyboard/Focus 各 ≤5 文件） |
+
+---
+
+### 8.7.7C-4A — NativeHost Input Arbitration
+
+输入仲裁逻辑提取：Navigation → SceneTool → Legacy Picking 分发顺序。
+
+#### 新增（5 文件 `NativeHost/Input/Arbitration/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `NativeViewportInputArbitration.cs` | 77 | 左键仲裁 + KillFocus/CaptureChanged 清理 |
+| `NativeViewportInputArbitrationRequest.cs` | 4 | 仲裁请求数据 |
+| `NativeViewportInputArbitrationResult.cs` | 4 | 仲裁消费方枚举 |
+| `NativeViewportNavigationCapture.cs` | 26 | Overlay 导航捕获状态 |
+| `NativeViewportSceneToolCapture.cs` | 29 | 场景工具捕获状态 |
+
+#### 修改
+
+- `WindowsVulkanViewportHostControl.cs`：369→328 行
+  - 移除 `_leftButtonHandledByNavigation` / `_navigationDragCaptured` / `_leftButtonHandledBySceneTool` / `_sceneToolDragCaptured`
+  - 移除 `EndNavigationCapture()` / `EndSceneToolCapture()`
+  - `HandleLeftButtonDown/Up` / `HandleKillFocus` / `HandleCaptureChanged` 委托至 `NativeViewportInputArbitration`
+  - 保留：`_rawPointerDragCaptured`（中键拖拽）、生命周期、P/Invoke
+- 新增 `Trace()` 辅助方法统一日志输出
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 新增文件全部 ≤100 行 | ✅ |
+| 白名单 | 无变更（Arbitration 5 文件恰好在限内） |

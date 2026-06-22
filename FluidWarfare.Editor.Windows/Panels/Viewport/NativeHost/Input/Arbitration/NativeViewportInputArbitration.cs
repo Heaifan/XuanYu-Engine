@@ -1,0 +1,77 @@
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
+using FluidWarfare.Render.ViewportNavigation;
+
+namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
+
+sealed class NativeViewportInputArbitration
+{
+    public NativeViewportNavigationCapture NavCapture { get; } = new();
+    public NativeViewportSceneToolCapture ToolCapture { get; } = new();
+
+    public NativeViewportInputArbitrationConsumer HandleLeftDown(int mx, int my,
+        NativeViewportMouseCapture mouseCapture, nint hwnd,
+        Func<int, int, ViewportNavigationPressResult> navigationPressed,
+        Func<int, int, ViewportSceneToolPressResult> sceneToolPressed,
+        Action<int, int> legacyPickDown,
+        Action<int, int, int> rawButtonDown)
+    {
+        var navResult = navigationPressed(mx, my);
+        if (navResult != ViewportNavigationPressResult.NotHandled)
+        {
+            if (navResult == ViewportNavigationPressResult.BeginDrag)
+            { NavCapture.BeginDrag(); mouseCapture.Capture(hwnd); }
+            else NavCapture.SetActive();
+            return NativeViewportInputArbitrationConsumer.Navigation;
+        }
+        var toolResult = sceneToolPressed(mx, my);
+        if (toolResult == ViewportSceneToolPressResult.BeginDrag)
+        { ToolCapture.BeginDrag(); mouseCapture.Capture(hwnd); return NativeViewportInputArbitrationConsumer.SceneTool; }
+        legacyPickDown(mx, my);
+        rawButtonDown(1, mx, my);
+        return NativeViewportInputArbitrationConsumer.Legacy;
+    }
+
+    public void HandleLeftUp(int mx, int my,
+        NativeViewportMouseCapture mouseCapture,
+        Action navigationReleased,
+        Action<int, int> sceneToolReleased,
+        Action<int, int> legacyPickUp,
+        Action<int, int, int> rawButtonUp)
+    {
+        if (NavCapture.IsActive)
+        { NavCapture.End(); navigationReleased(); if (NavCapture.DragCaptured) mouseCapture.Release(); }
+        else if (ToolCapture.IsActive)
+        { ToolCapture.End(); sceneToolReleased(mx, my); if (ToolCapture.DragCaptured) mouseCapture.Release(); }
+        else
+        { legacyPickUp(mx, my); rawButtonUp(1, mx, my); }
+    }
+
+    public void HandleKillFocus(
+        Action legacyKillFocus,
+        bool rawDragWasActive,
+        Action rawFocusLost,
+        Action navCaptureLost,
+        Action toolFocusLost)
+    {
+        legacyKillFocus();
+        if (rawDragWasActive) rawFocusLost();
+        var hadNav = NavCapture.DragCaptured || NavCapture.IsActive;
+        NavCapture.ClearState();
+        var hadTool = ToolCapture.DragCaptured || ToolCapture.IsActive;
+        ToolCapture.ClearState();
+        if (hadNav) navCaptureLost();
+        if (hadTool) toolFocusLost();
+    }
+
+    public void HandleCaptureChanged(
+        NativeViewportMouseCapture mouseCapture,
+        Action navigationCaptureLost,
+        Action rawFocusLost,
+        bool rawDragWasActive)
+    {
+        if (NavCapture.DragCaptured || NavCapture.IsActive)
+        { NavCapture.ClearState(); navigationCaptureLost(); }
+        if (ToolCapture.DragCaptured || ToolCapture.IsActive)
+        { ToolCapture.ClearState(); rawFocusLost(); }
+    }
+}

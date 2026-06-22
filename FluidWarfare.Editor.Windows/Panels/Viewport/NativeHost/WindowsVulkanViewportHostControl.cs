@@ -6,6 +6,7 @@ using Avalonia.Platform;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Focus;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
 using FluidWarfare.Render.ViewportNavigation;
 
 namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -34,6 +35,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     readonly NativeViewportMouseTrack _mouseTrack = new();
     readonly NativeViewportKeyboardMessages _keyboardMessages = new();
     readonly NativeViewportFocusMessages _focusMessages = new();
+    readonly NativeViewportInputArbitration _arbitration = new();
 
     // ─── 原始输入事件 ─────────────────────────────────────────
 
@@ -66,10 +68,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     // ─── 状态 ──────────────────────────────────────────────
 
-    bool _leftButtonHandledByNavigation;
-    bool _navigationDragCaptured;
-    bool _leftButtonHandledBySceneTool;
-    bool _sceneToolDragCaptured;
     bool _rawPointerDragCaptured;
     readonly bool _traceEnabled;
     readonly WindowsVulkanViewportPickInput _pickInput = new();
@@ -157,7 +155,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         if (instance is null || instance._windowHandle != hwnd)
             return DefWindowProc(hwnd, msg, wParam, lParam);
 
-        // 指针消息（已提取至 NativeViewportPointerMessages）
         var parsed = instance._pointerMessages.Parse(msg, wParam, lParam);
         if (parsed is not null)
         {
@@ -185,7 +182,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             }
         }
 
-        // 键盘消息（已提取至 NativeViewportKeyboardMessages）
         var key = instance._keyboardMessages.Parse(msg, wParam);
         if (key is not null)
         {
@@ -197,10 +193,15 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             return 0;
         }
 
-        // 焦点 / 命中测试
         if (instance._focusMessages.IsKillFocus(msg))
         {
-            instance.HandleKillFocus();
+            instance._arbitration.HandleKillFocus(
+                () => instance._pickInput.OnKillFocus(),
+                instance._rawPointerDragCaptured,
+                () => instance.RawInputFocusLost?.Invoke(),
+                () => instance.NavigationCaptureLost?.Invoke(),
+                () => instance.RawInputFocusLost?.Invoke());
+            instance._rawPointerDragCaptured = false;
             return 0;
         }
         if (NativeViewportHitTestMessages.IsHitTest(msg))
@@ -214,8 +215,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     nint HandleMiddleButtonDown(int x, int y)
     {
         _focusMessages.SetFocusTo(_windowHandle);
-        if (_traceEnabled)
-            System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={x} y={y}");
+        Trace($"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={x} y={y}");
         _mouseCapture.Capture(_windowHandle);
         _rawPointerDragCaptured = true;
         RawPointerButtonDown?.Invoke(NativeViewportPointerMessages.VkMButton, x, y);
@@ -224,8 +224,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     nint HandleMiddleButtonUp(int x, int y)
     {
-        if (_traceEnabled)
-            System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MBUTTONUP code=4(Middle)");
+        Trace($"[InputTrace-NativeHost] WM_MBUTTONUP code=4(Middle)");
         _mouseCapture.ClearState();
         RawPointerButtonUp?.Invoke(NativeViewportPointerMessages.VkMButton, x, y);
         return 0;
@@ -235,101 +234,54 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     {
         _mouseTrack.Begin(_windowHandle);
         var navConsumed = NavigationPointerMoved?.Invoke(x, y) == true;
-        if (_navigationDragCaptured) navConsumed = true;
+        if (_arbitration.NavCapture.DragCaptured) navConsumed = true;
         if (!navConsumed) { RawPointerMoved?.Invoke(x, y); PointerMoved?.Invoke(x, y); }
         return 0;
     }
 
     nint HandleMouseWheel(int x, int y, int delta, int modifiers)
     {
-        if (_traceEnabled)
-            System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MOUSEWHEEL delta={delta} mk=0x{modifiers:X4}");
+        Trace($"[InputTrace-NativeHost] WM_MOUSEWHEEL delta={delta} mk=0x{modifiers:X4}");
         RawMouseWheel?.Invoke(delta, modifiers);
         return 0;
     }
 
-    // ─── 左键按下/抬起（含导航/场景工具仲裁）─────────────────
+    // ─── 左键按下/抬起（委托至 NativeViewportInputArbitration）─
 
     nint HandleLeftButtonDown(int mx, int my)
     {
         _focusMessages.SetFocusTo(_windowHandle);
-        var pressResult = NavigationPointerPressed?.Invoke(mx, my)
-            ?? ViewportNavigationPressResult.NotHandled;
-        _leftButtonHandledByNavigation = pressResult != ViewportNavigationPressResult.NotHandled;
-
-        if (pressResult == ViewportNavigationPressResult.BeginDrag)
-        {
-            _mouseCapture.Capture(_windowHandle);
-            _navigationDragCaptured = true;
-        }
-        else if (!_leftButtonHandledByNavigation)
-        {
-            var toolResult = SceneToolPointerPressed?.Invoke(mx, my)
-                ?? ViewportSceneToolPressResult.NotHandled;
-            if (toolResult == ViewportSceneToolPressResult.BeginDrag)
-            {
-                _leftButtonHandledBySceneTool = true;
-                _sceneToolDragCaptured = true;
-                _mouseCapture.Capture(_windowHandle);
-            }
-            else
-            {
-                _pickInput.OnDown(mx, my);
-                RawPointerButtonDown?.Invoke(1, mx, my);
-            }
-        }
+        _arbitration.HandleLeftDown(mx, my,
+            _mouseCapture, _windowHandle,
+            (x, y) => NavigationPointerPressed?.Invoke(x, y) ?? ViewportNavigationPressResult.NotHandled,
+            (x, y) => SceneToolPointerPressed?.Invoke(x, y) ?? ViewportSceneToolPressResult.NotHandled,
+            (x, y) => _pickInput.OnDown(x, y),
+            (c, x, y) => RawPointerButtonDown?.Invoke(c, x, y));
         return 0;
     }
 
     nint HandleLeftButtonUp(int mx, int my)
     {
-        if (_leftButtonHandledByNavigation)
-        {
-            _leftButtonHandledByNavigation = false;
-            var hadCapture = _navigationDragCaptured;
-            _navigationDragCaptured = false;
-            NavigationPointerReleased?.Invoke();
-            if (hadCapture) _mouseCapture.Release();
-        }
-        else if (_leftButtonHandledBySceneTool)
-        {
-            _leftButtonHandledBySceneTool = false;
-            var hadCapture = _sceneToolDragCaptured;
-            _sceneToolDragCaptured = false;
-            SceneToolPointerReleased?.Invoke(mx, my);
-            if (hadCapture) _mouseCapture.Release();
-        }
-        else
-        {
-            _pickInput.OnUp(mx, my);
-            RawPointerButtonUp?.Invoke(1, mx, my);
-        }
+        _arbitration.HandleLeftUp(mx, my,
+            _mouseCapture,
+            () => NavigationPointerReleased?.Invoke(),
+            (x, y) => SceneToolPointerReleased?.Invoke(x, y),
+            (x, y) => _pickInput.OnUp(x, y),
+            (c, x, y) => RawPointerButtonUp?.Invoke(c, x, y));
         return 0;
     }
 
-    // ─── Focus / Capture 变更 ────────────────────────────────
-
-    void HandleKillFocus()
-    {
-        _pickInput.OnKillFocus();
-        if (_rawPointerDragCaptured) { _rawPointerDragCaptured = false; RawInputFocusLost?.Invoke(); }
-        var hadNav = _navigationDragCaptured || _leftButtonHandledByNavigation;
-        EndNavigationCapture();
-        var hadTool = _sceneToolDragCaptured || _leftButtonHandledBySceneTool;
-        EndSceneToolCapture();
-        if (hadNav) NavigationCaptureLost?.Invoke();
-        if (hadTool) RawInputFocusLost?.Invoke();
-    }
+    // ─── Capture 变更 ────────────────────────────────────────
 
     void HandleCaptureChanged()
     {
         if (_rawPointerDragCaptured) { _rawPointerDragCaptured = false; RawInputFocusLost?.Invoke(); }
-        if (_navigationDragCaptured || _leftButtonHandledByNavigation) { EndNavigationCapture(); NavigationCaptureLost?.Invoke(); }
-        if (_sceneToolDragCaptured || _leftButtonHandledBySceneTool) { EndSceneToolCapture(); RawInputFocusLost?.Invoke(); }
+        _arbitration.HandleCaptureChanged(
+            _mouseCapture,
+            () => NavigationCaptureLost?.Invoke(),
+            () => RawInputFocusLost?.Invoke(),
+            false);
     }
-
-    void EndNavigationCapture() { _leftButtonHandledByNavigation = false; _navigationDragCaptured = false; _pickInput.OnKillFocus(); }
-    void EndSceneToolCapture() { _leftButtonHandledBySceneTool = false; _sceneToolDragCaptured = false; }
 
     // ─── 窗口调整大小 ────────────────────────────────────────
 
@@ -349,6 +301,13 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         _width = w; _height = h;
         _hostInfo = NativeViewportHostInfoStatics.CreateHostInfo(_windowHandle, _instanceHandle, _width, _height);
         if (changed) HostInfoChanged?.Invoke(this, _hostInfo);
+    }
+
+    // ─── 工具方法 ──────────────────────────────────────────
+
+    void Trace(string msg)
+    {
+        if (_traceEnabled) System.Diagnostics.Debug.WriteLine(msg);
     }
 
     // ─── P/Invoke ───────────────────────────────────────────
