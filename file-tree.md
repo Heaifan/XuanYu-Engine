@@ -925,7 +925,7 @@ FluidWarfare/
 |   |   |   |-- VulkanScene3dSession.Properties.cs (87 行)
 |   |   |   |-- VulkanScene3dSessionStatus.cs
 |   |   |   |-- VulkanScene3dFrameReason.cs / FrameResult.cs / FrameStatus.cs
-|   |   |   |-- VulkanScene3dSwapchainResources.cs (294 行)
+|   |   |   |-- VulkanScene3dSwapchainResources.cs (113 行)
 |   |   |   |-- Lifecycle/
 |   |   |   |   `-- VulkanScene3dSessionState.cs (36 行)
 |   |   |   |-- Handles/
@@ -937,6 +937,8 @@ FluidWarfare/
 |   |   |       |-- VulkanScene3dSwapchainFunctions.cs / CreateResult.cs
 |   |   |       |-- VulkanScene3dSwapchainStage.cs / Invariant.cs
 |   |   |       |-- VulkanScene3dSwapchainExtent.cs (16 行)
+|   |   |       |-- Create/
+|   |   |       |   `-- VulkanScene3dSwapchainCreateFlow.cs
 |   |   |       `-- VulkanScene3dSwapchainSelection.cs (21 行)
 |   |   |       |-- Images/
 |   |   |       |   |-- VulkanScene3dSwapchainImageViews.cs (43 行)
