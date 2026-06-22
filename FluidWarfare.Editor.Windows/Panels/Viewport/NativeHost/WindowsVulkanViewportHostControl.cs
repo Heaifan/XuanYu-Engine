@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
@@ -7,26 +5,20 @@ using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Focus;
 using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Lifecycle;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Win32;
 using FluidWarfare.Render.ViewportNavigation;
 
 namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
 
 public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 {
-    const int WsChild = 0x40000000;
-    const int WsVisible = 0x10000000;
-    const int WsClipChildren = 0x02000000;
-    const int WsClipSiblings = 0x04000000;
-    const int WindowStyle = WsChild | WsVisible | WsClipChildren | WsClipSiblings;
-
     [ThreadStatic]
     static WindowsVulkanViewportHostControl? _currentInstance;
 
     nint _windowHandle;
     nint _instanceHandle;
-    int _width;
-    int _height;
-    WindowsVulkanViewportHostInfo _hostInfo = WindowsVulkanViewportHostInfo.NotCreated;
+    readonly NativeViewportHostSync _hostSync = new();
 
     // ─── 提取的子组件 ─────────────────────────────────────────
 
@@ -83,13 +75,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         _pickInput.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
     }
 
-    public WindowsVulkanViewportHostInfo GetHostInfo() => _hostInfo;
-
-    public void RequestCapture()
-    {
-        if (_windowHandle != 0) _mouseCapture.Capture(_windowHandle);
-    }
-
+    public WindowsVulkanViewportHostInfo GetHostInfo() => _hostSync.Current;
+    public void RequestCapture() { if (_windowHandle != 0) _mouseCapture.Capture(_windowHandle); }
     public void RequestReleaseCapture() => _mouseCapture.Release();
 
     // ─── 生命周期 ────────────────────────────────────────────
@@ -98,51 +85,39 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     {
         if (!OperatingSystem.IsWindows())
         {
-            _hostInfo = NativeViewportHostInfoStatics.CreateUnsupportedPlatformInfo();
+            _hostSync.SetFailed("当前平台不支持 Windows Vulkan 视口子窗口。", _instanceHandle);
             return new PlatformHandle(0, "HWND");
         }
         if (parent.Handle == 0)
         {
-            _hostInfo = NativeViewportHostInfoStatics.CreateNoParentHandleInfo();
+            _hostSync.SetFailed("Avalonia 未提供可嵌入原生子窗口的父级句柄。", _instanceHandle);
             return new PlatformHandle(0, "HWND");
         }
         try
         {
-            _instanceHandle = GetModuleHandle(null);
-            if (_instanceHandle == 0)
+            var result = NativeViewportCreate.TryCreate(parent, CustomWndProc);
+            if (!result.Success)
             {
-                _hostInfo = NativeViewportHostInfoStatics.CreateFailedHostInfo(
-                    "无法获取当前进程模块句柄。", _instanceHandle, _width, _height);
+                _hostSync.SetFailed(result.ErrorMessage ?? "", result.InstanceHandle);
                 return new PlatformHandle(0, "HWND");
             }
+            _windowHandle = result.WindowHandle;
+            _instanceHandle = result.InstanceHandle;
             _currentInstance = this;
-            Win32ViewportWindowClass.EnsureRegistered(_instanceHandle, CustomWndProc);
-            _windowHandle = CreateWindowEx(0, Win32ViewportWindowClass.WindowClassName,
-                "FluidWarfare Vulkan Viewport", WindowStyle,
-                0, 0, 1, 1, parent.Handle, 0, _instanceHandle, 0);
-            if (_windowHandle == 0)
-            {
-                _hostInfo = NativeViewportHostInfoStatics.CreateFailedHostInfo(
-                    $"CreateWindowEx 失败：{new Win32Exception(Marshal.GetLastWin32Error()).Message}",
-                    _instanceHandle, _width, _height);
-                return new PlatformHandle(0, "HWND");
-            }
             SyncAndPublishHostInfo();
             return new PlatformHandle(_windowHandle, "HWND");
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
-            _hostInfo = NativeViewportHostInfoStatics.CreateFailedHostInfo(
-                $"Windows Vulkan 视口子窗口创建失败：{ex.Message}",
-                _instanceHandle, _width, _height);
+            _hostSync.SetFailed($"Windows Vulkan 视口子窗口创建失败：{ex.Message}", _instanceHandle);
             return new PlatformHandle(0, "HWND");
         }
     }
 
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
-        if (_windowHandle != 0) { DestroyWindow(_windowHandle); _windowHandle = 0; }
-        _hostInfo = WindowsVulkanViewportHostInfo.NotCreated;
+        NativeViewportDestroy.Destroy(_windowHandle, ref _windowHandle);
+        _hostSync.Reset();
         if (_currentInstance == this) _currentInstance = null;
         base.DestroyNativeControlCore(control);
     }
@@ -153,7 +128,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     {
         var instance = _currentInstance;
         if (instance is null || instance._windowHandle != hwnd)
-            return DefWindowProc(hwnd, msg, wParam, lParam);
+            return Win32ViewportDefaultProc.DefWindowProc(hwnd, msg, wParam, lParam);
 
         var parsed = instance._pointerMessages.Parse(msg, wParam, lParam);
         if (parsed is not null)
@@ -188,8 +163,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             instance._focusMessages.SetFocusTo(instance._windowHandle);
             if (key.Action == NativeViewportKeyboardAction.Down)
                 instance.RawKeyDown?.Invoke(key.VirtualKeyCode);
-            else
-                instance.RawKeyUp?.Invoke(key.VirtualKeyCode);
+            else instance.RawKeyUp?.Invoke(key.VirtualKeyCode);
             return 0;
         }
 
@@ -205,9 +179,9 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             return 0;
         }
         if (NativeViewportHitTestMessages.IsHitTest(msg))
-            return DefWindowProc(hwnd, msg, wParam, lParam);
+            return Win32ViewportDefaultProc.DefWindowProc(hwnd, msg, wParam, lParam);
 
-        return DefWindowProc(hwnd, msg, wParam, lParam);
+        return Win32ViewportDefaultProc.DefWindowProc(hwnd, msg, wParam, lParam);
     }
 
     // ─── 指针消息处理（原始翻译，不含编辑器业务）───────────────
@@ -251,8 +225,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     nint HandleLeftButtonDown(int mx, int my)
     {
         _focusMessages.SetFocusTo(_windowHandle);
-        _arbitration.HandleLeftDown(mx, my,
-            _mouseCapture, _windowHandle,
+        _arbitration.HandleLeftDown(mx, my, _mouseCapture, _windowHandle,
             (x, y) => NavigationPointerPressed?.Invoke(x, y) ?? ViewportNavigationPressResult.NotHandled,
             (x, y) => SceneToolPointerPressed?.Invoke(x, y) ?? ViewportSceneToolPressResult.NotHandled,
             (x, y) => _pickInput.OnDown(x, y),
@@ -262,8 +235,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     nint HandleLeftButtonUp(int mx, int my)
     {
-        _arbitration.HandleLeftUp(mx, my,
-            _mouseCapture,
+        _arbitration.HandleLeftUp(mx, my, _mouseCapture,
             () => NavigationPointerReleased?.Invoke(),
             (x, y) => SceneToolPointerReleased?.Invoke(x, y),
             (x, y) => _pickInput.OnUp(x, y),
@@ -293,36 +265,11 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     void SyncAndPublishHostInfo()
     {
-        var w = Math.Max(1, (int)Math.Round(Bounds.Width));
-        var h = Math.Max(1, (int)Math.Round(Bounds.Height));
-        if (w < 1 || h < 1) return;
-        var changed = !_hostInfo.HasWindowHandle || _width != w || _height != h;
-        NativeViewportHostInfoStatics.SyncWindowSize(_windowHandle, w, h);
-        _width = w; _height = h;
-        _hostInfo = NativeViewportHostInfoStatics.CreateHostInfo(_windowHandle, _instanceHandle, _width, _height);
-        if (changed) HostInfoChanged?.Invoke(this, _hostInfo);
+        if (_hostSync.Apply(_windowHandle, _instanceHandle, Bounds, out var info))
+            HostInfoChanged?.Invoke(this, info);
     }
 
     // ─── 工具方法 ──────────────────────────────────────────
 
-    void Trace(string msg)
-    {
-        if (_traceEnabled) System.Diagnostics.Debug.WriteLine(msg);
-    }
-
-    // ─── P/Invoke ───────────────────────────────────────────
-
-    [DllImport("kernel32.dll", EntryPoint = "GetModuleHandleW", SetLastError = true, CharSet = CharSet.Unicode)]
-    static extern nint GetModuleHandle(string? moduleName);
-
-    [DllImport("user32.dll", EntryPoint = "CreateWindowExW", SetLastError = true, CharSet = CharSet.Unicode)]
-    static extern nint CreateWindowEx(int exStyle, string className, string windowName,
-        int style, int x, int y, int w, int h, nint parent, nint menu, nint instance, nint param);
-
-    [DllImport("user32.dll", EntryPoint = "DestroyWindow", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    static extern bool DestroyWindow(nint hwnd);
-
-    [DllImport("user32.dll", EntryPoint = "DefWindowProcW")]
-    static extern nint DefWindowProc(nint hwnd, uint msg, nint wParam, nint lParam);
+    void Trace(string msg) { if (_traceEnabled) System.Diagnostics.Debug.WriteLine(msg); }
 }

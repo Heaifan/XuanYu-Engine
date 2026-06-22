@@ -2060,3 +2060,52 @@ Pointer 消息机械翻译层提取（wParam/lParam 解析 + capture/track）。
 | `dotnet run Editor --no-build` | ✅ 成功 |
 | 新增文件全部 ≤100 行 | ✅ |
 | 白名单 | 无变更（Arbitration 5 文件恰好在限内） |
+
+---
+
+### 8.7.7C-4B — NativeHost Lifecycle / PInvoke Cleanup
+
+生命周期创建/销毁/尺寸同步 + Win32 P/Invoke 归位。
+
+#### 新增（7 文件）
+
+**Lifecycle/**（4 文件）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `NativeViewportCreate.cs` | 40 | CreateNativeControlCore 主体 + WindowStyle 常量 + CreateWindowEx P/Invoke |
+| `NativeViewportDestroy.cs` | 16 | DestroyNativeControlCore 主体 |
+| `NativeViewportHostSync.cs` | 37 | SyncAndPublishHostInfo + OnBoundsChanged + _hostInfo 状态管理 |
+| `NativeViewportLifecycleResult.cs` | 7 | 创建结果记录 |
+
+**Win32/**（3 文件 + 1 移入）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `Win32ViewportWindowClass.cs` | 56 | 窗口类注册（从 NativeHost/ 移入，namespace 更新） |
+| `Win32ViewportDefaultProc.cs` | 9 | DefWindowProc P/Invoke |
+| `Win32ViewportModuleHandle.cs` | 10 | GetModuleHandle P/Invoke |
+| `Win32ViewportDestroyWindow.cs` | 9 | DestroyWindow P/Invoke |
+
+#### 修改
+
+- `WindowsVulkanViewportHostControl.cs`：328→275 行
+  - 移除 WindowStyle 常量、_width/_height 字段
+  - CreateNativeControlCore → 5 行委托 + 3 行错误分支
+  - DestroyNativeControlCore → 1 行委托 + reset
+  - SyncAndPublishHostInfo → 3 行委托
+  - 移除 GetModuleHandle/CreateWindowEx/DestroyWindow/DefWindowProc P/Invoke
+  - _hostInfo 字段替换为 _hostSync (NativeViewportHostSync)
+  - CustomWndProc 使用 Win32ViewportDefaultProc.DefWindowProc
+  - 保留：全部输入事件、仲裁、输入消息处理
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 新增文件全部 ≤56 行 ✅ |
+| Lifecycle/ 4 文件、Win32/ 4 文件（各 ≤5） ✅ |
+| 白名单 | 无变更 |

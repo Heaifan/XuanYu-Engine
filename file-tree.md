@@ -682,16 +682,25 @@ FluidWarfare/
 |   |   |   |   |   `-- Focus/
 |   |   |   |   |       |-- NativeViewportFocusMessages.cs (19 行)
 |   |   |   |   |       `-- NativeViewportHitTestMessages.cs
-|   |   |   |   |   |-- Arbitration/
-|   |   |   |   |   |   |-- NativeViewportInputArbitration.cs (77 行)
-|   |   |   |   |   |   |-- NativeViewportInputArbitrationRequest.cs
-|   |   |   |   |   |   |-- NativeViewportInputArbitrationResult.cs
-|   |   |   |   |   |   |-- NativeViewportNavigationCapture.cs (26 行)
-|   |   |   |   |   |   `-- NativeViewportSceneToolCapture.cs (29 行)
+|   |   |   |   |   `-- Arbitration/
+|   |   |   |   |       |-- NativeViewportInputArbitration.cs (77 行)
+|   |   |   |   |       |-- NativeViewportInputArbitrationRequest.cs
+|   |   |   |   |       |-- NativeViewportInputArbitrationResult.cs
+|   |   |   |   |       |-- NativeViewportNavigationCapture.cs (26 行)
+|   |   |   |   |       `-- NativeViewportSceneToolCapture.cs (29 行)
+|   |   |   |   |-- Lifecycle/
+|   |   |   |   |   |-- NativeViewportCreate.cs (40 行)
+|   |   |   |   |   |-- NativeViewportDestroy.cs (16 行)
+|   |   |   |   |   |-- NativeViewportHostSync.cs (37 行)
+|   |   |   |   |   `-- NativeViewportLifecycleResult.cs
+|   |   |   |   |-- Win32/
+|   |   |   |   |   |-- Win32ViewportWindowClass.cs (56 行)
+|   |   |   |   |   |-- Win32ViewportDefaultProc.cs
+|   |   |   |   |   |-- Win32ViewportModuleHandle.cs
+|   |   |   |   |   `-- Win32ViewportDestroyWindow.cs
 |   |   |   |   |-- NativeViewportHostInfo.cs
 |   |   |   |   |-- ViewportSceneToolPressResult.cs
-|   |   |   |   |-- Win32ViewportWindowClass.cs (56 行)
-|   |   |   |   |-- WindowsVulkanViewportHostControl.cs (328 行, 待继续拆分)
+|   |   |   |   |-- WindowsVulkanViewportHostControl.cs (275 行, 待继续拆分)
 |   |   |   |   |-- WindowsVulkanViewportHostInfo.cs
 |   |   |   |   |-- WindowsVulkanViewportHostState.cs
 |   |   |   |   `-- WindowsVulkanViewportPickInput.cs (53 行)
