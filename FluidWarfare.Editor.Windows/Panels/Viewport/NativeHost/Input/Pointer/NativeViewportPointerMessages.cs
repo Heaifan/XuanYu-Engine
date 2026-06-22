@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input;
+namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 
 /// <summary>Win32 原生指针消息解析与分发。只处理消息翻译，不含编辑器业务。</summary>
 sealed class NativeViewportPointerMessages

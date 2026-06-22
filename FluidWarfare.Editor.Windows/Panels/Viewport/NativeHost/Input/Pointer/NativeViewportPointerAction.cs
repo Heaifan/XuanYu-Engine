@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input;
+namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 
 /// <summary>原生指针动作类型。</summary>
 enum NativeViewportPointerAction

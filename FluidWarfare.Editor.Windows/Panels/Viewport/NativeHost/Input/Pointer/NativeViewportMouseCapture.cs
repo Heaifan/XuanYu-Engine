@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input;
+namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 
 /// <summary>Win32 鼠标捕获管理。封装 SetCapture / ReleaseCapture 和捕获状态。</summary>
 sealed class NativeViewportMouseCapture

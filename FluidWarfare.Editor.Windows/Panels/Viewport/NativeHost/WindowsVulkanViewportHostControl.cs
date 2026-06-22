@@ -3,7 +3,9 @@ using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
-using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Focus;
 using FluidWarfare.Render.ViewportNavigation;
 
 namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -15,22 +17,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     const int WsClipChildren = 0x02000000;
     const int WsClipSiblings = 0x04000000;
     const int WindowStyle = WsChild | WsVisible | WsClipChildren | WsClipSiblings;
-
-    // 非指针消息常量（指针常量移至 NativeViewportPointerMessages）
-    const uint WmKeyDown = 0x0100;
-    const uint WmKeyUp = 0x0101;
-    const uint WmKillFocus = 0x0008;
-    const uint WmNcHitTest = 0x0084;
-    const int VkHome = 0x24;
-    const int VkEscape = 0x1B;
-    const int VkShift = 0x10;
-    const int VkControl = 0x11;
-    const int VkMenu = 0x12;
-    const int VkDecimal = 0x6E;
-    const int VkNumpad5 = 0x65;
-    const int MkLButton = 0x0001;
-    const int MkRButton = 0x0002;
-    const int MkMbutton = 0x0010;
 
     [ThreadStatic]
     static WindowsVulkanViewportHostControl? _currentInstance;
@@ -46,6 +32,8 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     readonly NativeViewportPointerMessages _pointerMessages = new();
     readonly NativeViewportMouseCapture _mouseCapture = new();
     readonly NativeViewportMouseTrack _mouseTrack = new();
+    readonly NativeViewportKeyboardMessages _keyboardMessages = new();
+    readonly NativeViewportFocusMessages _focusMessages = new();
 
     // ─── 原始输入事件 ─────────────────────────────────────────
 
@@ -169,7 +157,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         if (instance is null || instance._windowHandle != hwnd)
             return DefWindowProc(hwnd, msg, wParam, lParam);
 
-        // 指针消息解析（不包含编辑器业务仲裁）
+        // 指针消息（已提取至 NativeViewportPointerMessages）
         var parsed = instance._pointerMessages.Parse(msg, wParam, lParam);
         if (parsed is not null)
         {
@@ -177,49 +165,47 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             {
                 case NativeViewportPointerAction.LeftDown:
                     return instance.HandleLeftButtonDown(parsed.X, parsed.Y);
-
                 case NativeViewportPointerAction.LeftUp:
                     return instance.HandleLeftButtonUp(parsed.X, parsed.Y);
-
                 case NativeViewportPointerAction.MiddleDown:
                     return instance.HandleMiddleButtonDown(parsed.X, parsed.Y);
-
                 case NativeViewportPointerAction.MiddleUp:
                     return instance.HandleMiddleButtonUp(parsed.X, parsed.Y);
-
                 case NativeViewportPointerAction.Move:
                     return instance.HandlePointerMove(parsed.X, parsed.Y);
-
                 case NativeViewportPointerAction.Leave:
                     instance._mouseTrack.Reset();
                     instance.PointerLeft?.Invoke();
                     return 0;
-
                 case NativeViewportPointerAction.Wheel:
                     return instance.HandleMouseWheel(parsed.X, parsed.Y, parsed.WheelDelta, parsed.ModifierFlags);
-
                 case NativeViewportPointerAction.CaptureChanged:
                     instance.HandleCaptureChanged();
                     return 0;
             }
         }
 
-        // 非指针消息
-        switch (msg)
+        // 键盘消息（已提取至 NativeViewportKeyboardMessages）
+        var key = instance._keyboardMessages.Parse(msg, wParam);
+        if (key is not null)
         {
-            case WmKeyDown:
-                SetFocus(instance._windowHandle);
-                instance.RawKeyDown?.Invoke((int)wParam);
-                return 0;
-            case WmKeyUp:
-                instance.RawKeyUp?.Invoke((int)wParam);
-                return 0;
-            case WmKillFocus:
-                instance.HandleKillFocus();
-                return 0;
-            case WmNcHitTest:
-                return DefWindowProc(hwnd, msg, wParam, lParam);
+            instance._focusMessages.SetFocusTo(instance._windowHandle);
+            if (key.Action == NativeViewportKeyboardAction.Down)
+                instance.RawKeyDown?.Invoke(key.VirtualKeyCode);
+            else
+                instance.RawKeyUp?.Invoke(key.VirtualKeyCode);
+            return 0;
         }
+
+        // 焦点 / 命中测试
+        if (instance._focusMessages.IsKillFocus(msg))
+        {
+            instance.HandleKillFocus();
+            return 0;
+        }
+        if (NativeViewportHitTestMessages.IsHitTest(msg))
+            return DefWindowProc(hwnd, msg, wParam, lParam);
+
         return DefWindowProc(hwnd, msg, wParam, lParam);
     }
 
@@ -227,7 +213,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     nint HandleMiddleButtonDown(int x, int y)
     {
-        SetFocus(_windowHandle);
+        _focusMessages.SetFocusTo(_windowHandle);
         if (_traceEnabled)
             System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={x} y={y}");
         _mouseCapture.Capture(_windowHandle);
@@ -266,7 +252,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     nint HandleLeftButtonDown(int mx, int my)
     {
-        SetFocus(_windowHandle);
+        _focusMessages.SetFocusTo(_windowHandle);
         var pressResult = NavigationPointerPressed?.Invoke(mx, my)
             ?? ViewportNavigationPressResult.NotHandled;
         _leftButtonHandledByNavigation = pressResult != ViewportNavigationPressResult.NotHandled;
@@ -377,9 +363,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     [DllImport("user32.dll", EntryPoint = "DestroyWindow", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     static extern bool DestroyWindow(nint hwnd);
-
-    [DllImport("user32.dll")]
-    static extern nint SetFocus(nint hwnd);
 
     [DllImport("user32.dll", EntryPoint = "DefWindowProcW")]
     static extern nint DefWindowProc(nint hwnd, uint msg, nint wParam, nint lParam);

@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-12 16:00
+最后编辑：2026-06-22 15:00
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -14,7 +14,111 @@
 
 ## 1. 未发布变更日志
 
-### 新增
+最后编辑：2026-06-22 15:00（8.7.7C-1）
+
+### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
+
+以下变更覆盖 Milestone 8.7.6 至 8.7.7 的 SRP（单一职责原则）重构，总计 62 个提交，将 EditorShell.axaml.cs 从 3,041 行降至 970 行，并对多个面板进行了职责拆分。
+
+**EditorShell 提取 Route 类（8.7.6.1 — 8.7.6.8E）：**
+1. 8.7.6.1：创建 `FluidWarfare.Editor.Windows/Shell/Scene3D/Frame/Scene3dFrameRoute.cs`、`Scene3dFrameState.cs`、`Scene3dDrawListBuilder.cs`、`Scene3dPresentedState.cs`— 提取 Scene3D 帧路径。
+2. 8.7.6.2：创建 `FluidWarfare.Editor.Windows/Viewport/Picking/ViewportPointerPickRoute.cs`、`ViewportPickRequest.cs`、`ViewportPickResult.cs`、`ViewportPickFailure.cs`、`ViewportPickTrace.cs`— 提取视口指针拾取路由。
+3. 8.7.6.3A：创建 `FluidWarfare.Editor.Windows/Viewport/Transform/Interaction/TransformInteractionState.cs`、`TransformInteractionResult.cs`、`TransformPointerRoute.cs`、`TransformKeyboardRoute.cs`、`TransformStartRequest.cs`— 提取变换交互。
+4. 8.7.6.3B：创建 `FluidWarfare.Editor.Windows/Viewport/Transform/Application/EntityTransformPreview.cs`、`EntityTransformCommit.cs`、`EntityTransformCancel.cs`、`TransformApplyResult.cs`— 提取变换应用层。
+5. 8.7.6.3C：创建 `FluidWarfare.Editor.Windows/Viewport/Transform/Gizmo/MoveGizmoDrawList.cs`、`MoveGizmoElement.cs`、`MoveGizmoHitTest.cs`、`MoveGizmoInteraction.cs`、`MoveGizmoLayout.cs`、`MoveGizmoVisualState.cs`、`PresentedMoveGizmoSnapshot.cs` 等 — 提取 Gizmo 呈现。
+6. 8.7.6.4A：创建 `Scene3dFrameSubmitRoute.cs`、`Scene3dFrameSubmitInput.cs`、`Scene3dPickSnapshotSource.cs`、`Scene3dGizmoSubmitSource.cs`— 提取帧提交。
+7. 8.7.6.4B：创建 `Scene3dSessionLifecycle.cs`、`Scene3dSessionState.cs`、`Scene3dSessionStartRequest.cs`、`Scene3dSessionStartResult.cs`、`Scene3dSessionRestartReason.cs`— 提取 Session 生命周期。
+8. 8.7.6.4C：创建 `VulkanViewportProbeRoute.cs`、`VulkanViewportProbeState.cs`、`VulkanViewportProbeResult.cs`、`Scene3dDiagnosticSnapshot.cs`、`Scene3dDiagnosticText.cs`— 提取 Diagnostics。
+9. 8.7.6.5A：创建 `ViewportSelectionPresenter.cs`、`EditorSelectionPresenter.cs`、`WorldEntitySelectionPresenter.cs`、`ProjectContentSelectionPresenter.cs`、`SelectionPresentationResult.cs`— 提取选择呈现。
+10. 8.7.6.5B：创建 `EditorSelectionRoute.cs`、`EditorSelectionRequest.cs`、`EditorSelectionState.cs`、`EditorSelectionRouteResult.cs`、`EditorSelectionReason.cs`— 提取选择路由与状态。
+11. 8.7.6.5C：创建 `FluidWarfare.Tests/Architecture/CodeFileBudgetTests.cs`— 架构扫描测试（代码宪法自动化）。
+12. 8.7.6.6A：创建 `ProjectBootstrapRoute.cs`、`ProjectBootstrapResult.cs`— 提取项目引导。
+13. 8.7.6.6B：创建 `WorldBootstrapRoute.cs`、`WorldBootstrapInput.cs`、`WorldBootstrapResult.cs`、`WorldBootstrapEntitySeed.cs`、`WorldBootstrapRenderSeed.cs`— 提取世界引导。
+14. 8.7.6.7A：创建 `ViewportCameraRoute.cs`、`ViewportCameraCommand.cs`、`ViewportCameraResult.cs`、`ViewportCameraFocusTarget.cs`— 提取相机路由。
+15. 8.7.6.7B：创建 `ViewportNavigationRoute.cs`、`ViewportNavigationResponse.cs`— 提取导航路由。
+16. 8.7.6.8A：创建 `EditorRunMenuRoute.cs`— 提取运行菜单。创建 `EditorDiagnosticsRefreshRoute.cs`、`EditorDiagnosticsRefreshRequest.cs`、`EditorDiagnosticsRefreshResult.cs`、`EditorDiagnosticsRefreshState.cs`、`EditorDiagnosticsRefreshKind.cs`— 提取 Diagnostics 刷新。
+17. 8.7.6.8B-1：创建 `ViewportFocusSelectionRoute.cs`、`ViewportFocusSelectionResult.cs`— 提取焦点选择。
+18. 8.7.6.8B-2：创建 `Scene3dResizeRenderRoute.cs`、`Scene3dResizeRenderRequest.cs`、`Scene3dResizeRenderResult.cs`— 提取 Resize。
+19. 8.7.6.8B-3：创建 `EditorShellWindowRoute.cs`、`EditorShellWindowCommand.cs`、`EditorShellWindowResult.cs`— 提取窗口命令。
+20. 8.7.6.8C-1：创建 `EditorStartupBootstrapRoute.cs`、`EditorStartupBootstrapResult.cs`、`EditorStartupWorldResult.cs`、`EditorStartupVulkanRoute.cs`、`EditorStartupVulkanRequest.cs`、`EditorStartupVulkanResult.cs`、`EditorStartupVulkanState.cs`、`EditorStartupVulkanStep.cs`— 提取启动引导。
+21. 8.7.6.8D-1：创建 `EditorViewportInputRoute.cs`、`EditorViewportInputRequest.cs`、`EditorViewportInputResult.cs`、`EditorViewportInputState.cs`、`EditorViewportInputKind.cs`— 提取输入管线。
+22. 8.7.6.8D-2：创建 `EditorTransformInputRoute.cs`、`EditorTransformInputRequest.cs`、`EditorTransformInputResult.cs`、`EditorSceneToolInputRoute.cs`、`EditorSceneToolInputResult.cs`— 提取变换/工具输入桥。
+23. 8.7.6.8D-3：创建 `EditorGroundHoverInputRoute.cs`、`EditorGroundHoverInputRequest.cs`、`EditorGroundHoverInputResult.cs`、`EditorPickInputRoute.cs`、`EditorPickInputResult.cs`— 提取地面悬停/拾取桥。
+24. 8.7.6.8D-4：创建 `EditorScene3dCommandRoute.cs`、`EditorScene3dCommandRequest.cs`、`EditorScene3dCommandResult.cs`、`EditorScene3dCommandState.cs`、`EditorScene3dCommandKind.cs`— 提取 Scene3D 命令。
+25. 8.7.6.8D-5：创建 `EditorPanelApplyRoute.cs`、`EditorPanelApplyRequest.cs`、`EditorPanelApplyResult.cs`、`EditorPanelApplyState.cs`、`EditorPanelApplyKind.cs`— 提取面板操作应用。
+26. 8.7.6.8E-1：创建 `EditorTransformApplyRoute.cs`、`EditorTransformApplyRequest.cs`、`EditorTransformApplyResult.cs`、`EditorGroundPlacementRoute.cs`、`EditorGroundPlacementResult.cs`— 提取变换应用收口。
+27. 8.7.6.8E-2：创建 `EditorFeedbackRoute.cs`— 提取反馈路由。
+28. 8.7.6.8E-3：创建 `EditorShellControlRefs.cs`、`EditorShellRouteBuild.cs`、`EditorShellRouteSet.cs`、`EditorShellAttachRoute.cs`、`EditorShellAttachRequest.cs`、`EditorShellAttachResult.cs`、`EditorShellDetachRoute.cs`、`EditorShellDetachResult.cs`— 提取构造/FindControls/路由接线收口。
+29. 8.7.6.8E-3R/4：创建 `Composition/` 目录，合并 EditorShellRouteSet（聚合 ~26 个 Route 引用）。
+
+**EditorShell 提取前后对比：**
+- EditorShell.axaml.cs：3,041 行 → 970 行（-2,071 行）
+- 新增 26+ Route 类，所有 Route 类 ≤100 行
+- 白名单债务初始 74 项
+
+**面板 SRP 拆分（8.7.7）：**
+30. 8.7.7A：InspectorPanel SRP 拆分
+    - InspectorPanel.axaml.cs：387→84 行
+    - 新增 `InspectorSelectionView.cs`、`InspectorTransformView.cs`、`InspectorScrubInput.cs`、`InspectorTransformBinder.cs`、`Transform/TransformPositionAxis.cs`
+31. 8.7.7B-1：WorldHierarchyTreePanel SRP 拆分
+    - WorldHierarchyTreePanel.axaml.cs：229→95 行
+    - 新增 `WorldHierarchy/` 目录（8 个文件）：`WorldHierarchyNodeView.cs`、`WorldHierarchyTreeSelection.cs`、`WorldHierarchyTreeExpansion.cs`、`WorldHierarchyTreeIndex.cs`、`WorldHierarchyTreeItems.cs`、`WorldHierarchyTreeViewState.cs`、`WorldHierarchyProgrammaticSelection.cs`
+32. 8.7.7B-2：ProjectContentTreePanel / ProjectWorldDockPanel SRP 拆分
+    - ProjectContentTreePanel.axaml.cs：168→83 行
+    - ProjectWorldDockPanel.axaml.cs：219→76 行
+    - 新增 `ProjectContentTree/` 目录（6 个文件）
+    - 新增 `LeftDock/` 目录（ProjectWorldDockPanel + ProjectWorldDockTabs）
+33. 8.7.7C-1：NativeHost HWND Lifecycle SRP 拆分
+    - WindowsVulkanViewportHostControl.cs：605→386 行
+    - 新增 `NativeHost/Win32ViewportWindowClass.cs`、`NativeViewportHostInfo.cs`
+    - 新增 `NativeHost/Input/` 目录（5 个文件）：`NativeViewportPointerMessages.cs`、`NativeViewportMouseCapture.cs`、`NativeViewportMouseTrack.cs`、`NativeViewportPointerAction.cs`、`NativeViewportPointerRequest.cs`
+    - 新增 `WindowsVulkanViewportPickInput.cs`、`ViewportSceneToolPressResult.cs`
+34. 8.7.7C-2：NativeHost Raw Pointer Messages SRP 拆分（最新）
+
+**平台无关 Editor 项目创建：**
+35. 创建 `FluidWarfare.Editor/FluidWarfare.Editor.csproj` — 平台无关编辑器项目。
+36. 创建 `FluidWarfare.Editor/EntityTransform/`（5 文件）：EditorEntityTransformChange/Draft/Validation、EditorGroundPlacementState、EditorWorldDirtyState。
+37. 创建 `FluidWarfare.Editor/Input/`（13 文件）：Actions（4）、Bindings（5）、Runtime（4）、Settings（4）。
+38. 创建 `FluidWarfare.Editor/ProjectContentTree/`（5 文件）：ProjectContentTree/Builder/Node/NodeKind/Search。
+39. 创建 `FluidWarfare.Editor/Selection/`（4 文件）。
+40. 创建 `FluidWarfare.Editor/Transform/`（13 文件）：Data、Edit（5）、Scrub、Translation/Axis/Plane/Constraint。
+41. 创建 `FluidWarfare.Editor/ViewportGround/`（2 文件）。
+42. 创建 `FluidWarfare.Editor/WorldHierarchy/`（5 文件）。
+
+**新面板/功能区域：**
+43. 新增 `Panels/DebugDock/DebugDockPanel.axaml` + `.axaml.cs` — 渲染调试页签（RenderScene/渲染场景/性能）。
+44. 新增 `Panels/HierarchyVisual/`（4 个文件）— 层级可视化画布。
+45. 新增 `Panels/Viewport/Input/WindowsViewportInputTranslator.cs`（284 行）— 原始事件转 EditorInputMatch。
+46. 新增 `Panels/Viewport/Input/Win32KeyCodeMapper.cs`— Win32 键码映射（⚠️ 与 Editor 项目重复，待清理）。
+47. 新增 `Panels/Viewport/Tools/`（3 个文件）— 工具面板。
+48. 新增 `Assets/Icons/Hierarchy/`（17 个 SVG 图标）— 项目树和世界树图标。
+49. 新增 `About/AboutFluidWarfareWindow.axaml` + `.axaml.cs`— 关于窗口。
+50. 新增 `Preferences/EditorPreferencesWindow.axaml` + `.axaml.cs`— 偏好设置窗口。
+
+**Engine 层扩展：**
+51. 新增 `FluidWarfare.Engine/World/EntityPosition/`（3 文件）：WorldEntityPositionChange/WriteResult/Writer。
+52. 新增 `FluidWarfare.Project/World/Transform/`（4 文件）：SceneTransform/Defaults/Matrix/Validation。
+53. 新增 `FluidWarfare.Render/Scene/Position/`（3 文件）：RenderObjectPositionChange/WriteResult/RenderSceneObjectPositionWriter。
+54. 新增 `FluidWarfare.Render/Camera/Navigation/`（4 文件）。
+55. 新增 `FluidWarfare.Render/Selection/Ground/`、`Pointer/`、`Presented/`、`Screen/` — 选择系统扩展。
+56. 新增 `FluidWarfare.Render/ViewportNavigation/`（10 文件）— 视口导航元素。
+57. 新增 `FluidWarfare.Render.Vulkan/Camera/PresentedCameraSnapshot.cs`、`SceneRayBuildStatus.cs`。
+58. 新增 `FluidWarfare.Render.Vulkan/Scene3D/GroundCursor/`（3 文件）— 地面光标几何/信息/状态。
+59. 新增 `FluidWarfare.Render.Vulkan/Scene3D/Overlay/`（7 文件）— 导航覆盖层渲染。
+
+**测试扩展：**
+60. 新增 `FluidWarfare.Tests/Architecture/CodeFileBudgetTests.cs`（240 行）— 自动化代码宪法测试（文件行数、目录文件数、禁用命名检查）。
+61. 新增 `FluidWarfare.Tests/Editor/` — Editor 模块测试：EntityTransform（2）、Input（6）、Transform（3）、ViewportGround（1）、WorldHierarchy（1）。
+62. 新增 `FluidWarfare.Tests/Render/Camera/Navigation/`（2 测试文件）。
+63. 新增 `FluidWarfare.Tests/Render/Scene/Position/`（1 测试文件）。
+64. 新增 `FluidWarfare.Tests/Render/Selection/`（4 测试文件）。
+65. 新增 `FluidWarfare.Tests/Render/Vulkan/Scene3D/GroundCursor/`（1 测试文件）。
+66. 新增 `FluidWarfare.Tests/Render/ViewportNavigation/`（1 测试文件）。
+67. 新增 `FluidWarfare.Tests/Render/Vulkan/Camera/PerspectiveOrthographicPickingTests.cs`、`ProjectionUnprojectionRoundTripTests.cs`。
+68. 新增 `FluidWarfare.Tests/Render/Vulkan/Shaders/CompiledShadersCollection.cs`、`CompiledShadersTests.cs`。
+69. 新增 `GameProjects/SampleProject/units/sample_unit_2.json`、`sample_unit_3.json`。
+
+### 新增（初始版本 — Milestone 1 — 8.7.5）
 1. 创建 `FluidWarfare.sln`。
 2. 创建 Core、ECS、World、Simulation、Combat、AI、Data、Render、Vulkan 渲染后端、运行时、编辑器、导出器和测试等顶层模块目录。
 3. 创建资源目录：`game_data`、`assets`、`shaders` 和 `replays`。
@@ -311,33 +415,69 @@ Phase 1 证明最小闭环。
 4. Android Runtime 读取同一份数据并运行。
 5. Exporter 打包运行时输出。
 
-当前执行 Milestone 8.5.1：左侧双树页签、项目文件树与中文界面收口。
-- 左侧改为 [项目内容] / [世界层级] 双页签
-- 项目内容基于 contentFolders 声明构建文件树
-- 底部 RenderScene 页签已中文化为“渲染场景”
-- 项目资源选择与 World 实体选择完全隔离
+当前执行 Milestone 8.7.7：EditorShell SRP 重构 + GUI 面板职责拆分。
 
-管线进度：... → 持久会话 ✅ → 默认 3D 主视口 ✅ → 结果加固 ✅ → Picking ⬆️
+### 已完成的架构重构
 
-当前状态：
-- Scene3D 为 Editor 默认主视口，自动启动持久 Session。
-- 左键点击 3D 单位 → CPU Ray-AABB Picking → 选中最近单位。
-- 选中单位通过 Push Constant Tint 实现橙黄色高亮。
-- 视口、World 实体列表、检查器三向同步，使用稳定 EntityId。
-- 普通单位：rgba(1.00, 0.82, 0.20, 1.00) / 选中单位：rgba(1.00, 0.35, 0.05, 1.00)。
-- Picking 不创建任何 Vulkan 资源。
-- 不做框选、多选、地面拾取、单位移动、GPU Picking、轮廓后处理。
+**EditorShell（8.7.6.1 — 8.7.6.8E）：**
+- EditorShell.axaml.cs：3,041 行 → **970 行**（-2,071 行）
+- 提取了 **26+ Route 类**（每个 ≤100 行），涵盖：
+  - Scene3D 帧路径、帧提交、Session 生命周期
+  - 变换交互、Transform 应用层、Gizmo 呈现
+  - 选择路由与呈现（3D 选择 ↔ 面板同步）
+  - 输入管线（Raw 事件 → EditorInputMatch → Route 分发）
+  - 启动引导（Vulkan 初始化、项目/世界 Bootstrap）
+  - 面板操作应用、窗口命令、Diagnostics
+  - 构造/FindControls/Route 接线重构
+- 新增 `Shell/Composition/` 目录，`EditorShellRouteSet` 聚合所有 Route
+- 代码宪法自动化测试 `CodeFileBudgetTests.cs` 已上线
+
+**GUI 面板 SRP 拆分（8.7.7）：**
+- InspectorPanel：387→84 行（提取 5 个职责文件）
+- WorldHierarchyTreePanel：229→95 行（提取 8 个文件）
+- ProjectContentTreePanel：168→83 行（提取 6 个文件）
+- ProjectWorldDockPanel：219→76 行（提取 2 个文件）
+- WindowsVulkanViewportHostControl：605→386 行（提取 10 个文件）
+
+**平台无关 Editor 项目：**
+- 创建 `FluidWarfare.Editor/` — 无 Avalonia/Vulkan 依赖
+- 包含 Input、Selection、Transform、ProjectContentTree、WorldHierarchy 等模块
+
+### 当前管线
+
+```
+8.7.7A InspectorPanel                 ✅
+8.7.7B Project / World Tree Panels    ✅
+8.7.7C WindowsVulkanViewportHostControl ▶ 进行中
+  ├─ C-1 HWND Lifecycle               ✅
+  ├─ C-2 Raw Pointer Messages         ✅ (最新)
+  ├─ C-3 Resize/Events                ⏳
+  └─ C-4 Cleanup                      ⏳
+8.7.7D VulkanScene3dSession           ⏳
+8.7.7E VulkanScene3dRenderer          ⏳
+8.7.7F 白名单债务清算 + CHANGELOG     ⏳
+```
+
+**当前状态：**
+- Build 0 Error / 0 Warning / Tests 625+ 全通过
+- Editor 启动正常，Vulkan 视口正确渲染
+- 编辑器功能完整：3D 场景、Picking、变换编辑、层级树、检查器
+- 白名单债务：74 → ~70（持续下降）
+- 所有提交推送至 GitHub（codex/transform-clean-rewrite 分支）
 
 ## 3. 顶层目录结构
 
-当前真实顶层结构如下：
+当前真实顶层结构如下（总计 ~557 个跟踪文件，不含 `bin/` `obj/`）：
 
 ```text
 FluidWarfare/
-|-- .git/
 |-- .gitattributes
+|-- .gitignore
+|-- FluidWarfare.sln
+|-- file-tree.md
+|-- run.bat
+|
 |-- FluidWarfare.Core/
-|   |-- .gitkeep
 |   |-- FluidWarfare.Core.csproj
 |   |-- Identity/
 |   |   `-- EntityId.cs
@@ -353,7 +493,8 @@ FluidWarfare/
 |   `-- Time/
 |       |-- SimulationTime.cs
 |       `-- TimeStep.cs
-|-- FluidWarfare.Project/
+|
+|-- FluidWarface.Project/
 |   |-- FluidWarfare.Project.csproj
 |   |-- Content/
 |   |   |-- GameContentFileInfo.cs
@@ -367,266 +508,467 @@ FluidWarfare/
 |   |   `-- GameProjectInfo.cs
 |   |-- Paths/
 |   |   `-- SampleProjectPath.cs
-|   `-- Validation/
-|       |-- ProjectValidationIssue.cs
-|       `-- ProjectValidationReport.cs
+|   |-- Validation/
+|   |   |-- ProjectValidationIssue.cs
+|   |   `-- ProjectValidationReport.cs
+|   `-- World/Transform/
+|       |-- SceneTransform.cs
+|       |-- SceneTransformDefaults.cs
+|       |-- SceneTransformMatrix.cs
+|       `-- SceneTransformValidation.cs
+|
 |-- FluidWarfare.Bridge.ProjectEngine/
 |   |-- FluidWarfare.Bridge.ProjectEngine.csproj
 |   `-- World/
 |       |-- ProjectContentWorldSeedResult.cs
 |       `-- ProjectContentWorldSeeder.cs
+|
 |-- FluidWarfare.Engine/
 |   |-- FluidWarfare.Engine.csproj
 |   |-- Components/
 |   |   |-- DisplayNameComponent.cs
 |   |   `-- PositionComponent.cs
 |   `-- World/
+|       |-- EntityPosition/
+|       |   |-- WorldEntityPositionChange.cs
+|       |   |-- WorldEntityPositionWriteResult.cs
+|       |   `-- WorldEntityPositionWriter.cs
 |       |-- ProjectContentEntitySource.cs
 |       |-- WorldEntityInfo.cs
 |       `-- WorldState.cs
-|-- FluidWarfare.Ecs/
-|   `-- .gitkeep
-|-- FluidWarfare.World/
-|   `-- .gitkeep
-|-- FluidWarfare.Simulation/
-|   `-- .gitkeep
-|-- FluidWarfare.Combat/
-|   `-- .gitkeep
-|-- FluidWarfare.AI/
-|   `-- .gitkeep
-|-- FluidWarfare.Data/
-|   `-- .gitkeep
-|-- FluidWarfare.Render/
-|   |-- FluidWarfare.Render.csproj
-|   |-- Scene/
-|   |   |-- RenderObjectInfo.cs
-|   |   |-- RenderObjectVisualKind.cs
-|   |   `-- RenderScene.cs
+|
+|-- FluidWarfare.Editor/                    ← 新增：平台无关编辑器
+|   |-- FluidWarfare.Editor.csproj
+|   |-- EntityTransform/
+|   |   |-- EditorEntityTransformChange.cs
+|   |   |-- EditorEntityTransformDraft.cs
+|   |   |-- EditorEntityTransformValidation.cs
+|   |   |-- EditorGroundPlacementState.cs
+|   |   `-- EditorWorldDirtyState.cs
+|   |-- Input/
+|   |   |-- Actions/
+|   |   |   |-- EditorInputActionCatalog.cs
+|   |   |   |-- EditorInputActionContext.cs
+|   |   |   |-- EditorInputActionDefinition.cs
+|   |   |   `-- EditorInputValueKind.cs
+|   |   |-- Bindings/
+|   |   |   |-- EditorInputBinding.cs
+|   |   |   |-- EditorInputBindingSet.cs
+|   |   |   |-- EditorInputConflictDetector.cs
+|   |   |   |-- EditorInputGesture.cs
+|   |   |   `-- Win32KeyCodeMapper.cs   (← 规范副本)
+|   |   |-- Runtime/
+|   |   |   |-- EditorInputBindingSnapshot.cs
+|   |   |   |-- EditorInputEvent.cs
+|   |   |   |-- EditorInputMatch.cs
+|   |   |   `-- EditorInputService.cs
+|   |   `-- Settings/
+|   |       |-- EditorSettingsDocument.cs
+|   |       |-- EditorSettingsPath.cs
+|   |       |-- EditorSettingsReader.cs
+|   |       `-- EditorSettingsWriter.cs
+|   |-- ProjectContentTree/
+|   |   |-- ProjectContentTree.cs
+|   |   |-- ProjectContentTreeBuilder.cs
+|   |   |-- ProjectContentTreeNode.cs
+|   |   |-- ProjectContentTreeNodeKind.cs
+|   |   `-- ProjectContentTreeSearch.cs
 |   |-- Selection/
-|   |   |-- SceneRay.cs
-|   |   |-- SceneAxisAlignedBounds.cs
-|   |   |-- SceneRayBoundsIntersection.cs
-|   |   |-- RenderScenePickResult.cs
-|   |   `-- RenderScenePicker.cs
-|   `-- World/
-|       `-- WorldToRenderSceneBuilder.cs
-|-- FluidWarfare.Render.Vulkan/
-|   |-- FluidWarfare.Render.Vulkan.csproj
-|   |-- Backend/
-|   |   |-- VulkanBackendInfo.cs
-|   |   |-- VulkanBackendProbe.cs
-|   |   `-- VulkanBackendStatus.cs
-|   |-- Device/
-|   |   |-- VulkanDeviceInfo.cs
-|   |   |-- VulkanDeviceProbe.cs
-|   |   `-- VulkanDeviceStatus.cs
-|   |-- Instance/
-|       |-- VulkanInstanceInfo.cs
-|       |-- VulkanInstanceProbe.cs
-|       `-- VulkanInstanceStatus.cs
-|   `-- Surface/
-|       |-- VulkanSurfaceInfo.cs
-|       |-- VulkanSurfaceProbe.cs
-|       `-- VulkanSurfaceStatus.cs
-|   `-- Markers/
-|       |-- VulkanMarkerDrawInfo.cs
-|       |-- VulkanMarkerDrawResult.cs
-|       |-- VulkanMarkerDrawStatus.cs
-|       `-- VulkanMarkerClearRectRenderer.cs
-|   |-- Scene3D/
-|   |   |-- VulkanScene3dInfo.cs
-|   |   |-- VulkanScene3dPushConstants.cs
-|   |   |-- VulkanScene3dRenderer.cs
-|   |   |-- VulkanScene3dStatus.cs
-|   |   |-- VulkanScene3dVertex.cs
-|   |   |-- Depth/
-|   |   |   |-- VulkanScene3dDepthFormatSelector.cs
-|   |   |   |-- VulkanScene3dDepthAttachmentInfo.cs
-|   |   |   `-- VulkanScene3dDepthAttachments.cs
-|   |   |-- Session/
-|   |   |   |-- VulkanScene3dSession.cs
-|   |   |   |-- VulkanScene3dSessionStatus.cs
-|   |   |   |-- VulkanScene3dFrameReason.cs
-|   |   |   |-- VulkanScene3dFrameResult.cs
-|   |   |   |-- VulkanScene3dFrameStatus.cs
-|   |   |   |-- VulkanScene3dSwapchainResources.cs
-|   |   |   |-- Swapchain/
-|   |   |   |   |-- VulkanScene3dSwapchainFunctions.cs
-|   |   |   |   |-- VulkanScene3dSwapchainCreateResult.cs
-|   |   |   |   |-- VulkanScene3dSwapchainStage.cs
-|   |   |   |   `-- VulkanScene3dSwapchainInvariant.cs
-|   |   |   `-- Surface/
-|   |   |       |-- VulkanScene3dSurfaceFormats.cs
-|   |   |       `-- VulkanScene3dPresentModes.cs
-|   |-- Camera/
-|   |   |-- VulkanCameraInfo.cs
-|   |   |-- VulkanCameraMatrices.cs
-|   |   `-- VulkanSceneRayBuilder.cs
-|   `-- Shaders/
-|       |-- basic_3d.frag
-|       |-- basic_3d.vert
-|       |-- Compiled/
-|       |   `-- .gitkeep
-|       `-- CompiledShaders.cs  (已验证真实 SPIR-V 字节)
-|   |-- Validation/
-|   |   |-- VulkanDebugMessengerScope.cs
-|   |   |-- VulkanValidationAvailabilityProbe.cs
-|   |   |-- VulkanValidationInfo.cs
-|   |   |-- VulkanValidationMessageInfo.cs
-|   |   |-- VulkanValidationMessageStore.cs
-|   |   |-- VulkanValidationOptions.cs
-|   |   `-- VulkanValidationStatus.cs
-|-- tools/
-|   `-- shaders/
-|       |-- README.md
-|       |-- compile_basic_3d.ps1
-|       |-- validate_basic_3d.ps1
-|       `-- embed_basic_3d_shaders.ps1
-|-- FluidWarfare.Runtime.Windows/
-|   `-- .gitkeep
-|-- FluidWarfare.Runtime.Android/
-|   `-- .gitkeep
-|-- FluidWarfare.Editor.Windows/
-|   |-- App.axaml
-|   |-- App.axaml.cs
+|   |   |-- EditorEntitySelectionChange.cs
+|   |   |-- EditorEntitySelectionOrigin.cs
+|   |   |-- EditorEntitySelectionState.cs
+|   |   `-- EditorSelectionDiagnostics.cs
+|   |-- Transform/
+|   |   |-- Data/EntitySceneTransformAccess.cs
+|   |   |-- Edit/
+|   |   |   |-- TransformEditKind.cs
+|   |   |   |-- TransformEditResult.cs
+|   |   |   |-- TransformEditSession.cs
+|   |   |   |-- TransformEditSessionStart.cs
+|   |   |   `-- TransformEditSnapshot.cs
+|   |   |-- Scrub/TransformAxisScrubState.cs
+|   |   |-- Translation/
+|   |   |   |-- Axis/
+|   |   |   |   |-- AxisScreenMetric.cs
+|   |   |   |   |-- AxisTranslationAnchor.cs
+|   |   |   |   |-- AxisTranslationMode.cs
+|   |   |   |   |-- AxisTranslationSolver.cs
+|   |   |   |   `-- AxisTranslationStart.cs
+|   |   |   |-- Constraint/
+|   |   |   |   |-- TransformOrientation.cs
+|   |   |   |   |-- TranslationAxis.cs
+|   |   |   |   |-- TranslationConstraint.cs
+|   |   |   |   |-- TranslationConstraintText.cs
+|   |   |   |   `-- TranslationPlane.cs
+|   |   |   `-- Plane/
+|   |   |       |-- PlaneTranslationAnchor.cs
+|   |   |       |-- PlaneTranslationMode.cs
+|   |   |       |-- PlaneTranslationSolver.cs
+|   |   |       `-- PlaneTranslationStart.cs
+|   |-- ViewportGround/
+|   |   |-- EditorGroundPointerChange.cs
+|   |   `-- EditorGroundPointerState.cs
+|   `-- WorldHierarchy/
+|       |-- WorldHierarchyNode.cs
+|       |-- WorldHierarchyNodeKind.cs
+|       |-- WorldHierarchySearch.cs
+|       |-- WorldHierarchyTree.cs
+|       `-- WorldHierarchyTreeBuilder.cs
+|
+|-- FluidWarfare.Editor.Windows/           ← Avalonia Windows 编辑器
 |   |-- FluidWarfare.Editor.Windows.csproj
-|   |-- MainWindow.axaml
-|   |-- MainWindow.axaml.cs
 |   |-- Program.cs
+|   |-- App.axaml / App.axaml.cs
+|   |-- MainWindow.axaml / MainWindow.axaml.cs
 |   |-- app.manifest
-|   |-- Properties/
-|   |   `-- launchSettings.json
+|   |-- Properties/launchSettings.json
+|   |-- About/
+|   |   |-- AboutFluidWarfareWindow.axaml
+|   |   `-- AboutFluidWarfareWindow.axaml.cs
+|   |-- Preferences/
+|   |   |-- EditorPreferencesWindow.axaml
+|   |   `-- EditorPreferencesWindow.axaml.cs
+|   |-- Assets/Icons/Hierarchy/
+|   |   `-- (17 SVG icons: faction, file, folder, image, map, project, unit, weapon, world, etc.)
 |   |-- Panels/
+|   |   |-- DebugDock/
+|   |   |   |-- DebugDockPanel.axaml
+|   |   |   `-- DebugDockPanel.axaml.cs     (145 行, 渲染调试页签)
+|   |   |-- HierarchyVisual/
+|   |   |   |-- HierarchyBranchCanvas.cs
+|   |   |   |-- HierarchyBranchInfo.cs
+|   |   |   |-- HierarchyNodeRow.axaml / .cs
+|   |   |   `-- HierarchyNodeViewContract.cs
 |   |   |-- Inspector/
 |   |   |   |-- InspectorPanel.axaml
-|   |   |   `-- InspectorPanel.axaml.cs
+|   |   |   |-- InspectorPanel.axaml.cs     (84 行, 薄转发层)
+|   |   |   |-- InspectorSelectionView.cs   (35 行, 面板可见性)
+|   |   |   |-- InspectorScrubInput.cs       (53 行, 拖拽微调)
+|   |   |   |-- InspectorTransformBinder.cs  (38 行, 键盘绑定)
+|   |   |   |-- InspectorTransformView.cs    (45 行, 变换输入框)
+|   |   |   `-- Transform/
+|   |   |       `-- TransformPositionAxis.cs (11 行)
+|   |   |-- LeftDock/
+|   |   |   |-- ProjectWorldDockPanel.axaml / .cs (76 行)
+|   |   |   `-- ProjectWorldDockTabs.cs      (71 行)
 |   |   |-- Logging/
 |   |   |   |-- LogPanel.axaml
 |   |   |   `-- LogPanel.axaml.cs
-|   |   |-- Project/
-|   |   |   |-- ProjectPanel.axaml
-|   |   |   |-- ProjectContentFolderSelection.cs
-|   |   |   `-- ProjectPanel.axaml.cs
+|   |   |-- ProjectContentTree/
+|   |   |   |-- ProjectContentNodeView.cs    (114 行)
+|   |   |   |-- ProjectContentTreeExpansion.cs
+|   |   |   |-- ProjectContentTreeIndex.cs   (92 行)
+|   |   |   |-- ProjectContentTreeItems.cs
+|   |   |   |-- ProjectContentTreePanel.axaml / .cs (83 行)
+|   |   |   `-- ProjectContentTreeSelection.cs
 |   |   |-- Status/
 |   |   |   |-- StatusBarPanel.axaml
 |   |   |   `-- StatusBarPanel.axaml.cs
-|   |   `-- Viewport/
-|   |       |-- ViewportEntitySummary.cs
-|   |       |-- ViewportPlaceholderPanel.axaml
-|   |       |-- ViewportPlaceholderPanel.axaml.cs
-|   |       |-- ViewportRenderObjectSummary.cs
-|   |       |-- ViewportRenderSceneSummary.cs
-|   |       |-- NativeHost/
-|   |       |   |-- WindowsVulkanViewportHostControl.cs
-|   |       |   |-- WindowsVulkanViewportHostInfo.cs
-|   |       |   |-- WindowsVulkanViewportHostState.cs
-|   |       |   `-- WindowsVulkanViewportPickInput.cs
-|   |       |-- VulkanViewportHostInfo.cs
-|   |       |-- VulkanViewportNativeHostInfo.cs
-|   |       |-- VulkanViewportHostPanel.axaml
-|   |       |-- VulkanViewportHostPanel.axaml.cs
-|   |       |-- VulkanViewportHostState.cs
-|   |   `-- WorldEntities/
-|   |       |-- WorldEntityListPanel.axaml
-|   |       `-- WorldEntityListPanel.axaml.cs
-|   `-- Shell/
-|       |-- EditorShell.axaml
-|       |-- EditorShell.axaml.cs
-|       `-- EditorSelection.cs
-|-- FluidWarfare.Exporter/
-|   `-- .gitkeep
+|   |   |-- Viewport/
+|   |   |   |-- Input/
+|   |   |   |   |-- Win32KeyCodeMapper.cs   (← 重复副本, 待清理)
+|   |   |   |   `-- WindowsViewportInputTranslator.cs (284 行)
+|   |   |   |-- NativeHost/
+|   |   |   |   |-- Input/
+|   |   |   |   |   |-- NativeViewportMouseCapture.cs (33 行)
+|   |   |   |   |   |-- NativeViewportMouseTrack.cs   (40 行)
+|   |   |   |   |   |-- NativeViewportPointerAction.cs
+|   |   |   |   |   |-- NativeViewportPointerMessages.cs (46 行)
+|   |   |   |   |   `-- NativeViewportPointerRequest.cs (40 行)
+|   |   |   |   |-- NativeViewportHostInfo.cs
+|   |   |   |   |-- ViewportSceneToolPressResult.cs
+|   |   |   |   |-- Win32ViewportWindowClass.cs (56 行)
+|   |   |   |   |-- WindowsVulkanViewportHostControl.cs (386 行, 待继续拆分)
+|   |   |   |   |-- WindowsVulkanViewportHostInfo.cs
+|   |   |   |   |-- WindowsVulkanViewportHostState.cs
+|   |   |   |   `-- WindowsVulkanViewportPickInput.cs (53 行)
+|   |   |   |-- Tools/
+|   |   |   |   |-- ViewportEditorTool.cs
+|   |   |   |   |-- ViewportToolPalette.axaml / .cs
+|   |   |   |-- ViewportEntitySummary.cs
+|   |   |   |-- ViewportPlaceholderPanel.axaml (183 行) / .cs (189 行)
+|   |   |   |-- ViewportRenderObjectSummary.cs
+|   |   |   |-- ViewportRenderSceneSummary.cs
+|   |   |   |-- VulkanViewportHostInfo.cs
+|   |   |   |-- VulkanViewportHostPanel.axaml / .cs (158 行)
+|   |   |   |-- VulkanViewportHostState.cs
+|   |   |   `-- VulkanViewportNativeHostInfo.cs
+|   |   `-- WorldHierarchy/
+|   |       |-- WorldHierarchyNodeView.cs (91 行)
+|   |       |-- WorldHierarchyProgrammaticSelection.cs
+|   |       |-- WorldHierarchyTreeExpansion.cs
+|   |       |-- WorldHierarchyTreeIndex.cs (112 行, 超线)
+|   |       |-- WorldHierarchyTreeItems.cs
+|   |       |-- WorldHierarchyTreePanel.axaml / .cs (95 行)
+|   |       |-- WorldHierarchyTreeSelection.cs (87 行)
+|   |       `-- WorldHierarchyTreeViewState.cs
+|   |-- Shell/
+|   |   |-- EditorShell.axaml
+|   |   |-- EditorShell.axaml.cs (970 行, 原 3,041→重构后)
+|   |   |-- EditorSelection.cs
+|   |   |-- Composition/
+|   |   |   |-- EditorShellControlRefs.cs
+|   |   |   |-- EditorShellRouteBuild.cs
+|   |   |   `-- EditorShellRouteSet.cs      (26+ Route 聚合)
+|   |   |-- Diagnostics/
+|   |   |   |-- EditorDiagnosticsRefreshKind.cs
+|   |   |   |-- EditorDiagnosticsRefreshRequest.cs
+|   |   |   |-- EditorDiagnosticsRefreshResult.cs
+|   |   |   |-- EditorDiagnosticsRefreshRoute.cs
+|   |   |   `-- EditorDiagnosticsRefreshState.cs
+|   |   |-- Feedback/
+|   |   |   `-- EditorFeedbackRoute.cs
+|   |   |-- Input/
+|   |   |   |-- EditorViewportInputKind.cs
+|   |   |   |-- EditorViewportInputRequest.cs
+|   |   |   |-- EditorViewportInputResult.cs
+|   |   |   |-- EditorViewportInputRoute.cs
+|   |   |   |-- EditorViewportInputState.cs
+|   |   |   |-- Picking/
+|   |   |   |   |-- EditorGroundHoverInputRequest.cs / Result.cs / Route.cs
+|   |   |   |   `-- EditorPickInputResult.cs / Route.cs
+|   |   |   `-- Transform/
+|   |   |       |-- EditorSceneToolInputResult.cs / Route.cs
+|   |   |       |-- EditorTransformInputRequest.cs / Result.cs / Route.cs
+|   |   |-- Lifecycle/
+|   |   |   |-- EditorShellAttachRequest.cs / Result.cs / Route.cs
+|   |   |   |-- EditorShellDetachResult.cs / Route.cs
+|   |   |-- Menu/
+|   |   |   `-- EditorRunMenuRoute.cs
+|   |   |-- Panels/
+|   |   |   |-- EditorPanelApplyKind.cs / Request.cs / Result.cs / Route.cs / State.cs
+|   |   |-- Scene3D/Commands/
+|   |   |   |-- EditorScene3dCommandKind.cs / Request.cs / Result.cs / Route.cs / State.cs
+|   |   |-- Startup/
+|   |   |   |-- EditorStartupBootstrapResult.cs / Route.cs
+|   |   |   |-- EditorStartupWorldResult.cs
+|   |   |   `-- Vulkan/
+|   |   |       |-- EditorStartupVulkanRequest.cs / Result.cs / Route.cs / State.cs / Step.cs
+|   |   |-- Transform/
+|   |   |   |-- EditorGroundPlacementResult.cs / Route.cs
+|   |   |   `-- EditorTransformApplyRequest.cs / Result.cs / Route.cs
+|   |   `-- Windows/
+|   |       |-- EditorShellWindowCommand.cs / Result.cs / Route.cs
+|   |-- Viewport/
+|   |   |-- Camera/
+|   |   |   |-- ViewportCameraCommand.cs / FocusTarget.cs / Result.cs / Route.cs
+|   |   |-- Navigation/
+|   |   |   |-- ViewportNavigationResponse.cs / Route.cs
+|   |   |-- Picking/
+|   |   |   |-- ViewportPickFailure.cs / Request.cs / Result.cs / Trace.cs
+|   |   |   `-- ViewportPointerPickRoute.cs
+|   |   |-- Project/
+|   |   |   |-- ProjectBootstrapResult.cs / Route.cs
+|   |   |-- Scene3D/
+|   |   |   |-- Diagnostics/
+|   |   |   |   |-- Scene3dDiagnosticSnapshot.cs / Text.cs
+|   |   |   |   |-- VulkanViewportProbeResult.cs / Route.cs / State.cs
+|   |   |   |-- Frame/
+|   |   |   |   |-- Scene3dDrawListBuilder.cs
+|   |   |   |   |-- Scene3dFrameRoute.cs / State.cs / PresentedState.cs
+|   |   |   |-- Lifecycle/
+|   |   |   |   |-- Scene3dSessionLifecycle.cs / RestartReason.cs
+|   |   |   |   |-- Scene3dSessionStartRequest.cs / Result.cs / State.cs
+|   |   |   |-- Resize/
+|   |   |   |   |-- Scene3dResizeRenderRequest.cs / Result.cs / Route.cs
+|   |   |   `-- Submit/
+|   |   |       |-- Scene3dFrameSubmitInput.cs / Route.cs
+|   |   |       |-- Scene3dGizmoSubmitSource.cs / PickSnapshotSource.cs
+|   |   |-- Selection/
+|   |   |   |-- Focus/
+|   |   |   |   |-- ViewportFocusSelectionResult.cs / Route.cs
+|   |   |   |-- Presentation/
+|   |   |   |   |-- EditorSelectionPresenter.cs
+|   |   |   |   |-- ProjectContentSelectionPresenter.cs
+|   |   |   |   |-- SelectionPresentationResult.cs
+|   |   |   |   |-- ViewportSelectionPresenter.cs
+|   |   |   |   `-- WorldEntitySelectionPresenter.cs
+|   |   |   `-- Route/
+|   |   |       |-- EditorSelectionReason.cs / Request.cs / Route.cs / RouteResult.cs / State.cs
+|   |   |-- Transform/
+|   |   |   |-- Application/
+|   |   |   |   |-- Capabilities/
+|   |   |   |   |   |-- InspectorTransformDisplay.cs
+|   |   |   |   |   |-- Scene3dEntityPositionWriter.cs
+|   |   |   |   |   `-- WorldTransformWriter.cs
+|   |   |   |   |-- EntityTransformCancel.cs / Commit.cs / Preview.cs
+|   |   |   |   `-- TransformApplyResult.cs / ViewportRenderSceneStore.cs
+|   |   |   |-- Drag/
+|   |   |   |   |-- AxisDragAnchorBuilder.cs / PlaneDragAnchorBuilder.cs
+|   |   |   |   |-- TransformDragKind.cs / MoveResult.cs / Route.cs / StartSnapshot.cs
+|   |   |   |-- Gizmo/
+|   |   |   |   |-- GizmoDist.cs
+|   |   |   |   |-- HitTest/PlaneHandleHitTest.cs
+|   |   |   |   |-- Layout/Measure.cs / MoveGizmoPlaneLayout.cs
+|   |   |   |   |-- Visual/MoveGizmoAxisVertices.cs / PlaneVertices.cs
+|   |   |   |   |-- MoveGizmoDrawList.cs / Element.cs / HitTest.cs
+|   |   |   |   |-- MoveGizmoInteraction.cs / Layout.cs / VisualState.cs
+|   |   |   |   `-- PresentedMoveGizmoSnapshot.cs
+|   |   |   |-- Interaction/
+|   |   |   |   |-- TransformInteractionResult.cs / State.cs
+|   |   |   |   |-- TransformKeyboardRoute.cs / PointerRoute.cs / StartRequest.cs
+|   |   |   `-- Presentation/
+|   |   |       |-- MoveGizmoFrameInput.cs / Result.cs / Source.cs / Visibility.cs
+|   |   `-- World/Bootstrap/
+|   |       |-- WorldBootstrapEntitySeed.cs / Input.cs / RenderSeed.cs / Result.cs / Route.cs
+|
+|-- FluidWarfare.Ecs/                    `-- .gitkeep (待实现)
+|-- FluidWarfare.World/                 `-- .gitkeep (待实现)
+|-- FluidWarfare.Simulation/            `-- .gitkeep (待实现)
+|-- FluidWarfare.Combat/                `-- .gitkeep (待实现)
+|-- FluidWarfare.AI/                    `-- .gitkeep (待实现)
+|-- FluidWarfare.Data/                  `-- .gitkeep (待实现)
+|-- FluidWarfare.Runtime.Windows/       `-- .gitkeep (待实现)
+|-- FluidWarfare.Runtime.Android/       `-- .gitkeep (待实现)
+|-- FluidWarfare.Exporter/              `-- .gitkeep (待实现)
+|
+|-- FluidWarfare.Render/                   ← 抽象渲染层
+|   |-- FluidWarfare.Render.csproj
+|   |-- Camera/
+|   |   |-- SceneCameraDefaults.cs / Limits.cs / Motion.cs / Pose.cs / State.cs
+|   |   |-- Navigation/
+|   |   |   |-- SceneNavigationCameraMotion.cs / SceneNavigationView.cs
+|   |   |   |-- SceneOrthographicProjection.cs / SceneProjectionMode.cs
+|   |   |   `-- SceneOrbitCameraMotion.cs / SceneOrbitCameraState.cs
+|   |-- Coordinates/
+|   |   |-- WorldCoordinateConvention.cs
+|   |   `-- YUpToZUpPosition.cs
+|   |-- Scene/
+|   |   |-- Position/
+|   |   |   |-- RenderObjectPositionChange.cs
+|   |   |   |-- RenderObjectPositionWriteResult.cs
+|   |   |   `-- RenderSceneObjectPositionWriter.cs
+|   |   |-- RenderObjectInfo.cs
+|   |   |-- RenderObjectVisualKind.cs
+|   |   |-- RenderScene.cs
+|   |   `-- RenderUnitPlacement.cs
+|   |-- Selection/
+|   |   |-- Ground/
+|   |   |   |-- SceneGroundHit.cs / SceneGroundPlane.cs
+|   |   |   `-- SceneRayGroundIntersection.cs
+|   |   |-- Pointer/
+|   |   |   |-- ScenePointerPickKind.cs / ScenePointerPickResult.cs
+|   |   |   `-- ScenePointerPicker.cs
+|   |   |-- Presented/
+|   |   |   |-- PresentedEntityBounds.cs
+|   |   |   |-- PresentedScenePickSnapshot.cs / Builder.cs
+|   |   |   |-- RenderScenePickResult.cs / RenderScenePicker.cs
+|   |   |-- SceneAxisAlignedBounds.cs / SceneRay.cs / SceneRayBoundsIntersection.cs
+|   |   `-- Screen/
+|   |       |-- ScreenBoundsProjection.cs / ScreenEntityPicker.cs / ScreenPickTolerance.cs
+|   |-- ViewportNavigation/
+|   |   |-- AxisProjection.cs
+|   |   |-- ViewportNavigationAction.cs / DragMode.cs / Element.cs / HitTest.cs
+|   |   |-- ViewportNavigationLayout.cs / LayoutCompute.cs
+|   |   |-- ViewportNavigationPressResult.cs / Types.cs
+|   `-- World/
+|       `-- WorldToRenderSceneBuilder.cs
+|
+|-- FluidWarfare.Render.Vulkan/             ← Vulkan 渲染后端
+|   |-- FluidWarfare.Render.Vulkan.csproj
+|   |-- Backend/     (VulkanBackendInfo/Probe/Status)
+|   |-- Context/     (VulkanRenderContext)
+|   |-- Device/      (VulkanDeviceInfo/Probe/Status)
+|   |-- Instance/    (VulkanInstanceInfo/Probe/Status)
+|   |-- Surface/     (VulkanSurfaceInfo/Probe/Status)
+|   |-- Swapchain/   (VulkanSwapchainInfo/Probe/Status)
+|   |-- Clear/       (VulkanClearInfo/Probe/Status)
+|   |-- Markers/     (VulkanMarkerDrawInfo/Result/Status, VulkanMarkerClearRectRenderer)
+|   |-- Camera/
+|   |   |-- PresentedCameraSnapshot.cs
+|   |   |-- SceneRayBuildStatus.cs
+|   |   |-- VulkanCameraInfo.cs / Matrices.cs / SceneRayBuilder.cs
+|   |-- Scene3D/
+|   |   |-- VulkanScene3dInfo.cs / PushConstants.cs / Renderer.cs / Status.cs / Vertex.cs
+|   |   |-- VulkanScene3dCommandRecorder.cs / PipelineLayout.cs / Pipelines.cs
+|   |   |-- VulkanScene3dRenderResources.cs / RunGate.cs / ShaderModules.cs / VertexBuffers.cs
+|   |   |-- Depth/
+|   |   |   |-- VulkanScene3dDepthFormatSelector.cs
+|   |   |   |-- VulkanScene3dDepthAttachmentInfo.cs / DepthAttachments.cs
+|   |   |-- GroundCursor/
+|   |   |   |-- VulkanGroundCursorGeometry.cs / Info.cs / State.cs
+|   |   |-- Overlay/
+|   |   |   |-- PresentedNavigationOverlaySnapshot.cs
+|   |   |   |-- VulkanNavigationOverlayGeometry.cs / Info.cs
+|   |   |   |-- VulkanOverlayCommandRecorder.cs / Pipeline.cs / PipelineLayout.cs
+|   |   |   |-- VulkanOverlayResources.cs / Vertex.cs
+|   |   |-- Session/
+|   |   |   |-- VulkanScene3dSession.cs / SessionStatus.cs
+|   |   |   |-- VulkanScene3dFrameReason.cs / FrameResult.cs / FrameStatus.cs
+|   |   |   |-- VulkanScene3dSwapchainResources.cs
+|   |   |   |-- Surface/VulkanScene3dSurfaceFormats.cs / PresentModes.cs
+|   |   |   `-- Swapchain/
+|   |   |       |-- VulkanScene3dSwapchainFunctions.cs / CreateResult.cs / Stage.cs / Invariant.cs
+|   |   |-- VulkanSceneAxisGeometry.cs
+|   |-- Shaders/
+|   |   |-- basic_3d.frag / basic_3d.vert
+|   |   |-- viewport_overlay.frag / viewport_overlay.vert
+|   |   |-- Compiled/.gitkeep
+|   |   `-- CompiledShaders.cs
+|   `-- Validation/
+|       |-- VulkanDebugMessengerScope.cs
+|       |-- VulkanValidationAvailabilityProbe.cs / Info.cs / MessageInfo.cs
+|       |-- VulkanValidationMessageStore.cs / Options.cs / Status.cs
+|
 |-- FluidWarfare.Tests/
-|   |-- .gitkeep
-|   |-- Architecture/
-|   |   `-- ProjectDependencyDirectionTests.cs
-|   |-- Bridge/
-|   |-- Render/
-|   |   |-- Vulkan/
-|   |   |   |-- Backend/
-|   |   |   |   `-- VulkanBackendInfoTests.cs
-|   |   |   |-- Device/
-|   |   |   |   `-- VulkanDeviceInfoTests.cs
-|   |   |   |-- Instance/
-|   |   |       `-- VulkanInstanceInfoTests.cs
-|   |   |   `-- Surface/
-|   |   |       `-- VulkanSurfaceInfoTests.cs
-|   |   `-- World/
-|   |       `-- WorldToRenderSceneBuilderTests.cs
-|   |   `-- ProjectEngine/
-|   |       `-- World/
-|   |           `-- ProjectContentWorldSeederTests.cs
-|   |-- Core/
-|   |-- Engine/
-|   |   `-- World/
-|   |       `-- WorldStateTests.cs
-|   |   |-- Identity/
-|   |   |   `-- EntityIdTests.cs
-|   |   |-- Logging/
-|   |   |   |-- EngineLogEntryTests.cs
-|   |   |   `-- EngineLogLevelTests.cs
-|   |   |-- Math/
-|   |   |   |-- Vector3dTests.cs
-|   |   |   `-- YawRotationTests.cs
-|   |   |-- Results/
-|   |   |   |-- EngineErrorTests.cs
-|   |   |   `-- EngineResultTests.cs
-|   |   `-- Time/
-|   |       |-- SimulationTimeTests.cs
-|   |       `-- TimeStepTests.cs
-|   |-- Project/
-|   |   |-- Content/
-|   |   |   `-- GameContentFileScannerTests.cs
-|   |   |-- Loading/
-|   |   |   |-- GameProjectLoaderTests.cs
-|   |   |   `-- SampleProjectSmokeTests.cs
-|   |   |-- Paths/
-|   |   |   `-- SampleProjectPathTests.cs
-|   |   `-- Validation/
-|   |       `-- ProjectValidationReportTests.cs
+|   |-- FluidWarfare.Tests.csproj
 |   |-- CoreSmokeTests.cs
-|   `-- FluidWarfare.Tests.csproj
-|-- GameProjects/
-|   `-- SampleProject/
-|       |-- game.project.json
-|       |-- factions/
-|       |   `-- .gitkeep
-|       |-- units/
-|       |   |-- .gitkeep
-|       |   `-- sample_unit.json
-|       |-- weapons/
-|       |   |-- .gitkeep
-|       |   `-- sample_weapon.json
-|       |-- maps/
-|       |   `-- .gitkeep
-|       |-- scenarios/
-|       |   `-- .gitkeep
-|       |-- rules/
-|       |   `-- .gitkeep
-|       `-- icons/
-|           |-- .gitkeep
-|           `-- sample_icon.svg
-|-- game_data/
-|   `-- .gitkeep
-|-- assets/
-|   `-- .gitkeep
-|-- shaders/
-|   `-- .gitkeep
-|-- replays/
-|   `-- .gitkeep
-|-- docs/
-|   |-- AI_DEVELOPMENT_RULES.md
-|   |-- CHANGELOG.md
-|   |-- CODE_CONSTITUTION.md
-|   |-- ENGINE_ARCHITECTURE.md
-|   |-- LEGACY_FLUIDWARFARE_OLD_AUDIT.md
-|   |-- MILESTONE1_PUBLIC_VALIDATION.md
-|   |-- NAMING_RULES.md
-|   |-- PHASE1_SCOPE.md
-|   `-- PROJECT_CHARTER.md
-|-- FluidWarfare.sln
-|-- file-tree.md
-`-- run.bat
+|   |-- Architecture/
+|   |   |-- CodeFileBudgetTests.cs          (240 行, 代码宪法自动化)
+|   |   `-- ProjectDependencyDirectionTests.cs
+|   |-- Core/ (Identity/Logging/Math/Results/Time — 每个模块对应测试文件)
+|   |-- Project/ (Content/Loading/Paths/Validation — 5 个测试文件)
+|   |-- Bridge/ProjectEngine/World/ProjectContentWorldSeederTests.cs
+|   |-- Engine/World/ (WorldStateTests, WorldEntityPositionWriterTests)
+|   |-- Editor/
+|   |   |-- EntityTransform/ (2 测试)
+|   |   |-- Input/ (6 测试: BindingSet, ConflictDetector, Gesture, Service, ContextChain, Win32KeyCodeMapper)
+|   |   |-- Transform/ (2 测试: TransformApplyResult, TransformDragRoute, MoveGizmoHitTest)
+|   |   |-- ViewportGround/EditorGroundPointerStateTests.cs
+|   |   `-- WorldHierarchy/WorldHierarchyTreeBuilderTests.cs
+|   |-- Render/
+|   |   |-- Camera/ (SceneCameraLimits/Motion/State/OrbitCameraMotion + Navigation 2 测试)
+|   |   |-- Scene/Position/RenderSceneObjectPositionWriterTests.cs
+|   |   |-- Selection/ (4 测试: Ground/Pointer/Presented/Screen)
+|   |   |-- ViewportNavigation/ViewportNavigationLayoutTests.cs
+|   |   |-- Vulkan/ (VulkanBackendInfo/DeviceInfo/InstanceInfo/SurfaceInfo/SwapchainInfo/
+|   |   |   |         ClearInfo/Validation/Markers/Shaders/Scene3D/Camera 等 — 20+ 测试)
+|   |   `-- World/WorldToRenderSceneBuilderTests.cs
+|
+|-- tools/shaders/
+|   |-- README.md
+|   |-- compile_basic_3d.ps1
+|   |-- validate_basic_3d.ps1
+|   `-- embed_basic_3d_shaders.ps1
+|
+|-- GameProjects/SampleProject/
+|   |-- game.project.json
+|   |-- factions/ (.gitkeep)
+|   |-- units/ (sample_unit.json, sample_unit_2.json, sample_unit_3.json)
+|   |-- weapons/ (sample_weapon.json)
+|   |-- maps/ (.gitkeep)
+|   |-- scenarios/ (.gitkeep)
+|   |-- rules/ (.gitkeep)
+|   `-- icons/ (sample_icon.svg)
+|
+|-- game_data/ (.gitkeep)
+|-- assets/ (.gitkeep)
+|-- shaders/ (.gitkeep)
+|-- replays/ (.gitkeep)
+|
+`-- docs/
+    |-- PROJECT_CHARTER.md
+    |-- ENGINE_ARCHITECTURE.md
+    |-- CODE_CONSTITUTION.md
+    |-- NAMING_RULES.md
+    |-- PHASE1_SCOPE.md
+    |-- AI_DEVELOPMENT_RULES.md
+    |-- CHANGELOG.md
+    |-- LEGACY_FLUIDWARFARE_OLD_AUDIT.md
+    `-- MILESTONE1_PUBLIC_VALIDATION.md
 ```
+
+说明：`docs/AI_DEVELOPMENT_RULES.md` 要求每次结构变更后更新本文件（本版本由 Claude Code 于 2026-06-22 批量更新）。```
 
 以下旧项目目录和文件不应存在于新仓库：
 
@@ -913,6 +1255,67 @@ get_tree.bat
 | `GameProjects/SampleProject/icons/sample_icon.svg` | SampleProject 图标内容入口占位文件，仅用于验证内容文件扫描，不代表正式图标加载 | 占位 |
 | `GameProjects/SampleProject/icons/.gitkeep` | SampleProject 图标扩展目录占位文件，用于验证项目自定义内容目录声明 | 可加载 |
 | `*/.gitkeep` | 保留当前尚未写入代码或资源的目录 | 已创建 |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | **Editor 主壳（重构后）** 3,041→970 行，移除 -2,071 行职责到 26+ Route 类 | 测试通过 / Build 0 Error |
+| `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellRouteSet.cs` | 聚合 ~26 个 Route 引用，EditorShell 的唯一 Route 容器 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellRouteBuild.cs` | 构造 Route 的 Factory，负责 Route 初始化顺序 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellControlRefs.cs` | FindControls 结果的容器，保存所有 Axaml 控件引用 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Lifecycle/EditorShellAttachRoute.cs` | EditorShell 挂载事件处理（OnAttachedToVisualTree 等） | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Startup/EditorStartupBootstrapRoute.cs` | 编辑器启动引导路由：项目加载→World 引导→Vulkan 初始化 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Input/EditorViewportInputRoute.cs` | 视口输入路由：原始事件 → EditorInputMatch → 分发给各 Route | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Input/Transform/EditorTransformInputRoute.cs` | 变换工具输入路由：导航/场景工具/原始拾取仲裁 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Input/Picking/EditorPickInputRoute.cs` | 3D 拾取输入路由：左键点击 → CPU Ray-AABB Picking | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Selection/Route/EditorSelectionRoute.cs` | 编辑器全局选择路由：3D Picking / 面板点击 / 程序化选择 | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Scene3D/Frame/Scene3dFrameRoute.cs` | Scene3D 帧路由：DrawList → Submit → Present | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Scene3D/Lifecycle/Scene3dSessionLifecycle.cs` | Scene3D Session 生命周期管理 | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Transform/Interaction/TransformPointerRoute.cs` | 变换拖拽交互路由（鼠标 + Gizmo HitTest） | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Transform/Drag/TransformDragRoute.cs` | 变换拖拽路由（轴/平面锚定 + 约束 + 求解） | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Camera/ViewportCameraRoute.cs` | 视口相机路由（缩放/旋转/平移/帧选） | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Navigation/ViewportNavigationRoute.cs` | 视口导航路由（导航覆盖层交互） | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Scene3D/Commands/EditorScene3dCommandRoute.cs` | Scene3D 命令路由（开始/停止 Session） | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Windows/EditorShellWindowRoute.cs` | 窗口命令路由（最小化/最大化/关闭） | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Transform/EditorTransformApplyRoute.cs` | 变换应用路由（Apply/Reset/GroundPlace） | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Transform/EditorGroundPlacementRoute.cs` | 地面放置路由 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Panels/EditorPanelApplyRoute.cs` | 面板操作应用路由 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Diagnostics/EditorDiagnosticsRefreshRoute.cs` | Diagnostics 刷新路由 | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Feedback/EditorFeedbackRoute.cs` | 简短反馈路由（状态栏消息） | 可运行 |
+| `FluidWarfare.Editor.Windows/Shell/Menu/EditorRunMenuRoute.cs` | 运行菜单路由 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorPanel.axaml.cs` | **InspectorPanel（重构后）** 387→84 行 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorSelectionView.cs` | Inspector 选择状态面板可见性控制 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorTransformView.cs` | Inspector Transform 输入框组（X/Y/Z + Apply/Reset/GroundPlace） | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorTransformBinder.cs` | Inspector Transform 键盘事件绑定（Enter/Esc） | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Inspector/InspectorScrubInput.cs` | Inspector 拖拽微调输入处理 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyTreePanel.axaml.cs` | **WorldHierarchy（重构后）** 229→95 行 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyNodeView.cs` | 世界层级节点视图模型（图标/名称/实体 ID） | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyTreeSelection.cs` | 世界层级树选择状态管理 + 程序化选择防回环 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyTreeIndex.cs` | 世界层级扁平索引（EntityId ↔ NodeId O(1) 查询） | 可运行 (112 行，超线) |
+| `FluidWarfare.Editor.Windows/Panels/WorldHierarchy/WorldHierarchyTreeExpansion.cs` | 世界层级展开/折叠状态管理 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/ProjectContentTree/ProjectContentTreePanel.axaml.cs` | **ProjectContent（重构后）** 168→83 行 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/ProjectContentTree/ProjectContentNodeView.cs` | 项目内容节点视图模型（SVG 图标路径解析） | 可运行 (114 行，超线) |
+| `FluidWarfare.Editor.Windows/Panels/ProjectContentTree/ProjectContentTreeIndex.cs` | 项目内容树扁平索引（路径 ↔ NodeId 查询） | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/LeftDock/ProjectWorldDockPanel.axaml.cs` | **ProjectWorldDock（重构后）** 219→76 行 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/LeftDock/ProjectWorldDockTabs.cs` | 项目/世界页签切换抽象 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostControl.cs` | **NativeHost（重构后）** 605→386 行，待继续拆分 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/Input/NativeViewportPointerMessages.cs` | Win32 消息转 PointerRequest 解析器（WM_MOUSEMOVE/WM_LBUTTONDOWN 等） | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/Input/NativeViewportMouseCapture.cs` | SetCapture/ReleaseCapture P/Invoke 封装 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/Input/NativeViewportMouseTrack.cs` | TrackMouseEvent P/Invoke 封装 | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/Win32ViewportWindowClass.cs` | Win32 窗口类注册（RegisterClass + WndProc 委托） | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportPickInput.cs` | 视口点击检测（拖拽阈值过滤） | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Transform/Gizmo/MoveGizmoHitTest.cs` | Move Gizmo 命中检测（轴/平面） | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Transform/Gizmo/MoveGizmoInteraction.cs` | Gizmo 交互状态机（悬停/拖拽/释放） | 可运行 |
+| `FluidWarfare.Editor.Windows/Viewport/Transform/Presentation/MoveGizmoFrameSource.cs` | Gizmo 帧输入源（Gizmo 可见性/悬停结果/交互状态） | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/Input/WindowsViewportInputTranslator.cs` | Win32 原始事件 → EditorInputMatch 翻译器（284 行，最大输入文件） | 可运行 |
+| `FluidWarfare.Editor/Input/Runtime/EditorInputService.cs` | 编辑器输入服务（Action/Context/Binding → Match 管线） | 测试通过 |
+| `FluidWarfare.Editor/Input/Bindings/EditorInputBindingSet.cs` | 输入绑定集合（Action ↔ Gesture 映射） | 测试通过 |
+| `FluidWarfare.Editor/Input/Actions/EditorInputActionCatalog.cs` | 输入动作目录（所有可绑定动作定义） | 已创建 |
+| `FluidWarfare.Editor/Selection/EditorEntitySelectionState.cs` | 编辑器选择状态（EntityId/Origin/SourcePanel） | 测试通过 |
+| `FluidWarfare.Editor/Transform/Edit/TransformEditSession.cs` | 变换编辑 Session（轻量状态机: Idle→Started→Committing/Cancelling） | 测试通过 |
+| `FluidWarfare.Editor/Transform/Translation/Axis/AxisTranslationSolver.cs` | 轴平移求解器（屏幕度量 + 锚定 + 约束 → 增量） | 测试通过 |
+| `FluidWarfare.Editor.Windows/Panels/DebugDock/DebugDockPanel.axaml.cs` | 渲染调试页签（Render Diagnostics / RenderScene / 性能） | 可运行 |
+| `FluidWarfare.Tests/Architecture/CodeFileBudgetTests.cs` | **代码宪法自动化测试：** 扫描所有 .cs 文件行数 ≤100、目录文件数 ≤5、禁用 Manager/Helper/Utils 命名 | 625+ 全通过 |
+| `FluidWarfare.Render.Vulkan/Scene3D/Overlay/VulkanNavigationOverlayGeometry.cs` | 导航覆盖层几何体（左上角 XYZ+N 箭头 + SE 地面台） | 可运行 |
+| `FluidWarfare.Render.Vulkan/Scene3D/GroundCursor/VulkanGroundCursorState.cs` | 地面光标状态（鼠标跟踪 + 手动放置两种来源） | 可运行 |
+| `GameProjects/SampleProject/units/sample_unit_2.json` | 第二个示例单位占位文件（测试多文件排序稳定性） | 占位 |
+| `GameProjects/SampleProject/units/sample_unit_3.json` | 第三个示例单位占位文件 | 占位 |
 
 ## 6. 模块依赖方向
 
