@@ -12,8 +12,8 @@ public sealed class CodeFileBudgetTests
     // 每次新增白名单条目必须同时递增此值。
     // 目的：防止 AI 无监督扩大债务。
     // 每次新增白名单条目必须同步递增
-    const int LineWhitelistBudget = 64;
-    const int DirectoryWhitelistBudget = 11;
+    const int LineWhitelistBudget = 55;
+    const int DirectoryWhitelistBudget = 7;
 
     static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -27,14 +27,10 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Editor.Windows\Panels\Viewport\Input\WindowsViewportInputTranslator.cs",
 
         // UI 树面板（到期：8.7.7D）
-        @"FluidWarfare.Editor.Windows\Panels\WorldHierarchy\WorldHierarchyTreeIndex.cs",
-        @"FluidWarfare.Editor.Windows\Panels\ProjectContentTree\ProjectContentNodeView.cs",
         @"FluidWarfare.Editor.Windows\Preferences\EditorPreferencesWindow.axaml.cs",
 
         // Editor 业务层（到期：8.7.8）
-        @"FluidWarfare.Editor\WorldHierarchy\WorldHierarchyTreeBuilder.cs",
         @"FluidWarfare.Editor\Input\Runtime\EditorInputBindingSnapshot.cs",
-        @"FluidWarfare.Editor\Input\Actions\EditorInputActionCatalog.cs",
 
         // Vulkan（到期：8.7.7C）
         @"FluidWarfare.Render.Vulkan\Context\VulkanRenderContext.cs",
@@ -44,18 +40,13 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Render.Vulkan\Surface\VulkanSurfaceProbe.cs",
         @"FluidWarfare.Render.Vulkan\Camera\VulkanCameraMatrices.cs",
         @"FluidWarfare.Render.Vulkan\Camera\VulkanSceneRayBuilder.cs",
-        @"FluidWarfare.Render.Vulkan\Instance\VulkanInstanceProbe.cs",
-        @"FluidWarfare.Render.Vulkan\Validation\VulkanDebugMessengerScope.cs",
-        @"FluidWarfare.Render.Vulkan\Validation\VulkanValidationAvailabilityProbe.cs",
 
         // Render 层（到期：8.7.7E）
-        @"FluidWarfare.Render\Camera\SceneOrbitCameraMotion.cs",
+        @"FluidWarfare.Render\Camera\Orbit\SceneOrbitCameraMotion.cs",
         @"FluidWarfare.Render\Camera\Navigation\SceneNavigationCameraMotion.cs",
 
         // Project / Engine（到期：8.7.8）
         @"FluidWarfare.Project\Loading\GameProjectLoader.cs",
-        @"FluidWarfare.Project\Content\GameContentFileScanner.cs",
-        @"FluidWarfare.Engine\World\WorldState.cs",
 
         // 测试文件（允许保留，不强制拆）
         @"FluidWarfare.Tests\Architecture\CodeFileBudgetTests.cs",
@@ -92,14 +83,10 @@ public sealed class CodeFileBudgetTests
 
     static readonly HashSet<string> s_directoryWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
-        @"FluidWarfare.Render.Vulkan\Validation",
-        @"FluidWarfare.Render\Camera",
         @"FluidWarfare.Render\ViewportNavigation",
         @"FluidWarfare.Editor.Windows\Panels\Viewport",
         @"FluidWarfare.Editor.Windows\Panels\WorldHierarchy",
-        @"FluidWarfare.Editor.Windows\Panels\ProjectContentTree",
         @"FluidWarfare.Editor.Windows\Viewport\Transform\Gizmo",
-        @"FluidWarfare.Editor.Windows\Viewport\Transform\Drag",
     };
 
     static readonly string[] s_forbiddenNames =

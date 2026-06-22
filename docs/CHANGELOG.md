@@ -2992,6 +2992,46 @@ Render/Probe/
 
 ---
 
+### 8.7.7F-3 — 小修可清
+
+处理 9 个 101～150 行文件 + 4 个 6～7 文件目录。
+
+#### 目录移动（4 目录白名单删除 📋）
+
+| 目录 | 之前 | 之后 | 操作 |
+|------|------|------|------|
+| `Validation/` | 7 文件 | 2+Info/5 | 5 数据文件 → Info/ 子目录 |
+| `Camera/` | 7 文件 | 5+Orbit/2 | SceneOrbitMotion/State → Orbit/ 子目录 |
+| `ProjectContentTree/` | 6 文件 | 5+Panel/1 | Panel.axaml.cs → Panel/ 子目录 |
+| `Transform/Drag/` | 6 文件 | 4+Anchors/2 | MoveResult/Snapshot → Anchors/ 子目录 |
+
+#### 文件压缩（9 文件白名单删除 📋）
+
+| 文件 | 之前 | 之后 | 节约 |
+|------|------|------|------|
+| `WorldHierarchyTreeIndex.cs` | 112 | 46 | -66 |
+| `ProjectContentNodeView.cs` | 114 | 52 | -62 |
+| `WorldHierarchyTreeBuilder.cs` | 126 | 49 | -77 |
+| `EditorInputActionCatalog.cs` | 148 | 60 | -88 |
+| `VulkanInstanceProbe.cs` | 122 | 43 | -79 |
+| `VulkanDebugMessengerScope.cs` | 133 | 55 | -78 |
+| `VulkanValidationAvailabilityProbe.cs` | 118 | 40 | -78 |
+| `GameContentFileScanner.cs` | 130 | 38 | -92 |
+| `WorldState.cs` | 121 | 48 | -73 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 5/5 |
+| 目录白名单删除 | 4 项 (Validation/Camera/Tree/Drag) |
+| 文件白名单删除 | 9 项 |
+| 文件预算 | 64→55 |
+| 目录预算 | 11→7 |
+
+---
+
 ### 8.7.7F-2 — 立即可清白名单删除
 
 删除 3 项 ≤100 行的历史白名单残留，不改代码逻辑。

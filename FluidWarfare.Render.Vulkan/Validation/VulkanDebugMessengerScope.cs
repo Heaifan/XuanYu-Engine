@@ -3,131 +3,53 @@ using Silk.NET.Vulkan;
 
 namespace FluidWarfare.Render.Vulkan.Validation;
 
-/// <summary>
-/// 持有 DebugUtilsMessengerEXT 的生命周期。
-/// 必须持有 callback delegate 防止被 GC 回收。
-/// 必须在 Instance 销毁之前释放。
-/// </summary>
+/// <summary>持有 DebugUtilsMessengerEXT 生命周期。必须持有 callback 防 GC，在 Instance 销毁前释放。</summary>
 public sealed unsafe class VulkanDebugMessengerScope : IDisposable
 {
-    private readonly Vk _vk;
-    private readonly Silk.NET.Vulkan.Instance _instance;
-    private DebugUtilsMessengerEXT _messenger;
-    private bool _disposed;
+    readonly Vk _vk;
+    readonly Silk.NET.Vulkan.Instance _instance;
+    DebugUtilsMessengerEXT _messenger;
+    bool _disposed;
+    readonly DebugUtilsMessengerCallbackFunctionEXT _callback;
+    readonly VulkanValidationMessageStore _messageStore;
+    readonly nint _fnCreate, _fnDestroy;
 
-    // 持有 callback 防止 GC 回收（T0 重要事项）
-    private readonly DebugUtilsMessengerCallbackFunctionEXT _callback;
-    private readonly VulkanValidationMessageStore _messageStore;
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)] delegate Result CreatePtr(Silk.NET.Vulkan.Instance i, DebugUtilsMessengerCreateInfoEXT* ci, AllocationCallbacks* a, DebugUtilsMessengerEXT* m);
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)] delegate void DestroyPtr(Silk.NET.Vulkan.Instance i, DebugUtilsMessengerEXT m, AllocationCallbacks* a);
 
-    // 函数指针
-    private readonly nint _fnCreateDebugUtilsMessenger;
-    private readonly nint _fnDestroyDebugUtilsMessenger;
-
-    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-    private delegate Result CreateDebugUtilsMessengerPtr(
-        Silk.NET.Vulkan.Instance instance,
-        DebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-        AllocationCallbacks* pAllocator,
-        DebugUtilsMessengerEXT* pMessenger);
-
-    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-    private delegate void DestroyDebugUtilsMessengerPtr(
-        Silk.NET.Vulkan.Instance instance,
-        DebugUtilsMessengerEXT messenger,
-        AllocationCallbacks* pAllocator);
-
-    public VulkanDebugMessengerScope(Vk vk, Silk.NET.Vulkan.Instance instance,
-        VulkanValidationMessageStore messageStore)
+    public VulkanDebugMessengerScope(Vk vk, Silk.NET.Vulkan.Instance instance, VulkanValidationMessageStore messageStore)
     {
-        _vk = vk;
-        _instance = instance;
-        _messageStore = messageStore;
-        _callback = DebugCallback; // 必须在任何提前返回前初始化，防止 GC
-
-        // 加载函数指针
-        _fnCreateDebugUtilsMessenger = LoadProc("vkCreateDebugUtilsMessengerEXT");
-        _fnDestroyDebugUtilsMessenger = LoadProc("vkDestroyDebugUtilsMessengerEXT");
-
-        if (_fnCreateDebugUtilsMessenger == 0 || _fnDestroyDebugUtilsMessenger == 0)
-            throw new InvalidOperationException("Validation 已请求，但无法加载 Debug Utils 函数。");
-
+        _vk = vk; _instance = instance; _messageStore = messageStore; _callback = DebugCallback;
+        _fnCreate = LoadProc("vkCreateDebugUtilsMessengerEXT"); _fnDestroy = LoadProc("vkDestroyDebugUtilsMessengerEXT");
+        if (_fnCreate == 0 || _fnDestroy == 0) throw new InvalidOperationException("无法加载 Debug Utils 函数。");
         var ci = new DebugUtilsMessengerCreateInfoEXT
-        {
-            SType = StructureType.DebugUtilsMessengerCreateInfoExt,
-            MessageSeverity = DebugUtilsMessageSeverityFlagsEXT.VerboseBitExt |
-                              DebugUtilsMessageSeverityFlagsEXT.WarningBitExt |
-                              DebugUtilsMessageSeverityFlagsEXT.ErrorBitExt,
-            MessageType = DebugUtilsMessageTypeFlagsEXT.GeneralBitExt |
-                          DebugUtilsMessageTypeFlagsEXT.ValidationBitExt |
-                          DebugUtilsMessageTypeFlagsEXT.PerformanceBitExt,
-            PfnUserCallback = _callback,
-            PUserData = null
-        };
-
-        var createFn = Marshal.GetDelegateForFunctionPointer<CreateDebugUtilsMessengerPtr>(
-            _fnCreateDebugUtilsMessenger);
-
-        DebugUtilsMessengerEXT messenger;
-        createFn(_instance, &ci, null, &messenger);
-        _messenger = messenger;
+        { SType = StructureType.DebugUtilsMessengerCreateInfoExt,
+            MessageSeverity = DebugUtilsMessageSeverityFlagsEXT.VerboseBitExt | DebugUtilsMessageSeverityFlagsEXT.WarningBitExt | DebugUtilsMessageSeverityFlagsEXT.ErrorBitExt,
+            MessageType = DebugUtilsMessageTypeFlagsEXT.GeneralBitExt | DebugUtilsMessageTypeFlagsEXT.ValidationBitExt | DebugUtilsMessageTypeFlagsEXT.PerformanceBitExt,
+            PfnUserCallback = _callback, PUserData = null };
+        var createFn = Marshal.GetDelegateForFunctionPointer<CreatePtr>(_fnCreate);
+        DebugUtilsMessengerEXT msg; createFn(_instance, &ci, null, &msg); _messenger = msg;
     }
 
-    /// <summary>
-    /// 最近的 Validation 消息数量。
-    /// </summary>
     public int MessageCount => _messageStore?.Count ?? 0;
+    public IReadOnlyList<VulkanValidationMessageInfo> GetMessages() => _messageStore?.Snapshot() ?? [];
 
-    /// <summary>
-    /// 获取消息快照。
-    /// </summary>
-    public IReadOnlyList<VulkanValidationMessageInfo> GetMessages() =>
-        _messageStore?.Snapshot() ?? [];
-
-    private uint DebugCallback(
-        DebugUtilsMessageSeverityFlagsEXT severity,
-        DebugUtilsMessageTypeFlagsEXT types,
-        DebugUtilsMessengerCallbackDataEXT* pCallbackData,
-        void* pUserData)
+    uint DebugCallback(DebugUtilsMessageSeverityFlagsEXT severity, DebugUtilsMessageTypeFlagsEXT types, DebugUtilsMessengerCallbackDataEXT* pData, void* _)
     {
-        if (pCallbackData is null)
-            return Vk.False;
-
-        var msg = Marshal.PtrToStringAnsi((nint)pCallbackData->PMessage) ?? "未知";
-        var severityText = (severity & DebugUtilsMessageSeverityFlagsEXT.ErrorBitExt) != 0 ? "报错"
-                         : (severity & DebugUtilsMessageSeverityFlagsEXT.WarningBitExt) != 0 ? "警告"
-                         : "信息";
-        var typeText = (types & DebugUtilsMessageTypeFlagsEXT.ValidationBitExt) != 0 ? "Validation"
-                     : (types & DebugUtilsMessageTypeFlagsEXT.PerformanceBitExt) != 0 ? "性能"
-                     : "通用";
-
-        _messageStore?.Add(new VulkanValidationMessageInfo(severityText, typeText, msg));
+        if (pData is null) return Vk.False;
+        var msg = Marshal.PtrToStringAnsi((nint)pData->PMessage) ?? "未知";
+        var sv = (severity & DebugUtilsMessageSeverityFlagsEXT.ErrorBitExt) != 0 ? "报错" : (severity & DebugUtilsMessageSeverityFlagsEXT.WarningBitExt) != 0 ? "警告" : "信息";
+        var tp = (types & DebugUtilsMessageTypeFlagsEXT.ValidationBitExt) != 0 ? "Validation" : (types & DebugUtilsMessageTypeFlagsEXT.PerformanceBitExt) != 0 ? "性能" : "通用";
+        _messageStore?.Add(new VulkanValidationMessageInfo(sv, tp, msg));
         return Vk.False;
     }
 
-    private nint LoadProc(string name)
-    {
-        var p = Marshal.StringToHGlobalAnsi(name);
-        try
-        {
-            return (nint)_vk.GetInstanceProcAddr(_instance, (byte*)p);
-        }
-        finally
-        {
-            Marshal.FreeHGlobal(p);
-        }
-    }
+    nint LoadProc(string name) { var p = Marshal.StringToHGlobalAnsi(name); try { return (nint)_vk.GetInstanceProcAddr(_instance, (byte*)p); } finally { Marshal.FreeHGlobal(p); } }
 
     public void Dispose()
     {
-        if (_disposed) return;
-        _disposed = true;
-
-        if (_messenger.Handle != 0 && _fnDestroyDebugUtilsMessenger != 0)
-        {
-            var destroyFn = Marshal.GetDelegateForFunctionPointer<DestroyDebugUtilsMessengerPtr>(
-                _fnDestroyDebugUtilsMessenger);
-            destroyFn(_instance, _messenger, null);
-            _messenger = default;
-        }
+        if (_disposed) return; _disposed = true;
+        if (_messenger.Handle != 0 && _fnDestroy != 0)
+        { var dfn = Marshal.GetDelegateForFunctionPointer<DestroyPtr>(_fnDestroy); dfn(_instance, _messenger, null); _messenger = default; }
     }
 }

@@ -19,6 +19,8 @@
 ### 新增（Milestone 8.7.7F：全仓白名单债务清算）
 
 1. **8.7.7F-1**：创建 `docs/whitelist-audit-8.7.7F-1.md` — 全仓白名单债务盘点，49 项文件 + 8 项目录白名单分层审计
+2. **8.7.7F-2**：3 项立即可清白名单删除（InspectorPanel 84 行 / NativeHost 87 行 / SceneCameraPose 99 行）
+3. **8.7.7F-3**：小修可清 — 移动 4 目录子目录化（Validation/Camera/Tree/Drag）+ 压缩 9 文件到 ≤100 行
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
