@@ -14,7 +14,7 @@
 
 ## 1. 未发布变更日志
 
-最后编辑：2026-06-22 15:00（8.7.7E-2A）
+最后编辑：2026-06-22 15:00（8.7.7E-2B-4）（8.7.7E-2A）
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -470,7 +470,9 @@ Phase 1 证明最小闭环。
   ├─ E-2B-1 Pipeline 模块收口         ✅
   ├─ E-2B-2A Vertex 结构收口          ✅
   ├─ E-2B-2B VertexBuffers 收口       ✅
-  └─ E-2B-3 CommandRecorder 收口      ✅ (最新)
+  ├─ E-2B-3 CommandRecorder 收口      ✅
+  ├─ E-2B-3R Commands SRP 复核        ✅
+  └─ E-2B-4 RenderResources 收口      ✅ (最新)
 8.7.7F 全仓白名单债务清算             ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```

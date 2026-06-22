@@ -2758,3 +2758,65 @@ Vertex/
 | `Commands/` 文件数 | 4 ✅ ≤5 |
 | `CommandRecorder.cs` | 45 行 ✅ ≤100 |
 | 录制顺序不变 | ✅ Begin→RenderPass→Grid→Cursor→Units→Overlay→End |
+
+---
+
+### 8.7.7E-2B-3R — Commands 严格 SRP 复核
+
+CommandGrid 和 CommandUnits 按 SRP 拆分为单个职责文件。Commands/ 根目录拆为 Core/ 和 Draw/ 二级目录。
+
+#### 目录变更
+
+| 旧 | 新 |
+|----|----|
+| `Commands/VulkanScene3dCommandGrid.cs`（Grid + Cursor 复合） | `Commands/Draw/CommandGrid.cs` + `Commands/Draw/CommandGroundCursor.cs` |
+| `Commands/VulkanScene3dCommandUnits.cs`（Units + Overlay 复合） | `Commands/Draw/CommandUnits.cs` + `Commands/Draw/CommandOverlay.cs` |
+| `Commands/VulkanScene3dCommandRecorder.cs`（根目录） | `Commands/Core/CommandRecorder.cs` |
+| `Commands/VulkanScene3dCommandRenderPass.cs`（根目录） | `Commands/Core/CommandRenderPass.cs` |
+
+#### 结构
+
+```
+Commands/Core/   (2文件) 编排器 + RenderPass
+Commands/Draw/   (4文件) Grid / GroundCursor / Units / Overlay
+```
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `Commands/Core/` 文件数 | 2 ✅ ≤5 |
+| `Commands/Draw/` 文件数 | 4 ✅ ≤5 |
+| 全部 ≤56 行 | ✅ |
+
+---
+
+### 8.7.7E-2B-4 — RenderResources 收口
+
+`VulkanScene3dRenderResources.cs` 从 138 行拆至 48 行。按资源职责分拆。
+
+#### 新增
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `Render/Resources/VulkanScene3dDepthResource.cs` | 14 | Depth Image / Memory / View 字段 |
+| `Render/Resources/VulkanScene3dResourceRelease.cs` | 48 | 释放步骤：Fence→Pool→Buffer→Pipeline→Shader→Framebuffer→Depth→RenderPass→ImageView→Swapchain→Device→Surface→Instance |
+
+#### 修改
+
+- `Render/Resources/VulkanScene3dRenderResources.cs`（移入 Resources/）：138→48 行
+  - 核心字段 + IDisposable + 3 步释放编排
+  - ReleaseSwapchainAndSurface / ReleaseRenderResources / ReleaseDeviceAndInstance
+
+#### 白名单
+
+- `RenderResources.cs` 从 `s_lineWhitelist` 删除（48 行 ✅ ≤100）
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error / 0 新 Warning |
+| `dotnet test` | ✅ 625/625 |
+| `Resources/` 文件数 | 3 ✅ ≤5 |
+| `RenderResources.cs` | 48 行 ✅ ≤100 |

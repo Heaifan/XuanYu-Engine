@@ -40,7 +40,6 @@ public sealed class CodeFileBudgetTests
 
         // Vulkan（到期：8.7.7C）
         @"FluidWarfare.Render.Vulkan\Scene3D\Render\VulkanScene3dRenderer.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\Render\VulkanScene3dRenderResources.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanNavigationOverlayGeometry.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanOverlayResources.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanOverlayPipeline.cs",
