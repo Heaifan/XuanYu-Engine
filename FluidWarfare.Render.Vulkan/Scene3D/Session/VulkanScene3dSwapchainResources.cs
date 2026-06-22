@@ -2,6 +2,8 @@
 using FluidWarfare.Render.Vulkan.Scene3D.Depth;
 using FluidWarfare.Render.Vulkan.Scene3D.Session.Surface;
 using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
+using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain.Images;
+using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain.Sync;
 using Silk.NET.Vulkan;
 
 namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
@@ -174,36 +176,10 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
                 VulkanScene3dSwapchainStage.GetSwapchainImages, null,
                 $"GetSwapchainImages 超过最大重试次数（{maxImageRetries}）。");
         r.Extent = extent;
-
         // Color ImageViews
-        var imageCount = swapchainImages.Length;
-        r.ColorViews = new ImageView[imageCount];
-        for (var i = 0; i < imageCount; i++)
-        {
-            var ivCI = new ImageViewCreateInfo
-            {
-                SType = StructureType.ImageViewCreateInfo,
-                Image = swapchainImages[i],
-                ViewType = ImageViewType.Type2D,
-                Format = chosenFmt.Format,
-                Components = new ComponentMapping
-                {
-                    R = ComponentSwizzle.Identity, G = ComponentSwizzle.Identity,
-                    B = ComponentSwizzle.Identity, A = ComponentSwizzle.Identity
-                },
-                SubresourceRange = new ImageSubresourceRange
-                {
-                    AspectMask = ImageAspectFlags.ColorBit,
-                    BaseMipLevel = 0, LevelCount = 1,
-                    BaseArrayLayer = 0, LayerCount = 1
-                }
-            };
-            ImageView newCv = default;
-            if (vk.CreateImageView(device, &ivCI, null, out newCv) != Result.Success)
-                return Fail(
-                    VulkanScene3dSwapchainStage.ColorImageViews, null, $"Color ImageView {i} 创建失败。");
-            r.ColorViews[i] = newCv;
-        }
+        r.ColorViews = VulkanScene3dSwapchainImageViews.Create(vk, device, swapchainImages, chosenFmt.Format);
+        if (r.ColorViews.Length == 0)
+            return Fail(VulkanScene3dSwapchainStage.ColorImageViews, null, "Color ImageView 创建失败。");
 
         // Depth format + attachments
         var depthInfo = VulkanScene3dDepthFormatSelector.Select(vk, physicalDevice);
@@ -211,133 +187,50 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
             return Fail(
                 VulkanScene3dSwapchainStage.DepthAttachments, null, depthInfo.Message);
         r.DepthFormat = depthInfo.ChosenFormat;
-        r.DepthImages = new Image[imageCount];
-        r.DepthMemories = new DeviceMemory[imageCount];
-        r.DepthViews = new ImageView[imageCount];
+        r.DepthImages = new Image[swapchainImages.Length];
+        r.DepthMemories = new DeviceMemory[swapchainImages.Length];
+        r.DepthViews = new ImageView[swapchainImages.Length];
         if (!VulkanScene3dDepthAttachments.Create(vk, physicalDevice, device,
-                extent, depthInfo.ChosenFormat, (uint)imageCount,
+                extent, depthInfo.ChosenFormat, (uint)swapchainImages.Length,
                 r.DepthImages, r.DepthMemories, r.DepthViews, out var depthErr))
             return Fail(
                 VulkanScene3dSwapchainStage.DepthAttachments, null, depthErr);
-
         // RenderPass
-        var colorAttDesc = new AttachmentDescription
-        {
-            Format = chosenFmt.Format, Samples = SampleCountFlags.Count1Bit,
-            LoadOp = AttachmentLoadOp.Clear, StoreOp = AttachmentStoreOp.Store,
-            StencilLoadOp = AttachmentLoadOp.DontCare, StencilStoreOp = AttachmentStoreOp.DontCare,
-            InitialLayout = ImageLayout.Undefined, FinalLayout = ImageLayout.PresentSrcKhr
-        };
-        var depthAttDesc = new AttachmentDescription
-        {
-            Format = depthInfo.ChosenFormat, Samples = SampleCountFlags.Count1Bit,
-            LoadOp = AttachmentLoadOp.Clear, StoreOp = AttachmentStoreOp.DontCare,
-            StencilLoadOp = AttachmentLoadOp.DontCare, StencilStoreOp = AttachmentStoreOp.DontCare,
-            InitialLayout = ImageLayout.Undefined,
-            FinalLayout = ImageLayout.DepthStencilAttachmentOptimal
-        };
-        var atts = stackalloc[] { colorAttDesc, depthAttDesc };
-        var colorRef = new AttachmentReference { Attachment = 0, Layout = ImageLayout.ColorAttachmentOptimal };
-        var depthRef = new AttachmentReference { Attachment = 1, Layout = ImageLayout.DepthStencilAttachmentOptimal };
-        var subpass = new SubpassDescription
-        {
-            PipelineBindPoint = PipelineBindPoint.Graphics,
-            ColorAttachmentCount = 1, PColorAttachments = &colorRef,
-            PDepthStencilAttachment = &depthRef
-        };
-        var rpCI = new RenderPassCreateInfo
-        {
-            SType = StructureType.RenderPassCreateInfo,
-            AttachmentCount = 2, PAttachments = atts,
-            SubpassCount = 1, PSubpasses = &subpass
-        };
-        RenderPass newRp = default;
-        if (vk.CreateRenderPass(device, &rpCI, null, out newRp) != Result.Success)
-            return Fail(
-                VulkanScene3dSwapchainStage.RenderPass, null, "RenderPass 创建失败。");
-        r.RenderPass = newRp;
+        r.RenderPass = VulkanScene3dSwapchainFramebuffers.CreateRenderPass(vk, device, chosenFmt.Format, depthInfo.ChosenFormat);
+        if (r.RenderPass.Handle == 0)
+            return Fail(VulkanScene3dSwapchainStage.RenderPass, null, "RenderPass 创建失败。");
 
         // Framebuffers
-        r.Framebuffers = new Framebuffer[imageCount];
-        var fba = stackalloc ImageView[2];
-        for (var i = 0; i < imageCount; i++)
-        {
-            fba[0] = r.ColorViews[i];
-            fba[1] = r.DepthViews[i];
-            var fbCI = new FramebufferCreateInfo
-            {
-                SType = StructureType.FramebufferCreateInfo,
-                RenderPass = r.RenderPass,
-                AttachmentCount = 2,
-                PAttachments = fba,
-                Width = extent.Width, Height = extent.Height, Layers = 1
-            };
-            Framebuffer newFb = default;
-            if (vk.CreateFramebuffer(device, &fbCI, null, out newFb) != Result.Success)
-                return Fail(
-                    VulkanScene3dSwapchainStage.Framebuffers, null, $"Framebuffer {i} 创建失败。");
-            r.Framebuffers[i] = newFb;
-        }
+        r.Framebuffers = VulkanScene3dSwapchainFramebuffers.CreateFramebuffers(vk, device, r.RenderPass, r.ColorViews, r.DepthViews, extent);
+        if (r.Framebuffers.Length == 0)
+            return Fail(VulkanScene3dSwapchainStage.Framebuffers, null, "Framebuffer 创建失败。");
 
         // CommandPool
-        var poolCI = new CommandPoolCreateInfo { SType = StructureType.CommandPoolCreateInfo, QueueFamilyIndex = queueFamilyIndex };
-        CommandPool newPool = default;
-        if (vk.CreateCommandPool(device, &poolCI, null, out newPool) != Result.Success)
-            return Fail(
-                VulkanScene3dSwapchainStage.CommandPool, null, "CommandPool 创建失败。");
-        r.CommandPool = newPool;
+        // CommandPool
+        r.CommandPool = VulkanScene3dSwapchainSync.CreateCommandPool(vk, device, queueFamilyIndex);
+        if (r.CommandPool.Handle == 0)
+            return Fail(VulkanScene3dSwapchainStage.CommandPool, null, "CommandPool 创建失败。");
 
         // CommandBuffer
-        var allocCI = new CommandBufferAllocateInfo
-        {
-            SType = StructureType.CommandBufferAllocateInfo,
-            CommandPool = r.CommandPool,
-            Level = CommandBufferLevel.Primary,
-            CommandBufferCount = 1
-        };
-        CommandBuffer newCmd = default;
-        if (vk.AllocateCommandBuffers(device, &allocCI, out newCmd) != Result.Success)
-            return Fail(
-                VulkanScene3dSwapchainStage.CommandBuffer, null, "CommandBuffer 创建失败。");
-        r.CommandBuffer = newCmd;
+        r.CommandBuffer = VulkanScene3dSwapchainSync.AllocateCommandBuffer(vk, device, r.CommandPool);
+        if (r.CommandBuffer.Handle == 0)
+            return Fail(VulkanScene3dSwapchainStage.CommandBuffer, null, "CommandBuffer 创建失败。");
 
-        // Sync objects (individual creation with per-object VkResult logging)
-        var semCI = new SemaphoreCreateInfo { SType = StructureType.SemaphoreCreateInfo };
-        var fenceCI = new FenceCreateInfo { SType = StructureType.FenceCreateInfo, Flags = FenceCreateFlags.SignaledBit };
-        Silk.NET.Vulkan.Semaphore imageAvail = default;
-        var availResult = vk.CreateSemaphore(device, &semCI, null, out imageAvail);
-        if (availResult != Result.Success)
-            return Fail(VulkanScene3dSwapchainStage.Synchronization, availResult,
-                $"图像可用 Semaphore 创建失败：{availResult}。");
-
-        Silk.NET.Vulkan.Semaphore renderFin = default;
-        var finResult = vk.CreateSemaphore(device, &semCI, null, out renderFin);
-        if (finResult != Result.Success)
-        {
-            vk.DestroySemaphore(device, imageAvail, null);
-            return Fail(VulkanScene3dSwapchainStage.Synchronization, finResult,
-                $"渲染完成 Semaphore 创建失败：{finResult}。");
-        }
-
-        Fence frameFence = default;
-        var fenceResult = vk.CreateFence(device, &fenceCI, null, out frameFence);
-        if (fenceResult != Result.Success)
-        {
-            vk.DestroySemaphore(device, renderFin, null);
-            vk.DestroySemaphore(device, imageAvail, null);
-            return Fail(VulkanScene3dSwapchainStage.Synchronization, fenceResult,
-                $"帧 Fence 创建失败：{fenceResult}。");
-        }
+        // Sync objects
+        if (!VulkanScene3dSwapchainSync.CreateSemaphore(vk, device, out var imageAvail, out var semErr))
+            return Fail(VulkanScene3dSwapchainStage.Synchronization, null, semErr);
+        if (!VulkanScene3dSwapchainSync.CreateSemaphore(vk, device, out var renderFin, out var finErr))
+        { vk.DestroySemaphore(device, imageAvail, null); return Fail(VulkanScene3dSwapchainStage.Synchronization, null, finErr); }
+        if (!VulkanScene3dSwapchainSync.CreateFence(vk, device, out var frameFence, out var fenceErr))
+        { vk.DestroySemaphore(device, renderFin, null); vk.DestroySemaphore(device, imageAvail, null); return Fail(VulkanScene3dSwapchainStage.Synchronization, null, fenceErr); }
 
         r.SemAvail = imageAvail;
         r.SemFin = renderFin;
         r.Fence = frameFence;
-
         // 成功后不得再有 return Failed
 
         return new VulkanScene3dSwapchainCreateResult(true, r,
-            VulkanScene3dSwapchainStage.CreateSwapchain, Result.Success, w, h,
-            "Swapchain 创建成功。");
+            VulkanScene3dSwapchainStage.CreateSwapchain, Result.Success, w, h, null);
     }
 
     // ─── 幂等 Dispose ─────────────────────────────────────────

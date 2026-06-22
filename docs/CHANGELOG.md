@@ -2216,3 +2216,34 @@ Swapchain 表面格式选择、PresentMode 选择、Extent 计算提取。
 | `dotnet run Editor --no-build` | ✅ 成功 |
 | 新增文件全部 ≤21 行 | ✅ |
 | 白名单 | Swapchain 目录 +1（6 文件），DirectoryWhitelistBudget 11→12 |
+
+---
+
+### 8.7.7D-2B — Swapchain Resources SRP 继续拆
+
+ImageViews / Framebuffers / CommandPool / Sync 对象从 SwapchainResources 提取。
+
+#### 新增
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `Swapchain/Images/VulkanScene3dSwapchainImageViews.cs` | 43 | Color ImageView 创建（从 TryCreate 提取） |
+| `Swapchain/Images/VulkanScene3dSwapchainFramebuffers.cs` | 72 | RenderPass + Framebuffer 创建（从 TryCreate 提取） |
+| `Swapchain/Sync/VulkanScene3dSwapchainSync.cs` | 56 | CommandPool / CommandBuffer / Semaphore / Fence 创建 |
+
+#### 修改
+
+- `VulkanScene3dSwapchainResources.cs`：424→294 行
+  - Color ImageViews 循环 → `VulkanScene3dSwapchainImageViews.Create`
+  - RenderPass + Framebuffers 创建 → `VulkanScene3dSwapchainFramebuffers.*`
+  - CommandPool / CommandBuffer / Semaphore / Fence 创建 → `VulkanScene3dSwapchainSync.*`
+  - 保留：字段/构造/Surface caps/Format选择/Swapchain创建/Image获取/Depth/Dispose
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 新增文件全部 ≤72 行 | ✅ |
