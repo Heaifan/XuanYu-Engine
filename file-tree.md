@@ -945,12 +945,24 @@ FluidWarfare/
 |   |   |   |-- VulkanScene3dRunGate.cs (58 行)
 |   |   |   |-- VulkanScene3dInfo.cs (31 行)
 |   |   |   |-- VulkanScene3dStatus.cs (11 行)
-|   |   |   |-- Probe/                           [477→36 ✅ 白名单删除]
-|   |   |   |   |-- VulkanScene3dRenderer.cs (36 行)
-|   |   |   |   |-- VulkanScene3dRendererCreate.cs (67 行)
-|   |   |   |   |-- VulkanScene3dRendererFrame.cs (78 行)
-|   |   |   |   |-- VulkanScene3dRendererSetup.cs (99 行)
-|   |   |   |   `-- VulkanScene3dRendererSurface.cs (27 行)
+|   |   |   |-- Probe/                           [E-2C-R: SRP 复核]
+|   |   |   |   |-- VulkanScene3dRendererSetup.cs (79 行)
+|   |   |   |   |-- Core/
+|   |   |   |   |   `-- VulkanScene3dRenderer.cs (41 行)
+|   |   |   |   |-- Create/
+|   |   |   |   |   |-- VulkanScene3dRendererProbeInstance.cs (24 行)
+|   |   |   |   |   |-- VulkanScene3dRendererProbeDevice.cs (59 行)
+|   |   |   |   |   |-- VulkanScene3dRendererProbeSurfaceCreate.cs (21 行)
+|   |   |   |   |   |-- VulkanScene3dRendererProbeSwapchain.cs (40 行)
+|   |   |   |   |   `-- VulkanScene3dRendererProbeResources.cs (50 行)
+|   |   |   |   |-- Surface/
+|   |   |   |   |   `-- VulkanScene3dRendererProbeSurfaceChoice.cs (27 行)
+|   |   |   |   `-- Frame/
+|   |   |   |       |-- VulkanScene3dRendererProbeFrame.cs (39 行)
+|   |   |   |       |-- VulkanScene3dRendererProbeAcquire.cs (23 行)
+|   |   |   |       |-- VulkanScene3dRendererProbeMVP.cs (31 行)
+|   |   |   |       |-- VulkanScene3dRendererProbeSubmit.cs (19 行)
+|   |   |   |       `-- VulkanScene3dRendererProbePresent.cs (49 行)
 |   |   |   |-- Resources/
 |   |   |-- Commands/
 |   |   |   |-- VulkanScene3dCommandRecorder.cs (45 行) [200→45 ✅]
@@ -962,11 +974,21 @@ FluidWarfare/
 |   |   |   |-- VulkanScene3dDepthAttachmentInfo.cs / DepthAttachments.cs
 |   |   |-- GroundCursor/
 |   |   |   |-- VulkanGroundCursorGeometry.cs / Info.cs / State.cs
-|   |   |-- Overlay/
-|   |   |   |-- PresentedNavigationOverlaySnapshot.cs
-|   |   |   |-- VulkanNavigationOverlayGeometry.cs / Info.cs
-|   |   |   |-- VulkanOverlayCommandRecorder.cs / Pipeline.cs / PipelineLayout.cs
-|   |   |   |-- VulkanOverlayResources.cs / Vertex.cs
+|   |   |-- Overlay/                          [E-2D: 严格 SRP 子目录]
+|   |   |   |-- Geometry/
+|   |   |   |   |-- VulkanNavigationOverlayGeometry.cs (84 行)
+|   |   |   |   |-- VulkanNavigationOverlayPrimitives.cs (62 行)
+|   |   |   |   |-- VulkanNavigationOverlayShapes.cs (98 行)
+|   |   |   |   |-- VulkanNavigationOverlayInfo.cs (14 行)
+|   |   |   |   `-- VulkanOverlayVertex.cs (41 行)
+|   |   |   |-- Resources/
+|   |   |   |   |-- VulkanOverlayResources.cs (83 行)
+|   |   |   |   |-- VulkanOverlayResources.Create.cs (54 行)
+|   |   |   |   |-- VulkanOverlayPipeline.cs (55 行)
+|   |   |   |   |-- VulkanOverlayPipelineLayout.cs (45 行)
+|   |   |   `-- Render/
+|   |   |       |-- VulkanOverlayCommandRecorder.cs (35 行)
+|   |   |       `-- PresentedNavigationOverlaySnapshot.cs (17 行)
 |   |   |-- Session/
 |   |   |   |-- VulkanScene3dSession.cs (53 行) [≤100 ✅ 白名单已删除]
 |   |   |   |-- VulkanScene3dSession.Frame.cs (70 行)
@@ -1445,7 +1467,7 @@ get_tree.bat
 | `FluidWarfare.Editor/Transform/Translation/Axis/AxisTranslationSolver.cs` | 轴平移求解器（屏幕度量 + 锚定 + 约束 → 增量） | 测试通过 |
 | `FluidWarfare.Editor.Windows/Panels/DebugDock/DebugDockPanel.axaml.cs` | 渲染调试页签（Render Diagnostics / RenderScene / 性能） | 可运行 |
 | `FluidWarfare.Tests/Architecture/CodeFileBudgetTests.cs` | **代码宪法自动化测试：** 扫描所有 .cs 文件行数 ≤100、目录文件数 ≤5、禁用 Manager/Helper/Utils 命名 | 625+ 全通过 |
-| `FluidWarfare.Render.Vulkan/Scene3D/Overlay/VulkanNavigationOverlayGeometry.cs` | 导航覆盖层几何体（左上角 XYZ+N 箭头 + SE 地面台） | 可运行 |
+| `FluidWarfare.Render.Vulkan/Scene3D/Overlay/Geometry/VulkanNavigationOverlayGeometry.cs` | 导航覆盖层几何体（Build 入口，308→84 ✅） | 可运行 |
 | `FluidWarfare.Render.Vulkan/Scene3D/GroundCursor/VulkanGroundCursorState.cs` | 地面光标状态（鼠标跟踪 + 手动放置两种来源） | 可运行 |
 | `GameProjects/SampleProject/units/sample_unit_2.json` | 第二个示例单位占位文件（测试多文件排序稳定性） | 占位 |
 | `GameProjects/SampleProject/units/sample_unit_3.json` | 第三个示例单位占位文件 | 占位 |

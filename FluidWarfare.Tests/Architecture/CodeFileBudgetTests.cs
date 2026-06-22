@@ -12,8 +12,8 @@ public sealed class CodeFileBudgetTests
     // 每次新增白名单条目必须同时递增此值。
     // 目的：防止 AI 无监督扩大债务。
     // 每次新增白名单条目必须同步递增
-    const int LineWhitelistBudget = 71;
-    const int DirectoryWhitelistBudget = 12;
+    const int LineWhitelistBudget = 67;
+    const int DirectoryWhitelistBudget = 11;
 
     static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -39,10 +39,6 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Editor\Input\Actions\EditorInputActionCatalog.cs",
 
         // Vulkan（到期：8.7.7C）
-        @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanNavigationOverlayGeometry.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanOverlayResources.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanOverlayPipeline.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\Depth\VulkanScene3dDepthAttachments.cs",
         @"FluidWarfare.Render.Vulkan\Context\VulkanRenderContext.cs",
         @"FluidWarfare.Render.Vulkan\Clear\VulkanClearProbe.cs",
         @"FluidWarfare.Render.Vulkan\Swapchain\VulkanSwapchainProbe.cs",
@@ -99,7 +95,6 @@ public sealed class CodeFileBudgetTests
 
     static readonly HashSet<string> s_directoryWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
-        @"FluidWarfare.Render.Vulkan\Scene3D\Overlay",
         @"FluidWarfare.Render.Vulkan\Validation",
         @"FluidWarfare.Render\Camera",
         @"FluidWarfare.Render\ViewportNavigation",

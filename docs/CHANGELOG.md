@@ -2861,3 +2861,105 @@ Render/
 | `Render/Probe/` 目录 | 5 文件 ✅ ≤5 |
 | `Renderer.cs` | 36 行 ✅ ≤100 |
 | 全部 Probe 文件 | ≤99 行 ✅ |
+
+---
+
+### 8.7.7E-2C-R — Probe 严格 SRP 复核补丁
+
+**问题：** Probe/ 文件存在潜在复合职责：
+- `VulkanScene3dRendererCreate.cs` 同时实现 Instance + Device + Surface 创建
+- `VulkanScene3dRendererFrame.cs` 同时实现 Acquire + MVP + Submit + Present + Result
+- `VulkanScene3dRendererSetup.cs` 内联实现 Swapchain/ImageView/Framebuffer 创建
+
+**操作：**
+
+1. `Create.cs` (67 行) → `Create/` 子目录 5 文件：
+   - `ProbeInstance.cs` — LoadProc + CreateInstance + PackVer (24 行)
+   - `ProbeDevice.cs` — LoadDeviceProc + SelectDevice + CreateDevice (59 行)
+   - `ProbeSurfaceCreate.cs` — CreateSurface (21 行)
+   - `ProbeSwapchain.cs` — ProbeCreateSwapchain 提取自 Setup (40 行)
+   - `ProbeResources.cs` — ImageView/Framebuffer/CmdPool/Sync 创建提取自 Setup (50 行)
+2. `Frame.cs` (78 行) → `Frame/` 子目录 5 文件：
+   - `ProbeAcquire.cs` — AcquireNextImage (23 行)
+   - `ProbeMVP.cs` — MVP 矩阵 + 逐对象变换 (31 行)
+   - `ProbeSubmit.cs` — QueueSubmit (19 行)
+   - `ProbePresent.cs` — QueuePresent + FrameResult (49 行)
+   - `ProbeFrame.cs` — 帧编排器 (39 行)
+3. `Surface.cs` → `Surface/ProbeSurfaceChoice.cs` (27 行)
+4. `Renderer.cs` → `Core/VulkanScene3dRenderer.cs` 编排器 (+Fail 工厂) (41 行)
+5. Setup.cs 变薄：内联实现提取到 Create/ 子目录 (79 行)
+
+**目录结构：**
+```
+Render/Probe/
+├── VulkanScene3dRendererSetup.cs          (79 行) [99→79]
+├── Core/
+│   └── VulkanScene3dRenderer.cs           (41 行)
+├── Create/ (5 文件)
+│   ├── Instance.cs / Device.cs / SurfaceCreate.cs
+│   └── Swapchain.cs / Resources.cs
+├── Surface/
+│   └── SurfaceChoice.cs                   (27 行)
+└── Frame/ (5 文件)
+    ├── Frame.cs / Acquire.cs / MVP.cs / Submit.cs / Present.cs
+```
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 5/5 |
+| `Probe/` 根目录 | 2 文件 ✅ ≤5 |
+| `Create/` 目录 | 5 文件 ✅ ≤5 |
+| `Frame/` 目录 | 5 文件 ✅ ≤5 |
+| `Surface/` 目录 | 1 文件 ✅ ≤5 |
+| 全部 .cs 文件 | ≤79 行 ✅ |
+| 无复合职责文件 | ✅ |
+
+---
+
+### 8.7.7E-2D — Scene3D 白名单删除 + Overlay 目录整理
+
+**问题：** Scene3D 残留 4 个白名单债务：
+- `Overlay/` 目录 8 文件（目录白名单）
+- `VulkanNavigationOverlayGeometry.cs` 308 行（行白名单）
+- `VulkanOverlayResources.cs` 235 行（行白名单）
+- `VulkanOverlayPipeline.cs` 130 行（行白名单）
+- `VulkanScene3dDepthAttachments.cs` 125 行（行白名单）
+
+**操作：**
+
+1. **DepthAttachments.cs** (125→86 行)：提取 `FindDepthMemoryType` + `CreateDepthImageView` 辅助方法
+2. **OverlayGeometry.cs** (308 行) → `Geometry/` 子目录 3 文件：
+   - `VulkanNavigationOverlayGeometry.cs` (84 行) — Build 入口 + AdjustColor
+   - `VulkanNavigationOverlayPrimitives.cs` (62 行) — 绘图图元
+   - `VulkanNavigationOverlayShapes.cs` (98 行) — 字母 + 按钮
+3. **OverlayResources.cs** (235 行) → `Resources/` 子目录 2 文件：
+   - `VulkanOverlayResources.cs` (83 行) — 类定义 + TryCreate + Upload + Dispose
+   - `VulkanOverlayResources.Create.cs` (54 行) — 创建辅助方法
+4. **OverlayPipeline.cs** (130→55 行)：压缩 → 每行一个 Vulkan 结构体
+5. **Overlay 目录重组**：8 文件 → `Geometry/`(5) + `Resources/`(5) + `Render/`(2)
+6. **白名单删除：** 4 行条目 + 1 目录条目 → 预算 71→67 行 / 12→11 目录
+
+#### 白名单清理
+
+| 旧条目 | 之前 | 之后 | 结果 |
+|--------|------|------|------|
+| `Overlay/` (目录) | 8 文件 >5 | 3 子目录 ≤5 | ✅ 删除 |
+| `OverlayGeometry.cs` | 308 行 | 84 行 (Geometry/) | ✅ 删除 |
+| `OverlayResources.cs` | 235 行 | 83 行 (Resources/) | ✅ 删除 |
+| `OverlayPipeline.cs` | 130 行 | 55 行 (Resources/) | ✅ 删除 |
+| `DepthAttachments.cs` | 125 行 | 86 行 | ✅ 删除 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 5/5 |
+| Scene3D 白名单行 | ✅ 0 (全部删除) |
+| Scene3D 白名单目录 | ✅ 0 (全部删除) |
+| 全部 Overlay .cs 文件 | ≤98 行 ✅ |
+| 全部 Overlay 目录 | ≤5 文件 ✅ |
+| 无复合职责文件 | ✅ |

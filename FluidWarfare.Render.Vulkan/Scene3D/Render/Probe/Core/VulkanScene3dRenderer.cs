@@ -33,4 +33,7 @@ public static unsafe partial class VulkanScene3dRenderer
         }
         finally { r.Dispose(); }
     }
+
+    static VulkanScene3dInfo Fail(string msg, Stopwatch sw) =>
+        new(VulkanScene3dStatus.Failed, msg, 0, 0, 0, 0, 0, 0, 0, "无", 0, false, 0, 0, 0, "无", sw.Elapsed.TotalMilliseconds);
 }
