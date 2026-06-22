@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input;
 using FluidWarfare.Render.ViewportNavigation;
 
 namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
@@ -15,18 +16,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     const int WsClipSiblings = 0x04000000;
     const int WindowStyle = WsChild | WsVisible | WsClipChildren | WsClipSiblings;
 
-    // Win32 消息常量
-    const uint WmMButtonDown = 0x0207;
-    const uint WmMButtonUp = 0x0208;
-    const uint WmMouseMove = 0x0200;
-    const uint WmMouseLeave = 0x02A3;
-    const uint WmMouseWheel = 0x020A;
+    // 非指针消息常量（指针常量移至 NativeViewportPointerMessages）
     const uint WmKeyDown = 0x0100;
     const uint WmKeyUp = 0x0101;
     const uint WmKillFocus = 0x0008;
-    const uint WmLButtonDown = 0x0201;
-    const uint WmLButtonUp = 0x0202;
-    const uint WmCaptureChanged = 0x0215;
     const uint WmNcHitTest = 0x0084;
     const int VkHome = 0x24;
     const int VkEscape = 0x1B;
@@ -35,7 +28,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     const int VkMenu = 0x12;
     const int VkDecimal = 0x6E;
     const int VkNumpad5 = 0x65;
-    const int VkMButton = 0x04;
     const int MkLButton = 0x0001;
     const int MkRButton = 0x0002;
     const int MkMbutton = 0x0010;
@@ -49,7 +41,13 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     int _height;
     WindowsVulkanViewportHostInfo _hostInfo = WindowsVulkanViewportHostInfo.NotCreated;
 
-    // ─── 原始输入事件（Win32 层只转发原始消息，不含业务逻辑）──
+    // ─── 提取的子组件 ─────────────────────────────────────────
+
+    readonly NativeViewportPointerMessages _pointerMessages = new();
+    readonly NativeViewportMouseCapture _mouseCapture = new();
+    readonly NativeViewportMouseTrack _mouseTrack = new();
+
+    // ─── 原始输入事件 ─────────────────────────────────────────
 
     public event Action<int, int, int>? RawPointerButtonDown;
     public event Action<int, int, int>? RawPointerButtonUp;
@@ -59,7 +57,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     public event Action<int, int>? RawMouseWheel;
     public event Action? RawInputFocusLost;
 
-    // ─── Overlay 导航输入事件 ────────────────────────────────────
+    // ─── Overlay 导航输入事件 ─────────────────────────────────
 
     public event Func<int, int, ViewportNavigationPressResult>? NavigationPointerPressed;
     public event Func<int, int, bool>? NavigationPointerMoved;
@@ -80,7 +78,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     // ─── 状态 ──────────────────────────────────────────────
 
-    bool _trackingMouseLeave;
     bool _leftButtonHandledByNavigation;
     bool _navigationDragCaptured;
     bool _leftButtonHandledBySceneTool;
@@ -95,8 +92,7 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         _traceEnabled = Environment.GetEnvironmentVariable("FW_INPUT_TRACE") == "1";
         PropertyChanged += (_, args) =>
         {
-            if (args.Property == BoundsProperty)
-                OnBoundsChanged();
+            if (args.Property == BoundsProperty) OnBoundsChanged();
         };
         _pickInput.PickRequested += (x, y) => PickRequested?.Invoke(x, y);
     }
@@ -105,10 +101,10 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     public void RequestCapture()
     {
-        if (_windowHandle != 0) SetCapture(_windowHandle);
+        if (_windowHandle != 0) _mouseCapture.Capture(_windowHandle);
     }
 
-    public void RequestReleaseCapture() => ReleaseCapture();
+    public void RequestReleaseCapture() => _mouseCapture.Release();
 
     // ─── 生命周期 ────────────────────────────────────────────
 
@@ -124,7 +120,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
             _hostInfo = NativeViewportHostInfoStatics.CreateNoParentHandleInfo();
             return new PlatformHandle(0, "HWND");
         }
-
         try
         {
             _instanceHandle = GetModuleHandle(null);
@@ -134,14 +129,11 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     "无法获取当前进程模块句柄。", _instanceHandle, _width, _height);
                 return new PlatformHandle(0, "HWND");
             }
-
             _currentInstance = this;
             Win32ViewportWindowClass.EnsureRegistered(_instanceHandle, CustomWndProc);
-
             _windowHandle = CreateWindowEx(0, Win32ViewportWindowClass.WindowClassName,
                 "FluidWarfare Vulkan Viewport", WindowStyle,
                 0, 0, 1, 1, parent.Handle, 0, _instanceHandle, 0);
-
             if (_windowHandle == 0)
             {
                 _hostInfo = NativeViewportHostInfoStatics.CreateFailedHostInfo(
@@ -149,7 +141,6 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
                     _instanceHandle, _width, _height);
                 return new PlatformHandle(0, "HWND");
             }
-
             SyncAndPublishHostInfo();
             return new PlatformHandle(_windowHandle, "HWND");
         }
@@ -175,141 +166,162 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
     static nint CustomWndProc(nint hwnd, uint msg, nint wParam, nint lParam)
     {
         var instance = _currentInstance;
-        if (instance is not null && instance._windowHandle == hwnd)
+        if (instance is null || instance._windowHandle != hwnd)
+            return DefWindowProc(hwnd, msg, wParam, lParam);
+
+        // 指针消息解析（不包含编辑器业务仲裁）
+        var parsed = instance._pointerMessages.Parse(msg, wParam, lParam);
+        if (parsed is not null)
         {
-            switch (msg)
+            switch (parsed.Action)
             {
-                case WmMButtonDown:
-                {
-                    SetFocus(instance._windowHandle);
-                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
-                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-                    if (instance._traceEnabled)
-                        System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={mx} y={my}");
-                    SetCapture(instance._windowHandle);
-                    instance._rawPointerDragCaptured = true;
-                    instance.RawPointerButtonDown?.Invoke(VkMButton, mx, my);
-                    return 0;
-                }
+                case NativeViewportPointerAction.LeftDown:
+                    return instance.HandleLeftButtonDown(parsed.X, parsed.Y);
 
-                case WmMButtonUp:
-                {
-                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
-                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-                    if (instance._traceEnabled)
-                        System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MBUTTONUP code=4(Middle)");
-                    instance._rawPointerDragCaptured = false;
-                    ReleaseCapture();
-                    instance.RawPointerButtonUp?.Invoke(VkMButton, mx, my);
-                    return 0;
-                }
+                case NativeViewportPointerAction.LeftUp:
+                    return instance.HandleLeftButtonUp(parsed.X, parsed.Y);
 
-                case WmMouseMove:
-                {
-                    var x = (short)(lParam.ToInt64() & 0xFFFF);
-                    var y = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-                    if (!instance._trackingMouseLeave)
-                    {
-                        var tme = new TRACKMOUSEEVENT
-                        {
-                            cbSize = Marshal.SizeOf<TRACKMOUSEEVENT>(),
-                            dwFlags = 0x00000002u,
-                            hwndTrack = instance._windowHandle
-                        };
-                        TrackMouseEvent(ref tme);
-                        instance._trackingMouseLeave = true;
-                    }
-                    var navConsumed = instance.NavigationPointerMoved?.Invoke(x, y) == true;
-                    if (instance._navigationDragCaptured) navConsumed = true;
-                    if (!navConsumed) { instance.RawPointerMoved?.Invoke(x, y); instance.PointerMoved?.Invoke(x, y); }
-                    return 0;
-                }
+                case NativeViewportPointerAction.MiddleDown:
+                    return instance.HandleMiddleButtonDown(parsed.X, parsed.Y);
 
-                case WmMouseLeave:
-                    instance._trackingMouseLeave = false;
+                case NativeViewportPointerAction.MiddleUp:
+                    return instance.HandleMiddleButtonUp(parsed.X, parsed.Y);
+
+                case NativeViewportPointerAction.Move:
+                    return instance.HandlePointerMove(parsed.X, parsed.Y);
+
+                case NativeViewportPointerAction.Leave:
+                    instance._mouseTrack.Reset();
                     instance.PointerLeft?.Invoke();
                     return 0;
 
-                case WmMouseWheel:
-                {
-                    var delta = (short)((wParam.ToInt64() >> 16) & 0xFFFF);
-                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
-                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-                    var mkFlags = (int)wParam & 0xFFFF;
-                    if (instance._traceEnabled)
-                        System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MOUSEWHEEL delta={delta} mk=0x{mkFlags:X4}");
-                    instance.RawMouseWheel?.Invoke(delta, mkFlags);
-                    return 0;
-                }
+                case NativeViewportPointerAction.Wheel:
+                    return instance.HandleMouseWheel(parsed.X, parsed.Y, parsed.WheelDelta, parsed.ModifierFlags);
 
-                case WmLButtonDown:
-                {
-                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
-                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-                    SetFocus(instance._windowHandle);
-                    var pressResult = instance.NavigationPointerPressed?.Invoke(mx, my)
-                        ?? ViewportNavigationPressResult.NotHandled;
-                    instance._leftButtonHandledByNavigation = pressResult != ViewportNavigationPressResult.NotHandled;
-                    if (pressResult == ViewportNavigationPressResult.BeginDrag)
-                    { SetCapture(instance._windowHandle); instance._navigationDragCaptured = true; }
-                    else if (!instance._leftButtonHandledByNavigation)
-                    {
-                        var toolResult = instance.SceneToolPointerPressed?.Invoke(mx, my)
-                            ?? ViewportSceneToolPressResult.NotHandled;
-                        if (toolResult == ViewportSceneToolPressResult.BeginDrag)
-                        { instance._leftButtonHandledBySceneTool = true; instance._sceneToolDragCaptured = true; SetCapture(instance._windowHandle); }
-                        else { instance._pickInput.OnDown(mx, my); instance.RawPointerButtonDown?.Invoke(1, mx, my); }
-                    }
-                    return 0;
-                }
-
-                case WmLButtonUp:
-                {
-                    var mx = (short)(lParam.ToInt64() & 0xFFFF);
-                    var my = (short)((lParam.ToInt64() >> 16) & 0xFFFF);
-                    if (instance._leftButtonHandledByNavigation)
-                    {
-                        instance._leftButtonHandledByNavigation = false;
-                        var hadCapture = instance._navigationDragCaptured;
-                        instance._navigationDragCaptured = false;
-                        instance.NavigationPointerReleased?.Invoke();
-                        if (hadCapture) ReleaseCapture();
-                    }
-                    else if (instance._leftButtonHandledBySceneTool)
-                    {
-                        instance._leftButtonHandledBySceneTool = false;
-                        var hadCapture = instance._sceneToolDragCaptured;
-                        instance._sceneToolDragCaptured = false;
-                        instance.SceneToolPointerReleased?.Invoke(mx, my);
-                        if (hadCapture) ReleaseCapture();
-                    }
-                    else { instance._pickInput.OnUp(mx, my); instance.RawPointerButtonUp?.Invoke(1, mx, my); }
-                    return 0;
-                }
-
-                case WmKeyDown:
-                    SetFocus(instance._windowHandle);
-                    instance.RawKeyDown?.Invoke((int)wParam);
-                    return 0;
-
-                case WmKeyUp:
-                    instance.RawKeyUp?.Invoke((int)wParam);
-                    return 0;
-
-                case WmKillFocus:
-                    instance.HandleKillFocus();
-                    return 0;
-
-                case WmCaptureChanged:
+                case NativeViewportPointerAction.CaptureChanged:
                     instance.HandleCaptureChanged();
                     return 0;
-
-                case WmNcHitTest:
-                    return DefWindowProc(hwnd, msg, wParam, lParam);
             }
+        }
+
+        // 非指针消息
+        switch (msg)
+        {
+            case WmKeyDown:
+                SetFocus(instance._windowHandle);
+                instance.RawKeyDown?.Invoke((int)wParam);
+                return 0;
+            case WmKeyUp:
+                instance.RawKeyUp?.Invoke((int)wParam);
+                return 0;
+            case WmKillFocus:
+                instance.HandleKillFocus();
+                return 0;
+            case WmNcHitTest:
+                return DefWindowProc(hwnd, msg, wParam, lParam);
         }
         return DefWindowProc(hwnd, msg, wParam, lParam);
     }
+
+    // ─── 指针消息处理（原始翻译，不含编辑器业务）───────────────
+
+    nint HandleMiddleButtonDown(int x, int y)
+    {
+        SetFocus(_windowHandle);
+        if (_traceEnabled)
+            System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={x} y={y}");
+        _mouseCapture.Capture(_windowHandle);
+        _rawPointerDragCaptured = true;
+        RawPointerButtonDown?.Invoke(NativeViewportPointerMessages.VkMButton, x, y);
+        return 0;
+    }
+
+    nint HandleMiddleButtonUp(int x, int y)
+    {
+        if (_traceEnabled)
+            System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MBUTTONUP code=4(Middle)");
+        _mouseCapture.ClearState();
+        RawPointerButtonUp?.Invoke(NativeViewportPointerMessages.VkMButton, x, y);
+        return 0;
+    }
+
+    nint HandlePointerMove(int x, int y)
+    {
+        _mouseTrack.Begin(_windowHandle);
+        var navConsumed = NavigationPointerMoved?.Invoke(x, y) == true;
+        if (_navigationDragCaptured) navConsumed = true;
+        if (!navConsumed) { RawPointerMoved?.Invoke(x, y); PointerMoved?.Invoke(x, y); }
+        return 0;
+    }
+
+    nint HandleMouseWheel(int x, int y, int delta, int modifiers)
+    {
+        if (_traceEnabled)
+            System.Diagnostics.Debug.WriteLine($"[InputTrace-NativeHost] WM_MOUSEWHEEL delta={delta} mk=0x{modifiers:X4}");
+        RawMouseWheel?.Invoke(delta, modifiers);
+        return 0;
+    }
+
+    // ─── 左键按下/抬起（含导航/场景工具仲裁）─────────────────
+
+    nint HandleLeftButtonDown(int mx, int my)
+    {
+        SetFocus(_windowHandle);
+        var pressResult = NavigationPointerPressed?.Invoke(mx, my)
+            ?? ViewportNavigationPressResult.NotHandled;
+        _leftButtonHandledByNavigation = pressResult != ViewportNavigationPressResult.NotHandled;
+
+        if (pressResult == ViewportNavigationPressResult.BeginDrag)
+        {
+            _mouseCapture.Capture(_windowHandle);
+            _navigationDragCaptured = true;
+        }
+        else if (!_leftButtonHandledByNavigation)
+        {
+            var toolResult = SceneToolPointerPressed?.Invoke(mx, my)
+                ?? ViewportSceneToolPressResult.NotHandled;
+            if (toolResult == ViewportSceneToolPressResult.BeginDrag)
+            {
+                _leftButtonHandledBySceneTool = true;
+                _sceneToolDragCaptured = true;
+                _mouseCapture.Capture(_windowHandle);
+            }
+            else
+            {
+                _pickInput.OnDown(mx, my);
+                RawPointerButtonDown?.Invoke(1, mx, my);
+            }
+        }
+        return 0;
+    }
+
+    nint HandleLeftButtonUp(int mx, int my)
+    {
+        if (_leftButtonHandledByNavigation)
+        {
+            _leftButtonHandledByNavigation = false;
+            var hadCapture = _navigationDragCaptured;
+            _navigationDragCaptured = false;
+            NavigationPointerReleased?.Invoke();
+            if (hadCapture) _mouseCapture.Release();
+        }
+        else if (_leftButtonHandledBySceneTool)
+        {
+            _leftButtonHandledBySceneTool = false;
+            var hadCapture = _sceneToolDragCaptured;
+            _sceneToolDragCaptured = false;
+            SceneToolPointerReleased?.Invoke(mx, my);
+            if (hadCapture) _mouseCapture.Release();
+        }
+        else
+        {
+            _pickInput.OnUp(mx, my);
+            RawPointerButtonUp?.Invoke(1, mx, my);
+        }
+        return 0;
+    }
+
+    // ─── Focus / Capture 变更 ────────────────────────────────
 
     void HandleKillFocus()
     {
@@ -346,16 +358,11 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
         var w = Math.Max(1, (int)Math.Round(Bounds.Width));
         var h = Math.Max(1, (int)Math.Round(Bounds.Height));
         if (w < 1 || h < 1) return;
-
         var changed = !_hostInfo.HasWindowHandle || _width != w || _height != h;
-
         NativeViewportHostInfoStatics.SyncWindowSize(_windowHandle, w, h);
-        _width = w;
-        _height = h;
+        _width = w; _height = h;
         _hostInfo = NativeViewportHostInfoStatics.CreateHostInfo(_windowHandle, _instanceHandle, _width, _height);
-
-        if (changed)
-            HostInfoChanged?.Invoke(this, _hostInfo);
+        if (changed) HostInfoChanged?.Invoke(this, _hostInfo);
     }
 
     // ─── P/Invoke ───────────────────────────────────────────
@@ -376,27 +383,4 @@ public sealed class WindowsVulkanViewportHostControl : NativeControlHost
 
     [DllImport("user32.dll", EntryPoint = "DefWindowProcW")]
     static extern nint DefWindowProc(nint hwnd, uint msg, nint wParam, nint lParam);
-
-    [DllImport("user32.dll", EntryPoint = "SetCapture")]
-    static extern nint SetCapture(nint hwnd);
-
-    [DllImport("user32.dll", EntryPoint = "ReleaseCapture")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    static extern bool ReleaseCapture();
-
-    [DllImport("user32.dll", EntryPoint = "TrackMouseEvent", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    static extern bool TrackMouseEvent(ref TRACKMOUSEEVENT tme);
-
-    [DllImport("user32.dll", EntryPoint = "GetKeyState")]
-    static extern short GetKeyState(int nVirtKey);
-
-    [StructLayout(LayoutKind.Sequential)]
-    struct TRACKMOUSEEVENT
-    {
-        public int cbSize;
-        public uint dwFlags;
-        public nint hwndTrack;
-        public uint dwHoverTime;
-    }
 }
