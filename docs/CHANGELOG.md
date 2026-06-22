@@ -2142,3 +2142,48 @@ Pointer 消息机械翻译层提取（wParam/lParam 解析 + capture/track）。
 | NativeHost 目录白名单 | ✅ 已删除（DirectoryWhitelistBudget 12→11） |
 | 新增文件全部 ≤100 | ✅ |
 | `file-tree.md` / `CHANGELOG.md` | ✅ 已更新 |
+
+---
+
+### 8.7.7D-1 — VulkanScene3dSession Ownership Map
+
+VulkanScene3dSession 属性/状态/句柄所有权结构提取。
+
+#### 新增
+
+**Session/**（1 partial）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dSession.Properties.cs` | 87 | 公共属性 + 薄方法（SetSelectedEntity/UpdateEntityPosition/SetGroundCursor 等） |
+
+**Lifecycle/**（1 文件）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dSessionState.cs` | 36 | Session 运行时状态记录（Status/计数器/成功标记/Overlay 状态） |
+
+**Handles/**（3 文件）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dCoreHandles.cs` | 16 | Instance/Device/Surface/Queue 句柄集合 |
+| `VulkanScene3dSwapchainHandles.cs` | 20 | Swapchain 级句柄与函数指针集合 |
+| `VulkanScene3dFrameHandles.cs` | 24 | 帧级资源句柄（Shader/Pipeline/Buffer/Overlay） |
+
+#### 修改
+
+- `VulkanScene3dSession.cs`：1304→1185 行
+  - 属性/薄方法 → `Properties.cs` partial
+  - 主文件保留：字段声明、Start/RenderFrame/Resize/RenderFrameInternal、DisposeResources、创建辅助方法
+  - 类声明添加 `partial` 修饰符
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 新增文件全部 ≤87 行 | ✅ |
+| `file-tree.md` / `CHANGELOG.md` | ✅ 已更新 |

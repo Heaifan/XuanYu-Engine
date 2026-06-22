@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FluidWarfare.Core.Math;
 using FluidWarfare.Render.Camera.Navigation;
@@ -17,7 +17,7 @@ namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
 /// Swapchain 级资源在 resize 时重建。
 /// 每帧仅重录 CommandBuffer + Submit/Present。
 /// </summary>
-public sealed unsafe class VulkanScene3dSession : IDisposable
+public sealed unsafe partial class VulkanScene3dSession : IDisposable
 {
     // ─── 会话级持久资源 ─────────────────────────────────────────
     private Vk? _vk;
@@ -108,129 +108,10 @@ public sealed unsafe class VulkanScene3dSession : IDisposable
     private bool _gridPipeOk, _unitPipeOk;
     private bool _gridBufOk, _unitBufOk;
 
-    // ─── 公共属性 ───────────────────────────────────────────────
-
-    public VulkanScene3dSessionStatus Status => _status;
-    public int FrameIndex => _frameIndex;
-    public int InstanceCreateCount => _instanceCreateCount;
-    public int DeviceCreateCount => _deviceCreateCount;
-    public int PipelineCreateCount => _pipelineCreateCount;
-    public int BufferCreateCount => _bufferCreateCount;
-    public int SwapchainGeneration => _swapchainGeneration;
-    public int GridVertexCount => _gridVertexCount;
-    public int UnitVertexCount => _unitVertexCount;
-    public string? SelectedEntityId => _selectedEntityId;
-    /// <summary>最近成功 Present 的相机快照（用于 Picking 对齐）。</summary>
-    public PresentedCameraSnapshot LastPresentedSnapshot => _lastPresentedSnapshot;
-    public Overlay.PresentedNavigationOverlaySnapshot LastPresentedOverlaySnapshot =>
-        _lastPresentedOverlaySnapshot;
-
-    /// <summary>Overlay 诊断信息。</summary>
-    public Overlay.VulkanNavigationOverlayInfo OverlayInfo
-    {
-        get
-        {
-            if (_overlayResources is null || !_overlayResources.IsValid)
-                return new Overlay.VulkanNavigationOverlayInfo(false, 0, 0, 0,
-                    ViewportNavigation.ViewportNavigationElement.None, "Overlay 不可用");
-            return new Overlay.VulkanNavigationOverlayInfo(true,
-                _lastOverlayVertexCount, Overlay.VulkanNavigationOverlayGeometry.MaxVertexCapacity,
-                1, _overlayHovered, "Overlay 运行中");
-        }
-    }
-
+    // ─── 保留字段（属性在 VulkanScene3dSession.Properties.cs）──
     private int _lastOverlayVertexCount;
-    private Render.ViewportNavigation.ViewportNavigationLayout _lastOverlayLayout =
-        null!;
-
-    // ─── Move Gizmo 覆盖层 ─────────────────────────────────
+    private Render.ViewportNavigation.ViewportNavigationLayout _lastOverlayLayout = null!;
     private Overlay.VulkanOverlayVertex[]? _pendingGizmoVerts;
-    public VulkanGroundCursorInfo GroundCursorInfo =>
-        _cursorState.IsVisible
-            ? new VulkanGroundCursorInfo(
-                true, _cursorState.WorldPosition, _cursorState.Revision,
-                _cursorVertexCount, _cursorState.IsVisible ? 1 : 0)
-            : VulkanGroundCursorInfo.Hidden;
-
-    /// <summary>实体 Transform 修订号（位置变化递增）。</summary>
-    public int TransformRevision => _transformRevision;
-
-    /// <summary>
-    /// 设置当前选中实体。EntityId 无变化时不触发帧。
-    /// </summary>
-    public bool SetSelectedEntity(string? entityId)
-    {
-        if (_selectedEntityId == entityId)
-            return false;
-        _selectedEntityId = entityId;
-        return true;
-    }
-
-    public bool SetNavigationOverlayState(
-        ViewportNavigation.ViewportNavigationElement hovered,
-        ViewportNavigation.ViewportNavigationElement active)
-    {
-        if (_overlayHovered == hovered && _overlayActive == active)
-            return false;
-
-        _overlayHovered = hovered;
-        _overlayActive = active;
-        _overlayRevision++;
-        return true;
-    }
-    // ─── 启动 ───────────────────────────────────────────────────
-
-    /// <summary>
-    /// 设置地面落点标记。相同坐标或相同隐藏状态返回 false（NoOp）。
-    /// 调用方在返回 true 时应请求帧重绘。
-    /// </summary>
-    public bool SetGroundCursor(Vector3d? worldPosition)
-    {
-        if (_status != VulkanScene3dSessionStatus.Active)
-            return false;
-        return _cursorState.Set(worldPosition);
-    }
-
-    /// <summary>设置 Move Gizmo 覆盖层顶点，下一帧渲染。</summary>
-    public void SetMoveGizmoVertices(Overlay.VulkanOverlayVertex[]? vertices)
-    {
-        _pendingGizmoVerts = vertices;
-    }
-
-    /// <summary>
-    /// 更新一个实体的绘制位置。修改缓存的 UnitDrawData。
-    /// 不创建 Instance/Device/Swapchain/Pipeline/VertexBuffer。
-    /// </summary>
-    /// <param name="entityId">实体 ID 字符串。</param>
-    /// <param name="x">新 X 坐标（视觉中心）。</param>
-    /// <param name="y">新 Y 坐标（视觉中心）。</param>
-    /// <param name="z">新 Z 坐标（视觉中心）。</param>
-    /// <returns>是否实际变化（相同坐标返回 false）。</returns>
-    public bool UpdateEntityPosition(string entityId, float x, float y, float z)
-    {
-        for (var i = 0; i < _cachedUnitDraws.Length; i++)
-        {
-            var draw = _cachedUnitDraws[i];
-            if (draw.EntityId == entityId)
-            {
-                if (Math.Abs(draw.X - x) < 1e-6f &&
-                    Math.Abs(draw.Y - y) < 1e-6f &&
-                    Math.Abs(draw.Z - z) < 1e-6f)
-                {
-                    return false; // NoOp
-                }
-
-                _cachedUnitDraws[i] = new VulkanScene3dUnitDrawInfo(
-                    entityId, x, y, z, draw.Scale);
-                _transformRevision++;
-                return true;
-            }
-        }
-
-        return false; // EntityId not found in session
-    }
-
-    // 运行时一致性检查由 EditorShell 在 BuildUnitDrawList 时通过 RenderUnitPlacement 保障。
 
     /// <summary>
     /// 启动 Scene3D 会话。创建会话级资源和 swapchain 级资源。

@@ -921,9 +921,19 @@ FluidWarfare/
 |   |   |   |-- VulkanOverlayCommandRecorder.cs / Pipeline.cs / PipelineLayout.cs
 |   |   |   |-- VulkanOverlayResources.cs / Vertex.cs
 |   |   |-- Session/
-|   |   |   |-- VulkanScene3dSession.cs / SessionStatus.cs
+|   |   |   |-- VulkanScene3dSession.cs (1185 行)
+|   |   |   |-- VulkanScene3dSession.Properties.cs (87 行)
+|   |   |   |-- VulkanScene3dSessionStatus.cs
 |   |   |   |-- VulkanScene3dFrameReason.cs / FrameResult.cs / FrameStatus.cs
 |   |   |   |-- VulkanScene3dSwapchainResources.cs
+|   |   |   |-- Lifecycle/
+|   |   |   |   `-- VulkanScene3dSessionState.cs (36 行)
+|   |   |   |-- Handles/
+|   |   |   |   |-- VulkanScene3dCoreHandles.cs (16 行)
+|   |   |   |   |-- VulkanScene3dSwapchainHandles.cs (20 行)
+|   |   |   |   `-- VulkanScene3dFrameHandles.cs (24 行)
+|   |   |   |-- Surface/VulkanScene3dSurfaceFormats.cs / PresentModes.cs
+|   |   |   `-- Swapchain/
 |   |   |   |-- Surface/VulkanScene3dSurfaceFormats.cs / PresentModes.cs
 |   |   |   `-- Swapchain/
 |   |   |       |-- VulkanScene3dSwapchainFunctions.cs / CreateResult.cs / Stage.cs / Invariant.cs
