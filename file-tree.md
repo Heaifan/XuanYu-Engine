@@ -14,7 +14,7 @@
 
 ## 1. 未发布变更日志
 
-最后编辑：2026-06-22 15:00（8.7.7D-6B）
+最后编辑：2026-06-22 15:00（8.7.7D-6C）
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -461,7 +461,8 @@ Phase 1 证明最小闭环。
   ├─ D-5A Dispose Order Map           ✅
   ├─ D-5B Resource Dispose Steps      ✅
   ├─ D-6A Session Start/Create SRP    ✅
-  └─ D-6B Session Render/Resize Thin  ✅ (最新)
+  ├─ D-6B Session Render/Resize Thin  ✅
+  └─ D-6C Session Field/Handle Split  ✅ (最新)
 8.7.7E VulkanScene3dRenderer          ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```
@@ -929,7 +930,7 @@ FluidWarfare/
 |   |   |   |-- VulkanOverlayCommandRecorder.cs / Pipeline.cs / PipelineLayout.cs
 |   |   |   |-- VulkanOverlayResources.cs / Vertex.cs
 |   |   |-- Session/
-|   |   |   |-- VulkanScene3dSession.cs (177 行)
+|   |   |   |-- VulkanScene3dSession.cs (53 行)
 |   |   |   |-- VulkanScene3dSession.Frame.cs (70 行)
 |   |   |   |-- VulkanScene3dSession.Properties.cs (87 行)
 |   |   |   |-- VulkanScene3dSessionStatus.cs
@@ -948,6 +949,12 @@ FluidWarfare/
 |   |   |   |   `-- State/
 |   |   |   |       |-- VulkanScene3dSessionDisposeState.cs (32 行)
 |   |   |   |       `-- VulkanScene3dSessionDisposeTrace.cs (31 行)
+|   |   |   |-- Core/
+|   |   |   |   |-- VulkanScene3dSessionCoreState.cs (55 行)
+|   |   |   |   |-- VulkanScene3dSessionRenderState.cs (30 行)
+|   |   |   |   |-- VulkanScene3dSessionOverlayState.cs (22 行)
+|   |   |   |   |-- VulkanScene3dSessionResourceFlags.cs (13 行)
+|   |   |   |   `-- VulkanScene3dSessionProcLoad.cs (23 行)
 |   |   |   |-- Start/
 |   |   |   |   |-- VulkanScene3dSessionStart.cs (94 行)
 |   |   |   |   |-- VulkanScene3dSessionCreateInstance.cs (74 行)
