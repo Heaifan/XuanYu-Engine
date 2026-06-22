@@ -39,9 +39,7 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Editor\Input\Actions\EditorInputActionCatalog.cs",
 
         // Vulkan（到期：8.7.7C）
-        @"FluidWarfare.Render.Vulkan\Scene3D\Session\VulkanScene3dSession.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dRenderer.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\Session\VulkanScene3dSwapchainResources.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dVertexBuffers.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dVertex.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dPipelines.cs",
@@ -108,8 +106,6 @@ public sealed class CodeFileBudgetTests
     static readonly HashSet<string> s_directoryWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
         @"FluidWarfare.Render.Vulkan\Scene3D",
-        @"FluidWarfare.Render.Vulkan\Scene3D\Session",
-        @"FluidWarfare.Render.Vulkan\Scene3D\Session\Swapchain",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay",
         @"FluidWarfare.Render.Vulkan\Validation",
         @"FluidWarfare.Render\Camera",

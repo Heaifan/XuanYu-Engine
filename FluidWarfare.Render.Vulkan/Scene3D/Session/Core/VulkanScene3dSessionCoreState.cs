@@ -53,3 +53,13 @@ unsafe partial class VulkanScene3dSession
     private const ulong AcquireImageTimeoutNanoseconds = 100_000_000;
     private const int MaxConsecutiveAcquireTimeouts = 10;
 }
+
+/// <summary>
+/// Scene3D 会话状态机。
+/// Inactive → Starting → Active ←→ RecreatingSwapchain
+/// Any (except Disposed) → Failed → Disposed
+/// </summary>
+public enum VulkanScene3dSessionStatus
+{
+    Inactive, Starting, Active, RecreatingSwapchain, Failed, Disposed
+}

@@ -14,7 +14,7 @@
 
 ## 1. 未发布变更日志
 
-最后编辑：2026-06-22 15:00（8.7.7D-6C）
+最后编辑：2026-06-22 15:00（8.7.7D-6D）
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -462,7 +462,8 @@ Phase 1 证明最小闭环。
   ├─ D-5B Resource Dispose Steps      ✅
   ├─ D-6A Session Start/Create SRP    ✅
   ├─ D-6B Session Render/Resize Thin  ✅
-  └─ D-6C Session Field/Handle Split  ✅ (最新)
+  ├─ D-6C Session Field/Handle Split  ✅
+  └─ D-6D 白名单删除 + 目录债务清理   ✅ (最新)
 8.7.7E VulkanScene3dRenderer          ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```
@@ -930,12 +931,10 @@ FluidWarfare/
 |   |   |   |-- VulkanOverlayCommandRecorder.cs / Pipeline.cs / PipelineLayout.cs
 |   |   |   |-- VulkanOverlayResources.cs / Vertex.cs
 |   |   |-- Session/
-|   |   |   |-- VulkanScene3dSession.cs (53 行)
+|   |   |   |-- VulkanScene3dSession.cs (53 行) [≤100 ✅ 白名单已删除]
 |   |   |   |-- VulkanScene3dSession.Frame.cs (70 行)
 |   |   |   |-- VulkanScene3dSession.Properties.cs (87 行)
-|   |   |   |-- VulkanScene3dSessionStatus.cs
-|   |   |   |-- VulkanScene3dFrameReason.cs / FrameResult.cs / FrameStatus.cs
-|   |   |   |-- VulkanScene3dSwapchainResources.cs (113 行)
+|   |   |   |-- FrameModel/   [FrameReason / FrameResult / FrameStatus]
 |   |   |   |-- Dispose/
 |   |   |   |   |-- VulkanScene3dSessionDisposeResources.cs (34 行)
 |   |   |   |   |-- VulkanScene3dSessionDisposeSession.cs (31 行)
@@ -982,10 +981,13 @@ FluidWarfare/
 |   |   |   `-- Swapchain/
 |   |   |       |-- VulkanScene3dSwapchainFunctions.cs / CreateResult.cs
 |   |   |       |-- VulkanScene3dSwapchainStage.cs / Invariant.cs
-|   |   |       |-- VulkanScene3dSwapchainExtent.cs (16 行)
+|   |   |       |-- Choice/
+|   |   |       |   |-- VulkanScene3dSwapchainSelection.cs (21 行)
+|   |   |       |   `-- VulkanScene3dSwapchainExtent.cs (16 行)
+|   |   |       |-- Resources/
+|   |   |       |   `-- VulkanScene3dSwapchainResources.cs (100 行) [≤100 ✅ 白名单已删除]
 |   |   |       |-- Create/
 |   |   |       |   `-- VulkanScene3dSwapchainCreateFlow.cs
-|   |   |       `-- VulkanScene3dSwapchainSelection.cs (21 行)
 |   |   |       |-- Images/
 |   |   |       |   |-- VulkanScene3dSwapchainImageViews.cs (43 行)
 |   |   |       |   `-- VulkanScene3dSwapchainFramebuffers.cs (72 行)
