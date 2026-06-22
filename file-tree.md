@@ -670,15 +670,22 @@ FluidWarfare/
 |   |   |   |   `-- WindowsViewportInputTranslator.cs (284 行)
 |   |   |   |-- NativeHost/
 |   |   |   |   |-- Input/
-|   |   |   |   |   |-- NativeViewportMouseCapture.cs (33 行)
-|   |   |   |   |   |-- NativeViewportMouseTrack.cs   (40 行)
-|   |   |   |   |   |-- NativeViewportPointerAction.cs
-|   |   |   |   |   |-- NativeViewportPointerMessages.cs (46 行)
-|   |   |   |   |   `-- NativeViewportPointerRequest.cs (40 行)
+|   |   |   |   |   |-- Pointer/
+|   |   |   |   |   |   |-- NativeViewportMouseCapture.cs (33 行)
+|   |   |   |   |   |   |-- NativeViewportMouseTrack.cs   (40 行)
+|   |   |   |   |   |   |-- NativeViewportPointerAction.cs
+|   |   |   |   |   |   |-- NativeViewportPointerMessages.cs (46 行)
+|   |   |   |   |   |   `-- NativeViewportPointerRequest.cs (40 行)
+|   |   |   |   |   |-- Keyboard/
+|   |   |   |   |   |   |-- NativeViewportKeyboardMessages.cs (25 行)
+|   |   |   |   |   |   `-- NativeViewportKeyboardRequest.cs
+|   |   |   |   |   `-- Focus/
+|   |   |   |   |       |-- NativeViewportFocusMessages.cs (19 行)
+|   |   |   |   |       `-- NativeViewportHitTestMessages.cs
 |   |   |   |   |-- NativeViewportHostInfo.cs
 |   |   |   |   |-- ViewportSceneToolPressResult.cs
 |   |   |   |   |-- Win32ViewportWindowClass.cs (56 行)
-|   |   |   |   |-- WindowsVulkanViewportHostControl.cs (386 行, 待继续拆分)
+|   |   |   |   |-- WindowsVulkanViewportHostControl.cs (369 行, 待继续拆分)
 |   |   |   |   |-- WindowsVulkanViewportHostInfo.cs
 |   |   |   |   |-- WindowsVulkanViewportHostState.cs
 |   |   |   |   `-- WindowsVulkanViewportPickInput.cs (53 行)

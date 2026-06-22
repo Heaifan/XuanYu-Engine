@@ -1906,3 +1906,122 @@ EditorShell (991 行)
 ├── Lifecycle（5 个 Route 文件）
 └── 剩余：面板/选择/状态/诊断/Probe 约 500 行
 ```
+
+---
+
+### 8.7.7B — Project / World Tree Panels SRP
+
+左侧 Dock / 项目树 / 世界树三块 UI God Panel SRP 拆分。
+
+#### 修改
+
+- `WorldHierarchyTreePanel.axaml.cs`：229→95 行
+  - 新建 `WorldHierarchyTreeItems.cs`（14 行）、`WorldHierarchyTreeExpansion.cs`（43 行）、`WorldHierarchyTreeSelection.cs`（87 行）
+  - 白名单债务 -1（`WorldHierarchyTreePanel.axaml.cs` 移出）
+- `ProjectContentTreePanel.axaml.cs`：168→83 行
+  - 新建 `ProjectContentTreeItems.cs`（14 行）、`ProjectContentTreeExpansion.cs`（31 行）、`ProjectContentTreeSelection.cs`（48 行）
+  - 白名单债务 -1（`ProjectContentTreePanel.axaml.cs` 移出）
+- `ProjectWorldDockPanel.axaml.cs`：219→76 行
+  - 新建 `ProjectWorldDockTabs.cs`（71 行）— 页签切换 + 搜索状态管理
+  - `ProjectWorldDockPanel.axaml` 移除 XAML 事件绑定（移至程序化绑定）
+  - 白名单债务 -1（`ProjectWorldDockPanel.axaml.cs` 移出）
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 白名单债务 | 74→71 |
+
+---
+
+### 8.7.7C-1 — NativeHost HWND Lifecycle SRP
+
+`WindowsVulkanViewportHostControl.cs` 窗口类注册 + HostInfo 发布提取。
+
+#### 新增
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `Win32ViewportWindowClass.cs` | 56 | 窗口类注册 + WndClass struct + WndProc delegate |
+| `NativeViewportHostInfoStatics.cs` | 46 | HostInfo 工厂（CreateHostInfo/CreateFailed/CreateUnsupported）+ SyncWindowSize + FormatHandle + SetWindowPos P/Invoke |
+
+#### 修改
+
+- `WindowsVulkanViewportHostControl.cs`：605→402 行
+  - 移除窗口类注册、HostInfo 工厂方法、FormatHandle、SetWindowPos
+  - 保留：CustomWndProc + 全部输入事件 + 生命周期协调 + capture 管理
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 白名单 | directory +1（NativeHost）, budget 11→12 |
+
+---
+
+### 8.7.7C-2 — NativeHost Raw Pointer Messages SRP
+
+Pointer 消息机械翻译层提取（wParam/lParam 解析 + capture/track）。
+
+#### 新增（5 文件 `NativeHost/Input/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `NativeViewportPointerMessages.cs` | 46 | 消息识别 + Parse() 分发 |
+| `NativeViewportPointerRequest.cs` | 40 | wParam/lParam 解析工厂方法 |
+| `NativeViewportPointerAction.cs` | 15 | 指针动作枚举 |
+| `NativeViewportMouseCapture.cs` | 33 | SetCapture/ReleaseCapture P/Invoke + 状态 |
+| `NativeViewportMouseTrack.cs` | 40 | TrackMouseEvent P/Invoke + 状态 |
+
+#### 修改
+
+- `WindowsVulkanViewportHostControl.cs`：402→386 行
+  - CustomWndProc 从 2 段式 switch 改为 parse+dispatch 模式
+  - 指针消息拆为独立方法（HandleMiddleDown/Up/Move/Wheel/LeftDown/Up）
+  - 移除 SetCapture/ReleaseCapture/TrackMouseEvent P/Invoke 和指针消息常量
+  - 保留：LButtonDown/Up 仲裁逻辑 / Focus / Keyboard / Nav / SceneTool
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 白名单 | 无变更 |
+
+---
+
+### 8.7.7C-3 — Raw Keyboard / Focus Messages SRP
+
+键盘消息 + 焦点消息 + 命中测试消息提取。目录重组：Input/Pointer/、Input/Keyboard/、Input/Focus/。
+
+#### 目录重组
+
+- `Input/` → `Input/Pointer/`（git mv，5 文件 namespace 更新）
+- 新增 `Input/Keyboard/`（2 文件）：`NativeViewportKeyboardMessages.cs`（25 行）、`NativeViewportKeyboardRequest.cs`
+- 新增 `Input/Focus/`（2 文件）：`NativeViewportFocusMessages.cs`（19 行、含 SetFocus P/Invoke）、`NativeViewportHitTestMessages.cs`
+
+#### 修改
+
+- `WindowsVulkanViewportHostControl.cs`：386→369 行
+  - 移除键盘/焦点/命中测试消息常量
+  - 移除 Vk*/Mk* 常量
+  - 移除 SetFocus P/Invoke（移至 FocusMessages.SetFocusTo）
+  - CustomWndProc 三段式 dispatch：pointer → keyboard → focus/hittest
+  - 保留：LButtonDown/Up 仲裁 / HandleKillFocus / HandleCaptureChanged
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 白名单 | 无变更（Pointer/Keyboard/Focus 各 ≤5 文件） |
