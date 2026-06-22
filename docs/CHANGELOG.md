@@ -2311,3 +2311,40 @@ RenderFrameInternal 帧资源管理提取：Camera MVP / UnitDraw / Overlay / Su
 | `dotnet run Editor --no-build` | ✅ 成功 |
 | 新增文件 ≤98 行 | ✅ |
 | `file-tree.md` / `CHANGELOG.md` | ✅ 已更新 |
+
+---
+
+### 8.7.7D-4 — Acquire / Present Route
+
+AcquireNextImageKHR / QueueSubmit / QueuePresentKHR 调用及结果分类从 `Session.cs` 和 `Frame.cs` 提取到独立 `FrameFlow/` 目录。
+
+#### 新增（`Session/FrameFlow/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dFrameAcquire.cs` | 100 | AcquireNextImage 调用 + ClassifyAcquireResult（8 分支判读） |
+| `VulkanScene3dFrameSubmit.cs` | 25 | SubmitFrame（QueueSubmit 调用） |
+| `VulkanScene3dFramePresent.cs` | 66 | PresentFrame（函数指针调用）+ ClassifyPresentResult（6 分支判读） |
+| `VulkanScene3dFrameFailure.cs` | 17 | FailFrame 文案构造（DisposeResources + 状态标记） |
+
+#### 修改
+
+- `VulkanScene3dSession.cs`：1068→941 行
+  - 删除 `ClassifyAcquireResult()`（迁至 FrameAcquire.cs）
+  - 删除 `ClassifyPresentResult()`（迁至 FramePresent.cs）
+  - 删除 `FailFrame()`（迁至 FrameFailure.cs）
+  - `RenderFrameInternal` 中 Acquire 内联 18 行 → `AcquireNextImage(reason)` 单行调用（语义等价）
+- `VulkanScene3dSession.Frame.cs`：98→70 行
+  - 删除 `SubmitFrame()`（迁至 FrameSubmit.cs）
+  - 删除 `PresentFrame()`（迁至 FramePresent.cs）
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error / 0 新 Warning |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| `VulkanScene3dSession.cs` | 941 行 ✅（目标 850-950） |
+| `VulkanScene3dSession.Frame.cs` | 70 行 ✅（下降 28 行，< 红线 100） |
+| 新增文件全部 ≤100 行 | ✅ |

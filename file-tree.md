@@ -14,7 +14,7 @@
 
 ## 1. 未发布变更日志
 
-最后编辑：2026-06-22 15:00（8.7.7C-1）
+最后编辑：2026-06-22 15:00（8.7.7D-4）
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -453,7 +453,11 @@ Phase 1 证明最小闭环。
   ├─ C-2 Raw Pointer Messages         ✅ (最新)
   ├─ C-3 Resize/Events                ⏳
   └─ C-4 Cleanup                      ⏳
-8.7.7D VulkanScene3dSession           ⏳
+8.7.7D VulkanScene3dSession           ✅
+  ├─ D-1 Session Ownership            ✅
+  ├─ D-2 Swapchain Lifecycle          ✅
+  ├─ D-3 Vulkan Frame Resources       ✅
+  └─ D-4 Acquire / Present Route      ✅ (最新)
 8.7.7E VulkanScene3dRenderer          ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```
@@ -921,12 +925,17 @@ FluidWarfare/
 |   |   |   |-- VulkanOverlayCommandRecorder.cs / Pipeline.cs / PipelineLayout.cs
 |   |   |   |-- VulkanOverlayResources.cs / Vertex.cs
 |   |   |-- Session/
-|   |   |   |-- VulkanScene3dSession.cs (1068 行)
-|   |   |   |-- VulkanScene3dSession.Frame.cs (98 行)
+|   |   |   |-- VulkanScene3dSession.cs (941 行)
+|   |   |   |-- VulkanScene3dSession.Frame.cs (70 行)
 |   |   |   |-- VulkanScene3dSession.Properties.cs (87 行)
 |   |   |   |-- VulkanScene3dSessionStatus.cs
 |   |   |   |-- VulkanScene3dFrameReason.cs / FrameResult.cs / FrameStatus.cs
 |   |   |   |-- VulkanScene3dSwapchainResources.cs (113 行)
+|   |   |   |-- FrameFlow/
+|   |   |   |   |-- VulkanScene3dFrameAcquire.cs (100 行)
+|   |   |   |   |-- VulkanScene3dFrameSubmit.cs (25 行)
+|   |   |   |   |-- VulkanScene3dFramePresent.cs (66 行)
+|   |   |   |   `-- VulkanScene3dFrameFailure.cs (17 行)
 |   |   |   |-- Lifecycle/
 |   |   |   |   `-- VulkanScene3dSessionState.cs (36 行)
 |   |   |   |-- Handles/
