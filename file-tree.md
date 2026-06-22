@@ -14,7 +14,7 @@
 
 ## 1. 未发布变更日志
 
-最后编辑：2026-06-22 15:00（8.7.7D-6A）
+最后编辑：2026-06-22 15:00（8.7.7D-6B）
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -460,7 +460,8 @@ Phase 1 证明最小闭环。
   ├─ D-4 Acquire / Present Route      ✅
   ├─ D-5A Dispose Order Map           ✅
   ├─ D-5B Resource Dispose Steps      ✅
-  └─ D-6A Session Start/Create SRP    ✅ (最新)
+  ├─ D-6A Session Start/Create SRP    ✅
+  └─ D-6B Session Render/Resize Thin  ✅ (最新)
 8.7.7E VulkanScene3dRenderer          ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```
@@ -928,7 +929,7 @@ FluidWarfare/
 |   |   |   |-- VulkanOverlayCommandRecorder.cs / Pipeline.cs / PipelineLayout.cs
 |   |   |   |-- VulkanOverlayResources.cs / Vertex.cs
 |   |   |-- Session/
-|   |   |   |-- VulkanScene3dSession.cs (499 行)
+|   |   |   |-- VulkanScene3dSession.cs (177 行)
 |   |   |   |-- VulkanScene3dSession.Frame.cs (70 行)
 |   |   |   |-- VulkanScene3dSession.Properties.cs (87 行)
 |   |   |   |-- VulkanScene3dSessionStatus.cs
@@ -953,7 +954,14 @@ FluidWarfare/
 |   |   |   |   |-- VulkanScene3dSessionCreateSurface.cs (49 行)
 |   |   |   |   |-- VulkanScene3dSessionCreateDevice.cs (83 行)
 |   |   |   |   `-- VulkanScene3dSessionCreateResources.cs (55 行)
+|   |   |   |-- Render/
+|   |   |   |   |-- VulkanScene3dRenderFrame.cs (32 行)
+|   |   |   |   |-- VulkanScene3dRenderResize.cs (87 行)
+|   |   |   |   |-- VulkanScene3dRenderResizeAtomic.cs (79 行)
+|   |   |   |   |-- VulkanScene3dRenderFrameInternal.cs (80 行)
+|   |   |   |   `-- VulkanScene3dRenderFrameSnapshot.cs (62 行)
 |   |   |   |-- FrameFlow/
+|   |   |   |   |-- VulkanScene3dFrameAcquire.cs (100 行)
 |   |   |   |   |-- VulkanScene3dFrameSubmit.cs (25 行)
 |   |   |   |   |-- VulkanScene3dFramePresent.cs (66 行)
 |   |   |   |   `-- VulkanScene3dFrameFailure.cs (17 行)

@@ -2457,3 +2457,35 @@ Start() 编排器 + 所有 Create* 方法从 `VulkanScene3dSession.cs` 提取到
 | 新增文件全部 ≤94 行 | ✅ |
 | `Start/` 每目录 ≤5 文件 | ✅ |
 | `VulkanScene3dSession.cs` | 499 行 ✅ |
+
+---
+
+### 8.7.7D-6B — Session Render / Resize Thin Route
+
+RenderFrame / Resize / RenderFrameInternal 从 `VulkanScene3dSession.cs` 提取到 `Session/Render/`。
+
+#### 新增（`Session/Render/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dRenderFrame.cs` | 32 | RenderFrame 入口（状态检查 + 防重入） |
+| `VulkanScene3dRenderResize.cs` | 87 | Resize 编排器（检查 → DeviceWaitIdle → 事务 → 不变量） |
+| `VulkanScene3dRenderResizeAtomic.cs` | 79 | Resize 事务（Pipeline/Overlay 创建 → 原子切换 → 释放旧资源） |
+| `VulkanScene3dRenderFrameInternal.cs` | 80 | 帧编排（Fence → Acquire → Compute → Record → Submit → Present） |
+| `VulkanScene3dRenderFrameSnapshot.cs` | 62 | 相机快照 + Overlay 快照 + FrameResult 构造 |
+
+#### 修改
+
+- `VulkanScene3dSession.cs`：499→177 行
+  - RenderFrame / Resize / RenderFrameInternal → `Session/Render/`
+  - 渲染流程不变，Resize 事务逻辑不变
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error / 0 新 Warning |
+| `dotnet test` | ✅ 625/625 |
+| 新增文件全部 ≤87 行 | ✅ |
+| `Render/` 每目录 ≤5 文件 | ✅ |
+| `VulkanScene3dSession.cs` | 177 行 ✅ |
