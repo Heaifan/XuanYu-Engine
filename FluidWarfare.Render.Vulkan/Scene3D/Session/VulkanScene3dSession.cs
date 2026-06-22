@@ -479,7 +479,9 @@ public sealed unsafe partial class VulkanScene3dSession : IDisposable
 
         _frameIndex++;
         var drawCalls = 0;
-        var renderedUnitCount = 0;
+
+        int renderedUnitCount = 0;
+        VulkanScene3dCommandRecorder.UnitDrawData[] unitDrawData = [];
 
         try
         {
@@ -515,120 +517,22 @@ public sealed unsafe partial class VulkanScene3dSession : IDisposable
             if (resetResult != Result.Success)
                 return FailFrame(reason, $"GPU Fence 重置失败：{resetResult}。");
 
-            // 5. Compute camera from full pose (Yaw/Pitch preserved)
-            var camInfo = new VulkanCameraInfo(
-                cameraPose.PositionX, cameraPose.PositionY, cameraPose.PositionZ,
-                cameraPose.TargetX, cameraPose.TargetY, cameraPose.TargetZ,
-                cameraPose.UpX, cameraPose.UpY, cameraPose.UpZ,
-                cameraPose.FieldOfViewDegrees,
-                cameraPose.NearPlane, cameraPose.FarPlane);
+            // 5. Compute camera + build view-projection
             var aspect = _swapchainRes.Extent.Width / (float)_swapchainRes.Extent.Height;
+            var vp = ComputeViewProjection(cameraPose, aspect);
 
-            // 5a. Select projection based on mode
-            float[] vp;
-            if (cameraPose.ProjectionMode == FluidWarfare.Render.Camera.Navigation.SceneProjectionMode.Orthographic)
-            {
-                vp = VulkanCameraMatrices.ComputeVulkanOrthoMVP(camInfo, aspect, cameraPose.OrthographicHeight);
-            }
-            else
-            {
-                vp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
-            }
 
-            // 6. Sync cached unit draws from incoming data (first call or after resize)
-            if (_cachedUnitDraws.Length != unitDraws.Length)
-            {
-                _cachedUnitDraws = unitDraws.ToArray();
-            }
+            // 6-7. Sync + build unit draw data
+            (unitDrawData, renderedUnitCount) = BuildUnitDrawData(vp, unitDraws);
 
-            // 7. Build per-object MVP + Tint from cached UnitDrawData
-            var unitDrawData = new VulkanScene3dCommandRecorder.UnitDrawData[_cachedUnitDraws.Length];
-            for (var i = 0; i < _cachedUnitDraws.Length; i++)
-            {
-                var draw = _cachedUnitDraws[i];
-                var trans = VulkanCameraMatrices.CreateTranslation(draw.X, draw.Y, draw.Z);
-                var scale = VulkanCameraMatrices.CreateScale(draw.Scale);
-                var model = VulkanCameraMatrices.Mul(trans, scale);
-                var mvp = VulkanCameraMatrices.Mul(vp, model);
-                var tint = draw.EntityId == _selectedEntityId
-                    ? VulkanScene3dPushConstants.SelectedTint
-                    : VulkanScene3dPushConstants.NormalTint;
-                unitDrawData[i] = new VulkanScene3dCommandRecorder.UnitDrawData(mvp, tint);
-                renderedUnitCount++;
-            }
 
-            // 9. Build ground cursor data if visible
-            VulkanScene3dCommandRecorder.GroundCursorDrawData? cursorData = null;
-            if (_cursorState.IsVisible && _cursorState.WorldPosition is not null &&
-                _cursorBufOk && _cursorBuffer.Handle != 0)
-            {
-                var pos = _cursorState.WorldPosition.Value;
-                var ct = VulkanCameraMatrices.CreateTranslation(
-                    (float)pos.X, (float)pos.Y, (float)pos.Z + 0.02f);
-                var cursorMvp = VulkanCameraMatrices.Mul(vp, ct);
-                cursorData = new VulkanScene3dCommandRecorder.GroundCursorDrawData(
-                    _cursorBuffer, _cursorVertexCount, cursorMvp);
-            }
+            // 9. Build ground cursor data
+            var cursorData = BuildGroundCursorData(vp);
 
-            // 10. Record command buffer
-            // Pre-generate overlay geometry。每帧先清空 pending，防止上传失败后发布旧布局。
-            _pendingOverlayLayout = null;
-            _lastOverlayVertexCount = 0;
-            int overlayVtxCount = 0;
-            Silk.NET.Vulkan.Buffer? overlayBuf = null;
-            Pipeline? overlayPipe = null;
-            PipelineLayout? overlayLayout = null;
-            if (_overlayResources is not null && _overlayResources.IsValid)
-            {
-                try
-                {
-                    // Overlay geometry doesn't need camInfo — it uses layout directly
-                    var extentW = (int)_swapchainRes.Extent.Width;
-                    var extentH = (int)_swapchainRes.Extent.Height;
-                    var projText = cameraPose.ProjectionMode == SceneProjectionMode.Perspective ? "Persp" : "Ortho";
 
-                    _lastOverlayLayout = FluidWarfare.Render.ViewportNavigation.ViewportNavigationLayoutCompute.Compute(
-                        extentW, extentH, cameraPose);
+            // 10. Build overlay geometry
+            var (overlayVtxCount, overlayBuf, overlayPipe, overlayLayout) = BuildOverlay(cameraPose);
 
-                    var overlayVerts = Overlay.VulkanNavigationOverlayGeometry.Build(
-                        _lastOverlayLayout, _overlayHovered, _overlayActive, projText);
-
-                    // 合并 Move Gizmo 顶点（如果有）
-                    Overlay.VulkanOverlayVertex[] mergedVerts;
-                    if (_pendingGizmoVerts is { Length: > 0 })
-                    {
-                        mergedVerts = new Overlay.VulkanOverlayVertex[
-                            overlayVerts.Length + _pendingGizmoVerts.Length];
-                        Array.Copy(overlayVerts, 0, mergedVerts, 0, overlayVerts.Length);
-                        Array.Copy(_pendingGizmoVerts, 0, mergedVerts,
-                            overlayVerts.Length, _pendingGizmoVerts.Length);
-                        _pendingGizmoVerts = null;
-                    }
-                    else
-                    {
-                        mergedVerts = overlayVerts;
-                    }
-
-                    if (_overlayResources.UploadVertices(mergedVerts, out var overlayUploadError))
-                    {
-                        _lastOverlayVertexCount = mergedVerts.Length;
-                        _pendingOverlayLayout = _lastOverlayLayout;
-                        overlayVtxCount = mergedVerts.Length;
-                        overlayBuf = _overlayResources.VertexBuffer;
-                        overlayPipe = _overlayResources.Pipeline;
-                        overlayLayout = _overlayResources.Layout;
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine(
-                            $"[Overlay] 顶点上传失败：{overlayUploadError}。本帧跳过 Overlay。");
-                    }
-                }
-                catch (Exception exO)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[Overlay] 几何生成异常：{exO.Message}");
-                }
-            }
 
             if (!VulkanScene3dCommandRecorder.Record(_vk, _swapchainRes.CommandBuffer,
                     _swapchainRes.RenderPass, _swapchainRes.Framebuffers[imgIndex],
@@ -645,34 +549,13 @@ public sealed unsafe partial class VulkanScene3dSession : IDisposable
                 return FailFrame(reason, cmdErr);
 
             // 8. Submit
-            _vk.GetDeviceQueue(_device, _queueIndex, 0, out _queue);
-            var waitSem = stackalloc[] { _swapchainRes.SemAvail };
-            var waitStage = stackalloc[] { PipelineStageFlags.ColorAttachmentOutputBit };
-            var sigSem = stackalloc[] { _swapchainRes.SemFin };
-            var cBufs = stackalloc[] { _swapchainRes.CommandBuffer };
-            var submitInfo = new SubmitInfo
-            {
-                SType = StructureType.SubmitInfo,
-                WaitSemaphoreCount = 1, PWaitSemaphores = waitSem,
-                PWaitDstStageMask = waitStage,
-                CommandBufferCount = 1, PCommandBuffers = cBufs,
-                SignalSemaphoreCount = 1, PSignalSemaphores = sigSem
-            };
-            if (_vk.QueueSubmit(_queue, 1, &submitInfo, _swapchainRes.Fence) != Result.Success)
+            if (SubmitFrame() != Result.Success)
                 return FailFrame(reason, "QueueSubmit 失败。");
 
+
             // 9. Present
-            var presentFn = Marshal.GetDelegateForFunctionPointer<QueuePresentFn>(_fnQueuePresent);
-            var scArr = stackalloc[] { _swapchainRes.Swapchain };
-            var idxArr = stackalloc[] { imgIndex };
-            var presentInfo = new PresentInfoKHR
-            {
-                SType = StructureType.PresentInfoKhr,
-                WaitSemaphoreCount = 1, PWaitSemaphores = sigSem,
-                SwapchainCount = 1, PSwapchains = scArr,
-                PImageIndices = idxArr
-            };
-            var presentRes = presentFn(_queue, &presentInfo);
+            var presentRes = PresentFrame(imgIndex);
+
 
             // 10. 分类处理 Present 结果
             var presentResult = ClassifyPresentResult(presentRes, reason);

@@ -921,7 +921,8 @@ FluidWarfare/
 |   |   |   |-- VulkanOverlayCommandRecorder.cs / Pipeline.cs / PipelineLayout.cs
 |   |   |   |-- VulkanOverlayResources.cs / Vertex.cs
 |   |   |-- Session/
-|   |   |   |-- VulkanScene3dSession.cs (1185 行)
+|   |   |   |-- VulkanScene3dSession.cs (1068 行)
+|   |   |   |-- VulkanScene3dSession.Frame.cs (98 行)
 |   |   |   |-- VulkanScene3dSession.Properties.cs (87 行)
 |   |   |   |-- VulkanScene3dSessionStatus.cs
 |   |   |   |-- VulkanScene3dFrameReason.cs / FrameResult.cs / FrameStatus.cs

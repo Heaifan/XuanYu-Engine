@@ -2278,3 +2278,36 @@ Swapchain 创建流程 + 销毁逻辑从 SwapchainResources 提取。
 | `dotnet run Editor --no-build` | ✅ 成功 |
 | `VulkanScene3dSwapchainResources.cs` | 113 行 ✅ ≤150 |
 | 新增文件全部 ≤86 行 | ✅ |
+
+---
+
+### 8.7.7D-3 — Vulkan Frame Resources
+
+RenderFrameInternal 帧资源管理提取：Camera MVP / UnitDraw / Overlay / Submit / Present。
+
+#### 新增（`Session/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dSession.Frame.cs` | 98 | ComputeMVP / BuildUnitDrawData / BuildGroundCursorData / BuildOverlay / SubmitFrame / PresentFrame |
+
+#### 修改
+
+- `VulkanScene3dSession.cs`：1185→1068 行
+  - Camera MVP 计算 → `ComputeViewProjection()`
+  - UnitDrawData 构建 → `BuildUnitDrawData()`
+  - GroundCursor 数据 → `BuildGroundCursorData()`
+  - Overlay 几何生成 → `BuildOverlay()`
+  - QueueSubmit → `SubmitFrame()`
+  - QueuePresent → `PresentFrame()`
+  - RenderFrameInternal 从约 260 行降至约 120 行编排
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 新增文件 ≤98 行 | ✅ |
+| `file-tree.md` / `CHANGELOG.md` | ✅ 已更新 |
