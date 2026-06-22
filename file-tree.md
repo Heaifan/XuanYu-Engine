@@ -688,6 +688,9 @@ FluidWarfare/
 |   |   |   |   |       |-- NativeViewportInputArbitrationResult.cs
 |   |   |   |   |       |-- NativeViewportNavigationCapture.cs (26 行)
 |   |   |   |   |       `-- NativeViewportSceneToolCapture.cs (29 行)
+|   |   |   |   |-- Control/
+|   |   |   |   |   |-- WindowsVulkanViewportHostControl.Events.cs (31 行)
+|   |   |   |   |   `-- WindowsVulkanViewportHostControl.WndProc.cs (94 行)
 |   |   |   |   |-- Lifecycle/
 |   |   |   |   |   |-- NativeViewportCreate.cs (40 行)
 |   |   |   |   |   |-- NativeViewportDestroy.cs (16 行)
@@ -698,12 +701,15 @@ FluidWarfare/
 |   |   |   |   |   |-- Win32ViewportDefaultProc.cs
 |   |   |   |   |   |-- Win32ViewportModuleHandle.cs
 |   |   |   |   |   `-- Win32ViewportDestroyWindow.cs
-|   |   |   |   |-- NativeViewportHostInfo.cs
-|   |   |   |   |-- ViewportSceneToolPressResult.cs
-|   |   |   |   |-- WindowsVulkanViewportHostControl.cs (275 行, 待继续拆分)
-|   |   |   |   |-- WindowsVulkanViewportHostInfo.cs
-|   |   |   |   |-- WindowsVulkanViewportHostState.cs
-|   |   |   |   `-- WindowsVulkanViewportPickInput.cs (53 行)
+|   |   |   |   |-- HostInfo/
+|   |   |   |   |   |-- WindowsVulkanViewportHostInfo.cs
+|   |   |   |   |   |-- WindowsVulkanViewportHostState.cs
+|   |   |   |   |   `-- NativeViewportHostInfo.cs (46 行)
+|   |   |   |   |-- Picking/
+|   |   |   |   |   `-- WindowsVulkanViewportPickInput.cs (53 行)
+|   |   |   |   |-- SceneTool/
+|   |   |   |   |   `-- ViewportSceneToolPressResult.cs
+|   |   |   |   `-- WindowsVulkanViewportHostControl.cs (87 行)
 |   |   |   |-- Tools/
 |   |   |   |   |-- ViewportEditorTool.cs
 |   |   |   |   |-- ViewportToolPalette.axaml / .cs

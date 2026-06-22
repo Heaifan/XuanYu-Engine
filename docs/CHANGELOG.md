@@ -2109,3 +2109,36 @@ Pointer 消息机械翻译层提取（wParam/lParam 解析 + capture/track）。
 | 新增文件全部 ≤56 行 ✅ |
 | Lifecycle/ 4 文件、Win32/ 4 文件（各 ≤5） ✅ |
 | 白名单 | 无变更 |
+
+---
+
+### 8.7.7C-4C — NativeHost Final Thin Control
+
+主文件压至 ≤100 行，NativeHost 目录白名单删除。
+
+#### 目录重组
+
+- 新增 `Control/`（2 partial）：`Events.cs`（31 行）、`WndProc.cs`（94 行）
+- 新增 `HostInfo/`（git mv）：`WindowsVulkanViewportHostInfo.cs` / `HostState.cs` / `NativeViewportHostInfo.cs`
+- 新增 `Picking/`（git mv）：`WindowsVulkanViewportPickInput.cs`
+- 新增 `SceneTool/`（git mv）：`ViewportSceneToolPressResult.cs`
+
+#### 修改
+
+- `WindowsVulkanViewportHostControl.cs`：275→87 行（≤100 ✅）
+  - 事件声明 → `Control/Events.cs` partial
+  - WndProc 及所有输入处理器 → `Control/WndProc.cs` partial
+  - 主文件仅保留：字段、构造、Create/Destroy/SyncHostInfo 薄委托、CustomWndProc 入口
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| `WindowsVulkanViewportHostControl.cs` | 87 行 ✅ ≤100 |
+| NativeHost 根目录直属 .cs | 1 文件 ✅ ≤5 |
+| NativeHost 目录白名单 | ✅ 已删除（DirectoryWhitelistBudget 12→11） |
+| 新增文件全部 ≤100 | ✅ |
+| `file-tree.md` / `CHANGELOG.md` | ✅ 已更新 |
