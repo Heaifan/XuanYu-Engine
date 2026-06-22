@@ -42,7 +42,6 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Render.Vulkan\Scene3D\Render\VulkanScene3dRenderer.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Vertex\VulkanScene3dVertexBuffers.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Vertex\VulkanScene3dVertex.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\Pipeline\VulkanScene3dPipelines.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Commands\VulkanScene3dCommandRecorder.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Render\VulkanScene3dRenderResources.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanNavigationOverlayGeometry.cs",
