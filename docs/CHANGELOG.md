@@ -2587,3 +2587,35 @@ Renderer 代码审计，不涉及代码修改。
 | `dotnet test` | ✅ 625/625 |
 | 不引入新白名单债务 | ✅ |
 | 审计输出完整 | ✅ |
+
+---
+
+### 8.7.7E-2A — Scene3D 目录合规
+
+Scene3D/ 根目录 13 个 .cs 文件按职责归类到子目录。仅移动 + 更新白名单，不修改渲染行为。
+
+#### 目录迁移
+
+| 目标目录 | 文件 | 新路径 |
+|---------|------|--------|
+| `Pipeline/` | Pipelines / PipelineLayout / ShaderModules / PushConstants | 4 文件 |
+| `Vertex/` | Vertex / VertexBuffers / AxisGeometry | 3 文件 |
+| `Render/` | Renderer / RenderResources / RunGate / Info / Status | 5 文件 |
+| `Commands/` | CommandRecorder | 1 文件 |
+| `Scene3D/` 根目录 | 13→**0** 直属 .cs（仅子目录） | ≤5 ✅ |
+
+#### 白名单更新
+
+- 6 条行白名单路径 → 新子目录路径
+- 删除 `Scene3D\` 目录白名单（0 根文件 ✅）
+- Overlay 目录白名单保留（8 文件，待后续拆分）
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error / 0 新 Warning |
+| `dotnet test` | ✅ 625/625 |
+| `Scene3D/` 根目录 .cs | 0 文件 ✅ ≤5 |
+| 各子目录 ≤5 文件 | ✅ |
+| 白名单债务未新增 | ✅ |

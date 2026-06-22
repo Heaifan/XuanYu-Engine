@@ -39,12 +39,12 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Editor\Input\Actions\EditorInputActionCatalog.cs",
 
         // Vulkan（到期：8.7.7C）
-        @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dRenderer.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dVertexBuffers.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dVertex.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dPipelines.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dCommandRecorder.cs",
-        @"FluidWarfare.Render.Vulkan\Scene3D\VulkanScene3dRenderResources.cs",
+        @"FluidWarfare.Render.Vulkan\Scene3D\Render\VulkanScene3dRenderer.cs",
+        @"FluidWarfare.Render.Vulkan\Scene3D\Vertex\VulkanScene3dVertexBuffers.cs",
+        @"FluidWarfare.Render.Vulkan\Scene3D\Vertex\VulkanScene3dVertex.cs",
+        @"FluidWarfare.Render.Vulkan\Scene3D\Pipeline\VulkanScene3dPipelines.cs",
+        @"FluidWarfare.Render.Vulkan\Scene3D\Commands\VulkanScene3dCommandRecorder.cs",
+        @"FluidWarfare.Render.Vulkan\Scene3D\Render\VulkanScene3dRenderResources.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanNavigationOverlayGeometry.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanOverlayResources.cs",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay\VulkanOverlayPipeline.cs",
@@ -105,7 +105,6 @@ public sealed class CodeFileBudgetTests
 
     static readonly HashSet<string> s_directoryWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
-        @"FluidWarfare.Render.Vulkan\Scene3D",
         @"FluidWarfare.Render.Vulkan\Scene3D\Overlay",
         @"FluidWarfare.Render.Vulkan\Validation",
         @"FluidWarfare.Render\Camera",

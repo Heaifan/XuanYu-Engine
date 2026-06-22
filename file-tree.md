@@ -14,7 +14,7 @@
 
 ## 1. 未发布变更日志
 
-最后编辑：2026-06-22 15:00（8.7.7E-1）
+最后编辑：2026-06-22 15:00（8.7.7E-2A）
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -465,7 +465,8 @@ Phase 1 证明最小闭环。
   ├─ D-6C Session Field/Handle Split  ✅
   └─ D-6D 白名单删除 + 目录债务清理   ✅
 8.7.7E VulkanScene3dRenderer          ✅
-  └─ E-1 Renderer 审计               ✅ (最新)
+  ├─ E-1 Renderer 审计               ✅
+  └─ E-2A Scene3D 目录合规            ✅ (最新)
 8.7.7F 全仓白名单债务清算             ⏳
 8.7.7F 白名单债务清算 + CHANGELOG     ⏳
 ```
@@ -919,9 +920,23 @@ FluidWarfare/
 |   |   |-- SceneRayBuildStatus.cs
 |   |   |-- VulkanCameraInfo.cs / Matrices.cs / SceneRayBuilder.cs
 |   |-- Scene3D/
-|   |   |-- VulkanScene3dInfo.cs / PushConstants.cs / Renderer.cs / Status.cs / Vertex.cs
-|   |   |-- VulkanScene3dCommandRecorder.cs / PipelineLayout.cs / Pipelines.cs
-|   |   |-- VulkanScene3dRenderResources.cs / RunGate.cs / ShaderModules.cs / VertexBuffers.cs
+|   |   |-- Pipeline/
+|   |   |   |-- VulkanScene3dPipelines.cs (153 行)
+|   |   |   |-- VulkanScene3dPipelineLayout.cs (67 行)
+|   |   |   |-- VulkanScene3dShaderModules.cs (74 行)
+|   |   |   `-- VulkanScene3dPushConstants.cs (38 行)
+|   |   |-- Vertex/
+|   |   |   |-- VulkanScene3dVertex.cs (171 行)
+|   |   |   |-- VulkanScene3dVertexBuffers.cs (171 行)
+|   |   |   `-- VulkanSceneAxisGeometry.cs (33 行)
+|   |   |-- Render/
+|   |   |   |-- VulkanScene3dRenderer.cs (477 行)
+|   |   |   |-- VulkanScene3dRenderResources.cs (138 行)
+|   |   |   |-- VulkanScene3dRunGate.cs (58 行)
+|   |   |   |-- VulkanScene3dInfo.cs (31 行)
+|   |   |   `-- VulkanScene3dStatus.cs (11 行)
+|   |   |-- Commands/
+|   |   |   `-- VulkanScene3dCommandRecorder.cs (200 行)
 |   |   |-- Depth/
 |   |   |   |-- VulkanScene3dDepthFormatSelector.cs
 |   |   |   |-- VulkanScene3dDepthAttachmentInfo.cs / DepthAttachments.cs
