@@ -2989,3 +2989,25 @@ Render/Probe/
 | `dotnet build` | ✅ 0 Error |
 | `dotnet test` (架构) | ✅ 5/5 |
 | 审计文档输出 | ✅ `docs/whitelist-audit-8.7.7F-1.md` |
+
+---
+
+### 8.7.7F-2 — 立即可清白名单删除
+
+删除 3 项 ≤100 行的历史白名单残留，不改代码逻辑。
+
+#### 操作
+
+| 文件 | 行数 | 操作 |
+|------|------|------|
+| `InspectorPanel.axaml.cs` | 84 | 删除白名单 ✅ |
+| `WindowsVulkanViewportHostControl.cs` | 87 | 删除白名单 ✅ |
+| `SceneCameraPose.cs` | 99 | 删除白名单 ✅ |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet test` (架构) | ✅ 5/5 |
+| 行白名单预算 | 67→64 |
+| 文件白名单占用 | 49→46 |

@@ -12,7 +12,7 @@ public sealed class CodeFileBudgetTests
     // 每次新增白名单条目必须同时递增此值。
     // 目的：防止 AI 无监督扩大债务。
     // 每次新增白名单条目必须同步递增
-    const int LineWhitelistBudget = 67;
+    const int LineWhitelistBudget = 64;
     const int DirectoryWhitelistBudget = 11;
 
     static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
@@ -21,12 +21,10 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Editor.Windows\Shell\EditorShell.axaml.cs",
 
         // ═══ UI God 面板（到期：8.7.7A）══════════════════════════
-        @"FluidWarfare.Editor.Windows\Panels\Inspector\InspectorPanel.axaml.cs",
         @"FluidWarfare.Editor.Windows\Panels\DebugDock\DebugDockPanel.axaml.cs",
         @"FluidWarfare.Editor.Windows\Panels\Viewport\ViewportPlaceholderPanel.axaml.cs",
         @"FluidWarfare.Editor.Windows\Panels\Viewport\VulkanViewportHostPanel.axaml.cs",
         @"FluidWarfare.Editor.Windows\Panels\Viewport\Input\WindowsViewportInputTranslator.cs",
-        @"FluidWarfare.Editor.Windows\Panels\Viewport\NativeHost\WindowsVulkanViewportHostControl.cs",
 
         // UI 树面板（到期：8.7.7D）
         @"FluidWarfare.Editor.Windows\Panels\WorldHierarchy\WorldHierarchyTreeIndex.cs",
@@ -52,7 +50,6 @@ public sealed class CodeFileBudgetTests
 
         // Render 层（到期：8.7.7E）
         @"FluidWarfare.Render\Camera\SceneOrbitCameraMotion.cs",
-        @"FluidWarfare.Render\Camera\SceneCameraPose.cs",
         @"FluidWarfare.Render\Camera\Navigation\SceneNavigationCameraMotion.cs",
 
         // Project / Engine（到期：8.7.8）
