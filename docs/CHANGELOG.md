@@ -2348,3 +2348,34 @@ AcquireNextImageKHR / QueueSubmit / QueuePresentKHR 调用及结果分类从 `Se
 | `VulkanScene3dSession.cs` | 941 行 ✅（目标 850-950） |
 | `VulkanScene3dSession.Frame.cs` | 70 行 ✅（下降 28 行，< 红线 100） |
 | 新增文件全部 ≤100 行 | ✅ |
+
+---
+
+### 8.7.7D-5A — Dispose Order Map
+
+DisposeResources / Dispose 释放顺序显式化：从 Session.cs 提取到独立 `Dispose/` 目录，按编号步骤记录顺序。
+
+#### 新增（`Session/Dispose/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dSessionDisposeResources.cs` | 77 | DisposeResources 12 步释放顺序（Swapchain → Pipeline → Layout → Shader → Buffer → Overlay） |
+| `VulkanScene3dSessionDisposeSession.cs` | 94 | DisposeSessionResources 13 步释放顺序（含 Device/Surface/Messenger/Instance） |
+| `VulkanScene3dSessionDisposeState.cs` | 32 | 资源创建标记查询与重置（IsDeviceValid, ClearAllResourceFlags） |
+| `VulkanScene3dSessionDisposeTrace.cs` | 31 | Dispose 诊断日志辅助（DEBUG 模式） |
+
+#### 修改
+
+- `VulkanScene3dSession.cs`：941→840 行
+  - `DisposeResources()` → `VulkanScene3dSessionDisposeResources.cs`
+  - `Dispose()` 身体 → `DisposeSessionResources()` + `ClearAllResourceFlags()` 薄转发
+- 释放顺序未被改变，步骤未被合并，日志未被吞
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error / 0 新 Warning |
+| `dotnet test` | ✅ 625/625 |
+| 新增文件全部 ≤94 行 | ✅ |
+| `VulkanScene3dSession.cs` | 840 行 ✅ |

@@ -419,52 +419,7 @@ public sealed unsafe partial class VulkanScene3dSession : IDisposable
         return RenderFrameInternal(VulkanScene3dFrameReason.Resize, cameraPose, unitDraws, sw);
     }
 
-    /// <summary>
-    /// 完整释放所有会话级 Vulkan 资源（不含 Instance/Device/Surface 等）。
-    /// 由 FallBackToVulkanClear 或 Resize 失败时调用。
-    /// </summary>
-    private void DisposeResources()
-    {
-        _swapchainRes?.Dispose();
-        _swapchainRes = null;
-
-        if (_vk is null || _device.Handle == 0) return;
-
-        if (_unitPipeOk) { _vk.DestroyPipeline(_device, _unitPipeline, null); _unitPipeOk = false; }
-        if (_gridPipeOk) { _vk.DestroyPipeline(_device, _gridPipeline, null); _gridPipeOk = false; }
-        if (_layoutOk) { _vk.DestroyPipelineLayout(_device, _pipelineLayout, null); _layoutOk = false; }
-        if (_fragModOk) { _vk.DestroyShaderModule(_device, _fragModule, null); _fragModOk = false; }
-        if (_vertModOk) { _vk.DestroyShaderModule(_device, _vertModule, null); _vertModOk = false; }
-        if (_unitBufOk)
-        {
-            if (_unitBuffer.Handle != 0) _vk.DestroyBuffer(_device, _unitBuffer, null);
-            if (_unitMemory.Handle != 0) _vk.FreeMemory(_device, _unitMemory, null);
-            _unitBufOk = false;
-        }
-        if (_gridBufOk)
-        {
-            if (_gridBuffer.Handle != 0) _vk.DestroyBuffer(_device, _gridBuffer, null);
-            if (_gridMemory.Handle != 0) _vk.FreeMemory(_device, _gridMemory, null);
-            _gridBufOk = false;
-        }
-
-        if (_cursorBufOk)
-        {
-            if (_cursorBuffer.Handle != 0) _vk.DestroyBuffer(_device, _cursorBuffer, null);
-            if (_cursorMemory.Handle != 0) _vk.FreeMemory(_device, _cursorMemory, null);
-            _cursorBufOk = false;
-        }
-
-        if (_overlayResources is not null)
-        {
-            _overlayResources.Dispose();
-            _overlayResources = null;
-        }
-
-        _pendingOverlayLayout = null;
-        _lastPresentedOverlaySnapshot = Overlay.PresentedNavigationOverlaySnapshot.Empty;
-        _lastOverlayVertexCount = 0;
-    }
+    // DisposeResources → VulkanScene3dSessionDisposeOrder.cs
 
     // ─── 内部渲染 ───────────────────────────────────────────────
 
@@ -856,65 +811,9 @@ public sealed unsafe partial class VulkanScene3dSession : IDisposable
         if (_devOk && _device.Handle != 0)
             try { _vk.DeviceWaitIdle(_device); } catch { }
 
-        // Swapchain resources
-        _swapchainRes?.Dispose();
-        _swapchainRes = null;
-
-        // Pipelines (depend on RenderPass in swapchainRes - destroyed above)
-        if (_unitPipeOk && _device.Handle != 0)
-            _vk.DestroyPipeline(_device, _unitPipeline, null);
-        if (_gridPipeOk && _device.Handle != 0)
-            _vk.DestroyPipeline(_device, _gridPipeline, null);
-
-        // Pipeline Layout
-        if (_layoutOk && _device.Handle != 0)
-            _vk.DestroyPipelineLayout(_device, _pipelineLayout, null);
-
-        // Shader Modules
-        if (_fragModOk && _device.Handle != 0)
-            _vk.DestroyShaderModule(_device, _fragModule, null);
-        if (_vertModOk && _device.Handle != 0)
-            _vk.DestroyShaderModule(_device, _vertModule, null);
-
-        // Vertex Buffers
-        if (_unitBufOk && _device.Handle != 0)
-        {
-            if (_unitBuffer.Handle != 0) _vk.DestroyBuffer(_device, _unitBuffer, null);
-            if (_unitMemory.Handle != 0) _vk.FreeMemory(_device, _unitMemory, null);
-        }
-        if (_gridBufOk && _device.Handle != 0)
-        {
-            if (_gridBuffer.Handle != 0) _vk.DestroyBuffer(_device, _gridBuffer, null);
-            if (_gridMemory.Handle != 0) _vk.FreeMemory(_device, _gridMemory, null);
-        }
-
-        if (_cursorBufOk && _device.Handle != 0)
-        {
-            if (_cursorBuffer.Handle != 0) _vk.DestroyBuffer(_device, _cursorBuffer, null);
-            if (_cursorMemory.Handle != 0) _vk.FreeMemory(_device, _cursorMemory, null);
-        }
-
-        // Device
-        if (_devOk && _device.Handle != 0)
-            _vk.DestroyDevice(_device, null);
-
-        // Surface
-        if (_surfOk && _fnDestroySurface != 0)
-        {
-            var fn = Marshal.GetDelegateForFunctionPointer<DestroySurfaceFn>(_fnDestroySurface);
-            fn(_instance, _surface, null);
-        }
-
-        // Debug Messenger (must precede Instance)
-        if (_debugMessengerScope is not null)
-        {
-            _debugMessengerScope.Dispose();
-            _debugMessengerScope = null;
-        }
-
-        // Instance
-        if (_instOk)
-            _vk.DestroyInstance(_instance, null);
+        // 资源释放：一次性按顺序释放所有 Vulkan 资源
+        DisposeSessionResources();
+        ClearAllResourceFlags();
 
         // 不变量：Dispose 后应为 0 个活 Swapchain
         if (!VulkanScene3dSwapchainInvariant.IsDisposedValid())
