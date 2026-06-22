@@ -2424,3 +2424,36 @@ Dispose/
 | 所有新增/修改文件 ≤40 行 | ✅ |
 | `Dispose/` 每目录 ≤4 文件 | ✅ |
 | 释放顺序不变 | ✅ |
+
+---
+
+### 8.7.7D-6A — Session Start / Create Methods SRP
+
+Start() 编排器 + 所有 Create* 方法从 `VulkanScene3dSession.cs` 提取到独立 `Start/` 目录。
+
+#### 新增（`Session/Start/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dSessionStart.cs` | 94 | Start() 编排器：顺序调用 Create* 步骤 |
+| `VulkanScene3dSessionCreateInstance.cs` | 74 | CreateInstance（含 Debug Messenger 初始化） |
+| `VulkanScene3dSessionCreateSurface.cs` | 49 | CreateSurface + LoadSessionFunctionPointers |
+| `VulkanScene3dSessionCreateDevice.cs` | 83 | SelectDevice + CreateDevice |
+| `VulkanScene3dSessionCreateResources.cs` | 55 | CreateShaderModules / PipelineLayout / VertexBuffers / GroundCursor |
+
+#### 修改
+
+- `VulkanScene3dSession.cs`：840→499 行
+  - Start() → `VulkanScene3dSessionStart.cs`
+  - 全部 9 个 Create* 方法 → 对应 `Create*.cs` 文件
+  - 创建顺序不变
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error / 0 新 Warning |
+| `dotnet test` | ✅ 625/625 |
+| 新增文件全部 ≤94 行 | ✅ |
+| `Start/` 每目录 ≤5 文件 | ✅ |
+| `VulkanScene3dSession.cs` | 499 行 ✅ |
