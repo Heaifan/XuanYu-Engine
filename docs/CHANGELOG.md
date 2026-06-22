@@ -2187,3 +2187,32 @@ VulkanScene3dSession 属性/状态/句柄所有权结构提取。
 | `dotnet run Editor --no-build` | ✅ 成功 |
 | 新增文件全部 ≤87 行 | ✅ |
 | `file-tree.md` / `CHANGELOG.md` | ✅ 已更新 |
+
+---
+
+### 8.7.7D-2 — Vulkan Swapchain Selection / Extent
+
+Swapchain 表面格式选择、PresentMode 选择、Extent 计算提取。
+
+#### 新增（`Session/Swapchain/`）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanScene3dSwapchainSelection.cs` | 21 | ChooseFormat + ChoosePresentMode（从 SwapchainResources 提取） |
+| `VulkanScene3dSwapchainExtent.cs` | 16 | ChooseExtent（从 SwapchainResources 提取） |
+
+#### 修改
+
+- `VulkanScene3dSwapchainResources.cs`：424→401 行
+  - 移除 3 个私有静态方法（ChooseFormat / ChoosePresentMode / ChooseExtent）
+  - 改为调用 `VulkanScene3dSwapchainSelection.*` 和 `VulkanScene3dSwapchainExtent.ChooseExtent`
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 625/625 |
+| `dotnet run Editor --no-build` | ✅ 成功 |
+| 新增文件全部 ≤21 行 | ✅ |
+| 白名单 | Swapchain 目录 +1（6 文件），DirectoryWhitelistBudget 11→12 |

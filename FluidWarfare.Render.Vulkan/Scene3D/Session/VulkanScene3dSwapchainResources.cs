@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using FluidWarfare.Render.Vulkan.Scene3D.Depth;
 using FluidWarfare.Render.Vulkan.Scene3D.Session.Surface;
 using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
@@ -92,8 +92,8 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
                 out var fmts, out var fmtErr))
             return Fail(VulkanScene3dSwapchainStage.SurfaceFormats, null, fmtErr);
 
-        var chosenFmt = ChooseFormat(fmts);
-        var extent = ChooseExtent(caps, w, h);
+        var chosenFmt = VulkanScene3dSwapchainSelection.ChooseFormat(fmts);
+        var extent = VulkanScene3dSwapchainExtent.ChooseExtent(caps, w, h);
         var imgCount = Math.Clamp(caps.MinImageCount + 1,
             caps.MinImageCount,
             caps.MaxImageCount > 0 ? caps.MaxImageCount : uint.MaxValue);
@@ -104,7 +104,7 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
                 out var modes, out var modeErr))
             return Fail(VulkanScene3dSwapchainStage.PresentModes, null, modeErr);
 
-        var presentMode = ChoosePresentMode(modes);
+        var presentMode = VulkanScene3dSwapchainSelection.ChoosePresentMode(modes);
 
         // Create swapchain with OldSwapchain
         var scCI = new SwapchainCreateInfoKHR
@@ -398,27 +398,4 @@ public sealed unsafe class VulkanScene3dSwapchainResources : IDisposable
         }
     }
 
-    // ─── 辅助 ───────────────────────────────────────────────────
-
-    private static SurfaceFormatKHR ChooseFormat(SurfaceFormatKHR[] f)
-    {
-        foreach (var x in f)
-            if (x.Format == Format.B8G8R8A8Srgb || x.Format == Format.R8G8B8A8Srgb) return x;
-        return f[0];
-    }
-
-    private static PresentModeKHR ChoosePresentMode(PresentModeKHR[] m)
-    {
-        foreach (var x in m)
-            if (x == PresentModeKHR.MailboxKhr || x == PresentModeKHR.ImmediateKhr) return x;
-        return PresentModeKHR.FifoKhr;
-    }
-
-    private static Extent2D ChooseExtent(SurfaceCapabilitiesKHR c, uint fw, uint fh)
-    {
-        if (c.CurrentExtent.Width != uint.MaxValue) return c.CurrentExtent;
-        return new Extent2D(
-            Math.Clamp(fw, c.MinImageExtent.Width, c.MaxImageExtent.Width),
-            Math.Clamp(fh, c.MinImageExtent.Height, c.MaxImageExtent.Height));
-    }
 }
