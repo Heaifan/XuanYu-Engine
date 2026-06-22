@@ -3,53 +3,28 @@ using FluidWarfare.Editor.Windows.Panels.Logging;
 
 namespace FluidWarfare.Editor.Windows.Panels.DebugDock;
 
-/// <summary>
-/// 底部调试终端，包含日志、渲染诊断、RenderScene 和性能页签。
-/// 不创建日志，不创建 Vulkan 对象，不读取 WorldState。
-/// </summary>
+/// <summary>底部调试终端，包含日志、渲染诊断、RenderScene 和性能页签。</summary>
 public sealed partial class DebugDockPanel : UserControl
 {
-    private LogPanel? _logPanel;
+    LogPanel? _logPanel;
 
     // 渲染诊断
-    private SelectableTextBlock?_diagLoader;
-    private SelectableTextBlock?_diagInstance;
-    private SelectableTextBlock?_diagDevice;
-    private SelectableTextBlock?_diagNativeHost;
-    private SelectableTextBlock?_diagSurface;
-    private SelectableTextBlock?_diagSwapchain;
-    private SelectableTextBlock?_diagClear;
-    private SelectableTextBlock?_diagMarker;
-    private SelectableTextBlock?_diagValidation;
-    private SelectableTextBlock?_diagScene3d;
-    private SelectableTextBlock?_diagCamera;
-    private SelectableTextBlock?_diagGrid;
-    private SelectableTextBlock?_diagUnit;
-    private SelectableTextBlock?_diagDrawCall;
+    SelectableTextBlock? _diagLoader, _diagInstance, _diagDevice, _diagNativeHost, _diagSurface;
+    SelectableTextBlock? _diagSwapchain, _diagClear, _diagMarker, _diagValidation, _diagScene3d;
+    SelectableTextBlock? _diagCamera, _diagGrid, _diagUnit, _diagDrawCall;
 
     // RenderScene
-    private SelectableTextBlock?_renderSceneTitle;
-    private SelectableTextBlock?_renderSceneEmpty;
-    private StackPanel? _renderSceneList;
+    SelectableTextBlock? _renderSceneTitle, _renderSceneEmpty;
+    StackPanel? _renderSceneList;
 
     // 性能
-    private SelectableTextBlock?_perfInstance;
-    private SelectableTextBlock?_perfDevice;
-    private SelectableTextBlock?_perfSwapchain;
-    private SelectableTextBlock?_perfClear;
-    private SelectableTextBlock?_perfMarker;
-    private SelectableTextBlock?_perfScene3d;
+    SelectableTextBlock? _perfInstance, _perfDevice, _perfSwapchain, _perfClear, _perfMarker, _perfScene3d;
 
-    // 公开属性：让 EditorShell 可以访问 LogPanel
     public LogPanel? LogPanel => _logPanel;
 
-    public DebugDockPanel()
-    {
-        InitializeComponent();
-        CacheControls();
-    }
+    public DebugDockPanel() { InitializeComponent(); CacheControls(); }
 
-    private void CacheControls()
+    void CacheControls()
     {
         _logPanel = this.FindControl<LogPanel>("EditorLogPanel");
         _diagLoader = this.FindControl<SelectableTextBlock>("DiagVulkanLoader");
@@ -74,72 +49,5 @@ public sealed partial class DebugDockPanel : UserControl
         _perfSwapchain = this.FindControl<SelectableTextBlock>("PerfSwapchain");
         _perfClear = this.FindControl<SelectableTextBlock>("PerfClear");
         _perfMarker = this.FindControl<SelectableTextBlock>("PerfMarker");
-        _perfScene3d = this.FindControl<SelectableTextBlock>("PerfScene3d");
-    }
-
-    // ─── 渲染诊断 ──────────────────────────────────────────────
-
-    public void SetDiagnostics(string loader, string instance, string device, string nativeHost,
-        string surface, string swapchain, string clear, string marker, string validation)
-    {
-        if (_diagLoader is not null) _diagLoader.Text = $"Vulkan 后端：{loader}";
-        if (_diagInstance is not null) _diagInstance.Text = $"Instance：{instance}";
-        if (_diagDevice is not null) _diagDevice.Text = $"Device：{device}";
-        if (_diagNativeHost is not null) _diagNativeHost.Text = $"Native Host：{nativeHost}";
-        if (_diagSurface is not null) _diagSurface.Text = $"Surface：{surface}";
-        if (_diagSwapchain is not null) _diagSwapchain.Text = $"Swapchain：{swapchain}";
-        if (_diagClear is not null) _diagClear.Text = $"Clear：{clear}";
-        if (_diagMarker is not null) _diagMarker.Text = $"Marker：{marker}";
-        if (_diagValidation is not null) _diagValidation.Text = $"Validation：{validation}";
-    }
-
-    public void SetScene3d(string scene3d, string camera, string grid, string unit, string drawCall)
-    {
-        if (_diagScene3d is not null) _diagScene3d.Text = $"Scene3D：{scene3d}";
-        if (_diagCamera is not null) _diagCamera.Text = $"Camera：{camera}";
-        if (_diagGrid is not null) _diagGrid.Text = $"Grid：{grid}";
-        if (_diagUnit is not null) _diagUnit.Text = $"Unit：{unit}";
-        if (_diagDrawCall is not null) _diagDrawCall.Text = $"DrawCall：{drawCall}";
-    }
-
-    // ─── RenderScene 列表 ──────────────────────────────────────
-
-    public void SetRenderSceneSummary(string title, IReadOnlyList<string> entries)
-    {
-        if (_renderSceneTitle is not null) _renderSceneTitle.Text = title;
-        if (_renderSceneEmpty is null || _renderSceneList is null) return;
-
-        if (entries.Count == 0)
-        {
-            _renderSceneEmpty.IsVisible = true;
-            _renderSceneList.IsVisible = false;
-            return;
-        }
-
-        _renderSceneEmpty.IsVisible = false;
-        _renderSceneList.IsVisible = true;
-        _renderSceneList.Children.Clear();
-
-        foreach (var entry in entries)
-        {
-            _renderSceneList.Children.Add(new SelectableTextBlock
-            {
-                Text = entry,
-                Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#C9D1D9")),
-                TextWrapping = Avalonia.Media.TextWrapping.Wrap
-            });
-        }
-    }
-
-    // ─── 性能计时 ──────────────────────────────────────────────
-
-    public void SetPerformance(string instanceMs, string deviceMs, string swapchainMs, string clearMs, string markerMs, string scene3dMs)
-    {
-        if (_perfInstance is not null) _perfInstance.Text = $"Instance：{instanceMs} ms";
-        if (_perfDevice is not null) _perfDevice.Text = $"Device：{deviceMs} ms";
-        if (_perfSwapchain is not null) _perfSwapchain.Text = $"Swapchain：{swapchainMs} ms";
-        if (_perfClear is not null) _perfClear.Text = $"Clear：{clearMs} ms";
-        if (_perfMarker is not null) _perfMarker.Text = $"MarkerDraw：{markerMs} ms";
-        if (_perfScene3d is not null) _perfScene3d.Text = $"Scene3D：{scene3dMs} ms";
-    }
+        _perfScene3d = this.FindControl<SelectableTextBlock>("PerfScene3d"); }
 }

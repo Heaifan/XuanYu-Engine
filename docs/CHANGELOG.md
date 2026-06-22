@@ -3032,6 +3032,44 @@ Render/Probe/
 
 ---
 
+### 8.7.7F-4A — 中等债务第一组清理
+
+#### DebugDockPanel SRP 提取 (145→53 行)
+- 诊断面板提取 → `DebugDockPanel.Diagnostics.cs`
+- RenderScene 列表提取 → `DebugDockPanel.RenderScene.cs`
+- 性能计时提取 → `DebugDockPanel.Performance.cs`
+- 主文件仅保留字段 + CacheControls + LogPanel 属性
+
+#### ViewportPlaceholderPanel SRP 提取 (189→46 行)
+- 实体摘要/空状态 → `ViewportPlaceholderPanel.Entity.cs`
+- Vulkan 状态显示 → `ViewportPlaceholderPanel.Vulkan.cs`
+- RenderScene 调试列表 → `ViewportPlaceholderPanel.RenderScene.cs`
+- 主文件仅保留字段 + CacheControls + ShowSinglePanel
+
+#### WorldHierarchy 目录拆分 (8→5 文件 ✅)
+- 3 视图文件 (NodeView/TreeExpansion/TreeViewState) → `View/` 子目录
+
+#### 白名单清理
+
+| 条目 | 类型 | 之前 | 之后 | 操作 |
+|------|------|------|------|------|
+| `DebugDockPanel.axaml.cs` | 行 | 145 | 53 | ✅ 删除白名单 |
+| `ViewportPlaceholderPanel.axaml.cs` | 行 | 189 | 46 | ✅ 删除白名单 |
+| `Panels\WorldHierarchy` | 目录 | 8 文件 | 5+3 | ✅ 删除白名单 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 5/5 |
+| 行预算 | 55→53 |
+| 行占用 | 37→35 |
+| 目录预算 | 7→6 |
+| 目录占用 | 4→3 |
+
+---
+
 ### 8.7.7F-2 — 立即可清白名单删除
 
 删除 3 项 ≤100 行的历史白名单残留，不改代码逻辑。

@@ -12,8 +12,8 @@ public sealed class CodeFileBudgetTests
     // 每次新增白名单条目必须同时递增此值。
     // 目的：防止 AI 无监督扩大债务。
     // 每次新增白名单条目必须同步递增
-    const int LineWhitelistBudget = 55;
-    const int DirectoryWhitelistBudget = 7;
+    const int LineWhitelistBudget = 53;
+    const int DirectoryWhitelistBudget = 6;
 
     static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -21,8 +21,6 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Editor.Windows\Shell\EditorShell.axaml.cs",
 
         // ═══ UI God 面板（到期：8.7.7A）══════════════════════════
-        @"FluidWarfare.Editor.Windows\Panels\DebugDock\DebugDockPanel.axaml.cs",
-        @"FluidWarfare.Editor.Windows\Panels\Viewport\ViewportPlaceholderPanel.axaml.cs",
         @"FluidWarfare.Editor.Windows\Panels\Viewport\VulkanViewportHostPanel.axaml.cs",
         @"FluidWarfare.Editor.Windows\Panels\Viewport\Input\WindowsViewportInputTranslator.cs",
 
@@ -85,7 +83,6 @@ public sealed class CodeFileBudgetTests
     {
         @"FluidWarfare.Render\ViewportNavigation",
         @"FluidWarfare.Editor.Windows\Panels\Viewport",
-        @"FluidWarfare.Editor.Windows\Panels\WorldHierarchy",
         @"FluidWarfare.Editor.Windows\Viewport\Transform\Gizmo",
     };
 
