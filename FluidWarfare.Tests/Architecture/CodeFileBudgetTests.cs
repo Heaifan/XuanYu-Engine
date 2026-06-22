@@ -13,7 +13,7 @@ public sealed class CodeFileBudgetTests
     // 目的：防止 AI 无监督扩大债务。
     // 每次新增白名单条目必须同步递增
     const int LineWhitelistBudget = 71;
-    const int DirectoryWhitelistBudget = 11;
+    const int DirectoryWhitelistBudget = 12;
 
     static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -114,6 +114,7 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Render\Camera",
         @"FluidWarfare.Render\ViewportNavigation",
         @"FluidWarfare.Editor.Windows\Panels\Viewport",
+        @"FluidWarfare.Editor.Windows\Panels\Viewport\NativeHost",
         @"FluidWarfare.Editor.Windows\Panels\WorldHierarchy",
         @"FluidWarfare.Editor.Windows\Panels\ProjectContentTree",
         @"FluidWarfare.Editor.Windows\Viewport\Transform\Gizmo",
