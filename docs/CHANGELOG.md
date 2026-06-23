@@ -3337,3 +3337,38 @@ InstanceScope 与 Selector 完全隐藏在 `VulkanDeviceProbe.Probe()` 内部，
 | 目录文件数 (Loading/) | 5（含 LoadResult）≤5 ✅ |
 | 白名单删除 | ✅ `GameProjectLoader.cs` 移出 |
 | 债务路线图 | ✅ A 类 6→5 个 |
+
+---
+
+### 8.7.8D-2A — Swapchain 目录容量整理
+
+为即将到来的 VulkanSwapchainProbe SRP 拆分准备目录容量。
+
+#### 操作
+
+| 文件 | 操作 |
+|------|------|
+| `Swapchain/VulkanSwapchainProbe.cs` | 移入 `Swapchain/Probe/` 子目录 |
+| 命名空间 | 不变（仍为 `FluidWarfare.Render.Vulkan.Swapchain`），避免外部 using 修改 |
+
+#### 目录变化
+
+```
+整理前：                   整理后：
+Swapchain/                 Swapchain/
+├── VulkanSwapchainInfo.cs ├── VulkanSwapchainInfo.cs
+├── VulkanSwapchainProbe.cs├── VulkanSwapchainStatus.cs
+└── VulkanSwapchainStatus.cs└── Probe/
+                              └── VulkanSwapchainProbe.cs
+```
+
+D-2B 拆完后，Probe/ 目录 4 文件 ≤5，Swapchain/ 根目录 2 文件 ≤5。
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet test` (架构) | ✅ 5/5 |
+| `dotnet test` (完整) | ✅ 624/625（1 flaky pre-existing）|
+| 未改业务逻辑 | ✅ 只移动文件位置 |
+| Editor 启动 | ✅ |
