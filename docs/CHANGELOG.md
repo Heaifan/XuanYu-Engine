@@ -3751,3 +3751,28 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | Viewport Frame Selected | ✅ 不变 |
 | 视口尺寸判断 | ✅ 不变 |
 | Scene3D / Transform / Picking | ✅ 不受影响 |
+
+### 8.7.8H-4B — EditorShell P2 中等风险清理
+
+提取日志委托、视口焦点、Scene3D 命令薄转发。
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 496→**491**（含 using）| Body ~396 行，减少 5 行 |
+| `Shell/Scene3D/EditorShellScene3dCommandRoute.cs` | 19 | HandleScene3dRunRequested/Restart 薄转发 |
+| `Shell/Viewport/EditorShellViewportFocusRoute.cs` | 41 | HandleViewportFocused + ShowWorldEntitySelection |
+| `Shell/Diagnostics/Log/EditorShellLogRoute.cs` | 18 | 日志委托 + RefreshDiagnostics + UpdateVulkanViewportHost |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（19+41+18）|
+| 目录文件数 | ✅ Scene3D/ 1, Viewport/ 4, Diagnostics/Log/ 1 |
+| 白名单删除 | ❌ 不删除 |
+| Route 装配顺序 | ✅ 未改动 |
+| Scene3D 命令 / 日志 / Focus | ✅ 不变 |

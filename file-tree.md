@@ -36,6 +36,7 @@
 16. **8.7.8H-2F**：EditorShell 第六刀提取 — Startup Vulkan Probe → 1 新文件（46 行），Shell 589→576 行
 17. **8.7.8H-2G**：EditorShell 第七刀提取 — 项目加载 + World Bootstrap → 1 新文件（46 行），Shell 576→567 行
 18. **8.7.8H-4A**：EditorShell P1 清理 — Raw 输入 + 视口聚焦 + 空删除 + 尺寸工具 → 3 新文件（26+43+24），Shell 656→496 行（含 using）
+19. **8.7.8H-4B**：EditorShell P2 清理 — 日志委托 + 视口焦点 + Scene3D 命令 → 3 新文件（19+41+18），Shell 496→491 行
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -442,7 +443,7 @@ Phase 1 证明最小闭环。
 ### 已完成的架构重构
 
 **EditorShell（8.7.6.1 — 8.7.6.8E）：**
-- EditorShell.axaml.cs：3,041 行 → **496 行**（含 using；body ~403 行；H-2A/B/C/D/E/F/G/H-4A 累计减 2,545）
+- EditorShell.axaml.cs：3,041 行 → **491 行**（含 using 95；body ~396 行；H 系列累计减 2,550）
 - 提取了 **26+ Route 类**（每个 ≤100 行），涵盖：
   - Scene3D 帧路径、帧提交、Session 生命周期
   - 变换交互、Transform 应用层、Gizmo 呈现
@@ -777,7 +778,7 @@ FluidWarfare/
 |   |       `-- WorldHierarchyTreeViewState.cs
 |   |-- Shell/
 |   |   |-- EditorShell.axaml
-|   |   |-- EditorShell.axaml.cs (496 行, 含 using 93 行；body ~403 行；原 3,041 行)
+|   |   |-- EditorShell.axaml.cs (491 行, 含 using 95 行；body ~396 行；原 3,041 行)
 |   |   |-- EditorSelection.cs
 |   |   |-- Commands/
 |   |   |   `-- EditorShellWindowCommandsRoute.cs (24 行, H-2D)
@@ -787,6 +788,8 @@ FluidWarfare/
 |   |   |   `-- EditorShellRouteSet.cs      (26+ Route 聚合)
 |   |   |-- Diagnostics/
 |   |   |   |-- EditorDiagnosticsRefreshKind.cs
+|   |   |   |-- Log/
+|   |   |   |   `-- EditorShellLogRoute.cs (18 行, H-4B)
 |   |   |   |-- EditorDiagnosticsRefreshRequest.cs
 |   |   |   |-- EditorDiagnosticsRefreshResult.cs
 |   |   |   |-- EditorDiagnosticsRefreshRoute.cs
@@ -818,6 +821,8 @@ FluidWarfare/
 |   |   |   `-- EditorShellOverlayNavigationRoute.cs (78 行, H-2A 提取)
 |   |   |-- Panels/
 |   |   |   |-- EditorPanelApplyKind.cs / Request.cs / Result.cs / Route.cs / State.cs
+|   |   |-- Scene3D/
+|   |   |   `-- EditorShellScene3dCommandRoute.cs (19 行, H-4B)
 |   |   |-- Scene3D/Commands/
 |   |   |-- Selection/
 |   |   |   `-- EditorShellSelectionSyncRoute.cs (51 行, H-2E)
@@ -842,7 +847,8 @@ FluidWarfare/
 |   |   |-- Viewport/
 |   |   |   |-- EditorShellViewportRedrawRoute.cs (83 行, H-2C)
 |   |   |   |-- EditorShellViewportFrameRoute.cs (43 行, H-4A)
-|   |   |   `-- EditorShellViewportSizeGuard.cs (24 行, H-4A)
+|   |   |   |-- EditorShellViewportSizeGuard.cs (24 行, H-4A)
+|   |   |   `-- EditorShellViewportFocusRoute.cs (41 行, H-4B)
 |   |   `-- Windows/
 |   |       |-- EditorShellWindowCommand.cs / Result.cs / Route.cs
 |   |-- Viewport/

@@ -91,6 +91,8 @@ using FluidWarfare.Editor.Windows.Shell.Input.Raw;
 using FluidWarfare.Editor.Windows.Shell.Hierarchy;
 using FluidWarfare.Editor.Windows.Shell.Project;
 using FluidWarfare.Editor.Windows.Shell.Selection;
+using FluidWarfare.Editor.Windows.Shell.Scene3D;
+using FluidWarfare.Editor.Windows.Shell.Diagnostics.Log;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -194,6 +196,11 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorShellRawInputRoute _rawInputRoute;
     private readonly EditorShellViewportFrameRoute _viewportFrameRoute;
 
+    // ─── H-4B 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellScene3dCommandRoute _scene3dCmdRoute;
+    private readonly EditorShellViewportFocusRoute _viewFocusRoute;
+    private readonly EditorShellLogRoute _logRoute;
+
     public EditorShell()
     {
         AvaloniaXamlLoader.Load(this);
@@ -228,26 +235,26 @@ public sealed partial class EditorShell : UserControl
         _pickingRoute = new EditorShellPickingRoute(
             _pickInputRoute, _lifecycle, _viewportPickRoute, _renderSceneStore,
             _selectionRoute, _groundPlacementState, _groundPointerState,
-            _vulkanViewportHostPanel, AppendInfoLog,
+            _vulkanViewportHostPanel, _logRoute.Info,
             msg => _statusBarPanel?.SetCurrentSelection(msg),
-            RefreshDiagnostics, CompleteGroundPlacement, ScheduleScene3dFrame);
+            _logRoute.RefreshDiagnostics, CompleteGroundPlacement, ScheduleScene3dFrame);
 
         _transformRoute = new EditorShellTransformRoute(
             _transformApplyRoute, _selectionRoute, _groundPlacementState, _groundPlacementRoute,
             _inspectorPanel, _statusBarPanel,
             () => _worldState, () => _sessionActive, _lifecycle,
             () => _commitApplier,
-            ScheduleScene3dFrame, AppendInfoLog, AppendWarningLog);
+            ScheduleScene3dFrame, _logRoute.Info, _logRoute.Warn);
         _scrubRoute = new EditorShellScrubRoute(
             _transformApplyRoute, _selectionRoute,
             () => _worldState, () => _commitApplier,
-            ScheduleScene3dFrame, AppendInfoLog);
+            ScheduleScene3dFrame, _logRoute.Info);
 
         _viewportRedrawRoute = new EditorShellViewportRedrawRoute(
             _startupVulkanRoute, _probeRoute, _vulkanViewportHostPanel,
             () => _sessionActive, _lifecycle, _cameraRoute, _renderSceneStore,
-            () => _renderSeq, _resizeRenderRoute, AppendInfoLog, AppendWarningLog,
-            _diagnosticsRoute, RefreshDiagnostics,
+            () => _renderSeq, _resizeRenderRoute, _logRoute.Info, _logRoute.Warn,
+            _diagnosticsRoute, _logRoute.RefreshDiagnostics,
             () => _startupProbeRoute.RunStartupVulkanProbe(),
             v => _sessionActive = v,
             v => _renderSeq = v,
@@ -255,25 +262,25 @@ public sealed partial class EditorShell : UserControl
 
         _startupProbeRoute = new EditorShellStartupVulkanProbeRoute(
             _probeRoute, _startupVulkanRoute, _lifecycle, _renderSceneStore,
-            _vulkanViewportHostPanel, AppendInfoLog, AppendWarningLog,
-            RefreshDiagnostics,
+            _vulkanViewportHostPanel, _logRoute.Info, _logRoute.Warn,
+            _logRoute.RefreshDiagnostics,
             () => ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(
                 BuildScene3dCommandRequest(EditorScene3dCommandKind.Restart))),
             _diagnosticsRoute);
 
         _projectBootstrapRoute = new EditorShellProjectBootstrapRoute(
             _startupRoute, _panelApplyRoute, _hierarchyRoute,
-            _viewportSelectionPresenter, AppendInfoLog, AppendWarningLog, AppendErrorLog,
+            _viewportSelectionPresenter, _logRoute.Info, _logRoute.Warn, _logRoute.Error,
             v => _projectInfo = v,
             v => _contentFiles = v,
             v => _worldState = v);
 
         _windowCommandsRoute = new EditorShellWindowCommandsRoute(
-            _windowRoute, AppendInfoLog);
+            _windowRoute, _logRoute.Info);
 
         _hierarchyRoute = new EditorShellHierarchyRoute(
             _dockPanel, () => _projectInfo, () => _worldState,
-            _renderSceneStore, AppendErrorLog);
+            _renderSceneStore, _logRoute.Error);
         _selectionSyncRoute = new EditorShellSelectionSyncRoute(
             _selectionRoute, _panelApplyRoute,
             () => _worldState, () => _sessionActive, _lifecycle,
@@ -286,6 +293,21 @@ public sealed partial class EditorShell : UserControl
             () => _worldState, _statusBarPanel, _cameraRoute,
             ScheduleScene3dFrame);
 
+        _logRoute = new EditorShellLogRoute(
+            _feedback, _diagnosticsRoute,
+            () => _sessionActive, () => _renderLastMode);
+        _scene3dCmdRoute = new EditorShellScene3dCommandRoute(
+            _scene3dCommandRoute,
+            () => _viewportRedrawRoute.StopTimer(),
+            () => BuildScene3dCommandRequest(EditorScene3dCommandKind.Run),
+            r => ApplyScene3dCommandResult(r));
+        _viewFocusRoute = new EditorShellViewportFocusRoute(
+            _viewportFocusRoute, _panelApplyRoute,
+            _worldSelectionPresenter, _renderSceneStore,
+            () => _sessionActive, _lifecycle,
+            () => _worldState, _selectionRoute,
+            _logRoute.Info, _logRoute.Warn);
+
         SubscribePanelEvents();
         InitializeFeedback();
         _projectBootstrapRoute.LoadSampleProject();
@@ -296,7 +318,7 @@ public sealed partial class EditorShell : UserControl
     private void SubscribePanelEvents()
     {
         if (_c.ViewportPlaceholder is not null)
-            _c.ViewportPlaceholder.ViewportFocused += HandleViewportFocused;
+            _c.ViewportPlaceholder.ViewportFocused += (_, _) => _viewFocusRoute.HandleViewportFocused();
         if (_c.DockPanel is not null)
         {
             _c.DockPanel.EntitySelectionRequested += OnHierarchyEntitySelected;
@@ -376,15 +398,6 @@ public sealed partial class EditorShell : UserControl
         _feedback.SetStartupLogs();
     }
 
-    private void HandleViewportFocused(object? sender, EventArgs e)
-    {
-        var r = _viewportFocusRoute.Focus(_worldState, _selectionRoute);
-        _panelApplyRoute.ShowViewportFocused(r.InspectorSelection, r.StatusBarText, r.ShowEmptyWorld);
-        foreach (var m in r.LogMessages) AppendInfoLog(m);
-        foreach (var w in r.LogWarnings) AppendWarningLog(w);
-        if (r.EntityToShow is not null) ShowWorldEntitySelection(r.EntityToShow);
-    }
-
     // ─── 窗口菜单命令（委托至 _windowCommandsRoute）───
 
     private void OnHierarchyEntitySelected(string? entityId) =>
@@ -393,34 +406,16 @@ public sealed partial class EditorShell : UserControl
     private void OnProjectContentSelected(string? relativePath)
     {
         var r = _contentSelectionPresenter.Present(relativePath, _contentFiles);
-        _panelApplyRoute.ApplyProjectContentSelection(r.InspectorSelection, r.StatusBarSelection, r.LogMessage, AppendInfoLog);
+        _panelApplyRoute.ApplyProjectContentSelection(r.InspectorSelection, r.StatusBarSelection, r.LogMessage, _logRoute.Info);
     }
 
-    private void ShowWorldEntitySelection(WorldEntityInfo entityInfo)
-    {
-        var is3d = _sessionActive && _lifecycle.State.Session?.Status == VulkanScene3dSessionStatus.Active;
-        var r = _worldSelectionPresenter.Present(entityInfo, _worldState, _renderSceneStore.Current, is3d);
-        _panelApplyRoute.ApplyEntitySelection(r.InspectorSelection, r.InspectorEntityId, r.EntityPosition,
-            r.EntitySourcePath, r.GroundPlaceEnabled, r.StatusBarSelection,
-            r.ViewportSummary, r.LogMessage, AppendInfoLog);
-    }
+    /// <summary>实体选择展示。委托至 _viewFocusRoute。</summary>
+    private void ShowWorldEntitySelection(WorldEntityInfo entityInfo) =>
+        _viewFocusRoute.ShowWorldEntitySelection(entityInfo);
 
-    private void AppendInfoLog(string message) => _feedback.Info(message);
-    private void AppendWarningLog(string message) => _feedback.Warn(message);
-    private void AppendErrorLog(string message) => _feedback.Error(message);
+    // ─── Scene3D 命令（委托至 _scene3dCmdRoute）───
 
-    // ─── 项目加载 + World Bootstrap（委托至 _projectBootstrapRoute）───
-
-    private void HandleScene3dRunRequested(object? sender, EventArgs e)
-    {
-        _viewportRedrawRoute.StopTimer();
-        ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(BuildScene3dCommandRequest(EditorScene3dCommandKind.Run)));
-    }
-
-    private void HandleRestartScene3d()
-    {
-        ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(BuildScene3dCommandRequest(EditorScene3dCommandKind.Restart)));
-    }
+    // ─── Project + World Bootstrap（委托至 _projectBootstrapRoute）───
 
     private void InitializeInputPipeline()
     {
@@ -493,20 +488,20 @@ public sealed partial class EditorShell : UserControl
             _viewportInputRoute.State, _pointerRoute, _selectionRoute, _viewportToolPalette,
             _cameraRoute, _lifecycle, _viewportPickRoute, _renderSceneStore,
             _groundPlacementState, _worldDirtyState,
-            AppendInfoLog, AppendWarningLog, ScheduleScene3dFrame, BuildTransformStartSnapshot,
+            _logRoute.Info, _logRoute.Warn, ScheduleScene3dFrame, BuildTransformStartSnapshot,
             ApplyEntityTransform, CancelActiveTransform, ApplyPreviewPosition, _viewportFrameRoute.ExecuteViewportFrameSelected);
     }
 
     private EditorScene3dCommandRequest BuildScene3dCommandRequest(EditorScene3dCommandKind kind) => new(kind,
         _probeRoute, _lifecycle, _renderSceneStore,
         _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
-        _cameraRoute, _renderSeq, AppendInfoLog, AppendWarningLog);
+        _cameraRoute, _renderSeq, _logRoute.Info, _logRoute.Warn);
 
     private void ApplyScene3dCommandResult(EditorScene3dCommandResult r)
     {
         if (r.SessionStarted) { _sessionActive = true; _renderLastMode = "Scene3D"; _renderSeq = r.NewRenderSeq; InitTransformApplication(); }
         if (!r.SessionStarted && r.NeedsTransformInit) _sessionActive = false;
-        if (r.NeedsDiagnosticsRefresh) RefreshDiagnostics();
+        if (r.NeedsDiagnosticsRefresh) _logRoute.RefreshDiagnostics();
         if (r.NewRenderSeq > _renderSeq) _renderSeq = r.NewRenderSeq;
     }
 
@@ -529,14 +524,14 @@ public sealed partial class EditorShell : UserControl
         {
             _groundPlacementState.Cancel();
             _inspectorPanel?.SetPlacementMode(false);
-            AppendInfoLog("放置模式已取消。");
+            _logRoute.Info("放置模式已取消。");
         }
     }
 
     private void ScheduleScene3dFrame(VulkanScene3dFrameReason reason)
     {
         _diagnosticsRoute.ScheduleFrame(reason, _renderSeq, _selectionRoute, _worldState,
-            () => { _renderSeq = _lifecycle.State.FrameSubmitRoute?.RenderSeq ?? _renderSeq; RefreshDiagnostics(); });
+            () => { _renderSeq = _lifecycle.State.FrameSubmitRoute?.RenderSeq ?? _renderSeq; _logRoute.RefreshDiagnostics(); });
     }
 
     // ─── 选择同步（委托至 _selectionSyncRoute）───
@@ -557,7 +552,7 @@ public sealed partial class EditorShell : UserControl
     private void CompleteGroundPlacement(Vector3d groundPosition)
     {
         var r = _groundPlacementRoute.Complete(groundPosition, _selectionRoute, _groundPlacementState,
-            _worldState, _commitApplier, ScheduleScene3dFrame, _inspectorPanel, AppendInfoLog);
+            _worldState, _commitApplier, ScheduleScene3dFrame, _inspectorPanel, _logRoute.Info);
         if (r.Completed) _pickingRoute.HideGroundCursor();
     }
 
@@ -565,8 +560,5 @@ public sealed partial class EditorShell : UserControl
 
 
 
-    private void RefreshDiagnostics() => _diagnosticsRoute.Refresh(_sessionActive, _renderLastMode);
-
-
-    private void UpdateVulkanViewportHost() => _diagnosticsRoute.UpdateViewportHost();
+    // ─── 刷新 Diagnostics（委托至 _logRoute）───
 }
