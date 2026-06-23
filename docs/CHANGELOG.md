@@ -3468,3 +3468,32 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | 目录文件数 | ✅ 全部 ≤5 |
 | 白名单删除 | ✅ `VulkanClearProbe.cs` 移出 |
 | 债务路线图 | ✅ A 类 4→3 个 |
+
+---
+
+### 8.7.8F-2 — VulkanRenderContext SRP 拆分
+
+将 `VulkanRenderContext`（476 行，无调用点）拆成 3 活代码文件 + Legacy 死代码仓，不改 public API：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanRenderContext.cs` | 92 | 门面：Initialize + Cleanup + RenderFrame + public API |
+| `VulkanRenderContextSetup.cs` | 78 | Instance/Device/Surface 创建 + 函数指针加载 |
+| `VulkanRenderContextSelector.cs` | 32 | PhysicalDevice 选择 |
+| `Legacy/VulkanRenderContextLegacy.cs` | 30 | 死代码仓：TryCreateDeviceResources 仍 return false |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet test` (架构) | ✅ 5/5 |
+| `dotnet test` (完整) | ✅ 624/625（1 flaky pre-existing：中文排序）|
+| 生产文件 ≤100 行 | ✅ 全部达标（92+78+32+30）|
+| 目录文件数 | ✅ Context/ 3 + Legacy/ 1，全部 ≤5 |
+| 白名单删除 | ✅ `VulkanRenderContext.cs` 移出 |
+| 债务路线图 | ✅ A 类 3→2 个 |
+| TryCreateDeviceResources | ✅ 仍 return false |
+| Cleanup 释放顺序 | ✅ 未变 |
+| Editor 启动 | ✅ |

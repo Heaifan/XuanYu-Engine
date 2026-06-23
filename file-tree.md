@@ -201,7 +201,7 @@
 69. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/Backend/VulkanBackendStatus.cs`。
 70. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/Backend/VulkanBackendInfo.cs`。
 71. Milestone 7.0：新增 `FluidWarfare.Render.Vulkan/Backend/VulkanBackendProbe.cs`。
-72a. Milestone 7.8：新增 `FluidWarfare.Render.Vulkan/Context/VulkanRenderContext.cs`。
+72a. Milestone 7.8：新增 `FluidWarfare.Render.Vulkan/Context/VulkanRenderContext.cs`（8.7.8F-2 拆为 92 门面 + 78 Setup + 32 Selector + Legacy）。
 72b. Milestone 7.8.1：新增 `FluidWarfare.Render.Vulkan/Swapchain/VulkanSwapchainStatus.cs`。
 72c. Milestone 7.8.1：新增 `FluidWarfare.Render.Vulkan/Swapchain/VulkanSwapchainInfo.cs`。
 72d. Milestone 7.8.1：新增 `FluidWarfare.Render.Vulkan/Swapchain/VulkanSwapchainProbe.cs`（8.7.8D-2B 拆为 78 门面 + 100 ContextScope + 46 DeviceSelector + 64 SurfaceQuery）。
@@ -930,7 +930,7 @@ FluidWarfare/
 |-- FluidWarfare.Render.Vulkan/             ← Vulkan 渲染后端
 |   |-- FluidWarfare.Render.Vulkan.csproj
 |   |-- Backend/     (VulkanBackendInfo/Probe/Status)
-|   |-- Context/     (VulkanRenderContext)
+|   |-- Context/     (VulkanRenderContext + Setup + Selector + Legacy/)
 |   |-- Device/      (VulkanDeviceInfo/Probe/InstanceScope/Selector/Status)
 |   |-- Instance/    (VulkanInstanceInfo/Probe/Status)
 |   |-- Surface/     (VulkanSurfaceInfo/Probe/InstanceScope/Status)

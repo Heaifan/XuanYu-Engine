@@ -25,9 +25,6 @@ public sealed class CodeFileBudgetTests
 
         // Editor 业务层（到期：8.7.8）
 
-        // Vulkan（到期：8.7.7C）
-        @"FluidWarfare.Render.Vulkan\Context\VulkanRenderContext.cs",
-
         // Render 层（到期：8.7.7E）
         @"FluidWarfare.Render\Camera\Orbit\SceneOrbitCameraMotion.cs",
         @"FluidWarfare.Render\Camera\Navigation\SceneNavigationCameraMotion.cs",
