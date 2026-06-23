@@ -3672,3 +3672,28 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | World Tree 显示 | ✅ 不变 |
 | Inspector 同步 | ✅ 不变 |
 | Picking / Transform / Redraw | ✅ 不受影响 |
+
+### 8.7.8H-2F — EditorShell 第六刀：Startup Vulkan Probe 残留提取
+
+提取 EditorShell.axaml.cs（589→**576** 行）中 Startup Vulkan Probe 残留逻辑：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 589→**576** | 减少 13 行 |
+| `Shell/Startup/EditorShellStartupVulkanProbeRoute.cs` | 46 | RunStartupVulkanProbe + RunAttachedProbes + BuildRequest + ApplyResult + ProbeVulkanValidation |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（46）|
+| 目录文件数 | ✅ Shell/Startup/ 4, ≤5 |
+| 白名单删除 | ❌ 不删除，Shell 仍有 576 行 |
+| Route 装配顺序 | ✅ 未改动（回调链略调整）|
+| Vulkan 探测 | ✅ 不变 |
+| Scene3D 自动启动 | ✅ 不变 |
+| 项目加载 / Transform / Redraw | ✅ 不受影响 |

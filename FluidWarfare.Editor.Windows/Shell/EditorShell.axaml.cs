@@ -185,6 +185,9 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorShellHierarchyRoute _hierarchyRoute;
     private readonly EditorShellSelectionSyncRoute _selectionSyncRoute;
 
+    // ─── H-2F 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellStartupVulkanProbeRoute _startupProbeRoute;
+
     public EditorShell()
     {
         AvaloniaXamlLoader.Load(this);
@@ -239,10 +242,18 @@ public sealed partial class EditorShell : UserControl
             () => _sessionActive, _lifecycle, _cameraRoute, _renderSceneStore,
             () => _renderSeq, _resizeRenderRoute, AppendInfoLog, AppendWarningLog,
             _diagnosticsRoute, RefreshDiagnostics,
-            RunStartupVulkanProbe,
+            () => _startupProbeRoute.RunStartupVulkanProbe(),
             v => _sessionActive = v,
             v => _renderSeq = v,
             v => _renderLastMode = v);
+
+        _startupProbeRoute = new EditorShellStartupVulkanProbeRoute(
+            _probeRoute, _startupVulkanRoute, _lifecycle, _renderSceneStore,
+            _vulkanViewportHostPanel, AppendInfoLog, AppendWarningLog,
+            RefreshDiagnostics,
+            () => ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(
+                BuildScene3dCommandRequest(EditorScene3dCommandKind.Restart))),
+            _diagnosticsRoute);
 
         _windowCommandsRoute = new EditorShellWindowCommandsRoute(
             _windowRoute, AppendInfoLog);
@@ -258,8 +269,8 @@ public sealed partial class EditorShell : UserControl
         SubscribePanelEvents();
         InitializeFeedback();
         LoadSampleProject();
-        RunStartupVulkanProbe();
-        ProbeVulkanValidation();
+        _startupProbeRoute.RunStartupVulkanProbe();
+        _startupProbeRoute.ProbeVulkanValidation();
     }
 
     private void SubscribePanelEvents()
@@ -316,7 +327,7 @@ public sealed partial class EditorShell : UserControl
     }
 
     private EditorShellAttachRequest BuildAttachRequest() => new(
-        NativeHostReportAction: () => { var r = _startupVulkanRoute.TryRunAttachProbes(BuildStartupVulkanRequest()); ApplyStartupVulkanResult(r); },
+        NativeHostReportAction: _startupProbeRoute.RunAttachedProbes,
         InputPipelineInitAction: InitializeInputPipeline);
 
     private static void ApplyAttachResult(EditorShellAttachResult result)
@@ -335,30 +346,6 @@ public sealed partial class EditorShell : UserControl
         _sessionActive = false;
         _startupVulkanRoute.Reset();
         if (result.TimerCleanedUp) _viewportRedrawRoute.ClearTimer();
-    }
-
-    private void RunStartupVulkanProbe()
-    {
-        ApplyStartupVulkanResult(_startupVulkanRoute.RunConstructProbes(BuildStartupVulkanRequest()));
-    }
-
-    private EditorStartupVulkanRequest BuildStartupVulkanRequest()
-    {
-        return new EditorStartupVulkanRequest(
-            ProbeRoute: _probeRoute,
-            Lifecycle: _lifecycle,
-            RenderSceneStore: _renderSceneStore,
-            GetNativeHostInfo: () => _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
-            InfoLog: AppendInfoLog,
-            WarnLog: AppendWarningLog,
-            RefreshDiagnostics: RefreshDiagnostics,
-            RequestScene3dStart: () => ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(BuildScene3dCommandRequest(EditorScene3dCommandKind.Restart))));
-    }
-
-    private void ApplyStartupVulkanResult(EditorStartupVulkanResult result)
-    {
-        if (result.DiagnosticsRefreshRequested)
-            RefreshDiagnostics();
     }
 
     // ─── Viewport 重绘（委托至 _viewportRedrawRoute）───
@@ -425,8 +412,6 @@ public sealed partial class EditorShell : UserControl
         foreach (var m in result.LogMessages) AppendInfoLog(m);
         foreach (var w in result.LogWarnings) AppendWarningLog(w);
     }
-
-    private void ProbeVulkanValidation() => _diagnosticsRoute.ProbeValidation(AppendInfoLog, AppendWarningLog);
 
     private void HandleScene3dRunRequested(object? sender, EventArgs e)
     {
