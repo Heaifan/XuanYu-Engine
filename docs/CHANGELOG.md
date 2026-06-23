@@ -3372,3 +3372,29 @@ D-2B 拆完后，Probe/ 目录 4 文件 ≤5，Swapchain/ 根目录 2 文件 ≤
 | `dotnet test` (完整) | ✅ 624/625（1 flaky pre-existing）|
 | 未改业务逻辑 | ✅ 只移动文件位置 |
 | Editor 启动 | ✅ |
+
+---
+
+### 8.7.8D-2B — VulkanSwapchainProbe SRP 拆分
+
+将 `VulkanSwapchainProbe`（301 行）拆成 4 个小文件，不改 `ProbeWindows()` 签名：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanSwapchainProbe.cs` | 78 | 薄门面 — 编排 + Swapchain 创建 + 结果构建 |
+| `VulkanSwapchainProbeContextScope.cs` | 100 | Instance+Surface+Device 生命周期 + 函数指针加载 |
+| `VulkanSwapchainProbeDeviceSelector.cs` | 46 | PhysicalDevice 选择（Graphics+Present） |
+| `VulkanSwapchainProbeSurfaceQuery.cs` | 64 | SurfaceCaps/Formats/PresentModes 查询 + 格式选择 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet test` (架构) | ✅ 5/5 |
+| `dotnet test` (完整) | ✅ 624/625（1 flaky pre-existing：中文排序） |
+| 生产文件 ≤100 行 | ✅ 全部达标（78 + 100 + 46 + 64） |
+| 目录文件数 (Probe/) | 4 ≤5 ✅ |
+| 白名单删除 | ✅ `VulkanSwapchainProbe.cs` 移出 |
+| 债务路线图 | ✅ A 类 5→4 个 |
