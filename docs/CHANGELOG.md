@@ -3697,3 +3697,28 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | Vulkan 探测 | ✅ 不变 |
 | Scene3D 自动启动 | ✅ 不变 |
 | 项目加载 / Transform / Redraw | ✅ 不受影响 |
+
+### 8.7.8H-2G — EditorShell 第七刀：项目加载 + World Bootstrap 残留提取
+
+提取 EditorShell.axaml.cs（576→**567** 行）中项目加载与 World Bootstrap 残留逻辑。本轮后建议执行 **H-3 重新审计**。
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 576→**567** | 减少 9 行 |
+| `Shell/Project/EditorShellProjectBootstrapRoute.cs` | 46 | LoadSampleProject + ApplyStartupBootstrapResult（含项目/World 状态设置 + 面板同步）|
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（46）|
+| 目录文件数 | ✅ Shell/Project/ 1, ≤5 |
+| 白名单删除 | ❌ 不删除，Shell 仍有 567 行 |
+| Route 装配顺序 | ✅ 未改动 |
+| Editor 启动 / 项目加载 | ✅ 不变 |
+| World Tree / Inspector 同步 | ✅ 不变 |
+| Transform / Gizmo / Redraw | ✅ 不受影响 |

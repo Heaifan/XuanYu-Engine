@@ -88,6 +88,7 @@ using FluidWarfare.Editor.Windows.Shell.Transform.Edit;
 using FluidWarfare.Editor.Windows.Shell.Viewport;
 using FluidWarfare.Editor.Windows.Shell.Commands;
 using FluidWarfare.Editor.Windows.Shell.Hierarchy;
+using FluidWarfare.Editor.Windows.Shell.Project;
 using FluidWarfare.Editor.Windows.Shell.Selection;
 
 namespace FluidWarfare.Editor.Windows.Shell;
@@ -188,6 +189,9 @@ public sealed partial class EditorShell : UserControl
     // ─── H-2F 提取路由 ──────────────────────────────────────────
     private readonly EditorShellStartupVulkanProbeRoute _startupProbeRoute;
 
+    // ─── H-2G 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellProjectBootstrapRoute _projectBootstrapRoute;
+
     public EditorShell()
     {
         AvaloniaXamlLoader.Load(this);
@@ -255,6 +259,13 @@ public sealed partial class EditorShell : UserControl
                 BuildScene3dCommandRequest(EditorScene3dCommandKind.Restart))),
             _diagnosticsRoute);
 
+        _projectBootstrapRoute = new EditorShellProjectBootstrapRoute(
+            _startupRoute, _panelApplyRoute, _hierarchyRoute,
+            _viewportSelectionPresenter, AppendInfoLog, AppendWarningLog, AppendErrorLog,
+            v => _projectInfo = v,
+            v => _contentFiles = v,
+            v => _worldState = v);
+
         _windowCommandsRoute = new EditorShellWindowCommandsRoute(
             _windowRoute, AppendInfoLog);
 
@@ -268,7 +279,7 @@ public sealed partial class EditorShell : UserControl
 
         SubscribePanelEvents();
         InitializeFeedback();
-        LoadSampleProject();
+        _projectBootstrapRoute.LoadSampleProject();
         _startupProbeRoute.RunStartupVulkanProbe();
         _startupProbeRoute.ProbeVulkanValidation();
     }
@@ -389,29 +400,7 @@ public sealed partial class EditorShell : UserControl
     private void AppendWarningLog(string message) => _feedback.Warn(message);
     private void AppendErrorLog(string message) => _feedback.Error(message);
 
-    private void LoadSampleProject()
-    {
-        var result = _startupRoute.LoadSampleProject();
-        ApplyStartupBootstrapResult(result);
-    }
-
-    private void ApplyStartupBootstrapResult(EditorStartupBootstrapResult result)
-    {
-        if (!result.Success) { _panelApplyRoute.ShowProjectLoadFailure(result.FailureMessage ?? "未知错误", AppendErrorLog); return; }
-
-        _projectInfo = result.Project;
-        _contentFiles = result.Project?.ContentFiles;
-        _hierarchyRoute.RebuildAndShowHierarchy();
-
-        _worldState = result.WorldResult?.World;
-        var summary = result.WorldResult is not null
-            ? _viewportSelectionPresenter.CreateRenderSceneSummary(result.WorldResult.RenderScene)
-            : ViewportRenderSceneSummary.Empty;
-        _panelApplyRoute.ApplyStartupWorld(new(result.WorldResult?.HasEntities ?? false, summary));
-
-        foreach (var m in result.LogMessages) AppendInfoLog(m);
-        foreach (var w in result.LogWarnings) AppendWarningLog(w);
-    }
+    // ─── 项目加载 + World Bootstrap（委托至 _projectBootstrapRoute）───
 
     private void HandleScene3dRunRequested(object? sender, EventArgs e)
     {
