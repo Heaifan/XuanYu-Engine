@@ -86,6 +86,7 @@ using FluidWarfare.Editor.Windows.Shell.Navigation;
 using FluidWarfare.Editor.Windows.Shell.Picking;
 using FluidWarfare.Editor.Windows.Shell.Transform.Edit;
 using FluidWarfare.Editor.Windows.Shell.Viewport;
+using FluidWarfare.Editor.Windows.Shell.Commands;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -175,6 +176,9 @@ public sealed partial class EditorShell : UserControl
     // ─── H-2C 提取路由 ──────────────────────────────────────────
     private readonly EditorShellViewportRedrawRoute _viewportRedrawRoute;
 
+    // ─── H-2D 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellWindowCommandsRoute _windowCommandsRoute;
+
     public EditorShell()
     {
         AvaloniaXamlLoader.Load(this);
@@ -233,6 +237,9 @@ public sealed partial class EditorShell : UserControl
             v => _sessionActive = v,
             v => _renderSeq = v,
             v => _renderLastMode = v);
+
+        _windowCommandsRoute = new EditorShellWindowCommandsRoute(
+            _windowRoute, AppendInfoLog);
 
         SubscribePanelEvents();
         InitializeFeedback();
@@ -357,18 +364,7 @@ public sealed partial class EditorShell : UserControl
         if (r.EntityToShow is not null) ShowWorldEntitySelection(r.EntityToShow);
     }
 
-    private void HandlePreferencesClicked(object? sender, RoutedEventArgs e) =>
-        ApplyWindowResult(_windowRoute.Open(EditorShellWindowCommand.Preferences));
-
-    private void HandleShowInputBindingsClicked(object? sender, RoutedEventArgs e) =>
-        ApplyWindowResult(_windowRoute.Open(EditorShellWindowCommand.InputBindings));
-
-    private void HandleAboutFluidWarfareClicked(object? sender, RoutedEventArgs e) =>
-        ApplyWindowResult(_windowRoute.Open(EditorShellWindowCommand.About));
-
-    private void ApplyWindowResult(EditorShellWindowResult r)
-    { if (r.LogMessage is not null) AppendInfoLog(r.LogMessage); }
-
+    // ─── 窗口菜单命令（委托至 _windowCommandsRoute）───
 
     private void OnHierarchyEntitySelected(string? entityId)
     {
@@ -583,12 +579,6 @@ public sealed partial class EditorShell : UserControl
         if (!r.SessionStarted && r.NeedsTransformInit) _sessionActive = false;
         if (r.NeedsDiagnosticsRefresh) RefreshDiagnostics();
         if (r.NewRenderSeq > _renderSeq) _renderSeq = r.NewRenderSeq;
-    }
-
-    private void ExecuteOpenPreferences()
-    {
-        var r = _windowRoute.Open(EditorShellWindowCommand.Preferences);
-        if (r.LogMessage is not null) AppendInfoLog(r.LogMessage);
     }
 
     private void ExecuteCancelCurrentTool()

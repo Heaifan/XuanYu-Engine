@@ -3622,3 +3622,27 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | Viewport resize 不闪退 | ✅ 不变 |
 | Vulkan redraw | ✅ 不变 |
 | Scene3D 状态 | ✅ 不变 |
+
+### 8.7.8H-2D — EditorShell 第四刀：窗口菜单命令提取
+
+提取 EditorShell.axaml.cs（629→**622** 行）中窗口菜单命令（Preferences/ShowInputBindings/About/ExecuteOpenPreferences）：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 629→**622** | 减少 7 行 |
+| `Shell/Commands/EditorShellWindowCommandsRoute.cs` | 24 | 窗口菜单命令转发 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（24）|
+| 目录文件数 | ✅ Shell/Commands/ 1, ≤5 |
+| 白名单删除 | ❌ 不删除，Shell 仍有 622 行 |
+| Route 装配顺序 | ✅ 未改动 |
+| 菜单命令行为 | ✅ 不变 |
+| 项目加载 / Transform / Redraw | ✅ 不受影响 |
