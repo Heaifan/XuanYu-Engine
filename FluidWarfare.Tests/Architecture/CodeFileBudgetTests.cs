@@ -74,6 +74,56 @@ public sealed class CodeFileBudgetTests
     }
 
     [Fact]
+    public void ProductionWhitelist_OnlyApproved()
+    {
+        var expected = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            @"FluidWarfare.Render\Camera\Orbit\SceneOrbitCameraMotion.cs",
+            @"FluidWarfare.Render\Camera\Navigation\SceneNavigationCameraMotion.cs",
+        };
+
+        var actual = new HashSet<string>(
+            s_lineWhitelist.Where(e =>
+                !e.StartsWith("FluidWarfare.Tests", StringComparison.OrdinalIgnoreCase)),
+            StringComparer.OrdinalIgnoreCase);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void GlobalUsings_Max100Lines()
+    {
+        var path = Path.Combine(s_root, @"FluidWarfare.Editor.Windows\GlobalUsings.cs");
+        var lines = File.ReadAllLines(path).Length;
+        Assert.True(lines <= 100,
+            $"GlobalUsings.cs has {lines} lines, exceeds 100-line limit");
+    }
+
+    [Fact]
+    public void EditorShellContext_Max95Lines()
+    {
+        var path = Path.Combine(s_root,
+            @"FluidWarfare.Editor.Windows\Shell\Composition\Core\EditorShellContext.cs");
+        var lines = File.ReadAllLines(path).Length;
+        Assert.True(lines <= 95,
+            $"EditorShellContext.cs has {lines} lines, exceeds 95-line redline — must split before adding new fields");
+    }
+
+    [Fact]
+    public void EditorShell_NotInWhitelist()
+    {
+        var shellEntries = s_lineWhitelist.Where(e =>
+            e.StartsWith("FluidWarfare.Editor.Windows\\Shell", StringComparison.OrdinalIgnoreCase));
+        Assert.Empty(shellEntries);
+    }
+
+    [Fact]
+    public void DirectoryWhitelist_RemainsZero()
+    {
+        Assert.Empty(s_directoryWhitelist);
+    }
+
+    [Fact]
     public void ProductionFiles_Max100Lines()
     {
         var items = Directory.EnumerateFiles(s_root, "*.cs", SearchOption.AllDirectories);

@@ -1,13 +1,13 @@
 # 8.7.8 债务路线图
 
 生成日期：2026-06-23
-基于：8.7.7F-4C 完成后的状态
+最后更新：2026-06-23（8.8-0：防回潮门禁已锁）
 
 ---
 
 ## 一句话现状
 
-**8.7.8 全部完成。** 所有 Boss 文件已拆（8/8），生产白名单只剩 3 项合理例外（EditorShell 组合根 + 2 个相机算法放弃）。详见 `docs/audit-final-8.7.8-Z1.md`。
+**8.7.8 全部完成。** EditorShell 白名单已移除，生产白名单锁死为 2 个相机算法文件。架构防回潮门禁（8.8-0）已通过测试锁定。
 
 ---
 
@@ -55,6 +55,28 @@
 8.7.8  专项拆解（A 类 6 个，B 类 3 个已清，进入 A 类处理）
 ```
 
-当前产线白名单预算：32（2 生产 + 20 测试 + 10 松弛；EditorShell 已移出白名单 ✅）
-测试白名单：20 项（保留）
-EditorShell 最终状态：**24 行（≤100 ✅），白名单已删除 ✅**
+当前产线白名单预算：32（2 生产 + 30 测试；EditorShell 已移出白名单 ✅）
+测试白名单：30 项（保留）
+EditorShell 最终状态：**28 行（≤100 ✅），白名单已删除 ✅**
+
+---
+
+## 防回潮门禁（8.8-0）
+
+```text
+8.7.8-0 架构防回潮门禁 — 通过 ✅
+
+新增测试：
+├─ ProductionWhitelist_OnlyApproved     — 生产白名单精确锁死为 2 个相机文件
+├─ GlobalUsings_Max100Lines             — GlobalUsings.cs ≤100 行
+├─ EditorShellContext_Max95Lines        — EditorShellContext.cs ≤95 行
+├─ EditorShell_NotInWhitelist           — EditorShell 不得回归白名单
+└─ DirectoryWhitelist_RemainsZero       — 目录白名单保持 0
+
+当前值：
+├─ 生产白名单：2（SceneOrbitCameraMotion + SceneNavigationCameraMotion）
+├─ 目录白名单：0
+├─ GlobalUsings.cs：99 行
+├─ EditorShellContext.cs：95 行
+└─ EditorShell.axaml.cs：28 行
+```

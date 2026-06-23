@@ -3828,3 +3828,30 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
 | 收口审计文档 | `docs/audit-EditorShell-closeout-8.7.8H-5.md` |
 | 白名单策略 | 组合根例外，保留 |
+
+### 8.8-0 — 架构防回潮门禁
+
+8.7.8 正式收口后补加的防回潮测试。锁死白名单、GlobalUsings、EditorShellContext 行数上限，防止架构债务回潮。
+
+#### 新增测试
+
+| 测试 | 门禁 |
+|------|------|
+| `ProductionWhitelist_OnlyApproved` | 生产白名单精确锁死为 2 个相机算法文件 |
+| `GlobalUsings_Max100Lines` | GlobalUsings.cs ≤100 行 |
+| `EditorShellContext_Max95Lines` | EditorShellContext.cs ≤95 行 |
+| `EditorShell_NotInWhitelist` | EditorShell 不得回归白名单 |
+| `DirectoryWhitelist_RemainsZero` | 目录白名单保持 0 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 10/10 |
+| `dotnet test` (全量) | ✅ 629/630（1 flaky pre-existing：中文排序）|
+| 生产白名单 | 2（SceneOrbitCameraMotion + SceneNavigationCameraMotion）|
+| 目录白名单 | 0 |
+| GlobalUsings.cs | 99 行 |
+| EditorShellContext.cs | 95 行 |
+| EditorShell 白名单 | 已移除 |
