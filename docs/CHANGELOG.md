@@ -3597,3 +3597,28 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | Transform 编辑行为 | ✅ 不变 |
 | Inspector 数值拖拽 | ✅ 不变 |
 | Gizmo 交互 | ✅ 不变 |
+
+### 8.7.8H-2C — EditorShell 第三刀：Viewport 生命周期 + Vulkan Redraw 提取
+
+提取 EditorShell.axaml.cs（665→**629** 行）中 Viewport 重绘调度和 resize 结果应用：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 665→**629** | 减少 36 行 |
+| `Shell/Viewport/EditorShellViewportRedrawRoute.cs` | 83 | NativeHost 变更 → redraw 调度 → RenderOnce → 结果应用 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（83）|
+| 目录文件数 | ✅ Shell/Viewport/ 1, ≤5 |
+| 白名单删除 | ❌ 不删除，Shell 仍有 629 行 |
+| Route 装配顺序 | ✅ 未改动 |
+| Viewport resize 不闪退 | ✅ 不变 |
+| Vulkan redraw | ✅ 不变 |
+| Scene3D 状态 | ✅ 不变 |

@@ -85,6 +85,7 @@ using FluidWarfare.Render.World;
 using FluidWarfare.Editor.Windows.Shell.Navigation;
 using FluidWarfare.Editor.Windows.Shell.Picking;
 using FluidWarfare.Editor.Windows.Shell.Transform.Edit;
+using FluidWarfare.Editor.Windows.Shell.Viewport;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -106,7 +107,6 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorFeedbackRoute _feedback = new();
     private readonly EditorRunMenuRoute _runMenu = new();
     private readonly EditorStartupVulkanRoute _startupVulkanRoute = new();
-    private DispatcherTimer? _viewportResizeRenderTimer;
     private int _renderSeq;
     private string _renderLastMode = "无";
     private Scene3dSessionLifecycle _lifecycle = null!;
@@ -172,6 +172,9 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorShellTransformRoute _transformRoute;
     private readonly EditorShellScrubRoute _scrubRoute;
 
+    // ─── H-2C 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellViewportRedrawRoute _viewportRedrawRoute;
+
     public EditorShell()
     {
         AvaloniaXamlLoader.Load(this);
@@ -221,6 +224,16 @@ public sealed partial class EditorShell : UserControl
             () => _worldState, () => _commitApplier,
             ScheduleScene3dFrame, AppendInfoLog);
 
+        _viewportRedrawRoute = new EditorShellViewportRedrawRoute(
+            _startupVulkanRoute, _probeRoute, _vulkanViewportHostPanel,
+            () => _sessionActive, _lifecycle, _cameraRoute, _renderSceneStore,
+            () => _renderSeq, _resizeRenderRoute, AppendInfoLog, AppendWarningLog,
+            _diagnosticsRoute, RefreshDiagnostics,
+            RunStartupVulkanProbe,
+            v => _sessionActive = v,
+            v => _renderSeq = v,
+            v => _renderLastMode = v);
+
         SubscribePanelEvents();
         InitializeFeedback();
         LoadSampleProject();
@@ -239,7 +252,7 @@ public sealed partial class EditorShell : UserControl
         }
         if (_c.VulkanViewportHost is not null)
         {
-            _c.VulkanViewportHost.NativeHostInfoChanged += HandleVulkanViewportNativeHostInfoChanged;
+            _c.VulkanViewportHost.NativeHostInfoChanged += _viewportRedrawRoute.HandleNativeHostInfoChanged;
             _c.VulkanViewportHost.RawPointerButtonDown += HandleRawPointerButtonDown;
             _c.VulkanViewportHost.RawPointerButtonUp += HandleRawPointerButtonUp;
             _c.VulkanViewportHost.RawPointerMoved += HandleRawPointerMoved;
@@ -293,14 +306,14 @@ public sealed partial class EditorShell : UserControl
 
     private EditorShellDetachRequest BuildDetachRequest() => new(
         Lifecycle: _lifecycle,
-        ResizeRenderTimer: _viewportResizeRenderTimer,
-        ResizeRenderTimerTickHandler: HandleViewportResizeRenderTimerTick);
+        ResizeRenderTimer: _viewportRedrawRoute.Timer,
+        ResizeRenderTimerTickHandler: _viewportRedrawRoute.TimerTickHandler);
 
     private void ApplyDetachResult(EditorShellDetachResult result)
     {
         _sessionActive = false;
         _startupVulkanRoute.Reset();
-        if (result.TimerCleanedUp) _viewportResizeRenderTimer = null;
+        if (result.TimerCleanedUp) _viewportRedrawRoute.ClearTimer();
     }
 
     private void RunStartupVulkanProbe()
@@ -327,63 +340,7 @@ public sealed partial class EditorShell : UserControl
             RefreshDiagnostics();
     }
 
-    private void HandleVulkanViewportNativeHostInfoChanged(object? sender, VulkanViewportNativeHostInfo nativeHostInfo)
-    {
-        if (!nativeHostInfo.HasNativeHandle || nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
-        {
-            return;
-        }
-
-        if (!_startupVulkanRoute.State.NativeHostReported)
-        {
-            Dispatcher.UIThread.Post(RunStartupVulkanProbe);
-            return;
-        }
-
-        ScheduleVulkanViewportRedraw();
-    }
-
-    private void ScheduleVulkanViewportRedraw()
-    {
-        _viewportResizeRenderTimer ??= new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(180)
-        };
-
-        _viewportResizeRenderTimer.Tick -= HandleViewportResizeRenderTimerTick;
-        _viewportResizeRenderTimer.Tick += HandleViewportResizeRenderTimerTick;
-        _viewportResizeRenderTimer.Stop();
-        _viewportResizeRenderTimer.Start();
-    }
-
-    private void HandleViewportResizeRenderTimerTick(object? sender, EventArgs e)
-    {
-        _viewportResizeRenderTimer?.Stop();
-        RedrawVulkanViewportOnce();
-    }
-
-    private void RedrawVulkanViewportOnce()
-    {
-        var request = new Scene3dResizeRenderRequest(
-            _probeRoute.State.Backend.IsAvailable, _probeRoute.State.Device.IsCreated,
-            _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
-            _sessionActive, _lifecycle.State.Session,
-            _cameraRoute, _renderSceneStore.Current, _renderSeq);
-
-        var result = _resizeRenderRoute.RenderOnce(
-            request, _lifecycle, _probeRoute, AppendInfoLog, AppendWarningLog);
-
-        ApplyResizeRenderResult(result);
-    }
-
-    private void ApplyResizeRenderResult(Scene3dResizeRenderResult result)
-    {
-        var seq = _diagnosticsRoute.ApplyResizeResult(result, AppendInfoLog, AppendWarningLog);
-        if (seq > 0) _renderSeq = seq;
-        if (result.Action == Scene3dResizeAction.ClearFallbackAfterFailure) _sessionActive = false;
-        if (result.Action is Scene3dResizeAction.ClearFallback or Scene3dResizeAction.ClearFallbackAfterFailure)
-        { if (_probeRoute.State.Clear.IsSucceeded) _renderLastMode = "Clear"; RefreshDiagnostics(); }
-    }
+    // ─── Viewport 重绘（委托至 _viewportRedrawRoute）───
 
     private void InitializeFeedback()
     {
@@ -465,7 +422,7 @@ public sealed partial class EditorShell : UserControl
 
     private void HandleScene3dRunRequested(object? sender, EventArgs e)
     {
-        _viewportResizeRenderTimer?.Stop();
+        _viewportRedrawRoute.StopTimer();
         ApplyScene3dCommandResult(_scene3dCommandRoute.Execute(BuildScene3dCommandRequest(EditorScene3dCommandKind.Run)));
     }
 
