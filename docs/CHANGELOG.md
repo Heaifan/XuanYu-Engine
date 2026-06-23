@@ -3175,6 +3175,36 @@ Render/Probe/
 | 指标 | 值 |
 |------|-----|
 | 文档输出 | ✅ `docs/whitelist-debt-roadmap-8.7.8.md` |
+
+---
+
+### 8.7.7F-6 — 最终收口
+
+C 类 4 个文件中，清了 2 个，2 个因涉及相机运动算法放弃。
+
+#### 清理成功 ✅
+
+| 文件 | 操作 |
+|------|------|
+| `VulkanViewportHostPanel.axaml.cs` (158 行) | SRP 提取：Events + NativeHost 两个 partial，主文件 43 行 ✅ |
+| `EditorInputBindingSnapshot.cs` (175 行) | Build 逻辑提取到 .Build.cs，主文件 38 行 ✅ |
+
+#### 放弃（登记到 8.7.8）❌
+
+| 文件 | 原因 |
+|------|------|
+| `SceneNavigationCameraMotion.cs` (173 行) | 纯相机数学计算，硬拆破坏可读性 |
+| `SceneOrbitCameraMotion.cs` (202 行) | 同上，不改运动算法 |
+
+#### 8.7.7 最终白名单状态
+
+| 指标 | 值 |
+|------|-----|
+| **目录白名单** | **0 🎯** |
+| 行预算 | 49 |
+| 生产文件占用 | **11** (原 13，清 2) |
+| 测试文件占用 | 20 |
+| 已处理生产债务 | 74→11 (85% 清债率) |
 | 不做代码改动 | ✅ |
 | 目录白名单 | 保持 0 ✅ |
 | 剩余目录白名单 | ViewportNavigation(9) 仅 1 项 |

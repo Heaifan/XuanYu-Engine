@@ -34,14 +34,14 @@
 | `VulkanDeviceProbe.cs` | 288 | Device 诊断，Vulkan 核心 |
 | `VulkanSurfaceProbe.cs` | 203 | Surface 诊断，Vulkan 核心 |
 
-### C 类 — 可选 F-6 清尾（4 个，可尝试在本阶段收掉）
+### C 类 — F-6 已清 ✅
 
-| 文件 | 行数 | 建议 |
-|------|------|------|
-| `EditorInputBindingSnapshot.cs` | 175 | 数据快照类，风险低 |
-| `HostInfo/VulkanViewportHostPanel.axaml.cs` | 158 | UI 面板，已有 partial 模式可参考 |
-| `Orbit/SceneOrbitCameraMotion.cs` | 202 | 相机运动，注意不改数学 |
-| `Navigation/SceneNavigationCameraMotion.cs` | 173 | 导航相机，注意不改行为 |
+| 文件 | 操作 | 当前行数 |
+|------|------|----------|
+| `EditorInputBindingSnapshot.cs` | Build 提取 → `.Build.cs` | 38 ✅ |
+| `HostInfo/Panel/VulkanViewportHostPanel.axaml.cs` | SRP partial 提取 | 43 ✅ |
+| `Orbit/SceneOrbitCameraMotion.cs` | 放弃（相机算法，不可硬拆） | 202 |
+| `Navigation/SceneNavigationCameraMotion.cs` | 放弃（同上） | 173 |
 
 ### D 类 — 测试白名单（保留，不强制拆）
 

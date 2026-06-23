@@ -25,6 +25,7 @@
 5. **8.7.7F-4B**：中等目录债务 — Panels/Viewport 11 文件子目录化 → 0、Transform/Gizmo 8 文件子目录化 → 0
 6. **8.7.7F-4C**：中等债务第二组 — ViewportNavigation 9 文件子目录化（最后 1 个目录白名单删除 ✅）、VulkanSceneRayBuilder SRP 拆分 167→40、VulkanCameraMatrices SRP 拆分 189→21
 7. **8.7.7F-5**：大债务登记到 8.7.8 — 产出 `docs/whitelist-debt-roadmap-8.7.8.md`，13 个生产白名单分 A/B/C/D 四类
+8. **8.7.7F-6**：最终收口 — VulkanViewportHostPanel 158→43、EditorInputBindingSnapshot 175→38；SceneNavigationCameraMotion 与 SceneOrbitCameraMotion 因相机算法放弃
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
