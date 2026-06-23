@@ -208,7 +208,7 @@
 72e. Milestone 7.8.1：新增 `FluidWarfare.Tests/Render/Vulkan/Swapchain/VulkanSwapchainInfoTests.cs`。
 72f. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearStatus.cs`。
 72g. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearInfo.cs`。
-72h. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearProbe.cs`。
+72h. Milestone 7.8.2：新增 `FluidWarfare.Render.Vulkan/Clear/VulkanClearProbe.cs`（8.7.8E-2A 移入 Probe/ 子目录）。
 72i. Milestone 7.8.2：新增 `FluidWarfare.Tests/Render/Vulkan/Clear/VulkanClearInfoTests.cs`。
 72j. Milestone 8.0：新增 `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawStatus.cs`。
 72k. Milestone 8.0：新增 `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawInfo.cs`。
@@ -935,7 +935,7 @@ FluidWarfare/
 |   |-- Instance/    (VulkanInstanceInfo/Probe/Status)
 |   |-- Surface/     (VulkanSurfaceInfo/Probe/InstanceScope/Status)
 |   |-- Swapchain/   (VulkanSwapchainInfo/Status + Probe/)
-|   |-- Clear/       (VulkanClearInfo/Probe/Status)
+|   |-- Clear/       (VulkanClearInfo/Status + Probe/)
 |   |-- Markers/     (VulkanMarkerDrawInfo/Result/Status, VulkanMarkerClearRectRenderer)
 |   |-- Camera/
 |   |   |-- PresentedCameraSnapshot.cs

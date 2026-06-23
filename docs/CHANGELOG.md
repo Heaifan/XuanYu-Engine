@@ -3398,3 +3398,37 @@ D-2B 拆完后，Probe/ 目录 4 文件 ≤5，Swapchain/ 根目录 2 文件 ≤
 | 目录文件数 (Probe/) | 4 ≤5 ✅ |
 | 白名单删除 | ✅ `VulkanSwapchainProbe.cs` 移出 |
 | 债务路线图 | ✅ A 类 5→4 个 |
+
+---
+
+### 8.7.8E-2A — Clear 目录容量整理
+
+为即将到来的 VulkanClearProbe SRP 拆分准备目录容量。
+
+#### 操作
+
+| 文件 | 操作 |
+|------|------|
+| `Clear/VulkanClearProbe.cs` | 移入 `Clear/Probe/` 子目录 |
+| 命名空间 | 不变，外部 using 不受影响 |
+
+#### 目录变化
+
+```
+整理前：                   整理后：
+Clear/                     Clear/
+├── VulkanClearInfo.cs     ├── VulkanClearInfo.cs
+├── VulkanClearProbe.cs    ├── VulkanClearStatus.cs
+└── VulkanClearStatus.cs   └── Probe/
+                              └── VulkanClearProbe.cs
+```
+
+E-2B 拆完后，Probe/ 目录 5 文件 = 上限，Clear/ 根目录 2 文件 ≤5。
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| Build | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 5/5 |
+| 未改业务逻辑 | ✅ 只移动文件位置 |
