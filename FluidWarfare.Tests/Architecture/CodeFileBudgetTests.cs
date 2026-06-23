@@ -34,9 +34,6 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Render\Camera\Orbit\SceneOrbitCameraMotion.cs",
         @"FluidWarfare.Render\Camera\Navigation\SceneNavigationCameraMotion.cs",
 
-        // Project / Engine（到期：8.7.8）
-        @"FluidWarfare.Project\Loading\GameProjectLoader.cs",
-
         // 测试文件（允许保留，不强制拆）
         @"FluidWarfare.Tests\Architecture\CodeFileBudgetTests.cs",
         @"FluidWarfare.Tests\Architecture\ProjectDependencyDirectionTests.cs",

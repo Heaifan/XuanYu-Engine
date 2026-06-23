@@ -3309,3 +3309,31 @@ InstanceScope 与 Selector 完全隐藏在 `VulkanDeviceProbe.Probe()` 内部，
 | 目录文件数 (Device/) | 5（含 Status + Info）≤5 ✅ |
 | 白名单删除 | ✅ `VulkanDeviceProbe.cs` 移出白名单 |
 | 债务路线图 | ✅ B 类全部清零 |
+
+---
+
+### 8.7.8C-2 — GameProjectLoader SRP 拆分
+
+将 `GameProjectLoader`（392 行）拆成 4 个小文件，不改 `LoadFromDirectory()` 签名：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `GameProjectLoader.cs` | 82 | 薄门面 — 主编排 + 目录校验 + 结果构建 |
+| `GameProjectManifestReader.cs` | 89 | manifest.json 读取 + 反序列化 + 顶层校验 |
+| `GameProjectFolderParser.cs` | 100 | contentFolders 数组 + 单个 folder 解析 |
+| `GameProjectExtensionParser.cs` | 52 | allowedExtensions 解析 + 格式校验 |
+
+所有内部 record 类型跟随职责迁移。Loading/ 目录 5 文件 = 上限。
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet test` (架构) | ✅ 5/5 |
+| `dotnet test` (完整) | ✅ 624/625（1 flaky pre-existing：中文排序） |
+| 生产文件 ≤100 行 | ✅ 全部达标（82 + 89 + 100 + 52） |
+| 目录文件数 (Loading/) | 5（含 LoadResult）≤5 ✅ |
+| 白名单删除 | ✅ `GameProjectLoader.cs` 移出 |
+| 债务路线图 | ✅ A 类 6→5 个 |

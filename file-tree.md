@@ -262,6 +262,7 @@
 76. Milestone 7.1：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportHostInfo.cs`。
 77. Milestone 7.2：新增 `FluidWarfare.Editor.Windows/Panels/Project/ProjectContentFolderSelection.cs`。
 78. Milestone 7.2：新增 `FluidWarfare.Tests/Project/Loading/SampleProjectSmokeTests.cs`。
+    8.7.8C-2：GameProjectLoader 拆为 4 文件（82 门面 + 89 ManifestReader + 100 FolderParser + 52 ExtensionParser）。
 79. Milestone 7.2：新增 `FluidWarfare.Tests/Architecture/ProjectDependencyDirectionTests.cs`。
 80. Milestone 7.3：新增 `FluidWarfare.Render.Vulkan/Instance/VulkanInstanceStatus.cs`。
 81. Milestone 7.3：新增 `FluidWarfare.Render.Vulkan/Instance/VulkanInstanceInfo.cs`。
@@ -1198,7 +1199,10 @@ get_tree.bat
 | `FluidWarfare.Project/Content/GameContentFileScanner.cs` | 扫描已声明内容目录中的一级内容文件，返回合法文件入口并收集文件级校验问题 | 测试通过 |
 | `FluidWarfare.Project/Content/GameContentFolderInfo.cs` | 项目内容目录声明模型，保存目录名、显示名、说明、内容类型、是否必需与允许扩展名 | 测试通过 |
 | `FluidWarfare.Project/Metadata/GameProjectInfo.cs` | 游戏项目元数据模型，保存项目契约版本、项目编号、显示名称、说明、内容目录声明列表和合法内容文件入口列表 | 测试通过 |
-| `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 从项目目录读取 game.project.json，校验项目契约版本、项目元数据与内容目录声明，协调内容文件入口扫描，拒绝未声明一级内容目录、未允许扩展名文件与嵌套内容目录 | 测试通过 |
+| `FluidWarfare.Project/Loading/GameProjectLoader.cs` | 项目加载门面（82 行），委托 ManifestReader/FolderParser/ExtensionParser | 测试通过 |
+| `FluidWarfare.Project/Loading/GameProjectManifestReader.cs` | game.project.json 读取 + 反序列化 + 顶层字段校验（89 行） | 可运行 |
+| `FluidWarfare.Project/Loading/GameProjectFolderParser.cs` | contentFolders 数组 + 单个 folder 解析（100 行） | 可运行 |
+| `FluidWarfare.Project/Loading/GameProjectExtensionParser.cs` | allowedExtensions 解析 + 格式校验（52 行） | 可运行 |
 | `FluidWarfare.Project/Loading/GameProjectLoadResult.cs` | 项目加载结果模型，组合 EngineResult、可选 GameProjectInfo 与项目校验报告 | 测试通过 |
 | `FluidWarfare.Project/Validation/ProjectValidationIssue.cs` | 项目校验问题模型，保存错误码、中文信息和问题路径，不读取文件不写日志 | 测试通过 |
 | `FluidWarfare.Project/Validation/ProjectValidationReport.cs` | 项目校验报告模型，汇总项目加载与内容扫描中的校验问题，支持空报告 | 测试通过 |

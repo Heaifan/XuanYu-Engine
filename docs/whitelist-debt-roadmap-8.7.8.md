@@ -7,13 +7,13 @@
 
 ## 一句话现状
 
-目录结构欠债全部还清 ✅。生产文件还剩 **13 个大的**，总行数约 **4500 行**。这些不适合在 8.7.7 继续拆，目标改为：分出轻重缓急，登记到 8.7.8 处理。
+目录结构欠债全部还清 ✅。B 类 3 个中风险 + A 类 GameProjectLoader 已拆分，生产文件剩 **5 个大的**。
 
 ---
 
 ## 分类详情
 
-### A 类 — 8.7.8 大件专项（6 个，必须单独拆）
+### A 类 — 8.7.8 大件专项（5 个，必须单独拆）
 
 这几个文件都超过 300 行，每个都需要一个专门的拆分阶段，不能顺手带掉。
 
@@ -23,7 +23,7 @@
 | `EditorPreferencesWindow.axaml.cs` | 587 | 设置窗口，业务耦合重 |
 | `VulkanRenderContext.cs` | 476 | 渲染上下文核心，调用链深 |
 | `VulkanClearProbe.cs` | 416 | 清屏诊断，涉及多管道 |
-| `GameProjectLoader.cs` | 392 | 项目加载，流程长 |
+| ~~`GameProjectLoader.cs`~~ | ~~392~~ | ✅ **8.7.8C-2 已拆分** — 82 行门面 + 89 行 ManifestReader + 100 行 FolderParser + 52 行 ExtensionParser |
 | `VulkanSwapchainProbe.cs` | 301 | Swapchain 诊断探针 |
 
 ### B 类 — 8.7.8 中风险专项 — 已全部清零 ✅
