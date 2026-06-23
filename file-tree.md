@@ -269,7 +269,7 @@
 83. Milestone 7.3：新增 `FluidWarfare.Tests/Render/Vulkan/Instance/VulkanInstanceInfoTests.cs`。
 84. Milestone 7.4：新增 `FluidWarfare.Render.Vulkan/Device/VulkanDeviceStatus.cs`。
 85. Milestone 7.4：新增 `FluidWarfare.Render.Vulkan/Device/VulkanDeviceInfo.cs`。
-86. Milestone 7.4：新增 `FluidWarfare.Render.Vulkan/Device/VulkanDeviceProbe.cs`。
+86. Milestone 7.4：新增 `FluidWarfare.Render.Vulkan/Device/VulkanDeviceProbe.cs`（8.7.8B-4 拆为 77 行门面 + 61 行 InstanceScope + 80 行 Selector）。
 87. Milestone 7.4：新增 `FluidWarfare.Tests/Render/Vulkan/Device/VulkanDeviceInfoTests.cs`。
 88. Milestone 7.5：新增 `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceStatus.cs`。
 89. Milestone 7.5：新增 `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceInfo.cs`。
@@ -930,7 +930,7 @@ FluidWarfare/
 |   |-- FluidWarfare.Render.Vulkan.csproj
 |   |-- Backend/     (VulkanBackendInfo/Probe/Status)
 |   |-- Context/     (VulkanRenderContext)
-|   |-- Device/      (VulkanDeviceInfo/Probe/Status)
+|   |-- Device/      (VulkanDeviceInfo/Probe/InstanceScope/Selector/Status)
 |   |-- Instance/    (VulkanInstanceInfo/Probe/Status)
 |   |-- Surface/     (VulkanSurfaceInfo/Probe/InstanceScope/Status)
 |   |-- Swapchain/   (VulkanSwapchainInfo/Probe/Status)
@@ -1223,7 +1223,9 @@ get_tree.bat
 | `FluidWarfare.Tests/Render/Vulkan/Instance/VulkanInstanceInfoTests.cs` | 验证 Vulkan Instance 探测结果模型的基础语义与轻量 Probe 输出 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Device/VulkanDeviceStatus.cs` | Vulkan Device 创建探测状态枚举 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Device/VulkanDeviceInfo.cs` | Vulkan Device 创建探测结果模型，保存状态、中文说明、显卡名称、设备类型、图形队列族索引与耗时 | 测试通过 |
-| `FluidWarfare.Render.Vulkan/Device/VulkanDeviceProbe.cs` | 枚举 PhysicalDevice，选择支持 Graphics Queue 的设备，创建并释放 LogicalDevice，不创建 Surface 或 Swapchain | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Device/VulkanDeviceProbe.cs` | Probe() 门面（77 行），内部委托 InstanceScope + Selector | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Device/VulkanDeviceInstanceScope.cs` | 临时 VkInstance 生命周期（61 行，无扩展，IDisposable） | 可运行 |
+| `FluidWarfare.Render.Vulkan/Device/VulkanDeviceSelector.cs` | PhysicalDevice 枚举 + 选择 + Queue 族检查（80 行） | 可运行 |
 | `FluidWarfare.Tests/Render/Vulkan/Device/VulkanDeviceInfoTests.cs` | 验证 Vulkan Device 探测结果模型的基础语义与轻量 Probe 输出 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceStatus.cs` | Vulkan Surface 创建探测状态枚举 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceInfo.cs` | Vulkan Surface 创建探测结果模型，保存状态、中文说明、平台、原生句柄状态与耗时 | 测试通过 |
