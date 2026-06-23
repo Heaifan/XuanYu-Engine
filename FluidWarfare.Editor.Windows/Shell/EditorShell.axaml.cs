@@ -87,6 +87,7 @@ using FluidWarfare.Editor.Windows.Shell.Picking;
 using FluidWarfare.Editor.Windows.Shell.Transform.Edit;
 using FluidWarfare.Editor.Windows.Shell.Viewport;
 using FluidWarfare.Editor.Windows.Shell.Commands;
+using FluidWarfare.Editor.Windows.Shell.Input.Raw;
 using FluidWarfare.Editor.Windows.Shell.Hierarchy;
 using FluidWarfare.Editor.Windows.Shell.Project;
 using FluidWarfare.Editor.Windows.Shell.Selection;
@@ -153,9 +154,6 @@ public sealed partial class EditorShell : UserControl
     private readonly ProjectContentSelectionPresenter _contentSelectionPresenter = new();
     private readonly ViewportSelectionPresenter _viewportSelectionPresenter = new();
 
-    // ─── 动作去重守卫 ──────────────────────────────────────
-    private bool _frameSelectedPending;
-
     // ─── 输入上下文栈（由 InputRoute 管理后暂未外移） ──────
 
 
@@ -191,6 +189,10 @@ public sealed partial class EditorShell : UserControl
 
     // ─── H-2G 提取路由 ──────────────────────────────────────────
     private readonly EditorShellProjectBootstrapRoute _projectBootstrapRoute;
+
+    // ─── H-4A 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellRawInputRoute _rawInputRoute;
+    private readonly EditorShellViewportFrameRoute _viewportFrameRoute;
 
     public EditorShell()
     {
@@ -277,6 +279,13 @@ public sealed partial class EditorShell : UserControl
             () => _worldState, () => _sessionActive, _lifecycle,
             ScheduleScene3dFrame);
 
+        _rawInputRoute = new EditorShellRawInputRoute(
+            _viewportInputRoute, BuildInputRequest);
+        _viewportFrameRoute = new EditorShellViewportFrameRoute(
+            () => _sessionActive, _lifecycle, _selectionRoute,
+            () => _worldState, _statusBarPanel, _cameraRoute,
+            ScheduleScene3dFrame);
+
         SubscribePanelEvents();
         InitializeFeedback();
         _projectBootstrapRoute.LoadSampleProject();
@@ -296,20 +305,20 @@ public sealed partial class EditorShell : UserControl
         if (_c.VulkanViewportHost is not null)
         {
             _c.VulkanViewportHost.NativeHostInfoChanged += _viewportRedrawRoute.HandleNativeHostInfoChanged;
-            _c.VulkanViewportHost.RawPointerButtonDown += HandleRawPointerButtonDown;
-            _c.VulkanViewportHost.RawPointerButtonUp += HandleRawPointerButtonUp;
-            _c.VulkanViewportHost.RawPointerMoved += HandleRawPointerMoved;
-            _c.VulkanViewportHost.RawKeyDown += HandleRawKeyDown;
-            _c.VulkanViewportHost.RawKeyUp += HandleRawKeyUp;
-            _c.VulkanViewportHost.RawMouseWheel += HandleRawMouseWheel;
-            _c.VulkanViewportHost.RawInputFocusLost += HandleRawInputFocusLost;
+            _c.VulkanViewportHost.RawPointerButtonDown += _rawInputRoute.HandleRawPointerButtonDown;
+            _c.VulkanViewportHost.RawPointerButtonUp += _rawInputRoute.HandleRawPointerButtonUp;
+            _c.VulkanViewportHost.RawPointerMoved += _rawInputRoute.HandleRawPointerMoved;
+            _c.VulkanViewportHost.RawKeyDown += _rawInputRoute.HandleRawKeyDown;
+            _c.VulkanViewportHost.RawKeyUp += _rawInputRoute.HandleRawKeyUp;
+            _c.VulkanViewportHost.RawMouseWheel += _rawInputRoute.HandleRawMouseWheel;
+            _c.VulkanViewportHost.RawInputFocusLost += _rawInputRoute.HandleRawInputFocusLost;
             _c.VulkanViewportHost.PickRequested += HandleViewportPick;
             _c.VulkanViewportHost.NavigationPointerPressed += _overlayNavRoute.HandleOverlayPointerPressed;
             _c.VulkanViewportHost.NavigationPointerMoved += _overlayNavRoute.HandleOverlayPointerMoved;
             _c.VulkanViewportHost.NavigationPointerReleased += _overlayNavRoute.HandleOverlayPointerReleased;
             _c.VulkanViewportHost.NavigationCaptureLost += _overlayNavRoute.HandleOverlayCaptureLost;
-            _c.VulkanViewportHost.SceneToolPointerPressed += HandleSceneToolPointerPressed;
-            _c.VulkanViewportHost.SceneToolPointerReleased += HandleSceneToolPointerReleased;
+            _c.VulkanViewportHost.SceneToolPointerPressed += _rawInputRoute.HandleSceneToolPointerPressed;
+            _c.VulkanViewportHost.SceneToolPointerReleased += _rawInputRoute.HandleSceneToolPointerReleased;
             _c.VulkanViewportHost.PointerMoved += _groundPointerRoute.HandleViewportPointerMoved;
             _c.VulkanViewportHost.PointerLeft += _groundPointerRoute.HandleViewportPointerLeft;
         }
@@ -423,47 +432,7 @@ public sealed partial class EditorShell : UserControl
         };
     }
 
-    private void HandleRawKeyDown(int virtualKeyCode)
-    {
-        _viewportInputRoute.HandleKeyDown(BuildInputRequest(EditorViewportInputKind.KeyDown, keyCode: virtualKeyCode));
-    }
-
-    private void HandleRawKeyUp(int virtualKeyCode)
-    {
-        _viewportInputRoute.HandleKeyUp(BuildInputRequest(EditorViewportInputKind.KeyUp, keyCode: virtualKeyCode));
-    }
-
-    private void HandleRawPointerButtonDown(int buttonCode, int x, int y)
-    {
-        _viewportInputRoute.HandlePointerDown(BuildInputRequest(EditorViewportInputKind.PointerDown, buttonCode: buttonCode, x: x, y: y));
-    }
-
-    private void HandleRawPointerMoved(int x, int y)
-    {
-        _viewportInputRoute.HandlePointerMoved(BuildInputRequest(EditorViewportInputKind.PointerMoved, x: x, y: y));
-    }
-
-    private void HandleRawPointerButtonUp(int buttonCode, int x, int y)
-    {
-        _viewportInputRoute.HandlePointerUp(BuildInputRequest(EditorViewportInputKind.PointerUp, buttonCode: buttonCode, x: x, y: y));
-    }
-
-    private void HandleRawInputFocusLost()
-    {
-        _viewportInputRoute.HandleFocusLost(BuildInputRequest(EditorViewportInputKind.FocusLost));
-    }
-
-    // ─── 场景工具仲裁 ──────────────────────────────────
-
-    private ViewportSceneToolPressResult HandleSceneToolPointerPressed(int x, int y)
-    {
-        return _viewportInputRoute.HandleSceneToolPressed(BuildInputRequest(EditorViewportInputKind.PointerDown, x: x, y: y));
-    }
-
-    private void HandleSceneToolPointerReleased(int x, int y)
-    {
-        _viewportInputRoute.HandleSceneToolReleased(BuildInputRequest(EditorViewportInputKind.PointerUp, x: x, y: y));
-    }
+    // ─── Raw 输入转发（委托至 _rawInputRoute）───
 
     /// <summary>初始化 Transform Application 层（Session 启动后调用）。</summary>
     private void InitTransformApplication()
@@ -515,33 +484,7 @@ public sealed partial class EditorShell : UserControl
             _statusBarPanel?.SetCurrentSelection("请先选择实体。");
     }
 
-    private void HandleRawMouseWheel(int delta, int packedModifiers)
-    {
-        _viewportInputRoute.HandleMouseWheel(BuildInputRequest(EditorViewportInputKind.MouseWheel, wheelDelta: delta));
-    }
-
-    private void ExecuteViewportFrameSelected()
-    {
-        if (_frameSelectedPending) return;
-        _frameSelectedPending = true;
-        try
-        {
-            if (!_sessionActive || _lifecycle.State.Session is null) return;
-            if (_selectionRoute.State.SelectedWorldEntity is null)
-            {
-                _statusBarPanel?.SetCurrentSelection("没有可聚焦的世界实体。");
-                return;
-            }
-            var target = ViewportCameraFocusTarget.Compute(
-                _selectionRoute.State.SelectedWorldEntity.EntityId, _worldState!);
-            if (target is null) return;
-            var (cx, cy, cz, r) = target.Value;
-            var result = _cameraRoute.Apply(new ViewportCameraCommand.FrameSelected(cx, cy, cz, r));
-            _statusBarPanel?.SetCurrentSelection($"已聚焦实体 {_selectionRoute.State.SelectedWorldEntity.DisplayName}。");
-            if (result.NeedsFrame) ScheduleScene3dFrame(result.Reason);
-        }
-        finally { Dispatcher.UIThread.Post(() => _frameSelectedPending = false); }
-    }
+    // ─── 视口聚焦（委托至 _viewportFrameRoute）───
 
     private EditorViewportInputRequest BuildInputRequest(
         EditorViewportInputKind kind, int keyCode = 0, int buttonCode = 0, int x = 0, int y = 0, int wheelDelta = 0)
@@ -551,7 +494,7 @@ public sealed partial class EditorShell : UserControl
             _cameraRoute, _lifecycle, _viewportPickRoute, _renderSceneStore,
             _groundPlacementState, _worldDirtyState,
             AppendInfoLog, AppendWarningLog, ScheduleScene3dFrame, BuildTransformStartSnapshot,
-            ApplyEntityTransform, CancelActiveTransform, ApplyPreviewPosition, ExecuteViewportFrameSelected);
+            ApplyEntityTransform, CancelActiveTransform, ApplyPreviewPosition, _viewportFrameRoute.ExecuteViewportFrameSelected);
     }
 
     private EditorScene3dCommandRequest BuildScene3dCommandRequest(EditorScene3dCommandKind kind) => new(kind,
@@ -570,11 +513,6 @@ public sealed partial class EditorShell : UserControl
     private void ExecuteCancelCurrentTool()
     {
         HandleViewportEscape();
-    }
-
-    private void ExecuteTransformApply()
-    {
-        // 应用 Transform 需要由 Inspector 面板提供当前草稿值，此处不自动执行
     }
 
     private void ExecuteTransformResetDraft()
@@ -629,27 +567,6 @@ public sealed partial class EditorShell : UserControl
 
     private void RefreshDiagnostics() => _diagnosticsRoute.Refresh(_sessionActive, _renderLastMode);
 
-
-    private static bool TryGetValidViewportSize(
-        VulkanViewportNativeHostInfo nativeHostInfo,
-        out uint width,
-        out uint height,
-        out string message)
-    {
-        width = 0;
-        height = 0;
-
-        if (nativeHostInfo.Width < 1 || nativeHostInfo.Height < 1)
-        {
-            message = "Vulkan 视口尺寸尚未就绪，跳过本次绘制。";
-            return false;
-        }
-
-        width = checked((uint)nativeHostInfo.Width);
-        height = checked((uint)nativeHostInfo.Height);
-        message = string.Empty;
-        return true;
-    }
 
     private void UpdateVulkanViewportHost() => _diagnosticsRoute.UpdateViewportHost();
 }

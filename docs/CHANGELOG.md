@@ -3722,3 +3722,32 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | Editor 启动 / 项目加载 | ✅ 不变 |
 | World Tree / Inspector 同步 | ✅ 不变 |
 | Transform / Gizmo / Redraw | ✅ 不受影响 |
+
+### 8.7.8H-4A — EditorShell P1 低风险清理
+
+执行 H-3 审计推荐的 P1 清理：Raw 输入转发提取 + 视口聚焦提取 + 空方法删除 + 尺寸工具提取。
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 656→**496**（含 using）| Body 约 403 行（不含 using 93 行），减少 ~160 行 |
+| `Shell/Input/Raw/EditorShellRawInputRoute.cs` | 26 | 7 个 HandleRaw* + 2 个 HandleSceneTool* 转发 |
+| `Shell/Viewport/EditorShellViewportFrameRoute.cs` | 43 | ExecuteViewportFrameSelected（含 _frameSelectedPending）|
+| `Shell/Viewport/EditorShellViewportSizeGuard.cs` | 24 | TryGetValidViewportSize 静态工具 |
+| `ExecuteTransformApply` | — | **已删除**（空方法体，无调用者）|
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（26+43+24）|
+| 目录文件数 | ✅ Input/Raw/ 1, Viewport/ 3, ≤5 |
+| 白名单删除 | ❌ 不删除，Shell 仍有 496 行 |
+| Route 装配顺序 | ✅ 未改动 |
+| 鼠标/键盘输入 | ✅ 不变 |
+| Viewport Frame Selected | ✅ 不变 |
+| 视口尺寸判断 | ✅ 不变 |
+| Scene3D / Transform / Picking | ✅ 不受影响 |
