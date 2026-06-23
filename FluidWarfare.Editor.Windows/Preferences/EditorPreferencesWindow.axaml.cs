@@ -16,12 +16,14 @@ public sealed partial class EditorPreferencesWindow : Window
         InitializeComponent();
         Title = "偏好设置";
         _draft.LoadFromService();
-        _bindingList = new EditorPreferencesBindingList(_draft, BindingsContainer!, (id, slot) =>
+        EditorPreferencesBindingList? list = null;
+        list = new EditorPreferencesBindingList(_draft, BindingsContainer!, (id, slot) =>
         {
-            var btn = _bindingList.CreateBindingButton(id, slot);
+            var btn = list!.CreateBindingButton(id, slot);
             btn.Click += OnBindingButtonClicked;
             return btn;
         });
+        _bindingList = list;
         _bindingList.RestoreClicked += id => { _draft.RemoveOverrides(id); Refresh(); };
     }
 
