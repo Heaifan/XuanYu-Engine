@@ -3571,3 +3571,29 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | Overlay 导航行为 | ✅ 不变 |
 | 地面 hover | ✅ 不变 |
 | Picking/选择联动 | ✅ 不变 |
+
+### 8.7.8H-2B — EditorShell 第二刀：Transform 编辑 + Scrub 提取
+
+提取 EditorShell.axaml.cs（725→**665** 行）中 Transform 编辑和数值拖拽职责到 2 个新文件：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 725→**665** | 减少 60 行 |
+| `Shell/Transform/Edit/EditorShellTransformRoute.cs` | 86 | HandleTransformApply/Reset/DraftChanged + GroundPlacementToggle + ApplyEntityTransform |
+| `Shell/Transform/Edit/EditorShellScrubRoute.cs` | 62 | HandleScrubValueChanged/Completed/Cancelled |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（86+62）|
+| 目录文件数 | ✅ Shell/Transform/ 5 + Edit/ 2, 全部 ≤5 |
+| 白名单删除 | ❌ 不删除，Shell 仍有 665 行 |
+| Route 装配顺序 | ✅ 未改动 |
+| Transform 编辑行为 | ✅ 不变 |
+| Inspector 数值拖拽 | ✅ 不变 |
+| Gizmo 交互 | ✅ 不变 |

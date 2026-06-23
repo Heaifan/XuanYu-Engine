@@ -29,6 +29,7 @@
 9. **8.7.8G-1/G-2**：EditorPreferencesWindow SRP 拆分 — 587→78 门面 + 3 子组件（Capture/BindingList/DraftHandler）+ Helpers
 10. **8.7.8H-1**：EditorShell 最终 Boss 拆分审计 — 969 行 → 审计文档产出
 11. **8.7.8H-2A**：EditorShell 第一刀提取 — Overlay 导航 + 地面指针 + Picking → 3 新文件（78+63+79 行），Shell 969→725 行
+12. **8.7.8H-2B**：EditorShell 第二刀提取 — Transform 编辑 + Scrub → 2 新文件（86+62 行），Shell 725→665 行
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -770,7 +771,7 @@ FluidWarfare/
 |   |       `-- WorldHierarchyTreeViewState.cs
 |   |-- Shell/
 |   |   |-- EditorShell.axaml
-|   |   |-- EditorShell.axaml.cs (725 行, 原 3,041→重构后→H-2A 减 244)
+|   |   |-- EditorShell.axaml.cs (665 行, 原 3,041→重构后→H-2A/B 减 304)
 |   |   |-- EditorSelection.cs
 |   |   |-- Composition/
 |   |   |   |-- EditorShellControlRefs.cs
@@ -814,7 +815,10 @@ FluidWarfare/
 |   |   |       |-- EditorStartupVulkanRequest.cs / Result.cs / Route.cs / State.cs / Step.cs
 |   |   |-- Transform/
 |   |   |   |-- EditorGroundPlacementResult.cs / Route.cs
-|   |   |   `-- EditorTransformApplyRequest.cs / Result.cs / Route.cs
+|   |   |   |-- EditorTransformApplyRequest.cs / Result.cs / Route.cs
+|   |   |   `-- Edit/
+|   |   |       |-- EditorShellTransformRoute.cs (86 行, H-2B)
+|   |   |       `-- EditorShellScrubRoute.cs (62 行, H-2B)
 |   |   |-- Picking/
 |   |   |   |-- EditorShellGroundPointerRoute.cs (63 行, H-2A 提取)
 |   |   |   `-- EditorShellPickingRoute.cs (79 行, H-2A 提取)

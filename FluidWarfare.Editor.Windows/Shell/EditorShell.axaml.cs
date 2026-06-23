@@ -84,6 +84,7 @@ using FluidWarfare.Render.Vulkan.Swapchain;
 using FluidWarfare.Render.World;
 using FluidWarfare.Editor.Windows.Shell.Navigation;
 using FluidWarfare.Editor.Windows.Shell.Picking;
+using FluidWarfare.Editor.Windows.Shell.Transform.Edit;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -167,6 +168,10 @@ public sealed partial class EditorShell : UserControl
     private readonly EditorShellGroundPointerRoute _groundPointerRoute;
     private readonly EditorShellPickingRoute _pickingRoute;
 
+    // ─── H-2B 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellTransformRoute _transformRoute;
+    private readonly EditorShellScrubRoute _scrubRoute;
+
     public EditorShell()
     {
         AvaloniaXamlLoader.Load(this);
@@ -204,6 +209,17 @@ public sealed partial class EditorShell : UserControl
             _vulkanViewportHostPanel, AppendInfoLog,
             msg => _statusBarPanel?.SetCurrentSelection(msg),
             RefreshDiagnostics, CompleteGroundPlacement, ScheduleScene3dFrame);
+
+        _transformRoute = new EditorShellTransformRoute(
+            _transformApplyRoute, _selectionRoute, _groundPlacementState, _groundPlacementRoute,
+            _inspectorPanel, _statusBarPanel,
+            () => _worldState, () => _sessionActive, _lifecycle,
+            () => _commitApplier,
+            ScheduleScene3dFrame, AppendInfoLog, AppendWarningLog);
+        _scrubRoute = new EditorShellScrubRoute(
+            _transformApplyRoute, _selectionRoute,
+            () => _worldState, () => _commitApplier,
+            ScheduleScene3dFrame, AppendInfoLog);
 
         SubscribePanelEvents();
         InitializeFeedback();
@@ -243,13 +259,13 @@ public sealed partial class EditorShell : UserControl
         }
         if (_c.Inspector is not null)
         {
-            _c.Inspector.TransformDraftChanged += HandleTransformDraftChanged;
-            _c.Inspector.TransformApplyRequested += HandleTransformApply;
-            _c.Inspector.TransformResetRequested += HandleTransformReset;
-            _c.Inspector.GroundPlacementRequested += HandleGroundPlacementToggle;
-            _c.Inspector.ScrubValueChanged += HandleScrubValueChanged;
-            _c.Inspector.ScrubCompleted += HandleScrubCompleted;
-            _c.Inspector.ScrubCancelled += HandleScrubCancelled;
+            _c.Inspector.TransformDraftChanged += _transformRoute.HandleTransformDraftChanged;
+            _c.Inspector.TransformApplyRequested += _transformRoute.HandleTransformApply;
+            _c.Inspector.TransformResetRequested += _transformRoute.HandleTransformReset;
+            _c.Inspector.GroundPlacementRequested += _transformRoute.HandleGroundPlacementToggle;
+            _c.Inspector.ScrubValueChanged += _scrubRoute.HandleScrubValueChanged;
+            _c.Inspector.ScrubCompleted += _scrubRoute.HandleScrubCompleted;
+            _c.Inspector.ScrubCancelled += _scrubRoute.HandleScrubCancelled;
         }
     }
 
@@ -631,7 +647,7 @@ public sealed partial class EditorShell : UserControl
     private void ExecuteTransformResetDraft()
     {
         // 重置 Transform 草稿（通过面板的 Reset 事件）
-        HandleTransformReset();
+        _transformRoute.HandleTransformReset();
     }
 
     // ─── Overlay 导航输入（委托至 _overlayNavRoute）───
@@ -693,97 +709,11 @@ public sealed partial class EditorShell : UserControl
     private void HandleViewportPick(int pixelX, int pixelY) =>
         _pickingRoute.HandleViewportPick(pixelX, pixelY, ApplyEntitySelection);
 
-    // ─── Transform 编辑 ─────────────────────────────────────────────
+    // ─── Transform 编辑 + Scrub（委托至 _transformRoute / _scrubRoute）───
 
-    private void HandleTransformApply(string xText, string yText, string zText)
-    {
-        _transformApplyRoute.HandleInspectorApply(xText, yText, zText, _selectionRoute, _worldState,
-            _commitApplier, ScheduleScene3dFrame, AppendInfoLog,
-            err => { if (_inspectorPanel is not null) _inspectorPanel.ShowTransformError(err); });
-    }
-
-    private void HandleTransformReset()
-    {
-        if (_selectionRoute.State.SelectedWorldEntity is null) return;
-        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
-        if (pos is null) return;
-        var v = pos.Value.Value;
-        _inspectorPanel?.SetTransformTexts(
-            v.X.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            v.Y.ToString("F3", System.Globalization.CultureInfo.InvariantCulture),
-            v.Z.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
-        _inspectorPanel?.SetTransformDraftState(false, false, null);
-    }
-
-    private void HandleTransformDraftChanged(string xText, string yText, string zText)
-    {
-        if (_selectionRoute.State.SelectedWorldEntity is null)
-        {
-            _inspectorPanel?.SetTransformDraftState(false, false, null);
-            return;
-        }
-
-        if (!EditorEntityTransformValidation.TryParse(xText, yText, zText,
-                out var newPos, out var error))
-        {
-            _inspectorPanel?.SetTransformDraftState(false, true, error);
-            return;
-        }
-
-        var currentPos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
-        if (currentPos is null)
-        {
-            _inspectorPanel?.SetTransformDraftState(false, false, null);
-            return;
-        }
-
-        var changed = newPos != currentPos.Value.Value;
-        _inspectorPanel?.SetTransformDraftState(
-            canApply: changed && !_groundPlacementState.IsActive,
-            canReset: changed,
-            error: null);
-    }
-
-    // ─── 数值拖拽处理 ──────────────────────────────────────
-
-    private void HandleScrubValueChanged(string entityId, TransformPositionAxis axis, double value)
-    {
-        if (_selectionRoute.State.SelectedWorldEntity is null) return;
-        if (_selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString() != entityId) { AppendWarningLog("数值拖拽目标实体已变化，忽略本次更新。"); return; }
-        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
-        if (pos is null) return;
-        var cur = pos.Value.Value;
-        var newPos = axis switch { TransformPositionAxis.X => new Vector3d(value, cur.Y, cur.Z), TransformPositionAxis.Y => new Vector3d(cur.X, value, cur.Z), _ => new Vector3d(cur.X, cur.Y, value) };
-        _transformApplyRoute.Apply(_transformApplyRoute.CurrentEntityTransform(_selectionRoute, _worldState) with { Position = newPos }, EditorEntityTransformOrigin.DragScrub, _selectionRoute, _worldState, _commitApplier, ScheduleScene3dFrame, AppendInfoLog);
-    }
-
-    private void HandleScrubCompleted(string entityId, TransformPositionAxis axis, double value) => AppendInfoLog($"数值拖拽完成：{axis} = {value:F3}");
-
-    private void HandleScrubCancelled(string entityId, TransformPositionAxis axis, double initialValue)
-    {
-        if (_selectionRoute.State.SelectedWorldEntity is null || _selectionRoute.State.SelectedWorldEntity.EntityId.Value.ToString() != entityId) return;
-        var pos = _worldState?.FindPosition(_selectionRoute.State.SelectedWorldEntity.EntityId);
-        if (pos is null) return;
-        var cur = pos.Value.Value;
-        var restored = axis switch { TransformPositionAxis.X => new Vector3d(initialValue, cur.Y, cur.Z), TransformPositionAxis.Y => new Vector3d(cur.X, initialValue, cur.Z), _ => new Vector3d(cur.X, cur.Y, initialValue) };
-        _transformApplyRoute.Apply(_transformApplyRoute.CurrentEntityTransform(_selectionRoute, _worldState) with { Position = restored }, EditorEntityTransformOrigin.DragScrub, _selectionRoute, _worldState, _commitApplier, ScheduleScene3dFrame, AppendInfoLog);
-        AppendInfoLog("数值拖拽已取消");
-    }
-
-    private void HandleGroundPlacementToggle()
-    {
-        _groundPlacementRoute.Toggle(_selectionRoute, _groundPlacementState, _sessionActive, _lifecycle, _inspectorPanel, _statusBarPanel, AppendWarningLog);
-    }
-
-    private void ApplyEntityTransform(SceneTransform transform, EditorEntityTransformOrigin origin)
-    {
-        _transformApplyRoute.Apply(transform, origin, _selectionRoute, _worldState, _commitApplier, ScheduleScene3dFrame, AppendInfoLog);
-    }
-
-    private SceneTransform CurrentEntityTransform()
-    {
-        return _transformApplyRoute.CurrentEntityTransform(_selectionRoute, _worldState);
-    }
+    /// <summary>Transform 编辑转发。委托至 _transformRoute。</summary>
+    private void ApplyEntityTransform(SceneTransform transform, EditorEntityTransformOrigin origin) =>
+        _transformRoute.ApplyEntityTransform(transform, origin);
 
     private void CompleteGroundPlacement(Vector3d groundPosition)
     {
