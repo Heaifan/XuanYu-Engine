@@ -7,13 +7,13 @@
 
 ## 一句话现状
 
-目录结构欠债全部还清 ✅。B 类 3 个中风险 + A 类 2 个已拆分，生产文件剩 **4 个大的**。
+目录结构欠债全部还清 ✅。B 类 3 个中风险 + A 类 3 个已拆分，生产文件剩 **3 个大的**。
 
 ---
 
 ## 分类详情
 
-### A 类 — 8.7.8 大件专项（4 个，必须单独拆）
+### A 类 — 8.7.8 大件专项（3 个，必须单独拆）
 
 这几个文件都超过 300 行，每个都需要一个专门的拆分阶段，不能顺手带掉。
 
@@ -22,7 +22,7 @@
 | `EditorShell.axaml.cs` | 969 | 编辑器主入口，牵一发动全身 |
 | `EditorPreferencesWindow.axaml.cs` | 587 | 设置窗口，业务耦合重 |
 | `VulkanRenderContext.cs` | 476 | 渲染上下文核心，调用链深 |
-| `VulkanClearProbe.cs` | 416 | 清屏诊断，涉及多管道 |
+| ~~`VulkanClearProbe.cs`~~ | ~~416~~ | ✅ **8.7.8E-2B 已拆分** — 99 行门面 + 96 行 ContextScope + 42 行 DeviceSelector + 60 行 SurfaceQuery + 98 行 RenderTargetScope + 54 行 RenderSubmitScope |
 | ~~`GameProjectLoader.cs`~~ | ~~392~~ | ✅ **8.7.8C-2 已拆分** — 82 行门面 + 89 行 ManifestReader + 100 行 FolderParser + 52 行 ExtensionParser |
 | ~~`VulkanSwapchainProbe.cs`~~ | ~~301~~ | ✅ **8.7.8D-2B 已拆分** — 78 行门面 + 100 行 ContextScope + 46 行 DeviceSelector + 64 行 SurfaceQuery |
 

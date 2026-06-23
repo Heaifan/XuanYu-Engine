@@ -3432,3 +3432,39 @@ E-2B 拆完后，Probe/ 目录 5 文件 = 上限，Clear/ 根目录 2 文件 ≤
 | Build | ✅ 0 Error |
 | `dotnet test` (架构) | ✅ 5/5 |
 | 未改业务逻辑 | ✅ 只移动文件位置 |
+
+---
+
+### 8.7.8E-2B — VulkanClearProbe SRP 拆分
+
+将 `VulkanClearProbe`（416 行）拆成 6 个小文件，不改 `ProbeWindows()` 签名：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanClearProbe.cs` | 99 | 薄门面 — 主编排 + Acquire/Submit/Present |
+| `VulkanClearProbeContextScope.cs` | 96 | Instance+Surface+Device+函数指针 |
+| `VulkanClearProbeDeviceSelector.cs` | 42 | PhysicalDevice 选择（Graphics+Present）|
+| `VulkanClearProbeSurfaceQuery.cs` | 60 | SurfaceCaps/Formats/PresentModes |
+| `Render/VulkanClearProbeRenderTargetScope.cs` | 98 | Swapchain+ImageViews+RenderPass+Framebuffers |
+| `Render/VulkanClearProbeRenderSubmitScope.cs` | 54 | CommandPool+Buffer+Semaphore+Fence |
+
+#### 目录
+
+```
+Clear/                     2 文件（Info+Status）≤5 ✅
+Clear/Probe/               4 文件 ≤5 ✅
+Clear/Probe/Render/        2 文件 ≤5 ✅
+```
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet test` (架构) | ✅ 5/5 |
+| `dotnet test` (完整) | ✅ 624/625（1 flaky pre-existing：中文排序）|
+| 生产文件 ≤100 行 | ✅ 全部达标（99+96+42+60+98+54）|
+| 目录文件数 | ✅ 全部 ≤5 |
+| 白名单删除 | ✅ `VulkanClearProbe.cs` 移出 |
+| 债务路线图 | ✅ A 类 4→3 个 |

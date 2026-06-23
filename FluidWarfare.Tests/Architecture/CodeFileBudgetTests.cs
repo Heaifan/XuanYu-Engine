@@ -27,7 +27,6 @@ public sealed class CodeFileBudgetTests
 
         // Vulkan（到期：8.7.7C）
         @"FluidWarfare.Render.Vulkan\Context\VulkanRenderContext.cs",
-        @"FluidWarfare.Render.Vulkan\Clear\Probe\VulkanClearProbe.cs",
 
         // Render 层（到期：8.7.7E）
         @"FluidWarfare.Render\Camera\Orbit\SceneOrbitCameraMotion.cs",
