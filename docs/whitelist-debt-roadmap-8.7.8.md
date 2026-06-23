@@ -20,7 +20,7 @@
 | 文件 | 行数 | 为什么难拆 |
 |------|------|-----------|
 | `EditorShell.axaml.cs` | 969 | 编辑器主入口，牵一发动全身 |
-| `EditorPreferencesWindow.axaml.cs` | 587 | 设置窗口，业务耦合重 |
+| ~~`EditorPreferencesWindow.axaml.cs`~~ | ~~587~~ | ✅ **8.7.8G-2 已拆分** — 78 行门面 + 77 行 Capture + 81 行 BindingList + 79 行 DraftHandler + Helpers |
 | ~~`VulkanRenderContext.cs`~~ | ~~476~~ | ✅ **8.7.8F-2 已拆分** — 92 行门面 + 78 行 Setup + 32 行 Selector；死代码 Locked in Legacy |
 | ~~`VulkanClearProbe.cs`~~ | ~~416~~ | ✅ **8.7.8E-2B 已拆分** — 99 行门面 + 96 行 ContextScope + 42 行 DeviceSelector + 60 行 SurfaceQuery + 98 行 RenderTargetScope + 54 行 RenderSubmitScope |
 | ~~`GameProjectLoader.cs`~~ | ~~392~~ | ✅ **8.7.8C-2 已拆分** — 82 行门面 + 89 行 ManifestReader + 100 行 FolderParser + 52 行 ExtensionParser |

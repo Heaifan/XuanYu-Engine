@@ -20,9 +20,6 @@ public sealed class CodeFileBudgetTests
         // ═══ EditorShell 主线拆解（到期：8.7.6.8）═══════════════
         @"FluidWarfare.Editor.Windows\Shell\EditorShell.axaml.cs",
 
-        // UI 树面板（到期：8.7.7D）
-        @"FluidWarfare.Editor.Windows\Preferences\EditorPreferencesWindow.axaml.cs",
-
         // Editor 业务层（到期：8.7.8）
 
         // Render 层（到期：8.7.7E）

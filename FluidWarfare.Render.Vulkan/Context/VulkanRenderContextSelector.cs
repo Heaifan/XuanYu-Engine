@@ -25,7 +25,7 @@ sealed unsafe class VulkanRenderContextSelector
             fixed (QueueFamilyProperties* qPtr = qProps) vk.GetPhysicalDeviceQueueFamilyProperties(d, ref qc, qPtr);
             for (uint i = 0; i < qc; i++)
                 if (qProps[i].QueueCount > 0 && qProps[i].QueueFlags.HasFlag(QueueFlags.GraphicsBit))
-                { pd = d; qi = i; name = name; return true; }
+                { pd = d; qi = i; return true; }
         }
         return false;
     }
