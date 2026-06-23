@@ -30,7 +30,6 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Render.Vulkan\Clear\VulkanClearProbe.cs",
         @"FluidWarfare.Render.Vulkan\Swapchain\VulkanSwapchainProbe.cs",
         @"FluidWarfare.Render.Vulkan\Device\VulkanDeviceProbe.cs",
-        @"FluidWarfare.Render.Vulkan\Surface\VulkanSurfaceProbe.cs",
 
         // Render 层（到期：8.7.7E）
         @"FluidWarfare.Render\Camera\Orbit\SceneOrbitCameraMotion.cs",

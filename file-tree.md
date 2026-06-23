@@ -273,7 +273,7 @@
 87. Milestone 7.4：新增 `FluidWarfare.Tests/Render/Vulkan/Device/VulkanDeviceInfoTests.cs`。
 88. Milestone 7.5：新增 `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceStatus.cs`。
 89. Milestone 7.5：新增 `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceInfo.cs`。
-90. Milestone 7.5：新增 `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceProbe.cs`。
+90. Milestone 7.5：新增 `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceProbe.cs`（8.7.8B-2 拆为 66 行门面 + 98 行 InstanceScope）。
 91. Milestone 7.5：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/VulkanViewportNativeHostInfo.cs`。
 92. Milestone 7.5：新增 `FluidWarfare.Tests/Render/Vulkan/Surface/VulkanSurfaceInfoTests.cs`。
 93. Milestone 7.6：新增 `FluidWarfare.Editor.Windows/Panels/Viewport/NativeHost/WindowsVulkanViewportHostState.cs`。
@@ -932,7 +932,7 @@ FluidWarfare/
 |   |-- Context/     (VulkanRenderContext)
 |   |-- Device/      (VulkanDeviceInfo/Probe/Status)
 |   |-- Instance/    (VulkanInstanceInfo/Probe/Status)
-|   |-- Surface/     (VulkanSurfaceInfo/Probe/Status)
+|   |-- Surface/     (VulkanSurfaceInfo/Probe/InstanceScope/Status)
 |   |-- Swapchain/   (VulkanSwapchainInfo/Probe/Status)
 |   |-- Clear/       (VulkanClearInfo/Probe/Status)
 |   |-- Markers/     (VulkanMarkerDrawInfo/Result/Status, VulkanMarkerClearRectRenderer)
@@ -1227,7 +1227,8 @@ get_tree.bat
 | `FluidWarfare.Tests/Render/Vulkan/Device/VulkanDeviceInfoTests.cs` | 验证 Vulkan Device 探测结果模型的基础语义与轻量 Probe 输出 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceStatus.cs` | Vulkan Surface 创建探测状态枚举 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceInfo.cs` | Vulkan Surface 创建探测结果模型，保存状态、中文说明、平台、原生句柄状态与耗时 | 测试通过 |
-| `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceProbe.cs` | 接收 Windows 原生句柄，创建并立即释放 VkSurfaceKHR 与 VkInstance，不创建 Device 或 Swapchain | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceProbe.cs` | 接收 Windows 原生句柄，创建并立即释放 VkSurfaceKHR（66 行门面，内部使用 VulkanSurfaceInstanceScope） | 测试通过 |
+| `FluidWarfare.Render.Vulkan/Surface/VulkanSurfaceInstanceScope.cs` | 临时 VkInstance 生命周期 + Win32 Surface 创建（98 行，IDisposable） | 可运行 |
 | `FluidWarfare.Tests/Render/Vulkan/Surface/VulkanSurfaceInfoTests.cs` | 验证 Vulkan Surface 探测结果模型的基础语义，不创建真实 Surface | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawStatus.cs` | Vulkan 点位绘制状态枚举 | 测试通过 |
 | `FluidWarfare.Render.Vulkan/Markers/VulkanMarkerDrawInfo.cs` | 点位绘制信息模型，包含显示名、像素坐标、尺寸与颜色，支持基于真实视口宽高的 FromWorldPosition 坐标映射 | 测试通过 |

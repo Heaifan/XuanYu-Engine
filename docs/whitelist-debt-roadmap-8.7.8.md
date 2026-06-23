@@ -26,13 +26,13 @@
 | `GameProjectLoader.cs` | 392 | 项目加载，流程长 |
 | `VulkanSwapchainProbe.cs` | 301 | Swapchain 诊断探针 |
 
-### B 类 — 8.7.8 中风险专项（2 个，有风险但比 A 类轻）
+### B 类 — 8.7.8 中风险专项（1 个，有风险但比 A 类轻）
 
 | 文件 | 行数 | 注意事项 |
 |------|------|---------|
 | ~~`WindowsViewportInputTranslator.cs`~~ | ~~284~~ | ✅ **8.7.8A-2 已拆分** — 54 行门面 + 3 子组件 |
 | `VulkanDeviceProbe.cs` | 288 | Device 诊断，Vulkan 核心 |
-| `VulkanSurfaceProbe.cs` | 203 | Surface 诊断，Vulkan 核心 |
+| ~~`VulkanSurfaceProbe.cs`~~ | ~~203~~ | ✅ **8.7.8B-2 已拆分** — 66 行门面 + 98 行 InstanceScope |
 
 ### C 类 — F-6 已清 ✅
 

@@ -3256,3 +3256,29 @@ C 类 4 个文件中，清了 2 个，2 个因涉及相机运动算法放弃。
 | 目录文件数 (Input/) | 5（含 Win32KeyCodeMapper）≤5 ✅ |
 | 白名单删除 | ✅ `WindowsViewportInputTranslator.cs` 移出白名单 |
 | 行白名单预算 | 49→48 |
+
+---
+
+### 8.7.8B-2 — VulkanSurfaceProbe SRP 拆分
+
+将 `VulkanSurfaceProbe`（203 行）拆成 2 个小文件，不改外部 API 签名：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanSurfaceProbe.cs` | 66 | 薄门面 — 参数校验、编排探针流程、包装诊断结果 |
+| `VulkanSurfaceInstanceScope.cs` | 98 | 临时 VkInstance 生命周期 + Win32 Surface 创建（IDisposable） |
+
+Scope 完全隐藏在 `VulkanSurfaceProbe.ProbeWindows(...)` 内部，调用方无需感知。
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet test` (架构) | ✅ 5/5 |
+| `dotnet test` (完整) | ✅ 624/625（1 flaky pre-existing：中文排序） |
+| 生产文件 ≤100 行 | ✅ 全部达标 |
+| 目录文件数 (Surface/) | 4（含 Info + Status）≤5 ✅ |
+| 白名单删除 | ✅ `VulkanSurfaceProbe.cs` 移出白名单 |
+| 债务路线图 | ✅ 已更新 |
