@@ -22,6 +22,7 @@
 2. **8.7.7F-2**：3 项立即可清白名单删除（InspectorPanel 84 行 / NativeHost 87 行 / SceneCameraPose 99 行）
 3. **8.7.7F-3**：小修可清 — 移动 4 目录子目录化（Validation/Camera/Tree/Drag）+ 压缩 9 文件到 ≤100 行
 4. **8.7.7F-4A**：中等债务第一组 — DebugDockPanel SRP 提取 (145→53)、ViewportPlaceholderPanel SRP 提取 (189→46)、WorldHierarchy 目录 8→5
+5. **8.7.7F-4B**：中等目录债务 — Panels/Viewport 11 文件子目录化 → 0、Transform/Gizmo 8 文件子目录化 → 0
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 

@@ -13,7 +13,7 @@ public sealed class CodeFileBudgetTests
     // 目的：防止 AI 无监督扩大债务。
     // 每次新增白名单条目必须同步递增
     const int LineWhitelistBudget = 53;
-    const int DirectoryWhitelistBudget = 6;
+    const int DirectoryWhitelistBudget = 4;
 
     static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -21,7 +21,7 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Editor.Windows\Shell\EditorShell.axaml.cs",
 
         // ═══ UI God 面板（到期：8.7.7A）══════════════════════════
-        @"FluidWarfare.Editor.Windows\Panels\Viewport\VulkanViewportHostPanel.axaml.cs",
+        @"FluidWarfare.Editor.Windows\Panels\Viewport\HostInfo\VulkanViewportHostPanel.axaml.cs",
         @"FluidWarfare.Editor.Windows\Panels\Viewport\Input\WindowsViewportInputTranslator.cs",
 
         // UI 树面板（到期：8.7.7D）
@@ -82,8 +82,6 @@ public sealed class CodeFileBudgetTests
     static readonly HashSet<string> s_directoryWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
         @"FluidWarfare.Render\ViewportNavigation",
-        @"FluidWarfare.Editor.Windows\Panels\Viewport",
-        @"FluidWarfare.Editor.Windows\Viewport\Transform\Gizmo",
     };
 
     static readonly string[] s_forbiddenNames =

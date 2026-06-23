@@ -3070,6 +3070,48 @@ Render/Probe/
 
 ---
 
+### 8.7.7F-4B — 中等目录债务清理
+
+清理剩余 3 个目录白名单中的 2 个，全部通过子目录归类完成。
+
+#### Panels/Viewport（11 文件 → 子目录，目录白名单删除 ✅）
+
+| 子目录 | 文件数 | 内容 |
+|--------|--------|------|
+| `Placeholder/` | 4 | ViewportPlaceholderPanel 全部 4 个 partial 文件 |
+| `Summary/` | 3 | ViewportEntitySummary, RenderObjectSummary, RenderSceneSummary |
+| `HostInfo/` | 4 | VulkanViewportHostInfo/Panel/State/NativeHostInfo |
+| 根目录 | **0** ✅ | 全部移入子目录 |
+
+#### Transform/Gizmo（8 文件 → 子目录，目录白名单删除 ✅）
+
+| 子目录 | 文件数 | 内容 |
+|--------|--------|------|
+| `Core/` | 3 | MoveGizmoElement, GizmoDist, MoveGizmoVisualState |
+| `Layout/` | 2 | MoveGizmoLayout, PresentedMoveGizmoSnapshot |
+| `Interaction/` | 3 | MoveGizmoHitTest, MoveGizmoInteraction, MoveGizmoDrawList |
+| 根目录 | **0** ✅ | 全部移入子目录 |
+
+#### 白名单清理
+
+| 条目 | 类型 | 之前 | 之后 | 操作 |
+|------|------|------|------|------|
+| `Panels\Viewport` | 目录 | 11 文件 | 0 (子目录化) | ✅ 删除 |
+| `Transform\Gizmo` | 目录 | 8 文件 | 0 (子目录化) | ✅ 删除 |
+| `HostInfo\VulkanViewportHostPanel.axaml.cs` | 行路径 | — | 更新为 HostInfo/ 路径 | ✅ |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 5/5 |
+| 目录预算 | 6→4 |
+| 目录占用 | 3→1 |
+| 剩余目录白名单 | ViewportNavigation(9) 仅 1 项 |
+
+---
+
 ### 8.7.7F-2 — 立即可清白名单删除
 
 删除 3 项 ≤100 行的历史白名单残留，不改代码逻辑。
