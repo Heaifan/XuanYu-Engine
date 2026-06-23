@@ -3776,3 +3776,25 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | 白名单删除 | ❌ 不删除 |
 | Route 装配顺序 | ✅ 未改动 |
 | Scene3D 命令 / 日志 / Focus | ✅ 不变 |
+
+### 8.7.8H-5 — EditorShell 收口审计与白名单例外登记
+
+宣告 8.7.8H 阶段完成。EditorShell 从 3,041 行压到 **491 行**（含 using，body ~396 行），累计削减 **2,550 行**。
+
+#### 关键决策
+
+| 决策 | 结论 |
+|------|------|
+| H-4C Transform 管线 | ❌ **暂缓** — 收益 ~30 行，风险影响 Gizmo/移动/Preview 全链路 |
+| EditorShell 白名单 | ✅ **保留** — 组合根例外，不可删除 |
+| 后续 Shell 策略 | **只出不进** — 新增职责必须进 Route / 子模块 |
+| 8.7.8H 阶段 | ✅ **正式完成** |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 收口审计文档 | `docs/audit-EditorShell-closeout-8.7.8H-5.md` |
+| 白名单策略 | 组合根例外，保留 |

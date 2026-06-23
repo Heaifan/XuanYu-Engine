@@ -37,6 +37,7 @@
 17. **8.7.8H-2G**：EditorShell 第七刀提取 — 项目加载 + World Bootstrap → 1 新文件（46 行），Shell 576→567 行
 18. **8.7.8H-4A**：EditorShell P1 清理 — Raw 输入 + 视口聚焦 + 空删除 + 尺寸工具 → 3 新文件（26+43+24），Shell 656→496 行（含 using）
 19. **8.7.8H-4B**：EditorShell P2 清理 — 日志委托 + 视口焦点 + Scene3D 命令 → 3 新文件（19+41+18），Shell 496→491 行
+20. **8.7.8H-5**：EditorShell 收口审计 — 产出 `docs/audit-EditorShell-closeout-8.7.8H-5.md`，宣告 H 阶段完成。Shell 最终 491 行（含 using 95；body ~396 行），3,041→491（-2,550）
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
