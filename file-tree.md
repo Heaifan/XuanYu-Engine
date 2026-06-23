@@ -37,7 +37,8 @@
 17. **8.7.8H-2G**：EditorShell 第七刀提取 — 项目加载 + World Bootstrap → 1 新文件（46 行），Shell 576→567 行
 18. **8.7.8H-4A**：EditorShell P1 清理 — Raw 输入 + 视口聚焦 + 空删除 + 尺寸工具 → 3 新文件（26+43+24），Shell 656→496 行（含 using）
 19. **8.7.8H-4B**：EditorShell P2 清理 — 日志委托 + 视口焦点 + Scene3D 命令 → 3 新文件（19+41+18），Shell 496→491 行
-20. **8.7.8H-5**：EditorShell 收口审计 — 产出 `docs/audit-EditorShell-closeout-8.7.8H-5.md`，宣告 H 阶段完成。Shell 最终 491 行（含 using 95；body ~396 行），3,041→491（-2,550）
+20. **8.7.8H-5**：EditorShell 收口审计 — 产出 `docs/audit-EditorShell-closeout-8.7.8H-5.md`，宣告 H 阶段完成
+21. **8.7.8-Z2**：EditorShell 组合根彻底薄化 — 创建 Composition/Core + Composition/Wiring 子模块。EditorShell.axaml.cs 从 491 行压到 **24 行**并删除白名单。3,041→24（-3,017）
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -444,7 +445,7 @@ Phase 1 证明最小闭环。
 ### 已完成的架构重构
 
 **EditorShell（8.7.6.1 — 8.7.6.8E）：**
-- EditorShell.axaml.cs：3,041 行 → **491 行**（含 using 95；body ~396 行；H 系列累计减 2,550）
+- EditorShell.axaml.cs：3,041 行 → **24 行**（Z2 薄化后；累计减 3,017）[✅ 白名单已删除]
 - 提取了 **26+ Route 类**（每个 ≤100 行），涵盖：
   - Scene3D 帧路径、帧提交、Session 生命周期
   - 变换交互、Transform 应用层、Gizmo 呈现
@@ -779,11 +780,18 @@ FluidWarfare/
 |   |       `-- WorldHierarchyTreeViewState.cs
 |   |-- Shell/
 |   |   |-- EditorShell.axaml
-|   |   |-- EditorShell.axaml.cs (491 行, 含 using 95 行；body ~396 行；原 3,041 行)
+|   |   |-- EditorShell.axaml.cs (**24 行**, Z2 薄化；原 3,041 → Z2 后 24 行) [✅ 白名单已删除]
 |   |   |-- EditorSelection.cs
 |   |   |-- Commands/
 |   |   |   `-- EditorShellWindowCommandsRoute.cs (24 行, H-2D)
 |   |   |-- Composition/
+|   |   |   |-- Core/
+|   |   |   |   |-- EditorShellComposition.cs (59 行, Z2)
+|   |   |   |   |-- EditorShellCompositionRuntime.cs (62 行, Z2)
+|   |   |   |   `-- EditorShellContext.cs (88 行, Z2)
+|   |   |   |-- Wiring/
+|   |   |   |   |-- EditorShellEventWiring.cs (64 行, Z2)
+|   |   |   |   `-- EditorShellLifecycle.cs (25 行, Z2)
 |   |   |   |-- EditorShellControlRefs.cs
 |   |   |   |-- EditorShellRouteBuild.cs
 |   |   |   `-- EditorShellRouteSet.cs      (26+ Route 聚合)
@@ -1471,7 +1479,7 @@ get_tree.bat
 | `GameProjects/SampleProject/icons/sample_icon.svg` | SampleProject 图标内容入口占位文件，仅用于验证内容文件扫描，不代表正式图标加载 | 占位 |
 | `GameProjects/SampleProject/icons/.gitkeep` | SampleProject 图标扩展目录占位文件，用于验证项目自定义内容目录声明 | 可加载 |
 | `*/.gitkeep` | 保留当前尚未写入代码或资源的目录 | 已创建 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | **Editor 主壳（重构后）** 3,041→496 行（含 using 93），移除 -2,545 行职责到 26+ Route 类 + 14 个 H-x 文件 | 测试通过 / Build 0 Error |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | **Editor 主壳（薄化后）** 3,041→**24 行**，Z2 移除组合根职责到 Composition/ 子模块。白名单已删除 ✅ | 测试通过 / Build 0 Error |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellRouteSet.cs` | 聚合 ~26 个 Route 引用，EditorShell 的唯一 Route 容器 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellRouteBuild.cs` | 构造 Route 的 Factory，负责 Route 初始化顺序 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellControlRefs.cs` | FindControls 结果的容器，保存所有 Axaml 控件引用 | 可运行 |

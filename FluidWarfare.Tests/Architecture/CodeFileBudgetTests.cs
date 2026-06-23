@@ -17,9 +17,6 @@ public sealed class CodeFileBudgetTests
 
     static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
-        // ═══ EditorShell 主线拆解（到期：8.7.6.8）═══════════════
-        @"FluidWarfare.Editor.Windows\Shell\EditorShell.axaml.cs",
-
         // Editor 业务层（到期：8.7.8）
 
         // Render 层（到期：8.7.7E）

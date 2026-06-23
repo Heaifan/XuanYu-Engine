@@ -3777,6 +3777,36 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | Route 装配顺序 | ✅ 未改动 |
 | Scene3D 命令 / 日志 / Focus | ✅ 不变 |
 
+### 8.7.8-Z2 — EditorShell 组合根彻底薄化
+
+将 EditorShell.axaml.cs 从 491 行（含 using）压到 **24 行**，并从生产白名单移除。
+
+#### 操作
+
+| 操作 | 行数 | 说明 |
+|------|------|------|
+| GlobalUsings.cs | — | 95 个 using 移入全局 using |
+| Shell/Composition/Core/EditorShellContext.cs | 88 | 上下文：所有控件/Route/状态字段 |
+| Shell/Composition/Core/EditorShellComposition.cs | 59 | Build：创建上下文/H-x 路由/接线/初始化 |
+| Shell/Composition/Core/EditorShellCompositionRuntime.cs | 62 | 运行时辅助（ScheduleFrame/BuildInputRequest/Transform 管线）|
+| Shell/Composition/Wiring/EditorShellEventWiring.cs | 64 | 事件接线（原 SubscribePanelEvents）|
+| Shell/Composition/Wiring/EditorShellLifecycle.cs | 25 | 生命周期委托（Attach/Detach）|
+| **EditorShell.axaml.cs** | **491→24** | 仅保留 InitializeComponent + 生命周期转发 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (全量) | ✅ 624/625（1 flaky pre-existing）|
+| `dotnet test` (架构) | ✅ 5/5 |
+| EditorShell ≤100 行 | ✅ **24 行** |
+| 生产白名单 | ✅ **EditorShell 已移除**，余 2 相机算法 |
+| 目录合规 | ✅ Composition/ 3 + Core/ 3 + Wiring/ 2，全部 ≤5 |
+| 禁用命名 | ✅ 无 Manager/Helper/Utils |
+| 不得使用 partial 拆 Shell | ✅ 未使用 |
+| Route 装配顺序 | ✅ 未改动 |
+
 ### 8.7.8H-5 — EditorShell 收口审计与白名单例外登记
 
 宣告 8.7.8H 阶段完成。EditorShell 从 3,041 行压到 **491 行**（含 using，body ~396 行），累计削减 **2,550 行**。
