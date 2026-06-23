@@ -99,7 +99,7 @@
 **新面板/功能区域：**
 43. 新增 `Panels/DebugDock/DebugDockPanel.axaml` + `.axaml.cs` — 渲染调试页签（RenderScene/渲染场景/性能）。
 44. 新增 `Panels/HierarchyVisual/`（4 个文件）— 层级可视化画布。
-45. 新增 `Panels/Viewport/Input/WindowsViewportInputTranslator.cs`（284 行）— 原始事件转 EditorInputMatch。
+45. 新增 `Panels/Viewport/Input/`（4 文件：门面 54 行 + 修饰键状态 37 行 + 原始翻译 76 行 + 手势匹配 28 行）— 原始事件转 EditorInputMatch（8.7.8A-2 SRP 拆分）。
 46. 新增 `Panels/Viewport/Input/Win32KeyCodeMapper.cs`— Win32 键码映射（⚠️ 与 Editor 项目重复，待清理）。
 47. 新增 `Panels/Viewport/Tools/`（3 个文件）— 工具面板。
 48. 新增 `Assets/Icons/Hierarchy/`（17 个 SVG 图标）— 项目树和世界树图标。
@@ -698,7 +698,10 @@ FluidWarfare/
 |   |   |-- Viewport/
 |   |   |   |-- Input/
 |   |   |   |   |-- Win32KeyCodeMapper.cs   (← 重复副本, 待清理)
-|   |   |   |   `-- WindowsViewportInputTranslator.cs (284 行)
+|   |   |   |   |-- WindowsViewportGestureMatch.cs (28 行)
+|   |   |   |-- WindowsViewportModifierState.cs (37 行)
+|   |   |   |-- WindowsViewportRawInputTranslate.cs (76 行)
+|   |   |   `-- WindowsViewportInputTranslator.cs (54 行)  (门面)
 |   |   |   |-- NativeHost/
 |   |   |   |   |-- Input/
 |   |   |   |   |   |-- Pointer/
@@ -1469,7 +1472,7 @@ get_tree.bat
 | `FluidWarfare.Editor.Windows/Viewport/Transform/Gizmo/MoveGizmoHitTest.cs` | Move Gizmo 命中检测（轴/平面） | 可运行 |
 | `FluidWarfare.Editor.Windows/Viewport/Transform/Gizmo/MoveGizmoInteraction.cs` | Gizmo 交互状态机（悬停/拖拽/释放） | 可运行 |
 | `FluidWarfare.Editor.Windows/Viewport/Transform/Presentation/MoveGizmoFrameSource.cs` | Gizmo 帧输入源（Gizmo 可见性/悬停结果/交互状态） | 可运行 |
-| `FluidWarfare.Editor.Windows/Panels/Viewport/Input/WindowsViewportInputTranslator.cs` | Win32 原始事件 → EditorInputMatch 翻译器（284 行，最大输入文件） | 可运行 |
+| `FluidWarfare.Editor.Windows/Panels/Viewport/Input/WindowsViewportInputTranslator.cs` | Win32 原始事件 → EditorInputMatch 翻译器门面（54 行，委托 3 个子组件） | 可运行 |
 | `FluidWarfare.Editor/Input/Runtime/EditorInputService.cs` | 编辑器输入服务（Action/Context/Binding → Match 管线） | 测试通过 |
 | `FluidWarfare.Editor/Input/Bindings/EditorInputBindingSet.cs` | 输入绑定集合（Action ↔ Gesture 映射） | 测试通过 |
 | `FluidWarfare.Editor/Input/Actions/EditorInputActionCatalog.cs` | 输入动作目录（所有可绑定动作定义） | 已创建 |
