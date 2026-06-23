@@ -67,7 +67,7 @@ public sealed class PerspectiveOrthographicPickingTests
             mvp = VulkanCameraMatrices.ComputeVulkanMVP(camInfo, aspect);
         }
 
-        VulkanSceneRayBuilder.TryInvert(mvp, out var inv, out _);
+        VulkanMatrixInvert.TryInvert(mvp, out var inv, out _);
 
         return new PresentedCameraSnapshot
         {

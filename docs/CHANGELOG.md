@@ -3108,6 +3108,54 @@ Render/Probe/
 | `dotnet test` (架构) | ✅ 5/5 |
 | 目录预算 | 6→4 |
 | 目录占用 | 3→1 |
+
+---
+
+### 8.7.7F-4C — 中等债务第二组清理
+
+**最后 1 个目录白名单 + 2 个文件白名单删除。**
+
+#### ViewportNavigation 目录白名单 ✅（9→0）
+
+| 子目录 | 文件数 | 内容 |
+|--------|--------|------|
+| `Core/` | 5 | AxisProjection, Action, DragMode, Element, Types |
+| `Layout/` | 2 | NavigationLayout, LayoutCompute |
+| `Interaction/` | 2 | HitTest, PressResult |
+
+#### VulkanSceneRayBuilder SRP 拆分（167→40 行 ✅）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanSceneRayBuilder.cs` | 40 | TryBuild 射线构建 |
+| `Math/VulkanMatrixInvert.cs` | 25 | 矩阵求逆 (TryInvert) |
+
+#### VulkanCameraMatrices SRP 拆分（189→21 行 ✅）
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `VulkanCameraMatrices.cs` | 21 | MVP/OrthoMVP/Perspective |
+| `Math/VulkanViewMatrix.cs` | 19 | LookAt 矩阵 |
+| `Math/VulkanMatrixOperations.cs` | 15 | Mul/CreateTranslation/CreateScale |
+
+#### 白名单清理
+
+| 条目 | 类型 | 之前 | 之后 | 操作 |
+|------|------|------|------|------|
+| `ViewportNavigation` | 目录 | 9 文件 | 子目录化 | ✅ 全局最后一个目录白名单删除 |
+| `VulkanCameraMatrices.cs` | 行 | 189 | 21 | ✅ 删除 |
+| `VulkanSceneRayBuilder.cs` | 行 | 167 | 40 | ✅ 删除 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 5/5 |
+| 行预算 | 53→51 |
+| 行占用 | 35→33 |
+| 目录预算 | 4→3 |
+| 目录占用 | 1→0 🎯 |
 | 剩余目录白名单 | ViewportNavigation(9) 仅 1 项 |
 
 ---

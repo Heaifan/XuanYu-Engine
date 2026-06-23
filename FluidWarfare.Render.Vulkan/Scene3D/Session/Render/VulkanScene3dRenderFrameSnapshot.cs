@@ -20,7 +20,7 @@ unsafe partial class VulkanScene3dSession
         float[] vp)
     {
         // 已成功 Present → 发布相机快照供 Picking 使用
-        VulkanSceneRayBuilder.TryInvert(vp, out var invVp, out _);
+        VulkanMatrixInvert.TryInvert(vp, out var invVp, out _);
         _lastPresentedSnapshot = new PresentedCameraSnapshot
         {
             CameraPose = cameraPose,

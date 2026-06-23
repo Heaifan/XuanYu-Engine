@@ -28,9 +28,9 @@ partial class VulkanScene3dSession
         for (var i = 0; i < _cachedUnitDraws.Length; i++)
         {
             var draw = _cachedUnitDraws[i];
-            var mvp = VulkanCameraMatrices.Mul(VulkanCameraMatrices.Mul(vp,
-                VulkanCameraMatrices.CreateTranslation(draw.X, draw.Y, draw.Z)),
-                VulkanCameraMatrices.CreateScale(draw.Scale));
+            var mvp = VulkanMatrixOperations.Mul(VulkanMatrixOperations.Mul(vp,
+                VulkanMatrixOperations.CreateTranslation(draw.X, draw.Y, draw.Z)),
+                VulkanMatrixOperations.CreateScale(draw.Scale));
             data[i] = new(mvp, draw.EntityId == _selectedEntityId
                 ? VulkanScene3dPushConstants.SelectedTint : VulkanScene3dPushConstants.NormalTint);
             count++;
@@ -42,10 +42,10 @@ partial class VulkanScene3dSession
     {
         if (!_cursorState.IsVisible || _cursorState.WorldPosition is null || !_cursorBufOk || _cursorBuffer.Handle == 0)
             return null;
-        var ct = VulkanCameraMatrices.CreateTranslation(
+        var ct = VulkanMatrixOperations.CreateTranslation(
             (float)_cursorState.WorldPosition.Value.X, (float)_cursorState.WorldPosition.Value.Y,
             (float)_cursorState.WorldPosition.Value.Z + 0.02f);
-        return new(_cursorBuffer, _cursorVertexCount, VulkanCameraMatrices.Mul(vp, ct));
+        return new(_cursorBuffer, _cursorVertexCount, VulkanMatrixOperations.Mul(vp, ct));
     }
 
     (int, Silk.NET.Vulkan.Buffer?, Pipeline?, PipelineLayout?) BuildOverlay(SceneCameraPose pose)

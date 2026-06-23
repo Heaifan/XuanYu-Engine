@@ -12,8 +12,8 @@ public sealed class CodeFileBudgetTests
     // 每次新增白名单条目必须同时递增此值。
     // 目的：防止 AI 无监督扩大债务。
     // 每次新增白名单条目必须同步递增
-    const int LineWhitelistBudget = 53;
-    const int DirectoryWhitelistBudget = 4;
+    const int LineWhitelistBudget = 51;
+    const int DirectoryWhitelistBudget = 3;
 
     static readonly HashSet<string> s_lineWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -36,8 +36,6 @@ public sealed class CodeFileBudgetTests
         @"FluidWarfare.Render.Vulkan\Swapchain\VulkanSwapchainProbe.cs",
         @"FluidWarfare.Render.Vulkan\Device\VulkanDeviceProbe.cs",
         @"FluidWarfare.Render.Vulkan\Surface\VulkanSurfaceProbe.cs",
-        @"FluidWarfare.Render.Vulkan\Camera\VulkanCameraMatrices.cs",
-        @"FluidWarfare.Render.Vulkan\Camera\VulkanSceneRayBuilder.cs",
 
         // Render 层（到期：8.7.7E）
         @"FluidWarfare.Render\Camera\Orbit\SceneOrbitCameraMotion.cs",
@@ -81,7 +79,7 @@ public sealed class CodeFileBudgetTests
 
     static readonly HashSet<string> s_directoryWhitelist = new(StringComparer.OrdinalIgnoreCase)
     {
-        @"FluidWarfare.Render\ViewportNavigation",
+        // (No directory whitelist entries remain for Scene3D/Navigation)
     };
 
     static readonly string[] s_forbiddenNames =

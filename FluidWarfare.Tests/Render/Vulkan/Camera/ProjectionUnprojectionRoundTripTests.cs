@@ -55,7 +55,7 @@ public sealed class ProjectionUnprojectionRoundTripTests
         // 2. 计算 MVP 和逆矩阵
         var aspect = ViewportW / ViewportH;
         var mvp = VulkanCameraMatrices.ComputeVulkanMVP(camera, aspect);
-        VulkanSceneRayBuilder.TryInvert(mvp, out var invMvp, out var invErr);
+        VulkanMatrixInvert.TryInvert(mvp, out var invMvp, out var invErr);
         Assert.NotNull(invMvp);
 
         // 3. 创建模拟 Present 的快照
