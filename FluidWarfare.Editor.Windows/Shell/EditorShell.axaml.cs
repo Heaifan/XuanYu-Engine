@@ -82,6 +82,8 @@ using FluidWarfare.Render.Vulkan.Surface;
 using FluidWarfare.Render.Vulkan.Validation;
 using FluidWarfare.Render.Vulkan.Swapchain;
 using FluidWarfare.Render.World;
+using FluidWarfare.Editor.Windows.Shell.Navigation;
+using FluidWarfare.Editor.Windows.Shell.Picking;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -154,12 +156,16 @@ public sealed partial class EditorShell : UserControl
 
     // ─── 地面拾取状态 ─────────────────────────────────────────────
     private readonly FluidWarfare.Editor.ViewportGround.EditorGroundPointerState _groundPointerState = new();
-    private bool _groundPointerUpdatePending; // 调度合并
-    private long _lastGroundPointerUpdateTicks;
+    // (调度合并 moved to EditorShellGroundPointerRoute)
 
     // ─── Transform 编辑状态 ─────────────────────────────────────────
     private readonly EditorGroundPlacementState _groundPlacementState = new();
     private readonly EditorWorldDirtyState _worldDirtyState = new();
+
+    // ─── H-2A 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellOverlayNavigationRoute _overlayNavRoute;
+    private readonly EditorShellGroundPointerRoute _groundPointerRoute;
+    private readonly EditorShellPickingRoute _pickingRoute;
 
     public EditorShell()
     {
@@ -183,6 +189,21 @@ public sealed partial class EditorShell : UserControl
         _diagnosticsRoute.SetContext(new(_probeRoute, _feedback, _lifecycle, _renderSceneStore, _cameraRoute, _runMenu,
             () => _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable,
             _vulkanViewportHostPanel, _statusBarPanel, _selectionRoute, _pointerRoute, _worldDirtyState, _worldState));
+
+        _overlayNavRoute = new EditorShellOverlayNavigationRoute(
+            _lifecycle, _vulkanViewportHostPanel, _navigationRoute, _cameraRoute,
+            ScheduleScene3dFrame);
+        _groundPointerRoute = new EditorShellGroundPointerRoute(
+            _lifecycle, _vulkanViewportHostPanel, _groundHoverRoute, _groundPointerState,
+            _navigationRoute, _statusBarPanel, _selectionRoute,
+            _overlayNavRoute.ApplyOverlayVisualState,
+            ScheduleScene3dFrame);
+        _pickingRoute = new EditorShellPickingRoute(
+            _pickInputRoute, _lifecycle, _viewportPickRoute, _renderSceneStore,
+            _selectionRoute, _groundPlacementState, _groundPointerState,
+            _vulkanViewportHostPanel, AppendInfoLog,
+            msg => _statusBarPanel?.SetCurrentSelection(msg),
+            RefreshDiagnostics, CompleteGroundPlacement, ScheduleScene3dFrame);
 
         SubscribePanelEvents();
         InitializeFeedback();
@@ -211,14 +232,14 @@ public sealed partial class EditorShell : UserControl
             _c.VulkanViewportHost.RawMouseWheel += HandleRawMouseWheel;
             _c.VulkanViewportHost.RawInputFocusLost += HandleRawInputFocusLost;
             _c.VulkanViewportHost.PickRequested += HandleViewportPick;
-            _c.VulkanViewportHost.NavigationPointerPressed += HandleOverlayPointerPressed;
-            _c.VulkanViewportHost.NavigationPointerMoved += HandleOverlayPointerMoved;
-            _c.VulkanViewportHost.NavigationPointerReleased += HandleOverlayPointerReleased;
-            _c.VulkanViewportHost.NavigationCaptureLost += HandleOverlayCaptureLost;
+            _c.VulkanViewportHost.NavigationPointerPressed += _overlayNavRoute.HandleOverlayPointerPressed;
+            _c.VulkanViewportHost.NavigationPointerMoved += _overlayNavRoute.HandleOverlayPointerMoved;
+            _c.VulkanViewportHost.NavigationPointerReleased += _overlayNavRoute.HandleOverlayPointerReleased;
+            _c.VulkanViewportHost.NavigationCaptureLost += _overlayNavRoute.HandleOverlayCaptureLost;
             _c.VulkanViewportHost.SceneToolPointerPressed += HandleSceneToolPointerPressed;
             _c.VulkanViewportHost.SceneToolPointerReleased += HandleSceneToolPointerReleased;
-            _c.VulkanViewportHost.PointerMoved += HandleViewportPointerMoved;
-            _c.VulkanViewportHost.PointerLeft += HandleViewportPointerLeft;
+            _c.VulkanViewportHost.PointerMoved += _groundPointerRoute.HandleViewportPointerMoved;
+            _c.VulkanViewportHost.PointerLeft += _groundPointerRoute.HandleViewportPointerLeft;
         }
         if (_c.Inspector is not null)
         {
@@ -613,78 +634,7 @@ public sealed partial class EditorShell : UserControl
         HandleTransformReset();
     }
 
-    // ─── Overlay 导航输入 ──────────────────────────────
-    private ViewportNavigationLayout? GetPresentedNavigationLayout()
-    {
-        if (_lifecycle.State.Session is null || _vulkanViewportHostPanel is null)
-            return null;
-
-        var snapshot = _lifecycle.State.Session.LastPresentedOverlaySnapshot;
-        if (!snapshot.IsAvailable || snapshot.Layout is null)
-            return null;
-
-        var host = _vulkanViewportHostPanel.GetNativeHostInfo();
-        if (host.Width != snapshot.ViewportWidth || host.Height != snapshot.ViewportHeight)
-            return null;
-
-        return snapshot.Layout;
-    }
-
-    private bool ApplyOverlayVisualState(ViewportNavigationElement hovered, ViewportNavigationElement active)
-    {
-        if (_lifecycle.State.Session?.SetNavigationOverlayState(hovered, active) == true)
-        { ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged); return true; }
-        return false;
-    }
-
-    private ViewportNavigationPressResult HandleOverlayPointerPressed(int pixelX, int pixelY)
-    {
-        var layout = GetPresentedNavigationLayout();
-        if (layout is null) return ViewportNavigationPressResult.NotHandled;
-
-        var response = _navigationRoute.Press(pixelX, pixelY, layout);
-        if (response.Result == ViewportNavigationPressResult.NotHandled)
-            return response.Result;
-
-        ApplyOverlayVisualState(response.Element, response.Element);
-
-        if (response.CameraCommand is not null)
-        {
-            var camResult = _cameraRoute.Apply(response.CameraCommand);
-            if (camResult.StateChanged && camResult.NeedsFrame)
-                ScheduleScene3dFrame(camResult.Reason);
-            ApplyOverlayVisualState(response.Element, ViewportNavigationElement.None);
-            _navigationRoute.Release(false);
-        }
-
-        return response.Result;
-    }
-
-    private bool HandleOverlayPointerMoved(int pixelX, int pixelY)
-    {
-        var layout = GetPresentedNavigationLayout();
-        var vhFallback = _vulkanViewportHostPanel?.GetNativeHostInfo().Height ?? 1;
-        var response = _navigationRoute.Move(pixelX, pixelY, layout, _cameraRoute, vhFallback);
-        if (response.VisualStateChanged)
-            ApplyOverlayVisualState(response.Hovered, response.Active);
-        if (response.NeedsFrame)
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.OverlayNavigationChanged);
-        return response.Handled;
-    }
-
-    private void HandleOverlayPointerReleased()
-    {
-        var r = _navigationRoute.Release(true);
-        if (r.NeedsCleanupFrame)
-            ApplyOverlayVisualState(_navigationRoute.HoverElement, ViewportNavigationElement.None);
-    }
-
-    private void HandleOverlayCaptureLost()
-    {
-        var r = _navigationRoute.Release(true);
-        if (r.NeedsCleanupFrame)
-            ApplyOverlayVisualState(_navigationRoute.HoverElement, ViewportNavigationElement.None);
-    }
+    // ─── Overlay 导航输入（委托至 _overlayNavRoute）───
 
     private void HandleViewportEscape()
     {
@@ -737,90 +687,11 @@ public sealed partial class EditorShell : UserControl
         _ => EditorSelectionReason.ViewportFocused,
     };
 
-    // ─── 地面指针移动 ─────────────────────────────────────────────
+    // ─── Picking（委托至 _pickingRoute）───
 
-    /// <summary>
-    /// 鼠标在视口内移动 → 地面射线求交 → 状态栏反馈。
-    /// 采用"最新值覆盖 + 单次调度"合并模式，最多约每 16ms 更新一次。
-    /// </summary>
-    private void HandleViewportPointerMoved(int pixelX, int pixelY)
-    {
-        if (!_sessionActive || _lifecycle.State.Session?.Status != VulkanScene3dSessionStatus.Active) return;
-        var nh = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
-        if (!nh.HasNativeHandle || nh.Width < 1 || nh.Height < 1) return;
-
-        if (_groundPointerUpdatePending) { _lastGroundPointerUpdateTicks = (pixelX << 16) | (pixelY & 0xFFFF); return; }
-        _groundPointerUpdatePending = true;
-        var cx = pixelX; var cy = pixelY;
-        Dispatcher.UIThread.Post(() =>
-        {
-            _groundPointerUpdatePending = false;
-            if (_lastGroundPointerUpdateTicks != 0) { cx = (int)(_lastGroundPointerUpdateTicks >> 16); cy = (int)(_lastGroundPointerUpdateTicks & 0xFFFF); _lastGroundPointerUpdateTicks = 0; }
-            var host = _vulkanViewportHostPanel?.GetNativeHostInfo() ?? VulkanViewportNativeHostInfo.NotAvailable;
-            _groundHoverRoute.HandlePointerMoved(new(cx, cy, _lifecycle, _groundPointerState, _navigationRoute,
-                msg => { if (_statusBarPanel is not null) _statusBarPanel.SetGroundPosition(msg); },
-                msg => { if (_statusBarPanel is not null) _statusBarPanel.SetCurrentSelection(msg); }), host);
-        }, DispatcherPriority.Background);
-    }
-
-    /// <summary>
-    /// 鼠标离开视口 → 清除地面坐标显示。
-    /// </summary>
-    private void HandleViewportPointerLeft()
-    {
-        var nav = _groundHoverRoute.HandlePointerLeft(new(0, 0, _lifecycle, _groundPointerState, _navigationRoute,
-            msg => { if (_statusBarPanel is not null) _statusBarPanel.SetGroundPosition(msg); },
-            msg => { if (_statusBarPanel is not null) _statusBarPanel.SetCurrentSelection(msg); }),
-            _selectionRoute);
-        if (nav.VisualStateChanged) ApplyOverlayVisualState(nav.Hovered, nav.Active);
-    }
-
-    /// <summary>
-    /// 视口点击 Picking 处理。
-    /// 像素坐标 → 世界射线 → RenderScene Picker → 统一选择入口。
-    /// </summary>
-    /// <summary>
-    /// 视口点击 Picking 处理。
-    /// </summary>
-    private void HandleViewportPick(int pixelX, int pixelY)
-    {
-        var r = _pickInputRoute.Pick(pixelX, pixelY, _lifecycle, _viewportPickRoute, _renderSceneStore,
-            _selectionRoute, _groundPlacementState, _groundPointerState,
-            ApplyEntitySelection, AppendInfoLog,
-            msg => { if (_statusBarPanel is not null) _statusBarPanel.SetCurrentSelection(msg); },
-            RefreshDiagnostics, ShowGroundCursor, HideGroundCursor, CompleteGroundPlacement,
-            ScheduleScene3dFrame);
-        if (!r.SelectionChanged)
-        {
-            var snap = _lifecycle.State.Session?.LastPresentedSnapshot;
-            if (snap?.IsValid == true && _vulkanViewportHostPanel is not null)
-            { var nh = _vulkanViewportHostPanel.GetNativeHostInfo(); if (nh.HasNativeHandle) { var rb = RayBuilder.Build(new(pixelX, pixelY, snap, _lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None, _renderSceneStore.Current, SceneGroundPlane.Default)); if (rb is not null) ViewportPickTrace.Write(pixelX, pixelY, snap, rb, _renderSceneStore.Current); } }
-        }
-    }
-
-    /// <summary>Debug Picking 诊断：记录射线命中的实体和距离细节。</summary>
-
-
-    // ─── 地面标记控制 ─────────────────────────────────────────────
-
-    private void ShowGroundCursor(Vector3d worldPosition)
-    {
-        _groundPointerState.Commit(worldPosition);
-        if (_lifecycle.State.Session is not null && _lifecycle.State.Session.SetGroundCursor(worldPosition))
-        {
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.GroundCursorChanged);
-        }
-    }
-
-    private void HideGroundCursor()
-    {
-        _groundPointerState.ClearCommit();
-        if (_lifecycle.State.Session is not null)
-        {
-            _lifecycle.State.Session.SetGroundCursor(null);
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.GroundCursorChanged);
-        }
-    }
+    /// <summary>视口点击 Picking 处理。委托至 _pickingRoute。</summary>
+    private void HandleViewportPick(int pixelX, int pixelY) =>
+        _pickingRoute.HandleViewportPick(pixelX, pixelY, ApplyEntitySelection);
 
     // ─── Transform 编辑 ─────────────────────────────────────────────
 
@@ -918,7 +789,7 @@ public sealed partial class EditorShell : UserControl
     {
         var r = _groundPlacementRoute.Complete(groundPosition, _selectionRoute, _groundPlacementState,
             _worldState, _commitApplier, ScheduleScene3dFrame, _inspectorPanel, AppendInfoLog);
-        if (r.Completed) HideGroundCursor();
+        if (r.Completed) _pickingRoute.HideGroundCursor();
     }
 
     /// <summary>

@@ -3497,3 +3497,77 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | TryCreateDeviceResources | ✅ 仍 return false |
 | Cleanup 释放顺序 | ✅ 未变 |
 | Editor 启动 | ✅ |
+
+### 8.7.8G-1 — EditorPreferencesWindow 拆分审计
+
+审计 `EditorPreferencesWindow.axaml.cs`（587 行），确认可拆为门面 + 3 子组件 + Helpers。
+
+### 8.7.8G-2 — EditorPreferencesWindow SRP 拆分
+
+将 587 行窗口拆成 78 行门面 + 3 子组件 + Helpers，不改 XAML/行为：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorPreferencesWindow.axaml.cs` | 78 | 门面：XAML 事件名义转发 + 构造注入 |
+| `EditorPreferencesCapture.cs` | 77 | 按键捕获状态机 |
+| `EditorPreferencesBindingList.cs` | 81 | 绑定列表生成 + 冲突处理 |
+| `EditorPreferencesDraftHandler.cs` | 79 | 草稿覆盖管理 |
+| `Helpers/EditorPreferencesFormatText.cs` | 46 | 手势文本格式化 |
+| `Helpers/EditorPreferencesKeyMapper.cs` | 50 | 键码 → 手势转换 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标 |
+| 目录文件数 | ✅ Preferences/（含 .axaml）≤6+Helpers/2 |
+| 白名单删除 | ✅ `EditorPreferencesWindow.axaml.cs` 移出 |
+
+### 8.7.8H-1 — EditorShell 最终 Boss 拆分审计
+
+审计 `EditorShell.axaml.cs`（969 行），确认零 XAML 事件绑定 → 方法名可自由改。
+
+#### 关键结论
+
+- Extractable：~400 行（42%），Safe for H-2A/B/C
+- Must-stay：~200 行（组合根 + 编排核心），最终减到 ≤100 行可能不现实
+- 推荐第一刀 H-2A：Overlay 导航 + 地面指针 + Picking（~140 行）
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 审计文档 | `docs/audit-EditorShell-8.7.8H-1.md` |
+
+### 8.7.8H-2A — EditorShell 第一刀：Overlay 导航 + 地面指针 + Picking 提取
+
+将 EditorShell.axaml.cs 中第一批低风险职责提取到 3 个新文件：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 969→**725** | 减少 244 行 |
+| `Shell/Navigation/EditorShellOverlayNavigationRoute.cs` | 78 | 6 个 Overlay 导航方法 |
+| `Shell/Picking/EditorShellGroundPointerRoute.cs` | 63 | 地面指针移动/离开（含调度合并状态）|
+| `Shell/Picking/EditorShellPickingRoute.cs` | 79 | Picking/地面标记控制/诊断 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（78+63+79）|
+| 目录文件数 | ✅ Shell/Navigation/ 1, Shell/Picking/ 2 |
+| 白名单删除 | ❌ 不删除，Shell 仍有 725 行 |
+| Route 装配顺序 | ✅ 未改动 |
+| Overlay 导航行为 | ✅ 不变 |
+| 地面 hover | ✅ 不变 |
+| Picking/选择联动 | ✅ 不变 |

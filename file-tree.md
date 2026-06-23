@@ -6,7 +6,7 @@
 
 创建时间：2026-06-10
 
-最后编辑：2026-06-23 23:00
+最后编辑：2026-06-23 23:45（8.7.8H-2A EditorShell 第一刀）
 
 本文档用于记录 FluidWarfare 项目目录结构、模块职责、关键文件职责、未发布变更和模块依赖方向。
 
@@ -14,7 +14,7 @@
 
 ## 1. 未发布变更日志
 
-最后编辑：2026-06-23 23:00（8.7.7E-2C-R + E-2D + F-1）
+最后编辑：2026-06-23 23:45（8.7.8H-2A EditorShell 第一刀）
 
 ### 新增（Milestone 8.7.7F：全仓白名单债务清算）
 
@@ -26,6 +26,9 @@
 6. **8.7.7F-4C**：中等债务第二组 — ViewportNavigation 9 文件子目录化（最后 1 个目录白名单删除 ✅）、VulkanSceneRayBuilder SRP 拆分 167→40、VulkanCameraMatrices SRP 拆分 189→21
 7. **8.7.7F-5**：大债务登记到 8.7.8 — 产出 `docs/whitelist-debt-roadmap-8.7.8.md`，13 个生产白名单分 A/B/C/D 四类
 8. **8.7.7F-6**：最终收口 — VulkanViewportHostPanel 158→43、EditorInputBindingSnapshot 175→38；SceneNavigationCameraMotion 与 SceneOrbitCameraMotion 因相机算法放弃
+9. **8.7.8G-1/G-2**：EditorPreferencesWindow SRP 拆分 — 587→78 门面 + 3 子组件（Capture/BindingList/DraftHandler）+ Helpers
+10. **8.7.8H-1**：EditorShell 最终 Boss 拆分审计 — 969 行 → 审计文档产出
+11. **8.7.8H-2A**：EditorShell 第一刀提取 — Overlay 导航 + 地面指针 + Picking → 3 新文件（78+63+79 行），Shell 969→725 行
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -432,7 +435,7 @@ Phase 1 证明最小闭环。
 ### 已完成的架构重构
 
 **EditorShell（8.7.6.1 — 8.7.6.8E）：**
-- EditorShell.axaml.cs：3,041 行 → **970 行**（-2,071 行）
+- EditorShell.axaml.cs：3,041 行 → **725 行**（-2,316 行；8.7.8H-2A 继续减 244）
 - 提取了 **26+ Route 类**（每个 ≤100 行），涵盖：
   - Scene3D 帧路径、帧提交、Session 生命周期
   - 变换交互、Transform 应用层、Gizmo 呈现
@@ -767,7 +770,7 @@ FluidWarfare/
 |   |       `-- WorldHierarchyTreeViewState.cs
 |   |-- Shell/
 |   |   |-- EditorShell.axaml
-|   |   |-- EditorShell.axaml.cs (970 行, 原 3,041→重构后)
+|   |   |-- EditorShell.axaml.cs (725 行, 原 3,041→重构后→H-2A 减 244)
 |   |   |-- EditorSelection.cs
 |   |   |-- Composition/
 |   |   |   |-- EditorShellControlRefs.cs
@@ -798,6 +801,8 @@ FluidWarfare/
 |   |   |   |-- EditorShellDetachResult.cs / Route.cs
 |   |   |-- Menu/
 |   |   |   `-- EditorRunMenuRoute.cs
+|   |   |-- Navigation/
+|   |   |   `-- EditorShellOverlayNavigationRoute.cs (78 行, H-2A 提取)
 |   |   |-- Panels/
 |   |   |   |-- EditorPanelApplyKind.cs / Request.cs / Result.cs / Route.cs / State.cs
 |   |   |-- Scene3D/Commands/
@@ -810,6 +815,9 @@ FluidWarfare/
 |   |   |-- Transform/
 |   |   |   |-- EditorGroundPlacementResult.cs / Route.cs
 |   |   |   `-- EditorTransformApplyRequest.cs / Result.cs / Route.cs
+|   |   |-- Picking/
+|   |   |   |-- EditorShellGroundPointerRoute.cs (63 行, H-2A 提取)
+|   |   |   `-- EditorShellPickingRoute.cs (79 行, H-2A 提取)
 |   |   `-- Windows/
 |   |       |-- EditorShellWindowCommand.cs / Result.cs / Route.cs
 |   |-- Viewport/
@@ -1431,7 +1439,7 @@ get_tree.bat
 | `GameProjects/SampleProject/icons/sample_icon.svg` | SampleProject 图标内容入口占位文件，仅用于验证内容文件扫描，不代表正式图标加载 | 占位 |
 | `GameProjects/SampleProject/icons/.gitkeep` | SampleProject 图标扩展目录占位文件，用于验证项目自定义内容目录声明 | 可加载 |
 | `*/.gitkeep` | 保留当前尚未写入代码或资源的目录 | 已创建 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | **Editor 主壳（重构后）** 3,041→970 行，移除 -2,071 行职责到 26+ Route 类 | 测试通过 / Build 0 Error |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | **Editor 主壳（重构后）** 3,041→725 行，移除 -2,316 行职责到 26+ Route 类 + H-2A 3 文件 | 测试通过 / Build 0 Error |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellRouteSet.cs` | 聚合 ~26 个 Route 引用，EditorShell 的唯一 Route 容器 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellRouteBuild.cs` | 构造 Route 的 Factory，负责 Route 初始化顺序 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellControlRefs.cs` | FindControls 结果的容器，保存所有 Axaml 控件引用 | 可运行 |
