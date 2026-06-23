@@ -87,6 +87,8 @@ using FluidWarfare.Editor.Windows.Shell.Picking;
 using FluidWarfare.Editor.Windows.Shell.Transform.Edit;
 using FluidWarfare.Editor.Windows.Shell.Viewport;
 using FluidWarfare.Editor.Windows.Shell.Commands;
+using FluidWarfare.Editor.Windows.Shell.Hierarchy;
+using FluidWarfare.Editor.Windows.Shell.Selection;
 
 namespace FluidWarfare.Editor.Windows.Shell;
 
@@ -179,6 +181,10 @@ public sealed partial class EditorShell : UserControl
     // ─── H-2D 提取路由 ──────────────────────────────────────────
     private readonly EditorShellWindowCommandsRoute _windowCommandsRoute;
 
+    // ─── H-2E 提取路由 ──────────────────────────────────────────
+    private readonly EditorShellHierarchyRoute _hierarchyRoute;
+    private readonly EditorShellSelectionSyncRoute _selectionSyncRoute;
+
     public EditorShell()
     {
         AvaloniaXamlLoader.Load(this);
@@ -240,6 +246,14 @@ public sealed partial class EditorShell : UserControl
 
         _windowCommandsRoute = new EditorShellWindowCommandsRoute(
             _windowRoute, AppendInfoLog);
+
+        _hierarchyRoute = new EditorShellHierarchyRoute(
+            _dockPanel, () => _projectInfo, () => _worldState,
+            _renderSceneStore, AppendErrorLog);
+        _selectionSyncRoute = new EditorShellSelectionSyncRoute(
+            _selectionRoute, _panelApplyRoute,
+            () => _worldState, () => _sessionActive, _lifecycle,
+            ScheduleScene3dFrame);
 
         SubscribePanelEvents();
         InitializeFeedback();
@@ -366,10 +380,8 @@ public sealed partial class EditorShell : UserControl
 
     // ─── 窗口菜单命令（委托至 _windowCommandsRoute）───
 
-    private void OnHierarchyEntitySelected(string? entityId)
-    {
-        ApplyEntitySelection(entityId, EditorEntitySelectionOrigin.WorldHierarchy);
-    }
+    private void OnHierarchyEntitySelected(string? entityId) =>
+        _selectionSyncRoute.ApplyEntitySelection(entityId, EditorEntitySelectionOrigin.WorldHierarchy, ShowWorldEntitySelection);
 
     private void OnProjectContentSelected(string? relativePath)
     {
@@ -402,7 +414,7 @@ public sealed partial class EditorShell : UserControl
 
         _projectInfo = result.Project;
         _contentFiles = result.Project?.ContentFiles;
-        RebuildAndShowHierarchy();
+        _hierarchyRoute.RebuildAndShowHierarchy();
 
         _worldState = result.WorldResult?.World;
         var summary = result.WorldResult is not null
@@ -615,46 +627,14 @@ public sealed partial class EditorShell : UserControl
             () => { _renderSeq = _lifecycle.State.FrameSubmitRoute?.RenderSeq ?? _renderSeq; RefreshDiagnostics(); });
     }
 
-    // ─── 选择路由 ────────────────────────────────────────────
-
-    private void ApplyEntitySelection(string? entityIdStr, EditorEntitySelectionOrigin origin)
-    {
-        var reason = MapReason(origin);
-        var result = entityIdStr is null
-            ? _selectionRoute.ClearSelection(reason)
-            : _selectionRoute.SelectEntity(new(entityIdStr, reason, _worldState));
-        if (!result.IsChanged) return;
-        if (result.Entity is not null)
-        { ShowWorldEntitySelection(result.Entity); SyncSceneSelection(result.Entity.EntityId.Value.ToString()); }
-        else
-            _panelApplyRoute.ClearSelection();
-    }
-
-    private void SyncSceneSelection(string entityId)
-    {
-        if (_lifecycle.State.Session is null || !_sessionActive) return;
-        if (_lifecycle.State.Session.SetSelectedEntity(entityId))
-            ScheduleScene3dFrame(VulkanScene3dFrameReason.SelectionChanged);
-    }
-
-    private void ClearSelection()
-    {
-        _selectionRoute.ClearSelection(EditorSelectionReason.SelectionRestore);
-        _panelApplyRoute.ClearSelection();
-    }
-
-    static EditorSelectionReason MapReason(EditorEntitySelectionOrigin o) => o switch
-    {
-        EditorEntitySelectionOrigin.ViewportPicking => EditorSelectionReason.ViewportPicking,
-        EditorEntitySelectionOrigin.WorldHierarchy => EditorSelectionReason.WorldHierarchy,
-        _ => EditorSelectionReason.ViewportFocused,
-    };
+    // ─── 选择同步（委托至 _selectionSyncRoute）───
 
     // ─── Picking（委托至 _pickingRoute）───
 
     /// <summary>视口点击 Picking 处理。委托至 _pickingRoute。</summary>
     private void HandleViewportPick(int pixelX, int pixelY) =>
-        _pickingRoute.HandleViewportPick(pixelX, pixelY, ApplyEntitySelection);
+        _pickingRoute.HandleViewportPick(pixelX, pixelY,
+            (id, or) => _selectionSyncRoute.ApplyEntitySelection(id, or, ShowWorldEntitySelection));
 
     // ─── Transform 编辑 + Scrub（委托至 _transformRoute / _scrubRoute）───
 
@@ -669,23 +649,7 @@ public sealed partial class EditorShell : UserControl
         if (r.Completed) _pickingRoute.HideGroundCursor();
     }
 
-    /// <summary>
-    /// 从当前 WorldState + RenderScene 构建层级树并显示。
-    /// </summary>
-    private void RebuildAndShowHierarchy()
-    {
-        if (_projectInfo is not null) try { _dockPanel?.ShowProjectContent(ProjectContentTreeBuilder.Build(_projectInfo)); } catch (Exception ex) { AppendErrorLog($"项目内容树构建失败：{ex.Message}"); }
-        if (_worldState is not null) try { _dockPanel?.ShowWorldHierarchy(WorldHierarchyTreeBuilder.Build(_worldState, BuildGroupLookup())); } catch (Exception ex) { AppendErrorLog($"世界层级树构建失败：{ex.Message}"); }
-    }
-
-    private Dictionary<EntityId, string>? BuildGroupLookup()
-    {
-        if (_renderSceneStore.Current.Objects.Count == 0) return null;
-        var map = new Dictionary<EntityId, string>();
-        foreach (var obj in _renderSceneStore.Current.Objects)
-            map[obj.EntityId] = obj.VisualKind == RenderObjectVisualKind.UnitMarker ? "单位" : "其他";
-        return map;
-    }
+    // ─── 层级树构建（委托至 _hierarchyRoute）───
 
 
 

@@ -32,6 +32,7 @@
 12. **8.7.8H-2B**：EditorShell 第二刀提取 — Transform 编辑 + Scrub → 2 新文件（86+62 行），Shell 725→665 行
 13. **8.7.8H-2C**：EditorShell 第三刀提取 — Viewport 重绘 + Vulkan Redraw → 1 新文件（83 行），Shell 665→629 行
 14. **8.7.8H-2D**：EditorShell 第四刀提取 — 窗口菜单命令 → 1 新文件（24 行），Shell 629→622 行
+15. **8.7.8H-2E**：EditorShell 第五刀提取 — 层级树 + 选择同步 → 2 新文件（37+51 行），Shell 622→589 行
 
 ### 新增（Milestone 8.7.6 — 8.7.7：EditorShell SRP 重构 + 面板拆分）
 
@@ -438,7 +439,7 @@ Phase 1 证明最小闭环。
 ### 已完成的架构重构
 
 **EditorShell（8.7.6.1 — 8.7.6.8E）：**
-- EditorShell.axaml.cs：3,041 行 → **622 行**（-2,419 行；8.7.8H-2A/B/C/D 共减 347）
+- EditorShell.axaml.cs：3,041 行 → **589 行**（-2,452 行；8.7.8H-2A/B/C/D/E 共减 380）
 - 提取了 **26+ Route 类**（每个 ≤100 行），涵盖：
   - Scene3D 帧路径、帧提交、Session 生命周期
   - 变换交互、Transform 应用层、Gizmo 呈现
@@ -773,7 +774,7 @@ FluidWarfare/
 |   |       `-- WorldHierarchyTreeViewState.cs
 |   |-- Shell/
 |   |   |-- EditorShell.axaml
-|   |   |-- EditorShell.axaml.cs (622 行, 原 3,041→重构后→H-2A/B/C/D 减 347)
+|   |   |-- EditorShell.axaml.cs (589 行, 原 3,041→重构后→H-2A/B/C/D/E 减 380)
 |   |   |-- EditorSelection.cs
 |   |   |-- Commands/
 |   |   |   `-- EditorShellWindowCommandsRoute.cs (24 行, H-2D)
@@ -789,6 +790,8 @@ FluidWarfare/
 |   |   |   `-- EditorDiagnosticsRefreshState.cs
 |   |   |-- Feedback/
 |   |   |   `-- EditorFeedbackRoute.cs
+|   |   |-- Hierarchy/
+|   |   |   `-- EditorShellHierarchyRoute.cs (37 行, H-2E)
 |   |   |-- Input/
 |   |   |   |-- EditorViewportInputKind.cs
 |   |   |   |-- EditorViewportInputRequest.cs
@@ -811,6 +814,8 @@ FluidWarfare/
 |   |   |-- Panels/
 |   |   |   |-- EditorPanelApplyKind.cs / Request.cs / Result.cs / Route.cs / State.cs
 |   |   |-- Scene3D/Commands/
+|   |   |-- Selection/
+|   |   |   `-- EditorShellSelectionSyncRoute.cs (51 行, H-2E)
 |   |   |   |-- EditorScene3dCommandKind.cs / Request.cs / Result.cs / Route.cs / State.cs
 |   |   |-- Startup/
 |   |   |   |-- EditorStartupBootstrapResult.cs / Route.cs
@@ -1449,7 +1454,7 @@ get_tree.bat
 | `GameProjects/SampleProject/icons/sample_icon.svg` | SampleProject 图标内容入口占位文件，仅用于验证内容文件扫描，不代表正式图标加载 | 占位 |
 | `GameProjects/SampleProject/icons/.gitkeep` | SampleProject 图标扩展目录占位文件，用于验证项目自定义内容目录声明 | 可加载 |
 | `*/.gitkeep` | 保留当前尚未写入代码或资源的目录 | 已创建 |
-| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | **Editor 主壳（重构后）** 3,041→622 行，移除 -2,419 行职责到 26+ Route 类 + H-2A/B/C/D 共 7 文件 | 测试通过 / Build 0 Error |
+| `FluidWarfare.Editor.Windows/Shell/EditorShell.axaml.cs` | **Editor 主壳（重构后）** 3,041→589 行，移除 -2,452 行职责到 26+ Route 类 + H-2A/B/C/D/E 共 9 文件 | 测试通过 / Build 0 Error |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellRouteSet.cs` | 聚合 ~26 个 Route 引用，EditorShell 的唯一 Route 容器 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellRouteBuild.cs` | 构造 Route 的 Factory，负责 Route 初始化顺序 | 可运行 |
 | `FluidWarfare.Editor.Windows/Shell/Composition/EditorShellControlRefs.cs` | FindControls 结果的容器，保存所有 Axaml 控件引用 | 可运行 |

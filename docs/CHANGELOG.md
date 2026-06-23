@@ -3646,3 +3646,29 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | Route 装配顺序 | ✅ 未改动 |
 | 菜单命令行为 | ✅ 不变 |
 | 项目加载 / Transform / Redraw | ✅ 不受影响 |
+
+### 8.7.8H-2E — EditorShell 第五刀：层级树构建 + 选择同步提取
+
+提取 EditorShell.axaml.cs（622→**589** 行）中层级树构建与选择同步职责：
+
+#### 操作
+
+| 文件 | 行数 | 职责 |
+|------|------|------|
+| `EditorShell.axaml.cs` | 622→**589** | 减少 33 行 |
+| `Shell/Hierarchy/EditorShellHierarchyRoute.cs` | 37 | RebuildAndShowHierarchy + BuildGroupLookup |
+| `Shell/Selection/EditorShellSelectionSyncRoute.cs` | 51 | ApplyEntitySelection + SyncSceneSelection + ClearSelection + MapReason |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 624/625（1 flaky pre-existing）|
+| 生产文件 ≤100 行 | ✅ 全部达标（37+51）|
+| 目录文件数 | ✅ Shell/Hierarchy/ 1, Shell/Selection/ 1, ≤5 |
+| 白名单删除 | ❌ 不删除，Shell 仍有 589 行 |
+| Route 装配顺序 | ✅ 未改动 |
+| World Tree 显示 | ✅ 不变 |
+| Inspector 同步 | ✅ 不变 |
+| Picking / Transform / Redraw | ✅ 不受影响 |
