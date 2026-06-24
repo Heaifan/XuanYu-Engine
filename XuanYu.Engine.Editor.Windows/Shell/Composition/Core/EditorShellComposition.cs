@@ -1,4 +1,7 @@
-﻿namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
+﻿using XuanYu.Engine.Editor.Windows.Viewport.World;
+using XuanYu.Engine.Project.World.SaveLoad;
+
+namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
 
 /// <summary>EditorShell 组合根构建器。负责创建上下文、Route、事件接线和初始化。</summary>
 static class EditorShellComposition
@@ -43,6 +46,21 @@ static class EditorShellComposition
         ctx.ProjectBootstrapRoute = new(ctx.StartupRoute, ctx.PanelApplyRoute, ctx.HierarchyRoute,
             ctx.ViewportSelectionPresenter, ctx.LogRoute.Info, ctx.LogRoute.Warn, ctx.LogRoute.Error,
             v => ctx.ProjectInfo = v, v => ctx.ContentFiles = v, v => ctx.WorldState = v);
+
+        ctx.RunMenu.SaveWorldRequested += () =>
+        {
+            var world = ctx.WorldState;
+            var projectDir = ctx.ProjectBootstrap.ProjectDirectory;
+            if (world is null) { ctx.LogRoute.Info("World 为空，无法保存。"); return; }
+            if (projectDir is null) { ctx.LogRoute.Info("项目目录未知，无法保存。"); return; }
+
+            var worldPath = Path.Combine(projectDir, "Content", "Worlds", "main.world.json");
+            var doc = WorldStateDocumentConvert.ToDocument(world, "main", "主世界");
+            var writeResult = WorldDocumentWriter.Write(worldPath, doc);
+            ctx.LogRoute.Info(writeResult.IsSuccess
+                ? $"World 已保存：{worldPath}"
+                : $"World 保存失败：{writeResult.ErrorMessage}");
+        };
         ctx.SelectionSyncRoute = new(ctx.SelectionRoute, ctx.PanelApplyRoute, () => ctx.WorldState, () => ctx.SessionActive, ctx.Lifecycle, rt.ScheduleFrame);
         ctx.RawInputRoute = new(ctx.ViewportInputRoute, rt.BuildInputRequest);
         ctx.ViewportFrameRoute = new(() => ctx.SessionActive, ctx.Lifecycle, ctx.SelectionRoute, () => ctx.WorldState, ctx.StatusBarPanel, ctx.CameraRoute, rt.ScheduleFrame);

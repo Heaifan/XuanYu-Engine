@@ -10,6 +10,9 @@ public sealed class ProjectBootstrapRoute
 {
     public GameProjectInfo? Project { get; private set; }
 
+    /// <summary>已加载的项目目录路径，供 World 文件路径构造使用。</summary>
+    public string? ProjectDirectory { get; private set; }
+
     public ProjectBootstrapResult LoadSampleProject()
     {
         var pathResult = SampleProjectPath.TryFindFrom(
@@ -19,6 +22,7 @@ public sealed class ProjectBootstrapRoute
             return ProjectBootstrapResult.Failed(
                 pathResult.Error?.Message ?? "未知错误。");
 
+        ProjectDirectory = projectDir;
         var loadResult = GameProjectLoader.LoadFromDirectory(projectDir);
 
         if (loadResult.Result.IsSuccess && loadResult.Project is not null)
