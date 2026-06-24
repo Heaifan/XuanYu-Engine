@@ -14,7 +14,7 @@ public sealed record EditorTransformInputRequest(
     EditorViewportInputState InputState,
     TransformPointerRoute PointerRoute,
     EditorSelectionRoute SelectionRoute,
-    ViewportToolPalette ToolPalette,
+    ViewportToolPalette? ToolPalette,
     Scene3dSessionLifecycle Lifecycle,
     Action<string> InfoLog,
     Action<SceneTransform, EditorEntityTransformOrigin> ApplyTransform,

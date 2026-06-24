@@ -20,7 +20,7 @@ public sealed record EditorViewportInputRequest(
     EditorViewportInputState State,
     TransformPointerRoute PointerRoute,
     EditorSelectionRoute SelectionRoute,
-    ViewportToolPalette ToolPalette,
+    ViewportToolPalette? ToolPalette,
     ViewportCameraRoute CameraRoute,
     Scene3dSessionLifecycle Lifecycle,
     ViewportPointerPickRoute PickRoute,

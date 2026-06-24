@@ -27,7 +27,7 @@ public sealed class EditorPickInputRoute
         EditorSelectionRoute selection,
         EditorGroundPlacementState placement,
         EditorGroundPointerState groundPointer,
-        Action<string, EditorEntitySelectionOrigin> applySelection,
+        Action<string?, EditorEntitySelectionOrigin> applySelection,
         Action<string> infoLog,
         Action<string> setStatusBar,
         Action refreshDiagnostics,

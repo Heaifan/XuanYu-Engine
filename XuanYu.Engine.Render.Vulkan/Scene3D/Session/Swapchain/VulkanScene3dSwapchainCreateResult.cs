@@ -13,7 +13,7 @@ public sealed record VulkanScene3dSwapchainCreateResult(
     Result? VulkanResult,
     uint RequestedWidth,
     uint RequestedHeight,
-    string Message)
+    string? Message)
 {
     public static VulkanScene3dSwapchainCreateResult Failed(
         VulkanScene3dSwapchainStage stage, Result? vkResult,

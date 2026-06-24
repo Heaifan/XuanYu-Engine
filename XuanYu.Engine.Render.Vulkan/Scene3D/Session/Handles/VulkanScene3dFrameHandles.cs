@@ -1,6 +1,5 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 using Silk.NET.Vulkan;
-using Silk.NET.Vulkan;
 
 namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Handles;
 

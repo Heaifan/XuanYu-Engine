@@ -70,8 +70,8 @@ public sealed record VulkanScene3dFrameResult(
         VulkanScene3dFrameStatus frameStatus,
         Result? vkResult, VulkanScene3dSwapchainStage? stage,
         int swapchainGeneration, int acquireTimeoutCount,
-        string message) =>
-        new(false, message, frameIndex, reason,
+        string? message) =>
+        new(false, message ?? "未知错误", frameIndex, reason,
             frameStatus, vkResult, stage,
             swapchainGeneration, acquireTimeoutCount,
             0, 0, 0, 0, 0);
@@ -80,8 +80,8 @@ public sealed record VulkanScene3dFrameResult(
     /// 简明失败（向后兼容，自动推断 FrameStatus=Failed）。
     /// </summary>
     public static VulkanScene3dFrameResult Failed(
-        int frameIndex, VulkanScene3dFrameReason reason, string message) =>
-        new(false, message, frameIndex, reason,
+        int frameIndex, VulkanScene3dFrameReason reason, string? message) =>
+        new(false, message ?? "未知错误", frameIndex, reason,
             VulkanScene3dFrameStatus.Failed, null, null,
             0, 0,
             0, 0, 0, 0, 0);

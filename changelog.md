@@ -18,12 +18,27 @@
 - **现象**：Editor 启动崩溃，退出码 -1073741819（0xC0000005），实际为 NullReferenceException
 - **修复**：将 `ctx.HierarchyRoute = new(...)` 移到 `ctx.ProjectBootstrapRoute = new(...)` 之前
 - **验收**：
-  - build: 0 Error / 4 Warning（已知旧 warning，未新增）
+  - build: 0 Error / 0 Warning ✅
   - test: 638/639 通过（1 个预存 flaky：中文排序依赖 locale）
   - Editor 启动：成功，不再崩溃
   - 架构门禁：14/14
 - 附带修复：run.bat CRLF 行尾（Windows 批处理兼容性）
 - commit `359e3ce`
+
+## [8.8-RZ-Fix1b] — Warning 全清理 (2026-06-24 12:05)
+- **7 个 Warning 逐项处理**：
+  - `VulkanScene3dFrameHandles.cs` — 去重 `using Silk.NET.Vulkan`
+  - `VulkanScene3dSwapchainCreateResult.cs` — `Message` 改为 `string?`
+  - `VulkanScene3dRendererProbeFrame.cs` — `r.Vk` 增加 null 安全检查
+  - `EditorViewportInputRequest.cs` — `ToolPalette` 改为 `ViewportToolPalette?`
+  - `EditorTransformInputRequest.cs` — `ToolPalette` 改为 `ViewportToolPalette?`
+  - `EditorShellGroundPointerRoute.cs` — suppress CS9113（API 设计预留）
+  - `EditorPickInputRoute.cs` — `applySelection` 改为 `Action<string?,...>`
+  - `StatusBarPanel.SetCurrentSelection` — 改为 `string?`，null→"无"
+  - `VulkanScene3dFrameResult.Failed` — 参数改为 `string?`
+  - `VulkanScene3dSession.FailFrame` — 参数改为 `string?`
+- **验收**：build 0 Error / 0 Warning ✅ / 架构门禁 14/14 ✅
+- commit `pending`
 
 ## [8.8-R4] — 用户数据目录迁移 (2026-06-24 10:08)
 - 编辑器设置目录从 `%APPDATA%/FluidWarfare/` 迁移到 `%APPDATA%/XuanYuEngine/`

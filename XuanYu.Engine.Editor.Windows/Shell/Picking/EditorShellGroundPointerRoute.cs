@@ -12,6 +12,7 @@ using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 namespace XuanYu.Engine.Editor.Windows.Shell.Picking;
 
 /// <summary>地面指针移动路由。负责视口地面 hover/指针移动事件转发及调度合并。</summary>
+#pragma warning disable CS9113 // scheduleFrame 保留 — API 设计一致性，供启动帧调度预留
 sealed class EditorShellGroundPointerRoute(
     Scene3dSessionLifecycle lifecycle,
     VulkanViewportHostPanel? vhPanel,

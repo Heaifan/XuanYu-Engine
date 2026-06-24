@@ -22,6 +22,7 @@ public static unsafe partial class VulkanScene3dRenderer
         ProbeComputePerObjectMVP(unitDraws, vp, out var unitMvpData, out var renderedUnitCount);
 
         // Record
+        if (r.Vk is null) return Fail("Vulkan 后端未初始化，无法录制命令缓冲区。", sw);
         if (!VulkanScene3dCommandRecorder.Record(r.Vk, r.CommandBuffer, r.RenderPass, r.Framebuffers[imgIndex],
                 extent, r.GridPipeline, r.UnitPipeline, r.PipelineLayout, vp,
                 r.GridBuffer, gVc, r.UnitBuffer, uVc, unitMvpData,
