@@ -3944,3 +3944,31 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | 目录白名单 | 0（不变） |
 | 所有生产 .cs 文件 | ≤100 行（不变） |
 | EditorShell 白名单 | 已移除（不变） |
+
+### 8.8-R2B — 旧 FluidWarfare 占位目录清理
+
+删除根目录下 9 个仅含 .gitkeep 的空占位目录，消除新旧命名并存误导。
+
+#### 删除清单
+
+| 目录 | 原因 |
+|------|------|
+| `FluidWarfare.AI` | 空占位，无源码/引用 |
+| `FluidWarfare.Combat` | 同上 |
+| `FluidWarfare.Data` | 同上 |
+| `FluidWarfare.Ecs` | 同上 |
+| `FluidWarfare.Exporter` | 同上 |
+| `FluidWarfare.Runtime.Android` | 同上 |
+| `FluidWarfare.Runtime.Windows` | 同上 |
+| `FluidWarfare.Simulation` | 同上 |
+| `FluidWarfare.World` | 同上 |
+
+未来需要这些模块时，必须按命名规范（XuanYu.Engine.* / XuanYu.SunWu.* / XuanYu.Tools.*）重新声明、重新创建，不得复用旧 FluidWarfare 占位骨架。
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` | ✅ 629/630（1 flaky pre-existing：中文排序）|
+| 残留 FluidWarfare.* 目录 | 0 |
