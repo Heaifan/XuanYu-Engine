@@ -11,8 +11,8 @@ unsafe partial class VulkanScene3dSession
 {
     private bool CreateInstance()
     {
-        var a = Marshal.StringToHGlobalAnsi("FluidWarfare");
-        var eg = Marshal.StringToHGlobalAnsi("FluidWarfare");
+        var a = Marshal.StringToHGlobalAnsi("XuanYu Engine");
+        var eg = Marshal.StringToHGlobalAnsi("XuanYu Engine");
         var surf = Marshal.StringToHGlobalAnsi("VK_KHR_surface");
         var win = Marshal.StringToHGlobalAnsi("VK_KHR_win32_surface");
         var debug = Marshal.StringToHGlobalAnsi("VK_EXT_debug_utils");

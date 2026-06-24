@@ -1,4 +1,4 @@
-# FluidWarfare 变更日志
+# XuanYu Engine 变更日志
 
 本文档记录项目的重要变更。
 
@@ -3855,3 +3855,45 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | GlobalUsings.cs | 99 行 |
 | EditorShellContext.cs | 95 行 |
 | EditorShell 白名单 | 已移除 |
+
+### 8.8-R0/R1 — 品牌换名第一阶段：玄域引擎 / XuanYu Engine
+
+项目正式技术品牌从 FluidWarfare 迁移为"玄域引擎 / XuanYu Engine"。FluidWarfare 仅作为历史开发代号保留。本阶段只改用户可见品牌名称与文档，不改 namespace / .sln / .csproj。
+
+#### 操作
+
+| 类别 | 修改内容 |
+|------|----------|
+| 新建文档 | `docs/naming-XuanYu-Engine.md` — 命名体系冻结 |
+| 窗口标题 | `MainWindow.axaml` → "XuanYu Engine Editor" |
+| About 窗口 | 标题/品牌名/版权 → 玄域引擎 / XuanYu Engine |
+| 菜单 | "关于 FluidWarfare" → "关于 玄域引擎" |
+| 示例项目 | `game.project.json` 描述 → 玄域引擎 |
+| Vulkan 标识 | 8 个文件的 `appName`/`engineName` → "XuanYu Engine" |
+| 文档标题 | CHANGELOG / AI 规则 / 代码宪法 / 命名规则 / file-tree / shaders README → XuanYu Engine |
+
+#### 未修改（按计划保留）
+
+| 项目 | 原因 |
+|------|------|
+| C# namespace | R3 阶段执行 |
+| .sln 文件名 | R2 阶段执行 |
+| .csproj 项目名 | R2 阶段执行 |
+| 程序集名 / AssemblyName | R2 阶段执行 |
+| 目录名 | R2 阶段执行 |
+| 类名（如 AboutFluidWarfareWindow）| R3 阶段执行 |
+| 设置路径 AppFolderName | 与用户数据兼容性相关，待迁移 |
+| `.gitkeep` 标注 | 目录名未改，标注不误导 |
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 10/10 |
+| `dotnet test` (全量) | ✅ 629/630（1 flaky pre-existing：中文排序）|
+| namespace / .sln / .csproj | ✅ 未改动 |
+| 生产白名单 | 2（不变） |
+| 目录白名单 | 0（不变） |
+| 所有生产 .cs 文件 | ≤100 行（不变） |
+| EditorShell 白名单 | 已移除（不变） |

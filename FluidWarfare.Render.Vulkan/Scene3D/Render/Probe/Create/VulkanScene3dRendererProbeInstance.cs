@@ -12,7 +12,7 @@ public static unsafe partial class VulkanScene3dRenderer
     static bool CreateInstance(Vk vk, out Silk.NET.Vulkan.Instance inst)
     {
         inst = default;
-        var a = Marshal.StringToHGlobalAnsi("FluidWarfare"); var e = Marshal.StringToHGlobalAnsi("FluidWarfare");
+        var a = Marshal.StringToHGlobalAnsi("XuanYu Engine"); var e = Marshal.StringToHGlobalAnsi("XuanYu Engine");
         var s = Marshal.StringToHGlobalAnsi("VK_KHR_surface"); var w = Marshal.StringToHGlobalAnsi("VK_KHR_win32_surface");
         try { var exts = stackalloc byte*[] { (byte*)s, (byte*)w }; var ai = new ApplicationInfo { SType = StructureType.ApplicationInfo, PApplicationName = (byte*)a, ApplicationVersion = 1, PEngineName = (byte*)e, EngineVersion = 1, ApiVersion = PackVer(1, 0, 0) }; var ci = new InstanceCreateInfo { SType = StructureType.InstanceCreateInfo, PApplicationInfo = &ai, EnabledExtensionCount = 2, PpEnabledExtensionNames = exts }; return vk.CreateInstance(&ci, null, out inst) == Result.Success; }
         finally { Marshal.FreeHGlobal(a); Marshal.FreeHGlobal(e); Marshal.FreeHGlobal(s); Marshal.FreeHGlobal(w); }

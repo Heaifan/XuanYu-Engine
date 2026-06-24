@@ -36,7 +36,7 @@
             <MenuFlyout>
               <MenuItem Header="查看默认键位" x:Name="ShowInputBindingsMenuItem" />
               <Separator />
-              <MenuItem Header="关于 FluidWarfare" x:Name="AboutFluidWarfareMenuItem" />
+              <MenuItem Header="关于 玄域引擎" x:Name="AboutFluidWarfareMenuItem" />
             </MenuFlyout>
           </Button.Flyout>
         </Button>

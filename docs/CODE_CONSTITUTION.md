@@ -1,8 +1,9 @@
-# FluidWarfare 代码宪法
+# XuanYu Engine 代码宪法
 
 创建时间：2026-06-10
+最后更新：2026-06-24（品牌更名为 XuanYu Engine）
 
-本文档定义 FluidWarfare 的代码硬性规则。
+本文档定义 XuanYu Engine 的代码硬性规则（历史代号 FluidWarfare）。
 
 ## 单一职责
 

@@ -3,7 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shell="clr-namespace:FluidWarfare.Editor.Windows.Shell"
-    Title="FluidWarfare Editor"
+    Title="XuanYu Engine Editor"
     Width="1280"
     Height="800"
     MinWidth="960"

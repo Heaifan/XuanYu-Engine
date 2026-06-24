@@ -20,8 +20,8 @@ public static unsafe class VulkanInstanceProbe
             if (apiVersionResult != Result.Success) apiVersion = PackApiVersion(1, 0, 0);
             apiVersionText = FormatApiVersion(apiVersion);
             extensionCount = ReadInstanceExtensionCount(vk);
-            var appName = Marshal.StringToHGlobalAnsi("FluidWarfare");
-            var engineName = Marshal.StringToHGlobalAnsi("FluidWarfare");
+            var appName = Marshal.StringToHGlobalAnsi("XuanYu Engine");
+            var engineName = Marshal.StringToHGlobalAnsi("XuanYu Engine");
             try
             {
                 var appInfo = new ApplicationInfo { SType = StructureType.ApplicationInfo, PApplicationName = (byte*)appName, ApplicationVersion = PackApiVersion(0, 0, 1), PEngineName = (byte*)engineName, EngineVersion = PackApiVersion(0, 0, 1), ApiVersion = apiVersion };

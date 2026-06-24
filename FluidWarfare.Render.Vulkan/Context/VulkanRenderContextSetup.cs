@@ -18,8 +18,8 @@ sealed unsafe class VulkanRenderContextSetup
         if (_vk!.EnumerateInstanceVersion(ref apiVersion) != Result.Success) apiVersion = Pack(1, 0, 0);
         apiVersionText = Format(apiVersion);
 
-        var a = Marshal.StringToHGlobalAnsi("FluidWarfare");
-        var e = Marshal.StringToHGlobalAnsi("FluidWarfare");
+        var a = Marshal.StringToHGlobalAnsi("XuanYu Engine");
+        var e = Marshal.StringToHGlobalAnsi("XuanYu Engine");
         var s = Marshal.StringToHGlobalAnsi("VK_KHR_surface");
         var w = Marshal.StringToHGlobalAnsi("VK_KHR_win32_surface");
         try

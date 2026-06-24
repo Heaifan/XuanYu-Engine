@@ -22,7 +22,7 @@ sealed unsafe class VulkanClearProbeContextScope : IDisposable
 
     public bool CreateInstance()
     {
-        var a = Marshal.StringToHGlobalAnsi("FluidWarfare"); var e = Marshal.StringToHGlobalAnsi("FluidWarfare");
+        var a = Marshal.StringToHGlobalAnsi("XuanYu Engine"); var e = Marshal.StringToHGlobalAnsi("XuanYu Engine");
         var s = Marshal.StringToHGlobalAnsi("VK_KHR_surface"); var w = Marshal.StringToHGlobalAnsi("VK_KHR_win32_surface");
         try
         {

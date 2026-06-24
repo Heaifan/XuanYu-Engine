@@ -1,4 +1,4 @@
-# FluidWarfare 命名规则
+# XuanYu Engine 命名规则
 
 创建时间：2026-06-10
 
@@ -61,7 +61,7 @@ game_data/scn_phase1_test_field.json
 
 ## 中文化规则
 
-FluidWarfare 遵循“机器读英文，人类读中文”。
+XuanYu Engine（原名 FluidWarfare）遵循“机器读英文，人类读中文”。
 
 保持英文的内容：
 

@@ -22,8 +22,8 @@ sealed unsafe class VulkanSurfaceInstanceScope : IDisposable
         if (_vk.EnumerateInstanceVersion(ref apiVersion) != Result.Success)
             apiVersion = PackApiVersion(1, 0, 0);
 
-        var appName = Marshal.StringToHGlobalAnsi("FluidWarfare");
-        var engineName = Marshal.StringToHGlobalAnsi("FluidWarfare");
+        var appName = Marshal.StringToHGlobalAnsi("XuanYu Engine");
+        var engineName = Marshal.StringToHGlobalAnsi("XuanYu Engine");
         var surfExt = Marshal.StringToHGlobalAnsi("VK_KHR_surface");
         var win32Ext = Marshal.StringToHGlobalAnsi("VK_KHR_win32_surface");
 

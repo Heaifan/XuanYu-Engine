@@ -1,4 +1,4 @@
-# FluidWarfare AI 开发规则
+# XuanYu Engine AI 开发规则
 
 创建时间：2026-06-10
 
