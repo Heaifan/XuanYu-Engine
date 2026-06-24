@@ -385,7 +385,8 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │   └── EditorInputService.cs  # 单例服务，管理运行时绑定快照的生命周期和热更新。
 │   │   └── Settings/
 │   │       ├── EditorSettingsDocument.cs  # 编辑器设置文档结构。
-│   │       ├── EditorSettingsPath.cs  # 编辑器设置文件路径。
+│   │       ├── EditorSettingsPath.cs  # 编辑器设置文件路径与文件夹名常量。
+│   │       ├── EditorSettingsPathMigration.cs  # 将旧 %APPDATA%/FluidWarfare 下的设置文件迁移到 %APPDATA%/XuanYuEngine。
 │   │       ├── EditorSettingsReader.cs  # 读取编辑器设置文件。失败时回退默认。
 │   │       └── EditorSettingsWriter.cs  # 原子方式保存编辑器设置文件。
 │   ├── ProjectContentTree/
@@ -847,6 +848,7 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │   │   ├── EditorInputBindingSnapshotTests.cs  # EditorInputBindingSnapshotTests 类
 │   │   │   │   └── EditorInputServiceTests.cs  # EditorInputServiceTests 类
 │   │   │   └── Settings/
+│   │   │       ├── EditorSettingsPathMigrationTests.cs  # 测试 EditorSettingsPathMigration 的目录迁移逻辑。
 │   │   │       └── EditorSettingsWriterTests.cs  # 直接测试 EditorSettingsReader/Writer 序列化逻辑，
 │   │   ├── Transform/
 │   │   │   ├── Drag/

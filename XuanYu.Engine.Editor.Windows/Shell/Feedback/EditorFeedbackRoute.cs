@@ -26,7 +26,7 @@ public sealed class EditorFeedbackRoute
         _debugDock?.LogPanel?.AppendLogMessage(EngineLogEntry.Create(0.0, l, "Editor", m).ToDisplayString());
 
     public void SetStartupLogs() => _debugDock?.LogPanel?.SetLogMessages([
-        EngineLogEntry.Create(0.0, EngineLogLevel.Info, "Editor", "FluidWarfare Editor 启动完成。").ToDisplayString(),
+        EngineLogEntry.Create(0.0, EngineLogLevel.Info, "Editor", "XuanYu Engine Editor 启动完成。").ToDisplayString(),
         EngineLogEntry.Create(0.0, EngineLogLevel.Info, "Core", "Core 基础模块已加载。").ToDisplayString()]);
 
     public void SetSelection(string? t) => _statusBar?.SetCurrentSelection(t ?? "无");

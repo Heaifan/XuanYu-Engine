@@ -1,5 +1,18 @@
 # changelog
 
+## [8.8-R4] — 用户数据目录迁移 (2026-06-24 10:08)
+- 编辑器设置目录从 `%APPDATA%/FluidWarfare/` 迁移到 `%APPDATA%/XuanYuEngine/`
+- 新增 `EditorSettingsPathMigration.cs`：旧→新目录迁移逻辑（幂等、不覆盖、不崩溃）
+- `EditorSettingsPath.cs`：新增 `CurrentAppFolder = "XuanYuEngine"` / `LegacyAppFolder = "FluidWarfare"`
+- `EditorSettingsPath.cs`：GetSettingsFilePath 首次调用时触发迁移
+- 迁移策略：新目录存在→跳过 / 仅旧目录存在→复制 / 新旧都不存在→默认
+- 不删除旧目录 / 不覆盖新目录已有文件 / 迁移失败不阻止编辑器启动
+- 对应测试 5 项（EditorSettingsPathMigrationTests.cs）
+- 生产 `Input/Settings/` 目录 5 文件（合规）
+- build: 0 Error / test: 634/635 (1 flaky pre-existing)
+- 架构门禁：10/10
+- commit `644aff7`
+
 ## [8.8-R3-Z] — namespace 迁移全仓收口 (2026-06-24 09:54)
 - 全仓 namespace FluidWarfare.* 清零确认 ✅
 - AboutFluidWarfareWindow → AboutXuanYuEngineWindow（类名 + 文件名 + x:Class + 全部引用）
