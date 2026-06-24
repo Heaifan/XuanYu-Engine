@@ -19,7 +19,7 @@ public sealed class SampleProjectPathTests
     public void TryFindFrom_WithNestedDirectory_ShouldWalkUpAndSucceed()
     {
         using var scope = SampleProjectTree.Create(withManifest: true);
-        var nestedPath = Path.Combine(scope.RootPath, "FluidWarfare.Editor.Windows", "bin", "Debug");
+        var nestedPath = Path.Combine(scope.RootPath, "XuanYu.Engine.Editor.Windows", "bin", "Debug");
         Directory.CreateDirectory(nestedPath);
 
         var result = SampleProjectPath.TryFindFrom(nestedPath, out var projectDirectory);
@@ -66,7 +66,7 @@ public sealed class SampleProjectPathTests
         {
             var rootPath = Path.Combine(
                 Path.GetTempPath(),
-                $"FluidWarfareSampleProjectPathTests_{Guid.NewGuid():N}");
+                $"XuanYuEngineSampleProjectPathTests_{Guid.NewGuid():N}");
 
             var sampleProjectPath = Path.Combine(rootPath, "GameProjects", "SampleProject");
             Directory.CreateDirectory(sampleProjectPath);

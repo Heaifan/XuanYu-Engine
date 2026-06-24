@@ -18,9 +18,7 @@ XuanYu.Engine/                              ← 仓库根目录
 │   ├── NAMING_RULES.md
 │   ├── PHASE1_SCOPE.md
 │   ├── PROJECT_CHARTER.md
-│   ├── naming-XuanYu-Engine.md
-│   └── reports/
-│       └── namespace-migration-R3-plan.md
+│   └── naming-XuanYu-Engine.md
 
 ├── tools/shaders/
 │   ├── compile_basic_3d.ps1
@@ -101,7 +99,7 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   ├── SceneCameraPose.cs  # 完整的相机姿态 — 渲染、Picking、Ground Hover 的唯一真源。
 │   │   └── SceneCameraState.cs  # RTS 战场相机状态。
 │   ├── Coordinates/
-│   │   ├── WorldCoordinateConvention.cs  # FluidWarfare 世界坐标宪法。
+│   │   ├── WorldCoordinateConvention.cs  # XuanYu Engine 世界坐标宪法。
 │   │   └── YUpToZUpPosition.cs  # 旧 Y-Up 到 Z-Up 的一次性迁移工具。
 │   ├── Scene/
 │   │   ├── Position/
@@ -441,11 +439,11 @@ XuanYu.Engine/                              ← 仓库根目录
 │       └── WorldHierarchyTreeBuilder.cs  # WorldHierarchyTreeBuilder — <summary>从 WorldState 构建 WorldHierarchyTree。排序稳定：分组按语义顺序，...
 ├── XuanYu.Engine.Editor.Windows/
 │   ├── About/
-│   │   ├── AboutFluidWarfareWindow.axaml  # FluidWarfare.Editor.Windows.About.AboutFluidWarfareWindow
-│   │   └── AboutFluidWarfareWindow.axaml.cs  # AboutFluidWarfareWindow 类
+│   │   ├── AboutXuanYuEngineWindow.axaml  # XuanYu.Engine.Editor.Windows.About.AboutXuanYuEngineWindow
+│   │   └── AboutXuanYuEngineWindow.axaml.cs  # AboutXuanYuEngineWindow 类
 │   ├── Panels/
 │   │   ├── DebugDock/
-│   │   │   ├── DebugDockPanel.axaml  # FluidWarfare.Editor.Windows.Panels.DebugDock.DebugDockPanel
+│   │   │   ├── DebugDockPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.DebugDock.DebugDockPanel
 │   │   │   ├── DebugDockPanel.axaml.cs  # DebugDockPanel — <summary>底部调试终端，包含日志、渲染诊断、RenderScene 和性能页签。</summary>
 │   │   │   ├── DebugDockPanel.Diagnostics.cs  # DebugDockPanel — <summary>Partial：渲染诊断文本更新。</summary>
 │   │   │   ├── DebugDockPanel.Performance.cs  # DebugDockPanel — <summary>Partial：性能计时更新。</summary>
@@ -453,24 +451,24 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   ├── HierarchyVisual/
 │   │   │   ├── HierarchyBranchCanvas.cs  # 绘制经典文件树的连续虚线树干。
 │   │   │   ├── HierarchyBranchInfo.cs  # 一个可见节点的树干位置。
-│   │   │   ├── HierarchyNodeRow.axaml  # FluidWarfare.Editor.Windows.Panels.HierarchyVisual.HierarchyNodeRow
+│   │   │   ├── HierarchyNodeRow.axaml  # XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual.HierarchyNodeRow
 │   │   │   ├── HierarchyNodeRow.axaml.cs  # HierarchyNodeRow 类
 │   │   │   └── HierarchyNodeViewContract.cs  # IHierarchyNodeView 类
 │   │   ├── Inspector/
 │   │   │   ├── Transform/
 │   │   │   │   └── TransformPositionAxis.cs  # Transform 数值拖拽的轴向。
-│   │   │   ├── InspectorPanel.axaml  # FluidWarfare.Editor.Windows.Panels.Inspector.InspectorPanel
+│   │   │   ├── InspectorPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.Inspector.InspectorPanel
 │   │   │   ├── InspectorPanel.axaml.cs  # InspectorPanel 类
 │   │   │   ├── InspectorScrubInput.cs  # InspectorScrubInput — <summary>Inspector 数值拖拽输入处理。X/Y/Z 标签拖拽微调坐标值。</summary>
 │   │   │   ├── InspectorSelectionView.cs  # InspectorSelectionView — <summary>Inspector 选择区显示管理。空选择/项目文件/世界实体的展示切换。</summary>
 │   │   │   ├── InspectorTransformBinder.cs  # InspectorTransformBinder — <summary>Inspector Transform 键盘与按钮事件绑定。Enter/Esc/Apply/Re...
 │   │   │   └── InspectorTransformView.cs  # InspectorTransformView — <summary>Inspector Transform 输入区管理。包含坐标输入框、校验错误和按钮状态。</su...
 │   │   ├── LeftDock/
-│   │   │   ├── ProjectWorldDockPanel.axaml  # FluidWarfare.Editor.Windows.Panels.LeftDock.ProjectWorldDockPanel
+│   │   │   ├── ProjectWorldDockPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.LeftDock.ProjectWorldDockPanel
 │   │   │   ├── ProjectWorldDockPanel.axaml.cs  # ProjectWorldDockPanel 类
 │   │   │   └── ProjectWorldDockTabs.cs  # ProjectWorldDockTabs 类
 │   │   ├── Logging/
-│   │   │   ├── LogPanel.axaml  # FluidWarfare.Editor.Windows.Panels.Logging.LogPanel
+│   │   │   ├── LogPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.Logging.LogPanel
 │   │   │   └── LogPanel.axaml.cs  # LogPanel 类
 │   │   ├── ProjectContentTree/
 │   │   │   ├── Panel/
@@ -479,10 +477,10 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │   ├── ProjectContentTreeExpansion.cs  # ProjectContentTreeExpansion — <summary>项目内容树展开/折叠状态管理。</summary>
 │   │   │   ├── ProjectContentTreeIndex.cs  # ProjectContentTreeIndex 类
 │   │   │   ├── ProjectContentTreeItems.cs  # ProjectContentTreeItems — <summary>项目内容树视图节点和可见行构造。</summary>
-│   │   │   ├── ProjectContentTreePanel.axaml  # FluidWarfare.Editor.Windows.Panels.ProjectContentTree.ProjectContentTreePanel
+│   │   │   ├── ProjectContentTreePanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree.ProjectContentTreePanel
 │   │   │   └── ProjectContentTreeSelection.cs  # ProjectContentTreeSelection — <summary>项目内容树选择状态和事件管理。</summary>
 │   │   ├── Status/
-│   │   │   ├── StatusBarPanel.axaml  # FluidWarfare.Editor.Windows.Panels.Status.StatusBarPanel
+│   │   │   ├── StatusBarPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.Status.StatusBarPanel
 │   │   │   └── StatusBarPanel.axaml.cs  # StatusBarPanel 类
 │   │   ├── Viewport/
 │   │   │   ├── HostInfo/
@@ -552,10 +550,10 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │   │   └── ViewportRenderSceneSummary.cs  # 视口 RenderScene 调试列表显示模型，保存多个渲染对象摘要。
 │   │   │   ├── Tools/
 │   │   │   │   ├── ViewportEditorTool.cs  # 视口编辑工具类型。
-│   │   │   │   ├── ViewportToolPalette.axaml  # FluidWarfare.Editor.Windows.Panels.Viewport.Tools.ViewportToolPalette
+│   │   │   │   ├── ViewportToolPalette.axaml  # XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools.ViewportToolPalette
 │   │   │   │   └── ViewportToolPalette.axaml.cs  # ViewportToolPalette 类
-│   │   │   ├── ViewportPlaceholderPanel.axaml  # FluidWarfare.Editor.Windows.Panels.Viewport.ViewportPlaceholderPanel
-│   │   │   └── VulkanViewportHostPanel.axaml  # FluidWarfare.Editor.Windows.Panels.Viewport.VulkanViewportHostPanel
+│   │   │   ├── ViewportPlaceholderPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.Viewport.ViewportPlaceholderPanel
+│   │   │   └── VulkanViewportHostPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.Viewport.VulkanViewportHostPanel
 │   │   └── WorldHierarchy/
 │   │       ├── View/
 │   │       │   ├── WorldHierarchyNodeView.cs  # WorldHierarchyNodeView 类
@@ -564,7 +562,7 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │       ├── WorldHierarchyProgrammaticSelection.cs  # 程序化选择一次性令牌。
 │   │       ├── WorldHierarchyTreeIndex.cs  # WorldHierarchyTreeIndex 类
 │   │       ├── WorldHierarchyTreeItems.cs  # WorldHierarchyTreeItems — <summary>世界层级树视图节点和可见行构造。</summary>
-│   │       ├── WorldHierarchyTreePanel.axaml  # FluidWarfare.Editor.Windows.Panels.WorldHierarchy.WorldHierarchyTreePanel
+│   │       ├── WorldHierarchyTreePanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy.WorldHierarchyTreePanel
 │   │       ├── WorldHierarchyTreePanel.axaml.cs  # WorldHierarchyTreePanel 类
 │   │       └── WorldHierarchyTreeSelection.cs  # WorldHierarchyTreeSelection — <summary>世界层级树选择状态和事件管理。</summary>
 │   ├── Preferences/
@@ -575,7 +573,7 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │   └── EditorPreferencesKeyMapper.cs  # EditorPreferencesKeyMapper 类
 │   │   ├── EditorPreferencesBindingList.cs  # EditorPreferencesBindingList 类
 │   │   ├── EditorPreferencesDraftHandler.cs  # EditorPreferencesDraftHandler 类
-│   │   ├── EditorPreferencesWindow.axaml  # FluidWarfare.Editor.Windows.Preferences.EditorPreferencesWindow
+│   │   ├── EditorPreferencesWindow.axaml  # XuanYu.Engine.Editor.Windows.Preferences.EditorPreferencesWindow
 │   │   └── EditorPreferencesWindow.axaml.cs  # EditorPreferencesWindow 类
 │   ├── Shell/
 │   │   ├── Commands/
@@ -684,7 +682,7 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │   ├── EditorShellWindowResult.cs  # EditorShellWindowResult 类
 │   │   │   └── EditorShellWindowRoute.cs  # EditorShellWindowRoute — <summary>编辑器窗口命令路由。管理 Preferences / InputBindings / About...
 │   │   ├── EditorSelection.cs  # struct 类
-│   │   ├── EditorShell.axaml  # FluidWarfare.Editor.Windows.Shell.EditorShell
+│   │   ├── EditorShell.axaml  # XuanYu.Engine.Editor.Windows.Shell.EditorShell
 │   │   └── EditorShell.axaml.cs  # EditorShell 类
 │   ├── Viewport/
 │   │   ├── Camera/
@@ -803,10 +801,10 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │           ├── WorldBootstrapRenderSeed.cs  # WorldBootstrapRenderSeed — <summary>从 WorldState 生成 RenderScene。纯数据逻辑。</summary>
 │   │           ├── WorldBootstrapResult.cs  # WorldBootstrapResult — <summary>World 引导结果。Shell 用此结果更新 Store、Selection、UI。</sum...
 │   │           └── WorldBootstrapRoute.cs  # World 引导路由。创建 WorldState → 播种实体 → 生成 RenderScene → 返回结果。
-│   ├── App.axaml  # FluidWarfare.Editor.Windows.App
+│   ├── App.axaml  # XuanYu.Engine.Editor.Windows.App
 │   ├── App.axaml.cs  # App 类
-│   ├── GlobalUsings.cs  # 纯 — 新根（A-
-│   ├── MainWindow.axaml  # FluidWarfare.Editor.Windows.MainWindow
+│   ├── GlobalUsings.cs  # （待补充）
+│   ├── MainWindow.axaml  # XuanYu.Engine.Editor.Windows.MainWindow
 │   ├── MainWindow.axaml.cs  # MainWindow 类
 │   └── Program.cs  # Program 类
 ├── XuanYu.Engine.Tests/

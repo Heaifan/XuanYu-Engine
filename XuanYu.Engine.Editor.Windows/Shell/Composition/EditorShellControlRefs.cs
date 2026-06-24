@@ -40,6 +40,6 @@ public sealed record EditorShellControlRefs(
             shell.FindControl<Button>("RunMenuButton"),
             shell.FindControl<MenuItem>("PreferencesMenuItem"),
             shell.FindControl<MenuItem>("ShowInputBindingsMenuItem"),
-            shell.FindControl<MenuItem>("AboutFluidWarfareMenuItem"));
+            shell.FindControl<MenuItem>("AboutXuanYuEngineMenuItem"));
     }
 }

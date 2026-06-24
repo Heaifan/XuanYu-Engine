@@ -24,7 +24,7 @@ sealed class NativeViewportCreate
         Win32ViewportWindowClass.EnsureRegistered(instanceHandle, wndProc);
 
         var windowHandle = CreateWindowEx(0, Win32ViewportWindowClass.WindowClassName,
-            "FluidWarfare Vulkan Viewport", WindowStyle,
+            "XuanYu Engine Viewport", WindowStyle,
             0, 0, 1, 1, parent.Handle, 0, instanceHandle, 0);
 
         if (windowHandle == 0)

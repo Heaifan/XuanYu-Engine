@@ -1,7 +1,7 @@
 ﻿namespace XuanYu.Engine.Render.Coordinates;
 
 /// <summary>
-/// FluidWarfare 世界坐标宪法。
+/// XuanYu Engine 世界坐标宪法。
 /// 右手坐标系，Z-Up：
 ///
 ///     +X：世界横向（右）

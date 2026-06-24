@@ -252,7 +252,7 @@ public sealed class GameContentFileScannerTests
         {
             var path = System.IO.Path.Combine(
                 System.IO.Path.GetTempPath(),
-                $"FluidWarfareContentScanTests_{Guid.NewGuid():N}");
+                $"XuanYuEngineContentScanTests_{Guid.NewGuid():N}");
 
             Directory.CreateDirectory(path);
             return new TestContentDirectory(path);

@@ -4,9 +4,9 @@ using Avalonia.Interactivity;
 
 namespace XuanYu.Engine.Editor.Windows.About;
 
-public partial class AboutFluidWarfareWindow : Window
+public partial class AboutXuanYuEngineWindow : Window
 {
-    public AboutFluidWarfareWindow()
+    public AboutXuanYuEngineWindow()
     {
         InitializeComponent();
     }

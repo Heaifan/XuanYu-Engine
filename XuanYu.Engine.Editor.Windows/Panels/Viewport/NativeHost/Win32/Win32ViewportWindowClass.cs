@@ -6,7 +6,7 @@ namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Win32;
 /// <summary>Win32 视口子窗口类注册管理。</summary>
 internal static class Win32ViewportWindowClass
 {
-    public const string WindowClassName = "FluidWarfareWindowsVulkanViewportHost";
+    public const string WindowClassName = "XuanYuEngineVulkanViewportHost";
     const int ClassNameAlreadyExists = 1410;
     static bool _classRegistered;
 

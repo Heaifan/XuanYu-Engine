@@ -569,7 +569,7 @@ public sealed class GameProjectLoaderTests
         {
             var path = System.IO.Path.Combine(
                 System.IO.Path.GetTempPath(),
-                $"FluidWarfareProjectTests_{Guid.NewGuid():N}");
+                $"XuanYuEngineProjectTests_{Guid.NewGuid():N}");
 
             Directory.CreateDirectory(path);
             return new ProjectTestDirectory(path);

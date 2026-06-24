@@ -1,6 +1,31 @@
 # changelog
 
-## [8.8-R3-2] — Render 层 namespace 迁移 (2026-06-24)
+## [8.8-R3-Z] — namespace 迁移全仓收口 (2026-06-24 09:54)
+- 全仓 namespace FluidWarfare.* 清零确认 ✅
+- AboutFluidWarfareWindow → AboutXuanYuEngineWindow（类名 + 文件名 + x:Class + 全部引用）
+- 清理 14 处非 namespace 的 FluidWarfare 字符串（Vulkan 窗口标题 / Win32 类名 / 日志 / 测试路径等）
+- 删除 docs/reports/namespace-migration-R3-plan.md（生命周期完成）
+- 更新 docs/naming-XuanYu-Engine.md R3 状态、file-tree.md
+- 残留说明：EditorSettingsPath.AppFolderName = "FluidWarfare" 保留到 R4
+- build: 0 Error / test: 629/630 (1 flaky)
+- commit `56a5f17`
+
+## [8.8-R3-4] — Tests namespace 迁移 (2026-06-24 09:48)
+- 迁移 namespace `FluidWarfare.Tests.*` → `XuanYu.Engine.Tests.*`（73 文件）
+- 全仓 namespace `FluidWarfare.*` 清零 ✅
+- 剩余：EditorSettingsPath（R4）/ AboutFluidWarfareWindow（R3-Z）/ 历史记录
+- build: 0 Error / test: 629/630
+- commit `5c8966b`
+
+## [8.8-R3-3BC] — Editor.Windows 全仓 namespace + x:Class 成对迁移 (2026-06-24 09:42)
+- 合并 R3-3B + R3-3C 为原子提交（partial class 必须同 namespace）
+- 244 纯 C# + 16 .axaml.cs + 16 .axaml x:Class + 7 clr-namespace
+- GlobalUsings.cs: 43 条 Editor.Windows 全局 using（100 行门禁）
+- 清零：namespace/x:Class/clr-namespace FluidWarfare.Editor.Windows 全部 ✅
+- build: 0 Error / test: 629/630
+- commit `775ba48`
+
+## [8.8-R3-2] — Render 层 namespace 迁移 (2026-06-24 09:10)
 - 迁移 Render/Render.Vulkan namespace：`FluidWarfare.Render.*` → `XuanYu.Engine.Render.*`
 - Render：47 文件 namespace + 147 文件跨项目 using；Render.Vulkan：154 文件 namespace
 - 修复 1 处完全限定类型引用；相机白名单文件 namespace 正确迁移

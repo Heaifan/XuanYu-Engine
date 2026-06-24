@@ -34,10 +34,10 @@ public sealed class EditorShellWindowRoute
     private EditorShellWindowResult OpenAbout()
     {
         if (_aboutWindow is { IsVisible: true }) { _aboutWindow.Activate(); return new(null); }
-        _aboutWindow = new AboutFluidWarfareWindow();
+        _aboutWindow = new AboutXuanYuEngineWindow();
         var weak = _aboutWindow;
         _aboutWindow.Closed += (_, _) => { if (weak == _aboutWindow) _aboutWindow = null; };
         _aboutWindow.Show();
-        return new("已打开关于 FluidWarfare。");
+        return new("已打开关于 玄域引擎。" );
     }
 }

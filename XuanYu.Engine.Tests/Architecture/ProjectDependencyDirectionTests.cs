@@ -143,6 +143,6 @@ public sealed class ProjectDependencyDirectionTests
             current = current.Parent;
         }
 
-        throw new DirectoryNotFoundException("未找到 FluidWarfare 仓库根目录。");
+        throw new DirectoryNotFoundException("未找到 XuanYu Engine 仓库根目录。");
     }
 }

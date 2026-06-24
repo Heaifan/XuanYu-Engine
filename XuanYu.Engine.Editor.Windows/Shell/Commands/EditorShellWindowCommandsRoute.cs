@@ -14,7 +14,7 @@ sealed class EditorShellWindowCommandsRoute(
     public void HandleShowInputBindingsClicked(object? sender, RoutedEventArgs e) =>
         ApplyResult(windowRoute.Open(EditorShellWindowCommand.InputBindings));
 
-    public void HandleAboutFluidWarfareClicked(object? sender, RoutedEventArgs e) =>
+    public void HandleAboutXuanYuEngineClicked(object? sender, RoutedEventArgs e) =>
         ApplyResult(windowRoute.Open(EditorShellWindowCommand.About));
 
     public void ExecuteOpenPreferences()
