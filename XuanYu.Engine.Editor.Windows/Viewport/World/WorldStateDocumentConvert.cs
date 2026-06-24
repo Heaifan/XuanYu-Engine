@@ -15,15 +15,18 @@ static class WorldStateDocumentConvert
         foreach (var entity in entities)
         {
             var pos = world.FindPosition(entity.EntityId);
-            var position = new WorldVector3Document(
-                (float)(pos?.Value.X ?? 0),
-                (float)(pos?.Value.Y ?? 0),
-                (float)(pos?.Value.Z ?? 0));
+            var rot = world.FindRotation(entity.EntityId);
+            var scale = world.FindScale(entity.EntityId);
 
             entityDocs.Add(new WorldEntityDocument(
                 entity.EntityId.ToString(),
                 entity.DisplayName,
-                [new TransformComponentDocument(position)]));
+                [new TransformComponentDocument
+                {
+                    Position = ToDocVector(pos?.Value ?? Vector3d.Zero),
+                    RotationDegrees = ToDocVector(rot?.Value ?? Vector3d.Zero),
+                    Scale = ToDocVector(scale?.Value ?? new Vector3d(1, 1, 1)),
+                }]));
         }
 
         return new WorldDocument(
@@ -36,12 +39,23 @@ static class WorldStateDocumentConvert
         var world = new WorldState();
         foreach (var entity in doc.Entities)
         {
-            var pos = entity.Components is not null
-                ? entity.Components.OfType<TransformComponentDocument>().FirstOrDefault()?.Position
+            var t = entity.Components is not null
+                ? entity.Components.OfType<TransformComponentDocument>().FirstOrDefault()
                 : null;
-            var position = new Vector3d(pos?.X ?? 0, pos?.Y ?? 0, pos?.Z ?? 0);
-            world.CreateEntity(entity.DisplayName, position);
+
+            var position = ToEngineVector(t?.GetPositionOrDefault());
+            var rotation = ToEngineVector(t?.GetRotationDegreesOrDefault());
+            var scale = ToEngineVector(t?.GetScaleOrDefault());
+
+            world.CreateEntity(entity.DisplayName, position, rotation, scale);
         }
         return world;
     }
+
+    static WorldVector3Document ToDocVector(Vector3d v) =>
+        new((float)v.X, (float)v.Y, (float)v.Z);
+
+    static Vector3d ToEngineVector(WorldVector3Document? v) =>
+        v is null ? Vector3d.Zero : new Vector3d(v.X, v.Y, v.Z);
+
 }

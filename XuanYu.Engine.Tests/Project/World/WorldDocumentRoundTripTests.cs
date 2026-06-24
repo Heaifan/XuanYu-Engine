@@ -12,11 +12,21 @@ public sealed class WorldDocumentRoundTripTests
         var original = new WorldDocument(1, "rt_world", "往返测试世界",
             [
                 new WorldEntityDocument("rt_1", "单位甲",
-                    [new TransformComponentDocument(new WorldVector3Document(10f, 20f, 30f))]),
+                    [new TransformComponentDocument
+                    {
+                        Position = new WorldVector3Document(10f, 20f, 30f),
+                        RotationDegrees = new WorldVector3Document(0f, 45f, 0f),
+                        Scale = new WorldVector3Document(2f, 2f, 2f),
+                    }]),
                 new WorldEntityDocument("rt_2", "单位乙",
-                    [new TransformComponentDocument(new WorldVector3Document(40f, 50f, 60f))]),
+                    [new TransformComponentDocument
+                    {
+                        Position = new WorldVector3Document(40f, 50f, 60f),
+                        RotationDegrees = new WorldVector3Document(90f, 0f, 180f),
+                        Scale = new WorldVector3Document(1f, 0.5f, 1f),
+                    }]),
                 new WorldEntityDocument("rt_3", "单位丙",
-                    [new TransformComponentDocument(WorldVector3Document.Zero)]),
+                    [new TransformComponentDocument { Position = WorldVector3Document.Zero }]),
             ],
             new WorldMetadataDocument("测试", "RoundTrip 测试"));
 
@@ -57,9 +67,24 @@ public sealed class WorldDocumentRoundTripTests
 
                 var origTrans = origComp.OfType<TransformComponentDocument>().First();
                 var loadTrans = loadComp.OfType<TransformComponentDocument>().First();
-                Assert.Equal(origTrans.Position.X, loadTrans.Position.X);
-                Assert.Equal(origTrans.Position.Y, loadTrans.Position.Y);
-                Assert.Equal(origTrans.Position.Z, loadTrans.Position.Z);
+
+                var origPos = origTrans.GetPositionOrDefault();
+                var loadPos = loadTrans.GetPositionOrDefault();
+                Assert.Equal(origPos.X, loadPos.X);
+                Assert.Equal(origPos.Y, loadPos.Y);
+                Assert.Equal(origPos.Z, loadPos.Z);
+
+                var origRot = origTrans.GetRotationDegreesOrDefault();
+                var loadRot = loadTrans.GetRotationDegreesOrDefault();
+                Assert.Equal(origRot.X, loadRot.X);
+                Assert.Equal(origRot.Y, loadRot.Y);
+                Assert.Equal(origRot.Z, loadRot.Z);
+
+                var origScale = origTrans.GetScaleOrDefault();
+                var loadScale = loadTrans.GetScaleOrDefault();
+                Assert.Equal(origScale.X, loadScale.X);
+                Assert.Equal(origScale.Y, loadScale.Y);
+                Assert.Equal(origScale.Z, loadScale.Z);
             }
         }
         finally { File.Delete(path); }
@@ -92,7 +117,7 @@ public sealed class WorldDocumentRoundTripTests
     {
         var original = new WorldDocument(1, "valid", "合法 JSON 测试",
             [new WorldEntityDocument("e1", "实体",
-                [new TransformComponentDocument(new WorldVector3Document(1f, 2f, 3f))])],
+                [new TransformComponentDocument { Position = new WorldVector3Document(1f, 2f, 3f) }])],
             WorldMetadataDocument.Default);
 
         var path = Path.GetTempFileName();
