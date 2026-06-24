@@ -29,7 +29,7 @@ public sealed class EditorSceneToolInputRoute
         Func<TransformStartSnapshot?> buildSnapshot,
         Action<string> infoLog)
     {
-        if (!pointer.IsMoveToolActive || selection.State.SelectedWorldEntity is null) return ViewportSceneToolPressResult.NotHandled;
+        if (selection.State.SelectedWorldEntity is null) return ViewportSceneToolPressResult.NotHandled;
         var cam = lifecycle.State.Session?.LastPresentedSnapshot;
         if (cam is not { IsValid: true }) return ViewportSceneToolPressResult.NotHandled;
         var snap = buildSnapshot(); if (snap is null) return ViewportSceneToolPressResult.NotHandled;

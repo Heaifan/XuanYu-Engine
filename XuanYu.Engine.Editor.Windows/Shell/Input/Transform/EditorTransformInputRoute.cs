@@ -30,7 +30,7 @@ public sealed class EditorTransformInputRoute
 
     public EditorTransformInputResult HandlePointerMoved(EditorTransformInputRequest r)
     {
-        if (r.PointerRoute.IsMoveToolActive) { var g = r.Lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo; if (g?.IsAvailable == true) r.PointerRoute.UpdateGizmoHover(r.X, r.Y, g.Value.Layout); }
+        if (r.SelectionRoute.State.SelectedWorldEntity is not null) { var g = r.Lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo; if (g?.IsAvailable == true) r.PointerRoute.UpdateGizmoHover(r.X, r.Y, g.Value.Layout); }
         if (r.PointerRoute.IsDragActive) { var dr = r.PointerRoute.OnPointerMoved(r.X, r.Y); if (dr.Action == Previewed) { r.ApplyPreviewPosition(); return new(true); } }
         return new(false);
     }
