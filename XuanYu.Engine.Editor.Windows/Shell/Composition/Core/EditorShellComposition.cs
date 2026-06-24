@@ -38,11 +38,11 @@ static class EditorShellComposition
         ctx.StartupProbeRoute = new(ctx.ProbeRoute, ctx.StartupVulkanRoute, ctx.Lifecycle, ctx.RenderSceneStore,
             ctx.VulkanViewportHostPanel, ctx.LogRoute.Info, ctx.LogRoute.Warn, ctx.LogRoute.RefreshDiagnostics,
             () => rt.ApplyScene3dCommandResult_Direct(), ctx.DiagnosticsRoute);
+        ctx.HierarchyRoute = new(ctx.DockPanel, () => ctx.ProjectInfo, () => ctx.WorldState, ctx.RenderSceneStore, ctx.LogRoute.Error);
+        ctx.WindowCommandsRoute = new(ctx.WindowRoute, ctx.LogRoute.Info);
         ctx.ProjectBootstrapRoute = new(ctx.StartupRoute, ctx.PanelApplyRoute, ctx.HierarchyRoute,
             ctx.ViewportSelectionPresenter, ctx.LogRoute.Info, ctx.LogRoute.Warn, ctx.LogRoute.Error,
             v => ctx.ProjectInfo = v, v => ctx.ContentFiles = v, v => ctx.WorldState = v);
-        ctx.WindowCommandsRoute = new(ctx.WindowRoute, ctx.LogRoute.Info);
-        ctx.HierarchyRoute = new(ctx.DockPanel, () => ctx.ProjectInfo, () => ctx.WorldState, ctx.RenderSceneStore, ctx.LogRoute.Error);
         ctx.SelectionSyncRoute = new(ctx.SelectionRoute, ctx.PanelApplyRoute, () => ctx.WorldState, () => ctx.SessionActive, ctx.Lifecycle, rt.ScheduleFrame);
         ctx.RawInputRoute = new(ctx.ViewportInputRoute, rt.BuildInputRequest);
         ctx.ViewportFrameRoute = new(() => ctx.SessionActive, ctx.Lifecycle, ctx.SelectionRoute, () => ctx.WorldState, ctx.StatusBarPanel, ctx.CameraRoute, rt.ScheduleFrame);

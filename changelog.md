@@ -13,6 +13,18 @@
 - 架构门禁：14/14
 - commit `fbf509b`
 
+## [8.8-RZ-Fix1] — Editor 启动 AccessViolation 修复 (2026-06-24 11:45)
+- **根因**：`EditorShellComposition.Build()` 中初始化顺序错误 — `ProjectBootstrapRoute` 在第 41 行创建时引用了 `ctx.HierarchyRoute`，但 `HierarchyRoute` 直到第 45 行才赋值，导致 `hierarchyRoute` 为 null
+- **现象**：Editor 启动崩溃，退出码 -1073741819（0xC0000005），实际为 NullReferenceException
+- **修复**：将 `ctx.HierarchyRoute = new(...)` 移到 `ctx.ProjectBootstrapRoute = new(...)` 之前
+- **验收**：
+  - build: 0 Error / 4 Warning（已知旧 warning，未新增）
+  - test: 638/639 通过（1 个预存 flaky：中文排序依赖 locale）
+  - Editor 启动：成功，不再崩溃
+  - 架构门禁：14/14
+- 附带修复：run.bat CRLF 行尾（Windows 批处理兼容性）
+- commit `pending`
+
 ## [8.8-R4] — 用户数据目录迁移 (2026-06-24 10:08)
 - 编辑器设置目录从 `%APPDATA%/FluidWarfare/` 迁移到 `%APPDATA%/XuanYuEngine/`
 - 新增 `EditorSettingsPathMigration.cs`：旧→新目录迁移逻辑（幂等、不覆盖、不崩溃）
