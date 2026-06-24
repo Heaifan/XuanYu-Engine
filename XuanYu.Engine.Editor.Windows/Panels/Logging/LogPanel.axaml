@@ -13,14 +13,14 @@
         Background="#11161C"
         BorderBrush="#303944"
         BorderThickness="1"
-        CaretBrush="#F0F4F8"
         FontFamily="Consolas, Microsoft YaHei UI"
         FontSize="12"
         Foreground="#DCE3EA"
-        IsReadOnly="True"
         Padding="8"
         ScrollViewer.HorizontalScrollBarVisibility="Auto"
         ScrollViewer.VerticalScrollBarVisibility="Auto"
+        SelectionBrush="#1769AA"
+        SelectionForegroundBrush="#FFFFFF"
         TextWrapping="NoWrap" />
   </Border>
 </UserControl>
