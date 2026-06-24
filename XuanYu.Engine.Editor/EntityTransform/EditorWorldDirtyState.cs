@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.EntityTransform;
+﻿namespace XuanYu.Engine.Editor.EntityTransform;
 
 /// <summary>
 /// 场景修改状态跟踪。只提供状态反馈，不实现磁盘保存。

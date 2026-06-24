@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Input.Bindings;
+﻿using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Editor.Input.Actions;
+namespace XuanYu.Engine.Editor.Input.Actions;
 
 /// <summary>全部编辑器动作声明与 Blender 默认绑定。</summary>
 public static class EditorInputActionCatalog

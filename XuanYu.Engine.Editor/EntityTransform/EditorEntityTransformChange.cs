@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.EntityTransform;
+namespace XuanYu.Engine.Editor.EntityTransform;
 
 /// <summary>
 /// 一次正式实体位置修改。

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Input.Bindings;
+﻿namespace XuanYu.Engine.Editor.Input.Bindings;
 
 /// <summary>
 /// 绑定冲突检测。

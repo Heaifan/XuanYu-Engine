@@ -1,7 +1,7 @@
-using FluidWarfare.Editor.Input.Actions;
-using FluidWarfare.Editor.Input.Bindings;
+﻿using XuanYu.Engine.Editor.Input.Actions;
+using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Editor.Input.Runtime;
+namespace XuanYu.Engine.Editor.Input.Runtime;
 
 /// <summary>Partial：快照构建逻辑。</summary>
 sealed partial class EditorInputBindingSnapshot

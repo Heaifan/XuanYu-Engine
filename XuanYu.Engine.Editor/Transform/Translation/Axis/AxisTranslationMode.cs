@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Transform.Translation.Axis;
+﻿namespace XuanYu.Engine.Editor.Transform.Translation.Axis;
 
 /// <summary>
 /// 轴向平移求解器的执行模式。

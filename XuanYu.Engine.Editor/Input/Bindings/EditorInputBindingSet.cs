@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Input.Bindings;
+﻿namespace XuanYu.Engine.Editor.Input.Bindings;
 
 /// <summary>
 /// 完整的绑定集合：包含预设名和覆盖项。

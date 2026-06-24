@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Project.World.Transform;
 
-namespace FluidWarfare.Editor.Transform.Edit;
+namespace XuanYu.Engine.Editor.Transform.Edit;
 
 /// <summary>
 /// 编辑事务开始时的快照。用于 Cancel 时恢复。

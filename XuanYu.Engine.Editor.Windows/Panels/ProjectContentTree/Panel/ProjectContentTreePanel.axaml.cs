@@ -1,7 +1,7 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
-using ProjectContentTreeModel = FluidWarfare.Editor.ProjectContentTreeModel;
+using ProjectContentTreeModel = XuanYu.Engine.Editor.ProjectContentTreeModel;
 
 namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
 

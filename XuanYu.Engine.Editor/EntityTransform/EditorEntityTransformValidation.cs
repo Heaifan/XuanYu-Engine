@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.EntityTransform;
+namespace XuanYu.Engine.Editor.EntityTransform;
 
 /// <summary>
 /// Transform 输入校验。

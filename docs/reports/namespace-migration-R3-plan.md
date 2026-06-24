@@ -3,6 +3,7 @@
 > **创建**：2026-06-24 | **类型**：迁移计划 | **生命周期**：R3-Z 完成后合并到 `changelog.md` 后删除
 > **R3-1 状态**：✅ 已完成（2026-06-24）
 > **R3-2 状态**：✅ 已完成（2026-06-24）
+> **R3-3A 状态**：✅ 已完成（2026-06-24，Editor 项目 namespace 迁移，不碰 XAML）
 
 ---
 
@@ -174,7 +175,20 @@ XAML 风险：无
 5. build: 0 Error / test: 629/630 (1 flaky)
 6. R3-2 范围内旧 namespace/using 全部清零 ✅
 
-### R3-3 — Editor 层（Editor + Editor.Windows）⚠️ 高风险
+### R3-3 — Editor 层（Editor + Editor.Windows）⚠️ 高风险（拆三段）
+
+#### ✅ R3-3A — Editor 项目 namespace（已完成）
+
+```
+60 文件 namespace + 57 文件跨项目 using
+build: 0 Error / test: 629/630
+Editor namespace 清零 ✅
+Editor.Windows namespace 保持不动 ✅
+```
+
+#### ⬜ R3-3B — Editor.Windows 非 XAML C# namespace（待做）
+
+#### ⬜ R3-3C — Avalonia XAML / x:Class / 类型名迁移（高风险）
 
 ```
 文件数：~320

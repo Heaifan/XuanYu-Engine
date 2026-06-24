@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.EntityTransform;
+namespace XuanYu.Engine.Editor.EntityTransform;
 
 /// <summary>
 /// 检查器当前 Transform 输入草稿。

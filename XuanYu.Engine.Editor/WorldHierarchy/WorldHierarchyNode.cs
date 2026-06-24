@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Identity;
 
-namespace FluidWarfare.Editor.WorldHierarchy;
+namespace XuanYu.Engine.Editor.WorldHierarchy;
 
 /// <summary>
 /// 层级树中的一个节点。不可变创建，构建后 Children 集合不可修改。

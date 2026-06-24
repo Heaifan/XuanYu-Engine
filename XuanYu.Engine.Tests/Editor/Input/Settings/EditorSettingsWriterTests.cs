@@ -1,5 +1,5 @@
-using System.Text.Json;
-using FluidWarfare.Editor.Input.Bindings;
+﻿using System.Text.Json;
+using XuanYu.Engine.Editor.Input.Bindings;
 
 namespace FluidWarfare.Tests.Editor.Input.Settings;
 
@@ -20,9 +20,9 @@ public sealed class EditorSettingsWriterTests
     [Fact]
     public void DefaultDocument_RoundTrips()
     {
-        var doc = new FluidWarfare.Editor.Input.Settings.EditorSettingsDocument();
+        var doc = new XuanYu.Engine.Editor.Input.Settings.EditorSettingsDocument();
         var json = JsonSerializer.Serialize(doc, JsonOptions);
-        var read = JsonSerializer.Deserialize<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions);
+        var read = JsonSerializer.Deserialize<XuanYu.Engine.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions);
         Assert.NotNull(read);
         Assert.Equal("blender", read.Input.Preset);
     }
@@ -30,7 +30,7 @@ public sealed class EditorSettingsWriterTests
     [Fact]
     public void Override_RoundTrips()
     {
-        var doc = new FluidWarfare.Editor.Input.Settings.EditorSettingsDocument
+        var doc = new XuanYu.Engine.Editor.Input.Settings.EditorSettingsDocument
         {
             Input = new EditorInputBindingSet
             {
@@ -51,11 +51,11 @@ public sealed class EditorSettingsWriterTests
         };
 
         var json = JsonSerializer.Serialize(doc, JsonOptions);
-        var read = Assert.IsType<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(
-            JsonSerializer.Deserialize<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions));
+        var read = Assert.IsType<XuanYu.Engine.Editor.Input.Settings.EditorSettingsDocument>(
+            JsonSerializer.Deserialize<XuanYu.Engine.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions));
         Assert.Single(read.Input.Overrides);
         Assert.Equal("viewport.pan", read.Input.Overrides[0].ActionId);
-        var gesture = Assert.IsType<FluidWarfare.Editor.Input.Bindings.EditorInputGesture>(read.Input.Overrides[0].Gesture);
+        var gesture = Assert.IsType<XuanYu.Engine.Editor.Input.Bindings.EditorInputGesture>(read.Input.Overrides[0].Gesture);
         Assert.Equal("Right", gesture.Code);
     }
 
@@ -64,14 +64,14 @@ public sealed class EditorSettingsWriterTests
     {
         var json = "not valid json {{{";
         Assert.Throws<JsonException>(() =>
-            JsonSerializer.Deserialize<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions));
+            JsonSerializer.Deserialize<XuanYu.Engine.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions));
     }
 
     [Fact]
     public void UnsupportedSchema_DeserializesButIsNotDefault()
     {
         var json = """{"schemaVersion":99,"input":{"preset":"unknown"}}""";
-        var doc = JsonSerializer.Deserialize<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions);
+        var doc = JsonSerializer.Deserialize<XuanYu.Engine.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions);
         Assert.NotNull(doc);
         Assert.Equal(99, doc.SchemaVersion);
         Assert.False(doc.IsDefault);
@@ -81,7 +81,7 @@ public sealed class EditorSettingsWriterTests
     public void EmptyObject_DeserializesAsDefault()
     {
         var json = "{}";
-        var doc = JsonSerializer.Deserialize<FluidWarfare.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions);
+        var doc = JsonSerializer.Deserialize<XuanYu.Engine.Editor.Input.Settings.EditorSettingsDocument>(json, JsonOptions);
         Assert.NotNull(doc);
         Assert.True(doc.IsDefault);
     }

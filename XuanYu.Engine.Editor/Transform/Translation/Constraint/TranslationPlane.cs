@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Translation.Constraint;
+namespace XuanYu.Engine.Editor.Transform.Translation.Constraint;
 
 public enum TranslationPlane
 {

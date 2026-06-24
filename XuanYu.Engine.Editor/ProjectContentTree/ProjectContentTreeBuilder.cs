@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Project.Content;
 using XuanYu.Engine.Project.Metadata;
 
-namespace FluidWarfare.Editor.ProjectContentTreeModel;
+namespace XuanYu.Engine.Editor.ProjectContentTreeModel;
 
 /// <summary>
 /// 从 GameProjectInfo 构建 ProjectContentTree。

@@ -1,5 +1,5 @@
-using Avalonia.Input;
-using FluidWarfare.Editor.Input.Bindings;
+﻿using Avalonia.Input;
+using XuanYu.Engine.Editor.Input.Bindings;
 
 namespace FluidWarfare.Editor.Windows.Preferences;
 

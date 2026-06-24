@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Transform.Translation.Plane;
+﻿namespace XuanYu.Engine.Editor.Transform.Translation.Plane;
 
 public enum PlaneTranslationMode
 {

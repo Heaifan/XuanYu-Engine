@@ -1,7 +1,7 @@
-using FluidWarfare.Editor.Input.Actions;
-using FluidWarfare.Editor.Input.Bindings;
-using FluidWarfare.Editor.Input.Runtime;
-using FluidWarfare.Editor.Input.Settings;
+﻿using XuanYu.Engine.Editor.Input.Actions;
+using XuanYu.Engine.Editor.Input.Bindings;
+using XuanYu.Engine.Editor.Input.Runtime;
+using XuanYu.Engine.Editor.Input.Settings;
 
 namespace FluidWarfare.Editor.Windows.Preferences;
 

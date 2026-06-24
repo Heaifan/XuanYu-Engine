@@ -1,7 +1,7 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
-using FluidWarfare.Editor.Transform;
-using FluidWarfare.Editor.Transform.Scrub;
+using XuanYu.Engine.Editor.Transform;
+using XuanYu.Engine.Editor.Transform.Scrub;
 using FluidWarfare.Editor.Windows.Panels.Inspector.Transform;
 
 namespace FluidWarfare.Editor.Windows.Panels.Inspector;

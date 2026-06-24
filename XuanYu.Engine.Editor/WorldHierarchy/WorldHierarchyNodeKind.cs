@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.WorldHierarchy;
+﻿namespace XuanYu.Engine.Editor.WorldHierarchy;
 
 /// <summary>
 /// 层级节点类型。Root 和 Group 不可选择为实体，Entity 可选择。

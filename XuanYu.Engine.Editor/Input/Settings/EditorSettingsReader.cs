@@ -1,6 +1,6 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace FluidWarfare.Editor.Input.Settings;
+namespace XuanYu.Engine.Editor.Input.Settings;
 
 /// <summary>
 /// 读取编辑器设置文件。失败时回退默认。

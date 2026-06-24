@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Translation.Axis;
+namespace XuanYu.Engine.Editor.Transform.Translation.Axis;
 
 /// <summary>
 /// 轴向平移求解器。X/Y/Z 共用此 Solver，仅 Axis 不同。

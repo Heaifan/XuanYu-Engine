@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Input.Bindings;
+﻿namespace XuanYu.Engine.Editor.Input.Bindings;
 
 /// <summary>
 /// 一个动作的绑定声明：主手势和可选手势。

@@ -1,5 +1,5 @@
-using System.Text.Json;
-using FluidWarfare.Editor.Input.Bindings;
+﻿using System.Text.Json;
+using XuanYu.Engine.Editor.Input.Bindings;
 
 namespace FluidWarfare.Tests.Editor.Input.Bindings;
 

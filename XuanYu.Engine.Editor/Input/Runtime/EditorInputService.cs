@@ -1,9 +1,9 @@
-using System.Threading;
-using FluidWarfare.Editor.Input.Actions;
-using FluidWarfare.Editor.Input.Bindings;
-using FluidWarfare.Editor.Input.Settings;
+﻿using System.Threading;
+using XuanYu.Engine.Editor.Input.Actions;
+using XuanYu.Engine.Editor.Input.Bindings;
+using XuanYu.Engine.Editor.Input.Settings;
 
-namespace FluidWarfare.Editor.Input.Runtime;
+namespace XuanYu.Engine.Editor.Input.Runtime;
 
 /// <summary>
 /// 单例服务，管理运行时绑定快照的生命周期和热更新。

@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Translation.Axis;
+namespace XuanYu.Engine.Editor.Transform.Translation.Axis;
 
 /// <summary>
 /// 计算轴在屏幕上的投影方向和每像素对应世界单位数。

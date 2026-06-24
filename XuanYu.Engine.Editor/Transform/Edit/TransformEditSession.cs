@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Project.World.Transform;
 
-namespace FluidWarfare.Editor.Transform.Edit;
+namespace XuanYu.Engine.Editor.Transform.Edit;
 
 /// <summary>
 /// Transform 编辑事务状态机。

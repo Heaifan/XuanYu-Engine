@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Scrub;
+namespace XuanYu.Engine.Editor.Transform.Scrub;
 
 /// <summary>
 /// Transform 数值拖拽状态机（平台无关）。

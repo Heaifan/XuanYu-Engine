@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Translation.Plane;
+namespace XuanYu.Engine.Editor.Transform.Translation.Plane;
 
 /// <summary>
 /// 平面平移求解器。XY/XZ/YZ/View 平面共用。

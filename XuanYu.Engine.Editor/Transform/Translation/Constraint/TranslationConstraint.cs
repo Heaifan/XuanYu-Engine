@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Translation.Constraint;
+namespace XuanYu.Engine.Editor.Transform.Translation.Constraint;
 
 /// <summary>
 /// 平移约束的两种形式：轴向约束或平面约束。

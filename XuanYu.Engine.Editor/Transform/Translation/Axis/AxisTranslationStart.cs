@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Transform.Translation.Constraint;
+using XuanYu.Engine.Editor.Transform.Translation.Constraint;
 
-namespace FluidWarfare.Editor.Transform.Translation.Axis;
+namespace XuanYu.Engine.Editor.Transform.Translation.Axis;
 
 /// <summary>
 /// 从相机快照和实体位置创建 AxisTranslationAnchor 的辅助方法。

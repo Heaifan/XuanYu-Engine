@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Translation.Plane;
+namespace XuanYu.Engine.Editor.Transform.Translation.Plane;
 
 /// <summary>
 /// 平面平移拖动锚点。一次拖动期间不可变。

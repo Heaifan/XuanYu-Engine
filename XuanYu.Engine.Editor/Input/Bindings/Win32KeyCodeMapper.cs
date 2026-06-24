@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Input.Bindings;
+﻿namespace XuanYu.Engine.Editor.Input.Bindings;
 
 /// <summary>
 /// Win32 虚拟键码 (VK_*) 到抽象手势代码的静态映射。

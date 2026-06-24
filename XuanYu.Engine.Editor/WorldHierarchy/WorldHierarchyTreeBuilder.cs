@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.WorldHierarchy;
+namespace XuanYu.Engine.Editor.WorldHierarchy;
 
 /// <summary>从 WorldState 构建 WorldHierarchyTree。排序稳定：分组按语义顺序，实体按 DisplayName+EntityId。</summary>
 public static class WorldHierarchyTreeBuilder

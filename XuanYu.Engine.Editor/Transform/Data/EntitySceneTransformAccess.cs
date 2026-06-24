@@ -3,7 +3,7 @@ using XuanYu.Engine.World;
 using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Data;
+namespace XuanYu.Engine.Editor.Transform.Data;
 
 /// <summary>
 /// WorldState ↔ SceneTransform 的读写入口。

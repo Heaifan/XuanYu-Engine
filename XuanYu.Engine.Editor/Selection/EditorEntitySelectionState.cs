@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Selection;
+﻿namespace XuanYu.Engine.Editor.Selection;
 
 /// <summary>
 /// 唯一选择状态——SelectedEntityId 是实体选择的唯一真源。

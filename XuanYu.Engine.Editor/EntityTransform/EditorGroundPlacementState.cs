@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.EntityTransform;
+﻿namespace XuanYu.Engine.Editor.EntityTransform;
 
 /// <summary>
 /// 一次性地面放置模式状态。

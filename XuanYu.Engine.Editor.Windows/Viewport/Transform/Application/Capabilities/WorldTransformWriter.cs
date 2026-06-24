@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.EntityTransform;
+using XuanYu.Engine.Editor.EntityTransform;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using XuanYu.Engine.World;
 

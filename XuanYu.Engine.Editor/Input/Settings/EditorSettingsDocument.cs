@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Input.Bindings;
+﻿using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Editor.Input.Settings;
+namespace XuanYu.Engine.Editor.Input.Settings;
 
 /// <summary>
 /// 编辑器设置文档结构。

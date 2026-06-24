@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Input.Actions;
+﻿namespace XuanYu.Engine.Editor.Input.Actions;
 
 /// <summary>
 /// 动作输入值的种类。

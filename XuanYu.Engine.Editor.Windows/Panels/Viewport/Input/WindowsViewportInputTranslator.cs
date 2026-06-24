@@ -1,5 +1,5 @@
-using FluidWarfare.Editor.Input.Bindings;
-using FluidWarfare.Editor.Input.Runtime;
+﻿using XuanYu.Engine.Editor.Input.Bindings;
+using XuanYu.Engine.Editor.Input.Runtime;
 
 namespace FluidWarfare.Editor.Windows.Panels.Viewport.Input;
 

@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Identity;
 
-namespace FluidWarfare.Editor.WorldHierarchy;
+namespace XuanYu.Engine.Editor.WorldHierarchy;
 
 /// <summary>
 /// World 层级树的只读快照。

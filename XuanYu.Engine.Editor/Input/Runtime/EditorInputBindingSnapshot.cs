@@ -1,7 +1,7 @@
-using FluidWarfare.Editor.Input.Actions;
-using FluidWarfare.Editor.Input.Bindings;
+﻿using XuanYu.Engine.Editor.Input.Actions;
+using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Editor.Input.Runtime;
+namespace XuanYu.Engine.Editor.Input.Runtime;
 
 /// <summary>运行时绑定快照，O(1) 手势→动作查找。设置变更后重建并原子替换。</summary>
 public sealed partial class EditorInputBindingSnapshot

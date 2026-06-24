@@ -1,5 +1,5 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Transform.Translation.Axis;
+using XuanYu.Engine.Editor.Transform.Translation.Axis;
 
 namespace FluidWarfare.Tests.Editor.Transform.Translation.Axis;
 

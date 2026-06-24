@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Transform.Translation.Constraint;
+﻿namespace XuanYu.Engine.Editor.Transform.Translation.Constraint;
 
 public static class TranslationConstraintText
 {

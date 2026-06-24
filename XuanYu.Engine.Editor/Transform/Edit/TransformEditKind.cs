@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Transform.Edit;
+﻿namespace XuanYu.Engine.Editor.Transform.Edit;
 
 public enum TransformEditKind
 {

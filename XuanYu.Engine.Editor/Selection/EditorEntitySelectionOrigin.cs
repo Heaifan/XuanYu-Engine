@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Selection;
+﻿namespace XuanYu.Engine.Editor.Selection;
 
 /// <summary>
 /// 选择命令的真实来源。程序同步界面不是选择命令，不应从此 Origin 进入。

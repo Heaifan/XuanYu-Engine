@@ -1,4 +1,4 @@
-using FluidWarfare.Editor.Input.Bindings;
+﻿using XuanYu.Engine.Editor.Input.Bindings;
 
 namespace FluidWarfare.Tests.Editor.Input.Bindings;
 

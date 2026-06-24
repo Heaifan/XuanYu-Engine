@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Input.Settings;
+﻿namespace XuanYu.Engine.Editor.Input.Settings;
 
 /// <summary>
 /// 编辑器设置文件路径。

@@ -1,7 +1,7 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using FluidWarfare.Editor.Input.Bindings;
+using XuanYu.Engine.Editor.Input.Bindings;
 using AM = Avalonia.Media;
 
 namespace FluidWarfare.Editor.Windows.Preferences;

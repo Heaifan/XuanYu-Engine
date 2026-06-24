@@ -1,8 +1,8 @@
 ﻿using XuanYu.Engine.Core.Identity;
-using FluidWarfare.Editor.Transform.Data;
+using XuanYu.Engine.Editor.Transform.Data;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.Transform.Edit;
+namespace XuanYu.Engine.Editor.Transform.Edit;
 
 /// <summary>
 /// 从 Editor 上下文创建 TransformEditSession 的辅助方法。

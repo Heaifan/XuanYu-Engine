@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Transform.Translation.Plane;
+namespace XuanYu.Engine.Editor.Transform.Translation.Plane;
 
 /// <summary>
 /// 从射线-平面交点创建 PlaneTranslationAnchor 的辅助方法。

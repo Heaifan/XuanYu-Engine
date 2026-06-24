@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.ProjectContentTreeModel;
+﻿namespace XuanYu.Engine.Editor.ProjectContentTreeModel;
 
 /// <summary>
 /// 在项目内容树中搜索匹配节点。

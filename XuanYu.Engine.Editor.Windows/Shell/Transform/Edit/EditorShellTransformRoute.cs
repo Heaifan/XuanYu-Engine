@@ -1,5 +1,5 @@
-﻿using FluidWarfare.Editor.EntityTransform;
-using FluidWarfare.Editor.Selection;
+﻿using XuanYu.Engine.Editor.EntityTransform;
+using XuanYu.Engine.Editor.Selection;
 using FluidWarfare.Editor.Windows.Panels.Inspector;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Shell.Transform;

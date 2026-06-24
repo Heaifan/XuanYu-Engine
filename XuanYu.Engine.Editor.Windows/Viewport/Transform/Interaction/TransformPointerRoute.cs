@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Project.World.Transform;
-using FluidWarfare.Editor.Transform.Edit;
+using XuanYu.Engine.Editor.Transform.Edit;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
 

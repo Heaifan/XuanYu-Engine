@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Input.Bindings;
+﻿using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Editor.Input.Runtime;
+namespace XuanYu.Engine.Editor.Input.Runtime;
 
 /// <summary>
 /// 标准化的输入事件，由平台适配层产生。

@@ -1,6 +1,6 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace FluidWarfare.Editor.Input.Bindings;
+namespace XuanYu.Engine.Editor.Input.Bindings;
 
 /// <summary>
 /// 平台无关输入手势。

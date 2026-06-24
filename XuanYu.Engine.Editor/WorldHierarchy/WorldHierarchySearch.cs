@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.WorldHierarchy;
+﻿namespace XuanYu.Engine.Editor.WorldHierarchy;
 
 /// <summary>
 /// 在层级树中搜索匹配节点。

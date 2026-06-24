@@ -1,6 +1,6 @@
-using System.Text;
+﻿using System.Text;
 
-namespace FluidWarfare.Editor.Selection;
+namespace XuanYu.Engine.Editor.Selection;
 
 /// <summary>
 /// 选择系统诊断计数器，用于验证反馈循环和数据流正确性。

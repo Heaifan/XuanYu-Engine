@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Input.Actions;
+﻿namespace XuanYu.Engine.Editor.Input.Actions;
 
 /// <summary>
 /// 输入上下文，决定动作的生效范围。

@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Transform.Translation.Constraint;
+using XuanYu.Engine.Editor.Transform.Translation.Constraint;
 
-namespace FluidWarfare.Editor.Transform.Translation.Axis;
+namespace XuanYu.Engine.Editor.Transform.Translation.Axis;
 
 /// <summary>
 /// 轴向平移拖动锚点。一次拖动期间不可变。
