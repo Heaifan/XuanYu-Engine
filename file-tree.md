@@ -19,6 +19,9 @@ XuanYu.Engine/                              ← 仓库根目录
 │   ├── PHASE1_SCOPE.md
 │   ├── PROJECT_CHARTER.md
 │   └── naming-XuanYu-Engine.md
+│   ├── audit-inspector-transform-9.0C-0.md  # 9.0C-0 审计：Inspector / Selection / WorldState / Viewport 链路
+│   ├── diagnostic-safety.md  # 诊断日志与 UI 调度安全规范
+│   ├── plan-9.0D-move-gizmo-final.md  # 9.0D — Move Gizmo 最终验收开发计划
 
 ├── tools/shaders/
 │   ├── compile_basic_3d.ps1
@@ -73,12 +76,28 @@ XuanYu.Engine/                              ← 仓库根目录
 │   ├── Validation/
 │   │   ├── ProjectValidationIssue.cs  # 表示项目校验中的一个问题。
 │   │   └── ProjectValidationReport.cs  # 表示一次项目校验报告，汇总项目加载与内容扫描中的校验问题。
-│   └── World/
-│       └── Transform/
-│           ├── SceneTransform.cs  # 实体 Transform 单一真源。渲染、Picking、Gizmo、检查器全部从此派生。
-│           ├── SceneTransformDefaults.cs  # SceneTransform 默认值和工厂方法。
-│           ├── SceneTransformMatrix.cs  # SceneTransform ↔ 变换矩阵的转换入口。
-│           └── SceneTransformValidation.cs  # SceneTransform 各分量的有效性校验。
+'│   └── World/'
+'│       ├── Documents/'
+'│       │   ├── TransformComponentDocument.cs  # Transform 组件文档（Position/RotationDegrees/Scale）。'
+'│       │   ├── WorldDocument.cs  # World 文档根节点。'
+'│       │   ├── WorldEntityDocument.cs  # World 文件中一个实体的记录。'
+'│       │   ├── WorldMetadataDocument.cs  # World 文件元数据。'
+'│       │   └── WorldVector3Document.cs  # 三维坐标文档模型。'
+'│       ├── SaveLoad/'
+'│       │   ├── WorldDocumentJsonOptions.cs  # World 文档 JSON 序列化共享选项。'
+'│       │   ├── WorldDocumentReadResult.cs  # World 文档读取结果。'
+'│       │   ├── WorldDocumentReader.cs  # 从 .world.json 读取 WorldDocument。'
+'│       │   ├── WorldDocumentWriteResult.cs  # World 文档写入结果。'
+'│       │   └── WorldDocumentWriter.cs  # 将 WorldDocument 保存为 .world.json。'
+'│       ├── Transform/'
+'│       │   ├── SceneTransform.cs  # 实体 Transform 单一真源。渲染、Picking、Gizmo、检查器全部从此派生。'
+'│       │   ├── SceneTransformDefaults.cs  # SceneTransform 默认值和工厂方法。'
+'│       │   ├── SceneTransformMatrix.cs  # SceneTransform ↔ 变换矩阵的转换入口。'
+'│       │   └── SceneTransformValidation.cs  # SceneTransform 各分量的有效性校验。'
+'│       └── Validation/'
+'│           ├── WorldDocumentValidator.cs  # World 文档校验器。'
+'│           ├── WorldValidationError.cs  # World 校验错误。'
+'│           └── WorldValidationReport.cs  # World 校验报告。
 ├── XuanYu.Engine.Bridge.ProjectEngine/
 │   └── World/
 │       ├── ProjectContentWorldSeeder.cs  # 把项目内容文件入口转换为 Engine World 的占位实体。
@@ -458,6 +477,12 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   ├── Inspector/
 │   │   │   ├── Transform/
 │   │   │   │   └── TransformPositionAxis.cs  # Transform 数值拖拽的轴向。
+│   │   │   ├── TransformEdit/
+│   │   │   │   ├── SelectedEntityTransformApply.cs  # 应用 Inspector Transform 编辑请求到 WorldState。
+│   │   │   │   ├── SelectedEntityTransformReader.cs  # 从 WorldState 读取选中实体的完整 Transform。
+│   │   │   │   ├── TransformEditRequest.cs  # Inspector 发起的 Transform 编辑请求。
+│   │   │   │   ├── TransformEditResult.cs  # Transform 编辑应用结果。
+│   │   │   │   └── TransformInspectorSnapshot.cs  # Inspector 显示的选中实体 Transform 快照。
 │   │   │   ├── InspectorPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.Inspector.InspectorPanel
 │   │   │   ├── InspectorPanel.axaml.cs  # InspectorPanel 类
 │   │   │   ├── InspectorScrubInput.cs  # InspectorScrubInput — <summary>Inspector 数值拖拽输入处理。X/Y/Z 标签拖拽微调坐标值。</summary>

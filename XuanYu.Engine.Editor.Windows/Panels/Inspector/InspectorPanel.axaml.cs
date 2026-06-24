@@ -51,7 +51,7 @@ public sealed partial class InspectorPanel : UserControl
             if (tb is not null) tb.TextChanged += (_, _) => OnAnyTextChanged();
 
         if (apply is not null) apply.Click += (_, _) => { var t = (px?.Text ?? "", py?.Text ?? "", pz?.Text ?? ""); TransformApplyRequested?.Invoke(t.Item1, t.Item2, t.Item3); RequestAllApply(); };
-        if (reset is not null) reset.Click += (_, _) => { _xfrmView.SetSnapshot(_lastSnapshot); TransformResetRequested?.Invoke(); };
+        if (reset is not null) reset.Click += (_, _) => { if (_lastSnapshot is not null) _xfrmView.SetSnapshot(_lastSnapshot); TransformResetRequested?.Invoke(); };
         if (gp is not null) gp.Click += (_, _) => GroundPlacementRequested?.Invoke();
 
         // Scrub（Position 轴）

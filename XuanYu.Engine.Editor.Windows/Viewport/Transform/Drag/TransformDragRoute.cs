@@ -6,7 +6,6 @@ using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Vulkan.Camera;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
-using XuanYu.Engine.Editor.Transform.Translation.Axis;
 namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
 public sealed class TransformDragRoute

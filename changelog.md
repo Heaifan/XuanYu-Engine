@@ -1,6 +1,67 @@
 # changelog
 
-## [8.8-RZ] — 命名迁移全仓终验 (2026-06-24 11:24)
+## [9.0D-R3] — 诊断日志与 UI 调度安全规范 (2026-06-24)
+- 新增 `docs/diagnostic-safety.md`：收录 9.0D 诊断回调导致 UI 卡死事故的根因与防护规范
+- 覆盖启动期规则 / 高频路径规则 / 诊断 Sink 接口 / UI 日志异步投递 / 代码审查清单
+- commit `e57d5c9`
+
+## [9.0D-R2] — 选中实体自动显示并可拖 Move Gizmo (2026-06-24)
+- **取消「按 G 才显示 Gizmo」的交互入口**，改为选中实体 + 相机有效即自动显示
+- 改动 4 个点：
+  - `MoveGizmoFrameSource.Build`：闸门从 `MoveToolActive` 改为 `selectedEntity.IsValid || MoveToolActive`
+  - `MoveGizmoVisibility.ShouldShow`：同步去掉 `moveToolActive` 参数
+  - `EditorTransformInputRoute.HandlePointerMoved`：Gizmo Hover 检测改为选中实体即启用
+  - `EditorSceneToolInputRoute.HandlePressed`：去掉 `IsMoveToolActive`，选中实体即可拖动
+- G 键保留为快捷移动入口，不再是 Gizmo 出现的必要条件
+- build: 0 Error / test: 693/694 (1 pre-existing)
+- commit `e66cbb4`
+
+## [9.0D-R1] — Move Gizmo 轴约束求解器 (2026-06-24)
+- **AxisDragAnchorBuilder 重写**：从 ScreenProjection 升级为 DragPlane 射线约束方案
+- **Gram-Schmidt 法线构造**：轴约束平面包含目标轴并尽量面向摄像机，三级 fallback
+- **双保险**：DragPlane 优先 + ScreenProjection 降级，Builder 必定返回有效锚点
+- **TransformDragRoute 重构**：Move 方法提取公共 MoveDrag 辅助，Axis/Plane 共用
+- **诊断追踪**：TransformDragRoute 添加 Trace 回调，输出 Begin/Move/Confirm 位置值与模式
+- **死代码清理**：删除 AxisTranslationStart.cs（旧 ScreenProjection 实现）
+- **新增测试**：AxisPlaneTranslationSolverTests（X/Y/Z 轴正交性 / 45°视角无倍率异常 / 射线平行失败路径 / Gram-Schmidt 数学正确性）
+- 后续修复 4 轮（提交 7c88740 → ba85b92 → 4ac549e → c82bb41）
+- build: 0 Error / test: 693/694 (1 pre-existing)
+- 当前 Gizmo 可见时直接拖轴即可移动，不必按 G
+
+## [9.0C] — Inspector 与 Transform 同步 (2026-06-24)
+- WorldState 新增 `SetRotation()` / `SetScale()`
+- 新增 TransformEdit 应用层（TransformInspectorSnapshot / TransformEditRequest / TransformEditResult / SelectedEntityTransformReader / SelectedEntityTransformApply）
+- Inspector 支持显示并编辑 Position / RotationDegrees / Scale
+- Apply 层统一校验 Scale > 0 / NaN / Infinity，非法值拒绝写入
+- 旧 Position 编辑链路保持向后兼容
+- Transform 修改后标记 Dirty + 请求视口刷新
+- 预留 `SetSnapshot()` 入口供后续 Gizmo 同步 Inspector 使用
+- 审计文档 `docs/audit-inspector-transform-9.0C-0.md`
+- 新增测试 15 项（Reader 3 + Apply 11 + SaveLoad 1）
+- build: 0 Error / test: 685/686 (1 pre-existing)
+- commits: `69f056b` `d1cc14c` `d4cb881` `8fb4aaa`
+
+## [9.0B] — TransformComponent 补全：Position + Rotation + Scale (2026-06-24)
+- 新增 RotationComponent / ScaleComponent（Engine 层实体组件）
+- TransformComponentDocument 增加 RotationDegrees / Scale（可空，兼容旧文件）
+- WorldState 支持旋转/缩放存储与查询
+- WorldDocumentValidator 增加 RotationDegrees 有限校验 / Scale 有限+正数校验
+- 旧版只有 Position 的 world 文件兼容加载（缺 Rotation→补 0,0,0；缺 Scale→补 1,1,1）
+- WorldStateDocumentConvert 单向/双向转换同步支持完整 Transform
+- 新增/更新测试 20 项（Writer/Reader/Validator/RoundTrip）
+- build: 0 Error / test: 670/671 (1 pre-existing)
+- commits: `80230a2` `222f49a` `2043f4e` `39dc201`
+
+## [9.0A] — World 保存 / 加载 (2026-06-24)
+- 新增 WorldDocument / WorldEntityDocument / TransformComponentDocument / WorldVector3Document / WorldMetadataDocument 文档模型
+- 新增 WorldDocumentReader / WorldDocumentWriter 支持 .world.json 读写
+- 新增 WorldDocumentValidator（SchemaVersion / WorldId / EntityId / Transform Position 校验）
+- 编辑器打开项目时自动加载 Content/Worlds/main.world.json
+- 运行菜单新增「保存 World」入口
+- 新增 WorldState ↔ WorldDocument 转换
+- 新增保存 / 读取 / 校验 / RoundTrip 测试 23 项
+- build: 0 Error / test: 661/662 (1 pre-existing, SampleProjectSmokeTests 受未跟踪 Content/ 目录影响)
+- commits: `8bd920b` `825f3b3` `70099ce` `8f3d9a1`
 - 新增 4 项命名回潮门禁测试（CodeFileBudgetTests +4 → 14 项）：
   - `NoNamespaceFluidWarfare` — 禁止生产代码出现 namespace FluidWarfare
   - `NoUsingFluidWarfare` — 禁止生产代码出现 using FluidWarfare
