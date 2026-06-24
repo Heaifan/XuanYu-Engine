@@ -1,7 +1,7 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>视口占位面板。未创建 Vulkan Surface 时显示文本状态。</summary>
 public sealed partial class ViewportPlaceholderPanel : UserControl

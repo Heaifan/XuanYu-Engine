@@ -1,6 +1,4 @@
-﻿// 8.7.8-Z2: EditorShell 组合根薄化 — 全局 using
-// EditorShell.axaml.cs 不再直接依赖这些命名空间。
-
+// EditorShell 全局 using
 global using Avalonia;
 global using Avalonia.Controls;
 global using Avalonia.Interactivity;
@@ -17,42 +15,23 @@ global using XuanYu.Engine.Editor.ProjectContentTreeModel;
 global using XuanYu.Engine.Editor.Selection;
 global using XuanYu.Engine.Editor.Transform.Edit;
 global using XuanYu.Engine.Editor.ViewportGround;
-// R3-3B 过渡桥接：仅保留各根实际存在的 namespace
-// 旧根（B-class .axaml.cs）namespace
-global using FluidWarfare.Editor.Windows;
-global using FluidWarfare.Editor.Windows.About;
-global using FluidWarfare.Editor.Windows.Panels.DebugDock;
-global using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
-global using FluidWarfare.Editor.Windows.Panels.Inspector;
-global using FluidWarfare.Editor.Windows.Panels.LeftDock;
-global using FluidWarfare.Editor.Windows.Panels.Logging;
-global using FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
-global using FluidWarfare.Editor.Windows.Panels.Status;
-global using FluidWarfare.Editor.Windows.Panels.Viewport;
-global using FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
-global using FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
-global using FluidWarfare.Editor.Windows.Preferences;
-global using FluidWarfare.Editor.Windows.Shell;
-// 新根（A-class 纯 C#）namespace — 仅包含 .axaml.cs 未覆盖的子 namespace
+global using XuanYu.Engine.Editor.Windows.Panels.DebugDock;
 global using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
+global using XuanYu.Engine.Editor.Windows.Panels.Inspector;
 global using XuanYu.Engine.Editor.Windows.Panels.Inspector.Transform;
 global using XuanYu.Engine.Editor.Windows.Panels.LeftDock;
 global using XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
+global using XuanYu.Engine.Editor.Windows.Panels.Status;
+global using XuanYu.Engine.Editor.Windows.Panels.Logging;
+global using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
+global using XuanYu.Engine.Editor.Windows.Preferences;
+global using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 global using XuanYu.Engine.Editor.Windows.Panels.Viewport.Input;
 global using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost;
-global using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
-global using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Focus;
-global using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
-global using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
-global using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Lifecycle;
-global using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Win32;
-global using XuanYu.Engine.Editor.Windows.Preferences.Capture;
-global using XuanYu.Engine.Editor.Windows.Preferences.Helpers;
-global using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy.View;
+global using XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
 global using XuanYu.Engine.Editor.Windows.Shell.Commands;
 global using XuanYu.Engine.Editor.Windows.Shell.Composition;
 global using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
-global using XuanYu.Engine.Editor.Windows.Shell.Diagnostics.Log;
 global using XuanYu.Engine.Editor.Windows.Shell.Feedback;
 global using XuanYu.Engine.Editor.Windows.Shell.Hierarchy;
 global using XuanYu.Engine.Editor.Windows.Shell.Input;
@@ -60,25 +39,26 @@ global using XuanYu.Engine.Editor.Windows.Shell.Input.Picking;
 global using XuanYu.Engine.Editor.Windows.Shell.Input.Raw;
 global using XuanYu.Engine.Editor.Windows.Shell.Input.Transform;
 global using XuanYu.Engine.Editor.Windows.Shell.Lifecycle;
-global using XuanYu.Engine.Editor.Windows.Shell.Menu;
-global using XuanYu.Engine.Editor.Windows.Shell.Navigation;
 global using XuanYu.Engine.Editor.Windows.Shell.Panels;
 global using XuanYu.Engine.Editor.Windows.Shell.Picking;
+global using XuanYu.Engine.Editor.Windows.Shell.Menu;
+global using XuanYu.Engine.Editor.Windows.Shell.Navigation;
 global using XuanYu.Engine.Editor.Windows.Shell.Project;
 global using XuanYu.Engine.Editor.Windows.Shell.Scene3D;
+global using XuanYu.Engine.Editor.Windows.Shell.Diagnostics.Log;
+global using XuanYu.Engine.Editor.Windows.Shell.Windows;
 global using XuanYu.Engine.Editor.Windows.Shell.Scene3D.Commands;
+global using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 global using XuanYu.Engine.Editor.Windows.Shell.Selection;
 global using XuanYu.Engine.Editor.Windows.Shell.Startup;
 global using XuanYu.Engine.Editor.Windows.Shell.Startup.Vulkan;
 global using XuanYu.Engine.Editor.Windows.Shell.Transform;
 global using XuanYu.Engine.Editor.Windows.Shell.Transform.Edit;
 global using XuanYu.Engine.Editor.Windows.Shell.Viewport;
-global using XuanYu.Engine.Editor.Windows.Shell.Windows;
 global using XuanYu.Engine.Editor.Windows.Viewport.Camera;
 global using XuanYu.Engine.Editor.Windows.Viewport.Navigation;
 global using XuanYu.Engine.Editor.Windows.Viewport.Picking;
 global using XuanYu.Engine.Editor.Windows.Viewport.Project;
-global using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 global using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
 global using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 global using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Resize;
@@ -107,7 +87,6 @@ global using XuanYu.Engine.Render.Selection.Ground;
 global using XuanYu.Engine.Render.Selection.Pointer;
 global using XuanYu.Engine.Render.Selection.Presented;
 global using XuanYu.Engine.Render.Selection.Screen;
-// ViewportNavigation intentionally NOT global — contains 'Rect' which conflicts with Avalonia.Rect
 global using XuanYu.Engine.Render.Vulkan.Backend;
 global using XuanYu.Engine.Render.Vulkan.Camera;
 global using XuanYu.Engine.Render.Vulkan.Clear;

@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
 
-namespace FluidWarfare.Editor.Windows.Panels.DebugDock;
+namespace XuanYu.Engine.Editor.Windows.Panels.DebugDock;
 
 /// <summary>Partial：RenderScene 列表更新。</summary>
 sealed partial class DebugDockPanel

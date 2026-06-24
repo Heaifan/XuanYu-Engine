@@ -1,5 +1,5 @@
-<Window
-    x:Class="FluidWarfare.Editor.Windows.Preferences.EditorPreferencesWindow"
+﻿<Window
+    x:Class="XuanYu.Engine.Editor.Windows.Preferences.EditorPreferencesWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="偏好设置"

@@ -3,7 +3,7 @@ using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.Windows.Shell;
 
 using XuanYu.Engine.Editor.Windows.Panels.Inspector.Transform;
-namespace FluidWarfare.Editor.Windows.Panels.Inspector;
+namespace XuanYu.Engine.Editor.Windows.Panels.Inspector;
 
 public sealed partial class InspectorPanel : UserControl
 {

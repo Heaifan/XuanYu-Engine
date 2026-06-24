@@ -6,7 +6,7 @@ using ProjectContentTreeModel = XuanYu.Engine.Editor.ProjectContentTreeModel;
 
 using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 using XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
-namespace FluidWarfare.Editor.Windows.Panels.LeftDock;
+namespace XuanYu.Engine.Editor.Windows.Panels.LeftDock;
 
 public sealed partial class ProjectWorldDockPanel : UserControl
 {

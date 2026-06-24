@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell;
 
 public sealed partial class EditorShell : UserControl
 {

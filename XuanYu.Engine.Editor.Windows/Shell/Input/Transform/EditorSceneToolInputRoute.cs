@@ -12,7 +12,7 @@ using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Selection.Ground;
 using XuanYu.Engine.Render.Selection.Presented;
-using static FluidWarfare.Editor.Windows.Viewport.Transform.Interaction.TransformInteractionAction;
+using static XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction.TransformInteractionAction;
 
 namespace XuanYu.Engine.Editor.Windows.Shell.Input.Transform;
 

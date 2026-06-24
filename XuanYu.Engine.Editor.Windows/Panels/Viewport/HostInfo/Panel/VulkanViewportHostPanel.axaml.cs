@@ -2,7 +2,7 @@
 using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost;
 using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>Vulkan 视口宿主面板。持有原生子窗口，转发原始输入事件。</summary>
 public sealed partial class VulkanViewportHostPanel : UserControl

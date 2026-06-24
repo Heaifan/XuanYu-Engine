@@ -1,4 +1,4 @@
-﻿namespace FluidWarfare.Editor.Windows.Panels.DebugDock;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.DebugDock;
 
 /// <summary>Partial：性能计时更新。</summary>
 sealed partial class DebugDockPanel

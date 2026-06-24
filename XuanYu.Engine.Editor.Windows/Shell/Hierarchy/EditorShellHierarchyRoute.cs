@@ -7,7 +7,7 @@ using XuanYu.Engine.Project.Metadata;
 using XuanYu.Engine.World;
 using XuanYu.Engine.Render.Scene;
 
-using FluidWarfare.Editor.Windows.Panels.LeftDock;
+using XuanYu.Engine.Editor.Windows.Panels.LeftDock;
 namespace XuanYu.Engine.Editor.Windows.Shell.Hierarchy;
 
 /// <summary>层级树路由。负责世界层级树与项目内容树构建显示。</summary>

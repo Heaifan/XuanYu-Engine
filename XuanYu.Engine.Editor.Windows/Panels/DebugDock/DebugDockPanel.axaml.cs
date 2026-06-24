@@ -2,7 +2,7 @@
 using XuanYu.Engine.Editor.Windows.Panels.Logging;
 
 using XuanYu.Engine.Editor.Windows.Panels.Logging;
-namespace FluidWarfare.Editor.Windows.Panels.DebugDock;
+namespace XuanYu.Engine.Editor.Windows.Panels.DebugDock;
 
 /// <summary>底部调试终端，包含日志、渲染诊断、RenderScene 和性能页签。</summary>
 public sealed partial class DebugDockPanel : UserControl

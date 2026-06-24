@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost;
 using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>Partial：原生宿主信息查询与状态更新。</summary>
 sealed partial class VulkanViewportHostPanel

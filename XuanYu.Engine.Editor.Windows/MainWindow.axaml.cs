@@ -1,6 +1,6 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 
-namespace FluidWarfare.Editor.Windows;
+namespace XuanYu.Engine.Editor.Windows;
 
 public sealed partial class MainWindow : Window
 {

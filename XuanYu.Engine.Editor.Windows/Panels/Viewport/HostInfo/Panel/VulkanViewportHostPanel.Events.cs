@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost;
 using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>Partial：原生窗口事件转发接线。</summary>
 sealed partial class VulkanViewportHostPanel

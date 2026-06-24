@@ -1,5 +1,5 @@
-<Application
-    x:Class="FluidWarfare.Editor.Windows.App"
+﻿<Application
+    x:Class="XuanYu.Engine.Editor.Windows.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     RequestedThemeVariant="Dark">

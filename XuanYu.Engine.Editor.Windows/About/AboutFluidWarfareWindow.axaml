@@ -1,5 +1,5 @@
-<Window
-    x:Class="FluidWarfare.Editor.Windows.About.AboutFluidWarfareWindow"
+﻿<Window
+    x:Class="XuanYu.Engine.Editor.Windows.About.AboutFluidWarfareWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="关于 玄域引擎"

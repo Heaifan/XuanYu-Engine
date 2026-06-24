@@ -1,8 +1,8 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:FluidWarfare.Editor.Windows.Panels.HierarchyVisual"
+             xmlns:local="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual"
              xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Svg.Controls.Skia.Avalonia"
-             x:Class="FluidWarfare.Editor.Windows.Panels.HierarchyVisual.HierarchyNodeRow"
+             x:Class="XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual.HierarchyNodeRow"
              x:DataType="local:IHierarchyNodeView"
              UseLayoutRounding="True"
              ToolTip.Tip="{Binding ToolTipText}">

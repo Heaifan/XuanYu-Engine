@@ -1,7 +1,7 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:hierarchy="clr-namespace:FluidWarfare.Editor.Windows.Panels.HierarchyVisual"
-             x:Class="FluidWarfare.Editor.Windows.Panels.ProjectContentTree.ProjectContentTreePanel"
+             xmlns:hierarchy="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual"
+             x:Class="XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree.ProjectContentTreePanel"
              UseLayoutRounding="True">
   <UserControl.Styles>
     <Style Selector="ListBox.hierarchyList">

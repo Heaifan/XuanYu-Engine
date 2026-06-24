@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>Partial：RenderScene 调试对象列表显示。</summary>
 sealed partial class ViewportPlaceholderPanel

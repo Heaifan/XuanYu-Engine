@@ -3,9 +3,9 @@ using Avalonia.Controls;
 using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 using XuanYu.Engine.Editor.WorldHierarchy;
 
-using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy.View;
+using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
-namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+namespace XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 
 public sealed partial class WorldHierarchyTreePanel : UserControl
 {

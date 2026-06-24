@@ -1,7 +1,7 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace FluidWarfare.Editor.Windows.Panels.Logging;
+namespace XuanYu.Engine.Editor.Windows.Panels.Logging;
 
 public sealed partial class LogPanel : UserControl
 {

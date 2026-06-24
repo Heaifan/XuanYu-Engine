@@ -1,8 +1,8 @@
-<UserControl
-    x:Class="FluidWarfare.Editor.Windows.Panels.Viewport.VulkanViewportHostPanel"
+﻿<UserControl
+    x:Class="XuanYu.Engine.Editor.Windows.Panels.Viewport.VulkanViewportHostPanel"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:nativeHost="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost">
+    xmlns:nativeHost="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost">
   <Border
       Margin="0"
       Background="#15191E"

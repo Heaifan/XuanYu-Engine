@@ -1,8 +1,8 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-namespace FluidWarfare.Editor.Windows;
+namespace XuanYu.Engine.Editor.Windows;
 
 public sealed partial class App : Application
 {

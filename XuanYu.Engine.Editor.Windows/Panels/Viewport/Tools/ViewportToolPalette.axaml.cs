@@ -1,10 +1,10 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using AM = Avalonia.Media;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
 
 public sealed partial class ViewportToolPalette : UserControl
 {

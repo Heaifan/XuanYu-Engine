@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Editor.EntityTransform;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
-using static FluidWarfare.Editor.Windows.Viewport.Transform.Interaction.TransformInteractionAction;
+using static XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction.TransformInteractionAction;
 
 namespace XuanYu.Engine.Editor.Windows.Shell.Input.Transform;
 

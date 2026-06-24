@@ -1,6 +1,6 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 
-namespace FluidWarfare.Editor.Windows.Panels.Status;
+namespace XuanYu.Engine.Editor.Windows.Panels.Status;
 
 public sealed partial class StatusBarPanel : UserControl
 {

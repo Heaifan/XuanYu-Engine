@@ -1,8 +1,8 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-namespace FluidWarfare.Editor.Windows.About;
+namespace XuanYu.Engine.Editor.Windows.About;
 
 public partial class AboutFluidWarfareWindow : Window
 {

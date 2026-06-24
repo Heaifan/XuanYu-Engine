@@ -4,8 +4,8 @@ using Avalonia.Media;
 using XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
 using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 
-using FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
-using FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
+using XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
 namespace XuanYu.Engine.Editor.Windows.Panels.LeftDock;
 
 sealed class ProjectWorldDockTabs

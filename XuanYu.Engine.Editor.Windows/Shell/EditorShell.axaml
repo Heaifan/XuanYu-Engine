@@ -1,13 +1,13 @@
-<UserControl
-    x:Class="FluidWarfare.Editor.Windows.Shell.EditorShell"
+﻿<UserControl
+    x:Class="XuanYu.Engine.Editor.Windows.Shell.EditorShell"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:debugDock="clr-namespace:FluidWarfare.Editor.Windows.Panels.DebugDock"
-    xmlns:inspector="clr-namespace:FluidWarfare.Editor.Windows.Panels.Inspector"
-    xmlns:status="clr-namespace:FluidWarfare.Editor.Windows.Panels.Status"
-    xmlns:viewport="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport"
-    xmlns:tools="clr-namespace:FluidWarfare.Editor.Windows.Panels.Viewport.Tools"
-    xmlns:leftDock="clr-namespace:FluidWarfare.Editor.Windows.Panels.LeftDock">
+    xmlns:debugDock="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.DebugDock"
+    xmlns:inspector="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Inspector"
+    xmlns:status="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Status"
+    xmlns:viewport="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Viewport"
+    xmlns:tools="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools"
+    xmlns:leftDock="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.LeftDock">
   <Grid Background="#202327" RowDefinitions="44,*,200,28">
     <Border
         Grid.Row="0"
