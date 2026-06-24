@@ -25,6 +25,13 @@
 - 附带修复：run.bat CRLF 行尾（Windows 批处理兼容性）
 - commit `359e3ce`
 
+## [8.8-RZ-Fix1d] — 应用图标入库 (2026-06-24 12:30)
+- 将仓库根目录 `LOGO.png`（1254×1254）复制到 `Assets/Icons/logo.png` 作为应用图标
+- `.csproj` 注册 `logo.png` 为 `AvaloniaResource`（同时补注新的 ViewportNavigation SVGs）
+- `MainWindow.axaml` 设置 `Icon="/Assets/Icons/logo.png"`，标题栏显示玄域引擎 LOGO
+- `file-tree.md` 同步记录
+- build: 0 Error / 0 Warning ✅ / test: 638/639（1 flaky pre-existing）
+
 ## [8.8-RZ-Fix1c] — 视口导航按钮 SVG 图标资源入库 (2026-06-24 12:16)
 - 新增 4 个 SVG 图标资源到 `Assets/Icons/ViewportNavigation/`：
   - `nav_pan.svg` — 四向箭头，表示平移视图

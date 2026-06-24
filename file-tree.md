@@ -804,6 +804,10 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │           └── WorldBootstrapRoute.cs  # World 引导路由。创建 WorldState → 播种实体 → 生成 RenderScene → 返回结果。
 │   ├── Assets/
 │   │   └── Icons/
+│   │       ├── logo.png                        # 应用图标（LOGO.png 复制入库）
+│   │       ├── Hierarchy/
+│   │       │   ├── *.svg                       # 层级树与项目内容树图标集
+│   │       │   └── ...
 │   │       └── ViewportNavigation/
 │   │           ├── nav_pan.svg                  # 视口导航：平移按钮图标
 │   │           ├── nav_frame.svg                # 视口导航：聚焦 / 查看全部按钮图标

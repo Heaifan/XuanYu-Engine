@@ -18,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Include="Assets\Icons\logo.png" />
     <AvaloniaResource Include="Assets\Icons\Hierarchy\*.svg" />
+    <AvaloniaResource Include="Assets\Icons\ViewportNavigation\*.svg" />
   </ItemGroup>
 
   <ItemGroup>
