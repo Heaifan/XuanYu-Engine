@@ -1,10 +1,10 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Text.Json;
-using FluidWarfare.Core.Results;
-using FluidWarfare.Project.Content;
-using FluidWarfare.Project.Validation;
+using XuanYu.Engine.Core.Results;
+using XuanYu.Engine.Project.Content;
+using XuanYu.Engine.Project.Validation;
 
-namespace FluidWarfare.Project.Loading;
+namespace XuanYu.Engine.Project.Loading;
 
 internal static partial class GameProjectFolderParser
 {

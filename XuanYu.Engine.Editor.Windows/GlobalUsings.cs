@@ -1,4 +1,4 @@
-// 8.7.8-Z2: EditorShell 组合根薄化 — 全局 using
+﻿// 8.7.8-Z2: EditorShell 组合根薄化 — 全局 using
 // EditorShell.axaml.cs 不再直接依赖这些命名空间。
 
 global using Avalonia;
@@ -6,10 +6,10 @@ global using Avalonia.Controls;
 global using Avalonia.Interactivity;
 global using Avalonia.Markup.Xaml;
 global using Avalonia.Threading;
-global using FluidWarfare.Bridge.ProjectEngine.World;
-global using FluidWarfare.Core.Identity;
-global using FluidWarfare.Core.Logging;
-global using FluidWarfare.Core.Math;
+global using XuanYu.Engine.Bridge.ProjectEngine.World;
+global using XuanYu.Engine.Core.Identity;
+global using XuanYu.Engine.Core.Logging;
+global using XuanYu.Engine.Core.Math;
 global using FluidWarfare.Editor.EntityTransform;
 global using FluidWarfare.Editor.Input.Actions;
 global using FluidWarfare.Editor.Input.Runtime;
@@ -70,13 +70,13 @@ global using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 global using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
 global using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
 global using FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
-global using FluidWarfare.Engine.World;
-global using FluidWarfare.Project.Content;
-global using FluidWarfare.Project.Loading;
-global using FluidWarfare.Project.Metadata;
-global using FluidWarfare.Project.Paths;
-global using FluidWarfare.Project.Validation;
-global using FluidWarfare.Project.World.Transform;
+global using XuanYu.Engine.World;
+global using XuanYu.Engine.Project.Content;
+global using XuanYu.Engine.Project.Loading;
+global using XuanYu.Engine.Project.Metadata;
+global using XuanYu.Engine.Project.Paths;
+global using XuanYu.Engine.Project.Validation;
+global using XuanYu.Engine.Project.World.Transform;
 global using FluidWarfare.Render.Camera.Navigation;
 global using FluidWarfare.Render.Scene;
 global using FluidWarfare.Render.Scene.Position;

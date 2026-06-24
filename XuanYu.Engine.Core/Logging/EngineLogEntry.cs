@@ -1,4 +1,4 @@
-namespace FluidWarfare.Core.Logging;
+﻿namespace XuanYu.Engine.Core.Logging;
 
 public readonly record struct EngineLogEntry
 {

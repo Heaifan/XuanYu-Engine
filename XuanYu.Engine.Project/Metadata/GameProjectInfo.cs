@@ -1,6 +1,6 @@
-using FluidWarfare.Project.Content;
+﻿using XuanYu.Engine.Project.Content;
 
-namespace FluidWarfare.Project.Metadata;
+namespace XuanYu.Engine.Project.Metadata;
 
 public sealed record GameProjectInfo(
     int SchemaVersion,

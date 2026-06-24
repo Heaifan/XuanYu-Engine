@@ -1,5 +1,5 @@
-using Avalonia.Controls;
-using FluidWarfare.Core.Math;
+﻿using Avalonia.Controls;
+using XuanYu.Engine.Core.Math;
 using FluidWarfare.Editor.Windows.Shell;
 
 namespace FluidWarfare.Editor.Windows.Panels.Inspector;

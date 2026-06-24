@@ -1,6 +1,6 @@
-using FluidWarfare.Core.Math;
+﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Project.World.Transform;
+namespace XuanYu.Engine.Project.World.Transform;
 
 /// <summary>
 /// 实体 Transform 单一真源。渲染、Picking、Gizmo、检查器全部从此派生。

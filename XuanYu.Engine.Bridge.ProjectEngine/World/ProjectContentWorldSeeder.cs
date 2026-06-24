@@ -1,8 +1,8 @@
-using FluidWarfare.Core.Math;
-using FluidWarfare.Engine.World;
-using FluidWarfare.Project.Content;
+﻿using XuanYu.Engine.Core.Math;
+using XuanYu.Engine.World;
+using XuanYu.Engine.Project.Content;
 
-namespace FluidWarfare.Bridge.ProjectEngine.World;
+namespace XuanYu.Engine.Bridge.ProjectEngine.World;
 
 /// <summary>
 /// 把项目内容文件入口转换为 Engine World 的占位实体。

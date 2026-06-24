@@ -1,6 +1,6 @@
-using FluidWarfare.Core.Results;
+﻿using XuanYu.Engine.Core.Results;
 
-namespace FluidWarfare.Project.Paths;
+namespace XuanYu.Engine.Project.Paths;
 
 public static class SampleProjectPath
 {

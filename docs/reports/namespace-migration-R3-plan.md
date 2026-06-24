@@ -1,6 +1,7 @@
 # R3 namespace 迁移计划
 
 > **创建**：2026-06-24 | **类型**：迁移计划 | **生命周期**：R3-Z 完成后合并到 `changelog.md` 后删除
+> **R3-1 状态**：✅ 已完成（2026-06-24）
 
 ---
 
@@ -136,21 +137,23 @@ using 随 namespace 迁移自动同步——修改 namespace 后，同文件的 
 
 ## 8. R3 分阶段迁移建议
 
-### R3-1 — 底层模块（Core / Engine / Project / Bridge）
+### ✅ R3-1 — 底层模块（Core / Engine / Project / Bridge）
 
 ```
 文件数：~36
 namespace 更改：~36 处
+using 更改：~209 处（跨全仓引用）
 XAML 风险：无
-风险等级：🟢 低
+风险等级：🟢 低 — 已完成 ✅
 ```
 
-步骤：
-1. Core：`FluidWarfare.Core.*` → `XuanYu.Engine.Core.*`（9 文件）
-2. Engine：`FluidWarfare.Engine.*` → `XuanYu.Engine.*`（8 文件，注意无后缀）
-3. Project：`FluidWarfare.Project.*` → `XuanYu.Engine.Project.*`（17 文件）
-4. Bridge：`FluidWarfare.Bridge.ProjectEngine.*` → `XuanYu.Engine.Bridge.ProjectEngine.*`（2 文件）
-5. build + test
+操作：
+1. Core：`FluidWarfare.Core.*` → `XuanYu.Engine.Core.*`（9 文件 namespace + 134 文件 using）
+2. Engine：`FluidWarfare.Engine.*` → `XuanYu.Engine.*`（8 文件 namespace + 37 文件 using，注意无后缀）
+3. Project：`FluidWarfare.Project.*` → `XuanYu.Engine.Project.*`（17 文件 namespace + 35 文件 using）
+4. Bridge：`FluidWarfare.Bridge.ProjectEngine.*` → `XuanYu.Engine.Bridge.ProjectEngine.*`（2 文件 namespace + 3 文件 using）
+5. build: 0 Error / test: 629/630 (1 flaky)
+6. R3-1 范围内旧 namespace/using 全部清零 ✅
 
 ### R3-2 — Render 层（Render + Render.Vulkan）
 

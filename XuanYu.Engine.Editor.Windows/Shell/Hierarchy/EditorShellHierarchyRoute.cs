@@ -1,10 +1,10 @@
-using FluidWarfare.Core.Identity;
+﻿using XuanYu.Engine.Core.Identity;
 using FluidWarfare.Editor.ProjectContentTreeModel;
 using FluidWarfare.Editor.WorldHierarchy;
 using FluidWarfare.Editor.Windows.Panels.LeftDock;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
-using FluidWarfare.Project.Metadata;
-using FluidWarfare.Engine.World;
+using XuanYu.Engine.Project.Metadata;
+using XuanYu.Engine.World;
 using FluidWarfare.Render.Scene;
 
 namespace FluidWarfare.Editor.Windows.Shell.Hierarchy;

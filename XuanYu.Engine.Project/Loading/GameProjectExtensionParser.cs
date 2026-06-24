@@ -1,9 +1,9 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Text.Json;
-using FluidWarfare.Core.Results;
-using FluidWarfare.Project.Validation;
+using XuanYu.Engine.Core.Results;
+using XuanYu.Engine.Project.Validation;
 
-namespace FluidWarfare.Project.Loading;
+namespace XuanYu.Engine.Project.Loading;
 
 /// <summary>解析 allowedExtensions JSON 数组 + 格式校验。供 GameProjectFolderParser 调用。</summary>
 internal static partial class GameProjectExtensionParser

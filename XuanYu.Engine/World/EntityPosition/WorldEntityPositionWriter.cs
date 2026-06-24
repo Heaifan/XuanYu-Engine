@@ -1,7 +1,7 @@
-using FluidWarfare.Core.Identity;
-using FluidWarfare.Core.Math;
+﻿using XuanYu.Engine.Core.Identity;
+using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Engine.World.EntityPosition;
+namespace XuanYu.Engine.World.EntityPosition;
 
 /// <summary>
 /// 对 WorldState 执行位置修改。检查 EntityId 存在性和位置是否实际变化。

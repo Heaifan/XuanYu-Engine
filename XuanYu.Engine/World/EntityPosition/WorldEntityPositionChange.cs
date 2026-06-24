@@ -1,7 +1,7 @@
-using FluidWarfare.Core.Identity;
-using FluidWarfare.Core.Math;
+﻿using XuanYu.Engine.Core.Identity;
+using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Engine.World.EntityPosition;
+namespace XuanYu.Engine.World.EntityPosition;
 
 /// <summary>
 /// World Entity 位置变更记录。

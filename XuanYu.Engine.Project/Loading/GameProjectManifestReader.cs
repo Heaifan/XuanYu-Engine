@@ -1,8 +1,8 @@
-using System.Text.Json;
-using FluidWarfare.Core.Results;
-using FluidWarfare.Project.Validation;
+﻿using System.Text.Json;
+using XuanYu.Engine.Core.Results;
+using XuanYu.Engine.Project.Validation;
 
-namespace FluidWarfare.Project.Loading;
+namespace XuanYu.Engine.Project.Loading;
 
 /// <summary>读取并验证 game.project.json 文件。供 GameProjectLoader 内部使用。</summary>
 internal static class GameProjectManifestReader

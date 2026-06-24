@@ -1,6 +1,6 @@
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace FluidWarfare.Core.Math;
+namespace XuanYu.Engine.Core.Math;
 
 public readonly record struct YawRotation
 {

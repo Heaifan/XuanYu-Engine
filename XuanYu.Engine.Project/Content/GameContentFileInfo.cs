@@ -1,4 +1,4 @@
-namespace FluidWarfare.Project.Content;
+﻿namespace XuanYu.Engine.Project.Content;
 
 /// <summary>
 /// 表示项目中一个合法内容文件入口。

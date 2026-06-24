@@ -1,6 +1,6 @@
-using FluidWarfare.Core.Identity;
+﻿using XuanYu.Engine.Core.Identity;
 
-namespace FluidWarfare.Engine.World;
+namespace XuanYu.Engine.World;
 
 /// <summary>
 /// 表示 World 中一个实体的最小可显示信息。

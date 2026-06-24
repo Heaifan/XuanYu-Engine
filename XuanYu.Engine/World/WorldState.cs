@@ -1,8 +1,8 @@
-using FluidWarfare.Core.Identity;
-using FluidWarfare.Core.Math;
-using FluidWarfare.Engine.Components;
+﻿using XuanYu.Engine.Core.Identity;
+using XuanYu.Engine.Core.Math;
+using XuanYu.Engine.Components;
 
-namespace FluidWarfare.Engine.World;
+namespace XuanYu.Engine.World;
 
 /// <summary>最小世界状态，支持创建、查询和枚举实体。不读项目文件，不写日志。</summary>
 public sealed class WorldState

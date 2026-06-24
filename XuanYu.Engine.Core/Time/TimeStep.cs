@@ -1,6 +1,6 @@
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace FluidWarfare.Core.Time;
+namespace XuanYu.Engine.Core.Time;
 
 public readonly record struct TimeStep
 {

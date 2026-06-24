@@ -1,4 +1,4 @@
-namespace FluidWarfare.Project.Content;
+﻿namespace XuanYu.Engine.Project.Content;
 
 public sealed record GameContentFolderInfo(
     string FolderName,

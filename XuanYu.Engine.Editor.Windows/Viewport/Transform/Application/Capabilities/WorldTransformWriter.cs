@@ -1,8 +1,8 @@
-using FluidWarfare.Core.Identity;
-using FluidWarfare.Core.Math;
+﻿using XuanYu.Engine.Core.Identity;
+using XuanYu.Engine.Core.Math;
 using FluidWarfare.Editor.EntityTransform;
 using FluidWarfare.Editor.Windows.Panels.Status;
-using FluidWarfare.Engine.World;
+using XuanYu.Engine.World;
 
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 

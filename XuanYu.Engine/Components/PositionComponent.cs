@@ -1,6 +1,6 @@
-using FluidWarfare.Core.Math;
+﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Engine.Components;
+namespace XuanYu.Engine.Components;
 
 /// <summary>
 /// 实体位置组件，包装 Vector3d。

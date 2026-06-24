@@ -1,6 +1,6 @@
-using FluidWarfare.Core.Math;
+﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Project.World.Transform;
+namespace XuanYu.Engine.Project.World.Transform;
 
 /// <summary>
 /// SceneTransform 各分量的有效性校验。

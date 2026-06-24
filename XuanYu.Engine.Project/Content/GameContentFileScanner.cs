@@ -1,6 +1,6 @@
-using FluidWarfare.Project.Validation;
+﻿using XuanYu.Engine.Project.Validation;
 
-namespace FluidWarfare.Project.Content;
+namespace XuanYu.Engine.Project.Content;
 
 /// <summary>根据 GameContentFolderInfo 扫描项目内容目录的一级内容文件入口。校验扩展名，不解析内容。</summary>
 public static class GameContentFileScanner

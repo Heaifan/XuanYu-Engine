@@ -1,4 +1,4 @@
-namespace FluidWarfare.Core.Results;
+﻿namespace XuanYu.Engine.Core.Results;
 
 public readonly record struct EngineError
 {

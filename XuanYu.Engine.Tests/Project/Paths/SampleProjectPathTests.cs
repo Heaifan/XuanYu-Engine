@@ -1,4 +1,4 @@
-using FluidWarfare.Project.Paths;
+﻿using XuanYu.Engine.Project.Paths;
 
 namespace FluidWarfare.Tests.Project.Paths;
 

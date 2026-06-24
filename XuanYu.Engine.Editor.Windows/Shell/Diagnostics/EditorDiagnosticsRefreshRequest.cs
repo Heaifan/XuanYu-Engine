@@ -1,4 +1,4 @@
-using FluidWarfare.Editor.EntityTransform;
+﻿using FluidWarfare.Editor.EntityTransform;
 using FluidWarfare.Editor.Windows.Panels.Status;
 using FluidWarfare.Editor.Windows.Panels.Viewport;
 using FluidWarfare.Editor.Windows.Shell.Feedback;
@@ -10,7 +10,7 @@ using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
-using FluidWarfare.Engine.World;
+using XuanYu.Engine.World;
 
 namespace FluidWarfare.Editor.Windows.Shell.Diagnostics;
 

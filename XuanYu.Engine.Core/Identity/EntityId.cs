@@ -1,4 +1,4 @@
-namespace FluidWarfare.Core.Identity;
+﻿namespace XuanYu.Engine.Core.Identity;
 
 public readonly record struct EntityId
 {

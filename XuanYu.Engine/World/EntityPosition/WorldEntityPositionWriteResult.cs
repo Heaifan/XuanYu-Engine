@@ -1,4 +1,4 @@
-namespace FluidWarfare.Engine.World.EntityPosition;
+﻿namespace XuanYu.Engine.World.EntityPosition;
 
 /// <summary>
 /// World Entity 位置写入结果。
