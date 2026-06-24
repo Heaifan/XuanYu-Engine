@@ -70,17 +70,7 @@ public sealed class TransformDragRoute
     bool StartAxis(Vector3d axis, double x, double y, Vector3d pivot)
     {
         var (a, ok) = AxisDragAnchorBuilder.Build(axis, x, y, pivot, _camera!, _session.PreviewTransform.Position);
-        if (!ok) (a, ok) = FallbackScreenProj(axis, x, y, pivot);
         if (!ok) return false; _axisAnchor = a; _activeKind = TransformDragKind.Axis; return true;
-    }
-    (AxisTranslationAnchor, bool) FallbackScreenProj(Vector3d axis, double x, double y, Vector3d pivot)
-    {
-        var c = _camera!; var p = c.CameraPose;
-        if (AxisScreenMetric.TryCompute(pivot, axis, c.ViewProjection, c.ViewportWidth, c.ViewportHeight, out var d, out var u))
-            return (new(pivot, axis, pivot, u, d, x, y, AxisTranslationMode.ScreenProjection), true);
-        double dx = p.PositionX - p.TargetX, dy = p.PositionY - p.TargetY, dz = p.PositionZ - p.TargetZ;
-        var ppu = p.ProjectionMode == SceneProjectionMode.Orthographic ? p.OrthographicHeight / Math.Max(1, c.ViewportHeight) : 2.0 * Math.Sqrt(dx * dx + dy * dy + dz * dz) * Math.Tan(p.FieldOfViewDegrees * Math.PI / 360.0) / Math.Max(1, c.ViewportHeight);
-        return ppu <= 0 ? (default, false) : (new(pivot, axis, pivot, 1.0 / ppu, new(0, -1), x, y, AxisTranslationMode.ScreenProjection), true);
     }
     bool StartPlane(Vector3d pivot, Vector3d normal, double x, double y)
     {
