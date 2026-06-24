@@ -1,8 +1,8 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
-using FluidWarfare.Render.Selection;
+using XuanYu.Engine.Render.Selection;
 
-namespace FluidWarfare.Render.Scene;
+namespace XuanYu.Engine.Render.Scene;
 
 /// <summary>
 /// 表示一个可被渲染后端消费的最小对象。

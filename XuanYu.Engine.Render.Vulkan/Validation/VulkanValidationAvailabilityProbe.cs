@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Validation;
+namespace XuanYu.Engine.Render.Vulkan.Validation;
 
 /// <summary>检测 VK_LAYER_KHRONOS_validation 和 VK_EXT_debug_utils 是否可用。不创建 Instance。</summary>
 public static unsafe class VulkanValidationAvailabilityProbe

@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Swapchain;
 
 /// <summary>
 /// Swapchain 创建/重建的结构化结果。

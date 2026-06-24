@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>诊断探针的 QueueSubmit 阶段。</summary>
 public static unsafe partial class VulkanScene3dRenderer

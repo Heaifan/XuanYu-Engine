@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Camera;
+﻿namespace XuanYu.Engine.Render.Vulkan.Camera;
 
 /// <summary>4x4 矩阵求逆（列优先 float[]）。使用高斯-约旦消元法。</summary>
 public static class VulkanMatrixInvert

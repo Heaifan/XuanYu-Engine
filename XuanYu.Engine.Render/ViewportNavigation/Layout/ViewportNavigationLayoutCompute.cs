@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.ViewportNavigation;
+﻿namespace XuanYu.Engine.Render.ViewportNavigation;
 
 /// <summary>ViewportNavigationLayout 的工厂方法。</summary>
 public static class ViewportNavigationLayoutCompute

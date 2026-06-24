@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D.Axes;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D.Axes;
 
 /// <summary>
 /// 世界 X/Y/Z 主轴几何数据生成（Z-Up）。

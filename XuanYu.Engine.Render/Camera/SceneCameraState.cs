@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Camera;
+﻿namespace XuanYu.Engine.Render.Camera;
 
 /// <summary>
 /// RTS 战场相机状态。

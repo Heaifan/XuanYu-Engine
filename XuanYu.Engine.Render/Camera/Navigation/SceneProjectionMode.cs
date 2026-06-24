@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Camera.Navigation;
+﻿namespace XuanYu.Engine.Render.Camera.Navigation;
 
 /// <summary>
 /// 相机投影模式。

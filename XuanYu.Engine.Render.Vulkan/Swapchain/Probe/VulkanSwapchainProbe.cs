@@ -1,8 +1,8 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Swapchain;
+namespace XuanYu.Engine.Render.Vulkan.Swapchain;
 
 /// <summary>
 /// 使用临时 Instance + Surface + Device 创建并立即释放 Swapchain。

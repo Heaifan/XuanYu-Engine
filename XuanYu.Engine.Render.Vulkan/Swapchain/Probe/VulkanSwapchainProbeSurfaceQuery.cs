@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Swapchain;
+namespace XuanYu.Engine.Render.Vulkan.Swapchain;
 
 /// <summary>SurfaceCapabilities / SurfaceFormats / PresentModes 查询 + 格式选择。供 VulkanSwapchainProbe 内部使用。</summary>
 sealed unsafe class VulkanSwapchainProbeSurfaceQuery

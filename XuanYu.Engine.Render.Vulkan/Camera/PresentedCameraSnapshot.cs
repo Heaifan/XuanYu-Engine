@@ -1,7 +1,7 @@
-using FluidWarfare.Render.Camera;
-using FluidWarfare.Render.Camera.Navigation;
+﻿using XuanYu.Engine.Render.Camera;
+using XuanYu.Engine.Render.Camera.Navigation;
 
-namespace FluidWarfare.Render.Vulkan.Camera;
+namespace XuanYu.Engine.Render.Vulkan.Camera;
 
 /// <summary>
 /// 已成功 Present 的相机快照。

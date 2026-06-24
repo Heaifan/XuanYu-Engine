@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Swapchain;
+namespace XuanYu.Engine.Render.Vulkan.Swapchain;
 
 /// <summary>选择支持 Graphics + Present 的 PhysicalDevice。供 VulkanSwapchainProbe 内部使用。</summary>
 sealed unsafe class VulkanSwapchainProbeDeviceSelector

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.ViewportNavigation;
+﻿namespace XuanYu.Engine.Render.ViewportNavigation;
 
 /// <summary>
 /// ViewportNavigationLayout 的命中测试和动作映射。

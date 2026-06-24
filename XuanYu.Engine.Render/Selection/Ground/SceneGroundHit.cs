@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Selection.Ground;
+namespace XuanYu.Engine.Render.Selection.Ground;
 
 /// <summary>
 /// 地面射线求交结果。未命中时 IsHit = false。

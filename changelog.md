@@ -1,5 +1,14 @@
 # changelog
 
+## [8.8-R3-2] — Render 层 namespace 迁移 (2026-06-24)
+- 迁移 Render/Render.Vulkan namespace：`FluidWarfare.Render.*` → `XuanYu.Engine.Render.*`
+- Render：47 文件 namespace + 147 文件跨项目 using；Render.Vulkan：154 文件 namespace
+- 修复 1 处完全限定类型引用；相机白名单文件 namespace 正确迁移
+- Editor/Tests namespace 保持不动（R3-3/R3-4）
+- x:Class/EditorSettingsPath 未改动
+- build: 0 Error / test: 629/630 (1 flaky)
+- commit `next`
+
 ## [8.8-R3-1] — 底层模块 namespace 迁移 (2026-06-24)
 - 迁移 Core/Engine/Project/Bridge namespace：`FluidWarfare.*` → `XuanYu.Engine.*`
 - 模块内 namespace 声明：36 文件；全仓 using 引用：209 文件；总计 185 文件改动

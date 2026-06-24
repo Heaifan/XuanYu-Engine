@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Depth;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Depth;
 
 /// <summary>为每个 Swapchain Image 创建 Depth Image、DeviceMemory 和 ImageView。</summary>
 public static unsafe class VulkanScene3dDepthAttachments

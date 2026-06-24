@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Selection;
+namespace XuanYu.Engine.Render.Selection;
 
 /// <summary>
 /// Slab 法射线与 AABB 相交检测。

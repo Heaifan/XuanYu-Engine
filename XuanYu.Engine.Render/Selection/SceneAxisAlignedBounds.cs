@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Selection;
+namespace XuanYu.Engine.Render.Selection;
 
 /// <summary>
 /// 轴对齐包围盒（AABB），用于 Picking 和渲染尺寸统一。

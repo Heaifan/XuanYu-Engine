@@ -1,7 +1,7 @@
-using FluidWarfare.Render.Vulkan.Shaders;
+﻿using XuanYu.Engine.Render.Vulkan.Shaders;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>
 /// 使用 CompiledShaders 中已验证的 SPIR-V 字节创建 Vertex / Fragment ShaderModule。

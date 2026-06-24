@@ -3,8 +3,8 @@ using FluidWarfare.Editor.Transform.Edit;
 using FluidWarfare.Editor.Transform.Translation.Axis;
 using FluidWarfare.Editor.Transform.Translation.Plane;
 using XuanYu.Engine.Project.World.Transform;
-using FluidWarfare.Render.Selection;
-using FluidWarfare.Render.Vulkan.Camera;
+using XuanYu.Engine.Render.Selection;
+using XuanYu.Engine.Render.Vulkan.Camera;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
 

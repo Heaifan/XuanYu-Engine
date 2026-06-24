@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>诊断探针的 Surface 查询与格式选择辅助。</summary>
 public static unsafe partial class VulkanScene3dRenderer

@@ -1,8 +1,8 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Instance;
+namespace XuanYu.Engine.Render.Vulkan.Instance;
 
 /// <summary>创建并立即释放 Vulkan Instance，验证 Vulkan API 调用链路。</summary>
 public static unsafe class VulkanInstanceProbe

@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Camera.Navigation;
+namespace XuanYu.Engine.Render.Camera.Navigation;
 
 /// <summary>
 /// 标准视图方向的 Yaw/Pitch 计算及投影模式切换。

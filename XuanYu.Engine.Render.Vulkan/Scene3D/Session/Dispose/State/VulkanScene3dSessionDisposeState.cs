@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 /// <summary>
 /// Dispose 状态跟踪：资源创建标记的查询与重置。

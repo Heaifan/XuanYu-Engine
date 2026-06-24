@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.GroundCursor;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.GroundCursor;
 
 /// <summary>
 /// Ground Cursor 运行时状态（可见性 + 世界坐标）。

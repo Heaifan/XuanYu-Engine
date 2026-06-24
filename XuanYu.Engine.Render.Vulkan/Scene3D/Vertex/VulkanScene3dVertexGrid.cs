@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>Grid / Axis 顶点生成 + 交错格式转换。</summary>
 public static partial class VulkanScene3dVertices

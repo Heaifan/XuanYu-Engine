@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>CommandBuffer 录制编排器。各录制阶段委托到专用辅助。</summary>
 public static unsafe partial class VulkanScene3dCommandRecorder

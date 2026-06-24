@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Render.Selection;
+using XuanYu.Engine.Render.Selection;
 
-namespace FluidWarfare.Render.Scene;
+namespace XuanYu.Engine.Render.Scene;
 
 /// <summary>
 /// 单位渲染位置与 Picking 包围盒的单一真源。

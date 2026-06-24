@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 /// <summary>
 /// Vertex Buffer + DeviceMemory 释放步骤。

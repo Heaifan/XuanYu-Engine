@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Device;
+namespace XuanYu.Engine.Render.Vulkan.Device;
 
 /// <summary>临时 VkInstance 生命周期（无扩展，仅用于设备探测）。供 VulkanDeviceProbe 内部使用。</summary>
 sealed unsafe class VulkanDeviceInstanceScope : IDisposable

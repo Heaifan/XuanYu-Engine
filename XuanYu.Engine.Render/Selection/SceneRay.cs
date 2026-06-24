@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Selection;
+namespace XuanYu.Engine.Render.Selection;
 
 /// <summary>
 /// 3D 空间射线，用于 Picking 和命中检测。

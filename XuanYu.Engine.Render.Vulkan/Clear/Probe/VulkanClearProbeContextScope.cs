@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Clear;
+namespace XuanYu.Engine.Render.Vulkan.Clear;
 
 sealed unsafe class VulkanClearProbeContextScope : IDisposable
 {

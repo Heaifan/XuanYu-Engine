@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.ViewportNavigation;
+﻿namespace XuanYu.Engine.Render.ViewportNavigation;
 
 /// <summary>
 /// Overlay 交互触发的相机动作。

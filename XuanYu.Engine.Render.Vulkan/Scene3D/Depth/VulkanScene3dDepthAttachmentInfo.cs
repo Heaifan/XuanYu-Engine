@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Depth;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Depth;
 
 /// <summary>
 /// 深度附件查询与诊断信息。

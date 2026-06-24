@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Surface;
+namespace XuanYu.Engine.Render.Vulkan.Surface;
 
 /// <summary>临时 VkInstance 生命周期 + Win32 Surface 创建。仅供 VulkanSurfaceProbe 内部使用。</summary>
 sealed unsafe class VulkanSurfaceInstanceScope : IDisposable

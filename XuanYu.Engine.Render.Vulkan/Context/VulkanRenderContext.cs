@@ -1,8 +1,8 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Context;
+namespace XuanYu.Engine.Render.Vulkan.Context;
 
 public sealed unsafe class VulkanRenderContext : IDisposable
 {

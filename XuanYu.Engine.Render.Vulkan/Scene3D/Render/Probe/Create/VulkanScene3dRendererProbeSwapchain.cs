@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>诊断探针的 Swapchain 创建——函数指针、查询、选择、创建。</summary>
 public static unsafe partial class VulkanScene3dRenderer

@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Scene.Position;
+namespace XuanYu.Engine.Render.Scene.Position;
 
 /// <summary>
 /// RenderObject 位置变更记录。

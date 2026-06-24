@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>Unit TriangleList 录制。每单位单独 PushConstants（MVP + Tint）。</summary>
 public static unsafe partial class VulkanScene3dCommandRecorder

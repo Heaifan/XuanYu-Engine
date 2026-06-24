@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Handles;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Handles;
 
 /// <summary>Session 级核心 Vulkan 句柄集合。Instance / Device / Surface / Queue。</summary>
 sealed record VulkanScene3dCoreHandles(

@@ -1,6 +1,6 @@
-using FluidWarfare.Render.ViewportNavigation;
+﻿using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Overlay;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 
 /// <summary>Overlay Shape 绘制：字母标签 + 导航按钮。</summary>
 public static partial class VulkanNavigationOverlayGeometry

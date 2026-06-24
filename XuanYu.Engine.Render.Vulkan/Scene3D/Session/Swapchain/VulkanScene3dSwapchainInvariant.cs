@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Swapchain;
 
 /// <summary>
 /// Swapchain 生命周期不变量检查。

@@ -1,5 +1,5 @@
-using FluidWarfare.Editor.Windows.Viewport.Camera;
-using FluidWarfare.Render.ViewportNavigation;
+﻿using FluidWarfare.Editor.Windows.Viewport.Camera;
+using XuanYu.Engine.Render.ViewportNavigation;
 
 namespace FluidWarfare.Editor.Windows.Viewport.Navigation;
 

@@ -1,5 +1,5 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Render.Camera;
+using XuanYu.Engine.Render.Camera;
 
 namespace FluidWarfare.Tests.Render.Camera;
 

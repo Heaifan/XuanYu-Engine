@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Overlay;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 
 /// <summary>录制 Overlay CommandBuffer。在世界绘制完成后执行。TriangleList，Depth=off，Blend=on。</summary>
 public static unsafe class VulkanOverlayCommandRecorder

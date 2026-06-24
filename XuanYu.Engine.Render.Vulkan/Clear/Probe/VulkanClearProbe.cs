@@ -1,8 +1,8 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Clear;
+namespace XuanYu.Engine.Render.Vulkan.Clear;
 
 public static unsafe class VulkanClearProbe
 {

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Camera;
+﻿namespace XuanYu.Engine.Render.Vulkan.Camera;
 
 /// <summary>
 /// 固定 3D 相机参数。

@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain.Lifecycle;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Swapchain.Lifecycle;
 
 /// <summary>VulkanScene3dSwapchainResources 幂等销毁辅助。</summary>
 internal static unsafe class VulkanScene3dSwapchainDispose

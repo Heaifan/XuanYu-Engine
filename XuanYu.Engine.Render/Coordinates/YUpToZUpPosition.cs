@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Coordinates;
+namespace XuanYu.Engine.Render.Coordinates;
 
 /// <summary>
 /// 旧 Y-Up 到 Z-Up 的一次性迁移工具。

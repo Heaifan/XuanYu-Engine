@@ -1,6 +1,6 @@
-using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
+﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Session.Swapchain;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Handles;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Handles;
 
 /// <summary>Swapchain 级句柄与函数指针集合。</summary>
 sealed record VulkanScene3dSwapchainHandles(

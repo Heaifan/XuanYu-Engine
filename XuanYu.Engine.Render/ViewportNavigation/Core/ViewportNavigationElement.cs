@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.ViewportNavigation;
+﻿namespace XuanYu.Engine.Render.ViewportNavigation;
 
 /// <summary>
 /// 可交互的导航元素标识。

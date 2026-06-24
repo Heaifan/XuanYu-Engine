@@ -1,6 +1,6 @@
-using FluidWarfare.Render.ViewportNavigation;
+﻿using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Overlay;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 
 public sealed record PresentedNavigationOverlaySnapshot
 {

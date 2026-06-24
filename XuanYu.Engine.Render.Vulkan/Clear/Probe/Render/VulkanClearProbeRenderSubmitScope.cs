@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Clear;
+namespace XuanYu.Engine.Render.Vulkan.Clear;
 
 sealed unsafe class VulkanClearProbeRenderSubmitScope : IDisposable
 {

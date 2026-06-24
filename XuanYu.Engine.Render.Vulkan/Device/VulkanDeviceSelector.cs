@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Device;
+namespace XuanYu.Engine.Render.Vulkan.Device;
 
 /// <summary>PhysicalDevice 枚举 + 选择。优先独立 GPU + Graphics Queue。供 VulkanDeviceProbe 内部使用。</summary>
 sealed unsafe class VulkanDeviceSelector

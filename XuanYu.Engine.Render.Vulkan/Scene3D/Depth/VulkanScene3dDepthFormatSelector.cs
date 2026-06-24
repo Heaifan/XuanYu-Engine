@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Depth;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Depth;
 
 /// <summary>
 /// 查询物理设备支持的 Scene3D 深度格式。

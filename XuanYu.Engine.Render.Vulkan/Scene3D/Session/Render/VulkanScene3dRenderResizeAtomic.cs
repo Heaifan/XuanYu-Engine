@@ -1,8 +1,8 @@
-using System.Diagnostics;
-using FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
+﻿using System.Diagnostics;
+using XuanYu.Engine.Render.Vulkan.Scene3D.Session.Swapchain;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 /// <summary>
 /// Resize 事务：创建新 Pipeline/Overlay → 原子切换 → 释放旧资源。

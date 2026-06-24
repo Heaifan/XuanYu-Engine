@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>
 /// Push Constant 数据布局：MVP (mat4, 64 字节) + Tint (vec4, 16 字节) = 80 字节。

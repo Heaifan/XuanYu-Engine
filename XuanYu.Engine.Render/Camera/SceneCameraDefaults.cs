@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Camera;
+﻿namespace XuanYu.Engine.Render.Camera;
 
 /// <summary>
 /// 默认 Scene3D 相机配置（与当前 VulkanCameraInfo.DefaultBattlefield 等价的 Target+Distance 表示）。

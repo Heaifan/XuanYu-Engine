@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Render.Selection;
+using XuanYu.Engine.Render.Selection;
 
-namespace FluidWarfare.Render.Vulkan.Camera;
+namespace XuanYu.Engine.Render.Vulkan.Camera;
 
 /// <summary>从 Vulkan 视口像素坐标生成世界空间 SceneRay。使用已呈现帧的 ViewProjection 反投影。</summary>
 public static class VulkanSceneRayBuilder

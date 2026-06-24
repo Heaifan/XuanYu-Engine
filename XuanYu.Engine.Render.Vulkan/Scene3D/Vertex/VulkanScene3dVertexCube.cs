@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>立方体顶点生成（TriangleList）。</summary>
 public static partial class VulkanScene3dVertices

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Scene;
+﻿namespace XuanYu.Engine.Render.Scene;
 
 /// <summary>
 /// 保存一帧或当前状态下的可渲染对象集合。

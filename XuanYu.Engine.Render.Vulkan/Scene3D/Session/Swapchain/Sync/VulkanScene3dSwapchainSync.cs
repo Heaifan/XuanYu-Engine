@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain.Sync;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Swapchain.Sync;
 
 /// <summary>CommandPool / CommandBuffer / Semaphore / Fence 创建。</summary>
 internal static unsafe class VulkanScene3dSwapchainSync

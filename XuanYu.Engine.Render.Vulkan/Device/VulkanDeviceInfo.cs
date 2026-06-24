@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Device;
+﻿namespace XuanYu.Engine.Render.Vulkan.Device;
 
 /// <summary>
 /// Vulkan PhysicalDevice / LogicalDevice 探测结果。

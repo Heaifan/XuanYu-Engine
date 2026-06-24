@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 /// <summary>
 /// PhysicalDevice 选择 + LogicalDevice 创建。

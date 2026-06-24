@@ -2,6 +2,7 @@
 
 > **创建**：2026-06-24 | **类型**：迁移计划 | **生命周期**：R3-Z 完成后合并到 `changelog.md` 后删除
 > **R3-1 状态**：✅ 已完成（2026-06-24）
+> **R3-2 状态**：✅ 已完成（2026-06-24）
 
 ---
 
@@ -155,19 +156,23 @@ XAML 风险：无
 5. build: 0 Error / test: 629/630 (1 flaky)
 6. R3-1 范围内旧 namespace/using 全部清零 ✅
 
-### R3-2 — Render 层（Render + Render.Vulkan）
+### ✅ R3-2 — Render 层（Render + Render.Vulkan）
 
 ```
 文件数：~201
-namespace 更改：~150 处
+namespace 更改：~201 处
+using 更改：~147 处（跨全仓引用）
 XAML 风险：无
-风险等级：🟢 低
+风险等级：🟢 低 — 已完成 ✅
 ```
 
-步骤：
-1. Render：47 文件，namespace + using 同步
-2. Render.Vulkan：154 文件，数量最多但纯 C# 无 XAML
-3. build + test
+操作：
+1. Render：47 文件 namespace + 147 文件跨项目 using
+2. Render.Vulkan：154 文件 namespace（using 已被 Render 覆盖）
+3. 修复 1 处完全限定类型引用 `FluidWarfare.Render.Camera.SceneCameraPose`
+4. 相机白名单文件 namespace 正确迁移：`XuanYu.Engine.Render.Camera.*`
+5. build: 0 Error / test: 629/630 (1 flaky)
+6. R3-2 范围内旧 namespace/using 全部清零 ✅
 
 ### R3-3 — Editor 层（Editor + Editor.Windows）⚠️ 高风险
 

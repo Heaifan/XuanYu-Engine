@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>
 /// 单个 Vertex Buffer 创建：CreateBuffer → AllocateMemory → Bind → Map → Copy → Unmap。

@@ -1,6 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 /// <summary>
 /// Dispose 诊断日志。

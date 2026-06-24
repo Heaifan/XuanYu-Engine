@@ -1,6 +1,6 @@
-using FluidWarfare.Render.Vulkan.Shaders;
+﻿using XuanYu.Engine.Render.Vulkan.Shaders;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>
 /// Scene3D 运行闸门，控制 3D 管线是否允许启动。

@@ -1,8 +1,8 @@
-using FluidWarfare.Render.Vulkan.Scene3D.Overlay;
+﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Handles;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Handles;
 
 /// <summary>帧级资源句柄（Shader / Pipeline / Buffer / Overlay）。</summary>
 sealed record VulkanScene3dFrameHandles(

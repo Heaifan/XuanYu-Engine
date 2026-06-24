@@ -5,7 +5,7 @@ using FluidWarfare.Editor.Windows.Panels.LeftDock;
 using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
 using XuanYu.Engine.Project.Metadata;
 using XuanYu.Engine.World;
-using FluidWarfare.Render.Scene;
+using XuanYu.Engine.Render.Scene;
 
 namespace FluidWarfare.Editor.Windows.Shell.Hierarchy;
 

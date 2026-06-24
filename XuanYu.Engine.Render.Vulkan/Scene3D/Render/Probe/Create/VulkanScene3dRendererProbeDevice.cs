@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>诊断探针的 PhysicalDevice 选择、LogicalDevice 创建与设备级函数指针加载。</summary>
 public static unsafe partial class VulkanScene3dRenderer

@@ -1,8 +1,8 @@
-using System.Diagnostics;
-using FluidWarfare.Render.Vulkan.Camera;
+﻿using System.Diagnostics;
+using XuanYu.Engine.Render.Vulkan.Camera;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>Scene3D 诊断探针编排器。一次性创建→渲染→销毁。</summary>
 public static unsafe partial class VulkanScene3dRenderer

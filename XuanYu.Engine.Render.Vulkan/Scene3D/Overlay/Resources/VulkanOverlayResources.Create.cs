@@ -1,7 +1,7 @@
-using Silk.NET.Vulkan;
-using FluidWarfare.Render.Vulkan.Shaders;
+﻿using Silk.NET.Vulkan;
+using XuanYu.Engine.Render.Vulkan.Shaders;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Overlay;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 
 /// <summary>Overlay 资源创建静态辅助方法。</summary>
 sealed unsafe partial class VulkanOverlayResources

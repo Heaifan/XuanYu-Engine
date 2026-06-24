@@ -1,8 +1,8 @@
-using System.Diagnostics;
-using FluidWarfare.Render.Vulkan.Camera;
+﻿using System.Diagnostics;
+using XuanYu.Engine.Render.Vulkan.Camera;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>诊断探针的帧渲染编排器：Acquire → MVP → Record → Submit → Present → Result。</summary>
 public static unsafe partial class VulkanScene3dRenderer

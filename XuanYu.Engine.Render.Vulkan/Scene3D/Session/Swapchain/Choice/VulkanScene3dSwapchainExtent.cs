@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Swapchain;
 
 /// <summary>Swapchain Extent 计算。</summary>
 internal static class VulkanScene3dSwapchainExtent

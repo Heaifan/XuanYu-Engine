@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Overlay;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 
 /// <summary>Overlay 全部 Vulkan 资源。Session 启动创建；Swapchain Resize 时重建；Dispose 释放。</summary>
 public sealed unsafe partial class VulkanOverlayResources : IDisposable

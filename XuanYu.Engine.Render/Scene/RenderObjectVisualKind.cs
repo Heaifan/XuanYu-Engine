@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Scene;
+﻿namespace XuanYu.Engine.Render.Scene;
 
 /// <summary>
 /// 渲染对象视觉类型枚举。

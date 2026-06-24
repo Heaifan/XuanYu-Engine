@@ -1,7 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Surface;
+namespace XuanYu.Engine.Render.Vulkan.Surface;
 
 /// <summary>
 /// 使用外部传入的 Windows 原生句柄创建并立即释放 Vulkan Surface。

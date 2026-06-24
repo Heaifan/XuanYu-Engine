@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 /// <summary>
 /// ShaderModule 释放步骤。

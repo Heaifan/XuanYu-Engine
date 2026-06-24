@@ -1,8 +1,8 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
-using FluidWarfare.Render.Selection;
+using XuanYu.Engine.Render.Selection;
 
-namespace FluidWarfare.Render.Scene.Position;
+namespace XuanYu.Engine.Render.Scene.Position;
 
 /// <summary>
 /// 替换 RenderScene 中指定 EntityId 的 Position 和 SelectionBounds。

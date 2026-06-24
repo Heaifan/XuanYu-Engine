@@ -1,6 +1,6 @@
-using FluidWarfare.Render.ViewportNavigation;
+﻿using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Overlay;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 
 /// <summary>将 ViewportNavigationLayout 转换为 Overlay 三角形顶点。Build 入口 + 颜色工具。</summary>
 public static partial class VulkanNavigationOverlayGeometry

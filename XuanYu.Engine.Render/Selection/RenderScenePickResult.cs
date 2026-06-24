@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Selection;
+namespace XuanYu.Engine.Render.Selection;
 
 /// <summary>
 /// Picking 操作结果。NoHit 表示未选中任何对象。

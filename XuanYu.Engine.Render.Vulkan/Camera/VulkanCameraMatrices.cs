@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Camera;
+﻿namespace XuanYu.Engine.Render.Vulkan.Camera;
 
 /// <summary>3D 相机矩阵计算。提供 View、Projection 和 ViewProjection 矩阵。Vulkan NDC：深度 0..1，Y 向下。</summary>
 public static class VulkanCameraMatrices

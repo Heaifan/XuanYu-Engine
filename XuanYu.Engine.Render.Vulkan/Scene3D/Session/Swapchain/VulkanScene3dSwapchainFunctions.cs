@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Session.Swapchain;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Session.Swapchain;
 
 /// <summary>
 /// 不可变的 Swapchain 函数集合。

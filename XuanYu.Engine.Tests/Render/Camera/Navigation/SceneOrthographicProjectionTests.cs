@@ -1,5 +1,5 @@
-using FluidWarfare.Render.Camera;
-using FluidWarfare.Render.Camera.Navigation;
+﻿using XuanYu.Engine.Render.Camera;
+using XuanYu.Engine.Render.Camera.Navigation;
 
 namespace FluidWarfare.Tests.Render.Camera.Navigation;
 

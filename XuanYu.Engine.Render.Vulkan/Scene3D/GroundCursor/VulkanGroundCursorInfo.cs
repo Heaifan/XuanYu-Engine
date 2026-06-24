@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.GroundCursor;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.GroundCursor;
 
 /// <summary>
 /// Ground Cursor 诊断信息。

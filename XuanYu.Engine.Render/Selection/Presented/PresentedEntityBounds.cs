@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Render.Selection;
+using XuanYu.Engine.Render.Selection;
 
-namespace FluidWarfare.Render.Selection.Presented;
+namespace XuanYu.Engine.Render.Selection.Presented;
 
 /// <summary>
 /// 已呈现帧中单个实体的包围盒快照。

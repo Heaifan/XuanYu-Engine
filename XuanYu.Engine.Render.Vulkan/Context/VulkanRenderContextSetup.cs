@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Context;
+namespace XuanYu.Engine.Render.Vulkan.Context;
 
 sealed unsafe class VulkanRenderContextSetup
 {

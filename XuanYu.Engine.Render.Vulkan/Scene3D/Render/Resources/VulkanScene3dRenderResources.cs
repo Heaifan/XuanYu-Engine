@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>持有 Scene3D 本轮创建的 Vulkan 资源句柄。委托 ReleaseXxx 释放。</summary>
 public sealed unsafe partial class VulkanScene3dRenderResources : IDisposable

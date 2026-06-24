@@ -1,7 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Device;
+namespace XuanYu.Engine.Render.Vulkan.Device;
 
 /// <summary>
 /// 创建临时 Vulkan Instance，选择支持 Graphics Queue 的物理设备，创建并释放 LogicalDevice。

@@ -1,6 +1,6 @@
-using Silk.NET.Vulkan;
+﻿using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>诊断探针的 ImageView / Framebuffer / CommandPool / CommandBuffer / 同步对象创建。</summary>
 public static unsafe partial class VulkanScene3dRenderer

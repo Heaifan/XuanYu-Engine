@@ -1,6 +1,6 @@
-using FluidWarfare.Render.Scene;
+﻿using XuanYu.Engine.Render.Scene;
 
-namespace FluidWarfare.Render.Selection.Presented;
+namespace XuanYu.Engine.Render.Selection.Presented;
 
 /// <summary>
 /// 从 RenderScene + CameraRevision 构建 PresentedScenePickSnapshot。

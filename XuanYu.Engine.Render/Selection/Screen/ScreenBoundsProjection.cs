@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Render.Selection.Screen;
+namespace XuanYu.Engine.Render.Selection.Screen;
 
 /// <summary>
 /// 将世界空间 AABB 投影到屏幕空间，获取屏幕矩形。

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Clear;
+﻿namespace XuanYu.Engine.Render.Vulkan.Clear;
 
 /// <summary>
 /// Vulkan 最小清屏结果模型。

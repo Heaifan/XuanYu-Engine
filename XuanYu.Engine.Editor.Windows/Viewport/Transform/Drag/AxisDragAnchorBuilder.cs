@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
 using FluidWarfare.Editor.Transform.Translation.Axis;
-using FluidWarfare.Render.Camera.Navigation;
-using FluidWarfare.Render.Vulkan.Camera;
+using XuanYu.Engine.Render.Camera.Navigation;
+using XuanYu.Engine.Render.Vulkan.Camera;
 
 namespace FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
 

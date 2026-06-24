@@ -1,6 +1,6 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>Vulkan 资源释放步骤。按依赖逆序：Fence→Pool→Buffer→Pipeline→Shader→Framebuffer→DepthView→DepthImage→DepthMemory→RenderPass→ImageView→Swapchain→Device→Surface→Instance。</summary>
 unsafe partial class VulkanScene3dRenderResources

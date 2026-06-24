@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+﻿namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>3D 场景顶点（位置 + 颜色），Stride = 28。</summary>
 public readonly record struct VulkanScene3dVertex(

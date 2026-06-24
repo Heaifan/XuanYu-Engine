@@ -1,7 +1,7 @@
-using FluidWarfare.Render.Vulkan.Camera;
+﻿using XuanYu.Engine.Render.Vulkan.Camera;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D;
 
 /// <summary>诊断探针的 MVP 矩阵计算与逐对象变换。</summary>
 public static unsafe partial class VulkanScene3dRenderer

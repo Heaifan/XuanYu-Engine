@@ -1,6 +1,6 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace FluidWarfare.Render.Vulkan.Scene3D.Overlay;
+namespace XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
 
 /// <summary>Overlay 顶点：像素坐标 + RGBA 颜色。顶点着色器将像素坐标转换为 Vulkan NDC。</summary>
 [StructLayout(LayoutKind.Sequential)]

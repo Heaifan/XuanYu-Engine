@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Render.Vulkan.Validation;
+namespace XuanYu.Engine.Render.Vulkan.Validation;
 
 /// <summary>持有 DebugUtilsMessengerEXT 生命周期。必须持有 callback 防 GC，在 Instance 销毁前释放。</summary>
 public sealed unsafe class VulkanDebugMessengerScope : IDisposable

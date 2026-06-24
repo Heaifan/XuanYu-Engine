@@ -1,4 +1,4 @@
-namespace FluidWarfare.Render.Camera.Navigation;
+﻿namespace XuanYu.Engine.Render.Camera.Navigation;
 
 /// <summary>
 /// 标准视图方向标识。
