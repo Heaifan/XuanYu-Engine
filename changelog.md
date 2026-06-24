@@ -8,7 +8,7 @@
 - 更新 docs/naming-XuanYu-Engine.md R3 状态、file-tree.md
 - 残留说明：EditorSettingsPath.AppFolderName = "FluidWarfare" 保留到 R4
 - build: 0 Error / test: 629/630 (1 flaky)
-- commit `56a5f17`
+- commit `710dd88`
 
 ## [8.8-R3-4] — Tests namespace 迁移 (2026-06-24 09:48)
 - 迁移 namespace `FluidWarfare.Tests.*` → `XuanYu.Engine.Tests.*`（73 文件）
