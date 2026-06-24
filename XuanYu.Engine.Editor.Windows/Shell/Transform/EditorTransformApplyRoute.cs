@@ -21,10 +21,11 @@ public sealed class EditorTransformApplyRoute
         Action<string> infoLog)
     {
         if (selection.State.SelectedWorldEntity is null || commit is null) return new(false, false);
+        infoLog($"[Commit] Apply: origin={origin}, pos=({transform.Position.X:F3},{transform.Position.Y:F3},{transform.Position.Z:F3})");
         commit.Apply(transform, selection.State.SelectedWorldEntity.EntityId);
         scheduleFrame(VulkanScene3dFrameReason.EntityTransformChanged);
         if (origin != EditorEntityTransformOrigin.DragScrub && origin != EditorEntityTransformOrigin.MoveTool)
-            infoLog($"实体 {selection.State.SelectedWorldEntity.DisplayName} 坐标修改为 ({transform.Position.X:F2}, {transform.Position.Y:F2}, {transform.Position.Z:F2})。");
+            infoLog($"实体 {selection.State.SelectedWorldEntity.DisplayName} 坐标修改为 ({transform.Position.X:F3}, {transform.Position.Y:F3}, {transform.Position.Z:F3})。");
         return new(true, true);
     }
 

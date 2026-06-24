@@ -82,6 +82,9 @@ static class EditorShellComposition
             ctx.TransformRoute, ctx.ScrubRoute, ctx.RawInputRoute, ctx.ViewportRedrawRoute, ctx.ViewFocusRoute,
             ctx.SelectionSyncRoute, ctx.LogRoute).Wire();
 
+        // 诊断追踪：Gizmo 拖动 / Commit 位置链路
+        ctx.PointerRoute.Trace = msg => ctx.LogRoute.Info(msg);
+
         ctx.Feedback.Attach(ctx.DebugDockPanel, ctx.StatusBarPanel, ctx.VulkanViewportHostPanel);
         ctx.Feedback.SetStartupLogs();
         ctx.ProjectBootstrapRoute.LoadSampleProject();

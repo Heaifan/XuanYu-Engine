@@ -21,6 +21,8 @@ public sealed class TransformPointerRoute
     public MoveGizmoElement HoveredElement => _gizmo.HoveredElement;
     public bool HasHoveredElement => _gizmo.HoveredElement != MoveGizmoElement.None;
     public bool IsDragActive => _dragRoute.IsActive;
+    /// <summary>诊断追踪。转发到 _dragRoute.Trace。</summary>
+    public Action<string>? Trace { get => _dragRoute.Trace; set => _dragRoute.Trace = value; }
 
     public void UpdateGizmoHover(double x, double y, MoveGizmoLayout layout)
     {

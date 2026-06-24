@@ -1,12 +1,12 @@
-﻿using XuanYu.Engine.Core.Math;
+using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.Transform.Edit;
 using XuanYu.Engine.Editor.Transform.Translation.Axis;
 using XuanYu.Engine.Editor.Transform.Translation.Plane;
 using XuanYu.Engine.Project.World.Transform;
-using XuanYu.Engine.Render.Camera.Navigation;
 using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Vulkan.Camera;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Transform.Translation.Axis;
 namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
 public sealed class TransformDragRoute
@@ -18,20 +18,30 @@ public sealed class TransformDragRoute
     PresentedCameraSnapshot? _camera;
     SceneTransform _initialTransform;
 
+    public Action<string>? Trace { get; set; }
     public TransformEditSession Session => _session;
     public TransformDragKind ActiveKind => _activeKind;
     public bool IsActive => _activeKind != TransformDragKind.None;
 
     public bool Begin(MoveGizmoElement el, double x, double y, TransformStartSnapshot s)
     {
-        if (!s.Camera.IsValid) return false;
+        if (!s.Camera.IsValid) { Trace?.Invoke("[D] Begin: 相机无效"); return false; }
         _camera = s.Camera;
         _session.Begin(new(s.EntityId.Value.ToString(), s.InitialTransform, s.IsDirty, TransformEditKind.Translation));
-        if (!StartFromElement(el, x, y, s.InitialTransform.Position))
-        { _session.Cancel(); _camera = null; _activeKind = TransformDragKind.None; return false; }
-        _initialTransform = _session.PreviewTransform; return true;
+        var ip = s.InitialTransform.Position;
+        Trace?.Invoke($"[D] Begin: el={el}, pos=({ip.X:F2},{ip.Y:F2},{ip.Z:F2})");
+        if (!StartFromElement(el, x, y, ip))
+        { Trace?.Invoke("[D] Begin: StartFromElement 失败"); _session.Cancel(); _camera = null; _activeKind = TransformDragKind.None; return false; }
+        _initialTransform = _session.PreviewTransform;
+        Trace?.Invoke($"[D] StartAxis: mode={_axisAnchor.Mode}");
+        return true;
     }
-    public void Confirm() { if (_activeKind == TransformDragKind.None) return; _activeKind = TransformDragKind.None; _session.Confirm(); _camera = null; }
+    public void Confirm()
+    {
+        if (_activeKind == TransformDragKind.None) return;
+        var fp = _session.PreviewTransform.Position; Trace?.Invoke($"[D] Confirm: ({fp.X:F2},{fp.Y:F2},{fp.Z:F2})");
+        _activeKind = TransformDragKind.None; _session.Confirm(); _camera = null;
+    }
     public SceneTransform? Cancel()
     {
         if (_activeKind == TransformDragKind.None) return null;
@@ -43,19 +53,21 @@ public sealed class TransformDragRoute
         if (_activeKind == TransformDragKind.Axis && _axisAnchor.Mode == AxisTranslationMode.DragPlane)
             return MoveDrag(x, y, _axisAnchor.DragPlaneNormal, h => AxisTranslationSolver.SolveDragPlane(_axisAnchor, h));
         if (_activeKind == TransformDragKind.Axis)
-        { var t = AxisTranslationSolver.Solve(_axisAnchor, x, y); _session.Preview(WithPos(_session.PreviewTransform, t)); return new(true); }
+        { var t = AxisTranslationSolver.Solve(_axisAnchor, x, y); Trace?.Invoke($"[D] Move SP: ({t.X:F2},{t.Y:F2},{t.Z:F2})"); _session.Preview(WithPos(_session.PreviewTransform, t)); return new(true); }
         return MoveDrag(x, y, _planeAnchor.PlaneNormal, h => PlaneTranslationSolver.Solve(_planeAnchor, h));
     }
     TransformDragMoveResult MoveDrag(double x, double y, Vector3d n, Func<Vector3d, Vector3d> s)
     {
-        if (!BuildRay(x, y, out var r)) return default;
+        if (!BuildRay(x, y, out var r)) { Trace?.Invoke("[D] MoveDrag: BuildRay 失败"); return default; }
         var denom = r.Direction.Dot(n);
-        if (Math.Abs(denom) < 1e-10) return default;
+        if (Math.Abs(denom) < 1e-10) { Trace?.Invoke("[D] MoveDrag: 射线平行于平面"); return default; }
         var piv = _activeKind == TransformDragKind.Axis ? _axisAnchor.Pivot : _planeAnchor.PlaneOrigin;
         var t = (piv - r.Origin).Dot(n) / denom;
-        return t <= 0 ? default : DoPreview(s(r.Origin + r.Direction * t));
+        if (t <= 0) { Trace?.Invoke($"[D] MoveDrag: t={t:F4}<=0"); return default; }
+        var hit = r.Origin + r.Direction * t; var np = s(hit);
+        Trace?.Invoke($"[D] Move: ({np.X:F2},{np.Y:F2},{np.Z:F2})");
+        _session.Preview(WithPos(_session.PreviewTransform, np)); return new(true);
     }
-    TransformDragMoveResult DoPreview(Vector3d pos) { _session.Preview(WithPos(_session.PreviewTransform, pos)); return new(true); }
     bool StartFromElement(MoveGizmoElement el, double x, double y, Vector3d p) => el switch
     {
         MoveGizmoElement.AxisX => StartAxis(Vector3d.UnitX, x, y, p),
@@ -67,16 +79,10 @@ public sealed class TransformDragRoute
         MoveGizmoElement.ViewPlane => StartPlane(p, GetCamForward(), x, y),
         _ => false,
     };
-    bool StartAxis(Vector3d axis, double x, double y, Vector3d pivot)
-    {
-        var (a, ok) = AxisDragAnchorBuilder.Build(axis, x, y, pivot, _camera!, _session.PreviewTransform.Position);
-        if (!ok) return false; _axisAnchor = a; _activeKind = TransformDragKind.Axis; return true;
-    }
+    bool StartAxis(Vector3d a, double x, double y, Vector3d p)
+    { var (an, ok) = AxisDragAnchorBuilder.Build(a, x, y, p, _camera!, _session.PreviewTransform.Position); if (!ok) return false; _axisAnchor = an; _activeKind = TransformDragKind.Axis; return true; }
     bool StartPlane(Vector3d pivot, Vector3d normal, double x, double y)
-    {
-        var (a, ok) = PlaneDragAnchorBuilder.Build(pivot, normal, x, y, _camera!, _session.PreviewTransform.Position);
-        return !ok ? false : (_planeAnchor = a, _activeKind = TransformDragKind.Plane, true).Item3;
-    }
+    { var (an, ok) = PlaneDragAnchorBuilder.Build(pivot, normal, x, y, _camera!, _session.PreviewTransform.Position); return !ok ? false : (_planeAnchor = an, _activeKind = TransformDragKind.Plane, true).Item3; }
     bool BuildRay(double x, double y, out SceneRay ray)
     {
         var s = _camera;
