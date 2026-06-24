@@ -802,6 +802,13 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │           ├── WorldBootstrapRenderSeed.cs  # WorldBootstrapRenderSeed — <summary>从 WorldState 生成 RenderScene。纯数据逻辑。</summary>
 │   │           ├── WorldBootstrapResult.cs  # WorldBootstrapResult — <summary>World 引导结果。Shell 用此结果更新 Store、Selection、UI。</sum...
 │   │           └── WorldBootstrapRoute.cs  # World 引导路由。创建 WorldState → 播种实体 → 生成 RenderScene → 返回结果。
+│   ├── Assets/
+│   │   └── Icons/
+│   │       └── ViewportNavigation/
+│   │           ├── nav_pan.svg                  # 视口导航：平移按钮图标
+│   │           ├── nav_frame.svg                # 视口导航：聚焦 / 查看全部按钮图标
+│   │           ├── nav_projection_persp.svg     # 视口导航：当前透视投影状态图标
+│   │           └── nav_projection_ortho.svg     # 视口导航：当前正交投影状态图标
 │   ├── App.axaml  # XuanYu.Engine.Editor.Windows.App
 │   ├── App.axaml.cs  # App 类
 │   ├── GlobalUsings.cs  # （待补充）

@@ -25,6 +25,17 @@
 - 附带修复：run.bat CRLF 行尾（Windows 批处理兼容性）
 - commit `359e3ce`
 
+## [8.8-RZ-Fix1c] — 视口导航按钮 SVG 图标资源入库 (2026-06-24 12:16)
+- 新增 4 个 SVG 图标资源到 `Assets/Icons/ViewportNavigation/`：
+  - `nav_pan.svg` — 四向箭头，表示平移视图
+  - `nav_frame.svg` — 取景框角 + 中心点，表示聚焦/查看全部
+  - `nav_projection_persp.svg` — 视锥图形，表示透视投影
+  - `nav_projection_ortho.svg` — 网格方框，表示正交投影
+- 所有 SVG 使用 `viewBox="0 0 30 30"` + `currentColor`，匹配按钮尺寸且支持主题色
+- `file-tree.md` 同步记录新资源
+- 路线规划：短期为资源预案，后续接 Avalonia Overlay 或 Vulkan 贴图渲染路径
+- build: 0 Error / 0 Warning ✅ / test: 638/639（1 flaky pre-existing）/ 架构门禁 14/14
+
 ## [8.8-RZ-Fix1b] — Warning 全清理 (2026-06-24 12:05)
 - **7 个 Warning 逐项处理**：
   - `VulkanScene3dFrameHandles.cs` — 去重 `using Silk.NET.Vulkan`
@@ -38,7 +49,7 @@
   - `VulkanScene3dFrameResult.Failed` — 参数改为 `string?`
   - `VulkanScene3dSession.FailFrame` — 参数改为 `string?`
 - **验收**：build 0 Error / 0 Warning ✅ / 架构门禁 14/14 ✅
-- commit `pending`
+- commit `e3f644f`
 
 ## [8.8-R4] — 用户数据目录迁移 (2026-06-24 10:08)
 - 编辑器设置目录从 `%APPDATA%/FluidWarfare/` 迁移到 `%APPDATA%/XuanYuEngine/`
