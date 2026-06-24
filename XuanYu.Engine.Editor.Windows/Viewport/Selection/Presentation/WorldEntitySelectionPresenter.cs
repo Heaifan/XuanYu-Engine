@@ -1,5 +1,6 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
+using XuanYu.Engine.Editor.Windows.Inspector.TransformEdit;
 using XuanYu.Engine.Editor.Windows.Shell;
 using XuanYu.Engine.World;
 using XuanYu.Engine.Render.Scene;
@@ -23,10 +24,14 @@ public sealed class WorldEntitySelectionPresenter
             posV is not null ? $"({posV.Value.X}, {posV.Value.Y}, {posV.Value.Z})" : "未知",
             entity.Source?.RelativePath, kindText);
 
+        var fullTransform = world is not null && pos is not null
+            ? SelectedEntityTransformReader.Read(entity.EntityId, world)
+            : null;
+
         return new WorldEntitySelectionResult(selection, entity.EntityId.Value.ToString(),
             pos?.Value, entity.Source?.RelativePath, entity.DisplayName,
             isScene3dActive, $"已选择 {selection.Kind}：{entity.DisplayName}",
-            viewport, kindText);
+            viewport, kindText, fullTransform);
     }
 
     static string FindVisualKind(EntityId id, RenderScene scene)

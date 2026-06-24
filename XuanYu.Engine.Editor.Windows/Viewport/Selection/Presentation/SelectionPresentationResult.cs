@@ -1,4 +1,5 @@
 ﻿using XuanYu.Engine.Core.Math;
+using XuanYu.Engine.Editor.Windows.Inspector.TransformEdit;
 using XuanYu.Engine.Editor.Windows.Shell;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
@@ -14,7 +15,8 @@ public sealed record WorldEntitySelectionResult(
     bool GroundPlaceEnabled,
     string LogMessage,
     ViewportEntitySummary? ViewportSummary,
-    string? VisualKindText);
+    string? VisualKindText,
+    TransformInspectorSnapshot? FullTransform = null);
 
 /// <summary>项目文件选择展示结果。</summary>
 public sealed record ProjectContentSelectionResult(

@@ -39,6 +39,6 @@ sealed class EditorShellViewportFocusRoute(
         var r = worldSelectionPresenter.Present(entityInfo, getWorldState(), renderSceneStore.Current, is3d);
         panelApplyRoute.ApplyEntitySelection(r.InspectorSelection, r.InspectorEntityId, r.EntityPosition,
             r.EntitySourcePath, r.GroundPlaceEnabled, r.StatusBarSelection,
-            r.ViewportSummary, r.LogMessage, appendInfoLog);
+            r.ViewportSummary, r.LogMessage, appendInfoLog, r.FullTransform);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.Selection;
+using XuanYu.Engine.Editor.Windows.Inspector.TransformEdit;
 using XuanYu.Engine.Editor.Windows.Panels.Inspector;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 using XuanYu.Engine.Editor.Windows.Viewport.Selection.Presentation;
@@ -14,9 +15,10 @@ public sealed class EditorPanelApplyRoute
 
     public void ApplyEntitySelection(EditorSelection selection, string? entityId, Vector3d? position,
         string? sourcePath, bool groundPlaceEnabled, string? statusBarSelection,
-        ViewportEntitySummary? viewportSummary, string? logMessage, Action<string> log)
+        ViewportEntitySummary? viewportSummary, string? logMessage, Action<string> log,
+        TransformInspectorSnapshot? fullTransform = null)
     {
-        _p.Inspector?.ShowWorldEntitySelection(selection, entityId ?? "", position, sourcePath);
+        _p.Inspector?.ShowWorldEntitySelection(selection, entityId ?? "", position, sourcePath, fullTransform);
         if (_p.Inspector is InspectorPanel i) i.ScrubEntityId = entityId ?? "";
         _p.Inspector?.SetGroundPlaceEnabled(groundPlaceEnabled);
         _p.StatusBar?.SetCurrentSelection(statusBarSelection ?? "无");
