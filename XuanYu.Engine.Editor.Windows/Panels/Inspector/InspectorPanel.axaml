@@ -32,12 +32,13 @@
         <StackPanel x:Name="TransformSection" IsVisible="False" Spacing="6">
           <TextBlock Text="Transform" FontSize="12" FontWeight="SemiBold" Foreground="#7D8792" />
 
+          <!-- 位置 -->
+          <TextBlock Text="位置" FontSize="11" Foreground="#7D8792" />
           <Grid ColumnDefinitions="Auto,8,*">
             <TextBlock Grid.Column="0" x:Name="ScrubLabelX" Text="X" Foreground="#C9D1D9"
                        VerticalAlignment="Center" Cursor="SizeWestEast" />
             <TextBox Grid.Column="2" x:Name="TransformXText" Text="0.000"
-                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45"
-                     UseFloatingPlaceholder="False" />
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
           </Grid>
           <Grid ColumnDefinitions="Auto,8,*">
             <TextBlock Grid.Column="0" x:Name="ScrubLabelY" Text="Y" Foreground="#C9D1D9"
@@ -49,6 +50,48 @@
             <TextBlock Grid.Column="0" x:Name="ScrubLabelZ" Text="Z" Foreground="#C9D1D9"
                        VerticalAlignment="Center" Cursor="SizeWestEast" />
             <TextBox Grid.Column="2" x:Name="TransformZText" Text="0.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
+          </Grid>
+
+          <!-- 旋转 -->
+          <TextBlock Text="旋转" FontSize="11" Foreground="#7D8792" Margin="0,4,0,0" />
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock x:Name="RotationLabelX" Text="X" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
+            <TextBox Grid.Column="2" x:Name="RotationXText" Text="0.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock x:Name="RotationLabelY" Text="Y" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
+            <TextBox Grid.Column="2" x:Name="RotationYText" Text="0.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock x:Name="RotationLabelZ" Text="Z" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
+            <TextBox Grid.Column="2" x:Name="RotationZText" Text="0.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
+          </Grid>
+
+          <!-- 缩放 -->
+          <TextBlock Text="缩放" FontSize="11" Foreground="#7D8792" Margin="0,4,0,0" />
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock x:Name="ScaleLabelX" Text="X" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
+            <TextBox Grid.Column="2" x:Name="ScaleXText" Text="1.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock x:Name="ScaleLabelY" Text="Y" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
+            <TextBox Grid.Column="2" x:Name="ScaleYText" Text="1.000"
+                     Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,8,*">
+            <TextBlock x:Name="ScaleLabelZ" Text="Z" Foreground="#C9D1D9"
+                       VerticalAlignment="Center" Cursor="SizeWestEast" />
+            <TextBox Grid.Column="2" x:Name="ScaleZText" Text="1.000"
                      Foreground="#E6EDF3" Background="#1C2128" BorderBrush="#383D45" />
           </Grid>
 

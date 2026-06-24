@@ -1,85 +1,97 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using XuanYu.Engine.Core.Math;
+using XuanYu.Engine.Editor.Windows.Inspector.TransformEdit;
 using XuanYu.Engine.Editor.Windows.Shell;
 
-using XuanYu.Engine.Editor.Windows.Panels.Inspector.Transform;
 namespace XuanYu.Engine.Editor.Windows.Panels.Inspector;
 
 public sealed partial class InspectorPanel : UserControl
 {
-    // ─── 控件引用 ──────────────────────────────────────────
-    InspectorSelectionView _selView = null!;
-    InspectorTransformView _xfrmView = null!;
-    InspectorScrubInput _scrub = null!;
+    readonly InspectorSelectionView _selView = null!;
+    internal InspectorTransformView _xfrmView = null!;
     readonly StackPanel? _xfrmSection;
+    TransformInspectorSnapshot? _lastSnapshot;
 
-    // ─── 事件 ──────────────────────────────────────────────
-    public event Action<string, Transform.TransformPositionAxis, double>? ScrubValueChanged;
-    public event Action<string, Transform.TransformPositionAxis, double>? ScrubCompleted;
-    public event Action<string, Transform.TransformPositionAxis, double>? ScrubCancelled;
-    public string ScrubEntityId { get; set; } = "";
+    // 旧 Position 编辑事件（供现有管线使用）
     public event Action<string, string, string>? TransformDraftChanged;
     public event Action<string, string, string>? TransformApplyRequested;
     public event Action? TransformResetRequested;
     public event Action? GroundPlacementRequested;
+    public event Action<string, Transform.TransformPositionAxis, double>? ScrubValueChanged;
+    public event Action<string, Transform.TransformPositionAxis, double>? ScrubCompleted;
+    public event Action<string, Transform.TransformPositionAxis, double>? ScrubCancelled;
+    // 新全 Transform 编辑事件
+    public event Action<TransformEditRequest>? TransformAllApplyRequested;
+    public string ScrubEntityId { get; set; } = "";
     public bool IsUpdatingTransformTexts => _xfrmView.IsUpdating;
 
     public InspectorPanel()
     {
         InitializeComponent();
-        var e = this.FindControl<TextBlock>("EmptySelectionText");
-        var d = this.FindControl<StackPanel>("SelectionDetails");
-        var k = this.FindControl<TextBlock>("SelectionKindText");
-        var n = this.FindControl<TextBlock>("SelectionNameText");
-        var id = this.FindControl<TextBlock>("SelectionEntityIdText");
-        var s = this.FindControl<TextBlock>("SelectionSourceText");
-        var ts = this.FindControl<StackPanel>("TransformSection"); _xfrmSection = ts;
-        var tx = this.FindControl<TextBox>("TransformXText");
-        var ty = this.FindControl<TextBox>("TransformYText");
-        var tz = this.FindControl<TextBox>("TransformZText");
-        var err = this.FindControl<TextBlock>("TransformErrorText");
-        var apply = this.FindControl<Button>("ApplyButton");
-        var reset = this.FindControl<Button>("ResetButton");
-        var gp = this.FindControl<Button>("GroundPlaceButton");
-        var lx = this.FindControl<TextBlock>("ScrubLabelX");
-        var ly = this.FindControl<TextBlock>("ScrubLabelY");
-        var lz = this.FindControl<TextBlock>("ScrubLabelZ");
+        var e = F<TextBlock>("EmptySelectionText"); var d = F<StackPanel>("SelectionDetails");
+        var k = F<TextBlock>("SelectionKindText"); var n = F<TextBlock>("SelectionNameText");
+        var id = F<TextBlock>("SelectionEntityIdText"); var s = F<TextBlock>("SelectionSourceText");
+        _xfrmSection = F<StackPanel>("TransformSection");
+        var px = F<TextBox>("TransformXText"); var py = F<TextBox>("TransformYText"); var pz = F<TextBox>("TransformZText");
+        var rx = F<TextBox>("RotationXText"); var ry = F<TextBox>("RotationYText"); var rz = F<TextBox>("RotationZText");
+        var sx = F<TextBox>("ScaleXText"); var sy = F<TextBox>("ScaleYText"); var sz = F<TextBox>("ScaleZText");
+        var err = F<TextBlock>("TransformErrorText");
+        var apply = F<Button>("ApplyButton"); var reset = F<Button>("ResetButton"); var gp = F<Button>("GroundPlaceButton");
+        var lx = F<TextBlock>("ScrubLabelX"); var ly = F<TextBlock>("ScrubLabelY"); var lz = F<TextBlock>("ScrubLabelZ");
 
         _selView = new(e, d, k, n, id, s);
-        _xfrmView = new(tx, ty, tz, err, apply, reset, gp);
+        _xfrmView = new(px, py, pz, rx, ry, rz, sx, sy, sz, err, apply, reset, gp);
+        _xfrmView._isUpdating = false;
 
+        // Position 变更 → 旧管道
+        foreach (var tb in new[] { px, py, pz })
+            if (tb is not null) tb.TextChanged += (_, _) => { OnAnyTextChanged(); if (!_xfrmView.IsUpdating) { var t = (px?.Text ?? "", py?.Text ?? "", pz?.Text ?? ""); TransformDraftChanged?.Invoke(t.Item1, t.Item2, t.Item3); } };
+        // Rotation/Scale 变更 → 新管道（启用按钮）
+        foreach (var tb in new[] { rx, ry, rz, sx, sy, sz })
+            if (tb is not null) tb.TextChanged += (_, _) => OnAnyTextChanged();
+
+        if (apply is not null) apply.Click += (_, _) => { var t = (px?.Text ?? "", py?.Text ?? "", pz?.Text ?? ""); TransformApplyRequested?.Invoke(t.Item1, t.Item2, t.Item3); RequestAllApply(); };
+        if (reset is not null) reset.Click += (_, _) => { _xfrmView.SetSnapshot(_lastSnapshot); TransformResetRequested?.Invoke(); };
+        if (gp is not null) gp.Click += (_, _) => GroundPlacementRequested?.Invoke();
+
+        // Scrub（Position 轴）
         var getEid = () => ScrubEntityId;
-        var getTxt = (TextBlock? lbl) => lbl == lx ? tx?.Text : lbl == ly ? ty?.Text : tz?.Text;
-        Func<(string, string, string)> getTexts = () => _xfrmView.GetTexts();
-
-        _scrub = new(lx, ly, lz, getEid, getTxt,
-            (eid, ax, v) => ScrubValueChanged?.Invoke(eid, ax, v),
-            (eid, ax, v) => ScrubCompleted?.Invoke(eid, ax, v),
-            (eid, ax, v) => ScrubCancelled?.Invoke(eid, ax, v));
-        _scrub.Attach();
-
-        var binder = new InspectorTransformBinder(tx, ty, tz, apply, reset, gp, getTexts,
+        var getTxt = (TextBlock? lbl) => lbl == lx ? px?.Text : lbl == ly ? py?.Text : pz?.Text;
+        new InspectorTransformBinder(px, py, pz, apply, reset, gp,
+            () => (px?.Text ?? "", py?.Text ?? "", pz?.Text ?? ""),
             (x, y, z) => TransformApplyRequested?.Invoke(x, y, z),
             () => TransformResetRequested?.Invoke(),
-            () => GroundPlacementRequested?.Invoke());
-        binder.Attach();
-
-        foreach (var tb in new[] { tx, ty, tz })
-            if (tb is not null) tb.TextChanged += (_, _) => { if (!_xfrmView.IsUpdating) { _xfrmView.ClearError(); _xfrmView.SetTransformDraftState(false, false, null); var (x, y, z) = _xfrmView.GetTexts(); TransformDraftChanged?.Invoke(x, y, z); } };
+            () => GroundPlacementRequested?.Invoke()).Attach();
+        new InspectorScrubInput(lx, ly, lz, getEid, getTxt,
+            (eid, ax, v) => ScrubValueChanged?.Invoke(eid, ax, v),
+            (eid, ax, v) => ScrubCompleted?.Invoke(eid, ax, v),
+            (eid, ax, v) => ScrubCancelled?.Invoke(eid, ax, v)).Attach();
     }
 
-    // ─── 公共方法 ──────────────────────────────────────────
+    T? F<T>(string name) where T : Control => this.FindControl<T>(name);
+    void OnAnyTextChanged() { if (_xfrmView.IsUpdating) return; _xfrmView.ClearError(); _xfrmView.SetTransformDraftState(true, false, null); }
+
+    void RequestAllApply()
+    { var t = _xfrmView.GetAllTexts(); TransformAllApplyRequested?.Invoke(new(null, TryParse(t.Px, t.Py, t.Pz), TryParse(t.Rx, t.Ry, t.Rz), TryParse(t.Sx, t.Sy, t.Sz))); }
+
     public void ShowSelection(EditorSelection sel) => _selView.ShowProjectFile(sel);
     public void ShowNoSelection() => _selView.ShowEmpty();
-    public void ShowProjectFileSelection(EditorSelection sel) { _selView.ShowProjectFile(sel); if (_xfrmSection is not null) _xfrmSection.IsVisible = false; }
-    public void ShowWorldEntitySelection(EditorSelection sel, string? entityId, Vector3d? position, string? sourcePath)
-    { _selView.ShowWorldEntity(sel, entityId, position, sourcePath); if (_xfrmSection is not null) _xfrmSection.IsVisible = true; if (position is not null) _xfrmView.SetTexts(position.Value.X.ToString("F3", C), position.Value.Y.ToString("F3", C), position.Value.Z.ToString("F3", C)); else _xfrmView.SetTexts("", "", ""); }
-    static readonly System.Globalization.CultureInfo C = System.Globalization.CultureInfo.InvariantCulture;
-
+    public void ShowProjectFileSelection(EditorSelection sel)
+    { _selView.ShowProjectFile(sel); if (_xfrmSection is not null) _xfrmSection.IsVisible = false; }
+    public void ShowWorldEntitySelection(EditorSelection sel, string? entityId, Vector3d? pos, string? sourcePath, TransformInspectorSnapshot? fullTransform = null)
+    { _selView.ShowWorldEntity(sel, entityId, pos, sourcePath); if (_xfrmSection is not null) _xfrmSection.IsVisible = true; if (fullTransform is not null) { _lastSnapshot = fullTransform; _xfrmView.SetSnapshot(fullTransform); } }
     public void SetPlacementMode(bool v) => _xfrmView.SetPlacementMode(v);
-    public void SetTransformTexts(string x, string y, string z) => _xfrmView.SetTexts(x, y, z);
-    public (string X, string Y, string Z) GetTransformTexts() => _xfrmView.GetTexts();
     public void SetGroundPlaceEnabled(bool v) => _xfrmView.SetGroundPlaceEnabled(v);
-    public void SetTransformDraftState(bool canApply, bool canReset, string? error) => _xfrmView.SetTransformDraftState(canApply, canReset, error);
     public void ShowTransformError(string msg) => _xfrmView.ShowError(msg);
+    public void SetTransformDraftState(bool canApply, bool canReset, string? error) => _xfrmView.SetTransformDraftState(canApply, canReset, error);
+    public void SetTransformTexts(string x, string y, string z) => _xfrmView.SetSnapshot(new(ScrubEntityId, TryParse(x, y, z), Vector3d.Zero, new(1, 1, 1)));
+    public (string X, string Y, string Z) GetTransformTexts() => (F<TextBox>("TransformXText")?.Text ?? "", F<TextBox>("TransformYText")?.Text ?? "", F<TextBox>("TransformZText")?.Text ?? "");
+
+    static Vector3d TryParse(string x, string y, string z)
+    {
+        double.TryParse(x, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var dx);
+        double.TryParse(y, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var dy);
+        double.TryParse(z, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var dz);
+        return new(dx, dy, dz);
+    }
 }

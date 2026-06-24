@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 namespace XuanYu.Engine.Editor.Windows.Shell.Menu;
@@ -26,7 +25,6 @@ public sealed class EditorRunMenuRoute
         saveItem.Click += (_, _) => SaveWorldRequested?.Invoke();
 
         flyout.Items.Add(_runScene3dItem);
-        flyout.Items.Add(new Separator());
         flyout.Items.Add(saveItem);
 
         runMenuButton.Flyout = flyout;

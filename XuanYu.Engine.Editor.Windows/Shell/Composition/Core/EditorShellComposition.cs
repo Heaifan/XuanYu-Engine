@@ -1,5 +1,6 @@
 ﻿using XuanYu.Engine.Editor.Windows.Viewport.World;
 using XuanYu.Engine.Project.World.SaveLoad;
+using SelApply = XuanYu.Engine.Editor.Windows.Inspector.TransformEdit.SelectedEntityTransformApply;
 
 namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
 
@@ -49,18 +50,26 @@ static class EditorShellComposition
 
         ctx.RunMenu.SaveWorldRequested += () =>
         {
-            var world = ctx.WorldState;
             var projectDir = ctx.ProjectBootstrap.ProjectDirectory;
-            if (world is null) { ctx.LogRoute.Info("World 为空，无法保存。"); return; }
+            if (ctx.WorldState is null) { ctx.LogRoute.Info("World 为空，无法保存。"); return; }
             if (projectDir is null) { ctx.LogRoute.Info("项目目录未知，无法保存。"); return; }
-
             var worldPath = Path.Combine(projectDir, "Content", "Worlds", "main.world.json");
-            var doc = WorldStateDocumentConvert.ToDocument(world, "main", "主世界");
-            var writeResult = WorldDocumentWriter.Write(worldPath, doc);
-            ctx.LogRoute.Info(writeResult.IsSuccess
-                ? $"World 已保存：{worldPath}"
-                : $"World 保存失败：{writeResult.ErrorMessage}");
+            var doc = WorldStateDocumentConvert.ToDocument(ctx.WorldState, "main", "主世界");
+            var wr = WorldDocumentWriter.Write(worldPath, doc);
+            ctx.LogRoute.Info(wr.IsSuccess ? $"World 已保存：{worldPath}" : $"World 保存失败：{wr.ErrorMessage}");
         };
+
+        // Inspector Transform 编辑 → WorldState 应用
+        if (ctx.InspectorPanel is not null)
+            ctx.InspectorPanel.TransformAllApplyRequested += req =>
+            {
+                if (ctx.WorldState is null) return;
+                var withId = req with { EntityId = ctx.PanelApplyRoute.State.LastSelectedEntityId };
+                var r = SelApply.Apply(withId, ctx.WorldState, ctx.WorldDirtyState, ctx.LogRoute.Info, ctx.LogRoute.Warn);
+                if (r.Succeeded) { rt.ScheduleFrame(VulkanScene3dFrameReason.EntityTransformChanged); ctx.InspectorPanel.ShowTransformError(""); }
+                else ctx.InspectorPanel.ShowTransformError(r.Message);
+            };
+
         ctx.SelectionSyncRoute = new(ctx.SelectionRoute, ctx.PanelApplyRoute, () => ctx.WorldState, () => ctx.SessionActive, ctx.Lifecycle, rt.ScheduleFrame);
         ctx.RawInputRoute = new(ctx.ViewportInputRoute, rt.BuildInputRequest);
         ctx.ViewportFrameRoute = new(() => ctx.SessionActive, ctx.Lifecycle, ctx.SelectionRoute, () => ctx.WorldState, ctx.StatusBarPanel, ctx.CameraRoute, rt.ScheduleFrame);
