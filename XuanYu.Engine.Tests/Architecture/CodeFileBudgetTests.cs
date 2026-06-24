@@ -207,11 +207,98 @@ public sealed class CodeFileBudgetTests
         Assert.Empty(bad);
     }
 
+    // ── 命名回潮门禁 ──────────────────────────────────────
+    // FluidWarfare 不再作为正式名称出现。
+    // 允许的例外：LegacyAppFolder（R4 用户数据迁移）
+    //              EditorSettingsPathMigration（旧→新目录迁移路径引用）
+    //              changelog.md / LEGACY 文档 / naming 文档（历史记录）
+
+    [Fact]
+    public void NoNamespaceFluidWarfare()
+    {
+        var items = Directory.EnumerateFiles(s_root, "*.cs", SearchOption.AllDirectories);
+        var bad = new List<string>();
+        foreach (var f in items)
+        {
+            var r = Path.GetRelativePath(s_root, f);
+            if (IsBuildArtifact(r)) continue;
+            if (IsLegacyDocument(r)) continue;
+            // 允许 R4 迁移逻辑中的 FluidWarfare 路径引用
+            if (r.Contains("EditorSettingsPathMigration")) continue;
+            if (r.Contains("EditorSettingsPath") && r.Contains("Legacy")) continue;
+            var content = File.ReadAllText(f);
+            if (System.Text.RegularExpressions.Regex.IsMatch(content,
+                @"\bnamespace\s+FluidWarfare\b"))
+                bad.Add(r);
+        }
+        Assert.Empty(bad);
+    }
+
+    [Fact]
+    public void NoUsingFluidWarfare()
+    {
+        var items = Directory.EnumerateFiles(s_root, "*.cs", SearchOption.AllDirectories);
+        var bad = new List<string>();
+        foreach (var f in items)
+        {
+            var r = Path.GetRelativePath(s_root, f);
+            if (IsBuildArtifact(r)) continue;
+            if (IsLegacyDocument(r)) continue;
+            if (r.Contains("EditorSettingsPathMigration")) continue;
+            if (r.Contains("EditorSettingsPath") && r.Contains("Legacy")) continue;
+            var content = File.ReadAllText(f);
+            if (System.Text.RegularExpressions.Regex.IsMatch(content,
+                @"\busing\s+FluidWarfare\b"))
+                bad.Add(r);
+        }
+        Assert.Empty(bad);
+    }
+
+    [Fact]
+    public void NoXClassFluidWarfare()
+    {
+        var items = Directory.EnumerateFiles(s_root, "*.axaml", SearchOption.AllDirectories);
+        var bad = new List<string>();
+        foreach (var f in items)
+        {
+            var r = Path.GetRelativePath(s_root, f);
+            if (IsBuildArtifact(r)) continue;
+            var content = File.ReadAllText(f);
+            if (System.Text.RegularExpressions.Regex.IsMatch(content,
+                @"x:Class=""FluidWarfare\."))
+                bad.Add(r);
+        }
+        Assert.Empty(bad);
+    }
+
+    [Fact]
+    public void NoClrNamespaceFluidWarfare()
+    {
+        var items = Directory.EnumerateFiles(s_root, "*.axaml", SearchOption.AllDirectories);
+        var bad = new List<string>();
+        foreach (var f in items)
+        {
+            var r = Path.GetRelativePath(s_root, f);
+            if (IsBuildArtifact(r)) continue;
+            var content = File.ReadAllText(f);
+            if (System.Text.RegularExpressions.Regex.IsMatch(content,
+                @"clr-namespace:FluidWarfare\."))
+                bad.Add(r);
+        }
+        Assert.Empty(bad);
+    }
+
     static bool IsBuildArtifact(string p) =>
         p.StartsWith("XuanYu.Engine.Tests\\bin\\", StringComparison.Ordinal) ||
         p.StartsWith("XuanYu.Engine.Tests\\obj\\", StringComparison.Ordinal) ||
         p.Contains("\\bin\\Debug\\") || p.Contains("\\obj\\") ||
         p.Contains("\\bin\\Release\\");
+
+    static bool IsLegacyDocument(string p) =>
+        p.StartsWith("docs\\LEGACY_", StringComparison.OrdinalIgnoreCase) ||
+        p.StartsWith("docs\\naming-XuanYu-Engine", StringComparison.OrdinalIgnoreCase) ||
+        p.Equals("changelog.md", StringComparison.OrdinalIgnoreCase) ||
+        p.Equals("file-tree.md", StringComparison.OrdinalIgnoreCase);
 
     static string FindRoot()
     {

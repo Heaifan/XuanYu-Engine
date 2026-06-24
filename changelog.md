@@ -1,5 +1,18 @@
 # changelog
 
+## [8.8-RZ] — 命名迁移全仓终验 (2026-06-24 11:24)
+- 新增 4 项命名回潮门禁测试（CodeFileBudgetTests +4 → 14 项）：
+  - `NoNamespaceFluidWarfare` — 禁止生产代码出现 namespace FluidWarfare
+  - `NoUsingFluidWarfare` — 禁止生产代码出现 using FluidWarfare
+  - `NoXClassFluidWarfare` — 禁止 .axaml 出现 x:Class="FluidWarfare.*
+  - `NoClrNamespaceFluidWarfare` — 禁止 .axaml 出现 clr-namespace:FluidWarfare.*
+- 允许的例外：EditorSettingsPath.LegacyAppFolder / EditorSettingsPathMigration / 历史文档
+- 确认最终残留仅限：R4 Legacy 迁移路径 / 历史记录 / LEGACY 文档 / naming 说明
+- docs/naming-XuanYu-Engine.md 标记 RZ 完成
+- build: 0 Error / test: 638/639 (1 flaky pre-existing)
+- 架构门禁：14/14
+- commit `fbf509b`
+
 ## [8.8-R4] — 用户数据目录迁移 (2026-06-24 10:08)
 - 编辑器设置目录从 `%APPDATA%/FluidWarfare/` 迁移到 `%APPDATA%/XuanYuEngine/`
 - 新增 `EditorSettingsPathMigration.cs`：旧→新目录迁移逻辑（幂等、不覆盖、不崩溃）
