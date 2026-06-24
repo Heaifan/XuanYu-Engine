@@ -1,8 +1,8 @@
-﻿using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+﻿using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 using ProjectContentTreeType = XuanYu.Engine.Editor.ProjectContentTreeModel.ProjectContentTree;
 using ProjectContentTreeNodeType = XuanYu.Engine.Editor.ProjectContentTreeModel.ProjectContentTreeNode;
 
-namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+namespace XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
 
 public sealed class ProjectContentTreeIndex
 {

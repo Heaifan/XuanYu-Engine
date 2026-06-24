@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 
 /// <summary>
 /// 保存节点树的展开/选择状态，用于树重建时恢复。

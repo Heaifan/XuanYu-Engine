@@ -1,13 +1,13 @@
-﻿using FluidWarfare.Editor.Windows.Panels.Viewport;
-using FluidWarfare.Editor.Windows.Viewport.Camera;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
+﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Viewport.Camera;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Vulkan.Clear;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Resize;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Resize;
 
 /// <summary>视口 Resize / 重绘渲染路由。管理渲染锁、尺寸校验、Session.Resize 和 Clear 降级。</summary>
 public sealed class Scene3dResizeRenderRoute

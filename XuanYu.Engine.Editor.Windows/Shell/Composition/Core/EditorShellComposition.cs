@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Composition;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
 
 /// <summary>EditorShell 组合根构建器。负责创建上下文、Route、事件接线和初始化。</summary>
 static class EditorShellComposition

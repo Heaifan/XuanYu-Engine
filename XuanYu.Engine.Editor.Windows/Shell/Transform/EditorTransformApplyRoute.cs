@@ -1,15 +1,15 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.EntityTransform;
 using XuanYu.Engine.Editor.Selection;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 using XuanYu.Engine.World;
 using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Shell.Transform;
+namespace XuanYu.Engine.Editor.Windows.Shell.Transform;
 
 /// <summary>Transform 提交 / Preview / Cancel / Inspector 编排。不持有 Shell 面板。</summary>
 public sealed class EditorTransformApplyRoute

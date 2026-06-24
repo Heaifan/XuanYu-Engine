@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.DebugDock;
+﻿namespace FluidWarfare.Editor.Windows.Panels.DebugDock;
 
 /// <summary>Partial：渲染诊断文本更新。</summary>
 sealed partial class DebugDockPanel

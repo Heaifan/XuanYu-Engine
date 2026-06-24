@@ -1,4 +1,13 @@
-namespace FluidWarfare.Editor.Windows.Shell.Composition;
+﻿using FluidWarfare.Editor.Windows.Panels.Inspector;
+using FluidWarfare.Editor.Windows.Panels.LeftDock;
+using FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+using FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+using FluidWarfare.Editor.Windows.Panels.DebugDock;
+using FluidWarfare.Editor.Windows.Panels.Status;
+using FluidWarfare.Editor.Windows.Panels.Viewport;
+using FluidWarfare.Editor.Windows.Preferences;
+using FluidWarfare.Editor.Windows.Shell;
+namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
 
 /// <summary>EditorShell 组合根上下文。持有所有控件引用、Route 引用和可变状态。</summary>
 sealed class EditorShellContext

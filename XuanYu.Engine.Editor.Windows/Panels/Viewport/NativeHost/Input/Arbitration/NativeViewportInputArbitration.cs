@@ -1,7 +1,7 @@
-﻿using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
+﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
 
 sealed class NativeViewportInputArbitration
 {

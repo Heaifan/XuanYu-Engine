@@ -1,14 +1,14 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Windows.Panels.Viewport;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Resize;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Submit;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Resize;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
 using XuanYu.Engine.World;
 using XuanYu.Engine.Render.Vulkan.Scene3D;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Shell.Diagnostics;
+namespace XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 
 public sealed class EditorDiagnosticsRefreshRoute
 {

@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 
 namespace FluidWarfare.Editor.Windows.Panels.DebugDock;

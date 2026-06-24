@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
 using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Windows.Panels.Inspector;
+using XuanYu.Engine.Editor.Windows.Panels.Inspector;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+using FluidWarfare.Editor.Windows.Panels.Inspector;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>Inspector Transform 数值显示能力。不暴露 Panel 其他 API。</summary>
 public sealed class InspectorTransformDisplay

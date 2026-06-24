@@ -1,11 +1,11 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Windows.Shell;
+using XuanYu.Engine.Editor.Windows.Shell;
 using XuanYu.Engine.World;
 using XuanYu.Engine.Render.Scene;
-using FluidWarfare.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Selection.Presentation;
 
 /// <summary>世界实体选择 → Inspector / StatusBar / Viewport 展示。纯转换。</summary>
 public sealed class WorldEntitySelectionPresenter

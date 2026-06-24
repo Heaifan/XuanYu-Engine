@@ -7,7 +7,7 @@ using XuanYu.Engine.Editor.Input.Actions;
 using XuanYu.Engine.Editor.Input.Bindings;
 using AM = Avalonia.Media;
 
-namespace FluidWarfare.Editor.Windows.Preferences;
+namespace XuanYu.Engine.Editor.Windows.Preferences;
 
 sealed class EditorPreferencesBindingList
 {

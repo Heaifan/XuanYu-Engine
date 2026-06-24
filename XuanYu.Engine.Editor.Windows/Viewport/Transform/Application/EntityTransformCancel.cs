@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Project.World.Transform;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>
 /// Cancel：恢复实体到初始 Transform。还原 RenderScene + Vulkan + Inspector。

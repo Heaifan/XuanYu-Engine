@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
 /// <summary>Gizmo 命中和视觉用的点线距离计算。</summary>
 public static class GizmoDist

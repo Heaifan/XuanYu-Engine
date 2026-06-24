@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.Input;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.Input;
 
 /// <summary>
 /// 手势签名构建与按钮名称映射。

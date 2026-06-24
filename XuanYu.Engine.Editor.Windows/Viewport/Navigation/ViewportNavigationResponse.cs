@@ -1,7 +1,7 @@
-﻿using FluidWarfare.Editor.Windows.Viewport.Camera;
+﻿using XuanYu.Engine.Editor.Windows.Viewport.Camera;
 using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Navigation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Navigation;
 
 /// <summary>Overlay Pointer Press 的结果。</summary>
 public sealed record ViewportNavigationPressResponse(

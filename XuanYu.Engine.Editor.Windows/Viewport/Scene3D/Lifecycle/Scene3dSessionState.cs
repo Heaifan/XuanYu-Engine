@@ -1,8 +1,8 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Submit;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 
 /// <summary>Scene3D 会话运行时状态。三个字段的单一所有权容器。</summary>
 public sealed class Scene3dSessionState

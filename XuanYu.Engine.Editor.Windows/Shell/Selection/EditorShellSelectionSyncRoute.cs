@@ -1,12 +1,12 @@
 ﻿using XuanYu.Engine.Editor.Selection;
-using FluidWarfare.Editor.Windows.Shell.Panels;
+using XuanYu.Engine.Editor.Windows.Shell.Panels;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Submit;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.Windows.Shell.Selection;
+namespace XuanYu.Engine.Editor.Windows.Shell.Selection;
 
 /// <summary>选择同步路由。负责实体选择在视口/WorldTree/Inspector/Scene 之间的联动同步。</summary>
 sealed class EditorShellSelectionSyncRoute(

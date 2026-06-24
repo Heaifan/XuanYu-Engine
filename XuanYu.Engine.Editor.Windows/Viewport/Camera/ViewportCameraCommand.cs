@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Camera.Navigation;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Camera;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Camera;
 
 /// <summary>
 /// 相机命令的区分联合类型。每种具体命令是一个 sealed record 子类。

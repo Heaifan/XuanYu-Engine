@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
 public enum MoveGizmoVisualState
 {

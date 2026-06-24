@@ -1,8 +1,8 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Submit;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 
 /// <summary>Scene3D 会话启动结果。不含文案，Message 仅用于日志。</summary>
 public sealed record Scene3dSessionStartResult(

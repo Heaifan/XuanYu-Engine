@@ -1,6 +1,6 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Win32;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Win32;
 
 internal static class Win32ViewportDestroyWindow
 {

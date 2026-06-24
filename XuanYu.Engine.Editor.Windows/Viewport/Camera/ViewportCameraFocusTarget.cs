@@ -2,7 +2,7 @@
 using XuanYu.Engine.World;
 using XuanYu.Engine.Render.Scene;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Camera;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Camera;
 
 /// <summary>
 /// 计算 FrameSelected 的聚焦目标（包围盒中心 + 半径）。

@@ -1,6 +1,6 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 
 /// <summary>Win32 鼠标跟踪管理。封装 TrackMouseEvent 和跟踪状态。</summary>
 sealed class NativeViewportMouseTrack

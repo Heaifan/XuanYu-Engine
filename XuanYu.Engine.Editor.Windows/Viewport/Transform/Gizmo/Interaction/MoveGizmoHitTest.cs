@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo.HitTest;
+﻿using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo.HitTest;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
 /// <summary>
 /// Move Gizmo 的屏幕空间命中测试。

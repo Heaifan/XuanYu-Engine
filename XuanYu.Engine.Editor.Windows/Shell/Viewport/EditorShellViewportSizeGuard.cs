@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Windows.Panels.Viewport;
+﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
-namespace FluidWarfare.Editor.Windows.Shell.Viewport;
+namespace XuanYu.Engine.Editor.Windows.Shell.Viewport;
 
 /// <summary>视口尺寸校验工具。检查 NativeHost 尺寸是否可用。</summary>
 static class EditorShellViewportSizeGuard

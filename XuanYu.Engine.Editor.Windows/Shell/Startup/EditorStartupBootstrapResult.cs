@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Project.Metadata;
 
-namespace FluidWarfare.Editor.Windows.Shell.Startup;
+namespace XuanYu.Engine.Editor.Windows.Shell.Startup;
 
 /// <summary>启动引导的完整结果。Shell 根据此结果应用 UI。</summary>
 public sealed record EditorStartupBootstrapResult(

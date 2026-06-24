@@ -7,7 +7,7 @@ using XuanYu.Engine.Render.Selection.Presented;
 using XuanYu.Engine.Render.Selection.Screen;
 using XuanYu.Engine.Render.Vulkan.Camera;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Picking;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Picking;
 
 /// <summary>
 /// 视口 Picking 路由。单一职责：将像素坐标转换为拾取结果。

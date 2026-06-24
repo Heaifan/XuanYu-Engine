@@ -1,12 +1,12 @@
 ﻿using XuanYu.Engine.Editor.EntityTransform;
-using FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 using XuanYu.Engine.Project.World.Transform;
 
-namespace FluidWarfare.Editor.Windows.Shell.Input.Transform;
+namespace XuanYu.Engine.Editor.Windows.Shell.Input.Transform;
 
 /// <summary>Transform 输入路由的专用请求，比全量 InputRequest 更轻量。</summary>
 public sealed record EditorTransformInputRequest(

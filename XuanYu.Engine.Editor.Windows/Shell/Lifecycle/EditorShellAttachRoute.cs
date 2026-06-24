@@ -1,6 +1,6 @@
-using Avalonia.Threading;
+﻿using Avalonia.Threading;
 
-namespace FluidWarfare.Editor.Windows.Shell.Lifecycle;
+namespace XuanYu.Engine.Editor.Windows.Shell.Lifecycle;
 
 /// <summary>
 /// 管理 EditorShell 首次附加到 VisualTree 后的初始化时序。

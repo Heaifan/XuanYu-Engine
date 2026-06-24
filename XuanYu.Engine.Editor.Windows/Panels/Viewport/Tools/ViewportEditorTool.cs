@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
 
 /// <summary>
 /// 视口编辑工具类型。

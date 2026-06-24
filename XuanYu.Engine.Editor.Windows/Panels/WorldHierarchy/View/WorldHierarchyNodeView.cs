@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
-using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 using XuanYu.Engine.Editor.WorldHierarchy;
 
-namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+namespace XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 
 public sealed class WorldHierarchyNodeView : IHierarchyNodeView
 {

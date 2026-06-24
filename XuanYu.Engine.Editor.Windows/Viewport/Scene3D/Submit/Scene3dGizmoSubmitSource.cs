@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Presentation;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Submit;
 
 /// <summary>Gizmo 帧数据提交。执行 MoveGizmoFrameSource.Build + SetMoveGizmoVertices。
 /// 是唯一被允许调用 SetMoveGizmoVertices 的模块。</summary>

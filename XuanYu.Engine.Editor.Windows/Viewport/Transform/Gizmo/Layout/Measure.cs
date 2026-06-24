@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo.Layout;
+﻿using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo.Layout;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
 /// <summary>
 /// 从 MoveGizmoLayout 提取结构化的四边形角坐标，供 HitTest 和 DrawList 使用。

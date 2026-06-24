@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
 /// <summary>
 /// 最近成功渲染的 Move Gizmo 布局快照。

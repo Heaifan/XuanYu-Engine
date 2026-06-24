@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Render.Camera;
 using XuanYu.Engine.Render.Camera.Navigation;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
-namespace FluidWarfare.Editor.Windows.Viewport.Camera;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Camera;
 
 /// <summary>相机状态和命令路由。拥有 _lastCameraState 和 _cameraRevision，通过 Apply(command) 处理所有相机操作。</summary>
 public sealed class ViewportCameraRoute

@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using Avalonia.Controls;
-using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 using XuanYu.Engine.Editor.WorldHierarchy;
 
+using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy.View;
+using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
 
 public sealed partial class WorldHierarchyTreePanel : UserControl

@@ -1,9 +1,9 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Render.Vulkan.Camera;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
 /// <summary>
 /// 拖动开始时的冻结快照。保存所有外部状态，DragRoute 不持有 Shell 引用。

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo.Layout;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo.Layout;
 
 /// <summary>
 /// Plane 手柄的屏幕四边形顶点（四个角）。

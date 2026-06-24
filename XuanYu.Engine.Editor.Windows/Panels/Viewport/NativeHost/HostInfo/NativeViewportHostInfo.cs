@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Avalonia;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost;
 
 /// <summary>NativeHost 状态信息创建与窗口尺寸同步。</summary>
 internal static class NativeViewportHostInfoStatics

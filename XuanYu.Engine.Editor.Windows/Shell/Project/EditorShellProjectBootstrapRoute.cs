@@ -1,13 +1,13 @@
-﻿using FluidWarfare.Editor.Windows.Panels.Viewport;
-using FluidWarfare.Editor.Windows.Shell.Hierarchy;
-using FluidWarfare.Editor.Windows.Shell.Panels;
-using FluidWarfare.Editor.Windows.Shell.Startup;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
+﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Shell.Hierarchy;
+using XuanYu.Engine.Editor.Windows.Shell.Panels;
+using XuanYu.Engine.Editor.Windows.Shell.Startup;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Presentation;
 using XuanYu.Engine.World;
 using XuanYu.Engine.Project.Content;
 using XuanYu.Engine.Project.Metadata;
 
-namespace FluidWarfare.Editor.Windows.Shell.Project;
+namespace XuanYu.Engine.Editor.Windows.Shell.Project;
 
 /// <summary>项目加载 + World Bootstrap 路由。负责项目加载、加载结果应用、World 初始化。</summary>
 sealed class EditorShellProjectBootstrapRoute(

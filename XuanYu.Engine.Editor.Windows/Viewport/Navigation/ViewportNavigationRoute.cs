@@ -1,8 +1,8 @@
 ﻿using XuanYu.Engine.Render.Camera;
 using XuanYu.Engine.Render.Camera.Navigation;
 using XuanYu.Engine.Render.ViewportNavigation;
-using FluidWarfare.Editor.Windows.Viewport.Camera;
-namespace FluidWarfare.Editor.Windows.Viewport.Navigation;
+using XuanYu.Engine.Editor.Windows.Viewport.Camera;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Navigation;
 
 /// <summary>Viewport 右上角导航 Overlay 输入路由。拥有拖拽/悬停/选中状态，通过 Press/Move/Release/ClearHover 处理输入。</summary>
 public sealed class ViewportNavigationRoute

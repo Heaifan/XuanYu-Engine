@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
 /// <summary>
 /// Move Gizmo 的布局计算。

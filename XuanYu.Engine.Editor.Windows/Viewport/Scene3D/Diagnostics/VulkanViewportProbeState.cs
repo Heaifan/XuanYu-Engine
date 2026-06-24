@@ -7,7 +7,7 @@ using XuanYu.Engine.Render.Vulkan.Clear;
 using XuanYu.Engine.Render.Vulkan.Scene3D;
 using XuanYu.Engine.Render.Vulkan.Validation;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 
 /// <summary>Vulkan 探测和 Scene3D 诊断状态的单一所有者。</summary>
 public sealed class VulkanViewportProbeState

@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Editor.Input.Bindings;
 using XuanYu.Engine.Editor.Input.Runtime;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.Input;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.Input;
 
 /// <summary>
 /// Win32 原始输入 → EditorInputMatch 的翻译器门面。

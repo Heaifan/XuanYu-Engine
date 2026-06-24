@@ -2,9 +2,9 @@
 using Avalonia.Input;
 using XuanYu.Engine.Editor.Transform;
 using XuanYu.Engine.Editor.Transform.Scrub;
-using FluidWarfare.Editor.Windows.Panels.Inspector.Transform;
+using XuanYu.Engine.Editor.Windows.Panels.Inspector.Transform;
 
-namespace FluidWarfare.Editor.Windows.Panels.Inspector;
+namespace XuanYu.Engine.Editor.Windows.Panels.Inspector;
 
 /// <summary>Inspector 数值拖拽输入处理。X/Y/Z 标签拖拽微调坐标值。</summary>
 public sealed class InspectorScrubInput

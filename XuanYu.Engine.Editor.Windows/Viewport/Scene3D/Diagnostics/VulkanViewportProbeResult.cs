@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 
 /// <summary>Vulkan 探测结果。</summary>
 public readonly record struct ProbeResult(bool Success, string Message)

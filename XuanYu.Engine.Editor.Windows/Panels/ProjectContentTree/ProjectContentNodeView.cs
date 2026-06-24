@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using XuanYu.Engine.Editor.ProjectContentTreeModel;
-using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 
-namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+namespace XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
 
 public sealed class ProjectContentNodeView : IHierarchyNodeView
 {

@@ -1,18 +1,18 @@
 ﻿using XuanYu.Engine.Editor.EntityTransform;
-using FluidWarfare.Editor.Windows.Panels.Status;
-using FluidWarfare.Editor.Windows.Panels.Viewport;
-using FluidWarfare.Editor.Windows.Shell.Feedback;
-using FluidWarfare.Editor.Windows.Shell.Menu;
-using FluidWarfare.Editor.Windows.Viewport.Camera;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+using XuanYu.Engine.Editor.Windows.Panels.Status;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Shell.Feedback;
+using XuanYu.Engine.Editor.Windows.Shell.Menu;
+using XuanYu.Engine.Editor.Windows.Viewport.Camera;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.Windows.Shell.Diagnostics;
+namespace XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 
 /// <summary>诊断路由的上下文依赖。Shell 在构造后初始化一次。</summary>
 public sealed record EditorDiagnosticsContext(

@@ -1,6 +1,6 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+namespace XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 
 public interface IHierarchyNodeView : INotifyPropertyChanged
 {

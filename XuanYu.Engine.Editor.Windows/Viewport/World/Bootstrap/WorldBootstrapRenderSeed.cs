@@ -2,7 +2,7 @@
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.World;
 
-namespace FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
+namespace XuanYu.Engine.Editor.Windows.Viewport.World.Bootstrap;
 
 /// <summary>从 WorldState 生成 RenderScene。纯数据逻辑。</summary>
 public static class WorldBootstrapRenderSeed

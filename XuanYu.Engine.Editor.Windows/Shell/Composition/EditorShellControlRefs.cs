@@ -1,12 +1,17 @@
-using Avalonia.Controls;
-using FluidWarfare.Editor.Windows.Panels.DebugDock;
-using FluidWarfare.Editor.Windows.Panels.Inspector;
-using FluidWarfare.Editor.Windows.Panels.LeftDock;
-using FluidWarfare.Editor.Windows.Panels.Status;
-using FluidWarfare.Editor.Windows.Panels.Viewport;
-using FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
+﻿using Avalonia.Controls;
+using XuanYu.Engine.Editor.Windows.Panels.DebugDock;
+using XuanYu.Engine.Editor.Windows.Panels.Inspector;
+using XuanYu.Engine.Editor.Windows.Panels.LeftDock;
+using XuanYu.Engine.Editor.Windows.Panels.Status;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
 
-namespace FluidWarfare.Editor.Windows.Shell.Composition;
+using FluidWarfare.Editor.Windows.Panels.LeftDock;
+using FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+using FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+using FluidWarfare.Editor.Windows.Panels.Viewport;
+using FluidWarfare.Editor.Windows.Panels.Inspector;
+namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
 
 /// <summary>EditorShell 的 Avalonia 控件引用。由 Find() 从 VisualTree 查找。</summary>
 public sealed record EditorShellControlRefs(

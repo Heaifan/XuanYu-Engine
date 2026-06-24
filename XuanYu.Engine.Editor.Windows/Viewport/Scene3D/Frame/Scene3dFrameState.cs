@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
 
 /// <summary>
 /// Scene3D 帧路径的核心状态。

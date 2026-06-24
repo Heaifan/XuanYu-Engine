@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
 
 /// <summary>Override 导航鼠标捕获状态管理。</summary>
 sealed class NativeViewportNavigationCapture

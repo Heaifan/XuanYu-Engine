@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Camera;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Camera;
 
 /// <summary>
 /// 相机操作结果。Shell 根据此结果决定是否请求 Scene3D Frame。

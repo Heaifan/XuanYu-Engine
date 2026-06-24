@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Composition;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
 
 /// <summary>EditorShell 运行时辅助方法。Build 方法调用的本地函数提取。</summary>
 sealed class EditorShellCompositionRuntime(EditorShellContext ctx)

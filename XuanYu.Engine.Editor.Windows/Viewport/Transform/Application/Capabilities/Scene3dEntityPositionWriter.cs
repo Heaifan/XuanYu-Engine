@@ -3,7 +3,7 @@ using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>Scene3D 实体位置更新能力。仅暴露 UpdateEntityPosition，不暴露 Session 生命周期。</summary>
 public sealed class Scene3dEntityPositionWriter

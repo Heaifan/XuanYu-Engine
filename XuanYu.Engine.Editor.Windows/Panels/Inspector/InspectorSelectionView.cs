@@ -1,8 +1,8 @@
 ﻿using Avalonia.Controls;
 using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Windows.Shell;
+using XuanYu.Engine.Editor.Windows.Shell;
 
-namespace FluidWarfare.Editor.Windows.Panels.Inspector;
+namespace XuanYu.Engine.Editor.Windows.Panels.Inspector;
 
 /// <summary>Inspector 选择区显示管理。空选择/项目文件/世界实体的展示切换。</summary>
 public sealed class InspectorSelectionView

@@ -2,9 +2,9 @@
 using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Render.Camera;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Submit;
 
 /// <summary>Scene3dFrameSubmitRoute.Request 的输入。所有数据在调用时冻结。</summary>
 public readonly record struct Scene3dFrameSubmitInput(

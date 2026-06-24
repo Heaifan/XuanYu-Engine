@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Project.World.Transform;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>
 /// Preview：验证 RenderScene 可更新 → 写 Vulkan → 更新 Inspector。

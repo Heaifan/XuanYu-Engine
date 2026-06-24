@@ -2,7 +2,7 @@
 using XuanYu.Engine.World;
 using XuanYu.Engine.Render.Scene;
 
-namespace FluidWarfare.Editor.Windows.Viewport.World.Bootstrap;
+namespace XuanYu.Engine.Editor.Windows.Viewport.World.Bootstrap;
 
 /// <summary>World 引导结果。Shell 用此结果更新 Store、Selection、UI。</summary>
 public sealed record WorldBootstrapResult(

@@ -1,6 +1,6 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 
-namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+namespace XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 
 /// <summary>世界层级树选择状态和事件管理。</summary>
 sealed class WorldHierarchyTreeSelection

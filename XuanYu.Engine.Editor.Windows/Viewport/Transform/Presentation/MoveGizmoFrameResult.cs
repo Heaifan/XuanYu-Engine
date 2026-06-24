@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Presentation;
 
 /// <summary>MoveGizmoFrameSource.Build 的纯输出。Vulkan 副作用由调用层执行。</summary>
 public readonly record struct MoveGizmoFrameResult

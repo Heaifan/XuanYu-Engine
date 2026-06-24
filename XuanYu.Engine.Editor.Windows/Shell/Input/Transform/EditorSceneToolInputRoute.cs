@@ -1,20 +1,20 @@
 ﻿using XuanYu.Engine.Editor.EntityTransform;
-using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
-using FluidWarfare.Editor.Windows.Viewport.Picking;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost;
+using XuanYu.Engine.Editor.Windows.Viewport.Picking;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Presentation;
 using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Selection.Ground;
 using XuanYu.Engine.Render.Selection.Presented;
 using static FluidWarfare.Editor.Windows.Viewport.Transform.Interaction.TransformInteractionAction;
 
-namespace FluidWarfare.Editor.Windows.Shell.Input.Transform;
+namespace XuanYu.Engine.Editor.Windows.Shell.Input.Transform;
 
 /// <summary>SceneTool 场景工具输入路由。负责 Gizmo 点按 / 实体体拖拽启动和释放确认。</summary>
 public sealed class EditorSceneToolInputRoute

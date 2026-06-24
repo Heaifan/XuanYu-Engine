@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Render.Scene;
-using FluidWarfare.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Selection.Presentation;
 
 /// <summary>视口摘要展示。从 RenderScene 生成视口列表。</summary>
 public sealed class ViewportSelectionPresenter

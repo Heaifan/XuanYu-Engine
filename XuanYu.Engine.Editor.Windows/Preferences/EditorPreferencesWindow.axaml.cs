@@ -3,6 +3,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using XuanYu.Engine.Editor.Input.Bindings;
 
+using XuanYu.Engine.Editor.Windows.Preferences.Capture;
+using XuanYu.Engine.Editor.Windows.Preferences.Helpers;
 namespace FluidWarfare.Editor.Windows.Preferences;
 
 public sealed partial class EditorPreferencesWindow : Window

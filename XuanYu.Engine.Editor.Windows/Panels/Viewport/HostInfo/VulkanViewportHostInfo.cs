@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>
 /// 保存 Vulkan 视口宿主占位显示信息。

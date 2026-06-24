@@ -1,7 +1,7 @@
-﻿using FluidWarfare.Editor.Windows.Shell;
+﻿using XuanYu.Engine.Editor.Windows.Shell;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Selection.Presentation;
 
 /// <summary>基础选择展示工具。默认选择等工厂方法。</summary>
 public static class EditorSelectionPresenter

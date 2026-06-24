@@ -3,7 +3,7 @@ using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Vulkan.Camera;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Picking;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Picking;
 
 /// <summary>
 /// Debug Picking 诊断。非 Entity 命中时输出每个实体的位置和 Ray-AABB 结果。

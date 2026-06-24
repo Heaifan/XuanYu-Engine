@@ -1,7 +1,7 @@
-﻿using FluidWarfare.Editor.Windows.Shell;
+﻿using XuanYu.Engine.Editor.Windows.Shell;
 using XuanYu.Engine.Project.Content;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Selection.Presentation;
 
 /// <summary>项目文件选择 → Inspector / StatusBar / Log 展示。纯转换，不接触 UI 控件。</summary>
 public sealed class ProjectContentSelectionPresenter

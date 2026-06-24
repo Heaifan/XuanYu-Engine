@@ -1,7 +1,7 @@
-﻿using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+﻿using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 using XuanYu.Engine.Render.Selection.Presented;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
 
 /// <summary>
 /// Gizmo 和 Pick Snapshot 的 Pending/Presented 双缓冲。

@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Windows.Shell.Scene3D.Commands;
+﻿using XuanYu.Engine.Editor.Windows.Shell.Scene3D.Commands;
 
-namespace FluidWarfare.Editor.Windows.Shell.Scene3D;
+namespace XuanYu.Engine.Editor.Windows.Shell.Scene3D;
 
 /// <summary>Scene3D 命令路由。负责 Session 启动/重启命令薄转发。</summary>
 sealed class EditorShellScene3dCommandRoute(

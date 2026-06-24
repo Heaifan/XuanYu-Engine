@@ -1,10 +1,12 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
-using FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+using XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
+using XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 
-namespace FluidWarfare.Editor.Windows.Panels.LeftDock;
+using FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+using FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+namespace XuanYu.Engine.Editor.Windows.Panels.LeftDock;
 
 sealed class ProjectWorldDockTabs
 {

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 
 /// <summary>
 /// 程序化选择一次性令牌。

@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Selection.Route;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
 
 /// <summary>选择状态的唯一所有者。Shell 通过 Route 间接读取。</summary>
 public sealed class EditorSelectionState

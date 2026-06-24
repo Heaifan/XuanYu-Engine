@@ -1,11 +1,11 @@
 ﻿using Avalonia.Threading;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 using XuanYu.Engine.Render.Camera;
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Selection.Presented;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
 
 /// <summary>
 /// Scene3D 帧路径路由。单一职责：请求、合并、执行帧。

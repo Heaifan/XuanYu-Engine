@@ -2,7 +2,7 @@
 using XuanYu.Engine.Editor.Input.Bindings;
 using XuanYu.Engine.Editor.Input.Runtime;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.Input;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.Input;
 
 /// <summary>原始输入事件 → EditorInputMatch 翻译。通过 EditorInputBindingSnapshot 解析手势签名。</summary>
 public sealed class WindowsViewportRawInputTranslate

@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Windows.Panels.Viewport.Input;
+﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport.Input;
 
-namespace FluidWarfare.Editor.Windows.Shell.Input;
+namespace XuanYu.Engine.Editor.Windows.Shell.Input;
 
 public sealed class EditorViewportInputState
 {

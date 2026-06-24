@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Project.World.Transform;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 
 /// <summary>变换交互动作。日志层根据 Action + Reason 生成中文消息。</summary>
 public enum TransformInteractionAction

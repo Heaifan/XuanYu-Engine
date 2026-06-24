@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Startup.Vulkan;
 
 /// <summary>VulkanStartupRoute → Shell 的结果。Shell 据此应用 UI 更新。</summary>
 public sealed record EditorStartupVulkanResult(

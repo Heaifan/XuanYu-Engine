@@ -2,7 +2,7 @@
 using XuanYu.Engine.World;
 using XuanYu.Engine.Render.Scene;
 
-namespace FluidWarfare.Editor.Windows.Shell.Startup;
+namespace XuanYu.Engine.Editor.Windows.Shell.Startup;
 
 /// <summary>World 引导结果封装，包含世界状态、RenderScene、首位实体 ID、日志等。</summary>
 public sealed record EditorStartupWorldResult(

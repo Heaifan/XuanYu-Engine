@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Resize;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Resize;
 
 /// <summary>渲染重绘的执行结果。Shell 根据 Action 决定后续 Apply 操作。</summary>
 public sealed record Scene3dResizeRenderResult(

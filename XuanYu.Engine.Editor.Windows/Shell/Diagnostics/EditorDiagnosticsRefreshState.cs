@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Diagnostics;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 
 public sealed class EditorDiagnosticsRefreshState
 {

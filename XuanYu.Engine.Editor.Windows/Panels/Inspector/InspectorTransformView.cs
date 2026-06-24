@@ -1,8 +1,8 @@
 ﻿using Avalonia.Controls;
 using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Windows.Shell;
+using XuanYu.Engine.Editor.Windows.Shell;
 
-namespace FluidWarfare.Editor.Windows.Panels.Inspector;
+namespace XuanYu.Engine.Editor.Windows.Panels.Inspector;
 
 /// <summary>Inspector Transform 输入区管理。包含坐标输入框、校验错误和按钮状态。</summary>
 public sealed class InspectorTransformView

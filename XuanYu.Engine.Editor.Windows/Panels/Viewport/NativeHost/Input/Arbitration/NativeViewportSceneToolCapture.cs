@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
 
 /// <summary>场景工具鼠标捕获状态管理。</summary>
 sealed class NativeViewportSceneToolCapture

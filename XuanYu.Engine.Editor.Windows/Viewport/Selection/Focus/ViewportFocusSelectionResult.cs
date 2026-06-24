@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.World;
-using FluidWarfare.Editor.Windows.Shell;
+using XuanYu.Engine.Editor.Windows.Shell;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Selection.Focus;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Selection.Focus;
 
 /// <summary>视口焦点处理的完整输出。Shell 无需分支直接 Apply。</summary>
 public sealed record ViewportFocusSelectionResult(

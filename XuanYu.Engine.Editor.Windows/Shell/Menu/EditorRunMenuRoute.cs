@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Shell.Menu;
+namespace XuanYu.Engine.Editor.Windows.Shell.Menu;
 
 /// <summary>运行菜单路由。管理 RunMenuButton Flyout 和 Scene3D 菜单项状态。</summary>
 public sealed class EditorRunMenuRoute

@@ -1,6 +1,6 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Focus;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Focus;
 
 /// <summary>Win32 焦点消息处理。含 SetFocus P/Invoke 和焦点消息识别。</summary>
 sealed class NativeViewportFocusMessages

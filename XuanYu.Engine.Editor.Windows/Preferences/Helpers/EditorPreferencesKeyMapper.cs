@@ -1,7 +1,7 @@
 ﻿using Avalonia.Input;
 using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Editor.Windows.Preferences;
+namespace XuanYu.Engine.Editor.Windows.Preferences;
 
 static class EditorPreferencesKeyMapper
 {

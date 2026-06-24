@@ -1,7 +1,7 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Fonts.Inter;
 
-namespace FluidWarfare.Editor.Windows;
+namespace XuanYu.Engine.Editor.Windows;
 
 internal static class Program
 {

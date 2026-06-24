@@ -1,16 +1,16 @@
 ﻿using XuanYu.Engine.Editor.EntityTransform;
 using XuanYu.Engine.Editor.Selection;
-using FluidWarfare.Editor.Windows.Panels.Inspector;
-using FluidWarfare.Editor.Windows.Panels.Status;
-using FluidWarfare.Editor.Windows.Shell.Transform;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+using XuanYu.Engine.Editor.Windows.Panels.Inspector;
+using XuanYu.Engine.Editor.Windows.Panels.Status;
+using XuanYu.Engine.Editor.Windows.Shell.Transform;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
 using XuanYu.Engine.World;
 using XuanYu.Engine.Project.World.Transform;
 
-namespace FluidWarfare.Editor.Windows.Shell.Transform.Edit;
+namespace XuanYu.Engine.Editor.Windows.Shell.Transform.Edit;
 
 /// <summary>Transform 编辑路由。负责 Inspector Transform 面板事件转发。</summary>
 sealed class EditorShellTransformRoute(

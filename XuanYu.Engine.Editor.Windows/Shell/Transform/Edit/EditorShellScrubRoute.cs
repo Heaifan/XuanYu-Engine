@@ -1,13 +1,13 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.EntityTransform;
-using FluidWarfare.Editor.Windows.Panels.Inspector.Transform;
-using FluidWarfare.Editor.Windows.Shell.Transform;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+using XuanYu.Engine.Editor.Windows.Panels.Inspector.Transform;
+using XuanYu.Engine.Editor.Windows.Shell.Transform;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Route;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.Windows.Shell.Transform.Edit;
+namespace XuanYu.Engine.Editor.Windows.Shell.Transform.Edit;
 
 /// <summary>数值拖拽 Scrub 路由。负责 Inspector 数值拖拽事件转发。</summary>
 sealed class EditorShellScrubRoute(

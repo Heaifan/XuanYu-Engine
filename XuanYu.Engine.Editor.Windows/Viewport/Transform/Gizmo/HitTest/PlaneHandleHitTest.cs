@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo.HitTest;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo.HitTest;
 
 /// <summary>
 /// Plane 手柄的四边形命中测试。

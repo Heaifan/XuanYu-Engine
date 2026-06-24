@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
 
 /// <summary>Win32 键盘消息解析与识别。不含编辑器业务。</summary>
 sealed class NativeViewportKeyboardMessages

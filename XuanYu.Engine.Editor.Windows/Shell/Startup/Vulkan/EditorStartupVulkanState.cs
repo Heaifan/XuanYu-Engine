@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Startup.Vulkan;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Startup.Vulkan;
 
 /// <summary>Vulkan 启动探测的状态标志。由 Route 内部管理，Shell 通过 Result 和属性查询。</summary>
 public sealed class EditorStartupVulkanState

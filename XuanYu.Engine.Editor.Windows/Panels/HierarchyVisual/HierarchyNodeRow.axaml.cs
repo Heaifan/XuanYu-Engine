@@ -1,6 +1,7 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 
+using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 namespace FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
 
 public sealed partial class HierarchyNodeRow : UserControl

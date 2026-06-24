@@ -1,6 +1,6 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 
-namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+namespace XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
 
 /// <summary>项目内容树选择状态和事件管理。</summary>
 sealed class ProjectContentTreeSelection

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 
 /// <summary>
 /// Move 工具和 G 模态的共享状态。

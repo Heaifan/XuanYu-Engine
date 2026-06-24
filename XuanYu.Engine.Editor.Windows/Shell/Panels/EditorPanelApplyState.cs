@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Panels;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Panels;
 
 public sealed class EditorPanelApplyState
 {

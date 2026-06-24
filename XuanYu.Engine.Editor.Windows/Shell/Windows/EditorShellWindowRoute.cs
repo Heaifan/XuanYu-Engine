@@ -1,8 +1,8 @@
-using Avalonia.Controls;
-using FluidWarfare.Editor.Windows.About;
-using FluidWarfare.Editor.Windows.Preferences;
+﻿using Avalonia.Controls;
+using XuanYu.Engine.Editor.Windows.About;
+using XuanYu.Engine.Editor.Windows.Preferences;
 
-namespace FluidWarfare.Editor.Windows.Shell.Windows;
+namespace XuanYu.Engine.Editor.Windows.Shell.Windows;
 
 /// <summary>编辑器窗口命令路由。管理 Preferences / InputBindings / About 窗口的打开和 Activate。</summary>
 public sealed class EditorShellWindowRoute

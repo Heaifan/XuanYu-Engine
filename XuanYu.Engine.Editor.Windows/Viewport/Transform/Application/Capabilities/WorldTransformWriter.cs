@@ -1,10 +1,10 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.EntityTransform;
-using FluidWarfare.Editor.Windows.Panels.Status;
+using XuanYu.Engine.Editor.Windows.Panels.Status;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>WorldState Transform 写入结果。</summary>
 public enum WorldTransformWriteStatus { Changed, NoChange, EntityNotFound }

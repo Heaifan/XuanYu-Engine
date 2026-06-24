@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>
 /// Vulkan 视口宿主原生窗口句柄信息。

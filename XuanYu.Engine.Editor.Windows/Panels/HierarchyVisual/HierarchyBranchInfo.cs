@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 
 /// <summary>
 /// 一个可见节点的树干位置。

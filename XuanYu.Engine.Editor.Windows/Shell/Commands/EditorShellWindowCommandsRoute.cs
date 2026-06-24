@@ -1,7 +1,7 @@
-using Avalonia.Interactivity;
-using FluidWarfare.Editor.Windows.Shell.Windows;
+﻿using Avalonia.Interactivity;
+using XuanYu.Engine.Editor.Windows.Shell.Windows;
 
-namespace FluidWarfare.Editor.Windows.Shell.Commands;
+namespace XuanYu.Engine.Editor.Windows.Shell.Commands;
 
 /// <summary>窗口菜单命令路由。负责 Preferences/About/InputBindings 菜单命令转发。</summary>
 sealed class EditorShellWindowCommandsRoute(

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 
 /// <summary>从 Win32 wParam/lParam 解析的原生指针输入数据。</summary>
 sealed record NativeViewportPointerRequest(

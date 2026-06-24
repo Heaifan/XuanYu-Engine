@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
 
 /// <summary>键盘动作类型。</summary>
 enum NativeViewportKeyboardAction { Down, Up }

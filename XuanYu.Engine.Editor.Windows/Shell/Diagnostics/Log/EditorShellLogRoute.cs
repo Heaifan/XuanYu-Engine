@@ -1,7 +1,7 @@
-using FluidWarfare.Editor.Windows.Shell.Diagnostics;
-using FluidWarfare.Editor.Windows.Shell.Feedback;
+﻿using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
+using XuanYu.Engine.Editor.Windows.Shell.Feedback;
 
-namespace FluidWarfare.Editor.Windows.Shell.Diagnostics.Log;
+namespace XuanYu.Engine.Editor.Windows.Shell.Diagnostics.Log;
 
 /// <summary>日志路由。负责日志委托和 Diagnostics 薄转发。</summary>
 sealed class EditorShellLogRoute(

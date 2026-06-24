@@ -2,9 +2,9 @@
 using XuanYu.Engine.Render.Camera.Navigation;
 using XuanYu.Engine.Render.Vulkan.Camera;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Overlay;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Presentation;
 
 /// <summary>
 /// Move Gizmo 帧数据源。纯计算：输入相机/实体/工具状态 → 输出顶点 + Pending Snapshot。

@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo.Visual;
+﻿using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo.Visual;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
 /// <summary>
 /// 从 MoveGizmoLayout 生成屏幕空间三角形顶点列表。

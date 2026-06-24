@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Win32;
+﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Win32;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Lifecycle;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Lifecycle;
 
 /// <summary>NativeHost 子窗口销毁。</summary>
 sealed class NativeViewportDestroy

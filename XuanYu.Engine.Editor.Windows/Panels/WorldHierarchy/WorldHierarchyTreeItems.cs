@@ -1,7 +1,7 @@
-﻿using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+﻿using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 using XuanYu.Engine.Editor.WorldHierarchy;
 
-namespace FluidWarfare.Editor.Windows.Panels.WorldHierarchy;
+namespace XuanYu.Engine.Editor.Windows.Panels.WorldHierarchy;
 
 /// <summary>世界层级树视图节点和可见行构造。</summary>
 internal static class WorldHierarchyTreeItems

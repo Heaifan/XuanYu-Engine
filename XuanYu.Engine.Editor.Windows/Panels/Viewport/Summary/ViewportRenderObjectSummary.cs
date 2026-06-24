@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>
 /// 视口 RenderScene 调试列表中的单个渲染对象显示摘要。

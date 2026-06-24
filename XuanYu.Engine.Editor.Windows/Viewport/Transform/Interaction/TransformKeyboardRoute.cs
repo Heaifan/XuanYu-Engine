@@ -1,9 +1,9 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Project.World.Transform;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 
 /// <summary>
 /// 键盘变换交互路由。只处理 G/Enter/Esc 三键。

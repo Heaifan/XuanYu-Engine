@@ -8,9 +8,9 @@ using XuanYu.Engine.Render.Vulkan.Scene3D;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 using XuanYu.Engine.Render.Vulkan.Validation;
 using XuanYu.Engine.Render.Vulkan.Camera;
-using FluidWarfare.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 
 /// <summary>Vulkan 探测路由。探测方法包含完整逻辑（调用 Probe + 日志 + 状态更新）。
 /// 日志通过回调注入，Shell 无需知道探测细节。</summary>

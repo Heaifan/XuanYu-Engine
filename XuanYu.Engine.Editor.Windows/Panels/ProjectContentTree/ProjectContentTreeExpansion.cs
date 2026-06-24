@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
 
 /// <summary>项目内容树展开/折叠状态管理。</summary>
 sealed class ProjectContentTreeExpansion

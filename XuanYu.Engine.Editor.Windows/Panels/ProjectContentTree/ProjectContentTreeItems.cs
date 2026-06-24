@@ -1,7 +1,7 @@
-﻿using FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+﻿using XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 using ProjectContentTreeModel = XuanYu.Engine.Editor.ProjectContentTreeModel;
 
-namespace FluidWarfare.Editor.Windows.Panels.ProjectContentTree;
+namespace XuanYu.Engine.Editor.Windows.Panels.ProjectContentTree;
 
 /// <summary>项目内容树视图节点和可见行构造。</summary>
 internal static class ProjectContentTreeItems

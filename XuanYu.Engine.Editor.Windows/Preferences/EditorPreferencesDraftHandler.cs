@@ -3,7 +3,7 @@ using XuanYu.Engine.Editor.Input.Bindings;
 using XuanYu.Engine.Editor.Input.Runtime;
 using XuanYu.Engine.Editor.Input.Settings;
 
-namespace FluidWarfare.Editor.Windows.Preferences;
+namespace XuanYu.Engine.Editor.Windows.Preferences;
 
 sealed class EditorPreferencesDraftHandler
 {

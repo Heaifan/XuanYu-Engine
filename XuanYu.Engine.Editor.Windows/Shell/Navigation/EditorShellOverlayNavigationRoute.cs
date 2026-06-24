@@ -1,11 +1,11 @@
-﻿using FluidWarfare.Editor.Windows.Panels.Viewport;
-using FluidWarfare.Editor.Windows.Viewport.Camera;
-using FluidWarfare.Editor.Windows.Viewport.Navigation;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
+﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Viewport.Camera;
+using XuanYu.Engine.Editor.Windows.Viewport.Navigation;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using XuanYu.Engine.Render.ViewportNavigation;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Shell.Navigation;
+namespace XuanYu.Engine.Editor.Windows.Shell.Navigation;
 
 /// <summary>Overlay 导航事件路由。负责 Overlay 视口导航区的交互转发。</summary>
 sealed class EditorShellOverlayNavigationRoute(

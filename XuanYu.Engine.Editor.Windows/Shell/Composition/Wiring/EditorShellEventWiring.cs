@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Composition;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
 
 /// <summary>EditorShell 事件接线。集中管理面板事件与 Route 之间的订阅。</summary>
 sealed class EditorShellEventWiring(

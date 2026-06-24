@@ -1,10 +1,10 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Editor.Transform.Edit;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 
 /// <summary>
 /// 视口指针变换交互路由。负责：Gizmo HitTest、Drag 调度、G 模态逐出。

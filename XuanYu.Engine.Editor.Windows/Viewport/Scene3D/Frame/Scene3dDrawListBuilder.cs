@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Vulkan.Scene3D;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
 
 /// <summary>
 /// 从 RenderScene 构建 Vulkan 单位绘制列表。

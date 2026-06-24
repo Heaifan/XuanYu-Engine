@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Windows;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Windows;
 
 public enum EditorShellWindowCommand
 {

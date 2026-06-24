@@ -1,7 +1,7 @@
-using Avalonia.Threading;
-using FluidWarfare.Editor.Windows.Viewport.Scene3D.Lifecycle;
+﻿using Avalonia.Threading;
+using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 
-namespace FluidWarfare.Editor.Windows.Shell.Lifecycle;
+namespace XuanYu.Engine.Editor.Windows.Shell.Lifecycle;
 
 /// <summary>
 /// 管理 EditorShell 从 VisualTree 分离后的清理时序。

@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Shell.Composition;
+﻿namespace XuanYu.Engine.Editor.Windows.Shell.Composition;
 
 /// <summary>EditorShell 生命周期路由。处理 Attach/Detach 事件转发。</summary>
 sealed class EditorShellLifecycle(EditorShellContext ctx)

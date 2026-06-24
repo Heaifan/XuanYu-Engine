@@ -1,8 +1,8 @@
 ﻿using XuanYu.Engine.Core.Math;
-using FluidWarfare.Editor.Windows.Shell;
-using FluidWarfare.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Shell;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Selection.Presentation;
 
 /// <summary>世界实体选择展示结果。Shell Apply 到 Inspector / StatusBar / Viewport。</summary>
 public sealed record WorldEntitySelectionResult(

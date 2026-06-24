@@ -3,7 +3,7 @@ using XuanYu.Engine.Editor.Transform.Translation.Axis;
 using XuanYu.Engine.Render.Camera.Navigation;
 using XuanYu.Engine.Render.Vulkan.Camera;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
 /// <summary>
 /// 从相机快照和拖动参数构建 AxisTranslationAnchor。

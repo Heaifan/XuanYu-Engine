@@ -1,10 +1,10 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.Selection;
-using FluidWarfare.Editor.Windows.Panels.Inspector;
-using FluidWarfare.Editor.Windows.Panels.Viewport;
-using FluidWarfare.Editor.Windows.Viewport.Selection.Presentation;
+using XuanYu.Engine.Editor.Windows.Panels.Inspector;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Viewport.Selection.Presentation;
 
-namespace FluidWarfare.Editor.Windows.Shell.Panels;
+namespace XuanYu.Engine.Editor.Windows.Shell.Panels;
 
 public sealed class EditorPanelApplyRoute
 {

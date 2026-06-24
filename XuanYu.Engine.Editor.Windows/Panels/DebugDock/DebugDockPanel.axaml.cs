@@ -1,6 +1,7 @@
-using Avalonia.Controls;
-using FluidWarfare.Editor.Windows.Panels.Logging;
+﻿using Avalonia.Controls;
+using XuanYu.Engine.Editor.Windows.Panels.Logging;
 
+using XuanYu.Engine.Editor.Windows.Panels.Logging;
 namespace FluidWarfare.Editor.Windows.Panels.DebugDock;
 
 /// <summary>底部调试终端，包含日志、渲染诊断、RenderScene 和性能页签。</summary>

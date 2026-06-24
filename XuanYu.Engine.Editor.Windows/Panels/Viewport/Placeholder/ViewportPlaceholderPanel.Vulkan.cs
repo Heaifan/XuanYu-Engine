@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+﻿namespace FluidWarfare.Editor.Windows.Panels.Viewport;
 
 /// <summary>Partial：Vulkan 后端状态显示。</summary>
 sealed partial class ViewportPlaceholderPanel

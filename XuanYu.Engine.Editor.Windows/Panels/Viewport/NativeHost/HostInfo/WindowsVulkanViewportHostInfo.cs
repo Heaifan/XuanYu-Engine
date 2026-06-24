@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost;
 
 public sealed record WindowsVulkanViewportHostInfo(
     WindowsVulkanViewportHostState State,

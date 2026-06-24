@@ -1,7 +1,7 @@
-using Avalonia;
-using FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Win32;
+﻿using Avalonia;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Win32;
 
-namespace FluidWarfare.Editor.Windows.Panels.Viewport.NativeHost.Lifecycle;
+namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Lifecycle;
 
 /// <summary>NativeHost 状态信息同步与大小变更处理。</summary>
 sealed class NativeViewportHostSync

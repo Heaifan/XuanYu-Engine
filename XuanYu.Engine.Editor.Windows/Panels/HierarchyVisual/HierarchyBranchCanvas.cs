@@ -1,8 +1,8 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 
-namespace FluidWarfare.Editor.Windows.Panels.HierarchyVisual;
+namespace XuanYu.Engine.Editor.Windows.Panels.HierarchyVisual;
 
 /// <summary>
 /// 绘制经典文件树的连续虚线树干。

@@ -3,7 +3,7 @@ using XuanYu.Engine.Project.Metadata;
 using XuanYu.Engine.Project.Paths;
 using XuanYu.Engine.Project.Validation;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Project;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Project;
 
 /// <summary>项目加载路由。处理项目发现、加载、校验逻辑。不持有 UI 控件引用。</summary>
 public sealed class ProjectBootstrapRoute

@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 
 /// <summary>Scene3D 诊断快照。Shell 读取后分发到 DebugDockPanel。</summary>
 public sealed record Scene3dDiagnosticSnapshot(

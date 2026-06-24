@@ -3,7 +3,7 @@ using XuanYu.Engine.Editor.Transform.Translation.Plane;
 using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Vulkan.Camera;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
 /// <summary>
 /// 从相机快照构建射线，与平面求交后创建 PlaneTranslationAnchor。

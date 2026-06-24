@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Project;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Project;
 
 /// <summary>项目启动结果。Shell 根据结果应用 UI。</summary>
 public sealed record ProjectBootstrapResult(

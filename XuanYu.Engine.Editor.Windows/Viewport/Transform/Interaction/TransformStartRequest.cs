@@ -1,6 +1,6 @@
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+﻿using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 
 /// <summary>变换拖动启动来源。严格区分不允许 G 模态伪造 Hover。</summary>
 public enum TransformStartSource

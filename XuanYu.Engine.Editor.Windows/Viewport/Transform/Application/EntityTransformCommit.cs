@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Project.World.Transform;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>
 /// Commit：原子提交。先验证实体存在，再同步视觉层（RenderScene + Vulkan），最后写 WorldState + Dirty。

@@ -1,9 +1,9 @@
 ﻿using XuanYu.Engine.Editor.EntityTransform;
-using FluidWarfare.Editor.Windows.Panels.Viewport.Tools;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Interaction;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 using static FluidWarfare.Editor.Windows.Viewport.Transform.Interaction.TransformInteractionAction;
 
-namespace FluidWarfare.Editor.Windows.Shell.Input.Transform;
+namespace XuanYu.Engine.Editor.Windows.Shell.Input.Transform;
 
 /// <summary>变换交互输入路由。负责 G 键 / Esc / Enter 模态、Gizmo Hover、拖拽 Preview 和失焦取消。</summary>
 public sealed class EditorTransformInputRoute

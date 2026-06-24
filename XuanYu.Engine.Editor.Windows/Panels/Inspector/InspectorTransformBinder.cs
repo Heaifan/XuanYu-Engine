@@ -1,7 +1,7 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 
-namespace FluidWarfare.Editor.Windows.Panels.Inspector;
+namespace XuanYu.Engine.Editor.Windows.Panels.Inspector;
 
 /// <summary>Inspector Transform 键盘与按钮事件绑定。Enter/Esc/Apply/Reset/GroundPlace。</summary>
 public sealed class InspectorTransformBinder

@@ -1,9 +1,9 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Render.Vulkan.Camera;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Presentation;
 
 /// <summary>MoveGizmoFrameSource.Build 的纯输入。所有数据在调用时冻结。</summary>
 public readonly record struct MoveGizmoFrameInput(

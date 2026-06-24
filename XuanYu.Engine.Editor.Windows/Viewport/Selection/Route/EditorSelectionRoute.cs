@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Selection.Route;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Selection.Route;
 
 /// <summary>
 /// 选择路由。决定“选中谁”，不决定“怎么展示”。

@@ -1,9 +1,9 @@
-﻿using FluidWarfare.Editor.Windows.Viewport.Scene3D.Frame;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Application;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Presentation;
+﻿using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Presentation;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Submit;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Submit;
 
 /// <summary>
 /// Scene3D 帧提交流程编排。组装 Gizmo + PickSnapshot → 调用 Scene3dFrameRoute.Request。

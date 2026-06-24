@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Panels.Viewport;
+﻿namespace XuanYu.Engine.Editor.Windows.Panels.Viewport;
 
 /// <summary>
 /// 视口占位显示模型，保存当前选中实体的名称、EntityId、来源路径、位置文本与视觉类型。

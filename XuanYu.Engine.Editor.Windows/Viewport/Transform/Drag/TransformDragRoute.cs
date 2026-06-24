@@ -5,8 +5,8 @@ using XuanYu.Engine.Editor.Transform.Translation.Plane;
 using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Vulkan.Camera;
-using FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo;
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Drag;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
 public sealed class TransformDragRoute
 {

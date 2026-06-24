@@ -1,4 +1,4 @@
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Gizmo.Visual;
+﻿namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo.Visual;
 
 /// <summary>
 /// 生成 Gizmo 三轴和箭头的三角形顶点。

@@ -3,7 +3,7 @@ using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Scene.Position;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Transform.Application;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 
 /// <summary>RenderScene 当前位置的唯一写入所有者。读取仍可通过 Current 属性。</summary>
 public sealed class ViewportRenderSceneStore

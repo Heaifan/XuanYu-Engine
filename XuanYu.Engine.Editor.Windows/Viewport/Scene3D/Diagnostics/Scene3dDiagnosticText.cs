@@ -6,7 +6,7 @@ using XuanYu.Engine.Render.Vulkan.Swapchain;
 using XuanYu.Engine.Render.Vulkan.Clear;
 using XuanYu.Engine.Render.Vulkan.Scene3D;
 
-namespace FluidWarfare.Editor.Windows.Viewport.Scene3D.Diagnostics;
+namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 
 /// <summary>诊断文本格式化。不包含 Shell/面板引用。</summary>
 public static class Scene3dDiagnosticText
