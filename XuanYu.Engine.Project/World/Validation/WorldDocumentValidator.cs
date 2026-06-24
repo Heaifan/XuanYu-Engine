@@ -52,11 +52,29 @@ public static class WorldDocumentValidator
             errors.Add(new WorldValidationError($"实体 \"{entityId}\" 的 Transform 缺少 Position。"));
             return;
         }
+        ValidateFinite(t.Position, "Position", entityId, errors);
 
-        var (x, y, z) = (t.Position.X, t.Position.Y, t.Position.Z);
-        if (float.IsNaN(x) || float.IsInfinity(x) ||
-            float.IsNaN(y) || float.IsInfinity(y) ||
-            float.IsNaN(z) || float.IsInfinity(z))
-            errors.Add(new WorldValidationError($"实体 \"{entityId}\" 的 Position 包含无效数值（NaN 或 Infinity）。"));
+        if (t.RotationDegrees is not null)
+        {
+            ValidateFinite(t.RotationDegrees, "RotationDegrees", entityId, errors);
+        }
+
+        if (t.Scale is not null)
+        {
+            ValidateFinite(t.Scale, "Scale", entityId, errors);
+            if (t.Scale.X <= 0 || t.Scale.Y <= 0 || t.Scale.Z <= 0)
+                errors.Add(new WorldValidationError(
+                    $"实体 \"{entityId}\" 的 Scale 必须大于 0（当前 {t.Scale.X}, {t.Scale.Y}, {t.Scale.Z}）。"));
+        }
+    }
+
+    static void ValidateFinite(
+        WorldVector3Document v, string field, string entityId, List<WorldValidationError> errors)
+    {
+        if (float.IsNaN(v.X) || float.IsInfinity(v.X) ||
+            float.IsNaN(v.Y) || float.IsInfinity(v.Y) ||
+            float.IsNaN(v.Z) || float.IsInfinity(v.Z))
+            errors.Add(new WorldValidationError(
+                $"实体 \"{entityId}\" 的 {field} 包含无效数值（NaN 或 Infinity）。"));
     }
 }
