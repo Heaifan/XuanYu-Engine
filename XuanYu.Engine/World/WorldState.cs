@@ -58,6 +58,20 @@ public sealed class WorldState
         _positions[entityId] = new PositionComponent(newPosition); return true;
     }
 
+    public bool SetRotation(EntityId entityId, Vector3d newRotation)
+    {
+        if (!_rotations.TryGetValue(entityId, out var c)) return false;
+        if (c.Value == newRotation) return false;
+        _rotations[entityId] = new RotationComponent(newRotation); return true;
+    }
+
+    public bool SetScale(EntityId entityId, Vector3d newScale)
+    {
+        if (!_scales.TryGetValue(entityId, out var c)) return false;
+        if (c.Value == newScale) return false;
+        _scales[entityId] = new ScaleComponent(newScale); return true;
+    }
+
     public IReadOnlyList<WorldEntityInfo> ListEntities() =>
         _displayNames.Select(kvp => { _sources.TryGetValue(kvp.Key, out var s); return new WorldEntityInfo(kvp.Key, kvp.Value.Value, s); }).ToList();
 }
