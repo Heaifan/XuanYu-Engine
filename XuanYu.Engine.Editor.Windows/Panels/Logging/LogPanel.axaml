@@ -16,11 +16,19 @@
         FontFamily="Consolas, Microsoft YaHei UI"
         FontSize="12"
         Foreground="#DCE3EA"
+        IsReadOnly="True"
         Padding="8"
         ScrollViewer.HorizontalScrollBarVisibility="Auto"
         ScrollViewer.VerticalScrollBarVisibility="Auto"
         SelectionBrush="#1769AA"
         SelectionForegroundBrush="#FFFFFF"
-        TextWrapping="NoWrap" />
+        TextWrapping="NoWrap">
+      <TextBox.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="复制选中内容" Click="OnCopySelectionClicked" />
+          <MenuItem Header="复制全部日志" Click="OnCopyAllClicked" />
+        </ContextMenu>
+      </TextBox.ContextMenu>
+    </TextBox>
   </Border>
 </UserControl>
