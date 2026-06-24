@@ -1,5 +1,14 @@
 # changelog
 
+## [8.8-R3-1] — 底层模块 namespace 迁移 (2026-06-24)
+- 迁移 Core/Engine/Project/Bridge namespace：`FluidWarfare.*` → `XuanYu.Engine.*`
+- 模块内 namespace 声明：36 文件；全仓 using 引用：209 文件；总计 185 文件改动
+- 命名映射：`FluidWarfare.Core→XuanYu.Engine.Core`, `FluidWarfare.Engine→XuanYu.Engine`（注意无 `.Engine` 后缀）, `FluidWarfare.Project→XuanYu.Engine.Project`, `FluidWarfare.Bridge.ProjectEngine→XuanYu.Engine.Bridge.ProjectEngine`
+- Render/Editor/Tests namespace 保持不动（R3-2/R3-3/R3-4）
+- x:Class/EditorSettingsPath 未改动
+- build: 0 Error / test: 629/630 (1 flaky)
+- commit `6a90c9e`
+
 ## [8.8-R2C] — docs audit 文件清理 (2026-06-24)
 - 删除 14 个临时 audit-* / whitelist-* / renderer-* 文件
 - 旧 `docs/CHANGELOG.md`（179KB，表格密集）→ `changelog.md`（简洁格式，倒序）
