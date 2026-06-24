@@ -47,11 +47,11 @@ public static class AxisDragAnchorBuilder
                 if (pn is not null)
                 {
                     var denom = ray.Direction.Dot(pn.Value);
-                    if (Math.Abs(denom) >= 0.1) // 阈值 0.1，排除边界退化情况
+                    if (Math.Abs(denom) >= 0.1)
                     {
                         var t = (pivot - ray.Origin).Dot(pn.Value) / denom;
                         if (t > 0)
-                            anchor = anchor with { Mode = AxisTranslationMode.DragPlane, StartIntersection = ray.Origin + ray.Direction * t, DragPlaneNormal = pn.Value, CameraForward = fwd, CameraRight = right, CameraUp = up };
+                            anchor = anchor with { StartIntersection = ray.Origin + ray.Direction * t, DragPlaneNormal = pn.Value, CameraForward = fwd, CameraRight = right, CameraUp = up };
                     }
                 }
             }
