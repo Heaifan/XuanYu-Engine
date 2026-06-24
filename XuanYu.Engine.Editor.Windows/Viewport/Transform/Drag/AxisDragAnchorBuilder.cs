@@ -1,15 +1,14 @@
 using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.Transform.Translation.Axis;
 using XuanYu.Engine.Render.Camera.Navigation;
-using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Vulkan.Camera;
 
 namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
 /// <summary>
 /// 从相机快照构建 AxisTranslationAnchor。
-/// 主路径使用 ScreenProjection（稳定可靠），
-/// 同时尝试附加 DragPlane 射线约束数据以供 Move 选用。
+/// 唯一路径：ScreenProjection（稳定可靠，三轴统一）。
+/// DragPlane 临时方案已在 9.0D-R2B 中移除，后续独立处理。
 /// </summary>
 public static class AxisDragAnchorBuilder
 {
@@ -20,7 +19,6 @@ public static class AxisDragAnchorBuilder
         var pose = camera.CameraPose;
         if (pose is null) return (default, false);
 
-        // ── 主路径：ScreenProjection ─────────────────────
         var vp = camera.ViewProjection; var vw = camera.ViewportWidth; var vh = camera.ViewportHeight;
         if (!AxisScreenMetric.TryCompute(pivot, axis, vp, vw, vh, out var dir, out var ppu))
         {
@@ -31,42 +29,6 @@ public static class AxisDragAnchorBuilder
             ppu = 1.0 / fppu; dir = new Vector2d(0, -1);
         }
 
-        var anchor = new AxisTranslationAnchor(currentPosition, axis, pivot, ppu, dir, x, y, AxisTranslationMode.ScreenProjection);
-
-        // ── 附加：尝试构建 DragPlane 数据（可选） ────────
-        var status = VulkanSceneRayBuilder.TryBuild((float)x, (float)y, camera, (uint)vw, (uint)vh, out var ray);
-        if (status == SceneRayBuildStatus.Success && ray is not null)
-        {
-            var fwd = new Vector3d(pose.TargetX - pose.PositionX, pose.TargetY - pose.PositionY, pose.TargetZ - pose.PositionZ);
-            if (!fwd.IsZero)
-            {
-                fwd = fwd.Normalize();
-                var up = new Vector3d(pose.UpX, pose.UpY, pose.UpZ);
-                var right = new Vector3d(fwd.Y * up.Z - fwd.Z * up.Y, fwd.Z * up.X - fwd.X * up.Z, fwd.X * up.Y - fwd.Y * up.X);
-                var pn = BuildPlaneNormal(axis, fwd, right.IsZero ? new Vector3d(1, 0, 0) : right.Normalize(), up);
-                if (pn is not null)
-                {
-                    var denom = ray.Direction.Dot(pn.Value);
-                    if (Math.Abs(denom) >= 0.1)
-                    {
-                        var t = (pivot - ray.Origin).Dot(pn.Value) / denom;
-                        if (t > 0)
-                            anchor = anchor with { StartIntersection = ray.Origin + ray.Direction * t, DragPlaneNormal = pn.Value, CameraForward = fwd, CameraRight = right, CameraUp = up };
-                    }
-                }
-            }
-        }
-
-        return (anchor, true);
-    }
-
-    static Vector3d? BuildPlaneNormal(Vector3d axis, Vector3d fwd, Vector3d right, Vector3d up)
-    {
-        var n = fwd - fwd.Dot(axis) * axis;
-        if (n.Length > 1e-6) return n.Normalize();
-        n = right - right.Dot(axis) * axis;
-        if (n.Length > 1e-6) return n.Normalize();
-        n = up - up.Dot(axis) * axis;
-        return n.Length > 1e-6 ? n.Normalize() : null;
+        return (new AxisTranslationAnchor(currentPosition, axis, pivot, ppu, dir, x, y, AxisTranslationMode.ScreenProjection), true);
     }
 }

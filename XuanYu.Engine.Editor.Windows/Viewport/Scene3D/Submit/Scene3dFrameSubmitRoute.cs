@@ -1,6 +1,7 @@
 ﻿using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Presentation;
+using XuanYu.Engine.Render.Selection.Presented;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Submit;
@@ -35,9 +36,12 @@ public sealed class Scene3dFrameSubmitRoute
         var gizmoResult = Scene3dGizmoSubmitSource.Build(gizmoInput, _session);
 
         // Pick Snapshot
+        // Preview 帧不重建 PickSnapshot（拖动中不需要重新 Pick，复用上一次快照）
         var presented = _route.Snapshots.PresentedGizmo;
-        var pick = Scene3dPickSnapshotSource.Build(
-            _renderSceneStore.Current, input.RenderSeq, input.CameraRevision, presented);
+        var pick = input.Reason == VulkanScene3dFrameReason.TransformPreview
+            ? PresentedScenePickSnapshot.None
+            : Scene3dPickSnapshotSource.Build(
+                _renderSceneStore.Current, input.RenderSeq, input.CameraRevision, presented);
 
         // Frame 请求
         _route.Request(input.Reason, input.CameraState, input.CameraRevision,

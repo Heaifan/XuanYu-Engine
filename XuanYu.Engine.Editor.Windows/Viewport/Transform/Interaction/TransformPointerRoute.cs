@@ -29,6 +29,8 @@ public sealed class TransformPointerRoute
         var el = MoveGizmoHitTest.HitTest(layout, x, y);
         _gizmo.SetHover(el);
     }
+    public void ClearGizmoHover() => _gizmo.ClearHover();
+
     public TransformInteractionResult OnPointerPressed(
         TransformStartRequest req, TransformStartSnapshot snap)
     {
@@ -78,11 +80,7 @@ public sealed class TransformPointerRoute
             TransformInteractionAction.Cancelled, initial ?? default, reason);
     }
 
-    // ── 状态控制封装 ──
-
-    /// <summary>激活或关闭 Move 工具。外部读取通过 State.MoveToolActive。</summary>
     public void ActivateMoveTool(bool active) => _state.SetToolActive(active);
-    /// <summary>G 模态标志。外部读取通过 State.BlenderMoveActive。</summary>
     public void SetBlenderGActive(bool active) => _state.SetBlenderGActive(active);
     public bool IsMoveToolActive => _state.MoveToolActive;
     public bool IsBlenderGActive => _state.BlenderMoveActive;

@@ -5,7 +5,13 @@ sealed class EditorShellCompositionRuntime(EditorShellContext ctx)
 {
     public void ScheduleFrame(VulkanScene3dFrameReason reason) =>
         ctx.DiagnosticsRoute.ScheduleFrame(reason, ctx.RenderSeq, ctx.SelectionRoute, ctx.WorldState,
-            () => { ctx.RenderSeq = ctx.Lifecycle.State.FrameSubmitRoute?.RenderSeq ?? ctx.RenderSeq; ctx.LogRoute.RefreshDiagnostics(); });
+            () => {
+                ctx.RenderSeq = ctx.Lifecycle.State.FrameSubmitRoute?.RenderSeq ?? ctx.RenderSeq;
+                // Preview 帧是高频视觉反馈路径，不刷新 Diagnostics（DebugDock / StatusBar / RunMenu）
+                // Diagnostics 只在 Commit / Camera / Resize / SelectionChanged 等低频事件后刷新
+                if (reason != VulkanScene3dFrameReason.TransformPreview)
+                    ctx.LogRoute.RefreshDiagnostics();
+            });
 
     public EditorViewportInputRequest BuildInputRequest(EditorViewportInputKind kind, int kc = 0, int bc = 0, int x = 0, int y = 0, int wd = 0) =>
         new(kind, kc, bc, x, y, wd, ctx.ViewportInputRoute.State, ctx.PointerRoute, ctx.SelectionRoute,
@@ -38,7 +44,7 @@ sealed class EditorShellCompositionRuntime(EditorShellContext ctx)
         if (ctx.Lifecycle.State.Session is null) return;
         var vulkan = new Scene3dEntityPositionWriter(ctx.Lifecycle.State.Session);
         var inspect = new InspectorTransformDisplay(ctx.InspectorPanel);
-        ctx.PreviewApplier = new EntityTransformPreview(ctx.RenderSceneStore, vulkan, inspect);
+        ctx.PreviewApplier = new EntityTransformPreview(ctx.RenderSceneStore, vulkan);
         ctx.CancelApplier = new EntityTransformCancel(ctx.RenderSceneStore, vulkan, inspect);
         if (ctx.WorldState is not null)
         {

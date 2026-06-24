@@ -1,5 +1,15 @@
 # changelog
 
+## [9.0D-R2B] — 降低 Move Gizmo 拖动帧负载 (2026-06-25 00:18)
+- TransformPreview 不再每帧刷新 Inspector
+- TransformPreview 帧不再刷新 Diagnostics / DebugDock
+- TransformPreview 帧不再重建 PickSnapshot
+- AxisDragAnchorBuilder 删除未使用的 DragPlane 构建路径
+- Inspector 更新保留在 TransformCommit / TransformCancel 路径
+- Trace 审计确认未接入 UI 日志
+- Build: 0 Warning, 0 Error / Tests: 693/694 passed
+- commit `26f2006`
+
 ## [9.0D-R3] — 诊断日志与 UI 调度安全规范 (2026-06-24)
 - 新增 `docs/diagnostic-safety.md`：收录 9.0D 诊断回调导致 UI 卡死事故的根因与防护规范
 - 覆盖启动期规则 / 高频路径规则 / 诊断 Sink 接口 / UI 日志异步投递 / 代码审查清单

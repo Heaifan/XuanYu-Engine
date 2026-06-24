@@ -33,6 +33,9 @@ public sealed class EditorSceneToolInputRoute
         var cam = lifecycle.State.Session?.LastPresentedSnapshot;
         if (cam is not { IsValid: true }) return ViewportSceneToolPressResult.NotHandled;
         var snap = buildSnapshot(); if (snap is null) return ViewportSceneToolPressResult.NotHandled;
+        var gizmo = lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo;
+        if (gizmo?.IsAvailable == true) pointer.UpdateGizmoHover(x, y, gizmo.Value.Layout);
+        else pointer.ClearGizmoHover();
         if (pointer.HasHoveredElement)
             return pointer.OnPointerPressed(new(TransformStartSource.GizmoHandle, MoveGizmoElement.ViewPlane, x, y), snap.Value).Action == Started ? ViewportSceneToolPressResult.BeginDrag : ViewportSceneToolPressResult.NotHandled;
         var hit = pick.Pick(new(x, y, cam, lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None, renderScene.Current, SceneGroundPlane.Default));
