@@ -3897,3 +3897,50 @@ Clear/Probe/Render/        2 文件 ≤5 ✅
 | 目录白名单 | 0（不变） |
 | 所有生产 .cs 文件 | ≤100 行（不变） |
 | EditorShell 白名单 | 已移除（不变） |
+
+### 8.8-R2 — 工程外壳迁移
+
+解决方案文件、项目目录、.csproj 文件名从 FluidWarfare.* 全部迁至 XuanYu.Engine.*。C# namespace 保持不变（留 R3）。
+
+#### 操作
+
+| 旧名 | 新名 | 类型 |
+|------|------|------|
+| `FluidWarfare.sln` | `XuanYu.Engine.sln` | 解决方案文件 |
+| `FluidWarfare.Core` | `XuanYu.Engine.Core` | 项目目录 + .csproj |
+| `FluidWarfare.Engine` | `XuanYu.Engine` | 项目目录 + .csproj |
+| `FluidWarfare.Project` | `XuanYu.Engine.Project` | 项目目录 + .csproj |
+| `FluidWarfare.Bridge.ProjectEngine` | `XuanYu.Engine.Bridge.ProjectEngine` | 项目目录 + .csproj |
+| `FluidWarfare.Render` | `XuanYu.Engine.Render` | 项目目录 + .csproj |
+| `FluidWarfare.Render.Vulkan` | `XuanYu.Engine.Render.Vulkan` | 项目目录 + .csproj |
+| `FluidWarfare.Editor` | `XuanYu.Engine.Editor` | 项目目录 + .csproj |
+| `FluidWarfare.Editor.Windows` | `XuanYu.Engine.Editor.Windows` | 项目目录 + .csproj |
+| `FluidWarfare.Tests` | `XuanYu.Engine.Tests` | 项目目录 + .csproj |
+
+同步更新：全仓 ProjectReference / InternalsVisibleTo / app.manifest / 测试路径常量 / PowerShell 脚本 / .gitkeep 标注 / 文档路径。
+
+#### 未修改（按路线图保留）
+
+| 项目 | 原因 |
+|------|------|
+| `namespace FluidWarfare.*` | R3 阶段迁移 |
+| `using FluidWarfare.*` | R3 阶段迁移 |
+| `x:Class="FluidWarfare.*"` | R3 阶段迁移 |
+| 类型名 `AboutFluidWarfareWindow` | R3 阶段迁移 |
+| `EditorSettingsPath.AppFolderName` | R4 阶段迁移（用户数据兼容）|
+
+#### 验收
+
+| 指标 | 值 |
+|------|-----|
+| `dotnet build` | ✅ 0 Error |
+| `dotnet test` (架构) | ✅ 10/10 |
+| `dotnet test` (全量) | ✅ 629/630（1 flaky pre-existing：中文排序）|
+| namespace | ✅ 未改动 |
+| using | ✅ 未改动 |
+| x:Class | ✅ 未改动 |
+| EditorSettingsPath | ✅ 未改动 |
+| 生产白名单 | 2（不变） |
+| 目录白名单 | 0（不变） |
+| 所有生产 .cs 文件 | ≤100 行（不变） |
+| EditorShell 白名单 | 已移除（不变） |

@@ -24,10 +24,10 @@ Push-Location $repoRoot
 try
 {
     # 1. 定位文件路径
-    $compiledDir = Join-Path $repoRoot "FluidWarfare.Render.Vulkan\Shaders\Compiled"
+    $compiledDir = Join-Path $repoRoot "XuanYu.Engine.Render.Vulkan\Shaders\Compiled"
     $vertSpv = Join-Path $compiledDir "basic_3d.vert.spv"
     $fragSpv = Join-Path $compiledDir "basic_3d.frag.spv"
-    $outputFile = Join-Path $repoRoot "FluidWarfare.Render.Vulkan\Shaders\CompiledShaders.cs"
+    $outputFile = Join-Path $repoRoot "XuanYu.Engine.Render.Vulkan\Shaders\CompiledShaders.cs"
 
     # 2. 检查 .spv 文件是否存在
     $missing = @()
@@ -136,7 +136,7 @@ try
 // 由 tools/shaders/embed_basic_3d_shaders.ps1 在 spirv-val 通过后生成。
 // 不要手工编辑。
 // </auto-generated>
-namespace FluidWarfare.Render.Vulkan.Shaders;
+namespace XuanYu.Engine.Render.Vulkan.Shaders;
 
 internal static class CompiledShaders
 {

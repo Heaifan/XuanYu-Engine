@@ -37,11 +37,11 @@ try
     Write-Host "检测到 glslangValidator：$($glslang.Source)" -ForegroundColor Green
 
     # 2. 确保 Compiled 目录存在
-    $compiledDir = Join-Path $repoRoot "FluidWarfare.Render.Vulkan\Shaders\Compiled"
+    $compiledDir = Join-Path $repoRoot "XuanYu.Engine.Render.Vulkan\Shaders\Compiled"
     New-Item -ItemType Directory -Force -Path $compiledDir | Out-Null
 
     # 3. 编译顶点着色器
-    $vertSrc = Join-Path $repoRoot "FluidWarfare.Render.Vulkan\Shaders\basic_3d.vert"
+    $vertSrc = Join-Path $repoRoot "XuanYu.Engine.Render.Vulkan\Shaders\basic_3d.vert"
     $vertOut = Join-Path $compiledDir "basic_3d.vert.spv"
 
     Write-Host "编译顶点着色器：basic_3d.vert" -ForegroundColor Cyan
@@ -54,7 +54,7 @@ try
     Write-Host "  输出：$vertOut" -ForegroundColor Green
 
     # 4. 编译片段着色器
-    $fragSrc = Join-Path $repoRoot "FluidWarfare.Render.Vulkan\Shaders\basic_3d.frag"
+    $fragSrc = Join-Path $repoRoot "XuanYu.Engine.Render.Vulkan\Shaders\basic_3d.frag"
     $fragOut = Join-Path $compiledDir "basic_3d.frag.spv"
 
     Write-Host "编译片段着色器：basic_3d.frag" -ForegroundColor Cyan

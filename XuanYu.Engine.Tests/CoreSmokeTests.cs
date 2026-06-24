@@ -1,4 +1,4 @@
-namespace FluidWarfare.Tests;
+﻿namespace FluidWarfare.Tests;
 
 public sealed class CoreSmokeTests
 {
@@ -6,10 +6,10 @@ public sealed class CoreSmokeTests
     public void CoreAssemblyIsAvailable()
     {
         var assemblyName = System.Reflection.Assembly
-            .Load("FluidWarfare.Core")
+            .Load("XuanYu.Engine.Core")
             .GetName()
             .Name;
 
-        Assert.Equal("FluidWarfare.Core", assemblyName);
+        Assert.Equal("XuanYu.Engine.Core", assemblyName);
     }
 }

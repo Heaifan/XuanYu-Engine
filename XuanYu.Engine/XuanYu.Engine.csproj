@@ -6,6 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FluidWarfare.Core\FluidWarfare.Core.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Core\XuanYu.Engine.Core.csproj" />
   </ItemGroup>
 </Project>

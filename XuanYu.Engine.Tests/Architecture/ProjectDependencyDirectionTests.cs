@@ -1,4 +1,4 @@
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace FluidWarfare.Tests.Architecture;
 
@@ -9,33 +9,33 @@ public sealed class ProjectDependencyDirectionTests
     {
         var allowedDependencies = new Dictionary<string, string[]>
         {
-            ["FluidWarfare.Core"] = [],
-            ["FluidWarfare.Project"] = ["FluidWarfare.Core"],
-            ["FluidWarfare.Engine"] = ["FluidWarfare.Core"],
-            ["FluidWarfare.Editor"] = ["FluidWarfare.Core", "FluidWarfare.Engine", "FluidWarfare.Project"],
-            ["FluidWarfare.Bridge.ProjectEngine"] = ["FluidWarfare.Core", "FluidWarfare.Engine", "FluidWarfare.Project"],
-            ["FluidWarfare.Render"] = ["FluidWarfare.Core", "FluidWarfare.Engine"],
-            ["FluidWarfare.Render.Vulkan"] = ["FluidWarfare.Core", "FluidWarfare.Render"],
-            ["FluidWarfare.Editor.Windows"] =
+            ["XuanYu.Engine.Core"] = [],
+            ["XuanYu.Engine.Project"] = ["XuanYu.Engine.Core"],
+            ["XuanYu.Engine"] = ["XuanYu.Engine.Core"],
+            ["XuanYu.Engine.Editor"] = ["XuanYu.Engine.Core", "XuanYu.Engine", "XuanYu.Engine.Project"],
+            ["XuanYu.Engine.Bridge.ProjectEngine"] = ["XuanYu.Engine.Core", "XuanYu.Engine", "XuanYu.Engine.Project"],
+            ["XuanYu.Engine.Render"] = ["XuanYu.Engine.Core", "XuanYu.Engine"],
+            ["XuanYu.Engine.Render.Vulkan"] = ["XuanYu.Engine.Core", "XuanYu.Engine.Render"],
+            ["XuanYu.Engine.Editor.Windows"] =
             [
-                "FluidWarfare.Bridge.ProjectEngine",
-                "FluidWarfare.Core",
-                "FluidWarfare.Editor",
-                "FluidWarfare.Engine",
-                "FluidWarfare.Project",
-                "FluidWarfare.Render",
-                "FluidWarfare.Render.Vulkan"
+                "XuanYu.Engine.Bridge.ProjectEngine",
+                "XuanYu.Engine.Core",
+                "XuanYu.Engine.Editor",
+                "XuanYu.Engine",
+                "XuanYu.Engine.Project",
+                "XuanYu.Engine.Render",
+                "XuanYu.Engine.Render.Vulkan"
             ],
-            ["FluidWarfare.Tests"] =
+            ["XuanYu.Engine.Tests"] =
             [
-                "FluidWarfare.Bridge.ProjectEngine",
-                "FluidWarfare.Core",
-                "FluidWarfare.Editor",
-                "FluidWarfare.Editor.Windows",
-                "FluidWarfare.Engine",
-                "FluidWarfare.Project",
-                "FluidWarfare.Render",
-                "FluidWarfare.Render.Vulkan"
+                "XuanYu.Engine.Bridge.ProjectEngine",
+                "XuanYu.Engine.Core",
+                "XuanYu.Engine.Editor",
+                "XuanYu.Engine.Editor.Windows",
+                "XuanYu.Engine",
+                "XuanYu.Engine.Project",
+                "XuanYu.Engine.Render",
+                "XuanYu.Engine.Render.Vulkan"
             ]
         };
 
@@ -52,7 +52,7 @@ public sealed class ProjectDependencyDirectionTests
     [Fact]
     public void Core_ShouldNotHavePackageReferences()
     {
-        var packageReferences = ReadPackageReferences("FluidWarfare.Core");
+        var packageReferences = ReadPackageReferences("XuanYu.Engine.Core");
 
         Assert.Empty(packageReferences);
     }
@@ -62,14 +62,14 @@ public sealed class ProjectDependencyDirectionTests
     {
         var allowedPackages = new Dictionary<string, string[]>
         {
-            ["FluidWarfare.Core"] = [],
-            ["FluidWarfare.Project"] = [],
-            ["FluidWarfare.Engine"] = [],
-            ["FluidWarfare.Editor"] = [],
-            ["FluidWarfare.Bridge.ProjectEngine"] = [],
-            ["FluidWarfare.Render"] = [],
-            ["FluidWarfare.Render.Vulkan"] = ["Silk.NET.Vulkan"],
-            ["FluidWarfare.Editor.Windows"] =
+            ["XuanYu.Engine.Core"] = [],
+            ["XuanYu.Engine.Project"] = [],
+            ["XuanYu.Engine"] = [],
+            ["XuanYu.Engine.Editor"] = [],
+            ["XuanYu.Engine.Bridge.ProjectEngine"] = [],
+            ["XuanYu.Engine.Render"] = [],
+            ["XuanYu.Engine.Render.Vulkan"] = ["Silk.NET.Vulkan"],
+            ["XuanYu.Engine.Editor.Windows"] =
             [
                 "Avalonia",
                 "Avalonia.Desktop",
@@ -77,7 +77,7 @@ public sealed class ProjectDependencyDirectionTests
                 "Avalonia.Themes.Fluent",
                 "Svg.Controls.Skia.Avalonia"
             ],
-            ["FluidWarfare.Tests"] =
+            ["XuanYu.Engine.Tests"] =
             [
                 "coverlet.collector",
                 "Microsoft.NET.Test.Sdk",
@@ -134,7 +134,7 @@ public sealed class ProjectDependencyDirectionTests
 
         while (current is not null)
         {
-            var solutionPath = Path.Combine(current.FullName, "FluidWarfare.sln");
+            var solutionPath = Path.Combine(current.FullName, "XuanYu.Engine.sln");
             if (File.Exists(solutionPath))
             {
                 return current.FullName;

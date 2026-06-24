@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="FluidWarfare.Tests" />
+    <InternalsVisibleTo Include="XuanYu.Engine.Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FluidWarfare.Core\FluidWarfare.Core.csproj" />
-    <ProjectReference Include="..\FluidWarfare.Render\FluidWarfare.Render.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Core\XuanYu.Engine.Core.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Render\XuanYu.Engine.Render.csproj" />
   </ItemGroup>
 
   <ItemGroup>

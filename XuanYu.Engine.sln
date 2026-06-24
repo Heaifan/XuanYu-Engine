@@ -1,25 +1,23 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Core", "FluidWarfare.Core\FluidWarfare.Core.csproj", "{1D1F7998-E42D-4462-AD4E-F7CEDD994B6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuanYu.Engine.Core", "XuanYu.Engine.Core\XuanYu.Engine.Core.csproj", "{1D1F7998-E42D-4462-AD4E-F7CEDD994B6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Tests", "FluidWarfare.Tests\FluidWarfare.Tests.csproj", "{A3DBE986-E145-45A0-9F9D-4A346B37189F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuanYu.Engine.Tests", "XuanYu.Engine.Tests\XuanYu.Engine.Tests.csproj", "{A3DBE986-E145-45A0-9F9D-4A346B37189F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Editor.Windows", "FluidWarfare.Editor.Windows\FluidWarfare.Editor.Windows.csproj", "{F1E6E479-A32C-492A-AD70-0DD4945D1D02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuanYu.Engine.Project", "XuanYu.Engine.Project\XuanYu.Engine.Project.csproj", "{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Project", "FluidWarfare.Project\FluidWarfare.Project.csproj", "{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuanYu.Engine", "XuanYu.Engine\XuanYu.Engine.csproj", "{B4074288-F178-495C-BE78-5006EAB989C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Engine", "FluidWarfare.Engine\FluidWarfare.Engine.csproj", "{B4074288-F178-495C-BE78-5006EAB989C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuanYu.Engine.Bridge.ProjectEngine", "XuanYu.Engine.Bridge.ProjectEngine\XuanYu.Engine.Bridge.ProjectEngine.csproj", "{A5D73F33-95EB-414E-8CF5-41D7EC8AAF77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Bridge.ProjectEngine", "FluidWarfare.Bridge.ProjectEngine\FluidWarfare.Bridge.ProjectEngine.csproj", "{A5D73F33-95EB-414E-8CF5-41D7EC8AAF77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuanYu.Engine.Render", "XuanYu.Engine.Render\XuanYu.Engine.Render.csproj", "{A40A92FB-5E34-4917-9FE5-2BC8CC173CED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Render", "FluidWarfare.Render\FluidWarfare.Render.csproj", "{A40A92FB-5E34-4917-9FE5-2BC8CC173CED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuanYu.Engine.Render.Vulkan", "XuanYu.Engine.Render.Vulkan\XuanYu.Engine.Render.Vulkan.csproj", "{4EE76D0B-B8AF-48DD-994E-289A6A698A89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Render.Vulkan", "FluidWarfare.Render.Vulkan\FluidWarfare.Render.Vulkan.csproj", "{4EE76D0B-B8AF-48DD-994E-289A6A698A89}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidWarfare.Editor", "FluidWarfare.Editor\FluidWarfare.Editor.csproj", "{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuanYu.Engine.Editor", "XuanYu.Engine.Editor\XuanYu.Engine.Editor.csproj", "{07D5DBD3-2EE6-458C-9F20-BE7A7B792497}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,18 +53,6 @@ Global
 		{A3DBE986-E145-45A0-9F9D-4A346B37189F}.Release|x64.Build.0 = Release|Any CPU
 		{A3DBE986-E145-45A0-9F9D-4A346B37189F}.Release|x86.ActiveCfg = Release|Any CPU
 		{A3DBE986-E145-45A0-9F9D-4A346B37189F}.Release|x86.Build.0 = Release|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Debug|x64.Build.0 = Debug|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Debug|x86.Build.0 = Debug|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|x64.ActiveCfg = Release|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|x64.Build.0 = Release|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|x86.ActiveCfg = Release|Any CPU
-		{F1E6E479-A32C-492A-AD70-0DD4945D1D02}.Release|x86.Build.0 = Release|Any CPU
 		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A3250B0-F85A-45F2-94DE-EAD736F2D0DD}.Debug|x64.ActiveCfg = Debug|Any CPU

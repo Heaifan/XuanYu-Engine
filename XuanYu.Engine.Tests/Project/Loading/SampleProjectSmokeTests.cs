@@ -39,7 +39,7 @@ public sealed class SampleProjectSmokeTests
 
         while (current is not null)
         {
-            var solutionPath = Path.Combine(current.FullName, "FluidWarfare.sln");
+            var solutionPath = Path.Combine(current.FullName, "XuanYu.Engine.sln");
             if (File.Exists(solutionPath))
             {
                 return Path.Combine([current.FullName, .. segments]);
@@ -48,6 +48,6 @@ public sealed class SampleProjectSmokeTests
             current = current.Parent;
         }
 
-        throw new DirectoryNotFoundException("未找到 FluidWarfare 仓库根目录。");
+        throw new DirectoryNotFoundException("未找到 XuanYu Engine 仓库根目录。");
     }
 }

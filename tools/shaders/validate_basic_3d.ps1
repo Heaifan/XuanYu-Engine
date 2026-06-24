@@ -30,8 +30,8 @@ try
     Write-Host "检测到 spirv-val：$($spirvVal.Source)" -ForegroundColor Green
 
     # 2. 检查 .spv 文件是否存在
-    $vertSpv = Join-Path $repoRoot "FluidWarfare.Render.Vulkan\Shaders\Compiled\basic_3d.vert.spv"
-    $fragSpv = Join-Path $repoRoot "FluidWarfare.Render.Vulkan\Shaders\Compiled\basic_3d.frag.spv"
+    $vertSpv = Join-Path $repoRoot "XuanYu.Engine.Render.Vulkan\Shaders\Compiled\basic_3d.vert.spv"
+    $fragSpv = Join-Path $repoRoot "XuanYu.Engine.Render.Vulkan\Shaders\Compiled\basic_3d.frag.spv"
 
     $missing = @()
     if (-not (Test-Path $vertSpv)) { $missing += "basic_3d.vert.spv" }

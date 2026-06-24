@@ -22,13 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FluidWarfare.Bridge.ProjectEngine\FluidWarfare.Bridge.ProjectEngine.csproj" />
-    <ProjectReference Include="..\FluidWarfare.Core\FluidWarfare.Core.csproj" />
-    <ProjectReference Include="..\FluidWarfare.Editor\FluidWarfare.Editor.csproj" />
-    <ProjectReference Include="..\FluidWarfare.Engine\FluidWarfare.Engine.csproj" />
-    <ProjectReference Include="..\FluidWarfare.Project\FluidWarfare.Project.csproj" />
-    <ProjectReference Include="..\FluidWarfare.Render\FluidWarfare.Render.csproj" />
-    <ProjectReference Include="..\FluidWarfare.Render.Vulkan\FluidWarfare.Render.Vulkan.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Bridge.ProjectEngine\XuanYu.Engine.Bridge.ProjectEngine.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Core\XuanYu.Engine.Core.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Editor\XuanYu.Engine.Editor.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine\XuanYu.Engine.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Project\XuanYu.Engine.Project.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Render\XuanYu.Engine.Render.csproj" />
+    <ProjectReference Include="..\XuanYu.Engine.Render.Vulkan\XuanYu.Engine.Render.Vulkan.csproj" />
   </ItemGroup>
 
 </Project>
