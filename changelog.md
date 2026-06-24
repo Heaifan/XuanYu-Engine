@@ -7,7 +7,7 @@
 - Editor/Tests namespace 保持不动（R3-3/R3-4）
 - x:Class/EditorSettingsPath 未改动
 - build: 0 Error / test: 629/630 (1 flaky)
-- commit `next`
+- commit `aa94a43`
 
 ## [8.8-R3-1] — 底层模块 namespace 迁移 (2026-06-24)
 - 迁移 Core/Engine/Project/Bridge namespace：`FluidWarfare.*` → `XuanYu.Engine.*`
