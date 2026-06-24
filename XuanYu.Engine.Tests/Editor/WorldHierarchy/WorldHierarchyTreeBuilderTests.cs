@@ -3,7 +3,7 @@ using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.WorldHierarchy;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Tests.Editor.WorldHierarchy;
+namespace XuanYu.Engine.Tests.Editor.WorldHierarchy;
 
 public sealed class WorldHierarchyTreeBuilderTests
 {

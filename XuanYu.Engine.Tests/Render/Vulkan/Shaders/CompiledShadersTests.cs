@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Shaders;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Shaders;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Shaders;
 
 [Collection("CompiledShadersState")]
 public sealed class CompiledShadersTests

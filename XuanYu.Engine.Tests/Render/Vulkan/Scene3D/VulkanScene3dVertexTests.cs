@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Scene3D;
 
 public sealed class VulkanScene3dVertexTests
 {

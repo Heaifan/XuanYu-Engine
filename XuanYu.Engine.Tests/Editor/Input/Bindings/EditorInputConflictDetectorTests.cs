@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Editor.Input.Actions;
 using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Tests.Editor.Input.Bindings;
+namespace XuanYu.Engine.Tests.Editor.Input.Bindings;
 
 public sealed class EditorInputConflictDetectorTests
 {

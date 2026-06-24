@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace FluidWarfare.Tests.Architecture;
+namespace XuanYu.Engine.Tests.Architecture;
 
 public sealed class ProjectDependencyDirectionTests
 {

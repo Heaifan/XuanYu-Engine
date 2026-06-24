@@ -3,7 +3,7 @@ using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.World;
 using XuanYu.Engine.World.EntityPosition;
 
-namespace FluidWarfare.Tests.Engine.World.EntityPosition;
+namespace XuanYu.Engine.Tests.Engine.World.EntityPosition;
 
 public sealed class WorldEntityPositionWriterTests
 {

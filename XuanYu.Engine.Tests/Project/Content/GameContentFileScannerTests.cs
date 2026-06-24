@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Project.Content;
 
-namespace FluidWarfare.Tests.Project.Content;
+namespace XuanYu.Engine.Tests.Project.Content;
 
 public sealed class GameContentFileScannerTests
 {

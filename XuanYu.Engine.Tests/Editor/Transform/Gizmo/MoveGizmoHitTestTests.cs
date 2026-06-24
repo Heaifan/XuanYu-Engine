@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 
-namespace FluidWarfare.Tests.Editor.Transform.Gizmo;
+namespace XuanYu.Engine.Tests.Editor.Transform.Gizmo;
 
 /// <summary>
 /// MoveGizmoHitTest 的单元测试。

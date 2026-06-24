@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Math;
 
-namespace FluidWarfare.Tests.Core.Math;
+namespace XuanYu.Engine.Tests.Core.Math;
 
 public sealed class Vector3dTests
 {

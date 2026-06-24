@@ -5,7 +5,7 @@ using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Selection.Ground;
 using XuanYu.Engine.Render.Selection.Pointer;
 
-namespace FluidWarfare.Tests.Render.Selection.Pointer;
+namespace XuanYu.Engine.Tests.Render.Selection.Pointer;
 
 public sealed class ScenePointerPickerTests
 {

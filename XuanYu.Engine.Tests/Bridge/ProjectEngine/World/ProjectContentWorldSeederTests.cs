@@ -3,7 +3,7 @@ using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.World;
 using XuanYu.Engine.Project.Content;
 
-namespace FluidWarfare.Tests.Bridge.ProjectEngine.World;
+namespace XuanYu.Engine.Tests.Bridge.ProjectEngine.World;
 
 public sealed class ProjectContentWorldSeederTests
 {

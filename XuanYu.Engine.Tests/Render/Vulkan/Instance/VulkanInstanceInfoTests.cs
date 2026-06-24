@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Instance;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Instance;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Instance;
 
 public sealed class VulkanInstanceInfoTests
 {

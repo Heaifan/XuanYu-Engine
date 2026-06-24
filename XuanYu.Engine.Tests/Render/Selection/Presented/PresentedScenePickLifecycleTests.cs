@@ -7,7 +7,7 @@ using XuanYu.Engine.Render.Selection.Ground;
 using XuanYu.Engine.Render.Selection.Presented;
 using XuanYu.Engine.Render.Selection.Pointer;
 
-namespace FluidWarfare.Tests.Render.Selection.Presented;
+namespace XuanYu.Engine.Tests.Render.Selection.Presented;
 
 /// <summary>
 /// Preview → Confirm → Cancel 对 Picking 状态的影响。

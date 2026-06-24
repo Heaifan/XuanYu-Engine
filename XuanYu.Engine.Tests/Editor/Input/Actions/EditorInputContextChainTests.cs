@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Editor.Input.Actions;
 
-namespace FluidWarfare.Tests.Editor.Input.Actions;
+namespace XuanYu.Engine.Tests.Editor.Input.Actions;
 
 public sealed class EditorInputContextChainTests
 {

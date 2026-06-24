@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Project.Validation;
 
-namespace FluidWarfare.Tests.Project.Validation;
+namespace XuanYu.Engine.Tests.Project.Validation;
 
 public sealed class ProjectValidationReportTests
 {

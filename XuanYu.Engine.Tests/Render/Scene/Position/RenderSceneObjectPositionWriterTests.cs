@@ -4,7 +4,7 @@ using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Scene.Position;
 using XuanYu.Engine.Render.Selection;
 
-namespace FluidWarfare.Tests.Render.Scene.Position;
+namespace XuanYu.Engine.Tests.Render.Scene.Position;
 
 public sealed class RenderSceneObjectPositionWriterTests
 {

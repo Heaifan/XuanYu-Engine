@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Project.Paths;
 
-namespace FluidWarfare.Tests.Project.Paths;
+namespace XuanYu.Engine.Tests.Project.Paths;
 
 public sealed class SampleProjectPathTests
 {

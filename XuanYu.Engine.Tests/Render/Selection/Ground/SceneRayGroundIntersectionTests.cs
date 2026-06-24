@@ -2,7 +2,7 @@
 using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Selection.Ground;
 
-namespace FluidWarfare.Tests.Render.Selection.Ground;
+namespace XuanYu.Engine.Tests.Render.Selection.Ground;
 
 public sealed class SceneRayGroundIntersectionTests
 {

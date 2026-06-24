@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Render.Vulkan.Scene3D.GroundCursor;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Scene3D.GroundCursor;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Scene3D.GroundCursor;
 
 public sealed class VulkanGroundCursorStateTests
 {

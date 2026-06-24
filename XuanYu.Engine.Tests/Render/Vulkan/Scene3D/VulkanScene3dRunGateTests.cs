@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D;
 using XuanYu.Engine.Render.Vulkan.Shaders;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Scene3D;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Scene3D;
 
 [Collection("CompiledShadersState")]
 public sealed class VulkanScene3dRunGateTests

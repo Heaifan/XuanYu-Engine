@@ -1,4 +1,4 @@
-﻿namespace FluidWarfare.Tests.Architecture;
+﻿namespace XuanYu.Engine.Tests.Architecture;
 
 /// <summary>
 /// 代码架构宪法测试。逐步推行 100 行硬线 + 每目录 ≤5 直属文件。

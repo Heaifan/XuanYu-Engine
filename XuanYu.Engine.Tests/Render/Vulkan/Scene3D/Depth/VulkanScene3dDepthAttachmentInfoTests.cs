@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Scene3D.Depth;
 using Silk.NET.Vulkan;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Scene3D.Depth;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Scene3D.Depth;
 
 public sealed class VulkanScene3dDepthAttachmentInfoTests
 {

@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 
-namespace FluidWarfare.Tests.Editor.Transform.Drag;
+namespace XuanYu.Engine.Tests.Editor.Transform.Drag;
 
 public sealed class TransformApplyResultTests
 {

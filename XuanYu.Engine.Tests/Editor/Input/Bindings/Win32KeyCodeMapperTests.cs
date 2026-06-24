@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Tests.Editor.Input.Bindings;
+namespace XuanYu.Engine.Tests.Editor.Input.Bindings;
 
 /// <summary>
 /// Win32KeyCodeMapper 映射表测试（纯字典测试，无平台依赖）。

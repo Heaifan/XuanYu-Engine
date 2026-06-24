@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Device;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Device;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Device;
 
 public sealed class VulkanDeviceInfoTests
 {

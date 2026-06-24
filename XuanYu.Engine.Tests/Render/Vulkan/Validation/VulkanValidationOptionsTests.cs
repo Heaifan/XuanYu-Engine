@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Validation;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Validation;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Validation;
 
 public sealed class VulkanValidationOptionsTests
 {

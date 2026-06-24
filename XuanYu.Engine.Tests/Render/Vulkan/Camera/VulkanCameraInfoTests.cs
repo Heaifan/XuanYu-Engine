@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Camera;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Camera;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Camera;
 
 public sealed class VulkanCameraInfoTests
 {

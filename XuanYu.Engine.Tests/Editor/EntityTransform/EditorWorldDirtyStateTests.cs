@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Editor.EntityTransform;
 
-namespace FluidWarfare.Tests.Editor.EntityTransform;
+namespace XuanYu.Engine.Tests.Editor.EntityTransform;
 
 public sealed class EditorWorldDirtyStateTests
 {

@@ -4,7 +4,7 @@ using XuanYu.Engine.World;
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.World;
 
-namespace FluidWarfare.Tests.Render.World;
+namespace XuanYu.Engine.Tests.Render.World;
 
 public sealed class WorldToRenderSceneBuilderTests
 {

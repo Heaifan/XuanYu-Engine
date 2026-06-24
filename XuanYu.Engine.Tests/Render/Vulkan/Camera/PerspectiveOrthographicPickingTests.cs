@@ -8,7 +8,7 @@ using XuanYu.Engine.Render.Selection.Ground;
 using XuanYu.Engine.Render.Selection.Pointer;
 using XuanYu.Engine.Render.Vulkan.Camera;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Camera;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Camera;
 
 /// <summary>
 /// 投影-反投影-Picking 闭环测试。

@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Camera;
 
-namespace FluidWarfare.Tests.Render.Camera;
+namespace XuanYu.Engine.Tests.Render.Camera;
 
 public sealed class SceneCameraMotionTests
 {

@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Backend;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Backend;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Backend;
 
 public sealed class VulkanBackendInfoTests
 {

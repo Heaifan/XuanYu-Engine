@@ -2,7 +2,7 @@
 using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.World;
 
-namespace FluidWarfare.Tests.Engine.World;
+namespace XuanYu.Engine.Tests.Engine.World;
 
 public sealed class WorldStateTests
 {

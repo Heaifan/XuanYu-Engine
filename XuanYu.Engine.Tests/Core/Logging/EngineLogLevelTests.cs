@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Logging;
 
-namespace FluidWarfare.Tests.Core.Logging;
+namespace XuanYu.Engine.Tests.Core.Logging;
 
 public sealed class EngineLogLevelTests
 {

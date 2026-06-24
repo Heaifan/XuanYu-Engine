@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Time;
 
-namespace FluidWarfare.Tests.Core.Time;
+namespace XuanYu.Engine.Tests.Core.Time;
 
 public sealed class TimeStepTests
 {

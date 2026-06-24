@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Swapchain;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Swapchain;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Swapchain;
 
 public sealed class VulkanSwapchainInfoTests
 {

@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.ViewportGround;
 
-namespace FluidWarfare.Tests.Editor.ViewportGround;
+namespace XuanYu.Engine.Tests.Editor.ViewportGround;
 
 public sealed class EditorGroundPointerStateTests
 {

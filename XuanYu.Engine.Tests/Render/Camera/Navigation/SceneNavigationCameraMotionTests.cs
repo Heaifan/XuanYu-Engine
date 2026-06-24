@@ -2,7 +2,7 @@
 using XuanYu.Engine.Render.Camera;
 using XuanYu.Engine.Render.Camera.Navigation;
 
-namespace FluidWarfare.Tests.Render.Camera.Navigation;
+namespace XuanYu.Engine.Tests.Render.Camera.Navigation;
 
 public sealed class SceneNavigationCameraMotionTests
 {

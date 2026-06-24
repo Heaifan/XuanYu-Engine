@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Surface;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Surface;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Surface;
 
 public sealed class VulkanSurfaceInfoTests
 {

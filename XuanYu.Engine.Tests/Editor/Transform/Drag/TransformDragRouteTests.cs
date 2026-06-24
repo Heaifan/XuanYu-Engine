@@ -5,7 +5,7 @@ using XuanYu.Engine.Render.Vulkan.Camera;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
-namespace FluidWarfare.Tests.Editor.Transform.Drag;
+namespace XuanYu.Engine.Tests.Editor.Transform.Drag;
 
 public sealed class TransformDragRouteTests
 {

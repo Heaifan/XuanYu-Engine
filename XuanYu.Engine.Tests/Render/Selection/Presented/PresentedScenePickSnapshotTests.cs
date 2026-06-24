@@ -5,7 +5,7 @@ using XuanYu.Engine.Render.Scene.Position;
 using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Selection.Presented;
 
-namespace FluidWarfare.Tests.Render.Selection.Presented;
+namespace XuanYu.Engine.Tests.Render.Selection.Presented;
 
 public sealed class PresentedScenePickSnapshotTests
 {

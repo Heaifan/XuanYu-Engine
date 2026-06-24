@@ -2,7 +2,7 @@
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Selection;
 
-namespace FluidWarfare.Tests.Render.Scene;
+namespace XuanYu.Engine.Tests.Render.Scene;
 
 public sealed class RenderUnitPlacementTests
 {

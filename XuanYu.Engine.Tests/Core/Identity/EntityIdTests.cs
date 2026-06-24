@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Identity;
 
-namespace FluidWarfare.Tests.Core.Identity;
+namespace XuanYu.Engine.Tests.Core.Identity;
 
 public sealed class EntityIdTests
 {

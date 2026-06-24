@@ -1,4 +1,4 @@
-﻿namespace FluidWarfare.Tests;
+﻿namespace XuanYu.Engine.Tests;
 
 public sealed class CoreSmokeTests
 {

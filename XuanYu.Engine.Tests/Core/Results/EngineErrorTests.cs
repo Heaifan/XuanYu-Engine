@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Core.Results;
 
-namespace FluidWarfare.Tests.Core.Results;
+namespace XuanYu.Engine.Tests.Core.Results;
 
 public sealed class EngineErrorTests
 {

@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Project.Loading;
 
-namespace FluidWarfare.Tests.Project.Loading;
+namespace XuanYu.Engine.Tests.Project.Loading;
 
 public sealed class GameProjectLoaderTests
 {

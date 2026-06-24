@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using XuanYu.Engine.Editor.Input.Bindings;
 
-namespace FluidWarfare.Tests.Editor.Input.Settings;
+namespace XuanYu.Engine.Tests.Editor.Input.Settings;
 
 /// <summary>
 /// 直接测试 EditorSettingsReader/Writer 序列化逻辑，

@@ -2,7 +2,7 @@
 using XuanYu.Engine.Render.Camera.Navigation;
 using XuanYu.Engine.Render.ViewportNavigation;
 
-namespace FluidWarfare.Tests.Render.ViewportNavigation;
+namespace XuanYu.Engine.Tests.Render.ViewportNavigation;
 
 public sealed class ViewportNavigationLayoutTests
 {

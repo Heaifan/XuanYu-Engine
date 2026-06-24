@@ -1,7 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.Transform.Translation.Axis;
 
-namespace FluidWarfare.Tests.Editor.Transform.Translation.Axis;
+namespace XuanYu.Engine.Tests.Editor.Transform.Translation.Axis;
 
 /// <summary>
 /// 关键验收测试：1 次与 100 次 PointerMove 必须产生完全相同的结果。

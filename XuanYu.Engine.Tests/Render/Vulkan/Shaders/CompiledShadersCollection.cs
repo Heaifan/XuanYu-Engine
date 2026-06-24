@@ -1,6 +1,6 @@
 ﻿using XuanYu.Engine.Render.Vulkan.Shaders;
 
-namespace FluidWarfare.Tests.Render.Vulkan.Shaders;
+namespace XuanYu.Engine.Tests.Render.Vulkan.Shaders;
 
 /// <summary>
 /// 确保修改 CompiledShaders 静态状态的测试串行执行。

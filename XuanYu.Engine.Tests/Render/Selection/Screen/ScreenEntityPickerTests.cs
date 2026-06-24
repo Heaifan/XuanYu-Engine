@@ -3,7 +3,7 @@ using XuanYu.Engine.Render.Selection;
 using XuanYu.Engine.Render.Selection.Presented;
 using XuanYu.Engine.Render.Selection.Screen;
 
-namespace FluidWarfare.Tests.Render.Selection.Screen;
+namespace XuanYu.Engine.Tests.Render.Selection.Screen;
 
 public sealed class ScreenEntityPickerTests
 {

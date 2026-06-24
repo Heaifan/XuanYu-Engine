@@ -2,7 +2,7 @@
 using XuanYu.Engine.Editor.Input.Bindings;
 using XuanYu.Engine.Editor.Input.Runtime;
 
-namespace FluidWarfare.Tests.Editor.Input.Runtime;
+namespace XuanYu.Engine.Tests.Editor.Input.Runtime;
 
 public sealed class EditorInputServiceTests
 {
