@@ -23,7 +23,7 @@
   - Editor 启动：成功，不再崩溃
   - 架构门禁：14/14
 - 附带修复：run.bat CRLF 行尾（Windows 批处理兼容性）
-- commit `pending`
+- commit `359e3ce`
 
 ## [8.8-R4] — 用户数据目录迁移 (2026-06-24 10:08)
 - 编辑器设置目录从 `%APPDATA%/FluidWarfare/` 迁移到 `%APPDATA%/XuanYuEngine/`
