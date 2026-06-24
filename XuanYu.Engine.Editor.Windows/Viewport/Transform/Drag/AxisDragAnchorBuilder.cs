@@ -47,7 +47,7 @@ public static class AxisDragAnchorBuilder
                 if (pn is not null)
                 {
                     var denom = ray.Direction.Dot(pn.Value);
-                    if (Math.Abs(denom) >= 1e-10)
+                    if (Math.Abs(denom) >= 0.1) // 阈值 0.1，排除边界退化情况
                     {
                         var t = (pivot - ray.Origin).Dot(pn.Value) / denom;
                         if (t > 0)
