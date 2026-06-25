@@ -4,7 +4,7 @@ using XuanYu.Engine.Editor.Windows.Panels.Logging;
 using XuanYu.Engine.Editor.Windows.Panels.Logging;
 namespace XuanYu.Engine.Editor.Windows.Panels.DebugDock;
 
-/// <summary>底部调试终端，包含日志、渲染诊断、RenderScene 和性能页签。</summary>
+/// <summary>底部调试终端，包含日志和调试两个页签；调试页内嵌渲染诊断、RenderScene 和性能。</summary>
 public sealed partial class DebugDockPanel : UserControl
 {
     LogPanel? _logPanel;
