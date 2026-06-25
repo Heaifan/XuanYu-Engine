@@ -1,5 +1,27 @@
 # changelog
 
+## [9.0D-R2D] — Gizmo 拖动 Preview 高频路径复审 (2026-06-25 22:56)
+- 修复 `TransformPreview` 帧完成后仍可能调用 Diagnostics refresh 的路径：Preview 回调改为只记录“跳过 Diagnostics 刷新”
+- 补齐中文 probe log：PointerMoved、Gizmo hit/drag、Preview transform、RenderScene preview、Redraw、PickSnapshot、Dispatcher、Inspector、Diagnostics、WorldState、日志面板、WorldHierarchy
+- 保留 DebugDock 轻量化结果：Diagnostics/Performance/RenderScene 页不复活，仅提供 no-op 兼容方法，避免重建重型 Avalonia UI
+- 新增 `docs/gizmo_drag_audit_2026-06-25.md`：完整调用链、频率分级和日志结论
+- 复现日志：`docs/gizmo_drag_audit_probe.log` 共 355 行；Preview 拖动中 UI/WorldState/Diagnostics/Inspector 均为 0 次，PickSnapshot 跳过 20 次
+
+## [9.0D-R2C] — Gizmo 拖动高频路径探针审计 (2026-06-25 21:41)
+- 目标：确认 Move Gizmo Preview 高频路径未触发 Inspector / Diagnostics / PickSnapshot / WorldState / Avalonia 重布局
+- 在 PointerMoved → Gizmo Hit/Drag → Preview Transform → RenderScene 写入 → Redraw 请求全链路植入中文 probe log
+- 探针字段：阶段名、耗时 ms、UI 刷新、WorldState 写入、Diagnostics 刷新、Inspector 刷新
+- 审计结论：
+  - Preview（TransformPreview）帧：UI=否 / WorldState=否 / Diagnostics=否 / Inspector=否 / PickSnapshot=跳过
+  - Commit（EntityTransformChanged）帧：WorldState=是 / Inspector=是 / Diagnostics=是 / PickSnapshot=执行
+  - PointerMoved 高频路径未触发 Inspector/Diagnostics/PickSnapshot/WorldState，符合 9.0D-R2B 优化目标
+- 新增 `tools/gizmo_drag_postmessage.ps1`：通过 PostMessage 向 Vulkan 视口子窗口发送鼠标事件，复现拖动并采集探针日志
+- 新增 `tools/gizmo_drag_audit.ps1`：SendInput 方案（未能穿透 WinExe 输入队列，保留参考）
+- 新增 `artifacts/gizmo_drag_audit_probe.log`：本次审计原始探针日志（299 行）
+- 新增 `XuanYu.Engine.Editor.Windows/Shell/Diagnostics/GizmoDrag/` 探针实现
+- `EditorProbe` 同时输出到终端与 `%APPDATA%/XuanYuEngine/editor_probe.log`，便于 WinExe 审计采信
+- Build: 0 Warning, 0 Error / Tests: 693/694 passed（1 个预存 flaky：中文排序依赖 locale）
+
 ## [9.0D-R2B] — 降低 Move Gizmo 拖动帧负载 (2026-06-25 00:18)
 - TransformPreview 不再每帧刷新 Inspector
 - TransformPreview 帧不再刷新 Diagnostics / DebugDock

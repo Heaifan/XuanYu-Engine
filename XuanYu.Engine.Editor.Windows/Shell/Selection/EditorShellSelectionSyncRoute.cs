@@ -27,6 +27,8 @@ sealed class EditorShellSelectionSyncRoute(
         if (!result.IsChanged) return;
         if (result.Entity is not null)
         {
+            EditorProbe.Write("Selection", "Changed",
+                $"origin={origin} entity={result.Entity.EntityId.Value} name={result.Entity.DisplayName}");
             showWorldEntitySelection(result.Entity);
             SyncSceneSelection(result.Entity.EntityId.Value.ToString());
         }
@@ -38,7 +40,10 @@ sealed class EditorShellSelectionSyncRoute(
     {
         if (lifecycle.State.Session is null || !isSessionActive()) return;
         if (lifecycle.State.Session.SetSelectedEntity(entityId))
+        {
+            EditorProbe.Write("Selection", "SceneSync", $"entity={entityId} schedule=SelectionChanged");
             scheduleFrame(VulkanScene3dFrameReason.SelectionChanged);
+        }
     }
 
     public void ClearSelection()

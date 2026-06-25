@@ -1,5 +1,6 @@
 ﻿using Avalonia.Threading;
 using XuanYu.Engine.Editor.Windows.Panels.Status;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Camera;
 using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
@@ -41,6 +42,6 @@ sealed class EditorShellViewportFrameRoute(
                 $"已聚焦实体 {selectionRoute.State.SelectedWorldEntity.DisplayName}。");
             if (result.NeedsFrame) scheduleFrame(result.Reason);
         }
-        finally { Dispatcher.UIThread.Post(() => _frameSelectedPending = false); }
+        finally { GizmoDragProbe.Log("Dispatcher.UIThread.Post 入队(FrameSelected)"); Dispatcher.UIThread.Post(() => _frameSelectedPending = false); }
     }
 }

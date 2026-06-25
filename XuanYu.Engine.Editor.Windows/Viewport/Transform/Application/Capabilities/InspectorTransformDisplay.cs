@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using XuanYu.Engine.Core.Math;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Panels.Inspector;
 
 using XuanYu.Engine.Editor.Windows.Panels.Inspector;
@@ -14,6 +15,9 @@ public sealed class InspectorTransformDisplay
 
     public void SetPosition(Vector3d position)
     {
+        GizmoDragProbe.MarkInspectorRefreshed();
+        GizmoDragProbe.MarkUiRefreshed();
+        GizmoDragProbe.Log("Inspector 刷新");
         _panel?.SetTransformTexts(
             position.X.ToString("F3", CultureInfo.InvariantCulture),
             position.Y.ToString("F3", CultureInfo.InvariantCulture),

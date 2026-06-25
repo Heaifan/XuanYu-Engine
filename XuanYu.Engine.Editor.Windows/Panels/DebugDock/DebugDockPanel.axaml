@@ -7,58 +7,6 @@
       Background="#1B2026"
       BorderBrush="#48515C"
       BorderThickness="0,1,0,0">
-    <TabControl Margin="0" FontSize="12">
-      <TabItem Header="日志" FontSize="12" Padding="8,3">
-        <logging:LogPanel x:Name="EditorLogPanel" />
-      </TabItem>
-      <TabItem Header="调试" FontSize="12" Padding="8,3">
-        <TabControl>
-          <TabItem x:Name="RenderDiagnosticsTab" Header="渲染诊断" FontSize="12" Padding="8,3">
-            <ScrollViewer Padding="10,6" Background="#11161C">
-              <StackPanel Spacing="6">
-                <SelectableTextBlock x:Name="DiagVulkanLoader" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagVulkanInstance" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagVulkanDevice" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagNativeHost" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagSurface" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagSwapchain" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagClear" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagMarker" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagValidation" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagScene3d" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagCamera" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagGrid" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagUnit" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="DiagDrawCall" Foreground="#C9D1D9" TextWrapping="Wrap" />
-              </StackPanel>
-            </ScrollViewer>
-          </TabItem>
-          <TabItem x:Name="RenderSceneTab" Header="渲染场景" FontSize="12" Padding="8,3">
-            <ScrollViewer Padding="10,6" Background="#11161C">
-              <StackPanel Spacing="6">
-                <SelectableTextBlock x:Name="RenderSceneTitle" Foreground="#F0F4F8" FontWeight="SemiBold" Text="渲染场景调试对象" />
-                <SelectableTextBlock x:Name="RenderSceneEmpty" Foreground="#8B949E" Text="暂无渲染对象" />
-                <StackPanel x:Name="RenderSceneList" Spacing="4" />
-              </StackPanel>
-            </ScrollViewer>
-          </TabItem>
-          <TabItem x:Name="PerformanceTab" Header="性能" FontSize="12" Padding="8,3">
-            <ScrollViewer Padding="10,6" Background="#11161C">
-              <StackPanel Spacing="6">
-                <SelectableTextBlock x:Name="PerfTitle" Foreground="#F0F4F8" FontWeight="SemiBold" Text="性能计时" />
-                <SelectableTextBlock x:Name="PerfInstance" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="PerfDevice" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="PerfSwapchain" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="PerfClear" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="PerfMarker" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <SelectableTextBlock x:Name="PerfScene3d" Foreground="#C9D1D9" TextWrapping="Wrap" />
-                <Separator />
-                <SelectableTextBlock Foreground="#7F8B98" Text="Milestone 8.1：3D 管线渲染耗时。" TextWrapping="Wrap" />
-              </StackPanel>
-            </ScrollViewer>
-          </TabItem>
-        </TabControl>
-      </TabItem>
-    </TabControl>
+    <logging:LogPanel x:Name="EditorLogPanel" />
   </Border>
 </UserControl>

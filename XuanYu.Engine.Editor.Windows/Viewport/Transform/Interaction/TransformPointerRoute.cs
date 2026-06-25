@@ -1,6 +1,7 @@
 ﻿using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Project.World.Transform;
 using XuanYu.Engine.Editor.Transform.Edit;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Drag;
 
@@ -52,6 +53,7 @@ public sealed class TransformPointerRoute
     public TransformInteractionResult OnPointerMoved(double x, double y)
     {
         var r = _dragRoute.Move(x, y);
+        GizmoDragProbe.Log("Gizmo drag 计算");
         if (!r.Handled) return default;
 
         return new TransformInteractionResult(

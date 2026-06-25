@@ -1,4 +1,4 @@
-﻿# 项目文件树 — XuanYu Engine
+# 项目文件树 — XuanYu Engine
 
 玄域引擎（原名 FluidWarfare）。每个 .cs / .axaml 文件均附功能说明。
 
@@ -21,12 +21,21 @@ XuanYu.Engine/                              ← 仓库根目录
 │   └── naming-XuanYu-Engine.md
 │   ├── audit-inspector-transform-9.0C-0.md  # 9.0C-0 审计：Inspector / Selection / WorldState / Viewport 链路
 │   ├── diagnostic-safety.md  # 诊断日志与 UI 调度安全规范
+│   ├── gizmo_drag_audit_probe.log  # 9.0D-R2B 后 Gizmo 拖动性能审计探针日志（299 行）。
 │   ├── plan-9.0D-move-gizmo-final.md  # 9.0D — Move Gizmo 最终验收开发计划
 
-├── tools/shaders/
-│   ├── compile_basic_3d.ps1
-│   ├── validate_basic_3d.ps1
-│   └── embed_basic_3d_shaders.ps1
+├── tools/
+│   ├── gizmo_drag_audit.ps1  # 旧 SendInput 方案（未能穿透 WinExe 输入队列，保留参考）。
+│   ├── gizmo_drag_postmessage.ps1  # Gizmo 拖动审计自动化：PostMessage 到 Vulkan 视口子窗口。
+│   └── shaders/
+│       ├── compile_basic_3d.ps1
+│       ├── validate_basic_3d.ps1
+│       └── embed_basic_3d_shaders.ps1
+
+├── artifacts/
+│   ├── milestone3-5-editor-interactions-final.png
+│   ├── milestone3-5-editor-interactions-verified.png
+│   └── milestone3-5-editor-interactions.png
 
 ├── GameProjects/SampleProject/
 │   └── game.project.json
@@ -618,6 +627,9 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   ├── Diagnostics/
 │   │   │   ├── Log/
 │   │   │   │   └── EditorShellLogRoute.cs  # EditorShellLogRoute — <summary>日志路由。负责日志委托和 Diagnostics 薄转发。</summary>
+│   │   │   ├── GizmoDrag/
+│   │   │   │   ├── GizmoDragProbe.cs  # Gizmo 拖动审计探针入口。单帧内聚合 UI/WorldState/Diagnostics/Inspector 刷新标记。
+│   │   │   │   └── GizmoDragProbeFrame.cs  # Gizmo 拖动单帧审计上下文。
 │   │   │   ├── EditorDiagnosticsRefreshKind.cs  # （待补充）
 │   │   │   ├── EditorDiagnosticsRefreshRequest.cs  # EditorDiagnosticsContext — <summary>诊断路由的上下文依赖。Shell 在构造后初始化一次。</summary>
 │   │   │   ├── EditorDiagnosticsRefreshResult.cs  # EditorDiagnosticsRefreshResult 类

@@ -8,6 +8,7 @@ using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 using XuanYu.Engine.Render.Camera.Navigation;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 using XuanYu.Engine.Editor.Windows.Shell.Input.Transform;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 namespace XuanYu.Engine.Editor.Windows.Shell.Input;
 public sealed class EditorViewportInputRoute
 {
@@ -34,6 +35,8 @@ public sealed class EditorViewportInputRoute
     }
     public EditorViewportInputResult HandlePointerMoved(EditorViewportInputRequest r)
     {
+        using var probe = GizmoDragProbe.BeginFrame("PointerMoved");
+        GizmoDragProbe.Log("PointerMoved入口");
         r.State.LastPointerX = r.X; r.State.LastPointerY = r.Y;
         if (TransformInput.HandlePointerMoved(TReq(r, x: r.X, y: r.Y)).Handled) return new(true);
         return Trans(r, () => r.State.Translator?.OnRawPointerMoved(r.X, r.Y));

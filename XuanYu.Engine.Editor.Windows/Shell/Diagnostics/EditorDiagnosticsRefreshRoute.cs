@@ -18,6 +18,9 @@ public sealed class EditorDiagnosticsRefreshRoute
 
     public void Refresh(bool sessionActive, string renderLastMode)
     {
+        GizmoDragProbe.MarkDiagnosticsRefreshed();
+        GizmoDragProbe.MarkUiRefreshed();
+        GizmoDragProbe.Log("Diagnostics 刷新");
         var ps = _ctx.ProbeRoute.State; var nh = _ctx.GetNativeHostInfo(); var s3d = ps.Scene3d;
         _ctx.Feedback.RefreshViewportStatusLine(sessionActive, _ctx.Lifecycle.State, ps, renderLastMode);
         _ctx.Feedback.RefreshAllDiagnostics(ps, nh, _ctx.RenderSceneStore.Current.Objects, s3d.IsSucceeded, s3d.Message, s3d.CameraSummary,
@@ -32,6 +35,7 @@ public sealed class EditorDiagnosticsRefreshRoute
     public void ScheduleFrame(VulkanScene3dFrameReason reason, int renderSeq,
         EditorSelectionRoute selection, WorldState? world, Action refresh)
     {
+        GizmoDragProbe.Log($"Redraw 请求 reason={reason}");
         var submit = _ctx.Lifecycle.State.FrameSubmitRoute; if (submit is null) return;
         var sel = selection.State.SelectedWorldEntity;
         var entityPos = _ctx.PointerRoute.Session.IsActive ? _ctx.PointerRoute.Session.PreviewTransform.Position
@@ -39,7 +43,15 @@ public sealed class EditorDiagnosticsRefreshRoute
         submit.Request(new Scene3dFrameSubmitInput(reason, _ctx.CameraRoute.LastCameraState,
             _ctx.CameraRoute.CameraRevision, renderSeq, _ctx.PointerRoute.IsMoveToolActive,
             sel?.EntityId ?? default, entityPos, _ctx.PointerRoute.HoveredElement,
-            _ctx.WorldDirtyState.Revision), () => refresh());
+            _ctx.WorldDirtyState.Revision), () =>
+        {
+            if (reason == VulkanScene3dFrameReason.TransformPreview)
+            {
+                GizmoDragProbe.Log("Preview 帧跳过 Diagnostics 刷新");
+                return;
+            }
+            refresh();
+        });
     }
 
     public int ApplyResizeResult(Scene3dResizeRenderResult result, Action<string> info, Action<string> warn)

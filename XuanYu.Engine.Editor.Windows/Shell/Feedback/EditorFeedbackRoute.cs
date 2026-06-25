@@ -3,6 +3,7 @@ using XuanYu.Engine.Editor.Windows.Panels.DebugDock;
 using XuanYu.Engine.Editor.Windows.Panels.Status;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using XuanYu.Engine.Render.Scene;
@@ -22,8 +23,12 @@ public sealed class EditorFeedbackRoute
     public void Info(string msg) => Log(EngineLogLevel.Info, msg);
     public void Warn(string msg) => Log(EngineLogLevel.Warning, msg);
     public void Error(string msg) => Log(EngineLogLevel.Error, msg);
-    private void Log(EngineLogLevel l, string m) =>
+    private void Log(EngineLogLevel l, string m)
+    {
+        GizmoDragProbe.MarkUiRefreshed();
+        GizmoDragProbe.Log("日志面板刷新");
         _debugDock?.LogPanel?.AppendLogMessage(EngineLogEntry.Create(0.0, l, "Editor", m).ToDisplayString());
+    }
 
     public void SetStartupLogs() => _debugDock?.LogPanel?.SetLogMessages([
         EngineLogEntry.Create(0.0, EngineLogLevel.Info, "Editor", "XuanYu Engine Editor 启动完成。").ToDisplayString(),

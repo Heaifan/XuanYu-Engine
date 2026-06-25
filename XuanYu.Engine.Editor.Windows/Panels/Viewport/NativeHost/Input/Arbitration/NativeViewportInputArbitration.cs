@@ -39,9 +39,19 @@ sealed class NativeViewportInputArbitration
         Action<int, int, int> rawButtonUp)
     {
         if (NavCapture.IsActive)
-        { NavCapture.End(); navigationReleased(); if (NavCapture.DragCaptured) mouseCapture.Release(); }
+        {
+            var wasDrag = NavCapture.DragCaptured;
+            NavCapture.End();
+            navigationReleased();
+            if (wasDrag) mouseCapture.Release();
+        }
         else if (ToolCapture.IsActive)
-        { ToolCapture.End(); sceneToolReleased(mx, my); if (ToolCapture.DragCaptured) mouseCapture.Release(); }
+        {
+            var wasDrag = ToolCapture.DragCaptured;
+            ToolCapture.End();
+            sceneToolReleased(mx, my);
+            if (wasDrag) mouseCapture.Release();
+        }
         else
         { legacyPickUp(mx, my); rawButtonUp(1, mx, my); }
     }

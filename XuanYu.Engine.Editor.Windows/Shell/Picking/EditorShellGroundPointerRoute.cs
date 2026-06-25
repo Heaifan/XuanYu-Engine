@@ -2,6 +2,7 @@
 using XuanYu.Engine.Editor.ViewportGround;
 using XuanYu.Engine.Editor.Windows.Panels.Status;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Shell.Input.Picking;
 using XuanYu.Engine.Editor.Windows.Viewport.Navigation;
 using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
@@ -40,8 +41,10 @@ sealed class EditorShellGroundPointerRoute(
         if (_groundPointerUpdatePending) { _lastGroundPointerUpdateTicks = (pixelX << 16) | (pixelY & 0xFFFF); return; }
         _groundPointerUpdatePending = true;
         var cx = pixelX; var cy = pixelY;
+        GizmoDragProbe.Log("Dispatcher.UIThread.Post 入队(GroundPointer)");
         Dispatcher.UIThread.Post(() =>
         {
+            GizmoDragProbe.Log("Dispatcher.UIThread.Post 执行(GroundPointer)");
             _groundPointerUpdatePending = false;
             if (_lastGroundPointerUpdateTicks != 0)
             {

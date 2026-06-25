@@ -1,4 +1,5 @@
 ﻿using Avalonia.Threading;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Gizmo;
 using XuanYu.Engine.Render.Camera;
 using XuanYu.Engine.Render.Scene;
@@ -7,11 +8,7 @@ using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 namespace XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
 
-/// <summary>
-/// Scene3D 帧路径路由。单一职责：请求、合并、执行帧。
-/// 依赖注入：Session + CameraRevision 提供者 + Snapshot 构建。
-/// 不接收 EditorShell 引用，不持有 Func 参数。
-/// </summary>
+/// <summary>Scene3D 帧路径路由。负责请求、合并、执行帧。</summary>
 public sealed class Scene3dFrameRoute
 {
     private readonly VulkanScene3dSession _session;
@@ -29,10 +26,7 @@ public sealed class Scene3dFrameRoute
     public bool IsDisposed => _state.IsDisposed;
     public int RenderSeq => _state.RenderSeq;
 
-    /// <summary>
-    /// 请求一帧。framePending 闸门合并连续请求。
-    /// cameraRevision 由调用者提供（仅相机真实变化时递增），此方法不修改它。
-    /// </summary>
+    /// <summary>请求一帧。framePending 闸门合并连续请求。</summary>
     public void Request(
         VulkanScene3dFrameReason reason,
         SceneOrbitCameraState cameraState,
@@ -45,8 +39,10 @@ public sealed class Scene3dFrameRoute
         if (!_state.TryAcquire()) return;
         var generation = _state.SessionGeneration;
 
+        GizmoDragProbe.Log("Dispatcher.UIThread.Post 入队");
         Dispatcher.UIThread.Post(() =>
         {
+            GizmoDragProbe.Log("Dispatcher.UIThread.Post 执行");
             _state.Release();
 
             if (_state.IsDisposed || generation != _state.SessionGeneration)
@@ -60,6 +56,7 @@ public sealed class Scene3dFrameRoute
             _snapshots.SetPendingPick(pickSnapshot);
 
             var result = _session.RenderFrame(reason, sessionPose, [.. unitDraws]);
+            GizmoDragProbe.Log($"Preview Render 完成 success={result.Success}");
 
             if (result.Success)
             {

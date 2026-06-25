@@ -1,4 +1,5 @@
 ﻿using XuanYu.Engine.Core.Identity;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Project.World.Transform;
 
 namespace XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
@@ -23,10 +24,12 @@ public sealed class EntityTransformPreview
     public TransformApplyResult Apply(SceneTransform transform, EntityId entityId)
     {
         var pos = transform.Position;
+        GizmoDragProbe.Log("RenderScene preview 写入");
         // 先验证 RenderScene 可更新，再写 Vulkan
         if (!_renderScene.UpdatePosition(entityId, pos))
             return TransformApplyResult.Failure(TransformFailureReason.RenderSceneSyncFailed);
         _vulkan.Write(entityId, pos);
+        GizmoDragProbe.Log("RenderScene preview 写入完成");
         // Preview 不刷新 Inspector（拖动高频路径瘦身）
         // Inspector 在 Confirm / Commit 时由 EntityTransformCommit.Apply 更新
         return TransformApplyResult.SuccessResult;

@@ -10,9 +10,14 @@ namespace XuanYu.Engine.Editor.Windows.Viewport.Picking;
 /// </summary>
 public static class ViewportPickTrace
 {
+    static readonly bool s_enabled =
+        string.Equals(Environment.GetEnvironmentVariable("XUANYU_PICK_TRACE"), "1", StringComparison.Ordinal);
+
     public static void Write(int pixelX, int pixelY, PresentedCameraSnapshot snapshot,
         SceneRay ray, RenderScene renderScene)
     {
+        if (!s_enabled) return;
+
         System.Diagnostics.Debug.WriteLine(
             $"[PickTrace] Click({pixelX},{pixelY}) " +
             $"RO({ray.Origin.X:F2},{ray.Origin.Y:F2},{ray.Origin.Z:F2}) " +

@@ -2,6 +2,7 @@
 using XuanYu.Engine.Editor.ProjectContentTreeModel;
 using XuanYu.Engine.Editor.WorldHierarchy;
 using XuanYu.Engine.Editor.Windows.Panels.LeftDock;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 using XuanYu.Engine.Project.Metadata;
 using XuanYu.Engine.World;
@@ -26,7 +27,7 @@ sealed class EditorShellHierarchyRoute(
             try { dockPanel?.ShowProjectContent(ProjectContentTreeBuilder.Build(projectInfo)); }
             catch (Exception ex) { appendErrorLog($"项目内容树构建失败：{ex.Message}"); }
         if (worldState is not null)
-            try { dockPanel?.ShowWorldHierarchy(WorldHierarchyTreeBuilder.Build(worldState, BuildGroupLookup())); }
+            try { GizmoDragProbe.MarkUiRefreshed(); GizmoDragProbe.Log("WorldHierarchy 刷新"); dockPanel?.ShowWorldHierarchy(WorldHierarchyTreeBuilder.Build(worldState, BuildGroupLookup())); }
             catch (Exception ex) { appendErrorLog($"世界层级树构建失败：{ex.Message}"); }
     }
 

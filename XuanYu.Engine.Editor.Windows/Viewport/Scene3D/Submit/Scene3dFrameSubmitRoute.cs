@@ -1,4 +1,5 @@
 ﻿using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Frame;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Application;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Presentation;
 using XuanYu.Engine.Render.Selection.Presented;
@@ -29,6 +30,7 @@ public sealed class Scene3dFrameSubmitRoute
 
     public void Request(Scene3dFrameSubmitInput input, Action? onCompleted = null)
     {
+        GizmoDragProbe.Log($"Redraw 请求调度 reason={input.Reason}");
         // Gizmo 顶点
         var gizmoInput = new MoveGizmoFrameInput(
             input.MoveToolActive, input.SelectedEntityId, input.EntityPosition,
@@ -42,6 +44,9 @@ public sealed class Scene3dFrameSubmitRoute
             ? PresentedScenePickSnapshot.None
             : Scene3dPickSnapshotSource.Build(
                 _renderSceneStore.Current, input.RenderSeq, input.CameraRevision, presented);
+        GizmoDragProbe.Log(input.Reason == VulkanScene3dFrameReason.TransformPreview
+            ? "PickSnapshot 刷新跳过(Preview)"
+            : "PickSnapshot 刷新");
 
         // Frame 请求
         _route.Request(input.Reason, input.CameraState, input.CameraRevision,

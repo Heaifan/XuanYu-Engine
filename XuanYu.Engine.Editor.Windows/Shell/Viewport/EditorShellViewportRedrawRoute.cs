@@ -46,6 +46,7 @@ sealed class EditorShellViewportRedrawRoute(
 
         if (!startupVulkanRoute.State.NativeHostReported)
         {
+            GizmoDragProbe.Log("Dispatcher.UIThread.Post 入队(StartupProbe)");
             Dispatcher.UIThread.Post(runStartupProbe);
             return;
         }

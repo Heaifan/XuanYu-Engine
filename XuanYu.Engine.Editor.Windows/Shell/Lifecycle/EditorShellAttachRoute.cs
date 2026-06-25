@@ -1,5 +1,7 @@
 ﻿using Avalonia.Threading;
 
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
+
 namespace XuanYu.Engine.Editor.Windows.Shell.Lifecycle;
 
 /// <summary>
@@ -15,8 +17,10 @@ public sealed class EditorShellAttachRoute
         if (_dispatched) return new(false);
         _dispatched = true;
 
+        GizmoDragProbe.Log("Dispatcher.UIThread.Post 入队(Attach)");
         Dispatcher.UIThread.Post(() =>
         {
+            GizmoDragProbe.Log("Dispatcher.UIThread.Post 执行(Attach)");
             request.NativeHostReportAction();
             request.InputPipelineInitAction();
         });

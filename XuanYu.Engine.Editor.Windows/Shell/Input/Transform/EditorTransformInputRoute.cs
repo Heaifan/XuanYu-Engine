@@ -1,5 +1,6 @@
 ﻿using XuanYu.Engine.Editor.EntityTransform;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 using static XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction.TransformInteractionAction;
 
@@ -30,8 +31,9 @@ public sealed class EditorTransformInputRoute
 
     public EditorTransformInputResult HandlePointerMoved(EditorTransformInputRequest r)
     {
+        GizmoDragProbe.Log("Gizmo hit/drag 路由");
         if (r.SelectionRoute.State.SelectedWorldEntity is not null) { var g = r.Lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo; if (g?.IsAvailable == true) r.PointerRoute.UpdateGizmoHover(r.X, r.Y, g.Value.Layout); }
-        if (r.PointerRoute.IsDragActive) { var dr = r.PointerRoute.OnPointerMoved(r.X, r.Y); if (dr.Action == Previewed) { r.ApplyPreviewPosition(); return new(true); } }
+        if (r.PointerRoute.IsDragActive) { GizmoDragProbe.Log("Preview transform 计算"); var dr = r.PointerRoute.OnPointerMoved(r.X, r.Y); if (dr.Action == Previewed) { r.ApplyPreviewPosition(); return new(true); } }
         return new(false);
     }
 

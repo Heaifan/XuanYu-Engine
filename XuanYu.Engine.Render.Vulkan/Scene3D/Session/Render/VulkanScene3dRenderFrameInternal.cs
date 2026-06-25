@@ -44,6 +44,7 @@ unsafe partial class VulkanScene3dSession
             var vp = ComputeViewProjection(cameraPose, aspect);
             (unitDrawData, renderedUnitCount) = BuildUnitDrawData(vp, unitDraws);
             var cursorData = BuildGroundCursorData(vp);
+
             var (overlayVtxCount, overlayBuf, overlayPipe, overlayLayout) = BuildOverlay(cameraPose);
 
             if (!VulkanScene3dCommandRecorder.Record(_vk, _swapchainRes.CommandBuffer,
@@ -67,6 +68,7 @@ unsafe partial class VulkanScene3dSession
             if (presentResult is not null) return presentResult;
 
             sw.Stop();
+
             return BuildFrameResult(reason, cameraPose, sw,
                 renderedUnitCount, drawCalls, presentRes, vp);
         }

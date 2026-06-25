@@ -1,5 +1,6 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Render.Scene;
 using XuanYu.Engine.Render.Scene.Position;
 
@@ -18,6 +19,7 @@ public sealed class ViewportRenderSceneStore
         var result = RenderSceneObjectPositionWriter.Update(Current, entityId, position);
         if (!result.IsSuccess || result.NewScene is null) return false;
         Current = result.NewScene;
+        GizmoDragProbe.Log("RenderScene 内存更新");
         return true;
     }
 }

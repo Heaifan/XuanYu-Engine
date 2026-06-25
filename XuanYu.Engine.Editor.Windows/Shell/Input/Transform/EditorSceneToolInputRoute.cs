@@ -36,8 +36,16 @@ public sealed class EditorSceneToolInputRoute
         var gizmo = lifecycle.State.FrameRoute?.Snapshots.PresentedGizmo;
         if (gizmo?.IsAvailable == true) pointer.UpdateGizmoHover(x, y, gizmo.Value.Layout);
         else pointer.ClearGizmoHover();
+        EditorProbe.Write("GizmoPress", "HitTest",
+            $"selected={selection.State.SelectedWorldEntity.EntityId.Value} " +
+            $"presented={(gizmo?.IsAvailable == true ? gizmo.Value.EntityId : "none")} " +
+            $"xy=({x},{y}) hover={pointer.HoveredElement}");
         if (pointer.HasHoveredElement)
-            return pointer.OnPointerPressed(new(TransformStartSource.GizmoHandle, MoveGizmoElement.ViewPlane, x, y), snap.Value).Action == Started ? ViewportSceneToolPressResult.BeginDrag : ViewportSceneToolPressResult.NotHandled;
+        {
+            var result = pointer.OnPointerPressed(new(TransformStartSource.GizmoHandle, MoveGizmoElement.ViewPlane, x, y), snap.Value);
+            EditorProbe.Write("GizmoPress", "Begin", $"action={result.Action} reason={result.Reason}");
+            return result.Action == Started ? ViewportSceneToolPressResult.BeginDrag : ViewportSceneToolPressResult.NotHandled;
+        }
         var hit = pick.Pick(new(x, y, cam, lifecycle.State.FrameRoute?.Snapshots.PresentedPick ?? PresentedScenePickSnapshot.None, renderScene.Current, SceneGroundPlane.Default));
         if (hit.Kind == ViewportPickKind.Entity && hit.EntityId == selection.State.SelectedWorldEntity.EntityId)
         { infoLog("实体本体拖动"); return pointer.OnPointerPressed(new(TransformStartSource.EntityBody, MoveGizmoElement.ViewPlane, x, y), snap.Value).Action == Started ? ViewportSceneToolPressResult.BeginDrag : ViewportSceneToolPressResult.NotHandled; }
@@ -50,6 +58,7 @@ public sealed class EditorSceneToolInputRoute
         Action<string> infoLog)
     {
         var result = pointer.OnPointerReleased();
+        EditorProbe.Write("GizmoRelease", "End", $"action={result.Action} pos=({result.Transform.Position.X:F2},{result.Transform.Position.Y:F2},{result.Transform.Position.Z:F2})");
         if (result.Action == Confirmed)
         { applyTransform(result.Transform, EditorEntityTransformOrigin.MoveTool); infoLog($"移动完成 ({result.Transform.Position.X:F3}, {result.Transform.Position.Y:F3}, {result.Transform.Position.Z:F3})"); }
         return result;

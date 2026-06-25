@@ -1,6 +1,7 @@
 ﻿using XuanYu.Engine.Core.Identity;
 using XuanYu.Engine.Core.Math;
 using XuanYu.Engine.Editor.EntityTransform;
+using XuanYu.Engine.Editor.Windows.Shell.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Panels.Status;
 using XuanYu.Engine.World;
 
@@ -32,6 +33,8 @@ public sealed class WorldTransformWriter
             return WorldTransformWriteStatus.EntityNotFound;
         if (!_world.SetPosition(entityId, position))
             return WorldTransformWriteStatus.NoChange;
+        GizmoDragProbe.MarkWorldStateWritten();
+        GizmoDragProbe.Log("WorldState 写入");
         _dirty.MarkDirty(entityId.Value.ToString());
         _statusBar?.SetDirtyState(true);
         return WorldTransformWriteStatus.Changed;
