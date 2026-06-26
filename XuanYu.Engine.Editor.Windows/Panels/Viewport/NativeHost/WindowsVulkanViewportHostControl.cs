@@ -35,7 +35,7 @@ public sealed partial class WindowsVulkanViewportHostControl : NativeControlHost
 
     public WindowsVulkanViewportHostInfo GetHostInfo() => _hostSync.Current;
     public void RequestCapture() { if (_windowHandle != 0) _mouseCapture.Capture(_windowHandle, "外部请求", "未指定"); }
-    public void RequestReleaseCapture() => _mouseCapture.Release("外部请求请求");
+    public void RequestReleaseCapture() => _mouseCapture.Release(_windowHandle, "外部请求");
 
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
@@ -59,7 +59,7 @@ public sealed partial class WindowsVulkanViewportHostControl : NativeControlHost
     {
         if (_windowHandle != 0)
         {
-            _mouseCapture.Release("WM_DESTROY/DestroyNativeControlCore");
+            _mouseCapture.Release(_windowHandle, "WM_DESTROY/DestroyNativeControlCore");
             _rawPointerDragCaptured = false;
             _arbitration.Reset();
         }

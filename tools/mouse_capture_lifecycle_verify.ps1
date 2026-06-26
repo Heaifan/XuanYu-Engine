@@ -112,10 +112,12 @@ function Post-Mouse($hwnd, $msg, $x, $y) {
 }
 
 Write-Host "启动编辑器..." -ForegroundColor Cyan
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+Write-Host "仓库根目录: $repoRoot" -ForegroundColor Gray
 $psi = New-Object System.Diagnostics.ProcessStartInfo
 $psi.FileName = "dotnet"
 $psi.Arguments = "run --project XuanYu.Engine.Editor.Windows --no-build"
-$psi.WorkingDirectory = "E:\MyDoc\project-VSCode\XuanYuEngine"
+$psi.WorkingDirectory = $repoRoot.Path
 $psi.UseShellExecute = $false
 $psi.RedirectStandardOutput = $true
 $psi.RedirectStandardError = $true

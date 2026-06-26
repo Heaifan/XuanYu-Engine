@@ -17,6 +17,8 @@
 
 这些缺口导致 Native Viewport HWND 在某些场景下继续吞鼠标消息，表现为 UI 点击无反应、Gizmo 轴 hover 变黄但拖不动、窗口关闭卡顿。
 
+> **9.0X-R1 补丁补充**：静态审计发现 `WM_CAPTURECHANGED` 错误地读取 `wParam`（Win32 规范要求读取 `lParam`），且 `Release()` 仍过度依赖内部 `_captured` 标志。R1 已修正为 `Release(nint ownerHwnd, string reason)`，以 `GetCapture() == ownerHwnd` 作为最终释放依据。
+
 ---
 
 ## 二、所有捕获来源表
@@ -37,14 +39,14 @@
 
 | # | 释放触发条件 | 释放动作 | 是否调用 `ReleaseCapture()` | 内部状态清理 |
 |---|---|---|---|---|
-| 1 | `WM_MBUTTONUP` | `HandleMiddleUp` → `_mouseCapture.Release("WM_MBUTTONUP")` | 是（仅当 `GetCapture() == hwnd`） | `_rawPointerDragCaptured = false` + `_mouseCapture` 清内部状态 |
-| 2 | `WM_LBUTTONUP` 且导航/工具处于拖拽 | `Arbitration.HandleLeftUp` → `_mouseCapture.Release("WM_LBUTTONUP")` | 是（仅当真实持有） | `NavCapture.End()` / `ToolCapture.End()` + `_mouseCapture` 清内部状态 |
-| 3 | `WM_KILLFOCUS` | `DispatchWndProc` → `_mouseCapture.Release("WM_KILLFOCUS")` | 是（仅当真实持有） | `_rawPointerDragCaptured = false` + Arbitration 清状态 |
-| 4 | `WM_CANCELMODE`（新增） | `HandleCancelMode` → `_mouseCapture.Release("WM_CANCELMODE")` | 是（仅当真实持有） | `_rawPointerDragCaptured = false` + Arbitration 清状态 |
-| 5 | `WM_CAPTURECHANGED` | `HandleCaptureChanged` → `_mouseCapture.ClearState(...)` | **否**（只同步内部状态） | `_rawPointerDragCaptured = false` + Arbitration 清状态 |
-| 6 | `DestroyNativeControlCore`（新增） | `_mouseCapture.Release("WM_DESTROY/DestroyNativeControlCore")` | 是（仅当真实持有） | `_rawPointerDragCaptured = false` + `_arbitration.Reset()` |
+| 1 | `WM_MBUTTONUP` | `HandleMiddleUp` → `_mouseCapture.Release(_windowHandle, "WM_MBUTTONUP")` | 是（仅当 `GetCapture() == _windowHandle`） | `_rawPointerDragCaptured = false` + `_mouseCapture` 清内部状态 |
+| 2 | `WM_LBUTTONUP` 且导航/工具处于拖拽 | `Arbitration.HandleLeftUp` → `_mouseCapture.Release(hwnd, "WM_LBUTTONUP")` | 是（仅当 `GetCapture() == hwnd`） | `NavCapture.End()` / `ToolCapture.End()` + `_mouseCapture` 清内部状态 |
+| 3 | `WM_KILLFOCUS` | `DispatchWndProc` → `_mouseCapture.Release(_windowHandle, "WM_KILLFOCUS")` | 是（仅当 `GetCapture() == _windowHandle`） | `_rawPointerDragCaptured = false` + Arbitration 清状态 |
+| 4 | `WM_CANCELMODE`（新增） | `HandleCancelMode` → `_mouseCapture.Release(_windowHandle, "WM_CANCELMODE")` | 是（仅当 `GetCapture() == _windowHandle`） | `_rawPointerDragCaptured = false` + Arbitration 清状态 |
+| 5 | `WM_CAPTURECHANGED` | `HandleCaptureChanged(lParam)` → `_mouseCapture.ClearState(...)` | **否**（只同步内部状态） | `_rawPointerDragCaptured = false` + Arbitration 清状态 |
+| 6 | `DestroyNativeControlCore`（新增） | `_mouseCapture.Release(_windowHandle, "WM_DESTROY/DestroyNativeControlCore")` | 是（仅当 `GetCapture() == _windowHandle`） | `_rawPointerDragCaptured = false` + `_arbitration.Reset()` |
 
-核心规则：`Release(reason)` 以 `GetCapture() == _capturedHwnd` 作为是否真实调用 `ReleaseCapture()` 的唯一依据；无论 Win32 是否释放，都清理内部状态。
+核心规则：`Release(ownerHwnd, reason)` 以 `GetCapture() == ownerHwnd` 作为是否真实调用 `ReleaseCapture()` 的唯一依据；内部 `_captured` 只用于日志和辅助状态，不作为释放门槛。
 
 ---
 
@@ -55,8 +57,8 @@
 | 项目 | 修复前 | 修复后 |
 |---|---|---|
 | 入口唯一性 | `Capture` / `Release` 已封装，但无来源记录 | 所有 Capture 必须带 `source` + `button`；所有 Release 必须带 `reason` |
-| Win32 校验 | `Release()` 只看 `_captured` 标志 | `Release()` 用 `GetCapture()` 核对 `_capturedHwnd` |
-| 无捕获释放 | `_captured == false` 直接返回 | 记录日志，不报错 |
+| Win32 校验 | `Release()` 只看 `_captured` 标志 | `Release(nint ownerHwnd, ...)` 用 `GetCapture() == ownerHwnd` 核对，不依赖内部 `_captured` |
+| 无捕获释放 | `_captured == false` 直接返回 | 无论内部状态如何，只要 `GetCapture()` 不是当前窗口就不调用 `ReleaseCapture()`，并记录日志 |
 | `ClearState` | 仅清标志 | 仅清标志 + 加 reason 日志，明确不调用 `ReleaseCapture()` |
 | 日志 | 无 | 中文 probe log，含来源、按钮、hwnd、Win32 当前捕获、释放原因、是否实际 ReleaseCapture |
 | 直接 Win32 调用 | `SetCapture` / `ReleaseCapture` 仅在此文件中 | 增加 `GetCapture` P/Invoke，仍然只有此文件调用三者 |
@@ -66,17 +68,17 @@
 | 项目 | 修复前 | 修复后 |
 |---|---|---|
 | `WM_MBUTTONDOWN` | `_mouseCapture.Capture(hwnd)` 无来源 | `_mouseCapture.Capture(hwnd, "中键相机导航", "中键")` |
-| `WM_MBUTTONUP` | `_mouseCapture.Release()` 无原因 | `_mouseCapture.Release("WM_MBUTTONUP")` |
-| `WM_KILLFOCUS` | `_mouseCapture.Release()` 无原因 | `_mouseCapture.Release("WM_KILLFOCUS")` |
-| `WM_CAPTURECHANGED` | `_mouseCapture.ClearState()` 无原因 | `_mouseCapture.ClearState("WM_CAPTURECHANGED 新捕获窗口=...")` |
+| `WM_MBUTTONUP` | `_mouseCapture.Release()` 无原因 | `_mouseCapture.Release(_windowHandle, "WM_MBUTTONUP")` |
+| `WM_KILLFOCUS` | `_mouseCapture.Release()` 无原因 | `_mouseCapture.Release(_windowHandle, "WM_KILLFOCUS")` |
+| `WM_CAPTURECHANGED` | `_mouseCapture.ClearState()` 无原因，且误用 `wParam` | `_mouseCapture.ClearState("WM_CAPTURECHANGED 新捕获窗口=...")`，新窗口句柄来自 `lParam` |
 | `WM_CANCELMODE` | **未处理** | 新增 `HandleCancelMode`，兜底释放 + 清状态 |
 
 ### 4.3 `WindowsVulkanViewportHostControl.cs`
 
 | 项目 | 修复前 | 修复后 |
 |---|---|---|
-| `DestroyNativeControlCore` | 直接销毁窗口，未清捕获状态 | 先 `_mouseCapture.Release("WM_DESTROY/...")`，再 `_arbitration.Reset()`，最后销毁窗口 |
-| `RequestCapture/ReleaseCapture` | 无来源/原因 | 调用带 `source`/`reason` 的重载 |
+| `DestroyNativeControlCore` | 直接销毁窗口，未清捕获状态 | 先 `_mouseCapture.Release(_windowHandle, "WM_DESTROY/...")`，再 `_arbitration.Reset()`，最后销毁窗口 |
+| `RequestCapture/ReleaseCapture` | 无来源/原因 | 调用带 `hwnd`/`source`/`reason` 的重载 |
 
 ### 4.4 `NativeViewportInputArbitration.cs`
 
@@ -84,7 +86,7 @@
 |---|---|---|
 | 导航拖拽 Capture | `mouseCapture.Capture(hwnd)` | `mouseCapture.Capture(hwnd, "Overlay导航", "左键")` |
 | 工具拖拽 Capture | `mouseCapture.Capture(hwnd)` | `mouseCapture.Capture(hwnd, "MoveGizmo", "左键")` |
-| 左键释放 | `mouseCapture.Release()` | `mouseCapture.Release("WM_LBUTTONUP")` |
+| 左键释放 | `mouseCapture.Release()` | `mouseCapture.Release(hwnd, "WM_LBUTTONUP")` |
 | 重置 | 无 | 新增 `Reset()` 方法，供 Destroy 兜底调用 |
 
 ---
@@ -138,16 +140,17 @@ $env:FW_INPUT_TRACE = '1'
 ```text
 [09:39:44.271][探针][MouseCapture][捕获开始] 来源=中键相机导航 按钮=中键 hwnd=15098C Win32当前捕获=0 内部状态=已捕获
 [09:39:44.861][探针][MouseCapture][CaptureChanged同步] 原因=WM_CAPTURECHANGED 新捕获窗口=0 Win32当前捕获=0 来源=中键相机导航 按钮=中键 内部状态=已同步清除
-[09:39:44.861][探针][MouseCapture][释放] 来源=中键相机导航 原因=WM_MBUTTONUP 按钮=中键 是否调用ReleaseCapture=True Win32当前捕获=15098C 内部状态=已释放
-[09:39:50.005][探针][MouseCapture][捕获开始] 来源=MoveGizmo 按钮=左键 hwnd=15098C Win32当前捕获=0 内部状态=已捕获
-[09:39:50.717][探针][MouseCapture][CaptureChanged同步] 原因=WM_CAPTURECHANGED 新捕获窗口=0 Win32当前捕获=0 来源=MoveGizmo 按钮=左键 内部状态=已同步清除
-[09:39:50.718][探针][MouseCapture][释放] 来源=MoveGizmo 原因=WM_LBUTTONUP 按钮=左键 是否调用ReleaseCapture=True Win32当前捕获=15098C 内部状态=已释放
+[09:52:32.147][探针][MouseCapture][释放] 来源=中键相机导航 原因=WM_MBUTTONUP 按钮=中键 是否调用ReleaseCapture=True Win32当前捕获=C07B2 内部状态=未捕获
+[09:52:37.253][探针][MouseCapture][捕获开始] 来源=MoveGizmo 按钮=左键 hwnd=C07B2 Win32当前捕获=0 内部状态=已捕获
+[09:52:37.935][探针][MouseCapture][CaptureChanged同步] 原因=WM_CAPTURECHANGED 新捕获窗口=0 Win32当前捕获=0 来源=MoveGizmo 按钮=左键 内部状态=已同步清除
+[09:52:37.936][探针][MouseCapture][释放] 来源=MoveGizmo 原因=WM_LBUTTONUP 按钮=左键 是否调用ReleaseCapture=True Win32当前捕获=C07B2 内部状态=未捕获
 ```
 
 记录表明：
 - 中键旋转与 MoveGizmo 左键拖动均产生“捕获开始”；
 - 均通过 `WM_MBUTTONUP` / `WM_LBUTTONUP` 正常释放，且真实调用 `ReleaseCapture()`；
-- `WM_CAPTURECHANGED` 在释放前同步内部状态，未递归调用 `ReleaseCapture()`。
+- `WM_CAPTURECHANGED` 在释放前同步内部状态，未递归调用 `ReleaseCapture()`；
+- 释放日志中的“内部状态=未捕获”说明 `WM_CAPTURECHANGED` 已先清掉内部状态，但 `Release` 仍依据 `GetCapture() == ownerHwnd` 正确执行了 `ReleaseCapture()`。
 
 ---
 
@@ -163,16 +166,51 @@ dotnet test XuanYu.Engine.Tests --no-build
 #   失败原因：中文字符串排序受当前 Culture/CompareInfo 影响，与鼠标捕获生命周期无关。
 ```
 
-`CodeFileBudgetTests.ProductionFiles_Max100Lines` 已通过；相关修改文件行数：
+`CodeFileBudgetTests.ProductionFiles_Max100Lines` 已通过；相关修改文件行数（含 9.0X-R1）：
 
-- `NativeViewportMouseCapture.cs`：72 行
+- `NativeViewportMouseCapture.cs`：66 行
 - `WindowsVulkanViewportHostControl.WndProc.cs`：99 行
 - `WindowsVulkanViewportHostControl.cs`：93 行
 - `NativeViewportInputArbitration.cs`：93 行
 
 ---
 
-## 八、提交信息
+## 八、9.0X-R1 补丁
+
+静态审计后补两个小修：
+
+### 8.1 修正 `WM_CAPTURECHANGED` 参数
+
+Win32 文档规定 `WM_CAPTURECHANGED` 的 `wParam` 未使用，新捕获窗口句柄在 `lParam`。原代码 `HandleCaptureChanged(wParam)` 错误地读取了 `wParam`，会导致日志中的“新捕获窗口”不准确。R1 改为 `HandleCaptureChanged(lParam)`。
+
+### 8.2 强化 `Release` 兜底
+
+原 `Release(string reason)` 以内部 `_captured` 标志作为是否继续释放的门槛。若内部状态与 Win32 真实状态失同步（例如 `WM_CAPTURECHANGED` 先清掉了内部状态），即使 `GetCapture()` 仍指向当前窗口也不会释放。R1 改为：
+
+```csharp
+public void Release(nint ownerHwnd, string reason)
+{
+    var current = GetCapture();
+    var actuallyReleased = ownerHwnd != 0 && current == ownerHwnd;
+    // ... 记录来源/按钮/原因/是否释放，然后清内部状态
+}
+```
+
+所有调用点（`WM_MBUTTONUP`、`WM_LBUTTONUP`、`WM_KILLFOCUS`、`WM_CANCELMODE`、`DestroyNativeControlCore`、`RequestReleaseCapture`）均传入当前 viewport `hwnd`。
+
+### 8.3 验证脚本路径
+
+`tools/mouse_capture_lifecycle_verify.ps1` 不再硬编码 `E:\MyDoc\project-VSCode\XuanYuEngine`，改为：
+
+```powershell
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+```
+
+---
+
+## 九、提交信息
+
+### 9.0X
 
 ```text
 fix(NativeViewport): 9.0X 收口鼠标捕获生命周期
@@ -185,9 +223,19 @@ fix(NativeViewport): 9.0X 收口鼠标捕获生命周期
 - 新增 docs/audit-NativeViewportMouseCapture-lifecycle-9.0X.md
 ```
 
+### 9.0X-R1
+
+```text
+fix(NativeViewport): 9.0X-R1 修正 WM_CAPTURECHANGED 参数并强化 Release 兜底
+
+- WM_CAPTURECHANGED 新捕获窗口句柄从 lParam 读取
+- Release 接收 ownerHwnd，以 GetCapture()==ownerHwnd 为最终释放依据
+- 修复 mouse_capture_lifecycle_verify.ps1 硬编码路径
+```
+
 ---
 
-## 九、禁止项确认
+## 十、禁止项确认
 
 - [x] 未重做 EditorShell 布局  
 - [x] 未删除现有控件  

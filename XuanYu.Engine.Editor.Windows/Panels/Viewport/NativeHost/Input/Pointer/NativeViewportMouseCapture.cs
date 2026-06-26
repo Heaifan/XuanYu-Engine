@@ -29,20 +29,14 @@ sealed class NativeViewportMouseCapture
         Log("捕获开始", $"来源={source} 按钮={button} hwnd={hwnd:X} Win32当前捕获={previousCapture:X} 内部状态=已捕获");
     }
 
-    public void Release(string reason)
+    public void Release(nint ownerHwnd, string reason)
     {
-        if (!_captured)
-        {
-            var currentCapture = GetCapture();
-            Log("释放", $"原因={reason} 是否调用ReleaseCapture=False Win32当前捕获={currentCapture:X} 内部状态=未捕获");
-            return;
-        }
         var current = GetCapture();
-        var actuallyReleased = current == _capturedHwnd && _capturedHwnd != 0;
+        var actuallyReleased = ownerHwnd != 0 && current == ownerHwnd;
         var source = _source;
         var button = _button;
         if (actuallyReleased) ReleaseCapture();
-        Log("释放", $"来源={source} 原因={reason} 按钮={button} 是否调用ReleaseCapture={actuallyReleased} Win32当前捕获={current:X} 内部状态=已释放");
+        Log("释放", $"来源={source} 原因={reason} 按钮={button} 是否调用ReleaseCapture={actuallyReleased} Win32当前捕获={current:X} 内部状态={(_captured ? "已释放" : "未捕获")}");
         _captured = false;
         _capturedHwnd = 0;
         _source = string.Empty;

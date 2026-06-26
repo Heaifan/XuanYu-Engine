@@ -22,7 +22,7 @@ partial class WindowsVulkanViewportHostControl
                 case NativeViewportPointerAction.Move: return HandlePointerMove(parsed.X, parsed.Y);
                 case NativeViewportPointerAction.Leave: _mouseTrack.Reset(); PointerLeft?.Invoke(); return 0;
                 case NativeViewportPointerAction.Wheel: return HandleWheel(parsed.X, parsed.Y, parsed.WheelDelta, parsed.ModifierFlags);
-                case NativeViewportPointerAction.CaptureChanged: HandleCaptureChanged(wParam); return 0;
+                case NativeViewportPointerAction.CaptureChanged: HandleCaptureChanged(lParam); return 0;
             }
         }
         var key = _keyboardMessages.Parse(msg, wParam);
@@ -37,7 +37,7 @@ partial class WindowsVulkanViewportHostControl
             _arbitration.HandleKillFocus(() => _pickInput.OnKillFocus(), _rawPointerDragCaptured,
                 () => RawInputFocusLost?.Invoke(), () => NavigationCaptureLost?.Invoke(),
                 () => RawInputFocusLost?.Invoke());
-            _mouseCapture.Release("WM_KILLFOCUS");
+            _mouseCapture.Release(_windowHandle, "WM_KILLFOCUS");
             _rawPointerDragCaptured = false;
             return 0;
         }
@@ -53,7 +53,7 @@ partial class WindowsVulkanViewportHostControl
     }
     nint HandleMiddleUp(int x, int y)
     {
-        _mouseCapture.Release("WM_MBUTTONUP");
+        _mouseCapture.Release(_windowHandle, "WM_MBUTTONUP");
         _rawPointerDragCaptured = false;
         RawPointerButtonUp?.Invoke(NativeViewportPointerMessages.VkMButton, x, y); return 0;
     }
@@ -79,7 +79,7 @@ partial class WindowsVulkanViewportHostControl
     }
     nint HandleLeftUp(int mx, int my)
     {
-        _arbitration.HandleLeftUp(mx, my, _mouseCapture,
+        _arbitration.HandleLeftUp(mx, my, _windowHandle, _mouseCapture,
             () => NavigationPointerReleased?.Invoke(), (x, y) => SceneToolPointerReleased?.Invoke(x, y),
             (x, y) => _pickInput.OnUp(x, y), (c, x, y) => RawPointerButtonUp?.Invoke(c, x, y));
         return 0;
@@ -94,6 +94,6 @@ partial class WindowsVulkanViewportHostControl
     {
         if (_rawPointerDragCaptured) { _rawPointerDragCaptured = false; RawInputFocusLost?.Invoke(); }
         _arbitration.HandleCaptureChanged(_mouseCapture, () => NavigationCaptureLost?.Invoke(), () => RawInputFocusLost?.Invoke(), false);
-        _mouseCapture.Release("WM_CANCELMODE");
+        _mouseCapture.Release(_windowHandle, "WM_CANCELMODE");
     }
 }

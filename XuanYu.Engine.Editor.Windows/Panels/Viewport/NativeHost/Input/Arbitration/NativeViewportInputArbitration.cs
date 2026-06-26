@@ -31,7 +31,7 @@ sealed class NativeViewportInputArbitration
         return NativeViewportInputArbitrationConsumer.Legacy;
     }
 
-    public void HandleLeftUp(int mx, int my,
+    public void HandleLeftUp(int mx, int my, nint hwnd,
         NativeViewportMouseCapture mouseCapture,
         Action navigationReleased,
         Action<int, int> sceneToolReleased,
@@ -43,14 +43,14 @@ sealed class NativeViewportInputArbitration
             var wasDrag = NavCapture.DragCaptured;
             NavCapture.End();
             navigationReleased();
-            if (wasDrag) mouseCapture.Release("WM_LBUTTONUP");
+            if (wasDrag) mouseCapture.Release(hwnd, "WM_LBUTTONUP");
         }
         else if (ToolCapture.IsActive)
         {
             var wasDrag = ToolCapture.DragCaptured;
             ToolCapture.End();
             sceneToolReleased(mx, my);
-            if (wasDrag) mouseCapture.Release("WM_LBUTTONUP");
+            if (wasDrag) mouseCapture.Release(hwnd, "WM_LBUTTONUP");
         }
         else
         { legacyPickUp(mx, my); rawButtonUp(1, mx, my); }
