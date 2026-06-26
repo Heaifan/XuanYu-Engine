@@ -28,11 +28,13 @@ static class EditorShellV2Composition
         // ─── 路由创建（子文件） ───────────────────────────
         EditorShellV2Routes.Create(ctx);
 
-        // ─── 帧调度回调 ──────────────────────────────────
+        // ─── 帧调度回调：高频路径只刷新 Viewport，不触发诊断 ──
         ctx.FrameScheduler = reason =>
         {
             ScheduleRender(ctx);
-            if (reason != VulkanScene3dFrameReason.TransformPreview)
+            if (reason != VulkanScene3dFrameReason.TransformPreview
+                && reason != VulkanScene3dFrameReason.CameraPan
+                && reason != VulkanScene3dFrameReason.CameraZoom)
                 ctx.Diagnostics.ProbeValidation(_ => { }, _ => { });
         };
 

@@ -730,8 +730,10 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │   └── Composition/
 │   │   │       ├── EditorShellV2Context.cs  # V2 上下文：只持有 Viewport 需要的路由和控件引用
 │   │   │       ├── EditorShellV2Composition.cs  # V2 组合根：路由创建和渲染循环由子文件分担
-│   │   │       ├── EditorShellV2Routes.cs  # V2 路由工厂：创建所有 Route 实例，参构造均参数化
-│   │   │       └── EditorShellV2InputWiring.cs  # V2 输入接线：RawPointer/Navigation/SceneTool 事件→Route
+│   │   │       ├── EditorShellV2Routes.cs  # V2 路由工厂：创建所有 Route 实例
+│   │   │       ├── EditorShellV2InputWiring.cs  # V2 输入接线：使用实例状态机，不共享 static
+│   │   │       └── Input/
+│   │   │           └── EditorShellV2InputState.cs  # V2 输入状态机：Shift=修饰键，中键按下才产生导航
 │   │   ├── MainWindowV2.axaml  # V2 测试窗口：加载 EditorShellV2，旧 MainWindow 不受影响
 │   │   └── MainWindowV2.axaml.cs  # V2 窗口标题版本号
 │   ├── Viewport/
