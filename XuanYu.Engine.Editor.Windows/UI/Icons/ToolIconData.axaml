@@ -1,21 +1,21 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <!-- Select：鼠标指针 -->
-  <StreamGeometry x:Key="IconToolSelect">M2 1 L2 13 L5 10 L9 14 L10 13 L6 9 L14 8 Z</StreamGeometry>
-  <!-- Move：四向移动十字箭头 -->
-  <StreamGeometry x:Key="IconToolMove">M8 1 L5 4 L7 4 L7 7 L4 7 L4 5 L1 8 L4 11 L4 9 L7 9 L7 12 L5 12 L8 15 L11 12 L9 12 L9 9 L12 9 L12 11 L15 8 L12 5 L12 7 L9 7 L9 4 L11 4 Z</StreamGeometry>
-  <!-- Rotate：环形旋转箭头 -->
-  <StreamGeometry x:Key="IconToolRotate">M14 8 C14 4.7 11.3 2 8 2 C5.5 2 3.3 3.5 2.3 5.6 L2.3 5.6 M2.3 5.6 L0.5 3.5 L1.5 7 L5 5.5 M1 8 C1 11.3 3.7 14 7 14 C9.5 14 11.7 12.5 12.7 10.4 M15 12.5 L13 9 L11 10.5</StreamGeometry>
+  <StreamGeometry x:Key="IconToolSelect">M2 2 L2 12 L5 9 L8 13 L9 12 L6 8 L11 7 Z</StreamGeometry>
+  <!-- Move：四向十字箭头 -->
+  <StreamGeometry x:Key="IconToolMove">M8 1 L8 15 M1 8 L15 8 M8 1 L6 3 M8 1 L10 3 M8 15 L6 13 M8 15 L10 13 M1 8 L3 6 M1 8 L3 10 M15 8 L13 6 M15 8 L13 10</StreamGeometry>
+  <!-- Rotate：环形箭头 -->
+  <StreamGeometry x:Key="IconToolRotate">M13 4 A6 6 0 1 1 4 13 M4 13 L2 11 M4 13 L6 11</StreamGeometry>
   <!-- Scale：方框 + 对角缩放箭头 -->
-  <StreamGeometry x:Key="IconToolScale">M2 2 L14 2 L14 14 L2 14 Z M4 4 L12 4 L12 12 L4 12 Z M12 4 L4 12 M4 4 L12 12</StreamGeometry>
+  <StreamGeometry x:Key="IconToolScale">M2 2 L14 2 L14 14 L2 14 Z M4 12 L12 4 M10 4 L12 4 L12 6</StreamGeometry>
   <!-- Play：三角播放 -->
-  <StreamGeometry x:Key="IconCommandPlay">M3 1 L3 15 L15 8 Z</StreamGeometry>
+  <StreamGeometry x:Key="IconCommandPlay">M4 2 L4 14 L13 8 Z</StreamGeometry>
   <!-- Stop：方块停止 -->
   <StreamGeometry x:Key="IconCommandStop">M3 3 L13 3 L13 13 L3 13 Z</StreamGeometry>
   <!-- GlobalLocal：三轴坐标 -->
-  <StreamGeometry x:Key="IconToolGlobalLocal">M8 1 L8 15 M1 8 L15 8 M4 4 L12 12 M4 12 L12 4</StreamGeometry>
-  <!-- Snap：磁铁吸附 -->
-  <StreamGeometry x:Key="IconToolSnap">M1 1 L6 1 L6 6 L1 6 Z M10 1 L15 1 L15 6 L10 6 Z M1 10 L6 10 L6 15 L1 15 Z M10 10 L15 10 L15 15 L10 15 Z M6 6 L10 10 M10 6 L6 10</StreamGeometry>
+  <StreamGeometry x:Key="IconToolGlobalLocal">M1 8 L15 8 M8 1 L8 15 M3 13 L13 3 M15 8 L13 6 M15 8 L13 10 M8 1 L6 3 M8 1 L10 3 M13 3 L11 3 M13 3 L13 5</StreamGeometry>
+  <!-- Snap：磁铁 -->
+  <StreamGeometry x:Key="IconToolSnap">M3 1 L3 6 C3 10 6 12 8 12 C10 12 13 10 13 6 L13 1 M3 1 L6 1 L6 6 C6 8 7 9 8 9 C9 9 10 8 10 6 L10 1 L13 1 M8 12 L8 15</StreamGeometry>
   <!-- Grid：3x3 网格 -->
   <StreamGeometry x:Key="IconToolGrid">M1 1 L15 1 L15 15 L1 15 Z M1 5 L15 5 M1 11 L15 11 M5 1 L5 15 M11 1 L11 15</StreamGeometry>
 </ResourceDictionary>

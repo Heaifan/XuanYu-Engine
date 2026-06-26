@@ -5,20 +5,48 @@
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="FontSize" Value="12" />
     <Setter Property="Padding" Value="8,2" />
+    <Setter Property="Foreground" Value="#D8DDE4" />
   </Style>
   <Style Selector="Button.TopCommandButton:pointerover">
     <Setter Property="Background" Value="#3A3F47" />
   </Style>
+  <Style Selector="Button.TopCommandButton:pressed">
+    <Setter Property="Background" Value="#4A5059" />
+  </Style>
+
   <Style Selector="Button.EditorToolButton">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="FontSize" Value="12" />
     <Setter Property="Padding" Value="6,2" />
+    <Setter Property="Foreground" Value="#D8DDE4" />
   </Style>
   <Style Selector="Button.EditorToolButton:pointerover">
     <Setter Property="Background" Value="#3A3F47" />
   </Style>
+  <Style Selector="Button.EditorToolButton:pressed">
+    <Setter Property="Background" Value="#4A5059" />
+  </Style>
   <Style Selector="Button.EditorToolButton.SelectedTool">
     <Setter Property="Background" Value="#2D4A6E" />
+    <Setter Property="Foreground" Value="#E8EEF8" />
+  </Style>
+  <Style Selector="Button.EditorToolButton.SelectedTool:pointerover">
+    <Setter Property="Background" Value="#35577F" />
+  </Style>
+
+  <Style Selector="Button.SimulationButton">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="Foreground" Value="#D8DDE4" />
+  </Style>
+  <Style Selector="Button.SimulationButton:pointerover">
+    <Setter Property="Background" Value="#3A6B4A" />
+    <Setter Property="Foreground" Value="#E8F0EC" />
+  </Style>
+  <Style Selector="Button.SimulationButton:pressed">
+    <Setter Property="Background" Value="#4A7B5A" />
   </Style>
 </Styles>

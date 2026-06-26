@@ -20,46 +20,65 @@
 |---|---|---|
 | IconCommandUndo | 左弯箭头 | ✅ 已完成 |
 | IconCommandRedo | 右弯箭头 | ✅ 已完成 |
-| IconCommandSave | 磁盘保存 | ✅ 已完成 |
-| IconCommandResetLayout | 回转箭头 + 布局框 | ✅ 已完成 |
+| IconCommandSave | 软盘保存 | ✅ 已完成 |
+| IconCommandResetLayout | 窗口布局 + 重置箭头 | ✅ 已完成 |
 
 菜单项（文件、编辑、视图、窗口、设置、帮助）保持纯文字，不加图标。
+
+---
 
 ## 三、Row 2 编辑器工具栏图标清单
 
 | Code Key | 图标语义 | 状态 |
 |---|---|---|
 | IconToolSelect | 鼠标指针 | ✅ 已完成 |
-| IconToolMove | 四向移动十字箭头 | ✅ 已完成 |
-| IconToolRotate | 环形旋转箭头 | ✅ 已完成 |
+| IconToolMove | 四向十字箭头 | ✅ 已完成 |
+| IconToolRotate | 环形箭头 | ✅ 已完成 |
 | IconToolScale | 方框 + 对角缩放箭头 | ✅ 已完成 |
+| IconToolGlobalLocal | 三轴坐标 | ✅ 已完成 |
+| IconToolSnap | 磁铁 | ✅ 已完成 |
+| IconToolGrid | 3×3 网格 | ✅ 已完成 |
 | IconCommandPlay | 三角播放 | ✅ 已完成 |
 | IconCommandStop | 方块停止 | ✅ 已完成 |
 
-第二优先级（可选延后）：IconToolGlobalLocal（三轴坐标）、IconToolSnap（磁铁吸附）、IconToolGrid（3×3 网格）— 已定义但未接入按钮。
+---
 
 ## 四、PathIcon 使用规则
 
 ```xml
-<PathIcon Width="14" Height="14" Data="{StaticResource IconToolSelect}" />
+<PathIcon Width="16" Height="16" Data="{StaticResource IconToolSelect}" />
 ```
 
 - 图标通过 `StaticResource` 引用集中管理的 `StreamGeometry`
-- 尺寸统一 14×14（按钮内），源数据按 16×16 坐标系设计
-- 颜色继承父控件 Foreground
+- 显示尺寸统一 16×16
+- 源数据按 16×16 坐标系设计
+- 颜色继承父控件 `Foreground`
+
+---
 
 ## 五、图标数据位置
 
 | 文件 | 内容 | 行数 |
 |---|---|---|
 | `UI/Icons/CommandIconData.axaml` | 命令类图标（Undo/Redo/Save/ResetLayout） | 11 |
-| `UI/Icons/ToolIconData.axaml` | 工具类图标（Select/Move/Rotate/Scale/Play/Stop + Global/Snap/Grid） | 21 |
+| `UI/Icons/ToolIconData.axaml` | 工具类图标（Select/Move/Rotate/Scale/Global/Snap/Grid/Play/Stop） | 21 |
+
+---
 
 ## 六、按钮样式
 
 | 文件 | 内容 | 行数 |
 |---|---|---|
-| `UI/Styles/TopAreaButtonStyles.axaml` | TopCommandButton / EditorToolButton 样式统一定义 | 24 |
+| `UI/Styles/TopAreaButtonStyles.axaml` | TopCommandButton / EditorToolButton / SimulationButton 样式统一定义 | 约 60 |
+
+样式要点：
+
+- 默认透明背景，hover 为 `#3A3F47`
+- 当前工具高亮使用 `EditorToolButton.SelectedTool`，背景 `#2D4A6E`
+- `SimulationButton` 默认透明，hover 时轻微绿色强调 `#3A6B4A`
+- 无内联廉价强蓝/鲜艳绿色
+
+---
 
 ## 七、禁用项
 
