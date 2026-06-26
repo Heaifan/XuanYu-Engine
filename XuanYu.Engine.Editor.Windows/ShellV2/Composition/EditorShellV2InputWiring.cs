@@ -1,6 +1,7 @@
 using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 using XuanYu.Engine.Editor.Windows.ShellV2.Composition.Input;
 using XuanYu.Engine.Editor.Windows.Viewport.Camera;
+using XuanYu.Engine.Editor.Windows.Viewport.Transform.Interaction;
 using XuanYu.Engine.Render.ViewportNavigation;
 using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 using static XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer.NativeViewportPointerMessages;
@@ -25,6 +26,14 @@ static class EditorShellV2InputWiring
         };
         panel.RawPointerMoved += (x, y) =>
         {
+            // Gizmo drag preview 优先于相机导航
+            if (ctx.Pointer.IsDragActive)
+            {
+                var r = ctx.Pointer.OnPointerMoved(x, y);
+                if (r.Action == TransformInteractionAction.Previewed)
+                    schedule(VulkanScene3dFrameReason.TransformPreview);
+                return;
+            }
             var dx = x - s.LastX; var dy = y - s.LastY;
             s.OnMove(x, y);
             if (s.IsOrbiting) ApplyOrbit(dx, dy, ctx.Camera, schedule);
@@ -36,7 +45,14 @@ static class EditorShellV2InputWiring
         };
         panel.RawKeyDown += vk =>
         {
-            if (vk == 0x10) s.OnShiftDown();
+            if (vk == 0x10) { s.OnShiftDown(); return; }
+            if (vk == 0x1B && ctx.Pointer.IsDragActive) // Esc
+            {
+                ctx.Pointer.Cancel(TransformInteractionReason.Escape);
+                schedule(VulkanScene3dFrameReason.TransformPreview);
+                panel.RequestCancelToolCapture();
+                return;
+            }
         };
         panel.RawKeyUp += vk =>
         {
@@ -50,7 +66,7 @@ static class EditorShellV2InputWiring
         panel.RawInputFocusLost += () => s.OnFocusLost();
         panel.PointerLeft += () => { };
 
-        // Navigation overlay / SceneTool / Picking — 分别在专用 Wiring 文件中接入
+        // Navigation overlay — 在专用 Wiring 文件中接入
         panel.NavigationPointerPressed += (_, _) => ViewportNavigationPressResult.NotHandled;
         panel.NavigationPointerMoved += (_, _) => false;
         panel.NavigationPointerReleased += () => { };
