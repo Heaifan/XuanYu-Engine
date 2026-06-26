@@ -1,0 +1,24 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Button.TopCommandButton">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Padding" Value="8,2" />
+  </Style>
+  <Style Selector="Button.TopCommandButton:pointerover">
+    <Setter Property="Background" Value="#3A3F47" />
+  </Style>
+  <Style Selector="Button.EditorToolButton">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Padding" Value="6,2" />
+  </Style>
+  <Style Selector="Button.EditorToolButton:pointerover">
+    <Setter Property="Background" Value="#3A3F47" />
+  </Style>
+  <Style Selector="Button.EditorToolButton.SelectedTool">
+    <Setter Property="Background" Value="#2D4A6E" />
+  </Style>
+</Styles>

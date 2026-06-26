@@ -473,6 +473,11 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   ├── AboutXuanYuEngineWindow.axaml  # XuanYu.Engine.Editor.Windows.About.AboutXuanYuEngineWindow
 │   │   └── AboutXuanYuEngineWindow.axaml.cs  # AboutXuanYuEngineWindow 类
 │   ├── UI/
+│   │   ├── Icons/
+│   │   │   ├── CommandIconData.axaml  # 命令类 PathIcon 数据（Undo/Redo/Save/ResetLayout）
+│   │   │   └── ToolIconData.axaml  # 工具类 PathIcon 数据（Select/Move/Rotate/Scale/Play/Stop）
+│   │   ├── Styles/
+│   │   │   └── TopAreaButtonStyles.axaml  # 顶部按钮样式：TopCommandButton / EditorToolButton
 │   │   └── Text/
 │   │       └── EditorText.cs  # 编辑器 UI 文本集中管理。默认中文，禁止散落硬编码。
 │   ├── Panels/
