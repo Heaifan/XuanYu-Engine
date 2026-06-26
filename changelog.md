@@ -1,5 +1,19 @@
 # changelog
 
+## [9.0D-R2E] — 9.0X Native Viewport 鼠标捕获生命周期审计与修复 (2026-06-26)
+- 收口所有 Win32 鼠标捕获到 `NativeViewportMouseCapture`，禁止其他模块直接调用 `SetCapture` / `ReleaseCapture`
+- 修复 `WM_MBUTTONUP` 此前只清内部状态、不调用 `ReleaseCapture()` 导致 Native Viewport 继续吞鼠标消息的问题
+- `Release(nint ownerHwnd, string reason)` 以 `GetCapture() == ownerHwnd` 作为是否真实释放的最终依据，不再依赖内部 `_captured` 标志
+- 新增 `WM_CANCELMODE` 兜底释放路径
+- `WM_KILLFOCUS` / `WM_DESTROY` / `Dispose` 均兜底释放或清理捕获状态
+- `WM_CAPTURECHANGED` 只同步内部状态，新捕获窗口句柄从 `lParam` 读取，不递归调用 `ReleaseCapture()`
+- 增加中文 probe log：`Debug.WriteLine` + `EditorProbe` 双写，记录捕获开始/释放/来源/按钮/hwnd/Win32 当前捕获/释放原因
+- 新增审计文档 `docs/audit-NativeViewportMouseCapture-lifecycle-9.0X.md`
+- 新增回归验证脚本 `tools/mouse_capture_lifecycle_verify.ps1`：中键旋转 + MoveGizmo 拖动自动验证
+- 项目窗口标题改为动态读取程序集版本，build 后自动显示当前版本号
+- Build: 0 Warning, 0 Error / Tests: 697/698 passed（1 个预存：中文排序依赖 locale）
+- commits: `8d6e7fd` `a48ecfd`
+
 ## [9.0D-R2D] — Gizmo 拖动 Preview 高频路径复审 (2026-06-25 22:56)
 - 修复 `TransformPreview` 帧完成后仍可能调用 Diagnostics refresh 的路径：Preview 回调改为只记录“跳过 Diagnostics 刷新”
 - 补齐中文 probe log：PointerMoved、Gizmo hit/drag、Preview transform、RenderScene preview、Redraw、PickSnapshot、Dispatcher、Inspector、Diagnostics、WorldState、日志面板、WorldHierarchy

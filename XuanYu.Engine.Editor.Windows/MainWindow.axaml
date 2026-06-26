@@ -1,10 +1,10 @@
-﻿<Window
+<Window
     x:Class="XuanYu.Engine.Editor.Windows.MainWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shell="clr-namespace:XuanYu.Engine.Editor.Windows.Shell"
     Icon="/Assets/Icons/logo.png"
-    Title="XuanYu Engine Editor 9.0D-R2B"
+    Title="XuanYu Engine Editor"
     Width="1280"
     Height="800"
     MinWidth="960"
