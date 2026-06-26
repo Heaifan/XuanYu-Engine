@@ -1,6 +1,7 @@
 using Avalonia.Threading;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport;
 using XuanYu.Engine.Editor.Windows.Shell.Startup.Vulkan;
+using XuanYu.Engine.Editor.Windows.ShellV2.Composition.Input;
 using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Diagnostics;
 using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Lifecycle;
 using XuanYu.Engine.Editor.Windows.Viewport.Scene3D.Resize;
@@ -8,7 +9,6 @@ using XuanYu.Engine.Render.Vulkan.Scene3D.Session;
 
 namespace XuanYu.Engine.Editor.Windows.ShellV2.Composition;
 
-/// <summary>EditorShellV2 组合根。路由创建和渲染循环由子文件分担，不突破 100 行红线。</summary>
 static class EditorShellV2Composition
 {
     public static EditorShellV2Context Build(EditorShellV2 shell)
@@ -16,7 +16,6 @@ static class EditorShellV2Composition
         var ctx = new EditorShellV2Context();
         ctx.ViewportPanel = shell.FindControl<VulkanViewportHostPanel>("VulkanViewportHostPanelV2");
 
-        // ─── Probe / 基础设施 ────────────────────────────
         ctx.ProbeRoute = new VulkanViewportProbeRoute();
         ctx.ProbeRoute.State.Scene3d = new(0, ctx.ProbeRoute.State.Gate.Message, 0, 0, 0, 0, 0, 0, 0, "无", 0, false, 0, 0, 0, ctx.ProbeRoute.State.Gate.CanRun ? "可用" : "不可用", 0);
         ctx.StartupVulkan = new EditorStartupVulkanRoute();
@@ -52,6 +51,8 @@ static class EditorShellV2Composition
 
         // ─── 输入事件接线（子文件） ──────────────────────
         EditorShellV2InputWiring.Wire(ctx);
+        EditorShellV2PickingWiring.Wire(ctx);
+        EditorShellV2SceneToolWiring.Wire(ctx);
 
         return ctx;
     }

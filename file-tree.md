@@ -733,7 +733,9 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │       ├── EditorShellV2Routes.cs  # V2 路由工厂：创建所有 Route 实例
 │   │   │       ├── EditorShellV2InputWiring.cs  # V2 输入接线：使用实例状态机，不共享 static
 │   │   │       └── Input/
-│   │   │           └── EditorShellV2InputState.cs  # V2 输入状态机：Shift=修饰键，中键按下才产生导航
+│   │   │           ├── EditorShellV2InputState.cs  # V2 输入状态机：Shift=修饰键，中键按下才产生导航
+│   │   │           ├── EditorShellV2PickingWiring.cs  # V2 Picking 接线：击中实体→更新选择，不刷新重 UI
+│   │   │           └── EditorShellV2SceneToolWiring.cs  # V2 MoveGizmo 接线：press/drag/release，Preview 只刷新 Viewport
 │   │   ├── MainWindowV2.axaml  # V2 测试窗口：加载 EditorShellV2，旧 MainWindow 不受影响
 │   │   └── MainWindowV2.axaml.cs  # V2 窗口标题版本号
 │   ├── Viewport/

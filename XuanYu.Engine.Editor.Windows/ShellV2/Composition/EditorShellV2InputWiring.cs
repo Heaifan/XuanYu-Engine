@@ -22,7 +22,6 @@ static class EditorShellV2InputWiring
         {
             if (btn != VkMButton) return;
             s.OnMiddleDown(x, y);
-            // s.IsOrbiting / s.IsPanning 按下一次, Move 时决定
         };
         panel.RawPointerMoved += (x, y) =>
         {
@@ -37,7 +36,7 @@ static class EditorShellV2InputWiring
         };
         panel.RawKeyDown += vk =>
         {
-            if (vk == 0x10) s.OnShiftDown(); // Shift
+            if (vk == 0x10) s.OnShiftDown();
         };
         panel.RawKeyUp += vk =>
         {
@@ -49,16 +48,13 @@ static class EditorShellV2InputWiring
             if (r.NeedsFrame) schedule(r.Reason);
         };
         panel.RawInputFocusLost += () => s.OnFocusLost();
+        panel.PointerLeft += () => { };
 
-        // ─── 预留桩（9.1A-3 接入）───────────────────────
+        // Navigation overlay / SceneTool / Picking — 分别在专用 Wiring 文件中接入
         panel.NavigationPointerPressed += (_, _) => ViewportNavigationPressResult.NotHandled;
         panel.NavigationPointerMoved += (_, _) => false;
         panel.NavigationPointerReleased += () => { };
         panel.NavigationCaptureLost += () => { };
-        panel.SceneToolPointerPressed += (_, _) => ViewportSceneToolPressResult.NotHandled;
-        panel.SceneToolPointerReleased += (_, _) => { };
-        panel.PickRequested += (_, _) => { };
-        panel.PointerLeft += () => { };
     }
 
     static void ApplyOrbit(int dx, int dy, ViewportCameraRoute camera, Action<VulkanScene3dFrameReason> s)
