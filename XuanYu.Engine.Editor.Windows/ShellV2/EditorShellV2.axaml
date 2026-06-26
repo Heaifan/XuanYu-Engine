@@ -1,0 +1,38 @@
+<UserControl
+    x:Class="XuanYu.Engine.Editor.Windows.ShellV2.EditorShellV2"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewport="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Viewport">
+  <Grid Background="#202327" RowDefinitions="44,*">
+    <Border
+        Grid.Row="0"
+        Background="#2A2F36"
+        BorderBrush="#414852"
+        BorderThickness="0,0,0,1">
+      <StackPanel
+          Margin="18,0"
+          VerticalAlignment="Center"
+          Orientation="Horizontal"
+          Spacing="24">
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0">文件</Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="RunMenuButtonV2">运行</Button>
+        <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="SettingsMenuButtonV2">设置</Button>
+      </StackPanel>
+    </Border>
+    <Grid Grid.Row="1">
+      <viewport:VulkanViewportHostPanel x:Name="VulkanViewportHostPanelV2" />
+      <Border
+          Margin="8"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Top"
+          Background="#1E1E1E"
+          BorderBrush="#3E3E3E"
+          BorderThickness="1"
+          CornerRadius="4"
+          IsVisible="{Binding Path=IsVisible, ElementName=ViewportToolPaletteV2}"
+          x:Name="ToolOverlayBorder">
+        <StackPanel x:Name="ViewportToolPaletteV2" IsVisible="False" />
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

@@ -724,6 +724,14 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   ├── EditorSelection.cs  # struct 类
 │   │   ├── EditorShell.axaml  # XuanYu.Engine.Editor.Windows.Shell.EditorShell
 │   │   └── EditorShell.axaml.cs  # EditorShell 类
+│   │   ├── ShellV2/  # EditorShellV2 — 新 Shell 并行骨架，9.1A-1 新增。不引用旧 Shell 面板。
+│   │   │   ├── EditorShellV2.axaml  # V2 布局：菜单栏 + Viewport（全区域覆盖层），不接 ProjectTree/Inspector/Debug
+│   │   │   ├── EditorShellV2.axaml.cs  # V2 生命周期：构造组合根 + Attach/Detach
+│   │   │   └── Composition/
+│   │   │       ├── EditorShellV2Context.cs  # V2 上下文：只持有 Viewport 需要的路由和控件引用
+│   │   │       └── EditorShellV2Composition.cs  # V2 组合根：创建最小路由集 + 事件接线 + 渲染循环
+│   │   ├── MainWindowV2.axaml  # V2 测试窗口：加载 EditorShellV2，旧 MainWindow 不受影响
+│   │   └── MainWindowV2.axaml.cs  # V2 窗口标题版本号
 │   ├── Viewport/
 │   │   ├── Camera/
 │   │   │   ├── ViewportCameraCommand.cs  # 相机命令的区分联合类型。每种具体命令是一个 sealed record 子类。
