@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
@@ -34,8 +34,8 @@ public sealed partial class WindowsVulkanViewportHostControl : NativeControlHost
     }
 
     public WindowsVulkanViewportHostInfo GetHostInfo() => _hostSync.Current;
-    public void RequestCapture() { if (_windowHandle != 0) _mouseCapture.Capture(_windowHandle); }
-    public void RequestReleaseCapture() => _mouseCapture.Release();
+    public void RequestCapture() { if (_windowHandle != 0) _mouseCapture.Capture(_windowHandle, "外部请求", "未指定"); }
+    public void RequestReleaseCapture() => _mouseCapture.Release("外部请求请求");
 
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
@@ -57,6 +57,12 @@ public sealed partial class WindowsVulkanViewportHostControl : NativeControlHost
 
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
+        if (_windowHandle != 0)
+        {
+            _mouseCapture.Release("WM_DESTROY/DestroyNativeControlCore");
+            _rawPointerDragCaptured = false;
+            _arbitration.Reset();
+        }
         NativeViewportDestroy.Destroy(_windowHandle, ref _windowHandle);
         _hostSync.Reset();
         if (_currentInstance == this) _currentInstance = null;

@@ -20,6 +20,7 @@ XuanYu.Engine/                              ← 仓库根目录
 │   ├── PROJECT_CHARTER.md
 │   └── naming-XuanYu-Engine.md
 │   ├── audit-inspector-transform-9.0C-0.md  # 9.0C-0 审计：Inspector / Selection / WorldState / Viewport 链路
+│   ├── audit-NativeViewportMouseCapture-lifecycle-9.0X.md  # 9.0X 审计：Native Viewport 鼠标捕获生命周期
 │   ├── diagnostic-safety.md  # 诊断日志与 UI 调度安全规范
 │   ├── gizmo_drag_audit_probe.log  # 9.0D-R2B 后 Gizmo 拖动性能审计探针日志（299 行）。
 │   ├── plan-9.0D-move-gizmo-final.md  # 9.0D — Move Gizmo 最终验收开发计划
@@ -27,6 +28,7 @@ XuanYu.Engine/                              ← 仓库根目录
 ├── tools/
 │   ├── gizmo_drag_audit.ps1  # 旧 SendInput 方案（未能穿透 WinExe 输入队列，保留参考）。
 │   ├── gizmo_drag_postmessage.ps1  # Gizmo 拖动审计自动化：PostMessage 到 Vulkan 视口子窗口。
+│   ├── mouse_capture_lifecycle_verify.ps1  # 9.0X 鼠标捕获生命周期审计：中键旋转 + Gizmo 拖动自动验证。
 │   └── shaders/
 │       ├── compile_basic_3d.ps1
 │       ├── validate_basic_3d.ps1

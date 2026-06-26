@@ -1,4 +1,4 @@
-﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Keyboard;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Focus;
 using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Win32;
@@ -22,15 +22,14 @@ partial class WindowsVulkanViewportHostControl
                 case NativeViewportPointerAction.Move: return HandlePointerMove(parsed.X, parsed.Y);
                 case NativeViewportPointerAction.Leave: _mouseTrack.Reset(); PointerLeft?.Invoke(); return 0;
                 case NativeViewportPointerAction.Wheel: return HandleWheel(parsed.X, parsed.Y, parsed.WheelDelta, parsed.ModifierFlags);
-                case NativeViewportPointerAction.CaptureChanged: HandleCaptureChanged(); return 0;
+                case NativeViewportPointerAction.CaptureChanged: HandleCaptureChanged(wParam); return 0;
             }
         }
         var key = _keyboardMessages.Parse(msg, wParam);
         if (key is not null)
         {
             _focusMessages.SetFocusTo(_windowHandle);
-            if (key.Action == NativeViewportKeyboardAction.Down) RawKeyDown?.Invoke(key.VirtualKeyCode);
-            else RawKeyUp?.Invoke(key.VirtualKeyCode);
+            if (key.Action == NativeViewportKeyboardAction.Down) RawKeyDown?.Invoke(key.VirtualKeyCode); else RawKeyUp?.Invoke(key.VirtualKeyCode);
             return 0;
         }
         if (_focusMessages.IsKillFocus(msg))
@@ -38,25 +37,24 @@ partial class WindowsVulkanViewportHostControl
             _arbitration.HandleKillFocus(() => _pickInput.OnKillFocus(), _rawPointerDragCaptured,
                 () => RawInputFocusLost?.Invoke(), () => NavigationCaptureLost?.Invoke(),
                 () => RawInputFocusLost?.Invoke());
+            _mouseCapture.Release("WM_KILLFOCUS");
             _rawPointerDragCaptured = false;
             return 0;
         }
-        return NativeViewportHitTestMessages.IsHitTest(msg)
-            ? Win32ViewportDefaultProc.DefWindowProc(hwnd, msg, wParam, lParam)
-            : Win32ViewportDefaultProc.DefWindowProc(hwnd, msg, wParam, lParam);
+        if (msg == 0x001F) { HandleCancelMode(); return 0; }
+        return Win32ViewportDefaultProc.DefWindowProc(hwnd, msg, wParam, lParam);
     }
-
     nint HandleMiddleDown(int x, int y)
     {
         _focusMessages.SetFocusTo(_windowHandle);
-        Trace($"[InputTrace-NativeHost] WM_MBUTTONDOWN code=4(Middle) x={x} y={y}");
-        _mouseCapture.Capture(_windowHandle); _rawPointerDragCaptured = true;
+        _mouseCapture.Capture(_windowHandle, "中键相机导航", "中键");
+        _rawPointerDragCaptured = true;
         RawPointerButtonDown?.Invoke(NativeViewportPointerMessages.VkMButton, x, y); return 0;
     }
     nint HandleMiddleUp(int x, int y)
     {
-        Trace($"[InputTrace-NativeHost] WM_MBUTTONUP code=4(Middle)");
-        _mouseCapture.ClearState();
+        _mouseCapture.Release("WM_MBUTTONUP");
+        _rawPointerDragCaptured = false;
         RawPointerButtonUp?.Invoke(NativeViewportPointerMessages.VkMButton, x, y); return 0;
     }
     nint HandlePointerMove(int x, int y)
@@ -86,9 +84,16 @@ partial class WindowsVulkanViewportHostControl
             (x, y) => _pickInput.OnUp(x, y), (c, x, y) => RawPointerButtonUp?.Invoke(c, x, y));
         return 0;
     }
-    void HandleCaptureChanged()
+    void HandleCaptureChanged(nint newCaptureHwnd)
     {
         if (_rawPointerDragCaptured) { _rawPointerDragCaptured = false; RawInputFocusLost?.Invoke(); }
         _arbitration.HandleCaptureChanged(_mouseCapture, () => NavigationCaptureLost?.Invoke(), () => RawInputFocusLost?.Invoke(), false);
+        _mouseCapture.ClearState($"WM_CAPTURECHANGED 新捕获窗口={newCaptureHwnd:X}");
+    }
+    void HandleCancelMode()
+    {
+        if (_rawPointerDragCaptured) { _rawPointerDragCaptured = false; RawInputFocusLost?.Invoke(); }
+        _arbitration.HandleCaptureChanged(_mouseCapture, () => NavigationCaptureLost?.Invoke(), () => RawInputFocusLost?.Invoke(), false);
+        _mouseCapture.Release("WM_CANCELMODE");
     }
 }

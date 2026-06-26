@@ -1,4 +1,4 @@
-﻿using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
+using XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Pointer;
 using XuanYu.Engine.Render.ViewportNavigation;
 
 namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.NativeHost.Input.Arbitration;
@@ -19,13 +19,13 @@ sealed class NativeViewportInputArbitration
         if (navResult != ViewportNavigationPressResult.NotHandled)
         {
             if (navResult == ViewportNavigationPressResult.BeginDrag)
-            { NavCapture.BeginDrag(); mouseCapture.Capture(hwnd); }
+            { NavCapture.BeginDrag(); mouseCapture.Capture(hwnd, "Overlay导航", "左键"); }
             else NavCapture.SetActive();
             return NativeViewportInputArbitrationConsumer.Navigation;
         }
         var toolResult = sceneToolPressed(mx, my);
         if (toolResult == ViewportSceneToolPressResult.BeginDrag)
-        { ToolCapture.BeginDrag(); mouseCapture.Capture(hwnd); return NativeViewportInputArbitrationConsumer.SceneTool; }
+        { ToolCapture.BeginDrag(); mouseCapture.Capture(hwnd, "MoveGizmo", "左键"); return NativeViewportInputArbitrationConsumer.SceneTool; }
         legacyPickDown(mx, my);
         rawButtonDown(1, mx, my);
         return NativeViewportInputArbitrationConsumer.Legacy;
@@ -43,14 +43,14 @@ sealed class NativeViewportInputArbitration
             var wasDrag = NavCapture.DragCaptured;
             NavCapture.End();
             navigationReleased();
-            if (wasDrag) mouseCapture.Release();
+            if (wasDrag) mouseCapture.Release("WM_LBUTTONUP");
         }
         else if (ToolCapture.IsActive)
         {
             var wasDrag = ToolCapture.DragCaptured;
             ToolCapture.End();
             sceneToolReleased(mx, my);
-            if (wasDrag) mouseCapture.Release();
+            if (wasDrag) mouseCapture.Release("WM_LBUTTONUP");
         }
         else
         { legacyPickUp(mx, my); rawButtonUp(1, mx, my); }
@@ -83,5 +83,11 @@ sealed class NativeViewportInputArbitration
         { NavCapture.ClearState(); navigationCaptureLost(); }
         if (ToolCapture.DragCaptured || ToolCapture.IsActive)
         { ToolCapture.ClearState(); rawFocusLost(); }
+    }
+
+    public void Reset()
+    {
+        NavCapture.ClearState();
+        ToolCapture.ClearState();
     }
 }
