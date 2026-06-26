@@ -37,6 +37,7 @@ public sealed partial class VulkanViewportHostPanel : UserControl
 
     public void RequestCapture() => _nativeHostControl?.RequestCapture();
     public void RequestReleaseCapture() => _nativeHostControl?.RequestReleaseCapture();
+    public void RequestCancelToolCapture() => _nativeHostControl?.RequestCancelToolCapture();
 
     partial void WireNativeHostEvents(WindowsVulkanViewportHostControl ctl);
 }

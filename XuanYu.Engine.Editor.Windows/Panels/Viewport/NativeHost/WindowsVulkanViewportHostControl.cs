@@ -36,6 +36,12 @@ public sealed partial class WindowsVulkanViewportHostControl : NativeControlHost
     public WindowsVulkanViewportHostInfo GetHostInfo() => _hostSync.Current;
     public void RequestCapture() { if (_windowHandle != 0) _mouseCapture.Capture(_windowHandle, "外部请求", "未指定"); }
     public void RequestReleaseCapture() => _mouseCapture.Release(_windowHandle, "外部请求");
+    /// <summary>取消 SceneTool 捕获：清理 ToolCapture 状态并释放 Win32 Capture。不触发 Commit / UI 刷新。</summary>
+    public void RequestCancelToolCapture()
+    {
+        if (_arbitration.ToolCapture.IsActive || _arbitration.ToolCapture.DragCaptured)
+        { _arbitration.ToolCapture.ClearState(); _mouseCapture.Release(_windowHandle, "Esc取消MoveGizmo"); }
+    }
 
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {

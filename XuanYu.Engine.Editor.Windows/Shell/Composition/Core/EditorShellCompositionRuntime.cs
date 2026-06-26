@@ -66,7 +66,11 @@ sealed class EditorShellCompositionRuntime(EditorShellContext ctx)
     }
 
     void ApplyPreviewPosition() => ctx.TransformApplyRoute.Preview(ctx.SelectionRoute, ctx.PreviewApplier, ctx.PointerRoute, ScheduleFrame);
-    void CancelActiveTransform(TransformInteractionResult tr) => ctx.TransformApplyRoute.Cancel(tr, ctx.SelectionRoute, ctx.CancelApplier, ScheduleFrame);
+    void CancelActiveTransform(TransformInteractionResult tr)
+    {
+        ctx.TransformApplyRoute.Cancel(tr, ctx.SelectionRoute, ctx.CancelApplier, ScheduleFrame);
+        ctx.VulkanViewportHostPanel?.RequestCancelToolCapture();
+    }
 
     public void CompleteGroundPlacement(Vector3d gp)
     {
