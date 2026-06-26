@@ -4,8 +4,8 @@
   <StreamGeometry x:Key="IconToolSelect">M2 2 L2 12 L5 9 L8 13 L9 12 L6 8 L11 7 Z</StreamGeometry>
   <!-- Move：四向十字箭头 -->
   <StreamGeometry x:Key="IconToolMove">M8 1 L8 15 M1 8 L15 8 M8 1 L6 3 M8 1 L10 3 M8 15 L6 13 M8 15 L10 13 M1 8 L3 6 M1 8 L3 10 M15 8 L13 6 M15 8 L13 10</StreamGeometry>
-  <!-- Rotate：环形箭头 -->
-  <StreamGeometry x:Key="IconToolRotate">M13 4 A6 6 0 1 1 4 13 M4 13 L2 11 M4 13 L6 11</StreamGeometry>
+  <!-- Rotate：环形箭头 + 中心点 -->
+  <StreamGeometry x:Key="IconToolRotate">M2.57 4.12 A6.64 6.64 0 0 1 6.27 1.56 C9.83 0.61 13.48 2.72 14.44 6.27 C15.39 9.83 13.28 13.48 9.73 14.44 L11.01 14.10 A5.33 5.33 0 1 0 11.87 9.56 L13.12 10.36 L10.26 11.20 L1.33 3.33 L2.57 4.12 Z M8 8 A1.33 1.33 0 1 0 9.33 8 A1.33 1.33 0 1 0 6.67 8 Z</StreamGeometry>
   <!-- Scale：方框 + 对角缩放箭头 -->
   <StreamGeometry x:Key="IconToolScale">M2 2 L14 2 L14 14 L2 14 Z M4 12 L12 4 M10 4 L12 4 L12 6</StreamGeometry>
   <!-- Play：三角播放 -->
