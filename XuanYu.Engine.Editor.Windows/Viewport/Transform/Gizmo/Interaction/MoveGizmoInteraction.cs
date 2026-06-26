@@ -23,5 +23,6 @@ public sealed class MoveGizmoInteraction
     public void EndDrag()
     {
         ActiveElement = MoveGizmoElement.None;
+        HoveredElement = MoveGizmoElement.None;
     }
 }

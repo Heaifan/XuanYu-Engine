@@ -16,7 +16,7 @@ public static class MoveGizmoFrameSource
     {
         var camera = input.Camera;
         if (!camera.IsValid) return MoveGizmoFrameResult.Empty;
-        if (!input.MoveToolActive || !input.SelectedEntityId.IsValid) return MoveGizmoFrameResult.Empty;
+        if (!input.MoveToolActive && !input.SelectedEntityId.IsValid) return MoveGizmoFrameResult.Empty;
 
         var vp = camera.ViewProjection;
         var w = camera.ViewportWidth;
