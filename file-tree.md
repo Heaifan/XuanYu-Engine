@@ -729,7 +729,9 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   │   ├── EditorShellV2.axaml.cs  # V2 生命周期：构造组合根 + Attach/Detach
 │   │   │   └── Composition/
 │   │   │       ├── EditorShellV2Context.cs  # V2 上下文：只持有 Viewport 需要的路由和控件引用
-│   │   │       └── EditorShellV2Composition.cs  # V2 组合根：创建最小路由集 + 事件接线 + 渲染循环
+│   │   │       ├── EditorShellV2Composition.cs  # V2 组合根：路由创建和渲染循环由子文件分担
+│   │   │       ├── EditorShellV2Routes.cs  # V2 路由工厂：创建所有 Route 实例，参构造均参数化
+│   │   │       └── EditorShellV2InputWiring.cs  # V2 输入接线：RawPointer/Navigation/SceneTool 事件→Route
 │   │   ├── MainWindowV2.axaml  # V2 测试窗口：加载 EditorShellV2，旧 MainWindow 不受影响
 │   │   └── MainWindowV2.axaml.cs  # V2 窗口标题版本号
 │   ├── Viewport/
