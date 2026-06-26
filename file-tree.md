@@ -472,6 +472,9 @@ XuanYu.Engine/                              ← 仓库根目录
 │   ├── About/
 │   │   ├── AboutXuanYuEngineWindow.axaml  # XuanYu.Engine.Editor.Windows.About.AboutXuanYuEngineWindow
 │   │   └── AboutXuanYuEngineWindow.axaml.cs  # AboutXuanYuEngineWindow 类
+│   ├── UI/
+│   │   └── Text/
+│   │       └── EditorText.cs  # 编辑器 UI 文本集中管理。默认中文，禁止散落硬编码。
 │   ├── Panels/
 │   │   ├── DebugDock/
 │   │   │   ├── DebugDockPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.DebugDock.DebugDockPanel
@@ -519,6 +522,9 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │   ├── Status/
 │   │   │   ├── StatusBarPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.Status.StatusBarPanel
 │   │   │   └── StatusBarPanel.axaml.cs  # StatusBarPanel 类
+│   │   ├── TopArea/  # 9.1B 顶部区域：两行（主命令栏 + 编辑工具栏），不占第三行。
+│   │   │   ├── EditorTopArea.axaml  # V2 顶部区域：菜单/命令栏 + 工具/模式栏
+│   │   │   └── EditorTopArea.axaml.cs  # Reset Layout 占位行为 + 按钮事件
 │   │   ├── Viewport/
 │   │   │   ├── HostInfo/
 │   │   │   │   ├── Panel/

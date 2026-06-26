@@ -7,41 +7,10 @@
     xmlns:status="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Status"
     xmlns:viewport="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Viewport"
     xmlns:tools="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools"
-    xmlns:leftDock="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.LeftDock">
-  <Grid Background="#202327" RowDefinitions="44,*,200,28">
-    <Border
-        Grid.Row="0"
-        Background="#2A2F36"
-        BorderBrush="#414852"
-        BorderThickness="0,0,0,1">
-      <StackPanel
-          Margin="18,0"
-          VerticalAlignment="Center"
-          Orientation="Horizontal"
-          Spacing="24">
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0">文件</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0">编辑</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0">视图</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="RunMenuButton">运行</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0">导出</Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="SettingsMenuButton">设置
-          <Button.Flyout>
-            <MenuFlyout>
-              <MenuItem Header="偏好设置……" x:Name="PreferencesMenuItem" />
-            </MenuFlyout>
-          </Button.Flyout>
-        </Button>
-        <Button Padding="8,4" Background="Transparent" BorderThickness="0" x:Name="HelpMenuButton">帮助
-          <Button.Flyout>
-            <MenuFlyout>
-              <MenuItem Header="查看默认键位" x:Name="ShowInputBindingsMenuItem" />
-              <Separator />
-              <MenuItem Header="关于 玄域引擎" x:Name="AboutXuanYuEngineMenuItem" />
-            </MenuFlyout>
-          </Button.Flyout>
-        </Button>
-      </StackPanel>
-    </Border>
+    xmlns:leftDock="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.LeftDock"
+    xmlns:topArea="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.TopArea">
+  <Grid Background="#202327" RowDefinitions="Auto,*,200,28">
+    <topArea:EditorTopArea Grid.Row="0" x:Name="EditorTopArea" />
 
     <Grid Grid.Row="1" ColumnDefinitions="260,*,300">
       <leftDock:ProjectWorldDockPanel Grid.Column="0" x:Name="ProjectWorldDockPanel" />

@@ -1,0 +1,62 @@
+<UserControl
+    x:Class="XuanYu.Engine.Editor.Windows.Panels.TopArea.EditorTopArea"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:utext="clr-namespace:XuanYu.Engine.Editor.Windows.UI.Text">
+  <Grid RowDefinitions="29,29" Background="#202327">
+    <!-- Row 0: Main Command Box -->
+    <Border Grid.Row="0" Background="#2A2F36" BorderBrush="#414852" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Orientation="Horizontal" Spacing="4" Margin="6,0,0,0">
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.File}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Edit}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.View}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Window}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" x:Name="SettingsMenuButton" Content="设置">
+            <Button.Flyout><MenuFlyout>
+              <MenuItem Header="偏好设置……" x:Name="PreferencesMenuItem" />
+            </MenuFlyout></Button.Flyout>
+          </Button>
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" x:Name="HelpMenuButton" Content="{x:Static utext:EditorText.Help}">
+            <Button.Flyout><MenuFlyout>
+              <MenuItem Header="查看默认键位" x:Name="ShowInputBindingsMenuItem" />
+              <Separator />
+              <MenuItem Header="关于 玄域引擎" x:Name="AboutXuanYuEngineMenuItem" />
+            </MenuFlyout></Button.Flyout>
+          </Button>
+          <TextBlock Text="|" VerticalAlignment="Center" Foreground="#555" Margin="2,0" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Undo}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Redo}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Save}" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" Margin="0,0,6,0">
+          <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="#888" Text="SampleProject ▼" />
+          <Button Padding="6,2" Background="Transparent" BorderThickness="0" FontSize="11" Content="布局 ▼" />
+          <Button Padding="6,2" FontSize="11" x:Name="ResetLayoutButton" Content="{x:Static utext:EditorText.ResetLayout}"
+              Background="#3A5070" BorderBrush="#4A6680" BorderThickness="1" Foreground="#D8E2F0" />
+        </StackPanel>
+      </Grid>
+    </Border>
+    <!-- Row 1: Editor Tool Box -->
+    <Border Grid.Row="1" Background="#262B33" BorderBrush="#414852" BorderThickness="0,0,0,1">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Orientation="Horizontal" Spacing="4" Margin="6,0,0,0">
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Select}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Move}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Rotate}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Scale}" />
+          <TextBlock Text="|" VerticalAlignment="Center" Foreground="#555" Margin="2,0" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.GlobalLocal}" />
+          <TextBlock Text="|" VerticalAlignment="Center" Foreground="#555" Margin="2,0" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Snap}" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Grid}" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Margin="0,0,6,0">
+          <Button Padding="8,2" FontSize="12" x:Name="RunMenuButton" Content="{x:Static utext:EditorText.Play}"
+              Background="#3A6B4A" BorderBrush="#4A8860" BorderThickness="1" />
+          <Button Padding="8,2" Background="Transparent" BorderThickness="0" FontSize="12" Content="{x:Static utext:EditorText.Stop}" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>
