@@ -73,4 +73,62 @@ public sealed class AxisDragAnchorBuilderTests
         Assert.True(up.Z > 0);
         Assert.True(down.Z < 0);
     }
+
+    // ── DragPlane 退化路径测试 ───────────────────────────
+
+    /// <summary>Camera 从正上方俯视（Pitch≈90°），Z 轴投影 < 6px → 退化到 DragPlane。</summary>
+    [Fact]
+    public void Build_ZAxis_WithTopDownCamera_FallsBackToDragPlane()
+    {
+        var camera = MakeCamera(new SceneOrbitCameraState
+        {
+            Yaw = 0,
+            Pitch = 89f,
+            Distance = 100,
+            PivotX = 0, PivotY = 0, PivotZ = 0,
+            FieldOfViewDegrees = 45,
+            NearPlane = 0.1f,
+            FarPlane = 1000f,
+            ProjectionMode = SceneProjectionMode.Perspective
+        });
+
+        var result = AxisDragAnchorBuilder.Build(Vector3d.UnitZ, 640, 360, Vector3d.Zero, camera, Vector3d.Zero);
+        Assert.True(result.Success);
+        Assert.Equal(AxisTranslationMode.DragPlane, result.Anchor.Mode);
+
+        // DragPlane 字段不出现 NaN / Infinity
+        Assert.True(double.IsFinite(result.Anchor.StartIntersection.X));
+        Assert.True(double.IsFinite(result.Anchor.StartIntersection.Y));
+        Assert.True(double.IsFinite(result.Anchor.StartIntersection.Z));
+        Assert.False(result.Anchor.DragPlaneNormal.IsZero);
+        Assert.True(double.IsFinite(result.Anchor.CameraForward.X));
+    }
+
+    /// <summary>DragPlane 模式下移动方向可逆。</summary>
+    [Fact]
+    public void Solve_ZAxis_DragPlane_CanMoveUpThenBackDown()
+    {
+        var camera = MakeCamera(new SceneOrbitCameraState
+        {
+            Yaw = 0, Pitch = 89f, Distance = 100,
+            PivotX = 0, PivotY = 0, PivotZ = 0,
+            FieldOfViewDegrees = 45,
+            NearPlane = 0.1f, FarPlane = 1000f,
+            ProjectionMode = SceneProjectionMode.Perspective
+        });
+
+        var result = AxisDragAnchorBuilder.Build(Vector3d.UnitZ, 640, 360, Vector3d.Zero, camera, Vector3d.Zero);
+        Assert.True(result.Success);
+        Assert.Equal(AxisTranslationMode.DragPlane, result.Anchor.Mode);
+
+        // 沿轴正方向移动
+        var forward = AxisTranslationSolver.SolveDragPlane(result.Anchor,
+            result.Anchor.StartIntersection + Vector3d.UnitZ * 5);
+        // 回到原位置
+        var backward = AxisTranslationSolver.SolveDragPlane(result.Anchor,
+            result.Anchor.StartIntersection);
+
+        Assert.True(forward.Z > 0, "沿 +Z 移动后 Z 应增加");
+        Assert.True(Math.Abs(backward.Z) < 1e-6, "回到 StartIntersection 后 Z 应接近 0");
+    }
 }
