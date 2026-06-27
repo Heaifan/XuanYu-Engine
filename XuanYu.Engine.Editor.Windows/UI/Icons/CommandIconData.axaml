@@ -1,11 +1,11 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <!-- Undo：左弯箭头 -->
-  <StreamGeometry x:Key="IconCommandUndo">M3 5 L0 8 L3 11 M0 8 L9 8 C12 8 14 10 14 13</StreamGeometry>
-  <!-- Redo：右弯箭头 -->
-  <StreamGeometry x:Key="IconCommandRedo">M13 5 L16 8 L13 11 M16 8 L7 8 C4 8 2 10 2 13</StreamGeometry>
-  <!-- Save：软盘 -->
-  <StreamGeometry x:Key="IconCommandSave">M3 1 L13 1 L15 3 L15 15 L3 15 Z M5 1 L5 6 L11 6 L11 1 M5 10 L13 10 L13 13 L5 13 Z</StreamGeometry>
-  <!-- ResetLayout：窗口布局 + 重置箭头 -->
-  <StreamGeometry x:Key="IconCommandResetLayout">M2 5 L14 5 L14 14 L2 14 Z M2 5 L14 5 M5 5 L5 14 M13 3 C15 4 15 7 13 8 M13 8 L11 7 M13 8 L15 7</StreamGeometry>
+  <!-- Undo：用户提供的 iconfont 左弯箭头（等比缩放至 16px） -->
+  <StreamGeometry x:Key="IconCommandUndo">M 6.66 5.18 l 0 -2.65 -5.18 4.7 5.18 4.7 L 6.66 9.09 c 1.44 0 5.88 0 7.8 4.39 l 0 -0.49 C 14.46 11.04 12.54 4.77 6.66 5.18 z</StreamGeometry>
+  <!-- Redo：用户提供的 iconfont 右弯箭头（等比缩放至 16px） -->
+  <StreamGeometry x:Key="IconCommandRedo">M 9.31 5.18 l 0 -2.65 5.18 4.7 -5.18 4.7 L 9.31 9.09 c -1.44 0 -5.88 0 -7.8 4.39 l 0 -0.49 C 1.51 11.04 3.43 4.77 9.31 5.18 z</StreamGeometry>
+  <!-- Save：用户提供的 iconfont 软盘（等比缩放至 16px） -->
+  <StreamGeometry x:Key="IconCommandSave">M 2.67 2 h 9.33 l 1.8 1.8 a 0.67 0.67 0 0 1 0.2 0.47 V 13.33 a 0.67 0.67 0 0 1 -0.67 0.67 H 2.67 a 0.67 0.67 0 0 1 -0.67 -0.67 V 2.67 a 0.67 0.67 0 0 1 0.67 -0.67 z m 2 0.67 v 3.33 h 6 V 2.67 H 4.67 z m -0.67 5.33 v 4.67 h 8 v -4.67 H 4 z m 4.67 -4.67 h 1.33 v 2 h -1.33 V 3.33 z</StreamGeometry>
+  <!-- ResetLayout：用户提供的 iconfont 重置布局（等比缩放至 16px） -->
+  <StreamGeometry x:Key="IconCommandResetLayout">M 10.87 14.33 a 0.53 0.53 0 0 1 -0.53 -0.53 0.49 0.49 0 0 1 0.53 -0.53 h 2.47 v -2.47 a 0.53 0.53 0 0 1 0.53 -0.53 0.49 0.49 0 0 1 0.53 0.53 v 2.47 a 1.14 1.14 0 0 1 -1.07 1.07 z m -8.2 0 a 1.02 1.02 0 0 1 -1 -1 v -2.47 a 0.52 0.52 0 0 1 0.53 -0.53 0.49 0.49 0 0 1 0.53 0.53 V 13.33 h 2.47 a 0.53 0.53 0 0 1 0.53 0.53 c 0 0.33 -0.33 0.47 -0.6 0.47 z m 1.13 -5.87 a 3.87 3.87 0 0 1 3.67 -3.87 l -0.33 -0.33 a 0.52 0.52 0 0 1 0.73 -0.73 l 1.2 1.2 a 0.52 0.52 0 0 1 0 0.73 l -1.2 1.2 a 0.49 0.49 0 0 1 -0.67 0 0.52 0.52 0 0 1 0 -0.73 l 0.33 -0.33 a 2.85 2.85 0 0 0 -2.67 2.87 2.93 2.93 0 0 0 5.87 0 0.52 0.52 0 0 1 0.53 -0.53 0.4 0.4 0 0 1 0.4 0.53 3.9 3.9 0 0 1 -3.93 3.93 3.94 3.94 0 0 1 -3.93 -3.93 z m 9.53 -3.33 V 2.67 h -2.47 a 0.52 0.52 0 0 1 -0.53 -0.53 0.49 0.49 0 0 1 0.53 -0.53 h 2.47 a 1.02 1.02 0 0 1 1 1 v 2.47 a 0.54 0.54 0 0 1 -0.47 0.6 0.53 0.53 0 0 1 -0.53 -0.53 z m -11.67 0 V 2.67 a 1.02 1.02 0 0 1 1 -1 h 2.47 a 0.53 0.53 0 0 1 0.53 0.53 0.49 0.49 0 0 1 -0.53 0.53 h -2.47 v 2.47 a 0.5 0.5 0 0 1 -0.47 0.47 0.53 0.53 0 0 1 -0.53 -0.54 z</StreamGeometry>
 </ResourceDictionary>
