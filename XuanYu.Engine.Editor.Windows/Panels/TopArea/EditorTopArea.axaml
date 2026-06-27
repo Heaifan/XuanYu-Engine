@@ -15,34 +15,34 @@
           <Button Classes="TopCommandButton" x:Name="HelpMenuButton" Content="{x:Static utext:EditorText.Help}">
             <Button.Flyout><MenuFlyout><MenuItem Header="查看默认键位" x:Name="ShowInputBindingsMenuItem" /><Separator /><MenuItem Header="关于 玄域引擎" x:Name="AboutXuanYuEngineMenuItem" /></MenuFlyout></Button.Flyout></Button>
           <TextBlock Text="|" VerticalAlignment="Center" Foreground="#555" Margin="2,0" />
-          <Button Classes="TopCommandButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconCommandUndo}" /><TextBlock Text="{x:Static utext:EditorText.Undo}" /></StackPanel></Button>
-          <Button Classes="TopCommandButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconCommandRedo}" /><TextBlock Text="{x:Static utext:EditorText.Redo}" /></StackPanel></Button>
-          <Button Classes="TopCommandButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconCommandSave}" /><TextBlock Text="{x:Static utext:EditorText.Save}" /></StackPanel></Button>
+          <Button Classes="TopCommandButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconCommandUndo}" /><TextBlock Text="{x:Static utext:EditorText.Undo}" /></StackPanel></Button>
+          <Button Classes="TopCommandButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconCommandRedo}" /><TextBlock Text="{x:Static utext:EditorText.Redo}" /></StackPanel></Button>
+          <Button Classes="TopCommandButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconCommandSave}" /><TextBlock Text="{x:Static utext:EditorText.Save}" /></StackPanel></Button>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" Margin="0,0,6,0">
           <TextBlock VerticalAlignment="Center" FontSize="11" Foreground="#888" Text="SampleProject ▼" />
           <Button Classes="TopCommandButton" FontSize="11" Content="布局 ▼" />
           <Button Classes="TopCommandButton" x:Name="ResetLayoutButton">
-            <StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconCommandResetLayout}" /><TextBlock Text="{x:Static utext:EditorText.ResetLayout}" /></StackPanel></Button>
+            <StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconCommandResetLayout}" /><TextBlock Text="{x:Static utext:EditorText.ResetLayout}" /></StackPanel></Button>
         </StackPanel>
       </Grid>
     </Border>
     <Border Grid.Row="1" Background="#262B33" BorderBrush="#414852" BorderThickness="0,0,0,1">
       <Grid ColumnDefinitions="*,Auto">
         <StackPanel Orientation="Horizontal" Spacing="4" Margin="6,0,0,0">
-          <Button Classes="EditorToolButton" x:Name="ToolSelectButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconToolSelect}" /><TextBlock Text="{x:Static utext:EditorText.Select}" /></StackPanel></Button>
-          <Button Classes="EditorToolButton SelectedTool" x:Name="ToolMoveButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconToolMove}" /><TextBlock Text="{x:Static utext:EditorText.Move}" /></StackPanel></Button>
-          <Button Classes="EditorToolButton" x:Name="ToolRotateButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconToolRotate}" /><TextBlock Text="{x:Static utext:EditorText.Rotate}" /></StackPanel></Button>
-          <Button Classes="EditorToolButton" x:Name="ToolScaleButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconToolScale}" /><TextBlock Text="{x:Static utext:EditorText.Scale}" /></StackPanel></Button>
+          <Button Classes="EditorToolButton" x:Name="ToolSelectButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconToolSelect}" /><TextBlock Text="{x:Static utext:EditorText.Select}" /></StackPanel></Button>
+          <Button Classes="EditorToolButton SelectedTool" x:Name="ToolMoveButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconToolMove}" /><TextBlock Text="{x:Static utext:EditorText.Move}" /></StackPanel></Button>
+          <Button Classes="EditorToolButton" x:Name="ToolRotateButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconToolRotate}" /><TextBlock Text="{x:Static utext:EditorText.Rotate}" /></StackPanel></Button>
+          <Button Classes="EditorToolButton" x:Name="ToolScaleButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconToolScale}" /><TextBlock Text="{x:Static utext:EditorText.Scale}" /></StackPanel></Button>
           <TextBlock Text="|" VerticalAlignment="Center" Foreground="#555" Margin="4,0" />
-          <Button Classes="TopCommandButton" FontSize="11"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconToolGlobalLocal}" /><TextBlock Text="{x:Static utext:EditorText.GlobalLocal}" /></StackPanel></Button>
+          <Button Classes="TopCommandButton" FontSize="11"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconToolGlobalLocal}" /><TextBlock Text="{x:Static utext:EditorText.GlobalLocal}" /></StackPanel></Button>
           <TextBlock Text="|" VerticalAlignment="Center" Foreground="#555" Margin="4,0" />
-          <Button Classes="TopCommandButton" FontSize="11"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconToolSnap}" /><TextBlock Text="{x:Static utext:EditorText.Snap}" /></StackPanel></Button>
-          <Button Classes="TopCommandButton" FontSize="11"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconToolGrid}" /><TextBlock Text="{x:Static utext:EditorText.Grid}" /></StackPanel></Button>
+          <Button Classes="TopCommandButton" FontSize="11"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconToolSnap}" /><TextBlock Text="{x:Static utext:EditorText.Snap}" /></StackPanel></Button>
+          <Button Classes="TopCommandButton" FontSize="11"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconToolGrid}" /><TextBlock Text="{x:Static utext:EditorText.Grid}" /></StackPanel></Button>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Margin="0,0,6,0">
-          <Button Classes="SimulationButton" x:Name="RunMenuButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconCommandPlay}" /><TextBlock Text="{x:Static utext:EditorText.Play}" /></StackPanel></Button>
-          <Button Classes="TopCommandButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="16" Height="16" Data="{StaticResource IconCommandStop}" /><TextBlock Text="{x:Static utext:EditorText.Stop}" /></StackPanel></Button>
+          <Button Classes="SimulationButton" x:Name="RunMenuButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconCommandPlay}" /><TextBlock Text="{x:Static utext:EditorText.Play}" /></StackPanel></Button>
+          <Button Classes="TopCommandButton"><StackPanel Orientation="Horizontal" Spacing="4"><PathIcon Width="24" Height="24" Foreground="#FFFFFF" Data="{StaticResource IconCommandStop}" /><TextBlock Text="{x:Static utext:EditorText.Stop}" /></StackPanel></Button>
         </StackPanel>
       </Grid>
     </Border>

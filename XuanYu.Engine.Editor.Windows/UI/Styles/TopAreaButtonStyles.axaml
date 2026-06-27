@@ -49,4 +49,20 @@
   <Style Selector="Button.SimulationButton:pressed">
     <Setter Property="Background" Value="#4A7B5A" />
   </Style>
+
+  <Style Selector="Button.TopCommandButton PathIcon">
+    <Setter Property="Foreground" Value="#E8EEF8" />
+  </Style>
+  <Style Selector="Button.EditorToolButton PathIcon">
+    <Setter Property="Foreground" Value="#E8EEF8" />
+  </Style>
+  <Style Selector="Button.EditorToolButton.SelectedTool PathIcon">
+    <Setter Property="Foreground" Value="#FFFFFF" />
+  </Style>
+  <Style Selector="Button.SimulationButton PathIcon">
+    <Setter Property="Foreground" Value="#E8EEF8" />
+  </Style>
+  <Style Selector="Button.SimulationButton:pointerover PathIcon">
+    <Setter Property="Foreground" Value="#FFFFFF" />
+  </Style>
 </Styles>
