@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Color x:Key="ColorEditorWindowBackground">#29323A</Color>
+  <Color x:Key="ColorEditorTopBarBackground">#33404A</Color>
+  <Color x:Key="ColorEditorPanelBackground">#303A44</Color>
+  <Color x:Key="ColorEditorPanelHeaderBackground">#36424C</Color>
+  <Color x:Key="ColorEditorViewportFrameBackground">#26313A</Color>
+  <Color x:Key="ColorEditorViewportCanvasBackground">#1E2730</Color>
+  <Color x:Key="ColorEditorBottomDockBackground">#2E3740</Color>
+  <Color x:Key="ColorEditorStatusBarBackground">#34404A</Color>
+
+  <Color x:Key="ColorEditorBorder">#5B6875</Color>
+  <Color x:Key="ColorEditorBorderSoft">#45515D</Color>
+
+  <Color x:Key="ColorEditorTextPrimary">#EEF3F6</Color>
+  <Color x:Key="ColorEditorTextSecondary">#CCD6DE</Color>
+  <Color x:Key="ColorEditorTextMuted">#8D9AA6</Color>
+  <Color x:Key="ColorEditorTextOnAccent">#F6FBFF</Color>
+
+  <Color x:Key="ColorEditorAccent">#5B8FC7</Color>
+  <Color x:Key="ColorEditorAccentHover">#6FA3D8</Color>
+  <Color x:Key="ColorEditorAccentSelected">#477EB8</Color>
+  <Color x:Key="ColorEditorSuccess">#6E9F75</Color>
+  <Color x:Key="ColorEditorWarning">#B88955</Color>
+  <Color x:Key="ColorEditorError">#D36D6D</Color>
+
+  <Color x:Key="ColorEditorButtonBackground">#394652</Color>
+  <Color x:Key="ColorEditorButtonHoverBackground">#44525F</Color>
+  <Color x:Key="ColorEditorButtonPressedBackground">#4E5C69</Color>
+  <Color x:Key="ColorEditorButtonSelectedBackground">#477EB8</Color>
+  <Color x:Key="ColorEditorInputBackground">#27313A</Color>
+</ResourceDictionary>

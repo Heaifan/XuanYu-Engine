@@ -2,11 +2,43 @@
     x:Class="XuanYu.Engine.Editor.Windows.Panels.DebugDock.DebugDockPanel"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:utext="clr-namespace:XuanYu.Engine.Editor.Windows.UI.Text"
     xmlns:logging="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Logging">
   <Border
-      Background="#1B2026"
-      BorderBrush="#48515C"
+      Background="{StaticResource BrushEditorBottomDockBackground}"
+      BorderBrush="{StaticResource BrushEditorBorder}"
       BorderThickness="0,1,0,0">
-    <logging:LogPanel x:Name="EditorLogPanel" />
+    <Grid RowDefinitions="32,*">
+      <Border
+          Grid.Row="0"
+          Background="{StaticResource BrushEditorPanelHeaderBackground}"
+          BorderBrush="{StaticResource BrushEditorBorderSoft}"
+          BorderThickness="0,0,0,1"
+          Padding="10,0">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel
+              VerticalAlignment="Center"
+              Orientation="Horizontal"
+              Spacing="6">
+            <Button Classes="BottomDockTab" Content="{x:Static utext:EditorText.Console}" />
+            <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+            <Button Classes="BottomDockTab" Content="{x:Static utext:EditorText.Diagnostics}" />
+            <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+            <Button Classes="BottomDockTab" Content="{x:Static utext:EditorText.Performance}" />
+            <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+            <Button Classes="BottomDockTab" Content="{x:Static utext:EditorText.Trace}" />
+          </StackPanel>
+          <Button
+              Grid.Column="1"
+              x:Name="ToggleDockButton"
+              Classes="BottomDockToggle"
+              Click="OnToggleDockClicked" />
+        </Grid>
+      </Border>
+      <logging:LogPanel
+          Grid.Row="1"
+          x:Name="EditorLogPanel"
+          IsVisible="False" />
+    </Grid>
   </Border>
 </UserControl>

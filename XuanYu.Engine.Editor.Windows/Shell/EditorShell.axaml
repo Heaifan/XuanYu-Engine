@@ -9,7 +9,7 @@
     xmlns:tools="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools"
     xmlns:leftDock="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.LeftDock"
     xmlns:topArea="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.TopArea">
-  <Grid Background="#202327" RowDefinitions="Auto,*,200,28">
+  <Grid Background="{StaticResource BrushEditorWindowBackground}" RowDefinitions="Auto,*,32,28">
     <topArea:EditorTopArea Grid.Row="0" x:Name="EditorTopArea" />
 
     <Grid Grid.Row="1" ColumnDefinitions="260,*,300">

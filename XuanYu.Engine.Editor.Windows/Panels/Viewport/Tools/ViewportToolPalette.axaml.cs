@@ -2,7 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using AM = Avalonia.Media;
 
 namespace XuanYu.Engine.Editor.Windows.Panels.Viewport.Tools;
 
@@ -35,13 +34,24 @@ public sealed partial class ViewportToolPalette : UserControl
     private void UpdateVisualState()
     {
         var selBg = _activeTool == ViewportEditorTool.Select
-            ? new SolidColorBrush(AM.Color.Parse("#4A7FEF"))
-            : new SolidColorBrush(AM.Color.Parse("#353B44"));
+            ? ThemeBrush("BrushEditorButtonSelectedBackground")
+            : ThemeBrush("BrushEditorButtonBackground");
         var moveBg = _activeTool == ViewportEditorTool.Move
-            ? new SolidColorBrush(AM.Color.Parse("#4A7FEF"))
-            : new SolidColorBrush(AM.Color.Parse("#353B44"));
+            ? ThemeBrush("BrushEditorButtonSelectedBackground")
+            : ThemeBrush("BrushEditorButtonBackground");
 
         SelectButton!.Background = selBg;
         MoveButton!.Background = moveBg;
     }
+
+    private IBrush ThemeBrush(string key)
+    {
+        var value = this.FindResource(key);
+        if (value is IBrush brush) return brush;
+
+        return key == "BrushEditorButtonSelectedBackground"
+            ? new SolidColorBrush(Color.Parse("#477EB8"))
+            : new SolidColorBrush(Color.Parse("#394652"));
+    }
+
 }

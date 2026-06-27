@@ -19,12 +19,12 @@
     </Style>
 
     <Style Selector="ListBox.hierarchyList ListBoxItem:pointerover">
-      <Setter Property="Background" Value="#24313C" />
+      <Setter Property="Background" Value="{StaticResource BrushEditorButtonHoverBackground}" />
     </Style>
 
     <Style Selector="ListBox.hierarchyList ListBoxItem:selected">
-      <Setter Property="Background" Value="#1769AA" />
-      <Setter Property="Foreground" Value="#FFFFFF" />
+      <Setter Property="Background" Value="{StaticResource BrushEditorAccentSelected}" />
+      <Setter Property="Foreground" Value="{StaticResource BrushEditorTextOnAccent}" />
     </Style>
   </UserControl.Styles>
 

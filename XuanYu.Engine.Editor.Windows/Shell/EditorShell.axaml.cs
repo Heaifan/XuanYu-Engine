@@ -8,8 +8,15 @@ public sealed partial class EditorShell : UserControl
     public EditorShell()
     {
         InitializeComponent();
+        DebugDockPanel.ExpandedChanged += OnDebugDockExpandedChanged;
         _ctx = EditorShellComposition.Build(this);
         _lifecycle = new EditorShellLifecycle(_ctx);
+    }
+
+    void OnDebugDockExpandedChanged(bool isExpanded)
+    {
+        var height = isExpanded ? new GridLength(200) : new GridLength(32);
+        ((Grid)Content!).RowDefinitions[2].Height = height;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

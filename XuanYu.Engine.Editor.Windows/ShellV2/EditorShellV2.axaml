@@ -3,11 +3,11 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:viewport="clr-namespace:XuanYu.Engine.Editor.Windows.Panels.Viewport">
-  <Grid Background="#202327" RowDefinitions="44,*">
+  <Grid Background="{StaticResource BrushEditorWindowBackground}" RowDefinitions="44,*">
     <Border
         Grid.Row="0"
-        Background="#2A2F36"
-        BorderBrush="#414852"
+        Background="{StaticResource BrushEditorTopBarBackground}"
+        BorderBrush="{StaticResource BrushEditorBorderSoft}"
         BorderThickness="0,0,0,1">
       <StackPanel
           Margin="18,0"
@@ -25,8 +25,8 @@
           Margin="8"
           HorizontalAlignment="Left"
           VerticalAlignment="Top"
-          Background="#1E1E1E"
-          BorderBrush="#3E3E3E"
+          Background="{StaticResource BrushEditorPanelBackground}"
+          BorderBrush="{StaticResource BrushEditorBorderSoft}"
           BorderThickness="1"
           CornerRadius="4"
           IsVisible="{Binding Path=IsVisible, ElementName=ViewportToolPaletteV2}"

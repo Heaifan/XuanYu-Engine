@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <SolidColorBrush x:Key="BrushEditorWindowBackground" Color="{StaticResource ColorEditorWindowBackground}" />
+  <SolidColorBrush x:Key="BrushEditorTopBarBackground" Color="{StaticResource ColorEditorTopBarBackground}" />
+  <SolidColorBrush x:Key="BrushEditorPanelBackground" Color="{StaticResource ColorEditorPanelBackground}" />
+  <SolidColorBrush x:Key="BrushEditorPanelHeaderBackground" Color="{StaticResource ColorEditorPanelHeaderBackground}" />
+  <SolidColorBrush x:Key="BrushEditorViewportFrameBackground" Color="{StaticResource ColorEditorViewportFrameBackground}" />
+  <SolidColorBrush x:Key="BrushEditorViewportCanvasBackground" Color="{StaticResource ColorEditorViewportCanvasBackground}" />
+  <SolidColorBrush x:Key="BrushEditorBottomDockBackground" Color="{StaticResource ColorEditorBottomDockBackground}" />
+  <SolidColorBrush x:Key="BrushEditorStatusBarBackground" Color="{StaticResource ColorEditorStatusBarBackground}" />
+
+  <SolidColorBrush x:Key="BrushEditorBorder" Color="{StaticResource ColorEditorBorder}" />
+  <SolidColorBrush x:Key="BrushEditorBorderSoft" Color="{StaticResource ColorEditorBorderSoft}" />
+
+  <SolidColorBrush x:Key="BrushEditorTextPrimary" Color="{StaticResource ColorEditorTextPrimary}" />
+  <SolidColorBrush x:Key="BrushEditorTextSecondary" Color="{StaticResource ColorEditorTextSecondary}" />
+  <SolidColorBrush x:Key="BrushEditorTextMuted" Color="{StaticResource ColorEditorTextMuted}" />
+  <SolidColorBrush x:Key="BrushEditorTextOnAccent" Color="{StaticResource ColorEditorTextOnAccent}" />
+
+  <SolidColorBrush x:Key="BrushEditorAccent" Color="{StaticResource ColorEditorAccent}" />
+  <SolidColorBrush x:Key="BrushEditorAccentHover" Color="{StaticResource ColorEditorAccentHover}" />
+  <SolidColorBrush x:Key="BrushEditorAccentSelected" Color="{StaticResource ColorEditorAccentSelected}" />
+  <SolidColorBrush x:Key="BrushEditorSuccess" Color="{StaticResource ColorEditorSuccess}" />
+  <SolidColorBrush x:Key="BrushEditorWarning" Color="{StaticResource ColorEditorWarning}" />
+  <SolidColorBrush x:Key="BrushEditorError" Color="{StaticResource ColorEditorError}" />
+
+  <SolidColorBrush x:Key="BrushEditorButtonBackground" Color="{StaticResource ColorEditorButtonBackground}" />
+  <SolidColorBrush x:Key="BrushEditorButtonHoverBackground" Color="{StaticResource ColorEditorButtonHoverBackground}" />
+  <SolidColorBrush x:Key="BrushEditorButtonPressedBackground" Color="{StaticResource ColorEditorButtonPressedBackground}" />
+  <SolidColorBrush x:Key="BrushEditorButtonSelectedBackground" Color="{StaticResource ColorEditorButtonSelectedBackground}" />
+  <SolidColorBrush x:Key="BrushEditorInputBackground" Color="{StaticResource ColorEditorInputBackground}" />
+</ResourceDictionary>

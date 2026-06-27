@@ -18,7 +18,7 @@
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
     <Style Selector="Button.hierarchyToggle:pointerover">
-      <Setter Property="Background" Value="#26323D" />
+      <Setter Property="Background" Value="{StaticResource BrushEditorButtonHoverBackground}" />
     </Style>
   </UserControl.Styles>
 
@@ -64,7 +64,7 @@
                  Text="{Binding SecondaryText}"
                  IsVisible="{Binding HasSecondaryText}"
                  FontSize="10.5"
-                 Foreground="#84909D"
+                 Foreground="{StaticResource BrushEditorTextMuted}"
                  TextTrimming="CharacterEllipsis" />
     </Grid>
   </Grid>

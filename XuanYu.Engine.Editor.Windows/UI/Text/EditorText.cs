@@ -26,4 +26,12 @@ internal static class EditorText
     public const string GlobalLocal = "世界/本地";
     public const string Snap = "吸附";
     public const string Grid = "网格";
+
+    // ─── 底部辅助面板 ─────────────────────────────────
+    public const string Console = "控制台";
+    public const string Diagnostics = "诊断";
+    public const string Performance = "性能";
+    public const string Trace = "追踪";
+    public const string Expand = "展开";
+    public const string Collapse = "收起";
 }

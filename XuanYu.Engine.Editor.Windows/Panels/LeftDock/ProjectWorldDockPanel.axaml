@@ -1,12 +1,19 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="XuanYu.Engine.Editor.Windows.Panels.LeftDock.ProjectWorldDockPanel">
-  <Grid RowDefinitions="Auto,Auto,*">
+  <Grid RowDefinitions="Auto,Auto,*" Background="{StaticResource BrushEditorPanelBackground}">
     <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="0">
-      <Button Name="ProjectTabButton" Content="项目内容" Padding="12,4" FontSize="13" BorderThickness="0" />
-      <Button Name="WorldTabButton" Content="世界层级" Padding="12,4" FontSize="13" BorderThickness="0" />
+      <Button Name="ProjectTabButton" Content="项目内容" Padding="12,4" FontSize="13" BorderThickness="0"
+              Background="{StaticResource BrushEditorButtonBackground}"
+              Foreground="{StaticResource BrushEditorTextSecondary}" />
+      <Button Name="WorldTabButton" Content="世界层级" Padding="12,4" FontSize="13" BorderThickness="0"
+              Background="{StaticResource BrushEditorButtonBackground}"
+              Foreground="{StaticResource BrushEditorTextSecondary}" />
     </StackPanel>
-    <TextBox Grid.Row="1" Name="SearchTextBox" PlaceholderText="搜索世界实体……" Margin="0,0,0,4" />
+    <TextBox Grid.Row="1" Name="SearchTextBox" PlaceholderText="搜索世界实体……" Margin="0,0,0,4"
+             Background="{StaticResource BrushEditorInputBackground}"
+             BorderBrush="{StaticResource BrushEditorBorderSoft}"
+             Foreground="{StaticResource BrushEditorTextPrimary}" />
     <Grid Grid.Row="2" Name="ContentArea" />
   </Grid>
 </UserControl>

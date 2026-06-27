@@ -4,26 +4,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Border
       Padding="14,0"
-      Background="#252A31"
-      BorderBrush="#48515C"
+      Background="{StaticResource BrushEditorStatusBarBackground}"
+      BorderBrush="{StaticResource BrushEditorBorder}"
       BorderThickness="0,1,0,0">
     <StackPanel
         VerticalAlignment="Center"
         Orientation="Horizontal"
         Spacing="18">
-      <TextBlock Foreground="#E6EDF3" Text="状态：就绪" />
-      <TextBlock Foreground="#7D8792" Text="|" />
-      <TextBlock Foreground="#E6EDF3" Text="阶段：GUI 原型" />
-      <TextBlock Foreground="#7D8792" Text="|" />
-      <TextBlock Foreground="#E6EDF3" Text="Core：已加载" />
-      <TextBlock Foreground="#7D8792" Text="|" />
-      <TextBlock x:Name="VulkanStatusText" Foreground="#E6EDF3" Text="Vulkan：未接入" />
-      <TextBlock Foreground="#7D8792" Text="|" />
-      <TextBlock x:Name="CurrentSelectionText" Foreground="#E6EDF3" Text="当前选择：无" />
-      <TextBlock Foreground="#7D8792" Text="|" />
-      <TextBlock x:Name="GroundCoordText" Foreground="#7D8792" Text="地面坐标：无" />
-      <TextBlock Foreground="#7D8792" Text="|" />
-      <TextBlock x:Name="DirtyStateText" Foreground="#E6EDF3" Text="场景：未修改" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextPrimary}" Text="状态：就绪" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextPrimary}" Text="阶段：GUI 原型" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextPrimary}" Text="Core：已加载" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+      <TextBlock x:Name="VulkanStatusText" Foreground="{StaticResource BrushEditorTextPrimary}" Text="Vulkan：未接入" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+      <TextBlock x:Name="CurrentSelectionText" Foreground="{StaticResource BrushEditorTextPrimary}" Text="当前选择：无" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+      <TextBlock x:Name="GroundCoordText" Foreground="{StaticResource BrushEditorTextMuted}" Text="地面坐标：无" />
+      <TextBlock Foreground="{StaticResource BrushEditorTextMuted}" Text="|" />
+      <TextBlock x:Name="DirtyStateText" Foreground="{StaticResource BrushEditorTextPrimary}" Text="场景：未修改" />
     </StackPanel>
   </Border>
 </UserControl>

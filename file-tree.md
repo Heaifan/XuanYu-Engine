@@ -486,8 +486,8 @@ XuanYu.Engine/                              ← 仓库根目录
 │   │       └── EditorText.cs  # 编辑器 UI 文本集中管理。默认中文，禁止散落硬编码。
 │   ├── Panels/
 │   │   ├── DebugDock/
-│   │   │   ├── DebugDockPanel.axaml  # XuanYu.Engine.Editor.Windows.Panels.DebugDock.DebugDockPanel
-│   │   │   ├── DebugDockPanel.axaml.cs  # DebugDockPanel — <summary>底部调试终端，包含日志、渲染诊断、RenderScene 和性能页签。</summary>
+│   │   │   ├── DebugDockPanel.axaml  # 底部辅助 Dock：默认折叠，仅显示控制台/诊断/性能/追踪标签栏。
+│   │   │   ├── DebugDockPanel.axaml.cs  # DebugDockPanel：维护底部 Dock 展开/收起状态，并保留日志面板入口。
 │   │   │   ├── DebugDockPanel.Diagnostics.cs  # DebugDockPanel — <summary>Partial：渲染诊断文本更新。</summary>
 │   │   │   ├── DebugDockPanel.Performance.cs  # DebugDockPanel — <summary>Partial：性能计时更新。</summary>
 │   │   │   └── DebugDockPanel.RenderScene.cs  # DebugDockPanel — <summary>Partial：RenderScene 列表更新。</summary>

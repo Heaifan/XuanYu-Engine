@@ -7,14 +7,14 @@
     <Setter Property="CornerRadius" Value="3" />
     <Setter Property="FontSize" Value="12" />
     <Setter Property="Padding" Value="8,4" />
-    <Setter Property="Foreground" Value="#D8DDE4" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextSecondary}" />
   </Style>
   <Style Selector="Button.TopCommandButton:pointerover">
-    <Setter Property="Background" Value="#3A3F47" />
-    <Setter Property="Foreground" Value="#E8EEF8" />
+    <Setter Property="Background" Value="{StaticResource BrushEditorButtonHoverBackground}" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextPrimary}" />
   </Style>
   <Style Selector="Button.TopCommandButton:pressed">
-    <Setter Property="Background" Value="#4A5059" />
+    <Setter Property="Background" Value="{StaticResource BrushEditorButtonPressedBackground}" />
   </Style>
 
   <!-- 编辑器工具按钮：当前选中工具用蓝色高亮 -->
@@ -24,40 +24,66 @@
     <Setter Property="CornerRadius" Value="3" />
     <Setter Property="FontSize" Value="12" />
     <Setter Property="Padding" Value="6,4" />
-    <Setter Property="Foreground" Value="#D8DDE4" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextSecondary}" />
   </Style>
   <Style Selector="Button.EditorToolButton:pointerover">
-    <Setter Property="Background" Value="#3A3F47" />
-    <Setter Property="Foreground" Value="#E8EEF8" />
+    <Setter Property="Background" Value="{StaticResource BrushEditorButtonHoverBackground}" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextPrimary}" />
   </Style>
   <Style Selector="Button.EditorToolButton:pressed">
-    <Setter Property="Background" Value="#4A5059" />
+    <Setter Property="Background" Value="{StaticResource BrushEditorButtonPressedBackground}" />
   </Style>
   <Style Selector="Button.EditorToolButton.SelectedTool">
-    <Setter Property="Background" Value="#2563EB" />
-    <Setter Property="Foreground" Value="#FFFFFF" />
+    <Setter Property="Background" Value="{StaticResource BrushEditorButtonSelectedBackground}" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextOnAccent}" />
   </Style>
   <Style Selector="Button.EditorToolButton.SelectedTool:pointerover">
-    <Setter Property="Background" Value="#3B82F6" />
+    <Setter Property="Background" Value="{StaticResource BrushEditorAccentHover}" />
   </Style>
   <Style Selector="Button.EditorToolButton.SelectedTool:pressed">
-    <Setter Property="Background" Value="#1D4ED8" />
+    <Setter Property="Background" Value="{StaticResource BrushEditorAccentSelected}" />
   </Style>
 
   <!-- 图标颜色：普通浅灰，hover 提亮，选中变白 -->
   <Style Selector="Button.TopCommandButton PathIcon">
-    <Setter Property="Foreground" Value="#9CA3B0" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextMuted}" />
   </Style>
   <Style Selector="Button.TopCommandButton:pointerover PathIcon">
-    <Setter Property="Foreground" Value="#C4CBD6" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextSecondary}" />
   </Style>
   <Style Selector="Button.EditorToolButton PathIcon">
-    <Setter Property="Foreground" Value="#9CA3B0" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextMuted}" />
   </Style>
   <Style Selector="Button.EditorToolButton:pointerover PathIcon">
-    <Setter Property="Foreground" Value="#C4CBD6" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextSecondary}" />
   </Style>
   <Style Selector="Button.EditorToolButton.SelectedTool PathIcon">
-    <Setter Property="Foreground" Value="#FFFFFF" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextOnAccent}" />
+  </Style>
+
+  <Style Selector="Button.BottomDockTab">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="3" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Padding" Value="8,3" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextSecondary}" />
+  </Style>
+  <Style Selector="Button.BottomDockTab:pointerover">
+    <Setter Property="Background" Value="{StaticResource BrushEditorButtonHoverBackground}" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextPrimary}" />
+  </Style>
+  <Style Selector="Button.BottomDockToggle">
+    <Setter Property="Background" Value="{StaticResource BrushEditorButtonBackground}" />
+    <Setter Property="BorderBrush" Value="{StaticResource BrushEditorBorderSoft}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="3" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Padding" Value="10,3" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextSecondary}" />
+  </Style>
+  <Style Selector="Button.BottomDockToggle:pointerover">
+    <Setter Property="Background" Value="{StaticResource BrushEditorButtonHoverBackground}" />
+    <Setter Property="Foreground" Value="{StaticResource BrushEditorTextPrimary}" />
   </Style>
 </Styles>

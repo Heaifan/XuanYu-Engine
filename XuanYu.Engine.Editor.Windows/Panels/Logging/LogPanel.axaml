@@ -4,24 +4,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Border
       Padding="10,8"
-      Background="#1B2026"
-      BorderBrush="#48515C"
+      Background="{StaticResource BrushEditorBottomDockBackground}"
+      BorderBrush="{StaticResource BrushEditorBorder}"
       BorderThickness="0,1,0,0">
     <TextBox
         x:Name="LogTextBox"
         AcceptsReturn="True"
-        Background="#11161C"
-        BorderBrush="#303944"
+        Background="{StaticResource BrushEditorInputBackground}"
+        BorderBrush="{StaticResource BrushEditorBorderSoft}"
         BorderThickness="1"
         FontFamily="Consolas, Microsoft YaHei UI"
         FontSize="12"
-        Foreground="#DCE3EA"
+        Foreground="{StaticResource BrushEditorTextSecondary}"
         IsReadOnly="True"
         Padding="8"
         ScrollViewer.HorizontalScrollBarVisibility="Auto"
         ScrollViewer.VerticalScrollBarVisibility="Auto"
-        SelectionBrush="#1769AA"
-        SelectionForegroundBrush="#FFFFFF"
+        SelectionBrush="{StaticResource BrushEditorAccentSelected}"
+        SelectionForegroundBrush="{StaticResource BrushEditorTextOnAccent}"
         TextWrapping="NoWrap">
       <TextBox.ContextMenu>
         <ContextMenu>

@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Border
       Margin="0"
-      Background="#15191E"
-      BorderBrush="#48515C"
+      Background="{StaticResource BrushEditorViewportFrameBackground}"
+      BorderBrush="{StaticResource BrushEditorBorder}"
       BorderThickness="0,0,1,0"
       PointerPressed="HandleViewportPointerPressed">
     <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto" Margin="20">
@@ -13,7 +13,7 @@
           Grid.Row="0"
           FontSize="18"
           FontWeight="SemiBold"
-          Foreground="#F0F4F8"
+          Foreground="{StaticResource BrushEditorTextPrimary}"
           Text="3D 视口" />
 
       <!-- 主体内容 — 三状态面板 -->
@@ -26,15 +26,15 @@
         <TextBlock
             HorizontalAlignment="Center"
             FontSize="22"
-            Foreground="#F0F4F8"
+            Foreground="{StaticResource BrushEditorTextPrimary}"
             Text="Vulkan 渲染器尚未接入" />
         <TextBlock
             HorizontalAlignment="Center"
-            Foreground="#AEB7C2"
+            Foreground="{StaticResource BrushEditorTextSecondary}"
             Text="后续将在此显示 3D 战场" />
         <TextBlock
             HorizontalAlignment="Center"
-            Foreground="#7F8B98"
+            Foreground="{StaticResource BrushEditorTextMuted}"
             Text="点击此区域可聚焦视口占位区" />
       </StackPanel>
 
@@ -48,15 +48,15 @@
         <TextBlock
             HorizontalAlignment="Center"
             FontSize="22"
-            Foreground="#F0F4F8"
+            Foreground="{StaticResource BrushEditorTextPrimary}"
             Text="3D 视口" />
         <TextBlock
             HorizontalAlignment="Center"
-            Foreground="#AEB7C2"
+            Foreground="{StaticResource BrushEditorTextSecondary}"
             Text="当前 World 没有实体" />
         <TextBlock
             HorizontalAlignment="Center"
-            Foreground="#7F8B98"
+            Foreground="{StaticResource BrushEditorTextMuted}"
             Text="请检查项目内容目录中是否存在单位模板文件。" />
       </StackPanel>
 
@@ -71,48 +71,48 @@
             x:Name="EntityTypeLabel"
             HorizontalAlignment="Center"
             FontSize="20"
-            Foreground="#F0F4F8" />
+            Foreground="{StaticResource BrushEditorTextPrimary}" />
         <TextBlock
             x:Name="EntityNameText"
             HorizontalAlignment="Center"
             FontSize="28"
             FontWeight="SemiBold"
-            Foreground="#58A6FF" />
+            Foreground="{StaticResource BrushEditorAccentHover}" />
         <Separator Margin="40,4" />
         <StackPanel Spacing="4" HorizontalAlignment="Center">
-          <TextBlock Foreground="#AEB7C2" HorizontalAlignment="Center" Text="EntityId" />
-          <TextBlock x:Name="EntityIdText" Foreground="#F0F4F8" HorizontalAlignment="Center" />
+          <TextBlock Foreground="{StaticResource BrushEditorTextSecondary}" HorizontalAlignment="Center" Text="EntityId" />
+          <TextBlock x:Name="EntityIdText" Foreground="{StaticResource BrushEditorTextPrimary}" HorizontalAlignment="Center" />
         </StackPanel>
         <StackPanel Spacing="4" HorizontalAlignment="Center">
-          <TextBlock Foreground="#AEB7C2" HorizontalAlignment="Center" Text="来源" />
-          <TextBlock x:Name="EntitySourceText" Foreground="#F0F4F8" HorizontalAlignment="Center" />
+          <TextBlock Foreground="{StaticResource BrushEditorTextSecondary}" HorizontalAlignment="Center" Text="来源" />
+          <TextBlock x:Name="EntitySourceText" Foreground="{StaticResource BrushEditorTextPrimary}" HorizontalAlignment="Center" />
         </StackPanel>
         <StackPanel Spacing="4" HorizontalAlignment="Center">
-          <TextBlock Foreground="#AEB7C2" HorizontalAlignment="Center" Text="位置" />
-          <TextBlock x:Name="EntityPositionText" Foreground="#F0F4F8" HorizontalAlignment="Center" />
+          <TextBlock Foreground="{StaticResource BrushEditorTextSecondary}" HorizontalAlignment="Center" Text="位置" />
+          <TextBlock x:Name="EntityPositionText" Foreground="{StaticResource BrushEditorTextPrimary}" HorizontalAlignment="Center" />
         </StackPanel>
         <StackPanel Spacing="4" HorizontalAlignment="Center">
-          <TextBlock Foreground="#AEB7C2" HorizontalAlignment="Center" Text="渲染对象" />
-          <TextBlock x:Name="EntityVisualKindText" Foreground="#58A6FF" HorizontalAlignment="Center" />
+          <TextBlock Foreground="{StaticResource BrushEditorTextSecondary}" HorizontalAlignment="Center" Text="渲染对象" />
+          <TextBlock x:Name="EntityVisualKindText" Foreground="{StaticResource BrushEditorAccentHover}" HorizontalAlignment="Center" />
         </StackPanel>
       </StackPanel>
 
       <!-- 底部：Vulkan 后端状态 -->
       <Border
           Grid.Row="2"
-          Background="#1A1F26"
-          BorderBrush="#48515C"
+          Background="{StaticResource BrushEditorPanelBackground}"
+          BorderBrush="{StaticResource BrushEditorBorder}"
           BorderThickness="0,1,0,0"
           Padding="16,6">
         <StackPanel Spacing="4">
           <TextBlock
               FontSize="14"
               FontWeight="SemiBold"
-              Foreground="#F0F4F8"
+              Foreground="{StaticResource BrushEditorTextPrimary}"
               Text="Vulkan 后端" />
           <TextBlock
               x:Name="VulkanBackendStatusText"
-              Foreground="#8B949E"
+              Foreground="{StaticResource BrushEditorTextMuted}"
               Text="正在探测..." />
         </StackPanel>
       </Border>
@@ -120,19 +120,19 @@
       <!-- 底部：Vulkan Instance 状态 -->
       <Border
           Grid.Row="3"
-          Background="#1A1F26"
-          BorderBrush="#48515C"
+          Background="{StaticResource BrushEditorPanelBackground}"
+          BorderBrush="{StaticResource BrushEditorBorder}"
           BorderThickness="0,1,0,0"
           Padding="16,6">
         <StackPanel Spacing="4">
           <TextBlock
               FontSize="14"
               FontWeight="SemiBold"
-              Foreground="#F0F4F8"
+              Foreground="{StaticResource BrushEditorTextPrimary}"
               Text="Vulkan Instance" />
           <TextBlock
               x:Name="VulkanInstanceStatusText"
-              Foreground="#8B949E"
+              Foreground="{StaticResource BrushEditorTextMuted}"
               Text="尚未创建" />
         </StackPanel>
       </Border>
@@ -140,19 +140,19 @@
       <!-- 底部：Vulkan Device 状态 -->
       <Border
           Grid.Row="4"
-          Background="#1A1F26"
-          BorderBrush="#48515C"
+          Background="{StaticResource BrushEditorPanelBackground}"
+          BorderBrush="{StaticResource BrushEditorBorder}"
           BorderThickness="0,1,0,0"
           Padding="16,6">
         <StackPanel Spacing="4">
           <TextBlock
               FontSize="14"
               FontWeight="SemiBold"
-              Foreground="#F0F4F8"
+              Foreground="{StaticResource BrushEditorTextPrimary}"
               Text="Vulkan Device" />
           <TextBlock
               x:Name="VulkanDeviceStatusText"
-              Foreground="#8B949E"
+              Foreground="{StaticResource BrushEditorTextMuted}"
               Text="尚未创建" />
         </StackPanel>
       </Border>
@@ -160,19 +160,19 @@
       <!-- 底部：RenderScene 调试对象列表 -->
       <Border
           Grid.Row="5"
-          Background="#1A1F26"
-          BorderBrush="#48515C"
+          Background="{StaticResource BrushEditorPanelBackground}"
+          BorderBrush="{StaticResource BrushEditorBorder}"
           BorderThickness="0,1,0,0"
           Padding="16,10">
         <StackPanel Spacing="6">
           <TextBlock
               FontSize="14"
               FontWeight="SemiBold"
-              Foreground="#F0F4F8"
+              Foreground="{StaticResource BrushEditorTextPrimary}"
               Text="RenderScene 调试对象" />
           <TextBlock
               x:Name="DebugListEmptyText"
-              Foreground="#8B949E"
+              Foreground="{StaticResource BrushEditorTextMuted}"
               IsVisible="False"
               Text="暂无渲染对象" />
           <StackPanel x:Name="DebugListPanel" IsVisible="False" Spacing="4" />

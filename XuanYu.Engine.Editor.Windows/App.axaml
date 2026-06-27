@@ -6,6 +6,8 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="/UI/Theme/EditorThemeColors.axaml" />
+        <ResourceInclude Source="/UI/Theme/EditorThemeBrushes.axaml" />
         <ResourceInclude Source="/UI/Icons/CommandIconData.axaml" />
         <ResourceInclude Source="/UI/Icons/ToolIconData.axaml" />
       </ResourceDictionary.MergedDictionaries>
