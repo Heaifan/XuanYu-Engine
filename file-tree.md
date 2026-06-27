@@ -22,6 +22,10 @@ XuanYu.Engine/                              ← 仓库根目录
 │   ├── audit-inspector-transform-9.0C-0.md  # 9.0C-0 审计：Inspector / Selection / WorldState / Viewport 链路
 │   ├── audit-NativeViewportMouseCapture-lifecycle-9.0X.md  # 9.0X 审计：Native Viewport 鼠标捕获生命周期
 │   ├── diagnostic-safety.md  # 诊断日志与 UI 调度安全规范
+│   ├── editor-top-area-target-9.1B.md  # 9.1B 顶部区域目标：两行主命令栏 + 编辑工具栏。
+│   ├── editor-top-svg-icons-9.1C.md  # 9.1C 顶部工具栏 SVG 图标替换验收说明。
+│   ├── editor-top-svg-icons-9.1C-R.md  # 9.1C-R 顶部 SVG 视觉细修：降尺寸、降亮度、统一按钮。
+│   ├── editor-ui-terms-9.1B.md  # 9.1B 顶部区域 UI 文案与术语。
 │   ├── gizmo_drag_audit_probe.log  # 9.0D-R2B 后 Gizmo 拖动性能审计探针日志（299 行）。
 │   ├── plan-9.0D-move-gizmo-final.md  # 9.0D — Move Gizmo 最终验收开发计划
 

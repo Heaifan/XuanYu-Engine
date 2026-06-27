@@ -1,68 +1,63 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- 顶部命令按钮：菜单/全局命令，视觉低调 -->
   <Style Selector="Button.TopCommandButton">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="3" />
     <Setter Property="FontSize" Value="12" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="Padding" Value="8,4" />
     <Setter Property="Foreground" Value="#D8DDE4" />
   </Style>
   <Style Selector="Button.TopCommandButton:pointerover">
     <Setter Property="Background" Value="#3A3F47" />
+    <Setter Property="Foreground" Value="#E8EEF8" />
   </Style>
   <Style Selector="Button.TopCommandButton:pressed">
     <Setter Property="Background" Value="#4A5059" />
   </Style>
 
+  <!-- 编辑器工具按钮：当前选中工具用蓝色高亮 -->
   <Style Selector="Button.EditorToolButton">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="3" />
     <Setter Property="FontSize" Value="12" />
-    <Setter Property="Padding" Value="6,2" />
+    <Setter Property="Padding" Value="6,4" />
     <Setter Property="Foreground" Value="#D8DDE4" />
   </Style>
   <Style Selector="Button.EditorToolButton:pointerover">
     <Setter Property="Background" Value="#3A3F47" />
+    <Setter Property="Foreground" Value="#E8EEF8" />
   </Style>
   <Style Selector="Button.EditorToolButton:pressed">
     <Setter Property="Background" Value="#4A5059" />
   </Style>
   <Style Selector="Button.EditorToolButton.SelectedTool">
-    <Setter Property="Background" Value="#2D4A6E" />
-    <Setter Property="Foreground" Value="#E8EEF8" />
-  </Style>
-  <Style Selector="Button.EditorToolButton.SelectedTool:pointerover">
-    <Setter Property="Background" Value="#35577F" />
-  </Style>
-
-  <Style Selector="Button.SimulationButton">
-    <Setter Property="Background" Value="Transparent" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="FontSize" Value="12" />
-    <Setter Property="Padding" Value="8,2" />
-    <Setter Property="Foreground" Value="#D8DDE4" />
-  </Style>
-  <Style Selector="Button.SimulationButton:pointerover">
-    <Setter Property="Background" Value="#3A6B4A" />
-    <Setter Property="Foreground" Value="#E8F0EC" />
-  </Style>
-  <Style Selector="Button.SimulationButton:pressed">
-    <Setter Property="Background" Value="#4A7B5A" />
-  </Style>
-
-  <Style Selector="Button.TopCommandButton PathIcon">
-    <Setter Property="Foreground" Value="#E8EEF8" />
-  </Style>
-  <Style Selector="Button.EditorToolButton PathIcon">
-    <Setter Property="Foreground" Value="#E8EEF8" />
-  </Style>
-  <Style Selector="Button.EditorToolButton.SelectedTool PathIcon">
+    <Setter Property="Background" Value="#2563EB" />
     <Setter Property="Foreground" Value="#FFFFFF" />
   </Style>
-  <Style Selector="Button.SimulationButton PathIcon">
-    <Setter Property="Foreground" Value="#E8EEF8" />
+  <Style Selector="Button.EditorToolButton.SelectedTool:pointerover">
+    <Setter Property="Background" Value="#3B82F6" />
   </Style>
-  <Style Selector="Button.SimulationButton:pointerover PathIcon">
+  <Style Selector="Button.EditorToolButton.SelectedTool:pressed">
+    <Setter Property="Background" Value="#1D4ED8" />
+  </Style>
+
+  <!-- 图标颜色：普通浅灰，hover 提亮，选中变白 -->
+  <Style Selector="Button.TopCommandButton PathIcon">
+    <Setter Property="Foreground" Value="#9CA3B0" />
+  </Style>
+  <Style Selector="Button.TopCommandButton:pointerover PathIcon">
+    <Setter Property="Foreground" Value="#C4CBD6" />
+  </Style>
+  <Style Selector="Button.EditorToolButton PathIcon">
+    <Setter Property="Foreground" Value="#9CA3B0" />
+  </Style>
+  <Style Selector="Button.EditorToolButton:pointerover PathIcon">
+    <Setter Property="Foreground" Value="#C4CBD6" />
+  </Style>
+  <Style Selector="Button.EditorToolButton.SelectedTool PathIcon">
     <Setter Property="Foreground" Value="#FFFFFF" />
   </Style>
 </Styles>
