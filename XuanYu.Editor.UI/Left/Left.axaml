@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.Left"
+             x:DataType="local:UiVm">
+  <TabControl SelectedIndex="{Binding LeftTabIndex}">
+    <TabItem Header="项目">
+      <StackPanel Spacing="10" Margin="0,8,0,0">
+        <TextBlock Text="项目资源" Classes="section"/>
+        <ListBox ItemsSource="{Binding ProjectItems}"
+                 SelectedItem="{Binding SelectedProjectItem, Mode=TwoWay}"
+                 Background="Transparent"
+                 BorderThickness="0"/>
+      </StackPanel>
+    </TabItem>
+    <TabItem Header="层级">
+      <StackPanel Spacing="10" Margin="0,8,0,0">
+        <TextBlock Text="世界树" Classes="section"/>
+        <ListBox ItemsSource="{Binding HierarchyItems}"
+                 SelectedItem="{Binding SelectedHierarchyItem, Mode=TwoWay}"
+                 Background="Transparent"
+                 BorderThickness="0"/>
+      </StackPanel>
+    </TabItem>
+    <TabItem Header="工具">
+      <StackPanel Spacing="10" Margin="0,8,0,0">
+        <TextBlock Text="编辑工具" Classes="section"/>
+        <ListBox>
+          <ListBoxItem Content="选择模式"/>
+          <ListBoxItem Content="视口模式"/>
+          <ListBoxItem Content="检查器模式"/>
+        </ListBox>
+      </StackPanel>
+    </TabItem>
+  </TabControl>
+</UserControl>

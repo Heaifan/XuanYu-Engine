@@ -7,8 +7,8 @@ echo    XuanYu Engine Editor - 构建并启动
 echo ========================================
 echo.
 
-echo [1/2] 正在构建解决方案...
-call dotnet build XuanYu.Engine.sln -nologo -clp:Summary=false
+echo [1/2] 正在构建编辑器 UI 骨架...
+call dotnet build .\XuanYu.Editor.UI\XuanYu.Editor.UI.csproj -nologo -clp:Summary=false
 if %ERRORLEVEL% neq 0 (
     echo.
     echo [失败] 构建出错，请检查上方错误信息。
@@ -20,7 +20,7 @@ echo.
 echo [2/2] 正在启动 Editor...
 echo.
 echo --- dotnet output start ---
-call dotnet run --project XuanYu.Engine.Editor.Windows --no-build
+call dotnet run --project .\XuanYu.Editor.UI\XuanYu.Editor.UI.csproj --no-build
 set EDITOR_EXIT_CODE=%ERRORLEVEL%
 echo --- dotnet output end ---
 echo.
@@ -29,4 +29,4 @@ if %EDITOR_EXIT_CODE% neq 0 (
     echo 如果上方有异常堆栈，请优先关注异常类型与行号。
     pause
     exit /b %EDITOR_EXIT_CODE%
-)
+)

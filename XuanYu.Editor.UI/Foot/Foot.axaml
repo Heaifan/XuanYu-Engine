@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.Foot"
+             x:DataType="local:UiVm">
+  <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16">
+    <TextBlock Text="{Binding FooterMessage}" VerticalAlignment="Center"/>
+    <TextBlock Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center" Foreground="#50607a"/>
+    <TextBlock Grid.Column="2" Text="{Binding FooterState}" VerticalAlignment="Center" Foreground="#2e7d32" FontWeight="SemiBold"/>
+  </Grid>
+</UserControl>

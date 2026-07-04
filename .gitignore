@@ -11,6 +11,11 @@ obj/
 
 # Build artifacts
 artifacts/
+.artifacts/
+
+# Local package/cache folders
+.nuget-local/
+.agents/
 
 # Rider IDE
 .idea/

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.Top"
+             x:DataType="local:UiVm">
+  <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16">
+    <StackPanel Spacing="2">
+      <TextBlock Text="玄渊编辑器" FontSize="24" FontWeight="Bold" Foreground="#101828"/>
+      <TextBlock Text="{Binding FooterMessage}" Classes="caption"/>
+    </StackPanel>
+
+    <Border Grid.Column="1" Classes="chrome" Padding="6" VerticalAlignment="Center" HorizontalAlignment="Center">
+      <StackPanel Orientation="Horizontal">
+        <Button Content="项目" Command="{Binding SelectModeCommand}" CommandParameter="Project"/>
+        <Button Content="世界" Command="{Binding SelectModeCommand}" CommandParameter="World"/>
+        <Button Content="视口" Command="{Binding SelectModeCommand}" CommandParameter="Viewport"/>
+        <Button Content="检查器" Command="{Binding SelectModeCommand}" CommandParameter="Inspector"/>
+        <Button Content="日志" Command="{Binding SelectModeCommand}" CommandParameter="Logs" Margin="0"/>
+      </StackPanel>
+    </Border>
+
+    <StackPanel Grid.Column="2" HorizontalAlignment="Right" Spacing="2">
+      <TextBlock Text="{Binding ActiveModeTitle}" Foreground="#1f7a4d" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+      <TextBlock Text="{Binding FooterState}" Classes="caption" HorizontalAlignment="Right"/>
+    </StackPanel>
+  </Grid>
+</UserControl>

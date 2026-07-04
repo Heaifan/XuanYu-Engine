@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.UiRoot"
+             x:DataType="local:UiVm">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="16">
+    <Border Grid.Row="0" Classes="panel" Padding="16,12">
+      <local:Top />
+    </Border>
+
+    <Grid Grid.Row="1" ColumnDefinitions="270,8,*,8,340" Margin="0,14,0,14">
+      <Border Classes="panel" Padding="14">
+        <local:Left />
+      </Border>
+
+      <GridSplitter Grid.Column="1"
+                    Width="8"
+                    Background="#dce4ef"
+                    HorizontalAlignment="Stretch"
+                    ResizeDirection="Columns"
+                    ResizeBehavior="PreviousAndNext"/>
+
+      <Border Grid.Column="2" CornerRadius="8" Background="#101827" BorderBrush="#1d2a42" BorderThickness="1" Padding="18" BoxShadow="0 18 36 0 #260f172a">
+        <local:Main />
+      </Border>
+
+      <GridSplitter Grid.Column="3"
+                    Width="8"
+                    Background="#dce4ef"
+                    HorizontalAlignment="Stretch"
+                    ResizeDirection="Columns"
+                    ResizeBehavior="PreviousAndNext"/>
+
+      <Border Grid.Column="4" Classes="panel" Padding="14">
+        <local:Right />
+      </Border>
+    </Grid>
+
+    <Border Grid.Row="2" Classes="panel" Padding="12,10">
+      <local:Foot />
+    </Border>
+  </Grid>
+</UserControl>
