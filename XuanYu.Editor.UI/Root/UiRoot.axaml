@@ -3,12 +3,12 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.UiRoot"
              x:DataType="local:UiVm">
-  <Grid RowDefinitions="Auto,*,Auto" Margin="16">
-    <Border Grid.Row="0" Classes="panel" Padding="16,12">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="12">
+    <Border Grid.Row="0" Classes="panel" Padding="8,1">
       <local:Top />
     </Border>
 
-    <Grid Grid.Row="1" ColumnDefinitions="270,8,*,8,340" Margin="0,14,0,14">
+    <Grid Grid.Row="1" ColumnDefinitions="270,8,*,8,340" Margin="0,6,0,6">
       <Border Classes="panel" Padding="14">
         <local:Left />
       </Border>
@@ -36,7 +36,7 @@
       </Border>
     </Grid>
 
-    <Border Grid.Row="2" Classes="panel" Padding="12,10">
+    <Border Grid.Row="2" Classes="panel" Padding="8,2">
       <local:Foot />
     </Border>
   </Grid>

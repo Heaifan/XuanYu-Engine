@@ -3,25 +3,55 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.Top"
              x:DataType="local:UiVm">
-  <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16">
-    <StackPanel Spacing="2">
-      <TextBlock Text="玄渊编辑器" FontSize="24" FontWeight="Bold" Foreground="#101828"/>
-      <TextBlock Text="{Binding FooterMessage}" Classes="caption"/>
-    </StackPanel>
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Icons/EditorIcons.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Button.cmdBtn"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="7,2"/><Setter Property="Margin" Value="0"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/></Style>
+    <Style Selector="Button.cmdBtn:pointerover"><Setter Property="Background" Value="#edf3fb"/><Setter Property="BorderBrush" Value="#c7d5e8"/></Style>
+    <Style Selector="ToggleButton.toolBtn"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="7,2"/><Setter Property="Margin" Value="0"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/></Style>
+    <Style Selector="ToggleButton.toolBtn:pointerover"><Setter Property="Background" Value="#edf3fb"/><Setter Property="BorderBrush" Value="#c7d5e8"/></Style>
+    <Style Selector="ToggleButton.toolBtn:checked"><Setter Property="Background" Value="#e8f1ff"/><Setter Property="BorderBrush" Value="#93b7e8"/><Setter Property="Foreground" Value="#185aa6"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="Border.split"><Setter Property="Width" Value="1"/><Setter Property="Height" Value="14"/><Setter Property="Margin" Value="4,0"/><Setter Property="Background" Value="#d5deea"/></Style>
+    <Style Selector="Path.topIcon"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="#5d6d83"/><Setter Property="StrokeThickness" Value="1.6"/></Style>
+    <Style Selector="Button.cmdBtn:pointerover Path.topIcon"><Setter Property="Stroke" Value="#365d8d"/></Style>
+    <Style Selector="ToggleButton.toolBtn:pointerover Path.topIcon"><Setter Property="Stroke" Value="#365d8d"/></Style>
+    <Style Selector="ToggleButton.toolBtn:checked Path.topIcon"><Setter Property="Stroke" Value="#185aa6"/></Style>
+  </UserControl.Styles>
 
-    <Border Grid.Column="1" Classes="chrome" Padding="6" VerticalAlignment="Center" HorizontalAlignment="Center">
-      <StackPanel Orientation="Horizontal">
-        <Button Content="项目" Command="{Binding SelectModeCommand}" CommandParameter="Project"/>
-        <Button Content="世界" Command="{Binding SelectModeCommand}" CommandParameter="World"/>
-        <Button Content="视口" Command="{Binding SelectModeCommand}" CommandParameter="Viewport"/>
-        <Button Content="检查器" Command="{Binding SelectModeCommand}" CommandParameter="Inspector"/>
-        <Button Content="日志" Command="{Binding SelectModeCommand}" CommandParameter="Logs" Margin="0"/>
+  <Grid RowDefinitions="Auto,Auto" RowSpacing="3">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Orientation="Horizontal" Spacing="4">
+        <Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="新建"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource NewFileIcon}"/><TextBlock Text="新建"/></StackPanel></Button>
+        <Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="打开"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource OpenIcon}"/><TextBlock Text="打开"/></StackPanel></Button>
+        <Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="保存"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource SaveIcon}"/><TextBlock Text="保存"/></StackPanel></Button>
+        <Border Classes="split"/>
+        <Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="撤销"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource UndoIcon}"/><TextBlock Text="撤销"/></StackPanel></Button>
+        <Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="重做"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource RedoIcon}"/><TextBlock Text="重做"/></StackPanel></Button>
+        <Border Classes="split"/>
+        <Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="运行"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource PlayIcon}"/><TextBlock Text="运行"/></StackPanel></Button>
+        <Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="停止"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource StopIcon}"/><TextBlock Text="停止"/></StackPanel></Button>
       </StackPanel>
-    </Border>
+      <TextBlock Grid.Column="1" Text="{Binding FooterState}" VerticalAlignment="Center" Foreground="#1f7a4d" FontWeight="SemiBold"/>
+    </Grid>
 
-    <StackPanel Grid.Column="2" HorizontalAlignment="Right" Spacing="2">
-      <TextBlock Text="{Binding ActiveModeTitle}" Foreground="#1f7a4d" FontWeight="SemiBold" HorizontalAlignment="Right"/>
-      <TextBlock Text="{Binding FooterState}" Classes="caption" HorizontalAlignment="Right"/>
-    </StackPanel>
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+      <StackPanel Orientation="Horizontal" Spacing="4">
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsSelectTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="选择"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource SelectIcon}"/><TextBlock Text="选择"/></StackPanel></ToggleButton>
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsMoveTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="移动"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource MoveIcon}"/><TextBlock Text="移动"/></StackPanel></ToggleButton>
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsRotateTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="旋转"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource RotateIcon}"/><TextBlock Text="旋转"/></StackPanel></ToggleButton>
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsScaleTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="缩放"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource ScaleIcon}"/><TextBlock Text="缩放"/></StackPanel></ToggleButton>
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsBoxSelectTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="框选"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource BoxSelectIcon}"/><TextBlock Text="框选"/></StackPanel></ToggleButton>
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsFocusTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="聚焦"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource FocusIcon}"/><TextBlock Text="聚焦"/></StackPanel></ToggleButton>
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsPanTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="平移"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource PanIcon}"/><TextBlock Text="平移"/></StackPanel></ToggleButton>
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsOrbitTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="环绕"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource OrbitIcon}"/><TextBlock Text="环绕"/></StackPanel></ToggleButton>
+        <ToggleButton Classes="toolBtn" IsChecked="{Binding IsSnapTool, Mode=TwoWay}" Command="{Binding SelectToolCommand}" CommandParameter="吸附"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource SnapIcon}"/><TextBlock Text="吸附"/></StackPanel></ToggleButton>
+      </StackPanel>
+      <TextBlock Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center" Foreground="#3b4a60"/>
+    </Grid>
   </Grid>
 </UserControl>

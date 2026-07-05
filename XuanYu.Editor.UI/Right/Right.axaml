@@ -3,34 +3,40 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.Right"
              x:DataType="local:UiVm">
-  <TabControl>
-    <TabItem Header="检查器">
-      <StackPanel Spacing="10" Margin="0,8,0,0">
-        <TextBlock Text="当前选择" Classes="section"/>
-        <TextBlock Text="{Binding SelectionTitle}" FontSize="16" FontWeight="SemiBold"/>
-        <TextBlock Text="{Binding SelectionSubtitle}" Classes="muted"/>
-        <Separator/>
-        <TextBlock Text="属性字段" Classes="section"/>
-        <ListBox ItemsSource="{Binding InspectorFields}" Background="Transparent" BorderThickness="0"/>
+  <TabControl Classes="sideTabs">
+    <TabItem Classes="sideTab" Header="检查器">
+      <StackPanel Spacing="8" Margin="0,6,0,0">
+        <StackPanel IsVisible="{Binding IsEmptySelection}" Spacing="8">
+          <TextBlock Text="未选择对象" FontSize="18" FontWeight="SemiBold"/>
+          <TextBlock Text="请在左侧项目树、世界层级或视口中选择对象。" Classes="muted" TextWrapping="Wrap"/>
+          <ListBox ItemsSource="{Binding EmptyHints}" Background="Transparent" BorderThickness="0"/>
+        </StackPanel>
+        <StackPanel IsVisible="{Binding HasSelection}" Spacing="6">
+          <TextBlock Text="{Binding SelectionTitle}" FontSize="16" FontWeight="SemiBold"/>
+          <TextBlock Text="{Binding SelectionSubtitle}" Classes="muted"/>
+          <Separator Margin="0,8,0,8"/>
+          <TextBlock Text="基础信息" Classes="section"/>
+          <ListBox ItemsSource="{Binding InspectorFields}" Background="Transparent" BorderThickness="0"/>
+        </StackPanel>
       </StackPanel>
     </TabItem>
-    <TabItem Header="调试">
-      <StackPanel Spacing="10" Margin="0,8,0,0">
+    <TabItem Classes="sideTab" Header="调试">
+      <StackPanel Spacing="8" Margin="0,6,0,0">
         <TextBlock Text="外壳状态" Classes="section"/>
         <ListBox ItemsSource="{Binding DebugItems}" Background="Transparent" BorderThickness="0"/>
       </StackPanel>
     </TabItem>
-    <TabItem Header="偏好">
-      <StackPanel Spacing="10" Margin="0,8,0,0">
+    <TabItem Classes="sideTab" Header="偏好">
+      <StackPanel Spacing="8" Margin="0,6,0,0">
         <TextBlock Text="工作区" Classes="section"/>
         <TextBlock Text="后续在这里放布局保存、主题、快捷键和编辑器偏好。" Classes="muted" TextWrapping="Wrap"/>
         <ListBox ItemsSource="{Binding PropertyItems}" Background="Transparent" BorderThickness="0"/>
       </StackPanel>
     </TabItem>
-    <TabItem Header="模式">
-      <StackPanel Spacing="10" Margin="0,8,0,0">
-        <TextBlock Text="当前模式" Classes="section"/>
-        <TextBlock Text="{Binding ActiveModeTitle}" FontSize="18" FontWeight="SemiBold"/>
+    <TabItem Classes="sideTab" Header="模式">
+      <StackPanel Spacing="8" Margin="0,6,0,0">
+        <TextBlock Text="当前工具" Classes="section"/>
+        <TextBlock Text="{Binding ActiveTool}" FontSize="18" FontWeight="SemiBold"/>
         <TextBlock Text="{Binding FooterMessage}" Classes="muted" TextWrapping="Wrap"/>
       </StackPanel>
     </TabItem>

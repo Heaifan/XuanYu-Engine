@@ -3,33 +3,47 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.Left"
              x:DataType="local:UiVm">
-  <TabControl SelectedIndex="{Binding LeftTabIndex}">
-    <TabItem Header="项目">
-      <StackPanel Spacing="10" Margin="0,8,0,0">
-        <TextBlock Text="项目资源" Classes="section"/>
-        <ListBox ItemsSource="{Binding ProjectItems}"
-                 SelectedItem="{Binding SelectedProjectItem, Mode=TwoWay}"
-                 Background="Transparent"
-                 BorderThickness="0"/>
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Icons/EditorIcons.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Border.searchBox"><Setter Property="Background" Value="#f3f7fc"/><Setter Property="BorderBrush" Value="#d6dfec"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="6"/><Setter Property="Padding" Value="7,2"/></Style>
+    <Style Selector="Border.treeRow"><Setter Property="CornerRadius" Value="5"/><Setter Property="MinHeight" Value="27"/><Setter Property="Padding" Value="5,3"/></Style>
+    <Style Selector="Border.treeRow:pointerover"><Setter Property="Background" Value="#f0f6ff"/></Style>
+    <Style Selector="Border.treeRow.selected"><Setter Property="Background" Value="#e5f0ff"/></Style>
+    <Style Selector="TextBlock.selectedText"><Setter Property="Foreground" Value="#165ca8"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="Path.treeIcon"><Setter Property="Width" Value="15"/><Setter Property="Height" Value="15"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="#66758f"/><Setter Property="StrokeThickness" Value="1.6"/></Style>
+  </UserControl.Styles>
+
+  <TabControl Classes="sideTabs" SelectedIndex="{Binding LeftTabIndex}">
+    <TabItem Classes="sideTab" Header="项目">
+      <StackPanel Spacing="8" Margin="0,6,0,0">
+        <Border Classes="searchBox"><Grid ColumnDefinitions="16,*" ColumnSpacing="6"><Path Classes="treeIcon" Data="{StaticResource SearchIcon}" VerticalAlignment="Center"/><TextBox Grid.Column="1" PlaceholderText="搜索项目树..." BorderThickness="0" Background="Transparent" MinHeight="24"/></Grid></Border>
+        <StackPanel Spacing="0">
+          <Border Classes="treeRow selected"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}"/><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ProjectIcon}"/><TextBlock Grid.Column="2" Text="SampleProject" Classes="selectedText"/></Grid></Border>
+          <Border Classes="treeRow" Margin="16,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}"/><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource WorldIcon}"/><TextBlock Grid.Column="2" Text="世界"/></Grid></Border>
+          <Border Classes="treeRow" Margin="32,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource SceneIcon}"/><TextBlock Grid.Column="2" Text="MainWorld"/></Grid></Border>
+          <Border Classes="treeRow" Margin="32,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource SceneIcon}"/><TextBlock Grid.Column="2" Text="TestWorld"/></Grid></Border>
+          <Border Classes="treeRow" Margin="16,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}"/><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource FolderIcon}"/><TextBlock Grid.Column="2" Text="资源"/></Grid></Border>
+          <Border Classes="treeRow" Margin="32,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ImageIcon}"/><TextBlock Grid.Column="2" Text="图标"/></Grid></Border>
+          <Border Classes="treeRow" Margin="32,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource MaterialIcon}"/><TextBlock Grid.Column="2" Text="材质"/></Grid></Border>
+          <Border Classes="treeRow" Margin="32,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ScriptIcon}"/><TextBlock Grid.Column="2" Text="脚本"/></Grid></Border>
+          <Border Classes="treeRow" Margin="16,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource BuildIcon}"/><TextBlock Grid.Column="2" Text="构建"/></Grid></Border>
+        </StackPanel>
       </StackPanel>
     </TabItem>
-    <TabItem Header="层级">
-      <StackPanel Spacing="10" Margin="0,8,0,0">
-        <TextBlock Text="世界树" Classes="section"/>
-        <ListBox ItemsSource="{Binding HierarchyItems}"
-                 SelectedItem="{Binding SelectedHierarchyItem, Mode=TwoWay}"
-                 Background="Transparent"
-                 BorderThickness="0"/>
-      </StackPanel>
-    </TabItem>
-    <TabItem Header="工具">
-      <StackPanel Spacing="10" Margin="0,8,0,0">
-        <TextBlock Text="编辑工具" Classes="section"/>
-        <ListBox>
-          <ListBoxItem Content="选择模式"/>
-          <ListBoxItem Content="视口模式"/>
-          <ListBoxItem Content="检查器模式"/>
-        </ListBox>
+    <TabItem Classes="sideTab" Header="层级">
+      <StackPanel Spacing="8" Margin="0,6,0,0">
+        <StackPanel Spacing="0">
+          <Border Classes="treeRow selected"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}"/><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource WorldIcon}"/><TextBlock Grid.Column="2" Text="世界根节点" Classes="selectedText"/></Grid></Border>
+          <Border Classes="treeRow" Margin="16,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource SceneIcon}"/><TextBlock Grid.Column="2" Text="主相机"/></Grid></Border>
+          <Border Classes="treeRow" Margin="16,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource SceneIcon}"/><TextBlock Grid.Column="2" Text="地面"/></Grid></Border>
+          <Border Classes="treeRow" Margin="16,0,0,0"><Grid ColumnDefinitions="14,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ProjectIcon}"/><TextBlock Grid.Column="2" Text="示例实体"/></Grid></Border>
+        </StackPanel>
       </StackPanel>
     </TabItem>
   </TabControl>

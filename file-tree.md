@@ -887,6 +887,42 @@ XuanYu.Engine/                              ← 仓库根目录
 │   ├── MainWindow.axaml  # XuanYu.Engine.Editor.Windows.MainWindow
 │   ├── MainWindow.axaml.cs  # MainWindow 类
 │   └── Program.cs  # Program 类
+├── XuanYu.Editor.UI/
+│   ├── XuanYu.Editor.UI.csproj  # 轻量 Avalonia 编辑器 UI 外壳项目。
+│   ├── RelayCommand.cs  # 简单 ICommand 实现，供 UI 原型命令绑定使用。
+│   ├── Ui.axaml  # 全局样式：面板、按钮、侧栏 TabBar、文本样式。
+│   ├── app.manifest  # Windows 应用清单。
+│   ├── Bootstrap/
+│   │   ├── App.axaml  # Avalonia 应用入口资源。
+│   │   ├── App.axaml.cs  # 应用启动与主窗口挂载。
+│   │   └── Program.cs  # 桌面启动入口。
+│   ├── Icons/
+│   │   └── EditorIcons.axaml  # UI SVG / PathData 图标集中资源：项目树、顶部命令、编辑工具。
+│   ├── Win/
+│   │   ├── UiWin.axaml  # 玄域编辑器窗口壳。
+│   │   └── UiWin.axaml.cs  # 窗口代码后置。
+│   ├── Root/
+│   │   ├── UiRoot.axaml  # 主布局：顶部、左侧、视口、右侧、底部日志栏。
+│   │   └── UiRoot.axaml.cs  # 主布局代码后置。
+│   ├── Top/
+│   │   ├── Top.axaml  # 两行紧凑工具栏：主命令栏 + 编辑工具栏。
+│   │   └── Top.axaml.cs  # 顶部工具栏代码后置。
+│   ├── Left/
+│   │   ├── Left.axaml  # 左侧项目/层级页签，SVG 项目树与层级树。
+│   │   └── Left.axaml.cs  # 左侧面板代码后置。
+│   ├── Main/
+│   │   ├── Main.axaml  # 中央深色视口占位：网格、原点、方向提示、操作提示。
+│   │   └── Main.axaml.cs  # 视口占位代码后置。
+│   ├── Right/
+│   │   ├── Right.axaml  # 右侧检查器/调试/偏好/模式页签。
+│   │   └── Right.axaml.cs  # 右侧面板代码后置。
+│   ├── Foot/
+│   │   ├── Foot.axaml  # 底部日志摘要与可展开日志面板。
+│   │   └── Foot.axaml.cs  # 底部栏代码后置。
+│   └── Vm/
+│       ├── UiVm.cs  # UI 原型 ViewModel：工具选择、状态、日志展开、检查器文本。
+│       ├── UiText.cs  # 静态中文 UI 文案与检查器示例数据。
+│       └── LogText.cs  # 静态中文日志/问题/构建/任务示例数据。
 ├── XuanYu.Engine.Tests/
 │   ├── Architecture/
 │   │   ├── CodeFileBudgetTests.cs  # 代码架构宪法测试。逐步推行 100 行硬线 + 每目录 ≤5 直属文件。

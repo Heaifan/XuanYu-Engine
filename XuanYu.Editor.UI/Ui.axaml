@@ -8,14 +8,14 @@
     <Setter Property="Background" Value="#fbfcff"/>
     <Setter Property="BorderBrush" Value="#d9e0ec"/>
     <Setter Property="BorderThickness" Value="1"/>
-    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="CornerRadius" Value="6"/>
     <Setter Property="BoxShadow" Value="0 14 30 0 #160f172a"/>
   </Style>
   <Style Selector="Border.chrome">
     <Setter Property="Background" Value="#edf2f8"/>
     <Setter Property="BorderBrush" Value="#d7dfeb"/>
     <Setter Property="BorderThickness" Value="1"/>
-    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="CornerRadius" Value="6"/>
   </Style>
   <Style Selector="Border.pill">
     <Setter Property="CornerRadius" Value="5"/>
@@ -23,9 +23,9 @@
     <Setter Property="Padding" Value="10,5"/>
   </Style>
   <Style Selector="Button">
-    <Setter Property="MinWidth" Value="78"/>
-    <Setter Property="Padding" Value="14,8"/>
-    <Setter Property="Margin" Value="0,0,8,0"/>
+    <Setter Property="MinWidth" Value="52"/>
+    <Setter Property="Padding" Value="10,7"/>
+    <Setter Property="Margin" Value="0,0,6,0"/>
     <Setter Property="Background" Value="#eef3fa"/>
     <Setter Property="BorderBrush" Value="#d4ddea"/>
     <Setter Property="BorderThickness" Value="1"/>
@@ -39,14 +39,32 @@
     <Setter Property="Background" Value="Transparent"/>
     <Setter Property="BorderThickness" Value="0"/>
   </Style>
-  <Style Selector="TabItem">
-    <Setter Property="FontSize" Value="18"/>
-    <Setter Property="Foreground" Value="#697386"/>
-    <Setter Property="Padding" Value="0,0,22,10"/>
+  <Style Selector="TabControl.sideTabs">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
   </Style>
-  <Style Selector="TabItem:selected">
-    <Setter Property="Foreground" Value="#075ec8"/>
+  <Style Selector="TabItem.sideTab">
+    <Setter Property="FontSize" Value="15"/>
+    <Setter Property="Foreground" Value="#6d788a"/>
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="Margin" Value="0,0,4,0"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0,0,0,0"/>
+    <Setter Property="CornerRadius" Value="5"/>
+  </Style>
+  <Style Selector="TabItem.sideTab:pointerover">
+    <Setter Property="Background" Value="#f2f6fb"/>
+    <Setter Property="Foreground" Value="#47627f"/>
+  </Style>
+  <Style Selector="TabItem.sideTab:selected">
+    <Setter Property="Foreground" Value="#185aa6"/>
     <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Background" Value="#edf4ff"/>
+    <Setter Property="BorderBrush" Value="#8cb2e2"/>
+    <Setter Property="BorderThickness" Value="0,0,0,2"/>
   </Style>
   <Style Selector="ListBox">
     <Setter Property="Background" Value="Transparent"/>

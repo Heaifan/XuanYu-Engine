@@ -1,5 +1,18 @@
 # changelog
 
+## [RZ-Fix1-D] — Avalonia 编辑器 UI 骨架收口与底部日志栏接入 (2026-07-05 20:47)
+- 新增轻量 `XuanYu.Editor.UI` 编辑器外壳：顶部工具区、左侧项目/层级、中央深色视口、右侧检查器、底部状态/日志栏
+- 顶部改为两行紧凑工具栏：第一行主命令（新建/打开/保存/撤销/重做/运行/停止），第二行编辑工具（选择/移动/旋转/缩放/框选/聚焦/平移/环绕/吸附）
+- 顶部命令和编辑工具全部改为集中管理的 SVG / PathData 图标，禁止字符、Unicode、emoji 占位
+- 左侧面板收口为 `项目 / 层级` 两个页签；项目树和层级树均使用 SVG 图标，去掉重复的“工具”页
+- 右侧检查器收口为对象摘要 + 基础信息，删除重复的“当前选择”文案
+- 左右侧栏页签统一为轻量 Tab Bar：浅蓝激活态、蓝色底线、非激活灰蓝文字
+- 中央视口加入编辑器感占位：网格、原点轴线、视图标签、方向提示、操作提示
+- 底部栏升级为可展开日志面板：默认一行日志摘要，点击后展开 `日志 / 问题 / 构建 / 任务` 四页签，日志格式保持中文
+- 新增 `XuanYu.Editor.UI/Icons/EditorIcons.axaml` 集中管理 UI 图标
+- 新增 `XuanYu.Editor.UI/Vm/LogText.cs` 保存静态中文日志示例
+- Build: 0 Warning, 0 Error
+
 ## [9.0D-R2E] — 9.0X Native Viewport 鼠标捕获生命周期审计与修复 (2026-06-26)
 - 收口所有 Win32 鼠标捕获到 `NativeViewportMouseCapture`，禁止其他模块直接调用 `SetCapture` / `ReleaseCapture`
 - 修复 `WM_MBUTTONUP` 此前只清内部状态、不调用 `ReleaseCapture()` 导致 Native Viewport 继续吞鼠标消息的问题
