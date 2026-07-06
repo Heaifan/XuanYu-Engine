@@ -1,5 +1,36 @@
 # changelog
 
+## [RZ-Fix1-F] — 低频日志总线接入 (2026-07-06)
+- 新增 `Vm/Logging` 低频日志模块：`EditorLogBus`、`EditorLogBuffer`、`EditorLogSummary`、`EditorLogFilter`、`EditorLogFilterQuery`、`EditorLogRepeatKey`
+- 底部日志从纯 `SampleLogEntries` 过渡为 Buffer 驱动；`SampleLogEntries` 仅作为初始化种子，运行中的按钮命令和工具切换会通过 `EditorLogBus` 写入
+- `EditorLogBuffer` 最多保留最近 500 条日志，并对连续相同日志使用 `RepeatCount` 合并
+- 摘要条改为从 Buffer 真实计算错误数、警告数和最近事件
+- 过滤按钮接入真实过滤：全部 / 信息 / 警告 / 错误 / 构建 / 任务 / 输入 / 渲染
+- 首批只接低频 UI 事件：编辑器布局恢复、项目打开、启动渲染提示、新建/打开/保存/运行/停止/构建命令、工具切换
+- 明确不接 PointerMoved / Hover / Picking Hover / DragPreview / RenderFrame / Splitter Drag / Vulkan 初始化 / 中央视口渲染链路
+- `docs/diagnostic-safety.md` 补充低频日志准入清单和禁止高频接入清单
+- `file-tree.md` 同步当前真实文件数：102
+
+## [RZ-Fix1-E-R1] — 日志显示语义与高频风险小修审计 (2026-07-06)
+- 底部日志显示层中文化：内部枚举仍保留 `Editor / Layout` 等稳定标识，UI 显示为“编辑器 / 布局 / 项目 / 加载 / 渲染 / 后端 / 输入 / 捕获”等中文文本
+- 重复折叠确认绑定到对应日志行末尾，示例行显示“点击拾取未命中任何对象  重复 6 次”，不再像面板级状态
+- 示例拾取日志从“拾取结果为空”改为“点击拾取未命中任何对象”，明确它是低频点击事实日志，不代表 Hover / PointerMoved 逐条输出
+- 搜索框界面文案从开发占位“搜索占位”改为用户可见的“搜索日志...”
+- `docs/diagnostic-safety.md` 新增“底部普通日志准入”规则：PointerMoved / Hover / DragPreview / RenderFrame / Picking Hover / Splitter Drag 禁止逐条进入底部日志
+- 截图复查右侧“调试”页：当前上下文、当前对象、工具/输入状态以快照方式显示，不作为第二个日志面板
+- Build: 0 Warning, 0 Error
+
+## [RZ-Fix1-E] — 日志系统布局与调试快照职责收口 (2026-07-06)
+- `file-tree.md` 重建为当前工作区真实文件树，按 `rg --files` 统计 95 个文件，删除旧文档中已不存在的历史项目/目录记录
+- 底部日志栏从滚动文本占位升级为全局事实日志视图：摘要条、级别/来源过滤入口、搜索占位、列式日志列表、空状态与重复折叠占位
+- 明确底部日志只展示低频事实记录，示例覆盖 Editor / Project / Render / Build / Task / Input，不接真实日志后端、不接 Vulkan、不改中央视口
+- 新增轻量日志模型：`LogEntry`、`EditorLogLevel`、`EditorLogSource`、`EditorLogCategory`，字段预留 Detail / ContextId / CorrelationId / RepeatCount
+- `SampleLogEntries` 替代旧 `LogText`，避免 UI 内硬编码纯字符串日志，为后续 `EditorLogBuffer / EditorLogBus` 接入预留边界
+- 右侧“调试”页收口为当前状态快照：当前上下文、当前对象、工具状态、输入状态；不追加滚动日志，不与底部日志抢职责
+- 调试示例文案明确高频事件策略：PointerMoved / Hover / DragPreview 后续走摘要、覆盖快照或探针，不逐条进入普通日志 UI
+- 所有新增和修改的 `XuanYu.Editor.UI` `.cs / .axaml` 文件均保持 ≤100 行
+- Build: 0 Warning, 0 Error；截图复查底部日志与右侧调试职责清晰
+
 ## [RZ-Fix1-D] — Avalonia 编辑器 UI 骨架收口与底部日志栏接入 (2026-07-05 20:47)
 - 新增轻量 `XuanYu.Editor.UI` 编辑器外壳：顶部工具区、左侧项目/层级、中央深色视口、右侧检查器、底部状态/日志栏
 - 顶部改为两行紧凑工具栏：第一行主命令（新建/打开/保存/撤销/重做/运行/停止），第二行编辑工具（选择/移动/旋转/缩放/框选/聚焦/平移/环绕/吸附）

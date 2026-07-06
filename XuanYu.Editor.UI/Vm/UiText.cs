@@ -39,9 +39,9 @@ public static class UiText
         "旋转    X 0    Y 0    Z 0",
         "缩放    X 1    Y 1    Z 1",
         "标记",
-        "□ 静态对象",
-        "□ 可拾取",
-        "□ 参与碰撞"
+        "静态对象：否",
+        "可拾取：否",
+        "参与碰撞：否"
     ];
 
     public static readonly string[] ProjectInspectorFields =

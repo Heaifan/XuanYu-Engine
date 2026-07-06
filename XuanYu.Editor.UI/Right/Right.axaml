@@ -20,12 +20,30 @@
         </StackPanel>
       </StackPanel>
     </TabItem>
+
     <TabItem Classes="sideTab" Header="调试">
-      <StackPanel Spacing="8" Margin="0,6,0,0">
-        <TextBlock Text="外壳状态" Classes="section"/>
-        <ListBox ItemsSource="{Binding DebugItems}" Background="Transparent" BorderThickness="0"/>
-      </StackPanel>
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="10" Margin="0,6,0,0">
+          <TextBlock Text="当前上下文" Classes="section"/>
+          <ListBox ItemsSource="{Binding DebugContextItems}" Background="Transparent" BorderThickness="0"/>
+          <TextBlock Text="调试页显示当前状态快照，不追加日志流。" Classes="muted" TextWrapping="Wrap"/>
+
+          <Separator Margin="0,2,0,2"/>
+          <TextBlock Text="当前对象" Classes="section"/>
+          <ListBox ItemsSource="{Binding DebugObjectItems}" Background="Transparent" BorderThickness="0"/>
+          <TextBlock Text="没有实体选中时，这里只显示空状态和选择来源。" Classes="muted" TextWrapping="Wrap"/>
+
+          <Separator Margin="0,2,0,2"/>
+          <TextBlock Text="工具状态" Classes="section"/>
+          <ListBox ItemsSource="{Binding DebugToolItems}" Background="Transparent" BorderThickness="0"/>
+
+          <Separator Margin="0,2,0,2"/>
+          <TextBlock Text="输入状态" Classes="section"/>
+          <ListBox ItemsSource="{Binding DebugInputItems}" Background="Transparent" BorderThickness="0"/>
+        </StackPanel>
+      </ScrollViewer>
     </TabItem>
+
     <TabItem Classes="sideTab" Header="偏好">
       <StackPanel Spacing="8" Margin="0,6,0,0">
         <TextBlock Text="工作区" Classes="section"/>
@@ -33,6 +51,7 @@
         <ListBox ItemsSource="{Binding PropertyItems}" Background="Transparent" BorderThickness="0"/>
       </StackPanel>
     </TabItem>
+
     <TabItem Classes="sideTab" Header="模式">
       <StackPanel Spacing="8" Margin="0,6,0,0">
         <TextBlock Text="当前工具" Classes="section"/>

@@ -13,6 +13,10 @@ obj/
 artifacts/
 .artifacts/
 
+# Local Codex session exports
+codex_log/
+codex_log_xuanyu_handoff_*.zip
+
 # Local package/cache folders
 .nuget-local/
 .agents/

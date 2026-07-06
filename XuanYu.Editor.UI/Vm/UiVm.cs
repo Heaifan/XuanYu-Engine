@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace XuanYu.Editor.UI;
 
-public sealed class UiVm : INotifyPropertyChanged
+public sealed partial class UiVm : INotifyPropertyChanged
 {
     string _activeTool = "选择"; int _leftTabIndex; string? _selectedProjectItem, _selectedHierarchyItem;
     bool _isSelectTool = true, _isMoveTool, _isRotateTool, _isScaleTool, _isBoxSelectTool, _isFocusTool, _isPanTool, _isOrbitTool, _isSnapTool;
@@ -17,16 +17,20 @@ public sealed class UiVm : INotifyPropertyChanged
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
+        SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
+        InitLogs();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public ICommand RunCommand { get; }
     public ICommand SelectToolCommand { get; }
     public ICommand ToggleLogCommand { get; }
+    public ICommand SelectLogFilterCommand { get; }
     public IReadOnlyList<string> ProjectItems => UiText.ProjectItems; public IReadOnlyList<string> HierarchyItems => UiText.HierarchyItems; public IReadOnlyList<string> InspectorFields => UiText.ProjectInspectorFields;
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems; public IReadOnlyList<string> PropertyItems => UiText.PropertyItems;
     public IReadOnlyList<string> ToolItems => UiText.ToolItems;
-    public IReadOnlyList<string> LogItems => LogText.Logs; public IReadOnlyList<string> ProblemItems => LogText.Problems; public IReadOnlyList<string> BuildItems => LogText.Builds; public IReadOnlyList<string> TaskItems => LogText.Tasks;
+    public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => DebugText.ObjectItems;
+    public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => DebugText.InputItems;
     public string ActiveTool => _activeTool;
     public bool IsSelectTool { get => _isSelectTool; private set => Set(ref _isSelectTool, value); }
     public bool IsMoveTool { get => _isMoveTool; private set => Set(ref _isMoveTool, value); }
@@ -44,7 +48,6 @@ public sealed class UiVm : INotifyPropertyChanged
     public string FooterState { get => _footerState; private set => Set(ref _footerState, value); }
     public bool HasSelection { get => _hasSelection; private set => Set(ref _hasSelection, value); }
     public bool IsLogOpen { get => _isLogOpen; set => Set(ref _isLogOpen, value); }
-    public string LogSummary => $"日志：{FooterMessage}";
     public bool IsEmptySelection => !HasSelection;
 
     public int LeftTabIndex { get => _leftTabIndex; set => Set(ref _leftTabIndex, value); }
@@ -53,9 +56,9 @@ public sealed class UiVm : INotifyPropertyChanged
 
     public string? SelectedHierarchyItem { get => _selectedHierarchyItem; set { if (Set(ref _selectedHierarchyItem, value) && value is not null) ApplySelection("世界层级", value); } }
 
-    void Run(string name) { FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}"); FooterState = name is "运行" ? "状态：运行中" : "状态：就绪"; OnPropertyChanged(nameof(LogSummary)); }
+    void Run(string name) { FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}"); FooterState = name is "运行" ? "状态：运行中" : "状态：就绪"; LogCommand(name); OnPropertyChanged(nameof(LogSummary)); }
 
-    void SelectTool(string name) { _activeTool = string.IsNullOrWhiteSpace(name) ? "选择" : name; SetToolFlags(_activeTool); FooterMode = $"工具：{_activeTool}"; FooterMessage = $"当前工具：{_activeTool}。视口等待输入。"; OnPropertyChanged(nameof(ActiveTool)); OnPropertyChanged(nameof(LogSummary)); }
+    void SelectTool(string name) { _activeTool = string.IsNullOrWhiteSpace(name) ? "选择" : name; SetToolFlags(_activeTool); FooterMode = $"工具：{_activeTool}"; FooterMessage = $"当前工具：{_activeTool}。视口等待输入。"; LogTool(_activeTool); OnPropertyChanged(nameof(ActiveTool)); OnPropertyChanged(nameof(LogSummary)); }
 
     void ApplySelection(string source, string item) { HasSelection = true; SelectionTitle = item.TrimStart(' ', '├', '└', '─'); SelectionSubtitle = source; FooterMessage = $"{source}已选择：{SelectionTitle}"; FooterState = "状态：聚焦"; OnPropertyChanged(nameof(LogSummary)); }
 
