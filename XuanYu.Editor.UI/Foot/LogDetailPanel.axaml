@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.LogDetailPanel"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <Style Selector="TextBlock.detailLabel">
+      <Setter Property="Foreground" Value="#64748b"/><Setter Property="FontSize" Value="12"/>
+    </Style>
+    <Style Selector="TextBlock.detailValue">
+      <Setter Property="Foreground" Value="#243246"/><Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="TextBlock.detailTitle">
+      <Setter Property="Foreground" Value="#172337"/><Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="TextBox.detailBody">
+      <Setter Property="BorderThickness" Value="0"/><Setter Property="Background" Value="#f2f6fb"/>
+      <Setter Property="Padding" Value="6"/><Setter Property="MinHeight" Value="42"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Border BorderBrush="#d9e2ee" BorderThickness="1,0,0,0" Padding="10,0,0,0">
+    <Grid RowDefinitions="Auto,*">
+      <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+        <TextBlock Text="日志详情" FontWeight="SemiBold" Foreground="#243246"/>
+        <Button Grid.Column="1" Content="复制详情" Click="CopyDetail_Click"
+                IsVisible="{Binding HasSelectedLogEntry}" Padding="8,3"/>
+      </Grid>
+
+      <Grid Grid.Row="1">
+        <StackPanel IsVisible="{Binding !HasSelectedLogEntry}" VerticalAlignment="Center">
+          <TextBlock Text="未选择日志" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+          <TextBlock Text="点击左侧日志行后，这里会显示详细信息。" Classes="muted"
+                     TextWrapping="Wrap" HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <ScrollViewer IsVisible="{Binding HasSelectedLogEntry}">
+          <StackPanel Spacing="6">
+            <Border Background="#edf4ff" CornerRadius="5" Padding="8,6">
+              <StackPanel Spacing="3">
+                <TextBlock Text="{Binding SelectedLogEntry.TimeLevelText}" Classes="detailTitle"/>
+                <TextBlock Text="{Binding SelectedLogEntry.SourceCategoryText}" Classes="detailValue"/>
+              </StackPanel>
+            </Border>
+            <TextBlock Text="消息" Classes="detailLabel"/>
+            <TextBox Text="{Binding SelectedLogEntry.Message}" Classes="detailBody" IsReadOnly="True"/>
+            <TextBlock Text="详情" Classes="detailLabel"/>
+            <TextBox Text="{Binding SelectedLogEntry.DetailText}" Classes="detailBody" IsReadOnly="True"/>
+            <Grid ColumnDefinitions="72,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="3">
+              <TextBlock Text="重复次数" Classes="detailLabel"/>
+              <TextBlock Grid.Column="1" Text="{Binding SelectedLogEntry.RepeatDetailText}" Classes="detailValue"/>
+              <TextBlock Grid.Row="1" Text="上下文 ID" Classes="detailLabel"/>
+              <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedLogEntry.ContextText}" Classes="detailValue"/>
+              <TextBlock Grid.Row="2" Text="操作链路" Classes="detailLabel"/>
+              <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedLogEntry.CorrelationText}" Classes="detailValue"/>
+            </Grid>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+    </Grid>
+  </Border>
+</UserControl>

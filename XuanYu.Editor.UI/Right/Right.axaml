@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.Right"
+             x:DataType="local:UiVm">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Icons/EditorIcons.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Border.infoPanel"><Setter Property="Background" Value="#f7faff"/><Setter Property="BorderBrush" Value="#dce6f3"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="6"/><Setter Property="Padding" Value="10"/></Style>
+    <Style Selector="Border.kvRow"><Setter Property="MinHeight" Value="30"/><Setter Property="Padding" Value="0,3"/></Style>
+    <Style Selector="Path.panelIcon"><Setter Property="Width" Value="16"/><Setter Property="Height" Value="16"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="#66758f"/><Setter Property="StrokeThickness" Value="1.6"/></Style>
+    <Style Selector="TextBlock.panelTitle"><Setter Property="FontSize" Value="16"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="#243149"/></Style>
+    <Style Selector="TextBlock.key"><Setter Property="Foreground" Value="#6b7688"/><Setter Property="FontSize" Value="12"/></Style>
+    <Style Selector="TextBlock.value"><Setter Property="Foreground" Value="#253247"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
+    <Style Selector="TextBlock.emptyTitle"><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="#334155"/><Setter Property="HorizontalAlignment" Value="Center"/></Style>
+  </UserControl.Styles>
+
+  <TabControl Classes="sideTabs">
+    <TabItem Classes="sideTab" Header="检查器">
+      <StackPanel Spacing="10" Margin="0,6,0,0">
+        <Grid ColumnDefinitions="20,*" ColumnSpacing="8">
+          <Path Classes="panelIcon" Data="{StaticResource ProjectIcon}" VerticalAlignment="Center"/>
+          <StackPanel Grid.Column="1" Spacing="1">
+            <TextBlock Text="{Binding SelectionTitle}" Classes="panelTitle"/>
+            <TextBlock Text="{Binding SelectionSubtitle}" Classes="muted"/>
+          </StackPanel>
+        </Grid>
+        <Border Classes="infoPanel" IsVisible="{Binding HasSelection}">
+          <StackPanel Spacing="4">
+            <TextBlock Text="基础信息" Classes="section"/>
+            <Border Classes="kvRow"><Grid ColumnDefinitions="72,*"><TextBlock Text="名称" Classes="key"/><TextBlock Grid.Column="1" Text="{Binding SelectionTitle}" Classes="value"/></Grid></Border>
+            <Border Classes="kvRow"><Grid ColumnDefinitions="72,*"><TextBlock Text="类型" Classes="key"/><TextBlock Grid.Column="1" Text="{Binding SelectionSubtitle}" Classes="value"/></Grid></Border>
+            <Border Classes="kvRow"><Grid ColumnDefinitions="72,*"><TextBlock Text="路径" Classes="key"/><TextBlock Grid.Column="1" Text="SampleProject" Classes="value"/></Grid></Border>
+          </StackPanel>
+        </Border>
+        <Grid IsVisible="{Binding IsEmptySelection}" MinHeight="220">
+          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" MaxWidth="220">
+            <Path Classes="panelIcon" Data="{StaticResource SelectIcon}" Width="28" Height="28"/>
+            <TextBlock Text="未选择对象" Classes="emptyTitle"/>
+            <TextBlock Text="在左侧项目树、层级页或视口中选择对象后，这里会显示属性。" Classes="muted" TextWrapping="Wrap" TextAlignment="Center"/>
+          </StackPanel>
+        </Grid>
+      </StackPanel>
+    </TabItem>
+
+    <TabItem Classes="sideTab" Header="调试">
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="10" Margin="0,6,0,0">
+          <Border Classes="infoPanel"><StackPanel Spacing="5"><TextBlock Text="当前上下文" Classes="section"/><ListBox ItemsSource="{Binding DebugContextItems}" Background="Transparent" BorderThickness="0"/></StackPanel></Border>
+          <Border Classes="infoPanel"><StackPanel Spacing="5"><TextBlock Text="当前对象" Classes="section"/><ListBox ItemsSource="{Binding DebugObjectItems}" Background="Transparent" BorderThickness="0"/></StackPanel></Border>
+          <Border Classes="infoPanel"><StackPanel Spacing="5"><TextBlock Text="工具状态" Classes="section"/><ListBox ItemsSource="{Binding DebugToolItems}" Background="Transparent" BorderThickness="0"/></StackPanel></Border>
+          <Border Classes="infoPanel"><StackPanel Spacing="5"><TextBlock Text="输入状态" Classes="section"/><ListBox ItemsSource="{Binding DebugInputItems}" Background="Transparent" BorderThickness="0"/></StackPanel></Border>
+        </StackPanel>
+      </ScrollViewer>
+    </TabItem>
+
+    <TabItem Classes="sideTab" Header="偏好">
+      <StackPanel Spacing="10" Margin="0,6,0,0">
+        <Border Classes="infoPanel"><StackPanel Spacing="6"><TextBlock Text="编辑器偏好" Classes="section"/><TextBlock Text="布局保存、主题、快捷键和编辑器偏好后续会在这里收口。" Classes="muted" TextWrapping="Wrap"/><ListBox ItemsSource="{Binding PropertyItems}" Background="Transparent" BorderThickness="0"/></StackPanel></Border>
+      </StackPanel>
+    </TabItem>
+
+    <TabItem Classes="sideTab" Header="模式">
+      <StackPanel Spacing="10" Margin="0,6,0,0">
+        <Border Classes="infoPanel"><StackPanel Spacing="6"><TextBlock Text="当前工作模式" Classes="section"/><TextBlock Text="{Binding ActiveTool}" Classes="panelTitle"/><TextBlock Text="{Binding FooterMessage}" Classes="muted" TextWrapping="Wrap"/></StackPanel></Border>
+      </StackPanel>
+    </TabItem>
+  </TabControl>
+</UserControl>

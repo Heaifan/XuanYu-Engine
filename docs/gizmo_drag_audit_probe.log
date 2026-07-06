@@ -1,0 +1,355 @@
+﻿[22:56:20.857][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.336ms 累计=0.336ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:20.866][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=9.186ms 累计=9.522ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:20.869][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=3.101ms 累计=12.623ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:21.086][探针][Selection][Changed] origin=ViewportPicking entity=2 name=sample_unit_2
+[22:56:21.104][探针][Selection][SceneSync] entity=2 schedule=SelectionChanged
+[22:56:23.092][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.010ms 累计=0.010ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.093][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.969ms 累计=0.979ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.094][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=1.041ms 累计=2.020ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.308][探针][GizmoPress][HitTest] selected=2 presented=none xy=(417,232) hover=None
+[22:56:23.430][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.007ms 累计=0.007ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.431][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.679ms 累计=0.686ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.432][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.477ms 累计=1.163ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.460][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.018ms 累计=0.018ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.462][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.115ms 累计=1.133ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.463][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=1.224ms 累计=2.357ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.492][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.013ms 累计=0.013ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.493][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.186ms 累计=1.200ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.494][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.565ms 累计=1.765ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.538][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.010ms 累计=0.010ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.540][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.317ms 累计=1.326ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.541][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.834ms 累计=2.161ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.570][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.010ms 累计=0.010ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.571][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.013ms 累计=1.023ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.572][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.724ms 累计=1.746ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.601][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.008ms 累计=0.008ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.602][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.875ms 累计=0.883ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.603][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.691ms 累计=1.574ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.633][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.007ms 累计=0.007ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.634][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.994ms 累计=1.002ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.635][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.668ms 累计=1.670ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.664][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.008ms 累计=0.008ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.665][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.660ms 累计=0.668ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.665][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.558ms 累计=1.226ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.695][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.006ms 累计=0.006ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.696][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.740ms 累计=0.745ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.696][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.555ms 累计=1.300ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.727][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.008ms 累计=0.008ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.727][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.887ms 累计=0.895ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.728][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.653ms 累计=1.548ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.757][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.006ms 累计=0.006ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.757][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.668ms 累计=0.674ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.758][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.487ms 累计=1.162ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.789][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.010ms 累计=0.010ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.790][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.014ms 累计=1.024ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:23.791][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.856ms 累计=1.879ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:24.834][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.005ms 累计=0.005ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:24.835][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.635ms 累计=0.640ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:24.836][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.468ms 累计=1.108ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.037][探针][GizmoPress][HitTest] selected=2 presented=none xy=(337,232) hover=None
+[22:56:25.147][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.005ms 累计=0.005ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.148][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.538ms 累计=0.542ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.148][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.393ms 累计=0.935ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.151][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=2.317ms 累计=3.252ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.152][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=1.381ms 累计=4.633ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.154][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=1.491ms 累计=6.124ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.155][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.934ms 累计=7.059ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.155][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.657ms 累计=7.715ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.156][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.424ms 累计=8.139ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.156][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.363ms 累计=8.502ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.156][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.408ms 累计=8.910ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.157][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.468ms 累计=9.378ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.157][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.668ms 累计=10.046ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.159][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.325ms 累计=11.371ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.159][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.553ms 累计=11.924ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.193][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.006ms 累计=0.006ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.193][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.854ms 累计=0.859ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.194][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.572ms 累计=1.431ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.195][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.469ms 累计=1.901ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.195][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.422ms 累计=2.323ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.195][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.394ms 累计=2.716ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.196][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.366ms 累计=3.083ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.196][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.357ms 累计=3.439ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.196][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.408ms 累计=3.847ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.197][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.345ms 累计=4.192ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.197][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.409ms 累计=4.601ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.198][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.381ms 累计=4.982ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.198][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.631ms 累计=5.613ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.199][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.092ms 累计=6.705ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.200][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.478ms 累计=7.182ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.224][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.009ms 累计=0.009ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.225][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.789ms 累计=0.798ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.225][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.773ms 累计=1.571ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.226][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.417ms 累计=1.988ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.226][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.363ms 累计=2.352ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.226][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.406ms 累计=2.758ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.227][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.391ms 累计=3.149ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.227][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.380ms 累计=3.529ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.228][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.363ms 累计=3.892ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.228][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.422ms 累计=4.314ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.228][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.395ms 累计=4.709ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.229][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.398ms 累计=5.107ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.230][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.727ms 累计=5.834ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.231][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.003ms 累计=6.837ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.231][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.504ms 累计=7.340ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.255][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.007ms 累计=0.007ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.255][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.880ms 累计=0.887ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.256][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.522ms 累计=1.409ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.256][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.413ms 累计=1.822ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.257][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.357ms 累计=2.179ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.257][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.402ms 累计=2.581ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.258][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.381ms 累计=2.963ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.258][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.408ms 累计=3.371ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.258][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.370ms 累计=3.741ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.259][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.369ms 累计=4.110ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.259][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.368ms 累计=4.478ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.259][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.392ms 累计=4.870ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.260][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.687ms 累计=5.556ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.261][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.071ms 累计=6.627ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.262][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.483ms 累计=7.110ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.286][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.007ms 累计=0.007ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.287][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.201ms 累计=1.209ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.288][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.562ms 累计=1.771ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.288][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.477ms 累计=2.248ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.289][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.425ms 累计=2.674ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.289][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.492ms 累计=3.166ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.290][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.537ms 累计=3.703ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.290][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.548ms 累计=4.251ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.291][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.604ms 累计=4.855ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.292][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.444ms 累计=5.298ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.292][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.556ms 累计=5.855ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.293][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.425ms 累计=6.280ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.293][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.708ms 累计=6.988ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.294][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.219ms 累计=8.206ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.295][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.584ms 累计=8.791ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.318][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.004ms 累计=0.004ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.319][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.687ms 累计=0.691ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.319][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.555ms 累计=1.247ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.320][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.471ms 累计=1.718ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.320][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.405ms 累计=2.123ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.321][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.435ms 累计=2.558ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.321][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.517ms 累计=3.076ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.322][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.500ms 累计=3.576ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.322][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.390ms 累计=3.966ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.322][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.385ms 累计=4.350ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.323][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.408ms 累计=4.759ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.323][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.446ms 累计=5.204ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.324][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.714ms 累计=5.918ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.325][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.206ms 累计=7.124ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.326][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.627ms 累计=7.752ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.349][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.003ms 累计=0.003ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.350][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.664ms 累计=0.667ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.350][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.451ms 累计=1.118ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.351][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.369ms 累计=1.487ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.351][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.373ms 累计=1.860ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.352][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.418ms 累计=2.278ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.352][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.429ms 累计=2.707ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.352][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.418ms 累计=3.125ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.353][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.539ms 累计=3.664ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.353][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.438ms 累计=4.103ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.354][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.410ms 累计=4.513ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.354][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.370ms 累计=4.883ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.355][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.677ms 累计=5.560ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.356][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=0.942ms 累计=6.502ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.356][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.417ms 累计=6.919ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.381][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.004ms 累计=0.004ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.382][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.704ms 累计=0.708ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.383][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.535ms 累计=1.243ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.383][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.357ms 累计=1.600ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.383][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.414ms 累计=2.014ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.384][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.384ms 累计=2.398ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.384][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.429ms 累计=2.827ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.384][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.362ms 累计=3.189ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.385][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.360ms 累计=3.549ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.385][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.362ms 累计=3.911ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.386][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.367ms 累计=4.278ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.386][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.393ms 累计=4.671ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.387][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.635ms 累计=5.306ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.388][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.150ms 累计=6.456ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.388][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.606ms 累计=7.062ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.413][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.006ms 累计=0.006ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.414][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.703ms 累计=1.709ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.415][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.720ms 累计=2.428ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.416][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.580ms 累计=3.009ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.416][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.471ms 累计=3.480ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.416][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.436ms 累计=3.916ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.417][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.404ms 累计=4.320ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.417][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.348ms 累计=4.669ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.418][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.430ms 累计=5.099ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.418][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.550ms 累计=5.649ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.419][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.389ms 累计=6.038ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.419][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.389ms 累计=6.428ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.420][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.633ms 累计=7.061ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.421][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=0.980ms 累计=8.041ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.421][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.443ms 累计=8.484ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.443][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.006ms 累计=0.006ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.444][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.719ms 累计=0.725ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.444][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.488ms 累计=1.213ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.445][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.422ms 累计=1.635ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.445][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.390ms 累计=2.025ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.446][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.398ms 累计=2.422ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.446][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.424ms 累计=2.846ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.446][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.389ms 累计=3.235ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.447][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.406ms 累计=3.641ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.447][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.451ms 累计=4.092ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.448][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.375ms 累计=4.468ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.448][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.376ms 累计=4.844ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.449][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.701ms 累计=5.545ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.450][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.379ms 累计=6.924ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.451][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.888ms 累计=7.812ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.474][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.003ms 累计=0.003ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.475][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.765ms 累计=0.768ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.476][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.408ms 累计=1.175ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.476][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.402ms 累计=1.578ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.476][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.369ms 累计=1.947ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.477][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.410ms 累计=2.357ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.477][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.382ms 累计=2.738ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.478][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.428ms 累计=3.166ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.478][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.670ms 累计=3.836ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.479][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.415ms 累计=4.251ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.479][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.460ms 累计=4.711ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.480][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.415ms 累计=5.126ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.480][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.746ms 累计=5.872ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.482][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.277ms 累计=7.150ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.482][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.572ms 累计=7.722ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.506][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.005ms 累计=0.005ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.507][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.901ms 累计=0.906ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.507][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.827ms 累计=1.734ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.508][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.451ms 累计=2.184ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.508][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.425ms 累计=2.609ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.509][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.529ms 累计=3.138ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.509][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.518ms 累计=3.656ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.510][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.483ms 累计=4.139ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.510][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.438ms 累计=4.578ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.511][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.407ms 累计=4.985ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.511][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.389ms 累计=5.373ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.512][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.632ms 累计=6.005ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.513][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=1.108ms 累计=7.114ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.514][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.669ms 累计=8.783ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.515][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.784ms 累计=9.567ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.537][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.007ms 累计=0.007ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.538][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.039ms 累计=1.046ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.539][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.758ms 累计=1.803ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.540][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.835ms 累计=2.639ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.540][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.780ms 累计=3.419ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.541][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.712ms 累计=4.131ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.542][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.565ms 累计=4.696ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.542][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.485ms 累计=5.181ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.542][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.422ms 累计=5.603ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.543][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.575ms 累计=6.178ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.544][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.715ms 累计=6.893ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.545][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.748ms 累计=7.641ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.546][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=1.147ms 累计=8.788ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.548][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.846ms 累计=10.634ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.548][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.817ms 累计=11.451ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.568][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.004ms 累计=0.004ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.569][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.212ms 累计=1.216ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.570][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.739ms 累计=1.955ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.570][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.739ms 累计=2.695ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.571][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.754ms 累计=3.448ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.572][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.616ms 累计=4.064ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.572][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.586ms 累计=4.650ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.573][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.585ms 累计=5.234ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.573][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.455ms 累计=5.689ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.574][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.564ms 累计=6.253ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.574][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.426ms 累计=6.679ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.575][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.462ms 累计=7.142ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.576][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=1.238ms 累计=8.380ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.578][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.474ms 累计=9.854ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.578][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.795ms 累计=10.649ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.598][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.004ms 累计=0.004ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.599][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.866ms 累计=0.870ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.600][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.626ms 累计=1.496ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.600][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.527ms 累计=2.023ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.601][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.509ms 累计=2.532ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.601][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.681ms 累计=3.213ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.602][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.437ms 累计=3.650ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.602][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.391ms 累计=4.041ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.602][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.361ms 累计=4.402ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.603][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.519ms 累计=4.920ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.603][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.420ms 累计=5.341ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.604][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.410ms 累计=5.751ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.605][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.838ms 累计=6.589ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.606][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.078ms 累计=7.667ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.606][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.611ms 累计=8.278ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.629][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.004ms 累计=0.004ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.630][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.790ms 累计=0.794ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.630][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.408ms 累计=1.202ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.631][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.687ms 累计=1.889ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.631][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.637ms 累计=2.526ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.632][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.648ms 累计=3.175ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.632][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.466ms 累计=3.640ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.633][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.484ms 累计=4.125ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.633][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.483ms 累计=4.608ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.634][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.495ms 累计=5.103ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.634][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.411ms 累计=5.514ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.635][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.492ms 累计=6.006ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.636][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=1.080ms 累计=7.086ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.637][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.389ms 累计=8.476ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.638][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.695ms 累计=9.171ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.659][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.004ms 累计=0.004ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.660][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.054ms 累计=1.058ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.661][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.596ms 累计=1.655ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.662][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.822ms 累计=2.477ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.662][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.645ms 累计=3.122ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.663][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.601ms 累计=3.723ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.663][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.432ms 累计=4.154ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.664][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.644ms 累计=4.799ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.664][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.441ms 累计=5.239ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.665][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.579ms 累计=5.818ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.665][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.538ms 累计=6.356ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.666][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.603ms 累计=6.958ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.667][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=1.073ms 累计=8.031ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.669][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.506ms 累计=9.537ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.669][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.755ms 累计=10.292ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.692][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.006ms 累计=0.006ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.694][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=2.125ms 累计=2.131ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.695][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.899ms 累计=3.030ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.695][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.610ms 累计=3.640ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.696][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.519ms 累计=4.159ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.696][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.519ms 累计=4.678ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.697][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.626ms 累计=5.304ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.698][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.664ms 累计=5.969ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.698][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.698ms 累计=6.667ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.699][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.624ms 累计=7.291ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.700][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.641ms 累计=7.931ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.700][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.788ms 累计=8.720ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.701][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.942ms 累计=9.662ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.703][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.584ms 累计=11.246ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.704][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=1.052ms 累计=12.298ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.716][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.002ms 累计=0.002ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.716][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.671ms 累计=0.674ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.717][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.506ms 累计=1.180ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.718][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.642ms 累计=1.821ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.718][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.662ms 累计=2.484ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.722][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.001ms 累计=0.001ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.723][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=0.703ms 累计=0.704ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.723][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.484ms 累计=1.188ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.724][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=0.474ms 累计=1.662ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.724][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.464ms 累计=2.126ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.725][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.403ms 累计=2.529ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.725][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.378ms 累计=2.908ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.725][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.355ms 累计=3.263ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.726][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.382ms 累计=3.644ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.726][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.338ms 累计=3.982ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.727][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.320ms 累计=4.302ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.727][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.418ms 累计=4.720ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.727][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.404ms 累计=5.124ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.729][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.191ms 累计=6.315ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.729][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.675ms 累计=6.990ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.753][探针][Gizmo拖动][PointerMoved入口] 触发=PointerMoved 本阶段=0.004ms 累计=0.004ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.755][探针][Gizmo拖动][Gizmo hit/drag 路由] 触发=PointerMoved 本阶段=1.301ms 累计=1.306ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.755][探针][Gizmo拖动][Preview transform 计算] 触发=PointerMoved 本阶段=0.602ms 累计=1.907ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.756][探针][Gizmo拖动][Gizmo drag 计算] 触发=PointerMoved 本阶段=1.088ms 累计=2.995ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.757][探针][Gizmo拖动][RenderScene preview 写入] 触发=PointerMoved 本阶段=0.591ms 累计=3.586ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.757][探针][Gizmo拖动][RenderScene 内存更新] 触发=PointerMoved 本阶段=0.608ms 累计=4.194ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.758][探针][Gizmo拖动][RenderScene preview 写入完成] 触发=PointerMoved 本阶段=0.658ms 累计=4.852ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.759][探针][Gizmo拖动][Redraw 请求 reason=TransformPreview] 触发=PointerMoved 本阶段=0.648ms 累计=5.500ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.759][探针][Gizmo拖动][Redraw 请求调度 reason=TransformPreview] 触发=PointerMoved 本阶段=0.477ms 累计=5.977ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.760][探针][Gizmo拖动][PickSnapshot 刷新跳过(Preview)] 触发=PointerMoved 本阶段=0.392ms 累计=6.369ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.760][探针][Gizmo拖动][Dispatcher.UIThread.Post 入队] 触发=PointerMoved 本阶段=0.424ms 累计=6.793ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.761][探针][Gizmo拖动][帧结束] 触发=PointerMoved 本阶段=0.485ms 累计=7.278ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.761][探针][Gizmo拖动][Dispatcher.UIThread.Post 执行] 触发=PointerMoved 本阶段=0.499ms 累计=7.778ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.762][探针][Gizmo拖动][Preview Render 完成 success=True] 触发=PointerMoved 本阶段=1.163ms 累计=8.940ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.763][探针][Gizmo拖动][Preview 帧跳过 Diagnostics 刷新] 触发=PointerMoved 本阶段=0.797ms 累计=9.737ms UI=否 WorldState=否 Diagnostics=否 Inspector=否
+[22:56:25.787][探针][GizmoRelease][End] action=Confirmed pos=(-13.03,6.22,4.81)

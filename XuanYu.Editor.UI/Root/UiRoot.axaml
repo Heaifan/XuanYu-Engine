@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.UiRoot"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <Style Selector="GridSplitter.layoutSplitter">
+      <Setter Property="Background" Value="#dce4ef"/>
+    </Style>
+    <Style Selector="GridSplitter.layoutSplitter:pointerover">
+      <Setter Property="Background" Value="#9fb5d6"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid Margin="12" MinWidth="980">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*" MinHeight="320"/>
+      <RowDefinition Height="6"/>
+      <RowDefinition Height="Auto" MinHeight="32" MaxHeight="420"/>
+    </Grid.RowDefinitions>
+    <Border Grid.Row="0" Classes="panel" Padding="8,1">
+      <local:Top />
+    </Border>
+
+    <Grid x:Name="MainLayoutGrid" Grid.Row="1" Margin="0,6,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="270" MinWidth="200" MaxWidth="420"/>
+        <ColumnDefinition Width="6"/>
+        <ColumnDefinition Width="*" MinWidth="360"/>
+        <ColumnDefinition Width="6"/>
+        <ColumnDefinition Width="340" MinWidth="260" MaxWidth="480"/>
+      </Grid.ColumnDefinitions>
+      <Border Classes="panel" Padding="14" MinWidth="200" MaxWidth="420">
+        <local:Left />
+      </Border>
+
+      <GridSplitter Grid.Column="1"
+                    Classes="layoutSplitter"
+                    Width="6"
+                    HorizontalAlignment="Stretch"
+                    ResizeDirection="Columns"
+                    ResizeBehavior="PreviousAndNext"/>
+
+      <Border Grid.Column="2" MinWidth="360" CornerRadius="8" Background="#101827" BorderBrush="#1d2a42" BorderThickness="1" Padding="18" BoxShadow="0 18 36 0 #260f172a">
+        <local:Main />
+      </Border>
+
+      <GridSplitter Grid.Column="3"
+                    Classes="layoutSplitter"
+                    Width="6"
+                    HorizontalAlignment="Stretch"
+                    ResizeDirection="Columns"
+                    ResizeBehavior="PreviousAndNext"/>
+
+      <Border Grid.Column="4" Classes="panel" Padding="14" MinWidth="260" MaxWidth="480">
+        <local:Right />
+      </Border>
+    </Grid>
+
+    <GridSplitter Grid.Row="2"
+                  Classes="layoutSplitter"
+                  Height="6"
+                  HorizontalAlignment="Stretch"
+                  ResizeDirection="Rows"
+                  ResizeBehavior="PreviousAndNext"/>
+
+    <Border Grid.Row="3" Classes="panel" Padding="8,2" MinHeight="32" MaxHeight="420">
+      <local:Foot />
+    </Border>
+  </Grid>
+</UserControl>

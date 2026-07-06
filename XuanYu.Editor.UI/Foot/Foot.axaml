@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.Foot"
+             x:DataType="local:UiVm">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Icons/EditorIcons.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Button.logSummary"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="6,2"/><Setter Property="Margin" Value="0"/><Setter Property="HorizontalContentAlignment" Value="Left"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="CornerRadius" Value="4"/></Style>
+    <Style Selector="Button.logFilter"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="8,3"/><Setter Property="Margin" Value="0"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="Foreground" Value="#55667d"/></Style>
+    <Style Selector="Button.logFilter.selected"><Setter Property="Background" Value="#edf4ff"/><Setter Property="Foreground" Value="#185aa6"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="TextBlock.logMono"><Setter Property="FontFamily" Value="Consolas, Microsoft YaHei UI"/><Setter Property="Foreground" Value="#27354a"/></Style>
+    <Style Selector="TextBlock.logHead"><Setter Property="FontSize" Value="12"/><Setter Property="Foreground" Value="#64748b"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="ListBox.logList ListBoxItem"><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,1"/></Style>
+    <Style Selector="ListBox.logList ListBoxItem:selected">
+      <Setter Property="Background" Value="#eaf3ff"/><Setter Property="Foreground" Value="#172337"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16" MinHeight="28">
+      <Button Classes="logSummary" Command="{Binding ToggleLogCommand}">
+        <TextBlock Text="{Binding LogSummary}" VerticalAlignment="Center"/>
+      </Button>
+      <TextBlock Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center" Foreground="#50607a"/>
+      <TextBlock Grid.Column="2" Text="{Binding FooterState}" VerticalAlignment="Center" Foreground="#2e7d32" FontWeight="SemiBold"/>
+    </Grid>
+
+    <Border Grid.Row="1" IsVisible="{Binding IsLogOpen}" MinHeight="180" Margin="0,8,0,0" BorderBrush="#d9e2ee" BorderThickness="1" CornerRadius="6" Background="#f8fbff" Padding="8">
+      <Grid RowDefinitions="Auto,Auto,*">
+        <Grid ColumnDefinitions="*,220" Margin="0,0,0,6">
+          <StackPanel Orientation="Horizontal" Spacing="4">
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterAll}" Content="全部" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInfo}" Content="信息" Command="{Binding SelectLogFilterCommand}" CommandParameter="信息"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterWarning}" Content="警告" Command="{Binding SelectLogFilterCommand}" CommandParameter="警告"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterError}" Content="错误" Command="{Binding SelectLogFilterCommand}" CommandParameter="错误"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterBuild}" Content="构建" Command="{Binding SelectLogFilterCommand}" CommandParameter="构建"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterTask}" Content="任务" Command="{Binding SelectLogFilterCommand}" CommandParameter="任务"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInput}" Content="输入" Command="{Binding SelectLogFilterCommand}" CommandParameter="输入"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterRender}" Content="渲染" Command="{Binding SelectLogFilterCommand}" CommandParameter="渲染"/>
+          </StackPanel>
+          <Border Grid.Column="1" Classes="chrome" Padding="8,4">
+            <Grid ColumnDefinitions="18,*">
+              <PathIcon Data="{StaticResource SearchIcon}" Width="14" Height="14" Foreground="#6b7a90"/>
+              <TextBlock Grid.Column="1" Text="搜索日志..." Classes="caption" VerticalAlignment="Center"/>
+            </Grid>
+          </Border>
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="4,72,56,72,72,*,82" ColumnSpacing="10" Margin="0,0,0,4">
+          <TextBlock Grid.Column="1" Text="时间" Classes="logHead"/>
+          <TextBlock Grid.Column="2" Text="级别" Classes="logHead"/>
+          <TextBlock Grid.Column="3" Text="来源" Classes="logHead"/>
+          <TextBlock Grid.Column="4" Text="分类" Classes="logHead"/>
+          <TextBlock Grid.Column="5" Text="消息" Classes="logHead"/>
+          <TextBlock Grid.Column="6" Text="折叠" Classes="logHead"/>
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,280" ColumnSpacing="10">
+          <Grid>
+            <ListBox Classes="logList" ItemsSource="{Binding LogItems}" SelectedItem="{Binding SelectedLogEntry}"
+                     SelectionMode="Single" Background="Transparent" BorderThickness="0">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="local:LogEntry">
+                  <Grid ColumnDefinitions="4,72,56,72,72,*,82" ColumnSpacing="10">
+                    <Border Background="{Binding Accent}" CornerRadius="2"/>
+                    <TextBlock Grid.Column="1" Text="{Binding Time}" Classes="logMono"/>
+                    <TextBlock Grid.Column="2" Text="{Binding LevelText}" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="3" Text="{Binding SourceText}" Classes="logMono"/>
+                    <TextBlock Grid.Column="4" Text="{Binding CategoryText}" Classes="logMono"/>
+                    <TextBlock Grid.Column="5" Text="{Binding Message}" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="6" Text="{Binding RepeatText}" Foreground="#7a5a19"/>
+                  </Grid>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel IsVisible="{Binding HasNoLogItems}" HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock Text="暂无日志" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+              <TextBlock Text="低频事实记录会显示在这里，调试快照和临时探针不进入普通日志。" Classes="muted" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+            </StackPanel>
+          </Grid>
+          <local:LogDetailPanel Grid.Column="1"/>
+        </Grid>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>
