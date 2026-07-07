@@ -180,3 +180,8 @@ New Vulkan / NativeHost files:
 - XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs
 - docs/audit-RZ-VK1-vulkan-probe.md
 - docs/audit-RZ-VK2-native-host-lifecycle.md
+
+## 开发规范理解文档补充 (2026-07-07)
+新增开发规范两份（由 AI 接手理解验收提炼，经人工校正 5+100 / 依赖隔离 / 日志边界 / VK 阶段边界表述）：
+- `docs/dev-rules.md`  # 开发硬规则执行手册：接手红线清单 + 5+100 + 依赖方向硬隔离 + 高频链路纪律 + 日志边界 + VK 阶段边界 + 中文化 + 范围结构 + 命名品牌 + 构建测试审计门禁。
+- `docs/dev-rules-understanding.md`  # 开发规范「为什么这样规定」：事故来源、设计动机、历史坑、ShellV2 冻结 / Gizmo 卡顿 / Vulkan 生命周期教训、常见误读速查。
