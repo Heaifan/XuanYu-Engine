@@ -15,4 +15,13 @@ public sealed partial class UiVm
         else _logBus.Info(EditorLogSource.Render, EditorLogCategory.Backend, message, detail);
         RefreshLogBindings();
     }
+
+    public void LogNativeHostResizedMerged(NativeHostHandleSnapshot snapshot, int mergeCount)
+    {
+        var message = NativeHostLifecycleLogFormatter.MergedMessage(snapshot, mergeCount);
+        var detail = NativeHostLifecycleLogFormatter.Detail(snapshot) + $"；【NativeHost】合并次数：{mergeCount}";
+        if (snapshot.IsValid) _logBus.Info(EditorLogSource.Render, EditorLogCategory.Backend, message, detail);
+        else _logBus.Warning(EditorLogSource.Render, EditorLogCategory.Backend, message, detail);
+        RefreshLogBindings();
+    }
 }

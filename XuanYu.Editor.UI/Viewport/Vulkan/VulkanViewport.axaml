@@ -9,7 +9,7 @@
     <Border x:Name="FallbackLayer" Background="#cc0b1220" CornerRadius="6"
             Padding="18" HorizontalAlignment="Center" VerticalAlignment="Center">
       <StackPanel Spacing="6" MaxWidth="360">
-        <TextBlock Text="Vulkan Clear Probe" Foreground="#dbeafe" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+        <TextBlock Text="Vulkan Probe" Foreground="#dbeafe" FontWeight="SemiBold" HorizontalAlignment="Center"/>
         <TextBlock x:Name="FallbackText" Text="正在初始化 Vulkan..." Foreground="#9fb6d8" TextWrapping="Wrap" TextAlignment="Center"/>
       </StackPanel>
     </Border>

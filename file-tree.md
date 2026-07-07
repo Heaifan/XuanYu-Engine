@@ -185,3 +185,15 @@ New Vulkan / NativeHost files:
 新增开发规范两份（由 AI 接手理解验收提炼，经人工校正 5+100 / 依赖隔离 / 日志边界 / VK 阶段边界表述）：
 - `docs/dev-rules.md`  # 开发硬规则执行手册：接手红线清单 + 5+100 + 依赖方向硬隔离 + 高频链路纪律 + 日志边界 + VK 阶段边界 + 中文化 + 范围结构 + 命名品牌 + 构建测试审计门禁。
 - `docs/dev-rules-understanding.md`  # 开发规范「为什么这样规定」：事故来源、设计动机、历史坑、ShellV2 冻结 / Gizmo 卡顿 / Vulkan 生命周期教训、常见误读速查。
+
+## RZ-VK2-R1 NativeHost Resize 日志合并 (2026-07-07)
+结构性新增（已同步）：
+- `XuanYu.Editor.UI/NativeHostResizeSnapshot.cs`  # 尺寸变化快照，只保存尺寸数据。
+- `XuanYu.Editor.UI/NativeHostResizeCoalescer.cs`  # 250ms debounce，合并连续尺寸变化，稳定后生成一条低频合并日志；Detach/Dispose 安全停止 pending。
+- `docs/audit-RZ-VK2-R1-nativehost-resize-coalesce.md`  # RZ-VK2-R1 审计与验收文档。
+修改（职责收口，未改布局/输入）：
+- `XuanYu.Editor.UI/ViewportNativeHostRoute.cs`  # 增加 ReportMerged 薄入口。
+- `XuanYu.Render.Vulkan/NativeHostLifecycleLogFormatter.cs`  # 增加 MergedMessage 中文合并日志格式。
+- `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`  # 增加 LogNativeHostResizedMerged。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`  # OnSizeChanged 走 Coalescer；Detach/Dispose 调 Cancel。
+- `XuanYu.Editor.UI/Main/Main.axaml` 与 `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml`  # 视口文案 Vulkan Clear Probe 改为 NativeHost Probe / Vulkan Probe。

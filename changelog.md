@@ -1,5 +1,15 @@
 # changelog
 
+## [RZ-VK2-R1] NativeHost 尺寸变化日志合并 (2026-07-07)
+- 修复 NativeHost 尺寸变化高频事件连续进入 `EditorLogBus` 的问题（`VulkanNativeHost.OnSizeChanged` 每次直写日志并 `RefreshLogBindings`，导致截图「重复 138 次」）。
+- 新增 `NativeHostResizeSnapshot`（只保存尺寸数据）与 `NativeHostResizeCoalescer`（250ms debounce，连续 SizeChanged 只更新快照与合并计数，稳定后才生成一条低频合并日志）。
+- `ViewportNativeHostRoute` 增加 `ReportMerged` 薄入口；`UiVm.NativeHostLifecycle` 增加 `LogNativeHostResizedMerged`（合并日志含最终宽度、高度、DPI、生命周期版本、合并次数；无效句柄只写一条低频失效日志）。
+- `NativeHostLifecycleLogFormatter` 增加 `MergedMessage` 中文合并日志格式。
+- `VulkanNativeHost` 的 `OnSizeChanged` 改为走 Coalescer；`OnDetachedFromVisualTree` / `DestroyNativeControlCore` 调用 `Cancel()` 安全停止 pending debounce，不补写日志。
+- 中央视口文案 `Vulkan Clear Probe` 改为 `NativeHost Probe`（`Main.axaml`）与 `Vulkan Probe`（`VulkanViewport.axaml`）。
+- 未创建 Surface / Swapchain / LogicalDevice，未接入真实渲染循环，未修改顶部/左侧/右侧/底部布局与输入链路。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；本轮新增/修改 `.cs` / `.axaml` 全部 ≤100 行；`dotnet test` 退出正常且仓库无独立测试项目。
+
 ## [RZ-VK2] NativeHost / HWND 生命周期收口 (2026-07-07)
 - 新增 `XuanYu.Render.Vulkan` 内的 NativeHost 生命周期快照、状态、探针与中文日志格式化。
 - `VulkanNativeHost` 收口为纯 HWND 生命周期宿主，只记录创建、附加、句柄可用、尺寸变化、移除、释放、失效，不再触碰 Vulkan 会话。

@@ -6,4 +6,7 @@ public static class ViewportNativeHostRoute
 {
     public static void Report(UiVm? vm, NativeHostHandleSnapshot snapshot) =>
         vm?.LogNativeHostLifecycle(snapshot);
+
+    public static void ReportMerged(UiVm? vm, NativeHostHandleSnapshot snapshot, int mergeCount) =>
+        vm?.LogNativeHostResizedMerged(snapshot, mergeCount);
 }
