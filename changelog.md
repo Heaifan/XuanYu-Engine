@@ -6,6 +6,19 @@
 - VK3 只做 Surface，Swapchain 留给 VK4；阶段边界硬于技术规则，禁止 VK3 夹带 Swapchain。
 - 产出 `docs/rz-vk3-surface-lifecycle-plan.md`。
 
+## [Fix-M1] Windows 兼容清单提交 (2026-07-07)
+- 单独提交 `XuanYu.Editor.UI/app.manifest` 中遗留的 Windows `supportedOS` 兼容清单块（10/11/8.1/8/7），仅声明系统兼容，无任何 Vulkan / 逻辑改动。
+- 不碰 Vulkan / NativeHost / Resize / Surface / Swapchain / LogicalDevice；`.workbuddy/` 与 `qizheng-mvp-fixed/` 维持未跟踪，不纳入提交。
+- 提交信息：`chore(editor): declare Windows compatibility manifest`。
+
+## [RZ-VK2-R2] NativeHost Resize 合并验证/收口 (2026-07-07)
+- 验证 RZ-VK2-R1 合并边界干净：NativeHostResizeCoalescer 只合并 UI 生命周期日志，未改变 Win32ViewportHost.Resize 调用时机，未牵连 VulkanClearSession.Resize / Surface / Swapchain / LogicalDevice。
+- git diff 确认 VulkanClearSession.* 相对 HEAD 零改动；本回合文件均不引用它；无新增 Silk.NET.Vulkan 使用点。
+- 确认工作树仅 app.manifest 为 tracked modified（非本轮任务），不混入提交。
+- 新增 `docs/audit-RZ-VK2-R2-nativehost-resize-coalesce-verify.md`，回答四问：日志已转合并 / 无残留高频直写 / 未动 Surface/Swapchain/Device / Editor.UI 直接引用 Vulkan 债务仍在但未扩大。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
+- 提交信息：`test(editor): RZ-VK2-R2 verify native host resize coalescing`。
+
 ## [RZ-VK2-R1] NativeHost 尺寸变化日志合并 (2026-07-07)
 - 修复 NativeHost 尺寸变化高频事件连续进入 `EditorLogBus` 的问题（`VulkanNativeHost.OnSizeChanged` 每次直写日志并 `RefreshLogBindings`，导致截图「重复 138 次」）。
 - 新增 `NativeHostResizeSnapshot`（只保存尺寸数据）与 `NativeHostResizeCoalescer`（250ms debounce，连续 SizeChanged 只更新快照与合并计数，稳定后才生成一条低频合并日志）。
@@ -15,6 +28,13 @@
 - 中央视口文案 `Vulkan Clear Probe` 改为 `NativeHost Probe`（`Main.axaml`）与 `Vulkan Probe`（`VulkanViewport.axaml`）。
 - 未创建 Surface / Swapchain / LogicalDevice，未接入真实渲染循环，未修改顶部/左侧/右侧/底部布局与输入链路。
 - 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；本轮新增/修改 `.cs` / `.axaml` 全部 ≤100 行；`dotnet test` 退出正常且仓库无独立测试项目。
+
+## [RZ-New-0] 新人接手规则审计 (2026-07-07)
+- 新增开发规范两份（经人工校正 5+100 / 依赖隔离 / 日志边界 / VK 阶段边界表述）：`docs/dev-rules.md`（硬规则执行手册 + 接手红线清单）、`docs/dev-rules-understanding.md`（事故来源与动机解释）。
+- 新增 `docs/audit-RZ-New-0-onboarding.md`：按 10 项清单完成接手验收。实测确认 Editor.UI 仍直接引用 Silk.NET.Vulkan / XuanYu.Render.Vulkan（过渡期冲突）；VulkanClearSession 探针已创建 Instance/Surface/Device/Swapchain；NativeHost 高频 SizeChanged 直写 EditorLogBus 风险属实。
+- 同步 file-tree.md。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
+- 提交信息：`docs(dev): 新增开发规范文档与 RZ-New-0 接手审计`。
 
 ## [RZ-VK2] NativeHost / HWND 生命周期收口 (2026-07-07)
 - 新增 `XuanYu.Render.Vulkan` 内的 NativeHost 生命周期快照、状态、探针与中文日志格式化。
