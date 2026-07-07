@@ -191,6 +191,7 @@ New Vulkan / NativeHost files:
 - `XuanYu.Editor.UI/NativeHostResizeSnapshot.cs`  # 尺寸变化快照，只保存尺寸数据。
 - `XuanYu.Editor.UI/NativeHostResizeCoalescer.cs`  # 250ms debounce，合并连续尺寸变化，稳定后生成一条低频合并日志；Detach/Dispose 安全停止 pending。
 - `docs/audit-RZ-VK2-R1-nativehost-resize-coalesce.md`  # RZ-VK2-R1 审计与验收文档。
+- `docs/audit-RZ-VK2-R2-nativehost-resize-coalesce-verify.md`  # RZ-VK2-R2 验证/收口轮：确认合并边界干净、未牵连 Vulkan 生命周期。
 修改（职责收口，未改布局/输入）：
 - `XuanYu.Editor.UI/ViewportNativeHostRoute.cs`  # 增加 ReportMerged 薄入口。
 - `XuanYu.Render.Vulkan/NativeHostLifecycleLogFormatter.cs`  # 增加 MergedMessage 中文合并日志格式。
