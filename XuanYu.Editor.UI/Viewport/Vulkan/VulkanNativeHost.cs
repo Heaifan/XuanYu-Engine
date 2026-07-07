@@ -1,52 +1,64 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using XuanYu.Render.Vulkan;
 
 namespace XuanYu.Editor.UI;
 
 public sealed class VulkanNativeHost : NativeControlHost
 {
+    readonly NativeHostLifecycleProbe _probe = new();
+    bool _createdReported;
     nint _hwnd;
-    VulkanClearSession? _session;
+
+    public VulkanNativeHost() { }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        if (!_createdReported)
+        {
+            Report(NativeHostLifecycleState.Created, 0, 0, 0, 1d, false);
+            _createdReported = true;
+        }
+        Report(NativeHostLifecycleState.Attached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
+    }
 
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         _hwnd = Win32ViewportHost.CreateChild(parent.Handle);
-        StartSession();
+        Report(NativeHostLifecycleState.HandleAvailable, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), true);
         return new PlatformHandle(_hwnd, "HWND");
-    }
-
-    protected override void DestroyNativeControlCore(IPlatformHandle control)
-    {
-        _session?.Dispose();
-        Log("Vulkan 释放完成", "中央视口 Vulkan Clear Probe 已释放。");
-        _session = null;
-        Win32ViewportHost.Destroy(_hwnd);
-        _hwnd = 0;
     }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
         base.OnSizeChanged(e);
-        if (_hwnd == 0 || e.NewSize.Width < 1 || e.NewSize.Height < 1) return;
-        Win32ViewportHost.Resize(_hwnd, (int)e.NewSize.Width, (int)e.NewSize.Height);
-        _session?.Resize((uint)e.NewSize.Width, (uint)e.NewSize.Height);
+        var width = (int)e.NewSize.Width;
+        var height = (int)e.NewSize.Height;
+        if (_hwnd != 0 && width > 0 && height > 0) Win32ViewportHost.Resize(_hwnd, width, height);
+        Report(NativeHostLifecycleState.Resized, _hwnd, width, height, GetDpiScale(), _hwnd != 0 && width > 0 && height > 0);
     }
 
-    void StartSession()
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        var size = Bounds.Size;
-        Log("Vulkan 初始化开始", "中央视口开始创建 Vulkan Clear Probe。");
-        _session = VulkanClearSession.TryCreate(_hwnd, (uint)Math.Max(1, size.Width), (uint)Math.Max(1, size.Height), Log);
-        if (_session?.IsReady == true) Owner()?.HideFallback(); else Owner()?.SetFallback("Vulkan 初始化失败，已显示占位视口。");
+        Report(NativeHostLifecycleState.Detached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
+        base.OnDetachedFromVisualTree(e);
     }
 
-    void Log(string message, string detail) =>
-        (DataContext as UiVm)?.LogVulkanLifecycle(message, detail);
-
-    VulkanViewport? Owner()
+    protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
-        var p = Parent;
-        while (p is not null and not VulkanViewport) p = p.Parent;
-        return p as VulkanViewport;
+        Report(NativeHostLifecycleState.Disposed, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
+        Report(NativeHostLifecycleState.Invalidated, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
+        if (_hwnd != 0) Win32ViewportHost.Destroy(_hwnd);
+        _hwnd = 0;
     }
+
+    void Report(NativeHostLifecycleState state, nint hwnd, int width, int height, double dpiScale, bool isValid)
+    {
+        var snapshot = _probe.Capture(state, hwnd, width, height, dpiScale, isValid);
+        ViewportNativeHostRoute.Report(DataContext as UiVm, snapshot);
+    }
+
+    double GetDpiScale() => TopLevel.GetTopLevel(this)?.RenderScaling ?? 1d;
 }

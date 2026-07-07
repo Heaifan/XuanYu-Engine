@@ -1,0 +1,21 @@
+using System.Globalization;
+
+namespace XuanYu.Render.Vulkan;
+
+public static class NativeHostLifecycleLogFormatter
+{
+    public static string Message(NativeHostHandleSnapshot snapshot) => snapshot.State switch
+    {
+        NativeHostLifecycleState.Created => "【NativeHost】创建宿主控件",
+        NativeHostLifecycleState.Attached => "【NativeHost】附加到可视树",
+        NativeHostLifecycleState.HandleAvailable => "【NativeHost】原生句柄可用",
+        NativeHostLifecycleState.Resized => "【NativeHost】尺寸变化",
+        NativeHostLifecycleState.Detached => "【NativeHost】从可视树移除",
+        NativeHostLifecycleState.Disposed => "【NativeHost】释放宿主控件",
+        NativeHostLifecycleState.Invalidated => "【NativeHost】原生句柄失效",
+        _ => "【NativeHost】生命周期事件"
+    };
+
+    public static string Detail(NativeHostHandleSnapshot snapshot) =>
+        $"【NativeHost】HWND：0x{snapshot.Hwnd.ToInt64():X}；【NativeHost】宽度：{snapshot.Width}；【NativeHost】高度：{snapshot.Height}；【NativeHost】DPI缩放：{snapshot.DpiScale.ToString("0.00", CultureInfo.InvariantCulture)}；【NativeHost】句柄状态：{(snapshot.IsValid ? "有效" : "无效")}；【NativeHost】生命周期版本：{snapshot.Version}";
+}
