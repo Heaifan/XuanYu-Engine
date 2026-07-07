@@ -23,6 +23,7 @@ public sealed class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var vm = new UiVm();
+            VulkanProbeRoute.Run(vm);
             desktop.MainWindow = new UiWin
             {
                 DataContext = vm
