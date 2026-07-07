@@ -1,5 +1,14 @@
 # changelog
 
+## [RZ-Fix3-0] Vulkan 接入前置审计 (2026-07-07)
+- 新增 `docs/vulkan-preflight-audit-RZ-Fix3-0.md`，收口当前中央视口、Avalonia NativeControlHost、Win32 子窗口、Vulkan Surface/Swapchain 生命周期和 fallback 策略。
+- 确认当前工程已经存在 `Viewport/Vulkan` 预接入代码，实际状态已超过纯审计阶段，应在 RZ-Fix3-A 中收口为最小 Clear Probe，而不是继续扩大到完整 Renderer。
+- 明确 Vulkan 只允许进入中央视口链路：`UiRoot` -> `Main` -> `VulkanViewport` -> `VulkanNativeHost` -> `VulkanClearSession`。
+- 明确低频日志边界：只记录初始化、失败、Swapchain 重建、释放等生命周期摘要，禁止每帧 Acquire / Present / RenderFrame 日志。
+- 明确 fallback UI 要求：Vulkan 初始化失败时中央视口显示占位提示，并引导查看底部日志详情，不能白屏或崩溃。
+- 保持顶部工具栏、左侧项目树、右侧检查器、底部日志系统职责不变；本次不接 Gizmo、Picking、模型、相机、资源系统。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`.cs` / `.axaml` 文件未发现超过 100 行。
+
 ## [RZ-Fix3-A] — Vulkan 接入前置验证 (2026-07-06)
 - 中央视口从静态假网格切换为 `VulkanViewport` 宿主，保留顶部/底部视口状态提示
 - 新增 `Viewport/Vulkan` 小模块，使用 Avalonia `NativeControlHost` 在中央区域创建 Win32 子窗口作为 Vulkan Surface 承载点
