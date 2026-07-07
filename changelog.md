@@ -1,5 +1,19 @@
 # changelog
 
+## [RZ-VK2] NativeHost / HWND 生命周期收口 (2026-07-07)
+- 新增 `XuanYu.Render.Vulkan` 内的 NativeHost 生命周期快照、状态、探针与中文日志格式化。
+- `VulkanNativeHost` 收口为纯 HWND 生命周期宿主，只记录创建、附加、句柄可用、尺寸变化、移除、释放、失效，不再触碰 Vulkan 会话。
+- 新增 `ViewportNativeHostRoute` 与 `UiVm.NativeHostLifecycle`，UI 仅通过薄入口把快照写入现有日志系统。
+- 新增审计文档 `docs/audit-RZ-VK2-native-host-lifecycle.md`，记录 HWND 生命周期、验证结果与 RZ-VK3 接 Surface 的接点。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
+
+## [RZ-VK1] Vulkan 依赖接入与环境探针 (2026-07-07)
+- 新增独立 `XuanYu.Render.Vulkan` 项目，接入 `Silk.NET.Vulkan`，只负责最小 Vulkan 环境探针。
+- 探针完成 Vulkan API 入口创建、Instance 版本枚举、PhysicalDevice 枚举，并输出中文诊断日志。
+- UI 只通过 `VulkanProbeRoute.Run(vm)` 这一薄入口触发探针，未修改布局、输入或日志面板结构。
+- 未接入 Surface、Swapchain、LogicalDevice、CommandPool、CommandBuffer，也未进入真实渲染循环。
+- 新增审计文档 `docs/audit-RZ-VK1-vulkan-probe.md`，记录本轮文件清单、验证范围和下一步建议。
+
 ## [RZ-Fix3-0] Vulkan 接入前置审计 (2026-07-07)
 - 新增 `docs/vulkan-preflight-audit-RZ-Fix3-0.md`，收口当前中央视口、Avalonia NativeControlHost、Win32 子窗口、Vulkan Surface/Swapchain 生命周期和 fallback 策略。
 - 确认当前工程已经存在 `Viewport/Vulkan` 预接入代码，实际状态已超过纯审计阶段，应在 RZ-Fix3-A 中收口为最小 Clear Probe，而不是继续扩大到完整 Renderer。

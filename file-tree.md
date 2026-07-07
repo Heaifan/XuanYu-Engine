@@ -161,3 +161,22 @@ XuanYuEngine/
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanClearSession.Device.cs`
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanClearSession.Swapchain.cs`
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanClearSession.Dispose.cs`
+
+## RZ-VK2 / RZ-VK1 current snapshot (2026-07-07)
+Current file count: 117
+New Vulkan / NativeHost files:
+- XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj
+- XuanYu.Render.Vulkan/VulkanApiProbe.cs
+- XuanYu.Render.Vulkan/VulkanDeviceInfo.cs
+- XuanYu.Render.Vulkan/VulkanProbeLogFormatter.cs
+- XuanYu.Render.Vulkan/VulkanProbeResult.cs
+- XuanYu.Render.Vulkan/NativeHostHandleSnapshot.cs
+- XuanYu.Render.Vulkan/NativeHostLifecycleState.cs
+- XuanYu.Render.Vulkan/NativeHostLifecycleProbe.cs
+- XuanYu.Render.Vulkan/NativeHostLifecycleLogFormatter.cs
+- XuanYu.Editor.UI/VulkanProbeRoute.cs
+- XuanYu.Editor.UI/ViewportNativeHostRoute.cs
+- XuanYu.Editor.UI/Vm/UiVm.VulkanProbe.cs
+- XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs
+- docs/audit-RZ-VK1-vulkan-probe.md
+- docs/audit-RZ-VK2-native-host-lifecycle.md
