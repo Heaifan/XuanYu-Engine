@@ -1,5 +1,35 @@
 # changelog
 
+## [LOG-UX-2] 会话日志落盘（关闭后仍可审计 Detach 顺序）(2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-2（仅 Editor.UI 日志系统，不碰 Vulkan / NativeHost）
+
+### 背景
+VK4-B-R1 最后一项需验证关闭窗口时 Detach 释放顺序（LogicalDevice → Surface → Instance）。
+但原日志只进 UI 内存 `EditorLogBuffer`，关闭窗口后面板消失无法复制。
+方案 A（看控制台）经代码核查不成立：`EditorLogBus` 仅 `buffer.Add(...)`，无 `Console`/`File`/`Trace` 输出，控制台不会出现 Vulkan 生命周期日志。故按「A 不行就 B」决策树开 LOG-UX-2 落盘。
+
+### 目标（逐条对照）
+1. UI 日志照常显示，同时同步追加写入 `logs/editor-session-latest.log` — ✅
+2. 不碰 Vulkan 代码 — ✅ 仅在 `EditorLogBus.Write` 加文件追加
+3. 不碰 NativeHost 生命周期 — ✅
+4. 所有 .cs ≤100 行 — ✅ `EditorLogBus.cs` 21→44
+5. `XuanYu.Editor.UI` 0W0E — ✅
+6. `logs/` 加入 `.gitignore` 避免入仓 — ✅
+
+### 实现
+- `EditorLogBus.cs`：新增 `_logDir`/`_logPath`（相对 `Environment.CurrentDirectory/logs`）；首次写时 `Directory.CreateDirectory` + 写会话头；之后每条日志 `File.AppendAllText`，格式与剪贴板一致（`时间\t级别\t来源\t分类\t消息\t详情`）。包 `try/catch`，落盘失败不阻塞 UI（诊断安全约定）。
+- 每次启动重建 `editor-session-latest.log`（只保留最近一次会话），便于关闭后直接打开审计。
+
+### 验收（用户重测）
+- `run.bat` 启动编辑器 → 正常操作 → 关闭 → 打开 `logs/editor-session-latest.log`。
+- grep `LogicalDevice 释放成功` / `Surface 已销毁` / `Instance 已销毁`，确认顺序为 Device → Surface → Instance。
+- 至此 VK4-B-R1 最后一项（第⑪项）可从文件可靠审计，VK4-B 即可完全收口。
+
+### 红线校验
+- `git diff` 仅 `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs` 与 `.gitignore`；未改 `XuanYu.Render.Vulkan` / `VulkanNativeHostSurfaceBridge` / NativeHost。
+
 ## [LOG-UX-1-R1] Ctrl+C 复制无响应修复 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract

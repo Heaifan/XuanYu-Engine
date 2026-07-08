@@ -32,3 +32,6 @@ codex_chat_export_*.zip
 
 # Windows
 Thumbs.db
+
+# Editor session logs (LOG-UX-2 落盘，含 Vulkan 生命周期，不入仓)
+logs/
