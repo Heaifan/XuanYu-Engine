@@ -1,5 +1,42 @@
 # changelog
 
+## [RZ-VK3-C2] 组合根接线：桥接接入 NativeHost 生命周期 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：a01855702866f5b243efa23a796831af1a1a6d7f
+
+### 目标
+把 `VulkanNativeHostSurfaceBridge` 接入现有 `VulkanNativeHost` 的 Attach/Resize/Detach 生命周期流，验证真实 HWND 能创建并释放 Instance+Surface。Resize 只记录尺寸不重建 Surface；仍不碰 Device/Queue/Swapchain/RenderFrame。
+
+### 修改内容
+- 新增 `VulkanSurfaceBridgeProvider.cs`（12 行，组合根）：`using XuanYu.Render.Vulkan` + `using XuanYu.Render.Abstractions`，`Create()` 返回 `INativeHostSurfaceBridge`。UI 宿主只认契约，具体类实例化隔离在组合根，保持 Editor.UI → Abstractions 依赖方向。
+- `VulkanNativeHost.cs`（73→82 行）：
+  - 新增 `INativeHostSurfaceBridge? _bridge` 字段（契约类型，不引入 Render.Vulkan 具体类）。
+  - `Report` 返回 `NativeHostHandleSnapshot`；`OnAttachedToVisualTree` 用其构造 `NativeHostSurfaceHandle` 并 `_bridge ??= VulkanSurfaceBridgeProvider.Create(); _bridge.Attach(handle)`。
+  - `OnSizeChanged` 合并回调内调 `_bridge?.Resize(snap.Width, snap.Height)`（经 250ms Coalescer 节流，高频路径不直写）。
+  - `OnDetachedFromVisualTree` 调 `_bridge?.Detach()`。
+  - `DestroyNativeControlCore` 调 `(_bridge as IDisposable)?.Dispose()` 并置空（Dispose 顺序：Surface→Instance→Vk，复用 C1-R2 所有权）。
+
+### 未做内容（红线）
+- 未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame/CommandBuffer/RenderPass/Framebuffer`。
+- `Resize` 不重建 Surface（桥 `Resize` 仅记中文日志）。
+- 未搬 `VulkanClearSession` 探针到正式路径；旧探针未改动。
+- `XuanYu.Editor.UI` 工程级对 `Render.Vulkan` 的引用未解耦（组合根 provider 已 `using Render.Vulkan`，口径不变）。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 代码引用） |
+| Editor.UI 构建 | ✅ 0W0E |
+| git grep 禁止项 | ✅ 两 VK3-C2 文件无 PhysicalDevice/LogicalDevice/Queue/Swapchain 实装 |
+| 文件行数 | ✅ VulkanNativeHost 82 / VulkanSurfaceBridgeProvider 12，均 ≤100 |
+| Abstractions 纯净 | ✅ 仅解释性注释，无代码引用 |
+| file-tree.md | 新增 1 文件，已更新（总数 104→105） |
+
+### 下一步
+VK3 系列 Instance/Surface 层已收口（VK3-A / B / C 全完成）。Device/Swapchain/RenderFrame 留待 VK4。
+
 ## [RZ-VK3-C1-R2] Vk 生命周期所有权收口 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract

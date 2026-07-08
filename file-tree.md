@@ -4,7 +4,7 @@
 
 统计口径：当前工作区真实文件快照，排除 `.git/`、`bin/`、`obj/` 生成目录。
 
-当前文件总数：104
+当前文件总数：105
 
 ```
 
@@ -33,6 +33,7 @@
 - `NativeHostSurfaceContract.cs`  # 仅 `using XuanYu.Render.Abstractions`（VK3-A）。
 - `NativeHostResizeCoalescer.cs` / `ViewportNativeHostRoute.cs` / `Vm/UiVm.NativeHostLifecycle.cs` / `Viewport/Vulkan/VulkanNativeHost.cs`  # 生命周期链路改用 `using XuanYu.Render.Abstractions`（VK3-A-R1）。
 - `VulkanProbeRoute.cs` / `Vm/UiVm.VulkanProbe.cs`  # 仍 `using XuanYu.Render.Vulkan`（Vulkan 探针类型），故 Editor.UI.csproj 保留对 Render.Vulkan 的工程级引用。
+- `Viewport/Vulkan/VulkanSurfaceBridgeProvider.cs`  # VK3-C2 组合根：装配 INativeHostSurfaceBridge 具体实现，UI 宿主只认 Abstractions 契约（故 Editor.UI.csproj 仍引用 Render.Vulkan）。
 
 
 XuanYuEngine/
