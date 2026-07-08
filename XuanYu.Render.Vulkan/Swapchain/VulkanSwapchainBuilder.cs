@@ -11,19 +11,19 @@ public static unsafe class VulkanSwapchainBuilder
 {
     public static (SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool ok) Build(
         Vk vk, Instance instance, PhysicalDevice physicalDevice, SurfaceKHR surface,
-        KhrSwapchain khr, VulkanDevice device, int width, int height, Action<string>? log)
+        KhrSwapchain khr, VulkanDevice device, int width, int height, Action<string>? log, SwapchainKHR oldSwapchain = default)
     {
         var caps = VulkanSwapchainCapabilities.Query(vk, instance, physicalDevice, surface, width, height, log);
         if (!caps.Success || caps.Caps is null) return default;
         var chosen = caps.Caps.Value;
-        var swapchain = CreateSwapchain(khr, device, surface, chosen, log);
+        var swapchain = CreateSwapchain(khr, device, surface, chosen, oldSwapchain, log);
         if (swapchain.Handle == 0) return default;
         var (images, views) = CreateImagesAndViews(vk, khr, device, swapchain, chosen.Format.Format, log);
         if (views.Length != images.Length) return default;
         return (swapchain, images, views, chosen.Format.Format, chosen.Extent, true);
     }
 
-    static SwapchainKHR CreateSwapchain(KhrSwapchain khr, VulkanDevice device, SurfaceKHR surface, SwapchainCaps caps, Action<string>? log)
+    static SwapchainKHR CreateSwapchain(KhrSwapchain khr, VulkanDevice device, SurfaceKHR surface, SwapchainCaps caps, SwapchainKHR oldSwapchain, Action<string>? log)
     {
         var info = new SwapchainCreateInfoKHR
         {
@@ -39,7 +39,8 @@ public static unsafe class VulkanSwapchainBuilder
             PreTransform = caps.Transform,
             CompositeAlpha = CompositeAlphaFlagsKHR.OpaqueBitKhr,
             PresentMode = caps.PresentMode,
-            Clipped = true
+            Clipped = true,
+            OldSwapchain = oldSwapchain
         };
         var result = khr.CreateSwapchain(device, &info, null, out var swapchain);
         if (result != Result.Success) { Log(log, VulkanSwapchainLogFormatter.Failed($"CreateSwapchain 失败：{result}")); return default; }

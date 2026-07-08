@@ -54,7 +54,7 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         if (width <= 0 || height <= 0) { Log(_log, VulkanSwapchainLogFormatter.Skipped($"0 尺寸跳过重建（{width}x{height}）")); return; }
         try
         {
-            var (swapchain, images, views, format, extent, ok) = VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice, _surface, _khr, _deviceOwner.LogicalDevice, width, height, _log);
+            var (swapchain, images, views, format, extent, ok) = VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice, _surface, _khr, _deviceOwner.LogicalDevice, width, height, _log, _swapchain);
             if (!ok) return;
             DestroyImagesAndViews();
             _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent;

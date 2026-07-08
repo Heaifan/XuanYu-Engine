@@ -116,6 +116,24 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
+## [VK4-C-R1] Swapchain 重建（OldSwapchain）修复与二次运行验证（2026-07-08 晚）
+- 性质：VK4-C-R1 首次真机运行发现 Resize 重建运行时失败，仅修复 Swapchain 重建路径、不新增渲染能力；不进 VK4-D。
+- 运行结果（用户真机，RTX 3050 4GB Laptop GPU）：
+  - ✅ 第一项 首次 Swapchain 创建成功（`Swapchain 创建成功；ImageView 创建成功 3 张`）—— 证明 VK4-C-Fix 启用的 `VK_KHR_swapchain` 设备扩展已生效（编译过≠能建，现确证能建）。
+  - ❌ 第二项 Resize 重建失败：两次 `CreateSwapchain 失败：ErrorNativeWindowInUseKhr`（713x549 与 713x188）；Resize 红线正确（日志 `不重建 Surface`）。
+  - ⚠️ 第三项 Detach 顺序本次日志未含关闭事件，未验证。
+- 根因：`VulkanSwapchainOwner.Recreate` 调 `Build` 建新 Swapchain 时旧 Swapchain 仍存在，且 `VulkanSwapchainBuilder.CreateSwapchain` 的 `SwapchainCreateInfoKHR` **未设置 `OldSwapchain`** → 驱动判窗口被旧 Swapchain 占用 → `VK_ERROR_NATIVE_WINDOW_IN_USE_KHR`。
+- 修复：
+  - `Build` 新增 `SwapchainKHR oldSwapchain = default` 参数并透传给 `CreateSwapchain`。
+  - `CreateSwapchain` 设置 `info.OldSwapchain = oldSwapchain`（首次创建传 default=0，重建传 `_swapchain`）。
+  - `Recreate` 调 `Build(..., _log, _swapchain)` 把当前 Swapchain 作为旧句柄传入；新建成功后再 `DestroyImagesAndViews` 退役旧 Swapchain（顺序：先 ImageView 后旧 Swapchain）。
+- 红线校验：未新增 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present；UI 零改动；行数 `VulkanSwapchainBuilder` 74→75、`VulkanSwapchainOwner` 86 不变，全 ≤100；双项目低内存构建 0W0E（Editor.UI 首次因 PID 8636 旧编辑器锁 bin 拷贝失败，taskkill 释放后重建通过）。
+- 状态：**VK4-C 待二次 R1 验证（Resize 重建成功 + Detach 顺序正确）**，未完全收口；VK4-D 暂缓。
+- 下一步：用户重跑编辑器，核对 Resize 后 `Swapchain 创建成功；ImageView 创建成功 N 张` + 关闭后 Detach 顺序 `ImageViews → Swapchain → LogicalDevice → Surface → Instance`；全过则 VK4-C 收口、开 VK4-D。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [LOG-UX-2] 会话日志落盘（关闭后仍可审计 Detach 顺序）(2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract

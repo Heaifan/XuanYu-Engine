@@ -21,7 +21,7 @@
 - VK3 全链路已收口：NativeHost HWND 生命周期接入 Vulkan Instance + Surface（VK3-A/B1/B2/C1/C2/C2-R1）。黑屏为预期（无 Swapchain/渲染）。
 - VK4-A 已收口：PhysicalDevice 选择链路（仅枚举+选择+中文日志，未创设备）。
 - VK4-B（含 R1）已完全收口：基于 VK4-A 选择结果创建 LogicalDevice + Graphics/Present 队列；Detach 顺序 `LogicalDevice → Surface → Instance`。
-- **VK4-C 代码完成、待 VK4-C-R1 真机运行验证、未完全收口；VK4-D 暂缓**：Swapchain + Images + ImageViews 生命周期（独立 owner/attach step）。红线：未建 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present（仍黑屏）。
+- **VK4-C 待二次 R1 验证、未完全收口；VK4-D 暂缓**：Swapchain + Images + ImageViews 生命周期（独立 owner/attach step）。首次 R1 运行：首次 Swapchain 创建成功（证明 VK_KHR_swapchain 扩展已生效）✅；但 Resize 重建 `CreateSwapchain` 失败 `ErrorNativeWindowInUseKhr` ❌ —— 根因 `SwapchainCreateInfoKHR` 未设 `OldSwapchain`，已补（Recreate 传当前 Swapchain 作 oldSwapchain）。待二次 R1 确认 Resize 成功 + Detach 顺序。红线：未建 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present（仍黑屏）。
 - **VK4-C-Fix（已实装）**：① `VulkanDeviceOwner.Create` 启用 `VK_KHR_swapchain` 设备扩展（扩展名由 `VulkanSwapchainOwner.DeviceExtensionName` 传入，DeviceOwner 不硬编码 swapchain 知识）；② `VulkanSwapchainOwner.Recreate` 0 尺寸跳过；③ 暴露 `Format`/`Extent`/`ImageViews` 只读供 VK4-D。
 
 ## VK4 审计订正（速查，均非阻塞）
@@ -56,3 +56,4 @@
 - PowerShell `Reflection.Assembly.LoadFrom` 与 Bash 内嵌 PowerShell 被沙箱安全策略拦截；查 NuGet 包成员改用包内 `.xml` 文档（`grep -oE "F:完整类型名\.成员"`）。
 - `git diff` 对 `.axaml` 报「LF 将被替换为 CRLF」仅 autocrlf 噪声，非错误。
 - **Silk.NET.Vulkan 2.22.0 真实 API 名（已实测）**：`KhrSurface` 方法无 `KHR` 后缀（`GetPhysicalDeviceSurfaceCapabilities`/`...Formats`/`...PresentModes`）；枚举用非弃用短名 `ImageUsageFlags.ColorAttachmentBit`/`ColorSpaceKHR.SpaceSrgbNonlinearKhr`/`PresentModeKHR.MailboxKhr`/`FifoKhr`/`CompositeAlphaFlagsKHR.OpaqueBitKhr`/`ImageAspectFlags.ColorBit`；`Vk.TryGetDeviceExtension<T>` 需 4 参 `(Instance, Device, out T, string?)`。拿不准用临时反射控制台工程（引 Silk.NET.Vulkan + Extensions.KHR 2.22.0）打印真实名，勿反复试错编译。
+- **Swapchain 重建必须传 `OldSwapchain`**：Resize 重建 Swapchain 时，`SwapchainCreateInfoKHR.OldSwapchain` 须设为当前 Swapchain 句柄，否则 Windows 上 `vkCreateSwapchainKHR` 返回 `VK_ERROR_NATIVE_WINDOW_IN_USE_KHR`（窗口被旧 Swapchain 占用）。顺序：用旧句柄建新 Swapchain → 成功后再 Destroy 旧 ImageView + 旧 Swapchain（先 ImageView 后 Swapchain）。
