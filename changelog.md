@@ -1,5 +1,44 @@
 # changelog
 
+## [RZ-VK3-B1-R1] VulkanInstanceOwner 行数与健壮性收口 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：fde25d2fe8140022a7273e133081fc8da23393d9
+推送状态：已推送 origin
+
+### 本轮目标
+VK3-B1-R1：在进 VK3-B2 前，先把 VulkanInstanceOwner 从 98 行（贴 100 行红线）拆干净，避免 B2 接 VulkanSurfaceOwner 时顺手改 Owner 立刻破线。不新增 Surface，不进入 VK3-B2，不碰 Device / Swapchain / Queue。
+
+### 修改内容
+- `VulkanInstanceOwner` 由 98 行降到 66 行（<70）：移除内联的 ApplicationInfo / InstanceCreateInfo / 扩展指针构造，改调 `VulkanInstanceCreateInfoBuilder.BuildAndUse`。
+- 新增 `VulkanInstanceExtensions`：仅存 Instance 启用的最小扩展名集合（VK_KHR_surface、VK_KHR_win32_surface，以 null 结尾字节序列）；明确禁止在此添加 Device / Swapchain / 其他扩展。
+- 新增 `VulkanInstanceCreateInfoBuilder`：在 fixed 作用域内构造 InstanceCreateInfo 并交给回调，确保扩展名指针在创建调用期间有效；仅构造信息，不直接调用 Vulkan。
+- `vk.CreateInstance` 失败时记录实际 `Result`（错误类型记为 `VkResult`），不再只写“创建 Vulkan Instance 失败”。
+- `Dispose` 释放后 `_instance = default`，避免实例属性暴露已释放的旧句柄。
+
+### 范围口径（延续 VK3-B1）
+- "Editor.UI 改经 Abstractions 而非直接持有 Render.Vulkan" 仅限定为 NativeHost 生命周期链路；Editor.UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用。本轮未改动 Editor.UI 正式路径。
+
+### 未做内容
+- 未新增 VulkanSurfaceOwner；未创建 VkSurfaceKHR；未调用 CreateWin32Surface。
+- 未选择 PhysicalDevice；未创建 LogicalDevice；未获取 Queue；未创建 Swapchain。
+- 未碰 RenderFrame / CommandBuffer / RenderPass / Framebuffer。
+- 未把任何 Vulkan 实现类型放进 XuanYu.Render.Abstractions。
+
+### 验收结果
+- git diff 自审：无 Surface / Device / Swapchain / Queue 实装（仅注释提及）。
+- 新增 2 文件 + 重构 1 文件，均 ≤100 行（Owner 66 / Builder 40 / Extensions 9）。
+- XuanYu.Render.Abstractions 仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用。
+- XuanYu.Render.Vulkan / Abstractions / Editor.UI 构建均 0 warning / 0 error。
+- 仓库无独立测试项目：`dotnet test` 退出 MSB1003，如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦 Vulkan。
+- VulkanInstanceOwner 仍未接入任何使用方，等待 VK3-B2 接线。
+
+### 下一步
+VK3-B1-R1 收口后，可进入 VK3-B2：VulkanSurfaceOwner 经 INativeHostSurfaceBridge 由组合根实现，仍不碰 Device / Swapchain。
+
 ## [RZ-VK3-B1] Vulkan Instance 持有者 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
