@@ -1,20 +1,64 @@
 # changelog
 
 ## [RZ-VK3-A-R1] Surface 契约层依赖收口 (2026-07-08)
-- VK3-A 只新建了 `XuanYu.Render.Abstractions` 契约工程并让 Editor.UI 引用它，但 Editor.UI 对 `XuanYu.Render.Vulkan` 的工程级 `ProjectReference` 与 7 处 `using XuanYu.Render.Vulkan` 并未移除——故 VK3-A 只能算「契约层雏形已建立，UI↔Vulkan 解耦尚未完成」，不得宣称 UI 已完全解耦。
-- VK3-A-R1 收口：将 4 个纯生命周期契约类型 `NativeHostHandleSnapshot` / `NativeHostLifecycleState` / `NativeHostLifecycleProbe` / `NativeHostLifecycleLogFormatter` 从 `XuanYu.Render.Vulkan` 迁入 `XuanYu.Render.Abstractions`（均为纯数据/枚举/探针/日志格式器，无 Silk.NET / Vulkan 依赖），删除 Render.Vulkan 内对应 4 个文件。
-- Editor.UI 侧 5 个生命周期链路文件（`NativeHostSurfaceContract` / `NativeHostResizeCoalescer` / `ViewportNativeHostRoute` / `Vm/UiVm.NativeHostLifecycle` / `Viewport/Vulkan/VulkanNativeHost`）的 `using XuanYu.Render.Vulkan` 改为 `using XuanYu.Render.Abstractions`。
-- 收口后 Editor.UI 仍保留 2 处 `using XuanYu.Render.Vulkan`（`VulkanProbeRoute` / `Vm/UiVm.VulkanProbe`，引用 `VulkanApiProbe` 等 Vulkan 探针类型），因此 Editor.UI.csproj 对 `XuanYu.Render.Vulkan` 的工程级 `ProjectReference` **仍保留**——即 UI 到 Render.Vulkan 的引用因历史探针类型暂无法移除，仅生命周期契约部分完成解耦。
-- `VulkanClearSession` 探针仍留 Editor.UI（历史债，本轮不迁、不进正式路径）。
-- 验收：`XuanYu.Render.Abstractions` 不引用 Silk.NET / Avalonia / Editor.Win / Render.Vulkan；`dotnet build` 0 Warning / 0 Error；git diff 确认无 Surface / Swapchain / Device / Queue / PhysicalDevice / LogicalDevice 实装；仓库无独立测试项目，如实记录。
-- 提交信息：`refactor(vulkan): RZ-VK3-A-R1 close surface contract dependency gap`。
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：37504b0
+推送状态：已推送 origin
+
+### 本轮目标
+收口 VK3-A 契约层，避免 UI 继续通过 Render.Vulkan 获取 NativeHost 生命周期类型。
+
+### 修改内容
+- 将 `NativeHostHandleSnapshot` / `NativeHostLifecycleState` / `NativeHostLifecycleProbe` / `NativeHostLifecycleLogFormatter` 从 `XuanYu.Render.Vulkan` 迁入 `XuanYu.Render.Abstractions`（均为纯数据/枚举/探针/日志格式器，无 Silk.NET / Vulkan 依赖），删除 Render.Vulkan 内对应 4 个文件（git 识别为 rename）。
+- UI 侧 5 个生命周期链路文件（`NativeHostSurfaceContract` / `NativeHostResizeCoalescer` / `ViewportNativeHostRoute` / `Vm/UiVm.NativeHostLifecycle` / `Viewport/Vulkan/VulkanNativeHost`）的 `using XuanYu.Render.Vulkan` 改为 `using XuanYu.Render.Abstractions`。
+- 同步 `changelog.md` 与 `file-tree.md`。
+
+### 未做内容
+- 未创建 VulkanInstanceOwner / VulkanSurfaceOwner / VkSurfaceKHR。
+- 未碰 Swapchain / Device / Queue / PhysicalDevice / LogicalDevice。
+- 未迁移 `VulkanClearSession` 历史探针（留 Editor.UI，不进正式路径）。
+
+### 验收结果
+- `XuanYu.Render.Abstractions` 不引用 Silk.NET / Avalonia / Editor.Win / Render.Vulkan。
+- 低内存模式构建 Editor.UI：0 warning / 0 error；Abstractions 0W0E。
+- 仓库无独立测试项目，如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针（`VulkanApiProbe` 等）保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦。
+- `VulkanClearSession` 探针仍留 Editor.UI（历史债），VK3-B 不得直接搬用。
+
+### 下一步
+VK3-B1：VulkanInstanceOwner。只做 Instance（启用 `VK_KHR_surface` + `VK_KHR_win32_surface`），不碰 Surface / Device / Swapchain。
 
 ## [RZ-VK3-A] Surface 契约层建立 (2026-07-07)
-- 新增独立 `XuanYu.Render.Abstractions` 契约工程（net10.0，零 Silk.NET 引用），定义 NativeHost 到 Vulkan Surface 的交接通道：`NativeHostSurfaceHandle`（HWND / Hinstance / 尺寸 / DPI）与 `INativeHostSurfaceBridge`（Attach / Resize / Detach 契约接口）。
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：2bfbe2e
+推送状态：已推送 origin
+
+### 本轮目标
+建立 UI 与 Vulkan 之间的纯净交接契约层，为后续 SurfaceOwner 接线铺路。
+
+### 修改内容
+- 新增独立 `XuanYu.Render.Abstractions` 契约工程（net10.0，零 Silk.NET 引用）。
+- 定义 `NativeHostSurfaceHandle`（HWND / Hinstance / 尺寸 / DPI）与 `INativeHostSurfaceBridge`（Attach / Resize / Detach 契约接口）。
 - Editor.UI 侧新增 `NativeHostSurfaceContract`，把现有 `NativeHostHandleSnapshot` 映射为交接句柄（取 `Win32ViewportHost.ModuleHandle` 作 Hinstance），不引入任何 Vulkan 实现使用点。
-- 本轮不碰 Vulkan Instance / Surface / Swapchain / Device；UI 与 Render.Vulkan 的解耦收口在 RZ-VK3-A-R1 完成。
-- 验收：`dotnet build` 0 Warning / 0 Error；仓库无独立测试项目，如实记录。
-- 提交信息：`feat(vulkan): RZ-VK3-A native host surface handoff contract`。
+- `XuanYu.Editor.UI.csproj` 加对 Abstractions 的工程引用。
+
+### 未做内容
+- 未创建 VulkanSurfaceOwner / VulkanInstanceOwner / VkSurfaceKHR / Swapchain / Device。
+- UI 到 Render.Vulkan 的解耦收口见 RZ-VK3-A-R1。
+
+### 验收结果
+- 低内存模式构建 Editor.UI：0 warning / 0 error。
+- 仓库无独立测试项目，如实记录。
+
+### 已知债务
+- VK3-A 仅新建 Abstractions 工程，UI 对 Render.Vulkan 的工程级引用与 7 处 using 当时未移除，故 VK3-A 只算「契约层雏形已建立，解耦未完成」。
+
+### 下一步
+RZ-VK3-A-R1 收口依赖。
 
 ## [RZ-VK3-Plan] VK3 Surface 生命周期规划 (2026-07-07)
 - 仅规划正式 Vulkan Surface 生命周期，替代 `VulkanClearSession` 探针状态；本轮不写任何 Vulkan 实装代码。
