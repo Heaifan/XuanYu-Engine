@@ -1,10 +1,10 @@
 # 项目文件树 — XuanYu Engine
 
-最近更新：VK3 已收口（验收通过，2026-07-08）：新增 docs/rz-vk3-closure.md（收口确认）+ docs/rz-vk4-plan.md（VK4 规划，只规划不实装）；VK4 目标为最小渲染闭环（PhysicalDevice→LogicalDevice→Queue→Swapchain→ClearFrame→RenderSession），红线：Resize 不重建 Surface、不搬探针、UI 不持 Vulkan、每步 5+100。VK3 既有链路（VK3-A..VK3-C2-R1）不变。VK4-A 已实装（2026-07-08）：在 Instance+Surface 之后新增 PhysicalDevice 选择链路（XuanYu.Render.Vulkan/Device/ 下 3 个新文件，桥 Attach 后调用，仅枚举/选择/中文日志，未创建设备/队列/Swapchain）。VK4-A-R1 已收口（2026-07-08）：VK4-A 后 VulkanNativeHostSurfaceBridge.cs 由 93→110 行越过 100 行红线，已将内联选择逻辑迁出至 XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs（23 行），Bridge 压回 96 行，仅保留生命周期编排；行为不变。
+最近更新：VK3 已收口（验收通过，2026-07-08）：新增 docs/rz-vk3-closure.md（收口确认）+ docs/rz-vk4-plan.md（VK4 规划，只规划不实装）；VK4 目标为最小渲染闭环（PhysicalDevice→LogicalDevice→Queue→Swapchain→ClearFrame→RenderSession），红线：Resize 不重建 Surface、不搬探针、UI 不持 Vulkan、每步 5+100。VK3 既有链路（VK3-A..VK3-C2-R1）不变。VK4-A 已实装（2026-07-08）：在 Instance+Surface 之后新增 PhysicalDevice 选择链路（XuanYu.Render.Vulkan/Device/ 下 3 个新文件，桥 Attach 后调用，仅枚举/选择/中文日志，未创建设备/队列/Swapchain）。VK4-A-R1 已收口（2026-07-08）：VK4-A 后 VulkanNativeHostSurfaceBridge.cs 由 93→110 行越过 100 行红线，已将内联选择逻辑迁出至 XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs（23 行），Bridge 压回 96 行，仅保留生命周期编排；行为不变。VK4-B 已实装（2026-07-08）：基于 VK4-A 选择结果新增 LogicalDevice + Graphics/Present 队列（`Device/VulkanPhysicalDeviceSelection.cs` 抽为独立文件并补 PhysicalDevice 句柄、`Device/VulkanDeviceOwner.cs` 创建 VkDevice+队列、`Bridge/VulkanBridgeDeviceAttachStep.cs` 在 Instance+Surface 就绪后链式驱动创建设备）；未建 Swapchain/ImageView/RenderPass/CommandBuffer、未清屏/Present、UI 未接触 Silk.NET.Vulkan 类型；Bridge Detach 逆序释放 Device→Surface→Instance。
 
 统计口径：当前工作区真实文件快照，排除 `.git/`、`bin/`、`obj/` 生成目录。
 
-当前文件总数：109
+当前文件总数：112
 
 ```
 
@@ -28,8 +28,10 @@
 - 新增 `VulkanInstanceExtensions.cs` / `VulkanInstanceCreateInfoBuilder.cs`（VK3-B1-R1：前者存 Instance 启用的最小扩展名集合，后者在 fixed 作用域内构造 InstanceCreateInfo 并交给回调，均不直接调用 Vulkan）。
 - 新增 `VulkanSurfaceOwner.cs` / `VulkanSurfaceResult.cs` / `VulkanSurfaceLogFormatter.cs`（VK3-B2：Vulkan Surface 持有者，仅创建/释放 VkSurfaceKHR-Win32，生命周期绑定 NativeHost Attach/Detach，不绑定 Resize；创建经 KhrWin32Surface.CreateWin32Surface，销毁经 KhrSurface.DestroySurface；取 NativeHostSurfaceHandle 的 Hwnd/Hinstance；Dispose 幂等且释放后清空句柄；中文生命周期日志；禁止 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame）。
 - 新增 `VulkanNativeHostSurfaceBridge.cs` / `VulkanBridgeLogFormatter.cs`（VK3-C1：前者实现 INativeHostSurfaceBridge，Attach 经 VulkanInstanceOwner.Create + VulkanSurfaceOwner.Create 串起 Instance+Surface，Detach/Dispose 先释放 Surface 再释放 Instance，Resize 只记日志不重建 Surface；后者为纯中文生命周期日志格式器；均不接 UI 组合根、不碰 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame）。
-- 新增 `Device/VulkanPhysicalDeviceInfo.cs` / `Device/VulkanQueueFamilySelection.cs` / `Device/VulkanPhysicalDeviceSelector.cs`（VK4-A：PhysicalDevice 选择链路，落在 `XuanYu.Render.Vulkan/Device/` 子目录；仅枚举设备、检查 Graphics/Present 队列族与 Surface 呈现支持、优先独显、返回纯数据结果（`VulkanPhysicalDeviceInfo` / `VulkanQueueFamilySelection` / `VulkanPhysicalDeviceSelection`）、输出中文日志；`VulkanNativeHostSurfaceBridge.Attach` 在 Instance+Surface 就绪后调用 `RunDeviceSelection()`；红线：未创建 LogicalDevice/Queue/Swapchain/ImageView、未清屏/Present、未让 UI 引用 Vulkan 类型、未复制旧探针 `VulkanClearSession`、新增文件均 ≤100 行）。
-- 新增 `Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`（VK4-A-R1：在 Instance+Surface 就绪后调用 `VulkanPhysicalDeviceSelector.Select`、把选择结果与中文日志写入面板的薄委托层；选择异常仅记日志、不影响已附加的 Instance+Surface；`VulkanNativeHostSurfaceBridge` 不再内联选择逻辑，仅保留生命周期编排，已压回 96 行；目录 `Bridge/` 仅 1 文件，未越过 5-7 文件上限）。
+- 新增 `Device/VulkanPhysicalDeviceInfo.cs` / `Device/VulkanQueueFamilySelection.cs` / `Device/VulkanPhysicalDeviceSelector.cs`（VK4-A：PhysicalDevice 选择链路，落在 `XuanYu.Render.Vulkan/Device/` 子目录；仅枚举设备、检查 Graphics/Present 队列族与 Surface 呈现支持、优先独显、返回纯数据结果（`VulkanPhysicalDeviceInfo` / `VulkanQueueFamilySelection` / `VulkanPhysicalDeviceSelection`）、输出中文日志；`VulkanNativeHostSurfaceBridge.Attach` 在 Instance+Surface 就绪后调用选择 step；红线：未创建 LogicalDevice/Queue/Swapchain/ImageView、未清屏/Present、未让 UI 引用 Vulkan 类型、未复制旧探针 `VulkanClearSession`、新增文件均 ≤100 行）。
+- VK4-B 抽出 `Device/VulkanPhysicalDeviceSelection.cs`（12 行，原内联在选择器末尾的记录独立成文件，并补 `PhysicalDevice Handle` 字段供 VK4-B 复用、不泄漏 UI）；新增 `Device/VulkanDeviceOwner.cs`（96 行，基于 `VulkanPhysicalDeviceSelection` 创建 VkDevice 与 Graphics/Present 队列、Dispose 幂等释放；输出中文日志）；`VulkanPhysicalDeviceSelector.cs` 由 99→93 行（移除内联记录、捕获 `bestDevice` 随结果返回句柄），仅负责枚举与选择。
+- 新增 `Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`（VK4-A-R1：在 Instance+Surface 就绪后调用 `VulkanPhysicalDeviceSelector.Select`、把选择结果（现返回 `VulkanPhysicalDeviceSelection?`）与中文日志写入面板的薄委托层；选择异常仅记日志、不影响已附加的 Instance+Surface；`VulkanNativeHostSurfaceBridge` 不再内联选择逻辑，仅保留生命周期编排，已压回 96 行；目录 `Bridge/` 现 2 文件，未越过 5-7 文件上限）。
+- VK4-B 新增 `Bridge/VulkanBridgeDeviceAttachStep.cs`（29 行，在 VK4-A 选择成功后基于 `VulkanPhysicalDeviceSelection` 调用 `VulkanDeviceOwner.Create` 创建 LogicalDevice；选择失败（`sel` 为 null 或 `!Success`）则跳过、异常仅记日志，不影响已附加的 Instance+Surface+已选中设备）。`VulkanNativeHostSurfaceBridge.Attach` 现链式执行「选择 step → 设备 step」，Detach 逆序释放 Device→Surface→Instance。
 
 ### XuanYu.Editor.UI/（依赖收口）
 - `NativeHostSurfaceContract.cs`  # 仅 `using XuanYu.Render.Abstractions`（VK3-A）。

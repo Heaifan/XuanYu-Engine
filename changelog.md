@@ -1,5 +1,64 @@
 # changelog
 
+## [VK4-B] 基于 VK4-A 选择结果创建 LogicalDevice + 队列 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：21f24026ff7b102c12b8346563c066b8a64449a7
+版本：VK4-B
+
+### 口径订正（重要）
+本次截图验收机 GPU = `NVIDIA GeForce RTX 3050 4GB Laptop GPU`（备用机）；主力机为 RTX 3060。
+VK4-B **不以具体显卡型号为准**，而以 **VK4-A 最终选择结果（`VulkanPhysicalDeviceSelection`）** 为准创建 LogicalDevice，
+禁止硬编码 RTX 3050 / RTX 3060 或任何具体型号；在备用机上最终选择结果应为 RTX 3050 Laptop，在主力机上应为 RTX 3060。
+
+### 目标
+在 VK4-A 已选出的 PhysicalDevice 之上创建 `VkDevice`（LogicalDevice）与 Graphics / Present 队列。
+只创建设备与队列，不建 Swapchain、不建 ImageView/RenderPass/CommandBuffer、不清屏、不 Present。
+硬约束：必须复用 VK4-A 的最终选择结果，不得重新枚举 PhysicalDevice、不得自行选择其他设备（尤其不得选 D3D12 wrapper / Basic Render / iGPU）。
+
+### 新增文件
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelection.cs`（12 行）：将原内联在选择器末尾的「物理设备选择结果」记录抽出为独立文件，并补 `PhysicalDevice Handle` 字段（被选中的原生句柄），供 VK4-B 复用、禁止泄漏给 UI。
+- `XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.cs`（96 行）：基于 `VulkanPhysicalDeviceSelection` 创建 `VkDevice`，启用 Graphics/Present 队列族（同族合并），取 Graphics/Present `VkQueue`，`Dispose` 幂等释放 Device；输出中文日志（开始创建/物理设备名/队列族/创建成功/Queue 获取成功/释放成功）。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeDeviceAttachStep.cs`（29 行）：在 VK4-A 选择成功后调用 `VulkanDeviceOwner.Create`；选择失败则跳过（`sel` 为 null 或 `!Success` 时记日志返回 null）；异常仅记日志、不影响已附加的 Instance+Surface+已选中设备。
+
+### 修改内容
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`（99→93 行）：移除末尾内联记录定义（已抽至独立文件）；`Select` 内捕获 `bestDevice = devices[i]` 并随结果返回 `Handle`；三处返回点补 `Handle` 实参。selector 仅负责枚举与选择，未触及 VK4-B 逻辑。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`（23→24 行）：`Run` 返回类型由 `void` 改为 `VulkanPhysicalDeviceSelection?`，把选择结果交回 Bridge 以驱动设备创建。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`（96→98 行）：`Attach` 在 Instance+Surface 就绪后先跑选择 step、再跑设备 step（链式 `_deviceOwner = VulkanBridgeDeviceAttachStep.Run(_vk, 选择step.Run(...), Emit)`）；`Detach` 逆序释放 `Device → Surface → Instance`；Resize 仍只记尺寸、不重建 Surface/Device/Queue；新增 `using XuanYu.Render.Vulkan.Device;` 与 `_deviceOwner` 字段。
+
+### 未做内容（红线）
+- 未建 `Swapchain` / `ImageView` / `RenderPass` / `CommandPool` / `CommandBuffer`、未清屏、未 `Present`、未取交换链图像。
+- 未重新枚举 PhysicalDevice、未自行选择设备；选择结果直接复用 VK4-A 选定设备。
+- UI（Editor.UI）未新增任何 `Silk.NET.Vulkan` 引用（仅历史探针债 `VulkanClearSession.*.cs` 与 csproj ProjectReference，未触碰）；未复制旧探针 `VulkanClearSession` 路径。
+- 未顺手推进 VK4-C（Swapchain）；`Bridge/` 子目录 2 文件、`Device/` 子目录 5 文件，均未越 5-7 文件上限。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| VulkanDeviceOwner.cs 行数 | ✅ 96（≤100） |
+| VulkanBridgeDeviceAttachStep.cs 行数 | ✅ 29（≤100，新增） |
+| VulkanPhysicalDeviceSelection.cs 行数 | ✅ 12（≤100，新增） |
+| VulkanPhysicalDeviceSelector.cs 行数 | ✅ 93（≤100） |
+| VulkanBridgePhysicalDeviceAttachStep.cs 行数 | ✅ 24（≤100） |
+| VulkanNativeHostSurfaceBridge.cs 行数 | ✅ 98（≤100） |
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Editor.UI 构建（集成验证） | ✅ 0W0E |
+| git grep 禁止项 | ✅ 无 Swapchain/ImageView/RenderPass/CommandBuffer/Clear/CreateSwapchain 新增实装（仅注释/日志）；`VkDevice`/`VkQueue` 仅出现在注释 |
+| Editor.UI 新增 Silk.NET.Vulkan 引用 | ✅ 无（仍仅历史探针债） |
+
+### 人工测试清单（需在用户机器运行编辑器）
+1. 启动编辑器，确认无崩溃、NativeHost 正常附加。
+2. 打开日志面板，确认出现 `【VulkanDevice】开始创建 LogicalDevice；物理设备：<最终选中设备名>`。
+3. 确认日志含 `使用的 Graphics 队列族：N；Present 队列族：M`（应与 VK4-A 选择结果一致）。
+4. 确认 `【VulkanDevice】LogicalDevice 创建成功` 与 `【VulkanDevice】Queue 获取成功（Graphics + Present）`。
+5. 确认**仍黑屏**（无 Swapchain/ImageView/RenderPass，预期；真正出画面要等 VK4-D）。
+6. 缩放窗口，确认 `尺寸变化已接收：不重建 Surface`，且**不重建 Device / Queue**（VK4-B 红线延续）。
+7. 关闭编辑器，确认出现 `【VulkanDevice】LogicalDevice 释放成功`，且 Detach 顺序为 Device→Surface→Instance（无设备资源泄漏告警）。
+8. 确认无 `Swapchain`/`ClearFrame`/`Present` 相关新增日志。
+
+### 下一步
+VK4-B 边界与行数红线均守住，可判 VK4-B 功能收口。但**必须先做 VK4-B-R1 生命周期审计**，重点核对 Detach 释放顺序 `LogicalDevice → Surface → Instance` 与异常路径资源不泄漏；严禁顺手推进 VK4-C（Swapchain）。
+
 ## [VK4-A-R1] 物理设备选择链路收口修正（压回 100 行红线）(2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
@@ -36,7 +95,7 @@ VK4-A 审计发现 `VulkanNativeHostSurfaceBridge.cs` 由 93 行涨到 110 行�
 1. 启动编辑器，确认无崩溃、NativeHost 正常附加。
 2. 打开日志面板，确认仍出现 `【VulkanDevice】开始枚举物理设备；候选数量：N`（拆分后日志链路未断）。
 3. 确认每个候选设备的 `候选设备[i]` 日志（名称/类型/API/队列族/呈现支持/可用性）。
-4. 确认 RTX 3060（或本机独显）被选为 `已选择物理设备`，原因 `优先独立显卡`。
+4. 确认 RTX 3050 4GB Laptop（备用机；或本机最终选中的独显）被选为 `已选择物理设备`，原因 `优先独立显卡`。（口径订正：历史「RTX 3060」系误写；VK4 系列不以具体型号为准，而以 VK4-A 最终选择结果为准。）
 5. 确认 `Surface 呈现支持：是` 且 `可用性：可用`。
 6. 确认无 `VkDevice`/`Swapchain`/`ClearFrame` 相关新增日志（仍黑屏，预期）。
 7. 缩放窗口，确认 `尺寸变化已接收：不重建 Surface`（VK3 契约不变）。
@@ -85,7 +144,7 @@ VK4-A 边界与行数红线均已守住，可判定 VK4-A 正式收口。下一�
 1. 启动编辑器，确认无崩溃、NativeHost 正常附加。
 2. 打开日志面板，确认出现 `【VulkanDevice】开始枚举物理设备；候选数量：N`。
 3. 确认每个候选设备的 `候选设备[i]` 日志（名称/类型/API/队列族/呈现支持/可用性）。
-4. 确认 RTX 3060（或本机独显）被选为 `已选择物理设备`，原因 `优先独立显卡`。
+4. 确认 RTX 3050 4GB Laptop（备用机；或本机最终选中的独显）被选为 `已选择物理设备`，原因 `优先独立显卡`。（口径订正：历史「RTX 3060」系误写；VK4 系列不以具体型号为准，而以 VK4-A 最终选择结果为准。）
 5. 确认 `Surface 呈现支持：是` 且 `可用性：可用`。
 6. 确认无 `VkDevice`/`Swapchain`/`ClearFrame` 相关新增日志（仍黑屏，预期）。
 7. 缩放窗口，确认 `尺寸变化已接收：不重建 Surface`（VK3 契约）。

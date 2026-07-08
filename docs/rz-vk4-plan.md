@@ -10,7 +10,7 @@ VK4 只做最小渲染闭环，不夹带**真实渲染循环**（持续动画 / 
 
 ### 1. 物理设备谁选
 - 复用 VK1 探针已枚举的能力：由 `XuanYu.Render.Vulkan` 内新增 `VulkanPhysicalDeviceSelector` 选择，输入来自 Instance + Surface（需校验 Surface 呈现支持）。
-- 选择标准：图形队列族可用、Surface 呈现支持、离散 GPU 优先。**测试机型号订正：实际测试机 GPU 为 `NVIDIA GeForce RTX 3050 4GB Laptop GPU`，历史文档/指令中「RTX 3060」系口径误写，VK4-B 及以后一律以 RTX 3050 Laptop 为准。**
+- 选择标准：图形队列族可用、Surface 呈现支持、离散 GPU 优先。**测试机型号订正（非硬规则）：本次截图验收机 GPU 为 `NVIDIA GeForce RTX 3050 4GB Laptop GPU`（备用机）；主力机为 RTX 3060；历史「RTX 3060」系口径误写。VK4-B/C/D 不以具体型号为准，而以 VK4-A 最终选择结果为准（备用机→RTX 3050 Laptop，主力机→RTX 3060），禁止硬编码任何显卡型号。**
 - 输出 `VulkanPhysicalDeviceResult`（物理设备句柄 + 图形队列族索引 + 呈现队列族索引 + 设备属性）；**不持有 VkDevice**。
 
 ### 2. 逻辑设备与队列谁建
