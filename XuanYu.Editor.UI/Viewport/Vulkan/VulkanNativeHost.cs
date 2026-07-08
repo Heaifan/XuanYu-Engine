@@ -9,13 +9,17 @@ public sealed class VulkanNativeHost : NativeControlHost
 {
     readonly NativeHostLifecycleProbe _probe = new();
     readonly NativeHostResizeCoalescer _resizer;
+    INativeHostSurfaceBridge? _bridge;
     bool _createdReported;
     nint _hwnd;
 
     public VulkanNativeHost()
     {
-        _resizer = new NativeHostResizeCoalescer(
-            (snap, count) => ViewportNativeHostRoute.ReportMerged(DataContext as UiVm, snap, count));
+        _resizer = new NativeHostResizeCoalescer((snap, count) =>
+        {
+            _bridge?.Resize(snap.Width, snap.Height);
+            ViewportNativeHostRoute.ReportMerged(DataContext as UiVm, snap, count);
+        });
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -26,7 +30,9 @@ public sealed class VulkanNativeHost : NativeControlHost
             Report(NativeHostLifecycleState.Created, 0, 0, 0, 1d, false);
             _createdReported = true;
         }
-        Report(NativeHostLifecycleState.Attached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
+        var snap = Report(NativeHostLifecycleState.Attached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
+        _bridge ??= VulkanSurfaceBridgeProvider.Create();
+        _bridge.Attach(NativeHostSurfaceContract.ToSurfaceHandle(snap));
     }
 
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
@@ -50,6 +56,7 @@ public sealed class VulkanNativeHost : NativeControlHost
     {
         _resizer.Cancel();
         Report(NativeHostLifecycleState.Detached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
+        _bridge?.Detach();
         base.OnDetachedFromVisualTree(e);
     }
 
@@ -58,14 +65,17 @@ public sealed class VulkanNativeHost : NativeControlHost
         _resizer.Cancel();
         Report(NativeHostLifecycleState.Disposed, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
         Report(NativeHostLifecycleState.Invalidated, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
+        (_bridge as IDisposable)?.Dispose();
+        _bridge = null;
         if (_hwnd != 0) Win32ViewportHost.Destroy(_hwnd);
         _hwnd = 0;
     }
 
-    void Report(NativeHostLifecycleState state, nint hwnd, int width, int height, double dpiScale, bool isValid)
+    NativeHostHandleSnapshot Report(NativeHostLifecycleState state, nint hwnd, int width, int height, double dpiScale, bool isValid)
     {
         var snapshot = _probe.Capture(state, hwnd, width, height, dpiScale, isValid);
         ViewportNativeHostRoute.Report(DataContext as UiVm, snapshot);
+        return snapshot;
     }
 
     double GetDpiScale() => TopLevel.GetTopLevel(this)?.RenderScaling ?? 1d;
