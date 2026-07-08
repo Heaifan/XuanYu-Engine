@@ -1,5 +1,41 @@
 # changelog
 
+## [VK4-C-Plan] Swapchain 生命周期规划（只规划不实装）(2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：VK4-C-Plan（仅文档，不写 Vulkan 实装代码）
+
+### 背景
+VK4-A / VK4-A-R1 / VK4-B / VK4-B-R1 全部完成，VK4-B 正式完全收口（Detach 顺序 `LogicalDevice → Surface → Instance` 已运行时验证）。LOG-UX-1 保留，LOG-UX-2 已回退删除。当前链路停在 LogicalDevice + Graphics/Present Queue，仍黑屏（Swapchain 未接）。
+
+### 目标（只规划 Swapchain + Images + ImageViews）
+1. VK4-C 只创建 `VkSwapchainKHR` + Swapchain Images + ImageViews。 ✅ 规划
+2. 不创建 `RenderPass`。 ✅ 红线
+3. 不创建 `Framebuffer`。 ✅ 红线
+4. 不创建 `CommandPool` / `CommandBuffer`。 ✅ 红线
+5. 不 `Clear`、不 `Present`。 ✅ 红线（仍黑屏为预期）
+6. Resize 只重建 Swapchain + ImageViews。 ✅ 规划
+7. Resize 不重建 Surface / Instance / LogicalDevice / Queue。 ✅ 红线
+8. Dispose 顺序必须为 `ImageViews → Swapchain → LogicalDevice → Surface → Instance`。 ✅ 硬约束
+9. Bridge 不再膨胀，Swapchain 进入独立 owner / attach step。 ✅ 约束（Bridge 已 100 行红线）
+10. `VulkanDeviceOwner` 不增加职责。 ✅ 约束
+11. 所有新增 .cs ≤100 行。 ✅ 约束
+12. UI 不接触 `Silk.NET.Vulkan` 类型。 ✅ 约束
+13. 不复制 `VulkanClearSession` 旧探针路径。 ✅ 约束
+
+### 规划要点（详见 docs/rz-vk4-c-swapchain-plan.md）
+- 新增 `XuanYu.Render.Vulkan/Swapchain/` 子目录（目标 3 文件）：`VulkanSwapchainCapabilities.cs`（查 caps/format/present mode/extent，输出纯数据）、`VulkanSwapchainOwner.cs`（建 Swapchain+Images+ImageViews，Dispose 先 ImageView 后 Swapchain）、`VulkanSwapchainLogFormatter.cs`（中文日志）。
+- 新增 `Bridge/VulkanBridgeSwapchainAttachStep.cs`：在「选择 step → 设备 step」之后链式驱动 Swapchain 创建；前置失败只跳过、不崩。
+- Attach 扩展：`... → LogicalDevice → Swapchain → ImageViews`；Detach 扩展：`ImageViews → Swapchain → LogicalDevice → Surface → Instance`。
+- Resize：Bridge 现有 Resize 入口转发 `_swapchainOwner?.Recreate(newExtent)`，仅重建 Swapchain+ImageViews，跳过 0 尺寸 / 重复尺寸。
+
+### 红线校验（本轮）
+- 无代码改动；`git diff` 仅 `docs/rz-vk4-c-swapchain-plan.md`（新增）+ `changelog.md` + `file-tree.md`。
+- 不构建（仅文档，依指令「如果动了代码则必须 build 0W0E」不适用）。
+
+### 下一步
+规划通过后开 `VK4-C`（Swapchain + ImageViews 实装）→ `VK4-C-R1`（Resize 重建 Swapchain 审计）→ `VK4-D`（ClearFrame 出画面）。**当前不进 VK4-C 实装。**
+
 ## [LOG-UX-2] 会话日志落盘（关闭后仍可审计 Detach 顺序）(2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
