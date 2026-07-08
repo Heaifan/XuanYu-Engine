@@ -1,6 +1,7 @@
 using System;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
+using XuanYu.Render.Vulkan.Device;
 
 namespace XuanYu.Render.Vulkan;
 
@@ -39,6 +40,7 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
             _instanceOwner = instance;
             _surfaceOwner = surface;
             Emit(VulkanBridgeLogFormatter.Attached(handle.Hwnd));
+            RunDeviceSelection();
         }
         catch (Exception ex)
         {
@@ -49,6 +51,21 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
             _instanceOwner = null;
             if (ownedVk) _vk = null;
             Emit(VulkanBridgeLogFormatter.AttachFailed(ex.Message));
+        }
+    }
+
+    // VK4-A：Instance + Surface 已就绪后选择物理设备。仅枚举与选择，不创建 VkDevice / Queue / Swapchain。
+    // 选择异常不影响已附加的 Instance + Surface（VK3 契约保持）。
+    void RunDeviceSelection()
+    {
+        if (_vk is null || _instanceOwner is null || _surfaceOwner is null) return;
+        try
+        {
+            VulkanPhysicalDeviceSelector.Select(_vk, _instanceOwner.Instance, _surfaceOwner.Surface, Emit);
+        }
+        catch (Exception ex)
+        {
+            Emit($"【VulkanDevice】物理设备选择异常：{ex.Message}；Instance + Surface 保持已附加状态");
         }
     }
 
