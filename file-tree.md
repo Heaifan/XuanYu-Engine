@@ -1,10 +1,10 @@
 # 项目文件树 — XuanYu Engine
 
-最近更新：RZ-VK3-A-R1 收口 Surface 契约依赖——将 4 个 NativeHost 生命周期纯契约类型从 XuanYu.Render.Vulkan 迁入新建的 XuanYu.Render.Abstractions，UI 生命周期链路改依赖 Abstractions；UI 工程级对 Render.Vulkan 的引用因 Vulkan 探针类型仍在 Render.Vulkan 而保留。
+最近更新：RZ-VK3-B1 在 XuanYu.Render.Vulkan 内新增 VulkanInstanceOwner（仅创建/释放 Vulkan Instance，启用 VK_KHR_surface + VK_KHR_win32_surface，禁止 Surface/Device/Swapchain/Queue）；UI 生命周期链路经 Abstractions，UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用。
 
 统计口径：当前工作区真实文件快照，排除 `.git/`、`bin/`、`obj/` 生成目录。
 
-当前文件总数：94
+当前文件总数：97
 
 ```
 
@@ -24,6 +24,7 @@
 ### XuanYu.Render.Vulkan/（已移除 4 个生命周期类型）
 - 删除 `NativeHostLifecycleState.cs` / `NativeHostHandleSnapshot.cs` / `NativeHostLifecycleProbe.cs` / `NativeHostLifecycleLogFormatter.cs`（迁入 Abstractions）。
 - 保留 `VulkanApiProbe.cs` / `VulkanProbeResult.cs` / `VulkanProbeLogFormatter.cs` / `VulkanDeviceInfo.cs`（Vulkan 环境探针，仍属 Render.Vulkan）。
+- 新增 `VulkanInstanceOwner.cs` / `VulkanInstanceLogFormatter.cs` / `VulkanInstanceResult.cs`（VK3-B1：Vulkan Instance 持有者，仅创建/释放 Instance 并启用 VK_KHR_surface + VK_KHR_win32_surface；Dispose 幂等；中文生命周期日志；禁止 Surface / PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame）。
 
 ### XuanYu.Editor.UI/（依赖收口）
 - `NativeHostSurfaceContract.cs`  # 仅 `using XuanYu.Render.Abstractions`（VK3-A）。
