@@ -8,16 +8,17 @@ namespace XuanYu.Render.Vulkan.Bridge;
 // 使 Bridge 只保留生命周期编排（Attach/Resize/Detach）。仅枚举与选择，不创建 VkDevice / Queue / Swapchain。
 public sealed class VulkanBridgePhysicalDeviceAttachStep
 {
-    public static void Run(Vk vk, Instance instance, SurfaceKHR surface, Action<string>? log)
+    public static VulkanPhysicalDeviceSelection? Run(Vk vk, Instance instance, SurfaceKHR surface, Action<string>? log)
     {
         try
         {
-            VulkanPhysicalDeviceSelector.Select(vk, instance, surface, log);
+            return VulkanPhysicalDeviceSelector.Select(vk, instance, surface, log);
         }
         catch (Exception ex)
         {
             var msg = $"【VulkanDevice】物理设备选择异常：{ex.Message}；Instance + Surface 保持已附加状态";
             log?.Invoke(msg); Console.WriteLine(msg);
+            return null;
         }
     }
 }

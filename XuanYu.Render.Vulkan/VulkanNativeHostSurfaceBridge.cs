@@ -2,6 +2,7 @@ using System;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Bridge;
+using XuanYu.Render.Vulkan.Device;
 
 namespace XuanYu.Render.Vulkan;
 
@@ -14,6 +15,7 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
     Vk? _vk;
     VulkanInstanceOwner? _instanceOwner;
     VulkanSurfaceOwner? _surfaceOwner;
+    VulkanDeviceOwner? _deviceOwner;
     bool _disposed;
 
     public Instance? Instance => _instanceOwner?.Instance;
@@ -41,7 +43,8 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
             _surfaceOwner = surface;
             Emit(VulkanBridgeLogFormatter.Attached(handle.Hwnd));
             if (_vk is not null && _instanceOwner is not null && _surfaceOwner is not null)
-                VulkanBridgePhysicalDeviceAttachStep.Run(_vk, _instanceOwner.Instance, _surfaceOwner.Surface, Emit);
+                _deviceOwner = VulkanBridgeDeviceAttachStep.Run(_vk,
+                    VulkanBridgePhysicalDeviceAttachStep.Run(_vk, _instanceOwner.Instance, _surfaceOwner.Surface, Emit), Emit);
         }
         catch (Exception ex)
         {
@@ -72,10 +75,9 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
             Emit(VulkanBridgeLogFormatter.DetachedSkipped());
             return;
         }
-        _surfaceOwner?.Dispose();
-        _surfaceOwner = null;
-        _instanceOwner?.Dispose();
-        _instanceOwner = null;
+        _deviceOwner?.Dispose(); _deviceOwner = null;
+        _surfaceOwner?.Dispose(); _surfaceOwner = null;
+        _instanceOwner?.Dispose(); _instanceOwner = null;
         Emit(VulkanBridgeLogFormatter.Detached());
     }
 
