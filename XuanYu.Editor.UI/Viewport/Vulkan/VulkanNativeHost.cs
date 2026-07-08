@@ -31,7 +31,8 @@ public sealed class VulkanNativeHost : NativeControlHost
             _createdReported = true;
         }
         var snap = Report(NativeHostLifecycleState.Attached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
-        _bridge ??= VulkanSurfaceBridgeProvider.Create();
+        _bridge ??= VulkanSurfaceBridgeProvider.Create(msg =>
+            ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg));
         _bridge.Attach(NativeHostSurfaceContract.ToSurfaceHandle(snap));
     }
 

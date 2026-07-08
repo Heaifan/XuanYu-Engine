@@ -8,5 +8,6 @@ namespace XuanYu.Editor.UI;
 // 不直接依赖 Render.Vulkan 具体类，保持 Editor.UI → Abstractions 的依赖方向。
 public static class VulkanSurfaceBridgeProvider
 {
-    public static INativeHostSurfaceBridge Create() => new VulkanNativeHostSurfaceBridge();
+    public static INativeHostSurfaceBridge Create(Action<string> log) =>
+        new VulkanNativeHostSurfaceBridge(log);
 }

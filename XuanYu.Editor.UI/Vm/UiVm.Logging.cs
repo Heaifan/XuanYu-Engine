@@ -42,7 +42,7 @@ public sealed partial class UiVm
         _logBuffer.Seed(SampleLogEntries.All);
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Layout, "编辑器布局已恢复", "低频启动日志。");
         _logBus.Info(EditorLogSource.Project, EditorLogCategory.Load, "已打开项目：SampleProject", "UI 外壳启动种子项目。");
-        _logBus.Warning(EditorLogSource.Render, EditorLogCategory.Backend, "当前渲染后端尚未接入 Vulkan", "低频启动提示，不接 Vulkan 链路。");
+        _logBus.Info(EditorLogSource.Render, EditorLogCategory.Backend, "Vulkan Surface 生命周期已接入；Device / Swapchain 尚未接入", "低频启动提示，Surface 生命周期已接入，Device/Swapchain 待 VK4。");
         RefreshLogBindings();
     }
 

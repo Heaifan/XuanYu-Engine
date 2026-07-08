@@ -4,11 +4,12 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan;
 
-// VK3-C1-R2：Vk 所有权收口。Bridge 统一持有并释放 Vk；
-// InstanceOwner / SurfaceOwner 仅使用传入的 Vk，不负责 Dispose Vk。
-// Dispose 顺序固定：Surface → Instance → Vk。仍不接 UI 组合根，不碰 PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame。
+// VK3-C2-R1：VulkanBridge 生命周期日志经回调进入编辑器日志面板，
+// 不再只依赖 Console.WriteLine；Attach 失败记录原因后吞掉异常，避免编辑器崩溃。
+// 仍不碰 PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame。
 public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, IDisposable
 {
+    readonly Action<string>? _log;
     Vk? _vk;
     VulkanInstanceOwner? _instanceOwner;
     VulkanSurfaceOwner? _surfaceOwner;
@@ -16,6 +17,8 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
 
     public Instance? Instance => _instanceOwner?.Instance;
     public SurfaceKHR? Surface => _surfaceOwner?.Surface;
+
+    public VulkanNativeHostSurfaceBridge(Action<string>? log = null) => _log = log;
 
     public void Attach(NativeHostSurfaceHandle handle)
     {
@@ -35,9 +38,9 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
             if (ownedVk) _vk = vk;
             _instanceOwner = instance;
             _surfaceOwner = surface;
-            Console.WriteLine(VulkanBridgeLogFormatter.Attached(handle.Hwnd));
+            Emit(VulkanBridgeLogFormatter.Attached(handle.Hwnd));
         }
-        catch
+        catch (Exception ex)
         {
             surface?.Dispose();
             instance?.Dispose();
@@ -45,7 +48,7 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
             _surfaceOwner = null;
             _instanceOwner = null;
             if (ownedVk) _vk = null;
-            throw;
+            Emit(VulkanBridgeLogFormatter.AttachFailed(ex.Message));
         }
     }
 
@@ -53,24 +56,24 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
     {
         if (_instanceOwner is null || _surfaceOwner is null)
         {
-            Console.WriteLine(VulkanBridgeLogFormatter.ResizedSkipped(width, height));
+            Emit(VulkanBridgeLogFormatter.ResizedSkipped(width, height));
             return;
         }
-        Console.WriteLine(VulkanBridgeLogFormatter.Resized(width, height));
+        Emit(VulkanBridgeLogFormatter.Resized(width, height));
     }
 
     public void Detach()
     {
         if (_instanceOwner is null && _surfaceOwner is null)
         {
-            Console.WriteLine(VulkanBridgeLogFormatter.DetachedSkipped());
+            Emit(VulkanBridgeLogFormatter.DetachedSkipped());
             return;
         }
         _surfaceOwner?.Dispose();
         _surfaceOwner = null;
         _instanceOwner?.Dispose();
         _instanceOwner = null;
-        Console.WriteLine(VulkanBridgeLogFormatter.Detached());
+        Emit(VulkanBridgeLogFormatter.Detached());
     }
 
     public void Dispose()
@@ -80,5 +83,11 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
         Detach();
         _vk?.Dispose();
         _vk = null;
+    }
+
+    void Emit(string message)
+    {
+        _log?.Invoke(message);
+        Console.WriteLine(message);
     }
 }

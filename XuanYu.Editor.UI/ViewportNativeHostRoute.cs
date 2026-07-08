@@ -9,4 +9,7 @@ public static class ViewportNativeHostRoute
 
     public static void ReportMerged(UiVm? vm, NativeHostHandleSnapshot snapshot, int mergeCount) =>
         vm?.LogNativeHostResizedMerged(snapshot, mergeCount);
+
+    public static void ReportVulkanBridge(UiVm? vm, string message) =>
+        vm?.LogVulkanLifecycle(message, "");
 }
