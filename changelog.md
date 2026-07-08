@@ -1,5 +1,48 @@
 # changelog
 
+## [RZ-VK3-C1-R2] Vk 生命周期所有权收口 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：a176eb365dc42ade0d2c72cff9901ac9b9d740e0
+
+### 目标
+统一 `Vk.GetApi()` / `Vk.Dispose()` 的所有权，避免 VK3-C2 接真实 NativeHost 生命周期后出现重复 Dispose、提前 Dispose 或泄漏。不接 UI 组合根，不碰 Device/Swapchain。
+
+### 修改内容
+- `VulkanInstanceOwner.cs`（66→57 行）：
+  - `Create` / `CreateWithResult` 改为接收 `Vk vk` 参数，移除内部 `Vk.GetApi()`。
+  - `CreateWithResult` 失败路径不再 `vk.Dispose()`（所有权在调用方）。
+  - `Dispose` 仅 `vk.DestroyInstance` 释放 Instance，**移除 `_vk.Dispose()`**——Vk 不再由本类释放。
+- `VulkanSurfaceOwner.cs`（注释补强，75 行）：明确「Vk 由调用方（Bridge）统一持有与释放，本类只使用传入的 Vk，不持有也不释放 Vk」。
+- `VulkanNativeHostSurfaceBridge.cs`（76→84 行）：
+  - 新增 `Vk? _vk` 字段，由 `Attach` 统一 `Vk.GetApi()` 持有。
+  - `Attach` 复用既有 `_vk`（避免重复 GetApi）；仅本轮新创建时才在失败回滚中 `vk.Dispose()`，复用则不释放，杜绝重复 Dispose。
+  - 两个 Owner 均接收同一 `Vk` 实例。
+  - `Dispose` 顺序固定：`Detach()`（Surface→Instance）→ `_vk?.Dispose()`（Vk 最后释放）。
+  - `Attach` 失败回滚顺序与 Dispose 一致：Surface→Instance→（如本轮新创建）Vk。
+
+### 未做内容（红线）
+- 未接 UI 组合根；未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame/CommandBuffer/RenderPass/Framebuffer`。
+- 旧 `VulkanClearSession` / `VulkanApiProbe` 探针未改动，仍为历史债务，不纳入正式路径。
+- `XuanYu.Editor.UI` 工程级对 `Render.Vulkan` 的引用未解耦（口径不变）。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 代码引用） |
+| Editor.UI 构建 | ✅ 0W0E |
+| git grep 禁止项 | ✅ 三 VK3 文件仅注释提及，无 PhysicalDevice/LogicalDevice/Queue/Swapchain 实装 |
+| 文件行数 | ✅ InstanceOwner 57 / SurfaceOwner 75 / Bridge 84，均 ≤100 |
+| file-tree.md | 无新增文件，未改（总数维持 104） |
+
+### 已知债务（已消解项）
+- ~~`Vk.GetApi()` 所有权不统一~~ → 本轮已收口：Bridge 唯一所有者，Owner 仅使用。
+- UI 工程级对 Render.Vulkan 的引用待后续解耦。
+
+### 下一步
+VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface；接线时复用已收口的 Vk 所有权。
+
 ## [RZ-VK3-C1-R1] Bridge 生命周期异常安全收口 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
