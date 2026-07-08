@@ -1,5 +1,50 @@
 # changelog
 
+## [VK4-A-R1] 物理设备选择链路收口修正（压回 100 行红线）(2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：fffb6d1a006306f3051ac8cabc2fa27a977301ec
+版本：VK4-A-R1
+
+### 目标
+VK4-A 审计发现 `VulkanNativeHostSurfaceBridge.cs` 由 93 行涨到 110 行，违反“所有代码文件应 ≤100 行”红线
+（“新增文件 ≤100 行”口径不够，被修改的旧文件涨行同样要处理）。本次仅做收口修正，不新增 Vulkan 能力、不改变 VK4-A 行为。
+
+### 新增文件
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`（23 行）：在 Instance+Surface 就绪后调用 `VulkanPhysicalDeviceSelector.Select`，把选择结果与中文日志写入面板；选择异常仅记日志、不影响已附加的 Instance+Surface。
+
+### 修改内容
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`（110→96 行）：删除内联私有方法 `RunDeviceSelection()`，改在 `Attach` 末尾以带引用空值守卫的调用委托给 `VulkanBridgePhysicalDeviceAttachStep.Run(...)`；Bridge 只保留生命周期编排（Attach→Instance+Surface→run attach step / Resize 只记尺寸不重建 Surface / Detach 逆序释放）；`using XuanYu.Render.Vulkan.Device;` 换为 `using XuanYu.Render.Vulkan.Bridge;`。
+
+### 未做内容（红线）
+- 未创建 `VkDevice` / `LogicalDevice`、未取 `VkQueue`、未建 `Swapchain`、未建 `ImageView`、未清屏、未 `Present`。
+- UI（Editor.UI）未新增任何 `Silk.NET.Vulkan` 引用；未复制旧探针 `VulkanClearSession`；未搬 `VulkanApiProbe`/`VulkanDeviceInfo` 旧代码。
+- 未顺手推进 VK4-B（LogicalDevice + Queue）；目录 `Bridge/` 仅 1 文件，未越过 5-7 文件上限。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| VulkanNativeHostSurfaceBridge.cs 行数 | ✅ 96（≤100） |
+| VulkanBridgePhysicalDeviceAttachStep.cs 行数 | ✅ 23（≤100，新增文件） |
+| VulkanPhysicalDeviceSelector.cs 行数 | ✅ 99（≤100，未改） |
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Editor.UI 构建（集成验证） | ✅ 0W0E |
+| VK4-A 日志仍可见 | ✅ 候选设备/队列族/最终选择经面板输出（调用点不变） |
+| git grep 禁止项 | ✅ 无 VkDevice/Queue/Swapchain/ClearFrame 新增实装（仅注释/日志） |
+
+### 人工测试清单（需在用户机器运行编辑器）
+1. 启动编辑器，确认无崩溃、NativeHost 正常附加。
+2. 打开日志面板，确认仍出现 `【VulkanDevice】开始枚举物理设备；候选数量：N`（拆分后日志链路未断）。
+3. 确认每个候选设备的 `候选设备[i]` 日志（名称/类型/API/队列族/呈现支持/可用性）。
+4. 确认 RTX 3060（或本机独显）被选为 `已选择物理设备`，原因 `优先独立显卡`。
+5. 确认 `Surface 呈现支持：是` 且 `可用性：可用`。
+6. 确认无 `VkDevice`/`Swapchain`/`ClearFrame` 相关新增日志（仍黑屏，预期）。
+7. 缩放窗口，确认 `尺寸变化已接收：不重建 Surface`（VK3 契约不变）。
+8. 关闭编辑器，确认 `分离完成：Surface + Instance 已释放`，无设备相关资源泄漏告警。
+
+### 下一步
+VK4-A 边界与行数红线均已守住，可判定 VK4-A 正式收口。下一步进入 VK4-B（创建 LogicalDevice + Queue），仍独立文件、独立 commit、独立红线校验；严禁把 B/C/D 混写。
+
 ## [VK4-A] 物理设备选择链路（仅选择，不创建设备） (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
@@ -18,7 +63,7 @@
 - `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`（99 行，含结果 record `VulkanPhysicalDeviceSelection`）：`Select` 主入口枚举+选择+中文日志；`SelectQueueFamilies` 队列族与 Surface 支持检查；`TypeName` 类型中文化。
 
 ### 修改内容
-- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`（93→110 行）：`Attach` 在 Instance+Surface 就绪后调用 `RunDeviceSelection()`；新增私有方法 `RunDeviceSelection()`，经 `Emit`（日志回调 + Console 兜底）输出选择器日志；选择异常仅记日志、不影响已附加的 Instance+Surface（VK3 契约保持）；`Resize` 不重建 Surface 不变。新增 `using XuanYu.Render.Vulkan.Device;`。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`：VK4-A 时由 93→110 行（内联 `RunDeviceSelection()`）；**该 110 行状态已被 VK4-A-R1 修正**——选择逻辑迁出至 `Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`，Bridge 回到 96 行，仅保留生命周期编排。此处记录原始 VK4-A 行为：`Attach` 在 Instance+Surface 就绪后触发选择、经 `Emit` 输出选择器日志、选择异常不影响已附加的 Instance+Surface、`Resize` 不重建 Surface。
 
 ### 未做内容（红线）
 - 未创建 `VkDevice` / `LogicalDevice`、未取 `VkQueue`、未建 `Swapchain`、未建 `ImageView`、未清屏、未 `Present`。
