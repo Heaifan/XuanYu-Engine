@@ -38,6 +38,10 @@ public sealed unsafe class VulkanSurfaceOwner : IDisposable
             return new VulkanSurfaceResult(false, null, "缺扩展", "实例未启用 VK_KHR_surface");
         if (!vk.TryGetInstanceExtension(instance, out KhrWin32Surface? win32) || win32 is null)
             return new VulkanSurfaceResult(false, null, "缺扩展", "实例未启用 VK_KHR_win32_surface");
+        if (handle.Hwnd == 0)
+            return new VulkanSurfaceResult(false, null, "无效句柄", "NativeHost HWND 为 0");
+        if (handle.Hinstance == 0)
+            return new VulkanSurfaceResult(false, null, "无效句柄", "NativeHost HINSTANCE 为 0");
         try
         {
             var info = new Win32SurfaceCreateInfoKHR
@@ -46,8 +50,9 @@ public sealed unsafe class VulkanSurfaceOwner : IDisposable
                 Hwnd = handle.Hwnd,
                 Hinstance = handle.Hinstance
             };
-            if (win32.CreateWin32Surface(instance, &info, null, out var surface) != Result.Success)
-                return new VulkanSurfaceResult(false, null, "VkResult", "CreateWin32Surface 失败");
+            var result = win32.CreateWin32Surface(instance, &info, null, out var surface);
+            if (result != Result.Success)
+                return new VulkanSurfaceResult(false, null, "VkResult", result.ToString());
             Console.WriteLine(VulkanSurfaceLogFormatter.Created(handle.Hwnd));
             return new VulkanSurfaceResult(true, new VulkanSurfaceOwner(khr, instance, surface));
         }
