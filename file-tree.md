@@ -1,6 +1,6 @@
 # 项目文件树 — XuanYu Engine
 
-最近更新：RZ-VK3-C1 在 XuanYu.Render.Vulkan 内新增 VulkanNativeHostSurfaceBridge（实现 INativeHostSurfaceBridge，Attach 创建 Instance+Surface、Detach/Dispose 释放、Resize 只记日志不重建 Surface，红线：Surface 仅绑定 Attach/Detach）与 VulkanBridgeLogFormatter（中文生命周期日志）；Render.Vulkan 工程保留对 Abstractions（NativeHostSurfaceHandle/INativeHostSurfaceBridge）与 Silk.NET.Vulkan.Extensions.KHR 的引用；VK3-B1/B2 的 Instance/Surface 创建释放范围不变，禁止 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame；UI 生命周期链路经 Abstractions，UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用。
+最近更新：VK3 已收口（验收通过，2026-07-08）：新增 docs/rz-vk3-closure.md（收口确认）+ docs/rz-vk4-plan.md（VK4 规划，只规划不实装）；VK4 目标为最小渲染闭环（PhysicalDevice→LogicalDevice→Queue→Swapchain→ClearFrame→RenderSession），红线：Resize 不重建 Surface、不搬探针、UI 不持 Vulkan、每步 5+100。VK3 既有链路（VK3-A..VK3-C2-R1）不变。
 
 统计口径：当前工作区真实文件快照，排除 `.git/`、`bin/`、`obj/` 生成目录。
 
@@ -232,3 +232,7 @@ New Vulkan / NativeHost files:
 ## RZ-New-0 接手验收审计 (2026-07-07)
 - `docs/audit-RZ-New-0-onboarding.md`  # RZ-New-0 接手验收审计：10 项清单、真实状态（含 Editor.UI 直接引用 Vulkan 过渡债务与探针已超 VK3 的发现）。
 - `docs/dev-rules.md` / `docs/dev-rules-understanding.md`  # 开发规范执行手册与解释（登记见「开发规范理解文档补充」一节）。
+
+## VK3 收口 + VK4 规划文档 (2026-07-08)
+- `docs/rz-vk3-closure.md`  # VK3 收口确认：验收项表格、已完成阶段（VK3-A..VK3-C2-R1）、红线遵守确认、已知债务（UI 对 Render.Vulkan 工程级引用移交 VK4）、收口日期。VK3 结论：NativeHost HWND 生命周期已正式接入 Vulkan Instance + Surface；Swapchain 留 VK4。
+- `docs/rz-vk4-plan.md`  # VK4 规划（只规划不实装）：最小渲染闭环 PhysicalDevice→LogicalDevice→Queue→Swapchain→ClearFrame→RenderSession 五问规划、目标依赖方向、阶段分解 VK4-A..VK4-E、防回潮门禁（Resize 不重建 Surface、不搬探针、UI 不持 Vulkan、每步 5+100）。
