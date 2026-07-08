@@ -1,5 +1,44 @@
 # changelog
 
+## [RZ-VK3-B2] Vulkan Surface 持有者 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：9b41b28fc2a33f0953ccd00db7287353eb543be0
+推送状态：已推送 origin
+
+### 本轮目标
+VK3-B2：在 XuanYu.Render.Vulkan 内新增 VulkanSurfaceOwner，仅负责创建与释放 VkSurfaceKHR（Win32），生命周期绑定 NativeHost Attach/Detach，不绑定 Resize。不碰 PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame。组合根接线（INativeHostSurfaceBridge）留给 VK3-C，本轮不接入 Editor.UI 正式路径。
+
+### 修改内容
+- 新增 `VulkanSurfaceOwner`（Render.Vulkan 内部 unsafe 类）：从 `Vk` + `Instance` + `NativeHostSurfaceHandle` 创建 `VkSurfaceKHR`；创建经 `KhrWin32Surface.CreateWin32Surface`，销毁经 `KhrSurface.DestroySurface`（双扩展分别取用，与既有 VulkanClearSession 模式一致）；`Dispose` 幂等（重复调用不炸）且释放后 `_surface = default`；通过 `VulkanSurfaceLogFormatter` 输出中文生命周期日志（创建成功含窗口句柄 / 释放含 Surface 句柄 / 失败含错误类型与详情）。
+- 新增 `VulkanSurfaceLogFormatter`：纯中文生命周期日志格式器（创建成功含窗口句柄、释放含 Surface 句柄、失败含错误类型与详情）。
+- 新增 `VulkanSurfaceResult`：极小创建结果类型，携带 Success / Owner / 错误类型与详情；`Create()` 抛异常，`CreateWithResult()` 返回结果，二者共用同一条创建链路。
+- `XuanYu.Render.Vulkan.csproj` 补 `Silk.NET.Vulkan.Extensions.KHR` 包（提供 KhrWin32Surface / KhrSurface）与 `XuanYu.Render.Abstractions` 项目引用（取 `NativeHostSurfaceHandle`），对齐 Editor.UI 的 KHR 包版本 2.22.0。
+
+### 范围口径（延续 VK3-B1 / B1-R1）
+- "Editor.UI 改经 Abstractions 而非直接持有 Render.Vulkan" 仅限定为 NativeHost 生命周期链路；Editor.UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用，本轮未改动 Editor.UI 正式路径。
+- VulkanSurfaceOwner 仅消费 `NativeHostSurfaceHandle`（Abstractions 纯契约），不反向引用 Editor.UI。
+
+### 未做内容
+- 未选择 PhysicalDevice；未创建 LogicalDevice；未获取 Queue；未创建 Swapchain。
+- 未碰 RenderFrame / CommandBuffer / RenderPass / Framebuffer。
+- 未把 VulkanSurfaceOwner 接入任何使用方（组合根接线留给 VK3-C）。
+- 未把任何 Vulkan 实现类型放进 XuanYu.Render.Abstractions。
+
+### 验收结果
+- git diff 自审：无 PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame 实装（仅注释提及）。
+- 新增 3 文件，均 ≤100 行（Owner 69 / Result 9 / LogFormatter 16）。
+- XuanYu.Render.Abstractions 仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用。
+- XuanYu.Render.Vulkan / Abstractions / Editor.UI 构建均 0 warning / 0 error。
+- 仓库无独立测试项目：`dotnet test` 退出 MSB1003，如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦 Vulkan。
+- VulkanSurfaceOwner 仍未接入任何使用方（含组合根），等待 VK3-C 接线。
+
+### 下一步
+VK3-B2 收口后，可进入 VK3-C：经 INativeHostSurfaceBridge 由组合根把 VulkanInstanceOwner + VulkanSurfaceOwner 接线到 NativeHost Attach/Detach，仍不碰 Device / Swapchain。
+
 ## [RZ-VK3-B1-R1] VulkanInstanceOwner 行数与健壮性收口 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
