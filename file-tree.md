@@ -1,10 +1,10 @@
 # 项目文件树 — XuanYu Engine
 
-最近更新：RZ-VK3-B2 在 XuanYu.Render.Vulkan 内新增 VulkanSurfaceOwner（仅创建/释放 VkSurfaceKHR-Win32，生命周期绑定 NativeHost Attach/Detach，不绑定 Resize），配套 VulkanSurfaceResult 与 VulkanSurfaceLogFormatter；Render.Vulkan 工程补 Silk.NET.Vulkan.Extensions.KHR 包与 XuanYu.Render.Abstractions 引用（取 NativeHostSurfaceHandle）；VK3-B1 的 Instance 创建/释放范围不变，禁止 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame；UI 生命周期链路经 Abstractions，UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用。
+最近更新：RZ-VK3-C1 在 XuanYu.Render.Vulkan 内新增 VulkanNativeHostSurfaceBridge（实现 INativeHostSurfaceBridge，Attach 创建 Instance+Surface、Detach/Dispose 释放、Resize 只记日志不重建 Surface，红线：Surface 仅绑定 Attach/Detach）与 VulkanBridgeLogFormatter（中文生命周期日志）；Render.Vulkan 工程保留对 Abstractions（NativeHostSurfaceHandle/INativeHostSurfaceBridge）与 Silk.NET.Vulkan.Extensions.KHR 的引用；VK3-B1/B2 的 Instance/Surface 创建释放范围不变，禁止 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame；UI 生命周期链路经 Abstractions，UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用。
 
 统计口径：当前工作区真实文件快照，排除 `.git/`、`bin/`、`obj/` 生成目录。
 
-当前文件总数：102
+当前文件总数：104
 
 ```
 
@@ -27,6 +27,7 @@
 - 新增 `VulkanInstanceOwner.cs` / `VulkanInstanceLogFormatter.cs` / `VulkanInstanceResult.cs`（VK3-B1：Vulkan Instance 持有者；VK3-B1-R1 将 VulkanInstanceOwner 由 98 行拆至 66 行，抽出 `VulkanInstanceExtensions.cs` 最小扩展名集合与 `VulkanInstanceCreateInfoBuilder.cs` InstanceCreateInfo 构造；仍仅创建/释放 Instance 并启用 VK_KHR_surface + VK_KHR_win32_surface；Dispose 幂等且释放后清空句柄；中文生命周期日志；禁止 Surface / PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame）。
 - 新增 `VulkanInstanceExtensions.cs` / `VulkanInstanceCreateInfoBuilder.cs`（VK3-B1-R1：前者存 Instance 启用的最小扩展名集合，后者在 fixed 作用域内构造 InstanceCreateInfo 并交给回调，均不直接调用 Vulkan）。
 - 新增 `VulkanSurfaceOwner.cs` / `VulkanSurfaceResult.cs` / `VulkanSurfaceLogFormatter.cs`（VK3-B2：Vulkan Surface 持有者，仅创建/释放 VkSurfaceKHR-Win32，生命周期绑定 NativeHost Attach/Detach，不绑定 Resize；创建经 KhrWin32Surface.CreateWin32Surface，销毁经 KhrSurface.DestroySurface；取 NativeHostSurfaceHandle 的 Hwnd/Hinstance；Dispose 幂等且释放后清空句柄；中文生命周期日志；禁止 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame）。
+- 新增 `VulkanNativeHostSurfaceBridge.cs` / `VulkanBridgeLogFormatter.cs`（VK3-C1：前者实现 INativeHostSurfaceBridge，Attach 经 VulkanInstanceOwner.Create + VulkanSurfaceOwner.Create 串起 Instance+Surface，Detach/Dispose 先释放 Surface 再释放 Instance，Resize 只记日志不重建 Surface；后者为纯中文生命周期日志格式器；均不接 UI 组合根、不碰 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame）。
 
 ### XuanYu.Editor.UI/（依赖收口）
 - `NativeHostSurfaceContract.cs`  # 仅 `using XuanYu.Render.Abstractions`（VK3-A）。
