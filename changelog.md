@@ -59,6 +59,59 @@ VK4-B **不以具体显卡型号为准**，而以 **VK4-A 最终选择结果（`
 ### 下一步
 VK4-B 边界与行数红线均守住，可判 VK4-B 功能收口。但**必须先做 VK4-B-R1 生命周期审计**，重点核对 Detach 释放顺序 `LogicalDevice → Surface → Instance` 与异常路径资源不泄漏；严禁顺手推进 VK4-C（Swapchain）。
 
+## [VK4-B-R1] 生命周期审计与运行验证（静态审计已通过；运行时待用户机）(2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+关联提交：21f2402（VK4-B 代码） / 1f5da30（VK4-B 文档）
+性质：仅审计与运行验证，不新增 Vulkan 能力；不进入 VK4-C；不新增 Swapchain 相关代码。
+
+### 静态审计结果（已通过，无需用户机）
+| 项 | 结果 |
+|---|---|
+| Detach 释放顺序 LogicalDevice → Surface → Instance | ✅ VulkanNativeHostSurfaceBridge.Detach 第 78–80 行已逆序释放 |
+| Attach 异常路径逆序回滚 | ✅ catch 块（51–56 行）逆序释放 surface/instance/_vk；设备 step 失败仅返回 null 不抛 |
+| 未重新枚举设备 / 基于 VK4-A 选择结果 | ✅ VulkanDeviceOwner.Create 复用 sel.Handle，不重枚举 |
+| 未建 Swapchain/ImageView/RenderPass/CommandPool/CommandBuffer | ✅ 仅注释出现，grep 无实装 |
+| 未清屏 / 未 Present | ✅ red-line B grep NONE_MATCH |
+| UI(Editor.UI) 未新增 Silk.NET.Vulkan 引用 | ✅ 仅历史探针债 VulkanClearSession*.cs（4 文件）+ 生成 obj/bin |
+| 命名约定（VulkanDevice 别名 / LogicalDevice 属性） | ✅ VulkanDeviceOwner 用别名，属性名 LogicalDevice，无 Device 作属性名 |
+| 全 .cs ≤100 行 | ✅ 最大 Bridge 98 / DeviceOwner 96 / SurfaceOwner 75 |
+| Render.Vulkan 构建 | ✅ 0W0E（3.9s） |
+| Editor.UI 构建 | ✅ 0W0E（10.6s） |
+
+### 行数明细（实际，订正用户口头「DeviceOwner 95」为 96）
+- VulkanNativeHostSurfaceBridge.cs：98（余 2）
+- VulkanDeviceOwner.cs：96（余 4）
+- VulkanPhysicalDeviceSelector.cs：93
+- VulkanBridgePhysicalDeviceAttachStep.cs：24
+- VulkanBridgeDeviceAttachStep.cs：29
+- VulkanPhysicalDeviceSelection.cs：12
+- 其余（Instance/Surface 系列）：9–75
+
+### 风险点（移交 VK4-C 必须遵守）
+- **Bridge 98 行，仅余 2 行**：VK4-C 禁止再向 Bridge 塞 Swapchain 逻辑；Swapchain 必须进入独立 owner / attach step（与 VK4-B 的 DeviceOwner / BridgeDeviceAttachStep 同构）。
+- **DeviceOwner 96 行，仅余 4 行**：VulkanDeviceOwner 只负责 CreateDevice / GetQueue / DisposeDevice；VK4-C 禁止顺手塞 Swapchain/CommandPool/RenderPass；补日志也须防越 100 行。
+- **命名口径（用户明确）**：Silk.NET.Vulkan.Device 类型一律用 VulkanDevice 类型别名；业务 owner = VulkanDeviceOwner；业务属性 = LogicalDevice；禁止再用 Device 作属性名（避免与 XuanYu.Render.Vulkan.Device 命名空间混淆）。
+
+### 待用户机运行验证（12 项，本环境无 GPU/窗口无法跑）
+1. 启动编辑器无崩溃
+2. VulkanBridge 附加成功：Instance + Surface 已创建
+3. VulkanDevice 开始枚举物理设备
+4. VulkanDevice 已选择物理设备：本机独显
+5. VulkanDevice 开始创建 LogicalDevice
+6. 日志显示 Graphics QueueFamily
+7. 日志显示 Present QueueFamily
+8. 日志显示 LogicalDevice 创建成功
+9. 日志显示 Queue 获取成功
+10. 缩放窗口：Resize 只记尺寸，不重建 Surface / Device / Queue
+11. 关闭编辑器：释放顺序 LogicalDevice → Surface → Instance
+12. 确认仍黑屏，无 Swapchain / Clear / Present 日志
+
+> 运行验证通过前，VK4-B 不宣布完全收口；VK4-C 暂缓。
+
+### 下一步
+用户提供运行日志/截图后，核对 12 项；若全过则 VK4-B 完全收口，再议 VK4-C（Swapchain 独立 owner/step）。
+
 ## [VK4-A-R1] 物理设备选择链路收口修正（压回 100 行红线）(2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
