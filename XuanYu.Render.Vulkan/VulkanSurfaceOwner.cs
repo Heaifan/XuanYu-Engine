@@ -5,8 +5,9 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan;
 
-// VK3-B2：Vulkan Surface 持有者。仅创建/释放 VkSurfaceKHR（Win32），
+// VK3-B2 / C1-R2：Vulkan Surface 持有者。仅创建/释放 VkSurfaceKHR（Win32），
 // 生命周期绑定 NativeHost Attach/Detach，不绑定 Resize。
+// Vk 由调用方（Bridge）统一持有与释放，本类只使用传入的 Vk，不持有也不释放 Vk。
 // 禁止：PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame。
 public sealed unsafe class VulkanSurfaceOwner : IDisposable
 {
