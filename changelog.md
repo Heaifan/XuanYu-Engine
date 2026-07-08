@@ -1,5 +1,54 @@
 # changelog
 
+## [VK4-A] 物理设备选择链路（仅选择，不创建设备） (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：79eabd0c5f11c88ab78607041395353cf05156ae
+版本：VK4-A
+
+### 目标
+在 VK3 已接入的 Instance + Surface 生命周期之后，新增 PhysicalDevice 选择链路。
+只选设备、不渲染：枚举设备、检查 Graphics/Present 队列族与 Surface 呈现支持、
+优先独显、输出中文日志、返回纯数据结果。严禁创建 LogicalDevice/Queue/Swapchain。
+边界由审计压死：VK4-A 只做 PhysicalDevice 选择，不碰 Device/Queue/Swapchain/清屏。
+
+### 新增文件
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceInfo.cs`（12 行）：纯数据设备信息（名称/类型/API 版本/是否独显/是否可用），不持有任何 Vulkan 句柄。
+- `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs`（14 行）：纯数据队列族选择（Graphics/Present 索引与可用性，`None` 静态默认值）。
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`（99 行，含结果 record `VulkanPhysicalDeviceSelection`）：`Select` 主入口枚举+选择+中文日志；`SelectQueueFamilies` 队列族与 Surface 支持检查；`TypeName` 类型中文化。
+
+### 修改内容
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`（93→110 行）：`Attach` 在 Instance+Surface 就绪后调用 `RunDeviceSelection()`；新增私有方法 `RunDeviceSelection()`，经 `Emit`（日志回调 + Console 兜底）输出选择器日志；选择异常仅记日志、不影响已附加的 Instance+Surface（VK3 契约保持）；`Resize` 不重建 Surface 不变。新增 `using XuanYu.Render.Vulkan.Device;`。
+
+### 未做内容（红线）
+- 未创建 `VkDevice` / `LogicalDevice`、未取 `VkQueue`、未建 `Swapchain`、未建 `ImageView`、未清屏、未 `Present`。
+- UI（Editor.UI）未新增任何 `Silk.NET.Vulkan` 引用；选择器结果仅经日志字符串间接可见，不把 `VkPhysicalDevice` 泄漏给上层。
+- 未复制旧探针 `VulkanClearSession`；未搬 `VulkanApiProbe`/`VulkanDeviceInfo` 旧代码。
+- 文件落在现有 `XuanYu.Render.Vulkan/Device/` 子目录（复用项目与 Silk.NET 引用，避免新建工程扩大改动面），3 个新文件均 ≤100 行。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Editor.UI 构建（集成验证） | ✅ 0W0E |
+| 新增文件行数 | ✅ 均 ≤100（info 12 / queue 14 / selector 99） |
+| 选择器边界 | ✅ 仅枚举+选择+日志，无 Device/Queue/Swapchain 实装 |
+| UI 依赖 | ✅ Editor.UI 未新增 Silk.NET.Vulkan 引用 |
+| git grep 禁止项 | ✅ 无 VkDevice/Queue/Swapchain 新增实装（仅注释/日志） |
+
+### 人工测试清单（需在用户机器运行编辑器）
+1. 启动编辑器，确认无崩溃、NativeHost 正常附加。
+2. 打开日志面板，确认出现 `【VulkanDevice】开始枚举物理设备；候选数量：N`。
+3. 确认每个候选设备的 `候选设备[i]` 日志（名称/类型/API/队列族/呈现支持/可用性）。
+4. 确认 RTX 3060（或本机独显）被选为 `已选择物理设备`，原因 `优先独立显卡`。
+5. 确认 `Surface 呈现支持：是` 且 `可用性：可用`。
+6. 确认无 `VkDevice`/`Swapchain`/`ClearFrame` 相关新增日志（仍黑屏，预期）。
+7. 缩放窗口，确认 `尺寸变化已接收：不重建 Surface`（VK3 契约）。
+8. 关闭编辑器，确认 `分离完成：Surface + Instance 已释放`，无设备相关资源泄漏告警。
+
+### 下一步
+VK4-A 收口后可进入 VK4-A-R1（审计 + 日志补强）。严禁顺手推进 VK4-B（LogicalDevice + Queue）；B 阶段单独开。
+
 ## [VK3-Closure + VK4-Plan] VK3 收口确认 + VK4 规划落地 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
