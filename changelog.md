@@ -17,7 +17,7 @@ VK4-A / VK4-A-R1 / VK4-B / VK4-B-R1 全部完成，VK4-B 正式完全收口（De
 6. Resize 只重建 Swapchain + ImageViews。 ✅ 规划
 7. Resize 不重建 Surface / Instance / LogicalDevice / Queue。 ✅ 红线
 8. Dispose 顺序必须为 `ImageViews → Swapchain → LogicalDevice → Surface → Instance`。 ✅ 硬约束
-9. Bridge 不再膨胀，Swapchain 进入独立 owner / attach step。 ✅ 约束（Bridge 已 100 行红线）
+9. Bridge 不再膨胀，Swapchain 进入独立 owner / attach step。 ✅ 约束（Bridge 已接近 100 行红线）
 10. `VulkanDeviceOwner` 不增加职责。 ✅ 约束
 11. 所有新增 .cs ≤100 行。 ✅ 约束
 12. UI 不接触 `Silk.NET.Vulkan` 类型。 ✅ 约束
@@ -35,6 +35,58 @@ VK4-A / VK4-A-R1 / VK4-B / VK4-B-R1 全部完成，VK4-B 正式完全收口（De
 
 ### 下一步
 规划通过后开 `VK4-C`（Swapchain + ImageViews 实装）→ `VK4-C-R1`（Resize 重建 Swapchain 审计）→ `VK4-D`（ClearFrame 出画面）。**当前不进 VK4-C 实装。**
+
+## [VK4-C] Swapchain + Images + ImageViews 实装（2026-07-08）
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：VK4-C（Swapchain + Swapchain Images + ImageViews 实装，仍不出画面）
+
+### 背景
+VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderPass/Framebuffer/CommandPool/CommandBuffer、不 Clear/Present）。按用户拍板「开 VK4-C 实装，继续压边界」推进。当前链路停在 LogicalDevice + Graphics/Present Queue，仍黑屏。
+
+### 目标（逐条对照规划）
+1. 只创建 `VkSwapchainKHR` + Swapchain Images + ImageViews。 ✅
+2. 不创建 `RenderPass` / `Framebuffer` / `CommandPool` / `CommandBuffer`。 ✅ 红线（grep 仅注释命中）
+3. 不 `Clear`、不 `Present`。 ✅ 红线（仍黑屏为预期）
+4. Resize 只重建 Swapchain + ImageViews。 ✅（`VulkanNativeHostSurfaceBridge.Resize` 转发 `_swapchainOwner?.Recreate(width,height)`）
+5. Resize 不重建 Surface / Instance / LogicalDevice / Queue。 ✅
+6. Dispose 顺序 `ImageViews → Swapchain → LogicalDevice → Surface → Instance`。 ✅（`VulkanNativeHostSurfaceBridge.Detach` 首行 `_swapchainOwner?.Dispose()`）
+7. Bridge 不再膨胀：Swapchain 进独立 owner / attach step，Bridge 仅 98 行（接近 100 红线，未增 Swapchain 逻辑）。 ✅
+8. `VulkanDeviceOwner` 不增加职责（仍仅 `CreateDevice` / `GetQueue` / `DisposeDevice`）。 ✅
+9. 所有新增 .cs ≤100 行。 ✅（最大 Bridge 98）
+10. UI 不接触 `Silk.NET.Vulkan` 类型（`XuanYu.Editor.UI` 零改动，仅随 Render.Vulkan 编译）。 ✅
+11. 不复制 `VulkanClearSession` 旧探针路径。 ✅
+
+### 新增文件（XuanYu.Render.Vulkan/Swapchain/，4 文件）
+- `VulkanSwapchainCapabilities.cs`（80 行）：`Query` 查 Surface caps / formats / present modes / extent；`ChooseFormat` 优先 B8G8R8A8+SRGB、`ChoosePresentMode` 优先 MailboxKhr 否则 FifoKhr、`ChooseExtent` 处理 0/MaxValue；输出 `SwapchainCaps` record + `VulkanSwapchainCapabilitiesResult` record。
+- `VulkanSwapchainBuilder.cs`（74 行）：`Build` 串 Query→CreateSwapchain→GetSwapchainImages→CreateImageViews；`CreateSwapchain` 用 `SwapchainCreateInfoKHR`（ColorAttachmentBit / OpaqueBitKhr / SpaceSrgbNonlinearKhr）；`CreateImagesAndViews` 循环建 `ImageViewCreateInfo`（ColorBit）并 `vk.CreateImageView`。
+- `VulkanSwapchainOwner.cs`（77 行）：`Create(vk, instance, deviceOwner, surface, physicalDevice, width, height, log)` 经 `vk.TryGetDeviceExtension(instance, deviceOwner.LogicalDevice, out KhrSwapchain? khr)`；`Recreate(width,height)` 调 Builder 后 DestroyImagesAndViews 再赋值；`Dispose` 先 ImageView 后 Swapchain；不建 RenderPass 等。
+- `VulkanSwapchainLogFormatter.cs`（13 行）：`Creating/Created(views)/Recreating/Recreated(w,h,views)/Disposed/Skipped/Failed` 中文格式器。
+
+### 新增文件（XuanYu.Render.Vulkan/Bridge/，1 文件）
+- `VulkanBridgeSwapchainAttachStep.cs`（32 行）：`Run(vk, instance, deviceOwner, surface, selection, width, height, log)` 在设备 step 后链式驱动 `VulkanSwapchainOwner.Create`；前置 null/Success 检查跳过。
+
+### 改写文件
+- `VulkanNativeHostSurfaceBridge.cs`（98 行）：新增 `using ...Swapchain`；字段 `_swapchainOwner`；`Attach` 串「选择→设备→Swapchain」；`Resize` 加 `_swapchainOwner?.Recreate(width,height)`；`Detach` 首行 `_swapchainOwner?.Dispose()`；`Emit` 改调 `VulkanBridgeLogFormatter.Emit(_log, message)`。
+- `VulkanBridgeLogFormatter.cs`（35 行）：新增 `public static void Emit(Action<string>? log, string message) { log?.Invoke(message); Console.WriteLine(message); }`，原 Bridge 内联 Emit 逻辑迁出。
+
+### 关键 API 坑（Silk.NET.Vulkan 2.22.0 真实成员名，经反射确认）
+- `KhrSurface` 方法无 `KHR` 后缀：`GetPhysicalDeviceSurfaceCapabilities` / `GetPhysicalDeviceSurfaceFormats` / `GetPhysicalDeviceSurfacePresentModes`。
+- 枚举成员均带 `_Khr` 或同义短名：`ImageUsageFlags.ColorAttachmentBit`、`ColorSpaceKHR.SpaceSrgbNonlinearKhr`、`PresentModeKHR.MailboxKhr` / `FifoKhr`、`CompositeAlphaFlagsKHR.OpaqueBitKhr`、`ImageAspectFlags.ColorBit`。
+- `Vk.TryGetDeviceExtension<T>` 需 4 参数：`(Instance, Device, out T, string?)`。
+- 弃用成员（`*_Khr` 旧名）改用非弃用短名，达成两项目 0W0E（0 警告 0 错误）。
+
+### 验收
+- `XuanYu.Render.Vulkan` 构建 0W0E；`XuanYu.Editor.UI` 构建 0W0E（零改动，仅随依赖编译）。
+- 红线 grep：RenderPass / Framebuffer / CommandPool / CommandBuffer / Clear / Present 仅注释命中，无实装。
+- 全部 .cs ≤100 行（最大 Bridge 98）。
+
+### 下一步
+- `VK4-C-R1`（Resize 重建 Swapchain 审计）：核对 `Recreate` 不重建 Surface/Instance/Device/Queue、`DestroyImagesAndViews` 顺序、异常路径资源不泄漏；严禁顺手推进 VK4-D。
+- 用户真机运行时验证：启动→Swapchain 创建成功日志→Resize 重建→关闭 Detach 顺序（ImageViews→Swapchain→LogicalDevice→Surface→Instance）；仍黑屏为预期（ClearFrame 在 VK4-D）。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
 
 ## [LOG-UX-2] 会话日志落盘（关闭后仍可审计 Detach 顺序）(2026-07-08)
 

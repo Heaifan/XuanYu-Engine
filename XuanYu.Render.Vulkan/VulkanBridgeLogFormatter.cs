@@ -26,4 +26,10 @@ public static class VulkanBridgeLogFormatter
 
     public static string AttachFailed(string reason) =>
         $"【VulkanBridge】附加失败：{reason}；Surface 未创建";
+
+    public static void Emit(Action<string>? log, string message)
+    {
+        log?.Invoke(message);
+        Console.WriteLine(message);
+    }
 }

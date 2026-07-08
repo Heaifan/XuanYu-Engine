@@ -40,7 +40,7 @@ VK4-C 在 `LogicalDevice` 之后插入 `Swapchain → ImageViews`，把链延长
 
 ## 3. 资源持有者与文件结构（建议，均 ≤100 行）
 
-沿用 VK4-A/B 的「独立 owner + 独立 attach step」同构，绝不把 Swapchain 逻辑塞进 `VulkanNativeHostSurfaceBridge`（该文件已是 **100 行红线**，禁止再增）。
+沿用 VK4-A/B 的「独立 owner + 独立 attach step」同构，绝不把 Swapchain 逻辑塞进 `VulkanNativeHostSurfaceBridge`（Bridge 已接近 100 行红线，不再膨胀，禁止再增 Swapchain 逻辑）。
 
 建议在 `XuanYu.Render.Vulkan` 下新增子目录 `Swapchain/`：
 
@@ -90,7 +90,7 @@ ImageViews          ← 最先释放
 
 即：`_swapchainOwner?.Dispose()`（内部先 ImageView 后 Swapchain）→ `_deviceOwner?.Dispose()` → `_surfaceOwner?.Dispose()` → `_instanceOwner?.Dispose()`。
 
-> Bridge 现已 100 行，Detach 仅追加一行 `_swapchainOwner?.Dispose()` 即可（仍 100 或微调），**不得内联 Swapchain 创建/重建逻辑**。若 Bridge 越过 100 行，须把 Bridge 现有某段（如日志/合并）再迁出，而非内联 Swapchain。
+> Bridge 已接近 100 行红线，Detach 仅追加一行 `_swapchainOwner?.Dispose()` 即可（仍 100 或微调），**不得内联 Swapchain 创建/重建逻辑**。若 Bridge 越过 100 行，须把 Bridge 现有某段（如日志/合并）再迁出，而非内联 Swapchain。
 
 ## 5. Dispose 释放顺序硬约束
 
@@ -177,3 +177,66 @@ VK4-B 的 Resize 已实现「接收尺寸变化 / 不重建 Surface / 不重建 
 ## 11. 规划态验收
 - 本阶段只产出此文档 + changelog / file-tree 同步，**无代码改动**。
 - 规划通过后，再开 `VK4-C`（Swapchain + ImageViews 实装）与 `VK4-C-R1`（Resize 审计）。
+
+## 12. 规划图（SVG 源，代码框）
+
+> 生命周期与边界示意；以 raw SVG 贴在代码框内便于评审与复刻（不在文档内渲染）。
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 440" font-family="Segoe UI, sans-serif" font-size="13">
+  <rect x="0" y="0" width="680" height="440" fill="#0f1420"/>
+  <text x="20" y="28" fill="#7fd1ff" font-size="15" font-weight="bold">VK4-C Attach 链（已建 → 新增）</text>
+  <g fill="#1b3a5c" stroke="#3f7fb5" stroke-width="1.5">
+    <rect x="40" y="48" width="120" height="34" rx="6"/>
+    <rect x="40" y="96" width="120" height="34" rx="6"/>
+    <rect x="40" y="144" width="120" height="34" rx="6"/>
+    <rect x="40" y="192" width="120" height="34" rx="6"/>
+    <rect x="40" y="240" width="120" height="34" rx="6" fill="#2a5c3a" stroke="#5fbf7f"/>
+    <rect x="40" y="288" width="120" height="34" rx="6" fill="#2a5c3a" stroke="#5fbf7f"/>
+  </g>
+  <g fill="#dbe7f2" text-anchor="middle">
+    <text x="100" y="70">Instance</text>
+    <text x="100" y="118">Surface</text>
+    <text x="100" y="166">PhysicalDevice</text>
+    <text x="100" y="214">LogicalDevice</text>
+    <text x="100" y="262" fill="#bdf5cf">Swapchain</text>
+    <text x="100" y="310" fill="#bdf5cf">ImageViews</text>
+  </g>
+  <g stroke="#5f9fd0" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="100" y1="82" x2="100" y2="94"/>
+    <line x1="100" y1="130" x2="100" y2="142"/>
+    <line x1="100" y1="178" x2="100" y2="190"/>
+    <line x1="100" y1="226" x2="100" y2="238"/>
+    <line x1="100" y1="274" x2="100" y2="286"/>
+  </g>
+  <text x="360" y="28" fill="#ff9f7f" font-size="15" font-weight="bold">Detach 释放顺序（逆序）</text>
+  <g fill="#3a2030" stroke="#b5654f" stroke-width="1.5">
+    <rect x="380" y="48" width="160" height="30" rx="6"/>
+    <rect x="380" y="90" width="160" height="30" rx="6"/>
+    <rect x="380" y="132" width="160" height="30" rx="6"/>
+    <rect x="380" y="174" width="160" height="30" rx="6"/>
+    <rect x="380" y="216" width="160" height="30" rx="6"/>
+  </g>
+  <g fill="#f3d6cc" text-anchor="middle">
+    <text x="460" y="68">① ImageViews</text>
+    <text x="460" y="110">② Swapchain</text>
+    <text x="460" y="152">③ LogicalDevice</text>
+    <text x="460" y="194">④ Surface</text>
+    <text x="460" y="236">⑤ Instance</text>
+  </g>
+  <g stroke="#c97f6a" stroke-width="2" marker-end="url(#arrowR)">
+    <line x1="460" y1="78" x2="460" y2="88"/>
+    <line x1="460" y1="120" x2="460" y2="130"/>
+    <line x1="460" y1="162" x2="460" y2="172"/>
+    <line x1="460" y1="204" x2="460" y2="214"/>
+  </g>
+  <text x="20" y="356" fill="#ffd27f" font-size="14" font-weight="bold">VK4-C 边界</text>
+  <text x="20" y="380" fill="#bdf5cf" font-size="12">做：Swapchain + Images + ImageViews</text>
+  <text x="20" y="400" fill="#f3a0a0" font-size="12">不做：RenderPass / Framebuffer / CommandPool / CommandBuffer / Clear / Present</text>
+  <text x="20" y="420" fill="#9fd0ff" font-size="12">Resize：只重建 Swapchain + ImageViews（不重建 Surface/Instance/Device/Queue）</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#5f9fd0"/></marker>
+    <marker id="arrowR" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#c97f6a"/></marker>
+  </defs>
+</svg>
+```
