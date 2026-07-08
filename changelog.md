@@ -1,5 +1,45 @@
 # changelog
 
+## [RZ-VK3-C1] NativeHost 生命周期桥接类 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：2eb6cc930ae51eccb62546509df5925bd9eab146
+
+### 目标
+实现 `INativeHostSurfaceBridge` 的 Vulkan 桥接类，把已完成的 `VulkanInstanceOwner` 与 `VulkanSurfaceOwner` 串起来；**暂不接 UI 组合根**，只做桥本身。
+
+### 修改内容
+- 新增 `VulkanNativeHostSurfaceBridge.cs`（46 行，unsafe）：实现 `INativeHostSurfaceBridge` + `IDisposable`。
+  - `Attach(handle)`：先 `VulkanInstanceOwner.Create()`，再 `VulkanSurfaceOwner.Create(Vk.GetApi(), instance, handle)`；幂等（已 Attach 则跳过）。
+  - `Detach()`：先释放 Surface 再释放 Instance（顺序相反于创建）。
+  - `Resize(w, h)`：仅 `Console.WriteLine` 中文日志，**不重建 Surface**（红线：Surface 仅绑定 Attach/Detach）。
+  - `Dispose()`：幂等，转调 `Detach()`。
+  - 暴露 `Instance` / `Surface` 只读属性供后续 VK3-C2 / VK4 取用。
+- 新增 `VulkanBridgeLogFormatter.cs`（14 行）：纯中文生命周期日志格式器（Attached / Resized / Detached）。
+
+### 未做内容（红线）
+- 未接 UI 组合根（`VulkanNativeHostSurfaceBridge` 仅作为可独立实例存在的桥，未被任何 NativeHost 生命周期流引用）。
+- 未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame/CommandBuffer/RenderPass/Framebuffer`。
+- 未把 Vulkan 实现放进 `XuanYu.Render.Abstractions`。
+- `XuanYu.Editor.UI` 工程级仍因历史 Vulkan 探针（VulkanClearSession 等）保留对 `Render.Vulkan` 的引用，未完全解耦。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用） |
+| Editor.UI 构建 | ✅ 0W0E（未改其代码路径） |
+| git grep 禁止项 | ✅ 无 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame 实装 |
+| dotnet test | ⚠️ 仓库无独立测试项目（MSB1003），如实记录 |
+| file-tree.md / changelog.md | ✅ 已更新（总数 102→104） |
+
+### 已知债务
+- `VulkanClearSession` 仍是历史 Vulkan 探针，不得搬进正式路径；VK3-C2 接线应走新桥而非复用探针逻辑。
+- UI 工程级对 Render.Vulkan 的引用待后续解耦。
+
+### 下一步
+VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface。
+
 ## [RZ-VK3-B2-R1] VulkanSurfaceOwner 健壮性收口 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
