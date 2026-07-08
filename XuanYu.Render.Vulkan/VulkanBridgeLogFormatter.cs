@@ -9,6 +9,12 @@ public static class VulkanBridgeLogFormatter
     public static string Resized(int width, int height) =>
         $"【VulkanBridge】尺寸变化已接收：仅更新视口，不重建 Surface；宽度：{width}；高度：{height}";
 
+    public static string ResizedSkipped(int width, int height) =>
+        $"【VulkanBridge】收到尺寸变化但尚未 Attach，不处理 Surface；宽度：{width}；高度：{height}";
+
     public static string Detached() =>
         "【VulkanBridge】分离原生宿主：已释放 Surface 与 Instance";
+
+    public static string DetachedSkipped() =>
+        "【VulkanBridge】跳过分离：尚未 Attach";
 }
