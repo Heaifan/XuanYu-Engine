@@ -1,5 +1,39 @@
 # changelog
 
+## [RZ-VK3-B2-R1] VulkanSurfaceOwner 健壮性收口 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：7a1299a9aa1d4f80b3dcd135ec5952a721ef4280
+推送状态：已推送 origin
+
+### 本轮目标
+VK3-B2-R1：在正式接 VK3-C 组合根前，补强 VulkanSurfaceOwner 的失败诊断与入参校验。不进入 VK3-C，不接组合根，不碰 PhysicalDevice / LogicalDevice / Queue / Swapchain，未新增文件。
+
+### 修改内容
+- `VulkanSurfaceOwner.CreateWithResult`：将 `KhrWin32Surface.CreateWin32Surface` 的返回值保存为 `Result`，失败时把真实 `result.ToString()`（如 ErrorExtensionNotPresent / ErrorNativeWindowInUseKhr / ErrorOutOfHostMemory）写入 `VulkanSurfaceResult.ErrorMessage`，对齐 B1-R1 已落地的真实 VkResult 记录标准；不再只返回泛化的"CreateWin32Surface 失败"。
+- `VulkanSurfaceOwner.CreateWithResult`：创建前校验 `handle.Hwnd != 0` 与 `handle.Hinstance != 0`，任一为 0 即返回失败结果（错误类型"无效句柄"，详情指明对应字段），避免 VK3-C 接入真实 NativeHost 生命周期后收到 0 句柄时错误难看。
+
+### 未做内容
+- 未选择 PhysicalDevice；未创建 LogicalDevice；未获取 Queue；未创建 Swapchain。
+- 未碰 RenderFrame / CommandBuffer / RenderPass / Framebuffer。
+- 未接组合根（INativeHostSurfaceBridge），未改动 Editor.UI。
+- 未把任何 Vulkan 实现类型放进 XuanYu.Render.Abstractions。
+- 未新增文件，file-tree.md 不变。
+
+### 验收结果
+- git diff 自审：无 PhysicalDevice / LogicalDevice / Queue / Swapchain 实装（仅注释提及）。
+- `VulkanSurfaceOwner.cs` 由 69 → 74 行，仍 ≤100 行。
+- XuanYu.Render.Abstractions 仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用。
+- XuanYu.Render.Vulkan / Abstractions / Editor.UI 构建均 0 warning / 0 error。
+- 仓库无独立测试项目：`dotnet test` 退出 MSB1003，如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦 Vulkan。
+- VulkanSurfaceOwner 仍未接入任何使用方（含组合根），等待 VK3-C 接线。
+
+### 下一步
+VK3-B2-R1 收口后，可进入 VK3-C：经 INativeHostSurfaceBridge 由组合根把 VulkanInstanceOwner + VulkanSurfaceOwner 接线到 NativeHost Attach/Detach，仍不碰 Device / Swapchain。
+
 ## [RZ-VK3-B2] Vulkan Surface 持有者 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
