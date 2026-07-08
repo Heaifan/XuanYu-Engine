@@ -39,7 +39,7 @@ VK4-A / VK4-A-R1 / VK4-B / VK4-B-R1 全部完成，VK4-B 正式完全收口（De
 ## [VK4-C] Swapchain + Images + ImageViews 实装（2026-07-08）
 
 分支：fix/RZ-VK3-A-surface-contract
-版本：VK4-C（Swapchain + Swapchain Images + ImageViews 实装，仍不出画面）
+版本：VK4-C（Swapchain + Swapchain Images + ImageViews 实装，仍不出画面）｜状态：代码完成，待 VK4-C-R1 运行验证，未完全收口；VK4-D 暂缓。
 
 ### 背景
 VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderPass/Framebuffer/CommandPool/CommandBuffer、不 Clear/Present）。按用户拍板「开 VK4-C 实装，继续压边界」推进。当前链路停在 LogicalDevice + Graphics/Present Queue，仍黑屏。
@@ -84,6 +84,34 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### 下一步
 - `VK4-C-R1`（Resize 重建 Swapchain 审计）：核对 `Recreate` 不重建 Surface/Instance/Device/Queue、`DestroyImagesAndViews` 顺序、异常路径资源不泄漏；严禁顺手推进 VK4-D。
 - 用户真机运行时验证：启动→Swapchain 创建成功日志→Resize 重建→关闭 Detach 顺序（ImageViews→Swapchain→LogicalDevice→Surface→Instance）；仍黑屏为预期（ClearFrame 在 VK4-D）。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## [VK4-C-Fix] 启用 VK_KHR_swapchain + 0 尺寸跳过 + 格式暴露（2026-07-08）
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：VK4-C 运行前置修正（非新渲染能力；仍不出画面；VK4-D 暂缓）
+
+### 背景（审计发现）
+用户审计 VK4-C 指出最大运行时风险：`VK_KHR_swapchain` 设备扩展可能未启用。静态核查 `VulkanDeviceOwner.Create` 确认 `DeviceCreateInfo` 未设置 `EnabledExtensionCount` / `PpEnabledExtensionNames` —— 编译过、扩展函数拿得到，但运行时 `CreateSwapchainKHR` 会失败。这是 VK4-C 必须补的运行缺口，非 VK4-D 问题。
+
+### 修正（逐条）
+1. `VulkanDeviceOwner.Create` 新增 `requiredDeviceExtension` 参数，创建 `DeviceCreateInfo` 时启用该设备扩展（`EnabledExtensionCount=1` + `PpEnabledExtensionNames` 指向 null 结尾的扩展名）。**扩展名由调用方传入**（当前 `VulkanSwapchainOwner.DeviceExtensionName = "VK_KHR_swapchain"`），DeviceOwner 不自带 swapchain 知识，守住「DeviceOwner 不增 Swapchain 职责」。DeviceOwner 96→99 行（≤100）。
+2. 扩展名穿程：`VulkanSwapchainOwner.DeviceExtensionName` → `VulkanBridgeDeviceAttachStep.Run(..., requiredDeviceExtension)` → `VulkanDeviceOwner.Create`；`VulkanNativeHostSurfaceBridge.Attach` 调设备 step 时传入。`Bridge` 98 行不变（仅多一个实参）。
+3. `VulkanSwapchainOwner.Recreate` 新增 0 尺寸跳过：`width<=0 || height<=0` 时记 `Skipped` 日志并 return，不重建、不崩溃（R1 #8）。初始 `Create` 不改（启动窗口必有有效尺寸；`ChooseExtent` 已夹取下限）。
+4. `VulkanSwapchainOwner` 暴露只读信息：`Format` / `Extent` / `ImageViews`（ReadOnlySpan<ImageView>），供 VK4-D 建 RenderPass/Framebuffer 直接使用，免反查。Owner 77→86 行（≤100）。`VulkanSwapchainBuilder.Build` 返回元组追加 `Format` / `Extent`（74→74，未增行）。
+
+### 红线校验
+- 未建 RenderPass / Framebuffer / CommandPool / CommandBuffer、未 Clear / Present（仍黑屏为预期）。✅
+- UI 零改动；`XuanYu.Editor.UI` 仅随依赖编译。✅
+- 全 .cs ≤100（最大 DeviceOwner 99）。✅
+- 两项目 0W0E。✅
+- 仍非「完全收口」：上述为代码修正，运行时需 VK4-C-R1 真机验证（Swapchain 创建成功 / Resize 重建 / Detach 顺序）。
+
+### 下一步
+- `VK4-C-R1`：运行验证（见 `docs/rz-vk4-c-r1-audit-plan.md`），拿真机日志确认三项；严禁进 VK4-D。
+- `VK4-D`：待 R1 通过后，才出画面（ClearFrame）。
 
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。

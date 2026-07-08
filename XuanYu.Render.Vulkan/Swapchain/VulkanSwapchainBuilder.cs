@@ -9,7 +9,7 @@ namespace XuanYu.Render.Vulkan.Swapchain;
 // VK4-C：Swapchain 构建细节（创建 Swapchain + 取 Images + 建 ImageViews）。纯逻辑，不持有状态。
 public static unsafe class VulkanSwapchainBuilder
 {
-    public static (SwapchainKHR swapchain, Image[] images, ImageView[] views, bool ok) Build(
+    public static (SwapchainKHR swapchain, Image[] images, ImageView[] views, Format format, Extent2D extent, bool ok) Build(
         Vk vk, Instance instance, PhysicalDevice physicalDevice, SurfaceKHR surface,
         KhrSwapchain khr, VulkanDevice device, int width, int height, Action<string>? log)
     {
@@ -20,7 +20,7 @@ public static unsafe class VulkanSwapchainBuilder
         if (swapchain.Handle == 0) return default;
         var (images, views) = CreateImagesAndViews(vk, khr, device, swapchain, chosen.Format.Format, log);
         if (views.Length != images.Length) return default;
-        return (swapchain, images, views, true);
+        return (swapchain, images, views, chosen.Format.Format, chosen.Extent, true);
     }
 
     static SwapchainKHR CreateSwapchain(KhrSwapchain khr, VulkanDevice device, SurfaceKHR surface, SwapchainCaps caps, Action<string>? log)

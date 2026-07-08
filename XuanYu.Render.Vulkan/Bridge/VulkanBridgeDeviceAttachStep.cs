@@ -8,7 +8,7 @@ namespace XuanYu.Render.Vulkan.Bridge;
 // 不重新枚举、不建 Swapchain；选择或创建设备异常不影响已附加的 Instance + Surface。
 public sealed class VulkanBridgeDeviceAttachStep
 {
-    public static VulkanDeviceOwner? Run(Vk vk, VulkanPhysicalDeviceSelection? sel, Action<string>? log)
+    public static VulkanDeviceOwner? Run(Vk vk, VulkanPhysicalDeviceSelection? sel, Action<string>? log, string requiredDeviceExtension)
     {
         if (sel is null || !sel.Success)
         {
@@ -17,7 +17,7 @@ public sealed class VulkanBridgeDeviceAttachStep
         }
         try
         {
-            return VulkanDeviceOwner.Create(vk, sel, log);
+            return VulkanDeviceOwner.Create(vk, sel, requiredDeviceExtension, log);
         }
         catch (Exception ex)
         {

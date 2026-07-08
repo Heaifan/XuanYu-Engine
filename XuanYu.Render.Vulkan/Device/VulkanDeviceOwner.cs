@@ -26,7 +26,7 @@ public sealed unsafe class VulkanDeviceOwner : IDisposable
     public Queue GraphicsQueue => _graphicsQueue;
     public Queue PresentQueue => _presentQueue;
 
-    public static VulkanDeviceOwner? Create(Vk vk, VulkanPhysicalDeviceSelection sel, Action<string>? log = null)
+    public static VulkanDeviceOwner? Create(Vk vk, VulkanPhysicalDeviceSelection sel, string requiredDeviceExtension, Action<string>? log = null)
     {
         if (!sel.Success || sel.Handle.Handle == 0 || sel.Queue is null)
         {
@@ -34,8 +34,7 @@ public sealed unsafe class VulkanDeviceOwner : IDisposable
             return null;
         }
         var q = sel.Queue!;
-        var name = sel.Device?.Name ?? "未知设备";
-        Log(log, $"【VulkanDevice】开始创建 LogicalDevice；物理设备：{name}");
+        Log(log, $"【VulkanDevice】开始创建 LogicalDevice；物理设备：{sel.Device?.Name ?? "未知设备"}");
         Log(log, $"【VulkanDevice】使用的 Graphics 队列族：{q.GraphicsFamily}；Present 队列族：{q.PresentFamily}");
         float priority = 1.0f;
         var gci = new DeviceQueueCreateInfo
@@ -69,6 +68,10 @@ public sealed unsafe class VulkanDeviceOwner : IDisposable
             QueueCreateInfoCount = (uint)count,
             PQueueCreateInfos = pQueues
         };
+        var extBytes = System.Text.Encoding.ASCII.GetBytes(requiredDeviceExtension); // VK4-C：启用所需设备扩展（当前 VK_KHR_swapchain）才能建 Swapchain
+        var extMem = stackalloc byte[extBytes.Length + 1];
+        extBytes.CopyTo(new Span<byte>(extMem, extBytes.Length)); extMem[extBytes.Length] = 0;
+        byte* pExt = extMem; dci.EnabledExtensionCount = 1; dci.PpEnabledExtensionNames = &pExt;
         var result = vk.CreateDevice(sel.Handle, &dci, null, out var device);
         if (result != Result.Success)
         {

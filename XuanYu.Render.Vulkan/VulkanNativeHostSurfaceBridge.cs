@@ -42,7 +42,7 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
             _surfaceOwner = surface;
             Emit(VulkanBridgeLogFormatter.Attached(handle.Hwnd));
             var selection = VulkanBridgePhysicalDeviceAttachStep.Run(vk, _instanceOwner.Instance, _surfaceOwner.Surface, Emit);
-            _deviceOwner = VulkanBridgeDeviceAttachStep.Run(vk, selection, Emit);
+            _deviceOwner = VulkanBridgeDeviceAttachStep.Run(vk, selection, Emit, VulkanSwapchainOwner.DeviceExtensionName);
             if (_deviceOwner is not null)
                 _swapchainOwner = VulkanBridgeSwapchainAttachStep.Run(vk, _instanceOwner.Instance,
                     _deviceOwner, _surfaceOwner.Surface, selection, handle.Width, handle.Height, Emit);
