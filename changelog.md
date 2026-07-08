@@ -214,6 +214,22 @@ VK4-B 边界与行数红线均守住，可判 VK4-B 功能收口。但**必须�
 ### 下一步
 用户提供运行日志/截图后，核对 12 项；若全过则 VK4-B 完全收口，再议 VK4-C（Swapchain 独立 owner/step）。
 
+### 日志路由补强（第⑪项证据闭合）(2026-07-08)
+- **问题**：用户运行验证发现 `logs/editor-session-latest.log` 仅有 `【VulkanDevice】LogicalDevice 释放成功` 与合并行 `【VulkanBridge】分离完成：Surface + Instance 已释放`；缺 Surface / Instance 各自释放行，无法逐行核对顺序。
+- **根因**：`VulkanSurfaceOwner.Dispose` / `VulkanInstanceOwner.Dispose` 用 `Console.WriteLine` 直写控制台，不经 `_log` 回调，故不入 UI 缓冲、不被 LOG-UX-2 落盘；Bridge 只发一条合并行。释放顺序在代码中本就正确（Device → Surface → Instance），只是文件证据缺独立行。
+- **修复（仅日志，不改 Vulkan 语义与释放顺序）**：
+  - `VulkanBridgeLogFormatter` 新增 `SurfaceDisposed()` / `InstanceDisposed()`（23 → 29 行）。
+  - `VulkanNativeHostSurfaceBridge.Detach` 在 ②Surface、③Instance 释放后各补一条 `Emit`；文件现出现独立行：
+    ```
+    【VulkanDevice】LogicalDevice 释放成功
+    【VulkanBridge】Surface 已释放
+    【VulkanBridge】Instance 已销毁
+    【VulkanBridge】分离完成：Surface + Instance 已释放
+    ```
+- **构建**：Render.Vulkan 0W0E；Bridge 由 98 → **100**（压红线边界，符合 ≤100）；格式化器 29 行。
+- **关联提交**：c4c804a
+- **结论**：第⑪项释放顺序证据闭合（Device → Surface → Instance 现可逐行核对）；VK4-B 可宣布完全收口。
+
 ## [VK4-A-R1] 物理设备选择链路收口修正（压回 100 行红线）(2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
