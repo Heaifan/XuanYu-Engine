@@ -10,7 +10,7 @@ VK4 只做最小渲染闭环，不夹带**真实渲染循环**（持续动画 / 
 
 ### 1. 物理设备谁选
 - 复用 VK1 探针已枚举的能力：由 `XuanYu.Render.Vulkan` 内新增 `VulkanPhysicalDeviceSelector` 选择，输入来自 Instance + Surface（需校验 Surface 呈现支持）。
-- 选择标准：图形队列族可用、Surface 呈现支持、离散 GPU 优先（RTX 3060 已验证可识别）。
+- 选择标准：图形队列族可用、Surface 呈现支持、离散 GPU 优先。**测试机型号订正：实际测试机 GPU 为 `NVIDIA GeForce RTX 3050 4GB Laptop GPU`，历史文档/指令中「RTX 3060」系口径误写，VK4-B 及以后一律以 RTX 3050 Laptop 为准。**
 - 输出 `VulkanPhysicalDeviceResult`（物理设备句柄 + 图形队列族索引 + 呈现队列族索引 + 设备属性）；**不持有 VkDevice**。
 
 ### 2. 逻辑设备与队列谁建
@@ -45,6 +45,25 @@ NativeHost 仍只给 HWND/尺寸，经组合根接线，不直接碰 Vulkan。
 - **VK4-C**：VulkanSwapchainOwner（VkSwapchainKHR + 图像/视图；Resize 仅重建 Swapchain）。
 - **VK4-D**：VulkanClearFrame（RenderPass + Framebuffer + CommandBuffer + 单帧 clear/present）。
 - **VK4-E**：VulkanRenderSession + IRenderSession 契约 + VulkanRenderSessionProvider 组合根接线。
+
+## VK4-A 验收后审计备注（截图审计，2026-07-08，均非阻塞）
+
+### 日志通道区分（避免误判正式生命周期）
+- **旧探针日志**：`【Vulkan探针】`（来自历史 `VulkanApiProbe` / `VulkanClearSession` 债，**不参与正式生命周期**，禁止当成正式选择/呈现证据）。
+- **正式链路日志**：`【VulkanBridge】` / `【VulkanDevice】`（VK3 / VK4-A 实装，才是正式生命周期证据）。
+- 报告与后续审计须显式区分两者；看到 `【Vulkan探针】` 不能推断旧探针参与了 VK3/VK4 正式链路。
+
+### 候选设备枚举含杂质（VK4-B 须留意）
+- VK4-A 枚举出 9 个候选，混合了：真实设备（`NVIDIA GeForce RTX 3050 4GB Laptop GPU` / `Intel(R) Iris(R) Xe Graphics`）、D3D12 wrapper（`Microsoft Direct3D12 (...)`）、`Microsoft Basic Render Driver`。
+- 当前选择逻辑正确命中真实独显；**VK4-B 创建 `VkDevice` 必须复用 VK4-A 的最终选择结果（`VulkanPhysicalDeviceSelection`），不得重新枚举后自行选择其他设备**——尤其不得选 D3D12 wrapper / Basic Render Driver / Intel 集显。
+
+### VK4-B 硬约束（进入 B 时指令必须包含）
+> VK4-B 必须基于 VK4-A 最终选择结果创建 LogicalDevice，不得重新枚举后自行选择其他设备。
+
+### 其他非阻塞项
+- **Resize 红线延续**：VK4-B 加入 LogicalDevice 后，Resize 仍只能「接收尺寸变化 / 不重建 Surface / 不重建 Device / 不重建 Queue」；真正响应 Resize 的是 VK4-C 的 Swapchain 重建。
+- **黑屏为预期**：当前无 Swapchain / ImageView / RenderPass / CommandBuffer / Present，黑屏正常；看到颜色要等 VK4-D。
+- **日志截断（非 VK4-B 前置）**：UI 日志面板以省略号截断关键内容，影响审计；后续可考虑点击日志在右侧「日志详情」显示完整内容，但不在 VK4-B 前做。
 
 ## 防回潮门禁（VK4 实装时）
 - Resize 不重建 Surface，只允许触发 Swapchain 重建策略（跳过 0 尺寸 / 重复尺寸）。
