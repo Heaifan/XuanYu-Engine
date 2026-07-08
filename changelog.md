@@ -1,5 +1,43 @@
 # changelog
 
+## [RZ-VK3-B1] Vulkan Instance 持有者 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：aa56857
+推送状态：已推送 origin
+
+### 本轮目标
+VK3-B1：在 XuanYu.Render.Vulkan 内新增 VulkanInstanceOwner，只负责创建与释放 Vulkan Instance，并确认启用 VK_KHR_surface 与 VK_KHR_win32_surface 扩展。不碰 Surface / Device / Swapchain / Queue。
+
+### 修改内容
+- 新增 `VulkanInstanceOwner`（Render.Vulkan 内部 unsafe 类）：创建 VkInstance 并启用 VK_KHR_surface、VK_KHR_win32_surface 两个扩展；`Dispose` 幂等（重复调用不炸）；通过 `VulkanInstanceLogFormatter` 输出中文生命周期日志（创建成功 / 释放 / 失败）。
+- 新增 `VulkanInstanceLogFormatter`：纯中文生命周期日志格式器（创建成功含 API 版本与启用扩展清单、释放含实例句柄、失败含错误类型与详情）。
+- 新增 `VulkanInstanceResult`：极小创建结果类型，携带 Success / Owner / ApiVersion / 错误类型与详情；`Create()` 抛异常，`CreateWithResult()` 返回结果，二者共用同一条创建链路。
+
+### 范围口径（修正 VK3-A 表述）
+- "Editor.UI 改经 Abstractions 而非直接持有 Render.Vulkan" 仅限定为：NativeHost 生命周期链路已改经 Abstractions；Editor.UI 工程级仍因历史 Vulkan 探针（`VulkanApiProbe` 等）保留对 Render.Vulkan 的引用。本轮未改动 Editor.UI 正式路径。
+
+### 未做内容
+- 未新增 VulkanSurfaceOwner；未创建 VkSurfaceKHR；未调用 CreateWin32Surface。
+- 未选择 PhysicalDevice；未创建 LogicalDevice；未获取 Queue；未创建 Swapchain。
+- 未碰 RenderFrame / CommandBuffer / RenderPass / Framebuffer。
+- 未把任何 Vulkan 实现类型放进 XuanYu.Render.Abstractions。
+
+### 验收结果
+- git diff 自审：新增文件仅含 Instance 创建/释放与中文日志，无 Surface / Device / Swapchain / Queue 实装。
+- XuanYu.Render.Abstractions 不引用 Silk.NET / Avalonia / Editor.Win / Render.Vulkan（仅注释提及，无 using/工程引用）；构建 0W0E。
+- XuanYu.Render.Vulkan 构建 0 warning / 0 error。
+- XuanYu.Editor.UI 构建 0 warning / 0 error（依赖方，本轮未改其代码路径）。
+- 仓库无独立测试项目：根目录无 .sln / 测试 .csproj，`dotnet test` 因无项目/解决方案可运行而退出（MSB1003）；如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦 Vulkan。
+- VulkanInstanceOwner 当前未接入任何使用方（组合根 / 探针入口），仅作为 VK3-B1 交付物落地，等待 VK3-B2 接线。
+- Instance 扩展写死为最小集合（仅 surface + win32_surface 两项），符合 VK3-B1 审计点 1。
+
+### 下一步
+VK3-B1 审计三点已过：扩展为最小集合 / Dispose 幂等 / 无 Surface(Swapchain) 实装。可进入 VK3-B2：VulkanSurfaceOwner 经 INativeHostSurfaceBridge 由组合根实现，仍不碰 Device / Swapchain。
+
 ## [RZ-VK3-A-R1] Surface 契约层依赖收口 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
