@@ -30,6 +30,13 @@ VK4-B-R1 最后一项需验证关闭窗口时 Detach 释放顺序（LogicalDevic
 ### 红线校验
 - `git diff` 仅 `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs` 与 `.gitignore`；未改 `XuanYu.Render.Vulkan` / `VulkanNativeHostSurfaceBridge` / NativeHost。
 
+### 回退（2026-07-08 收尾）
+LOG-UX-2 仅为临时调试手段，用于关闭窗口后从文件审计 Detach 顺序。VK4-B-R1 第⑪项已通过文件日志确认顺序为 `LogicalDevice 释放成功 → Surface 已释放 → Instance 已销毁`（Device→Surface→Instance），VK4-B 完全收口后，按用户要求删除该落盘功能：
+- `EditorLogBus.cs` 还原为纯内存版（44→21 行，移除 `System.IO` 依赖与文件追加）。
+- `.gitignore` 移除 `logs/` 条目。
+- 磁盘 `logs/` 目录已删除。
+- 不碰 Vulkan / NativeHost；`XuanYu.Editor.UI` 构建 0W0E。
+
 ## [LOG-UX-1-R1] Ctrl+C 复制无响应修复 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
