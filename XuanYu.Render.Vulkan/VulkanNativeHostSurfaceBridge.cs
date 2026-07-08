@@ -77,7 +77,9 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
         }
         _deviceOwner?.Dispose(); _deviceOwner = null;
         _surfaceOwner?.Dispose(); _surfaceOwner = null;
+        Emit(VulkanBridgeLogFormatter.SurfaceDisposed());
         _instanceOwner?.Dispose(); _instanceOwner = null;
+        Emit(VulkanBridgeLogFormatter.InstanceDisposed());
         Emit(VulkanBridgeLogFormatter.Detached());
     }
 

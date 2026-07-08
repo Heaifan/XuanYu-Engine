@@ -15,6 +15,12 @@ public static class VulkanBridgeLogFormatter
     public static string Detached() =>
         "【VulkanBridge】分离完成：Surface + Instance 已释放";
 
+    public static string SurfaceDisposed() =>
+        "【VulkanBridge】Surface 已释放";
+
+    public static string InstanceDisposed() =>
+        "【VulkanBridge】Instance 已销毁";
+
     public static string DetachedSkipped() =>
         "【VulkanBridge】跳过分离：尚未 Attach";
 
