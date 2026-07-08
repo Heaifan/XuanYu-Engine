@@ -1,5 +1,24 @@
 # changelog
 
+## [VK3-Closure + VK4-Plan] VK3 收口确认 + VK4 规划落地 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：49403707f152c9a60f88f7944ca1375b770cdc0a
+
+### 目标
+VK3 验收通过，收口确认；并落地 VK4 规划（只规划不实装）。不改任何 Vulkan 生命周期代码，不进入 VK4 实装。
+
+### 新增文档
+- `docs/rz-vk3-closure.md`  # VK3 收口确认：验收项表格、已完成阶段（VK3-A..VK3-C2-R1）、红线遵守确认、已知债务（UI 对 Render.Vulkan 工程级引用移交 VK4）、收口日期。结论：NativeHost HWND 生命周期已正式接入 Vulkan Instance + Surface；Swapchain 留 VK4。
+- `docs/rz-vk4-plan.md`  # VK4 规划（不实装）：最小渲染闭环 PhysicalDevice→LogicalDevice→Queue→Swapchain→ClearFrame→RenderSession，五问规划、目标依赖方向、阶段分解 VK4-A..VK4-E、防回潮门禁（Resize 不重建 Surface、不搬探针、UI 不持 Vulkan、每步 5+100）。
+
+### 同步
+- `file-tree.md`  # 追加 VK3 收口 + VK4 规划文档小节，更新顶部摘要。
+
+### 未做内容（红线）
+- 未写任何 Vulkan 实装代码；未选 PhysicalDevice / 未创 LogicalDevice / 未建 Swapchain / 未碰 RenderFrame。
+- 未扩大 UI 对 Vulkan 的直接认识。
+
 ## [RZ-VK3-C2-R1] VulkanBridge 日志面板可见性修复 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
