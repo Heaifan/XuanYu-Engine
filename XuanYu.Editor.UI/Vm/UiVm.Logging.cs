@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
@@ -6,6 +8,7 @@ public sealed partial class UiVm
     EditorLogBus _logBus = null!;
     EditorLogFilter _logFilter = EditorLogFilter.All;
     LogEntry? _selectedLogEntry;
+    LogEntry[] _selectedEntries = [];
 
     public IReadOnlyList<LogEntry> LogItems => _logBuffer.Filter(_logFilter);
     public IReadOnlyList<LogEntry> ProblemItems => _logBuffer.Filter(EditorLogFilter.Warning)
@@ -35,6 +38,15 @@ public sealed partial class UiVm
     public bool HasSelectedLogEntry => SelectedLogEntry is not null;
     public string SelectedLogClipboardText => SelectedLogEntry is null
         ? "" : EditorLogClipboardText.From(SelectedLogEntry);
+    public bool HasSelectedEntries => _selectedEntries.Length > 0;
+    public string SelectedEntriesClipboardText => EditorLogClipboardText.FromMany(_selectedEntries);
+
+    public void SetSelectedEntries(IEnumerable<LogEntry> items)
+    {
+        _selectedEntries = items as LogEntry[] ?? items.ToArray();
+        OnPropertyChanged(nameof(HasSelectedEntries));
+        OnPropertyChanged(nameof(SelectedEntriesClipboardText));
+    }
 
     void InitLogs()
     {

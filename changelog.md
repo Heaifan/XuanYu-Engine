@@ -1,5 +1,55 @@
 # changelog
 
+## [LOG-UX-1] 日志多选复制与详情换行修复 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1（仅 UI 改动，不进入 VK4-C，不碰 Vulkan 链路）
+
+### 背景与目标
+VK4-B-R1 审计时需要把完整 Vulkan 生命周期日志贴回对话，但旧日志面板只能单行查看、详情被横向截断、无法整段复制。
+用户拍板插一轮极小 `LOG-UX-1`：只修日志面板交互，服务 VK4-B-R1 审计，不修改 Vulkan 渲染链路 / NativeHost 生命周期 / Render.Vulkan。
+
+### 目标（逐条对照）
+1. 日志列表支持多选 — ✅ `SelectionMode` 改为 `Multiple`（Avalonia 12 已含 Shift 范围选择 + Ctrl 切换，等价于旧 `Extended`）。
+2. Shift + 单击范围多选 — ✅ 由 Avalonia `Multiple` 原生支持。
+3. Ctrl + 单击追加/取消选择 — ✅ 由 Avalonia `Multiple` 原生支持。
+4. Ctrl + A 选择当前筛选结果中的全部日志 — ✅ `Foot.axaml.cs` 处理 `KeyUp` 调 `ListBox.SelectAll()`（= 当前 `ItemsSource` 即筛选结果）。
+5. Ctrl + C 复制当前选中的日志 — ✅ `KeyUp` 调 `TopLevel.Clipboard.SetTextAsync(SelectedEntriesClipboardText)`。
+6. 复制格式为纯文本表格：表头 `时间\t级别\t来源\t分类\t消息\t详情`，每行一条，详情不截断 — ✅ `EditorLogClipboardText.FromMany`。
+7. 右侧「日志详情」的消息与详情自动换行、不横向截断 — ✅ `LogDetailPanel.axaml` 的 `detailBody` 样式补 `TextWrapping=Wrap` + `AcceptsReturn=True`。
+8. 右侧详情文本可复制 — ✅ 详情用只读 `TextBox`，默认可选中复制。
+9. 保留「复制详情」按钮 — ✅ 未改动其逻辑（单条 `EditorLogClipboardText.From`）。
+10. 仅日志区域可复制/可选择 — ✅ 改动仅限 `Foot.axaml` / `LogDetailPanel.axaml`；项目树 / Inspector / 按钮 / 普通标签均为 `TextBlock`，未引入可选文本。
+11. 不修改 Vulkan 代码 — ✅ 仅 `Editor.UI`。
+12. 不修改 NativeHost 生命周期 — ✅。
+13. 不修改 Render.Vulkan 项目 — ✅ `git diff` 仅 `XuanYu.Editor.UI`。
+14. 所有 .cs 文件 ≤100 行 — ✅ `Foot.axaml.cs` 34 / `UiVm.Logging.cs` 100 / `EditorLogClipboardText.cs` 25。
+15. `dotnet build XuanYu.Editor.UI` 0W0E — ✅。
+16. 更新 changelog.md — ✅ 本节；无新增/移动文件，故 file-tree.md 不更新。
+
+### 技术注记（Avalonia 12 陷阱）
+- 本机 Avalonia 为 **12.0.4**，其 `Avalonia.Controls.SelectionMode` 枚举**没有 `Extended` 成员**（旧版才有）。
+  旧 `Extended`（单击选一行 / Shift 范围 / Ctrl 切换）语义在 12.0.4 由 `SelectionMode.Multiple` 提供（含 Shift 范围 + Ctrl 切换）。
+  XAML 中 `SelectionMode="Extended"` 会触发 AVLN3000（字符串无法转枚举）。须用 `SelectionMode="{x:Static av:SelectionMode.Multiple}"`，
+  并在根元素加 `xmlns:av="using:Avalonia.Controls"`。
+- `Multiple` 模式下「普通单击」是**切换该行**（而非「只选这一行」）；但详情面板仍按最后点击项显示，审计复制（Shift 范围 / Ctrl+A）不受影响。
+
+### 改动文件
+- `XuanYu.Editor.UI/Foot/Foot.axaml`（95 行）：ListBox 加 `x:Name="LogList"`、`SelectionMode=Multiple(x:Static)`、`SelectionChanged`/`KeyUp` 事件接线；根加 `av` 命名空间。
+- `XuanYu.Editor.UI/Foot/Foot.axaml.cs`（34 行，+27→34）：`LogList_SelectionChanged` 把选中 `LogEntry[]` 推给 VM；`LogList_KeyUp` 处理 `Ctrl+A`(SelectAll) 与 `Ctrl+C`(写剪贴板)。
+- `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`（88→100 行）：新增 `_selectedEntries` 字段、`SetSelectedEntries(...)`、`HasSelectedEntries`、`SelectedEntriesClipboardText`（委托 `EditorLogClipboardText.FromMany`）。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogClipboardText.cs`（15→25 行）：新增 `FromMany(IEnumerable<LogEntry>)` 输出纯文本表格（表头 + 每行 \t 分隔）。
+- `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`（63→64 行）：`detailBody` 样式补 `TextWrapping=Wrap` + `AcceptsReturn=True`，详情不再横向截断。
+
+### 验收（需用户机运行）
+- 单击日志行可切换选中；Shift+单击可范围多选；Ctrl+单击可追加/取消。
+- Ctrl+A 选中当前筛选结果全部；Ctrl+C 复制到记事本为表格、每行一条、详情完整。
+- 右侧详情「消息 / 详情」自动换行、可复制、不横向截断。
+- Vulkan 日志仍正常显示，VK4-B 运行链路不受影响。
+
+### 下一步
+用户重跑编辑器，`Ctrl+A` + `Ctrl+C` 贴出完整 Vulkan 生命周期日志，据此核对 VK4-B-R1 最后一项（关闭时 `LogicalDevice → Surface → Instance` 释放顺序），收口 VK4-B。
+
 ## [VK4-B] 基于 VK4-A 选择结果创建 LogicalDevice + 队列 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract

@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:av="using:Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.Foot"
              x:DataType="local:UiVm">
   <UserControl.Resources>
@@ -63,8 +64,9 @@
 
         <Grid Grid.Row="2" ColumnDefinitions="*,280" ColumnSpacing="10">
           <Grid>
-            <ListBox Classes="logList" ItemsSource="{Binding LogItems}" SelectedItem="{Binding SelectedLogEntry}"
-                     SelectionMode="Single" Background="Transparent" BorderThickness="0">
+            <ListBox x:Name="LogList" Classes="logList" ItemsSource="{Binding LogItems}" SelectedItem="{Binding SelectedLogEntry}"
+                     SelectionMode="{x:Static av:SelectionMode.Multiple}" Background="Transparent" BorderThickness="0"
+                     SelectionChanged="LogList_SelectionChanged" KeyUp="LogList_KeyUp">
               <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="local:LogEntry">
                   <Grid ColumnDefinitions="4,72,56,72,72,*,82" ColumnSpacing="10">
