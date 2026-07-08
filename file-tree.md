@@ -1,10 +1,10 @@
 # 项目文件树 — XuanYu Engine
 
-最近更新：RZ-VK3-B1 在 XuanYu.Render.Vulkan 内新增 VulkanInstanceOwner（仅创建/释放 Vulkan Instance，启用 VK_KHR_surface + VK_KHR_win32_surface，禁止 Surface/Device/Swapchain/Queue）；UI 生命周期链路经 Abstractions，UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用。
+最近更新：RZ-VK3-B1-R1 在 XuanYu.Render.Vulkan 内拆分 VulkanInstanceOwner（98→66 行，避免贴 100 行红线），新增 VulkanInstanceExtensions（最小扩展名集合）与 VulkanInstanceCreateInfoBuilder（InstanceCreateInfo 构造）；VK3-B1 的 Instance 创建/释放范围不变，仍启用 VK_KHR_surface + VK_KHR_win32_surface，禁止 Surface/Device/Swapchain/Queue；UI 生命周期链路经 Abstractions，UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用。
 
 统计口径：当前工作区真实文件快照，排除 `.git/`、`bin/`、`obj/` 生成目录。
 
-当前文件总数：97
+当前文件总数：99
 
 ```
 
@@ -24,7 +24,8 @@
 ### XuanYu.Render.Vulkan/（已移除 4 个生命周期类型）
 - 删除 `NativeHostLifecycleState.cs` / `NativeHostHandleSnapshot.cs` / `NativeHostLifecycleProbe.cs` / `NativeHostLifecycleLogFormatter.cs`（迁入 Abstractions）。
 - 保留 `VulkanApiProbe.cs` / `VulkanProbeResult.cs` / `VulkanProbeLogFormatter.cs` / `VulkanDeviceInfo.cs`（Vulkan 环境探针，仍属 Render.Vulkan）。
-- 新增 `VulkanInstanceOwner.cs` / `VulkanInstanceLogFormatter.cs` / `VulkanInstanceResult.cs`（VK3-B1：Vulkan Instance 持有者，仅创建/释放 Instance 并启用 VK_KHR_surface + VK_KHR_win32_surface；Dispose 幂等；中文生命周期日志；禁止 Surface / PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame）。
+- 新增 `VulkanInstanceOwner.cs` / `VulkanInstanceLogFormatter.cs` / `VulkanInstanceResult.cs`（VK3-B1：Vulkan Instance 持有者；VK3-B1-R1 将 VulkanInstanceOwner 由 98 行拆至 66 行，抽出 `VulkanInstanceExtensions.cs` 最小扩展名集合与 `VulkanInstanceCreateInfoBuilder.cs` InstanceCreateInfo 构造；仍仅创建/释放 Instance 并启用 VK_KHR_surface + VK_KHR_win32_surface；Dispose 幂等且释放后清空句柄；中文生命周期日志；禁止 Surface / PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame）。
+- 新增 `VulkanInstanceExtensions.cs` / `VulkanInstanceCreateInfoBuilder.cs`（VK3-B1-R1：前者存 Instance 启用的最小扩展名集合，后者在 fixed 作用域内构造 InstanceCreateInfo 并交给回调，均不直接调用 Vulkan）。
 
 ### XuanYu.Editor.UI/（依赖收口）
 - `NativeHostSurfaceContract.cs`  # 仅 `using XuanYu.Render.Abstractions`（VK3-A）。
