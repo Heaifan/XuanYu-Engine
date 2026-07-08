@@ -1,12 +1,36 @@
 # 项目文件树 — XuanYu Engine
 
-最近更新：RZ-Fix2-D 收口右侧检查器、调试、偏好与模式页职责；本轮未新增源文件。
+最近更新：RZ-VK3-A-R1 收口 Surface 契约依赖——将 4 个 NativeHost 生命周期纯契约类型从 XuanYu.Render.Vulkan 迁入新建的 XuanYu.Render.Abstractions，UI 生命周期链路改依赖 Abstractions；UI 工程级对 Render.Vulkan 的引用因 Vulkan 探针类型仍在 Render.Vulkan 而保留。
 
 统计口径：当前工作区真实文件快照，排除 `.git/`、`bin/`、`obj/` 生成目录。
 
-当前文件总数：91
+当前文件总数：94
 
 ```
+
+## RZ-VK3-A-R1 / RZ-VK3-A Surface 契约层快照 (2026-07-08)
+
+新增独立契约工程 `XuanYu.Render.Abstractions`（net10.0，零 Silk.NET / Avalonia / Editor.Win / Render.Vulkan 引用），承载 UI 与 Vulkan 之间的纯窗口交接通道。
+
+### XuanYu.Render.Abstractions/
+- `XuanYu.Render.Abstractions.csproj`  # 纯契约工程，无包引用。
+- `NativeHostSurfaceHandle.cs`  # HWND / Hinstance / 尺寸 / DPI 交接句柄（VK3-A）。
+- `INativeHostSurfaceBridge.cs`  # Attach / Resize / Detach 交接契约接口（VK3-A）。
+- `NativeHostLifecycleState.cs`  # 生命周期状态枚举（VK3-A-R1 从 Render.Vulkan 迁入）。
+- `NativeHostHandleSnapshot.cs`  # 生命周期快照记录（VK3-A-R1 从 Render.Vulkan 迁入）。
+- `NativeHostLifecycleProbe.cs`  # 生命周期探针（VK3-A-R1 从 Render.Vulkan 迁入）。
+- `NativeHostLifecycleLogFormatter.cs`  # 中文生命周期日志格式器（VK3-A-R1 从 Render.Vulkan 迁入）。
+
+### XuanYu.Render.Vulkan/（已移除 4 个生命周期类型）
+- 删除 `NativeHostLifecycleState.cs` / `NativeHostHandleSnapshot.cs` / `NativeHostLifecycleProbe.cs` / `NativeHostLifecycleLogFormatter.cs`（迁入 Abstractions）。
+- 保留 `VulkanApiProbe.cs` / `VulkanProbeResult.cs` / `VulkanProbeLogFormatter.cs` / `VulkanDeviceInfo.cs`（Vulkan 环境探针，仍属 Render.Vulkan）。
+
+### XuanYu.Editor.UI/（依赖收口）
+- `NativeHostSurfaceContract.cs`  # 仅 `using XuanYu.Render.Abstractions`（VK3-A）。
+- `NativeHostResizeCoalescer.cs` / `ViewportNativeHostRoute.cs` / `Vm/UiVm.NativeHostLifecycle.cs` / `Viewport/Vulkan/VulkanNativeHost.cs`  # 生命周期链路改用 `using XuanYu.Render.Abstractions`（VK3-A-R1）。
+- `VulkanProbeRoute.cs` / `Vm/UiVm.VulkanProbe.cs`  # 仍 `using XuanYu.Render.Vulkan`（Vulkan 探针类型），故 Editor.UI.csproj 保留对 Render.Vulkan 的工程级引用。
+
+
 XuanYuEngine/
 │
 ├── NuGet.Config  # NuGet 源配置。

@@ -1,7 +1,9 @@
 using System.Globalization;
 
-namespace XuanYu.Render.Vulkan;
+namespace XuanYu.Render.Abstractions;
 
+// VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期日志格式器。
+// 仅生成中文生命周期日志文本，不含任何 Vulkan / Silk.NET 依赖。
 public static class NativeHostLifecycleLogFormatter
 {
     public static string Message(NativeHostHandleSnapshot snapshot) => snapshot.State switch
