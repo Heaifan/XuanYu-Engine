@@ -1,5 +1,44 @@
 # changelog
 
+## [RZ-VK3-C1-R1] Bridge 生命周期异常安全收口 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：733ccaef7f2a89477d32a01c6dc5dcce0879cb6d
+
+### 目标
+为 VK3-C1 的 `VulkanNativeHostSurfaceBridge` 补生命周期异常安全收口，避免半初始化状态、重复 Attach/Dispose 与误导日志。**不接 UI 组合根，不碰 Device/Swapchain**。
+
+### 修改内容
+- `VulkanNativeHostSurfaceBridge.cs`（46→76 行）：
+  - `Attach` 开头检查 `_disposed`，已 Dispose 抛 `ObjectDisposedException`。
+  - `Attach` 已附加判断改为 `_instanceOwner` 与 `_surfaceOwner` 双字段均非 null。
+  - `Attach` 用临时变量 `instance`/`surface` 先创建，全成功后才落字段；任一失败进入 `catch`，先 `surface?.Dispose()` 再 `instance?.Dispose()`，并把两字段恢复为 null 后 `throw`——消除“有 Instance 无 Surface”的半初始化。
+  - `Resize` 未附加时输出「收到尺寸变化但尚未 Attach，不处理 Surface」，仍不重建 Surface。
+  - `Detach` 无资源时输出「跳过分离：尚未 Attach」，避免误判。
+- `VulkanBridgeLogFormatter.cs`（14→20 行）：新增 `ResizedSkipped(int,int)` 与 `DetachedSkipped()` 两条跳过日志。
+
+### 未做内容（红线）
+- 未接 UI 组合根；未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame/CommandBuffer/RenderPass/Framebuffer`。
+- `Vk.GetApi()` 所有权统一问题（Bridge/InstanceOwner/SurfaceOwner 共用 Silk.NET 单例，避免在多处重复 Dispose）**未在本轮解决**，列为 VK3-C2 前需确认项，记于「已知债务」。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用） |
+| Editor.UI 构建 | ✅ 0W0E（未改其代码路径） |
+| git grep 禁止项 | ✅ 无 PhysicalDevice/LogicalDevice/Queue/Swapchain 实装 |
+| dotnet test | ⚠️ 仓库无独立测试项目（MSB1003），如实记录 |
+| file-tree.md | 无新增文件，未改（总数维持 104） |
+
+### 已知债务
+- `Vk.GetApi()` 在 `VulkanNativeHostSurfaceBridge` 与两个 Owner 内共用同一 Silk.NET 单例，`VulkanInstanceOwner.Dispose` 会 `vk.Dispose()`；VK3-C2 接线前须确认不会多处获取/释放导致重复 Dispose 或泄漏。
+- `VulkanClearSession` 仍是历史探针，不得搬进正式路径；C2 接线走新桥而非复用探针逻辑。
+- UI 工程级对 Render.Vulkan 的引用待后续解耦。
+
+### 下一步
+VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface；接线前先确认 `Vk.GetApi()` 所有权。
+
 ## [RZ-VK3-C1] NativeHost 生命周期桥接类 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
