@@ -1,5 +1,41 @@
 # changelog
 
+## [RZ-VK3-C2-R1] VulkanBridge 日志面板可见性修复 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：2390c6314c75b30097e689fee60e6fdf05bfd31e
+
+### 目标
+不改 Vulkan 生命周期、不进入 VK4、不碰 Device/Queue/Swapchain，只把 `VulkanNativeHostSurfaceBridge` 的 Attach/Resize/Detach/Dispose 结果接入编辑器日志面板，让 VK3-C2 能在 UI 日志中验收。
+
+### 修改内容
+- `VulkanNativeHostSurfaceBridge.cs`（84→93 行）：新增 `Action<string>? _log` 日志回调（构造函数注入，默认 null 保留 Console.WriteLine 兜底）。`Attach/Resize/Detach` 经 `Emit` 同时 `_log?.Invoke` 与 `Console.WriteLine`。`Attach` 失败由“抛出不可见异常”改为“记录 `AttachFailed(原因)` 后吞掉异常”，避免编辑器崩溃且失败可见；回滚语义不变。
+- `VulkanBridgeLogFormatter.cs`（20→23 行）：文案对齐验收串——`【VulkanBridge】附加成功：Instance + Surface 已创建（含窗口句柄）`、`【VulkanBridge】尺寸变化已接收：不重建 Surface`、`【VulkanBridge】分离完成：Surface + Instance 已释放`；新增 `AttachFailed(reason)`。
+- `VulkanSurfaceBridgeProvider.cs`（12→13 行）：`Create()` 改为 `Create(Action<string> log)`，把日志回调接进具体桥接（组合根仍持有 `using Render.Vulkan`，保持 Editor.UI → Abstractions 方向）。
+- `ViewportNativeHostRoute.cs`（12→15 行）：新增 `ReportVulkanBridge(UiVm?, string)` → `vm?.LogVulkanLifecycle(message, "")`，复用既有的 NativeHost→UiVm 日志面板路径。
+- `VulkanNativeHost.cs`（82→83 行）：`OnAttachedToVisualTree` 中 `_bridge ??= VulkanSurfaceBridgeProvider.Create(msg => ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg))`，把回调接到面板；其余生命周期钩子不变。
+- `UiVm.Logging.cs`（line 45）：旧启动告警 `当前渲染后端尚未接入 Vulkan` 改为 `Vulkan Surface 生命周期已接入；Device / Swapchain 尚未接入`，级别 Warning→Info。
+- `SampleLogEntries.cs`（line 13-15）：种子示例同步改为上述准确文案，级别 Warning→Info，避免面板出现互相矛盾的两行。
+
+### 未做内容（红线）
+- 未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame`。
+- `Resize` 不重建 Surface（桥 `Resize` 仅记中文日志）。
+- 未搬 `VulkanClearSession` 探针到正式路径；旧探针未改动。
+- 无新增文件，`file-tree.md` 未改（总数维持 105）。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（未改动，仍零 Vulkan 代码引用） |
+| Editor.UI 构建 | ✅ 0W0E（临时输出目录编译验证；in-place bin 复制因运行中的编辑器占用 XuanYu.Render.Vulkan.dll 而锁，代码本身 0W0E） |
+| git grep 禁止项 | ✅ 7 文件无 PhysicalDevice/LogicalDevice/Queue/Swapchain 实装（仅注释） |
+| 文件行数 | ✅ 均 ≤100（bridge 93 / formatter 23 / provider 13 / route 15 / nativehost 83 / logging 88 / sample 35） |
+| 旧文案残留 | ✅ 已清除 |
+
+### 下一步
+关闭编辑器后 rebuild + run，即可在日志面板看到 `【VulkanBridge】附加成功 / 尺寸变化已接收 / 分离完成`；VK3 系列收尾，Device/Swapchain/RenderFrame 留待 VK4。
+
 ## [RZ-VK3-C2] 组合根接线：桥接接入 NativeHost 生命周期 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
