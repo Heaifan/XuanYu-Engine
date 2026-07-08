@@ -130,6 +130,7 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 - 红线校验：未新增 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present；UI 零改动；行数 `VulkanSwapchainBuilder` 74→75、`VulkanSwapchainOwner` 86 不变，全 ≤100；双项目低内存构建 0W0E（Editor.UI 首次因 PID 8636 旧编辑器锁 bin 拷贝失败，taskkill 释放后重建通过）。
 - 状态：**VK4-C 待二次 R1 验证（Resize 重建成功 + Detach 顺序正确）**，未完全收口；VK4-D 暂缓。
 - 下一步：用户重跑编辑器，核对 Resize 后 `Swapchain 创建成功；ImageView 创建成功 N 张` + 关闭后 Detach 顺序 `ImageViews → Swapchain → LogicalDevice → Surface → Instance`；全过则 VK4-C 收口、开 VK4-D。
+- 可视化：`docs/vk4-c-r1-swapchain-fix.svg`（修复前后 Swapchain 重建对比图：修复前未设 `OldSwapchain` → `ErrorNativeWindowInUseKhr`；修复后传当前 Swapchain 作旧句柄 → 创建成功后再退役旧 Swapchain）。
 
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。

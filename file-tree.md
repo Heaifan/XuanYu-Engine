@@ -244,3 +244,4 @@ New Vulkan / NativeHost files:
 - `docs/rz-vk4-plan.md`  # VK4 规划（只规划不实装）：最小渲染闭环 PhysicalDevice→LogicalDevice→Queue→Swapchain→ClearFrame→RenderSession 五问规划、目标依赖方向、阶段分解 VK4-A..VK4-E、防回潮门禁（Resize 不重建 Surface、不搬探针、UI 不持 Vulkan、每步 5+100）。
 - `docs/rz-vk4-c-swapchain-plan.md`  # VK4-C-Plan（2026-07-08，只规划不实装）：Swapchain + Images + ImageViews 生命周期规划；边界（不建 RenderPass/Framebuffer/CommandPool/CommandBuffer、不 Clear/Present）、Resize 只重建 Swapchain+ImageViews、Dispose 顺序 ImageViews→Swapchain→LogicalDevice→Surface→Instance、独立 owner/attach step 文件结构、命名与 100 行红线。
 - `docs/rz-vk4-c-r1-audit-plan.md`  # VK4-C-R1 审计与运行验证计划（2026-07-08）：只审计不新增能力、不进 VK4-D；静态审计结论 + 运行验证清单（14 项）+ Codex 指令。
+- `docs/vk4-c-r1-swapchain-fix.svg`  # VK4-C-R1 Swapchain 重建修复对比图：修复前未设 OldSwapchain→失败 / 修复后传旧句柄→成功（透明背景、规范箭头，符合 Visualizer 约束）。
