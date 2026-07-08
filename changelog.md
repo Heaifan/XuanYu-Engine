@@ -1,5 +1,27 @@
 # changelog
 
+## [LOG-UX-1-R1] Ctrl+C 复制无响应修复 (2026-07-08)
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R1（对 LOG-UX-1 的缺陷修复，仅 Editor.UI）
+
+### 根因
+LOG-UX-1 在 `Foot.axaml` 用 `KeyUp` 事件 + `e.KeyModifiers.HasFlag(KeyModifiers.Control)` 判断快捷键。
+Avalonia 中 `KeyUp` 的 `KeyModifiers` 反映「松开该键那一刻」的按键状态；用户按 `Ctrl+C` 后若先松开 Ctrl，则 `KeyUp(C)` 时 `KeyModifiers` 不再含 `Control`，`Ctrl+C` 分支条件不满足被跳过 → 表现为按了没反应。
+原 `async void` + `await SetTextAsync` 也无异常兜底，剪贴板失败静默消失。
+
+### 修复
+1. `Foot.axaml`：`KeyUp="LogList_KeyUp"` → `KeyDown="LogList_KeyDown"`（按下 C 瞬间 Ctrl 必仍按着，检测稳定）。
+2. `Foot.axaml.cs`：`LogList_KeyDown` 用 `KeyDown`；`Ctrl+A`→`SelectAll()`，`Ctrl+C`→`TopLevel.Clipboard.SetTextAsync(...)` 且包 `try/catch`，失败仅 `Debug.WriteLine` 不崩。
+3. `UiVm.Logging.cs`：新增 `NotifyLogCopied()`（当前 96 行，未突破 100 红线）；复制成功后写一条「已复制 N 条日志到剪贴板」信息日志，提供可见反馈。
+4. 为腾出空间，把 11 行 `RefreshLogBindings` 压成单行（行为不变）。
+
+### 验收
+- `XuanYu.Editor.UI` 构建 0W0E。
+- `Foot.axaml.cs` 36 行 / `UiVm.Logging.cs` 96 行 / `Foot.axaml` 95 行，均 ≤100。
+- 未碰 `Render.Vulkan` / NativeHost / Vulkan 链路。
+- 用户重测：日志面板选中若干行 → `Ctrl+C` → 面板出现「已复制 N 条日志到剪贴板」→ 粘贴到记事本为纯文本表格。
+
 ## [LOG-UX-1] 日志多选复制与详情换行修复 (2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract

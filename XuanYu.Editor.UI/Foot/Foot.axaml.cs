@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -15,19 +16,20 @@ public partial class Foot : UserControl
             vm.SetSelectedEntries(lb.SelectedItems?.OfType<LogEntry>().ToArray() ?? []);
     }
 
-    async void LogList_KeyUp(object? sender, KeyEventArgs e)
+    async void LogList_KeyDown(object? sender, KeyEventArgs e)
     {
         if (sender is not ListBox lb || DataContext is not UiVm vm) return;
-        if (e.Key == Key.A && e.KeyModifiers.HasFlag(KeyModifiers.Control))
-        {
-            lb.SelectAll();
-            e.Handled = true;
-        }
-        else if (e.Key == Key.C && e.KeyModifiers.HasFlag(KeyModifiers.Control)
-                 && vm.SelectedEntriesClipboardText is { Length: > 0 } text)
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Control)) return;
+        if (e.Key == Key.A) { lb.SelectAll(); e.Handled = true; return; }
+        if (e.Key == Key.C && vm.HasSelectedEntries)
         {
             var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-            if (clipboard is not null) await clipboard.SetTextAsync(text);
+            if (clipboard is not null)
+            {
+                try { await clipboard.SetTextAsync(vm.SelectedEntriesClipboardText); }
+                catch (Exception ex) { Debug.WriteLine($"[LogList] 复制失败: {ex}"); }
+            }
+            vm.NotifyLogCopied();
             e.Handled = true;
         }
     }

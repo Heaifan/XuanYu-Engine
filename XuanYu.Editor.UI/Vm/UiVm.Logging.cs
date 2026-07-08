@@ -48,6 +48,13 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(SelectedEntriesClipboardText));
     }
 
+    public void NotifyLogCopied()
+    {
+        _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
+            $"已复制 {_selectedEntries.Length} 条日志到剪贴板", "Ctrl+C 复制选中日志，可粘贴给 AI 审计。");
+        RefreshLogBindings();
+    }
+
     void InitLogs()
     {
         _logBus = new EditorLogBus(_logBuffer);
@@ -85,16 +92,5 @@ public sealed partial class UiVm
         RefreshLogBindings();
     }
 
-    void RefreshLogBindings()
-    {
-        OnPropertyChanged(nameof(LogItems)); OnPropertyChanged(nameof(ProblemItems));
-        OnPropertyChanged(nameof(BuildItems)); OnPropertyChanged(nameof(TaskItems));
-        OnPropertyChanged(nameof(LogSummary)); OnPropertyChanged(nameof(HasNoLogItems));
-        OnPropertyChanged(nameof(SelectedLogEntry)); OnPropertyChanged(nameof(HasSelectedLogEntry));
-        OnPropertyChanged(nameof(SelectedLogClipboardText));
-        OnPropertyChanged(nameof(IsLogFilterAll)); OnPropertyChanged(nameof(IsLogFilterInfo));
-        OnPropertyChanged(nameof(IsLogFilterWarning)); OnPropertyChanged(nameof(IsLogFilterError));
-        OnPropertyChanged(nameof(IsLogFilterBuild)); OnPropertyChanged(nameof(IsLogFilterTask));
-        OnPropertyChanged(nameof(IsLogFilterInput)); OnPropertyChanged(nameof(IsLogFilterRender));
-    }
+    void RefreshLogBindings() { OnPropertyChanged(nameof(LogItems)); OnPropertyChanged(nameof(ProblemItems)); OnPropertyChanged(nameof(BuildItems)); OnPropertyChanged(nameof(TaskItems)); OnPropertyChanged(nameof(LogSummary)); OnPropertyChanged(nameof(HasNoLogItems)); OnPropertyChanged(nameof(SelectedLogEntry)); OnPropertyChanged(nameof(HasSelectedLogEntry)); OnPropertyChanged(nameof(SelectedLogClipboardText)); OnPropertyChanged(nameof(IsLogFilterAll)); OnPropertyChanged(nameof(IsLogFilterInfo)); OnPropertyChanged(nameof(IsLogFilterWarning)); OnPropertyChanged(nameof(IsLogFilterError)); OnPropertyChanged(nameof(IsLogFilterBuild)); OnPropertyChanged(nameof(IsLogFilterTask)); OnPropertyChanged(nameof(IsLogFilterInput)); OnPropertyChanged(nameof(IsLogFilterRender)); }
 }
