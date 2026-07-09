@@ -21,8 +21,10 @@
 - VK3 全链路已收口：NativeHost HWND 生命周期接入 Vulkan Instance + Surface（VK3-A/B1/B2/C1/C2/C2-R1）。黑屏为预期（无 Swapchain/渲染）。
 - VK4-A 已收口：PhysicalDevice 选择链路（仅枚举+选择+中文日志，未创设备）。
 - VK4-B（含 R1）已完全收口：基于 VK4-A 选择结果创建 LogicalDevice + Graphics/Present 队列；Detach 顺序 `LogicalDevice → Surface → Instance`。
-- **VK4-C 二次 R1 已验 5/8，剩 T5/T6 待补，未完全收口；VK4-D 暂缓**：Swapchain + Images + ImageViews 生命周期（独立 owner/attach step）。二次 R1（2026-07-09 用户真机）Resize 重建已通过（713x549/736x188/412x188/318x188 等均成功，无 ErrorNativeWindowInUseKhr），证明 OldSwapchain 修复生效。⚠️ T6 Detach 顺序日志**已存在于代码**（`VulkanSwapchainOwner.Dispose`→`Swapchain 释放成功`，内部 `DestroyImagesAndViews` 先 ImageView 后 Swapchain；`VulkanDeviceOwner`→`LogicalDevice 释放成功`；`VulkanBridgeLogFormatter`→`Surface 已释放`/`Instance 已销毁`/`分离完成`）—— **不需另开 Vulkan 改动轮**，补 LOG-UX-1-R2 自动滚动后重跑即可见。T5 0尺寸未触发（不阻塞主链路）。红线：未建 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present（仍黑屏）。
+- **VK4-C ✅ 正式收口（2026-07-09 用户真机验证）**：Swapchain + Images + ImageViews 生命周期（独立 owner/attach step）全过；VK4-C-R1 Resize 重建（OldSwapchain 修复）与 Detach 逆序释放均运行时验证。红线解除「黑屏为预期」——进入 VK4-D 才出画面。
 - **VK4-C-Fix（已实装）**：① `VulkanDeviceOwner.Create` 启用 `VK_KHR_swapchain` 设备扩展（扩展名由 `VulkanSwapchainOwner.DeviceExtensionName` 传入，DeviceOwner 不硬编码 swapchain 知识）；② `VulkanSwapchainOwner.Recreate` 0 尺寸跳过；③ 暴露 `Format`/`Extent`/`ImageViews` 只读供 VK4-D。
+- **LOG-UX-2 ✅ 正式收口（2026-07-09 真机）**：独立 `Foot/LogListAutoScrollController.cs`（74 行）替代堆在 `Foot.axaml.cs` 的自动滚动状态机；四机制（单次解析/节流/防重入/零遍历）解决 R4 UI 线程卡死。控制台单出口去重 + 21:32 种子清理均保持。LOG-UX-2 收口 Commit `a7149f6`。
+- **下一阶段：VK4-D-Plan（已写 docs/rz-vk4-d-plan.md）**：目标最小 Clear+Present 单色清屏闭环。首次涉及 RenderPass/Framebuffer/CommandPool/CommandBuffer/Semaphore/Fence/AcquireNextImage/QueueSubmit/QueuePresent。红线：只做最小清屏，不做场景渲染/相机/网格/材质/Gizmo/UI叠加/持续动画。边界：Resize 只重建 Framebuffers；Detach 顺序 ClearFrame→Swapchain→Device→Surface→Instance；Present 泵独立线程禁 UI 线程。为守 Bridge ≤100 红线，实装时顺带引入薄组合根 `VulkanRenderSession`（原 VK4-E 范围），Bridge 委托。
 
 ## VK4 审计订正（速查，均非阻塞）
 - **GPU 型号非硬规则**：以 VK4-A 最终选择结果为准，禁止硬编码 RTX 3050/3060 等。

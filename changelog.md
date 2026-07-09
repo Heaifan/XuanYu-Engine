@@ -238,6 +238,34 @@ R5A 已禁用自动滚动、编辑器恢复稳定。本轮把自动滚动按用�
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
+---
+
+## [VK4-C / LOG-UX-2] 正式收口 + VK4-D-Plan 启动（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+文档：docs/rz-vk4-d-plan.md（新建）
+
+### 收口确认（用户真机验证）
+- **VK4-C 正式收口**：Instance→Surface→PhysicalDevice→LogicalDevice→Queue→Swapchain→ImageView 全链路通过；VK4-C-R1 Resize 重建（旧 Swapchain 句柄修复 `ErrorNativeWindowInUseKHR`）与 Detach 逆序释放（Swapchain→LogicalDevice→Surface→Instance）均运行时验证。
+- **LOG-UX-2 正式收口**：独立 `Foot/LogListAutoScrollController.cs`（74 行）真机通过——新日志自动滚到底、上翻不禁、回底恢复；`Foot.axaml.cs`（64 行）只做接线。
+- **控制台日志单出口去重 / 旧 21:32 种子假日志清理**：均保持无回归。
+- LOG-UX-2 收口 Commit：`a7149f6`（已推送 origin）。
+
+### 三问题最终归因（用户总结，作防回潮基线）
+| 问题 | 根因 | 处理结果 |
+|---|---|---|
+| UI 未响应 | 自动滚动逻辑堆在 `Foot.axaml.cs`，视觉树查找 + Dispatcher + ScrollChanged 套娃 | ✅ 拆出 `LogListAutoScrollController` |
+| 控制台日志重复 | 多处低层 `Console.WriteLine` 与统一 `Emit` 双出口 | ✅ 保留单出口 |
+| 21:32 假日志 | 示例/种子日志混入真实运行日志 | ✅ 清理 |
+
+### 下一阶段：VK4-D-Plan
+- 文档 `docs/rz-vk4-d-plan.md` 已落定：目标 **最小 Clear + Present 单色清屏闭环**。
+- VK4-D 首次真正涉及：RenderPass / Framebuffer / CommandPool / CommandBuffer / Semaphore / Fence / AcquireNextImage / QueueSubmit / QueuePresent。
+- **红线（写死）**：只做最小清屏闭环；不做场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加 / 持续动画。
+- **边界**：Resize 只重建 Framebuffers（RenderPass/CP/CB/Sync 不动）；Detach 顺序 ClearFrame→Swapchain→Device→Surface→Instance；Present 泵独立线程，禁在 UI 线程。
+- 为守住 `VulkanNativeHostSurfaceBridge` ≤100 红线与契约优先设计，VK4-D 实装时顺带引入薄组合根 `VulkanRenderSession`（原 VK4-E 范围），Bridge 委托给它。
+- 当前阶段：VK4-A/B/C 完成；LOG-UX-1/2 收口；**进入 VK4-D-Plan**，不回头补日志功能。
+
 ## [LOG-UX-1-R3] 自动滚动修复 + WinExe 控制台输出（2026-07-09）
 
 分支：fix/RZ-VK3-A-surface-contract
