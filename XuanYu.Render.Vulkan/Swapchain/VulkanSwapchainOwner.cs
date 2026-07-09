@@ -81,6 +81,8 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
     public Format Format => _format;
     public Extent2D Extent => _extent;
     public ReadOnlySpan<ImageView> ImageViews => _imageViews;
+    public SwapchainKHR Swapchain => _swapchain;
+    public KhrSwapchain Khr => _khr!;
 
     static void Log(Action<string>? log, string m) { log?.Invoke(m); }
 }
