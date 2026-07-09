@@ -21,7 +21,7 @@
 - VK3 全链路已收口：NativeHost HWND 生命周期接入 Vulkan Instance + Surface（VK3-A/B1/B2/C1/C2/C2-R1）。黑屏为预期（无 Swapchain/渲染）。
 - VK4-A 已收口：PhysicalDevice 选择链路（仅枚举+选择+中文日志，未创设备）。
 - VK4-B（含 R1）已完全收口：基于 VK4-A 选择结果创建 LogicalDevice + Graphics/Present 队列；Detach 顺序 `LogicalDevice → Surface → Instance`。
-- **VK4-C 待二次 R1 验证、未完全收口；VK4-D 暂缓**：Swapchain + Images + ImageViews 生命周期（独立 owner/attach step）。首次 R1 运行：首次 Swapchain 创建成功（证明 VK_KHR_swapchain 扩展已生效）✅；但 Resize 重建 `CreateSwapchain` 失败 `ErrorNativeWindowInUseKhr` ❌ —— 根因 `SwapchainCreateInfoKHR` 未设 `OldSwapchain`，已补（Recreate 传当前 Swapchain 作 oldSwapchain）。待二次 R1 确认 Resize 成功 + Detach 顺序。红线：未建 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present（仍黑屏）。
+- **VK4-C 二次 R1 已验 5/8，剩 T5/T6 待补，未完全收口；VK4-D 暂缓**：Swapchain + Images + ImageViews 生命周期（独立 owner/attach step）。二次 R1（2026-07-09 用户真机）Resize 重建已通过（713x549/736x188/412x188/318x188 等均成功，无 ErrorNativeWindowInUseKhr），证明 OldSwapchain 修复生效。⚠️ T6 Detach 顺序日志**已存在于代码**（`VulkanSwapchainOwner.Dispose`→`Swapchain 释放成功`，内部 `DestroyImagesAndViews` 先 ImageView 后 Swapchain；`VulkanDeviceOwner`→`LogicalDevice 释放成功`；`VulkanBridgeLogFormatter`→`Surface 已释放`/`Instance 已销毁`/`分离完成`）—— **不需另开 Vulkan 改动轮**，补 LOG-UX-1-R2 自动滚动后重跑即可见。T5 0尺寸未触发（不阻塞主链路）。红线：未建 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present（仍黑屏）。
 - **VK4-C-Fix（已实装）**：① `VulkanDeviceOwner.Create` 启用 `VK_KHR_swapchain` 设备扩展（扩展名由 `VulkanSwapchainOwner.DeviceExtensionName` 传入，DeviceOwner 不硬编码 swapchain 知识）；② `VulkanSwapchainOwner.Recreate` 0 尺寸跳过；③ 暴露 `Format`/`Extent`/`ImageViews` 只读供 VK4-D。
 
 ## VK4 审计订正（速查，均非阻塞）
