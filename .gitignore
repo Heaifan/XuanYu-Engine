@@ -32,3 +32,6 @@ codex_chat_export_*.zip
 
 # Windows
 Thumbs.db
+
+# Local AI/workbuddy tool state (not project source, keep out of repo history)
+.workbuddy/

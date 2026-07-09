@@ -1,5 +1,18 @@
 # changelog
 
+## [VK5-Plan-R1] 仓库记忆文件收口：.workbuddy/memory 移出追踪并 gitignore（2026-07-09，仅仓库卫生）
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮不触碰任何代码，仅做仓库卫生收口。
+- 将 `.workbuddy/memory/`（4 文件：2026-07-07.md / 2026-07-08.md / 2026-07-09.md / MEMORY.md）从 Git 追踪移除（`git rm --cached`），本地文件保留。
+- `.gitignore` 新增 `.workbuddy/`，使本地 AI 工作记忆不再进入仓库历史，避免污染项目文档与协作历史。
+- 理由：项目文档（`docs/`）面向仓库与协作者；AI 本地工作记忆面向工具/会话/用户偏好，二者混库会污染历史。
+- 重要项目信息无损：架构债务 A/B 的收口节奏已固化于 `docs/rz-vk5-plan.md` §12，不依赖 `.workbuddy/memory`。
+- 报表格式等跨项目用户偏好改为写入用户级 `~/.workbuddy/MEMORY.md`（本地，不进仓库）。
+- `file-tree.md` 无需更新（无 `.workbuddy` 登记项）。
+
+红线：未改任何 `.cs`/`.axaml`/`.csproj`/Vulkan/UI/NativeHost/LOG-UX 代码。
+
 ## [VK5-Plan 债务升格] 两条已知债务升格为架构债务并锁死节奏（2026-07-09，仅文档）
 
 分支：fix/RZ-VK3-A-surface-contract
