@@ -1,5 +1,39 @@
 # changelog
 
+## [VK4-D] 最小 Clear + Present 单色清屏闭环（D1+D2+D3 同轮）(2026-07-09)
+
+分支：fix/RZ-VK3-A-surface-contract
+依据：docs/rz-vk4-d-plan.md（用户已认可并批准实装）
+状态：实装完成，双项目 0W0E，全 .cs ≤100；待用户真机验收「单色清屏画面」。
+
+### 目标（最小单色清屏）
+1. 黑屏 → 单色背景（clear 颜色 0.10/0.30/0.45/1.0 蓝）。✅ 实装
+2. RenderPass + Framebuffer。✅ D1
+3. CommandPool + CommandBuffer + 静态 clear 录制。✅ D2
+4. Semaphore/Fence + AcquireNextImage → QueueSubmit → QueuePresent。✅ D3
+5. Present 泵必须独立后台线程，不阻塞 UI 线程。✅ D3（Thread + IsBackground）
+6. 引入薄 VulkanRenderSession 组合根，Bridge 只委托。✅ Session
+7. Resize 只重建 Framebuffers（RenderPass/CP/CB/Sync 不动）。✅
+8. OUT_OF_DATE/SUBOPTIMAL 当帧不强行 Present，交下次 Resize 重建。✅（loop continue）
+9. Detach 顺序 ClearFrame → Swapchain → LogicalDevice → Surface → Instance。✅
+
+### 严禁（均未触碰）
+- 不做场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加 / 持续动画。
+- 不修改日志 UX（LOG-UX 成果保持）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge（Bridge 84 行仅委托）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型。
+
+### 关键实现细节
+- 每 Swapchain 图像一张 CommandBuffer，clear 命令录制一次；Resize 重建 Framebuffer 后重录。
+- 单 in-flight 帧 + 单 Fence：`_submitted` 守卫避免首帧 WaitForFences 空等 1s。
+- Acquire 用指针重载（`&idx`），仅 CommandBuffer[] 用 `fixed` 钉住；其余栈本地 `&` 直接取址。
+- `KhrSwapchain` 方法名无 KHR 后缀（Silk.NET.Vulkan 2.22.0）：`AcquireNextImage` / `QueuePresent`。
+- `SampleCountFlags.Count1Bit`、`ImageLayout.PresentSrcKhr`、`StructureType.PresentInfoKhr`、`ClearColorValue.Float32_0..3`。
+- `using Semaphore = Silk.NET.Vulkan.Semaphore` 消除与 `System.Threading.Semaphore` 歧义。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [VK4-C-Plan] Swapchain 生命周期规划（只规划不实装）(2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract

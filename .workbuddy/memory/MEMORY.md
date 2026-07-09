@@ -22,6 +22,7 @@
 - VK4-A 已收口：PhysicalDevice 选择链路（仅枚举+选择+中文日志，未创设备）。
 - VK4-B（含 R1）已完全收口：基于 VK4-A 选择结果创建 LogicalDevice + Graphics/Present 队列；Detach 顺序 `LogicalDevice → Surface → Instance`。
 - **VK4-C ✅ 正式收口（2026-07-09 用户真机验证）**：Swapchain + Images + ImageViews 生命周期（独立 owner/attach step）全过；VK4-C-R1 Resize 重建（OldSwapchain 修复）与 Detach 逆序释放均运行时验证。红线解除「黑屏为预期」——进入 VK4-D 才出画面。
+- **VK4-D 实装完成（2026-07-09，待真机验收出画面）**：最小 Clear+Present 单色清屏闭环。D1 RenderPass+CommandPool+Framebuffer[]（`VulkanClearFrameOwner.cs` 93行）；D2 CommandBuffer[] 每 Swapchain 图像一张静态 clear 录制；D3 Semaphore/Fence+Acquire→Submit→Present 独立后台线程（`VulkanPresentLoop.cs` 86行，`_submitted` 守卫免首帧 WaitForFences 空等）。薄组合根 `Session/VulkanRenderSession.cs`（59行）+ `Bridge/VulkanBridgeRenderSessionAttachStep.cs`（15行），Bridge 仅委托（84行）。红线守住：不引入场景渲染/相机/网格/材质/Gizmo/UI叠加；不碰日志 UX；Bridge 未内联 VK4-D 细节。Silk.NET.Vulkan 2.22.0 注意：`KhrSwapchain` 方法名**无 KHR 后缀**（`AcquireNextImage`/`QueuePresent`/`CreateSwapchain`/`GetSwapchainImages`）；`SampleCountFlags.Count1Bit`；`ImageLayout.PresentSrcKhr`；`StructureType.PresentInfoKhr`；`ClearColorValue.Float32_0..3`；`Semaphore` 别名消歧义。
 - **VK4-C-Fix（已实装）**：① `VulkanDeviceOwner.Create` 启用 `VK_KHR_swapchain` 设备扩展（扩展名由 `VulkanSwapchainOwner.DeviceExtensionName` 传入，DeviceOwner 不硬编码 swapchain 知识）；② `VulkanSwapchainOwner.Recreate` 0 尺寸跳过；③ 暴露 `Format`/`Extent`/`ImageViews` 只读供 VK4-D。
 - **LOG-UX-2 ✅ 正式收口（2026-07-09 真机）**：独立 `Foot/LogListAutoScrollController.cs`（74 行）替代堆在 `Foot.axaml.cs` 的自动滚动状态机；四机制（单次解析/节流/防重入/零遍历）解决 R4 UI 线程卡死。控制台单出口去重 + 21:32 种子清理均保持。LOG-UX-2 收口 Commit `a7149f6`。
 - **下一阶段：VK4-D-Plan（已写 docs/rz-vk4-d-plan.md）**：目标最小 Clear+Present 单色清屏闭环。首次涉及 RenderPass/Framebuffer/CommandPool/CommandBuffer/Semaphore/Fence/AcquireNextImage/QueueSubmit/QueuePresent。红线：只做最小清屏，不做场景渲染/相机/网格/材质/Gizmo/UI叠加/持续动画。边界：Resize 只重建 Framebuffers；Detach 顺序 ClearFrame→Swapchain→Device→Surface→Instance；Present 泵独立线程禁 UI 线程。为守 Bridge ≤100 红线，实装时顺带引入薄组合根 `VulkanRenderSession`（原 VK4-E 范围），Bridge 委托。
@@ -32,11 +33,12 @@
 - **候选设备含杂质**：枚举混有 D3D12 wrapper / Basic Render Driver / iGPU；VK4-B 创建 LogicalDevice 必须复用 VK4-A 选择结果，不得重枚举选错设备。
 - **VK_KHR_swapchain 设备扩展是 Swapchain 运行时命门**：仅拿 `KhrSwapchain` 函数不够，须 `LogicalDevice` 创建时通过 `DeviceCreateInfo.EnabledExtensionCount`+`PpEnabledExtensionNames` 启用，否则 `CreateSwapchainKHR` 运行时失败。
 - **Resize 红线**：VK4-B 起 Resize 只接收尺寸不重建 Surface/Device/Queue；VK4-C Resize 只重建 Swapchain+ImageViews。
-- **黑屏为预期**直到 VK4-D 出画面。
+- **黑屏为预期**直到 VK4-D 出画面（VK4-D 已实装，待真机验证单色清屏）。
 
 ## VK4 行数/职责红线（当前临界）
-- `VulkanNativeHostSurfaceBridge.cs` 98 行（压 100 红线，不得再增，仅编排）。
+- `VulkanNativeHostSurfaceBridge.cs` 84 行（VK4-D 后仅委托 RenderSession，不得再增，仅编排）。
 - `VulkanDeviceOwner.cs` 99 行（仅 `CreateDevice/GetQueue/DisposeDevice`，禁止顺手塞 Swapchain/CommandPool/RenderPass）。
+- `VulkanClearFrameOwner.cs` 93 行 / `VulkanPresentLoop.cs` 86 行 / `VulkanRenderSession.cs` 59 行 / `VulkanBridgeRenderSessionAttachStep.cs` 15 行 / `VulkanClearFrameLogFormatter.cs` 13 行（VK4-D 新增，均 ≤100）。
 - 命名口径：`Silk.NET.Vulkan.Device` 一律用 `VulkanDevice` 别名；业务 owner=`VulkanDeviceOwner`；属性=`LogicalDevice`；禁止用 `Device` 作属性名。
 
 ## 横切约束

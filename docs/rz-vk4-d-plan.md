@@ -273,3 +273,16 @@ ClearFrame.Dispose 内部顺序（逆创建序）：停 Present 泵 → 销毁 F
   </defs>
 </svg>
 ```
+
+---
+
+## 实施状态（2026-07-09）
+
+VK4-D 已按本规划实装并构建通过（双项目 0W0E，全 .cs ≤100 行）。
+
+- D1：RenderPass + CommandPool + Framebuffer[]（`VulkanClearFrameOwner.cs`）。
+- D2：CommandBuffer[] 每 Swapchain 图像一张，静态 clear 录制一次。
+- D3：Semaphore/Fence + Acquire→Submit→Present，独立后台线程（`VulkanPresentLoop.cs`）。
+- 薄组合根 `Session/VulkanRenderSession.cs` + `Bridge/VulkanBridgeRenderSessionAttachStep.cs`，Bridge 仅委托（84 行）。
+- 红线全部守住：未引入场景渲染/相机/网格/材质/Gizmo/UI 叠加；未修改日志 UX；Bridge 未内联 VK4-D 细节。
+- 待用户真机验证「单色清屏画面 + Resize 恢复 + 关闭释放顺序」。
