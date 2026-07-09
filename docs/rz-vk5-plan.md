@@ -147,7 +147,31 @@ Present 泵停止（VK4-D）
 - 本阶段只产出 `docs/rz-vk4-closure.md` + `docs/rz-vk5-plan.md` + `changelog.md` / `file-tree.md` 同步，**无任何代码改动**（不改 `.cs` / `.axaml` / `.csproj`）。
 - 规划通过后再开 **VK5-A**（Shader + Pipeline），逐阶段独立 commit。
 
-## 12. 规划图（SVG 源，代码框）
+## 12. 架构债务升级（继承并锁死）
+
+> 来源：`docs/rz-vk4-closure.md` 已登记两条「已知债务」。本节将其**升格为架构债务**并锁定处理节奏，防止 VK5 期间悄悄膨胀或回潮。
+
+### 债务 A：`Editor.UI` 仍直接引用 `XuanYu.Render.Vulkan`
+- **性质：架构债务（非小债务）**。历史债：Editor.UI 仍 `ProjectReference` Render.Vulkan 且 `using Silk.NET.Vulkan`。
+- **处理三原则（锁死）：**
+  1. **VK5-A 可暂缓**：VK5 各阶段不强制修它。
+  2. **VK5 期间禁止扩大**：VK5-A~D 任何改动都不得新增 Editor.UI → Render.Vulkan 的引用点，不得新增 UI 代码后置里的 Silk.NET.Vulkan 类型接触。
+  3. **VK6 或独立 ARCH 轮必须收掉**：届时把引用收敛到 `Render.Abstractions` 契约层，UI 不再直接持有 Vulkan 类型。
+- **理由**：若不收口，UI 生命周期 / Avalonia 线程 / NativeHost / Vulkan 资源释放会互相缠死，越往后越难解。
+
+### 债务 B：`VulkanClearSession` 死代码待清
+- **性质**：死代码。Clear+Present 闭环已用 `VulkanRenderSession` 等正式路径跑通，`VulkanClearSession` 为早期探针残留。
+- **处理节奏（不要在 VK5-A 前清）：**
+  ```
+  VK5-A Shader + Pipeline
+  VK5-B 固定三角形 Draw
+  VK5-C Resize 验证
+  VK5-D 边界收口
+  VK5-E 再清 VulkanClearSession 死代码
+  ```
+- **理由**：VK5-A/B 仍可能参考 ClearSession 的资源生命周期；进三角形前先大清理，容易把已验证的 Clear+Present 闭环弄乱。清理由独立 commit，不与其他阶段混。
+
+## 13. 规划图（SVG 源，代码框）
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" width="720" height="220" role="img">

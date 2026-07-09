@@ -1,5 +1,13 @@
 # changelog
 
+## [VK5-Plan 债务升格] 两条已知债务升格为架构债务并锁死节奏（2026-07-09，仅文档）
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮仅对 `docs/rz-vk5-plan.md` 增补「架构债务升级」节（§12，原 §12 规划图顺延为 §13），未改任何代码。
+- **债务 A：`Editor.UI` 仍直接引用 Render.Vulkan** 升格为架构债务：VK5-A~D 可暂缓但**禁止扩大**；VK6 / 独立 ARCH 轮必须收口到 `Render.Abstractions` 契约层。
+- **债务 B：`VulkanClearSession` 死代码** 清理排在 **VK5-E**（VK5-A/B/C/D 之后），不在 VK5-A 前清，以免弄乱已验证的 Clear+Present 闭环；清理独立 commit。
+- 提交复核：`fe6d5d3` 仅含 6 文件（`.workbuddy/memory/` 项目级工作记忆 + 两份新 doc + changelog + file-tree），无 `.codex/`/`.ai-memory/`/密钥；`.workbuddy/memory/` 为本项目惯例追踪，非用户级 AI 文件。
+
 ## [VK4-Closure + VK5-Plan] VK4 收口归档 + VK5 最小几何渲染规划（2026-07-09，仅文档）
 
 分支：fix/RZ-VK3-A-surface-contract

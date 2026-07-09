@@ -43,6 +43,11 @@
 - 不写 token/密码/密钥进仓库；Git 鉴权细节不进仓库。
 - **每次 commit 后必须 push 到 origin；每次 push/交付都要给 commit hash。**
 
+## 架构债务（升格，锁死节奏）
+- **债务 A：Editor.UI 仍直接 `ProjectReference` Render.Vulkan 且 `using Silk.NET.Vulkan`（架构债务，非小债务）**。VK5-A~D 可暂缓但**禁止扩大**；VK6 或独立 ARCH 轮必须收口到 `Render.Abstractions` 契约层，UI 不再直接持有 Vulkan 类型。不收口会致 UI 生命周期 / Avalonia 线程 / NativeHost / Vulkan 释放缠死。
+- **债务 B：`VulkanClearSession` 为早期探针死代码，Clear+Present 已用 `VulkanRenderSession` 正式路径跑通**。清理节奏排在 **VK5-E**（VK5-A/B/C/D 之后），不在 VK5-A 前清，以免弄乱已验证闭环；清理独立 commit。
+- **本项目 `.workbuddy/memory/` 为项目级工作记忆（Layer 3 工作区记忆），非用户级 AI 文件（`C:\Users\35013\.workbuddy`），已惯例追踪进仓库，不含密钥**；提交前用 `git show --name-only` 复核，禁进 `.codex/`/`.ai-memory/`/token/密钥。
+
 ## 技术陷阱（Silk.NET.Vulkan 2.22.0 已实测）
 - `KhrSwapchain`/`KhrSurface` 方法名**无 KHR 后缀**（`AcquireNextImage`/`QueuePresent`/`CreateSwapchain`/`GetSwapchainImages`/`GetPhysicalDeviceSurfaceCapabilities`/`...Formats`/`...PresentModes`）；枚举用非弃用短名（`ImageUsageFlags.ColorAttachmentBit`/`ColorSpaceKHR.SpaceSrgbNonlinearKhr`/`PresentModeKHR.MailboxKhr`/`FifoKhr`/`CompositeAlphaFlagsKHR.OpaqueBitKhr`/`ImageAspectFlags.ColorBit`）；`Vk.TryGetDeviceExtension<T>` 需 4 参 `(Instance, Device, out T, string?)`。
 - **`Result.SuboptimalKhr` 是成功码**（正值），`ErrorOutOfDateKhr` 才是错误 → `res != Success && res != SuboptimalKhr` 判失败；OutOfDate 应优雅降级（记一次后 break 等 Resize 重建）而非刷屏。
