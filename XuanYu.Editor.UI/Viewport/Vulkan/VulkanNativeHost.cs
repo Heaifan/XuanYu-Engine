@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using Avalonia.Threading;
 using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
@@ -31,8 +32,7 @@ public sealed class VulkanNativeHost : NativeControlHost
             _createdReported = true;
         }
         var snap = Report(NativeHostLifecycleState.Attached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
-        _bridge ??= VulkanSurfaceBridgeProvider.Create(msg =>
-            ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg));
+        _bridge ??= VulkanSurfaceBridgeProvider.Create(ReportVulkanMessage);
         _bridge.Attach(NativeHostSurfaceContract.ToSurfaceHandle(snap));
     }
 
@@ -80,4 +80,15 @@ public sealed class VulkanNativeHost : NativeControlHost
     }
 
     double GetDpiScale() => TopLevel.GetTopLevel(this)?.RenderScaling ?? 1d;
+
+    // VK4-D-R2：Vulkan 日志回调线程安全入口。Present 泵在后台线程打日志，
+    // 访问 DataContext / UiVm / 日志集合必须回 UI 线程，否则 Avalonia 抛 InvalidOperationException。
+    void ReportVulkanMessage(string msg)
+    {
+        if (Dispatcher.UIThread.CheckAccess()) ReportVulkanMessageOnUiThread(msg);
+        else Dispatcher.UIThread.Post(() => ReportVulkanMessageOnUiThread(msg));
+    }
+
+    void ReportVulkanMessageOnUiThread(string msg) =>
+        ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg);
 }

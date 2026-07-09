@@ -88,5 +88,10 @@ public sealed unsafe class VulkanPresentLoop : IDisposable
             _vk.DestroyFence(_deviceOwner.LogicalDevice, _fence, null);
         }
     }
-    void Log(string m) => _log?.Invoke(m);
+    // VK4-D-R2：后台线程日志回调异常必须被吞掉，绝不能让日志错误终止 Present 泵或炸进程。
+    void Log(string m)
+    {
+        try { _log?.Invoke(m); }
+        catch { /* 日志回调异常不应影响渲染泵 */ }
+    }
 }

@@ -1,5 +1,42 @@
 # changelog
 
+## [VK4-D-R2] Present 泵后台线程日志回调线程派发修复（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D-R1 修复后用户真机启动即闪退，退出码 -532462766；异常为 `System.InvalidOperationException: The calling thread cannot access this object because a different thread owns it`，堆栈指向 `XuanYu.Editor.UI.VulkanNativeHost.<OnAttachedToVisualTree>b__6_0` 访问 `DataContext` 时崩溃，该日志来自 `VulkanPresentLoop.Run` 独立后台线程。
+根因：VK4-D 引入独立 Present 线程后，PresentLoop 后台线程经 `VulkanBridgeLogFormatter.Emit` → `VulkanNativeHostSurfaceBridge.Emit` → 回调 `msg => ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg)` 直接访问 Avalonia `DataContext`（仅 UI 线程可访问），Avalonia 抛异常未处理，进程闪退。
+状态：修复完成，双项目 0W0E，全 .cs ≤100（VulkanNativeHost 95 / VulkanPresentLoop 96）；待用户真机验收「启动不闪退 + 首帧 Present 成功 + 蓝灰清屏 + Resize 单次重建」。
+
+### 修复点
+1. **日志回调线程安全入口**：`VulkanNativeHost.cs` 把原内联回调 `msg => ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg)` 改为方法 `ReportVulkanMessage`；内部 `Dispatcher.UIThread.CheckAccess()` 判断——UI 线程直接调用 `ReportVulkanMessageOnUiThread`，非 UI 线程经 `Dispatcher.UIThread.Post(...)` 切回 UI 线程后再访问 `DataContext` / `UiVm` / 日志集合。新增 `using Avalonia.Threading;`。
+2. **Present 泵日志防御**：`VulkanPresentLoop.Log` 由 `_log?.Invoke(m)` 改为 `try { _log?.Invoke(m); } catch { }`，后台线程日志回调异常被吞掉，绝不终止 Present 泵或炸进程（第二层保护）。
+
+### 严禁（均未触碰）
+- 不新增渲染能力：未改 RenderPass / Framebuffer / CommandBuffer / Present / Swapchain Resize 逻辑。
+- 不修改日志 UX（LOG-UX 成果保持）。
+- 不让 Render.Vulkan 引用 Avalonia：线程派发全部落在 Editor.UI 的 `VulkanNativeHost.cs`；`VulkanPresentLoop` 仅 `try/catch` 包裹 `Action<string> log` 调用，不引用任何 Avalonia 类型。
+- Bridge 不膨胀（仍 83 行仅委托）。
+
+### 关键实现细节
+- 日志回调契约仍为 `Action<string> log`；契约不变，仅消费方（Editor.UI）保证线程安全。
+- Emit 单出口不变：`VulkanBridgeLogFormatter.Emit` 仍先 `log?.Invoke` 后 `Console.WriteLine`；UI 集合更新经 Dispatcher 在 UI 线程发生，与控制台输出并行不悖。
+- 控制台单出口、日志不重复、无种子日志：均保持。
+
+### 验收
+1. XuanYu.Render.Vulkan 0 warning / 0 error。
+2. XuanYu.Editor.UI 0 warning / 0 error。
+3. 所有 .cs 文件 ≤100 行（VulkanNativeHost 95 / VulkanPresentLoop 96）。
+4. run.bat 启动不闪退，不再出现 "The calling thread cannot access this object"。
+5. 控制台出现 "Present 泵已启动（独立线程）"。
+6. 控制台出现 "首帧 Present 成功"。
+7. 视口变成明显蓝灰色（0.25/0.45/0.70）。
+8. Resize 后只重建一次 Swapchain。
+9. 关闭时释放顺序正确（ClearFrame→Swapchain→Device→Surface→Instance）。
+10. Vulkan 日志不重复，旧种子日志不出现。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [VK4-D-R1] Clear + Present 运行审计与 Resize 去重（2026-07-09）
 
 分支：fix/RZ-VK3-A-surface-contract
