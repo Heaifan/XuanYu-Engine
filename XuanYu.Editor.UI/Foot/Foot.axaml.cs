@@ -53,9 +53,7 @@ public partial class Foot : UserControl
     void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(UiVm.LogItems)) return;
-        if (!_followTail) return;
-        ResolveScrollViewer();
-        if (_logScroll is null) return;
+        if (!_followTail || _logScroll is null) return; // 未解析到 ScrollViewer 时不做任何事（避免 Vulkan Attach 期间每条日志遍历视觉树）
         Dispatcher.InvokeAsync(ScrollToTail, DispatcherPriority.Render); // 布局完成后滚到底
     }
 
@@ -67,7 +65,7 @@ public partial class Foot : UserControl
 
     void ScrollToTail()
     {
-        if (_logScroll is null) { ResolveScrollViewer(); if (_logScroll is null) return; }
+        if (_logScroll is null) return;
         try { _logScroll.ScrollToEnd(); }
         catch (Exception ex) { Debug.WriteLine($"[Foot] ScrollToEnd: {ex.Message}"); }
     }
