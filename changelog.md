@@ -135,6 +135,50 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
+## [LOG-UX-1-R2] 日志面板自动滚动到最新 (2026-07-09)
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R2（仅 UI 改动，服务 VK4-C-R1 审计；不碰 Vulkan / Render.Vulkan / NativeHost 生命周期 / 日志数据模型）
+注：用户指令称本轮为 LOG-UX-1-R1，但 changelog 中 LOG-UX-1-R1 已被 Ctrl+C 复制修复占用，按命名顺延为本节 R2。
+
+### 性质
+VK4-C-R1 二次运行已验证 Resize 重建 Swapchain 通过，但审计 Vulkan 生命周期时每次 Resize/Attach/Detach 都要手动把日志拖到底，影响可用性。本轮只补日志面板自动滚动，不新增渲染能力、不进 VK4-D。
+
+### 目标（逐条对照）
+1. 新日志进入且用户在底部时，自动滚动到最新日志 — ✅
+2. 用户手动上翻历史时不强制拉回底部（暂停跟随）— ✅
+3. 用户再滚到底部时恢复自动跟随 — ✅
+4. `Ctrl+A` / `Ctrl+C` 多选复制不受影响 — ✅ 沿用 LOG-UX-1-R1 的 `LogList_KeyDown`
+5. 多选日志不强制跳动、不破坏选择 — ✅ 滚动只改视图偏移，不触动 `SelectedItems`
+6. 不修改 Vulkan 代码 — ✅ 仅 `XuanYu.Editor.UI`
+7. 不修改 NativeHost 生命周期 — ✅
+8. 不修改 Render.Vulkan 项目 — ✅ `git diff` 仅 `Foot.axaml.cs`
+9. 不修改日志数据模型（EditorLogBuffer / EditorLogBus）— ✅
+10. 所有 .cs ≤100 行 — ✅ `Foot.axaml.cs` 36→89
+11. `XuanYu.Editor.UI` 构建 0W0E — ✅
+
+### 实现
+- `Foot.axaml.cs`：
+  - 构造里 `AttachedToVisualTree` / `DataContextChanged` 双重挂接 `TryHook`（含重复订阅防护）。
+  - `TryHook`：用 `LogList.FindDescendantOfType<ScrollViewer>()` 取内部 `ScrollViewer`；订阅其 `ScrollChanged` 与 `LogList.LayoutUpdated`；订阅 `UiVm.PropertyChanged` 仅在 `LogItems` 变化时置 `_pendingScroll = _followTail`。
+  - 跟随判定 `LogScroll_OnScrollChanged`：仅当 `Math.Abs(e.OffsetDelta.Y) >= 0.5`（用户主动滚动）才重算 `_followTail`，`Offset.Y + Viewport.Height >= Extent.Height - 2.0` 视为在底部；Extent 增长（新日志）不误判，规避「用户本在底部却被误停跟随」的经典竞态。
+  - 实际滚动放 `LogList_OnLayoutUpdated`：布局完成后再 `ScrollToEnd()`，确保新项已测量；`_pendingScroll` 一次性标志，防每帧空滚。
+  - 首次附着若 `_followTail` 为真，立即 `_pendingScroll = true` 对齐到底部。
+- 未触碰 `UiVm.Logging.cs`（已 100 行，遵守「不往里塞逻辑」红线）、`Foot.axaml`、`EditorLogBuffer/EditorLogBus`。
+
+### 验收（用户重测）
+- `run.bat` 启动编辑器 → 日志随新事件自动滚到最底；向上翻看历史时不再被拽回底部；滚回底部后恢复跟随。
+- 关闭编辑器，确认底部自动跟到 Detach 释放顺序日志（T6 证据）：
+  `【VulkanSwapchain】Swapchain 释放成功` → `【VulkanDevice】LogicalDevice 释放成功` → `【VulkanBridge】Surface 已释放` → `【VulkanBridge】Instance 已销毁` → `【VulkanBridge】分离完成：Surface + Instance 已释放`。
+  （注：`VulkanSwapchainOwner.Dispose` 内部 `DestroyImagesAndViews` 先 ImageView 后 Swapchain，与 `Swapchain 释放成功` 单次日志合并，顺序正确；无需另开 Vulkan 改动轮。）
+
+### 红线校验
+- `git diff` 仅 `XuanYu.Editor.UI/Foot/Foot.axaml.cs`；`UiVm.Logging.cs` 保持 100 行未动、`Foot.axaml` 95 行未动；未改 `Render.Vulkan` / NativeHost。
+- `Foot.axaml.cs` 36→89 行，<100。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [LOG-UX-2] 会话日志落盘（关闭后仍可审计 Detach 顺序）(2026-07-08)
 
 分支：fix/RZ-VK3-A-surface-contract
