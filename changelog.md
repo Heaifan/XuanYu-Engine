@@ -1,5 +1,19 @@
 # changelog
 
+## [VK4-Closure + VK5-Plan] VK4 收口归档 + VK5 最小几何渲染规划（2026-07-09，仅文档）
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮**只写文档，不写实装代码**（未改任何 `.cs` / `.axaml` / `.csproj` / Vulkan 实装 / LOG-UX / NativeHost 代码）。
+
+### 新增文档
+- `docs/rz-vk4-closure.md`  # VK4 阶段正式收口确认：VK4-A（PhysicalDevice）/ VK4-B（LogicalDevice+Queue）/ VK4-C（Swapchain+ImageView）/ VK4-D（Clear+Present 单色清屏）+ VIEWPORT-RESIZE-R2（DPI 逻辑/物理尺寸错配修复）逐项收口表；已验证清单（首帧 Present、蓝灰覆盖、Resize 恢复、详情栏不慢半拍、日志单出口、双项目 0W0E、全 .cs ≤100）；长期硬规则（Bounds 逻辑尺寸 / Win32+Surface 物理像素 / physical=round(logical×DPI) / Render.Vulkan 不引用 Avalonia / UI 不接触 Silk.NET.Vulkan）；已知债务与下一阶段指向。
+- `docs/rz-vk5-plan.md`  # VK5 最小几何渲染规划（只规划不实装）：从「单色清屏」进入「最小图元渲染」，先画固定三角形/测试图元，不接场景/相机/网格/材质/Gizmo。分阶段 VK5-A（Shader+Pipeline）/ VK5-B（gl_VertexIndex 画固定三角形，暂不建 VertexBuffer）/ VK5-C（viewport/scissor 动态状态同步 extent，Resize 不重建 Pipeline）/ VK5-D（Clear/Draw 职责收进清晰 RenderPass/FrameRenderer 边界，不进场景系统）；资源创建/释放顺序、文件结构、12 条红线、逐阶段验收、SVG 规划图。
+
+### 更新
+- `changelog.md` / `file-tree.md` 同步登记两份新文档。
+
+红线：本轮不触碰任何代码；VK5 第一步不是场景渲染，而是「固定三角形 / 最小 Pipeline / 最小 Draw」；规划通过后再开 VK5-A 实装。
+
 ## [VK4-D] 正式收口确认（2026-07-09）
 
 VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：VK4-D-R3（Render.Vulkan 侧 OutOfDate 优雅降级 + Resize 日志顺序 + 物理像素诚实日志）、VIEWPORT-RESIZE-R1（Editor.UI 日志详情栏切换后布局稳定主动同步最终尺寸）、VIEWPORT-RESIZE-R2（修正 R1 的 DPI 错配，物理像素 = round(逻辑×DPI)）。双项目均 0 warning / 0 error，全 .cs ≤100。

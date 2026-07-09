@@ -1,5 +1,10 @@
 # 项目文件树 — XuanYu Engine
 
+## VK4-Closure + VK5-Plan 文档快照 (2026-07-09)
+本轮仅新增文档，不改任何代码（`.cs` / `.axaml` / `.csproj` 均未动）。
+- `docs/rz-vk4-closure.md`  # VK4 阶段正式收口确认：VK4-A/B/C/D + VIEWPORT-RESIZE-R2 逐项收口表、已验证清单、跨阶段长期硬规则、已知债务、下一阶段指向 VK5。
+- `docs/rz-vk5-plan.md`  # VK5 最小几何渲染规划（只规划不实装）：VK5-A Shader+Pipeline / VK5-B 固定三角形（gl_VertexIndex，暂不建 VertexBuffer）/ VK5-C Resize 兼容 / VK5-D 渲染命令边界；12 条红线、资源创建/释放顺序、文件结构、SVG 规划图。
+
 ## VIEWPORT-RESIZE-R2 快照 (2026-07-09)
 VIEWPORT-RESIZE-R2（Editor.UI 侧）已收口：修复 R1 的 DPI 错配——`SyncFinalSize` 把 Avalonia 逻辑尺寸 ×DPI 换算成物理像素再喂 `Win32ViewportHost.Resize`，`_bridge.Resize` 仍收逻辑尺寸；探针补「目标物理」字段。全部 ≤100 行，双项目 0W0E。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` 98：`partial`；`OnSizeChanged`/`Coalescer` 路径原样保留（拖动窗口仍走它）。
