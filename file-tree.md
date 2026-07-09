@@ -138,7 +138,7 @@ XuanYuEngine/
     ├── Foot/
     │   ├── Foot.axaml  # 底部全局日志栏：摘要、过滤、搜索框、日志列表与右侧详情入口。
     │   ├── LogDetailPanel.axaml  # 日志详情面板：点击选中日志后显示详情并提供复制入口。
-    │   ├── Foot.axaml.cs  # 底部栏代码后置。36→98 行：LOG-UX-1-R4 自动滚动根因修复（TemplateApplied+Dispatcher 延迟解析 ScrollViewer，ScrollToEnd 直控 Offset；R2/R3 因解析时机失效）；Ctrl+A/C 多选复制沿用 LOG-UX-1-R1。
+    │   ├── Foot.axaml.cs  # 底部栏代码后置。42 行：LOG-UX-1-R5A 止血后仅保留 SelectionChanged 选中 + Ctrl+A/C 多选复制（LOG-UX-1-R1）。自动滚动逻辑已全部移除（因在 Vulkan Attach UI 线程同步期触发视觉树遍历/Dispatcher 堆积导致「未响应」崩溃），后续由 LOG-UX-2 独立 LogListAutoScrollController.cs 重设计。
     │   └── LogDetailPanel.axaml.cs  # 日志详情复制按钮与剪贴板桥接。
     ├── Icons/
     │   └── EditorIcons.axaml  # SVG / PathData 图标集中资源。

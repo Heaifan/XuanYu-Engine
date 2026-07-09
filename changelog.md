@@ -173,6 +173,36 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
+## [LOG-UX-1-R5A] 止血：彻底禁用日志自动滚动（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R5A（用户称 R5 后仍「未响应」，指令止血而非继续叠补丁）。
+
+### 现象
+- 用户 run.bat 贴截图：编辑器窗口标题「**玄域编辑器（未响应）**」，终端日志已跑到 `【VulkanSwapchain】Swapchain 创建成功；ImageView 创建成功 3 张`。
+- 结论：**Vulkan 主链路全过（Instance✅ Surface✅ PhysicalDevice✅ LogicalDevice✅ Queue✅ Swapchain✅ ImageView✅）**，未响应发生在 Editor.UI 层，系 UI 线程卡死。截图黑色大块为 Windows DWM 未响应残影，非代码 bug。
+
+### 判断与决策
+- 自动滚动状态机（TemplateApplied 解析 ScrollViewer + ScrollChanged 跟随 + Dispatcher 自动 ScrollToTail）在 Vulkan `Attach`（UI 线程同步执行 ~25 条日志）期间触发视觉树遍历 / Dispatcher 堆积 → UI 线程卡死。
+- 用户明确：**不要在 `Foot.axaml.cs` 继续叠自动滚动补丁**。改做止血——禁用自动滚动，保留其余 LOG-UX 成果。
+
+### 保留（不受影响）
+- 控制台日志去重（R4 单出口）；种子日志清理（R4）；Ctrl+A/Ctrl+C 多行复制；详情换行；AttachConsole（-1）。
+
+### 禁用 / 移除
+- `Foot.axaml.cs` 全部自动滚动逻辑：ResolveScrollViewer / HookVm / OnVmPropertyChanged / OnScrollChanged / ScrollToTail / TemplateApplied 订阅 全部删除。
+- `Foot.axaml.cs` 由 96 行精简至 **42 行**（仅保留 SelectionChanged / KeyDown 复制逻辑）。
+
+### 红线校验
+- `Foot.axaml.cs` 42 行 <100 ✅；不碰 Render.Vulkan / NativeHost / Swapchain 创建·Resize·释放 ✅；双项目低内存构建 0W0E ✅。
+
+### 后续
+- 自动滚动由 **LOG-UX-2** 重新设计：拆出 `Foot/LogListAutoScrollController.cs`，`Foot.axaml.cs` 只创建 controller + 交 ListBox + 通知新日志；controller 内部节流（已安排滚动则不重复安排，等布局完成只滚一次），避免 Dispatcher/ScrollChanged 套娃。
+- 当前阶段：VK4-C Vulkan 链路通过；VK4-D 暂停；先稳定编辑器，再重开自动滚动设计。
+
+### Commit
+`8407657`（已推送 origin fix/RZ-VK3-A-surface-contract）。
+
 ## [LOG-UX-1-R3] 自动滚动修复 + WinExe 控制台输出（2026-07-09）
 
 分支：fix/RZ-VK3-A-surface-contract
