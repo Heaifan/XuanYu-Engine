@@ -203,6 +203,41 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 `8407657`（已推送 origin fix/RZ-VK3-A-surface-contract）。
 
+---
+
+## [LOG-UX-2] 自动滚动重设计：独立控制器（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-2（R5A 止血后，按「独立 controller + 节流 + 防重入 + 不碰 Vulkan」方案重做）。
+
+### 背景
+R5A 已禁用自动滚动、编辑器恢复稳定。本轮把自动滚动按用户给定方案重做，但**禁止再把状态机塞进 `Foot.axaml.cs`**。
+
+### 设计
+- 新增 `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`（74 行）：独立控制器，职责只有「控制日志 ListBox 的自动滚动」。
+- `Foot.axaml.cs`（64 行）只做接线：创建 controller、SelectionChanged 详情选中、Ctrl+A/Ctrl+C 复制、Unloaded 时 Dispose controller。
+
+### 关键防卡死机制
+1. **单次解析**：`Resolve()` 用 `_resolved` 守卫，仅 `TemplateApplied` 后 `FindDescendantOfType<ScrollViewer>()` 一次；模板未就绪则静默等待，**不每条日志遍历视觉树**。
+2. **节流**：`OnLogItemsChanged` 用 `_pendingScroll` 标志，连续多条日志只排一次 `Dispatcher.UIThread.InvokeAsync(ScrollToTail, Render)`。
+3. **防重入**：`_isProgrammaticScroll` 标志，程序滚动期间 `ScrollChanged` 直接 return，不重算跟随态，避开 ScrollChanged↔ScrollToEnd 套娃。
+4. **不阻塞 UI 线程**：`OnVmPropertyChanged` 只调 `_autoScroll.OnLogItemsChanged()` 做布尔判定；Vulkan `Attach`（UI 线程同步 ~25 条日志）期间 `_scroll` 尚未解析 → 直接返回，**零视觉树遍历**。
+5. **跟随态**：`_followTail` 用户上翻（>12px 容差）置 false 暂停；滚回底部恢复；用户在看历史时不强制拉回。
+
+### 红线校验
+- `Foot.axaml.cs` 64 行、`LogListAutoScrollController.cs` 74 行，均 ≤100 ✅。
+- 不碰 `Render.Vulkan` / `NativeHost` / `Swapchain` 生命周期 / `UiVm.Logging.cs` ✅。
+- 保留：控制台去重、种子清理、Ctrl+A/Ctrl+C、详情换行、AttachConsole ✅。
+- 双项目低内存构建 **0W0E** ✅。
+
+### 验收（待用户 run.bat 真机验证）
+- 编辑器稳定启动，不再「未响应」；Vulkan 链路仍到 Swapchain+ImageView。
+- 新日志自动滚到底；用户上翻不被强制拉回；滚回底部恢复跟随。
+- Ctrl+A/Ctrl+C、详情换行、控制台 Vulkan 日志单次、无种子日志 均保持。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [LOG-UX-1-R3] 自动滚动修复 + WinExe 控制台输出（2026-07-09）
 
 分支：fix/RZ-VK3-A-surface-contract

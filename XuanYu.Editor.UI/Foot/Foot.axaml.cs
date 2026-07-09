@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Avalonia.Controls;
@@ -7,16 +8,34 @@ using Avalonia.Input.Platform;
 
 namespace XuanYu.Editor.UI;
 
-// LOG-UX-1-R5A：止血修复——彻底禁用日志自动滚动，恢复编辑器稳定启动。
-// 根因：自动滚动状态机（TemplateApplied 解析 ScrollViewer + ScrollChanged 跟随 + Dispatcher 自动 ScrollToTail）
-// 在 Vulkan Attach 同步执行于 UI 线程期间触发视觉树遍历/Dispatcher 堆积，导致主窗口「未响应」、退出码 0xCFFFFFFF。
-// 保留：Ctrl+A/Ctrl+C 多行复制、详情选中、AttachConsole、控制台去重、种子清理（均在其它文件，不受影响）。
-// 自动滚动后续由独立控制器重新设计（LOG-UX-2：LogListAutoScrollController.cs），不再在本文件硬顶。
+// LOG-UX-2：Foot.axaml.cs 只做接线——创建自动滚动 controller、日志选中、Ctrl+A/Ctrl+C。
+// 自动滚动状态机已拆入 LogListAutoScrollController.cs（节流 + 防重入 + 单次解析）。
 public partial class Foot : UserControl
 {
+    readonly LogListAutoScrollController _autoScroll;
+    bool _vmHooked;
+
     public Foot()
     {
         InitializeComponent();
+        _autoScroll = new LogListAutoScrollController(LogList);
+        DataContextChanged += (_, _) => HookVm();
+        Unloaded += (_, _) => _autoScroll.Dispose();
+    }
+
+    void HookVm()
+    {
+        if (DataContext is UiVm vm && !_vmHooked)
+        {
+            vm.PropertyChanged += OnVmPropertyChanged;
+            _vmHooked = true;
+        }
+    }
+
+    void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(UiVm.LogItems))
+            _autoScroll.OnLogItemsChanged();
     }
 
     void LogList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
