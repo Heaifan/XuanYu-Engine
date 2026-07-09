@@ -1,5 +1,37 @@
 # changelog
 
+## [VIEWPORT-RESIZE-R1] Editor.UI 日志详情栏展开/收起后 NativeHost 最终尺寸主动同步（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D-R3 后用户真机验收，OutOfDate 刷屏已止，但「半屏蓝灰、下半黑」仍在；日志证明 Swapchain/Framebuffer/RenderArea 已同源物理像素（Surface CurrentExtent=1248x961 = 713x549×1.75 DPI）。根因转向 Editor.UI：日志详情栏展开/收起是低频离散布局变化，但 Vulkan Swapchain 重建只走 250ms Coalescer，导致 Present 泵停（OutOfDate）后等 250ms 才重建，旧小 Swapchain 帧停在顶部、下方黑；且离散变化可能不被 Coalescer 及时捕获。
+状态：修复完成，双项目 0W0E，全 .cs ≤100。待用户真机验收「蓝灰覆盖整个 NativeHost 可视区、不再半屏黑；关闭日志详情栏视口立即恢复不慢半拍；逻辑×DPI 与 Surface CurrentExtent 对齐」。
+
+### 修复点（Editor.UI 侧，VIEWPORT-RESIZE-R1）
+1. **日志详情栏切换不等 Coalescer，布局稳定后立即同步最终尺寸（修法 A/C）**：`VulkanNativeHost` 改为 `partial`，新增 `VulkanNativeHost.LayoutSync.cs`；在 `DataContextChanged` 时订阅 `UiVm.IsLogOpen` 的 `PropertyChanged`，变化后以 `Dispatcher.UIThread.InvokeAsync(SyncFinalSize, DispatcherPriority.Render)` 调度——等布局稳定后读 `Bounds` 最终值，立即 `Win32ViewportHost.Resize` + `_bridge.Resize(w, h)`，并先 `_resizer.Cancel()` 取消待处理的 250ms debounce，避免重复重建。拖动窗口仍走 `OnSizeChanged → NativeHostResizeCoalescer`（高频合并），互不干扰。
+2. **中文探针核对四者对齐**：`SyncFinalSize` 经 `ViewportNativeHostRoute.ReportProbe` → `UiVm.LogNativeHostProbe` 打印「日志详情栏=展开/收起；逻辑=WxH；Win32子窗口=CWxCH；DPI」与「逻辑×DPI≈…；子窗口物理=…」，与 Render.Vulkan 侧已有的「Surface CurrentExtent / Swapchain chosen extent / Framebuffer extent」交叉核对：Avalonia 逻辑尺寸 × DPI ≈ Win32 子窗口物理尺寸 ≈ Surface CurrentExtent ≈ Swapchain/Framebuffer extent。
+3. **Win32 子窗口真实尺寸可读**：`Win32ViewportHost` 新增 `GetClientSize(hwnd)`（P/Invoke `GetClientRect` + `RECT`），供探针取子窗口物理像素。
+
+### 红线守住（均未触碰）
+- 不新增场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加。
+- 不修改日志 UX（LOG-UX 自动滚动 / 多选复制保持）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型（本轮仅动 Win32 `user32` P/Invoke 与 Avalonia 调度，未引入 Vulkan 类型；遗留的 `VulkanClearSession.cs` 属死代码、非活跃链路，本轮不动）。
+- 不重建 Surface / Instance / LogicalDevice / Queue（Resize 只到 HWND + Swapchain/Framebuffer 重建）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge。
+- 全 .cs ≤100：`VulkanNativeHost.cs` 99 / `VulkanNativeHost.LayoutSync.cs` 38 / `Win32ViewportHost.cs` 67 / `ViewportNativeHostRoute.cs` 18 / `UiVm.NativeHostLifecycle.cs` 40。
+
+### 关键实现细节
+- `SyncFinalSize` 读取的 `Bounds` 为 Avalonia 逻辑像素；`_bridge.Resize(w, h)` 传入逻辑尺寸，Render.Vulkan 侧 `VulkanSwapchainOwner.Recreate` 用 `caps.CurrentExtent`（HWND 真实物理像素）建 Swapchain，故 extent 始终以物理像素为准，与 VK4-D-R3 同源。
+- `DispatcherPriority.Render` 确保 `SyncFinalSize` 在布局 pass 完成后运行，读到最终 `Bounds`；若布局仍微抖，Coalescer 作为兜底会在末次 `OnSizeChanged` 后 250ms 再同步一次（冗余但无害）。
+- `HookLayoutSync`/`UnhookLayoutSync` 用 `_layoutSyncHooked` 守卫避免重复订阅；`OnDetachedFromVisualTree`/`DestroyNativeControlCore` 中 `UnhookLayoutSync()` 防泄漏。
+
+### 验收
+1. 启动不闪退、不未响应。
+2. 蓝灰覆盖整个 NativeHost 可视区，不再半屏黑。
+3. 关闭日志详情栏，视口立即恢复，不慢半拍。
+4. 打开日志详情栏，视口缩小正常。
+5. 日志显示「布局同步探针」：逻辑×DPI ≈ Win32 子窗口 ≈ Surface CurrentExtent。
+6. Resize 不重建 Surface / Instance / Device / Queue；控制台日志不重复。
+
 ## [VK4-D-R3] Present 泵 OutOfDate 降级 + Resize 日志顺序 + 物理像素诚实日志（2026-07-09）
 
 分支：fix/RZ-VK3-A-surface-contract

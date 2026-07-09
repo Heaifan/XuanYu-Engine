@@ -6,12 +6,13 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
 
-public sealed class VulkanNativeHost : NativeControlHost
+public sealed partial class VulkanNativeHost : NativeControlHost
 {
     readonly NativeHostLifecycleProbe _probe = new();
     readonly NativeHostResizeCoalescer _resizer;
     INativeHostSurfaceBridge? _bridge;
     bool _createdReported;
+    bool _layoutSyncHooked;
     nint _hwnd;
 
     public VulkanNativeHost()
@@ -21,6 +22,7 @@ public sealed class VulkanNativeHost : NativeControlHost
             _bridge?.Resize(snap.Width, snap.Height);
             ViewportNativeHostRoute.ReportMerged(DataContext as UiVm, snap, count);
         });
+        DataContextChanged += (_, _) => HookLayoutSync();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -56,6 +58,7 @@ public sealed class VulkanNativeHost : NativeControlHost
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         _resizer.Cancel();
+        UnhookLayoutSync();
         Report(NativeHostLifecycleState.Detached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
         _bridge?.Detach();
         base.OnDetachedFromVisualTree(e);
@@ -64,6 +67,7 @@ public sealed class VulkanNativeHost : NativeControlHost
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
         _resizer.Cancel();
+        UnhookLayoutSync();
         Report(NativeHostLifecycleState.Disposed, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
         Report(NativeHostLifecycleState.Invalidated, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
         (_bridge as IDisposable)?.Dispose();

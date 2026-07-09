@@ -1,6 +1,12 @@
 # 项目文件树 — XuanYu Engine
 
-## VK4-D-R3 快照 (2026-07-09)
+## VIEWPORT-RESIZE-R1 快照 (2026-07-09)
+VIEWPORT-RESIZE-R1（Editor.UI 侧）已收口：日志详情栏展开/收起后 NativeHost 最终尺寸主动同步，全部 ≤100 行，双项目 0W0E。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` 94→99：`partial` 化；构造函数订阅 `DataContextChanged` 钩 `HookLayoutSync`；`OnDetachedFromVisualTree`/`DestroyNativeControlCore` 加 `UnhookLayoutSync`；不动原有 OnSizeChanged/Coalescer 路径。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`（新增 38）：`HookLayoutSync`/`UnhookLayoutSync`（订阅 `UiVm.IsLogOpen` 的 `PropertyChanged`）；`OnLayoutSyncProp` 以 `Dispatcher.UIThread.InvokeAsync(SyncFinalSize, DispatcherPriority.Render)` 调度；`SyncFinalSize` 读最终 `Bounds` → `_resizer.Cancel()` → `Win32ViewportHost.GetClientSize` 探针 → `Win32ViewportHost.Resize` + `_bridge.Resize` 立即同步最终尺寸。
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` 55→67：新增 `GetClientSize(hwnd)`（P/Invoke `GetClientRect` + `RECT`），取 Win32 子窗口物理像素。
+- `XuanYu.Editor.UI/ViewportNativeHostRoute.cs` 15→18：新增 `ReportProbe` 路由到 `UiVm.LogNativeHostProbe`。
+- `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs` 27→40：新增 `LogNativeHostProbe`（逻辑尺寸 / Win32 子窗口 / DPI 四者对齐探针）。
 VK4-D-R3（Render.Vulkan 侧）已收口：修改 6 个 Render.Vulkan 文件，全部 ≤100 行，双项目 0W0E。
 - `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs` 92→99：OutOfDate 优雅降级（`ErrorOutOfDateKhr` 仅记一次 `OutOfDatePaused()` 后 break，不刷屏）；`Start()` 重置 `_outOfDateLogged`；`Stop()` 局部捕获线程防 NRE。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 59：Resize 日志顺序收口（Rebuilt 在 Start 前，用 `_swapchainOwner.Extent` 物理像素）。
@@ -8,7 +14,6 @@ VK4-D-R3（Render.Vulkan 侧）已收口：修改 6 个 Render.Vulkan 文件，�
 - `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainLogFormatter.cs` 13→15：`Created`/`Recreated` 收 `Extent2D` 打印物理像素。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs` 14→17：`Rebuilt(Extent2D, uint)` 打印物理像素；新增 `OutOfDatePaused()`。
 - `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 88：`Created`/`Recreated` 改传实际 `_extent`。
-VIEWPORT-RESIZE-R1（Editor.UI 侧，日志详情栏展开/收起后视口同步慢半拍）尚未开始。
 
 最近更新：VK3 已收口（验收通过，2026-07-08）：新增 docs/rz-vk3-closure.md（收口确认）+ docs/rz-vk4-plan.md（VK4 规划，只规划不实装）；VK4 目标为最小渲染闭环（PhysicalDevice→LogicalDevice→Queue→Swapchain→ClearFrame→RenderSession），红线：Resize 不重建 Surface、不搬探针、UI 不持 Vulkan、每步 5+100。VK3 既有链路（VK3-A..VK3-C2-R1）不变。VK4-A 已实装（2026-07-08）：在 Instance+Surface 之后新增 PhysicalDevice 选择链路（XuanYu.Render.Vulkan/Device/ 下 3 个新文件，桥 Attach 后调用，仅枚举/选择/中文日志，未创建设备/队列/Swapchain）。VK4-A-R1 已收口（2026-07-08）：VK4-A 后 VulkanNativeHostSurfaceBridge.cs 由 93→110 行越过 100 行红线，已将内联选择逻辑迁出至 XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs（23 行），Bridge 压回 96 行，仅保留生命周期编排；行为不变。VK4-B 已实装（2026-07-08）：基于 VK4-A 选择结果新增 LogicalDevice + Graphics/Present 队列（`Device/VulkanPhysicalDeviceSelection.cs` 抽为独立文件并补 PhysicalDevice 句柄、`Device/VulkanDeviceOwner.cs` 创建 VkDevice+队列、`Bridge/VulkanBridgeDeviceAttachStep.cs` 在 Instance+Surface 就绪后链式驱动创建设备）；未建 Swapchain/ImageView/RenderPass/CommandBuffer、未清屏/Present、UI 未接触 Silk.NET.Vulkan 类型；Bridge Detach 逆序释放 Device→Surface→Instance。VK4-C 已实装（2026-07-08）：在 VK4-B 的 LogicalDevice+Queue 之后新增 Swapchain + Swapchain Images + ImageViews 链路（`XuanYu.Render.Vulkan/Swapchain/` 下 4 文件：VulkanSwapchainCapabilities 80 / VulkanSwapchainBuilder 74 / VulkanSwapchainOwner 86 / VulkanSwapchainLogFormatter 13；`Bridge/VulkanBridgeSwapchainAttachStep.cs` 32 在设备 step 后链式驱动；均 ≤100 行）；Bridge 改写 98 行（接近 100 红线不再膨胀，仅编排生命周期，Swapchain 逻辑全在独立 owner/step）；Resize 只重建 Swapchain+ImageViews（不重建 Surface/Instance/Device/Queue）；Dispose 顺序 ImageViews→Swapchain→LogicalDevice→Surface→Instance；红线守住：未建 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present（仍黑屏为预期）、UI 零改动不接触 Silk.NET.Vulkan、未复制 VulkanClearSession 旧探针；两项目 0W0E。VK4-C 已补运行前置修正（2026-07-08）：`VulkanDeviceOwner` 创建设备时启用 `VK_KHR_swapchain` 设备扩展（扩展名由 `VulkanSwapchainOwner.DeviceExtensionName` 传入，DeviceOwner 96→99 行）、`VulkanSwapchainOwner.Recreate` 加 0 尺寸跳过（77→86 行）、暴露 `Format`/`Extent`/`ImageViews` 只读供 VK4-D；均 ≤100，仍不出画面。状态：VK4-C 代码完成，待 VK4-C-R1 真机运行验证，未完全收口；VK4-D 已实装（D1+D2+D3+VK4-D-R1 修复），VK4-D-R2（2026-07-09）修复 Present 泵后台线程日志回调线程派发导致的闪退——VulkanNativeHost 新增 ReportVulkanMessage / ReportVulkanMessageOnUiThread 经 Dispatcher.UIThread 切回 UI 线程访问 DataContext / UiVm；VulkanPresentLoop.Log 加 try/catch 防御；双项目 0W0E，VulkanNativeHost 95 / VulkanPresentLoop 96 行；VK4-D 仍待真机验收。
 

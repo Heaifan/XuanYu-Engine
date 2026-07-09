@@ -20,6 +20,14 @@ static partial class Win32ViewportHost
     public static void Resize(nint hwnd, int width, int height) =>
         SetWindowPos(hwnd, 0, 0, 0, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 
+    public static (int Width, int Height) GetClientSize(nint hwnd)
+    {
+        if (hwnd == 0) return (0, 0);
+        var rect = new RECT();
+        GetClientRect(hwnd, ref rect);
+        return (rect.right - rect.left, rect.bottom - rect.top);
+    }
+
     public static void Destroy(nint hwnd)
     {
         if (hwnd != 0) DestroyWindow(hwnd);
@@ -52,4 +60,8 @@ static partial class Win32ViewportHost
     [DllImport("user32")] static extern nint DefWindowProc(nint hWnd, uint msg, nint wParam, nint lParam);
     [DllImport("user32")] [return: MarshalAs(UnmanagedType.Bool)] static extern bool DestroyWindow(nint hWnd);
     [DllImport("user32")] [return: MarshalAs(UnmanagedType.Bool)] static extern bool SetWindowPos(nint hWnd, nint after, int x, int y, int cx, int cy, uint flags);
+    [DllImport("user32")] [return: MarshalAs(UnmanagedType.Bool)] static extern bool GetClientRect(nint hWnd, ref RECT lpRect);
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct RECT { public int left, top, right, bottom; }
 }
