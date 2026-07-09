@@ -134,11 +134,11 @@ XuanYuEngine/
     ├── Bootstrap/
     │   ├── App.axaml  # Avalonia 应用资源入口。
     │   ├── App.axaml.cs  # 应用启动与主窗口挂载。
-    │   └── Program.cs  # Avalonia 桌面启动入口。
+    │   └── Program.cs  # Avalonia 桌面启动入口（含 AttachConsole(-1) 继承父控制台使 Console.WriteLine 可见）。
     ├── Foot/
     │   ├── Foot.axaml  # 底部全局日志栏：摘要、过滤、搜索框、日志列表与右侧详情入口。
     │   ├── LogDetailPanel.axaml  # 日志详情面板：点击选中日志后显示详情并提供复制入口。
-    │   ├── Foot.axaml.cs  # 底部栏代码后置。36→89 行：LOG-UX-1-R2 增日志自动滚动（用户在底部时跟随最新；上翻暂停、回底恢复；滚动放 LayoutUpdated 确保新项已测量）；Ctrl+A/C 多选复制沿用 LOG-UX-1-R1。
+    │   ├── Foot.axaml.cs  # 底部栏代码后置。36→91 行：LOG-UX-1-R3 修复自动滚动（Dispatcher.InvokeAsync(Render) 替代 LayoutUpdated，时序可靠；用户在底部跟随、上翻暂停、回底恢复）；Ctrl+A/C 多选复制沿用 LOG-UX-1-R1。
     │   └── LogDetailPanel.axaml.cs  # 日志详情复制按钮与剪贴板桥接。
     ├── Icons/
     │   └── EditorIcons.axaml  # SVG / PathData 图标集中资源。

@@ -2,20 +2,23 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
 
-// LOG-UX-1-R1：日志面板自动滚动到最新。
-// 边界：只改本文件 UI 行为，不碰 Vulkan / Render.Vulkan / NativeHost 生命周期 / 日志数据模型。
+// LOG-UX-1-R3：日志面板自动滚动（R2 因 PropertyChanged→LayoutUpdated 时序不可靠未生效，
+// 本版改用 Dispatcher.InvokeAsync(Render)，确保布局完成后再滚到底）。
+// 边界：只改本文件 UI 行为，不碰 Vulkan / Render.Vulkan / NativeHost / 日志数据模型。
 public partial class Foot : UserControl
 {
     ScrollViewer? _logScroll;
     bool _followTail = true;   // 用户在底部时跟随最新；上翻历史时暂停
-    bool _pendingScroll;       // LogItems 变化且当时在底部，待布局后滚到底
     bool _scrollHooked;
     bool _vmHooked;
 
@@ -31,36 +34,35 @@ public partial class Foot : UserControl
         _logScroll ??= LogList.FindDescendantOfType<ScrollViewer>();
         if (_logScroll is not null && !_scrollHooked)
         {
-            _logScroll.ScrollChanged += LogScroll_OnScrollChanged;
-            LogList.LayoutUpdated += LogList_OnLayoutUpdated;
+            _logScroll.ScrollChanged += OnScrollChanged;
             _scrollHooked = true;
-            _pendingScroll = _followTail; // 首次附着即对齐到底部（若在底部跟随）
+            ScrollToTail(); // 首次附着对齐到底部
         }
         if (DataContext is UiVm vm && !_vmHooked)
         {
-            vm.PropertyChanged += Vm_OnPropertyChanged;
+            vm.PropertyChanged += OnVmPropertyChanged;
             _vmHooked = true;
         }
     }
 
-    void Vm_OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    // 核心修复：LogItems 变更后用 InvokeAsync(Render) 延迟滚到底。
+    void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(UiVm.LogItems))
-            _pendingScroll = _followTail;
+        if (e.PropertyName != nameof(UiVm.LogItems)) return;
+        if (!_followTail || _logScroll is null) return;
+        Dispatcher.InvokeAsync(ScrollToTail, DispatcherPriority.Render);
     }
 
-    void LogList_OnLayoutUpdated(object? sender, EventArgs e)
+    void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
-        if (!_pendingScroll || _logScroll is null) return;
-        _pendingScroll = false;
-        _logScroll.ScrollToEnd(); // 布局完成后再滚，确保新项已测量
-    }
-
-    void LogScroll_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
-    {
-        // 仅当用户主动滚动（Offset 明显变化）才重判跟随态；Extent 增长不误判
         if (_logScroll is null || Math.Abs(e.OffsetDelta.Y) < 0.5) return;
         _followTail = _logScroll.Offset.Y + _logScroll.Viewport.Height >= _logScroll.Extent.Height - 2.0;
+    }
+
+    void ScrollToTail()
+    {
+        if (_logScroll is null) return;
+        try { _logScroll.ScrollToEnd(); } catch { /* 控件可能已卸载 */ }
     }
 
     void LogList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -80,7 +82,7 @@ public partial class Foot : UserControl
             if (clipboard is not null)
             {
                 try { await clipboard.SetTextAsync(vm.SelectedEntriesClipboardText); }
-                catch (Exception ex) { Debug.WriteLine($"[LogList] 复制失败: {ex}"); }
+                catch { /* 剪贴板不可用 */ }
             }
             vm.NotifyLogCopied();
             e.Handled = true;

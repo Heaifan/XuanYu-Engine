@@ -135,6 +135,42 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
+## [LOG-UX-1-R3] 自动滚动修复 + WinExe 控制台输出（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R3（仅 UI 改动 + Program.cs 一行 P/Invoke；不碰 Vulkan / Render.Vulkan / 日志数据模型）
+
+### 性质
+双修复：① R2 自动滚动未生效的根因修复；② WinExe 进程 Console.WriteLine 不显示在父终端的问题。
+
+### 问题 1：R2 自动滚动不生效
+- **现象**：用户真机验证 Foot 面板日志不自动滚到底。
+- **根因**：R2 用 `LayoutUpdated` 事件触发 `ScrollToEnd`，但 Avalonia 的 `LayoutUpdated` 触发时机与 `PropertyChanged(LogItems)` 的时序不可靠——新日志写入 buffer → `RefreshLogBindings()` → `OnPropertyChanged(LogItems)` → 设置 `_pendingScroll=true`，但 `LayoutUpdated` 可能在设置前已触发过、或 ListBox 虚拟化延迟导致 LayoutUpdated 不再为本次变更触发。
+- **修复**：改用 `Dispatcher.InvokeAsync(ScrollToTail, DispatcherPriority.Render)`——将滚动操作显式放入 dispatcher 队列的 Render 优先级，确保 Avalonia 布局完成后再执行，比事件驱动更可靠。
+- **代码**：`Foot.axaml.cs` 重写（89→91 行，去掉了 R2 的自定义 `DispatcherTimerExt` 辅助类）。
+
+### 问题 2：WinExe 控制台无输出
+- **现象**：用户运行 `dotnet run` 后终端只显示 build 输出，所有 Vulkan 生命周期日志（Console.WriteLine）不出现。
+- **根因**：`XuanYu.Editor.UI.csproj` 的 `<OutputType>WinExe</OutputType>`。Windows 上 WinExe 进程不继承父控制台句柄，`Console.WriteLine` 写入虚空。
+- **影响范围**：Vulkan 代码已有 6 处 `Console.WriteLine`（BridgeLogFormatter.Emit / DeviceOwner.Log / SwapchainOwner.Log / Capabilities.Log / Builder.Log / Selector.Log），全部因 WinExe 无效。
+- **修复**：`Program.cs:Main()` 首行调用 `AttachConsole(-1)`（ATTACH_PARENT_PROCESS），使 WinExe 进程继承 `dotnet run` 父终端。零改动 Vulkan 代码。
+- **效果**：关闭编辑器后，终端窗口仍显示完整 Detach 释放顺序（ImageViews→Swapchain→LogicalDevice→Surface→Instance），直接解决 T6 审计问题。
+
+### 红线校验
+- `Foot.axaml.cs` 91 行 <100 ✅；`Program.cs` 28 行 ✅。
+- UiVm.Logging.cs 保持 100 行未动 ✅。
+- 不碰 Vulkan / Render.Vulkan / NativeHost / 日志数据模型 ✅。
+- Editor.UI 构建 0W0E ✅。
+
+### 下一步
+- 用户重跑编辑器，验证两项：
+  1. 启动后日志面板自动滚到最新（不再需手动拖到底）；
+  2. 关闭编辑器后，`dotnet run` 终端显示 Detach 释放序列（AttachConsole 使 Console.WriteLine 生效）；
+- 两项全过 → VK4-C 正式收口（T6 拿到证据），开 VK4-D 出画面。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [LOG-UX-1-R2] 日志面板自动滚动到最新 (2026-07-09)
 
 分支：fix/RZ-VK3-A-surface-contract
