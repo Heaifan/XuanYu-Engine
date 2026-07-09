@@ -1,5 +1,21 @@
 # changelog
 
+## [RZ-VK5-A] ShaderModule + GraphicsPipeline 最小接入（2026-07-09，实装）
+
+分支：fix/RZ-VK3-A-surface-contract
+在 VK4-D Clear+Present 闭环上新增最小 Graphics Pipeline 创建/释放能力。不 Draw、不画三角形。
+- 新增 `XuanYu.Render.Vulkan/Pipeline/`：
+  - `ShaderBytecode.Vert.cs` / `ShaderBytecode.Frag.cs`：内嵌 SPIR-V `uint[]`（glslangValidator 本地编译，vertex+fragment passthrough，entry main）。CodeSize = Code.Length * 4。
+  - `VulkanShaderModuleOwner.cs`：`unsafe` 助手，用 `uint[]` 建/销 vert+frag 两个 ShaderModule。
+  - `VulkanGraphicsPipelineOwner.cs`：建空 PipelineLayout + 绑 RenderPass 的 GraphicsPipeline（动态 viewport/scissor、空 vertex input、TriangleList）；**建 Pipeline 后立即释放两个 ShaderModule**（短生命周期）；Dispose 释放 Pipeline→Layout。
+  - `VulkanPipelineLogFormatter.cs`：中文日志格式器（经注入的 `Action<string> log`，日志单出口）。
+- 修改：
+  - `VulkanClearFrameOwner.cs`：+1 只读 getter `RenderPass => _renderPass`（供 Pipeline 绑定；构造时建一次，Resize 稳定）。
+  - `VulkanRenderSession.cs`：+pipeline 字段；`Create` 中 ClearFrame 之后建 Pipeline；`Dispose` 中最先释放 Pipeline。
+- 关键结论沿用规划：PresentLoop 提交 ClearFrameOwner 录好的 CommandBuffer，VK5-A 未绑定 Pipeline（无 Draw）→ PresentLoop 零改动；RenderPass 构造时建一次、Resize 只重建 Framebuffer → GraphicsPipeline Resize 稳定。
+- 验收：双项目 `dotnet build` **0W0E**；所有改动 `.cs` ≤100（最大 96）；`Pipeline/` 4 文件。
+- 红线守住：不 Draw / 不画三角形 / 不建 VertexBuffer·DescriptorSet / 不接 Scene·Camera·Mesh·Material·Gizmo / 不改 UI·NativeHost·LOG-UX·Resize / 不扩大 Editor.UI→Render.Vulkan 引用 / 不清 VulkanClearSession。
+
 ## [RZ-VK5-A 规划修正] 采纳两条实装前修正（2026-07-09，仅文档）
 
 分支：fix/RZ-VK3-A-surface-contract

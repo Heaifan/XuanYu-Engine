@@ -23,6 +23,7 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
 
     public CommandBuffer[] CommandBuffers => _commandBuffers;
     public Extent2D Extent => _extent;
+    public RenderPass RenderPass => _renderPass;
 
     void BuildRenderPass()
     {
