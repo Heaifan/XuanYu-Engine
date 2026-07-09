@@ -1,5 +1,10 @@
 # 项目文件树 — XuanYu Engine
 
+## 视口 UI 收口快照 (2026-07-09)
+移除视口内部 overlay，只留纯 Vulkan 视口。
+- `XuanYu.Editor.UI/Main/Main.axaml` 20→6：移除 Grid 顶部（透视 / NativeHost Probe）与底部（左键选择 / 中键环绕 / 右键平移 / 工具：选择）两组 pill，内容简化为 `<local:VulkanViewport/>`；`x:DataType` 移除（绑定已删）。`VulkanViewport` 交互逻辑未动。
+- 同轮：`RZ-VK5-A-R1` 关闭释放顺序静态验证通过（无代码改动）。
+
 ## RZ-VK5-A 实装快照 (2026-07-09)
 在 VK4-D Clear+Present 闭环上新增最小 Graphics Pipeline 创建/释放能力（不 Draw、不画三角形）。
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs` 25：内嵌顶点 SPIR-V `uint[]`（glslangValidator 本地编译，passthrough，entry main）。

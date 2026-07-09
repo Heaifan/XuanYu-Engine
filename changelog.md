@@ -1,5 +1,14 @@
 # changelog
 
+## [视口 UI 收口] 移除视口内部顶部/底部 overlay，只留纯 Vulkan 视口（2026-07-09，UI 只改）
+
+分支：fix/RZ-VK3-A-surface-contract
+- 修改 `XuanYu.Editor.UI/Main/Main.axaml`：移除视口内部顶部（透视 / NativeHost Probe）与底部（左键选择 / 中键环绕 / 右键平移 / 工具：选择）两组叠加条，UserControl 内容简化为仅 `<local:VulkanViewport/>`，中间区域只显示纯视口画面。
+- 不删除选择/环绕/平移功能本身（`VulkanViewport` 交互逻辑未动），仅移除可见提示条。
+- 不改 Vulkan / NativeHost 渲染逻辑；不改外部主工具栏、左侧项目树、右侧检查器、底部总状态栏；不碰 LOG-UX / Resize。
+- 验收：双项目 `dotnet build` **0W0E**；视口内部顶部/底部叠加条消失，中间只剩纯视口，清屏与 Resize 不受影响。
+- 同轮 `RZ-VK5-A-R1`：静态验证 Detach 释放顺序正确（PresentLoop → GraphicsPipeline 资源 → ClearFrame(RenderPass+Framebuffer) → Swapchain → LogicalDevice → Surface → Instance）；ShaderModule 短生命周期已落地（关闭链不含 ShaderModule）；释放顺序无破坏，**未改代码**。
+
 ## [RZ-VK5-A] ShaderModule + GraphicsPipeline 最小接入（2026-07-09，实装）
 
 分支：fix/RZ-VK3-A-surface-contract
