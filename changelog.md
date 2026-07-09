@@ -1,5 +1,13 @@
 # changelog
 
+## [RZ-VK5-A 规划修正] 采纳两条实装前修正（2026-07-09，仅文档）
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮仅修正 `docs/rz-vk5-a-plan.md`（RZ-VK5-A 规划），未改任何代码。
+- 修正 1：Shader 字节码由 `byte[]` 改为 `uint[]`（`ShaderBytecode.Vert.cs` / `ShaderBytecode.Frag.cs`）。`PCode` 直接按 `uint*` 传入，`CodeSize = Code.Length * 4`，免 unsafe 字节转换/对齐/长度换算；SPIR-V 由 glslangValidator 本地编译生成，不引入运行时编译工具链。
+- 修正 2：ShaderModule 生命周期由「持有到会话结束」改为「短生命周期」——创建 GraphicsPipeline 成功后立即释放两个 ShaderModule；Detach 只释放 GraphicsPipeline + PipelineLayout。Detach 顺序更短、更不易埋雷（采纳用户修正）。
+- 同步更新 §2/§3/§6/§7/§9/§10/§11。
+
 ## [RZ-VK5-A-Plan] VK5-A 规划：ShaderModule + GraphicsPipeline 最小接入（2026-07-09，仅规划）
 
 分支：fix/RZ-VK3-A-surface-contract

@@ -24,10 +24,11 @@
 
 新增（`XuanYu.Render.Vulkan/Pipeline/`，均 ≤100）：
 
-- `VulkanShaderBytecode.cs`：静态 `byte[]` 存放顶点+片元 SPIR-V（固定三角形），避免引入着色器编译工具链。
-- `VulkanShaderModuleOwner.cs`：用 `byte[]` 建/销 vert+frag 两个 `ShaderModule`，暴露只读句柄。
-- `VulkanGraphicsPipelineOwner.cs`：建 PipelineLayout（空，无 descriptor）+ GraphicsPipeline（绑定 RenderPass，动态 viewport/scissor，空 vertex input，TriangleList），暴露 `Pipeline` / `Layout` 只读。
-- `VulkanPipelineLogFormatter.cs`：中文日志格式器（与既有 formatter 同构）。
+- `ShaderBytecode.Vert.cs`：静态 `uint[]` 存放顶点 SPIR-V（最小 passthrough，entry `main`）。由 glslangValidator 本地编译生成，避免引入运行时着色器编译工具链。
+- `ShaderBytecode.Frag.cs`：静态 `uint[]` 存放片元 SPIR-V（输出固定色，entry `main`）。
+- `VulkanShaderModuleOwner.cs`：`unsafe` 助手，用 `uint[]` 建/销 vert+frag 两个 `ShaderModule`；**创建 GraphicsPipeline 成功后立即释放两个 ShaderModule**（短生命周期，不持有到会话结束）。
+- `VulkanGraphicsPipelineOwner.cs`：建 PipelineLayout（空，无 descriptor）+ GraphicsPipeline（绑定 RenderPass，动态 viewport/scissor，空 vertex input，TriangleList）；**不持有 ShaderModule**；暴露只读 `Pipeline` / `Layout`，Dispose 释放 Pipeline→Layout。
+- `VulkanPipelineLogFormatter.cs`：中文日志格式器（与既有 formatter 同构；经注入的 `Action<string> log` 回调，不自带 Console.WriteLine）。
 
 修改（最小改动，守住 ≤100）：
 
@@ -40,11 +41,13 @@
 
 创建（LogicalDevice 就绪后）：
 
-1. 取 `VulkanShaderBytecode.Vertex` / `.Fragment` 两个 `byte[]`。
-2. 各 `ShaderModuleCreateInfo { SType, CodeSize, PCode = (uint*)byte数组 }` → `vk.CreateShaderModule(LogicalDevice, ...)` ×2，VkResult 必检。
-3. 持有 `vert` / `frag` 只读句柄。
+1. 取 `ShaderBytecodeVert.Code` / `ShaderBytecodeFrag.Code` 两个 `uint[]`。
+2. 各 `ShaderModuleCreateInfo { SType, CodeSize = Code.Length * 4, PCode = (uint*)Code }`（`fixed` 固定数组）→ `vk.CreateShaderModule(LogicalDevice, ...)` ×2，VkResult 必检。
+3. 建 PipelineLayout（空）→ 建 GraphicsPipeline（绑 RenderPass + 两模块）→ VkResult 必检。
+4. **成功后立即 `vk.DestroyShaderModule` ×2 释放 vert/frag**（短生命周期：Pipeline 一旦建好，ShaderModule 不再被引用；规避"持有到会话结束"带来的 Detach 顺序复杂化）。
+5. 仅保留 `Pipeline` + `Layout`。
 
-释放：VK5-A 选择**持有到会话结束**（最简单、规避「建完即销 ShaderModule 导致 Pipeline 悬挂」的坑）；`Dispose` 中在 GraphicsPipeline 之后、ClearFrame 之前销毁两个 ShaderModule。优化（建完即销）留待 VK5-A 实装后按验证结果决定，不在规划内定死。
+释放：`VulkanGraphicsPipelineOwner.Dispose` 中**最先**释放 `Pipeline` → `Layout`；ShaderModule 已在创建期释放，Detach 不再触碰。
 
 ## 4. PipelineLayout 创建与释放顺序
 
@@ -75,12 +78,12 @@
 - `Framebuffer` 依赖 `RenderPass` + `Swapchain.ImageViews`；Resize 随 Swapchain 重建，但 RenderPass 不变 → Framebuffer 重建不影响 Pipeline。
 - `CommandBuffer`（ClearFrameOwner 录制）→ `PresentLoop` 提交；VK5-B 在其中 `CmdBindPipeline(pipeline)+CmdDraw` 后，PresentLoop 自动提交，**零改动**。
 - 依赖时序（Attach）：Device → Swapchain → ClearFrame(RenderPass) → ShaderModule(vert/frag) → PipelineLayout → GraphicsPipeline。
-- 依赖时序（Detach，逆序，最先释放 Pipeline）：GraphicsPipeline → PipelineLayout → ShaderModule → ClearFrame(Framebuffer→CommandPool→RenderPass→Sync) → Swapchain → Device → Surface → Instance。
+- 依赖时序（Detach，逆序，最先释放 Pipeline）：GraphicsPipeline → PipelineLayout → ClearFrame(Framebuffer→CommandPool→RenderPass→Sync) → Swapchain → Device → Surface → Instance（ShaderModule 已在创建期释放，不在 Detach 链中）。
 
 ## 7. ≤100 行拆分方案
 
-- `VulkanShaderBytecode.cs`：仅静态 `byte[]`（约 30–50 行，含 vert+frag SPIR-V 常量）。
-- `VulkanShaderModuleOwner.cs`：建/销 2 个模块，约 60–80 行。
+- `ShaderBytecode.Vert.cs` / `ShaderBytecode.Frag.cs`：各仅静态 `uint[]`（约 30–45 行，12 字/行；单独拆文件避免把 vert/frag 塞进一个大文件）。
+- `VulkanShaderModuleOwner.cs`：`unsafe` 建/销 2 个模块，约 30–45 行。
 - `VulkanGraphicsPipelineOwner.cs`：建 Layout+Pipeline，约 80–95 行（逼近上限时把「取 SPIR-V 字节」留在 Bytecode 文件，本类只做 Vulkan 调用）。
 - `VulkanPipelineLogFormatter.cs`：中文格式，约 15–20 行。
 - `VulkanClearFrameOwner.cs`：+1 行 getter（94≤100）。
@@ -109,7 +112,7 @@
 - 构建：XuanYu.Render.Vulkan + XuanYu.Editor.UI 双项目 **0W0E**。
 - 日志依次出现：`ShaderModule 创建成功` → `PipelineLayout 创建成功` → `GraphicsPipeline 创建成功`（经 `VulkanPipelineLogFormatter`）。
 - 画面仍单色清屏（无 Draw，三角形不可见）。
-- Detach 释放顺序：`Pipeline 释放 → Layout 释放 → ClearFrame 释放 → Swapchain → Device → Surface → Instance`。
+- Detach 释放顺序：`Pipeline 释放 → Layout 释放 → ClearFrame 释放 → Swapchain → Device → Surface → Instance`（ShaderModule 已在创建期释放）。
 - 全新增 `.cs` ≤100；子目录 `Pipeline/` ≤7 文件。
 - 无 UI / NativeHost / LOG-UX / Resize 改动；无 Editor.UI 新增 `Silk.NET.Vulkan` 引用。
 - 控制台日志单出口。
@@ -120,7 +123,7 @@
 
 - R1 SPIR-V 合法性：硬编码三角形 SPIR-V 须为合法模块（entry `main`，正确 capability）。错则 `CreateShaderModule` 失败。→ VkResult 必检，失败仅记日志、Pipeline 置 null、不影响 Clear+Present。
 - R2 Silk.NET 动态状态枚举名：`DynamicState.Viewport` / `Scissor` 成员名须与 2.22.0 一致。→ 实装前先确认枚举名；若不确定，VK5-A 退化为**静态 viewport**（写死 extent），Resize 重建 Pipeline 推迟到 VK5-C 再改动态；推荐优先确认动态枚举名、一步到位。
-- R3 ShaderModule 生命周期：建完即销可能使 Pipeline 悬挂。→ VK5-A 选择持有到会话结束（见 §3），规避。
+- R3 ShaderModule 生命周期：已采纳用户修正——**创建 GraphicsPipeline 成功后立即释放 ShaderModule**（短生命周期）。这是 Vulkan 标准做法：模块仅在管线链接期需要，之后不再被引用。
 - R4 RenderPass 稳定性假设：若某路径重建 RenderPass，绑定它的 Pipeline 会失效。→ 已确认 ClearFrameOwner 仅在构造建 RenderPass、Resize 不重建，假设成立；`RebuildFramebuffers` 不改 RenderPass。
 
 回滚：
@@ -130,6 +133,6 @@
 
 ## 11. 决策点（实装前定死，本轮建议）
 
-- **D1 Shader 来源**：选「内嵌 SPIR-V `byte[]`」（`VulkanShaderBytecode.cs`），不引入 `.vert/.frag→.spv` 编译工具链（仓库当前无 glslang 工具链）。若后续需要可换文件方案。
-- **D2 viewport/scissor**：选「动态状态」（一步到位，Resize 不重建 Pipeline），前提 R2 枚举名确认。
-- **D3 ShaderModule 存活**：选「持有到会话结束」（安全优先）。
+- **D1 Shader 来源**：选「内嵌 SPIR-V `uint[]`」（`ShaderBytecode.Vert.cs` / `ShaderBytecode.Frag.cs`），由 glslangValidator 本地编译生成、不引入运行时编译工具链。比 `byte[]` 更稳：`PCode` 直接按 `uint*` 传入，`CodeSize = Code.Length * 4`，免 unsafe 字节转换/对齐/长度换算。
+- **D2 viewport/scissor**：选「动态状态」（一步到位，Resize 不重建 Pipeline），前提 R2 枚举名确认（`DynamicState.Viewport` / `DynamicState.Scissor`）。
+- **D3 ShaderModule 存活**：选「短生命周期」——创建 GraphicsPipeline 成功后立即释放两个 ShaderModule；Detach 只释放 GraphicsPipeline + PipelineLayout。比"持有到会话结束"更干净，Detach 顺序更短、更不易埋雷（采纳用户修正）。
