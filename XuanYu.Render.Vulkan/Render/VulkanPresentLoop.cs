@@ -12,7 +12,7 @@ namespace XuanYu.Render.Vulkan.Render;
 public sealed unsafe class VulkanPresentLoop : IDisposable
 {
     readonly Vk _vk; readonly VulkanDeviceOwner _deviceOwner; readonly VulkanSwapchainOwner _swapchainOwner; readonly VulkanClearFrameOwner _clearFrame; readonly Action<string>? _log;
-    Semaphore _imageAvailable; Semaphore _renderFinished; Fence _fence; Thread? _thread; bool _stop; bool _syncCreated; bool _firstPresentLogged;
+    Semaphore _imageAvailable; Semaphore _renderFinished; Fence _fence; Thread? _thread; bool _stop; bool _syncCreated; bool _firstPresentLogged; bool _outOfDateLogged;
     const ulong AcquireTimeoutNs = 1_000_000_000; const ulong FenceTimeoutNs = 1_000_000_000;
 
     public VulkanPresentLoop(Vk vk, VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner, VulkanClearFrameOwner clearFrame, Action<string>? log)
@@ -22,7 +22,7 @@ public sealed unsafe class VulkanPresentLoop : IDisposable
     {
         if (_thread is not null) return;
         if (!_syncCreated) CreateSync();
-        _stop = false; _thread = new Thread(Run) { IsBackground = true, Name = "VulkanPresent" };
+        _stop = false; _outOfDateLogged = false; _thread = new Thread(Run) { IsBackground = true, Name = "VulkanPresent" };
         _thread.Start();
         Log(VulkanClearFrameLogFormatter.LoopStarted());
     }
@@ -65,6 +65,7 @@ public sealed unsafe class VulkanPresentLoop : IDisposable
             present.WaitSemaphoreCount = 1; present.PWaitSemaphores = &renderDone;
             present.SwapchainCount = 1; present.PSwapchains = &swapchain; present.PImageIndices = &idx;
             var pres = khr.QueuePresent(_deviceOwner.PresentQueue, &present);
+            if (pres == Result.ErrorOutOfDateKhr) { if (!_outOfDateLogged) { _outOfDateLogged = true; Log(VulkanClearFrameLogFormatter.OutOfDatePaused()); } break; }
             if (pres != Result.Success && pres != Result.SuboptimalKhr)
             { Log(VulkanClearFrameLogFormatter.PresentError($"QueuePresent 失败：{pres}")); break; }
             if (!_firstPresentLogged) { _firstPresentLogged = true; Log(VulkanClearFrameLogFormatter.FirstPresented(idx)); }
@@ -73,8 +74,9 @@ public sealed unsafe class VulkanPresentLoop : IDisposable
 
     public void Stop()
     {
-        if (_thread is null) return;
-        _stop = true; _thread.Join(2000); _thread = null;
+        var t = _thread;
+        if (t is null) return;
+        _stop = true; t.Join(2000); _thread = null;
         Log(VulkanClearFrameLogFormatter.LoopStopped());
     }
 

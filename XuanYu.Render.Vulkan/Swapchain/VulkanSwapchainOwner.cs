@@ -42,7 +42,7 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         {
         var (swapchain, images, views, format, extent, ok) = VulkanSwapchainBuilder.Build(vk, instance, physicalDevice, surface, khr, deviceOwner.LogicalDevice, width, height, log);
         if (!ok) return null;
-        Log(log, VulkanSwapchainLogFormatter.Created(views.Length));
+        Log(log, VulkanSwapchainLogFormatter.Created(extent, views.Length));
         return new VulkanSwapchainOwner(vk, instance, deviceOwner, surface, physicalDevice, khr, swapchain, images, views, format, extent, log);
         }
         catch (Exception ex) { Log(log, VulkanSwapchainLogFormatter.Failed($"创建异常：{ex.Message}")); return null; }
@@ -58,7 +58,7 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
             if (!ok) return;
             DestroyImagesAndViews();
             _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent;
-            Log(_log, VulkanSwapchainLogFormatter.Recreated((uint)width, (uint)height, views.Length));
+            Log(_log, VulkanSwapchainLogFormatter.Recreated(_extent, views.Length));
         }
         catch (Exception ex) { Log(_log, VulkanSwapchainLogFormatter.Failed($"重建异常：{ex.Message}")); }
     }

@@ -1,5 +1,43 @@
 # changelog
 
+## [VK4-D-R3] Present 泵 OutOfDate 降级 + Resize 日志顺序 + 物理像素诚实日志（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D-R2 收口后用户真机验收发现（1）蓝灰清屏只覆盖上半部分（半屏）；（2）`QueuePresent` 反复返回 `ErrorOutOfDateKhr` 刷屏；（3）日志详情栏展开/收起后 NativeHost 视口尺寸同步慢半拍；（4）Resize 时序竞争。用户给出两阶段方案：VK4-D-R3（Render.Vulkan 侧）修 ①②，VIEWPORT-RESIZE-R1（Editor.UI 侧）修 ③。
+状态：VK4-D-R3 修复完成，双项目 0W0E，全 .cs ≤100（VulkanPresentLoop 99 / VulkanRenderSession 59 / VulkanSwapchainOwner 88 / VulkanSwapchainCapabilities 81 / VulkanSwapchainLogFormatter 15 / VulkanClearFrameLogFormatter 17）；待用户真机验收「全区域蓝灰不再半屏 + Resize 单次重建 + OutOfDate 不再反复刷 + 关闭/打开日志详情栏后视口立即同步」。VIEWPORT-RESIZE-R1 尚未开始。
+
+### 修复点（Render.Vulkan 侧，VK4-D-R3）
+1. **OutOfDate 优雅降级（不再刷屏）**：`VulkanPresentLoop.Run` 中 `QueuePresent` 返回 `ErrorOutOfDateKhr` 时，仅在首次（`_outOfDateLogged` 守卫）记录一次 `【VulkanClearFrame】Swapchain 已过期，暂停 Present，等待 Resize 重建`，随后 `break` 退出 Present 泵；不再当作错误反复刷屏并 break。新增字段 `_outOfDateLogged`，`Start()` 重置为 false。
+2. **Acquire 的 OutOfDate 仍 sleep continue**：`AcquireNextImage` 返回 `ErrorOutOfDateKhr` 保持 `Thread.Sleep(1); continue;` 等下次 Resize 重建（与 VK4-D-R1 一致，不当失败）。
+3. **Resize 日志顺序收口**：`VulkanRenderSession.Resize` 改为 `Stop 泵 → Swapchain Recreate → RebuildFramebuffers → 记 Rebuilt（用 _swapchainOwner.Extent 物理像素）→ Start 泵`，确保「Framebuffer 重建成功」日志在「泵启动」之前，且 extent 来源统一为物理像素。
+4. **物理像素诚实日志**：`VulkanSwapchainCapabilities.Query` 能力日志同时打印「请求逻辑尺寸 / Surface CurrentExtent（物理像素）/ 选择 extent（物理像素）」；`VulkanSwapchainLogFormatter.Created/Recreated` 与 `VulkanClearFrameLogFormatter.Rebuilt` 改收 `Extent2D` 打印「（物理像素）」；`VulkanSwapchainOwner` 创建/重建改传实际 `_extent`。
+
+### 关于「半屏蓝灰」的判断
+- 经核对：`VulkanSwapchainOwner._extent`（= `caps.CurrentExtent` 物理像素）、`VulkanClearFrameOwner` 的 Framebuffer/RenderPass/RenderArea 均以此 `Extent2D` 为唯一来源，三者同源。用户方案中「Framebuffer 用逻辑尺寸」的假设在代码中不成立，故本阶段不盲改已正确的 extent 统一，只通过诚实日志让半屏真因在真机运行日志中暴露，交由 VIEWPORT-RESIZE-R1 视 probe 结果决定。
+
+### 严禁（均未触碰）
+- 不新增场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加 / 持续动画。
+- 不修改日志 UX（LOG-UX 成果保持）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型（VK4-D-R3 仅动 Render.Vulkan）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge（Bridge 83 行仅委托）。
+
+### 关键实现细节
+- `Result.SuboptimalKhr` 仍是成功码（`res != Success && res != SuboptimalKhr` 才判失败）；`ErrorOutOfDateKhr` 反映 Swapchain 过期，需重建而非当错误。
+- `Stop()` 局部捕获 `_thread` 引用（`var t = _thread;`），避免 Join 后外部置 null 造成 NRE。
+- 日志单出口：`VulkanClearFrameLogFormatter` 纯文本格式器，经 Bridge `Emit` 统一输出；新增 `OutOfDatePaused()` 走同一通道。
+
+### 验收
+1. XuanYu.Render.Vulkan 0 warning / 0 error。
+2. XuanYu.Editor.UI 0 warning / 0 error（VK4-D-R3 未动 Editor.UI）。
+3. 所有 .cs 文件 ≤100 行（VulkanPresentLoop 99 / VulkanRenderSession 59 / VulkanSwapchainOwner 88 / VulkanSwapchainCapabilities 81 / VulkanSwapchainLogFormatter 15 / VulkanClearFrameLogFormatter 17）。
+4. 真机：全区域蓝灰不再半屏（以物理像素 extent 日志核对）。
+5. 真机：Resize 一次只重建一次 Swapchain；日志顺序「Framebuffer 重建成功」在「Present 泵已启动」之前。
+6. 真机：OutOfDate 不再反复刷屏，仅记一次「Swapchain 已过期，暂停 Present」。
+7. 关闭时释放顺序正确（ClearFrame→Swapchain→Device→Surface→Instance）。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [VK4-D-R2] Present 泵后台线程日志回调线程派发修复（2026-07-09）
 
 分支：fix/RZ-VK3-A-surface-contract

@@ -44,8 +44,8 @@ public sealed class VulkanRenderSession : IDisposable
         _presentLoop.Stop();
         _swapchainOwner.Recreate(width, height);
         _clearFrame.RebuildFramebuffers();
+        _log?.Invoke(VulkanClearFrameLogFormatter.Rebuilt(_swapchainOwner.Extent, (uint)_clearFrame.CommandBuffers.Length));
         _presentLoop.Start();
-        _log?.Invoke(VulkanClearFrameLogFormatter.Rebuilt((uint)width, (uint)height, (uint)_clearFrame.CommandBuffers.Length));
     }
 
     public void Dispose()
