@@ -1,5 +1,9 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-A-Plan 文档快照 (2026-07-09)
+本轮仅新增规划文档，不改任何代码（`.cs` / `.axaml` / `.csproj` 均未动）。
+- `docs/rz-vk5-a-plan.md`  # RZ-VK5-A 规划：在 VK4-D Clear+Present 闭环上接入 ShaderModule + PipelineLayout + GraphicsPipeline 最小方案（只规划不实装）。10 项输出：当前 Vulkan 文件职责 / VK5-A 新增(4 文件 `Pipeline/`)+修改(ClearFrameOwner +1 RenderPass getter、RenderSession +pipeline 接线)清单 / ShaderModule·PipelineLayout·GraphicsPipeline 创建释放顺序 / RenderPass·Swapchain·Framebuffer·Pipeline 依赖（RenderPass 构造时建一次、Resize 不重建→Pipeline Resize 稳定）/ ≤100 拆分 / 禁止事项 / 验收 / 风险与回滚；3 决策点（内嵌 SPIR-V byte[]、动态 viewport-scissor、ShaderModule 持有到会话结束）。关键结论：PresentLoop 提交 ClearFrameOwner 录好的 CommandBuffer，VK5-A/B 加 BindPipeline+Draw 零改动 PresentLoop。
+
 ## VK4-Closure + VK5-Plan 文档快照 (2026-07-09)
 本轮仅新增文档，不改任何代码（`.cs` / `.axaml` / `.csproj` 均未动）。
 - `docs/rz-vk4-closure.md`  # VK4 阶段正式收口确认：VK4-A/B/C/D + VIEWPORT-RESIZE-R2 逐项收口表、已验证清单、跨阶段长期硬规则、已知债务、下一阶段指向 VK5。

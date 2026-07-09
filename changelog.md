@@ -1,5 +1,15 @@
 # changelog
 
+## [RZ-VK5-A-Plan] VK5-A 规划：ShaderModule + GraphicsPipeline 最小接入（2026-07-09，仅规划）
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮**只规划、不写代码**（未改任何 `.cs` / `.axaml` / `.csproj`）。
+- 新增 `docs/rz-vk5-a-plan.md`：RZ-VK5-A 规划——在当前 VK4-D Clear+Present 闭环上接入 ShaderModule + PipelineLayout + GraphicsPipeline 最小方案。
+- 必读已读：`rz-vk4-closure.md` / `rz-vk5-plan.md` / `file-tree.md` / `docs/dev-rules.md`（已存在，不新建）/ 当前 Vulkan Clear+Present 源。
+- 关键结论：①`PresentLoop` 提交 `ClearFrameOwner` 录好的 CommandBuffer，VK5-A/B 加 `CmdBindPipeline`+`CmdDraw` 会被自动提交，PresentLoop 零改动；②`RenderPass` 构造时建一次、Resize 只重建 Framebuffer，故绑它的 GraphicsPipeline 在 Resize 时无需重建。
+- 输出 10 项：当前 Vulkan 文件职责 / VK5-A 新增+修改清单 / ShaderModule 创建释放 / PipelineLayout 创建释放 / GraphicsPipeline 创建释放 / RenderPass·Swapchain·Framebuffer·Pipeline 依赖 / ≤100 拆分 / 禁止事项 / 验收 / 风险与回滚；含 3 个决策点（内嵌 SPIR-V byte[] / 动态 viewport-scissor / ShaderModule 持有到会话结束）。
+- VK5-A 实装禁止事项（承 red lines）：不 Draw、不画三角形、不建 VertexBuffer/DescriptorSet、不接 Scene/Camera/Mesh/Material/Gizmo、不改 UI/NativeHost/LOG-UX/Resize、不扩大 Editor.UI→Render.Vulkan 引用、不清 VulkanClearSession。
+
 ## [VK5-Plan-R1] 仓库记忆文件收口：.workbuddy/memory 移出追踪并 gitignore（2026-07-09，仅仓库卫生）
 
 分支：fix/RZ-VK3-A-surface-contract
