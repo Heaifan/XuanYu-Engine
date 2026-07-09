@@ -175,6 +175,7 @@ VK4-C-R1 二次运行已验证 Resize 重建 Swapchain 通过，但审计 Vulkan
 ### 红线校验
 - `git diff` 仅 `XuanYu.Editor.UI/Foot/Foot.axaml.cs`；`UiVm.Logging.cs` 保持 100 行未动、`Foot.axaml` 95 行未动；未改 `Render.Vulkan` / NativeHost。
 - `Foot.axaml.cs` 36→89 行，<100。
+- 可视化：`docs/log-ux-1-r2-autoscroll.svg`（跟随状态机 FOLLOW/PAUSED + 滚动时序 LogItems→LayoutUpdated→ScrollToEnd）。
 
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。

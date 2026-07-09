@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" font-family="Segoe UI, Microsoft YaHei UI, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="680" height="360" fill="#ffffff"/>
+  <text x="20" y="28" font-size="15" font-weight="700" fill="#0f172a">LOG-UX-1-R2 日志自动滚动 — 跟随状态机 + 滚动时序</text>
+  <text x="20" y="48" font-size="11" fill="#64748b">Foot.axaml.cs（89 行）· 仅 UI，不碰 Vulkan / 日志数据模型</text>
+
+  <!-- 左：状态机 -->
+  <text x="20" y="76" font-size="12" font-weight="700" fill="#185aa6">① 跟随状态机</text>
+
+  <rect x="30" y="92" width="150" height="52" rx="8" fill="#eaf3ff" stroke="#185aa6" stroke-width="1.5"/>
+  <text x="105" y="116" font-size="13" font-weight="700" fill="#172337" text-anchor="middle">FOLLOW 跟随</text>
+  <text x="105" y="134" font-size="10" fill="#55667d" text-anchor="middle">用户在底部，新日志自动滚</text>
+
+  <rect x="30" y="244" width="150" height="52" rx="8" fill="#fff4e5" stroke="#d97706" stroke-width="1.5"/>
+  <text x="105" y="268" font-size="13" font-weight="700" fill="#7c3a06" text-anchor="middle">PAUSED 暂停</text>
+  <text x="105" y="286" font-size="10" fill="#55667d" text-anchor="middle">用户上翻看历史，不打扰</text>
+
+  <!-- FOLLOW -> PAUSED -->
+  <path d="M180,118 C250,118 250,270 188,270" fill="none" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="200" y="200" font-size="10" fill="#334155">用户上翻</text>
+  <text x="200" y="214" font-size="10" fill="#334155">ScrollChanged |ΔY|≥0.5</text>
+  <text x="200" y="228" font-size="10" fill="#334155">且不在底部</text>
+
+  <!-- PAUSED -> FOLLOW -->
+  <path d="M188,270 C250,270 250,118 180,118" fill="none" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="200" y="150" font-size="10" fill="#334155">滚回底部</text>
+  <text x="200" y="164" font-size="10" fill="#334155">ScrollChanged |ΔY|≥0.5</text>
+  <text x="200" y="178" font-size="10" fill="#334155">Offset.Y+VH≥H-2</text>
+
+  <!-- 底部判定 -->
+  <text x="105" y="170" font-size="10" fill="#0f766e" text-anchor="middle">判定：</text>
+  <text x="105" y="184" font-size="10" fill="#0f766e" text-anchor="middle">Offset.Y + Viewport.H</text>
+  <text x="105" y="198" font-size="10" fill="#0f766e" text-anchor="middle">≥ Extent.H − 2</text>
+
+  <!-- 右：时序 -->
+  <text x="360" y="76" font-size="12" font-weight="700" fill="#185aa6">② 滚动时序（规避竞态）</text>
+
+  <rect x="360" y="92" width="300" height="40" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="372" y="116" font-size="11" fill="#172337">1. LogItems 变化 → _pendingScroll = _followTail</text>
+
+  <rect x="360" y="148" width="300" height="40" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="372" y="172" font-size="11" fill="#172337">2. LayoutUpdated（新项已测量）</text>
+
+  <rect x="360" y="204" width="300" height="40" rx="6" fill="#eaf3ff" stroke="#185aa6"/>
+  <text x="372" y="228" font-size="11" fill="#172337">3. ScrollToEnd() —— _pendingScroll 一次性清除</text>
+
+  <path d="M510,132 L510,148" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M510,188 L510,204" stroke="#334155" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <text x="372" y="276" font-size="10" fill="#64748b">关键：Extent 增长（新日志导致）不算用户滚动，</text>
+  <text x="372" y="290" font-size="10" fill="#64748b">故 ScrollChanged 仅当 |OffsetDelta.Y|≥0.5 才改状态，</text>
+  <text x="372" y="304" font-size="10" fill="#64748b">避免「用户在底部却被新日志误停跟随」。</text>
+
+  <text x="372" y="330" font-size="10" fill="#0f766e">红线：UiVm.Logging.cs 保持 100 行未动；</text>
+  <text x="372" y="344" font-size="10" fill="#0f766e">Ctrl+A/C 多选复制沿用 LOG-UX-1-R1，不受影响。</text>
+</svg>

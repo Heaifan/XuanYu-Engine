@@ -245,3 +245,4 @@ New Vulkan / NativeHost files:
 - `docs/rz-vk4-c-swapchain-plan.md`  # VK4-C-Plan（2026-07-08，只规划不实装）：Swapchain + Images + ImageViews 生命周期规划；边界（不建 RenderPass/Framebuffer/CommandPool/CommandBuffer、不 Clear/Present）、Resize 只重建 Swapchain+ImageViews、Dispose 顺序 ImageViews→Swapchain→LogicalDevice→Surface→Instance、独立 owner/attach step 文件结构、命名与 100 行红线。
 - `docs/rz-vk4-c-r1-audit-plan.md`  # VK4-C-R1 审计与运行验证计划（2026-07-08）：只审计不新增能力、不进 VK4-D；静态审计结论 + 运行验证清单（14 项）+ Codex 指令。
 - `docs/vk4-c-r1-swapchain-fix.svg`  # VK4-C-R1 Swapchain 重建修复对比图：修复前未设 OldSwapchain→失败 / 修复后传旧句柄→成功（透明背景、规范箭头，符合 Visualizer 约束）。
+- `docs/log-ux-1-r2-autoscroll.svg`  # LOG-UX-1-R2 日志自动滚动可视化：跟随状态机（FOLLOW/PAUSED）+ 滚动时序（LogItems→LayoutUpdated→ScrollToEnd，规避 Extent 增长误判竞态）。
