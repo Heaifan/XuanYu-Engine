@@ -63,7 +63,7 @@ public static unsafe class VulkanSwapchainCapabilities
         return new Extent2D(w, h);
     }
 
-    static void Log(Action<string>? log, string m) { log?.Invoke(m); Console.WriteLine(m); }
+    static void Log(Action<string>? log, string m) { log?.Invoke(m); }
 }
 
 public readonly record struct SwapchainCaps(

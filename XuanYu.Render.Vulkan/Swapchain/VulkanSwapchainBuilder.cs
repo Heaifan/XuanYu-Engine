@@ -71,5 +71,5 @@ public static unsafe class VulkanSwapchainBuilder
         return (images, views);
     }
 
-    static void Log(Action<string>? log, string m) { log?.Invoke(m); Console.WriteLine(m); }
+    static void Log(Action<string>? log, string m) { log?.Invoke(m); }
 }

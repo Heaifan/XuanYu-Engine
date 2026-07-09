@@ -58,10 +58,7 @@ public sealed partial class UiVm
     void InitLogs()
     {
         _logBus = new EditorLogBus(_logBuffer);
-        _logBuffer.Seed(SampleLogEntries.All);
-        _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Layout, "编辑器布局已恢复", "低频启动日志。");
-        _logBus.Info(EditorLogSource.Project, EditorLogCategory.Load, "已打开项目：SampleProject", "UI 外壳启动种子项目。");
-        _logBus.Info(EditorLogSource.Render, EditorLogCategory.Backend, "Vulkan Surface 生命周期已接入；Device / Swapchain 尚未接入", "低频启动提示，Surface 生命周期已接入，Device/Swapchain 待 VK4。");
+        // 生产运行时不再注入示例/种子日志；空状态由 UI「暂无日志」占位呈现。
         RefreshLogBindings();
     }
 

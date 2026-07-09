@@ -20,7 +20,7 @@ public sealed unsafe class VulkanPhysicalDeviceSelector
         if (count == 0)
         {
             var msg = "【VulkanDevice】枚举物理设备失败：未找到任何物理设备";
-            log?.Invoke(msg); Console.WriteLine(msg);
+            log?.Invoke(msg);
             return new VulkanPhysicalDeviceSelection(false, default, null, null, "未枚举到物理设备");
         }
         var devices = stackalloc PhysicalDevice[(int)count];
@@ -49,7 +49,7 @@ public sealed unsafe class VulkanPhysicalDeviceSelector
         if (best is null || bestQ is null)
         {
             var msg = "【VulkanDevice】未找到可用物理设备：需同时支持 Graphics 队列与 Surface Present";
-            log?.Invoke(msg); Console.WriteLine(msg);
+            log?.Invoke(msg);
             return new VulkanPhysicalDeviceSelection(false, default, null, null, "无可用设备（缺 Graphics 或 Present）");
         }
         Log(log, $"【VulkanDevice】已选择物理设备：{best.Name}；原因：{reason}；" +
@@ -79,7 +79,7 @@ public sealed unsafe class VulkanPhysicalDeviceSelector
         var hasG = g >= 0; var hasP = p >= 0;
         return new VulkanQueueFamilySelection(g, p, hasG, hasP, hasG && hasP && g == p);
     }
-    static void Log(Action<string>? log, string msg) { log?.Invoke(msg); Console.WriteLine(msg); }
+    static void Log(Action<string>? log, string msg) { log?.Invoke(msg); }
 
     static string TypeName(PhysicalDeviceType t) => t switch
     {

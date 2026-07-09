@@ -16,7 +16,7 @@ public sealed class VulkanBridgeSwapchainAttachStep
         if (deviceOwner is null || selection is null || !selection.Success)
         {
             var skip = "【VulkanSwapchain】Swapchain 创建跳过：LogicalDevice 或物理设备选择不可用";
-            log?.Invoke(skip); Console.WriteLine(skip); return null;
+            log?.Invoke(skip); return null;
         }
         try
         {
@@ -25,7 +25,7 @@ public sealed class VulkanBridgeSwapchainAttachStep
         catch (Exception ex)
         {
             var msg = $"【VulkanSwapchain】Swapchain 创建异常：{ex.Message}；Instance + Surface + Device 保持已附加状态";
-            log?.Invoke(msg); Console.WriteLine(msg);
+            log?.Invoke(msg);
             return null;
         }
     }

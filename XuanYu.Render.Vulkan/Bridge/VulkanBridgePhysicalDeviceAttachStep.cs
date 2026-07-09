@@ -17,7 +17,7 @@ public sealed class VulkanBridgePhysicalDeviceAttachStep
         catch (Exception ex)
         {
             var msg = $"【VulkanDevice】物理设备选择异常：{ex.Message}；Instance + Surface 保持已附加状态";
-            log?.Invoke(msg); Console.WriteLine(msg);
+            log?.Invoke(msg);
             return null;
         }
     }

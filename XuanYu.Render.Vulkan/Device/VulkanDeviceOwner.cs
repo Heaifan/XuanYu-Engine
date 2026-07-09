@@ -95,5 +95,5 @@ public sealed unsafe class VulkanDeviceOwner : IDisposable
         Log(_log, "【VulkanDevice】LogicalDevice 释放成功");
     }
 
-    static void Log(Action<string>? log, string m) { log?.Invoke(m); Console.WriteLine(m); }
+    static void Log(Action<string>? log, string m) { log?.Invoke(m); }
 }

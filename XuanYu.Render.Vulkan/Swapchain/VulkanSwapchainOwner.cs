@@ -82,5 +82,5 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
     public Extent2D Extent => _extent;
     public ReadOnlySpan<ImageView> ImageViews => _imageViews;
 
-    static void Log(Action<string>? log, string m) { log?.Invoke(m); Console.WriteLine(m); }
+    static void Log(Action<string>? log, string m) { log?.Invoke(m); }
 }

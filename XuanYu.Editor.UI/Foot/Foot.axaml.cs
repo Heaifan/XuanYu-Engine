@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -12,45 +11,52 @@ using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
 
-// LOG-UX-1-R3：日志面板自动滚动（R2 因 PropertyChanged→LayoutUpdated 时序不可靠未生效，
-// 本版改用 Dispatcher.InvokeAsync(Render)，确保布局完成后再滚到底）。
-// 边界：只改本文件 UI 行为，不碰 Vulkan / Render.Vulkan / NativeHost / 日志数据模型。
+// LOG-UX-1-R4（用户称 R2）：自动滚动 + 种子清理 + 控制台去重。
+// 自动滚动根因：R3 的 TryHook 在 ListBox 模板未应用时 FindDescendantOfType<ScrollViewer> 返回 null 且不再重试，_logScroll 永远为 null → 滚动死。
+// 本版延迟解析 + TemplateApplied 重试，直接 ScrollToEnd 控 Offset。边界：只改本文件 + UiVm.Logging（去种子）+ 低层 Vulkan Log 辅助（去 Console.WriteLine，单出口留 VulkanBridgeLogFormatter）。
 public partial class Foot : UserControl
 {
     ScrollViewer? _logScroll;
-    bool _followTail = true;   // 用户在底部时跟随最新；上翻历史时暂停
+    bool _followTail = true;
     bool _scrollHooked;
     bool _vmHooked;
 
     public Foot()
     {
         InitializeComponent();
-        AttachedToVisualTree += (_, _) => TryHook();
-        DataContextChanged += (_, _) => TryHook();
+        AttachedToVisualTree += (_, _) => ResolveScrollViewer();
+        DataContextChanged += (_, _) => HookVm();
+        LogList.TemplateApplied += (_, _) => ResolveScrollViewer();
     }
 
-    void TryHook()
+    void ResolveScrollViewer()
     {
         _logScroll ??= LogList.FindDescendantOfType<ScrollViewer>();
         if (_logScroll is not null && !_scrollHooked)
         {
             _logScroll.ScrollChanged += OnScrollChanged;
             _scrollHooked = true;
-            ScrollToTail(); // 首次附着对齐到底部
+            ScrollToTail();
         }
-        if (DataContext is UiVm vm && !_vmHooked)
+        else if (_logScroll is null && !_scrollHooked)
         {
-            vm.PropertyChanged += OnVmPropertyChanged;
-            _vmHooked = true;
+            Dispatcher.InvokeAsync(ResolveScrollViewer, DispatcherPriority.Loaded); // 模板未应用则重试
         }
     }
 
-    // 核心修复：LogItems 变更后用 InvokeAsync(Render) 延迟滚到底。
+    void HookVm()
+    {
+        if (DataContext is UiVm vm && !_vmHooked)
+        { vm.PropertyChanged += OnVmPropertyChanged; _vmHooked = true; }
+    }
+
     void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(UiVm.LogItems)) return;
-        if (!_followTail || _logScroll is null) return;
-        Dispatcher.InvokeAsync(ScrollToTail, DispatcherPriority.Render);
+        if (!_followTail) return;
+        ResolveScrollViewer();
+        if (_logScroll is null) return;
+        Dispatcher.InvokeAsync(ScrollToTail, DispatcherPriority.Render); // 布局完成后滚到底
     }
 
     void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
@@ -61,8 +67,9 @@ public partial class Foot : UserControl
 
     void ScrollToTail()
     {
-        if (_logScroll is null) return;
-        try { _logScroll.ScrollToEnd(); } catch { /* 控件可能已卸载 */ }
+        if (_logScroll is null) { ResolveScrollViewer(); if (_logScroll is null) return; }
+        try { _logScroll.ScrollToEnd(); }
+        catch (Exception ex) { Debug.WriteLine($"[Foot] ScrollToEnd: {ex.Message}"); }
     }
 
     void LogList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -82,7 +89,7 @@ public partial class Foot : UserControl
             if (clipboard is not null)
             {
                 try { await clipboard.SetTextAsync(vm.SelectedEntriesClipboardText); }
-                catch { /* 剪贴板不可用 */ }
+                catch (Exception ex) { Debug.WriteLine($"[LogList] 复制失败: {ex}"); }
             }
             vm.NotifyLogCopied();
             e.Handled = true;

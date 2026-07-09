@@ -135,6 +135,44 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
+## [LOG-UX-1-R4] 日志系统三修：自动滚动根因修复 + 种子清理 + 控制台去重（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R4（用户指令称 LOG-UX-1-R2，但 R2/R3 已被占用，顺延 R4）。仅改 UI shell + 低层 Vulkan Log 辅助（去 Console.WriteLine）；不碰 Vulkan 生命周期行为 / NativeHost / Swapchain 逻辑；不进 VK4-D。
+
+### 一、自动滚动根因修复（前两次 R2/R3 仍失效）
+- **根因（确证）**：R3 在 `TryHook`（`AttachedToVisualTree`/`DataContextChanged`）时 ListBox 模板尚未应用，`FindDescendantOfType<ScrollViewer>()` 返回 null 且不再重试 → `_logScroll` 永远为 null → `OnVmPropertyChanged` 每次 `if (_logScroll is null) return` 直接退出 → 滚动完全死。
+- **修复**：
+  - `LogList.TemplateApplied` 事件 + `Dispatcher.InvokeAsync(ResolveScrollViewer, Loaded)` 延迟重试，确保拿到内部 ScrollViewer 后才挂 `ScrollChanged` 并首次 `ScrollToTail`。
+  - 新日志进入：`ResolveScrollViewer()` 兜底补解析 → `Dispatcher.InvokeAsync(ScrollToTail, Render)`，布局完成后 `ScrollToEnd()` 直接控 Offset 到底部。
+  - 跟随态判定不变：`ScrollChanged` 仅当用户主动滚动（`|OffsetDelta.Y|>=0.5`）才重算 `_followTail`，Extent 增长不误判。上翻暂停、回底恢复。
+- 代码：`Foot.axaml.cs` 91→98 行（注释精简，仍 <100）。
+
+### 二、清理 21:32 示例/种子日志
+- **现象**：日志面板混入 `编辑器布局已恢复`/`已打开项目：SampleProject`/`Vulkan Surface 生命周期已接入；Device / Swapchain 尚未接入`/`构建队列空闲`/`点击拾取未命中任何对象`/`资源导入队列为空`，且「Device / Swapchain 尚未接入」已过期（现已接入）。
+- **来源**：`UiVm.Logging.InitLogs` 调 `_logBuffer.Seed(SampleLogEntries.All)` + 3 条 `_logBus.Info` 种子。
+- **修复**：删除 `_logBuffer.Seed(...)` 与 3 条种子 `_logBus.Info`；空状态由 UI「暂无日志」占位呈现。`SampleLogEntries.cs` 数据类保留（无引用，无害）。
+- 效果：启动后日志面板从真实 Vulkan 生命周期日志起，无假数据污染审计。
+
+### 三、控制台 Vulkan 日志去重
+- **现象**：`AttachConsole(-1)` 生效后终端每条 Vulkan 日志出现两遍。
+- **根因（确认）**：低层 Vulkan `Log(log, m)` 辅助在 `log?.Invoke(m)` 之外**又各自 `Console.WriteLine(m)`**；而 `log` 就是 Bridge 的 `Emit` → `VulkanBridgeLogFormatter.Emit` 本身已 `Console.WriteLine` → 双写。同样问题在 `VulkanPhysicalDeviceSelector` 2 处内联、`VulkanBridge{Device,PhysicalDevice,Swapchain}AttachStep` 共 5 处。
+- **修复（统一单出口）**：删除所有低层 `Console.WriteLine`，仅保留 `VulkanBridgeLogFormatter.Emit` 内的唯一 `Console.WriteLine` 作为控制台单出口。
+- **未动**：`VulkanInstanceOwner`/`VulkanSurfaceOwner` 仅直接 `Console.WriteLine`（不走 `Emit`），终端已单现，不重复，保持。
+- 效果：终端每条 Vulkan 生命周期日志仅一次；UI 面板仍正常一次。
+
+### 红线校验
+- `Foot.axaml.cs` 98 行 <100 ✅；`UiVm.Logging.cs` 100 行未动（仅删种子调用）✅；5 低层文件仅删 1 行 Console.WriteLine、AttachStep 删 5 处，全 ≤100 ✅。
+- 不碰 Render.Vulkan 生命周期行为 / NativeHost Attach·Resize·Detach / Swapchain 创建·重建·释放 ✅。
+- 双项目低内存构建 0W0E ✅。
+
+### 下一步
+- 用户重跑编辑器：① 日志面板自动滚到最新（不再卡在旧种子位置）；② 面板无 21:32 假日志；③ 终端每条 Vulkan 日志仅一次。
+- 全过 → VK4-C 日志链路收口，开 VK4-D 出画面。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [LOG-UX-1-R3] 自动滚动修复 + WinExe 控制台输出（2026-07-09）
 
 分支：fix/RZ-VK3-A-surface-contract

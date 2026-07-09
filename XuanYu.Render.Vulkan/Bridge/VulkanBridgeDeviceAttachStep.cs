@@ -13,7 +13,7 @@ public sealed class VulkanBridgeDeviceAttachStep
         if (sel is null || !sel.Success)
         {
             var skip = "【VulkanDevice】LogicalDevice 创建跳过：VK4-A 选择结果不可用";
-            log?.Invoke(skip); Console.WriteLine(skip); return null;
+            log?.Invoke(skip); return null;
         }
         try
         {
@@ -22,7 +22,7 @@ public sealed class VulkanBridgeDeviceAttachStep
         catch (Exception ex)
         {
             var msg = $"【VulkanDevice】LogicalDevice 创建异常：{ex.Message}；Instance + Surface + 物理设备保持已附加状态";
-            log?.Invoke(msg); Console.WriteLine(msg);
+            log?.Invoke(msg);
             return null;
         }
     }
