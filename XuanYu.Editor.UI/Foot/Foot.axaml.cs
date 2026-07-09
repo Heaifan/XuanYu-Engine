@@ -1,73 +1,22 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
-using Avalonia.Threading;
-using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
 
-// LOG-UX-1-R4（用户称 R2）：自动滚动 + 种子清理 + 控制台去重。
-// 自动滚动根因：R3 的 TryHook 在 ListBox 模板未应用时 FindDescendantOfType<ScrollViewer> 返回 null 且不再重试，_logScroll 永远为 null → 滚动死。
-// 本版延迟解析 + TemplateApplied 重试，直接 ScrollToEnd 控 Offset。边界：只改本文件 + UiVm.Logging（去种子）+ 低层 Vulkan Log 辅助（去 Console.WriteLine，单出口留 VulkanBridgeLogFormatter）。
+// LOG-UX-1-R5A：止血修复——彻底禁用日志自动滚动，恢复编辑器稳定启动。
+// 根因：自动滚动状态机（TemplateApplied 解析 ScrollViewer + ScrollChanged 跟随 + Dispatcher 自动 ScrollToTail）
+// 在 Vulkan Attach 同步执行于 UI 线程期间触发视觉树遍历/Dispatcher 堆积，导致主窗口「未响应」、退出码 0xCFFFFFFF。
+// 保留：Ctrl+A/Ctrl+C 多行复制、详情选中、AttachConsole、控制台去重、种子清理（均在其它文件，不受影响）。
+// 自动滚动后续由独立控制器重新设计（LOG-UX-2：LogListAutoScrollController.cs），不再在本文件硬顶。
 public partial class Foot : UserControl
 {
-    ScrollViewer? _logScroll;
-    bool _followTail = true;
-    bool _scrollHooked;
-    bool _vmHooked;
-
     public Foot()
     {
         InitializeComponent();
-        AttachedToVisualTree += (_, _) => ResolveScrollViewer();
-        DataContextChanged += (_, _) => HookVm();
-        LogList.TemplateApplied += (_, _) => ResolveScrollViewer();
-    }
-
-    void ResolveScrollViewer()
-    {
-        _logScroll ??= LogList.FindDescendantOfType<ScrollViewer>();
-        if (_logScroll is not null && !_scrollHooked)
-        {
-            _logScroll.ScrollChanged += OnScrollChanged;
-            _scrollHooked = true;
-            ScrollToTail();
-        }
-        else if (_logScroll is null && !_scrollHooked)
-        {
-            Dispatcher.InvokeAsync(ResolveScrollViewer, DispatcherPriority.Loaded); // 模板未应用则重试
-        }
-    }
-
-    void HookVm()
-    {
-        if (DataContext is UiVm vm && !_vmHooked)
-        { vm.PropertyChanged += OnVmPropertyChanged; _vmHooked = true; }
-    }
-
-    void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(UiVm.LogItems)) return;
-        if (!_followTail || _logScroll is null) return; // 未解析到 ScrollViewer 时不做任何事（避免 Vulkan Attach 期间每条日志遍历视觉树）
-        Dispatcher.InvokeAsync(ScrollToTail, DispatcherPriority.Render); // 布局完成后滚到底
-    }
-
-    void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
-    {
-        if (_logScroll is null || Math.Abs(e.OffsetDelta.Y) < 0.5) return;
-        _followTail = _logScroll.Offset.Y + _logScroll.Viewport.Height >= _logScroll.Extent.Height - 2.0;
-    }
-
-    void ScrollToTail()
-    {
-        if (_logScroll is null) return;
-        try { _logScroll.ScrollToEnd(); }
-        catch (Exception ex) { Debug.WriteLine($"[Foot] ScrollToEnd: {ex.Message}"); }
     }
 
     void LogList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
