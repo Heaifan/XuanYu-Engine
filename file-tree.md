@@ -1,12 +1,16 @@
 # 项目文件树 — XuanYu Engine
 
-## VIEWPORT-RESIZE-R1 快照 (2026-07-09)
-VIEWPORT-RESIZE-R1（Editor.UI 侧）已收口：日志详情栏展开/收起后 NativeHost 最终尺寸主动同步，全部 ≤100 行，双项目 0W0E。
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` 94→99：`partial` 化；构造函数订阅 `DataContextChanged` 钩 `HookLayoutSync`；`OnDetachedFromVisualTree`/`DestroyNativeControlCore` 加 `UnhookLayoutSync`；不动原有 OnSizeChanged/Coalescer 路径。
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`（新增 38）：`HookLayoutSync`/`UnhookLayoutSync`（订阅 `UiVm.IsLogOpen` 的 `PropertyChanged`）；`OnLayoutSyncProp` 以 `Dispatcher.UIThread.InvokeAsync(SyncFinalSize, DispatcherPriority.Render)` 调度；`SyncFinalSize` 读最终 `Bounds` → `_resizer.Cancel()` → `Win32ViewportHost.GetClientSize` 探针 → `Win32ViewportHost.Resize` + `_bridge.Resize` 立即同步最终尺寸。
-- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` 55→67：新增 `GetClientSize(hwnd)`（P/Invoke `GetClientRect` + `RECT`），取 Win32 子窗口物理像素。
-- `XuanYu.Editor.UI/ViewportNativeHostRoute.cs` 15→18：新增 `ReportProbe` 路由到 `UiVm.LogNativeHostProbe`。
-- `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs` 27→40：新增 `LogNativeHostProbe`（逻辑尺寸 / Win32 子窗口 / DPI 四者对齐探针）。
+## VIEWPORT-RESIZE-R2 快照 (2026-07-09)
+VIEWPORT-RESIZE-R2（Editor.UI 侧）已收口：修复 R1 的 DPI 错配——`SyncFinalSize` 把 Avalonia 逻辑尺寸 ×DPI 换算成物理像素再喂 `Win32ViewportHost.Resize`，`_bridge.Resize` 仍收逻辑尺寸；探针补「目标物理」字段。全部 ≤100 行，双项目 0W0E。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` 98：`partial`；`OnSizeChanged`/`Coalescer` 路径原样保留（拖动窗口仍走它）。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs` 38→49：`SyncFinalSize` 先 `physicalW=max(1,round(logicalW*GetDpiScale()))`、`physicalH=max(1,round(logicalH*GetDpiScale()))`；`Win32ViewportHost.Resize(_hwnd, physicalW, physicalH)`（物理像素）；`_bridge.Resize(logicalW, logicalH)`（逻辑）；`GetClientSize` 取实际物理供探针。
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` 67：`Resize` 裸 `SetWindowPos` 不乘 DPI（收物理像素）；`GetClientSize(hwnd)` 取子窗口物理像素。
+- `XuanYu.Editor.UI/ViewportNativeHostRoute.cs` 18：`ReportProbe(vm, open, logicalW, logicalH, dpi, targetW, targetH, clientW, clientH)`。
+- `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs` 38：`LogNativeHostProbe(... dpi, targetW, targetH, clientW, clientH)` 输出 目标物理 + 子窗口实际。
+VK4-D-R3（Render.Vulkan 侧）已收口：修改 6 个 Render.Vulkan 文件，全部 ≤100 行，双项目 0W0E。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs` 99：OutOfDate 优雅降级（`ErrorOutOfDateKhr` 仅记一次 `OutOfDatePaused()` 后 break，不刷屏）；`Start()` 重置 `_outOfDateLogged`；`Stop()` 局部捕获线程防 NRE。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 59：Resize 日志顺序收口（Rebuilt 在 Start 前，用 `_swapchainOwner.Extent` 物理像素）。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainCapabilities.cs` 81：能力日志打印请求逻辑尺寸 + Surface CurrentExtent（物理像素）+ 选择 extent（物理像素）。
 VK4-D-R3（Render.Vulkan 侧）已收口：修改 6 个 Render.Vulkan 文件，全部 ≤100 行，双项目 0W0E。
 - `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs` 92→99：OutOfDate 优雅降级（`ErrorOutOfDateKhr` 仅记一次 `OutOfDatePaused()` 后 break，不刷屏）；`Start()` 重置 `_outOfDateLogged`；`Stop()` 局部捕获线程防 NRE。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 59：Resize 日志顺序收口（Rebuilt 在 Start 前，用 `_swapchainOwner.Extent` 物理像素）。

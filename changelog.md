@@ -1,5 +1,47 @@
 # changelog
 
+## [VK4-D] 正式收口确认（2026-07-09）
+
+VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：VK4-D-R3（Render.Vulkan 侧 OutOfDate 优雅降级 + Resize 日志顺序 + 物理像素诚实日志）、VIEWPORT-RESIZE-R1（Editor.UI 日志详情栏切换后布局稳定主动同步最终尺寸）、VIEWPORT-RESIZE-R2（修正 R1 的 DPI 错配，物理像素 = round(逻辑×DPI)）。双项目均 0 warning / 0 error，全 .cs ≤100。
+
+运行态验收（用户真机，2026-07-09）：
+1. 蓝灰铺满整个 NativeHost 区域，不再半屏黑。✅
+2. 打开/关闭日志详情栏立即同步，不慢半拍。✅
+3. Win32 子窗口物理尺寸 = 逻辑尺寸 × DPI（DPI=1.75 时 713×188 → 1248×330）。✅ R2 修复。
+4. Swapchain / Framebuffer extent 与 Win32 子窗口物理尺寸一致。✅ R3 同源物理像素。
+5. 无闪退 / 未响应。✅ VK4-D-R2 已修后台线程日志回调线程派发导致闪退。
+6. 关闭释放顺序：Present 泵停止 → ClearFrame 释放 → Swapchain 释放 → LogicalDevice 释放 → Surface 释放 → Instance 销毁 → 分离完成。✅（VK4-D-R3 真机验证；R2 未触碰 Release 路径，释放顺序不变；建议收口后跑一次关闭日志做最终确认。）
+
+结论：VK4-D 正式收口。下一阶段：VK4-D 收口文档归档 / VK5 规划（场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加，均不在 VK4-D 红线内）。
+
+红线全程守住：不进场景渲染；Resize 不重建 Surface/Instance/Device/Queue；Editor.UI 不接触 Silk.NET.Vulkan；日志单出口；全 .cs ≤100。
+
+## [VIEWPORT-RESIZE-R2] 修复 R1 的 DPI 错配：Win32 子窗口 Resize 必须收物理像素（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D-R3 + VIEWPORT-RESIZE-R1 后用户真机验收，R1 解决了「慢半拍」，但引入更关键的 DPI 尺寸错配。R1 的 `VulkanNativeHost.LayoutSync.SyncFinalSize` 把 Avalonia `Bounds` 的**逻辑尺寸**（713×188）直接当物理像素喂给 `Win32ViewportHost.Resize`（裸 `SetWindowPos`，不乘 DPI），把子 HWND 缩成逻辑尺寸；探针日志显示 `Win32子窗口=713x188`、`Surface CurrentExtent=713x188`，蓝灰画面只占左上角，右侧/下方露黑。真因：`Bounds` 是逻辑像素，Win32/Vulkan 要物理像素；R1 少了 `×DPI` 换算、绕过了 Avalonia 本来的 DPI 感知摆放。
+状态：已收口。双项目 0W0E，全 .cs ≤100；2026-07-09 用户真机验收通过（蓝灰覆盖整个 NativeHost 可视区、逻辑×DPI≈目标物理≈Win32子窗口≈Surface CurrentExtent）。
+
+### 修复点（Editor.UI 侧，VIEWPORT-RESIZE-R2）
+1. **`SyncFinalSize` 物理像素换算**：`Bounds` 逻辑尺寸先 `physical = max(1, round(logical × GetDpiScale()))`，`Win32ViewportHost.Resize(_hwnd, physicalW, physicalH)` 收**物理像素**；`_bridge.Resize(logicalW, logicalH)` 仍收逻辑尺寸（供日志与请求尺寸，Render.Vulkan 侧最终用 `caps.CurrentExtent` 建 Swapchain，与 VK4-D-R3 同源）。
+2. **探针补「目标物理」字段**：`LogNativeHostProbe` 现输出「日志详情栏；逻辑；DPI；目标物理=CWxCH；Win32子窗口=AWxAH」与 detail「逻辑×DPI≈…；目标物理=…；子窗口实际=…」；验收必须看到 `目标物理≈1248x330` 且 `Win32子窗口≈1248x330`，若仍 `713x188` 即未修好。
+3. **`_resizer.Cancel()` 仍保留**：布局稳定后主动同步立即取消待处理的 250ms Coalescer，避免重复重建；拖动窗口仍走 `OnSizeChanged → NativeHostResizeCoalescer`（高频合并），互不干扰。
+
+### 红线守住（均未触碰）
+- 不新增场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加。
+- 不修改日志 UX（LOG-UX 自动滚动 / 多选复制保持）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型（仅动 Win32 `user32` P/Invoke 与 Avalonia 调度）。
+- 不重建 Surface / Instance / LogicalDevice / Queue（Resize 只到 HWND + Swapchain/Framebuffer 重建）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge。
+- 全 .cs ≤100：`VulkanNativeHost.cs` 98 / `VulkanNativeHost.LayoutSync.cs` 49 / `Win32ViewportHost.cs` 67 / `ViewportNativeHostRoute.cs` 18 / `UiVm.NativeHostLifecycle.cs` 38。
+
+### 验收
+1. 启动不闪退、不未响应。
+2. 蓝灰覆盖整个 NativeHost 可视区，不再半屏黑。
+3. 打开/关闭日志详情栏，视口立即同步，不慢半拍。
+4. 探针日志：逻辑×DPI ≈ 目标物理 ≈ Win32子窗口 ≈ Surface CurrentExtent（DPI=1.75 时 713×188 → 1248×330）。
+5. Resize 不重建 Surface / Instance / Device / Queue；控制台日志不重复。
+
 ## [VIEWPORT-RESIZE-R1] Editor.UI 日志详情栏展开/收起后 NativeHost 最终尺寸主动同步（2026-07-09）
 
 分支：fix/RZ-VK3-A-surface-contract
