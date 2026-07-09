@@ -56,7 +56,6 @@ public sealed class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, ID
     {
         if (_instanceOwner is null || _surfaceOwner is null) { Emit(VulkanBridgeLogFormatter.ResizedSkipped(width, height)); return; }
         Emit(VulkanBridgeLogFormatter.Resized(width, height));
-        _swapchainOwner?.Recreate(width, height);
         _renderSession?.Resize(width, height);
     }
 

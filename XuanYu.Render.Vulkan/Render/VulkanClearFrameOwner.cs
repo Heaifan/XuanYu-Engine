@@ -67,7 +67,7 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
     {
         var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo, Flags = 0 };
         _vk.BeginCommandBuffer(cb, &begin);
-        var clear = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.10f, Float32_1 = 0.30f, Float32_2 = 0.45f, Float32_3 = 1.0f } };
+        var clear = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.25f, Float32_1 = 0.45f, Float32_2 = 0.70f, Float32_3 = 1.0f } };
         var rp = new RenderPassBeginInfo { SType = StructureType.RenderPassBeginInfo, RenderPass = _renderPass, Framebuffer = fb, RenderArea = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent }, ClearValueCount = 1, PClearValues = &clear };
         _vk.CmdBeginRenderPass(cb, &rp, SubpassContents.Inline);
         _vk.CmdEndRenderPass(cb);

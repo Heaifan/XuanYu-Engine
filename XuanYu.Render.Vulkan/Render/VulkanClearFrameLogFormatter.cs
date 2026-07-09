@@ -10,4 +10,5 @@ public static class VulkanClearFrameLogFormatter
     public static string LoopStopped() => "【VulkanClearFrame】Present 泵已停止";
     public static string Skipped(string r) => $"【VulkanClearFrame】跳过：{r}";
     public static string PresentError(string r) => $"【VulkanClearFrame】Present 异常：{r}";
+    public static string FirstPresented(uint idx) => $"【VulkanClearFrame】首帧 Present 成功；imageIndex={idx}";
 }

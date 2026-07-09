@@ -1,10 +1,50 @@
 # changelog
 
+## [VK4-D-R1] Clear + Present 运行审计与 Resize 去重（2026-07-09）
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D 初版实装后，用户真机发现（1）视口仍为黑色，（2）一次 Resize 触发两次 Swapchain 重建。
+状态：修复完成，双项目 0W0E，全 .cs ≤100；待用户真机验收「单色清屏画面 + Resize 单次重建 + 首帧 Present 成功日志」。
+
+### 修复点
+1. **Resize 去重**：`VulkanNativeHostSurfaceBridge.Resize` 不再直接调用 `_swapchainOwner?.Recreate`，只转发 `_renderSession?.Resize(width, height)`；统一入口在 `VulkanRenderSession.Resize`：Stop pump → Swapchain recreate → Rebuild Framebuffers → Start pump。
+2. **首帧 Present 可观测**：`VulkanPresentLoop` 成功完成第一次 `QueuePresent` 后，输出一次 `【VulkanClearFrame】首帧 Present 成功；imageIndex=...`，不每帧刷屏。
+3. **Present 错误可见**：`AcquireNextImage` / `QueuePresent` 返回非成功/非 `SuboptimalKhr` 时，输出中文错误日志。
+4. **修正 `SuboptimalKhr` 处理**：`AcquireNextImage` 返回 `SuboptimalKhr`（成功码）不再被误判为失败并退出 Present 泵；`ErrorOutOfDateKhr` 则 sleep 后继续，等下次 Resize 重建。
+5. **clear 颜色更明显**：由 0.10/0.30/0.45 改为 0.25/0.45/0.70 蓝灰，便于肉眼区分黑屏与清屏。
+
+### 严禁（均未触碰）
+- 不做场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加 / 持续动画。
+- 不修改日志 UX（LOG-UX 成果保持）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge（Bridge 83 行仅委托）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型。
+
+### 关键实现细节
+- Present 泵独立后台 `Thread(IsBackground)`；Detach/Resize 先 `Stop()`（Join 2000ms）再释放/重建资源。
+- 单 in-flight 帧 + 单 Fence；`_submitted` 守卫避免首帧 `WaitForFences` 空等。
+- `KhrSwapchain` 方法名无 KHR 后缀：`AcquireNextImage` / `QueuePresent`。
+- `using Semaphore = Silk.NET.Vulkan.Semaphore` 消除 `System.Threading.Semaphore` 歧义。
+
+### 验收
+1. XuanYu.Render.Vulkan 0 warning / 0 error。
+2. XuanYu.Editor.UI 0 warning / 0 error。
+3. 所有 .cs 文件 ≤100 行。
+4. 编辑器启动不未响应。
+5. 视口从黑色变为明显单色。
+6. 控制台出现 `首帧 Present 成功`。
+7. 一次 Resize 只出现一次 Swapchain 重建。
+8. Resize 后单色画面恢复。
+9. Detach 顺序正确。
+10. Vulkan 日志不重复，旧种子日志不出现。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
 ## [VK4-D] 最小 Clear + Present 单色清屏闭环（D1+D2+D3 同轮）(2026-07-09)
 
 分支：fix/RZ-VK3-A-surface-contract
 依据：docs/rz-vk4-d-plan.md（用户已认可并批准实装）
-状态：实装完成，双项目 0W0E，全 .cs ≤100；待用户真机验收「单色清屏画面」。
+状态：初版实装完成，VK4-D-R1 修复后待验收「单色清屏画面」。
 
 ### 目标（最小单色清屏）
 1. 黑屏 → 单色背景（clear 颜色 0.10/0.30/0.45/1.0 蓝）。✅ 实装
