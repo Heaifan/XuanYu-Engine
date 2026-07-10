@@ -1,5 +1,21 @@
 # changelog
 
+## [RZ-VK5-D-R1] Resize / Present 慢半拍全链路诊断（2026-07-10，实装）
+
+分支：fix/RZ-VK3-A-surface-contract
+VK5-D 边界收口后，用户真机发现"展开/收起日志栏时视口画面慢半拍"——功能最终正确（三角形保留、自愈恢复），但切换时有明显延迟。
+本轮目标：**不修、先诊断**——给整条 Resize/Present 链路加 T+elapsedMs 追踪日志，定位慢在哪一段。
+
+- 新增 `Diagnostic/VulkanResizeTracer.cs`（48 行）：共享 Stopwatch 诊断工具，提供 StartTrace()/ElapsedMs()/Stage()/HealStage()/DuplicateWarning() 方法。每次 Resize/自愈生成 `[T+XXXms gen=N]` 前缀的阶段日志。
+- 修改 4 个文件加追踪点（行为零变化）：
+  - `VulkanRenderSession.cs`（97 行）：Resize() 打 T+0 起点 + 完成日志；RecoverFromOutOfDate() 打自愈阶段日志（旧→新 extent）。LogProbe 内联消除。
+  - `VulkanSwapchainOwner.cs`（96 行）：Recreate() 打请求尺寸 + 重建完成；TryRecreateToCurrent() 打旧 extent + Surface 查询。
+  - `VulkanClearFrameOwner.cs`（95 行）：RebuildFramebuffers() 打开始 + FB创建完成+重录CB。
+  - `VulkanPresentLoop.cs`（100 行）：AcquireNextImage/QueuePresent 的 OutOfDate 事件打来源追踪。
+- 追踪覆盖的完整链路：UI Coalescer(250ms) → Bridge.Resize → RenderSession.Resize(T+0) → Stop泵 → Swapchain.Recreate(T+) → Framebuffer.Rebuild(T+) → CB重录(T+) → Start泵 → Present.OutOfDate(T+) → 自愈(T+) → 恢复Present(T+)。
+- 红线守住：不进 VK5-C/D-E；不新增渲染能力；不改 UI/NativeHost/Shader/三角形逻辑；不清 VulkanClearSession；双项目 0W0E；全 .cs ≤100 行。
+- 下一步：用户 run.bat 真机操作（展开/收起日志栏），回传完整 trace 日志，定位慢半拍根因后决定是否 R2 修复。
+
 ## [RZ-VK5-D] 清屏/绘制/录制/管线注入/Resize 重录 职责边界收口（2026-07-10，实装）
 
 分支：fix/RZ-VK3-A-surface-contract

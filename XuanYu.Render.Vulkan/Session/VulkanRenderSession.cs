@@ -5,10 +5,11 @@ using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Swapchain;
 using XuanYu.Render.Vulkan.Render;
 using XuanYu.Render.Vulkan.Pipeline;
+using XuanYu.Render.Vulkan.Diagnostic;
 
 namespace XuanYu.Render.Vulkan.Session;
 
-// VK4-D 薄组合根（装配 ClearFrame + PresentLoop + VK5-A Pipeline）。RZ-VK5-A-R2：OutOfDate 经 RecoverFromOutOfDate 自愈；_rebuildLock 防并发；连续自愈上限 5 次。
+// VK4-D 薄组合根。RZ-VK5-A-R2：OutOfDate 自愈。RZ-VK5-D-R1：全链路诊断追踪（T+elapsedMs）。
 public sealed class VulkanRenderSession : IDisposable
 {
     readonly VulkanDeviceOwner _deviceOwner;
@@ -19,9 +20,8 @@ public sealed class VulkanRenderSession : IDisposable
     readonly Action<string>? _log;
     readonly NativeHostSurfaceHandle? _surfaceHandle;
     readonly object _rebuildLock = new();
-    uint _generation; int _recoverTries;
+    uint _generation; int _recoverTries; bool _disposed;
     const int MaxRecoverTries = 5;
-    bool _disposed;
     VulkanRenderSession(VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner,
         VulkanClearFrameOwner clearFrame, VulkanPresentLoop presentLoop, VulkanGraphicsPipelineOwner? pipeline, Action<string>? log, NativeHostSurfaceHandle? surfaceHandle)
     {
@@ -46,45 +46,44 @@ public sealed class VulkanRenderSession : IDisposable
         }
         catch (Exception ex) { log?.Invoke(VulkanClearFrameLogFormatter.PresentError($"创建异常：{ex.Message}")); return null; }
     }
-    // RZ-VK5-A-R2：Resize 走统一入口（Stop 期间重建后重启泵）。
+    // RZ-VK5-A-R2：Resize 走统一入口（Stop 期间重建后重启泵）。RZ-VK5-D-R1：T+0 起点追踪。
     public void Resize(int width, int height)
     {
         if (_disposed) return;
+        VulkanResizeTracer.StartTrace();
+        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize开始", $"请求逻辑尺寸={width}x{height}"));
         _presentLoop.Stop();
         lock (_rebuildLock)
         {
             _swapchainOwner.Recreate(width, height);
             _clearFrame.RebuildFramebuffers();
             _generation++;
-            _log?.Invoke(VulkanClearFrameLogFormatter.Rebuilt(_swapchainOwner.Extent, (uint)_clearFrame.CommandBuffers.Length));
+            _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize完成", $"{_swapchainOwner.Extent.Width}x{_swapchainOwner.Extent.Height}；{_clearFrame.CommandBuffers.Length} 张 CB"));
         }
         _presentLoop.Start();
     }
-    // RZ-VK5-A-R2：OutOfDate 自愈入口（PresentLoop 线程调用）。true=继续 Present，false=放弃并暂停。
+    // RZ-VK5-A-R2 + R1：自愈入口，带 T+ 追踪。
     bool RecoverFromOutOfDate(string source)
     {
         if (_disposed) return false;
         lock (_rebuildLock)
         {
             var old = _swapchainOwner.Extent;
+            _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", "查询中..."));
             if (!_swapchainOwner.TryRecreateToCurrent(out _))
             {
-                LogProbe(old, source);
+                var ne2 = _swapchainOwner.Extent; var dpi = _surfaceHandle?.DpiScale ?? 1.0;
+                _log?.Invoke(VulkanClearFrameLogFormatter.OutOfDateProbe(source, old, ne2, _generation, dpi));
                 if (_recoverTries >= MaxRecoverTries) { _log?.Invoke(VulkanClearFrameLogFormatter.OutOfDateRecoverFailed($"连续 {MaxRecoverTries} 次重建失败")); return false; }
                 _recoverTries++;
                 return true;
             }
             _clearFrame.RebuildFramebuffers();
             _generation++; _recoverTries = 0;
-            LogProbe(old, source);
-            _log?.Invoke(VulkanClearFrameLogFormatter.OutOfDateRecovered(_generation));
+            var ne = _swapchainOwner.Extent;
+            _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", $"{ne.Width}x{ne.Height}", "已恢复 Present"));
             return true;
         }
-    }
-    void LogProbe(Extent2D old, string source)
-    {
-        var ne = _swapchainOwner.Extent; var dpi = _surfaceHandle?.DpiScale ?? 1.0;
-        _log?.Invoke(VulkanClearFrameLogFormatter.OutOfDateProbe(source, old, ne, _generation, dpi));
     }
     public void Dispose()
     {

@@ -2,10 +2,11 @@ using System;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Swapchain;
+using XuanYu.Render.Vulkan.Diagnostic;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// VK4-D 清屏 + VK5-B 三角形。VK5-D 职责边界：帧缓冲管理｜命令录制（RecordCommandBuffers/RecordOne/RecordDraw）｜绘制（RecordDraw）｜管线注入（SetPipeline 触发重录）。Resize 只重建 Framebuffer + 重录。
+// VK4-D 清屏 + VK5-B 三角形。VK5-D 职责边界：帧缓冲管理｜命令录制｜绘制｜管线注入。RZ-VK5-D-R1：RebuildFramebuffers 加 T+ 追踪。
 public sealed unsafe class VulkanClearFrameOwner : IDisposable
 {
     readonly Vk _vk; readonly VulkanDeviceOwner _deviceOwner; readonly VulkanSwapchainOwner _swapchainOwner; readonly Action<string>? _log;
@@ -35,18 +36,13 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
     }
     public void RebuildFramebuffers()
     {
+        _log?.Invoke(VulkanResizeTracer.Stage(0, "Framebuffer.Rebuild", "开始..."));
         DestroyFramebuffers();
         _extent = _swapchainOwner.Extent;
         _views = _swapchainOwner.ImageViews.ToArray();
         _framebuffers = new Framebuffer[_views.Length];
-        for (var i = 0; i < _views.Length; i++)
-        {
-            fixed (ImageView* pView = &_views[i])
-            {
-                var fbInfo = new FramebufferCreateInfo { SType = StructureType.FramebufferCreateInfo, RenderPass = _renderPass, AttachmentCount = 1, PAttachments = pView, Width = _extent.Width, Height = _extent.Height, Layers = 1 };
-                _vk.CreateFramebuffer(_deviceOwner.LogicalDevice, &fbInfo, null, out _framebuffers[i]);
-            }
-        }
+        for (var i = 0; i < _views.Length; i++) { fixed (ImageView* pView = &_views[i]) { var fbInfo = new FramebufferCreateInfo { SType = StructureType.FramebufferCreateInfo, RenderPass = _renderPass, AttachmentCount = 1, PAttachments = pView, Width = _extent.Width, Height = _extent.Height, Layers = 1 }; _vk.CreateFramebuffer(_deviceOwner.LogicalDevice, &fbInfo, null, out _framebuffers[i]); } }
+        _log?.Invoke(VulkanResizeTracer.Stage(0, "Framebuffer.Rebuild完成", $"{_extent.Width}x{_extent.Height}；{_framebuffers.Length}张FB+重录CB"));
         RecordCommandBuffers(_views);
     }
     void RecordCommandBuffers(ImageView[] views)
@@ -72,7 +68,7 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
         _vk.CmdEndRenderPass(cb);
         _vk.EndCommandBuffer(cb);
     }
-    // 绘制：仅管线已注入时绑定并画固定三角形（gl_VertexIndex）。不含 VertexBuffer / Mesh。
+    // 绘制（管线已注入时绑定并画固定三角形）。不含 VertexBuffer / Mesh。
     void RecordDraw(CommandBuffer cb)
     {
         if (_pipeline.Handle == 0) return;
@@ -86,7 +82,6 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
         _vk.CmdDraw(cb, 3, 1, 0, 0);
     }
     void DestroyFramebuffers() { foreach (var f in _framebuffers) if (f.Handle != 0) _vk.DestroyFramebuffer(_deviceOwner.LogicalDevice, f, null); _framebuffers = []; }
-
     public void Dispose()
     {
         if (_disposed) return; _disposed = true;

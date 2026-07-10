@@ -1,5 +1,14 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-D-R1 实装快照 (2026-07-10)
+Resize / Present 慢半拍全链路诊断——不修、先诊断，加 T+elapsedMs 追踪定位慢在哪一段。
+- **新增** `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs`（48 行）：共享 Stopwatch 诊断工具，StartTrace()/ElapsedMs()/Stage()/HealStage()/DuplicateWarning()。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 97→97：+`VulkanResizeTracer.StartTrace()` + Resize/自愈阶段日志；LogProbe 内联消除。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 100→96：Recreate/TryRecreateToCurrent 加 T+ 阶段日志；属性行合并压缩。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs` 100→95：RebuildFramebuffers 加 FB 创建完成追踪；for 循环压缩单行。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs` 100→100：OutOfDate(Acquire/QueuePresent) 加来源追踪；注释精简。
+- 验收：双项目 0W0E；全 .cs ≤100（新增 48 行 tracer + 4 文件改）；行为零变化。
+
 ## RZ-VK5-D 实装快照 (2026-07-10)
 VK5-B 封版后职责边界收口：只在 `VulkanClearFrameOwner.cs` 内部整理，不新增渲染能力、不重命名、不改对外行为。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs` 99→100：抽出 `RecordDraw(CommandBuffer cb)`（BindPipeline+SetViewport+SetScissor+CmdDraw(3)）从 `RecordOne` 的清屏中拆出；类头注释显式列出 VK5-D 职责边界（帧缓冲管理｜命令录制｜绘制｜管线注入）；`SetPipeline`/`RebuildFramebuffers` 两重录入口仍各自直调 `RecordCommandBuffers`。靠局部变量取地址 + 精简注释 + 去空行守住 ≤100。

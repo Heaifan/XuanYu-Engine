@@ -2,11 +2,11 @@ using System;
 using Silk.NET.Vulkan;
 using Silk.NET.Vulkan.Extensions.KHR;
 using XuanYu.Render.Vulkan.Device;
+using XuanYu.Render.Vulkan.Diagnostic;
 
 namespace XuanYu.Render.Vulkan.Swapchain;
 
-// VK4-C：Swapchain + Images + ImageViews 持有者。仅创建/重建/释放；
-// 不建 RenderPass / Framebuffer / CommandPool / CommandBuffer，不清屏 / Present。
+// VK4-C：Swapchain 持有者（创建/重建/释放）。RZ-VK5-D-R1：Recreate 内部加 T+ 阶段日志。
 public sealed unsafe class VulkanSwapchainOwner : IDisposable
 {
     readonly Vk _vk;
@@ -52,6 +52,7 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
     {
         if (_khr is null) return;
         if (width <= 0 || height <= 0) { Log(_log, VulkanSwapchainLogFormatter.Skipped($"0 尺寸跳过重建（{width}x{height}）")); return; }
+        _log?.Invoke(VulkanResizeTracer.Stage(0, "Swapchain.Recreate", $"请求={width}x{height}"));
         try
         {
             var (swapchain, images, views, format, extent, ok) = VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice, _surface, _khr, _deviceOwner.LogicalDevice, width, height, _log, _swapchain);
@@ -59,15 +60,17 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
             DestroyImagesAndViews();
             _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent;
             Log(_log, VulkanSwapchainLogFormatter.Recreated(_extent, views.Length));
+            _log?.Invoke(VulkanResizeTracer.Stage(0, "Swapchain.Recreate完成", $"{extent.Width}x{extent.Height}"));
         }
         catch (Exception ex) { Log(_log, VulkanSwapchainLogFormatter.Failed($"重建异常：{ex.Message}")); }
     }
 
-    // RZ-VK5-A-R2：按 Surface 当前 CurrentExtent 重建（Windows ChooseExtent 直接返回它，忽略传入尺寸）。
+    // RZ-VK5-A-R2 + R1：按 Surface 当前 CurrentExtent 重建（Windows ChooseExtent 直接返回它）。
     public bool TryRecreateToCurrent(out Extent2D newExtent)
     {
         newExtent = _extent;
         if (_khr is null) return false;
+        _log?.Invoke(VulkanResizeTracer.Stage(0, "Swapchain.TryRecreate", $"旧 extent={_extent.Width}x{_extent.Height}，查询 Surface..."));
         var caps = VulkanSwapchainCapabilities.Query(_vk, _instance, _physicalDevice, _surface, (int)_extent.Width, (int)_extent.Height, _log);
         if (!caps.Success || caps.Caps is null || caps.Caps.Value.Extent.Width == 0 || caps.Caps.Value.Extent.Height == 0 || caps.Caps.Value.Extent.Width == uint.MaxValue) return false;
         Recreate((int)caps.Caps.Value.Extent.Width, (int)caps.Caps.Value.Extent.Height);
@@ -81,20 +84,13 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         if (_swapchain.Handle != 0) _khr?.DestroySwapchain(_deviceOwner.LogicalDevice, _swapchain, null);
         _imageViews = []; _images = []; _swapchain = default;
     }
-
     public void Dispose()
     {
-        if (_disposed) return;
-        _disposed = true;
+        if (_disposed) return; _disposed = true;
         DestroyImagesAndViews();
         Log(_log, VulkanSwapchainLogFormatter.Disposed());
     }
-
-    public Format Format => _format;
-    public Extent2D Extent => _extent;
-    public ReadOnlySpan<ImageView> ImageViews => _imageViews;
-    public SwapchainKHR Swapchain => _swapchain;
-    public KhrSwapchain Khr => _khr!;
-
-    static void Log(Action<string>? log, string m) { log?.Invoke(m); }
+    public Format Format => _format; public Extent2D Extent => _extent;
+    public ReadOnlySpan<ImageView> ImageViews => _imageViews; public SwapchainKHR Swapchain => _swapchain;
+    public KhrSwapchain Khr => _khr!; static void Log(Action<string>? log, string m) { log?.Invoke(m); }
 }

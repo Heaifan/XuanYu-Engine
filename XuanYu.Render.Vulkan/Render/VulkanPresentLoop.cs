@@ -4,12 +4,12 @@ using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Swapchain;
 using XuanYu.Render.Vulkan.Render;
+using XuanYu.Render.Vulkan.Diagnostic;
 using Semaphore = Silk.NET.Vulkan.Semaphore;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// VK4-D-R1：Present 泵独立后台线程；记录首帧 Present 成功一次；Acquire/Submit/Present 失败记录中文错误。
-// RZ-VK5-A-R2：OutOfDate 不再永久 break，改经 onOutOfDate 回调请求 RenderSession 统一自愈；无回调时退回 continue。
+// VK4-D Present 泵。RZ-VK5-A-R2：OutOfDate 经回调自愈。RZ-VK5-D-R1：OutOfDate 事件打 T+ 追踪日志。
 public sealed unsafe class VulkanPresentLoop : IDisposable
 {
     readonly Vk _vk; readonly VulkanDeviceOwner _deviceOwner; readonly VulkanSwapchainOwner _swapchainOwner; readonly VulkanClearFrameOwner _clearFrame; readonly Func<string, bool>? _onOutOfDate; readonly Action<string>? _log;
@@ -50,7 +50,7 @@ public sealed unsafe class VulkanPresentLoop : IDisposable
             var res = khr.AcquireNextImage(device, swapchain, AcquireTimeoutNs, imgAvail, default, &idx);
             if (res != Result.Success && res != Result.SuboptimalKhr)
             {
-                if (res == Result.ErrorOutOfDateKhr) { if (!(_onOutOfDate?.Invoke("AcquireNextImage") ?? true)) break; continue; }
+                if (res == Result.ErrorOutOfDateKhr) { Log(VulkanResizeTracer.Stage(0, "Present.OutOfDate", "来源=AcquireNextImage")); if (!(_onOutOfDate?.Invoke("AcquireNextImage") ?? true)) break; continue; }
                 Log(VulkanClearFrameLogFormatter.PresentError($"AcquireNextImage 失败：{res}")); break;
             }
             if (submitted) { _vk.WaitForFences(device, 1, &fence, true, FenceTimeoutNs); _vk.ResetFences(device, 1, &fence); }
@@ -66,7 +66,7 @@ public sealed unsafe class VulkanPresentLoop : IDisposable
             present.WaitSemaphoreCount = 1; present.PWaitSemaphores = &renderDone;
             present.SwapchainCount = 1; present.PSwapchains = &swapchain; present.PImageIndices = &idx;
             var pres = khr.QueuePresent(_deviceOwner.PresentQueue, &present);
-            if (pres == Result.ErrorOutOfDateKhr) { if (!(_onOutOfDate?.Invoke("QueuePresent") ?? true)) break; continue; }
+            if (pres == Result.ErrorOutOfDateKhr) { Log(VulkanResizeTracer.Stage(0, "Present.OutOfDate", "来源=QueuePresent")); if (!(_onOutOfDate?.Invoke("QueuePresent") ?? true)) break; continue; }
             if (pres != Result.Success && pres != Result.SuboptimalKhr)
             { Log(VulkanClearFrameLogFormatter.PresentError($"QueuePresent 失败：{pres}")); break; }
             if (!_firstPresentLogged) { _firstPresentLogged = true; Log(VulkanClearFrameLogFormatter.FirstPresented(idx)); }
