@@ -1,5 +1,6 @@
 using System;
 using Silk.NET.Vulkan;
+using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Swapchain;
 using XuanYu.Render.Vulkan.Session;
@@ -10,6 +11,6 @@ namespace XuanYu.Render.Vulkan.Bridge;
 public sealed class VulkanBridgeRenderSessionAttachStep
 {
     public static VulkanRenderSession? Run(Vk vk, VulkanDeviceOwner? deviceOwner,
-        VulkanSwapchainOwner? swapchainOwner, VulkanPhysicalDeviceSelection? selection, Action<string>? log)
-        => VulkanRenderSession.Create(vk, deviceOwner, swapchainOwner, selection, log);
+        VulkanSwapchainOwner? swapchainOwner, VulkanPhysicalDeviceSelection? selection, Action<string>? log, NativeHostSurfaceHandle? handle = null)
+        => VulkanRenderSession.Create(vk, deviceOwner, swapchainOwner, selection, log, handle);
 }

@@ -1,5 +1,16 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-A-R2 实装快照 (2026-07-10)
+修复 Resize 后 Present 泵停在 Swapchain OutOfDate 的问题（受控自愈）。不 Draw、不画三角形、不进 VK5-B。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs` 99→100：OutOfDate 不再永久 break，改经 `onOutOfDate` 回调请求 RenderSession 统一自愈；无回调时退回 continue；移除 `_outOfDateLogged` 与 `OutOfDatePaused` 永久暂停分支。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 63→97：新增 `RecoverFromOutOfDate`（OutOfDate 统一自愈入口，返回 true=继续 Present / false=放弃暂停）经 lambda 绑定（规避静态方法组）；`_rebuildLock` 防 Resize 线程与 PresentLoop 线程并发重建；`_generation` 标记重建代次；连续自愈上限 5 次（超上限输出中文错误日志并暂停）；`Resize` 走统一入口（Stop 期间重建）；`Create` 新增 `NativeHostSurfaceHandle?` 形参供探针取 DPI；`VulkanBridgeRenderSessionAttachStep.Run` 透传 handle。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 88→100：新增 `TryRecreateToCurrent(out Extent2D)`——按 Surface 当前 `CurrentExtent` 重建（Windows `ChooseExtent` 直接返回它，忽略传入尺寸），0/uint.MaxValue 尺寸跳过。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs` 17→21：移除 `OutOfDatePaused`；新增 `OutOfDateProbe`（来源/旧 extent/新 Surface CurrentExtent/DPI/逻辑尺寸/generation）、`OutOfDateRecovered`、`OutOfDateRecoverFailed`。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeRenderSessionAttachStep.cs` 15→16：`Run` 透传 `NativeHostSurfaceHandle? handle`。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs` 83：Attach 把 `handle` 透传给 RenderSession step。
+- 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 100）；Resize 后 Present 自愈恢复（不再永久停在"Swapchain 已过期"）；释放顺序不变（PresentLoop→GraphicsPipeline→ClearFrame→Swapchain→LogicalDevice→Surface→Instance）。
+- 红线守住：不 Draw / 不画三角形 / 不建 VertexBuffer·DescriptorSet / 不接 Scene·Camera·Mesh·Material·Gizmo / 不改 UI overlay / 不扩大 Editor.UI→Render.Vulkan 引用（handle 走 Abstractions 契约）/ 不清 VulkanClearSession / 不无限重建（守护上限）/ PresentLoop 线程不 join 自身 Stop/Dispose。
+
 ## 视口 UI 收口快照 (2026-07-09)
 移除视口内部 overlay，只留纯 Vulkan 视口。
 - `XuanYu.Editor.UI/Main/Main.axaml` 20→6：移除 Grid 顶部（透视 / NativeHost Probe）与底部（左键选择 / 中键环绕 / 右键平移 / 工具：选择）两组 pill，内容简化为 `<local:VulkanViewport/>`；`x:DataType` 移除（绑定已删）。`VulkanViewport` 交互逻辑未动。

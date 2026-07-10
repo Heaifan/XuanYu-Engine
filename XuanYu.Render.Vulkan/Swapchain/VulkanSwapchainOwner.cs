@@ -63,6 +63,18 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         catch (Exception ex) { Log(_log, VulkanSwapchainLogFormatter.Failed($"重建异常：{ex.Message}")); }
     }
 
+    // RZ-VK5-A-R2：按 Surface 当前 CurrentExtent 重建（Windows ChooseExtent 直接返回它，忽略传入尺寸）。
+    public bool TryRecreateToCurrent(out Extent2D newExtent)
+    {
+        newExtent = _extent;
+        if (_khr is null) return false;
+        var caps = VulkanSwapchainCapabilities.Query(_vk, _instance, _physicalDevice, _surface, (int)_extent.Width, (int)_extent.Height, _log);
+        if (!caps.Success || caps.Caps is null || caps.Caps.Value.Extent.Width == 0 || caps.Caps.Value.Extent.Height == 0 || caps.Caps.Value.Extent.Width == uint.MaxValue) return false;
+        Recreate((int)caps.Caps.Value.Extent.Width, (int)caps.Caps.Value.Extent.Height);
+        newExtent = _extent;
+        return true;
+    }
+
     void DestroyImagesAndViews()
     {
         foreach (var v in _imageViews) if (v.Handle != 0) _vk.DestroyImageView(_deviceOwner.LogicalDevice, v, null);

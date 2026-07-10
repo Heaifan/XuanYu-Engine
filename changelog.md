@@ -1,5 +1,21 @@
 # changelog
 
+## [RZ-VK5-A-R2] Present 泵 OutOfDate 受控自愈（Resize 后 Present 恢复，2026-07-10，实装）
+
+分支：fix/RZ-VK3-A-surface-contract
+修复 Resize（拖窗口/调整日志栏）后 Present 泵重启即 `ErrorOutOfDateKhr` 并永久 `break`、最终停在"Swapchain 已过期"的问题。本轮只收口 Present 恢复，不 Draw、不画三角形、不进 VK5-B。
+- 根因（用户真机 + 代码审计双重确认）：Windows 上 `VulkanSwapchainCapabilities.ChooseExtent` 直接 `return caps.CurrentExtent`，Swapchain extent = 创建/重建时刻 Surface 报告的尺寸；Resize 触发 `WM_SIZE` 异步、Avalonia 逻辑×DPI 与 Surface 实际客户区存在残余偏差，导致新 Swapchain 基于"旧时刻"尺寸建出，Present 时 Surface 已变 → OutOfDate。
+- 修复设计：OutOfDate 不再永久 `break`，改经 RenderSession 统一入口 `RecoverFromOutOfDate` 自愈——查 Surface 当前 `CurrentExtent`、重建 Swapchain + 重建 Framebuffer + 重录 CommandBuffer、更新 `_generation`，PresentLoop `continue` 不退出线程（满足红线：PresentLoop 线程不 join 自身 Stop/Dispose）。
+- 新增/修改：
+  - `VulkanPresentLoop.cs` 99→100：构造函数新增 `Func<string,bool>? onOutOfDate`；Acquire/QueuePresent 遇 OutOfDate 调 `onOutOfDate(source)`（返回 false 才 break）；移除原 `_outOfDateLogged`/`OutOfDatePaused` 永久暂停分支。
+  - `VulkanRenderSession.cs` 63→97：`RecoverFromOutOfDate(string source)` 统一自愈入口（返回 true=继续 / false=放弃暂停）；`_rebuildLock` 锁住 Resize 与自愈路径防并发重建；`_generation` 标记重建代次；连续自愈上限 `MaxRecoverTries=5`，超上限输出 `OutOfDateRecoverFailed` 中文日志并暂停（防刷屏/无限重建）；`Resize` 走 `lock(_rebuildLock)` 统一入口；`Create` 新增 `NativeHostSurfaceHandle?` 形参（供探针取 DPI）；lambda 绑定规避静态方法组引用实例方法。
+  - `VulkanSwapchainOwner.cs` 88→100：新增 `TryRecreateToCurrent(out Extent2D)`——按 Surface 当前 `CurrentExtent` 重建（0/uint.MaxValue 尺寸跳过）。
+  - `VulkanClearFrameLogFormatter.cs` 17→21：移除 `OutOfDatePaused`；新增 `OutOfDateProbe`（来源/旧 extent/新 Surface CurrentExtent/DPI/逻辑尺寸/generation）、`OutOfDateRecovered`、`OutOfDateRecoverFailed`。
+  - `VulkanBridgeRenderSessionAttachStep.cs` 15→16 + `VulkanNativeHostSurfaceBridge.cs` 83：Attach 把 `NativeHostSurfaceHandle` 透传给 RenderSession（走 Abstractions 契约，不扩大 Editor.UI→Render.Vulkan）。
+- 低频中文探针日志（自愈时一次）：OutOfDate 来源 / 旧 Swapchain extent / 新 Surface CurrentExtent / DPI / 逻辑尺寸 / generation / 自愈次数 / 成败。
+- 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 100）；Resize 后 Present 自愈恢复（不再永久停在"Swapchain 已过期"）；关闭释放顺序不变（PresentLoop→GraphicsPipeline→ClearFrame→Swapchain→LogicalDevice→Surface→Instance）。
+- 红线守住：不 Draw / 不画三角形 / 不建 VertexBuffer·DescriptorSet / 不接 Scene·Camera·Mesh·Material·Gizmo / 不改 UI overlay / 不扩大 Editor.UI→Render.Vulkan 引用（handle 走 Abstractions）/ 不清 VulkanClearSession / 不无限重建（守护上限）/ PresentLoop 线程不 join 自身 Stop/Dispose。
+
 ## [视口 UI 收口] 移除视口内部顶部/底部 overlay，只留纯 Vulkan 视口（2026-07-09，UI 只改）
 
 分支：fix/RZ-VK3-A-surface-contract
