@@ -13,6 +13,7 @@
   - `VulkanRenderSession.cs` 97→98：`Create` 把 Pipeline 创建提前到 `loop.Start()` 之前，创建后 `clear.SetPipeline(pipeline.Pipeline)`（泵启动前注入，避免首帧竞态）；PresentLoop 完全未改。
 - 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 99）；蓝灰清屏背景上出现琥珀色固定三角形；Resize 后三角形仍显示且 Present 自愈能力保留（RZ-VK5-A-R2 未破坏）；关闭释放顺序不变。
 - 红线守住：不建 VertexBuffer/IndexBuffer/UniformBuffer/DescriptorSet；不接 Scene/Camera/Mesh/Material/Gizmo；不改 UI/NativeHost/LOG-UX；不扩大 Editor.UI→Render.Vulkan 引用；不清 VulkanClearSession；不破坏 RZ-VK5-A-R2 的 Resize 后 Present 恢复。
+- **真机最终验收通过（2026-07-10，正式封版）**：①蓝灰背景上已显示琥珀色固定三角形；②展开底部日志栏后三角形仍显示；③Resize/日志栏变化后 Present 自愈恢复正常（控制台日志 `Swapchain 自愈成功，已恢复 Present；generation=3`）；④关闭窗口释放顺序正确（Present泵停止→GraphicsPipeline释放→RenderPass+Framebuffer释放→Swapchain→LogicalDevice→Surface→Instance→分离完成）；⑤未进入复杂渲染器（无 VertexBuffer/Scene/Camera/Mesh/Material/Gizmo）。遗留非阻断项：`RenderPass + Framebuffer 释放成功` 关闭日志重复打印一行，留待 LOG-CLEANUP 清理。**RZ-VK5-B 正式收口，Vulkan 最小图形渲染闭环成立。**
 
 ## [RZ-VK5-A-R2] Present 泵 OutOfDate 受控自愈（Resize 后 Present 恢复，2026-07-10，实装）
 
