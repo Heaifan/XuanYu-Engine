@@ -46,10 +46,12 @@ public sealed class VulkanRenderSession : IDisposable
         }
         catch (Exception ex) { log?.Invoke(VulkanClearFrameLogFormatter.PresentError($"创建异常：{ex.Message}")); return null; }
     }
-    // RZ-VK5-A-R2：Resize 走统一入口（Stop 期间重建后重启泵）。RZ-VK5-D-R1：T+0 起点追踪。
+    // RZ-VK5-A-R2：Resize 统一入口（Stop 期间重建后重启泵）。RZ-VK5-D-R3：同尺寸快速跳过 Present 停启。
     public void Resize(int width, int height)
     {
         if (_disposed) return;
+        if (_swapchainOwner.Extent.Width == (uint)width && _swapchainOwner.Extent.Height == (uint)height)
+        { _log?.Invoke(VulkanClearFrameLogFormatter.ResizeFastSkipped(_generation, width, height)); return; }
         VulkanResizeTracer.StartTrace();
         _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize开始", $"请求逻辑尺寸={width}x{height}"));
         _presentLoop.Stop();

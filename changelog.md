@@ -1,5 +1,17 @@
 # changelog
 
+## [RZ-VK5-D-R3] Resize 同尺寸快速跳过 Present 泵停启（2026-07-10，实装）
+
+分支：fix/RZ-VK3-A-surface-contract
+R2 真实成绩：同尺寸 Swapchain/Framebuffer 重建已跳过、gen 追踪已真实化、三角形仍显示——但日志仍反复出现"自愈成功后又 Present 泵停止/启动"。根因进一步缩小：Resize 流程在调用 `PresentLoop.Stop()` 之前**未判断尺寸是否已经一致**，无论 Swapchain/Framebuffer 是否跳过重修，泵都被无意义地停一下再开，造成视觉停顿（慢半拍）。
+
+- **快速跳过（核心）**：`VulkanRenderSession.Resize` 在 Stop 泵之前新增短路——若目标尺寸 `(width,height)` 已等于当前 `Swapchain.Extent`，直接打一条低频中文日志 `【VulkanClearFrame】Resize 快速跳过：尺寸已由自愈恢复（WxH）；generation=N` 并 `return`，**不** Stop/Start 泵、**不**重建 Swapchain/Framebuffer、**不**重录 CommandBuffer。尺寸一致时三者必然同源一致（Framebuffer extent 源自 Swapchain，CommandBuffer 已在上一轮对应重录），故快速返回安全。
+- **保留 R2 去重**：同尺寸 Swapchain/Framebuffer 重建跳过逻辑原样保留（Resize 真正走全量时仍受益于去重）。
+- **保留自愈**：Present 自愈机制（OutOfDate → RecoverFromOutOfDate）原样保留，未被删除。
+- **日志新增**：`VulkanClearFrameLogFormatter.ResizeFastSkipped(uint generation, int w, int h)` 输出上述中文日志。
+- 红线守住：不进 VK5-C/E；不新增渲染能力；不改三角形绘制/shader/UI/NativeHost；不清 VulkanClearSession；双项目 0W0E；全 .cs ≤100 行。
+- 验证（待用户 run.bat 真机复验）：①启动不重复 714x639；②展开只 1 次 714x274；③后续同尺寸 Resize 应快速跳过（不再出现 Present 泵停止/启动）；④三角形仍显示；⑤关闭释放顺序正确。改动 .cs 行数 RenderSession 98→100、LogFormatter 21→23，均 ≤100。
+
 ## [RZ-VK5-D-R2] Resize / Present 重复重建去重 + 追踪 gen 修正（2026-07-10，实装）
 
 分支：fix/RZ-VK3-A-surface-contract

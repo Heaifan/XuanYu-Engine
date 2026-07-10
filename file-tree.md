@@ -1,5 +1,11 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-D-R3 实装快照 (2026-07-10)
+Resize 同尺寸快速跳过 Present 泵停启——消除"自愈成功后又停泵重启"造成的视觉停顿。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 98→100：Resize 在 Stop 泵前新增短路——目标尺寸==当前 Swapchain.Extent 时打 `Resize 快速跳过` 中文日志并直接 return，不 Stop/Start 泵、不重建 Swapchain/Framebuffer、不重录 CommandBuffer；保留 R2 同尺寸去重与自愈机制。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs` 21→23：新增 `ResizeFastSkipped(uint generation, int w, int h)`（中文：尺寸已由自愈恢复）。
+- 验收：Render.Vulkan 0W0E；全 .cs ≤100；功能行为不变（三角形/自愈/关闭释放顺序保持）；红线守住（不进 VK5-C/E、不新增渲染能力、不改三角形/shader/UI/NativeHost、不清 VulkanClearSession）。
+
 ## RZ-VK5-D-R2 实装快照 (2026-07-10)
 Resize/Present 重复重建去重 + 追踪 gen 修正（用户选方案1：去重+修追踪）。
 - `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 96→98：+`generation` 参数；`Recreate`/`TryRecreateToCurrent` 同尺寸跳过重建（Skipped 日志）。

@@ -18,4 +18,6 @@ public static class VulkanClearFrameLogFormatter
         => $"【VulkanClearFrame】自愈探针：来源={source}；旧 extent={oldExtent.Width}x{oldExtent.Height}；新 Surface CurrentExtent={newExtent.Width}x{newExtent.Height}（物理像素）；DPI={dpi:F2}；逻辑≈{newExtent.Width / dpi:F0}x{newExtent.Height / dpi:F0}；generation={generation}";
     public static string OutOfDateRecovered(uint generation) => $"【VulkanClearFrame】Swapchain 自愈成功，已恢复 Present；generation={generation}";
     public static string OutOfDateRecoverFailed(string reason) => $"【VulkanClearFrame】Swapchain 过期恢复失败，暂停 Present：{reason}";
+    // RZ-VK5-D-R3：尺寸已由自愈恢复一致，Resize 快速跳过（不停启 Present 泵）。
+    public static string ResizeFastSkipped(uint generation, int w, int h) => $"【VulkanClearFrame】Resize 快速跳过：尺寸已由自愈恢复（{w}x{h}）；generation={generation}";
 }
