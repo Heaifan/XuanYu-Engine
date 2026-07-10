@@ -1,11 +1,17 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-D 实装快照 (2026-07-10)
+VK5-B 封版后职责边界收口：只在 `VulkanClearFrameOwner.cs` 内部整理，不新增渲染能力、不重命名、不改对外行为。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs` 99→100：抽出 `RecordDraw(CommandBuffer cb)`（BindPipeline+SetViewport+SetScissor+CmdDraw(3)）从 `RecordOne` 的清屏中拆出；类头注释显式列出 VK5-D 职责边界（帧缓冲管理｜命令录制｜绘制｜管线注入）；`SetPipeline`/`RebuildFramebuffers` 两重录入口仍各自直调 `RecordCommandBuffers`。靠局部变量取地址 + 精简注释 + 去空行守住 ≤100。
+- 零改动：`SwapchainOwner`/`PipelineOwner`/`PresentLoop`/`RenderSession` 经审计确认已是干净 SRP，本轮未动。
+- 验收：双项目 `dotnet build` **0W0E**；全仓 `.cs` 无超 100 行；功能行为零变化（清屏+三角形、Resize 自愈、关闭释放顺序同 VK5-B 封版）。
+
 ## RZ-VK5-B 实装快照 (2026-07-10)
 在 VK5-A Pipeline 基础上画出蓝灰背景上的第一个固定三角形（gl_VertexIndex + CmdDraw，不建 VertexBuffer）。
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs` 18→33：顶点着色器改用 `gl_VertexIndex` 生成 3 顶点（`glslangValidator -V` 重编译）。
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs` 18：片元输出固定琥珀色（重编译）。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs` 96→97：新增 `public Silk.NET.Vulkan.Pipeline Pipeline => _pipeline` 供注入。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs` 95→99：+`_pipeline` 字段与 `SetPipeline(Pipeline)`（注入后重录含 Draw）；`RecordOne` 在 RenderPass 内插入 `CmdBindPipeline`+`CmdSetViewport`+`CmdSetScissor`+`CmdDraw(3,1,0,0)`；Resize 重建后重录自然带 Draw。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs` 95→99（VK5-D 再 99→100）：+`_pipeline` 字段与 `SetPipeline(Pipeline)`（注入后重录含 Draw）；`RecordOne` 在 RenderPass 内插入 `CmdBindPipeline`+`CmdSetViewport`+`CmdSetScissor`+`CmdDraw(3,1,0,0)`；VK5-D 把绘制抽出为 `RecordDraw`，`RecordOne` 变为 `清屏 → RecordDraw → 结束`；Resize 重建后重录自然带 Draw。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 97→98：`Create` 把 Pipeline 创建提前到 `loop.Start()` 前并 `clear.SetPipeline(...)`（泵启动前注入，无竞态）；PresentLoop 未改。
 - 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 99）；蓝灰背景上出现琥珀色固定三角形；Resize 后三角形仍显示且 Present 自愈保留。
 

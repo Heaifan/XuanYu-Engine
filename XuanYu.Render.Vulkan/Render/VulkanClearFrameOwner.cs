@@ -5,7 +5,7 @@ using XuanYu.Render.Vulkan.Swapchain;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// VK4-D 单色清屏 + VK5-B 固定三角形绘制。RenderPass + CommandPool + CommandBuffer[] + Framebuffer[]。Resize 只重建 Framebuffer + 重录（带 Draw）。不碰 Surface/Instance/Swapchain/Present 泵。
+// VK4-D 清屏 + VK5-B 三角形。VK5-D 职责边界：帧缓冲管理｜命令录制（RecordCommandBuffers/RecordOne/RecordDraw）｜绘制（RecordDraw）｜管线注入（SetPipeline 触发重录）。Resize 只重建 Framebuffer + 重录。
 public sealed unsafe class VulkanClearFrameOwner : IDisposable
 {
     readonly Vk _vk; readonly VulkanDeviceOwner _deviceOwner; readonly VulkanSwapchainOwner _swapchainOwner; readonly Action<string>? _log;
@@ -24,7 +24,6 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
     public CommandBuffer[] CommandBuffers => _commandBuffers;
     public Extent2D Extent => _extent;
     public RenderPass RenderPass => _renderPass;
-    // VK5-B：Pipeline 创建后由 RenderSession 注入并重录（含 Draw）。
     public void SetPipeline(Silk.NET.Vulkan.Pipeline pipeline) { _pipeline = pipeline; if (_views.Length > 0) RecordCommandBuffers(_views); }
     void BuildRenderPass()
     {
@@ -64,26 +63,28 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
     }
     void RecordOne(CommandBuffer cb, Framebuffer fb)
     {
-        var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo, Flags = 0 };
+        var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo };
         _vk.BeginCommandBuffer(cb, &begin);
-        var clearVal = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.25f, Float32_1 = 0.45f, Float32_2 = 0.70f, Float32_3 = 1.0f } };
-        var rp = new RenderPassBeginInfo { SType = StructureType.RenderPassBeginInfo, RenderPass = _renderPass, Framebuffer = fb, RenderArea = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent }, ClearValueCount = 1, PClearValues = &clearVal };
+        var clear = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.25f, Float32_1 = 0.45f, Float32_2 = 0.70f, Float32_3 = 1.0f } };
+        var rp = new RenderPassBeginInfo { SType = StructureType.RenderPassBeginInfo, RenderPass = _renderPass, Framebuffer = fb, RenderArea = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent }, ClearValueCount = 1, PClearValues = &clear };
         _vk.CmdBeginRenderPass(cb, &rp, SubpassContents.Inline);
-        if (_pipeline.Handle != 0)
-        {
-            Viewport* pVp = stackalloc Viewport[1];
-            pVp[0] = new Viewport { X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 };
-            Rect2D* pSc = stackalloc Rect2D[1];
-            pSc[0] = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent };
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
-            _vk.CmdSetViewport(cb, 0, 1, pVp);
-            _vk.CmdSetScissor(cb, 0, 1, pSc);
-            _vk.CmdDraw(cb, 3, 1, 0, 0);
-        }
+        RecordDraw(cb);
         _vk.CmdEndRenderPass(cb);
         _vk.EndCommandBuffer(cb);
     }
-
+    // 绘制：仅管线已注入时绑定并画固定三角形（gl_VertexIndex）。不含 VertexBuffer / Mesh。
+    void RecordDraw(CommandBuffer cb)
+    {
+        if (_pipeline.Handle == 0) return;
+        Viewport* pVp = stackalloc Viewport[1];
+        pVp[0] = new Viewport { X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 };
+        Rect2D* pSc = stackalloc Rect2D[1];
+        pSc[0] = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent };
+        _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
+        _vk.CmdSetViewport(cb, 0, 1, pVp);
+        _vk.CmdSetScissor(cb, 0, 1, pSc);
+        _vk.CmdDraw(cb, 3, 1, 0, 0);
+    }
     void DestroyFramebuffers() { foreach (var f in _framebuffers) if (f.Handle != 0) _vk.DestroyFramebuffer(_deviceOwner.LogicalDevice, f, null); _framebuffers = []; }
 
     public void Dispose()

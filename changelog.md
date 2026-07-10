@@ -1,5 +1,17 @@
 # changelog
 
+## [RZ-VK5-D] 清屏/绘制/录制/管线注入/Resize 重录 职责边界收口（2026-07-10，实装）
+
+分支：fix/RZ-VK3-A-surface-contract
+VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动 `VulkanClearFrameOwner.cs`，不新增任何渲染能力。
+- 边界整理（仍 1 个文件、行为不变）：
+  - 抽出 `RecordDraw(CommandBuffer cb)`：把"绘制"（BindPipeline + SetViewport + SetScissor + CmdDraw(3)）从 `RecordOne` 的"清屏"（BeginRenderPass 带 ClearValue）中拆出，`RecordOne` 变为 `清屏 → RecordDraw → 结束`。清屏与绘制成为两个一眼分开的方法。
+  - 类头注释如实改写为"持有 RenderPass+CommandPool+CommandBuffer[]+Framebuffer[]"，并显式列出 VK5-D 职责边界：帧缓冲管理（BuildRenderPass/RebuildFramebuffers）｜命令录制（RecordCommandBuffers/RecordOne/RecordDraw）｜绘制（RecordDraw）｜管线注入（SetPipeline 触发重录）。
+  - `SetPipeline`（管线注入）、`RebuildFramebuffers`（Resize 重建）两个重录触发入口保持各自直调 `RecordCommandBuffers` 的现状，但在类注释中统一说明"最终只走 RecordCommandBuffers 一处"，厘清两条重录路径的意图差异。
+- 不参与（红线）：不建 VertexBuffer/IndexBuffer/UniformBuffer/DescriptorSet；不建 Mesh/Camera/Material/Scene；不改 UI/NativeHost/LOG-UX；不改 SwapchainOwner/PipelineOwner/PresentLoop/RenderSession 对外行为；不清 VulkanClearSession 死代码（留 VK5-E）。`SwapchainOwner`/`PipelineOwner` 经审计确认已是干净 SRP，本轮零改动。
+- 验收：双项目 `dotnet build` **0W0E**；`VulkanClearFrameOwner.cs` 99→100（≤100 硬门禁守住，靠局部变量取地址 + 精简注释 + 去空行达成）；全仓 `.cs` 无新增超 100 行文件；`dotnet build` 0W0E；功能行为零变化（清屏+三角形显示、Resize 自愈、关闭释放顺序均与 VK5-B 封版一致）。
+- 决策（用户拍板）：仅内部整理，**不重命名** `VulkanClearFrameOwner`（保守、零跨文件风险）。
+
 ## [RZ-VK5-B] 固定三角形绘制（gl_VertexIndex + CmdDraw，2026-07-10，实装）
 
 分支：fix/RZ-VK3-A-surface-contract
