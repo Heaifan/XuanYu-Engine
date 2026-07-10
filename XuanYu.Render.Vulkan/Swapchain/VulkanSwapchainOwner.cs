@@ -48,11 +48,12 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         catch (Exception ex) { Log(log, VulkanSwapchainLogFormatter.Failed($"创建异常：{ex.Message}")); return null; }
     }
 
-    public void Recreate(int width, int height)
+    public void Recreate(int width, int height, uint generation = 0)
     {
         if (_khr is null) return;
         if (width <= 0 || height <= 0) { Log(_log, VulkanSwapchainLogFormatter.Skipped($"0 尺寸跳过重建（{width}x{height}）")); return; }
-        _log?.Invoke(VulkanResizeTracer.Stage(0, "Swapchain.Recreate", $"请求={width}x{height}"));
+        if (_swapchain.Handle != 0 && _extent.Width == (uint)width && _extent.Height == (uint)height) { Log(_log, VulkanSwapchainLogFormatter.Skipped($"同尺寸跳过重建（{width}x{height}）")); return; }
+        _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain.Recreate", $"请求={width}x{height}"));
         try
         {
             var (swapchain, images, views, format, extent, ok) = VulkanSwapchainBuilder.Build(_vk, _instance, _physicalDevice, _surface, _khr, _deviceOwner.LogicalDevice, width, height, _log, _swapchain);
@@ -60,20 +61,21 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
             DestroyImagesAndViews();
             _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent;
             Log(_log, VulkanSwapchainLogFormatter.Recreated(_extent, views.Length));
-            _log?.Invoke(VulkanResizeTracer.Stage(0, "Swapchain.Recreate完成", $"{extent.Width}x{extent.Height}"));
+            _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain.Recreate完成", $"{extent.Width}x{extent.Height}"));
         }
         catch (Exception ex) { Log(_log, VulkanSwapchainLogFormatter.Failed($"重建异常：{ex.Message}")); }
     }
 
     // RZ-VK5-A-R2 + R1：按 Surface 当前 CurrentExtent 重建（Windows ChooseExtent 直接返回它）。
-    public bool TryRecreateToCurrent(out Extent2D newExtent)
+    public bool TryRecreateToCurrent(out Extent2D newExtent, uint generation = 0)
     {
         newExtent = _extent;
         if (_khr is null) return false;
-        _log?.Invoke(VulkanResizeTracer.Stage(0, "Swapchain.TryRecreate", $"旧 extent={_extent.Width}x{_extent.Height}，查询 Surface..."));
+        _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain.TryRecreate", $"旧 extent={_extent.Width}x{_extent.Height}，查询 Surface..."));
         var caps = VulkanSwapchainCapabilities.Query(_vk, _instance, _physicalDevice, _surface, (int)_extent.Width, (int)_extent.Height, _log);
         if (!caps.Success || caps.Caps is null || caps.Caps.Value.Extent.Width == 0 || caps.Caps.Value.Extent.Height == 0 || caps.Caps.Value.Extent.Width == uint.MaxValue) return false;
-        Recreate((int)caps.Caps.Value.Extent.Width, (int)caps.Caps.Value.Extent.Height);
+        if (caps.Caps.Value.Extent.Width == _extent.Width && caps.Caps.Value.Extent.Height == _extent.Height) { newExtent = _extent; Log(_log, VulkanSwapchainLogFormatter.Skipped($"同尺寸跳过自愈重建（{_extent.Width}x{_extent.Height}）")); return true; }
+        Recreate((int)caps.Caps.Value.Extent.Width, (int)caps.Caps.Value.Extent.Height, generation);
         newExtent = _extent;
         return true;
     }

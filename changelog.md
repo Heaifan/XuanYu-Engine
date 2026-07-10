@@ -1,5 +1,15 @@
 # changelog
 
+## [RZ-VK5-D-R2] Resize / Present 重复重建去重 + 追踪 gen 修正（2026-07-10，实装）
+
+分支：fix/RZ-VK3-A-surface-contract
+R1 真机 trace 铁证：3 处同尺寸重复 Swapchain 重建（启动 16x16→714x639 后 Resize 又建 714x639；展开时两次 714x274；幻影自愈 714x639→714x274 本已是 714x274）。根因=Resize 重建与 Present 自愈重建撞车，目标 extent 相同却各建一次。本轮最小修复（用户选方案1）。
+
+- **去重（核心）**：`VulkanSwapchainOwner.Recreate/TryRecreateToCurrent` 与 `VulkanClearFrameOwner.RebuildFramebuffers` 均新增「目标 extent == 当前 extent 时跳过重建」短路（同尺寸打 Skipped 日志直接返回）。Resize 与自愈两条路径都受益，彻底消除重复重建。
+- **修追踪 gen 硬编码 0**：`VulkanPresentLoop` 的 OutOfDate 日志原本 `gen=0` 硬编码，已移除；改在 `VulkanRenderSession.RecoverFromOutOfDate` 顶部用真实 `_generation` 打 `Present.OutOfDate` 日志。`Recreate/TryRecreateToCurrent/RebuildFramebuffers` 新增 `generation` 参数，所有 Stage 日志透传真实 gen。
+- 红线守住：不建 VertexBuffer/DescriptorSet/Mesh/Camera/Scene；不改 UI/NativeHost/Shader；不清 VulkanClearSession；不进 VK5-C/E。
+- 验证：Render.Vulkan 构建 0W0E；Editor.UI 无 C# 编译错误（仅因运行中的编辑器 PID 7236 锁 dll 致拷贝失败，非代码问题）；改动 .cs 行数 98/96/98/99 均 ≤100。
+
 ## [RZ-VK5-D-R1] Resize / Present 慢半拍全链路诊断（2026-07-10，实装）
 
 分支：fix/RZ-VK3-A-surface-contract

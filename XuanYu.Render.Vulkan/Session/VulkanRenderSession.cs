@@ -55,8 +55,8 @@ public sealed class VulkanRenderSession : IDisposable
         _presentLoop.Stop();
         lock (_rebuildLock)
         {
-            _swapchainOwner.Recreate(width, height);
-            _clearFrame.RebuildFramebuffers();
+            _swapchainOwner.Recreate(width, height, _generation);
+            _clearFrame.RebuildFramebuffers(_generation);
             _generation++;
             _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize完成", $"{_swapchainOwner.Extent.Width}x{_swapchainOwner.Extent.Height}；{_clearFrame.CommandBuffers.Length} 张 CB"));
         }
@@ -66,11 +66,12 @@ public sealed class VulkanRenderSession : IDisposable
     bool RecoverFromOutOfDate(string source)
     {
         if (_disposed) return false;
+        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Present.OutOfDate", $"来源={source}（进入自愈）"));
         lock (_rebuildLock)
         {
             var old = _swapchainOwner.Extent;
             _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", "查询中..."));
-            if (!_swapchainOwner.TryRecreateToCurrent(out _))
+            if (!_swapchainOwner.TryRecreateToCurrent(out _, _generation))
             {
                 var ne2 = _swapchainOwner.Extent; var dpi = _surfaceHandle?.DpiScale ?? 1.0;
                 _log?.Invoke(VulkanClearFrameLogFormatter.OutOfDateProbe(source, old, ne2, _generation, dpi));
@@ -78,7 +79,7 @@ public sealed class VulkanRenderSession : IDisposable
                 _recoverTries++;
                 return true;
             }
-            _clearFrame.RebuildFramebuffers();
+            _clearFrame.RebuildFramebuffers(_generation);
             _generation++; _recoverTries = 0;
             var ne = _swapchainOwner.Extent;
             _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", $"{ne.Width}x{ne.Height}", "已恢复 Present"));

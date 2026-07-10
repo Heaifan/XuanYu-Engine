@@ -34,15 +34,16 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
         var info = new RenderPassCreateInfo { SType = StructureType.RenderPassCreateInfo, AttachmentCount = 1, PAttachments = &attachment, SubpassCount = 1, PSubpasses = &subpass };
         _vk.CreateRenderPass(_deviceOwner.LogicalDevice, &info, null, out _renderPass);
     }
-    public void RebuildFramebuffers()
+    public void RebuildFramebuffers(uint generation = 0)
     {
-        _log?.Invoke(VulkanResizeTracer.Stage(0, "Framebuffer.Rebuild", "开始..."));
+        if (_framebuffers.Length > 0 && _extent.Width == _swapchainOwner.Extent.Width && _extent.Height == _swapchainOwner.Extent.Height) { Log(_log, VulkanClearFrameLogFormatter.Skipped($"同尺寸跳过帧缓冲重建（{_extent.Width}x{_extent.Height}）")); return; }
+        _log?.Invoke(VulkanResizeTracer.Stage(generation, "Framebuffer.Rebuild", "开始..."));
         DestroyFramebuffers();
         _extent = _swapchainOwner.Extent;
         _views = _swapchainOwner.ImageViews.ToArray();
         _framebuffers = new Framebuffer[_views.Length];
         for (var i = 0; i < _views.Length; i++) { fixed (ImageView* pView = &_views[i]) { var fbInfo = new FramebufferCreateInfo { SType = StructureType.FramebufferCreateInfo, RenderPass = _renderPass, AttachmentCount = 1, PAttachments = pView, Width = _extent.Width, Height = _extent.Height, Layers = 1 }; _vk.CreateFramebuffer(_deviceOwner.LogicalDevice, &fbInfo, null, out _framebuffers[i]); } }
-        _log?.Invoke(VulkanResizeTracer.Stage(0, "Framebuffer.Rebuild完成", $"{_extent.Width}x{_extent.Height}；{_framebuffers.Length}张FB+重录CB"));
+        _log?.Invoke(VulkanResizeTracer.Stage(generation, "Framebuffer.Rebuild完成", $"{_extent.Width}x{_extent.Height}；{_framebuffers.Length}张FB+重录CB"));
         RecordCommandBuffers(_views);
     }
     void RecordCommandBuffers(ImageView[] views)

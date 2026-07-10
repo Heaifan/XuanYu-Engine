@@ -1,5 +1,13 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-D-R2 实装快照 (2026-07-10)
+Resize/Present 重复重建去重 + 追踪 gen 修正（用户选方案1：去重+修追踪）。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 96→98：+`generation` 参数；`Recreate`/`TryRecreateToCurrent` 同尺寸跳过重建（Skipped 日志）。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs` 95→96：+`generation` 参数；`RebuildFramebuffers` 同尺寸跳过帧缓冲重建。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 97→98：Resize/Recover 透传 `_generation`；`RecoverFromOutOfDate` 顶部用真实 gen 打 `Present.OutOfDate` 日志。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs` 100→99：移除硬编码 `gen=0` 的 OutOfDate 日志与 Diagnostic using（日志改由 RecoverFromOutOfDate 承担）。
+- 验收：Render.Vulkan 0W0E；全 .cs ≤100；行为零变化（去重仅减少冗余重建）；不改红线。
+
 ## RZ-VK5-D-R1 实装快照 (2026-07-10)
 Resize / Present 慢半拍全链路诊断——不修、先诊断，加 T+elapsedMs 追踪定位慢在哪一段。
 - **新增** `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs`（48 行）：共享 Stopwatch 诊断工具，StartTrace()/ElapsedMs()/Stage()/HealStage()/DuplicateWarning()。

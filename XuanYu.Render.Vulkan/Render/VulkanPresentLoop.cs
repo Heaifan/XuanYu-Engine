@@ -4,7 +4,6 @@ using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Swapchain;
 using XuanYu.Render.Vulkan.Render;
-using XuanYu.Render.Vulkan.Diagnostic;
 using Semaphore = Silk.NET.Vulkan.Semaphore;
 
 namespace XuanYu.Render.Vulkan.Render;
@@ -50,7 +49,7 @@ public sealed unsafe class VulkanPresentLoop : IDisposable
             var res = khr.AcquireNextImage(device, swapchain, AcquireTimeoutNs, imgAvail, default, &idx);
             if (res != Result.Success && res != Result.SuboptimalKhr)
             {
-                if (res == Result.ErrorOutOfDateKhr) { Log(VulkanResizeTracer.Stage(0, "Present.OutOfDate", "来源=AcquireNextImage")); if (!(_onOutOfDate?.Invoke("AcquireNextImage") ?? true)) break; continue; }
+                if (res == Result.ErrorOutOfDateKhr) { if (!(_onOutOfDate?.Invoke("AcquireNextImage") ?? true)) break; continue; }
                 Log(VulkanClearFrameLogFormatter.PresentError($"AcquireNextImage 失败：{res}")); break;
             }
             if (submitted) { _vk.WaitForFences(device, 1, &fence, true, FenceTimeoutNs); _vk.ResetFences(device, 1, &fence); }
@@ -66,7 +65,7 @@ public sealed unsafe class VulkanPresentLoop : IDisposable
             present.WaitSemaphoreCount = 1; present.PWaitSemaphores = &renderDone;
             present.SwapchainCount = 1; present.PSwapchains = &swapchain; present.PImageIndices = &idx;
             var pres = khr.QueuePresent(_deviceOwner.PresentQueue, &present);
-            if (pres == Result.ErrorOutOfDateKhr) { Log(VulkanResizeTracer.Stage(0, "Present.OutOfDate", "来源=QueuePresent")); if (!(_onOutOfDate?.Invoke("QueuePresent") ?? true)) break; continue; }
+            if (pres == Result.ErrorOutOfDateKhr) { if (!(_onOutOfDate?.Invoke("QueuePresent") ?? true)) break; continue; }
             if (pres != Result.Success && pres != Result.SuboptimalKhr)
             { Log(VulkanClearFrameLogFormatter.PresentError($"QueuePresent 失败：{pres}")); break; }
             if (!_firstPresentLogged) { _firstPresentLogged = true; Log(VulkanClearFrameLogFormatter.FirstPresented(idx)); }
