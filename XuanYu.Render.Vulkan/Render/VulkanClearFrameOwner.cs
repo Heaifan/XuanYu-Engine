@@ -5,11 +5,12 @@ using XuanYu.Render.Vulkan.Swapchain;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// VK4-D（D1+D2）：单色清屏资源持有者。RenderPass + CommandPool + CommandBuffer[]（每 Swapchain 图像一张）+ Framebuffer[]。Resize 只重建 Framebuffer + 重录 CommandBuffer。不碰 Surface/Instance/Swapchain 重建/Present 泵。
+// VK4-D 单色清屏 + VK5-B 固定三角形绘制。RenderPass + CommandPool + CommandBuffer[] + Framebuffer[]。Resize 只重建 Framebuffer + 重录（带 Draw）。不碰 Surface/Instance/Swapchain/Present 泵。
 public sealed unsafe class VulkanClearFrameOwner : IDisposable
 {
     readonly Vk _vk; readonly VulkanDeviceOwner _deviceOwner; readonly VulkanSwapchainOwner _swapchainOwner; readonly Action<string>? _log;
-    RenderPass _renderPass; CommandPool _commandPool; CommandBuffer[] _commandBuffers = []; Framebuffer[] _framebuffers = []; Extent2D _extent; bool _disposed;
+    RenderPass _renderPass; CommandPool _commandPool; CommandBuffer[] _commandBuffers = []; Framebuffer[] _framebuffers = [];
+    ImageView[] _views = []; Silk.NET.Vulkan.Pipeline _pipeline = default; Extent2D _extent; bool _disposed;
 
     public VulkanClearFrameOwner(Vk vk, VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner, int graphicsFamily, Action<string>? log)
     {
@@ -20,11 +21,11 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
         RebuildFramebuffers();
         Log(_log, VulkanClearFrameLogFormatter.Created());
     }
-
     public CommandBuffer[] CommandBuffers => _commandBuffers;
     public Extent2D Extent => _extent;
     public RenderPass RenderPass => _renderPass;
-
+    // VK5-B：Pipeline 创建后由 RenderSession 注入并重录（含 Draw）。
+    public void SetPipeline(Silk.NET.Vulkan.Pipeline pipeline) { _pipeline = pipeline; if (_views.Length > 0) RecordCommandBuffers(_views); }
     void BuildRenderPass()
     {
         var attachment = new AttachmentDescription { Format = _swapchainOwner.Format, Samples = SampleCountFlags.Count1Bit, LoadOp = AttachmentLoadOp.Clear, StoreOp = AttachmentStoreOp.Store, StencilLoadOp = AttachmentLoadOp.DontCare, StencilStoreOp = AttachmentStoreOp.DontCare, InitialLayout = ImageLayout.Undefined, FinalLayout = ImageLayout.PresentSrcKhr };
@@ -33,24 +34,22 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
         var info = new RenderPassCreateInfo { SType = StructureType.RenderPassCreateInfo, AttachmentCount = 1, PAttachments = &attachment, SubpassCount = 1, PSubpasses = &subpass };
         _vk.CreateRenderPass(_deviceOwner.LogicalDevice, &info, null, out _renderPass);
     }
-
     public void RebuildFramebuffers()
     {
         DestroyFramebuffers();
         _extent = _swapchainOwner.Extent;
-        var views = _swapchainOwner.ImageViews.ToArray();
-        _framebuffers = new Framebuffer[views.Length];
-        for (var i = 0; i < views.Length; i++)
+        _views = _swapchainOwner.ImageViews.ToArray();
+        _framebuffers = new Framebuffer[_views.Length];
+        for (var i = 0; i < _views.Length; i++)
         {
-            fixed (ImageView* pView = &views[i])
+            fixed (ImageView* pView = &_views[i])
             {
                 var fbInfo = new FramebufferCreateInfo { SType = StructureType.FramebufferCreateInfo, RenderPass = _renderPass, AttachmentCount = 1, PAttachments = pView, Width = _extent.Width, Height = _extent.Height, Layers = 1 };
                 _vk.CreateFramebuffer(_deviceOwner.LogicalDevice, &fbInfo, null, out _framebuffers[i]);
             }
         }
-        RecordCommandBuffers(views);
+        RecordCommandBuffers(_views);
     }
-
     void RecordCommandBuffers(ImageView[] views)
     {
         var old = _commandBuffers;
@@ -63,23 +62,29 @@ public sealed unsafe class VulkanClearFrameOwner : IDisposable
         }
         if (old.Length > 0) _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)old.Length, old);
     }
-
     void RecordOne(CommandBuffer cb, Framebuffer fb)
     {
         var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo, Flags = 0 };
         _vk.BeginCommandBuffer(cb, &begin);
-        var clear = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.25f, Float32_1 = 0.45f, Float32_2 = 0.70f, Float32_3 = 1.0f } };
-        var rp = new RenderPassBeginInfo { SType = StructureType.RenderPassBeginInfo, RenderPass = _renderPass, Framebuffer = fb, RenderArea = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent }, ClearValueCount = 1, PClearValues = &clear };
+        var clearVal = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.25f, Float32_1 = 0.45f, Float32_2 = 0.70f, Float32_3 = 1.0f } };
+        var rp = new RenderPassBeginInfo { SType = StructureType.RenderPassBeginInfo, RenderPass = _renderPass, Framebuffer = fb, RenderArea = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent }, ClearValueCount = 1, PClearValues = &clearVal };
         _vk.CmdBeginRenderPass(cb, &rp, SubpassContents.Inline);
+        if (_pipeline.Handle != 0)
+        {
+            Viewport* pVp = stackalloc Viewport[1];
+            pVp[0] = new Viewport { X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 };
+            Rect2D* pSc = stackalloc Rect2D[1];
+            pSc[0] = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent };
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
+            _vk.CmdSetViewport(cb, 0, 1, pVp);
+            _vk.CmdSetScissor(cb, 0, 1, pSc);
+            _vk.CmdDraw(cb, 3, 1, 0, 0);
+        }
         _vk.CmdEndRenderPass(cb);
         _vk.EndCommandBuffer(cb);
     }
 
-    void DestroyFramebuffers()
-    {
-        foreach (var f in _framebuffers) if (f.Handle != 0) _vk.DestroyFramebuffer(_deviceOwner.LogicalDevice, f, null);
-        _framebuffers = [];
-    }
+    void DestroyFramebuffers() { foreach (var f in _framebuffers) if (f.Handle != 0) _vk.DestroyFramebuffer(_deviceOwner.LogicalDevice, f, null); _framebuffers = []; }
 
     public void Dispose()
     {

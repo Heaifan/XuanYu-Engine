@@ -37,8 +37,9 @@ public sealed class VulkanRenderSession : IDisposable
         {
             VulkanRenderSession? session = null;
             var clear = new VulkanClearFrameOwner(vk, deviceOwner, swapchainOwner, selection.Queue!.GraphicsFamily, log);
-            var loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear, source => session!.RecoverFromOutOfDate(source), log);
             var pipeline = VulkanGraphicsPipelineOwner.Create(vk, deviceOwner, clear, swapchainOwner, log);
+            if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline);
+            var loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear, source => session!.RecoverFromOutOfDate(source), log);
             session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, log, surfaceHandle);
             loop.Start();
             return session;

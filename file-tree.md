@@ -1,5 +1,14 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-B 实装快照 (2026-07-10)
+在 VK5-A Pipeline 基础上画出蓝灰背景上的第一个固定三角形（gl_VertexIndex + CmdDraw，不建 VertexBuffer）。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs` 18→33：顶点着色器改用 `gl_VertexIndex` 生成 3 顶点（`glslangValidator -V` 重编译）。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs` 18：片元输出固定琥珀色（重编译）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs` 96→97：新增 `public Silk.NET.Vulkan.Pipeline Pipeline => _pipeline` 供注入。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs` 95→99：+`_pipeline` 字段与 `SetPipeline(Pipeline)`（注入后重录含 Draw）；`RecordOne` 在 RenderPass 内插入 `CmdBindPipeline`+`CmdSetViewport`+`CmdSetScissor`+`CmdDraw(3,1,0,0)`；Resize 重建后重录自然带 Draw。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 97→98：`Create` 把 Pipeline 创建提前到 `loop.Start()` 前并 `clear.SetPipeline(...)`（泵启动前注入，无竞态）；PresentLoop 未改。
+- 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 99）；蓝灰背景上出现琥珀色固定三角形；Resize 后三角形仍显示且 Present 自愈保留。
+
 ## RZ-VK5-A-R2 实装快照 (2026-07-10)
 修复 Resize 后 Present 泵停在 Swapchain OutOfDate 的问题（受控自愈）。不 Draw、不画三角形、不进 VK5-B。
 - `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs` 99→100：OutOfDate 不再永久 break，改经 `onOutOfDate` 回调请求 RenderSession 统一自愈；无回调时退回 continue；移除 `_outOfDateLogged` 与 `OutOfDatePaused` 永久暂停分支。

@@ -14,6 +14,7 @@ internal sealed unsafe class VulkanGraphicsPipelineOwner : IDisposable
     readonly Action<string>? _log;
     PipelineLayout _layout;
     Silk.NET.Vulkan.Pipeline _pipeline;
+    public Silk.NET.Vulkan.Pipeline Pipeline => _pipeline;
 
     VulkanGraphicsPipelineOwner(Vk vk, VulkanDeviceOwner deviceOwner, PipelineLayout layout, Silk.NET.Vulkan.Pipeline pipeline, Action<string>? log)
     {

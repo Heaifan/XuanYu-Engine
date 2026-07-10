@@ -1,5 +1,19 @@
 # changelog
 
+## [RZ-VK5-B] 固定三角形绘制（gl_VertexIndex + CmdDraw，2026-07-10，实装）
+
+分支：fix/RZ-VK3-A-surface-contract
+在 VK5-A 已创建好的 GraphicsPipeline 基础上，画出蓝灰背景上的第一个固定三角形。不建 VertexBuffer / IndexBuffer / UniformBuffer / DescriptorSet，顶点由 `gl_VertexIndex` 在顶点着色器内生成。
+- 着色器（`glslangValidator -V` 重新编译，内嵌 SPIR-V 字流，无 .vert/.frag/.spv 源文件入库）：
+  - `ShaderBytecode.Vert.cs` 重写：顶点着色器用 `gl_VertexIndex` 索引 3 个常量顶点位置，输出 `gl_Position`（三角形居中、底边长、尖朝上）。
+  - `ShaderBytecode.Frag.cs` 重写：片元着色器输出固定琥珀色 `vec4(1.0, 0.85, 0.2, 1.0)`（蓝灰背景上醒目）。
+- 录制 + 装配：
+  - `VulkanClearFrameOwner.cs` 95→99：新增 `_pipeline` 字段与 `SetPipeline(Pipeline)`（由 RenderSession 注入后重录 CommandBuffer，含 Draw）；`RecordOne` 在 `CmdBeginRenderPass` 之后、`CmdEndRenderPass` 之前插入 `CmdBindPipeline` + `CmdSetViewport` + `CmdSetScissor` + `CmdDraw(3,1,0,0)`；Resize 重建 Framebuffer 后重录自然带上 Draw（沿用原有 RebuildFramebuffers 路径，未改 Resize/Present 泵）。
+  - `VulkanGraphicsPipelineOwner.cs` 96→97：新增 `public Silk.NET.Vulkan.Pipeline Pipeline => _pipeline` 供注入。
+  - `VulkanRenderSession.cs` 97→98：`Create` 把 Pipeline 创建提前到 `loop.Start()` 之前，创建后 `clear.SetPipeline(pipeline.Pipeline)`（泵启动前注入，避免首帧竞态）；PresentLoop 完全未改。
+- 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 99）；蓝灰清屏背景上出现琥珀色固定三角形；Resize 后三角形仍显示且 Present 自愈能力保留（RZ-VK5-A-R2 未破坏）；关闭释放顺序不变。
+- 红线守住：不建 VertexBuffer/IndexBuffer/UniformBuffer/DescriptorSet；不接 Scene/Camera/Mesh/Material/Gizmo；不改 UI/NativeHost/LOG-UX；不扩大 Editor.UI→Render.Vulkan 引用；不清 VulkanClearSession；不破坏 RZ-VK5-A-R2 的 Resize 后 Present 恢复。
+
 ## [RZ-VK5-A-R2] Present 泵 OutOfDate 受控自愈（Resize 后 Present 恢复，2026-07-10，实装）
 
 分支：fix/RZ-VK3-A-surface-contract
