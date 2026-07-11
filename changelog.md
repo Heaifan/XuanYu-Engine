@@ -1,5 +1,13 @@
 # changelog
 
+## [RZ-VK5-C-Plan] viewport/scissor 与 Resize 关系验证收口（2026-07-11，规划·零代码）
+
+分支：fix/RZ-VK3-A-surface-contract；基线 HEAD：c53b7a8（RZ-VK5-D-R3 封版）。
+结论：**VK5-C 无需改代码，改为「验证收口轮」**。经源码取证，viewport/scissor 已使用动态状态、Resize 后 CommandBuffer 必然重录且取最新 Swapchain extent、GraphicsPipeline 不随 Resize 重建——三项诉求全部已满足。
+- 新增 `docs/rz-vk5-c-plan.md`：8 问逐答（带文件/行号源码证据）+ 验证收口方案 + 真机 run-list。
+- 红线守住：不进 VK5-E；不新增渲染能力；不改三角形/shader/UI/NativeHost；不清 VulkanClearSession；不扩大 Editor.UI→Render.Vulkan 引用；全 .cs ≤100；双项目 0W0E；**本轮 0 代码改动**（无 .cs/.axaml/.csproj 变更）。
+- 进度指针：VK5-C 验证收口后推进到 **VK5-E**（清 VulkanClearSession 死代码 = 债务 B）。
+
 ## [RZ-VK5-D-R3] Resize 同尺寸快速跳过 Present 泵停启（2026-07-10，实装）
 
 分支：fix/RZ-VK3-A-surface-contract

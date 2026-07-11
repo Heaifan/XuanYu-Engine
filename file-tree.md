@@ -1,5 +1,11 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-C-Plan 快照 (2026-07-11)
+VK5-C（viewport/scissor 与 Resize 关系）规划轮：经源码取证确认 viewport/scissor 已使用动态状态、Resize 后 CommandBuffer 必然重录且取最新 Swapchain extent、GraphicsPipeline 不随 Resize 重建——三项诉求均满足，VK5-C 无需改代码，改为「验证收口轮」。
+- `docs/rz-vk5-c-plan.md`（新）：8 问逐答（带文件/行号源码证据）+ 验证收口方案 + 真机 run-list。
+- 本轮零代码改动（无 .cs/.axaml/.csproj 变更）；双项目 0W0E 维持；红线守住（不进 VK5-E、不新增渲染能力、不改三角形/shader/UI/NativeHost、不清 VulkanClearSession）。
+- 进度指针：VK5-C 验证收口后推进 VK5-E（清 VulkanClearSession 死代码 = 债务 B）。
+
 ## RZ-VK5-D-R3 实装快照 (2026-07-10)
 Resize 同尺寸快速跳过 Present 泵停启——消除"自愈成功后又停泵重启"造成的视觉停顿。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` 98→100：Resize 在 Stop 泵前新增短路——目标尺寸==当前 Swapchain.Extent 时打 `Resize 快速跳过` 中文日志并直接 return，不 Stop/Start 泵、不重建 Swapchain/Framebuffer、不重录 CommandBuffer；保留 R2 同尺寸去重与自愈机制。
