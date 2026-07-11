@@ -10,6 +10,11 @@
 用户要求的 3 项诉求在当前 `c53b7a8` 代码中**全部已满足** → VK5-C 不做实装，改为「验证收口轮」：
 产出验证报告 + 真机 run-list，不触碰任何 `.cs` / `.axaml` / `.csproj`。
 
+> ⚠️ **边界纠正（审计通过时用户要求）**：viewport / scissor 只决定「绘制区域有多大、裁剪到哪里」，
+> **不负责几何宽高比保持**。当前测试三角形使用 NDC 固定坐标，视口宽高比变化时其屏幕外观会**变宽 / 变窄 / 变扁**——
+> 这属于**预期行为**，是后续 Camera / Projection（或独立宽高比修正阶段）要解决的问题，**不属于 VK5-C 的 viewport/scissor 生命周期范畴**。
+> 因此 VK5-C 结论**禁止声称**「三角形在任何宽高比下都不拉伸变形」。
+
 ---
 
 ## 1. viewport / scissor 当前在哪里设置？
@@ -110,6 +115,14 @@ VulkanRenderSession.cs:96   _pipeline?.Dispose();                               
 
 → **VK5-C 无代码改动必要。** 继续写码只会引入冗余/回归风险，违背「先冻结、先收口」节奏。
 
+**允许确认 / 禁止声称（审计口径）：**
+- ✅ viewport / scissor 已声明为动态状态；
+- ✅ Resize 后 CommandBuffer 使用最新 Swapchain extent 重录；
+- ✅ RenderArea / Framebuffer / viewport / scissor 使用同一最新 extent；
+- ✅ GraphicsPipeline 不因 Resize 重建；
+- ✅ Resize 后三角形继续显示且不被错误裁切；
+- ❌ **禁止声称**三角形在不同视口宽高比下不会拉伸变形（那属 Camera / Projection 范畴）。
+
 ## 7. 如果需要，最小改动文件和边界是什么？
 
 **不适用（Q6=不需要）。** 仅作预案记录：
@@ -132,7 +145,7 @@ VulkanRenderSession.cs:96   _pipeline?.Dispose();                               
 
 **真机 run-list（供用户 `run.bat` 验收，VK5-D-R3 基础上追加 2 项）**：
 1. 启动：蓝灰清屏背景上出现琥珀色固定三角形（VK5-B 既有）。
-2. Resize（拖窗口 / 展开日志栏）：三角形随窗口尺寸**完整铺满、不裁切、不偏移**——证明 viewport/scissor 取最新 extent。
+2. Resize（拖窗口 / 展开日志栏）：三角形继续显示且**不被错误裁切**（但宽高比变化时屏幕外观会随视口变宽 / 变扁，属预期，非 Resize 链路失败）——证明 viewport/scissor 取最新 extent。
 3. Resize 后日志：仅出现 `Swapchain.Recreate` + `Framebuffer.Rebuild` + `Resize完成` 配对；**无** `GraphicsPipeline` 重建 / 创建日志（证明 Pipeline 不随 Resize 重建）。
 4. 真机日志含 `[T+... gen=N]` 追踪：无重复同尺寸重建；自愈路径（若有 OutOfDate）重录后三角形仍铺满。
 5. 关闭窗口：释放顺序 `Present泵停止→Pipeline释放→ClearFrame释放→Swapchain释放→Device→Surface→Instance`，三角形全程未报丢失。
