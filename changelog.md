@@ -1,5 +1,13 @@
 # changelog
 
+## [RZ-VK5-E-Plan] 清理 VulkanClearSession 死代码（债务 B）规划（2026-07-11，规划·待确认实装）
+
+分支：fix/RZ-VK3-A-surface-contract；基线 HEAD：139c748（RZ-VK5-C 封版）。
+结论：**VulkanClearSession 为确定无引用的死代码，可安全删除，收口债务 B**。经审计：`VulkanClearSession`（Editor.UI 4 个 partial 文件）是 VK3-A 前早期探针，已被 `VulkanRenderSession` 正式链路取代；全仓 grep 确认无任何 `.cs` 外部引用或 `TryCreate` 调用方。
+- 新增 `docs/rz-vk5-e-plan.md`：9 项规划（死代码确认 / 文件+调用方+替代链路+删除影响 / 正式链路由 VulkanRenderSession 承担 / 只删无引用死代码 / 不改三角形·Resize·PresentLoop·Pipeline / 不新增 / 全 .cs ≤100 / 双项目 0W0E / 实装步骤 + 风险回滚）+ 红线。
+- 实装步骤（确认后）：`git rm` 4 文件 → 低内存构建验证 0W0E → 更新 changelog/file-tree → 独立 commit + push。
+- 红线守住：只删死代码；不碰 VulkanRenderSession 链路 / UI / NativeHost / LOG-UX；不扩大 Editor.UI→Render.Vulkan 引用；双项目 0W0E；全 .cs ≤100。
+
 ## [RZ-VK5-C-Plan] viewport/scissor 与 Resize 关系验证收口（2026-07-11，验证收口·已封版）
 
 分支：fix/RZ-VK3-A-surface-contract；基线 HEAD：c53b7a8（RZ-VK5-D-R3 封版）。

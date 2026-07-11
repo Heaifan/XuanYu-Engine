@@ -1,5 +1,11 @@
 # 项目文件树 — XuanYu Engine
 
+## RZ-VK5-E-Plan 快照 (2026-07-11)
+清理 VulkanClearSession 死代码（债务 B）规划轮：经审计确认 VulkanClearSession（Editor.UI 4 个 partial 文件）为 VK3-A 前早期探针，已被 VulkanRenderSession 正式链路取代，全仓无任何 .cs 外部引用或 TryCreate 调用方，属确定无引用死代码。
+- `docs/rz-vk5-e-plan.md`（新）：9 项规划（死代码确认 / 文件+调用方+替代链路+删除影响 / 正式链路由 VulkanRenderSession 承担 / 只删无引用死代码 / 不改三角形·Resize·PresentLoop·Pipeline / 不新增 / 全 .cs ≤100 / 双项目 0W0E / 实装步骤 + 风险回滚）+ 红线。
+- 实装（待确认）：`git rm` 4 个 VulkanClearSession.*.cs（XuanYu.Editor.UI/Viewport/Vulkan/），低内存构建验证 0W0E，更新 changelog/file-tree，独立 commit + push。
+- 红线守住：只删死代码；不碰 VulkanRenderSession 链路 / UI / NativeHost / LOG-UX；不扩大 Editor.UI→Render.Vulkan 引用；双项目 0W0E；全 .cs ≤100。
+
 ## RZ-VK5-C-Plan 快照 (2026-07-11)
 VK5-C（viewport/scissor 与 Resize 关系）规划轮：经源码取证确认 viewport/scissor 已使用动态状态、Resize 后 CommandBuffer 必然重录且取最新 Swapchain extent、GraphicsPipeline 不随 Resize 重建——三项诉求均满足，VK5-C 无需改代码，改为「验证收口轮」。
 - `docs/rz-vk5-c-plan.md`（新）：8 问逐答（带文件/行号源码证据）+ 验证收口方案 + 真机 run-list。
