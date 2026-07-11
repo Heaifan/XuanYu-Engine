@@ -10,7 +10,14 @@ R2 真实成绩：同尺寸 Swapchain/Framebuffer 重建已跳过、gen 追踪�
 - **保留自愈**：Present 自愈机制（OutOfDate → RecoverFromOutOfDate）原样保留，未被删除。
 - **日志新增**：`VulkanClearFrameLogFormatter.ResizeFastSkipped(uint generation, int w, int h)` 输出上述中文日志。
 - 红线守住：不进 VK5-C/E；不新增渲染能力；不改三角形绘制/shader/UI/NativeHost；不清 VulkanClearSession；双项目 0W0E；全 .cs ≤100 行。
-- 验证（待用户 run.bat 真机复验）：①启动不重复 714x639；②展开只 1 次 714x274；③后续同尺寸 Resize 应快速跳过（不再出现 Present 泵停止/启动）；④三角形仍显示；⑤关闭释放顺序正确。改动 .cs 行数 RenderSession 98→100、LogFormatter 21→23，均 ≤100。
+- **真机验收通过（2026-07-11，用户 run.bat 回传 trace）**：全部 11 项验收 PASS。
+  - ①启动不重复 714x639：首帧 Present 成功（imageIndex=0）后，仅由 OutOfDate 自愈 16x16→714x639 一次，无重复 714x639 重建。
+  - ②展开只 1 次 714x274 全量：自愈 714x639→714x274 一次（gen=2），符合预期。
+  - ③同尺寸 Resize 快速跳过、不再 Stop/Start 泵：日志出现两条 `【VulkanClearFrame】Resize 快速跳过：尺寸已由自愈恢复（714x639）；generation=1` 与 `（714x274）；generation=2`，**均无** `Present 泵已停止/启动` 配对——R2 残留的"自愈成功后停泵重启"慢半拍被消除。
+  - ④唯一一次 `Present 泵已停止`/`已启动` 出现在收尾真实的窗口展开 Resize（714x274→714x639，gen=3→4），属尺寸真变化的正确必要行为，非慢半拍。
+  - ⑤关闭释放顺序正确：Present泵停止→GraphicsPipeline释放→RenderPass+Framebuffer释放→Swapchain释放→LogicalDevice释放→Surface释放→Instance释放→Bridge分离。三角形全程持续 Present（未报丢失）。
+  - 遗留非阻断：`RenderPass + Framebuffer 释放成功` 关闭时仍重复一行（LOG-CLEANUP，不影响功能）；UI 250ms Coalescer 防抖不在红线内。
+  - 改动 .cs 行数 RenderSession 98→100、LogFormatter 21→23，均 ≤100；双项目 0W0E（Editor.UI 锁 dll 仅环境，改临时目录构建复验 0W0E）。
 
 ## [RZ-VK5-D-R2] Resize / Present 重复重建去重 + 追踪 gen 修正（2026-07-10，实装）
 
