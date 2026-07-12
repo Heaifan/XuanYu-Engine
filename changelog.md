@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.14.6-rz
+ORG-1-R1：项目基线审计修正版（2026-07-12，审计文档修正）
+
+- 原历史编号：ORG-1-R1
+- 日期：2026-07-12
+- 任务目标：退回修正 ORG-1 审计报告（f187174）的 11 项误判，使报告成为可信赖的"权威项目基线"。纯文档修正，不改代码。
+- 主要改动：新增 `docs/project-baseline-audit-org-1-r1.md`（修正版，17 节含可复跑证据附录）；原 `docs/project-baseline-audit-org-1.md` 顶部加"已退回，见 R1" superseded 注。修正要点：① 分支范围——所有"无 .sln/无测试"限定为 `fix/RZ-VK3-A-surface-contract` 分支 `f187174` 快照（实测 `origin/main` 含 `XuanYu.Engine.sln` + `XuanYu.Engine.Tests/`）；② 5+100——物理行数通过（111 文件 0 超限，最大 100）但质量条件不通过（VulkanRenderSession.cs / VulkanPresentLoop.cs 压行），红线总判定不成立；③ 空 catch（VulkanPresentLoop.cs:96-97）列为 P1；④ Editor.UI→Vulkan 为活跃组合根违反（VulkanSurfaceBridgeProvider + UiVm.VulkanProbe + VulkanProbeRoute 共 3 活跃 .cs + csproj）；⑤ Vk 所有权表重写（VulkanNativeHostSurfaceBridge 唯一持有/释放，Session 无 `_vk`）；⑥ Vulkan 失败路径回滚+Present 线程 Stop 可靠性列为 P1；⑦ 能力表数字修正 A=10/B=1/D=1 + 新增"未规划/不在当前阶段"类；⑧ 基线双标注（被审计代码基线 9bc210e / 审计报告提交 f187174）；⑨ 新增可复跑证据附录（精确命令+退出码+结果）；⑩ 111.ps1 修正为"非强推"（普通 git push -u）；⑪ ORG-2 拆为 5 轮（ORG-1-R1 / SAFE-1 / VK-LIFE-1 / ARCH-A-PLAN / ORG-2）。
+- 影响范围：仅四份文档（changelog.md / file-tree.md / 新增 R1 审计文档 / 原审计文档加注）；零源码改动；不改 Git 历史/Commit/分支/Tag。
+- 验证结果：5 项目 `dotnet build` 全 0W0E EXIT=0（复跑确认）；git ls-files 统计 111 手写 .cs/.axaml 全 ≤100（0 超限）；origin/main 实测含 .sln 与 Tests；密钥/FluidWarfare 扫描干净；Editor.UI 活跃 Render.Vulkan 引用 3 处确认。
+- Commit Hash：见本次提交。
+- 遗留问题（修正后仍仅报告不修复，排入对应轮）：P1 四项（债务A 活跃收口 / 空 catch / Vulkan 失败路径回滚 / 111.ps1 删除）；P2 多项（本分支无测试 / qizheng-mvp-fixed / 旧治理文档 / codex_log）；VK5-E 待实装。
+
 ## v0.2.14.5-rz
 ORG-1：项目真实基线审计（2026-07-12，审计文档）
 
