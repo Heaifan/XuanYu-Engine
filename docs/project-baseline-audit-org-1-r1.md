@@ -2,7 +2,7 @@
 
 - 任务代号：ORG-1-R1（基于 ORG-1 `f187174` 退回修正）
 - 被审计代码基线：`9bc210e`（DOC-VERSION-1-R1，ORG-1 审计时的代码树）
-- 审计报告提交（本轮）：见 changelog `v0.2.14.6-rz`（提交后补充 hash）
+- 审计报告提交（本轮）：`e6f96b5`（分支 `fix/RZ-VK3-A-surface-contract`）
 - 分支：`fix/RZ-VK3-A-surface-contract`
 - 审计性质：纯文档修正轮，**不改代码、不重构、不删除文件**
 - 依据文档：`docs/玄域引擎_AI开发宪法.md`（最高规范）、`docs/版本号规范与历史映射.md`、`docs/CODE_CONSTITUTION.md`、`docs/AI_DEVELOPMENT_RULES.md`、各 VK3/VK4/VK5 计划与收口文档、`changelog.md`、`file-tree.md`
