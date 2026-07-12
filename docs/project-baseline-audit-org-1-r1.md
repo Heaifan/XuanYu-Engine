@@ -1,9 +1,12 @@
 # ORG-1-R1 项目基线审计（修正版）
 
 - 任务代号：ORG-1-R1（基于 ORG-1 `f187174` 退回修正）
-- 被审计代码基线：`9bc210e`（DOC-VERSION-1-R1，ORG-1 审计时的代码树）
-- 审计报告提交（本轮）：`e6f96b5`（分支 `fix/RZ-VK3-A-surface-contract`）
 - 分支：`fix/RZ-VK3-A-surface-contract`
+- **四重提交/基线身份（须严格区分，不可混称"报告提交"）**：
+  - 被审计代码基线：`9bc210e`（ORG-1 审计时的代码树，DOC-VERSION-1-R1）
+  - 原 ORG-1 退回报告提交：`f187174`（已退回，由本 R1 取代）
+  - R1 主体内容提交：`e6f96b5`（11 项误判修正 + 新增本 R1 报告 + 原报告加注 + changelog/file-tree）
+  - R1 后续文字补正提交：`ef0ca11`（仅补一行 hash 占位，属 R1 收尾，非独立轮次）
 - 审计性质：纯文档修正轮，**不改代码、不重构、不删除文件**
 - 依据文档：`docs/玄域引擎_AI开发宪法.md`（最高规范）、`docs/版本号规范与历史映射.md`、`docs/CODE_CONSTITUTION.md`、`docs/AI_DEVELOPMENT_RULES.md`、各 VK3/VK4/VK5 计划与收口文档、`changelog.md`、`file-tree.md`
 
@@ -20,10 +23,12 @@
 | 5 | Vk 所有权表写"Session 持有并向下传播" | 实测 `Vk` 由 `VulkanNativeHostSurfaceBridge` 唯一持有并在 `Dispose` 释放；`VulkanRenderSession` **无 `_vk` 字段**（见 §8 表、项1） |
 | 6 | Vulkan 异常后状态整体判"正常" | `Create` 部分泄漏、`Bridge.Attach` 部分泄漏、`Resize` 无 `try/finally`、`Stop` 的 `Join` 未检查返回值——新增 **P1：失败路径回滚与 Present 线程终止可靠性**（见 §8、§14 P1-c） |
 | 7 | 能力表数字与 SVG 不一致（A=9/B=1/C=0/D=1） | 实测 A=10、B=1、D=1；Shape/Mesh/Camera/Scene/DescriptorSet 改列为**"未规划／不在当前阶段"**（非"已规划未实装"）；SVG 同步修正（见 §9、可视化） |
-| 8 | 基线标注混淆（正文 9bc210e / SVG f187174） | 明确区分：**被审计代码基线 `9bc210e`** / **审计报告提交 `f187174`**（本轮 R1 另出新提交），SVG 双标注（见 §1、可视化） |
+| 8 | 基线标注混淆（正文 9bc210e / SVG f187174） | 明确拆为**四重身份**：被审计代码基线 `9bc210e` / 原 ORG-1 退回报告 `f187174` / R1 主体 `e6f96b5` / R1 文字补正 `ef0ca11`；`f187174` 是已被退回的原报告，并非 R1（见 §1、§2） |
 | 9 | 证据链不可复跑（引用 `.workbuddy` 本地脚本） | 新增 §附录：精确命令 + 排除目录 + 退出码 + 结果摘要 + 扫描文件数 + 发现列表，全部可复跑（见 §附录） |
 | 10 | 111.ps1 称"强推" | 脚本为普通 `git push -u origin $Branch`，**无 `--force`**；修正表述为"破坏本地历史并尝试推向远端，是否成功取决于远端状态"（见 §13） |
 | 11 | ORG-2 范围过大（文档+删移+架构+测试+卫生混一轮） | 拆为 5 轮：ORG-1-R1 / SAFE-1 / VK-LIFE-1 / ARCH-A-PLAN / ORG-2（见 §16） |
+
+**ORG-1-R2 补丁（2026-07-12，小范围精确修正，未重写本报告）**：用户二次审查确认 11 项核心纠错通过，但退回"报告现已可称权威基线"的结论，要求 R2 仅做六处小修：① A3/A4/A5 真实退出码语义修正（原误写"退出码 0"）；② A6 补退出码与命中数；③ hash 拆为四重身份（`9bc210e`/`f187174`/`e6f96b5`/`ef0ca11`）；④ "全仓密钥扫描"缩窄为真实范围（`git grep` 全 tracked 文本，3 处命中均复核为误报，非"0 命中"）；⑤ `_stop` 内存可见性、Vulkan `Result` 未检查、`CreateSync` 部分泄漏补入 VK-LIFE-1（P1-c）；⑥ 新增独立 `ARCH-A-IMPL`，删除 `ARCH-A-PLAN` 的"可选 PoC"。另按非阻断建议：能力计数注明"仅条目盘点非成熟度"；`SAFE-1` 必做收紧为 `111.ps1` + `qizheng-mvp-fixed/`，`codex_log/` 降为可选。本轮仍不改代码、不重做 SVG。
 
 ---
 
@@ -45,7 +50,9 @@
 | --- | --- |
 | 当前分支 | `fix/RZ-VK3-A-surface-contract` |
 | 被审计代码基线 | `9bc210e0217e2b07956cc8732ae84aea6d83e3f2` |
-| 审计报告提交（ORG-1） | `f1871741dd97e3dc1e9dab2f9ce85846f852c78d` |
+| 审计报告提交（ORG-1，已退回） | `f1871741dd97e3dc1e9dab2f9ce85846f852c78d` |
+| R1 主体内容提交 | `e6f96b5` |
+| R1 文字补正提交 | `ef0ca11` |
 | upstream | `origin/fix/RZ-VK3-A-surface-contract`（已设） |
 | ahead / behind | `0 / 0`（与同名远端同步） |
 | 分支比较范围 | **仅**比较本地分支与同名远端分支；**未**比较 `main`/分叉点/合并状态（范围限制见 §1） |
@@ -150,7 +157,7 @@ XuanYu.Core ──（无依赖）
 
 ## 7. 5+100 审计
 
-统计范围：当前分支 `git ls-files '*.cs' '*.axaml'`（自动排除 `.gitignore` 覆盖的 `bin/obj/.artifacts/codex_log` 及 untracked 的 `qizheng-mvp-fixed`）。可复跑命令见 §附录 A1。
+统计范围：本次统计**只计算 tracked 文件**（`git ls-files '*.cs' '*.axaml'`）。`git ls-files` 列出的是**已跟踪**文件——一个文件即使后来被加入 `.gitignore`，只要已 tracked 仍会被返回；未跟踪（如 `qizheng-mvp-fixed/`）与被忽略文件不在统计范围内。当前 tracked 集合中未发现 `bin/obj/.artifacts/codex_log` 等生成目录文件。可复跑命令见 §附录 A1。
 
 | 指标 | 值 |
 | --- | --- |
@@ -243,8 +250,11 @@ ORG-1 大量使用"快速失败、可恢复、正常"，但源码存在明确失
 - **`VulkanNativeHostSurfaceBridge.Attach` 部分回滚缺失**：`Attach` 中 `_deviceOwner = VulkanBridgeDeviceAttachStep.Run(...)`（第 41 行，写入字段）；若随后 `Swapchain` 步（第 42 行）或 `RenderSession` 步（第 43 行）抛异常，`catch`（第 45-52 行）仅 `surface?.Dispose(); instance?.Dispose();` 并清理局部/ownedVk，**未释放已写入字段的 `_deviceOwner`**（亦未释放可能已建好的 `_swapchainOwner`/`_renderSession` 局部/字段）。→ 需完整回滚已提交的字段。
 - **`VulkanRenderSession.Resize` 无 `try/finally`**：`Resize` 先 `_presentLoop.Stop()`（第 57 行），在 `_rebuildLock` 内 `Recreate`/`RebuildFramebuffers`（第 60-61 行）；若重建抛异常，异常逃出 `Resize`，第 65 行 `_presentLoop.Start()` **不会执行**，渲染泵停在失败（已停）状态。→ 需 `try/finally` 保证异常时 `Start()` 或进入明确失败态。
 - **`VulkanPresentLoop.Stop` 的 `Join` 未检查返回值**：`Stop`（第 79 行）`_stop = true; t.Join(2000); _thread = null;` 不检查 `Join` 返回值；随后 `Dispose`（第 83-92 行）直接 `DestroySemaphore`/`DestroyFence`。若 `Join` 超时（线程仍在跑），`Dispose` 会在后台线程仍使用同步对象时销毁它们，**理论存在竞态/崩溃**。→ 需检查 `Join` 返回值并在超时时不立即释放，或改用可取消的协作终止。
+- **`_stop` 跨线程字段无同步（内存可见性）**：`Stop()`（第 79 行）在调用线程写 `_stop = true`，`Run()`（第 46 行）在 Present 后台线程读 `while (!_stop)`；`_stop` 既非 `volatile`，也不受锁/其他同步机制保护。单核/编译器/CPU 重排下，后台线程可能延迟感知 `_stop`，属 Present 线程终止可靠性问题（并入 P1-c）。
+- **多个 Vulkan 调用返回值未检查**：`CreateSemaphore`（第 33-34 行）、`CreateFence`（第 36 行）、`WaitForFences`（第 55 行）、`ResetFences`（第 55 行）、`QueueSubmit`（第 62 行）的 `Result` 均未检查，失败时不会触发回滚或降级。
+- **`CreateSync` 部分创建失败泄漏**：第 33 行第一个 Semaphore 成功后，若第 34 行第二个 Semaphore 或第 36 行 Fence 创建抛异常，`_syncCreated` 仍为 `false`（第 37 行才置真），`Dispose`（第 86-91 行）不会进入销毁分支，**已创建的对象泄漏**。
 
-**结论**：Vulkan 生命周期"正常路径"基本正确，但**失败路径资源回滚与 Present 线程终止可靠性不达标**，列为 **P1（VK-LIFE-1 专项处理）**。
+**结论**：真机成功路径已工作，但**关键 Vulkan 调用的失败结果尚未完整处理**，且 **Present 线程终止可靠性不达标**，列为 **P1（VK-LIFE-1 专项处理）**。
 
 ---
 
@@ -273,6 +283,8 @@ ORG-1 大量使用"快速失败、可恢复、正常"，但源码存在明确失
 > ⚠ ORG-1 原 SVG 写 A=9、B=1、C=0、D=1 与正文不一致；且 Shape/Mesh/Camera/Scene/DescriptorSet 原误列 D（"已规划未实装"），实为"尚未开发、不在当前阶段"。本报告与可视化已统一修正。
 
 **真机验收边界说明**：A 类均有多轮用户真机回传或收口文档支撑；B 类（视口 UI 收口）仅有构建通过，无真机验收记录，按宪法第十二条 UI 类改动需真机验收再 Push，故标记待确认；D 类（VK5-E）仅规划文档，代码未动；"未规划/不在当前阶段"类仅为路线图占位，无任何计划或代码。
+
+> ⚠ 数量仅用于**条目盘点**，不代表模块成熟度或完成比例。A=10 中部分属同一 Vulkan 链路的不同验收点（Clear+Present、关闭释放顺序、Resize 自愈、同尺寸跳过），不应累加为"成熟度分数"。证据列引用的是 `vk4-*`/`log-ux-*` 等 changelog/收口文档代号（非逐条精确 commit）；精确依据见 §10 真机验收证据与对应 changelog 条目。
 
 ---
 
@@ -344,7 +356,7 @@ ORG-1 大量使用"快速失败、可恢复、正常"，但源码存在明确失
 | 生成物目录 | `.artifacts/`、`bin/`、`obj/` | 已被 `.gitignore` 覆盖 | 低 | 无 |
 | 旧品牌命名残留于文档 | `AI_DEVELOPMENT_RULES.md`/`CODE_CONSTITUTION.md` 等 | tracked 文档 | 低：仅文档误导性 | P2：ORG-2 裁决 |
 | 文档绝对路径残留 | `docs/audit-NativeViewportMouseCapture-lifecycle-9.0X.md:203` | 仅作为整改说明 | 低 | P3：可顺手清理 |
-| 密钥/Token/密码 | 全仓 tracked 文件 | grep 模式未命中（见 §附录 A4） | 无 | 无（符合红线3） |
+| 密钥/Token/密码 | 全部 tracked 文本文件（`git grep`） | 模式命中 3 处，经复核均为误报：① `XuanYu.Editor.UI/Vm/SampleLogEntries.cs:24` 样例日志字符串含 token 字样；② `docs/project-baseline-audit-org-1-r1.md:438` 与 ③ `docs/project-baseline-audit-org-1.md:275` 为本审计报告自身引用模式字符串。0 处真实密钥（见 §附录 A4） | 低（误报） | 基础特征扫描，非完整 secret scanning；不能据此断言"仓库无密钥风险"，仅表明指定模式未命中真实凭据 |
 | FluidWarfare 旧命名泄漏源码 | 全仓 `.cs/.axaml/.csproj` | grep 未命中（见 §附录 A5） | 无 | 无（仅旧文档） |
 
 依据：`git ls-files`、`.gitignore`、`git status`、`git ls-tree -r origin/main`、`grep` 源码（FluidWarfare / 密钥模式 / `Render.Vulkan` 引用）。
@@ -359,13 +371,13 @@ ORG-1 大量使用"快速失败、可恢复、正常"，但源码存在明确失
 - **P1（下一功能轮前必须处理）**：
   1. **`Editor.UI` 直接依赖 `Render.Vulkan` + `Silk.NET.Vulkan`（红线1 活跃违反，债务 A）**：位于组合根 `VulkanSurfaceBridgeProvider` 及 `UiVm.VulkanProbe`/`VulkanProbeRoute` 共 3 个活跃 `.cs` + csproj（§4、§8.2⑧）。须排 ARCH-A-PLAN 专项收口到 `Abstractions`，覆盖活跃组合根。
   2. **空 `catch` 违反宪法（VulkanPresentLoop.cs:96-97）**：后台线程日志回调空 `catch` 静默吞异常，违反"禁止空 catch / 异常必须可追踪"。须改用兜底诊断通道或受限诊断状态（§8.2⑦）。
-  3. **Vulkan 失败路径资源回滚与 Present 线程终止可靠性**：`Create`/`Attach` 部分泄漏、`Resize` 无 `try/finally`、`Stop` 的 `Join` 未检查（§8.3）。须排 VK-LIFE-1 专项修复。
+  3. **Vulkan 失败路径资源回滚与 Present 线程终止可靠性（P1-c）**：`Create`/`Attach` 部分泄漏、`Resize` 无 `try/finally`、`Stop` 的 `Join` 未检查、`_stop` 跨线程无同步（内存可见性）、`CreateSemaphore/Fence`/`WaitForFences`/`ResetFences`/`QueueSubmit` 返回值未检查、`CreateSync` 部分创建失败泄漏（§8.3）。须排 VK-LIFE-1 专项修复。
   4. **`111.ps1` 危险脚本已入库**：须按删除流程批准后移除（SAFE-1）。
 - **P2（已知债务，可排专项）**：
   5. 本分支零自动化测试覆盖（注：`origin/main` 有 `XuanYu.Engine.Tests`，本分支未携带）——须建/恢复测试项目（至少 Render.Vulkan 生命周期/Dispose 幂等）。
   6. `qizheng-mvp-fixed/` 未跟踪未忽略——迁出或 gitignore（SAFE-1）。
   7. 旧治理文档含旧命名/偏松规则——ORG-2 裁决归档或合并。
-  8. `codex_log/` 与 handoff zip 本地残留（虽 gitignore）——定期清理。
+  8. `codex_log/` 与 handoff zip 本地残留（虽 gitignore，无入库风险）——可选本地清理，由用户决定，不列入 SAFE-1 必做。
 - **P3（非阻断整理项）**：
   9. 关闭时 RenderPass/Framebuffer 释放日志重复一行（仅日志，留 LOG-CLEANUP）。
   10. 文档数量庞大（54 个 md），存在重复/历史计划——ORG-2 归档整理。
@@ -377,7 +389,7 @@ ORG-1 大量使用"快速失败、可恢复、正常"，但源码存在明确失
 
 1. 红线1（Editor.UI→Vulkan 直接依赖）如何收口到 `Abstractions` 且覆盖**活跃组合根**（VulkanSurfaceBridgeProvider 等），而非仅清死代码——需专项设计（ARCH-A-PLAN）。
 2. 空 `catch`（VulkanPresentLoop）的兜底诊断通道设计——须在 VK-LIFE-1 一并处理。
-3. Vulkan 失败路径资源回滚（Create/Attach 部分泄漏、Resize try/finally、Stop Join 检查）——VK-LIFE-1 专项。
+3. Vulkan 失败路径资源回滚与线程可靠性（Create/Attach 部分泄漏、Resize try/finally、Stop Join 检查、`_stop` 内存可见性、Vulkan `Result` 未检查、`CreateSync` 部分泄漏）——VK-LIFE-1 专项。
 4. VK5-E（清 VulkanClearSession 死代码）实装时机——规划已就绪，待用户确认。
 5. `111.ps1` 删除需用户按删除流程批准（本轮只审计，不删，SAFE-1）。
 6. `qizheng-mvp-fixed/` 处置方式（迁出 vs gitignore）待用户定（SAFE-1）。
@@ -389,11 +401,12 @@ ORG-1 大量使用"快速失败、可恢复、正常"，但源码存在明确失
 
 ORG-1 原 ORG-2 把"文档+删移+架构+测试+卫生"混成一轮，违反范围控制原则。修正为 5 个独立轮次：
 
-1. **ORG-1-R1（本轮）**：仅修正 ORG-1 审计报告中的事实、表格、风险等级与可视化；不修代码。✅ 本轮完成。
-2. **SAFE-1（安全卫生）**：删除 `111.ps1`（删除流程批准后）；处理 `qizheng-mvp-fixed/`（迁出或 gitignore）；本地清理 `codex_log/`。纯仓库安全，不碰架构/文档体系。
-3. **VK-LIFE-1（Vulkan 生命周期专项）**：审计并修复异常回滚（Create/Attach 部分泄漏）、空 `catch`（兜底诊断通道）、`Resize` 的 `try/finally`、`Stop` 的 `Join` 检查、5+100 压行可读性拆分（§7、§8）。独立 commit，须真机验收。
-4. **ARCH-A-PLAN（架构迁移设计）**：单独设计 `Editor.UI` 组合根迁移到 `Abstractions`，使 `Editor.UI` 不再直接 `using XuanYu.Render.Vulkan`/引用 `Silk.NET.Vulkan`（覆盖活跃组合根）。纯设计文档 + 可选 PoC，独立 commit。
-5. **ORG-2（治理收口，最后做）**：仅做治理文档单一入口与归档——合并/标记 deprecated `AI_DEVELOPMENT_RULES.md`/`CODE_CONSTITUTION.md`；更新旧品牌/旧阶段表述；将 30+ 历史文档移入 `docs/archive/`。不夹杂删移脚本、架构重构或测试基建。
+1. **ORG-1-R1（本轮）**：仅修正 ORG-1 审计报告中的事实、表格、风险等级与可视化；不修代码。✅ 本轮完成（并经 ORG-1-R2 小修补正）。
+2. **SAFE-1（安全卫生，必做范围收紧）**：① 删除或隔离 tracked 的 `111.ps1`（删除流程批准后）；② 处理未忽略的 `qizheng-mvp-fixed/`（迁出或加入 `.gitignore`）。`codex_log/` 等本地 AI 日志已被 `.gitignore` 覆盖、无入库风险，**不列为 SAFE-1 必做**，仅作为可选本地清理项（由用户决定是否删除，有时可用于事故追溯）。纯仓库安全，不碰架构/文档体系。
+3. **VK-LIFE-1（Vulkan 生命周期专项）**：审计并修复异常回滚（Create/Attach 部分泄漏、`CreateSync` 部分泄漏）、空 `catch`（兜底诊断通道）、`Resize` 的 `try/finally`、`Stop` 的 `Join` 检查与 `_stop` 内存可见性、`CreateSemaphore/Fence`/`WaitForFences`/`ResetFences`/`QueueSubmit` 返回值检查、5+100 压行可读性拆分（§7、§8）。独立 commit，须真机验收。
+4. **ARCH-A-PLAN（架构迁移设计，仅设计）**：单独设计 `Editor.UI` 组合根迁移到 `Abstractions`，使 `Editor.UI` 不再直接 `using XuanYu.Render.Vulkan`/引用 `Silk.NET.Vulkan`（覆盖活跃组合根 `VulkanSurfaceBridgeProvider` 等 3 个 .cs + csproj）。**纯设计文档，不含 PoC、不实装**；产出文件清单、接口与组合根方案、迁移顺序，独立 commit，经用户批准后交 ARCH-A-IMPL 实装。
+5. **ARCH-A-IMPL（架构迁移实装）**：按已批准的 ARCH-A-PLAN 实装，移除 `Editor.UI` 对 `Render.Vulkan`/`Silk.NET.Vulkan` 的直接依赖（含 csproj 引用与 3 个活跃 .cs 的组合根装配），真机验收后 Push。**在 ARCH-A-IMPL 验收前，不得宣称债务 A 已收口**。独立 commit，须真机验收。
+6. **ORG-2（治理收口，最后做）**：仅做治理文档单一入口与归档——合并/标记 deprecated `AI_DEVELOPMENT_RULES.md`/`CODE_CONSTITUTION.md`；更新旧品牌/旧阶段表述；将 30+ 历史文档移入 `docs/archive/`。不夹杂删移脚本、架构重构或测试基建。
 
 各轮独立 commit、独立验收；所有删除/移动按宪法第十三条走批准流程。
 
@@ -425,35 +438,61 @@ ORG-1 原 ORG-2 把"文档+删移+架构+测试+卫生"混成一轮，违反范�
 
 ### A3. 分支与解决方案/测试范围
 ```
-命令：git branch -a
-      git ls-tree -r --name-only origin/main | grep -iE '\.sln$|Tests'
-      git ls-files | grep -iE '\.sln$'
-退出码：0
-结果摘要：本分支（f187174）无 .sln；origin/main 含 XuanYu.Engine.sln 与 XuanYu.Engine.Tests/（全套历史测试）
+命令①（本分支是否有 .sln）：
+  git ls-files | grep -ciE '\.sln$'
+    → 原始工具退出码：1（0 行匹配；grep 无命中返回非零，绝非 0）
+命令②（origin/main 是否含 .sln/Tests）：
+  git ls-tree -r --name-only origin/main | grep -iE '\.sln$|Tests'
+    → 原始工具退出码：0（命中 XuanYu.Engine.sln 与 XuanYu.Engine.Tests/）
+审计包装结论退出码：0（两项事实均确认真）
+匹配计数：本分支 .sln 命中 = 0；origin/main .sln/Tests 命中 ≥ 2
+结果摘要：本分支（f187174）tracked 文件无 .sln；origin/main 含 .sln 与 Tests
 发现列表：本分支无解决方案/测试项目 ≠ 整个仓库无（范围限定见 §1/§3/§6）
 ```
 
-### A4. 密钥扫描
+### A4. 密钥/凭据模式扫描（覆盖全部 tracked 文本文件）
 ```
-命令：git ls-files | grep -iE '\.(cs|axaml|csproj|md|json|config|ps1|bat)$' | xargs grep -rilE "ghp_|sk-|AKIA|password=|token=|client_secret=" 
-退出码：0（无输出 = 无命中）
-结果摘要：全仓 tracked 源/文档文件未发现密钥模式
-发现列表：无
+命令（全部 tracked 文本，git grep 默认仅搜 tracked、跳过二进制）：
+  git grep -nI -E 'ghp_|sk-|AKIA|password=|token=|client_secret='
+    → 原始工具退出码：0（命中 3 行）
+    → 命中数：3
+    → 命中明细（均经人工复核为误报）：
+        1) XuanYu.Editor.UI/Vm/SampleLogEntries.cs:24 — 样例日志字符串含 token 字样（测试数据，非真实凭据）
+        2) docs/project-baseline-audit-org-1-r1.md:438 — 本报告附录命令自身引用的模式字符串
+        3) docs/project-baseline-audit-org-1.md:275 — 原报告文本引用模式字符串
+    → 真实密钥/凭据：0
+审计包装脚本退出码：0（SCAN_RESULT=CLEAN，无真实凭据）
+结果摘要：指定模式在全部 tracked 文本中命中 3 处，全部误报；0 处真实密钥/Token/密码
+发现列表：无真实密钥风险；但本扫描仅为基础特征扫描，不等于完整 secret scanning，
+          不能据此断言"仓库没有密钥风险"，仅表明指定模式未命中真实凭据
 ```
 
-### A5. 旧命名泄漏扫描
+### A5. 旧命名 FluidWarfare 泄漏扫描
 ```
-命令：git ls-files '*.cs' '*.axaml' '*.csproj' | xargs grep -l "FluidWarfare"
-退出码：0（无输出 = 无命中）
-结果摘要：源码层无 FluidWarfare 命名泄漏（仅旧文档含）
-发现列表：无
+命令①（源码层，按 R1 范围 cs/axaml/csproj）：
+  git ls-files '*.cs' '*.axaml' '*.csproj' | xargs grep -l "FluidWarfare"
+    → 原始工具退出码：1（0 文件匹配，源码层无泄漏）
+命令②（全部 tracked 文本，git grep）：
+  git grep -l "FluidWarfare"
+    → 原始工具退出码：0（命中 15 个文件）
+    → 命中明细：全部为文档（changelog.md、docs/*.md、file-tree.md 等旧治理/历史文档），无源码文件
+审计包装脚本退出码：0（源码层 CLEAN）
+匹配计数：源码层 0 / 全 tracked 文本 15（均文档）
+结果摘要：源码层（.cs/.axaml/.csproj）0 命中；全部 15 处命中均在旧文档中
+发现列表：源码无 FluidWarfare 命名泄漏；"仅旧文档含"结论成立
 ```
 
 ### A6. Editor.UI → Vulkan 活跃引用扫描
 ```
-命令：grep -rn "XuanYu.Render.Vulkan" XuanYu.Editor.UI --include=*.cs | grep -v "VulkanClearSession"
-      grep -nE "Render.Vulkan|Silk.NET" XuanYu.Editor.UI/XuanYu.Editor.UI.csproj
-结果摘要：3 个活跃 .cs（VulkanSurfaceBridgeProvider / UiVm.VulkanProbe / VulkanProbeRoute）+ csproj 直接引用
+命令①：
+  grep -rn "XuanYu.Render.Vulkan" XuanYu.Editor.UI --include=*.cs | grep -v "VulkanClearSession"
+    → 原始工具退出码：0（命中 3 行）  → 命中数：3（活跃 .cs）
+命令②：
+  grep -nE "Render.Vulkan|Silk.NET" XuanYu.Editor.UI/XuanYu.Editor.UI.csproj
+    → 原始工具退出码：0（命中 3 行：Silk.NET.Vulkan / Silk.NET.Vulkan.Extensions.KHR / ProjectReference Render.Vulkan）
+审计包装脚本退出码：0（SCAN_RESULT=FOUND）
+匹配计数：活跃 .cs = 3；csproj 直接引用 = 3
+结果摘要：3 个活跃 .cs（VulkanSurfaceBridgeProvider / UiVm.VulkanProbe / VulkanProbeRoute）+ csproj 3 处直接引用
 发现列表：红线1 活跃违反（见 §4、§8.2⑧、§14 P1-a）
 ```
 
@@ -466,7 +505,7 @@ ORG-1 原 ORG-2 把"文档+删移+架构+测试+卫生"混成一轮，违反范�
 3. 每个数字均有命令或文件依据（见各节"依据"与 §附录）。✅
 4. "真机验收"与"代码存在"严格区分（§9）。✅
 5. 5+100 统计排除生成物与 untracked（git ls-files 自动）。✅
-6. 明确区分"被审计代码基线 9bc210e"与"审计报告提交 f187174"。✅
+6. 明确拆为四重身份：被审计代码基线 `9bc210e` / 原 ORG-1 退回报告 `f187174` / R1 主体 `e6f96b5` / R1 文字补正 `ef0ca11`（见 §1、§2、§0 表8）。✅
 7. 文档总数与 `file-tree.md` 一致（本轮 +1 → 待更新）。✅
 8. 无敏感内容抄入本报告（密钥仅报类型/路径，未复制值）。✅
 9. `changelog.md` 新增 `v0.2.14.6-rz` 条目。✅
