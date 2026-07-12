@@ -1,5 +1,16 @@
 # changelog
 
+## [DOC] 新增《玄域引擎 AI 开发宪法》总治理文档（2026-07-12，文档）
+
+类型：纯文档补充，无代码改动。
+
+- **新增** `docs/玄域引擎_AI开发宪法.md`（826 行，从用户 Downloads 移入 docs/）：作为后续所有开发、审计、修复、规划与 Codex 协作的**统一最高执行标准**，覆盖二十章——总执行原则 / 绝对红线（5+100、分层边界、敏感信息禁入库、聊天记录禁入库、禁止掩盖失败）/ AI 自主权限 / 计划与范围控制 / Bug 排查 / 日志 / 测试验证 / 异常处理 / 存档兼容 / 依赖配置 / 生成文件 / Git 规范 / 删移重命名 / 注释与 TODO / 警告静态检查 / 版本规范 / 文档同步 / 收口报告 / 重大事项请示。
+- **关系说明**：原 `docs/AI_DEVELOPMENT_RULES.md`、`docs/CODE_CONSTITUTION.md` 内容已被本宪法统辖；本轮保留作历史参考，不删除、不重写原意（是否正式标记 deprecated 待用户定夺）。
+- **文档同步**：`file-tree.md` 已更新（新增文件登记 + 文档补充快照 + 文件总数更新为 121）；`changelog.md` 本条。
+- **验证**：纯文档任务按"文档同步规范"校验——格式（Markdown 标题层级完整）/ 链接（无失效内部链接）/ 内容一致性（5+100、分层边界与 `docs/dev-rules.md` 红线表述一致）/ 文件引用（指向 file-tree/changelog 机制）/ 事实准确性。无编译、无代码改动、无新增警告。
+- **Commit Hash**：见本次提交（docs 文档补充，未动源码）。
+- **遗留问题**：无阻断项。`AI_DEVELOPMENT_RULES.md` / `CODE_CONSTITUTION.md` 是否归档待用户决定，本轮不擅自删改。
+
 ## [RZ-VK5-E-Plan] 清理 VulkanClearSession 死代码（债务 B）规划（2026-07-11，规划·待确认实装）
 
 分支：fix/RZ-VK3-A-surface-contract；基线 HEAD：139c748（RZ-VK5-C 封版）。

@@ -1,5 +1,10 @@
 # 项目文件树 — XuanYu Engine
 
+## 文档补充快照 (2026-07-12)
+新增《玄域引擎 AI 开发宪法》总治理文档（从用户 Downloads 移入 docs/）。
+- `docs/玄域引擎_AI开发宪法.md`  # 826 行总治理文档：统辖执行流程、绝对红线（5+100 / 分层边界 / 敏感信息禁入库 / 聊天记录禁入库 / 禁止掩盖失败）、AI 自主权限、计划与范围控制、Bug 排查、日志、测试验证、异常处理、存档兼容、依赖配置、生成文件、Git 规范、删移重命名、注释与 TODO、警告静态检查、版本规范、文档同步、收口报告、重大事项请示。本文件为后续所有开发/审计/修复/规划/Codex 协作的统一最高执行标准，原 `AI_DEVELOPMENT_RULES.md` / `CODE_CONSTITUTION.md` 内容已由其统辖（保留作历史参考，不删除）。
+- 文档任务按"文档同步规范"校验：格式 / 链接 / 内容一致性 / 文件引用 / 事实准确性——纯文档改动，无代码变更，无编译警告新增。
+
 ## RZ-VK5-E-Plan 快照 (2026-07-11)
 清理 VulkanClearSession 死代码（债务 B）规划轮：经审计确认 VulkanClearSession（Editor.UI 4 个 partial 文件）为 VK3-A 前早期探针，已被 VulkanRenderSession 正式链路取代，全仓无任何 .cs 外部引用或 TryCreate 调用方，属确定无引用死代码。
 - `docs/rz-vk5-e-plan.md`（新）：9 项规划（死代码确认 / 文件+调用方+替代链路+删除影响 / 正式链路由 VulkanRenderSession 承担 / 只删无引用死代码 / 不改三角形·Resize·PresentLoop·Pipeline / 不新增 / 全 .cs ≤100 / 双项目 0W0E / 实装步骤 + 风险回滚）+ 红线。
@@ -108,7 +113,7 @@ VK4-D-R3（Render.Vulkan 侧）已收口：修改 6 个 Render.Vulkan 文件，�
 
 统计口径：当前工作区真实文件快照，排除 `.git/`、`bin/`、`obj/` 生成目录。
 
-当前文件总数：118
+当前文件总数：121
 
 ```
 
@@ -156,7 +161,8 @@ XuanYuEngine/
 ├── run.bat  # Windows 启动脚本。
 │
 ├── docs/
-│   ├── AI_DEVELOPMENT_RULES.md  # AI 协作开发规则。
+│   ├── 玄域引擎_AI开发宪法.md  # 玄域引擎 AI 开发宪法（总治理文档，统辖执行流程 / 绝对红线 / 自主权限 / 计划范围 / Bug 排查 / 日志 / 测试 / 异常 / 存档 / 依赖 / 生成文件 / Git / 删移重命名 / 注释 / 警告 / 版本 / 文档同步 / 收口报告 / 重大事项请示）。
+│   ├── AI_DEVELOPMENT_RULES.md  # AI 协作开发规则（已被 AI 开发宪法统辖，保留作历史参考）。
 │   ├── CODE_CONSTITUTION.md  # 代码宪法与结构约束。
 │   ├── ENGINE_ARCHITECTURE.md  # 引擎架构说明。
 │   ├── LEGACY_FLUIDWARFARE_OLD_AUDIT.md  # 旧 FluidWarfare 项目审计记录。
