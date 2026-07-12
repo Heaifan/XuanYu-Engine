@@ -1,6 +1,175 @@
 # changelog
 
-## [DOC] 新增《玄域引擎 AI 开发宪法》总治理文档（2026-07-12，文档）
+## 版本号说明
+
+自 2026-07 起，玄域引擎开发期统一采用：
+
+`v0.<里程碑>.<模块>.<修订次数>-<类型>`
+
+- `0`：尚未正式上线；`<里程碑>` 为重大开发阶段计数（M1 = 2026-05~06 首版引擎构建，M2 = 2026-07 起 RZ 重启与 Vulkan 生命周期正式化）。
+- 进入新里程碑，模块号从 `1` 重新开始；进入新模块，修订次数从 `1` 重新开始。
+- 类型标签仅限已确认三种：`rz`（通用编辑器/引擎/文档任务）、`vk`（Vulkan 生命周期相关）、`fix`（修复/去重/健壮性）。`RZ`/`VK`/`FIX` 仅作末尾类型标签，不再充当主版本结构。
+- 历史记录中的 `8.x` / `9.x` / `RZ-*` / `VK*` / `FIX` 等编号已转换为统一版本号；原编号作为「原历史编号」保留在每条目正文，仅用于追溯旧文档、Commit 与开发报告。
+- **本轮转换仅修改 changelog 的正式版本标识，不修改 Git 历史、Commit Hash、分支名称、Tag、Release 或历史文档文件名。**
+
+### 里程碑与模块划分依据
+- **M1（v0.1，2026-05-28~06-26）首版引擎构建**：模块 1 内核与实体奠基 / 2 Vulkan 集成与首渲 / 3 Vulkan 3D 渲染管线 / 4 编辑器 Route 化与 SRP / 5 EditorShell 大刀与 SRP 拆分 / 6 品牌换名与命名空间迁移 / 7 启动修复与资源入库 / 8 World·Transform·Inspector·Gizmo。
+- **M2（v0.2，2026-07-05~07-12）RZ 重启与 Vulkan 生命周期**：模块 1 编辑器框架收口(Fix1/2/3) / 2 前置审计与 Vulkan 接入 / 3 VK3 Surface 生命周期 / 4 VK4 物理与逻辑设备 / 5 VK4 Swapchain / 6 VK4 Clear+Present+ViewportResize+收口 / 7 LOG-UX 日志系统 / 8 VK5-A / 9 VK5-B / 10 VK5-C / 11 VK5-D / 12 VK5-E / 13 视口 UI 收口 / 14 文档与治理。
+- 模块与修订严格按日期、Commit 顺序与任务继承关系综合判断；同一模块内计划→实装→修复→验证/封版保持连续编号；不按文本顺序简单递增，不编造不存在的修订。
+
+## 历史编号映射
+
+| 新正式版本 | 原历史编号 | 日期 | Commit | 状态 |
+|---|---|---|---|---|
+| v0.1.1.1-rz | 0.0.1-dev | 2026-05-28 | — | 已完成 |
+| v0.1.1.2-rz | 2.x~4.x | 2026-05-29 | — | 已完成 |
+| v0.1.1.3-rz | 4.3~4.4 | 2026-05-30 | — | 已完成 |
+| v0.1.1.4-rz | 5.0~5.3 | 2026-05-31 | — | 已完成 |
+| v0.1.1.5-rz | 6.0~6.1 | 2026-06-01 | — | 已完成 |
+| v0.1.2.1-vk | 7.0~7.7 | 2026-06-02 | — | 已完成 |
+| v0.1.2.2-vk | 7.8 | 2026-06-04 | — | 已完成 |
+| v0.1.3.1-vk | 8.0 | 2026-06-05 | — | 已完成 |
+| v0.1.3.2-vk | 8.1 | 2026-06-06 | — | 已完成 |
+| v0.1.3.3-vk | 8.2 | 2026-06-08 | — | 已完成 |
+| v0.1.3.4-vk | 8.3 | 2026-06-09 | — | 已完成 |
+| v0.1.3.5-vk | 8.4 | 2026-06-10 | — | 已完成 |
+| v0.1.3.6-vk | 8.5 | 2026-06-11 | — | 已完成 |
+| v0.1.3.7-vk | 8.6 | 2026-06-12 | — | 已完成 |
+| v0.1.3.8-vk | 8.7.3 | 2026-06-17 | — | 已完成 |
+| v0.1.3.9-vk | 8.7.4 | 2026-06-18 | — | 已完成 |
+| v0.1.4.1-rz | 8.7.0 | 2026-06-14 | — | 已完成 |
+| v0.1.4.2-rz | 8.7.1 | 2026-06-15 | — | 已完成 |
+| v0.1.4.3-rz | 8.7.2 | 2026-06-16 | — | 已完成 |
+| v0.1.4.4-rz | 8.7.5 | 2026-06-20 | — | 已完成 |
+| v0.1.4.5-rz | 8.7.6 | 2026-06-21 | — | 已完成 |
+| v0.1.4.6-rz | 8.7.7A | 2026-06-22 | — | 已完成 |
+| v0.1.4.7-rz | 8.7.7B | 2026-06-22 | — | 已完成 |
+| v0.1.4.8-rz | 8.7.7C | 2026-06-22 | — | 已完成 |
+| v0.1.4.9-rz | 8.7.7D | 2026-06-22 | — | 已完成 |
+| v0.1.4.10-rz | 8.7.7E | 2026-06-22 | — | 已完成 |
+| v0.1.4.11-rz | 8.7.7F | 2026-06-23 | — | 已完成 |
+| v0.1.5.1-rz | 8.7.8A-2 | 2026-06-23 | — | 已完成 |
+| v0.1.5.2-rz | 8.7.8B-2 | 2026-06-23 | — | 已完成 |
+| v0.1.5.3-rz | 8.7.8B-4 | 2026-06-23 | — | 已完成 |
+| v0.1.5.4-rz | 8.7.8C-2 | 2026-06-23 | — | 已完成 |
+| v0.1.5.5-rz | 8.7.8D-2A | 2026-06-23 | — | 已完成 |
+| v0.1.5.6-rz | 8.7.8D-2B | 2026-06-23 | — | 已完成 |
+| v0.1.5.7-rz | 8.7.8E-2A | 2026-06-23 | — | 已完成 |
+| v0.1.5.8-rz | 8.7.8E-2B | 2026-06-23 | — | 已完成 |
+| v0.1.5.9-rz | 8.7.8F-2 | 2026-06-23 | — | 已完成 |
+| v0.1.5.10-rz | 8.7.8G-2 | 2026-06-23 | — | 已完成 |
+| v0.1.5.11-rz | 8.7.8H-2A | 2026-06-23 | — | 已完成 |
+| v0.1.5.12-rz | 8.7.8H-2B | 2026-06-23 | — | 已完成 |
+| v0.1.5.13-rz | 8.7.8H-2C | 2026-06-23 | — | 已完成 |
+| v0.1.5.14-rz | 8.7.8H-2D | 2026-06-23 | — | 已完成 |
+| v0.1.5.15-rz | 8.7.8H-2E | 2026-06-23 | — | 已完成 |
+| v0.1.5.16-rz | 8.7.8H-2F | 2026-06-23 | — | 已完成 |
+| v0.1.5.17-rz | 8.7.8H-2G | 2026-06-23 | — | 已完成 |
+| v0.1.5.18-rz | 8.7.8H-4A | 2026-06-23 | — | 已完成 |
+| v0.1.5.19-rz | 8.7.8H-4B | 2026-06-23 | — | 已完成 |
+| v0.1.5.20-rz | 8.7.8H-5 | 2026-06-23 | — | 已完成 |
+| v0.1.5.21-rz | 8.7.8-Z2 | 2026-06-23 | 913b66b | 已完成 |
+| v0.1.6.1-rz | 8.8-0 | 2026-06-24 | 4c4d82c | 已完成 |
+| v0.1.6.2-rz | 8.8-R0/R1 | 2026-06-24 | 71d6187 | 已完成 |
+| v0.1.6.3-rz | 8.8-R2 | 2026-06-24 | 6ad57bd | 已完成 |
+| v0.1.6.4-rz | 8.8-R2B | 2026-06-24 | 5bdda34 | 已完成 |
+| v0.1.6.5-rz | 8.8-R2C | 2026-06-24 | 68ffde8 | 已完成 |
+| v0.1.6.6-rz | 8.8-R3-1 | 2026-06-24 | 6a90c9e | 已完成 |
+| v0.1.6.7-rz | 8.8-R3-2 | 2026-06-24 | aa94a43 | 已完成 |
+| v0.1.6.8-rz | 8.8-R3-3BC | 2026-06-24 | 775ba48 | 已完成 |
+| v0.1.6.9-rz | 8.8-R3-4 | 2026-06-24 | 5c8966b | 已完成 |
+| v0.1.6.10-rz | 8.8-R3-Z | 2026-06-24 | 710dd88 | 已完成 |
+| v0.1.6.11-rz | 8.8-R4 | 2026-06-24 | 644aff7 | 已完成 |
+| v0.1.7.1-fix | 8.8-RZ-Fix1 | 2026-06-24 | 359e3ce | 已完成 |
+| v0.1.7.2-fix | 8.8-RZ-Fix1b | 2026-06-24 | e3f644f | 已完成 |
+| v0.1.7.3-rz | 8.8-RZ-Fix1c | 2026-06-24 | — | 已完成 |
+| v0.1.7.4-rz | 8.8-RZ-Fix1d | 2026-06-24 | — | 已完成 |
+| v0.1.8.1-rz | 9.0A | 2026-06-24 | fbf509b | 已完成 |
+| v0.1.8.2-rz | 9.0B | 2026-06-24 | — | 已完成 |
+| v0.1.8.3-rz | 9.0C | 2026-06-24 | — | 已完成 |
+| v0.1.8.4-rz | 9.0D-R1 | 2026-06-24 | — | 已完成 |
+| v0.1.8.5-rz | 9.0D-R2 | 2026-06-24 | e66cbb4 | 已完成 |
+| v0.1.8.6-rz | 9.0D-R3 | 2026-06-24 | e57d5c9 | 已完成 |
+| v0.1.8.7-fix | 9.0D-R2B | 2026-06-25 | 26f2006 | 已完成 |
+| v0.1.8.8-fix | 9.0D-R2C | 2026-06-25 | — | 已完成 |
+| v0.1.8.9-fix | 9.0D-R2D | 2026-06-25 | — | 已完成 |
+| v0.1.8.10-fix | 9.0D-R2E | 2026-06-26 | — | 已完成 |
+| v0.2.1.1-rz | RZ-Fix1-D | 2026-07-05 | — | 已完成 |
+| v0.2.1.2-rz | RZ-Fix1-E | 2026-07-06 | — | 已完成 |
+| v0.2.1.3-fix | RZ-Fix1-E-R1 | 2026-07-06 | — | 已完成 |
+| v0.2.1.4-rz | RZ-Fix1-F | 2026-07-06 | — | 已完成 |
+| v0.2.1.5-fix | RZ-Fix1-F-R1 | 2026-07-06 | — | 已完成 |
+| v0.2.1.6-rz | RZ-Fix1-G | 2026-07-06 | — | 已完成 |
+| v0.2.1.7-fix | RZ-Fix1-G-R1 | 2026-07-06 | — | 已完成 |
+| v0.2.1.8-rz | RZ-Fix2-A | 2026-07-06 | — | 已完成 |
+| v0.2.1.9-rz | RZ-Fix2-B | 2026-07-06 | — | 已完成 |
+| v0.2.1.10-fix | RZ-Fix2-B-R1 | 2026-07-06 | — | 已完成 |
+| v0.2.1.11-rz | RZ-Fix2-C | 2026-07-06 | — | 已完成 |
+| v0.2.1.12-rz | RZ-Fix2-D | 2026-07-06 | — | 已完成 |
+| v0.2.1.13-rz | RZ-Fix3-A | 2026-07-06 | — | 已完成 |
+| v0.2.1.14-rz | RZ-Fix3-0 | 2026-07-07 | — | 已完成 |
+| v0.2.2.1-rz | RZ-New-0 | 2026-07-07 | — | 已完成 |
+| v0.2.2.2-vk | RZ-VK1 | 2026-07-07 | — | 已完成 |
+| v0.2.2.3-vk | RZ-VK2 | 2026-07-07 | — | 已完成 |
+| v0.2.2.4-fix | RZ-VK2-R1 | 2026-07-07 | — | 已完成 |
+| v0.2.2.5-fix | RZ-VK2-R2 | 2026-07-07 | — | 已完成 |
+| v0.2.2.6-rz | Fix-M1 | 2026-07-07 | — | 已完成 |
+| v0.2.2.7-vk | RZ-VK3-Plan | 2026-07-07 | — | 已完成 |
+| v0.2.3.1-vk | RZ-VK3-A | 2026-07-07 | — | 已完成 |
+| v0.2.3.2-fix | RZ-VK3-A-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.3.3-vk | RZ-VK3-B1 | 2026-07-08 | — | 已完成 |
+| v0.2.3.4-fix | RZ-VK3-B1-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.3.5-vk | RZ-VK3-B2 | 2026-07-08 | — | 已完成 |
+| v0.2.3.6-fix | RZ-VK3-B2-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.3.7-vk | RZ-VK3-C1 | 2026-07-08 | — | 已完成 |
+| v0.2.3.8-fix | RZ-VK3-C1-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.3.9-fix | RZ-VK3-C1-R2 | 2026-07-08 | — | 已完成 |
+| v0.2.3.10-vk | RZ-VK3-C2 | 2026-07-08 | — | 已完成 |
+| v0.2.3.11-fix | RZ-VK3-C2-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.3.12-vk | VK3-Closure + VK4-Plan | 2026-07-08 | — | 已完成 |
+| v0.2.4.1-vk | VK4-A | 2026-07-08 | — | 已完成 |
+| v0.2.4.2-fix | VK4-A-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.4.3-vk | VK4-B | 2026-07-08 | — | 已完成 |
+| v0.2.4.4-fix | VK4-B-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.5.1-vk | VK4-C-Plan | 2026-07-08 | — | 已实装 |
+| v0.2.5.2-vk | VK4-C | 2026-07-08 | — | 已实装 |
+| v0.2.5.3-fix | VK4-C-Fix | 2026-07-08 | — | 已完成 |
+| v0.2.5.4-fix | VK4-C-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.6.1-vk | VK4-D | 2026-07-09 | — | 已完成 |
+| v0.2.6.2-fix | VK4-D-R1 | 2026-07-09 | — | 已完成 |
+| v0.2.6.3-fix | VK4-D-R2 | 2026-07-09 | — | 已完成 |
+| v0.2.6.4-fix | VK4-D-R3 | 2026-07-09 | — | 已完成 |
+| v0.2.6.5-fix | VIEWPORT-RESIZE-R1 | 2026-07-09 | — | 已完成 |
+| v0.2.6.6-fix | VIEWPORT-RESIZE-R2 | 2026-07-09 | — | 已完成 |
+| v0.2.6.7-vk | VK4-D | 2026-07-09 | — | 已完成 |
+| v0.2.6.8-vk | VK4-Closure + VK5-Plan | 2026-07-09 | — | 文档 |
+| v0.2.7.1-fix | LOG-UX-1 | 2026-07-08 | — | 已完成 |
+| v0.2.7.2-fix | LOG-UX-1-R1 | 2026-07-08 | — | 已完成 |
+| v0.2.7.3-fix | LOG-UX-1-R2 | 2026-07-09 | — | 已完成 |
+| v0.2.7.4-fix | LOG-UX-1-R3 | 2026-07-09 | — | 已完成 |
+| v0.2.7.5-fix | LOG-UX-1-R4 | 2026-07-09 | — | 已完成 |
+| v0.2.7.6-fix | LOG-UX-1-R5A | 2026-07-09 | — | 已完成 |
+| v0.2.7.7-rz | LOG-UX-2 | 2026-07-08 | — | 已完成 |
+| v0.2.7.8-rz | LOG-UX-2 | 2026-07-09 | — | 已完成 |
+| v0.2.7.9-vk | VK4-C / LOG-UX-2 | 2026-07-09 | — | 已完成 |
+| v0.2.8.1-vk | RZ-VK5-A-Plan | 2026-07-09 | — | 规划待实装 |
+| v0.2.8.2-vk | RZ-VK5-A 规划修正 | 2026-07-09 | — | 已实装 |
+| v0.2.8.3-vk | RZ-VK5-A | 2026-07-09 | — | 已实装 |
+| v0.2.8.4-fix | RZ-VK5-A-R2 | 2026-07-10 | — | 已实装 |
+| v0.2.9.1-vk | RZ-VK5-B | 2026-07-10 | — | 已实装 |
+| v0.2.10.1-vk | RZ-VK5-C-Plan | 2026-07-11 | — | 已封版 |
+| v0.2.11.1-vk | RZ-VK5-D | 2026-07-10 | — | 已实装 |
+| v0.2.11.2-fix | RZ-VK5-D-R1 | 2026-07-10 | — | 已实装 |
+| v0.2.11.3-fix | RZ-VK5-D-R2 | 2026-07-10 | — | 已实装 |
+| v0.2.11.4-fix | RZ-VK5-D-R3 | 2026-07-10 | — | 已实装 |
+| v0.2.12.1-vk | RZ-VK5-E-Plan | 2026-07-11 | — | 规划待实装 |
+| v0.2.13.1-rz | 视口 UI 收口 | 2026-07-09 | — | 已完成 |
+| v0.2.14.1-rz | VK5-Plan 债务升格 | 2026-07-09 | — | 文档 |
+| v0.2.14.2-rz | VK5-Plan-R1 | 2026-07-09 | — | 已完成 |
+| v0.2.14.3-rz | DOC | 2026-07-12 | — | 已完成 |
+
+## v0.2.14.3-rz 新增《玄域引擎 AI 开发宪法》总治理文档（2026-07-12，文档）
+- 原历史编号：[DOC]（宪法入库）
 
 类型：纯文档补充，无代码改动。
 
@@ -11,7 +180,8 @@
 - **Commit Hash**：见本次提交（docs 文档补充，未动源码）。
 - **遗留问题**：无阻断项。`AI_DEVELOPMENT_RULES.md` / `CODE_CONSTITUTION.md` 是否归档待用户决定，本轮不擅自删改。
 
-## [RZ-VK5-E-Plan] 清理 VulkanClearSession 死代码（债务 B）规划（2026-07-11，规划·待确认实装）
+## v0.2.12.1-vk 清理 VulkanClearSession 死代码（债务 B）规划（2026-07-11，规划·待确认实装）
+- 原历史编号：RZ-VK5-E-Plan
 
 分支：fix/RZ-VK3-A-surface-contract；基线 HEAD：139c748（RZ-VK5-C 封版）。
 结论：**VulkanClearSession 为确定无引用的死代码，可安全删除，收口债务 B**。经审计：`VulkanClearSession`（Editor.UI 4 个 partial 文件）是 VK3-A 前早期探针，已被 `VulkanRenderSession` 正式链路取代；全仓 grep 确认无任何 `.cs` 外部引用或 `TryCreate` 调用方。
@@ -19,7 +189,8 @@
 - 实装步骤（确认后）：`git rm` 4 文件 → 低内存构建验证 0W0E → 更新 changelog/file-tree → 独立 commit + push。
 - 红线守住：只删死代码；不碰 VulkanRenderSession 链路 / UI / NativeHost / LOG-UX；不扩大 Editor.UI→Render.Vulkan 引用；双项目 0W0E；全 .cs ≤100。
 
-## [RZ-VK5-C-Plan] viewport/scissor 与 Resize 关系验证收口（2026-07-11，验证收口·已封版）
+## v0.2.10.1-vk viewport/scissor 与 Resize 关系验证收口（2026-07-11，验证收口·已封版）
+- 原历史编号：RZ-VK5-C-Plan
 
 分支：fix/RZ-VK3-A-surface-contract；基线 HEAD：c53b7a8（RZ-VK5-D-R3 封版）。
 结论：**VK5-C 无需改代码，改为「验证收口轮」**。经源码取证，viewport/scissor 已使用动态状态、Resize 后 CommandBuffer 必然重录且取最新 Swapchain extent、GraphicsPipeline 不随 Resize 重建——三项诉求全部已满足。
@@ -28,7 +199,8 @@
 - 红线守住：不进 VK5-E；不新增渲染能力；不改三角形/shader/UI/NativeHost；不清 VulkanClearSession；不扩大 Editor.UI→Render.Vulkan 引用；全 .cs ≤100；双项目 0W0E；**本轮 0 代码改动**（无 .cs/.axaml/.csproj 变更）。
 - 进度指针：VK5-C 验证收口后推进到 **VK5-E**（清 VulkanClearSession 死代码 = 债务 B）。
 
-## [RZ-VK5-D-R3] Resize 同尺寸快速跳过 Present 泵停启（2026-07-10，实装）
+## v0.2.11.4-fix Resize 同尺寸快速跳过 Present 泵停启（2026-07-10，实装）
+- 原历史编号：RZ-VK5-D-R3
 
 分支：fix/RZ-VK3-A-surface-contract
 R2 真实成绩：同尺寸 Swapchain/Framebuffer 重建已跳过、gen 追踪已真实化、三角形仍显示——但日志仍反复出现"自愈成功后又 Present 泵停止/启动"。根因进一步缩小：Resize 流程在调用 `PresentLoop.Stop()` 之前**未判断尺寸是否已经一致**，无论 Swapchain/Framebuffer 是否跳过重修，泵都被无意义地停一下再开，造成视觉停顿（慢半拍）。
@@ -48,7 +220,8 @@ R2 真实成绩：同尺寸 Swapchain/Framebuffer 重建已跳过、gen 追踪�
   - 改动 .cs 行数 RenderSession 98→100、LogFormatter 21→23，均 ≤100；双项目 0W0E（Editor.UI 锁 dll 仅环境，改临时目录构建复验 0W0E）。
   - **正式封版（2026-07-11，用户拍板）**：RZ-VK5-D-R3 验收全过，文档封版。不追慢半拍后续；若仍疑有极轻视觉延迟，归因 UI 布局/防抖/日志面板刷新层，另开 UI 体验轮，不在 VK5-D 继续挖掘。下一步候选 VK5-C（viewport/scissor 边界收口）先于 VK5-E（清 VulkanClearSession 死代码）。
 
-## [RZ-VK5-D-R2] Resize / Present 重复重建去重 + 追踪 gen 修正（2026-07-10，实装）
+## v0.2.11.3-fix Resize / Present 重复重建去重 + 追踪 gen 修正（2026-07-10，实装）
+- 原历史编号：RZ-VK5-D-R2
 
 分支：fix/RZ-VK3-A-surface-contract
 R1 真机 trace 铁证：3 处同尺寸重复 Swapchain 重建（启动 16x16→714x639 后 Resize 又建 714x639；展开时两次 714x274；幻影自愈 714x639→714x274 本已是 714x274）。根因=Resize 重建与 Present 自愈重建撞车，目标 extent 相同却各建一次。本轮最小修复（用户选方案1）。
@@ -58,7 +231,8 @@ R1 真机 trace 铁证：3 处同尺寸重复 Swapchain 重建（启动 16x16→
 - 红线守住：不建 VertexBuffer/DescriptorSet/Mesh/Camera/Scene；不改 UI/NativeHost/Shader；不清 VulkanClearSession；不进 VK5-C/E。
 - 验证：Render.Vulkan 构建 0W0E；Editor.UI 无 C# 编译错误（仅因运行中的编辑器 PID 7236 锁 dll 致拷贝失败，非代码问题）；改动 .cs 行数 98/96/98/99 均 ≤100。
 
-## [RZ-VK5-D-R1] Resize / Present 慢半拍全链路诊断（2026-07-10，实装）
+## v0.2.11.2-fix Resize / Present 慢半拍全链路诊断（2026-07-10，实装）
+- 原历史编号：RZ-VK5-D-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 VK5-D 边界收口后，用户真机发现"展开/收起日志栏时视口画面慢半拍"——功能最终正确（三角形保留、自愈恢复），但切换时有明显延迟。
@@ -74,7 +248,8 @@ VK5-D 边界收口后，用户真机发现"展开/收起日志栏时视口画面
 - 红线守住：不进 VK5-C/D-E；不新增渲染能力；不改 UI/NativeHost/Shader/三角形逻辑；不清 VulkanClearSession；双项目 0W0E；全 .cs ≤100 行。
 - 下一步：用户 run.bat 真机操作（展开/收起日志栏），回传完整 trace 日志，定位慢半拍根因后决定是否 R2 修复。
 
-## [RZ-VK5-D] 清屏/绘制/录制/管线注入/Resize 重录 职责边界收口（2026-07-10，实装）
+## v0.2.11.1-vk 清屏/绘制/录制/管线注入/Resize 重录 职责边界收口（2026-07-10，实装）
+- 原历史编号：RZ-VK5-D
 
 分支：fix/RZ-VK3-A-surface-contract
 VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动 `VulkanClearFrameOwner.cs`，不新增任何渲染能力。
@@ -86,7 +261,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 - 验收：双项目 `dotnet build` **0W0E**；`VulkanClearFrameOwner.cs` 99→100（≤100 硬门禁守住，靠局部变量取地址 + 精简注释 + 去空行达成）；全仓 `.cs` 无新增超 100 行文件；`dotnet build` 0W0E；功能行为零变化（清屏+三角形显示、Resize 自愈、关闭释放顺序均与 VK5-B 封版一致）。
 - 决策（用户拍板）：仅内部整理，**不重命名** `VulkanClearFrameOwner`（保守、零跨文件风险）。
 
-## [RZ-VK5-B] 固定三角形绘制（gl_VertexIndex + CmdDraw，2026-07-10，实装）
+## v0.2.9.1-vk 固定三角形绘制（gl_VertexIndex + CmdDraw，2026-07-10，实装）
+- 原历史编号：RZ-VK5-B
 
 分支：fix/RZ-VK3-A-surface-contract
 在 VK5-A 已创建好的 GraphicsPipeline 基础上，画出蓝灰背景上的第一个固定三角形。不建 VertexBuffer / IndexBuffer / UniformBuffer / DescriptorSet，顶点由 `gl_VertexIndex` 在顶点着色器内生成。
@@ -101,7 +277,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 - 红线守住：不建 VertexBuffer/IndexBuffer/UniformBuffer/DescriptorSet；不接 Scene/Camera/Mesh/Material/Gizmo；不改 UI/NativeHost/LOG-UX；不扩大 Editor.UI→Render.Vulkan 引用；不清 VulkanClearSession；不破坏 RZ-VK5-A-R2 的 Resize 后 Present 恢复。
 - **真机最终验收通过（2026-07-10，正式封版）**：①蓝灰背景上已显示琥珀色固定三角形；②展开底部日志栏后三角形仍显示；③Resize/日志栏变化后 Present 自愈恢复正常（控制台日志 `Swapchain 自愈成功，已恢复 Present；generation=3`）；④关闭窗口释放顺序正确（Present泵停止→GraphicsPipeline释放→RenderPass+Framebuffer释放→Swapchain→LogicalDevice→Surface→Instance→分离完成）；⑤未进入复杂渲染器（无 VertexBuffer/Scene/Camera/Mesh/Material/Gizmo）。遗留非阻断项：`RenderPass + Framebuffer 释放成功` 关闭日志重复打印一行，留待 LOG-CLEANUP 清理。**RZ-VK5-B 正式收口，Vulkan 最小图形渲染闭环成立。**
 
-## [RZ-VK5-A-R2] Present 泵 OutOfDate 受控自愈（Resize 后 Present 恢复，2026-07-10，实装）
+## v0.2.8.4-fix Present 泵 OutOfDate 受控自愈（Resize 后 Present 恢复，2026-07-10，实装）
+- 原历史编号：RZ-VK5-A-R2
 
 分支：fix/RZ-VK3-A-surface-contract
 修复 Resize（拖窗口/调整日志栏）后 Present 泵重启即 `ErrorOutOfDateKhr` 并永久 `break`、最终停在"Swapchain 已过期"的问题。本轮只收口 Present 恢复，不 Draw、不画三角形、不进 VK5-B。
@@ -117,7 +294,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 - 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 100）；Resize 后 Present 自愈恢复（不再永久停在"Swapchain 已过期"）；关闭释放顺序不变（PresentLoop→GraphicsPipeline→ClearFrame→Swapchain→LogicalDevice→Surface→Instance）。
 - 红线守住：不 Draw / 不画三角形 / 不建 VertexBuffer·DescriptorSet / 不接 Scene·Camera·Mesh·Material·Gizmo / 不改 UI overlay / 不扩大 Editor.UI→Render.Vulkan 引用（handle 走 Abstractions）/ 不清 VulkanClearSession / 不无限重建（守护上限）/ PresentLoop 线程不 join 自身 Stop/Dispose。
 
-## [视口 UI 收口] 移除视口内部顶部/底部 overlay，只留纯 Vulkan 视口（2026-07-09，UI 只改）
+## v0.2.13.1-rz 移除视口内部顶部/底部 overlay，只留纯 Vulkan 视口（2026-07-09，UI 只改）
+- 原历史编号：视口 UI 收口
 
 分支：fix/RZ-VK3-A-surface-contract
 - 修改 `XuanYu.Editor.UI/Main/Main.axaml`：移除视口内部顶部（透视 / NativeHost Probe）与底部（左键选择 / 中键环绕 / 右键平移 / 工具：选择）两组叠加条，UserControl 内容简化为仅 `<local:VulkanViewport/>`，中间区域只显示纯视口画面。
@@ -126,7 +304,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 - 验收：双项目 `dotnet build` **0W0E**；视口内部顶部/底部叠加条消失，中间只剩纯视口，清屏与 Resize 不受影响。
 - 同轮 `RZ-VK5-A-R1`：静态验证 Detach 释放顺序正确（PresentLoop → GraphicsPipeline 资源 → ClearFrame(RenderPass+Framebuffer) → Swapchain → LogicalDevice → Surface → Instance）；ShaderModule 短生命周期已落地（关闭链不含 ShaderModule）；释放顺序无破坏，**未改代码**。
 
-## [RZ-VK5-A] ShaderModule + GraphicsPipeline 最小接入（2026-07-09，实装）
+## v0.2.8.3-vk ShaderModule + GraphicsPipeline 最小接入（2026-07-09，实装）
+- 原历史编号：RZ-VK5-A
 
 分支：fix/RZ-VK3-A-surface-contract
 在 VK4-D Clear+Present 闭环上新增最小 Graphics Pipeline 创建/释放能力。不 Draw、不画三角形。
@@ -142,7 +321,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 - 验收：双项目 `dotnet build` **0W0E**；所有改动 `.cs` ≤100（最大 96）；`Pipeline/` 4 文件。
 - 红线守住：不 Draw / 不画三角形 / 不建 VertexBuffer·DescriptorSet / 不接 Scene·Camera·Mesh·Material·Gizmo / 不改 UI·NativeHost·LOG-UX·Resize / 不扩大 Editor.UI→Render.Vulkan 引用 / 不清 VulkanClearSession。
 
-## [RZ-VK5-A 规划修正] 采纳两条实装前修正（2026-07-09，仅文档）
+## v0.2.8.2-vk 采纳两条实装前修正（2026-07-09，仅文档）
+- 原历史编号：RZ-VK5-A 规划修正
 
 分支：fix/RZ-VK3-A-surface-contract
 本轮仅修正 `docs/rz-vk5-a-plan.md`（RZ-VK5-A 规划），未改任何代码。
@@ -150,7 +330,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 - 修正 2：ShaderModule 生命周期由「持有到会话结束」改为「短生命周期」——创建 GraphicsPipeline 成功后立即释放两个 ShaderModule；Detach 只释放 GraphicsPipeline + PipelineLayout。Detach 顺序更短、更不易埋雷（采纳用户修正）。
 - 同步更新 §2/§3/§6/§7/§9/§10/§11。
 
-## [RZ-VK5-A-Plan] VK5-A 规划：ShaderModule + GraphicsPipeline 最小接入（2026-07-09，仅规划）
+## v0.2.8.1-vk VK5-A 规划：ShaderModule + GraphicsPipeline 最小接入（2026-07-09，仅规划）
+- 原历史编号：RZ-VK5-A-Plan
 
 分支：fix/RZ-VK3-A-surface-contract
 本轮**只规划、不写代码**（未改任何 `.cs` / `.axaml` / `.csproj`）。
@@ -160,7 +341,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 - 输出 10 项：当前 Vulkan 文件职责 / VK5-A 新增+修改清单 / ShaderModule 创建释放 / PipelineLayout 创建释放 / GraphicsPipeline 创建释放 / RenderPass·Swapchain·Framebuffer·Pipeline 依赖 / ≤100 拆分 / 禁止事项 / 验收 / 风险与回滚；含 3 个决策点（内嵌 SPIR-V byte[] / 动态 viewport-scissor / ShaderModule 持有到会话结束）。
 - VK5-A 实装禁止事项（承 red lines）：不 Draw、不画三角形、不建 VertexBuffer/DescriptorSet、不接 Scene/Camera/Mesh/Material/Gizmo、不改 UI/NativeHost/LOG-UX/Resize、不扩大 Editor.UI→Render.Vulkan 引用、不清 VulkanClearSession。
 
-## [VK5-Plan-R1] 仓库记忆文件收口：.workbuddy/memory 移出追踪并 gitignore（2026-07-09，仅仓库卫生）
+## v0.2.14.2-rz 仓库记忆文件收口：.workbuddy/memory 移出追踪并 gitignore（2026-07-09，仅仓库卫生）
+- 原历史编号：VK5-Plan-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 本轮不触碰任何代码，仅做仓库卫生收口。
@@ -173,7 +355,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 
 红线：未改任何 `.cs`/`.axaml`/`.csproj`/Vulkan/UI/NativeHost/LOG-UX 代码。
 
-## [VK5-Plan 债务升格] 两条已知债务升格为架构债务并锁死节奏（2026-07-09，仅文档）
+## v0.2.14.1-rz 两条已知债务升格为架构债务并锁死节奏（2026-07-09，仅文档）
+- 原历史编号：VK5-Plan 债务升格
 
 分支：fix/RZ-VK3-A-surface-contract
 本轮仅对 `docs/rz-vk5-plan.md` 增补「架构债务升级」节（§12，原 §12 规划图顺延为 §13），未改任何代码。
@@ -181,7 +364,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 - **债务 B：`VulkanClearSession` 死代码** 清理排在 **VK5-E**（VK5-A/B/C/D 之后），不在 VK5-A 前清，以免弄乱已验证的 Clear+Present 闭环；清理独立 commit。
 - 提交复核：`fe6d5d3` 仅含 6 文件（`.workbuddy/memory/` 项目级工作记忆 + 两份新 doc + changelog + file-tree），无 `.codex/`/`.ai-memory/`/密钥；`.workbuddy/memory/` 为本项目惯例追踪，非用户级 AI 文件。
 
-## [VK4-Closure + VK5-Plan] VK4 收口归档 + VK5 最小几何渲染规划（2026-07-09，仅文档）
+## v0.2.6.8-vk VK4 收口归档 + VK5 最小几何渲染规划（2026-07-09，仅文档）
+- 原历史编号：VK4-Closure + VK5-Plan
 
 分支：fix/RZ-VK3-A-surface-contract
 本轮**只写文档，不写实装代码**（未改任何 `.cs` / `.axaml` / `.csproj` / Vulkan 实装 / LOG-UX / NativeHost 代码）。
@@ -195,7 +379,8 @@ VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动
 
 红线：本轮不触碰任何代码；VK5 第一步不是场景渲染，而是「固定三角形 / 最小 Pipeline / 最小 Draw」；规划通过后再开 VK5-A 实装。
 
-## [VK4-D] 正式收口确认（2026-07-09）
+## v0.2.6.7-vk 正式收口确认（2026-07-09）
+- 原历史编号：VK4-D
 
 VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：VK4-D-R3（Render.Vulkan 侧 OutOfDate 优雅降级 + Resize 日志顺序 + 物理像素诚实日志）、VIEWPORT-RESIZE-R1（Editor.UI 日志详情栏切换后布局稳定主动同步最终尺寸）、VIEWPORT-RESIZE-R2（修正 R1 的 DPI 错配，物理像素 = round(逻辑×DPI)）。双项目均 0 warning / 0 error，全 .cs ≤100。
 
@@ -211,7 +396,8 @@ VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：
 
 红线全程守住：不进场景渲染；Resize 不重建 Surface/Instance/Device/Queue；Editor.UI 不接触 Silk.NET.Vulkan；日志单出口；全 .cs ≤100。
 
-## [VIEWPORT-RESIZE-R2] 修复 R1 的 DPI 错配：Win32 子窗口 Resize 必须收物理像素（2026-07-09）
+## v0.2.6.6-fix 修复 R1 的 DPI 错配：Win32 子窗口 Resize 必须收物理像素（2026-07-09）
+- 原历史编号：VIEWPORT-RESIZE-R2
 
 分支：fix/RZ-VK3-A-surface-contract
 前提：VK4-D-R3 + VIEWPORT-RESIZE-R1 后用户真机验收，R1 解决了「慢半拍」，但引入更关键的 DPI 尺寸错配。R1 的 `VulkanNativeHost.LayoutSync.SyncFinalSize` 把 Avalonia `Bounds` 的**逻辑尺寸**（713×188）直接当物理像素喂给 `Win32ViewportHost.Resize`（裸 `SetWindowPos`，不乘 DPI），把子 HWND 缩成逻辑尺寸；探针日志显示 `Win32子窗口=713x188`、`Surface CurrentExtent=713x188`，蓝灰画面只占左上角，右侧/下方露黑。真因：`Bounds` 是逻辑像素，Win32/Vulkan 要物理像素；R1 少了 `×DPI` 换算、绕过了 Avalonia 本来的 DPI 感知摆放。
@@ -237,7 +423,8 @@ VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：
 4. 探针日志：逻辑×DPI ≈ 目标物理 ≈ Win32子窗口 ≈ Surface CurrentExtent（DPI=1.75 时 713×188 → 1248×330）。
 5. Resize 不重建 Surface / Instance / Device / Queue；控制台日志不重复。
 
-## [VIEWPORT-RESIZE-R1] Editor.UI 日志详情栏展开/收起后 NativeHost 最终尺寸主动同步（2026-07-09）
+## v0.2.6.5-fix Editor.UI 日志详情栏展开/收起后 NativeHost 最终尺寸主动同步（2026-07-09）
+- 原历史编号：VIEWPORT-RESIZE-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 前提：VK4-D-R3 后用户真机验收，OutOfDate 刷屏已止，但「半屏蓝灰、下半黑」仍在；日志证明 Swapchain/Framebuffer/RenderArea 已同源物理像素（Surface CurrentExtent=1248x961 = 713x549×1.75 DPI）。根因转向 Editor.UI：日志详情栏展开/收起是低频离散布局变化，但 Vulkan Swapchain 重建只走 250ms Coalescer，导致 Present 泵停（OutOfDate）后等 250ms 才重建，旧小 Swapchain 帧停在顶部、下方黑；且离散变化可能不被 Coalescer 及时捕获。
@@ -269,7 +456,8 @@ VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：
 5. 日志显示「布局同步探针」：逻辑×DPI ≈ Win32 子窗口 ≈ Surface CurrentExtent。
 6. Resize 不重建 Surface / Instance / Device / Queue；控制台日志不重复。
 
-## [VK4-D-R3] Present 泵 OutOfDate 降级 + Resize 日志顺序 + 物理像素诚实日志（2026-07-09）
+## v0.2.6.4-fix Present 泵 OutOfDate 降级 + Resize 日志顺序 + 物理像素诚实日志（2026-07-09）
+- 原历史编号：VK4-D-R3
 
 分支：fix/RZ-VK3-A-surface-contract
 前提：VK4-D-R2 收口后用户真机验收发现（1）蓝灰清屏只覆盖上半部分（半屏）；（2）`QueuePresent` 反复返回 `ErrorOutOfDateKhr` 刷屏；（3）日志详情栏展开/收起后 NativeHost 视口尺寸同步慢半拍；（4）Resize 时序竞争。用户给出两阶段方案：VK4-D-R3（Render.Vulkan 侧）修 ①②，VIEWPORT-RESIZE-R1（Editor.UI 侧）修 ③。
@@ -307,7 +495,8 @@ VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [VK4-D-R2] Present 泵后台线程日志回调线程派发修复（2026-07-09）
+## v0.2.6.3-fix Present 泵后台线程日志回调线程派发修复（2026-07-09）
+- 原历史编号：VK4-D-R2
 
 分支：fix/RZ-VK3-A-surface-contract
 前提：VK4-D-R1 修复后用户真机启动即闪退，退出码 -532462766；异常为 `System.InvalidOperationException: The calling thread cannot access this object because a different thread owns it`，堆栈指向 `XuanYu.Editor.UI.VulkanNativeHost.<OnAttachedToVisualTree>b__6_0` 访问 `DataContext` 时崩溃，该日志来自 `VulkanPresentLoop.Run` 独立后台线程。
@@ -344,7 +533,8 @@ VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [VK4-D-R1] Clear + Present 运行审计与 Resize 去重（2026-07-09）
+## v0.2.6.2-fix Clear + Present 运行审计与 Resize 去重（2026-07-09）
+- 原历史编号：VK4-D-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 前提：VK4-D 初版实装后，用户真机发现（1）视口仍为黑色，（2）一次 Resize 触发两次 Swapchain 重建。
@@ -384,7 +574,8 @@ VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [VK4-D] 最小 Clear + Present 单色清屏闭环（D1+D2+D3 同轮）(2026-07-09)
+## v0.2.6.1-vk 最小 Clear + Present 单色清屏闭环（D1+D2+D3 同轮）(2026-07-09)
+- 原历史编号：VK4-D
 
 分支：fix/RZ-VK3-A-surface-contract
 依据：docs/rz-vk4-d-plan.md（用户已认可并批准实装）
@@ -418,7 +609,8 @@ VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [VK4-C-Plan] Swapchain 生命周期规划（只规划不实装）(2026-07-08)
+## v0.2.5.1-vk Swapchain 生命周期规划（只规划不实装）(2026-07-08)
+- 原历史编号：VK4-C-Plan
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：VK4-C-Plan（仅文档，不写 Vulkan 实装代码）
@@ -454,7 +646,8 @@ VK4-A / VK4-A-R1 / VK4-B / VK4-B-R1 全部完成，VK4-B 正式完全收口（De
 ### 下一步
 规划通过后开 `VK4-C`（Swapchain + ImageViews 实装）→ `VK4-C-R1`（Resize 重建 Swapchain 审计）→ `VK4-D`（ClearFrame 出画面）。**当前不进 VK4-C 实装。**
 
-## [VK4-C] Swapchain + Images + ImageViews 实装（2026-07-08）
+## v0.2.5.2-vk Swapchain + Images + ImageViews 实装（2026-07-08）
+- 原历史编号：VK4-C
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：VK4-C（Swapchain + Swapchain Images + ImageViews 实装，仍不出画面）｜状态：代码完成，待 VK4-C-R1 运行验证，未完全收口；VK4-D 暂缓。
@@ -506,7 +699,8 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [VK4-C-Fix] 启用 VK_KHR_swapchain + 0 尺寸跳过 + 格式暴露（2026-07-08）
+## v0.2.5.3-fix 启用 VK_KHR_swapchain + 0 尺寸跳过 + 格式暴露（2026-07-08）
+- 原历史编号：VK4-C-Fix
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：VK4-C 运行前置修正（非新渲染能力；仍不出画面；VK4-D 暂缓）
@@ -534,7 +728,8 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [VK4-C-R1] Swapchain 重建（OldSwapchain）修复与二次运行验证（2026-07-08 晚）
+## v0.2.5.4-fix Swapchain 重建（OldSwapchain）修复与二次运行验证（2026-07-08 晚）
+- 原历史编号：VK4-C-R1
 - 性质：VK4-C-R1 首次真机运行发现 Resize 重建运行时失败，仅修复 Swapchain 重建路径、不新增渲染能力；不进 VK4-D。
 - 运行结果（用户真机，RTX 3050 4GB Laptop GPU）：
   - ✅ 第一项 首次 Swapchain 创建成功（`Swapchain 创建成功；ImageView 创建成功 3 张`）—— 证明 VK4-C-Fix 启用的 `VK_KHR_swapchain` 设备扩展已生效（编译过≠能建，现确证能建）。
@@ -553,7 +748,8 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [LOG-UX-1-R4] 日志系统三修：自动滚动根因修复 + 种子清理 + 控制台去重（2026-07-09）
+## v0.2.7.5-fix 日志系统三修：自动滚动根因修复 + 种子清理 + 控制台去重（2026-07-09）
+- 原历史编号：LOG-UX-1-R4
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：LOG-UX-1-R4（用户指令称 LOG-UX-1-R2，但 R2/R3 已被占用，顺延 R4）。仅改 UI shell + 低层 Vulkan Log 辅助（去 Console.WriteLine）；不碰 Vulkan 生命周期行为 / NativeHost / Swapchain 逻辑；不进 VK4-D。
@@ -591,7 +787,8 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [LOG-UX-1-R5A] 止血：彻底禁用日志自动滚动（2026-07-09）
+## v0.2.7.6-fix 止血：彻底禁用日志自动滚动（2026-07-09）
+- 原历史编号：LOG-UX-1-R5A
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：LOG-UX-1-R5A（用户称 R5 后仍「未响应」，指令止血而非继续叠补丁）。
@@ -623,7 +820,8 @@ VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderP
 
 ---
 
-## [LOG-UX-2] 自动滚动重设计：独立控制器（2026-07-09）
+## v0.2.7.8-rz 自动滚动重设计：独立控制器（2026-07-09）
+- 原历史编号：LOG-UX-2
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：LOG-UX-2（R5A 止血后，按「独立 controller + 节流 + 防重入 + 不碰 Vulkan」方案重做）。
@@ -658,7 +856,8 @@ R5A 已禁用自动滚动、编辑器恢复稳定。本轮把自动滚动按用�
 
 ---
 
-## [VK4-C / LOG-UX-2] 正式收口 + VK4-D-Plan 启动（2026-07-09）
+## v0.2.7.9-vk 正式收口 + VK4-D-Plan 启动（2026-07-09）
+- 原历史编号：VK4-C / LOG-UX-2
 
 分支：fix/RZ-VK3-A-surface-contract
 文档：docs/rz-vk4-d-plan.md（新建）
@@ -684,7 +883,8 @@ R5A 已禁用自动滚动、编辑器恢复稳定。本轮把自动滚动按用�
 - 为守住 `VulkanNativeHostSurfaceBridge` ≤100 红线与契约优先设计，VK4-D 实装时顺带引入薄组合根 `VulkanRenderSession`（原 VK4-E 范围），Bridge 委托给它。
 - 当前阶段：VK4-A/B/C 完成；LOG-UX-1/2 收口；**进入 VK4-D-Plan**，不回头补日志功能。
 
-## [LOG-UX-1-R3] 自动滚动修复 + WinExe 控制台输出（2026-07-09）
+## v0.2.7.4-fix 自动滚动修复 + WinExe 控制台输出（2026-07-09）
+- 原历史编号：LOG-UX-1-R3
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：LOG-UX-1-R3（仅 UI 改动 + Program.cs 一行 P/Invoke；不碰 Vulkan / Render.Vulkan / 日志数据模型）
@@ -720,7 +920,8 @@ R5A 已禁用自动滚动、编辑器恢复稳定。本轮把自动滚动按用�
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [LOG-UX-1-R2] 日志面板自动滚动到最新 (2026-07-09)
+## v0.2.7.3-fix 日志面板自动滚动到最新 (2026-07-09)
+- 原历史编号：LOG-UX-1-R2
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：LOG-UX-1-R2（仅 UI 改动，服务 VK4-C-R1 审计；不碰 Vulkan / Render.Vulkan / NativeHost 生命周期 / 日志数据模型）
@@ -765,7 +966,8 @@ VK4-C-R1 二次运行已验证 Resize 重建 Swapchain 通过，但审计 Vulkan
 ### Commit
 见交付报告（本 commit 哈希在回复中给出）。
 
-## [LOG-UX-2] 会话日志落盘（关闭后仍可审计 Detach 顺序）(2026-07-08)
+## v0.2.7.7-rz 会话日志落盘（关闭后仍可审计 Detach 顺序）(2026-07-08)
+- 原历史编号：LOG-UX-2
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：LOG-UX-2（仅 Editor.UI 日志系统，不碰 Vulkan / NativeHost）
@@ -802,7 +1004,8 @@ LOG-UX-2 仅为临时调试手段，用于关闭窗口后从文件审计 Detach 
 - 磁盘 `logs/` 目录已删除。
 - 不碰 Vulkan / NativeHost；`XuanYu.Editor.UI` 构建 0W0E。
 
-## [LOG-UX-1-R1] Ctrl+C 复制无响应修复 (2026-07-08)
+## v0.2.7.2-fix Ctrl+C 复制无响应修复 (2026-07-08)
+- 原历史编号：LOG-UX-1-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：LOG-UX-1-R1（对 LOG-UX-1 的缺陷修复，仅 Editor.UI）
@@ -824,7 +1027,8 @@ Avalonia 中 `KeyUp` 的 `KeyModifiers` 反映「松开该键那一刻」的按�
 - 未碰 `Render.Vulkan` / NativeHost / Vulkan 链路。
 - 用户重测：日志面板选中若干行 → `Ctrl+C` → 面板出现「已复制 N 条日志到剪贴板」→ 粘贴到记事本为纯文本表格。
 
-## [LOG-UX-1] 日志多选复制与详情换行修复 (2026-07-08)
+## v0.2.7.1-fix 日志多选复制与详情换行修复 (2026-07-08)
+- 原历史编号：LOG-UX-1
 
 分支：fix/RZ-VK3-A-surface-contract
 版本：LOG-UX-1（仅 UI 改动，不进入 VK4-C，不碰 Vulkan 链路）
@@ -874,7 +1078,8 @@ VK4-B-R1 审计时需要把完整 Vulkan 生命周期日志贴回对话，但旧
 ### 下一步
 用户重跑编辑器，`Ctrl+A` + `Ctrl+C` 贴出完整 Vulkan 生命周期日志，据此核对 VK4-B-R1 最后一项（关闭时 `LogicalDevice → Surface → Instance` 释放顺序），收口 VK4-B。
 
-## [VK4-B] 基于 VK4-A 选择结果创建 LogicalDevice + 队列 (2026-07-08)
+## v0.2.4.3-vk 基于 VK4-A 选择结果创建 LogicalDevice + 队列 (2026-07-08)
+- 原历史编号：VK4-B
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：21f24026ff7b102c12b8346563c066b8a64449a7
@@ -933,7 +1138,8 @@ VK4-B **不以具体显卡型号为准**，而以 **VK4-A 最终选择结果（`
 ### 下一步
 VK4-B 边界与行数红线均守住，可判 VK4-B 功能收口。但**必须先做 VK4-B-R1 生命周期审计**，重点核对 Detach 释放顺序 `LogicalDevice → Surface → Instance` 与异常路径资源不泄漏；严禁顺手推进 VK4-C（Swapchain）。
 
-## [VK4-B-R1] 生命周期审计与运行验证（静态审计已通过；运行时待用户机）(2026-07-08)
+## v0.2.4.4-fix 生命周期审计与运行验证（静态审计已通过；运行时待用户机）(2026-07-08)
+- 原历史编号：VK4-B-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 关联提交：21f2402（VK4-B 代码） / 1f5da30（VK4-B 文档）
@@ -1002,7 +1208,8 @@ VK4-B 边界与行数红线均守住，可判 VK4-B 功能收口。但**必须�
 - **关联提交**：c4c804a
 - **结论**：第⑪项释放顺序证据闭合（Device → Surface → Instance 现可逐行核对）；VK4-B 可宣布完全收口。
 
-## [VK4-A-R1] 物理设备选择链路收口修正（压回 100 行红线）(2026-07-08)
+## v0.2.4.2-fix 物理设备选择链路收口修正（压回 100 行红线）(2026-07-08)
+- 原历史编号：VK4-A-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：fffb6d1a006306f3051ac8cabc2fa27a977301ec
@@ -1047,7 +1254,8 @@ VK4-A 审计发现 `VulkanNativeHostSurfaceBridge.cs` 由 93 行涨到 110 行�
 ### 下一步
 VK4-A 边界与行数红线均已守住，可判定 VK4-A 正式收口。下一步进入 VK4-B（创建 LogicalDevice + Queue），仍独立文件、独立 commit、独立红线校验；严禁把 B/C/D 混写。
 
-## [VK4-A] 物理设备选择链路（仅选择，不创建设备） (2026-07-08)
+## v0.2.4.1-vk 物理设备选择链路（仅选择，不创建设备） (2026-07-08)
+- 原历史编号：VK4-A
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：79eabd0c5f11c88ab78607041395353cf05156ae
@@ -1096,7 +1304,8 @@ VK4-A 边界与行数红线均已守住，可判定 VK4-A 正式收口。下一�
 ### 下一步
 VK4-A 收口后可进入 VK4-A-R1（审计 + 日志补强）。严禁顺手推进 VK4-B（LogicalDevice + Queue）；B 阶段单独开。
 
-## [VK3-Closure + VK4-Plan] VK3 收口确认 + VK4 规划落地 (2026-07-08)
+## v0.2.3.12-vk VK3 收口确认 + VK4 规划落地 (2026-07-08)
+- 原历史编号：VK3-Closure + VK4-Plan
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：49403707f152c9a60f88f7944ca1375b770cdc0a
@@ -1115,7 +1324,8 @@ VK3 验收通过，收口确认；并落地 VK4 规划（只规划不实装）�
 - 未写任何 Vulkan 实装代码；未选 PhysicalDevice / 未创 LogicalDevice / 未建 Swapchain / 未碰 RenderFrame。
 - 未扩大 UI 对 Vulkan 的直接认识。
 
-## [RZ-VK3-C2-R1] VulkanBridge 日志面板可见性修复 (2026-07-08)
+## v0.2.3.11-fix VulkanBridge 日志面板可见性修复 (2026-07-08)
+- 原历史编号：RZ-VK3-C2-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：2390c6314c75b30097e689fee60e6fdf05bfd31e
@@ -1151,7 +1361,8 @@ VK3 验收通过，收口确认；并落地 VK4 规划（只规划不实装）�
 ### 下一步
 关闭编辑器后 rebuild + run，即可在日志面板看到 `【VulkanBridge】附加成功 / 尺寸变化已接收 / 分离完成`；VK3 系列收尾，Device/Swapchain/RenderFrame 留待 VK4。
 
-## [RZ-VK3-C2] 组合根接线：桥接接入 NativeHost 生命周期 (2026-07-08)
+## v0.2.3.10-vk 组合根接线：桥接接入 NativeHost 生命周期 (2026-07-08)
+- 原历史编号：RZ-VK3-C2
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：a01855702866f5b243efa23a796831af1a1a6d7f
@@ -1188,7 +1399,8 @@ VK3 验收通过，收口确认；并落地 VK4 规划（只规划不实装）�
 ### 下一步
 VK3 系列 Instance/Surface 层已收口（VK3-A / B / C 全完成）。Device/Swapchain/RenderFrame 留待 VK4。
 
-## [RZ-VK3-C1-R2] Vk 生命周期所有权收口 (2026-07-08)
+## v0.2.3.9-fix Vk 生命周期所有权收口 (2026-07-08)
+- 原历史编号：RZ-VK3-C1-R2
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：a176eb365dc42ade0d2c72cff9901ac9b9d740e0
@@ -1231,7 +1443,8 @@ VK3 系列 Instance/Surface 层已收口（VK3-A / B / C 全完成）。Device/S
 ### 下一步
 VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface；接线时复用已收口的 Vk 所有权。
 
-## [RZ-VK3-C1-R1] Bridge 生命周期异常安全收口 (2026-07-08)
+## v0.2.3.8-fix Bridge 生命周期异常安全收口 (2026-07-08)
+- 原历史编号：RZ-VK3-C1-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：733ccaef7f2a89477d32a01c6dc5dcce0879cb6d
@@ -1270,7 +1483,8 @@ VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周�
 ### 下一步
 VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface；接线前先确认 `Vk.GetApi()` 所有权。
 
-## [RZ-VK3-C1] NativeHost 生命周期桥接类 (2026-07-08)
+## v0.2.3.7-vk NativeHost 生命周期桥接类 (2026-07-08)
+- 原历史编号：RZ-VK3-C1
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：2eb6cc930ae51eccb62546509df5925bd9eab146
@@ -1310,7 +1524,8 @@ VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周�
 ### 下一步
 VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface。
 
-## [RZ-VK3-B2-R1] VulkanSurfaceOwner 健壮性收口 (2026-07-08)
+## v0.2.3.6-fix VulkanSurfaceOwner 健壮性收口 (2026-07-08)
+- 原历史编号：RZ-VK3-B2-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：7a1299a9aa1d4f80b3dcd135ec5952a721ef4280
@@ -1344,7 +1559,8 @@ VK3-B2-R1：在正式接 VK3-C 组合根前，补强 VulkanSurfaceOwner 的失�
 ### 下一步
 VK3-B2-R1 收口后，可进入 VK3-C：经 INativeHostSurfaceBridge 由组合根把 VulkanInstanceOwner + VulkanSurfaceOwner 接线到 NativeHost Attach/Detach，仍不碰 Device / Swapchain。
 
-## [RZ-VK3-B2] Vulkan Surface 持有者 (2026-07-08)
+## v0.2.3.5-vk Vulkan Surface 持有者 (2026-07-08)
+- 原历史编号：RZ-VK3-B2
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：9b41b28fc2a33f0953ccd00db7287353eb543be0
@@ -1383,7 +1599,8 @@ VK3-B2：在 XuanYu.Render.Vulkan 内新增 VulkanSurfaceOwner，仅负责创建
 ### 下一步
 VK3-B2 收口后，可进入 VK3-C：经 INativeHostSurfaceBridge 由组合根把 VulkanInstanceOwner + VulkanSurfaceOwner 接线到 NativeHost Attach/Detach，仍不碰 Device / Swapchain。
 
-## [RZ-VK3-B1-R1] VulkanInstanceOwner 行数与健壮性收口 (2026-07-08)
+## v0.2.3.4-fix VulkanInstanceOwner 行数与健壮性收口 (2026-07-08)
+- 原历史编号：RZ-VK3-B1-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：fde25d2fe8140022a7273e133081fc8da23393d9
@@ -1422,7 +1639,8 @@ VK3-B1-R1：在进 VK3-B2 前，先把 VulkanInstanceOwner 从 98 行（贴 100 
 ### 下一步
 VK3-B1-R1 收口后，可进入 VK3-B2：VulkanSurfaceOwner 经 INativeHostSurfaceBridge 由组合根实现，仍不碰 Device / Swapchain。
 
-## [RZ-VK3-B1] Vulkan Instance 持有者 (2026-07-08)
+## v0.2.3.3-vk Vulkan Instance 持有者 (2026-07-08)
+- 原历史编号：RZ-VK3-B1
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：aa56857
@@ -1460,7 +1678,8 @@ VK3-B1：在 XuanYu.Render.Vulkan 内新增 VulkanInstanceOwner，只负责创�
 ### 下一步
 VK3-B1 审计三点已过：扩展为最小集合 / Dispose 幂等 / 无 Surface(Swapchain) 实装。可进入 VK3-B2：VulkanSurfaceOwner 经 INativeHostSurfaceBridge 由组合根实现，仍不碰 Device / Swapchain。
 
-## [RZ-VK3-A-R1] Surface 契约层依赖收口 (2026-07-08)
+## v0.2.3.2-fix Surface 契约层依赖收口 (2026-07-08)
+- 原历史编号：RZ-VK3-A-R1
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：37504b0
@@ -1491,7 +1710,8 @@ VK3-B1 审计三点已过：扩展为最小集合 / Dispose 幂等 / 无 Surface
 ### 下一步
 VK3-B1：VulkanInstanceOwner。只做 Instance（启用 `VK_KHR_surface` + `VK_KHR_win32_surface`），不碰 Surface / Device / Swapchain。
 
-## [RZ-VK3-A] Surface 契约层建立 (2026-07-07)
+## v0.2.3.1-vk Surface 契约层建立 (2026-07-07)
+- 原历史编号：RZ-VK3-A
 
 分支：fix/RZ-VK3-A-surface-contract
 提交：2bfbe2e
@@ -1520,18 +1740,21 @@ VK3-B1：VulkanInstanceOwner。只做 Instance（启用 `VK_KHR_surface` + `VK_K
 ### 下一步
 RZ-VK3-A-R1 收口依赖。
 
-## [RZ-VK3-Plan] VK3 Surface 生命周期规划 (2026-07-07)
+## v0.2.2.7-vk VK3 Surface 生命周期规划 (2026-07-07)
+- 原历史编号：RZ-VK3-Plan
 - 仅规划正式 Vulkan Surface 生命周期，替代 `VulkanClearSession` 探针状态；本轮不写任何 Vulkan 实装代码。
 - 明确：Surface 由 `XuanYu.Render.Vulkan` 内部 `VulkanSurfaceOwner` 创建/持有；NativeHost 只提供 HWND/尺寸与 Attach/Detach 生命周期，不直接管理 Vulkan；Editor.UI 不直接创建 Surface/Device/Swapchain；`VulkanClearSession` 仅作探针参考，不能直接搬进正式路径。
 - VK3 只做 Surface，Swapchain 留给 VK4；阶段边界硬于技术规则，禁止 VK3 夹带 Swapchain。
 - 产出 `docs/rz-vk3-surface-lifecycle-plan.md`。
 
-## [Fix-M1] Windows 兼容清单提交 (2026-07-07)
+## v0.2.2.6-rz Windows 兼容清单提交 (2026-07-07)
+- 原历史编号：Fix-M1
 - 单独提交 `XuanYu.Editor.UI/app.manifest` 中遗留的 Windows `supportedOS` 兼容清单块（10/11/8.1/8/7），仅声明系统兼容，无任何 Vulkan / 逻辑改动。
 - 不碰 Vulkan / NativeHost / Resize / Surface / Swapchain / LogicalDevice；`.workbuddy/` 与 `qizheng-mvp-fixed/` 维持未跟踪，不纳入提交。
 - 提交信息：`chore(editor): declare Windows compatibility manifest`。
 
-## [RZ-VK2-R2] NativeHost Resize 合并验证/收口 (2026-07-07)
+## v0.2.2.5-fix NativeHost Resize 合并验证/收口 (2026-07-07)
+- 原历史编号：RZ-VK2-R2
 - 验证 RZ-VK2-R1 合并边界干净：NativeHostResizeCoalescer 只合并 UI 生命周期日志，未改变 Win32ViewportHost.Resize 调用时机，未牵连 VulkanClearSession.Resize / Surface / Swapchain / LogicalDevice。
 - git diff 确认 VulkanClearSession.* 相对 HEAD 零改动；本回合文件均不引用它；无新增 Silk.NET.Vulkan 使用点。
 - 确认工作树仅 app.manifest 为 tracked modified（非本轮任务），不混入提交。
@@ -1539,7 +1762,8 @@ RZ-VK3-A-R1 收口依赖。
 - 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
 - 提交信息：`test(editor): RZ-VK2-R2 verify native host resize coalescing`。
 
-## [RZ-VK2-R1] NativeHost 尺寸变化日志合并 (2026-07-07)
+## v0.2.2.4-fix NativeHost 尺寸变化日志合并 (2026-07-07)
+- 原历史编号：RZ-VK2-R1
 - 修复 NativeHost 尺寸变化高频事件连续进入 `EditorLogBus` 的问题（`VulkanNativeHost.OnSizeChanged` 每次直写日志并 `RefreshLogBindings`，导致截图「重复 138 次」）。
 - 新增 `NativeHostResizeSnapshot`（只保存尺寸数据）与 `NativeHostResizeCoalescer`（250ms debounce，连续 SizeChanged 只更新快照与合并计数，稳定后才生成一条低频合并日志）。
 - `ViewportNativeHostRoute` 增加 `ReportMerged` 薄入口；`UiVm.NativeHostLifecycle` 增加 `LogNativeHostResizedMerged`（合并日志含最终宽度、高度、DPI、生命周期版本、合并次数；无效句柄只写一条低频失效日志）。
@@ -1549,28 +1773,32 @@ RZ-VK3-A-R1 收口依赖。
 - 未创建 Surface / Swapchain / LogicalDevice，未接入真实渲染循环，未修改顶部/左侧/右侧/底部布局与输入链路。
 - 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；本轮新增/修改 `.cs` / `.axaml` 全部 ≤100 行；`dotnet test` 退出正常且仓库无独立测试项目。
 
-## [RZ-New-0] 新人接手规则审计 (2026-07-07)
+## v0.2.2.1-rz 新人接手规则审计 (2026-07-07)
+- 原历史编号：RZ-New-0
 - 新增开发规范两份（经人工校正 5+100 / 依赖隔离 / 日志边界 / VK 阶段边界表述）：`docs/dev-rules.md`（硬规则执行手册 + 接手红线清单）、`docs/dev-rules-understanding.md`（事故来源与动机解释）。
 - 新增 `docs/audit-RZ-New-0-onboarding.md`：按 10 项清单完成接手验收。实测确认 Editor.UI 仍直接引用 Silk.NET.Vulkan / XuanYu.Render.Vulkan（过渡期冲突）；VulkanClearSession 探针已创建 Instance/Surface/Device/Swapchain；NativeHost 高频 SizeChanged 直写 EditorLogBus 风险属实。
 - 同步 file-tree.md。
 - 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
 - 提交信息：`docs(dev): 新增开发规范文档与 RZ-New-0 接手审计`。
 
-## [RZ-VK2] NativeHost / HWND 生命周期收口 (2026-07-07)
+## v0.2.2.3-vk NativeHost / HWND 生命周期收口 (2026-07-07)
+- 原历史编号：RZ-VK2
 - 新增 `XuanYu.Render.Vulkan` 内的 NativeHost 生命周期快照、状态、探针与中文日志格式化。
 - `VulkanNativeHost` 收口为纯 HWND 生命周期宿主，只记录创建、附加、句柄可用、尺寸变化、移除、释放、失效，不再触碰 Vulkan 会话。
 - 新增 `ViewportNativeHostRoute` 与 `UiVm.NativeHostLifecycle`，UI 仅通过薄入口把快照写入现有日志系统。
 - 新增审计文档 `docs/audit-RZ-VK2-native-host-lifecycle.md`，记录 HWND 生命周期、验证结果与 RZ-VK3 接 Surface 的接点。
 - 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
 
-## [RZ-VK1] Vulkan 依赖接入与环境探针 (2026-07-07)
+## v0.2.2.2-vk Vulkan 依赖接入与环境探针 (2026-07-07)
+- 原历史编号：RZ-VK1
 - 新增独立 `XuanYu.Render.Vulkan` 项目，接入 `Silk.NET.Vulkan`，只负责最小 Vulkan 环境探针。
 - 探针完成 Vulkan API 入口创建、Instance 版本枚举、PhysicalDevice 枚举，并输出中文诊断日志。
 - UI 只通过 `VulkanProbeRoute.Run(vm)` 这一薄入口触发探针，未修改布局、输入或日志面板结构。
 - 未接入 Surface、Swapchain、LogicalDevice、CommandPool、CommandBuffer，也未进入真实渲染循环。
 - 新增审计文档 `docs/audit-RZ-VK1-vulkan-probe.md`，记录本轮文件清单、验证范围和下一步建议。
 
-## [RZ-Fix3-0] Vulkan 接入前置审计 (2026-07-07)
+## v0.2.1.14-rz Vulkan 接入前置审计 (2026-07-07)
+- 原历史编号：RZ-Fix3-0
 - 新增 `docs/vulkan-preflight-audit-RZ-Fix3-0.md`，收口当前中央视口、Avalonia NativeControlHost、Win32 子窗口、Vulkan Surface/Swapchain 生命周期和 fallback 策略。
 - 确认当前工程已经存在 `Viewport/Vulkan` 预接入代码，实际状态已超过纯审计阶段，应在 RZ-Fix3-A 中收口为最小 Clear Probe，而不是继续扩大到完整 Renderer。
 - 明确 Vulkan 只允许进入中央视口链路：`UiRoot` -> `Main` -> `VulkanViewport` -> `VulkanNativeHost` -> `VulkanClearSession`。
@@ -1579,7 +1807,8 @@ RZ-VK3-A-R1 收口依赖。
 - 保持顶部工具栏、左侧项目树、右侧检查器、底部日志系统职责不变；本次不接 Gizmo、Picking、模型、相机、资源系统。
 - 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`.cs` / `.axaml` 文件未发现超过 100 行。
 
-## [RZ-Fix3-A] — Vulkan 接入前置验证 (2026-07-06)
+## v0.2.1.13-rz — Vulkan 接入前置验证 (2026-07-06)
+- 原历史编号：RZ-Fix3-A
 - 中央视口从静态假网格切换为 `VulkanViewport` 宿主，保留顶部/底部视口状态提示
 - 新增 `Viewport/Vulkan` 小模块，使用 Avalonia `NativeControlHost` 在中央区域创建 Win32 子窗口作为 Vulkan Surface 承载点
 - 新增 Silk.NET Vulkan 依赖：`Silk.NET.Vulkan` 与 `Silk.NET.Vulkan.Extensions.KHR`
@@ -1591,7 +1820,8 @@ RZ-VK3-A-R1 收口依赖。
 - 当前为 Vulkan Host / Surface / Swapchain 前置验证；逐帧 Clear + Present 留到 RZ-Fix3-A-R1 收口
 - Build: 0 Warning, 0 Error；GUI 烟测启动 5 秒存活
 
-## [RZ-Fix2-D] — 右侧检查器 / 调试 / 偏好 / 模式页收口 (2026-07-06)
+## v0.2.1.12-rz — 右侧检查器 / 调试 / 偏好 / 模式页收口 (2026-07-06)
+- 原历史编号：RZ-Fix2-D
 - 右侧面板收口为四个职责明确的页签：检查器、调试、偏好、模式
 - 检查器页改为当前选中对象 / 项目的属性查看区，使用紧凑键值布局显示名称、类型和路径
 - 检查器页补明确空状态：未选择对象时提示从左侧项目树、层级页或视口选择对象
@@ -1602,7 +1832,8 @@ RZ-VK3-A-R1 收口依赖。
 - 不改中央视口、不接 Vulkan、不改日志系统、不改顶部工具栏、不改左侧项目树
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix2-C] — 左侧项目树视觉与层级收口 (2026-07-06)
+## v0.2.1.11-rz — 左侧项目树视觉与层级收口 (2026-07-06)
+- 原历史编号：RZ-Fix2-C
 - 左侧项目区收口为更稳定的编辑器侧栏：项目 / 层级 Tab、搜索框、项目树、选中态、Hover 和空状态统一整理
 - 项目页保留静态示例结构：SampleProject、世界、MainWorld、TestWorld、资源、图标、材质、脚本、构建
 - 项目树行高统一为约 28px，一级、二级、三级缩进分别保持 0、18px、36px
@@ -1613,7 +1844,8 @@ RZ-VK3-A-R1 收口依赖。
 - 不接真实资源扫描、不做导入导出、不做右键菜单、不改中央视口、不接 Vulkan、不改日志系统
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix2-B-R1] — Splitter 默认布局与最小宽度修复 (2026-07-06)
+## v0.2.1.10-fix — Splitter 默认布局与最小宽度修复 (2026-07-06)
+- 原历史编号：RZ-Fix2-B-R1
 - 修复 RZ-Fix2-B 后左右面板可能被 splitter 或窗口压窄的问题
 - 主布局根容器增加最小宽度兜底，避免左侧、中央、右侧的最小可用宽度总和被整体压穿
 - 左侧项目列继续默认 270px，并在列定义与面板上双层限制 200px 至 420px
@@ -1623,7 +1855,8 @@ RZ-VK3-A-R1 收口依赖。
 - 不改中央视口绘制逻辑、不接 Vulkan、不扩展日志系统、不接 Probe
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix2-B] — 主布局 Splitter 可拖拽收口 (2026-07-06)
+## v0.2.1.9-rz — 主布局 Splitter 可拖拽收口 (2026-07-06)
+- 原历史编号：RZ-Fix2-B
 - 主布局改为可拖拽尺寸骨架：左侧项目区、中央视口、右侧检查器、底部日志区域通过轻量 splitter 调整空间
 - 左侧项目区默认约 270px，限制为 200px 至 420px，避免项目树被压没或过度挤占中央视口
 - 右侧检查器默认约 340px，限制为 260px 至 480px，为属性、调试、偏好等后续内容预留可调空间
@@ -1632,7 +1865,8 @@ RZ-VK3-A-R1 收口依赖。
 - 仅调整主布局容器，不改中央视口绘制逻辑、不接 Vulkan、不扩展日志系统、不接 Probe
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix2-A] — 顶部菜单栏与工具栏收口 (2026-07-06)
+## v0.2.1.8-rz — 顶部菜单栏与工具栏收口 (2026-07-06)
+- 原历史编号：RZ-Fix2-A
 - RZ-Fix1 日志阶段判定完成并冻结：后续只维护，不继续扩展 Probe、文件日志或诊断包
 - 撤回 ProbeScope / Trace / 高频摘要预研入口，Probe 系统延期到真实 bug 复现且普通日志不足时再做
 - 顶部区域继续保持两行结构，改为主命令区与编辑工具区的分组式布局
@@ -1641,7 +1875,8 @@ RZ-VK3-A-R1 收口依赖。
 - 不改中央视口、不接 Vulkan、不扩展日志系统、不接 Probe
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix1-G-R1] — 日志详情可读性与复制验收 (2026-07-06)
+## v0.2.1.7-fix — 日志详情可读性与复制验收 (2026-07-06)
+- 原历史编号：RZ-Fix1-G-R1
 - 右侧日志详情区改为更紧凑的可读布局：顶部聚合显示时间、级别、来源和分类
 - 消息与详情继续使用只读正文区域，便于选择/复制日志正文
 - 重复次数、上下文 ID、操作链路 ID 改为键值行，空值继续显示“无”
@@ -1649,7 +1884,8 @@ RZ-VK3-A-R1 收口依赖。
 - 保持详情只由点击日志行选择驱动，不使用 Hover / PointerMoved 刷新
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix1-G] — 日志详情面板与复制单条日志 (2026-07-06)
+## v0.2.1.6-rz — 日志详情面板与复制单条日志 (2026-07-06)
+- 原历史编号：RZ-Fix1-G
 - 底部日志展开区改为左侧日志列表 + 右侧日志详情，点击日志行后通过 `SelectedLogEntry` 显示详情
 - 新增 `LogDetailPanel`，显示时间、级别、来源、分类、消息、详情、重复次数、上下文 ID、操作链路 ID
 - 未选择日志时显示明确空状态：“未选择日志，点击左侧日志行后显示详情”
@@ -1660,7 +1896,8 @@ RZ-VK3-A-R1 收口依赖。
 - `docs/diagnostic-safety.md` 补充日志详情选择规则：禁止 hover 驱动详情刷新
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix1-F-R1] — 构建环境与低频日志总线验收收口 (2026-07-06)
+## v0.2.1.5-fix — 构建环境与低频日志总线验收收口 (2026-07-06)
+- 原历史编号：RZ-Fix1-F-R1
 - `NuGet.Config` 移除缺失的 `.nuget-local` 本地源，改为只保留 `nuget.org`，避免新克隆仓库因本地源不存在而无法 restore
 - `run.bat` 改为稳定入口：先 restore，再 `--no-restore` build，最后启动当前 `XuanYu.Editor.UI`
 - 审计低频日志总线：`SampleLogEntries` 仅在 `UiVm` 实例初始化时作为种子进入实例内 Buffer，过滤切换不会重复追加种子日志
@@ -1670,7 +1907,8 @@ RZ-VK3-A-R1 收口依赖。
 - `docs/diagnostic-safety.md` 补充后台任务日志规则：后台构建、导入、加载、保存或渲染摘要未来接入时必须通过日志队列或 UI 调度合批刷新，不得直接修改 UI 绑定集合
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix1-F] — 低频日志总线接入 (2026-07-06)
+## v0.2.1.4-rz — 低频日志总线接入 (2026-07-06)
+- 原历史编号：RZ-Fix1-F
 - 新增 `Vm/Logging` 低频日志模块：`EditorLogBus`、`EditorLogBuffer`、`EditorLogSummary`、`EditorLogFilter`、`EditorLogFilterQuery`、`EditorLogRepeatKey`
 - 底部日志从纯 `SampleLogEntries` 过渡为 Buffer 驱动；`SampleLogEntries` 仅作为初始化种子，运行中的按钮命令和工具切换会通过 `EditorLogBus` 写入
 - `EditorLogBuffer` 最多保留最近 500 条日志，并对连续相同日志使用 `RepeatCount` 合并
@@ -1681,7 +1919,8 @@ RZ-VK3-A-R1 收口依赖。
 - `docs/diagnostic-safety.md` 补充低频日志准入清单和禁止高频接入清单
 - `file-tree.md` 同步当前真实文件数：102
 
-## [RZ-Fix1-E-R1] — 日志显示语义与高频风险小修审计 (2026-07-06)
+## v0.2.1.3-fix — 日志显示语义与高频风险小修审计 (2026-07-06)
+- 原历史编号：RZ-Fix1-E-R1
 - 底部日志显示层中文化：内部枚举仍保留 `Editor / Layout` 等稳定标识，UI 显示为“编辑器 / 布局 / 项目 / 加载 / 渲染 / 后端 / 输入 / 捕获”等中文文本
 - 重复折叠确认绑定到对应日志行末尾，示例行显示“点击拾取未命中任何对象  重复 6 次”，不再像面板级状态
 - 示例拾取日志从“拾取结果为空”改为“点击拾取未命中任何对象”，明确它是低频点击事实日志，不代表 Hover / PointerMoved 逐条输出
@@ -1690,7 +1929,8 @@ RZ-VK3-A-R1 收口依赖。
 - 截图复查右侧“调试”页：当前上下文、当前对象、工具/输入状态以快照方式显示，不作为第二个日志面板
 - Build: 0 Warning, 0 Error
 
-## [RZ-Fix1-E] — 日志系统布局与调试快照职责收口 (2026-07-06)
+## v0.2.1.2-rz — 日志系统布局与调试快照职责收口 (2026-07-06)
+- 原历史编号：RZ-Fix1-E
 - `file-tree.md` 重建为当前工作区真实文件树，按 `rg --files` 统计 95 个文件，删除旧文档中已不存在的历史项目/目录记录
 - 底部日志栏从滚动文本占位升级为全局事实日志视图：摘要条、级别/来源过滤入口、搜索占位、列式日志列表、空状态与重复折叠占位
 - 明确底部日志只展示低频事实记录，示例覆盖 Editor / Project / Render / Build / Task / Input，不接真实日志后端、不接 Vulkan、不改中央视口
@@ -1701,7 +1941,8 @@ RZ-VK3-A-R1 收口依赖。
 - 所有新增和修改的 `XuanYu.Editor.UI` `.cs / .axaml` 文件均保持 ≤100 行
 - Build: 0 Warning, 0 Error；截图复查底部日志与右侧调试职责清晰
 
-## [RZ-Fix1-D] — Avalonia 编辑器 UI 骨架收口与底部日志栏接入 (2026-07-05 20:47)
+## v0.2.1.1-rz — Avalonia 编辑器 UI 骨架收口与底部日志栏接入 (2026-07-05 20:47)
+- 原历史编号：RZ-Fix1-D
 - 新增轻量 `XuanYu.Editor.UI` 编辑器外壳：顶部工具区、左侧项目/层级、中央深色视口、右侧检查器、底部状态/日志栏
 - 顶部改为两行紧凑工具栏：第一行主命令（新建/打开/保存/撤销/重做/运行/停止），第二行编辑工具（选择/移动/旋转/缩放/框选/聚焦/平移/环绕/吸附）
 - 顶部命令和编辑工具全部改为集中管理的 SVG / PathData 图标，禁止字符、Unicode、emoji 占位
@@ -1714,7 +1955,8 @@ RZ-VK3-A-R1 收口依赖。
 - 新增 `XuanYu.Editor.UI/Vm/LogText.cs` 保存静态中文日志示例
 - Build: 0 Warning, 0 Error
 
-## [9.0D-R2E] — 9.0X Native Viewport 鼠标捕获生命周期审计与修复 (2026-06-26)
+## v0.1.8.10-fix — 9.0X Native Viewport 鼠标捕获生命周期审计与修复 (2026-06-26)
+- 原历史编号：9.0D-R2E
 - 收口所有 Win32 鼠标捕获到 `NativeViewportMouseCapture`，禁止其他模块直接调用 `SetCapture` / `ReleaseCapture`
 - 修复 `WM_MBUTTONUP` 此前只清内部状态、不调用 `ReleaseCapture()` 导致 Native Viewport 继续吞鼠标消息的问题
 - `Release(nint ownerHwnd, string reason)` 以 `GetCapture() == ownerHwnd` 作为是否真实释放的最终依据，不再依赖内部 `_captured` 标志
@@ -1728,14 +1970,16 @@ RZ-VK3-A-R1 收口依赖。
 - Build: 0 Warning, 0 Error / Tests: 697/698 passed（1 个预存：中文排序依赖 locale）
 - commits: `8d6e7fd` `a48ecfd`
 
-## [9.0D-R2D] — Gizmo 拖动 Preview 高频路径复审 (2026-06-25 22:56)
+## v0.1.8.9-fix — Gizmo 拖动 Preview 高频路径复审 (2026-06-25 22:56)
+- 原历史编号：9.0D-R2D
 - 修复 `TransformPreview` 帧完成后仍可能调用 Diagnostics refresh 的路径：Preview 回调改为只记录“跳过 Diagnostics 刷新”
 - 补齐中文 probe log：PointerMoved、Gizmo hit/drag、Preview transform、RenderScene preview、Redraw、PickSnapshot、Dispatcher、Inspector、Diagnostics、WorldState、日志面板、WorldHierarchy
 - 保留 DebugDock 轻量化结果：Diagnostics/Performance/RenderScene 页不复活，仅提供 no-op 兼容方法，避免重建重型 Avalonia UI
 - 新增 `docs/gizmo_drag_audit_2026-06-25.md`：完整调用链、频率分级和日志结论
 - 复现日志：`docs/gizmo_drag_audit_probe.log` 共 355 行；Preview 拖动中 UI/WorldState/Diagnostics/Inspector 均为 0 次，PickSnapshot 跳过 20 次
 
-## [9.0D-R2C] — Gizmo 拖动高频路径探针审计 (2026-06-25 21:41)
+## v0.1.8.8-fix — Gizmo 拖动高频路径探针审计 (2026-06-25 21:41)
+- 原历史编号：9.0D-R2C
 - 目标：确认 Move Gizmo Preview 高频路径未触发 Inspector / Diagnostics / PickSnapshot / WorldState / Avalonia 重布局
 - 在 PointerMoved → Gizmo Hit/Drag → Preview Transform → RenderScene 写入 → Redraw 请求全链路植入中文 probe log
 - 探针字段：阶段名、耗时 ms、UI 刷新、WorldState 写入、Diagnostics 刷新、Inspector 刷新
@@ -1750,7 +1994,8 @@ RZ-VK3-A-R1 收口依赖。
 - `EditorProbe` 同时输出到终端与 `%APPDATA%/XuanYuEngine/editor_probe.log`，便于 WinExe 审计采信
 - Build: 0 Warning, 0 Error / Tests: 693/694 passed（1 个预存 flaky：中文排序依赖 locale）
 
-## [9.0D-R2B] — 降低 Move Gizmo 拖动帧负载 (2026-06-25 00:18)
+## v0.1.8.7-fix — 降低 Move Gizmo 拖动帧负载 (2026-06-25 00:18)
+- 原历史编号：9.0D-R2B
 - TransformPreview 不再每帧刷新 Inspector
 - TransformPreview 帧不再刷新 Diagnostics / DebugDock
 - TransformPreview 帧不再重建 PickSnapshot
@@ -1760,12 +2005,14 @@ RZ-VK3-A-R1 收口依赖。
 - Build: 0 Warning, 0 Error / Tests: 693/694 passed
 - commit `26f2006`
 
-## [9.0D-R3] — 诊断日志与 UI 调度安全规范 (2026-06-24)
+## v0.1.8.6-rz — 诊断日志与 UI 调度安全规范 (2026-06-24)
+- 原历史编号：9.0D-R3
 - 新增 `docs/diagnostic-safety.md`：收录 9.0D 诊断回调导致 UI 卡死事故的根因与防护规范
 - 覆盖启动期规则 / 高频路径规则 / 诊断 Sink 接口 / UI 日志异步投递 / 代码审查清单
 - commit `e57d5c9`
 
-## [9.0D-R2] — 选中实体自动显示并可拖 Move Gizmo (2026-06-24)
+## v0.1.8.5-rz — 选中实体自动显示并可拖 Move Gizmo (2026-06-24)
+- 原历史编号：9.0D-R2
 - **取消「按 G 才显示 Gizmo」的交互入口**，改为选中实体 + 相机有效即自动显示
 - 改动 4 个点：
   - `MoveGizmoFrameSource.Build`：闸门从 `MoveToolActive` 改为 `selectedEntity.IsValid || MoveToolActive`
@@ -1776,7 +2023,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 693/694 (1 pre-existing)
 - commit `e66cbb4`
 
-## [9.0D-R1] — Move Gizmo 轴约束求解器 (2026-06-24)
+## v0.1.8.4-rz — Move Gizmo 轴约束求解器 (2026-06-24)
+- 原历史编号：9.0D-R1
 - **AxisDragAnchorBuilder 重写**：从 ScreenProjection 升级为 DragPlane 射线约束方案
 - **Gram-Schmidt 法线构造**：轴约束平面包含目标轴并尽量面向摄像机，三级 fallback
 - **双保险**：DragPlane 优先 + ScreenProjection 降级，Builder 必定返回有效锚点
@@ -1788,7 +2036,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 693/694 (1 pre-existing)
 - 当前 Gizmo 可见时直接拖轴即可移动，不必按 G
 
-## [9.0C] — Inspector 与 Transform 同步 (2026-06-24)
+## v0.1.8.3-rz — Inspector 与 Transform 同步 (2026-06-24)
+- 原历史编号：9.0C
 - WorldState 新增 `SetRotation()` / `SetScale()`
 - 新增 TransformEdit 应用层（TransformInspectorSnapshot / TransformEditRequest / TransformEditResult / SelectedEntityTransformReader / SelectedEntityTransformApply）
 - Inspector 支持显示并编辑 Position / RotationDegrees / Scale
@@ -1801,7 +2050,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 685/686 (1 pre-existing)
 - commits: `69f056b` `d1cc14c` `d4cb881` `8fb4aaa`
 
-## [9.0B] — TransformComponent 补全：Position + Rotation + Scale (2026-06-24)
+## v0.1.8.2-rz — TransformComponent 补全：Position + Rotation + Scale (2026-06-24)
+- 原历史编号：9.0B
 - 新增 RotationComponent / ScaleComponent（Engine 层实体组件）
 - TransformComponentDocument 增加 RotationDegrees / Scale（可空，兼容旧文件）
 - WorldState 支持旋转/缩放存储与查询
@@ -1812,7 +2062,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 670/671 (1 pre-existing)
 - commits: `80230a2` `222f49a` `2043f4e` `39dc201`
 
-## [9.0A] — World 保存 / 加载 (2026-06-24)
+## v0.1.8.1-rz — World 保存 / 加载 (2026-06-24)
+- 原历史编号：9.0A
 - 新增 WorldDocument / WorldEntityDocument / TransformComponentDocument / WorldVector3Document / WorldMetadataDocument 文档模型
 - 新增 WorldDocumentReader / WorldDocumentWriter 支持 .world.json 读写
 - 新增 WorldDocumentValidator（SchemaVersion / WorldId / EntityId / Transform Position 校验）
@@ -1834,7 +2085,8 @@ RZ-VK3-A-R1 收口依赖。
 - 架构门禁：14/14
 - commit `fbf509b`
 
-## [8.8-RZ-Fix1] — Editor 启动 AccessViolation 修复 (2026-06-24 11:45)
+## v0.1.7.1-fix — Editor 启动 AccessViolation 修复 (2026-06-24 11:45)
+- 原历史编号：8.8-RZ-Fix1
 - **根因**：`EditorShellComposition.Build()` 中初始化顺序错误 — `ProjectBootstrapRoute` 在第 41 行创建时引用了 `ctx.HierarchyRoute`，但 `HierarchyRoute` 直到第 45 行才赋值，导致 `hierarchyRoute` 为 null
 - **现象**：Editor 启动崩溃，退出码 -1073741819（0xC0000005），实际为 NullReferenceException
 - **修复**：将 `ctx.HierarchyRoute = new(...)` 移到 `ctx.ProjectBootstrapRoute = new(...)` 之前
@@ -1846,14 +2098,16 @@ RZ-VK3-A-R1 收口依赖。
 - 附带修复：run.bat CRLF 行尾（Windows 批处理兼容性）
 - commit `359e3ce`
 
-## [8.8-RZ-Fix1d] — 应用图标入库 (2026-06-24 12:30)
+## v0.1.7.4-rz — 应用图标入库 (2026-06-24 12:30)
+- 原历史编号：8.8-RZ-Fix1d
 - 将仓库根目录 `LOGO.png`（1254×1254）复制到 `Assets/Icons/logo.png` 作为应用图标
 - `.csproj` 注册 `logo.png` 为 `AvaloniaResource`（同时补注新的 ViewportNavigation SVGs）
 - `MainWindow.axaml` 设置 `Icon="/Assets/Icons/logo.png"`，标题栏显示玄域引擎 LOGO
 - `file-tree.md` 同步记录
 - build: 0 Error / 0 Warning ✅ / test: 638/639（1 flaky pre-existing）
 
-## [8.8-RZ-Fix1c] — 视口导航按钮 SVG 图标资源入库 (2026-06-24 12:16)
+## v0.1.7.3-rz — 视口导航按钮 SVG 图标资源入库 (2026-06-24 12:16)
+- 原历史编号：8.8-RZ-Fix1c
 - 新增 4 个 SVG 图标资源到 `Assets/Icons/ViewportNavigation/`：
   - `nav_pan.svg` — 四向箭头，表示平移视图
   - `nav_frame.svg` — 取景框角 + 中心点，表示聚焦/查看全部
@@ -1864,7 +2118,8 @@ RZ-VK3-A-R1 收口依赖。
 - 路线规划：短期为资源预案，后续接 Avalonia Overlay 或 Vulkan 贴图渲染路径
 - build: 0 Error / 0 Warning ✅ / test: 638/639（1 flaky pre-existing）/ 架构门禁 14/14
 
-## [8.8-RZ-Fix1b] — Warning 全清理 (2026-06-24 12:05)
+## v0.1.7.2-fix — Warning 全清理 (2026-06-24 12:05)
+- 原历史编号：8.8-RZ-Fix1b
 - **7 个 Warning 逐项处理**：
   - `VulkanScene3dFrameHandles.cs` — 去重 `using Silk.NET.Vulkan`
   - `VulkanScene3dSwapchainCreateResult.cs` — `Message` 改为 `string?`
@@ -1879,7 +2134,8 @@ RZ-VK3-A-R1 收口依赖。
 - **验收**：build 0 Error / 0 Warning ✅ / 架构门禁 14/14 ✅
 - commit `e3f644f`
 
-## [8.8-R4] — 用户数据目录迁移 (2026-06-24 10:08)
+## v0.1.6.11-rz — 用户数据目录迁移 (2026-06-24 10:08)
+- 原历史编号：8.8-R4
 - 编辑器设置目录从 `%APPDATA%/FluidWarfare/` 迁移到 `%APPDATA%/XuanYuEngine/`
 - 新增 `EditorSettingsPathMigration.cs`：旧→新目录迁移逻辑（幂等、不覆盖、不崩溃）
 - `EditorSettingsPath.cs`：新增 `CurrentAppFolder = "XuanYuEngine"` / `LegacyAppFolder = "FluidWarfare"`
@@ -1892,7 +2148,8 @@ RZ-VK3-A-R1 收口依赖。
 - 架构门禁：10/10
 - commit `644aff7`
 
-## [8.8-R3-Z] — namespace 迁移全仓收口 (2026-06-24 09:54)
+## v0.1.6.10-rz — namespace 迁移全仓收口 (2026-06-24 09:54)
+- 原历史编号：8.8-R3-Z
 - 全仓 namespace FluidWarfare.* 清零确认 ✅
 - AboutFluidWarfareWindow → AboutXuanYuEngineWindow（类名 + 文件名 + x:Class + 全部引用）
 - 清理 14 处非 namespace 的 FluidWarfare 字符串（Vulkan 窗口标题 / Win32 类名 / 日志 / 测试路径等）
@@ -1902,14 +2159,16 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 629/630 (1 flaky)
 - commit `710dd88`
 
-## [8.8-R3-4] — Tests namespace 迁移 (2026-06-24 09:48)
+## v0.1.6.9-rz — Tests namespace 迁移 (2026-06-24 09:48)
+- 原历史编号：8.8-R3-4
 - 迁移 namespace `FluidWarfare.Tests.*` → `XuanYu.Engine.Tests.*`（73 文件）
 - 全仓 namespace `FluidWarfare.*` 清零 ✅
 - 剩余：EditorSettingsPath（R4）/ AboutFluidWarfareWindow（R3-Z）/ 历史记录
 - build: 0 Error / test: 629/630
 - commit `5c8966b`
 
-## [8.8-R3-3BC] — Editor.Windows 全仓 namespace + x:Class 成对迁移 (2026-06-24 09:42)
+## v0.1.6.8-rz — Editor.Windows 全仓 namespace + x:Class 成对迁移 (2026-06-24 09:42)
+- 原历史编号：8.8-R3-3BC
 - 合并 R3-3B + R3-3C 为原子提交（partial class 必须同 namespace）
 - 244 纯 C# + 16 .axaml.cs + 16 .axaml x:Class + 7 clr-namespace
 - GlobalUsings.cs: 43 条 Editor.Windows 全局 using（100 行门禁）
@@ -1917,7 +2176,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 629/630
 - commit `775ba48`
 
-## [8.8-R3-2] — Render 层 namespace 迁移 (2026-06-24 09:10)
+## v0.1.6.7-rz — Render 层 namespace 迁移 (2026-06-24 09:10)
+- 原历史编号：8.8-R3-2
 - 迁移 Render/Render.Vulkan namespace：`FluidWarfare.Render.*` → `XuanYu.Engine.Render.*`
 - Render：47 文件 namespace + 147 文件跨项目 using；Render.Vulkan：154 文件 namespace
 - 修复 1 处完全限定类型引用；相机白名单文件 namespace 正确迁移
@@ -1926,7 +2186,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 629/630 (1 flaky)
 - commit `aa94a43`
 
-## [8.8-R3-1] — 底层模块 namespace 迁移 (2026-06-24)
+## v0.1.6.6-rz — 底层模块 namespace 迁移 (2026-06-24)
+- 原历史编号：8.8-R3-1
 - 迁移 Core/Engine/Project/Bridge namespace：`FluidWarfare.*` → `XuanYu.Engine.*`
 - 模块内 namespace 声明：36 文件；全仓 using 引用：209 文件；总计 185 文件改动
 - 命名映射：`FluidWarfare.Core→XuanYu.Engine.Core`, `FluidWarfare.Engine→XuanYu.Engine`（注意无 `.Engine` 后缀）, `FluidWarfare.Project→XuanYu.Engine.Project`, `FluidWarfare.Bridge.ProjectEngine→XuanYu.Engine.Bridge.ProjectEngine`
@@ -1935,21 +2196,24 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 629/630 (1 flaky)
 - commit `6a90c9e`
 
-## [8.8-R2C] — docs audit 文件清理 (2026-06-24)
+## v0.1.6.5-rz — docs audit 文件清理 (2026-06-24)
+- 原历史编号：8.8-R2C
 - 删除 14 个临时 audit-* / whitelist-* / renderer-* 文件
 - 旧 `docs/CHANGELOG.md`（179KB，表格密集）→ `changelog.md`（简洁格式，倒序）
 - `file-tree.md` 中 31KB 的"未发布变更日志"区 → 指向 `changelog.md` 的引用
 - build: 0 Error / test: 629/630 (1 flaky)
 - commit `68ffde8`
 
-## [8.8-R2B] — 旧占位目录清理 (2026-06-24)
+## v0.1.6.4-rz — 旧占位目录清理 (2026-06-24)
+- 原历史编号：8.8-R2B
 - 删除 9 个仅含 `.gitkeep` 的空占位目录：`FluidWarfare.AI` / `Combat` / `Data` / `Ecs` / `Exporter` / `Runtime.Android` / `Runtime.Windows` / `Simulation` / `World`
 - 删除审计确认：9 个文件全部为 `.gitkeep`，无误伤
 - 未来需要时按命名规范重新声明（`XuanYu.Engine.*` / `XuanYu.SunWu.*` / `XuanYu.Tools.*`）
 - build: 0 Error / test: 629/630 (1 flaky)
 - commit `5bdda34`
 
-## [8.8-R2] — 工程外壳迁移 (2026-06-24)
+## v0.1.6.3-rz — 工程外壳迁移 (2026-06-24)
+- 原历史编号：8.8-R2
 - `.sln` / 9 项目目录 / `.csproj` / `ProjectReference` 全部迁至 `XuanYu.Engine.*`
 - 映射：`FluidWarfare.Core→XuanYu.Engine.Core`, `FluidWarfare.Engine→XuanYu.Engine`（无后缀）, `FluidWarfare.Editor.Windows→XuanYu.Engine.Editor.Windows`, 等
 - 同步更新：`InternalsVisibleTo` / `app.manifest` / 测试路径常量 / PowerShell 脚本 / `.gitkeep`
@@ -1957,7 +2221,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 629/630 (1 flaky)
 - commit `6ad57bd`
 
-## [8.8-R0/R1] — 品牌换名：玄域引擎 (2026-06-24)
+## v0.1.6.2-rz — 品牌换名：玄域引擎 (2026-06-24)
+- 原历史编号：8.8-R0/R1
 - 正式技术品牌从 FluidWarfare 迁移为"玄域引擎 / XuanYu Engine"
 - 窗口标题：`FluidWarfare Editor` → `XuanYu Engine Editor`
 - About 窗口：品牌名 / 版权 → XuanYu Engine / 玄域引擎贡献者
@@ -1969,7 +2234,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 629/630 (1 flaky)
 - commit `71d6187`
 
-## [8.8-0] — 架构防回潮门禁 (2026-06-24)
+## v0.1.6.1-rz — 架构防回潮门禁 (2026-06-24)
+- 原历史编号：8.8-0
 - `CodeFileBudgetTests.cs` 新增 5 个门禁测试：
   - `ProductionWhitelist_OnlyApproved` — 生产白名单精确锁死为 2 个相机文件
   - `GlobalUsings_Max100Lines` — `GlobalUsings.cs` ≤ 100 行
@@ -1979,7 +2245,8 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 629/630 (1 flaky)
 - commit `4c4d82c`
 
-## [8.7.8-Z2] — EditorShell 组合根彻底薄化 (2026-06-23)
+## v0.1.5.21-rz — EditorShell 组合根彻底薄化 (2026-06-23)
+- 原历史编号：8.7.8-Z2
 - `EditorShell.axaml.cs`：3,041→28 行，**从白名单移除**
 - 95 个 using 移入 `GlobalUsings.cs`
 - 新建 Composition 架构：
@@ -1992,21 +2259,24 @@ RZ-VK3-A-R1 收口依赖。
 - build: 0 Error / test: 624/625 (1 flaky)
 - commit `913b66b`
 
-## [8.7.8H-5] — EditorShell 收口审计 (2026-06-23)
+## v0.1.5.20-rz — EditorShell 收口审计 (2026-06-23)
+- 原历史编号：8.7.8H-5
 - EditorShell 从 3,041 行压到 491 行（含 using，body ~396 行），累计削减 2,550 行
 - 决策：Transform 管线暂缓（收益 ~30 行，风险影响全链路）
 - 决策：EditorShell 白名单保留（组合根例外）
 - 后续策略：只出不进，新增职责必须进 Route / 子模块
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8H-4B] — EditorShell P2 中等风险清理 (2026-06-23)
+## v0.1.5.19-rz — EditorShell P2 中等风险清理 (2026-06-23)
+- 原历史编号：8.7.8H-4B
 - 提取日志委托 → `Shell/Diagnostics/Log/EditorShellLogRoute.cs` (18 行)
 - 提取视口焦点 → `Shell/Viewport/EditorShellViewportFocusRoute.cs` (41 行)
 - 提取 Scene3D 命令 → `Shell/Scene3D/EditorShellScene3dCommandRoute.cs` (19 行)
 - EditorShell: 496→491 行
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8H-4A] — EditorShell P1 低风险清理 (2026-06-23)
+## v0.1.5.18-rz — EditorShell P1 低风险清理 (2026-06-23)
+- 原历史编号：8.7.8H-4A
 - 提取 Raw 输入处理 → `Shell/Input/Raw/EditorShellRawInputRoute.cs` (26 行)
 - 提取视口帧命令 → `Shell/Viewport/EditorShellViewportFrameRoute.cs` (43 行)
 - 提取视口尺寸工具 → `Shell/Viewport/EditorShellViewportSizeGuard.cs` (24 行)
@@ -2014,46 +2284,54 @@ RZ-VK3-A-R1 收口依赖。
 - EditorShell: 656→496 行（含 using，body ~403 行）
 - build: 0 Error / test: 624/625 (1 flaky，白名单不删)
 
-## [8.7.8H-2G] — EditorShell 第七刀：项目加载 + World Bootstrap (2026-06-23)
+## v0.1.5.17-rz — EditorShell 第七刀：项目加载 + World Bootstrap (2026-06-23)
+- 原历史编号：8.7.8H-2G
 - 提取项目加载残留 → `Shell/Project/EditorShellProjectBootstrapRoute.cs` (46 行)
 - EditorShell: 576→567 行
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8H-2F] — EditorShell 第六刀：Startup Vulkan Probe (2026-06-23)
+## v0.1.5.16-rz — EditorShell 第六刀：Startup Vulkan Probe (2026-06-23)
+- 原历史编号：8.7.8H-2F
 - 提取 Startup Vulkan Probe → `Shell/Startup/EditorShellStartupVulkanProbeRoute.cs` (46 行)
 - EditorShell: 589→576 行
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8H-2E] — EditorShell 第五刀：层级树 + 选择同步 (2026-06-23)
+## v0.1.5.15-rz — EditorShell 第五刀：层级树 + 选择同步 (2026-06-23)
+- 原历史编号：8.7.8H-2E
 - 提取层级树 → `Shell/Hierarchy/EditorShellHierarchyRoute.cs` (37 行)
 - 提取选择同步 → `Shell/Selection/EditorShellSelectionSyncRoute.cs` (51 行)
 - EditorShell: 622→589 行
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8H-2D] — EditorShell 第四刀：窗口菜单命令 (2026-06-23)
+## v0.1.5.14-rz — EditorShell 第四刀：窗口菜单命令 (2026-06-23)
+- 原历史编号：8.7.8H-2D
 - 提取窗口命令 → `Shell/Commands/EditorShellWindowCommandsRoute.cs` (24 行)
 - EditorShell: 629→622 行
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8H-2C] — EditorShell 第三刀：Viewport 生命周期 + Vulkan Redraw (2026-06-23)
+## v0.1.5.13-rz — EditorShell 第三刀：Viewport 生命周期 + Vulkan Redraw (2026-06-23)
+- 原历史编号：8.7.8H-2C
 - 提取 Viewport 重绘 → `Shell/Viewport/EditorShellViewportRedrawRoute.cs` (83 行)
 - EditorShell: 665→629 行
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8H-2B] — EditorShell 第二刀：Transform 编辑 + Scrub (2026-06-23)
+## v0.1.5.12-rz — EditorShell 第二刀：Transform 编辑 + Scrub (2026-06-23)
+- 原历史编号：8.7.8H-2B
 - 提取 Transform 路由 → `Shell/Transform/EditorShellTransformRoute.cs` (62 行)
 - 提取 Scrub → `Shell/Transform/EditorShellScrubRoute.cs` (24 行)
 - EditorShell: 725→665 行
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8H-2A] — EditorShell 第一刀：Overlay 导航 + 地面指针 + Picking (2026-06-23)
+## v0.1.5.11-rz — EditorShell 第一刀：Overlay 导航 + 地面指针 + Picking (2026-06-23)
+- 原历史编号：8.7.8H-2A
 - 提取 Overlay 导航 → `Shell/Navigation/EditorShellOverlayNavigationRoute.cs` (78 行)
 - 提取地面指针 → `Shell/Picking/EditorShellGroundPointerRoute.cs` (63 行)
 - 提取 Picking → `Shell/Input/Picking/EditorPickInputRoute.cs` (79 行)
 - EditorShell: 969→725 行
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8G-2] — EditorPreferencesWindow SRP 拆分 (2026-06-23)
+## v0.1.5.10-rz — EditorPreferencesWindow SRP 拆分 (2026-06-23)
+- 原历史编号：8.7.8G-2
 - `EditorPreferencesWindow.axaml.cs`：587→78 行
 - 提取 Capture 逻辑 → `EditorPreferencesCapture.cs` (77 行)
 - 提取 BindingList 管理 → `EditorPreferencesBindingList.cs` (81 行)
@@ -2061,14 +2339,16 @@ RZ-VK3-A-R1 收口依赖。
 - 提取 Helpers → `EditorPreferencesHelpers.cs` (30 行)
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8F-2] — VulkanRenderContext SRP 拆分 (2026-06-23)
+## v0.1.5.9-rz — VulkanRenderContext SRP 拆分 (2026-06-23)
+- 原历史编号：8.7.8F-2
 - `VulkanRenderContext.cs`：476→92 行
 - 提取 Context Setup → `Context/VulkanRenderContextSetup.cs` (78 行)
 - 提取 Device Selector → `Context/VulkanRenderContextSelector.cs` (32 行)
 - 死代码锁定 Legacy
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8E-2B] — VulkanClearProbe SRP 拆分 (2026-06-23)
+## v0.1.5.8-rz — VulkanClearProbe SRP 拆分 (2026-06-23)
+- 原历史编号：8.7.8E-2B
 - `VulkanClearProbe.cs`：416→99 行
 - 提取 ContextScope → `Clear/Probe/VulkanClearProbeContextScope.cs` (96 行)
 - 提取 DeviceSelector → `Clear/Probe/VulkanClearProbeDeviceSelector.cs` (42 行)
@@ -2077,47 +2357,55 @@ RZ-VK3-A-R1 收口依赖。
 - 提取 RenderSubmitScope → `Clear/Probe/Render/VulkanClearProbeRenderSubmitScope.cs` (54 行)
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8E-2A] — Clear 目录容量整理 (2026-06-23)
+## v0.1.5.7-rz — Clear 目录容量整理 (2026-06-23)
+- 原历史编号：8.7.8E-2A
 - `Clear/Probe/` 目录 9→6 文件（容量达标）
 - build: 0 Error / test: 624/625
 
-## [8.7.8D-2B] — VulkanSwapchainProbe SRP 拆分 (2026-06-23)
+## v0.1.5.6-rz — VulkanSwapchainProbe SRP 拆分 (2026-06-23)
+- 原历史编号：8.7.8D-2B
 - `VulkanSwapchainProbe.cs`：301→78 行
 - 提取 ContextScope → `Swapchain/Probe/VulkanSwapchainProbeContextScope.cs` (100 行)
 - 提取 DeviceSelector → `Swapchain/Probe/VulkanSwapchainProbeDeviceSelector.cs` (46 行)
 - 提取 SurfaceQuery → `Swapchain/Probe/VulkanSwapchainProbeSurfaceQuery.cs` (64 行)
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8D-2A] — Swapchain 目录容量整理 (2026-06-23)
+## v0.1.5.5-rz — Swapchain 目录容量整理 (2026-06-23)
+- 原历史编号：8.7.8D-2A
 - `Swapchain/` 子目录重建：Probe/ / Context/ / Image/ / Sync/
 - 文件迁移确保 ≤5/目录
 - build: 0 Error / test: 624/625
 
-## [8.7.8C-2] — GameProjectLoader SRP 拆分 (2026-06-23)
+## v0.1.5.4-rz — GameProjectLoader SRP 拆分 (2026-06-23)
+- 原历史编号：8.7.8C-2
 - `GameProjectLoader.cs`：392→82 行
 - 提取 ManifestReader → `Loading/GameProjectManifestReader.cs` (89 行)
 - 提取 FolderParser → `Loading/GameProjectFolderParser.cs` (100 行)
 - 提取 ExtensionParser → `Loading/GameProjectExtensionParser.cs` (52 行)
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8B-4] — VulkanDeviceProbe SRP 拆分 (2026-06-23)
+## v0.1.5.3-rz — VulkanDeviceProbe SRP 拆分 (2026-06-23)
+- 原历史编号：8.7.8B-4
 - `VulkanDeviceProbe.cs`：288→77 行
 - 提取 InstanceScope → `Device/VulkanDeviceInstanceScope.cs` (61 行)
 - 提取 Selector → `Device/VulkanDeviceSelector.cs` (80 行)
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8B-2] — VulkanSurfaceProbe SRP 拆分 (2026-06-23)
+## v0.1.5.2-rz — VulkanSurfaceProbe SRP 拆分 (2026-06-23)
+- 原历史编号：8.7.8B-2
 - `VulkanSurfaceProbe.cs`：203→66 行
 - 提取 InstanceScope → `Surface/VulkanSurfaceInstanceScope.cs` (98 行)
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.8A-2] — WindowsViewportInputTranslator SRP 拆分 (2026-06-23)
+## v0.1.5.1-rz — WindowsViewportInputTranslator SRP 拆分 (2026-06-23)
+- 原历史编号：8.7.8A-2
 - `WindowsViewportInputTranslator.cs`：284→54 行
 - 拆为：`WindowsViewportModifierState.cs` (37) / `WindowsViewportRawInputTranslate.cs` (76) / `WindowsViewportGestureMatch.cs` (28)
 - 白名单：1 项删除
 - build: 0 Error / test: 624/625 (1 flaky)
 
-## [8.7.7F] — 全仓白名单债务审计与 8.7.8 路线图 (2026-06-23)
+## v0.1.4.11-rz — 全仓白名单债务审计与 8.7.8 路线图 (2026-06-23)
+- 原历史编号：8.7.7F
 - F-1：全仓盘点，49 项行白名单 + 8 项目录白名单
 - F-2：3 项立即可清（InspectorPanel 84 行 / NativeHost 87 行 / SceneCameraPose 99 行）
 - F-3：9 文件压缩 + 4 目录子目录化，13 项白名单删除
@@ -2130,7 +2418,8 @@ RZ-VK3-A-R1 收口依赖。
 - F-6：最终收口 — VulkanViewportHostPanel 158→43 / EditorInputBindingSnapshot 175→38；SceneNavigationCameraMotion(173) 与 SceneOrbitCameraMotion(202) 因相机算法放弃
 - build: 0 Error / test: 625/625
 
-## [8.7.7E] — 全仓白名单深度清理 (2026-06-22)
+## v0.1.4.10-rz — 全仓白名单深度清理 (2026-06-22)
+- 原历史编号：8.7.7E
 - E-1：VulkanScene3dRenderer SRP — 主文件 261→41 行，5 子模块全部 ≤100
 - E-2A：Scene3D Session SRP — Session 主文件 371→46，CreateInstance/FrameFlow/Handles/FrameAcquire/Lifecycle
 - E-2B：Swapchain SRP — 去重合并后 6 文件，全 ≤100
@@ -2139,32 +2428,37 @@ RZ-VK3-A-R1 收口依赖。
 - 最终 9 文件白名单删除，ViewportNavigation 目录白名单清理
 - build: 0 Error / test: 625/625
 
-## [8.7.7D] — 目录子目录化 + 文件重组 (2026-06-22)
+## v0.1.4.9-rz — 目录子目录化 + 文件重组 (2026-06-22)
+- 原历史编号：8.7.7D
 - D-1：Shell/Scene3D/ 11→5 文件（Scene3dFrameState/Scene3dDrawListBuilder/Scene3dPresentedState 迁入子目录）
 - D-2：Viewport/Picking/ 重构 + Viewport/Transform/ 子目录重组
 - build: 0 Error / test: 625/625
 
-## [8.7.7C] — NativeHost / ViewportPlaceholder / DebugDock SRP (2026-06-22)
+## v0.1.4.8-rz — NativeHost / ViewportPlaceholder / DebugDock SRP (2026-06-22)
+- 原历史编号：8.7.7C
 - C-1：NativeHost.axaml.cs 158→43 行（HWND 生命周期提取 / HostInfo 提取 / Input 提取）
 - C-2：ViewportPlaceholderPanel.axaml.cs 189→46 行
 - C-3：DebugDockPanel.axaml.cs 145→53 行
 - 白名单 -3
 - build: 0 Error / test: 625/625
 
-## [8.7.7B] — Project / World Tree Panels SRP (2026-06-22)
+## v0.1.4.7-rz — Project / World Tree Panels SRP (2026-06-22)
+- 原历史编号：8.7.7B
 - `ProjectContentTreePanel.axaml.cs`：128→63 行
 - `WorldHierarchyTreePanel.axaml.cs`：229→95 行
 - 新建 WorldHierarchyTreeItems.cs(14) / TreeExpansion.cs(43) / TreeSelection.cs(87)
 - 白名单 -2
 - build: 0 Error / test: 625/625
 
-## [8.7.7A] — InspectorPanel SRP 拆分 (2026-06-22)
+## v0.1.4.6-rz — InspectorPanel SRP 拆分 (2026-06-22)
+- 原历史编号：8.7.7A
 - `InspectorPanel.axaml.cs`：145→53 行
 - 提取 TransformHeader.cs(31) / EntityIdRow.cs(26) / GroupSeparator.cs(16)
 - 白名单 -1
 - build: 0 Error / test: 625/625
 
-## [8.7.6] — EditorShell Route 化重构 Phase 3：Composition (2026-06-21 ~ 22)
+## v0.1.4.5-rz — EditorShell Route 化重构 Phase 3：Composition (2026-06-21 ~ 22)
+- 原历史编号：8.7.6
 - 8.7.6.8C — Startup Bootstrap / Lifecycle / Vulkan Probe Route 化
 - 8.7.6.8D-1 — Input Pipeline / Raw Viewport Events 提取
 - 8.7.6.8D-2 — Transform / SceneTool Input Bridge
@@ -2177,7 +2471,8 @@ RZ-VK3-A-R1 收口依赖。
 - 8.7.6.8E-3R/4 — Composition Cleanup + Final Stabilization（EditorShell 3,041→2,157 行）
 - build: 0 Error / test: 625/625
 
-## [8.7.5] — EditorShell Route 化 Phase 2：Selection & Gizmo (2026-06-20 ~ 21)
+## v0.1.4.4-rz — EditorShell Route 化 Phase 2：Selection & Gizmo (2026-06-20 ~ 21)
+- 原历史编号：8.7.5
 - 8.7.5.1-3 — Scene3D Frame Route 提取（FrameRoute/FrameState/DrawListBuilder/PresentedState）
 - 8.7.5.4 — Viewport Pointer Pick Route
 - 8.7.5.5A-C — Transform Interaction（State/Result/PointerRoute/KeyboardRoute/StartRequest）
@@ -2191,77 +2486,91 @@ RZ-VK3-A-R1 收口依赖。
 - 8.7.5.8B — World Bootstrap Route (EntitySeed/RenderSeed/Input/Result)
 - EditorShell 3,041→1,200+ 行（Route 化 Phase 1 后继续拆解）
 
-## [8.7.4] — Scene3D 渲染与选择系统独立 (2026-06-18 ~ 20)
+## v0.1.3.9-vk — Scene3D 渲染与选择系统独立 (2026-06-18 ~ 20)
+- 原历史编号：8.7.4
 - Scene3D 渲染模块独立化（Scene3dFrameRun/Scene3dSessionLifecycle 等）
 - 选择系统 Route 化（EditorSelectionRoute/State/Request/Result/Reason）
 - 选择呈现（ViewportSelectionPresenter/WorldEntitySelectionPresenter）
 - Picking 管线独立（ViewportPointerPickRoute）
 - 多对象绘制与 Depth Buffer
 
-## [8.7.3] — Vulkan 管线稳定化与 Swapchain 重构 (2026-06-17 ~ 18)
+## v0.1.3.8-vk — Vulkan 管线稳定化与 Swapchain 重构 (2026-06-17 ~ 18)
+- 原历史编号：8.7.3
 - Swapchain API 结果加固与生命周期规则收口
 - Vulkan Clear 与 Swapchain Probe 重构
 - Surface/Device/Instance 创建链路稳定化
 
-## [8.7.2] — Transform 编辑基础 (2026-06-16 ~ 17)
+## v0.1.4.3-rz — Transform 编辑基础 (2026-06-16 ~ 17)
+- 原历史编号：8.7.2
 - 单实体 Transform 编辑与地面放置
 - 3D 地面拾取、世界坐标反馈与落点标记
 - Gizmo 基础呈现（MoveGizmo）
 
-## [8.7.1] — 视口与输入系统 (2026-06-15 ~ 16)
+## v0.1.4.2-rz — 视口与输入系统 (2026-06-15 ~ 16)
+- 原历史编号：8.7.1
 - 默认 3D 主视口、俯视矩阵修复
 - Windows 原生视口子窗口宿主完善
 - 输入管线路由化（RawInput→Transform→SceneTool）
 
-## [8.7.0] — Shell Route 化 Phase 1 (2026-06-14 ~ 15)
+## v0.1.4.1-rz — Shell Route 化 Phase 1 (2026-06-14 ~ 15)
+- 原历史编号：8.7.0
 - EditorShell 从 ~3,041 行开始 Route 化重构
 - 第一批 Route 提取：Startup、Lifecycle、Log、PanelSwitch
 - Route 装配与组合根（EditorShellComposition）
 
-## [8.6] — 3D 地面拾取与 World Hierarchy (2026-06-12 ~ 14)
+## v0.1.3.7-vk — 3D 地面拾取与 World Hierarchy (2026-06-12 ~ 14)
+- 原历史编号：8.6
 - 3D 地面拾取、世界坐标反馈与落点标记
 - World Hierarchy 节点树与编辑器选择收口
 - SVG 经典资源管理器式双树菜单
 - 左侧双树页签、项目文件树与中文界面收口
 
-## [8.5] — World Hierarchy 与选择系统 (2026-06-11 ~ 12)
+## v0.1.3.6-vk — World Hierarchy 与选择系统 (2026-06-11 ~ 12)
+- 原历史编号：8.5
 - World Hierarchy 节点树（WorldHierarchyNode/TreeBuilder/Search）
 - 编辑器选择 Route 化
 - 项目内容树面板拆分
 
-## [8.4] — 3D Picking 与单位选择 (2026-06-10 ~ 11)
+## v0.1.3.5-vk — 3D Picking 与单位选择 (2026-06-10 ~ 11)
+- 原历史编号：8.4
 - 3D Picking 管线（ScenePointerPicker/SceneRayGroundIntersection）
 - 单位选择与高亮
 - Picking 与选择 Route 化
 
-## [8.3] — 持久 Scene3D 渲染会话与 RTS 相机 (2026-06-09 ~ 10)
+## v0.1.3.4-vk — 持久 Scene3D 渲染会话与 RTS 相机 (2026-06-09 ~ 10)
+- 原历史编号：8.3
 - 持久 Scene3D 渲染会话（Session/Surface/Swapchain/Lifecycle）
 - RTS 相机基础控制（ViewportNavigation）
 - Overlay 渲染
 
-## [8.2] — 多对象 3D 绘制与 Depth Buffer (2026-06-08 ~ 09)
+## v0.1.3.3-vk — 多对象 3D 绘制与 Depth Buffer (2026-06-08 ~ 09)
+- 原历史编号：8.2
 - 多对象 3D 绘制（顶点缓冲/索引缓冲）
 - 基础 Depth Buffer
 - Ground Cursor 绘制
 
-## [8.1] — Vulkan 3D 基础管线 (2026-06-06 ~ 08)
+## v0.1.3.2-vk — Vulkan 3D 基础管线 (2026-06-06 ~ 08)
+- 原历史编号：8.1
 - Vulkan 3D 基础管线（ShaderModules/PipelineLayout/Pipelines/CommandRecorder）
 - Scene3D 隔离（手动触发，不与 Editor 自动绑定）
 - SPIR-V 手写编码废弃 → 标准 glslangValidator 工具链
 - Validation Layer 开关接入
 - Scene3D Renderer SRP 拆分
 
-## [8.0] — RenderScene GPU 点位绘制 (2026-06-05 ~ 06)
+## v0.1.3.1-vk — RenderScene GPU 点位绘制 (2026-06-05 ~ 06)
+- 原历史编号：8.0
 - RenderScene 单对象 GPU 点位绘制
 - Vulkan 战场视口填充与重绘修复
 - 多对象点位绘制
 
-## [7.8] — Vulkan 最小可见渲染闭环 (2026-06-04 ~ 05)
+## v0.1.2.2-vk — Vulkan 最小可见渲染闭环 (2026-06-04 ~ 05)
+- 原历史编号：7.8
 - 最小可见渲染闭环（CreateInstance→CreateSurface→CreateDevice→CreateSwapchain→Render→Present→Cleanup）
 - Swapchain 扩展加载修复
 - 底部调试终端与主视口收束
 
-## [7.0~7.7] — Vulkan 基础集成 (2026-06-02 ~ 04)
+## v0.1.2.1-vk — Vulkan 基础集成 (2026-06-02 ~ 04)
+- 原历史编号：7.0~7.7
 - Vulkan 最小清屏（Clear Probe）
 - Vulkan Instance 最小创建与释放
 - Vulkan Device 最小选择与释放
@@ -2269,27 +2578,32 @@ RZ-VK3-A-R1 收口依赖。
 - Windows 原生视口子窗口宿主
 - Vulkan Surface 创建成功回归
 
-## [6.0~6.1] — RenderScene 抽象 (2026-06-01 ~ 02)
+## v0.1.1.5-rz — RenderScene 抽象 (2026-06-01 ~ 02)
+- 原历史编号：6.0~6.1
 - RenderScene 最小抽象
 - 视口 RenderScene 调试显示
 
-## [5.0~5.3] — World 实体与选择 (2026-05-31 ~ 06-01)
+## v0.1.1.4-rz — World 实体与选择 (2026-05-31 ~ 06-01)
+- 原历史编号：5.0~5.3
 - 最小 World 实体
 - 从项目内容生成占位实体
 - 最小 World 实体列表面板
 - World 实体选择与视口联动占位
 
-## [4.3~4.4] — 项目系统 (2026-05-30 ~ 31)
+## v0.1.1.3-rz — 项目系统 (2026-05-30 ~ 31)
+- 原历史编号：4.3~4.4
 - 项目内容文件入口声明与扩展名校验
 - 项目校验报告
 
-## [2.x~4.x] — 核心值对象与初始骨架 (2026-05-29 ~ 30)
+## v0.1.1.2-rz — 核心值对象与初始骨架 (2026-05-29 ~ 30)
+- 原历史编号：2.x~4.x
 - 解决方案骨架、项目宪章、架构说明、AI 开发规则、代码宪法、命名规则
 - `EntityId` / `TimeStep` / `SimulationTime` / `Vector3d` / `YawRotation` / `EngineError` / `EngineResult`
 - 初始项目内容文件入口声明
 - 中文化补丁：明确人类可读文本默认使用中文
 
-## [0.0.1-dev] — 初始创建 (2026-05-28)
+## v0.1.1.1-rz — 初始创建 (2026-05-28)
+- 原历史编号：0.0.1-dev
 - 创建初始解决方案骨架（`FluidWarfare.sln`）
 - 创建顶层模块目录和资源目录规划
 - 创建项目宪章、架构说明、AI 开发规则、代码宪法、命名规则、Phase 1 范围和旧仓库考古报告
