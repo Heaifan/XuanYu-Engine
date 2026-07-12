@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.14.5-rz
+ORG-1：项目真实基线审计（2026-07-12，审计文档）
+
+- 原历史编号：ORG-1
+- 日期：2026-07-12
+- 任务目标：建立可作为后续开发依据的项目基线——当前真实状态 / 已完成并真机验收的能力 / 仅有代码或计划未验收的能力 / 架构依赖与 Vulkan 生命周期是否符合宪法 / 代码·文档·仓库卫生债务。纯审计，不改代码、不重构、不删文件、不实装 VK5-E。
+- 主要改动：新增 `docs/project-baseline-audit-org-1.md`（16 节：Git 状态 / 构建测试 / 项目依赖 / 5+100 / Vulkan 生命周期 / 能力状态 / 真机证据 / 文档基线 / 三份治理文档规则矩阵 / 仓库卫生 / 风险分级 P0-P3 / ORG-2 建议）。
+- 影响范围：仅三份文档（changelog.md / file-tree.md / 新增审计文档）；零源码改动；不改 Git 历史/Commit/分支/Tag。
+- 验证结果（关键数字）：5 项目 `dotnet build` 全 **0 警告 0 错误 EXIT=0**；仓库**无测试项目**（0 自动化测试覆盖）；5+100 审计 **111 个手写 .cs/.axaml 全部 ≤100 行（0 超限）**；红线2（Abstractions 不依赖 Silk）成立；红线1（Editor.UI 不直接依赖 Vulkan）**当前违反=债务 A**（csproj 直接引用 Render.Vulkan + Silk.NET.Vulkan）；VulkanClearSession 死代码 4 文件确认真实（无外部引用）；关闭 RenderPass/Framebuffer 仅日志重复一行（非双重释放）；源码零 FluidWarfare 旧命名、tracked 文件零密钥。
+- Commit Hash：见本次提交。
+- 遗留问题：P1 两项（债务 A 收口 / `111.ps1` 危险脚本已入库待删）；P2 多项（零测试 / `qizheng-mvp-fixed` 未忽略 / 旧治理文档待裁决）；VK5-E 待实装。均仅报告不修复。
+
 ## v0.2.14.4-rz
 DOC-VERSION-1：历史版本号标准化（含本轮 R1 修正）
 
