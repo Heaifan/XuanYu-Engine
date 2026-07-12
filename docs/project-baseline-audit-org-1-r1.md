@@ -421,7 +421,7 @@ ORG-1 原 ORG-2 把"文档+删移+架构+测试+卫生"混成一轮，违反范�
 命令：git ls-files '*.cs' '*.axaml' | wc -l            # 文件总数
       git ls-files '*.cs' '*.axaml' | while IFS= read -r f; do wc -l "$f"; done | sort -n | tail -15
       git ls-files '*.cs' '*.axaml' | while IFS= read -r f; do n=$(wc -l < "$f"); [ "$n" -gt 100 ] && echo "OVER100: $f ($n)"; done
-排除目录：自动由 .gitignore 排除 bin/obj/.artifacts/codex_log；untracked 的 qizheng-mvp-fixed 不计入 tracked
+统计范围说明：本次统计只计算 tracked 文件。`git ls-files` 列出的是**已跟踪**文件——`bin/obj/.artifacts/codex_log` 等生成目录因从未被 tracked 而不在结果中，并非被 `.gitignore`「自动排除」；若一个文件已 tracked 后才加入 `.gitignore`，仍会被 `git ls-files` 返回（与 §7 同主题说明一致）。untracked 的 `qizheng-mvp-fixed` 不计入 tracked。
 退出码：0
 结果摘要：tracked 手写文件 = 111；最大 = 100（VulkanRenderSession.cs）；0 个文件 >100 行
 发现列表：压行问题见 §7（VulkanRenderSession.cs / VulkanPresentLoop.cs）

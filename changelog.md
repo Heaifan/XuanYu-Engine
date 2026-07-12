@@ -5,12 +5,12 @@ ORG-1-R1：项目基线审计修正版（2026-07-12，审计文档修正）
 
 - 原历史编号：ORG-1-R1
 - 日期：2026-07-12
-- 任务目标：退回修正 ORG-1 审计报告（f187174）的 11 项误判，使报告成为可信赖的"权威项目基线"。纯文档修正，不改代码。
+- 任务目标：退回修正 ORG-1 审计报告（f187174）的 11 项误判，使报告成为可信赖的"权威项目基线"（注：经 ORG-1-R2 二次审查仍退回，待最终收口轮通过验收后方可称权威基线）。纯文档修正，不改代码。
 - 主要改动：新增 `docs/project-baseline-audit-org-1-r1.md`（修正版，17 节含可复跑证据附录）；原 `docs/project-baseline-audit-org-1.md` 顶部加"已退回，见 R1" superseded 注。修正要点：① 分支范围——所有"无 .sln/无测试"限定为 `fix/RZ-VK3-A-surface-contract` 分支 `f187174` 快照（实测 `origin/main` 含 `XuanYu.Engine.sln` + `XuanYu.Engine.Tests/`）；② 5+100——物理行数通过（111 文件 0 超限，最大 100）但质量条件不通过（VulkanRenderSession.cs / VulkanPresentLoop.cs 压行），红线总判定不成立；③ 空 catch（VulkanPresentLoop.cs:96-97）列为 P1；④ Editor.UI→Vulkan 为活跃组合根违反（VulkanSurfaceBridgeProvider + UiVm.VulkanProbe + VulkanProbeRoute 共 3 活跃 .cs + csproj）；⑤ Vk 所有权表重写（VulkanNativeHostSurfaceBridge 唯一持有/释放，Session 无 `_vk`）；⑥ Vulkan 失败路径回滚+Present 线程 Stop 可靠性列为 P1；⑦ 能力表数字修正 A=10/B=1/D=1 + 新增"未规划/不在当前阶段"类；⑧ 基线双标注（被审计代码基线 9bc210e / 审计报告提交 f187174）；⑨ 新增可复跑证据附录（精确命令+退出码+结果）；⑩ 111.ps1 修正为"非强推"（普通 git push -u）；⑪ ORG-2 拆为 5 轮（ORG-1-R1 / SAFE-1 / VK-LIFE-1 / ARCH-A-PLAN / ORG-2）。
 - 影响范围：仅四份文档（changelog.md / file-tree.md / 新增 R1 审计文档 / 原审计文档加注）；零源码改动；不改 Git 历史/Commit/分支/Tag。
-- 验证结果：5 项目 `dotnet build` 全 0W0E EXIT=0（复跑确认）；git ls-files 统计 111 手写 .cs/.axaml 全 ≤100（0 超限）；origin/main 实测含 .sln 与 Tests；密钥/FluidWarfare 扫描干净；Editor.UI 活跃 Render.Vulkan 引用 3 处确认。
+- 验证结果：5 项目 `dotnet build` 全 0W0E EXIT=0（复跑确认）；git ls-files 统计 111 手写 .cs/.axaml 全 ≤100（0 超限）；origin/main 实测含 .sln 与 Tests；密钥扫描（`git grep` 全 tracked 文本、指定模式）命中 3 处均复核为误报（0 真实凭据），FluidWarfare 源码层 0 命中、全文本 15 处均旧文档（**指定范围与指定模式未命中真实泄漏，非全仓安全结论**）；Editor.UI 活跃 Render.Vulkan 引用 3 处确认。
 - Commit Hash：R1 主体 `e6f96b5` + R1 文字补正 `ef0ca11`。
-- 二次审查与 R2 补丁：经 ORG-1-R2 二次审查（2026-07-12），11 项核心纠错确认通过，但"权威基线"结论退回，要求 R2 小修：可复跑附录真实退出码（原误写 0）、四重 hash 身份拆分（9bc210e/f187174/e6f96b5/ef0ca11）、密钥扫描真实范围（`git grep` 全 tracked 文本，3 处命中均复核为误报，非"0 命中"）、Vulkan 生命周期补全（`_stop` 内存可见性 / Vulkan Result 未检查 / CreateSync 部分泄漏）、新增独立 ARCH-A-IMPL 并移除 ARCH-A-PLAN 的"可选 PoC"、能力计数注明"仅条目盘点非成熟度"、SAFE-1 必做收紧为 111.ps1 + qizheng。R2 提交 hash 记入最终收口报告，本轮不新增 changelog 版本号条目以避免重复填 hash 提交。
+- 二次审查与 R2 补丁：经 ORG-1-R2 二次审查（2026-07-12），11 项核心纠错确认通过，但"权威基线"结论退回，要求 R2 小修：可复跑附录真实退出码（原误写 0）、四重 hash 身份拆分（9bc210e/f187174/e6f96b5/ef0ca11）、密钥扫描真实范围（`git grep` 全 tracked 文本，3 处命中均复核为误报，非"0 命中"）、Vulkan 生命周期补全（`_stop` 内存可见性 / Vulkan Result 未检查 / CreateSync 部分泄漏）、新增独立 ARCH-A-IMPL 并移除 ARCH-A-PLAN 的"可选 PoC"、能力计数注明"仅条目盘点非成熟度"、SAFE-1 必做收紧为 111.ps1 + qizheng。R2 提交 hash 记入最终收口报告，本轮不新增 changelog 版本号条目以避免重复填 hash 提交；R2 收口补丁另修正 A1 行 424「git ls-files 被 .gitignore 自动排除」误述与本条验证结果「干净」措辞（改「指定范围与指定模式未命中真实泄漏，非全仓安全结论」）。
 - 遗留问题（修正后仍仅报告不修复，排入对应轮）：P1 四项（债务A 活跃收口 / 空 catch / Vulkan 失败路径回滚 / 111.ps1 删除）；P2 多项（本分支无测试 / qizheng-mvp-fixed / 旧治理文档 / codex_log）；VK5-E 待实装。
 
 ## v0.2.14.5-rz
