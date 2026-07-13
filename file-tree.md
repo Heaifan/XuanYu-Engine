@@ -1,5 +1,13 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-R3 UI Vulkan 直接依赖移除快照 (2026-07-13 22:38:14)
+在 R2 Resize / 代际一致性真机验收通过后，移除 `Editor.UI` 的旧 Vulkan / Silk 直接依赖与 fallback 链路，UI 只保留抽象渲染桥入口。
+- `XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`  # UI 类库项目；移除 `Silk.NET.Vulkan`、`Silk.NET.Vulkan.Extensions.KHR` 和 `XuanYu.Render.Vulkan` 引用，仅保留 Avalonia、Core、Render.Abstractions。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs`  # NativeHost 桥接创建入口；仅接受 `INativeHostSurfaceBridgeFactory` 应用注入，缺失注入时明确失败，不再 fallback 到 Vulkan 实现。
+- `XuanYu.Editor.UI/Bootstrap/App.axaml.cs`  # UI Application；不再运行旧 VulkanProbe，启动后只创建携带抽象 factory 的 `UiVm`。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml`  # 视口 UI 壳；fallback 文案改为后端中性表达，不承担后端探针职责。
+- 已删除 `XuanYu.Editor.UI/VulkanProbeRoute.cs`、`XuanYu.Editor.UI/Vm/UiVm.VulkanProbe.cs`、`XuanYu.Editor.UI/Viewport/Vulkan/VulkanSurfaceBridgeProvider.cs`、`XuanYu.Editor.UI/Viewport/Vulkan/VulkanClearSession*.cs`  # 历史探针、旧 fallback 与早期 ClearSession 死链；不再属于当前运行路径。
+
 ## ARCH-A-R2-R2 Swapchain 代际依赖修复快照 (2026-07-13 22:24:18)
 修复日志栏 Resize 后 Swapchain 实际换代但 Framebuffer / CommandBuffer 因同 extent 被错误跳过重建，最终触发 `QueueSubmit ErrorDeviceLost` 的生命周期缺陷。
 - `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs`  # Swapchain 持有者；新增资源代际 `ResourceGeneration`，仅在 Swapchain / ImageView 集合实际换代时推进，供上层判断依赖资源是否必须重建。

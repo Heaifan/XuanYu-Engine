@@ -11,8 +11,8 @@ public sealed partial class VulkanNativeHost
             LogBridgeFactorySource("应用注入（XuanYu.Editor.App）");
             return factory.Create(ReportVulkanMessage);
         }
-        LogBridgeFactorySource("旧兼容回退（VulkanSurfaceBridgeProvider）");
-        return VulkanSurfaceBridgeProvider.Create(ReportVulkanMessage);
+        LogBridgeFactorySource("缺少应用注入，已拒绝旧 fallback");
+        throw new InvalidOperationException("NativeHost Surface Bridge factory 未由应用组装层注入。");
     }
 
     void LogBridgeFactorySource(string source)
