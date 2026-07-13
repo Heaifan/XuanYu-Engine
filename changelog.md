@@ -9,7 +9,7 @@ ARCH-A-R3：移除 Editor.UI 对 Vulkan / Silk 的旧直接依赖与 fallback �
 - 主要改动：`XuanYu.Editor.UI.csproj` 移除 `Silk.NET.Vulkan`、`Silk.NET.Vulkan.Extensions.KHR` 和 `XuanYu.Render.Vulkan` 引用；`VulkanNativeHost.CreateBridge` 在缺少应用注入 factory 时明确拒绝旧 fallback；删除 `VulkanSurfaceBridgeProvider`、`VulkanProbeRoute`、`UiVm.VulkanProbe` 和 4 个旧 `VulkanClearSession.*` 文件；UI 启动不再运行 VulkanProbe；视口 fallback 文案改为后端中性表达。
 - 影响范围：仅 `XuanYu.Editor.UI` 依赖边界、旧死链删除与同步文档；不修改 `XuanYu.Editor.App` 组装根，不修改 `XuanYu.Render.Vulkan` 的 Resize / Swapchain / Present 主逻辑，不删除 R2 代际探针。
 - 验证结果：`Editor.UI` 内对 `XuanYu.Render.Vulkan` / `Silk.NET.Vulkan` / `VulkanSurfaceBridgeProvider` / `VulkanApiProbe` / `VulkanClearSession` 的扫描为 0 命中；5+100 扫描无 `.cs/.axaml/.js` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 在提升权限下 0 warning / 0 error；受控启动 `XuanYu.Editor.App` 10 秒显示桥接工厂来源为“应用注入（XuanYu.Editor.App）”，未触发旧 fallback，Instance / Surface / Swapchain / Present 正常启动。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `4bf4c67827c51c714d783950225e35ad66e01af8`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：受控启动使用 `Stop-Process` 结束，不构成手动关闭释放顺序验收；仍建议用户在真机手动关闭一次，确认 Present 停止、Pipeline / Framebuffer / Swapchain / Device / Surface / Instance 释放顺序完整。
 
 ## v0.2.15.5-fix
