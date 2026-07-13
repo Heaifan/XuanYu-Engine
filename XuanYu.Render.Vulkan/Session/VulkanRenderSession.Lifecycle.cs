@@ -1,4 +1,5 @@
 using XuanYu.Render.Vulkan.Render;
+using System.Threading;
 
 namespace XuanYu.Render.Vulkan.Session;
 
@@ -22,9 +23,8 @@ public sealed partial class VulkanRenderSession
 
     void MarkFailed(string reason)
     {
-        if (_failed) return;
-        _failed = true;
-        _failureReason = reason;
+        Volatile.Write(ref _failureReason, reason);
+        if (Interlocked.Exchange(ref _failed, 1) != 0) return;
         _log?.Invoke(VulkanClearFrameLogFormatter.PresentFatal(reason));
     }
 

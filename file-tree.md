@@ -1,5 +1,10 @@
 # 项目文件树 — XuanYu Engine
 
+## VK-LIFE-1-R2 Fatal 状态发布快照 (2026-07-13)
+收口 Present 后台线程 Fatal 状态跨线程发布契约。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs`  # `_failed` 改为 `int` 发布位，`IsFailed` / `FailureReason` 走 Volatile 读取。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs`  # `MarkFailed` 先发布失败原因，再 Interlocked 发布失败状态，并保证 Fatal 日志只输出一次。
+
 ## VK-LIFE-1-R1 竞态补正快照 (2026-07-13)
 补正 VK-LIFE-1 真机验收暴露的 Resize / Present 自愈竞态与状态传播问题。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`  # Resize 接管流程：等自愈锁、锁内复查尺寸、锁外停泵、仅实际重建时推进 generation。

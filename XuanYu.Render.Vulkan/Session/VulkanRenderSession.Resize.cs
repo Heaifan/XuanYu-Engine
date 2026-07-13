@@ -7,7 +7,7 @@ public sealed partial class VulkanRenderSession
 {
     public bool Resize(int width, int height)
     {
-        if (_disposed || _failed) return false;
+        if (_disposed || IsFailed) return false;
         lock (_rebuildLock)
         {
             if (IsSameSize(width, height))

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
@@ -23,7 +24,7 @@ public sealed partial class VulkanRenderSession : IDisposable
     uint _generation;
     int _recoverTries;
     bool _disposed;
-    bool _failed;
+    int _failed;
     bool _resizeStopping;
     string? _failureReason;
     const int MaxRecoverTries = 5;
@@ -77,7 +78,7 @@ public sealed partial class VulkanRenderSession : IDisposable
         }
     }
 
-    public bool IsFailed => _failed;
-    public string? FailureReason => _failureReason;
+    public bool IsFailed => Volatile.Read(ref _failed) != 0;
+    public string? FailureReason => Volatile.Read(ref _failureReason);
 
 }
