@@ -6,10 +6,10 @@ VK-LIFE-1-R2：Present Fatal 状态跨线程发布收口（2026-07-13，修复�
 - 原历史编号：VK-LIFE-1-R2
 - 日期：2026-07-13
 - 任务目标：在 VK-LIFE-1-R1 正常路径真机通过后，只补 Present Fatal 状态跨线程发布契约；不再修改 Resize、Swapchain、Framebuffer 正常路径。
-- 主要改动：`VulkanRenderSession` 将 `_failed` 改为 `int` 发布位；`MarkFailed` 先 `Volatile.Write` 失败原因，再 `Interlocked.Exchange` 发布失败状态，并保证 `PresentFatal` 日志只输出一次；`IsFailed` 与 `FailureReason` 使用 `Volatile.Read`。
+- 主要改动：`VulkanRenderSession` 将 `_failed` 改为 `int` 发布位；`MarkFailed` 通过 `Interlocked.CompareExchange` 原子抢占首个失败原因，成功后再 `Volatile.Write` 发布失败状态，并保证 `PresentFatal` 日志只输出一次；`IsFailed` 与 `FailureReason` 使用 `Volatile.Read`。
 - 影响范围：仅 `XuanYu.Render.Vulkan/Session` 失败状态发布相关代码及两份同步文档；不修改 `.axaml/.csproj`，不触碰已验收通过的 Resize 自愈路径。
-- 验证结果：5 个当前分支项目 `dotnet build --no-restore` 全部 0 warning / 0 error；5+100 全量检查无超 100 行文件；空 `catch` 扫描 0 命中；Fatal 状态扫描确认 `MarkFailed` 先写 `_failureReason`、再 `Interlocked.Exchange` 发布 `_failed`，读侧 `IsFailed` / `FailureReason` 走 `Volatile.Read`；`git diff --check` 通过。沿用 VK-LIFE-1-R1 真机日志作为正常 Resize / 自愈路径验收证据。
-- Commit Hash：待提交后补齐。
+- 验证结果：5 个当前分支项目按顺序 `dotnet build --no-restore` 全部 0 warning / 0 error；5+100 全量检查无超 100 行文件；空 `catch` 扫描 0 命中；Fatal 状态扫描确认 `MarkFailed` 使用 `Interlocked.CompareExchange` 抢占首个 `_failureReason`，成功后 `Volatile.Write` 发布 `_failed`，读侧 `IsFailed` / `FailureReason` 走 `Volatile.Read`；`git diff --check` 通过。沿用 VK-LIFE-1-R1 真机日志作为正常 Resize / 自愈路径验收证据。
+- Commit Hash：R2 主提交 `90128dd0f7aacd0f8ca0edfa07a10e5009fb90b5`；首因所有权补正提交以 Git 记录和交付报告为准。
 - 遗留问题：PresentFatal 人为失败路径仍需后续按需构造故障注入验证；ARCH-A-PLAN/IMPL 与 VK5-E 仍在后续。
 
 ## v0.2.14.10-rz

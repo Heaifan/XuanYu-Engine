@@ -23,8 +23,8 @@ public sealed partial class VulkanRenderSession
 
     void MarkFailed(string reason)
     {
-        Volatile.Write(ref _failureReason, reason);
-        if (Interlocked.Exchange(ref _failed, 1) != 0) return;
+        if (Interlocked.CompareExchange(ref _failureReason, reason, null) is not null) return;
+        Volatile.Write(ref _failed, 1);
         _log?.Invoke(VulkanClearFrameLogFormatter.PresentFatal(reason));
     }
 
