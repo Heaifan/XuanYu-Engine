@@ -7,10 +7,10 @@
 - `XuanYu.Editor.App/EditorCompositionRoot.cs`  # 应用组装根；创建 `VulkanNativeHostSurfaceBridgeFactory` 并以 `INativeHostSurfaceBridgeFactory` 暴露；不持有或释放 Bridge 实例。
 - `XuanYu.Editor.UI/Bootstrap/App.axaml.cs`  # UI Application；可接收抽象 Bridge factory 并传给 `UiVm`；加载既有 App.axaml，不重复声明样式资源。
 - `XuanYu.Editor.UI/Vm/UiVm.cs`  # UI 状态模型；保存可选 `INativeHostSurfaceBridgeFactory`，不认识 Vulkan 具体实现。
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`  # NativeHost 控件；优先用 VM 注入的抽象 factory 创建 Bridge，旧 provider 仅作兼容 fallback。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`  # NativeHost 控件；优先用 VM 注入的抽象 factory 创建 Bridge，旧 provider 仅作兼容 fallback；创建时输出低频中文日志标明工厂来源。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanSurfaceBridgeProvider.cs`  # 旧 UI 入口兼容 fallback；新 App 启动路径不应使用它直接创建 Vulkan Bridge。
 - `XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`  # UI 类库项目；不再作为活动 WinExe 启动入口，旧 Vulkan/Silk 引用暂留给 R3+ 清理。
-- `XuanYu.Engine.slnx`  # 解决方案文件；纳入 Core、Render.Abstractions、Render.Vulkan、Editor.UI、Editor.Win、Editor.App 六个项目供整体构建。
+- `XuanYu.Engine.slnx`  # 当前分支唯一权威解决方案入口；纳入 Core、Render.Abstractions、Render.Vulkan、Editor.UI、Editor.Win、Editor.App 六个项目供 restore/build/test 使用。当前分支不存在 `XuanYu.Engine.sln`。
 
 ## ARCH-A-R1 最小生命周期契约快照 (2026-07-13 20:30:44)
 建立 NativeHost 渲染桥最小装配契约，Vulkan 侧开始适配；不修改 UI 旧调用链。

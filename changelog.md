@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.15.3-r2-rz
+ARCH-A-R2-Verify：桥接工厂来源日志与解决方案入口说明（2026-07-13 20:57:24，验收补充）
+
+- 原历史编号：ARCH-A-R2-Verify
+- 日期：2026-07-13 20:57:24
+- 任务目标：补足 R2 真机验收前的可观测性，明确区分 `XuanYu.Editor.App` 注入路径与旧 fallback 路径，并说明当前唯一解决方案入口。
+- 主要改动：`VulkanNativeHost.CreateBridge` 在创建 Bridge 前输出一条低频中文日志，分别标明“桥接工厂来源：应用注入（XuanYu.Editor.App）”或“桥接工厂来源：旧兼容回退（VulkanSurfaceBridgeProvider）”；`file-tree.md` 明确当前分支只有 `XuanYu.Engine.slnx`，没有 `XuanYu.Engine.sln`。
+- 影响范围：仅 UI 低频生命周期日志与同步文档；不修改 Vulkan Attach/Resize/Present/Fatal/Detach 行为，不删除 fallback，不进入 R3。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore` 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；`Render.Abstractions` 对 `Silk.NET.Vulkan` / `XuanYu.Render.Vulkan` 的命中仅为历史说明注释，无实际 using / PackageReference / ProjectReference；受控运行 `XuanYu.Editor.App` 12 秒并自动停止，stdout 首行证明桥接工厂来源为“应用注入（XuanYu.Editor.App）”，未出现“旧兼容回退”文本，且日志显示 Instance / Surface / Swapchain / Present 已启动。因本次为定时停止，不判定关闭释放顺序和人工视觉验收通过。
+- Commit Hash：待提交后补齐。
+- 遗留问题：仍需从 `XuanYu.Editor.App` 真机启动并确认日志出现“应用注入”且不出现“旧兼容回退”；R3 在真机验收通过前不得开始。
+
 ## v0.2.15.3-rz
 ARCH-A-R2：建立 Avalonia 应用组装层（2026-07-13 20:44:15，实装）
 

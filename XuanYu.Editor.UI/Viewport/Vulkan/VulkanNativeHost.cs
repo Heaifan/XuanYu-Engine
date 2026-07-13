@@ -88,12 +88,21 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     INativeHostSurfaceBridge CreateBridge()
     {
         if (DataContext is UiVm { SurfaceBridgeFactory: { } factory })
+        {
+            LogBridgeFactorySource("应用注入（XuanYu.Editor.App）");
             return factory.Create(ReportVulkanMessage);
+        }
+        LogBridgeFactorySource("旧兼容回退（VulkanSurfaceBridgeProvider）");
         return VulkanSurfaceBridgeProvider.Create(ReportVulkanMessage);
     }
 
-    // VK4-D-R2：Vulkan 日志回调线程安全入口。Present 泵在后台线程打日志，
-    // 访问 DataContext / UiVm / 日志集合必须回 UI 线程，否则 Avalonia 抛 InvalidOperationException。
+    void LogBridgeFactorySource(string source)
+    {
+        var message = $"【ARCH-A-R2】桥接工厂来源：{source}";
+        Console.WriteLine(message); ReportVulkanMessage(message);
+    }
+
+    // VK4-D-R2：后台 Present 泵日志必须回 UI 线程访问 DataContext / UiVm。
     void ReportVulkanMessage(string msg)
     {
         if (Dispatcher.UIThread.CheckAccess()) ReportVulkanMessageOnUiThread(msg);
