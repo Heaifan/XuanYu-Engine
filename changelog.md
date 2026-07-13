@@ -9,7 +9,7 @@ ARCH-A-R4-R1：唯一启动入口守卫与普通权限构建收口（2026-07-13 
 - 主要改动：`XuanYu.Editor.Win` 移除 `OutputType=WinExe` 并删除旧 `Program.cs` 启动入口，降为非独立启动项目；`scripts/arch-a-guard.ps1` 增加 `OutputType` 检查，强制只有 `Editor.App` 可为 `WinExe/Exe`；主窗口标题和 `run.bat` 标题更新为 `v0.2.15.7-r1-rz`。
 - 影响范围：仅启动入口守卫、旧 WinForms 壳输出类型、标题版本号和同步文档；不修改 Swapchain、Resize、Present、Vulkan 释放链或 App 注入逻辑。
 - 验证结果：`scripts/arch-a-guard.ps1` 通过，已覆盖唯一可执行入口；5+100 扫描通过；`git diff --check` 通过；`XuanYu.Editor.Win` 普通权限 `dotnet build --no-restore` 0 warning / 0 error；清理 `XuanYu.Editor.UI/bin,obj` 后修复用户级 `NuGet.Config` 对 `CodexSandboxUsers` 的读取权限，`dotnet restore XuanYu.Engine.slnx` 不再出现 `Access denied`，但当前 Codex 普通沙箱仍因 socket 权限阻止访问 `api.nuget.org:443`；放开网络后 restore 通过，随后普通权限 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `ab4fecdd50da6ef9deb0a315193abb424284122e`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：版本号仍分散在标题、run.bat 和 changelog 中；后续可考虑单一版本来源，但本轮仅用守卫防漂移。
 
 ## v0.2.15.7-rz
