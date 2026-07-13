@@ -1,5 +1,12 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-R4 架构守卫与标题版本快照 (2026-07-13 22:53:06)
+在 ARCH-A-R3 真机验收通过后，新增自动守卫并固化窗口标题版本号规则；本轮不修改 Vulkan 渲染主链。
+- `scripts/arch-a-guard.ps1`  # ARCH-A 自动守卫脚本；检查 `Editor.UI` 禁止引用 `Render.Vulkan` / `Silk.NET.Vulkan`、`Render.Abstractions` 禁止引用 Vulkan/Silk/Avalonia、`Editor.App` 组装 UI 与 Vulkan、`run.bat` 启动 App、解决方案六项目、主窗口标题版本号和 5+100。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题显示产品名与当前开发版本号：`玄域引擎编辑器 v0.2.15.7-rz`。
+- `run.bat`  # 仓库根启动脚本；继续唯一启动 `XuanYu.Editor.App`，控制台标题同步当前版本号。
+- `docs/玄域引擎_AI开发宪法.md`  # 最高开发规范；补充窗口标题版本号必须随轮次更新，并强化 `changelog.md` 时间必须精确到秒。
+
 ## ARCH-A-R3 UI Vulkan 直接依赖移除快照 (2026-07-13 22:38:14)
 在 R2 Resize / 代际一致性真机验收通过后，移除 `Editor.UI` 的旧 Vulkan / Silk 直接依赖与 fallback 链路，UI 只保留抽象渲染桥入口。
 - `XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`  # UI 类库项目；移除 `Silk.NET.Vulkan`、`Silk.NET.Vulkan.Extensions.KHR` 和 `XuanYu.Render.Vulkan` 引用，仅保留 Avalonia、Core、Render.Abstractions。
