@@ -9,7 +9,7 @@ ARCH-A-R2-R2：日志栏布局同步后的 Swapchain 高度滞后修复（2026-0
 - 主要改动：`VulkanNativeHost.LayoutSync.SyncFinalSize` 不再在 `Win32ViewportHost.Resize` 后立即调用 `_bridge.Resize`；改为先完成 HWND 物理尺寸同步和探针日志，再把同一逻辑尺寸交回现有 `NativeHostResizeCoalescer` 延后合并触发，让 Surface CurrentExtent 有机会稳定到新的物理尺寸。
 - 影响范围：仅 `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`、`changelog.md`、`file-tree.md`；不修改 Vulkan Attach/Present/Swapchain 主链，不删除 fallback，不进入 ARCH-A-R3。
 - 验证结果：`git diff --check` 通过；5+100 扫描无 `.cs/.axaml/.js` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 在提升权限下 0 warning / 0 error；受控启动 `XuanYu.Editor.App` 12 秒日志显示桥接工厂来源为“应用注入（XuanYu.Editor.App）”、未触发旧 fallback，Surface CurrentExtent 与 Swapchain/Framebuffer 自愈并稳定到 `1248x1110`。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `2e03a58dd303fa78fa554975b864fc7005f43d67`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：仍需用户真机复验展开/收起日志详情栏后的画面完整性，确认蓝灰背景覆盖完整 Vulkan 视口、黄色三角形正常、底部黑屏不再出现。
 
 ## v0.2.15.4-r1-fix
