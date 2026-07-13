@@ -67,10 +67,10 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         catch (Exception ex) { Log(_log, VulkanSwapchainLogFormatter.Failed($"重建异常：{ex.Message}")); return false; }
     }
 
-    // RZ-VK5-A-R2 + R1：按 Surface 当前 CurrentExtent 重建（Windows ChooseExtent 直接返回它）。
-    public bool TryRecreateToCurrent(out Extent2D newExtent, uint generation = 0)
+    public bool TryRecreateToCurrent(out Extent2D newExtent, out bool rebuilt, uint generation = 0)
     {
         newExtent = _extent;
+        rebuilt = false;
         if (_khr is null) return false;
         _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain.TryRecreate", $"旧 extent={_extent.Width}x{_extent.Height}，查询 Surface..."));
         var caps = VulkanSwapchainCapabilities.Query(_vk, _instance, _physicalDevice, _surface, (int)_extent.Width, (int)_extent.Height, _log);
@@ -78,6 +78,7 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         if (caps.Caps.Value.Extent.Width == _extent.Width && caps.Caps.Value.Extent.Height == _extent.Height) { newExtent = _extent; Log(_log, VulkanSwapchainLogFormatter.Skipped($"同尺寸跳过自愈重建（{_extent.Width}x{_extent.Height}）")); return true; }
         if (!Recreate((int)caps.Caps.Value.Extent.Width, (int)caps.Caps.Value.Extent.Height, generation)) return false;
         newExtent = _extent;
+        rebuilt = true;
         return true;
     }
 

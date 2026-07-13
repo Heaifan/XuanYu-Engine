@@ -33,6 +33,9 @@ public static class VulkanBridgeLogFormatter
     public static string DetachBlocked() =>
         "【VulkanBridge】分离受阻：Present 泵未确认停止，已禁止继续释放底层 Vulkan 资源";
 
+    public static string SessionFailed(string reason) =>
+        $"【VulkanBridge】RenderSession 已失效，拒绝继续按正常状态处理：{reason}";
+
     public static void Emit(Action<string>? log, string message)
     {
         log?.Invoke(message);

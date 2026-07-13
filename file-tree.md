@@ -1,5 +1,13 @@
 # 项目文件树 — XuanYu Engine
 
+## VK-LIFE-1-R1 竞态补正快照 (2026-07-13)
+补正 VK-LIFE-1 真机验收暴露的 Resize / Present 自愈竞态与状态传播问题。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`  # Resize 接管流程：等自愈锁、锁内复查尺寸、锁外停泵、仅实际重建时推进 generation。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs`  # 自愈遇到 Resize 接管时让出；同尺寸自愈不推进 generation；连续失败标记 Session Failed。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs` / `.Lifecycle.cs`  # Present 致命错误经回调传播到 RenderSession Failed 状态。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`  # Bridge 在后续 Resize 中识别 Failed Session，不再按正常附加状态继续。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`  # Session 释放与 ClearFrame 释放使用不同日志，避免重复“RenderPass + Framebuffer 释放成功”。
+
 ## VK-LIFE-1 生命周期安全快照 (2026-07-13)
 加固 Vulkan 生命周期失败路径，并合并仓库收尾删除已批准的危险脚本。
 - 删除 `111.ps1`  # 已批准删除的危险仓库设置脚本；不再作为 SAFE-1-R1 单独开轮。

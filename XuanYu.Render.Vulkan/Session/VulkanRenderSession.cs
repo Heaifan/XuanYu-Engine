@@ -23,6 +23,9 @@ public sealed partial class VulkanRenderSession : IDisposable
     uint _generation;
     int _recoverTries;
     bool _disposed;
+    bool _failed;
+    bool _resizeStopping;
+    string? _failureReason;
     const int MaxRecoverTries = 5;
 
     VulkanRenderSession(VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner,
@@ -56,7 +59,10 @@ public sealed partial class VulkanRenderSession : IDisposable
             clear = new VulkanClearFrameOwner(vk, deviceOwner, swapchainOwner, selection.Queue.GraphicsFamily, log);
             pipeline = VulkanGraphicsPipelineOwner.Create(vk, deviceOwner, clear, swapchainOwner, log);
             if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline);
-            loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear, source => session!.RecoverFromOutOfDate(source), log);
+            loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,
+                source => session!.RecoverFromOutOfDate(source),
+                reason => session!.MarkFailed(reason),
+                log);
             session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, log, surfaceHandle);
             if (!loop.Start()) throw new InvalidOperationException("Present 泵启动失败");
             return session;
@@ -71,26 +77,7 @@ public sealed partial class VulkanRenderSession : IDisposable
         }
     }
 
-    public bool Resize(int width, int height)
-    {
-        if (_disposed) return false;
-        if (_swapchainOwner.Extent.Width == (uint)width && _swapchainOwner.Extent.Height == (uint)height)
-        {
-            _log?.Invoke(VulkanClearFrameLogFormatter.ResizeFastSkipped(_generation, width, height));
-            return true;
-        }
-        VulkanResizeTracer.StartTrace();
-        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize开始", $"请求逻辑尺寸={width}x{height}"));
-        if (!_presentLoop.Stop()) return false;
-        lock (_rebuildLock)
-        {
-            if (!_swapchainOwner.Recreate(width, height, _generation)) return FailResize("Swapchain 重建失败");
-            if (!_clearFrame.RebuildFramebuffers(_generation)) return FailResize("Framebuffer 重建失败");
-            _generation++;
-            _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize完成", $"{_swapchainOwner.Extent.Width}x{_swapchainOwner.Extent.Height}；{_clearFrame.CommandBuffers.Length} 张 CB"));
-        }
-        if (!_presentLoop.Start()) return FailResize("Present 泵重启失败");
-        return true;
-    }
+    public bool IsFailed => _failed;
+    public string? FailureReason => _failureReason;
 
 }

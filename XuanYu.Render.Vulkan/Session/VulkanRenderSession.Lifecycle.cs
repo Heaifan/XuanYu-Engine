@@ -7,8 +7,25 @@ public sealed partial class VulkanRenderSession
     bool FailResize(string reason)
     {
         _log?.Invoke(VulkanClearFrameLogFormatter.PresentError($"Resize 失败，RenderSession 将释放：{reason}"));
+        _resizeStopping = false;
+        MarkFailed($"Resize 失败：{reason}");
         TryDispose();
         return false;
+    }
+
+    bool RestartAfterResizeSkip(int width, int height)
+    {
+        _resizeStopping = false;
+        _log?.Invoke(VulkanClearFrameLogFormatter.ResizeFastSkipped(_generation, width, height));
+        return _presentLoop.Start() || FailResize("Present 泵重启失败");
+    }
+
+    void MarkFailed(string reason)
+    {
+        if (_failed) return;
+        _failed = true;
+        _failureReason = reason;
+        _log?.Invoke(VulkanClearFrameLogFormatter.PresentFatal(reason));
     }
 
     public bool TryDispose()
@@ -19,7 +36,7 @@ public sealed partial class VulkanRenderSession
         _presentLoop.Dispose();
         _pipeline?.Dispose();
         _clearFrame.Dispose();
-        _log?.Invoke(VulkanClearFrameLogFormatter.Disposed());
+        _log?.Invoke(VulkanClearFrameLogFormatter.SessionDisposed());
         return true;
     }
 

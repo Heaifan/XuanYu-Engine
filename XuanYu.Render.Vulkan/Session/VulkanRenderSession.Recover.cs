@@ -8,13 +8,15 @@ public sealed partial class VulkanRenderSession
 {
     bool RecoverFromOutOfDate(string source)
     {
-        if (_disposed) return false;
+        if (_disposed || _failed) return false;
         _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Present.OutOfDate", $"来源={source}（进入自愈）"));
         lock (_rebuildLock)
         {
+            if (_resizeStopping) return false;
             var old = _swapchainOwner.Extent;
             _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", "查询中..."));
-            if (!_swapchainOwner.TryRecreateToCurrent(out _, _generation)) return RetryOrStop(source, old);
+            if (!_swapchainOwner.TryRecreateToCurrent(out _, out var rebuilt, _generation)) return RetryOrStop(source, old);
+            if (!rebuilt) return true;
             if (!_clearFrame.RebuildFramebuffers(_generation)) return false;
             _generation++;
             _recoverTries = 0;
@@ -32,6 +34,7 @@ public sealed partial class VulkanRenderSession
         if (_recoverTries >= MaxRecoverTries)
         {
             _log?.Invoke(VulkanClearFrameLogFormatter.OutOfDateRecoverFailed($"连续 {MaxRecoverTries} 次重建失败"));
+            MarkFailed("Swapchain 自愈连续失败");
             return false;
         }
         _recoverTries++;

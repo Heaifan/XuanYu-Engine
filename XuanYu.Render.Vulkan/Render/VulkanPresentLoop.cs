@@ -15,6 +15,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
     readonly VulkanSwapchainOwner _swapchainOwner;
     readonly VulkanClearFrameOwner _clearFrame;
     readonly Func<string, bool>? _onOutOfDate;
+    readonly Action<string>? _onFatal;
     readonly Action<string>? _log;
     Semaphore _imageAvailable;
     Semaphore _renderFinished;
@@ -27,13 +28,14 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
     const ulong FenceTimeoutNs = 1_000_000_000;
 
     public VulkanPresentLoop(Vk vk, VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner,
-        VulkanClearFrameOwner clearFrame, Func<string, bool>? onOutOfDate, Action<string>? log)
+        VulkanClearFrameOwner clearFrame, Func<string, bool>? onOutOfDate, Action<string>? onFatal, Action<string>? log)
     {
         _vk = vk;
         _deviceOwner = deviceOwner;
         _swapchainOwner = swapchainOwner;
         _clearFrame = clearFrame;
         _onOutOfDate = onOutOfDate;
+        _onFatal = onFatal;
         _log = log;
     }
 
@@ -51,7 +53,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
     void Run()
     {
         try { RunFrames(); }
-        catch (Exception ex) { Log(VulkanClearFrameLogFormatter.PresentError($"Present 线程异常：{ex.Message}")); }
+        catch (Exception ex) { Fatal($"Present 线程异常：{ex.Message}"); }
     }
 
     void RunFrames()

@@ -64,6 +64,12 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
             Emit(VulkanBridgeLogFormatter.ResizedSkipped(width, height));
             return;
         }
+        if (_renderSession.IsFailed)
+        {
+            _failed = true;
+            Emit(VulkanBridgeLogFormatter.SessionFailed(_renderSession.FailureReason ?? "未知原因"));
+            return;
+        }
         Emit(VulkanBridgeLogFormatter.Resized(width, height));
         if (_renderSession.Resize(width, height)) return;
         _failed = true;

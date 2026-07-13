@@ -67,8 +67,14 @@ public sealed unsafe partial class VulkanPresentLoop
     {
         if (res == Result.Success) return true;
         if (allowSuboptimal && res == Result.SuboptimalKhr) return true;
-        Log(VulkanClearFrameLogFormatter.PresentError($"{op} 失败：{res}"));
+        Fatal($"{op} 失败：{res}");
         return false;
+    }
+
+    void Fatal(string reason)
+    {
+        Log(VulkanClearFrameLogFormatter.PresentError(reason));
+        _onFatal?.Invoke(reason);
     }
 
     void Log(string message)

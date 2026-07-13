@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.14.10-rz
+VK-LIFE-1-R1：Resize 自愈竞态与失败状态传播补正（2026-07-13，修复）
+
+- 原历史编号：VK-LIFE-1-R1
+- 日期：2026-07-13
+- 任务目标：在 VK-LIFE-1 真机部分通过的基础上补正 Resize 与 Present 自愈竞态、generation 语义、Present 致命退出状态传播和重复释放日志，不扩大到 ARCH-A / VK5-E / VulkanClearSession。
+- 主要改动：`VulkanRenderSession.Resize` 改为先等待自愈锁、锁内复查尺寸并标记 Resize 接管，再锁外 Stop Present，避免自愈已完成后 UI Resize 仍无意义停泵；generation 仅在 Swapchain extent 实际变化后增加；`VulkanPresentLoop` 增加致命退出回调，Wait/Reset/Submit/Present 等失败会使 RenderSession 进入 Failed 状态；Bridge 后续 Resize 会识别 Failed Session 并拒绝按正常状态继续；Session 释放日志改为 `【VulkanRenderSession】释放完成`，ClearFrame 释放日志只由 ClearFrameOwner 输出一次。
+- 影响范围：仅 `XuanYu.Render.Vulkan` 生命周期相关文件与 `changelog.md`、`file-tree.md`；未修改 `.axaml/.csproj`；未处理 Editor.UI → Render.Vulkan 依赖迁移；未删除 VulkanClearSession；未新增渲染功能。
+- 验证结果：5 个当前分支项目 `dotnet build --no-restore` 全部 0 warning / 0 error；5+100 全量检查无超 100 行文件（最大 100）；空 `catch` 扫描 0 命中；`git ls-files -- 111.ps1` 仍为 0 命中；`git diff --check` 通过；状态传播扫描确认 Present 致命错误进入 `PresentFatal` / `SessionFailed` 路径；generation 递增仅保留在 Resize extent 实际变化与自愈 rebuilt 两处。仍需用户真机复验连续快速展开/收起日志栏至少 10 次。
+- Commit Hash：待提交后补齐。
+- 遗留问题：本轮自动验证通过后，VK-LIFE-1 是否封版取决于用户真机复验；ARCH-A-PLAN/IMPL 与 VK5-E 仍在后续。
+
 ## v0.2.14.9-rz
 VK-LIFE-1：Vulkan 生命周期失败安全与仓库收尾（2026-07-13，修复）
 
