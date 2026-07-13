@@ -10,7 +10,7 @@ DOC-GIT-PUSH-1：开发提交必须 Push 到 GitHub 远端工作分支（2026-07
 - 影响范围：仅开发规范、版本标题和同步文档；不修改 UiVm、状态所有权实现、NativeHost、Bridge、Vulkan、Resize、Present 或项目依赖结构。
 - 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 Git LF/CRLF 工作区提示，无空白错误）；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
 - Commit Hash：主提交 `b32e760a2fedc6cad2de919edb9c51c89bc8298e`；哈希回填修正以 Git 记录和交付报告为准。
-- Push 状态：待本轮 Push 后补齐。
+- Push 状态：已推送到 `origin/fix/RZ-VK3-A-surface-contract`；首次推送区间 `c823312..f9c6953`；Push 状态回填提交以 Git 记录和交付报告为准。
 - 遗留问题：后续 ARCH-B-R1 版本号需顺延到下一个有效开发版本。
 
 ## v0.2.16.1-rz
