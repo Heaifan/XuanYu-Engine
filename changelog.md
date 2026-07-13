@@ -9,7 +9,7 @@ ARCH-A-R2-R1：run.bat 批处理编码修复（2026-07-13 21:51:44，修复）
 - 主要改动：将 `run.bat` 脚本正文改为 ASCII-only 命令与提示，保留仓库根切换、`XuanYu.Editor.App` 唯一启动入口、NuGet.Config restore、build、run、退出码透传和失败 pause 逻辑。
 - 影响范围：仅 `run.bat` 与 `changelog.md`；不修改 App / UI / Vulkan 代码，不改变 DPI 修复逻辑。
 - 验证结果：`cmd /c type run.bat` 输出脚本结构正常，无乱码命令；`git diff --check` 通过；`dotnet build XuanYu.Editor.App\\XuanYu.Editor.App.csproj --no-restore` 0 warning / 0 error。未完整执行 `run.bat`，因为它会启动窗口并等待用户关闭。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `9b514c4d6e8e3357ff10502f9b71f074dc32c3f5`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：仍需用户双击或命令行运行 `run.bat` 做真实启动确认。
 
 ## v0.2.15.4-fix
