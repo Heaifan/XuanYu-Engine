@@ -1,16 +1,28 @@
 # changelog
 
+## v0.2.14.7-rz
+ORG-1：项目基线审计最终文档收口（2026-07-13，纯文档）
+
+- 原历史编号：ORG-1 收口
+- 日期：2026-07-13
+- 任务目标：将 ORG-1 收口为可指导后续开发的已验收基线；不重新审计项目、不增加新风险项，下一轮直接进入 SAFE-1。
+- 主要改动：仅修改 `docs/project-baseline-audit-org-1-r1.md` 与 `changelog.md`。① 非构建扫描不再使用 Shell/GNU 工具自然退出码作为结论，A1 直接记录 111 个文件、0 个超限，A5 直接记录 tracked 源码范围与 0 个 FluidWarfare 命中；② 后续工作统一拆为 ORG-1、SAFE-1、VK-LIFE-1、ARCH-A-PLAN、ARCH-A-IMPL、ORG-2 六个独立轮次；③ 密钥结论收窄为“指定模式未发现真实凭据泄漏”，明确不替代完整 secret scanning；④ 5+100 明确只统计 tracked 手写 `.cs/.axaml`，且 `.gitignore` 不会使已跟踪文件自动消失；⑤ 债务 A 明确须经过 ARCH-A-PLAN 设计、ARCH-A-IMPL 实装、构建与真机验收后才能收口；⑥ Hash 身份统一为代码基线、原报告、修正过程三类，最终收口 Hash 不回填本文档。
+- 状态结论：**ORG-1 已完成并通过文档验收。** R1、R2 仅作为历史提交过程保留，不再作为持续状态标签。
+- 影响范围：仅两份文档；未修改 `file-tree.md`，未修改任何 `.cs/.axaml/.csproj`，未删除 `111.ps1`，未处理 `qizheng-mvp-fixed/`，未新增测试、报告或 SVG。
+- 验证：仅执行文档 diff 校验与旧错误措辞扫描；本轮为纯文档修改，不重新构建五个项目。
+- 下一轮：SAFE-1，只处理 tracked 的 `111.ps1` 与 untracked、未忽略的 `qizheng-mvp-fixed/`。
+
 ## v0.2.14.6-rz
 ORG-1-R1：项目基线审计修正版（2026-07-12，审计文档修正）
 
 - 原历史编号：ORG-1-R1
 - 日期：2026-07-12
-- 任务目标：退回修正 ORG-1 审计报告（f187174）的 11 项误判，使报告成为可信赖的"权威项目基线"（注：经 ORG-1-R2 二次审查仍退回，待最终收口轮通过验收后方可称权威基线）。纯文档修正，不改代码。
-- 主要改动：新增 `docs/project-baseline-audit-org-1-r1.md`（修正版，17 节含可复跑证据附录）；原 `docs/project-baseline-audit-org-1.md` 顶部加"已退回，见 R1" superseded 注。修正要点：① 分支范围——所有"无 .sln/无测试"限定为 `fix/RZ-VK3-A-surface-contract` 分支 `f187174` 快照（实测 `origin/main` 含 `XuanYu.Engine.sln` + `XuanYu.Engine.Tests/`）；② 5+100——物理行数通过（111 文件 0 超限，最大 100）但质量条件不通过（VulkanRenderSession.cs / VulkanPresentLoop.cs 压行），红线总判定不成立；③ 空 catch（VulkanPresentLoop.cs:96-97）列为 P1；④ Editor.UI→Vulkan 为活跃组合根违反（VulkanSurfaceBridgeProvider + UiVm.VulkanProbe + VulkanProbeRoute 共 3 活跃 .cs + csproj）；⑤ Vk 所有权表重写（VulkanNativeHostSurfaceBridge 唯一持有/释放，Session 无 `_vk`）；⑥ Vulkan 失败路径回滚+Present 线程 Stop 可靠性列为 P1；⑦ 能力表数字修正 A=10/B=1/D=1 + 新增"未规划/不在当前阶段"类；⑧ 基线双标注（被审计代码基线 9bc210e / 审计报告提交 f187174）；⑨ 新增可复跑证据附录（精确命令+退出码+结果）；⑩ 111.ps1 修正为"非强推"（普通 git push -u）；⑪ ORG-2 拆为 5 轮（ORG-1-R1 / SAFE-1 / VK-LIFE-1 / ARCH-A-PLAN / ORG-2）。
+- 任务目标：退回修正 ORG-1 审计报告（f187174）的 11 项误判；后续修正与收口完成后，该报告已作为 ORG-1 已验收基线。纯文档修正，不改代码。
+- 主要改动：新增 `docs/project-baseline-audit-org-1-r1.md`（修正版，17 节含审计命令与结果附录）；原 `docs/project-baseline-audit-org-1.md` 顶部加"已退回，见 R1" superseded 注。修正要点：① 分支范围——所有"无 .sln/无测试"限定为 `fix/RZ-VK3-A-surface-contract` 分支 `f187174` 快照（实测 `origin/main` 含 `XuanYu.Engine.sln` + `XuanYu.Engine.Tests/`）；② 5+100——物理行数通过（111 文件 0 超限，最大 100）但质量条件不通过（VulkanRenderSession.cs / VulkanPresentLoop.cs 压行），红线总判定不成立；③ 空 catch（VulkanPresentLoop.cs:96-97）列为 P1；④ Editor.UI→Vulkan 为活跃组合根违反（VulkanSurfaceBridgeProvider + UiVm.VulkanProbe + VulkanProbeRoute 共 3 活跃 .cs + csproj）；⑤ Vk 所有权表重写（VulkanNativeHostSurfaceBridge 唯一持有/释放，Session 无 `_vk`）；⑥ Vulkan 失败路径回滚+Present 线程 Stop 可靠性列为 P1；⑦ 能力表数字修正 A=10/B=1/D=1 + 新增"未规划/不在当前阶段"类；⑧ 基线与报告身份分离；⑨ 新增标准命令、范围与结果记录；⑩ 111.ps1 修正为"非强推"（普通 git push -u）；⑪ 后续拆为 6 个独立轮次（ORG-1 / SAFE-1 / VK-LIFE-1 / ARCH-A-PLAN / ARCH-A-IMPL / ORG-2）。
 - 影响范围：仅四份文档（changelog.md / file-tree.md / 新增 R1 审计文档 / 原审计文档加注）；零源码改动；不改 Git 历史/Commit/分支/Tag。
 - 验证结果：5 项目 `dotnet build` 全 0W0E EXIT=0（复跑确认）；git ls-files 统计 111 手写 .cs/.axaml 全 ≤100（0 超限）；origin/main 实测含 .sln 与 Tests；密钥扫描（`git grep` 全 tracked 文本、指定模式）命中 3 处均复核为误报（0 真实凭据），FluidWarfare 源码层 0 命中、全文本 15 处均旧文档（**指定范围与指定模式未命中真实泄漏，非全仓安全结论**）；Editor.UI 活跃 Render.Vulkan 引用 3 处确认。
 - Commit Hash：R1 主体 `e6f96b5` + R1 文字补正 `ef0ca11`。
-- 二次审查与 R2 补丁：经 ORG-1-R2 二次审查（2026-07-12），11 项核心纠错确认通过，但"权威基线"结论退回，要求 R2 小修：可复跑附录真实退出码（原误写 0）、四重 hash 身份拆分（9bc210e/f187174/e6f96b5/ef0ca11）、密钥扫描真实范围（`git grep` 全 tracked 文本，3 处命中均复核为误报，非"0 命中"）、Vulkan 生命周期补全（`_stop` 内存可见性 / Vulkan Result 未检查 / CreateSync 部分泄漏）、新增独立 ARCH-A-IMPL 并移除 ARCH-A-PLAN 的"可选 PoC"、能力计数注明"仅条目盘点非成熟度"、SAFE-1 必做收紧为 111.ps1 + qizheng。R2 提交 hash 记入最终收口报告，本轮不新增 changelog 版本号条目以避免重复填 hash 提交；R2 收口补丁另修正 A1 行 424「git ls-files 被 .gitignore 自动排除」误述与本条验证结果「干净」措辞（改「指定范围与指定模式未命中真实泄漏，非全仓安全结论」）。
+- 历史修正过程：后续提交继续修正证据范围、Hash 身份、密钥扫描边界、Vulkan 生命周期风险、独立 ARCH-A-IMPL、能力计数口径与 SAFE-1 范围；最终收口不回填本轮 Hash，避免为记录 Hash 再产生补丁提交。
 - 遗留问题（修正后仍仅报告不修复，排入对应轮）：P1 四项（债务A 活跃收口 / 空 catch / Vulkan 失败路径回滚 / 111.ps1 删除）；P2 多项（本分支无测试 / qizheng-mvp-fixed / 旧治理文档 / codex_log）；VK5-E 待实装。
 
 ## v0.2.14.5-rz
@@ -21,7 +33,7 @@ ORG-1：项目真实基线审计（2026-07-12，审计文档）
 - 任务目标：建立可作为后续开发依据的项目基线——当前真实状态 / 已完成并真机验收的能力 / 仅有代码或计划未验收的能力 / 架构依赖与 Vulkan 生命周期是否符合宪法 / 代码·文档·仓库卫生债务。纯审计，不改代码、不重构、不删文件、不实装 VK5-E。
 - 主要改动：新增 `docs/project-baseline-audit-org-1.md`（16 节：Git 状态 / 构建测试 / 项目依赖 / 5+100 / Vulkan 生命周期 / 能力状态 / 真机证据 / 文档基线 / 三份治理文档规则矩阵 / 仓库卫生 / 风险分级 P0-P3 / ORG-2 建议）。
 - 影响范围：仅三份文档（changelog.md / file-tree.md / 新增审计文档）；零源码改动；不改 Git 历史/Commit/分支/Tag。
-- 验证结果（关键数字）：5 项目 `dotnet build` 全 **0 警告 0 错误 EXIT=0**；仓库**无测试项目**（0 自动化测试覆盖）；5+100 审计 **111 个手写 .cs/.axaml 全部 ≤100 行（0 超限）**；红线2（Abstractions 不依赖 Silk）成立；红线1（Editor.UI 不直接依赖 Vulkan）**当前违反=债务 A**（csproj 直接引用 Render.Vulkan + Silk.NET.Vulkan）；VulkanClearSession 死代码 4 文件确认真实（无外部引用）；关闭 RenderPass/Framebuffer 仅日志重复一行（非双重释放）；源码零 FluidWarfare 旧命名、tracked 文件零密钥。
+- 验证结果（关键数字）：5 项目 `dotnet build` 全 **0 警告 0 错误 EXIT=0**；本分支**无测试项目**（0 自动化测试覆盖）；5+100 审计 **111 个 tracked 手写 .cs/.axaml 全部 ≤100 行（0 超限）**；红线2（Abstractions 不依赖 Silk）成立；红线1（Editor.UI 不直接依赖 Vulkan）**当前违反=债务 A**（csproj 直接引用 Render.Vulkan + Silk.NET.Vulkan）；VulkanClearSession 死代码 4 文件确认真实（无外部引用）；关闭 RenderPass/Framebuffer 仅日志重复一行（非双重释放）；源码层 FluidWarfare 旧命名 0 命中；在本次指定模式扫描范围内未发现真实凭据泄漏，该检查不替代完整 secret scanning。
 - Commit Hash：f187174（ORG-1 原始审计报告提交；后被 ORG-1-R1 取代，原报告已加 superseded 注）。
 - 遗留问题：P1 两项（债务 A 收口 / `111.ps1` 危险脚本已入库待删）；P2 多项（零测试 / `qizheng-mvp-fixed` 未忽略 / 旧治理文档待裁决）；VK5-E 待实装。均仅报告不修复。
 
