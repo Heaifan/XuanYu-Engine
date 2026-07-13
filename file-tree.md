@@ -1,12 +1,17 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-R2-R2 布局同步高度滞后修复快照 (2026-07-13 22:05:10)
+修复日志详情栏展开/收起后 Win32 子窗口已到正确物理尺寸，但 Vulkan Swapchain / Framebuffer 仍可能沿用旧高度导致底部黑屏的问题。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`  # 日志栏展开/收起后的最终布局同步路径；先按逻辑尺寸乘 DPI 调整 Win32 子窗口并输出探针，再把逻辑尺寸交给 `NativeHostResizeCoalescer` 延后合并触发桥接 Resize，避免 Surface CurrentExtent 未稳定时重建 Swapchain。
+- `XuanYu.Editor.UI/NativeHostResizeCoalescer.cs`  # 既有低频 Resize 合并器；本轮未改代码，但 LayoutSync 现在复用它承担延后触发桥接 Resize 的职责。
+
 ## ARCH-A-R2-R1 DPI 物理尺寸修复快照 (2026-07-13 21:42:14)
 修复新 App 启动入口下 DPI 虚拟化与逻辑/物理尺寸混用导致的左上角绘制问题。
 - `XuanYu.Editor.UI/app.manifest`  # App 可执行入口复用的 Windows manifest；声明 PerMonitorV2 DPI awareness，不负责渲染逻辑。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`  # NativeHost 控件；SizeChanged 时用物理像素调整 Win32 子窗口，逻辑尺寸仍交给渲染桥日志/请求路径。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs`  # Bridge 创建与工厂来源日志；优先使用 App 注入 factory，旧 provider 仅作 fallback。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs`  # 逻辑尺寸到物理像素尺寸换算工具；不触碰 Vulkan 对象。
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`  # 日志栏展开/收起同步路径复用同一物理尺寸换算。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`  # 日志栏展开/收起同步路径复用同一物理尺寸换算；R2-R2 起桥接 Resize 改为延后合并触发。
 - `run.bat`  # 仓库根启动脚本；唯一启动 `XuanYu.Editor.App`，使用 UTF-8，透传退出码，失败时保留窗口。
 
 ## ARCH-A-R2 Avalonia 应用组装层快照 (2026-07-13 20:44:15)

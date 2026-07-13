@@ -40,9 +40,9 @@ public sealed partial class VulkanNativeHost
         var (physicalW, physicalH) = ToPhysicalSize(logicalW, logicalH, dpi);
         _resizer.Cancel();
         Win32ViewportHost.Resize(_hwnd, physicalW, physicalH);
-        _bridge?.Resize(logicalW, logicalH);
         var (aw, ah) = Win32ViewportHost.GetClientSize(_hwnd);
         var open = DataContext is UiVm vm && vm.IsLogOpen;
         ViewportNativeHostRoute.ReportProbe(DataContext as UiVm, open, logicalW, logicalH, dpi, physicalW, physicalH, aw, ah);
+        _resizer.OnResize(logicalW, logicalH, dpi, true, _hwnd);
     }
 }
