@@ -6,10 +6,13 @@ ORG-1：项目基线审计最终文档收口（2026-07-13，纯文档）
 - 原历史编号：ORG-1 收口
 - 日期：2026-07-13
 - 任务目标：将 ORG-1 收口为可指导后续开发的已验收基线；不重新审计项目、不增加新风险项，下一轮直接进入 SAFE-1。
-- 主要改动：仅修改 `docs/project-baseline-audit-org-1-r1.md` 与 `changelog.md`。① 非构建扫描不再使用 Shell/GNU 工具自然退出码作为结论，A1 直接记录 111 个文件、0 个超限，A5 直接记录 tracked 源码范围与 0 个 FluidWarfare 命中；② 后续工作统一拆为 ORG-1、SAFE-1、VK-LIFE-1、ARCH-A-PLAN、ARCH-A-IMPL、ORG-2 六个独立轮次；③ 密钥结论收窄为“指定模式未发现真实凭据泄漏”，明确不替代完整 secret scanning；④ 5+100 明确只统计 tracked 手写 `.cs/.axaml`，且 `.gitignore` 不会使已跟踪文件自动消失；⑤ 债务 A 明确须经过 ARCH-A-PLAN 设计、ARCH-A-IMPL 实装、构建与真机验收后才能收口；⑥ Hash 身份统一为代码基线、原报告、修正过程三类，最终收口 Hash 不回填本文档。
+- 主要改动：仅修改 `docs/project-baseline-audit-org-1-r1.md` 与 `changelog.md`。① 非构建扫描不再使用 Shell/GNU 工具自然退出码作为结论，A1 直接记录 111 个文件、0 个超限，A5 直接记录 tracked 源码范围与 0 个 FluidWarfare 命中；② 后续工作统一拆为 ORG-1、SAFE-1、VK-LIFE-1、ARCH-A-PLAN、ARCH-A-IMPL、ORG-2 六个独立轮次；③ 密钥结论收窄为“指定模式未发现真实凭据泄漏”，明确不替代完整 secret scanning；④ 5+100 明确只统计 tracked 手写 `.cs/.axaml`，且 `.gitignore` 不会使已跟踪文件自动消失；⑤ 债务 A 明确须经过 ARCH-A-PLAN 设计、ARCH-A-IMPL 实装、构建与真机验收后才能收口；⑥ Hash 身份统一为代码基线、原报告、修正过程和 ORG-1 收口提交。
 - 状态结论：**ORG-1 已完成并通过文档验收。** R1、R2 仅作为历史提交过程保留，不再作为持续状态标签。
 - 影响范围：仅两份文档；未修改 `file-tree.md`，未修改任何 `.cs/.axaml/.csproj`，未删除 `111.ps1`，未处理 `qizheng-mvp-fixed/`，未新增测试、报告或 SVG。
-- 验证：仅执行文档 diff 校验与旧错误措辞扫描；本轮为纯文档修改，不重新构建五个项目。
+- 验证结果：`git diff --check` 通过；旧错误措辞 0 命中；Markdown 标题、表格、代码围栏格式通过；未新增 Markdown 超链接；内容一致性、文件引用和事实准确性检查通过。纯文档修改不重新构建五个项目。
+- Commit Hash：ORG-1 收口提交 `0667f2a`；其后宪法复核采用独立补正提交，不 amend、不强推，补正 Hash 以实际提交和最终交付报告为准。
+- 文档同步：`changelog.md` 已更新；`file-tree.md` 未更新，因为本轮没有新增、删除、移动、重命名文件，也没有文件职责或依赖边界变化。
+- 遗留问题：tracked 的 `111.ps1` 与 untracked、未忽略的 `qizheng-mvp-fixed/` 留给 SAFE-1；空 `catch`、Vulkan 失败回滚与 Present 线程可靠性留给 VK-LIFE-1；活跃 Vulkan 依赖留给 ARCH-A-PLAN/IMPL；本分支测试缺口、旧治理文档及 VK5-E 均未在本轮处理。
 - 下一轮：SAFE-1，只处理 tracked 的 `111.ps1` 与 untracked、未忽略的 `qizheng-mvp-fixed/`。
 
 ## v0.2.14.6-rz
@@ -22,7 +25,7 @@ ORG-1-R1：项目基线审计修正版（2026-07-12，审计文档修正）
 - 影响范围：仅四份文档（changelog.md / file-tree.md / 新增 R1 审计文档 / 原审计文档加注）；零源码改动；不改 Git 历史/Commit/分支/Tag。
 - 验证结果：5 项目 `dotnet build` 全 0W0E EXIT=0（复跑确认）；git ls-files 统计 111 手写 .cs/.axaml 全 ≤100（0 超限）；origin/main 实测含 .sln 与 Tests；密钥扫描（`git grep` 全 tracked 文本、指定模式）命中 3 处均复核为误报（0 真实凭据），FluidWarfare 源码层 0 命中、全文本 15 处均旧文档（**指定范围与指定模式未命中真实泄漏，非全仓安全结论**）；Editor.UI 活跃 Render.Vulkan 引用 3 处确认。
 - Commit Hash：R1 主体 `e6f96b5` + R1 文字补正 `ef0ca11`。
-- 历史修正过程：后续提交继续修正证据范围、Hash 身份、密钥扫描边界、Vulkan 生命周期风险、独立 ARCH-A-IMPL、能力计数口径与 SAFE-1 范围；最终收口不回填本轮 Hash，避免为记录 Hash 再产生补丁提交。
+- 历史修正过程：后续提交继续修正证据范围、Hash 身份、密钥扫描边界、Vulkan 生命周期风险、独立 ARCH-A-IMPL、能力计数口径与 SAFE-1 范围；ORG-1 收口 Hash 最终统一记录在 `v0.2.14.7-rz`，后续补正不改写已推送历史。
 - 遗留问题（修正后仍仅报告不修复，排入对应轮）：P1 四项（债务A 活跃收口 / 空 catch / Vulkan 失败路径回滚 / 111.ps1 删除）；P2 多项（本分支无测试 / qizheng-mvp-fixed / 旧治理文档 / codex_log）；VK5-E 待实装。
 
 ## v0.2.14.5-rz
