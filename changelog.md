@@ -9,7 +9,7 @@ ARCH-A-R2：建立 Avalonia 应用组装层（2026-07-13 20:44:15，实装）
 - 主要改动：新增 `XuanYu.Editor.App` 项目与 `EditorCompositionRoot`；`AppBuilder` 通过工厂函数创建带抽象 factory 的 UI `App`；`UiVm` 接收并保存 `INativeHostSurfaceBridgeFactory`；`VulkanNativeHost` 优先使用注入 factory 创建 Bridge，旧 `VulkanSurfaceBridgeProvider` 仅保留为兼容 fallback；`XuanYu.Editor.UI` 改为类库；新增 `XuanYu.Engine.slnx` 纳入 6 个项目。
 - 影响范围：`XuanYu.Editor.App`、`XuanYu.Editor.UI` 启动/组装入口、`changelog.md`、`file-tree.md` 与解决方案文件；不修改 Vulkan Attach/Resize/Present/Fatal/Detach 行为，不删除 UI 旧 Vulkan 链路，不调整 UI 布局。
 - 验证结果：`dotnet restore XuanYu.Engine.slnx` 通过；Core、Render.Abstractions、Render.Vulkan、Editor.UI、Editor.Win、Editor.App 六个项目分别 `dotnet build --no-restore` 全部 0 warning / 0 error；`dotnet build XuanYu.Engine.slnx --no-restore` 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；`Render.Abstractions` 对 `Silk.NET.Vulkan` / `XuanYu.Render.Vulkan` 的命中仅为历史说明注释，无实际 using / PackageReference / ProjectReference。真机启动与渲染验收待用户执行。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `ded3af5c64bb32ef88a9f1fe526a014b8dc3efdd`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：`Editor.UI` 项目引用层面仍保留 `Render.Vulkan` / `Silk.NET.Vulkan` 旧依赖，旧 `VulkanProbeRoute`、`UiVm.VulkanProbe`、`VulkanClearSession.*` 仍待 R3+ 独立处理；真机启动、Resize、关闭释放需用户验收。
 
 ## v0.2.15.2-rz
