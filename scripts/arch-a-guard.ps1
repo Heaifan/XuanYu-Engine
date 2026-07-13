@@ -75,10 +75,12 @@ foreach ($project in $projects) {
 }
 
 $changelog = Read-Text "changelog.md"
-$versionMatch = [regex]::Match($changelog, '(?m)^##\s+(v[0-9]+\.[0-9]+\.[0-9]+(?:\.[0-9]+)?-[A-Za-z0-9-]+)')
+$versionPattern = 'v0\.[0-9]+\.[0-9]+\.[0-9]+-(rz|fix|vk)'
+$versionMatch = [regex]::Match($changelog, "(?m)^##\s+($versionPattern)")
 if (!$versionMatch.Success) { Add-Failure "changelog top version missing" }
 else {
     $version = $versionMatch.Groups[1].Value
+    if ($version -notmatch "^$versionPattern$") { Add-Failure "invalid development version: $version" }
     Assert-Contains "XuanYu.Editor.UI/Win/UiWin.axaml" $version "main window title version"
     Assert-Contains "run.bat" $version "run.bat title version"
 }

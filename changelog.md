@@ -1,7 +1,19 @@
 # changelog
 
+## v0.2.15.8-fix
+ARCH-A-R4-R2：版本格式守卫与 ARCH-A 最终封版修正（2026-07-13 23:19:16，修正）
+
+- 原历史编号：ARCH-A-R4-R2
+- 日期：2026-07-13 23:19:16
+- 任务目标：修正无效开发期版本号 `v0.2.15.7-r1-rz`，将“R1/R2”保留在任务编号而非版本号中，并让 ARCH-A 守卫同时检查版本一致性与版本格式合法性。
+- 主要改动：主窗口标题和 `run.bat` 标题更新为 `v0.2.15.8-fix`；`scripts/arch-a-guard.ps1` 增加开发期版本格式校验，当前允许 `rz` / `fix` / `vk` 类型；本条 changelog 作为 ARCH-A 最终封版修正条目。
+- 影响范围：仅版本字符串、版本格式守卫和同步文档；不修改 Swapchain、Resize、Present、Vulkan 生命周期、依赖结构或 `Editor.Win` 项目结构。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过，已同时校验版本一致性与版本格式合法性；`git diff --check` 通过；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；放开网络后 `dotnet restore XuanYu.Engine.slnx` 通过，随后普通权限 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。当前 Codex 普通沙箱仍会阻止访问 `api.nuget.org:443`，属于网络权限限制而非仓库缺陷。
+- Commit Hash：待提交后补齐。
+- 遗留问题：版本号仍分散在标题、run.bat 和 changelog 中；后续可考虑单一版本来源。
+
 ## v0.2.15.7-r1-rz
-ARCH-A-R4-R1：唯一启动入口守卫与普通权限构建收口（2026-07-13 23:04:38，修正）
+ARCH-A-R4-R1：唯一启动入口守卫与普通权限构建收口（2026-07-13 23:04:38，修正；版本号格式已由 v0.2.15.8-fix 接续修正）
 
 - 原历史编号：ARCH-A-R4-R1
 - 日期：2026-07-13 23:04:38

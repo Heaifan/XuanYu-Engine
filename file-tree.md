@@ -1,5 +1,11 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-R4-R2 版本格式守卫快照 (2026-07-13 23:19:16)
+修正无效开发期版本号 `v0.2.15.7-r1-rz`，将任务轮次保留在任务编号中，版本号推进为 `v0.2.15.8-fix`。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口标题同步合法开发期版本：`玄域引擎编辑器 v0.2.15.8-fix`。
+- `run.bat`  # 控制台标题同步合法开发期版本，启动项目仍为 `XuanYu.Editor.App`。
+- `scripts/arch-a-guard.ps1`  # ARCH-A 自动守卫脚本；新增开发期版本格式校验，当前允许 `rz` / `fix` / `vk` 类型，并继续校验标题、run.bat 与 changelog 顶部版本一致。
+
 ## ARCH-A-R4-R1 唯一启动入口守卫快照 (2026-07-13 23:04:38)
 补齐 R4 总封版前的守卫缺口，确保解决方案内只有 `XuanYu.Editor.App` 是可执行启动入口。
 - `XuanYu.Editor.Win/XuanYu.Editor.Win.csproj`  # 旧 WinForms 壳项目；移除 `OutputType=WinExe`，保留为非独立启动项目，避免与 `Editor.App` 形成双可执行入口。
