@@ -9,7 +9,7 @@ ARCH-B-Plan：编辑器状态所有权与交互事务边界审计（2026-07-13 2
 - 主要改动：新增 `docs/arch-b-plan.md`，记录当前状态所有权清单、写入路径、风险判断、ARCH-B 禁区、R1-R4 分轮方案和中文 SVG 状态流图；主窗口标题与 `run.bat` 标题同步推进为 `v0.2.16.1-rz`。
 - 影响范围：仅规划文档、版本标题和同步索引；不修改 UiVm 运行行为、NativeHost、Bridge、Swapchain、Resize、Present、Vulkan 生命周期或项目依赖结构。
 - 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅出现 Git LF/CRLF 工作区提示，无空白错误）；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `cab420a02d25e403802eb8460605163c29b10613`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：ARCH-B-R1 仍需在实现前决定最小 Editor State Owner 放置位置；本轮不创建新项目、不引入状态框架、不实现 Picking / Gizmo / 场景存档。
 
 ## v0.2.15.8-fix
