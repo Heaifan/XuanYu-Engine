@@ -9,7 +9,7 @@ ARCH-A-R4：架构守卫、标题版本号与 ARCH-A 总收口（2026-07-13 22:5
 - 主要改动：新增 `scripts/arch-a-guard.ps1`；主窗口标题更新为 `玄域引擎编辑器 v0.2.15.7-rz`；`run.bat` 控制台标题同步版本号；开发宪法新增窗口标题版本号规则，并强化 `changelog.md` 日期必须精确到秒、不得只写日期或分钟。
 - 影响范围：仅架构守卫脚本、窗口标题、启动脚本标题与同步文档；不修改 Swapchain、Resize、Present、渲染资源释放或 Vulkan 主链。
 - 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 在提升权限下 0 warning / 0 error。普通权限构建仍会被 Avalonia UI `obj` 资源缓存写入权限阻断，属于本机权限环境问题。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `b72993ba5fcfb33b81183c1693b50cb208376154`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：R4 为守卫与总收口轮，不处理启动 16x16 Swapchain 后自愈到真实尺寸的后续优化项。
 
 ## v0.2.15.6-rz
