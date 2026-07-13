@@ -14,13 +14,15 @@ public sealed partial class VulkanRenderSession
         {
             if (_resizeStopping) return false;
             var old = _swapchainOwner.Extent;
+            var oldResourceGen = _swapchainOwner.ResourceGeneration;
             _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", "查询中..."));
             if (!_swapchainOwner.TryRecreateToCurrent(out _, out var rebuilt, _generation)) return RetryOrStop(source, old);
             if (!rebuilt) return true;
-            if (!_clearFrame.RebuildFramebuffers(_generation)) return false;
             _generation++;
+            if (!_clearFrame.RebuildFramebuffers(_generation, true)) return false;
             _recoverTries = 0;
             var next = _swapchainOwner.Extent;
+            _log?.Invoke(VulkanClearFrameLogFormatter.SwapchainGeneration($"QueuePresent自愈/{source}", oldResourceGen, _swapchainOwner.ResourceGeneration, true, old, next, "必须重建FB并重录CB"));
             _log?.Invoke(VulkanResizeTracer.HealStage(_generation, source, $"{old.Width}x{old.Height}", $"{next.Width}x{next.Height}", "已恢复 Present"));
             return true;
         }

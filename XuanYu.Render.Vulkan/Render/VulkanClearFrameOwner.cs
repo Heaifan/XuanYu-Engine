@@ -54,9 +54,9 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
             throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
     }
 
-    public bool RebuildFramebuffers(uint generation = 0)
+    public bool RebuildFramebuffers(uint generation = 0, bool force = false)
     {
-        if (_framebuffers.Length > 0 && _extent.Width == _swapchainOwner.Extent.Width && _extent.Height == _swapchainOwner.Extent.Height)
+        if (!force && _framebuffers.Length > 0 && _extent.Width == _swapchainOwner.Extent.Width && _extent.Height == _swapchainOwner.Extent.Height)
         {
             Log(VulkanClearFrameLogFormatter.Skipped($"同尺寸跳过帧缓冲重建（{_extent.Width}x{_extent.Height}）"));
             return true;

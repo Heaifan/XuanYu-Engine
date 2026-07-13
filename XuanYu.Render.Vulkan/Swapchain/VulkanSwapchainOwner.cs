@@ -21,6 +21,7 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
     ImageView[] _imageViews = [];
     Format _format;
     Extent2D _extent;
+    uint _resourceGeneration;
     bool _disposed;
 
     public const string DeviceExtensionName = "VK_KHR_swapchain"; // VK4-C：LogicalDevice 创建时必须启用的设备扩展
@@ -60,6 +61,7 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
             if (!ok) return false;
             DestroyImagesAndViews();
             _swapchain = swapchain; _images = images; _imageViews = views; _format = format; _extent = extent;
+            _resourceGeneration++;
             Log(_log, VulkanSwapchainLogFormatter.Recreated(_extent, views.Length));
             _log?.Invoke(VulkanResizeTracer.Stage(generation, "Swapchain.Recreate完成", $"{extent.Width}x{extent.Height}"));
             return true;
@@ -95,6 +97,7 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         Log(_log, VulkanSwapchainLogFormatter.Disposed());
     }
     public Format Format => _format; public Extent2D Extent => _extent;
+    public uint ResourceGeneration => _resourceGeneration;
     public ReadOnlySpan<ImageView> ImageViews => _imageViews; public SwapchainKHR Swapchain => _swapchain;
     public KhrSwapchain Khr => _khr!; static void Log(Action<string>? log, string m) { log?.Invoke(m); }
 }

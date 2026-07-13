@@ -24,4 +24,8 @@ public static class VulkanClearFrameLogFormatter
     public static string OutOfDateRecoverFailed(string reason) => $"【VulkanClearFrame】Swapchain 过期恢复失败，暂停 Present：{reason}";
     // RZ-VK5-D-R3：尺寸已由自愈恢复一致，Resize 快速跳过（不停启 Present 泵）。
     public static string ResizeFastSkipped(uint generation, int w, int h) => $"【VulkanClearFrame】Resize 快速跳过：尺寸已由自愈恢复（{w}x{h}）；generation={generation}";
+    public static string SwapchainGeneration(string source, uint oldGen, uint newGen, bool rebuilt, Extent2D oldExtent, Extent2D newExtent, string decision)
+        => $"【Swapchain代际】触发来源：{source}；旧代际：{oldGen}；新代际：{newGen}；是否实际重建：{(rebuilt ? "是" : "否")}；旧Extent：{oldExtent.Width}x{oldExtent.Height}；新Extent：{newExtent.Width}x{newExtent.Height}；处理决定：{decision}";
+    public static string ResizeSkipped(string source, uint gen, Extent2D current, int w, int h, string reason)
+        => $"【Resize跳过】触发来源：{source}；当前Swapchain代际：{gen}；当前物理尺寸：{current.Width}x{current.Height}；请求逻辑尺寸：{w}x{h}；实际Swapchain重建：否；原因：{reason}";
 }

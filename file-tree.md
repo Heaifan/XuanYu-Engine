@@ -1,5 +1,13 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-R2-R2 Swapchain 代际依赖修复快照 (2026-07-13 22:24:18)
+修复日志栏 Resize 后 Swapchain 实际换代但 Framebuffer / CommandBuffer 因同 extent 被错误跳过重建，最终触发 `QueueSubmit ErrorDeviceLost` 的生命周期缺陷。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs`  # Swapchain 持有者；新增资源代际 `ResourceGeneration`，仅在 Swapchain / ImageView 集合实际换代时推进，供上层判断依赖资源是否必须重建。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`  # Framebuffer / CommandBuffer 持有者；`RebuildFramebuffers` 支持强制重建，Swapchain 换代时即使 extent 相同也必须重建 FB 并重录 CB。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`  # ClearFrame / Resize 日志格式化；新增低频中文 Swapchain 代际与 Resize 跳过日志，不逐帧输出。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`  # UI 合并 Resize 入口；改为查询当前 Surface extent，若 Present 自愈已完成当前尺寸则在 Recreate 前快速跳过，否则按资源代际强制重建依赖资源。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs`  # Present OutOfDate 自愈入口；Swapchain 换代后强制重建 FB / CB，并输出中文代际日志。
+
 ## ARCH-A-R2-R2 布局同步高度滞后修复快照 (2026-07-13 22:05:10)
 修复日志详情栏展开/收起后 Win32 子窗口已到正确物理尺寸，但 Vulkan Swapchain / Framebuffer 仍可能沿用旧高度导致底部黑屏的问题。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`  # 日志栏展开/收起后的最终布局同步路径；先按逻辑尺寸乘 DPI 调整 Win32 子窗口并输出探针，再把逻辑尺寸交给 `NativeHostResizeCoalescer` 延后合并触发桥接 Resize，避免 Surface CurrentExtent 未稳定时重建 Swapchain。

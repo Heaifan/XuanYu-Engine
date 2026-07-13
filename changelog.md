@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.15.5-fix
+ARCH-A-R2-R2：Swapchain 代际依赖与重复 Resize 修复（2026-07-13 22:24:18，修复）
+
+- 原历史编号：ARCH-A-R2-R2
+- 日期：2026-07-13 22:24:18
+- 任务目标：修复日志栏 Resize 后可重复出现的 `QueueSubmit ErrorDeviceLost`，根因是 Swapchain 实际重建并生成新 ImageView 后，仅因 extent 相同而错误跳过 Framebuffer 重建与 CommandBuffer 重录。
+- 主要改动：`VulkanSwapchainOwner` 新增资源代际 `ResourceGeneration`，仅在 Swapchain / ImageView 实际换代后推进；`VulkanClearFrameOwner.RebuildFramebuffers` 增加 `force` 参数，Swapchain 换代时即使 extent 相同也强制销毁旧 FB、创建新 FB 并重录 CB；`VulkanRenderSession.Resize` 改为查询当前 Surface extent，若 Present 自愈已完成目标尺寸则在 Recreate 前快速跳过；Present 自愈与 UI 合并 Resize 均输出低频中文代际日志。
+- 影响范围：仅 `XuanYu.Render.Vulkan` 的 Swapchain / RenderSession / ClearFrame 代际一致性路径，以及 `changelog.md`、`file-tree.md`；不修改 ARCH-A 注入链，不删除 fallback，不进入 ARCH-A-R3。
+- 验证结果：`git diff --check` 通过；5+100 扫描无 `.cs/.axaml/.js` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 在释放本项目 App 文件锁后 0 warning / 0 error。普通权限构建曾被残留 `XuanYu.Editor.App (29216)` 锁定输出 DLL 阻断，停止该进程后通过。
+- Commit Hash：待提交后补齐。
+- 遗留问题：仍需用户按 175% DPI 真机验收清单复验：展开/收起日志栏 10 次、拖动日志栏分隔线至少 5 秒、改变主窗口尺寸、最小化恢复、确认不再出现 `ErrorDeviceLost`，且 Swapchain / Framebuffer / CommandBuffer 代际不落后。
+
 ## v0.2.15.4-r2-fix
 ARCH-A-R2-R2：日志栏布局同步后的 Swapchain 高度滞后修复（2026-07-13 22:05:10，修复）
 

@@ -25,9 +25,18 @@ public sealed partial class VulkanRenderSession
             _resizeStopping = false;
             if (IsSameSize(width, height)) return RestartAfterResizeSkip(width, height);
             var old = _swapchainOwner.Extent;
-            if (!_swapchainOwner.Recreate(width, height, _generation)) return FailResize("Swapchain 重建失败");
-            if (!_clearFrame.RebuildFramebuffers(_generation)) return FailResize("Framebuffer 重建失败");
-            if (old.Width != _swapchainOwner.Extent.Width || old.Height != _swapchainOwner.Extent.Height) _generation++;
+            var oldResourceGen = _swapchainOwner.ResourceGeneration;
+            if (!_swapchainOwner.TryRecreateToCurrent(out _, out var currentRebuilt, _generation)) return FailResize("Swapchain 重建失败");
+            var rebuilt = oldResourceGen != _swapchainOwner.ResourceGeneration;
+            var next = _swapchainOwner.Extent;
+            if (!currentRebuilt && !rebuilt)
+            {
+                _log?.Invoke(VulkanClearFrameLogFormatter.ResizeSkipped("UI合并Resize", _generation, next, width, height, "Present自愈已完成目标尺寸"));
+                return RestartAfterResizeSkip(width, height);
+            }
+            if (rebuilt || old.Width != _swapchainOwner.Extent.Width || old.Height != _swapchainOwner.Extent.Height) _generation++;
+            _log?.Invoke(VulkanClearFrameLogFormatter.SwapchainGeneration("UI合并Resize", oldResourceGen, _swapchainOwner.ResourceGeneration, rebuilt, old, next, "必须重建FB并重录CB"));
+            if (!_clearFrame.RebuildFramebuffers(_generation, rebuilt)) return FailResize("Framebuffer 重建失败");
             _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize完成", $"{_swapchainOwner.Extent.Width}x{_swapchainOwner.Extent.Height}；{_clearFrame.CommandBuffers.Length} 张 CB"));
         }
         if (!_presentLoop.Start()) return FailResize("Present 泵重启失败");
