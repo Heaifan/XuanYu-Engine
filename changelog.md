@@ -9,7 +9,7 @@ ARCH-A-R2-R1：新启动入口 DPI / 物理像素一致性修复（2026-07-13 21
 - 主要改动：`app.manifest` 补 PerMonitorV2 DPI awareness 并将 manifest 身份改为 `XuanYu.Editor.App.app`；`VulkanNativeHost.OnSizeChanged` 与日志栏同步路径统一使用 `逻辑尺寸 × DPI` 后的物理像素调整 Win32 子窗口；新增 `VulkanNativeHost.Dpi.cs` 承载物理尺寸换算；`run.bat` 改为还原/构建/启动 `XuanYu.Editor.App`，切换到仓库根、UTF-8 输出并透传退出码。
 - 影响范围：仅 App 启动配置、Native HWND 物理尺寸、run.bat 与同步文档；不修改 Vulkan Attach/Resize/Present/Fatal/Detach 行为，不修改 RenderArea/Viewport/Scissor，不进入 ARCH-A-R3。
 - 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore` 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；受控运行 `XuanYu.Editor.App` 12 秒后自动停止，日志显示应用注入路径生效、未触发 fallback、Instance / Surface / Swapchain / Present 启动成功，Swapchain / Framebuffer 重建到 `1248x1110` 物理 extent；无残留 `XuanYu.Editor.App` 进程。因本次为定时停止，蓝灰背景是否覆盖完整视口、日志栏拖动和关闭释放顺序仍需用户真机确认。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `3a403d4cc768bf582e8054aa076f66d736985cb7`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：仍需用户在 175% 缩放率下真机确认蓝灰背景覆盖完整 Vulkan 视口、黄色三角形正常、展开/收起日志栏与窗口 Resize 后无黑边。
 
 ## v0.2.15.3-r3-rz
