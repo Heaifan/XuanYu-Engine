@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.15.2-rz
+ARCH-A-R1：最小渲染生命周期契约与 Vulkan 工厂适配（2026-07-13 20:30:44，实装）
+
+- 原历史编号：ARCH-A-R1
+- 日期：2026-07-13 20:30:44
+- 任务目标：在 `XuanYu.Render.Abstractions` 建立现有 NativeHost 渲染生命周期所需的最小契约，并让 Vulkan 实现开始适配；不删除 `Editor.UI` 旧 Vulkan 调用链，不新增 `Editor.App`。
+- 主要改动：`INativeHostSurfaceBridge` 继承 `IDisposable`，把释放纳入抽象生命周期契约；新增 `INativeHostSurfaceBridgeFactory`；新增 `VulkanNativeHostSurfaceBridgeFactory` 返回 `VulkanNativeHostSurfaceBridge`。
+- 影响范围：仅 `XuanYu.Render.Abstractions`、`XuanYu.Render.Vulkan` 与同步文档；未修改 `XuanYu.Editor.UI`，未移除任何旧 Vulkan/Silk 引用，未改变 Attach/Resize/Detach 行为。
+- 验证结果：5 个项目按顺序 `dotnet build --no-restore` 全部 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；`Render.Abstractions` 对 `Silk.NET.Vulkan` / `XuanYu.Render.Vulkan` 的命中仅为历史说明注释，无实际 using / PackageReference / ProjectReference；`Editor.UI` 旧链路未改动。
+- Commit Hash：待提交后补齐。
+- 遗留问题：UI 侧仍由 `VulkanSurfaceBridgeProvider` 直接装配 Vulkan 实现；`XuanYu.Editor.UI.csproj` 仍直接引用 `Render.Vulkan` / `Silk.NET.Vulkan`；旧 `VulkanClearSession.*` 仍待后续独立轮次清理。
+
 ## v0.2.15.1-rz
 ARCH-A-Plan：Editor.UI Vulkan 直接依赖边界审计与迁移计划（2026-07-13 20:27:01，规划文档）
 

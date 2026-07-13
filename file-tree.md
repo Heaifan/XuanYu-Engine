@@ -1,5 +1,11 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-R1 最小生命周期契约快照 (2026-07-13 20:30:44)
+建立 NativeHost 渲染桥最小装配契约，Vulkan 侧开始适配；不修改 UI 旧调用链。
+- `XuanYu.Render.Abstractions/INativeHostSurfaceBridge.cs`  # NativeHost Surface 生命周期桥契约；现在显式包含释放生命周期，不负责具体 Vulkan 创建。
+- `XuanYu.Render.Abstractions/INativeHostSurfaceBridgeFactory.cs`  # NativeHost 渲染桥工厂契约；后续供组合根注入具体后端，不负责选择或持有 Vulkan 类型。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridgeFactory.cs`  # Vulkan 后端工厂适配；只创建 `VulkanNativeHostSurfaceBridge`，不改变 Attach/Resize/Detach 行为。
+
 ## ARCH-A-Plan 架构边界规划快照 (2026-07-13 20:27:01)
 新增 ARCH-A 债务收口规划文档，只记录依赖边界和迁移顺序，不修改运行逻辑。
 - `docs/arch-a-plan.md`  # ARCH-A 规划文档：审计 `Editor.UI` 直接依赖 `Render.Vulkan` / `Silk.NET.Vulkan` 的活跃文件与历史旧探针，约束 `v0.2.15.2-rz` 只建立最小生命周期契约并适配 Vulkan 实现；不负责删除旧 UI Vulkan 链路、不新增组合根项目、不改变渲染行为。
