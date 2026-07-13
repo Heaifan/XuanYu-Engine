@@ -51,8 +51,13 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         var width = (int)e.NewSize.Width;
         var height = (int)e.NewSize.Height;
         var isValid = _hwnd != 0 && width > 0 && height > 0;
-        if (isValid) Win32ViewportHost.Resize(_hwnd, width, height);
-        _resizer.OnResize(width, height, GetDpiScale(), isValid, _hwnd);
+        var dpi = GetDpiScale();
+        if (isValid)
+        {
+            var (physicalW, physicalH) = ToPhysicalSize(width, height, dpi);
+            Win32ViewportHost.Resize(_hwnd, physicalW, physicalH);
+        }
+        _resizer.OnResize(width, height, dpi, isValid, _hwnd);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -84,23 +89,6 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     }
 
     double GetDpiScale() => TopLevel.GetTopLevel(this)?.RenderScaling ?? 1d;
-
-    INativeHostSurfaceBridge CreateBridge()
-    {
-        if (DataContext is UiVm { SurfaceBridgeFactory: { } factory })
-        {
-            LogBridgeFactorySource("应用注入（XuanYu.Editor.App）");
-            return factory.Create(ReportVulkanMessage);
-        }
-        LogBridgeFactorySource("旧兼容回退（VulkanSurfaceBridgeProvider）");
-        return VulkanSurfaceBridgeProvider.Create(ReportVulkanMessage);
-    }
-
-    void LogBridgeFactorySource(string source)
-    {
-        var message = $"【ARCH-A-R2】桥接工厂来源：{source}";
-        Console.WriteLine(message); ReportVulkanMessage(message);
-    }
 
     // VK4-D-R2：后台 Present 泵日志必须回 UI 线程访问 DataContext / UiVm。
     void ReportVulkanMessage(string msg)

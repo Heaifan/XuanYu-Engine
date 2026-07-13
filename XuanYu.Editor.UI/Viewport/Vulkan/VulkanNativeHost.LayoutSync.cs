@@ -37,8 +37,7 @@ public sealed partial class VulkanNativeHost
         var logicalH = (int)Bounds.Height;
         if (logicalW <= 0 || logicalH <= 0) return;
         var dpi = GetDpiScale();
-        var physicalW = Math.Max(1, (int)Math.Round(logicalW * dpi));
-        var physicalH = Math.Max(1, (int)Math.Round(logicalH * dpi));
+        var (physicalW, physicalH) = ToPhysicalSize(logicalW, logicalH, dpi);
         _resizer.Cancel();
         Win32ViewportHost.Resize(_hwnd, physicalW, physicalH);
         _bridge?.Resize(logicalW, logicalH);

@@ -1,5 +1,14 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-R2-R1 DPI 物理尺寸修复快照 (2026-07-13 21:42:14)
+修复新 App 启动入口下 DPI 虚拟化与逻辑/物理尺寸混用导致的左上角绘制问题。
+- `XuanYu.Editor.UI/app.manifest`  # App 可执行入口复用的 Windows manifest；声明 PerMonitorV2 DPI awareness，不负责渲染逻辑。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`  # NativeHost 控件；SizeChanged 时用物理像素调整 Win32 子窗口，逻辑尺寸仍交给渲染桥日志/请求路径。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs`  # Bridge 创建与工厂来源日志；优先使用 App 注入 factory，旧 provider 仅作 fallback。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs`  # 逻辑尺寸到物理像素尺寸换算工具；不触碰 Vulkan 对象。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`  # 日志栏展开/收起同步路径复用同一物理尺寸换算。
+- `run.bat`  # 仓库根启动脚本；唯一启动 `XuanYu.Editor.App`，使用 UTF-8，透传退出码，失败时保留窗口。
+
 ## ARCH-A-R2 Avalonia 应用组装层快照 (2026-07-13 20:44:15)
 新增真实应用启动与依赖组装入口，避免 UI 项目直接作为活动启动入口。
 - `XuanYu.Editor.App/XuanYu.Editor.App.csproj`  # Avalonia WinExe 启动项目；引用 UI、Abstractions、Vulkan；不负责 Swapchain、Resize、Present 或 ViewModel 业务状态。
