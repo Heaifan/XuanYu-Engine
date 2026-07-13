@@ -14,6 +14,7 @@
 → 直接实施最小可行修改
 → 完成验证
 → 提交本地 Commit
+→ Push 到 GitHub 远端当前工作分支
 → 输出完整报告
 ```
 
@@ -507,24 +508,23 @@ Build 或测试失败时：
 
 ### 2. Push
 
-自动验证通过后可本地 Commit。
+自动验证通过并完成本地 Commit 后，必须 Push 到 GitHub 远端当前工作分支，作为多电脑开发的远端备份基线。
 
-以下任务通常需用户真机验收后再 Push：
+Push 规则：
 
-- UI；
-- Vulkan；
-- 输入；
-- 生命周期；
-- 性能；
-- 真实交互。
+- 默认 Push 当前工作分支到其跟踪远端分支；
+- 不得因“未进入 main”而跳过 Push；
+- Push 前必须确认 worktree、staged、untracked 状态；
+- Push 后必须在最终报告中写明远端分支、Push 结果和 HEAD Hash；
+- Push 只代表备份和同步，不代表正式封版。
 
-以下任务可直接 Push：
+以下操作仍然必须经用户明确确认：
 
-- 纯文档；
-- 测试；
-- 低风险纯逻辑。
-
-用户明确要求 Push 时，按要求执行。
+- 合并到 `main`；
+- 创建 Pull Request；
+- 创建或移动 Tag；
+- 创建 GitHub Release；
+- 强推、Rebase、重写历史。
 
 ### 3. 分支
 
