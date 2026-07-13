@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="XuanYu.Core/XuanYu.Core.csproj" />
+  <Project Path="XuanYu.Editor.App/XuanYu.Editor.App.csproj" />
+  <Project Path="XuanYu.Editor.UI/XuanYu.Editor.UI.csproj" />
+  <Project Path="XuanYu.Editor.Win/XuanYu.Editor.Win.csproj" />
+  <Project Path="XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj" />
+  <Project Path="XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj" />
+</Solution>

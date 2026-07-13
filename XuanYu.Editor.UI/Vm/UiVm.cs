@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
 
@@ -12,8 +13,11 @@ public sealed partial class UiVm : INotifyPropertyChanged
     string _footerMessage = "已就绪。SampleProject 已选中。", _footerMode = "工具：选择", _footerState = "状态：就绪";
     bool _hasSelection = true, _isLogOpen;
 
-    public UiVm()
+    public UiVm() : this(null) { }
+
+    public UiVm(INativeHostSurfaceBridgeFactory? surfaceBridgeFactory)
     {
+        SurfaceBridgeFactory = surfaceBridgeFactory;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
@@ -22,6 +26,7 @@ public sealed partial class UiVm : INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+    public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }
     public ICommand RunCommand { get; }
     public ICommand SelectToolCommand { get; }
     public ICommand ToggleLogCommand { get; }

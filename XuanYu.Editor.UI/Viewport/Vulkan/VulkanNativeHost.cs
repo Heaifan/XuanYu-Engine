@@ -34,7 +34,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
             _createdReported = true;
         }
         var snap = Report(NativeHostLifecycleState.Attached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
-        _bridge ??= VulkanSurfaceBridgeProvider.Create(ReportVulkanMessage);
+        _bridge ??= CreateBridge();
         _bridge.Attach(NativeHostSurfaceContract.ToSurfaceHandle(snap));
     }
 
@@ -84,6 +84,13 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     }
 
     double GetDpiScale() => TopLevel.GetTopLevel(this)?.RenderScaling ?? 1d;
+
+    INativeHostSurfaceBridge CreateBridge()
+    {
+        if (DataContext is UiVm { SurfaceBridgeFactory: { } factory })
+            return factory.Create(ReportVulkanMessage);
+        return VulkanSurfaceBridgeProvider.Create(ReportVulkanMessage);
+    }
 
     // VK4-D-R2：Vulkan 日志回调线程安全入口。Present 泵在后台线程打日志，
     // 访问 DataContext / UiVm / 日志集合必须回 UI 线程，否则 Avalonia 抛 InvalidOperationException。

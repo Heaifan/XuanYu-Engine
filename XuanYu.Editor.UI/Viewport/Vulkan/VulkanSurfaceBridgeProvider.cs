@@ -3,9 +3,8 @@ using XuanYu.Render.Vulkan;
 
 namespace XuanYu.Editor.UI;
 
-// VK3-C2 组合根：把渲染层具体桥接实现装配给 UI 生命周期宿主。
-// UI 宿主（VulkanNativeHost）只认 INativeHostSurfaceBridge 契约，
-// 不直接依赖 Render.Vulkan 具体类，保持 Editor.UI → Abstractions 的依赖方向。
+// ARCH-A-R2：旧 UI 启动入口的兼容 fallback。
+// 新 Editor.App 路径通过 INativeHostSurfaceBridgeFactory 注入，不走这里直接 new。
 public static class VulkanSurfaceBridgeProvider
 {
     public static INativeHostSurfaceBridge Create(Action<string> log) =>

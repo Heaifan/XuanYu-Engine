@@ -1,28 +1,26 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Markup.Xaml.Styling;
-using Avalonia.Styling;
-using Avalonia.Themes.Fluent;
+using Avalonia.Markup.Xaml;
+using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
 
 public sealed class App : Application
 {
-    public override void Initialize()
-    {
-        RequestedThemeVariant = ThemeVariant.Light;
-        Styles.Add(new FluentTheme());
-        Styles.Add(new StyleInclude(new Uri("avares://XuanYu.Editor.UI/"))
-        {
-            Source = new Uri("avares://XuanYu.Editor.UI/Ui.axaml")
-        });
-    }
+    readonly INativeHostSurfaceBridgeFactory? _surfaceBridgeFactory;
+
+    public App() { }
+
+    public App(INativeHostSurfaceBridgeFactory surfaceBridgeFactory) =>
+        _surfaceBridgeFactory = surfaceBridgeFactory;
+
+    public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var vm = new UiVm();
+            var vm = new UiVm(_surfaceBridgeFactory);
             VulkanProbeRoute.Run(vm);
             desktop.MainWindow = new UiWin
             {
