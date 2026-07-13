@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.15.1-rz
+ARCH-A-Plan：Editor.UI Vulkan 直接依赖边界审计与迁移计划（2026-07-13 20:27:01，规划文档）
+
+- 原历史编号：ARCH-A-Plan
+- 日期：2026-07-13 20:27:01
+- 任务目标：确认 `Editor.UI` 直接依赖 `Render.Vulkan` / `Silk.NET.Vulkan` 的真实边界，并规划后续 ARCH-A-R1 的最小契约迁移顺序。
+- 主要改动：新增 `docs/arch-a-plan.md`，记录活跃直接依赖文件、历史旧探针依赖、R1 允许/禁止范围与架构 SVG；同步 `file-tree.md`。
+- 影响范围：仅 `docs/arch-a-plan.md`、`changelog.md`、`file-tree.md`；不修改代码、不修改项目引用、不改变运行逻辑。
+- 验证结果：纯文档计划；已确认 `Editor.UI` 活跃直接依赖清单包含 `XuanYu.Editor.UI.csproj`、`VulkanSurfaceBridgeProvider.cs`、`UiVm.VulkanProbe.cs`、`VulkanProbeRoute.cs`；`Render.Abstractions` 无实际 Silk.NET / Vulkan 依赖。
+- Commit Hash：待提交后补齐。
+- 遗留问题：正式依赖迁移留给 `v0.2.15.2-rz` 起的独立轮次；本轮不删除旧 `VulkanClearSession.*`，不新增 `Editor.App`。
+
 ## v0.2.14.12-rz
 DOC-CONSTITUTION-1：changelog 时间精度规则补充（2026-07-13 20:24:59，纯文档）
 

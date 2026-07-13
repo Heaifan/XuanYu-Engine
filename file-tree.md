@@ -1,5 +1,9 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-Plan 架构边界规划快照 (2026-07-13 20:27:01)
+新增 ARCH-A 债务收口规划文档，只记录依赖边界和迁移顺序，不修改运行逻辑。
+- `docs/arch-a-plan.md`  # ARCH-A 规划文档：审计 `Editor.UI` 直接依赖 `Render.Vulkan` / `Silk.NET.Vulkan` 的活跃文件与历史旧探针，约束 `v0.2.15.2-rz` 只建立最小生命周期契约并适配 Vulkan 实现；不负责删除旧 UI Vulkan 链路、不新增组合根项目、不改变渲染行为。
+
 ## VK-LIFE-1-R2 Fatal 状态发布快照 (2026-07-13)
 收口 Present 后台线程 Fatal 状态跨线程发布契约。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs`  # `_failed` 改为 `int` 发布位，`IsFailed` / `FailureReason` 走 Volatile 读取。
