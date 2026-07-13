@@ -9,7 +9,7 @@ DOC-GIT-PUSH-1：开发提交必须 Push 到 GitHub 远端工作分支（2026-07
 - 主要改动：`docs/玄域引擎_AI开发宪法.md` 默认流程新增 Push 步骤；Git Push 章节改为验证通过并 Commit 后必须 Push 当前工作分支，同时保留 main 合并、PR、Tag、Release、强推、Rebase、重写历史必须明确确认的红线；主窗口标题和 `run.bat` 标题更新为 `v0.2.16.2-rz`。
 - 影响范围：仅开发规范、版本标题和同步文档；不修改 UiVm、状态所有权实现、NativeHost、Bridge、Vulkan、Resize、Present 或项目依赖结构。
 - 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 Git LF/CRLF 工作区提示，无空白错误）；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `b32e760a2fedc6cad2de919edb9c51c89bc8298e`；哈希回填修正以 Git 记录和交付报告为准。
 - Push 状态：待本轮 Push 后补齐。
 - 遗留问题：后续 ARCH-B-R1 版本号需顺延到下一个有效开发版本。
 
