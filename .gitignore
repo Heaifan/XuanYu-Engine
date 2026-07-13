@@ -35,3 +35,6 @@ Thumbs.db
 
 # Local AI/workbuddy tool state (not project source, keep out of repo history)
 .workbuddy/
+
+# Misplaced standalone MVP project, not XuanYu Engine source
+qizheng-mvp-fixed/

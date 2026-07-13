@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.14.8-rz
+SAFE-1：仓库危险脚本与误提交风险收口（2026-07-13，仓库安全）
+
+- 原历史编号：SAFE-1
+- 日期：2026-07-13
+- 任务目标：只处理 ORG-1 后续指定的两项仓库安全问题：tracked 的 `111.ps1` 与 untracked、未忽略的 `qizheng-mvp-fixed/`。
+- 主要改动：将 `111.ps1` 安全隔离为立即报错退出的占位脚本，移除原脚本中的 `.git` 删除、`git init`、`git add -A`、提交和推送流程；在 `.gitignore` 中加入 `qizheng-mvp-fixed/`，避免误 `git add -A` 纳入独立 MVP 项目。
+- 影响范围：仅 `111.ps1`、`.gitignore`、`changelog.md`、`file-tree.md`；未修改任何 `.cs/.axaml/.csproj`；未删除或迁移 `qizheng-mvp-fixed/`；未继续修改 ORG-1 审计报告。
+- 验证结果：`git diff --check` 通过；`git check-ignore -v qizheng-mvp-fixed` 命中根 `.gitignore`；`111.ps1` 中 `Remove-Item`、`git init`、`git add -A`、`git commit`、`git push`、`Read-Host` 0 命中；`.cs/.axaml/.csproj` 改动 0。纯仓库安全修改，不重新构建五个项目。
+- Commit Hash：本轮最终提交 Hash 以 Git 记录和交付报告为准。
+- 遗留问题：`111.ps1` 当前为安全隔离状态，如需彻底删除需按删除流程另行批准；`qizheng-mvp-fixed/` 仍留在本地工作区但已被根 `.gitignore` 覆盖。
+
 ## v0.2.14.7-rz
 ORG-1：项目基线审计最终文档收口（2026-07-13，纯文档）
 
