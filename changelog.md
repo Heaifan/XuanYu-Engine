@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.15.7-r1-rz
+ARCH-A-R4-R1：唯一启动入口守卫与普通权限构建收口（2026-07-13 23:04:38，修正）
+
+- 原历史编号：ARCH-A-R4-R1
+- 日期：2026-07-13 23:04:38
+- 任务目标：补齐 ARCH-A-R4 守卫缺口，确保只有 `XuanYu.Editor.App` 是可执行入口，并按普通权限清理缓存后重新验证完整构建；同步标题版本号。
+- 主要改动：`XuanYu.Editor.Win` 移除 `OutputType=WinExe` 并删除旧 `Program.cs` 启动入口，降为非独立启动项目；`scripts/arch-a-guard.ps1` 增加 `OutputType` 检查，强制只有 `Editor.App` 可为 `WinExe/Exe`；主窗口标题和 `run.bat` 标题更新为 `v0.2.15.7-r1-rz`。
+- 影响范围：仅启动入口守卫、旧 WinForms 壳输出类型、标题版本号和同步文档；不修改 Swapchain、Resize、Present、Vulkan 释放链或 App 注入逻辑。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过，已覆盖唯一可执行入口；5+100 扫描通过；`git diff --check` 通过；`XuanYu.Editor.Win` 普通权限 `dotnet build --no-restore` 0 warning / 0 error；清理 `XuanYu.Editor.UI/bin,obj` 后修复用户级 `NuGet.Config` 对 `CodexSandboxUsers` 的读取权限，`dotnet restore XuanYu.Engine.slnx` 不再出现 `Access denied`，但当前 Codex 普通沙箱仍因 socket 权限阻止访问 `api.nuget.org:443`；放开网络后 restore 通过，随后普通权限 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：待提交后补齐。
+- 遗留问题：版本号仍分散在标题、run.bat 和 changelog 中；后续可考虑单一版本来源，但本轮仅用守卫防漂移。
+
 ## v0.2.15.7-rz
 ARCH-A-R4：架构守卫、标题版本号与 ARCH-A 总收口（2026-07-13 22:53:06，实施）
 

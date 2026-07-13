@@ -19,13 +19,18 @@ function Assert-NotContains([string]$path, [string[]]$needles, [string]$label) {
         }
     }
 }
+function Get-OutputType([string]$path) {
+    $match = [regex]::Match((Read-Text $path), '<OutputType>(.*?)</OutputType>')
+    if ($match.Success) { return $match.Groups[1].Value }
+    return ""
+}
 function Get-SourceFiles([string]$dir) {
-    git ls-files "$dir/*" | Where-Object { $_ -match '\.(cs|axaml|js)$' } | ForEach-Object { Get-Item -LiteralPath $_ }
+    git ls-files "$dir/*" | Where-Object { $_ -match '\.(cs|axaml|js)$' -and (Test-Path $_) } | ForEach-Object { Get-Item -LiteralPath $_ }
 }
 function Get-TrackedHandwrittenFiles {
     $tracked = git ls-files
     $untracked = git ls-files --others --exclude-standard
-    @($tracked) + @($untracked) | Where-Object { $_ -match '\.(cs|axaml|js|ps1)$' } | ForEach-Object { Get-Item -LiteralPath $_ }
+    @($tracked) + @($untracked) | Where-Object { $_ -match '\.(cs|axaml|js|ps1)$' -and (Test-Path $_) } | ForEach-Object { Get-Item -LiteralPath $_ }
 }
 
 $uiCsproj = "XuanYu.Editor.UI/XuanYu.Editor.UI.csproj"
@@ -46,6 +51,8 @@ Assert-Contains $appCsproj "XuanYu.Editor.UI.csproj" "Editor.App composes UI"
 Assert-Contains $appCsproj "XuanYu.Render.Vulkan.csproj" "Editor.App composes Vulkan"
 Assert-Contains "run.bat" "XuanYu.Editor.App\XuanYu.Editor.App.csproj" "run.bat startup project"
 
+if ((Get-OutputType $appCsproj) -ne "WinExe") { Add-Failure "Editor.App must be WinExe" }
+
 $projects = @(
     "XuanYu.Core/XuanYu.Core.csproj",
     "XuanYu.Editor.App/XuanYu.Editor.App.csproj",
@@ -58,6 +65,12 @@ $slnx = Read-Text "XuanYu.Engine.slnx"
 foreach ($project in $projects) {
     if ($slnx.IndexOf($project, [StringComparison]::OrdinalIgnoreCase) -lt 0) {
         Add-Failure "solution missing project: $project"
+    }
+    if ($project -ne "XuanYu.Editor.App/XuanYu.Editor.App.csproj") {
+        $outputType = Get-OutputType $project
+        if ($outputType -eq "Exe" -or $outputType -eq "WinExe") {
+            Add-Failure "only Editor.App may be executable: $project is $outputType"
+        }
     }
 }
 

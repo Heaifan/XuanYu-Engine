@@ -1,5 +1,13 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-A-R4-R1 唯一启动入口守卫快照 (2026-07-13 23:04:38)
+补齐 R4 总封版前的守卫缺口，确保解决方案内只有 `XuanYu.Editor.App` 是可执行启动入口。
+- `XuanYu.Editor.Win/XuanYu.Editor.Win.csproj`  # 旧 WinForms 壳项目；移除 `OutputType=WinExe`，保留为非独立启动项目，避免与 `Editor.App` 形成双可执行入口。
+- 已删除 `XuanYu.Editor.Win/Program.cs`  # 旧 WinForms 启动入口；删除后 `Editor.Win` 不再声明独立 `Main`。
+- `scripts/arch-a-guard.ps1`  # ARCH-A 自动守卫脚本；新增 `OutputType` 检查，强制只有 `XuanYu.Editor.App` 可声明 `WinExe/Exe`。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口标题同步本轮版本：`玄域引擎编辑器 v0.2.15.7-r1-rz`。
+- `run.bat`  # 控制台标题同步本轮版本，启动项目仍为 `XuanYu.Editor.App`。
+
 ## ARCH-A-R4 架构守卫与标题版本快照 (2026-07-13 22:53:06)
 在 ARCH-A-R3 真机验收通过后，新增自动守卫并固化窗口标题版本号规则；本轮不修改 Vulkan 渲染主链。
 - `scripts/arch-a-guard.ps1`  # ARCH-A 自动守卫脚本；检查 `Editor.UI` 禁止引用 `Render.Vulkan` / `Silk.NET.Vulkan`、`Render.Abstractions` 禁止引用 Vulkan/Silk/Avalonia、`Editor.App` 组装 UI 与 Vulkan、`run.bat` 启动 App、解决方案六项目、主窗口标题版本号和 5+100。
