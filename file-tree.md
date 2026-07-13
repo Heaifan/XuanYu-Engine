@@ -1,5 +1,11 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-Plan 状态所有权审计快照 (2026-07-13 23:33:18)
+ARCH-A 封版后进入 `v0.2.16.1-rz`，本轮只新增状态所有权规划文档并同步可见版本号，不修改运行逻辑。
+- `docs/arch-b-plan.md`  # ARCH-B 规划文档：审计当前 `UiVm`、Viewport、层级树、Inspector、工具、日志与 NativeHost 写入路径；规划最小 Editor State Owner、只读快照、Preview / Commit / Cancel 边界和 R1-R4 分轮；不负责实现状态 Owner、不开发 Picking / Gizmo / 场景存档、不修改 Vulkan。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.1-rz`，继续仅承担窗口壳定义。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.1-rz`，启动项目仍为 `XuanYu.Editor.App`。
+
 ## ARCH-A-R4-R2 版本格式守卫快照 (2026-07-13 23:19:16)
 修正无效开发期版本号 `v0.2.15.7-r1-rz`，将任务轮次保留在任务编号中，版本号推进为 `v0.2.15.8-fix`。
 - `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口标题同步合法开发期版本：`玄域引擎编辑器 v0.2.15.8-fix`。
