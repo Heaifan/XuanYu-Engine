@@ -9,7 +9,7 @@ ARCH-A-R1：最小渲染生命周期契约与 Vulkan 工厂适配（2026-07-13 2
 - 主要改动：`INativeHostSurfaceBridge` 继承 `IDisposable`，把释放纳入抽象生命周期契约；新增 `INativeHostSurfaceBridgeFactory`；新增 `VulkanNativeHostSurfaceBridgeFactory` 返回 `VulkanNativeHostSurfaceBridge`。
 - 影响范围：仅 `XuanYu.Render.Abstractions`、`XuanYu.Render.Vulkan` 与同步文档；未修改 `XuanYu.Editor.UI`，未移除任何旧 Vulkan/Silk 引用，未改变 Attach/Resize/Detach 行为。
 - 验证结果：5 个项目按顺序 `dotnet build --no-restore` 全部 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；`Render.Abstractions` 对 `Silk.NET.Vulkan` / `XuanYu.Render.Vulkan` 的命中仅为历史说明注释，无实际 using / PackageReference / ProjectReference；`Editor.UI` 旧链路未改动。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `a8c9672729e49a113924f9b128856139e3f25c12`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：UI 侧仍由 `VulkanSurfaceBridgeProvider` 直接装配 Vulkan 实现；`XuanYu.Editor.UI.csproj` 仍直接引用 `Render.Vulkan` / `Silk.NET.Vulkan`；旧 `VulkanClearSession.*` 仍待后续独立轮次清理。
 
 ## v0.2.15.1-rz
@@ -21,7 +21,7 @@ ARCH-A-Plan：Editor.UI Vulkan 直接依赖边界审计与迁移计划（2026-07
 - 主要改动：新增 `docs/arch-a-plan.md`，记录活跃直接依赖文件、历史旧探针依赖、R1 允许/禁止范围与架构 SVG；同步 `file-tree.md`。
 - 影响范围：仅 `docs/arch-a-plan.md`、`changelog.md`、`file-tree.md`；不修改代码、不修改项目引用、不改变运行逻辑。
 - 验证结果：纯文档计划；已确认 `Editor.UI` 活跃直接依赖清单包含 `XuanYu.Editor.UI.csproj`、`VulkanSurfaceBridgeProvider.cs`、`UiVm.VulkanProbe.cs`、`VulkanProbeRoute.cs`；`Render.Abstractions` 无实际 Silk.NET / Vulkan 依赖。
-- Commit Hash：待提交后补齐。
+- Commit Hash：主提交 `db041ae9e845d2a810b73adfb09214b4cafdcf50`；哈希回填修正以 Git 记录和交付报告为准。
 - 遗留问题：正式依赖迁移留给 `v0.2.15.2-rz` 起的独立轮次；本轮不删除旧 `VulkanClearSession.*`，不新增 `Editor.App`。
 
 ## v0.2.14.12-rz
