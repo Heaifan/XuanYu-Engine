@@ -17,7 +17,8 @@ internal static unsafe class VulkanShaderModuleOwner
                 CodeSize = (nuint)(code.Length * 4),
                 PCode = pCode,
             };
-            vk.CreateShaderModule(deviceOwner.LogicalDevice, &info, null, out var module);
+            var result = vk.CreateShaderModule(deviceOwner.LogicalDevice, &info, null, out var module);
+            if (result != Result.Success) return default;
             return module;
         }
     }

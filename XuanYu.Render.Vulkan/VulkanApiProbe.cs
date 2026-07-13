@@ -18,7 +18,7 @@ public static unsafe class VulkanApiProbe
             vk.EnumerateInstanceVersion(&version);
             instanceVersion = version;
         }
-        catch { }
+        catch (Exception ex) { _ = ex; }
 
         Instance instance = default;
         try

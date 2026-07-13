@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.14.9-rz
+VK-LIFE-1：Vulkan 生命周期失败安全与仓库收尾（2026-07-13，修复）
+
+- 原历史编号：VK-LIFE-1
+- 日期：2026-07-13
+- 任务目标：正常 Vulkan 成功路径不退化；失败路径可回滚；Present 线程能够可靠停止；异常不再静默吞掉；顺带删除已批准删除的 `111.ps1`。
+- 主要改动：删除 tracked 的 `111.ps1`；`VulkanPresentLoop` 拆分为主循环与生命周期 partial，补 Semaphore/Fence 创建结果、WaitForFences/ResetFences/QueueSubmit/QueuePresent 等关键 Result 检查，`Stop()` 检查 `Join(2000)` 返回值，日志回调异常改为受限 Debug 兜底；`VulkanClearFrameOwner` 拆分创建/命令/生命周期 partial，补 RenderPass、CommandPool、Framebuffer、CommandBuffer 创建与录制结果检查；`VulkanRenderSession.Create` 对 ClearFrame/Pipeline/PresentLoop 做失败逆序释放，Resize 失败进入明确释放路径；`VulkanNativeHostSurfaceBridge.Attach` 改为全成功后再写字段，失败按现有释放顺序回滚，Resize 失败时不假装可用。
+- 影响范围：仓库收尾 `111.ps1` 删除；Vulkan 生命周期文件限于 `XuanYu.Render.Vulkan`；同步 `changelog.md` 与 `file-tree.md`。不处理 Editor.UI → Render.Vulkan 依赖迁移，不处理 ARCH-A，不删除 VulkanClearSession，不新增渲染功能。
+- 验证结果：5 个当前分支项目 `dotnet build --no-restore` 全部 0 warning / 0 error；5+100 全量检查无超 100 行的 `.cs/.axaml/.js`；空 `catch` 扫描 0 命中；`git ls-files -- 111.ps1` 0 命中；`111.ps1` 引用仅剩 changelog/file-tree 与历史审计文档说明；Vulkan 关键 Result 扫描确认 Wait/Reset/Submit/Present 与同步对象、RenderPass、CommandPool、Framebuffer、CommandBuffer、Pipeline、ShaderModule 创建均进入 `Check`/`Ok`/显式 `Result` 处理；`git diff --check` 通过。
+- Commit Hash：仓库收尾与 Vulkan 生命周期修复分别以本轮实际 Git 提交为准。
+- 遗留问题：需用户真机验收启动、Resize、日志栏、关闭释放顺序与人为失败路径；Editor.UI 活跃 Vulkan 依赖留给 ARCH-A-PLAN/IMPL；VulkanClearSession 清理留给后续 VK5-E。
+
 ## v0.2.14.8-rz
 SAFE-1：仓库危险脚本与误提交风险收口（2026-07-13，仓库安全）
 

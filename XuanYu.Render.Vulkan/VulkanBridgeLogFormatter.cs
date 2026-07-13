@@ -25,7 +25,13 @@ public static class VulkanBridgeLogFormatter
         "【VulkanBridge】跳过分离：尚未 Attach";
 
     public static string AttachFailed(string reason) =>
-        $"【VulkanBridge】附加失败：{reason}；Surface 未创建";
+        $"【VulkanBridge】附加失败：{reason}；已回滚可释放资源";
+
+    public static string ResizeFailed() =>
+        "【VulkanBridge】Resize 失败：Bridge 已进入失效路径并尝试释放";
+
+    public static string DetachBlocked() =>
+        "【VulkanBridge】分离受阻：Present 泵未确认停止，已禁止继续释放底层 Vulkan 资源";
 
     public static void Emit(Action<string>? log, string message)
     {

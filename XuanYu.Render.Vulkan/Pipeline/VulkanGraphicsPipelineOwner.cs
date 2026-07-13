@@ -35,12 +35,12 @@ internal sealed unsafe class VulkanGraphicsPipelineOwner : IDisposable
         }
         log?.Invoke(VulkanPipelineLogFormatter.ShaderModuleCreated());
         var layoutInfo = new PipelineLayoutCreateInfo { SType = StructureType.PipelineLayoutCreateInfo, SetLayoutCount = 0, PushConstantRangeCount = 0 };
-        vk.CreatePipelineLayout(deviceOwner.LogicalDevice, &layoutInfo, null, out var layout);
-        if (layout.Handle == 0)
+        var layoutResult = vk.CreatePipelineLayout(deviceOwner.LogicalDevice, &layoutInfo, null, out var layout);
+        if (layoutResult != Result.Success)
         {
             VulkanShaderModuleOwner.Destroy(vk, deviceOwner, vert);
             VulkanShaderModuleOwner.Destroy(vk, deviceOwner, frag);
-            log?.Invoke(VulkanPipelineLogFormatter.Failed("PipelineLayout 创建失败"));
+            log?.Invoke(VulkanPipelineLogFormatter.Failed($"CreatePipelineLayout {layoutResult}"));
             return null;
         }
         log?.Invoke(VulkanPipelineLogFormatter.PipelineLayoutCreated());

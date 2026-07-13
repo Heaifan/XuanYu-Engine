@@ -10,8 +10,10 @@ public static class VulkanClearFrameLogFormatter
     public static string Disposed() => "【VulkanClearFrame】RenderPass + Framebuffer 释放成功";
     public static string LoopStarted() => "【VulkanClearFrame】Present 泵已启动（独立线程）";
     public static string LoopStopped() => "【VulkanClearFrame】Present 泵已停止";
+    public static string LoopStopTimedOut() => "【VulkanClearFrame】Present 泵停止超时：线程仍可能使用 Vulkan 资源，已禁止继续释放";
     public static string Skipped(string r) => $"【VulkanClearFrame】跳过：{r}";
     public static string PresentError(string r) => $"【VulkanClearFrame】Present 异常：{r}";
+    public static string LogFallback(string e, string m) => $"【VulkanClearFrame】日志回调失败：{e}；原日志：{m}";
     public static string FirstPresented(uint idx) => $"【VulkanClearFrame】首帧 Present 成功；imageIndex={idx}";
     // RZ-VK5-A-R2：OutOfDate 自愈探针与恢复日志（替代原永久暂停日志）。
     public static string OutOfDateProbe(string source, Extent2D oldExtent, Extent2D newExtent, uint generation, double dpi)

@@ -1,8 +1,25 @@
 # 项目文件树 — XuanYu Engine
 
+## VK-LIFE-1 生命周期安全快照 (2026-07-13)
+加固 Vulkan 生命周期失败路径，并合并仓库收尾删除已批准的危险脚本。
+- 删除 `111.ps1`  # 已批准删除的危险仓库设置脚本；不再作为 SAFE-1-R1 单独开轮。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`  # Present 主循环：检查 Acquire/Wait/Reset/Submit/Present 结果，Stop 使用跨线程可见停止标志。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Frame.cs`  # Present 单帧提交/Present 辅助：Fence、Submit、QueuePresent 结果检查。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Lifecycle.cs`  # Present 生命周期：同步对象创建失败回滚、Join 超时阻断释放、日志回调受限兜底。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`  # ClearFrame 创建入口：RenderPass/CommandPool/Framebuffer 创建失败显式失败。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`  # CommandBuffer 分配与录制结果检查，保留固定三角形绘制路径。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`  # ClearFrame 资源释放与 Result 诊断辅助。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`  # RenderPass / CommandPool 创建结果检查。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs`  # Create/Resize 失败逆序回滚；停泵失败时不继续释放底层资源。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs`  # Present OutOfDate 自愈与失败计数。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs`  # Resize 失败释放与 TryDispose。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`  # Attach 全成功后写字段；Attach/Resize 失败进入明确回滚或失效路径。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Attach.cs`  # Attach 成功提交字段与失败逆序回滚。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Lifecycle.cs`  # Bridge Dispose 与日志出口。
+
 ## SAFE-1 仓库安全快照 (2026-07-13)
 收口 ORG-1 指定的两项仓库安全问题。
-- `111.ps1`  # SAFE-1 后为禁用占位脚本：立即报错退出，不再执行 `.git` 删除、`git init`、`git add -A`、提交或推送。
+- `111.ps1`  # SAFE-1 后曾为禁用占位脚本；VK-LIFE-1 中已按批准删除。
 - `.gitignore`  # SAFE-1 新增 `qizheng-mvp-fixed/` 忽略规则，防止误提交根目录下的独立 MVP 项目。
 - `qizheng-mvp-fixed/`  # 本地未跟踪独立 MVP 项目；仍留在工作区，但已被根 `.gitignore` 覆盖，不属于玄域引擎源码。
 
