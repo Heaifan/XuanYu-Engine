@@ -8,10 +8,10 @@ ARCH-B-R2：活动工具状态与工具捕获状态唯一所有权（2026-07-14 
 - 任务目标：在 ARCH-B-R1 选择状态封版后，建立活动工具状态和工具捕获状态的唯一所有权，让工具栏只提交工具切换意图，状态栏明确区分“工具”和“编辑器交互阶段”。
 - 主要改动：`EditorStateOwner` 改为 partial 并新增工具状态分部；新增 `EditorToolId`、`EditorToolSnapshot`、`ChangeEditorToolCommand`、`EditorToolChangedResult` 和工具文本映射；`UiVm` 移除活动工具可变字段和工具布尔字段，工具名称、高亮和 `FooterMode` 全部从 Owner 的只读工具快照派生；顶部工具按钮 `IsChecked` 改为单向绑定，只通过命令提交切换意图；选择项目或层级节点后不再把 `FooterState` 写成“状态：聚焦”，避免与“聚焦”工具混淆；主窗口标题与 `run.bat` 同步到 `v0.2.16.6-rz`。
 - 修改范围：`XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`、`EditorStateOwner.Tool.cs`、`EditorToolId.cs`、`EditorToolText.cs`、`EditorToolSnapshot.cs`、`EditorToolCommand.cs`、`EditorToolChangedResult.cs`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`UiVm.Selection.cs`、`XuanYu.Editor.UI/Top/Top.axaml`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge、Picking、Gizmo、Transform Preview、场景存档、通用事件总线或第三方依赖。
-- 验证结果：开发中预检 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；本轮触碰 `.cs/.axaml/.js` 文件均未超过 100 行；全仓 5+100 扫描发现既有禁区文件 `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` 101 行、`XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 103 行，本轮按 R2 禁区未修改 Vulkan / Swapchain，作为既有范围风险如实记录。
+- 验证结果：开发中预检 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；本轮触碰 `.cs/.axaml/.js` 文件均未超过 100 行；全仓 5+100 扫描发现既有禁区文件 `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` 101 行、`XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 103 行，本轮按 R2 禁区未修改 Vulkan / Swapchain，作为既有范围风险如实记录；人工验收（2026-07-14 22:37:29）正式通过：九种活动工具切换、当前工具唯一高亮、顶部与底部工具文字同步、工具与“就绪 / 运行中”语义分离、运行/停止后保持原活动工具、选择对象不污染工具、Vulkan Resize 回归和正常关闭释放链均通过；正常关窗出现 Present 泵停止、GraphicsPipeline / RenderPass + Framebuffer / VulkanRenderSession / Swapchain / LogicalDevice / Surface / Instance / Bridge 依次释放，未出现 DeviceLost、Fatal、`[ERROR] Editor failed` 或 `Exit code: -1`。
 - Commit Hash：主实现提交 `ad1894e450de70ffd362912092ced16aadd7cc94`；不追记回填提交自身 Hash。
-- Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
-- 遗留问题：R2 只建立活动工具和捕获状态的所有权边界，尚未开发真实 Gizmo 拖动、Picking、Transform Preview、工具捕获输入细节或场景存档。
+- Push 状态：主实现与 Hash 回填已推送到 `origin/fix/RZ-VK3-A-surface-contract`；本条人工验收收口记录待提交后推送；未创建 Tag / Release。
+- 遗留问题：R2 正式封版；本轮准确成果边界为活动工具状态唯一所有权。尚未开发指针捕获、CaptureOwner、CapturePhase、BeginCapture、CommitCapture、CancelCapture、失焦取消、Escape 取消交互事务、真实 Gizmo 拖动、Picking、Transform Preview 或场景存档；这些进入后续 ARCH-B-R3。全仓仍有两个既有 5+100 超限文件，建议下一轮 `v0.2.16.7-fix` 先做 Vulkan 既有超限文件纯结构拆分。
 
 ## v0.2.16.5-fix
 ARCH-B-R1-R3：跨树选择同步与 Inspector 刷新收口（2026-07-14 21:15:02，修复）
