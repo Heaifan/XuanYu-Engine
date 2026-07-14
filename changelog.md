@@ -8,10 +8,10 @@ ARCH-B-R1-R3：跨树选择同步与 Inspector 刷新收口（2026-07-14 21:15:0
 - 任务目标：修复层级树视觉选中后未同步到正式选择和 Inspector 的阻断问题，确保项目树与层级树共享同一个 `EditorStateOwner` 正式选择状态。
 - 主要改动：左侧项目树与层级树 `SelectedItem` 绑定显式设为 `Mode=TwoWay`，确保视觉选中回写 `UiVm` 并提交 Owner；Escape 清空时同时清空两棵树的 `SelectedItem`，触发既有 Clear 路径，让 Inspector 回到无选择状态；主窗口标题与 `run.bat` 同步到 `v0.2.16.5-fix`。
 - 修改范围：`XuanYu.Editor.UI/Left/Left.axaml`、`XuanYu.Editor.UI/Left/Left.axaml.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改树视觉、Owner 架构、Vulkan、Resize、Present、Bridge、Picking、Gizmo、场景存档或第三方依赖。
-- 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；5+100 扫描无超限；首次构建因上一轮启动的 `XuanYu.Editor.App` 仍占用输出 DLL 失败，关闭该进程后 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；5+100 扫描无超限；首次构建因上一轮启动的 `XuanYu.Editor.App` 仍占用输出 DLL 失败，关闭该进程后 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；人工验收通过：项目树“构建”、层级树“地面/主相机”、项目树“MainWorld”均能通过同一个 `EditorStateOwner` 更新 Inspector；Escape 清空正式选择、两棵树 UI 选择和 Inspector 空状态；正常关窗释放链完整（Present 泵停止、Pipeline / Framebuffer / Swapchain / LogicalDevice / Surface / Instance / Bridge 依次释放），未出现 DeviceLost、Fatal、`[ERROR] Editor failed` 或 `Exit code: -1`。
 - Commit Hash：以 Git 记录和本轮交付报告为准。
 - Push 状态：未执行；未创建 Tag / Release。
-- 遗留问题：仍需人工确认项目树“构建”→层级树“地面/主相机”→项目树“MainWorld”→Escape 的完整交互链。
+- 遗留问题：ARCH-B-R1 已正式验收通过；后续进入 `v0.2.16.6-rz — ARCH-B-R2`，聚焦活动工具状态与工具捕获状态的唯一所有权。
 
 ## v0.2.16.4-fix
 ARCH-B-R1-R2：项目树 / 层级树视觉恢复与 Inspector 元数据修正（2026-07-14 20:47:57，修复）
