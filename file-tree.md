@@ -1,5 +1,15 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R1-R1 选择幂等与清空入口修复快照 (2026-07-14 20:26:21)
+推进到 `v0.2.16.3-fix`，仅修复 ARCH-B-R1 收口缺口：重复选择 / 重复清空不再制造伪变化，左侧现有选择控件提供真实清空路径；不新增状态种类，不开发 Picking / Gizmo / 存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
+- `XuanYu.Editor.UI/EditorState/EditorSelectionSnapshot.cs`  # 当前选择不可变快照；新增稳定 `SelectionKey` 用于幂等比较，不负责全局实体 ID 或持久化身份系统。
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`  # Editor 状态所有者；`Select` / `Clear` 在状态未变化时返回 NoChange（`null`），不递增 Revision、不返回伪变化结果；仍不依赖 Avalonia、Vulkan、Silk、Window 或控件。
+- `XuanYu.Editor.UI/Vm/UiVm.cs`  # UI ViewModel；项目/层级选择缓存统一提交给 Owner，null 选择进入清空命令，避免两个绑定缓存争抢正式选择状态。
+- `XuanYu.Editor.UI/Left/Left.axaml`  # 左侧项目/层级区；改用现有 `ProjectItems` / `HierarchyItems` 绑定列表提供真实选择路径，不负责场景模型、Picking 或 Gizmo。
+- `XuanYu.Editor.UI/Left/Left.axaml.cs`  # 左侧选择控件代码后置；Escape 清空当前列表选择，触发既有 null 绑定路径，不新增长期无用按钮。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.3-fix`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.3-fix`。
+
 ## ARCH-B-R1 最小状态所有权闭环快照 (2026-07-14 19:35:40)
 按 `v0.2.16.2-rz` 建立当前选择状态的最小 Editor State Owner。UI 只提交选择意图，正式状态由 Owner 持有，检查器从只读快照派生显示；本轮不开发 Picking / Gizmo / 存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
 - `XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`  # Editor 状态所有者；当前只负责选择状态的唯一正式写入、校验、Revision 递增、快照生成和变更结果返回；不负责 Avalonia 控件、窗口、Vulkan、Silk、NativeHost、Swapchain 或渲染会话。

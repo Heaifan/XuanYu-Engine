@@ -59,9 +59,9 @@ public sealed partial class UiVm : INotifyPropertyChanged
 
     public int LeftTabIndex { get => _leftTabIndex; set => Set(ref _leftTabIndex, value); }
 
-    public string? SelectedProjectItem { get => _selectedProjectItem; set { if (Set(ref _selectedProjectItem, value) && value is not null) ApplySelection("项目", value); } }
+    public string? SelectedProjectItem { get => _selectedProjectItem; set => SetProjectSelection(value); }
 
-    public string? SelectedHierarchyItem { get => _selectedHierarchyItem; set { if (Set(ref _selectedHierarchyItem, value) && value is not null) ApplySelection("世界层级", value); } }
+    public string? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
 
     void Run(string name) { FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}"); FooterState = name is "运行" ? "状态：运行中" : "状态：就绪"; LogCommand(name); OnPropertyChanged(nameof(LogSummary)); }
 
@@ -69,11 +69,37 @@ public sealed partial class UiVm : INotifyPropertyChanged
 
     void ApplySelection(string source, string item)
     {
-        _editorState.Select(new SelectEditorItemCommand(source, item));
+        if (_editorState.Select(new SelectEditorItemCommand(source, item)) is null) return;
         OnPropertyChanged(nameof(SelectionTitle)); OnPropertyChanged(nameof(SelectionSubtitle));
         OnPropertyChanged(nameof(HasSelection)); OnPropertyChanged(nameof(IsEmptySelection));
         FooterMessage = $"{source}已选择：{SelectionTitle}"; FooterState = "状态：聚焦";
         OnPropertyChanged(nameof(LogSummary));
+    }
+
+    void ApplyClearSelection()
+    {
+        if (_selectedProjectItem is not null || _selectedHierarchyItem is not null) return;
+        if (_editorState.Clear(new ClearEditorSelectionCommand()) is null) return;
+        OnPropertyChanged(nameof(SelectionTitle)); OnPropertyChanged(nameof(SelectionSubtitle));
+        OnPropertyChanged(nameof(HasSelection)); OnPropertyChanged(nameof(IsEmptySelection));
+        FooterMessage = "已清空选择。"; FooterState = "状态：就绪";
+        OnPropertyChanged(nameof(LogSummary));
+    }
+
+    void SetProjectSelection(string? value)
+    {
+        if (!Set(ref _selectedProjectItem, value, nameof(SelectedProjectItem))) return;
+        if (value is null) { ApplyClearSelection(); return; }
+        _selectedHierarchyItem = null; OnPropertyChanged(nameof(SelectedHierarchyItem));
+        ApplySelection("项目", value);
+    }
+
+    void SetHierarchySelection(string? value)
+    {
+        if (!Set(ref _selectedHierarchyItem, value, nameof(SelectedHierarchyItem))) return;
+        if (value is null) { ApplyClearSelection(); return; }
+        _selectedProjectItem = null; OnPropertyChanged(nameof(SelectedProjectItem));
+        ApplySelection("世界层级", value);
     }
 
     void SetToolFlags(string tool) { IsSelectTool = tool == "选择"; IsMoveTool = tool == "移动"; IsRotateTool = tool == "旋转"; IsScaleTool = tool == "缩放"; IsBoxSelectTool = tool == "框选"; IsFocusTool = tool == "聚焦"; IsPanTool = tool == "平移"; IsOrbitTool = tool == "环绕"; IsSnapTool = tool == "吸附"; }

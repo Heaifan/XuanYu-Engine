@@ -35,27 +35,34 @@
             <TextBox Grid.Column="1" PlaceholderText="搜索项目树..." BorderThickness="0" Background="Transparent" MinHeight="24"/>
           </Grid>
         </Border>
-        <StackPanel Spacing="1">
-          <Border Classes="treeRow selected"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}"/><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ProjectIcon}"/><TextBlock Grid.Column="2" Text="SampleProject" Classes="treeText selectedText"/></Grid></Border>
-          <Border Classes="treeRow level2"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}"/><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource WorldIcon}"/><TextBlock Grid.Column="2" Text="世界" Classes="treeText"/></Grid></Border>
-          <Border Classes="treeRow level3"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource SceneIcon}"/><TextBlock Grid.Column="2" Text="MainWorld" Classes="treeText"/></Grid></Border>
-          <Border Classes="treeRow level3"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource SceneIcon}"/><TextBlock Grid.Column="2" Text="TestWorld" Classes="treeText"/></Grid></Border>
-          <Border Classes="treeRow level2"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}"/><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource FolderIcon}"/><TextBlock Grid.Column="2" Text="资源" Classes="treeText"/></Grid></Border>
-          <Border Classes="treeRow level3"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ImageIcon}"/><TextBlock Grid.Column="2" Text="图标" Classes="treeText"/></Grid></Border>
-          <Border Classes="treeRow level3"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource MaterialIcon}"/><TextBlock Grid.Column="2" Text="材质" Classes="treeText"/></Grid></Border>
-          <Border Classes="treeRow level3"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ScriptIcon}"/><TextBlock Grid.Column="2" Text="脚本" Classes="treeText"/></Grid></Border>
-          <Border Classes="treeRow level2"><Grid ColumnDefinitions="18,18,*" ColumnSpacing="6"><Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource BuildIcon}"/><TextBlock Grid.Column="2" Text="构建" Classes="treeText"/></Grid></Border>
-        </StackPanel>
+        <ListBox x:Name="ProjectList" ItemsSource="{Binding ProjectItems}"
+                 SelectedItem="{Binding SelectedProjectItem}"
+                 Background="Transparent" BorderThickness="0"
+                 KeyDown="SelectionList_KeyDown">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Border Classes="treeRow">
+                <TextBlock Text="{Binding}" Classes="treeText"/>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
       </StackPanel>
     </TabItem>
     <TabItem Classes="leftTab" Header="层级">
-      <Grid Margin="0,8,0,0" MinHeight="220">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" MaxWidth="210">
-          <Path Classes="treeIcon" Data="{StaticResource WorldIcon}" Width="28" Height="28" Stroke="#7a8aa3"/>
-          <TextBlock Text="暂无场景对象" Classes="emptyTitle"/>
-          <TextBlock Text="打开世界或创建对象后，这里会显示场景层级。" Classes="muted" TextWrapping="Wrap" TextAlignment="Center"/>
-        </StackPanel>
-      </Grid>
+      <ListBox x:Name="HierarchyList" Margin="0,8,0,0" MinHeight="220"
+               ItemsSource="{Binding HierarchyItems}"
+               SelectedItem="{Binding SelectedHierarchyItem}"
+               Background="Transparent" BorderThickness="0"
+               KeyDown="SelectionList_KeyDown">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Border Classes="treeRow">
+              <TextBlock Text="{Binding}" Classes="treeText"/>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
     </TabItem>
   </TabControl>
 </UserControl>

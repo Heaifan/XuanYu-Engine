@@ -12,7 +12,7 @@ public sealed class EditorStateOwner
 
     public EditorSelectionSnapshot Snapshot => _snapshot;
 
-    public EditorStateChangedResult Select(SelectEditorItemCommand command)
+    public EditorStateChangedResult? Select(SelectEditorItemCommand command)
     {
         EnsureWriteThread();
         if (string.IsNullOrWhiteSpace(command.Source))
@@ -27,21 +27,34 @@ public sealed class EditorStateOwner
 
         var old = _snapshot;
         var title = command.Item.TrimStart(' ', '├', '└', '─');
+        var key = $"{command.Source}:{command.Item}";
+        if (old.HasSelection && old.SelectionKey == key)
+        {
+            return null;
+        }
+
         _snapshot = new EditorSelectionSnapshot(
             old.Revision + 1,
             true,
+            key,
             title,
             command.Source);
         return Changed(old, EditorStateChangeKind.SelectionChanged);
     }
 
-    public EditorStateChangedResult Clear(ClearEditorSelectionCommand command)
+    public EditorStateChangedResult? Clear(ClearEditorSelectionCommand command)
     {
         EnsureWriteThread();
         var old = _snapshot;
+        if (!old.HasSelection)
+        {
+            return null;
+        }
+
         _snapshot = new EditorSelectionSnapshot(
             old.Revision + 1,
             false,
+            "",
             "未选择对象",
             "无");
         return Changed(old, EditorStateChangeKind.SelectionCleared);

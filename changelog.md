@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.16.3-fix
+ARCH-B-R1-R1：选择状态幂等性与清空选择真实入口（2026-07-14 20:26:21，修复）
+
+- 原历史编号：ARCH-B-R1-R1
+- 日期：2026-07-14 20:26:21
+- 任务目标：补齐 ARCH-B-R1 收口缺口，让重复选择和重复清空成为 NoChange，并让现有左侧选择控件具备真实清空选择路径。
+- 主要改动：`EditorSelectionSnapshot` 增加稳定 `SelectionKey`；`EditorStateOwner.Select/Clear` 在状态未变化时返回 `null`，不递增 Revision、不发布伪变化；`UiVm` 将项目/层级选择缓存接入同一个 Owner，null 选择进入 `ClearEditorSelectionCommand`；`Left.axaml` 改用现有 `ProjectItems` / `HierarchyItems` 的 `ListBox` 绑定，Escape 清空当前列表选择；主窗口标题与 `run.bat` 同步到 `v0.2.16.3-fix`。
+- 修改范围：`XuanYu.Editor.UI/EditorState/*`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`XuanYu.Editor.UI/Left/Left.axaml`、`XuanYu.Editor.UI/Left/Left.axaml.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge、Picking、Gizmo、场景存档或第三方依赖。
+- 验证结果：待本轮最终验证回填；已完成一次构建预检：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：以 Git 记录和本轮交付报告为准。
+- Push 状态：待本轮裁定；未创建 Tag / Release。
+- 遗留问题：仍需真机交互验收选择 A / 重复选择 A / 选择 B / Escape 清空 / 重复清空 / 日志栏与工具按钮 / 正常关闭释放链。
+
 ## v0.2.16.2-rz
 ARCH-B-R1：最小 Editor State Owner 与只读快照边界（2026-07-14 19:35:40，实施）
 
@@ -9,7 +22,7 @@ ARCH-B-R1：最小 Editor State Owner 与只读快照边界（2026-07-14 19:35:4
 - 主要改动：新增 `EditorStateOwner`、`EditorSelectionSnapshot`、`SelectEditorItemCommand` / `ClearEditorSelectionCommand`、`EditorStateChangedResult`；`UiVm` 移除选择显示字段的正式所有权，项目树 / 层级树选择 setter 仅转发为具体选择命令，检查器标题、类型和空选择状态从 Owner 快照派生；Owner 写入由 UI 线程门禁校验，非 UI 线程写入快速失败。
 - 修改范围：`XuanYu.Editor.UI/EditorState/*` 与 `XuanYu.Editor.UI/Vm/UiVm.cs`；同步 `changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge 生命周期、渲染请求系统、Inspector 布局、真实 Picking、Gizmo、存档格式或第三方依赖。
 - 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 `UiVm.cs` LF/CRLF 工作区提示，无空白错误）；本轮触碰 `.cs` 文件均不超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
-- Commit Hash：以 Git 记录和本轮交付报告为准。
+- Commit Hash：主实现提交 `a1bfe8a716c99e0a8d1c624972f51d6b158a3295`；本条 Hash 回填随 ARCH-B-R1-R1 文档修复提交进入历史。
 - Push 状态：按本轮用户裁定暂不执行 Push / Tag / Release。
 - 遗留问题：当前只迁移选择状态；当前工具、工具捕获、交互事务和视口请求状态仍在后续 ARCH-B-R2/R3/R4 收口；未做真实交互启动验收。
 
