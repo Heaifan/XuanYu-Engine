@@ -9,7 +9,7 @@ ARCH-B-R2：活动工具状态与工具捕获状态唯一所有权（2026-07-14 
 - 主要改动：`EditorStateOwner` 改为 partial 并新增工具状态分部；新增 `EditorToolId`、`EditorToolSnapshot`、`ChangeEditorToolCommand`、`EditorToolChangedResult` 和工具文本映射；`UiVm` 移除活动工具可变字段和工具布尔字段，工具名称、高亮和 `FooterMode` 全部从 Owner 的只读工具快照派生；顶部工具按钮 `IsChecked` 改为单向绑定，只通过命令提交切换意图；选择项目或层级节点后不再把 `FooterState` 写成“状态：聚焦”，避免与“聚焦”工具混淆；主窗口标题与 `run.bat` 同步到 `v0.2.16.6-rz`。
 - 修改范围：`XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`、`EditorStateOwner.Tool.cs`、`EditorToolId.cs`、`EditorToolText.cs`、`EditorToolSnapshot.cs`、`EditorToolCommand.cs`、`EditorToolChangedResult.cs`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`UiVm.Selection.cs`、`XuanYu.Editor.UI/Top/Top.axaml`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge、Picking、Gizmo、Transform Preview、场景存档、通用事件总线或第三方依赖。
 - 验证结果：开发中预检 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；本轮触碰 `.cs/.axaml/.js` 文件均未超过 100 行；全仓 5+100 扫描发现既有禁区文件 `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` 101 行、`XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 103 行，本轮按 R2 禁区未修改 Vulkan / Swapchain，作为既有范围风险如实记录。
-- Commit Hash：待主实现提交后回填；不追记回填提交自身 Hash。
+- Commit Hash：主实现提交 `ad1894e450de70ffd362912092ced16aadd7cc94`；不追记回填提交自身 Hash。
 - Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
 - 遗留问题：R2 只建立活动工具和捕获状态的所有权边界，尚未开发真实 Gizmo 拖动、Picking、Transform Preview、工具捕获输入细节或场景存档。
 
