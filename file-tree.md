@@ -1,5 +1,13 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R1 最小状态所有权闭环快照 (2026-07-14 19:35:40)
+按 `v0.2.16.2-rz` 建立当前选择状态的最小 Editor State Owner。UI 只提交选择意图，正式状态由 Owner 持有，检查器从只读快照派生显示；本轮不开发 Picking / Gizmo / 存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`  # Editor 状态所有者；当前只负责选择状态的唯一正式写入、校验、Revision 递增、快照生成和变更结果返回；不负责 Avalonia 控件、窗口、Vulkan、Silk、NativeHost、Swapchain 或渲染会话。
+- `XuanYu.Editor.UI/EditorState/EditorSelectionSnapshot.cs`  # 当前选择状态的不可变快照；包含 `Revision`、是否有选择、标题和来源；不泄漏可变集合、ViewModel 或 Avalonia 属性。
+- `XuanYu.Editor.UI/EditorState/EditorSelectionCommand.cs`  # ARCH-B-R1 的具体选择命令；只定义 `SelectEditorItemCommand` / `ClearEditorSelectionCommand`，不负责通用命令总线、字典 payload 或全局 EventBus。
+- `XuanYu.Editor.UI/EditorState/EditorStateChangedResult.cs`  # 状态变化事实结果；记录旧 Revision、新 Revision、变化类型和新快照；不负责再次触发写入请求。
+- `XuanYu.Editor.UI/Vm/UiVm.cs`  # UI ViewModel；项目树 / 层级树选择 setter 仅提交具体选择命令，检查器绑定从 Owner 快照读取；保留展示绑定、Footer 摘要和日志入口，不再作为选择状态正式 Owner。
+
 ## DOC-GIT-PUSH-1 Git 远端备份规则快照 (2026-07-13 23:41:18)
 将“提交后必须 Push 当前工作分支到 GitHub”固化为长期协作规则，本轮不修改运行逻辑。
 - `docs/玄域引擎_AI开发宪法.md`  # 最高开发规范；默认流程新增 Push 步骤，Git Push 章节改为每轮 Commit 后必须推送远端工作分支，同时保留 main 合并、PR、Tag、Release、强推、Rebase、重写历史的确认红线。
