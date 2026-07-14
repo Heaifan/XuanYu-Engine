@@ -9,7 +9,7 @@ Vulkan 既有 5+100 超限文件纯结构拆分（2026-07-14 22:41:08，修复�
 - 主要改动：`VulkanNativeHost.cs` 将后台 Present 泵日志回 UI 线程的两个方法拆入 `VulkanNativeHost.Log.cs`；`VulkanSwapchainOwner.cs` 将只读访问器与内部 `Log` 辅助拆入 `VulkanSwapchainOwner.Accessors.cs`；主窗口标题与 `run.bat` 同步到 `v0.2.16.7-fix`。
 - 修改范围：`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`、`VulkanNativeHost.Log.cs`、`XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs`、`VulkanSwapchainOwner.Accessors.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。仅做结构拆分，不改变 Attach、Resize、Present、自愈、释放顺序、公开契约、Picking、Gizmo、Transform Preview、场景存档或第三方依赖。
 - 验证结果：开发中预检目标文件行数为 `VulkanNativeHost.cs` 92 行、`VulkanNativeHost.Log.cs` 15 行、`VulkanSwapchainOwner.cs` 99 行、`VulkanSwapchainOwner.Accessors.cs` 17 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
-- Commit Hash：待主实现提交后回填；不追记回填提交自身 Hash。
+- Commit Hash：主实现提交 `4ac7d977b4dcf13356039cfcecbdb17f9f115d8a`；不追记回填提交自身 Hash。
 - Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
 - 遗留问题：仍需按本轮要求真机验证启动、日志栏展开/收起和正常关闭释放链；通过后可进入 `v0.2.16.8-rz — ARCH-B-R3`。
 
