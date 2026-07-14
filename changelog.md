@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.16.4-fix
+ARCH-B-R1-R2：项目树 / 层级树视觉恢复与 Inspector 元数据修正（2026-07-14 20:47:57，修复）
+
+- 原历史编号：ARCH-B-R1-R2
+- 日期：2026-07-14 20:47:57
+- 任务目标：保留 ARCH-B-R1 的 `EditorStateOwner` / Snapshot / Command 链路，恢复左侧项目树和层级树的树形视觉表达，统一左右字体层级，并修正 Inspector 类型与路径元数据。
+- 主要改动：新增 UI 专用 `EditorTreeNode` 与 `UiVm.Selection.cs`；项目树 / 层级树改为带层级缩进、节点图标和稳定 Key 的树节点列表；选择命令携带 Key / 标题 / 类型 / 路径；Snapshot 增加 `SelectionPath`；Inspector 路径改为绑定真实选择元数据；左侧页签与树项字号收敛到右侧体系；主窗口标题和 `run.bat` 同步到 `v0.2.16.4-fix`。
+- 修改范围：`XuanYu.Editor.UI/EditorState/*`、`XuanYu.Editor.UI/Vm/EditorTreeNode.cs`、`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/Vm/UiText.cs`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`XuanYu.Editor.UI/Left/Left.axaml`、`XuanYu.Editor.UI/Right/Right.axaml`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge、Picking、Gizmo、场景存档或第三方依赖。
+- 验证结果：首次构建预检因上一轮启动的 `XuanYu.Editor.App` 仍占用输出 DLL 失败；关闭该进程后重跑通过：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；5+100 扫描无超限；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：以 Git 记录和本轮交付报告为准。
+- Push 状态：未执行；未创建 Tag / Release。
+- 遗留问题：仍需真机人工确认左侧树视觉层级、Inspector 元数据、Escape 清空选择、日志栏/工具按钮和正常关闭释放链。
+
 ## v0.2.16.3-fix
 ARCH-B-R1-R1：选择状态幂等性与清空选择真实入口（2026-07-14 20:26:21，修复）
 

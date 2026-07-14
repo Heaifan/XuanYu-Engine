@@ -20,15 +20,13 @@ public sealed class EditorStateOwner
             throw new ArgumentException("选择来源不能为空。", nameof(command));
         }
 
-        if (string.IsNullOrWhiteSpace(command.Item))
+        if (string.IsNullOrWhiteSpace(command.Key))
         {
-            throw new ArgumentException("选择对象不能为空。", nameof(command));
+            throw new ArgumentException("选择身份不能为空。", nameof(command));
         }
 
         var old = _snapshot;
-        var title = command.Item.TrimStart(' ', '├', '└', '─');
-        var key = $"{command.Source}:{command.Item}";
-        if (old.HasSelection && old.SelectionKey == key)
+        if (old.HasSelection && old.SelectionKey == command.Key)
         {
             return null;
         }
@@ -36,9 +34,10 @@ public sealed class EditorStateOwner
         _snapshot = new EditorSelectionSnapshot(
             old.Revision + 1,
             true,
-            key,
-            title,
-            command.Source);
+            command.Key,
+            command.Title,
+            command.Type,
+            command.Path);
         return Changed(old, EditorStateChangeKind.SelectionChanged);
     }
 
@@ -56,7 +55,8 @@ public sealed class EditorStateOwner
             false,
             "",
             "未选择对象",
-            "无");
+            "无",
+            "");
         return Changed(old, EditorStateChangeKind.SelectionCleared);
     }
 

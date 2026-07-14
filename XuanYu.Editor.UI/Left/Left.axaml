@@ -12,7 +12,7 @@
   </UserControl.Resources>
   <UserControl.Styles>
     <Style Selector="TabControl.leftTabs"><Setter Property="Padding" Value="0"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
-    <Style Selector="TabItem.leftTab"><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="12,4"/><Setter Property="Margin" Value="0,0,4,0"/><Setter Property="CornerRadius" Value="5"/><Setter Property="Foreground" Value="#6b7688"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style Selector="TabItem.leftTab"><Setter Property="FontSize" Value="15"/><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="10,4"/><Setter Property="Margin" Value="0,0,4,0"/><Setter Property="CornerRadius" Value="5"/><Setter Property="Foreground" Value="#6b7688"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
     <Style Selector="TabItem.leftTab:selected"><Setter Property="Background" Value="#edf4ff"/><Setter Property="Foreground" Value="#185aa6"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="BorderBrush" Value="#8cb2e2"/><Setter Property="BorderThickness" Value="0,0,0,2"/></Style>
     <Style Selector="Border.searchBox"><Setter Property="Background" Value="#f5f8fc"/><Setter Property="BorderBrush" Value="#d7e1ee"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="6"/><Setter Property="Padding" Value="7,2"/></Style>
     <Style Selector="Border.treeRow"><Setter Property="CornerRadius" Value="5"/><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="5,3"/></Style>
@@ -21,7 +21,8 @@
     <Style Selector="Border.treeRow.level2"><Setter Property="Margin" Value="18,0,0,0"/></Style>
     <Style Selector="Border.treeRow.level3"><Setter Property="Margin" Value="36,0,0,0"/></Style>
     <Style Selector="Path.treeIcon"><Setter Property="Width" Value="15"/><Setter Property="Height" Value="15"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="#66758f"/><Setter Property="StrokeThickness" Value="1.6"/></Style>
-    <Style Selector="TextBlock.treeText"><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="Foreground" Value="#27354a"/></Style>
+    <Style Selector="ListBox.treeList ListBoxItem"><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,1"/></Style>
+    <Style Selector="TextBlock.treeText"><Setter Property="FontSize" Value="13"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="Foreground" Value="#27354a"/></Style>
     <Style Selector="TextBlock.selectedText"><Setter Property="Foreground" Value="#165ca8"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
     <Style Selector="TextBlock.emptyTitle"><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="#334155"/><Setter Property="HorizontalAlignment" Value="Center"/></Style>
   </UserControl.Styles>
@@ -35,14 +36,21 @@
             <TextBox Grid.Column="1" PlaceholderText="搜索项目树..." BorderThickness="0" Background="Transparent" MinHeight="24"/>
           </Grid>
         </Border>
-        <ListBox x:Name="ProjectList" ItemsSource="{Binding ProjectItems}"
+        <ListBox x:Name="ProjectList" Classes="treeList" ItemsSource="{Binding ProjectItems}"
                  SelectedItem="{Binding SelectedProjectItem}"
                  Background="Transparent" BorderThickness="0"
                  KeyDown="SelectionList_KeyDown">
           <ListBox.ItemTemplate>
             <DataTemplate>
-              <Border Classes="treeRow">
-                <TextBlock Text="{Binding}" Classes="treeText"/>
+              <Border Classes="treeRow" Margin="{Binding Indent}">
+                <Grid ColumnDefinitions="16,18,*" ColumnSpacing="5">
+                  <Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}" IsVisible="{Binding IsCategory}"/>
+                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ProjectIcon}" IsVisible="{Binding IsRoot}"/>
+                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource FolderIcon}" IsVisible="{Binding IsFolder}"/>
+                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource WorldIcon}" IsVisible="{Binding IsWorld}"/>
+                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource MaterialIcon}" IsVisible="{Binding IsAsset}"/>
+                  <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="treeText"/>
+                </Grid>
               </Border>
             </DataTemplate>
           </ListBox.ItemTemplate>
@@ -50,15 +58,21 @@
       </StackPanel>
     </TabItem>
     <TabItem Classes="leftTab" Header="层级">
-      <ListBox x:Name="HierarchyList" Margin="0,8,0,0" MinHeight="220"
+      <ListBox x:Name="HierarchyList" Classes="treeList" Margin="0,8,0,0" MinHeight="220"
                ItemsSource="{Binding HierarchyItems}"
                SelectedItem="{Binding SelectedHierarchyItem}"
                Background="Transparent" BorderThickness="0"
                KeyDown="SelectionList_KeyDown">
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <Border Classes="treeRow">
-              <TextBlock Text="{Binding}" Classes="treeText"/>
+            <Border Classes="treeRow" Margin="{Binding Indent}">
+              <Grid ColumnDefinitions="16,18,*" ColumnSpacing="5">
+                <Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}" IsVisible="{Binding IsRoot}"/>
+                <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource WorldIcon}" IsVisible="{Binding IsRoot}"/>
+                <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource FocusIcon}" IsVisible="{Binding IsCamera}"/>
+                <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource SceneIcon}" IsVisible="{Binding IsEntity}"/>
+                <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="treeText"/>
+              </Grid>
             </Border>
           </DataTemplate>
         </ListBox.ItemTemplate>

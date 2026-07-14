@@ -1,5 +1,16 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R1-R2 树形视觉与 Inspector 元数据修复快照 (2026-07-14 20:47:57)
+推进到 `v0.2.16.4-fix`，保留当前状态 Owner 链路，仅修复左侧树 UI 表达和 Inspector 元数据；不新增正式状态种类，不开发 Picking / Gizmo / 存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
+- `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`  # UI 专用树节点模型；描述当前样例项目树 / 层级树的 Key、标题、类型、路径、缩进和图标可见性；不负责场景模型、持久化或全局实体 ID。
+- `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`  # UI ViewModel 的选择提交与清空选择逻辑；把树节点元数据转为具体选择命令，并保持两个左侧列表缓存不争抢正式状态。
+- `XuanYu.Editor.UI/Vm/UiText.cs`  # 静态 UI 样例数据；项目/层级从普通字符串列表升级为带语义的树节点列表，不负责真实场景数据源。
+- `XuanYu.Editor.UI/Left/Left.axaml`  # 左侧项目树 / 层级树视觉；恢复缩进、节点图标、父子层级和真实选中行表达，不负责 Picking 或 Gizmo。
+- `XuanYu.Editor.UI/Right/Right.axaml`  # Inspector 面板；路径字段绑定 `SelectionPath`，字号层级与左侧页签/树项收敛。
+- `XuanYu.Editor.UI/EditorState/EditorSelectionCommand.cs` / `EditorSelectionSnapshot.cs` / `EditorStateOwner.cs`  # 选择命令和快照携带稳定 Key、标题、类型、路径，Owner 继续只负责选择状态转换与 NoChange 判定。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.4-fix`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.4-fix`。
+
 ## ARCH-B-R1-R1 选择幂等与清空入口修复快照 (2026-07-14 20:26:21)
 推进到 `v0.2.16.3-fix`，仅修复 ARCH-B-R1 收口缺口：重复选择 / 重复清空不再制造伪变化，左侧现有选择控件提供真实清空路径；不新增状态种类，不开发 Picking / Gizmo / 存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
 - `XuanYu.Editor.UI/EditorState/EditorSelectionSnapshot.cs`  # 当前选择不可变快照；新增稳定 `SelectionKey` 用于幂等比较，不负责全局实体 ID 或持久化身份系统。

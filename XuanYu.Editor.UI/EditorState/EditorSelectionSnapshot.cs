@@ -5,8 +5,9 @@ public sealed record EditorSelectionSnapshot(
     bool HasSelection,
     string SelectionKey,
     string SelectionTitle,
-    string SelectionSubtitle)
+    string SelectionSubtitle,
+    string SelectionPath)
 {
     public static EditorSelectionSnapshot Initial { get; } =
-        new(1, true, "项目:SampleProject", "SampleProject", "项目");
+        new(1, true, "project:root", "SampleProject", "项目", "SampleProject");
 }

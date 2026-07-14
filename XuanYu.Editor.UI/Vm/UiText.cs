@@ -2,25 +2,25 @@ namespace XuanYu.Editor.UI;
 
 public static class UiText
 {
-    public static readonly string[] ProjectItems =
+    public static readonly EditorTreeNode[] ProjectTreeItems =
     [
-        "SampleProject",
-        "世界",
-        "MainWorld",
-        "TestWorld",
-        "资源",
-        "图标",
-        "材质",
-        "脚本",
-        "构建"
+        new("project:root", "SampleProject", "项目", "SampleProject", 0, "project"),
+        new("project:worlds", "世界", "分类", "SampleProject/世界", 1, "folder"),
+        new("world:main", "MainWorld", "世界", "SampleProject/世界/MainWorld", 2, "world"),
+        new("world:test", "TestWorld", "世界", "SampleProject/世界/TestWorld", 2, "world"),
+        new("project:assets", "资源", "分类", "SampleProject/资源", 1, "folder"),
+        new("asset:icons", "图标", "资源分类", "SampleProject/资源/图标", 2, "asset"),
+        new("asset:materials", "材质", "资源分类", "SampleProject/资源/材质", 2, "asset"),
+        new("asset:scripts", "脚本", "资源分类", "SampleProject/资源/脚本", 2, "asset"),
+        new("asset:build", "构建", "资源分类", "SampleProject/资源/构建", 2, "asset")
     ];
 
-    public static readonly string[] HierarchyItems =
+    public static readonly EditorTreeNode[] HierarchyTreeItems =
     [
-        "世界根节点",
-        "  ├─ 主相机",
-        "  ├─ 地面",
-        "  └─ 示例实体"
+        new("hierarchy:root", "世界根节点", "场景根", "MainWorld/世界根节点", 0, "world"),
+        new("hierarchy:camera", "主相机", "相机", "MainWorld/世界根节点/主相机", 1, "camera"),
+        new("hierarchy:ground", "地面", "实体", "MainWorld/世界根节点/地面", 1, "entity"),
+        new("hierarchy:sample", "示例实体", "实体", "MainWorld/世界根节点/示例实体", 1, "entity")
     ];
 
     public static readonly string[] ToolItems =
