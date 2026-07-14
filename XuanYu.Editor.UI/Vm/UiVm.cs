@@ -9,9 +9,8 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm : INotifyPropertyChanged
 {
     readonly EditorStateOwner _editorState;
-    string _activeTool = "选择"; int _leftTabIndex; EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
-    bool _isSelectTool = true, _isMoveTool, _isRotateTool, _isScaleTool, _isBoxSelectTool, _isFocusTool, _isPanTool, _isOrbitTool, _isSnapTool;
-    string _footerMessage = "已就绪。SampleProject 已选中。", _footerMode = "工具：选择", _footerState = "状态：就绪";
+    int _leftTabIndex; EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
+    string _footerMessage = "已就绪。SampleProject 已选中。", _footerState = "状态：就绪";
     bool _isLogOpen;
 
     public UiVm() : this(null) { }
@@ -38,21 +37,21 @@ public sealed partial class UiVm : INotifyPropertyChanged
     public IReadOnlyList<string> ToolItems => UiText.ToolItems;
     public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => DebugText.ObjectItems;
     public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => DebugText.InputItems;
-    public string ActiveTool => _activeTool;
-    public bool IsSelectTool { get => _isSelectTool; private set => Set(ref _isSelectTool, value); }
-    public bool IsMoveTool { get => _isMoveTool; private set => Set(ref _isMoveTool, value); }
-    public bool IsRotateTool { get => _isRotateTool; private set => Set(ref _isRotateTool, value); }
-    public bool IsScaleTool { get => _isScaleTool; private set => Set(ref _isScaleTool, value); }
-    public bool IsBoxSelectTool { get => _isBoxSelectTool; private set => Set(ref _isBoxSelectTool, value); }
-    public bool IsFocusTool { get => _isFocusTool; private set => Set(ref _isFocusTool, value); }
-    public bool IsPanTool { get => _isPanTool; private set => Set(ref _isPanTool, value); }
-    public bool IsOrbitTool { get => _isOrbitTool; private set => Set(ref _isOrbitTool, value); }
-    public bool IsSnapTool { get => _isSnapTool; private set => Set(ref _isSnapTool, value); }
+    public string ActiveTool => _editorState.ToolSnapshot.ActiveToolText;
+    public bool IsSelectTool => IsTool(EditorToolId.Select);
+    public bool IsMoveTool => IsTool(EditorToolId.Move);
+    public bool IsRotateTool => IsTool(EditorToolId.Rotate);
+    public bool IsScaleTool => IsTool(EditorToolId.Scale);
+    public bool IsBoxSelectTool => IsTool(EditorToolId.BoxSelect);
+    public bool IsFocusTool => IsTool(EditorToolId.Focus);
+    public bool IsPanTool => IsTool(EditorToolId.Pan);
+    public bool IsOrbitTool => IsTool(EditorToolId.Orbit);
+    public bool IsSnapTool => IsTool(EditorToolId.Snap);
     public string SelectionTitle => _editorState.Snapshot.SelectionTitle;
     public string SelectionSubtitle => _editorState.Snapshot.SelectionSubtitle;
     public string SelectionPath => _editorState.Snapshot.SelectionPath;
     public string FooterMessage { get => _footerMessage; private set => Set(ref _footerMessage, value); }
-    public string FooterMode { get => _footerMode; private set => Set(ref _footerMode, value); }
+    public string FooterMode => $"工具：{ActiveTool}";
     public string FooterState { get => _footerState; private set => Set(ref _footerState, value); }
     public bool HasSelection => _editorState.Snapshot.HasSelection;
     public bool IsLogOpen { get => _isLogOpen; set => Set(ref _isLogOpen, value); }
@@ -66,10 +65,32 @@ public sealed partial class UiVm : INotifyPropertyChanged
 
     void Run(string name) { FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}"); FooterState = name is "运行" ? "状态：运行中" : "状态：就绪"; LogCommand(name); OnPropertyChanged(nameof(LogSummary)); }
 
-    void SelectTool(string name) { _activeTool = string.IsNullOrWhiteSpace(name) ? "选择" : name; SetToolFlags(_activeTool); FooterMode = $"工具：{_activeTool}"; FooterMessage = $"当前工具：{_activeTool}。视口等待输入。"; LogTool(_activeTool); OnPropertyChanged(nameof(ActiveTool)); OnPropertyChanged(nameof(LogSummary)); }
+    void SelectTool(string name)
+    {
+        if (_editorState.ChangeTool(new ChangeEditorToolCommand(name)) is null)
+        {
+            RaiseToolChanged();
+            return;
+        }
 
+        RaiseToolChanged();
+        FooterMessage = $"当前工具：{ActiveTool}。视口等待输入。";
+        FooterState = "状态：就绪";
+        LogTool(ActiveTool);
+        OnPropertyChanged(nameof(LogSummary));
+    }
 
-    void SetToolFlags(string tool) { IsSelectTool = tool == "选择"; IsMoveTool = tool == "移动"; IsRotateTool = tool == "旋转"; IsScaleTool = tool == "缩放"; IsBoxSelectTool = tool == "框选"; IsFocusTool = tool == "聚焦"; IsPanTool = tool == "平移"; IsOrbitTool = tool == "环绕"; IsSnapTool = tool == "吸附"; }
+    bool IsTool(EditorToolId tool) => _editorState.ToolSnapshot.ActiveTool == tool;
+
+    void RaiseToolChanged()
+    {
+        OnPropertyChanged(nameof(ActiveTool)); OnPropertyChanged(nameof(FooterMode));
+        OnPropertyChanged(nameof(IsSelectTool)); OnPropertyChanged(nameof(IsBoxSelectTool));
+        OnPropertyChanged(nameof(IsMoveTool)); OnPropertyChanged(nameof(IsRotateTool));
+        OnPropertyChanged(nameof(IsScaleTool)); OnPropertyChanged(nameof(IsFocusTool));
+        OnPropertyChanged(nameof(IsPanTool)); OnPropertyChanged(nameof(IsOrbitTool));
+        OnPropertyChanged(nameof(IsSnapTool));
+    }
 
     bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return false; field = value; OnPropertyChanged(name); return true; }
 

@@ -9,7 +9,7 @@ public sealed partial class UiVm
         if (_editorState.Select(command) is null) return;
         RaiseSelectionChanged();
         FooterMessage = $"{source}已选择：{SelectionTitle}";
-        FooterState = "状态：聚焦";
+        FooterState = "状态：就绪";
         OnPropertyChanged(nameof(LogSummary));
     }
 

@@ -1,5 +1,20 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R2 工具状态所有权快照 (2026-07-14 22:25:24)
+推进到 `v0.2.16.6-rz`，只治理活动工具状态、工具捕获状态和状态栏语义边界；不开发真实 Gizmo、Picking、Transform Preview、场景存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`  # Editor 状态所有者主分部；继续负责选择状态转换、线程门禁和选择快照，不直接依赖 Avalonia 控件、窗口或 Vulkan。
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.Tool.cs`  # Editor 工具状态所有者分部；唯一写入活动工具快照，重复提交同一工具返回 NoChange，不负责真实捕获输入或 Gizmo 行为。
+- `XuanYu.Editor.UI/EditorState/EditorToolId.cs`  # 工具身份与捕获状态枚举；定义当前 UI 可切换的工具集合和最小捕获状态，不负责按钮文案或输入分发。
+- `XuanYu.Editor.UI/EditorState/EditorToolText.cs`  # 工具中文文案与稳定工具身份之间的映射；不承担本地化系统或 UI 控件职责。
+- `XuanYu.Editor.UI/EditorState/EditorToolSnapshot.cs`  # 工具只读快照；包含 Revision、活动工具和捕获状态，不泄漏可变 UI 字段。
+- `XuanYu.Editor.UI/EditorState/EditorToolCommand.cs`  # 工具切换命令；只表达“请求切换到某工具”的具体意图，不引入通用命令总线。
+- `XuanYu.Editor.UI/EditorState/EditorToolChangedResult.cs`  # 工具状态变化结果；记录旧 Revision、新 Revision 和新旧快照，不反向修改 Owner。
+- `XuanYu.Editor.UI/Vm/UiVm.cs`  # UI ViewModel；工具名称、按钮高亮和 Footer 工具文本从 Owner 工具快照派生，按钮只提交切换意图，不再正式持有活动工具状态。
+- `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`  # 选择提交逻辑；选择对象后保持编辑器阶段为就绪，不再把“聚焦”写入通用状态，避免与聚焦工具混淆。
+- `XuanYu.Editor.UI/Top/Top.axaml`  # 顶部工具栏；工具按钮高亮为单向快照显示，点击只调用切换工具命令。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.6-rz`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.6-rz`。
+
 ## ARCH-B-R1-R3 跨树选择同步修复快照 (2026-07-14 21:15:02)
 推进到 `v0.2.16.5-fix`，只修复项目树 / 层级树选中值回写与 Escape 清空链路；不改变树视觉，不新增正式状态种类，不开发 Picking / Gizmo / 存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
 - `XuanYu.Editor.UI/Left/Left.axaml`  # 左侧项目树 / 层级树；`SelectedItem` 显式 `Mode=TwoWay`，确保视觉选中写回 `UiVm` 并进入同一个 Owner。

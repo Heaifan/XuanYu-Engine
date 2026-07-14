@@ -1,6 +1,6 @@
 namespace XuanYu.Editor.UI;
 
-public sealed class EditorStateOwner
+public sealed partial class EditorStateOwner
 {
     readonly Func<bool> _isWriteThread;
     EditorSelectionSnapshot _snapshot = EditorSelectionSnapshot.Initial;
