@@ -37,7 +37,7 @@
           </Grid>
         </Border>
         <ListBox x:Name="ProjectList" Classes="treeList" ItemsSource="{Binding ProjectItems}"
-                 SelectedItem="{Binding SelectedProjectItem}"
+                 SelectedItem="{Binding SelectedProjectItem, Mode=TwoWay}"
                  Background="Transparent" BorderThickness="0"
                  KeyDown="SelectionList_KeyDown">
           <ListBox.ItemTemplate>
@@ -60,7 +60,7 @@
     <TabItem Classes="leftTab" Header="层级">
       <ListBox x:Name="HierarchyList" Classes="treeList" Margin="0,8,0,0" MinHeight="220"
                ItemsSource="{Binding HierarchyItems}"
-               SelectedItem="{Binding SelectedHierarchyItem}"
+               SelectedItem="{Binding SelectedHierarchyItem, Mode=TwoWay}"
                Background="Transparent" BorderThickness="0"
                KeyDown="SelectionList_KeyDown">
         <ListBox.ItemTemplate>

@@ -1,5 +1,12 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R1-R3 跨树选择同步修复快照 (2026-07-14 21:15:02)
+推进到 `v0.2.16.5-fix`，只修复项目树 / 层级树选中值回写与 Escape 清空链路；不改变树视觉，不新增正式状态种类，不开发 Picking / Gizmo / 存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
+- `XuanYu.Editor.UI/Left/Left.axaml`  # 左侧项目树 / 层级树；`SelectedItem` 显式 `Mode=TwoWay`，确保视觉选中写回 `UiVm` 并进入同一个 Owner。
+- `XuanYu.Editor.UI/Left/Left.axaml.cs`  # 左侧选择控件代码后置；Escape 同时清空项目树和层级树选中行，触发既有 Clear 路径。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.5-fix`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.5-fix`。
+
 ## ARCH-B-R1-R2 树形视觉与 Inspector 元数据修复快照 (2026-07-14 20:47:57)
 推进到 `v0.2.16.4-fix`，保留当前状态 Owner 链路，仅修复左侧树 UI 表达和 Inspector 元数据；不新增正式状态种类，不开发 Picking / Gizmo / 存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
 - `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`  # UI 专用树节点模型；描述当前样例项目树 / 层级树的 Key、标题、类型、路径、缩进和图标可见性；不负责场景模型、持久化或全局实体 ID。

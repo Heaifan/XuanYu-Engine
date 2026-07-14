@@ -12,8 +12,9 @@ public partial class Left : UserControl
 
     void SelectionList_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key != Key.Escape || sender is not ListBox list) return;
-        list.SelectedItem = null;
+        if (e.Key != Key.Escape) return;
+        ProjectList.SelectedItem = null;
+        HierarchyList.SelectedItem = null;
         e.Handled = true;
     }
 }
