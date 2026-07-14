@@ -8,10 +8,10 @@ Vulkan 既有 5+100 超限文件纯结构拆分（2026-07-14 22:41:08，修复�
 - 任务目标：在进入 ARCH-B-R3 前，先治理全仓已发现的两个既有 5+100 硬红线文件，让 `VulkanNativeHost.cs` 与 `VulkanSwapchainOwner.cs` 回到 100 行以内。
 - 主要改动：`VulkanNativeHost.cs` 将后台 Present 泵日志回 UI 线程的两个方法拆入 `VulkanNativeHost.Log.cs`；`VulkanSwapchainOwner.cs` 将只读访问器与内部 `Log` 辅助拆入 `VulkanSwapchainOwner.Accessors.cs`；主窗口标题与 `run.bat` 同步到 `v0.2.16.7-fix`。
 - 修改范围：`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`、`VulkanNativeHost.Log.cs`、`XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs`、`VulkanSwapchainOwner.Accessors.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。仅做结构拆分，不改变 Attach、Resize、Present、自愈、释放顺序、公开契约、Picking、Gizmo、Transform Preview、场景存档或第三方依赖。
-- 验证结果：开发中预检目标文件行数为 `VulkanNativeHost.cs` 92 行、`VulkanNativeHost.Log.cs` 15 行、`VulkanSwapchainOwner.cs` 99 行、`VulkanSwapchainOwner.Accessors.cs` 17 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- 验证结果：开发中预检目标文件行数为 `VulkanNativeHost.cs` 92 行、`VulkanNativeHost.Log.cs` 15 行、`VulkanSwapchainOwner.cs` 99 行、`VulkanSwapchainOwner.Accessors.cs` 17 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；人工验收（2026-07-14 23:13:39）正式通过：启动通过，`XuanYu.Editor.App` 注入路径正常，Vulkan Instance / Surface / LogicalDevice / Swapchain / Pipeline 创建成功，首帧 Present 成功；日志栏展开 Resize 回归通过，Swapchain 从 `1248×1110` 实际重建到 `1248×478`，代际 `gen=1 → gen=2`，Framebuffer 重建并重录 CommandBuffer，随后 UI 合并 Resize 正确跳过第二次重建，未出现 DeviceLost、Fatal 或黑屏；正常关闭释放链通过，Present 泵、GraphicsPipeline、RenderPass + Framebuffer、RenderSession、Swapchain、LogicalDevice、Surface、Instance 与 Bridge 均按序释放。
 - Commit Hash：主实现提交 `4ac7d977b4dcf13356039cfcecbdb17f9f115d8a`；不追记回填提交自身 Hash。
-- Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
-- 遗留问题：仍需按本轮要求真机验证启动、日志栏展开/收起和正常关闭释放链；通过后可进入 `v0.2.16.8-rz — ARCH-B-R3`。
+- Push 状态：主实现与 Hash 回填已推送到 `origin/fix/RZ-VK3-A-surface-contract`；本条人工验收收口记录待提交后推送；未创建 Tag / Release。
+- 遗留问题：`v0.2.16.7-fix` 正式验收通过，可进入 `v0.2.16.8-rz — ARCH-B-R3`；R3 仍禁止开发完整移动 Gizmo、真实 Picking、修改 Vulkan、通用事件总线、Undo / Redo 或场景存档格式。
 
 ## v0.2.16.6-rz
 ARCH-B-R2：活动工具状态与工具捕获状态唯一所有权（2026-07-14 22:25:24，实施）
