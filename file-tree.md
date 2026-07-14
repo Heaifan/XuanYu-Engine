@@ -1,5 +1,14 @@
 # 项目文件树 — XuanYu Engine
 
+## v0.2.16.7-fix Vulkan 既有 5+100 纯结构拆分快照 (2026-07-14 22:41:08)
+在进入 ARCH-B-R3 前，先治理两个既有 5+100 超限文件；本轮只拆分职责，不改变 Attach、Resize、Present、自愈或释放逻辑。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`  # NativeHost 主生命周期与尺寸路径；保留创建、Attach、Resize、Detach、Dispose 编排，不负责后台日志线程派发实现。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Log.cs`  # NativeHost Vulkan 日志 UI 线程派发分部；只负责把后台 Present 泵日志切回 UI 线程并交给既有 Route，不改变日志内容或生命周期。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs`  # Swapchain 创建、重建、自愈与释放主体；不再承载只读访问器集中声明，不改变 Swapchain/ImageView 销毁顺序。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.Accessors.cs`  # Swapchain Owner 只读访问器与内部日志辅助；只暴露既有格式、Extent、ImageViews、Swapchain、KHR 和 ResourceGeneration。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.7-fix`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.7-fix`。
+
 ## ARCH-B-R2 工具状态所有权快照 (2026-07-14 22:25:24)
 推进到 `v0.2.16.6-rz`，只治理活动工具状态、工具捕获状态和状态栏语义边界；不开发真实 Gizmo、Picking、Transform Preview、场景存档，不修改 Vulkan、Resize、Present 或 Bridge 生命周期。
 - `XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`  # Editor 状态所有者主分部；继续负责选择状态转换、线程门禁和选择快照，不直接依赖 Avalonia 控件、窗口或 Vulkan。

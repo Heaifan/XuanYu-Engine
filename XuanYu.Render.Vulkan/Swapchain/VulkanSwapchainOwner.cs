@@ -7,7 +7,7 @@ using XuanYu.Render.Vulkan.Diagnostic;
 namespace XuanYu.Render.Vulkan.Swapchain;
 
 // VK4-C：Swapchain 持有者（创建/重建/释放）。RZ-VK5-D-R1：Recreate 内部加 T+ 阶段日志。
-public sealed unsafe class VulkanSwapchainOwner : IDisposable
+public sealed unsafe partial class VulkanSwapchainOwner : IDisposable
 {
     readonly Vk _vk;
     readonly Instance _instance;
@@ -96,8 +96,4 @@ public sealed unsafe class VulkanSwapchainOwner : IDisposable
         DestroyImagesAndViews();
         Log(_log, VulkanSwapchainLogFormatter.Disposed());
     }
-    public Format Format => _format; public Extent2D Extent => _extent;
-    public uint ResourceGeneration => _resourceGeneration;
-    public ReadOnlySpan<ImageView> ImageViews => _imageViews; public SwapchainKHR Swapchain => _swapchain;
-    public KhrSwapchain Khr => _khr!; static void Log(Action<string>? log, string m) { log?.Invoke(m); }
 }
