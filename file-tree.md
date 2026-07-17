@@ -1,5 +1,14 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-C-Plan 真实场景编辑交互闭环规划快照 (2026-07-17 22:49:25)
+推进到 `v0.2.17.1-rz`，只冻结 ARCH-C 的 Picking、Selection、Transform、Gizmo、Undo 契约和 R1-R8 验收标准；不实现 Picking / Gizmo / Transform / Undo，不修改 Vulkan、输入生命周期或 UI 布局。
+- `docs/arch-c-plan.md`  # ARCH-C 正式规划文档；记录当前前置条件、模块边界、状态所有权、数据流、CPU Ray-AABB Picking 契约、Selection 唯一事实源、Transform 三层状态、Move Gizmo 路线、Commit / Cancel / Undo 契约、性能预算、R1-R8 里程碑和自动/真机验收矩阵。
+- `docs/arch-c-overview.svg`  # ARCH-C 规划总览图；展示 ARCH-A、ARCH-B、ARCH-C-Plan 与 C-R1 到 C-R8 的依赖顺序和最终交互闭环。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；仅同步标题版本到 `v0.2.17.1-rz`，不改 UI 布局。
+- `run.bat`  # 仓库根启动脚本；仅同步控制台标题到 `XuanYu Engine Editor v0.2.17.1-rz`，不改 restore / build / run 流程。
+- `changelog.md`  # 登记 `v0.2.17.1-rz` 规划轮范围、禁区、验证与遗留风险。
+- `file-tree.md`  # 登记本轮新增文档和版本展示点。
+
 ## ARCH-B-R4-R1 Win32 子窗口 Pointer 消息转发修复快照 (2026-07-17 21:56:17)
 推进到 `v0.2.16.11-fix`，只修复 NativeControlHost 未收到 Win32 子窗口鼠标消息导致真实视口拖动无反应的问题；不修改 Vulkan、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs`  # Win32 子窗口创建与基础生命周期；窗口过程改为输入路由入口，仍不承载 Vulkan 资源逻辑。

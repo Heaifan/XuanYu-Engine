@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.1-rz
+ARCH-C-Plan：真实场景编辑交互闭环规划（2026-07-17 22:49:25，规划文档）
+
+- 原历史编号：ARCH-C-Plan
+- 日期：2026-07-17 22:49:25
+- 任务目标：在 ARCH-B 输入事务闭环完成后，冻结真实场景编辑阶段的所有权、数据流、实现顺序和验收标准，约束后续 `ARCH-C-R1` 到 `ARCH-C-R8`，避免在开发中途再次改变 Picking、Selection、Transform、Gizmo 与 Undo 的方向。
+- 主要改动：新增 `docs/arch-c-plan.md`，明确单场景、单测试对象、单选、Position Transform、CPU Ray-AABB Picking、Session / RequestSequence / ViewportGeneration 过期保护、Selection 唯一事实源、Committed / StartSnapshot / Preview 三层 Transform 状态、世界坐标 X/Y/Z Move Gizmo、Commit / Cancel / Undo 契约、性能预算、日志探针格式、R1-R8 里程碑与自动/真机验收矩阵；新增 `docs/arch-c-overview.svg`，展示 ARCH-A、ARCH-B、ARCH-C-Plan 与 C-R1 到 C-R8 的依赖顺序；主窗口标题与 `run.bat` 同步到 `v0.2.17.1-rz`。
+- 修改范围：`docs/arch-c-plan.md`、`docs/arch-c-overview.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Vulkan Instance / Surface / Device、Swapchain / Present / Resize、RenderPass / Framebuffer、鼠标捕获实现、EditorStateOwner 运行时逻辑、Selection 运行时逻辑、场景渲染代码、Picking / Gizmo / Transform / Undo / Camera 代码、项目依赖、测试框架或解决方案结构。
+- 验证结果：`git status` 确认执行前工作区干净；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；版本号一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 与规划文档均同步到 `v0.2.17.1-rz`；`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 首次因正在运行的 `XuanYu.Editor.App (26164)` 锁定输出 DLL 失败，结束该进程后重跑通过，6 项目 0 warning / 0 error；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查通过；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；`docs/arch-c-overview.svg` XML 有效性检查通过；文档链接检查无缺失链接。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：未 Push；未创建 Tag / Release。
+- 遗留问题：ARCH-C-R1 实现前仍需审计相机矩阵契约、真实场景实体身份放置位置、固定三角形与真实对象的边界、视口逻辑像素 / 物理像素 / DPI 换算以及 SelectionKey 到 EntityKey 的迁移策略。
+
 ## v0.2.16.12-fix
 ARCH-B-R4-R2：原生鼠标捕获正常释放与异常丢失判定修复（2026-07-17 22:13:56，修复）
 
