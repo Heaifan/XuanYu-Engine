@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.16.10-rz
+ARCH-B-R4：真实视口 Pointer 输入事务闭环（2026-07-17 21:28:27，实施）
+
+- 原历史编号：ARCH-B-R4
+- 日期：2026-07-17 21:28:27
+- 任务目标：把真实视口鼠标按下、移动、释放和失焦接入 R3 已验收的 Begin / Preview / Commit / Cancel 事务边界；本轮不接入 Picking、不移动黄色三角形、不实现 Gizmo、不修改 Vulkan / Swapchain / Present / Resize 生命周期。
+- 主要改动：`EditorInteractionSnapshot` 增加只读 Pointer 快照，记录 PointerId、逻辑起点、当前点、Delta 和 Preview 次数；`EditorStateOwner.Interaction` 在 Preview / Commit 时校验 Session、Owner 与 PointerId；`UiVm.InteractionPointer.cs` 将真实视口 Pointer 意图转换为 Begin / Preview / Commit，且只允许“移动”工具启动真实拖动；`VulkanNativeHost.Pointer.cs` 在 UI 边界接入 PointerPressed / PointerMoved / PointerReleased / PointerCaptureLost，按逻辑像素传递坐标并调用既有 Owner；窗口失焦汇聚到统一 Cancel；主窗口标题与 `run.bat` 同步到 `v0.2.16.10-rz`。
+- 修改范围：`XuanYu.Editor.UI/EditorState/EditorInteractionPointerSnapshot.cs`、`EditorInteractionSnapshot.cs`、`EditorInteractionCommand.cs`、`EditorStateOwner.Interaction.cs`、`XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`、`UiVm.Interaction.cs`、`UiVm.cs`、`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml.cs`、`UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、自愈、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 `.cs/.axaml/.js` 5+100 扫描无超限输出；依赖边界扫描确认 `Editor.UI` 未直接引用 `Render.Vulkan` / `Silk.NET.Vulkan`，`Render.Abstractions` 对 `XuanYu.Render.Vulkan` 的命中仅为历史迁移注释。首次构建因正在运行的 `XuanYu.Editor.App (17576)` 占用输出 DLL 失败，停止该进程后重跑通过。
+- Commit Hash：待提交后回填。
+- Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
+- 遗留问题：仍需真机人工验收真实视口拖动：移动工具左键按下进入捕获、拖动期间 Preview 次数递增、释放只 Commit 一次、Escape / CaptureLost / Window Deactivated 取消、取消后的延迟 Release 不得 Commit、Resize 不破坏 Vulkan 与事务状态。
+
 ## v0.2.16.9-fix
 ARCH-B-R3-R1：窗口级 Escape Cancel 与宪法优先级补充（2026-07-17 21:00:05，修复）
 

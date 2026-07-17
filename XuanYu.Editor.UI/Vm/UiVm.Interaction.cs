@@ -7,8 +7,10 @@ public sealed partial class UiVm
     public string InteractionPreview => _editorState.InteractionSnapshot.Preview is "" ? "无" : _editorState.InteractionSnapshot.Preview;
 
     public void CancelInteractionFromEscape() => CancelInteraction("Escape");
+    public void CancelInteractionFromWindowDeactivated() => CancelInteraction("窗口失焦");
     public void CancelInteractionFromWindowClosing() => CancelInteraction("窗口关闭");
     public void CancelInteractionFromHostDetach() => CancelInteraction("NativeHost Detach");
+    public void CancelInteractionFromPointerCaptureLost() => CancelInteraction("PointerCaptureLost");
 
     void RunInteraction(string name)
     {
@@ -20,7 +22,8 @@ public sealed partial class UiVm
 
     void BeginInteraction()
     {
-        var result = _editorState.Begin(new BeginInteractionCommand(ActiveTool, SelectionTitle));
+        var result = _editorState.Begin(new BeginInteractionCommand(ActiveTool,
+            SelectionTitle, EditorInteractionPointerSnapshot.Empty));
         if (result is null) return;
         FooterState = "状态：捕获中";
         FooterMessage = $"交互开始：{ActiveTool}";
@@ -31,7 +34,10 @@ public sealed partial class UiVm
     void PreviewInteraction()
     {
         var snap = _editorState.InteractionSnapshot;
-        var result = _editorState.Preview(new PreviewInteractionCommand(snap.SessionId, snap.OwnerTool, $"预览 {snap.Revision}"));
+        var pointer = snap.Pointer.IsEmpty ? snap.Pointer : snap.Pointer.MoveTo(
+            snap.Pointer.PointerId, snap.Pointer.CurrentX, snap.Pointer.CurrentY);
+        var result = _editorState.Preview(new PreviewInteractionCommand(
+            snap.SessionId, snap.OwnerTool, $"预览 {snap.Revision}", pointer));
         if (result is null) return;
         FooterMessage = $"交互预览：{InteractionPreview}";
         RaiseInteractionChanged();
@@ -40,11 +46,12 @@ public sealed partial class UiVm
     void CommitInteraction()
     {
         var snap = _editorState.InteractionSnapshot;
-        var result = _editorState.Commit(new CommitInteractionCommand(snap.SessionId, snap.OwnerTool));
+        var result = _editorState.Commit(new CommitInteractionCommand(
+            snap.SessionId, snap.OwnerTool, snap.Pointer.PointerId));
         if (result is null) return;
         FooterState = "状态：就绪";
         FooterMessage = "交互已提交。";
-        LogInteraction("提交捕获", $"Session={snap.SessionId}");
+        LogInteraction("提交捕获", $"Session={snap.SessionId}；{snap.Pointer.Summary}");
         RaiseInteractionChanged();
     }
 
@@ -64,6 +71,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InteractionPhase));
         OnPropertyChanged(nameof(InteractionOwner));
         OnPropertyChanged(nameof(InteractionPreview));
+        OnPropertyChanged(nameof(DebugInputItems));
         OnPropertyChanged(nameof(LogSummary));
     }
 }

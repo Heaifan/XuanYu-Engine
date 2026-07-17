@@ -9,10 +9,12 @@ public sealed record EditorInteractionSnapshot(
     string OwnerTool,
     string StartSnapshot,
     string Preview,
-    EditorInteractionPhase Phase)
+    EditorInteractionPhase Phase,
+    EditorInteractionPointerSnapshot Pointer)
 {
     public static EditorInteractionSnapshot Initial { get; } =
-        new(1, false, 0, "", "", "", EditorInteractionPhase.Idle);
+        new(1, false, 0, "", "", "", EditorInteractionPhase.Idle,
+            EditorInteractionPointerSnapshot.Empty);
 
     public string PhaseText => Phase == EditorInteractionPhase.Idle ? "空闲" : "捕获中";
 }

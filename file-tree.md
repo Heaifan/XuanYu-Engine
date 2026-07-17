@@ -1,5 +1,18 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R4 真实视口 Pointer 输入事务闭环快照 (2026-07-17 21:28:27)
+推进到 `v0.2.16.10-rz`，只把真实视口 PointerPressed / PointerMoved / PointerReleased 接入既有交互事务 Owner；不修改 Vulkan、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
+- `XuanYu.Editor.UI/EditorState/EditorInteractionPointerSnapshot.cs`  # 真实 Pointer 事务只读快照；记录 PointerId、逻辑起点、当前点、位移和 Preview 次数，不持有控件或 Vulkan 对象。
+- `XuanYu.Editor.UI/EditorState/EditorInteractionSnapshot.cs`  # 交互捕获只读快照；新增 Pointer 快照字段，继续由 Owner 统一发布。
+- `XuanYu.Editor.UI/EditorState/EditorInteractionCommand.cs`  # 交互事务命令；Begin / Preview / Commit 携带 Pointer 快照或 PointerId，用于 Owner 边界校验。
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.Interaction.cs`  # 交互事务唯一 Owner；新增 PointerId 校验，防止非当前指针 Preview / Commit。
+- `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`  # 真实视口 Pointer 意图转换；只允许移动工具启动真实拖动，并把逻辑像素坐标提交给 Owner。
+- `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`  # 交互事务 VM 入口；补充窗口失焦和 PointerCaptureLost 的统一 Cancel 入口。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`  # NativeHost 的 Avalonia Pointer 路由分部；接入按下、移动、释放和捕获丢失，不改 Attach / Resize / Present / Detach 生命周期。
+- `XuanYu.Editor.UI/Win/UiWin.axaml.cs`  # 主窗口代码后置；窗口失焦时统一取消当前交互事务。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.10-rz`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.10-rz`。
+
 ## ARCH-B-R3-R1 Escape 路由与宪法优先级修复快照 (2026-07-17 21:00:05)
 推进到 `v0.2.16.9-fix`，只修复 R3 人工验收发现的 Escape 无响应和临时调试按钮裁切，并补充开发宪法优先级；不修改 Vulkan、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
 - `XuanYu.Editor.UI/Win/UiWin.axaml.cs`  # 主窗口代码后置；新增窗口级 Escape 隧道路由，统一调用 VM 的交互 Cancel 入口，不负责事务状态所有权。

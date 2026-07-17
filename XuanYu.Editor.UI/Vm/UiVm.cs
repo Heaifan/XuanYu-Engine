@@ -38,7 +38,7 @@ public sealed partial class UiVm : INotifyPropertyChanged
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems; public IReadOnlyList<string> PropertyItems => UiText.PropertyItems;
     public IReadOnlyList<string> ToolItems => UiText.ToolItems;
     public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => DebugText.ObjectItems;
-    public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => DebugText.InputItems;
+    public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => BuildDebugInputItems();
     public string ActiveTool => _editorState.ToolSnapshot.ActiveToolText;
     public bool IsSelectTool => IsTool(EditorToolId.Select);
     public bool IsMoveTool => IsTool(EditorToolId.Move);

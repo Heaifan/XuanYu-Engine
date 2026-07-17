@@ -10,6 +10,7 @@ public partial class UiWin : Window
     {
         InitializeComponent();
         AddHandler(KeyDownEvent, Window_KeyDown, RoutingStrategies.Tunnel);
+        Deactivated += (_, _) => (DataContext as UiVm)?.CancelInteractionFromWindowDeactivated();
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)

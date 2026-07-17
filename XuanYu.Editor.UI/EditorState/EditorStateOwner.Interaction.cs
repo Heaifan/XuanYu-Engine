@@ -13,7 +13,8 @@ public sealed partial class EditorStateOwner
         if (_interaction.HasCapture) return null;
         var old = _interaction;
         _interaction = new(old.Revision + 1, true, _nextInteractionSessionId++,
-            command.OwnerTool, command.StartSnapshot, "", EditorInteractionPhase.Captured);
+            command.OwnerTool, command.StartSnapshot, "", EditorInteractionPhase.Captured,
+            command.Pointer);
         return InteractionChanged(old, EditorInteractionChangeKind.Began);
     }
 
@@ -21,8 +22,14 @@ public sealed partial class EditorStateOwner
     {
         EnsureWriteThread();
         if (!EnsureCaptureOwner(command.SessionId, command.OwnerTool)) return null;
+        if (!EnsurePointer(command.Pointer.PointerId)) return null;
         var old = _interaction;
-        _interaction = old with { Revision = old.Revision + 1, Preview = command.Preview };
+        _interaction = old with
+        {
+            Revision = old.Revision + 1,
+            Preview = command.Preview,
+            Pointer = command.Pointer
+        };
         return InteractionChanged(old, EditorInteractionChangeKind.Previewed);
     }
 
@@ -30,6 +37,7 @@ public sealed partial class EditorStateOwner
     {
         EnsureWriteThread();
         if (!EnsureCaptureOwner(command.SessionId, command.OwnerTool)) return null;
+        if (!EnsurePointer(command.PointerId)) return null;
         var old = _interaction;
         _interaction = EditorInteractionSnapshot.Initial with { Revision = old.Revision + 1 };
         return InteractionChanged(old, EditorInteractionChangeKind.Committed);
@@ -49,6 +57,12 @@ public sealed partial class EditorStateOwner
         if (!_interaction.HasCapture) return false;
         if (_interaction.SessionId == sessionId && _interaction.OwnerTool == ownerTool) return true;
         throw new InvalidOperationException("非捕获所有者不能修改当前交互事务。");
+    }
+
+    bool EnsurePointer(long pointerId)
+    {
+        if (_interaction.Pointer.IsEmpty && pointerId == 0) return true;
+        return pointerId != 0 && _interaction.Pointer.PointerId == pointerId;
     }
 
     EditorInteractionChangedResult InteractionChanged(EditorInteractionSnapshot old, EditorInteractionChangeKind kind) =>
