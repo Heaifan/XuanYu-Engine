@@ -8,6 +8,7 @@ public sealed partial class VulkanNativeHostSurfaceBridge
     {
         if (_disposed) return;
         _disposed = true;
+        if (_sceneSource is not null) _sceneSource.RenderSnapshotChanged -= OnSceneRenderSnapshotChanged;
         Detach();
         if (_renderSession is null) { _vk?.Dispose(); _vk = null; }
     }

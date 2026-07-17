@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.3-rz
+ARCH-C-R1：最小场景实体与 CommittedTransform 所有权闭环（2026-07-17，实施）
+
+- 原历史编号：ARCH-C-R1
+- 日期：2026-07-17
+- 任务目标：在 `ARCH-C-Plan` 通过后，建立单一最小真实场景实体、稳定 `EntityKey`、`CommittedTransform.Position` 正式状态所有权，以及从场景状态到 Vulkan 渲染快照的单向数据流。
+- 主要改动：新增 `XuanYu.Core/Scene/*`，由 `SceneStateOwner` 持有单实体状态并发布 `SceneRenderSnapshot`；`UiVm.Scene.cs` 通过顶部“运行/停止”提交测试实体 Position 并刷新右侧对象调试信息；`INativeHostSurfaceBridgeFactory` 接收可选 `ISceneRenderSnapshotSource`；Vulkan Bridge / Session / ClearFrame 消费快照并通过重录命令缓冲让现有三角形随 Position 平移；主窗口标题、`run.bat` 和 `file-tree.md` 同步到 `v0.2.17.3-rz`。
+- 修改范围：`XuanYu.Core/Scene/*`、`XuanYu.Editor.UI/Vm/UiVm.Scene.cs`、`UiVm.cs`、`VulkanNativeHost.Bridge.cs`、`XuanYu.Render.Abstractions/*`、`XuanYu.Render.Vulkan/*Bridge*`、`VulkanRenderSession*`、`VulkanClearFrameOwner*`、`run.bat`、`UiWin.axaml`、`file-tree.md`、`changelog.md`。未实现 Picking / Ray-AABB / Gizmo / Preview / Commit-Cancel 输入事务 / Undo / 多选 / 父子 Transform / Rotation / Scale / ECS / 资产系统 / 存档格式；未修改 Vulkan Instance / Surface / Device / Swapchain / Present / Resize 主生命周期所有权。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.3-rz`；`file-tree.md` 实际条目 228 且总数声明 228；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：本轮不 Push；未创建 Tag / Release。
+- 遗留问题：仍需真机人工确认对象可见、运行后 Position 改变对应渲染结果变化、停止后回到原点、Resize 不破坏渲染、日志栏展开/收起与关闭释放链正常。
+
 ## v0.2.17.1-rz
 ARCH-C-Plan：真实场景编辑交互闭环规划（2026-07-17 22:49:25，规划文档）
 

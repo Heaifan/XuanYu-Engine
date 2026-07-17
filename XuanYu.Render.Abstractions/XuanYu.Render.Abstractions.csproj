@@ -5,4 +5,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>XuanYu.Render.Abstractions</AssemblyName>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XuanYu.Core\XuanYu.Core.csproj" />
+  </ItemGroup>
 </Project>

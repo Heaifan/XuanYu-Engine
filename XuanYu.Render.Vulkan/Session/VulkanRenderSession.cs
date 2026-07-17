@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Silk.NET.Vulkan;
+using XuanYu.Core.Scene;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
@@ -44,7 +45,7 @@ public sealed partial class VulkanRenderSession : IDisposable
 
     public static VulkanRenderSession? Create(Vk vk, VulkanDeviceOwner? deviceOwner,
         VulkanSwapchainOwner? swapchainOwner, VulkanPhysicalDeviceSelection? selection,
-        Action<string>? log, NativeHostSurfaceHandle? surfaceHandle = null)
+        Action<string>? log, NativeHostSurfaceHandle? surfaceHandle = null, SceneRenderSnapshot? scene = null)
     {
         if (deviceOwner is null || swapchainOwner is null || selection?.Queue is null || !selection.Success)
         {
@@ -58,6 +59,7 @@ public sealed partial class VulkanRenderSession : IDisposable
         {
             VulkanRenderSession? session = null;
             clear = new VulkanClearFrameOwner(vk, deviceOwner, swapchainOwner, selection.Queue.GraphicsFamily, log);
+            clear.SetSceneSnapshot(scene ?? SceneRenderSnapshot.TestEntityAtOrigin);
             pipeline = VulkanGraphicsPipelineOwner.Create(vk, deviceOwner, clear, swapchainOwner, log);
             if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline);
             loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,

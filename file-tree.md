@@ -1,7 +1,7 @@
-版本：v0.2.17.2-fix
+版本：v0.2.17.3-rz
 # XuanYu Engine 文件树
 
-文件总数：220
+文件总数：228
 
 ## 根目录
 
@@ -90,6 +90,11 @@
 - `XuanYu.Core/Logging/EngineLogLevel.cs`：引擎日志等级。
 - `XuanYu.Core/Math/Vector3d.cs`：三维向量值对象。
 - `XuanYu.Core/Math/YawRotation.cs`：Yaw 旋转值对象。
+- `XuanYu.Core/Scene/CommittedTransform.cs`：已提交 Transform 值对象，当前保存正式 Position。
+- `XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs`：场景渲染快照源抽象，向渲染侧发布只读快照。
+- `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
+- `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体。
+- `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position 并发布渲染快照。
 - `XuanYu.Core/Results/EngineError.cs`：引擎错误值对象。
 - `XuanYu.Core/Results/EngineResult.cs`：引擎结果类型。
 - `XuanYu.Core/Time/SimulationTime.cs`：模拟时间值对象。
@@ -119,6 +124,8 @@
 - `XuanYu.Render.Vulkan/VulkanInstanceResult.cs`：Vulkan Instance 创建结果。
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Attach.cs`：Vulkan NativeHost 桥接 Attach 分部。
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Lifecycle.cs`：Vulkan NativeHost 桥接生命周期分部。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Resize.cs`：Vulkan NativeHost 桥接 Resize 分部。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Scene.cs`：Vulkan NativeHost 桥接场景快照订阅分部。
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`：Vulkan NativeHost Surface 桥接主体。
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridgeFactory.cs`：Vulkan NativeHost Surface 桥接工厂。
 - `XuanYu.Render.Vulkan/VulkanProbeLogFormatter.cs`：Vulkan 探针日志格式化器。
@@ -237,6 +244,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
+- `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令分部，提交 R1 测试实体 Position 并刷新调试对象信息。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm 选择提交与清空分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态。

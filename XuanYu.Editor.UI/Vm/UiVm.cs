@@ -37,7 +37,7 @@ public sealed partial class UiVm : INotifyPropertyChanged
     public IReadOnlyList<EditorTreeNode> ProjectItems => UiText.ProjectTreeItems; public IReadOnlyList<EditorTreeNode> HierarchyItems => UiText.HierarchyTreeItems; public IReadOnlyList<string> InspectorFields => UiText.ProjectInspectorFields;
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems; public IReadOnlyList<string> PropertyItems => UiText.PropertyItems;
     public IReadOnlyList<string> ToolItems => UiText.ToolItems;
-    public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => DebugText.ObjectItems;
+    public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => BuildDebugObjectItems();
     public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => BuildDebugInputItems();
     public string ActiveTool => _editorState.ToolSnapshot.ActiveToolText;
     public bool IsSelectTool => IsTool(EditorToolId.Select);
@@ -65,7 +65,7 @@ public sealed partial class UiVm : INotifyPropertyChanged
 
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
 
-    void Run(string name) { FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}"); FooterState = name is "运行" ? "状态：运行中" : "状态：就绪"; LogCommand(name); OnPropertyChanged(nameof(LogSummary)); }
+    void Run(string name) => ApplyRunCommand(name);
 
     bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return false; field = value; OnPropertyChanged(name); return true; }
 

@@ -1,5 +1,6 @@
 using System;
 using Silk.NET.Vulkan;
+using XuanYu.Core.Scene;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Swapchain;
@@ -19,6 +20,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     Framebuffer[] _framebuffers = [];
     ImageView[] _views = [];
     Silk.NET.Vulkan.Pipeline _pipeline = default;
+    SceneRenderSnapshot _sceneSnapshot = SceneRenderSnapshot.TestEntityAtOrigin;
     Extent2D _extent;
     bool _disposed;
 
@@ -52,6 +54,13 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
         _pipeline = pipeline;
         if (_views.Length > 0 && !RecordCommandBuffers(_views))
             throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
+    }
+
+    public void SetSceneSnapshot(SceneRenderSnapshot snapshot)
+    {
+        _sceneSnapshot = snapshot;
+        if (_views.Length > 0 && !RecordCommandBuffers(_views))
+            throw new InvalidOperationException("Scene snapshot 注入后 CommandBuffer 重录失败");
     }
 
     public bool RebuildFramebuffers(uint generation = 0, bool force = false)

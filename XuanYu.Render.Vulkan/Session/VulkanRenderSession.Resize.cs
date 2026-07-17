@@ -1,3 +1,4 @@
+using XuanYu.Core.Scene;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Render;
 
@@ -45,4 +46,12 @@ public sealed partial class VulkanRenderSession
 
     bool IsSameSize(int width, int height)
         => _swapchainOwner.Extent.Width == (uint)width && _swapchainOwner.Extent.Height == (uint)height;
+
+    public void UpdateScene(SceneRenderSnapshot snapshot)
+    {
+        if (_disposed || IsFailed) return;
+        if (!_presentLoop.Stop()) return;
+        lock (_rebuildLock) _clearFrame.SetSceneSnapshot(snapshot);
+        _presentLoop.Start();
+    }
 }

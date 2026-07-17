@@ -1,4 +1,5 @@
 using System;
+using XuanYu.Core.Scene;
 
 namespace XuanYu.Render.Abstractions;
 
@@ -6,5 +7,5 @@ namespace XuanYu.Render.Abstractions;
 // UI 后续只接收该工厂，不直接认识具体 Vulkan 实现。
 public interface INativeHostSurfaceBridgeFactory
 {
-    INativeHostSurfaceBridge Create(Action<string>? log = null);
+    INativeHostSurfaceBridge Create(Action<string>? log = null, ISceneRenderSnapshotSource? sceneSource = null);
 }

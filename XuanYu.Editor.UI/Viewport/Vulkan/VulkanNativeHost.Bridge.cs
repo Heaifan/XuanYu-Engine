@@ -6,10 +6,10 @@ public sealed partial class VulkanNativeHost
 {
     INativeHostSurfaceBridge CreateBridge()
     {
-        if (DataContext is UiVm { SurfaceBridgeFactory: { } factory })
+        if (DataContext is UiVm { SurfaceBridgeFactory: { } factory } vm)
         {
             LogBridgeFactorySource("应用注入（XuanYu.Editor.App）");
-            return factory.Create(ReportVulkanMessage);
+            return factory.Create(ReportVulkanMessage, vm.SceneSnapshotSource);
         }
         LogBridgeFactorySource("缺少应用注入，已拒绝旧 fallback");
         throw new InvalidOperationException("NativeHost Surface Bridge factory 未由应用组装层注入。");
