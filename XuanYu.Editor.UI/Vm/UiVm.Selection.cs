@@ -4,6 +4,7 @@ public sealed partial class UiVm
 {
     void ApplySelection(string source, EditorTreeNode node)
     {
+        CancelInteraction("切换选择对象");
         var command = new SelectEditorItemCommand(
             source, node.Key, node.Title, node.Type, node.Path);
         if (_editorState.Select(command) is null) return;

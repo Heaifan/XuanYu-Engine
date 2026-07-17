@@ -8,4 +8,10 @@ public partial class UiWin : Window
     {
         InitializeComponent();
     }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        (DataContext as UiVm)?.CancelInteractionFromWindowClosing();
+        base.OnClosing(e);
+    }
 }

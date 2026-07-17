@@ -21,6 +21,7 @@ public sealed partial class UiVm : INotifyPropertyChanged
         SurfaceBridgeFactory = surfaceBridgeFactory;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
+        InteractionCommand = new RelayCommand(name => RunInteraction(name?.ToString() ?? string.Empty));
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
         SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
         InitLogs();
@@ -30,6 +31,7 @@ public sealed partial class UiVm : INotifyPropertyChanged
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }
     public ICommand RunCommand { get; }
     public ICommand SelectToolCommand { get; }
+    public ICommand InteractionCommand { get; }
     public ICommand ToggleLogCommand { get; }
     public ICommand SelectLogFilterCommand { get; }
     public IReadOnlyList<EditorTreeNode> ProjectItems => UiText.ProjectTreeItems; public IReadOnlyList<EditorTreeNode> HierarchyItems => UiText.HierarchyTreeItems; public IReadOnlyList<string> InspectorFields => UiText.ProjectInspectorFields;
@@ -64,33 +66,6 @@ public sealed partial class UiVm : INotifyPropertyChanged
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
 
     void Run(string name) { FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}"); FooterState = name is "运行" ? "状态：运行中" : "状态：就绪"; LogCommand(name); OnPropertyChanged(nameof(LogSummary)); }
-
-    void SelectTool(string name)
-    {
-        if (_editorState.ChangeTool(new ChangeEditorToolCommand(name)) is null)
-        {
-            RaiseToolChanged();
-            return;
-        }
-
-        RaiseToolChanged();
-        FooterMessage = $"当前工具：{ActiveTool}。视口等待输入。";
-        FooterState = "状态：就绪";
-        LogTool(ActiveTool);
-        OnPropertyChanged(nameof(LogSummary));
-    }
-
-    bool IsTool(EditorToolId tool) => _editorState.ToolSnapshot.ActiveTool == tool;
-
-    void RaiseToolChanged()
-    {
-        OnPropertyChanged(nameof(ActiveTool)); OnPropertyChanged(nameof(FooterMode));
-        OnPropertyChanged(nameof(IsSelectTool)); OnPropertyChanged(nameof(IsBoxSelectTool));
-        OnPropertyChanged(nameof(IsMoveTool)); OnPropertyChanged(nameof(IsRotateTool));
-        OnPropertyChanged(nameof(IsScaleTool)); OnPropertyChanged(nameof(IsFocusTool));
-        OnPropertyChanged(nameof(IsPanTool)); OnPropertyChanged(nameof(IsOrbitTool));
-        OnPropertyChanged(nameof(IsSnapTool));
-    }
 
     bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return false; field = value; OnPropertyChanged(name); return true; }
 

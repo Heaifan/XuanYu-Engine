@@ -83,6 +83,12 @@ public sealed partial class UiVm
         RefreshLogBindings();
     }
 
+    void LogInteraction(string message, string detail)
+    {
+        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture, message, detail);
+        RefreshLogBindings();
+    }
+
     public void LogVulkanLifecycle(string message, string detail)
     {
         _logBus.Info(EditorLogSource.Render, EditorLogCategory.Backend, message, detail);

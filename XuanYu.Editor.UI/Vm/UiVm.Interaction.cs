@@ -1,0 +1,69 @@
+namespace XuanYu.Editor.UI;
+
+public sealed partial class UiVm
+{
+    public string InteractionPhase => _editorState.InteractionSnapshot.PhaseText;
+    public string InteractionOwner => _editorState.InteractionSnapshot.OwnerTool is "" ? "无" : _editorState.InteractionSnapshot.OwnerTool;
+    public string InteractionPreview => _editorState.InteractionSnapshot.Preview is "" ? "无" : _editorState.InteractionSnapshot.Preview;
+
+    public void CancelInteractionFromEscape() => CancelInteraction("Escape");
+    public void CancelInteractionFromWindowClosing() => CancelInteraction("窗口关闭");
+    public void CancelInteractionFromHostDetach() => CancelInteraction("NativeHost Detach");
+
+    void RunInteraction(string name)
+    {
+        if (name == "Begin") BeginInteraction();
+        else if (name == "Preview") PreviewInteraction();
+        else if (name == "Commit") CommitInteraction();
+        else if (name == "Cancel") CancelInteraction("手动取消");
+    }
+
+    void BeginInteraction()
+    {
+        var result = _editorState.Begin(new BeginInteractionCommand(ActiveTool, SelectionTitle));
+        if (result is null) return;
+        FooterState = "状态：捕获中";
+        FooterMessage = $"交互开始：{ActiveTool}";
+        LogInteraction("开始捕获", $"Session={result.Snapshot.SessionId}");
+        RaiseInteractionChanged();
+    }
+
+    void PreviewInteraction()
+    {
+        var snap = _editorState.InteractionSnapshot;
+        var result = _editorState.Preview(new PreviewInteractionCommand(snap.SessionId, snap.OwnerTool, $"预览 {snap.Revision}"));
+        if (result is null) return;
+        FooterMessage = $"交互预览：{InteractionPreview}";
+        RaiseInteractionChanged();
+    }
+
+    void CommitInteraction()
+    {
+        var snap = _editorState.InteractionSnapshot;
+        var result = _editorState.Commit(new CommitInteractionCommand(snap.SessionId, snap.OwnerTool));
+        if (result is null) return;
+        FooterState = "状态：就绪";
+        FooterMessage = "交互已提交。";
+        LogInteraction("提交捕获", $"Session={snap.SessionId}");
+        RaiseInteractionChanged();
+    }
+
+    void CancelInteraction(string reason)
+    {
+        var snap = _editorState.InteractionSnapshot;
+        var result = _editorState.Cancel(new CancelInteractionCommand(snap.SessionId, snap.OwnerTool, reason));
+        if (result is null) return;
+        FooterState = "状态：就绪";
+        FooterMessage = $"交互已取消：{reason}";
+        LogInteraction("取消捕获", $"Session={snap.SessionId}，原因={reason}");
+        RaiseInteractionChanged();
+    }
+
+    void RaiseInteractionChanged()
+    {
+        OnPropertyChanged(nameof(InteractionPhase));
+        OnPropertyChanged(nameof(InteractionOwner));
+        OnPropertyChanged(nameof(InteractionPreview));
+        OnPropertyChanged(nameof(LogSummary));
+    }
+}

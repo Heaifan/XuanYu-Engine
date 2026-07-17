@@ -1,5 +1,18 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R3 交互捕获事务边界快照 (2026-07-17 20:15:16)
+推进到 `v0.2.16.8-rz`，只建设交互捕获 Owner 与 Preview / Commit / Cancel 边界；不开发真实 Gizmo、Picking、WorldState 写入、Undo / Redo、存档格式，不修改 Render.Vulkan / Swapchain / Present。
+- `XuanYu.Editor.UI/EditorState/EditorInteractionSnapshot.cs`  # 交互捕获只读快照；记录 Revision、是否捕获、SessionId、OwnerTool、开始快照、最新 Preview 和阶段，不负责真实场景状态。
+- `XuanYu.Editor.UI/EditorState/EditorInteractionCommand.cs`  # 交互 Begin / Preview / Commit / Cancel 命令；表达具体事务意图，不引入通用命令总线。
+- `XuanYu.Editor.UI/EditorState/EditorInteractionChangedResult.cs`  # 交互状态变化结果；记录旧快照、新快照和变化类型，不反向修改 Owner。
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.Interaction.cs`  # Editor 交互捕获所有者；唯一管理捕获会话、Owner 校验、Preview 覆盖、Commit / Cancel 回 Idle。
+- `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`  # UI 工具切换分部；工具切换前取消当前交互，不直接持有正式工具状态。
+- `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`  # UI 交互事务分部；提供调试命令和统一 Cancel 入口，不写正式场景状态。
+- `XuanYu.Editor.UI/Right/Right.axaml`  # 右侧调试页；新增最小 Begin / Preview / Commit / Cancel 测试面板。
+- `XuanYu.Editor.UI/Left/Left.axaml.cs` / `Win/UiWin.axaml.cs` / `Viewport/Vulkan/VulkanNativeHost.cs`  # Escape、窗口关闭、NativeHost Detach 汇聚到 VM Cancel；不改变渲染生命周期顺序。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.8-rz`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.8-rz`。
+
 ## v0.2.16.7-fix Vulkan 既有 5+100 纯结构拆分快照 (2026-07-14 22:41:08)
 在进入 ARCH-B-R3 前，先治理两个既有 5+100 超限文件；本轮只拆分职责，不改变 Attach、Resize、Present、自愈或释放逻辑。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`  # NativeHost 主生命周期与尺寸路径；保留创建、Attach、Resize、Detach、Dispose 编排，不负责后台日志线程派发实现。
