@@ -6,7 +6,7 @@ static partial class Win32ViewportHost
 {
     const int WS_CHILD = 0x40000000, WS_VISIBLE = 0x10000000;
     const int SWP_NOZORDER = 0x0004, SWP_NOACTIVATE = 0x0010;
-    static readonly WndProcDelegate WndProc = DefWindowProc;
+    static readonly WndProcDelegate WndProc = RouteWndProc;
     static readonly nint WndProcPtr = Marshal.GetFunctionPointerForDelegate(WndProc);
 
     public static nint CreateChild(nint parent)

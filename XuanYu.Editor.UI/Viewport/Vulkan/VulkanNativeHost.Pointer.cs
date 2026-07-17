@@ -4,15 +4,35 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class VulkanNativeHost
 {
+    const long NativePointerId = 1;
+
+    void OnNativePointerMessage(NativePointerMessage message)
+    {
+        var dpi = GetDpiScale();
+        var x = message.PhysicalX / dpi;
+        var y = message.PhysicalY / dpi;
+        if (DataContext is not UiVm vm) return;
+        if (message.Message == NativePointerMessage.LeftDown)
+            vm.BeginViewportPointer(NativePointerId, x, y, IsInBounds(x, y), _hwnd != 0);
+        else if (message.Message == NativePointerMessage.Move && message.IsLeftButtonDown)
+            vm.PreviewViewportPointer(NativePointerId, x, y);
+        else if (message.Message == NativePointerMessage.LeftUp)
+            vm.CommitViewportPointer(NativePointerId, x, y);
+        else if (message.Message is NativePointerMessage.CaptureChanged or NativePointerMessage.KillFocus)
+            vm.CancelInteractionFromPointerCaptureLost();
+    }
+
+    bool IsInBounds(double x, double y) =>
+        x >= 0 && y >= 0 && x <= Bounds.Width && y <= Bounds.Height;
+
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
         var point = e.GetCurrentPoint(this);
         if (!point.Properties.IsLeftButtonPressed) return;
         if (DataContext is not UiVm vm) return;
-        var inViewport = point.Position.X >= 0 && point.Position.Y >= 0 &&
-            point.Position.X <= Bounds.Width && point.Position.Y <= Bounds.Height;
-        if (!vm.BeginViewportPointer(e.Pointer.Id, point.Position.X, point.Position.Y, inViewport, _hwnd != 0)) return;
+        if (!vm.BeginViewportPointer(e.Pointer.Id, point.Position.X, point.Position.Y,
+            IsInBounds(point.Position.X, point.Position.Y), _hwnd != 0)) return;
         e.Pointer.Capture(this);
         e.Handled = true;
     }

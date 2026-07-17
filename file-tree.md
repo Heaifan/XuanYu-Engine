@@ -1,5 +1,15 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R4-R1 Win32 子窗口 Pointer 消息转发修复快照 (2026-07-17 21:56:17)
+推进到 `v0.2.16.11-fix`，只修复 NativeControlHost 未收到 Win32 子窗口鼠标消息导致真实视口拖动无反应的问题；不修改 Vulkan、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs`  # Win32 子窗口创建与基础生命周期；窗口过程改为输入路由入口，仍不承载 Vulkan 资源逻辑。
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs`  # Win32 子窗口鼠标消息转发；注册输入 Sink 并转发左键按下、移动、释放、捕获丢失和失焦。
+- `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs`  # Win32 Pointer 消息快照；保存消息类型、按钮状态和物理像素坐标。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`  # NativeHost 生命周期主体；创建子窗口后注册输入 Sink，销毁前清理 Sink。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`  # 真实 Pointer 路由分部；接收 Win32 子窗口消息，把物理坐标转回逻辑坐标并提交既有交互事务。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.11-fix`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.11-fix`。
+
 ## ARCH-B-R4 真实视口 Pointer 输入事务闭环快照 (2026-07-17 21:28:27)
 推进到 `v0.2.16.10-rz`，只把真实视口 PointerPressed / PointerMoved / PointerReleased 接入既有交互事务 Owner；不修改 Vulkan、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
 - `XuanYu.Editor.UI/EditorState/EditorInteractionPointerSnapshot.cs`  # 真实 Pointer 事务只读快照；记录 PointerId、逻辑起点、当前点、位移和 Preview 次数，不持有控件或 Vulkan 对象。
