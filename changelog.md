@@ -8,10 +8,10 @@ ARCH-B-R3-R1：窗口级 Escape Cancel 与宪法优先级补充（2026-07-17 21:
 - 任务目标：修复 ARCH-B-R3 人工验收发现的 Escape 无响应问题，让 Escape 不依赖左侧树焦点即可进入统一 Cancel 路径；同时补充开发宪法优先级规则，明确用户临时提示与宪法冲突时必须以宪法为准。
 - 主要改动：`UiWin.axaml.cs` 增加窗口级 `KeyDown` 隧道路由，捕获 Escape 后调用 `CancelInteractionFromEscape()` 并标记已处理；右侧临时调试按钮从英文改为中文短文案，避免 Begin / Preview / Commit / Cancel 裁切；主窗口标题与 `run.bat` 同步到 `v0.2.16.9-fix`；`docs/玄域引擎_AI开发宪法.md` 新增“宪法优先级”条款。
 - 修改范围：`XuanYu.Editor.UI/Win/UiWin.axaml.cs`、`XuanYu.Editor.UI/Right/Right.axaml`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`docs/玄域引擎_AI开发宪法.md`、`changelog.md`、`file-tree.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、自愈、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
-- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 5+100 扫描无超限输出；首次 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 因正在运行的 `XuanYu.Editor.App (27352)` 占用输出 DLL 失败，停止该进程后重跑通过，6 项目 0 warning / 0 error。Escape 窗口级路由与按钮裁切修复仍需真机人工确认。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 5+100 扫描无超限输出；首次 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 因正在运行的 `XuanYu.Editor.App (27352)` 占用输出 DLL 失败，停止该进程后重跑通过，6 项目 0 warning / 0 error。人工验收（2026-07-17 21:07:35）正式通过：两次独立 Escape 路由均正确触发统一 Cancel，Session=1 于 21:07:12 开始捕获、21:07:15 因 Escape 取消，Session=2 于 21:07:28 开始捕获、21:07:35 因 Escape 取消；取消后阶段=空闲、Owner=无、Preview=无、状态=就绪。日志栏展开/收起 Resize 回归通过，Swapchain 代际 `gen=1 → gen=2 → gen=3 → gen=4`，Framebuffer / CommandBuffer 同步重建与重录，随后 UI 合并 Resize 正确跳过同尺寸重复重建，未出现 DeviceLost、Fatal、黑屏或 Present 无法恢复；临时调试按钮中文文案通过界面观察验收。
 - Commit Hash：主实现提交 `35514f1b582b3c0a4fd6166a33303e25787a767e`；不追记回填提交自身 Hash。
-- Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
-- 遗留问题：仍需真机确认 `Begin → Preview → Esc` 能取消捕获且日志原因为 Escape；捕获中关闭窗口、幂等与捕获期间 Resize 仍按 R3 人工验收清单继续确认。
+- Push 状态：主实现与 Hash 回填已推送到 `origin/fix/RZ-VK3-A-surface-contract`；本条人工验收收口记录待提交后推送；未创建 Tag / Release。
+- 遗留问题：`v0.2.16.9-fix` 与 ARCH-B-R3 正式验收通过；本轮不创建 Tag / Release，后续可进入下一阶段规划。
 
 ## v0.2.16.8-rz
 ARCH-B-R3：交互捕获与 Preview / Commit / Cancel 事务边界（2026-07-17 20:15:16，实施）
