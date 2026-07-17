@@ -9,8 +9,8 @@ ARCH-B-R4-R1：Win32 子窗口 Pointer 消息转发修复（2026-07-17 21:56:17�
 - 主要改动：`Win32ViewportHost` 的窗口过程从直接 `DefWindowProc` 改为最小输入路由，转发 `WM_LBUTTONDOWN / WM_MOUSEMOVE / WM_LBUTTONUP / WM_CAPTURECHANGED / WM_KILLFOCUS`；新增 Native Pointer 消息快照与输入 Sink 注册；`VulkanNativeHost.Pointer` 接收 Win32 子窗口消息，将物理像素除以 DPI 还原为逻辑像素后继续调用既有 `UiVm` 事务入口；主窗口标题与 `run.bat` 同步到 `v0.2.16.11-fix`。
 - 修改范围：`XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs`、`Win32ViewportHost.Input.cs`、`NativePointerMessage.cs`、`VulkanNativeHost.cs`、`VulkanNativeHost.Pointer.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、自愈、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 `.cs/.axaml/.js` 5+100 扫描无超限输出；首次 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 因正在运行的 `XuanYu.Editor.App (4972)` 占用输出 DLL 失败，停止该进程后重跑通过，6 项目 0 warning / 0 error。
-- Commit Hash：待提交后回填。
-- Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
+- Commit Hash：主实现提交 `6e910577f001a881827dd8df84c1d5183fe944ae`；不追记回填提交自身 Hash。
+- Push 状态：待 Hash 回填提交后推送；未创建 Tag / Release。
 - 遗留问题：仍需真机重新验证真实视口拖动：移动工具左键按下进入捕获、拖动期间 Preview 次数递增、释放只 Commit 一次、Escape / CaptureLost / Window Deactivated 取消、取消后的延迟 Release 不得 Commit。
 
 ## v0.2.16.10-rz
