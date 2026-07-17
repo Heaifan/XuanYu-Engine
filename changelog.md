@@ -9,7 +9,7 @@ ARCH-B-R4-R2：原生鼠标捕获正常释放与异常丢失判定修复（2026-
 - 主要改动：`Win32ViewportHost.Input.cs` 不再在 `WM_LBUTTONUP` 前提前 `ReleaseCapture()`，并把 `WM_CAPTURECHANGED` 的新捕获 HWND、SetCapture 前后捕获状态传给上层；`NativePointerMessage` 增加捕获相关字段与 `WM_CANCELMODE` 常量；`VulkanNativeHost.Pointer.cs` 增加最小原生拖动状态，区分正常 Commit/Cancel 后的预期释放与真正捕获转移；`UiVm.Interaction.cs` 增加原生 Pointer Cancel 入口；主窗口标题与 `run.bat` 同步到 `v0.2.16.12-fix`。
 - 修改范围：`XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs`、`NativePointerMessage.cs`、`VulkanNativeHost.Pointer.cs`、`XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、Framebuffer、CommandBuffer、Surface 生命周期、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 `.cs/.axaml/.js` 5+100 扫描无超限输出；依赖边界扫描确认 `Editor.UI` 未直接引用 `Render.Vulkan` / `Silk.NET.Vulkan`，`Render.Abstractions` 命中仅为历史迁移注释。待真机验证真实拖动 Begin → Preview → Commit，不再被正常释放产生的 `WM_CAPTURECHANGED` 误取消。
-- Commit Hash：待回填。
+- Commit Hash：主实现提交 `e7440527b97e37fde6fd1c9789b0e1e25c2125c4`；不追记回填提交自身 Hash。
 - Push 状态：待提交并推送；未创建 Tag / Release。
 - 遗留问题：仍需真机人工验收连续三次真实拖动、Escape 取消、失焦 / CaptureChanged 异常取消、日志栏展开收起 Resize 回归和正常关闭释放链。
 
