@@ -9,7 +9,7 @@ ARCH-B-R3：交互捕获与 Preview / Commit / Cancel 事务边界（2026-07-17 
 - 主要改动：新增 `EditorInteractionSnapshot`、交互命令、交互变更结果和 `EditorStateOwner.Interaction` 分部，统一管理 Idle / Captured、SessionId、OwnerTool、开始快照和最新 Preview；`UiVm` 拆出 `UiVm.Tool.cs` 与 `UiVm.Interaction.cs`，工具切换、选择切换、Escape、窗口关闭和 NativeHost Detach 均汇聚到同一个 Cancel 路径；右侧调试页新增最小事务测试面板，可触发 Begin / Preview / Commit / Cancel；主窗口标题与 `run.bat` 同步到 `v0.2.16.8-rz`。
 - 修改范围：`XuanYu.Editor.UI/EditorState/EditorInteraction*.cs`、`EditorStateOwner.Interaction.cs`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`UiVm.Tool.cs`、`UiVm.Interaction.cs`、`UiVm.Selection.cs`、`UiVm.Logging.cs`、`XuanYu.Editor.UI/Right/Right.axaml`、`Left.axaml.cs`、`UiWin.axaml(.cs)`、`VulkanNativeHost.cs`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、自愈、Picking、真实 Gizmo、WorldState、Undo / Redo、存档格式或第三方依赖。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 5+100 扫描无超限输出。项目暂无测试工程，本轮未引入测试框架或第三方依赖；重复 Begin、非 Owner 拒绝、Commit / Cancel 回 Idle 等需通过右侧调试面板和后续人工验收确认。
-- Commit Hash：待主实现提交后回填；不追记回填提交自身 Hash。
+- Commit Hash：主实现提交 `a706e975795fc694abc3cc9fc481bfc0f3efb6ba`；不追记回填提交自身 Hash。
 - Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
 - 遗留问题：本轮只建立交互事务地基，尚未开发完整移动 Gizmo、真实 Picking、Transform Preview、WorldState 写入、Undo / Redo 或场景存档。
 
