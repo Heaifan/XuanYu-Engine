@@ -11,6 +11,7 @@ public sealed partial class UiVm
     public void CancelInteractionFromWindowClosing() => CancelInteraction("窗口关闭");
     public void CancelInteractionFromHostDetach() => CancelInteraction("NativeHost Detach");
     public void CancelInteractionFromPointerCaptureLost() => CancelInteraction("PointerCaptureLost");
+    public void CancelInteractionFromNativePointer(string reason) => CancelInteraction(reason);
 
     void RunInteraction(string name)
     {
