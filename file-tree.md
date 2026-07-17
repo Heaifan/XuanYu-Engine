@@ -1,5 +1,13 @@
 # 项目文件树 — XuanYu Engine
 
+## ARCH-B-R3-R1 Escape 路由与宪法优先级修复快照 (2026-07-17 21:00:05)
+推进到 `v0.2.16.9-fix`，只修复 R3 人工验收发现的 Escape 无响应和临时调试按钮裁切，并补充开发宪法优先级；不修改 Vulkan、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
+- `XuanYu.Editor.UI/Win/UiWin.axaml.cs`  # 主窗口代码后置；新增窗口级 Escape 隧道路由，统一调用 VM 的交互 Cancel 入口，不负责事务状态所有权。
+- `XuanYu.Editor.UI/Right/Right.axaml`  # 右侧调试页；临时事务探针按钮改为中文短文案，避免裁切，不作为正式用户功能。
+- `XuanYu.Editor.UI/Win/UiWin.axaml`  # 主窗口定义；标题版本同步为 `玄域引擎编辑器 v0.2.16.9-fix`。
+- `run.bat`  # 仓库根启动脚本；控制台标题同步为 `XuanYu Engine Editor v0.2.16.9-fix`。
+- `docs/玄域引擎_AI开发宪法.md`  # 最高开发规范；新增宪法优先级条款，用户提示与宪法冲突时必须以宪法为准并说明原因。
+
 ## ARCH-B-R3 交互捕获事务边界快照 (2026-07-17 20:15:16)
 推进到 `v0.2.16.8-rz`，只建设交互捕获 Owner 与 Preview / Commit / Cancel 边界；不开发真实 Gizmo、Picking、WorldState 写入、Undo / Redo、存档格式，不修改 Render.Vulkan / Swapchain / Present。
 - `XuanYu.Editor.UI/EditorState/EditorInteractionSnapshot.cs`  # 交互捕获只读快照；记录 Revision、是否捕获、SessionId、OwnerTool、开始快照、最新 Preview 和阶段，不负责真实场景状态。
