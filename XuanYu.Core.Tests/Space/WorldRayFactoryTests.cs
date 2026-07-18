@@ -16,24 +16,44 @@ public sealed class WorldRayFactoryTests
     }
 
     [Fact]
-    public void Corners_change_direction_in_expected_axes()
+    public void Four_corners_freeze_screen_to_world_axis_convention()
     {
         var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
         var leftTop = WorldRayFactory.FromViewportPoint(state, 0, 0);
+        var rightTop = WorldRayFactory.FromViewportPoint(state, 800, 0);
+        var leftBottom = WorldRayFactory.FromViewportPoint(state, 0, 600);
         var rightBottom = WorldRayFactory.FromViewportPoint(state, 800, 600);
 
-        Assert.NotEqual(leftTop.Direction.X, rightBottom.Direction.X);
-        Assert.NotEqual(leftTop.Direction.Y, rightBottom.Direction.Y);
-        Assert.Equal(leftTop.Direction.Z, rightBottom.Direction.Z, precision: 6);
+        Assert.True(leftTop.Direction.X > 0.0);
+        Assert.True(rightTop.Direction.X < 0.0);
+        Assert.True(leftTop.Direction.Y > 0.0);
+        Assert.True(leftBottom.Direction.Y < 0.0);
+        Assert.True(leftTop.Direction.Z > 0.0);
+        Assert.True(rightBottom.Direction.Z > 0.0);
     }
 
     [Fact]
-    public void Resize_uses_new_viewport_aspect()
+    public void Non_zero_viewport_origin_uses_local_center()
+    {
+        var state = ViewProjectionState.Create(
+            TestCamera(),
+            new ViewportState(200, 100, 800, 600, 800, 600, 1, 0));
+
+        var ray = WorldRayFactory.FromViewportPoint(state, 600, 400);
+
+        SpaceAssert.Near(Vector3d.UnitZ, ray.Direction);
+    }
+
+    [Fact]
+    public void Resize_keeps_center_ray_and_changes_edge_aspect()
     {
         var camera = TestCamera();
+        var normal = ViewProjectionState.Create(camera, TestViewport(800, 600));
         var wide = ViewProjectionState.Create(camera, TestViewport(1200, 600));
         var narrow = ViewProjectionState.Create(camera, TestViewport(600, 600));
 
+        SpaceAssert.Near(Vector3d.UnitZ, WorldRayFactory.FromViewportPoint(normal, 400, 300).Direction);
+        SpaceAssert.Near(Vector3d.UnitZ, WorldRayFactory.FromViewportPoint(wide, 600, 300).Direction);
         var wideRay = WorldRayFactory.FromViewportPoint(wide, 0, 300);
         var narrowRay = WorldRayFactory.FromViewportPoint(narrow, 0, 300);
 

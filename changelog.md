@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.17.9-fix
+ARCH-C-R2-B 数学契约验收补测（2026-07-18 21:58:23，坐标约定冻结）
+
+- 原历史编号：ARCH-C-R2-B-CONTRACT-VERIFY。
+- 日期：2026-07-18 21:58:23。
+- 任务目标：按用户对 R2-B 的验收意见，只补齐坐标约定证据测试；已有覆盖直接保留，不新增运行时 UI，不接 Pointer，不实现实体 Picking、空间索引、Ray-AABB、Selection、Gizmo 或 Undo。
+- 主要改动：`WorldRayFactoryTests` 将原两角差异测试升级为四角坐标约定冻结测试；新增非零 Viewport Origin 中心射线测试；新增 Resize 后中心射线不漂移测试；新增 `WorldRayTests` 验证零方向、NaN 和 Infinity 方向不会产生合法世界射线；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.9-fix`。
+- 契约覆盖：A 视口中心对应 Camera Forward 已覆盖；B 左上 / 右上 / 左下 / 右下四角方向已覆盖；C 非零 Viewport Origin 已覆盖；D Resize 后中心语义不漂移已覆盖；E 非法 Viewport、Camera、输入点和 WorldRay 非法方向均明确失败。逆矩阵失败不通过新增测试注入不可达非法状态，而由 Camera / Viewport 构造期拒绝退化输入、`ViewProjectionState.Create` 内部失败即抛出保证，不为了测试暴露额外 public API。
+- 修改范围：`XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`、`XuanYu.Core.Tests/Space/WorldRayTests.cs`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改生产代码实现、公共 API、Vulkan 生命周期、渲染管线、SceneStateOwner、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；并行运行 `dotnet build` / `dotnet test` 时 MSBuild 子节点因内存 / 节点占用异常失败，已改为串行验证；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.9-fix`；`file-tree.md` 实际条目 244 且总数声明 244；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：黄色三角形仍未接入正式 World / View / Projection 渲染链；在 Pointer -> WorldRay -> Spatial Query 串联前，仍需单独确认 Render 与 Picking 消费同一 ViewProjection 空间事实。
+
 ## v0.2.17.8-rz
 ARCH-C-R2-B 统一空间事实与 WorldRay 契约（2026-07-18 21:41:33，空间数学实现）
 
