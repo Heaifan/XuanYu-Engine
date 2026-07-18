@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.17.5-fix
+ARCH-C-R1 真机封版验收回填（2026-07-18，封版验证）
+
+- 原历史编号：ARCH-C-R1-FINAL
+- 日期：2026-07-18
+- 任务目标：根据用户回传的真机关闭日志，完成 `ARCH-C-R1` 最后一项生命周期验收记录，正式裁定 R1 封版通过；本轮不进入 `ARCH-C-R2`。
+- 主要改动：回填真机验收结论，确认启动显示、Position 0→1、Position 1→0、`EntityId(1)` 稳定、重复运行/停止、相同 Position 幂等、Resize / 日志栏、Scene 与 Swapchain 生命周期解耦、静止无重复快照、关闭释放链全部通过；登记 R5 前置约束：高频 Transform Preview 不得沿用 R1 的 Stop Present → 重录 CB → Start Present 低频路径；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.5-fix`。
+- 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期实现、Picking / Ray-AABB / Gizmo / Undo / ECS / 资产系统 / 存档格式。
+- 真机验收结果：启动显示 PASS；Position 0→1 PASS；Position 1→0 PASS；EntityKey 稳定 PASS；重复运行/停止 PASS；幂等相同 Position PASS；Resize / 日志栏 PASS；Swapchain 与 Scene 解耦 PASS；静止无重复快照 PASS；关闭释放 PASS。关闭日志证据包含：`Present 泵已停止`、`GraphicsPipeline 资源释放完成`、`RenderPass + Framebuffer 释放成功`、`VulkanRenderSession 释放完成`、`Swapchain 释放成功`、`LogicalDevice 释放成功`、`Surface 已释放`、`Instance 已销毁`、`分离完成`；未见 `[ERROR] Editor failed` 或 `Exit code: -1`。
+- 自动验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.5-fix`；`file-tree.md` 实际条目 228 且总数声明 228；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：`ARCH-C-R1` 正式封版通过；下一阶段可规划进入 `ARCH-C-R2` 屏幕坐标 → 世界射线 → Ray-AABB → EntityKey。`ARCH-C-R5` 前必须设计高频 Preview 专用更新路径，不得沿用 R1 低频停止 / 启动 Present 泵路径。
+
 ## v0.2.17.4-fix
 ARCH-C-R1 真机验收前收口修正（2026-07-18，修复）
 
@@ -9,7 +23,7 @@ ARCH-C-R1 真机验收前收口修正（2026-07-18，修复）
 - 主要改动：`SceneStateOwner.CommitPosition` 在 Position 未变化时返回 NoChange，不发布重复 `RenderSnapshotChanged`；`VulkanRenderSession.UpdateScene` 在快照未变化时不停止 Present 泵；`VulkanClearFrameOwner.SetSceneSnapshot` 在相同快照下不重录 CommandBuffer；补记 `v0.2.17.2-fix` 对应 `44d9e00` 的 file-tree 独立修正；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.4-fix`。
 - 修改范围：`XuanYu.Core/Scene/SceneStateOwner.cs`、`XuanYu.Editor.UI/Vm/UiVm.Scene.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`、`XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`file-tree.md`、`changelog.md`。未实现 Picking / Ray-AABB / Gizmo / Undo / ECS / 资产系统 / 存档格式；未修改 Vulkan Instance / Surface / Device / Swapchain / Present 主生命周期所有权。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.4-fix`；`file-tree.md` 实际条目 228 且总数声明 228；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
-- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Commit Hash：`381298b1c6aeb2645f7d60d4fd099808d768d603`
 - Push 状态：本轮不 Push；未创建 Tag / Release。
 - 遗留问题：R1 真机验收仍待完成，需确认同一 EntityKey、P0→P1 画面变化、Resize 和日志栏变化保持最新 Position、静止时无持续无效重录、关闭释放正常。
 
