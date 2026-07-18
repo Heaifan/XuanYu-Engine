@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.17.7-fix
+ARCH-C-R2-A 正式通过验收回填（2026-07-18 20:55:35，封版验证）
+
+- 原历史编号：ARCH-C-R2-A-FINAL。
+- 日期：2026-07-18 20:55:35。
+- 任务目标：根据用户对 R2-A 的裁定，正式回填 ARCH-C-R2-A 验收通过结论；本轮不进入 ARCH-C-R2-B，不实现 Picking、空间索引、Camera 或 WorldRay。
+- 主要改动：记录 R2-A 通过；确认治理规则已同步到宪法 / dev-rules / arch-c-plan；确认未硬做 Picking，Entry Gate 因缺 ViewportState / CameraState / WorldRay 正确阻断；确认空间查询从 Picking 算法升级为引擎地基；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.7-fix`。
+- 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期、Picking、空间索引、CameraState、ViewportState、WorldRay、Selection、Gizmo、Undo、测试项目或存档格式。
+- 验收结果：ARCH-C-R2-A PASS；R2-A 完成的是长期空间查询地基规则和 Entry Gate 审计，不是 Picking 功能；当前黄色三角形仍不能视为真实 World / View / Projection 渲染对象，R2-B 必须先建立统一空间事实契约。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.7-fix`；`file-tree.md` 实际条目 230 且总数声明 230；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：R2-B 建议版本顺延为 `v0.2.17.8-rz`；其唯一目标是 ViewportState / CameraState / ViewProjection / WorldRay，禁止实体 Picking。空间数学 / 索引自动测试宿主建议另开受控任务，新增项目需用户批准。
+
 ## v0.2.17.6-rz
 ARCH-C-R2：长期空间查询地基规则与坐标入口门审计（2026-07-18 20:44:10，规划/审计）
 
@@ -10,8 +24,8 @@ ARCH-C-R2：长期空间查询地基规则与坐标入口门审计（2026-07-18 
 - 修改范围：`docs/玄域引擎_AI开发宪法.md`、`docs/dev-rules.md`、`docs/arch-c-plan.md`、`docs/arch-c-r2-entry-audit.md`、`docs/arch-c-r2-spatial-query.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期实现、Selection、Gizmo、Transform Preview、Undo、ECS、资产系统或存档格式。
 - 入口门审计结果：当前不存在正式 `World -> View -> Projection -> NDC` 坐标事实，也不存在渲染后端无关 `ViewportState / CameraState`；R1 Position 仍通过 Vulkan viewport 偏移驱动画面，不能作为 Picking 世界射线依据。因此 R2 Picking 实装被 Entry Gate 阻断，下一步必须先建立最小视口 / 相机变换契约。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；首次 `git diff --check` 发现 `docs/arch-c-plan.md` 两处尾随空格，已修正后重跑通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2-spatial-query.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md`、`docs/arch-c-plan.md` 同步到 `v0.2.17.6-rz`；`file-tree.md` 实际条目 230 且总数声明 230；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
-- Commit Hash：提交后回填；本条不预填未来 Hash。
-- Push 状态：待用户明确授权后再 Push；未创建 Tag / Release。
+- Commit Hash：`1259f1e8248d2febbf1c37e45e58788ef7e99fd0`
+- Push 状态：已 Push 到 `origin/fix/RZ-VK3-A-surface-contract`；未创建 Tag / Release。
 - 遗留问题：空间索引 / 坐标数学缺少正式自动测试宿主；新增最小测试项目属于解决方案结构变更，需用户批准后才能执行。`ARCH-C-R2` 下一步应建立 `ViewportState / CameraState / WorldRay / SpatialBounds / SpatialQueryService` 最小正确契约，再继续 Picking。
 
 ## v0.2.17.5-fix
