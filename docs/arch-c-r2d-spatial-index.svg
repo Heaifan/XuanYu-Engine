@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620">
+  <rect width="1120" height="620" fill="#f7f9fc"/>
+  <text x="560" y="42" text-anchor="middle" font-size="25" fill="#24364b" font-family="Microsoft YaHei, Arial">ARCH-C-R2-D：长期可扩展空间索引</text>
+  <text x="560" y="72" text-anchor="middle" font-size="14" fill="#65758a" font-family="Microsoft YaHei, Arial">目标：建立高速对象地址目录，禁止全场景默认扫描</text>
+  <rect x="55" y="125" width="220" height="110" rx="12" fill="#eef5fb" stroke="#6587a8" stroke-width="2"/>
+  <text x="165" y="160" text-anchor="middle" font-size="18" fill="#304f6c" font-family="Microsoft YaHei, Arial">场景事实</text>
+  <text x="165" y="190" text-anchor="middle" font-size="13" fill="#50677d" font-family="Microsoft YaHei, Arial">EntityKey / Transform</text>
+  <text x="165" y="212" text-anchor="middle" font-size="13" fill="#50677d" font-family="Microsoft YaHei, Arial">SpatialBounds / Category</text>
+  <rect x="340" y="125" width="230" height="110" rx="12" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="455" y="160" text-anchor="middle" font-size="18" fill="#376047" font-family="Microsoft YaHei, Arial">空间索引所有者</text>
+  <text x="455" y="190" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">Insert / Update / Remove</text>
+  <text x="455" y="212" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">SpatialRevision</text>
+  <rect x="635" y="125" width="230" height="110" rx="12" fill="#f8f2e8" stroke="#aa8750" stroke-width="2"/>
+  <text x="750" y="160" text-anchor="middle" font-size="18" fill="#72562c" font-family="Microsoft YaHei, Arial">动态空间索引</text>
+  <text x="750" y="190" text-anchor="middle" font-size="13" fill="#78664b" font-family="Microsoft YaHei, Arial">Dynamic AABB Tree</text>
+  <text x="750" y="212" text-anchor="middle" font-size="13" fill="#78664b" font-family="Microsoft YaHei, Arial">实现类型不暴露给上层</text>
+  <rect x="930" y="125" width="140" height="110" rx="12" fill="#f3f1fa" stroke="#8977a6" stroke-width="2"/>
+  <text x="1000" y="160" text-anchor="middle" font-size="18" fill="#594b76" font-family="Microsoft YaHei, Arial">候选查询</text>
+  <text x="1000" y="190" text-anchor="middle" font-size="13" fill="#74698a" font-family="Microsoft YaHei, Arial">只缩小范围</text>
+  <text x="1000" y="212" text-anchor="middle" font-size="13" fill="#74698a" font-family="Microsoft YaHei, Arial">不做最终选中</text>
+  <path d="M275 180 H330" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M570 180 H625" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M865 180 H920" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="85" y="315" width="250" height="105" rx="12" fill="#ffffff" stroke="#8798aa" stroke-width="2"/>
+  <text x="210" y="350" text-anchor="middle" font-size="17" fill="#344b63" font-family="Microsoft YaHei, Arial">实体创建</text>
+  <text x="210" y="379" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">计算世界空间边界</text>
+  <text x="210" y="401" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">Insert 到空间索引</text>
+  <rect x="435" y="315" width="250" height="105" rx="12" fill="#ffffff" stroke="#8798aa" stroke-width="2"/>
+  <text x="560" y="350" text-anchor="middle" font-size="17" fill="#344b63" font-family="Microsoft YaHei, Arial">实体移动</text>
+  <text x="560" y="379" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">CommittedTransform 改变</text>
+  <text x="560" y="401" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">Update 对应索引记录</text>
+  <rect x="785" y="315" width="250" height="105" rx="12" fill="#ffffff" stroke="#8798aa" stroke-width="2"/>
+  <text x="910" y="350" text-anchor="middle" font-size="17" fill="#344b63" font-family="Microsoft YaHei, Arial">实体删除</text>
+  <text x="910" y="379" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">Remove 空间记录</text>
+  <text x="910" y="401" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">不得遗留幽灵候选</text>
+  <rect x="125" y="485" width="870" height="80" rx="12" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="560" y="517" text-anchor="middle" font-size="17" fill="#755923" font-family="Microsoft YaHei, Arial">R2-D 红线</text>
+  <text x="560" y="545" text-anchor="middle" font-size="13" fill="#806c47" font-family="Microsoft YaHei, Arial">禁止全量扫描；禁止每次查询重建索引；不做 Selection / Gizmo / Undo / 最终 Picking</text>
+  <text x="560" y="596" text-anchor="middle" font-size="13" fill="#5e7185" font-family="Microsoft YaHei, Arial">长期演进：未来可升级为世界分区 + 静态/动态多级索引，但调用契约不得推翻</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#64788d"/></marker></defs>
+</svg>

@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.13-fix
+版本：v0.2.17.14-rz
 日期：2026-07-18
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -140,6 +140,18 @@ SceneStateOwner 场景事实
 ```
 
 R2-C 真机验收确认黄色三角形已经通过这条链渲染，场景 `Position`、默认相机、ViewProjection、Vulkan Shader 与未来 WorldRay 使用同一套方向契约。当前默认相机下世界 `+X` 映射到屏幕左侧，属于已冻结约定，不是渲染方向 Bug。
+
+R2-D 建立长期空间索引数据流：
+
+```text
+SceneStateOwner 场景事实
+-> SpatialBounds
+-> SpatialIndexOwner 增量维护
+-> DynamicAabbTree 内部裁剪
+-> 候选对象查询
+```
+
+R2-D 只负责候选范围裁剪和结构性统计，不负责实体级最终 Ray-AABB、最近命中、Selection、Gizmo 或 Undo。
 
 ```text
 Pointer 屏幕坐标
@@ -341,7 +353,7 @@ R2 分解顺序：
 R2-A 已完成：长期空间查询架构与入口审计
 R2-B 已封版：统一 Camera / Viewport / ViewProjection / WorldRay 数学契约
 R2-C 已封版：Vulkan 渲染正式消费统一空间事实
-R2-D 下一步：动态空间索引
+R2-D 已实装：动态空间索引、SpatialRevision、候选查询和 1k / 10k 规模回归
 R2-E：Ray-AABB / 最近命中
 R2-F：真实鼠标 Picking
 ```
