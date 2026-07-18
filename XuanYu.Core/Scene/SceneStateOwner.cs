@@ -24,6 +24,8 @@ public sealed class SceneStateOwner : ISceneRenderSnapshotSource
 
     public SpatialQueryResult QuerySpatial(SpatialRayQuery ray, SpatialQueryCategory mask) => _spatialIndex.Query(ray, mask);
 
+    public SpatialRaycastResult RaycastSpatial(SpatialRayQuery ray, SpatialQueryCategory mask) => _spatialIndex.Raycast(ray, mask);
+
     public bool CommitPosition(Vector3d position)
     {
         var current = _snapshot.Entity;

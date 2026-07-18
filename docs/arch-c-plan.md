@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.15-fix
+版本：v0.2.17.16-rz
 日期：2026-07-18
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -152,6 +152,18 @@ SceneStateOwner 场景事实
 ```
 
 R2-D-R1 已确认 `SceneStateOwner` 初始化时登记 EntityId(1)，CommittedTransform 改变时同步更新同一个 EntityKey 的空间记录，重复 Position 不产生无意义 SpatialRevision。R2-D 只负责区域 / WorldRay 候选范围裁剪和结构性统计，不负责实体级最终 Ray-AABB、最近命中、Selection、Gizmo 或 Undo。
+
+R2-E 建立实体级 AABB 精确命中数据流：
+
+```text
+WorldRay
+-> SpatialIndexOwner Ray Candidate Query
+-> 候选 SpatialBounds
+-> RayAabbIntersection Narrow Phase
+-> 最近 SpatialRaycastHit
+```
+
+R2-E 允许对 Broad Phase 候选集合执行 O(k) 精确检测，禁止绕过空间索引对全场景 O(N) 扫描。命中结果携带 EntityKey、HitDistance、HitPoint 和 SpatialRevision；等距时按稳定 EntityKey 顺序裁决。
 
 ```text
 Pointer 屏幕坐标
@@ -354,7 +366,7 @@ R2-A 已完成：长期空间查询架构与入口审计
 R2-B 已封版：统一 Camera / Viewport / ViewProjection / WorldRay 数学契约
 R2-C 已封版：Vulkan 渲染正式消费统一空间事实
 R2-D 已补全：真实 Scene 接线、动态空间索引、SpatialRevision、AABB / WorldRay 候选查询和 1k / 10k 规模回归
-R2-E：Ray-AABB / 最近命中
+R2-E 已实装：实体级 Ray-AABB / 最近命中
 R2-F：真实鼠标 Picking
 ```
 

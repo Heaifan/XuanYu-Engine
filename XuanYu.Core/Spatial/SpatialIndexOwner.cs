@@ -5,6 +5,7 @@ namespace XuanYu.Core.Spatial;
 public sealed class SpatialIndexOwner
 {
     readonly ISpatialIndex _index;
+    readonly SpatialRaycastResolver _raycast = new();
     long _revision;
 
     public SpatialIndexOwner()
@@ -51,6 +52,11 @@ public sealed class SpatialIndexOwner
     {
         var result = _index.Query(ray, mask);
         return WithCurrentStats(result);
+    }
+
+    public SpatialRaycastResult Raycast(SpatialRayQuery ray, SpatialQueryCategory mask)
+    {
+        return _raycast.Raycast(this, ray, mask);
     }
 
     SpatialQueryResult WithCurrentStats(SpatialQueryResult result)

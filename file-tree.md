@@ -1,7 +1,7 @@
-版本：v0.2.17.15-fix
+版本：v0.2.17.16-rz
 # XuanYu Engine 文件树
 
-文件总数：274
+文件总数：285
 
 ## 根目录
 
@@ -37,6 +37,7 @@
 - `docs/arch-c-r2c-render-space.svg`：ARCH-C-R2-C 渲染接入统一空间事实架构图；用于说明世界位置、统一 ViewProjection 与 Vulkan push constant 的关系，不承载运行时代码。
 - `docs/arch-c-r2c-closure.svg`：ARCH-C-R2-C 正式封版状态图；用于说明真机渲染、坐标契约、Resize、自愈和释放链均已通过，不承载运行时代码。
 - `docs/arch-c-r2d-spatial-index.svg`：ARCH-C-R2-D 空间索引架构图；用于说明场景事实、增量维护、动态索引和候选查询关系，不承载运行时代码。
+- `docs/arch-c-r2e-ray-hit.svg`：ARCH-C-R2-E 精确命中架构图；用于说明 WorldRay、Broad Phase、Ray-AABB Narrow Phase 和最近命中的关系，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -110,11 +111,17 @@
 - `XuanYu.Core/Spatial/DynamicAabbTree.Refit.cs`：动态 AABB 树回填分部；负责实体增删改后的父级 AABB 更新，不负责平衡策略外露。
 - `XuanYu.Core/Spatial/DynamicAabbTree.Remove.cs`：动态 AABB 树删除分部；负责移除叶节点并接回兄弟节点，不负责实体生命周期决策。
 - `XuanYu.Core/Spatial/ISpatialIndex.cs`：空间索引抽象契约；负责屏蔽具体索引实现并提供 AABB / WorldRay 候选查询，不绑定 DynamicAabbTree、UI 或 Vulkan。
+- `XuanYu.Core/Spatial/RayAabbHit.cs`：Ray-AABB 命中值对象；负责保存命中距离与命中点，不保存实体选择状态。
+- `XuanYu.Core/Spatial/RayAabbIntersection.cs`：实体 AABB Narrow Phase 数学；负责正向、最大距离、盒内起点、擦边和轴平行命中规则，不执行空间索引遍历。
 - `XuanYu.Core/Spatial/SpatialAabb.cs`：世界空间 AABB 值对象；负责有限性、大小关系、相交和合并计算，不保存实体状态。
 - `XuanYu.Core/Spatial/SpatialBounds.cs`：实体空间边界值对象；负责绑定 EntityKey、WorldBounds 和 QueryCategory，不成为第二份场景数据库。
 - `XuanYu.Core/Spatial/SpatialIndexOwner.cs`：空间索引生命周期所有者；负责增量维护索引、SpatialRevision、AABB / WorldRay 查询统计，不拥有正式 Transform。
 - `XuanYu.Core/Spatial/SpatialRayAabb.cs`：空间射线与 AABB 的 Broad Phase 相交计算；只服务候选裁剪，不裁定最近命中。
 - `XuanYu.Core/Spatial/SpatialRayQuery.cs`：有界 WorldRay 查询值对象；负责携带射线和最大查询距离，不绑定 Picking 或 Selection。
+- `XuanYu.Core/Spatial/SpatialRaycastHit.cs`：空间射线最近命中值对象；负责携带 EntityKey、距离、命中点和 SpatialRevision，不触发 Selection。
+- `XuanYu.Core/Spatial/SpatialRaycastResolver.cs`：空间射线命中解析器；负责对 Broad Phase 候选执行 O(k) Ray-AABB 并按距离 / EntityKey 稳定选最近，不扫描全场景。
+- `XuanYu.Core/Spatial/SpatialRaycastResult.cs`：空间射线命中结果；负责表达 Hit / NoHit 与统计信息，不包含材质、法线、Mesh 三角形或 UI 状态。
+- `XuanYu.Core/Spatial/SpatialRaycastStats.cs`：空间射线命中诊断统计；负责记录总实体、访问节点、候选数、精确检测数和真实命中数，并生成低频中文探针文本。
 - `XuanYu.Core/Spatial/SpatialQueryCategory.cs`：空间查询分类掩码；负责长期扩展场景实体、地形、Gizmo 和编辑器辅助对象分类。
 - `XuanYu.Core/Spatial/SpatialQueryResult.cs`：空间候选查询结果；负责携带候选 Bounds 与统计信息，不裁定最近命中。
 - `XuanYu.Core/Spatial/SpatialQueryStats.cs`：空间查询诊断统计；负责记录 Revision、总实体、访问节点和候选数，并生成低频中文探针文本。
@@ -139,12 +146,16 @@
 - `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`：WorldRay 自动测试；负责中心点、角落、Resize、稳定复现和非法输入覆盖，不负责实体 Picking。
 - `XuanYu.Core.Tests/Space/WorldRayTests.cs`：WorldRay 值对象自动测试；负责非法 Origin / Direction 失败边界，不负责射线命中或空间查询。
 - `XuanYu.Core.Tests/Spatial/SpatialBoundsTests.cs`：空间边界测试；负责 AABB 非法输入、相交和合并行为覆盖，不测试 Picking。
+- `XuanYu.Core.Tests/Spatial/RayAabbIntersectionTests.cs`：Ray-AABB 数学测试；负责正面命中、miss、背向、负方向、盒内起点、平行轴、擦边、擦角和最大距离覆盖。
 - `XuanYu.Core.Tests/Spatial/SceneStateOwnerSpatialTests.cs`：SceneStateOwner 空间索引集成测试；负责初始化 Insert、Position Update、EntityKey 稳定和 Revision 幂等覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialIndexOwnerLifecycleTests.cs`：空间索引生命周期测试；负责 Insert、Remove、Update、重复实体和分类掩码覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialIndexOwnerRevisionTests.cs`：空间索引 Revision 测试；负责 SpatialRevision 增长、幂等更新和中文探针统计覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialIndexScaleTests.cs`：空间索引规模回归测试；负责 1k / 10k 实体查询统计、连续移动和批量删除一致性覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialRayQueryLifecycleTests.cs`：WorldRay 候选查询生命周期与规模测试；负责 Update、Remove、1k / 10k Ray Query 统计覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialRayQueryTests.cs`：WorldRay 候选查询边界测试；负责命中、空查询、Mask、起点在盒内、平行轴、背向和最大距离覆盖。
+- `XuanYu.Core.Tests/Spatial/SpatialRaycastNearestTests.cs`：最近命中测试；负责多实体最近命中、候选顺序变化和等距 EntityKey 稳定裁决覆盖。
+- `XuanYu.Core.Tests/Spatial/SpatialRaycastRevisionTests.cs`：射线命中 Revision 测试；负责命中 / 未命中结果携带同一 SpatialRevision 覆盖。
+- `XuanYu.Core.Tests/Spatial/SpatialRaycastScaleTests.cs`：射线命中规模回归测试；负责 1k / 10k Broad 到 Narrow 端到端统计和不全量扫描约束。
 - `XuanYu.Core.Tests/Spatial/SpatialTestData.cs`：空间索引测试数据工厂；负责确定性网格实体和查询 AABB 构造，不进入生产项目。
 
 ## XuanYu.Render.Abstractions
