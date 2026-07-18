@@ -9,8 +9,8 @@ ARCH-C-R2-C 正式封版回填（2026-07-18 23:24:18，真机验收裁定）
 - 主要改动：记录 R2-C 启动显示、场景 Position 影响画面、Run / Stop 重复一致、日志栏 Resize、窗口 Resize、Swapchain 自愈、同尺寸重建抑制、Vulkan 生命周期和关闭释放链均通过；记录默认相机下世界 `+X` 映射到屏幕左侧属于已冻结坐标约定，且 Vulkan 渲染与 WorldRay 测试契约一致；`docs/arch-c-plan.md` 更新为 R2-C 已封版、R2-D 动态空间索引为下一步；新增 `docs/arch-c-r2c-closure.svg` 作为浅色中文封版状态图；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.13-fix`。
 - 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`docs/arch-c-plan.md`、`docs/arch-c-r2c-closure.svg`。未修改生产代码实现、测试断言、公共 API、Vulkan 生命周期、渲染管线、SceneStateOwner、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2c-closure.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.13-fix`；`file-tree.md` 实际条目 250 且总数声明 250；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
-- Commit Hash：提交后回填；本条不预填未来 Hash。
-- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- Commit Hash：主封版回填提交 `5c86473c4aaa1d52447bd86a577cbf16c2d5a437`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
 - 下一步：`ARCH-C-R2-D` 动态空间索引；只能建立空间目录与候选查询地基，仍禁止 Selection、Gizmo、Undo 和真实 Picking 偷跑。
 
 ## v0.2.17.12-rz
