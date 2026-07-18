@@ -10,8 +10,8 @@ ARCH-C-R2-B 正式封版裁定回填（2026-07-18 22:08:55，封版记录）
 - 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`docs/arch-c-r2b-closure.svg`。未修改生产代码实现、公共 API、测试断言、Vulkan 生命周期、渲染管线、SceneStateOwner、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
 - 验收结论：`ARCH-C-R2-B` 正式封版通过；玄域第一套相机、视口、屏幕点到 3D 世界射线的统一数学规则已经站稳。下一道门建议调整为 `ARCH-C-R2-C`：让 Vulkan 渲染正式消费统一空间事实，再进入空间索引与真实 Picking。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2b-closure.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.10-fix`；`file-tree.md` 实际条目 245 且总数声明 245；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
-- Commit Hash：提交后回填；本条不预填未来 Hash。
-- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- Commit Hash：主封版记录提交 `c0c071d91e12ae8357e9a8a267613719d283bc1c`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
 - 遗留问题：当前黄色三角形仍属于旧 Vulkan 测试渲染路径，尚未正式消费 `CameraState / ViewportState / ViewProjectionState`；该问题不阻断 R2-B 封版，但会成为 R2-C Entry Gate。
 
 ## v0.2.17.9-fix
