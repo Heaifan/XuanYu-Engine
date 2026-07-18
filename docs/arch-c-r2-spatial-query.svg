@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="590" viewBox="0 0 1080 590">
+  <rect width="1080" height="590" fill="#f7f9fc"/>
+  <text x="540" y="40" text-anchor="middle" font-size="24" fill="#24364b" font-family="Microsoft YaHei, Arial">ARCH-C-R2：长期可扩展空间查询与拾取架构</text>
+  <text x="540" y="68" text-anchor="middle" font-size="14" fill="#65758a" font-family="Microsoft YaHei, Arial">架构立足终局，R2 只实现其中最小正确能力</text>
+
+  <rect x="60" y="110" width="230" height="110" rx="12" fill="#eef5fb" stroke="#6587a8" stroke-width="2"/>
+  <text x="175" y="145" text-anchor="middle" font-size="18" fill="#304f6c" font-family="Microsoft YaHei, Arial">场景状态所有者</text>
+  <text x="175" y="176" text-anchor="middle" font-size="14" fill="#50677d" font-family="Microsoft YaHei, Arial">实体标识 / 位置 / 空间边界</text>
+  <text x="175" y="201" text-anchor="middle" font-size="13" fill="#687b8c" font-family="Microsoft YaHei, Arial">唯一场景事实源</text>
+
+  <rect x="425" y="110" width="230" height="110" rx="12" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="540" y="145" text-anchor="middle" font-size="18" fill="#376047" font-family="Microsoft YaHei, Arial">空间查询索引</text>
+  <text x="540" y="176" text-anchor="middle" font-size="14" fill="#52715b" font-family="Microsoft YaHei, Arial">增量插入 / 删除 / 更新</text>
+  <text x="540" y="201" text-anchor="middle" font-size="13" fill="#687d6e" font-family="Microsoft YaHei, Arial">首版：动态 AABB 树类结构</text>
+
+  <rect x="790" y="110" width="230" height="110" rx="12" fill="#f8f2e8" stroke="#aa8750" stroke-width="2"/>
+  <text x="905" y="145" text-anchor="middle" font-size="18" fill="#72562c" font-family="Microsoft YaHei, Arial">空间查询服务</text>
+  <text x="905" y="176" text-anchor="middle" font-size="14" fill="#78664b" font-family="Microsoft YaHei, Arial">射线查询 / 候选裁剪</text>
+  <text x="905" y="201" text-anchor="middle" font-size="13" fill="#88775d" font-family="Microsoft YaHei, Arial">调用方不绑定具体索引实现</text>
+
+  <path d="M290 165 H415" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="352" y="151" text-anchor="middle" font-size="12" fill="#5c6f82" font-family="Microsoft YaHei, Arial">增量维护</text>
+  <path d="M655 165 H780" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="718" y="151" text-anchor="middle" font-size="12" fill="#5c6f82" font-family="Microsoft YaHei, Arial">查询</text>
+
+  <rect x="70" y="310" width="190" height="90" rx="10" fill="#f1f5fa" stroke="#7b91aa" stroke-width="2"/>
+  <text x="165" y="344" text-anchor="middle" font-size="17" fill="#38526e" font-family="Microsoft YaHei, Arial">鼠标点击</text>
+  <text x="165" y="373" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">视口局部坐标</text>
+
+  <rect x="310" y="310" width="210" height="90" rx="10" fill="#f0f5f7" stroke="#77949a" stroke-width="2"/>
+  <text x="415" y="344" text-anchor="middle" font-size="17" fill="#3e6066" font-family="Microsoft YaHei, Arial">统一视口 / 相机事实</text>
+  <text x="415" y="373" text-anchor="middle" font-size="13" fill="#61777c" font-family="Microsoft YaHei, Arial">DPI / 矩阵 / 视口修订号</text>
+
+  <rect x="570" y="310" width="190" height="90" rx="10" fill="#f4f1fa" stroke="#8977a6" stroke-width="2"/>
+  <text x="665" y="344" text-anchor="middle" font-size="17" fill="#594b76" font-family="Microsoft YaHei, Arial">生成世界射线</text>
+  <text x="665" y="373" text-anchor="middle" font-size="13" fill="#74698a" font-family="Microsoft YaHei, Arial">使用统一空间事实</text>
+
+  <rect x="810" y="310" width="200" height="90" rx="10" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="910" y="344" text-anchor="middle" font-size="17" fill="#376047" font-family="Microsoft YaHei, Arial">索引裁剪候选</text>
+  <text x="910" y="373" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">禁止全场景默认扫描</text>
+
+  <path d="M260 355 H300" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M520 355 H560" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M760 355 H800" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="260" y="455" width="250" height="80" rx="10" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="385" y="487" text-anchor="middle" font-size="17" fill="#755923" font-family="Microsoft YaHei, Arial">包围盒精确检测</text>
+  <text x="385" y="514" text-anchor="middle" font-size="13" fill="#806c47" font-family="Microsoft YaHei, Arial">Ray-AABB + 最近有效命中</text>
+
+  <rect x="570" y="455" width="250" height="80" rx="10" fill="#eef5fb" stroke="#6587a8" stroke-width="2"/>
+  <text x="695" y="487" text-anchor="middle" font-size="17" fill="#304f6c" font-family="Microsoft YaHei, Arial">返回拾取结果</text>
+  <text x="695" y="514" text-anchor="middle" font-size="13" fill="#50677d" font-family="Microsoft YaHei, Arial">实体标识 / 距离 / 命中位置</text>
+
+  <path d="M910 400 V430 H385 V445" stroke="#64788d" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M510 495 H560" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="540" y="568" text-anchor="middle" font-size="13" fill="#8a5f32" font-family="Microsoft YaHei, Arial">长期原则：未来可升级世界分区、静态/动态多级索引，但 Picking 调用契约不得推翻</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64788d"/>
+    </marker>
+  </defs>
+</svg>

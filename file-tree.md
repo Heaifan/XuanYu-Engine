@@ -1,7 +1,7 @@
-版本：v0.2.17.5-fix
+版本：v0.2.17.6-rz
 # XuanYu Engine 文件树
 
-文件总数：228
+文件总数：230
 
 ## 根目录
 
@@ -29,6 +29,8 @@
 - `docs/arch-b-plan.md`：ARCH-B 规划文档，记录编辑器状态所有权与交互事务边界。
 - `docs/arch-c-overview.svg`：ARCH-C 规划总览图。
 - `docs/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
+- `docs/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。
+- `docs/arch-c-r2-spatial-query.svg`：ARCH-C-R2 空间查询架构图；不承载运行时代码，仅用于人工验收与规划沟通。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。

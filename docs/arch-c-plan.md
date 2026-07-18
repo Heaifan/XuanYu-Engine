@@ -1,8 +1,8 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.1-rz  
-日期：2026-07-17 22:49:25  
-类型：规划文档  
+版本：v0.2.17.6-rz
+日期：2026-07-18
+类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
 
 ## 1. 文档目的
@@ -48,7 +48,7 @@ ARCH-C 是“真实场景编辑交互闭环”阶段。它负责把 ARCH-B 的�
 - 建立单场景、单测试对象、单选、世界坐标 Position Transform 的最小模型。
 - 明确 Transform 的 `CommittedTransform`、`TransformStartSnapshot`、`PreviewTransform` 三层状态。
 - 明确 Picking 首版使用 CPU Ray-AABB，不使用 GPU Picking。
-- 明确 Picking 请求与结果的 Session、RequestSequence、ViewportGeneration 过期保护。
+- 明确 Picking 请求与结果的 Session、RequestSequence、ViewportRevision、SceneSpatialRevision 过期保护。
 - 明确 Selection 仍由统一命令链进入 `EditorStateOwner`，所有视图只消费快照。
 - 明确 Move Gizmo 首版只支持世界坐标 X/Y/Z 轴位置移动。
 - 明确一次拖动只产生一次正式 Transform 修改、一次 Undo 记录和一次 Commit 日志。
@@ -56,7 +56,33 @@ ARCH-C 是“真实场景编辑交互闭环”阶段。它负责把 ARCH-B 的�
 
 ## 5. 明确不做
 
-ARCH-C 首轮不做多选、父子 Transform、旋转、缩放、局部坐标轴、Prefab、ECS、通用组件系统、场景持久化、GPU Picking、精确网格 Picking、BVH、通用命令总线、UI 布局重做或 Vulkan 生命周期修改。发现相关问题时，只记录到风险清单或后续阶段接口，不借规划轮修复运行时代码。
+ARCH-C 首轮不做多选、父子 Transform、旋转、缩放、局部坐标轴、Prefab、ECS、通用组件系统、场景持久化、GPU Picking、精确网格 Picking、完整世界分区、通用命令总线、UI 布局重做或 Vulkan 生命周期修改。发现相关问题时，只记录到风险清单或后续阶段接口，不借规划轮修复运行时代码。
+
+## 5.1 长期空间查询原则
+
+ARCH-C-R2 之后，Picking 不得再以“当前实体少”为理由把全实体线性扫描写成正式主路径。正式主链必须通过渲染后端无关的空间查询服务访问增量维护的空间索引，再对候选执行 Ray-AABB 精确检测。
+
+禁止：
+
+```text
+GetAllEntities -> foreach 全场景 -> Ray-AABB
+每次点击 -> 临时重建空间索引 -> 查询 -> 丢弃
+Picking -> 读取 Render.Vulkan / Vk* / SwapchainGeneration
+```
+
+正确方向：
+
+```text
+SceneStateOwner 场景事实
+-> Spatial Query Index 增量维护
+-> ViewportState / CameraState 统一空间事实
+-> Ray Query
+-> 索引裁剪候选
+-> Ray-AABB
+-> 最近 EntityKey
+```
+
+第一版空间索引采用动态 AABB 树 / Dynamic BVH 类结构作为最小正确实现。它不承诺所有查询严格 `O(log N)`，但必须在架构上裁剪候选，而不是把全场景扫描设计为默认查询模型。
 
 ## 6. 模块边界
 
@@ -64,8 +90,9 @@ ARCH-C 首轮不做多选、父子 Transform、旋转、缩放、局部坐标轴
 | --- | --- | --- |
 | Scene Model | 持有实体身份、AABB、正式 Transform | 不承担 Vulkan 资源和 UI 控件职责 |
 | EditorStateOwner | 统一接收 Selection / Tool / Interaction / Transform 命令 | 不直接依赖 Avalonia 控件、Win32 HWND 或 Vulkan 对象 |
-| Viewport Input | 提供 Pointer 坐标、Session 和 ViewportGeneration | 不直接修改场景 Transform |
-| Picking | 把屏幕坐标转换为命中实体候选 | 不写 Selection，不写 Transform |
+| Viewport Input | 提供 Pointer 坐标、Session 和 ViewportRevision | 不直接修改场景 Transform |
+| Picking | 把屏幕坐标转换为命中实体候选 | 不写 Selection，不写 Transform，不读取 Vulkan 内部数据 |
+| Spatial Query | 增量维护空间索引、裁剪候选、执行空间查询 | 不持有 UI / Avalonia / Win32 / Vulkan 对象 |
 | Selection | 发布唯一选择快照 | 不复制多个“当前选中对象” |
 | Gizmo | 消费选择和相机矩阵生成轴命中与拖动意图 | 不拥有正式 Transform |
 | Renderer | 消费场景/预览快照绘制 | 不决定选择、提交或 Undo |
@@ -102,8 +129,9 @@ Cancel -> 丢弃 Preview 并恢复 StartSnapshot
 ```text
 Pointer 屏幕坐标
 -> 视口局部坐标
--> 标准化设备坐标
+-> ViewportState / CameraState
 -> 相机矩阵生成世界射线
+-> Spatial Query Index 裁剪候选
 -> CPU Ray-AABB
 -> PickingResult
 -> SelectionCommand
@@ -127,15 +155,17 @@ GizmoAxisHit
 
 ## 9. Picking 契约
 
-首版 Picking 采用 `CPU Ray Picking + Ray-AABB`。
+首版 Picking 采用 `Spatial Query Index + CPU Ray Picking + Ray-AABB`。调用方依赖空间查询服务，不绑定具体树实现。
 
 请求至少携带：
 
 ```text
 InputSessionId
 RequestSequence
-ViewportGeneration
+ViewportRevision
+SceneSpatialRevision
 PointerPosition
+QueryMask
 ```
 
 结果至少携带：
@@ -143,13 +173,16 @@ PointerPosition
 ```text
 InputSessionId
 RequestSequence
-ViewportGeneration
+ViewportRevision
+SceneSpatialRevision
 EntityKey
 HitDistance
 HitPosition
+VisitedNodeCount
+CandidateCount
 ```
 
-应用结果前必须验证 Session 仍有效、RequestSequence 未过期、ViewportGeneration 未变化且实体仍存在。过期 Picking 结果不得覆盖更新的 Selection。
+应用结果前必须验证 Session 仍有效、RequestSequence 未过期、ViewportRevision 与 SceneSpatialRevision 未变化且实体仍存在。过期 Picking 结果不得覆盖更新的 Selection。
 
 ## 10. Selection 契约
 
@@ -168,7 +201,7 @@ Hierarchy、Inspector、Viewport Selection Highlight、Move Gizmo 和状态栏�
 
 ## 11. Transform 编辑事务
 
-Transform Session 必须携带 SessionId、EntityKey、Axis、StartPointer、CurrentPointer、TransformStartSnapshot、LastValidPreview、ViewportGeneration 和 CancelReason。PointerMove 只能更新 `PreviewTransform` 和必要的渲染请求，不得生成 Undo，不得写普通日志，不得阻塞 UI 线程等待 Vulkan。
+Transform Session 必须携带 SessionId、EntityKey、Axis、StartPointer、CurrentPointer、TransformStartSnapshot、LastValidPreview、ViewportRevision 和 CancelReason。PointerMove 只能更新 `PreviewTransform` 和必要的渲染请求，不得生成 Undo，不得写普通日志，不得阻塞 UI 线程等待 Vulkan。
 
 ## 12. Gizmo 技术路线
 
@@ -217,7 +250,7 @@ Undo 后恢复 `BeforeTransform`。Redo 可作为 ARCH-C 后半段候选，但�
 - Renderer 只读取快照或渲染请求，不拥有编辑事实。
 - Resize、Detach、窗口失焦、`WM_CANCELMODE` 必须取消当前 Transform Session。
 - 延迟 MouseUp 不得复活旧 Session。
-- ViewportGeneration 改变后，旧 Picking 和旧 Gizmo 拖动结果都必须失效。
+- ViewportRevision 改变后，旧 Picking 和旧 Gizmo 拖动结果都必须失效。
 
 ## 16. 错误与退化处理
 
@@ -244,20 +277,48 @@ PointerMove 禁止每次移动分配大量对象、重建完整场景快照、�
 
 建议使用 PointerMove 合并、Preview 覆盖、渲染请求合并、高频探针限流，并让正式日志只记录 Begin / Commit / Cancel / Error。
 
-Picking 初期可以线性遍历少量对象。只有当可 Picking 实体数量或真机测量时间超过既定预算时，才进入空间索引或 BVH；没有性能证据前不得提前开发 BVH。
+Picking 正式主路径禁止全实体线性遍历，禁止每次点击重建空间索引，禁止默认在 PointerMoved 高频路径持续 Picking。空间查询索引必须从实体创建、Transform Commit、Bounds 改变和实体删除处增量维护。
 
 ## 19. R1 到 R8 里程碑
 
 | 阶段 | 目标 | 独立验收 |
 | --- | --- | --- |
 | ARCH-C-R1 | 场景实体与 Transform 所有权 | 出现一个真实测试对象；EntityKey 运行期稳定；修改 Transform 后渲染同步；Resize 后身份不变 |
-| ARCH-C-R2 | 坐标转换与 CPU Picking | 点击对象命中；点击空白返回未命中；Resize 和日志栏变化后坐标仍正确；过期 ViewportGeneration 被拒绝 |
+| ARCH-C-R2 | 空间查询地基与 CPU Picking | 空间索引增量维护；点击对象命中；点击空白返回未命中；Resize 和日志栏变化后坐标仍正确；过期 ViewportRevision / SceneSpatialRevision 被拒绝 |
 | ARCH-C-R3 | 真实 Selection 同步 | 视口点击后层级树高亮；Inspector 显示真实对象；重复选择 NoChange；点击空白清除选择 |
 | ARCH-C-R4 | Move Gizmo 显示与轴命中 | 未选中无 Gizmo；选中后 Gizmo 跟随对象；X/Y/Z 可独立命中；点击 Gizmo 不误选背后对象 |
 | ARCH-C-R5 | Transform Preview | 拖动 X/Y/Z 只改变对应轴；PointerMove 不生成 Undo；无效数学结果不入状态 |
 | ARCH-C-R6 | Commit 与 Cancel | 多次 Preview 后只 Commit 一次；Escape 和 `WM_CANCELMODE` 恢复原位；Cancel 后延迟 MouseUp 不 Commit |
 | ARCH-C-R7 | 最小 Undo | Commit 后 Undo 返回拖动前位置；一次拖动不是数百条历史；对象删除后 Undo 明确失败或失效 |
 | ARCH-C-R8 | 真机综合验收与封版 | 点击、同步、Gizmo、Preview、Commit、Cancel、Undo、Resize、日志栏、再次拖动、正常关闭全链路通过 |
+
+## 19.1 ARCH-C-R2 Entry Gate / Exit Gate
+
+R2 开工入口条件：
+
+```text
+R1 已封版
+EntityKey 稳定
+CommittedTransform 权威状态明确
+Scene 生命周期独立于 Vulkan
+长期空间查询架构已冻结
+渲染后端无关 ViewportState / CameraState 契约存在
+```
+
+R2 封版出口条件：
+
+```text
+没有全实体扫描正式主路径
+空间索引增量维护
+Picking 不依赖 Vulkan
+Render / Picking 共用统一空间事实
+实体移动后索引同步
+Resize 后坐标正确
+最近命中正确
+不修改 Selection
+0 warning / 0 error
+真机验收通过
+```
 
 ## 20. 自动验证矩阵
 

@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.17.6-rz
+ARCH-C-R2：长期空间查询地基规则与坐标入口门审计（2026-07-18 20:44:10，规划/审计）
+
+- 原历史编号：ARCH-C-R2-A
+- 日期：2026-07-18 20:44:10
+- 任务目标：按用户确认的长期原则修正 R2 方向，先同步开发治理规则，再审计当前坐标与相机入口门；禁止在缺少统一 Viewport / Camera 空间事实时实现临时 Picking。
+- 主要改动：`docs/玄域引擎_AI开发宪法.md` 新增地基型架构原则、Entry Gate / Exit Gate、受控架构债务与治理规则实时同步要求；`docs/dev-rules.md` 新增地基型架构自检项和空间查询 / Picking 主链硬规则；`docs/arch-c-plan.md` 将 R2 从“少量对象可线性遍历”修正为“空间查询索引 + CPU Ray Picking + Ray-AABB”，并冻结 R2 Entry / Exit Gate；新增 `docs/arch-c-r2-entry-audit.md` 记录坐标与相机入口门审计；新增 `docs/arch-c-r2-spatial-query.svg` 作为浅色中文架构图；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.6-rz`。
+- 修改范围：`docs/玄域引擎_AI开发宪法.md`、`docs/dev-rules.md`、`docs/arch-c-plan.md`、`docs/arch-c-r2-entry-audit.md`、`docs/arch-c-r2-spatial-query.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期实现、Selection、Gizmo、Transform Preview、Undo、ECS、资产系统或存档格式。
+- 入口门审计结果：当前不存在正式 `World -> View -> Projection -> NDC` 坐标事实，也不存在渲染后端无关 `ViewportState / CameraState`；R1 Position 仍通过 Vulkan viewport 偏移驱动画面，不能作为 Picking 世界射线依据。因此 R2 Picking 实装被 Entry Gate 阻断，下一步必须先建立最小视口 / 相机变换契约。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；首次 `git diff --check` 发现 `docs/arch-c-plan.md` 两处尾随空格，已修正后重跑通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2-spatial-query.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md`、`docs/arch-c-plan.md` 同步到 `v0.2.17.6-rz`；`file-tree.md` 实际条目 230 且总数声明 230；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：待用户明确授权后再 Push；未创建 Tag / Release。
+- 遗留问题：空间索引 / 坐标数学缺少正式自动测试宿主；新增最小测试项目属于解决方案结构变更，需用户批准后才能执行。`ARCH-C-R2` 下一步应建立 `ViewportState / CameraState / WorldRay / SpatialBounds / SpatialQueryService` 最小正确契约，再继续 Picking。
+
 ## v0.2.17.5-fix
 ARCH-C-R1 真机封版验收回填（2026-07-18，封版验证）
 
@@ -10,8 +24,8 @@ ARCH-C-R1 真机封版验收回填（2026-07-18，封版验证）
 - 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期实现、Picking / Ray-AABB / Gizmo / Undo / ECS / 资产系统 / 存档格式。
 - 真机验收结果：启动显示 PASS；Position 0→1 PASS；Position 1→0 PASS；EntityKey 稳定 PASS；重复运行/停止 PASS；幂等相同 Position PASS；Resize / 日志栏 PASS；Swapchain 与 Scene 解耦 PASS；静止无重复快照 PASS；关闭释放 PASS。关闭日志证据包含：`Present 泵已停止`、`GraphicsPipeline 资源释放完成`、`RenderPass + Framebuffer 释放成功`、`VulkanRenderSession 释放完成`、`Swapchain 释放成功`、`LogicalDevice 释放成功`、`Surface 已释放`、`Instance 已销毁`、`分离完成`；未见 `[ERROR] Editor failed` 或 `Exit code: -1`。
 - 自动验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.5-fix`；`file-tree.md` 实际条目 228 且总数声明 228；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
-- Commit Hash：提交后回填；本条不预填未来 Hash。
-- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- Commit Hash：`116cca2d59002b443e1eae8d7b80b6bf19453587`
+- Push 状态：已 Push 到 `origin/fix/RZ-VK3-A-surface-contract`；未创建 Tag / Release。
 - 遗留问题：`ARCH-C-R1` 正式封版通过；下一阶段可规划进入 `ARCH-C-R2` 屏幕坐标 → 世界射线 → Ray-AABB → EntityKey。`ARCH-C-R5` 前必须设计高频 Preview 专用更新路径，不得沿用 R1 低频停止 / 启动 Present 泵路径。
 
 ## v0.2.17.4-fix
