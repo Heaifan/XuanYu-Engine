@@ -1,7 +1,7 @@
-版本：v0.2.17.12-rz
+版本：v0.2.17.13-fix
 # XuanYu Engine 文件树
 
-文件总数：249
+文件总数：250
 
 ## 根目录
 
@@ -35,6 +35,7 @@
 - `docs/arch-c-r2b-closure.svg`：ARCH-C-R2-B 正式封版状态图；用于说明数学契约已通过、下一步转入渲染接入统一空间事实，不承载运行时代码。
 - `docs/arch-c-r2-current-route.svg`：ARCH-C-R2 当前阶段路线图；用于说明 R2-A / R2-B 已完成以及 R2-C 渲染接入统一空间事实的下一步，不承载运行时代码。
 - `docs/arch-c-r2c-render-space.svg`：ARCH-C-R2-C 渲染接入统一空间事实架构图；用于说明世界位置、统一 ViewProjection 与 Vulkan push constant 的关系，不承载运行时代码。
+- `docs/arch-c-r2c-closure.svg`：ARCH-C-R2-C 正式封版状态图；用于说明真机渲染、坐标契约、Resize、自愈和释放链均已通过，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。

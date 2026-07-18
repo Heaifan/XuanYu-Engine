@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="500" viewBox="0 0 1020 500">
+  <rect width="1020" height="500" fill="#f8fafc"/>
+  <text x="510" y="38" text-anchor="middle" font-size="24" fill="#26384f" font-family="Microsoft YaHei, Arial">ARCH-C-R2-C：正式封版通过</text>
+  <text x="510" y="68" text-anchor="middle" font-size="14" fill="#63758a" font-family="Microsoft YaHei, Arial">渲染画面与未来空间查询确认进入同一套 3D 空间事实</text>
+
+  <rect x="70" y="125" width="230" height="108" rx="10" fill="#edf7f1" stroke="#5f8d70" stroke-width="2"/>
+  <text x="185" y="158" text-anchor="middle" font-size="18" fill="#355f45" font-family="Microsoft YaHei, Arial">场景实体</text>
+  <text x="185" y="188" text-anchor="middle" font-size="13" fill="#4f6f59" font-family="Microsoft YaHei, Arial">Position 真实影响画面</text>
+  <text x="185" y="211" text-anchor="middle" font-size="13" fill="#4f6f59" font-family="Microsoft YaHei, Arial">Run / Stop 可重复恢复</text>
+
+  <rect x="395" y="125" width="230" height="108" rx="10" fill="#eef5fb" stroke="#6689ad" stroke-width="2"/>
+  <text x="510" y="158" text-anchor="middle" font-size="18" fill="#304f6c" font-family="Microsoft YaHei, Arial">统一空间契约</text>
+  <text x="510" y="188" text-anchor="middle" font-size="13" fill="#536b82" font-family="Microsoft YaHei, Arial">Camera / Viewport / ViewProjection</text>
+  <text x="510" y="211" text-anchor="middle" font-size="13" fill="#536b82" font-family="Microsoft YaHei, Arial">+X → 屏幕左，设计如此</text>
+
+  <rect x="720" y="125" width="230" height="108" rx="10" fill="#fff8e9" stroke="#b28a4c" stroke-width="2"/>
+  <text x="835" y="158" text-anchor="middle" font-size="18" fill="#745723" font-family="Microsoft YaHei, Arial">Vulkan 真机链</text>
+  <text x="835" y="188" text-anchor="middle" font-size="13" fill="#806b46" font-family="Microsoft YaHei, Arial">Resize / 自愈 / 释放通过</text>
+  <text x="835" y="211" text-anchor="middle" font-size="13" fill="#806b46" font-family="Microsoft YaHei, Arial">未破坏生命周期</text>
+
+  <path d="M300 179 H385" stroke="#68798b" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M625 179 H710" stroke="#68798b" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="105" y="305" width="810" height="92" rx="10" fill="#ffffff" stroke="#8798aa" stroke-width="2"/>
+  <text x="510" y="338" text-anchor="middle" font-size="16" fill="#344b63" font-family="Microsoft YaHei, Arial">统一事实成立：Vulkan 认为 +X 在屏幕左，WorldRay 也认为屏幕左对应世界 +X</text>
+  <text x="510" y="367" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">因此 R2-C 不是方向 Bug，而是坐标约定已被渲染与查询共同遵守</text>
+
+  <text x="510" y="450" text-anchor="middle" font-size="13" fill="#8a5f32" font-family="Microsoft YaHei, Arial">下一步：R2-D 动态空间索引；仍禁止 Selection / Gizmo / Undo 偷跑</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#68798b"/>
+    </marker>
+  </defs>
+</svg>

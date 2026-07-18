@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.11-fix
+版本：v0.2.17.13-fix
 日期：2026-07-18
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -62,7 +62,7 @@ ARCH-C 首轮不做多选、父子 Transform、旋转、缩放、局部坐标轴
 
 ARCH-C-R2 之后，Picking 不得再以“当前实体少”为理由把全实体线性扫描写成正式主路径。正式主链必须通过渲染后端无关的空间查询服务访问增量维护的空间索引，再对候选执行 Ray-AABB 精确检测。
 
-`ARCH-C-R2-B` 已封版后，R2 后续顺序调整为：先让 Vulkan 渲染正式消费统一 `CameraState / ViewportState / ViewProjectionState`，再进入空间索引与真实 Picking。禁止在 Render 尚未接入统一空间事实前，把 `Pointer -> WorldRay -> Spatial Query` 串成正式主链。
+`ARCH-C-R2-C` 已封版后，Vulkan 渲染与未来 Picking 已确认共用同一 `CameraState / ViewportState / ViewProjectionState` 空间事实。R2 后续顺序调整为：先进入动态空间索引，再进入 Ray-AABB / 最近命中与真实 Picking。禁止绕过空间索引直接把 `Pointer -> WorldRay -> 全实体扫描` 串成正式主链。
 
 禁止：
 
@@ -129,7 +129,7 @@ Cancel -> 丢弃 Preview 并恢复 StartSnapshot
 
 ## 8. 数据流
 
-R2-C 渲染接入统一空间事实的数据流：
+R2-C 已封版的渲染接入统一空间事实数据流：
 
 ```text
 SceneStateOwner 场景事实
@@ -139,7 +139,7 @@ SceneStateOwner 场景事实
 -> 屏幕上的真实位置
 ```
 
-在这条链完成前，黄色三角形旧 Vulkan 测试路径可以短期作为迁移对象存在，但不得继续扩散为长期主路径。
+R2-C 真机验收确认黄色三角形已经通过这条链渲染，场景 `Position`、默认相机、ViewProjection、Vulkan Shader 与未来 WorldRay 使用同一套方向契约。当前默认相机下世界 `+X` 映射到屏幕左侧，属于已冻结约定，不是渲染方向 Bug。
 
 ```text
 Pointer 屏幕坐标
@@ -299,7 +299,7 @@ Picking 正式主路径禁止全实体线性遍历，禁止每次点击重建空
 | 阶段 | 目标 | 独立验收 |
 | --- | --- | --- |
 | ARCH-C-R1 | 场景实体与 Transform 所有权 | 出现一个真实测试对象；EntityKey 运行期稳定；修改 Transform 后渲染同步；Resize 后身份不变 |
-| ARCH-C-R2 | 统一空间事实、渲染接入、空间查询地基与 CPU Picking | R2-A 冻结长期空间架构；R2-B 封版统一 Camera / Viewport / WorldRay；R2-C 让 Render 正式消费统一 ViewProjection；随后再进入空间索引、Ray-AABB 与真实 Picking |
+| ARCH-C-R2 | 统一空间事实、渲染接入、空间查询地基与 CPU Picking | R2-A 冻结长期空间架构；R2-B 封版统一 Camera / Viewport / WorldRay；R2-C 封版 Render 正式消费统一 ViewProjection；随后进入空间索引、Ray-AABB 与真实 Picking |
 | ARCH-C-R3 | 真实 Selection 同步 | 视口点击后层级树高亮；Inspector 显示真实对象；重复选择 NoChange；点击空白清除选择 |
 | ARCH-C-R4 | Move Gizmo 显示与轴命中 | 未选中无 Gizmo；选中后 Gizmo 跟随对象；X/Y/Z 可独立命中；点击 Gizmo 不误选背后对象 |
 | ARCH-C-R5 | Transform Preview | 拖动 X/Y/Z 只改变对应轴；PointerMove 不生成 Undo；无效数学结果不入状态 |
@@ -340,8 +340,8 @@ R2 分解顺序：
 ```text
 R2-A 已完成：长期空间查询架构与入口审计
 R2-B 已封版：统一 Camera / Viewport / ViewProjection / WorldRay 数学契约
-R2-C 下一步：Vulkan 渲染正式消费统一空间事实
-R2-D：动态空间索引
+R2-C 已封版：Vulkan 渲染正式消费统一空间事实
+R2-D 下一步：动态空间索引
 R2-E：Ray-AABB / 最近命中
 R2-F：真实鼠标 Picking
 ```
@@ -390,8 +390,8 @@ R8 必须完成以下手工链路：
 
 当前风险：
 
-- 相机 / 视口 / 世界射线数学契约已在 `ARCH-C-R2-B` 封版；后续风险转为 Render 是否正式消费同一套 ViewProjection。
-- 固定三角形仍属于旧 Vulkan 测试渲染路径，尚未正式接入统一空间事实，也不是完整场景实体。
+- 相机 / 视口 / 世界射线数学契约已在 `ARCH-C-R2-B` 封版；Render 正式消费同一套 ViewProjection 已在 `ARCH-C-R2-C` 真机验收封版。
+- 当前默认相机下世界 `+X` 映射到屏幕左侧，已确认为 Render / WorldRay 共享的冻结坐标约定；若未来产品层要求 `+X` 屏幕向右，必须整体调整相机、ViewProjection、WorldRay、测试与 Gizmo 约定，禁止局部取负号。
 - Transform 正式所有权尚未落到具体类型。
 - CPU Picking 需要明确视口逻辑像素、物理像素和 DPI 的换算边界。
 - Selection 现有 Key 来自 UI 树节点，不能直接当作长期场景 EntityKey。
