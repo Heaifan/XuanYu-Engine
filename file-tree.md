@@ -1,7 +1,7 @@
 版本：v0.2.17.8-rz
 # XuanYu Engine 文件树
 
-文件总数：232
+文件总数：243
 
 ## 根目录
 
@@ -31,6 +31,7 @@
 - `docs/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
 - `docs/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。
 - `docs/arch-c-r2-spatial-query.svg`：ARCH-C-R2 空间查询架构图；不承载运行时代码，仅用于人工验收与规划沟通。
+- `docs/arch-c-r2b-space-fact.svg`：ARCH-C-R2-B 统一空间事实架构图；用于说明 Camera / Viewport / ViewProjection / WorldRay 的共享关系，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -92,6 +93,11 @@
 - `XuanYu.Core/Logging/EngineLogLevel.cs`：引擎日志等级。
 - `XuanYu.Core/Math/Vector3d.cs`：三维向量值对象。
 - `XuanYu.Core/Math/YawRotation.cs`：Yaw 旋转值对象。
+- `XuanYu.Core/Space/CameraState.cs`：渲染后端无关的相机状态契约；负责校验位置、方向、Up、FOV、裁剪面和 Revision，不负责渲染资源、输入事件或 Picking 命中。
+- `XuanYu.Core/Space/ViewportState.cs`：渲染后端无关的视口状态契约；负责记录逻辑区域、物理尺寸、DPI 和 Revision，不等同于 Vulkan Swapchain。
+- `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；负责从 Camera / Viewport 生成 View、Projection、ViewProjection 和逆矩阵，不负责实体筛选或空间索引。
+- `XuanYu.Core/Space/WorldRay.cs`：世界射线值对象；负责保存有限 Origin 和归一化 Direction，不负责命中测试或实体选择。
+- `XuanYu.Core/Space/WorldRayFactory.cs`：视口点到世界射线的转换入口；负责 NDC 与逆矩阵反投影，不负责 Ray-AABB、Picking、Selection 或 Gizmo。
 - `XuanYu.Core/Scene/CommittedTransform.cs`：已提交 Transform 值对象，当前保存正式 Position。
 - `XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs`：场景渲染快照源抽象，向渲染侧发布只读快照。
 - `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
@@ -106,6 +112,11 @@
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
+- `XuanYu.Core.Tests/Space/CameraStateTests.cs`：CameraState 自动测试；负责合法相机、退化方向、共线 Up、非法 FOV / Near / Far / 非有限数覆盖，不负责渲染画面验收。
+- `XuanYu.Core.Tests/Space/SpaceAssert.cs`：空间数学测试辅助断言；只负责局部近似比较，不进入生产项目。
+- `XuanYu.Core.Tests/Space/ViewportStateTests.cs`：ViewportState 自动测试；负责合法尺寸、DPI、Revision、幂等和非法尺寸覆盖，不负责平台窗口尺寸同步。
+- `XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs`：ViewProjectionState 自动测试；负责已知 View 矩阵、投影宽高比和矩阵可逆性覆盖，不负责 Vulkan 投影落地。
+- `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`：WorldRay 自动测试；负责中心点、角落、Resize、稳定复现和非法输入覆盖，不负责实体 Picking。
 
 ## XuanYu.Render.Abstractions
 

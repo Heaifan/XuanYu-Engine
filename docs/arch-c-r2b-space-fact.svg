@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="500" viewBox="0 0 1040 500">
+  <rect width="1040" height="500" fill="#f7f9fc"/>
+  <text x="520" y="38" text-anchor="middle" font-size="23" fill="#24364b" font-family="Microsoft YaHei, Arial">ARCH-C-R2-B：统一空间事实与世界射线</text>
+  <text x="520" y="66" text-anchor="middle" font-size="14" fill="#66778a" font-family="Microsoft YaHei, Arial">渲染与未来 Picking 共享同一套 Camera / Viewport / ViewProjection</text>
+
+  <rect x="60" y="115" width="220" height="105" rx="10" fill="#eef5fb" stroke="#6688a9" stroke-width="2"/>
+  <text x="170" y="150" text-anchor="middle" font-size="18" fill="#304f6c" font-family="Microsoft YaHei, Arial">CameraState</text>
+  <text x="170" y="178" text-anchor="middle" font-size="13" fill="#52677c" font-family="Microsoft YaHei, Arial">位置 / Forward / Up</text>
+  <text x="170" y="201" text-anchor="middle" font-size="13" fill="#52677c" font-family="Microsoft YaHei, Arial">FOV / Near / Far / Revision</text>
+
+  <rect x="410" y="115" width="220" height="105" rx="10" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="520" y="150" text-anchor="middle" font-size="18" fill="#376047" font-family="Microsoft YaHei, Arial">ViewportState</text>
+  <text x="520" y="178" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">逻辑区域 / 物理尺寸 / DPI</text>
+  <text x="520" y="201" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">不是 Vulkan Swapchain</text>
+
+  <rect x="760" y="115" width="220" height="105" rx="10" fill="#f8f2e8" stroke="#a8844c" stroke-width="2"/>
+  <text x="870" y="150" text-anchor="middle" font-size="18" fill="#72562c" font-family="Microsoft YaHei, Arial">ViewProjectionState</text>
+  <text x="870" y="178" text-anchor="middle" font-size="13" fill="#78664b" font-family="Microsoft YaHei, Arial">View / Projection</text>
+  <text x="870" y="201" text-anchor="middle" font-size="13" fill="#78664b" font-family="Microsoft YaHei, Arial">逆矩阵必须可用</text>
+
+  <path d="M280 168 H400" stroke="#66788b" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M630 168 H750" stroke="#66788b" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="240" y="315" width="220" height="90" rx="10" fill="#f3f1fa" stroke="#8977a6" stroke-width="2"/>
+  <text x="350" y="349" text-anchor="middle" font-size="17" fill="#594b76" font-family="Microsoft YaHei, Arial">渲染系统</text>
+  <text x="350" y="378" text-anchor="middle" font-size="13" fill="#74698a" font-family="Microsoft YaHei, Arial">后续消费同一观察事实</text>
+
+  <rect x="580" y="315" width="240" height="90" rx="10" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="700" y="349" text-anchor="middle" font-size="17" fill="#755923" font-family="Microsoft YaHei, Arial">WorldRayFactory</text>
+  <text x="700" y="378" text-anchor="middle" font-size="13" fill="#806c47" font-family="Microsoft YaHei, Arial">视口点 → NDC → 世界射线</text>
+
+  <path d="M870 220 V270 H350 V305" stroke="#66788b" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M870 220 V270 H700 V305" stroke="#66788b" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+
+  <text x="520" y="460" text-anchor="middle" font-size="13" fill="#8a5f32" font-family="Microsoft YaHei, Arial">本轮红线：不做实体 Picking / 空间索引 / Ray-AABB / Selection / Gizmo / Undo</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#66788b"/>
+    </marker>
+  </defs>
+</svg>
