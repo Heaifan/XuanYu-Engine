@@ -48,6 +48,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     public CommandBuffer[] CommandBuffers => _commandBuffers;
     public Extent2D Extent => _extent;
     public RenderPass RenderPass => _renderPass;
+    public SceneRenderSnapshot SceneSnapshot => _sceneSnapshot;
 
     public void SetPipeline(Silk.NET.Vulkan.Pipeline pipeline)
     {
@@ -56,11 +57,13 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
             throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
     }
 
-    public void SetSceneSnapshot(SceneRenderSnapshot snapshot)
+    public bool SetSceneSnapshot(SceneRenderSnapshot snapshot)
     {
+        if (_sceneSnapshot == snapshot) return false;
         _sceneSnapshot = snapshot;
         if (_views.Length > 0 && !RecordCommandBuffers(_views))
             throw new InvalidOperationException("Scene snapshot 注入后 CommandBuffer 重录失败");
+        return true;
     }
 
     public bool RebuildFramebuffers(uint generation = 0, bool force = false)

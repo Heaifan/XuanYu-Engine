@@ -10,13 +10,16 @@ public sealed class SceneStateOwner : ISceneRenderSnapshotSource
 
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
 
-    public void CommitPosition(Vector3d position)
+    public bool CommitPosition(Vector3d position)
     {
         var current = _snapshot.Entity;
+        var transform = new CommittedTransform(position);
+        if (current.Transform == transform) return false;
         _snapshot = new SceneRenderSnapshot(current with
         {
-            Transform = new CommittedTransform(position)
+            Transform = transform
         });
         RenderSnapshotChanged?.Invoke(_snapshot);
+        return true;
     }
 }

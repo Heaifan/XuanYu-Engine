@@ -50,6 +50,10 @@ public sealed partial class VulkanRenderSession
     public void UpdateScene(SceneRenderSnapshot snapshot)
     {
         if (_disposed || IsFailed) return;
+        lock (_rebuildLock)
+        {
+            if (_clearFrame.SceneSnapshot == snapshot) return;
+        }
         if (!_presentLoop.Stop()) return;
         lock (_rebuildLock) _clearFrame.SetSceneSnapshot(snapshot);
         _presentLoop.Start();

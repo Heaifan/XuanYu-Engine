@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.4-fix
+ARCH-C-R1 真机验收前收口修正（2026-07-18，修复）
+
+- 原历史编号：ARCH-C-R1-R1
+- 日期：2026-07-18
+- 任务目标：根据 R1 本地收口裁定，补齐版本链记录，并冻结“只有有效场景快照变化才发布与重录”的 R1 性能边界；当前仍不进入 ARCH-C-R2。
+- 主要改动：`SceneStateOwner.CommitPosition` 在 Position 未变化时返回 NoChange，不发布重复 `RenderSnapshotChanged`；`VulkanRenderSession.UpdateScene` 在快照未变化时不停止 Present 泵；`VulkanClearFrameOwner.SetSceneSnapshot` 在相同快照下不重录 CommandBuffer；补记 `v0.2.17.2-fix` 对应 `44d9e00` 的 file-tree 独立修正；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.4-fix`。
+- 修改范围：`XuanYu.Core/Scene/SceneStateOwner.cs`、`XuanYu.Editor.UI/Vm/UiVm.Scene.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`、`XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`file-tree.md`、`changelog.md`。未实现 Picking / Ray-AABB / Gizmo / Undo / ECS / 资产系统 / 存档格式；未修改 Vulkan Instance / Surface / Device / Swapchain / Present 主生命周期所有权。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.4-fix`；`file-tree.md` 实际条目 228 且总数声明 228；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：本轮不 Push；未创建 Tag / Release。
+- 遗留问题：R1 真机验收仍待完成，需确认同一 EntityKey、P0→P1 画面变化、Resize 和日志栏变化保持最新 Position、静止时无持续无效重录、关闭释放正常。
+
 ## v0.2.17.3-rz
 ARCH-C-R1：最小场景实体与 CommittedTransform 所有权闭环（2026-07-17，实施）
 
@@ -12,6 +25,19 @@ ARCH-C-R1：最小场景实体与 CommittedTransform 所有权闭环（2026-07-1
 - Commit Hash：提交后回填；本条不预填未来 Hash。
 - Push 状态：本轮不 Push；未创建 Tag / Release。
 - 遗留问题：仍需真机人工确认对象可见、运行后 Position 改变对应渲染结果变化、停止后回到原点、Resize 不破坏渲染、日志栏展开/收起与关闭释放链正常。
+
+## v0.2.17.2-fix
+file-tree 清单独立修正（2026-07-17，修复）
+
+- 原历史编号：FILE-TREE-R1
+- 日期：2026-07-17
+- 任务目标：按用户要求删除 `file-tree.md` 中过度展开的树形内容，只保留当前仓库文件清单、每个文件的清晰简介、文件总数和首行版本号。
+- 主要改动：重写 `file-tree.md` 为纯文件清单，首行版本为 `v0.2.17.2-fix`，文件总数统计为 220。
+- 修改范围：仅 `file-tree.md`。
+- 验证结果：清单条目统计 220，文件总数声明 220；未修改源码、项目依赖、Vulkan 生命周期、UI 布局或 ARCH-C 规划文档。
+- Commit Hash：`44d9e00`
+- Push 状态：未 Push；未创建 Tag / Release。
+- 遗留问题：该修正仅补齐文件清单表达方式，不改变运行时行为；后续新增、删除、移动、重命名或职责变化时继续更新首行版本和文件总数。
 
 ## v0.2.17.1-rz
 ARCH-C-Plan：真实场景编辑交互闭环规划（2026-07-17 22:49:25，规划文档）
