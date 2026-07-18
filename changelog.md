@@ -10,8 +10,8 @@ ARCH-C-R2-A 正式通过验收回填（2026-07-18 20:55:35，封版验证）
 - 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期、Picking、空间索引、CameraState、ViewportState、WorldRay、Selection、Gizmo、Undo、测试项目或存档格式。
 - 验收结果：ARCH-C-R2-A PASS；R2-A 完成的是长期空间查询地基规则和 Entry Gate 审计，不是 Picking 功能；当前黄色三角形仍不能视为真实 World / View / Projection 渲染对象，R2-B 必须先建立统一空间事实契约。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.7-fix`；`file-tree.md` 实际条目 230 且总数声明 230；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
-- Commit Hash：提交后回填；本条不预填未来 Hash。
-- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- Commit Hash：主验收提交 `5cb630625de7e860bd467d5ec73c9049353b2a4e`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
 - 遗留问题：R2-B 建议版本顺延为 `v0.2.17.8-rz`；其唯一目标是 ViewportState / CameraState / ViewProjection / WorldRay，禁止实体 Picking。空间数学 / 索引自动测试宿主建议另开受控任务，新增项目需用户批准。
 
 ## v0.2.17.6-rz
