@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="450" viewBox="0 0 980 450">
+  <rect width="980" height="450" fill="#f7f9fc"/>
+  <text x="490" y="38" text-anchor="middle" font-size="23" fill="#24364b" font-family="Microsoft YaHei, Arial">ARCH-C-R2 当前状态</text>
+  <text x="490" y="66" text-anchor="middle" font-size="14" fill="#66778a" font-family="Microsoft YaHei, Arial">空间规则已经建立，下一步让真实渲染进入同一个世界</text>
+
+  <rect x="55" y="115" width="210" height="105" rx="10" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="160" y="150" text-anchor="middle" font-size="18" fill="#376047" font-family="Microsoft YaHei, Arial">R2-A 已完成</text>
+  <text x="160" y="180" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">长期空间架构冻结</text>
+  <text x="160" y="202" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">禁止短视全量扫描主路径</text>
+
+  <rect x="385" y="115" width="210" height="105" rx="10" fill="#eef5fb" stroke="#6688a9" stroke-width="2"/>
+  <text x="490" y="150" text-anchor="middle" font-size="18" fill="#304f6c" font-family="Microsoft YaHei, Arial">R2-B 已封版</text>
+  <text x="490" y="180" text-anchor="middle" font-size="13" fill="#52677c" font-family="Microsoft YaHei, Arial">统一相机 / 视口 / 投影</text>
+  <text x="490" y="202" text-anchor="middle" font-size="13" fill="#52677c" font-family="Microsoft YaHei, Arial">屏幕点可转世界方向</text>
+
+  <rect x="715" y="115" width="210" height="105" rx="10" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="820" y="150" text-anchor="middle" font-size="18" fill="#755923" font-family="Microsoft YaHei, Arial">R2-C 下一步</text>
+  <text x="820" y="180" text-anchor="middle" font-size="13" fill="#806c47" font-family="Microsoft YaHei, Arial">渲染正式接入统一空间</text>
+  <text x="820" y="202" text-anchor="middle" font-size="13" fill="#806c47" font-family="Microsoft YaHei, Arial">让画面和空间规则一致</text>
+
+  <path d="M265 167 H375" stroke="#66788b" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M595 167 H705" stroke="#66788b" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="130" y="295" width="720" height="85" rx="10" fill="#ffffff" stroke="#8798aa" stroke-width="2"/>
+  <text x="490" y="327" text-anchor="middle" font-size="16" fill="#344b63" font-family="Microsoft YaHei, Arial">最终目标：画面位置 = 鼠标理解的位置 = Gizmo 操作的位置</text>
+  <text x="490" y="355" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">R2-C 只统一渲染空间，不偷跑 Picking、Selection 或 Gizmo</text>
+
+  <text x="490" y="420" text-anchor="middle" font-size="13" fill="#8a5f32" font-family="Microsoft YaHei, Arial">原则：宁可少做一层功能，也不能让渲染与空间查询长期生活在两个世界</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#66788b"/>
+    </marker>
+  </defs>
+</svg>

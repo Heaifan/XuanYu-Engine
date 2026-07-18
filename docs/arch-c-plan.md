@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.6-rz
+版本：v0.2.17.11-fix
 日期：2026-07-18
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -62,6 +62,8 @@ ARCH-C 首轮不做多选、父子 Transform、旋转、缩放、局部坐标轴
 
 ARCH-C-R2 之后，Picking 不得再以“当前实体少”为理由把全实体线性扫描写成正式主路径。正式主链必须通过渲染后端无关的空间查询服务访问增量维护的空间索引，再对候选执行 Ray-AABB 精确检测。
 
+`ARCH-C-R2-B` 已封版后，R2 后续顺序调整为：先让 Vulkan 渲染正式消费统一 `CameraState / ViewportState / ViewProjectionState`，再进入空间索引与真实 Picking。禁止在 Render 尚未接入统一空间事实前，把 `Pointer -> WorldRay -> Spatial Query` 串成正式主链。
+
 禁止：
 
 ```text
@@ -74,8 +76,9 @@ Picking -> 读取 Render.Vulkan / Vk* / SwapchainGeneration
 
 ```text
 SceneStateOwner 场景事实
+-> ViewportState / CameraState / ViewProjectionState 统一空间事实
+-> Renderer 正式消费同一 ViewProjection
 -> Spatial Query Index 增量维护
--> ViewportState / CameraState 统一空间事实
 -> Ray Query
 -> 索引裁剪候选
 -> Ray-AABB
@@ -126,11 +129,23 @@ Cancel -> 丢弃 Preview 并恢复 StartSnapshot
 
 ## 8. 数据流
 
+R2-C 渲染接入统一空间事实的数据流：
+
+```text
+SceneStateOwner 场景事实
+-> CameraState / ViewportState
+-> ViewProjectionState
+-> Renderer 消费同一观察事实
+-> 屏幕上的真实位置
+```
+
+在这条链完成前，黄色三角形旧 Vulkan 测试路径可以短期作为迁移对象存在，但不得继续扩散为长期主路径。
+
 ```text
 Pointer 屏幕坐标
 -> 视口局部坐标
--> ViewportState / CameraState
--> 相机矩阵生成世界射线
+-> ViewportState / CameraState / ViewProjectionState
+-> WorldRayFactory 生成世界射线
 -> Spatial Query Index 裁剪候选
 -> CPU Ray-AABB
 -> PickingResult
@@ -284,7 +299,7 @@ Picking 正式主路径禁止全实体线性遍历，禁止每次点击重建空
 | 阶段 | 目标 | 独立验收 |
 | --- | --- | --- |
 | ARCH-C-R1 | 场景实体与 Transform 所有权 | 出现一个真实测试对象；EntityKey 运行期稳定；修改 Transform 后渲染同步；Resize 后身份不变 |
-| ARCH-C-R2 | 空间查询地基与 CPU Picking | 空间索引增量维护；点击对象命中；点击空白返回未命中；Resize 和日志栏变化后坐标仍正确；过期 ViewportRevision / SceneSpatialRevision 被拒绝 |
+| ARCH-C-R2 | 统一空间事实、渲染接入、空间查询地基与 CPU Picking | R2-A 冻结长期空间架构；R2-B 封版统一 Camera / Viewport / WorldRay；R2-C 让 Render 正式消费统一 ViewProjection；随后再进入空间索引、Ray-AABB 与真实 Picking |
 | ARCH-C-R3 | 真实 Selection 同步 | 视口点击后层级树高亮；Inspector 显示真实对象；重复选择 NoChange；点击空白清除选择 |
 | ARCH-C-R4 | Move Gizmo 显示与轴命中 | 未选中无 Gizmo；选中后 Gizmo 跟随对象；X/Y/Z 可独立命中；点击 Gizmo 不误选背后对象 |
 | ARCH-C-R5 | Transform Preview | 拖动 X/Y/Z 只改变对应轴；PointerMove 不生成 Undo；无效数学结果不入状态 |
@@ -318,6 +333,17 @@ Resize 后坐标正确
 不修改 Selection
 0 warning / 0 error
 真机验收通过
+```
+
+R2 分解顺序：
+
+```text
+R2-A 已完成：长期空间查询架构与入口审计
+R2-B 已封版：统一 Camera / Viewport / ViewProjection / WorldRay 数学契约
+R2-C 下一步：Vulkan 渲染正式消费统一空间事实
+R2-D：动态空间索引
+R2-E：Ray-AABB / 最近命中
+R2-F：真实鼠标 Picking
 ```
 
 ## 20. 自动验证矩阵
@@ -364,8 +390,8 @@ R8 必须完成以下手工链路：
 
 当前风险：
 
-- 相机矩阵契约尚未正式冻结。
-- 固定三角形仍属于渲染数据，不是场景实体。
+- 相机 / 视口 / 世界射线数学契约已在 `ARCH-C-R2-B` 封版；后续风险转为 Render 是否正式消费同一套 ViewProjection。
+- 固定三角形仍属于旧 Vulkan 测试渲染路径，尚未正式接入统一空间事实，也不是完整场景实体。
 - Transform 正式所有权尚未落到具体类型。
 - CPU Picking 需要明确视口逻辑像素、物理像素和 DPI 的换算边界。
 - Selection 现有 Key 来自 UI 树节点，不能直接当作长期场景 EntityKey。

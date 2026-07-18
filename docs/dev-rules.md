@@ -91,6 +91,7 @@
 - 空间索引不得持有 Vulkan、Avalonia、Win32 HWND 或 UI 控件对象。
 - 正式路径必须是：场景事实 → 增量维护空间查询索引 → 视口 / 相机事实 → 世界射线 → 索引裁剪候选 → Ray-AABB → 最近有效命中。
 - 当前没有正式 Camera / View / Projection 契约时，禁止使用 Clip Space 临时破解；必须先建立渲染后端无关的视口 / 相机变换契约。
+- 在 `Pointer -> WorldRay -> Spatial Query` 进入正式主链前，Render 必须消费同一套 `CameraState / ViewportState / ViewProjectionState`；禁止让 Vulkan 画面和 Picking 长期各自生活在两套空间事实里。
 
 ## 8. 命名与品牌
 
