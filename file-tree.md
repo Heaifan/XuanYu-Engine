@@ -1,7 +1,7 @@
-版本：v0.2.17.11-fix
+版本：v0.2.17.12-rz
 # XuanYu Engine 文件树
 
-文件总数：246
+文件总数：249
 
 ## 根目录
 
@@ -34,6 +34,7 @@
 - `docs/arch-c-r2b-space-fact.svg`：ARCH-C-R2-B 统一空间事实架构图；用于说明 Camera / Viewport / ViewProjection / WorldRay 的共享关系，不承载运行时代码。
 - `docs/arch-c-r2b-closure.svg`：ARCH-C-R2-B 正式封版状态图；用于说明数学契约已通过、下一步转入渲染接入统一空间事实，不承载运行时代码。
 - `docs/arch-c-r2-current-route.svg`：ARCH-C-R2 当前阶段路线图；用于说明 R2-A / R2-B 已完成以及 R2-C 渲染接入统一空间事实的下一步，不承载运行时代码。
+- `docs/arch-c-r2c-render-space.svg`：ARCH-C-R2-C 渲染接入统一空间事实架构图；用于说明世界位置、统一 ViewProjection 与 Vulkan push constant 的关系，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -168,9 +169,11 @@
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：顶点着色器 SPIR-V 字节码。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`：Vulkan 图形管线生命周期持有者。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：Vulkan 管线日志格式化器。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs`：Vulkan ShaderModule 生命周期持有者。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；负责把场景 World Position 与统一 ViewProjection 写入 push constant 并发起 Draw，不负责 Picking、Selection 或生命周期重构。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`：Vulkan ClearFrame 资源持有主体。

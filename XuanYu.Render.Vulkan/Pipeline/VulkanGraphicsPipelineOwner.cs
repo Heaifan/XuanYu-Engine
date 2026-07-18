@@ -15,6 +15,7 @@ internal sealed unsafe class VulkanGraphicsPipelineOwner : IDisposable
     PipelineLayout _layout;
     Silk.NET.Vulkan.Pipeline _pipeline;
     public Silk.NET.Vulkan.Pipeline Pipeline => _pipeline;
+    public PipelineLayout Layout => _layout;
 
     VulkanGraphicsPipelineOwner(Vk vk, VulkanDeviceOwner deviceOwner, PipelineLayout layout, Silk.NET.Vulkan.Pipeline pipeline, Action<string>? log)
     {
@@ -34,7 +35,8 @@ internal sealed unsafe class VulkanGraphicsPipelineOwner : IDisposable
             return null;
         }
         log?.Invoke(VulkanPipelineLogFormatter.ShaderModuleCreated());
-        var layoutInfo = new PipelineLayoutCreateInfo { SType = StructureType.PipelineLayoutCreateInfo, SetLayoutCount = 0, PushConstantRangeCount = 0 };
+        var range = new PushConstantRange { StageFlags = ShaderStageFlags.VertexBit, Offset = 0, Size = VulkanScenePushConstants.SizeInBytes };
+        var layoutInfo = new PipelineLayoutCreateInfo { SType = StructureType.PipelineLayoutCreateInfo, SetLayoutCount = 0, PushConstantRangeCount = 1, PPushConstantRanges = &range };
         var layoutResult = vk.CreatePipelineLayout(deviceOwner.LogicalDevice, &layoutInfo, null, out var layout);
         if (layoutResult != Result.Success)
         {

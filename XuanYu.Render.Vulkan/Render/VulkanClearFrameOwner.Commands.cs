@@ -74,19 +74,4 @@ public sealed unsafe partial class VulkanClearFrameOwner
         return Ok(_vk.EndCommandBuffer(cb), "EndCommandBuffer");
     }
 
-    void RecordDraw(CommandBuffer cb)
-    {
-        if (_pipeline.Handle == 0) return;
-        var position = _sceneSnapshot.Entity.Transform.Position;
-        var x = (float)(position.X * _extent.Width * 0.18);
-        var y = (float)(-position.Y * _extent.Height * 0.18);
-        Viewport* pVp = stackalloc Viewport[1];
-        pVp[0] = new Viewport { X = x, Y = y, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 };
-        Rect2D* pSc = stackalloc Rect2D[1];
-        pSc[0] = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent };
-        _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
-        _vk.CmdSetViewport(cb, 0, 1, pVp);
-        _vk.CmdSetScissor(cb, 0, 1, pSc);
-        _vk.CmdDraw(cb, 3, 1, 0, 0);
-    }
 }

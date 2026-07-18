@@ -61,7 +61,7 @@ public sealed partial class VulkanRenderSession : IDisposable
             clear = new VulkanClearFrameOwner(vk, deviceOwner, swapchainOwner, selection.Queue.GraphicsFamily, log);
             clear.SetSceneSnapshot(scene ?? SceneRenderSnapshot.TestEntityAtOrigin);
             pipeline = VulkanGraphicsPipelineOwner.Create(vk, deviceOwner, clear, swapchainOwner, log);
-            if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline);
+            if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline, pipeline.Layout);
             loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,
                 source => session!.RecoverFromOutOfDate(source),
                 reason => session!.MarkFailed(reason),

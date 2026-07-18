@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.12-rz
+ARCH-C-R2-C 渲染接入统一空间事实（2026-07-18 22:34:21，最小实装）
+
+- 原历史编号：ARCH-C-R2-C。
+- 日期：2026-07-18 22:34:21。
+- 任务目标：让当前 Vulkan 黄色三角形渲染路径正式消费 `CameraState / ViewportState / ViewProjectionState`，证明画面位置开始服从 Core 的统一 3D 空间规则；本轮不实现 Picking、空间索引、Ray-AABB、Selection、Gizmo 或 Undo，不重构 Vulkan 生命周期。
+- 主要改动：`VulkanClearFrameOwner.Draw.cs` 新增 R2-C 绘制分部，基于 swapchain extent 构造 `ViewportState`、固定相机构造 `CameraState`、通过 `ViewProjectionState` 生成 ViewProjection，并把 ViewProjection 与场景实体 World Position 作为顶点 push constant 推入 Vulkan；`VulkanGraphicsPipelineOwner` 为顶点阶段声明 80 字节 push constant range 并暴露 PipelineLayout；顶点 shader 从固定 NDC 三角形改为局部三角形 + push constant 世界位置 / ViewProjection；`RecordDraw` 不再用 `Position * swapchain 尺寸` 偏移 Vulkan viewport；新增 `VulkanScenePushConstants` 统一 push constant 大小；新增 `docs/arch-c-r2c-render-space.svg` 作为浅色中文架构图；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.12-rz`。
+- 修改范围：`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`、`XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`、`XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`、`XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`、`XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs`、`docs/arch-c-r2c-render-space.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 SceneStateOwner、EditorStateOwner、Render.Abstractions、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2c-render-space.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.12-rz`；`file-tree.md` 实际条目 249 且总数声明 249；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：本轮只完成单测试实体的渲染空间接入，尚未暴露可交互相机控制，也未进入真实 Pointer Picking。R2-D 才能进入动态空间索引。
+
 ## v0.2.17.11-fix
 ARCH-C-R2 后续路线同步（2026-07-18 22:21:39，R2-C Entry Gate 冻结）
 
