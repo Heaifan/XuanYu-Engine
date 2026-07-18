@@ -10,8 +10,8 @@ ARCH-C-R2 后续路线同步（2026-07-18 22:21:39，R2-C Entry Gate 冻结）
 - 修改范围：`docs/arch-c-plan.md`、`docs/dev-rules.md`、`docs/arch-c-r2-current-route.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改生产代码实现、测试断言、公共 API、Vulkan 生命周期、渲染管线、SceneStateOwner、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
 - 验收结论：R2-B 已正式封版；下一步建议版本候选为 `v0.2.17.11-rz — ARCH-C-R2-C` 的结论被本轮治理记录吸收，但当前版本已作为路线同步使用 `v0.2.17.11-fix`，因此 R2-C 实装版本建议顺延为 `v0.2.17.12-rz`。R2-C Entry Gate 是让 Vulkan 渲染正式消费统一空间事实，禁止直接进入 Picking。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2-current-route.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.11-fix`；`file-tree.md` 实际条目 246 且总数声明 246；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
-- Commit Hash：提交后回填；本条不预填未来 Hash。
-- Push 状态：待本轮提交并 Push 当前工作分支；未创建 Tag / Release。
+- Commit Hash：主路线同步提交 `a9ad144275c1698c4ac99233c519c85c37382106`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
 - 遗留问题：当前黄色三角形仍属于旧 Vulkan 测试渲染路径；R2-C 必须建立 Render 正式消费统一空间事实的最小正确实现，随后才能进入空间索引与真实 Picking。
 
 ## v0.2.17.10-fix
