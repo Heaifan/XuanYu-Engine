@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.17.8-rz
+ARCH-C-R2-B 测试地基预提交（2026-07-18 21:25:00，Core 长期测试宿主）
+
+- 原历史编号：ARCH-C-R2-B-TEST-HOST。
+- 日期：2026-07-18 21:25:00。
+- 任务目标：按用户明确授权新增 `XuanYu.Core.Tests`，先建立玄域 Core 层长期自动测试宿主，确保 `dotnet test` 能发现并执行测试；本提交不实现 CameraState、ViewportState、ViewProjection、WorldRay，也不进入 Picking。
+- 主要改动：新增 `XuanYu.Core.Tests` 项目并加入 `XuanYu.Engine.slnx`；测试项目引用 `XuanYu.Core`；移除模板默认覆盖率依赖；新增最小 smoke test 验证 Core 自检和 `Vector3d` 基础行为；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.8-rz`。
+- 测试依赖：`Microsoft.NET.Test.Sdk` `17.14.1`、`xunit` `2.9.3`、`xunit.runner.visualstudio` `3.1.4`；依赖仅进入 `XuanYu.Core.Tests`，未污染生产项目；未引入 Mock、Benchmark、覆盖率采集器、数学库或额外工具链。
+- 修改范围：`XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`、`XuanYu.Core.Tests/CoreSmokeTests.cs`、`XuanYu.Engine.slnx`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改生产代码架构边界、公共 API、Vulkan 生命周期、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验证结果：首次沙箱内 `dotnet test XuanYu.Engine.slnx -p:UseSharedCompilation=false` 因 NuGet 网络权限报 `NU1301`，已按规则使用提升权限重跑；`dotnet test XuanYu.Engine.slnx -p:UseSharedCompilation=false` 通过，发现 `XuanYu.Core.Tests.dll`，执行 2 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：待 R2-B 完整收口后一并 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：R2-B 仍需在独立提交中实现 CameraState / ViewportState / ViewProjection / WorldRay，并补齐对应自动测试；当前仓库根目录存在历史 `codex_chat_export_*.zip`，本轮不扩散、不删除、不改写历史。
+
 ## v0.2.17.7-fix
 ARCH-C-R2-A 正式通过验收回填（2026-07-18 20:55:35，封版验证）
 

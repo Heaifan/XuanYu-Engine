@@ -1,7 +1,7 @@
-版本：v0.2.17.7-fix
+版本：v0.2.17.8-rz
 # XuanYu Engine 文件树
 
-文件总数：230
+文件总数：232
 
 ## 根目录
 
@@ -101,6 +101,11 @@
 - `XuanYu.Core/Results/EngineResult.cs`：引擎结果类型。
 - `XuanYu.Core/Time/SimulationTime.cs`：模拟时间值对象。
 - `XuanYu.Core/Time/TimeStep.cs`：时间步长值对象。
+
+## XuanYu.Core.Tests
+
+- `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
+- `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
 
 ## XuanYu.Render.Abstractions
 
