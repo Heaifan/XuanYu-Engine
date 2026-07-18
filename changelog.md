@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.15-fix
+ARCH-C-R2-D-R1 封版补全（2026-07-18 23:48:24，真实 Scene 接线与 WorldRay 候选查询）
+
+- 原历史编号：ARCH-C-R2-D-R1。
+- 日期：2026-07-18 23:48:24。
+- 任务目标：补齐 `v0.2.17.14-rz — ARCH-C-R2-D` 封版审计发现的两个 GAP：空间索引必须进入真实 `SceneStateOwner` 主链，且空间索引必须具备有界 `WorldRay` 候选查询契约；本轮不实现实体级最终 Ray-AABB、最近命中、正式 Picking、Selection、Gizmo、Undo、Camera 工具、GPU Picking、ECS、地形系统、Vulkan 生命周期或存档。
+- 主要改动：`SceneStateOwner` 初始化时将 `EntityId(1)` 的世界 `SpatialBounds` 插入 `SpatialIndexOwner`，`CommitPosition` 改变正式 Transform 时先增量更新同一个 EntityKey 的空间记录再发布场景快照，相同 Position 保持幂等且不增加 `SpatialRevision`；新增 `SpatialRayQuery` 与 `SpatialRayAabb`，`ISpatialIndex` / `SpatialIndexOwner` / `DynamicAabbTree` 支持带最大距离的 WorldRay Broad Phase 候选查询；新增自动测试覆盖真实 Scene -> SpatialIndex 初始化 / Update / Revision、Ray 命中 / 空查询 / Mask / Update / Remove / 起点在盒内 / 平行轴 / 背向 / 负方向 / 最大距离，以及 1,000 / 10,000 实体 Ray Query 结构统计。
+- 修改范围：`XuanYu.Core/Scene/SceneStateOwner.cs`、`XuanYu.Core/Spatial/ISpatialIndex.cs`、`XuanYu.Core/Spatial/DynamicAabbTree.cs`、`XuanYu.Core/Spatial/DynamicAabbTree.Query.cs`、`XuanYu.Core/Spatial/SpatialIndexOwner.cs`、`XuanYu.Core/Spatial/SpatialRayQuery.cs`、`XuanYu.Core/Spatial/SpatialRayAabb.cs`、`XuanYu.Core.Tests/Spatial/SceneStateOwnerSpatialTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRayQueryTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRayQueryLifecycleTests.cs`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Vulkan、Render.Abstractions、EditorStateOwner、Selection、Gizmo、Undo、存档格式或项目依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 34 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2d-spatial-index.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.15-fix`；`file-tree.md` 实际条目 274 且总数声明 274；依赖方向扫描确认 `XuanYu.Core` / `XuanYu.Core.Tests` 未引入 Avalonia、Vulkan 或 Silk.NET，未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖；Ray Query 规模审计确认 1,000 实体访问 79 节点 / 候选 5，10,000 实体访问 571 节点 / 候选 6，均未退化为全量扫描。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：用户本轮明确要求不要 Push；本轮完成本地 Commit 后停止在本地，不创建 Tag / Release。
+- 遗留问题：当前真实 Scene 仍没有实体删除生命周期，因此没有虚构 Delete / Clear 接线；`SpatialIndexOwner.Remove` 能力和测试已存在，真实删除接线冻结为未来实体删除生命周期 Entry Gate。R2-D 仍只返回候选，不做实体级最终 Ray-AABB、最近命中或 Selection。
+
 ## v0.2.17.14-rz
 ARCH-C-R2-D 长期可扩展空间索引（2026-07-18 23:33:11，Core 空间查询地基）
 

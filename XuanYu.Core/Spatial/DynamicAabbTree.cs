@@ -47,6 +47,14 @@ public sealed partial class DynamicAabbTree : ISpatialIndex
         return new SpatialQueryResult(candidates, stats);
     }
 
+    public SpatialQueryResult Query(SpatialRayQuery ray, SpatialQueryCategory mask)
+    {
+        var candidates = new List<SpatialBounds>();
+        var visited = QueryInto(ray, mask, candidates);
+        var stats = new SpatialQueryStats(0, Count, visited, candidates.Count);
+        return new SpatialQueryResult(candidates, stats);
+    }
+
     int AddNode(SpatialBounds bounds)
     {
         _nodes.Add(new Node { Bounds = bounds });

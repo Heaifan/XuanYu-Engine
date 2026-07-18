@@ -13,4 +13,6 @@ public interface ISpatialIndex
     bool Update(SpatialBounds bounds);
 
     SpatialQueryResult Query(SpatialAabb area, SpatialQueryCategory mask);
+
+    SpatialQueryResult Query(SpatialRayQuery ray, SpatialQueryCategory mask);
 }

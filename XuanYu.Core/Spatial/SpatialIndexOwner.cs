@@ -44,6 +44,17 @@ public sealed class SpatialIndexOwner
     public SpatialQueryResult Query(SpatialAabb area, SpatialQueryCategory mask)
     {
         var result = _index.Query(area, mask);
+        return WithCurrentStats(result);
+    }
+
+    public SpatialQueryResult Query(SpatialRayQuery ray, SpatialQueryCategory mask)
+    {
+        var result = _index.Query(ray, mask);
+        return WithCurrentStats(result);
+    }
+
+    SpatialQueryResult WithCurrentStats(SpatialQueryResult result)
+    {
         var stats = result.Stats with
         {
             SpatialRevision = _revision,

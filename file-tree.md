@@ -1,7 +1,7 @@
-版本：v0.2.17.14-rz
+版本：v0.2.17.15-fix
 # XuanYu Engine 文件树
 
-文件总数：269
+文件总数：274
 
 ## 根目录
 
@@ -106,13 +106,15 @@
 - `XuanYu.Core/Spatial/DynamicAabbTree.cs`：动态 AABB 树索引入口；负责 Insert、Remove、Update 和 Query 调度，不暴露内部节点给调用方。
 - `XuanYu.Core/Spatial/DynamicAabbTree.Insert.cs`：动态 AABB 树插入分部；负责寻找兄弟节点和接入叶节点，不负责场景事实所有权。
 - `XuanYu.Core/Spatial/DynamicAabbTree.Node.cs`：动态 AABB 树内部节点模型；只在索引内部保存父子关系和包围盒，不作为公共契约。
-- `XuanYu.Core/Spatial/DynamicAabbTree.Query.cs`：动态 AABB 树候选查询分部；负责 Broad Phase 节点裁剪和统计访问节点数，不做最终 Picking。
+- `XuanYu.Core/Spatial/DynamicAabbTree.Query.cs`：动态 AABB 树候选查询分部；负责 AABB / WorldRay Broad Phase 节点裁剪和统计访问节点数，不做最近命中或最终 Picking。
 - `XuanYu.Core/Spatial/DynamicAabbTree.Refit.cs`：动态 AABB 树回填分部；负责实体增删改后的父级 AABB 更新，不负责平衡策略外露。
 - `XuanYu.Core/Spatial/DynamicAabbTree.Remove.cs`：动态 AABB 树删除分部；负责移除叶节点并接回兄弟节点，不负责实体生命周期决策。
-- `XuanYu.Core/Spatial/ISpatialIndex.cs`：空间索引抽象契约；负责屏蔽具体索引实现，不绑定 DynamicAabbTree、UI 或 Vulkan。
+- `XuanYu.Core/Spatial/ISpatialIndex.cs`：空间索引抽象契约；负责屏蔽具体索引实现并提供 AABB / WorldRay 候选查询，不绑定 DynamicAabbTree、UI 或 Vulkan。
 - `XuanYu.Core/Spatial/SpatialAabb.cs`：世界空间 AABB 值对象；负责有限性、大小关系、相交和合并计算，不保存实体状态。
 - `XuanYu.Core/Spatial/SpatialBounds.cs`：实体空间边界值对象；负责绑定 EntityKey、WorldBounds 和 QueryCategory，不成为第二份场景数据库。
-- `XuanYu.Core/Spatial/SpatialIndexOwner.cs`：空间索引生命周期所有者；负责增量维护索引和 SpatialRevision，不拥有正式 Transform。
+- `XuanYu.Core/Spatial/SpatialIndexOwner.cs`：空间索引生命周期所有者；负责增量维护索引、SpatialRevision、AABB / WorldRay 查询统计，不拥有正式 Transform。
+- `XuanYu.Core/Spatial/SpatialRayAabb.cs`：空间射线与 AABB 的 Broad Phase 相交计算；只服务候选裁剪，不裁定最近命中。
+- `XuanYu.Core/Spatial/SpatialRayQuery.cs`：有界 WorldRay 查询值对象；负责携带射线和最大查询距离，不绑定 Picking 或 Selection。
 - `XuanYu.Core/Spatial/SpatialQueryCategory.cs`：空间查询分类掩码；负责长期扩展场景实体、地形、Gizmo 和编辑器辅助对象分类。
 - `XuanYu.Core/Spatial/SpatialQueryResult.cs`：空间候选查询结果；负责携带候选 Bounds 与统计信息，不裁定最近命中。
 - `XuanYu.Core/Spatial/SpatialQueryStats.cs`：空间查询诊断统计；负责记录 Revision、总实体、访问节点和候选数，并生成低频中文探针文本。
@@ -120,7 +122,7 @@
 - `XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs`：场景渲染快照源抽象，向渲染侧发布只读快照。
 - `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
 - `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体。
-- `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position 并发布渲染快照。
+- `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position、同步派生空间索引并发布渲染快照；空间索引不是第二份场景真相。
 - `XuanYu.Core/Results/EngineError.cs`：引擎错误值对象。
 - `XuanYu.Core/Results/EngineResult.cs`：引擎结果类型。
 - `XuanYu.Core/Time/SimulationTime.cs`：模拟时间值对象。
@@ -137,9 +139,12 @@
 - `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`：WorldRay 自动测试；负责中心点、角落、Resize、稳定复现和非法输入覆盖，不负责实体 Picking。
 - `XuanYu.Core.Tests/Space/WorldRayTests.cs`：WorldRay 值对象自动测试；负责非法 Origin / Direction 失败边界，不负责射线命中或空间查询。
 - `XuanYu.Core.Tests/Spatial/SpatialBoundsTests.cs`：空间边界测试；负责 AABB 非法输入、相交和合并行为覆盖，不测试 Picking。
+- `XuanYu.Core.Tests/Spatial/SceneStateOwnerSpatialTests.cs`：SceneStateOwner 空间索引集成测试；负责初始化 Insert、Position Update、EntityKey 稳定和 Revision 幂等覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialIndexOwnerLifecycleTests.cs`：空间索引生命周期测试；负责 Insert、Remove、Update、重复实体和分类掩码覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialIndexOwnerRevisionTests.cs`：空间索引 Revision 测试；负责 SpatialRevision 增长、幂等更新和中文探针统计覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialIndexScaleTests.cs`：空间索引规模回归测试；负责 1k / 10k 实体查询统计、连续移动和批量删除一致性覆盖。
+- `XuanYu.Core.Tests/Spatial/SpatialRayQueryLifecycleTests.cs`：WorldRay 候选查询生命周期与规模测试；负责 Update、Remove、1k / 10k Ray Query 统计覆盖。
+- `XuanYu.Core.Tests/Spatial/SpatialRayQueryTests.cs`：WorldRay 候选查询边界测试；负责命中、空查询、Mask、起点在盒内、平行轴、背向和最大距离覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialTestData.cs`：空间索引测试数据工厂；负责确定性网格实体和查询 AABB 构造，不进入生产项目。
 
 ## XuanYu.Render.Abstractions
