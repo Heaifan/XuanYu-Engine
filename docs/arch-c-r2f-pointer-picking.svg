@@ -1,0 +1,61 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="720" viewBox="0 0 1180 720">
+  <rect width="1180" height="720" fill="#f7f9fc"/>
+  <text x="590" y="42" text-anchor="middle" font-size="26" fill="#24364b" font-family="Microsoft YaHei, Arial">ARCH-C-R2-F：真实 Pointer Picking</text>
+  <text x="590" y="74" text-anchor="middle" font-size="15" fill="#65758a" font-family="Microsoft YaHei, Arial">鼠标真实点击视口，经过统一空间链返回 EntityKey 或 NoHit</text>
+
+  <rect x="40" y="120" width="175" height="104" rx="10" fill="#eef5fb" stroke="#6587a8" stroke-width="2"/>
+  <text x="127" y="154" text-anchor="middle" font-size="17" fill="#304f6c" font-family="Microsoft YaHei, Arial">PointerPressed</text>
+  <text x="127" y="184" text-anchor="middle" font-size="13" fill="#50677d" font-family="Microsoft YaHei, Arial">Avalonia / NativeHost</text>
+  <text x="127" y="206" text-anchor="middle" font-size="13" fill="#50677d" font-family="Microsoft YaHei, Arial">逻辑坐标</text>
+
+  <rect x="255" y="120" width="175" height="104" rx="10" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="342" y="154" text-anchor="middle" font-size="17" fill="#376047" font-family="Microsoft YaHei, Arial">ViewportState</text>
+  <text x="342" y="184" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">逻辑尺寸 / DPI</text>
+  <text x="342" y="206" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">ViewportRevision</text>
+
+  <rect x="470" y="120" width="175" height="104" rx="10" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="557" y="154" text-anchor="middle" font-size="17" fill="#755923" font-family="Microsoft YaHei, Arial">WorldRay</text>
+  <text x="557" y="184" text-anchor="middle" font-size="13" fill="#806c47" font-family="Microsoft YaHei, Arial">统一相机</text>
+  <text x="557" y="206" text-anchor="middle" font-size="13" fill="#806c47" font-family="Microsoft YaHei, Arial">WorldRayFactory</text>
+
+  <rect x="685" y="120" width="175" height="104" rx="10" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="772" y="154" text-anchor="middle" font-size="17" fill="#376047" font-family="Microsoft YaHei, Arial">Spatial Raycast</text>
+  <text x="772" y="184" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">Broad + Narrow</text>
+  <text x="772" y="206" text-anchor="middle" font-size="13" fill="#52715b" font-family="Microsoft YaHei, Arial">SpatialRevision</text>
+
+  <rect x="900" y="120" width="220" height="104" rx="10" fill="#f3f1fa" stroke="#8977a6" stroke-width="2"/>
+  <text x="1010" y="154" text-anchor="middle" font-size="17" fill="#594b76" font-family="Microsoft YaHei, Arial">低频中文日志</text>
+  <text x="1010" y="184" text-anchor="middle" font-size="13" fill="#74698a" font-family="Microsoft YaHei, Arial">EntityKey / NoHit</text>
+  <text x="1010" y="206" text-anchor="middle" font-size="13" fill="#74698a" font-family="Microsoft YaHei, Arial">候选与命中统计</text>
+
+  <path d="M215 172 H245" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M430 172 H460" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M645 172 H675" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M860 172 H890" stroke="#64788d" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="80" y="310" width="300" height="132" rx="10" fill="#ffffff" stroke="#8798aa" stroke-width="2"/>
+  <text x="230" y="346" text-anchor="middle" font-size="18" fill="#344b63" font-family="Microsoft YaHei, Arial">验收 A / B</text>
+  <text x="230" y="380" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">点击黄色三角形中心 -> EntityId(1)</text>
+  <text x="230" y="405" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">点击明显空白 -> NoHit</text>
+
+  <rect x="440" y="310" width="300" height="132" rx="10" fill="#ffffff" stroke="#8798aa" stroke-width="2"/>
+  <text x="590" y="346" text-anchor="middle" font-size="18" fill="#344b63" font-family="Microsoft YaHei, Arial">验收 C / D</text>
+  <text x="590" y="380" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">Run 后新位置命中，旧位置 NoHit</text>
+  <text x="590" y="405" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">Resize / 日志栏展开后仍正确</text>
+
+  <rect x="800" y="310" width="300" height="132" rx="10" fill="#ffffff" stroke="#8798aa" stroke-width="2"/>
+  <text x="950" y="346" text-anchor="middle" font-size="18" fill="#344b63" font-family="Microsoft YaHei, Arial">过期保护</text>
+  <text x="950" y="380" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">ViewportRevision 变化拒绝旧结果</text>
+  <text x="950" y="405" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">SpatialRevision 变化拒绝旧结果</text>
+
+  <rect x="90" y="520" width="1000" height="96" rx="10" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="590" y="556" text-anchor="middle" font-size="18" fill="#755923" font-family="Microsoft YaHei, Arial">R2-F 红线</text>
+  <text x="590" y="588" text-anchor="middle" font-size="14" fill="#806c47" font-family="Microsoft YaHei, Arial">只返回 EntityKey / NoHit；禁止 Selection、Gizmo、Undo、新 PickingCamera、全场景扫描、Vulkan 生命周期修改</text>
+  <text x="590" y="672" text-anchor="middle" font-size="13" fill="#5e7185" font-family="Microsoft YaHei, Arial">通过后进入 R3 Selection，不继续拆分 R2-F-A / B / C</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64788d"/>
+    </marker>
+  </defs>
+</svg>

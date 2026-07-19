@@ -1,7 +1,7 @@
-版本：v0.2.17.17-fix
+版本：v0.2.17.18-rz
 # XuanYu Engine 文件树
 
-文件总数：286
+文件总数：294
 
 ## 根目录
 
@@ -38,6 +38,7 @@
 - `docs/arch-c-r2c-closure.svg`：ARCH-C-R2-C 正式封版状态图；用于说明真机渲染、坐标契约、Resize、自愈和释放链均已通过，不承载运行时代码。
 - `docs/arch-c-r2d-spatial-index.svg`：ARCH-C-R2-D 空间索引架构图；用于说明场景事实、增量维护、动态索引和候选查询关系，不承载运行时代码。
 - `docs/arch-c-r2e-ray-hit.svg`：ARCH-C-R2-E 精确命中架构图；用于说明 WorldRay、Broad Phase、Ray-AABB Narrow Phase 和最近命中的关系，不承载运行时代码。
+- `docs/arch-c-r2f-pointer-picking.svg`：ARCH-C-R2-F 真实 Pointer Picking 架构图；用于说明 PointerPressed 到 EntityKey / NoHit 的最小闭环，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -100,6 +101,9 @@
 - `XuanYu.Core/Logging/EngineLogLevel.cs`：引擎日志等级。
 - `XuanYu.Core/Math/Vector3d.cs`：三维向量值对象。
 - `XuanYu.Core/Math/YawRotation.cs`：Yaw 旋转值对象。
+- `XuanYu.Core/Picking/ViewportPickingRequest.cs`：视口拾取请求值对象；负责携带请求序号、ViewportState、CameraState、逻辑坐标、查询掩码和 SpatialRevision，不执行射线命中。
+- `XuanYu.Core/Picking/ViewportPickingResult.cs`：视口拾取结果值对象；负责表达 EntityKey / NoHit、ViewportRevision、SpatialRevision 和 Raycast 统计，不写 Selection。
+- `XuanYu.Core/Picking/ViewportPickingService.cs`：视口拾取 Core 服务；负责把视口点转换为 WorldRay 并调用空间 Raycast，同时校验 ViewportRevision / SpatialRevision，不依赖 Avalonia 或 Vulkan。
 - `XuanYu.Core/Space/CameraState.cs`：渲染后端无关的相机状态契约；负责校验位置、方向、Up、FOV、裁剪面和 Revision，不负责渲染资源、输入事件或 Picking 命中。
 - `XuanYu.Core/Space/ViewportState.cs`：渲染后端无关的视口状态契约；负责记录逻辑区域、物理尺寸、DPI 和 Revision，不等同于 Vulkan Swapchain。
 - `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；负责从 Camera / Viewport 生成 View、Projection、ViewProjection 和逆矩阵，不负责实体筛选或空间索引。
@@ -140,6 +144,7 @@
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
+- `XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs`：视口拾取 Core 测试；负责中心命中、空白 NoHit、移动后新旧位置、DPI 逻辑坐标和代际过期拒绝覆盖。
 - `XuanYu.Core.Tests/Space/CameraStateTests.cs`：CameraState 自动测试；负责合法相机、退化方向、共线 Up、非法 FOV / Near / Far / 非有限数覆盖，不负责渲染画面验收。
 - `XuanYu.Core.Tests/Space/SpaceAssert.cs`：空间数学测试辅助断言；只负责局部近似比较，不进入生产项目。
 - `XuanYu.Core.Tests/Space/ViewportStateTests.cs`：ViewportState 自动测试；负责合法尺寸、DPI、Revision、幂等和非法尺寸覆盖，不负责平台窗口尺寸同步。
@@ -287,6 +292,7 @@
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs`：Vulkan NativeHost DPI 辅助分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`：Vulkan NativeHost 布局同步分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Log.cs`：Vulkan NativeHost 日志转发分部。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs`：Vulkan NativeHost 拾取接线分部；负责把当前 Bounds、DPI、物理尺寸和 ViewportRevision 送入 UiVm，不执行 Selection 或 Vulkan 修改。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`：Vulkan NativeHost Pointer 输入分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`：Vulkan NativeHost 主体。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml`：Vulkan 视口控件界面。
@@ -305,10 +311,12 @@
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
+- `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 R2-F Picking 请求、调用 Core 拾取服务并写低频中文结果日志，不写 Selection。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令分部，提交 R1 测试实体 Position 并刷新调试对象信息。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm 选择提交与清空分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态。
+- `XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`：视口拾取日志格式化器；负责生成 R2-F 中文摘要和详情文本，不持有状态。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs`：编辑器内存日志缓冲区。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs`：编辑器低频日志入口。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogClipboardText.cs`：日志复制文本格式化器。

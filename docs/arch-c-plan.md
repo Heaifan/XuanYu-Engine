@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.17-fix
+版本：v0.2.17.18-rz
 日期：2026-07-19
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -166,6 +166,7 @@ WorldRay
 R2-E 允许对 Broad Phase 候选集合执行 O(k) 精确检测，禁止绕过空间索引对全场景 O(N) 扫描。命中结果携带 EntityKey、HitDistance、HitPoint 和 SpatialRevision；等距时按稳定 EntityKey 顺序裁决。结果发布前必须完成 `Start Revision -> Broad Phase -> Verify -> Narrow Phase -> Final Verify -> Publish`，任何 Narrow Phase 期间发生的 SpatialRevision 变化都不得发布旧 HitResult。
 
 当前 `DynamicAabbTree` 叶节点 Broad Bounds 与真实 `SpatialBounds.WorldBounds` 相同，尚未引入 Fat AABB 或更粗代理盒；因此生产链路下 Broad 叶候选与 Narrow AABB 使用同一盒体。未来一旦引入 Fat AABB、宽松代理 Bounds、复杂 Shape 或 Mesh Picking，必须先补真实 false-positive 集成测试，证明 `CandidateCount >= 1` 且 `ActualHit = 0` 时最终返回 NoHit，之后才允许封版。
+R2-F 建立真实 Pointer Picking 最小闭环：`Avalonia / Native PointerPressed -> ViewportState -> WorldRayFactory -> SceneStateOwner.RaycastSpatial -> EntityKey / NoHit`。本阶段只发布低频中文拾取日志，不写 Selection，不显示 Gizmo，不产生 Undo，不新增 PickingCamera，不修改 Vulkan 生命周期。
 
 ```text
 Pointer 屏幕坐标

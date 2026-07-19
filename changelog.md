@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.18-rz
+ARCH-C-R2-F 真实 Pointer Picking（2026-07-19 20:01:53，视口点击到 EntityKey）
+
+- 原历史编号：ARCH-C-R2-F。
+- 日期：2026-07-19 20:01:53。
+- 任务目标：一次性完成真实 Pointer Picking 最小闭环，让 Avalonia / NativeHost 的真实 `PointerPressed` 通过 `ViewportState`、统一默认 `CameraState`、`WorldRayFactory` 和 `SceneStateOwner.RaycastSpatial` 返回 `EntityKey / NoHit`；本轮不拆 R2-F-A / B / C，不实现 Selection、Gizmo、Undo、新 PickingCamera、全场景扫描、Vulkan 生命周期、Shader、Pipeline、Swapchain 或 Present 修改。
+- 主要改动：新增 `XuanYu.Core.Picking` 请求、结果和 `ViewportPickingService`，将视口逻辑坐标转换为 `WorldRay` 并复用 R2-E `SpatialRaycastResult`；结果发布前校验 `ViewportRevision` 与 `SpatialRevision`，过期结果抛出明确异常；新增 Core 自动测试覆盖黄色三角形中心命中、空白 NoHit、Run 后新位置命中 / 旧位置 NoHit、DPI=1.75 逻辑坐标、ViewportRevision 过期拒绝和 SpatialRevision 过期拒绝；新增 `VulkanNativeHost.Picking` 与 `UiVm.Picking`，真实 PointerPressed 记录当前视口逻辑尺寸、物理尺寸、DPI 和 ViewportRevision 后写入低频中文拾取日志；新增 `ViewportPickingLogFormatter` 与 `docs/arch-c-r2f-pointer-picking.svg`；版本同步到 `v0.2.17.18-rz`。
+- 修改范围：`XuanYu.Core/Picking/ViewportPickingRequest.cs`、`XuanYu.Core/Picking/ViewportPickingResult.cs`、`XuanYu.Core/Picking/ViewportPickingService.cs`、`XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs`、`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs`、`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`、`XuanYu.Editor.UI/Vm/UiVm.Picking.cs`、`XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`、`docs/arch-c-r2f-pointer-picking.svg`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Selection、Gizmo、Undo、Vulkan 渲染生命周期、Shader、Pipeline、Swapchain、Present、存档格式或项目依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 51 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2f-pointer-picking.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.18-rz`；`file-tree.md` 实际条目 294 且总数声明 294；依赖方向扫描确认 `XuanYu.Core` / `XuanYu.Core.Tests` 未引入 Avalonia、Vulkan 或 Silk.NET，未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。真实 Pointer 点击仍需按最终报告清单做人工验收。
+- Commit Hash：本条 Hash 以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求未经授权不得 Push；本轮只允许本地 Commit。
+- 遗留问题：R2-F 只输出低频中文 Picking 结果日志，不写 Selection；R3 才把 PickingResult 接入 SelectionCommand / EditorStateOwner；R5 Entry Gate 前仍需处理高频 Preview 渲染更新路径，避免 PointerMove 频繁 Stop / Start Present。
+
 ## v0.2.17.17-fix
 ARCH-C-R2-E-R1 精确命中封版补强（2026-07-19 19:39:31，Revision 最终校验）
 

@@ -13,7 +13,11 @@ public sealed partial class VulkanNativeHost
         var x = message.PhysicalX / dpi;
         var y = message.PhysicalY / dpi;
         if (DataContext is not UiVm vm) return;
-        if (message.Message == NativePointerMessage.LeftDown) BeginNativePointer(vm, x, y);
+        if (message.Message == NativePointerMessage.LeftDown)
+        {
+            ReportPointerPicking(vm, x, y);
+            BeginNativePointer(vm, x, y);
+        }
         else if (message.Message == NativePointerMessage.Move && message.IsLeftButtonDown) PreviewNativePointer(vm, x, y);
         else if (message.Message == NativePointerMessage.LeftUp) CommitNativePointer(vm, x, y);
         else if (message.Message == NativePointerMessage.CaptureChanged) HandleNativeCaptureChanged(vm, message);
@@ -63,6 +67,7 @@ public sealed partial class VulkanNativeHost
         var point = e.GetCurrentPoint(this);
         if (!point.Properties.IsLeftButtonPressed) return;
         if (DataContext is not UiVm vm) return;
+        ReportPointerPicking(vm, point.Position.X, point.Position.Y);
         if (!vm.BeginViewportPointer(e.Pointer.Id, point.Position.X, point.Position.Y,
             IsInBounds(point.Position.X, point.Position.Y), _hwnd != 0)) return;
         e.Pointer.Capture(this);
