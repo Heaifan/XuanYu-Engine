@@ -15,7 +15,7 @@ public sealed record EditorTreeNode(
     public bool IsCategory => Type == "分类";
     public bool IsWorld => Type == "世界";
     public bool IsAsset => Type == "资源分类";
-    public bool IsEntity => Type == "实体";
+    public bool IsEntity => Icon == "entity";
     public bool IsCamera => Type == "相机";
     public bool IsFolder => Icon == "folder";
 }

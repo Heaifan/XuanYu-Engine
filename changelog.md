@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.19-rz
+ARCH-C-R3 真实 Selection（2026-07-19 20:30:44，Picking 接入统一选择事实）
+
+- 原历史编号：ARCH-C-R3。
+- 日期：2026-07-19 20:30:44。
+- 任务目标：一次完成真实 Pointer Picking 到既有 ARCH-B Selection 主链的接线，使视口命中、空白清除、Tree 与 Inspector 共同消费 `EditorStateOwner` 的唯一 `EditorSelectionSnapshot`；禁止拆分 R3-A/B/C，禁止 Gizmo、Transform Preview、Commit/Cancel、Undo、多选、Mesh Picking、Vulkan 生命周期与 Shader/Pipeline 扩围。
+- 主要改动：`UiVm.Picking` 在发布 R2-F 低频日志后把结果交给 `UiVm.ViewportSelection`；命中时校验 Picking EntityKey 与当前场景实体一致并提交既有 `SelectEditorItemCommand`，NoHit 提交既有 `ClearEditorSelectionCommand`；`UiVm.Selection` 统一处理命令返回值并仅在 Owner 真实变更时发布属性通知和低频 Revision 日志，重复选择保持幂等；层级树真实实体节点采用 `EntityId(1)` 稳定身份，Tree 的 SelectedItem 由 Snapshot Key 投影，Inspector 继续直接绑定同一 Snapshot；实体节点图标按显示身份判断，不与真实类型文本耦合；新增浅色中文 `docs/arch-c-r3-selection.svg`；版本同步到 `v0.2.17.19-rz`。
+- 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Picking.cs`、`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`、`XuanYu.Editor.UI/Vm/UiText.cs`、`XuanYu.Editor.UI/Vm/EditorTreeNode.cs`、`docs/arch-c-r3-selection.svg`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Core Picking/Spatial、Vulkan、Shader、Pipeline、Swapchain、Present、Gizmo、Transform、Undo、存档格式、项目结构或依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，执行 51 项测试，0 failed / 0 skipped；`git diff --check`、全仓 5+100、版本一致性、UI 到 Vulkan 依赖方向和 `docs/arch-c-r3-selection.svg` XML 检查通过；`file-tree.md` 按既有口径记录 296 个项目文件（不计 `.gitignore` 与空目录 `.gitkeep`）。真实 UI 交互仍需按最终报告清单真机验收。
+- Commit Hash：本条 Hash 以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求只本地 Commit，不 Push。
+- 遗留问题：R3 不提供复杂 Viewport 高亮；层级树选中与 Inspector 真实事实同步作为本轮最小可见反馈。R5 高频 Preview 渲染更新路径仍是后续 Entry Gate，不在 R3 提前实现。
+
 ## v0.2.17.18-rz
 ARCH-C-R2-F 真实 Pointer Picking（2026-07-19 20:01:53，视口点击到 EntityKey）
 

@@ -20,7 +20,7 @@ public static class UiText
         new("hierarchy:root", "世界根节点", "场景根", "MainWorld/世界根节点", 0, "world"),
         new("hierarchy:camera", "主相机", "相机", "MainWorld/世界根节点/主相机", 1, "camera"),
         new("hierarchy:ground", "地面", "实体", "MainWorld/世界根节点/地面", 1, "entity"),
-        new("hierarchy:sample", "示例实体", "实体", "MainWorld/世界根节点/示例实体", 1, "entity")
+        new("EntityId(1)", "ARCH-C-R1 Test Entity", "MinimalSceneEntity", "MainWorld/EntityId(1)", 1, "entity")
     ];
 
     public static readonly string[] ToolItems =

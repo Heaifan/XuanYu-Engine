@@ -1,7 +1,7 @@
-版本：v0.2.17.18-rz
+版本：v0.2.17.19-rz
 # XuanYu Engine 文件树
 
-文件总数：294
+文件总数：296
 
 ## 根目录
 
@@ -39,6 +39,7 @@
 - `docs/arch-c-r2d-spatial-index.svg`：ARCH-C-R2-D 空间索引架构图；用于说明场景事实、增量维护、动态索引和候选查询关系，不承载运行时代码。
 - `docs/arch-c-r2e-ray-hit.svg`：ARCH-C-R2-E 精确命中架构图；用于说明 WorldRay、Broad Phase、Ray-AABB Narrow Phase 和最近命中的关系，不承载运行时代码。
 - `docs/arch-c-r2f-pointer-picking.svg`：ARCH-C-R2-F 真实 Pointer Picking 架构图；用于说明 PointerPressed 到 EntityKey / NoHit 的最小闭环，不承载运行时代码。
+- `docs/arch-c-r3-selection.svg`：ARCH-C-R3 真实 Selection 架构图；说明 Picking 结果经唯一 Owner 同步到 Tree 与 Inspector，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -303,18 +304,19 @@
 - `XuanYu.Editor.UI/Vm/EditorLogCategory.cs`：编辑器日志分类枚举。
 - `XuanYu.Editor.UI/Vm/EditorLogLevel.cs`：编辑器日志等级枚举。
 - `XuanYu.Editor.UI/Vm/EditorLogSource.cs`：编辑器日志来源枚举。
-- `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点模型。
+- `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点 UI 投影模型；按图标身份提供显示分类，不把实体显示类型当作 Selection 或场景事实。
 - `XuanYu.Editor.UI/Vm/LogEntry.cs`：编辑器日志条目模型。
 - `XuanYu.Editor.UI/Vm/SampleLogEntries.cs`：底部日志栏示例数据。
-- `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与示例数据。
+- `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`：UiVm 交互事务入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
-- `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 R2-F Picking 请求、调用 Core 拾取服务并写低频中文结果日志，不写 Selection。
+- `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令分部，提交 R1 测试实体 Position 并刷新调试对象信息。
-- `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm 选择提交与清空分部。
+- `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。
+- `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
 - `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态。
 - `XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`：视口拾取日志格式化器；负责生成 R2-F 中文摘要和详情文本，不持有状态。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs`：编辑器内存日志缓冲区。

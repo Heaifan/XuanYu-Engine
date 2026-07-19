@@ -28,6 +28,7 @@ public sealed partial class UiVm
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
             ViewportPickingLogFormatter.Message(result),
             ViewportPickingLogFormatter.Detail(result, x, y, dpi));
+        ApplyViewportSelection(result);
         RefreshLogBindings();
         return true;
     }

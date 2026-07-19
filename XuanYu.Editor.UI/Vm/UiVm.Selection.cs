@@ -5,23 +5,14 @@ public sealed partial class UiVm
     void ApplySelection(string source, EditorTreeNode node)
     {
         CancelInteraction("切换选择对象");
-        var command = new SelectEditorItemCommand(
-            source, node.Key, node.Title, node.Type, node.Path);
-        if (_editorState.Select(command) is null) return;
-        RaiseSelectionChanged();
-        FooterMessage = $"{source}已选择：{SelectionTitle}";
-        FooterState = "状态：就绪";
-        OnPropertyChanged(nameof(LogSummary));
+        ApplySelectionCommand(new SelectEditorItemCommand(
+            source, node.Key, node.Title, node.Type, node.Path));
     }
 
     void ApplyClearSelection()
     {
         if (_selectedProjectItem is not null || _selectedHierarchyItem is not null) return;
-        if (_editorState.Clear(new ClearEditorSelectionCommand()) is null) return;
-        RaiseSelectionChanged();
-        FooterMessage = "已清空选择。";
-        FooterState = "状态：就绪";
-        OnPropertyChanged(nameof(LogSummary));
+        ApplySelectionCommand(new ClearEditorSelectionCommand(), "树节点清空");
     }
 
     void SetProjectSelection(EditorTreeNode? value)
@@ -42,10 +33,50 @@ public sealed partial class UiVm
 
     void RaiseSelectionChanged()
     {
+        SynchronizeSelectionProjection();
         OnPropertyChanged(nameof(SelectionTitle));
         OnPropertyChanged(nameof(SelectionSubtitle));
         OnPropertyChanged(nameof(SelectionPath));
         OnPropertyChanged(nameof(HasSelection));
         OnPropertyChanged(nameof(IsEmptySelection));
+    }
+
+    void ApplySelectionCommand(SelectEditorItemCommand command)
+    {
+        var changed = _editorState.Select(command);
+        if (changed is null) return;
+        RaiseSelectionChanged();
+        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
+            $"【ARCH-C-R3】选择已提交；结果={command.Key}",
+            $"来源={command.Source}; Revision={changed.OldRevision}->{changed.NewRevision}");
+        RefreshLogBindings();
+        FooterMessage = $"{command.Source}已选择：{SelectionTitle}";
+        FooterState = "状态：就绪";
+        OnPropertyChanged(nameof(LogSummary));
+    }
+
+    void ApplySelectionCommand(ClearEditorSelectionCommand command, string source)
+    {
+        var changed = _editorState.Clear(command);
+        if (changed is null) return;
+        RaiseSelectionChanged();
+        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
+            "【ARCH-C-R3】选择已清除；结果=None",
+            $"来源={source}; Revision={changed.OldRevision}->{changed.NewRevision}");
+        RefreshLogBindings();
+        FooterMessage = $"{source}已清空选择。";
+        FooterState = "状态：就绪";
+        OnPropertyChanged(nameof(LogSummary));
+    }
+
+    void SynchronizeSelectionProjection()
+    {
+        var key = _editorState.Snapshot.HasSelection ? _editorState.Snapshot.SelectionKey : "";
+        var project = UiText.ProjectTreeItems.FirstOrDefault(item => item.Key == key);
+        var hierarchy = UiText.HierarchyTreeItems.FirstOrDefault(item => item.Key == key);
+        if (Set(ref _selectedProjectItem, project, nameof(SelectedProjectItem)) && project is not null)
+            LeftTabIndex = 0;
+        if (Set(ref _selectedHierarchyItem, hierarchy, nameof(SelectedHierarchyItem)) && hierarchy is not null)
+            LeftTabIndex = 1;
     }
 }
