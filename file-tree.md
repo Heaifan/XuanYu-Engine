@@ -1,7 +1,7 @@
-版本：v0.2.17.19-rz
+版本：v0.2.17.20-fix
 # XuanYu Engine 文件树
 
-文件总数：296
+文件总数：297
 
 ## 根目录
 
@@ -40,6 +40,7 @@
 - `docs/arch-c-r2e-ray-hit.svg`：ARCH-C-R2-E 精确命中架构图；用于说明 WorldRay、Broad Phase、Ray-AABB Narrow Phase 和最近命中的关系，不承载运行时代码。
 - `docs/arch-c-r2f-pointer-picking.svg`：ARCH-C-R2-F 真实 Pointer Picking 架构图；用于说明 PointerPressed 到 EntityKey / NoHit 的最小闭环，不承载运行时代码。
 - `docs/arch-c-r3-selection.svg`：ARCH-C-R3 真实 Selection 架构图；说明 Picking 结果经唯一 Owner 同步到 Tree 与 Inspector，不承载运行时代码。
+- `docs/arch-c-r3-timeout-fix.svg`：R3 真机收口 Timeout 修复图；说明 Acquire 超时按可恢复空帧处理、其他错误仍保持致命语义，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -222,7 +223,7 @@
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`：Vulkan ClearFrame 资源持有主体。
 - `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Frame.cs`：Vulkan Present 单帧执行分部。
 - `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Lifecycle.cs`：Vulkan Present 泵生命周期分部。
-- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`：Vulkan Present 泵主体。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`：Vulkan Present 泵主体；有限 Acquire 等待超时只跳过当前帧，其他结果交由既有错误与自愈合同处理，不负责 Selection 或 Gizmo。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs`：Vulkan 渲染 Session 生命周期分部。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs`：Vulkan 渲染 Session 自愈分部。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`：Vulkan 渲染 Session Resize 分部。

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520">
+  <rect width="1120" height="520" fill="#f7f9fc"/>
+  <text x="560" y="48" text-anchor="middle" font-size="28" fill="#24364b" font-family="Microsoft YaHei, Arial">R3 真机收口：Acquire Timeout 修复</text>
+  <text x="560" y="80" text-anchor="middle" font-size="15" fill="#65758a" font-family="Microsoft YaHei, Arial">有限等待超时是可恢复空帧，不等于 RenderSession 失效</text>
+  <rect x="60" y="150" width="220" height="110" rx="8" fill="#eef5fb" stroke="#6688a9" stroke-width="2"/>
+  <text x="170" y="190" text-anchor="middle" font-size="18" fill="#304f6c" font-family="Microsoft YaHei, Arial">AcquireNextImage</text>
+  <text x="170" y="222" text-anchor="middle" font-size="14" fill="#5d7186" font-family="Microsoft YaHei, Arial">等待上限 1 秒</text>
+  <path d="M280 205 H370" stroke="#6688a9" stroke-width="3"/>
+  <path d="M360 198 L372 205 L360 212" fill="#6688a9"/>
+  <rect x="375" y="125" width="260" height="160" rx="8" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="505" y="168" text-anchor="middle" font-size="19" fill="#755923" font-family="Microsoft YaHei, Arial">按 Result 分类</text>
+  <text x="405" y="207" font-size="14" fill="#806c47" font-family="Microsoft YaHei, Arial">Timeout：跳过当前帧</text>
+  <text x="405" y="237" font-size="14" fill="#806c47" font-family="Microsoft YaHei, Arial">OutOfDate：进入自愈</text>
+  <text x="405" y="267" font-size="14" fill="#806c47" font-family="Microsoft YaHei, Arial">其他错误：保持 Fatal</text>
+  <path d="M635 170 H725" stroke="#628f71" stroke-width="3"/>
+  <path d="M715 163 L727 170 L715 177" fill="#628f71"/>
+  <rect x="730" y="115" width="320" height="105" rx="8" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="890" y="155" text-anchor="middle" font-size="18" fill="#376047" font-family="Microsoft YaHei, Arial">Timeout 可恢复路径</text>
+  <text x="890" y="188" text-anchor="middle" font-size="14" fill="#52715b" font-family="Microsoft YaHei, Arial">继续 Present 循环，Session 保持有效</text>
+  <path d="M635 255 H725" stroke="#b45f5f" stroke-width="3"/>
+  <path d="M715 248 L727 255 L715 262" fill="#b45f5f"/>
+  <rect x="730" y="235" width="320" height="105" rx="8" fill="#fff3f3" stroke="#b45f5f" stroke-width="2"/>
+  <text x="890" y="275" text-anchor="middle" font-size="18" fill="#873f3f" font-family="Microsoft YaHei, Arial">真实错误路径</text>
+  <text x="890" y="308" text-anchor="middle" font-size="14" fill="#8d5555" font-family="Microsoft YaHei, Arial">仍快速失败，不掩盖设备或同步错误</text>
+  <rect x="135" y="390" width="850" height="75" rx="8" fill="#f3f6fa" stroke="#8798aa" stroke-width="2"/>
+  <text x="560" y="422" text-anchor="middle" font-size="16" fill="#344b63" font-family="Microsoft YaHei, Arial">边界：不改线程模型、不重构 Swapchain、不吞掉未知 Vulkan 错误</text>
+  <text x="560" y="449" text-anchor="middle" font-size="14" fill="#607489" font-family="Microsoft YaHei, Arial">真机复验必须持续运行、Resize、展开日志栏并正常关闭，确认释放链完整</text>
+</svg>

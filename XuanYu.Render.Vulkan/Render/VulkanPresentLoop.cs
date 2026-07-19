@@ -67,6 +67,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
             var swapchain = _swapchainOwner.Swapchain;
             uint idx;
             var res = khr.AcquireNextImage(device, swapchain, AcquireTimeoutNs, _imageAvailable, default, &idx);
+            if (res == Result.Timeout) continue;
             if (!HandleAcquireResult(res)) break;
             if (submitted && !WaitAndResetFence(device)) break;
             if (!SubmitFrame(device, idx, stage)) break;

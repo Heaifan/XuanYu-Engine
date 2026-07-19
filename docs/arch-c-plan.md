@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.19-rz
+版本：v0.2.17.20-fix
 日期：2026-07-19
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -261,6 +261,12 @@ Transform Session 必须携带 SessionId、EntityKey、Axis、StartPointer、Cur
 ```
 
 阈值是可调交互参数，不写死为架构常量，必须在真机验收中微调。
+
+### 12.1 R4 相机 Entry Gate
+
+当前默认编辑器相机位于 `(0,0,-5)` 并严格朝向世界 `+Z`。在这一冻结视角下，世界 Z 轴与视线共线，投影后退化为一个点，无法满足 R4 的“X/Y/Z 三轴可见且可独立命中”出口条件。
+
+R4 实现前必须由产品层冻结以下方案之一：调整默认编辑器相机为可同时观察三轴的斜视角，或明确采用不遵循世界轴投影的屏幕空间 Z Handle。禁止仅在 Vulkan 或 Hit Test 单侧伪造方向；显示与命中必须继续消费同一 Camera / ViewProjection 契约。
 
 ## 13. Commit / Cancel 契约
 
