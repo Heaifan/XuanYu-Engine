@@ -2,7 +2,7 @@ using XuanYu.Core.Identity;
 
 namespace XuanYu.Core.Scene;
 
-public readonly record struct SceneRenderSnapshot(SceneEntitySnapshot Entity)
+public readonly record struct SceneRenderSnapshot(SceneEntitySnapshot Entity, bool IsSelected = false)
 {
     public static SceneRenderSnapshot TestEntityAtOrigin { get; } = new(
         new SceneEntitySnapshot(

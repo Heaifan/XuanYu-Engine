@@ -6,7 +6,7 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
 
-public sealed partial class UiVm : INotifyPropertyChanged
+public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISceneRenderSnapshotSource
 {
     readonly EditorStateOwner _editorState;
     int _leftTabIndex; EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
@@ -18,6 +18,7 @@ public sealed partial class UiVm : INotifyPropertyChanged
     public UiVm(INativeHostSurfaceBridgeFactory? surfaceBridgeFactory)
     {
         _editorState = new EditorStateOwner(() => Dispatcher.UIThread.CheckAccess());
+        _sceneState.RenderSnapshotChanged += _ => PublishSceneRenderSnapshot();
         SurfaceBridgeFactory = surfaceBridgeFactory;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
@@ -50,6 +51,7 @@ public sealed partial class UiVm : INotifyPropertyChanged
     public bool IsOrbitTool => IsTool(EditorToolId.Orbit);
     public bool IsSnapTool => IsTool(EditorToolId.Snap);
     public string SelectionTitle => _editorState.Snapshot.SelectionTitle;
+    public string SelectionKey => _editorState.Snapshot.SelectionKey;
     public string SelectionSubtitle => _editorState.Snapshot.SelectionSubtitle;
     public string SelectionPath => _editorState.Snapshot.SelectionPath;
     public string FooterMessage { get => _footerMessage; private set => Set(ref _footerMessage, value); }

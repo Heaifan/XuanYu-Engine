@@ -1,7 +1,7 @@
-版本：v0.2.17.20-fix
+版本：v0.2.17.21-rz
 # XuanYu Engine 文件树
 
-文件总数：297
+文件总数：309
 
 ## 根目录
 
@@ -41,6 +41,7 @@
 - `docs/arch-c-r2f-pointer-picking.svg`：ARCH-C-R2-F 真实 Pointer Picking 架构图；用于说明 PointerPressed 到 EntityKey / NoHit 的最小闭环，不承载运行时代码。
 - `docs/arch-c-r3-selection.svg`：ARCH-C-R3 真实 Selection 架构图；说明 Picking 结果经唯一 Owner 同步到 Tree 与 Inspector，不承载运行时代码。
 - `docs/arch-c-r3-timeout-fix.svg`：R3 真机收口 Timeout 修复图；说明 Acquire 超时按可恢复空帧处理、其他错误仍保持致命语义，不承载运行时代码。
+- `docs/arch-c-r4-move-gizmo.svg`：R4 Move Gizmo 架构图；说明统一相机、三轴投影、输入优先级和 Capture 唯一所有权，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -95,6 +96,11 @@
 
 ## XuanYu.Core
 
+- `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴身份；只定义 X/Y/Z，不承担 Transform 或渲染状态。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影与确定性命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
+- `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
+- `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
+
 - `XuanYu.Core/XuanYu.Core.csproj`：核心类库项目文件。
 - `XuanYu.Core/Properties/AssemblyInfo.cs`：Core 程序集内部可见性声明；仅允许 `XuanYu.Core.Tests` 访问内部测试入口，不承载生产行为或运行时依赖。
 - `XuanYu.Core/Diagnostics/CoreSelfTest.cs`：Core 自检入口。
@@ -109,6 +115,7 @@
 - `XuanYu.Core/Space/CameraState.cs`：渲染后端无关的相机状态契约；负责校验位置、方向、Up、FOV、裁剪面和 Revision，不负责渲染资源、输入事件或 Picking 命中。
 - `XuanYu.Core/Space/ViewportState.cs`：渲染后端无关的视口状态契约；负责记录逻辑区域、物理尺寸、DPI 和 Revision，不等同于 Vulkan Swapchain。
 - `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；负责从 Camera / Viewport 生成 View、Projection、ViewProjection 和逆矩阵，不负责实体筛选或空间索引。
+- `XuanYu.Core/Space/DefaultEditorCamera.cs`：默认编辑器斜视相机合同；从固定 Position/Target/Up 派生 CameraState，供 Render、Picking、Gizmo 共用，不改变世界坐标语义。
 - `XuanYu.Core/Space/WorldRay.cs`：世界射线值对象；负责保存有限 Origin 和归一化 Direction，不负责命中测试或实体选择。
 - `XuanYu.Core/Space/WorldRayFactory.cs`：视口点到世界射线的转换入口；负责 NDC 与逆矩阵反投影，不负责 Ray-AABB、Picking、Selection 或 Gizmo。
 - `XuanYu.Core/Spatial/DynamicAabbTree.cs`：动态 AABB 树索引入口；负责 Insert、Remove、Update 和 Query 调度，不暴露内部节点给调用方。
@@ -144,6 +151,8 @@
 
 ## XuanYu.Core.Tests
 
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、X/Y/Z 命中、Miss、点击宽度和确定性裁决测试；不验证 Vulkan 像素输出。
+
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
 - `XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs`：视口拾取 Core 测试；负责中心命中、空白 NoHit、移动后新旧位置、DPI 逻辑坐标和代际过期拒绝覆盖。
@@ -151,6 +160,7 @@
 - `XuanYu.Core.Tests/Space/SpaceAssert.cs`：空间数学测试辅助断言；只负责局部近似比较，不进入生产项目。
 - `XuanYu.Core.Tests/Space/ViewportStateTests.cs`：ViewportState 自动测试；负责合法尺寸、DPI、Revision、幂等和非法尺寸覆盖，不负责平台窗口尺寸同步。
 - `XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs`：ViewProjectionState 自动测试；负责已知 View 矩阵、投影宽高比和矩阵可逆性覆盖，不负责 Vulkan 投影落地。
+- `XuanYu.Core.Tests/Space/DefaultEditorCameraTests.cs`：默认斜视相机 Forward 派生与中心射线合同测试；不修改世界轴约定。
 - `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`：WorldRay 自动测试；负责中心点、角落、Resize、稳定复现和非法输入覆盖，不负责实体 Picking。
 - `XuanYu.Core.Tests/Space/WorldRayTests.cs`：WorldRay 值对象自动测试；负责非法 Origin / Direction 失败边界，不负责射线命中或空间查询。
 - `XuanYu.Core.Tests/Spatial/SpatialBoundsTests.cs`：空间边界测试；负责 AABB 非法输入、相交和合并行为覆盖，不测试 Picking。
@@ -218,6 +228,8 @@
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；负责把场景 World Position 与统一 ViewProjection 写入 push constant 并发起 Draw，不负责 Picking、Selection 或生命周期重构。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与最小 Move Gizmo 三轴顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。
+- `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；不负责 Selection 或 Pipeline 生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`：Vulkan ClearFrame 资源持有主体。
@@ -295,6 +307,7 @@
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`：Vulkan NativeHost 布局同步分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Log.cs`：Vulkan NativeHost 日志转发分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs`：Vulkan NativeHost 拾取接线分部；负责把当前 Bounds、DPI、物理尺寸和 ViewportRevision 送入 UiVm，不执行 Selection 或 Vulkan 修改。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Gizmo.cs`：NativeHost Gizmo 命中入口；复用 Picking 的 ViewportState 捕获并调用 UiVm，命中时阻断 Scene Picking，不拥有 Capture。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`：Vulkan NativeHost Pointer 输入分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`：Vulkan NativeHost 主体。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml`：Vulkan 视口控件界面。
@@ -314,6 +327,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo Hit/Capture 的适配分部；提交既有 Interaction Begin 并记录低频日志，不修改 Transform、SpatialIndex 或 Undo。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令分部，提交 R1 测试实体 Position 并刷新调试对象信息。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。

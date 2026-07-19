@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+  <rect width="1200" height="650" fill="#f7f9fc"/>
+  <text x="600" y="46" text-anchor="middle" font-size="28" fill="#24364b" font-family="Microsoft YaHei, Arial">ARCH-C-R4：Move Gizmo</text>
+  <text x="600" y="78" text-anchor="middle" font-size="15" fill="#65758a" font-family="Microsoft YaHei, Arial">统一斜视相机 → 三轴投影 → Gizmo 优先命中 → 唯一 Interaction Capture</text>
+  <rect x="45" y="130" width="225" height="115" rx="8" fill="#eef5fb" stroke="#6688a9" stroke-width="2"/>
+  <text x="157" y="168" text-anchor="middle" font-size="18" fill="#304f6c" font-family="Microsoft YaHei, Arial">SelectionSnapshot</text>
+  <text x="157" y="198" text-anchor="middle" font-size="14" fill="#5d7186" font-family="Microsoft YaHei, Arial">EntityId(1)</text>
+  <text x="157" y="222" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">唯一 Selection 事实</text>
+  <path d="M270 188 H340" stroke="#6688a9" stroke-width="3"/><path d="M330 181 L342 188 L330 195" fill="#6688a9"/>
+  <rect x="345" y="130" width="225" height="115" rx="8" fill="#edf7f1" stroke="#628f71" stroke-width="2"/>
+  <text x="457" y="168" text-anchor="middle" font-size="18" fill="#376047" font-family="Microsoft YaHei, Arial">统一默认相机</text>
+  <text x="457" y="198" text-anchor="middle" font-size="14" fill="#52715b" font-family="Microsoft YaHei, Arial">(4,3,-5) → 原点</text>
+  <text x="457" y="222" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">Render / Picking / Gizmo 共用</text>
+  <path d="M570 188 H640" stroke="#628f71" stroke-width="3"/><path d="M630 181 L642 188 L630 195" fill="#628f71"/>
+  <rect x="645" y="130" width="225" height="115" rx="8" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="757" y="168" text-anchor="middle" font-size="18" fill="#755923" font-family="Microsoft YaHei, Arial">Move Gizmo 投影</text>
+  <text x="757" y="198" text-anchor="middle" font-size="14" fill="#806c47" font-family="Microsoft YaHei, Arial">X / Y / Z 三轴</text>
+  <text x="757" y="222" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">9 logical px 命中宽度</text>
+  <path d="M870 188 H940" stroke="#b48d4e" stroke-width="3"/><path d="M930 181 L942 188 L930 195" fill="#b48d4e"/>
+  <rect x="945" y="130" width="210" height="115" rx="8" fill="#f3f1fa" stroke="#8977a6" stroke-width="2"/>
+  <text x="1050" y="168" text-anchor="middle" font-size="18" fill="#594b76" font-family="Microsoft YaHei, Arial">Interaction Owner</text>
+  <text x="1050" y="198" text-anchor="middle" font-size="14" fill="#74698a" font-family="Microsoft YaHei, Arial">Session + Entity + Axis</text>
+  <text x="1050" y="222" text-anchor="middle" font-size="13" fill="#607489" font-family="Microsoft YaHei, Arial">只 Capture，不移动</text>
+  <rect x="70" y="320" width="500" height="155" rx="8" fill="#fff" stroke="#8798aa" stroke-width="2"/>
+  <text x="320" y="358" text-anchor="middle" font-size="19" fill="#344b63" font-family="Microsoft YaHei, Arial">PointerDown 优先级</text>
+  <text x="100" y="398" font-size="14" fill="#607489" font-family="Microsoft YaHei, Arial">1. 已选中实体：先测试 Gizmo Handle</text>
+  <text x="100" y="428" font-size="14" fill="#607489" font-family="Microsoft YaHei, Arial">2. Hit：Begin Capture，禁止继续 Scene Picking</text>
+  <text x="100" y="458" font-size="14" fill="#607489" font-family="Microsoft YaHei, Arial">3. Miss：回落 Picking → Selection / Clear</text>
+  <rect x="630" y="320" width="500" height="155" rx="8" fill="#fff8e9" stroke="#b48d4e" stroke-width="2"/>
+  <text x="880" y="358" text-anchor="middle" font-size="19" fill="#755923" font-family="Microsoft YaHei, Arial">R4 边界</text>
+  <text x="660" y="398" font-size="14" fill="#806c47" font-family="Microsoft YaHei, Arial">Gizmo 不进入 Scene SpatialIndex</text>
+  <text x="660" y="428" font-size="14" fill="#806c47" font-family="Microsoft YaHei, Arial">PointerMove 不修改 CommittedTransform</text>
+  <text x="660" y="458" font-size="14" fill="#806c47" font-family="Microsoft YaHei, Arial">不生成 Undo，不建设完整 Overlay Renderer</text>
+  <rect x="150" y="535" width="900" height="70" rx="8" fill="#f3f6fa" stroke="#8798aa" stroke-width="2"/>
+  <text x="600" y="565" text-anchor="middle" font-size="17" fill="#344b63" font-family="Microsoft YaHei, Arial">Exit Gate：三轴可见可点、Hit 不改 Selection、Miss 回落 Picking、Run/Resize 后视觉与命中一致</text>
+  <text x="600" y="590" text-anchor="middle" font-size="14" fill="#607489" font-family="Microsoft YaHei, Arial">下一步 R5：先解决高频 Preview Render Update，再允许实体实时移动</text>
+</svg>

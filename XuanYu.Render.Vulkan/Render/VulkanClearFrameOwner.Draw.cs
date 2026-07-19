@@ -22,13 +22,13 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk.CmdPushConstants(cb, _pipelineLayout, ShaderStageFlags.VertexBit, 0, VulkanScenePushConstants.SizeInBytes, scene);
         _vk.CmdSetViewport(cb, 0, 1, pVp);
         _vk.CmdSetScissor(cb, 0, 1, pSc);
-        _vk.CmdDraw(cb, 3, 1, 0, 0);
+        _vk.CmdDraw(cb, _sceneSnapshot.IsSelected ? 21u : 3u, 1, 0, 0);
     }
 
     void FillScenePushConstants(float* target)
     {
         var viewport = new ViewportState(0, 0, _extent.Width, _extent.Height, (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
-        var camera = new CameraState(new Vector3d(0, 0, -5), Vector3d.UnitZ, Vector3d.UnitY, 60, 0.1, 100, _swapchainOwner.ResourceGeneration);
+        var camera = DefaultEditorCamera.Create(_swapchainOwner.ResourceGeneration);
         var viewProjection = ViewProjectionState.Create(camera, viewport).ViewProjection;
         FillMatrixTranspose(target, viewProjection);
         var position = _sceneSnapshot.Entity.Transform.Position;

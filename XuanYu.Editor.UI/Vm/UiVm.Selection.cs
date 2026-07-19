@@ -37,8 +37,10 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(SelectionTitle));
         OnPropertyChanged(nameof(SelectionSubtitle));
         OnPropertyChanged(nameof(SelectionPath));
+        OnPropertyChanged(nameof(SelectionKey));
         OnPropertyChanged(nameof(HasSelection));
         OnPropertyChanged(nameof(IsEmptySelection));
+        PublishSceneRenderSnapshot();
     }
 
     void ApplySelectionCommand(SelectEditorItemCommand command)

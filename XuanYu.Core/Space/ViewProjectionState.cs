@@ -1,4 +1,5 @@
 using System.Numerics;
+using XuanYu.Core.Gizmo;
 using XuanYu.Core.Math;
 
 namespace XuanYu.Core.Space;
@@ -67,6 +68,17 @@ public sealed class ViewProjectionState
         if (world.W == 0.0f) throw new InvalidOperationException("World 坐标 W 为 0。");
 
         return new Vector3d(world.X / world.W, world.Y / world.W, world.Z / world.W);
+    }
+
+    public ScreenPoint ProjectWorldPoint(Vector3d point)
+    {
+        var clip = Vector4.Transform(new Vector4(ToVector3(point), 1), ViewProjection);
+        if (!float.IsFinite(clip.W) || clip.W <= 0) throw new InvalidOperationException("世界点位于相机后方。");
+        var ndcX = clip.X / clip.W;
+        var ndcY = clip.Y / clip.W;
+        return new ScreenPoint(
+            Viewport.LogicalX + ((ndcX + 1.0) * 0.5 * Viewport.LogicalWidth),
+            Viewport.LogicalY + ((1.0 - ndcY) * 0.5 * Viewport.LogicalHeight));
     }
 
     static Vector3 ToVector3(Vector3d vector)

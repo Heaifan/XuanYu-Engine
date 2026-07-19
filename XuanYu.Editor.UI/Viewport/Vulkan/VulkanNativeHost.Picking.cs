@@ -1,3 +1,5 @@
+using XuanYu.Core.Space;
+
 namespace XuanYu.Editor.UI;
 
 public sealed partial class VulkanNativeHost
@@ -8,6 +10,14 @@ public sealed partial class VulkanNativeHost
     double _pickDpi;
 
     void ReportPointerPicking(UiVm vm, double x, double y)
+    {
+        var viewport = CaptureViewportState();
+        vm.PickViewportPointer(x, y, (int)viewport.LogicalWidth, (int)viewport.LogicalHeight,
+            viewport.PhysicalWidth, viewport.PhysicalHeight, viewport.DpiScale,
+            viewport.Revision, _hwnd != 0);
+    }
+
+    ViewportState CaptureViewportState()
     {
         var width = Math.Max(1, (int)Math.Round(Bounds.Width));
         var height = Math.Max(1, (int)Math.Round(Bounds.Height));
@@ -21,6 +31,7 @@ public sealed partial class VulkanNativeHost
         }
 
         var physical = ToPhysicalSize(width, height, dpi);
-        vm.PickViewportPointer(x, y, width, height, physical.Width, physical.Height, dpi, _viewportRevision, _hwnd != 0);
+        return new ViewportState(
+            0, 0, width, height, physical.Width, physical.Height, dpi, _viewportRevision);
     }
 }

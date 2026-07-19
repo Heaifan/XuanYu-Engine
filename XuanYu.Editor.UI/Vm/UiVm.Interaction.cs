@@ -53,6 +53,7 @@ public sealed partial class UiVm
         FooterState = "状态：就绪";
         FooterMessage = "交互已提交。";
         LogInteraction("提交捕获", $"Session={snap.SessionId}；{snap.Pointer.Summary}");
+        LogMoveGizmoEnd("结束", snap);
         RaiseInteractionChanged();
     }
 
@@ -64,6 +65,7 @@ public sealed partial class UiVm
         FooterState = "状态：就绪";
         FooterMessage = $"交互已取消：{reason}";
         LogInteraction("取消捕获", $"Session={snap.SessionId}，原因={reason}");
+        LogMoveGizmoEnd($"取消，原因={reason}", snap);
         RaiseInteractionChanged();
     }
 
@@ -74,5 +76,14 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InteractionPreview));
         OnPropertyChanged(nameof(DebugInputItems));
         OnPropertyChanged(nameof(LogSummary));
+    }
+
+    void LogMoveGizmoEnd(string result, EditorInteractionSnapshot snap)
+    {
+        if (snap.OwnerTool != "移动" || !snap.StartSnapshot.StartsWith("Entity=", StringComparison.Ordinal)) return;
+        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
+            $"【ARCH-C-R4】移动工具捕获{result}",
+            $"{snap.StartSnapshot}; Session={snap.SessionId}");
+        RefreshLogBindings();
     }
 }

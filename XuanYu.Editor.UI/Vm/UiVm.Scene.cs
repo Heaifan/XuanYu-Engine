@@ -7,7 +7,11 @@ public sealed partial class UiVm
 {
     readonly SceneStateOwner _sceneState = new();
 
-    public ISceneRenderSnapshotSource SceneSnapshotSource => _sceneState;
+    public ISceneRenderSnapshotSource SceneSnapshotSource => this;
+    public SceneRenderSnapshot RenderSnapshot => new(
+        _sceneState.RenderSnapshot.Entity,
+        HasSelection && SelectionKey == _sceneState.RenderSnapshot.Entity.EntityKey.ToString());
+    public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
 
     void ApplyRunCommand(string name)
     {
@@ -27,6 +31,8 @@ public sealed partial class UiVm
             "ARCH-C-R1 场景实体 Position 已提交",
             $"EntityKey={_sceneState.RenderSnapshot.Entity.EntityKey}; Position={position}");
     }
+
+    void PublishSceneRenderSnapshot() => RenderSnapshotChanged?.Invoke(RenderSnapshot);
 
     IReadOnlyList<string> BuildDebugObjectItems()
     {

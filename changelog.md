@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.17.21-rz
+ARCH-C-R4 Move Gizmo（2026-07-19 22:31:16，统一斜视相机与三轴 Capture）
+
+- 原历史编号：ARCH-C-R4。
+- 日期：2026-07-19 22:31:16。
+- 任务目标：一次完成默认编辑器斜视相机、Move Gizmo X/Y/Z 显示与屏幕空间命中、Gizmo Hit 优先于 Scene Picking、既有 EditorInteraction Capture；本轮不移动实体，不实现 Preview Transform、Commit Position、SpatialIndex Update、Undo、Rotate、Scale、多选或 Vulkan 生命周期重构。
+- 主要改动：新增 Core `DefaultEditorCamera`，固定 `Position=(4,3,-5)`、`Target=(0,0,0)`、`Up=+Y` 并由 Target-Position 派生 Forward，Render、Picking、Gizmo 共用；新增 `MoveGizmoLayout` 把实体 CommittedTransform Origin 与世界 X/Y/Z 投影为逻辑像素线段，以 9 logical px 命中宽度、距离优先及 X→Y→Z 平局顺序裁决；Native PointerDown 优先执行 Gizmo Hit，命中后提交既有 `EditorStateOwner.Begin` 并阻断 Scene Picking，Miss 才回落 R2-F/R3；Selection 派生 `SceneRenderSnapshot.IsSelected` 供 Vulkan 使用，不保存第二份 Selection；现有 Pipeline 在选中时以同一 Draw 追加三根彩色细矩形轴，正式 GLSL 源码经 glslc 生成内嵌 SPIR-V；PointerUp/Cancel 只结束既有 Capture，不修改 Scene Transform。
+- 测试变化：新增默认相机 Forward/中心射线测试和 Move Gizmo 三轴非退化、X/Y/Z 命中、Miss、9 px 边界与确定性平局测试；保留旧轴向相机测试作为一般 Camera/ViewProjection 数学合同，不把旧默认姿态误当世界坐标永恒合同。
+- 修改范围：新增 `XuanYu.Core/Gizmo/*`、`XuanYu.Core/Space/DefaultEditorCamera.cs`、对应 Core Tests、`UiVm.MoveGizmo.cs`、`VulkanNativeHost.Gizmo.cs`、正式 shader 源码与 `docs/arch-c-r4-move-gizmo.svg`；修改 ViewProjection 投影、Picking/Render 默认相机、Selection 派生渲染快照、Pointer 优先级、Interaction 日志、shader 字节码、Draw 顶点数、版本与治理文档。未新增依赖、项目、Scene Entity、SpatialIndex 条目、第二套 Selection/Capture Owner 或 Transform 写入。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；首轮 Build 因 `VulkanNativeHost.Picking.cs` 提取统一 ViewportState 后遗漏 Core.Space using 失败，局部补齐后第二轮 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；测试首轮发现斜视中心射线与双精度 Forward 存在 Matrix4x4 单精度约 3.8e-6 分量误差，改为直接验证方向点积合同后 `dotnet test` 通过，59 passed / 0 failed / 0 skipped；`git diff --check`、5+100、Core 依赖方向、版本一致性、file-tree 309 / 309、SVG XML 均通过；正式 GLSL 重新编译产物与内嵌 SPIR-V 逐字节一致。仓库未获批新增 UI 测试项目，因此真实 Pointer Capture 与视觉像素结果仍需按最终清单真机验收，不把测试依赖加入生产 UI。
+- Commit Hash：本条 Hash 以 Git 记录和最终报告为准。
+- Push 状态：本轮只创建本地 Commit，不 Push。
+- 遗留问题：R5 Entry Gate 仍需解决高频 Preview Render Update，禁止 PointerMove 复用当前低频 Present Stop/CommandBuffer 重录/Start 路径。
+
 ## v0.2.17.20-fix
 ARCH-C-R3 真机收口 Timeout 修复与 R4 Entry Gate（2026-07-19 21:01:29）
 

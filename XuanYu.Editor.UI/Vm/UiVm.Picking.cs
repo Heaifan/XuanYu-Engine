@@ -15,7 +15,7 @@ public sealed partial class UiVm
         var request = new ViewportPickingRequest(
             ++_pickSequence,
             new ViewportState(0, 0, logicalW, logicalH, physicalW, physicalH, dpi, viewportRevision),
-            DefaultPickingCamera(viewportRevision),
+            DefaultEditorCamera.Create(viewportRevision),
             x,
             y,
             SpatialQueryCategory.SceneEntity,
@@ -33,6 +33,4 @@ public sealed partial class UiVm
         return true;
     }
 
-    static CameraState DefaultPickingCamera(long revision) =>
-        new(new Vector3d(0, 0, -5), Vector3d.UnitZ, Vector3d.UnitY, 60, 0.1, 100, revision);
 }
