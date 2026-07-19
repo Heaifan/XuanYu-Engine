@@ -7,7 +7,8 @@ ARCH-C-R3 真机收口 Timeout 修复与 R4 Entry Gate（2026-07-19 21:01:29）
 - 日期：2026-07-19 21:01:29。
 - 任务目标：修复 R3 真机日志暴露的 `AcquireNextImage == Timeout` 被误判为 Present 致命退出问题，并完成 R4 Move Gizmo 入口审计；不修改线程模型、Swapchain 自愈、Selection、Scene SpatialIndex、Transform 或 Undo。
 - 主要改动：`VulkanPresentLoop` 在一秒有限 Acquire 等待返回 `Result.Timeout` 时只跳过当前空帧并继续循环，不再调用 Fatal 或使 RenderSession 失效；`ErrorOutOfDateKhr` 仍进入既有 Swapchain 自愈，其他 Vulkan 错误仍保持快速失败。R4 入口审计确认默认相机严格沿世界 `+Z`，导致世界 Z 轴投影退化为点；在产品层冻结相机或屏幕空间 Handle 方案前，不伪造三轴显示与命中。
-- 修改范围：`XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`、`docs/arch-c-plan.md`、`docs/arch-c-r3-timeout-fix.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Shader、Pipeline、Swapchain、Selection、Gizmo 运行时代码、Transform、Undo、项目结构或依赖。
+- 治理规则：用户明确授权，后续 Build 若被本工作区 `XuanYu.Editor.App` 锁定 DLL，AI 在核实进程身份与工作区关联后自行终止并重跑验证；禁止终止身份不明或无关进程。该规则已同步写入开发宪法。
+- 修改范围：`XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`、`docs/arch-c-plan.md`、`docs/arch-c-r3-timeout-fix.svg`、`docs/玄域引擎_AI开发宪法.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Shader、Pipeline、Swapchain、Selection、Gizmo 运行时代码、Transform、Undo、项目结构或依赖。
 - 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，51 passed / 0 failed / 0 skipped；`git diff --check`、全仓 5+100、版本一致性、`file-tree.md` 297 / 297 和 SVG XML 检查通过。首次 Build 因用户真机编辑器进程锁定输出 DLL 失败，正常关闭该进程后同一命令通过，确认不是代码错误。Timeout 的真实驱动行为与关闭释放链仍需真机复验。
 - Commit Hash：本条 Hash 以 Git 记录和最终报告为准。
 - Push 状态：只创建本地 Commit，不 Push。
