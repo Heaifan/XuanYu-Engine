@@ -63,6 +63,21 @@ public sealed class MoveGizmoLayoutTests
     }
 
     [Fact]
+    public void Shared_origin_uses_pointer_direction_before_distance_tie()
+    {
+        var layout = Layout();
+        var y = layout.Segments.Single(item => item.Axis == MoveGizmoAxis.Y);
+        var origin = y.Start;
+        var dx = y.End.X - y.Start.X;
+        var dy = y.End.Y - y.Start.Y;
+        var length = y.Length;
+
+        Assert.Equal(MoveGizmoAxis.Y, layout.GuardHitTest(
+            origin.X + (dx / length * 28),
+            origin.Y + (dy / length * 28)));
+    }
+
+    [Fact]
     public void Equal_distance_uses_fixed_axis_order()
     {
         var layout = Layout();

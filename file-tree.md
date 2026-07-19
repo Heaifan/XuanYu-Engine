@@ -1,4 +1,4 @@
-版本：v0.2.17.23-fix
+版本：v0.2.17.24-fix
 # XuanYu Engine 文件树
 
 文件总数：310
@@ -98,7 +98,7 @@
 ## XuanYu.Core
 
 - `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴身份；只定义 X/Y/Z，不承担 Transform 或渲染状态。
-- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影、精确命中与 R4-R2 Guard 命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影、方向优先轴裁决与 R4-R3 Guard 命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
 - `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
 - `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
 
@@ -152,7 +152,7 @@
 
 ## XuanYu.Core.Tests
 
-- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、X/Y/Z 命中、R4-R2 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。

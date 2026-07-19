@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.17.24-fix
+ARCH-C-R4-R3 Move Gizmo 轴身份裁决修复（2026-07-19 23:18:00）
+- 原历史编号：ARCH-C-R4-R3。
+- 任务目标：修复真机点击绿色 Y 轴后虽进入 R4 Capture、但日志详情显示 `Axis=X` 的问题；本轮只修共享起点附近的轴身份裁决，不新增 Gizmo UX、Transform Preview、Commit、Cancel、Undo 或 Vulkan 生命周期改动。
+- 主要改动：`MoveGizmoLayout.HitTest` 从“距离优先”改为“从 Gizmo 起点指向鼠标的方向一致性优先，距离作为次级裁决”；这样在 X/Y/Z 共用起点的区域，点击绿色方向会判为 Y，而不是因为红轴也在附近或平局顺序而误判 X。新增回归测试覆盖绿色 Y 轴靠近共享起点时必须返回 `MoveGizmoAxis.Y`。
+- 修改范围：`XuanYu.Core/Gizmo/MoveGizmoLayout.cs`、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Selection Owner、Scene Transform、SpatialIndex、Shader、Pipeline、Swapchain、Present、存档格式、项目结构或依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；构建 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；测试 `dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，61 passed / 0 failed / 0 skipped；`git diff --check` 通过且仅有既有 CRLF 工作区提示；5+100、版本一致性、file-tree 310 / 310、SVG XML 和 Core 依赖方向检查均通过。真机复验仍需确认点击绿色 Y 轴日志详情显示 `Axis=Y`。
+- Push 状态：本轮未获授权，不 Push。
+
 ## v0.2.17.23-fix
 ARCH-C-R4-R2 Move Gizmo Guard 命中修复（2026-07-19 23:12:00）
 - 原历史编号：ARCH-C-R4-R2。

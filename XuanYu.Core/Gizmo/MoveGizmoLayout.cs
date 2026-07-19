@@ -28,10 +28,12 @@ public sealed class MoveGizmoLayout
     {
         if (!double.IsFinite(x) || !double.IsFinite(y) || !double.IsFinite(width) || width <= 0)
             throw new ArgumentOutOfRangeException(nameof(x));
+        var origin = Segments[0].Start;
         return Segments
-            .Select(segment => (segment.Axis, Distance(segment, x, y)))
-            .Where(hit => hit.Item2 <= width)
-            .OrderBy(hit => hit.Item2)
+            .Select(segment => Hit(segment, origin, x, y))
+            .Where(hit => hit.Distance <= width && hit.Alignment >= 0)
+            .OrderByDescending(hit => hit.Alignment)
+            .ThenBy(hit => hit.Distance)
             .ThenBy(hit => hit.Axis)
             .Select(hit => (MoveGizmoAxis?)hit.Axis)
             .FirstOrDefault();
@@ -46,6 +48,15 @@ public sealed class MoveGizmoLayout
         return segment;
     }
 
+    static (MoveGizmoAxis Axis, double Distance, double Alignment) Hit(
+        MoveGizmoSegment segment,
+        ScreenPoint origin,
+        double x,
+        double y)
+    {
+        return (segment.Axis, Distance(segment, x, y), Alignment(segment, origin, x, y));
+    }
+
     static double Distance(MoveGizmoSegment segment, double x, double y)
     {
         var dx = segment.End.X - segment.Start.X;
@@ -56,5 +67,17 @@ public sealed class MoveGizmoLayout
         var px = segment.Start.X + (t * dx);
         var py = segment.Start.Y + (t * dy);
         return global::System.Math.Sqrt(((x - px) * (x - px)) + ((y - py) * (y - py)));
+    }
+
+    static double Alignment(MoveGizmoSegment segment, ScreenPoint origin, double x, double y)
+    {
+        var ax = segment.End.X - segment.Start.X;
+        var ay = segment.End.Y - segment.Start.Y;
+        var px = x - origin.X;
+        var py = y - origin.Y;
+        var axisLength = segment.Length;
+        var pointerLength = global::System.Math.Sqrt((px * px) + (py * py));
+        if (pointerLength < 0.000001) return 1.0;
+        return ((px * ax) + (py * ay)) / (pointerLength * axisLength);
     }
 }
