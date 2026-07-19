@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-labelledby="title desc">
+  <title id="title">ARCH-C R5 至 R8 正式路线</title>
+  <desc id="desc">R5 已完成，R6 原职责被 R5 吸收，下一实际开发阶段为 R7 最小撤销，随后进入 R8 综合验收。</desc>
+  <defs>
+    <style>
+      text { font-family: "Microsoft YaHei", "Segoe UI", sans-serif; fill: #172033; }
+      .title { font-size: 25px; font-weight: 700; }
+      .head { font-size: 18px; font-weight: 700; }
+      .small { font-size: 14px; fill: #536174; }
+      .done { fill: #eef9f1; stroke: #29945a; stroke-width: 2; }
+      .active { fill: #eef6ff; stroke: #477fb7; stroke-width: 2; }
+      .future { fill: #fff8e8; stroke: #cf8a20; stroke-width: 2; }
+      .arrow { stroke: #66758a; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#66758a"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="430" fill="#ffffff"/>
+  <text x="34" y="44" class="title">ARCH-C：R5 至 R8 正式主线</text>
+  <text x="34" y="72" class="small">R6 保留历史编号，但其提交 / 取消职责已经由 R5 完整吸收，不再重复开发。</text>
+
+  <rect x="35" y="120" width="190" height="125" rx="12" class="done"/>
+  <text x="57" y="155" class="head">R5：变换会话</text>
+  <text x="57" y="185" class="small">预览 / 提交 / 取消</text>
+  <text x="57" y="209" class="small">自动验证通过</text>
+  <text x="57" y="232" class="small">真机验证通过</text>
+
+  <rect x="270" y="120" width="190" height="125" rx="12" class="done"/>
+  <text x="292" y="155" class="head">R6：职责已吸收</text>
+  <text x="292" y="185" class="small">原计划：提交 / 取消</text>
+  <text x="292" y="209" class="small">已由 R5 完成</text>
+  <text x="292" y="232" class="small">不再单独开发</text>
+
+  <rect x="505" y="120" width="190" height="125" rx="12" class="active"/>
+  <text x="527" y="155" class="head">R7：最小撤销</text>
+  <text x="527" y="185" class="small">一次合法提交</text>
+  <text x="527" y="209" class="small">生成一个撤销事实</text>
+  <text x="527" y="232" class="small">预览 / 取消不入历史</text>
+
+  <rect x="740" y="120" width="185" height="125" rx="12" class="future"/>
+  <text x="762" y="155" class="head">R8：综合收口</text>
+  <text x="762" y="185" class="small">选择 / 拖动 / 提交</text>
+  <text x="762" y="209" class="small">取消 / 撤销 / Resize</text>
+  <text x="762" y="232" class="small">ARCH-C 最终验收</text>
+
+  <path d="M225 182H270" class="arrow"/>
+  <path d="M460 182H505" class="arrow"/>
+  <path d="M695 182H740" class="arrow"/>
+
+  <rect x="220" y="305" width="520" height="80" rx="12" class="active"/>
+  <text x="245" y="337" class="head">R7 历史入口红线</text>
+  <text x="245" y="365" class="small">只有成功 Commit 可以进入 History；Preview、Cancel、异常取消、迟到 MouseUp 一律禁止进入。</text>
+</svg>

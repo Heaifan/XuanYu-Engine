@@ -70,6 +70,11 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
             if (res == Result.Timeout) continue;
             if (!HandleAcquireResult(res)) break;
             if (submitted && !WaitAndResetFence(device)) break;
+            if (!_clearFrame.TryApplyPendingSceneSnapshot())
+            {
+                Fatal("Transform Preview CommandBuffer 重录失败。");
+                break;
+            }
             if (!SubmitFrame(device, idx, stage)) break;
             submitted = true;
             var pres = PresentFrame(khr, swapchain, idx);

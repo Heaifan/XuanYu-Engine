@@ -1,7 +1,7 @@
-版本：v0.2.17.25-fix
+版本：v0.2.17.26-rz
 # XuanYu Engine 文件树
 
-文件总数：311
+文件总数：321
 
 ## 根目录
 
@@ -43,6 +43,9 @@
 - `docs/arch-c-r3-timeout-fix.svg`：R3 真机收口 Timeout 修复图；说明 Acquire 超时按可恢复空帧处理、其他错误仍保持致命语义，不承载运行时代码。
 - `docs/arch-c-r4-move-gizmo.svg`：R4 Move Gizmo 架构图；说明统一相机、三轴投影、输入优先级和 Capture 唯一所有权，不承载运行时代码。
 - `docs/arch-c-r4-r1-gizmo-hit.svg`：R4-R1 Move Gizmo 命中收口图；说明真机点击容错、Gizmo 优先级和 Scene Picking 回落边界，不承载运行时代码。
+- `docs/arch-c-r5-to-r8-route.svg`：ARCH-C R5 收口后路线图；说明 R6 由 R5 吸收、下一实际开发进入 R7 最小 Undo、R8 综合收口，不承载运行时代码。
+- `docs/arch-c-r5-transform-session.md`：R5 高频 Preview Entry Gate、三层 Transform 状态、Commit / Cancel 合同与封版验证记录。
+- `docs/arch-c-r5-transform-session.svg`：R5 Transform Preview / Commit / Cancel 可视化图；说明三层 Transform、单槽 Preview 渲染、Commit / Cancel 与迟到 MouseUp 边界，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -98,6 +101,7 @@
 ## XuanYu.Core
 
 - `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴身份；只定义 X/Y/Z，不承担 Transform 或渲染状态。
+- `XuanYu.Core/Gizmo/MoveGizmoDragConstraint.cs`：把 Pointer 屏幕位移投影到已命中轴，并只生成对应世界轴 Position 预览。
 - `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影、方向优先轴裁决与 R4-R3 Guard 命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
 - `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
 - `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
@@ -145,6 +149,9 @@
 - `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
 - `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体。
 - `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position、同步派生空间索引并发布渲染快照；空间索引不是第二份场景真相。
+- `XuanYu.Core/Transform/PreviewTransform.cs`：拖动期间的临时 Position；只供渲染预览，不是正式场景事实。
+- `XuanYu.Core/Transform/TransformSession.cs`：单实体 Move 会话，校验 Session、维护 Start / Preview，并保证最多一次 Commit 或 Cancel。
+- `XuanYu.Core/Transform/TransformStartSnapshot.cs`：Transform Begin 时的实体身份与正式 Transform 快照。
 - `XuanYu.Core/Results/EngineError.cs`：引擎错误值对象。
 - `XuanYu.Core/Results/EngineResult.cs`：引擎结果类型。
 - `XuanYu.Core/Time/SimulationTime.cs`：模拟时间值对象。
@@ -154,6 +161,8 @@
 
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
+- `XuanYu.Core.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
@@ -229,6 +238,7 @@
 - `XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs`：Vulkan ShaderModule 生命周期持有者。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Scene Preview 快照，并由 Present 线程在安全点消费。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；负责把场景 World Position 与统一 ViewProjection 写入 push constant 并发起 Draw，不负责 Picking、Selection 或生命周期重构。
 - `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与最小 Move Gizmo 三轴顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。
 - `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；不负责 Selection 或 Pipeline 生命周期。

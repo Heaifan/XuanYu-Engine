@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.26-rz
+ARCH-C-R5 Transform Preview / Commit / Cancel（2026-07-20）
+- 任务目标：让 R4 已选单实体沿世界 X/Y/Z 轴实时预览移动，MouseUp 最多正式 Commit 一次，Escape / `WM_CANCELMODE` / 捕获丢失完整 Cancel，迟到 MouseUp 不得复活会话；不实现 Undo 或其他 Transform 能力。
+- Entry Gate：确认旧 Scene 更新会执行 `Present Stop -> CommandBuffer 全量重录 -> Present Start`；新增覆盖式单槽快照通道，由 Present 线程在 fence 安全点消费最新请求并重录命令，拖动期间持续 Present、不排队、不输出逐帧日志。
+- 状态所有权：新增 `TransformStartSnapshot`、`PreviewTransform`、`TransformSession`；Preview 只进入 `SceneRenderSnapshot.RenderPosition`，不修改 `CommittedTransform` 或 SpatialIndex；Commit 让 Session 先失效再调用 `SceneStateOwner.CommitPosition`，Cancel 清 Preview 并保留正式事实。
+- 拖动数学：把 Pointer 位移投影到 R4 轴屏幕线段，仅改变对应世界 X/Y/Z 分量；Gizmo 与实体共同消费 Preview 渲染位置。
+- 测试：新增轴向约束、垂直位移、三轴 Preview、正式事实隔离、单次 Commit、Cancel、迟到 Commit 和 Render Preview 覆盖测试。
+- 可视化：新增 `docs/arch-c-r5-transform-session.svg`，补齐 R5 窗口内浅色可视化图，视觉主标签使用中文，必要代码标识只作精确引用；最终报告需附完整纯文本 SVG 源码。
+- 后续路线：保留历史编号，原 R6 Commit / Cancel 合同已由 R5 吸收完成并真机验收通过，不再单独开发；新增 `docs/arch-c-r5-to-r8-route.svg`，下一实际开发阶段为 R7 最小 Undo，并冻结 History 入口红线。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；原位全解构建通过，7 项目 0 warning / 0 error；全解测试通过，72 passed / 0 failed / 0 skipped；`git diff --check`、5+100、版本一致性和 `file-tree.md` 320 / 320 通过。用户真机回传确认拖动正常；日志显示 X / Y / Z / Z / X 五次真实 Move 会话均 Begin -> Commit -> End，Position 只沿对应轴变化，拖动期间无 Present Stop / Start；日志栏 Resize 后 Swapchain 自愈到 1248x478 并恢复 Present，正常关闭释放链完整。Cancel 专项真机日志显示 Escape、`WM_CANCELMODE` 和 Cancel 后迟到 MouseUp 均未触发旧 Session Commit，Position 保持 StartSnapshot。
+- 范围确认：未实现 Undo、Rotate、Scale、Local Space、Snapping、多选、Gizmo 美化、地平面、原点、世界轴或天空盒；未新增依赖、项目或 Vulkan 资源类型。
+- Push 状态：R4 ahead 5 已按授权推送至 `origin/fix/RZ-VK3-A-surface-contract`；本轮 R5 只做本地 Commit，不 Push。
+
 ## v0.2.17.25-fix
 ARCH-C-R4-R4 Move Gizmo Vulkan 屏幕投影修复（2026-07-19 23:28:00）
 - 原历史编号：ARCH-C-R4-R4。

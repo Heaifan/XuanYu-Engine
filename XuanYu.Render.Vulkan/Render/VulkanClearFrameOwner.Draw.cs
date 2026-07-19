@@ -31,7 +31,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var camera = DefaultEditorCamera.Create(_swapchainOwner.ResourceGeneration);
         var viewProjection = ViewProjectionState.Create(camera, viewport).ViewProjection;
         FillMatrixTranspose(target, viewProjection);
-        var position = _sceneSnapshot.Entity.Transform.Position;
+        var position = _sceneSnapshot.RenderPosition;
         target[16] = (float)position.X;
         target[17] = (float)position.Y;
         target[18] = (float)position.Z;

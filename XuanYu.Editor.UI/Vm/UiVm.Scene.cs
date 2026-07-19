@@ -8,9 +8,15 @@ public sealed partial class UiVm
     readonly SceneStateOwner _sceneState = new();
 
     public ISceneRenderSnapshotSource SceneSnapshotSource => this;
-    public SceneRenderSnapshot RenderSnapshot => new(
-        _sceneState.RenderSnapshot.Entity,
-        HasSelection && SelectionKey == _sceneState.RenderSnapshot.Entity.EntityKey.ToString());
+    public SceneRenderSnapshot RenderSnapshot
+    {
+        get
+        {
+            var entity = _sceneState.RenderSnapshot.Entity;
+            var selected = HasSelection && SelectionKey == entity.EntityKey.ToString();
+            return new SceneRenderSnapshot(entity, selected, _transformSession.Preview);
+        }
+    }
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
 
     void ApplyRunCommand(string name)

@@ -50,6 +50,9 @@ public sealed partial class UiVm
         var result = _editorState.Commit(new CommitInteractionCommand(
             snap.SessionId, snap.OwnerTool, snap.Pointer.PointerId));
         if (result is null) return;
+        var transformCommitted = _transformSession.TryCommit(snap.SessionId, _sceneState);
+        _moveDragConstraint = null;
+        if (transformCommitted) PublishSceneRenderSnapshot();
         FooterState = "状态：就绪";
         FooterMessage = "交互已提交。";
         LogInteraction("提交捕获", $"Session={snap.SessionId}；{snap.Pointer.Summary}");
@@ -62,6 +65,9 @@ public sealed partial class UiVm
         var snap = _editorState.InteractionSnapshot;
         var result = _editorState.Cancel(new CancelInteractionCommand(snap.SessionId, snap.OwnerTool, reason));
         if (result is null) return;
+        var transformCanceled = _transformSession.TryCancel(snap.SessionId);
+        _moveDragConstraint = null;
+        if (transformCanceled) PublishSceneRenderSnapshot();
         FooterState = "状态：就绪";
         FooterMessage = $"交互已取消：{reason}";
         LogInteraction("取消捕获", $"Session={snap.SessionId}，原因={reason}");
@@ -82,8 +88,8 @@ public sealed partial class UiVm
     {
         if (snap.OwnerTool != "移动" || !snap.StartSnapshot.StartsWith("Entity=", StringComparison.Ordinal)) return;
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
-            $"【ARCH-C-R4】移动工具捕获{result}",
-            $"{snap.StartSnapshot}; Session={snap.SessionId}");
+            $"【ARCH-C-R5】移动工具会话{result}",
+            $"{snap.StartSnapshot}; Session={snap.SessionId}; Position={_sceneState.RenderSnapshot.Entity.Transform.Position}");
         RefreshLogBindings();
     }
 }

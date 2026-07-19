@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.25-fix
+版本：v0.2.17.26-rz
 日期：2026-07-19
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -338,7 +338,7 @@ Picking 正式主路径禁止全实体线性遍历，禁止每次点击重建空
 | ARCH-C-R3 | 真实 Selection 同步 | 视口点击后层级树高亮；Inspector 显示真实对象；重复选择 NoChange；点击空白清除选择 |
 | ARCH-C-R4 | Move Gizmo 显示与轴命中 | 未选中无 Gizmo；选中后 Gizmo 跟随对象；X/Y/Z 可独立命中；点击 Gizmo 不误选背后对象 |
 | ARCH-C-R5 | Transform Preview | 拖动 X/Y/Z 只改变对应轴；PointerMove 不生成 Undo；无效数学结果不入状态 |
-| ARCH-C-R6 | Commit 与 Cancel | 多次 Preview 后只 Commit 一次；Escape 和 `WM_CANCELMODE` 恢复原位；Cancel 后延迟 MouseUp 不 Commit |
+| ARCH-C-R6 | Commit 与 Cancel（已由 R5 吸收） | 原 R6 合同已在 R5 实现并真机验收通过；保留历史编号，不再单独开发 |
 | ARCH-C-R7 | 最小 Undo | Commit 后 Undo 返回拖动前位置；一次拖动不是数百条历史；对象删除后 Undo 明确失败或失效 |
 | ARCH-C-R8 | 真机综合验收与封版 | 点击、同步、Gizmo、Preview、Commit、Cancel、Undo、Resize、日志栏、再次拖动、正常关闭全链路通过 |
 
@@ -348,7 +348,9 @@ Picking 正式主路径禁止全实体线性遍历，禁止每次点击重建空
 
 R4 禁止继续新增箭头造型、Hover、X/Y/Z 标签、屏幕恒定尺寸、遮挡策略、中心 Handle、平面 Handle、Rotate 或 Scale。真机点击可见轴时必须优先进入 Gizmo Capture；未命中 Gizmo 时才允许回落 Scene Picking。R4-R1 将命中容错调整为 18 logical px，以覆盖真机手点偏差和当前细矩形视觉宽度。
 
-下一开发轮顺延为 `v0.2.17.26-rz — ARCH-C-R5`，目标合并为 Transform Preview / Commit / Cancel 同一轮打通；职责仍必须分离为 CommittedTransform、PreviewTransform 和 TransformStartSnapshot。Undo 继续留到后续轮次。
+`v0.2.17.26-rz — ARCH-C-R5` 已实现并真机验收 Transform Preview / Commit / Cancel：三层 Transform 状态保持分离，PointerMove 只更新覆盖式 Preview 渲染请求，MouseUp 最多正式 Commit 一次，Cancel 后旧输入不得复活。R5 实作已覆盖原 R6 的 Commit / Cancel 合同，但不包含 Undo；保留历史编号，R6 不再单独开发，当前进度指针推进到 R7 最小 Undo。
+
+后续路线图见 `docs/arch-c-r5-to-r8-route.svg`。R7 的核心红线是“一次成功 Commit = 一个 Undo Record”，Preview、Cancel、`WM_CANCELMODE` 和迟到 MouseUp 均不得写入 History。R7 不做 Redo、Rotate、Scale、Local Transform、Snapping、多选 Undo、持久化 Undo、地平面、世界原点、世界坐标轴或天空盒。
 
 ## 19.2 ARCH-C-R2 Entry Gate / Exit Gate
 
@@ -435,7 +437,7 @@ R8 必须完成以下手工链路：
 
 - 相机 / 视口 / 世界射线数学契约已在 `ARCH-C-R2-B` 封版；Render 正式消费同一套 ViewProjection 已在 `ARCH-C-R2-C` 真机验收封版。
 - 当前默认相机下世界 `+X` 映射到屏幕左侧，已确认为 Render / WorldRay 共享的冻结坐标约定；若未来产品层要求 `+X` 屏幕向右，必须整体调整相机、ViewProjection、WorldRay、测试与 Gizmo 约定，禁止局部取负号。
-- Transform 正式所有权尚未落到具体类型。
+- Transform 正式事实由 `SceneStateOwner` 的 `CommittedTransform` 持有；R5 会话只持有 `TransformStartSnapshot` 与 `PreviewTransform`。
 - CPU Picking 需要明确视口逻辑像素、物理像素和 DPI 的换算边界。
 - Selection 现有 Key 来自 UI 树节点，不能直接当作长期场景 EntityKey。
 
