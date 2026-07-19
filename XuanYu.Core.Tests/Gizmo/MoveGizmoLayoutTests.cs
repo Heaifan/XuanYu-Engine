@@ -4,7 +4,7 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Tests.Gizmo;
 
-public sealed class MoveGizmoLayoutTests
+public sealed partial class MoveGizmoLayoutTests
 {
     [Fact]
     public void Oblique_camera_projects_three_visible_axes()

@@ -78,7 +78,7 @@ public sealed class ViewProjectionState
         var ndcY = clip.Y / clip.W;
         return new ScreenPoint(
             Viewport.LogicalX + ((ndcX + 1.0) * 0.5 * Viewport.LogicalWidth),
-            Viewport.LogicalY + ((1.0 - ndcY) * 0.5 * Viewport.LogicalHeight));
+            Viewport.LogicalY + ((ndcY + 1.0) * 0.5 * Viewport.LogicalHeight));
     }
 
     static Vector3 ToVector3(Vector3d vector)

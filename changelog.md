@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.17.25-fix
+ARCH-C-R4-R4 Move Gizmo Vulkan 屏幕投影修复（2026-07-19 23:28:00）
+- 原历史编号：ARCH-C-R4-R4。
+- 任务目标：修复真机三轴颜色与日志轴身份整体错位的问题：绿色 Y 点击显示 X、红色 X 点击显示 Z、蓝色 Z 点击显示 X；本轮只修 Gizmo CPU 投影到 Vulkan 屏幕坐标的 Y 映射，不修改 WorldRay/Picking、Selection、Transform、Undo 或 Vulkan 生命周期。
+- 主要改动：`ViewProjectionState.ProjectWorldPoint` 的屏幕 Y 映射改为与 Vulkan 正高度 viewport 呈现一致，避免 CPU HitTest 使用 UI 常规 Y 翻转而 Vulkan 画面使用另一套落屏方向；新增 Gizmo 测试锁住默认斜视相机下红 X、绿 Y、蓝 Z 的屏幕方向与 Vulkan 可见方向一致。
+- 修改范围：`XuanYu.Core/Space/ViewProjectionState.cs`、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 `WorldRayFactory`、Picking 服务、Selection Owner、Scene Transform、SpatialIndex、Shader、Pipeline、Swapchain、Present、存档格式、项目结构或依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；构建 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；测试 `dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，62 passed / 0 failed / 0 skipped；`git diff --check` 通过且仅有既有 CRLF 工作区提示；5+100、版本一致性、file-tree 311 / 311 和 Core 依赖方向检查均通过。真机复验仍需确认红 X、绿 Y、蓝 Z 分别显示 `Axis=X/Y/Z`。
+- Push 状态：本轮未获授权，不 Push。
+
 ## v0.2.17.24-fix
 ARCH-C-R4-R3 Move Gizmo 轴身份裁决修复（2026-07-19 23:18:00）
 - 原历史编号：ARCH-C-R4-R3。

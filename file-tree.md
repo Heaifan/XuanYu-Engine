@@ -1,7 +1,7 @@
-版本：v0.2.17.24-fix
+版本：v0.2.17.25-fix
 # XuanYu Engine 文件树
 
-文件总数：310
+文件总数：311
 
 ## 根目录
 
@@ -115,7 +115,7 @@
 - `XuanYu.Core/Picking/ViewportPickingService.cs`：视口拾取 Core 服务；负责把视口点转换为 WorldRay 并调用空间 Raycast，同时校验 ViewportRevision / SpatialRevision，不依赖 Avalonia 或 Vulkan。
 - `XuanYu.Core/Space/CameraState.cs`：渲染后端无关的相机状态契约；负责校验位置、方向、Up、FOV、裁剪面和 Revision，不负责渲染资源、输入事件或 Picking 命中。
 - `XuanYu.Core/Space/ViewportState.cs`：渲染后端无关的视口状态契约；负责记录逻辑区域、物理尺寸、DPI 和 Revision，不等同于 Vulkan Swapchain。
-- `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；负责从 Camera / Viewport 生成 View、Projection、ViewProjection 和逆矩阵，不负责实体筛选或空间索引。
+- `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；负责从 Camera / Viewport 生成 View、Projection、ViewProjection、逆矩阵与 Vulkan 屏幕投影点，不负责实体筛选或空间索引。
 - `XuanYu.Core/Space/DefaultEditorCamera.cs`：默认编辑器斜视相机合同；从固定 Position/Target/Up 派生 CameraState，供 Render、Picking、Gizmo 共用，不改变世界坐标语义。
 - `XuanYu.Core/Space/WorldRay.cs`：世界射线值对象；负责保存有限 Origin 和归一化 Direction，不负责命中测试或实体选择。
 - `XuanYu.Core/Space/WorldRayFactory.cs`：视口点到世界射线的转换入口；负责 NDC 与逆矩阵反投影，不负责 Ray-AABB、Picking、Selection 或 Gizmo。
@@ -152,7 +152,8 @@
 
 ## XuanYu.Core.Tests
 
-- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
