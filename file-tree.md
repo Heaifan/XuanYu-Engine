@@ -1,7 +1,7 @@
-版本：v0.2.17.21-rz
+版本：v0.2.17.22-fix
 # XuanYu Engine 文件树
 
-文件总数：309
+文件总数：310
 
 ## 根目录
 
@@ -42,6 +42,7 @@
 - `docs/arch-c-r3-selection.svg`：ARCH-C-R3 真实 Selection 架构图；说明 Picking 结果经唯一 Owner 同步到 Tree 与 Inspector，不承载运行时代码。
 - `docs/arch-c-r3-timeout-fix.svg`：R3 真机收口 Timeout 修复图；说明 Acquire 超时按可恢复空帧处理、其他错误仍保持致命语义，不承载运行时代码。
 - `docs/arch-c-r4-move-gizmo.svg`：R4 Move Gizmo 架构图；说明统一相机、三轴投影、输入优先级和 Capture 唯一所有权，不承载运行时代码。
+- `docs/arch-c-r4-r1-gizmo-hit.svg`：R4-R1 Move Gizmo 命中收口图；说明真机点击容错、Gizmo 优先级和 Scene Picking 回落边界，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -97,7 +98,7 @@
 ## XuanYu.Core
 
 - `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴身份；只定义 X/Y/Z，不承担 Transform 或渲染状态。
-- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影与确定性命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影与 R4-R1 真机容错命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
 - `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
 - `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
 
@@ -151,7 +152,7 @@
 
 ## XuanYu.Core.Tests
 
-- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、X/Y/Z 命中、Miss、点击宽度和确定性裁决测试；不验证 Vulkan 像素输出。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、X/Y/Z 命中、R4-R1 容错宽度、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。

@@ -6,7 +6,7 @@ namespace XuanYu.Core.Gizmo;
 public sealed class MoveGizmoLayout
 {
     public const double AxisLength = 1.2;
-    public const double HitWidth = 9.0;
+    public const double HitWidth = 18.0;
 
     MoveGizmoLayout(MoveGizmoSegment[] segments) => Segments = segments;
 

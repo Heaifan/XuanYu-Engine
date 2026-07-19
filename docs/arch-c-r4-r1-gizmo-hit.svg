@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="420" viewBox="0 0 980 420">
+  <rect width="980" height="420" fill="#f7fbff"/>
+  <text x="40" y="48" font-family="Microsoft YaHei, Arial" font-size="26" font-weight="700" fill="#14324f">ARCH-C-R4-R1: &#x79FB;&#x52A8;&#x5DE5;&#x5177;&#x547D;&#x4E2D;&#x6536;&#x53E3;</text>
+  <text x="40" y="82" font-family="Microsoft YaHei, Arial" font-size="15" fill="#4e6378">&#x53EA;&#x4FEE;&#x53EF;&#x89C1;&#x8F74;&#x70B9;&#x4E0D;&#x4E2D;&#x7684;&#x5165;&#x53E3;&#x95EE;&#x9898;&#xFF0C;&#x4E0D;&#x8FDB;&#x5165;&#x5B8C;&#x6574; Gizmo UX&#x3002;</text>
+  <rect x="54" y="130" width="250" height="190" rx="8" fill="#ffffff" stroke="#c7d8e8" stroke-width="2"/>
+  <text x="82" y="166" font-family="Microsoft YaHei, Arial" font-size="18" font-weight="700" fill="#1e3c59">&#x53EF;&#x89C1;&#x4E09;&#x8F74;</text>
+  <line x1="176" y1="230" x2="98" y2="210" stroke="#e12d2d" stroke-width="8" stroke-linecap="round"/>
+  <line x1="176" y1="230" x2="176" y2="306" stroke="#22a447" stroke-width="8" stroke-linecap="round"/>
+  <line x1="176" y1="230" x2="126" y2="258" stroke="#2d6eea" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="176" cy="230" r="8" fill="#ffd640" stroke="#846a00"/>
+  <text x="108" y="350" font-family="Microsoft YaHei, Arial" font-size="14" fill="#4e6378">&#x7EA2; X / &#x7EFF; Y / &#x84DD; Z &#x56F4;&#x7ED5;&#x9009;&#x4E2D;&#x5B9E;&#x4F53;</text>
+  <path d="M318 224 H420" stroke="#6b7d90" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="436" y="130" width="220" height="190" rx="8" fill="#ffffff" stroke="#c7d8e8" stroke-width="2"/>
+  <text x="466" y="166" font-family="Microsoft YaHei, Arial" font-size="18" font-weight="700" fill="#1e3c59">&#x547D;&#x4E2D;&#x5BB9;&#x9519;</text>
+  <rect x="494" y="198" width="104" height="56" rx="28" fill="#dff3e6" stroke="#30a85a" stroke-width="2"/>
+  <line x1="546" y1="182" x2="546" y2="282" stroke="#22a447" stroke-width="6" stroke-linecap="round"/>
+  <text x="474" y="326" font-family="Microsoft YaHei, Arial" font-size="14" fill="#4e6378">18 logical px&#xFF0C;&#x8986;&#x76D6;&#x771F;&#x673A;&#x624B;&#x70B9;&#x504F;&#x5DEE;</text>
+  <path d="M670 224 H772" stroke="#6b7d90" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="786" y="130" width="150" height="190" rx="8" fill="#ffffff" stroke="#c7d8e8" stroke-width="2"/>
+  <text x="818" y="166" font-family="Microsoft YaHei, Arial" font-size="18" font-weight="700" fill="#1e3c59">&#x7ED3;&#x679C;</text>
+  <text x="814" y="214" font-family="Microsoft YaHei, Arial" font-size="15" fill="#243b53">&#x547D;&#x4E2D;&#x8F74;</text>
+  <text x="814" y="242" font-family="Microsoft YaHei, Arial" font-size="15" fill="#243b53">&#x5F00;&#x59CB; Capture</text>
+  <text x="814" y="270" font-family="Microsoft YaHei, Arial" font-size="15" fill="#243b53">&#x963B;&#x65AD; Picking</text>
+  <text x="814" y="298" font-family="Microsoft YaHei, Arial" font-size="15" fill="#243b53">&#x677E;&#x5F00;&#x7ED3;&#x675F;</text>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7d90"/>
+    </marker>
+  </defs>
+</svg>

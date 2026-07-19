@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.17.22-fix
+ARCH-C-R4-R1 Move Gizmo 真机命中收口（2026-07-19 22:58:00）
+- 原历史编号：ARCH-C-R4-R1。
+- 任务目标：修复真机点击绿色 Y 轴时未进入 Gizmo Capture、回落到 Scene Picking 的问题；本轮只修最小 Move Gizmo 入口命中一致性，不新增箭头、Hover、标签、屏幕恒定尺寸、遮挡策略、Preview Transform、Commit、Cancel、Undo、Rotate、Scale 或 Vulkan 生命周期重构。
+- 主要改动：`MoveGizmoLayout.HitWidth` 从 9 logical px 调整为 18 logical px，使 R4 最小入口覆盖真机手点偏差和细矩形视觉宽度；同步更新 Core 自动测试边界，保留 X/Y/Z 轴确定性命中、Miss 和轴顺序裁决规则；新增浅色中文 `docs/arch-c-r4-r1-gizmo-hit.svg` 说明可见轴、命中容错、Capture 与 Scene Picking 回落边界。
+- 修改范围：`XuanYu.Core/Gizmo/MoveGizmoLayout.cs`、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`、`docs/arch-c-r4-r1-gizmo-hit.svg`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Scene Transform、SpatialIndex、Selection Owner、Interaction Owner、Shader、Pipeline、Swapchain、Present、存档格式、项目结构或依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，59 passed / 0 failed / 0 skipped；`git diff --check` 通过且仅有既有 CRLF 工作区提示；5+100、版本一致性、file-tree 310 / 310、SVG XML 和 Core 依赖方向检查均通过。真机复验仍需确认绿色 Y 轴点击能进入 `Axis=Y` Capture。
+- Push 状态：本轮未获授权，不 Push。
+
 ## v0.2.17.21-rz
 ARCH-C-R4 Move Gizmo（2026-07-19 22:31:16，统一斜视相机与三轴 Capture）
 

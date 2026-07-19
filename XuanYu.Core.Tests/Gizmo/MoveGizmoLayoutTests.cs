@@ -11,6 +11,7 @@ public sealed class MoveGizmoLayoutTests
     {
         var layout = Layout();
 
+        Assert.Equal(18.0, MoveGizmoLayout.HitWidth);
         Assert.All(layout.Segments, segment => Assert.True(segment.Length > 20));
         Assert.Equal(3, layout.Segments.Count);
     }
@@ -40,8 +41,10 @@ public sealed class MoveGizmoLayoutTests
         var dy = x.End.Y - x.Start.Y;
         var length = x.Length;
 
-        Assert.Equal(MoveGizmoAxis.X, layout.HitTest(midX - (dy / length * 8.9), midY + (dx / length * 8.9)));
-        Assert.Null(layout.HitTest(midX - (dy / length * 9.1), midY + (dx / length * 9.1)));
+        Assert.Equal(MoveGizmoAxis.X, layout.HitTest(
+            midX - (dy / length * 8.9), midY + (dx / length * 8.9), 9.0));
+        Assert.Null(layout.HitTest(
+            midX - (dy / length * 9.1), midY + (dx / length * 9.1), 9.0));
         Assert.Null(layout.HitTest(5, 5));
     }
 

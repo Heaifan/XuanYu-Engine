@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.21-rz
+版本：v0.2.17.22-fix
 日期：2026-07-19
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -342,7 +342,15 @@ Picking 正式主路径禁止全实体线性遍历，禁止每次点击重建空
 | ARCH-C-R7 | 最小 Undo | Commit 后 Undo 返回拖动前位置；一次拖动不是数百条历史；对象删除后 Undo 明确失败或失效 |
 | ARCH-C-R8 | 真机综合验收与封版 | 点击、同步、Gizmo、Preview、Commit、Cancel、Undo、Resize、日志栏、再次拖动、正常关闭全链路通过 |
 
-## 19.1 ARCH-C-R2 Entry Gate / Exit Gate
+## 19.1 ARCH-C-R4-R1 路线冻结
+
+`v0.2.17.22-fix — ARCH-C-R4-R1` 只修 Move Gizmo 最小入口命中一致性。R4 定位正式冻结为“能显示、能点中、能开始和结束 Capture”的最小操作入口验证，不继续深挖完整 Gizmo UX。
+
+R4 禁止继续新增箭头造型、Hover、X/Y/Z 标签、屏幕恒定尺寸、遮挡策略、中心 Handle、平面 Handle、Rotate 或 Scale。真机点击可见轴时必须优先进入 Gizmo Capture；未命中 Gizmo 时才允许回落 Scene Picking。R4-R1 将命中容错调整为 18 logical px，以覆盖真机手点偏差和当前细矩形视觉宽度。
+
+下一开发轮顺延为 `v0.2.17.23-rz — ARCH-C-R5`，目标合并为 Transform Preview / Commit / Cancel 同一轮打通；职责仍必须分离为 CommittedTransform、PreviewTransform 和 TransformStartSnapshot。Undo 继续留到后续轮次。
+
+## 19.2 ARCH-C-R2 Entry Gate / Exit Gate
 
 R2 开工入口条件：
 
