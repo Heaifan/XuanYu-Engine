@@ -10,7 +10,8 @@ public sealed partial class UiVm
         var entity = _sceneState.RenderSnapshot.Entity;
         if (!hostValid || !HasSelection || SelectionKey != entity.EntityKey.ToString()) return false;
         var state = ViewProjectionState.Create(DefaultEditorCamera.Create(viewport.Revision), viewport);
-        var axis = MoveGizmoLayout.Project(state, entity.Transform.Position).HitTest(x, y);
+        var layout = MoveGizmoLayout.Project(state, entity.Transform.Position);
+        var axis = layout.HitTest(x, y) ?? layout.GuardHitTest(x, y);
         if (axis is null) return false;
 
         var pointer = new EditorInteractionPointerSnapshot(pointerId, x, y, x, y, 0);

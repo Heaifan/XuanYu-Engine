@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.22-fix
+版本：v0.2.17.23-fix
 日期：2026-07-19
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -348,7 +348,7 @@ Picking 正式主路径禁止全实体线性遍历，禁止每次点击重建空
 
 R4 禁止继续新增箭头造型、Hover、X/Y/Z 标签、屏幕恒定尺寸、遮挡策略、中心 Handle、平面 Handle、Rotate 或 Scale。真机点击可见轴时必须优先进入 Gizmo Capture；未命中 Gizmo 时才允许回落 Scene Picking。R4-R1 将命中容错调整为 18 logical px，以覆盖真机手点偏差和当前细矩形视觉宽度。
 
-下一开发轮顺延为 `v0.2.17.23-rz — ARCH-C-R5`，目标合并为 Transform Preview / Commit / Cancel 同一轮打通；职责仍必须分离为 CommittedTransform、PreviewTransform 和 TransformStartSnapshot。Undo 继续留到后续轮次。
+下一开发轮顺延为 `v0.2.17.24-rz — ARCH-C-R5`，目标合并为 Transform Preview / Commit / Cancel 同一轮打通；职责仍必须分离为 CommittedTransform、PreviewTransform 和 TransformStartSnapshot。Undo 继续留到后续轮次。
 
 ## 19.2 ARCH-C-R2 Entry Gate / Exit Gate
 

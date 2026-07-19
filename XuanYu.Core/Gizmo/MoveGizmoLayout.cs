@@ -7,6 +7,7 @@ public sealed class MoveGizmoLayout
 {
     public const double AxisLength = 1.2;
     public const double HitWidth = 18.0;
+    public const double GuardWidth = 48.0;
 
     MoveGizmoLayout(MoveGizmoSegment[] segments) => Segments = segments;
 
@@ -35,6 +36,8 @@ public sealed class MoveGizmoLayout
             .Select(hit => (MoveGizmoAxis?)hit.Axis)
             .FirstOrDefault();
     }
+
+    public MoveGizmoAxis? GuardHitTest(double x, double y) => HitTest(x, y, GuardWidth);
 
     static MoveGizmoSegment Segment(MoveGizmoAxis axis, ScreenPoint start, ScreenPoint end)
     {

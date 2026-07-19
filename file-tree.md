@@ -1,4 +1,4 @@
-版本：v0.2.17.22-fix
+版本：v0.2.17.23-fix
 # XuanYu Engine 文件树
 
 文件总数：310
@@ -98,7 +98,7 @@
 ## XuanYu.Core
 
 - `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴身份；只定义 X/Y/Z，不承担 Transform 或渲染状态。
-- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影与 R4-R1 真机容错命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影、精确命中与 R4-R2 Guard 命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
 - `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
 - `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
 
@@ -152,7 +152,7 @@
 
 ## XuanYu.Core.Tests
 
-- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、X/Y/Z 命中、R4-R1 容错宽度、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、X/Y/Z 命中、R4-R2 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
@@ -328,7 +328,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
-- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo Hit/Capture 的适配分部；提交既有 Interaction Begin 并记录低频日志，不修改 Transform、SpatialIndex 或 Undo。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；命中后提交既有 Interaction Begin 并阻断 Scene Picking，不修改 Transform、SpatialIndex 或 Undo。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令分部，提交 R1 测试实体 Position 并刷新调试对象信息。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。

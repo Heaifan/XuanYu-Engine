@@ -12,6 +12,7 @@ public sealed class MoveGizmoLayoutTests
         var layout = Layout();
 
         Assert.Equal(18.0, MoveGizmoLayout.HitWidth);
+        Assert.Equal(48.0, MoveGizmoLayout.GuardWidth);
         Assert.All(layout.Segments, segment => Assert.True(segment.Length > 20));
         Assert.Equal(3, layout.Segments.Count);
     }
@@ -46,6 +47,19 @@ public sealed class MoveGizmoLayoutTests
         Assert.Null(layout.HitTest(
             midX - (dy / length * 9.1), midY + (dx / length * 9.1), 9.0));
         Assert.Null(layout.HitTest(5, 5));
+    }
+
+    [Fact]
+    public void Guard_hit_keeps_visible_axis_from_falling_to_scene_picking()
+    {
+        var layout = Layout();
+        var y = layout.Segments.Single(item => item.Axis == MoveGizmoAxis.Y);
+        var midX = (y.Start.X + y.End.X) * 0.5;
+        var midY = (y.Start.Y + y.End.Y) * 0.5;
+
+        Assert.Null(layout.HitTest(midX + 32, midY));
+        Assert.Equal(MoveGizmoAxis.Y, layout.GuardHitTest(midX + 32, midY));
+        Assert.Null(layout.GuardHitTest(5, 5));
     }
 
     [Fact]

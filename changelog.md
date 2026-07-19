@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.17.23-fix
+ARCH-C-R4-R2 Move Gizmo Guard 命中修复（2026-07-19 23:12:00）
+- 原历史编号：ARCH-C-R4-R2。
+- 任务目标：修复 `v0.2.17.22-fix` 后真机点击绿色 Y 轴仍回落 Scene Picking 并清除 Selection 的问题；本轮只补 R4 最小入口 Guard 命中，不新增 Gizmo UX、Transform Preview、Commit、Cancel、Undo 或 Vulkan 生命周期改动。
+- 主要改动：`MoveGizmoLayout` 增加 `GuardWidth=48 logical px` 与 `GuardHitTest`，`UiVm.MoveGizmo` 在精确 `HitTest` 失败后对已选中对象执行 Guard 命中，防止点击可见 Gizmo 轴时落入 Scene Picking 清空分支；新增自动测试覆盖绿色 Y 轴可见入口在普通命中失败时仍由 Guard 捕获，远处空白仍 miss。
+- 修改范围：`XuanYu.Core/Gizmo/MoveGizmoLayout.cs`、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`、`XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Selection Owner、Scene Transform、SpatialIndex、Shader、Pipeline、Swapchain、Present、存档格式、项目结构或依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；构建 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；测试 `dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，60 passed / 0 failed / 0 skipped；`git diff --check` 通过且仅有既有 CRLF 工作区提示；5+100、版本一致性、file-tree 310 / 310、SVG XML 和 Core 依赖方向检查均通过。真机复验仍需确认绿色 Y 轴点击进入 `Axis=Y` Capture，且不再清除 Selection。
+- Push 状态：本轮未获授权，不 Push。
+
 ## v0.2.17.22-fix
 ARCH-C-R4-R1 Move Gizmo 真机命中收口（2026-07-19 22:58:00）
 - 原历史编号：ARCH-C-R4-R1。
