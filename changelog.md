@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.17.17-fix
+ARCH-C-R2-E-R1 精确命中封版补强（2026-07-19 19:39:31，Revision 最终校验）
+
+- 原历史编号：ARCH-C-R2-E-R1。
+- 日期：2026-07-19 19:39:31。
+- 任务目标：补齐 `v0.2.17.16-rz — ARCH-C-R2-E` 封版审计发现的两个局部 GAP：Narrow Phase 完成后必须再次校验 `SpatialRevision`，且必须补充 Broad 候选不等于最终命中的责任分离证据；本轮不实现 Pointer、Selection、Gizmo、Undo、Vulkan、Shader、Pipeline、Swapchain、Present、Fat AABB、Mesh Picking 或 R2-F。
+- 主要改动：`SpatialRaycastResolver` 在 Broad Phase 后与结果发布前各校验一次 `SpatialRevision`，任何 Narrow Phase 期间发生的代际变化都会抛出既有“空间索引代际已变化。”失败语义，避免发布混代 HitResult；新增内部测试构造入口，仅供 `XuanYu.Core.Tests` 精确触发第一道校验之后、Narrow 期间的变代场景；补充 `SpatialRaycastRevisionTests` 覆盖 Narrow 期间变代拒绝；补充 `SpatialRaycastNearestTests` 的 `ISpatialIndex` 合同层责任分离测试，证明 Resolver 不把 Broad Candidate 直接发布为 Hit；审计确认当前 `DynamicAabbTree` 叶节点 Broad Bounds 等于真实 `SpatialBounds.WorldBounds`，生产链路暂不具备自然 Fat AABB false-positive 场景，并在 `docs/arch-c-plan.md` 冻结未来 Fat AABB / 粗代理 Bounds 的真实 false-positive 集成测试 Entry Gate；重写 `docs/arch-c-r2e-ray-hit.svg` 为浅色中文 R2-E-R1 收口图；版本同步到 `v0.2.17.17-fix`。
+- 修改范围：`XuanYu.Core/Spatial/SpatialRaycastResolver.cs`、`XuanYu.Core/Properties/AssemblyInfo.cs`、`XuanYu.Core.Tests/Spatial/SpatialRaycastNearestTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRaycastRevisionTests.cs`、`docs/arch-c-plan.md`、`docs/arch-c-r2e-ray-hit.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Vulkan、Render.Abstractions、Pointer、EditorStateOwner、Selection、Gizmo、Undo、存档格式或项目依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 45 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2e-ray-hit.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.17-fix`；`file-tree.md` 实际条目 286 且总数声明 286；依赖方向扫描确认 `XuanYu.Core` 未引入测试依赖、`XuanYu.Core.Tests` 只依赖既有测试包和 `XuanYu.Core`，未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：本条 Hash 以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求未经授权不得 Push / Tag / Release；本轮只允许本地 Commit。
+- 遗留问题：当前精确命中仍为实体 AABB 级别，不是 Mesh Triangle Picking；真实 Pointer Picking 留给 R2-F；未来引入 Fat AABB / 粗代理 Bounds 前必须补真实 false-positive 集成测试。
+
 ## v0.2.17.16-rz
 ARCH-C-R2-E 实体级 Ray-AABB / 最近命中（2026-07-19 00:04:15，Core 精确命中）
 

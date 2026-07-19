@@ -1,7 +1,7 @@
-版本：v0.2.17.16-rz
+版本：v0.2.17.17-fix
 # XuanYu Engine 文件树
 
-文件总数：285
+文件总数：286
 
 ## 根目录
 
@@ -93,6 +93,7 @@
 ## XuanYu.Core
 
 - `XuanYu.Core/XuanYu.Core.csproj`：核心类库项目文件。
+- `XuanYu.Core/Properties/AssemblyInfo.cs`：Core 程序集内部可见性声明；仅允许 `XuanYu.Core.Tests` 访问内部测试入口，不承载生产行为或运行时依赖。
 - `XuanYu.Core/Diagnostics/CoreSelfTest.cs`：Core 自检入口。
 - `XuanYu.Core/Identity/EntityId.cs`：实体 ID 值对象。
 - `XuanYu.Core/Logging/EngineLogEntry.cs`：引擎日志条目。
@@ -119,7 +120,7 @@
 - `XuanYu.Core/Spatial/SpatialRayAabb.cs`：空间射线与 AABB 的 Broad Phase 相交计算；只服务候选裁剪，不裁定最近命中。
 - `XuanYu.Core/Spatial/SpatialRayQuery.cs`：有界 WorldRay 查询值对象；负责携带射线和最大查询距离，不绑定 Picking 或 Selection。
 - `XuanYu.Core/Spatial/SpatialRaycastHit.cs`：空间射线最近命中值对象；负责携带 EntityKey、距离、命中点和 SpatialRevision，不触发 Selection。
-- `XuanYu.Core/Spatial/SpatialRaycastResolver.cs`：空间射线命中解析器；负责对 Broad Phase 候选执行 O(k) Ray-AABB 并按距离 / EntityKey 稳定选最近，不扫描全场景。
+- `XuanYu.Core/Spatial/SpatialRaycastResolver.cs`：空间射线命中解析器；负责对 Broad Phase 候选执行 O(k) Ray-AABB、前后校验 SpatialRevision 并按距离 / EntityKey 稳定选最近，不扫描全场景。
 - `XuanYu.Core/Spatial/SpatialRaycastResult.cs`：空间射线命中结果；负责表达 Hit / NoHit 与统计信息，不包含材质、法线、Mesh 三角形或 UI 状态。
 - `XuanYu.Core/Spatial/SpatialRaycastStats.cs`：空间射线命中诊断统计；负责记录总实体、访问节点、候选数、精确检测数和真实命中数，并生成低频中文探针文本。
 - `XuanYu.Core/Spatial/SpatialQueryCategory.cs`：空间查询分类掩码；负责长期扩展场景实体、地形、Gizmo 和编辑器辅助对象分类。
@@ -153,8 +154,8 @@
 - `XuanYu.Core.Tests/Spatial/SpatialIndexScaleTests.cs`：空间索引规模回归测试；负责 1k / 10k 实体查询统计、连续移动和批量删除一致性覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialRayQueryLifecycleTests.cs`：WorldRay 候选查询生命周期与规模测试；负责 Update、Remove、1k / 10k Ray Query 统计覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialRayQueryTests.cs`：WorldRay 候选查询边界测试；负责命中、空查询、Mask、起点在盒内、平行轴、背向和最大距离覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialRaycastNearestTests.cs`：最近命中测试；负责多实体最近命中、候选顺序变化和等距 EntityKey 稳定裁决覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialRaycastRevisionTests.cs`：射线命中 Revision 测试；负责命中 / 未命中结果携带同一 SpatialRevision 覆盖。
+- `XuanYu.Core.Tests/Spatial/SpatialRaycastNearestTests.cs`：最近命中测试；负责多实体最近命中、候选顺序变化、等距 EntityKey 稳定裁决和 Broad 候选必须经过 Narrow 才能发布命中的责任分离覆盖。
+- `XuanYu.Core.Tests/Spatial/SpatialRaycastRevisionTests.cs`：射线命中 Revision 测试；负责命中 / 未命中结果携带同一 SpatialRevision，以及 Narrow Phase 期间变代会被最终校验拒绝的覆盖。
 - `XuanYu.Core.Tests/Spatial/SpatialRaycastScaleTests.cs`：射线命中规模回归测试；负责 1k / 10k Broad 到 Narrow 端到端统计和不全量扫描约束。
 - `XuanYu.Core.Tests/Spatial/SpatialTestData.cs`：空间索引测试数据工厂；负责确定性网格实体和查询 AABB 构造，不进入生产项目。
 
