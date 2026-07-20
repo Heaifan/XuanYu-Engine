@@ -1,7 +1,7 @@
-版本：v0.2.17.26-rz
+版本：v0.2.17.27-rz
 # XuanYu Engine 文件树
 
-文件总数：321
+文件总数：328
 
 ## 根目录
 
@@ -46,6 +46,7 @@
 - `docs/arch-c-r5-to-r8-route.svg`：ARCH-C R5 收口后路线图；说明 R6 由 R5 吸收、下一实际开发进入 R7 最小 Undo、R8 综合收口，不承载运行时代码。
 - `docs/arch-c-r5-transform-session.md`：R5 高频 Preview Entry Gate、三层 Transform 状态、Commit / Cancel 合同与封版验证记录。
 - `docs/arch-c-r5-transform-session.svg`：R5 Transform Preview / Commit / Cancel 可视化图；说明三层 Transform、单槽 Preview 渲染、Commit / Cancel 与迟到 MouseUp 边界，不承载运行时代码。
+- `docs/arch-c-r7-undo.svg`：R7 最小 Undo 开发主链图；说明成功 Commit 进入 History、Undo 恢复正式 Scene、Preview / Cancel 禁止进历史，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -149,6 +150,9 @@
 - `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
 - `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体。
 - `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position、同步派生空间索引并发布渲染快照；空间索引不是第二份场景真相。
+- `XuanYu.Core/Scene/SceneTransformCommitResult.cs`：Scene Transform 正式提交结果，携带 EntityKey、Before、After 与 Changed 供 History 判断。
+- `XuanYu.Core/History/EditorHistoryOwner.cs`：编辑历史所有者，维护最小 Undo 栈；只接收正式 Transform History Entry，不执行 Scene 恢复。
+- `XuanYu.Core/History/TransformHistoryEntry.cs`：Transform 历史记录值对象，保存实体身份以及提交前后的正式 Transform。
 - `XuanYu.Core/Transform/PreviewTransform.cs`：拖动期间的临时 Position；只供渲染预览，不是正式场景事实。
 - `XuanYu.Core/Transform/TransformSession.cs`：单实体 Move 会话，校验 Session、维护 Start / Preview，并保证最多一次 Commit 或 Cancel。
 - `XuanYu.Core/Transform/TransformStartSnapshot.cs`：Transform Begin 时的实体身份与正式 Transform 快照。
@@ -162,6 +166,8 @@
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
+- `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs`：编辑历史 Owner 合同测试；覆盖空栈、无变化忽略和 LIFO Undo。
+- `XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs`：Transform Commit / History / Restore 集成测试；覆盖 Preview、Cancel、迟到输入和无变化提交不污染 History。
 - `XuanYu.Core.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
@@ -334,12 +340,13 @@
 - `XuanYu.Editor.UI/Vm/LogEntry.cs`：编辑器日志条目模型。
 - `XuanYu.Editor.UI/Vm/SampleLogEntries.cs`：底部日志栏示例数据。
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
+- `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm 最小 Undo 接线分部；成功 Commit 后记录 History，Ctrl+Z / 撤销命令恢复正式 Scene。
 - `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`：UiVm 交互事务入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
-- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；命中后提交既有 Interaction Begin 并阻断 Scene Picking，不修改 Transform、SpatialIndex 或 Undo。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；命中后提交既有 Interaction Begin 并阻断 Scene Picking，不直接写正式 Transform、SpatialIndex 或 History。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令分部，提交 R1 测试实体 Position 并刷新调试对象信息。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。

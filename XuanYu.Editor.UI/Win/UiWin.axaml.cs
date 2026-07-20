@@ -21,6 +21,13 @@ public partial class UiWin : Window
 
     void Window_KeyDown(object? sender, KeyEventArgs e)
     {
+        if (e.Key == Key.Z && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            (DataContext as UiVm)?.TryUndoFromShortcut();
+            e.Handled = true;
+            return;
+        }
+
         if (e.Key != Key.Escape) return;
         (DataContext as UiVm)?.CancelInteractionFromEscape();
         e.Handled = true;

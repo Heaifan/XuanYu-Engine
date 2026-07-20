@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia.Threading;
+using XuanYu.Core.History;
 using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
@@ -9,6 +10,7 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISceneRenderSnapshotSource
 {
     readonly EditorStateOwner _editorState;
+    readonly EditorHistoryOwner _historyOwner = new();
     int _leftTabIndex; EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
     string _footerMessage = "已就绪。SampleProject 已选中。", _footerState = "状态：就绪";
     bool _isLogOpen;
@@ -67,7 +69,11 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
 
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
 
-    void Run(string name) => ApplyRunCommand(name);
+    void Run(string name)
+    {
+        if (name == "撤销") { TryUndoFromCommand(); return; }
+        ApplyRunCommand(name);
+    }
 
     bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return false; field = value; OnPropertyChanged(name); return true; }
 

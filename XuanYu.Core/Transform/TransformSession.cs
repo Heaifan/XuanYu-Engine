@@ -33,10 +33,19 @@ public sealed class TransformSession
 
     public bool TryCommit(long sessionId, SceneStateOwner scene)
     {
+        return TryCommit(sessionId, scene, out _);
+    }
+
+    public bool TryCommit(
+        long sessionId,
+        SceneStateOwner scene,
+        out SceneTransformCommitResult commit)
+    {
+        commit = default;
         if (!Owns(sessionId) || scene.RenderSnapshot.Entity.EntityKey != StartSnapshot.EntityKey) return false;
         var position = Preview?.Position ?? StartSnapshot.Transform.Position;
         End();
-        scene.CommitPosition(position);
+        commit = scene.CommitPositionWithResult(position);
         return true;
     }
 

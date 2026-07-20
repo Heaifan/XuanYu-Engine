@@ -50,9 +50,14 @@ public sealed partial class UiVm
         var result = _editorState.Commit(new CommitInteractionCommand(
             snap.SessionId, snap.OwnerTool, snap.Pointer.PointerId));
         if (result is null) return;
-        var transformCommitted = _transformSession.TryCommit(snap.SessionId, _sceneState);
+        var transformCommitted = _transformSession.TryCommit(snap.SessionId, _sceneState, out var commit);
         _moveDragConstraint = null;
-        if (transformCommitted) PublishSceneRenderSnapshot();
+        if (transformCommitted)
+        {
+            RecordTransformHistory(commit);
+            PublishSceneRenderSnapshot();
+            OnPropertyChanged(nameof(DebugObjectItems));
+        }
         FooterState = "状态：就绪";
         FooterMessage = "交互已提交。";
         LogInteraction("提交捕获", $"Session={snap.SessionId}；{snap.Pointer.Summary}");

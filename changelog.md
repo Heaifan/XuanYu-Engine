@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.17.27-rz
+ARCH-C-R7 最小 Undo（2026-07-20 11:41:16）
+- 任务目标：建立最小编辑历史链，一次成功 Transform Commit 只生成一条 Undo 记录，Ctrl+Z 恢复 Commit 前正式 Transform；Preview、Cancel、`WM_CANCELMODE`、迟到 MouseUp 和无变化 Commit 均不得进入 History。
+- Entry Gate：确认 R5 正式写入点为 `SceneStateOwner.CommitPosition`；R7 History 只能接在 Scene 正式 Commit 成功且 `Changed=true` 之后，不能接 PointerMove、MouseUp 输入事件或 UI 猜测。
+- 主要改动：新增 `SceneTransformCommitResult` 返回 Entity / Before / After / Changed；新增 `TransformHistoryEntry` 与 `EditorHistoryOwner` 撤销栈；`TransformSession.TryCommit` 返回 Scene Commit 结果；UiVm 在 Changed Commit 后记录 History，Ctrl+Z / 顶部撤销在 Interaction Idle 时执行 Undo，拖动中不执行历史 Undo；Undo 通过 `SceneStateOwner.RestoreTransform` 恢复正式 Scene，不直接写渲染 Preview。
+- 测试：新增 History Owner 空栈、无变化忽略、LIFO 测试，以及 Transform Commit -> History -> Undo 集成测试；覆盖多次 Preview 只生成一条历史、Cancel 与迟到 MouseUp 不进 History、无变化 Commit 不进 History、Undo 后 History 归零。
+- 可视化：新增 `docs/arch-c-r7-undo.svg`，以浅色中文图说明 Commit / History / Undo / Scene / Render 与禁止入口。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、`docs/arch-c-r7-undo.svg` XML 和 `file-tree.md` 328 / 328 均通过。R7 真机 Ctrl+Z 验收尚待用户运行确认。
+- 范围确认：未实现 Redo、Rotate、Scale、Local Transform、Snapping、多选、多实体事务、History 持久化、History UI、地平面、世界原点、世界坐标轴、天空盒或 Vulkan 生命周期改动。
+- Push 状态：本轮只做本地 Commit，不 Push。
+
 ## v0.2.17.26-rz
 ARCH-C-R5 Transform Preview / Commit / Cancel（2026-07-20）
 - 任务目标：让 R4 已选单实体沿世界 X/Y/Z 轴实时预览移动，MouseUp 最多正式 Commit 一次，Escape / `WM_CANCELMODE` / 捕获丢失完整 Cancel，迟到 MouseUp 不得复活会话；不实现 Undo 或其他 Transform 能力。

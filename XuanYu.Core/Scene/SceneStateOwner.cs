@@ -1,3 +1,4 @@
+using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
 using XuanYu.Core.Spatial;
 
@@ -28,9 +29,34 @@ public sealed class SceneStateOwner : ISceneRenderSnapshotSource
 
     public bool CommitPosition(Vector3d position)
     {
+        return CommitPositionWithResult(position).Changed;
+    }
+
+    public SceneTransformCommitResult CommitPositionWithResult(Vector3d position)
+    {
         var current = _snapshot.Entity;
         var transform = new CommittedTransform(position);
+        if (current.Transform == transform)
+        {
+            return new SceneTransformCommitResult(current.EntityKey, current.Transform, transform, false);
+        }
+
+        return ApplyTransform(current, transform);
+    }
+
+    public bool RestoreTransform(EntityId entityKey, CommittedTransform transform)
+    {
+        var current = _snapshot.Entity;
+        if (current.EntityKey != entityKey) return false;
         if (current.Transform == transform) return false;
+        ApplyTransform(current, transform);
+        return true;
+    }
+
+    SceneTransformCommitResult ApplyTransform(
+        SceneEntitySnapshot current,
+        CommittedTransform transform)
+    {
         var next = current with
         {
             Transform = transform
@@ -38,7 +64,7 @@ public sealed class SceneStateOwner : ISceneRenderSnapshotSource
         _spatialIndex.Update(ToSpatialBounds(next));
         _snapshot = new SceneRenderSnapshot(next);
         RenderSnapshotChanged?.Invoke(_snapshot);
-        return true;
+        return new SceneTransformCommitResult(current.EntityKey, current.Transform, transform, true);
     }
 
     static SpatialBounds ToSpatialBounds(SceneEntitySnapshot entity)
