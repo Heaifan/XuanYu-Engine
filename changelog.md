@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.17.31-fix
+ARCH-C-R8 真机验收清单细化（2026-07-20 23:45:00）
+- 任务目标：修正 `v0.2.17.30-rz` 最终报告和验收文档中 R8-B~E 过于概括的问题，把“阶段名式清单”改为可执行真机操作手册；本轮不修改运行时代码。
+- 主要改动：重写 `docs/arch-c-r8-acceptance.md`，为 R8-B / R8-C / R8-D / R8-E 分别补齐具体操作步骤、必须出现的日志、检查点、P0 失败判定和一次回传应包含的材料；同步 `docs/arch-c-plan.md`、主窗口标题与 `run.bat` 至 `v0.2.17.31-fix`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、版本一致性和 `file-tree.md` 331 / 331 均通过。
+- 范围确认：未修改运行时代码、SVG 结构、ARCH-C-R7 Undo、LOG-UX 复制逻辑、Transform、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖。
+
 ## v0.2.17.30-rz
 ARCH-C-R8 综合真机验收启动（2026-07-20 23:35:00）
 - 任务目标：进入 ARCH-C-R8 综合验收轮；本轮不新增运行时能力，只冻结 R8-A 自动审计结果并补齐 R8-B~E 真机验收清单，用于判断 ARCH-C 是否可正式收口。
