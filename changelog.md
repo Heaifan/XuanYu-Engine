@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.17.30-rz
+ARCH-C-R8 综合真机验收启动（2026-07-20 23:35:00）
+- 任务目标：进入 ARCH-C-R8 综合验收轮；本轮不新增运行时能力，只冻结 R8-A 自动审计结果并补齐 R8-B~E 真机验收清单，用于判断 ARCH-C 是否可正式收口。
+- 主要改动：新增 `docs/arch-c-r8-acceptance.md`，记录 R8-A 自动审计、R8-B 主链、R8-C Cancel / History / Session、R8-D Resize / DPI / Vulkan、R8-E 持续操作与关闭释放、P0 阻断项和禁区；新增 `docs/arch-c-r8-integration-acceptance.svg` 浅色中文综合验收图；同步 `docs/arch-c-plan.md`、`file-tree.md`、主窗口标题与 `run.bat` 至 `v0.2.17.30-rz`。
+- 验证结果：`dotnet restore XuanYu.Engine.slnx` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、版本一致性和 `file-tree.md` 331 / 331 均通过。首次沙箱内 restore 因 nuget.org 网络权限失败，已按审批流程联网重跑通过。
+- 范围确认：未修改运行时代码、ARCH-C-R7 Undo、LOG-UX 复制逻辑、Transform、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖；未新增 Redo / Rotate / Scale / Snapping / Local Transform / 多选 / History UI / 地平面 / 世界原点 / 世界坐标轴 / 天空盒。
+- 当前结论：R8-A 自动审计通过；R8-B~E 真机综合验收待用户回传；ARCH-C 最终收口暂未判定。
+
 ## v0.2.17.29-fix
 ARCH-C-R7 / LOG-UX 收口报告补图（2026-07-20 23:20:00）
 - 任务目标：补齐上轮 `v0.2.17.28-fix` 最终报告中缺失的窗口内可视化 SVG；本轮是宪法第十八章交付格式修正，不改变运行时代码语义。

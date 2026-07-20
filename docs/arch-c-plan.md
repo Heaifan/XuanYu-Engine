@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.29-fix
+版本：v0.2.17.30-rz
 日期：2026-07-19
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -357,6 +357,8 @@ R4 禁止继续新增箭头造型、Hover、X/Y/Z 标签、屏幕恒定尺寸、
 `v0.2.17.28-fix` 为 LOG-UX 真机问题修复：日志列表 Shift 多选后 `Ctrl+C` 不再依赖 `ListBox` 自身焦点，而是由底部日志区 Foot 隧道路由统一处理；本轮不改变 ARCH-C-R7 Undo 语义、不修改 Vulkan 生命周期、不新增 Render / Scene / History 能力。
 
 `v0.2.17.29-fix` 为宪法第十八章收口补正：补齐 `v0.2.17.28-fix` 对应窗口内可视化图 `docs/arch-c-r7-log-copy-fix.svg`，说明 LOG-UX Ctrl+C 从 ListBox 局部事件迁移到 Foot 隧道路由的脉络；不修改运行时代码语义。
+
+`v0.2.17.30-rz — ARCH-C-R8` 正式进入综合真机验收与 ARCH-C 收口判断：本轮只验不扩，冻结 R8-A 自动审计结果，后续按 `docs/arch-c-r8-acceptance.md` 对 Picking / Selection / Transform / Cancel / Undo / Resize / Vulkan 关闭释放做组合验收。R8 规划图见 `docs/arch-c-r8-integration-acceptance.svg`。
 
 ## 19.2 ARCH-C-R2 Entry Gate / Exit Gate
 

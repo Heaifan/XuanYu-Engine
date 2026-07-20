@@ -1,7 +1,7 @@
-版本：v0.2.17.29-fix
+版本：v0.2.17.30-rz
 # XuanYu Engine 文件树
 
-文件总数：329
+文件总数：331
 
 ## 根目录
 
@@ -48,6 +48,8 @@
 - `docs/arch-c-r5-transform-session.svg`：R5 Transform Preview / Commit / Cancel 可视化图；说明三层 Transform、单槽 Preview 渲染、Commit / Cancel 与迟到 MouseUp 边界，不承载运行时代码。
 - `docs/arch-c-r7-undo.svg`：R7 最小 Undo 开发主链图；说明成功 Commit 进入 History、Undo 恢复正式 Scene、Preview / Cancel 禁止进历史，不承载运行时代码。
 - `docs/arch-c-r7-log-copy-fix.svg`：R7 后 LOG-UX 多选复制修复图；说明 Shift 多选日志、Foot 隧道路由、选中集合文本和系统剪贴板关系，不承载运行时代码。
+- `docs/arch-c-r8-acceptance.md`：ARCH-C-R8 综合真机验收与收口判断文档；冻结 R8-A 自动审计，列出 R8-B~E 真机验收矩阵、P0 阻断项和禁区。
+- `docs/arch-c-r8-integration-acceptance.svg`：ARCH-C-R8 综合验收图；说明 Scene、Picking、Transform、Undo、Resize、Vulkan 生命周期与 P0 收口判断关系，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
