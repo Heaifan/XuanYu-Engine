@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.17.29-fix
+ARCH-C-R7 / LOG-UX 收口报告补图（2026-07-20 23:20:00）
+- 任务目标：补齐上轮 `v0.2.17.28-fix` 最终报告中缺失的窗口内可视化 SVG；本轮是宪法第十八章交付格式修正，不改变运行时代码语义。
+- 主要改动：新增 `docs/arch-c-r7-log-copy-fix.svg`，用浅色中文图说明 Shift 多选日志、旧 ListBox 局部 KeyDown 漏洞、Foot 隧道路由、SelectedEntriesClipboardText 与系统剪贴板的关系；同步 `docs/arch-c-plan.md`、`file-tree.md`、主窗口标题与 `run.bat` 至 `v0.2.17.29-fix`。
+- 验证结果：`docs/arch-c-r7-log-copy-fix.svg` XML 有效性检查通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、版本一致性和 `file-tree.md` 329 / 329 均通过。
+- 范围确认：未修改 LOG-UX 运行时代码、ARCH-C-R7 Undo、Transform、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖。
+
 ## v0.2.17.28-fix
 LOG-UX 多选日志 Ctrl+C 路由修复（2026-07-20 23:00:44）
 - 任务目标：修复真机发现的日志列表 Shift 多选若干行后按 `Ctrl+C` 无法复制的问题；本轮只修日志面板快捷键路由，不修改 ARCH-C-R7 Undo、Transform、Scene、History、Vulkan 生命周期或渲染链路。
