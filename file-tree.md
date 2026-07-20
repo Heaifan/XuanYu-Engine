@@ -1,7 +1,7 @@
-版本：v0.2.17.31-fix
+版本：v0.2.17.32-fix
 # XuanYu Engine 文件树
 
-文件总数：331
+文件总数：335
 
 ## 根目录
 
@@ -81,6 +81,7 @@
 - `docs/gizmo_drag_audit_2026-06-25.md`：Gizmo 拖动审计报告。
 - `docs/gizmo_drag_audit_probe.log`：Gizmo 拖动审计探针日志。
 - `docs/log-ux-1-r2-autoscroll.svg`：LOG-UX 自动滚动设计图。
+- `docs/log-ux-r8-tail-noise-fix.svg`：LOG-UX R8 尾随最新日志与 Render Backend 噪声降级图；说明不删除 Vulkan 后端代码，只过滤普通 UI 噪声。
 - `docs/naming-XuanYu-Engine.md`：XuanYu Engine 命名迁移说明。
 - `docs/plan-9.0D-move-gizmo-final.md`：Move Gizmo 最终验收计划。
 - `docs/project-baseline-audit-org-1-r1.md`：ORG-1-R1 项目基线审计修正版。
@@ -310,7 +311,7 @@
 - `XuanYu.Editor.UI/Foot/Foot.axaml.cs`：底部日志栏代码后置，含日志区 Ctrl+A / Ctrl+C 隧道路由接线。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`：日志详情面板界面。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs`：日志详情面板代码后置。
-- `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`：日志列表自动滚动控制器。
+- `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`：日志列表自动滚动控制器；R8 验收期间新日志到来时强制尾随最新行。
 - `XuanYu.Editor.UI/Icons/EditorIcons.axaml`：编辑器图标资源。
 - `XuanYu.Editor.UI/Left/Left.axaml`：左侧项目与层级面板界面。
 - `XuanYu.Editor.UI/Left/Left.axaml.cs`：左侧面板代码后置。
@@ -359,6 +360,7 @@
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs`：编辑器内存日志缓冲区。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs`：编辑器低频日志入口。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogClipboardText.cs`：日志复制文本格式化器。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogNoiseFilter.cs`：UI 日志噪声过滤器；屏蔽普通 Info 级 Render Backend Resize / 同尺寸探针噪声，不承载 Vulkan 生命周期所有权。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogFilter.cs`：日志过滤枚举与中文映射。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogFilterQuery.cs`：日志过滤匹配规则。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogRepeatKey.cs`：重复日志折叠键。

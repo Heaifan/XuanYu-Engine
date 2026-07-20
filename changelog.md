@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.17.32-fix
+LOG-UX 自动滚动与后端噪声降级（2026-07-21 00:20:00）
+- 任务目标：修复 R8 真机验收中发现的两个 LOG-UX 问题：日志列表选中 / 复制旧行后不再稳定滚到最新行；打开日志栏 / Resize 后普通 Render Backend 噪声大量占据底部日志，干扰人工验收。本轮不删除 Vulkan 后端生命周期代码。
+- 主要改动：`LogListAutoScrollController` 改为新日志到来时强制尾随最新行，选择旧日志不再永久关闭自动滚动；新增 `EditorLogNoiseFilter`，屏蔽普通 Info 级 `VulkanSwapchain 能力查询成功`、同尺寸跳过、`Resize跳过`、`Resize 快速跳过` 与 TryRecreate / ResizeStart 探针进入 UI 日志；新增 `docs/log-ux-r8-tail-noise-fix.svg` 说明噪声降级边界；错误、致命、实际 Swapchain 重建、Present 停启、释放链仍保留。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、版本一致性和 `file-tree.md` 335 / 335 均通过。
+- 范围确认：未修改 Vulkan 后端资源所有权、Swapchain 重建合同、Present 生命周期、Scene / Transform / Undo 语义、存档格式或项目依赖；未新增 R8 禁区功能。
+
 ## v0.2.17.31-fix
 ARCH-C-R8 真机验收清单细化（2026-07-20 23:45:00）
 - 任务目标：修正 `v0.2.17.30-rz` 最终报告和验收文档中 R8-B~E 过于概括的问题，把“阶段名式清单”改为可执行真机操作手册；本轮不修改运行时代码。

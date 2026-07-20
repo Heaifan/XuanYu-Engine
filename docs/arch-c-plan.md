@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.31-fix
+版本：v0.2.17.32-fix
 日期：2026-07-19
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -361,6 +361,8 @@ R4 禁止继续新增箭头造型、Hover、X/Y/Z 标签、屏幕恒定尺寸、
 `v0.2.17.30-rz — ARCH-C-R8` 正式进入综合真机验收与 ARCH-C 收口判断：本轮只验不扩，冻结 R8-A 自动审计结果，后续按 `docs/arch-c-r8-acceptance.md` 对 Picking / Selection / Transform / Cancel / Undo / Resize / Vulkan 关闭释放做组合验收。R8 规划图见 `docs/arch-c-r8-integration-acceptance.svg`。
 
 `v0.2.17.31-fix` 细化 R8 真机验收清单：将 R8-B~E 从阶段概括改为可执行操作手册，逐项列出操作步骤、必须出现的日志、检查点、失败判定和回传要求；不修改运行时代码语义。
+
+`v0.2.17.32-fix` 修复 R8 真机验收中暴露的 LOG-UX 问题：底部日志列表新日志到来时强制尾随最新行，避免选中 / 复制旧日志后自动滚动永久失效；同时屏蔽普通 Info 级 Render Backend Resize 快速跳过、同尺寸能力查询等低价值噪声进入 UI 日志，不删除 Vulkan 后端代码和生命周期日志。LOG-UX 修复图见 `docs/log-ux-r8-tail-noise-fix.svg`。
 
 ## 19.2 ARCH-C-R2 Entry Gate / Exit Gate
 

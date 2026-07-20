@@ -91,6 +91,7 @@ public sealed partial class UiVm
 
     public void LogVulkanLifecycle(string message, string detail)
     {
+        if (EditorLogNoiseFilter.SuppressRenderBackendInfo(message)) return;
         _logBus.Info(EditorLogSource.Render, EditorLogCategory.Backend, message, detail);
         RefreshLogBindings();
     }
