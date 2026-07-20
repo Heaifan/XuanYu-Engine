@@ -1,4 +1,4 @@
-版本：v0.2.17.27-rz
+版本：v0.2.17.28-fix
 # XuanYu Engine 文件树
 
 文件总数：328
@@ -304,7 +304,7 @@
 - `XuanYu.Editor.UI/EditorState/EditorToolSnapshot.cs`：编辑器工具只读快照。
 - `XuanYu.Editor.UI/EditorState/EditorToolText.cs`：工具身份与中文文案映射。
 - `XuanYu.Editor.UI/Foot/Foot.axaml`：底部日志栏界面。
-- `XuanYu.Editor.UI/Foot/Foot.axaml.cs`：底部日志栏代码后置。
+- `XuanYu.Editor.UI/Foot/Foot.axaml.cs`：底部日志栏代码后置，含日志区 Ctrl+A / Ctrl+C 隧道路由接线。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`：日志详情面板界面。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs`：日志详情面板代码后置。
 - `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`：日志列表自动滚动控制器。

@@ -1,6 +1,6 @@
 # ARCH-C-Plan：真实场景编辑交互闭环规划
 
-版本：v0.2.17.27-rz
+版本：v0.2.17.28-fix
 日期：2026-07-19
 类型：规划文档
 范围：纯规划与架构冻结，不实现 Picking、Gizmo、Transform、Undo 或场景运行时代码。
@@ -353,6 +353,8 @@ R4 禁止继续新增箭头造型、Hover、X/Y/Z 标签、屏幕恒定尺寸、
 后续路线图见 `docs/arch-c-r5-to-r8-route.svg`。R7 的核心红线是“一次成功 Commit = 一个 Undo Record”，Preview、Cancel、`WM_CANCELMODE` 和迟到 MouseUp 均不得写入 History。R7 不做 Redo、Rotate、Scale、Local Transform、Snapping、多选 Undo、持久化 Undo、地平面、世界原点、世界坐标轴或天空盒。
 
 `v0.2.17.27-rz — ARCH-C-R7` 已建立最小 Undo：`SceneStateOwner` 在正式 Position Commit 后返回 Entity / Before / After / Changed，`EditorHistoryOwner` 只记录 Changed=true 的 Transform History Entry，Ctrl+Z 在 Interaction Idle 时恢复 Before。Preview、Cancel、`WM_CANCELMODE`、迟到 MouseUp 与无变化 Commit 均不得进入 History；Undo 恢复走正式 Scene 入口，不直接修改渲染画面，不生成新的 History。R7 路线图见 `docs/arch-c-r7-undo.svg`。
+
+`v0.2.17.28-fix` 为 LOG-UX 真机问题修复：日志列表 Shift 多选后 `Ctrl+C` 不再依赖 `ListBox` 自身焦点，而是由底部日志区 Foot 隧道路由统一处理；本轮不改变 ARCH-C-R7 Undo 语义、不修改 Vulkan 生命周期、不新增 Render / Scene / History 能力。
 
 ## 19.2 ARCH-C-R2 Entry Gate / Exit Gate
 

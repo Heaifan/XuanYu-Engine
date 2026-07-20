@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.17.28-fix
+LOG-UX 多选日志 Ctrl+C 路由修复（2026-07-20 23:00:44）
+- 任务目标：修复真机发现的日志列表 Shift 多选若干行后按 `Ctrl+C` 无法复制的问题；本轮只修日志面板快捷键路由，不修改 ARCH-C-R7 Undo、Transform、Scene、History、Vulkan 生命周期或渲染链路。
+- 根因结论：旧实现把 `Ctrl+A / Ctrl+C` 只挂在 `LogList.KeyDown` 上，Shift 多选虽然能更新选中集合，但焦点落到 ListBoxItem、详情区或其它日志区子控件时，按键事件不一定进入该 handler，导致剪贴板写入链未触发。
+- 主要改动：`Foot` 构造时通过 `AddHandler(KeyDownEvent, Foot_KeyDown, RoutingStrategies.Tunnel)` 接管日志区隧道路由；`Foot.axaml` 移除 ListBox 局部 `KeyDown` 接线；`Ctrl+A` 仍选择当前筛选结果全部日志，`Ctrl+C` 写入 `SelectedEntriesClipboardText` 后发布既有“已复制 N 条日志到剪贴板”低频日志。
+- 验证结果：`dotnet build XuanYu.Editor.UI/XuanYu.Editor.UI.csproj --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，0 warning / 0 error；默认输出目录全解 build 首次因正在运行的 `XuanYu.Editor.App (36204)` 锁定 DLL 被阻断，已改用临时 `OutDir` 重跑 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100 和版本一致性检查均通过。
+- 范围确认：未新增文件；未修改 `UiVm.Logging.cs` 剪贴板格式、日志缓冲、日志详情按钮、ARCH-C-R7 Undo、Render.Vulkan、NativeHost、Swapchain、Pipeline、Shader 或 Scene 状态。
+- 真机复验清单：启动 `v0.2.17.28-fix`，展开日志栏，Shift 多选 3 行以上，按 `Ctrl+C`，粘贴到记事本 / Codex 后应出现 TSV 表头与多行日志；随后点击右侧“复制详情”仍只复制当前详情；`Ctrl+A` 后 `Ctrl+C` 应复制当前筛选结果全部日志。
+
 ## v0.2.17.27-rz
 ARCH-C-R7 最小 Undo（2026-07-20 11:41:16）
 - 任务目标：建立最小编辑历史链，一次成功 Transform Commit 只生成一条 Undo 记录，Ctrl+Z 恢复 Commit 前正式 Transform；Preview、Cancel、`WM_CANCELMODE`、迟到 MouseUp 和无变化 Commit 均不得进入 History。
