@@ -20,13 +20,22 @@ public sealed partial class UiVm
 
     bool IsTool(EditorToolId tool) => _editorState.ToolSnapshot.ActiveTool == tool;
 
+    void ToggleSnap()
+    {
+        var result = _editorState.ToggleSnap(new ToggleEditorSnapCommand());
+        RaiseToolChanged();
+        FooterMessage = $"{result.Snapshot.SnapText}；当前工具：{ActiveTool}。";
+        FooterState = "状态：就绪";
+        LogCommand(result.Snapshot.SnapText);
+        OnPropertyChanged(nameof(LogSummary));
+    }
+
     void RaiseToolChanged()
     {
         OnPropertyChanged(nameof(ActiveTool)); OnPropertyChanged(nameof(FooterMode));
         OnPropertyChanged(nameof(IsSelectTool)); OnPropertyChanged(nameof(IsBoxSelectTool));
         OnPropertyChanged(nameof(IsMoveTool)); OnPropertyChanged(nameof(IsRotateTool));
-        OnPropertyChanged(nameof(IsScaleTool)); OnPropertyChanged(nameof(IsFocusTool));
-        OnPropertyChanged(nameof(IsPanTool)); OnPropertyChanged(nameof(IsOrbitTool));
-        OnPropertyChanged(nameof(IsSnapTool));
+        OnPropertyChanged(nameof(IsScaleTool)); OnPropertyChanged(nameof(IsSnapEnabled));
+        OnPropertyChanged(nameof(SnapMode));
     }
 }

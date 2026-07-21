@@ -19,6 +19,24 @@ public sealed partial class EditorStateOwner
         _toolSnapshot = new EditorToolSnapshot(
             old.Revision + 1,
             tool,
+            old.IsSnapEnabled,
+            EditorToolCaptureState.None);
+        return new EditorToolChangedResult(
+            old.Revision,
+            _toolSnapshot.Revision,
+            old,
+            _toolSnapshot);
+    }
+
+    public EditorToolChangedResult ToggleSnap(ToggleEditorSnapCommand command)
+    {
+        EnsureWriteThread();
+        _ = command;
+        var old = _toolSnapshot;
+        _toolSnapshot = new EditorToolSnapshot(
+            old.Revision + 1,
+            old.ActiveTool,
+            !old.IsSnapEnabled,
             EditorToolCaptureState.None);
         return new EditorToolChangedResult(
             old.Revision,

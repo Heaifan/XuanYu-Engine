@@ -39,6 +39,13 @@ public partial class UiWin : Window
             return;
         }
 
+        if (e.Key == Key.Y && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            (DataContext as UiVm)?.TryRedoFromShortcut();
+            e.Handled = true;
+            return;
+        }
+
         if (e.Key != Key.Escape) return;
         (DataContext as UiVm)?.CancelInteractionFromEscape();
         e.Handled = true;

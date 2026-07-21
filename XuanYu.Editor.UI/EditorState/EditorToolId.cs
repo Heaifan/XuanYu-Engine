@@ -6,11 +6,7 @@ public enum EditorToolId
     BoxSelect,
     Move,
     Rotate,
-    Scale,
-    Focus,
-    Pan,
-    Orbit,
-    Snap
+    Scale
 }
 
 public enum EditorToolCaptureState

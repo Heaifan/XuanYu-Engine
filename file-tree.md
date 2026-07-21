@@ -1,7 +1,7 @@
-版本：v0.2.18.1-rz
+版本：v0.2.18.2-fix
 # XuanYu Engine 文件树
 
-文件总数：342
+文件总数：345
 
 ## 根目录
 
@@ -56,6 +56,7 @@
 - `docs/arch-c-r8-final-acceptance-status.svg`：ARCH-C-R8 最终真机验收状态图；说明最后组合风险项已取得足够证据，不承载运行时代码。
 - `docs/world-a-r0-coordinate-contract.md`：WORLD-A-R0 坐标链审计矩阵、RH/Z-Up 契约、Vulkan 边界和全球/局部坐标边界记录。
 - `docs/world-a-r0-coordinate-chain.svg`：WORLD-A-R0 浅色中文坐标事实链图；展示 World、Transform、Camera、Projection、Picking、Vulkan 与 Gizmo 的唯一事实关系。
+- `docs/world-a-r0-r1-tool-history-fix.svg`：WORLD-A-R0-R1 工具状态与 Redo 修复图；说明 ActiveTool、Command、Toggle 和 Redo Snapshot 恢复边界，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -162,7 +163,7 @@
 - `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体。
 - `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position、同步派生空间索引并发布渲染快照；空间索引不是第二份场景真相。
 - `XuanYu.Core/Scene/SceneTransformCommitResult.cs`：Scene Transform 正式提交结果，携带 EntityKey、Before、After 与 Changed 供 History 判断。
-- `XuanYu.Core/History/EditorHistoryOwner.cs`：编辑历史所有者，维护最小 Undo 栈；只接收正式 Transform History Entry，不执行 Scene 恢复。
+- `XuanYu.Core/History/EditorHistoryOwner.cs`：编辑历史所有者，维护 Undo / Redo 栈；只接收正式 Transform History Entry，不执行 Scene 恢复。
 - `XuanYu.Core/History/TransformHistoryEntry.cs`：Transform 历史记录值对象，保存实体身份以及提交前后的正式 Transform。
 - `XuanYu.Core/Transform/PreviewTransform.cs`：拖动期间的临时 Position；只供渲染预览，不是正式场景事实。
 - `XuanYu.Core/Transform/TransformSession.cs`：单实体 Move 会话，校验 Session、维护 Start / Preview，并保证最多一次 Commit 或 Cancel。
@@ -177,8 +178,10 @@
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
-- `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs`：编辑历史 Owner 合同测试；覆盖空栈、无变化忽略和 LIFO Undo。
-- `XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs`：Transform Commit / History / Restore 集成测试；覆盖 Preview、Cancel、迟到输入和无变化提交不污染 History。
+- `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs`：编辑历史 Owner 基础合同测试；覆盖空栈、无变化忽略和 LIFO Undo。
+- `XuanYu.Core.Tests/History/EditorHistoryRedoTests.cs`：编辑历史 Redo 合同测试；覆盖 Redo Cursor、多次 Redo 顺序和新 Commit 清空 Redo Branch。
+- `XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs`：Transform Commit / History / Restore 基础集成测试；覆盖 Preview、Cancel、迟到输入和无变化提交不污染 History。
+- `XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs`：Transform History Redo 集成测试；验证 Undo 恢复 Before、Redo 恢复 After 和新提交后 Redo 不可用。
 - `XuanYu.Core.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
@@ -307,28 +310,28 @@
 - `XuanYu.Editor.UI/EditorState/EditorSelectionSnapshot.cs`：编辑器选择只读快照。
 - `XuanYu.Editor.UI/EditorState/EditorStateChangedResult.cs`：编辑器选择状态变更结果。
 - `XuanYu.Editor.UI/EditorState/EditorStateOwner.Interaction.cs`：EditorStateOwner 交互事务分部。
-- `XuanYu.Editor.UI/EditorState/EditorStateOwner.Tool.cs`：EditorStateOwner 工具状态分部。
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.Tool.cs`：EditorStateOwner 工具状态分部；维护 ActiveTool 与 Snap Toggle，不处理一次性命令。
 - `XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`：EditorStateOwner 主体与选择状态所有权。
 - `XuanYu.Editor.UI/EditorState/EditorToolChangedResult.cs`：工具状态变更结果。
 - `XuanYu.Editor.UI/EditorState/EditorToolCommand.cs`：工具切换命令定义。
-- `XuanYu.Editor.UI/EditorState/EditorToolId.cs`：编辑器工具身份枚举。
-- `XuanYu.Editor.UI/EditorState/EditorToolSnapshot.cs`：编辑器工具只读快照。
+- `XuanYu.Editor.UI/EditorState/EditorToolId.cs`：编辑器持续工具身份枚举；不包含 Snap、Undo、Redo、Focus 等 Toggle / Command。
+- `XuanYu.Editor.UI/EditorState/EditorToolSnapshot.cs`：编辑器工具只读快照；包含 ActiveTool、Snap Toggle 与捕获状态。
 - `XuanYu.Editor.UI/EditorState/EditorToolText.cs`：工具身份与中文文案映射。
 - `XuanYu.Editor.UI/Foot/Foot.axaml`：底部日志栏界面。
 - `XuanYu.Editor.UI/Foot/Foot.axaml.cs`：底部日志栏代码后置，含日志区 Ctrl+A / Ctrl+C 隧道路由接线。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`：日志详情面板界面。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs`：日志详情面板代码后置。
 - `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`：日志列表自动滚动控制器；R8 验收期间新日志到来时强制尾随最新行。
-- `XuanYu.Editor.UI/Icons/EditorIcons.axaml`：编辑器图标资源。
+- `XuanYu.Editor.UI/Icons/EditorIcons.axaml`：编辑器图标资源；撤销 / 重做保持镜像同源视觉语言。
 - `XuanYu.Editor.UI/Left/Left.axaml`：左侧项目与层级面板界面。
 - `XuanYu.Editor.UI/Left/Left.axaml.cs`：左侧面板代码后置。
 - `XuanYu.Editor.UI/Main/Main.axaml`：中央主视口区域界面。
 - `XuanYu.Editor.UI/Main/Main.axaml.cs`：中央主视口区域代码后置。
-- `XuanYu.Editor.UI/Right/Right.axaml`：右侧检查器与调试面板界面。
+- `XuanYu.Editor.UI/Right/Right.axaml`：右侧检查器与调试面板界面；模式页显示 ActiveTool 与 Snap Toggle。
 - `XuanYu.Editor.UI/Right/Right.axaml.cs`：右侧面板代码后置。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml`：主布局根界面。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml.cs`：主布局根代码后置。
-- `XuanYu.Editor.UI/Top/Top.axaml`：顶部工具栏界面。
+- `XuanYu.Editor.UI/Top/Top.axaml`：顶部工具栏界面；持续工具高亮、视图命令按钮和吸附 Toggle 分离。
 - `XuanYu.Editor.UI/Top/Top.axaml.cs`：顶部工具栏代码后置。
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs`：Win32 原生 Pointer 消息快照。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs`：Vulkan NativeHost 桥接分部。
@@ -351,7 +354,7 @@
 - `XuanYu.Editor.UI/Vm/LogEntry.cs`：编辑器日志条目模型。
 - `XuanYu.Editor.UI/Vm/SampleLogEntries.cs`：底部日志栏示例数据。
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
-- `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm 最小 Undo 接线分部；成功 Commit 后记录 History，Ctrl+Z / 撤销命令恢复正式 Scene。
+- `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm Undo / Redo 接线分部；成功 Commit 后记录 History，撤销恢复 Before，重做恢复 After。
 - `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`：UiVm 交互事务入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。

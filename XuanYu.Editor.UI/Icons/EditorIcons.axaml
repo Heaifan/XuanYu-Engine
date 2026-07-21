@@ -15,7 +15,7 @@
   <StreamGeometry x:Key="OpenIcon">M2 6H6L8 4H14V13H2Z</StreamGeometry>
   <StreamGeometry x:Key="SaveIcon">M3 3H13V13H3ZM5 3V7H11V3M5 9H11</StreamGeometry>
   <StreamGeometry x:Key="UndoIcon">M6 5L3 8L6 11M3 8H9C11 8 13 9 13 12V14</StreamGeometry>
-  <StreamGeometry x:Key="RedoIcon">M10 5L13 8L10 11M5 8H11C13 8 15 9 15 12V14</StreamGeometry>
+  <StreamGeometry x:Key="RedoIcon">M10 5L13 8L10 11M13 8H7C5 8 3 9 3 12V14</StreamGeometry>
   <StreamGeometry x:Key="PlayIcon">M4 3L13 8L4 13Z</StreamGeometry>
   <StreamGeometry x:Key="StopIcon">M4 4H12V12H4Z</StreamGeometry>
   <StreamGeometry x:Key="SelectIcon">M5 3L17 14L11.7 15.1L14.7 20.2L12.4 21.5L9.4 16.4L5.8 20.2Z</StreamGeometry>

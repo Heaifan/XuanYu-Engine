@@ -856,3 +856,13 @@ AI 必须遵循以下判断顺序：
 - Transform、Camera、Spatial、Picking 与 Gizmo 必须消费同一 World / View / Projection 事实，禁止形成 Render World 与 Picking World。
 - Vulkan 裁剪空间差异只能在 Render Boundary 转换，不得用交换轴、额外负号或临时补丁污染 World、Transform、Picking、Spatial 或 Gameplay。
 - 全球地理坐标必须经过显式 Datum、全局双精度、Region 局部、Camera-relative 与 Vulkan float 边界；禁止把整个地球表示成单一 float3。
+
+---
+
+## 二十二、工具状态与 History 事实
+
+- `ActiveTool` 只能表示持续编辑工具，不得混入 Toggle、一次性 Command 或视图命令。
+- `Snap` 等开关必须作为独立 Toggle 状态；点击开关不得改变当前编辑工具。
+- 撤销、重做、聚焦等命令不得污染 `ActiveTool`，执行后工具高亮、右上角工具文本和底部工具文本必须保持同源一致。
+- Undo 必须恢复已提交的 Before Snapshot，Redo 必须恢复已提交的 After Snapshot；二者不得重新模拟输入 Delta。
+- Undo / Redo 不得产生新 History；任何新 Commit 必须清空旧 Redo Branch。

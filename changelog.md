@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.18.2-fix
+WORLD-A-R0-R1 工具状态同步与 Redo 修复（2026-07-21 23:10:00）
+- 任务目标：修复 WORLD-A-R0 真机验收暴露的工具状态事实源、Redo 历史恢复和撤销/重做图标一致性问题；本轮不得进入 WORLD-A-R1 Registry，不新增 Ground、Grid、Skybox、Terrain、地球 Mesh、玩法系统或完整 UI 重构。
+- 根因结论：`EditorToolId` 把 Select / Move / Rotate / Scale 等持续工具与 Focus / Pan / Orbit 命令、Snap Toggle 混在同一 ActiveTool 里，导致顶部高亮、右上角模式和底部工具文本共享错误事实；`EditorHistoryOwner` 只有 Undo 栈，Redo 按钮没有真实 AfterSnapshot 恢复链。
+- 主要改动：ActiveTool 收敛为 Select、BoxSelect、Move、Rotate、Scale 五项；Snap 改为 `EditorToolSnapshot.IsSnapEnabled` 独立 Toggle，点击吸附不再改变当前工具；聚焦、平移、环绕改为普通命令按钮，不参与工具高亮；Redo 增加 `_redo` 栈，Undo 把 Entry 移入 Redo，Redo 恢复 AfterSnapshot，新 Commit 清空旧 Redo 分支；UiVm 执行 Undo/Redo 后重新发布 Scene Render Snapshot，且不改变 ActiveTool；`Ctrl+Y` 接入 Redo。
+- 测试变化：新增 `EditorHistoryRedoTests` 和 `TransformHistoryRedoIntegrationTests`，覆盖 P0→P1→Undo→Redo、连续 Undo/Redo 顺序、新 Commit 后 Redo Branch 失效；既有 Preview / Cancel / Late MouseUp 不进 History 测试保留。
+- UI 与图标：Redo 图标改为 Undo 图标的水平镜像构型，共用同一 `Path.topIcon` 样式、线宽、端点、留白和视觉重量；右侧“模式”页补充显示 Snap 状态，避免把“吸附”写成当前工具。
+- 治理与可视化：工具状态长期规则同步到 AI 开发宪法与 dev-rules；新增浅色中文 `docs/world-a-r0-r1-tool-history-fix.svg` 描述 ActiveTool / Toggle / Command 与 History Redo 链路；`file-tree.md` 更新到 345 / 345。
+- 自动验收：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 通过，89 passed / 0 failed / 0 skipped；旧工具状态绑定与“工具：吸附”残留扫描为空。
+- 遗留问题：WORLD-A-R0 真机 Gate 仍需复验 Rotate→Move、Move→Snap ON、Move Commit→Undo→Redo、Resize、DPI 与 ARCH-C Preview / Commit / Cancel / Undo / Redo；通过前 R0 不封闭，WORLD-A-R1 继续暂缓。
+
 ## v0.2.18.1-rz
 WORLD-A-R0 坐标契约冻结与方向轴纠正（2026-07-21 22:38:53）
 - 任务目标：冻结 World、Transform、Camera、Projection、Vulkan、Screen、Picking 与 Gizmo 的唯一坐标事实，只修坐标链；禁止 Ground、Grid、Skybox、Terrain、PBR、世界地图与 WORLD-A-R1 之后能力。

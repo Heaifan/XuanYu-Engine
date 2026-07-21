@@ -67,7 +67,7 @@
 
     <TabItem Classes="sideTab" Header="模式">
       <StackPanel Spacing="10" Margin="0,6,0,0">
-        <Border Classes="infoPanel"><StackPanel Spacing="6"><TextBlock Text="当前工作模式" Classes="section"/><TextBlock Text="{Binding ActiveTool}" Classes="panelTitle"/><TextBlock Text="{Binding FooterMessage}" Classes="muted" TextWrapping="Wrap"/></StackPanel></Border>
+        <Border Classes="infoPanel"><StackPanel Spacing="6"><TextBlock Text="当前工作模式" Classes="section"/><TextBlock Text="{Binding ActiveTool}" Classes="panelTitle"/><TextBlock Text="{Binding SnapMode}" Classes="value"/><TextBlock Text="{Binding FooterMessage}" Classes="muted" TextWrapping="Wrap"/></StackPanel></Border>
       </StackPanel>
     </TabItem>
   </TabControl>

@@ -24,6 +24,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         SurfaceBridgeFactory = surfaceBridgeFactory;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
+        ToggleSnapCommand = new RelayCommand(_ => ToggleSnap());
         InteractionCommand = new RelayCommand(name => RunInteraction(name?.ToString() ?? string.Empty));
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
         SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
@@ -34,6 +35,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }
     public ICommand RunCommand { get; }
     public ICommand SelectToolCommand { get; }
+    public ICommand ToggleSnapCommand { get; }
     public ICommand InteractionCommand { get; }
     public ICommand ToggleLogCommand { get; }
     public ICommand SelectLogFilterCommand { get; }
@@ -48,10 +50,8 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public bool IsRotateTool => IsTool(EditorToolId.Rotate);
     public bool IsScaleTool => IsTool(EditorToolId.Scale);
     public bool IsBoxSelectTool => IsTool(EditorToolId.BoxSelect);
-    public bool IsFocusTool => IsTool(EditorToolId.Focus);
-    public bool IsPanTool => IsTool(EditorToolId.Pan);
-    public bool IsOrbitTool => IsTool(EditorToolId.Orbit);
-    public bool IsSnapTool => IsTool(EditorToolId.Snap);
+    public bool IsSnapEnabled => _editorState.ToolSnapshot.IsSnapEnabled;
+    public string SnapMode => _editorState.ToolSnapshot.SnapText;
     public string SelectionTitle => _editorState.Snapshot.SelectionTitle;
     public string SelectionKey => _editorState.Snapshot.SelectionKey;
     public string SelectionSubtitle => _editorState.Snapshot.SelectionSubtitle;
@@ -72,6 +72,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     void Run(string name)
     {
         if (name == "撤销") { TryUndoFromCommand(); return; }
+        if (name == "重做") { TryRedoFromCommand(); return; }
         ApplyRunCommand(name);
     }
 

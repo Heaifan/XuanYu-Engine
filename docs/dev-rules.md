@@ -116,3 +116,11 @@
 - 正高度 Vulkan Viewport 的 Y 差异只允许在 `Render.Vulkan` 组装渲染矩阵时转换 Core Projection 的副本；Picking 不得读取该副本或加入 Vulkan 翻轴。
 - 修改 Camera / Projection / Screen-NDC / Gizmo 时，必须覆盖 Basis、World-Clip-World Round Trip、Center Ray、XYZ 分量与 Resize/DPI 测试。
 - 发现 `-X`、`-Y`、`Swap(Y,Z)` 等视觉补丁时必须追溯根因，禁止用第二个补丁抵消第一个错误。
+
+## 12. 工具状态与历史门禁
+
+- `ActiveTool` 只表示持续编辑工具：选择、框选、移动、旋转、缩放。
+- `Snap` 是 Toggle，撤销、重做、聚焦是 Command；它们不得覆盖或伪装成 `ActiveTool`。
+- 顶部工具高亮、右上角工具文本、底部工具文本必须从同一个工具快照派生。
+- Undo / Redo 必须恢复已提交的 Before / After Snapshot，不得重新模拟输入 Delta。
+- Undo / Redo 不得产生新 History；新 Commit 后必须清空旧 Redo 分支。
