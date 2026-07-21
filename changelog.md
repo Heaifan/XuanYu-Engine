@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.17.33-fix
+LOG-UX 窗口级日志复制焦点修复（2026-07-21 19:55:00）
+- 任务目标：修复 R8 补测中发现的 LOG-UX 焦点路由问题：点击视口后再 Shift 多选底部日志，按 `Ctrl+C` 没有复制反馈。本轮只修日志复制快捷键路由，不修改 ARCH-C-R7 Undo、Transform、Picking、Scene、History 或 Vulkan 生命周期。
+- 根因结论：`v0.2.17.32-fix` 的多选复制仍主要依赖底部 Foot 区域收到 `KeyDown`。当用户先点击视口后，键盘焦点可能停在视口 / 窗口路由链上；随后日志列表虽然视觉上有多选集合，但 `Ctrl+C` 不一定进入 Foot 的 Tunnel handler，导致剪贴板写入链不触发。
+- 主要改动：`UiWin` 窗口级 Tunnel 快捷键新增日志复制兜底：当日志栏打开且存在已选日志时，`Ctrl+C` 直接写入 `SelectedEntriesClipboardText` 并发布既有“已复制 N 条日志到剪贴板”日志；保留 Foot 区域内原有 `Ctrl+A / Ctrl+C` 行为；新增 `docs/log-ux-window-copy-focus-fix.svg` 绘制焦点路由。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、版本一致性和 `file-tree.md` 336 / 336 均通过。
+- 范围确认：未修改 Undo、Redo、Transform、Picking、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖；未新增 R8 禁区功能。
+
 ## v0.2.17.32-fix
 LOG-UX 自动滚动与后端噪声降级（2026-07-21 00:20:00）
 - 任务目标：修复 R8 真机验收中发现的两个 LOG-UX 问题：日志列表选中 / 复制旧行后不再稳定滚到最新行；打开日志栏 / Resize 后普通 Render Backend 噪声大量占据底部日志，干扰人工验收。本轮不删除 Vulkan 后端生命周期代码。

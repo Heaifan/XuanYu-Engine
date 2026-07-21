@@ -1,7 +1,7 @@
-版本：v0.2.17.32-fix
+版本：v0.2.17.33-fix
 # XuanYu Engine 文件树
 
-文件总数：335
+文件总数：336
 
 ## 根目录
 
@@ -82,6 +82,7 @@
 - `docs/gizmo_drag_audit_probe.log`：Gizmo 拖动审计探针日志。
 - `docs/log-ux-1-r2-autoscroll.svg`：LOG-UX 自动滚动设计图。
 - `docs/log-ux-r8-tail-noise-fix.svg`：LOG-UX R8 尾随最新日志与 Render Backend 噪声降级图；说明不删除 Vulkan 后端代码，只过滤普通 UI 噪声。
+- `docs/log-ux-window-copy-focus-fix.svg`：LOG-UX 窗口级日志复制焦点修复图；说明视口获得焦点后仍可复制已选日志，不承载运行时代码。
 - `docs/naming-XuanYu-Engine.md`：XuanYu Engine 命名迁移说明。
 - `docs/plan-9.0D-move-gizmo-final.md`：Move Gizmo 最终验收计划。
 - `docs/project-baseline-audit-org-1-r1.md`：ORG-1-R1 项目基线审计修正版。
