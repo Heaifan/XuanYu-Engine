@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.17.33-fix-stage-report
+ARCH-C-R8 阶段性真机验收报告固化（2026-07-21 20:10:00）
+- 任务目标：按当前真机证据固化 ARCH-C-R8 阶段性验收报告，明确 R8 阶段性真机验收通过，但 ARCH-C 尚未最终封板；本轮不修改运行时代码。
+- 主要改动：新增 `docs/arch-c-r8-stage-acceptance-report.md` 与 `docs/arch-c-r8-stage-acceptance-status.svg`，记录 Git 状态、已通过主链、Undo 与迟到 MouseUp 的谨慎判定、剩余三项组合生命周期证据、项目进度百分比和阻断项；同步 `file-tree.md` 至 338 / 338。
+- 验证结果：`docs/arch-c-r8-stage-acceptance-status.svg` XML 有效性检查通过；`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过；`file-tree.md` 提交后预期 338 / 338 通过。纯文档固化，不重新运行 build/test。
+- 范围确认：未修改运行时代码、Undo、Transform、Picking、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖；未新增 R8 禁区功能。
+
 ## v0.2.17.33-fix
 LOG-UX 窗口级日志复制焦点修复（2026-07-21 19:55:00）
 - 任务目标：修复 R8 补测中发现的 LOG-UX 焦点路由问题：点击视口后再 Shift 多选底部日志，按 `Ctrl+C` 没有复制反馈。本轮只修日志复制快捷键路由，不修改 ARCH-C-R7 Undo、Transform、Picking、Scene、History 或 Vulkan 生命周期。
