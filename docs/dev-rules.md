@@ -107,3 +107,12 @@
 - 每阶段：**审计文档（现状 + 风险排序）→ 修复 → 封版验证报告**（末尾带禁止项确认 + Build / Test 结果 + 变更清单）。
 - 冻结纪律：`ShellV2` 冻结后不回滚 / 不继续 / 不扩大；重启前必须人工确认路线。
 - stash 纪律：不随手 `git stash pop`；先分类（A 进当前 / B 延后 / C 不进），只提取需要的文件独立提交。
+
+## 11. 坐标契约门禁
+
+- World Space：右手系、`+Z` Up、XY 水平，`X × Y = Z`；正旋转使用右手规则。
+- 禁止把世界 `+X` 或 `+Y` 写成所有系统共享的 Forward；Camera / Object Local / Asset / Geographic Forward 分别定义。
+- 默认编辑相机、Picking、Gizmo 与 Vulkan Render 必须消费同一 `CameraState / ViewportState / ViewProjectionState`。
+- 正高度 Vulkan Viewport 的 Y 差异只允许在 `Render.Vulkan` 组装渲染矩阵时转换 Core Projection 的副本；Picking 不得读取该副本或加入 Vulkan 翻轴。
+- 修改 Camera / Projection / Screen-NDC / Gizmo 时，必须覆盖 Basis、World-Clip-World Round Trip、Center Ray、XYZ 分量与 Resize/DPI 测试。
+- 发现 `-X`、`-Y`、`Swap(Y,Z)` 等视觉补丁时必须追溯根因，禁止用第二个补丁抵消第一个错误。

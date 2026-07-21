@@ -29,7 +29,9 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         var viewport = new ViewportState(0, 0, _extent.Width, _extent.Height, (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
         var camera = DefaultEditorCamera.Create(_swapchainOwner.ResourceGeneration);
-        var viewProjection = ViewProjectionState.Create(camera, viewport).ViewProjection;
+        var state = ViewProjectionState.Create(camera, viewport);
+        var projection = ToVulkanProjection(state.Projection);
+        var viewProjection = state.View * projection;
         FillMatrixTranspose(target, viewProjection);
         var position = _sceneSnapshot.RenderPosition;
         target[16] = (float)position.X;
@@ -44,5 +46,14 @@ public sealed unsafe partial class VulkanClearFrameOwner
         target[4] = matrix.M21; target[5] = matrix.M22; target[6] = matrix.M23; target[7] = matrix.M24;
         target[8] = matrix.M31; target[9] = matrix.M32; target[10] = matrix.M33; target[11] = matrix.M34;
         target[12] = matrix.M41; target[13] = matrix.M42; target[14] = matrix.M43; target[15] = matrix.M44;
+    }
+
+    static Matrix4x4 ToVulkanProjection(Matrix4x4 projection)
+    {
+        projection.M12 = -projection.M12;
+        projection.M22 = -projection.M22;
+        projection.M32 = -projection.M32;
+        projection.M42 = -projection.M42;
+        return projection;
     }
 }

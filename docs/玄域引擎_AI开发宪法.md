@@ -846,3 +846,13 @@ AI 必须遵循以下判断顺序：
 > 普通问题直接解决，重大问题才请示。  
 > 不盲改、不造假、不掩盖、不扩围。  
 > 所有结果必须可验证、可回退、可审计。
+
+---
+
+## 二十一、唯一坐标事实
+
+- 玄域 World Space 固定为右手系、`+Z` 向上、XY 为水平面，正旋转遵守右手规则。
+- 世界 X/Y 是固定水平轴，但不得定义“世界唯一 Forward”；Camera、Object Local、Asset Import 与 Geographic Tangent 的 Forward 必须分别声明。
+- Transform、Camera、Spatial、Picking 与 Gizmo 必须消费同一 World / View / Projection 事实，禁止形成 Render World 与 Picking World。
+- Vulkan 裁剪空间差异只能在 Render Boundary 转换，不得用交换轴、额外负号或临时补丁污染 World、Transform、Picking、Spatial 或 Gameplay。
+- 全球地理坐标必须经过显式 Datum、全局双精度、Region 局部、Camera-relative 与 Vulkan float 边界；禁止把整个地球表示成单一 float3。

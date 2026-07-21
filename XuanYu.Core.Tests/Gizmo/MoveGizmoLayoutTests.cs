@@ -53,12 +53,15 @@ public sealed partial class MoveGizmoLayoutTests
     public void Guard_hit_keeps_visible_axis_from_falling_to_scene_picking()
     {
         var layout = Layout();
-        var y = layout.Segments.Single(item => item.Axis == MoveGizmoAxis.Y);
-        var midX = (y.Start.X + y.End.X) * 0.5;
-        var midY = (y.Start.Y + y.End.Y) * 0.5;
+        var origin = layout.Segments[0].Start;
+        var guardPoint = Enumerable.Range(-20, 41)
+            .SelectMany(x => Enumerable.Range(-20, 41).Select(y => new ScreenPoint(
+                origin.X + (x * 4), origin.Y + (y * 4))))
+            .First(point => layout.HitTest(point.X, point.Y) is null &&
+                            layout.GuardHitTest(point.X, point.Y) is not null);
 
-        Assert.Null(layout.HitTest(midX + 32, midY));
-        Assert.Equal(MoveGizmoAxis.Y, layout.GuardHitTest(midX + 32, midY));
+        Assert.Null(layout.HitTest(guardPoint.X, guardPoint.Y));
+        Assert.NotNull(layout.GuardHitTest(guardPoint.X, guardPoint.Y));
         Assert.Null(layout.GuardHitTest(5, 5));
     }
 

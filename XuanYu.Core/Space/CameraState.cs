@@ -21,7 +21,7 @@ public readonly record struct CameraState
         ValidateFinite(up, nameof(up));
         if (forward.IsZero) throw new ArgumentOutOfRangeException(nameof(forward));
         if (up.IsZero) throw new ArgumentOutOfRangeException(nameof(up));
-        if (Cross(forward, up).Length < 0.000001) throw new ArgumentOutOfRangeException(nameof(up));
+        if (forward.Cross(up).Length < 0.000001) throw new ArgumentOutOfRangeException(nameof(up));
         if (!double.IsFinite(verticalFovDegrees) || verticalFovDegrees <= MinFov || verticalFovDegrees >= MaxFov)
         {
             throw new ArgumentOutOfRangeException(nameof(verticalFovDegrees));
@@ -33,7 +33,8 @@ public readonly record struct CameraState
 
         Position = position;
         Forward = forward.Normalize();
-        Up = up.Normalize();
+        Right = Forward.Cross(up).Normalize();
+        Up = Right.Cross(Forward).Normalize();
         VerticalFovDegrees = verticalFovDegrees;
         NearPlane = nearPlane;
         FarPlane = farPlane;
@@ -44,6 +45,8 @@ public readonly record struct CameraState
 
     public Vector3d Forward { get; }
 
+    public Vector3d Right { get; }
+
     public Vector3d Up { get; }
 
     public double VerticalFovDegrees { get; }
@@ -53,14 +56,6 @@ public readonly record struct CameraState
     public double FarPlane { get; }
 
     public long Revision { get; }
-
-    static Vector3d Cross(Vector3d left, Vector3d right)
-    {
-        return new Vector3d(
-            (left.Y * right.Z) - (left.Z * right.Y),
-            (left.Z * right.X) - (left.X * right.Z),
-            (left.X * right.Y) - (left.Y * right.X));
-    }
 
     static void ValidateFinite(Vector3d vector, string name)
     {

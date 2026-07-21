@@ -12,6 +12,8 @@ public sealed class DefaultEditorCameraTests
         var expected = (DefaultEditorCamera.Target - DefaultEditorCamera.Position).Normalize();
 
         SpaceAssert.Near(expected, camera.Forward);
+        SpaceAssert.Near(Vector3d.UnitZ, DefaultEditorCamera.Up);
+        SpaceAssert.Near(0, camera.Forward.Dot(camera.Up));
         Assert.Equal(7, camera.Revision);
     }
 

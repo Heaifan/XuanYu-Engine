@@ -33,7 +33,7 @@ public static class CoreSelfTest
             {
                 var yaw = YawRotation.FromDegrees(450.0);
                 return global::System.Math.Abs(yaw.Degrees - 90.0) < 0.000001 &&
-                       global::System.Math.Abs(yaw.ForwardOnXZPlane.X - 1.0) < 0.000001;
+                       global::System.Math.Abs(yaw.RotatedUnitXOnXYPlane.Y - 1.0) < 0.000001;
             }),
             Check("SimulationTime advance", () =>
             {

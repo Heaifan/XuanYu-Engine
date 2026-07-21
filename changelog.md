@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.18.1-rz
+WORLD-A-R0 坐标契约冻结与方向轴纠正（2026-07-21 22:38:53）
+- 任务目标：冻结 World、Transform、Camera、Projection、Vulkan、Screen、Picking 与 Gizmo 的唯一坐标事实，只修坐标链；禁止 Ground、Grid、Skybox、Terrain、PBR、世界地图与 WORLD-A-R1 之后能力。
+- 审计结论：默认 Camera 与 `YawRotation` 隐含 Y-Up；正高度 Vulkan Viewport 缺少 Clip Y 边界转换，使 Camera Up 显示向下；CPU World→Screen 也把 NDC +Y 映射到屏幕下方，而 Picking 的 Screen→NDC 本身正确，形成 Render/Gizmo/Picking 多套解释。Shader、Push Constant 内存适配和 Vulkan 生命周期不是根因。
+- 主要改动：世界契约冻结为右手系、Z-Up、XY 水平面，且不定义世界唯一 Forward；`Vector3d` 增加 Cross；`YawRotation` 改为绕 +Z 的 XY 局部基轴；默认相机改为 Z-Up 斜视姿态；`CameraState` 正交化 Forward/Right/Up；Core `ViewProjectionState` 保持标准右手 Projection 并修正左上屏幕 Y 映射；`Render.Vulkan` 只在生成 Push Constant 时翻转 Projection 副本的 Clip Y。Picking 保持 Core Screen→NDC 语义，不携带 Vulkan 补丁。未改 Shader、Viewport/Scissor、Surface、Swapchain、Present 或关闭释放链。
+- 治理与证据：新增 `docs/world-a-r0-coordinate-contract.md` 审计矩阵与全球双精度边界，新增浅色中文 `docs/world-a-r0-coordinate-chain.svg`；坐标长期规则同步到 AI 开发宪法与 dev-rules。自动测试增加右手 Basis、Z-Up Yaw 局部基轴、Camera 正交轴、World-Clip-World Round Trip、Camera Up 屏幕方向与投影/射线一致性。
+- 自动验收：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test` 通过，基线 78 tests 增至 84 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1` 通过。Local Gizmo 当前缺少正式 Entity Rotation 与 Local 模式，本轮没有用假 Rotation 或新移动系统冒充完成；因此 R0 仍需用户真机 Gate，且不能在 Global/Local 能力补齐前宣称最终收口。
+- 禁止项确认：未新增 Ground、Grid、Origin Marker、Skybox、Terrain、地球 Mesh、世界地图、PBR、Camera 新玩法、完整 Blender 快捷键或 Gameplay Movement。
+
 ## v0.2.17.33-fix-final-acceptance
 ARCH-C-R8 最终真机验收固化（2026-07-21 21:45:00）
 - 任务目标：按最终补测日志固化 ARCH-C-R8 最终真机验收通过结论，并明确 ARCH-C 具备正式收口条件；本轮不修改运行时代码。

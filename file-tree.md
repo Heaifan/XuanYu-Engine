@@ -1,7 +1,7 @@
-版本：v0.2.17.33-fix
+版本：v0.2.18.1-rz
 # XuanYu Engine 文件树
 
-文件总数：340
+文件总数：342
 
 ## 根目录
 
@@ -54,6 +54,8 @@
 - `docs/arch-c-r8-stage-acceptance-status.svg`：ARCH-C-R8 阶段性真机验收状态图；说明已通过主链和待补最终 3 项，不承载运行时代码。
 - `docs/arch-c-r8-final-acceptance-report.md`：ARCH-C-R8 最终真机验收报告；固化 R8 最终通过、ARCH-C 具备正式收口条件以及两个证据范围注记。
 - `docs/arch-c-r8-final-acceptance-status.svg`：ARCH-C-R8 最终真机验收状态图；说明最后组合风险项已取得足够证据，不承载运行时代码。
+- `docs/world-a-r0-coordinate-contract.md`：WORLD-A-R0 坐标链审计矩阵、RH/Z-Up 契约、Vulkan 边界和全球/局部坐标边界记录。
+- `docs/world-a-r0-coordinate-chain.svg`：WORLD-A-R0 浅色中文坐标事实链图；展示 World、Transform、Camera、Projection、Picking、Vulkan 与 Gizmo 的唯一事实关系。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -122,17 +124,17 @@
 - `XuanYu.Core/Identity/EntityId.cs`：实体 ID 值对象。
 - `XuanYu.Core/Logging/EngineLogEntry.cs`：引擎日志条目。
 - `XuanYu.Core/Logging/EngineLogLevel.cs`：引擎日志等级。
-- `XuanYu.Core/Math/Vector3d.cs`：三维向量值对象。
-- `XuanYu.Core/Math/YawRotation.cs`：Yaw 旋转值对象。
+- `XuanYu.Core/Math/Vector3d.cs`：双精度三维向量值对象；提供确定性距离、点积、叉积与基础向量运算。
+- `XuanYu.Core/Math/YawRotation.cs`：Z-Up 世界中绕 +Z 的 Yaw 值对象；显式提供旋转后的 XY 局部 X/Y 基轴，不定义世界唯一 Forward。
 - `XuanYu.Core/Picking/ViewportPickingRequest.cs`：视口拾取请求值对象；负责携带请求序号、ViewportState、CameraState、逻辑坐标、查询掩码和 SpatialRevision，不执行射线命中。
 - `XuanYu.Core/Picking/ViewportPickingResult.cs`：视口拾取结果值对象；负责表达 EntityKey / NoHit、ViewportRevision、SpatialRevision 和 Raycast 统计，不写 Selection。
 - `XuanYu.Core/Picking/ViewportPickingService.cs`：视口拾取 Core 服务；负责把视口点转换为 WorldRay 并调用空间 Raycast，同时校验 ViewportRevision / SpatialRevision，不依赖 Avalonia 或 Vulkan。
-- `XuanYu.Core/Space/CameraState.cs`：渲染后端无关的相机状态契约；负责校验位置、方向、Up、FOV、裁剪面和 Revision，不负责渲染资源、输入事件或 Picking 命中。
+- `XuanYu.Core/Space/CameraState.cs`：渲染后端无关的相机状态契约；负责校验并正交化 Forward/Right/Up、FOV、裁剪面和 Revision。
 - `XuanYu.Core/Space/ViewportState.cs`：渲染后端无关的视口状态契约；负责记录逻辑区域、物理尺寸、DPI 和 Revision，不等同于 Vulkan Swapchain。
-- `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；负责从 Camera / Viewport 生成 View、Projection、ViewProjection、逆矩阵与 Vulkan 屏幕投影点，不负责实体筛选或空间索引。
-- `XuanYu.Core/Space/DefaultEditorCamera.cs`：默认编辑器斜视相机合同；从固定 Position/Target/Up 派生 CameraState，供 Render、Picking、Gizmo 共用，不改变世界坐标语义。
+- `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；生成标准右手 Projection、逆矩阵与左上原点屏幕投影点，不携带 Vulkan 差异。
+- `XuanYu.Core/Space/DefaultEditorCamera.cs`：默认 Z-Up 编辑器斜视相机合同；从固定 Position/Target/+Z Up 派生 CameraState，供 Render、Picking、Gizmo 共用。
 - `XuanYu.Core/Space/WorldRay.cs`：世界射线值对象；负责保存有限 Origin 和归一化 Direction，不负责命中测试或实体选择。
-- `XuanYu.Core/Space/WorldRayFactory.cs`：视口点到世界射线的转换入口；负责 NDC 与逆矩阵反投影，不负责 Ray-AABB、Picking、Selection 或 Gizmo。
+- `XuanYu.Core/Space/WorldRayFactory.cs`：视口点到世界射线的转换入口；按左上屏幕原点映射 Core NDC 并用同一逆矩阵反投影。
 - `XuanYu.Core/Spatial/DynamicAabbTree.cs`：动态 AABB 树索引入口；负责 Insert、Remove、Update 和 Query 调度，不暴露内部节点给调用方。
 - `XuanYu.Core/Spatial/DynamicAabbTree.Insert.cs`：动态 AABB 树插入分部；负责寻找兄弟节点和接入叶节点，不负责场景事实所有权。
 - `XuanYu.Core/Spatial/DynamicAabbTree.Node.cs`：动态 AABB 树内部节点模型；只在索引内部保存父子关系和包围盒，不作为公共契约。
@@ -185,9 +187,9 @@
 - `XuanYu.Core.Tests/Space/CameraStateTests.cs`：CameraState 自动测试；负责合法相机、退化方向、共线 Up、非法 FOV / Near / Far / 非有限数覆盖，不负责渲染画面验收。
 - `XuanYu.Core.Tests/Space/SpaceAssert.cs`：空间数学测试辅助断言；只负责局部近似比较，不进入生产项目。
 - `XuanYu.Core.Tests/Space/ViewportStateTests.cs`：ViewportState 自动测试；负责合法尺寸、DPI、Revision、幂等和非法尺寸覆盖，不负责平台窗口尺寸同步。
-- `XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs`：ViewProjectionState 自动测试；负责已知 View 矩阵、投影宽高比和矩阵可逆性覆盖，不负责 Vulkan 投影落地。
-- `XuanYu.Core.Tests/Space/DefaultEditorCameraTests.cs`：默认斜视相机 Forward 派生与中心射线合同测试；不修改世界轴约定。
-- `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`：WorldRay 自动测试；负责中心点、角落、Resize、稳定复现和非法输入覆盖，不负责实体 Picking。
+- `XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs`：ViewProjectionState 自动测试；覆盖标准右手 Projection、Camera Up 屏幕方向、World-Clip-World Round Trip 与可逆性。
+- `XuanYu.Core.Tests/Space/DefaultEditorCameraTests.cs`：默认 Z-Up 斜视相机 Forward/Up 派生与 Resize 中心射线合同测试。
+- `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`：WorldRay 自动测试；覆盖中心、四角、Resize、投影反投影方向一致性、稳定复现和非法输入。
 - `XuanYu.Core.Tests/Space/WorldRayTests.cs`：WorldRay 值对象自动测试；负责非法 Origin / Direction 失败边界，不负责射线命中或空间查询。
 - `XuanYu.Core.Tests/Spatial/SpatialBoundsTests.cs`：空间边界测试；负责 AABB 非法输入、相交和合并行为覆盖，不测试 Picking。
 - `XuanYu.Core.Tests/Spatial/RayAabbIntersectionTests.cs`：Ray-AABB 数学测试；负责正面命中、miss、背向、负方向、盒内起点、平行轴、擦边、擦角和最大距离覆盖。
@@ -254,7 +256,7 @@
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Scene Preview 快照，并由 Present 线程在安全点消费。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；负责把场景 World Position 与统一 ViewProjection 写入 push constant 并发起 Draw，不负责 Picking、Selection 或生命周期重构。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并发起 Draw，不污染 Picking 或生命周期。
 - `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与最小 Move Gizmo 三轴顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。
 - `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；不负责 Selection 或 Pipeline 生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。

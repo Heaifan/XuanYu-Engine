@@ -4,9 +4,9 @@ namespace XuanYu.Core.Space;
 
 public static class DefaultEditorCamera
 {
-    public static Vector3d Position { get; } = new(4, 3, -5);
+    public static Vector3d Position { get; } = new(4, -5, 3);
     public static Vector3d Target { get; } = Vector3d.Zero;
-    public static Vector3d Up { get; } = Vector3d.UnitY;
+    public static Vector3d Up { get; } = Vector3d.UnitZ;
 
     public static CameraState Create(long revision) => new(
         Position,

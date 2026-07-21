@@ -39,6 +39,11 @@ public readonly record struct Vector3d
 
     public double Dot(Vector3d other) => (X * other.X) + (Y * other.Y) + (Z * other.Z);
 
+    public Vector3d Cross(Vector3d other) => new(
+        (Y * other.Z) - (Z * other.Y),
+        (Z * other.X) - (X * other.Z),
+        (X * other.Y) - (Y * other.X));
+
     public static Vector3d operator +(Vector3d left, Vector3d right) => new(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
 
     public static Vector3d operator -(Vector3d left, Vector3d right) => new(left.X - right.X, left.Y - right.Y, left.Z - right.Z);

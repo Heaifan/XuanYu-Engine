@@ -33,6 +33,19 @@ public sealed class WorldRayFactoryTests
     }
 
     [Fact]
+    public void Project_then_unproject_keeps_screen_and_world_direction_consistent()
+    {
+        var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
+        var worldPoint = new Vector3d(0.75, 1.0, 0.0);
+        var screen = state.ProjectWorldPoint(worldPoint);
+        var ray = WorldRayFactory.FromViewportPoint(state, screen.X, screen.Y);
+        var expected = (worldPoint - ray.Origin).Normalize();
+
+        Assert.True(expected.Dot(ray.Direction) > 0.99999999);
+        Assert.True(screen.Y < 300);
+    }
+
+    [Fact]
     public void Non_zero_viewport_origin_uses_local_center()
     {
         var state = ViewProjectionState.Create(
