@@ -1,7 +1,7 @@
 版本：v0.2.17.33-fix
 # XuanYu Engine 文件树
 
-文件总数：338
+文件总数：340
 
 ## 根目录
 
@@ -52,6 +52,8 @@
 - `docs/arch-c-r8-integration-acceptance.svg`：ARCH-C-R8 综合验收图；说明 Scene、Picking、Transform、Undo、Resize、Vulkan 生命周期与 P0 收口判断关系，不承载运行时代码。
 - `docs/arch-c-r8-stage-acceptance-report.md`：ARCH-C-R8 阶段性真机验收报告；固定当前 R8 阶段性通过、ARCH-C 尚未最终封板以及剩余 3 项组合闭环。
 - `docs/arch-c-r8-stage-acceptance-status.svg`：ARCH-C-R8 阶段性真机验收状态图；说明已通过主链和待补最终 3 项，不承载运行时代码。
+- `docs/arch-c-r8-final-acceptance-report.md`：ARCH-C-R8 最终真机验收报告；固化 R8 最终通过、ARCH-C 具备正式收口条件以及两个证据范围注记。
+- `docs/arch-c-r8-final-acceptance-status.svg`：ARCH-C-R8 最终真机验收状态图；说明最后组合风险项已取得足够证据，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。

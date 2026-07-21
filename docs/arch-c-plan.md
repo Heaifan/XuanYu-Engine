@@ -366,6 +366,8 @@ R4 禁止继续新增箭头造型、Hover、X/Y/Z 标签、屏幕恒定尺寸、
 
 `v0.2.17.33-fix` 修复 R8 补测中暴露的 LOG-UX 焦点路由问题：点击视口后再 Shift 多选日志时，`Ctrl+C` 不再依赖底部 Foot 区域获得键盘焦点，而由窗口级 Tunnel 快捷键在日志栏打开且存在选中日志时复制当前选中集合；不修改 Undo、Transform、Picking、Scene 或 Vulkan 生命周期语义。LOG-UX 修复图见 `docs/log-ux-window-copy-focus-fix.svg`。
 
+`v0.2.17.33-fix` 后续补测确认 ARCH-C-R8 最终真机验收通过，ARCH-C 具备正式收口条件：Captured Ctrl+Z 按结果证据判定未破坏 Session / Scene / History；Resize 后 Undo 能恢复正式 Scene 并驱动后续 Transform；复杂操作后的 Vulkan 关闭释放链已通过。最终报告见 `docs/arch-c-r8-final-acceptance-report.md`，最终状态图见 `docs/arch-c-r8-final-acceptance-status.svg`。
+
 ## 19.2 ARCH-C-R2 Entry Gate / Exit Gate
 
 R2 开工入口条件：

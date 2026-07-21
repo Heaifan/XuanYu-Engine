@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 540" role="img" aria-labelledby="title desc">
+  <title id="title">ARCH-C-R8 final true-machine acceptance passed</title>
+  <desc id="desc">Core edit chain, captured undo result evidence, resize-to-undo-to-continued-transform, and complex-operation Vulkan close release chain have sufficient acceptance evidence.</desc>
+  <defs>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #172033; }
+      .title { font-size: 27px; font-weight: 700; }
+      .head { font-size: 18px; font-weight: 700; }
+      .small { font-size: 14px; fill: #536174; }
+      .done { fill: #eef9f1; stroke: #29945a; stroke-width: 2; }
+      .note { fill: #fff8e8; stroke: #cf8a20; stroke-width: 2; }
+      .final { fill: #eef6ff; stroke: #477fb7; stroke-width: 2; }
+      .arrow { stroke: #66758a; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#66758a"/>
+    </marker>
+  </defs>
+
+  <rect width="1100" height="540" fill="#ffffff"/>
+  <text x="34" y="45" class="title">ARCH-C-R8: final true-machine acceptance passed</text>
+  <text x="34" y="76" class="small">The final combined-risk checks now have enough evidence; ARCH-C is ready for formal closure work.</text>
+
+  <rect x="45" y="125" width="285" height="140" rx="14" class="done"/>
+  <text x="68" y="162" class="head">Captured undo scenario</text>
+  <text x="68" y="193" class="small">No invalid commit</text>
+  <text x="68" y="218" class="small">No history pollution</text>
+  <text x="68" y="243" class="small">Escape keeps legal position</text>
+
+  <rect x="407" y="125" width="285" height="140" rx="14" class="done"/>
+  <text x="430" y="162" class="head">Resize full chain</text>
+  <text x="430" y="193" class="small">Commit to Resize to Undo</text>
+  <text x="430" y="218" class="small">to Selection / Transform</text>
+  <text x="430" y="243" class="small">Continued editing works</text>
+
+  <rect x="770" y="125" width="285" height="140" rx="14" class="done"/>
+  <text x="793" y="162" class="head">Vulkan normal close</text>
+  <text x="793" y="193" class="small">Present stops after complex ops</text>
+  <text x="793" y="218" class="small">Release chain is complete</text>
+  <text x="793" y="243" class="small">No fatal late access</text>
+
+  <path d="M330 195H407" class="arrow"/>
+  <path d="M692 195H770" class="arrow"/>
+
+  <rect x="105" y="335" width="390" height="105" rx="14" class="note"/>
+  <text x="128" y="370" class="head">Evidence note 1</text>
+  <text x="128" y="400" class="small">Captured Ctrl+Z passes by result evidence</text>
+  <text x="128" y="424" class="small">No direct "ignored Ctrl+Z" log was printed</text>
+
+  <rect x="605" y="335" width="390" height="105" rx="14" class="note"/>
+  <text x="628" y="370" class="head">Evidence note 2</text>
+  <text x="628" y="400" class="small">Undo to Selection / Transform chain passed</text>
+  <text x="628" y="424" class="small">This run did not separately log viewport Picking</text>
+
+  <rect x="315" y="475" width="470" height="46" rx="12" class="final"/>
+  <text x="340" y="505" class="head">R8 final acceptance passed; ARCH-C is ready for formal closure</text>
+</svg>

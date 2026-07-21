@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.17.33-fix-final-acceptance
+ARCH-C-R8 最终真机验收固化（2026-07-21 21:45:00）
+- 任务目标：按最终补测日志固化 ARCH-C-R8 最终真机验收通过结论，并明确 ARCH-C 具备正式收口条件；本轮不修改运行时代码。
+- 主要改动：新增 `docs/arch-c-r8-final-acceptance-report.md` 与 `docs/arch-c-r8-final-acceptance-status.svg`；在 `docs/arch-c-plan.md` 追加 R8 最终验收结论；同步 `file-tree.md` 至 340 / 340。报告保留两条证据范围注记：Captured Ctrl+Z 按结果证据判定通过但未直接打印忽略日志；本轮 Resize 连续链未单独重新记录 viewport Picking，但 Undo 后正式 Scene 能正确驱动后续 Transform。
+- 验证结果：`docs/arch-c-r8-final-acceptance-status.svg` XML 有效性检查通过；`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过；`file-tree.md` 提交后预期 340 / 340 通过。纯文档最终验收固化，不重新运行 build/test；最近一次运行时代码验证仍为 `v0.2.17.33-fix` 的 7 项目 0 warning / 0 error、78 passed。
+- 范围确认：未修改运行时代码、Undo、Transform、Picking、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖；未新增 R8 禁区功能。
+
 ## v0.2.17.33-fix-stage-report
 ARCH-C-R8 阶段性真机验收报告固化（2026-07-21 20:10:00）
 - 任务目标：按当前真机证据固化 ARCH-C-R8 阶段性验收报告，明确 R8 阶段性真机验收通过，但 ARCH-C 尚未最终封板；本轮不修改运行时代码。
