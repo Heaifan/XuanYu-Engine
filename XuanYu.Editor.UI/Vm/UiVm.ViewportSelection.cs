@@ -18,10 +18,8 @@ public sealed partial class UiVm
             ApplySelectionCommand(new ClearEditorSelectionCommand(), "视口失效命中");
             return;
         }
-        _sceneState.SetActiveEntity(entity.EntityKey);
-
-        ApplySelectionCommand(new SelectEditorItemCommand(
-            "视口", entity.EntityKey.ToString(), entity.Name, entity.Type,
-            $"MainWorld/{entity.EntityKey}"));
+        ApplySelection("视口", new EditorTreeNode(
+            entity.EntityKey.ToString(), entity.Name, entity.Type,
+            $"MainWorld/{entity.EntityKey}", 1, "entity"));
     }
 }

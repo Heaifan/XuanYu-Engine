@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="980" height="460" viewBox="0 0 980 460">
   <rect width="980" height="460" fill="#f7fbff"/>
   <text x="40" y="48" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="26" fill="#14324a">WORLD-A-R1-R2 真机退回修复链</text>
-  <text x="40" y="82" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="15" fill="#486276">v0.2.18.9-fix：保留全量实体事实，降低 Vulkan 命令录制风险</text>
+  <text x="40" y="82" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="15" fill="#486276">v0.2.18.10-fix：保留全量实体事实，封住 Selection 同步回流</text>
 
   <rect x="44" y="130" width="180" height="92" rx="14" fill="#e4f0ff" stroke="#82aee6" stroke-width="2"/>
   <text x="74" y="166" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" fill="#14324a">GlobalWorld</text>
@@ -17,7 +17,7 @@
 
   <rect x="778" y="130" width="158" height="92" rx="14" fill="#fdebea" stroke="#e08a84" stroke-width="2"/>
   <text x="806" y="166" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" fill="#14324a">Vulkan 录制</text>
-  <text x="806" y="196" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" fill="#486276">索引循环绘制</text>
+  <text x="806" y="196" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" fill="#486276">录制深度诊断</text>
 
   <path d="M224 176 L278 176" stroke="#56738c" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
   <path d="M484 176 L538 176" stroke="#56738c" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
@@ -25,7 +25,7 @@
 
   <rect x="78" y="284" width="824" height="94" rx="16" fill="#ffffff" stroke="#c9d8e6" stroke-width="2"/>
   <text x="112" y="322" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" fill="#14324a">真机复验 Gate</text>
-  <text x="112" y="354" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="15" fill="#486276">启动不崩溃；未点击实体也可见；点击不同实体后层级、检查器、Picking 不串线；Resize 后仍可见。</text>
+  <text x="112" y="354" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="15" fill="#486276">启动不崩溃；10 实体同时可见；连续点击 Entity1~10 无转圈；层级、检查器、Picking 不串线。</text>
 
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">

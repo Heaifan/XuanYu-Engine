@@ -33,10 +33,12 @@ public sealed partial class SceneStateOwner
     public bool TryGetEntity(EntityId entityKey, out WorldEntitySnapshot entity) =>
         _world.TryGet(entityKey, out entity);
 
-    public void SetActiveEntity(EntityId entityKey)
+    public bool SetActiveEntity(EntityId entityKey, bool publish = true)
     {
+        if (_activeEntityKey == entityKey) return false;
         _activeEntityKey = entityKey;
         RefreshSnapshot();
-        RenderSnapshotChanged?.Invoke(_snapshot);
+        if (publish) RenderSnapshotChanged?.Invoke(_snapshot);
+        return true;
     }
 }

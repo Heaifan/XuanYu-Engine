@@ -23,6 +23,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     PipelineLayout _pipelineLayout = default;
     SceneRenderSnapshot _sceneSnapshot = SceneRenderSnapshot.TestEntityAtOrigin;
     Extent2D _extent;
+    int _recordCommandDepth;
     bool _disposed;
 
     public VulkanClearFrameOwner(Vk vk, VulkanDeviceOwner deviceOwner,

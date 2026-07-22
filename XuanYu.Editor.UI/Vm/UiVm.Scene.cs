@@ -47,7 +47,12 @@ public sealed partial class UiVm
             $"EntityKey={_sceneState.RenderSnapshot.Entity.EntityKey}; Position={position}");
     }
 
-    void PublishSceneRenderSnapshot() => RenderSnapshotChanged?.Invoke(RenderSnapshot);
+    void PublishSceneRenderSnapshot()
+    {
+        TraceSelection("PublishSceneRenderSnapshot", 1,
+            $"EntityCount={RenderSnapshot.Entities.Count}");
+        RenderSnapshotChanged?.Invoke(RenderSnapshot);
+    }
 
     IReadOnlyList<string> BuildDebugObjectItems()
     {

@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.18.10-fix
+WORLD-A-R1-R2-R1 Selection 同步重入诊断与最小修复（2026-07-22 22:58:00）
+- 任务目标：定位并修复 `v0.2.18.9-fix` 真机点击第二个实体后转圈并以 `-1073741571 / 0xC00000FD` 闪退的问题；本轮只处理 Selection / Hierarchy / ActiveEntity 同步重入最高嫌疑，不进入 WORLD-A-R2、Partition、Instancing、ECS、Hierarchy 大重构或 Vulkan 生命周期重构。
+- 根因证据状态：多实体同时可见已由用户截图确认，说明 UI 全量 RenderSnapshot 链路恢复；点击第二实体后崩溃把 P0 缩小到 Selection 切换链。当前仍按“最高概率嫌疑”处理，不把同步重入写成已完全证明的根因，需真机低频 Depth 日志回传确认。
+- 主要改动：`SceneStateOwner.SetActiveEntity` 增加同 EntityId no-op，避免重复 ActiveEntity 广播；树与视口选择统一走 `ApplySelection` 单入口，先提交 Editor Selection，再无广播切换 Scene ActiveEntity，最后统一同步投影并发布一次 RenderSnapshot；Selection Projection 加内部同步保护，程序同步 Project / Hierarchy 选中项时不得回流成业务选择。
+- 诊断与测试：新增 `[DIAG Selection]` 与 `[DIAG Vulkan]` 低频深度日志，只记录 Selection、Projection、Publish、RecordCommandBuffers 的 Depth / ThreadId / EntityCount；新增选择重入回归测试，覆盖 Entity1→Entity2、重复选择 no-op、1→2→3→1、Select B 后 Move / Undo / Redo。
+- 修改范围：`SceneStateOwner.Lifecycle.cs`、`UiVm.Selection.cs`、`UiVm.SelectionProjection.cs`、`UiVm.SelectionTrace.cs`、`UiVm.ViewportSelection.cs`、`UiVm.WorldProjection.cs`、`UiVm.Scene.cs`、`VulkanClearFrameOwner.Commands.cs`、`VulkanClearFrameOwner.Trace.cs`、`VulkanClearFrameOwner.cs`、`WorldSceneSelectionReentryTests.cs`、`UiWin.axaml`、`run.bat`、`docs/world-a-r1-r2-final-gate.md`、`docs/world-a-r1-r2-runtime-fix.svg`、`file-tree.md`、`changelog.md`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 118 passed / 0 failed / 0 skipped。5+100 通过。
+- Commit Hash：待本轮提交后回填。
+- 遗留问题：必须真机复验连续点击 Entity1~Entity10，不得转圈、不得 `0xC00000FD`；若仍失败，下一轮必须依据 Depth 日志或调用栈继续定位，不能继续叠保护位。
+
 ## v0.2.18.9-fix
 WORLD-A-R1-R2 真机退回：UI RenderSnapshot 全量投影与 Vulkan 录制稳定化（2026-07-22 22:28:07）
 - 任务目标：处理用户真机复验中 `v0.2.18.8-fix` 仍以 `-1073741571 / 0xC00000FD` 退出，以及多个实体“不点到就不显示”的阻断问题；本轮不进入 WORLD-A-R2 Partition，不新增 Instancing、批处理、完整 ECS、Terrain、Streaming、Gameplay、Rotation / Scale / Local Gizmo。

@@ -2,12 +2,33 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
+    bool _isSynchronizingSelectionProjection;
+    int _selectionCommitDepth, _hierarchySelectionDepth, _projectionSyncDepth;
+
     void ApplySelection(string source, EditorTreeNode node)
     {
+        _selectionCommitDepth++;
+        TraceSelection("ApplySelection", _selectionCommitDepth, $"Source={source}; Key={node.Key}");
         CancelInteraction("切换选择对象");
-        if (TryEntityKey(node.Key, out var key)) _sceneState.SetActiveEntity(key);
-        ApplySelectionCommand(new SelectEditorItemCommand(
-            source, node.Key, node.Title, node.Type, node.Path));
+        try
+        {
+            var command = new SelectEditorItemCommand(
+                source, node.Key, node.Title, node.Type, node.Path);
+            var changed = _editorState.Select(command);
+            var activeChanged = TryEntityKey(node.Key, out var key)
+                && _sceneState.SetActiveEntity(key, publish: false);
+            if (changed is null && !activeChanged) return;
+            RaiseSelectionChanged();
+            if (changed is not null) LogSelectionCommit(command, changed);
+            FooterMessage = $"{source}已选择：{SelectionTitle}";
+            FooterState = "状态：就绪";
+            OnPropertyChanged(nameof(LogSummary));
+        }
+        finally
+        {
+            TraceSelection("ApplySelection.End", _selectionCommitDepth, $"Key={node.Key}");
+            _selectionCommitDepth--;
+        }
     }
 
     void ApplyClearSelection()
@@ -26,10 +47,21 @@ public sealed partial class UiVm
 
     void SetHierarchySelection(EditorTreeNode? value)
     {
-        if (!Set(ref _selectedHierarchyItem, value, nameof(SelectedHierarchyItem))) return;
-        if (value is null) { ApplyClearSelection(); return; }
-        _selectedProjectItem = null; OnPropertyChanged(nameof(SelectedProjectItem));
-        ApplySelection("层级树", value);
+        _hierarchySelectionDepth++;
+        TraceSelection("SetHierarchySelection", _hierarchySelectionDepth, $"Key={value?.Key ?? "null"}");
+        try
+        {
+            if (!Set(ref _selectedHierarchyItem, value, nameof(SelectedHierarchyItem))) return;
+            if (_isSynchronizingSelectionProjection) return;
+            if (value is null) { ApplyClearSelection(); return; }
+            _selectedProjectItem = null; OnPropertyChanged(nameof(SelectedProjectItem));
+            ApplySelection("层级树", value);
+        }
+        finally
+        {
+            TraceSelection("SetHierarchySelection.End", _hierarchySelectionDepth, $"Key={value?.Key ?? "null"}");
+            _hierarchySelectionDepth--;
+        }
     }
 
     void RaiseSelectionChanged()
@@ -50,10 +82,7 @@ public sealed partial class UiVm
         var changed = _editorState.Select(command);
         if (changed is null) return;
         RaiseSelectionChanged();
-        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
-            $"【ARCH-C-R3】选择已提交；结果={command.Key}",
-            $"来源={command.Source}; Revision={changed.OldRevision}->{changed.NewRevision}");
-        RefreshLogBindings();
+        LogSelectionCommit(command, changed);
         FooterMessage = $"{command.Source}已选择：{SelectionTitle}";
         FooterState = "状态：就绪";
         OnPropertyChanged(nameof(LogSummary));
@@ -73,14 +102,4 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(LogSummary));
     }
 
-    void SynchronizeSelectionProjection()
-    {
-        var key = _editorState.Snapshot.HasSelection ? _editorState.Snapshot.SelectionKey : "";
-        var project = UiText.ProjectTreeItems.FirstOrDefault(item => item.Key == key);
-        var hierarchy = BuildHierarchyItems().FirstOrDefault(item => item.Key == key);
-        if (Set(ref _selectedProjectItem, project, nameof(SelectedProjectItem)) && project is not null)
-            LeftTabIndex = 0;
-        if (Set(ref _selectedHierarchyItem, hierarchy, nameof(SelectedHierarchyItem)) && hierarchy is not null)
-            LeftTabIndex = 1;
-    }
 }

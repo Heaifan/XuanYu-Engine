@@ -60,6 +60,8 @@ public sealed partial class UiVm
 
     void RefreshWorldProjectionBindings()
     {
+        TraceSelection("RefreshWorldProjectionBindings", 1,
+            $"EntityCount={_sceneState.RenderSnapshot.Entities.Count}");
         SynchronizeSelectionProjection();
         OnPropertyChanged(nameof(HierarchyItems));
         OnPropertyChanged(nameof(InspectorFields));

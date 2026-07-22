@@ -1,7 +1,7 @@
-版本：v0.2.18.9-fix
+版本：v0.2.18.10-fix
 # XuanYu Engine 文件树
 
-文件总数：369
+文件总数：373
 
 ## 根目录
 
@@ -64,7 +64,7 @@
 - `docs/world-a-r1-r1-scene-consumption.svg`：WORLD-A-R1-R1 Scene / Editor 消费 GlobalWorld 图；说明 SceneStateOwner 从实体 Owner 收敛为投影、会话和派生索引层，不承载运行时代码。
 - `docs/world-a-r1-r2-final-gate.md`：WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate 验收报告；记录 R1 封闭条件、真机退回项和禁止项确认。
 - `docs/world-a-r1-r2-multi-entity-gate.svg`：WORLD-A-R1-R2 多实体闭环图；说明 10 实体互不串线、Destroy 无幽灵和 1K Registry Gate。
-- `docs/world-a-r1-r2-runtime-fix.svg`：WORLD-A-R1-R2 真机退回修复图；说明 UI 全量实体投影、Vulkan 稳定录制和真机复验 Gate。
+- `docs/world-a-r1-r2-runtime-fix.svg`：WORLD-A-R1-R2 真机退回修复图；说明 UI 全量实体投影、Selection 同步重入保护、Vulkan 录制诊断和真机复验 Gate。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -202,6 +202,7 @@
 - `XuanYu.Core.Tests/World/EntityRegistryTests.cs`：实体注册表测试；覆盖 1 / 10 实体创建、查询、删除、重复删除、缺失键和稳定身份。
 - `XuanYu.Core.Tests/World/GlobalWorldTests.cs`：GlobalWorld 生命周期测试；覆盖所有者入口、销毁后不复用 EntityId，以及 1000 实体创建 / 查询 / 内存基线烟测记录。
 - `XuanYu.Core.Tests/World/WorldSceneMultiEntityGateTests.cs`：WORLD-A-R1-R2 多实体 Gate 测试；覆盖 10 实体 RenderSnapshot 投影、Picking 不同 EntityId、Destroy 后 Snapshot / Picking 无幽灵。
+- `XuanYu.Core.Tests/World/WorldSceneSelectionReentryTests.cs`：WORLD-A-R1-R2-R1 选择同步重入测试；覆盖 Entity1→Entity2、重复选择 no-op、快速切换和 Select B 后 Move / Undo / Redo。
 - `XuanYu.Core.Tests/World/WorldSceneConsumptionTests.cs`：WORLD-A-R1-R1 Scene 消费 World 测试；覆盖默认实体投影、Move Commit 同 EntityId、Undo/Redo 同 World Entity 和 Destroy 清空渲染投影。
 - `XuanYu.Core.Tests/World/WorldSceneIsolationTests.cs`：WORLD-A-R1-R1 多实体隔离测试；覆盖移动 B 不污染 A/C、Undo 只恢复 B、销毁选中实体不复用身份且安全回退。
 
@@ -279,6 +280,7 @@
 - `XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs`：Vulkan ShaderModule 生命周期持有者。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Trace.cs`：Vulkan ClearFrame 低频录制诊断分部；记录 RecordCommandBuffers 深度、线程、实体数和视图数，不改变生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Scene Preview 快照，并由 Present 线程在安全点消费。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并发起 Draw，不污染 Picking 或生命周期。
 - `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与最小 Move Gizmo 三轴顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。
@@ -386,6 +388,8 @@
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令与渲染快照分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
+- `XuanYu.Editor.UI/Vm/UiVm.SelectionProjection.cs`：UiVm Selection 投影同步分部；用内部同步保护位更新 Project / Hierarchy 选中项，禁止程序同步回流成业务选择。
+- `XuanYu.Editor.UI/Vm/UiVm.SelectionTrace.cs`：UiVm Selection 低频诊断分部；记录选择提交、层级选择、投影同步和渲染发布深度。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
 - `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点与 Inspector 字段，并同步投影刷新。

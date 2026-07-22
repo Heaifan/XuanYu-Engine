@@ -29,29 +29,39 @@ public sealed unsafe partial class VulkanClearFrameOwner
 
     bool RecordCommandBuffers(ImageView[] views)
     {
-        var old = _commandBuffers;
-        var next = new CommandBuffer[views.Length];
-        var alloc = new CommandBufferAllocateInfo
+        _recordCommandDepth++;
+        TraceRecordCommands("RecordCommandBuffers", _recordCommandDepth, views.Length);
+        try
         {
-            SType = StructureType.CommandBufferAllocateInfo,
-            CommandPool = _commandPool,
-            Level = CommandBufferLevel.Primary,
-            CommandBufferCount = (uint)views.Length
-        };
-        fixed (CommandBuffer* p = next)
-        {
-            var result = _vk.AllocateCommandBuffers(_deviceOwner.LogicalDevice, &alloc, p);
-            if (!Ok(result, "AllocateCommandBuffers")) return false;
-            for (var i = 0; i < next.Length; i++)
+            var old = _commandBuffers;
+            var next = new CommandBuffer[views.Length];
+            var alloc = new CommandBufferAllocateInfo
             {
-                if (RecordOne(next[i], _framebuffers[i])) continue;
-                _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)next.Length, next);
-                return false;
+                SType = StructureType.CommandBufferAllocateInfo,
+                CommandPool = _commandPool,
+                Level = CommandBufferLevel.Primary,
+                CommandBufferCount = (uint)views.Length
+            };
+            fixed (CommandBuffer* p = next)
+            {
+                var result = _vk.AllocateCommandBuffers(_deviceOwner.LogicalDevice, &alloc, p);
+                if (!Ok(result, "AllocateCommandBuffers")) return false;
+                for (var i = 0; i < next.Length; i++)
+                {
+                    if (RecordOne(next[i], _framebuffers[i])) continue;
+                    _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)next.Length, next);
+                    return false;
+                }
             }
+            if (old.Length > 0) _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)old.Length, old);
+            _commandBuffers = next;
+            return true;
         }
-        if (old.Length > 0) _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)old.Length, old);
-        _commandBuffers = next;
-        return true;
+        finally
+        {
+            TraceRecordCommands("RecordCommandBuffers.End", _recordCommandDepth, views.Length);
+            _recordCommandDepth--;
+        }
     }
 
     bool RecordOne(CommandBuffer cb, Framebuffer fb)
