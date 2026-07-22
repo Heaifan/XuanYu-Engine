@@ -864,5 +864,7 @@ AI 必须遵循以下判断顺序：
 - `ActiveTool` 只能表示持续编辑工具，不得混入 Toggle、一次性 Command 或视图命令。
 - `Snap` 等开关必须作为独立 Toggle 状态；点击开关不得改变当前编辑工具。
 - 撤销、重做、聚焦等命令不得污染 `ActiveTool`，执行后工具高亮、右上角工具文本和底部工具文本必须保持同源一致。
+- PointerDown 创建交互 Session 时，`SessionTool` 必须由当时唯一 `ActiveTool` 快照生成；Session 创建后可锁定该工具到 Commit / Cancel，但不得读取旧缓存或默认模式。
+- 未实现真实 Transform 能力的工具不得伪装完成；Rotate / Scale 未实现时不能偷偷执行 Move Session。
 - Undo 必须恢复已提交的 Before Snapshot，Redo 必须恢复已提交的 After Snapshot；二者不得重新模拟输入 Delta。
 - Undo / Redo 不得产生新 History；任何新 Commit 必须清空旧 Redo Branch。

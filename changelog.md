@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.18.3-fix
+WORLD-A-R0-R2 Transform 输入路由一致性与旋转图标优化（2026-07-22 20:01:12）
+- 任务目标：修复 `v0.2.18.2-fix` 真机验收第 2 项失败：工具显示已切到移动，但真实拖拽 Session 仍可能不按 ActiveTool 创建；本轮继续暂缓 WORLD-A-R1 Registry，只处理 R0 真机阻断和旋转按钮图标。
+- 根因结论：`TryBeginMoveGizmoCapture` 命中 Move Gizmo 后直接以硬编码 `"移动"` 创建交互 Session，没有先校验当前 `ActiveTool`。因此 Rotate / Scale 尚未真实实现时，仍可能偷偷落入 Move Gizmo Capture，形成 UI 工具状态与真实输入路由不一致。
+- 主要改动：新增 `EditorTransformCapturePolicy`，规定只有 `ActiveTool=Move` 才能开始 Move Gizmo Capture；PointerDown 创建 Session 时使用当前 ActiveTool 快照作为 `SessionTool`；Rotate / Scale 未实现真实能力时拒绝捕获，不再退化执行 Move；新增 WORLD-A-R0-R2 低频 Begin / Commit / Cancel / Reject 日志，明确打印 `ActiveTool` 与 `SessionTool`。
+- 图标变化：替换 `RotateIcon`，改为中心点 + 双段环形箭头构型，保持现有 Toolbar 的 ViewBox、StrokeWidth、LineCap、LineJoin 和视觉重量，但避免与 Undo / Redo / Refresh 语义混淆。
+- 测试变化：新增 `EditorTransformCapturePolicyTests`，覆盖 Move 可开始捕获、Rotate / Scale 不会回退成 Move 捕获、Move 下切换 Snap 后仍保持 Move 捕获。
+- 治理与可视化：新增 `docs/world-a-r0-r2-transform-route-fix.svg`，同步 `docs/dev-rules.md` 和 `docs/玄域引擎_AI开发宪法.md` 的交互 Session 工具事实规则；`file-tree.md` 更新到 349 / 349。
+- 自动验收：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 通过，92 passed / 0 failed / 0 skipped。
+- 遗留问题：WORLD-A-R0 仍需真机复验 `Rotate → Move → PointerDown` 日志中 `ActiveTool=移动; SessionTool=移动`，并确认 Rotate / Scale 不再偷偷执行 Move Session；通过前 R0 不封版，WORLD-A-R1 继续暂缓。
+
 ## v0.2.18.2-fix
 WORLD-A-R0-R1 工具状态同步与 Redo 修复（2026-07-21 23:10:00）
 - 任务目标：修复 WORLD-A-R0 真机验收暴露的工具状态事实源、Redo 历史恢复和撤销/重做图标一致性问题；本轮不得进入 WORLD-A-R1 Registry，不新增 Ground、Grid、Skybox、Terrain、地球 Mesh、玩法系统或完整 UI 重构。

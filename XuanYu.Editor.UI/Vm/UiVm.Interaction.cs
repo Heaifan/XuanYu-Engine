@@ -55,6 +55,7 @@ public sealed partial class UiVm
         if (transformCommitted)
         {
             RecordTransformHistory(commit);
+            LogTransformCaptureCommit(snap, commit);
             PublishSceneRenderSnapshot();
             OnPropertyChanged(nameof(DebugObjectItems));
         }
@@ -75,6 +76,7 @@ public sealed partial class UiVm
         if (transformCanceled) PublishSceneRenderSnapshot();
         FooterState = "状态：就绪";
         FooterMessage = $"交互已取消：{reason}";
+        LogTransformCaptureCancel(reason, snap);
         LogInteraction("取消捕获", $"Session={snap.SessionId}，原因={reason}");
         LogMoveGizmoEnd($"取消，原因={reason}", snap);
         RaiseInteractionChanged();
@@ -89,12 +91,4 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(LogSummary));
     }
 
-    void LogMoveGizmoEnd(string result, EditorInteractionSnapshot snap)
-    {
-        if (snap.OwnerTool != "移动" || !snap.StartSnapshot.StartsWith("Entity=", StringComparison.Ordinal)) return;
-        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
-            $"【ARCH-C-R5】移动工具会话{result}",
-            $"{snap.StartSnapshot}; Session={snap.SessionId}; Position={_sceneState.RenderSnapshot.Entity.Transform.Position}");
-        RefreshLogBindings();
-    }
 }

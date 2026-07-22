@@ -1,7 +1,7 @@
-版本：v0.2.18.2-fix
+版本：v0.2.18.3-fix
 # XuanYu Engine 文件树
 
-文件总数：345
+文件总数：349
 
 ## 根目录
 
@@ -57,6 +57,7 @@
 - `docs/world-a-r0-coordinate-contract.md`：WORLD-A-R0 坐标链审计矩阵、RH/Z-Up 契约、Vulkan 边界和全球/局部坐标边界记录。
 - `docs/world-a-r0-coordinate-chain.svg`：WORLD-A-R0 浅色中文坐标事实链图；展示 World、Transform、Camera、Projection、Picking、Vulkan 与 Gizmo 的唯一事实关系。
 - `docs/world-a-r0-r1-tool-history-fix.svg`：WORLD-A-R0-R1 工具状态与 Redo 修复图；说明 ActiveTool、Command、Toggle 和 Redo Snapshot 恢复边界，不承载运行时代码。
+- `docs/world-a-r0-r2-transform-route-fix.svg`：WORLD-A-R0-R2 Transform 输入路由修复图；说明 PointerDown 从 ActiveTool 快照生成 SessionTool，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -178,13 +179,14 @@
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
+- `XuanYu.Core.Tests/EditorTool/EditorTransformCapturePolicyTests.cs`：编辑器 Transform 捕获策略测试；测试侧引用 Editor.UI，验证 Move 可捕获、Rotate / Scale 不伪装 Move、Snap 不改变捕获工具。
 - `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs`：编辑历史 Owner 基础合同测试；覆盖空栈、无变化忽略和 LIFO Undo。
 - `XuanYu.Core.Tests/History/EditorHistoryRedoTests.cs`：编辑历史 Redo 合同测试；覆盖 Redo Cursor、多次 Redo 顺序和新 Commit 清空 Redo Branch。
 - `XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs`：Transform Commit / History / Restore 基础集成测试；覆盖 Preview、Cancel、迟到输入和无变化提交不污染 History。
 - `XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs`：Transform History Redo 集成测试；验证 Undo 恢复 Before、Redo 恢复 After 和新提交后 Redo 不可用。
 - `XuanYu.Core.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
 
-- `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：Core 长期自动测试宿主项目文件；只负责引用测试依赖和 `XuanYu.Core`，不向生产项目传递测试依赖或工具链。
+- `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
 - `XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs`：视口拾取 Core 测试；负责中心命中、空白 NoHit、移动后新旧位置、DPI 逻辑坐标和代际过期拒绝覆盖。
 - `XuanYu.Core.Tests/Space/CameraStateTests.cs`：CameraState 自动测试；负责合法相机、退化方向、共线 Up、非法 FOV / Near / Far / 非有限数覆盖，不负责渲染画面验收。
@@ -317,12 +319,13 @@
 - `XuanYu.Editor.UI/EditorState/EditorToolId.cs`：编辑器持续工具身份枚举；不包含 Snap、Undo、Redo、Focus 等 Toggle / Command。
 - `XuanYu.Editor.UI/EditorState/EditorToolSnapshot.cs`：编辑器工具只读快照；包含 ActiveTool、Snap Toggle 与捕获状态。
 - `XuanYu.Editor.UI/EditorState/EditorToolText.cs`：工具身份与中文文案映射。
+- `XuanYu.Editor.UI/EditorState/EditorTransformCapturePolicy.cs`：Transform 捕获策略；规定 Move Gizmo 只能由 ActiveTool=Move 的快照开始，不执行 UI 或场景修改。
 - `XuanYu.Editor.UI/Foot/Foot.axaml`：底部日志栏界面。
 - `XuanYu.Editor.UI/Foot/Foot.axaml.cs`：底部日志栏代码后置，含日志区 Ctrl+A / Ctrl+C 隧道路由接线。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`：日志详情面板界面。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs`：日志详情面板代码后置。
 - `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`：日志列表自动滚动控制器；R8 验收期间新日志到来时强制尾随最新行。
-- `XuanYu.Editor.UI/Icons/EditorIcons.axaml`：编辑器图标资源；撤销 / 重做保持镜像同源视觉语言。
+- `XuanYu.Editor.UI/Icons/EditorIcons.axaml`：编辑器图标资源；撤销 / 重做保持镜像同源视觉语言，旋转图标使用中心轴环形构型。
 - `XuanYu.Editor.UI/Left/Left.axaml`：左侧项目与层级面板界面。
 - `XuanYu.Editor.UI/Left/Left.axaml.cs`：左侧面板代码后置。
 - `XuanYu.Editor.UI/Main/Main.axaml`：中央主视口区域界面。
@@ -360,7 +363,8 @@
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
-- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；命中后提交既有 Interaction Begin 并阻断 Scene Picking，不直接写正式 Transform、SpatialIndex 或 History。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令分部，提交 R1 测试实体 Position 并刷新调试对象信息。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。

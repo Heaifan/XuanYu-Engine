@@ -12,7 +12,14 @@ public sealed partial class UiVm
     public bool TryBeginMoveGizmoCapture(long pointerId, double x, double y, ViewportState viewport, bool hostValid)
     {
         var entity = _sceneState.RenderSnapshot.Entity;
+        var sessionTool = ActiveTool;
         if (!hostValid || !HasSelection || SelectionKey != entity.EntityKey.ToString()) return false;
+        if (!EditorTransformCapturePolicy.CanBeginMoveGizmo(_editorState.ToolSnapshot))
+        {
+            LogTransformCaptureRejected(sessionTool, entity.EntityKey.ToString());
+            return false;
+        }
+
         var state = ViewProjectionState.Create(DefaultEditorCamera.Create(viewport.Revision), viewport);
         var layout = MoveGizmoLayout.Project(state, entity.Transform.Position);
         var axis = layout.HitTest(x, y) ?? layout.GuardHitTest(x, y);
@@ -20,11 +27,12 @@ public sealed partial class UiVm
 
         var pointer = new EditorInteractionPointerSnapshot(pointerId, x, y, x, y, 0);
         var start = $"Entity={entity.EntityKey}; Axis={axis}";
-        var result = _editorState.Begin(new BeginInteractionCommand("移动", start, pointer));
+        var result = _editorState.Begin(new BeginInteractionCommand(sessionTool, start, pointer));
         if (result is null) return false;
         if (!_transformSession.Begin(result.Snapshot.SessionId, entity, axis.Value))
         {
-            _editorState.Cancel(new CancelInteractionCommand(result.Snapshot.SessionId, "移动", "Transform Session 启动失败"));
+            _editorState.Cancel(new CancelInteractionCommand(
+                result.Snapshot.SessionId, sessionTool, "Transform Session 启动失败"));
             return false;
         }
         var segment = layout.Segments.Single(item => item.Axis == axis.Value);
@@ -34,6 +42,7 @@ public sealed partial class UiVm
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
             "【ARCH-C-R5】移动工具会话开始",
             $"实体={entity.EntityKey}; 轴={axis}; Session={result.Snapshot.SessionId}");
+        LogTransformCaptureBegin(sessionTool, result.Snapshot.OwnerTool, entity.EntityKey.ToString(), axis.Value);
         RefreshLogBindings();
         RaiseInteractionChanged();
         return true;

@@ -122,5 +122,7 @@
 - `ActiveTool` 只表示持续编辑工具：选择、框选、移动、旋转、缩放。
 - `Snap` 是 Toggle，撤销、重做、聚焦是 Command；它们不得覆盖或伪装成 `ActiveTool`。
 - 顶部工具高亮、右上角工具文本、底部工具文本必须从同一个工具快照派生。
+- 交互 Session 创建时，`SessionTool` 必须来自捕获开始瞬间的唯一 `ActiveTool` 快照，不得来自旧缓存、默认 TransformMode 或 UI 文案猜测。
+- 未实现真实能力的工具不得偷偷退化执行已实现工具；例如 Rotate / Scale 未实现时不得进入 Move Session。
 - Undo / Redo 必须恢复已提交的 Before / After Snapshot，不得重新模拟输入 Delta。
 - Undo / Redo 不得产生新 History；新 Commit 后必须清空旧 Redo 分支。

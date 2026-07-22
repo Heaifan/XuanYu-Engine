@@ -20,7 +20,7 @@
   <StreamGeometry x:Key="StopIcon">M4 4H12V12H4Z</StreamGeometry>
   <StreamGeometry x:Key="SelectIcon">M5 3L17 14L11.7 15.1L14.7 20.2L12.4 21.5L9.4 16.4L5.8 20.2Z</StreamGeometry>
   <StreamGeometry x:Key="MoveIcon">M12 3V21M12 3L9 6M12 3L15 6M12 21L9 18M12 21L15 18M3 12H21M3 12L6 9M3 12L6 15M21 12L18 9M21 12L18 15M12 10.5A1.5 1.5 0 1 0 12 13.5A1.5 1.5 0 0 0 12 10.5</StreamGeometry>
-  <StreamGeometry x:Key="RotateIcon">M17.5 7.2A7 7 0 1 0 19 14M17.5 7.2V3.8H20.9</StreamGeometry>
+  <StreamGeometry x:Key="RotateIcon">M12 10.5A1.5 1.5 0 1 0 12 13.5A1.5 1.5 0 0 0 12 10.5M6.2 9.5A6.6 6.6 0 0 1 15.8 5.3M15.8 5.3L15.2 2.8M15.8 5.3L13.2 5.9M17.8 14.5A6.6 6.6 0 0 1 8.2 18.7M8.2 18.7L8.8 21.2M8.2 18.7L10.8 18.1</StreamGeometry>
   <StreamGeometry x:Key="ScaleIcon">M8 4H4V8M4 4L9 9M16 4H20V8M20 4L15 9M8 20H4V16M4 20L9 15M16 20H20V16M20 20L15 15M9 9H15V15H9Z</StreamGeometry>
   <StreamGeometry x:Key="BoxSelectIcon">M4 5H17V16H4ZM14.5 14L20 19.2L17.4 19.8L18.9 22L17.2 23L15.8 20.7L14.1 22.4Z</StreamGeometry>
   <StreamGeometry x:Key="FocusIcon">M4 9V4H9M15 4H20V9M20 15V20H15M9 20H4V15M12 9.8A2.2 2.2 0 1 0 12 14.2A2.2 2.2 0 0 0 12 9.8M12 11.2A0.8 0.8 0 1 0 12 12.8A0.8 0.8 0 0 0 12 11.2</StreamGeometry>
