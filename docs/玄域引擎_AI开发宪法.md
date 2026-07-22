@@ -879,3 +879,4 @@ AI 必须遵循以下判断顺序：
 - `EntityRegistry` 的最小正式入口为 `Create`、`Destroy`、`Get`、`TryGet`、`Exists`；销毁已不存在或非法实体必须稳定失败，不得污染 Registry。
 - 1000 实体冒烟必须覆盖创建、查询、删除、重复删除、稳定 key、缺失 key 与无污染，并记录创建时间、查询时间和内存变化基线；基线只作观察，不作为未审计性能门槛。
 - Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay 或 ECS 接入时，必须消费 `GlobalWorld / EntityRegistry` 的实体事实，不得反向成为实体生命周期 Owner。
+- `SceneStateOwner` 只能承担 Scene 投影、编辑会话、Snapshot 聚合和派生空间索引维护；Transform Commit、Undo、Redo、Destroy 必须写回或查询同一个 `GlobalWorld / EntityRegistry` 实体事实，不得维护第二份正式 Transform。

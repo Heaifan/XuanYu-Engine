@@ -34,6 +34,7 @@ public sealed partial class UiVm
 
     void CommitTestEntityPosition(Vector3d position)
     {
+        if (!_sceneState.RenderSnapshot.HasEntity) return;
         if (!_sceneState.CommitPosition(position)) return;
         _logBus.Info(EditorLogSource.Render, EditorLogCategory.Command,
             "ARCH-C-R1 场景实体 Position 已提交",
@@ -45,6 +46,7 @@ public sealed partial class UiVm
     IReadOnlyList<string> BuildDebugObjectItems()
     {
         var entity = _sceneState.RenderSnapshot.Entity;
+        if (!entity.IsValid) return ["Entity：无"];
         var position = entity.Transform.Position;
         return
         [

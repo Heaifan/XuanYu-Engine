@@ -10,6 +10,9 @@ public sealed class EntityRegistry
 
     public int Count => _entities.Count;
 
+    public IReadOnlyList<WorldEntitySnapshot> Snapshot =>
+        _entities.Values.OrderBy(item => item.EntityKey.Value).ToArray();
+
     public WorldEntitySnapshot Create(
         string name,
         string type = "WorldEntity",
@@ -28,6 +31,17 @@ public sealed class EntityRegistry
     {
         if (!entityKey.IsValid) return false;
         return _entities.Remove(entityKey);
+    }
+
+    public bool UpdateTransform(EntityId entityKey, CommittedTransform transform)
+    {
+        if (!TryGet(entityKey, out var entity)) return false;
+        _entities[entityKey] = new WorldEntitySnapshot(
+            entity.EntityKey,
+            entity.Name,
+            entity.Type,
+            transform);
+        return true;
     }
 
     public WorldEntitySnapshot Get(EntityId entityKey)

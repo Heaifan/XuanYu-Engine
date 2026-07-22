@@ -6,4 +6,7 @@ public readonly record struct SceneEntitySnapshot(
     EntityId EntityKey,
     string Name,
     string Type,
-    CommittedTransform Transform);
+    CommittedTransform Transform)
+{
+    public bool IsValid => EntityKey.IsValid;
+}

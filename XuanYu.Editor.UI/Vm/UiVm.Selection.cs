@@ -40,6 +40,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(SelectionKey));
         OnPropertyChanged(nameof(HasSelection));
         OnPropertyChanged(nameof(IsEmptySelection));
+        OnPropertyChanged(nameof(InspectorFields));
         PublishSceneRenderSnapshot();
     }
 
@@ -75,7 +76,7 @@ public sealed partial class UiVm
     {
         var key = _editorState.Snapshot.HasSelection ? _editorState.Snapshot.SelectionKey : "";
         var project = UiText.ProjectTreeItems.FirstOrDefault(item => item.Key == key);
-        var hierarchy = UiText.HierarchyTreeItems.FirstOrDefault(item => item.Key == key);
+        var hierarchy = BuildHierarchyItems().FirstOrDefault(item => item.Key == key);
         if (Set(ref _selectedProjectItem, project, nameof(SelectedProjectItem)) && project is not null)
             LeftTabIndex = 0;
         if (Set(ref _selectedHierarchyItem, hierarchy, nameof(SelectedHierarchyItem)) && hierarchy is not null)

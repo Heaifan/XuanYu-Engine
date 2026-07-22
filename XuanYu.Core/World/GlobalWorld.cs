@@ -9,6 +9,8 @@ public sealed class GlobalWorld
 
     public int EntityCount => _registry.Count;
 
+    public IReadOnlyList<WorldEntitySnapshot> Entities => _registry.Snapshot;
+
     public WorldEntitySnapshot Create(
         string name,
         string type = "WorldEntity",
@@ -16,6 +18,9 @@ public sealed class GlobalWorld
         _registry.Create(name, type, transform);
 
     public bool Destroy(EntityId entityKey) => _registry.Destroy(entityKey);
+
+    public bool UpdateTransform(EntityId entityKey, CommittedTransform transform) =>
+        _registry.UpdateTransform(entityKey, transform);
 
     public WorldEntitySnapshot Get(EntityId entityKey) => _registry.Get(entityKey);
 

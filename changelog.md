@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.18.6-rz
+WORLD-A-R1-R1 Scene Consumption Integration（2026-07-22）
+- 任务目标：让现有 Scene / Editor / Render 链真正消费 `GlobalWorld -> EntityRegistry -> Entity State`，消除 ARCH-C 单测试实体时代遗留的双事实风险；本轮不进入 WORLD-A-R2 Partition，也不实现 Organization、完整 ECS、Terrain、Streaming、Gameplay、Rotation / Scale / Local Gizmo。
+- 审计结论：变更前 `SceneStateOwner` 自持 `SceneRenderSnapshot.TestEntityAtOrigin` 并作为正式 Transform Owner，`Hierarchy` 与 `Inspector` 的实体信息来自静态 `UiText`；Picking / Gizmo 返回和消费的是 EntityId，但最终仍落在 SceneStateOwner 自有实体上。
+- 主要改动：`SceneStateOwner` 改为持有 `GlobalWorld`，默认实体由 `GlobalWorld.Create` 生成，再通过 `SceneWorldProjection` 投影成 `SceneRenderSnapshot`；`CommitPosition`、`RestoreTransform`、Undo / Redo 均写回同一个 World Entity State；`SceneRenderSnapshot` 支持 Empty，Vulkan 空快照时 draw 0 顶点，防止 Destroy 后幽灵实体。
+- Editor 接入：`HierarchyItems` 改为从 `_sceneState.Entities` 动态生成实体节点；`InspectorFields` 在选中 `EntityId(...)` 时通过 World-backed Scene 查询 `WorldEntitySnapshot`；Selection 仍只保存稳定 EntityId 字符串，不保存实体对象或 Transform 副本。
+- 测试覆盖：新增 WORLD-A-R1-R1 Scene 消费与多实体隔离测试，覆盖 Create -> Projection、Select/Move/Undo/Redo 全程 EntityId 稳定、Move B 不污染 A/C、Undo 只恢复 B、Destroy active entity 后 RenderSnapshot 清空或安全回退且不复用身份。
+- 治理与文档：新增 `docs/world-a-r1-r1-scene-consumption-audit.md` 当前事实 Owner 矩阵与 `docs/world-a-r1-r1-scene-consumption.svg` 中文可视化；同步 `file-tree.md` 到 363 / 363；补充 dev-rules 与 AI 开发宪法中 Scene 投影、Transform Commit、Undo / Redo 必须落同一 World Fact 的长期规则。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 111 passed / 0 failed / 0 skipped；5+100、SVG XML、ARCH-A guard、`git diff --check` 均通过。
+
 ## v0.2.18.5-rz
 WORLD-A-R1 Global World + Entity Registry（2026-07-22）
 - 阶段裁定：基于用户真机截图裁定 `WORLD-A-R0 CLOSED`，正式进入 `WORLD-A-R1`；本轮只建立 GlobalWorld 与稳定 Entity Registry，不进入 Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay、ECS、Rotation / Scale / Local Gizmo。

@@ -20,7 +20,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public UiVm(INativeHostSurfaceBridgeFactory? surfaceBridgeFactory)
     {
         _editorState = new EditorStateOwner(() => Dispatcher.UIThread.CheckAccess());
-        _sceneState.RenderSnapshotChanged += _ => PublishSceneRenderSnapshot();
+        _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();
         SurfaceBridgeFactory = surfaceBridgeFactory;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
@@ -39,7 +39,9 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public ICommand InteractionCommand { get; }
     public ICommand ToggleLogCommand { get; }
     public ICommand SelectLogFilterCommand { get; }
-    public IReadOnlyList<EditorTreeNode> ProjectItems => UiText.ProjectTreeItems; public IReadOnlyList<EditorTreeNode> HierarchyItems => UiText.HierarchyTreeItems; public IReadOnlyList<string> InspectorFields => UiText.ProjectInspectorFields;
+    public IReadOnlyList<EditorTreeNode> ProjectItems => UiText.ProjectTreeItems;
+    public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
+    public IReadOnlyList<string> InspectorFields => BuildInspectorFields();
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems; public IReadOnlyList<string> PropertyItems => UiText.PropertyItems;
     public IReadOnlyList<string> ToolItems => UiText.ToolItems;
     public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => BuildDebugObjectItems();

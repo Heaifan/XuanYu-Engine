@@ -13,6 +13,7 @@ public sealed partial class UiVm
     {
         var entity = _sceneState.RenderSnapshot.Entity;
         var sessionTool = ActiveTool;
+        if (!entity.IsValid) return false;
         if (!hostValid || !HasSelection || SelectionKey != entity.EntityKey.ToString()) return false;
         if (!EditorTransformCapturePolicy.CanBeginMoveGizmo(_editorState.ToolSnapshot))
         {
