@@ -127,3 +127,11 @@
 - 未实现真实能力的工具不得偷偷退化执行已实现工具；例如 Rotate / Scale 未实现时不得进入 Move Session。
 - Undo / Redo 必须恢复已提交的 Before / After Snapshot，不得重新模拟输入 Delta。
 - Undo / Redo 不得产生新 History；新 Commit 后必须清空旧 Redo 分支。
+
+## 13. Global World 与 Entity Registry 事实源
+
+- 正式实体身份只能使用既有 `EntityId`；禁止为同一实体发明第二套长期 ID、UI ID、Render ID 或 Registry Key。
+- `GlobalWorld -> EntityRegistry -> Entity State` 是实体生命周期唯一事实源；UI、Renderer、Hierarchy、Inspector、Snapshot、Picking、Gizmo 只能读取、投影或缓存派生快照，不得拥有第二份正式实体真相。
+- `EntityRegistry` 的最小正式入口为 `Create`、`Destroy`、`Get`、`TryGet`、`Exists`；销毁已不存在或非法实体必须稳定失败，不得污染 Registry。
+- 1000 实体冒烟必须覆盖创建、查询、删除、重复删除、稳定 key、缺失 key 与无污染，并记录创建时间、查询时间和内存变化基线；基线只作观察，不作为未审计性能门槛。
+- 在 Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay 或 ECS 接入前，必须先确认它们消费 `GlobalWorld / EntityRegistry` 的事实，不得反向成为实体生命周期 Owner。

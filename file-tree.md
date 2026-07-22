@@ -1,7 +1,7 @@
-版本：v0.2.18.4-fix
+版本：v0.2.18.5-rz
 # XuanYu Engine 文件树
 
-文件总数：350
+文件总数：356
 
 ## 根目录
 
@@ -59,6 +59,7 @@
 - `docs/world-a-r0-r1-tool-history-fix.svg`：WORLD-A-R0-R1 工具状态与 Redo 修复图；说明 ActiveTool、Command、Toggle 和 Redo Snapshot 恢复边界，不承载运行时代码。
 - `docs/world-a-r0-r2-transform-route-fix.svg`：WORLD-A-R0-R2 Transform 输入路由修复图；说明 PointerDown 从 ActiveTool 快照生成 SessionTool，不承载运行时代码。
 - `docs/world-a-r0-r3-gizmo-visibility.svg`：WORLD-A-R0-R3 Gizmo 可见性收口图；说明 Selection、ActiveTool、真实能力与 ShowMoveGizmo 的关系，不承载运行时代码。
+- `docs/world-a-r1-entity-registry.svg`：WORLD-A-R1 Global World 与 Entity Registry 事实源图；说明 GlobalWorld、EntityRegistry、EntityId、查询者和后续接入边界，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -165,6 +166,9 @@
 - `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体、选择态、Preview 与 Move Gizmo 可见性。
 - `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position、同步派生空间索引并发布渲染快照；空间索引不是第二份场景真相。
 - `XuanYu.Core/Scene/SceneTransformCommitResult.cs`：Scene Transform 正式提交结果，携带 EntityKey、Before、After 与 Changed 供 History 判断。
+- `XuanYu.Core/World/EntityRegistry.cs`：实体注册表；负责 EntityId 分配、Create / Destroy / Get / TryGet / Exists 生命周期入口，不依赖 UI、Vulkan 或空间索引。
+- `XuanYu.Core/World/GlobalWorld.cs`：全局世界最小所有者；负责把实体生命周期委托给唯一 EntityRegistry，并暴露稳定实体查询入口。
+- `XuanYu.Core/World/WorldEntitySnapshot.cs`：世界实体快照值对象；负责绑定 EntityKey、名称、类型和正式 Transform，不生成第二套实体身份。
 - `XuanYu.Core/History/EditorHistoryOwner.cs`：编辑历史所有者，维护 Undo / Redo 栈；只接收正式 Transform History Entry，不执行 Scene 恢复。
 - `XuanYu.Core/History/TransformHistoryEntry.cs`：Transform 历史记录值对象，保存实体身份以及提交前后的正式 Transform。
 - `XuanYu.Core/Transform/PreviewTransform.cs`：拖动期间的临时 Position；只供渲染预览，不是正式场景事实。
@@ -186,6 +190,8 @@
 - `XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs`：Transform Commit / History / Restore 基础集成测试；覆盖 Preview、Cancel、迟到输入和无变化提交不污染 History。
 - `XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs`：Transform History Redo 集成测试；验证 Undo 恢复 Before、Redo 恢复 After 和新提交后 Redo 不可用。
 - `XuanYu.Core.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
+- `XuanYu.Core.Tests/World/EntityRegistryTests.cs`：实体注册表测试；覆盖 1 / 10 实体创建、查询、删除、重复删除、缺失键和稳定身份。
+- `XuanYu.Core.Tests/World/GlobalWorldTests.cs`：GlobalWorld 生命周期测试；覆盖所有者入口、销毁后不复用 EntityId，以及 1000 实体创建 / 查询 / 内存基线烟测记录。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。

@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.18.5-rz
+WORLD-A-R1 Global World + Entity Registry（2026-07-22）
+- 阶段裁定：基于用户真机截图裁定 `WORLD-A-R0 CLOSED`，正式进入 `WORLD-A-R1`；本轮只建立 GlobalWorld 与稳定 Entity Registry，不进入 Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay、ECS、Rotation / Scale / Local Gizmo。
+- 主要改动：新增 `XuanYu.Core.World`，以既有 `EntityId` 作为唯一实体身份；`EntityRegistry` 提供 `Create`、`Destroy`、`Get`、`TryGet`、`Exists`，`GlobalWorld` 作为上层唯一世界入口，实体状态以 `WorldEntitySnapshot` 保存名称、类型和正式 Transform。
+- 治理边界：冻结长期所有权链路为 `GlobalWorld -> EntityRegistry -> Entity State`；UI、Renderer、Hierarchy、Inspector、Snapshot、Picking 和 Gizmo 只能消费或投影实体事实，不得拥有第二份正式实体真相。
+- 测试覆盖：新增 1 / 10 / 1000 实体自动测试，覆盖创建、查询、销毁、重复删除、缺失键、稳定 key、销毁后不复用 key，以及 1000 实体创建时间、查询时间、内存变化基线记录。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 104 passed / 0 failed / 0 skipped。
+- 文档同步：版本更新到 `v0.2.18.5-rz`；新增 `docs/world-a-r1-entity-registry.svg`；同步 `file-tree.md` 到 356 / 356，并更新 dev-rules 与 AI 开发宪法的 GlobalWorld / EntityRegistry 长期事实源规则。
+
 ## v0.2.18.4-fix
 WORLD-A-R0-R3 Tool-aware Gizmo Visibility（2026-07-22 21:09:43）
 - 任务目标：修复 WORLD-A-R0 最后一个 UI/交互一致性缺口：ActiveTool=Rotate / Scale 时视口仍显示 Move Gizmo，虽然捕获已被拒绝，导致“看得见但不能用”的误导。本轮不实现 Rotation / Scale / Local Gizmo，不进入 WORLD-A-R1。
