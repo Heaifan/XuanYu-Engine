@@ -14,7 +14,9 @@ public sealed partial class UiVm
         {
             var entity = _sceneState.RenderSnapshot.Entity;
             var selected = HasSelection && SelectionKey == entity.EntityKey.ToString();
-            return new SceneRenderSnapshot(entity, selected, _transformSession.Preview);
+            var showMove = EditorTransformCapturePolicy.ShouldShowMoveGizmo(
+                _editorState.ToolSnapshot, selected);
+            return new SceneRenderSnapshot(entity, selected, _transformSession.Preview, showMove);
         }
     }
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;

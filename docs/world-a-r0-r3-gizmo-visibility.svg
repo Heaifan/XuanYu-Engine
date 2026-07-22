@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <rect width="1200" height="760" fill="#f7fafc"/>
+  <style>
+    .title{font:700 30px 'Microsoft YaHei',sans-serif;fill:#17324d}.sub{font:16px 'Microsoft YaHei',sans-serif;fill:#52677d}
+    .box{fill:#fff;stroke:#4c78a8;stroke-width:2;rx:14}.ok{fill:#eef8f1;stroke:#3f8f5f;stroke-width:2;rx:14}
+    .deny{fill:#fff6e8;stroke:#d28b27;stroke-width:2;rx:14}.txt{font:18px 'Microsoft YaHei',sans-serif;fill:#18344f;text-anchor:middle}
+    .small{font:14px 'Microsoft YaHei',sans-serif;fill:#52677d;text-anchor:middle}.arrow{stroke:#69849d;stroke-width:3;fill:none;marker-end:url(#a)}
+  </style>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#69849d"/></marker></defs>
+  <text x="600" y="52" class="title" text-anchor="middle">WORLD-A-R0-R3 Gizmo 可见性收口</text>
+  <text x="600" y="82" class="sub" text-anchor="middle">Selection 只表示选中；ShowMoveGizmo 才表示可显示移动三轴</text>
+  <rect x="90" y="130" width="260" height="88" class="box"/><text x="220" y="164" class="txt">Selection</text><text x="220" y="192" class="small">实体是否被选中</text>
+  <rect x="470" y="130" width="260" height="88" class="box"/><text x="600" y="164" class="txt">ActiveTool</text><text x="600" y="192" class="small">选择 / 移动 / 旋转 / 缩放</text>
+  <rect x="850" y="130" width="260" height="88" class="ok"/><text x="980" y="164" class="txt">真实能力</text><text x="980" y="192" class="small">当前只有 Move Gizmo</text>
+  <rect x="390" y="315" width="420" height="90" class="ok"/><text x="600" y="350" class="txt">SceneRenderSnapshot.ShowMoveGizmo</text><text x="600" y="378" class="small">HasSelection 且 ActiveTool=移动</text>
+  <path d="M220 218 C280 275 390 300 470 315" class="arrow"/><path d="M600 218 L600 315" class="arrow"/><path d="M980 218 C900 275 810 300 730 315" class="arrow"/>
+  <rect x="135" y="510" width="260" height="88" class="ok"/><text x="265" y="544" class="txt">移动</text><text x="265" y="572" class="small">显示 Move Gizmo；可拖拽</text>
+  <rect x="470" y="510" width="260" height="88" class="deny"/><text x="600" y="544" class="txt">旋转 / 缩放</text><text x="600" y="572" class="small">隐藏 Move Gizmo；不伪造</text>
+  <rect x="805" y="510" width="260" height="88" class="deny"/><text x="935" y="544" class="txt">选择 / 框选</text><text x="935" y="572" class="small">不显示 Move Gizmo</text>
+  <path d="M500 405 C420 455 330 470 265 510" class="arrow"/><path d="M600 405 L600 510" class="arrow"/><path d="M700 405 C780 455 870 470 935 510" class="arrow"/>
+  <text x="600" y="700" class="sub" text-anchor="middle">禁止：选中即显示三轴 · 透明假隐藏 · 不可见仍可 Picking · Rotation / Scale 临时扩张</text>
+</svg>

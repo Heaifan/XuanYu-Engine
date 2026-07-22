@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.18.4-fix
+WORLD-A-R0-R3 Tool-aware Gizmo Visibility（2026-07-22 21:09:43）
+- 任务目标：修复 WORLD-A-R0 最后一个 UI/交互一致性缺口：ActiveTool=Rotate / Scale 时视口仍显示 Move Gizmo，虽然捕获已被拒绝，导致“看得见但不能用”的误导。本轮不实现 Rotation / Scale / Local Gizmo，不进入 WORLD-A-R1。
+- 根因结论：`SceneRenderSnapshot.IsSelected` 同时承担“实体选中”和“显示 Move Gizmo”两个语义；Vulkan 渲染用 `IsSelected ? 21 : 3` 画三轴，所以只要实体被选中就会显示 Move Gizmo，没有消费 ActiveTool 与真实能力矩阵。
+- 主要改动：`SceneRenderSnapshot` 新增 `ShowMoveGizmo`；`UiVm.RenderSnapshot` 使用 `EditorTransformCapturePolicy.ShouldShowMoveGizmo(selection, ActiveTool)` 生成 Gizmo 可见性；工具切换后立即发布 Scene Render Snapshot；Vulkan 改为只在 `ShowMoveGizmo=true` 时绘制 21 顶点 Move Gizmo。Move Gizmo Picking 仍由 R2 的 `CanBeginMoveGizmo` 拦截，Render 与 Picking 共享同一能力策略。
+- 测试变化：扩展 `EditorTransformCapturePolicyTests`，覆盖 Selected+Move 显示、Selected+Rotate/Scale 隐藏、无选择隐藏、Snap Toggle 不影响 Move Gizmo Visibility。
+- 治理与可视化：新增 `docs/world-a-r0-r3-gizmo-visibility.svg`；同步 `docs/dev-rules.md` 与 AI 开发宪法，冻结“视口 Gizmo 可见性必须对应当前 ActiveTool 的真实可操作能力”；`file-tree.md` 更新到 350 / 350。
+- 自动验收：首次 build 被当前工作区 `XuanYu.Editor.App (34832)` 锁定输出 DLL 阻断；已按宪法核对进程名、PID、启动时间与路径后终止该编辑器进程并重跑。最终 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 通过，97 passed / 0 failed / 0 skipped。
+- 遗留问题：WORLD-A-R0 还需最后真机 Gate：Rotate / Scale 下 Move Gizmo 消失，Move 下 Move Gizmo 出现且可拖，Move → Rotate → Move 显示/隐藏/显示链路通过；通过后可判定 WORLD-A-R0 CLOSED。
+
 ## v0.2.18.3-fix
 WORLD-A-R0-R2 Transform 输入路由一致性与旋转图标优化（2026-07-22 20:01:12）
 - 任务目标：修复 `v0.2.18.2-fix` 真机验收第 2 项失败：工具显示已切到移动，但真实拖拽 Session 仍可能不按 ActiveTool 创建；本轮继续暂缓 WORLD-A-R1 Registry，只处理 R0 真机阻断和旋转按钮图标。

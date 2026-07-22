@@ -7,7 +7,8 @@ namespace XuanYu.Core.Scene;
 public readonly record struct SceneRenderSnapshot(
     SceneEntitySnapshot Entity,
     bool IsSelected = false,
-    PreviewTransform? PreviewTransform = null)
+    PreviewTransform? PreviewTransform = null,
+    bool ShowMoveGizmo = false)
 {
     public static SceneRenderSnapshot TestEntityAtOrigin { get; } = new(
         new SceneEntitySnapshot(

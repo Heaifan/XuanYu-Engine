@@ -22,7 +22,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk.CmdPushConstants(cb, _pipelineLayout, ShaderStageFlags.VertexBit, 0, VulkanScenePushConstants.SizeInBytes, scene);
         _vk.CmdSetViewport(cb, 0, 1, pVp);
         _vk.CmdSetScissor(cb, 0, 1, pSc);
-        _vk.CmdDraw(cb, _sceneSnapshot.IsSelected ? 21u : 3u, 1, 0, 0);
+        _vk.CmdDraw(cb, _sceneSnapshot.ShowMoveGizmo ? 21u : 3u, 1, 0, 0);
     }
 
     void FillScenePushConstants(float* target)

@@ -12,6 +12,7 @@ public sealed partial class UiVm
         }
 
         RaiseToolChanged();
+        PublishSceneRenderSnapshot();
         FooterMessage = $"当前工具：{ActiveTool}。视口等待输入。";
         FooterState = "状态：就绪";
         LogTool(ActiveTool);

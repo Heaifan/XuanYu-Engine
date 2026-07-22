@@ -35,5 +35,30 @@ public sealed class EditorTransformCapturePolicyTests
 
         Assert.Equal(EditorToolId.Move, owner.ToolSnapshot.ActiveTool);
         Assert.True(EditorTransformCapturePolicy.CanBeginMoveGizmo(owner.ToolSnapshot));
+        Assert.True(EditorTransformCapturePolicy.ShouldShowMoveGizmo(owner.ToolSnapshot, true));
+    }
+
+    [Theory]
+    [InlineData("选择")]
+    [InlineData("框选")]
+    [InlineData("旋转")]
+    [InlineData("缩放")]
+    public void Non_move_tools_hide_move_gizmo(string tool)
+    {
+        var owner = new EditorStateOwner(() => true);
+
+        owner.ChangeTool(new ChangeEditorToolCommand(tool));
+
+        Assert.False(EditorTransformCapturePolicy.ShouldShowMoveGizmo(owner.ToolSnapshot, true));
+    }
+
+    [Fact]
+    public void Move_tool_requires_selection_to_show_move_gizmo()
+    {
+        var owner = new EditorStateOwner(() => true);
+
+        owner.ChangeTool(new ChangeEditorToolCommand("移动"));
+
+        Assert.False(EditorTransformCapturePolicy.ShouldShowMoveGizmo(owner.ToolSnapshot, false));
     }
 }
