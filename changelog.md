@@ -9,7 +9,7 @@ WORLD-A-R1 FINAL 多实体中央总账最终收口（2026-07-22 23:27:24）
 - 文档收口：新增 `docs/world-a-r1-final-closure-report.md` 与 `docs/world-a-r1-final-closure.svg`；`docs/world-a-r1-r2-final-gate.md` 更新最终 Gate；登记 R2 前置债务：Stable HierarchyNode Identity、Key-based Hierarchy Selection、正式可见实体渲染策略。
 - 修改范围：`UiVm.cs`、`WorldSceneSelectionReentryTests.cs`、`WorldR1FinalSelectionTests.cs`、`WorldR1FinalSceneTests.cs`、`GlobalWorldTests.cs`、`UiWin.axaml`、`run.bat`、`docs/world-a-r1-final-closure-report.md`、`docs/world-a-r1-final-closure.svg`、`docs/world-a-r1-r2-final-gate.md`、`changelog.md`、`file-tree.md`。
 - 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 121 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 379 / 379 均通过。
-- Commit Hash：待本轮提交后回填。
+- Commit Hash：`67445a3`。
 - 遗留问题：`WORLD-A-R1` 正式 CLOSED；下一阶段进入 `WORLD-A-R2 Global Coordinate + World Partition` 前，应先给稳定层级节点身份和 Key-based Selection 方案。
 
 ## v0.2.18.11-rz
