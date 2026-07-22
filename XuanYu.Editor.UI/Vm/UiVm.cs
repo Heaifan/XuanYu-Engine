@@ -17,9 +17,9 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
 
     public UiVm() : this(null) { }
 
-    public UiVm(INativeHostSurfaceBridgeFactory? surfaceBridgeFactory)
+    public UiVm(INativeHostSurfaceBridgeFactory? surfaceBridgeFactory, Func<bool>? isWriteThread = null)
     {
-        _editorState = new EditorStateOwner(() => Dispatcher.UIThread.CheckAccess());
+        _editorState = new EditorStateOwner(isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();
         _sceneState.EnsureEntityCount(10);
         SurfaceBridgeFactory = surfaceBridgeFactory;

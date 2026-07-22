@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.18.12-rz
+WORLD-A-R1 FINAL 多实体中央总账最终收口（2026-07-22 23:27:24）
+- 任务目标：不新增世界能力，只完成 `WORLD-A-R1` 多实体最终毕业验收；验证 10 实体同时存在、连续选择、Move 隔离、Undo / Redo 身份不串线、Destroy 无幽灵、1K Registry Gate 以及 Resize / Vulkan 回归。本轮不进入 WORLD-A-R2、Partition、Organization、Terrain、Streaming、ECS、Instancing、Rotation / Scale / Local Gizmo。
+- 自动 Gate：新增 `WorldR1FinalSelectionTests`，覆盖 EntityId(1) 到 EntityId(10) 连续选择、Inspector 同步和 RenderSnapshot 全量实体稳定；新增 `WorldR1FinalSceneTests`，覆盖 Entity5 Move / Undo / Redo 只影响同一实体，以及 Destroy 后 World / RenderSnapshot / Spatial / Render active 均无幽灵。
+- 测试治理：`UiVm` 保持默认 Avalonia UI 线程写入检查，同时允许测试注入写线程判定，避免为了测试削弱 EditorStateOwner 的线程守卫；既有 Selection 重入测试同步改用该测试 seam。
+- 1K Registry：`GlobalWorldTests` 补充 Snapshot / Destroy 计时记录，继续确认 1000 个 EntityId 唯一、存在、可查询、可快照、可销毁且运行期不立即复用身份。
+- 文档收口：新增 `docs/world-a-r1-final-closure-report.md` 与 `docs/world-a-r1-final-closure.svg`；`docs/world-a-r1-r2-final-gate.md` 更新最终 Gate；登记 R2 前置债务：Stable HierarchyNode Identity、Key-based Hierarchy Selection、正式可见实体渲染策略。
+- 修改范围：`UiVm.cs`、`WorldSceneSelectionReentryTests.cs`、`WorldR1FinalSelectionTests.cs`、`WorldR1FinalSceneTests.cs`、`GlobalWorldTests.cs`、`UiWin.axaml`、`run.bat`、`docs/world-a-r1-final-closure-report.md`、`docs/world-a-r1-final-closure.svg`、`docs/world-a-r1-r2-final-gate.md`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 121 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 379 / 379 均通过。
+- Commit Hash：待本轮提交后回填。
+- 遗留问题：`WORLD-A-R1` 正式 CLOSED；下一阶段进入 `WORLD-A-R2 Global Coordinate + World Partition` 前，应先给稳定层级节点身份和 Key-based Selection 方案。
+
 ## v0.2.18.11-rz
 WORLD-A-R1-R2-R1 真机验收固化与影响面裁定（2026-07-22 23:08:01）
 - 任务目标：根据用户真机回传固化 `v0.2.18.10-fix` 验收结果，回答点击实体闪退的原因、是否属于架构问题以及是否影响其他能力；本轮只写验收报告与版本收口，不进入 WORLD-A-R2、Partition、Instancing、ECS 或 Vulkan 生命周期重构。

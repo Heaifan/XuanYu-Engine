@@ -11,7 +11,7 @@ public sealed class WorldSceneSelectionReentryTests
     [Fact]
     public void Selecting_entity_one_then_two_publishes_once_per_commit()
     {
-        var vm = new UiVm();
+        var vm = TestVm();
         var entities = EntityNodes(vm);
         var publishes = 0;
         vm.RenderSnapshotChanged += _ => publishes++;
@@ -29,7 +29,7 @@ public sealed class WorldSceneSelectionReentryTests
     [Fact]
     public void Selecting_same_entity_is_noop()
     {
-        var vm = new UiVm();
+        var vm = TestVm();
         var entity = EntityNodes(vm)[1];
         vm.SelectedHierarchyItem = entity;
         var publishes = 0;
@@ -44,7 +44,7 @@ public sealed class WorldSceneSelectionReentryTests
     [Fact]
     public void Rapid_entity_switching_keeps_selection_and_active_entity_aligned()
     {
-        var vm = new UiVm();
+        var vm = TestVm();
         var entities = EntityNodes(vm);
 
         vm.SelectedHierarchyItem = entities[0];
@@ -60,7 +60,7 @@ public sealed class WorldSceneSelectionReentryTests
     [Fact]
     public void Select_b_then_move_undo_redo_keeps_entity_identity()
     {
-        var vm = new UiVm();
+        var vm = TestVm();
         var b = EntityNodes(vm)[1];
         vm.SelectedHierarchyItem = b;
         var session = new TransformSession();
@@ -78,6 +78,8 @@ public sealed class WorldSceneSelectionReentryTests
         Assert.Equal(b.Key, redo.EntityKey.ToString());
         Assert.Equal(b.Key, vm.RenderSnapshot.Entity.EntityKey.ToString());
     }
+
+    static UiVm TestVm() => new(null, () => true);
 
     static List<EditorTreeNode> EntityNodes(UiVm vm) =>
         vm.HierarchyItems.Where(item => item.Key.StartsWith("EntityId(", StringComparison.Ordinal)).ToList();

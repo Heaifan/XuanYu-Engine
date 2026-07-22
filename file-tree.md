@@ -1,7 +1,7 @@
-版本：v0.2.18.11-rz
+版本：v0.2.18.12-rz
 # XuanYu Engine 文件树
 
-文件总数：375
+文件总数：379
 
 ## 根目录
 
@@ -60,6 +60,8 @@
 - `docs/world-a-r0-r2-transform-route-fix.svg`：WORLD-A-R0-R2 Transform 输入路由修复图；说明 PointerDown 从 ActiveTool 快照生成 SessionTool，不承载运行时代码。
 - `docs/world-a-r0-r3-gizmo-visibility.svg`：WORLD-A-R0-R3 Gizmo 可见性收口图；说明 Selection、ActiveTool、真实能力与 ShowMoveGizmo 的关系，不承载运行时代码。
 - `docs/world-a-r1-entity-registry.svg`：WORLD-A-R1 Global World 与 Entity Registry 事实源图；说明 GlobalWorld、EntityRegistry、EntityId、查询者和后续接入边界，不承载运行时代码。
+- `docs/world-a-r1-final-closure-report.md`：WORLD-A-R1 最终收口报告；固化 10 实体、Selection、Move、Destroy、1K Registry 与 Resize/Vulkan 回归结论。
+- `docs/world-a-r1-final-closure.svg`：WORLD-A-R1 最终收口状态图；说明 R0 坐标尺、R1 中央总账和 R2 分区入口关系。
 - `docs/world-a-r1-r1-scene-consumption-audit.md`：WORLD-A-R1-R1 当前事实 Owner 审计矩阵；记录 GlobalWorld、SceneStateOwner、Selection、Hierarchy、Inspector、RenderSnapshot、Picking、Gizmo 与 Undo/Redo 的收敛结果。
 - `docs/world-a-r1-r1-scene-consumption.svg`：WORLD-A-R1-R1 Scene / Editor 消费 GlobalWorld 图；说明 SceneStateOwner 从实体 Owner 收敛为投影、会话和派生索引层，不承载运行时代码。
 - `docs/world-a-r1-r2-final-gate.md`：WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate 验收报告；记录 R1 封闭条件、真机退回项和禁止项确认。
@@ -202,7 +204,9 @@
 - `XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs`：Transform History Redo 集成测试；验证 Undo 恢复 Before、Redo 恢复 After 和新提交后 Redo 不可用。
 - `XuanYu.Core.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
 - `XuanYu.Core.Tests/World/EntityRegistryTests.cs`：实体注册表测试；覆盖 1 / 10 实体创建、查询、删除、重复删除、缺失键和稳定身份。
-- `XuanYu.Core.Tests/World/GlobalWorldTests.cs`：GlobalWorld 生命周期测试；覆盖所有者入口、销毁后不复用 EntityId，以及 1000 实体创建 / 查询 / 内存基线烟测记录。
+- `XuanYu.Core.Tests/World/GlobalWorldTests.cs`：GlobalWorld 生命周期测试；覆盖所有者入口、销毁后不复用 EntityId，以及 1000 实体创建 / 查询 / Snapshot / Destroy / 内存基线烟测记录。
+- `XuanYu.Core.Tests/World/WorldR1FinalSceneTests.cs`：WORLD-A-R1 FINAL 场景毕业测试；覆盖 Entity5 Move / Undo / Redo 隔离和 Destroy 后 World / Snapshot / Spatial / Render 无幽灵。
+- `XuanYu.Core.Tests/World/WorldR1FinalSelectionTests.cs`：WORLD-A-R1 FINAL 选择毕业测试；覆盖 EntityId(1) 到 EntityId(10) 连续选择、Inspector 同步和 RenderSnapshot 全量实体稳定。
 - `XuanYu.Core.Tests/World/WorldSceneMultiEntityGateTests.cs`：WORLD-A-R1-R2 多实体 Gate 测试；覆盖 10 实体 RenderSnapshot 投影、Picking 不同 EntityId、Destroy 后 Snapshot / Picking 无幽灵。
 - `XuanYu.Core.Tests/World/WorldSceneSelectionReentryTests.cs`：WORLD-A-R1-R2-R1 选择同步重入测试；覆盖 Entity1→Entity2、重复选择 no-op、快速切换和 Select B 后 Move / Undo / Redo。
 - `XuanYu.Core.Tests/World/WorldSceneConsumptionTests.cs`：WORLD-A-R1-R1 Scene 消费 World 测试；覆盖默认实体投影、Move Commit 同 EntityId、Undo/Redo 同 World Entity 和 Destroy 清空渲染投影。
@@ -395,7 +399,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
 - `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点与 Inspector 字段，并同步投影刷新。
-- `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态。
+- `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态；默认使用 Avalonia UI 线程写入检查，测试可注入写线程判定以覆盖 Selection Gate。
 - `XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`：视口拾取日志格式化器；负责生成 R2-F 中文摘要和详情文本，不持有状态。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs`：编辑器内存日志缓冲区。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs`：编辑器低频日志入口。

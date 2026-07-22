@@ -1,12 +1,23 @@
 # WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate
 
-版本：v0.2.18.11-rz
+版本：v0.2.18.12-rz
 
 ## 验收结论
 
 `WORLD-A-R1-R2` 自动验收通过，但真机验收在 `v0.2.18.8-fix` 仍退回。
 
-当前裁定：`WORLD-A-R1-R2-R1 / v0.2.18.10-fix` 真机复验通过，`WORLD-A-R1-R2` 阻断解除。
+当前裁定：`WORLD-A-R1-R2-R1 / v0.2.18.10-fix` 真机复验通过，`WORLD-A-R1-R2` 阻断解除，`WORLD-A-R1` 最终收口通过。
+
+## WORLD-A-R1 FINAL
+
+| 项目 | 结论 |
+| --- | --- |
+| 10 实体启动即同时可见 | PASS |
+| EntityId(1) 到 EntityId(10) 连续选择 | PASS |
+| Move / Undo / Redo 只影响同一 EntityId | PASS |
+| Destroy 后 World / Snapshot / Spatial / Render 无幽灵 | PASS |
+| 1K Registry Create / Get / Exists / Snapshot / Destroy | PASS |
+| Resize / Vulkan 回归 | PASS |
 
 ## 真机退回修正
 
