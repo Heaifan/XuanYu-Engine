@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.18.9-fix
+WORLD-A-R1-R2 真机退回：UI RenderSnapshot 全量投影与 Vulkan 录制稳定化（2026-07-22 22:28:07）
+- 任务目标：处理用户真机复验中 `v0.2.18.8-fix` 仍以 `-1073741571 / 0xC00000FD` 退出，以及多个实体“不点到就不显示”的阻断问题；本轮不进入 WORLD-A-R2 Partition，不新增 Instancing、批处理、完整 ECS、Terrain、Streaming、Gameplay、Rotation / Scale / Local Gizmo。
+- 根因修正：`UiVm.RenderSnapshot` 重新包装 Core 快照时丢失 `RenderSnapshot.Entities`，导致 UI 到 Vulkan 的渲染事实退化为 active entity；这解释了多实体只有被选中/激活后才显示的现象。
+- 主要改动：UI RenderSnapshot 保留 Core 的完整实体列表；Vulkan draw path 保持堆数组 + `fixed` 指针，同时把多实体绘制从 `foreach` 改为稳定索引循环，降低命令录制阶段的枚举/派生属性风险并保留多实体可见语义。
+- 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Scene.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`docs/world-a-r1-r2-final-gate.md`、`docs/world-a-r1-r2-runtime-fix.svg`、`file-tree.md`、`changelog.md`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 114 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100 和 SVG XML 均通过。首次 build 因 Avalonia BuildServices 写本机日志缓存被沙箱拒绝，已按权限规则升级重跑通过。
+- Commit Hash：待本轮提交后回填。
+- 遗留问题：`WORLD-A-R1-R2` 必须重新真机验收，重点确认启动不再崩溃、层级中未点击实体也在视口可见、点击不同实体后高亮/Inspector/Picking 不串线；通过前不得宣称 `WORLD-A-R1` CLOSED。
+
 ## v0.2.18.8-fix
 WORLD-A-R1-R2 Vulkan 多实体绘制栈风险止血（2026-07-22）
 - 问题现象：真机启动在 Vulkan Instance、Surface、Device、Swapchain、Pipeline、首帧 Present 与 Resize 自愈均成功后，进程以 `-1073741571` 退出；该 Windows 退出码对应 `0xC00000FD`，语义为 Stack Overflow。

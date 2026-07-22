@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="460" viewBox="0 0 980 460">
+  <rect width="980" height="460" fill="#f7fbff"/>
+  <text x="40" y="48" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="26" fill="#14324a">WORLD-A-R1-R2 真机退回修复链</text>
+  <text x="40" y="82" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="15" fill="#486276">v0.2.18.9-fix：保留全量实体事实，降低 Vulkan 命令录制风险</text>
+
+  <rect x="44" y="130" width="180" height="92" rx="14" fill="#e4f0ff" stroke="#82aee6" stroke-width="2"/>
+  <text x="74" y="166" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" fill="#14324a">GlobalWorld</text>
+  <text x="74" y="196" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" fill="#486276">10 个稳定 EntityId</text>
+
+  <rect x="278" y="130" width="206" height="92" rx="14" fill="#eaf7ee" stroke="#84c995" stroke-width="2"/>
+  <text x="306" y="166" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" fill="#14324a">Core RenderSnapshot</text>
+  <text x="306" y="196" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" fill="#486276">Active + Entities 全量投影</text>
+
+  <rect x="538" y="130" width="190" height="92" rx="14" fill="#fff3dc" stroke="#e0b45f" stroke-width="2"/>
+  <text x="566" y="166" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" fill="#14324a">UiVm 快照</text>
+  <text x="566" y="196" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" fill="#486276">不再裁成单实体</text>
+
+  <rect x="778" y="130" width="158" height="92" rx="14" fill="#fdebea" stroke="#e08a84" stroke-width="2"/>
+  <text x="806" y="166" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" fill="#14324a">Vulkan 录制</text>
+  <text x="806" y="196" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" fill="#486276">索引循环绘制</text>
+
+  <path d="M224 176 L278 176" stroke="#56738c" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M484 176 L538 176" stroke="#56738c" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M728 176 L778 176" stroke="#56738c" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="78" y="284" width="824" height="94" rx="16" fill="#ffffff" stroke="#c9d8e6" stroke-width="2"/>
+  <text x="112" y="322" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" fill="#14324a">真机复验 Gate</text>
+  <text x="112" y="354" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="15" fill="#486276">启动不崩溃；未点击实体也可见；点击不同实体后层级、检查器、Picking 不串线；Resize 后仍可见。</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#56738c"/>
+    </marker>
+  </defs>
+</svg>

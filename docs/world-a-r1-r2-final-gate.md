@@ -1,10 +1,21 @@
 # WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate
 
-版本：v0.2.18.7-rz
+版本：v0.2.18.9-fix
 
 ## 验收结论
 
-`WORLD-A-R1-R2` 自动验收通过，`WORLD-A-R1` 具备 CLOSED 条件。
+`WORLD-A-R1-R2` 自动验收通过，但真机验收在 `v0.2.18.8-fix` 仍退回。
+
+当前裁定：`WORLD-A-R1` 暂不 CLOSED，等待 `v0.2.18.9-fix` 真机复验。
+
+## 真机退回修正
+
+| 项目 | 结论 |
+| --- | --- |
+| 启动后退出码 `-1073741571` | 阻断，按栈溢出/录制链风险处理 |
+| 多实体不点击不显示 | 已定位为 UI RenderSnapshot 丢失全量 Entities |
+| 本轮修正 | UI 保留全量实体投影，Vulkan 改稳定索引循环绘制 |
+| 封闭条件 | 必须重新真机确认多实体可见、Picking、Inspector、Resize |
 
 ## 多实体 Gate
 

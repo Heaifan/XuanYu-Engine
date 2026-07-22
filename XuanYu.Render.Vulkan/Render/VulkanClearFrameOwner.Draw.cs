@@ -21,9 +21,10 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
             _vk.CmdSetViewport(cb, 0, 1, pVp);
             _vk.CmdSetScissor(cb, 0, 1, pSc);
-            foreach (var entity in _sceneSnapshot.Entities)
+            var entities = _sceneSnapshot.Entities;
+            for (var i = 0; i < entities.Count; i++)
             {
-                FillScenePushConstants(pScene, _sceneSnapshot.PositionFor(entity));
+                FillScenePushConstants(pScene, _sceneSnapshot.PositionFor(entities[i]));
                 PushSceneConstants(cb, pScene);
                 _vk.CmdDraw(cb, 3, 1, 0, 0);
             }

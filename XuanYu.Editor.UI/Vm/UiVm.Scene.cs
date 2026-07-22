@@ -12,11 +12,17 @@ public sealed partial class UiVm
     {
         get
         {
-            var entity = _sceneState.RenderSnapshot.Entity;
+            var scene = _sceneState.RenderSnapshot;
+            var entity = scene.Entity;
             var selected = HasSelection && SelectionKey == entity.EntityKey.ToString();
             var showMove = EditorTransformCapturePolicy.ShouldShowMoveGizmo(
                 _editorState.ToolSnapshot, selected);
-            return new SceneRenderSnapshot(entity, selected, _transformSession.Preview, showMove);
+            return new SceneRenderSnapshot(
+                entity,
+                selected,
+                _transformSession.Preview,
+                showMove,
+                scene.Entities);
         }
     }
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;

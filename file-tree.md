@@ -1,7 +1,7 @@
-版本：v0.2.18.8-fix
+版本：v0.2.18.9-fix
 # XuanYu Engine 文件树
 
-文件总数：368
+文件总数：369
 
 ## 根目录
 
@@ -62,8 +62,9 @@
 - `docs/world-a-r1-entity-registry.svg`：WORLD-A-R1 Global World 与 Entity Registry 事实源图；说明 GlobalWorld、EntityRegistry、EntityId、查询者和后续接入边界，不承载运行时代码。
 - `docs/world-a-r1-r1-scene-consumption-audit.md`：WORLD-A-R1-R1 当前事实 Owner 审计矩阵；记录 GlobalWorld、SceneStateOwner、Selection、Hierarchy、Inspector、RenderSnapshot、Picking、Gizmo 与 Undo/Redo 的收敛结果。
 - `docs/world-a-r1-r1-scene-consumption.svg`：WORLD-A-R1-R1 Scene / Editor 消费 GlobalWorld 图；说明 SceneStateOwner 从实体 Owner 收敛为投影、会话和派生索引层，不承载运行时代码。
-- `docs/world-a-r1-r2-final-gate.md`：WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate 验收报告；记录 R1 封闭条件和禁止项确认。
+- `docs/world-a-r1-r2-final-gate.md`：WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate 验收报告；记录 R1 封闭条件、真机退回项和禁止项确认。
 - `docs/world-a-r1-r2-multi-entity-gate.svg`：WORLD-A-R1-R2 多实体闭环图；说明 10 实体互不串线、Destroy 无幽灵和 1K Registry Gate。
+- `docs/world-a-r1-r2-runtime-fix.svg`：WORLD-A-R1-R2 真机退回修复图；说明 UI 全量实体投影、Vulkan 稳定录制和真机复验 Gate。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
