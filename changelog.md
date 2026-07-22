@@ -8,7 +8,7 @@ WORLD-A-R1-R2-R1 真机验收固化与影响面裁定（2026-07-22 23:08:01）
 - 影响面：短期已覆盖 Hierarchy、Inspector、RenderSnapshot、Picking 选择入口和 Select B 后 Move / Undo / Redo；后续 R1 / R2 规模扩大时仍需关注 `HierarchyItems` 每次重建节点对象的结构性债务，未来接入 Partition / Organization 前应评估稳定 HierarchyNode Identity。
 - 修改范围：`docs/world-a-r1-r2-r1-acceptance-report.md`、`docs/world-a-r1-r2-r1-acceptance.svg`、`docs/world-a-r1-r2-final-gate.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
 - 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 118 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 375 / 375 均通过。
-- Commit Hash：待本轮提交后回填。
+- Commit Hash：`a7eb411`。
 - 遗留问题：`WORLD-A-R1-R2` 阻断解除；若后续实体规模扩大到 1K 可见或引入分区/组织树，应优先治理稳定 Hierarchy 节点身份，而不是继续依赖每次 getter 重建列表。
 
 ## v0.2.18.10-fix
