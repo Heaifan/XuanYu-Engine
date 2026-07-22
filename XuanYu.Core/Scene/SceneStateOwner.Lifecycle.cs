@@ -1,0 +1,42 @@
+using XuanYu.Core.Identity;
+using XuanYu.Core.World;
+
+namespace XuanYu.Core.Scene;
+
+public sealed partial class SceneStateOwner
+{
+    public WorldEntitySnapshot CreateEntity(
+        string name,
+        string type,
+        CommittedTransform? transform = null)
+    {
+        var entity = _world.Create(name, type, transform);
+        _spatialIndex.Insert(ToSpatialBounds(SceneWorldProjection.ToSceneEntity(entity)));
+        if (!_snapshot.HasEntity) SetActiveEntity(entity.EntityKey);
+        else RefreshSnapshot();
+        return entity;
+    }
+
+    public bool DestroyEntity(EntityId entityKey)
+    {
+        if (!_world.Destroy(entityKey)) return false;
+        _spatialIndex.Remove(entityKey);
+        if (_activeEntityKey == entityKey) SetActiveEntity(Entities.FirstOrDefault().EntityKey);
+        else
+        {
+            RefreshSnapshot();
+            RenderSnapshotChanged?.Invoke(_snapshot);
+        }
+        return true;
+    }
+
+    public bool TryGetEntity(EntityId entityKey, out WorldEntitySnapshot entity) =>
+        _world.TryGet(entityKey, out entity);
+
+    public void SetActiveEntity(EntityId entityKey)
+    {
+        _activeEntityKey = entityKey;
+        RefreshSnapshot();
+        RenderSnapshotChanged?.Invoke(_snapshot);
+    }
+}

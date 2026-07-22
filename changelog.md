@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.18.7-rz
+WORLD-A-R1-R2 Multi-Entity Gate + WORLD-A-R1 CLOSED（2026-07-22）
+- 阶段裁定：基于用户真机验收，`WORLD-A-R1-R1 / v0.2.18.6-rz` PASS；本轮进入 R1 最后一段，多实体真实闭环、Destroy 无幽灵和 1K Registry Gate，完成后 `WORLD-A-R1` 可判定 CLOSED。
+- 主要改动：`SceneRenderSnapshot` 保留 active `Entity` 兼容字段，同时新增多实体 `Entities` 投影；`SceneStateOwner` 增加 R1-R2 10 实体种子、生命周期分部和 Destroy 后全量刷新，避免非 active 实体销毁后残留在 RenderSnapshot；Vulkan 使用同一基础三角形循环绘制 Snapshot 中的多个实体，未引入 Instancing 或性能压测。
+- Editor / Picking：启动时补足 10 个可区分实体，Hierarchy 从 World-backed Scene 投影出多个 EntityId；选择实体会同步 active entity；视口 Picking 不再要求命中当前 active entity，而是用返回的稳定 EntityId 查询 World-backed Scene 后提交 Selection。
+- Destroy Gate：自动测试抓出并修复了非 active entity Destroy 后仍残留在 RenderSnapshot.Entities 的幽灵实体问题；修复后 Destroy 会刷新 World 投影，Spatial / Picking 不再命中已销毁实体。
+- 1K Registry Gate：`GlobalWorldTests` 覆盖 Create 1000、Lookup、Exists、Snapshot、Destroy、Destroy 后 Exists=false、EntityId 唯一且运行期不立即复用；记录创建 ticks、查询 ticks 和内存变化 bytes，仅作结构冒烟，不作为 R6 性能毕业测试。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 114 passed / 0 failed / 0 skipped。5+100 通过。
+- 文档同步：新增 `docs/world-a-r1-r2-final-gate.md` 与 `docs/world-a-r1-r2-multi-entity-gate.svg`；`file-tree.md` 更新到 368 / 368；治理文档补充运行期 EntityId 默认单调递增、不立即复用以避免 ABA 身份风险。
+
 ## v0.2.18.6-rz
 WORLD-A-R1-R1 Scene Consumption Integration（2026-07-22）
 - 任务目标：让现有 Scene / Editor / Render 链真正消费 `GlobalWorld -> EntityRegistry -> Entity State`，消除 ARCH-C 单测试实体时代遗留的双事实风险；本轮不进入 WORLD-A-R2 Partition，也不实现 Organization、完整 ECS、Terrain、Streaming、Gameplay、Rotation / Scale / Local Gizmo。

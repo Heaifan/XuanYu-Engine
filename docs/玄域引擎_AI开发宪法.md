@@ -875,6 +875,7 @@ AI 必须遵循以下判断顺序：
 ## 二十三、Global World 与 Entity Registry 事实源
 
 - 正式实体身份只能使用既有 `EntityId`；禁止为同一实体发明第二套长期 ID、UI ID、Render ID 或 Registry Key。
+- 运行期 `EntityId` 默认单调递增，Destroy 后不得立即复用旧 ID；禁止为避免简单计数而引入 GUID 或复杂分布式 ID。
 - `GlobalWorld -> EntityRegistry -> Entity State` 是实体生命周期唯一事实源；UI、Renderer、Hierarchy、Inspector、Snapshot、Picking、Gizmo 只能读取、投影或缓存派生快照，不得拥有第二份正式实体真相。
 - `EntityRegistry` 的最小正式入口为 `Create`、`Destroy`、`Get`、`TryGet`、`Exists`；销毁已不存在或非法实体必须稳定失败，不得污染 Registry。
 - 1000 实体冒烟必须覆盖创建、查询、删除、重复删除、稳定 key、缺失 key 与无污染，并记录创建时间、查询时间和内存变化基线；基线只作观察，不作为未审计性能门槛。

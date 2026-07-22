@@ -1,7 +1,7 @@
-版本：v0.2.18.6-rz
+版本：v0.2.18.7-rz
 # XuanYu Engine 文件树
 
-文件总数：363
+文件总数：368
 
 ## 根目录
 
@@ -62,6 +62,8 @@
 - `docs/world-a-r1-entity-registry.svg`：WORLD-A-R1 Global World 与 Entity Registry 事实源图；说明 GlobalWorld、EntityRegistry、EntityId、查询者和后续接入边界，不承载运行时代码。
 - `docs/world-a-r1-r1-scene-consumption-audit.md`：WORLD-A-R1-R1 当前事实 Owner 审计矩阵；记录 GlobalWorld、SceneStateOwner、Selection、Hierarchy、Inspector、RenderSnapshot、Picking、Gizmo 与 Undo/Redo 的收敛结果。
 - `docs/world-a-r1-r1-scene-consumption.svg`：WORLD-A-R1-R1 Scene / Editor 消费 GlobalWorld 图；说明 SceneStateOwner 从实体 Owner 收敛为投影、会话和派生索引层，不承载运行时代码。
+- `docs/world-a-r1-r2-final-gate.md`：WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate 验收报告；记录 R1 封闭条件和禁止项确认。
+- `docs/world-a-r1-r2-multi-entity-gate.svg`：WORLD-A-R1-R2 多实体闭环图；说明 10 实体互不串线、Destroy 无幽灵和 1K Registry Gate。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -167,6 +169,8 @@
 - `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
 - `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体、选择态、Preview 与 Move Gizmo 可见性。
 - `XuanYu.Core/Scene/SceneSpatialBoundsProjection.cs`：Scene 实体到 SpatialBounds 的派生投影；负责为 Picking / SpatialIndex 构造 AABB，不拥有正式 Transform。
+- `XuanYu.Core/Scene/SceneStateOwner.Lifecycle.cs`：SceneStateOwner 生命周期分部；负责通过 GlobalWorld 创建、销毁、查询和切换 active entity，不拥有第二份实体真相。
+- `XuanYu.Core/Scene/SceneStateOwner.Seeding.cs`：SceneStateOwner R1-R2 测试实体种子分部；负责补足 10 个可区分编辑器实体，不进入组织系统或分区系统。
 - `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position、同步派生空间索引并发布渲染快照；空间索引不是第二份场景真相。
 - `XuanYu.Core/Scene/SceneTransformCommitResult.cs`：Scene Transform 正式提交结果，携带 EntityKey、Before、After 与 Changed 供 History 判断。
 - `XuanYu.Core/Scene/SceneWorldProjection.cs`：WorldEntitySnapshot 到 SceneEntitySnapshot / SceneRenderSnapshot 的单向投影入口；负责防止 Scene 重新成为实体事实源。
@@ -196,6 +200,7 @@
 - `XuanYu.Core.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
 - `XuanYu.Core.Tests/World/EntityRegistryTests.cs`：实体注册表测试；覆盖 1 / 10 实体创建、查询、删除、重复删除、缺失键和稳定身份。
 - `XuanYu.Core.Tests/World/GlobalWorldTests.cs`：GlobalWorld 生命周期测试；覆盖所有者入口、销毁后不复用 EntityId，以及 1000 实体创建 / 查询 / 内存基线烟测记录。
+- `XuanYu.Core.Tests/World/WorldSceneMultiEntityGateTests.cs`：WORLD-A-R1-R2 多实体 Gate 测试；覆盖 10 实体 RenderSnapshot 投影、Picking 不同 EntityId、Destroy 后 Snapshot / Picking 无幽灵。
 - `XuanYu.Core.Tests/World/WorldSceneConsumptionTests.cs`：WORLD-A-R1-R1 Scene 消费 World 测试；覆盖默认实体投影、Move Commit 同 EntityId、Undo/Redo 同 World Entity 和 Destroy 清空渲染投影。
 - `XuanYu.Core.Tests/World/WorldSceneIsolationTests.cs`：WORLD-A-R1-R1 多实体隔离测试；覆盖移动 B 不污染 A/C、Undo 只恢复 B、销毁选中实体不复用身份且安全回退。
 

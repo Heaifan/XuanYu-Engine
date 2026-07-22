@@ -9,10 +9,15 @@ public static class SceneWorldProjection
 
     public static SceneRenderSnapshot ToRenderSnapshot(
         WorldEntitySnapshot? entity,
+        IReadOnlyList<WorldEntitySnapshot>? allEntities = null,
         bool isSelected = false)
     {
+        var renderEntities = allEntities?.Select(ToSceneEntity).ToArray();
         return entity is null
             ? SceneRenderSnapshot.Empty
-            : new SceneRenderSnapshot(ToSceneEntity(entity.Value), isSelected);
+            : new SceneRenderSnapshot(
+                ToSceneEntity(entity.Value),
+                isSelected,
+                RenderEntities: renderEntities);
     }
 }

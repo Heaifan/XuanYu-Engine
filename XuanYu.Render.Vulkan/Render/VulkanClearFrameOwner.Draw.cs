@@ -16,19 +16,26 @@ public sealed unsafe partial class VulkanClearFrameOwner
         Rect2D* pSc = stackalloc Rect2D[1];
         pSc[0] = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent };
         float* scene = stackalloc float[20];
-        FillScenePushConstants(scene);
-
         _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
-        _vk.CmdPushConstants(cb, _pipelineLayout, ShaderStageFlags.VertexBit, 0, VulkanScenePushConstants.SizeInBytes, scene);
         _vk.CmdSetViewport(cb, 0, 1, pVp);
         _vk.CmdSetScissor(cb, 0, 1, pSc);
-        var vertices = _sceneSnapshot.HasEntity
-            ? _sceneSnapshot.ShowMoveGizmo ? 21u : 3u
-            : 0u;
-        _vk.CmdDraw(cb, vertices, 1, 0, 0);
+        foreach (var entity in _sceneSnapshot.Entities)
+        {
+            FillScenePushConstants(scene, _sceneSnapshot.PositionFor(entity));
+            _vk.CmdPushConstants(cb, _pipelineLayout, ShaderStageFlags.VertexBit, 0, VulkanScenePushConstants.SizeInBytes, scene);
+            _vk.CmdDraw(cb, 3, 1, 0, 0);
+        }
+        if (_sceneSnapshot.ShowMoveGizmo) DrawActiveGizmo(cb, scene);
     }
 
-    void FillScenePushConstants(float* target)
+    void DrawActiveGizmo(CommandBuffer cb, float* scene)
+    {
+        FillScenePushConstants(scene, _sceneSnapshot.RenderPosition);
+        _vk.CmdPushConstants(cb, _pipelineLayout, ShaderStageFlags.VertexBit, 0, VulkanScenePushConstants.SizeInBytes, scene);
+        _vk.CmdDraw(cb, 21, 1, 0, 0);
+    }
+
+    void FillScenePushConstants(float* target, Vector3d position)
     {
         var viewport = new ViewportState(0, 0, _extent.Width, _extent.Height, (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
         var camera = DefaultEditorCamera.Create(_swapchainOwner.ResourceGeneration);
@@ -36,7 +43,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var projection = ToVulkanProjection(state.Projection);
         var viewProjection = state.View * projection;
         FillMatrixTranspose(target, viewProjection);
-        var position = _sceneSnapshot.RenderPosition;
         target[16] = (float)position.X;
         target[17] = (float)position.Y;
         target[18] = (float)position.Z;

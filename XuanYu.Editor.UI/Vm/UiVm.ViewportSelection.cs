@@ -12,9 +12,13 @@ public sealed partial class UiVm
             return;
         }
 
-        var entity = _sceneState.RenderSnapshot.Entity;
-        if (entity.EntityKey != result.EntityKey)
-            throw new InvalidOperationException("Picking 结果与当前场景实体不一致。");
+        if (result.EntityKey is not { } entityKey ||
+            !_sceneState.TryGetEntity(entityKey, out var entity))
+        {
+            ApplySelectionCommand(new ClearEditorSelectionCommand(), "视口失效命中");
+            return;
+        }
+        _sceneState.SetActiveEntity(entity.EntityKey);
 
         ApplySelectionCommand(new SelectEditorItemCommand(
             "视口", entity.EntityKey.ToString(), entity.Name, entity.Type,

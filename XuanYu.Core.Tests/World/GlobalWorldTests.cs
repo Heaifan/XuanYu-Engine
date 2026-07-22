@@ -36,11 +36,20 @@ public sealed class GlobalWorldTests
         }
         queryWatch.Stop();
 
+        var snapshot = world.Entities;
+        foreach (var entity in entities)
+        {
+            Assert.Contains(snapshot, item => item.EntityKey == entity.EntityKey);
+            Assert.True(world.Destroy(entity.EntityKey));
+            Assert.False(world.Exists(entity.EntityKey));
+        }
+
         var memoryDelta = GC.GetTotalMemory(true) - beforeMemory;
         Debug.WriteLine(
             $"WORLD-A-R1 1000实体冒烟：创建Ticks={createWatch.ElapsedTicks}; " +
             $"查询Ticks={queryWatch.ElapsedTicks}; 内存变化Bytes={memoryDelta}");
-        Assert.Equal(1000, world.EntityCount);
+        Assert.Equal(0, world.EntityCount);
+        Assert.Equal(1000, snapshot.Count);
         Assert.Equal(1000, entities.Select(item => item.EntityKey).Distinct().Count());
         Assert.True(createWatch.ElapsedTicks >= 0);
         Assert.True(queryWatch.ElapsedTicks >= 0);

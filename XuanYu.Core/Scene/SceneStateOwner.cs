@@ -5,7 +5,7 @@ using XuanYu.Core.World;
 
 namespace XuanYu.Core.Scene;
 
-public sealed class SceneStateOwner : ISceneRenderSnapshotSource
+public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
 {
     readonly GlobalWorld _world = new();
     readonly SpatialIndexOwner _spatialIndex = new();
@@ -16,7 +16,7 @@ public sealed class SceneStateOwner : ISceneRenderSnapshotSource
     {
         var entity = _world.Create("ARCH-C-R1 Test Entity", "MinimalSceneEntity");
         _activeEntityKey = entity.EntityKey;
-        _snapshot = SceneWorldProjection.ToRenderSnapshot(entity);
+        RefreshSnapshot();
         _spatialIndex.Insert(ToSpatialBounds(_snapshot.Entity));
     }
 
@@ -24,41 +24,6 @@ public sealed class SceneStateOwner : ISceneRenderSnapshotSource
     public IReadOnlyList<WorldEntitySnapshot> Entities => _world.Entities;
     public long SpatialRevision => _spatialIndex.SpatialRevision;
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
-
-    public WorldEntitySnapshot CreateEntity(string name, string type, CommittedTransform? transform = null)
-    {
-        var entity = _world.Create(name, type, transform);
-        _spatialIndex.Insert(ToSpatialBounds(SceneWorldProjection.ToSceneEntity(entity)));
-        if (!_snapshot.HasEntity) SetActiveEntity(entity.EntityKey);
-        return entity;
-    }
-
-    public bool DestroyEntity(EntityId entityKey)
-    {
-        if (!_world.Destroy(entityKey)) return false;
-        _spatialIndex.Remove(entityKey);
-        if (_activeEntityKey == entityKey)
-        {
-            SetActiveEntity(Entities.FirstOrDefault().EntityKey);
-        }
-        else
-        {
-            RenderSnapshotChanged?.Invoke(_snapshot);
-        }
-        return true;
-    }
-
-    public bool TryGetEntity(EntityId entityKey, out WorldEntitySnapshot entity) =>
-        _world.TryGet(entityKey, out entity);
-
-    public void SetActiveEntity(EntityId entityKey)
-    {
-        _activeEntityKey = entityKey;
-        _snapshot = _world.TryGet(entityKey, out var entity)
-            ? SceneWorldProjection.ToRenderSnapshot(entity)
-            : SceneRenderSnapshot.Empty;
-        RenderSnapshotChanged?.Invoke(_snapshot);
-    }
 
     public SpatialQueryResult QuerySpatial(SpatialAabb area, SpatialQueryCategory mask) => _spatialIndex.Query(area, mask);
     public SpatialQueryResult QuerySpatial(SpatialRayQuery ray, SpatialQueryCategory mask) => _spatialIndex.Query(ray, mask);
@@ -90,11 +55,18 @@ public sealed class SceneStateOwner : ISceneRenderSnapshotSource
         _world.UpdateTransform(current.EntityKey, transform);
         var next = _world.Get(current.EntityKey);
         _spatialIndex.Update(ToSpatialBounds(SceneWorldProjection.ToSceneEntity(next)));
-        if (_activeEntityKey == current.EntityKey) _snapshot = SceneWorldProjection.ToRenderSnapshot(next);
+        RefreshSnapshot();
         RenderSnapshotChanged?.Invoke(_snapshot);
         return new SceneTransformCommitResult(current.EntityKey, current.Transform, transform, true);
     }
 
     static SpatialBounds ToSpatialBounds(SceneEntitySnapshot entity) =>
         SceneSpatialBoundsProjection.ToSpatialBounds(entity);
+
+    void RefreshSnapshot()
+    {
+        _snapshot = _world.TryGet(_activeEntityKey, out var active)
+            ? SceneWorldProjection.ToRenderSnapshot(active, Entities)
+            : SceneRenderSnapshot.Empty;
+    }
 }

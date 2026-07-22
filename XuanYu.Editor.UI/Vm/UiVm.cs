@@ -21,6 +21,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     {
         _editorState = new EditorStateOwner(() => Dispatcher.UIThread.CheckAccess());
         _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();
+        _sceneState.EnsureEntityCount(10);
         SurfaceBridgeFactory = surfaceBridgeFactory;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));

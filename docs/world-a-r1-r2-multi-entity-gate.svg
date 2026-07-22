@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="560" viewBox="0 0 980 560">
+  <rect width="980" height="560" fill="#f8fbff"/>
+  <text x="490" y="42" text-anchor="middle" font-size="28" font-family="Microsoft YaHei, Arial" fill="#17324d">WORLD-A-R1-R2：多实体闭环 + Destroy + 1K Gate</text>
+  <text x="490" y="76" text-anchor="middle" font-size="15" font-family="Microsoft YaHei, Arial" fill="#50657a">证明中央总账从“一个实体不乱”扩展为“多个实体也不串号”</text>
+
+  <rect x="60" y="118" width="250" height="120" rx="18" fill="#dff1ff" stroke="#4d91c8" stroke-width="2"/>
+  <text x="185" y="154" text-anchor="middle" font-size="22" font-family="Microsoft YaHei, Arial" fill="#12395c">10 个真实实体</text>
+  <text x="185" y="184" text-anchor="middle" font-size="15" font-family="Microsoft YaHei, Arial" fill="#31516d">EntityId / 名称 / 类型 / Position</text>
+  <text x="185" y="210" text-anchor="middle" font-size="14" font-family="Microsoft YaHei, Arial" fill="#31516d">Hierarchy / Inspector / Render 投影</text>
+
+  <rect x="365" y="118" width="250" height="120" rx="18" fill="#e8f7e8" stroke="#4f9e5c" stroke-width="2"/>
+  <text x="490" y="154" text-anchor="middle" font-size="22" font-family="Microsoft YaHei, Arial" fill="#1d4d28">互不串线</text>
+  <text x="490" y="184" text-anchor="middle" font-size="15" font-family="Microsoft YaHei, Arial" fill="#37653d">移动 B：A/C 不变</text>
+  <text x="490" y="210" text-anchor="middle" font-size="14" font-family="Microsoft YaHei, Arial" fill="#37653d">Undo / Redo 只修改同一 EntityId</text>
+
+  <rect x="670" y="118" width="250" height="120" rx="18" fill="#fff0cc" stroke="#d59a16" stroke-width="2"/>
+  <text x="795" y="154" text-anchor="middle" font-size="22" font-family="Microsoft YaHei, Arial" fill="#6b4700">Destroy 无幽灵</text>
+  <text x="795" y="184" text-anchor="middle" font-size="15" font-family="Microsoft YaHei, Arial" fill="#745822">World 不存在</text>
+  <text x="795" y="210" text-anchor="middle" font-size="14" font-family="Microsoft YaHei, Arial" fill="#745822">Snapshot / Picking 不残留</text>
+
+  <path d="M312 178 H357" stroke="#31516d" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M617 178 H662" stroke="#37653d" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="145" y="330" width="690" height="120" rx="18" fill="#ffffff" stroke="#b6c7d8" stroke-width="2"/>
+  <text x="490" y="367" text-anchor="middle" font-size="22" font-family="Microsoft YaHei, Arial" fill="#26394a">1000 Entity Registry Gate</text>
+  <text x="490" y="400" text-anchor="middle" font-size="15" font-family="Microsoft YaHei, Arial" fill="#50657a">Create / Lookup / Exists / Snapshot / Destroy 全覆盖</text>
+  <text x="490" y="426" text-anchor="middle" font-size="15" font-family="Microsoft YaHei, Arial" fill="#50657a">记录创建耗时、查询耗时、内存变化；不做 R6 可见实体性能压测</text>
+
+  <text x="490" y="505" text-anchor="middle" font-size="18" font-family="Microsoft YaHei, Arial" fill="#1f5d2b">WORLD-A-R1 CLOSED 条件：GlobalWorld / EntityRegistry 成为多实体唯一事实源</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#31516d"/>
+    </marker>
+  </defs>
+</svg>

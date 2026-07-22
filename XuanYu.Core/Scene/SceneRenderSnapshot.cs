@@ -8,7 +8,8 @@ public readonly record struct SceneRenderSnapshot(
     SceneEntitySnapshot Entity,
     bool IsSelected = false,
     PreviewTransform? PreviewTransform = null,
-    bool ShowMoveGizmo = false)
+    bool ShowMoveGizmo = false,
+    IReadOnlyList<SceneEntitySnapshot>? RenderEntities = null)
 {
     public static SceneRenderSnapshot Empty { get; } = new(
         new SceneEntitySnapshot(
@@ -25,6 +26,17 @@ public readonly record struct SceneRenderSnapshot(
             CommittedTransform.Identity));
 
     public bool HasEntity => Entity.IsValid;
+    public IReadOnlyList<SceneEntitySnapshot> Entities =>
+        RenderEntities ?? (HasEntity ? [Entity] : []);
 
     public Vector3d RenderPosition => PreviewTransform?.Position ?? Entity.Transform.Position;
+    public Vector3d PositionFor(SceneEntitySnapshot entity)
+    {
+        if (PreviewTransform is not null && entity.EntityKey == Entity.EntityKey)
+        {
+            return PreviewTransform.Value.Position;
+        }
+
+        return entity.Transform.Position;
+    }
 }
