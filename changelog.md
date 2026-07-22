@@ -8,7 +8,7 @@ WORLD-A-R1-R2-R1 Selection 同步重入诊断与最小修复（2026-07-22 22:58:
 - 诊断与测试：新增 `[DIAG Selection]` 与 `[DIAG Vulkan]` 低频深度日志，只记录 Selection、Projection、Publish、RecordCommandBuffers 的 Depth / ThreadId / EntityCount；新增选择重入回归测试，覆盖 Entity1→Entity2、重复选择 no-op、1→2→3→1、Select B 后 Move / Undo / Redo。
 - 修改范围：`SceneStateOwner.Lifecycle.cs`、`UiVm.Selection.cs`、`UiVm.SelectionProjection.cs`、`UiVm.SelectionTrace.cs`、`UiVm.ViewportSelection.cs`、`UiVm.WorldProjection.cs`、`UiVm.Scene.cs`、`VulkanClearFrameOwner.Commands.cs`、`VulkanClearFrameOwner.Trace.cs`、`VulkanClearFrameOwner.cs`、`WorldSceneSelectionReentryTests.cs`、`UiWin.axaml`、`run.bat`、`docs/world-a-r1-r2-final-gate.md`、`docs/world-a-r1-r2-runtime-fix.svg`、`file-tree.md`、`changelog.md`。
 - 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 118 passed / 0 failed / 0 skipped。5+100 通过。
-- Commit Hash：待本轮提交后回填。
+- Commit Hash：`7fc0fad`。
 - 遗留问题：必须真机复验连续点击 Entity1~Entity10，不得转圈、不得 `0xC00000FD`；若仍失败，下一轮必须依据 Depth 日志或调用栈继续定位，不能继续叠保护位。
 
 ## v0.2.18.9-fix
