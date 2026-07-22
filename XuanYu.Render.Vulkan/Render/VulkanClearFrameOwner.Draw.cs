@@ -11,28 +11,38 @@ public sealed unsafe partial class VulkanClearFrameOwner
     void RecordDraw(CommandBuffer cb)
     {
         if (_pipeline.Handle == 0 || _pipelineLayout.Handle == 0) return;
-        Viewport* pVp = stackalloc Viewport[1];
-        pVp[0] = new Viewport { X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 };
-        Rect2D* pSc = stackalloc Rect2D[1];
-        pSc[0] = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent };
-        float* scene = stackalloc float[20];
-        _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
-        _vk.CmdSetViewport(cb, 0, 1, pVp);
-        _vk.CmdSetScissor(cb, 0, 1, pSc);
-        foreach (var entity in _sceneSnapshot.Entities)
+        var viewport = new[] { new Viewport { X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 } };
+        var scissor = new[] { new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent } };
+        var scene = new float[20];
+        fixed (Viewport* pVp = viewport)
+        fixed (Rect2D* pSc = scissor)
+        fixed (float* pScene = scene)
         {
-            FillScenePushConstants(scene, _sceneSnapshot.PositionFor(entity));
-            _vk.CmdPushConstants(cb, _pipelineLayout, ShaderStageFlags.VertexBit, 0, VulkanScenePushConstants.SizeInBytes, scene);
-            _vk.CmdDraw(cb, 3, 1, 0, 0);
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
+            _vk.CmdSetViewport(cb, 0, 1, pVp);
+            _vk.CmdSetScissor(cb, 0, 1, pSc);
+            foreach (var entity in _sceneSnapshot.Entities)
+            {
+                FillScenePushConstants(pScene, _sceneSnapshot.PositionFor(entity));
+                PushSceneConstants(cb, pScene);
+                _vk.CmdDraw(cb, 3, 1, 0, 0);
+            }
+            if (_sceneSnapshot.ShowMoveGizmo) DrawActiveGizmo(cb, pScene);
         }
-        if (_sceneSnapshot.ShowMoveGizmo) DrawActiveGizmo(cb, scene);
     }
 
     void DrawActiveGizmo(CommandBuffer cb, float* scene)
     {
         FillScenePushConstants(scene, _sceneSnapshot.RenderPosition);
-        _vk.CmdPushConstants(cb, _pipelineLayout, ShaderStageFlags.VertexBit, 0, VulkanScenePushConstants.SizeInBytes, scene);
+        PushSceneConstants(cb, scene);
         _vk.CmdDraw(cb, 21, 1, 0, 0);
+    }
+
+    void PushSceneConstants(CommandBuffer cb, float* scene)
+    {
+        _vk.CmdPushConstants(cb, _pipelineLayout,
+            ShaderStageFlags.VertexBit, 0,
+            VulkanScenePushConstants.SizeInBytes, scene);
     }
 
     void FillScenePushConstants(float* target, Vector3d position)

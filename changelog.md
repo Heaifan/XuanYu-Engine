@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.18.8-fix
+WORLD-A-R1-R2 Vulkan 多实体绘制栈风险止血（2026-07-22）
+- 问题现象：真机启动在 Vulkan Instance、Surface、Device、Swapchain、Pipeline、首帧 Present 与 Resize 自愈均成功后，进程以 `-1073741571` 退出；该 Windows 退出码对应 `0xC00000FD`，语义为 Stack Overflow。
+- 根因判断：崩溃点不在 Vulkan 初始化或 Swapchain 生命周期，而在 R1-R2 新增的多实体 Vulkan draw path；该路径在渲染命令录制中使用 unsafe 指针与 `stackalloc` 组织 push constants，真机 Present 线程暴露栈风险。
+- 主要改动：`VulkanClearFrameOwner.Draw` 改为堆数组 + `fixed` 指针提交 Viewport、Scissor 与 Scene PushConstants，移除该路径中的 `stackalloc`；保留多实体循环绘制语义，不引入 Instancing、Partition 或性能优化。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 114 passed / 0 failed / 0 skipped。
+
 ## v0.2.18.7-rz
 WORLD-A-R1-R2 Multi-Entity Gate + WORLD-A-R1 CLOSED（2026-07-22）
 - 阶段裁定：基于用户真机验收，`WORLD-A-R1-R1 / v0.2.18.6-rz` PASS；本轮进入 R1 最后一段，多实体真实闭环、Destroy 无幽灵和 1K Registry Gate，完成后 `WORLD-A-R1` 可判定 CLOSED。
