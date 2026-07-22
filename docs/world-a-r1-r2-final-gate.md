@@ -1,12 +1,12 @@
 # WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate
 
-版本：v0.2.18.10-fix
+版本：v0.2.18.11-rz
 
 ## 验收结论
 
 `WORLD-A-R1-R2` 自动验收通过，但真机验收在 `v0.2.18.8-fix` 仍退回。
 
-当前裁定：`WORLD-A-R1` 暂不 CLOSED，等待 `v0.2.18.10-fix` 真机复验。
+当前裁定：`WORLD-A-R1-R2-R1 / v0.2.18.10-fix` 真机复验通过，`WORLD-A-R1-R2` 阻断解除。
 
 ## 真机退回修正
 
@@ -25,6 +25,17 @@
 | 本轮诊断 | 低频记录 Selection、Projection、Publish、RecordCommandBuffers 深度 |
 | 本轮修正 | ActiveEntity 幂等 no-op；用户选择单入口提交；内部投影同步禁止回流 |
 | 禁止项 | 未进入 WORLD-A-R2、Partition、Instancing、ECS 或 Vulkan 生命周期重构 |
+
+## R1-R2-R1 真机验收
+
+| 项目 | 结论 |
+| --- | --- |
+| 10 实体同时可见 | PASS |
+| 连续点击 EntityId(2) 到 EntityId(10) | PASS |
+| Selection Revision 线性递增 | PASS |
+| 点击后无转圈、无闪退、无 `0xC00000FD` | PASS |
+| 日志栏展开触发 Resize / Swapchain 自愈 | PASS |
+| 根因裁定 | Selection 业务提交与 UI 投影同步曾存在回流风险，属局部编辑器交互架构债 |
 
 ## 多实体 Gate
 

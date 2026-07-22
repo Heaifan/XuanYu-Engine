@@ -1,7 +1,7 @@
-版本：v0.2.18.10-fix
+版本：v0.2.18.11-rz
 # XuanYu Engine 文件树
 
-文件总数：373
+文件总数：375
 
 ## 根目录
 
@@ -64,6 +64,8 @@
 - `docs/world-a-r1-r1-scene-consumption.svg`：WORLD-A-R1-R1 Scene / Editor 消费 GlobalWorld 图；说明 SceneStateOwner 从实体 Owner 收敛为投影、会话和派生索引层，不承载运行时代码。
 - `docs/world-a-r1-r2-final-gate.md`：WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate 验收报告；记录 R1 封闭条件、真机退回项和禁止项确认。
 - `docs/world-a-r1-r2-multi-entity-gate.svg`：WORLD-A-R1-R2 多实体闭环图；说明 10 实体互不串线、Destroy 无幽灵和 1K Registry Gate。
+- `docs/world-a-r1-r2-r1-acceptance-report.md`：WORLD-A-R1-R2-R1 真机验收报告；固化连续点击 Entity1~10、Resize 和 Selection 单入口修复结论。
+- `docs/world-a-r1-r2-r1-acceptance.svg`：WORLD-A-R1-R2-R1 真机验收状态图；说明选择链局部架构债、修复边界和后续影响面。
 - `docs/world-a-r1-r2-runtime-fix.svg`：WORLD-A-R1-R2 真机退回修复图；说明 UI 全量实体投影、Selection 同步重入保护、Vulkan 录制诊断和真机复验 Gate。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。

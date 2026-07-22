@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.18.11-rz
+WORLD-A-R1-R2-R1 真机验收固化与影响面裁定（2026-07-22 23:08:01）
+- 任务目标：根据用户真机回传固化 `v0.2.18.10-fix` 验收结果，回答点击实体闪退的原因、是否属于架构问题以及是否影响其他能力；本轮只写验收报告与版本收口，不进入 WORLD-A-R2、Partition、Instancing、ECS 或 Vulkan 生命周期重构。
+- 真机结论：用户确认连续狂点不再闪退；日志显示从 `EntityId(2)` 到 `EntityId(10)` 的选择提交按 `Revision=1->2` 到 `9->10` 线性递增，未出现重复提交、回流递归、转圈或 `0xC00000FD`；日志栏展开触发 Resize 后 Swapchain 自愈到 `1248x478` 并恢复 Present。
+- 原因裁定：这不是 Vulkan 地基问题，也不是 GlobalWorld / Registry 方向错误；它是编辑器 Selection 链的局部架构债——业务选择提交、ActiveEntity 切换和 UI TwoWay 投影同步曾存在同步回流风险。`v0.2.18.10-fix` 通过 ActiveEntity 幂等 no-op、选择单入口提交和内部投影同步保护把一次用户选择收敛为一次事实提交。
+- 影响面：短期已覆盖 Hierarchy、Inspector、RenderSnapshot、Picking 选择入口和 Select B 后 Move / Undo / Redo；后续 R1 / R2 规模扩大时仍需关注 `HierarchyItems` 每次重建节点对象的结构性债务，未来接入 Partition / Organization 前应评估稳定 HierarchyNode Identity。
+- 修改范围：`docs/world-a-r1-r2-r1-acceptance-report.md`、`docs/world-a-r1-r2-r1-acceptance.svg`、`docs/world-a-r1-r2-final-gate.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 118 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 375 / 375 均通过。
+- Commit Hash：待本轮提交后回填。
+- 遗留问题：`WORLD-A-R1-R2` 阻断解除；若后续实体规模扩大到 1K 可见或引入分区/组织树，应优先治理稳定 Hierarchy 节点身份，而不是继续依赖每次 getter 重建列表。
+
 ## v0.2.18.10-fix
 WORLD-A-R1-R2-R1 Selection 同步重入诊断与最小修复（2026-07-22 22:58:00）
 - 任务目标：定位并修复 `v0.2.18.9-fix` 真机点击第二个实体后转圈并以 `-1073741571 / 0xC00000FD` 闪退的问题；本轮只处理 Selection / Hierarchy / ActiveEntity 同步重入最高嫌疑，不进入 WORLD-A-R2、Partition、Instancing、ECS、Hierarchy 大重构或 Vulkan 生命周期重构。
