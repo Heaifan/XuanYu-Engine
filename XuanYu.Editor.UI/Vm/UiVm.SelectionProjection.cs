@@ -14,6 +14,16 @@ public sealed partial class UiVm
             var key = _editorState.Snapshot.HasSelection ? _editorState.Snapshot.SelectionKey : "";
             var project = UiText.ProjectTreeItems.FirstOrDefault(item => item.Key == key);
             var hierarchy = BuildHierarchyItems().FirstOrDefault(item => item.Key == key);
+            var projection = hierarchy ?? project;
+            SetSelectedNodeKey(key);
+            var changed = projection is null
+                ? null
+                : _editorState.Select(new SelectEditorItemCommand(
+                    "投影刷新",
+                    projection.Key,
+                    projection.Title,
+                    projection.Type,
+                    projection.Path));
             if (Set(ref _selectedProjectItem, project, nameof(SelectedProjectItem))
                 && project is not null)
             {
@@ -23,6 +33,13 @@ public sealed partial class UiVm
                 && hierarchy is not null)
             {
                 LeftTabIndex = 1;
+            }
+            if (changed is not null)
+            {
+                OnPropertyChanged(nameof(SelectionTitle));
+                OnPropertyChanged(nameof(SelectionSubtitle));
+                OnPropertyChanged(nameof(SelectionPath));
+                OnPropertyChanged(nameof(SelectionKey));
             }
         }
         finally

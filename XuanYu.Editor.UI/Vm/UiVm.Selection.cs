@@ -40,6 +40,7 @@ public sealed partial class UiVm
     void SetProjectSelection(EditorTreeNode? value)
     {
         if (!Set(ref _selectedProjectItem, value, nameof(SelectedProjectItem))) return;
+        SetSelectedNodeKey(value?.Key ?? "");
         if (value is null) { ApplyClearSelection(); return; }
         _selectedHierarchyItem = null; OnPropertyChanged(nameof(SelectedHierarchyItem));
         ApplySelection("项目树", value);
@@ -52,6 +53,7 @@ public sealed partial class UiVm
         try
         {
             if (!Set(ref _selectedHierarchyItem, value, nameof(SelectedHierarchyItem))) return;
+            SetSelectedNodeKey(value?.Key ?? "");
             if (_isSynchronizingSelectionProjection) return;
             if (value is null) { ApplyClearSelection(); return; }
             _selectedProjectItem = null; OnPropertyChanged(nameof(SelectedProjectItem));
@@ -71,22 +73,14 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(SelectionSubtitle));
         OnPropertyChanged(nameof(SelectionPath));
         OnPropertyChanged(nameof(SelectionKey));
+        SetSelectedNodeKey(_editorState.Snapshot.SelectionKey);
         OnPropertyChanged(nameof(HasSelection));
         OnPropertyChanged(nameof(IsEmptySelection));
         OnPropertyChanged(nameof(InspectorFields));
         PublishSceneRenderSnapshot();
     }
 
-    void ApplySelectionCommand(SelectEditorItemCommand command)
-    {
-        var changed = _editorState.Select(command);
-        if (changed is null) return;
-        RaiseSelectionChanged();
-        LogSelectionCommit(command, changed);
-        FooterMessage = $"{command.Source}已选择：{SelectionTitle}";
-        FooterState = "状态：就绪";
-        OnPropertyChanged(nameof(LogSummary));
-    }
+    void SetSelectedNodeKey(string key) => Set(ref _selectedNodeKey, key, nameof(SelectedNodeKey));
 
     void ApplySelectionCommand(ClearEditorSelectionCommand command, string source)
     {

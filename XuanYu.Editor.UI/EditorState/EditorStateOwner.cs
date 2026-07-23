@@ -26,7 +26,11 @@ public sealed partial class EditorStateOwner
         }
 
         var old = _snapshot;
-        if (old.HasSelection && old.SelectionKey == command.Key)
+        if (old.HasSelection &&
+            old.SelectionKey == command.Key &&
+            old.SelectionTitle == command.Title &&
+            old.SelectionSubtitle == command.Type &&
+            old.SelectionPath == command.Path)
         {
             return null;
         }

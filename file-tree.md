@@ -1,7 +1,7 @@
-版本：v0.2.18.12-rz
+版本：v0.2.18.13-rz
 # XuanYu Engine 文件树
 
-文件总数：379
+文件总数：384
 
 ## 根目录
 
@@ -69,6 +69,8 @@
 - `docs/world-a-r1-r2-r1-acceptance-report.md`：WORLD-A-R1-R2-R1 真机验收报告；固化连续点击 Entity1~10、Resize 和 Selection 单入口修复结论。
 - `docs/world-a-r1-r2-r1-acceptance.svg`：WORLD-A-R1-R2-R1 真机验收状态图；说明选择链局部架构债、修复边界和后续影响面。
 - `docs/world-a-r1-r2-runtime-fix.svg`：WORLD-A-R1-R2 真机退回修复图；说明 UI 全量实体投影、Selection 同步重入保护、Vulkan 录制诊断和真机复验 Gate。
+- `docs/world-a-r2-global-partition-report.md`：WORLD-A-R2 基础轮报告；记录 RegionKey、Partition Membership、Global Position、活跃态和 Key-based Selection 收敛边界。
+- `docs/world-a-r2-global-partition.svg`：WORLD-A-R2 基础轮架构图；说明 GlobalWorld、Partition Membership、Editor Projection 和跨区不是 Destroy/Create。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -174,14 +176,17 @@
 - `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
 - `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体、选择态、Preview 与 Move Gizmo 可见性。
 - `XuanYu.Core/Scene/SceneSpatialBoundsProjection.cs`：Scene 实体到 SpatialBounds 的派生投影；负责为 Picking / SpatialIndex 构造 AABB，不拥有正式 Transform。
-- `XuanYu.Core/Scene/SceneStateOwner.Lifecycle.cs`：SceneStateOwner 生命周期分部；负责通过 GlobalWorld 创建、销毁、查询和切换 active entity，不拥有第二份实体真相。
+- `XuanYu.Core/Scene/SceneStateOwner.Lifecycle.cs`：SceneStateOwner 生命周期分部；负责通过 GlobalWorld 创建、销毁、查询、切换 active entity 和转发 Region / Activity 变更，不拥有第二份实体真相。
 - `XuanYu.Core/Scene/SceneStateOwner.Seeding.cs`：SceneStateOwner R1-R2 测试实体种子分部；负责补足 10 个可区分编辑器实体，不进入组织系统或分区系统。
 - `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position、同步派生空间索引并发布渲染快照；空间索引不是第二份场景真相。
 - `XuanYu.Core/Scene/SceneTransformCommitResult.cs`：Scene Transform 正式提交结果，携带 EntityKey、Before、After 与 Changed 供 History 判断。
 - `XuanYu.Core/Scene/SceneWorldProjection.cs`：WorldEntitySnapshot 到 SceneEntitySnapshot / SceneRenderSnapshot 的单向投影入口；负责防止 Scene 重新成为实体事实源。
-- `XuanYu.Core/World/EntityRegistry.cs`：实体注册表；负责 EntityId 分配、Create / Destroy / Get / TryGet / Exists 生命周期入口，不依赖 UI、Vulkan 或空间索引。
-- `XuanYu.Core/World/GlobalWorld.cs`：全局世界最小所有者；负责把实体生命周期委托给唯一 EntityRegistry，并暴露稳定实体查询入口。
-- `XuanYu.Core/World/WorldEntitySnapshot.cs`：世界实体快照值对象；负责绑定 EntityKey、名称、类型和正式 Transform，不生成第二套实体身份。
+- `XuanYu.Core/World/EntityRegistry.cs`：实体注册表；负责 EntityId 分配、实体快照保存与生命周期入口，不拥有 Region Membership 运行策略。
+- `XuanYu.Core/World/GlobalWorld.cs`：全局世界最小所有者；负责把实体生命周期委托给唯一 EntityRegistry，并协调 Transform、GlobalPosition 与 Partition Membership。
+- `XuanYu.Core/World/RegionKey.cs`：WORLD-A-R2 区域身份值对象；表达全局世界中的管理分区坐标，不代表实体身份。
+- `XuanYu.Core/World/WorldEntityActivity.cs`：世界实体活跃等级枚举；冻结 Active、Dormant、Externalized 三种运行成本语义。
+- `XuanYu.Core/World/WorldEntitySnapshot.cs`：世界实体快照值对象；负责绑定 EntityKey、名称、类型、正式 Transform、GlobalPosition、RegionKey 和 Activity，不生成第二套实体身份。
+- `XuanYu.Core/World/WorldPartitionMembership.cs`：WORLD-A-R2 分区归属表；维护 EntityId 到 RegionKey / Activity 的关系，Region 不拥有 Entity 生命周期。
 - `XuanYu.Core/History/EditorHistoryOwner.cs`：编辑历史所有者，维护 Undo / Redo 栈；只接收正式 Transform History Entry，不执行 Scene 恢复。
 - `XuanYu.Core/History/TransformHistoryEntry.cs`：Transform 历史记录值对象，保存实体身份以及提交前后的正式 Transform。
 - `XuanYu.Core/Transform/PreviewTransform.cs`：拖动期间的临时 Position；只供渲染预览，不是正式场景事实。
@@ -211,6 +216,8 @@
 - `XuanYu.Core.Tests/World/WorldSceneSelectionReentryTests.cs`：WORLD-A-R1-R2-R1 选择同步重入测试；覆盖 Entity1→Entity2、重复选择 no-op、快速切换和 Select B 后 Move / Undo / Redo。
 - `XuanYu.Core.Tests/World/WorldSceneConsumptionTests.cs`：WORLD-A-R1-R1 Scene 消费 World 测试；覆盖默认实体投影、Move Commit 同 EntityId、Undo/Redo 同 World Entity 和 Destroy 清空渲染投影。
 - `XuanYu.Core.Tests/World/WorldSceneIsolationTests.cs`：WORLD-A-R1-R1 多实体隔离测试；覆盖移动 B 不污染 A/C、Undo 只恢复 B、销毁选中实体不复用身份且安全回退。
+- `XuanYu.Core.Tests/World/WorldPartitionTests.cs`：WORLD-A-R2 分区基础测试；覆盖 Region membership 非实体 Owner、全局位置推导 Region、活跃态切换和 1000 实体迁移。
+- `XuanYu.Core.Tests/World/WorldPartitionUiTests.cs`：WORLD-A-R2 UI 投影测试；覆盖跨 Region 后 EntityId、RenderSnapshot、SelectedNodeKey、SelectionPath 和 Inspector 不丢。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。

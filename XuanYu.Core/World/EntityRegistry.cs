@@ -16,13 +16,19 @@ public sealed class EntityRegistry
     public WorldEntitySnapshot Create(
         string name,
         string type = "WorldEntity",
-        CommittedTransform? transform = null)
+        CommittedTransform? transform = null,
+        RegionKey? region = null,
+        WorldEntityActivity activity = WorldEntityActivity.Active)
     {
+        var committed = transform ?? CommittedTransform.Identity;
         var entity = new WorldEntitySnapshot(
             EntityId.FromInt(_nextId++),
             name,
             type,
-            transform ?? CommittedTransform.Identity);
+            committed,
+            committed.Position,
+            region ?? RegionKey.Origin,
+            activity);
         _entities.Add(entity.EntityKey, entity);
         return entity;
     }
@@ -40,7 +46,24 @@ public sealed class EntityRegistry
             entity.EntityKey,
             entity.Name,
             entity.Type,
-            transform);
+            transform,
+            transform.Position,
+            entity.RegionKey,
+            entity.Activity);
+        return true;
+    }
+
+    public bool UpdatePartition(EntityId entityKey, RegionKey region, WorldEntityActivity activity)
+    {
+        if (!TryGet(entityKey, out var entity)) return false;
+        _entities[entityKey] = new WorldEntitySnapshot(
+            entity.EntityKey,
+            entity.Name,
+            entity.Type,
+            entity.Transform,
+            entity.GlobalPosition,
+            region,
+            activity);
         return true;
     }
 

@@ -16,7 +16,7 @@ public sealed partial class UiVm
             entity.EntityKey.ToString(),
             entity.Name,
             entity.Type,
-            $"MainWorld/{entity.EntityKey}",
+            $"MainWorld/{entity.RegionKey}/{entity.EntityKey}",
             1,
             "entity")));
         return items;
@@ -34,7 +34,9 @@ public sealed partial class UiVm
         [
             $"名称：{entity.Name}",
             $"类型：{entity.Type}",
-            $"路径：MainWorld/{entity.EntityKey}",
+            $"路径：MainWorld/{entity.RegionKey}/{entity.EntityKey}",
+            $"Region：{entity.RegionKey}",
+            $"活跃状态：{entity.Activity}",
             "Transform",
             $"位置    X {p.X:g}    Y {p.Y:g}    Z {p.Z:g}"
         ];

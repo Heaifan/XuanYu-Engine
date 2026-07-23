@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.18.13-rz
+WORLD-A-R2 Global Coordinate + World Partition 最小正式骨架（2026-07-23）
+- 任务目标：在 `WORLD-A-R1` 完整 CLOSED 后进入 `WORLD-A-R2` 基础轮；先处理 Stable HierarchyNode Identity / Key-based Hierarchy Selection 的最小必要收敛，再建立 `RegionKey`、Partition Membership、Global Position Contract 与 Active / Dormant / Externalized 语义。本轮不进入 Spatial Index 新阶段、Organization、Terrain、Earth Mesh、GIS 大工程、完整 Streaming Persistence、Gameplay、ECS 重构或 Renderer 大重构。
+- World 合同：`GlobalWorld` 仍是唯一 Entity 生命周期 Owner；`EntityRegistry` 继续保存唯一实体快照；`WorldPartitionMembership` 只维护 `EntityId -> RegionKey` 与运行成本状态，Region 不拥有第二套 Entity 生命周期；Destroy 与 Unload / Externalized 严格区分。
+- 坐标与迁移：`WorldEntitySnapshot` 增加双精度 `GlobalPosition`、`RegionKey` 与 `Activity`；正式 Transform 更新同步 GlobalPosition，并按固定 Region 尺寸推导 Region；`MoveToRegion` 只更新 membership，跨区后 `EntityId` 保持不变，旧 Region 清理、新 Region 归属正确。
+- Editor 前置收敛：UI Selection 增加稳定 `SelectedNodeKey`；Hierarchy 节点仍可按投影重建，但 Selection / Inspector / RenderSnapshot 均按 EntityId key 重投影；Region 变化后 `SelectionPath` 与 Inspector 同步到新 Region，不依赖节点对象引用碰巧稳定。
+- 测试覆盖：新增 `WorldPartitionTests` 与 `WorldPartitionUiTests`，覆盖 Region membership 非实体 Owner、GlobalPosition -> RegionKey、Active / Dormant / Externalized 不改变身份、10 Entity / Selection / Inspector 跨区不丢、1000 Entity 多 Region 迁移冒烟。
+- 文档同步：新增 `docs/world-a-r2-global-partition-report.md` 与 `docs/world-a-r2-global-partition.svg`；`file-tree.md` 更新到 384；主窗口标题与 `run.bat` 同步到 `v0.2.18.13-rz`。
+- 验证结果：`dotnet restore XuanYu.Engine.slnx --configfile .\NuGet.Config` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 127 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 384 / 384 均通过。首次 restore 因沙箱网络限制 `NU1301`，已按权限规则升级联网重跑通过；首次 build 因 Avalonia BuildServices 写用户日志被沙箱拒绝，已按权限规则升级重跑通过。
+- 遗留问题：`WORLD-A-R2` 基础骨架已具备；后续 `WORLD-A-R2-R1` 应继续做更完整的拖动跨边界、Region 激活 / 休眠刷新、Hierarchy 分组视图和真机交互验收。
+
 ## v0.2.18.12-rz
 WORLD-A-R1 FINAL 多实体中央总账最终收口（2026-07-22 23:27:24）
 - 任务目标：不新增世界能力，只完成 `WORLD-A-R1` 多实体最终毕业验收；验证 10 实体同时存在、连续选择、Move 隔离、Undo / Redo 身份不串线、Destroy 无幽灵、1K Registry Gate 以及 Resize / Vulkan 回归。本轮不进入 WORLD-A-R2、Partition、Organization、Terrain、Streaming、ECS、Instancing、Rotation / Scale / Local Gizmo。

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620">
+  <rect width="1120" height="620" fill="#f7f9fc"/>
+  <text x="560" y="54" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="30" fill="#243447">WORLD-A-R2 全球坐标与分区基础轮</text>
+  <rect x="70" y="110" width="290" height="320" rx="10" fill="#e8f3ff" stroke="#4d8fd8" stroke-width="2"/>
+  <text x="215" y="150" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="22" fill="#1c5c9c">GlobalWorld</text>
+  <text x="110" y="195" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">唯一实体总账</text>
+  <text x="110" y="230" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">Create / Destroy</text>
+  <text x="110" y="265" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">Transform / GlobalPosition</text>
+  <text x="110" y="300" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">EntityId 永不因跨区改变</text>
+  <rect x="430" y="110" width="290" height="320" rx="10" fill="#ecf8ef" stroke="#48a868" stroke-width="2"/>
+  <text x="575" y="150" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="22" fill="#277043">Partition Membership</text>
+  <text x="470" y="195" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">EntityId -> RegionKey</text>
+  <text x="470" y="230" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">Active / Dormant / Externalized</text>
+  <text x="470" y="265" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">只管理归属和运行成本</text>
+  <text x="470" y="300" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">不拥有 Entity 生命周期</text>
+  <rect x="790" y="110" width="260" height="320" rx="10" fill="#fff4df" stroke="#d99b32" stroke-width="2"/>
+  <text x="920" y="150" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="22" fill="#9a650e">Editor Projection</text>
+  <text x="830" y="195" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">SelectedNodeKey</text>
+  <text x="830" y="230" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">Hierarchy 节点可重建</text>
+  <text x="830" y="265" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">Selection 仍指向 EntityId</text>
+  <text x="830" y="300" font-family="Microsoft YaHei, Arial" font-size="18" fill="#243447">Inspector 显示 Region</text>
+  <path d="M360 250 H430" stroke="#596579" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M720 250 H790" stroke="#596579" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="170" y="480" width="780" height="70" rx="8" fill="#ffffff" stroke="#aab7c8"/>
+  <text x="560" y="524" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="22" fill="#243447">跨区迁移 = 更新 membership；不是 Destroy + Create</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#596579"/>
+    </marker>
+  </defs>
+</svg>
