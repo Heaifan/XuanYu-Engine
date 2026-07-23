@@ -11,29 +11,31 @@ public static class TreeGuideBuilder
             if (HasCollapsedAncestor(nodes, i, collapsed)) continue;
             visible.Add(node);
         }
-        Apply(visible, collapsed);
+        Apply(nodes, visible, collapsed);
         return visible;
     }
 
     public static void Apply(IReadOnlyList<EditorTreeNode> nodes)
     {
-        Apply(nodes, new HashSet<string>());
+        Apply(nodes, nodes, new HashSet<string>());
     }
 
-    static void Apply(IReadOnlyList<EditorTreeNode> nodes, ISet<string> collapsed)
+    static void Apply(IReadOnlyList<EditorTreeNode> allNodes, IReadOnlyList<EditorTreeNode> visibleNodes, ISet<string> collapsed)
     {
-        var last = new bool[nodes.Count];
-        for (var i = 0; i < nodes.Count; i++)
+        for (var i = 0; i < allNodes.Count; i++)
         {
-            last[i] = IsLastChild(nodes, i);
-            var hasChildren = HasChildren(nodes, i);
-            nodes[i].SetTreeState(hasChildren, hasChildren && !collapsed.Contains(nodes[i].Key));
+            var hasChildren = HasChildren(allNodes, i);
+            allNodes[i].SetTreeState(hasChildren, hasChildren && !collapsed.Contains(allNodes[i].Key));
         }
 
+        var last = new bool[visibleNodes.Count];
+        for (var i = 0; i < visibleNodes.Count; i++)
+            last[i] = IsLastChild(visibleNodes, i);
+
         var ancestorLast = new Dictionary<int, bool>();
-        for (var i = 0; i < nodes.Count; i++)
+        for (var i = 0; i < visibleNodes.Count; i++)
         {
-            var node = nodes[i];
+            var node = visibleNodes[i];
             foreach (var key in ancestorLast.Keys.Where(level => level >= node.Level).ToArray())
                 ancestorLast.Remove(key);
             node.SetGuide(Build(node.Level, last[i], ancestorLast));

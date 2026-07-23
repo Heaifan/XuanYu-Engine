@@ -39,7 +39,8 @@ public sealed partial class UiVm
 
     void SetProjectSelection(EditorTreeNode? value)
     {
-        if (!Set(ref _selectedProjectItem, value, nameof(SelectedProjectItem))) return;
+        var already = _selectedProjectItem == value;
+        if (!Set(ref _selectedProjectItem, value, nameof(SelectedProjectItem)) && !already) return;
         SetSelectedNodeKey(value?.Key ?? "");
         if (value is null) { ApplyClearSelection(); return; }
         if (value.CanToggle) ToggleProjectNode(value);
@@ -53,7 +54,8 @@ public sealed partial class UiVm
         TraceSelection("层级选择", _hierarchySelectionDepth, $"键={value?.Key ?? "空"}");
         try
         {
-            if (!Set(ref _selectedHierarchyItem, value, nameof(SelectedHierarchyItem))) return;
+            var already = _selectedHierarchyItem == value;
+            if (!Set(ref _selectedHierarchyItem, value, nameof(SelectedHierarchyItem)) && !already) return;
             SetSelectedNodeKey(value?.Key ?? "");
             if (_isSynchronizingSelectionProjection) return;
             if (value is null) { ApplyClearSelection(); return; }

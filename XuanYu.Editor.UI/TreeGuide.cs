@@ -25,11 +25,13 @@ public sealed class TreeGuide : Control
     {
         base.Render(context);
         var pen = new Pen(new SolidColorBrush(Color.Parse("#C7D7EA")), 1);
+        const double branchExtension = 7; // 穿过 TreeGuide 与 Toggle 列之间的 Grid.ColumnSpacing
         foreach (var segment in Segments)
         {
             var x = segment.Depth * 20 + 10;
             var mid = Bounds.Height / 2;
             var right = segment.Depth * 20 + 20;
+            var branchEnd = right + branchExtension;
             switch (segment.Kind)
             {
                 case TreeGuideSegmentKind.Full:
@@ -37,11 +39,11 @@ public sealed class TreeGuide : Control
                     break;
                 case TreeGuideSegmentKind.Tee:
                     context.DrawLine(pen, new Point(x, 0), new Point(x, Bounds.Height));
-                    context.DrawLine(pen, new Point(x, mid), new Point(right, mid));
+                    context.DrawLine(pen, new Point(x, mid), new Point(branchEnd, mid));
                     break;
                 case TreeGuideSegmentKind.Elbow:
                     context.DrawLine(pen, new Point(x, 0), new Point(x, mid));
-                    context.DrawLine(pen, new Point(x, mid), new Point(right, mid));
+                    context.DrawLine(pen, new Point(x, mid), new Point(branchEnd, mid));
                     break;
             }
         }

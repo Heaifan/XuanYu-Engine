@@ -1,5 +1,20 @@
 # changelog
 
+## v0.2.18.23-fix
+UI-TREE-R1 后续：修复项目树折叠后再展开失效 + 延长树形横线（2026-07-23）
+- 任务目标：继续 UI-TREE-R1 收尾，不扩 WORLD-A、不重做图标、不改动世界数据模型。修复真机验收发现的两个问题：① 点击根节点（或箭头）折叠后再次点击无法展开；② 树形连接线横线过短、不显眼。
+- 根因裁定：
+  - 折叠后再展开失败：`UiVm.Selection.cs` 中 `SetProjectSelection` / `SetHierarchySelection` 在选择对象引用未改变时（`Set` 返回 false）直接 `return`，导致折叠后同一节点仍被选中时再次点击无法触发 `ToggleProjectNode` / `ToggleHierarchyNode`。根节点折叠后项目树只剩根节点一行，该节点仍保持选中，因此再次点击无反应。
+  - 横线过短：`TreeGuide` 中 `Tee / Elbow` 的横向支线仅从槽中点（x = Depth*20+10）画到槽右边缘（Depth*20+20），长度仅 10px，在浅色背景下视觉权重太弱。
+- 最小正确修复：
+  - 选择未变仍允许 toggle：在 `SetProjectSelection` / `SetHierarchySelection` 中记录 `already = _selected*Item == value`，即使 `Set` 失败但引用相同时仍继续执行后续逻辑（含 CanToggle 时 toggle）。未改变"点击节点文字也展开/折叠"的现有交互，只修复"选择相同节点时漏 toggle"的边界。
+  - 横线延长 7px：在 `TreeGuide.Render` 中把 `Tee / Elbow` 横线终点从槽右边缘延长 `Grid.ColumnSpacing`（7px）到 Toggle 列左边缘，长度从 10px 增至 17px，与左面板 `ColumnSpacing="7"` 对齐。未改动竖线、图标、文字、TreeView 结构。
+- 测试加固：新增 `XuanYu.Core.Tests/World/WorldUiTreeToggleTests.cs`，覆盖 `ToggleProjectNode` 两次恢复、`SelectedProjectItem = root` 在折叠后仍能展开、`ToggleHierarchyNode` 两次恢复。
+- 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/TreeGuide.cs`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`XuanYu.Core.Tests/World/WorldUiTreeToggleTests.cs`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped（新增 `WorldUiTreeToggleTests` 3 例全过，覆盖 Project/Hierarchy 连续 toggle 与选择未变展开）；`scripts/arch-a-guard.ps1` 通过；5+100 与红线规则未触发。
+- Commit Hash：（docs 提交后填入）
+- 遗留问题：本轮仍属 UI-TREE-R1 收尾，真机验收需确认：竖线连续、横线长度适中、折叠/展开稳定、图标无回退、文字无位移。
+
 ## v0.2.18.22-fix
 UI-TREE-R1 连续树形层级分支连接线渲染断口修复（2026-07-23）
 - 任务目标：按 UI-TREE-R1 计划只修左侧"层级"面板树形连接线，不重做图标、不改动 World / Scene / Hierarchy 数据模型、不扩 WORLD-A。把"每个节点一小截短线、兄弟间断裂"修复为经典连续树形分支连接线。
