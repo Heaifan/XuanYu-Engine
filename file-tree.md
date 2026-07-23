@@ -1,7 +1,7 @@
 版本：v0.2.18.21-fix
 # XuanYu Engine 文件树
 
-文件总数：420
+文件总数：421
 
 ## 根目录
 
@@ -249,6 +249,7 @@
 - `XuanYu.Core.Tests/World/WorldSpatialR1Oracle.cs`：WORLD-A-R3-R1 空间查询测试 Oracle；只在测试侧使用 O(N) 真值校验，不进入生产 World Query。
 - `XuanYu.Core.Tests/World/WorldSpatialR1RebuildTests.cs`：WORLD-A-R3-R1 Rebuild 与随机一致性测试；覆盖 1000 Entity 重建前后 Query 一致和确定性随机 Move / Radius / Bounds。
 - `XuanYu.Core.Tests/World/WorldUiTreeGuideTests.cs`：WORLD-A-UI-R2 树线投影测试；覆盖 Project Tree 连续 Guide、折叠后可视节点和 `构建配置` 命名。
+- `XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`：UI-TREE-R1 层级树连接线测试；构造真实玄域层级结构断言 `Tee / Elbow / Full / Blank` 段，锁定末区域子节点 `Blank@0` 与折叠重算。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。

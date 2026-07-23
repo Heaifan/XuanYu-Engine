@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.18.22-fix
+UI-TREE-R1 连续树形层级分支连接线渲染断口修复（2026-07-23）
+- 任务目标：按 UI-TREE-R1 计划只修左侧"层级"面板树形连接线，不重做图标、不改动 World / Scene / Hierarchy 数据模型、不扩 WORLD-A。把"每个节点一小截短线、兄弟间断裂"修复为经典连续树形分支连接线。
+- 根因裁定（代码审计）：连续树线模型（`XuanYu.Editor.UI.TreeGuide` 的 `Full / Tee / Elbow / Blank` 段 + `TreeGuideBuilder` 祖先延续推导）已在 `v0.2.18.21-fix` 正确实现，既有 `WorldUiTreeGuideTests` 也锁定了段逻辑；真正渲染断口是 `Left.axaml` 中 `Border.treeRow` 的 `Padding="0,3,5,3"` 上下各 3px 内边距——`TreeGuide` 只在每行中间 28px 内容区画竖线，行间累计 6px 空白，层级越深断裂越明显（Project 树仅 2 层不易察觉，上次验收漏检）。
+- 最小正确修复：将 `treeRow` 垂直内边距从 3px 置 0（水平 5px 保留给图标/文字间距），使连续竖线在行间真正衔接。未采用"延长短线 / 负 Margin / 改颜色 / Unicode 字符 / 重构 TreeView"等禁止方案。
+- 测试加固：新增 `XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`，按计划 Case1-5 构造真实玄域层级结构（root / 相机 / 地面 / 区域0+实体 / 区域1+实体）并断言 `Tee / Elbow / Full / Blank` 段，重点锁定"末区域（区域1）子节点 `Blank@0`（根延续线正确停在区域1）"与折叠后可见节点重算。
+- 修改范围：`XuanYu.Editor.UI/Left/Left.axaml`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 155 passed / 0 failed / 0 skipped（`WorldUiHierarchyConnectorTests` 4 例全过，含末区域 `Blank@0` 与折叠重算）；`scripts/arch-a-guard.ps1` 通过；5+100 与红线规则未触发。
+- 遗留问题：本轮仅改 UI 行内边距断口，未做真机截图验收；需用户运行 `run.bat` 启动 `v0.2.18.22-fix` 真机核对 P0（竖线连续 / 无断点 / 无重叠粗线 / ├└ 关系正确 / 多层祖先线正确 / 折叠不残留 / 展开重新正确 / 图标无回退 / 文字无异常位移）。UI-TREE-R2 视真机结果做第二轮微调，再返回 WORLD-A。
+
 ## v0.2.18.21-fix
 WORLD-A-UI-R2 Continuous Tree + Icon Refresh（2026-07-23）
 - 任务目标：修正 `WORLD-A-UI-R1` 人工视觉验收退回项；本轮唯一重点是 Project Tree / Hierarchy Tree 连续树干与确认图标替换，不进入 `WORLD-A-R3-R2` Picking 正式接线，不改变 GlobalWorld、Partition、WorldQuery、SpatialIndex、Selection、Move、Undo、Redo 或 Region 迁移事实语义。
