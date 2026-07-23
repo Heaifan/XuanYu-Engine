@@ -8,6 +8,7 @@ UI-TREE-R1 连续树形层级分支连接线渲染断口修复（2026-07-23）
 - 测试加固：新增 `XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`，按计划 Case1-5 构造真实玄域层级结构（root / 相机 / 地面 / 区域0+实体 / 区域1+实体）并断言 `Tee / Elbow / Full / Blank` 段，重点锁定"末区域（区域1）子节点 `Blank@0`（根延续线正确停在区域1）"与折叠后可见节点重算。
 - 修改范围：`XuanYu.Editor.UI/Left/Left.axaml`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`、`changelog.md`、`file-tree.md`。
 - 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 155 passed / 0 failed / 0 skipped（`WorldUiHierarchyConnectorTests` 4 例全过，含末区域 `Blank@0` 与折叠重算）；`scripts/arch-a-guard.ps1` 通过；5+100 与红线规则未触发。
+- Commit Hash：`3cd3c8c`。
 - 遗留问题：本轮仅改 UI 行内边距断口，未做真机截图验收；需用户运行 `run.bat` 启动 `v0.2.18.22-fix` 真机核对 P0（竖线连续 / 无断点 / 无重叠粗线 / ├└ 关系正确 / 多层祖先线正确 / 折叠不残留 / 展开重新正确 / 图标无回退 / 文字无异常位移）。UI-TREE-R2 视真机结果做第二轮微调，再返回 WORLD-A。
 
 ## v0.2.18.21-fix
