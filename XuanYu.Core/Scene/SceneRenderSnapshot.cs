@@ -1,5 +1,6 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
+using XuanYu.Core.Space;
 using XuanYu.Core.Transform;
 
 namespace XuanYu.Core.Scene;
@@ -9,7 +10,8 @@ public readonly record struct SceneRenderSnapshot(
     bool IsSelected = false,
     PreviewTransform? PreviewTransform = null,
     bool ShowMoveGizmo = false,
-    IReadOnlyList<SceneEntitySnapshot>? RenderEntities = null)
+    IReadOnlyList<SceneEntitySnapshot>? RenderEntities = null,
+    CameraState? Camera = null)
 {
     public static SceneRenderSnapshot Empty { get; } = new(
         new SceneEntitySnapshot(
@@ -28,6 +30,8 @@ public readonly record struct SceneRenderSnapshot(
     public bool HasEntity => Entity.IsValid;
     public IReadOnlyList<SceneEntitySnapshot> Entities =>
         RenderEntities ?? (HasEntity ? [Entity] : []);
+
+    public CameraState CameraState => Camera ?? DefaultEditorCamera.Create(0);
 
     public Vector3d RenderPosition => PreviewTransform?.Position ?? Entity.Transform.Position;
     public Vector3d PositionFor(SceneEntitySnapshot entity)

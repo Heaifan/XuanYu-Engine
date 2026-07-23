@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.18.17-rz
+WORLD-A-R2-R4 Editor Camera Framing + Branch Governance（2026-07-23 13:58:03）
+- 任务目标：从 `ac75bf0` 干净 HEAD 创建 `feat/WORLD-A-global-world` 并推送 upstream；补齐 WORLD-A 多实体 / 跨 Region 真机验收所需的编辑器相机构图能力。本轮不进入完整 Blender Camera、FPS Free Fly、Camera Asset、相机动画、WORLD-B、Terrain、Grid、Skybox 或 Earth Orbit Camera。
+- 分支治理：旧 `fix/RZ-VK3-A-surface-contract` 保留不改写；新 WORLD-A 主里程碑分支 `feat/WORLD-A-global-world` 已从当前 HEAD 创建并推送。`docs/玄域引擎_AI开发宪法.md` 与 `docs/dev-rules.md` 新增“主里程碑换分支”和“提交轮最终回复展示 SVG”硬规则。
+- 相机地基：新增 `EditorCameraFraming`，根据当前调试可见实体位置、Viewport Aspect 与 FOV 计算 Camera Target / Distance / Far；`UiVm.Camera` 持有当前 CameraState，提供启动看全、`聚焦` Frame Selected 和 `查看全部` Frame All。
+- 同源链路：`SceneRenderSnapshot` 携带 CameraState；Vulkan Render、Viewport Picking、Move Gizmo 全部消费同一个 CameraState / ViewportState / ViewProjectionState，禁止通过缩放 Renderer 模型或修改实体 Transform 实现看全。
+- UI：顶部 `视图` 组增加 `查看全部` 按钮；既有 `聚焦` 从提示命令升级为真实 Frame Selected。
+- 文档同步：新增 `docs/world-a-r2-r4-camera-framing-report.md` 与 `docs/world-a-r2-r4-camera-framing.svg`；`file-tree.md` 更新到 400；主窗口标题与 `run.bat` 同步到 `v0.2.18.17-rz`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 140 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 400 / 400 通过。
+- 真机 Gate：`run.bat` 启动 `v0.2.18.17-rz` 后当前调试实体直接可见；`查看全部` / `聚焦` 工作；EntityId(2) 跨 Region Commit 到 `Region(1,0,0)` / X=5.9043412667376955 后 Selection、Inspector、Hierarchy、Render 不丢不串；Undo 回 `Region(0,0,0)` / X=1.5，Redo 再回 `Region(1,0,0)`；Preview -> Escape Cancel 留在 `Region(0,0,0)` / X=1.5，日志显示“移动工具会话取消，原因=Escape”；Maximize/Resize 后 NativeHost 尺寸合并、`查看全部`、Undo/Redo 仍通过。
+- 遗留问题：本轮只补 WORLD-A 可观察性基础设施；Activity 仍无正式手动切换 UI，继续按自动 Gate 覆盖 / 手动 N/A 记录。
+
 ## v0.2.18.16-rz
 WORLD-A-R2-R3 Inspector Manual Gate Fix（2026-07-23 13:25:06）
 - 任务目标：修正 `v0.2.18.15-rz` 真机 Gate 暴露的流程和 UI 缺口；暂停进入 R2-R3 之外的新世界能力，只让 Inspector 明确显示 EntityId、Region、Activity、GlobalPosition 和 Transform 字段。

@@ -23,13 +23,16 @@ public sealed partial class UiVm
                 selected,
                 _transformSession.Preview,
                 showMove,
-                scene.Entities);
+                scene.Entities,
+                _camera);
         }
     }
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
 
     void ApplyRunCommand(string name)
     {
+        if (name is "聚焦") { FrameSelectedCamera(); return; }
+        if (name is "查看全部") { FrameAllCamera("查看全部"); return; }
         FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}");
         FooterState = name is "运行" ? "状态：运行中" : "状态：就绪";
         if (name is "运行") CommitTestEntityPosition(new Vector3d(1.0, 0.0, 0.0));

@@ -21,7 +21,7 @@ public sealed partial class UiVm
             return false;
         }
 
-        var state = ViewProjectionState.Create(DefaultEditorCamera.Create(viewport.Revision), viewport);
+        var state = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
         var layout = MoveGizmoLayout.Project(state, entity.Transform.Position);
         var axis = layout.HitTest(x, y) ?? layout.GuardHitTest(x, y);
         if (axis is null) return false;

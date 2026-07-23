@@ -1,7 +1,7 @@
-版本：v0.2.18.16-rz
+版本：v0.2.18.17-rz
 # XuanYu Engine 文件树
 
-文件总数：395
+文件总数：400
 
 ## 根目录
 
@@ -77,6 +77,8 @@
 - `docs/world-a-r2-r2-partition-consistency.svg`：WORLD-A-R2-R2 一致性 Gate 图；说明 Alive Entity、Membership、Strategy(GlobalPosition) 与 Editor Projection 的关系。
 - `docs/world-a-r2-r3-inspector-manual-gate-report.md`：WORLD-A-R2-R3 真机 Gate 退回修正报告；记录 Inspector 缺项、真实交互复验与 R2 未 CLOSED 裁定。
 - `docs/world-a-r2-r3-inspector-manual-gate.svg`：WORLD-A-R2-R3 Inspector 修正图；说明 InspectorFields、Selection、Hierarchy 和真机 Gate 关系。
+- `docs/world-a-r2-r4-camera-framing-report.md`：WORLD-A-R2-R4 相机构图与分支治理报告；记录 Frame All / Frame Selected、分支切换和真机 Gate 复验。
+- `docs/world-a-r2-r4-camera-framing.svg`：WORLD-A-R2-R4 相机收口图；说明 World Bounds、CameraState、Render、Picking 和 Gizmo 同源关系。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -154,6 +156,7 @@
 - `XuanYu.Core/Space/ViewportState.cs`：渲染后端无关的视口状态契约；负责记录逻辑区域、物理尺寸、DPI 和 Revision，不等同于 Vulkan Swapchain。
 - `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；生成标准右手 Projection、逆矩阵与左上原点屏幕投影点，不携带 Vulkan 差异。
 - `XuanYu.Core/Space/DefaultEditorCamera.cs`：默认 Z-Up 编辑器斜视相机合同；从固定 Position/Target/+Z Up 派生 CameraState，供 Render、Picking、Gizmo 共用。
+- `XuanYu.Core/Space/EditorCameraFraming.cs`：编辑器最小 Frame All / Frame Selected 构图计算；根据当前可见实体位置、视口比例和 FOV 生成 CameraState，不修改实体 Transform。
 - `XuanYu.Core/Space/WorldRay.cs`：世界射线值对象；负责保存有限 Origin 和归一化 Direction，不负责命中测试或实体选择。
 - `XuanYu.Core/Space/WorldRayFactory.cs`：视口点到世界射线的转换入口；按左上屏幕原点映射 Core NDC 并用同一逆矩阵反投影。
 - `XuanYu.Core/Spatial/DynamicAabbTree.cs`：动态 AABB 树索引入口；负责 Insert、Remove、Update 和 Query 调度，不暴露内部节点给调用方。
@@ -229,6 +232,7 @@
 - `XuanYu.Core.Tests/World/WorldPartitionR1Tests.cs`：WORLD-A-R2-R1 迁移测试；覆盖 Preview Cancel、Preview Commit、Undo / Redo Region 恢复、多实体迁移隔离和 Active / Dormant。
 - `XuanYu.Core.Tests/World/WorldPartitionR2Tests.cs`：WORLD-A-R2-R2 一致性与规模 Gate 测试；覆盖 1000 Entity / 10000 随机迁移、Partition Invariant、Dormant 查询和 RegionKey 几何依赖红线。
 - `XuanYu.Core.Tests/World/WorldPartitionUiTests.cs`：WORLD-A-R2 UI 投影测试；覆盖跨 Region 后 EntityId、RenderSnapshot、SelectedNodeKey、SelectionPath 和 Inspector 不丢。
+- `XuanYu.Core.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
@@ -407,6 +411,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
+- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：UiVm 编辑器相机状态分部；持有当前 CameraState，并提供启动看全、查看全部与聚焦选中实体命令。
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。

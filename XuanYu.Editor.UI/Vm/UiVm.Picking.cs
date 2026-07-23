@@ -15,7 +15,7 @@ public sealed partial class UiVm
         var request = new ViewportPickingRequest(
             ++_pickSequence,
             new ViewportState(0, 0, logicalW, logicalH, physicalW, physicalH, dpi, viewportRevision),
-            DefaultEditorCamera.Create(viewportRevision),
+            CurrentCamera(viewportRevision),
             x,
             y,
             SpatialQueryCategory.SceneEntity,

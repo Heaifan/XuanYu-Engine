@@ -49,7 +49,10 @@ public sealed unsafe partial class VulkanClearFrameOwner
     void FillScenePushConstants(float* target, Vector3d position)
     {
         var viewport = new ViewportState(0, 0, _extent.Width, _extent.Height, (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
-        var camera = DefaultEditorCamera.Create(_swapchainOwner.ResourceGeneration);
+        var source = _sceneSnapshot.CameraState;
+        var camera = new CameraState(source.Position, source.Forward, source.Up,
+            source.VerticalFovDegrees, source.NearPlane, source.FarPlane,
+            _swapchainOwner.ResourceGeneration);
         var state = ViewProjectionState.Create(camera, viewport);
         var projection = ToVulkanProjection(state.Projection);
         var viewProjection = state.View * projection;
