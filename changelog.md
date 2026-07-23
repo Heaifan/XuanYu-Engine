@@ -10,7 +10,7 @@ ARCH-WORLD-R0 物理分层归属冻结 + 归属审计修正版落库（2026-07-2
 - 文档同步：新增 `docs/arch-world-layer-attribution.md` 与 `docs/arch-world-layer-attribution.svg`；`file-tree.md` 更新到 424；主窗口标题与 `run.bat` 同步到 `v0.2.19.1-rz`。
 - 修改范围：`docs/arch-world-layer-attribution.md`（新增）、`docs/arch-world-layer-attribution.svg`（新增）、`docs/玄域引擎_AI开发宪法.md`、`docs/dev-rules.md`、`file-tree.md`、`changelog.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
 - 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1` 通过；SVG XML 解析通过；`git diff --check` 通过；`file-tree.md` 424 / 424 一致。
-- Commit Hash：（docs 提交后填入）
+- Commit Hash：`01689fdfbb3cf8d0d8d6e7c0bf3a5c601f71d293`
 - 遗留问题：R0 仅冻结边界，代码归属未动；R1 建立 `XuanYu.World` 前需确认是否随 ARCH-WORLD 主阶段切换开发分支；R2 双轨收敛将触碰 Picking 主链，需真机验收；`docs/architecture/layer-attribution.md` 原定路径按仓库扁平惯例落为 `docs/arch-world-layer-attribution.md`，是否保留扁平命名待确认。
 
 ## v0.2.18.23-fix
