@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.18.16-rz
+WORLD-A-R2-R3 Inspector Manual Gate Fix（2026-07-23 13:25:06）
+- 任务目标：修正 `v0.2.18.15-rz` 真机 Gate 暴露的流程和 UI 缺口；暂停进入 R2-R3 之外的新世界能力，只让 Inspector 明确显示 EntityId、Region、Activity、GlobalPosition 和 Transform 字段。
+- 真机退回：`run.bat` 启动后标题、10 实体可见、Hierarchy Region 分组、EntityId(2) Selection、跨 Region Commit、Preview -> Escape Cancel、Undo / Redo、Restore / Maximize + Undo / Redo 均获得真机证据；但检查器页只显示名称 / 类型 / 路径，不满足 Gate 对 Inspector 字段的明文要求。
+- 主要修正：`Right.axaml` 检查器信息面板改为绑定 `InspectorFields`，直接消费 `UiVm.WorldProjection.cs` 已生成的完整字段列表；不新增第二份 Inspector 真相，不改变 GlobalWorld、Partition、Selection、Gizmo、History 或 Vulkan 行为。
+- 文档同步：新增 `docs/world-a-r2-r3-inspector-manual-gate-report.md` 与 `docs/world-a-r2-r3-inspector-manual-gate.svg`；`file-tree.md` 更新到 395；主窗口标题与 `run.bat` 同步到 `v0.2.18.16-rz`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 138 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、AXAML 5+100 和 SVG XML 通过；`run.bat` 真机复验确认 `v0.2.18.16-rz` 选中 `EntityId(2)` 后 Inspector 显示 EntityId、Region、活跃状态、GlobalPosition 与 Transform。
+- 遗留问题：本轮只修 Inspector Gate 缺口；Activity 仍无正式交互控件，真机 Activity 切换项记为 UI N/A / 自动 Gate 覆盖；R2 在本轮验证和提交完成前不得宣称 CLOSED。
+
 ## v0.2.18.15-rz
 WORLD-A-R2-R2 Partition Scale + Consistency Gate（2026-07-23）
 - 任务目标：在 `WORLD-A-R2-R1 / v0.2.18.14-rz` PASS 后，不新增世界能力，只完成 R2 毕业前分区规模与一致性 Gate；重点验证 Partition Invariant、1000 Entity 多 Region 随机迁移、Hierarchy 稳定节点生命周期、Activity 查询不变和 RegionKey 几何依赖红线。本轮不进入 Spatial Index 新阶段、Organization Graph、Terrain、Earth Mesh、GIS、完整 Streaming、Persistence、ECS 或 GPU-driven Renderer。

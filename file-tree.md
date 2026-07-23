@@ -1,7 +1,7 @@
-版本：v0.2.18.15-rz
+版本：v0.2.18.16-rz
 # XuanYu Engine 文件树
 
-文件总数：393
+文件总数：395
 
 ## 根目录
 
@@ -75,6 +75,8 @@
 - `docs/world-a-r2-r1-migration-activity.svg`：WORLD-A-R2-R1 迁移与活跃态图；说明 Preview 不写 Membership、Commit 原子迁移、Undo / Redo 由 Position 推导 Region。
 - `docs/world-a-r2-r2-partition-consistency-report.md`：WORLD-A-R2-R2 分区规模与一致性报告；记录 Partition Invariant、1000 实体迁移、Hierarchy cache 清理和真机准备。
 - `docs/world-a-r2-r2-partition-consistency.svg`：WORLD-A-R2-R2 一致性 Gate 图；说明 Alive Entity、Membership、Strategy(GlobalPosition) 与 Editor Projection 的关系。
+- `docs/world-a-r2-r3-inspector-manual-gate-report.md`：WORLD-A-R2-R3 真机 Gate 退回修正报告；记录 Inspector 缺项、真实交互复验与 R2 未 CLOSED 裁定。
+- `docs/world-a-r2-r3-inspector-manual-gate.svg`：WORLD-A-R2-R3 Inspector 修正图；说明 InspectorFields、Selection、Hierarchy 和真机 Gate 关系。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -373,7 +375,7 @@
 - `XuanYu.Editor.UI/Left/Left.axaml.cs`：左侧面板代码后置。
 - `XuanYu.Editor.UI/Main/Main.axaml`：中央主视口区域界面。
 - `XuanYu.Editor.UI/Main/Main.axaml.cs`：中央主视口区域代码后置。
-- `XuanYu.Editor.UI/Right/Right.axaml`：右侧检查器与调试面板界面；模式页显示 ActiveTool 与 Snap Toggle。
+- `XuanYu.Editor.UI/Right/Right.axaml`：右侧检查器与调试面板界面；检查器显示 Selection 的完整 World 字段，模式页显示 ActiveTool 与 Snap Toggle。
 - `XuanYu.Editor.UI/Right/Right.axaml.cs`：右侧面板代码后置。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml`：主布局根界面。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml.cs`：主布局根代码后置。

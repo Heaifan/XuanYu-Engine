@@ -33,9 +33,9 @@
         <Border Classes="infoPanel" IsVisible="{Binding HasSelection}">
           <StackPanel Spacing="4">
             <TextBlock Text="基础信息" Classes="section"/>
-            <Border Classes="kvRow"><Grid ColumnDefinitions="72,*"><TextBlock Text="名称" Classes="key"/><TextBlock Grid.Column="1" Text="{Binding SelectionTitle}" Classes="value"/></Grid></Border>
-            <Border Classes="kvRow"><Grid ColumnDefinitions="72,*"><TextBlock Text="类型" Classes="key"/><TextBlock Grid.Column="1" Text="{Binding SelectionSubtitle}" Classes="value"/></Grid></Border>
-            <Border Classes="kvRow"><Grid ColumnDefinitions="72,*"><TextBlock Text="路径" Classes="key"/><TextBlock Grid.Column="1" Text="{Binding SelectionPath}" Classes="value"/></Grid></Border>
+            <ListBox ItemsSource="{Binding InspectorFields}"
+                     Background="Transparent"
+                     BorderThickness="0"/>
           </StackPanel>
         </Border>
         <Grid IsVisible="{Binding IsEmptySelection}" MinHeight="220">

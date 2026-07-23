@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520">
+  <rect width="960" height="520" fill="#f7fafc"/>
+  <text x="48" y="54" font-family="Microsoft YaHei, Arial" font-size="26" font-weight="700" fill="#203047">WORLD-A-R2-R3 Inspector 真机 Gate 修正</text>
+  <text x="48" y="86" font-family="Microsoft YaHei, Arial" font-size="15" fill="#536176">v0.2.18.16-rz：修正检查器未显示完整 World 字段，不改变 World 核心事实源</text>
+  <g fill="#ffffff" stroke="#cbd7e5" stroke-width="2">
+    <rect x="56" y="138" width="210" height="110" rx="8"/>
+    <rect x="374" y="138" width="210" height="110" rx="8"/>
+    <rect x="692" y="138" width="210" height="110" rx="8"/>
+    <rect x="214" y="330" width="220" height="112" rx="8"/>
+    <rect x="526" y="330" width="220" height="112" rx="8"/>
+  </g>
+  <g font-family="Microsoft YaHei, Arial" fill="#203047">
+    <text x="88" y="176" font-size="20" font-weight="700">Selection</text>
+    <text x="88" y="208" font-size="14">EntityId(2)</text>
+    <text x="88" y="230" font-size="14">唯一选中事实</text>
+    <text x="406" y="176" font-size="20" font-weight="700">InspectorFields</text>
+    <text x="406" y="208" font-size="14">EntityId / Region</text>
+    <text x="406" y="230" font-size="14">Activity / Position</text>
+    <text x="724" y="176" font-size="20" font-weight="700">Right.axaml</text>
+    <text x="724" y="208" font-size="14">绑定完整字段列表</text>
+    <text x="724" y="230" font-size="14">不再只显示三行</text>
+    <text x="246" y="370" font-size="20" font-weight="700">真机 Gate</text>
+    <text x="246" y="402" font-size="14">Commit / Cancel</text>
+    <text x="246" y="424" font-size="14">Undo / Redo / Resize</text>
+    <text x="558" y="370" font-size="20" font-weight="700">当前裁定</text>
+    <text x="558" y="402" font-size="14">R2 未 CLOSED</text>
+    <text x="558" y="424" font-size="14">修正轮待复验</text>
+  </g>
+  <g stroke="#4f7db8" stroke-width="3" fill="none" marker-end="url(#arrow)">
+    <path d="M266 193H374"/>
+    <path d="M584 193H692"/>
+    <path d="M790 248C760 312 700 344 746 386"/>
+    <path d="M374 248C330 292 304 306 312 330"/>
+    <path d="M434 386H526"/>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4f7db8"/>
+    </marker>
+  </defs>
+</svg>
