@@ -1,6 +1,4 @@
 using XuanYu.Core.Identity;
-using XuanYu.Core.Math;
-
 namespace XuanYu.Core.World;
 
 public sealed class WorldPartitionMembership
@@ -45,13 +43,4 @@ public sealed class WorldPartitionMembership
             .Select(item => item.Key)
             .OrderBy(item => item.Value)
             .ToArray();
-
-    public static RegionKey RegionFor(Vector3d globalPosition, double regionSize = 1000)
-    {
-        if (regionSize <= 0) throw new ArgumentOutOfRangeException(nameof(regionSize));
-        return RegionKey.FromGrid(
-            (int)global::System.Math.Floor(globalPosition.X / regionSize),
-            (int)global::System.Math.Floor(globalPosition.Y / regionSize),
-            (int)global::System.Math.Floor(globalPosition.Z / regionSize));
-    }
 }

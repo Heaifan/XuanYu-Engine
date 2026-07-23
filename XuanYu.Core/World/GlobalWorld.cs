@@ -7,6 +7,14 @@ public sealed class GlobalWorld
 {
     readonly EntityRegistry _registry = new();
     readonly WorldPartitionMembership _partition = new();
+    readonly IWorldPartitionStrategy _partitionStrategy;
+
+    public GlobalWorld() : this(new GridWorldPartitionStrategy()) { }
+
+    public GlobalWorld(IWorldPartitionStrategy partitionStrategy)
+    {
+        _partitionStrategy = partitionStrategy;
+    }
 
     public int EntityCount => _registry.Count;
 
@@ -33,7 +41,7 @@ public sealed class GlobalWorld
     public bool UpdateTransform(EntityId entityKey, CommittedTransform transform)
     {
         if (!_registry.UpdateTransform(entityKey, transform)) return false;
-        var region = WorldPartitionMembership.RegionFor(transform.Position);
+        var region = _partitionStrategy.RegionFor(transform.Position);
         _partition.MoveToRegion(entityKey, region);
         return _registry.UpdatePartition(entityKey, region, GetActivity(entityKey));
     }
@@ -46,6 +54,7 @@ public sealed class GlobalWorld
 
     public bool SetActivity(EntityId entityKey, WorldEntityActivity activity)
     {
+        if (activity == WorldEntityActivity.Externalized) return false;
         if (!Exists(entityKey) || !_partition.SetActivity(entityKey, activity)) return false;
         return _registry.UpdatePartition(entityKey, GetRegion(entityKey), activity);
     }

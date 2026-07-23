@@ -11,6 +11,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
 {
     readonly EditorStateOwner _editorState;
     readonly EditorHistoryOwner _historyOwner = new();
+    readonly Dictionary<string, EditorTreeNode> _hierarchyNodeCache = new();
     int _leftTabIndex; EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
     string _footerMessage = "已就绪。SampleProject 已选中。", _footerState = "状态：就绪";

@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.18.14-rz
+WORLD-A-R2-R1 跨 Region 迁移与 Activity 生命周期第一阶段（2026-07-23）
+- 任务目标：在 `WORLD-A-R2 / v0.2.18.13-rz` 基础骨架通过后，完成真实跨 Region 迁移语义与 Activity 生命周期第一阶段；冻结 `GlobalPosition -> Partition Strategy -> RegionKey` 单向合同，RegionKey 只能是派生管理事实，不得反向成为位置真相。本轮不进入完整 Streaming、Persistence、Earth Mesh、GIS、Terrain、Organization、Spatial Index 新阶段、ECS 重构或 GPU Renderer 大改。
+- 分区策略：新增 `IWorldPartitionStrategy` 与默认 `GridWorldPartitionStrategy`，把当前平面网格算法从 World 核心抽成可替换策略；`GlobalWorld.UpdateTransform` 在正式 Position 落地后用策略重新推导 Region，并原子更新 Membership 与 Entity Snapshot。
+- Preview / Commit / History：新增自动测试锁定 Preview into B 不正式修改 Membership、Cancel 后仍在 A、Commit 后正式进入 B；Undo / Redo 只恢复 Position，Region 由 Position 重新推导，不在 History 中保存另一套 Region 真相。
+- Activity：本轮正式实现并验证 `Active -> Dormant -> Active`，要求 EntityId、Region、GlobalPosition 均不变；`Externalized` 只保留接口边界，`SetActivity(Externalized)` 暂不伪造完整卸载能力。
+- Hierarchy / Inspector：`EditorTreeNode` 改为按 key 复用的可更新投影节点；Hierarchy 增加 Region 调试分组，Region 节点 key 为 `RegionKey`，Entity 节点 key 仍为 `EntityId`；Inspector 明确显示 EntityId、GlobalPosition、RegionKey 与 Activity。
+- 测试覆盖：新增 `WorldPartitionR1Tests` 并扩展 `WorldPartitionTests` / `WorldPartitionUiTests`，覆盖 A->B、Preview Cancel、Preview Commit、Undo/Redo A/B 恢复、多实体迁移隔离、Active/Dormant、1000 Entity 多 Region 迁移后一实体恰好一个 Region，以及 Region 变化后 Entity 节点对象身份复用。
+- 文档同步：新增 `docs/world-a-r2-r1-migration-activity-report.md` 与 `docs/world-a-r2-r1-migration-activity.svg`；`file-tree.md` 更新到 389；主窗口标题与 `run.bat` 同步到 `v0.2.18.14-rz`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 134 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 389 / 389 均通过。普通 sandbox build 因 Avalonia BuildServices 写用户日志被拒绝，已按权限规则升级重跑通过。
+- 遗留问题：`WORLD-A-R2-R1` 自动 Gate 已覆盖迁移语义；后续还需真机验证选中实体跨 Region 后 Commit / Undo / Redo 时 Selection、Inspector、Hierarchy、Render 全程不丢不串，并继续规划 Externalized / Streaming 的真实数据驻留边界。
+
 ## v0.2.18.13-rz
 WORLD-A-R2 Global Coordinate + World Partition 最小正式骨架（2026-07-23）
 - 任务目标：在 `WORLD-A-R1` 完整 CLOSED 后进入 `WORLD-A-R2` 基础轮；先处理 Stable HierarchyNode Identity / Key-based Hierarchy Selection 的最小必要收敛，再建立 `RegionKey`、Partition Membership、Global Position Contract 与 Active / Dormant / Externalized 语义。本轮不进入 Spatial Index 新阶段、Organization、Terrain、Earth Mesh、GIS 大工程、完整 Streaming Persistence、Gameplay、ECS 重构或 Renderer 大重构。
