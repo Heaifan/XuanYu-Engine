@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.19.1-rz
+ARCH-WORLD-R0 物理分层归属冻结 + 归属审计修正版落库（2026-07-23 21:56:11）
+- 任务目标：在继续 WORLD-A 功能扩张前完成归属审计修正版落库与 ARCH-WORLD-R0 边界冻结；本轮纯文档治理，不改任何代码归属、不迁移文件、不触碰运行行为与 Vulkan 生命周期。
+- 五项架构裁定：① `EntityId` 保持纯稳定身份，Generation 归未来 `EntityHandle`、Revision 独立；② 术语统一 `EntityId`，弃用 `EntityKey`；③ Viewport Picking 归 Editor（Core 留 Ray/AABB 数学、World 留空间查询）；④ `ISpatialIndex` / `DynamicAabbTree` 归 World，纯几何数学留 Core；⑤ `SceneStateOwner` 归 World/Scene，`SceneRenderSnapshot` 为边界 DTO 归 Render.Abstractions，`DefaultEditorCamera` 归 Editor。
+- 双轨空间索引立案：`SceneStateOwner._spatialIndex`（SceneStateOwner.cs:11）与 `WorldQuery._index`（WorldQuery.cs:9）构成双轨空间真相，裁定收敛为 `GlobalWorld → 唯一 SpatialIndexOwner → WorldQuery`，由 ARCH-WORLD-R2 收口；收敛前旧索引列为受控债务，禁止新增消费者。
+- 治理序列：ARCH-WORLD-R0（本轮，文档冻结）→ R1 建立 `XuanYu.World` → R2 收敛唯一 SpatialIndex → R3 Scene Truth 归位 → R4 Editor 污染剥离 → R5 Snapshot 边界整理 → 恢复 WORLD-A 功能开发；禁止大爆炸式迁移。
+- 治理同步：`docs/玄域引擎_AI开发宪法.md` 新增第二十六条（物理分层归属与身份边界），第二十三条补双轨索引受控债务标注；`docs/dev-rules.md` 新增第 15 节（物理分层与归属门禁），第 13 节补同款债务标注。
+- 文档同步：新增 `docs/arch-world-layer-attribution.md` 与 `docs/arch-world-layer-attribution.svg`；`file-tree.md` 更新到 424；主窗口标题与 `run.bat` 同步到 `v0.2.19.1-rz`。
+- 修改范围：`docs/arch-world-layer-attribution.md`（新增）、`docs/arch-world-layer-attribution.svg`（新增）、`docs/玄域引擎_AI开发宪法.md`、`docs/dev-rules.md`、`file-tree.md`、`changelog.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1` 通过；SVG XML 解析通过；`git diff --check` 通过；`file-tree.md` 424 / 424 一致。
+- Commit Hash：（docs 提交后填入）
+- 遗留问题：R0 仅冻结边界，代码归属未动；R1 建立 `XuanYu.World` 前需确认是否随 ARCH-WORLD 主阶段切换开发分支；R2 双轨收敛将触碰 Picking 主链，需真机验收；`docs/architecture/layer-attribution.md` 原定路径按仓库扁平惯例落为 `docs/arch-world-layer-attribution.md`，是否保留扁平命名待确认。
+
 ## v0.2.18.23-fix
 UI-TREE-R1 后续：修复项目树折叠后再展开失效 + 延长树形横线（2026-07-23）
 - 任务目标：继续 UI-TREE-R1 收尾，不扩 WORLD-A、不重做图标、不改动世界数据模型。修复真机验收发现的两个问题：① 点击根节点（或箭头）折叠后再次点击无法展开；② 树形连接线横线过短、不显眼。

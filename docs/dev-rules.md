@@ -144,6 +144,7 @@
 - 1000 实体冒烟必须覆盖创建、查询、删除、重复删除、稳定 key、缺失 key 与无污染，并记录创建时间、查询时间和内存变化基线；基线只作观察，不作为未审计性能门槛。
 - 在 Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay 或 ECS 接入前，必须先确认它们消费 `GlobalWorld / EntityRegistry` 的事实，不得反向成为实体生命周期 Owner。
 - `SceneStateOwner` 只能承担 Scene 投影、编辑会话、Snapshot 聚合和派生空间索引维护；Transform Commit、Undo、Redo、Destroy 必须写回或查询同一个 `GlobalWorld / EntityRegistry` 实体事实，不得维护第二份正式 Transform。
+- `SceneStateOwner` 的派生空间索引自第 15 节起列为受控架构债务（与 `WorldQuery` 双轨并存）；ARCH-WORLD-R2 收敛前禁止新增消费者，收敛后该职责移除。
 
 ## 14. World Query 与 Spatial Index 门禁
 
@@ -153,3 +154,13 @@
 - `QueryRadius` / `QueryBounds` 返回 `EntityId` 集合；调用者必须回到 `GlobalWorld` 查询正式 Entity State。
 - `Region` 解决管理、Activity、Streaming 边界；`Spatial Cell / Node` 解决查询加速；禁止把 `Region == Spatial Cell` 写成长期架构。
 - 当前 R3 不上 Octree / BVH 大工程；允许最小可替换索引实现，但接口必须保留未来替换空间。
+
+## 15. 物理分层与归属门禁
+
+- 新增类型先判定归属层（Core / World / Editor / Render.Abstractions），禁止默认塞进 `XuanYu.Core`。
+- `XuanYu.Core` 禁止新增 World / Scene / Viewport / Picking / Gizmo / Camera / History / Transform Session 类型。
+- `EntityId` 禁止加入 Generation / Revision；实体身份术语只用 `EntityId`，不用 `EntityKey`。
+- 空间索引唯一权威：禁止在 `GlobalWorld → SpatialIndexOwner → WorldQuery` 之外新增第二套空间查询索引。
+- `SceneRenderSnapshot` 等 Snapshot 是派生表现边界 DTO，不得携带 Editor 相机创建后门；相机只能由 Editor/View 以 `CameraState` 传入。
+- 归属迁移按 `ARCH-WORLD-R0 → R5` 序列执行（`docs/arch-world-layer-attribution.md`），每轮 build 0W0E + 全量测试 + arch-a-guard 通过后 commit；禁止一轮全搬、禁止跨轮夹带。
+- R1 完成前禁止在 Core 继续扩张 World 概念新类型；确需新增必须先在 `docs/arch-world-layer-attribution.md` 归属总表登记裁定。

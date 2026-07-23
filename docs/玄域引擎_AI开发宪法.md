@@ -892,6 +892,7 @@ AI 必须遵循以下判断顺序：
 - 1000 实体冒烟必须覆盖创建、查询、删除、重复删除、稳定 key、缺失 key 与无污染，并记录创建时间、查询时间和内存变化基线；基线只作观察，不作为未审计性能门槛。
 - Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay 或 ECS 接入时，必须消费 `GlobalWorld / EntityRegistry` 的实体事实，不得反向成为实体生命周期 Owner。
 - `SceneStateOwner` 只能承担 Scene 投影、编辑会话、Snapshot 聚合和派生空间索引维护；Transform Commit、Undo、Redo、Destroy 必须写回或查询同一个 `GlobalWorld / EntityRegistry` 实体事实，不得维护第二份正式 Transform。
+- 自第二十六条起，`SceneStateOwner` 的派生空间索引维护列为受控架构债务（双轨索引：`SceneStateOwner._spatialIndex` 与 `WorldQuery._index` 并存）；ARCH-WORLD-R2 必须收敛为 `GlobalWorld → 唯一 SpatialIndexOwner → WorldQuery`，收敛前禁止为该旧索引新增消费者，收敛后该职责移除。
 
 ## 二十四、World Query 与 Spatial Index 事实边界
 
@@ -913,3 +914,18 @@ AI 必须遵循以下判断顺序：
 - 高频诊断和内部函数名不得直接进入普通 UI 日志；确需保留的低频诊断必须转为中文阶段、中文字段和可解释详情。
 - Project Tree 与 Hierarchy Tree 必须保持同一视觉语言：缩进、分支线、行高、悬停、选中态和矢量路径图标一致。
 - 树与 Inspector 的用户可见名称必须使用中文显示映射；不得因为 UI 中文化改名而重命名内部 C# 类型、实体 key 或长期公共 API。
+
+---
+
+## 二十六、物理分层归属与身份边界
+
+- Core 极度克制：`XuanYu.Core` 只保留稳定身份（`EntityId`）、数学基元（Vector3d / Aabb3d / Ray3d / 几何求交）、时间（SimulationTime）、结果（EngineResult）与极少量真正全局基础诊断契约；不得新增 World、Scene、Viewport、Picking、Gizmo、Camera、History 或 Transform Session 类型。
+- World 拥有世界与空间事实：`GlobalWorld / EntityRegistry / Region / Partition / SpatialIndex / WorldQuery / SceneStateOwner` 等“世界里有什么、在哪里”的正式事实归属 World 层（目标程序集 `XuanYu.World`），不得挤在 Core。
+- WarCore 拥有战争语义（未启动）：军事身份、编制、阵营等战争领域语义未来归属 `XuanYu.WarCore`；在“奇正相生·一个士兵闭环”正式启动前，不得创建空接口或空程序集。
+- 唯一权威事实禁止双轨复制：同一类世界事实只能有一个权威载体；空间索引全引擎唯一（`GlobalWorld → 唯一 SpatialIndexOwner → WorldQuery`），Scene、Picking、Render 不得各自维护第二套“谁在哪里”的索引。
+- 稳定身份与临时句柄必须分离：`EntityId` 是纯稳定身份，不得混入 Generation / Revision；未来存储槽复用防 stale 由 `EntityHandle`（Index + Generation）承担，状态版本由 `EntityRevision` 承担，三者不得合并。
+- 术语统一：正式实体身份术语只使用 `EntityId`，不再使用 `EntityKey` 第二套叫法。
+- 依赖禁区：`Core → World / WarCore / Editor / Vulkan` 禁止；`World → WarCore / Editor / Vulkan` 禁止；`WarCore → Editor / Vulkan` 禁止。
+- Viewport Picking 固定三层拆法：Ray / AABB 数学在 Core，空间查询在 World，`ViewportPickingService` 在 Editor。
+- `SceneRenderSnapshot` 等 Snapshot 是派生表现数据的边界 DTO，不是 World Truth；禁止携带“没有相机就创建编辑器默认相机”之类的隐藏后门，相机只能由 Editor/View 以 `CameraState` 传入。
+- 物理分层治理按 `ARCH-WORLD-R0 → R5` 小步推进（裁定见 `docs/arch-world-layer-attribution.md`），每轮独立验收，禁止大爆炸式迁移。
