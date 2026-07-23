@@ -1,7 +1,7 @@
-版本：v0.2.18.17-rz
+版本：v0.2.18.18-rz
 # XuanYu Engine 文件树
 
-文件总数：400
+文件总数：406
 
 ## 根目录
 
@@ -79,6 +79,8 @@
 - `docs/world-a-r2-r3-inspector-manual-gate.svg`：WORLD-A-R2-R3 Inspector 修正图；说明 InspectorFields、Selection、Hierarchy 和真机 Gate 关系。
 - `docs/world-a-r2-r4-camera-framing-report.md`：WORLD-A-R2-R4 相机构图与分支治理报告；记录 Frame All / Frame Selected、分支切换和真机 Gate 复验。
 - `docs/world-a-r2-r4-camera-framing.svg`：WORLD-A-R2-R4 相机收口图；说明 World Bounds、CameraState、Render、Picking 和 Gizmo 同源关系。
+- `docs/world-a-r3-spatial-query-report.md`：WORLD-A-R3 Spatial Index + World Query 基础报告；记录查询所有权、红线、正确性 Gate 与性能观察。
+- `docs/world-a-r3-spatial-query.svg`：WORLD-A-R3 空间查询收口图；说明 GlobalWorld、Partition、SpatialIndex 和 Query API 的事实边界。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -180,6 +182,8 @@
 - `XuanYu.Core/Spatial/SpatialQueryCategory.cs`：空间查询分类掩码；负责长期扩展场景实体、地形、Gizmo 和编辑器辅助对象分类。
 - `XuanYu.Core/Spatial/SpatialQueryResult.cs`：空间候选查询结果；负责携带候选 Bounds 与统计信息，不裁定最近命中。
 - `XuanYu.Core/Spatial/SpatialQueryStats.cs`：空间查询诊断统计；负责记录 Revision、总实体、访问节点和候选数，并生成低频中文探针文本。
+- `XuanYu.Core/World/GlobalWorld.Query.cs`：GlobalWorld 的正式 World Query API 分部；只暴露 QueryRadius / QueryBounds，不扫描 Registry。
+- `XuanYu.Core/World/WorldQuery.cs`：World 级派生空间查询层；负责随 Entity Create / Move / Destroy 增量维护 SpatialIndex 并返回 EntityId。
 - `XuanYu.Core/Scene/CommittedTransform.cs`：已提交 Transform 值对象，当前保存正式 Position。
 - `XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs`：场景渲染快照源抽象，向渲染侧发布只读快照。
 - `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
@@ -233,6 +237,8 @@
 - `XuanYu.Core.Tests/World/WorldPartitionR2Tests.cs`：WORLD-A-R2-R2 一致性与规模 Gate 测试；覆盖 1000 Entity / 10000 随机迁移、Partition Invariant、Dormant 查询和 RegionKey 几何依赖红线。
 - `XuanYu.Core.Tests/World/WorldPartitionUiTests.cs`：WORLD-A-R2 UI 投影测试；覆盖跨 Region 后 EntityId、RenderSnapshot、SelectedNodeKey、SelectionPath 和 Inspector 不丢。
 - `XuanYu.Core.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
+- `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
+- `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。

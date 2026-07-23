@@ -1,12 +1,14 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Scene;
+using XuanYu.Core.Spatial;
 
 namespace XuanYu.Core.World;
 
-public sealed class GlobalWorld
+public sealed partial class GlobalWorld
 {
     readonly EntityRegistry _registry = new();
     readonly WorldPartitionMembership _partition = new();
+    readonly WorldQuery _query = new();
     readonly IWorldPartitionStrategy _partitionStrategy;
 
     public GlobalWorld() : this(new GridWorldPartitionStrategy()) { }
@@ -28,6 +30,7 @@ public sealed class GlobalWorld
         var committed = transform ?? CommittedTransform.Identity;
         var entity = _registry.Create(name, type, committed, ResolveRegion(committed));
         _partition.Add(entity.EntityKey, entity.RegionKey);
+        _query.Insert(entity);
         return entity;
     }
 
@@ -35,6 +38,7 @@ public sealed class GlobalWorld
     {
         if (!_registry.Destroy(entityKey)) return false;
         _partition.Remove(entityKey);
+        _query.Remove(entityKey);
         return true;
     }
 
@@ -43,7 +47,9 @@ public sealed class GlobalWorld
         if (!_registry.UpdateTransform(entityKey, transform)) return false;
         var region = _partitionStrategy.RegionFor(transform.Position);
         _partition.MoveToRegion(entityKey, region);
-        return _registry.UpdatePartition(entityKey, region, GetActivity(entityKey));
+        var updated = _registry.UpdatePartition(entityKey, region, GetActivity(entityKey));
+        if (updated) _query.Update(_registry.Get(entityKey));
+        return updated;
     }
 
     public bool MoveToRegion(EntityId entityKey, RegionKey region)
@@ -67,6 +73,8 @@ public sealed class GlobalWorld
     public IReadOnlyList<EntityId> EntitiesIn(RegionKey region) => _partition.EntitiesIn(region);
 
     public IReadOnlyList<WorldPartitionEntry> PartitionSnapshot => _partition.Snapshot;
+
+    public SpatialQueryStats LastSpatialQueryStats => _query.LastStats;
 
     public RegionKey ResolveRegion(CommittedTransform transform) =>
         _partitionStrategy.RegionFor(transform.Position);

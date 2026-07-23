@@ -140,3 +140,12 @@
 - 1000 实体冒烟必须覆盖创建、查询、删除、重复删除、稳定 key、缺失 key 与无污染，并记录创建时间、查询时间和内存变化基线；基线只作观察，不作为未审计性能门槛。
 - 在 Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay 或 ECS 接入前，必须先确认它们消费 `GlobalWorld / EntityRegistry` 的事实，不得反向成为实体生命周期 Owner。
 - `SceneStateOwner` 只能承担 Scene 投影、编辑会话、Snapshot 聚合和派生空间索引维护；Transform Commit、Undo、Redo、Destroy 必须写回或查询同一个 `GlobalWorld / EntityRegistry` 实体事实，不得维护第二份正式 Transform。
+
+## 14. World Query 与 Spatial Index 门禁
+
+- `SpatialIndex` 只能是从 `GlobalWorld` 实体位置 / Bounds 派生出的查询加速结构，不得成为 Entity、Position、Region 或 Activity 的事实源。
+- 正式 `World Query` 路径禁止偷扫 `GlobalWorld.Entities` / Registry；O(N) 暴力扫描只允许作为自动测试 Oracle。
+- `GlobalWorld` 正式 Position Commit 后，必须先更新 Partition 派生事实，再更新 Spatial Index 派生事实。
+- `QueryRadius` / `QueryBounds` 返回 `EntityId` 集合；调用者必须回到 `GlobalWorld` 查询正式 Entity State。
+- `Region` 解决管理、Activity、Streaming 边界；`Spatial Cell / Node` 解决查询加速；禁止把 `Region == Spatial Cell` 写成长期架构。
+- 当前 R3 不上 Octree / BVH 大工程；允许最小可替换索引实现，但接口必须保留未来替换空间。

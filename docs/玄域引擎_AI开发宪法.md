@@ -892,3 +892,15 @@ AI 必须遵循以下判断顺序：
 - 1000 实体冒烟必须覆盖创建、查询、删除、重复删除、稳定 key、缺失 key 与无污染，并记录创建时间、查询时间和内存变化基线；基线只作观察，不作为未审计性能门槛。
 - Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay 或 ECS 接入时，必须消费 `GlobalWorld / EntityRegistry` 的实体事实，不得反向成为实体生命周期 Owner。
 - `SceneStateOwner` 只能承担 Scene 投影、编辑会话、Snapshot 聚合和派生空间索引维护；Transform Commit、Undo、Redo、Destroy 必须写回或查询同一个 `GlobalWorld / EntityRegistry` 实体事实，不得维护第二份正式 Transform。
+
+## 二十四、World Query 与 Spatial Index 事实边界
+
+- `GlobalWorld` 仍是 Entity、Position、Activity 与生命周期唯一事实源；
+- `WorldPartition` 只维护 Region Membership 管理事实；
+- `SpatialIndex` 只能作为派生查询加速结构，理论上必须可从 `GlobalWorld` 当前状态重建；
+- 正式 `World Query` 路径不得通过遍历 `GlobalWorld.Entities` 或 Registry 全扫实现；
+- 自动测试可以使用 O(N) 暴力扫描作为正确性 Oracle，但生产查询路径不得依赖该方式；
+- `QueryRadius`、`QueryBounds` 等 World Query API 必须返回 `EntityId` 集合，调用者再回到 `GlobalWorld` 查询正式 Entity State；
+- Entity Position 正式提交后，必须保持 `GlobalWorld Position Commit → Partition 派生更新 → SpatialIndex 派生更新` 的顺序；
+- Region 解决管理 / Activity / Streaming 边界，Spatial Cell / Node 解决查询加速；禁止把 `Region == Spatial Cell` 写成长期架构约束；
+- 当前阶段禁止借 Spatial Index 引入 Organization Graph、Terrain、GIS、完整 Streaming、Persistence、ECS 重构、GPU Driven Renderer 或 Octree 大工程。

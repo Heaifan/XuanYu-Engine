@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.18.18-rz
+WORLD-A-R3 Spatial Index + World Query Foundation（2026-07-23 15:45:12）
+- 任务目标：正式裁定 `WORLD-A-R2 = CLOSED` 后进入 `WORLD-A-R3`；建立 Spatial Index + World Query 最小正式骨架。本轮不进入 Organization Graph、Gameplay、Terrain、Earth Mesh、GIS、完整 Streaming、Persistence、Octree 大工程、GPU Driven Renderer 或 ECS 重构。
+- 所有权边界：`GlobalWorld` 继续作为 Entity / Position / Activity / 生命周期唯一事实源；`WorldPartition` 继续作为 Region Membership 管理事实；`WorldQuery` 与 `SpatialIndex` 只作为从正式实体位置派生出的查询加速结构。
+- 查询接口：新增 `GlobalWorld.QueryRadius` 与 `GlobalWorld.QueryBounds`，返回 `EntityId` 集合；调用者必须回到 `GlobalWorld` 查询正式 Entity State。Radius Query 先走 Spatial AABB 候选，再对候选执行半径精确过滤。
+- 派生同步：`GlobalWorld.Create` 插入 WorldQuery；`UpdateTransform` 在正式 Position / Partition 更新后同步 SpatialIndex；`Destroy` 从 Registry / Partition / SpatialIndex 中移除同一 `EntityId`。
+- 治理红线：`docs/玄域引擎_AI开发宪法.md` 与 `docs/dev-rules.md` 新增 World Query / Spatial Index 门禁，冻结“禁止正式查询全扫 Registry”“SpatialIndex 不成为第三套实体事实”“Region 不等于 Spatial Cell”。
+- 测试覆盖：新增 `WorldSpatialQueryTests` 与 `WorldSpatialQueryGovernanceTests`；1000 / 10000 Entity 的 `QueryRadius` / `QueryBounds` 使用 O(N) 测试 Oracle 校验正确性，Move / Cross Region / Destroy 后查询结果同步正确，生产 World Query 文件不得扫描 `GlobalWorld.Entities`。
+- 文档同步：新增 `docs/world-a-r3-spatial-query-report.md` 与 `docs/world-a-r3-spatial-query.svg`；`file-tree.md` 更新到 406；主窗口标题与 `run.bat` 同步到 `v0.2.18.18-rz`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 144 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 406 / 406 通过。普通 sandbox build 因 Avalonia BuildServices 写用户日志被拒绝，已按权限规则升级重跑通过。
+- Performance Gate：R3 targeted tests 记录 `1000` Entity 查询 `Visited=813 / Candidates=76`；`10000` Entity 查询 `Visited=3569 / Candidates=289`；两者结果均与测试侧 O(N) Oracle 完全一致，正式生产查询路径未扫描 `GlobalWorld.Entities`。
+- 遗留问题：本轮只建立 R3 Foundation；后续 `WORLD-A-R3-R1` 可继续把 World Query 接给 Editor / Picking / AI / Gameplay 等消费者，但不得回到 O(N) 正式查询路径。
+
 ## v0.2.18.17-rz
 WORLD-A-R2-R4 Editor Camera Framing + Branch Governance（2026-07-23 13:58:03）
 - 任务目标：从 `ac75bf0` 干净 HEAD 创建 `feat/WORLD-A-global-world` 并推送 upstream；补齐 WORLD-A 多实体 / 跨 Region 真机验收所需的编辑器相机构图能力。本轮不进入完整 Blender Camera、FPS Free Fly、Camera Asset、相机动画、WORLD-B、Terrain、Grid、Skybox 或 Earth Orbit Camera。
