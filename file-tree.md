@@ -1,7 +1,7 @@
-版本：v0.2.18.20-fix
+版本：v0.2.18.21-fix
 # XuanYu Engine 文件树
 
-文件总数：414
+文件总数：420
 
 ## 根目录
 
@@ -85,6 +85,8 @@
 - `docs/world-a-r3-r1-spatial-consistency.svg`：WORLD-A-R3-R1 空间一致性图；说明正式 WorldQuery 生命周期闭环与 SceneIndex 待收敛边界。
 - `docs/world-a-ui-r1-display-cleanup-report.md`：WORLD-A-UI-R1 显示清理报告；记录日志、树形 UI、中文显示映射、治理规则和禁止项确认。
 - `docs/world-a-ui-r1-display-cleanup.svg`：WORLD-A-UI-R1 显示清理图；说明日志表格、树形投影、Inspector 显示映射与事实源边界。
+- `docs/world-a-ui-r2-continuous-tree-report.md`：WORLD-A-UI-R2 连续树线与图标重制报告；记录 UI-R1 视觉退回、共享 TreeGuide、图标来源和验收证据。
+- `docs/world-a-ui-r2-continuous-tree.svg`：WORLD-A-UI-R2 连续树干验收图；展示 Project / Hierarchy 的 Full、Tee、Elbow 树线模型。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -246,6 +248,7 @@
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1Oracle.cs`：WORLD-A-R3-R1 空间查询测试 Oracle；只在测试侧使用 O(N) 真值校验，不进入生产 World Query。
 - `XuanYu.Core.Tests/World/WorldSpatialR1RebuildTests.cs`：WORLD-A-R3-R1 Rebuild 与随机一致性测试；覆盖 1000 Entity 重建前后 Query 一致和确定性随机 Move / Radius / Bounds。
+- `XuanYu.Core.Tests/World/WorldUiTreeGuideTests.cs`：WORLD-A-UI-R2 树线投影测试；覆盖 Project Tree 连续 Guide、折叠后可视节点和 `构建配置` 命名。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
@@ -360,6 +363,8 @@
 - `XuanYu.Editor.UI/NativeHostResizeSnapshot.cs`：NativeHost Resize 快照。
 - `XuanYu.Editor.UI/NativeHostSurfaceContract.cs`：NativeHost Surface 合约。
 - `XuanYu.Editor.UI/RelayCommand.cs`：ICommand 简易实现。
+- `XuanYu.Editor.UI/TreeGuide.cs`：共享树线绘制控件；按节点 GuideSegments 绘制连续 Full、Tee 与 Elbow 分支线。
+- `XuanYu.Editor.UI/TreeGuideSegment.cs`：树线段值对象与类型枚举；描述 Blank、Full、Tee、Elbow 四种可视 Guide。
 - `XuanYu.Editor.UI/Ui.axaml`：全局 UI 样式资源。
 - `XuanYu.Editor.UI/ViewportNativeHostRoute.cs`：视口 NativeHost 路由入口。
 - `XuanYu.Editor.UI/app.manifest`：Windows 应用清单。
@@ -387,9 +392,9 @@
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`：日志详情面板界面。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs`：日志详情面板代码后置。
 - `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`：日志列表自动滚动控制器；R8 验收期间新日志到来时强制尾随最新行。
-- `XuanYu.Editor.UI/Icons/EditorIcons.axaml`：编辑器图标资源；撤销 / 重做保持镜像同源视觉语言，旋转图标使用中心轴环形构型。
-- `XuanYu.Editor.UI/Left/Left.axaml`：左侧项目与层级面板界面。
-- `XuanYu.Editor.UI/Left/Left.axaml.cs`：左侧面板代码后置。
+- `XuanYu.Editor.UI/Icons/EditorIcons.axaml`：编辑器图标资源；树节点图标统一 24x24 viewBox、`#2F80C9` 主色和 2.2 线宽。
+- `XuanYu.Editor.UI/Left/Left.axaml`：左侧项目与层级面板界面；Project / Hierarchy 共用连续 TreeGuide 树线模板。
+- `XuanYu.Editor.UI/Left/Left.axaml.cs`：左侧面板代码后置；接收 Project / Hierarchy 展开折叠点击并交给 UiVm。
 - `XuanYu.Editor.UI/Main/Main.axaml`：中央主视口区域界面。
 - `XuanYu.Editor.UI/Main/Main.axaml.cs`：中央主视口区域代码后置。
 - `XuanYu.Editor.UI/Right/Right.axaml`：右侧检查器与调试面板界面；检查器显示 Selection 的完整 World 字段，模式页显示 ActiveTool 与 Snap Toggle。
@@ -416,9 +421,10 @@
 - `XuanYu.Editor.UI/Vm/EditorDisplayText.cs`：编辑器中文显示文本映射；只处理 Entity、Region、Activity、类型和坐标展示，不重命名内部 C# 标识。
 - `XuanYu.Editor.UI/Vm/EditorLogLevel.cs`：编辑器日志等级枚举。
 - `XuanYu.Editor.UI/Vm/EditorLogSource.cs`：编辑器日志来源枚举。
-- `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点 UI 投影模型；按图标身份提供显示分类，不把实体显示类型当作 Selection 或场景事实。
+- `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点 UI 投影模型；携带图标身份、连续树线 Guide 和展开折叠 UI 状态。
 - `XuanYu.Editor.UI/Vm/LogEntry.cs`：编辑器日志条目模型。
 - `XuanYu.Editor.UI/Vm/SampleLogEntries.cs`：底部日志栏示例数据。
+- `XuanYu.Editor.UI/Vm/TreeGuideBuilder.cs`：树形 UI Guide 构造器；从可视节点层级推导祖先连续竖线、中间 Tee、末节点 Elbow 和折叠过滤。
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm Undo / Redo 接线分部；成功 Commit 后记录 History，撤销恢复 Before，重做恢复 After。
 - `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`：UiVm 交互事务入口分部。
@@ -435,8 +441,8 @@
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionTrace.cs`：UiVm Selection 低频诊断分部；记录选择提交、层级选择、投影同步和渲染发布深度。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
-- `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点与 Inspector 字段，并同步投影刷新。
-- `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态；默认使用 Avalonia UI 线程写入检查，测试可注入写线程判定以覆盖 Selection Gate。
+- `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点、Inspector 字段并重算连续树线。
+- `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态；维护 Project / Hierarchy 折叠集合并发布 TreeGuide 可视投影。
 - `XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`：视口拾取日志格式化器；负责生成 R2-F 中文摘要和详情文本，不持有状态。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs`：编辑器内存日志缓冲区。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs`：编辑器低频日志入口。

@@ -42,6 +42,7 @@ public sealed partial class UiVm
         if (!Set(ref _selectedProjectItem, value, nameof(SelectedProjectItem))) return;
         SetSelectedNodeKey(value?.Key ?? "");
         if (value is null) { ApplyClearSelection(); return; }
+        if (value.CanToggle) ToggleProjectNode(value);
         _selectedHierarchyItem = null; OnPropertyChanged(nameof(SelectedHierarchyItem));
         ApplySelection("项目树", value);
     }
@@ -56,6 +57,7 @@ public sealed partial class UiVm
             SetSelectedNodeKey(value?.Key ?? "");
             if (_isSynchronizingSelectionProjection) return;
             if (value is null) { ApplyClearSelection(); return; }
+            if (value.CanToggle) ToggleHierarchyNode(value);
             _selectedProjectItem = null; OnPropertyChanged(nameof(SelectedProjectItem));
             ApplySelection("层级树", value);
         }
@@ -95,5 +97,4 @@ public sealed partial class UiVm
         FooterState = "状态：就绪";
         OnPropertyChanged(nameof(LogSummary));
     }
-
 }

@@ -12,6 +12,8 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     readonly EditorStateOwner _editorState;
     readonly EditorHistoryOwner _historyOwner = new();
     readonly Dictionary<string, EditorTreeNode> _hierarchyNodeCache = new();
+    readonly HashSet<string> _collapsedProjectKeys = new(StringComparer.Ordinal);
+    readonly HashSet<string> _collapsedHierarchyKeys = new(StringComparer.Ordinal);
     int _leftTabIndex; EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
     string _footerMessage = "已就绪。玄域示例项目已选中。", _footerState = "状态：就绪";
@@ -42,7 +44,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public ICommand InteractionCommand { get; }
     public ICommand ToggleLogCommand { get; }
     public ICommand SelectLogFilterCommand { get; }
-    public IReadOnlyList<EditorTreeNode> ProjectItems => UiText.ProjectTreeItems;
+    public IReadOnlyList<EditorTreeNode> ProjectItems => TreeGuideBuilder.Visible(UiText.ProjectTreeItems, _collapsedProjectKeys);
     public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
     public IReadOnlyList<string> InspectorFields => BuildInspectorFields();
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems; public IReadOnlyList<string> PropertyItems => UiText.PropertyItems;
@@ -68,12 +70,18 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public bool HasSelection => _editorState.Snapshot.HasSelection;
     public bool IsLogOpen { get => _isLogOpen; set => Set(ref _isLogOpen, value); }
     public bool IsEmptySelection => !HasSelection;
-
     public int LeftTabIndex { get => _leftTabIndex; set => Set(ref _leftTabIndex, value); }
-
     public EditorTreeNode? SelectedProjectItem { get => _selectedProjectItem; set => SetProjectSelection(value); }
-
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
+    public void ToggleProjectNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedProjectKeys, nameof(ProjectItems));
+    public void ToggleHierarchyNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedHierarchyKeys, nameof(HierarchyItems));
+
+    void ToggleTreeNode(EditorTreeNode node, HashSet<string> collapsed, string propertyName)
+    {
+        if (!node.CanToggle) return;
+        if (!collapsed.Add(node.Key)) collapsed.Remove(node.Key);
+        OnPropertyChanged(propertyName);
+    }
 
     void Run(string name)
     {

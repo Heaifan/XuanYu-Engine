@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.18.21-fix
+WORLD-A-UI-R2 Continuous Tree + Icon Refresh（2026-07-23）
+- 任务目标：修正 `WORLD-A-UI-R1` 人工视觉验收退回项；本轮唯一重点是 Project Tree / Hierarchy Tree 连续树干与确认图标替换，不进入 `WORLD-A-R3-R2` Picking 正式接线，不改变 GlobalWorld、Partition、WorldQuery、SpatialIndex、Selection、Move、Undo、Redo 或 Region 迁移事实语义。
+- 连续树线：新增共享 `TreeGuide` / `TreeGuideSegment` / `TreeGuideBuilder`；每个可视节点按 Depth、IsLastChild 与祖先末节点状态生成 `Full` / `Tee` / `Elbow` / `Blank` Guide，父级竖线从第一个子节点连续延伸到最后一个子节点中心。
+- 折叠重算：Project Tree 与 Hierarchy Tree 共用折叠状态过滤与 Guide 重算；折叠父节点后子节点不可见，后续兄弟线段重新收敛，无多余残线。
+- 视觉冻结：缩进 20 px、箭头 16 px、图标 16x16、行高 28 px、树线 `#C7D7EA` / 1 px、图标 `#2F80C9` / 2.2、图标与文字间距 7 px。
+- 图标替换：`EditorIcons.axaml` 统一项目、世界、文件夹、图标/图片、材质、脚本、相机、地面、区域、实体、构建配置图标资源；禁止 Emoji、Unicode 字符或字体 Glyph 充当节点图标。
+- 构建节点：项目树资源分类中的 `构建` 改为 `构建配置`，使用构建配置图标；仅处理显示语义，不修改 dotnet build 命令或构建系统逻辑。
+- 文档同步：新增 `docs/world-a-ui-r2-continuous-tree-report.md` 与 `docs/world-a-ui-r2-continuous-tree.svg`；`file-tree.md` 更新到 420；主窗口标题与 `run.bat` 同步到 `v0.2.18.21-fix`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 151 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、SVG XML、版本残留扫描和 `file-tree.md` 420 / 420 通过。真机截图已覆盖 Project Tree 全展开、Project Tree 折叠、Hierarchy Tree 全展开、选中态与 Hover；跨 Region 迁移后额外真机截图本轮未取得，因此不据此宣布人工 PASS。
+
 ## v0.2.18.20-fix
 WORLD-A-UI-R1 Display Cleanup（2026-07-23）
 - 任务目标：暂停 `WORLD-A-R3-R2` Picking 正式接线，只处理多实体 / Region / Spatial Query 阶段暴露出的 UI 可读性债务；本轮不改 SpatialIndex 算法、不接 Organization Graph、不引入 ECS、场景保存或层级拖拽重排。

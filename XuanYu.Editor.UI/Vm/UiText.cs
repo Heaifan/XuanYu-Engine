@@ -2,7 +2,7 @@ namespace XuanYu.Editor.UI;
 
 public static class UiText
 {
-    public static readonly EditorTreeNode[] ProjectTreeItems =
+    public static readonly EditorTreeNode[] ProjectTreeItems = Guided(
     [
         new("project:root", "玄域示例项目", "项目", "玄域示例项目", 0, "project"),
         new("project:worlds", "世界", "分类", "玄域示例项目/世界", 1, "folder"),
@@ -12,8 +12,8 @@ public static class UiText
         new("asset:icons", "图标", "资源分类", "玄域示例项目/资源/图标", 2, "asset"),
         new("asset:materials", "材质", "资源分类", "玄域示例项目/资源/材质", 2, "asset"),
         new("asset:scripts", "脚本", "资源分类", "玄域示例项目/资源/脚本", 2, "script"),
-        new("asset:build", "构建", "资源分类", "玄域示例项目/资源/构建", 2, "build")
-    ];
+        new("asset:build", "构建配置", "资源分类", "玄域示例项目/资源/构建配置", 2, "build")
+    ]);
 
     public static readonly EditorTreeNode[] HierarchyTreeItems =
     [
@@ -89,4 +89,10 @@ public static class UiText
         ["停止"] = "运行预览已停止。",
         ["构建"] = "构建任务已加入队列。"
     };
+
+    static EditorTreeNode[] Guided(EditorTreeNode[] nodes)
+    {
+        TreeGuideBuilder.Apply(nodes);
+        return nodes;
+    }
 }

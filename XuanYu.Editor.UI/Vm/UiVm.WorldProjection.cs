@@ -22,7 +22,7 @@ public sealed partial class UiVm
                 $"主世界/{region}/{EditorDisplayText.Entity(entity.EntityKey)}", 2, "entity")));
         }
         PruneHierarchyNodeCache(liveKeys);
-        return items;
+        return TreeGuideBuilder.Visible(items, _collapsedHierarchyKeys);
     }
 
     EditorTreeNode Node(HashSet<string> liveKeys, string key, string title, string type, string path, int level, string icon)
