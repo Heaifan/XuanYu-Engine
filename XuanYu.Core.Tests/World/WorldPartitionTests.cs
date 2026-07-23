@@ -12,14 +12,13 @@ public sealed class WorldPartitionTests
     public void Region_membership_does_not_own_entity_lifecycle()
     {
         var world = new GlobalWorld();
-        var a = RegionKey.FromGrid(0, 0);
         var b = RegionKey.FromGrid(1, 0);
-        var entity = world.Create("Soldier", region: a);
+        var entity = world.Create("Soldier");
 
-        Assert.True(world.MoveToRegion(entity.EntityKey, b));
+        Assert.True(world.UpdateTransform(entity.EntityKey, new CommittedTransform(new Vector3d(1001, 0, 0))));
 
         Assert.True(world.Exists(entity.EntityKey));
-        Assert.DoesNotContain(entity.EntityKey, world.EntitiesIn(a));
+        Assert.DoesNotContain(entity.EntityKey, world.EntitiesIn(RegionKey.Origin));
         Assert.Contains(entity.EntityKey, world.EntitiesIn(b));
         Assert.Equal(entity.EntityKey, world.Get(entity.EntityKey).EntityKey);
     }
@@ -74,14 +73,14 @@ public sealed class WorldPartitionTests
     {
         var world = new GlobalWorld();
         var entities = Enumerable.Range(0, 1000)
-            .Select(i => world.Create($"Entity {i}", region: RegionKey.FromGrid(i % 10, 0)))
+            .Select(i => world.Create($"Entity {i}"))
             .ToArray();
         var watch = Stopwatch.StartNew();
 
         foreach (var entity in entities)
         {
-            var region = RegionKey.FromGrid(entity.EntityKey.Value % 13, entity.EntityKey.Value % 7);
-            Assert.True(world.MoveToRegion(entity.EntityKey, region));
+            var p = new Vector3d(entity.EntityKey.Value % 13 * 1000, entity.EntityKey.Value % 7 * 1000, 0);
+            Assert.True(world.UpdateTransform(entity.EntityKey, new CommittedTransform(p)));
         }
 
         watch.Stop();

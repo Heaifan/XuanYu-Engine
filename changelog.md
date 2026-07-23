@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.18.15-rz
+WORLD-A-R2-R2 Partition Scale + Consistency Gate（2026-07-23）
+- 任务目标：在 `WORLD-A-R2-R1 / v0.2.18.14-rz` PASS 后，不新增世界能力，只完成 R2 毕业前分区规模与一致性 Gate；重点验证 Partition Invariant、1000 Entity 多 Region 随机迁移、Hierarchy 稳定节点生命周期、Activity 查询不变和 RegionKey 几何依赖红线。本轮不进入 Spatial Index 新阶段、Organization Graph、Terrain、Earth Mesh、GIS、完整 Streaming、Persistence、ECS 或 GPU-driven Renderer。
+- 一致性合同：新增 `WorldPartitionEntry` 与 `GlobalWorld.PartitionSnapshot`，自动 Gate 校验所有 Alive Entity 恰好一份 Membership，`Membership.RegionKey == ResolveRegion(GlobalPosition)`，Entity Snapshot Region 与 Membership Region 一致，Activity 不被迁移污染。
+- 迁移入口收紧：`GlobalWorld.Create` 不再允许调用方手写 Region 绕过策略；`MoveToRegion` 只接受与当前 Position 策略推导一致的 Region，真实迁移继续由 Transform / Position Commit 驱动，避免 RegionKey 成为第二份位置真相。
+- 规模 Gate：新增 `WorldPartitionR2Tests`，创建 1000 Entity，执行 10000 次确定性随机迁移，并在每次迁移后立即验证 Partition Invariant；记录 Create / Migration / LookupCount 观察基线，不设置拍脑袋性能门槛。
+- Hierarchy / Activity：Hierarchy 投影刷新后清理不再存活的 node cache，Destroy 后 Entity 节点和 cache 均无幽灵；Dormant Entity 仍可 Exists / TryGet，RegionKey 与 GlobalPosition 不变；生产代码红线测试确认除 `GridWorldPartitionStrategy` 和 `RegionKey` 自身外不得调用 `RegionKey.FromGrid` 解释网格几何。
+- 真机准备：`UiVm` 的编辑器调试场景使用 `GridWorldPartitionStrategy(regionSize: 5)`，便于用当前 Move Gizmo 做近距离跨 Region 真机验证；Inspector 已显示 EntityId、GlobalPosition、RegionKey 与 Activity。
+- 文档同步：新增 `docs/world-a-r2-r2-partition-consistency-report.md` 与 `docs/world-a-r2-r2-partition-consistency.svg`；`file-tree.md` 更新到 393；主窗口标题与 `run.bat` 同步到 `v0.2.18.15-rz`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 138 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 393 / 393 均通过。普通 sandbox build 因 Avalonia BuildServices 写用户日志被拒绝，已按权限规则升级重跑通过。
+- 遗留问题：R2 自动毕业 Gate 已基本齐备；最终 CLOSED 前仍需用户真机回传选中实体 A->B Commit、Undo B->A、Redo A->B 时 Selection / Inspector / Hierarchy / Render 全程不丢不串的证据。
+
 ## v0.2.18.14-rz
 WORLD-A-R2-R1 跨 Region 迁移与 Activity 生命周期第一阶段（2026-07-23）
 - 任务目标：在 `WORLD-A-R2 / v0.2.18.13-rz` 基础骨架通过后，完成真实跨 Region 迁移语义与 Activity 生命周期第一阶段；冻结 `GlobalPosition -> Partition Strategy -> RegionKey` 单向合同，RegionKey 只能是派生管理事实，不得反向成为位置真相。本轮不进入完整 Streaming、Persistence、Earth Mesh、GIS、Terrain、Organization、Spatial Index 新阶段、ECS 重构或 GPU Renderer 大改。

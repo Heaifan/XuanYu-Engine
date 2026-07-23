@@ -23,10 +23,10 @@ public sealed class GlobalWorld
     public WorldEntitySnapshot Create(
         string name,
         string type = "WorldEntity",
-        CommittedTransform? transform = null,
-        RegionKey? region = null)
+        CommittedTransform? transform = null)
     {
-        var entity = _registry.Create(name, type, transform, region);
+        var committed = transform ?? CommittedTransform.Identity;
+        var entity = _registry.Create(name, type, committed, ResolveRegion(committed));
         _partition.Add(entity.EntityKey, entity.RegionKey);
         return entity;
     }
@@ -48,7 +48,8 @@ public sealed class GlobalWorld
 
     public bool MoveToRegion(EntityId entityKey, RegionKey region)
     {
-        if (!Exists(entityKey) || !_partition.MoveToRegion(entityKey, region)) return false;
+        if (!TryGet(entityKey, out var entity) || region != ResolveRegion(entity.Transform)) return false;
+        if (!_partition.MoveToRegion(entityKey, region)) return false;
         return _registry.UpdatePartition(entityKey, region, GetActivity(entityKey));
     }
 
@@ -64,6 +65,11 @@ public sealed class GlobalWorld
     public WorldEntityActivity GetActivity(EntityId entityKey) => _partition.GetActivity(entityKey);
 
     public IReadOnlyList<EntityId> EntitiesIn(RegionKey region) => _partition.EntitiesIn(region);
+
+    public IReadOnlyList<WorldPartitionEntry> PartitionSnapshot => _partition.Snapshot;
+
+    public RegionKey ResolveRegion(CommittedTransform transform) =>
+        _partitionStrategy.RegionFor(transform.Position);
 
     public WorldEntitySnapshot Get(EntityId entityKey) => _registry.Get(entityKey);
 

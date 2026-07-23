@@ -38,6 +38,14 @@ public sealed class WorldPartitionMembership
 
     public WorldEntityActivity GetActivity(EntityId entityKey) => _activities[entityKey];
 
+    public IReadOnlyList<WorldPartitionEntry> Snapshot =>
+        _regions.OrderBy(item => item.Key.Value)
+            .Select(item => new WorldPartitionEntry(
+                item.Key,
+                item.Value,
+                _activities[item.Key]))
+            .ToArray();
+
     public IReadOnlyList<EntityId> EntitiesIn(RegionKey region) =>
         _regions.Where(item => item.Value == region)
             .Select(item => item.Key)

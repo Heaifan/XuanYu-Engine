@@ -1,11 +1,12 @@
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
+using XuanYu.Core.World;
 
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    readonly SceneStateOwner _sceneState = new();
+    readonly SceneStateOwner _sceneState = new(new GridWorldPartitionStrategy(regionSize: 5));
 
     public ISceneRenderSnapshotSource SceneSnapshotSource => this;
     public SceneRenderSnapshot RenderSnapshot

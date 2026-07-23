@@ -7,13 +7,16 @@ namespace XuanYu.Core.Scene;
 
 public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
 {
-    readonly GlobalWorld _world = new();
+    readonly GlobalWorld _world;
     readonly SpatialIndexOwner _spatialIndex = new();
     SceneRenderSnapshot _snapshot;
     EntityId _activeEntityKey;
 
-    public SceneStateOwner()
+    public SceneStateOwner() : this(null) { }
+
+    public SceneStateOwner(IWorldPartitionStrategy? partitionStrategy)
     {
+        _world = partitionStrategy is null ? new GlobalWorld() : new GlobalWorld(partitionStrategy);
         var entity = _world.Create("ARCH-C-R1 Test Entity", "MinimalSceneEntity");
         _activeEntityKey = entity.EntityKey;
         RefreshSnapshot();

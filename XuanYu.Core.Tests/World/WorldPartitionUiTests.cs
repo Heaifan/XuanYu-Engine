@@ -16,7 +16,7 @@ public sealed class WorldPartitionUiTests
         var entity = scene.Entities[4];
         scene.SetActiveEntity(entity.EntityKey, publish: false);
 
-        Assert.True(scene.MoveEntityToRegion(entity.EntityKey, RegionKey.FromGrid(2, 1)));
+        scene.CommitPositionWithResult(entity.EntityKey, new XuanYu.Core.Math.Vector3d(2001, 1001, 0));
 
         Assert.Equal(entity.EntityKey, scene.RenderSnapshot.Entity.EntityKey);
         Assert.Equal(RegionKey.FromGrid(2, 1), scene.GetRegion(entity.EntityKey));
@@ -27,10 +27,10 @@ public sealed class WorldPartitionUiTests
     public void Selection_and_inspector_survive_region_migration_by_key()
     {
         var vm = new UiVm(null, () => true);
-        var entity = EntityNodes(vm)[4];
+        var entity = EntityNodes(vm).Single(item => item.Key == "EntityId(5)");
 
         vm.SelectedHierarchyItem = entity;
-        SceneOf(vm).MoveEntityToRegion(EntityId.FromInt(5), RegionKey.FromGrid(3, 2));
+        SceneOf(vm).CommitPositionWithResult(EntityId.FromInt(5), new XuanYu.Core.Math.Vector3d(16, 11, 0));
 
         Assert.Equal(entity.Key, vm.SelectedNodeKey);
         Assert.Equal(entity.Key, vm.SelectionKey);
@@ -46,12 +46,25 @@ public sealed class WorldPartitionUiTests
         var vm = new UiVm(null, () => true);
         var before = EntityNodes(vm)[0];
 
-        SceneOf(vm).MoveEntityToRegion(EntityId.FromInt(1), RegionKey.FromGrid(4, 0));
+        SceneOf(vm).CommitPositionWithResult(EntityId.FromInt(1), new XuanYu.Core.Math.Vector3d(21, 0, 0));
         var after = EntityNodes(vm).Single(item => item.Key == before.Key);
 
         Assert.Same(before, after);
         Assert.Contains("Region(4,0,0)", after.Path);
         Assert.Contains(vm.HierarchyItems, item => item.Key == "Region(4,0,0)" && item.IsRegion);
+    }
+
+    [Fact]
+    public void Destroy_removes_entity_node_and_prunes_hierarchy_cache()
+    {
+        var vm = new UiVm(null, () => true);
+        var key = EntityNodes(vm)[0].Key;
+
+        Assert.True(SceneOf(vm).DestroyEntity(EntityId.FromInt(1)));
+        _ = vm.HierarchyItems;
+
+        Assert.DoesNotContain(vm.HierarchyItems, item => item.Key == key);
+        Assert.False(HierarchyCacheOf(vm).ContainsKey(key));
     }
 
     static List<EditorTreeNode> EntityNodes(UiVm vm) =>
@@ -61,5 +74,11 @@ public sealed class WorldPartitionUiTests
     {
         var field = typeof(UiVm).GetField("_sceneState", BindingFlags.Instance | BindingFlags.NonPublic);
         return (SceneStateOwner)field!.GetValue(vm)!;
+    }
+
+    static Dictionary<string, EditorTreeNode> HierarchyCacheOf(UiVm vm)
+    {
+        var field = typeof(UiVm).GetField("_hierarchyNodeCache", BindingFlags.Instance | BindingFlags.NonPublic);
+        return (Dictionary<string, EditorTreeNode>)field!.GetValue(vm)!;
     }
 }
