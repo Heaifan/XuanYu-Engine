@@ -8,16 +8,17 @@ public sealed partial class VulkanNativeHost
     {
         if (DataContext is UiVm { SurfaceBridgeFactory: { } factory } vm)
         {
-            LogBridgeFactorySource("应用注入（XuanYu.Editor.App）");
+            LogBridgeFactorySource("应用注入");
             return factory.Create(ReportVulkanMessage, vm.SceneSnapshotSource);
         }
-        LogBridgeFactorySource("缺少应用注入，已拒绝旧 fallback");
+        LogBridgeFactorySource("缺少应用注入，已拒绝旧回退路径");
         throw new InvalidOperationException("NativeHost Surface Bridge factory 未由应用组装层注入。");
     }
 
     void LogBridgeFactorySource(string source)
     {
-        var message = $"【ARCH-A-R2】桥接工厂来源：{source}";
-        Console.WriteLine(message); ReportVulkanMessage(message);
+        var message = $"桥接工厂来源：{source}；应用=玄域编辑器";
+        var console = $"{DateTime.Now:HH:mm:ss} 【信息】【Vulkan桥接】{message}";
+        Console.WriteLine(console); ReportVulkanMessage(message);
     }
 }

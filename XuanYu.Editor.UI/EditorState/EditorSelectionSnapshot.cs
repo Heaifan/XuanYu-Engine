@@ -9,5 +9,5 @@ public sealed record EditorSelectionSnapshot(
     string SelectionPath)
 {
     public static EditorSelectionSnapshot Initial { get; } =
-        new(1, true, "project:root", "SampleProject", "项目", "SampleProject");
+        new(1, true, "project:root", "玄域示例项目", "项目", "玄域示例项目");
 }

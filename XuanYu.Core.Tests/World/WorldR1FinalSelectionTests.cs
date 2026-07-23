@@ -18,7 +18,7 @@ public sealed class WorldR1FinalSelectionTests
             Assert.Equal(entity.Key, vm.SelectionKey);
             Assert.Equal(entity.Key, vm.RenderSnapshot.Entity.EntityKey.ToString());
             Assert.Equal(entity.Title, vm.SelectionTitle);
-            Assert.Contains(vm.InspectorFields, item => item.Contains(entity.Key));
+            Assert.Contains(vm.InspectorFields, item => item.Contains(DisplayEntity(entity.Key)));
             Assert.Equal(10, vm.RenderSnapshot.Entities.Count);
         }
 
@@ -36,4 +36,7 @@ public sealed class WorldR1FinalSelectionTests
         Assert.Equal(10, nodes.Count);
         return nodes;
     }
+
+    static string DisplayEntity(string key) =>
+        key.Replace("EntityId", "实体编号", StringComparison.Ordinal);
 }

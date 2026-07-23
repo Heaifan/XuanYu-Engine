@@ -9,7 +9,7 @@ public sealed partial class VulkanRenderSession
     bool RecoverFromOutOfDate(string source)
     {
         if (_disposed || IsFailed) return false;
-        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Present.OutOfDate", $"来源={source}（进入自愈）"));
+        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Present 过期", $"来源={source}；进入自愈"));
         lock (_rebuildLock)
         {
             if (_resizeStopping) return false;

@@ -13,7 +13,7 @@ public sealed partial class SceneStateOwner
             var x = (index - 1) % 5;
             var y = (index - 1) / 5;
             CreateEntity(
-                $"WORLD-A-R1-R2 Test Entity {index}",
+                $"测试实体 {index:00}",
                 "MinimalSceneEntity",
                 new CommittedTransform(new Vector3d(x * 1.5, y * 1.5, 0)));
         }

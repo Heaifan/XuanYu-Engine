@@ -4,7 +4,7 @@ public static class DebugText
 {
     public static readonly string[] ContextItems =
     [
-        "当前选择：SampleProject",
+        "当前选择：玄域示例项目",
         "当前工具：选择",
         "拾取状态：无命中",
         "日志策略：高频事件不进入底部日志"

@@ -8,7 +8,7 @@ public static class EditorLogClipboardText
         $"时间：{entry.Time}",
         $"级别：{entry.LevelText}",
         $"来源：{entry.SourceText}",
-        $"分类：{entry.CategoryText}",
+        $"模块：{entry.ModuleText}",
         $"消息：{entry.Message}",
         $"重复次数：{entry.RepeatCount}",
         $"详情：{entry.DetailText}",
@@ -17,9 +17,9 @@ public static class EditorLogClipboardText
 
     public static string FromMany(IEnumerable<LogEntry> entries)
     {
-        var lines = new List<string> { "时间\t级别\t来源\t分类\t消息\t详情" };
+        var lines = new List<string> { "时间\t级别\t来源\t模块\t消息\t详情" };
         foreach (var e in entries)
-            lines.Add(string.Join("\t", e.Time, e.LevelText, e.SourceText, e.CategoryText, e.Message, e.DetailText));
+            lines.Add(string.Join("\t", e.Time, e.LevelText, e.SourceText, e.ModuleText, e.Message, e.DetailText));
         return string.Join(Environment.NewLine, lines);
     }
 }

@@ -33,6 +33,6 @@ public sealed class SpatialIndexOwnerRevisionTests
 
         Assert.Equal(1, result.Stats.SpatialRevision);
         Assert.Equal(1, result.Stats.TotalEntityCount);
-        Assert.Contains("【ARCH-C-R2-D】空间查询完成", result.Stats.ToChineseProbe());
+        Assert.Contains("空间查询完成", result.Stats.ToChineseProbe());
     }
 }

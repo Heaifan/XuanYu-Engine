@@ -5,6 +5,10 @@
   <StreamGeometry x:Key="ChevronRightIcon">M6 4L10 8L6 12</StreamGeometry>
   <StreamGeometry x:Key="ProjectIcon">M3 5L8 2L13 5V11L8 14L3 11ZM3 5L8 8L13 5M8 8V14</StreamGeometry>
   <StreamGeometry x:Key="WorldIcon">M8 2A6 6 0 1 0 8 14A6 6 0 0 0 8 2M2 8H14M8 2C10 4 10 12 8 14M8 2C6 4 6 12 8 14</StreamGeometry>
+  <StreamGeometry x:Key="RegionIcon">M3 5L8 2L13 5V11L8 14L3 11ZM3 5L8 8L13 5M8 8V14M5.3 6.4L10.7 3.8M5.3 9.6L10.7 12.2</StreamGeometry>
+  <StreamGeometry x:Key="CameraIcon">M3 5H9L10.5 7H13V13H3ZM13 8L16 6.5V11.5L13 10M6.5 8.2A2 2 0 1 0 6.5 12.2A2 2 0 0 0 6.5 8.2</StreamGeometry>
+  <StreamGeometry x:Key="GroundIcon">M2 11H14M4 8H12M6 5H10M3 13L5 11M7 13L9 11M11 13L13 11</StreamGeometry>
+  <StreamGeometry x:Key="EntityIcon">M4 4H12V12H4ZM4 4L8 2L12 4M12 12L8 14L4 12M8 2V14</StreamGeometry>
   <StreamGeometry x:Key="SceneIcon">M3 4H13V12H3ZM5 10L7 8L9 10L11 7L13 10</StreamGeometry>
   <StreamGeometry x:Key="FolderIcon">M2 5H7L8 6H14V13H2Z</StreamGeometry>
   <StreamGeometry x:Key="ImageIcon">M3 4H13V12H3ZM5 10L7 8L9 10L11 7L13 10M5 6H6</StreamGeometry>

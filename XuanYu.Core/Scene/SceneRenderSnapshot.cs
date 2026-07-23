@@ -23,7 +23,7 @@ public readonly record struct SceneRenderSnapshot(
     public static SceneRenderSnapshot TestEntityAtOrigin { get; } = new(
         new SceneEntitySnapshot(
             EntityId.FromInt(1),
-            "ARCH-C-R1 Test Entity",
+            "基础测试实体",
             "MinimalSceneEntity",
             CommittedTransform.Identity));
 

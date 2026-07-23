@@ -47,28 +47,28 @@ public sealed partial class UiVm
         if (!_sceneState.RenderSnapshot.HasEntity) return;
         if (!_sceneState.CommitPosition(position)) return;
         _logBus.Info(EditorLogSource.Render, EditorLogCategory.Command,
-            "ARCH-C-R1 场景实体 Position 已提交",
-            $"EntityKey={_sceneState.RenderSnapshot.Entity.EntityKey}; Position={position}");
+            "场景实体位置已提交",
+            $"实体={EditorDisplayText.Entity(_sceneState.RenderSnapshot.Entity.EntityKey)}；位置={EditorDisplayText.Position(position)}");
     }
 
     void PublishSceneRenderSnapshot()
     {
         TraceSelection("PublishSceneRenderSnapshot", 1,
-            $"EntityCount={RenderSnapshot.Entities.Count}");
+            $"实体数={RenderSnapshot.Entities.Count}");
         RenderSnapshotChanged?.Invoke(RenderSnapshot);
     }
 
     IReadOnlyList<string> BuildDebugObjectItems()
     {
         var entity = _sceneState.RenderSnapshot.Entity;
-        if (!entity.IsValid) return ["Entity：无"];
+        if (!entity.IsValid) return ["实体：无"];
         var position = entity.Transform.Position;
         return
         [
-            $"EntityKey：{entity.EntityKey}",
-            $"Name：{entity.Name}",
-            $"Type：{entity.Type}",
-            $"Position：{position}"
+            $"实体编号：{EditorDisplayText.Entity(entity.EntityKey)}",
+            $"名称：{entity.Name}",
+            $"类型：{EditorDisplayText.EntityType(entity.Type)}",
+            $"位置：{EditorDisplayText.Position(position)}"
         ];
     }
 }

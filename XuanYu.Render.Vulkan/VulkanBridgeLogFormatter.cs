@@ -38,7 +38,27 @@ public static class VulkanBridgeLogFormatter
 
     public static void Emit(Action<string>? log, string message)
     {
-        log?.Invoke(message);
-        Console.WriteLine(message);
+        var display = Display(message);
+        log?.Invoke(display);
+        Console.WriteLine($"{DateTime.Now:HH:mm:ss} {display}");
+    }
+
+    static string Display(string message)
+    {
+        var text = message
+            .Replace("【VulkanBridge】", "", StringComparison.Ordinal)
+            .Replace("【VulkanDevice】", "", StringComparison.Ordinal)
+            .Replace("【VulkanSwapchain】", "", StringComparison.Ordinal)
+            .Replace("【VulkanClearFrame】", "", StringComparison.Ordinal)
+            .Replace("【VulkanRenderSession】", "", StringComparison.Ordinal)
+            .Replace("【VulkanInstance】", "", StringComparison.Ordinal)
+            .Replace("【VulkanSurface】", "", StringComparison.Ordinal)
+            .Replace("LogicalDevice", "逻辑设备", StringComparison.Ordinal)
+            .Replace("PhysicalDevice", "物理设备", StringComparison.Ordinal)
+            .Replace("Graphics", "图形", StringComparison.Ordinal)
+            .Replace("Present", "呈现", StringComparison.Ordinal)
+            .Replace("Queue", "队列", StringComparison.Ordinal)
+            .Replace("Instance", "实例", StringComparison.Ordinal);
+        return text.TrimStart();
     }
 }

@@ -19,13 +19,13 @@ public static class VulkanClearFrameLogFormatter
     public static string FirstPresented(uint idx) => $"【VulkanClearFrame】首帧 Present 成功；imageIndex={idx}";
     // RZ-VK5-A-R2：OutOfDate 自愈探针与恢复日志（替代原永久暂停日志）。
     public static string OutOfDateProbe(string source, Extent2D oldExtent, Extent2D newExtent, uint generation, double dpi)
-        => $"【VulkanClearFrame】自愈探针：来源={source}；旧 extent={oldExtent.Width}x{oldExtent.Height}；新 Surface CurrentExtent={newExtent.Width}x{newExtent.Height}（物理像素）；DPI={dpi:F2}；逻辑≈{newExtent.Width / dpi:F0}x{newExtent.Height / dpi:F0}；generation={generation}";
-    public static string OutOfDateRecovered(uint generation) => $"【VulkanClearFrame】Swapchain 自愈成功，已恢复 Present；generation={generation}";
+        => $"【VulkanClearFrame】自愈探针：来源={source}；旧物理尺寸={oldExtent.Width}x{oldExtent.Height}；当前 Surface 尺寸={newExtent.Width}x{newExtent.Height}（物理像素）；DPI={dpi:F2}；逻辑≈{newExtent.Width / dpi:F0}x{newExtent.Height / dpi:F0}；代际={generation}";
+    public static string OutOfDateRecovered(uint generation) => $"【VulkanClearFrame】Swapchain 自愈成功，已恢复 Present；代际={generation}";
     public static string OutOfDateRecoverFailed(string reason) => $"【VulkanClearFrame】Swapchain 过期恢复失败，暂停 Present：{reason}";
     // RZ-VK5-D-R3：尺寸已由自愈恢复一致，Resize 快速跳过（不停启 Present 泵）。
-    public static string ResizeFastSkipped(uint generation, int w, int h) => $"【VulkanClearFrame】Resize 快速跳过：尺寸已由自愈恢复（{w}x{h}）；generation={generation}";
+    public static string ResizeFastSkipped(uint generation, int w, int h) => $"【VulkanClearFrame】Resize 快速跳过：尺寸已由自愈恢复（{w}x{h}）；代际={generation}";
     public static string SwapchainGeneration(string source, uint oldGen, uint newGen, bool rebuilt, Extent2D oldExtent, Extent2D newExtent, string decision)
-        => $"【Swapchain代际】触发来源：{source}；旧代际：{oldGen}；新代际：{newGen}；是否实际重建：{(rebuilt ? "是" : "否")}；旧Extent：{oldExtent.Width}x{oldExtent.Height}；新Extent：{newExtent.Width}x{newExtent.Height}；处理决定：{decision}";
+        => $"【Swapchain代际】触发来源：{source}；旧代际：{oldGen}；新代际：{newGen}；是否实际重建：{(rebuilt ? "是" : "否")}；旧物理尺寸：{oldExtent.Width}x{oldExtent.Height}；新物理尺寸：{newExtent.Width}x{newExtent.Height}；处理决定：{decision}";
     public static string ResizeSkipped(string source, uint gen, Extent2D current, int w, int h, string reason)
-        => $"【Resize跳过】触发来源：{source}；当前Swapchain代际：{gen}；当前物理尺寸：{current.Width}x{current.Height}；请求逻辑尺寸：{w}x{h}；实际Swapchain重建：否；原因：{reason}";
+        => $"【Resize跳过】触发来源：{source}；当前 Swapchain 代际：{gen}；当前物理尺寸：{current.Width}x{current.Height}；请求逻辑尺寸：{w}x{h}；实际 Swapchain 重建：否；原因：{reason}";
 }

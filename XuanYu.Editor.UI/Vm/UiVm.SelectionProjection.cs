@@ -7,8 +7,8 @@ public sealed partial class UiVm
         if (_isSynchronizingSelectionProjection) return;
         _isSynchronizingSelectionProjection = true;
         _projectionSyncDepth++;
-        TraceSelection("SynchronizeSelectionProjection", _projectionSyncDepth,
-            $"Selection={_editorState.Snapshot.SelectionKey}");
+        TraceSelection("选择投影同步", _projectionSyncDepth,
+            $"选择={_editorState.Snapshot.SelectionKey}");
         try
         {
             var key = _editorState.Snapshot.HasSelection ? _editorState.Snapshot.SelectionKey : "";
@@ -44,8 +44,8 @@ public sealed partial class UiVm
         }
         finally
         {
-            TraceSelection("SynchronizeSelectionProjection.End", _projectionSyncDepth,
-                $"Selection={_editorState.Snapshot.SelectionKey}");
+            TraceSelection("选择投影同步完成", _projectionSyncDepth,
+                $"选择={_editorState.Snapshot.SelectionKey}");
             _projectionSyncDepth--;
             _isSynchronizingSelectionProjection = false;
         }
@@ -54,8 +54,8 @@ public sealed partial class UiVm
     void LogSelectionCommit(SelectEditorItemCommand command, EditorStateChangedResult changed)
     {
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
-            $"【ARCH-C-R3】选择已提交；结果={command.Key}",
-            $"来源={command.Source}; Revision={changed.OldRevision}->{changed.NewRevision}");
+            $"选择已提交；结果={command.Title}",
+            $"来源={command.Source}；修订={changed.OldRevision}->{changed.NewRevision}");
         RefreshLogBindings();
     }
 }

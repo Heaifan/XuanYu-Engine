@@ -8,7 +8,7 @@ public sealed partial class UiVm
     void ApplySelection(string source, EditorTreeNode node)
     {
         _selectionCommitDepth++;
-        TraceSelection("ApplySelection", _selectionCommitDepth, $"Source={source}; Key={node.Key}");
+        TraceSelection("选择提交", _selectionCommitDepth, $"来源={source}；键={node.Key}");
         CancelInteraction("切换选择对象");
         try
         {
@@ -26,7 +26,7 @@ public sealed partial class UiVm
         }
         finally
         {
-            TraceSelection("ApplySelection.End", _selectionCommitDepth, $"Key={node.Key}");
+            TraceSelection("选择提交完成", _selectionCommitDepth, $"键={node.Key}");
             _selectionCommitDepth--;
         }
     }
@@ -49,7 +49,7 @@ public sealed partial class UiVm
     void SetHierarchySelection(EditorTreeNode? value)
     {
         _hierarchySelectionDepth++;
-        TraceSelection("SetHierarchySelection", _hierarchySelectionDepth, $"Key={value?.Key ?? "null"}");
+        TraceSelection("层级选择", _hierarchySelectionDepth, $"键={value?.Key ?? "空"}");
         try
         {
             if (!Set(ref _selectedHierarchyItem, value, nameof(SelectedHierarchyItem))) return;
@@ -61,7 +61,7 @@ public sealed partial class UiVm
         }
         finally
         {
-            TraceSelection("SetHierarchySelection.End", _hierarchySelectionDepth, $"Key={value?.Key ?? "null"}");
+            TraceSelection("层级选择完成", _hierarchySelectionDepth, $"键={value?.Key ?? "空"}");
             _hierarchySelectionDepth--;
         }
     }
@@ -88,8 +88,8 @@ public sealed partial class UiVm
         if (changed is null) return;
         RaiseSelectionChanged();
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
-            "【ARCH-C-R3】选择已清除；结果=None",
-            $"来源={source}; Revision={changed.OldRevision}->{changed.NewRevision}");
+            "选择已清除；结果=无",
+            $"来源={source}；修订={changed.OldRevision}->{changed.NewRevision}");
         RefreshLogBindings();
         FooterMessage = $"{source}已清空选择。";
         FooterState = "状态：就绪";

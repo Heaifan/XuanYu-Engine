@@ -9,16 +9,17 @@ public sealed partial class UiVm
         var liveKeys = new HashSet<string>(StringComparer.Ordinal);
         var items = new List<EditorTreeNode>
         {
-            Node(liveKeys, "hierarchy:root", "世界根节点", "场景根", "MainWorld/世界根节点", 0, "world"),
-            Node(liveKeys, "hierarchy:camera", "主相机", "相机", "MainWorld/世界根节点/主相机", 1, "camera"),
-            Node(liveKeys, "hierarchy:ground", "地面", "实体", "MainWorld/世界根节点/地面", 1, "entity")
+            Node(liveKeys, "hierarchy:root", "世界根节点", "场景根", "主世界/世界根节点", 0, "world"),
+            Node(liveKeys, "hierarchy:camera", "主相机", "相机", "主世界/世界根节点/主相机", 1, "camera"),
+            Node(liveKeys, "hierarchy:ground", "地面", "地面", "主世界/世界根节点/地面", 1, "ground")
         };
         foreach (var group in _sceneState.Entities.GroupBy(item => item.RegionKey).OrderBy(item => item.Key.ToString()))
         {
-            items.Add(Node(liveKeys, group.Key.ToString(), group.Key.ToString(), "Region", $"MainWorld/{group.Key}", 1, "folder"));
+            var region = EditorDisplayText.Region(group.Key);
+            items.Add(Node(liveKeys, group.Key.ToString(), region, "Region", $"主世界/{region}", 1, "region"));
             items.AddRange(group.OrderBy(entity => entity.EntityKey.Value).Select(entity => Node(liveKeys,
-                entity.EntityKey.ToString(), entity.Name, entity.Type,
-                $"MainWorld/{entity.RegionKey}/{entity.EntityKey}", 2, "entity")));
+                entity.EntityKey.ToString(), entity.Name, EditorDisplayText.EntityType(entity.Type),
+                $"主世界/{region}/{EditorDisplayText.Entity(entity.EntityKey)}", 2, "entity")));
         }
         PruneHierarchyNodeCache(liveKeys);
         return items;
@@ -53,12 +54,12 @@ public sealed partial class UiVm
         return
         [
             $"名称：{entity.Name}",
-            $"类型：{entity.Type}",
-            $"EntityId：{entity.EntityKey}",
-            $"路径：MainWorld/{entity.RegionKey}/{entity.EntityKey}",
-            $"Region：{entity.RegionKey}",
-            $"活跃状态：{entity.Activity}",
-            $"GlobalPosition：X {entity.GlobalPosition.X:g}    Y {entity.GlobalPosition.Y:g}    Z {entity.GlobalPosition.Z:g}",
+            $"类型：{EditorDisplayText.EntityType(entity.Type)}",
+            $"实体编号：{EditorDisplayText.Entity(entity.EntityKey)}",
+            $"路径：主世界/{EditorDisplayText.Region(entity.RegionKey)}/{EditorDisplayText.Entity(entity.EntityKey)}",
+            $"区域：{EditorDisplayText.Region(entity.RegionKey)}",
+            $"活动状态：{EditorDisplayText.Activity(entity.Activity)}",
+            $"全局位置：{EditorDisplayText.Position(entity.GlobalPosition)}",
             "Transform",
             $"位置    X {p.X:g}    Y {p.Y:g}    Z {p.Z:g}"
         ];
@@ -85,7 +86,7 @@ public sealed partial class UiVm
     void RefreshWorldProjectionBindings()
     {
         TraceSelection("RefreshWorldProjectionBindings", 1,
-            $"EntityCount={_sceneState.RenderSnapshot.Entities.Count}");
+            $"实体数={_sceneState.RenderSnapshot.Entities.Count}");
         SynchronizeSelectionProjection();
         OnPropertyChanged(nameof(HierarchyItems));
         OnPropertyChanged(nameof(InspectorFields));

@@ -6,8 +6,9 @@ public sealed partial class UiVm
     {
         if (depth <= 3 || depth % 10 == 0)
         {
+            var time = DateTime.Now.ToString("HH:mm:ss");
             Console.Error.WriteLine(
-                $"[DIAG Selection] {stage}; Depth={depth}; ThreadId={Environment.CurrentManagedThreadId}; {detail}");
+                $"{time} 【调试】【选择系统】选择投影诊断；阶段={stage}；深度={depth}；线程编号={Environment.CurrentManagedThreadId}；{detail}");
         }
     }
 }

@@ -8,6 +8,6 @@ public readonly record struct SpatialQueryStats(
 {
     public string ToChineseProbe()
     {
-        return $"【ARCH-C-R2-D】空间查询完成；索引代际={SpatialRevision}；总实体={TotalEntityCount}；访问节点={VisitedNodeCount}；候选实体={CandidateCount}";
+        return $"空间查询完成；索引代际={SpatialRevision}；总实体={TotalEntityCount}；访问节点={VisitedNodeCount}；候选实体={CandidateCount}";
     }
 }

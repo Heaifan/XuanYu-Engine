@@ -35,8 +35,8 @@ public sealed class WorldPartitionUiTests
         Assert.Equal(entity.Key, vm.SelectedNodeKey);
         Assert.Equal(entity.Key, vm.SelectionKey);
         Assert.Equal(entity.Key, vm.SelectedHierarchyItem!.Key);
-        Assert.Contains("Region(3,2,0)", vm.SelectionPath);
-        Assert.Contains(vm.InspectorFields, item => item.Contains("Region(3,2,0)"));
+        Assert.Contains("区域 3,2,0", vm.SelectionPath);
+        Assert.Contains(vm.InspectorFields, item => item.Contains("区域 3,2,0"));
         Assert.Equal(entity.Key, vm.RenderSnapshot.Entity.EntityKey.ToString());
     }
 
@@ -50,7 +50,7 @@ public sealed class WorldPartitionUiTests
         var after = EntityNodes(vm).Single(item => item.Key == before.Key);
 
         Assert.Same(before, after);
-        Assert.Contains("Region(4,0,0)", after.Path);
+        Assert.Contains("区域 4,0,0", after.Path);
         Assert.Contains(vm.HierarchyItems, item => item.Key == "Region(4,0,0)" && item.IsRegion);
     }
 

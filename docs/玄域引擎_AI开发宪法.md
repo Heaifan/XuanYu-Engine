@@ -904,3 +904,12 @@ AI 必须遵循以下判断顺序：
 - Entity Position 正式提交后，必须保持 `GlobalWorld Position Commit → Partition 派生更新 → SpatialIndex 派生更新` 的顺序；
 - Region 解决管理 / Activity / Streaming 边界，Spatial Cell / Node 解决查询加速；禁止把 `Region == Spatial Cell` 写成长期架构约束；
 - 当前阶段禁止借 Spatial Index 引入 Organization Graph、Terrain、GIS、完整 Streaming、Persistence、ECS 重构、GPU Driven Renderer 或 Octree 大工程。
+
+## 二十五、编辑器可见文本与树形 UI 边界
+
+- 运行期用户可见日志不得使用 `ARCH-*`、`WORLD-*` 等阶段代号作为模块名；阶段代号只允许出现在 changelog、报告、测试、审计元数据或开发注释中。
+- 日志表格必须以时间作为第一视觉字段，并保持“时间 / 级别 / 来源 / 模块 / 消息 / 详情”的阅读顺序。
+- 普通用户日志必须优先使用中文显示文本；Vulkan、API、DPI、HWND、GPU 型号等标准名称可以保留。
+- 高频诊断和内部函数名不得直接进入普通 UI 日志；确需保留的低频诊断必须转为中文阶段、中文字段和可解释详情。
+- Project Tree 与 Hierarchy Tree 必须保持同一视觉语言：缩进、分支线、行高、悬停、选中态和矢量路径图标一致。
+- 树与 Inspector 的用户可见名称必须使用中文显示映射；不得因为 UI 中文化改名而重命名内部 C# 类型、实体 key 或长期公共 API。

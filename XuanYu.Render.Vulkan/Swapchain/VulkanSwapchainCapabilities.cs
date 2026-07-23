@@ -35,7 +35,7 @@ public static unsafe class VulkanSwapchainCapabilities
         uint minImages = caps.MinImageCount + 1;
         if (caps.MaxImageCount != 0 && minImages > caps.MaxImageCount) minImages = caps.MaxImageCount;
 
-        Log(log, $"【VulkanSwapchain】能力查询成功；请求逻辑尺寸={width}x{height}；Surface CurrentExtent={caps.CurrentExtent.Width}x{caps.CurrentExtent.Height}；选择 extent={extent.Width}x{extent.Height}（物理像素）；格式={format.Format}；呈现模式={presentMode}；最小图像数={minImages}");
+        Log(log, $"【VulkanSwapchain】能力查询成功；请求逻辑尺寸={width}x{height}；Surface 当前尺寸={caps.CurrentExtent.Width}x{caps.CurrentExtent.Height}；选择物理尺寸={extent.Width}x{extent.Height}；格式={format.Format}；呈现模式={presentMode}；最小图像数={minImages}");
         return VulkanSwapchainCapabilitiesResult.Ok(new SwapchainCaps(format, presentMode, extent, minImages, caps.CurrentTransform));
     }
 

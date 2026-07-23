@@ -19,7 +19,7 @@ public static class NativeHostLifecycleLogFormatter
     };
 
     public static string Detail(NativeHostHandleSnapshot snapshot) =>
-        $"【NativeHost】HWND：0x{snapshot.Hwnd.ToInt64():X}；【NativeHost】宽度：{snapshot.Width}；【NativeHost】高度：{snapshot.Height}；【NativeHost】DPI缩放：{snapshot.DpiScale.ToString("0.00", CultureInfo.InvariantCulture)}；【NativeHost】句柄状态：{(snapshot.IsValid ? "有效" : "无效")}；【NativeHost】生命周期版本：{snapshot.Version}";
+        $"窗口句柄：0x{snapshot.Hwnd.ToInt64():X}；宽度：{snapshot.Width}；高度：{snapshot.Height}；DPI缩放：{snapshot.DpiScale.ToString("0.00", CultureInfo.InvariantCulture)}；句柄状态：{(snapshot.IsValid ? "有效" : "无效")}；生命周期版本：{snapshot.Version}";
 
     public static string MergedMessage(NativeHostHandleSnapshot snapshot, int mergeCount) =>
         snapshot.IsValid

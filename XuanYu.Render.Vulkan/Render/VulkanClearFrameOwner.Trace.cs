@@ -6,8 +6,9 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         if (depth <= 3 || depth % 10 == 0)
         {
+            var time = DateTime.Now.ToString("HH:mm:ss");
             Console.Error.WriteLine(
-                $"[DIAG Vulkan] {stage}; Depth={depth}; ThreadId={Environment.CurrentManagedThreadId}; EntityCount={_sceneSnapshot.Entities.Count}; ViewCount={viewCount}");
+                $"{time} 【调试】【命令缓冲】命令缓冲录制诊断；阶段={stage}；深度={depth}；线程编号={Environment.CurrentManagedThreadId}；实体数={_sceneSnapshot.Entities.Count}；视图数={viewCount}");
         }
     }
 }

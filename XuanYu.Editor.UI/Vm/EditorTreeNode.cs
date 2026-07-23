@@ -27,6 +27,7 @@ public sealed class EditorTreeNode
     }
 
     public Thickness Indent => new(Level * 16, 0, 0, 0);
+    public bool HasConnector => Level > 0;
     public bool IsRoot => Level == 0;
     public bool IsCategory => Type == "分类";
     public bool IsRegion => Type == "Region";
@@ -34,5 +35,8 @@ public sealed class EditorTreeNode
     public bool IsAsset => Type == "资源分类";
     public bool IsEntity => Icon == "entity";
     public bool IsCamera => Type == "相机";
+    public bool IsGround => Icon == "ground";
     public bool IsFolder => Icon == "folder";
+    public bool IsScript => Icon == "script";
+    public bool IsBuild => Icon == "build";
 }

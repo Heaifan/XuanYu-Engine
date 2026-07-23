@@ -6,8 +6,8 @@ public static class ViewportPickingLogFormatter
 {
     public static string Message(ViewportPickingResult result)
     {
-        var value = result.EntityKey?.ToString() ?? "未命中";
-        return $"【ARCH-C-R2-F】视口拾取完成；结果={value}";
+        var value = result.EntityKey is { } key ? EditorDisplayText.Entity(key) : "未命中";
+        return $"视口拾取完成；结果={value}";
     }
 
     public static string Detail(ViewportPickingResult result, double x, double y, double dpi)

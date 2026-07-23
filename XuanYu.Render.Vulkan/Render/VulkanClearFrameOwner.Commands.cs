@@ -30,7 +30,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     bool RecordCommandBuffers(ImageView[] views)
     {
         _recordCommandDepth++;
-        TraceRecordCommands("RecordCommandBuffers", _recordCommandDepth, views.Length);
+        TraceRecordCommands("命令缓冲录制开始", _recordCommandDepth, views.Length);
         try
         {
             var old = _commandBuffers;
@@ -59,7 +59,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         }
         finally
         {
-            TraceRecordCommands("RecordCommandBuffers.End", _recordCommandDepth, views.Length);
+            TraceRecordCommands("命令缓冲录制结束", _recordCommandDepth, views.Length);
             _recordCommandDepth--;
         }
     }

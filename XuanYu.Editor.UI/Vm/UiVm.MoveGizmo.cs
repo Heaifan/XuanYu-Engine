@@ -17,7 +17,7 @@ public sealed partial class UiVm
         if (!hostValid || !HasSelection || SelectionKey != entity.EntityKey.ToString()) return false;
         if (!EditorTransformCapturePolicy.CanBeginMoveGizmo(_editorState.ToolSnapshot))
         {
-            LogTransformCaptureRejected(sessionTool, entity.EntityKey.ToString());
+            LogTransformCaptureRejected(sessionTool, EditorDisplayText.Entity(entity.EntityKey));
             return false;
         }
 
@@ -27,7 +27,7 @@ public sealed partial class UiVm
         if (axis is null) return false;
 
         var pointer = new EditorInteractionPointerSnapshot(pointerId, x, y, x, y, 0);
-        var start = $"Entity={entity.EntityKey}; Axis={axis}";
+        var start = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}";
         var result = _editorState.Begin(new BeginInteractionCommand(sessionTool, start, pointer));
         if (result is null) return false;
         if (!_transformSession.Begin(result.Snapshot.SessionId, entity, axis.Value))
@@ -41,9 +41,9 @@ public sealed partial class UiVm
         FooterState = "状态：捕获中";
         FooterMessage = $"移动轴 {axis} 已捕获";
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
-            "【ARCH-C-R5】移动工具会话开始",
-            $"实体={entity.EntityKey}; 轴={axis}; Session={result.Snapshot.SessionId}");
-        LogTransformCaptureBegin(sessionTool, result.Snapshot.OwnerTool, entity.EntityKey.ToString(), axis.Value);
+            "移动工具会话开始",
+            $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}；会话={result.Snapshot.SessionId}");
+        LogTransformCaptureBegin(sessionTool, result.Snapshot.OwnerTool, EditorDisplayText.Entity(entity.EntityKey), axis.Value);
         RefreshLogBindings();
         RaiseInteractionChanged();
         return true;

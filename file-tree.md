@@ -1,7 +1,7 @@
-版本：v0.2.18.19-rz
+版本：v0.2.18.20-fix
 # XuanYu Engine 文件树
 
-文件总数：411
+文件总数：414
 
 ## 根目录
 
@@ -83,6 +83,8 @@
 - `docs/world-a-r3-spatial-query.svg`：WORLD-A-R3 空间查询收口图；说明 GlobalWorld、Partition、SpatialIndex 和 Query API 的事实边界。
 - `docs/world-a-r3-r1-spatial-consistency-report.md`：WORLD-A-R3-R1 空间一致性报告；记录 Spatial Owner Matrix、生命周期 Gate、Rebuild Gate 和双轨裁定。
 - `docs/world-a-r3-r1-spatial-consistency.svg`：WORLD-A-R3-R1 空间一致性图；说明正式 WorldQuery 生命周期闭环与 SceneIndex 待收敛边界。
+- `docs/world-a-ui-r1-display-cleanup-report.md`：WORLD-A-UI-R1 显示清理报告；记录日志、树形 UI、中文显示映射、治理规则和禁止项确认。
+- `docs/world-a-ui-r1-display-cleanup.svg`：WORLD-A-UI-R1 显示清理图；说明日志表格、树形投影、Inspector 显示映射与事实源边界。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -411,6 +413,7 @@
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs`：Win32 子窗口宿主主体。
 - `XuanYu.Editor.UI/Vm/DebugText.cs`：右侧调试页状态快照示例数据。
 - `XuanYu.Editor.UI/Vm/EditorLogCategory.cs`：编辑器日志分类枚举。
+- `XuanYu.Editor.UI/Vm/EditorDisplayText.cs`：编辑器中文显示文本映射；只处理 Entity、Region、Activity、类型和坐标展示，不重命名内部 C# 标识。
 - `XuanYu.Editor.UI/Vm/EditorLogLevel.cs`：编辑器日志等级枚举。
 - `XuanYu.Editor.UI/Vm/EditorLogSource.cs`：编辑器日志来源枚举。
 - `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点 UI 投影模型；按图标身份提供显示分类，不把实体显示类型当作 Selection 或场景事实。

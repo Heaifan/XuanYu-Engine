@@ -32,20 +32,22 @@ public sealed record LogEntry(
         _ => "编辑器"
     };
 
-    public string CategoryText => Category switch
+    public string ModuleText => Category switch
     {
-        EditorLogCategory.Layout => "布局",
-        EditorLogCategory.Load => "加载",
-        EditorLogCategory.Backend => "后端",
-        EditorLogCategory.Queue => "队列",
-        EditorLogCategory.Import => "导入",
-        EditorLogCategory.Capture => "捕获",
-        EditorLogCategory.Selection => "选择",
-        EditorLogCategory.Tool => "工具",
-        EditorLogCategory.Command => "命令",
-        EditorLogCategory.Save => "保存",
-        _ => "布局"
+        EditorLogCategory.Layout => "界面布局",
+        EditorLogCategory.Load => "项目加载",
+        EditorLogCategory.Backend => "Vulkan桥接",
+        EditorLogCategory.Queue => "任务队列",
+        EditorLogCategory.Import => "资源导入",
+        EditorLogCategory.Capture => "变换捕获",
+        EditorLogCategory.Selection => "选择系统",
+        EditorLogCategory.Tool => "工具系统",
+        EditorLogCategory.Command => "命令系统",
+        EditorLogCategory.Save => "保存系统",
+        _ => "编辑器"
     };
+
+    public string CategoryText => ModuleText;
     public bool IsRepeated => RepeatCount > 1;
     public string RepeatText => IsRepeated ? $"重复 {RepeatCount} 次" : "";
     public string RepeatDetailText => $"{RepeatCount} 次";
@@ -53,7 +55,7 @@ public sealed record LogEntry(
     public string ContextText => string.IsNullOrWhiteSpace(ContextId) ? "无" : ContextId;
     public string CorrelationText => string.IsNullOrWhiteSpace(CorrelationId) ? "无" : CorrelationId;
     public string TimeLevelText => $"{Time}    {LevelText}";
-    public string SourceCategoryText => $"{SourceText} / {CategoryText}";
+    public string SourceCategoryText => $"{SourceText} / {ModuleText}";
 
     public string Accent => Level switch
     {

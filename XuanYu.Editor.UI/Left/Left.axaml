@@ -18,8 +18,8 @@
     <Style Selector="Border.treeRow"><Setter Property="CornerRadius" Value="5"/><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="5,3"/></Style>
     <Style Selector="Border.treeRow:pointerover"><Setter Property="Background" Value="#f1f7ff"/></Style>
     <Style Selector="Border.treeRow.selected"><Setter Property="Background" Value="#e7f1ff"/></Style>
-    <Style Selector="Border.treeRow.level2"><Setter Property="Margin" Value="18,0,0,0"/></Style>
-    <Style Selector="Border.treeRow.level3"><Setter Property="Margin" Value="36,0,0,0"/></Style>
+    <Style Selector="Border.branchV"><Setter Property="Width" Value="1"/><Setter Property="Height" Value="28"/><Setter Property="Background" Value="#d2dcea"/><Setter Property="HorizontalAlignment" Value="Center"/></Style>
+    <Style Selector="Border.branchH"><Setter Property="Width" Value="10"/><Setter Property="Height" Value="1"/><Setter Property="Background" Value="#d2dcea"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="HorizontalAlignment" Value="Right"/></Style>
     <Style Selector="Path.treeIcon"><Setter Property="Width" Value="15"/><Setter Property="Height" Value="15"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="#66758f"/><Setter Property="StrokeThickness" Value="1.6"/></Style>
     <Style Selector="ListBox.treeList ListBoxItem"><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,1"/></Style>
     <Style Selector="TextBlock.treeText"><Setter Property="FontSize" Value="13"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="Foreground" Value="#27354a"/></Style>
@@ -43,13 +43,16 @@
           <ListBox.ItemTemplate>
             <DataTemplate>
               <Border Classes="treeRow" Margin="{Binding Indent}">
-                <Grid ColumnDefinitions="16,18,*" ColumnSpacing="5">
-                  <Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}" IsVisible="{Binding IsCategory}"/>
-                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ProjectIcon}" IsVisible="{Binding IsRoot}"/>
-                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource FolderIcon}" IsVisible="{Binding IsFolder}"/>
-                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource WorldIcon}" IsVisible="{Binding IsWorld}"/>
-                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource MaterialIcon}" IsVisible="{Binding IsAsset}"/>
-                  <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="treeText"/>
+                <Grid ColumnDefinitions="16,16,18,*" ColumnSpacing="5">
+                  <Grid><Border Classes="branchV" IsVisible="{Binding HasConnector}"/><Border Classes="branchH" IsVisible="{Binding HasConnector}"/></Grid>
+                  <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ChevronDownIcon}" IsVisible="{Binding IsCategory}"/>
+                  <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource ProjectIcon}" IsVisible="{Binding IsRoot}"/>
+                  <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource FolderIcon}" IsVisible="{Binding IsFolder}"/>
+                  <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource WorldIcon}" IsVisible="{Binding IsWorld}"/>
+                  <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource MaterialIcon}" IsVisible="{Binding IsAsset}"/>
+                  <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource ScriptIcon}" IsVisible="{Binding IsScript}"/>
+                  <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource BuildIcon}" IsVisible="{Binding IsBuild}"/>
+                  <TextBlock Grid.Column="3" Text="{Binding Title}" Classes="treeText"/>
                 </Grid>
               </Border>
             </DataTemplate>
@@ -66,12 +69,15 @@
         <ListBox.ItemTemplate>
           <DataTemplate>
             <Border Classes="treeRow" Margin="{Binding Indent}">
-              <Grid ColumnDefinitions="16,18,*" ColumnSpacing="5">
-                <Path Classes="treeIcon" Data="{StaticResource ChevronDownIcon}" IsVisible="{Binding IsRoot}"/>
-                <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource WorldIcon}" IsVisible="{Binding IsRoot}"/>
-                <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource FocusIcon}" IsVisible="{Binding IsCamera}"/>
-                <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource SceneIcon}" IsVisible="{Binding IsEntity}"/>
-                <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="treeText"/>
+              <Grid ColumnDefinitions="16,16,18,*" ColumnSpacing="5">
+                <Grid><Border Classes="branchV" IsVisible="{Binding HasConnector}"/><Border Classes="branchH" IsVisible="{Binding HasConnector}"/></Grid>
+                <Path Grid.Column="1" Classes="treeIcon" Data="{StaticResource ChevronDownIcon}" IsVisible="{Binding IsRoot}"/>
+                <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource WorldIcon}" IsVisible="{Binding IsRoot}"/>
+                <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource CameraIcon}" IsVisible="{Binding IsCamera}"/>
+                <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource GroundIcon}" IsVisible="{Binding IsGround}"/>
+                <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource RegionIcon}" IsVisible="{Binding IsRegion}"/>
+                <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource EntityIcon}" IsVisible="{Binding IsEntity}"/>
+                <TextBlock Grid.Column="3" Text="{Binding Title}" Classes="treeText"/>
               </Grid>
             </Border>
           </DataTemplate>

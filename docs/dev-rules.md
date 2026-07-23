@@ -56,6 +56,8 @@
 - 节流（每 100ms 最多一次 UI 刷新）只是低频日志 UI 刷新的**保护层**，**不是**允许 `PointerMoved` / `RenderFrame` / `DragPreview` 进入 `EditorLogBus` 的理由。
 - 诊断不得阻塞输入 / 渲染 / UI 线程；禁同步 `Dispatcher.Invoke`、`Task.Wait/Result`，禁高频路径写文件 / 写 UI 日志。高频路径只走非阻塞 `DiagnosticSink.TryWrite` / `Debug.WriteLine` / `RingBuffer`。
 - 启动期（Build / 构造 / 窗口未 Loaded / 项目未打开前）禁止把 UI 日志回调注入纯逻辑层。
+- 用户可见日志表格必须保持“时间 / 级别 / 来源 / 模块 / 消息 / 详情”顺序；普通日志不得把 `ARCH-*` / `WORLD-*` 阶段代号当作运行时模块名。
+- 普通用户日志优先中文化；内部函数名、线程字段和英文调试 key 不得直接暴露到 UI 日志主文案，保留诊断时必须转为中文阶段与中文字段。
 
 ## 5. Vulkan 阶段边界（比技术规则更硬）
 
@@ -71,6 +73,8 @@
 - **英文保留**：命名空间、类名、方法名、文件名、测试方法名、`EngineError.Code`、程序内部枚举名。
 - **中文保留**：异常 message、日志 message、编辑器提示、导出提示、验收结果、`file-tree.md`、`CHANGELOG.md`、开发任务说明。
 - 示例：`Core.InvalidArgument`（码·英文）/ `参数无效。`（信息·中文）。
+- 树节点、Inspector 字段和示例实体名必须走中文显示映射；禁止为中文化显示而重命名内部 C# 标识、实体 key 或公共 API。
+- Project Tree 与 Hierarchy Tree 使用同一套分支线、缩进、行高、悬停、选中态和矢量路径图标，不得用 emoji 或纯字符替代正式图标。
 
 ## 7. 范围与结构纪律
 

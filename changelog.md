@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.18.20-fix
+WORLD-A-UI-R1 Display Cleanup（2026-07-23）
+- 任务目标：暂停 `WORLD-A-R3-R2` Picking 正式接线，只处理多实体 / Region / Spatial Query 阶段暴露出的 UI 可读性债务；本轮不改 SpatialIndex 算法、不接 Organization Graph、不引入 ECS、场景保存或层级拖拽重排。
+- 日志清理：底部日志表格改为 `时间 / 级别 / 来源 / 模块 / 消息 / 详情`；运行期模块显示中文化，清理普通日志中的阶段代号、英文调试字段和裸函数名；终端桥接日志补时间前缀。
+- 树与显示：Project Tree / Hierarchy Tree 统一分支线、缩进、行高和矢量路径图标；Region、Camera、Ground、Entity、脚本、构建等节点使用 SVG Path 数据；测试实体、Region、Inspector 字段和 Activity 走中文显示映射。
+- 治理同步：`docs/玄域引擎_AI开发宪法.md` 与 `docs/dev-rules.md` 新增运行日志模块名、时间首字段、中文显示映射和树形 UI 图标边界规则。
+- 文档同步：新增 `docs/world-a-ui-r1-display-cleanup-report.md` 与 `docs/world-a-ui-r1-display-cleanup.svg`；`file-tree.md` 更新到 414；主窗口标题与 `run.bat` 同步到 `v0.2.18.20-fix`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 149 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、残留文本扫描和 `file-tree.md` 414 / 414 通过；`run.bat` 真机确认标题、项目树、日志表头、模块列和中文 Inspector 显示。
+
 ## v0.2.18.19-rz
 WORLD-A-R3-R1 Spatial Consistency（2026-07-23 16:18:06）
 - 任务目标：在 `WORLD-A-R3 / v0.2.18.18-rz` 基础骨架后，不新增查询 API，完成 SpatialIndex 生命周期一致性闭环；证明 Create、Move、Cross Region、Preview Cancel、Undo、Redo、Destroy 与 Rebuild 后索引始终跟随 `GlobalWorld` 正式 Position。本轮不进入 R4 Organization Graph，不扩张 AI / Gameplay / Terrain / GIS / Streaming / Persistence / ECS / GPU Driven Renderer。

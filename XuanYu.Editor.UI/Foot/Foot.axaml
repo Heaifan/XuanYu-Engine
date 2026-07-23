@@ -53,11 +53,11 @@
           </Border>
         </Grid>
 
-        <Grid Grid.Row="1" ColumnDefinitions="4,72,56,72,72,*,82" ColumnSpacing="10" Margin="0,0,0,4">
+        <Grid Grid.Row="1" ColumnDefinitions="4,72,56,72,92,*,82" ColumnSpacing="10" Margin="0,0,0,4">
           <TextBlock Grid.Column="1" Text="时间" Classes="logHead"/>
           <TextBlock Grid.Column="2" Text="级别" Classes="logHead"/>
           <TextBlock Grid.Column="3" Text="来源" Classes="logHead"/>
-          <TextBlock Grid.Column="4" Text="分类" Classes="logHead"/>
+          <TextBlock Grid.Column="4" Text="模块" Classes="logHead"/>
           <TextBlock Grid.Column="5" Text="消息" Classes="logHead"/>
           <TextBlock Grid.Column="6" Text="折叠" Classes="logHead"/>
         </Grid>
@@ -69,12 +69,12 @@
                      SelectionChanged="LogList_SelectionChanged">
               <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="local:LogEntry">
-                  <Grid ColumnDefinitions="4,72,56,72,72,*,82" ColumnSpacing="10">
+                  <Grid ColumnDefinitions="4,72,56,72,92,*,82" ColumnSpacing="10">
                     <Border Background="{Binding Accent}" CornerRadius="2"/>
                     <TextBlock Grid.Column="1" Text="{Binding Time}" Classes="logMono"/>
                     <TextBlock Grid.Column="2" Text="{Binding LevelText}" FontWeight="SemiBold"/>
                     <TextBlock Grid.Column="3" Text="{Binding SourceText}" Classes="logMono"/>
-                    <TextBlock Grid.Column="4" Text="{Binding CategoryText}" Classes="logMono"/>
+                    <TextBlock Grid.Column="4" Text="{Binding ModuleText}" Classes="logMono"/>
                     <TextBlock Grid.Column="5" Text="{Binding Message}" TextTrimming="CharacterEllipsis"/>
                     <TextBlock Grid.Column="6" Text="{Binding RepeatText}" Foreground="#7a5a19"/>
                   </Grid>

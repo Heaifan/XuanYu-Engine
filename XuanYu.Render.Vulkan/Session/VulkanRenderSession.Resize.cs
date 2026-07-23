@@ -19,7 +19,7 @@ public sealed partial class VulkanRenderSession
             _resizeStopping = true;
         }
         VulkanResizeTracer.StartTrace();
-        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize开始", $"请求逻辑尺寸={width}x{height}"));
+        _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize 开始", $"请求逻辑尺寸={width}x{height}"));
         if (!_presentLoop.Stop()) return FailResize("Present 泵停止失败");
         lock (_rebuildLock)
         {
@@ -38,7 +38,7 @@ public sealed partial class VulkanRenderSession
             if (rebuilt || old.Width != _swapchainOwner.Extent.Width || old.Height != _swapchainOwner.Extent.Height) _generation++;
             _log?.Invoke(VulkanClearFrameLogFormatter.SwapchainGeneration("UI合并Resize", oldResourceGen, _swapchainOwner.ResourceGeneration, rebuilt, old, next, "必须重建FB并重录CB"));
             if (!_clearFrame.RebuildFramebuffers(_generation, rebuilt)) return FailResize("Framebuffer 重建失败");
-            _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize完成", $"{_swapchainOwner.Extent.Width}x{_swapchainOwner.Extent.Height}；{_clearFrame.CommandBuffers.Length} 张 CB"));
+            _log?.Invoke(VulkanResizeTracer.Stage(_generation, "Resize 完成", $"物理尺寸={_swapchainOwner.Extent.Width}x{_swapchainOwner.Extent.Height}；命令缓冲={_clearFrame.CommandBuffers.Length} 张"));
         }
         if (!_presentLoop.Start()) return FailResize("Present 泵重启失败");
         return true;

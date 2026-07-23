@@ -56,24 +56,24 @@ public sealed partial class UiVm
         var entry = new TransformHistoryEntry(commit.EntityKey, commit.Before, commit.After);
         _historyOwner.Push(entry);
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
-            "【ARCH-C-R7】记录编辑历史",
-            $"Entity={entry.EntityKey}; Before={entry.Before.Position}; After={entry.After.Position}; Count={_historyOwner.Count}");
+            "编辑历史已记录",
+            $"实体={EditorDisplayText.Entity(entry.EntityKey)}；之前位置={EditorDisplayText.Position(entry.Before.Position)}；之后位置={EditorDisplayText.Position(entry.After.Position)}；历史数量={_historyOwner.Count}");
         RefreshLogBindings();
     }
 
     void LogHistoryUndo(TransformHistoryEntry entry)
     {
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
-            "【ARCH-C-R7】执行撤销",
-            $"Entity={entry.EntityKey}; Before={entry.Before.Position}; After={entry.After.Position}; Remaining={_historyOwner.Count}");
+            "撤销已执行",
+            $"实体={EditorDisplayText.Entity(entry.EntityKey)}；恢复位置={EditorDisplayText.Position(entry.Before.Position)}；撤销后历史数量={_historyOwner.Count}");
         RefreshLogBindings();
     }
 
     void LogHistoryRedo(TransformHistoryEntry entry)
     {
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
-            "【WORLD-A-R0-R1】执行重做",
-            $"Entity={entry.EntityKey}; Before={entry.Before.Position}; After={entry.After.Position}; Undo={_historyOwner.Count}; Redo={_historyOwner.RedoCount}");
+            "重做已执行",
+            $"实体={EditorDisplayText.Entity(entry.EntityKey)}；恢复位置={EditorDisplayText.Position(entry.After.Position)}；撤销数量={_historyOwner.Count}；重做数量={_historyOwner.RedoCount}");
         RefreshLogBindings();
     }
 }

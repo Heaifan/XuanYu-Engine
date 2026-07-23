@@ -27,19 +27,19 @@ public static class VulkanResizeTracer
         return (_sw.ElapsedTicks - baseTicks) / (double)Stopwatch.Frequency * 1000.0;
     }
 
-    // 格式化阶段日志前缀：[T+XXXms gen=N 阶段]
+    // 格式化阶段日志前缀：[T+XXXms 代际=N 阶段]
     public static string Prefix(uint generation, string phase) =>
-        $"[T+{ElapsedMs():F0}ms gen={generation} {phase}]";
+        $"[T+{ElapsedMs():F0}ms 代际={generation} {phase}]";
 
-    // 完整阶段行：[T+XXXms gen=N] 阶段：detail
+    // 完整阶段行：[T+XXXms 代际=N] 阶段：detail
     public static string Stage(uint generation, string stage, string detail) =>
-        $"[T+{ElapsedMs():F0}ms gen={generation}] {stage}：{detail}";
+        $"[T+{ElapsedMs():F0}ms 代际={generation}] {stage}：{detail}";
 
     // 自愈阶段专用：标注来源 + 旧/new extent
     public static string HealStage(uint generation, string source, string oldExtent, string newExtent, string extra = "") =>
-        $"[T+{ElapsedMs():F0}ms gen={generation}] 自愈({source})：旧={oldExtent} → 新={newExtent}{(string.IsNullOrEmpty(extra) ? "" : "；" + extra)}";
+        $"[T+{ElapsedMs():F0}ms 代际={generation}] 自愈({source})：旧={oldExtent} → 新={newExtent}{(string.IsNullOrEmpty(extra) ? "" : "；" + extra)}";
 
     // 重复检测：同一轮中第 N 次 Recreate
     public static string DuplicateWarning(uint generation, int count, string trigger1, string trigger2) =>
-        $"[T+{ElapsedMs():F0}ms gen={generation}] ⚠ 同轮检测到第 {count} 次 Swapchain 重建：先由「{trigger1}」触发，再由「{trigger2}」触发——可能重复";
+        $"[T+{ElapsedMs():F0}ms 代际={generation}] 同轮检测到第 {count} 次 Swapchain 重建：先由「{trigger1}」触发，再由「{trigger2}」触发，可能重复";
 }

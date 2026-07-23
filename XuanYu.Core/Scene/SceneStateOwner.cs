@@ -17,7 +17,7 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
     public SceneStateOwner(IWorldPartitionStrategy? partitionStrategy)
     {
         _world = partitionStrategy is null ? new GlobalWorld() : new GlobalWorld(partitionStrategy);
-        var entity = _world.Create("ARCH-C-R1 Test Entity", "MinimalSceneEntity");
+        var entity = _world.Create("基础测试实体", "MinimalSceneEntity");
         _activeEntityKey = entity.EntityKey;
         RefreshSnapshot();
         _spatialIndex.Insert(ToSpatialBounds(_snapshot.Entity));
