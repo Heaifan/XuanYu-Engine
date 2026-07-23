@@ -1,7 +1,7 @@
-版本：v0.2.18.18-rz
+版本：v0.2.18.19-rz
 # XuanYu Engine 文件树
 
-文件总数：406
+文件总数：411
 
 ## 根目录
 
@@ -81,6 +81,8 @@
 - `docs/world-a-r2-r4-camera-framing.svg`：WORLD-A-R2-R4 相机收口图；说明 World Bounds、CameraState、Render、Picking 和 Gizmo 同源关系。
 - `docs/world-a-r3-spatial-query-report.md`：WORLD-A-R3 Spatial Index + World Query 基础报告；记录查询所有权、红线、正确性 Gate 与性能观察。
 - `docs/world-a-r3-spatial-query.svg`：WORLD-A-R3 空间查询收口图；说明 GlobalWorld、Partition、SpatialIndex 和 Query API 的事实边界。
+- `docs/world-a-r3-r1-spatial-consistency-report.md`：WORLD-A-R3-R1 空间一致性报告；记录 Spatial Owner Matrix、生命周期 Gate、Rebuild Gate 和双轨裁定。
+- `docs/world-a-r3-r1-spatial-consistency.svg`：WORLD-A-R3-R1 空间一致性图；说明正式 WorldQuery 生命周期闭环与 SceneIndex 待收敛边界。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -239,6 +241,9 @@
 - `XuanYu.Core.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
+- `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
+- `XuanYu.Core.Tests/World/WorldSpatialR1Oracle.cs`：WORLD-A-R3-R1 空间查询测试 Oracle；只在测试侧使用 O(N) 真值校验，不进入生产 World Query。
+- `XuanYu.Core.Tests/World/WorldSpatialR1RebuildTests.cs`：WORLD-A-R3-R1 Rebuild 与随机一致性测试；覆盖 1000 Entity 重建前后 Query 一致和确定性随机 Move / Radius / Bounds。
 
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
 - `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。

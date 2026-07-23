@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.18.19-rz
+WORLD-A-R3-R1 Spatial Consistency（2026-07-23 16:18:06）
+- 任务目标：在 `WORLD-A-R3 / v0.2.18.18-rz` 基础骨架后，不新增查询 API，完成 SpatialIndex 生命周期一致性闭环；证明 Create、Move、Cross Region、Preview Cancel、Undo、Redo、Destroy 与 Rebuild 后索引始终跟随 `GlobalWorld` 正式 Position。本轮不进入 R4 Organization Graph，不扩张 AI / Gameplay / Terrain / GIS / Streaming / Persistence / ECS / GPU Driven Renderer。
+- Spatial Owner Audit：确认当前存在 `GlobalWorld -> WorldQuery` 正式 World 派生索引，以及 `SceneStateOwner._spatialIndex` 旧 Scene / Picking 派生索引；本轮不盲目大重构，先裁定旧索引仍服务既有 Picking 路径，R3-R2 必须优先把 Picking 候选查询接向 WorldQuery，避免长期双轨。
+- Rebuild 能力：`GlobalWorld` 新增 `SpatialEntityCount` 与 `RebuildSpatialIndexFromWorld()`；`WorldQuery` 新增从当前 `WorldEntitySnapshot` 集合重建空索引的入口，证明 SpatialIndex 可从 World 正式状态恢复。
+- 生命周期 Gate：新增 `WorldSpatialR1LifecycleTests` 覆盖 Create 入索引、Move 旧位置消失 / 新位置出现、Cross Region 后 Region 与 Spatial Query 同步、Preview Cancel 不污染正式索引、Undo / Redo 跟随 Before / After、Destroy 后 QueryRadius / QueryBounds 无空间幽灵。
+- Rebuild / Oracle Gate：新增 `WorldSpatialR1RebuildTests` 与 `WorldSpatialR1Oracle`；1000 Entity Rebuild 前后 QueryRadius / QueryBounds 结果一致，确定性随机 Move / Radius / Bounds 均与测试侧 O(N) Oracle 一致。
+- 文档同步：新增 `docs/world-a-r3-r1-spatial-consistency-report.md` 与 `docs/world-a-r3-r1-spatial-consistency.svg`；`file-tree.md` 更新到 411；主窗口标题与 `run.bat` 同步到 `v0.2.18.19-rz`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 149 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 411 / 411 通过。普通 sandbox build 因 Avalonia BuildServices 写用户日志被拒绝，已按权限规则升级重跑通过。
+- 遗留问题：R3-R1 已封死正式 WorldQuery 生命周期一致性；R3-R2 必须接入第一个真实消费者，优先 Picking，并最小收敛旧 Scene SpatialIndex 的正式查询地位。
+
 ## v0.2.18.18-rz
 WORLD-A-R3 Spatial Index + World Query Foundation（2026-07-23 15:45:12）
 - 任务目标：正式裁定 `WORLD-A-R2 = CLOSED` 后进入 `WORLD-A-R3`；建立 Spatial Index + World Query 最小正式骨架。本轮不进入 Organization Graph、Gameplay、Terrain、Earth Mesh、GIS、完整 Streaming、Persistence、Octree 大工程、GPU Driven Renderer 或 ECS 重构。

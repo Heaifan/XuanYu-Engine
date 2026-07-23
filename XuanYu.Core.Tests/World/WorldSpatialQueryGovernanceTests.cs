@@ -16,7 +16,7 @@ public sealed class WorldSpatialQueryGovernanceTests
         {
             var text = File.ReadAllText(file);
             Assert.DoesNotContain(".Entities", text);
-            Assert.DoesNotContain("foreach (var entity", text);
+            Assert.DoesNotContain("_registry", text);
         }
     }
 

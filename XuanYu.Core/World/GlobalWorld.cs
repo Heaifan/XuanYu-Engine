@@ -74,6 +74,8 @@ public sealed partial class GlobalWorld
 
     public IReadOnlyList<WorldPartitionEntry> PartitionSnapshot => _partition.Snapshot;
 
+    public int SpatialEntityCount => _query.Count;
+
     public SpatialQueryStats LastSpatialQueryStats => _query.LastStats;
 
     public RegionKey ResolveRegion(CommittedTransform transform) =>
@@ -85,4 +87,6 @@ public sealed partial class GlobalWorld
         _registry.TryGet(entityKey, out entity);
 
     public bool Exists(EntityId entityKey) => _registry.Exists(entityKey);
+
+    public void RebuildSpatialIndexFromWorld() => _query.Rebuild(_registry.Snapshot);
 }

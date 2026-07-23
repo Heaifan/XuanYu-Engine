@@ -6,7 +6,7 @@ namespace XuanYu.Core.World;
 
 public sealed class WorldQuery
 {
-    readonly SpatialIndexOwner _index = new();
+    SpatialIndexOwner _index = new();
 
     public SpatialQueryStats LastStats { get; private set; }
 
@@ -21,6 +21,13 @@ public sealed class WorldQuery
     }
 
     public bool Remove(EntityId entityKey) => _index.Remove(entityKey);
+
+    public void Rebuild(IEnumerable<WorldEntitySnapshot> entities)
+    {
+        _index = new SpatialIndexOwner();
+        foreach (var entity in entities) _index.Insert(ToBounds(entity));
+        LastStats = default;
+    }
 
     public IReadOnlyList<EntityId> QueryBounds(SpatialAabb bounds)
     {
