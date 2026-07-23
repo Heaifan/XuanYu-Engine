@@ -12,7 +12,7 @@ UI-TREE-R1 后续：修复项目树折叠后再展开失效 + 延长树形横线
 - 测试加固：新增 `XuanYu.Core.Tests/World/WorldUiTreeToggleTests.cs`，覆盖 `ToggleProjectNode` 两次恢复、`SelectedProjectItem = root` 在折叠后仍能展开、`ToggleHierarchyNode` 两次恢复。
 - 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/TreeGuide.cs`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`XuanYu.Core.Tests/World/WorldUiTreeToggleTests.cs`、`changelog.md`、`file-tree.md`。
 - 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped（新增 `WorldUiTreeToggleTests` 3 例全过，覆盖 Project/Hierarchy 连续 toggle 与选择未变展开）；`scripts/arch-a-guard.ps1` 通过；5+100 与红线规则未触发。
-- Commit Hash：（docs 提交后填入）
+- Commit Hash：`d327b8c73c537a2f803e034b1799831793e45c15`
 - 遗留问题：本轮仍属 UI-TREE-R1 收尾，真机验收需确认：竖线连续、横线长度适中、折叠/展开稳定、图标无回退、文字无位移。
 
 ## v0.2.18.22-fix
