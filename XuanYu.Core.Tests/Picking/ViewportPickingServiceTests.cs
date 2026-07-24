@@ -4,6 +4,7 @@ using XuanYu.Core.Scene;
 using XuanYu.Core.Space;
 using XuanYu.Core.Spatial;
 
+using XuanYu.World.Scene;
 namespace XuanYu.Core.Tests.Picking;
 
 public sealed class ViewportPickingServiceTests

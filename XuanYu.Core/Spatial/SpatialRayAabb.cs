@@ -2,7 +2,7 @@ using XuanYu.Core.Math;
 
 namespace XuanYu.Core.Spatial;
 
-static class SpatialRayAabb
+public static class SpatialRayAabb
 {
     public static bool Intersects(SpatialRayQuery query, SpatialAabb box)
     {

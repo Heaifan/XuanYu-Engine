@@ -1,6 +1,8 @@
 <Solution>
   <Project Path="XuanYu.Core/XuanYu.Core.csproj" />
   <Project Path="XuanYu.Core.Tests/XuanYu.Core.Tests.csproj" />
+  <Project Path="XuanYu.World/XuanYu.World.csproj" />
+  <Project Path="XuanYu.World.Tests/XuanYu.World.Tests.csproj" />
   <Project Path="XuanYu.Editor.App/XuanYu.Editor.App.csproj" />
   <Project Path="XuanYu.Editor.UI/XuanYu.Editor.UI.csproj" />
   <Project Path="XuanYu.Editor.Win/XuanYu.Editor.Win.csproj" />

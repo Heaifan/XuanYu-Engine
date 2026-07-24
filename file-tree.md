@@ -1,7 +1,7 @@
-版本：v0.2.19.1-rz
+版本：v0.2.19.2-rz
 # XuanYu Engine 文件树
 
-文件总数：424
+文件总数：429
 
 ## 根目录
 
@@ -14,6 +14,16 @@
 ## scripts
 
 - `scripts/arch-a-guard.ps1`：ARCH-A 自动守卫脚本，检查依赖边界、启动入口、版本一致性和 5+100 等约束。
+
+## XuanYu.World
+- 物理世界真相层（ARCH-WORLD-R1 新建）。命名空间 `XuanYu.World`（根）、`XuanYu.World.Scene`、`XuanYu.World.Spatial`、`XuanYu.World.Transform`。
+- 根域：`EntityRegistry`（实体总账）、`GlobalWorld`（全局世界根 + 查询入口）、`WorldEntitySnapshot`、`WorldEntityActivity`、`RegionKey`、`WorldPartition*`、`WorldPartitionEntry`、`WorldPartitionMembership`、`IWorldPartitionStrategy`、`GridWorldPartitionStrategy`、`WorldQuery`（世界查询骨架）。
+- `Scene/`：`SceneStateOwner`（场景真相所有权，引用 Core.Scene 边界 DTO）、`SceneStateOwner.Lifecycle`、`SceneStateOwner.Seeding`、`SceneWorldProjection`、`SceneSpatialBoundsProjection`（Scene↔World 投影）。
+- `Spatial/`：`ISpatialIndex`、`DynamicAabbTree*`（AABB 树实现）、`SpatialIndexOwner`、`SpatialRaycastResolver`（空间索引实现，引用 Core.Spatial 纯几何/查询契约，World→Core 合规）。
+- `Transform/`：`TransformSession`（变换事务，引用 SceneStateOwner；`PreviewTransform`/`TransformStartSnapshot` 留 `XuanYu.Core.Transform` 待 R4 Editor 剥离）。
+
+## XuanYu.World.Tests
+- `XuanYu.World` 物理边界测试层（ARCH-WORLD-R1 新建）。`World/`、`Spatial/`、`Transform/` 镜像生产子域；Core 纯几何契约测试（`SpatialBoundsTests`、`RayAabbIntersectionTests`）仍留 `XuanYu.Core.Tests/Spatial`。
 
 ## docs
 

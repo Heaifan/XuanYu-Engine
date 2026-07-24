@@ -4,6 +4,8 @@ using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Transform;
 
+using XuanYu.World.Scene;
+using XuanYu.World.Transform;
 namespace XuanYu.Core.Tests.History;
 
 public sealed class TransformHistoryIntegrationTests

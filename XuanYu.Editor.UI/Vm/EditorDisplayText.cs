@@ -1,6 +1,6 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
-using XuanYu.Core.World;
+using XuanYu.World;
 
 namespace XuanYu.Editor.UI;
 
