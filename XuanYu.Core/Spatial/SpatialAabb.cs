@@ -44,6 +44,9 @@ public readonly record struct SpatialAabb
             new Vector3d(global::System.Math.Max(Max.X, other.Max.X), global::System.Math.Max(Max.Y, other.Max.Y), global::System.Math.Max(Max.Z, other.Max.Z)));
     }
 
+    public SpatialAabb Translate(Vector3d offset) =>
+        new(Min + offset, Max + offset);
+
     static void Validate(Vector3d value, string name)
     {
         if (!double.IsFinite(value.X) || !double.IsFinite(value.Y) || !double.IsFinite(value.Z))

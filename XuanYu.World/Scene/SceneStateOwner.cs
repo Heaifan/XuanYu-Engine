@@ -12,12 +12,19 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
     SceneRenderSnapshot _snapshot;
     EntityId _activeEntityKey;
 
+    // Placeholder scene entities have no real mesh/collider bounds yet, so the scene
+    // factory assigns a 1m pick proxy. This is the ENTITY-CREATION site deciding its
+    // own entity's spatial extent -- NOT WorldQuery inventing a universal default for
+    // all entities. Real gameplay entities supply their own bounds (R2-R1).
+    static readonly SpatialAabb MinimalSceneEntityExtent =
+        new(new Vector3d(-0.5, -0.5, -0.5), new Vector3d(0.5, 0.5, 0.5));
+
     public SceneStateOwner() : this(null) { }
 
     public SceneStateOwner(IWorldPartitionStrategy? partitionStrategy)
     {
         _world = partitionStrategy is null ? new GlobalWorld() : new GlobalWorld(partitionStrategy);
-        var entity = _world.Create("基础测试实体", "MinimalSceneEntity");
+        var entity = _world.Create("基础测试实体", "MinimalSceneEntity", null, MinimalSceneEntityExtent);
         _activeEntityKey = entity.EntityKey;
         RefreshSnapshot();
     }

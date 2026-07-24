@@ -1,6 +1,7 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
+using XuanYu.Core.Spatial;
 
 namespace XuanYu.World;
 
@@ -13,7 +14,8 @@ public readonly record struct WorldEntitySnapshot
         CommittedTransform transform,
         Vector3d globalPosition,
         RegionKey regionKey,
-        WorldEntityActivity activity)
+        WorldEntityActivity activity,
+        SpatialAabb extent)
     {
         if (!entityKey.IsValid) throw new ArgumentOutOfRangeException(nameof(entityKey));
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("实体名称不能为空。", nameof(name));
@@ -25,6 +27,7 @@ public readonly record struct WorldEntitySnapshot
         GlobalPosition = globalPosition;
         RegionKey = regionKey;
         Activity = activity;
+        Extent = extent;
     }
 
     public EntityId EntityKey { get; }
@@ -34,4 +37,13 @@ public readonly record struct WorldEntitySnapshot
     public Vector3d GlobalPosition { get; }
     public RegionKey RegionKey { get; }
     public WorldEntityActivity Activity { get; }
+
+    // Spatial extent relative to the entity position (local box). The absolute world
+    // bounds are derived by translating this extent to GlobalPosition. This is the
+    // entity's OWN spatial description supplied at creation -- WorldQuery consumes it
+    // and never invents a default size for entities (R2-R1).
+    public SpatialAabb Extent { get; }
+
+    public SpatialBounds Bounds =>
+        new(EntityKey, Extent.Translate(GlobalPosition), SpatialQueryCategory.SceneEntity);
 }

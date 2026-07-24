@@ -4,13 +4,23 @@
 ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - 任务目标：收敛双轨空间索引（`SceneStateOwner._spatialIndex` 与 `GlobalWorld→WorldQuery` 内部索引）为唯一权威查询源；`GlobalWorld` 已是世界事实 + 唯一写链（`Create`/`Destroy`/`UpdateTransform`/`Rebuild`），`SceneStateOwner` 不再持有第二套索引，其 `QuerySpatial`/`RaycastSpatial`/`SpatialRevision` 经 `_world` 兼容门面读唯一索引。运行行为（Picking/Undo/Redo/跨 Region）保持。
 - 唯一权威链：`GlobalWorld` → `WorldQuery`（新增 `Query(SpatialAabb/ray)` public + `Raycast(ray)` + `SpatialRevision`）→ 唯一 `SpatialIndexOwner`；`SceneStateOwner` 删 `_spatialIndex` 字段与 4 处双写（构造/`ApplyTransform`/`CreateEntity`/`DestroyEntity`），只读委托。
-- 索引表示统一：唯一索引实体 AABB 半长由 0（点）改为 0.5（1×1×1 盒），与旧 Scene B 索引（`SceneSpatialBoundsProjection` ±0.5）一致，确保 Picking 射线命中行为不变；`WorldQuery.QueryRadius` 窄筛用实体中心距离，结果不受影响。受此影响，按"点"写的 WorldQuery 边界 oracle（`WorldSpatialR1Oracle.Bounds`/`WorldSpatialQueryTests.BruteBounds`）改为盒感知（±0.5）。
+- 索引表示统一：唯一索引实体 AABB 半长由 0（点）改为 0.5（1×1×1 盒），与旧 Scene B 索引（`SceneSpatialBoundsProjection` ±0.5）一致，确保 Picking 射线命中行为不变；`WorldQuery.QueryRadius` 窄筛用实体中心距离，结果不受影响。受此影响，按"点"写的 WorldQuery 边界 oracle（`WorldSpatialR1Oracle.Bounds`/`WorldSpatialQueryTests.BruteBounds`）改为盒感知（±0.5）。**（注：此 ±0.5 经 R2-R1 修正——不再由 `WorldQuery` 硬编码为所有实体的全局默认，改为实体/占位工厂显式提供的 `SpatialBounds`；缺省为点，World 不发明尺寸。详见 `### ARCH-WORLD-R2-R1`。）**
 - 新增自动测试 `XuanYu.World.Tests/World/WorldSceneSingleAuthorityTests.cs`：Case1 Create / Case2 Move（核心：旧位不命中、新位必命中）/ Case3 Undo-Redo 一致 / Case4 Destroy / Case5 跨 Region / Case6 反射断言 `SceneStateOwner` 无 `_spatialIndex` 字段（单权威守护）。
 - 源码守卫补强：`scripts/arch-a-guard-world.ps1` 新增 `XuanYu.World/Scene/*` 禁止 `new SpatialIndexOwner`，防第二索引回潮。
 - 修改范围：`XuanYu.World/WorldQuery.cs`、`XuanYu.World/GlobalWorld.Query.cs`、`XuanYu.World/Scene/SceneStateOwner.cs`、`XuanYu.World/Scene/SceneStateOwner.Lifecycle.cs`、`XuanYu.World.Tests/World/WorldSceneSingleAuthorityTests.cs`（新建）、`XuanYu.World.Tests/World/WorldSpatialR1Oracle.cs`、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`、`scripts/arch-a-guard-world.ps1`、`docs/arch-world-r2-single-spatial-authority.md`（R2 方案 Gate）、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
 - 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 97 passed（含 R2 新用例，Picking 回归 `Moved_entity_hits_new_position_not_old_position` 通过）；`arch-a-guard.ps1` 通过；5+100 通过。
 - 状态：**R2 代码完成、自动测试全绿、架构守卫通过；待用户真机验收（13 项，重点盯移动后 / Undo 后 / Redo 后 Picking）后正式 CLOSED**（验收清单与停手条件见 `docs/arch-world-r2-single-spatial-authority.md` 第九/十节）。
 - 后续：进入 R3 Scene Truth 归位（按治理序列）；R2 不碰 D1/D2/D3/O1/Camera Inspector/Large World（均保留）。
+
+### ARCH-WORLD-R2-R1 空间 Bounds 职责归位（v0.2.19.3-rz 内，2026-07-24）
+- 裁定来源：项目负责人审计指出初版 R2 把 `Position ± 0.5` 硬编码进 `WorldQuery.ToBounds`，等于"World 底层替所有实体发明 1×1×1 尺寸"，属"底层把当前答案写死成通用机制"的错层（同类于地球坐标写死进 Core）。R2 主体（单一权威）保留，暂缓 CLOSED，先执行本最小修正。
+- 原则：**`WorldQuery` 只消费空间 Bounds，不发明实体尺寸**。实体空间状态 = `Transform/Position` + 显式 `SpatialBounds`（本地盒）。未来士兵/坦克/建筑/行星各自携带自身 Bounds，WorldQuery 无需改动——"专用目标，开放上限"。
+- 代码改动：`WorldEntitySnapshot` 增本地 `Extent`（相对位置的盒）+ 绝对 `Bounds` 属性；`SpatialAabb` 增纯几何 `Translate`；`EntityRegistry`/`GlobalWorld.Create` 透传显式 `extent`（缺省 = 零尺寸点，World 不发明尺寸）；`WorldQuery.ToBounds` 改为 `entity.Bounds` 并删 `PointBounds` ±0.5；`WorldQuery.Insert`/`Update`/`Remove`/`Rebuild` 收 `internal`（仅 `GlobalWorld` 权威链可写，机器保证唯一 Writer）；`SceneStateOwner` 以占位实体工厂身份显式给 ±0.5 拾取代理，`CreateEntity` 增可选 `extent` 参数；`SceneSpatialBoundsProjection` 保留（旧 Scene B 投影，未再使用于权威索引）。
+- 测试 Oracle 诚实化：`WorldSpatialR1Oracle.Bounds` / `WorldSpatialQueryTests.BruteBounds` 改用 `e.Bounds.WorldBounds`（实体真实盒），不再硬编码 ±0.5；`WorldSpatialQueryTests`/`WorldSpatialR1RebuildTests` 的 `CreateWorld` 显式给测试实体 ±0.5（尺寸属测试数据）；冻结 `QueryBounds` 正式语义 ="实体显式 Bounds 与查询区域相交"。
+- 守卫强化：`scripts/arch-a-guard-world.ps1` 由 `XuanYu.World/Scene/*` 禁第二索引升级为整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs`，把"单一空间索引"锁成机器约束而非约定。
+- 修改范围：`XuanYu.Core/Spatial/SpatialAabb.cs`、`XuanYu.World/WorldEntitySnapshot.cs`、`XuanYu.World/EntityRegistry.cs`、`XuanYu.World/GlobalWorld.cs`、`XuanYu.World/WorldQuery.cs`、`XuanYu.World/Scene/SceneStateOwner.cs`、`XuanYu.World/Scene/SceneStateOwner.Lifecycle.cs`、`XuanYu.World.Tests/World/WorldSpatialR1Oracle.cs`、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`、`XuanYu.World.Tests/World/WorldSpatialR1RebuildTests.cs`、`scripts/arch-a-guard-world.ps1`、`docs/arch-world-r2-status.md`。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 97 passed（含 R2 新用例与 R2-R1 修正，Picking 回归 `Moved_entity_hits_new_position_not_old_position` 通过）；`arch-a-guard.ps1` 通过；5+100 通过。
+- 状态：**R2 主体 + R2-R1 修正完成、自动全绿、守卫通过；暂缓 CLOSED，待用户真机验收 13 项（含补入的 Frame All、Create/Destroy 一致）后正式收口**（验收清单与裁定见 `docs/arch-world-r2-status.md`）。
 
 ## v0.2.19.2-rz
 ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）

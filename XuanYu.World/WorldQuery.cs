@@ -15,17 +15,19 @@ public sealed class WorldQuery
 
     public long SpatialRevision => _index.SpatialRevision;
 
-    public void Insert(WorldEntitySnapshot entity) => _index.Insert(ToBounds(entity));
+    // Mutation is reserved for the World authority chain (GlobalWorld). WorldQuery is
+    // the single owned SpatialIndexOwner; no other World consumer may write (R2-R1).
+    internal void Insert(WorldEntitySnapshot entity) => _index.Insert(ToBounds(entity));
 
-    public void Update(WorldEntitySnapshot entity)
+    internal void Update(WorldEntitySnapshot entity)
     {
         var bounds = ToBounds(entity);
         if (!_index.Update(bounds)) LastStats = LastStats with { SpatialRevision = _index.SpatialRevision };
     }
 
-    public bool Remove(EntityId entityKey) => _index.Remove(entityKey);
+    internal bool Remove(EntityId entityKey) => _index.Remove(entityKey);
 
-    public void Rebuild(IEnumerable<WorldEntitySnapshot> entities)
+    internal void Rebuild(IEnumerable<WorldEntitySnapshot> entities)
     {
         _index = new SpatialIndexOwner();
         foreach (var entity in entities) _index.Insert(ToBounds(entity));
@@ -79,13 +81,9 @@ public sealed class WorldQuery
         return result;
     }
 
-    static SpatialBounds ToBounds(WorldEntitySnapshot entity) =>
-        new(entity.EntityKey, PointBounds(entity.GlobalPosition), SpatialQueryCategory.SceneEntity);
-
-    // Half-extent matches SceneSpatialBoundsProjection so the unique index serves Picking
-    // raycast with the same 1x1x1 box the former Scene B index used (R2 convergence).
-    static SpatialAabb PointBounds(Vector3d p) =>
-        new(new Vector3d(p.X - 0.5, p.Y - 0.5, p.Z - 0.5), new Vector3d(p.X + 0.5, p.Y + 0.5, p.Z + 0.5));
+    // Consume the entity's explicit spatial bounds. WorldQuery never invents a default
+    // size -- the extent is the entity's own description (R2-R1).
+    static SpatialBounds ToBounds(WorldEntitySnapshot entity) => entity.Bounds;
 
     static Vector3d Center(SpatialAabb bounds) => new(
         (bounds.Min.X + bounds.Max.X) * 0.5,

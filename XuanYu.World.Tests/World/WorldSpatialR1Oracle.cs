@@ -9,7 +9,7 @@ static class WorldSpatialR1Oracle
 {
     public static IReadOnlyList<EntityId> Bounds(GlobalWorld world, SpatialAabb bounds) =>
         world.Entities
-            .Where(e => bounds.Intersects(EntityBox(e.GlobalPosition)))
+            .Where(e => bounds.Intersects(e.Bounds.WorldBounds))
             .Select(e => e.EntityKey)
             .OrderBy(id => id.Value)
             .ToArray();
@@ -28,10 +28,6 @@ static class WorldSpatialR1Oracle
 
     public static void AssertSame(IReadOnlyList<EntityId> expected, IReadOnlyList<EntityId> actual) =>
         Assert.Equal(expected, actual.OrderBy(id => id.Value));
-
-    // Entity half-extent matches WorldQuery.PointBounds (R2 single-authority box).
-    static SpatialAabb EntityBox(Vector3d p) =>
-        new(new Vector3d(p.X - 0.5, p.Y - 0.5, p.Z - 0.5), new Vector3d(p.X + 0.5, p.Y + 0.5, p.Z + 0.5));
 
     static double DistanceSquared(Vector3d a, Vector3d b)
     {

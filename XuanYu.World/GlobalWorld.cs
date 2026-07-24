@@ -22,13 +22,17 @@ public sealed partial class GlobalWorld
 
     public IReadOnlyList<WorldEntitySnapshot> Entities => _registry.Snapshot;
 
+    // Creates an entity. The optional `extent` is the entity's OWN spatial description
+    // (local box relative to its position); WorldQuery only consumes it and never
+    // invents a default size. Callers that omit extent get a zero-size point (R2-R1).
     public WorldEntitySnapshot Create(
         string name,
         string type = "WorldEntity",
-        CommittedTransform? transform = null)
+        CommittedTransform? transform = null,
+        SpatialAabb extent = default)
     {
         var committed = transform ?? CommittedTransform.Identity;
-        var entity = _registry.Create(name, type, committed, ResolveRegion(committed));
+        var entity = _registry.Create(name, type, committed, ResolveRegion(committed), WorldEntityActivity.Active, extent);
         _partition.Add(entity.EntityKey, entity.RegionKey);
         _query.Insert(entity);
         return entity;

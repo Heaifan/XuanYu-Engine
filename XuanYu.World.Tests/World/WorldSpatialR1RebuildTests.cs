@@ -48,7 +48,10 @@ public sealed class WorldSpatialR1RebuildTests
         for (var i = 0; i < count; i++)
         {
             var p = new Vector3d((i % 100) * 5.0, (i / 100) * 5.0, 0);
-            world.Create($"Entity {i}", transform: new CommittedTransform(p));
+            // Test entities carry an explicit 1m extent; the size belongs to the test
+            // data, not to WorldQuery (R2-R1).
+            var extent = new SpatialAabb(new Vector3d(-0.5, -0.5, -0.5), new Vector3d(0.5, 0.5, 0.5));
+            world.Create($"Entity {i}", transform: new CommittedTransform(p), extent: extent);
         }
 
         return world;

@@ -1,5 +1,6 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Scene;
+using XuanYu.Core.Spatial;
 
 namespace XuanYu.World;
 
@@ -18,7 +19,8 @@ public sealed class EntityRegistry
         string type = "WorldEntity",
         CommittedTransform? transform = null,
         RegionKey? region = null,
-        WorldEntityActivity activity = WorldEntityActivity.Active)
+        WorldEntityActivity activity = WorldEntityActivity.Active,
+        SpatialAabb extent = default)
     {
         var committed = transform ?? CommittedTransform.Identity;
         var entity = new WorldEntitySnapshot(
@@ -28,7 +30,8 @@ public sealed class EntityRegistry
             committed,
             committed.Position,
             region ?? RegionKey.Origin,
-            activity);
+            activity,
+            extent);
         _entities.Add(entity.EntityKey, entity);
         return entity;
     }
@@ -49,7 +52,8 @@ public sealed class EntityRegistry
             transform,
             transform.Position,
             entity.RegionKey,
-            entity.Activity);
+            entity.Activity,
+            entity.Extent);
         return true;
     }
 
@@ -63,7 +67,8 @@ public sealed class EntityRegistry
             entity.Transform,
             entity.GlobalPosition,
             region,
-            activity);
+            activity,
+            entity.Extent);
         return true;
     }
 

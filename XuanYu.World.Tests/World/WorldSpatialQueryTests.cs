@@ -75,14 +75,17 @@ public sealed class WorldSpatialQueryTests
         {
             var x = (i % 100) * 7.0;
             var y = (i / 100) * 7.0;
-            world.Create($"Entity {i}", transform: new CommittedTransform(new Vector3d(x, y, 0)));
+            // Test entities carry an explicit 1m extent so the box-query oracle stays
+            // meaningful. The size belongs to the test data, not to WorldQuery (R2-R1).
+            var extent = new SpatialAabb(new Vector3d(-0.5, -0.5, -0.5), new Vector3d(0.5, 0.5, 0.5));
+            world.Create($"Entity {i}", transform: new CommittedTransform(new Vector3d(x, y, 0)), extent: extent);
         }
 
         return world;
     }
 
     static IReadOnlyList<EntityId> BruteBounds(GlobalWorld world, SpatialAabb bounds) =>
-        world.Entities.Where(e => bounds.Intersects(EntityBox(e.GlobalPosition))).Select(e => e.EntityKey).ToArray();
+        world.Entities.Where(e => bounds.Intersects(e.Bounds.WorldBounds)).Select(e => e.EntityKey).ToArray();
 
     static IReadOnlyList<EntityId> BruteRadius(GlobalWorld world, Vector3d center, double radius) =>
         world.Entities.Where(e => DistanceSquared(e.GlobalPosition, center) <= radius * radius).Select(e => e.EntityKey).ToArray();
@@ -94,10 +97,6 @@ public sealed class WorldSpatialQueryTests
         var dz = a.Z - b.Z;
         return (dx * dx) + (dy * dy) + (dz * dz);
     }
-
-    // Entity half-extent matches WorldQuery.PointBounds (R2 single-authority box).
-    static SpatialAabb EntityBox(Vector3d p) =>
-        new(new Vector3d(p.X - 0.5, p.Y - 0.5, p.Z - 0.5), new Vector3d(p.X + 0.5, p.Y + 0.5, p.Z + 0.5));
 
     static void AssertSame(IReadOnlyList<EntityId> expected, IReadOnlyList<EntityId> actual) =>
         Assert.Equal(expected.OrderBy(id => id.Value), actual.OrderBy(id => id.Value));

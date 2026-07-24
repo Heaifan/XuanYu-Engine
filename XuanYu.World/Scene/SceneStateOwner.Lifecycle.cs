@@ -1,5 +1,6 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Scene;
+using XuanYu.Core.Spatial;
 using XuanYu.World;
 
 namespace XuanYu.World.Scene;
@@ -9,9 +10,10 @@ public sealed partial class SceneStateOwner
     public WorldEntitySnapshot CreateEntity(
         string name,
         string type,
-        CommittedTransform? transform = null)
+        CommittedTransform? transform = null,
+        SpatialAabb? extent = null)
     {
-        var entity = _world.Create(name, type, transform);
+        var entity = _world.Create(name, type, transform, extent ?? MinimalSceneEntityExtent);
         if (!_snapshot.HasEntity) SetActiveEntity(entity.EntityKey);
         else RefreshSnapshot();
         return entity;

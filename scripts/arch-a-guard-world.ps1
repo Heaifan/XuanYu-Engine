@@ -36,10 +36,13 @@ foreach ($file in Get-SourceFiles "XuanYu.World") {
     Assert-NotContains $file.FullName @("using XuanYu.Editor.", "using XuanYu.Render.Vulkan", "using Silk.NET.Vulkan", "using Avalonia") "World source reference"
 }
 
-# R2 single spatial authority: Scene must not own a second SpatialIndexOwner. The unique
-# index is owned by GlobalWorld -> WorldQuery; Scene may only read through _world.
-foreach ($file in Get-SourceFiles "XuanYu.World/Scene") {
-    Assert-NotContains $file.FullName @("new SpatialIndexOwner") "Scene second spatial index forbidden"
+# R2-R1 single spatial authority: the WHOLE World assembly may contain exactly ONE
+# authorized SpatialIndexOwner instance path. Only WorldQuery.cs may construct it; any
+# other World file (Scene/Picking/Streaming/Partition/...) creating a second index is
+# rejected. This locks "single spatial index" as a machine-enforced rule, not a convention.
+foreach ($file in Get-SourceFiles "XuanYu.World") {
+    if ($file.Name -eq "WorldQuery.cs") { continue }
+    Assert-NotContains $file.FullName @("new SpatialIndexOwner") "Only WorldQuery may own the unique SpatialIndexOwner"
 }
 
 # Solution must contain the new World assemblies; otherwise the physical boundary is gone
