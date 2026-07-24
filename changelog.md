@@ -20,7 +20,15 @@ ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
 - 语义重定性：R1 执行报告中"语义拆分已正确"改为"物理依赖方向正确；TransformSession 等 Editor 语义仍为受控过渡债务"。双轨 SpatialIndex 确证存在，R2 优先级不变。
 - 修改范围：`scripts/arch-a-guard.ps1`、`XuanYu.World/XuanYu.World.csproj`、`XuanYu.World/Spatial/SpatialRaycastResolver.cs`、`docs/arch-world-debts.md`、`changelog.md`、`file-tree.md`。
 - 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` 158 passed / 0 failed；`arch-a-guard.ps1` 通过（含新增 ARCH-WORLD 红线）；5+100 通过。
-- 状态：R1 待用户真机回归（run.bat）通过后正式 CLOSED，随即进入 R2 单一空间权威。
+- 状态：**R1 已真机验收通过，正式 CLOSED**（2026-07-24，证据见 `docs/arch-world-r1-acceptance.md` + `docs/arch-world-r1-acceptance.svg`）；随即进入 R2 单一空间权威。
+
+### ARCH-WORLD-R1 真机验收与 CLOSED（v0.2.19.2-rz，2026-07-24）
+- 验收方式：项目负责人逐张截图 + 运行日志人工核对（`run.bat` 启动，Windows + RTX 3060 + Vulkan + Avalonia）。R1 为纯归属重构、运行行为不变，验收仅验证跨程序集迁移后核心风险链路未断。
+- 13 项核心风险链路 PASS：① 启动/程序集加载/Vulkan 主链（16×16→714×639，10 实体持续渲染）；② Project/Hierarchy 世界投影（世界根/相机/地面/区域树完整）；③ Hierarchy Selection；④ Viewport Picking（两条入口均进入同一选择投影链）；⑤ Inspector 实体状态；⑥ Move Gizmo Preview→Commit（D1 过渡债务仍完整工作）；⑦ Undo/Redo；⑧ Resize/Swapchain 多代际重建（16×16→714×639→714×274→1234×442→714×274，Swapchain 代际 0→4，R1 未破坏 Vulkan 生命周期）；⑨ 关闭生命周期（泵停→Pipeline/Framebuffer/Swapchain/Device/Surface/Instance 依次释放，无崩溃）；⑩ 物理程序集边界；⑪ Core→World 红线；⑫ ARCH-WORLD 自动守卫；⑬ 9 项目 0W0E + 158 Tests。
+- 观察项（非阻断，不判 bug）：O1 Camera Inspector 选中"主相机"时基础信息仍显示项目占位数据，疑似复用项目占位，性质不像 World 拆分核心错误，登记为独立 Editor/Inspector 小债务，**不夹入 R2**；O2 移动 Gizmo 期间 `PublishSceneRenderSnapshot` 高频刷屏，无错误/卡死，暂不判性能问题；O3 Frame All/Frame Selected 本轮无独立日志标记、截图尺度变化不能可靠归因（同时 Resize），**不伪称有日志证明**，自动测试已覆盖 Camera Framing 主链。
+- 受控债务保留：D1 `TransformSession`→R4（禁止新增 World→`Core.Gizmo` 依赖）；D2 `SceneRenderSnapshot`→R5；D3 `Core.Tests`/`World.Tests` 跨层→R4/R5（详见 `docs/arch-world-debts.md`）。
+- 最终裁定：**✅ PASS / CLOSED**。版本维持 `v0.2.19.2-rz`，未升版；本步仅文档收口，未改生产代码。
+- 后续：进入 **ARCH-WORLD-R2 单一空间权威**——收敛双轨 `SpatialIndexOwner`（GlobalWorld→WorldQuery A 与 SceneStateOwner B）为唯一权威查询源；R2 不碰 D1/D2/O1/Camera Inspector/Large World。
 
 ## v0.2.19.1-rz
 ARCH-WORLD-R0 物理分层归属冻结 + 归属审计修正版落库（2026-07-23 21:56:11）

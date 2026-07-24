@@ -1,0 +1,70 @@
+<svg viewBox="0 0 680 540" width="100%" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>ARCH-WORLD-R1 真机验收证据图</title>
+  <desc>v0.2.19.2-rz CLOSED。13 项核心风险链路 PASS；D1/D2/D3 受控债务保留；O1/O2/O3 非阻断观察项；最终裁定 PASS。</desc>
+  <rect x="0" y="0" width="680" height="540" fill="#F4F2EC"/>
+  <rect x="0" y="0" width="680" height="52" fill="#2E4A2E"/>
+  <text x="24" y="24" font-size="15" font-weight="600" fill="#FFFFFF" font-family="Segoe UI, sans-serif">ARCH-WORLD-R1 真机验收证据图</text>
+  <text x="24" y="42" font-size="12" fill="#D6E8D2" font-family="Segoe UI, sans-serif">v0.2.19.2-rz · ✅ CLOSED · 跨程序集迁移核心风险链路验证</text>
+
+  <text x="24" y="76" font-size="13" font-weight="600" fill="#2C2C2A" font-family="Segoe UI, sans-serif">核心风险链路 PASS（13/13）</text>
+  <g font-family="Segoe UI, sans-serif" font-size="11" fill="#1F4D1F">
+    <rect x="24" y="86" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="36" y="102">✓ 启动 / 程序集加载 / Vulkan 主链</text>
+    <rect x="344" y="86" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="356" y="102">✓ Project / Hierarchy 世界投影</text>
+    <rect x="24" y="114" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="36" y="130">✓ Hierarchy Selection</text>
+    <rect x="344" y="114" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="356" y="130">✓ Viewport Picking</text>
+    <rect x="24" y="142" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="36" y="158">✓ Inspector 实体状态</text>
+    <rect x="344" y="142" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="356" y="158">✓ Move Gizmo Preview→Commit</text>
+    <rect x="24" y="170" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="36" y="186">✓ Undo / Redo</text>
+    <rect x="344" y="170" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="356" y="186">✓ Resize / Swapchain 多代际</text>
+    <rect x="24" y="198" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="36" y="214">✓ 关闭生命周期</text>
+    <rect x="344" y="198" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="356" y="214">✓ 物理程序集边界</text>
+    <rect x="24" y="226" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="36" y="242">✓ Core→World 红线</text>
+    <rect x="344" y="226" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="356" y="242">✓ ARCH-WORLD 自动守卫</text>
+    <rect x="24" y="254" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="36" y="270">✓ 9 项目 Build 0W0E</text>
+    <rect x="344" y="254" width="312" height="24" rx="6" fill="#E3F1DD" stroke="#5BA84B"/>
+    <text x="356" y="270">✓ 158 Tests passed</text>
+  </g>
+
+  <text x="24" y="300" font-size="13" font-weight="600" fill="#2C2C2A" font-family="Segoe UI, sans-serif">受控债务（保留至 R4 / R5）</text>
+  <g font-family="Segoe UI, sans-serif" font-size="11">
+    <rect x="24" y="310" width="216" height="40" rx="6" fill="#FDF1DC" stroke="#D99A2B"/>
+    <text x="36" y="328" fill="#7A4E07" font-weight="600">D1 TransformSession</text>
+    <text x="36" y="343" fill="#7A4E07">含 Gizmo/Editor 语义 → R4</text>
+    <rect x="252" y="310" width="216" height="40" rx="6" fill="#FDF1DC" stroke="#D99A2B"/>
+    <text x="264" y="328" fill="#7A4E07" font-weight="600">D2 SceneRenderSnapshot</text>
+    <text x="264" y="343" fill="#7A4E07">污染 Core → R5</text>
+    <rect x="480" y="310" width="176" height="40" rx="6" fill="#FDF1DC" stroke="#D99A2B"/>
+    <text x="492" y="328" fill="#7A4E07" font-weight="600">D3 跨层测试</text>
+    <text x="492" y="343" fill="#7A4E07">Core/World.Tests → R4/R5</text>
+  </g>
+
+  <text x="24" y="372" font-size="13" font-weight="600" fill="#2C2C2A" font-family="Segoe UI, sans-serif">观察项（非阻断，不判 bug）</text>
+  <g font-family="Segoe UI, sans-serif" font-size="11">
+    <rect x="24" y="382" width="216" height="40" rx="6" fill="#E7F0FB" stroke="#3E7BC2"/>
+    <text x="36" y="400" fill="#1E4E82" font-weight="600">O1 Camera Inspector</text>
+    <text x="36" y="415" fill="#1E4E82">占位数据 → 另登记小债</text>
+    <rect x="252" y="382" width="216" height="40" rx="6" fill="#E7F0FB" stroke="#3E7BC2"/>
+    <text x="264" y="400" fill="#1E4E82" font-weight="600">O2 Preview 高频日志</text>
+    <text x="264" y="415" fill="#1E4E82">非 bug，未来治理</text>
+    <rect x="480" y="382" width="176" height="40" rx="6" fill="#E7F0FB" stroke="#3E7BC2"/>
+    <text x="492" y="400" fill="#1E4E82" font-weight="600">O3 Frame All/Sel</text>
+    <text x="492" y="415" fill="#1E4E82">无独立日志，不伪称</text>
+  </g>
+
+  <rect x="24" y="440" width="632" height="48" rx="10" fill="#2E7D32"/>
+  <text x="340" y="464" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="Segoe UI, sans-serif">✅ PASS · R1 CLOSED → R2 单一空间权威</text>
+  <text x="340" y="480" font-size="11" fill="#CDEBCF" text-anchor="middle" font-family="Segoe UI, sans-serif">双轨 SpatialIndex 收敛：GlobalWorld→WorldQuery→唯一 SpatialIndexOwner</text>
+</svg>

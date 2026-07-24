@@ -1,7 +1,7 @@
 版本：v0.2.19.2-rz
 # XuanYu Engine 文件树
 
-文件总数：431
+文件总数：432
 
 ## 根目录
 
@@ -17,7 +17,7 @@
 - `scripts/arch-a-guard-world.ps1`：ARCH-WORLD 红线子守卫（R1-R1 拆分，主脚本 dot-source）；按 `<ProjectReference>` 元素解析校验 Core ✕→ World/Editor/Vulkan、World only → Core、World 生产源码 ✕ Editor/Vulkan/Avalonia/Silk，并校验 Solution 含 World/World.Tests。
 
 ## XuanYu.World
-- 物理世界真相层（ARCH-WORLD-R1 新建）。命名空间 `XuanYu.World`（根）、`XuanYu.World.Scene`、`XuanYu.World.Spatial`、`XuanYu.World.Transform`。
+- 物理世界真相层（ARCH-WORLD-R1 新建，2026-07-24 真机验收 **CLOSED**）。命名空间 `XuanYu.World`（根）、`XuanYu.World.Scene`、`XuanYu.World.Spatial`、`XuanYu.World.Transform`。
 - 根域：`EntityRegistry`（实体总账）、`GlobalWorld`（全局世界根 + 查询入口）、`WorldEntitySnapshot`、`WorldEntityActivity`、`RegionKey`、`WorldPartition*`、`WorldPartitionEntry`、`WorldPartitionMembership`、`IWorldPartitionStrategy`、`GridWorldPartitionStrategy`、`WorldQuery`（世界查询骨架）。
 - `Scene/`：`SceneStateOwner`（场景真相所有权，引用 Core.Scene 边界 DTO）、`SceneStateOwner.Lifecycle`、`SceneStateOwner.Seeding`、`SceneWorldProjection`、`SceneSpatialBoundsProjection`（Scene↔World 投影）。
 - `Spatial/`：`ISpatialIndex`、`DynamicAabbTree*`（AABB 树实现）、`SpatialIndexOwner`、`SpatialRaycastResolver`（空间索引实现，引用 Core.Spatial 纯几何/查询契约，World→Core 合规）。
@@ -41,6 +41,8 @@
 - `docs/arch-world-layer-attribution.md`：ARCH-WORLD 物理分层归属审计（修正版）；冻结 Core / World / Editor / Render / WarCore 归属、EntityId 身份边界、双轨索引收敛与 R0→R5 治理序列，不承载运行时代码。
 - `docs/arch-world-layer-attribution.svg`：ARCH-WORLD-R0 分层与依赖方向冻结图；展示五层归属、允许依赖与禁止边界，不承载运行时代码。
 - `docs/arch-world-debts.md`：ARCH-WORLD 受控债务登记（R1-R1 新建）；记录 D1 TransformSession 暂居 World（R4）、D2 SceneRenderSnapshot 污染 Core（R5）、D3 测试程序集跨层（R4/R5）三项受控债务与红线路令。
+- `docs/arch-world-r1-acceptance.md`：ARCH-WORLD-R1 真机验收报告（R1 CLOSED 收口，2026-07-24）；逐条证据链 8 项 PASS、3 观察项（O1 Camera Inspector 占位 / O2 Preview 高频日志 / O3 Frame All-Selected 无独立日志，均非阻断）、保留 D1/D2/D3、最终裁定 PASS/CLOSED、下一步 R2 单一空间权威；版本维持 v0.2.19.2-rz。
+- `docs/arch-world-r1-acceptance.svg`：ARCH-WORLD-R1 真机验收证据图；展示 13/13 核心风险链路 PASS、D1/D2/D3 受控债务、O1/O2/O3 观察项与最终 CLOSED 裁定，不承载运行时代码。
 - `docs/arch-c-overview.svg`：ARCH-C 规划总览图。
 - `docs/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
 - `docs/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。
