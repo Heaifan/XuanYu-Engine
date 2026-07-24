@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.19.2-rz
+ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
+- 任务目标：在 R0 冻结基础上新建 `XuanYu.World` + `XuanYu.World.Tests` 程序集，把物理世界真相（World 根域 / Scene 簇 / Spatial 索引实现 / Transform 簇）从 Core 迁出，确立 Core→World 红线物理边界；本轮纯归属重构，运行行为不变。
+- 语义拆分裁定：纯几何与查询契约（`SpatialAabb` / `SpatialBounds` / `SpatialQuery*` / `SpatialRay*` / `RayAabb*`）留 `XuanYu.Core.Spatial`；`PreviewTransform` / `TransformStartSnapshot` 留 `XuanYu.Core.Transform`（待 R4 Editor 剥离）；`SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `CameraState` 等边界 DTO 留 R5。
+- 迁移范围：`XuanYu.World`（根域 `EntityRegistry` / `GlobalWorld` / `RegionKey` / `WorldQuery` / `WorldPartition*` / `WorldEntity*`；`Scene/` `SceneStateOwner` 簇 + 投影；`Spatial/` `ISpatialIndex` / `DynamicAabbTree*` / `SpatialIndexOwner` / `SpatialRaycastResolver`；`Transform/` `TransformSession`）+ `XuanYu.World.Tests`（`World` / `Spatial` / `Transform` 镜像测试）。
+- 跨程序集可访问性修复：`SpatialRayAabb` 由默认 internal 改 public；`SpatialRaycastResolver(Action<SpatialBounds>)` 构造由 internal 改 public，供 `XuanYu.World.Tests` 使用。
+- 测试依赖（非生产红线）：`XuanYu.Editor.UI`→`XuanYu.World`、`XuanYu.Core.Tests`→`XuanYu.World`；`scripts/arch-a-guard.ps1` 通过。Core 纯几何契约测试（`SpatialBoundsTests` / `RayAabbIntersectionTests`）保留 `XuanYu.Core.Tests/Spatial`，并补建 Core-only `SpatialTestData` 助手。
+- 修改范围：`XuanYu.World/*`（新建 29 .cs）、`XuanYu.World.Tests/*`（新建 35 .cs）、`XuanYu.Core/{World,Scene,Spatial,Transform}` 迁出、`XuanYu.Core.Tests/{World,Spatial,Transform}` 迁出、`XuanYu.Core/Spatial/SpatialRayAabb.cs`、`XuanYu.Editor.UI/Vm/{EditorDisplayText,UiVm.Scene,UiVm.MoveGizmo}.cs`、`XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`、`XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`、`XuanYu.Engine.slnx`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`file-tree.md`、`.gitignore`。
+- 验证结果：`dotnet build` 9 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped（Core.Tests 67 + World.Tests 91）；`scripts/arch-a-guard.ps1` 通过；5+100（World 文件均 ≤100 行）通过；`file-tree.md` 429 / 429 一致。
+- Commit Hash：`eb4f34ddd8a3c9f173d6bc524ad10db0e0a76015`
+- 遗留问题：R1 仅归属重构、行为不变；R2 收敛双轨空间索引（`SceneStateOwner._spatialIndex` 与 `WorldQuery._index` → 唯一 `SpatialIndexOwner`）未启动；真机回归（启动→实体→层级→拾取→选择→移动 Gizmo→撤销/重做→取景→分区→缩放→关闭）需用户手动验收；R3 Scene Truth / R4 Editor 剥离 / R5 Snapshot 边界按序列后续推进。
+
 ## v0.2.19.1-rz
 ARCH-WORLD-R0 物理分层归属冻结 + 归属审计修正版落库（2026-07-23 21:56:11）
 - 任务目标：在继续 WORLD-A 功能扩张前完成归属审计修正版落库与 ARCH-WORLD-R0 边界冻结；本轮纯文档治理，不改任何代码归属、不迁移文件、不触碰运行行为与 Vulkan 生命周期。
