@@ -8,4 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\XuanYu.Core\XuanYu.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="XuanYu.World.Tests" />
+  </ItemGroup>
 </Project>

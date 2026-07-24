@@ -5,12 +5,22 @@ ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
 - 任务目标：在 R0 冻结基础上新建 `XuanYu.World` + `XuanYu.World.Tests` 程序集，把物理世界真相（World 根域 / Scene 簇 / Spatial 索引实现 / Transform 簇）从 Core 迁出，确立 Core→World 红线物理边界；本轮纯归属重构，运行行为不变。
 - 语义拆分裁定：纯几何与查询契约（`SpatialAabb` / `SpatialBounds` / `SpatialQuery*` / `SpatialRay*` / `RayAabb*`）留 `XuanYu.Core.Spatial`；`PreviewTransform` / `TransformStartSnapshot` 留 `XuanYu.Core.Transform`（待 R4 Editor 剥离）；`SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `CameraState` 等边界 DTO 留 R5。
 - 迁移范围：`XuanYu.World`（根域 `EntityRegistry` / `GlobalWorld` / `RegionKey` / `WorldQuery` / `WorldPartition*` / `WorldEntity*`；`Scene/` `SceneStateOwner` 簇 + 投影；`Spatial/` `ISpatialIndex` / `DynamicAabbTree*` / `SpatialIndexOwner` / `SpatialRaycastResolver`；`Transform/` `TransformSession`）+ `XuanYu.World.Tests`（`World` / `Spatial` / `Transform` 镜像测试）。
-- 跨程序集可访问性修复：`SpatialRayAabb` 由默认 internal 改 public；`SpatialRaycastResolver(Action<SpatialBounds>)` 构造由 internal 改 public，供 `XuanYu.World.Tests` 使用。
+- 跨程序集可访问性修复：`SpatialRayAabb` 由默认 internal 改 public（纯几何跨程序集能力，合理，保留）；`SpatialRaycastResolver(Action<SpatialBounds>)` 构造在 R1 中临时由 internal 改 public 供 `XuanYu.World.Tests` 使用，**已于 R1-R1 退回 internal**，改由 `XuanYu.World.csproj` 的 `InternalsVisibleTo("XuanYu.World.Tests")` 暴露，消除测试后门。
 - 测试依赖（非生产红线）：`XuanYu.Editor.UI`→`XuanYu.World`、`XuanYu.Core.Tests`→`XuanYu.World`；`scripts/arch-a-guard.ps1` 通过。Core 纯几何契约测试（`SpatialBoundsTests` / `RayAabbIntersectionTests`）保留 `XuanYu.Core.Tests/Spatial`，并补建 Core-only `SpatialTestData` 助手。
 - 修改范围：`XuanYu.World/*`（新建 29 .cs）、`XuanYu.World.Tests/*`（新建 35 .cs）、`XuanYu.Core/{World,Scene,Spatial,Transform}` 迁出、`XuanYu.Core.Tests/{World,Spatial,Transform}` 迁出、`XuanYu.Core/Spatial/SpatialRayAabb.cs`、`XuanYu.Editor.UI/Vm/{EditorDisplayText,UiVm.Scene,UiVm.MoveGizmo}.cs`、`XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`、`XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`、`XuanYu.Engine.slnx`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`file-tree.md`、`.gitignore`。
 - 验证结果：`dotnet build` 9 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped（Core.Tests 67 + World.Tests 91）；`scripts/arch-a-guard.ps1` 通过；5+100（World 文件均 ≤100 行）通过；`file-tree.md` 429 / 429 一致。
 - Commit Hash：`eb4f34ddd8a3c9f173d6bc524ad10db0e0a76015`
 - 遗留问题：R1 仅归属重构、行为不变；R2 收敛双轨空间索引（`SceneStateOwner._spatialIndex` 与 `WorldQuery._index` → 唯一 `SpatialIndexOwner`）未启动；真机回归（启动→实体→层级→拾取→选择→移动 Gizmo→撤销/重做→取景→分区→缩放→关闭）需用户手动验收；R3 Scene Truth / R4 Editor 剥离 / R5 Snapshot 边界按序列后续推进。
+
+### ARCH-WORLD-R1-R1 边界守卫补强（v0.2.19.2-rz 内，2026-07-24）
+- 任务目标：R1 核心物理分层已 PASS，但独立审计发现 `arch-a-guard.ps1` 仍只校验旧红线（Editor.UI ✕→ Vulkan、Render.Abstractions ✕→ Vulkan/Avalonia），**未自动校验 ARCH-WORLD 新边界**，且 `$projects` 清单仅为旧 6 项目（缺 World/World.Tests）。本步为治理补强，不搬代码、不改运行行为。
+- 守卫补强（`scripts/arch-a-guard.ps1` + 新建 `scripts/arch-a-guard-world.ps1`）：新增 ARCH-WORLD 红线自动校验——Core 禁止引用 World/Editor/Vulkan；World 仅允许引用 Core；World 生产源码禁止 `using XuanYu.Editor.*` / `XuanYu.Render.Vulkan` / `Silk.NET.Vulkan` / `Avalonia`；Solution 必须包含 `XuanYu.World` 与 `XuanYu.World.Tests`；并将 `$projects` 由 6 扩展为全 9 项目。因主脚本新增检查后超 100 行，按 5+100 红线将 ARCH-WORLD 检查拆入 `arch-a-guard-world.ps1`（主脚本 dot-source），两文件均 ≤100 行。ProjectReference 按元素解析（非整文件子串），故 `InternalsVisibleTo` 属性合法。
+- 关闭测试后门：`SpatialRaycastResolver(Action<SpatialBounds>)` 单参构造由 public 退回 internal，改由 `XuanYu.World.csproj` 的 `InternalsVisibleTo("XuanYu.World.Tests")` 暴露；`SpatialRayAabb` 维持 public（纯几何能力，合理）。
+- 受控债务登记（`docs/arch-world-debts.md`）：D1 `TransformSession` 暂居 World 含 Gizmo/Editor 语义 → R4（并令禁止新增 World→`Core.Gizmo` 依赖）；D2 `SceneRenderSnapshot` 含 EditorCamera/Gizmo/Selection → R5；D3 `Core.Tests`/`World.Tests` 跨层测试依赖 → R4/R5。
+- 语义重定性：R1 执行报告中"语义拆分已正确"改为"物理依赖方向正确；TransformSession 等 Editor 语义仍为受控过渡债务"。双轨 SpatialIndex 确证存在，R2 优先级不变。
+- 修改范围：`scripts/arch-a-guard.ps1`、`XuanYu.World/XuanYu.World.csproj`、`XuanYu.World/Spatial/SpatialRaycastResolver.cs`、`docs/arch-world-debts.md`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` 158 passed / 0 failed；`arch-a-guard.ps1` 通过（含新增 ARCH-WORLD 红线）；5+100 通过。
+- 状态：R1 待用户真机回归（run.bat）通过后正式 CLOSED，随即进入 R2 单一空间权威。
 
 ## v0.2.19.1-rz
 ARCH-WORLD-R0 物理分层归属冻结 + 归属审计修正版落库（2026-07-23 21:56:11）

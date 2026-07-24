@@ -55,6 +55,9 @@ if ((Get-OutputType $appCsproj) -ne "WinExe") { Add-Failure "Editor.App must be 
 
 $projects = @(
     "XuanYu.Core/XuanYu.Core.csproj",
+    "XuanYu.Core.Tests/XuanYu.Core.Tests.csproj",
+    "XuanYu.World/XuanYu.World.csproj",
+    "XuanYu.World.Tests/XuanYu.World.Tests.csproj",
     "XuanYu.Editor.App/XuanYu.Editor.App.csproj",
     "XuanYu.Editor.UI/XuanYu.Editor.UI.csproj",
     "XuanYu.Editor.Win/XuanYu.Editor.Win.csproj",
@@ -84,6 +87,9 @@ else {
     Assert-Contains "XuanYu.Editor.UI/Win/UiWin.axaml" $version "main window title version"
     Assert-Contains "run.bat" $version "run.bat title version"
 }
+
+# ARCH-WORLD red-line guards live in a separate file (5+100 split).
+. "$PSScriptRoot/arch-a-guard-world.ps1"
 
 foreach ($file in Get-TrackedHandwrittenFiles) {
     $lines = (Get-Content -LiteralPath $file.FullName -Encoding utf8 | Measure-Object -Line).Lines

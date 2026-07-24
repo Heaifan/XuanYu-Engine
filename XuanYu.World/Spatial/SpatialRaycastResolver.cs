@@ -9,7 +9,7 @@ public sealed class SpatialRaycastResolver
     {
     }
 
-    public SpatialRaycastResolver(Action<SpatialBounds> beforeNarrowCandidate)
+    internal SpatialRaycastResolver(Action<SpatialBounds> beforeNarrowCandidate)
     {
         _beforeNarrowCandidate = beforeNarrowCandidate;
     }
