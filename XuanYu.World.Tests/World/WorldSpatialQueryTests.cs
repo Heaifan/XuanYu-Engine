@@ -82,7 +82,7 @@ public sealed class WorldSpatialQueryTests
     }
 
     static IReadOnlyList<EntityId> BruteBounds(GlobalWorld world, SpatialAabb bounds) =>
-        world.Entities.Where(e => bounds.Intersects(new SpatialAabb(e.GlobalPosition, e.GlobalPosition))).Select(e => e.EntityKey).ToArray();
+        world.Entities.Where(e => bounds.Intersects(EntityBox(e.GlobalPosition))).Select(e => e.EntityKey).ToArray();
 
     static IReadOnlyList<EntityId> BruteRadius(GlobalWorld world, Vector3d center, double radius) =>
         world.Entities.Where(e => DistanceSquared(e.GlobalPosition, center) <= radius * radius).Select(e => e.EntityKey).ToArray();
@@ -94,6 +94,10 @@ public sealed class WorldSpatialQueryTests
         var dz = a.Z - b.Z;
         return (dx * dx) + (dy * dy) + (dz * dz);
     }
+
+    // Entity half-extent matches WorldQuery.PointBounds (R2 single-authority box).
+    static SpatialAabb EntityBox(Vector3d p) =>
+        new(new Vector3d(p.X - 0.5, p.Y - 0.5, p.Z - 0.5), new Vector3d(p.X + 0.5, p.Y + 0.5, p.Z + 0.5));
 
     static void AssertSame(IReadOnlyList<EntityId> expected, IReadOnlyList<EntityId> actual) =>
         Assert.Equal(expected.OrderBy(id => id.Value), actual.OrderBy(id => id.Value));

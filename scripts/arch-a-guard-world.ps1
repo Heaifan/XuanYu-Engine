@@ -36,6 +36,12 @@ foreach ($file in Get-SourceFiles "XuanYu.World") {
     Assert-NotContains $file.FullName @("using XuanYu.Editor.", "using XuanYu.Render.Vulkan", "using Silk.NET.Vulkan", "using Avalonia") "World source reference"
 }
 
+# R2 single spatial authority: Scene must not own a second SpatialIndexOwner. The unique
+# index is owned by GlobalWorld -> WorldQuery; Scene may only read through _world.
+foreach ($file in Get-SourceFiles "XuanYu.World/Scene") {
+    Assert-NotContains $file.FullName @("new SpatialIndexOwner") "Scene second spatial index forbidden"
+}
+
 # Solution must contain the new World assemblies; otherwise the physical boundary is gone
 # without the guard noticing (the old $projects list omitted them).
 Assert-Contains "XuanYu.Engine.slnx" "XuanYu.World/XuanYu.World.csproj" "solution contains World"

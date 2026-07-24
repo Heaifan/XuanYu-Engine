@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.19.3-rz
+ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
+- 任务目标：收敛双轨空间索引（`SceneStateOwner._spatialIndex` 与 `GlobalWorld→WorldQuery` 内部索引）为唯一权威查询源；`GlobalWorld` 已是世界事实 + 唯一写链（`Create`/`Destroy`/`UpdateTransform`/`Rebuild`），`SceneStateOwner` 不再持有第二套索引，其 `QuerySpatial`/`RaycastSpatial`/`SpatialRevision` 经 `_world` 兼容门面读唯一索引。运行行为（Picking/Undo/Redo/跨 Region）保持。
+- 唯一权威链：`GlobalWorld` → `WorldQuery`（新增 `Query(SpatialAabb/ray)` public + `Raycast(ray)` + `SpatialRevision`）→ 唯一 `SpatialIndexOwner`；`SceneStateOwner` 删 `_spatialIndex` 字段与 4 处双写（构造/`ApplyTransform`/`CreateEntity`/`DestroyEntity`），只读委托。
+- 索引表示统一：唯一索引实体 AABB 半长由 0（点）改为 0.5（1×1×1 盒），与旧 Scene B 索引（`SceneSpatialBoundsProjection` ±0.5）一致，确保 Picking 射线命中行为不变；`WorldQuery.QueryRadius` 窄筛用实体中心距离，结果不受影响。受此影响，按"点"写的 WorldQuery 边界 oracle（`WorldSpatialR1Oracle.Bounds`/`WorldSpatialQueryTests.BruteBounds`）改为盒感知（±0.5）。
+- 新增自动测试 `XuanYu.World.Tests/World/WorldSceneSingleAuthorityTests.cs`：Case1 Create / Case2 Move（核心：旧位不命中、新位必命中）/ Case3 Undo-Redo 一致 / Case4 Destroy / Case5 跨 Region / Case6 反射断言 `SceneStateOwner` 无 `_spatialIndex` 字段（单权威守护）。
+- 源码守卫补强：`scripts/arch-a-guard-world.ps1` 新增 `XuanYu.World/Scene/*` 禁止 `new SpatialIndexOwner`，防第二索引回潮。
+- 修改范围：`XuanYu.World/WorldQuery.cs`、`XuanYu.World/GlobalWorld.Query.cs`、`XuanYu.World/Scene/SceneStateOwner.cs`、`XuanYu.World/Scene/SceneStateOwner.Lifecycle.cs`、`XuanYu.World.Tests/World/WorldSceneSingleAuthorityTests.cs`（新建）、`XuanYu.World.Tests/World/WorldSpatialR1Oracle.cs`、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`、`scripts/arch-a-guard-world.ps1`、`docs/arch-world-r2-single-spatial-authority.md`（R2 方案 Gate）、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 97 passed（含 R2 新用例，Picking 回归 `Moved_entity_hits_new_position_not_old_position` 通过）；`arch-a-guard.ps1` 通过；5+100 通过。
+- 状态：**R2 代码完成、自动测试全绿、架构守卫通过；待用户真机验收（13 项，重点盯移动后 / Undo 后 / Redo 后 Picking）后正式 CLOSED**（验收清单与停手条件见 `docs/arch-world-r2-single-spatial-authority.md` 第九/十节）。
+- 后续：进入 R3 Scene Truth 归位（按治理序列）；R2 不碰 D1/D2/D3/O1/Camera Inspector/Large World（均保留）。
+
 ## v0.2.19.2-rz
 ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
 - 任务目标：在 R0 冻结基础上新建 `XuanYu.World` + `XuanYu.World.Tests` 程序集，把物理世界真相（World 根域 / Scene 簇 / Spatial 索引实现 / Transform 簇）从 Core 迁出，确立 Core→World 红线物理边界；本轮纯归属重构，运行行为不变。

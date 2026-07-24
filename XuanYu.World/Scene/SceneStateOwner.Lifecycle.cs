@@ -12,7 +12,6 @@ public sealed partial class SceneStateOwner
         CommittedTransform? transform = null)
     {
         var entity = _world.Create(name, type, transform);
-        _spatialIndex.Insert(ToSpatialBounds(SceneWorldProjection.ToSceneEntity(entity)));
         if (!_snapshot.HasEntity) SetActiveEntity(entity.EntityKey);
         else RefreshSnapshot();
         return entity;
@@ -21,7 +20,6 @@ public sealed partial class SceneStateOwner
     public bool DestroyEntity(EntityId entityKey)
     {
         if (!_world.Destroy(entityKey)) return false;
-        _spatialIndex.Remove(entityKey);
         if (_activeEntityKey == entityKey) SetActiveEntity(Entities.FirstOrDefault().EntityKey);
         else
         {

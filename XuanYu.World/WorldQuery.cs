@@ -13,6 +13,8 @@ public sealed class WorldQuery
 
     public int Count => _index.EntityCount;
 
+    public long SpatialRevision => _index.SpatialRevision;
+
     public void Insert(WorldEntitySnapshot entity) => _index.Insert(ToBounds(entity));
 
     public void Update(WorldEntitySnapshot entity)
@@ -52,10 +54,38 @@ public sealed class WorldQuery
             .ToArray();
     }
 
+    public SpatialQueryResult Query(SpatialAabb area, SpatialQueryCategory mask)
+    {
+        var result = _index.Query(area, mask);
+        LastStats = result.Stats;
+        return result;
+    }
+
+    public SpatialQueryResult Query(SpatialRayQuery ray, SpatialQueryCategory mask)
+    {
+        var result = _index.Query(ray, mask);
+        LastStats = result.Stats;
+        return result;
+    }
+
+    public SpatialRaycastResult Raycast(SpatialRayQuery ray, SpatialQueryCategory mask)
+    {
+        var result = _index.Raycast(ray, mask);
+        LastStats = new SpatialQueryStats(
+            result.Stats.SpatialRevision,
+            result.Stats.TotalEntityCount,
+            result.Stats.VisitedNodeCount,
+            result.Stats.CandidateCount);
+        return result;
+    }
+
     static SpatialBounds ToBounds(WorldEntitySnapshot entity) =>
         new(entity.EntityKey, PointBounds(entity.GlobalPosition), SpatialQueryCategory.SceneEntity);
 
-    static SpatialAabb PointBounds(Vector3d p) => new(p, p);
+    // Half-extent matches SceneSpatialBoundsProjection so the unique index serves Picking
+    // raycast with the same 1x1x1 box the former Scene B index used (R2 convergence).
+    static SpatialAabb PointBounds(Vector3d p) =>
+        new(new Vector3d(p.X - 0.5, p.Y - 0.5, p.Z - 0.5), new Vector3d(p.X + 0.5, p.Y + 0.5, p.Z + 0.5));
 
     static Vector3d Center(SpatialAabb bounds) => new(
         (bounds.Min.X + bounds.Max.X) * 0.5,
