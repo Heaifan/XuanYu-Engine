@@ -45,6 +45,19 @@ foreach ($file in Get-SourceFiles "XuanYu.World") {
     Assert-NotContains $file.FullName @("new SpatialIndexOwner") "Only WorldQuery may own the unique SpatialIndexOwner"
 }
 
+# R2-R1: WorldQuery mutation API (Insert/Update/Remove/Rebuild) is `internal` -- that only
+# restricts it to the XuanYu.World assembly, but a SECOND in-assembly caller (e.g. a future
+# Streaming/Partition system) would still compile. Lock the production call sites to the
+# World authority whitelist so "single Writer" is machine-enforced, not merely conventional.
+# NOTE: this keys on the `_query` field name used by GlobalWorld; if that field is renamed
+# the guard must be updated to keep matching the real call sites.
+$writeWhitelist = @("GlobalWorld.cs", "GlobalWorld.Query.cs", "WorldQuery.cs")
+$mutationPatterns = @("_query.Insert(", "_query.Update(", "_query.Remove(", "_query.Rebuild(")
+foreach ($file in Get-SourceFiles "XuanYu.World") {
+    if ($writeWhitelist -contains $file.Name) { continue }
+    Assert-NotContains $file.FullName $mutationPatterns "WorldQuery mutation only callable from World authority (GlobalWorld)"
+}
+
 # Solution must contain the new World assemblies; otherwise the physical boundary is gone
 # without the guard noticing (the old $projects list omitted them).
 Assert-Contains "XuanYu.Engine.slnx" "XuanYu.World/XuanYu.World.csproj" "solution contains World"

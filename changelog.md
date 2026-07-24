@@ -19,8 +19,16 @@ ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - 测试 Oracle 诚实化：`WorldSpatialR1Oracle.Bounds` / `WorldSpatialQueryTests.BruteBounds` 改用 `e.Bounds.WorldBounds`（实体真实盒），不再硬编码 ±0.5；`WorldSpatialQueryTests`/`WorldSpatialR1RebuildTests` 的 `CreateWorld` 显式给测试实体 ±0.5（尺寸属测试数据）；冻结 `QueryBounds` 正式语义 ="实体显式 Bounds 与查询区域相交"。
 - 守卫强化：`scripts/arch-a-guard-world.ps1` 由 `XuanYu.World/Scene/*` 禁第二索引升级为整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs`，把"单一空间索引"锁成机器约束而非约定。
 - 修改范围：`XuanYu.Core/Spatial/SpatialAabb.cs`、`XuanYu.World/WorldEntitySnapshot.cs`、`XuanYu.World/EntityRegistry.cs`、`XuanYu.World/GlobalWorld.cs`、`XuanYu.World/WorldQuery.cs`、`XuanYu.World/Scene/SceneStateOwner.cs`、`XuanYu.World/Scene/SceneStateOwner.Lifecycle.cs`、`XuanYu.World.Tests/World/WorldSpatialR1Oracle.cs`、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`、`XuanYu.World.Tests/World/WorldSpatialR1RebuildTests.cs`、`scripts/arch-a-guard-world.ps1`、`docs/arch-world-r2-status.md`。
-- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 97 passed（含 R2 新用例与 R2-R1 修正，Picking 回归 `Moved_entity_hits_new_position_not_old_position` 通过）；`arch-a-guard.ps1` 通过；5+100 通过。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 99 passed（含 R2 新用例与 R2-R1 修正，Picking 回归 `Moved_entity_hits_new_position_not_old_position` 通过）；`arch-a-guard.ps1` 通过；5+100 通过。
 - 状态：**R2 主体 + R2-R1 修正完成、自动全绿、守卫通过；暂缓 CLOSED，待用户真机验收 13 项（含补入的 Frame All、Create/Destroy 一致）后正式收口**（验收清单与裁定见 `docs/arch-world-r2-status.md`）。
+
+### ARCH-WORLD-R2-R1 收尾补丁（v0.2.19.3-rz 内，2026-07-24）
+- 裁定来源：项目负责人二审 R2-R1，认可"Bounds 职责归位"方向，但指出两点须最终钉死才可达真机收口：① `internal` 仅挡跨程序集、挡不住 `XuanYu.World` 内第二个调用方，须把"唯一 Writer"升级为机器约束；②须把 ±0.5 真实归属与 extent=0 语义正式记录，防未来回潮。
+- 代码改动（纯机器约束 + 语义测试，无生产行为变化）：`scripts/arch-a-guard-world.ps1` 新增"WorldQuery mutation 调用点（`_query.Insert/Update/Remove/Rebuild`）仅允许出现在白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail"，与既有"全 World 禁 `new SpatialIndexOwner`"共同锁死唯一 Writer；新建 `XuanYu.World.Tests/World/WorldEntityBoundsSemanticsTests.cs`（Test A 默认 extent=零尺寸点：`Bounds.Min==Max==Position` 且 QueryBounds 维持点语义；Test B 显式 ±0.5 → 绝对盒 `Min=(9.5,-0.5,-0.5)`/`Max=(10.5,0.5,0.5)` 且盒外 0.55 仍 HIT、1.2 外 MISS）；`SceneStateOwner.cs` 注释澄清 `MinimalSceneEntityExtent=±0.5` 为占位实体**自身空间 Bounds**（情况 A 正确），非 Picking 容差伪装，未来 Pick Proxy 分离登记为非阻断选项。
+- ±0.5 归属裁定：占位工厂为自身单位尺寸最小场景对象声明的实体空间 Bounds，属"实体创建点决定自身尺寸"，不是 WorldQuery 通用默认、也不是纯 Picking 容差。extent=0 语义冻结：缺省 = 点状空间足迹（`Min==Max==Position`），非"无空间信息"；保持"默认点 + 显式盒"两极，不引入 HasBounds/Optional。
+- 修改范围：`scripts/arch-a-guard-world.ps1`、`XuanYu.World.Tests/World/WorldEntityBoundsSemanticsTests.cs`（新建）、`XuanYu.World/Scene/SceneStateOwner.cs`、`docs/arch-world-r2-status.md`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 99 passed（较 R2-R1 +2 收尾语义测试）；`arch-a-guard.ps1` 通过（含新唯一 Writer 调用点守卫）；5+100 通过。
+- 状态：**R2 主体 + R2-R1 + 收尾补丁完成、自动全绿、守卫通过；暂缓 CLOSED，待用户真机验收 13 项后正式收口**。仍不碰 D1/D2/D3/O1/Camera/Large World/Streaming。
 
 ## v0.2.19.2-rz
 ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）

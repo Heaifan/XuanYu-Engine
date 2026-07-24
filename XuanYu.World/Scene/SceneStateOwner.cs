@@ -12,10 +12,12 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
     SceneRenderSnapshot _snapshot;
     EntityId _activeEntityKey;
 
-    // Placeholder scene entities have no real mesh/collider bounds yet, so the scene
-    // factory assigns a 1m pick proxy. This is the ENTITY-CREATION site deciding its
-    // own entity's spatial extent -- NOT WorldQuery inventing a universal default for
-    // all entities. Real gameplay entities supply their own bounds (R2-R1).
+    // Placeholder scene entities declare their OWN spatial extent (1m box) at the
+    // entity-creation site. This is the entity's own spatial description -- it stands in
+    // for a unit-sized minimal scene object -- NOT WorldQuery inventing a universal
+    // default size for all entities. Real gameplay entities supply their own bounds.
+    // If a future picking tolerance diverges from this spatial extent, that separation
+    // belongs to a Pick Proxy concern, not to World Bounds (R2-R1 ownership ruling).
     static readonly SpatialAabb MinimalSceneEntityExtent =
         new(new Vector3d(-0.5, -0.5, -0.5), new Vector3d(0.5, 0.5, 0.5));
 

@@ -12,10 +12,10 @@ R2 唯一权威主体 PASS，但暂缓 CLOSED，先执行 **R2-R1 最小架构�
 | `GlobalWorld` 唯一事实 + 唯一写链 | ✅ PASS |
 | `SceneStateOwner` 查询委托唯一 `WorldQuery` | ✅ PASS |
 | 自动测试 / 架构 Guard 基础 | ✅ PASS |
-| **World Bounds 语义** | ⚠ **NEED FIX（R2-R1 已修）** |
-| **唯一 Writer 访问控制** | ⚠ **NEED VERIFY（R2-R1 已修 internal）** |
-| **唯一索引全局 Guard** | ⚠ **NEED STRENGTHEN（R2-R1 已锁全 World）** |
-| 真机验收 | ⏸ 暂缓（待 R2-R1 落地后执行 13 项） |
+| **World Bounds 语义** | ✅ R2-R1 已修（实体显式 Bounds，WorldQuery 只消费不发明） |
+| **唯一 Writer 访问控制** | ✅ internal + 调用点守卫（机器约束，非仅当前调用链） |
+| **唯一索引全局 Guard** | ✅ 全 World 禁第二索引 + 写调用点白名单 |
+| 真机验收 | ⏸ 暂缓（待 R2-R1 收尾落地后执行 13 项） |
 
 核心问题：初版把 `Position ± 0.5` 硬编码进 `WorldQuery.ToBounds`，等于"World 底层替所有实体发明 1×1×1 尺寸"——与"地球坐标写死进 Core"同一类错误。R2-R1 把尺寸归还给实体自身（显式 `SpatialBounds`），`WorldQuery` 只消费、不发明。
 
@@ -32,12 +32,27 @@ R2 唯一权威主体 PASS，但暂缓 CLOSED，先执行 **R2-R1 最小架构�
 | 源码守卫升级：整个 `XuanYu.World/**` 禁 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs` | ✅ |
 | 测试 Oracle 诚实化：`WorldSpatialR1Oracle.Bounds` / `BruteBounds` 改用 `e.Bounds.WorldBounds`；`WorldSpatialQueryTests`/`RebuildTests` 显式给测试实体 ±0.5（尺寸属测试数据，非 World 默认） | ✅ |
 
+### 收尾补丁（最终钉死唯一 Writer 与 Bounds 语义，2026-07-24）
+
+R2-R1 主体已修"WorldQuery 不发明尺寸"，但 `internal` 仅挡跨程序集、挡不住 `XuanYu.World` 内第二个调用方；且需把 ±0.5 归属与 extent=0 语义正式钉死。本补丁不做任何生产行为改动，只加机器约束与语义测试：
+
+| 项 | 状态 |
+| --- | --- |
+| 唯一 Writer 机器约束：`_query.Insert/Update/Remove/Rebuild` 调用点仅白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail | ✅ |
+| 两个 Bounds 语义测试 `WorldEntityBoundsSemanticsTests`：默认点（`Min==Max==Position` + QueryBounds 点语义）/ 显式 ±0.5 绝对盒 | ✅ |
+| ±0.5 归属裁定：占位实体自身 Bounds（情况 A 正确），非 Picking 容差伪装；未来 Pick Proxy 分离登记为非阻断选项 | ✅ |
+| extent=0 语义冻结：零尺寸**点状空间足迹**，非"无空间信息"；保持"默认点 + 显式盒"两极，不引入 HasBounds/Optional | ✅ |
+
+**±0.5 归属裁定（正式）：** `SceneStateOwner.MinimalSceneEntityExtent = ±0.5` 属**情况 A**——它是占位实体创建点为自己单位尺寸最小场景对象声明的**实体自身空间 Bounds**，不是 `WorldQuery` 替所有实体发明的通用默认，也不是单纯 Picking 容差伪装。代码注释已明确：若未来"拾取容差"与"空间 Bounds"分歧，那是 **Pick Proxy** 关注点，不属于 World Bounds；当前不分离（非阻断），仅登记。
+
+**extent=0 语义冻结：** 缺省 `Extent = default(SpatialAabb)` = `Min==Max==Position`，表示"具有点状空间足迹的实体"，**不是**"该实体没有空间信息"。未来若需区分"点状实体"与"不参与空间查询的实体"，不在此轮提前引入 `HasBounds`/Optional/接口。
+
 **冻结的 `QueryBounds` 正式语义**：返回"实体显式 `SpatialBounds` 与查询区域相交"的实体集合。不再因实现变化而改动 Oracle 掩盖语义——Oracle 直接引用实体真实 `Bounds`。
 
 ## 三、自动验证结果（R2-R1 后）
 
 - `dotnet build` 9 项目 **0 warning / 0 error**
-- `dotnet test`：**Core.Tests 67 passed / World.Tests 97 passed**（含 R2 新用例 + R2-R1 修正）
+- `dotnet test`：**Core.Tests 67 passed / World.Tests 99 passed**（含 R2 新用例 + R2-R1 修正 + 收尾 2 语义测试）
 - `scripts/arch-a-guard.ps1`：**EXIT=0**
 - 5+100：所有改动文件 ≤100 行
 - Picking 回归 `Moved_entity_hits_new_position_not_old_position`：**通过**（实体 ±0.5 由占位工厂提供，Picking 行为保持）

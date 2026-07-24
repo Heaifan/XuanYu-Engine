@@ -1,7 +1,7 @@
 版本：v0.2.19.3-rz
 # XuanYu Engine 文件树
 
-文件总数：435
+文件总数：436
 
 ## 根目录
 
@@ -14,7 +14,7 @@
 ## scripts
 
 - `scripts/arch-a-guard.ps1`：ARCH-A 自动守卫主脚本，检查依赖边界（含 ARCH-WORLD 红线）、启动入口、版本一致性和 5+100 等约束；Solution 必须含 World/World.Tests；dot-source `arch-a-guard-world.ps1`。
-- `scripts/arch-a-guard-world.ps1`：ARCH-WORLD 红线子守卫（R1-R1 拆分，主脚本 dot-source）；按 `<ProjectReference>` 元素解析校验 Core ✕→ World/Editor/Vulkan、World only → Core、World 生产源码 ✕ Editor/Vulkan/Avalonia/Silk，并校验 Solution 含 World/World.Tests；**R2-R1 升级：整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs` 可建唯一索引，把"单一空间索引"锁成机器约束**。
+- `scripts/arch-a-guard-world.ps1`：ARCH-WORLD 红线子守卫（R1-R1 拆分，主脚本 dot-source）；按 `<ProjectReference>` 元素解析校验 Core ✕→ World/Editor/Vulkan、World only → Core、World 生产源码 ✕ Editor/Vulkan/Avalonia/Silk，并校验 Solution 含 World/World.Tests；**R2-R1 升级：整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs` 可建唯一索引，把"单一空间索引"锁成机器约束**；**R2-R1 收尾：新增 WorldQuery mutation 调用点（`_query.Insert/Update/Remove/Rebuild`）仅允许出现在白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail，与单索引锁共同钉死"唯一 Writer"**。
 
 ## XuanYu.World
 - 物理世界真相层（ARCH-WORLD-R1 新建，2026-07-24 真机验收 **CLOSED**）。命名空间 `XuanYu.World`（根）、`XuanYu.World.Scene`、`XuanYu.World.Spatial`、`XuanYu.World.Transform`。
