@@ -10,6 +10,7 @@ ARCH-WORLD-R4-R1-FIX1 恢复 5+100 全局硬门禁合规（2026-07-25）
 - 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/Vm/UiVm.SelectionProjection.cs`、`XuanYu.World.Tests/World/WorldPartitionR1Tests.cs`(+`WorldPartitionR1Tests.Activity.cs`)、`XuanYu.World.Tests/World/WorldPartitionTests.cs`(+`WorldPartitionTests.PartitionStrategy.cs`)、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`(+`WorldSpatialQueryTests.Geometry.cs`)、`changelog.md`、`file-tree.md`、`run.bat`。
 - 验证结果：`dotnet build` 10 项目 **0W0E**；`dotnet test` Core.Tests + World.Tests 共 **168 passed / 0 failed / 0 skipped**；`arch-a-guard.ps1` / `arch-a-guard-world.ps1` / `arch-a-guard-editor.ps1` 全部 **EXIT=0**；`git diff --check` 通过；SVG XML 47/47 通过；**全仓 5+100 扫描 0 个超限文件（PASS）**。
 - 状态：**ARCH-WORLD-R4-R1-FIX1 完成，R4 自动门禁现已全 PASS**（含此前漏报的 3 个 World.Tests 违例一并修复）。后续 `Gate 2` 用户真机 11 项验收 → `Gate 3` 文档 CLOSED 收口 → `Gate 4` 收口推送。版本源 `run.bat` 随本轮同步 bump 至 v0.2.19.5-fix，与 changelog 版本保持一致。
+- 补（同轮治理收口）：真实版本源 `XuanYu.Editor.UI/Win/UiWin.axaml` 主窗口标题由 `v0.2.19.4-rz` 同步为 `v0.2.19.5-fix`（arch-a-guard 第 88 行比对 changelog 顶部版本；此前仅更新 run.bat 标题导致守卫判 `main window title version missing`）。现 `arch-a-guard.ps1`（链式 world+editor）EXIT=0。
 
 ### ARCH-WORLD-R4-R1-FIX1 收尾（v0.2.19.5-fix 内，2026-07-25）
 - run.bat 构建崩溃修复（commit `25bd66b`，线性子提交 `8e80098f..25bd66b`）：`run.bat` 加 `MSBUILDDISABLENODEREUSE=1` + build 行 `-p:UseSharedCompilation=false`，关闭 Roslyn 共享编译/节点复用以规避 `error MSB6006: csc.exe 已退出，代码为 1`（无 CS 错误，纯编译器进程崩溃，与 FIX1 代码无关；Core 在 FIX1 未改动且 Gate 1 全 0W0E）。仅改 `run.bat`，不升版本号、不动 file-tree 计数。
