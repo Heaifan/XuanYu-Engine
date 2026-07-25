@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ARCH-WORLD-R2 真机验收清单 v0.2.19.3-rz</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #f5f7fa;
+    --ink: #1f2933;
+    --muted: #5b6b7b;
+    --line: #d9e2ec;
+    --accent: #2563eb;
+    --warn: #b45309;
+    --ok: #15803d;
+    --group1: #2563eb;
+    --group2: #7c3aed;
+    --group3: #0891b2;
+    --group4: #ca8a04;
+    --group5: #db2777;
+    --group6: #16a34a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    background: var(--bg); color: var(--ink);
+    font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 20px 0 8px; border-left: 4px solid var(--accent); padding-left: 8px; }
+  .sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+  .meta { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; font-size: 13px; }
+  .meta b { color: var(--ink); }
+  .progress { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--line); padding: 10px 0; margin-bottom: 8px; z-index: 10; font-size: 14px; }
+  .bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+  .bar > i { display: block; height: 100%; width: 0%; background: var(--ok); transition: width .2s; }
+  details {
+    border: 1px solid var(--line); border-radius: 8px;
+    margin: 8px 0; background: var(--panel); overflow: hidden;
+  }
+  summary {
+    cursor: pointer; padding: 10px 14px; font-weight: 600; font-size: 14px;
+    display: flex; align-items: center; gap: 10px; user-select: none;
+  }
+  summary .tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; color: #fff; }
+  summary input[type=checkbox] { width: 18px; height: 18px; }
+  .body { padding: 4px 16px 14px; font-size: 13px; }
+  .body .row { margin: 6px 0; }
+  .body .k { font-weight: 600; color: var(--muted); display: inline-block; min-width: 72px; }
+  .body ol { margin: 4px 0 4px 18px; padding: 0; }
+  .body ol li { margin: 3px 0; }
+  .body .pass { color: var(--ok); font-weight: 600; }
+  .body .fail { color: #dc2626; font-weight: 600; }
+  .body .src { color: var(--muted); font-size: 12px; border-top: 1px dashed var(--line); margin-top: 8px; padding-top: 6px; }
+  .watch { border: 1px solid #fcd34d; background: #fffbeb; border-radius: 8px; padding: 12px 16px; }
+  .watch b { color: var(--warn); }
+  .probe { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 12px 16px; }
+  .sop { border: 1px solid var(--accent); background: #eef4ff; border-radius: 8px; padding: 12px 16px; }
+  .sop ol { margin: 4px 0 4px 18px; padding: 0; }
+  .sop ol li { margin: 6px 0; }
+  .sign { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin-top: 20px; }
+  .sign label { display: inline-block; min-width: 120px; font-weight: 600; }
+  .sign input[type=text] { border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; width: 200px; }
+  .foot { color: var(--muted); font-size: 12px; margin-top: 16px; }
+  code { background: #eef2f7; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+</style>
+</head>
+<body>
+  <h1>ARCH-WORLD-R2 真机验收清单</h1>
+  <div class="sub">单一空间权威收敛 · 真实代码 &gt; changelog &gt; file-tree &gt; README &gt; 记忆</div>
+
+  <div class="meta">
+    <div><b>版本：</b><code>v0.2.19.3-rz</code>（R2 冻结，未升版、未 CLOSED）</div>
+    <div><b>分支：</b><code>refactor/ARCH-WORLD-layer-boundary</code></div>
+    <div><b>启动：</b><code>run.bat</code>（<code>dotnet build XuanYu.Editor.UI</code> → <code>dotnet run --no-build</code>）</div>
+    <div><b>环境：</b>Windows + Vulkan（RTX 3060）+ Avalonia 编辑器</div>
+    <div><b>自动测试基线：</b>Core.Tests 67 + World.Tests 99 passed；arch-a-guard EXIT=0（GUI 不可由 AI 运行，须人工）</div>
+    <div><b>验收结论：</b>13 项全 PASS 后，AI 补 R2 CLOSED 收口提交并进入 R3 场景真相归位。</div>
+  </div>
+
+  <div class="progress">
+    勾选进度：<span id="cnt">0</span> / 13 已通过
+    <div class="bar"><i id="bar"></i></div>
+  </div>
+
+  <h2>零、整体测试流程（操作手册，先读这一段）</h2>
+  <div class="sop">
+    <p><b>本段告诉你“怎么测、按什么顺序测、测完怎么记录”。</b>后面的 13 项是对照表，本段是总流程。</p>
+    <ol>
+      <li><b>阶段 0 — 准备：</b>确认仓库处于 <code>refactor/ARCH-WORLD-layer-boundary</code> 分支、版本串 <code>v0.2.19.3-rz</code>；确认 <code>run.bat</code> 指向 <code>XuanYu.Editor.UI</code>；在桌面建一个截图目录（如 <code>R2-验收-日期</code>），用来存 FAIL 证据。</li>
+      <li><b>阶段 1 — 启动与基线：</b>双击 <code>run.bat</code>；观察终端先“编译”后“运行”，等待 Vulkan 初始化日志出现、视口（Viewport）窗口弹出、无红色报错。记录初始实体数量（层级面板中的条目数）。</li>
+      <li><b>阶段 2 — 先认结构：</b>看左侧“层级面板（Hierarchy）”列出 N 个实体，右侧视口里也能看到对应 N 个物体；确认两者一一对应（名称能对上）。这一步不勾选，只是建立“面板↔视口”的对应关系认知。</li>
+      <li><b>阶段 3 — 按序测试（建议两轮）：</b>
+        <ul>
+          <li><b>第一轮 · 基础编辑闭环：</b>①层级选择 → ②视口拾取 → ③移动预览 → ④移动提交 → ⑤取消拖动 → ⑥撤销 → ⑦重做。这 7 项构成“选→移→撤→重”最小闭环，先跑通。</li>
+          <li><b>核心回归（重点盯防）：</b>在第 ④ 项之后，立即验证“移动 A→B：旧位点不中、新位点得中；撤销回 A；重做回 B”三条（详见第七节）。这是 R2 的命门，建议每轮都先跑。</li>
+          <li><b>第二轮 · 空间/视图/生命周期/一致性：</b>⑧跨分区移动 → ⑨框选选中 → ⑩框选全部 → ⑪窗口缩放 → ⑫关闭释放 → ⑬创建删除一致性。最后压测一致性。</li>
+        </ul>
+      </li>
+      <li><b>阶段 4 — 记录规范：</b>每项 PASS 就勾选本页对应复选框；若 FAIL，必须：① 截当前视口图存入截图目录；② 写下复现步骤（先点哪、再拖哪、结果怎样）；③ 复制终端相关日志片段。三项缺一不算有效 FAIL。</li>
+      <li><b>阶段 5 — 汇总判定：</b>13 项全部勾选后，到第九节“验收签署”填验收人/日期/结论。全部 PASS 即通知 AI 补 R2 CLOSED 收口；任一 FAIL 则按停手条件单独反馈，<b>不要</b>判 PASS。</li>
+    </ol>
+    <p><b>通用操作约定：</b>“点击”= 鼠标左键单击（不拖）；“拖动”= 左键按住移动再松开；“轴箭头”指位移控制器（Gizmo）上红(X)/绿(Y)/蓝(Z) 三个方向的箭头；“空白处”指视口中没有实体的区域。</p>
+  </div>
+
+  <h2>一、基础交互（1–5）</h2>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group1)">1</span>层级面板选择（Hierarchy）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>编辑器已启动，左侧“层级面板（Hierarchy）”列出若干实体，右侧视口可见对应物体。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>在层级面板中，用鼠标左键<b>单击</b>任意一个实体条目。</li>
+        <li>观察：该条目是否高亮？右侧视口中对应物体是否出现选中态（Gizmo 三轴箭头出现 / 描边变色）？</li>
+        <li>再单击面板中<b>另一个</b>实体条目，确认焦点从前者切到后者。</li>
+        <li>看右下/右侧“属性面板”是否刷新为当前选中实体的变换（位置/旋转/缩放）数值。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>单击即选中对应实体；焦点切换干净（旧条目不再高亮）；属性面板同步显示该实体。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：切换无残留旧选中、属性不错乱；<span class="fail">FAIL</span>：切到新实体后旧实体仍高亮，或属性显示的是别的实体。</div>
+      <div class="src">溯源：SceneStateOwner 查询委托唯一 WorldQuery；层级面板与视口共享同一 GlobalWorld 真相层。</div>
+    </div>
+  </details>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group1)">2</span>视口拾取（Picking / Viewport）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>场景中至少 3 个互不重叠、无遮挡争议的实体；默认透视视角；当前未处于任何拖动状态。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>先在层级面板核对实体名称与视口里物体位置，做到“叫得出名、指得准位”。</li>
+        <li>把鼠标移到<b>目标实体可见表面中心</b>，注意避开它的 Gizmo 三轴箭头和选中描边环。</li>
+        <li>鼠标左键<b>单击</b>（单击，不要拖动）。</li>
+        <li>观察：该实体是否出现选中高亮？层级面板对应条目是否高亮？属性面板是否刷新？</li>
+        <li>再把鼠标移到<b>另一个</b>实体表面单击，确认焦点切换。</li>
+        <li>最后在视口<b>空白处</b>单击，确认选中被清除（或保持最后选中——按编辑器实际策略记录即可）。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>点中哪个就选中哪个；无串选（点 A 不会选 B）、无漏选（点中却没反应）。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：命中即所选、切换干净；<span class="fail">FAIL</span>：点 A 选中 B，或明明点中实体却选不中。</div>
+      <div class="src">溯源：WorldSceneSingleAuthorityTests / Picking 回归 <code>Moved_entity_hits_new_position_not_old_position</code>。占位工厂为实体显式 ±0.5（实体自身 Bounds，情况 A）。</div>
+    </div>
+  </details>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group1)">3</span>移动预览（Move Gizmo Preview，拖拽中不提交）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>已在层级面板选中某实体；视口中出现位移控制器（Gizmo）：中心方块 + 红(X)/绿(Y)/蓝(Z) 三轴箭头。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>把鼠标移到 <b>X 轴红色箭头</b>上，光标应变双向箭头形状（表示可沿 X 拖动）。</li>
+        <li>按住左键，缓慢向右拖动约 2 个网格间距，<b>眼睛盯着实体</b>：它是否实时跟着光标走？</li>
+        <li>停在半路<b>不要松开</b>，此时去翻“操作历史 / 撤销栈”（若编辑器有此面板），看是否<b>已经</b>多了一条移动记录——<b>应当还没有</b>。</li>
+        <li>确认预览位置与光标贴合，无明显偏移或跳变。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>拖动过程中实体实时预览跟随；<b>此时撤销栈不应新增记录</b>（预览未提交到真相层）。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：预览与提交分离清晰、跟随顺滑；<span class="fail">FAIL</span>：一拖动就直接落定（没有预览阶段），或预览位置与实际落点不符。</div>
+      <div class="src">溯源：R2 不动预览语义（R4 事务）；仅收口查询权威，预览仍走原路径。</div>
+    </div>
+  </details>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group1)">4</span>移动提交（Move Gizmo Commit，释放后落实）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>接上一项，实体正处在拖动预览中。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>把实体拖到<b>新的目标位置</b>（与起点明显分开，便于后续验证），松开左键。</li>
+        <li>看实体是否<b>停在新位置</b>（不回弹）。</li>
+        <li>看层级面板 / 属性面板：该实体的位置数值是否更新为新坐标。</li>
+        <li>打开“操作历史 / 撤销栈”，确认<b>新增了一条</b>移动记录。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>释放即落定；变换数值更新；撤销栈多一条，且可对该条做撤销。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：落定且可撤销；<span class="fail">FAIL</span>：松开后回弹/落点偏移/撤销栈无新记录。</div>
+      <div class="src">溯源：GlobalWorld.UpdateTransform 是唯一写链；提交经 GlobalWorld→WorldQuery 同步索引。</div>
+    </div>
+  </details>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group1)">5</span>取消拖动（Esc Cancel，放弃拖动）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>选中实体并进入了拖动预览（参考第 3 项操作到“按住拖动”状态）。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>把实体拖到一个<b>明显偏离</b>原位置的地方（不松开）。</li>
+        <li>按下键盘 <code>Esc</code> 键。</li>
+        <li>观察：实体是否<b>瞬间回到拖动前的位置</b>？</li>
+        <li>检查撤销栈：<b>不应</b>因为这次取消而产生新记录。</li>
+        <li>确认 Gizmo 仍在，可再次拖动（取消不等于锁定）。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>按 Esc 后完全还原到拖动前；无脏记录；控制器可继续使用。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：取消后完全还原；<span class="fail">FAIL</span>：实体留在偏离位，或取消动作本身生成了一条废记录。</div>
+      <div class="src">溯源：R2 不重构撤销/取消语义，仅验证查询权威下取消行为未被破坏。</div>
+    </div>
+  </details>
+
+  <h2>二、撤销 / 重做（6–7）</h2>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group2)">6</span>撤销（Undo，恢复上一位置）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>已对实体做过一次“移动提交”（第 4 项），实体现在处于新位置 B。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>触发撤销：编辑器菜单“编辑→撤销”，或快捷键（通常是 <code>Ctrl+Z</code>），或工具栏撤销按钮。</li>
+        <li>观察实体：是否<b>回到移动前的旧位置 A</b>？</li>
+        <li>在旧位置 A 处<b>单击</b>：应能选中（HIT）。</li>
+        <li>在原目标位置 B 处<b>单击</b>：应<b>选不中</b>（MISS）。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>撤销后位置与拾取同步回退到 A；点 A 命中、点 B 落空。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：位置回退且拾取跟随；<span class="fail">FAIL</span>：位置回了 A，但点 B 仍能选中（说明索引没跟着回退）。</div>
+      <div class="src">溯源：WorldSceneSingleAuthorityTests 撤销重做用例；索引由 GlobalWorld 写链统一回退。</div>
+    </div>
+  </details>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group2)">7</span>重做（Redo，重做下一位置）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>接上一项，已撤销，实体回到旧位置 A。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>触发重做：菜单“编辑→重做”，或快捷键（通常 <code>Ctrl+Y</code> / <code>Ctrl+Shift+Z</code>），或工具栏重做按钮。</li>
+        <li>观察实体：是否<b>回到撤销前的目标位置 B</b>？</li>
+        <li>在位置 B 处<b>单击</b>：应能选中（HIT）。</li>
+        <li>在旧位置 A 处<b>单击</b>：应<b>选不中</b>（MISS）。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>重做后位置与拾取再次前移到 B；点 B 命中、点 A 落空。</li>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：重做后拾取跟随；<span class="fail">FAIL</span>：位置恢复 B，但点 A 仍能选中。</div>
+      <div class="src">溯源：同第 6 项；重做经同一权威写链重放。</div>
+    </div>
+  </details>
+
+  <h2>三、空间跨度（8）</h2>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group3)">8</span>跨分区移动（跨 Region，旧区无残留）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>若编辑器能显示空间分区（Region）边界，请开启分区可视化；确保场景至少 2 个相邻分区 R1、R2。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>选中一个位于分区 R1 内的实体，记下它的当前位置（记为 A，在 R1）。</li>
+        <li>用 Gizmo 把它<b>拖入相邻分区 R2</b> 并“移动提交”（参考第 3/4 项）。</li>
+        <li>回到分区 R1 的原位置 A 处<b>单击</b>：应<b>选不中</b>（MISS，旧区无残留）。</li>
+        <li>在分区 R2 的新位置 B 处<b>单击</b>：应能选中（HIT）。</li>
+        <li>在层级面板确认该实体仍只有<b>一条</b>记录（没有 R1、R2 各一份的重复）。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>实体只存在于 R2 坐标；R1 不再返回它（查询/射线均无）；无双份、无幽灵。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：跨区后查询与拾取全局一致；<span class="fail">FAIL</span>：旧区 R1 仍能拾取，或新区 R2 无响应。</div>
+      <div class="src">溯源：WorldSceneSingleAuthorityTests 跨分区用例；删除场景第二索引后，全局唯一索引保证无分区镜像残留。</div>
+    </div>
+  </details>
+
+  <h2>四、视图（9–10）</h2>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group4)">9</span>框选选中（Frame Selected，居中选中的实体）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>选中某个偏离视口中心的实体（可先用第 1 项选中）。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>触发“框选选中（Frame Selected）”：菜单 / 快捷键 / 或在层级面板双击该实体（按编辑器实际入口操作）。</li>
+        <li>观察相机：是否平移+缩放，使该实体<b>居中且适配视野</b>？</li>
+        <li>框选完成后，在该实体上<b>单击</b>：仍能正确选中（HIT）。</li>
+        <li>注意：点击位置与实体落点是否吻合（没有因为相机动了而点偏）。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>居中后实体清晰可见且拾取坐标映射正确；点击不偏位。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：居中后拾取准确；<span class="fail">FAIL</span>：居中后点击偏位（说明查询/投影未随相机同步）。</div>
+      <div class="src">溯源：R2 不改动相机/投影；验证唯一权威下相机联动拾取无回归。</div>
+    </div>
+  </details>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group4)">10</span>框选全部（Frame All，适配所有实体）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>场景中存在多个分散实体（最好横跨不同分区，以增强覆盖）。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>触发“框选全部（Frame All）”。</li>
+        <li>观察相机：是否缩放/平移到能<b>完整容纳所有实体</b>的视野？</li>
+        <li>逐个在分散的实体上<b>单击</b>：每个都应能正确选中（HIT）。</li>
+        <li>确认没有实体被裁出视野之外或点击错位。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>全部实体进入视野且拾取一致；遍历点击无遗漏、无错位。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：全部可见且拾取一致；<span class="fail">FAIL</span>：部分实体看不见，或某实体点击错位。</div>
+      <div class="src">溯源：本轮补项（修正原“13 项/实列 11 项”不一致）；验证全局索引遍历完整性。</div>
+    </div>
+  </details>
+
+  <h2>五、生命周期（11–12）</h2>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group5)">11</span>窗口缩放与交换链重建（Resize / Swapchain）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>编辑器运行中，视口里有实体。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>用鼠标拖拽窗口<b>右边框 / 下边框</b>，由小拖大、由大拖小，反复多次（含拖到很窄、很宽的极端比例）。</li>
+        <li>点击窗口“最小化”再“恢复”。</li>
+        <li>若编辑器支持，切换一次显示分辨率。</li>
+        <li>每次尺寸变化后，在实体上<b>单击</b>验证拾取：点中位置与实体落点是否一致？</li>
+        <li>盯住终端：是否有 Vulkan 校验层（validation layer）红色报错、黑屏、或卡死。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>交换链（Swapchain）重建无崩溃、无黑屏、无校验报错；重建后拾取坐标映射仍正确。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：多次缩放后功能正常、拾取不偏；<span class="fail">FAIL</span>：某次缩放后黑屏/崩溃/拾取错位。</div>
+      <div class="src">溯源：Render.Vulkan 生命周期（VK3–VK5 已封版）；R2 仅确保查询层不依赖窗口尺寸，验证无回归。</div>
+    </div>
+  </details>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group5)">12</span>关闭生命周期释放（关闭窗口干净退出）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>编辑器已运行并完成若干操作（最好刚跑过移动/缩放等）。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>点击窗口右上角“关闭（X）”。</li>
+        <li>盯住启动 <code>run.bat</code> 的那个终端窗口：有无异常堆栈、报错信息？</li>
+        <li>确认进程已退出（终端回到命令提示符，或任务管理器里该进程消失）。</li>
+        <li>留意有无“资源未释放 / 内存泄漏”类告警。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>Vulkan 资源依次释放、无悬挂渲染线程、无内存泄漏告警；退出码正常。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：干净退出；<span class="fail">FAIL</span>：退出时报错/卡死/资源泄漏告警。</div>
+      <div class="src">溯源：VK-LIFE 系列已封版（P1 待办未启动，但关闭路径应无回归）；R2 不涉及资源释放改动。</div>
+    </div>
+  </details>
+
+  <h2>六、一致性（13）</h2>
+
+  <details>
+    <summary><input type="checkbox" class="chk" /><span class="tag" style="background:var(--group6)">13</span>创建与删除后拾取一致（Create / Destroy）</summary>
+    <div class="body">
+      <div class="row"><span class="k">前置</span>空场景或仅少量实体。</div>
+      <div class="row"><span class="k">步骤</span><ol>
+        <li>新建一个实体 → 立即在它身上<b>单击</b>：应能选中（HIT，无延迟）。</li>
+        <li>删除该实体 → 立即在原位置<b>单击</b>：应<b>选不中</b>（MISS，无幽灵残留）。</li>
+        <li>重复“新建→删除”至少 5 次，每次都做上面的命中/落空验证。</li>
+        <li>最后再新建一个实体，确认仍能立即拾取命中。</li>
+        <li>观察层级面板：实体数量应随增删实时增减，无“删了还在列表里”的幽灵条目。</li>
+      </ol></div>
+      <div class="row"><span class="k">预期</span>每次增删后，空间查询与拾取立即反映；无幽灵、无遗漏；反复操作不退化。</div>
+      <div class="row"><span class="k">判定</span><span class="pass">PASS</span>：增减即同步；<span class="fail">FAIL</span>：删了仍能拾取（幽灵），或新建了却拾取不到。</div>
+      <div class="src">溯源：WorldSceneSingleAuthorityTests 创建删除用例；唯一写链保证增删即时进/出全局索引。</div>
+    </div>
+  </details>
+
+  <h2>七、重点盯防（R2 核心价值，必须逐条人工确认）</h2>
+  <div class="watch">
+    <p><b>① 移动 A→B（验证“场景第二索引已死”）：</b>把实体从位置 A 拖到 B 并提交后——<b>在旧 A 位置单击必须选不中（MISS），在 B 位置单击必须选中（HIT）</b>。这是证明“查询统一走 GlobalWorld→WorldQuery、场景不再维护第二份索引”的关键。</p>
+    <p><b>② 撤销跟随：</b>撤销后，在 A 位置单击必须命中、在 B 位置单击必须落空。</p>
+    <p><b>③ 重做跟随：</b>重做后，在 B 位置单击必须命中、在 A 位置单击必须落空。</p>
+    <p>这三条任一失败，说明索引没跟着真相层同步回退，立即按停手条件单独报告，<b>不要</b>判 PASS。建议放在第一轮第 ④ 项之后立即验证（见零节“核心回归”）。</p>
+  </div>
+
+  <h2>八、A / B 实体尺寸差异探针</h2>
+  <div class="probe">
+    <p><b>语义背景（已由自动测试证明）：</b><code>WorldEntityBoundsSemanticsTests</code> 已验证两极——</p>
+    <ul>
+      <li><b>A 类（默认）：</b><code>Extent = default</code> → <code>Min==Max==Position</code>，零尺寸<b>点状</b>空间足迹（并非“无空间信息”）。</li>
+      <li><b>B 类（显式）：</b>实体自带 <code>±0.5</code> 本地盒 → 绝对盒如 <code>(9.5,-0.5,-0.5)/(10.5,0.5,0.5)</code>。</li>
+    </ul>
+    <p><b>真机侧验证策略：</b>图形界面默认创建的实体，经占位工厂显式给 <code>±0.5</code>（属“实体自身 Bounds，情况 A”，不是 WorldQuery 发明的通用尺寸）。所以真机默认实体都是 <b>B 类</b>。只要第 ②/⑧/⑬ 项里 B 类实体“移动后拾取精确跟随”，就<b>间接证明 WorldQuery 只消费真实 Bounds、没偷偷发明统一 1×1×1 尺寸</b>。</p>
+    <p><b>可选增强（超出 R2 范围，已登记）：</b>若想肉眼确认“A 类零尺寸点极难命中”以彻底排除任何统一尺寸残留，需在编辑器侧加调试入口构造零尺寸点实体——属 R4 编辑器污染剥离的关注点，不在本论。当前以自动测试 + B 类真机行为为准。</p>
+  </div>
+
+  <div class="sign">
+    <h2 style="border:none;padding:0;margin:0 0 8px;">九、验收签署</h2>
+    <div><label>验收人：</label><input type="text" placeholder="姓名/代号" /></div>
+    <div style="margin-top:8px"><label>日期：</label><input type="text" placeholder="YYYY-MM-DD" /></div>
+    <div style="margin-top:8px"><label>结论：</label>
+      <label><input type="checkbox" /> 13 项全 PASS，同意 CLOSED</label>
+      <label style="margin-left:12px"><input type="checkbox" /> 存在 FAIL，需返工</label>
+    </div>
+    <div style="margin-top:8px"><label>备注：</label><input type="text" style="width:60%" placeholder="异常截图路径 / 现象描述" /></div>
+  </div>
+
+  <div class="foot">
+    本清单与 <code>docs/arch-world-r2-status.md</code> 第四节同源。任一 FAIL 请附带截图与复现步骤，按停手条件向 AI 反馈；全部 PASS 后通知 AI 补 R2 CLOSED 收口提交。
+  </div>
+
+  <script>
+    var chks = document.querySelectorAll('.chk');
+    function upd() {
+      var n = 0;
+      chks.forEach(function (c) { if (c.checked) n++; });
+      document.getElementById('cnt').textContent = n;
+      document.getElementById('bar').style.width = (n / 13 * 100) + '%';
+    }
+    chks.forEach(function (c) { c.addEventListener('change', upd); });
+  </script>
+</body>
+</html>
