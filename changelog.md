@@ -37,6 +37,15 @@ ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` 0 failed；`arch-a-guard.ps1` EXIT=0。
 - 状态：**R0A-R1 治理闭环完成；G1 尚未修复、R2 尚未完成 13 项真机验收，保持 AWAITING；下一步 ARCH-WORLD-R2-G1-R0B 最小修复 Gizmo 输入抢占 P0**。
 
+### ARCH-WORLD-R2-G1-R0B Gizmo 输入抢占 P0 修复（v0.2.19.3-rz 内，2026-07-25）
+- 任务目标：按 `docs/arch-world-r2-g1-audit.md` 第 0–6 节只读审计结论，执行最小 P0 修复——移除 48px 隐形大范围命中守卫，使 Gizmo 命中几何与可见几何同源（可见线宽 + 显式容差），命中失败即落场景 Picking。
+- 修复原则：① 可见几何真源 `GizmoVisualLineWidth = 2.0`（DIP，与 Vulkan 顶点着色器 Gizmo 几何同尺度）；② 有限显式容差 `HitMargin = 5.0`（DIP）；③ `HitWidth = (GizmoVisualLineWidth / 2.0) + HitMargin = 6.0` 派生，非魔法数字；④ 删 `GuardWidth = 48.0` 与 `GuardHitTest`，`UiVm.MoveGizmo` 输入分流仅 `HitTest`，命中失败 `return false` 落 Picking。
+- 修改范围：`XuanYu.Core/Gizmo/MoveGizmoLayout.cs`（删 Guard、增派生 HitWidth）、`XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`（去 `?? GuardHitTest` 兜底）、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`（锁 HitWidth 派生 + `< 12` 防回归，替换 48/Guard 断言）、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutG1Tests.cs`（新建部分类，3 个 G1 回归测试）。
+- 受控未做（守禁区）：未改 WorldQuery / 空间索引 / Region / EntityRegistry / 实体 Picking 算法；未重构输入系统；未改 Gizmo 外观（Vulkan 绘制线宽未动）；未处理 P1 零位移 Undo；未碰 Vulkan / Editor.UI 旧债；未宣布 R2 CLOSED。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 69 passed / World.Tests 99 passed / 0 failed；`arch-a-guard.ps1` EXIT=0；5+100（4 文件均 ≤100 行）通过；`git diff --check` 通过。
+- Commit Hash：`d4f6919d261013dff4d094639c18e52427f868c8`
+- 状态：**G1 P0 自动验证全绿；待用户真机验收（移动后 / Undo 后 / Redo 后 Picking，相邻实体不再被 Gizmo 光环抢占）后 G1 视为 CLOSED**。R2 整体仍 AWAITING 13 项真机验收。
+
 ## v0.2.19.2-rz
 ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
 - 任务目标：在 R0 冻结基础上新建 `XuanYu.World` + `XuanYu.World.Tests` 程序集，把物理世界真相（World 根域 / Scene 簇 / Spatial 索引实现 / Transform 簇）从 Core 迁出，确立 Core→World 红线物理边界；本轮纯归属重构，运行行为不变。
