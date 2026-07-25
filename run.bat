@@ -22,7 +22,8 @@ if errorlevel 1 goto fail
 
 echo.
 echo [2/3] Building app...
-call dotnet build "%PROJECT%" --no-restore -nologo -clp:Summary=false
+set "MSBUILDDISABLENODEREUSE=1"
+call dotnet build "%PROJECT%" --no-restore -nologo -clp:Summary=false -p:UseSharedCompilation=false
 if errorlevel 1 goto fail
 
 echo.
