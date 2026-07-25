@@ -70,3 +70,17 @@ R4 目标：识别并定位"编辑器职责"对基础 `Scene`/`World`/`Core` 层
 - **文档同步**：`arch-world-layer-attribution.md`（Editor 层 + 依赖禁区 + R4-R1 状态）、`玄域引擎_AI开发宪法.md`§26（Editor 边界红线）、`dev-rules.md`§2（Editor 依赖约束）、`changelog.md`（v0.2.19.4-rz + 补录 R4-R0A 条目）、`file-tree.md`、新增 `docs/arch-world-r4-editor-boundary.svg`。
 - **R4 其余迁移**（Gizmo / History / ViewportPicking / DefaultEditorCamera / ScreenPoint）与 **R5**（DefaultEditorCamera.Create(0) 后门、SceneRenderSnapshot、ISceneRenderSnapshotSource 拆分）按原计划边界，不在 R4-R1 范围。
 - **验证（提交前）**：`dotnet build` 10 项目 0W0E；`dotnet test` Core.Tests + World.Tests 共 168 passed / 0 failed；`arch-a-guard.ps1` EXIT=0；`git diff --check` 通过；SVG XML 通过；5+100 通过。状态：**R4-R1 代码完成、自动测试全绿、架构守卫通过；待用户真机验收（R4-R2 收口清单）后正式 CLOSED**。
+
+## 八、R4 正式关闭（2026-07-25，v0.2.19.5-fix）
+
+经 R4-R1 实装（`v0.2.19.4-rz`）+ FIX1（`v0.2.19.5-fix`）与用户真机验收，ARCH-WORLD R4 裁定 **CLOSED**：
+
+- **边界建立完成**：`XuanYu.Editor` 程序集（仅引 Core+World，禁 Avalonia/Vulkan/Editor.UI/Silk）已落地；R4-M1 `EditorCameraFraming`（Core.Space→Editor.Camera）与 R4-M2 `TransformSession`（World.Transform→Editor.Transform）归位，依赖方向 `Core ← World ← Editor ← Editor.UI` 成立；架构守卫 `arch-a-guard-editor.ps1` 长期守护。
+- **World 仍为唯一空间权威**：写入链 `UiVm → TransformSession → SceneStateOwner → GlobalWorld → Region/SpatialIndex/Snapshot` 不变；Editor 不持有实体永久位置，`Preview` 仅进 `RenderSnapshot` 显示、从不回写 World。
+- **FIX1 恢复全仓 5+100**：`8e80098f` 纯 partial 物理拆分 4 个超限 `.cs`（`UiVm.Selection` 102→88 + `SelectionProjection` 61→75；`WorldPartitionR1Tests` 108→93 + `.Activity`；`WorldPartitionTests` 101→89 + `.PartitionStrategy`；`WorldSpatialQueryTests` 103→95 + `.Geometry`），行为零变化；真实版本源 `UiWin.axaml` / `run.bat` / `changelog` 三处一致 `v0.2.19.5-fix`。
+- **自动门禁全绿**（远端 tip `e8d3593`）：10 项目 0W0E；`dotnet test` 168 passed / 0 failed / 0 skipped；三守卫 `arch-a-guard*.ps1` EXIT=0；SVG 47/47；全仓 5+100 = 0；`git diff --check` 通过。
+- **真机验收通过**：`v0.2.19.4-rz` 完整 11 项（Frame/Undo/Picking/Resize/Vulkan 释放等）PASS；`v0.2.19.5-fix` 简化回归六项（实体命中/空白取消、Move Commit、跨 Region、Undo/Redo、Escape Cancel、Resize/Swapchain 恢复、Vulkan 关闭释放链）全 PASS，FIX1 未发现运行回归。
+- **非阻断后续项（不塞入 R4）**：高频 `PublishSceneRenderSnapshot` / 命令缓冲重录日志风暴——功能无失败，属诊断/性能噪声（P1 非阻断）；独立登记为「日志限流 / Snapshot 发布合并」待办，留后续轮处理，不在 R4 收口轮修复。
+- **下一阶段**：进入 **R5-R0A** —— `SceneRenderSnapshot` 当前归属、两个 `ISceneRenderSnapshotSource` 语义、Scene 基础快照 vs UiVm 组合快照、`DefaultEditorCamera.Create(0)` 兜底、Render 真实所需字段、Editor 语义是否污染基础合同、哪些合同应进入 `Render.Abstractions`；R5 首轮只读审计，不移动 DTO / 不拆接口 / 不改 Vulkan。
+
+> **ARCH-WORLD R4 = CLOSED**（2026-07-25，v0.2.19.5-fix）。

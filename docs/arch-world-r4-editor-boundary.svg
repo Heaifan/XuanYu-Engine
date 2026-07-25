@@ -2,7 +2,9 @@
   <desc>ARCH-WORLD R4 Editor 领域边界图：Core/World → XuanYu.Editor → XuanYu.Editor.UI 依赖方向、TransformSession 与 EditorCameraFraming 迁移、World 写入权不变、R5 待处理范围与依赖禁区。</desc>
   <rect x="0" y="0" width="680" height="560" fill="#F7F9FC"/>
 
-  <text x="24" y="34" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="16" font-weight="bold" fill="#1F2D3D">ARCH-WORLD R4 · Editor 领域边界（v0.2.19.4-rz）</text>
+  <text x="24" y="34" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="16" font-weight="bold" fill="#1F2D3D">ARCH-WORLD R4 · Editor 领域边界（v0.2.19.5-fix · CLOSED）</text>
+  <rect x="556" y="18" width="104" height="22" rx="11" fill="#2E8B57"/>
+  <text x="608" y="33" text-anchor="middle" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF">R4 CLOSED</text>
   <text x="24" y="52" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="10.5" fill="#5A6B7B">依赖方向：Editor.UI → Editor → Core / World（自上而下）；Editor 不持有实体永久位置。</text>
 
   <defs>

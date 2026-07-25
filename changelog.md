@@ -15,7 +15,16 @@ ARCH-WORLD-R4-R1-FIX1 恢复 5+100 全局硬门禁合规（2026-07-25）
 ### ARCH-WORLD-R4-R1-FIX1 收尾（v0.2.19.5-fix 内，2026-07-25）
 - run.bat 构建崩溃修复（commit `25bd66b`，线性子提交 `8e80098f..25bd66b`）：`run.bat` 加 `MSBUILDDISABLENODEREUSE=1` + build 行 `-p:UseSharedCompilation=false`，关闭 Roslyn 共享编译/节点复用以规避 `error MSB6006: csc.exe 已退出，代码为 1`（无 CS 错误，纯编译器进程崩溃，与 FIX1 代码无关；Core 在 FIX1 未改动且 Gate 1 全 0W0E）。仅改 `run.bat`，不升版本号、不动 file-tree 计数。
 - Gate 2 真机验收清单文档化：`docs/arch-world-r4-gate2-acceptance.md`（新建）+ `file-tree.md` 总数 444→445；把原简略 11 项清单扩为操作手册（A 组交互 6 项 + B 组门禁 5 项，各含操作/预期/通过判定/风险盯防 + 结果记录表），供真机逐项勾选。本提交后远端 tip = `25bd66b`。
-- 当前状态：**Gate 0 PASS / Gate 1 全 PASS（含 5+100=0）/ Gate 2 待用户真机 / Gate 3 文档 CLOSED / Gate 4 收口推送**。
+- 当前状态（写于 FIX1 收尾时）：Gate 0 PASS / Gate 1 全 PASS（含 5+100=0）/ Gate 2 待用户真机 / Gate 3 文档 CLOSED / Gate 4 收口推送。**→ 已于 v0.2.19.5-fix 简化回归后整体 CLOSED，见下「ARCH-WORLD-R4 正式关闭」。**
+
+### ARCH-WORLD-R4 正式关闭（v0.2.19.5-fix，2026-07-25）
+- **ARCH-WORLD R4 = CLOSED。**
+- 边界建立完成：`XuanYu.Editor` 程序集（仅引 Core+World）已落地；`EditorCameraFraming`（Core.Space→Editor.Camera）与 `TransformSession`（World.Transform→Editor.Transform）归位；写入链 `UiVm→TransformSession→SceneStateOwner→GlobalWorld` 不变，World 仍为唯一空间权威，Editor 不持有实体永久位置。
+- FIX1 恢复全仓 5+100：`8e80098f` 纯 partial 拆分（4 文件超限，零行为变化）；真实版本源 `UiWin.axaml` / `run.bat` / `changelog` 三处一致为 `v0.2.19.5-fix`。
+- 自动门禁全绿（commit `e8d3593`）：10 项目 0W0E；168 passed / 0 failed / 0 skipped；三守卫 EXIT=0；SVG 47/47；全仓 5+100 = 0；`git diff --check` 通过。
+- 真机验收：`v0.2.19.4-rz` 完整 11 项验收通过；`v0.2.19.5-fix` 简化回归六项（实体命中/空白取消、Move Commit、跨 Region、Undo/Redo、Escape Cancel、Resize/Swapchain 恢复、Vulkan 关闭释放链）全部 PASS，FIX1 未发现运行回归。
+- 非阻断后续项（不塞入 R4）：高频 `PublishSceneRenderSnapshot` / 命令缓冲重录日志风暴（诊断/性能噪声，P1 非阻断），独立登记为日志限流 / Snapshot 发布合并待办，留后续轮处理。
+- 下一阶段：**R5-R0A**（`SceneRenderSnapshot` 与 `ISceneRenderSnapshotSource` 只读审计）。
 
 ## v0.2.19.4-rz
 ARCH-WORLD-R4-R1 建立 XuanYu.Editor 编辑器领域边界（2026-07-25）
