@@ -4,7 +4,7 @@ using XuanYu.Core.Scene;
 using XuanYu.Core.Transform;
 using XuanYu.World.Scene;
 
-namespace XuanYu.World.Transform;
+namespace XuanYu.Editor.Transform;
 
 public sealed class TransformSession
 {

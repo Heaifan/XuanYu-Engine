@@ -58,6 +58,7 @@ $projects = @(
     "XuanYu.Core.Tests/XuanYu.Core.Tests.csproj",
     "XuanYu.World/XuanYu.World.csproj",
     "XuanYu.World.Tests/XuanYu.World.Tests.csproj",
+    "XuanYu.Editor/XuanYu.Editor.csproj",
     "XuanYu.Editor.App/XuanYu.Editor.App.csproj",
     "XuanYu.Editor.UI/XuanYu.Editor.UI.csproj",
     "XuanYu.Editor.Win/XuanYu.Editor.Win.csproj",
@@ -90,6 +91,9 @@ else {
 
 # ARCH-WORLD red-line guards live in a separate file (5+100 split).
 . "$PSScriptRoot/arch-a-guard-world.ps1"
+
+# ARCH-WORLD-R4 Editor boundary guards live in a separate file (5+100 split).
+. "$PSScriptRoot/arch-a-guard-editor.ps1"
 
 foreach ($file in Get-TrackedHandwrittenFiles) {
     $lines = (Get-Content -LiteralPath $file.FullName -Encoding utf8 | Measure-Object -Line).Lines

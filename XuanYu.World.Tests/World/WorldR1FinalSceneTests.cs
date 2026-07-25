@@ -7,7 +7,7 @@ using XuanYu.Core.Spatial;
 using XuanYu.Core.Transform;
 
 using XuanYu.World.Scene;
-using XuanYu.World.Transform;
+using XuanYu.Editor.Transform;
 namespace XuanYu.World.Tests.World;
 
 public sealed class WorldR1FinalSceneTests

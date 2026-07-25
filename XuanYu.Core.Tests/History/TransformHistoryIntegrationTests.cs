@@ -5,7 +5,7 @@ using XuanYu.Core.Scene;
 using XuanYu.Core.Transform;
 
 using XuanYu.World.Scene;
-using XuanYu.World.Transform;
+using XuanYu.Editor.Transform;
 namespace XuanYu.Core.Tests.History;
 
 public sealed class TransformHistoryIntegrationTests

@@ -40,6 +40,8 @@
   - `Editor.UI` → `Render.Abstractions`
   - `Editor.Win`（平台宿主 / 组合根）→ `Render.Vulkan`
   - `Render.Vulkan` → `Render.Abstractions`
+  - `Editor` → `Core` / `World`（编辑器领域规则层，仅引用基础与 World；不得引用 `Editor.UI` / Avalonia / `Render.Vulkan` / `Silk.NET.Vulkan`）
+  - `Editor.UI` → `Editor`（界面与输入适配消费编辑器规则，不得反向让 Editor 依赖 UI）
 - **过渡期现实**：当前 `XuanYu.Editor.UI` 已含 `VulkanProbeRoute.cs` / `ViewportNativeHostRoute.cs`，属 VK1 最小探针的暂时接受；VK2 / VK3 前应改为经 `Abstractions` / 平台组合根装配，消除 UI 直接认识 Vulkan 实现。
 
 ## 3. 高频链路纪律（输入 / Gizmo / Viewport / Vulkan Resize 共同规则）

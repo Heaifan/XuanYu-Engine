@@ -120,7 +120,7 @@ GlobalWorld（World Truth）
 | R1 | 建立 `XuanYu.World` 程序集；迁 GlobalWorld / EntityRegistry / RegionKey / WorldPartition* / WorldEntitySnapshot / WorldEntityActivity / WorldQuery / GridWorldPartitionStrategy 与 Spatial Index 实现 | 不碰 Editor |
 | R2 | 收敛唯一空间真相：唯一权威 SpatialIndex；Picking 接 WorldQuery；Scene 旧索引退场 | 触碰 Picking 主链，需真机验收 |
 | R3 | Scene Truth 归位：迁 CommittedTransform / SceneEntitySnapshot / SceneWorldProjection / SceneStateOwner | 行为完全不变 |
-| R4 | Editor 污染剥离：迁 Gizmo / History / Transform Preview Session / DefaultEditorCamera / ViewportPicking / ScreenPoint | — |
+| R4（进行中） | Editor 污染剥离：R4-R1 已建 `XuanYu.Editor` 并迁入 `EditorCameraFraming` + `TransformSession`；其余 Gizmo / History / ViewportPicking / DefaultEditorCamera / ScreenPoint 留待后续 R4 子轮 | — |
 | R5 | Snapshot 边界整理：SceneRenderSnapshot / ISceneRenderSnapshotSource / CameraState / ViewProjectionState；保证 World 不依赖 Editor、Render 不依赖 World 实现、Editor 不依赖 Vulkan 实现 | — |
 
 每轮独立：修改 → 验证（build 0W0E + 全量测试 + arch-a-guard + 涉及面真机）→ commit → push。禁止一轮全搬，禁止跨轮夹带。
@@ -135,7 +135,7 @@ GlobalWorld（World Truth）
 兵无常势（游戏） → XuanYu.WarCore（未来）
 XuanYu.WarCore   → XuanYu.World / XuanYu.Core
 XuanYu.World     → XuanYu.Core
-XuanYu.Editor    → XuanYu.World / XuanYu.Core / XuanYu.Render.Abstractions
+XuanYu.Editor    → XuanYu.World / XuanYu.Core（本轮仅引用 Core+World；Render.Abstractions 待 R5 Snapshot 边界再评估）
 XuanYu.Render.Vulkan → XuanYu.Render.Abstractions
 ```
 
@@ -145,9 +145,16 @@ XuanYu.Render.Vulkan → XuanYu.Render.Abstractions
 Core    → World / WarCore / Editor / Vulkan
 World   → WarCore / Editor / Vulkan
 WarCore → Editor / Vulkan
+Editor  → Editor.UI / Avalonia / Vulkan / Silk.NET
 ```
 
-附注：若 R5 采用“Snapshot 契约归 Render.Abstractions”，允许 `World → Render.Abstractions` 单向引用边界 DTO；`Render.Abstractions` 任何情况下不得引用 World 实现（红线 2 已禁 Silk.NET / Avalonia / UI，R5 补齐 World 方向）。
+附注：若 R5 采用"Snapshot 契约归 Render.Abstractions"，允许 `World → Render.Abstractions` 单向引用边界 DTO；`Render.Abstractions` 任何情况下不得引用 World 实现（红线 2 已禁 Silk.NET / Avalonia / UI，R5 补齐 World 方向）。
+
+## 六之二、R4-R1 实施状态（2026-07-25，v0.2.19.4-rz）
+
+- 新增程序集 `XuanYu.Editor`（net10.0，仅引用 `XuanYu.Core` 与 `XuanYu.World`），确立编辑器领域边界；首批生产类型 `EditorCameraFraming`（`Camera/`）、`TransformSession`（`Transform/`），均由原归属经纯文件迁移，行为不变。
+- 依赖方向落地：Core / World 不得引用 Editor（生产红线）；Editor 不得引用 Editor.UI / Avalonia / Vulkan / Silk.NET；Editor.UI 允许引用 Editor；Editor 最终写入经 `SceneStateOwner` → `GlobalWorld`（World 写入权不变）。
+- R4 其余迁移（Gizmo / History / ViewportPicking / DefaultEditorCamera / ScreenPoint）与 R5（Snapshot 边界）保持原计划边界，不在 R4-R1 范围内。
 
 ---
 

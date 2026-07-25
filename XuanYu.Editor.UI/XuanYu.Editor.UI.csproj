@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\XuanYu.Core\XuanYu.Core.csproj" />
     <ProjectReference Include="..\XuanYu.World\XuanYu.World.csproj" />
+    <ProjectReference Include="..\XuanYu.Editor\XuanYu.Editor.csproj" />
     <ProjectReference Include="..\XuanYu.Render.Abstractions\XuanYu.Render.Abstractions.csproj" />
   </ItemGroup>
 </Project>

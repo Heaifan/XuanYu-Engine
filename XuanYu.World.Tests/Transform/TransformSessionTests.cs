@@ -3,7 +3,7 @@ using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Transform;
 using XuanYu.World.Scene;
-using XuanYu.World.Transform;
+using XuanYu.Editor.Transform;
 
 namespace XuanYu.World.Tests.Transform;
 

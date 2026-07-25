@@ -1,6 +1,7 @@
 using XuanYu.Core.Math;
+using XuanYu.Core.Space;
 
-namespace XuanYu.Core.Space;
+namespace XuanYu.Editor.Camera;
 
 public static class EditorCameraFraming
 {

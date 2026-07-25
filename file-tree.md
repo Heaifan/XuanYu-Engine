@@ -1,7 +1,7 @@
-版本：v0.2.19.3-rz
+版本：v0.2.19.4-rz
 # XuanYu Engine 文件树
 
-文件总数：438
+文件总数：441
 
 ## 根目录
 
@@ -13,7 +13,7 @@
 
 ## scripts
 
-- `scripts/arch-a-guard.ps1`：ARCH-A 自动守卫主脚本，检查依赖边界（含 ARCH-WORLD 红线）、启动入口、版本一致性和 5+100 等约束；Solution 必须含 World/World.Tests；dot-source `arch-a-guard-world.ps1`。
+- `scripts/arch-a-guard.ps1`：ARCH-A 自动守卫主脚本，检查依赖边界（含 ARCH-WORLD 红线）、启动入口、版本一致性和 5+100 等约束；Solution 必须含 World/World.Tests/Editor；dot-source `arch-a-guard-world.ps1` 与 `arch-a-guard-editor.ps1`。
 - `scripts/arch-a-guard-world.ps1`：ARCH-WORLD 红线子守卫（R1-R1 拆分，主脚本 dot-source）；按 `<ProjectReference>` 元素解析校验 Core ✕→ World/Editor/Vulkan、World only → Core、World 生产源码 ✕ Editor/Vulkan/Avalonia/Silk，并校验 Solution 含 World/World.Tests；**R2-R1 升级：整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs` 可建唯一索引，把"单一空间索引"锁成机器约束**；**R2-R1 收尾：新增 WorldQuery mutation 调用点（`_query.Insert/Update/Remove/Rebuild`）仅允许出现在白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail，与单索引锁共同钉死"唯一 Writer"**。
 
 ## XuanYu.World
@@ -21,10 +21,16 @@
 - 根域：`EntityRegistry`（实体总账）、`GlobalWorld`（全局世界根 + 查询入口，**R2 单一空间权威入口**；`Create` 透传显式 `extent`，缺省零尺寸点）、`WorldEntitySnapshot`（含本地 `Extent` + 绝对 `Bounds`，**R2-R1 实体显式空间描述**）、`WorldEntityActivity`、`RegionKey`、`WorldPartition*`、`WorldPartitionEntry`、`WorldPartitionMembership`、`IWorldPartitionStrategy`、`GridWorldPartitionStrategy`、`WorldQuery`（世界查询门面，**R2 新增 `Query(SpatialAabb/ray)` public + `Raycast(ray)` + `SpatialRevision`**；`Insert`/`Update`/`Remove`/`Rebuild` 收 `internal` 仅 `GlobalWorld` 可写；`ToBounds` 消费 `entity.Bounds`，**R2-R1 不再硬编码 ±0.5**）。
 - `Scene/`：`SceneStateOwner`（场景真相所有权；**R2 已删除第二套 `_spatialIndex`，`QuerySpatial`/`RaycastSpatial`/`SpatialRevision` 经 `_world` 兼容门面读唯一索引**；`CreateEntity` 增可选 `extent`，**R2-R1 占位实体显式 ±0.5 拾取代理由工厂提供而非 World 默认**）、`SceneStateOwner.Lifecycle`、`SceneStateOwner.Seeding`、`SceneWorldProjection`、`SceneSpatialBoundsProjection`（Scene↔World 旧投影；`ToSpatialBounds` ±0.5 为历史 B 索引来源，**R2-R1 起不再用于权威索引**，保留作边界 DTO）。
 - `Spatial/`：`ISpatialIndex`、`DynamicAabbTree*`（AABB 树实现）、`SpatialIndexOwner`（**R2-R1 确认仅 `WorldQuery` 可构造，全 World 守卫锁死**）、`SpatialRaycastResolver`、Core `SpatialAabb.Translate`（**R2-R1 新增纯几何辅助**，供 `WorldEntitySnapshot.Bounds` 由本地 `Extent` 平移为绝对盒）。
-- `Transform/`：`TransformSession`（变换事务，引用 SceneStateOwner；`PreviewTransform`/`TransformStartSnapshot` 留 `XuanYu.Core.Transform` 待 R4 Editor 剥离）。
+- `Transform/`：原 `TransformSession` 已于 R4-R1 迁至 `XuanYu.Editor.Transform`；`PreviewTransform`/`TransformStartSnapshot` 留 `XuanYu.Core.Transform`；本目录当前不再承载编辑器会话类型。
 
 ## XuanYu.World.Tests
 - `XuanYu.World` 物理边界测试层（ARCH-WORLD-R1 新建）。`World/`、`Spatial/`、`Transform/` 镜像生产子域；Core 纯几何契约测试（`SpatialBoundsTests`、`RayAabbIntersectionTests`）仍留 `XuanYu.Core.Tests/Spatial`。
+
+## XuanYu.Editor
+- 编辑器领域规则层（ARCH-WORLD-R4-R1 新建，2026-07-25）。命名空间 `XuanYu.Editor`（根）、`XuanYu.Editor.Camera`、`XuanYu.Editor.Transform`。
+- `Camera/`：`EditorCameraFraming`（编辑器构图纯函数，由 Core.Space 迁入；Frame All / Frame Selected、空集合、大坐标处理，行为不变）。
+- `Transform/`：`TransformSession`（变换事务会话，由 World.Transform 迁入；Begin / Preview / Commit / Cancel、捕获 SessionId、原始与预览位置、Escape 取消、延迟 MouseUp 防误提交；最终 Commit 经 `SceneStateOwner` → `GlobalWorld`，不拥有实体永久位置）。
+- 仅引用 `XuanYu.Core` 与 `XuanYu.World`；禁止引用 Avalonia / `XuanYu.Editor.UI` / `XuanYu.Render.Vulkan` / Silk.NET；不新增第三方依赖。
 
 ## docs
 
@@ -48,7 +54,8 @@
 - `docs/arch-world-r2-g1-audit.md`：ARCH-WORLD-R2-G1 Gizmo 输入抢占缺陷只读审计（P0 命中兜底根因 + P1 零位移 Commit）；属修复前证据，不承载运行时代码，不宣布 G1 已修复。
 - `docs/arch-world-r2-manual-checklist.html`：ARCH-WORLD-R2 十三项真机验收清单；含操作手册、重点盯防与签署区，不承载运行时代码。
 - `docs/arch-world-r3-scene-truth-audit.md`：ARCH-WORLD-R3-R0A Scene Truth 现状只读审计（2026-07-25）；核对 SceneStateOwner 是否仍含第二套真相、SceneRenderSnapshot 来源、DefaultEditorCamera 后门、各层 Writer、Selection/Hierarchy/Inspector 投影性、Preview/Commit 写入权、Scene→World 旁路，结论"无第二真相、DTO 混 Editor 语义、相机后门为真实风险、双源气味"，并给出 R3-M1/M2/M3 最小迁移计划；不承载运行时代码。
-- `docs/arch-world-r4-editor-pollution-audit.md`：ARCH-WORLD-R4-R0A Editor 污染归属只读审计（2026-07-25）；聚焦 DefaultEditorCamera.Create(0) 后门（生产中死代码、UiVm 恒传 Camera）、TransformSession 仅 Editor.UI 消费且 Commit 写入权在 World、Framing/Selection/Preview 污染判定，输出依赖方向精确表与 R4-M1/M2/M3 迁移草案；不承载运行时代码。
+- `docs/arch-world-r4-editor-pollution-audit.md`：ARCH-WORLD-R4-R0A Editor 污染归属只读审计（2026-07-25）；聚焦 DefaultEditorCamera.Create(0) 后门（生产中死代码、UiVm 恒传 Camera）、TransformSession 仅 Editor.UI 消费且 Commit 写入权在 World、Framing/Selection/Preview 污染判定，输出依赖方向精确表与 R4-M1/M2/M3 迁移草案；R4-R1 实装结果已追加于文档末尾；不承载运行时代码。
+- `docs/arch-world-r4-editor-boundary.svg`：ARCH-WORLD-R4 Editor 领域边界图（2026-07-25）；展示 Core/World → XuanYu.Editor → XuanYu.Editor.UI 依赖方向、TransformSession 与 EditorCameraFraming 迁移、World 写入权不变、R5 待处理范围与依赖禁区，不承载运行时代码。
 - `docs/arch-c-overview.svg`：ARCH-C 规划总览图。
 - `docs/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
 - `docs/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。

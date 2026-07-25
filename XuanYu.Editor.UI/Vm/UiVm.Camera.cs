@@ -1,6 +1,7 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
+using XuanYu.Editor.Camera;
 
 namespace XuanYu.Editor.UI;
 

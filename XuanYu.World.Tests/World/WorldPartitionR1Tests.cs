@@ -7,7 +7,7 @@ using XuanYu.Core.Transform;
 using XuanYu.World;
 
 using XuanYu.World.Scene;
-using XuanYu.World.Transform;
+using XuanYu.Editor.Transform;
 namespace XuanYu.World.Tests.World;
 
 public sealed class WorldPartitionR1Tests

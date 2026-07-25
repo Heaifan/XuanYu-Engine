@@ -927,5 +927,6 @@ AI 必须遵循以下判断顺序：
 - 术语统一：正式实体身份术语只使用 `EntityId`，不再使用 `EntityKey` 第二套叫法。
 - 依赖禁区：`Core → World / WarCore / Editor / Vulkan` 禁止；`World → WarCore / Editor / Vulkan` 禁止；`WarCore → Editor / Vulkan` 禁止。
 - Viewport Picking 固定三层拆法：Ray / AABB 数学在 Core，空间查询在 World，`ViewportPickingService` 在 Editor。
-- `SceneRenderSnapshot` 等 Snapshot 是派生表现数据的边界 DTO，不是 World Truth；禁止携带“没有相机就创建编辑器默认相机”之类的隐藏后门，相机只能由 Editor/View 以 `CameraState` 传入。
+- `SceneRenderSnapshot` 等 Snapshot 是派生表现数据的边界 DTO，不是 World Truth；禁止携带"没有相机就创建编辑器默认相机"之类的隐藏后门，相机只能由 Editor/View 以 `CameraState` 传入。
+- `XuanYu.Editor` 拥有编辑操作会话规则（Begin / Preview / Commit / Cancel、构图、相机操作算法），但不得拥有实体永久位置；Editor 不得依赖 Avalonia 或 Vulkan 实现，不得成为第二套 World 真相；Editor 最终写入必须经过 World 权威入口（`SceneStateOwner` → `GlobalWorld`）。
 - 物理分层治理按 `ARCH-WORLD-R0 → R5` 小步推进（裁定见 `docs/arch-world-layer-attribution.md`），每轮独立验收，禁止大爆炸式迁移。

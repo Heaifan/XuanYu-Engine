@@ -1,6 +1,6 @@
 # ARCH-WORLD-R4-R0A Editor 污染归属只读审计
 
-版本：`v0.2.19.3-rz`｜分支：`refactor/ARCH-WORLD-layer-boundary`｜前置：`ARCH-WORLD-R3 CLOSED`（`e50d890`）+ changelog 哈希纠偏（`b82a240`）
+版本：`v0.2.19.4-rz`｜分支：`refactor/ARCH-WORLD-layer-boundary`｜前置：`ARCH-WORLD-R3 CLOSED`（`e50d890`）+ changelog 哈希纠偏（`b82a240`）
 
 > 本轮性质：**只读审计**，不修改任何生产代码、不移动类型、不新建项目/模块。仅输出归属结论与最小迁移计划草案，待用户裁定后实装。
 
@@ -57,3 +57,16 @@ R4 目标：识别并定位"编辑器职责"对基础 `Scene`/`World`/`Core` 层
 - **R4-M3（D2→R5 协同）**：`SceneRenderSnapshot` 迁 `Render.Abstractions` 时移除 `Camera ?? DefaultEditorCamera.Create(0)`，显式要求 Editor 必传 `Camera`（本审计建议 R4 起草契约、R5 实施）。
 - **不纳入 R4**：接口语义拆分（R5）、G1（已 CLOSED）、空间索引（R2 CLOSED）、创建/删除实体 UI、VK-LIFE-1、P1 零位移 Undo。
 - **本轮未改任何生产代码、未移动类型、未新建项目；仅产出归属结论与计划草案。**
+
+## 七、R4-R1 实施结果（2026-07-25，v0.2.19.4-rz）
+
+用户裁定：批准新增最小 `XuanYu.Editor` 程序集，R4 不再只是"移动两个文件"，而是建立长期稳定的编辑器领域边界。R4-R1 实装已完成：
+
+- **新增 `XuanYu.Editor`**（`XuanYu.Editor.csproj`，net10.0，TargetFramework/Nullable/ImplicitUsings 沿用规范）：仅引用 `XuanYu.Core` 与 `XuanYu.World`；不引用 Avalonia / `XuanYu.Editor.UI` / `XuanYu.Render.Vulkan` / Silk.NET / 第三方包。加入 `XuanYu.Engine.slnx`；`XuanYu.Editor.UI` 新增对 Editor 的引用。
+- **R4-R1A 迁移 `EditorCameraFraming`**：`Core/Space/EditorCameraFraming.cs` → `Editor/Camera/EditorCameraFraming.cs`（namespace `XuanYu.Editor.Camera`）；保留 `using XuanYu.Core.Space;`（消费 `DefaultEditorCamera`/`CameraState`，留 R5）+ `using XuanYu.Core.Math;`。行为完全不变（Frame All/Selected、空集合、大坐标、相机方向/Z-up）。
+- **R4-R1B 迁移 `TransformSession`**：`World/Transform/TransformSession.cs` → `Editor/Transform/TransformSession.cs`（namespace `XuanYu.Editor.Transform`）；usings 不变（Core.Gizmo/Core.Math/Core.Scene/Core.Transform/World.Scene）。写入链 `UiVm → TransformSession → SceneStateOwner → GlobalWorld` 不变；不拥有实体永久位置，不自行改空间索引/Region。
+- **测试策略**：未新建 `XuanYu.Editor.Tests`；现有回归测试暂留 `XuanYu.World.Tests` / `XuanYu.Core.Tests`，仅更新 `ProjectReference` + namespace（`using XuanYu.Editor.Camera` / `using XuanYu.Editor.Transform`）；迁移回归用例（Frame Selected/All、空集合、Begin→Preview→Commit、Escape Cancel、延迟 MouseUp、WM_CANCELMODE、跨 Region、Undo/Redo）继续运行。
+- **架构守卫**：新增 `scripts/arch-a-guard-editor.ps1`（5+100 拆分），主脚本新增 Editor 入 `$projects` 并 dot-source；规则：Core/World ✕ Editor、Editor ✕ Editor.UI/Avalonia/Vulkan/Silk、Editor.csproj 仅 Core+World、Editor.UI 允许 Editor、Solution 含 Editor。
+- **文档同步**：`arch-world-layer-attribution.md`（Editor 层 + 依赖禁区 + R4-R1 状态）、`玄域引擎_AI开发宪法.md`§26（Editor 边界红线）、`dev-rules.md`§2（Editor 依赖约束）、`changelog.md`（v0.2.19.4-rz + 补录 R4-R0A 条目）、`file-tree.md`、新增 `docs/arch-world-r4-editor-boundary.svg`。
+- **R4 其余迁移**（Gizmo / History / ViewportPicking / DefaultEditorCamera / ScreenPoint）与 **R5**（DefaultEditorCamera.Create(0) 后门、SceneRenderSnapshot、ISceneRenderSnapshotSource 拆分）按原计划边界，不在 R4-R1 范围。
+- **验证（提交前）**：`dotnet build` 10 项目 0W0E；`dotnet test` Core.Tests + World.Tests 共 168 passed / 0 failed；`arch-a-guard.ps1` EXIT=0；`git diff --check` 通过；SVG XML 通过；5+100 通过。状态：**R4-R1 代码完成、自动测试全绿、架构守卫通过；待用户真机验收（R4-R2 收口清单）后正式 CLOSED**。

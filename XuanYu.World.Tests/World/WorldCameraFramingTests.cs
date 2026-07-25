@@ -1,5 +1,5 @@
 using XuanYu.Core.Math;
-using XuanYu.Core.Space;
+using XuanYu.Editor.Camera;
 using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.World;

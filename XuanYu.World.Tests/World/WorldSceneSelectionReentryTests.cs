@@ -5,7 +5,7 @@ using XuanYu.Core.Transform;
 using XuanYu.Editor.UI;
 
 using XuanYu.World.Scene;
-using XuanYu.World.Transform;
+using XuanYu.Editor.Transform;
 namespace XuanYu.World.Tests.World;
 
 public sealed class WorldSceneSelectionReentryTests

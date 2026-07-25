@@ -1,5 +1,20 @@
 # changelog
 
+## v0.2.19.4-rz
+ARCH-WORLD-R4-R1 建立 XuanYu.Editor 编辑器领域边界（2026-07-25）
+- 任务目标：在 R4-R0A 只读审计（提交 `9459447`，远端已确认）确认污染归属后，建立最小 `XuanYu.Editor` 程序集，确立"Core 通用机制 / World 世界事实 / Editor 编辑规则 / Editor.UI 界面与输入"的长期稳定边界。
+- 新增 `XuanYu.Editor`（仅引用 Core + World，禁 Avalonia/Vulkan/Editor.UI/Silk/第三方）；首批两个生产类型：`EditorCameraFraming`（Core.Space → Editor.Camera）、`TransformSession`（World.Transform → Editor.Transform）；行为完全不变（Frame All/Selected、空集合、Begin/Preview/Commit/Cancel、延迟 MouseUp、WM_CANCELMODE、写入经 SceneStateOwner→GlobalWorld）。
+- Editor.UI 新增对 Editor 引用；World.Tests / Core.Tests 新增 Editor 引用以承载迁移回归测试（暂未新建 XuanYu.Editor.Tests，待 R5 后判断）。
+- 架构守卫新增 Editor 依赖禁区：Core/World 不得引用 Editor；Editor 不得引用 Editor.UI/Avalonia/Render.Vulkan/Silk.NET.Vulkan；Editor.csproj 引用仅 Core+World；Editor.UI 允许引用 Editor；Solution 必须含 Editor。
+- 修改范围：`XuanYu.Editor/`（新建 csproj + Camera/EditorCameraFraming.cs + Transform/TransformSession.cs）、`XuanYu.Core/Space/EditorCameraFraming.cs`（删除）、`XuanYu.World/Transform/TransformSession.cs`（删除）、`XuanYu.Editor.UI/Vm/UiVm.Camera.cs`、`XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`、`XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`、`XuanYu.World.Tests/XuanYu.World.Tests.csproj`、`XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`、`XuanYu.Engine.slnx`、`scripts/arch-a-guard.ps1`、`scripts/arch-a-guard-editor.ps1`（新建）、`docs/arch-world-layer-attribution.md`、`docs/玄域引擎_AI开发宪法.md`、`docs/dev-rules.md`、`docs/arch-world-r4-editor-pollution-audit.md`、`docs/arch-world-r4-editor-boundary.svg`（新建）、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证结果：`dotnet build` 10 项目 `0W0E`；`dotnet test` Core.Tests + World.Tests 共 168 passed / 0 failed（含迁移回归用例）；`arch-a-guard.ps1` 通过；`git diff --check` 通过；SVG XML 通过；5+100 通过。
+- 状态：**R4-R1 代码完成、自动测试全绿、架构守卫通过；待用户真机验收（见 R4-R2 收口清单）后正式 CLOSED**。R4 其余迁移（Gizmo/History/ViewportPicking/DefaultEditorCamera/ScreenPoint）留待后续 R4 子轮；DefaultEditorCamera/SceneRenderSnapshot/ISceneRenderSnapshotSource 归 R5。
+
+### ARCH-WORLD-R4-R0A Editor 污染归属只读审计（v0.2.19.4-rz 内，2026-07-25）
+- 前置：ARCH-WORLD-R3 CLOSED（`e50d890`）+ changelog 哈希纠偏（`b82a240`）。
+- 只读审计 DefaultEditorCamera.Create(0) 后门、TransformSession 归属、Framing/Selection/Preview 污染、依赖方向精确表；结论 D1 TransformSession→Editor、D4 EditorCameraFraming→Editor、D2 DefaultEditorCamera 后门随 R5。审计提交 `9459447`（远端已确认）。
+- 本条目在本轮 R4-R1 实装提交中补录（原审计提交未写入 changelog 条目）。
+
 ## v0.2.19.3-rz
 ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - 任务目标：收敛双轨空间索引（`SceneStateOwner._spatialIndex` 与 `GlobalWorld→WorldQuery` 内部索引）为唯一权威查询源；`GlobalWorld` 已是世界事实 + 唯一写链（`Create`/`Destroy`/`UpdateTransform`/`Rebuild`），`SceneStateOwner` 不再持有第二套索引，其 `QuerySpatial`/`RaycastSpatial`/`SpatialRevision` 经 `_world` 兼容门面读唯一索引。运行行为（Picking/Undo/Redo/跨 Region）保持。
