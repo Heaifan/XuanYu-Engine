@@ -6,8 +6,16 @@ namespace XuanYu.Core.Gizmo;
 public sealed class MoveGizmoLayout
 {
     public const double AxisLength = 1.2;
-    public const double HitWidth = 18.0;
-    public const double GuardWidth = 48.0;
+
+    // 可见轴杆线宽（DIP）。与 Vulkan 顶点着色器生成的 Gizmo 几何同尺度（审计实测约 2–3px）。
+    // 命中区必须以可见几何为唯一真源，禁止另开一套大半径。
+    public const double GizmoVisualLineWidth = 2.0;
+
+    // 有限、明确的交互容差（DIP）。仅补偿指针精度，非大范围抢占。
+    public const double HitMargin = 5.0;
+
+    // 命中半径 = 可见半径 + 交互容差 ⇒ 看得到 ≈ 点得到。
+    public const double HitWidth = (GizmoVisualLineWidth / 2.0) + HitMargin;
 
     MoveGizmoLayout(MoveGizmoSegment[] segments) => Segments = segments;
 
@@ -38,8 +46,6 @@ public sealed class MoveGizmoLayout
             .Select(hit => (MoveGizmoAxis?)hit.Axis)
             .FirstOrDefault();
     }
-
-    public MoveGizmoAxis? GuardHitTest(double x, double y) => HitTest(x, y, GuardWidth);
 
     static MoveGizmoSegment Segment(MoveGizmoAxis axis, ScreenPoint start, ScreenPoint end)
     {

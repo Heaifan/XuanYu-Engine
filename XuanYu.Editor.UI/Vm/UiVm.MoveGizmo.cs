@@ -24,7 +24,7 @@ public sealed partial class UiVm
 
         var state = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
         var layout = MoveGizmoLayout.Project(state, entity.Transform.Position);
-        var axis = layout.HitTest(x, y) ?? layout.GuardHitTest(x, y);
+        var axis = layout.HitTest(x, y);
         if (axis is null) return false;
 
         var pointer = new EditorInteractionPointerSnapshot(pointerId, x, y, x, y, 0);

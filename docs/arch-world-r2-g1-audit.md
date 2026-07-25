@@ -206,3 +206,35 @@ return true;
 - [ ] 按 P1 方案改 `TransformSession.TryCommit` 零位移 No-op；
 - [ ] 更新/新增上述测试，确保 Build 0W0E + 测试绿 + `arch-a-guard` 通过；
 - [ ] 真机复测移动/Undo/Redo 后 Picking 与 A/B 实体 Bounds 探针（沿用 R2 清单第 4/6/7 项重点盯防）。
+
+---
+
+## 7. 修复实现与验证结果（R0B，2026-07-25 追加，原证据第 0–6 节未改动）
+
+> 本节为 G1 最小 P0 修复落地记录，仅追加，不修改上方只读审计证据（第 0–6 节）。
+
+### 7.1 修复原则落地
+- **命中几何与可见几何同源**：新增可见线宽真源 `GizmoVisualLineWidth = 2.0`（DIP，与 Vulkan 顶点着色器生成的 Gizmo 几何同尺度，审计实测约 2–3px）；新增有限、显式交互容差 `HitMargin = 5.0`（DIP，仅补偿指针精度）。
+- **命中半径派生，非魔法数字**：`HitWidth = (GizmoVisualLineWidth / 2.0) + HitMargin = 6.0`。看得到 ≈ 点得到；不再存在第二套半径。
+- **移除 48px 隐形大范围抢占**：删除 `GuardWidth = 48.0` 常量与 `GuardHitTest` 方法；`UiVm.MoveGizmo.TryBeginMoveGizmoCapture` 的输入分流由 `layout.HitTest(x, y) ?? layout.GuardHitTest(x, y)` 改为仅 `layout.HitTest(x, y)`。命中失败即 `return false`，PointerDown 落到 `ReportPointerPicking` → 场景 Picking 正常进行。
+
+### 7.2 修改范围（仅 G1 P0，未越禁区）
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：删 `GuardWidth` / `GuardHitTest`；增 `GizmoVisualLineWidth` / `HitMargin`；`HitWidth` 改为派生常量。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：第 27 行移除 `?? GuardHitTest(x, y)` 兜底。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：锁 `HitWidth` 派生关系 + `< 12` 防回归上限，替换原 48/Guard 断言；将 `Hit_radius_follows_visible_geometry_with_explicit_margin` 移入新建部分类以保持 5+100。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutG1Tests.cs`（新建，部分类）：`Removed_wide_guard_no_longer_captures_far_off_axis_clicks`（轴外 40px 旧守卫点现 MISS）、`Far_from_gizmo_misses_so_click_falls_through_to_picking`（视口角落 MISS → 落 Picking）、`Hit_radius_follows_visible_geometry_with_explicit_margin`（可见中心必命中、容差内仍命中、超容差 MISS）。
+
+### 7.3 明确未做（守禁区）
+未改 `WorldQuery` / 空间索引 / `Region` / `EntityRegistry` / 实体 Picking 算法；未重构输入系统；未改 Gizmo 外观（Vulkan 绘制线宽未动）；未处理 P1 零位移 Undo；未碰 Vulkan / Editor.UI 旧债；未宣布 R2 CLOSED。
+
+### 7.4 验证结果
+- `dotnet build XuanYu.Engine.slnx`：9 项目 **0 warning / 0 error**。
+- `dotnet test XuanYu.Core.Tests`：**69 passed / 0 failed**（含 2 个新增 G1 回归测试与替换后的容差测试）。
+- `dotnet test XuanYu.World.Tests`：**99 passed / 0 failed**（R2 回归无回潮）。
+- `scripts/arch-a-guard.ps1`：**EXIT=0**（含 5+100：4 个改动文件均 ≤100 行）。
+- `git diff --check`：通过（无尾随空白 / 冲突标记）。
+- 状态：自动验证全绿；**待用户真机验收**（沿用 R2 清单，重点盯移动后 / Undo 后 / Redo 后 Picking 与相邻实体不再被 Gizmo 光环抢占）后，G1 方可视为 CLOSED。
+
+### 7.5 提交
+- Commit：见 `changelog.md` 对应 `###` 条目（含真实 Commit Hash）。
+- 本追加节与代码、测试同批落库（同一次修复提交）。

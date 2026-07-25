@@ -10,9 +10,10 @@ public sealed partial class MoveGizmoLayoutTests
     public void Oblique_camera_projects_three_visible_axes()
     {
         var layout = Layout();
-
-        Assert.Equal(18.0, MoveGizmoLayout.HitWidth);
-        Assert.Equal(48.0, MoveGizmoLayout.GuardWidth);
+        // 命中半径必须由“可见几何 + 显式容差”派生，禁止再开大半径
+        Assert.Equal((MoveGizmoLayout.GizmoVisualLineWidth / 2.0) + MoveGizmoLayout.HitMargin,
+            MoveGizmoLayout.HitWidth);
+        Assert.True(MoveGizmoLayout.HitWidth < 12.0); // 防 P0 隐形大半径回归
         Assert.All(layout.Segments, segment => Assert.True(segment.Length > 20));
         Assert.Equal(3, layout.Segments.Count);
     }
@@ -50,22 +51,6 @@ public sealed partial class MoveGizmoLayoutTests
     }
 
     [Fact]
-    public void Guard_hit_keeps_visible_axis_from_falling_to_scene_picking()
-    {
-        var layout = Layout();
-        var origin = layout.Segments[0].Start;
-        var guardPoint = Enumerable.Range(-20, 41)
-            .SelectMany(x => Enumerable.Range(-20, 41).Select(y => new ScreenPoint(
-                origin.X + (x * 4), origin.Y + (y * 4))))
-            .First(point => layout.HitTest(point.X, point.Y) is null &&
-                            layout.GuardHitTest(point.X, point.Y) is not null);
-
-        Assert.Null(layout.HitTest(guardPoint.X, guardPoint.Y));
-        Assert.NotNull(layout.GuardHitTest(guardPoint.X, guardPoint.Y));
-        Assert.Null(layout.GuardHitTest(5, 5));
-    }
-
-    [Fact]
     public void Shared_origin_uses_pointer_direction_before_distance_tie()
     {
         var layout = Layout();
@@ -74,10 +59,10 @@ public sealed partial class MoveGizmoLayoutTests
         var dx = y.End.X - y.Start.X;
         var dy = y.End.Y - y.Start.Y;
         var length = y.Length;
-
-        Assert.Equal(MoveGizmoAxis.Y, layout.GuardHitTest(
+        // 显式宽度仅用于覆盖沿轴 28px 的点，验证对齐优先于距离的平局裁决
+        Assert.Equal(MoveGizmoAxis.Y, layout.HitTest(
             origin.X + (dx / length * 28),
-            origin.Y + (dy / length * 28)));
+            origin.Y + (dy / length * 28), 30.0));
     }
 
     [Fact]
