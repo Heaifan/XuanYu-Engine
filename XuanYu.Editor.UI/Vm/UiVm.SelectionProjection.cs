@@ -58,4 +58,18 @@ public sealed partial class UiVm
             $"来源={command.Source}；修订={changed.OldRevision}->{changed.NewRevision}");
         RefreshLogBindings();
     }
+
+    void RaiseSelectionChanged()
+    {
+        SynchronizeSelectionProjection();
+        OnPropertyChanged(nameof(SelectionTitle));
+        OnPropertyChanged(nameof(SelectionSubtitle));
+        OnPropertyChanged(nameof(SelectionPath));
+        OnPropertyChanged(nameof(SelectionKey));
+        SetSelectedNodeKey(_editorState.Snapshot.SelectionKey);
+        OnPropertyChanged(nameof(HasSelection));
+        OnPropertyChanged(nameof(IsEmptySelection));
+        OnPropertyChanged(nameof(InspectorFields));
+        PublishSceneRenderSnapshot();
+    }
 }

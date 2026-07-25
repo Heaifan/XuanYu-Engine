@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.19.5-fix
+ARCH-WORLD-R4-R1-FIX1 恢复 5+100 全局硬门禁合规（2026-07-25）
+- 任务目标：修正仓库全局 5+100 硬门禁违例。经稳健全仓扫描（此前一次 `< <(find)` 进程替换写法在沙箱静默失败，曾误报"仅 1 个违例 / 5+100 PASS"，系假阴性），真实违例为 4 个 `.cs` >100 行：`UiVm.Selection.cs`(102，Editor.UI)、`WorldPartitionR1Tests.cs`(108)、`WorldPartitionTests.cs`(101)、`WorldSpatialQueryTests.cs`(103，后三者均在 XuanYu.World.Tests，R4 提交 `9bce3ad` 时即已违规，非 R4 引入)。
+- 处理：纯物理 partial 拆分，行为零变化（namespace / partial 类 / public-private 可见性 / 测试覆盖不变；同 partial 类，零调用点改动）。
+  - `UiVm.Selection.cs`：`RaiseSelectionChanged()`(13 行) 迁入 `UiVm.SelectionProjection.cs`（同为 partial UiVm，语义匹配——其直接调用 `SynchronizeSelectionProjection()` 与 `LogSelectionCommit()` 均在该文件）；Selection.cs 102→88、Projection.cs 61→75。
+  - `WorldPartitionR1Tests.cs` / `WorldSpatialQueryTests.cs` / `WorldPartitionTests.cs`：各自改为 `sealed partial class`，将 1 个完整方法迁入同名 partial 新文件：`WorldPartitionR1Tests.Activity.cs`（Active/Dormant 用例）、`WorldSpatialQueryTests.Geometry.cs`（`DistanceSquared` 辅助）、`WorldPartitionTests.PartitionStrategy.cs`（分区策略可替换用例）。原文件分别 108→93 / 103→95 / 101→89，新文件均 ≤22 行。
+- 行为红线：未修改 R4 Editor 边界；未处理零位移 Undo；未重命名或清理其他代码；测试数量与结论不变（168 passed / 0 failed / 0 skipped）。
+- 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/Vm/UiVm.SelectionProjection.cs`、`XuanYu.World.Tests/World/WorldPartitionR1Tests.cs`(+`WorldPartitionR1Tests.Activity.cs`)、`XuanYu.World.Tests/World/WorldPartitionTests.cs`(+`WorldPartitionTests.PartitionStrategy.cs`)、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`(+`WorldSpatialQueryTests.Geometry.cs`)、`changelog.md`、`file-tree.md`、`run.bat`。
+- 验证结果：`dotnet build` 10 项目 **0W0E**；`dotnet test` Core.Tests + World.Tests 共 **168 passed / 0 failed / 0 skipped**；`arch-a-guard.ps1` / `arch-a-guard-world.ps1` / `arch-a-guard-editor.ps1` 全部 **EXIT=0**；`git diff --check` 通过；SVG XML 47/47 通过；**全仓 5+100 扫描 0 个超限文件（PASS）**。
+- 状态：**ARCH-WORLD-R4-R1-FIX1 完成，R4 自动门禁现已全 PASS**（含此前漏报的 3 个 World.Tests 违例一并修复）。后续 `Gate 2` 用户真机 11 项验收 → `Gate 3` 文档 CLOSED 收口 → `Gate 4` 收口推送。版本源 `run.bat` 随本轮同步 bump 至 v0.2.19.5-fix，与 changelog 版本保持一致。
+
 ## v0.2.19.4-rz
 ARCH-WORLD-R4-R1 建立 XuanYu.Editor 编辑器领域边界（2026-07-25）
 - 任务目标：在 R4-R0A 只读审计（提交 `9459447`，远端已确认）确认污染归属后，建立最小 `XuanYu.Editor` 程序集，确立"Core 通用机制 / World 世界事实 / Editor 编辑规则 / Editor.UI 界面与输入"的长期稳定边界。

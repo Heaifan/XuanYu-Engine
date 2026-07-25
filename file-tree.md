@@ -1,7 +1,7 @@
-版本：v0.2.19.4-rz
+版本：v0.2.19.5-fix
 # XuanYu Engine 文件树
 
-文件总数：441
+文件总数：444
 
 ## 根目录
 
@@ -268,7 +268,9 @@
 - `XuanYu.Core.Tests/World/WorldSceneConsumptionTests.cs`：WORLD-A-R1-R1 Scene 消费 World 测试；覆盖默认实体投影、Move Commit 同 EntityId、Undo/Redo 同 World Entity 和 Destroy 清空渲染投影。
 - `XuanYu.Core.Tests/World/WorldSceneIsolationTests.cs`：WORLD-A-R1-R1 多实体隔离测试；覆盖移动 B 不污染 A/C、Undo 只恢复 B、销毁选中实体不复用身份且安全回退。
 - `XuanYu.Core.Tests/World/WorldPartitionTests.cs`：WORLD-A-R2 分区基础测试；覆盖 Region membership 非实体 Owner、全局位置推导 Region、活跃态切换和 1000 实体迁移。
+- `XuanYu.World.Tests/World/WorldPartitionTests.PartitionStrategy.cs`：WorldPartitionTests 的 partial 拆分（R4-R1-FIX1，2026-07-25）；承载 `Partition_strategy_can_be_replaced_without_changing_entity_owner` 用例，使主文件 ≤100 行，职责为"分区策略可替换性"测试。
 - `XuanYu.Core.Tests/World/WorldPartitionR1Tests.cs`：WORLD-A-R2-R1 迁移测试；覆盖 Preview Cancel、Preview Commit、Undo / Redo Region 恢复、多实体迁移隔离和 Active / Dormant。
+- `XuanYu.World.Tests/World/WorldPartitionR1Tests.Activity.cs`：WorldPartitionR1Tests 的 partial 拆分（R4-R1-FIX1）；承载 `Active_dormant_active_keeps_identity_region_and_position` 用例，职责为"Active/Dormant 活动态往返"测试。
 - `XuanYu.Core.Tests/World/WorldPartitionR2Tests.cs`：WORLD-A-R2-R2 一致性与规模 Gate 测试；覆盖 1000 Entity / 10000 随机迁移、Partition Invariant、Dormant 查询和 RegionKey 几何依赖红线。
 - `XuanYu.Core.Tests/World/WorldPartitionUiTests.cs`：WORLD-A-R2 UI 投影测试；覆盖跨 Region 后 EntityId、RenderSnapshot、SelectedNodeKey、SelectionPath 和 Inspector 不丢。
 - `XuanYu.Core.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
@@ -276,6 +278,7 @@
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1Oracle.cs`：WORLD-A-R3-R1 空间查询测试 Oracle；只在测试侧使用 O(N) 真值校验，不进入生产 World Query。
+- `XuanYu.World.Tests/World/WorldSpatialQueryTests.Geometry.cs`：WorldSpatialQueryTests 的 partial 拆分（R4-R1-FIX1）；承载 `DistanceSquared` 几何辅助，职责为"空间距离平方"纯函数（被 `BruteRadius` Oracle 复用）。
 - `XuanYu.Core.Tests/World/WorldSpatialR1RebuildTests.cs`：WORLD-A-R3-R1 Rebuild 与随机一致性测试；覆盖 1000 Entity 重建前后 Query 一致和确定性随机 Move / Radius / Bounds。
 - `XuanYu.Core.Tests/World/WorldUiTreeGuideTests.cs`：WORLD-A-UI-R2 树线投影测试；覆盖 Project Tree 连续 Guide、折叠后可视节点和 `构建配置` 命名。
 - `XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`：UI-TREE-R1 层级树连接线测试；构造真实玄域层级结构断言 `Tee / Elbow / Full / Blank` 段，锁定末区域子节点 `Blank@0` 与折叠重算。

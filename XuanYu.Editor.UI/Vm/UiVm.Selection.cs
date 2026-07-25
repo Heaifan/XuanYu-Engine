@@ -70,20 +70,6 @@ public sealed partial class UiVm
         }
     }
 
-    void RaiseSelectionChanged()
-    {
-        SynchronizeSelectionProjection();
-        OnPropertyChanged(nameof(SelectionTitle));
-        OnPropertyChanged(nameof(SelectionSubtitle));
-        OnPropertyChanged(nameof(SelectionPath));
-        OnPropertyChanged(nameof(SelectionKey));
-        SetSelectedNodeKey(_editorState.Snapshot.SelectionKey);
-        OnPropertyChanged(nameof(HasSelection));
-        OnPropertyChanged(nameof(IsEmptySelection));
-        OnPropertyChanged(nameof(InspectorFields));
-        PublishSceneRenderSnapshot();
-    }
-
     void SetSelectedNodeKey(string key) => Set(ref _selectedNodeKey, key, nameof(SelectedNodeKey));
 
     void ApplySelectionCommand(ClearEditorSelectionCommand command, string source)

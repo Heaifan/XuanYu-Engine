@@ -10,7 +10,7 @@ using XuanYu.World.Scene;
 using XuanYu.Editor.Transform;
 namespace XuanYu.World.Tests.World;
 
-public sealed class WorldPartitionR1Tests
+public sealed partial class WorldPartitionR1Tests
 {
     [Fact]
     public void Preview_into_next_region_then_cancel_keeps_membership()
@@ -74,21 +74,6 @@ public sealed class WorldPartitionR1Tests
         Assert.Equal(RegionKey.FromGrid(1, 0), scene.GetRegion(first.EntityKey));
         Assert.Equal(RegionKey.Origin, scene.GetRegion(second.EntityKey));
         Assert.Equal(RegionKey.Origin, scene.GetRegion(third.EntityKey));
-    }
-
-    [Fact]
-    public void Active_dormant_active_keeps_identity_region_and_position()
-    {
-        var scene = new SceneStateOwner();
-        var before = scene.RenderSnapshot.Entity;
-
-        Assert.True(scene.SetEntityActivity(before.EntityKey, WorldEntityActivity.Dormant));
-        Assert.True(scene.SetEntityActivity(before.EntityKey, WorldEntityActivity.Active));
-
-        var after = scene.RenderSnapshot.Entity;
-        Assert.Equal(before.EntityKey, after.EntityKey);
-        Assert.Equal(before.Transform.Position, after.Transform.Position);
-        Assert.Equal(RegionKey.Origin, scene.GetRegion(after.EntityKey));
     }
 
     static TransformSession Begin(SceneStateOwner scene)

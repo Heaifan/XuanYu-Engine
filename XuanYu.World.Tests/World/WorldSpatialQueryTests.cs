@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace XuanYu.World.Tests.World;
 
-public sealed class WorldSpatialQueryTests
+public sealed partial class WorldSpatialQueryTests
 {
     readonly ITestOutputHelper _output;
 
@@ -89,14 +89,6 @@ public sealed class WorldSpatialQueryTests
 
     static IReadOnlyList<EntityId> BruteRadius(GlobalWorld world, Vector3d center, double radius) =>
         world.Entities.Where(e => DistanceSquared(e.GlobalPosition, center) <= radius * radius).Select(e => e.EntityKey).ToArray();
-
-    static double DistanceSquared(Vector3d a, Vector3d b)
-    {
-        var dx = a.X - b.X;
-        var dy = a.Y - b.Y;
-        var dz = a.Z - b.Z;
-        return (dx * dx) + (dy * dy) + (dz * dz);
-    }
 
     static void AssertSame(IReadOnlyList<EntityId> expected, IReadOnlyList<EntityId> actual) =>
         Assert.Equal(expected.OrderBy(id => id.Value), actual.OrderBy(id => id.Value));

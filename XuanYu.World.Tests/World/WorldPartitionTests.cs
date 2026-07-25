@@ -6,7 +6,7 @@ using XuanYu.World;
 
 namespace XuanYu.World.Tests.World;
 
-public sealed class WorldPartitionTests
+public sealed partial class WorldPartitionTests
 {
     [Fact]
     public void Region_membership_does_not_own_entity_lifecycle()
@@ -38,18 +38,6 @@ public sealed class WorldPartitionTests
         Assert.Equal(new Vector3d(1200, -1, 0), next.GlobalPosition);
         Assert.Equal(RegionKey.FromGrid(1, -1, 0), next.RegionKey);
         Assert.Contains(entity.EntityKey, world.EntitiesIn(next.RegionKey));
-    }
-
-    [Fact]
-    public void Partition_strategy_can_be_replaced_without_changing_entity_owner()
-    {
-        var world = new GlobalWorld(new GridWorldPartitionStrategy(regionSize: 10));
-        var entity = world.Create("Scout");
-
-        Assert.True(world.UpdateTransform(entity.EntityKey, new CommittedTransform(new Vector3d(11, 0, 0))));
-
-        Assert.Equal(entity.EntityKey, world.Get(entity.EntityKey).EntityKey);
-        Assert.Equal(RegionKey.FromGrid(1, 0), world.GetRegion(entity.EntityKey));
     }
 
     [Fact]
