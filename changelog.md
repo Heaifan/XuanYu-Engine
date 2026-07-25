@@ -30,6 +30,13 @@ ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 99 passed（较 R2-R1 +2 收尾语义测试）；`arch-a-guard.ps1` 通过（含新唯一 Writer 调用点守卫）；5+100 通过。
 - 状态：**R2 主体 + R2-R1 + 收尾补丁完成、自动全绿、守卫通过；暂缓 CLOSED，待用户真机验收 13 项后正式收口**。仍不碰 D1/D2/D3/O1/Camera/Large World/Streaming。
 
+### ARCH-WORLD-R2-G1-R0A-R1 治理文档闭环（v0.2.19.3-rz 内，2026-07-25）
+- 任务目标：补齐 `d40b806` 落库 G1 修复前证据时漏做的治理同步；该提交已新增 `docs/arch-world-r2-g1-audit.md`（Gizmo 输入抢占只读审计：P0 命中兜底根因 + P1 零位移 Commit）与 `docs/arch-world-r2-manual-checklist.html`（R2 真机验收 13 项清单），但当时未同轮更新 `changelog.md` / `file-tree.md`，违反冻结的治理规则，本轮纠偏。
+- 本轮范围：仅文档治理闭环，不修改任何运行时代码、不触碰 G1 / Gizmo / Picking / 输入 / WorldQuery / 空间索引 / Vulkan / Editor.UI 依赖；不修复 G1、不宣布 R2 CLOSED。
+- 修改范围：`changelog.md`、`file-tree.md`（新增两证据文件路径与简短职责）。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` 0 failed；`arch-a-guard.ps1` EXIT=0。
+- 状态：**R0A-R1 治理闭环完成；G1 尚未修复、R2 尚未完成 13 项真机验收，保持 AWAITING；下一步 ARCH-WORLD-R2-G1-R0B 最小修复 Gizmo 输入抢占 P0**。
+
 ## v0.2.19.2-rz
 ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
 - 任务目标：在 R0 冻结基础上新建 `XuanYu.World` + `XuanYu.World.Tests` 程序集，把物理世界真相（World 根域 / Scene 簇 / Spatial 索引实现 / Transform 簇）从 Core 迁出，确立 Core→World 红线物理边界；本轮纯归属重构，运行行为不变。

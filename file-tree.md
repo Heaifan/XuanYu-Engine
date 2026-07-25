@@ -1,7 +1,7 @@
 版本：v0.2.19.3-rz
 # XuanYu Engine 文件树
 
-文件总数：436
+文件总数：438
 
 ## 根目录
 
@@ -45,6 +45,8 @@
 - `docs/arch-world-r1-acceptance.svg`：ARCH-WORLD-R1 真机验收证据图；展示 13/13 核心风险链路 PASS、D1/D2/D3 受控债务、O1/O2/O3 观察项与最终 CLOSED 裁定，不承载运行时代码。
 - `docs/arch-world-r2-single-spatial-authority.md`：ARCH-WORLD-R2 单一空间权威方案（2026-07-24）；短硬实施 Gate：双轨只读审计结论、唯一权威目标、Writer/Reader/Owner/Derived 四列、不动项、迁移步骤、6 用例自动测试、自动验收门、13 项真机验收清单与停手条件；版本 v0.2.19.3-rz。
 - `docs/arch-world-r2-status.md`：ARCH-WORLD-R2 实施状态与真机验收（2026-07-24）；记录裁定（R2 主体 PASS、Bounds 语义/Writing 访问控制/全局守卫 NEED FIX→R2-R1 已修）、R2-R1 修正完成项、`QueryBounds` 冻结语义、自动验证结果、真机 13 项验收清单（含补入的 Frame All 与 Create/Destroy 一致，修正原"13/11"不一致）、当前 AWAITING 用户真机验收；版本 v0.2.19.3-rz。
+- `docs/arch-world-r2-g1-audit.md`：ARCH-WORLD-R2-G1 Gizmo 输入抢占缺陷只读审计（P0 命中兜底根因 + P1 零位移 Commit）；属修复前证据，不承载运行时代码，不宣布 G1 已修复。
+- `docs/arch-world-r2-manual-checklist.html`：ARCH-WORLD-R2 十三项真机验收清单；含操作手册、重点盯防与签署区，不承载运行时代码。
 - `docs/arch-c-overview.svg`：ARCH-C 规划总览图。
 - `docs/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
 - `docs/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。
