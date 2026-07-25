@@ -48,6 +48,7 @@
 - `docs/arch-world-r2-g1-audit.md`：ARCH-WORLD-R2-G1 Gizmo 输入抢占缺陷只读审计（P0 命中兜底根因 + P1 零位移 Commit）；属修复前证据，不承载运行时代码，不宣布 G1 已修复。
 - `docs/arch-world-r2-manual-checklist.html`：ARCH-WORLD-R2 十三项真机验收清单；含操作手册、重点盯防与签署区，不承载运行时代码。
 - `docs/arch-world-r3-scene-truth-audit.md`：ARCH-WORLD-R3-R0A Scene Truth 现状只读审计（2026-07-25）；核对 SceneStateOwner 是否仍含第二套真相、SceneRenderSnapshot 来源、DefaultEditorCamera 后门、各层 Writer、Selection/Hierarchy/Inspector 投影性、Preview/Commit 写入权、Scene→World 旁路，结论"无第二真相、DTO 混 Editor 语义、相机后门为真实风险、双源气味"，并给出 R3-M1/M2/M3 最小迁移计划；不承载运行时代码。
+- `docs/arch-world-r4-editor-pollution-audit.md`：ARCH-WORLD-R4-R0A Editor 污染归属只读审计（2026-07-25）；聚焦 DefaultEditorCamera.Create(0) 后门（生产中死代码、UiVm 恒传 Camera）、TransformSession 仅 Editor.UI 消费且 Commit 写入权在 World、Framing/Selection/Preview 污染判定，输出依赖方向精确表与 R4-M1/M2/M3 迁移草案；不承载运行时代码。
 - `docs/arch-c-overview.svg`：ARCH-C 规划总览图。
 - `docs/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
 - `docs/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。
