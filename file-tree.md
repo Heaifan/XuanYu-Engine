@@ -1,4 +1,4 @@
-版本：v0.2.19.5-fix
+版本：v0.2.19.6-rz
 # XuanYu Engine 文件树
 
 文件总数：445
@@ -170,6 +170,8 @@
 - `docs/vulkan-preflight-audit-RZ-Fix3-0.md`：Vulkan 前置审计文档。
 - `docs/版本号规范与历史映射.md`：版本号规范与历史编号映射。
 - `docs/玄域引擎_AI开发宪法.md`：玄域引擎 AI 开发宪法，总治理文档。
+- `docs/arch-world-r5-r0a-render-contract-audit.md`：ARCH-WORLD R5-R0A 只读审计——Render 合同边界（类型归属矩阵 / 字段逐项分类 / 双 Source 定性 / DefaultEditorCamera 后门 / Render 实际消费 / 方案 B）。
+- `docs/arch-world-r5-r0a-render-contract.svg`：R5-R0A 渲染合同边界流程图（World 权威→Editor 组合→最小 Render Projection→Render.Abstractions→Render.Vulkan，标禁止反向依赖）。
 
 ## XuanYu.Core
 

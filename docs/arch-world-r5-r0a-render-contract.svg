@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 560" font-family="Microsoft YaHei, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <rect width="680" height="560" fill="#FFFFFF"/>
+
+  <text x="340" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">ARCH-WORLD R5：渲染合同边界（R5-R0A 只读审计）</text>
+  <text x="340" y="52" text-anchor="middle" font-size="12" fill="#666">World 权威事实 → Editor 组合/适配 → 最小 Render Projection → Render.Abstractions → Render.Vulkan</text>
+
+  <!-- 禁止反向依赖 标记 -->
+  <g>
+    <circle cx="42" cy="300" r="20" fill="#FDECEA" stroke="#C0392B" stroke-width="2"/>
+    <text x="42" y="307" text-anchor="middle" font-size="20" fill="#C0392B" font-weight="bold">✕</text>
+    <text x="74" y="294" font-size="12" font-weight="bold" fill="#C0392B">禁止反向依赖</text>
+    <text x="74" y="310" font-size="10" fill="#C0392B">Render 不引 World / Editor</text>
+    <text x="74" y="324" font-size="10" fill="#C0392B">Core.Scene 不回引 Render</text>
+  </g>
+
+  <!-- 主流程 5 节点 -->
+  <!-- ① World -->
+  <rect x="210" y="74" width="260" height="74" rx="8" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="340" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#1B5E20">① World 权威事实</text>
+  <text x="340" y="120" text-anchor="middle" font-size="11" fill="#333">GlobalWorld / Entity / Transform</text>
+  <text x="340" y="137" text-anchor="middle" font-size="10" fill="#666">（XuanYu.World · 唯一空间权威）</text>
+
+  <line x1="340" y1="148" x2="340" y2="172" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="350" y="164" font-size="10" fill="#666">真相</text>
+
+  <!-- ② Editor -->
+  <rect x="210" y="174" width="260" height="74" rx="8" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+  <text x="340" y="200" text-anchor="middle" font-size="14" font-weight="bold" fill="#0D47A1">② Editor 组合 / 适配</text>
+  <text x="340" y="220" text-anchor="middle" font-size="11" fill="#333">UiVm 装饰：选中·预览·Gizmo·相机</text>
+  <text x="340" y="237" text-anchor="middle" font-size="10" fill="#666">（XuanYu.Editor.UI · 活动组合源）</text>
+
+  <line x1="340" y1="248" x2="340" y2="272" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="350" y="264" font-size="10" fill="#666">抽取</text>
+
+  <!-- ③ 最小 Render Projection -->
+  <rect x="210" y="274" width="260" height="74" rx="8" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
+  <text x="340" y="300" text-anchor="middle" font-size="14" font-weight="bold" fill="#4A148C">③ 最小 Render Projection</text>
+  <text x="340" y="320" text-anchor="middle" font-size="11" fill="#333">相机 + 实体位置(+预览) + Gizmo可见</text>
+  <text x="340" y="337" text-anchor="middle" font-size="10" fill="#666">定义于 Render.Abstractions（自持）</text>
+
+  <line x1="340" y1="348" x2="340" y2="372" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="350" y="364" font-size="10" fill="#666">合同</text>
+
+  <!-- ④ Render.Abstractions -->
+  <rect x="210" y="374" width="260" height="74" rx="8" fill="#FFF3E0" stroke="#E65100" stroke-width="2"/>
+  <text x="340" y="400" text-anchor="middle" font-size="14" font-weight="bold" fill="#BF360C">④ Render.Abstractions</text>
+  <text x="340" y="420" text-anchor="middle" font-size="11" fill="#333">不可变只读帧级数据合同</text>
+  <text x="340" y="437" text-anchor="middle" font-size="10" fill="#666">不再引用 Core.Scene（解耦）</text>
+
+  <line x1="340" y1="448" x2="340" y2="470" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="350" y="462" font-size="10" fill="#666">消费</text>
+
+  <!-- ⑤ Render.Vulkan -->
+  <rect x="210" y="472" width="260" height="64" rx="8" fill="#ECEFF1" stroke="#37474F" stroke-width="2"/>
+  <text x="340" y="498" text-anchor="middle" font-size="14" font-weight="bold" fill="#263238">⑤ Render.Vulkan</text>
+  <text x="340" y="518" text-anchor="middle" font-size="10" fill="#666">消费投影绘制场景 / Gizmo</text>
+
+  <!-- 现状污染对照（右侧虚线框） -->
+  <rect x="498" y="74" width="170" height="200" rx="8" fill="#FFF" stroke="#C0392B" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="583" y="96" text-anchor="middle" font-size="12" font-weight="bold" fill="#C0392B">R5 前·现状污染</text>
+  <text x="583" y="118" text-anchor="middle" font-size="10" fill="#333">SceneRenderSnapshot</text>
+  <text x="583" y="134" text-anchor="middle" font-size="10" fill="#333">（Core.Scene）</text>
+  <text x="583" y="154" text-anchor="middle" font-size="10" fill="#666">含 Editor 字段：</text>
+  <text x="583" y="170" text-anchor="middle" font-size="10" fill="#666">IsSelected / Preview</text>
+  <text x="583" y="186" text-anchor="middle" font-size="10" fill="#666">ShowMoveGizmo</text>
+  <text x="583" y="206" text-anchor="middle" font-size="10" fill="#C0392B">+</text>
+  <text x="583" y="222" text-anchor="middle" font-size="10" fill="#C0392B">Camera ?? Create(0) 后门</text>
+  <text x="583" y="248" text-anchor="middle" font-size="10" fill="#666">Render.Abstractions</text>
+  <text x="583" y="262" text-anchor="middle" font-size="10" fill="#666">→ 引用 Core.Scene</text>
+
+  <text x="340" y="548" text-anchor="middle" font-size="10" fill="#888">双 Source：SceneStateOwner（基础投影） → UiVm（组合装饰器）｜非并列权威源，无第二事实源</text>
+</svg>

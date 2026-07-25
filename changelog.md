@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.19.6-rz
+ARCH-WORLD-R5-R0A 渲染合同边界只读审计（2026-07-25）
+- 任务目标：从已确认的 R4 终点 `6ccfb66` 新建 `refactor/ARCH-WORLD-R5-render-contract`（旧分支保留归档，不重写、不强推），以一轮只读审计确定 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` 与 Render 的真实边界，锁定后续方案，不再围绕旧分支状态打转。
+- 审计结论：① `SceneRenderSnapshot`（`Core/Scene`）是"World 事实 + Editor 状态 + Render 相机"的组合 DTO，6 字段跨 A/B/C 三类（`Entity`/`RenderEntities`=World；`IsSelected`/`PreviewTransform`/`ShowMoveGizmo`=Editor；`Camera`=Render 输入），非纯渲染合同；② 双 `ISceneRenderSnapshotSource` 实现（`SceneStateOwner` 基础投影 + `UiVm` 组合装饰器）为"基础生产者+组合装饰器"关系，非并列权威源，无第二事实源风险；③ `DefaultEditorCamera.Create(0)` 后门仅在 `Camera==null` 时触发（活动路径 `UiVm` 恒传 `_camera` 不触发），属掩盖缺相机的兜底，R5 应移除；④ Render（`VulkanClearFrameOwner.Draw`）实测仅消费 `Entities`/`PositionFor`/`ShowMoveGizmo`/`CameraState`，`IsSelected` 零消费——证实 Render 真实最小输入 = {实体渲染位置(+预览)、Gizmo 可见、相机、视口}。
+- 方案裁定：**B 提取最小 Render Projection**（在 `Render.Abstractions` 自持不可变投影类型，由 Editor/UI 适配层从组合快照抽取 Render 消费字段）；否决 A（快照含 Editor 污染与后门）与 C（含 World/Editor 权威语义，不能整体迁 Render.Abstractions）。R5-R1 直接进入最小合同实装，不再额外开计划轮。
+- 本轮范围（R0A 停止线）：仅新增审计文档 + 版本/元信息 bump；零生产代码改动。修改：`docs/arch-world-r5-r0a-render-contract-audit.md`（新建）、`docs/arch-world-r5-r0a-render-contract.svg`（新建）、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证：版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.6-rz`）；`git diff --check` 通过；SVG XML 解析通过；全仓 5+100 扫描 0 超限（本轮无 .cs 改动，继承 R4 CLOSED 基线）；10 项目 0W0E 与 168 passed 为**继承证据**（`6ccfb66` 已 CLOSED，本轮零生产逻辑改动）；三项架构守卫 EXIT=0（版本一致性当场复证，生产边界继承 R4）。下一阶段：R5-R1 实装最小 Render Projection。
+
 ## v0.2.19.5-fix
 ARCH-WORLD-R4-R1-FIX1 恢复 5+100 全局硬门禁合规（2026-07-25）
 - 任务目标：修正仓库全局 5+100 硬门禁违例。经稳健全仓扫描（此前一次 `< <(find)` 进程替换写法在沙箱静默失败，曾误报"仅 1 个违例 / 5+100 PASS"，系假阴性），真实违例为 4 个 `.cs` >100 行：`UiVm.Selection.cs`(102，Editor.UI)、`WorldPartitionR1Tests.cs`(108)、`WorldPartitionTests.cs`(101)、`WorldSpatialQueryTests.cs`(103，后三者均在 XuanYu.World.Tests，R4 提交 `9bce3ad` 时即已违规，非 R4 引入)。
