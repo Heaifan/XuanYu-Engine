@@ -76,6 +76,8 @@ B 与 A' 同为 `SpatialIndexOwner`，由**完全相同**的 `_world.Create / Up
 
 Hierarchy 选择 / Viewport Picking / Move Preview / Move Commit / Escape Cancel / Undo / Redo / 跨 Region 移动 / Frame Selected / Resize / 关闭生命周期；**重点盯**：移动后 Picking、Undo 后 Picking、Redo 后 Picking（旧位不可选、新位必选）。
 
+**状态：R2 CLOSED（2026-07-25，ARCH-WORLD-R2-R0D 收口）—— 13 项真机验收全部 PASS（1–12 真机通过，第 13 项自动测试覆盖 UI N/A），Undo 经用户日志 PASS，G1 P0 随 R2 一并 CLOSED。**
+
 ## 十、停手条件（立即收手并报告）
 
 1. 为删 B 须大规模重写 Picking → 停

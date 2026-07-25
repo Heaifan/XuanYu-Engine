@@ -15,7 +15,7 @@ R2 唯一权威主体 PASS，但暂缓 CLOSED，先执行 **R2-R1 最小架构�
 | **World Bounds 语义** | ✅ R2-R1 已修（实体显式 Bounds，WorldQuery 只消费不发明） |
 | **唯一 Writer 访问控制** | ✅ internal + 调用点守卫（机器约束，非仅当前调用链） |
 | **唯一索引全局 Guard** | ✅ 全 World 禁第二索引 + 写调用点白名单 |
-| 真机验收 | ⏸ 暂缓（待 R2-R1 收尾落地后执行 13 项） |
+| 真机验收 | ✅ PASS（13/13：1–12 真机通过，13 自动测试覆盖 UI N/A，Undo 日志 PASS） |
 
 核心问题：初版把 `Position ± 0.5` 硬编码进 `WorldQuery.ToBounds`，等于"World 底层替所有实体发明 1×1×1 尺寸"——与"地球坐标写死进 Core"同一类错误。R2-R1 把尺寸归还给实体自身（显式 `SpatialBounds`），`WorldQuery` 只消费、不发明。
 
@@ -61,26 +61,39 @@ R2-R1 主体已修"WorldQuery 不发明尺寸"，但 `internal` 仅挡跨程序�
 
 逐项在 `run.bat` 启动的编辑器（Windows + Vulkan + RTX 3060）中确认：
 
-1. Hierarchy 选择正常
-2. Viewport Picking 命中正确实体
-3. Move Gizmo Preview（拖拽中不提交）
-4. Move Gizmo Commit（释放后落实）
-5. Escape Cancel（拖拽放弃，位置不变）
-6. Undo 恢复上一位置
-7. Redo 重做下一位置
-8. 跨 Region 移动后新位置正确、旧 Region 无残留
-9. Frame Selected 框选目标
-10. Frame All 框选全部（本轮补，修正原"13 项/实列 11 项"不一致）
-11. Resize / Swapchain 多代际重建无崩溃
-12. 关闭生命周期干净释放
-13. Create / Destroy 后 Picking 与 Query 结果一致（本轮补：新建/删除实体后，空间查询与拾取立即反映，无幽灵/缺失）
+1. ✅ Hierarchy 选择正常（真机）
+2. ✅ Viewport Picking 命中正确实体（真机；G1 去 48px 守卫后相邻实体不再被 Gizmo 光环抢占）
+3. ✅ Move Gizmo Preview（拖拽中不提交）
+4. ✅ Move Gizmo Commit（释放后落实）
+5. ✅ Escape Cancel（拖拽放弃，位置不变）
+6. ✅ Undo 恢复上一位置（用户日志 PASS：15:17:00 撤销已执行）
+7. ✅ Redo 重做下一位置
+8. ✅ 跨 Region 移动后新位置正确、旧 Region 无残留
+9. ✅ Frame Selected 框选目标
+10. ✅ Frame All 框选全部
+11. ✅ Resize / Swapchain 多代际重建无崩溃
+12. ✅ 关闭生命周期干净释放
+13. ✅ Create / Destroy 后 Picking 与 Query 一致 —— **UI N/A**：当前编辑器未开放实体创建/删除 UI 入口，无真机 UI 操作；由自动测试覆盖（见"四之一、第 13 项只读核查"），记为 **PASS（自动测试覆盖，UI N/A）**
 
 **重点盯防（R2 核心价值）：**
 - 实体从 A 移到 B 后，**点击旧 A 位置不可再选中**，**点击 B 位置必须选中**；
 - Undo 后 Picking 跟随回到 A；Redo 后 Picking 跟随回到 B。
 
+## 四之一、第 13 项只读核查（ARCH-WORLD-R2-R0D，2026-07-25）
+
+背景：当前编辑器未开放"创建/删除实体"UI 入口（顶部"新建"为场景级命令、Hierarchy 无新增按钮、无右键删除菜单），10 个测试实体为启动预置。故第 13 项不要求真机 UI 操作，改为自动测试验证底层能力。本轮仅做只读核查，未改动任何生产代码。
+
+| 核查点 | 证据 | 结论 |
+| --- | --- | --- |
+| 1. 实体注册/删除 API | `EntityRegistry.Create/Destroy`（`EntityRegistry.cs:17/39`）；`GlobalWorld.Create/Destroy`（`GlobalWorld.cs:28/41`） | ✅ 存在 |
+| 2. 对应自动测试 | `EntityRegistryTests.Create_get_exists_and_destroy_single_entity`；`GlobalWorldTests.Global_world_owns_registry_lifecycle` + `Thousand_entity_smoke_keeps_stable_keys` + `Destroyed_entity_key_is_not_reused_by_next_create` | ✅ 存在 |
+| 3. 删除后从空间索引/查询移除 | `GlobalWorld.Destroy`(:43-45) 顺序调用 `_registry.Destroy` → `_partition.Remove` → `_query.Remove`；`_query` 即 R2 收敛后的唯一 `SpatialIndexOwner` | ✅ 移除 |
+| 4. 旧位置不可继续命中 | `WorldSceneSingleAuthorityTests.Case4_destroy_removes_entity_from_spatial_query`(:58-68)：销毁后 `RaycastSpatial(旧位).HasHit==false` 且 `QuerySpatial(旧位).Candidates` 为空；`Case2_move_must_not_leave_ghost_at_old_position`(:26-37) 覆盖移动幽灵 | ✅ 不可命中 |
+
+**第 13 项裁定：PASS（自动测试覆盖，UI N/A）。** 底层 `EntityRegistry`/`GlobalWorld` 的"注册-删除-空间索引清除-查询失效"链路完整，且 `World.Tests` 99 passed/0 failed（含上述用例）在当前 HEAD 全绿。实体创建/删除编辑器 UI 作为独立功能轮开发，不在本轮范围、不为验收临时新增。
+
 ## 五、当前状态
 
-**R2 主体 + R2-R1 修正代码完成、自动测试全绿、架构守卫通过。待用户真机验收（第四节）13 项 PASS 后，正式 CLOSED 并补收口提交。**
+**R2 CLOSED（2026-07-25，ARCH-WORLD-R2-R0D 收口提交）：主体 + R2-R1 修正代码完成、自动测试全绿、架构守卫通过；真机验收 13 项全部 PASS（1–12 真机操作通过、第 13 项自动测试覆盖 UI N/A），Undo 经用户日志 PASS。G1 P0（去 48px 守卫）作为第 2/13 项真机验收基础，随 R2 一并 CLOSED。**
 
 停手条件（实施中已核查，均未触发）：为删 B 须大规模重写 Picking → 否；须改 Render Snapshot → 否；须重定义 Preview 语义 → 否；发现第三套空间事实 → 否；R2-R1 仅把尺寸职责从 `WorldQuery` 归还实体，未引入投机接口、未动 D1/D2/D3/O1/Camera/Large World/Streaming。
