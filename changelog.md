@@ -69,7 +69,7 @@ ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - R3 收口裁定（8 条，详见 `docs/arch-world-r3-scene-truth-audit.md` 第三节）：① R3-M1 正式撤销、不实施（不删 `SceneStateOwner` 接口实现、不提升 `UiVm` 为基础场景权威）；② `SceneStateOwner` = 基础 World/Scene 投影；③ `UiVm` = 编辑器组合投影；④ 生产渲染端唯一活动组合源为 `UiVm`；⑤ 两者非重复权威；⑥ `ISceneRenderSnapshotSource` 语义过宽转交 R5 拆分；⑦ `DefaultEditorCamera` 与 Editor 职责归位转交 R4；⑧ **ARCH-WORLD R3 = CLOSED**。
 - 修改范围：仅文档 `docs/arch-world-r3-scene-truth-audit.md`（撤销 R3-M1、补收口裁定）、`changelog.md`（本条目）。未改任何生产代码、未新增/移动文件、无 file-tree 改动。
 - 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 69 + World.Tests 99 = 168 passed / 0 failed；`arch-a-guard.ps1` EXIT=0；`git diff --check` 通过。
-- Commit Hash：`14273916fc05e17515bbe6bafb0747850ed86c07`
+- Commit Hash：`e50d8903122fcf014e19f8b9e21a807fe2c3d550`
 - 状态：**R3 CLOSED（技术目标通过，R3-M1 撤销，接口拆分归 R5、Editor 污染归 R4）。下一轮进入 ARCH-WORLD-R4 Editor 污染剥离**。
 
 ## v0.2.19.2-rz
