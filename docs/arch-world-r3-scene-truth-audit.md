@@ -2,6 +2,7 @@
 
 版本：`v0.2.19.3-rz`｜分支：`refactor/ARCH-WORLD-layer-boundary`｜前置：`ARCH-WORLD-R2 CLOSED`（`3093eba`）
 
+> **状态：ARCH-WORLD R3 = CLOSED（2026-07-25，R3-R0B 决策 B）**。原 R3-M1 建议经调用链核查推翻，正式撤销、不实施；收口裁定见第三节。
 > 本轮性质：**只读审计**，不修改任何生产代码、不移动目录、不新增 UI。
 > 目标：回答"Scene 层目前还保存了哪些本应来自 World 的权威状态？哪些只是编辑器投影，哪些仍构成第二套真相？"，并产出 R3 最小迁移计划，供后续子轮实装。
 
@@ -16,7 +17,7 @@
   - D2：`SceneRenderSnapshot`（含 `IsSelected`/`PreviewTransform`/`ShowMoveGizmo`/`Camera` + `Camera ?? DefaultEditorCamera.Create(0)` 隐藏后门）仍在 `Core.Scene`；
   - D4：`DefaultEditorCamera`/`EditorCameraFraming` 仍在 `Core.Space`；
   - D1：`TransformSession`（含 `Core.Gizmo` 语义）仍暂居 `World.Transform`。
-- **唯一"双源"气味**：`SceneStateOwner` 与 `UiVm` 双实现 `ISceneRenderSnapshotSource`；生产只用 `UiVm`，`SceneStateOwner` 实现仅服务单测。属 R3 最小迁移范围。
+- **`SceneStateOwner` 与 `UiVm` 双实现 `ISceneRenderSnapshotSource`，但语义不同、非重复权威**：`SceneStateOwner` 返回基础 World/Scene 投影（无 Selection/Preview/Gizmo/Camera），`UiVm` 返回叠加编辑器语义的组合投影；生产渲染端只把 `UiVm` 作为 `ISceneRenderSnapshotSource` 注入（`SurfaceBridgeFactory.Create(vm.SceneSnapshotSource)` → `VulkanNativeHostSurfaceBridge._sceneSource`），`SceneStateOwner` 仅被 `UiVm` 当具体 World 门面读取，从未作为接口注入生产消费者。两者是"基础快照"与"编辑器组合快照"两个不同语义层，不构成第二套真相；接口名 `ISceneRenderSnapshotSource` 过宽属语义问题，转交 R5（见第三节 R3-R0B 决策 B）。
 
 ## 二、八项核查（对应 R3 焦点）
 
@@ -67,18 +68,26 @@
 | --- | --- | --- | --- |
 | `SceneStateOwner`（World 门面 + 投影） | `World.Scene` | **保留** | — |
 | `SceneWorldProjection`（单向投影） | `World.Scene` | **保留** | — |
-| `SceneStateOwner` 的 `ISceneRenderSnapshotSource` 实现 | `World.Scene` | 仅服务单测；生产以 `UiVm` 为唯一活动源 → 抽离为测试用投影助手 | **R3-M1** |
+| `SceneStateOwner` 的 `ISceneRenderSnapshotSource` 实现 | `World.Scene` | **保留**：基础 World/Scene 投影，被 `UiVm` 当具体门面读取；非测试冗余、非重复权威；接口语义过宽转 R5 | （撤销 R3-M1，归 R5） |
 | `SceneRenderSnapshot` + `ISceneRenderSnapshotSource` | `Core.Scene` | 迁 `Render.Abstractions`（边界 DTO） | R5（D2） |
 | `SceneRenderSnapshot.Camera` 后门 `?? DefaultEditorCamera.Create(0)` | `Core.Scene` | 删除，要求 Editor 必传 `Camera` | R5（D2） |
 | `DefaultEditorCamera` / `EditorCameraFraming` | `Core.Space` | 迁 Editor | R4（D4） |
 | `TransformSession`（含 `Core.Gizmo`） | `World.Transform` | 迁 Editor，解除 `World→Core.Gizmo` 依赖 | R4（D1） |
 
-## 三、R3 最小迁移计划（待后续子轮实装，本轮只规划）
+## 三、R3 收口裁定（R3-R0B 决策 B，2026-07-25）
 
-- **R3-M1（本轮后续子轮，最小且安全）**：确立 `UiVm` 为唯一活动 `ISceneRenderSnapshotSource`；将 `SceneStateOwner` 的 `ISceneRenderSnapshotSource` 实现降级为测试用投影助手（或测试直接构造 `SceneRenderSnapshot`），消除"双源"气味。不移动目录、不改 `UiVm` 生产行为（其本就是活动源）。
-- **R3-M2（归 R4）**：`DefaultEditorCamera`/`EditorCameraFraming`→Editor（D4）；`TransformSession`→Editor（D1，禁止新增 `World→Core.Gizmo`）。
-- **R3-M3（归 R5）**：`SceneRenderSnapshot`/`ISceneRenderSnapshotSource`→`Render.Abstractions`（D2）；删除相机 fallback，Snapshot 只接受 Editor 传入 `CameraState`。
-- **不纳入 R3**：实体创建/删除编辑器 UI（独立功能轮）、P1 零位移 Undo、VK-LIFE-1、Editor.UI↔Vulkan 旧债（债A）。
+经 R3-R0B 只读调用链核查，`SceneStateOwner` 与 `UiVm` 双实现 `ISceneRenderSnapshotSource` 实为两层投影（基础 World/Scene 快照 vs 编辑器组合快照），非重复权威。原 R3-M1（确立 UiVm 唯一活动源 + 降级 SceneStateOwner 为测试助手）经证据推翻，**正式撤销、不实施**。
+
+1. **R3-M1 正式撤销，不实施。** 不得删除 `SceneStateOwner` 的 `ISceneRenderSnapshotSource` 实现，不得把 `UiVm` 提升为基础场景权威（UI 层不应自动成为引擎快照权威）。
+2. **`SceneStateOwner` = 基础 World/Scene 投影**：返回 `SceneWorldProjection.ToRenderSnapshot` 基础快照（无 Selection/Preview/Gizmo/Camera），被 `UiVm` 当具体 World 门面读取，从未作为接口注入生产渲染链。
+3. **`UiVm` = 编辑器组合投影**：在基础快照上叠加 `selected` + `_transformSession.Preview` + `showMove` + `_camera`，是编辑器最终组合源。
+4. **生产渲染端唯一活动组合源为 `UiVm`**：经 `SurfaceBridgeFactory.Create(ReportVulkanMessage, vm.SceneSnapshotSource)` → `VulkanNativeHostSurfaceBridge._sceneSource`，Render 只消费 `UiVm`。
+5. **两者不是重复权威，不构成第二套真相**：`GlobalWorld` 仍是唯一实体/Transform/Region/空间查询权威；Scene 仅是 World 的投影与协调层。
+6. **`ISceneRenderSnapshotSource` 语义过宽问题转交 R5**：在 R5 拆分为"基础 Scene Snapshot Source"与"Editor Render Snapshot Source"两个语义明确的接口（不提前拉入 R3）。
+7. **`DefaultEditorCamera` 与 Editor 职责归位转交 R4**：`DefaultEditorCamera.Create(0)` 隐藏兜底、`EditorCameraFraming`、`TransformSession` 含 Editor 语义等归属 R4 处理。
+8. **ARCH-WORLD R3 = CLOSED**：Scene 无第二套世界真相已由 R1/R2 实质完成；R3 只读审计（R0A 八项 + R0B 调用链）确认无额外生产代码迁移需求，成果为确认依赖方向正确并阻止一次可能错误的接口删除。
+
+- 关联：R3-M2/M3 原提案并入 R4/R5，不再作为 R3 子项；实体创建/删除编辑器 UI、P1 零位移 Undo、VK-LIFE-1、债A 均不在 R3 范围，保持转交/独立立项。
 
 ## 四、守禁区（本轮未违反）
 

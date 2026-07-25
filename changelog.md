@@ -60,7 +60,17 @@ ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - R3 最小迁移计划：R3-M1 确立 UiVm 唯一活动源、抽离 SceneStateOwner 测试投影助手；R3-M2→R4（DefaultEditorCamera/Framing、TransformSession 迁 Editor）；R3-M3→R5（SceneRenderSnapshot 迁 Render.Abstractions + 删相机 fallback）。不纳入 R3：实体创建/删除 UI、P1 零位移 Undo、VK-LIFE-1、债A。
 - 修改范围：仅文档 `docs/arch-world-r3-scene-truth-audit.md`（新建）+ `file-tree.md`（登记一行）。未改任何生产代码。
 - Commit Hash：`68a87c7beb9fce51da2f1622f4fd3bd143a29fcc`
-- 状态：**R3-R0A 审计完成、迁移计划已定；待后续子轮（R3-M1）实装双源收口，R3-M2/M3 分别并入 R4/R5。R2 维持 CLOSED。**
+- 状态：**R3-R0A 审计完成；其 R3-M1 建议经 R3-R0B 调用链核查推翻并正式撤销，R3 最终收口见 ARCH-WORLD-R3-R0B。R2 维持 CLOSED。**
+
+### ARCH-WORLD-R3-R0B Snapshot Source 语义核查与 R3 收口（v0.2.19.3-rz 内，2026-07-25）
+- 任务目标：按 R3-R0A 后续只读核查两个 `ISceneRenderSnapshotSource` 实现的真实消费者、构造链、注入链与返回语义，判定是重复实现还是两层投影，据此收口 R3。
+- 核查结论（调用链）：`SceneStateOwner`（基础 World/Scene 投影，返回 `SceneWorldProjection.ToRenderSnapshot`，无 Selection/Preview/Gizmo/Camera）仅被 `UiVm` 当具体 World 门面读取，**从未作为 `ISceneRenderSnapshotSource` 注入任何生产消费者**；`UiVm`（编辑器组合投影，叠加 selected/Preview/showMove/camera）经 `SurfaceBridgeFactory.Create(vm.SceneSnapshotSource)` 注入 `VulkanNativeHostSurfaceBridge._sceneSource`，是**生产渲染端唯一活动组合源**。
+- 决策：命中决策 B——两者为"基础快照"与"编辑器组合快照"两个不同语义层，非重复权威、不构成第二套真相；`GlobalWorld` 仍为唯一实体/Transform/Region/空间查询权威。
+- R3 收口裁定（8 条，详见 `docs/arch-world-r3-scene-truth-audit.md` 第三节）：① R3-M1 正式撤销、不实施（不删 `SceneStateOwner` 接口实现、不提升 `UiVm` 为基础场景权威）；② `SceneStateOwner` = 基础 World/Scene 投影；③ `UiVm` = 编辑器组合投影；④ 生产渲染端唯一活动组合源为 `UiVm`；⑤ 两者非重复权威；⑥ `ISceneRenderSnapshotSource` 语义过宽转交 R5 拆分；⑦ `DefaultEditorCamera` 与 Editor 职责归位转交 R4；⑧ **ARCH-WORLD R3 = CLOSED**。
+- 修改范围：仅文档 `docs/arch-world-r3-scene-truth-audit.md`（撤销 R3-M1、补收口裁定）、`changelog.md`（本条目）。未改任何生产代码、未新增/移动文件、无 file-tree 改动。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 69 + World.Tests 99 = 168 passed / 0 failed；`arch-a-guard.ps1` EXIT=0；`git diff --check` 通过。
+- Commit Hash：`14273916fc05e17515bbe6bafb0747850ed86c07`
+- 状态：**R3 CLOSED（技术目标通过，R3-M1 撤销，接口拆分归 R5、Editor 污染归 R4）。下一轮进入 ARCH-WORLD-R4 Editor 污染剥离**。
 
 ## v0.2.19.2-rz
 ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
