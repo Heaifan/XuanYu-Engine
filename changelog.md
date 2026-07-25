@@ -11,6 +11,11 @@ ARCH-WORLD-R4-R1-FIX1 恢复 5+100 全局硬门禁合规（2026-07-25）
 - 验证结果：`dotnet build` 10 项目 **0W0E**；`dotnet test` Core.Tests + World.Tests 共 **168 passed / 0 failed / 0 skipped**；`arch-a-guard.ps1` / `arch-a-guard-world.ps1` / `arch-a-guard-editor.ps1` 全部 **EXIT=0**；`git diff --check` 通过；SVG XML 47/47 通过；**全仓 5+100 扫描 0 个超限文件（PASS）**。
 - 状态：**ARCH-WORLD-R4-R1-FIX1 完成，R4 自动门禁现已全 PASS**（含此前漏报的 3 个 World.Tests 违例一并修复）。后续 `Gate 2` 用户真机 11 项验收 → `Gate 3` 文档 CLOSED 收口 → `Gate 4` 收口推送。版本源 `run.bat` 随本轮同步 bump 至 v0.2.19.5-fix，与 changelog 版本保持一致。
 
+### ARCH-WORLD-R4-R1-FIX1 收尾（v0.2.19.5-fix 内，2026-07-25）
+- run.bat 构建崩溃修复（commit `25bd66b`，线性子提交 `8e80098f..25bd66b`）：`run.bat` 加 `MSBUILDDISABLENODEREUSE=1` + build 行 `-p:UseSharedCompilation=false`，关闭 Roslyn 共享编译/节点复用以规避 `error MSB6006: csc.exe 已退出，代码为 1`（无 CS 错误，纯编译器进程崩溃，与 FIX1 代码无关；Core 在 FIX1 未改动且 Gate 1 全 0W0E）。仅改 `run.bat`，不升版本号、不动 file-tree 计数。
+- Gate 2 真机验收清单文档化：`docs/arch-world-r4-gate2-acceptance.md`（新建）+ `file-tree.md` 总数 444→445；把原简略 11 项清单扩为操作手册（A 组交互 6 项 + B 组门禁 5 项，各含操作/预期/通过判定/风险盯防 + 结果记录表），供真机逐项勾选。本提交后远端 tip = `25bd66b`。
+- 当前状态：**Gate 0 PASS / Gate 1 全 PASS（含 5+100=0）/ Gate 2 待用户真机 / Gate 3 文档 CLOSED / Gate 4 收口推送**。
+
 ## v0.2.19.4-rz
 ARCH-WORLD-R4-R1 建立 XuanYu.Editor 编辑器领域边界（2026-07-25）
 - 任务目标：在 R4-R0A 只读审计（提交 `9459447`，远端已确认）确认污染归属后，建立最小 `XuanYu.Editor` 程序集，确立"Core 通用机制 / World 世界事实 / Editor 编辑规则 / Editor.UI 界面与输入"的长期稳定边界。

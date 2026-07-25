@@ -1,7 +1,7 @@
 版本：v0.2.19.5-fix
 # XuanYu Engine 文件树
 
-文件总数：444
+文件总数：445
 
 ## 根目录
 
@@ -56,6 +56,7 @@
 - `docs/arch-world-r3-scene-truth-audit.md`：ARCH-WORLD-R3-R0A Scene Truth 现状只读审计（2026-07-25）；核对 SceneStateOwner 是否仍含第二套真相、SceneRenderSnapshot 来源、DefaultEditorCamera 后门、各层 Writer、Selection/Hierarchy/Inspector 投影性、Preview/Commit 写入权、Scene→World 旁路，结论"无第二真相、DTO 混 Editor 语义、相机后门为真实风险、双源气味"，并给出 R3-M1/M2/M3 最小迁移计划；不承载运行时代码。
 - `docs/arch-world-r4-editor-pollution-audit.md`：ARCH-WORLD-R4-R0A Editor 污染归属只读审计（2026-07-25）；聚焦 DefaultEditorCamera.Create(0) 后门（生产中死代码、UiVm 恒传 Camera）、TransformSession 仅 Editor.UI 消费且 Commit 写入权在 World、Framing/Selection/Preview 污染判定，输出依赖方向精确表与 R4-M1/M2/M3 迁移草案；R4-R1 实装结果已追加于文档末尾；不承载运行时代码。
 - `docs/arch-world-r4-editor-boundary.svg`：ARCH-WORLD-R4 Editor 领域边界图（2026-07-25）；展示 Core/World → XuanYu.Editor → XuanYu.Editor.UI 依赖方向、TransformSession 与 EditorCameraFraming 迁移、World 写入权不变、R5 待处理范围与依赖禁区，不承载运行时代码。
+- `docs/arch-world-r4-gate2-acceptance.md`：ARCH-WORLD-R4 Gate 2 真机验收清单（操作手册，2026-07-25）；R4 机械拆分 + 构建配置变更后的 11 项真机验收（A 组交互 6 项：Frame/Move Gizmo/Undo-Redo/Viewport Picking/Selection 面板/Resize；B 组门禁 5 项：构建 0W0E+168 测试/三架构守卫/5+100/SVG 47/47/git clean+远端 tip），含操作手册、通过判定、风险盯防与结果记录表；不承载运行时代码。
 - `docs/arch-c-overview.svg`：ARCH-C 规划总览图。
 - `docs/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
 - `docs/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。
