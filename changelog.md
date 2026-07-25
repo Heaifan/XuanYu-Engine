@@ -46,6 +46,14 @@ ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - Commit Hash：`d4f6919d261013dff4d094639c18e52427f868c8`
 - 状态：**G1 P0 自动验证全绿；待用户真机验收（移动后 / Undo 后 / Redo 后 Picking，相邻实体不再被 Gizmo 光环抢占）后 G1 视为 CLOSED**。R2 整体仍 AWAITING 13 项真机验收。
 
+### ARCH-WORLD-R2-R0D 最终文档收口（R2 CLOSED，2026-07-25）
+- 任务目标：用户真机验收 13 项全部通过（1–12 真机操作 PASS；第 13 项因编辑器未开放实体创建/删除 UI 入口，改为只读核查底层能力，记为 PASS（自动测试覆盖，UI N/A））；Undo 经用户日志 PASS（15:17:00 撤销已执行）。据此收口 R2，并随 R2 一并 CLOSED G1 P0。
+- 第 13 项只读核查（未改任何生产代码）：① 注册/删除 API 存在（`EntityRegistry.Create/Destroy`、`GlobalWorld.Create/Destroy`）；② 自动测试存在（`EntityRegistryTests.Create_get_exists_and_destroy_single_entity`、`GlobalWorldTests` 三项、`WorldSceneSingleAuthorityTests.Case4_destroy_removes_entity_from_spatial_query`）；③ 删除后从唯一空间索引与查询移除（`GlobalWorld.Destroy` 顺序 `_registry.Destroy`→`_partition.Remove`→`_query.Remove`，`_query` 即 R2 收敛后的唯一 `SpatialIndexOwner`）；④ 旧位置不可继续命中（`Case4` 销毁后 `RaycastSpatial(旧位).HasHit==false` 且 `QuerySpatial(旧位).Candidates` 为空；`Case2` 覆盖移动幽灵）。
+- 修改范围：仅文档 `docs/arch-world-r2-status.md`（裁定表真机验收改 PASS；第四节 13 项逐项标注；新增『四之一、第 13 项只读核查』；第五节 R2 CLOSED）、`docs/arch-world-r2-single-spatial-authority.md`（第九节补 R2 CLOSED 状态行）。未改任何生产代码。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 69 passed / World.Tests 99 passed / 0 failed（含第 13 项 Create/Destroy 用例）；`arch-a-guard.ps1` EXIT=0；5+100 通过；`git diff --check` 通过。
+- Commit Hash：`bd49285369364a4e395d9df24911b17011b952e5`
+- 状态：**R2 CLOSED（13 项真机验收全 PASS，G1 P0 随 R2 一并 CLOSED）。下一轮按治理序列进入 R3 Scene Truth 归位；实体创建/删除编辑器 UI 作为独立功能轮开发，不在本轮范围。**
+
 ## v0.2.19.2-rz
 ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
 - 任务目标：在 R0 冻结基础上新建 `XuanYu.World` + `XuanYu.World.Tests` 程序集，把物理世界真相（World 根域 / Scene 簇 / Spatial 索引实现 / Transform 簇）从 Core 迁出，确立 Core→World 红线物理边界；本轮纯归属重构，运行行为不变。
