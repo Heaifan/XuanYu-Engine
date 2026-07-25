@@ -54,6 +54,14 @@ ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
 - Commit Hash：`bd49285369364a4e395d9df24911b17011b952e5`
 - 状态：**R2 CLOSED（13 项真机验收全 PASS，G1 P0 随 R2 一并 CLOSED）。下一轮按治理序列进入 R3 Scene Truth 归位；实体创建/删除编辑器 UI 作为独立功能轮开发，不在本轮范围。**
 
+### ARCH-WORLD-R3-R0A Scene Truth 现状审计（v0.2.19.3-rz 内，2026-07-25）
+- 任务目标：只读审计 Scene 层是否仍保存本应来自 World 的权威状态、哪些只是编辑器投影、是否仍构成第二套真相；产出 R3 最小迁移计划，不动代码、不移动目录。
+- 八项核查结论：① `SceneStateOwner` 无第二套实体/空间状态（仅 `_world`/`_snapshot`/`_activeEntityKey`，全部经 `GlobalWorld`）；② `SceneRenderSnapshot` 来源混合 World 真相 + Editor 语义（`IsSelected`/`PreviewTransform`/`ShowMoveGizmo`/`Camera`），按设计但 DTO 在 Core（D2）；③ `DefaultEditorCamera.Create(0)` 隐藏后门（`SceneRenderSnapshot.CameraState => Camera ?? DefaultEditorCamera.Create(0)`）掩盖缺失相机（D4）；④ Writer 单一链 Editor→SceneStateOwner→GlobalWorld，Editor.UI 全仓无 `GlobalWorld` 直接引用；⑤ Selection/Hierarchy/Inspector 全为只读投影，无写回；⑥ Preview 仅进 RenderSnapshot 显示、Commit 最终写入权在 World；⑦ 无 Scene→World 未登记旁路；⑧ `SceneStateOwner` 与 `UiVm` 双实现 `ISceneRenderSnapshotSource`（生产只用 UiVm）为双源气味。
+- R3 最小迁移计划：R3-M1 确立 UiVm 唯一活动源、抽离 SceneStateOwner 测试投影助手；R3-M2→R4（DefaultEditorCamera/Framing、TransformSession 迁 Editor）；R3-M3→R5（SceneRenderSnapshot 迁 Render.Abstractions + 删相机 fallback）。不纳入 R3：实体创建/删除 UI、P1 零位移 Undo、VK-LIFE-1、债A。
+- 修改范围：仅文档 `docs/arch-world-r3-scene-truth-audit.md`（新建）+ `file-tree.md`（登记一行）。未改任何生产代码。
+- Commit Hash：`68a87c7beb9fce51da2f1622f4fd3bd143a29fcc`
+- 状态：**R3-R0A 审计完成、迁移计划已定；待后续子轮（R3-M1）实装双源收口，R3-M2/M3 分别并入 R4/R5。R2 维持 CLOSED。**
+
 ## v0.2.19.2-rz
 ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
 - 任务目标：在 R0 冻结基础上新建 `XuanYu.World` + `XuanYu.World.Tests` 程序集，把物理世界真相（World 根域 / Scene 簇 / Spatial 索引实现 / Transform 簇）从 Core 迁出，确立 Core→World 红线物理边界；本轮纯归属重构，运行行为不变。
