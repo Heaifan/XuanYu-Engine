@@ -21,10 +21,11 @@ ARCH-WORLD-R4-R1-FIX1 恢复 5+100 全局硬门禁合规（2026-07-25）
 - **ARCH-WORLD R4 = CLOSED。**
 - 边界建立完成：`XuanYu.Editor` 程序集（仅引 Core+World）已落地；`EditorCameraFraming`（Core.Space→Editor.Camera）与 `TransformSession`（World.Transform→Editor.Transform）归位；写入链 `UiVm→TransformSession→SceneStateOwner→GlobalWorld` 不变，World 仍为唯一空间权威，Editor 不持有实体永久位置。
 - FIX1 恢复全仓 5+100：`8e80098f` 纯 partial 拆分（4 文件超限，零行为变化）；真实版本源 `UiWin.axaml` / `run.bat` / `changelog` 三处一致为 `v0.2.19.5-fix`。
-- 自动门禁全绿（commit `e8d3593`）：10 项目 0W0E；168 passed / 0 failed / 0 skipped；三守卫 EXIT=0；SVG 47/47；全仓 5+100 = 0；`git diff --check` 通过。
+- 自动门禁核验：R4-R2 文档收口轮（commit `6635e989`）仅改三份文档、无生产代码变化，未重新执行 `dotnet build`/`dotnet test`；本轮**当场复证**的静态门禁 = 三守卫 `arch-a-guard*.ps1` EXIT=0、SVG 47/47、全仓 5+100 = 0、`git diff --check` 通过、版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.5-fix`）、远端引用=`6635e989`。`10 项目 0W0E` 与 `168 passed / 0 failed / 0 skipped` 为**继承证据**：来自前序提交 `8e80098f` 的自动验证（自该提交后无生产逻辑改动），并由用户本轮 `v0.2.19.5-fix` 真机六项回归（含完整构建 + Vulkan 释放链）作为外部补充证据佐证无生产回归。
 - 真机验收：`v0.2.19.4-rz` 完整 11 项验收通过；`v0.2.19.5-fix` 简化回归六项（实体命中/空白取消、Move Commit、跨 Region、Undo/Redo、Escape Cancel、Resize/Swapchain 恢复、Vulkan 关闭释放链）全部 PASS，FIX1 未发现运行回归。
 - 非阻断后续项（不塞入 R4）：高频 `PublishSceneRenderSnapshot` / 命令缓冲重录日志风暴（诊断/性能噪声，P1 非阻断），独立登记为日志限流 / Snapshot 发布合并待办，留后续轮处理。
-- 下一阶段：**R5-R0A**（`SceneRenderSnapshot` 与 `ISceneRenderSnapshotSource` 只读审计）。
+- 下一阶段：**R5-R0A** 只读审计：核心问题非"是否把 `SceneRenderSnapshot` 迁入 `Render.Abstractions`"（渲染器消费某对象≠该对象归渲染层），而是分离三类概念——① 世界事实快照（实体是谁/在哪/状态，属 World/场景权威层）；② 编辑器组合状态（选中/Gizmo/Editor 相机/辅助开关，属 Editor）；③ 渲染输入投影（Render 真正消费的不可变只读帧级数据合同，才可能属 `Render.Abstractions`）。真实审计问题：是否从 `SceneRenderSnapshot` 提取最小 Render Projection，而非整体搬入 Render.Abstractions。交付五部分：① 类型归属矩阵；② 字段逐项分类；③ 双 `ISceneRenderSnapshotSource` 真实关系；④ 三套迁移选项（A 保持现状仅修正命名 / B 拆出最小 Render Projection / C 整体迁移，默认不直选 C）；⑤ 明确停止线（R5-R0A 只读阶段不得：移动 DTO、修改项目引用、拆分接口、改 Vulkan、顺手处理日志风暴、因"不顺眼"批量整理）。
+- 补（审计措辞校正）：修正本段"自动门禁全绿（e8d3593）"表述——`10 项目 0W0E` 与 `168 passed` 为前序 `8e80098f` 继承证据 + 用户真机回归佐证，非 R4-R2 文档收口轮当场重跑；R5 目标由"是否迁入 Render.Abstractions"修正为"世界事实/编辑器组合状态/渲染投影三者分离"。R4 功能与架构验收仍为 **CLOSED**。
 
 ## v0.2.19.4-rz
 ARCH-WORLD-R4-R1 建立 XuanYu.Editor 编辑器领域边界（2026-07-25）
