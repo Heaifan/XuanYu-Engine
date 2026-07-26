@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.19.9-rz
+ARCH-WORLD-R6 架构退出门禁（2026-07-26）
+- 任务目标：不继续制造 R7/R8 架构阶段，只回答 ARCH-WORLD 是否可以退出纯引擎架构治理并进入一个士兵 WarCore 闭环。
+- 测试分层审计：列出 `Core.Tests` / `World.Tests` 全部测试文件及真实被测层；确认 `SceneRenderProjectionAdapterTests` 真实被测为 Editor.UI 组合边界 + Render.Abstractions，长期留在 Core.Tests 不理想，但新增 `Render.Tests` 不正确。D3 测试程序集混层债务范围较广，R6 不移动少量文件制造假干净，登记为非阻断退出后债务。
+- WarCore 入口冻结：下一阶段最小链路为 World Entity → WarCore `MilitaryIdentity` / `FactionId` / 最小组织归属 → 士兵可观察状态 → Editor / Render 显示投影。第一轮禁止战斗、接触面、命令、后勤、国家、AI 和完整编制树。
+- 收口文档：新增 `docs/arch-world-r6-exit-gate.md` 与 `docs/arch-world-r6-exit-gate.svg`；`docs/arch-world-debts.md` 更新 D3 状态；`file-tree.md`、`run.bat`、`UiWin.axaml` 同步到 `v0.2.19.9-rz`。
+- 验证：`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **171 passed / 0 failed / 0 skipped**；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS；SVG XML 50/50 PASS；`git diff --check` PASS；版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.9-rz`）。**ARCH-WORLD 可以退出**。
+
 ## v0.2.19.8-rz
 ARCH-WORLD-R5 正式收口（2026-07-26）
 - 真机裁定：R5-R1 自动验收与真机功能验收均通过。启动首帧、查看全部、聚焦选中对象、Gizmo 显示、Preview、Commit、Escape Cancel、Resize、日志栏展开/收起、Vulkan 关闭释放链全部 PASS；未发现 DefaultEditorCamera、相机缺失、跳过帧、Fatal 或新增异常。R5-R1 不因日志噪声退回，不重跑已通过的真机功能测试。

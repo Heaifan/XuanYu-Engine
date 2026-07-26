@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 560" font-family="Microsoft YaHei, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#2E3A46"/>
+    </marker>
+    <style>
+      .title{font-size:22px;font-weight:700;fill:#1F2933}
+      .sub{font-size:13px;fill:#52606D}
+      .box{rx:10;stroke-width:2}
+      .h{font-size:15px;font-weight:700}
+      .t{font-size:12px;fill:#334E68}
+      .s{font-size:11px;fill:#627D98}
+    </style>
+  </defs>
+  <rect width="880" height="560" fill="#F8FBFF"/>
+  <text x="440" y="38" text-anchor="middle" class="title">ARCH-WORLD R6：架构退出门禁</text>
+  <text x="440" y="62" text-anchor="middle" class="sub">从引擎架构治理退出，进入一个士兵 WarCore 闭环</text>
+
+  <rect x="50" y="104" width="210" height="116" class="box" fill="#E8F5E9" stroke="#2E7D32"/>
+  <text x="155" y="134" text-anchor="middle" class="h" fill="#1B5E20">门禁一：测试分层</text>
+  <text x="155" y="162" text-anchor="middle" class="t">D3 存在但非阻断</text>
+  <text x="155" y="184" text-anchor="middle" class="s">不新增 Render.Tests</text>
+  <text x="155" y="204" text-anchor="middle" class="s">未来按需要建立 Editor.Tests</text>
+
+  <rect x="335" y="104" width="210" height="116" class="box" fill="#E3F2FD" stroke="#1565C0"/>
+  <text x="440" y="134" text-anchor="middle" class="h" fill="#0D47A1">门禁二：WarCore 入口</text>
+  <text x="440" y="162" text-anchor="middle" class="t">只定义一个士兵闭环</text>
+  <text x="440" y="184" text-anchor="middle" class="s">身份 / 阵营 / 组织 / 状态</text>
+  <text x="440" y="204" text-anchor="middle" class="s">禁止战斗、AI、后勤扩张</text>
+
+  <rect x="620" y="104" width="210" height="116" class="box" fill="#F3E5F5" stroke="#6A1B9A"/>
+  <text x="725" y="134" text-anchor="middle" class="h" fill="#4A148C">最终裁定</text>
+  <text x="725" y="162" text-anchor="middle" class="t">ARCH-WORLD 可退出</text>
+  <text x="725" y="184" text-anchor="middle" class="s">无真实阻断项</text>
+  <text x="725" y="204" text-anchor="middle" class="s">下一分支进入 WarCore</text>
+
+  <rect x="80" y="308" width="140" height="70" class="box" fill="#FFFFFF" stroke="#486581"/>
+  <text x="150" y="336" text-anchor="middle" class="h" fill="#243B53">World</text>
+  <text x="150" y="358" text-anchor="middle" class="s">实体在哪里</text>
+
+  <line x1="220" y1="343" x2="290" y2="343" stroke="#2E3A46" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="290" y="292" width="210" height="102" class="box" fill="#FFF8E1" stroke="#F9A825"/>
+  <text x="395" y="320" text-anchor="middle" class="h" fill="#8D6E00">WarCore</text>
+  <text x="395" y="344" text-anchor="middle" class="t">MilitaryIdentity / FactionId</text>
+  <text x="395" y="366" text-anchor="middle" class="s">最小组织归属 + 士兵状态</text>
+
+  <line x1="500" y1="343" x2="570" y2="343" stroke="#2E3A46" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="570" y="308" width="230" height="70" class="box" fill="#E0F7FA" stroke="#00838F"/>
+  <text x="685" y="336" text-anchor="middle" class="h" fill="#006064">Editor / Render</text>
+  <text x="685" y="358" text-anchor="middle" class="s">只显示可观察状态</text>
+
+  <rect x="185" y="456" width="510" height="62" rx="12" fill="#EAF2F8" stroke="#486581" stroke-width="2"/>
+  <text x="440" y="482" text-anchor="middle" class="h" fill="#243B53">下一步：feat/WARCORE-one-soldier-loop</text>
+  <text x="440" y="504" text-anchor="middle" class="s">从一个 World 实体开始，赋予士兵身份并显示可观察状态</text>
+</svg>

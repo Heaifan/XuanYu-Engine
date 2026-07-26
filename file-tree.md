@@ -1,7 +1,7 @@
-版本：v0.2.19.8-rz
+版本：v0.2.19.9-rz
 # XuanYu Engine 文件树
 
-文件总数：456
+文件总数：458
 
 ## 根目录
 
@@ -175,6 +175,8 @@
 - `docs/arch-world-r5-r0a-render-contract.svg`：R5-R0A 渲染合同边界流程图（World 权威→Editor 组合→最小 Render Projection→Render.Abstractions→Render.Vulkan，标禁止反向依赖）。
 - `docs/arch-world-r5-final-closure.md`：ARCH-WORLD R5 最终收口报告；固化 R5-R1 自动与真机验收通过、日志降噪、D2 收口和 R5 CLOSED 裁定。
 - `docs/arch-world-r5-final-closure.svg`：ARCH-WORLD R5 最终收口图；展示 World 事实、Editor/UI 组合边界、Render Projection、真机验收、日志治理和边界守卫。
+- `docs/arch-world-r6-exit-gate.md`：ARCH-WORLD R6 架构退出门禁报告；审计测试程序集分层债务并冻结一个士兵 WarCore 最小闭环入口。
+- `docs/arch-world-r6-exit-gate.svg`：ARCH-WORLD R6 退出门禁图；展示测试分层门禁、WarCore 入口和下一阶段一个士兵闭环。
 
 ## XuanYu.Core
 

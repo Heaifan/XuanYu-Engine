@@ -32,6 +32,9 @@
 
 ## D3 — 测试程序集未严格映射生产层（收口轮次：R4/R5）
 
+- **状态**：ARCH-WORLD R6 判定为**非阻断退出后债务**。当前测试混层范围较广，
+  单独移动少量文件会制造假干净；后续进入真实功能开发时，按触碰范围逐步建立
+  `XuanYu.Editor.Tests` / 必要测试项目，不在 R6 大规模迁移既有 171 个测试。
 - **现状**：`XuanYu.World.Tests` 引用 World + Core + Editor.UI（含 `WorldCameraFramingTests` /
   `WorldPartitionUiTests` / `WorldUi*` / `TransformSessionTests` 等 Editor/UI 性质测试）；
   `XuanYu.Core.Tests` 引用 Core + World + Editor.UI（Picking / History 遗留）。
