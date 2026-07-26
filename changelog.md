@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.20.10-rz
+WORLD-B-R4-F4 旋转工具闭环（2026-07-26）
+- 任务目标：在 F2/F3 建立的 Transform 会话与工具状态合同之上，正式启用旋转工具——可见 X/Y/Z 三轴旋转环、屏幕命中、旋转会话、一次拖拽一次历史提交、取消不改写历史；Vulkan 顶点着色器按 `gizmoMode` 切换移动/旋转几何并按 `RotateGizmoVisible` 门控 CmdDraw。本轮不实现缩放柄、全局/局部或检查器旋转输入。
+- 实装结果：`XuanYu.Core/Gizmo` 新增 `RotateGizmoAxis`/`RotateGizmoRing`/`RotateGizmoLayout`/`RotateGizmoDrag(.Math)` 纯几何与稳定旋转数学（欧拉角度，分量独立回绕 ±180）；`XuanYu.Editor/Transform/TransformSession.Rotate.cs` 扩展 `BeginRotate` 与 `RotateAxis`；`UiVm.RotateGizmo`/`UiVm.Tool` 接通旋转命中、指针派发与工具高亮；`SceneRenderSnapshot`/`RenderProjection` 各加 `ShowRotateGizmo`/`RotateGizmoVisible` 尾随可选参数（位置记录结构，零破坏性）；`scene.vert` 旋转环 3×48×6=867 顶点，`VulkanClearFrameOwner.Draw` 按可见性选择 39/867 顶点计数。
+- 测试变化：新增 `RotateGizmoLayoutTests`(Core 3 项) 与 `WorldRotateTransformUiTests`(World 2 项：一次拖拽一次提交+撤销重做、取消不入历史)；修订 `WorldToolStateHighlightUiTests`(旋转切换高亮)、`EditorTransformCapturePolicyTests`(可起旋转捕获)、`WorldSelectionToolStateUiTests`(旋转已实装不再假激活)。实测测试数 Core 91 / World 143，合计 234（相对 F3 的 226 净增 8）。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.10-rz`；新增 `XuanYu.Editor` 旋转会话分部，遵守 ≤100 行红线（拆 `RotateGizmoDrag.Math` 偏部）。
+- 状态：R4 继续推进；下一步 F5 缩放闭环（X/Y/Z 单轴 + 等比，复用 ValidateScale）。
+- 验证（本轮实测，非沿用上轮记录）：`git diff --check` PASS；本轮差异文件 5+100 PASS；`scripts\arch-a-guard.ps1` EXIT=0；`dotnet build` 10 项目 **0W0E**（用时 15.44s，串行 -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false）；`dotnet test` **Core 91 / World 143 passed，0 failed / 0 skipped**，`--no-build --no-restore` 串行执行；无环境性失败。
+
 ## v0.2.20.9-fix
 WORLD-B-R4-F3 工具状态真相修复（2026-07-26）
 - 任务目标：修复点击未实装“旋转”后“移动”与“旋转”同时高亮的双高亮问题，恢复 R2 已冻结合同（唯一 ToolMode → 工具栏高亮 / 右上角状态 / 视口控制柄 / 输入行为 四者一致）；旋转/缩放真正接通前不得假激活。本轮不实现旋转环、缩放柄或全局/局部。

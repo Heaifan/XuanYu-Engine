@@ -1,0 +1,89 @@
+using XuanYu.Core.Math;
+using XuanYu.Core.Space;
+
+namespace XuanYu.Core.Gizmo;
+
+public sealed partial class RotateGizmoLayout
+{
+    // 与 MoveGizmo 同尺度：环半径对齐 AxisLength=1.2，环管宽对齐 GizmoVisualLineWidth。
+    public const double RingRadius = 1.2;
+    public const int RingSegments = 48;
+    public const double RingVisualWidth = 2.0;
+
+    // 有限、明确的交互容差（DIP）。仅补偿指针精度，非大范围抢占。
+    public const double HitMargin = 5.0;
+
+    // 命中半径 = 可见环管半径 + 交互容差 ⇒ 看得到 ≈ 点得到。
+    public const double HitWidth = (RingVisualWidth / 2.0) + HitMargin;
+
+    // 屏幕投影半径小于此值视为边视环，不参与命中。
+    public const double EdgeOnScreenRadius = 6.0;
+
+    RotateGizmoLayout(RotateGizmoRing[] rings)
+    {
+        Rings = rings;
+    }
+
+    public IReadOnlyList<RotateGizmoRing> Rings { get; }
+
+    public static RotateGizmoLayout Project(ViewProjectionState state, Vector3d origin)
+    {
+        return new RotateGizmoLayout(
+        [
+            Ring(state, origin, RotateGizmoAxis.X),
+            Ring(state, origin, RotateGizmoAxis.Y),
+            Ring(state, origin, RotateGizmoAxis.Z)
+        ]);
+    }
+
+    public RotateGizmoAxis? HitTest(double x, double y, double width = HitWidth)
+    {
+        if (!double.IsFinite(x) || !double.IsFinite(y) || !double.IsFinite(width) || width <= 0)
+            throw new ArgumentOutOfRangeException(nameof(x));
+        RotateGizmoAxis? best = null;
+        var bestDist = double.MaxValue;
+        foreach (var ring in Rings)
+        {
+            if (ring.IsEdgeOn) continue;
+            var d = ring.NearestDistance(x, y);
+            if (d <= width && d < bestDist)
+            {
+                bestDist = d;
+                best = ring.Axis;
+            }
+        }
+        return best;
+    }
+
+    static RotateGizmoRing Ring(ViewProjectionState state, Vector3d origin, RotateGizmoAxis axis)
+    {
+        var (b1, b2) = Basis(axis);
+        var points = new ScreenPoint[RingSegments];
+        ScreenPoint center;
+        try { center = state.ProjectWorldPoint(origin); }
+        catch { return new RotateGizmoRing(axis, default, [], 0.0); }
+        var maxR = 0.0;
+        for (var i = 0; i < RingSegments; i++)
+        {
+            var theta = (i * 2.0 * global::System.Math.PI) / RingSegments;
+            var dir = (b1 * global::System.Math.Cos(theta)) + (b2 * global::System.Math.Sin(theta));
+            var world = origin + (dir * RingRadius);
+            ScreenPoint p;
+            try { p = state.ProjectWorldPoint(world); }
+            catch { return new RotateGizmoRing(axis, center, [], 0.0); }
+            points[i] = p;
+            var r = global::System.Math.Sqrt(
+                ((p.X - center.X) * (p.X - center.X)) + ((p.Y - center.Y) * (p.Y - center.Y)));
+            if (r > maxR) maxR = r;
+        }
+        return new RotateGizmoRing(axis, center, points, maxR);
+    }
+
+    internal static (Vector3d, Vector3d) Basis(RotateGizmoAxis axis) => axis switch
+    {
+        RotateGizmoAxis.X => (Vector3d.UnitY, Vector3d.UnitZ),
+        RotateGizmoAxis.Y => (Vector3d.UnitZ, Vector3d.UnitX),
+        RotateGizmoAxis.Z => (Vector3d.UnitX, Vector3d.UnitY),
+        _ => throw new global::System.ArgumentOutOfRangeException(nameof(axis))
+    };
+}

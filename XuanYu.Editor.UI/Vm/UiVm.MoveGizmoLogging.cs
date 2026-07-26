@@ -1,4 +1,3 @@
-using XuanYu.Core.Gizmo;
 using XuanYu.Core.Scene;
 
 namespace XuanYu.Editor.UI;
@@ -13,7 +12,7 @@ public sealed partial class UiVm
         RefreshLogBindings();
     }
 
-    void LogTransformCaptureBegin(string activeTool, string sessionTool, string entity, MoveGizmoAxis axis)
+    void LogTransformCaptureBegin(string activeTool, string sessionTool, string entity, object axis)
     {
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
             "变换捕获开始",

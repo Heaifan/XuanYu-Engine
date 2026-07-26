@@ -26,6 +26,7 @@ public sealed partial class UiVm
             snap.SessionId, snap.OwnerTool, pointer.Summary, pointer));
         if (result is null) return false;
         if (PreviewMoveGizmo(snap.SessionId, x, y)) return true;
+        if (PreviewRotateGizmo(snap.SessionId, x, y)) return true;
         FooterMessage = $"视口预览：{pointer.Summary}";
         RaiseInteractionChanged();
         return true;

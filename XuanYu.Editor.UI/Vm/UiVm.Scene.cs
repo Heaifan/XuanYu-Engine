@@ -22,13 +22,16 @@ public sealed partial class UiVm
             var selected = HasSelection && SelectionKey == entity.EntityKey.ToString();
             var showMove = EditorTransformCapturePolicy.ShouldShowMoveGizmo(
                 _editorState.ToolSnapshot, selected);
+            var showRotate = EditorTransformCapturePolicy.ShouldShowRotateGizmo(
+                _editorState.ToolSnapshot, selected);
             return new SceneRenderSnapshot(
                 entity,
                 selected,
                 _transformSession.Preview,
                 showMove,
                 scene.Entities,
-                _camera);
+                _camera,
+                ShowRotateGizmo: showRotate);
         }
     }
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;

@@ -6,7 +6,7 @@ using XuanYu.World.Scene;
 
 namespace XuanYu.Editor.Transform;
 
-public sealed class TransformSession
+public sealed partial class TransformSession
 {
     public bool IsActive { get; private set; }
     public long SessionId { get; private set; }
@@ -85,5 +85,6 @@ public sealed class TransformSession
         IsActive = false;
         SessionId = 0;
         Preview = null;
+        RotateAxis = null;
     }
 }

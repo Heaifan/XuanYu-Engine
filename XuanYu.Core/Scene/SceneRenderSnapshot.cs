@@ -11,7 +11,8 @@ public readonly record struct SceneRenderSnapshot(
     PreviewTransform? PreviewTransform = null,
     bool ShowMoveGizmo = false,
     IReadOnlyList<SceneEntitySnapshot>? RenderEntities = null,
-    CameraState? Camera = null)
+    CameraState? Camera = null,
+    bool ShowRotateGizmo = false)
 {
     public static SceneRenderSnapshot Empty { get; } = new(
         new SceneEntitySnapshot(

@@ -61,4 +61,17 @@ public sealed class EditorTransformCapturePolicyTests
 
         Assert.False(EditorTransformCapturePolicy.ShouldShowMoveGizmo(owner.ToolSnapshot, false));
     }
+
+    [Fact]
+    public void Rotate_tool_can_begin_rotate_gizmo_capture_and_shows_rotate_gizmo()
+    {
+        var owner = new EditorStateOwner(() => true);
+
+        owner.ChangeTool(new ChangeEditorToolCommand("旋转"));
+
+        Assert.True(EditorTransformCapturePolicy.CanBeginRotateGizmo(owner.ToolSnapshot));
+        Assert.True(EditorTransformCapturePolicy.ShouldShowRotateGizmo(owner.ToolSnapshot, true));
+        Assert.False(EditorTransformCapturePolicy.ShouldShowRotateGizmo(owner.ToolSnapshot, false));
+        Assert.False(EditorTransformCapturePolicy.CanBeginMoveGizmo(owner.ToolSnapshot));
+    }
 }

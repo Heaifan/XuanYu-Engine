@@ -6,26 +6,24 @@ namespace XuanYu.World.Tests.World;
 public sealed class WorldToolStateHighlightUiTests
 {
     [Fact]
-    public void Unimplemented_rotate_keeps_move_tool_single_highlight()
+    public void Rotate_tool_switches_highlight_to_rotate_gizmo()
     {
         var vm = new UiVm(null, () => true);
         vm.SelectedHierarchyItem = EntityNode(vm, 1);
         vm.SelectToolCommand.Execute("移动");
-
         Assert.Equal("移动", vm.ActiveTool);
         Assert.True(vm.IsMoveTool);
         Assert.False(vm.IsRotateTool);
         Assert.False(vm.IsScaleTool);
-        Assert.Equal("工具：移动", vm.FooterMode);
         Assert.True(vm.RenderSnapshot.ShowMoveGizmo);
 
         vm.SelectToolCommand.Execute("旋转");
-        Assert.Equal("移动", vm.ActiveTool);
-        Assert.True(vm.IsMoveTool);
-        Assert.False(vm.IsRotateTool);
+        Assert.Equal("旋转", vm.ActiveTool);
+        Assert.True(vm.IsRotateTool);
+        Assert.False(vm.IsMoveTool);
         Assert.False(vm.IsScaleTool);
-        Assert.Equal("工具：移动", vm.FooterMode);
-        Assert.True(vm.RenderSnapshot.ShowMoveGizmo);
+        Assert.True(vm.RenderSnapshot.ShowRotateGizmo);
+        Assert.False(vm.RenderSnapshot.ShowMoveGizmo);
 
         var active = new[] { vm.IsSelectTool, vm.IsMoveTool, vm.IsRotateTool, vm.IsScaleTool }.Count(b => b);
         Assert.Equal(1, active);

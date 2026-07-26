@@ -22,7 +22,8 @@ public static class SceneRenderProjectionAdapter
                 camera.FarPlane, camera.Revision),
             entities,
             snapshot.ShowMoveGizmo,
-            snapshot.RenderPosition);
+            snapshot.RenderPosition,
+            RotateGizmoVisible: snapshot.ShowRotateGizmo);
         return RenderProjectionResult.Ok(projection);
     }
 }

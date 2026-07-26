@@ -3,6 +3,7 @@
 layout(push_constant) uniform ScenePush {
     mat4 viewProjection;
     vec4 worldPosition;
+    float gizmoMode;
 } pc;
 
 layout(location = 0) out vec4 outColor;
@@ -36,23 +37,48 @@ vec3 planeVertex(int plane, int index) {
     return vertices[index];
 }
 
+// 旋转环：每个环在垂直于该轴的平面内生成 48 段细环带（每环 288 顶点，3 环共 864）。
+vec3 ringVertex(int ring, int seg, int vert) {
+    float R = 1.2;
+    float w = 0.03;
+    vec3 b1 = ring == 0 ? vec3(0.0, 1.0, 0.0) : (ring == 1 ? vec3(1.0, 0.0, 0.0) : vec3(1.0, 0.0, 0.0));
+    vec3 b2 = ring == 0 ? vec3(0.0, 0.0, 1.0) : (ring == 1 ? vec3(0.0, 0.0, 1.0) : vec3(0.0, 1.0, 0.0));
+    float t1 = float(seg) * 6.2831853 / 48.0;
+    float t2 = float(seg + 1) * 6.2831853 / 48.0;
+    vec3 d1 = (cos(t1) * b1) + (sin(t1) * b2);
+    vec3 d2 = (cos(t2) * b1) + (sin(t2) * b2);
+    vec3 ro1 = (R + w) * d1; vec3 ri1 = (R - w) * d1;
+    vec3 ro2 = (R + w) * d2; vec3 ri2 = (R - w) * d2;
+    vec3 c[6] = vec3[6](ro1, ro2, ri2, ro1, ri2, ri1);
+    return c[vert];
+}
+
 void main() {
     vec3 world;
     if (gl_VertexIndex < 3) {
         world = triangleVertex(gl_VertexIndex) + pc.worldPosition.xyz;
         outColor = vec4(1.0, 0.85, 0.2, 1.0);
-    } else if (gl_VertexIndex < 21) {
-        int planeIndex = gl_VertexIndex - 3;
-        int plane = planeIndex / 6;
-        world = planeVertex(plane, planeIndex % 6) + pc.worldPosition.xyz;
-        outColor = plane == 0 ? vec4(0.82, 0.66, 0.16, 1.0) :
-            (plane == 1 ? vec4(0.64, 0.26, 0.82, 1.0) : vec4(0.16, 0.68, 0.76, 1.0));
+    } else if (pc.gizmoMode < 0.5) {
+        int gi = gl_VertexIndex - 3;
+        if (gi < 18) {
+            int plane = gi / 6;
+            world = planeVertex(plane, gi % 6) + pc.worldPosition.xyz;
+            outColor = plane == 0 ? vec4(0.82, 0.66, 0.16, 1.0) :
+                (plane == 1 ? vec4(0.64, 0.26, 0.82, 1.0) : vec4(0.16, 0.68, 0.76, 1.0));
+        } else {
+            int axis = (gi - 18) / 6;
+            world = gizmoVertex(axis, (gi - 18) % 6) + pc.worldPosition.xyz;
+            outColor = axis == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
+                (axis == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
+        }
     } else {
-        int gizmoIndex = gl_VertexIndex - 21;
-        int axis = gizmoIndex / 6;
-        world = gizmoVertex(axis, gizmoIndex % 6) + pc.worldPosition.xyz;
-        outColor = axis == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
-            (axis == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
+        int ri = gl_VertexIndex - 3;
+        int ring = ri / (48 * 6);
+        int seg = (ri % (48 * 6)) / 6;
+        int vert = ri % 6;
+        world = ringVertex(ring, seg, vert) + pc.worldPosition.xyz;
+        outColor = ring == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
+            (ring == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
     }
     gl_Position = pc.viewProjection * vec4(world, 1.0);
 }

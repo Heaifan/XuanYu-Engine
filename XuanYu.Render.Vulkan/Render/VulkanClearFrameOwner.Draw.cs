@@ -27,7 +27,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 Extent = _extent
             }
         };
-        var scene = new float[20];
+        var scene = new float[24];
         fixed (Viewport* pVp = viewport)
         fixed (Rect2D* pSc = scissor)
         fixed (float* pScene = scene)
@@ -43,16 +43,20 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 PushSceneConstants(cb, pScene);
                 _vk.CmdDraw(cb, 3, 1, 0, 0);
             }
-            if (_renderProjection.GizmoVisible)
+            if (_renderProjection.GizmoVisible || _renderProjection.RotateGizmoVisible)
                 DrawActiveGizmo(cb, pScene, _renderProjection);
         }
     }
+
+    const uint MoveGizmoVertexCount = 39;
+    const uint RotateGizmoVertexCount = 867;
 
     void DrawActiveGizmo(CommandBuffer cb, float* scene, RenderProjection projection)
     {
         FillScenePushConstants(scene, projection, projection.GizmoPosition);
         PushSceneConstants(cb, scene);
-        _vk.CmdDraw(cb, 39, 1, 0, 0);
+        var count = projection.RotateGizmoVisible ? RotateGizmoVertexCount : MoveGizmoVertexCount;
+        _vk.CmdDraw(cb, count, 1, 0, 0);
     }
 
     void PushSceneConstants(CommandBuffer cb, float* scene)
@@ -82,6 +86,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         target[17] = (float)position.Y;
         target[18] = (float)position.Z;
         target[19] = 1.0f;
+        target[20] = projection.RotateGizmoVisible ? 1.0f : 0.0f;
     }
 
 }

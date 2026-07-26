@@ -5,7 +5,7 @@ public sealed partial class UiVm
     void SelectTool(string name)
     {
         if (!CanChangeToolNow(name)) return;
-        if (name is "框选" or "旋转" or "缩放")
+        if (name is "框选" or "缩放")
         {
             FooterState = "状态：就绪";
             FooterMessage = $"{name}尚未实装，当前仍保持：{ActiveTool}。";
