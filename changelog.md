@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.20.7-rz
+WORLD-B-R4-F1 Transform 数据合同与检查器真实投影（2026-07-26）
+- 任务目标：在 WORLD-B-R3 CLOSED 后立即进入 WORLD-B-R4 代码实装；先补正式 Transform 数据合同和检查器真实字段，为后续 Rotate / Scale / Global / Local / Inspector 输入建立落点。本轮不实现旋转控制柄、缩放控制柄、Local 模式数学、检查器数值编辑、CRUD 或 WarCore。
+- 实装结果：`CommittedTransform` 扩展为 Position / Rotation / Scale，旧 Position 构造默认 Rotation=0、Scale=1；新增 `WithPosition`，移动提交经 `SceneStateOwner` 保留已有 Rotation / Scale；新增 `UiVm.Inspector` 分部，让右侧“检查器”显示实体真实位置、旋转、缩放字段。
+- 测试变化：新增 `WorldR4TransformFoundationTests` 3 项，覆盖 Transform 默认值、移动提交保留旋转缩放、检查器显示真实 Transform 字段。测试数由 209 增至 212。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.7-rz`。
+- 状态：R4 已开始但尚未 CLOSED；下一步继续实装 Rotate / Scale 操作会话、Global / Local 模式和检查器数值输入。
+- 验证：`git diff --check` PASS；本轮差异文件 5+100 PASS（6 个 `.cs` / `.axaml`）；SVG XML **55/55 PASS**；`scripts\arch-a-guard.ps1` EXIT=0；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **212 passed / 0 failed / 0 skipped**（Core 85 + World 127）。
+
 ## v0.2.20.6-rz
 WORLD-B-R3 移动变换闭环收口（2026-07-26）
 - 任务目标：在 `53b6dd7` R3 基础加固后继续完成剩余 R3 代码，不另开规划轮；补齐可见 XY / XZ / YZ 平面控制柄、平面 Picking / Drag、提交 / 撤销 / 重做、跨 Region、取消路径和输入互斥。本轮不加入 CRUD、Rotate、Scale、Global / Local、Inspector 数值输入或 WarCore。

@@ -36,20 +36,35 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
     public long SpatialRevision => _world.SpatialRevision;
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
 
-    public SpatialQueryResult QuerySpatial(SpatialAabb area, SpatialQueryCategory mask) => _world.QuerySpatial(area, mask);
-    public SpatialQueryResult QuerySpatial(SpatialRayQuery ray, SpatialQueryCategory mask) => _world.QuerySpatial(ray, mask);
-    public SpatialRaycastResult RaycastSpatial(SpatialRayQuery ray, SpatialQueryCategory mask) => _world.RaycastSpatial(ray, mask);
+    public SpatialQueryResult QuerySpatial(SpatialAabb area, SpatialQueryCategory mask) =>
+        _world.QuerySpatial(area, mask);
+    public SpatialQueryResult QuerySpatial(SpatialRayQuery ray, SpatialQueryCategory mask) =>
+        _world.QuerySpatial(ray, mask);
+    public SpatialRaycastResult RaycastSpatial(SpatialRayQuery ray, SpatialQueryCategory mask) =>
+        _world.RaycastSpatial(ray, mask);
     public bool CommitPosition(Vector3d position) => CommitPositionWithResult(position).Changed;
     public SceneTransformCommitResult CommitPositionWithResult(Vector3d position) =>
         CommitPositionWithResult(_activeEntityKey, position);
 
-    public SceneTransformCommitResult CommitPositionWithResult(EntityId entityKey, Vector3d position)
+    public SceneTransformCommitResult CommitPositionWithResult(
+        EntityId entityKey,
+        Vector3d position)
     {
         if (!_world.TryGet(entityKey, out var current))
-            return new SceneTransformCommitResult(entityKey, CommittedTransform.Identity, CommittedTransform.Identity, false);
-        var transform = new CommittedTransform(position);
+        {
+            return new SceneTransformCommitResult(
+                entityKey,
+                CommittedTransform.Identity,
+                CommittedTransform.Identity,
+                false);
+        }
+        var transform = current.Transform.WithPosition(position);
         if (current.Transform == transform)
-            return new SceneTransformCommitResult(entityKey, current.Transform, transform, false);
+            return new SceneTransformCommitResult(
+                entityKey,
+                current.Transform,
+                transform,
+                false);
         return ApplyTransform(current, transform);
     }
 
@@ -61,12 +76,18 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
         return true;
     }
 
-    SceneTransformCommitResult ApplyTransform(WorldEntitySnapshot current, CommittedTransform transform)
+    SceneTransformCommitResult ApplyTransform(
+        WorldEntitySnapshot current,
+        CommittedTransform transform)
     {
         _world.UpdateTransform(current.EntityKey, transform);
         RefreshSnapshot();
         RenderSnapshotChanged?.Invoke(_snapshot);
-        return new SceneTransformCommitResult(current.EntityKey, current.Transform, transform, true);
+        return new SceneTransformCommitResult(
+            current.EntityKey,
+            current.Transform,
+            transform,
+            true);
     }
 
     void RefreshSnapshot()
