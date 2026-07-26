@@ -9,7 +9,7 @@ public sealed partial class VulkanNativeHost
         if (DataContext is UiVm { SurfaceBridgeFactory: { } factory } vm)
         {
             LogBridgeFactorySource("应用注入");
-            return factory.Create(ReportVulkanMessage, vm.SceneSnapshotSource);
+            return factory.Create(ReportVulkanMessage, vm);
         }
         LogBridgeFactorySource("缺少应用注入，已拒绝旧回退路径");
         throw new InvalidOperationException("NativeHost Surface Bridge factory 未由应用组装层注入。");

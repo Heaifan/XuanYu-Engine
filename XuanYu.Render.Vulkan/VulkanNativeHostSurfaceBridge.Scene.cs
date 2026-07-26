@@ -1,11 +1,11 @@
-using XuanYu.Core.Scene;
+using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan;
 
 public sealed partial class VulkanNativeHostSurfaceBridge
 {
-    void OnSceneRenderSnapshotChanged(SceneRenderSnapshot snapshot)
+    void OnRenderProjectionChanged(RenderProjectionResult projection)
     {
-        _renderSession?.UpdateScene(snapshot);
+        _renderSession?.UpdateRenderProjection(projection);
     }
 }

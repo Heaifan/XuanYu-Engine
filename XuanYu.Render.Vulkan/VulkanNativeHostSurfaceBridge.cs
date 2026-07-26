@@ -1,6 +1,5 @@
 using System;
 using Silk.NET.Vulkan;
-using XuanYu.Core.Scene;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Bridge;
 using XuanYu.Render.Vulkan.Device;
@@ -13,7 +12,7 @@ namespace XuanYu.Render.Vulkan;
 public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBridge, IDisposable
 {
     readonly Action<string>? _log;
-    readonly ISceneRenderSnapshotSource? _sceneSource;
+    readonly IRenderProjectionSource? _projectionSource;
     Vk? _vk;
     VulkanInstanceOwner? _instanceOwner;
     VulkanSurfaceOwner? _surfaceOwner;
@@ -25,11 +24,11 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
 
     public Instance? Instance => _instanceOwner?.Instance;
     public SurfaceKHR? Surface => _surfaceOwner?.Surface;
-    public VulkanNativeHostSurfaceBridge(Action<string>? log = null, ISceneRenderSnapshotSource? sceneSource = null)
+    public VulkanNativeHostSurfaceBridge(Action<string>? log = null, IRenderProjectionSource? projectionSource = null)
     {
         _log = log;
-        _sceneSource = sceneSource;
-        if (_sceneSource is not null) _sceneSource.RenderSnapshotChanged += OnSceneRenderSnapshotChanged;
+        _projectionSource = projectionSource;
+        if (_projectionSource is not null) _projectionSource.RenderProjectionChanged += OnRenderProjectionChanged;
     }
 
     public void Attach(NativeHostSurfaceHandle handle)
@@ -52,7 +51,7 @@ public sealed partial class VulkanNativeHostSurfaceBridge : INativeHostSurfaceBr
                 ?? throw new InvalidOperationException("LogicalDevice 创建失败");
             swapchain = VulkanBridgeSwapchainAttachStep.Run(vk, instance.Instance, device, surface.Surface, selection, handle.Width, handle.Height, Emit)
                 ?? throw new InvalidOperationException("Swapchain 创建失败");
-            session = VulkanBridgeRenderSessionAttachStep.Run(vk, device, swapchain, selection, Emit, handle, _sceneSource?.RenderSnapshot)
+            session = VulkanBridgeRenderSessionAttachStep.Run(vk, device, swapchain, selection, Emit, handle, _projectionSource?.RenderProjection)
                 ?? throw new InvalidOperationException("RenderSession 创建失败");
             CommitAttach(ownedVk, vk, instance, surface, device, swapchain, session);
             Emit(VulkanBridgeLogFormatter.Attached(handle.Hwnd));

@@ -64,17 +64,22 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
         var submitted = false;
         while (Volatile.Read(ref _stopRequested) == 0)
         {
+            if (!_clearFrame.TryApplyPendingRenderProjection())
+            {
+                Fatal("Render Projection CommandBuffer 重录失败。");
+                break;
+            }
+            if (!_clearFrame.HasRenderProjection)
+            {
+                Thread.Sleep(16);
+                continue;
+            }
             var swapchain = _swapchainOwner.Swapchain;
             uint idx;
             var res = khr.AcquireNextImage(device, swapchain, AcquireTimeoutNs, _imageAvailable, default, &idx);
             if (res == Result.Timeout) continue;
             if (!HandleAcquireResult(res)) break;
             if (submitted && !WaitAndResetFence(device)) break;
-            if (!_clearFrame.TryApplyPendingSceneSnapshot())
-            {
-                Fatal("Transform Preview CommandBuffer 重录失败。");
-                break;
-            }
             if (!SubmitFrame(device, idx, stage)) break;
             submitted = true;
             var pres = PresentFrame(khr, swapchain, idx);

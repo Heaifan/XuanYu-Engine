@@ -25,7 +25,9 @@ function Get-OutputType([string]$path) {
     return ""
 }
 function Get-SourceFiles([string]$dir) {
-    git ls-files "$dir/*" | Where-Object { $_ -match '\.(cs|axaml|js)$' -and (Test-Path $_) } | ForEach-Object { Get-Item -LiteralPath $_ }
+    @($(git ls-files "$dir/*") + $(git ls-files --others --exclude-standard "$dir/*")) |
+        Where-Object { $_ -match '\.(cs|axaml|js)$' -and (Test-Path $_) } |
+        ForEach-Object { Get-Item -LiteralPath $_ }
 }
 function Get-TrackedHandwrittenFiles {
     $tracked = git ls-files
@@ -94,6 +96,9 @@ else {
 
 # ARCH-WORLD-R4 Editor boundary guards live in a separate file (5+100 split).
 . "$PSScriptRoot/arch-a-guard-editor.ps1"
+
+# ARCH-WORLD-R5 Render projection boundary guards live in a separate file.
+. "$PSScriptRoot/arch-a-guard-render.ps1"
 
 foreach ($file in Get-TrackedHandwrittenFiles) {
     $lines = (Get-Content -LiteralPath $file.FullName -Encoding utf8 | Measure-Object -Line).Lines

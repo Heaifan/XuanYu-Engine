@@ -14,6 +14,7 @@ public static class VulkanClearFrameLogFormatter
     public static string Skipped(string r) => $"【VulkanClearFrame】跳过：{r}";
     public static string PresentError(string r) => $"【VulkanClearFrame】Present 异常：{r}";
     public static string PresentFatal(string r) => $"【VulkanClearFrame】Present 致命退出，RenderSession 已失效：{r}";
+    public static string RenderProjectionSkipped(string r) => $"【VulkanClearFrame】跳过渲染投影：{r}";
     public static string SessionDisposed() => "【VulkanRenderSession】释放完成";
     public static string LogFallback(string e, string m) => $"【VulkanClearFrame】日志回调失败：{e}；原日志：{m}";
     public static string FirstPresented(uint idx) => $"【VulkanClearFrame】首帧 Present 成功；imageIndex={idx}";

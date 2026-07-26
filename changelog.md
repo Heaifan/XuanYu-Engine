@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.19.7-rz
+ARCH-WORLD-R5-R1 显式 Render Projection 最小合同实装（2026-07-26）
+- 任务目标：在 `9048176` 已完成本机复证（10 项目 0W0E、168 tests passed、Git/5+100/架构守卫/SVG/版本一致性通过）的基线上，完成 R5-R1 剩余工作：Render 不再直接消费 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource`，相机输入显式化，缺相机时明确失败并跳过当前帧提交。
+- 实装结果：`XuanYu.Render.Abstractions` 新增最小只读合同 `RenderProjection`、`RenderEntityProjection`、`RenderCameraProjection`、`RenderProjectionResult`、`IRenderProjectionSource`；`INativeHostSurfaceBridgeFactory` 改收 `IRenderProjectionSource`。`XuanYu.Editor.UI` 新增 `SceneRenderProjectionAdapter`，在组合边界把 `SceneRenderSnapshot` 解析为最终渲染数据：实体最终渲染位置（含 Preview 覆盖）、Gizmo 可见性与位置、显式相机投影均在跨 Render 边界前完成。
+- Render 迁移：`VulkanNativeHostSurfaceBridge` / `VulkanRenderSession` / `VulkanClearFrameOwner` 改为接收、排队和消费 `RenderProjectionResult` / `RenderProjection`；`VulkanClearFrameOwner.Draw` 不再读取旧快照，诊断实体数改读投影实体数；`VulkanPresentLoop` 在 Acquire 前应用投影，无有效投影时短暂等待并跳过提交，避免相机缺失被升级为 Vulkan 生命周期失败。
+- 守卫与测试：新增 `scripts/arch-a-guard-render.ps1`，锁定 `Render.Vulkan` 禁止 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `DefaultEditorCamera`，`Render.Abstractions` 禁止 `Core.Scene` / World / Editor.UI；新增 `SceneRenderProjectionAdapterTests` 覆盖缺相机失败、显式相机矩阵等价、Preview/Gizmo 边界前解析。测试数量由 168 增至 171。
+- 受控未做：未删除 `SceneRenderSnapshot`，未重构 Scene / World / Gizmo / Picking / Selection / Camera 系统，未改 Vulkan 生命周期，未新增渲染功能字段，未预埋材质/光照/天空盒等未来功能。
+- 验证：`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **171 passed / 0 failed / 0 skipped**；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS；SVG XML 48/48 PASS；`git diff --check` PASS；版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.7-rz`）。真机验收待用户执行。
+
 ## v0.2.19.6-rz
 ARCH-WORLD-R5-R0A 渲染合同边界只读审计（2026-07-25）
 - 任务目标：从已确认的 R4 终点 `6ccfb66` 新建 `refactor/ARCH-WORLD-R5-render-contract`（旧分支保留归档，不重写、不强推），以一轮只读审计确定 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` 与 Render 的真实边界，锁定后续方案，不再围绕旧分支状态打转。

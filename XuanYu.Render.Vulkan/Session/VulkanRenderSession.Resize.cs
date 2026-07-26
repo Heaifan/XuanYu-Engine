@@ -1,4 +1,4 @@
-using XuanYu.Core.Scene;
+using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Render;
 
@@ -47,9 +47,9 @@ public sealed partial class VulkanRenderSession
     bool IsSameSize(int width, int height)
         => _swapchainOwner.Extent.Width == (uint)width && _swapchainOwner.Extent.Height == (uint)height;
 
-    public void UpdateScene(SceneRenderSnapshot snapshot)
+    public void UpdateRenderProjection(RenderProjectionResult projection)
     {
         if (_disposed || IsFailed) return;
-        _clearFrame.QueueSceneSnapshot(snapshot);
+        _clearFrame.QueueRenderProjection(projection);
     }
 }

@@ -1,7 +1,7 @@
-版本：v0.2.19.6-rz
+版本：v0.2.19.7-rz
 # XuanYu Engine 文件树
 
-文件总数：445
+文件总数：454
 
 ## 根目录
 
@@ -15,6 +15,7 @@
 
 - `scripts/arch-a-guard.ps1`：ARCH-A 自动守卫主脚本，检查依赖边界（含 ARCH-WORLD 红线）、启动入口、版本一致性和 5+100 等约束；Solution 必须含 World/World.Tests/Editor；dot-source `arch-a-guard-world.ps1` 与 `arch-a-guard-editor.ps1`。
 - `scripts/arch-a-guard-world.ps1`：ARCH-WORLD 红线子守卫（R1-R1 拆分，主脚本 dot-source）；按 `<ProjectReference>` 元素解析校验 Core ✕→ World/Editor/Vulkan、World only → Core、World 生产源码 ✕ Editor/Vulkan/Avalonia/Silk，并校验 Solution 含 World/World.Tests；**R2-R1 升级：整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs` 可建唯一索引，把"单一空间索引"锁成机器约束**；**R2-R1 收尾：新增 WorldQuery mutation 调用点（`_query.Insert/Update/Remove/Rebuild`）仅允许出现在白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail，与单索引锁共同钉死"唯一 Writer"**。
+- `scripts/arch-a-guard-render.ps1`：ARCH-WORLD-R5 Render Projection 边界守卫；禁止 Render.Vulkan 回退引用 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `DefaultEditorCamera`，并禁止 Render.Abstractions 引入 Core.Scene / World / Editor.UI。
 
 ## XuanYu.World
 - 物理世界真相层（ARCH-WORLD-R1 新建，2026-07-24 真机验收 **CLOSED**）。命名空间 `XuanYu.World`（根）、`XuanYu.World.Scene`、`XuanYu.World.Spatial`、`XuanYu.World.Transform`。
@@ -255,6 +256,7 @@
 
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
+- `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.cs`：R5 Render Projection 适配器测试；覆盖缺相机失败、显式相机矩阵等价、Preview 与 Gizmo 在跨 Render 边界前解析。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
 - `XuanYu.Core.Tests/EditorTool/EditorTransformCapturePolicyTests.cs`：编辑器 Transform 捕获策略测试；测试侧引用 Editor.UI，验证 Move 可捕获 / 可显示、Rotate / Scale 不伪装 Move、Snap 不改变捕获和 Gizmo 可见性。
 - `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs`：编辑历史 Owner 基础合同测试；覆盖空栈、无变化忽略和 LIFO Undo。
@@ -314,12 +316,17 @@
 
 - `XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj`：渲染抽象项目文件。
 - `XuanYu.Render.Abstractions/INativeHostSurfaceBridge.cs`：NativeHost Surface 桥接抽象。
-- `XuanYu.Render.Abstractions/INativeHostSurfaceBridgeFactory.cs`：NativeHost Surface 桥接工厂抽象。
+- `XuanYu.Render.Abstractions/INativeHostSurfaceBridgeFactory.cs`：NativeHost Surface 桥接工厂抽象；R5-R1 起只接收 `IRenderProjectionSource`，不再暴露 Scene 快照源。
+- `XuanYu.Render.Abstractions/IRenderProjectionSource.cs`：Render Projection Source 抽象；发布显式投影结果或可审计失败原因。
 - `XuanYu.Render.Abstractions/NativeHostHandleSnapshot.cs`：NativeHost 句柄快照。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleLogFormatter.cs`：NativeHost 生命周期日志格式化器。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleProbe.cs`：NativeHost 生命周期探针数据。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleState.cs`：NativeHost 生命周期状态枚举。
 - `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs`：NativeHost Surface 句柄值对象。
+- `XuanYu.Render.Abstractions/RenderCameraProjection.cs`：最小 Render 相机投影；携带显式相机数值并按 Render 视口生成 ViewProjection，不创建默认相机。
+- `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：最小实体渲染投影；仅携带实体 Key 与跨边界前解析完成的位置。
+- `XuanYu.Render.Abstractions/RenderProjection.cs`：R5 最小渲染投影合同；包含显式相机、实体投影、Gizmo 可见性与位置。
+- `XuanYu.Render.Abstractions/RenderProjectionResult.cs`：Render Projection 创建结果；表达成功投影或明确失败原因。
 
 ## XuanYu.Render.Vulkan
 
@@ -335,7 +342,7 @@
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Attach.cs`：Vulkan NativeHost 桥接 Attach 分部。
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Lifecycle.cs`：Vulkan NativeHost 桥接生命周期分部。
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Resize.cs`：Vulkan NativeHost 桥接 Resize 分部。
-- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Scene.cs`：Vulkan NativeHost 桥接场景快照订阅分部。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Scene.cs`：Vulkan NativeHost 桥接 Render Projection 订阅分部。
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`：Vulkan NativeHost Surface 桥接主体。
 - `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridgeFactory.cs`：Vulkan NativeHost Surface 桥接工厂。
 - `XuanYu.Render.Vulkan/VulkanProbeLogFormatter.cs`：Vulkan 探针日志格式化器。
@@ -362,8 +369,8 @@
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Trace.cs`：Vulkan ClearFrame 低频录制诊断分部；记录 RecordCommandBuffers 深度、线程、实体数和视图数，不改变生命周期。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Scene Preview 快照，并由 Present 线程在安全点消费。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并发起 Draw，不污染 Picking 或生命周期。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Render Projection，并由 Present 线程在安全点消费；缺相机失败仅清空当前可提交投影并记录跳过原因。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；只消费 Render Projection，负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并发起 Draw，不污染 Picking 或生命周期。
 - `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与最小 Move Gizmo 三轴顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。
 - `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；不负责 Selection 或 Pipeline 生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
@@ -461,6 +468,7 @@
 - `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点 UI 投影模型；携带图标身份、连续树线 Guide 和展开折叠 UI 状态。
 - `XuanYu.Editor.UI/Vm/LogEntry.cs`：编辑器日志条目模型。
 - `XuanYu.Editor.UI/Vm/SampleLogEntries.cs`：底部日志栏示例数据。
+- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：R5 Render Projection 组合边界适配器；从 `SceneRenderSnapshot` 抽取最终实体位置、Gizmo 状态和显式相机，缺相机时返回明确失败。
 - `XuanYu.Editor.UI/Vm/TreeGuideBuilder.cs`：树形 UI Guide 构造器；从可视节点层级推导祖先连续竖线、中间 Tee、末节点 Elbow 和折叠过滤。
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm Undo / Redo 接线分部；成功 Commit 后记录 History，撤销恢复 Before，重做恢复 After。
@@ -472,7 +480,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。
-- `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令与渲染快照分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo。
+- `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令、组合快照与 Render Projection 发布分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionProjection.cs`：UiVm Selection 投影同步分部；用内部同步保护位更新 Project / Hierarchy 选中项，禁止程序同步回流成业务选择。
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionTrace.cs`：UiVm Selection 低频诊断分部；记录选择提交、层级选择、投影同步和渲染发布深度。

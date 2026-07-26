@@ -1,6 +1,6 @@
 using System;
 using Silk.NET.Vulkan;
-using XuanYu.Core.Scene;
+using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Swapchain;
@@ -21,7 +21,8 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     ImageView[] _views = [];
     Silk.NET.Vulkan.Pipeline _pipeline = default;
     PipelineLayout _pipelineLayout = default;
-    SceneRenderSnapshot _sceneSnapshot = SceneRenderSnapshot.TestEntityAtOrigin;
+    RenderProjection _renderProjection;
+    bool _hasRenderProjection;
     Extent2D _extent;
     int _recordCommandDepth;
     bool _disposed;
@@ -50,7 +51,8 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     public CommandBuffer[] CommandBuffers => _commandBuffers;
     public Extent2D Extent => _extent;
     public RenderPass RenderPass => _renderPass;
-    public SceneRenderSnapshot SceneSnapshot => _sceneSnapshot;
+    public RenderProjection RenderProjection => _renderProjection;
+    public bool HasRenderProjection => _hasRenderProjection;
 
     public void SetPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
     {
@@ -60,13 +62,19 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
             throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
     }
 
-    public bool SetSceneSnapshot(SceneRenderSnapshot snapshot)
+    public bool SetRenderProjection(RenderProjection projection)
     {
-        if (_sceneSnapshot == snapshot) return false;
-        _sceneSnapshot = snapshot;
+        if (_hasRenderProjection && _renderProjection == projection) return false;
+        _renderProjection = projection;
+        _hasRenderProjection = true;
         if (_views.Length > 0 && !RecordCommandBuffers(_views))
-            throw new InvalidOperationException("Scene snapshot 注入后 CommandBuffer 重录失败");
+            throw new InvalidOperationException("Render projection 注入后 CommandBuffer 重录失败");
         return true;
+    }
+
+    public void ClearRenderProjection()
+    {
+        _hasRenderProjection = false;
     }
 
     public bool RebuildFramebuffers(uint generation = 0, bool force = false)

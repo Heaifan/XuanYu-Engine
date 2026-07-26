@@ -1,33 +1,42 @@
-using XuanYu.Core.Scene;
+using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
 {
     readonly object _sceneLock = new();
-    SceneRenderSnapshot _pendingSceneSnapshot;
-    bool _sceneSnapshotPending;
+    RenderProjectionResult _pendingRenderProjection;
+    bool _renderProjectionPending;
 
-    public void QueueSceneSnapshot(SceneRenderSnapshot snapshot)
+    public void QueueRenderProjection(RenderProjectionResult projection)
     {
         lock (_sceneLock)
         {
-            if (!_sceneSnapshotPending && _sceneSnapshot == snapshot) return;
-            _pendingSceneSnapshot = snapshot;
-            _sceneSnapshotPending = true;
+            if (!_renderProjectionPending && projection.Success &&
+                _hasRenderProjection && _renderProjection == projection.Projection) return;
+            _pendingRenderProjection = projection;
+            _renderProjectionPending = true;
         }
     }
 
-    public bool TryApplyPendingSceneSnapshot()
+    public bool TryApplyPendingRenderProjection()
     {
-        SceneRenderSnapshot snapshot;
+        RenderProjectionResult projection;
         lock (_sceneLock)
         {
-            if (!_sceneSnapshotPending) return true;
-            snapshot = _pendingSceneSnapshot;
-            _sceneSnapshotPending = false;
-            _sceneSnapshot = snapshot;
+            if (!_renderProjectionPending) return true;
+            projection = _pendingRenderProjection;
+            _renderProjectionPending = false;
         }
+        if (!projection.Success)
+        {
+            ClearRenderProjection();
+            Log(VulkanClearFrameLogFormatter.RenderProjectionSkipped(
+                projection.FailureReason ?? "未知原因"));
+            return true;
+        }
+        _renderProjection = projection.Projection;
+        _hasRenderProjection = true;
         return _views.Length == 0 || RecordCommandBuffers(_views);
     }
 }

@@ -2,6 +2,7 @@ using System.Numerics;
 using Silk.NET.Vulkan;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
+using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Pipeline;
 
 namespace XuanYu.Render.Vulkan.Render;
@@ -21,20 +22,21 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
             _vk.CmdSetViewport(cb, 0, 1, pVp);
             _vk.CmdSetScissor(cb, 0, 1, pSc);
-            var entities = _sceneSnapshot.Entities;
+            if (!_hasRenderProjection) return;
+            var entities = _renderProjection.Entities;
             for (var i = 0; i < entities.Count; i++)
             {
-                FillScenePushConstants(pScene, _sceneSnapshot.PositionFor(entities[i]));
+                FillScenePushConstants(pScene, _renderProjection, entities[i].Position);
                 PushSceneConstants(cb, pScene);
                 _vk.CmdDraw(cb, 3, 1, 0, 0);
             }
-            if (_sceneSnapshot.ShowMoveGizmo) DrawActiveGizmo(cb, pScene);
+            if (_renderProjection.GizmoVisible) DrawActiveGizmo(cb, pScene, _renderProjection);
         }
     }
 
-    void DrawActiveGizmo(CommandBuffer cb, float* scene)
+    void DrawActiveGizmo(CommandBuffer cb, float* scene, RenderProjection projection)
     {
-        FillScenePushConstants(scene, _sceneSnapshot.RenderPosition);
+        FillScenePushConstants(scene, projection, projection.GizmoPosition);
         PushSceneConstants(cb, scene);
         _vk.CmdDraw(cb, 21, 1, 0, 0);
     }
@@ -46,16 +48,13 @@ public sealed unsafe partial class VulkanClearFrameOwner
             VulkanScenePushConstants.SizeInBytes, scene);
     }
 
-    void FillScenePushConstants(float* target, Vector3d position)
+    void FillScenePushConstants(float* target, RenderProjection projection, Vector3d position)
     {
         var viewport = new ViewportState(0, 0, _extent.Width, _extent.Height, (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
-        var source = _sceneSnapshot.CameraState;
-        var camera = new CameraState(source.Position, source.Forward, source.Up,
-            source.VerticalFovDegrees, source.NearPlane, source.FarPlane,
-            _swapchainOwner.ResourceGeneration);
-        var state = ViewProjectionState.Create(camera, viewport);
-        var projection = ToVulkanProjection(state.Projection);
-        var viewProjection = state.View * projection;
+        var camera = projection.Camera with { Revision = _swapchainOwner.ResourceGeneration };
+        var state = camera.ToViewProjection(viewport);
+        var vulkanProjection = ToVulkanProjection(state.Projection);
+        var viewProjection = state.View * vulkanProjection;
         FillMatrixTranspose(target, viewProjection);
         target[16] = (float)position.X;
         target[17] = (float)position.Y;

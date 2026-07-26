@@ -1,5 +1,6 @@
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
+using XuanYu.Render.Abstractions;
 using XuanYu.World.Scene;
 using XuanYu.World;
 
@@ -29,6 +30,9 @@ public sealed partial class UiVm
         }
     }
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
+    public RenderProjectionResult RenderProjection =>
+        SceneRenderProjectionAdapter.TryCreate(RenderSnapshot);
+    public event Action<RenderProjectionResult>? RenderProjectionChanged;
 
     void ApplyRunCommand(string name)
     {
@@ -57,6 +61,7 @@ public sealed partial class UiVm
         TraceSelection("PublishSceneRenderSnapshot", 1,
             $"实体数={RenderSnapshot.Entities.Count}");
         RenderSnapshotChanged?.Invoke(RenderSnapshot);
+        RenderProjectionChanged?.Invoke(RenderProjection);
     }
 
     IReadOnlyList<string> BuildDebugObjectItems()

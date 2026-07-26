@@ -7,7 +7,8 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
 
-public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISceneRenderSnapshotSource
+public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISceneRenderSnapshotSource,
+    XuanYu.Render.Abstractions.IRenderProjectionSource
 {
     readonly EditorStateOwner _editorState;
     readonly EditorHistoryOwner _historyOwner = new();

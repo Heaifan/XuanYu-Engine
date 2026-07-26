@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using Silk.NET.Vulkan;
-using XuanYu.Core.Scene;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
@@ -45,7 +44,7 @@ public sealed partial class VulkanRenderSession : IDisposable
 
     public static VulkanRenderSession? Create(Vk vk, VulkanDeviceOwner? deviceOwner,
         VulkanSwapchainOwner? swapchainOwner, VulkanPhysicalDeviceSelection? selection,
-        Action<string>? log, NativeHostSurfaceHandle? surfaceHandle = null, SceneRenderSnapshot? scene = null)
+        Action<string>? log, NativeHostSurfaceHandle? surfaceHandle = null, RenderProjectionResult? projection = null)
     {
         if (deviceOwner is null || swapchainOwner is null || selection?.Queue is null || !selection.Success)
         {
@@ -59,7 +58,10 @@ public sealed partial class VulkanRenderSession : IDisposable
         {
             VulkanRenderSession? session = null;
             clear = new VulkanClearFrameOwner(vk, deviceOwner, swapchainOwner, selection.Queue.GraphicsFamily, log);
-            clear.SetSceneSnapshot(scene ?? SceneRenderSnapshot.TestEntityAtOrigin);
+            if (projection is { Success: true } ok) clear.SetRenderProjection(ok.Projection);
+            else if (projection is { Success: false } fail)
+                log?.Invoke(VulkanClearFrameLogFormatter.RenderProjectionSkipped(
+                    fail.FailureReason ?? "未知原因"));
             pipeline = VulkanGraphicsPipelineOwner.Create(vk, deviceOwner, clear, swapchainOwner, log);
             if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline, pipeline.Layout);
             loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,
