@@ -16,6 +16,7 @@ public sealed partial class UiVm
 
     void BeginInteraction()
     {
+        if (!CanBeginMoveInteraction()) return;
         var result = _editorState.Begin(new BeginInteractionCommand(ActiveTool,
             SelectionTitle, EditorInteractionPointerSnapshot.Empty));
         if (result is null) return;

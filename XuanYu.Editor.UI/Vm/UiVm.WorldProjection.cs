@@ -87,6 +87,7 @@ public sealed partial class UiVm
     {
         TraceSelection("RefreshWorldProjectionBindings", 1,
             $"实体数={_sceneState.RenderSnapshot.Entities.Count}");
+        ClearInvalidEntitySelection("世界实体失效");
         SynchronizeSelectionProjection();
         OnPropertyChanged(nameof(HierarchyItems));
         OnPropertyChanged(nameof(InspectorFields));

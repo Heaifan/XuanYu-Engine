@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.20.4-rz
+WORLD-B-R2 选择与工具状态闭环实装（2026-07-26）
+- 任务目标：建立编辑器唯一 Selection / ToolMode 的边界加固，让中央视口、左侧“层级”、右侧“检查器”、顶部工具栏和移动控制柄消费同一选择与工具状态；本轮不进入 Rotate / Scale 数学、Inspector 数值变换、多选、框选算法或 WarCore。
+- 实装结果：新增 `UiVm.InputGuards` 与 `UiVm.SelectionValidity`；Picking 只允许“选择”工具在无活动会话时写入 Selection；活动相机或移动会话期间拒绝 Picking、层级/项目树选择写入和工具切换；“框选”“旋转”“缩放”不进入虚假活动态；删除/失效实体后按 World 权威清理 Selection。
+- 测试变化：新增 `WorldSelectionToolStateUiTests` 5 项，覆盖层级选择同步检查器、清除选择同步清层级/检查器/移动控制柄、删除选中实体清除失效选择、未实现工具拒绝虚假高亮、移动会话阻止工具切换/相机/Picking。测试数由 182 增至 187。
+- 文档与可视化：新增 `docs/world-b-r2-selection-tool-state-report.md` 与 `docs/world-b-r2-selection-tool-state.svg`；`run.bat`、`UiWin.axaml`、`file-tree.md` 同步到 `v0.2.20.4-rz`。
+- 状态：R2 代码与自动门禁完成；R2 真机验收清单已落库，但尚需用户按中文 IPO 清单确认或明确豁免后才能宣布 CLOSED。
+- 验证：`git diff --check` PASS；全仓 5+100 PASS（311 个 tracked/untracked `.cs` / `.axaml`）；SVG XML **54/54 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **187 passed / 0 failed / 0 skipped**（Core 77 + World 110）；`scripts\arch-a-guard.ps1` EXIT=0。
+
 ## v0.2.20.3-rz
 WORLD-B-R1 编辑器相机操作验收收口（2026-07-26）
 - 任务目标：记录 R1 中文 IPO 真机证据通过，将 WORLD-B-R1 从“代码与自动门禁完成、等待真机记录”推进到正式 CLOSED，并冻结下一入口为 WORLD-B-R2。

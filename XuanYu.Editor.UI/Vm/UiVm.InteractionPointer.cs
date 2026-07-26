@@ -6,7 +6,7 @@ public sealed partial class UiVm
 {
     public bool BeginViewportPointer(long pointerId, double x, double y, bool inViewport, bool hostValid)
     {
-        if (!inViewport || !hostValid || !IsMoveTool) return false;
+        if (!inViewport || !hostValid || !CanBeginMoveInteraction()) return false;
         var pointer = new EditorInteractionPointerSnapshot(pointerId, x, y, x, y, 0);
         var result = _editorState.Begin(new BeginInteractionCommand(ActiveTool, SelectionTitle, pointer));
         if (result is null) return false;

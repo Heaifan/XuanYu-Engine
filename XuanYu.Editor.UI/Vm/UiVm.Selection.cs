@@ -7,6 +7,7 @@ public sealed partial class UiVm
 
     void ApplySelection(string source, EditorTreeNode node)
     {
+        if (HasBlockingInput) return;
         _selectionCommitDepth++;
         TraceSelection("选择提交", _selectionCommitDepth, $"来源={source}；键={node.Key}");
         CancelInteraction("切换选择对象");
@@ -39,6 +40,7 @@ public sealed partial class UiVm
 
     void SetProjectSelection(EditorTreeNode? value)
     {
+        if (HasBlockingInput && !_isSynchronizingSelectionProjection) return;
         var already = _selectedProjectItem == value;
         if (!Set(ref _selectedProjectItem, value, nameof(SelectedProjectItem)) && !already) return;
         SetSelectedNodeKey(value?.Key ?? "");
@@ -50,6 +52,7 @@ public sealed partial class UiVm
 
     void SetHierarchySelection(EditorTreeNode? value)
     {
+        if (HasBlockingInput && !_isSynchronizingSelectionProjection) return;
         _hierarchySelectionDepth++;
         TraceSelection("层级选择", _hierarchySelectionDepth, $"键={value?.Key ?? "空"}");
         try

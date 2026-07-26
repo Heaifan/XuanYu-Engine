@@ -9,6 +9,7 @@ public sealed partial class UiVm
     long _cameraSessionRevision;
 
     public Vector3d ObservationCenter => _observationCenter;
+    public bool IsCameraNavigationActive => _cameraSession is not null;
 
     public bool BeginCameraNavigation(long pointerId, double x, double y, bool shift, int width, int height)
     {
