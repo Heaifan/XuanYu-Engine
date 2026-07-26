@@ -1,7 +1,7 @@
-版本：v0.2.19.9-rz
+版本：v0.2.20.1-rz
 # XuanYu Engine 文件树
 
-文件总数：458
+文件总数：460
 
 ## 根目录
 
@@ -118,6 +118,8 @@
 - `docs/world-a-ui-r1-display-cleanup.svg`：WORLD-A-UI-R1 显示清理图；说明日志表格、树形投影、Inspector 显示映射与事实源边界。
 - `docs/world-a-ui-r2-continuous-tree-report.md`：WORLD-A-UI-R2 连续树线与图标重制报告；记录 UI-R1 视觉退回、共享 TreeGuide、图标来源和验收证据。
 - `docs/world-a-ui-r2-continuous-tree.svg`：WORLD-A-UI-R2 连续树干验收图；展示 Project / Hierarchy 的 Full、Tee、Elbow 树线模型。
+- `docs/world-b-r0-editor-interaction-audit.md`：WORLD-B-R0 编辑器基本操作现状审计与合同冻结文档；冻结 Camera / Selection / ToolMode / Transform 权威、输入优先级、保留项、缺口和 R1-R4 入口边界，不承载运行时代码。
+- `docs/world-b-r0-editor-interaction-audit.svg`：WORLD-B-R0 编辑器相机、选择、工具与 Transform 权威关系图；展示 WarCore 后移和 R1-R4 路线，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。

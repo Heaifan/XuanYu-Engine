@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f6f8fb"/>
+  <text x="64" y="58" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" font-weight="700" fill="#172033">WORLD-B-R0 编辑器基本操作合同冻结</text>
+  <text x="64" y="92" font-family="Microsoft YaHei, Arial, sans-serif" font-size="16" fill="#526070">不进入 WarCore；先让编辑器完成看、选、变换、取消、撤销、重做的基本闭环</text>
+  <rect x="64" y="132" width="230" height="92" rx="8" fill="#ffffff" stroke="#6a8fbf" stroke-width="2"/>
+  <text x="92" y="166" font-family="Microsoft YaHei, Arial, sans-serif" font-size="20" font-weight="700" fill="#24496f">CameraState</text>
+  <text x="92" y="195" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">Owner: UiVm.Camera</text>
+  <text x="92" y="216" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">R1 补 Orbit / Pan / Zoom</text>
+  <rect x="374" y="132" width="230" height="92" rx="8" fill="#ffffff" stroke="#6a8fbf" stroke-width="2"/>
+  <text x="402" y="166" font-family="Microsoft YaHei, Arial, sans-serif" font-size="20" font-weight="700" fill="#24496f">Selection</text>
+  <text x="402" y="195" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">Owner: EditorStateOwner</text>
+  <text x="402" y="216" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">Viewport / Hierarchy 同入口</text>
+  <rect x="684" y="132" width="230" height="92" rx="8" fill="#ffffff" stroke="#6a8fbf" stroke-width="2"/>
+  <text x="712" y="166" font-family="Microsoft YaHei, Arial, sans-serif" font-size="20" font-weight="700" fill="#24496f">ToolMode</text>
+  <text x="712" y="195" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">Owner: ActiveTool</text>
+  <text x="712" y="216" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">Select / Move / Rotate / Scale</text>
+  <rect x="994" y="132" width="222" height="92" rx="8" fill="#fff8f0" stroke="#d28b3d" stroke-width="2"/>
+  <text x="1022" y="166" font-family="Microsoft YaHei, Arial, sans-serif" font-size="20" font-weight="700" fill="#7a4a14">WarCore</text>
+  <text x="1022" y="195" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#5f4930">本阶段禁止进入</text>
+  <text x="1022" y="216" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#5f4930">士兵 / 战斗 / 组织后移</text>
+  <path d="M294 178H374" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M604 178H684" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M914 178H994" stroke="#d28b3d" stroke-width="2" stroke-dasharray="8 6"/>
+  <rect x="144" y="292" width="310" height="108" rx="8" fill="#ffffff" stroke="#3b82a6" stroke-width="2"/>
+  <text x="176" y="328" font-family="Microsoft YaHei, Arial, sans-serif" font-size="20" font-weight="700" fill="#1f5f75">Picking / ViewProjection</text>
+  <text x="176" y="357" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">CameraState + ViewportState</text>
+  <text x="176" y="380" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">ViewportPickingService → Selection</text>
+  <rect x="486" y="292" width="310" height="108" rx="8" fill="#ffffff" stroke="#3b82a6" stroke-width="2"/>
+  <text x="518" y="328" font-family="Microsoft YaHei, Arial, sans-serif" font-size="20" font-weight="700" fill="#1f5f75">TransformSession</text>
+  <text x="518" y="357" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">Begin / Preview / Commit / Cancel</text>
+  <text x="518" y="380" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">Preview 只进 Render，不进 World</text>
+  <rect x="828" y="292" width="310" height="108" rx="8" fill="#ffffff" stroke="#3b82a6" stroke-width="2"/>
+  <text x="860" y="328" font-family="Microsoft YaHei, Arial, sans-serif" font-size="20" font-weight="700" fill="#1f5f75">GlobalWorld</text>
+  <text x="860" y="357" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">唯一实体与 Transform 权威</text>
+  <text x="860" y="380" font-family="Microsoft YaHei, Arial, sans-serif" font-size="15" fill="#334155">Commit / Undo / Redo 写回这里</text>
+  <path d="M299 224V292" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M489 224C489 252 641 252 641 292" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M799 224V292" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M796 346H828" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="164" y="478" width="950" height="120" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="196" y="516" font-family="Microsoft YaHei, Arial, sans-serif" font-size="20" font-weight="700" fill="#172033">WORLD-B 后续轮次</text>
+  <text x="196" y="550" font-family="Microsoft YaHei, Arial, sans-serif" font-size="16" fill="#334155">R1 相机：MMB Orbit / Shift+MMB Pan / Wheel Dolly / Frame 焦点保持</text>
+  <text x="196" y="576" font-family="Microsoft YaHei, Arial, sans-serif" font-size="16" fill="#334155">R2 选择与工具：唯一 Selection、唯一 ActiveTool、输入抢占、未实现能力不伪装</text>
+  <text x="196" y="602" font-family="Microsoft YaHei, Arial, sans-serif" font-size="16" fill="#334155">R3 Move：单轴 + 平面 + Preview/Commit/Cancel + Undo/Redo + 跨 Region</text>
+  <text x="196" y="628" font-family="Microsoft YaHei, Arial, sans-serif" font-size="16" fill="#334155">R4 Rotate / Scale / Local / Inspector：真实数据合同后再启用</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+</svg>

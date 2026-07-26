@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.20.1-rz
+WORLD-B-R0 编辑器基本操作现状审计与合同冻结（2026-07-26 10:16:13）
+- 任务目标：纠正“ARCH-WORLD 后立即进入 WarCore”的错误路线，正式建立 `WORLD-B：编辑器基本操作与实体变换闭环` 的 R0 入口门；本轮不创建 WarCore、士兵、战斗、编制或战争结算。
+- 审计结论：确认现有 `CameraState` / `EditorCameraFraming` / `ViewportPickingService` / `EditorStateOwner` / `EditorToolSnapshot` / `TransformSession` / `EditorHistoryOwner` / Win32+Avalonia Capture Cancel 链均可复用；R1-R4 必须沿这些入口扩展，不得重造 Camera、Selection、Transform 或 GlobalWorld 权威。
+- 合同冻结：新增 `docs/world-b-r0-editor-interaction-audit.md`，冻结输入优先级、Camera / Selection / ToolMode / Transform 权威图、保留项、缺口和 R1-R4 入口边界；新增 `docs/world-b-r0-editor-interaction-audit.svg` 作为本轮可视化证据。
+- 明确缺口：Orbit / Pan / Zoom 尚无真实输入会话；Frame Selected 后 Orbit 焦点尚未保持；Move 仅有 X/Y/Z 单轴且无平面；`CommittedTransform` 当前只有 Position；Rotate / Scale / Local / Inspector 数值编辑均未实装，后续不得伪装能力。
+- 修改范围：`docs/world-b-r0-editor-interaction-audit.md`、`docs/world-b-r0-editor-interaction-audit.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证：首次沙箱内 `dotnet build .\XuanYu.Engine.slnx --no-incremental` 因 NuGet 网络权限失败（NU1301，api.nuget.org:443），非沙箱重跑通过，10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **171 passed / 0 failed / 0 skipped**（Core 72 + World 99）；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS（322 文件）；SVG XML **51/51 PASS**；`git diff --check` PASS；版本源四处一致（`run.bat`/`UiWin.axaml`/`changelog`/`file-tree`=`v0.2.20.1-rz`）。
+- Commit Hash：本条记录在提交前写入；最终提交 Hash 以本轮最终报告和 Git 记录为准。
+- 遗留问题：R1 开始真实相机操作；R2 收口选择与工具状态；R3 收口 Move；R4 再进入 Rotate / Scale / Local / Inspector。WarCore 后移到 WORLD-B 稳定后再裁定。
+
 ## v0.2.19.9-rz
 ARCH-WORLD-R6 架构退出门禁（2026-07-26）
 - 任务目标：不继续制造 R7/R8 架构阶段，只回答 ARCH-WORLD 是否可以退出纯引擎架构治理并进入一个士兵 WarCore 闭环。
