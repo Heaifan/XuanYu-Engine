@@ -1,6 +1,13 @@
 # changelog
 
 ## v0.2.20.2-rz
+WORLD-B-R1 中文 IPO 真机测试治理补丁（2026-07-26 14:25:28）
+- 任务目标：将人工与真机测试清单统一为“序号 / 路径 / 输入 I / 过程 P / 输出 O”格式，确保测试者可以逐步照做，结果可以由画面、状态、日志或数据明确判断。
+- 治理更新：`docs/玄域引擎_AI开发宪法.md` 在测试验收章节新增 IPO 强制条款；`docs/dev-rules.md` 同步简版硬规则；禁止在人工或真机清单中用 `Frame Selected`、`Frame All`、`Orbit`、`Pan` 等内部英文名替代当前 UI 中文名称。
+- 验收文档：`docs/world-b-r1-camera-operation-report.md` 将 R1 真机验收项替换为 11 项中文 IPO 清单，覆盖“聚焦”“查看全部”、Shift + 鼠标中键平移、滚轮调整观察距离、Escape 取消、窗口失焦、调整窗口大小、选择保持和“移动”互斥。
+- 范围纪律：本轮只修改治理文档、R1 验收文档与 changelog，不修改生产逻辑；未新增、删除、改名或移动文件，因此不机械修改 `file-tree.md`。
+- 验证：`git diff --check` PASS；全仓 5+100 PASS（308 个 tracked `.cs` / `.axaml`）；SVG XML **52/52 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **182 passed / 0 failed / 0 skipped**（Core 77 + World 105）；`scripts\arch-a-guard.ps1` EXIT=0。首次沙箱 build 因 NuGet 网络权限 NU1301 失败；非沙箱重跑时 PID 3288 的当前工作区 `XuanYu.Editor.App` 锁定输出 DLL，核对路径后终止该进程并重跑通过。
+
 WORLD-B-R1 编辑器相机操作实装（2026-07-26 13:56:52）
 - 任务目标：完成编辑器相机操作主链，建立唯一 `ObservationCenter`，让 Frame All / Frame Selected、MMB Orbit、Shift+MMB Pan、Wheel Dolly 与 Cancel 生命周期读取同一焦点来源；本轮不进入 WarCore、Rotate、Scale、Inspector Transform 或实体 Transform 改造。
 - 实装结果：`XuanYu.Editor.Camera` 新增 `CameraFrameResult` 与 `CameraNavigation` 纯算法；`EditorCameraFraming` 增加带中心返回的 Frame API；`UiVm.Camera` 增 `_observationCenter`；`UiVm.CameraNavigation` 增最小 CameraSession；Win32 NativeHost 与 Avalonia Pointer 路由接入 MMB / Shift+MMB / Wheel；Camera Capture 与 Gizmo / Picking 互斥。
