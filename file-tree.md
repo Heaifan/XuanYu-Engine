@@ -1,4 +1,4 @@
-版本：v0.2.20.8-rz
+版本：v0.2.20.9-fix
 # XuanYu Engine 文件树
 
 文件总数：502
@@ -300,6 +300,7 @@
 - `XuanYu.Core.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
 - `XuanYu.World.Tests/World/WorldCameraNavigationUiTests.cs`：WORLD-B-R1 UiVm 相机会话测试；覆盖 Frame 更新 ObservationCenter、Cancel 恢复、输入抢占、旧 PointerUp 和 Camera Capture 阻止 Picking / Dolly。
 - `XuanYu.World.Tests/World/WorldSelectionToolStateUiTests.cs`：WORLD-B-R2 UiVm 选择与工具状态测试；覆盖层级选择同步检查器、清除选择、删除失效选择、未实现工具拒绝虚假活动态和移动会话输入抢占。
+- `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.cs`：WORLD-B-R4-F3 UiVm 工具状态高亮测试；覆盖未实装旋转/缩放点击后唯一高亮、右上角状态与视口移动控制柄一致、至多一个工具按钮活动。
 - `XuanYu.World.Tests/World/WorldMoveTransformUiTests.cs`：WORLD-B-R3 UiVm 移动变换基础测试；覆盖真实 X 轴拖动提交、撤销、重做，以及移动会话期间选择改写被拒绝。
 - `XuanYu.World.Tests/World/WorldMoveTransformPlaneUiTests.cs`：WORLD-B-R3 平面移动 UiVm 测试；覆盖 XY/XZ/YZ 平面只改对应轴、Preview 不写正式位置、无位移不进 History。
 - `XuanYu.World.Tests/World/WorldMoveTransformRegionUiTests.cs`：WORLD-B-R3 跨 Region 移动 UiVm 测试；覆盖 EntityId 不变、世界单实体、层级/检查器/Selection 更新和 Undo/Redo 区域恢复。

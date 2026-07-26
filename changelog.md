@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.20.9-fix
+WORLD-B-R4-F3 工具状态真相修复（2026-07-26）
+- 任务目标：修复点击未实装“旋转”后“移动”与“旋转”同时高亮的双高亮问题，恢复 R2 已冻结合同（唯一 ToolMode → 工具栏高亮 / 右上角状态 / 视口控制柄 / 输入行为 四者一致）；旋转/缩放真正接通前不得假激活。本轮不实现旋转环、缩放柄或全局/局部。
+- 实装结果：`UiVm.Tool.cs` 在“未实装”分支提前 `return` 前补 `RaiseToolChanged()`，让被误点的 ToggleButton 视觉回落，消除双高亮；日志语义由“当前工具切换为：旋转未实装”改正为“旋转工具尚未实装，当前工具仍为：{当前工具}”，避免造成“已切换成功”的错误审计证据；当前真实工具、右上角状态与视口移动控制柄在点击未实装工具后均保持不变。
+- 测试变化：新增 `WorldToolStateHighlightUiTests` 2 项，覆盖未实装旋转/缩放点击后唯一高亮、状态与移动控制柄一致、至多一个工具按钮活动。测试数由 224 增至 226。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.9-fix`；新增 `.gitattributes`（`* text=auto`）统一换行，消除工作树 CRLF 误标。
+- 状态：R4 继续推进；下一步 F4 正式启用旋转工具（可见旋转环 + 命中 + 会话 + 提交）。
+- 验证：`git diff --check` PASS；本轮差异文件 5+100 PASS；SVG XML PASS；`scripts\arch-a-guard.ps1` EXIT=0；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **226 passed / 0 failed / 0 skipped**（Core 85 + World 141）。
+- 关联提交：`fd9ef059`。
+
 ## v0.2.20.8-rz
 WORLD-B-R4-F2 完整 Transform 会话与检查器提交合同（2026-07-26）
 - 任务目标：继续 WORLD-B-R4，不补 CRUD、不进入 WarCore；把 R4-F1 的 Position / Rotation / Scale 数据落点推进为正式会话提交和检查器数值输入合同。本轮不宣布 R4 CLOSED，旋转/缩放可见控制柄与全局/局部模式仍待后续 R4 子轮完成。
