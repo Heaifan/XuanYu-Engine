@@ -19,13 +19,16 @@
 
 ## D2 — SceneRenderSnapshot 污染 Core（收口轮次：R5）
 
-- **现状**：`XuanYu.Core.Scene.SceneRenderSnapshot` 含 `IsSelected` / `PreviewTransform` / `ShowMoveGizmo` /
+- **状态**：**已于 ARCH-WORLD R5 CLOSED 收口**。Render 生产路径已改为消费 `RenderProjection`，
+  `Render.Vulkan` 不再引用 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `DefaultEditorCamera`；
+  `SceneRenderSnapshot` 仅保留为 World/Editor 上层组合快照，不再作为 Render 合同。
+- **原现状**：`XuanYu.Core.Scene.SceneRenderSnapshot` 含 `IsSelected` / `PreviewTransform` / `ShowMoveGizmo` /
   `Camera`，乃至 `Camera ?? DefaultEditorCamera.Create(0)`；已迁 World 的 `SceneStateOwner` 仍实现
   `ISceneRenderSnapshotSource` 并持有该快照。
 - **性质**：一个名义上的 `Core.Scene` 类型实际上知道选中状态、Gizmo 显示、编辑预览、编辑器默认相机——
   明显的 Editor / Presentation 语义。
-- **裁定**：属 R5 Snapshot / Camera / Presentation 边界整理，**不得混入 R2**。维持"程序集依赖正确 ≠
-  语义依赖完全正确"的认知。
+- **收口裁定**：R5 采用最小 Render Projection，而非整体搬迁 Snapshot；Preview / Gizmo / Camera 在
+  Editor/UI 组合边界解析，Render 只见不可变帧级投影。该债务对 Render 生产路径已关闭。
 
 ## D3 — 测试程序集未严格映射生产层（收口轮次：R4/R5）
 

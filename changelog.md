@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.19.8-rz
+ARCH-WORLD-R5 正式收口（2026-07-26）
+- 真机裁定：R5-R1 自动验收与真机功能验收均通过。启动首帧、查看全部、聚焦选中对象、Gizmo 显示、Preview、Commit、Escape Cancel、Resize、日志栏展开/收起、Vulkan 关闭释放链全部 PASS；未发现 DefaultEditorCamera、相机缺失、跳过帧、Fatal 或新增异常。R5-R1 不因日志噪声退回，不重跑已通过的真机功能测试。
+- 最小日志降噪：定位并处理三类高频调试噪声。`UiVm.Scene.PublishSceneRenderSnapshot` 不再逐次输出，改为首次、实体数变化和每 100 次摘要；`VulkanClearFrameOwner.Commands` 不再输出每次命令缓冲录制开始/结束，改为成功重录后的低频摘要；失败仍由既有 `Ok(...)` / Fatal / 异常日志保留。
+- 收口文档：新增 `docs/arch-world-r5-final-closure.md` 与 `docs/arch-world-r5-final-closure.svg`，更新 `docs/arch-world-debts.md` 将 D2 对 Render 生产路径标记为已收口；`file-tree.md`、`run.bat`、`UiWin.axaml` 同步至 `v0.2.19.8-rz`。
+- 范围红线：未修改 Render Projection 合同，未修改 Scene / World / Gizmo / Picking / Selection / Camera 系统，未改 Vulkan 生命周期，未新开 R5-R2。
+- 验证：`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **171 passed / 0 failed / 0 skipped**；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS；SVG XML 49/49 PASS；`git diff --check` PASS；版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.8-rz`）。**ARCH-WORLD R5 = CLOSED**。
+
 ## v0.2.19.7-rz
 ARCH-WORLD-R5-R1 显式 Render Projection 最小合同实装（2026-07-26）
 - 任务目标：在 `9048176` 已完成本机复证（10 项目 0W0E、168 tests passed、Git/5+100/架构守卫/SVG/版本一致性通过）的基线上，完成 R5-R1 剩余工作：Render 不再直接消费 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource`，相机输入显式化，缺相机时明确失败并跳过当前帧提交。

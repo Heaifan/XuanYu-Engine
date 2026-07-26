@@ -9,6 +9,8 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     readonly SceneStateOwner _sceneState = new(new GridWorldPartitionStrategy(regionSize: 5));
+    int _renderSnapshotPublishCount;
+    int _lastLoggedRenderEntityCount = -1;
 
     public ISceneRenderSnapshotSource SceneSnapshotSource => this;
     public SceneRenderSnapshot RenderSnapshot
@@ -58,10 +60,21 @@ public sealed partial class UiVm
 
     void PublishSceneRenderSnapshot()
     {
-        TraceSelection("PublishSceneRenderSnapshot", 1,
-            $"实体数={RenderSnapshot.Entities.Count}");
-        RenderSnapshotChanged?.Invoke(RenderSnapshot);
-        RenderProjectionChanged?.Invoke(RenderProjection);
+        var snapshot = RenderSnapshot;
+        TraceRenderSnapshotPublish(snapshot.Entities.Count);
+        RenderSnapshotChanged?.Invoke(snapshot);
+        RenderProjectionChanged?.Invoke(SceneRenderProjectionAdapter.TryCreate(snapshot));
+    }
+
+    void TraceRenderSnapshotPublish(int entityCount)
+    {
+        _renderSnapshotPublishCount++;
+        if (_renderSnapshotPublishCount != 1 &&
+            entityCount == _lastLoggedRenderEntityCount &&
+            _renderSnapshotPublishCount % 100 != 0) return;
+        _lastLoggedRenderEntityCount = entityCount;
+        TraceSelection("PublishSceneRenderSnapshot摘要", 1,
+            $"次数={_renderSnapshotPublishCount}；实体数={entityCount}");
     }
 
     IReadOnlyList<string> BuildDebugObjectItems()

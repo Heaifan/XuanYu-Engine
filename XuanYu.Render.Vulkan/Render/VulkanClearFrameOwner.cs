@@ -25,6 +25,9 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     bool _hasRenderProjection;
     Extent2D _extent;
     int _recordCommandDepth;
+    int _recordCommandTraceCount;
+    int _lastLoggedCommandEntityCount = -1;
+    int _lastLoggedCommandViewCount = -1;
     bool _disposed;
 
     public VulkanClearFrameOwner(Vk vk, VulkanDeviceOwner deviceOwner,

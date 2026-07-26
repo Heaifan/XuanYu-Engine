@@ -1,7 +1,7 @@
-版本：v0.2.19.7-rz
+版本：v0.2.19.8-rz
 # XuanYu Engine 文件树
 
-文件总数：454
+文件总数：456
 
 ## 根目录
 
@@ -173,6 +173,8 @@
 - `docs/玄域引擎_AI开发宪法.md`：玄域引擎 AI 开发宪法，总治理文档。
 - `docs/arch-world-r5-r0a-render-contract-audit.md`：ARCH-WORLD R5-R0A 只读审计——Render 合同边界（类型归属矩阵 / 字段逐项分类 / 双 Source 定性 / DefaultEditorCamera 后门 / Render 实际消费 / 方案 B）。
 - `docs/arch-world-r5-r0a-render-contract.svg`：R5-R0A 渲染合同边界流程图（World 权威→Editor 组合→最小 Render Projection→Render.Abstractions→Render.Vulkan，标禁止反向依赖）。
+- `docs/arch-world-r5-final-closure.md`：ARCH-WORLD R5 最终收口报告；固化 R5-R1 自动与真机验收通过、日志降噪、D2 收口和 R5 CLOSED 裁定。
+- `docs/arch-world-r5-final-closure.svg`：ARCH-WORLD R5 最终收口图；展示 World 事实、Editor/UI 组合边界、Render Projection、真机验收、日志治理和边界守卫。
 
 ## XuanYu.Core
 
