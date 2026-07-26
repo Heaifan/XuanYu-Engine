@@ -8,6 +8,7 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     CameraState _camera = DefaultEditorCamera.Create(1);
+    Vector3d _observationCenter = DefaultEditorCamera.Target;
     double _viewportAspect = 16.0 / 9.0;
     long _cameraRevision = 1;
     bool _viewportCameraFramed;
@@ -24,6 +25,8 @@ public sealed partial class UiVm
     public void UpdateViewportFrame(int width, int height)
     {
         if (width <= 0 || height <= 0) return;
+        if (_cameraSession is not null && global::System.Math.Abs(_viewportAspect - ((double)width / height)) > 0.000001)
+            CancelCameraNavigation("Resize");
         _viewportAspect = (double)width / height;
         if (_viewportCameraFramed) return;
         _viewportCameraFramed = true;
@@ -32,10 +35,12 @@ public sealed partial class UiVm
 
     void FrameAllCamera(string source)
     {
-        _camera = EditorCameraFraming.FrameAll(
+        var frame = EditorCameraFraming.FrameAllWithCenter(
             _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position),
             _viewportAspect,
             ++_cameraRevision);
+        _camera = frame.Camera;
+        _observationCenter = frame.ObservationCenter;
         PublishSceneRenderSnapshot();
         FooterMessage = $"{source}：当前可见实体已进入视野。";
     }
@@ -48,8 +53,10 @@ public sealed partial class UiVm
             return;
         }
 
-        _camera = EditorCameraFraming.FrameSelected(entity.Transform.Position,
+        var frame = EditorCameraFraming.FrameSelectedWithCenter(entity.Transform.Position,
             _viewportAspect, ++_cameraRevision);
+        _camera = frame.Camera;
+        _observationCenter = frame.ObservationCenter;
         PublishSceneRenderSnapshot();
         FooterMessage = $"聚焦：{EditorDisplayText.Entity(EntityId.FromInt(key.Value))} 已进入视野。";
     }

@@ -1,7 +1,7 @@
-版本：v0.2.20.1-rz
+版本：v0.2.20.2-rz
 # XuanYu Engine 文件树
 
-文件总数：460
+文件总数：473
 
 ## 根目录
 
@@ -29,7 +29,7 @@
 
 ## XuanYu.Editor
 - 编辑器领域规则层（ARCH-WORLD-R4-R1 新建，2026-07-25）。命名空间 `XuanYu.Editor`（根）、`XuanYu.Editor.Camera`、`XuanYu.Editor.Transform`。
-- `Camera/`：`EditorCameraFraming`（编辑器构图纯函数，由 Core.Space 迁入；Frame All / Frame Selected、空集合、大坐标处理，行为不变）。
+- `Camera/`：`EditorCameraFraming`（编辑器构图纯函数，由 Core.Space 迁入；Frame All / Frame Selected、空集合、大坐标处理，并可返回唯一 ObservationCenter）、`CameraFrameResult`（相机和观察中心组合结果）、`CameraNavigation`（Orbit / Pan / Dolly 纯算法；不依赖 UI、Vulkan 或 World 权威）。
 - `Transform/`：`TransformSession`（变换事务会话，由 World.Transform 迁入；Begin / Preview / Commit / Cancel、捕获 SessionId、原始与预览位置、Escape 取消、延迟 MouseUp 防误提交；最终 Commit 经 `SceneStateOwner` → `GlobalWorld`，不拥有实体永久位置）。
 - 仅引用 `XuanYu.Core` 与 `XuanYu.World`；禁止引用 Avalonia / `XuanYu.Editor.UI` / `XuanYu.Render.Vulkan` / Silk.NET；不新增第三方依赖。
 
@@ -120,6 +120,8 @@
 - `docs/world-a-ui-r2-continuous-tree.svg`：WORLD-A-UI-R2 连续树干验收图；展示 Project / Hierarchy 的 Full、Tee、Elbow 树线模型。
 - `docs/world-b-r0-editor-interaction-audit.md`：WORLD-B-R0 编辑器基本操作现状审计与合同冻结文档；冻结 Camera / Selection / ToolMode / Transform 权威、输入优先级、保留项、缺口和 R1-R4 入口边界，不承载运行时代码。
 - `docs/world-b-r0-editor-interaction-audit.svg`：WORLD-B-R0 编辑器相机、选择、工具与 Transform 权威关系图；展示 WarCore 后移和 R1-R4 路线，不承载运行时代码。
+- `docs/world-b-r1-camera-operation-report.md`：WORLD-B-R1 编辑器相机操作实装报告；记录唯一 ObservationCenter、CameraSession、输入抢占、测试覆盖和真机待验清单，不承载运行时代码。
+- `docs/world-b-r1-camera-operation.svg`：WORLD-B-R1 相机操作实装状态图；展示 Frame、Orbit、Pan、Dolly、CameraSession、输入抢占和真机待验状态，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -261,6 +263,7 @@
 ## XuanYu.Core.Tests
 
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
+- `XuanYu.Core.Tests/Camera/CameraNavigationTests.cs`：WORLD-B-R1 相机导航纯算法测试；覆盖 Orbit 保中心/保距离/防极点翻转、Pan 屏幕平面平移和 Dolly 距离缩放保护。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
 - `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.cs`：R5 Render Projection 适配器测试；覆盖缺相机失败、显式相机矩阵等价、Preview 与 Gizmo 在跨 Render 边界前解析。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
@@ -285,6 +288,7 @@
 - `XuanYu.Core.Tests/World/WorldPartitionR2Tests.cs`：WORLD-A-R2-R2 一致性与规模 Gate 测试；覆盖 1000 Entity / 10000 随机迁移、Partition Invariant、Dormant 查询和 RegionKey 几何依赖红线。
 - `XuanYu.Core.Tests/World/WorldPartitionUiTests.cs`：WORLD-A-R2 UI 投影测试；覆盖跨 Region 后 EntityId、RenderSnapshot、SelectedNodeKey、SelectionPath 和 Inspector 不丢。
 - `XuanYu.Core.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
+- `XuanYu.World.Tests/World/WorldCameraNavigationUiTests.cs`：WORLD-B-R1 UiVm 相机会话测试；覆盖 Frame 更新 ObservationCenter、Cancel 恢复、输入抢占、旧 PointerUp 和 Camera Capture 阻止 Picking / Dolly。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
@@ -453,14 +457,17 @@
 - `XuanYu.Editor.UI/Root/UiRoot.axaml.cs`：主布局根代码后置。
 - `XuanYu.Editor.UI/Top/Top.axaml`：顶部工具栏界面；持续工具高亮、视图命令按钮和吸附 Toggle 分离。
 - `XuanYu.Editor.UI/Top/Top.axaml.cs`：顶部工具栏代码后置。
-- `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs`：Win32 原生 Pointer 消息快照。
+- `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs`：Win32 原生 Pointer 消息快照；R1 起包含 Middle Button、Wheel、Shift 和滚轮 Delta。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaCamera.cs`：Avalonia 中键相机会话启动辅助；负责 Shift+MMB 模式冻结与 Pointer Capture，不拥有 CameraState。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaPointer.cs`：Avalonia Pointer 覆盖分部；分发 Left Gizmo / Picking 与 Middle Camera 输入，不拥有业务状态。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs`：Vulkan NativeHost 桥接分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs`：Vulkan NativeHost DPI 辅助分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`：Vulkan NativeHost 布局同步分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Log.cs`：Vulkan NativeHost 日志转发分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs`：Vulkan NativeHost 拾取接线分部；负责把当前 Bounds、DPI、物理尺寸和 ViewportRevision 送入 UiVm，不执行 Selection 或 Vulkan 修改。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Gizmo.cs`：NativeHost Gizmo 命中入口；复用 Picking 的 ViewportState 捕获并调用 UiVm，命中时阻断 Scene Picking，不拥有 Capture。
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`：Vulkan NativeHost Pointer 输入分部。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`：Vulkan NativeHost 原生 Pointer 输入分部；负责 Left Gizmo / Picking 与 Middle Camera / Wheel Dolly 的 Native 消息分发。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.CameraPointer.cs`：Vulkan NativeHost 相机输入辅助分部；负责 Native Camera Begin / Preview / End / Cancel 与 Wheel 入口，不拥有 CameraState。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`：Vulkan NativeHost 主体。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml`：Vulkan 视口控件界面。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs`：Vulkan 视口控件代码后置。
@@ -482,7 +489,11 @@
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
-- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：UiVm 编辑器相机状态分部；持有当前 CameraState，并提供启动看全、查看全部与聚焦选中实体命令。
+- `XuanYu.Editor.UI/Vm/CameraSessionMode.cs`：WORLD-B-R1 相机会话模式枚举；区分 Orbit 与 Pan，不进入持续 ToolMode。
+- `XuanYu.Editor.UI/Vm/CameraSessionSnapshot.cs`：WORLD-B-R1 相机会话起始快照；保存 SessionId、Pointer、Mode、StartCamera、StartCenter 与视口尺寸，供 Cancel 恢复。
+- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：UiVm 编辑器相机状态分部；持有当前 CameraState 与唯一 ObservationCenter，并提供启动看全、查看全部与聚焦选中实体命令。
+- `XuanYu.Editor.UI/Vm/UiVm.CameraNavigation.cs`：UiVm 相机会话入口分部；负责 Begin / Preview / End / Cancel 与 Dolly，调用 Editor.Camera 纯算法，不写实体 History。
+- `XuanYu.Editor.UI/Vm/UiVm.InteractionCancel.cs`：UiVm 输入取消入口分部；统一 Escape、窗口失焦、Host Detach、PointerCaptureLost 对 Transform / Camera 的取消优先级。
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。

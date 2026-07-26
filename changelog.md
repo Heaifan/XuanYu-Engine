@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.20.2-rz
+WORLD-B-R1 编辑器相机操作实装（2026-07-26 13:56:52）
+- 任务目标：完成编辑器相机操作主链，建立唯一 `ObservationCenter`，让 Frame All / Frame Selected、MMB Orbit、Shift+MMB Pan、Wheel Dolly 与 Cancel 生命周期读取同一焦点来源；本轮不进入 WarCore、Rotate、Scale、Inspector Transform 或实体 Transform 改造。
+- 实装结果：`XuanYu.Editor.Camera` 新增 `CameraFrameResult` 与 `CameraNavigation` 纯算法；`EditorCameraFraming` 增加带中心返回的 Frame API；`UiVm.Camera` 增 `_observationCenter`；`UiVm.CameraNavigation` 增最小 CameraSession；Win32 NativeHost 与 Avalonia Pointer 路由接入 MMB / Shift+MMB / Wheel；Camera Capture 与 Gizmo / Picking 互斥。
+- 测试变化：新增 `CameraNavigationTests` 与 `WorldCameraNavigationUiTests`，覆盖 Orbit / Pan / Dolly 不变量、Frame 更新观察中心、Cancel 恢复、Gizmo 抢占、旧 PointerUp 拒绝、Camera Capture 阻止 Dolly / Picking。测试数由 171 增至 182。
+- 文档与可视化：新增 `docs/world-b-r1-camera-operation-report.md` 与 `docs/world-b-r1-camera-operation.svg`；`run.bat`、`UiWin.axaml`、`file-tree.md` 同步到 `v0.2.20.2-rz`。
+- 验证：`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **182 passed / 0 failed / 0 skipped**（Core 77 + World 105）；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS；SVG XML **52/52 PASS**；`git diff --check` PASS；版本源四处一致（`run.bat`/`UiWin.axaml`/`changelog`/`file-tree`=`v0.2.20.2-rz`）。
+- Commit Hash：待提交后补齐。
+- 遗留问题：R1 尚未真机 CLOSED；仍需用户运行 `run.bat` 验收 MMB Orbit、Shift+MMB Pan、Wheel Dolly、Resize、Escape / LostCapture / WM_CANCELMODE 与输入抢占。真机通过后补验收收口文档；不得直接跳入 R2、Rotate、Scale 或 WarCore。
+
 ## v0.2.20.1-rz
 WORLD-B-R0 编辑器基本操作现状审计与合同冻结（2026-07-26 10:16:13）
 - 任务目标：纠正“ARCH-WORLD 后立即进入 WarCore”的错误路线，正式建立 `WORLD-B：编辑器基本操作与实体变换闭环` 的 R0 入口门；本轮不创建 WarCore、士兵、战斗、编制或战争结算。

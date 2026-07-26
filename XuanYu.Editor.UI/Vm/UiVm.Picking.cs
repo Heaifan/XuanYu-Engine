@@ -11,6 +11,7 @@ public sealed partial class UiVm
 
     public bool PickViewportPointer(double x, double y, int logicalW, int logicalH, int physicalW, int physicalH, double dpi, long viewportRevision, bool hostValid)
     {
+        if (_cameraSession is not null) return false;
         if (!hostValid || x < 0 || y < 0 || x > logicalW || y > logicalH) return false;
         var request = new ViewportPickingRequest(
             ++_pickSequence,

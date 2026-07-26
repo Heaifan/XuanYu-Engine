@@ -12,6 +12,7 @@ public sealed partial class UiVm
 
     public bool TryBeginMoveGizmoCapture(long pointerId, double x, double y, ViewportState viewport, bool hostValid)
     {
+        if (_cameraSession is not null) return false;
         var entity = _sceneState.RenderSnapshot.Entity;
         var sessionTool = ActiveTool;
         if (!entity.IsValid) return false;

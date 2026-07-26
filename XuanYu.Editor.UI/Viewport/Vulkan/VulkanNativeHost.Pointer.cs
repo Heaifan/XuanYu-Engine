@@ -1,5 +1,3 @@
-using Avalonia.Input;
-
 namespace XuanYu.Editor.UI;
 
 public sealed partial class VulkanNativeHost
@@ -19,11 +17,16 @@ public sealed partial class VulkanNativeHost
             ReportPointerPicking(vm, x, y);
             ReleaseExpectedCapture();
         }
+        else if (message.Message == NativePointerMessage.MiddleDown)
+            TryBeginNativeCamera(vm, NativePointerId, x, y, message.IsShiftDown);
         else if (message.Message == NativePointerMessage.Move && message.IsLeftButtonDown) PreviewNativePointer(vm, x, y);
+        else if (message.Message == NativePointerMessage.Move && message.IsMiddleButtonDown) PreviewNativeCamera(vm, x, y);
         else if (message.Message == NativePointerMessage.LeftUp) CommitNativePointer(vm, x, y);
+        else if (message.Message == NativePointerMessage.MiddleUp) EndNativeCamera(vm);
+        else if (message.Message == NativePointerMessage.Wheel) vm.DollyCamera(message.WheelDelta / 120.0);
         else if (message.Message == NativePointerMessage.CaptureChanged) HandleNativeCaptureChanged(vm, message);
-        else if (message.Message == NativePointerMessage.KillFocus) CancelNativePointer(vm, "WindowFocusLost");
-        else if (message.Message == NativePointerMessage.CancelMode) CancelNativePointer(vm, "WM_CANCELMODE");
+        else if (message.Message == NativePointerMessage.KillFocus) CancelNativeInput(vm, "WindowFocusLost");
+        else if (message.Message == NativePointerMessage.CancelMode) CancelNativeInput(vm, "WM_CANCELMODE");
     }
     void PreviewNativePointer(UiVm vm, double x, double y)
     {
@@ -38,8 +41,13 @@ public sealed partial class VulkanNativeHost
     }
     void HandleNativeCaptureChanged(UiVm vm, NativePointerMessage message)
     {
-        if (!_nativeDragActive || _expectedCaptureRelease || message.CaptureTarget == _hwnd) return;
-        CancelNativePointer(vm, "PointerCaptureLost");
+        if ((!_nativeDragActive && !_nativeCameraActive) || _expectedCaptureRelease || message.CaptureTarget == _hwnd) return;
+        CancelNativeInput(vm, "PointerCaptureLost");
+    }
+    void CancelNativeInput(UiVm vm, string reason)
+    {
+        CancelNativePointer(vm, reason);
+        CancelNativeCamera(vm, reason);
     }
     void CancelNativePointer(UiVm vm, string reason)
     {
@@ -56,40 +64,4 @@ public sealed partial class VulkanNativeHost
     }
     bool IsInBounds(double x, double y) =>
         x >= 0 && y >= 0 && x <= Bounds.Width && y <= Bounds.Height;
-    protected override void OnPointerPressed(PointerPressedEventArgs e)
-    {
-        base.OnPointerPressed(e);
-        var point = e.GetCurrentPoint(this);
-        if (!point.Properties.IsLeftButtonPressed) return;
-        if (DataContext is not UiVm vm) return;
-        if (TryBeginGizmo(vm, e.Pointer.Id, point.Position.X, point.Position.Y))
-        {
-            e.Pointer.Capture(this); e.Handled = true; return;
-        }
-        ReportPointerPicking(vm, point.Position.X, point.Position.Y);
-    }
-    protected override void OnPointerMoved(PointerEventArgs e)
-    {
-        base.OnPointerMoved(e);
-        var point = e.GetCurrentPoint(this);
-        if (DataContext is UiVm vm && vm.PreviewViewportPointer(
-            e.Pointer.Id, point.Position.X, point.Position.Y))
-            e.Handled = true;
-    }
-    protected override void OnPointerReleased(PointerReleasedEventArgs e)
-    {
-        base.OnPointerReleased(e);
-        var point = e.GetCurrentPoint(this);
-        if (DataContext is UiVm vm && vm.CommitViewportPointer(
-            e.Pointer.Id, point.Position.X, point.Position.Y))
-        {
-            e.Pointer.Capture(null);
-            e.Handled = true;
-        }
-    }
-    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
-    {
-        (DataContext as UiVm)?.CancelInteractionFromNativePointer("PointerCaptureLost");
-        base.OnPointerCaptureLost(e);
-    }
 }

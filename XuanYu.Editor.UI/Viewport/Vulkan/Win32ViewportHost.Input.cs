@@ -5,6 +5,7 @@ namespace XuanYu.Editor.UI;
 static partial class Win32ViewportHost
 {
     const uint WM_MOUSEMOVE = 0x0200, WM_LBUTTONDOWN = 0x0201, WM_LBUTTONUP = 0x0202;
+    const uint WM_MBUTTONDOWN = 0x0207, WM_MBUTTONUP = 0x0208, WM_MOUSEWHEEL = 0x020a;
     const uint WM_CAPTURECHANGED = 0x0215, WM_KILLFOCUS = 0x0008;
     const uint WM_CANCELMODE = 0x001f;
     const int MK_LBUTTON = 0x0001;
@@ -22,7 +23,7 @@ static partial class Win32ViewportHost
         if (InputSinks.TryGetValue(hWnd, out var sink) && IsPointerMessage(msg))
         {
             var before = GetCapture();
-            if (msg == WM_LBUTTONDOWN) SetCapture(hWnd);
+            if (msg is WM_LBUTTONDOWN or WM_MBUTTONDOWN) SetCapture(hWnd);
             var after = GetCapture();
             var target = msg == WM_CAPTURECHANGED ? lParam : 0;
             sink(new NativePointerMessage(
@@ -33,6 +34,7 @@ static partial class Win32ViewportHost
 
     static bool IsPointerMessage(uint msg) =>
         msg is WM_LBUTTONDOWN or WM_MOUSEMOVE or WM_LBUTTONUP or
+            WM_MBUTTONDOWN or WM_MBUTTONUP or WM_MOUSEWHEEL or
             WM_CAPTURECHANGED or WM_KILLFOCUS or WM_CANCELMODE;
 
     public static bool HasMouseCapture(nint hwnd) => hwnd != 0 && GetCapture() == hwnd;

@@ -11,23 +11,32 @@ public static class EditorCameraFraming
 
     public static CameraState FrameAll(IEnumerable<Vector3d> positions, double aspect, long revision)
     {
+        return FrameAllWithCenter(positions, aspect, revision).Camera;
+    }
+
+    public static CameraFrameResult FrameAllWithCenter(IEnumerable<Vector3d> positions, double aspect, long revision)
+    {
         var points = positions.ToArray();
-        if (points.Length == 0) return DefaultEditorCamera.Create(revision);
+        if (points.Length == 0) return new CameraFrameResult(DefaultEditorCamera.Create(revision), DefaultEditorCamera.Target);
         return Frame(points, aspect, revision, 1.2);
     }
 
     public static CameraState FrameSelected(Vector3d center, double aspect, long revision) =>
+        FrameSelectedWithCenter(center, aspect, revision).Camera;
+
+    public static CameraFrameResult FrameSelectedWithCenter(Vector3d center, double aspect, long revision) =>
         Frame([center], aspect, revision, 1.8);
 
-    static CameraState Frame(Vector3d[] points, double aspect, long revision, double minRadius)
+    static CameraFrameResult Frame(Vector3d[] points, double aspect, long revision, double minRadius)
     {
         var center = Center(points);
         var radius = global::System.Math.Max(minRadius, points.Max(point => point.DistanceTo(center))) * Padding;
         var fov = global::System.Math.Min(DefaultFov, HorizontalFov(DefaultFov, global::System.Math.Max(0.1, aspect)));
         var distance = radius / global::System.Math.Sin(ToRadians(fov) * 0.5);
         var position = center - (Direction * distance);
-        return new CameraState(position, Direction, DefaultEditorCamera.Up,
+        var camera = new CameraState(position, Direction, DefaultEditorCamera.Up,
             DefaultFov, 0.05, global::System.Math.Max(100.0, distance + (radius * 4.0)), revision);
+        return new CameraFrameResult(camera, center);
     }
 
     static Vector3d Center(Vector3d[] points)

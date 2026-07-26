@@ -6,13 +6,6 @@ public sealed partial class UiVm
     public string InteractionOwner => _editorState.InteractionSnapshot.OwnerTool is "" ? "无" : _editorState.InteractionSnapshot.OwnerTool;
     public string InteractionPreview => _editorState.InteractionSnapshot.Preview is "" ? "无" : _editorState.InteractionSnapshot.Preview;
 
-    public void CancelInteractionFromEscape() => CancelInteraction("Escape");
-    public void CancelInteractionFromWindowDeactivated() => CancelInteraction("窗口失焦");
-    public void CancelInteractionFromWindowClosing() => CancelInteraction("窗口关闭");
-    public void CancelInteractionFromHostDetach() => CancelInteraction("NativeHost Detach");
-    public void CancelInteractionFromPointerCaptureLost() => CancelInteraction("PointerCaptureLost");
-    public void CancelInteractionFromNativePointer(string reason) => CancelInteraction(reason);
-
     void RunInteraction(string name)
     {
         if (name == "Begin") BeginInteraction();
