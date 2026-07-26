@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.20.6-rz
+WORLD-B-R3 移动变换闭环收口（2026-07-26）
+- 任务目标：在 `53b6dd7` R3 基础加固后继续完成剩余 R3 代码，不另开规划轮；补齐可见 XY / XZ / YZ 平面控制柄、平面 Picking / Drag、提交 / 撤销 / 重做、跨 Region、取消路径和输入互斥。本轮不加入 CRUD、Rotate、Scale、Global / Local、Inspector 数值输入或 WarCore。
+- 实装结果：`MoveGizmoLayout` 增加平面面片投影和命中；新增 `MoveGizmoPlane`；`UiVm.MoveGizmo` 在平面命中后复用当前 `TransformSession` 并构造平面约束；Vulkan `scene.vert` 绘制中心标记、三平面和三轴，顶点 draw 数从 21 扩到 39，`ShaderBytecode.Vert.cs` 由 glslc 重新生成；Resize 汇入移动取消路径。
+- 测试变化：新增 Core 平面控制柄命中测试、UiVm 平面移动 / 无位移提交 / 取消 / 延迟 PointerUp / 输入互斥 / 跨 Region 自动测试。测试数由 193 增至 209。
+- 文档与可视化：新增 `docs/world-b-r3-move-transform-closure.md` 与 `docs/world-b-r3-move-transform-closure.svg`，记录 R3 中文 IPO 真机清单与最终 CLOSED 裁定；`run.bat`、`UiWin.axaml`、`file-tree.md` 同步到 `v0.2.20.6-rz`。
+- 状态：**WORLD-B-R3 CLOSED**。下一入口为 WORLD-B-R4：旋转 / 缩放 / Global / Local / 检查器变换输入；仍不进入 CRUD 或 WarCore。
+- 验证：`git diff --check` PASS；本轮差异手写文件 5+100 PASS（13 个 `.cs` / `.axaml`，生成文件 `ShaderBytecode.Vert.cs` 行数 79）；SVG XML **55/55 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **209 passed / 0 failed / 0 skipped**（Core 85 + World 124）。沙箱 build 因 NuGet 网络权限 NU1301 失败，非沙箱重跑时 PID 31752 的当前工作区 `XuanYu.Editor.App` 锁定输出 DLL，核对路径后终止该进程并重跑通过。
+
 ## v0.2.20.5-rz
 WORLD-B-R3 移动变换闭环基础加固（2026-07-26）
 - 任务目标：在 R2 CLOSED 后立即进入 WORLD-B-R3，先补移动变换基础风险：平面移动数学约束、实体失效后的会话安全结束、UiVm 级移动提交 / 撤销 / 重做主链自动测试。本轮不补完整 CRUD，不进入 Rotate / Scale、Inspector 数值输入、吸附、多选、批量移动、WarCore。

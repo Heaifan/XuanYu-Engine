@@ -25,7 +25,10 @@ public sealed partial class UiVm
     public void UpdateViewportFrame(int width, int height)
     {
         if (width <= 0 || height <= 0) return;
-        if (_cameraSession is not null && global::System.Math.Abs(_viewportAspect - ((double)width / height)) > 0.000001)
+        if (_editorState.InteractionSnapshot.HasCapture) CancelInteraction("Resize");
+        var aspectChanged =
+            global::System.Math.Abs(_viewportAspect - ((double)width / height)) > 0.000001;
+        if (_cameraSession is not null && aspectChanged)
             CancelCameraNavigation("Resize");
         _viewportAspect = (double)width / height;
         if (_viewportCameraFramed) return;

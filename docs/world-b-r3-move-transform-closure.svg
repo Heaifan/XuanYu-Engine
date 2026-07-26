@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f7f9fc"/>
+  <text x="64" y="76" font-family="Microsoft YaHei, Arial, sans-serif" font-size="34" font-weight="700" fill="#18324a">WORLD-B-R3 移动变换闭环</text>
+  <text x="64" y="118" font-family="Microsoft YaHei, Arial, sans-serif" font-size="18" fill="#5b6f83">v0.2.20.6-rz · 单轴 / 平面 · Preview / Commit / Cancel · Undo / Redo · 跨 Region</text>
+  <rect x="70" y="175" width="230" height="154" rx="8" fill="#e8f3fb" stroke="#3f78aa" stroke-width="2"/>
+  <text x="104" y="225" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="700" fill="#285a82">移动控制柄</text>
+  <text x="104" y="264" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#385f7c">X / Y / Z 单轴</text>
+  <text x="104" y="296" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#385f7c">XY / XZ / YZ 平面</text>
+  <rect x="370" y="175" width="230" height="154" rx="8" fill="#edf6ed" stroke="#4c9164" stroke-width="2"/>
+  <text x="404" y="225" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="700" fill="#2d6844">移动会话</text>
+  <text x="404" y="264" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#42634b">Begin / Preview</text>
+  <text x="404" y="296" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#42634b">Commit / Cancel</text>
+  <rect x="670" y="175" width="230" height="154" rx="8" fill="#fff3e6" stroke="#c88535" stroke-width="2"/>
+  <text x="704" y="225" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="700" fill="#84541f">World 权威</text>
+  <text x="704" y="264" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#725127">GlobalWorld</text>
+  <text x="704" y="296" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#725127">Region 自动迁移</text>
+  <rect x="970" y="175" width="230" height="154" rx="8" fill="#f4edf9" stroke="#9b6bb2" stroke-width="2"/>
+  <text x="1004" y="225" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="700" fill="#714587">一致投影</text>
+  <text x="1004" y="264" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#63476f">层级 / 检查器</text>
+  <text x="1004" y="296" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#63476f">视口 / 控制柄</text>
+  <path d="M300 252 L366 252" stroke="#657789" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M600 252 L666 252" stroke="#657789" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M900 252 L966 252" stroke="#657789" stroke-width="4" marker-end="url(#arrow)"/>
+  <rect x="120" y="410" width="1040" height="130" rx="8" fill="#ffffff" stroke="#ccd8e5" stroke-width="2"/>
+  <text x="164" y="462" font-family="Microsoft YaHei, Arial, sans-serif" font-size="25" font-weight="700" fill="#18324a">R3 输入优先级</text>
+  <text x="164" y="505" font-family="Microsoft YaHei, Arial, sans-serif" font-size="18" fill="#486276">活动移动会话 → 活动相机会话 → 文本输入 → Picking → 工具切换。</text>
+  <text x="164" y="535" font-family="Microsoft YaHei, Arial, sans-serif" font-size="18" fill="#486276">Escape、LostCapture、WM_CANCELMODE、Resize、实体失效均汇入统一取消路径；取消不写 History。</text>
+  <text x="64" y="650" font-family="Microsoft YaHei, Arial, sans-serif" font-size="18" fill="#3d5368">自动验证：209 passed / 0 failed / 0 skipped。最终裁定：WORLD-B-R3 CLOSED。</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#657789"/>
+    </marker>
+  </defs>
+</svg>

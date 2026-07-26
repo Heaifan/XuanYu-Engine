@@ -10,13 +10,19 @@ public sealed partial class UiVm
     readonly TransformSession _transformSession = new();
     MoveGizmoDragConstraint? _moveDragConstraint;
 
-    public bool TryBeginMoveGizmoCapture(long pointerId, double x, double y, ViewportState viewport, bool hostValid)
+    public bool TryBeginMoveGizmoCapture(
+        long pointerId,
+        double x,
+        double y,
+        ViewportState viewport,
+        bool hostValid)
     {
         if (_cameraSession is not null) return false;
         var entity = _sceneState.RenderSnapshot.Entity;
         var sessionTool = ActiveTool;
         if (!entity.IsValid) return false;
-        if (!hostValid || !HasSelection || SelectionKey != entity.EntityKey.ToString()) return false;
+        if (!hostValid || !HasSelection ||
+            SelectionKey != entity.EntityKey.ToString()) return false;
         if (!EditorTransformCapturePolicy.CanBeginMoveGizmo(_editorState.ToolSnapshot))
         {
             LogTransformCaptureRejected(sessionTool, EditorDisplayText.Entity(entity.EntityKey));
@@ -38,14 +44,18 @@ public sealed partial class UiVm
                 result.Snapshot.SessionId, sessionTool, "Transform Session 启动失败"));
             return false;
         }
-        var segment = layout.Segments.Single(item => item.Axis == axis.Value);
-        _moveDragConstraint = new MoveGizmoDragConstraint(segment, x, y);
+        _moveDragConstraint = CreateMoveDragConstraint(layout, axis.Value, x, y);
         FooterState = "状态：捕获中";
         FooterMessage = $"移动轴 {axis} 已捕获";
+        var detail = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}";
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
             "移动工具会话开始",
-            $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}；会话={result.Snapshot.SessionId}");
-        LogTransformCaptureBegin(sessionTool, result.Snapshot.OwnerTool, EditorDisplayText.Entity(entity.EntityKey), axis.Value);
+            $"{detail}；会话={result.Snapshot.SessionId}");
+        LogTransformCaptureBegin(
+            sessionTool,
+            result.Snapshot.OwnerTool,
+            EditorDisplayText.Entity(entity.EntityKey),
+            axis.Value);
         RefreshLogBindings();
         RaiseInteractionChanged();
         return true;
@@ -58,5 +68,23 @@ public sealed partial class UiVm
         if (!_transformSession.TryPreview(sessionId, position)) return false;
         PublishSceneRenderSnapshot();
         return true;
+    }
+
+    static MoveGizmoDragConstraint CreateMoveDragConstraint(
+        MoveGizmoLayout layout,
+        MoveGizmoAxis axis,
+        double x,
+        double y)
+    {
+        if (axis is MoveGizmoAxis.X or MoveGizmoAxis.Y or MoveGizmoAxis.Z)
+            return new MoveGizmoDragConstraint(layout.Segments.Single(s => s.Axis == axis), x, y);
+        var a = axis is MoveGizmoAxis.YZ ? MoveGizmoAxis.Y : MoveGizmoAxis.X;
+        var b = axis is MoveGizmoAxis.XY ? MoveGizmoAxis.Y : MoveGizmoAxis.Z;
+        return MoveGizmoDragConstraint.Plane(
+            axis,
+            layout.Segments.Single(s => s.Axis == a),
+            layout.Segments.Single(s => s.Axis == b),
+            x,
+            y);
     }
 }

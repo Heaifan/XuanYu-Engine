@@ -1,7 +1,7 @@
-版本：v0.2.20.5-rz
+版本：v0.2.20.6-rz
 # XuanYu Engine 文件树
 
-文件总数：483
+文件总数：491
 
 ## 根目录
 
@@ -126,6 +126,8 @@
 - `docs/world-b-r1-camera-operation.svg`：WORLD-B-R1 相机操作实装状态图；展示 Frame、Orbit、Pan、Dolly、CameraSession、输入抢占和真机待验状态，不承载运行时代码。
 - `docs/world-b-r2-selection-tool-state-report.md`：WORLD-B-R2 选择与工具状态闭环报告；记录唯一 Selection / ToolMode、输入抢占、自动测试和中文 IPO 真机验收清单，不承载运行时代码。
 - `docs/world-b-r2-selection-tool-state.svg`：WORLD-B-R2 选择与工具状态闭环图；展示视口/层级、SelectionState、检查器/控制柄和 ToolMode 的同源关系，不承载运行时代码。
+- `docs/world-b-r3-move-transform-closure.md`：WORLD-B-R3 移动变换闭环报告；记录单轴/平面移动、取消、Undo/Redo、跨 Region、输入互斥、中文 IPO 真机清单和 CLOSED 裁定，不承载运行时代码。
+- `docs/world-b-r3-move-transform-closure.svg`：WORLD-B-R3 移动变换闭环浅色中文图；展示控制柄、移动会话、World 权威、一致投影和输入优先级，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
@@ -188,9 +190,11 @@
 
 ## XuanYu.Core
 
-- `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴身份；只定义 X/Y/Z，不承担 Transform 或渲染状态。
-- `XuanYu.Core/Gizmo/MoveGizmoDragConstraint.cs`：把 Pointer 屏幕位移投影到已命中轴，并只生成对应世界轴 Position 预览。
-- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影、方向优先轴裁决与 R4-R3 Guard 命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
+- `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴/平面身份；定义 X/Y/Z 与 XY/XZ/YZ，不承担 Transform 或渲染状态。
+- `XuanYu.Core/Gizmo/MoveGizmoDragConstraint.cs`：把 Pointer 屏幕位移投影到已命中轴或平面，并只生成对应世界轴/平面 Position 预览。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影、方向优先轴裁决、平面命中与 R4-R3 Guard 命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.Hit.cs`：Move Gizmo 轴命中距离和方向对齐数学分部；供 `MoveGizmoLayout` 复用，不持有交互状态。
+- `XuanYu.Core/Gizmo/MoveGizmoPlane.cs`：Move Gizmo 平面控制柄屏幕四边形值对象；用同一面片支持可见区域和 Picking 命中。
 - `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
 - `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
 
@@ -267,6 +271,7 @@
 ## XuanYu.Core.Tests
 
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutPlaneTests.cs`：WORLD-B-R3 平面控制柄投影与命中测试；覆盖 XY/XZ/YZ 平面存在、平面中心命中和轴优先于平面。
 - `XuanYu.Core.Tests/Camera/CameraNavigationTests.cs`：WORLD-B-R1 相机导航纯算法测试；覆盖 Orbit 保中心/保距离/防极点翻转、Pan 屏幕平面平移和 Dolly 距离缩放保护。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
 - `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.cs`：R5 Render Projection 适配器测试；覆盖缺相机失败、显式相机矩阵等价、Preview 与 Gizmo 在跨 Render 边界前解析。
@@ -295,6 +300,9 @@
 - `XuanYu.World.Tests/World/WorldCameraNavigationUiTests.cs`：WORLD-B-R1 UiVm 相机会话测试；覆盖 Frame 更新 ObservationCenter、Cancel 恢复、输入抢占、旧 PointerUp 和 Camera Capture 阻止 Picking / Dolly。
 - `XuanYu.World.Tests/World/WorldSelectionToolStateUiTests.cs`：WORLD-B-R2 UiVm 选择与工具状态测试；覆盖层级选择同步检查器、清除选择、删除失效选择、未实现工具拒绝虚假活动态和移动会话输入抢占。
 - `XuanYu.World.Tests/World/WorldMoveTransformUiTests.cs`：WORLD-B-R3 UiVm 移动变换基础测试；覆盖真实 X 轴拖动提交、撤销、重做，以及移动会话期间选择改写被拒绝。
+- `XuanYu.World.Tests/World/WorldMoveTransformPlaneUiTests.cs`：WORLD-B-R3 平面移动 UiVm 测试；覆盖 XY/XZ/YZ 平面只改对应轴、Preview 不写正式位置、无位移不进 History。
+- `XuanYu.World.Tests/World/WorldMoveTransformRegionUiTests.cs`：WORLD-B-R3 跨 Region 移动 UiVm 测试；覆盖 EntityId 不变、世界单实体、层级/检查器/Selection 更新和 Undo/Redo 区域恢复。
+- `XuanYu.World.Tests/World/WorldMoveTransformSessionUiTests.cs`：WORLD-B-R3 移动会话取消与输入互斥测试；覆盖 Escape、PointerCaptureLost、WM_CANCELMODE、Resize、延迟 PointerUp、相机/Picking/工具切换抢占。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
@@ -386,8 +394,9 @@
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Trace.cs`：Vulkan ClearFrame 低频录制诊断分部；记录 RecordCommandBuffers 深度、线程、实体数和视图数，不改变生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Render Projection，并由 Present 线程在安全点消费；缺相机失败仅清空当前可提交投影并记录跳过原因。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；只消费 Render Projection，负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并发起 Draw，不污染 Picking 或生命周期。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与最小 Move Gizmo 三轴顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；只消费 Render Projection，负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并绘制场景实体与 Move Gizmo 三轴/三平面，不污染 Picking 或生命周期。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Matrix.cs`：Vulkan ClearFrame 矩阵辅助分部；提供 push constant 矩阵转置和 Vulkan Clip Y 投影副本转换，不持有渲染资源生命周期。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与 Move Gizmo 三轴/三平面顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。
 - `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；不负责 Selection 或 Pipeline 生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。
@@ -498,11 +507,11 @@
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
 - `XuanYu.Editor.UI/Vm/CameraSessionMode.cs`：WORLD-B-R1 相机会话模式枚举；区分 Orbit 与 Pan，不进入持续 ToolMode。
 - `XuanYu.Editor.UI/Vm/CameraSessionSnapshot.cs`：WORLD-B-R1 相机会话起始快照；保存 SessionId、Pointer、Mode、StartCamera、StartCenter 与视口尺寸，供 Cancel 恢复。
-- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：UiVm 编辑器相机状态分部；持有当前 CameraState 与唯一 ObservationCenter，并提供启动看全、查看全部与聚焦选中实体命令。
+- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：UiVm 编辑器相机状态分部；持有当前 CameraState 与唯一 ObservationCenter，并提供启动看全、查看全部、聚焦选中实体和 Resize 取消活动输入。
 - `XuanYu.Editor.UI/Vm/UiVm.CameraNavigation.cs`：UiVm 相机会话入口分部；负责 Begin / Preview / End / Cancel 与 Dolly，调用 Editor.Camera 纯算法，不写实体 History。
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionCancel.cs`：UiVm 输入取消入口分部；统一 Escape、窗口失焦、Host Detach、PointerCaptureLost 对 Transform / Camera 的取消优先级。
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
-- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 精确/Guard Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 轴/平面 Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令、组合快照与 Render Projection 发布分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。

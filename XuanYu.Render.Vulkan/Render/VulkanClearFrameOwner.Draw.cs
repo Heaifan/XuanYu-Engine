@@ -1,4 +1,3 @@
-using System.Numerics;
 using Silk.NET.Vulkan;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
@@ -12,8 +11,22 @@ public sealed unsafe partial class VulkanClearFrameOwner
     void RecordDraw(CommandBuffer cb)
     {
         if (_pipeline.Handle == 0 || _pipelineLayout.Handle == 0) return;
-        var viewport = new[] { new Viewport { X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 } };
-        var scissor = new[] { new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent } };
+        var viewport = new[]
+        {
+            new Viewport
+            {
+                X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height,
+                MinDepth = 0, MaxDepth = 1
+            }
+        };
+        var scissor = new[]
+        {
+            new Rect2D
+            {
+                Offset = new Offset2D { X = 0, Y = 0 },
+                Extent = _extent
+            }
+        };
         var scene = new float[20];
         fixed (Viewport* pVp = viewport)
         fixed (Rect2D* pSc = scissor)
@@ -30,7 +43,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 PushSceneConstants(cb, pScene);
                 _vk.CmdDraw(cb, 3, 1, 0, 0);
             }
-            if (_renderProjection.GizmoVisible) DrawActiveGizmo(cb, pScene, _renderProjection);
+            if (_renderProjection.GizmoVisible)
+                DrawActiveGizmo(cb, pScene, _renderProjection);
         }
     }
 
@@ -38,7 +52,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         FillScenePushConstants(scene, projection, projection.GizmoPosition);
         PushSceneConstants(cb, scene);
-        _vk.CmdDraw(cb, 21, 1, 0, 0);
+        _vk.CmdDraw(cb, 39, 1, 0, 0);
     }
 
     void PushSceneConstants(CommandBuffer cb, float* scene)
@@ -50,7 +64,15 @@ public sealed unsafe partial class VulkanClearFrameOwner
 
     void FillScenePushConstants(float* target, RenderProjection projection, Vector3d position)
     {
-        var viewport = new ViewportState(0, 0, _extent.Width, _extent.Height, (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
+        var viewport = new ViewportState(
+            0,
+            0,
+            _extent.Width,
+            _extent.Height,
+            (int)_extent.Width,
+            (int)_extent.Height,
+            1,
+            _swapchainOwner.ResourceGeneration);
         var camera = projection.Camera with { Revision = _swapchainOwner.ResourceGeneration };
         var state = camera.ToViewProjection(viewport);
         var vulkanProjection = ToVulkanProjection(state.Projection);
@@ -62,20 +84,4 @@ public sealed unsafe partial class VulkanClearFrameOwner
         target[19] = 1.0f;
     }
 
-    static void FillMatrixTranspose(float* target, Matrix4x4 matrix)
-    {
-        target[0] = matrix.M11; target[1] = matrix.M12; target[2] = matrix.M13; target[3] = matrix.M14;
-        target[4] = matrix.M21; target[5] = matrix.M22; target[6] = matrix.M23; target[7] = matrix.M24;
-        target[8] = matrix.M31; target[9] = matrix.M32; target[10] = matrix.M33; target[11] = matrix.M34;
-        target[12] = matrix.M41; target[13] = matrix.M42; target[14] = matrix.M43; target[15] = matrix.M44;
-    }
-
-    static Matrix4x4 ToVulkanProjection(Matrix4x4 projection)
-    {
-        projection.M12 = -projection.M12;
-        projection.M22 = -projection.M22;
-        projection.M32 = -projection.M32;
-        projection.M42 = -projection.M42;
-        return projection;
-    }
 }

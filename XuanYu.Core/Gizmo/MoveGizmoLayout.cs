@@ -3,7 +3,7 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Core.Gizmo;
 
-public sealed class MoveGizmoLayout
+public sealed partial class MoveGizmoLayout
 {
     public const double AxisLength = 1.2;
 
@@ -16,19 +16,34 @@ public sealed class MoveGizmoLayout
 
     // 命中半径 = 可见半径 + 交互容差 ⇒ 看得到 ≈ 点得到。
     public const double HitWidth = (GizmoVisualLineWidth / 2.0) + HitMargin;
+    public const double PlaneInset = 0.22;
+    public const double PlaneSize = 0.38;
 
-    MoveGizmoLayout(MoveGizmoSegment[] segments) => Segments = segments;
+    MoveGizmoLayout(MoveGizmoSegment[] segments, MoveGizmoPlane[] planes)
+    {
+        Segments = segments;
+        Planes = planes;
+    }
 
     public IReadOnlyList<MoveGizmoSegment> Segments { get; }
+    public IReadOnlyList<MoveGizmoPlane> Planes { get; }
 
     public static MoveGizmoLayout Project(ViewProjectionState state, Vector3d origin)
     {
         var start = state.ProjectWorldPoint(origin);
         return new MoveGizmoLayout(
         [
-            Segment(MoveGizmoAxis.X, start, state.ProjectWorldPoint(origin + new Vector3d(AxisLength, 0, 0))),
-            Segment(MoveGizmoAxis.Y, start, state.ProjectWorldPoint(origin + new Vector3d(0, AxisLength, 0))),
-            Segment(MoveGizmoAxis.Z, start, state.ProjectWorldPoint(origin + new Vector3d(0, 0, AxisLength)))
+            Segment(MoveGizmoAxis.X, start,
+                state.ProjectWorldPoint(origin + new Vector3d(AxisLength, 0, 0))),
+            Segment(MoveGizmoAxis.Y, start,
+                state.ProjectWorldPoint(origin + new Vector3d(0, AxisLength, 0))),
+            Segment(MoveGizmoAxis.Z, start,
+                state.ProjectWorldPoint(origin + new Vector3d(0, 0, AxisLength)))
+        ],
+        [
+            Plane(state, origin, MoveGizmoAxis.XY, Vector3d.UnitX, Vector3d.UnitY),
+            Plane(state, origin, MoveGizmoAxis.XZ, Vector3d.UnitX, Vector3d.UnitZ),
+            Plane(state, origin, MoveGizmoAxis.YZ, Vector3d.UnitY, Vector3d.UnitZ)
         ]);
     }
 
@@ -37,7 +52,7 @@ public sealed class MoveGizmoLayout
         if (!double.IsFinite(x) || !double.IsFinite(y) || !double.IsFinite(width) || width <= 0)
             throw new ArgumentOutOfRangeException(nameof(x));
         var origin = Segments[0].Start;
-        return Segments
+        var axis = Segments
             .Select(segment => Hit(segment, origin, x, y))
             .Where(hit => hit.Distance <= width && hit.Alignment >= 0)
             .OrderByDescending(hit => hit.Alignment)
@@ -45,6 +60,10 @@ public sealed class MoveGizmoLayout
             .ThenBy(hit => hit.Axis)
             .Select(hit => (MoveGizmoAxis?)hit.Axis)
             .FirstOrDefault();
+        if (axis is not null) return axis;
+        foreach (var plane in Planes)
+            if (plane.Contains(x, y)) return plane.Axis;
+        return null;
     }
 
     static MoveGizmoSegment Segment(MoveGizmoAxis axis, ScreenPoint start, ScreenPoint end)
@@ -54,36 +73,21 @@ public sealed class MoveGizmoLayout
         return segment;
     }
 
-    static (MoveGizmoAxis Axis, double Distance, double Alignment) Hit(
-        MoveGizmoSegment segment,
-        ScreenPoint origin,
-        double x,
-        double y)
+    static MoveGizmoPlane Plane(
+        ViewProjectionState state,
+        Vector3d origin,
+        MoveGizmoAxis axis,
+        Vector3d a,
+        Vector3d b)
     {
-        return (segment.Axis, Distance(segment, x, y), Alignment(segment, origin, x, y));
+        var i = PlaneInset;
+        var o = PlaneInset + PlaneSize;
+        return new MoveGizmoPlane(
+            axis,
+            state.ProjectWorldPoint(origin + (a * i) + (b * i)),
+            state.ProjectWorldPoint(origin + (a * o) + (b * i)),
+            state.ProjectWorldPoint(origin + (a * o) + (b * o)),
+            state.ProjectWorldPoint(origin + (a * i) + (b * o)));
     }
 
-    static double Distance(MoveGizmoSegment segment, double x, double y)
-    {
-        var dx = segment.End.X - segment.Start.X;
-        var dy = segment.End.Y - segment.Start.Y;
-        var length2 = (dx * dx) + (dy * dy);
-        var t = (((x - segment.Start.X) * dx) + ((y - segment.Start.Y) * dy)) / length2;
-        t = global::System.Math.Clamp(t, 0, 1);
-        var px = segment.Start.X + (t * dx);
-        var py = segment.Start.Y + (t * dy);
-        return global::System.Math.Sqrt(((x - px) * (x - px)) + ((y - py) * (y - py)));
-    }
-
-    static double Alignment(MoveGizmoSegment segment, ScreenPoint origin, double x, double y)
-    {
-        var ax = segment.End.X - segment.Start.X;
-        var ay = segment.End.Y - segment.Start.Y;
-        var px = x - origin.X;
-        var py = y - origin.Y;
-        var axisLength = segment.Length;
-        var pointerLength = global::System.Math.Sqrt((px * px) + (py * py));
-        if (pointerLength < 0.000001) return 1.0;
-        return ((px * ax) + (py * ay)) / (pointerLength * axisLength);
-    }
 }

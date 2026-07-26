@@ -5,7 +5,7 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.World;
 
-public sealed class WorldMoveTransformUiTests
+public sealed partial class WorldMoveTransformUiTests
 {
     [Fact]
     public void Move_gizmo_drag_commits_once_and_undo_redo_restores()
