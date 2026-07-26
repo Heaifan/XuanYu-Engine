@@ -9,8 +9,11 @@ public sealed partial class UiVm
         {
             FooterState = "状态：就绪";
             FooterMessage = $"{name}尚未实装，当前仍保持：{ActiveTool}。";
-            LogTool($"{name}未实装");
+            _logBus.Info(EditorLogSource.Input, EditorLogCategory.Tool,
+                $"{name}工具尚未实装，当前工具仍为：{ActiveTool}", "未实装工具点击不切换真实工具。");
+            RefreshLogBindings();
             OnPropertyChanged(nameof(LogSummary));
+            RaiseToolChanged();
             return;
         }
 
