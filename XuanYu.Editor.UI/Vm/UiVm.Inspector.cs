@@ -21,10 +21,10 @@ public sealed partial class UiVm
             $"区域：{EditorDisplayText.Region(entity.RegionKey)}",
             $"活动状态：{EditorDisplayText.Activity(entity.Activity)}",
             $"全局位置：{EditorDisplayText.Position(entity.GlobalPosition)}",
-            "Transform",
-            $"位置    X {p.X:g}    Y {p.Y:g}    Z {p.Z:g}",
-            $"旋转    X {r.X:g}    Y {r.Y:g}    Z {r.Z:g}",
-            $"缩放    X {s.X:g}    Y {s.Y:g}    Z {s.Z:g}"
+            "变换",
+            $"位置    X {FormatNumber(p.X)}    Y {FormatNumber(p.Y)}    Z {FormatNumber(p.Z)}",
+            $"旋转    X {FormatNumber(r.X)}°    Y {FormatNumber(r.Y)}°    Z {FormatNumber(r.Z)}°",
+            $"缩放    X {FormatNumber(s.X)}    Y {FormatNumber(s.Y)}    Z {FormatNumber(s.Z)}"
         ];
     }
 

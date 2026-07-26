@@ -42,31 +42,6 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
         _world.QuerySpatial(ray, mask);
     public SpatialRaycastResult RaycastSpatial(SpatialRayQuery ray, SpatialQueryCategory mask) =>
         _world.RaycastSpatial(ray, mask);
-    public bool CommitPosition(Vector3d position) => CommitPositionWithResult(position).Changed;
-    public SceneTransformCommitResult CommitPositionWithResult(Vector3d position) =>
-        CommitPositionWithResult(_activeEntityKey, position);
-
-    public SceneTransformCommitResult CommitPositionWithResult(
-        EntityId entityKey,
-        Vector3d position)
-    {
-        if (!_world.TryGet(entityKey, out var current))
-        {
-            return new SceneTransformCommitResult(
-                entityKey,
-                CommittedTransform.Identity,
-                CommittedTransform.Identity,
-                false);
-        }
-        var transform = current.Transform.WithPosition(position);
-        if (current.Transform == transform)
-            return new SceneTransformCommitResult(
-                entityKey,
-                current.Transform,
-                transform,
-                false);
-        return ApplyTransform(current, transform);
-    }
 
     public bool RestoreTransform(EntityId entityKey, CommittedTransform transform)
     {

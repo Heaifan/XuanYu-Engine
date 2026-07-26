@@ -7,7 +7,7 @@ using XuanYu.World.Scene;
 
 namespace XuanYu.World.Tests.World;
 
-public sealed class WorldR4TransformFoundationTests
+public sealed partial class WorldR4TransformFoundationTests
 {
     [Fact]
     public void Position_constructor_defaults_rotation_and_scale()
@@ -50,8 +50,9 @@ public sealed class WorldR4TransformFoundationTests
         SceneOf(vm).RestoreTransform(key, transform);
         vm.SelectedHierarchyItem = vm.HierarchyItems.Single(i => i.Key == key.ToString());
 
+        Assert.Contains("变换", vm.InspectorFields);
         Assert.Contains("位置    X 1    Y 2    Z 3", vm.InspectorFields);
-        Assert.Contains("旋转    X 10    Y 20    Z 30", vm.InspectorFields);
+        Assert.Contains("旋转    X 10°    Y 20°    Z 30°", vm.InspectorFields);
         Assert.Contains("缩放    X 2    Y 2    Z 2", vm.InspectorFields);
     }
 

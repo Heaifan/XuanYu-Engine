@@ -23,16 +23,29 @@ public sealed class TransformSession
         SessionId = sessionId;
         Axis = axis;
         StartSnapshot = new TransformStartSnapshot(entity.EntityKey, entity.Transform);
-        Preview = new PreviewTransform(entity.Transform.Position);
+        Preview = new PreviewTransform(entity.Transform);
         return true;
     }
 
     public bool TryPreview(long sessionId, Vector3d position)
     {
         if (!Owns(sessionId)) return false;
-        Preview = new PreviewTransform(position);
+        Preview = new PreviewTransform(StartSnapshot.Transform.WithPosition(position));
         return true;
     }
+
+    public bool TryPreviewTransform(long sessionId, CommittedTransform transform)
+    {
+        if (!Owns(sessionId)) return false;
+        Preview = new PreviewTransform(transform);
+        return true;
+    }
+
+    public bool TryPreviewRotation(long sessionId, Vector3d rotation) =>
+        TryPreviewTransform(sessionId, StartSnapshot.Transform.WithRotation(rotation));
+
+    public bool TryPreviewScale(long sessionId, Vector3d scale) =>
+        TryPreviewTransform(sessionId, StartSnapshot.Transform.WithScale(scale));
 
     public bool TryCommit(long sessionId, SceneStateOwner scene)
     {
@@ -52,9 +65,9 @@ public sealed class TransformSession
             End();
             return false;
         }
-        var position = Preview?.Position ?? StartSnapshot.Transform.Position;
+        var transform = Preview?.Transform ?? StartSnapshot.Transform;
         End();
-        commit = scene.CommitPositionWithResult(position);
+        commit = scene.CommitTransformWithResult(StartSnapshot.EntityKey, transform);
         return true;
     }
 

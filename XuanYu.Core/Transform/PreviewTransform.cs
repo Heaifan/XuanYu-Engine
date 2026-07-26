@@ -1,15 +1,19 @@
 using XuanYu.Core.Math;
+using XuanYu.Core.Scene;
 
 namespace XuanYu.Core.Transform;
 
 public readonly record struct PreviewTransform
 {
-    public PreviewTransform(Vector3d position)
+    public PreviewTransform(Vector3d position) : this(new CommittedTransform(position))
     {
-        if (!double.IsFinite(position.X) || !double.IsFinite(position.Y) || !double.IsFinite(position.Z))
-            throw new ArgumentOutOfRangeException(nameof(position), position, "Preview Position 必须是有限数值。");
-        Position = position;
     }
 
-    public Vector3d Position { get; }
+    public PreviewTransform(CommittedTransform transform)
+    {
+        Transform = transform;
+    }
+
+    public CommittedTransform Transform { get; }
+    public Vector3d Position => Transform.Position;
 }

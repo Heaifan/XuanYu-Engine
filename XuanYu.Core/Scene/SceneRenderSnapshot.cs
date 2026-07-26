@@ -33,7 +33,18 @@ public readonly record struct SceneRenderSnapshot(
 
     public CameraState CameraState => Camera ?? DefaultEditorCamera.Create(0);
 
-    public Vector3d RenderPosition => PreviewTransform?.Position ?? Entity.Transform.Position;
+    public CommittedTransform RenderTransform => PreviewTransform?.Transform ?? Entity.Transform;
+    public Vector3d RenderPosition => RenderTransform.Position;
+    public CommittedTransform TransformFor(SceneEntitySnapshot entity)
+    {
+        if (PreviewTransform is not null && entity.EntityKey == Entity.EntityKey)
+        {
+            return PreviewTransform.Value.Transform;
+        }
+
+        return entity.Transform;
+    }
+
     public Vector3d PositionFor(SceneEntitySnapshot entity)
     {
         if (PreviewTransform is not null && entity.EntityKey == Entity.EntityKey)

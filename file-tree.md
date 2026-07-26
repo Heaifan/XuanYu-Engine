@@ -1,7 +1,7 @@
-版本：v0.2.20.7-rz
+版本：v0.2.20.8-rz
 # XuanYu Engine 文件树
 
-文件总数：497
+文件总数：502
 
 ## 根目录
 
@@ -20,7 +20,7 @@
 ## XuanYu.World
 - 物理世界真相层（ARCH-WORLD-R1 新建，2026-07-24 真机验收 **CLOSED**）。命名空间 `XuanYu.World`（根）、`XuanYu.World.Scene`、`XuanYu.World.Spatial`、`XuanYu.World.Transform`。
 - 根域：`EntityRegistry`（实体总账）、`GlobalWorld`（全局世界根 + 查询入口，**R2 单一空间权威入口**；`Create` 透传显式 `extent`，缺省零尺寸点）、`WorldEntitySnapshot`（含本地 `Extent` + 绝对 `Bounds`，**R2-R1 实体显式空间描述**）、`WorldEntityActivity`、`RegionKey`、`WorldPartition*`、`WorldPartitionEntry`、`WorldPartitionMembership`、`IWorldPartitionStrategy`、`GridWorldPartitionStrategy`、`WorldQuery`（世界查询门面，**R2 新增 `Query(SpatialAabb/ray)` public + `Raycast(ray)` + `SpatialRevision`**；`Insert`/`Update`/`Remove`/`Rebuild` 收 `internal` 仅 `GlobalWorld` 可写；`ToBounds` 消费 `entity.Bounds`，**R2-R1 不再硬编码 ±0.5**）。
-- `Scene/`：`SceneStateOwner`（场景真相所有权；**R2 已删除第二套 `_spatialIndex`，`QuerySpatial`/`RaycastSpatial`/`SpatialRevision` 经 `_world` 兼容门面读唯一索引**；`CreateEntity` 增可选 `extent`，**R2-R1 占位实体显式 ±0.5 拾取代理由工厂提供而非 World 默认**；WORLD-B-R4-F1 起移动提交只替换 Position 并保留 Rotation / Scale）、`SceneStateOwner.Lifecycle`、`SceneStateOwner.Seeding`、`SceneWorldProjection`、`SceneSpatialBoundsProjection`（Scene↔World 旧投影；`ToSpatialBounds` ±0.5 为历史 B 索引来源，**R2-R1 起不再用于权威索引**，保留作边界 DTO）。
+- `Scene/`：`SceneStateOwner`（场景真相所有权；**R2 已删除第二套 `_spatialIndex`，`QuerySpatial`/`RaycastSpatial`/`SpatialRevision` 经 `_world` 兼容门面读唯一索引**；`CreateEntity` 增可选 `extent`，**R2-R1 占位实体显式 ±0.5 拾取代理由工厂提供而非 World 默认**）、`SceneStateOwner.Transform`（WORLD-B-R4-F2 完整 `CommitTransformWithResult`，移动提交只替换 Position 并保留 Rotation / Scale）、`SceneStateOwner.Lifecycle`、`SceneStateOwner.Seeding`、`SceneWorldProjection`、`SceneSpatialBoundsProjection`（Scene↔World 旧投影；`ToSpatialBounds` ±0.5 为历史 B 索引来源，**R2-R1 起不再用于权威索引**，保留作边界 DTO）。
 - `Spatial/`：`ISpatialIndex`、`DynamicAabbTree*`（AABB 树实现）、`SpatialIndexOwner`（**R2-R1 确认仅 `WorldQuery` 可构造，全 World 守卫锁死**）、`SpatialRaycastResolver`、Core `SpatialAabb.Translate`（**R2-R1 新增纯几何辅助**，供 `WorldEntitySnapshot.Bounds` 由本地 `Extent` 平移为绝对盒）。
 - `Transform/`：原 `TransformSession` 已于 R4-R1 迁至 `XuanYu.Editor.Transform`；`PreviewTransform`/`TransformStartSnapshot` 留 `XuanYu.Core.Transform`；本目录当前不再承载编辑器会话类型。
 
@@ -30,7 +30,7 @@
 ## XuanYu.Editor
 - 编辑器领域规则层（ARCH-WORLD-R4-R1 新建，2026-07-25）。命名空间 `XuanYu.Editor`（根）、`XuanYu.Editor.Camera`、`XuanYu.Editor.Transform`。
 - `Camera/`：`EditorCameraFraming`（编辑器构图纯函数，由 Core.Space 迁入；Frame All / Frame Selected、空集合、大坐标处理，并可返回唯一 ObservationCenter）、`CameraFrameResult`（相机和观察中心组合结果）、`CameraNavigation`（Orbit / Pan / Dolly 纯算法；不依赖 UI、Vulkan 或 World 权威）。
-- `Transform/`：`TransformSession`（变换事务会话，由 World.Transform 迁入；Begin / Preview / Commit / Cancel、捕获 SessionId、原始与预览位置、Escape 取消、延迟 MouseUp 防误提交；最终 Commit 经 `SceneStateOwner` → `GlobalWorld`，不拥有实体永久位置）。
+- `Transform/`：`TransformSession`（变换事务会话，由 World.Transform 迁入；Begin / Preview / Commit / Cancel、捕获 SessionId、原始与完整预览 Transform、Escape 取消、延迟 MouseUp 防误提交；最终 Commit 经 `SceneStateOwner` → `GlobalWorld`，不拥有实体永久 Transform）。
 - 仅引用 `XuanYu.Core` 与 `XuanYu.World`；禁止引用 Avalonia / `XuanYu.Editor.UI` / `XuanYu.Render.Vulkan` / Silk.NET；不新增第三方依赖。
 
 ## docs
@@ -246,7 +246,8 @@
 - `XuanYu.Core/Scene/SceneSpatialBoundsProjection.cs`：Scene 实体到 SpatialBounds 的派生投影；负责为 Picking / SpatialIndex 构造 AABB，不拥有正式 Transform。
 - `XuanYu.Core/Scene/SceneStateOwner.Lifecycle.cs`：SceneStateOwner 生命周期分部；负责通过 GlobalWorld 创建、销毁、查询、切换 active entity 和转发 Region / Activity 变更，不拥有第二份实体真相。
 - `XuanYu.Core/Scene/SceneStateOwner.Seeding.cs`：SceneStateOwner R1-R2 测试实体种子分部；负责补足 10 个可区分编辑器实体，不进入组织系统或分区系统。
-- `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责提交 Position、同步派生空间索引并发布渲染快照；空间索引不是第二份场景真相。
+- `XuanYu.Core/Scene/SceneStateOwner.Transform.cs`：SceneStateOwner Transform 提交分部；提供完整 Transform 与 Position 包装提交入口，并返回 History 所需 Before / After。
+- `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责持有 GlobalWorld、转发空间查询并发布渲染快照；空间索引不是第二份场景真相。
 - `XuanYu.Core/Scene/SceneTransformCommitResult.cs`：Scene Transform 正式提交结果，携带 EntityKey、Before、After 与 Changed 供 History 判断。
 - `XuanYu.Core/Scene/SceneWorldProjection.cs`：WorldEntitySnapshot 到 SceneEntitySnapshot / SceneRenderSnapshot 的单向投影入口；负责防止 Scene 重新成为实体事实源。
 - `XuanYu.Core/World/EntityRegistry.cs`：实体注册表；负责 EntityId 分配、实体快照保存与生命周期入口，不拥有 Region Membership 运行策略。
@@ -303,7 +304,9 @@
 - `XuanYu.World.Tests/World/WorldMoveTransformPlaneUiTests.cs`：WORLD-B-R3 平面移动 UiVm 测试；覆盖 XY/XZ/YZ 平面只改对应轴、Preview 不写正式位置、无位移不进 History。
 - `XuanYu.World.Tests/World/WorldMoveTransformRegionUiTests.cs`：WORLD-B-R3 跨 Region 移动 UiVm 测试；覆盖 EntityId 不变、世界单实体、层级/检查器/Selection 更新和 Undo/Redo 区域恢复。
 - `XuanYu.World.Tests/World/WorldMoveTransformSessionUiTests.cs`：WORLD-B-R3 移动会话取消与输入互斥测试；覆盖 Escape、PointerCaptureLost、WM_CANCELMODE、Resize、延迟 PointerUp、相机/Picking/工具切换抢占。
-- `XuanYu.World.Tests/World/WorldR4TransformFoundationTests.cs`：WORLD-B-R4-F1 Transform 数据合同测试；覆盖 Rotation/Scale 默认值、移动提交保留旋转缩放，以及检查器显示真实 Transform 字段。
+- `XuanYu.World.Tests/World/WorldR4InspectorInputTests.cs`：WORLD-B-R4-F2 检查器输入防污染测试；覆盖格式化显示保留内部精度、非法缩放 / NaN / 非数字不写 Transform 与 History。
+- `XuanYu.World.Tests/World/WorldR4TransformFoundationTests.cs`：WORLD-B-R4-F1/F2 Transform 数据合同测试；覆盖 Rotation/Scale 默认值、移动提交保留旋转缩放，以及检查器显示真实 Transform 字段。
+- `XuanYu.World.Tests/World/WorldR4TransformInputTests.cs`：WORLD-B-R4-F2 完整 Transform 输入测试；覆盖完整提交入口、会话 Preview / Commit 保留字段、旋转缩放候选与检查器提交撤销重做。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
@@ -502,7 +505,9 @@
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm Undo / Redo 接线分部；成功 Commit 后记录 History，撤销恢复 Before，重做恢复 After。
 - `XuanYu.Editor.UI/Vm/UiVm.InputGuards.cs`：WORLD-B-R2 输入门禁分部；集中判断活动移动会话 / 相机会话对 Picking、选择写入、工具切换和移动会话启动的抢占关系。
-- `XuanYu.Editor.UI/Vm/UiVm.Inspector.cs`：WORLD-B-R4-F1 检查器投影分部；从当前 World Entity 的正式 Transform 显示位置、旋转和缩放，不保存第二份 Inspector 状态。
+- `XuanYu.Editor.UI/Vm/UiVm.Inspector.cs`：WORLD-B-R4-F2 检查器投影分部；从当前 World Entity 的正式 Transform 以中文和 6 位小数显示位置、旋转和缩放，不保存第二份 Inspector 状态。
+- `XuanYu.Editor.UI/Vm/UiVm.InspectorInput.cs`：WORLD-B-R4-F2 检查器提交分部；将中文位置 / 旋转 / 缩放数值输入提交到 SceneStateOwner 并记录 History。
+- `XuanYu.Editor.UI/Vm/UiVm.InspectorInput.Parse.cs`：WORLD-B-R4-F2 检查器输入解析分部；负责数值解析、轴替换和非法缩放防污染。
 - `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`：UiVm 交互事务入口分部。
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部。
 - `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。

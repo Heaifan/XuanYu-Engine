@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.20.8-rz
+WORLD-B-R4-F2 完整 Transform 会话与检查器提交合同（2026-07-26）
+- 任务目标：继续 WORLD-B-R4，不补 CRUD、不进入 WarCore；把 R4-F1 的 Position / Rotation / Scale 数据落点推进为正式会话提交和检查器数值输入合同。本轮不宣布 R4 CLOSED，旋转/缩放可见控制柄与全局/局部模式仍待后续 R4 子轮完成。
+- 实装结果：`CommittedTransform` 增加 `WithRotation` / `WithScale` 与缩放安全下限，拒绝零、负数和接近零缩放；`PreviewTransform` 与 `TransformSession` 升级为完整 Transform Preview / Commit，旧移动预览继续保留 Rotation / Scale；`SceneStateOwner` 新增 `CommitTransformWithResult` 作为完整 Transform 唯一提交入口；右侧“检查器”标题改为“变换”，数值显示限制为 6 位小数，新增中文 `位置` / `旋转` / `缩放` 数值提交入口并接入 History。
+- 测试变化：扩展 R4 Transform 基础测试到 15 项，覆盖完整 Transform 提交、移动会话保留 Rotation / Scale、旋转缩放会话候选、危险缩放拒绝、检查器输入提交 / 撤销 / 重做、格式化显示不降内部精度与非法输入不污染 Transform。测试数由 212 增至 224。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.8-rz`。
+- 状态：R4 继续推进；下一步进入可见旋转环、缩放控制柄和“全局 / 局部”模式实装。
+- 验证：`git diff --check` PASS；本轮差异文件 5+100 PASS（14 个 `.cs` / `.axaml`）；SVG XML **55/55 PASS**；`scripts\arch-a-guard.ps1` EXIT=0；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **224 passed / 0 failed / 0 skipped**（Core 85 + World 139）。首次 build 被当前工作区 `XuanYu.Editor.App` PID 28612 锁定，核对 ExecutablePath 后终止该进程并重跑通过。
+
 ## v0.2.20.7-rz
 WORLD-B-R4-F1 Transform 数据合同与检查器真实投影（2026-07-26）
 - 任务目标：在 WORLD-B-R3 CLOSED 后立即进入 WORLD-B-R4 代码实装；先补正式 Transform 数据合同和检查器真实字段，为后续 Rotate / Scale / Global / Local / Inspector 输入建立落点。本轮不实现旋转控制柄、缩放控制柄、Local 模式数学、检查器数值编辑、CRUD 或 WarCore。

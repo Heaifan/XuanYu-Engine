@@ -26,6 +26,9 @@ public sealed partial class UiVm
         FooterMessage = "撤销完成。";
         LogHistoryUndo(entry);
         OnPropertyChanged(nameof(DebugObjectItems));
+        OnPropertyChanged(nameof(InspectorFields));
+        OnPropertyChanged(nameof(TransformHistoryCount));
+        OnPropertyChanged(nameof(TransformRedoCount));
         PublishSceneRenderSnapshot();
     }
 
@@ -47,6 +50,9 @@ public sealed partial class UiVm
         FooterMessage = "重做完成。";
         LogHistoryRedo(entry);
         OnPropertyChanged(nameof(DebugObjectItems));
+        OnPropertyChanged(nameof(InspectorFields));
+        OnPropertyChanged(nameof(TransformHistoryCount));
+        OnPropertyChanged(nameof(TransformRedoCount));
         PublishSceneRenderSnapshot();
     }
 
@@ -59,6 +65,8 @@ public sealed partial class UiVm
             "编辑历史已记录",
             $"实体={EditorDisplayText.Entity(entry.EntityKey)}；之前位置={EditorDisplayText.Position(entry.Before.Position)}；之后位置={EditorDisplayText.Position(entry.After.Position)}；历史数量={_historyOwner.Count}");
         RefreshLogBindings();
+        OnPropertyChanged(nameof(TransformHistoryCount));
+        OnPropertyChanged(nameof(TransformRedoCount));
     }
 
     void LogHistoryUndo(TransformHistoryEntry entry)
