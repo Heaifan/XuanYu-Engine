@@ -173,3 +173,44 @@
 - `SceneRenderSnapshot` 等 Snapshot 是派生表现边界 DTO，不得携带 Editor 相机创建后门；相机只能由 Editor/View 以 `CameraState` 传入。
 - 归属迁移按 `ARCH-WORLD-R0 → R5` 序列执行（`docs/arch-world-layer-attribution.md`），每轮 build 0W0E + 全量测试 + arch-a-guard 通过后 commit；禁止一轮全搬、禁止跨轮夹带。
 - R1 完成前禁止在 Core 继续扩张 World 概念新类型；确需新增必须先在 `docs/arch-world-layer-attribution.md` 归属总表登记裁定。
+
+---
+
+## 16. .NET 构建、测试与子进程生命周期（GOV-DOTNET-R1）
+
+### 16.1 稳定验证模板（可直接复制）
+
+```powershell
+Set-Location 'E:\MyDoc\project-VSCode\XuanYuEngine'
+
+dotnet build-server shutdown
+$env:MSBUILDDISABLENODEREUSE = "1"
+
+dotnet restore .\XuanYu.Engine.slnx
+
+dotnet build .\XuanYu.Engine.slnx `
+  --no-restore `
+  -m:1 `
+  -nr:false `
+  -p:BuildInParallel=false `
+  -p:UseSharedCompilation=false
+
+dotnet test .\XuanYu.Core.Tests\XuanYu.Core.Tests.csproj `
+  --no-build `
+  --no-restore
+
+dotnet test .\XuanYu.World.Tests\XuanYu.World.Tests.csproj `
+  --no-build `
+  --no-restore
+
+dotnet build-server shutdown
+```
+
+### 16.2 规则要点
+
+- 这是一套**稳定默认模板**，不代表所有测试项目必须每轮全部运行；具体测试范围仍按本轮改动决定，但所有被选中的测试必须**串行**。
+- 验证起止必须 `dotnet build-server shutdown`；必须设置 `MSBUILDDISABLENODEREUSE=1`。
+- 解决方案只完整构建一次，后续测试一律 `--no-build --no-restore`。
+- 单命令 ≤ 5 分钟，连续 2 分钟无输出立即停；环境失败（`Access is denied` / obj·bin 写锁）优先判环境阻断，不得伪装代码失败。
+- 沙箱禁止进程管理时（LOLBin 拦 `tasklist` / `Stop-Process`），停止执行、请用户手动清进程或重启，不得绕过。
+- 同一失败命令仅环境真实变化后重试一次；changelog 只记本轮真实退出码。

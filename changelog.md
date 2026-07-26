@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.20.11-fix
+WORLD-B 治理·.NET 构建测试子进程生命周期（GOV-DOTNET-R1，2026-07-27）
+- 任务目标：把 WORLD-B-R4 收口期暴露的治理缺口正式写入宪法与执行手册——dotnet 构建/测试必须串行、子进程生命周期可控、超时无输出有上限、环境失败不伪装代码失败、安全策略限制时停止而非绕过、changelog 只记本轮真实退出码。本轮不修改任何 .cs、不修改测试、不新增脚本、不清理构建系统、不扩张架构、不触碰 CI。
+- 实装结果：`docs/玄域引擎_AI开发宪法.md` 新增第二十七章「.NET 构建、测试与子进程生命周期治理」（十二条不可违反原则：串行/前命令未返回不启下条/MSBUILDDISABLENODEREUSE/起止 build-server shutdown/-m:1 -nr:false/只构建一次后续 --no-build/单命令5min连续2min无输出停/取消杀完整进程树/无法终止子进程则停/环境失败不伪装代码失败/禁删 obj-bin 代替释放/安全策略拦进程管理不得绕过/同失败命令仅环境真变后重试一次/changelog 只记本轮真实退出码）；`docs/dev-rules.md` 新增第 16 节稳定验证模板（build-server shutdown + -m:1 -nr:false BuildInParallel=false UseSharedCompilation=false + 串行 --no-build --no-restore 测试 + 收尾 shutdown）。
+- 版本同步：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.11-fix`。
+- 状态：GOV-DOTNET-R1 CLOSED；下一动作回到 WORLD-B-R4-F5 缩放闭环（待用户真机验收 R4 后启动）。
+- 验证（本轮实际执行，非沿用）：`git diff --check` PASS；修改范围仅 6 个批准文件（2 文档 + 3 版本源 + 本条目）；架构守卫 `scripts/arch-a-guard.ps1` 执行一次 EXIT=0；5+100 对 .cs/.axaml 无新增越界（UiWin.axaml 仅改版本行）；无运行时代码变化，未跑全解决方案构建（文档治理轮按第二十七条第十二条豁免）。
+
 ## v0.2.20.10-rz
 WORLD-B-R4-F4 旋转工具闭环（2026-07-26）
 - 任务目标：在 F2/F3 建立的 Transform 会话与工具状态合同之上，正式启用旋转工具——可见 X/Y/Z 三轴旋转环、屏幕命中、旋转会话、一次拖拽一次历史提交、取消不改写历史；Vulkan 顶点着色器按 `gizmoMode` 切换移动/旋转几何并按 `RotateGizmoVisible` 门控 CmdDraw。本轮不实现缩放柄、全局/局部或检查器旋转输入。
