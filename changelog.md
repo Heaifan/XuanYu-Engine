@@ -6,7 +6,7 @@ WORLD-B-R2 选择与工具状态闭环实装（2026-07-26）
 - 实装结果：新增 `UiVm.InputGuards` 与 `UiVm.SelectionValidity`；Picking 只允许“选择”工具在无活动会话时写入 Selection；活动相机或移动会话期间拒绝 Picking、层级/项目树选择写入和工具切换；“框选”“旋转”“缩放”不进入虚假活动态；删除/失效实体后按 World 权威清理 Selection。
 - 测试变化：新增 `WorldSelectionToolStateUiTests` 5 项，覆盖层级选择同步检查器、清除选择同步清层级/检查器/移动控制柄、删除选中实体清除失效选择、未实现工具拒绝虚假高亮、移动会话阻止工具切换/相机/Picking。测试数由 182 增至 187。
 - 文档与可视化：新增 `docs/world-b-r2-selection-tool-state-report.md` 与 `docs/world-b-r2-selection-tool-state.svg`；`run.bat`、`UiWin.axaml`、`file-tree.md` 同步到 `v0.2.20.4-rz`。
-- 状态：R2 代码与自动门禁完成；R2 真机验收清单已落库，但尚需用户按中文 IPO 清单确认或明确豁免后才能宣布 CLOSED。
+- 状态：R2 代码与自动门禁完成；中文 IPO 真机验收 01–06 PASS，07 因当前编辑器没有实体删除入口标记 N/A；失效实体选择清理由自动测试覆盖。最终裁定：**WORLD-B-R2 CLOSED**。
 - 验证：`git diff --check` PASS；全仓 5+100 PASS（311 个 tracked/untracked `.cs` / `.axaml`）；SVG XML **54/54 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **187 passed / 0 failed / 0 skipped**（Core 77 + World 110）；`scripts\arch-a-guard.ps1` EXIT=0。
 
 ## v0.2.20.3-rz
