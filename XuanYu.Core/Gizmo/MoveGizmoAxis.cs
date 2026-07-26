@@ -4,5 +4,8 @@ public enum MoveGizmoAxis
 {
     X,
     Y,
-    Z
+    Z,
+    XY,
+    XZ,
+    YZ
 }

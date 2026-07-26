@@ -64,6 +64,19 @@ public sealed class TransformSessionTests
         Assert.Equal(Vector3d.Zero, render.Entity.Transform.Position);
     }
 
+    [Fact]
+    public void Commit_after_entity_loss_ends_session_without_history_candidate()
+    {
+        var scene = new SceneStateOwner();
+        var session = Begin(scene, MoveGizmoAxis.X);
+        Assert.True(scene.DestroyEntity(scene.RenderSnapshot.Entity.EntityKey));
+
+        Assert.False(session.TryCommit(17, scene, out var commit));
+
+        Assert.False(session.IsActive);
+        Assert.False(commit.Changed);
+    }
+
     static TransformSession Begin(SceneStateOwner scene, MoveGizmoAxis axis)
     {
         var session = new TransformSession();

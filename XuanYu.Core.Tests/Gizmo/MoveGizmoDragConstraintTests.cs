@@ -23,9 +23,33 @@ public sealed class MoveGizmoDragConstraintTests
     [Fact]
     public void Perpendicular_pointer_motion_does_not_move_entity()
     {
-        var segment = new MoveGizmoSegment(MoveGizmoAxis.X, new ScreenPoint(0, 0), new ScreenPoint(40, 0));
+        var segment = new MoveGizmoSegment(
+            MoveGizmoAxis.X,
+            new ScreenPoint(0, 0),
+            new ScreenPoint(40, 0));
         var constraint = new MoveGizmoDragConstraint(segment, 0, 0);
 
         Assert.Equal(Vector3d.Zero, constraint.Solve(Vector3d.Zero, 0, 30));
+    }
+
+    [Theory]
+    [InlineData(MoveGizmoAxis.XY, 1.2, 1.2, 0)]
+    [InlineData(MoveGizmoAxis.XZ, 1.2, 0, 1.2)]
+    [InlineData(MoveGizmoAxis.YZ, 0, 1.2, 1.2)]
+    public void Plane_drag_moves_only_plane_axes(MoveGizmoAxis axis, double x, double y, double z)
+    {
+        var a = new MoveGizmoSegment(
+            MoveGizmoAxis.X,
+            new ScreenPoint(0, 0),
+            new ScreenPoint(40, 0));
+        var b = new MoveGizmoSegment(
+            MoveGizmoAxis.Y,
+            new ScreenPoint(0, 0),
+            new ScreenPoint(0, 40));
+        var constraint = MoveGizmoDragConstraint.Plane(axis, a, b, 0, 0);
+
+        var result = constraint.Solve(Vector3d.Zero, 40, 40);
+
+        Assert.Equal(new Vector3d(x, y, z), result);
     }
 }

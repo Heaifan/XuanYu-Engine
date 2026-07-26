@@ -45,8 +45,13 @@ public sealed class TransformSession
         out SceneTransformCommitResult commit)
     {
         commit = default;
-        if (!Owns(sessionId) || !scene.RenderSnapshot.HasEntity) return false;
-        if (scene.RenderSnapshot.Entity.EntityKey != StartSnapshot.EntityKey) return false;
+        if (!Owns(sessionId)) return false;
+        if (!scene.RenderSnapshot.HasEntity ||
+            scene.RenderSnapshot.Entity.EntityKey != StartSnapshot.EntityKey)
+        {
+            End();
+            return false;
+        }
         var position = Preview?.Position ?? StartSnapshot.Transform.Position;
         End();
         commit = scene.CommitPositionWithResult(position);

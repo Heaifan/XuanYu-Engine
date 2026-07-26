@@ -1,7 +1,7 @@
-版本：v0.2.20.4-rz
+版本：v0.2.20.5-rz
 # XuanYu Engine 文件树
 
-文件总数：482
+文件总数：483
 
 ## 根目录
 
@@ -294,6 +294,7 @@
 - `XuanYu.Core.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
 - `XuanYu.World.Tests/World/WorldCameraNavigationUiTests.cs`：WORLD-B-R1 UiVm 相机会话测试；覆盖 Frame 更新 ObservationCenter、Cancel 恢复、输入抢占、旧 PointerUp 和 Camera Capture 阻止 Picking / Dolly。
 - `XuanYu.World.Tests/World/WorldSelectionToolStateUiTests.cs`：WORLD-B-R2 UiVm 选择与工具状态测试；覆盖层级选择同步检查器、清除选择、删除失效选择、未实现工具拒绝虚假活动态和移动会话输入抢占。
+- `XuanYu.World.Tests/World/WorldMoveTransformUiTests.cs`：WORLD-B-R3 UiVm 移动变换基础测试；覆盖真实 X 轴拖动提交、撤销、重做，以及移动会话期间选择改写被拒绝。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。

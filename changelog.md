@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.20.5-rz
+WORLD-B-R3 移动变换闭环基础加固（2026-07-26）
+- 任务目标：在 R2 CLOSED 后立即进入 WORLD-B-R3，先补移动变换基础风险：平面移动数学约束、实体失效后的会话安全结束、UiVm 级移动提交 / 撤销 / 重做主链自动测试。本轮不补完整 CRUD，不进入 Rotate / Scale、Inspector 数值输入、吸附、多选、批量移动、WarCore。
+- 实装结果：`MoveGizmoAxis` 增加 XY / XZ / YZ 平面枚举；`MoveGizmoDragConstraint` 增加平面约束求解，解两根屏幕轴的 2x2 投影并只修改对应世界平面；`TransformSession.TryCommit` 在目标实体失效或 active entity 不匹配时结束会话并拒绝生成提交结果。
+- 测试变化：`MoveGizmoDragConstraintTests` 新增 3 项平面约束测试；`TransformSessionTests` 新增实体失效提交安全结束测试；新增 `WorldMoveTransformUiTests` 2 项，覆盖真实 UiVm X 轴拖动提交、撤销、重做，以及移动会话阻止选择改写。测试数由 187 增至 193。
+- 状态：R3 已开始但尚未 CLOSED；平面控制柄目前只有数学约束，尚未完成可见平面控制柄与真机可操作入口，因此不能宣布 R3 完整闭环。
+- 验证：`git diff --check` PASS；本轮差异文件 5+100 PASS（7 个 `.cs` / `.axaml`）；SVG XML **54/54 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **193 passed / 0 failed / 0 skipped**（Core 80 + World 113）；`scripts\arch-a-guard.ps1` EXIT=0。沙箱 build 因 NuGet 网络权限 NU1301 失败，非沙箱重跑通过；此前 PID 33152 的当前工作区 `XuanYu.Editor.App` 锁定输出 DLL，核对路径后终止该进程并重跑通过。
+
 ## v0.2.20.4-rz
 WORLD-B-R2 选择与工具状态闭环实装（2026-07-26）
 - 任务目标：建立编辑器唯一 Selection / ToolMode 的边界加固，让中央视口、左侧“层级”、右侧“检查器”、顶部工具栏和移动控制柄消费同一选择与工具状态；本轮不进入 Rotate / Scale 数学、Inspector 数值变换、多选、框选算法或 WarCore。
