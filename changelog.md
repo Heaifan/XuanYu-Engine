@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.20.3-rz
+WORLD-B-R1 编辑器相机操作验收收口（2026-07-26）
+- 任务目标：记录 R1 中文 IPO 真机证据通过，将 WORLD-B-R1 从“代码与自动门禁完成、等待真机记录”推进到正式 CLOSED，并冻结下一入口为 WORLD-B-R2。
+- 收口结果：新增 `docs/world-b-r1-camera-acceptance-closure.md` 与 `docs/world-b-r1-camera-acceptance-closure.svg`，记录 11 项中文 IPO 真机验收 PASS、相机焦点合同 PASS、相机 / 选择 / 移动输入互斥 PASS、窗口调整与捕获取消 PASS。
+- 版本同步：`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.3-rz`。
+- 范围纪律：本轮只做 R1 验收收口与文档版本推进，不修改生产逻辑；不进入 R2 代码、Rotate、Scale、Inspector Transform 或 WarCore。
+- 验证：`git diff --check` PASS；全仓 5+100 PASS（308 个 tracked `.cs` / `.axaml`）；SVG XML **53/53 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **182 passed / 0 failed / 0 skipped**（Core 77 + World 105）；`scripts\arch-a-guard.ps1` EXIT=0。首次沙箱 build 因 NuGet 网络权限 NU1301 失败；非沙箱重跑时 PID 34672 的当前工作区 `XuanYu.Editor.App` 锁定输出 DLL，核对路径后终止该进程并重跑通过。
+
 ## v0.2.20.2-rz
 WORLD-B-R1 中文 IPO 真机测试治理补丁（2026-07-26 14:25:28）
 - 任务目标：将人工与真机测试清单统一为“序号 / 路径 / 输入 I / 过程 P / 输出 O”格式，确保测试者可以逐步照做，结果可以由画面、状态、日志或数据明确判断。

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f6f8fb"/>
+  <text x="64" y="78" font-family="Microsoft YaHei, Arial, sans-serif" font-size="34" font-weight="700" fill="#18324a">WORLD-B-R1 相机操作验收收口</text>
+  <text x="64" y="120" font-family="Microsoft YaHei, Arial, sans-serif" font-size="18" fill="#5a6f82">v0.2.20.3-rz · 中文 IPO 真机证据通过 · 下一入口 WORLD-B-R2</text>
+  <rect x="70" y="178" width="280" height="160" rx="8" fill="#e8f4ee" stroke="#3a8a5f" stroke-width="2"/>
+  <text x="104" y="230" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="700" fill="#236044">聚焦 / 查看全部</text>
+  <text x="104" y="272" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#315346">观察中心稳定</text>
+  <text x="104" y="304" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#315346">环绕不漂移</text>
+  <rect x="390" y="178" width="280" height="160" rx="8" fill="#e9f0fb" stroke="#3f6fae" stroke-width="2"/>
+  <text x="424" y="230" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="700" fill="#284f85">平移 / 滚轮</text>
+  <text x="424" y="272" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#365276">方向保持</text>
+  <text x="424" y="304" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#365276">距离稳定缩放</text>
+  <rect x="710" y="178" width="280" height="160" rx="8" fill="#fff3e5" stroke="#c47b2c" stroke-width="2"/>
+  <text x="744" y="230" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="700" fill="#84521e">Escape / 失焦</text>
+  <text x="744" y="272" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#704b25">会话取消</text>
+  <text x="744" y="304" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#704b25">无捕获残留</text>
+  <rect x="1030" y="178" width="180" height="160" rx="8" fill="#f7eefa" stroke="#9a67ad" stroke-width="2"/>
+  <text x="1062" y="230" font-family="Microsoft YaHei, Arial, sans-serif" font-size="24" font-weight="700" fill="#6f3d82">互斥</text>
+  <text x="1062" y="272" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#62416d">相机</text>
+  <text x="1062" y="304" font-family="Microsoft YaHei, Arial, sans-serif" font-size="17" fill="#62416d">选择 / 移动</text>
+  <rect x="170" y="430" width="940" height="118" rx="8" fill="#ffffff" stroke="#ccd8e5" stroke-width="2"/>
+  <text x="220" y="480" font-family="Microsoft YaHei, Arial, sans-serif" font-size="26" font-weight="700" fill="#18324a">WORLD-B-R1 CLOSED</text>
+  <text x="220" y="520" font-family="Microsoft YaHei, Arial, sans-serif" font-size="18" fill="#486276">不重审 R1，不进入 WarCore；立即进入 WORLD-B-R2：选择与工具状态闭环。</text>
+  <path d="M640 350 L640 420" stroke="#607489" stroke-width="4" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#607489"/>
+    </marker>
+  </defs>
+</svg>

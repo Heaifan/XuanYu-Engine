@@ -1,7 +1,7 @@
-版本：v0.2.20.2-rz
+版本：v0.2.20.3-rz
 # XuanYu Engine 文件树
 
-文件总数：473
+文件总数：475
 
 ## 根目录
 
@@ -120,6 +120,8 @@
 - `docs/world-a-ui-r2-continuous-tree.svg`：WORLD-A-UI-R2 连续树干验收图；展示 Project / Hierarchy 的 Full、Tee、Elbow 树线模型。
 - `docs/world-b-r0-editor-interaction-audit.md`：WORLD-B-R0 编辑器基本操作现状审计与合同冻结文档；冻结 Camera / Selection / ToolMode / Transform 权威、输入优先级、保留项、缺口和 R1-R4 入口边界，不承载运行时代码。
 - `docs/world-b-r0-editor-interaction-audit.svg`：WORLD-B-R0 编辑器相机、选择、工具与 Transform 权威关系图；展示 WarCore 后移和 R1-R4 路线，不承载运行时代码。
+- `docs/world-b-r1-camera-acceptance-closure.md`：WORLD-B-R1 编辑器相机操作验收收口报告；记录 11 项中文 IPO 真机验收 PASS、R1 CLOSED 裁定和下一入口 WORLD-B-R2，不承载运行时代码。
+- `docs/world-b-r1-camera-acceptance-closure.svg`：WORLD-B-R1 相机操作验收收口状态图；展示聚焦/查看全部、平移/滚轮、Escape/失焦和输入互斥均通过，不承载运行时代码。
 - `docs/world-b-r1-camera-operation-report.md`：WORLD-B-R1 编辑器相机操作实装报告；记录唯一 ObservationCenter、CameraSession、输入抢占、测试覆盖和真机待验清单，不承载运行时代码。
 - `docs/world-b-r1-camera-operation.svg`：WORLD-B-R1 相机操作实装状态图；展示 Frame、Orbit、Pan、Dolly、CameraSession、输入抢占和真机待验状态，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
