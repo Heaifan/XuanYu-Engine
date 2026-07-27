@@ -1,4 +1,4 @@
-版本：v0.2.20.15-fix
+版本：v0.2.20.16-fix
 # XuanYu Engine 文件树
 
 文件总数：502
@@ -398,21 +398,21 @@
 - `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`：Vulkan 物理设备选择器。
 - `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs`：Vulkan 队列族选择结果。
 - `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs`：Vulkan Resize 追踪诊断工具。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs`：片元着色器 SPIR-V 字节码。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：顶点着色器 SPIR-V 字节码；WORLD-B-R4-R3 重生成以容纳 `outlineMode` push constant（1622 字）。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs`：片元着色器 SPIR-V 字节码；WORLD-B-R4-R3-R1 重生成（307 字）以容纳重心坐标边缘高亮逻辑。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：顶点着色器 SPIR-V 字节码；WORLD-B-R4-R3-R1 重生成以容纳 `selectionMode` push constant 与重心坐标输出（1689 字）。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`：Vulkan 图形管线生命周期持有者。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：Vulkan 管线日志格式化器。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；@88 / index 22 为 `selectionMode`（选中标志，真实边缘高亮由片元着色器基于重心坐标绘制），负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs`：Vulkan ShaderModule 生命周期持有者。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Trace.cs`：Vulkan ClearFrame 低频录制诊断分部；记录 RecordCommandBuffers 深度、线程、实体数和视图数，不改变生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Render Projection，并由 Present 线程在安全点消费；缺相机失败仅清空当前可提交投影并记录跳过原因。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；只消费 Render Projection，负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并绘制场景实体与 Move Gizmo 三轴/三平面，不污染 Picking 或生命周期（WORLD-B-R4-R3 对 `IsSelected` 实体先以 outlineMode=1 画放大浅蓝白底三角、再以 outlineMode=0 画实体形成轮廓高亮；`FillScenePushConstants` 因 5+100 拆至 `VulkanClearFrameOwner.PushConstants.cs`）。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PushConstants.cs`：Vulkan ClearFrame push constant 填充分部（WORLD-B-R4-R3 从 Draw 拆出以满足 5+100）；`FillScenePushConstants` 写入 viewProjection、实体位移/旋转/缩放、Gizmo 环半径与 `outlineMode`（@88 / index 22），不持有渲染资源生命周期。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；只消费 Render Projection，负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并绘制场景实体与 Move Gizmo 三轴/三平面，不污染 Picking 或生命周期（WORLD-B-R4-R3-R1 每个实体只绘制一次，选中仅以 `selectionMode` 标志下传，由片元着色器基于重心坐标绘制真实边缘高亮，废除放大复制面；`FillScenePushConstants` 因 5+100 拆至 `VulkanClearFrameOwner.PushConstants.cs`）。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PushConstants.cs`：Vulkan ClearFrame push constant 填充分部（WORLD-B-R4-R3-R1 从 Draw 拆出以满足 5+100）；`FillScenePushConstants` 写入 viewProjection、实体位移/旋转/缩放、Gizmo 环半径与 `selectionMode`（@88 / index 22），不持有渲染资源生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Matrix.cs`：Vulkan ClearFrame 矩阵辅助分部；提供 push constant 矩阵转置和 Vulkan Clip Y 投影副本转换，不持有渲染资源生命周期。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与 Move Gizmo 三轴/三平面顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试（WORLD-B-R4-R3 增 `outlineMode`：>0.5 时放大本地点 1.16 并以浅蓝白 `vec4(0.80,0.90,1.0,1.0)` 着色形成轮廓高亮）。
-- `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；不负责 Selection 或 Pipeline 生命周期。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与 Move Gizmo 三轴/三平面顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试（WORLD-B-R4-R3-R1 改 `outlineMode`→`selectionMode` 仅表示是否选中，删除 1.16 放大，按 `gl_VertexIndex` 输出重心坐标 `vBary` 供片元绘制真实边缘高亮）。
+- `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；WORLD-B-R4-R3-R1 对选中实体（`vEntity>0.5 && vSelected>0.5`）用 `fwidth(vBary)` + `smoothstep` 判定近边，边缘输出浅蓝白 `vec3(0.80,0.90,1.0)`、内部保持黄色，不输出第二张完整面，不负责 Pipeline 生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`：Vulkan ClearFrame 资源持有主体。

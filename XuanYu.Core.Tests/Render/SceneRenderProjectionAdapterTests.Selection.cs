@@ -55,4 +55,24 @@ public sealed partial class SceneRenderProjectionAdapterTests
 
         Assert.All(projection.Entities, e => Assert.False(e.IsSelected));
     }
+
+    // E：选中实体不得向渲染投影注入第二个实体副本。
+    // 渲染层收到的实体集合必须与源 RenderEntities 一致，且 IsSelected 唯一标记当前实体——
+    // 这是“无放大的完整复制面”的投影层等价证据（Draw 层 CmdDraw 单次性由代码删除双 Draw 分支保证）。
+    [Fact]
+    public void Selection_marks_single_entity_without_duplicating_into_render_projection()
+    {
+        var a = EntityAt(1, Vector3d.Zero);
+        var b = EntityAt(2, new Vector3d(5, 0, 0));
+        var snapshot = new SceneRenderSnapshot(
+            a, IsSelected: true, RenderEntities: [a, b], Camera: TestCamera());
+
+        var projection = SceneRenderProjectionAdapter.TryCreate(snapshot).Projection;
+
+        // 渲染层实体数量 == 源数量（2），不因为高亮而新增实体副本。
+        Assert.Equal(2, projection.Entities.Count);
+        // 恰好一个实体被标记选中，且就是当前选中实体 A。
+        Assert.Single(projection.Entities, e => e.IsSelected);
+        Assert.Equal(EntityId.FromInt(1), projection.Entities.Single(e => e.IsSelected).Key);
+    }
 }

@@ -5,12 +5,15 @@ layout(push_constant) uniform ScenePush {
     vec4 worldPosition;
     float gizmoMode;
     float gizmoRingRadius;
-    float outlineMode;
+    float selectionMode;
     vec4 entityRotation;
     vec4 entityScale;
 } pc;
 
-layout(location = 0) out vec4 outColor;
+layout(location = 0) out vec4 vBaseColor;
+layout(location = 1) out vec3 vBary;
+layout(location = 2) out float vSelected;
+layout(location = 3) out float vEntity;
 
 vec3 triangleVertex(int index) {
     vec3 vertices[3] = vec3[3](
@@ -74,34 +77,44 @@ void main() {
     vec3 world;
     if (gl_VertexIndex < 3) {
         // 实体三角形：应用缩放 → 旋转 → 平移，使世界 Rotation/Scale 真正影响画面。
-        // R4-R3：outlineMode=1 时先放大作底（浅蓝白），实体三角形随后压顶形成轮廓高亮。
+        // R4-R3-R1：selectionMode 仅表示“当前实体是否选中”，不再放大顶点；
+        // 真实边缘高亮由片元着色器基于重心坐标（vBary + fwidth）绘制，实体只绘制一次。
         vec3 local = triangleVertex(gl_VertexIndex);
-        if (pc.outlineMode > 0.5) local = local * 1.16;
         local = local * pc.entityScale.xyz;
         local = eulerRot(pc.entityRotation.xyz) * local;
         world = local + pc.worldPosition.xyz;
-        outColor = pc.outlineMode > 0.5 ? vec4(0.80, 0.90, 1.0, 1.0) : vec4(1.0, 0.85, 0.2, 1.0);
+        vBaseColor = vec4(1.0, 0.85, 0.2, 1.0);
+        vBary = gl_VertexIndex == 0 ? vec3(1.0, 0.0, 0.0) :
+                (gl_VertexIndex == 1 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0));
+        vSelected = pc.selectionMode > 0.5 ? 1.0 : 0.0;
+        vEntity = 1.0;
     } else if (pc.gizmoMode < 0.5) {
         int gi = gl_VertexIndex - 3;
         if (gi < 18) {
             int plane = gi / 6;
             world = planeVertex(plane, gi % 6) + pc.worldPosition.xyz;
-            outColor = plane == 0 ? vec4(0.82, 0.66, 0.16, 1.0) :
+            vBaseColor = plane == 0 ? vec4(0.82, 0.66, 0.16, 1.0) :
                 (plane == 1 ? vec4(0.64, 0.26, 0.82, 1.0) : vec4(0.16, 0.68, 0.76, 1.0));
         } else {
             int axis = (gi - 18) / 6;
             world = gizmoVertex(axis, (gi - 18) % 6) + pc.worldPosition.xyz;
-            outColor = axis == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
+            vBaseColor = axis == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
                 (axis == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
         }
+        vBary = vec3(1.0);
+        vSelected = 0.0;
+        vEntity = 0.0;
     } else {
         int ri = gl_VertexIndex - 3;
         int ring = ri / (48 * 6);
         int seg = (ri % (48 * 6)) / 6;
         int vert = ri % 6;
         world = ringVertex(ring, seg, vert) + pc.worldPosition.xyz;
-        outColor = ring == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
+        vBaseColor = ring == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
             (ring == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
+        vBary = vec3(1.0);
+        vSelected = 0.0;
+        vEntity = 0.0;
     }
     gl_Position = pc.viewProjection * vec4(world, 1.0);
 }

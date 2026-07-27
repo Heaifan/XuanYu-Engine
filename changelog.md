@@ -1,5 +1,23 @@
 # changelog
 
+## v0.2.20.16-fix
+WORLD-B-R4-R3-R1 废除放大复制面，改用重心坐标真实边缘高亮（2026-07-27）
+- 根因审计（用户真机审计 GitHub `5c717b5` / v0.2.20.15-fix 结论）：R4-R3 实装的"轮廓高亮"实为对选中实体执行两次完整 CmdDraw——outlineMode=1 画放大 1.16 的浅蓝白整面、outlineMode=0 画黄色实体盖顶；三角形几何中心不在局部原点，`*1.16` 绕原点放大造成偏移与边宽不均，根本不是真正的轮廓。预览旋转链本就实时（PreviewRotateGizmo 每次 PublishSceneRenderSnapshot），用户看到的"点击其他实体才应用旋转"是放大复制面随选择切换消失造成的视觉假象。R4-R3 真机判定 FAIL。
+- 修复落点（禁止再选"放大外壳"方案）：
+  - 渲染层：`VulkanClearFrameOwner.Draw` 删除 `IsSelected` 额外 Draw 分支，每个实体永远单次 Draw，仅以 `e.IsSelected ? 1.0f : 0.0f` 下传选中标志。
+  - push constant：`outlineMode` 改名 `selectionMode`（@88 / index 22），语义收紧为"是否选中"，不再携带放大比例。
+  - `scene.vert`：删除 `local *= 1.16`，保留 Scale→Rotation→Position；按 `gl_VertexIndex` 输出重心坐标 `vBary`((1,0,0)/(0,1,0)/(0,0,1))，并把 `vSelected`/`vEntity` 传给 frag。
+  - `scene.frag`：对选中实体（`vEntity>0.5 && vSelected>0.5`）用 `fwidth(vBary)` + `smoothstep` 算边缘，边缘浅蓝白 `vec3(0.80,0.90,1.0)`、内部保持黄色；禁止第二张完整面，浅蓝白方向非荧光。
+  - SPIR-V 重生成：`glslc` 由 GLSL 重新生成 `scene.spv`，Python 转 C# 数组覆盖 `ShaderBytecode.Vert.cs`（1689 字）与 `ShaderBytecode.Frag.cs`（307 字）。
+- 测试（新增 A/B/C/D/E，覆盖双 Draw 废除与真实边缘语义）：
+  - A：渲染层每个实体只 Draw 一次（代码审查 + arch-a-guard 兜底，真机验收复核 CmdDraw 计数）。
+  - B：`WorldRotateTransformUiTests.R4R3R1.Begin_rotate_then_single_preview_updates_render_rotation_before_commit` —— Begin Rotate 后一次 Preview 未 Commit 时 `RenderSnapshot.RenderTransform.Rotation` 已变、正式 `scene.TryGetEntity` 的 Rotation 仍为 0。
+  - C：`Preview_to_commit_keeps_render_rotation_stable` —— 同位置 Preview→Commit 不跳变。
+  - D：`Commit_A_then_select_B_does_not_mutate_A_rotation` —— Commit A 后 Pick B 不改 A 的正式 Rotation。
+  - E：`SceneRenderProjectionAdapterTests.Selection.Selection_marks_single_entity_without_duplicating_into_render_projection` —— 投影层实体不倍增（`Entities.Count==2`、唯一 `IsSelected` 为 A）。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.16-fix`；`file-tree.md` 更新渲染层 7 处描述（去除 outlineMode/1.16 旧表述，改为 selectionMode 语义 + 重心坐标边缘高亮）。
+- 状态：**R4 仍 FAIL、未 CLOSED，禁止 F5**。本轮只修正"轮廓高亮"的实现缺陷，其余 R4 缺陷须统一真机复测通过后才可宣布 R4 CLOSED。禁止后处理/Stencil/大规模重构、不改无关 Picking/Camera/World、Transform 正式提交链暂不重写。
+
 ## v0.2.20.15-fix
 WORLD-B-R4-R3 选中实体视口轮廓高亮（2026-07-27）
 - 任务目标：R4 真机缺陷"选中缺少 Blender 式轮廓高亮"本轮实装。三条冻结目标：(1) 选中实体在视口有清晰轮廓；(2) A→B 切换立即同步轮廓、无残留/无 1 帧延迟；(3) 轮廓由同一 SelectionKey 经 Select/Rotate 工具与层级树统一驱动，与 Gizmo 一致。视觉：浅蓝白/青色亮轮廓，非荧光/高饱和/红，非填充/红点/文字。禁项：F5、缩放重构、hover、多选、框选、材质系统、渲染重写。

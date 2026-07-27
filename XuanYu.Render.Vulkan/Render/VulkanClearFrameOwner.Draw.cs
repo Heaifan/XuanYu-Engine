@@ -40,15 +40,10 @@ public sealed unsafe partial class VulkanClearFrameOwner
             for (var i = 0; i < entities.Count; i++)
             {
                 var e = entities[i];
-                if (e.IsSelected)
-                {
-                    FillScenePushConstants(pScene, _renderProjection,
-                        e.Position, e.Rotation, e.Scale, 0.0f, 1.0f);
-                    PushSceneConstants(cb, pScene);
-                    _vk.CmdDraw(cb, 3, 1, 0, 0);
-                }
+                // R4-R3-R1：每个实体只绘制一次；选中只以 selectionMode 标志下传，
+                // 由片元着色器基于重心坐标绘制真实边缘高亮，绝不产生放大复制面。
                 FillScenePushConstants(pScene, _renderProjection,
-                    e.Position, e.Rotation, e.Scale, 0.0f, 0.0f);
+                    e.Position, e.Rotation, e.Scale, 0.0f, e.IsSelected ? 1.0f : 0.0f);
                 PushSceneConstants(cb, pScene);
                 _vk.CmdDraw(cb, 3, 1, 0, 0);
             }
