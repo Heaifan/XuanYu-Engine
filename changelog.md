@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.20.14-fix
+WORLD-B-R4-R2 选择与旋转目标一致性修复（2026-07-27）
+- 任务目标：R4 真机缺陷（旋转工具激活时不能直接点其他实体切换 Gizmo、选择/旋转目标疑似不同步有延迟感、缺旋转日志、环尺寸不合适）中，本轮只修前三类与尺寸，并把"全链路单一权威选中实体"固化；**不碰选择轮廓（已冻结为 R4-R3）、不进入 F5、不顺手修历史文档**。
+- 根因审计（链路闭合即停，未全仓库考古）：`UiVm.InputGuards.CanPickViewportSelection()` 原要求 `IsSelectTool`，导致旋转/移动/缩放工具下点击非 Gizmo 区域时 `PickViewportPointer` 首行短路、选择永不切换，Gizmo/Inspector/旋转目标全卡旧实体 A；实为"切换入口被工具限制堵死"，并非多缓存字段不一致（权威选中实体本就是单一的 `_editorState.SelectionKey` → `SetActiveEntity` → `RenderSnapshot.Entity` → `TransformSession.EntityKey`）。
+- 修复落点：
+  - 切换入口：`UiVm.InputGuards.CanPickViewportSelection()` 去掉 `IsSelectTool` 前提，改为 `!IsBoxSelectTool && !HasMoveCapture && !IsCameraNavigationActive`；指针按下已先 `TryBeginGizmo`，Gizmo 未命中才 Picking，不会与变换捕获冲突。旋转/移动/缩放工具下点击其他实体立即切换选择，工具保持原样。
+  - 单一权威一致性：因全链路本就派生自 `SelectionKey`，切换后 Selected/Gizmo/Inspector/Render/Transform/History 目标自动统一为 B，无延迟、无旧目标残留、无点 B 转 A。
+  - Gizmo 尺寸：`RotateGizmoScreenRadius.TargetScreenRadiusDip` 由 120 DIP 调至 90 DIP，近远相机下环更合理且减少误触。
+  - 最小诊断日志：`UiVm.MoveGizmoLogging` 去掉 `OwnerTool!="移动"` 限制，旋转提交/取消同样记录并带 EntityKey 与旋转前后；`UiVm.SelectionProjection.LogSelectionCommit` 补 EntityKey 作为 TargetSwitch 日志；仍不记录 PointerMoved 噪声。
+  - 测试：`WorldRotateTransformUiTests.R4R2`（旋转工具下点击 B 切选择且工具保持 Rotate、Selected/Gizmo/Inspector/Render/Transform/History 统一为 B、切换后第一次拖动改 B 不改 A、Commit/Undo EntityKey==B、Gizmo 屏幕半径有界）。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.14-fix`；`file-tree.md` 登记新增 `WorldRotateTransformUiTests.R4R2.cs` 并补充 `RotateGizmoScreenRadius`/`InputGuards`/`MoveGizmoLogging`/`SelectionProjection` 本轮变更说明。
+- 状态：**R4 仍 FAIL、未 CLOSED，禁止 F5**。本轮只解决"切换与目标一致性 + 尺寸 + 日志"，"Blender 式轮廓高亮"已冻结为 R4-R3，须 R4-R2 真机复测通过后再进入 R4-R3。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行）；`dotnet test --no-build --no-restore` 串行 **Core 95 passed / 0 failed**、**World 148 passed / 0 failed**（合计 243，较 R1 净增 3）；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过）。
+
 ## v0.2.20.13-fix
 GOV-FLOW-R1 关键路径、范围冻结与及时交付治理（2026-07-27 08:45:39）
 - 任务目标：WORLD-B-R4 真机复测仍判定 **FAIL**（旋转环尺寸不合适、旋转目标疑似与选中实体不同步有延迟感、缺少旋转交互日志、变换工具激活时不能直接点选其他实体切换 Gizmo、选中缺少 Blender 式轮廓高亮），缺陷全部登记、保留到治理轮后处理；**不修运行时代码、不进入 F5**。本治理轮只改 6 个批准文档文件，把 R4 FAIL 暴露的流程问题固化成长期治理规则，冻结每轮目标、范围、门禁、停止条件与禁止事项。

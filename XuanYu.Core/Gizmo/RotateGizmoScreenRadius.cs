@@ -8,7 +8,7 @@ namespace XuanYu.Core.Gizmo;
 // 保证“所见即所命中”。纯函数，便于单元测试与生产路径共用同一公式。
 public static class RotateGizmoScreenRadius
 {
-    public const double TargetScreenRadiusDip = 120.0;
+    public const double TargetScreenRadiusDip = 90.0;
 
     public static double ComputeWorldRadius(
         CameraState camera,

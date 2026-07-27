@@ -15,7 +15,7 @@ public sealed partial class UiVm
     }
 
     bool CanPickViewportSelection() =>
-        IsSelectTool && !HasMoveCapture && !IsCameraNavigationActive;
+        !IsBoxSelectTool && !HasMoveCapture && !IsCameraNavigationActive;
 
     bool CanBeginMoveInteraction() =>
         IsMoveTool && HasSelection && !IsCameraNavigationActive;

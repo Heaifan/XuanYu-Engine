@@ -1,4 +1,4 @@
-版本：v0.2.20.13-fix
+版本：v0.2.20.14-fix
 # XuanYu Engine 文件树
 
 文件总数：502
@@ -202,7 +202,7 @@
 - `XuanYu.Core/Gizmo/RotateGizmoLayout.cs`：Rotate Gizmo 屏幕投影、轴环生成与命中；默认世界半径 1.2，可由显式 `worldRadius` 覆盖以支持屏幕空间恒定尺寸（WORLD-B-R4-F4 + R4-R1 屏幕空间半径）。
 - `XuanYu.Core/Gizmo/RotateGizmoDrag.cs`：Rotate Gizmo 拖动状态主体；持有初始化标记与上一帧角度，经 `RotateGizmoDrag.Math` 解算平面角度差（WORLD-B-R4-F4）。
 - `XuanYu.Core/Gizmo/RotateGizmoDrag.Math.cs`：Rotate Gizmo 稳定旋转数学分部；纯方法 `PlaneAngle` 与 `TryInitialize`（指针按下初始化角度、无效射线交返回 false 拒绝捕获），欧拉角度分量独立回绕 ±180（WORLD-B-R4-F4 + R4-R1 首帧吞角修复）。
-- `XuanYu.Core/Gizmo/RotateGizmoScreenRadius.cs`：Rotate Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R4-R1）；按相机深度、FOV 与视口逻辑高度把目标屏幕半径（120 DIP）反算为世界半径，供 CPU 命中测试与 Shader 共用同一公式，做到"所见即所命中"且任意 DPI 一致。
+- `XuanYu.Core/Gizmo/RotateGizmoScreenRadius.cs`：Rotate Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R4-R1，WORLD-B-R4-R2 将目标屏幕半径由 120 DIP 调至 90 DIP 使近远相机下尺寸更合理且减少误触）；按相机深度、FOV 与视口逻辑高度把目标屏幕半径（90 DIP）反算为世界半径，供 CPU 命中测试与 Shader 共用同一公式，做到"所见即所命中"且任意 DPI 一致。
 
 - `XuanYu.Core/XuanYu.Core.csproj`：核心类库项目文件。
 - `XuanYu.Core/Properties/AssemblyInfo.cs`：Core 程序集内部可见性声明；仅允许 `XuanYu.Core.Tests` 访问内部测试入口，不承载生产行为或运行时依赖。
@@ -315,7 +315,7 @@
 - `XuanYu.World.Tests/World/WorldR4InspectorInputTests.cs`：WORLD-B-R4-F2 检查器输入防污染测试；覆盖格式化显示保留内部精度、非法缩放 / NaN / 非数字不写 Transform 与 History。
 - `XuanYu.World.Tests/World/WorldR4TransformFoundationTests.cs`：WORLD-B-R4-F1/F2 Transform 数据合同测试；覆盖 Rotation/Scale 默认值、移动提交保留旋转缩放，以及检查器显示真实 Transform 字段。
 - `XuanYu.World.Tests/World/WorldR4TransformInputTests.cs`：WORLD-B-R4-F2 完整 Transform 输入测试；覆盖完整提交入口、会话 Preview / Commit 保留字段、旋转缩放候选与检查器提交撤销重做。
-- `XuanYu.World.Tests/World/WorldRotateTransformUiTests.cs`：WORLD-B-R4-F4 Rotate Gizmo UiVm 闭环测试；覆盖一次拖拽一次提交+撤销重做、取消不入历史，命中点按屏幕空间半径（与生产捕获同公式）构造以对齐命中。WORLD-B-R4-R1 拆出 `WorldRotateTransformUiTests.R4R1.cs` 偏部（`Rotate_with_no_pointer_movement_creates_no_history` 近零旋转不污染历史、`Rotate_commit_and_cancel_clear_drag_state` 提交/取消对称清空 `_rotateDrag`）。
+- `XuanYu.World.Tests/World/WorldRotateTransformUiTests.cs`：WORLD-B-R4-F4 Rotate Gizmo UiVm 闭环测试；覆盖一次拖拽一次提交+撤销重做、取消不入历史，命中点按屏幕空间半径（与生产捕获同公式）构造以对齐命中。WORLD-B-R4-R1 拆出 `WorldRotateTransformUiTests.R4R1.cs` 偏部（`Rotate_with_no_pointer_movement_creates_no_history` 近零旋转不污染历史、`Rotate_commit_and_cancel_clear_drag_state` 提交/取消对称清空 `_rotateDrag`）。WORLD-B-R4-R2 拆出 `WorldRotateTransformUiTests.R4R2.cs` 偏部（旋转工具下点击其他实体立即切换选择且工具保持 Rotate、Selected/Gizmo/Inspector/Render/Transform/History 目标统一为 B、切换后第一次拖动改 B 不改 A、Commit/Undo 的 EntityKey 一致、Gizmo 屏幕半径有界）。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
@@ -513,7 +513,7 @@
 - `XuanYu.Editor.UI/Vm/TreeGuideBuilder.cs`：树形 UI Guide 构造器；从可视节点层级推导祖先连续竖线、中间 Tee、末节点 Elbow 和折叠过滤。
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm Undo / Redo 接线分部；成功 Commit 后记录 History，撤销恢复 Before，重做恢复 After。
-- `XuanYu.Editor.UI/Vm/UiVm.InputGuards.cs`：WORLD-B-R2 输入门禁分部；集中判断活动移动会话 / 相机会话对 Picking、选择写入、工具切换和移动会话启动的抢占关系。
+- `XuanYu.Editor.UI/Vm/UiVm.InputGuards.cs`：WORLD-B-R2 输入门禁分部；集中判断活动移动会话 / 相机会话对 Picking、选择写入、工具切换和移动会话启动的抢占关系。WORLD-B-R4-R2 放开非选择工具下的视口 Picking：旋转/移动/缩放工具下点击非 Gizmo 区域也允许切换选择（仍排除框选与活动会话），修复"旋转工具下不能直接点其他实体切换 Gizmo"。
 - `XuanYu.Editor.UI/Vm/UiVm.Inspector.cs`：WORLD-B-R4-F2 检查器投影分部；从当前 World Entity 的正式 Transform 以中文和 6 位小数显示位置、旋转和缩放，不保存第二份 Inspector 状态。
 - `XuanYu.Editor.UI/Vm/UiVm.InspectorInput.cs`：WORLD-B-R4-F2 检查器提交分部；将中文位置 / 旋转 / 缩放数值输入提交到 SceneStateOwner 并记录 History。
 - `XuanYu.Editor.UI/Vm/UiVm.InspectorInput.Parse.cs`：WORLD-B-R4-F2 检查器输入解析分部；负责数值解析、轴替换和非法缩放防污染。
@@ -528,10 +528,10 @@
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionCancel.cs`：UiVm 输入取消入口分部；统一 Escape、窗口失焦、Host Detach、PointerCaptureLost 对 Transform / Camera 的取消优先级。
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 轴/平面 Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
-- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。WORLD-B-R4-R2 去掉 `OwnerTool!="移动"` 限制，旋转提交/取消同样记录并带 EntityKey 与旋转前后，且仍不记录 PointerMove。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令、组合快照与 Render Projection 发布分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
-- `XuanYu.Editor.UI/Vm/UiVm.SelectionProjection.cs`：UiVm Selection 投影同步分部；用内部同步保护位更新 Project / Hierarchy 选中项，禁止程序同步回流成业务选择。
+- `XuanYu.Editor.UI/Vm/UiVm.SelectionProjection.cs`：UiVm Selection 投影同步分部；用内部同步保护位更新 Project / Hierarchy 选中项，禁止程序同步回流成业务选择。WORLD-B-R4-R2 `LogSelectionCommit` 补 EntityKey，作为 TargetSwitch 最小诊断日志。
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionTrace.cs`：UiVm Selection 低频诊断分部；记录选择提交、层级选择、投影同步和渲染发布深度。
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionValidity.cs`：WORLD-B-R2 选择失效清理分部；根据 World 权威 `TryGetEntity` 清理已不存在的 EntityId 选择，不依赖层级节点显示状态。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部。

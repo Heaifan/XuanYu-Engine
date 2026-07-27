@@ -53,9 +53,10 @@ public sealed partial class UiVm
 
     void LogSelectionCommit(SelectEditorItemCommand command, EditorStateChangedResult changed)
     {
+        var entityKeyText = TryEntityKey(command.Key, out var ek) ? EditorDisplayText.Entity(ek) : command.Key;
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,
             $"选择已提交；结果={command.Title}",
-            $"来源={command.Source}；修订={changed.OldRevision}->{changed.NewRevision}");
+            $"来源={command.Source}；实体={entityKeyText}；修订={changed.OldRevision}->{changed.NewRevision}");
         RefreshLogBindings();
     }
 
