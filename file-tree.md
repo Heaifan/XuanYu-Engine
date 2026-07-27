@@ -1,4 +1,4 @@
-版本：v0.2.20.16-fix
+版本：v0.2.20.17-fix
 # XuanYu Engine 文件树
 
 文件总数：502
@@ -365,6 +365,8 @@
 - `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：最小实体渲染投影；携带实体 Key 与跨边界前解析完成的 Position / Rotation / Scale（WORLD-B-R4-R1 TRS 合同：旋转/缩放经 RenderProjection 真正下传，不再被渲染链丢弃）；WORLD-B-R4-R3 增 `IsSelected` 选择态，驱动视口轮廓高亮。
 - `XuanYu.Render.Abstractions/RenderProjection.cs`：R5 最小渲染投影合同；包含显式相机、实体投影（Position/Rotation/Scale）、Move Gizmo 可见性与位置，以及 Rotate Gizmo 可见性与世界半径（WORLD-B-R4-R1 尾随可选 `RotateGizmoVisible` / `RotateGizmoWorldRadius`，屏幕空间恒定尺寸）。
 - `XuanYu.Render.Abstractions/RenderProjectionResult.cs`：Render Projection 创建结果；表达成功投影或明确失败原因。
+- `XuanYu.Render.Abstractions/RenderDrawPlan.cs`：WORLD-B-R4-R3-R2 抽取的实体绘制计划纯函数 `GetDrawPlan(IReadOnlyList<RenderEntityProjection>)`；未选中实体 `Fill(3)`、选中实体追加 `OutlineRibbon(18)`；`FillVertexCount=3`/`OutlineRibbonVertexCount=18` 为 Vulkan 绘制层与测试共同引用的单一顶点数来源。
+- `XuanYu.Render.Abstractions/FrameExecutionPolicy.cs`：WORLD-B-R4-R3-R2 抽取的 Vulkan Present 帧执行顺序策略；`FrameStep` 枚举（WaitFence/ApplyPendingProjection/ResetFence/QueueSubmit）与固定 `Order`（WaitFence→ApplyPendingProjection→ResetFence→QueueSubmit），供 VulkanPresentLoop 与测试共同引用，固化"Fence 等待在重录前、Reset 在提交前"的同步约束。
 
 ## XuanYu.Render.Vulkan
 
@@ -398,27 +400,27 @@
 - `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`：Vulkan 物理设备选择器。
 - `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs`：Vulkan 队列族选择结果。
 - `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs`：Vulkan Resize 追踪诊断工具。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs`：片元着色器 SPIR-V 字节码；WORLD-B-R4-R3-R1 重生成（307 字）以容纳重心坐标边缘高亮逻辑。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：顶点着色器 SPIR-V 字节码；WORLD-B-R4-R3-R1 重生成以容纳 `selectionMode` push constant 与重心坐标输出（1689 字）。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs`：片元着色器 SPIR-V 字节码；WORLD-B-R4-R3-R2 重生成，改为直接透传基础色（轮廓由顶点着色器外轮廓边带生成，不再使用重心坐标 fwidth 内部边线）。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：顶点着色器 SPIR-V 字节码；WORLD-B-R4-R3-R2 重生成以容纳 `selectionMode` push constant（0/1=填充、2=外轮廓边带）与 `outlineRibbonVertex` 18 顶点外轮廓边带生成逻辑（屏幕空间定宽，复用 `entityRotation.w`/`entityScale.w` 为 viewportWidth/Height）。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`：Vulkan 图形管线生命周期持有者。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：Vulkan 管线日志格式化器。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；@88 / index 22 为 `selectionMode`（选中标志，真实边缘高亮由片元着色器基于重心坐标绘制），负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；128 字节（32 float）std140；@88 / index 22 为 `selectionMode`（0/1=填充、2=外轮廓边带）；复用 `entityRotation.w`（target 27）= viewportWidth、`entityScale.w`（target 31）= viewportHeight 供屏幕空间定宽边带；负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs`：Vulkan ShaderModule 生命周期持有者。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Trace.cs`：Vulkan ClearFrame 低频录制诊断分部；记录 RecordCommandBuffers 深度、线程、实体数和视图数，不改变生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Render Projection，并由 Present 线程在安全点消费；缺相机失败仅清空当前可提交投影并记录跳过原因。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；只消费 Render Projection，负责在 Render Boundary 翻转 Core Projection 副本的 Clip Y、写入 push constant 并绘制场景实体与 Move Gizmo 三轴/三平面，不污染 Picking 或生命周期（WORLD-B-R4-R3-R1 每个实体只绘制一次，选中仅以 `selectionMode` 标志下传，由片元着色器基于重心坐标绘制真实边缘高亮，废除放大复制面；`FillScenePushConstants` 因 5+100 拆至 `VulkanClearFrameOwner.PushConstants.cs`）。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PushConstants.cs`：Vulkan ClearFrame push constant 填充分部（WORLD-B-R4-R3-R1 从 Draw 拆出以满足 5+100）；`FillScenePushConstants` 写入 viewProjection、实体位移/旋转/缩放、Gizmo 环半径与 `selectionMode`（@88 / index 22），不持有渲染资源生命周期。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；只消费 Render Projection，负责翻转 Core Projection 副本 Clip Y、写入 push constant 并绘制场景实体与 Move Gizmo 三轴/三平面（WORLD-B-R4-R3-R2 每实体先 `Fill(3)` 单次填充，选中实体再追加 `OutlineRibbon(18)` 外轮廓边带，顶点数取自 `RenderDrawPlan.FillVertexCount`/`OutlineRibbonVertexCount`；废除重心坐标内部边线与放大复制面）。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PushConstants.cs`：Vulkan ClearFrame push constant 填充分部（WORLD-B-R4-R3-R1 从 Draw 拆出以满足 5+100）；`FillScenePushConstants` 写入 viewProjection、实体位移/旋转/缩放、Gizmo 环半径与 `selectionMode`（@88 / index 22）；WORLD-B-R4-R3-R2 新增 `target[27]=entityRotation.w=viewportWidth`、`target[31]=entityScale.w=viewportHeight`，供 18 顶点外轮廓边带屏幕空间定宽。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Matrix.cs`：Vulkan ClearFrame 矩阵辅助分部；提供 push constant 矩阵转置和 Vulkan Clip Y 投影副本转换，不持有渲染资源生命周期。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与 Move Gizmo 三轴/三平面顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试（WORLD-B-R4-R3-R1 改 `outlineMode`→`selectionMode` 仅表示是否选中，删除 1.16 放大，按 `gl_VertexIndex` 输出重心坐标 `vBary` 供片元绘制真实边缘高亮）。
-- `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；WORLD-B-R4-R3-R1 对选中实体（`vEntity>0.5 && vSelected>0.5`）用 `fwidth(vBary)` + `smoothstep` 判定近边，边缘输出浅蓝白 `vec3(0.80,0.90,1.0)`、内部保持黄色，不输出第二张完整面，不负责 Pipeline 生命周期。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与 Move Gizmo 三轴/三平面顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试（WORLD-B-R4-R3-R2 删除重心坐标 `vBary` 方案，新增 `outlineRibbonVertex`：选中实体（`selectionMode>1.5`）按原始三角三边各生成 2 三角形共 18 顶点外轮廓边带，NDC 边方向取垂直分量按 `perp*(halfWidth*2.0/vec2(vpW,vpH))` 屏幕空间偏移，halfWidth=1.5px≈3 DIP 全宽，颜色 `vec3(0.80,0.90,1.0)`；`entityRotation.w`/`entityScale.w` 复用为 viewportWidth/Height）。
+- `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；WORLD-B-R4-R3-R2 改为直接透传基础色 `outColor=vec4(vBaseColor.rgb,1.0)`，删除重心坐标 `fwidth` 内部边线逻辑（轮廓改由顶点着色器外轮廓边带生成），不负责 Pipeline 生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`：Vulkan ClearFrame 资源持有主体。
-- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Frame.cs`：Vulkan Present 单帧执行分部。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Frame.cs`：Vulkan Present 单帧执行分部；WORLD-B-R4-R3-R2 拆分出 `WaitFence`（`WaitForFences`）、`ResetFence`（`ResetFences`）、`SubmitFrame`、`PresentFrame`，使同步顺序固定为 WaitFence→ApplyPendingProjection→ResetFence→QueueSubmit，禁止 Fence 等待前重录 CommandBuffer、禁止 Reset 后跳过提交。
 - `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Lifecycle.cs`：Vulkan Present 泵生命周期分部。
-- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`：Vulkan Present 泵主体；有限 Acquire 等待超时只跳过当前帧，其他结果交由既有错误与自愈合同处理，不负责 Selection 或 Gizmo。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`：Vulkan Present 泵主体；WORLD-B-R4-R3-R2 修正 `RunFrames` 同步顺序——`ApplyPendingProjection`（重录 CommandBuffer）前先 `WaitFence` 等上一帧 GPU 完成，提交前再 `ResetFence`，杜绝"释放/替换仍在 GPU 执行的 CommandBuffer"导致的呈现延迟与帧错乱；有限 Acquire 等待超时只跳过当前帧，其他结果交由既有错误与自愈合同处理，不负责 Selection 或 Gizmo。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs`：Vulkan 渲染 Session 生命周期分部。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs`：Vulkan 渲染 Session 自愈分部。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`：Vulkan 渲染 Session Resize 分部。

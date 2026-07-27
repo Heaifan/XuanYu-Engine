@@ -40,12 +40,19 @@ public sealed unsafe partial class VulkanClearFrameOwner
             for (var i = 0; i < entities.Count; i++)
             {
                 var e = entities[i];
-                // R4-R3-R1：每个实体只绘制一次；选中只以 selectionMode 标志下传，
-                // 由片元着色器基于重心坐标绘制真实边缘高亮，绝不产生放大复制面。
+                // R4-R3-R2：实体主体填充，顶点数=RenderDrawPlan.FillVertexCount(3)
                 FillScenePushConstants(pScene, _renderProjection,
                     e.Position, e.Rotation, e.Scale, 0.0f, e.IsSelected ? 1.0f : 0.0f);
                 PushSceneConstants(cb, pScene);
-                _vk.CmdDraw(cb, 3, 1, 0, 0);
+                _vk.CmdDraw(cb, RenderDrawPlan.FillVertexCount, 1, 0, 0);
+                // R4-R3-R2：选中实体额外绘制外轮廓边带，顶点数=RenderDrawPlan.OutlineRibbonVertexCount(18)
+                if (e.IsSelected)
+                {
+                    FillScenePushConstants(pScene, _renderProjection,
+                        e.Position, e.Rotation, e.Scale, 0.0f, 2.0f);
+                    PushSceneConstants(cb, pScene);
+                    _vk.CmdDraw(cb, RenderDrawPlan.OutlineRibbonVertexCount, 1, 0, 0);
+                }
             }
             if (_renderProjection.GizmoVisible || _renderProjection.RotateGizmoVisible)
                 DrawActiveGizmo(cb, pScene, _renderProjection);

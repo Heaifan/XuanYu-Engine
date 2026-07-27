@@ -56,6 +56,8 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
         catch (Exception ex) { Fatal($"Present 线程异常：{ex.Message}"); }
     }
 
+    // R4-R3-R2：修正同步顺序。先等待上一帧 Fence（确保 GPU 已完成旧 CommandBuffer），
+    // 再应用 Pending RenderProjection（重录/释放 CommandBuffer），最后 ResetFence 紧贴 QueueSubmit。
     void RunFrames()
     {
         var device = _deviceOwner.LogicalDevice;
@@ -64,6 +66,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
         var submitted = false;
         while (Volatile.Read(ref _stopRequested) == 0)
         {
+            if (submitted && !WaitFence(device)) break;
             if (!_clearFrame.TryApplyPendingRenderProjection())
             {
                 Fatal("Render Projection CommandBuffer 重录失败。");
@@ -79,7 +82,7 @@ public sealed unsafe partial class VulkanPresentLoop : IDisposable
             var res = khr.AcquireNextImage(device, swapchain, AcquireTimeoutNs, _imageAvailable, default, &idx);
             if (res == Result.Timeout) continue;
             if (!HandleAcquireResult(res)) break;
-            if (submitted && !WaitAndResetFence(device)) break;
+            if (!ResetFence(device)) break;
             if (!SubmitFrame(device, idx, stage)) break;
             submitted = true;
             var pres = PresentFrame(khr, swapchain, idx);

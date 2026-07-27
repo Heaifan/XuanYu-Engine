@@ -6,14 +6,11 @@ layout(push_constant) uniform ScenePush {
     float gizmoMode;
     float gizmoRingRadius;
     float selectionMode;
-    vec4 entityRotation;
-    vec4 entityScale;
+    vec4 entityRotation;  // xyz=欧拉角(度), w=viewportWidth
+    vec4 entityScale;     // xyz=实体缩放, w=viewportHeight
 } pc;
 
 layout(location = 0) out vec4 vBaseColor;
-layout(location = 1) out vec3 vBary;
-layout(location = 2) out float vSelected;
-layout(location = 3) out float vEntity;
 
 vec3 triangleVertex(int index) {
     vec3 vertices[3] = vec3[3](
@@ -44,7 +41,6 @@ vec3 planeVertex(int plane, int index) {
     return vertices[index];
 }
 
-// 由欧拉角（度）构造旋转矩阵，约定 Rz * Ry * Rx。
 mat3 eulerRot(vec3 deg) {
     vec3 r = radians(deg);
     float cx = cos(r.x), sx = sin(r.x);
@@ -56,8 +52,6 @@ mat3 eulerRot(vec3 deg) {
     return Rz * Ry * Rx;
 }
 
-// 旋转环：每个环在垂直于该轴的平面内生成 48 段细环带（每环 288 顶点，3 环共 864）。
-// 环半径取自 push 常量 gizmoRingRadius（CPU 按屏幕空间恒定尺寸换算的世界半径）。
 vec3 ringVertex(int ring, int seg, int vert) {
     float R = pc.gizmoRingRadius;
     float w = R * 0.025;
@@ -73,48 +67,83 @@ vec3 ringVertex(int ring, int seg, int vert) {
     return c[vert];
 }
 
+// R4-R3-R2：外轮廓边带。每条边生成 6 顶点（2 三角形），3 条边共 18 顶点。
+// 用屏幕空间法线偏移生成窄四边形，不依赖重心坐标或片元内部线。
+void outlineRibbonVertex(int vi, out vec4 clipPos, out vec4 color) {
+    int edgeIdx = vi / 6;
+    int cornerIdx = vi % 6;
+    // 边端点（局部空间）
+    int i0 = edgeIdx;
+    int i1 = (edgeIdx + 1) % 3;
+    vec3 local0 = triangleVertex(i0);
+    vec3 local1 = triangleVertex(i1);
+    // 实体变换
+    vec3 s0 = local0 * pc.entityScale.xyz;
+    vec3 s1 = local1 * pc.entityScale.xyz;
+    mat3 R = eulerRot(pc.entityRotation.xyz);
+    vec3 w0 = R * s0 + pc.worldPosition.xyz;
+    vec3 w1 = R * s1 + pc.worldPosition.xyz;
+    // 裁剪空间
+    vec4 c0 = pc.viewProjection * vec4(w0, 1.0);
+    vec4 c1 = pc.viewProjection * vec4(w1, 1.0);
+    // 屏幕空间边方向与法线（NDC 空间）
+    vec2 ndc0 = c0.xy / c0.w;
+    vec2 ndc1 = c1.xy / c1.w;
+    vec2 edgeDir = normalize(ndc1 - ndc0);
+    vec2 perp = vec2(-edgeDir.y, edgeDir.x);
+    // 像素偏移 → NDC 偏移（目标线宽 3 DIP，半宽 1.5 px）
+    float vpW = pc.entityRotation.w;
+    float vpH = pc.entityScale.w;
+    float halfWidth = 1.5;
+    vec2 ndcOffset = perp * (halfWidth * 2.0 / vec2(vpW, vpH));
+    // 四边形角点映射：0=A(start,-), 1=B(start,+), 2=C(end,-), 3=B, 4=D(end,+), 5=C
+    bool useEnd = (cornerIdx == 2 || cornerIdx == 4 || cornerIdx == 5);
+    bool usePos = (cornerIdx == 1 || cornerIdx == 3 || cornerIdx == 4);
+    vec4 base = useEnd ? c1 : c0;
+    float sign = usePos ? 1.0 : -1.0;
+    clipPos = base;
+    clipPos.xy += sign * ndcOffset * base.w;
+    color = vec4(0.80, 0.90, 1.0, 1.0); // 浅蓝白轮廓
+}
+
 void main() {
-    vec3 world;
-    if (gl_VertexIndex < 3) {
-        // 实体三角形：应用缩放 → 旋转 → 平移，使世界 Rotation/Scale 真正影响画面。
-        // R4-R3-R1：selectionMode 仅表示“当前实体是否选中”，不再放大顶点；
-        // 真实边缘高亮由片元着色器基于重心坐标（vBary + fwidth）绘制，实体只绘制一次。
+    if (pc.selectionMode > 1.5) {
+        // R4-R3-R2：外轮廓边带（18 顶点），非重心坐标内部线、非放大复制面
+        vec4 clipPos; vec4 color;
+        outlineRibbonVertex(gl_VertexIndex, clipPos, color);
+        gl_Position = clipPos;
+        vBaseColor = color;
+    } else if (gl_VertexIndex < 3) {
+        // 实体三角形填充
         vec3 local = triangleVertex(gl_VertexIndex);
         local = local * pc.entityScale.xyz;
         local = eulerRot(pc.entityRotation.xyz) * local;
-        world = local + pc.worldPosition.xyz;
+        vec3 world = local + pc.worldPosition.xyz;
+        gl_Position = pc.viewProjection * vec4(world, 1.0);
         vBaseColor = vec4(1.0, 0.85, 0.2, 1.0);
-        vBary = gl_VertexIndex == 0 ? vec3(1.0, 0.0, 0.0) :
-                (gl_VertexIndex == 1 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0));
-        vSelected = pc.selectionMode > 0.5 ? 1.0 : 0.0;
-        vEntity = 1.0;
     } else if (pc.gizmoMode < 0.5) {
         int gi = gl_VertexIndex - 3;
         if (gi < 18) {
             int plane = gi / 6;
-            world = planeVertex(plane, gi % 6) + pc.worldPosition.xyz;
+            vec3 world = planeVertex(plane, gi % 6) + pc.worldPosition.xyz;
             vBaseColor = plane == 0 ? vec4(0.82, 0.66, 0.16, 1.0) :
                 (plane == 1 ? vec4(0.64, 0.26, 0.82, 1.0) : vec4(0.16, 0.68, 0.76, 1.0));
+            gl_Position = pc.viewProjection * vec4(world, 1.0);
         } else {
             int axis = (gi - 18) / 6;
-            world = gizmoVertex(axis, (gi - 18) % 6) + pc.worldPosition.xyz;
+            vec3 world = gizmoVertex(axis, (gi - 18) % 6) + pc.worldPosition.xyz;
             vBaseColor = axis == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
                 (axis == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
+            gl_Position = pc.viewProjection * vec4(world, 1.0);
         }
-        vBary = vec3(1.0);
-        vSelected = 0.0;
-        vEntity = 0.0;
     } else {
         int ri = gl_VertexIndex - 3;
         int ring = ri / (48 * 6);
         int seg = (ri % (48 * 6)) / 6;
         int vert = ri % 6;
-        world = ringVertex(ring, seg, vert) + pc.worldPosition.xyz;
+        vec3 world = ringVertex(ring, seg, vert) + pc.worldPosition.xyz;
         vBaseColor = ring == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
             (ring == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
-        vBary = vec3(1.0);
-        vSelected = 0.0;
-        vEntity = 0.0;
+        gl_Position = pc.viewProjection * vec4(world, 1.0);
     }
-    gl_Position = pc.viewProjection * vec4(world, 1.0);
 }

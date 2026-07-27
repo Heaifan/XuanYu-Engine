@@ -1,5 +1,28 @@
 # changelog
 
+## v0.2.20.17-fix
+WORLD-B-R4-R3-R2 选中实体外轮廓边带 + Present 同步顺序修正（2026-07-27）
+- 任务目标：v0.2.20.16-fix 经真机验收判定 **FAIL**——`5c717b5` 废除的浅蓝复制面确实消失，但新"重心坐标真实边缘高亮"几乎不可见（仅三角形内约 1-2px 内边线，吃黄色、受透视畸变、被 Gizmo 环盖住），并非 Blender 式外轮廓；且真机发现真正的 Vulkan 同步 bug：`VulkanPresentLoop.RunFrames` 在 `WaitAndResetFence()` 之前调用 `TryApplyPendingRenderProjection()` 重录并释放/替换上一帧 CommandBuffer，可能释放仍在 GPU 执行的 CommandBuffer，导致呈现延迟/帧错乱、旋转"看起来滞后"。本轮回填两者；**不进 F5、不改放大复制面、不加粗重心坐标内线、不做每帧 `DeviceWaitIdle`、不重写 World/Picking/TransformSession、不扩文档注水、测试全绿后不扩测**。
+- 根因审计（用户真机审计 `0925dda` / v0.2.20.16-fix 结论）：(1) 重心坐标 `fwidth(vBary)` 仅着色三角形内部 ~1-2px 近边，本质是"内描边"而非"外轮廓"，放大倍数被禁且放大仍非外轮廓；(2) `RunFrames` 旧顺序 `ApplyPendingProjection → WaitAndResetFence → Submit` 在等待 Fence 之前已重录/释放旧 CommandBuffer，违反"Fence 等待应在重录前"的 Vulkan 生命周期铁律，是旋转实时呈现滞后的真正根因（B/C/D/E 仅验 `UiVm`/`RenderSnapshot`，未验 GPU Present）。
+- 修复落点（Target A 真实外轮廓）：
+  - 顶点着色器：`scene.vert` 删除重心坐标 `vBary` 输出，新增 `outlineRibbonVertex(vi)`——选中实体（`selectionMode>1.5`）按原始三角三边各生成 2 三角形共 **18 顶点**外轮廓边带（非放大整面），NDC 边方向取垂直分量按 `perp*(halfWidth*2.0/vec2(vpW,vpH))` 屏幕空间偏移，halfWidth=1.5px≈3 DIP 全宽，颜色 `vec3(0.80,0.90,1.0)`（浅蓝白）。
+  - push constant：`entityRotation.w`（target 27）= viewportWidth、`entityScale.w`（target 31）= viewportHeight，复用为屏幕空间定宽依据；`selectionMode`（@88/index 22）语义 0/1=填充、2=外轮廓边带；128 字节 std140 不变。
+  - 绘制层：`VulkanClearFrameOwner.Draw` 每实体先 `Fill(3)` 单次填充，选中实体再追加 `OutlineRibbon(18)`；顶点数取自 `RenderDrawPlan.FillVertexCount(3)`/`OutlineRibbonVertexCount(18)`；绘制顺序 Fill→OutlineRibbon→Gizmo。
+  - 片元着色器：`scene.frag` 改为直接透传基础色，删除重心坐标 `fwidth` 内部边线。
+- 修复落点（Target B 同步顺序）：
+  - `VulkanPresentLoop.Frame.cs` 拆分 `WaitFence`（`WaitForFences`）/ `ResetFence`（`ResetFences`）/ `SubmitFrame` / `PresentFrame`。
+  - `VulkanPresentLoop.cs` 的 `RunFrames` 改为 `WaitFence`（等上一帧 GPU 完成）→ `ApplyPendingProjection`（重录 CommandBuffer）→ `ResetFence` → `QueueSubmit`，杜绝释放/替换 GPU 执行中 CommandBuffer；禁止每帧 `DeviceWaitIdle`，禁止 Reset 后跳过提交。
+- 抽象与测试（抽出可测纯函数供 Vulkan 与测试共同引用）：
+  - `XuanYu.Render.Abstractions/RenderDrawPlan.cs`：`GetDrawPlan` 纯函数（未选中 `Fill(3)`、选中 `Fill(3)+OutlineRibbon(18)`），顶点数常量单一来源。
+  - `XuanYu.Render.Abstractions/FrameExecutionPolicy.cs`：`FrameStep` 枚举 + 固定 `Order`（WaitFence→ApplyPendingProjection→ResetFence→QueueSubmit）。
+  - `XuanYu.Core.Tests/Render/RenderDrawPlanTests.cs`（6）：未选中仅 `Fill(3)`、选中 `Fill(3)+OutlineRibbon(18)`、无第二 `Fill(3)`、边带总 18 顶点、混合选择各自正确、全不选皆 `Fill`。
+  - `XuanYu.Core.Tests/Render/FrameExecutionPolicyTests.cs`（6）：四步顺序与"Reset 不在 Apply 之前"等约束。
+  - 保留 B/C/D/E（`WorldRotateTransformUiTests.R4R3R1` + `SceneRenderProjectionAdapterTests.Selection`）作为投影层证据，但明确不作为 GPU Present 证据。
+- 本轮补修（工作树既有 R4-R3-R2 实装经核验后的缺口）：`ShaderBytecode.Vert.cs` 既有重生成被截断（495 行、末行 `0x0003003Eu, 0x000` 半字）→ 用 `glslc` 重新生成并 Python 转 C# 数组还原完整 4366 字 SPIR-V（紧凑 60 字/行，85 行，满足 5+100）；`FrameExecutionPolicyTests.cs` 原对 `IReadOnlyList` 误用 `.IndexOf` 编译失败 → 改为本地 `StepIndex` 索引查找。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.17-fix`；`file-tree.md` 更新渲染层描述（ShaderBytecode.Vert/Frag、VulkanScenePushConstants、VulkanClearFrameOwner.Draw/PushConstants、scene.vert/frag、VulkanPresentLoop.Frame/主体、Render.Abstractions 新增 RenderDrawPlan/FrameExecutionPolicy）。
+- 状态：**R4 仍 FAIL、未 CLOSED，禁止 F5**。本轮把"轮廓高亮"从不可见重心坐标内线改为 Blender 式 18 顶点外轮廓边带，并修正真正导致旋转呈现滞后的 Vulkan 同步顺序；其余 R4 缺陷须统一真机复测通过后才可宣布 R4 CLOSED。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行）；`dotnet test` 串行 **Core 111 passed / 0 failed**、**World 151 passed / 0 failed**；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过，含 ShaderBytecode.Vert.cs 85 行 <100）。
+
 ## v0.2.20.16-fix
 WORLD-B-R4-R3-R1 废除放大复制面，改用重心坐标真实边缘高亮（2026-07-27）
 - 根因审计（用户真机审计 GitHub `5c717b5` / v0.2.20.15-fix 结论）：R4-R3 实装的"轮廓高亮"实为对选中实体执行两次完整 CmdDraw——outlineMode=1 画放大 1.16 的浅蓝白整面、outlineMode=0 画黄色实体盖顶；三角形几何中心不在局部原点，`*1.16` 绕原点放大造成偏移与边宽不均，根本不是真正的轮廓。预览旋转链本就实时（PreviewRotateGizmo 每次 PublishSceneRenderSnapshot），用户看到的"点击其他实体才应用旋转"是放大复制面随选择切换消失造成的视觉假象。R4-R3 真机判定 FAIL。

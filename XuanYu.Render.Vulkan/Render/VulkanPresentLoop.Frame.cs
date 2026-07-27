@@ -12,10 +12,17 @@ public sealed unsafe partial class VulkanPresentLoop
         return Check(res, "AcquireNextImage", allowSuboptimal: true);
     }
 
-    bool WaitAndResetFence(Silk.NET.Vulkan.Device device)
+    // R4-R3-R2：WaitFence 与 ResetFence 拆分，Wait 必须在 CommandBuffer 重录前
+    // 以确保旧 CommandBuffer 不再被 GPU 使用；Reset 必须在 QueueSubmit 前。
+    bool WaitFence(Silk.NET.Vulkan.Device device)
     {
         var fence = _fence;
-        if (!Check(_vk.WaitForFences(device, 1, &fence, true, FenceTimeoutNs), "WaitForFences")) return false;
+        return Check(_vk.WaitForFences(device, 1, &fence, true, FenceTimeoutNs), "WaitForFences");
+    }
+
+    bool ResetFence(Silk.NET.Vulkan.Device device)
+    {
+        var fence = _fence;
         return Check(_vk.ResetFences(device, 1, &fence), "ResetFences");
     }
 

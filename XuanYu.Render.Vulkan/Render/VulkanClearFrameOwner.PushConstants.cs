@@ -35,8 +35,10 @@ public sealed unsafe partial class VulkanClearFrameOwner
         target[24] = (float)rotation.X;
         target[25] = (float)rotation.Y;
         target[26] = (float)rotation.Z;
+        target[27] = _extent.Width;   // entityRotation.w = viewportWidth
         target[28] = (float)scale.X;
         target[29] = (float)scale.Y;
         target[30] = (float)scale.Z;
+        target[31] = _extent.Height;  // entityScale.w = viewportHeight
     }
 }
