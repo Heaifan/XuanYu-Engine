@@ -1,6 +1,7 @@
 using XuanYu.Core.Gizmo;
 using XuanYu.Core.Scene;
 using XuanYu.Core.Space;
+using XuanYu.Core.Math;
 using XuanYu.Editor.Transform;
 
 namespace XuanYu.Editor.UI;
@@ -29,7 +30,9 @@ public sealed partial class UiVm
         }
 
         var state = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        var layout = RotateGizmoLayout.Project(state, entity.Transform.Position);
+        _lastViewport = viewport;
+        var layout = RotateGizmoLayout.Project(
+            state, entity.Transform.Position, ComputeRotateGizmoWorldRadius(entity.Transform.Position));
         var axis = layout.HitTest(x, y);
         if (axis is null) return false;
 
@@ -45,6 +48,14 @@ public sealed partial class UiVm
         }
         _rotateDrag = new RotateGizmoDrag(
             state, entity.Transform.Position, axis.Value, entity.Transform.Rotation, x, y);
+        if (!_rotateDrag.TryInitialize(x, y))
+        {
+            _transformSession.TryCancel(result.Snapshot.SessionId);
+            _editorState.Cancel(new CancelInteractionCommand(
+                result.Snapshot.SessionId, sessionTool, "旋转射线与环无有效交点"));
+            _rotateDrag = null;
+            return false;
+        }
         FooterState = "状态：捕获中";
         FooterMessage = $"旋转轴 {axis} 已捕获";
         var detail = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；轴={axis}";
@@ -70,5 +81,13 @@ public sealed partial class UiVm
         _rotateDrag = drag;
         PublishSceneRenderSnapshot();
         return true;
+    }
+
+    // 旋转环屏幕空间恒定尺寸：按当前相机深度与视口逻辑高度，将目标 DIP 半径换算为世界半径。
+    // CPU 命中（RotateGizmoLayout）与 Shader 绘制（RenderProjection.RotateGizmoWorldRadius）共用同一值。
+    double ComputeRotateGizmoWorldRadius(Vector3d origin)
+    {
+        if (_lastViewport is not { } vp) return RotateGizmoLayout.RingRadius;
+        return RotateGizmoScreenRadius.ComputeWorldRadius(_camera, vp, origin);
     }
 }

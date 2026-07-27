@@ -31,6 +31,7 @@ public sealed partial class UiVm
         if (_cameraSession is not null && aspectChanged)
             CancelCameraNavigation("Resize");
         _viewportAspect = (double)width / height;
+        _lastViewport = new ViewportState(0, 0, width, height, width, height, 1.0, Math.Max(_cameraRevision, 1));
         if (_viewportCameraFramed) return;
         _viewportCameraFramed = true;
         FrameAllCamera("启动看全");

@@ -2,6 +2,14 @@ namespace XuanYu.Render.Vulkan.Pipeline;
 
 internal static class VulkanScenePushConstants
 {
-    // mat4(64) + vec4(16) + float gizmoMode(4) = 84，按 16 字节对齐补齐到 96。
-    public const uint SizeInBytes = 96;
+    // std140 布局：
+    //   mat4 viewProjection      @0   (64)
+    //   vec4 worldPosition       @64  (16)
+    //   float gizmoMode          @80  (4)
+    //   float gizmoRingRadius    @84  (4)   仅旋转 Gizmo 环使用（屏幕空间世界半径）
+    //   vec4 entityRotation      @96  (16)  实体欧拉角（度），xyz 有效
+    //   vec4 entityScale         @112 (16)  实体缩放，xyz 有效
+    // 合计 128 字节（32 个 float），必须 ≤ 128（Vulkan 最小保证上限）。
+    public const uint SizeInBytes = 128;
+    public const int FloatCount = 32;
 }

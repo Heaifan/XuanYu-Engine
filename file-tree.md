@@ -1,4 +1,4 @@
-版本：v0.2.20.11-fix
+版本：v0.2.20.12-fix
 # XuanYu Engine 文件树
 
 文件总数：502
@@ -197,6 +197,12 @@
 - `XuanYu.Core/Gizmo/MoveGizmoPlane.cs`：Move Gizmo 平面控制柄屏幕四边形值对象；用同一面片支持可见区域和 Picking 命中。
 - `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
 - `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
+- `XuanYu.Core/Gizmo/RotateGizmoAxis.cs`：Rotate Gizmo 世界轴身份；定义 X/Y/Z，不承担 Transform 或渲染状态（WORLD-B-R4-F4）。
+- `XuanYu.Core/Gizmo/RotateGizmoRing.cs`：Rotate Gizmo 单轴环屏幕弧线值对象；承载轴、屏幕点序列与屏幕半径，供命中与可见共用（WORLD-B-R4-F4）。
+- `XuanYu.Core/Gizmo/RotateGizmoLayout.cs`：Rotate Gizmo 屏幕投影、轴环生成与命中；默认世界半径 1.2，可由显式 `worldRadius` 覆盖以支持屏幕空间恒定尺寸（WORLD-B-R4-F4 + R4-R1 屏幕空间半径）。
+- `XuanYu.Core/Gizmo/RotateGizmoDrag.cs`：Rotate Gizmo 拖动状态主体；持有初始化标记与上一帧角度，经 `RotateGizmoDrag.Math` 解算平面角度差（WORLD-B-R4-F4）。
+- `XuanYu.Core/Gizmo/RotateGizmoDrag.Math.cs`：Rotate Gizmo 稳定旋转数学分部；纯方法 `PlaneAngle` 与 `TryInitialize`（指针按下初始化角度、无效射线交返回 false 拒绝捕获），欧拉角度分量独立回绕 ±180（WORLD-B-R4-F4 + R4-R1 首帧吞角修复）。
+- `XuanYu.Core/Gizmo/RotateGizmoScreenRadius.cs`：Rotate Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R4-R1）；按相机深度、FOV 与视口逻辑高度把目标屏幕半径（120 DIP）反算为世界半径，供 CPU 命中测试与 Shader 共用同一公式，做到"所见即所命中"且任意 DPI 一致。
 
 - `XuanYu.Core/XuanYu.Core.csproj`：核心类库项目文件。
 - `XuanYu.Core/Properties/AssemblyInfo.cs`：Core 程序集内部可见性声明；仅允许 `XuanYu.Core.Tests` 访问内部测试入口，不承载生产行为或运行时依赖。
@@ -242,7 +248,7 @@
 - `XuanYu.Core/Scene/CommittedTransform.cs`：已提交 Transform 值对象；WORLD-B-R4-F1 起保存正式 Position / Rotation / Scale，并提供移动保留旋转缩放的 `WithPosition`。
 - `XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs`：场景渲染快照源抽象，向渲染侧发布只读快照。
 - `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
-- `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体、选择态、Preview 与 Move Gizmo 可见性。
+- `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体、选择态、Preview、Move Gizmo 可见性与 Rotate Gizmo 可见性，并经 `SceneRenderProjectionAdapter` 解析为带 Rotation/Scale 的 RenderProjection。
 - `XuanYu.Core/Scene/SceneSpatialBoundsProjection.cs`：Scene 实体到 SpatialBounds 的派生投影；负责为 Picking / SpatialIndex 构造 AABB，不拥有正式 Transform。
 - `XuanYu.Core/Scene/SceneStateOwner.Lifecycle.cs`：SceneStateOwner 生命周期分部；负责通过 GlobalWorld 创建、销毁、查询、切换 active entity 和转发 Region / Activity 变更，不拥有第二份实体真相。
 - `XuanYu.Core/Scene/SceneStateOwner.Seeding.cs`：SceneStateOwner R1-R2 测试实体种子分部；负责补足 10 个可区分编辑器实体，不进入组织系统或分区系统。
@@ -275,7 +281,8 @@
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutPlaneTests.cs`：WORLD-B-R3 平面控制柄投影与命中测试；覆盖 XY/XZ/YZ 平面存在、平面中心命中和轴优先于平面。
 - `XuanYu.Core.Tests/Camera/CameraNavigationTests.cs`：WORLD-B-R1 相机导航纯算法测试；覆盖 Orbit 保中心/保距离/防极点翻转、Pan 屏幕平面平移和 Dolly 距离缩放保护。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
-- `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.cs`：R5 Render Projection 适配器测试；覆盖缺相机失败、显式相机矩阵等价、Preview 与 Gizmo 在跨 Render 边界前解析。
+- `XuanYu.Core.Tests/Gizmo/RotateGizmoLayoutTests.cs`：WORLD-B-R4-F4 Rotate Gizmo 屏幕投影与轴环命中测试；WORLD-B-R4-R1 扩 `Custom_world_radius_scales_ring_screen_radius`，断言显式世界半径线性放大环屏幕半径。
+- `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.cs`：R5 Render Projection 适配器测试；覆盖缺相机失败、显式相机矩阵等价、Preview 与 Gizmo 在跨 Render 边界前解析。WORLD-B-R4-R1 拆出 `SceneRenderProjectionAdapterTests.Rotation.cs` 偏部（实体 Rotation/Scale 下传、显式旋转环世界半径透传、不显示时回落默认半径）。
 - `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
 - `XuanYu.Core.Tests/EditorTool/EditorTransformCapturePolicyTests.cs`：编辑器 Transform 捕获策略测试；测试侧引用 Editor.UI，验证 Move 可捕获 / 可显示、Rotate / Scale 不伪装 Move、Snap 不改变捕获和 Gizmo 可见性。
 - `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs`：编辑历史 Owner 基础合同测试；覆盖空栈、无变化忽略和 LIFO Undo。
@@ -308,6 +315,7 @@
 - `XuanYu.World.Tests/World/WorldR4InspectorInputTests.cs`：WORLD-B-R4-F2 检查器输入防污染测试；覆盖格式化显示保留内部精度、非法缩放 / NaN / 非数字不写 Transform 与 History。
 - `XuanYu.World.Tests/World/WorldR4TransformFoundationTests.cs`：WORLD-B-R4-F1/F2 Transform 数据合同测试；覆盖 Rotation/Scale 默认值、移动提交保留旋转缩放，以及检查器显示真实 Transform 字段。
 - `XuanYu.World.Tests/World/WorldR4TransformInputTests.cs`：WORLD-B-R4-F2 完整 Transform 输入测试；覆盖完整提交入口、会话 Preview / Commit 保留字段、旋转缩放候选与检查器提交撤销重做。
+- `XuanYu.World.Tests/World/WorldRotateTransformUiTests.cs`：WORLD-B-R4-F4 Rotate Gizmo UiVm 闭环测试；覆盖一次拖拽一次提交+撤销重做、取消不入历史，命中点按屏幕空间半径（与生产捕获同公式）构造以对齐命中。WORLD-B-R4-R1 拆出 `WorldRotateTransformUiTests.R4R1.cs` 偏部（`Rotate_with_no_pointer_movement_creates_no_history` 近零旋转不污染历史、`Rotate_commit_and_cancel_clear_drag_state` 提交/取消对称清空 `_rotateDrag`）。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
@@ -353,8 +361,8 @@
 - `XuanYu.Render.Abstractions/NativeHostLifecycleState.cs`：NativeHost 生命周期状态枚举。
 - `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs`：NativeHost Surface 句柄值对象。
 - `XuanYu.Render.Abstractions/RenderCameraProjection.cs`：最小 Render 相机投影；携带显式相机数值并按 Render 视口生成 ViewProjection，不创建默认相机。
-- `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：最小实体渲染投影；仅携带实体 Key 与跨边界前解析完成的位置。
-- `XuanYu.Render.Abstractions/RenderProjection.cs`：R5 最小渲染投影合同；包含显式相机、实体投影、Gizmo 可见性与位置。
+- `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：最小实体渲染投影；携带实体 Key 与跨边界前解析完成的 Position / Rotation / Scale（WORLD-B-R4-R1 TRS 合同：旋转/缩放经 RenderProjection 真正下传，不再被渲染链丢弃）。
+- `XuanYu.Render.Abstractions/RenderProjection.cs`：R5 最小渲染投影合同；包含显式相机、实体投影（Position/Rotation/Scale）、Move Gizmo 可见性与位置，以及 Rotate Gizmo 可见性与世界半径（WORLD-B-R4-R1 尾随可选 `RotateGizmoVisible` / `RotateGizmoWorldRadius`，屏幕空间恒定尺寸）。
 - `XuanYu.Render.Abstractions/RenderProjectionResult.cs`：Render Projection 创建结果；表达成功投影或明确失败原因。
 
 ## XuanYu.Render.Vulkan
@@ -501,7 +509,7 @@
 - `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点 UI 投影模型；携带图标身份、连续树线 Guide 和展开折叠 UI 状态。
 - `XuanYu.Editor.UI/Vm/LogEntry.cs`：编辑器日志条目模型。
 - `XuanYu.Editor.UI/Vm/SampleLogEntries.cs`：底部日志栏示例数据。
-- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：R5 Render Projection 组合边界适配器；从 `SceneRenderSnapshot` 抽取最终实体位置、Gizmo 状态和显式相机，缺相机时返回明确失败。
+- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：R5 Render Projection 组合边界适配器；从 `SceneRenderSnapshot` 抽取最终实体 Position/Rotation/Scale、Move/Rotate Gizmo 状态与显式相机，缺相机时返回明确失败（WORLD-B-R4-R1 把旋转/缩放与显式旋转环世界半径一并下传，默认半径 1.2 仅作不显示时的占位）。
 - `XuanYu.Editor.UI/Vm/TreeGuideBuilder.cs`：树形 UI Guide 构造器；从可视节点层级推导祖先连续竖线、中间 Tee、末节点 Elbow 和折叠过滤。
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm Undo / Redo 接线分部；成功 Commit 后记录 History，撤销恢复 Before，重做恢复 After。

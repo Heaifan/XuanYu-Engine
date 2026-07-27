@@ -7,7 +7,8 @@ public readonly record struct RenderProjection(
     IReadOnlyList<RenderEntityProjection> Entities,
     bool GizmoVisible,
     Vector3d GizmoPosition,
-    bool RotateGizmoVisible = false)
+    bool RotateGizmoVisible = false,
+    double RotateGizmoWorldRadius = 1.2)
 {
     public int EntityCount => Entities.Count;
 }

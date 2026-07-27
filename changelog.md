@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.20.12-fix
+WORLD-B-R4-R1 旋转 Gizmo 真机收口修复（2026-07-27）
+- 任务目标：R4 实装（F4 旋转工具闭环）经真机验收判定 **FAIL**——旋转在视口无可见效果。本轮回填 R4 FAIL 审计的全部缺陷，使旋转真正可旋转、命中与渲染一致、零误触发历史；**不进入 F5 缩放**、不扩架构、不改日志/测试断言伪装过关、不宣布 R4 CLOSED。
+- 缺陷与修复（FAIL 审计 → 落点）：
+  - P0 渲染链丢弃 Rotation：`RenderEntityProjection` 新增 `Rotation`/`Scale`；`RenderProjection` 实体投影与 `SceneRenderProjectionAdapter` 一并下传 TRS；`scene.vert` 已含 `eulerRot()` 与缩放应用、`VulkanClearFrameOwner.Draw` 已按 `RotateGizmoVisible` 门控 CmdDraw——本轮确认 TRS 真正贯通到 `gl_Position`。
+  - P1 旋转环固定世界半径 1.2：新增纯辅助 `RotateGizmoScreenRadius.ComputeWorldRadius`（目标 120 DIP，按相机深度/FOV/视口逻辑高度反算世界半径），CPU 命中（`RotateGizmoLayout`）与 Shader（`RenderProjection.RotateGizmoWorldRadius`）共用同一公式，做到"所见即所命中"且任意 DPI 一致，不再只是换一个魔法数。
+  - P1 `RotateGizmoDrag` 首帧吞角：`RotateGizmoDrag.Math.TryInitialize` 在指针按下即初始化角度，无效射线交返回 false 拒绝捕获（修复 `UiVm.RotateGizmo.TryBeginRotateGizmoCapture`）。
+  - P1 近零旋转空历史：`SceneStateOwner.Transform` 以 `EquivalentTransform`（分量 1e-4 容差）取代精确相等，避免浮点抖动污染 History。
+  - P2 `_rotateDrag` 提交/取消不对称清空：`UiVm.Interaction` 的 `CommitInteraction`/`CancelInteraction` 均补 `_rotateDrag = null`。
+  - 测试缺口：新增 `SceneRenderProjectionAdapterTests.Rotation`（实体 R/S 下传、显式旋转环半径透传、不显示回落默认半径）、`WorldRotateTransformUiTests.R4R1`（零位移无历史、提交/取消清空拖拽态）、`RotateGizmoLayoutTests.Custom_world_radius_scales_ring_screen_radius`；原 `WorldRotateTransformUiTests.RingHit` 改用屏幕空间半径公式，命中点与生产捕获对齐。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.12-fix`；`file-tree.md` 补齐 F4 漏登记的 `RotateGizmo*` 系列与 `WorldRotateTransformUiTests`，并同步 TRS 合同与旋转环半径描述。
+- 状态：**R4 未 CLOSED**。本轮回填 FAIL 审计缺陷，全测试通过、构建清洁，但必须回真机重新验收旋转可视效果后才可宣布 R4 CLOSED；验收通过前不进入 F5 缩放。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行 `-m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false`）；`dotnet test --no-build --no-restore` 串行 **Core 95 passed / 0 failed**、**World 145 passed / 0 failed**（合计 240，较 F4 净增 6）；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与 ARCH-WORLD/RENDER 边界均通过）。
+
 ## v0.2.20.11-fix
 WORLD-B 治理·.NET 构建测试子进程生命周期（GOV-DOTNET-R1，2026-07-27）
 - 任务目标：把 WORLD-B-R4 收口期暴露的治理缺口正式写入宪法与执行手册——dotnet 构建/测试必须串行、子进程生命周期可控、超时无输出有上限、环境失败不伪装代码失败、安全策略限制时停止而非绕过、changelog 只记本轮真实退出码。本轮不修改任何 .cs、不修改测试、不新增脚本、不清理构建系统、不扩张架构、不触碰 CI。

@@ -1,5 +1,6 @@
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
+using XuanYu.Core.Space;
 using XuanYu.Render.Abstractions;
 using XuanYu.World.Scene;
 using XuanYu.World;
@@ -11,6 +12,7 @@ public sealed partial class UiVm
     readonly SceneStateOwner _sceneState = new(new GridWorldPartitionStrategy(regionSize: 5));
     int _renderSnapshotPublishCount;
     int _lastLoggedRenderEntityCount = -1;
+    ViewportState? _lastViewport;
 
     public ISceneRenderSnapshotSource SceneSnapshotSource => this;
     public SceneRenderSnapshot RenderSnapshot
@@ -36,7 +38,8 @@ public sealed partial class UiVm
     }
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
     public RenderProjectionResult RenderProjection =>
-        SceneRenderProjectionAdapter.TryCreate(RenderSnapshot);
+        SceneRenderProjectionAdapter.TryCreate(
+            RenderSnapshot, ComputeRotateGizmoWorldRadius(RenderSnapshot.Entity.Transform.Position));
     public event Action<RenderProjectionResult>? RenderProjectionChanged;
 
     void ApplyRunCommand(string name)
@@ -66,7 +69,8 @@ public sealed partial class UiVm
         var snapshot = RenderSnapshot;
         TraceRenderSnapshotPublish(snapshot.Entities.Count);
         RenderSnapshotChanged?.Invoke(snapshot);
-        RenderProjectionChanged?.Invoke(SceneRenderProjectionAdapter.TryCreate(snapshot));
+        RenderProjectionChanged?.Invoke(
+            SceneRenderProjectionAdapter.TryCreate(snapshot, ComputeRotateGizmoWorldRadius(snapshot.Entity.Transform.Position)));
     }
 
     void TraceRenderSnapshotPublish(int entityCount)

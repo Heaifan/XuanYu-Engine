@@ -46,4 +46,15 @@ public sealed class RotateGizmoLayoutTests
             ViewProjectionState.Create(DefaultEditorCamera.Create(1), viewport),
             Vector3d.Zero);
     }
+
+    [Fact]
+    public void Custom_world_radius_scales_ring_screen_radius()
+    {
+        var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
+        var state = ViewProjectionState.Create(DefaultEditorCamera.Create(1), viewport);
+        var small = RotateGizmoLayout.Project(state, Vector3d.Zero, 1.0).Rings[0].ScreenRadius;
+        var large = RotateGizmoLayout.Project(state, Vector3d.Zero, 2.0).Rings[0].ScreenRadius;
+        Assert.True(large > small);
+        Assert.True(large / small > 1.9 && large / small < 2.1);
+    }
 }

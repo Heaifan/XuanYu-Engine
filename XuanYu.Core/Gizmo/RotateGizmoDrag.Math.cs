@@ -36,4 +36,14 @@ public sealed partial class RotateGizmoDrag
         while (d <= -180.0) d += 360.0;
         return d;
     }
+
+    // 在 pointer-down 即初始化基线角度；若射线与旋转平面无有效交点则返回 false（应拒绝捕获）。
+    public bool TryInitialize(double x, double y)
+    {
+        var angle = PlaneAngle(x, y);
+        if (angle is null) return false;
+        _prevAngle = angle.Value;
+        _initialized = true;
+        return true;
+    }
 }

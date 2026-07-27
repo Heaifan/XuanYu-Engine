@@ -5,7 +5,9 @@ namespace XuanYu.Editor.UI;
 
 public static class SceneRenderProjectionAdapter
 {
-    public static RenderProjectionResult TryCreate(SceneRenderSnapshot snapshot)
+    public static RenderProjectionResult TryCreate(
+        SceneRenderSnapshot snapshot,
+        double rotateGizmoWorldRadius = 1.2)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -13,7 +15,11 @@ public static class SceneRenderProjectionAdapter
         }
 
         var entities = snapshot.Entities
-            .Select(e => new RenderEntityProjection(e.EntityKey, snapshot.PositionFor(e)))
+            .Select(e =>
+            {
+                var t = snapshot.TransformFor(e);
+                return new RenderEntityProjection(e.EntityKey, t.Position, t.Rotation, t.Scale);
+            })
             .ToArray();
         var projection = new RenderProjection(
             new RenderCameraProjection(
@@ -23,7 +29,8 @@ public static class SceneRenderProjectionAdapter
             entities,
             snapshot.ShowMoveGizmo,
             snapshot.RenderPosition,
-            RotateGizmoVisible: snapshot.ShowRotateGizmo);
+            RotateGizmoVisible: snapshot.ShowRotateGizmo,
+            RotateGizmoWorldRadius: rotateGizmoWorldRadius);
         return RenderProjectionResult.Ok(projection);
     }
 }

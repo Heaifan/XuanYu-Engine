@@ -27,7 +27,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 Extent = _extent
             }
         };
-        var scene = new float[24];
+        var scene = new float[VulkanScenePushConstants.FloatCount];
         fixed (Viewport* pVp = viewport)
         fixed (Rect2D* pSc = scissor)
         fixed (float* pScene = scene)
@@ -39,7 +39,9 @@ public sealed unsafe partial class VulkanClearFrameOwner
             var entities = _renderProjection.Entities;
             for (var i = 0; i < entities.Count; i++)
             {
-                FillScenePushConstants(pScene, _renderProjection, entities[i].Position);
+                var e = entities[i];
+                FillScenePushConstants(pScene, _renderProjection,
+                    e.Position, e.Rotation, e.Scale, 0.0f);
                 PushSceneConstants(cb, pScene);
                 _vk.CmdDraw(cb, 3, 1, 0, 0);
             }
@@ -53,7 +55,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
 
     void DrawActiveGizmo(CommandBuffer cb, float* scene, RenderProjection projection)
     {
-        FillScenePushConstants(scene, projection, projection.GizmoPosition);
+        // 旋转 Gizmo 环的世界半径已由 CPU 用 DIP 视口算好并贯穿进来（屏幕空间恒定尺寸）；
+        // 此处直接使用，保证绘制层与命中层在同一世界半径下一致。
+        FillScenePushConstants(scene, projection, projection.GizmoPosition,
+            Vector3d.Zero, new Vector3d(1, 1, 1),
+            (float)projection.RotateGizmoWorldRadius);
         PushSceneConstants(cb, scene);
         var count = projection.RotateGizmoVisible ? RotateGizmoVertexCount : MoveGizmoVertexCount;
         _vk.CmdDraw(cb, count, 1, 0, 0);
@@ -66,7 +72,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
             VulkanScenePushConstants.SizeInBytes, scene);
     }
 
-    void FillScenePushConstants(float* target, RenderProjection projection, Vector3d position)
+    void FillScenePushConstants(float* target, RenderProjection projection, Vector3d position,
+        Vector3d rotation, Vector3d scale, float gizmoRingRadius)
     {
         var viewport = new ViewportState(
             0,
@@ -87,6 +94,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
         target[18] = (float)position.Z;
         target[19] = 1.0f;
         target[20] = projection.RotateGizmoVisible ? 1.0f : 0.0f;
+        target[21] = gizmoRingRadius;
+        target[24] = (float)rotation.X;
+        target[25] = (float)rotation.Y;
+        target[26] = (float)rotation.Z;
+        target[28] = (float)scale.X;
+        target[29] = (float)scale.Y;
+        target[30] = (float)scale.Z;
     }
-
 }

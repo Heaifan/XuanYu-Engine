@@ -9,7 +9,7 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Core.Tests.Render;
 
-public sealed class SceneRenderProjectionAdapterTests
+public sealed partial class SceneRenderProjectionAdapterTests
 {
     [Fact]
     public void Missing_camera_fails_without_default_projection()

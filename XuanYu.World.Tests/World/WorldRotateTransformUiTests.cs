@@ -7,7 +7,7 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.World;
 
-public sealed class WorldRotateTransformUiTests
+public sealed partial class WorldRotateTransformUiTests
 {
     [Fact]
     public void Rotate_gizmo_drag_commits_once_and_undo_redo_restores()
@@ -57,8 +57,11 @@ public sealed class WorldRotateTransformUiTests
         RingHit(UiVm vm, RotateGizmoAxis axis)
     {
         var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
-        var state = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, viewport);
-        var layout = RotateGizmoLayout.Project(state, vm.RenderSnapshot.Entity.Transform.Position);
+        var camera = vm.RenderSnapshot.CameraState;
+        var origin = vm.RenderSnapshot.Entity.Transform.Position;
+        var worldRadius = RotateGizmoScreenRadius.ComputeWorldRadius(camera, viewport, origin);
+        var state = ViewProjectionState.Create(camera, viewport);
+        var layout = RotateGizmoLayout.Project(state, origin, worldRadius);
         var ring = layout.Rings.Single(r => r.Axis == axis);
         var start = ring.Points[6];
         var mid = ring.Points[9];

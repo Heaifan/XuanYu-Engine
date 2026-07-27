@@ -5,7 +5,8 @@ namespace XuanYu.Core.Gizmo;
 
 public sealed partial class RotateGizmoLayout
 {
-    // 与 MoveGizmo 同尺度：环半径对齐 AxisLength=1.2，环管宽对齐 GizmoVisualLineWidth。
+    // 旋转环世界半径默认值（与 MoveGizmo AxisLength=1.2 同尺度）。
+    // 屏幕空间恒定尺寸由调用方按视口/相机换算 worldRadius 覆盖。
     public const double RingRadius = 1.2;
     public const int RingSegments = 48;
     public const double RingVisualWidth = 2.0;
@@ -26,13 +27,16 @@ public sealed partial class RotateGizmoLayout
 
     public IReadOnlyList<RotateGizmoRing> Rings { get; }
 
-    public static RotateGizmoLayout Project(ViewProjectionState state, Vector3d origin)
+    public static RotateGizmoLayout Project(
+        ViewProjectionState state,
+        Vector3d origin,
+        double worldRadius = RingRadius)
     {
         return new RotateGizmoLayout(
         [
-            Ring(state, origin, RotateGizmoAxis.X),
-            Ring(state, origin, RotateGizmoAxis.Y),
-            Ring(state, origin, RotateGizmoAxis.Z)
+            Ring(state, origin, RotateGizmoAxis.X, worldRadius),
+            Ring(state, origin, RotateGizmoAxis.Y, worldRadius),
+            Ring(state, origin, RotateGizmoAxis.Z, worldRadius)
         ]);
     }
 
@@ -55,7 +59,8 @@ public sealed partial class RotateGizmoLayout
         return best;
     }
 
-    static RotateGizmoRing Ring(ViewProjectionState state, Vector3d origin, RotateGizmoAxis axis)
+    static RotateGizmoRing Ring(
+        ViewProjectionState state, Vector3d origin, RotateGizmoAxis axis, double worldRadius)
     {
         var (b1, b2) = Basis(axis);
         var points = new ScreenPoint[RingSegments];
@@ -67,7 +72,7 @@ public sealed partial class RotateGizmoLayout
         {
             var theta = (i * 2.0 * global::System.Math.PI) / RingSegments;
             var dir = (b1 * global::System.Math.Cos(theta)) + (b2 * global::System.Math.Sin(theta));
-            var world = origin + (dir * RingRadius);
+            var world = origin + (dir * worldRadius);
             ScreenPoint p;
             try { p = state.ProjectWorldPoint(world); }
             catch { return new RotateGizmoRing(axis, center, [], 0.0); }

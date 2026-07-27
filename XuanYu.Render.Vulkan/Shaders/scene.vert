@@ -4,6 +4,9 @@ layout(push_constant) uniform ScenePush {
     mat4 viewProjection;
     vec4 worldPosition;
     float gizmoMode;
+    float gizmoRingRadius;
+    vec4 entityRotation;
+    vec4 entityScale;
 } pc;
 
 layout(location = 0) out vec4 outColor;
@@ -37,10 +40,23 @@ vec3 planeVertex(int plane, int index) {
     return vertices[index];
 }
 
+// 由欧拉角（度）构造旋转矩阵，约定 Rz * Ry * Rx。
+mat3 eulerRot(vec3 deg) {
+    vec3 r = radians(deg);
+    float cx = cos(r.x), sx = sin(r.x);
+    float cy = cos(r.y), sy = sin(r.y);
+    float cz = cos(r.z), sz = sin(r.z);
+    mat3 Rx = mat3(1.0, 0.0, 0.0, 0.0, cx, sx, 0.0, -sx, cx);
+    mat3 Ry = mat3(cy, 0.0, sy, 0.0, 1.0, 0.0, -sy, 0.0, cy);
+    mat3 Rz = mat3(cz, -sz, 0.0, sz, cz, 0.0, 0.0, 0.0, 1.0);
+    return Rz * Ry * Rx;
+}
+
 // 旋转环：每个环在垂直于该轴的平面内生成 48 段细环带（每环 288 顶点，3 环共 864）。
+// 环半径取自 push 常量 gizmoRingRadius（CPU 按屏幕空间恒定尺寸换算的世界半径）。
 vec3 ringVertex(int ring, int seg, int vert) {
-    float R = 1.2;
-    float w = 0.03;
+    float R = pc.gizmoRingRadius;
+    float w = R * 0.025;
     vec3 b1 = ring == 0 ? vec3(0.0, 1.0, 0.0) : (ring == 1 ? vec3(1.0, 0.0, 0.0) : vec3(1.0, 0.0, 0.0));
     vec3 b2 = ring == 0 ? vec3(0.0, 0.0, 1.0) : (ring == 1 ? vec3(0.0, 0.0, 1.0) : vec3(0.0, 1.0, 0.0));
     float t1 = float(seg) * 6.2831853 / 48.0;
@@ -56,7 +72,11 @@ vec3 ringVertex(int ring, int seg, int vert) {
 void main() {
     vec3 world;
     if (gl_VertexIndex < 3) {
-        world = triangleVertex(gl_VertexIndex) + pc.worldPosition.xyz;
+        // 实体三角形：应用缩放 → 旋转 → 平移，使世界 Rotation/Scale 真正影响画面。
+        vec3 local = triangleVertex(gl_VertexIndex);
+        local = local * pc.entityScale.xyz;
+        local = eulerRot(pc.entityRotation.xyz) * local;
+        world = local + pc.worldPosition.xyz;
         outColor = vec4(1.0, 0.85, 0.2, 1.0);
     } else if (pc.gizmoMode < 0.5) {
         int gi = gl_VertexIndex - 3;

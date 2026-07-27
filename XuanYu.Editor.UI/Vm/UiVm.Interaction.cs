@@ -46,6 +46,7 @@ public sealed partial class UiVm
         if (result is null) return;
         var transformCommitted = _transformSession.TryCommit(snap.SessionId, _sceneState, out var commit);
         _moveDragConstraint = null;
+        _rotateDrag = null;
         if (transformCommitted)
         {
             RecordTransformHistory(commit);
@@ -67,6 +68,7 @@ public sealed partial class UiVm
         if (result is null) return;
         var transformCanceled = _transformSession.TryCancel(snap.SessionId);
         _moveDragConstraint = null;
+        _rotateDrag = null;
         if (transformCanceled) PublishSceneRenderSnapshot();
         FooterState = "状态：就绪";
         FooterMessage = $"交互已取消：{reason}";
