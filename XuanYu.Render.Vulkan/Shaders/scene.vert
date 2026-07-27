@@ -106,6 +106,51 @@ void outlineRibbonVertex(int vi, out vec4 clipPos, out vec4 color) {
     color = vec4(0.80, 0.90, 1.0, 1.0); // 浅蓝白轮廓
 }
 
+vec3 cube(vec3 center, vec3 halfExtent, int li) {
+    vec3 corners[8] = vec3[8](
+        center + vec3(-halfExtent.x, -halfExtent.y, -halfExtent.z),
+        center + vec3( halfExtent.x, -halfExtent.y, -halfExtent.z),
+        center + vec3( halfExtent.x,  halfExtent.y, -halfExtent.z),
+        center + vec3(-halfExtent.x,  halfExtent.y, -halfExtent.z),
+        center + vec3(-halfExtent.x, -halfExtent.y,  halfExtent.z),
+        center + vec3( halfExtent.x, -halfExtent.y,  halfExtent.z),
+        center + vec3( halfExtent.x,  halfExtent.y,  halfExtent.z),
+        center + vec3(-halfExtent.x,  halfExtent.y,  halfExtent.z));
+    int idx[36] = int[36](
+        0,1,2, 0,2,3,   4,5,6, 4,6,7,
+        0,1,5, 0,5,4,   3,2,6, 3,6,7,
+        1,2,6, 1,6,5,   0,3,7, 0,7,4);
+    return corners[idx[li]];
+}
+
+// Scale Gizmo 几何（相对 Gizmo 中心，轴方向随实体局部旋转）：
+// [0..107] 三轴杆（沿旋转轴方向拉长）；[108..215] 三轴端立方体；[216..251] 中心等比立方体。
+vec3 scaleVertex(int vi) {
+    float L = pc.gizmoRingRadius;
+    if (vi < 108) {
+        int b = vi / 36;
+        int li = vi % 36;
+        vec3 a = (b == 0) ? vec3(1.0, 0.0, 0.0)
+            : (b == 1 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0));
+        float bar = L * 0.03;
+        vec3 halfExtent = (b == 0) ? vec3(L * 0.8, bar, bar)
+            : (b == 1 ? vec3(bar, L * 0.8, bar) : vec3(bar, bar, L * 0.8));
+        vec3 centerBox = a * (L * 0.42);
+        return eulerRot(pc.entityRotation.xyz) * cube(centerBox, halfExtent, li);
+    } else if (vi < 216) {
+        int c = (vi - 108) / 36;
+        int li = (vi - 108) % 36;
+        vec3 a = (c == 0) ? vec3(1.0, 0.0, 0.0)
+            : (c == 1 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0));
+        vec3 centerBox = a * L;
+        vec3 halfExtent = vec3(L * 0.13);
+        return eulerRot(pc.entityRotation.xyz) * cube(centerBox, halfExtent, li);
+    } else {
+        int li = vi - 216;
+        return cube(vec3(0.0), vec3(L * 0.12), li);
+    }
+}
+
 void main() {
     if (pc.selectionMode > 1.5) {
         // R4-R3-R2：外轮廓边带（18 顶点），非重心坐标内部线、非放大复制面
@@ -136,6 +181,25 @@ void main() {
                 (axis == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
             gl_Position = pc.viewProjection * vec4(world, 1.0);
         }
+    } else if (pc.gizmoMode > 1.5) {
+        // Scale Gizmo：三轴杆 + 三轴端立方体 + 中心等比立方体
+        int vi = gl_VertexIndex - 3;
+        vec3 local = scaleVertex(vi);
+        vec3 world = local + pc.worldPosition.xyz;
+        gl_Position = pc.viewProjection * vec4(world, 1.0);
+        vec3 col;
+        if (vi < 108) {
+            int b = vi / 36;
+            col = (b == 0) ? vec3(0.9, 0.18, 0.16)
+                : (b == 1 ? vec3(0.16, 0.72, 0.28) : vec3(0.18, 0.42, 0.95));
+        } else if (vi < 216) {
+            int c = (vi - 108) / 36;
+            col = (c == 0) ? vec3(0.9, 0.18, 0.16)
+                : (c == 1 ? vec3(0.16, 0.72, 0.28) : vec3(0.18, 0.42, 0.95));
+        } else {
+            col = vec3(0.95, 0.95, 0.95);
+        }
+        vBaseColor = vec4(col, 1.0);
     } else {
         int ri = gl_VertexIndex - 3;
         int ring = ri / (48 * 6);

@@ -13,4 +13,10 @@ public static class EditorTransformCapturePolicy
 
     public static bool ShouldShowRotateGizmo(EditorToolSnapshot snapshot, bool hasSelection) =>
         hasSelection && CanBeginRotateGizmo(snapshot);
+
+    public static bool CanBeginScaleGizmo(EditorToolSnapshot snapshot) =>
+        snapshot.ActiveTool == EditorToolId.Scale;
+
+    public static bool ShouldShowScaleGizmo(EditorToolSnapshot snapshot, bool hasSelection) =>
+        hasSelection && CanBeginScaleGizmo(snapshot);
 }

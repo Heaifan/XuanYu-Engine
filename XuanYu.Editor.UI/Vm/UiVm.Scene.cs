@@ -26,6 +26,8 @@ public sealed partial class UiVm
                 _editorState.ToolSnapshot, selected);
             var showRotate = EditorTransformCapturePolicy.ShouldShowRotateGizmo(
                 _editorState.ToolSnapshot, selected);
+            var showScale = EditorTransformCapturePolicy.ShouldShowScaleGizmo(
+                _editorState.ToolSnapshot, selected);
             return new SceneRenderSnapshot(
                 entity,
                 selected,
@@ -33,13 +35,12 @@ public sealed partial class UiVm
                 showMove,
                 scene.Entities,
                 _camera,
-                ShowRotateGizmo: showRotate);
+                ShowRotateGizmo: showRotate,
+                ShowScaleGizmo: showScale);
         }
     }
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
-    public RenderProjectionResult RenderProjection =>
-        SceneRenderProjectionAdapter.TryCreate(
-            RenderSnapshot, ComputeRotateGizmoWorldRadius(RenderSnapshot.Entity.Transform.Position));
+    public RenderProjectionResult RenderProjection => CreateRenderProjection(RenderSnapshot);
     public event Action<RenderProjectionResult>? RenderProjectionChanged;
 
     void ApplyRunCommand(string name)
@@ -69,8 +70,7 @@ public sealed partial class UiVm
         var snapshot = RenderSnapshot;
         TraceRenderSnapshotPublish(snapshot.Entities.Count);
         RenderSnapshotChanged?.Invoke(snapshot);
-        RenderProjectionChanged?.Invoke(
-            SceneRenderProjectionAdapter.TryCreate(snapshot, ComputeRotateGizmoWorldRadius(snapshot.Entity.Transform.Position)));
+        RenderProjectionChanged?.Invoke(CreateRenderProjection(snapshot));
     }
 
     void TraceRenderSnapshotPublish(int entityCount)

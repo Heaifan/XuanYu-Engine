@@ -29,7 +29,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
         target[17] = (float)position.Y;
         target[18] = (float)position.Z;
         target[19] = 1.0f;
-        target[20] = projection.RotateGizmoVisible ? 1.0f : 0.0f;
+        target[20] = projection.ScaleGizmoVisible ? 2.0f
+            : (projection.RotateGizmoVisible ? 1.0f : 0.0f);
         target[21] = gizmoRingRadius;
         target[22] = selectionMode;
         target[24] = (float)rotation.X;

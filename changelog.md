@@ -1,5 +1,26 @@
 # changelog
 
+## v0.2.20.18-rz
+WORLD-B-R5 Scale Gizmo 缩放变换闭环（2026-07-27 22:32:12）
+- 任务目标：在 R4（移动/旋转）基础上补齐第三变换工具——Scale Gizmo 缩放闭环；三轴 X/Y/Z 单轴只改对应 Scale 分量、中心 Uniform 三轴等比；实体局部 Scale 语义、下限 0.01、拒绝 0/负/NaN/Infinity；闭环 PointerDown→Begin→Preview→Commit→Escape Cancel→Undo/Redo，实时预览、单次提交、松手无跳变、工具内切换实体、轮廓同步。冻结：不进 Local/多选/Pivot/吸附/数值输入/负缩放/镜像/父子传播/重开 R4/重构稳定 Vulkan Fence/顺手清文档/扩范围。
+- 复用体系：SelectionKey 单一权威、TransformSession（TryPreviewScale/TryCommit/TryCancel 轴无关）、SceneRenderSnapshot/RenderProjection、History.RecordTransformHistory、Capture Cancel、Vulkan Pending Projection、工具内点选切换；push constant 槽零新增——gizmoMode(@80/index20: 0=Move/1=Rotate/2=Scale)、gizmoRingRadius 复用为 Scale 世界轴长、entityRotation 复用为 GizmoRotation。
+- 修复落点（Core Gizmo，无平台依赖）：
+  - `ScaleGizmoAxis`：定义 `ScaleGizmoAxis{X,Y,Z}` 与 `ScaleGizmoHandle{X,Y,Z,Uniform}`（Uniform 跨三轴）。
+  - `ScaleGizmoScreenSize.ComputeWorldAxisLength(camera,viewport,origin)`：DIP→世界轴长，屏幕空间恒定尺寸（TargetScreenAxisDip=90/Handle11/Center13），CPU 命中与 Shader 共用。
+  - `ScaleGizmoLayout.Project(state,pos,worldAxisLength,entityRotation)`：生成中心立方体+三轴端点，按实体 Rotation 经欧拉旋转（Rz·Ry·Rx，与 shader 一致）使轴跟随朝向。
+  - `ScaleGizmoHitTester.HitTest(layout,x,y,margin=5)`：中心→Uniform、三轴线段→对应 X/Y/Z。
+  - `ScaleGizmoDrag.ApplyFactor(s,handle,factor)`+`Solve`：单轴只改对应分量、Uniform 三轴同乘；exp 因子（factor=exp(Δ/SensitivityDip)，从 StartScale 非累积）；Clamp 到 MinimumScale=0.01。
+- 修复落点（Editor + UI + Render）：
+  - `XuanYu.Editor/Transform/TransformSession.Scale.cs`：`ScaleHandle` + `BeginScale(sessionId,entity,handle)`，复用 TryPreviewScale/TryCommit/TryCancel；`TransformSession.End()` 重置 `ScaleHandle=null`。
+  - `Render.Abstractions/RenderProjection.cs` 增 `ScaleGizmoVisible`/`ScaleGizmoWorldRadius`(复用 gizmoRingRadius)/`GizmoRotation`(复用 entityRotation)；`SceneRenderSnapshot.cs` 增 `ShowScaleGizmo`。
+  - `Editor.UI/EditorState/EditorTransformCapturePolicy.cs` 增 `CanBeginScaleGizmo`(ActiveTool==Scale)/`ShouldShowScaleGizmo`；`UiVm.Tool.cs` 放开"缩放"拦截（原 `name is "框选" or "缩放"` 改仅 `name is "框选"`）；`UiVm.InteractionPointer.cs` 旋转后增 `PreviewScaleGizmo` 分支；`UiVm.Interaction.cs` Commit/Cancel 补 `_scaleDrag=null`；`UiVm.MoveGizmoLogging.cs` 增"缩放"前后 Scale 日志；`SceneRenderProjectionAdapter.cs` 增 scaleGizmoWorldAxisLength/gizmoRotation 映射；`VulkanNativeHost.Gizmo.cs` ActiveTool=="缩放"改路由 `TryBeginScaleGizmoCapture`；`UiVm.Scene.cs` 增 `ComputeScaleGizmoWorldAxisLength`+下传 GizmoRotation；`UiVm.ScaleGizmo.cs`(新) 承载捕获/预览/轴方向。
+  - `Render.Vulkan`：`VulkanClearFrameOwner.Draw.cs` 增 `ScaleGizmoVertexCount=252`（36×3 轴条+36×3 轴端立方体+36 中心立方体）+ `DrawActiveGizmo` 按 `gizmoMode` 切换；`VulkanClearFrameOwner.PushConstants.cs` `target[20]=gizmoMode`；`scene.vert` 增 `cube`+`scaleVertex(vi)`（gizmoMode>1.5 经 `eulerRot(entityRotation)` 跟随朝向，按轴红/绿/蓝或中心白色）；`ShaderBytecode.Vert.cs` 以 glslc 重生成、80 字/行紧凑 75 行满足 5+100。
+- 测试（R5 自动测试 23，全绿）：`XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.cs`（14：Layout 三轴/旋转、HitTester 中心→Uniform/轴→对应手柄/远端→null、Drag 单轴只改自身/Uniform 三轴相等/零位移保持/负向 Clamp/NaN 回落/更远拉更大）；`XuanYu.World.Tests/World/WorldScaleTransformUiTests.cs`（9：Begin+Preview 提交前更新渲染 Scale、Preview→Commit 不跳变、X 提交只改 X、Uniform 三轴相等、一次提交+Undo/Redo、Esc 不入历史、空白点击不 Begin、切换 B 后第一次拖动改 B 不改 A、Resize 世界轴长有界）。另修正 2 个 stale 测试以反映缩放已实装：`WorldToolStateHighlightUiTests.Unimplemented_scale_keeps_move_tool_single_highlight`→`Scale_tool_switches_highlight_to_scale_gizmo`（点击"缩放"进入缩放工具+ShowScaleGizmo）；`WorldSelectionToolStateUiTests.Implemented_rotate_switches_active_tool_unimplemented_tools_keep_current`→`Implemented_rotate_and_scale_switch_active_tool_box_select_keeps_current`（"缩放"实装可切换、"框选"仍保持当前）。
+- 本轮补修：`UiVm.Scene` 原下传 Gizmo 投影时仍读取正式 `Entity.Transform`，缩放 Preview 时 Gizmo 朝向/轴长可能滞后；已新增 `UiVm.RenderProjection.cs` 并统一从 `snapshot.RenderTransform` 计算 RenderProjection，保证实体、轮廓与 Scale Gizmo 同步。`ScaleGizmoTests` 与 `WorldScaleTransformUiTests` 拆为 partial 分部，恢复全仓 5+100；`ScaleGizmoLayout` 空 `catch` 改为明确 `InvalidOperationException` 降级。
+- 版本与文档：`run.bat`/`UiWin.axaml`/`file-tree.md` 首行与 `changelog.md` 顶部同步到 `v0.2.20.18-rz`；新增 `docs/world-b-r5-scale-transform-report.md` 与 `docs/world-b-r5-scale-transform.svg`；`file-tree.md` 登记 ScaleGizmo 5 文件、测试 partial、`TransformSession.Scale.cs`、`UiVm.ScaleGizmo.cs`、`UiVm.RenderProjection.cs`，并补充 RenderProjection/SceneRenderSnapshot/Render.Vulkan 绘制与 PushConstants/scene.vert/ShaderBytecode 的 R5 变更。
+- 状态：**WORLD-B-R5 功能实装完成、自动化门禁全绿**；五项动态真机验收（点轴只缩轴/中心等比/拖动实时/轮廓同步/Undo-Redo-Esc）待用户真机裁定（用户已令"不需确认直接开发"），裁定通过即 WORLD-B-R5 CLOSED 并进入 R6 三工具整体验收与 WORLD-B 退出。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行）；`dotnet test` 串行 **Core 125 passed / 0 failed**、**World 160 passed / 0 failed**（合计 285，较 R4 净增 14+9=23）；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过，含 ShaderBytecode.Vert.cs 75 行 <100、版本四源一致）。
+
 ## v0.2.20.17-fix
 WORLD-B-R4-R3-R2 选中实体外轮廓边带 + Present 同步顺序修正（2026-07-27）
 - 任务目标：v0.2.20.16-fix 经真机验收判定 **FAIL**——`5c717b5` 废除的浅蓝复制面确实消失，但新"重心坐标真实边缘高亮"几乎不可见（仅三角形内约 1-2px 内边线，吃黄色、受透视畸变、被 Gizmo 环盖住），并非 Blender 式外轮廓；且真机发现真正的 Vulkan 同步 bug：`VulkanPresentLoop.RunFrames` 在 `WaitAndResetFence()` 之前调用 `TryApplyPendingRenderProjection()` 重录并释放/替换上一帧 CommandBuffer，可能释放仍在 GPU 执行的 CommandBuffer，导致呈现延迟/帧错乱、旋转"看起来滞后"。本轮回填两者；**不进 F5、不改放大复制面、不加粗重心坐标内线、不做每帧 `DeviceWaitIdle`、不重写 World/Picking/TransformSession、不扩文档注水、测试全绿后不扩测**。

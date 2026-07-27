@@ -30,6 +30,12 @@ public sealed partial class UiVm
                 "变换捕获提交",
                 $"会话工具=移动；实体={key}；之前位置={EditorDisplayText.Position(commit.Before.Position)}；之后位置={EditorDisplayText.Position(commit.After.Position)}");
         }
+        else if (snap.OwnerTool == "缩放")
+        {
+            _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
+                "变换捕获提交",
+                $"会话工具=缩放；实体={key}；之前缩放=({commit.Before.Scale.X:g},{commit.Before.Scale.Y:g},{commit.Before.Scale.Z:g})；之后缩放=({commit.After.Scale.X:g},{commit.After.Scale.Y:g},{commit.After.Scale.Z:g})");
+        }
         else
         {
             _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,

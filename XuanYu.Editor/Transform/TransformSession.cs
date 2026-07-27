@@ -86,5 +86,6 @@ public sealed partial class TransformSession
         SessionId = 0;
         Preview = null;
         RotateAxis = null;
+        ScaleHandle = null;
     }
 }

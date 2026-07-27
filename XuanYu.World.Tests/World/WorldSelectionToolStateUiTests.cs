@@ -56,7 +56,7 @@ public sealed class WorldSelectionToolStateUiTests
     }
 
     [Fact]
-    public void Implemented_rotate_switches_active_tool_unimplemented_tools_keep_current()
+    public void Implemented_rotate_and_scale_switch_active_tool_box_select_keeps_current()
     {
         var vm = new UiVm(null, () => true);
 
@@ -64,11 +64,13 @@ public sealed class WorldSelectionToolStateUiTests
         vm.SelectToolCommand.Execute("旋转");
         Assert.Equal("旋转", vm.ActiveTool);
 
-        // 未实装的缩放/框选：不进入假激活态，保持当前工具（旋转）
+        // 缩放已实装（WORLD-B-R5）：切换进入缩放工具
         vm.SelectToolCommand.Execute("缩放");
-        Assert.Equal("旋转", vm.ActiveTool);
+        Assert.Equal("缩放", vm.ActiveTool);
+
+        // 未实装的框选：不进入假激活态，保持当前工具（缩放）
         vm.SelectToolCommand.Execute("框选");
-        Assert.Equal("旋转", vm.ActiveTool);
+        Assert.Equal("缩放", vm.ActiveTool);
     }
 
     [Fact]

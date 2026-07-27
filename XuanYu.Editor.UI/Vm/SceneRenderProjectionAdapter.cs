@@ -1,4 +1,5 @@
 using XuanYu.Core.Identity;
+using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Render.Abstractions;
 
@@ -8,7 +9,9 @@ public static class SceneRenderProjectionAdapter
 {
     public static RenderProjectionResult TryCreate(
         SceneRenderSnapshot snapshot,
-        double rotateGizmoWorldRadius = 1.2)
+        double rotateGizmoWorldRadius = 1.2,
+        double scaleGizmoWorldAxisLength = 1.2,
+        Vector3d gizmoRotation = default)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -33,7 +36,10 @@ public static class SceneRenderProjectionAdapter
             snapshot.ShowMoveGizmo,
             snapshot.RenderPosition,
             RotateGizmoVisible: snapshot.ShowRotateGizmo,
-            RotateGizmoWorldRadius: rotateGizmoWorldRadius);
+            RotateGizmoWorldRadius: rotateGizmoWorldRadius,
+            ScaleGizmoVisible: snapshot.ShowScaleGizmo,
+            ScaleGizmoWorldRadius: scaleGizmoWorldAxisLength,
+            GizmoRotation: gizmoRotation);
         return RenderProjectionResult.Ok(projection);
     }
 }

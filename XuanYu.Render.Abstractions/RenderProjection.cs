@@ -8,7 +8,10 @@ public readonly record struct RenderProjection(
     bool GizmoVisible,
     Vector3d GizmoPosition,
     bool RotateGizmoVisible = false,
-    double RotateGizmoWorldRadius = 1.2)
+    double RotateGizmoWorldRadius = 1.2,
+    bool ScaleGizmoVisible = false,
+    double ScaleGizmoWorldRadius = 1.2,
+    Vector3d GizmoRotation = default)
 {
     public int EntityCount => Entities.Count;
 }

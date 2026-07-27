@@ -54,23 +54,43 @@ public sealed unsafe partial class VulkanClearFrameOwner
                     _vk.CmdDraw(cb, RenderDrawPlan.OutlineRibbonVertexCount, 1, 0, 0);
                 }
             }
-            if (_renderProjection.GizmoVisible || _renderProjection.RotateGizmoVisible)
+            if (_renderProjection.GizmoVisible || _renderProjection.RotateGizmoVisible || _renderProjection.ScaleGizmoVisible)
                 DrawActiveGizmo(cb, pScene, _renderProjection);
         }
     }
 
     const uint MoveGizmoVertexCount = 39;
     const uint RotateGizmoVertexCount = 867;
+    const uint ScaleGizmoVertexCount = 252;
 
     void DrawActiveGizmo(CommandBuffer cb, float* scene, RenderProjection projection)
     {
-        // 旋转 Gizmo 环的世界半径已由 CPU 用 DIP 视口算好并贯穿进来（屏幕空间恒定尺寸）；
-        // 此处直接使用，保证绘制层与命中层在同一世界半径下一致。
+        // Scale Gizmo 轴长（worldAxisLength）与实体旋转（GizmoRotation）由 CPU 用 DIP 视口算好并贯穿进来
+        // （屏幕空间恒定尺寸，命中层与绘制层共用）；此处直接使用，保证绘制与命中一致。
+        Vector3d gizmoRotation;
+        double worldRadius;
+        uint count;
+        if (projection.ScaleGizmoVisible)
+        {
+            gizmoRotation = projection.GizmoRotation;
+            worldRadius = projection.ScaleGizmoWorldRadius;
+            count = ScaleGizmoVertexCount;
+        }
+        else if (projection.RotateGizmoVisible)
+        {
+            gizmoRotation = Vector3d.Zero;
+            worldRadius = projection.RotateGizmoWorldRadius;
+            count = RotateGizmoVertexCount;
+        }
+        else
+        {
+            gizmoRotation = Vector3d.Zero;
+            worldRadius = projection.RotateGizmoWorldRadius;
+            count = MoveGizmoVertexCount;
+        }
         FillScenePushConstants(scene, projection, projection.GizmoPosition,
-            Vector3d.Zero, new Vector3d(1, 1, 1),
-            (float)projection.RotateGizmoWorldRadius);
+            gizmoRotation, new Vector3d(1, 1, 1), (float)worldRadius);
         PushSceneConstants(cb, scene);
-        var count = projection.RotateGizmoVisible ? RotateGizmoVertexCount : MoveGizmoVertexCount;
         _vk.CmdDraw(cb, count, 1, 0, 0);
     }
 
