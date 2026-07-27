@@ -1,3 +1,4 @@
+using XuanYu.Core.Identity;
 using XuanYu.Core.Scene;
 using XuanYu.Render.Abstractions;
 
@@ -14,11 +15,13 @@ public static class SceneRenderProjectionAdapter
             return RenderProjectionResult.Fail("Render Projection 缺少显式 Camera。");
         }
 
+        var selectedKey = snapshot.IsSelected ? snapshot.Entity.EntityKey : EntityId.None;
         var entities = snapshot.Entities
             .Select(e =>
             {
                 var t = snapshot.TransformFor(e);
-                return new RenderEntityProjection(e.EntityKey, t.Position, t.Rotation, t.Scale);
+                return new RenderEntityProjection(e.EntityKey, t.Position, t.Rotation, t.Scale,
+                    e.EntityKey == selectedKey);
             })
             .ToArray();
         var projection = new RenderProjection(

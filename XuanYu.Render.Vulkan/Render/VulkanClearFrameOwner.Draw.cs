@@ -40,8 +40,15 @@ public sealed unsafe partial class VulkanClearFrameOwner
             for (var i = 0; i < entities.Count; i++)
             {
                 var e = entities[i];
+                if (e.IsSelected)
+                {
+                    FillScenePushConstants(pScene, _renderProjection,
+                        e.Position, e.Rotation, e.Scale, 0.0f, 1.0f);
+                    PushSceneConstants(cb, pScene);
+                    _vk.CmdDraw(cb, 3, 1, 0, 0);
+                }
                 FillScenePushConstants(pScene, _renderProjection,
-                    e.Position, e.Rotation, e.Scale, 0.0f);
+                    e.Position, e.Rotation, e.Scale, 0.0f, 0.0f);
                 PushSceneConstants(cb, pScene);
                 _vk.CmdDraw(cb, 3, 1, 0, 0);
             }
@@ -70,36 +77,5 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk.CmdPushConstants(cb, _pipelineLayout,
             ShaderStageFlags.VertexBit, 0,
             VulkanScenePushConstants.SizeInBytes, scene);
-    }
-
-    void FillScenePushConstants(float* target, RenderProjection projection, Vector3d position,
-        Vector3d rotation, Vector3d scale, float gizmoRingRadius)
-    {
-        var viewport = new ViewportState(
-            0,
-            0,
-            _extent.Width,
-            _extent.Height,
-            (int)_extent.Width,
-            (int)_extent.Height,
-            1,
-            _swapchainOwner.ResourceGeneration);
-        var camera = projection.Camera with { Revision = _swapchainOwner.ResourceGeneration };
-        var state = camera.ToViewProjection(viewport);
-        var vulkanProjection = ToVulkanProjection(state.Projection);
-        var viewProjection = state.View * vulkanProjection;
-        FillMatrixTranspose(target, viewProjection);
-        target[16] = (float)position.X;
-        target[17] = (float)position.Y;
-        target[18] = (float)position.Z;
-        target[19] = 1.0f;
-        target[20] = projection.RotateGizmoVisible ? 1.0f : 0.0f;
-        target[21] = gizmoRingRadius;
-        target[24] = (float)rotation.X;
-        target[25] = (float)rotation.Y;
-        target[26] = (float)rotation.Z;
-        target[28] = (float)scale.X;
-        target[29] = (float)scale.Y;
-        target[30] = (float)scale.Z;
     }
 }

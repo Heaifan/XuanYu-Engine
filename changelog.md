@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.20.15-fix
+WORLD-B-R4-R3 选中实体视口轮廓高亮（2026-07-27）
+- 任务目标：R4 真机缺陷"选中缺少 Blender 式轮廓高亮"本轮实装。三条冻结目标：(1) 选中实体在视口有清晰轮廓；(2) A→B 切换立即同步轮廓、无残留/无 1 帧延迟；(3) 轮廓由同一 SelectionKey 经 Select/Rotate 工具与层级树统一驱动，与 Gizmo 一致。视觉：浅蓝白/青色亮轮廓，非荧光/高饱和/红，非填充/红点/文字。禁项：F5、缩放重构、hover、多选、框选、材质系统、渲染重写。
+- 根因与方案：实体为程序化三角形（无顶点缓冲/法线、无深度缓冲、画家序），故采用零重构"先画放大浅蓝白三角作底、实体三角随后压顶"形成轮廓；多实体同屏渲染（UiVm.Scene 把全部 world entities 作为 RenderEntities），故轮廓必须跟随显式 `IsSelected` 标志，而非"列表内即选中"。
+- 修复落点：
+  - 投影层：`RenderEntityProjection` 增加 `IsSelected`；`SceneRenderProjectionAdapter` 按 `snapshot.IsSelected && e.EntityKey == snapshot.Entity.EntityKey` 标记当前选中实体。
+  - 渲染层：`scene.vert` 新增 `outlineMode` push constant（@88 / index 22），>0.5 时放大本地点 1.16 并以浅蓝白 `vec4(0.80,0.90,1.0,1.0)` 着色；`VulkanClearFrameOwner.Draw` 对 `IsSelected` 实体先以 outlineMode=1 画底三角、再以 outlineMode=0 画实体；`ShaderBytecode.Vert` 重生成容纳新 SPIR-V（1622 字）。
+  - 文件拆分布局：因 Draw 文件加入轮廓后超 5+100 硬门禁（107 行），将 `FillScenePushConstants` 抽入新建 `VulkanClearFrameOwner.PushConstants.cs`（同 partial 类），主 Draw 文件回到 82 行。
+  - 测试：`SceneRenderProjectionAdapterTests.Selection`（选中实体 IsSelected=true、非选中 false、切到 B 仅 B 标记）。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.15-fix`；`file-tree.md` 登记新增 `SceneRenderProjectionAdapterTests.Selection.cs` 与 `VulkanClearFrameOwner.PushConstants.cs`，并补充 `RenderEntityProjection`/`SceneRenderSnapshot`/`SceneRenderProjectionAdapter`/`ShaderBytecode.Vert`/`VulkanClearFrameOwner.Draw`/`scene.vert` 本轮变更说明。
+- 状态：**R4 仍 FAIL、未 CLOSED，禁止 F5**。本轮只解决"轮廓高亮"，其余 R4 缺陷（旋转可视/尺寸/日志/切换）已分别由 R4-R1/R2 处理，须统一真机复测通过后才可宣布 R4 CLOSED。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全项目 **0W0E**（GOV 串行）；`dotnet test --no-build --no-restore` 串行 **Core 98 passed / 0 failed**、**World 148 passed / 0 failed**（合计 246，较 R2 净增 3）；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过）。
+
 ## v0.2.20.14-fix
 WORLD-B-R4-R2 选择与旋转目标一致性修复（2026-07-27）
 - 任务目标：R4 真机缺陷（旋转工具激活时不能直接点其他实体切换 Gizmo、选择/旋转目标疑似不同步有延迟感、缺旋转日志、环尺寸不合适）中，本轮只修前三类与尺寸，并把"全链路单一权威选中实体"固化；**不碰选择轮廓（已冻结为 R4-R3）、不进入 F5、不顺手修历史文档**。

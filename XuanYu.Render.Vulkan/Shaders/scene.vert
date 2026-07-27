@@ -5,6 +5,7 @@ layout(push_constant) uniform ScenePush {
     vec4 worldPosition;
     float gizmoMode;
     float gizmoRingRadius;
+    float outlineMode;
     vec4 entityRotation;
     vec4 entityScale;
 } pc;
@@ -73,11 +74,13 @@ void main() {
     vec3 world;
     if (gl_VertexIndex < 3) {
         // 实体三角形：应用缩放 → 旋转 → 平移，使世界 Rotation/Scale 真正影响画面。
+        // R4-R3：outlineMode=1 时先放大作底（浅蓝白），实体三角形随后压顶形成轮廓高亮。
         vec3 local = triangleVertex(gl_VertexIndex);
+        if (pc.outlineMode > 0.5) local = local * 1.16;
         local = local * pc.entityScale.xyz;
         local = eulerRot(pc.entityRotation.xyz) * local;
         world = local + pc.worldPosition.xyz;
-        outColor = vec4(1.0, 0.85, 0.2, 1.0);
+        outColor = pc.outlineMode > 0.5 ? vec4(0.80, 0.90, 1.0, 1.0) : vec4(1.0, 0.85, 0.2, 1.0);
     } else if (pc.gizmoMode < 0.5) {
         int gi = gl_VertexIndex - 3;
         if (gi < 18) {

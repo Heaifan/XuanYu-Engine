@@ -7,4 +7,5 @@ public readonly record struct RenderEntityProjection(
     EntityId Key,
     Vector3d Position,
     Vector3d Rotation,
-    Vector3d Scale);
+    Vector3d Scale,
+    bool IsSelected = false);
