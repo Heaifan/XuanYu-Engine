@@ -20,7 +20,7 @@ WORLD-B-R4-R3-R2 选中实体外轮廓边带 + Present 同步顺序修正（2026
   - 保留 B/C/D/E（`WorldRotateTransformUiTests.R4R3R1` + `SceneRenderProjectionAdapterTests.Selection`）作为投影层证据，但明确不作为 GPU Present 证据。
 - 本轮补修（工作树既有 R4-R3-R2 实装经核验后的缺口）：`ShaderBytecode.Vert.cs` 既有重生成被截断（495 行、末行 `0x0003003Eu, 0x000` 半字）→ 用 `glslc` 重新生成并 Python 转 C# 数组还原完整 4366 字 SPIR-V（紧凑 60 字/行，85 行，满足 5+100）；`FrameExecutionPolicyTests.cs` 原对 `IReadOnlyList` 误用 `.IndexOf` 编译失败 → 改为本地 `StepIndex` 索引查找。
 - 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.17-fix`；`file-tree.md` 更新渲染层描述（ShaderBytecode.Vert/Frag、VulkanScenePushConstants、VulkanClearFrameOwner.Draw/PushConstants、scene.vert/frag、VulkanPresentLoop.Frame/主体、Render.Abstractions 新增 RenderDrawPlan/FrameExecutionPolicy）。
-- 状态：**R4 仍 FAIL、未 CLOSED，禁止 F5**。本轮把"轮廓高亮"从不可见重心坐标内线改为 Blender 式 18 顶点外轮廓边带，并修正真正导致旋转呈现滞后的 Vulkan 同步顺序；其余 R4 缺陷须统一真机复测通过后才可宣布 R4 CLOSED。
+- 状态：**WORLD-B-R4 CLOSED（2026-07-27 用户真机裁定）**。用户真机验收裁定：选中轮廓 PASS、旋转实时预览 PASS、目标切换 PASS、Undo PASS；18 顶点外轮廓边带 + Vulkan 同步顺序修正经真机验收通过。R4 收口，禁止重开；立即进入 WORLD-B-R5（候选 v0.2.20.18-rz Scale Gizmo 缩放闭环）。
 - 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行）；`dotnet test` 串行 **Core 111 passed / 0 failed**、**World 151 passed / 0 failed**；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过，含 ShaderBytecode.Vert.cs 85 行 <100）。
 
 ## v0.2.20.16-fix
