@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.20.19-fix
+WORLD-B-R5-R1 Scale Gizmo 尺寸与整体缩放可发现性修复（2026-07-31）
+- 任务目标：修复 v0.2.20.18-rz 真机验收退回项——Scale Gizmo 视觉尺寸过大、遮挡实体和场景，中心 `Uniform` 整体等比缩放手柄不可发现/不可理解或难以稳定命中。状态从 R5 待验收转为 R5-R1 修复完成后等待真机重新验收；不得宣布 R5 CLOSED，不进入 F6，不进入 WarCore。
+- 修复落点（Core Gizmo）：`ScaleGizmoScreenSize` 将主体屏幕轴长从 90 DIP 缩至 63 DIP（约 70%），端点手柄从 11 DIP 缩至 8 DIP，中心视觉尺寸调为 15 DIP，并新增 `CenterHitRadiusDip=12`；`ScaleGizmoHitTester` 改为中心 Uniform 核心区先裁决，X/Y/Z 轴段从中心核心区外参与命中，避免中心拖动误判为单轴。
+- 修复落点（Render + UI）：`scene.vert` 保持 Scale Gizmo 252 顶点结构，随 63 DIP 世界轴长整体缩小，并把中心白色 Uniform 立方体半径调为 `L*0.15`，使中心形状独立可见；`ShaderBytecode.Vert.cs` 由 glslc 从正式 GLSL 重新生成。`UiVm.ScaleGizmo.cs` 补低频“缩放开始捕获 Entity=... Handle=...”日志；`UiVm.MoveGizmoLogging.cs` 在缩放 Commit / Cancel 中补 `Handle` 与最终 Scale / Reason，支撑真机区分 Uniform 与 X/Y/Z。
+- 保持语义：未修改 `TransformSession → SceneStateOwner → GlobalWorld` 提交链；未改实体 Transform、相机参数、Move/Rotate Gizmo、Preview/Commit/Cancel/Undo/Redo 语义；未新增多选、Pivot、吸附、数值输入、Global/Local、负缩放、WarCore。
+- 测试变化：新增 `ScaleGizmoTests.R5R1.cs` 覆盖中心 Uniform 优先命中、中心外单轴命中、Uniform Preview 按同倍率保持原比例、63 DIP 尺寸契约和距离稳定性；新增 `WorldScaleTransformUiTests.R5R1.cs` 覆盖 Y/Z 单轴回归、Uniform 一次提交一条 History、Undo/Redo、Escape 后延迟 MouseUp 不提交。
+- 验证（本轮实测，非沿用）：首次沙箱内 `dotnet build XuanYu.Engine.slnx --no-restore -m:1 -nr:false -p:UseSharedCompilation=false` 因 Avalonia BuildServices 写 `C:\Users\Heai\AppData\Local\AvaloniaUI\BuildServices\buildtasks.log` 权限失败（0 warning / 2 errors），授权后同命令通过，全 10 项目 **0W0E**；`dotnet test XuanYu.Core.Tests\XuanYu.Core.Tests.csproj --no-build -m:1 -nr:false` **129 passed / 0 failed / 0 skipped**；`dotnet test XuanYu.World.Tests\XuanYu.World.Tests.csproj --no-build -m:1 -nr:false` **163 passed / 0 failed / 0 skipped**。后续守卫、diff、5+100 与 push 结果见本轮最终回复。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md`、`changelog.md` 同步到 `v0.2.20.19-fix`；更新 `docs/world-b-r5-scale-transform-report.md`，明确 v0.2.20.18-rz 真机退回、R5-R1 修复和“等待真机重新验收、未 CLOSED”。
+
 ## v0.2.20.18-rz
 WORLD-B-R5 Scale Gizmo 缩放变换闭环（2026-07-27 22:32:12）
 - 任务目标：在 R4（移动/旋转）基础上补齐第三变换工具——Scale Gizmo 缩放闭环；三轴 X/Y/Z 单轴只改对应 Scale 分量、中心 Uniform 三轴等比；实体局部 Scale 语义、下限 0.01、拒绝 0/负/NaN/Infinity；闭环 PointerDown→Begin→Preview→Commit→Escape Cancel→Undo/Redo，实时预览、单次提交、松手无跳变、工具内切换实体、轮廓同步。冻结：不进 Local/多选/Pivot/吸附/数值输入/负缩放/镜像/父子传播/重开 R4/重构稳定 Vulkan Fence/顺手清文档/扩范围。

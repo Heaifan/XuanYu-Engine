@@ -1,4 +1,4 @@
-版本：v0.2.20.18-rz
+版本：v0.2.20.19-fix
 # XuanYu Engine 文件树
 
 文件总数：543
@@ -129,7 +129,7 @@
 - `docs/world-b-r2-selection-tool-state.svg`：WORLD-B-R2 选择与工具状态闭环图；展示视口/层级、SelectionState、检查器/控制柄和 ToolMode 的同源关系，不承载运行时代码。
 - `docs/world-b-r3-move-transform-closure.md`：WORLD-B-R3 移动变换闭环报告；记录单轴/平面移动、取消、Undo/Redo、跨 Region、输入互斥、中文 IPO 真机清单和 CLOSED 裁定，不承载运行时代码。
 - `docs/world-b-r3-move-transform-closure.svg`：WORLD-B-R3 移动变换闭环浅色中文图；展示控制柄、移动会话、World 权威、一致投影和输入优先级，不承载运行时代码。
-- `docs/world-b-r5-scale-transform-report.md`：WORLD-B-R5 Scale Gizmo 缩放变换闭环报告；记录本轮实装、自动验证、中文 IPO 真机验收清单和“等待真机验收、未 CLOSED”状态，不承载运行时代码。
+- `docs/world-b-r5-scale-transform-report.md`：WORLD-B-R5 Scale Gizmo 缩放变换闭环报告；记录 R5 实装、v0.2.20.18-rz 真机退回、R5-R1 尺寸/Uniform 可发现性修复、自动验证、中文 IPO 真机复验清单和“等待真机重新验收、未 CLOSED”状态，不承载运行时代码。
 - `docs/world-b-r5-scale-transform.svg`：WORLD-B-R5 缩放闭环状态图；展示 SelectionKey、TransformSession、ScaleGizmoDrag、SceneRenderSnapshot、RenderProjection 与 Vulkan 绘制链路，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
@@ -207,9 +207,9 @@
 - `XuanYu.Core/Gizmo/RotateGizmoDrag.Math.cs`：Rotate Gizmo 稳定旋转数学分部；纯方法 `PlaneAngle` 与 `TryInitialize`（指针按下初始化角度、无效射线交返回 false 拒绝捕获），欧拉角度分量独立回绕 ±180（WORLD-B-R4-F4 + R4-R1 首帧吞角修复）。
 - `XuanYu.Core/Gizmo/RotateGizmoScreenRadius.cs`：Rotate Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R4-R1，WORLD-B-R4-R2 将目标屏幕半径由 120 DIP 调至 90 DIP 使近远相机下尺寸更合理且减少误触）；按相机深度、FOV 与视口逻辑高度把目标屏幕半径（90 DIP）反算为世界半径，供 CPU 命中测试与 Shader 共用同一公式，做到"所见即所命中"且任意 DPI 一致。
 - `XuanYu.Core/Gizmo/ScaleGizmoAxis.cs`：Scale Gizmo 世界轴身份与手柄身份；定义 `ScaleGizmoAxis`（X/Y/Z）与 `ScaleGizmoHandle`（X/Y/Z/Uniform），Uniform 跨三轴等比，不承担 Transform 或渲染状态（WORLD-B-R5）。
-- `XuanYu.Core/Gizmo/ScaleGizmoScreenSize.cs`：Scale Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R5）；`TargetScreenAxisDip=90`、`HandleScreenSizeDip=11`、`CenterScreenSizeDip=13`，按相机深度/FOV/视口逻辑高度反算世界轴长（`ComputeWorldAxisLength`），供 CPU 命中与 Shader 共用同一公式。
+- `XuanYu.Core/Gizmo/ScaleGizmoScreenSize.cs`：Scale Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R5-R1）；`TargetScreenAxisDip=63`、`HandleScreenSizeDip=8`、`CenterScreenSizeDip=15`、`CenterHitRadiusDip=12`，按相机深度/FOV/视口逻辑高度反算世界轴长（`ComputeWorldAxisLength`），供 CPU 命中与 Shader 共用同一公式。
 - `XuanYu.Core/Gizmo/ScaleGizmoLayout.cs`：Scale Gizmo 屏幕投影；生成中心立方体与三轴端点（X/Y/Z 各沿对应世界轴），按实体 Rotation 经欧拉旋转（Rz·Ry·Rx，与 shader 一致）使轴跟随朝向，不访问 Scene/Vulkan。
-- `XuanYu.Core/Gizmo/ScaleGizmoHitTester.cs`：Scale Gizmo 命中测试；中心立方体命中为 Uniform、三轴线段命中对应 X/Y/Z 轴，margin=5 DIP（WORLD-B-R5）。
+- `XuanYu.Core/Gizmo/ScaleGizmoHitTester.cs`：Scale Gizmo 命中测试（WORLD-B-R5-R1）；中心 Uniform 核心区先裁决，X/Y/Z 轴线段从中心核心区外参与命中，避免中心整体缩放误判为单轴，margin=5 DIP。
 - `XuanYu.Core/Gizmo/ScaleGizmoDrag.cs`：Scale Gizmo 拖动状态主体；持有 StartScale/指针起点/轴方向，`Solve` 经 `ApplyFactor`（单轴只改对应分量、Uniform 三轴同乘）以 exp 因子（从 StartScale，非累积）解算预览 Scale，并 Clamp 到 MinimumScale=0.01（WORLD-B-R5）。
 
 - `XuanYu.Core/XuanYu.Core.csproj`：核心类库项目文件。
@@ -293,6 +293,7 @@
 - `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.Drag.cs`：WORLD-B-R5 ScaleGizmoTests 拖动分部；覆盖 X/Y/Z 单轴只改自身、Uniform 三轴相等。
 - `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.DragSafety.cs`：WORLD-B-R5 ScaleGizmoTests 安全分部；覆盖零位移保持、负向 Clamp 到下限、NaN 回落 Clamp、更远拉更大。
 - `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.Helpers.cs`：WORLD-B-R5 ScaleGizmoTests 辅助分部；集中构造布局、拖拽起点和屏幕拉动向量，避免主测试文件超过 100 行。
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.R5R1.cs`：WORLD-B-R5-R1 ScaleGizmoTests 修复分部；覆盖中心 Uniform 优先命中、中心外单轴命中、Uniform 按同倍率保持原比例、63 DIP 尺寸常量和距离稳定性。
 - `XuanYu.Core.Tests/Gizmo/RotateGizmoLayoutTests.cs`：WORLD-B-R4-F4 Rotate Gizmo 屏幕投影与轴环命中测试；WORLD-B-R4-R1 扩 `Custom_world_radius_scales_ring_screen_radius`，断言显式世界半径线性放大环屏幕半径。
 - `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.cs`：R5 Render Projection 适配器测试；覆盖缺相机失败、显式相机矩阵等价、Preview 与 Gizmo 在跨 Render 边界前解析。WORLD-B-R4-R1 拆出 `SceneRenderProjectionAdapterTests.Rotation.cs` 偏部（实体 Rotation/Scale 下传、显式旋转环世界半径透传、不显示时回落默认半径）。
 - `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.Selection.cs`：WORLD-B-R4-R3 选中实体轮廓高亮投影测试；覆盖选中实体 `IsSelected=true`、非选中 `IsSelected=false`、切到 B 仅 B 标记，验证轮廓由显式 `IsSelected` 而非实体列表成员决定。
@@ -334,6 +335,7 @@
 - `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Target.cs`：WORLD-B-R5 缩放目标切换与 Resize 测试分部；覆盖空白不 Begin、缩放工具下点击 B 后首拖只改 B、Resize 后世界轴长正且有界。
 - `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Helpers.cs`：WORLD-B-R5 缩放 UiVm 测试辅助分部；集中构造测试 Vm、第二实体和 History 反射入口。
 - `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Pointer.cs`：WORLD-B-R5 缩放 UiVm 指针辅助分部；集中构造 Scale Gizmo 命中点、拖动点和实体屏幕点，确保测试命中与生产布局同源。
+- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.R5R1.cs`：WORLD-B-R5-R1 缩放 UiVm 修复分部；覆盖 Y/Z 单轴回归、Uniform 一次提交一条 History、Undo/Redo 和 Escape 后延迟 MouseUp 不提交。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
@@ -418,7 +420,7 @@
 - `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs`：Vulkan 队列族选择结果。
 - `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs`：Vulkan Resize 追踪诊断工具。
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs`：片元着色器 SPIR-V 字节码；WORLD-B-R4-R3-R2 重生成，改为直接透传基础色（轮廓由顶点着色器外轮廓边带生成，不再使用重心坐标 fwidth 内部边线）。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：顶点着色器 SPIR-V 字节码；WORLD-B-R4-R3-R2 重生成以容纳 `selectionMode` push constant（0/1=填充、2=外轮廓边带）与 `outlineRibbonVertex` 18 顶点外轮廓边带生成逻辑（屏幕空间定宽，复用 `entityRotation.w`/`entityScale.w` 为 viewportWidth/Height）。WORLD-B-R5 再次重生成以容纳 Scale Gizmo：`gizmoMode`（@80 / index 20，0=Move/1=Rotate/2=Scale）、`scaleVertex(vi)`（三轴条+三轴端立方体+中心立方体共 252 顶点，按 `gizmoMode>1.5` 经 `eulerRot(pc.entityRotation.xyz)` 跟随朝向、按轴红/绿/蓝或中心白色着色，复用 `gizmoRingRadius` 为世界轴长），80 字/行紧凑 75 行满足 5+100。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：顶点着色器 SPIR-V 字节码；WORLD-B-R4-R3-R2 重生成以容纳 `selectionMode` push constant（0/1=填充、2=外轮廓边带）与 `outlineRibbonVertex` 18 顶点外轮廓边带生成逻辑。WORLD-B-R5/R5-R1 再次重生成以容纳 Scale Gizmo：`gizmoMode`（@80 / index 20，0=Move/1=Rotate/2=Scale）、`scaleVertex(vi)`（三轴条+三轴端立方体+中心立方体共 252 顶点，中心半径 R5-R1 调为 `L*0.15`，复用 `gizmoRingRadius` 为 63 DIP 世界轴长），紧凑 77 行满足 5+100。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`：Vulkan 图形管线生命周期持有者。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：Vulkan 管线日志格式化器。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；128 字节（32 float）std140；@88 / index 22 为 `selectionMode`（0/1=填充、2=外轮廓边带）；复用 `entityRotation.w`（target 27）= viewportWidth、`entityScale.w`（target 31）= viewportHeight 供屏幕空间定宽边带；负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
@@ -430,7 +432,7 @@
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan ClearFrame 绘制分部；只消费 Render Projection，负责翻转 Core Projection 副本 Clip Y、写入 push constant 并绘制场景实体与 Move Gizmo 三轴/三平面（WORLD-B-R4-R3-R2 每实体先 `Fill(3)` 单次填充，选中实体再追加 `OutlineRibbon(18)` 外轮廓边带，顶点数取自 `RenderDrawPlan.FillVertexCount`/`OutlineRibbonVertexCount`；废除重心坐标内部边线与放大复制面）。WORLD-B-R5 新增 Scale Gizmo 分发：`ScaleGizmoVertexCount=252`（36 顶点/轴条×3 + 36 顶点/轴端立方体×3 + 36 顶点中心立方体），`DrawActiveGizmo` 按 `gizmoMode` 切换——Scale 取 `GizmoRotation=entityRotation`/`worldRadius=ScaleGizmoWorldRadius`/`count=252`，Rotate 取 Rotation=Zero/`RotateGizmoWorldRadius`，否则 Move；dispatch 条件增 `ScaleGizmoVisible`。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PushConstants.cs`：Vulkan ClearFrame push constant 填充分部（WORLD-B-R4-R3-R1 从 Draw 拆出以满足 5+100）；`FillScenePushConstants` 写入 viewProjection、实体位移/旋转/缩放、Gizmo 环半径与 `selectionMode`（@88 / index 22）；WORLD-B-R4-R3-R2 新增 `target[27]=entityRotation.w=viewportWidth`、`target[31]=entityScale.w=viewportHeight`，供 18 顶点外轮廓边带屏幕空间定宽。WORLD-B-R5 新增 `target[20]=gizmoMode`（0=Move/1=Rotate/2=Scale），由 `ScaleGizmoVisible?2:(RotateGizmoVisible?1:0)` 推导。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Matrix.cs`：Vulkan ClearFrame 矩阵辅助分部；提供 push constant 矩阵转置和 Vulkan Clip Y 投影副本转换，不持有渲染资源生命周期。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与 Move Gizmo 三轴/三平面顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试（WORLD-B-R4-R3-R2 删除重心坐标 `vBary` 方案，新增 `outlineRibbonVertex`：选中实体（`selectionMode>1.5`）按原始三角三边各生成 2 三角形共 18 顶点外轮廓边带，NDC 边方向取垂直分量按 `perp*(halfWidth*2.0/vec2(vpW,vpH))` 屏幕空间偏移，halfWidth=1.5px≈3 DIP 全宽，颜色 `vec3(0.80,0.90,1.0)`；`entityRotation.w`/`entityScale.w` 复用为 viewportWidth/Height）。WORLD-B-R5 新增 `cube(center,halfExtent,li)` 与 `scaleVertex(vi)`：当 `gizmoMode>1.5` 时生成 Scale Gizmo——三轴条（红 X/绿 Y/蓝 Z）+ 三轴端立方体 + 中心白色立方体共 252 顶点，全部经 `eulerRot(pc.entityRotation.xyz)` 跟随实体朝向，世界轴长取自 `gizmoRingRadius`，颜色按轴/中心区分。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与 Move Gizmo 三轴/三平面顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。WORLD-B-R5 新增 `cube(center,halfExtent,li)` 与 `scaleVertex(vi)`；WORLD-B-R5-R1 保持 252 顶点绘制结构，随 63 DIP 世界轴长整体缩小 Scale Gizmo，并将中心白色 Uniform 立方体半径调为 `L*0.15` 以提升可发现性。
 - `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；WORLD-B-R4-R3-R2 改为直接透传基础色 `outColor=vec4(vBaseColor.rgb,1.0)`，删除重心坐标 `fwidth` 内部边线逻辑（轮廓改由顶点着色器外轮廓边带生成），不负责 Pipeline 生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。
@@ -550,7 +552,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 轴/平面 Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。WORLD-B-R4-R2 去掉 `OwnerTool!="移动"` 限制，旋转提交/取消同样记录并带 EntityKey 与旋转前后；WORLD-B-R5 增 `缩放` 同格式日志（前后 Scale X/Y/Z），仍不记录 PointerMove。
-- `XuanYu.Editor.UI/Vm/UiVm.ScaleGizmo.cs`（WORLD-B-R5）：Scale Gizmo 适配分部；`ScaleGizmoDrag? _scaleDrag` 状态、`TryBeginScaleGizmoCapture`（命中中心→Uniform、三轴→对应轴、构造 `ScaleGizmoLayout.Project`+`ScaleGizmoHitTester.HitTest`+`TransformSession.BeginScale`+轴屏幕方向）与 `PreviewScaleGizmo`（拖拽 `Solve`→`TryPreviewScale`→`PublishSceneRenderSnapshot`），"缩放"工具下点击非 Gizmo 区域仍允许切换选择，复用 Selection/Camera/Render 既有链路，不拥有 Capture。
+- `XuanYu.Editor.UI/Vm/UiVm.ScaleGizmo.cs`（WORLD-B-R5-R1）：Scale Gizmo 适配分部；`ScaleGizmoDrag? _scaleDrag` 状态、`TryBeginScaleGizmoCapture`（中心 Uniform 优先命中、三轴→对应轴、构造 `ScaleGizmoLayout.Project`+`ScaleGizmoHitTester.HitTest`+`TransformSession.BeginScale`+轴屏幕方向，并记录低频 `缩放开始捕获 Entity=... Handle=...` 日志）与 `PreviewScaleGizmo`（拖拽 `Solve`→`TryPreviewScale`→`PublishSceneRenderSnapshot`），复用 Selection/Camera/Render 既有链路，不拥有 Capture。
 - `XuanYu.Editor.UI/Vm/UiVm.RenderProjection.cs`：UiVm Render Projection 创建分部；从 `SceneRenderSnapshot.RenderTransform` 读取 Preview 后的位置、缩放和旋转来计算 Rotate / Scale Gizmo 投影，保证缩放 Preview 时实体、轮廓与 Gizmo 同步。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令、组合快照与 Render Projection 发布分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo 与 ShowScaleGizmo（WORLD-B-R5 `ShowScaleGizmo` 由 ActiveTool==Scale 且已选中驱动）。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。

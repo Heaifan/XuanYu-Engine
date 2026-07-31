@@ -11,18 +11,23 @@ public static class ScaleGizmoHitTester
         ScaleGizmoLayout layout, double x, double y, double margin = HitMargin)
     {
         if (!double.IsFinite(x) || !double.IsFinite(y)) return null;
-        var candidates = new (ScaleGizmoHandle handle, double dist, double half)[]
+        var centerRadius = System.Math.Max(
+            ScaleGizmoScreenSize.CenterHitRadiusDip,
+            layout.CenterSizeDip / 2.0 + margin);
+        if (DistToPoint(layout.Center, x, y) <= centerRadius)
+            return ScaleGizmoHandle.Uniform;
+
+        var candidates = new (ScaleGizmoHandle handle, double dist)[]
         {
-            (ScaleGizmoHandle.Uniform, DistToPoint(layout.Center, x, y), layout.CenterSizeDip / 2.0),
-            (ScaleGizmoHandle.X, DistToSegment(layout.Center, layout.AxisEnd[0], x, y), layout.HandleSizeDip / 2.0),
-            (ScaleGizmoHandle.Y, DistToSegment(layout.Center, layout.AxisEnd[1], x, y), layout.HandleSizeDip / 2.0),
-            (ScaleGizmoHandle.Z, DistToSegment(layout.Center, layout.AxisEnd[2], x, y), layout.HandleSizeDip / 2.0),
+            (ScaleGizmoHandle.X, DistToAxisOutsideCenter(layout, 0, x, y, centerRadius)),
+            (ScaleGizmoHandle.Y, DistToAxisOutsideCenter(layout, 1, x, y, centerRadius)),
+            (ScaleGizmoHandle.Z, DistToAxisOutsideCenter(layout, 2, x, y, centerRadius)),
         };
         ScaleGizmoHandle? best = null;
         var bestEff = double.MaxValue;
         foreach (var c in candidates)
         {
-            var eff = c.dist - c.half;
+            var eff = c.dist - layout.HandleSizeDip / 2.0;
             if (eff <= margin && eff < bestEff) { bestEff = eff; best = c.handle; }
         }
         return best;
@@ -39,5 +44,19 @@ public static class ScaleGizmoHitTester
         t = System.Math.Max(0.0, System.Math.Min(1.0, t));
         var px = a.X + t * dx; var py = a.Y + t * dy;
         return System.Math.Sqrt((px - x) * (px - x) + (py - y) * (py - y));
+    }
+
+    static double DistToAxisOutsideCenter(
+        ScaleGizmoLayout layout, int axis, double x, double y, double centerRadius)
+    {
+        var a = layout.Center;
+        var b = layout.AxisEnd[axis];
+        var dx = b.X - a.X; var dy = b.Y - a.Y;
+        var len = System.Math.Sqrt(dx * dx + dy * dy);
+        if (len <= centerRadius) return double.MaxValue;
+        var start = new ScreenPoint(
+            a.X + dx * centerRadius / len,
+            a.Y + dy * centerRadius / len);
+        return DistToSegment(start, b, x, y);
     }
 }

@@ -7,9 +7,10 @@ namespace XuanYu.Core.Gizmo;
 // CPU 命中布局与 Vulkan 绘制共用同一世界轴长，保证“所看到 ≈ 点得到”。
 public static class ScaleGizmoScreenSize
 {
-    public const double TargetScreenAxisDip = 90.0;
-    public const double HandleScreenSizeDip = 11.0;
-    public const double CenterScreenSizeDip = 13.0;
+    public const double TargetScreenAxisDip = 63.0;
+    public const double HandleScreenSizeDip = 8.0;
+    public const double CenterScreenSizeDip = 15.0;
+    public const double CenterHitRadiusDip = 12.0;
 
     public static double ComputeWorldAxisLength(
         CameraState camera, ViewportState viewport, Vector3d origin)

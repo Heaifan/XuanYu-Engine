@@ -132,7 +132,7 @@ vec3 scaleVertex(int vi) {
         int li = vi % 36;
         vec3 a = (b == 0) ? vec3(1.0, 0.0, 0.0)
             : (b == 1 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0));
-        float bar = L * 0.03;
+        float bar = L * 0.035;
         vec3 halfExtent = (b == 0) ? vec3(L * 0.8, bar, bar)
             : (b == 1 ? vec3(bar, L * 0.8, bar) : vec3(bar, bar, L * 0.8));
         vec3 centerBox = a * (L * 0.42);
@@ -147,7 +147,7 @@ vec3 scaleVertex(int vi) {
         return eulerRot(pc.entityRotation.xyz) * cube(centerBox, halfExtent, li);
     } else {
         int li = vi - 216;
-        return cube(vec3(0.0), vec3(L * 0.12), li);
+        return cube(vec3(0.0), vec3(L * 0.15), li);
     }
 }
 

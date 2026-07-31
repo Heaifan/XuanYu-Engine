@@ -1,94 +1,116 @@
 # WORLD-B-R5 Scale Gizmo 缩放变换闭环报告
 
-版本：v0.2.20.18-rz
-日期：2026-07-27 22:32:12
+版本：v0.2.20.19-fix
+日期：2026-07-31
 分支：feat/WORLD-B-editor-interaction
-阶段：WORLD-B-R5：Scale Gizmo 缩放变换闭环
+阶段：WORLD-B-R5-R1：Scale Gizmo 尺寸与整体缩放可发现性修复
 
 ## 裁定
 
-本轮完成 R5 自动门禁实现，状态为等待真机验收。不得宣布 R5 CLOSED，不得启动 F6 / WarCore。
+v0.2.20.18-rz 已被真机验收退回：Scale Gizmo 在视口中过大，明显遮挡实体和场景；中心 `Uniform` 整体等比缩放手柄不可发现、不可理解或难以稳定命中。
 
-本轮只实现实体自身 TRS 的 X/Y/Z 局部分量缩放与中心 Uniform 等比缩放，不实现负缩放、镜像、多选、Pivot、吸附、数值输入、Local/Global 切换、父子传播或世界空间剪切。
+v0.2.20.19-fix 已完成 R5-R1 自动门禁修复，当前状态为等待真机重新验收。不得宣布 WORLD-B-R5 CLOSED，不得启动 F6 / WarCore。
 
-## 实现变化
+本轮仍只实现实体自身 TRS 的 X/Y/Z 局部分量缩放与中心 Uniform 等比缩放，不实现负缩放、镜像、多选、Pivot、吸附、数值输入、Local/Global 切换、父子传播或世界空间剪切。
 
-- Core 新增 Scale Gizmo 纯函数：轴/手柄身份、屏幕空间恒定尺寸、布局投影、命中测试和指数倍率拖动解算。
-- Editor 复用 `TransformSession`，新增 `BeginScale` 与 `ScaleHandle`，Preview / Commit / Cancel 仍走既有生命周期。
-- UI 在“缩放”工具下先尝试 Scale Gizmo 命中；未命中时保留 R4 的直接 Picking 切换实体逻辑。
-- Render Projection 新增 Scale Gizmo 可见性、世界轴长和朝向字段。
-- Vulkan shader 绘制三轴端方块与中心等比方块，按实体 Rotation 对齐局部轴。
-- RenderProjection 创建改读 Preview 后的 `RenderTransform`，保证预览缩放时实体、轮廓和 Gizmo 同步。
+## R5-R1 实现变化
+
+- `ScaleGizmoScreenSize` 将 Scale Gizmo 主体屏幕轴长从 90 DIP 缩小到 63 DIP，约为原尺寸 70%。
+- 端点手柄视觉尺寸从 11 DIP 缩小到 8 DIP，中心 Uniform 视觉尺寸调为 15 DIP。
+- 新增 `CenterHitRadiusDip=12`，保证中心整体缩放普通鼠标可稳定命中。
+- `ScaleGizmoHitTester` 改为中心 Uniform 核心区先裁决，X/Y/Z 轴段从中心核心区外参与命中。
+- `scene.vert` 保持现有 Scale Gizmo 252 顶点绘制结构，随 63 DIP 轴长整体缩小，并将中心白色 Uniform 立方体半径调为 `L*0.15`。
+- `ShaderBytecode.Vert.cs` 已由 glslc 从正式 `scene.vert` 重新生成。
+- `UiVm.ScaleGizmo.cs` 补充低频“缩放开始捕获 Entity=... Handle=...”日志。
+- `UiVm.MoveGizmoLogging.cs` 在缩放 Commit / Cancel 中补充 `Handle`、最终 Scale 和取消 Reason。
+
+## 保持不变
+
+- X 手柄只改变 Scale.X。
+- Y 手柄只改变 Scale.Y。
+- Z 手柄只改变 Scale.Z。
+- Uniform 使用同一倍率改变 Scale.X / Scale.Y / Scale.Z，并保持原始比例。
+- Preview 不绕过权威链写入最终状态。
+- Commit 仍通过 `TransformSession → SceneStateOwner → GlobalWorld`。
+- Escape 恢复捕获前 Scale，不提交历史记录。
+- 一次完整拖动只产生一次历史记录。
+- Undo / Redo 恢复完整 Scale。
+- 缩放工具内切换实体后，旧实体不接受延迟缩放。
 
 ## 自动验证
 
 ```text
-dotnet build .\XuanYu.Engine.slnx -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false
-结果：10 项目 0W0E
-
-dotnet test .\XuanYu.Core.Tests\XuanYu.Core.Tests.csproj --no-build --no-restore
-结果：125 passed / 0 failed / 0 skipped
-
-dotnet test .\XuanYu.World.Tests\XuanYu.World.Tests.csproj --no-build --no-restore
-结果：160 passed / 0 failed / 0 skipped
-
-git diff --check
+dotnet build-server shutdown
 结果：PASS
 
-5+100
-结果：PASS
+dotnet build XuanYu.Engine.slnx --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
+首次结果：0 warning / 2 errors
+阻断原因：Avalonia BuildServices 写 C:\Users\Heai\AppData\Local\AvaloniaUI\BuildServices\buildtasks.log 被拒绝
+授权后结果：10 项目 0 warning / 0 error
+
+dotnet test XuanYu.Core.Tests\XuanYu.Core.Tests.csproj --no-build -m:1 -nr:false
+结果：129 passed / 0 failed / 0 skipped
+
+dotnet test XuanYu.World.Tests\XuanYu.World.Tests.csproj --no-build -m:1 -nr:false
+结果：163 passed / 0 failed / 0 skipped
 ```
 
-首次沙箱内 build 因 NuGet 网络权限 NU1301 失败，未进入 C# 编译；授权非沙箱构建后通过。
+后续 `arch-a-guard`、`git diff --check`、5+100、最终 build-server shutdown、commit/push 与远端 tip 复核结果以本轮最终执行回复为准。
 
-## 真机验收清单
+## 真机重新验收卡
 
-#### 测试项目：显示 Scale Gizmo
+#### 测试 01：控件尺寸
 
-- 序号：01
-- 路径：运行 `run.bat` → 中央视口 → 左侧“层级” → 顶部“缩放”
-- 输入 I：
-  - 选择任意可见实体。
-- 过程 P：
-  1. 点击顶部工具栏“缩放”。
-  2. 拉近、拉远相机。
-  3. 查看三轴端方块和中心方块。
-- 输出 O：
-  - X/Y/Z 三轴与中心柄清晰可见。
-  - Gizmo 位于实体中心，尺寸随相机距离基本稳定。
-  - 浅蓝白轮廓仍存在，且不异常巨大或过小。
+- Input：运行 `run.bat`，选择实体，点击顶部“缩放”。
+- Process：观察 Scale Gizmo 与实体主体的相对尺寸。
+- Output：Gizmo 不再大面积遮挡实体。
 
-#### 测试项目：缩放闭环
+#### 测试 02：X 单轴缩放
 
-- 序号：02
-- 路径：顶部“缩放” → 中央视口 → 顶部“撤销”“重做”
-- 输入 I：
-  - 当前已选中一个实体并显示 Scale Gizmo。
-- 过程 P：
-  1. 分别拖动 X/Y/Z 控制柄。
-  2. 拖动中心等比控制柄。
-  3. 对一次缩放执行“撤销”和“重做”。
-  4. 拖动中按 Escape 后再松开鼠标。
-- 输出 O：
-  - 单轴只改变对应 Scale 分量，Uniform 三轴同倍率。
-  - Preview 实时变化，松手只提交一次。
-  - Undo 一次恢复，Redo 一次重现。
-  - Escape 恢复原 Scale，延迟 MouseUp 不提交。
+- Input：拖动 X 手柄。
+- Process：观察 Inspector Scale。
+- Output：只改变 X。
 
-#### 测试项目：缩放工具内切换实体
+#### 测试 03：Y 单轴缩放
 
-- 序号：03
-- 路径：顶部“缩放” → 中央视口 → 右侧“检查器”
-- 输入 I：
-  - 当前选择实体 A，场景内还有实体 B。
-- 过程 P：
-  1. 保持“缩放”工具激活。
-  2. 点击实体 B。
-  3. 不切换工具，立即拖动 B 的缩放柄。
-- 输出 O：
-  - 轮廓、Gizmo 和检查器立即切到 B。
-  - 第一次拖动只缩放 B，A 的 Scale 不变。
+- Input：拖动 Y 手柄。
+- Process：观察 Inspector Scale。
+- Output：只改变 Y。
+
+#### 测试 04：Z 单轴缩放
+
+- Input：拖动 Z 手柄。
+- Process：观察 Inspector Scale。
+- Output：只改变 Z。
+
+#### 测试 05：Uniform 整体缩放
+
+- Input：拖动中心整体缩放手柄。
+- Process：观察 Gizmo、实体、Inspector 和日志。
+- Output：
+  - X/Y/Z 使用相同倍率变化。
+  - 原始比例保持。
+  - 日志明确显示 `Handle=Uniform`。
+
+#### 测试 06：撤销与重做
+
+- Input：完成一次 Uniform 拖动，然后撤销、重做。
+- Process：观察 Scale。
+- Output：
+  - 一次拖动对应一次历史记录。
+  - Undo 恢复。
+  - Redo 恢复。
+
+#### 测试 07：Escape 取消
+
+- Input：开始拖动 Uniform，移动后按 Escape，再松开鼠标。
+- Process：观察实体、Inspector 和日志。
+- Output：
+  - Scale 恢复。
+  - 日志显示 Cancel。
+  - 没有 Commit。
+  - 延迟 MouseUp 不会重新提交。
 
 ## 最终状态
 
-R5 自动门禁实现完成，等待用户真机验收。真机通过前不得宣布 WORLD-B-R5 CLOSED。
+WORLD-B-R5-R1 自动门禁修复完成，等待用户真机重新验收。真机通过前不得宣布 WORLD-B-R5 CLOSED。

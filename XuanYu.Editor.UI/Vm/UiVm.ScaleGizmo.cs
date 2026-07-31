@@ -65,6 +65,9 @@ public sealed partial class UiVm
         FooterMessage = $"缩放手柄 {handle} 已捕获";
         var detail = $"实体={EditorDisplayText.Entity(entity.EntityKey)}；手柄={handle}";
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
+            "缩放开始捕获",
+            $"Entity={EditorDisplayText.Entity(entity.EntityKey)} Handle={handle}");
+        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
             "缩放工具会话开始",
             $"{detail}；会话={result.Snapshot.SessionId}");
         LogTransformCaptureBegin(

@@ -32,9 +32,13 @@ public sealed partial class UiVm
         }
         else if (snap.OwnerTool == "缩放")
         {
+            var handle = TransformHandleFromStart(snap);
             _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
                 "变换捕获提交",
-                $"会话工具=缩放；实体={key}；之前缩放=({commit.Before.Scale.X:g},{commit.Before.Scale.Y:g},{commit.Before.Scale.Z:g})；之后缩放=({commit.After.Scale.X:g},{commit.After.Scale.Y:g},{commit.After.Scale.Z:g})");
+                $"会话工具=缩放；实体={key}；手柄={handle}；之前缩放=({commit.Before.Scale.X:g},{commit.Before.Scale.Y:g},{commit.Before.Scale.Z:g})；之后缩放=({commit.After.Scale.X:g},{commit.After.Scale.Y:g},{commit.After.Scale.Z:g})");
+            _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
+                "缩放提交",
+                $"Entity={key} Handle={handle} Scale=({commit.After.Scale.X:g},{commit.After.Scale.Y:g},{commit.After.Scale.Z:g})");
         }
         else
         {
@@ -52,6 +56,12 @@ public sealed partial class UiVm
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
             "变换捕获取消",
             $"会话工具={snap.OwnerTool}；实体={key}；会话={snap.SessionId}；原因={reason}");
+        if (snap.OwnerTool == "缩放")
+        {
+            _logBus.Info(EditorLogSource.Input, EditorLogCategory.Capture,
+                "缩放取消",
+                $"Entity={key} Handle={TransformHandleFromStart(snap)} Reason={reason}");
+        }
         RefreshLogBindings();
     }
 
@@ -62,5 +72,15 @@ public sealed partial class UiVm
             $"移动工具会话{result}",
             $"{snap.StartSnapshot}；会话={snap.SessionId}；当前位置={EditorDisplayText.Position(_sceneState.RenderSnapshot.Entity.Transform.Position)}");
         RefreshLogBindings();
+    }
+
+    static string TransformHandleFromStart(EditorInteractionSnapshot snap)
+    {
+        const string marker = "手柄=";
+        var i = snap.StartSnapshot.IndexOf(marker, StringComparison.Ordinal);
+        if (i < 0) return "未知";
+        var start = i + marker.Length;
+        var end = snap.StartSnapshot.IndexOf('；', start);
+        return end < 0 ? snap.StartSnapshot[start..] : snap.StartSnapshot[start..end];
     }
 }
