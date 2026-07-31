@@ -6,23 +6,23 @@ static class SceneDocumentValidator
 {
     public static SceneDocumentResult<SceneDocumentJson> Validate(SceneDocumentJson? doc)
     {
-        if (doc is null) return Fail("BrokenJson", "场景文件结构损坏。");
-        if (doc.Format != "XuanYuScene") return Fail("UnsupportedFormat", "不是玄域场景文件。");
-        if (doc.SchemaVersion > 1) return Fail("SchemaTooHigh", "场景文件版本高于当前编辑器支持范围。");
-        if (string.IsNullOrWhiteSpace(doc.Scene.Id)) return Fail("InvalidSceneId", "场景ID不能为空。");
+        if (doc is null) return Fail("BrokenJson", "场景文件结构损坏。", "Parse");
+        if (doc.Format != "XuanYuScene") return Fail("UnsupportedFormat", "不是玄域场景文件。", "Schema", "format");
+        if (doc.SchemaVersion > 1) return Fail("SchemaTooHigh", "场景文件版本高于当前编辑器支持范围。", "Schema", "schemaVersion");
+        if (string.IsNullOrWhiteSpace(doc.Scene.Id)) return Fail("InvalidSceneId", "场景ID不能为空。", "Validate", "scene.id");
         var ids = new HashSet<int>();
         foreach (var entity in doc.Entities)
         {
-            if (entity.Id <= 0 || !ids.Add(entity.Id)) return Fail("DuplicateEntityId", "实体ID重复或非法。");
-            if (string.IsNullOrWhiteSpace(entity.Name)) return Fail("InvalidEntityName", "实体名称不能为空。");
+            if (entity.Id <= 0 || !ids.Add(entity.Id)) return Fail("DuplicateEntityId", "实体ID重复或非法。", "Validate", $"entity.id={entity.Id}");
+            if (string.IsNullOrWhiteSpace(entity.Name)) return Fail("InvalidEntityName", "实体名称不能为空。", "Validate", $"entity.id={entity.Id}");
             if (!Finite(entity.Position) || !Finite(entity.Rotation) || !Finite(entity.Scale))
-                return Fail("InvalidTransform", "实体Transform包含非法数值。");
+                return Fail("InvalidTransform", "实体Transform包含非法数值。", "Validate", $"entity.id={entity.Id}");
             if (entity.Scale.X <= 0 || entity.Scale.Y <= 0 || entity.Scale.Z <= 0)
-                return Fail("InvalidTransform", "实体Scale必须大于0。");
+                return Fail("InvalidTransform", "实体Scale必须大于0。", "Validate", $"entity.id={entity.Id}");
         }
         if (doc.Entities.Any(e => e.ParentId is not null && !ids.Contains(e.ParentId.Value)))
-            return Fail("MissingParent", "实体父节点不存在。");
-        if (HasCycle(doc.Entities)) return Fail("HierarchyCycle", "实体层级存在循环。");
+            return Fail("MissingParent", "实体父节点不存在。", "Validate", "parentId");
+        if (HasCycle(doc.Entities)) return Fail("HierarchyCycle", "实体层级存在循环。", "Validate", "parentId");
         return SceneDocumentResult<SceneDocumentJson>.Ok(doc);
     }
 
@@ -47,6 +47,10 @@ static class SceneDocumentValidator
 
     static bool Valid(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
 
-    static SceneDocumentResult<SceneDocumentJson> Fail(string code, string message) =>
-        SceneDocumentResult<SceneDocumentJson>.Fail(code, message);
+    static SceneDocumentResult<SceneDocumentJson> Fail(
+        string code,
+        string message,
+        string stage,
+        string detail = "") =>
+        SceneDocumentResult<SceneDocumentJson>.Fail(code, message, stage, detail);
 }

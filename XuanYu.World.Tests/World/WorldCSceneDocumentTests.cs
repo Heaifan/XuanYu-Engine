@@ -7,7 +7,7 @@ using XuanYu.World.Scene;
 
 namespace XuanYu.World.Tests.World;
 
-public sealed class WorldCSceneDocumentTests
+public sealed partial class WorldCSceneDocumentTests
 {
     [Fact]
     public async Task Save_and_load_preserves_entity_identity_name_and_transform()
@@ -42,6 +42,8 @@ public sealed class WorldCSceneDocumentTests
         Assert.False(opened);
         Assert.Empty(vm.HierarchyItems);
         Assert.False(vm.IsSceneDirty);
+        Assert.Contains(vm.LogItems, x => x.Message == "场景加载失败" &&
+            x.Detail.Contains("Code=BrokenJson", StringComparison.Ordinal));
     }
 
     [Fact]

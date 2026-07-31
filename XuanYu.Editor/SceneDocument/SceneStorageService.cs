@@ -4,27 +4,38 @@ namespace XuanYu.Editor.SceneDocument;
 
 public sealed class SceneStorageService
 {
-    static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
-
-    public async Task<SceneDocumentResult<SceneDocumentSnapshot>> LoadAsync(string path)
+    static readonly JsonSerializerOptions Options = new()
     {
-        if (!File.Exists(path)) return SceneDocumentResult<SceneDocumentSnapshot>.Fail("MissingFile", "场景文件不存在。");
+        WriteIndented = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true
+    };
+
+    public async Task<SceneDocumentResult<SceneDocumentSnapshot>> LoadAsync(
+        string path,
+        Action<string>? stage = null)
+    {
+        stage?.Invoke("Read");
+        if (!File.Exists(path)) return Fail("MissingFile", "场景文件不存在。", "Read", path);
         try
         {
             var text = await File.ReadAllTextAsync(path);
+            stage?.Invoke("Parse");
             var doc = JsonSerializer.Deserialize<SceneDocumentJson>(text, Options);
+            stage?.Invoke("Schema");
             var checkedDoc = SceneDocumentValidator.Validate(doc);
+            stage?.Invoke("Validate");
             return checkedDoc.Succeeded
                 ? SceneDocumentResult<SceneDocumentSnapshot>.Ok(SceneDocumentMapper.ToSnapshot(checkedDoc.Value!))
-                : SceneDocumentResult<SceneDocumentSnapshot>.Fail(checkedDoc.ErrorCode, checkedDoc.Message);
+                : Fail(checkedDoc.ErrorCode, checkedDoc.Message, checkedDoc.Stage, checkedDoc.Detail);
         }
-        catch (JsonException)
+        catch (JsonException ex)
         {
-            return SceneDocumentResult<SceneDocumentSnapshot>.Fail("BrokenJson", "场景JSON损坏或格式不严格。");
+            return Fail("BrokenJson", "场景JSON损坏或格式不严格。", "Parse", ex.Message);
         }
-        catch (IOException ex)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            return SceneDocumentResult<SceneDocumentSnapshot>.Fail("ReadFailed", $"读取场景失败：{ex.Message}");
+            return Fail("ReadFailed", $"读取场景失败：{ex.Message}", "Read", ex.Message);
         }
     }
 
@@ -44,9 +55,16 @@ public sealed class SceneStorageService
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             TryDeleteTemp(temp);
-            return SceneDocumentResult<string>.Fail("WriteFailed", $"保存场景失败：{ex.Message}");
+            return SceneDocumentResult<string>.Fail("WriteFailed", $"保存场景失败：{ex.Message}", "Write", ex.Message);
         }
     }
+
+    static SceneDocumentResult<SceneDocumentSnapshot> Fail(
+        string code,
+        string message,
+        string stage,
+        string detail) =>
+        SceneDocumentResult<SceneDocumentSnapshot>.Fail(code, message, stage, detail);
 
     static void TryDeleteTemp(string path)
     {

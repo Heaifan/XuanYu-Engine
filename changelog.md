@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.21.3-fix
+WORLD-C-R1-R1 真机场景加载失败诊断与 sample 修复（2026-07-31 16:50:16）
+- 当前事实：用户真机测试 01 已确认启动空白场景 PASS；测试 02 打开 `samples/world-c-r1-ten-triangles.xyscene` 后 UI 显示“加载失败”、World 仍为 0 实体，且控制台/编辑器日志缺少 Path、Stage、Code、Message 和 Detail，无法审计失败根因。
+- 根因链：打开按钮与 `Ctrl+O` 均进入 `UiWin.SceneCommands.OpenScene`，文件路径传入 `UiVm.OpenSceneAsync`；失败时 `SceneStorageService.LoadAsync` 仅返回 `ErrorCode/Message`，UI 只写 Footer，不写编辑器日志和 Console。生产 JSON 读取使用默认 `System.Text.Json` 大小写敏感策略，而仓库 sample 使用 `format/schemaVersion/scene/entities/x/y/z` lower-camel 键，真实 sample 未经过生产 OpenSceneAsync 回归。
+- 修复内容：`SceneDocumentResult` 增 `Stage/Detail`；`SceneStorageService.LoadAsync` 增低频阶段回调 `Read/Parse/Schema/Validate`，JSON 读取改为 lower-camel 写出、大小写兼容读入；`UiVm.OpenSceneAsync` 记录“场景加载开始/阶段/成功/失败”到编辑器日志和 Console，失败详情包含 Path、Stage、Code、Message、Detail、CurrentScenePreserved；候选场景构建成功前不清选择、不清历史、不替换 World。
+- 测试变化：`WorldCSceneDocumentTests` 增加真实仓库 sample 生产入口回归，断言文件存在、OpenSceneAsync 成功、World/Hierarchy 均含 10 实体、中文名称可读、日志含 `Entities=10`；新增非空旧场景打开损坏文件保护回归，断言旧 World、路径、Dirty、选择和 History 均保留且日志含同一错误 Code。
+- 验证结果：定向 `WorldCSceneDocumentTests` **5 passed / 0 failed / 0 skipped**；正式串行 build 全 10 项目 **0W0E**；`XuanYu.Core.Tests` **129 passed / 0 failed / 0 skipped**；`XuanYu.World.Tests` **168 passed / 0 failed / 0 skipped**；`scripts\arch-a-guard.ps1` PASS；`git diff --check` PASS；`.xyscene` JSON PASS；SVG XML PASS。裸 5+100 扫描仅剩 2 个既有非本轮触碰超线文件，项目守卫通过。Push 结果见最终收口报告。
+- 状态：WORLD-C-R1 仍等待用户重新执行真机测试 02；未宣布 CLOSED，不进入 WORLD-C-R2，不创建 Tag 或 Release。
+
 ## v0.2.21.2-rz
 WORLD-C-R1 最小场景保存与打开闭环（2026-07-31 16:04:38）
 - 任务目标：进入 WORLD-C-R1 运行时代码实现；完成启动空白场景、`.xyscene` 严格 JSON 保存/打开、安全加载、Dirty 保存检查点、未保存提示入口和快捷键主链；不进入 WORLD-C-R2 项目管理器，不实现资产库、Prefab、通用组件序列化或自动恢复。

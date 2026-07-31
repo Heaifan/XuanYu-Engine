@@ -1,7 +1,7 @@
-版本：v0.2.21.2-rz
+版本：v0.2.21.3-fix
 # XuanYu Engine 文件树
 
-文件总数：561
+文件总数：564
 
 ## 根目录
 
@@ -36,7 +36,7 @@
 - `Camera/`：`EditorCameraFraming`（编辑器构图纯函数，由 Core.Space 迁入；Frame All / Frame Selected、空集合、大坐标处理，并可返回唯一 ObservationCenter）、`CameraFrameResult`（相机和观察中心组合结果）、`CameraNavigation`（Orbit / Pan / Dolly 纯算法；不依赖 UI、Vulkan 或 World 权威）。
 - `Transform/`：`TransformSession`（变换事务会话，由 World.Transform 迁入；Begin / Preview / Commit / Cancel、捕获 SessionId、原始与完整预览 Transform、Escape 取消、延迟 MouseUp 防误提交；最终 Commit 经 `SceneStateOwner` → `GlobalWorld`，不拥有实体永久 Transform）。
 - `Transform/TransformSession.Scale.cs`（WORLD-B-R5）：Scale 变换事务分部；`ScaleHandle` 状态 + `BeginScale(sessionId, entity, handle)`，复用 `TryPreviewScale`/`TryCommit`/`TryCancel` 轴无关逻辑，不拥有实体永久 Transform。
-- `SceneDocument/`：WORLD-C-R1 场景文档模块；`SceneStorageService` 负责严格 JSON 读写和临时文件替换，`SceneDocumentSession` 只持有路径/Untitled/Clean-Dirty/错误状态，`SceneDocumentWorldBridge` 只在事务边界从 World 快照生成或恢复场景，不复制第二份实体权威。
+- `SceneDocument/`：WORLD-C-R1 场景文档模块；`SceneStorageService` 负责严格 JSON 读写、lower-camel / Pascal 兼容读取和临时文件替换，`SceneDocumentSession` 只持有路径/Untitled/Clean-Dirty/错误状态，`SceneDocumentWorldBridge` 只在事务边界从 World 快照生成或恢复场景，不复制第二份实体权威。
 - 仅引用 `XuanYu.Core` 与 `XuanYu.World`；禁止引用 Avalonia / `XuanYu.Editor.UI` / `XuanYu.Render.Vulkan` / Silk.NET；不新增第三方依赖。
 
 ## docs
@@ -343,6 +343,8 @@
 - `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Helpers.cs`：WORLD-B-R5 缩放 UiVm 测试辅助分部；集中构造测试 Vm、第二实体和 History 反射入口。
 - `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Pointer.cs`：WORLD-B-R5 缩放 UiVm 指针辅助分部；集中构造 Scale Gizmo 命中点、拖动点和实体屏幕点，确保测试命中与生产布局同源。
 - `XuanYu.World.Tests/World/WorldScaleTransformUiTests.R5R1.cs`：WORLD-B-R5-R1 缩放 UiVm 修复分部；覆盖 Y/Z 单轴回归、Uniform 一次提交一条 History、Undo/Redo 和 Escape 后延迟 MouseUp 不提交。
+- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.cs`：WORLD-C-R1 场景文档基础测试；覆盖保存/打开往返、损坏 JSON 失败日志和 Dirty 保存检查点。
+- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.R1R1.cs`：WORLD-C-R1-R1 真机失败回归测试；走生产 `OpenSceneAsync` 打开仓库 sample，并验证损坏文件加载失败时旧 World、路径、Dirty、选择和 History 保留。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
@@ -568,7 +570,9 @@
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionValidity.cs`：WORLD-B-R2 选择失效清理分部；根据 World 权威 `TryGetEntity` 清理已不存在的 EntityId 选择，不依赖层级节点显示状态。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部；WORLD-B-R5 放开"缩放"工具拦截（原 `name is "框选" or "缩放"` 改为仅 `name is "框选"`），使缩放工具可激活并驱动 Scale Gizmo。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
-- `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：WORLD-C-R1 文档命令分部；负责新建空白场景、打开候选场景、保存/另存为和保存检查点，不持有实体副本。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：WORLD-C-R1 文档打开分部；负责新建空白场景、打开候选场景和文档状态更新，不持有实体副本。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentLog.cs`：WORLD-C-R1-R1 场景加载/保存低频诊断分部；同步写编辑器日志和 Console，记录 Path、Stage、Code、Message、Detail 和保护状态。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentSave.cs`：WORLD-C-R1 文档保存分部；负责保存/另存为和保存失败处理，不复制实体数据。
 - `XuanYu.Editor.UI/Vm/UiVm.TreeCommands.cs`：UiVm 树折叠与文件命令触发分部；只转发文件意图给窗口层，不执行存储。
 - `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点、Inspector 字段并重算连续树线；WORLD-C-R1 移除启动层级中的非实体相机/地面占位。
 - `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态；真实 App 启动传入空白场景，旧自动测试可显式保留十实体测试种子。
