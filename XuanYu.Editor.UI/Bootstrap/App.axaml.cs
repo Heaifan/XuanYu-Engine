@@ -20,7 +20,7 @@ public sealed class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var vm = new UiVm(_surfaceBridgeFactory);
+            var vm = new UiVm(_surfaceBridgeFactory, seedInitialScene: false);
             desktop.MainWindow = new UiWin
             {
                 DataContext = vm

@@ -1,0 +1,20 @@
+{
+  "format": "XuanYuScene",
+  "schemaVersion": 1,
+  "scene": {
+    "id": "world-c-r1-ten-triangles",
+    "name": "WORLD-C-R1 十个三角形测试场景"
+  },
+  "entities": [
+    { "id": 1, "name": "测试实体 01", "parentId": null, "siblingOrder": 0, "position": { "x": 0.0, "y": 0.0, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 2, "name": "测试实体 02", "parentId": null, "siblingOrder": 1, "position": { "x": 1.5, "y": 0.0, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 3, "name": "测试实体 03", "parentId": null, "siblingOrder": 2, "position": { "x": 3.0, "y": 0.0, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 4, "name": "测试实体 04", "parentId": null, "siblingOrder": 3, "position": { "x": 4.5, "y": 0.0, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 5, "name": "测试实体 05", "parentId": null, "siblingOrder": 4, "position": { "x": 6.0, "y": 0.0, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 6, "name": "测试实体 06", "parentId": null, "siblingOrder": 5, "position": { "x": 0.0, "y": 1.5, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 7, "name": "测试实体 07", "parentId": null, "siblingOrder": 6, "position": { "x": 1.5, "y": 1.5, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 8, "name": "测试实体 08", "parentId": null, "siblingOrder": 7, "position": { "x": 3.0, "y": 1.5, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 9, "name": "测试实体 09", "parentId": null, "siblingOrder": 8, "position": { "x": 4.5, "y": 1.5, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } },
+    { "id": 10, "name": "测试实体 10", "parentId": null, "siblingOrder": 9, "position": { "x": 6.0, "y": 1.5, "z": 0.0 }, "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 }, "scale": { "x": 1.0, "y": 1.0, "z": 1.0 } }
+  ]
+}

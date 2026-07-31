@@ -1,0 +1,12 @@
+using XuanYu.Core.Identity;
+
+namespace XuanYu.Editor.SceneDocument;
+
+public sealed record SceneDocumentSnapshot(
+    string SceneId,
+    string SceneName,
+    IReadOnlyList<SceneDocumentEntity> Entities)
+{
+    public static SceneDocumentSnapshot Empty(string name) =>
+        new(Guid.NewGuid().ToString("N"), name, []);
+}

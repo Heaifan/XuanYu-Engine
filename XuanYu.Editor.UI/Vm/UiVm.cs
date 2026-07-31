@@ -3,7 +3,10 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia.Threading;
 using XuanYu.Core.History;
+using XuanYu.Editor.SceneDocument;
 using XuanYu.Render.Abstractions;
+using XuanYu.World;
+using XuanYu.World.Scene;
 
 namespace XuanYu.Editor.UI;
 
@@ -17,16 +20,20 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     readonly HashSet<string> _collapsedHierarchyKeys = new(StringComparer.Ordinal);
     int _leftTabIndex; EditorTreeNode? _selectedProjectItem, _selectedHierarchyItem;
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
-    string _footerMessage = "已就绪。玄域示例项目已选中。", _footerState = "状态：就绪";
+    string _footerMessage = "已就绪。当前为空白未命名场景。", _footerState = "状态：就绪";
     bool _isLogOpen;
 
     public UiVm() : this(null) { }
 
-    public UiVm(INativeHostSurfaceBridgeFactory? surfaceBridgeFactory, Func<bool>? isWriteThread = null)
+    public UiVm(
+        INativeHostSurfaceBridgeFactory? surfaceBridgeFactory,
+        Func<bool>? isWriteThread = null,
+        bool seedInitialScene = true)
     {
         _editorState = new EditorStateOwner(isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
+        _sceneState = new SceneStateOwner(_partitionStrategy, seedInitialScene);
         _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();
-        _sceneState.EnsureEntityCount(10);
+        if (seedInitialScene) _sceneState.EnsureEntityCount(10);
         SurfaceBridgeFactory = surfaceBridgeFactory;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
@@ -77,15 +84,9 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public void ToggleProjectNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedProjectKeys, nameof(ProjectItems));
     public void ToggleHierarchyNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedHierarchyKeys, nameof(HierarchyItems));
 
-    void ToggleTreeNode(EditorTreeNode node, HashSet<string> collapsed, string propertyName)
-    {
-        if (!node.CanToggle) return;
-        if (!collapsed.Add(node.Key)) collapsed.Remove(node.Key);
-        OnPropertyChanged(propertyName);
-    }
-
     void Run(string name)
     {
+        if (TryRequestFileCommand(name)) return;
         if (name == "撤销") { TryUndoFromCommand(); return; }
         if (name == "重做") { TryRedoFromCommand(); return; }
         ApplyRunCommand(name);

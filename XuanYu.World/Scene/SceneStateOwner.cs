@@ -21,11 +21,17 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
     static readonly SpatialAabb MinimalSceneEntityExtent =
         new(new Vector3d(-0.5, -0.5, -0.5), new Vector3d(0.5, 0.5, 0.5));
 
-    public SceneStateOwner() : this(null) { }
+    public SceneStateOwner() : this(null, true) { }
 
-    public SceneStateOwner(IWorldPartitionStrategy? partitionStrategy)
+    public SceneStateOwner(IWorldPartitionStrategy? partitionStrategy, bool seedInitialEntity = true)
     {
         _world = partitionStrategy is null ? new GlobalWorld() : new GlobalWorld(partitionStrategy);
+        if (!seedInitialEntity)
+        {
+            _activeEntityKey = EntityId.None;
+            RefreshSnapshot();
+            return;
+        }
         var entity = _world.Create("基础测试实体", "MinimalSceneEntity", null, MinimalSceneEntityExtent);
         _activeEntityKey = entity.EntityKey;
         RefreshSnapshot();
@@ -70,5 +76,13 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
         _snapshot = _world.TryGet(_activeEntityKey, out var active)
             ? SceneWorldProjection.ToRenderSnapshot(active, Entities)
             : SceneRenderSnapshot.Empty;
+    }
+
+    public void ReplaceEntities(IReadOnlyList<WorldEntitySnapshot> entities)
+    {
+        _world.Replace(entities);
+        _activeEntityKey = Entities.FirstOrDefault().EntityKey;
+        RefreshSnapshot();
+        RenderSnapshotChanged?.Invoke(_snapshot);
     }
 }

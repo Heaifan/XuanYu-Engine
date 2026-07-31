@@ -18,10 +18,6 @@ public sealed partial class GlobalWorld
         _partitionStrategy = partitionStrategy;
     }
 
-    public int EntityCount => _registry.Count;
-
-    public IReadOnlyList<WorldEntitySnapshot> Entities => _registry.Snapshot;
-
     // Creates an entity. The optional `extent` is the entity's OWN spatial description
     // (local box relative to its position); WorldQuery only consumes it and never
     // invents a default size. Callers that omit extent get a zero-size point (R2-R1).
@@ -74,14 +70,6 @@ public sealed partial class GlobalWorld
 
     public WorldEntityActivity GetActivity(EntityId entityKey) => _partition.GetActivity(entityKey);
 
-    public IReadOnlyList<EntityId> EntitiesIn(RegionKey region) => _partition.EntitiesIn(region);
-
-    public IReadOnlyList<WorldPartitionEntry> PartitionSnapshot => _partition.Snapshot;
-
-    public int SpatialEntityCount => _query.Count;
-
-    public SpatialQueryStats LastSpatialQueryStats => _query.LastStats;
-
     public RegionKey ResolveRegion(CommittedTransform transform) =>
         _partitionStrategy.RegionFor(transform.Position);
 
@@ -93,4 +81,15 @@ public sealed partial class GlobalWorld
     public bool Exists(EntityId entityKey) => _registry.Exists(entityKey);
 
     public void RebuildSpatialIndexFromWorld() => _query.Rebuild(_registry.Snapshot);
+
+    public void Replace(IReadOnlyList<WorldEntitySnapshot> entities)
+    {
+        _registry.Replace(entities);
+        _partition.Clear();
+        foreach (var entity in _registry.Snapshot)
+        {
+            _partition.Add(entity.EntityKey, entity.RegionKey);
+        }
+        _query.Rebuild(_registry.Snapshot);
+    }
 }

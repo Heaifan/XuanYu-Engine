@@ -4,7 +4,7 @@ using XuanYu.Core.Spatial;
 
 namespace XuanYu.World;
 
-public sealed class EntityRegistry
+public sealed partial class EntityRegistry
 {
     readonly Dictionary<EntityId, WorldEntitySnapshot> _entities = new();
     int _nextId = 1;

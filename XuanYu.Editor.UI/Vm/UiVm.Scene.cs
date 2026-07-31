@@ -9,7 +9,6 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    readonly SceneStateOwner _sceneState = new(new GridWorldPartitionStrategy(regionSize: 5));
     int _renderSnapshotPublishCount;
     int _lastLoggedRenderEntityCount = -1;
     ViewportState? _lastViewport;

@@ -7,26 +7,18 @@ public sealed partial class UiVm
     IReadOnlyList<EditorTreeNode> BuildHierarchyItems()
     {
         var liveKeys = new HashSet<string>(StringComparer.Ordinal);
-        var items = new List<EditorTreeNode>
-        {
-            Node(liveKeys, "hierarchy:root", "世界根节点", "场景根",
-                "主世界/世界根节点", 0, "world"),
-            Node(liveKeys, "hierarchy:camera", "主相机", "相机",
-                "主世界/世界根节点/主相机", 1, "camera"),
-            Node(liveKeys, "hierarchy:ground", "地面", "地面",
-                "主世界/世界根节点/地面", 1, "ground")
-        };
+        var items = new List<EditorTreeNode>();
         foreach (var group in _sceneState.Entities
             .GroupBy(item => item.RegionKey)
             .OrderBy(item => item.Key.ToString()))
         {
             var region = EditorDisplayText.Region(group.Key);
             items.Add(Node(liveKeys, group.Key.ToString(), region, "Region",
-                $"主世界/{region}", 1, "region"));
+                $"主世界/{region}", 0, "region"));
             items.AddRange(group.OrderBy(entity => entity.EntityKey.Value).Select(entity =>
                 Node(liveKeys, entity.EntityKey.ToString(), entity.Name,
                     EditorDisplayText.EntityType(entity.Type),
-                    $"主世界/{region}/{EditorDisplayText.Entity(entity.EntityKey)}", 2, "entity")));
+                    $"主世界/{region}/{EditorDisplayText.Entity(entity.EntityKey)}", 1, "entity")));
         }
         PruneHierarchyNodeCache(liveKeys);
         return TreeGuideBuilder.Visible(items, _collapsedHierarchyKeys);

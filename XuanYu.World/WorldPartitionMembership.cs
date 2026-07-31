@@ -51,4 +51,10 @@ public sealed class WorldPartitionMembership
             .Select(item => item.Key)
             .OrderBy(item => item.Value)
             .ToArray();
+
+    public void Clear()
+    {
+        _regions.Clear();
+        _activities.Clear();
+    }
 }

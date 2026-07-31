@@ -1,7 +1,7 @@
-版本：v0.2.21.1-rz
+版本：v0.2.21.2-rz
 # XuanYu Engine 文件树
 
-文件总数：547
+文件总数：561
 
 ## 根目录
 
@@ -16,6 +16,10 @@
 - `scripts/arch-a-guard.ps1`：ARCH-A 自动守卫主脚本，检查依赖边界（含 ARCH-WORLD 红线）、启动入口、版本一致性和 5+100 等约束；Solution 必须含 World/World.Tests/Editor；dot-source `arch-a-guard-world.ps1` 与 `arch-a-guard-editor.ps1`。
 - `scripts/arch-a-guard-world.ps1`：ARCH-WORLD 红线子守卫（R1-R1 拆分，主脚本 dot-source）；按 `<ProjectReference>` 元素解析校验 Core ✕→ World/Editor/Vulkan、World only → Core、World 生产源码 ✕ Editor/Vulkan/Avalonia/Silk，并校验 Solution 含 World/World.Tests；**R2-R1 升级：整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs` 可建唯一索引，把"单一空间索引"锁成机器约束**；**R2-R1 收尾：新增 WorldQuery mutation 调用点（`_query.Insert/Update/Remove/Rebuild`）仅允许出现在白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail，与单索引锁共同钉死"唯一 Writer"**。
 - `scripts/arch-a-guard-render.ps1`：ARCH-WORLD-R5 Render Projection 边界守卫；禁止 Render.Vulkan 回退引用 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `DefaultEditorCamera`，并禁止 Render.Abstractions 引入 Core.Scene / World / Editor.UI。
+
+## samples
+
+- `samples/world-c-r1-ten-triangles.xyscene`：WORLD-C-R1 专用十个三角形测试场景；用于手动打开、保存往返和真机验收，不参与编辑器启动自动加载。
 
 ## XuanYu.World
 - 物理世界真相层（ARCH-WORLD-R1 新建，2026-07-24 真机验收 **CLOSED**）。命名空间 `XuanYu.World`（根）、`XuanYu.World.Scene`、`XuanYu.World.Spatial`、`XuanYu.World.Transform`。
@@ -32,6 +36,7 @@
 - `Camera/`：`EditorCameraFraming`（编辑器构图纯函数，由 Core.Space 迁入；Frame All / Frame Selected、空集合、大坐标处理，并可返回唯一 ObservationCenter）、`CameraFrameResult`（相机和观察中心组合结果）、`CameraNavigation`（Orbit / Pan / Dolly 纯算法；不依赖 UI、Vulkan 或 World 权威）。
 - `Transform/`：`TransformSession`（变换事务会话，由 World.Transform 迁入；Begin / Preview / Commit / Cancel、捕获 SessionId、原始与完整预览 Transform、Escape 取消、延迟 MouseUp 防误提交；最终 Commit 经 `SceneStateOwner` → `GlobalWorld`，不拥有实体永久 Transform）。
 - `Transform/TransformSession.Scale.cs`（WORLD-B-R5）：Scale 变换事务分部；`ScaleHandle` 状态 + `BeginScale(sessionId, entity, handle)`，复用 `TryPreviewScale`/`TryCommit`/`TryCancel` 轴无关逻辑，不拥有实体永久 Transform。
+- `SceneDocument/`：WORLD-C-R1 场景文档模块；`SceneStorageService` 负责严格 JSON 读写和临时文件替换，`SceneDocumentSession` 只持有路径/Untitled/Clean-Dirty/错误状态，`SceneDocumentWorldBridge` 只在事务边界从 World 快照生成或恢复场景，不复制第二份实体权威。
 - 仅引用 `XuanYu.Core` 与 `XuanYu.World`；禁止引用 Avalonia / `XuanYu.Editor.UI` / `XuanYu.Render.Vulkan` / Silk.NET；不新增第三方依赖。
 
 ## docs
@@ -563,8 +568,12 @@
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionValidity.cs`：WORLD-B-R2 选择失效清理分部；根据 World 权威 `TryGetEntity` 清理已不存在的 EntityId 选择，不依赖层级节点显示状态。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部；WORLD-B-R5 放开"缩放"工具拦截（原 `name is "框选" or "缩放"` 改为仅 `name is "框选"`），使缩放工具可激活并驱动 Scale Gizmo。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
-- `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点、Inspector 字段并重算连续树线。
-- `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态；维护 Project / Hierarchy 折叠集合并发布 TreeGuide 可视投影。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：WORLD-C-R1 文档命令分部；负责新建空白场景、打开候选场景、保存/另存为和保存检查点，不持有实体副本。
+- `XuanYu.Editor.UI/Vm/UiVm.TreeCommands.cs`：UiVm 树折叠与文件命令触发分部；只转发文件意图给窗口层，不执行存储。
+- `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点、Inspector 字段并重算连续树线；WORLD-C-R1 移除启动层级中的非实体相机/地面占位。
+- `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态；真实 App 启动传入空白场景，旧自动测试可显式保留十实体测试种子。
+- `XuanYu.Editor.UI/Win/UiWin.SceneCommands.cs`：WORLD-C-R1 文件对话框与 Ctrl+N/O/S/Shift+S 分部；只负责 UI 文件选择和命令路由。
+- `XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs`：WORLD-C-R1 未保存提示窗口；提供保存、不保存、取消三路结果，不保存实体数据。
 - `XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`：视口拾取日志格式化器；负责生成 R2-F 中文摘要和详情文本，不持有状态。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs`：编辑器内存日志缓冲区。
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs`：编辑器低频日志入口。

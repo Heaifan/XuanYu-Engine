@@ -10,17 +10,31 @@ namespace XuanYu.Editor.UI;
 
 public partial class UiWin : Window
 {
+    UiVm? _attachedVm;
+    bool _allowClosing;
+
     public UiWin()
     {
         InitializeComponent();
         AddHandler(KeyDownEvent, Window_KeyDown, RoutingStrategies.Tunnel);
+        DataContextChanged += (_, _) => AttachVm();
         Deactivated += (_, _) => (DataContext as UiVm)?.CancelInteractionFromWindowDeactivated();
     }
 
-    protected override void OnClosing(WindowClosingEventArgs e)
+    protected override async void OnClosing(WindowClosingEventArgs e)
     {
-        (DataContext as UiVm)?.CancelInteractionFromWindowClosing();
-        base.OnClosing(e);
+        if (_allowClosing || DataContext is not UiVm vm || !vm.IsSceneDirty)
+        {
+            (DataContext as UiVm)?.CancelInteractionFromWindowClosing();
+            base.OnClosing(e);
+            return;
+        }
+        e.Cancel = true;
+        var proceed = await ConfirmUnsavedBeforeContinue(vm);
+        if (!proceed) return;
+        vm.CancelInteractionFromWindowClosing();
+        _allowClosing = true;
+        Close();
     }
 
     async void Window_KeyDown(object? sender, KeyEventArgs e)
@@ -46,6 +60,8 @@ public partial class UiWin : Window
             return;
         }
 
+        if (await HandleSceneShortcut(e)) return;
+
         if (e.Key != Key.Escape) return;
         (DataContext as UiVm)?.CancelInteractionFromEscape();
         e.Handled = true;
@@ -60,4 +76,19 @@ public partial class UiWin : Window
         vm.NotifyLogCopied();
         return true;
     }
+
+    void AttachVm()
+    {
+        if (_attachedVm is not null) _attachedVm.FileCommandRequested -= OnFileCommandRequested;
+        _attachedVm = DataContext as UiVm;
+        if (_attachedVm is null) return;
+        _attachedVm.FileCommandRequested += OnFileCommandRequested;
+        Title = _attachedVm.DocumentWindowTitle;
+        _attachedVm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(UiVm.DocumentWindowTitle)) Title = _attachedVm.DocumentWindowTitle;
+        };
+    }
+
+    async void OnFileCommandRequested(string command) => await RunSceneCommand(command);
 }

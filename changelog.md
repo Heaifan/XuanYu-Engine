@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.21.2-rz
+WORLD-C-R1 最小场景保存与打开闭环（2026-07-31 16:04:38）
+- 任务目标：进入 WORLD-C-R1 运行时代码实现；完成启动空白场景、`.xyscene` 严格 JSON 保存/打开、安全加载、Dirty 保存检查点、未保存提示入口和快捷键主链；不进入 WORLD-C-R2 项目管理器，不实现资产库、Prefab、通用组件序列化或自动恢复。
+- 场景存储：新增 `XuanYu.Editor.SceneDocument` 模块，`SceneStorageService` 负责 `format=XuanYuScene`、`schemaVersion=1`、稳定 `scene.id`、稳定实体 ID、名称、父关系、同级顺序和 Transform 的 UTF-8 JSON 读写；校验文件损坏、格式不支持、Schema 过高、重复 ID、父实体不存在、层级循环和非法 Transform；保存采用同目录临时文件写入后替换正式文件。
+- World 边界：`SceneStateOwner` 增空白启动与整体替换入口；`GlobalWorld` / `EntityRegistry` 只在候选场景验证成功后一次性替换实体快照，加载失败不会清空旧场景；启动 App 显式使用空白未命名场景，旧十实体入口仅保留给自动测试和专用 `.xyscene`。
+- UI 接入：顶部增加“另存为”；窗口层接入 `Ctrl+N`、`Ctrl+O`、`Ctrl+S`、`Ctrl+Shift+S`、文件打开/保存对话框和关闭前“保存 / 不保存 / 取消”；`UiVm` 维护文档路径、Untitled/Clean-Dirty、保存检查点和错误消息，不复制实体列表。拖动中保存会先提交当前 Preview 并写入 History，再保存。
+- 测试变化：新增 `WorldCSceneDocumentTests` 覆盖保存/打开往返、损坏 JSON 不替换旧场景、Dirty/保存/Undo 检查点；新增 `samples/world-c-r1-ten-triangles.xyscene` 供真机手动打开。
+- 验证结果：本轮授权串行 build 全 10 项目 **0W0E**；`XuanYu.Core.Tests` **129 passed / 0 failed / 0 skipped**；`XuanYu.World.Tests` **166 passed / 0 failed / 0 skipped**。首次未授权 build 被 Avalonia BuildServices 写 `C:\Users\Heai\AppData\Local\AvaloniaUI\BuildServices\buildtasks.log` 权限阻断，授权后通过。后续守卫、diff、5+100、SVG、commit/push 结果见最终收口报告。
+- 状态：WORLD-C-R1 自动化主链完成，等待用户真机验收；未宣布 CLOSED，暂不创建 Tag 或 Release。
+
 ## v0.2.21.1-rz
 WORLD-C-R0 场景文档契约冻结（2026-07-31 13:48:34）
 - 任务目标：从 WORLD-B 最终收口 commit `4ae360b55754d7385f294d1181808f58ab0dc84e` 创建 `feat/WORLD-C-scene-authoring`，启动 `WORLD-C：场景创作与持久化闭环`，只冻结 R0 场景文档契约，不混入 WORLD-C-R1 运行时代码。

@@ -1,0 +1,69 @@
+using Avalonia.Input;
+using Avalonia.Platform.Storage;
+
+namespace XuanYu.Editor.UI;
+
+public partial class UiWin
+{
+    static readonly FilePickerFileType SceneFileType = new("玄域场景")
+    {
+        Patterns = ["*.xyscene"]
+    };
+
+    async Task<bool> HandleSceneShortcut(KeyEventArgs e)
+    {
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Control)) return false;
+        var shift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        var command = e.Key switch
+        {
+            Key.N => "新建",
+            Key.O => "打开",
+            Key.S when shift => "另存为",
+            Key.S => "保存",
+            _ => ""
+        };
+        if (command == "") return false;
+        e.Handled = true;
+        await RunSceneCommand(command);
+        return true;
+    }
+
+    async Task RunSceneCommand(string command)
+    {
+        if (DataContext is not UiVm vm) return;
+        if (command is "新建" or "打开" && !await ConfirmUnsavedBeforeContinue(vm)) return;
+        if (command == "新建") { vm.NewBlankScene(); return; }
+        if (command == "打开") { await OpenScene(vm); return; }
+        if (command == "保存" && await SaveExistingOrPick(vm)) return;
+        if (command == "另存为") await SaveSceneAs(vm);
+    }
+
+    async Task OpenScene(UiVm vm)
+    {
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "打开玄域场景",
+            AllowMultiple = false,
+            FileTypeFilter = [SceneFileType]
+        });
+        var path = files.FirstOrDefault()?.TryGetLocalPath();
+        if (!string.IsNullOrWhiteSpace(path)) await vm.OpenSceneAsync(path);
+    }
+
+    async Task<bool> SaveExistingOrPick(UiVm vm) =>
+        !string.IsNullOrWhiteSpace(vm.CurrentScenePath)
+            ? await vm.SaveSceneAsync()
+            : await SaveSceneAs(vm);
+
+    async Task<bool> SaveSceneAs(UiVm vm)
+    {
+        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = "保存玄域场景",
+            SuggestedFileName = "untitled.xyscene",
+            FileTypeChoices = [SceneFileType]
+        });
+        var path = file?.TryGetLocalPath();
+        return !string.IsNullOrWhiteSpace(path) && await vm.SaveSceneAsync(path);
+    }
+}

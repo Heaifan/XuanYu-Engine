@@ -29,6 +29,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InspectorFields));
         OnPropertyChanged(nameof(TransformHistoryCount));
         OnPropertyChanged(nameof(TransformRedoCount));
+        RaiseDocumentChanged();
         PublishSceneRenderSnapshot();
     }
 
@@ -53,6 +54,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InspectorFields));
         OnPropertyChanged(nameof(TransformHistoryCount));
         OnPropertyChanged(nameof(TransformRedoCount));
+        RaiseDocumentChanged();
         PublishSceneRenderSnapshot();
     }
 
@@ -67,6 +69,7 @@ public sealed partial class UiVm
         RefreshLogBindings();
         OnPropertyChanged(nameof(TransformHistoryCount));
         OnPropertyChanged(nameof(TransformRedoCount));
+        RaiseDocumentChanged();
     }
 
     void LogHistoryUndo(TransformHistoryEntry entry)
