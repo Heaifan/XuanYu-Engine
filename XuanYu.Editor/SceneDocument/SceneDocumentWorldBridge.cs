@@ -16,9 +16,10 @@ public static class SceneDocumentWorldBridge
         string sceneId,
         string sceneName)
     {
-        var entities = scene.Entities.OrderBy(e => e.EntityKey.Value)
-            .Select((e, index) => new SceneDocumentEntity(
-                e.EntityKey, e.Name, EntityId.None, index, e.Transform))
+        var entities = scene.Entities.OrderBy(e => e.SiblingOrder).ThenBy(e => e.EntityKey.Value)
+            .Select(e => new SceneDocumentEntity(
+                e.EntityKey, e.Name, e.ParentId, e.SiblingOrder, e.Transform,
+                NormalizeType(e.Type)))
             .ToArray();
         return new SceneDocumentSnapshot(sceneId, sceneName, entities);
     }
@@ -31,10 +32,15 @@ public static class SceneDocumentWorldBridge
             .Select(e =>
             {
                 var region = partitionStrategy.RegionFor(e.Transform.Position);
-                return new WorldEntitySnapshot(e.Id, e.Name, "MinimalSceneEntity",
+                return new WorldEntitySnapshot(e.Id, e.Name, NormalizeType(e.EntityType),
                     e.Transform, e.Transform.Position, region,
-                    WorldEntityActivity.Active, MinimalExtent);
+                    WorldEntityActivity.Active, MinimalExtent, e.ParentId, e.SiblingOrder);
             })
             .ToArray();
     }
+
+    static string NormalizeType(string type) =>
+        WorldEntityTypes.TryParse(type, out var parsed)
+            ? parsed.ToString()
+            : throw new ArgumentException($"Unsupported entity type: {type}");
 }

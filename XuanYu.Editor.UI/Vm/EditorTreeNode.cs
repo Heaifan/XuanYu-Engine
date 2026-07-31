@@ -1,8 +1,10 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Avalonia;
 
 namespace XuanYu.Editor.UI;
 
-public sealed class EditorTreeNode
+public sealed class EditorTreeNode : INotifyPropertyChanged
 {
     public EditorTreeNode(string key, string title, string type, string path, int level, string icon)
     {
@@ -19,6 +21,9 @@ public sealed class EditorTreeNode
     public IReadOnlyList<TreeGuideSegment> GuideSegments { get; private set; } = [];
     public bool HasChildren { get; private set; }
     public bool IsExpanded { get; private set; }
+    public bool IsRenaming { get; private set; }
+    public string RenameText { get; set; } = "";
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void Update(string title, string type, string path, int level, string icon)
     {
@@ -53,4 +58,21 @@ public sealed class EditorTreeNode
         HasChildren = hasChildren;
         IsExpanded = isExpanded;
     }
+
+    public void BeginRename()
+    {
+        RenameText = Title;
+        IsRenaming = true;
+        Changed(nameof(RenameText));
+        Changed(nameof(IsRenaming));
+    }
+
+    public void EndRename()
+    {
+        IsRenaming = false;
+        Changed(nameof(IsRenaming));
+    }
+
+    void Changed([CallerMemberName] string? name = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }

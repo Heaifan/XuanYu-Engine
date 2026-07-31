@@ -64,4 +64,12 @@ public sealed partial class UiVm
         PublishSceneRenderSnapshot();
         FooterMessage = $"聚焦：{EditorDisplayText.Entity(EntityId.FromInt(key.Value))} 已进入视野。";
     }
+
+    void ResetCameraForSceneReplacement()
+    {
+        _camera = DefaultEditorCamera.Create(++_cameraRevision);
+        _observationCenter = DefaultEditorCamera.Target;
+        _viewportCameraFramed = true;
+        PublishSceneRenderSnapshot();
+    }
 }

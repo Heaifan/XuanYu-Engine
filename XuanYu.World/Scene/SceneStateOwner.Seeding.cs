@@ -15,7 +15,7 @@ public sealed partial class SceneStateOwner
             var y = (index - 1) / 5;
             CreateEntity(
                 $"测试实体 {index:00}",
-                "MinimalSceneEntity",
+                WorldEntityTypes.LegacyMinimalTriangle,
                 new CommittedTransform(new Vector3d(x * 1.5, y * 1.5, 0)));
         }
     }

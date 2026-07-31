@@ -8,4 +8,5 @@ public readonly record struct SceneDocumentEntity(
     string Name,
     EntityId ParentId,
     int SiblingOrder,
-    CommittedTransform Transform);
+    CommittedTransform Transform,
+    string EntityType = "LegacyMinimalTriangle");

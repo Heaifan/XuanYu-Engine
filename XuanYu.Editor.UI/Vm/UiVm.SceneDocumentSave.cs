@@ -15,7 +15,7 @@ public sealed partial class UiVm
         FooterState = "状态：正在保存";
         var result = await _sceneStorage.SaveAsync(target, snapshot);
         if (!result.Succeeded) return FailSave(target, result);
-        _documentSession.MarkSaved(target, snapshot, _historyOwner.Count);
+        _documentSession.MarkSaved(target, snapshot, _historyOwner.CurrentRevision);
         FooterMessage = saveAs ? "场景已另存为。" : "场景已保存。";
         LogSceneSaveSuccess(target, saveAs);
         SetSceneBusy(false);

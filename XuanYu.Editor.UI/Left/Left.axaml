@@ -69,8 +69,10 @@
                SelectedItem="{Binding SelectedHierarchyItem, Mode=TwoWay}"
                Background="Transparent" BorderThickness="0"
                KeyDown="SelectionList_KeyDown">
-        <ListBox.ItemTemplate>
-          <DataTemplate>
+        <ListBox.ContextMenu><ContextMenu><MenuItem Header="添加"><MenuItem Header="基础实体">
+          <MenuItem Header="立方体" Click="AddCube_Click"/></MenuItem></MenuItem><Separator/><MenuItem Header="重命名" Click="Rename_Click"/><MenuItem Header="删除" Click="Delete_Click"/>
+        </ContextMenu></ListBox.ContextMenu>
+        <ListBox.ItemTemplate><DataTemplate>
             <Border Classes="treeRow" PointerPressed="HierarchyRow_Pressed">
               <Grid ColumnDefinitions="Auto,16,16,*" ColumnSpacing="7">
                 <local:TreeGuide Width="{Binding GuideWidth}" Segments="{Binding GuideSegments}"/>
@@ -85,11 +87,12 @@
                 <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource GroundIcon}" IsVisible="{Binding IsGround}"/>
                 <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource RegionIcon}" IsVisible="{Binding IsRegion}"/>
                 <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource EntityIcon}" IsVisible="{Binding IsEntity}"/>
-                <TextBlock Grid.Column="3" Text="{Binding Title}" Classes="treeText"/>
+                <TextBlock Grid.Column="3" Text="{Binding Title}" Classes="treeText" IsVisible="{Binding !IsRenaming}"/>
+                <TextBox Grid.Column="3" Text="{Binding RenameText, Mode=TwoWay}" IsVisible="{Binding IsRenaming}"
+                         AttachedToVisualTree="RenameTextBox_AttachedToVisualTree" KeyDown="RenameTextBox_KeyDown" LostFocus="RenameTextBox_LostFocus"/>
               </Grid>
             </Border>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
+          </DataTemplate></ListBox.ItemTemplate>
       </ListBox>
     </TabItem>
   </TabControl>

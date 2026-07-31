@@ -20,7 +20,9 @@ public sealed partial class EntityRegistry
         CommittedTransform? transform = null,
         RegionKey? region = null,
         WorldEntityActivity activity = WorldEntityActivity.Active,
-        SpatialAabb extent = default)
+        SpatialAabb extent = default,
+        EntityId parentId = default,
+        int? siblingOrder = null)
     {
         var committed = transform ?? CommittedTransform.Identity;
         var entity = new WorldEntitySnapshot(
@@ -31,7 +33,9 @@ public sealed partial class EntityRegistry
             committed.Position,
             region ?? RegionKey.Origin,
             activity,
-            extent);
+            extent,
+            parentId,
+            siblingOrder ?? NextSiblingOrder(parentId));
         _entities.Add(entity.EntityKey, entity);
         return entity;
     }
@@ -53,7 +57,9 @@ public sealed partial class EntityRegistry
             transform.Position,
             entity.RegionKey,
             entity.Activity,
-            entity.Extent);
+            entity.Extent,
+            entity.ParentId,
+            entity.SiblingOrder);
         return true;
     }
 
@@ -68,7 +74,9 @@ public sealed partial class EntityRegistry
             entity.GlobalPosition,
             region,
             activity,
-            entity.Extent);
+            entity.Extent,
+            entity.ParentId,
+            entity.SiblingOrder);
         return true;
     }
 
@@ -85,7 +93,6 @@ public sealed partial class EntityRegistry
             entity = default;
             return false;
         }
-
         return _entities.TryGetValue(entityKey, out entity);
     }
 

@@ -23,8 +23,10 @@ public static class SceneRenderProjectionAdapter
             .Select(e =>
             {
                 var t = snapshot.TransformFor(e);
+                var type = e.Type == XuanYu.World.WorldEntityTypes.Cube
+                    ? RenderEntityType.Cube : RenderEntityType.LegacyMinimalTriangle;
                 return new RenderEntityProjection(e.EntityKey, t.Position, t.Rotation, t.Scale,
-                    e.EntityKey == selectedKey);
+                    e.EntityKey == selectedKey, type);
             })
             .ToArray();
         var projection = new RenderProjection(

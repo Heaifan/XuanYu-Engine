@@ -15,7 +15,9 @@ public readonly record struct WorldEntitySnapshot
         Vector3d globalPosition,
         RegionKey regionKey,
         WorldEntityActivity activity,
-        SpatialAabb extent)
+        SpatialAabb extent,
+        EntityId parentId = default,
+        int siblingOrder = 0)
     {
         if (!entityKey.IsValid) throw new ArgumentOutOfRangeException(nameof(entityKey));
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("实体名称不能为空。", nameof(name));
@@ -28,6 +30,8 @@ public readonly record struct WorldEntitySnapshot
         RegionKey = regionKey;
         Activity = activity;
         Extent = extent;
+        ParentId = parentId;
+        SiblingOrder = siblingOrder;
     }
 
     public EntityId EntityKey { get; }
@@ -43,6 +47,8 @@ public readonly record struct WorldEntitySnapshot
     // entity's OWN spatial description supplied at creation -- WorldQuery consumes it
     // and never invents a default size for entities (R2-R1).
     public SpatialAabb Extent { get; }
+    public EntityId ParentId { get; }
+    public int SiblingOrder { get; }
 
     public SpatialBounds Bounds =>
         new(EntityKey, Extent.Translate(GlobalPosition), SpatialQueryCategory.SceneEntity);

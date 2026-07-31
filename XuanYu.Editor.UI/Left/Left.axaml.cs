@@ -41,6 +41,9 @@ public partial class Left : UserControl
 
     void HierarchyRow_Pressed(object? sender, PointerPressedEventArgs e)
     {
+        if (e.GetCurrentPoint(sender as Control).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed
+            && (sender as Control)?.DataContext is EditorTreeNode selected)
+            (DataContext as UiVm)!.SelectedHierarchyItem = selected;
         if (TryToggleFromArrowSlot(sender, e, out var node))
             (DataContext as UiVm)?.ToggleHierarchyNode(node);
     }

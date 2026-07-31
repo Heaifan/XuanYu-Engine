@@ -24,7 +24,6 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     bool _isLogOpen;
 
     public UiVm() : this(null) { }
-
     public UiVm(
         INativeHostSurfaceBridgeFactory? surfaceBridgeFactory,
         Func<bool>? isWriteThread = null,
@@ -87,6 +86,8 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     void Run(string name)
     {
         if (TryRequestFileCommand(name)) return;
+        if (name == "添加立方体") { AddCubeEntity(); return; }
+        if (name == "删除") { DeleteSelectedEntity(); return; }
         if (name == "撤销") { TryUndoFromCommand(); return; }
         if (name == "重做") { TryRedoFromCommand(); return; }
         ApplyRunCommand(name);

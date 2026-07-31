@@ -15,11 +15,12 @@ sealed record SceneInfoJson(
 sealed record SceneEntityJson(
     [property: JsonPropertyOrder(0)] int Id,
     [property: JsonPropertyOrder(1)] string Name,
-    [property: JsonPropertyOrder(2)] int? ParentId,
-    [property: JsonPropertyOrder(3)] int SiblingOrder,
-    [property: JsonPropertyOrder(4)] Vector3Json Position,
-    [property: JsonPropertyOrder(5)] Vector3Json Rotation,
-    [property: JsonPropertyOrder(6)] Vector3Json Scale);
+    [property: JsonPropertyOrder(2)] string? EntityType,
+    [property: JsonPropertyOrder(3)] int? ParentId,
+    [property: JsonPropertyOrder(4)] int SiblingOrder,
+    [property: JsonPropertyOrder(5)] Vector3Json Position,
+    [property: JsonPropertyOrder(6)] Vector3Json Rotation,
+    [property: JsonPropertyOrder(7)] Vector3Json Scale);
 
 sealed record Vector3Json(
     [property: JsonPropertyOrder(0)] double X,

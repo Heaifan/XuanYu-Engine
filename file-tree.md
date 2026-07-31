@@ -1,6 +1,21 @@
 版本：v0.2.21.5-fix
 # XuanYu Engine 文件树
 
+## WORLD-C-R2 新增职责（v0.2.21.6-rz）
+
+- `XuanYu.World/WorldEntityType.cs`：R2 最小实体类型与 Legacy 名称兼容解析。
+- `XuanYu.World/WorldEntityName.cs`：场景范围唯一命名与最小可用三位后缀。
+- `XuanYu.Editor.UI/Vm/SceneHistoryEntry.cs`：Add/Delete/Rename 上层历史数据条目。
+- `XuanYu.Editor.UI/Vm/UiVm.EntityCommands.cs`：立方体添加、选择、删除、重命名与历史接入。
+- `XuanYu.Editor.UI/Left/Left.EntityCommands.cs`：层级右键命令和内联重命名输入生命周期。
+- `XuanYu.Editor.UI/Win/UiWin.EntityShortcuts.cs`：F2/Delete 窗口快捷键与文本输入保护。
+- `XuanYu.Render.Abstractions/RenderEntityType.cs`：跨渲染边界的 Legacy/Cube 类型判别。
+- `XuanYu.World.Tests/World/WorldCR2*.cs`：R2 World、UI 历史、Dirty 与文档兼容回归。
+- `XuanYu.Core.Tests/Render/CubeRenderDrawPlanTests.cs`：Cube 填充与轮廓绘制合同。
+- `docs/world-c-r2-implementation-acceptance.md`：R2 实施范围、自动门禁与等待真机状态。
+- `docs/world-c-r2-ipo-manual-checklist.md`：中文 IPO 真机验收卡。
+- `docs/world-c-r2-status.svg`：R2 当前状态图。
+
 文件总数：568
 
 ## 根目录

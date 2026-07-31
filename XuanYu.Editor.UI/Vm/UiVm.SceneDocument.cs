@@ -12,19 +12,20 @@ public sealed partial class UiVm
     readonly SceneStateOwner _sceneState;
 
     public event Action<string>? FileCommandRequested;
-    public bool IsSceneDirty => _documentSession.IsDirty(_historyOwner.Count);
+    public bool IsSceneDirty => _documentSession.IsDirty(_historyOwner.CurrentRevision);
     public string CurrentScenePath => _documentSession.CurrentPath ?? "";
-    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.21.5-fix - {DocumentTitle}";
+    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.21.6-rz - {DocumentTitle}";
     public string DocumentTitle => $"{DocumentFileName}{(IsSceneDirty ? "（未保存）" : "")}";
     public string DocumentFileName =>
         string.IsNullOrWhiteSpace(CurrentScenePath) ? "未命名场景" : Path.GetFileName(CurrentScenePath);
 
     public void NewBlankScene()
     {
-        CancelInteraction("新建场景");
+        CancelActiveInput("新建场景");
         _historyOwner.Clear();
         _documentSession.MarkNew();
         _sceneState.ReplaceEntities([]);
+        ResetCameraForSceneReplacement();
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "新建场景");
         FooterMessage = "已创建空白未命名场景。";
         RaiseDocumentChanged();
@@ -52,8 +53,9 @@ public sealed partial class UiVm
         try { entities = SceneDocumentWorldBridge.ToWorld(result.Value, _partitionStrategy); }
         catch (Exception ex) { SetSceneBusy(false); return FailCandidateBuild(path, ex); }
         LogSceneLoadStage("ReplaceWorld");
+        CancelActiveInput("打开场景");
         _sceneState.ReplaceEntities(entities);
-        CancelInteraction("打开场景");
+        ResetCameraForSceneReplacement();
         _historyOwner.Clear();
         _documentSession.MarkLoaded(path, result.Value);
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "打开场景");

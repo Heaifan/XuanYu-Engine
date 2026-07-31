@@ -39,6 +39,7 @@ public partial class UiWin : Window
 
     async void Window_KeyDown(object? sender, KeyEventArgs e)
     {
+        if (HandleEntityShortcut(e)) return;
         if (e.Key == Key.C && e.KeyModifiers.HasFlag(KeyModifiers.Control)
             && DataContext is UiVm { IsLogOpen: true, HasSelectedEntries: true } copyVm)
         {

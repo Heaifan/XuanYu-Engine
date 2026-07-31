@@ -25,10 +25,13 @@ public sealed partial class GlobalWorld
         string name,
         string type = "WorldEntity",
         CommittedTransform? transform = null,
-        SpatialAabb extent = default)
+        SpatialAabb extent = default,
+        EntityId parentId = default,
+        int? siblingOrder = null)
     {
         var committed = transform ?? CommittedTransform.Identity;
-        var entity = _registry.Create(name, type, committed, ResolveRegion(committed), WorldEntityActivity.Active, extent);
+        var entity = _registry.Create(name, type, committed, ResolveRegion(committed),
+            WorldEntityActivity.Active, extent, parentId, siblingOrder);
         _partition.Add(entity.EntityKey, entity.RegionKey);
         _query.Insert(entity);
         return entity;

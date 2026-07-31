@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.21.6-rz
+WORLD-C-R2 真实场景实体创作主闭环（2026-07-31，等待真机验收）
+- World：新增 `LegacyMinimalTriangle` / `Cube` 最小类型、Add Cube、场景唯一名称、受控重命名、删除与快照原身份恢复；快照持有 ParentId/SiblingOrder，恢复拒绝重复 ID、非法类型、失效父级和顺序冲突。
+- History/Dirty：Core 历史容器保持业务无关并可承载上层条目；Editor/UI 统一记录 Transform/Add/Delete/Rename，Undo/Redo 恢复原 EntityId；Dirty 改为历史内容位置与保存检查点比较，支持回到保存点 Clean、离开保存点 Dirty。
+- SceneDocument：Schema 正式升至 v2，新保存必写 EntityType；v1 缺类型解释为 Legacy Triangle；v2 严格拒绝缺失/未知类型、重复 ID、非法 Transform、父级/顺序错误和高版本，候选失败不污染当前编辑状态。
+- Render：Render Projection / DrawPlan 显式携带实体类型；Cube 使用 36 顶点填充和同类型 72 顶点十二边轮廓，Picking/Preview/Gizmo 继续消费同一 World Transform；GLSL 与嵌入 SPIR-V 已同步生成。
+- UI/启动：生产 App 保持真正空白启动；顶部“场景→添加→基础实体→立方体”和层级右键 Add 接入；Add 自动选择，Delete/F2/右键删除和内联重命名接入，文本框焦点时全局 Delete 不删除实体；新建和成功打开恢复默认相机。
+- 测试/资料：新增 World、History/Dirty、SceneDocument v1/v2、Cube DrawPlan 回归，以及 R2 实施验收报告、中文 IPO 真机卡和状态 SVG。
+- 架构守卫：WorldQuery 单写者白名单同步识别 `GlobalWorld.Authoring.cs`；该 partial 仍属于同一 GlobalWorld 权威，不新增第二 Writer。
+- 验证结果：10 项目串行 build 0W0E；Core Tests 130/130、World Tests 188/188；架构守卫（含 5+100）、`git diff --check`、SVG XML、样例 JSON 与 GLSL 编译均 PASS。
+- 状态：自动门禁与真机验收结果完成前仅标记“等待真机验收”，不宣布 WORLD-C-R2 CLOSED，不创建 Tag/Release。
+
 ## v0.2.21.5-fix
 WORLD-C-R1 真机验收通过与正式收口（2026-07-31 17:58:02）
 - 用户裁定：测试 01-09 均已 PASS；测试 10-13 不再追加真机重复测试，由现有自动门禁覆盖。WORLD-C-R1 真机验收通过。

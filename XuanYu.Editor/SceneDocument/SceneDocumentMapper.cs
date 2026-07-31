@@ -1,19 +1,20 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
+using XuanYu.World;
 
 namespace XuanYu.Editor.SceneDocument;
 
 static class SceneDocumentMapper
 {
     public static SceneDocumentJson ToJson(SceneDocumentSnapshot snapshot) =>
-        new("XuanYuScene", 1, new SceneInfoJson(snapshot.SceneId, snapshot.SceneName),
+        new("XuanYuScene", 2, new SceneInfoJson(snapshot.SceneId, snapshot.SceneName),
             snapshot.Entities.OrderBy(e => e.SiblingOrder).ThenBy(e => e.Id.Value).Select(ToJson).ToArray());
 
     public static SceneEntityJson ToJson(SceneDocumentEntity entity)
     {
         var t = entity.Transform;
-        return new SceneEntityJson(entity.Id.Value, entity.Name,
+        return new SceneEntityJson(entity.Id.Value, entity.Name, entity.EntityType,
             entity.ParentId.IsValid ? entity.ParentId.Value : null, entity.SiblingOrder,
             ToJson(t.Position), ToJson(t.Rotation), ToJson(t.Scale));
     }
@@ -25,7 +26,8 @@ static class SceneDocumentMapper
         new(EntityId.FromInt(entity.Id), entity.Name,
             entity.ParentId is > 0 ? EntityId.FromInt(entity.ParentId.Value) : EntityId.None,
             entity.SiblingOrder,
-            new CommittedTransform(ToVector(entity.Position), ToVector(entity.Rotation), ToVector(entity.Scale)));
+            new CommittedTransform(ToVector(entity.Position), ToVector(entity.Rotation), ToVector(entity.Scale)),
+            entity.EntityType ?? WorldEntityTypes.LegacyMinimalTriangle);
 
     static Vector3Json ToJson(Vector3d v) => new(v.X, v.Y, v.Z);
 

@@ -7,17 +7,35 @@ public static class RenderDrawPlan
 {
     public const int FillVertexCount = 3;
     public const int OutlineRibbonVertexCount = 18;
+    public const int CubeFillVertexCount = 36;
+    public const int CubeOutlineRibbonVertexCount = 72;
+
+    public readonly record struct Entry(
+        RenderEntityType EntityType,
+        int VertexCount,
+        bool IsOutline);
+
+    public static IReadOnlyList<Entry> GetTypedDrawPlan(
+        IReadOnlyList<RenderEntityProjection> entities)
+    {
+        var plan = new List<Entry>(entities.Count * 2);
+        foreach (var entity in entities)
+        {
+            var fill = entity.EntityType == RenderEntityType.Cube
+                ? CubeFillVertexCount : FillVertexCount;
+            var outline = entity.EntityType == RenderEntityType.Cube
+                ? CubeOutlineRibbonVertexCount : OutlineRibbonVertexCount;
+            plan.Add(new Entry(entity.EntityType, fill, false));
+            if (entity.IsSelected) plan.Add(new Entry(entity.EntityType, outline, true));
+        }
+        return plan;
+    }
 
     public static IReadOnlyList<(int VertexCount, bool IsOutline)> GetDrawPlan(
         IReadOnlyList<RenderEntityProjection> entities)
     {
-        var plan = new List<(int, bool)>(entities.Count * 2);
-        foreach (var e in entities)
-        {
-            plan.Add((FillVertexCount, false));
-            if (e.IsSelected)
-                plan.Add((OutlineRibbonVertexCount, true));
-        }
-        return plan;
+        return GetTypedDrawPlan(entities)
+            .Select(x => (x.VertexCount, x.IsOutline))
+            .ToArray();
     }
 }

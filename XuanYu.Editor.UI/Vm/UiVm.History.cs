@@ -16,15 +16,14 @@ public sealed partial class UiVm
             return;
         }
 
-        if (!_historyOwner.TryUndo(out var entry))
+        if (!_historyOwner.TryUndoAny(out var entry))
         {
             FooterMessage = "没有可撤销的编辑历史。";
             return;
         }
 
-        if (!_sceneState.RestoreTransform(entry.EntityKey, entry.Before)) return;
+        if (!ApplyHistory(entry, undo: true)) return;
         FooterMessage = "撤销完成。";
-        LogHistoryUndo(entry);
         OnPropertyChanged(nameof(DebugObjectItems));
         OnPropertyChanged(nameof(InspectorFields));
         OnPropertyChanged(nameof(TransformHistoryCount));
@@ -41,15 +40,14 @@ public sealed partial class UiVm
             return;
         }
 
-        if (!_historyOwner.TryRedo(out var entry))
+        if (!_historyOwner.TryRedoAny(out var entry))
         {
             FooterMessage = "没有可重做的编辑历史。";
             return;
         }
 
-        if (!_sceneState.RestoreTransform(entry.EntityKey, entry.After)) return;
+        if (!ApplyHistory(entry, undo: false)) return;
         FooterMessage = "重做完成。";
-        LogHistoryRedo(entry);
         OnPropertyChanged(nameof(DebugObjectItems));
         OnPropertyChanged(nameof(InspectorFields));
         OnPropertyChanged(nameof(TransformHistoryCount));

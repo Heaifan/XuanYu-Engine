@@ -32,7 +32,8 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
             RefreshSnapshot();
             return;
         }
-        var entity = _world.Create("基础测试实体", "MinimalSceneEntity", null, MinimalSceneEntityExtent);
+        var entity = _world.Create("基础测试实体", WorldEntityTypes.LegacyMinimalTriangle,
+            null, MinimalSceneEntityExtent);
         _activeEntityKey = entity.EntityKey;
         RefreshSnapshot();
     }
@@ -40,6 +41,7 @@ public sealed partial class SceneStateOwner : ISceneRenderSnapshotSource
     public SceneRenderSnapshot RenderSnapshot => _snapshot;
     public IReadOnlyList<WorldEntitySnapshot> Entities => _world.Entities;
     public long SpatialRevision => _world.SpatialRevision;
+    public EntityId ActiveEntityKey => _activeEntityKey;
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
 
     public SpatialQueryResult QuerySpatial(SpatialAabb area, SpatialQueryCategory mask) =>

@@ -123,6 +123,34 @@ vec3 cube(vec3 center, vec3 halfExtent, int li) {
     return corners[idx[li]];
 }
 
+vec3 cubeCorner(int index) {
+    vec3 c[8] = vec3[8](
+        vec3(-0.5,-0.5,-0.5), vec3(0.5,-0.5,-0.5),
+        vec3(0.5,0.5,-0.5), vec3(-0.5,0.5,-0.5),
+        vec3(-0.5,-0.5,0.5), vec3(0.5,-0.5,0.5),
+        vec3(0.5,0.5,0.5), vec3(-0.5,0.5,0.5));
+    return c[index];
+}
+
+void cubeOutlineVertex(int vi, out vec4 clipPos, out vec4 color) {
+    int ends[24] = int[24](0,1, 1,2, 2,3, 3,0, 4,5, 5,6,
+        6,7, 7,4, 0,4, 1,5, 2,6, 3,7);
+    int edge = vi / 6;
+    int corner = vi % 6;
+    mat3 R = eulerRot(pc.entityRotation.xyz);
+    vec3 w0 = R * (cubeCorner(ends[edge * 2]) * pc.entityScale.xyz) + pc.worldPosition.xyz;
+    vec3 w1 = R * (cubeCorner(ends[edge * 2 + 1]) * pc.entityScale.xyz) + pc.worldPosition.xyz;
+    vec4 c0 = pc.viewProjection * vec4(w0, 1.0);
+    vec4 c1 = pc.viewProjection * vec4(w1, 1.0);
+    vec2 d = normalize((c1.xy / c1.w) - (c0.xy / c0.w));
+    vec2 offset = vec2(-d.y, d.x) * (3.0 / vec2(pc.entityRotation.w, pc.entityScale.w));
+    bool useEnd = corner == 2 || corner == 4 || corner == 5;
+    bool usePos = corner == 1 || corner == 3 || corner == 4;
+    clipPos = useEnd ? c1 : c0;
+    clipPos.xy += (usePos ? 1.0 : -1.0) * offset * clipPos.w;
+    color = vec4(0.80, 0.90, 1.0, 1.0);
+}
+
 // Scale Gizmo 几何（相对 Gizmo 中心，轴方向随实体局部旋转）：
 // [0..107] 三轴杆（沿旋转轴方向拉长）；[108..215] 三轴端立方体；[216..251] 中心等比立方体。
 vec3 scaleVertex(int vi) {
@@ -152,7 +180,17 @@ vec3 scaleVertex(int vi) {
 }
 
 void main() {
-    if (pc.selectionMode > 1.5) {
+    if (pc.gizmoMode < -0.5 && pc.selectionMode > 1.5) {
+        vec4 clipPos; vec4 color;
+        cubeOutlineVertex(gl_VertexIndex, clipPos, color);
+        gl_Position = clipPos;
+        vBaseColor = color;
+    } else if (pc.gizmoMode < -0.5) {
+        vec3 local = cube(vec3(0.0), vec3(0.5), gl_VertexIndex);
+        local = eulerRot(pc.entityRotation.xyz) * (local * pc.entityScale.xyz);
+        gl_Position = pc.viewProjection * vec4(local + pc.worldPosition.xyz, 1.0);
+        vBaseColor = vec4(0.72, 0.76, 0.82, 1.0);
+    } else if (pc.selectionMode > 1.5) {
         // R4-R3-R2：外轮廓边带（18 顶点），非重心坐标内部线、非放大复制面
         vec4 clipPos; vec4 color;
         outlineRibbonVertex(gl_VertexIndex, clipPos, color);

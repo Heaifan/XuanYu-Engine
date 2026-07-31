@@ -51,7 +51,7 @@ foreach ($file in Get-SourceFiles "XuanYu.World") {
 # World authority whitelist so "single Writer" is machine-enforced, not merely conventional.
 # NOTE: this keys on the `_query` field name used by GlobalWorld; if that field is renamed
 # the guard must be updated to keep matching the real call sites.
-$writeWhitelist = @("GlobalWorld.cs", "GlobalWorld.Query.cs", "WorldQuery.cs")
+$writeWhitelist = @("GlobalWorld.cs", "GlobalWorld.Query.cs", "GlobalWorld.Authoring.cs", "WorldQuery.cs")
 $mutationPatterns = @("_query.Insert(", "_query.Update(", "_query.Remove(", "_query.Rebuild(")
 foreach ($file in Get-SourceFiles "XuanYu.World") {
     if ($writeWhitelist -contains $file.Name) { continue }
