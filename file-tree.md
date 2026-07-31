@@ -129,8 +129,8 @@
 - `docs/world-b-r2-selection-tool-state.svg`：WORLD-B-R2 选择与工具状态闭环图；展示视口/层级、SelectionState、检查器/控制柄和 ToolMode 的同源关系，不承载运行时代码。
 - `docs/world-b-r3-move-transform-closure.md`：WORLD-B-R3 移动变换闭环报告；记录单轴/平面移动、取消、Undo/Redo、跨 Region、输入互斥、中文 IPO 真机清单和 CLOSED 裁定，不承载运行时代码。
 - `docs/world-b-r3-move-transform-closure.svg`：WORLD-B-R3 移动变换闭环浅色中文图；展示控制柄、移动会话、World 权威、一致投影和输入优先级，不承载运行时代码。
-- `docs/world-b-r5-scale-transform-report.md`：WORLD-B-R5 Scale Gizmo 缩放变换闭环报告；记录 R5 实装、v0.2.20.18-rz 真机退回、R5-R1 尺寸/Uniform 可发现性修复、自动验证、中文 IPO 真机复验清单和“等待真机重新验收、未 CLOSED”状态，不承载运行时代码。
-- `docs/world-b-r5-scale-transform.svg`：WORLD-B-R5 缩放闭环状态图；展示 SelectionKey、TransformSession、ScaleGizmoDrag、SceneRenderSnapshot、RenderProjection 与 Vulkan 绘制链路，不承载运行时代码。
+- `docs/world-b-r5-scale-transform-report.md`：WORLD-B-R5 Scale Gizmo 缩放变换闭环报告；记录 R5 实装、v0.2.20.18-rz 真机退回、R5-R1 尺寸/Uniform 可发现性修复、自动验证、用户真机验收通过和 WORLD-B-R5 CLOSED 裁定，不承载运行时代码。
+- `docs/world-b-r5-scale-transform.svg`：WORLD-B-R5 缩放闭环状态图；展示 SelectionKey、TransformSession、ScaleGizmoDrag、SceneRenderSnapshot、RenderProjection、Vulkan 绘制链路和 WORLD-B-R5 CLOSED 状态，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。

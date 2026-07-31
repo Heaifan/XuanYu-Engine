@@ -3,13 +3,15 @@
 版本：v0.2.20.19-fix
 日期：2026-07-31
 分支：feat/WORLD-B-editor-interaction
-阶段：WORLD-B-R5-R1：Scale Gizmo 尺寸与整体缩放可发现性修复
+阶段：WORLD-B-R5：Scale Gizmo 缩放变换闭环正式收口
 
 ## 裁定
 
 v0.2.20.18-rz 已被真机验收退回：Scale Gizmo 在视口中过大，明显遮挡实体和场景；中心 `Uniform` 整体等比缩放手柄不可发现、不可理解或难以稳定命中。
 
-v0.2.20.19-fix 已完成 R5-R1 自动门禁修复，当前状态为等待真机重新验收。不得宣布 WORLD-B-R5 CLOSED，不得启动 F6 / WarCore。
+v0.2.20.19-fix 已完成 R5-R1 自动门禁修复。用户已完成真机重新验收并裁定通过，`WORLD-B-R5` 正式 CLOSED。
+
+本轮只记录用户真机验收结论与阶段收口，不重复执行已通过的 R5 真机测试，不新增 `WORLD-B-R6`，不启动 WarCore。
 
 本轮仍只实现实体自身 TRS 的 X/Y/Z 局部分量缩放与中心 Uniform 等比缩放，不实现负缩放、镜像、多选、Pivot、吸附、数值输入、Local/Global 切换、父子传播或世界空间剪切。
 
@@ -57,60 +59,24 @@ dotnet test XuanYu.World.Tests\XuanYu.World.Tests.csproj --no-build -m:1 -nr:fal
 
 后续 `arch-a-guard`、`git diff --check`、5+100、最终 build-server shutdown、commit/push 与远端 tip 复核结果以本轮最终执行回复为准。
 
-## 真机重新验收卡
+## 真机验收结论
 
-#### 测试 01：控件尺寸
+以下结论来自用户真机验收结果，不是自动测试替代证据：
 
-- Input：运行 `run.bat`，选择实体，点击顶部“缩放”。
-- Process：观察 Scale Gizmo 与实体主体的相对尺寸。
-- Output：Gizmo 不再大面积遮挡实体。
+- Scale Gizmo 尺寸调整符合预期，不再大面积遮挡实体和场景。
+- X、Y、Z 单轴缩放有效，只改变对应 Scale 分量。
+- 中心 Uniform 等比缩放有效，可稳定发现和命中。
+- 实体、选中轮廓和 Gizmo 在 Preview 过程中同步。
+- Commit 生效。
+- Escape Cancel 生效，延迟 MouseUp 未发现阻断问题。
+- Undo / Redo 生效，一次拖动对应一次历史记录。
+- 工具状态和目标切换没有发现阻断问题。
+- 用户已完成真机验收，不需要再次执行重复验收。
 
-#### 测试 02：X 单轴缩放
+## 已覆盖的 R5 IPO 项
 
-- Input：拖动 X 手柄。
-- Process：观察 Inspector Scale。
-- Output：只改变 X。
-
-#### 测试 03：Y 单轴缩放
-
-- Input：拖动 Y 手柄。
-- Process：观察 Inspector Scale。
-- Output：只改变 Y。
-
-#### 测试 04：Z 单轴缩放
-
-- Input：拖动 Z 手柄。
-- Process：观察 Inspector Scale。
-- Output：只改变 Z。
-
-#### 测试 05：Uniform 整体缩放
-
-- Input：拖动中心整体缩放手柄。
-- Process：观察 Gizmo、实体、Inspector 和日志。
-- Output：
-  - X/Y/Z 使用相同倍率变化。
-  - 原始比例保持。
-  - 日志明确显示 `Handle=Uniform`。
-
-#### 测试 06：撤销与重做
-
-- Input：完成一次 Uniform 拖动，然后撤销、重做。
-- Process：观察 Scale。
-- Output：
-  - 一次拖动对应一次历史记录。
-  - Undo 恢复。
-  - Redo 恢复。
-
-#### 测试 07：Escape 取消
-
-- Input：开始拖动 Uniform，移动后按 Escape，再松开鼠标。
-- Process：观察实体、Inspector 和日志。
-- Output：
-  - Scale 恢复。
-  - 日志显示 Cancel。
-  - 没有 Commit。
-  - 延迟 MouseUp 不会重新提交。
+R5 真机复验已覆盖控件尺寸、X 单轴、Y 单轴、Z 单轴、Uniform 整体缩放、撤销重做、Escape 取消、目标切换与工具状态。本轮不再保留待执行验收卡。
 
 ## 最终状态
 
-WORLD-B-R5-R1 自动门禁修复完成，等待用户真机重新验收。真机通过前不得宣布 WORLD-B-R5 CLOSED。
+WORLD-B-R5 CLOSED。Scale Gizmo 缩放变换闭环已完成，WORLD-B 不需要 R6；下一步只允许进行 WORLD-B 总收口，并从收口后的准确 HEAD 创建 WORLD-C 分支。

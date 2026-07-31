@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
   <rect width="960" height="540" fill="#f7f9fb"/>
   <text x="40" y="48" font-family="Microsoft YaHei, Arial" font-size="28" fill="#1f2a37">WORLD-B-R5 Scale Gizmo 缩放闭环</text>
-  <text x="40" y="82" font-family="Microsoft YaHei, Arial" font-size="15" fill="#52606d">v0.2.20.18-rz｜自动门禁完成，等待真机验收</text>
+  <text x="40" y="82" font-family="Microsoft YaHei, Arial" font-size="15" fill="#52606d">v0.2.20.19-fix｜用户真机验收通过，WORLD-B-R5 CLOSED</text>
   <g font-family="Microsoft YaHei, Arial" font-size="16">
     <rect x="70" y="130" width="190" height="70" rx="8" fill="#ffffff" stroke="#8aa4c0"/>
     <text x="95" y="158" fill="#1f2a37">SelectionKey</text>
@@ -30,7 +30,7 @@
     <path d="M595 323 H660"/>
   </g>
   <g font-family="Microsoft YaHei, Arial" font-size="14" fill="#415466">
-    <text x="83" y="430">验收重点：X/Y/Z 只改对应分量；Uniform 三轴同倍率；Undo/Redo 一次对应一次拖动。</text>
+    <text x="83" y="430">验收结论：X/Y/Z 只改对应分量；Uniform 三轴同倍率；Undo/Redo 一次对应一次拖动。</text>
     <text x="83" y="458">禁止项：不做负缩放、镜像、多选、Pivot、吸附、数值输入、Local/Global、父子传播、WarCore。</text>
   </g>
   <defs>

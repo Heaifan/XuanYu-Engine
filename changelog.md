@@ -1,6 +1,15 @@
 # changelog
 
 ## v0.2.20.19-fix
+WORLD-B-R5 与 WORLD-B 正式收口（2026-07-31 13:44:13）
+- 任务目标：根据用户真机验收结论正式关闭 `WORLD-B-R5` 和整个 `WORLD-B`；不新增 `WORLD-B-R6`，不重复执行已经通过的 R5 真机测试，不进入 WarCore，不创建 Tag 或 Release。
+- R5 裁定：用户真机验收已确认 Scale Gizmo 尺寸调整符合预期，X/Y/Z 单轴缩放有效，中心 Uniform 等比缩放有效，实体、选中轮廓和 Gizmo 在 Preview 中同步，Commit、Escape Cancel、Undo/Redo、工具状态和目标切换未发现阻断问题。`WORLD-B-R5` 正式 CLOSED；该结论记录为用户验收结果，不以自动测试伪装真机证据。
+- WORLD-B 裁定：`WORLD-B` 正式 CLOSED。已完成相机、选择、移动、旋转、缩放及撤销取消等基础编辑交互；不代表场景创建、保存、资产导入和环境系统已经完成。
+- 范围边界：WORLD-B 已完成编辑器相机基础交互、层级/检查器/视口选择同步、视口 Picking、空白取消选择、Move/Rotate/Scale Gizmo、Preview/Commit/Cancel、Undo/Redo、目标切换、捕获取消、基础日志与自动验证。WORLD-B 未包含场景新建/打开/保存/另存为、实体完整 CRUD、静态模型导入、资产数据库、Prefab、地面、天空环境和 WarCore。
+- 修改范围：更新 `docs/world-b-r5-scale-transform-report.md` 的 R5 CLOSED 与真机结论；更新 `docs/world-b-r0-editor-interaction-audit.md` 的 WORLD-B 总收口边界；更新 `docs/world-b-r5-scale-transform.svg` 与 `file-tree.md` 中仍指向“等待真机验收/未 CLOSED”的阶段状态描述。
+- 验证结果：本轮为纯文档收口，未重跑完整 build/test；状态一致性搜索仅剩历史 changelog 与非 WORLD-B 条目；`git diff --check` PASS；`docs/world-b-r5-scale-transform.svg` XML PASS；`scripts/arch-a-guard.ps1` EXIT=0；完整 diff 与修改范围已核对，无运行时代码夹带。Commit Hash 以本轮最终 Git 记录为准。
+
+## v0.2.20.19-fix
 WORLD-B-R5-R1 Scale Gizmo 尺寸与整体缩放可发现性修复（2026-07-31）
 - 任务目标：修复 v0.2.20.18-rz 真机验收退回项——Scale Gizmo 视觉尺寸过大、遮挡实体和场景，中心 `Uniform` 整体等比缩放手柄不可发现/不可理解或难以稳定命中。状态从 R5 待验收转为 R5-R1 修复完成后等待真机重新验收；不得宣布 R5 CLOSED，不进入 F6，不进入 WarCore。
 - 修复落点（Core Gizmo）：`ScaleGizmoScreenSize` 将主体屏幕轴长从 90 DIP 缩至 63 DIP（约 70%），端点手柄从 11 DIP 缩至 8 DIP，中心视觉尺寸调为 15 DIP，并新增 `CenterHitRadiusDip=12`；`ScaleGizmoHitTester` 改为中心 Uniform 核心区先裁决，X/Y/Z 轴段从中心核心区外参与命中，避免中心拖动误判为单轴。

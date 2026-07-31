@@ -167,3 +167,41 @@ Transform Truth
 ## 9. 下一轮入口
 
 R1 只做编辑器相机操作：Orbit / Pan / Zoom / Frame All / Frame Selected / Resize / LostCapture / Escape。R1 禁止顺手实现 Rotate、Scale、WarCore、多选、吸附、场景序列化或完整地形编辑。
+
+## 10. WORLD-B 最终收口
+
+日期：2026-07-31 13:44:13
+
+`WORLD-B` 正式 CLOSED。
+
+已完成相机、选择、移动、旋转、缩放及撤销取消等基础编辑交互；不代表场景创建、保存、资产导入和环境系统已经完成。
+
+### WORLD-B 已完成
+
+- 编辑器相机基础交互。
+- 层级、检查器和视口选择同步。
+- 视口 Picking。
+- 空白区域取消选择。
+- Move Gizmo 移动闭环。
+- Rotate Gizmo 旋转闭环。
+- Scale Gizmo 缩放闭环。
+- Preview / Commit / Cancel。
+- Undo / Redo。
+- 目标切换。
+- 捕获异常取消。
+- 基础日志与自动验证。
+
+### WORLD-B 未包含
+
+- 场景新建。
+- 场景打开与保存。
+- 另存为。
+- 实体完整 CRUD。
+- 静态模型导入。
+- 资产数据库。
+- Prefab。
+- 地面。
+- 天空环境。
+- WarCore 领域功能。
+
+上述未包含能力不否定 WORLD-B 收口；它们属于 WORLD-C 或后续阶段。下一主阶段为 `WORLD-C：场景创作与持久化闭环`，必须从 WORLD-B 最终收口 commit 创建 `feat/WORLD-C-scene-authoring`。
