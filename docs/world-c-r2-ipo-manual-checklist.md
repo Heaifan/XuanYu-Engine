@@ -1,6 +1,20 @@
 # WORLD-C-R2 中文 IPO 真机验收卡
 
-当前为 WORLD-C-R2-R2 真机复测。首次验收中 01、05、06、07、08 通过；重点重新执行 02、03、04，状态不得提前 CLOSED。
+状态：`WORLD-C-R2 CLOSED`
+真机裁定日期：2026-08-01
+
+| 测试 | 结果 | 验收证据摘要 |
+| --- | --- | --- |
+| 01 空白场景 | PASS | 层级、检查器和选择为空，无十个测试实体 |
+| 02 添加立方体 | PASS | Cube 正常，黄色 Legacy Triangle 残影消失 |
+| 03 Transform | PASS | Move、Rotate、Scale 均正常，无几何串线 |
+| 04 重命名 | PASS | Focus → SelectAll，可直接覆盖旧名称 |
+| 05 删除 | PASS | 删除、选择清理与 Undo/Redo 正常 |
+| 06 Dirty 保存点 | PASS | 保存点前后 Clean/Dirty 正确 |
+| 07 保存恢复 | PASS | 身份、名称、类型、Transform 与顺序恢复 |
+| 08 R1 兼容 | PASS | Legacy 场景可打开并升级保存 |
+
+以下 IPO 条目保留为已执行的验收合同。
 
 ## 01 空白场景
 

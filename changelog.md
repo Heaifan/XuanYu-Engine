@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.21.8-rz
+WORLD-C-R2 真机验收通过与正式收口（2026-08-01 00:23:44）
+- 用户裁定：测试 01–08 全部 PASS；空白场景无测试实体，Cube 添加与三类 Transform 正常且黄色 Legacy Triangle 残影消失，重命名 Focus→SelectAll 符合预期，删除、Dirty、保存恢复与 R1 兼容均通过。
+- 根因收口：R2-R2 已将 Legacy Triangle、Cube、Move、Rotate、Scale 改为互斥绘制模式，Gizmo Draw 不再携带前三个 Legacy 顶点；该修复已获得真机证据确认。
+- 收口资料：实施验收报告、中文 IPO 验收记录、状态 SVG 与 `file-tree.md` 已同步为 `WORLD-C-R2 CLOSED`；本轮仅同步文档、状态和可见版本号，不修改运行时代码逻辑或测试逻辑。
+- 边界：不制造 R2-R3，不加入地面、网格、天空、更多几何、项目管理器、材质或资产系统；不创建 Tag/Release，不处理保留 stash，不 force/merge/rebase。
+- 验证结果：R2 代码自动门禁沿用已落库的 10 项目 0W0E、Core 135/135、World 191/191 证据，本纯收口轮未无意义复跑 build/test；本轮 `git diff --check` PASS，`scripts/arch-a-guard.ps1` EXIT=0（含 5+100），版本源、Markdown 标题/表格、SVG XML、当前状态引用与 8 文件修改范围核对均 PASS，无运行时代码逻辑或测试逻辑夹带。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：R2 无运行时阻断；R3 候选范围尚未冻结，需先讨论再实施。
+- 下一阶段：进入 `WORLD-C-R3：基础场景空间参照` 方案讨论；候选范围尚未冻结，本提交不直接实装。
+
 ## v0.2.21.7-rz
 WORLD-C-R2-R2 真机退回最小修复（2026-07-31，等待真机复测）
 - 真机裁定：空白场景、重命名功能、删除、Dirty、保存恢复和 R1 兼容通过；添加/Transform 因选中 Cube 内叠加黄色旧三角形失败，R2 不得 CLOSED。

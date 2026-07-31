@@ -1,8 +1,27 @@
 # WORLD-C-R2 实施与验收报告
 
+版本：`v0.2.21.8-rz`
+日期：2026-08-01 00:23:44
+分支：`feat/WORLD-C-scene-authoring`
+
 ## 状态
 
-`WAITING FOR REAL-MACHINE RETEST`（等待真机复测）。首次真机验收发现选中 Cube 叠加黄色旧三角形，并要求补全重命名全选体验；已进入 WORLD-C-R2-R2 最小修复，本报告不宣布 WORLD-C-R2 CLOSED。
+`WORLD-C-R2：CLOSED`。
+
+用户已完成真机复测并正式裁定通过：
+
+| 测试 | 真机结果 |
+| --- | --- |
+| 01 空白场景 | PASS；无十个测试实体 |
+| 02 添加立方体 | PASS；黄色 Legacy Triangle 残影已消失 |
+| 03 Move / Rotate / Scale | PASS；Cube、轮廓与三类 Gizmo 正常 |
+| 04 重命名 | PASS；Focus → SelectAll，可直接覆盖输入 |
+| 05 删除 | PASS |
+| 06 Dirty 保存点 | PASS |
+| 07 保存恢复 | PASS |
+| 08 R1 兼容 | PASS |
+
+该结论来自用户真机验收，不以自动测试替代真机证据。
 
 ## R2-R2 真机退回与修复
 
@@ -37,6 +56,8 @@
 - `scripts/arch-a-guard.ps1`：PASS（含架构边界与全仓 5+100）。
 - `git diff --check`、R2 SVG XML、仓库 `.xyscene` JSON：PASS。
 
-## 真机入口
+## 收口与下一阶段
 
-按 `docs/world-c-r2-ipo-manual-checklist.md` 重点复测 02、03、04。通过后另行裁定 CLOSED；本轮不创建 Tag/Release。
+WORLD-C-R2 已完成真实场景实体创建、编辑、历史、保存与恢复闭环，并经真机验收正式 CLOSED。本轮不创建 Tag/Release。
+
+下一阶段仅进入 `WORLD-C-R3：基础场景空间参照` 方案讨论。世界原点、编辑器网格、坐标轴、地面参照与天空背景均尚未冻结，本收口不直接实装。

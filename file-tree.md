@@ -1,7 +1,7 @@
-版本：v0.2.21.7-rz
+版本：v0.2.21.8-rz
 # XuanYu Engine 文件树
 
-## WORLD-C-R2/R2-R2 新增职责（v0.2.21.7-rz）
+## WORLD-C-R2 CLOSED 职责索引（v0.2.21.8-rz）
 
 - `XuanYu.World/WorldEntityType.cs`：R2 最小实体类型与 Legacy 名称兼容解析。
 - `XuanYu.World/WorldEntityName.cs`：场景范围唯一命名与最小可用三位后缀。
@@ -14,9 +14,9 @@
 - `XuanYu.World.Tests/World/WorldCR2*.cs`：R2 World、UI 历史、Dirty 与文档兼容回归。
 - `XuanYu.Core.Tests/Render/CubeRenderDrawPlanTests.cs`：Cube 填充/轮廓及三类 Gizmo 无 Legacy Draw 的最终帧合同。
 - `XuanYu.World.Tests/World/WorldCR2InlineRenameTests.cs`：F2/右键重命名、延迟 Focus 与 SelectAll 回归。
-- `docs/world-c-r2-implementation-acceptance.md`：R2 实施范围、自动门禁与等待真机状态。
-- `docs/world-c-r2-ipo-manual-checklist.md`：中文 IPO 真机验收卡。
-- `docs/world-c-r2-status.svg`：R2 当前状态图。
+- `docs/world-c-r2-implementation-acceptance.md`：R2 实施范围、自动门禁、R2-R2 修复与真机 CLOSED 裁定。
+- `docs/world-c-r2-ipo-manual-checklist.md`：中文 IPO 合同与测试 01–08 真机 PASS 记录。
+- `docs/world-c-r2-status.svg`：R2 真机验收通过与 CLOSED 状态图。
 
 文件总数：570
 
