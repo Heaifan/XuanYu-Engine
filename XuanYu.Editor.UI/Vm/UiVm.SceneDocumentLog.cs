@@ -18,8 +18,15 @@ public sealed partial class UiVm
             $"Path={path}；Stage={result.Stage}；Code={result.ErrorCode}；Message={result.Message}；Detail={result.Detail}；CurrentScenePreserved=True");
 
     void LogSceneSaveFailure<T>(string path, SceneDocumentResult<T> result) =>
-        LogScene(EditorLogLevel.Error, "场景保存失败",
+        LogScene(EditorLogLevel.Error, EditorLogCategory.Save, "场景保存失败",
             $"Path={path}；Stage={result.Stage}；Code={result.ErrorCode}；Message={result.Message}；Detail={result.Detail}");
+
+    void LogSceneSaveSuccess(string path, bool saveAs)
+    {
+        var name = Path.GetFileName(path);
+        var message = saveAs ? $"场景另存为成功：{name}" : $"场景保存成功：{name}";
+        LogScene(EditorLogLevel.Info, EditorLogCategory.Save, message, $"Path={path}");
+    }
 
     bool FailCandidateBuild(string path, Exception ex)
     {
@@ -33,11 +40,14 @@ public sealed partial class UiVm
         return false;
     }
 
-    void LogScene(EditorLogLevel level, string message, string detail)
+    void LogScene(EditorLogLevel level, string message, string detail) =>
+        LogScene(level, EditorLogCategory.Load, message, detail);
+
+    void LogScene(EditorLogLevel level, EditorLogCategory category, string message, string detail)
     {
         if (level == EditorLogLevel.Error)
-            _logBus.Error(EditorLogSource.Project, EditorLogCategory.Load, message, detail);
-        else _logBus.Info(EditorLogSource.Project, EditorLogCategory.Load, message, detail);
+            _logBus.Error(EditorLogSource.Project, category, message, detail);
+        else _logBus.Info(EditorLogSource.Project, category, message, detail);
         Console.WriteLine($"{DateTime.Now:HH:mm:ss} [{level}] 场景文档 {message}；{detail}");
         RefreshLogBindings();
     }

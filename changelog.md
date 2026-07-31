@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.21.4-fix
+WORLD-C-R1 保存反馈与 Dirty 可见性修复（2026-07-31 17:34:28）
+- 当前事实：用户真机截图已确认测试 02 打开 `samples/world-c-r1-ten-triangles.xyscene` 改判 PASS；测试 03/04 暴露的是“另存为/保存成功反馈不明显、Dirty 中文状态不够可见”的交互反馈缺口，不是保存链路本身失效。
+- 修复内容：文档标题 Dirty 标记从 `*` 改为 `（未保存）`；顶部与底部状态统一经 `DocumentStatusText` 投影，Dirty 显示 amber “状态：未保存”，保存失败保持红色，保存/另存为成功显示绿色短暂反馈后回到就绪；Dirty 会主动打断短暂成功提示。
+- 保存反馈：普通保存成功写 `场景保存成功：<文件名>`，另存为成功写 `场景另存为成功：<文件名>`，日志 Detail 包含完整 `Path=<路径>`；保存失败继续保留 Dirty、标题未保存和红色失败状态，日志保留 Path/Stage/Code/Message/Detail。
+- UI 行为：保存按钮在 Dirty 时轻量 amber 强调，保存中禁用；`Ctrl+S` 走普通保存，未命名场景仍经另存为入口，`Ctrl+Shift+S` 明确记录另存为成功反馈。
+- 测试变化：新增 WORLD-C-R1 保存反馈回归，覆盖另存为成功、普通保存成功、Dirty 中文状态、Undo 回保存点 Clean / Redo 重新 Dirty、保存失败保护 Dirty 与错误 Code。
+- 状态：WORLD-C-R1 仍等待用户真机重新执行测试 03/04；不宣布 CLOSED，不进入 WORLD-C-R2。
+
 ## v0.2.21.3-fix
 WORLD-C-R1-R1 真机场景加载失败诊断与 sample 修复（2026-07-31 16:50:16）
 - 当前事实：用户真机测试 01 已确认启动空白场景 PASS；测试 02 打开 `samples/world-c-r1-ten-triangles.xyscene` 后 UI 显示“加载失败”、World 仍为 0 实体，且控制台/编辑器日志缺少 Path、Stage、Code、Message 和 Detail，无法审计失败根因。

@@ -74,7 +74,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public string SelectedNodeKey => _selectedNodeKey;
     public string FooterMessage { get => _footerMessage; private set => Set(ref _footerMessage, value); }
     public string FooterMode => $"工具：{ActiveTool}";
-    public string FooterState { get => _footerState; private set => Set(ref _footerState, value); }
+    public string FooterState { get => _footerState; private set => SetFooterState(value); }
     public bool HasSelection => _editorState.Snapshot.HasSelection;
     public bool IsLogOpen { get => _isLogOpen; set => Set(ref _isLogOpen, value); }
     public bool IsEmptySelection => !HasSelection;

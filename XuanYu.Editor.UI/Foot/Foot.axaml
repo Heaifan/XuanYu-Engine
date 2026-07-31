@@ -29,7 +29,7 @@
         <TextBlock Text="{Binding LogSummary}" VerticalAlignment="Center"/>
       </Button>
       <TextBlock Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center" Foreground="#50607a"/>
-      <TextBlock Grid.Column="2" Text="{Binding FooterState}" VerticalAlignment="Center" Foreground="#2e7d32" FontWeight="SemiBold"/>
+      <TextBlock Grid.Column="2" Text="{Binding DocumentStatusText}" VerticalAlignment="Center" Foreground="{Binding DocumentStatusForeground}" FontWeight="SemiBold"/>
     </Grid>
 
     <Border Grid.Row="1" IsVisible="{Binding IsLogOpen}" MinHeight="180" Margin="0,8,0,0" BorderBrush="#d9e2ee" BorderThickness="1" CornerRadius="6" Background="#f8fbff" Padding="8">

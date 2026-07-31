@@ -64,6 +64,6 @@ public partial class UiWin
             FileTypeChoices = [SceneFileType]
         });
         var path = file?.TryGetLocalPath();
-        return !string.IsNullOrWhiteSpace(path) && await vm.SaveSceneAsync(path);
+        return !string.IsNullOrWhiteSpace(path) && await vm.SaveSceneAsync(path, saveAs: true);
     }
 }

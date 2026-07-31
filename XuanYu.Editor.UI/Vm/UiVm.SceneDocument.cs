@@ -14,8 +14,10 @@ public sealed partial class UiVm
     public event Action<string>? FileCommandRequested;
     public bool IsSceneDirty => _documentSession.IsDirty(_historyOwner.Count);
     public string CurrentScenePath => _documentSession.CurrentPath ?? "";
-    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.21.3-fix - {DocumentTitle}";
-    public string DocumentTitle => $"{(string.IsNullOrWhiteSpace(CurrentScenePath) ? "未命名场景" : Path.GetFileName(CurrentScenePath))}{(IsSceneDirty ? "*" : "")}";
+    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.21.4-fix - {DocumentTitle}";
+    public string DocumentTitle => $"{DocumentFileName}{(IsSceneDirty ? "（未保存）" : "")}";
+    public string DocumentFileName =>
+        string.IsNullOrWhiteSpace(CurrentScenePath) ? "未命名场景" : Path.GetFileName(CurrentScenePath);
 
     public void NewBlankScene()
     {
@@ -31,11 +33,13 @@ public sealed partial class UiVm
 
     public async Task<bool> OpenSceneAsync(string path)
     {
+        SetSceneBusy(true);
         FooterState = "状态：正在加载";
         LogSceneLoadStart(path);
         var result = await _sceneStorage.LoadAsync(path, stage => LogSceneLoadStage(stage));
         if (!result.Succeeded || result.Value is null)
         {
+            SetSceneBusy(false);
             _documentSession.MarkError(result.Message);
             FooterMessage = result.Message;
             FooterState = "状态：加载失败";
@@ -46,7 +50,7 @@ public sealed partial class UiVm
         LogSceneLoadStage("BuildCandidate");
         IReadOnlyList<WorldEntitySnapshot> entities;
         try { entities = SceneDocumentWorldBridge.ToWorld(result.Value, _partitionStrategy); }
-        catch (Exception ex) { return FailCandidateBuild(path, ex); }
+        catch (Exception ex) { SetSceneBusy(false); return FailCandidateBuild(path, ex); }
         LogSceneLoadStage("ReplaceWorld");
         _sceneState.ReplaceEntities(entities);
         CancelInteraction("打开场景");
@@ -54,9 +58,10 @@ public sealed partial class UiVm
         _documentSession.MarkLoaded(path, result.Value);
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "打开场景");
         FooterMessage = "场景已打开。";
-        FooterState = "状态：就绪";
         LogSceneLoadSuccess(path, entities.Count);
+        SetSceneBusy(false);
         RaiseDocumentChanged();
+        ShowTemporaryDocumentStatus("状态：场景加载成功");
         RefreshWorldProjectionBindings();
         return true;
     }
@@ -70,11 +75,14 @@ public sealed partial class UiVm
 
     void RaiseDocumentChanged()
     {
+        ClearTransientDocumentStatusForDirty();
         OnPropertyChanged(nameof(IsSceneDirty));
         OnPropertyChanged(nameof(CurrentScenePath));
         OnPropertyChanged(nameof(DocumentTitle));
+        OnPropertyChanged(nameof(DocumentFileName));
         OnPropertyChanged(nameof(DocumentWindowTitle));
         OnPropertyChanged(nameof(TransformHistoryCount));
         OnPropertyChanged(nameof(TransformRedoCount));
+        RaiseDocumentStatusChanged();
     }
 }

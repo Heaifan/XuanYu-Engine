@@ -1,7 +1,7 @@
-版本：v0.2.21.3-fix
+版本：v0.2.21.4-fix
 # XuanYu Engine 文件树
 
-文件总数：564
+文件总数：566
 
 ## 根目录
 
@@ -345,6 +345,7 @@
 - `XuanYu.World.Tests/World/WorldScaleTransformUiTests.R5R1.cs`：WORLD-B-R5-R1 缩放 UiVm 修复分部；覆盖 Y/Z 单轴回归、Uniform 一次提交一条 History、Undo/Redo 和 Escape 后延迟 MouseUp 不提交。
 - `XuanYu.World.Tests/World/WorldCSceneDocumentTests.cs`：WORLD-C-R1 场景文档基础测试；覆盖保存/打开往返、损坏 JSON 失败日志和 Dirty 保存检查点。
 - `XuanYu.World.Tests/World/WorldCSceneDocumentTests.R1R1.cs`：WORLD-C-R1-R1 真机失败回归测试；走生产 `OpenSceneAsync` 打开仓库 sample，并验证损坏文件加载失败时旧 World、路径、Dirty、选择和 History 保留。
+- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.R1SaveFeedback.cs`：WORLD-C-R1 保存反馈回归测试；覆盖另存为成功、普通保存成功、Dirty 中文状态、Undo/Redo Clean-Dirty 和保存失败保护。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
 - `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
 - `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
@@ -501,7 +502,7 @@
 - `XuanYu.Editor.UI/EditorState/EditorToolSnapshot.cs`：编辑器工具只读快照；包含 ActiveTool、Snap Toggle 与捕获状态。
 - `XuanYu.Editor.UI/EditorState/EditorToolText.cs`：工具身份与中文文案映射。
 - `XuanYu.Editor.UI/EditorState/EditorTransformCapturePolicy.cs`：Transform 捕获与 Gizmo 可见性策略；规定 Move Gizmo 只能由 ActiveTool=Move 且已选中时显示和捕获；WORLD-B-R5 新增 `CanBeginScaleGizmo`（ActiveTool==Scale 且已选中）与 `ShouldShowScaleGizmo`，不执行 UI 或场景修改。
-- `XuanYu.Editor.UI/Foot/Foot.axaml`：底部日志栏界面。
+- `XuanYu.Editor.UI/Foot/Foot.axaml`：底部日志栏界面；底部状态文本复用文档状态投影，Dirty、保存成功和失败与顶部一致。
 - `XuanYu.Editor.UI/Foot/Foot.axaml.cs`：底部日志栏代码后置，含日志区 Ctrl+A / Ctrl+C 隧道路由接线。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`：日志详情面板界面。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs`：日志详情面板代码后置。
@@ -515,7 +516,7 @@
 - `XuanYu.Editor.UI/Right/Right.axaml.cs`：右侧面板代码后置。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml`：主布局根界面。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml.cs`：主布局根代码后置。
-- `XuanYu.Editor.UI/Top/Top.axaml`：顶部工具栏界面；持续工具高亮、视图命令按钮和吸附 Toggle 分离。
+- `XuanYu.Editor.UI/Top/Top.axaml`：顶部工具栏界面；持续工具高亮、文档状态胶囊、保存按钮 Dirty 提示和保存中禁用。
 - `XuanYu.Editor.UI/Top/Top.axaml.cs`：顶部工具栏代码后置。
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs`：Win32 原生 Pointer 消息快照；R1 起包含 Middle Button、Wheel、Shift 和滚轮 Delta。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaCamera.cs`：Avalonia 中键相机会话启动辅助；负责 Shift+MMB 模式冻结与 Pointer Capture，不拥有 CameraState。
@@ -570,6 +571,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionValidity.cs`：WORLD-B-R2 选择失效清理分部；根据 World 权威 `TryGetEntity` 清理已不存在的 EntityId 选择，不依赖层级节点显示状态。
 - `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部；WORLD-B-R5 放开"缩放"工具拦截（原 `name is "框选" or "缩放"` 改为仅 `name is "框选"`），使缩放工具可激活并驱动 Scale Gizmo。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
+- `XuanYu.Editor.UI/Vm/UiVm.DocumentStatus.cs`：WORLD-C-R1 文档状态投影分部；把 Dirty、保存/另存为成功、失败和 Busy 映射到顶部/底部状态与保存按钮视觉。
 - `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：WORLD-C-R1 文档打开分部；负责新建空白场景、打开候选场景和文档状态更新，不持有实体副本。
 - `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentLog.cs`：WORLD-C-R1-R1 场景加载/保存低频诊断分部；同步写编辑器日志和 Console，记录 Path、Stage、Code、Message、Detail 和保护状态。
 - `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentSave.cs`：WORLD-C-R1 文档保存分部；负责保存/另存为和保存失败处理，不复制实体数据。
