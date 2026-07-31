@@ -180,12 +180,12 @@ vec3 scaleVertex(int vi) {
 }
 
 void main() {
-    if (pc.gizmoMode < -0.5 && pc.selectionMode > 1.5) {
+    if (pc.gizmoMode > -1.5 && pc.gizmoMode < -0.5 && pc.selectionMode > 1.5) {
         vec4 clipPos; vec4 color;
         cubeOutlineVertex(gl_VertexIndex, clipPos, color);
         gl_Position = clipPos;
         vBaseColor = color;
-    } else if (pc.gizmoMode < -0.5) {
+    } else if (pc.gizmoMode > -1.5 && pc.gizmoMode < -0.5) {
         vec3 local = cube(vec3(0.0), vec3(0.5), gl_VertexIndex);
         local = eulerRot(pc.entityRotation.xyz) * (local * pc.entityScale.xyz);
         gl_Position = pc.viewProjection * vec4(local + pc.worldPosition.xyz, 1.0);
@@ -196,7 +196,7 @@ void main() {
         outlineRibbonVertex(gl_VertexIndex, clipPos, color);
         gl_Position = clipPos;
         vBaseColor = color;
-    } else if (gl_VertexIndex < 3) {
+    } else if (pc.gizmoMode < -1.5 && gl_VertexIndex < 3) {
         // 实体三角形填充
         vec3 local = triangleVertex(gl_VertexIndex);
         local = local * pc.entityScale.xyz;
@@ -205,7 +205,7 @@ void main() {
         gl_Position = pc.viewProjection * vec4(world, 1.0);
         vBaseColor = vec4(1.0, 0.85, 0.2, 1.0);
     } else if (pc.gizmoMode < 0.5) {
-        int gi = gl_VertexIndex - 3;
+        int gi = gl_VertexIndex;
         if (gi < 18) {
             int plane = gi / 6;
             vec3 world = planeVertex(plane, gi % 6) + pc.worldPosition.xyz;
@@ -221,7 +221,7 @@ void main() {
         }
     } else if (pc.gizmoMode > 1.5) {
         // Scale Gizmo：三轴杆 + 三轴端立方体 + 中心等比立方体
-        int vi = gl_VertexIndex - 3;
+        int vi = gl_VertexIndex;
         vec3 local = scaleVertex(vi);
         vec3 world = local + pc.worldPosition.xyz;
         gl_Position = pc.viewProjection * vec4(world, 1.0);
@@ -239,7 +239,7 @@ void main() {
         }
         vBaseColor = vec4(col, 1.0);
     } else {
-        int ri = gl_VertexIndex - 3;
+        int ri = gl_VertexIndex;
         int ring = ri / (48 * 6);
         int seg = (ri % (48 * 6)) / 6;
         int vert = ri % 6;

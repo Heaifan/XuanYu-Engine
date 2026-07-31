@@ -4,7 +4,7 @@ using XuanYu.World;
 
 namespace XuanYu.World.Tests.World;
 
-public sealed class WorldCR2UiHistoryTests
+public sealed partial class WorldCR2UiHistoryTests
 {
     [Fact]
     public void Production_start_is_blank_and_add_undo_redo_restores_id_and_selection()

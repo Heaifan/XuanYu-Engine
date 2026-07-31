@@ -11,7 +11,7 @@ public partial class UiWin
         if (DataContext is not UiVm vm) return false;
         if (e.Key == Key.F2)
         {
-            e.Handled = vm.BeginRenameSelectedEntity();
+            e.Handled = vm.BeginRenameFromShortcut();
             return e.Handled;
         }
         if (e.Key != Key.Delete) return false;

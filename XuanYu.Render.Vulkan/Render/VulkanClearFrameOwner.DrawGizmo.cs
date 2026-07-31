@@ -7,37 +7,33 @@ namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    const uint MoveGizmoVertexCount = 39;
-    const uint RotateGizmoVertexCount = 867;
-    const uint ScaleGizmoVertexCount = 252;
-
-    void DrawActiveGizmo(CommandBuffer cb, float* scene, RenderProjection projection)
+    void DrawGizmo(CommandBuffer cb, float* scene, RenderDrawPlan.FrameEntry draw)
     {
         Vector3d rotation;
         double radius;
-        uint count;
-        if (projection.ScaleGizmoVisible)
+        float mode;
+        if (draw.Kind == RenderDrawKind.ScaleGizmo)
         {
-            rotation = projection.GizmoRotation;
-            radius = projection.ScaleGizmoWorldRadius;
-            count = ScaleGizmoVertexCount;
+            rotation = _renderProjection.GizmoRotation;
+            radius = _renderProjection.ScaleGizmoWorldRadius;
+            mode = 2.0f;
         }
-        else if (projection.RotateGizmoVisible)
+        else if (draw.Kind == RenderDrawKind.RotateGizmo)
         {
             rotation = Vector3d.Zero;
-            radius = projection.RotateGizmoWorldRadius;
-            count = RotateGizmoVertexCount;
+            radius = _renderProjection.RotateGizmoWorldRadius;
+            mode = 1.0f;
         }
         else
         {
             rotation = Vector3d.Zero;
-            radius = projection.RotateGizmoWorldRadius;
-            count = MoveGizmoVertexCount;
+            radius = _renderProjection.RotateGizmoWorldRadius;
+            mode = 0.0f;
         }
-        FillScenePushConstants(scene, projection, projection.GizmoPosition,
-            rotation, new Vector3d(1, 1, 1), (float)radius);
+        FillScenePushConstants(scene, _renderProjection, _renderProjection.GizmoPosition,
+            rotation, new Vector3d(1, 1, 1), (float)radius, gizmoModeOverride: mode);
         PushSceneConstants(cb, scene);
-        _vk.CmdDraw(cb, count, 1, 0, 0);
+        _vk.CmdDraw(cb, (uint)draw.VertexCount, 1, 0, 0);
     }
 
     void PushSceneConstants(CommandBuffer cb, float* scene)

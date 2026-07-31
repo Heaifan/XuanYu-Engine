@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.21.7-rz
+WORLD-C-R2-R2 真机退回最小修复（2026-07-31，等待真机复测）
+- 真机裁定：空白场景、重命名功能、删除、Dirty、保存恢复和 R1 兼容通过；添加/Transform 因选中 Cube 内叠加黄色旧三角形失败，R2 不得 CLOSED。
+- 根因：Gizmo Draw 仍保留旧合同的前三个 Legacy Triangle 顶点，`scene.vert` 又在 Move/Rotate/Scale 分支前优先绘制这三个顶点；三种工具因此都提交黄色三角形，Scale 同时漏掉末尾三个真实 Gizmo 顶点。
+- Render 修复：最终帧统一消费 `RenderDrawPlan.GetFrameDrawPlan`；Legacy、Cube、Move、Rotate、Scale 模式互斥，Gizmo 顶点数改为 36/864/252，不再包含旧三角形额度；Legacy 仅由显式 Legacy 实体类型生成。
+- 重命名修复：内联文本框在实际变为可见并完成布局调度后执行 Focus + SelectAll；F2 与层级右键入口显式汇入同一重命名合同。
+- 回归：新增选中 Cube 在 Move/Rotate/Scale 最终帧无 Legacy 命令、Cube 填充/轮廓同类型、显式 Legacy 保留，以及重命名 Focus/SelectAll 和双入口一致性测试。
+- 验证：10 项目串行 build 0W0E；Core Tests 135/135、World Tests 191/191；架构守卫（含正式 5+100）、diff-check、GLSL、SVG XML 与样例 JSON 均 PASS。
+- 状态：自动门禁完成后仍标记“等待真机复测”；不宣布 WORLD-C-R2 CLOSED，不扩入地面、网格、更多几何、项目管理器、材质或资产系统，不创建 Tag/Release。
+
 ## v0.2.21.6-rz
 WORLD-C-R2 真实场景实体创作主闭环（2026-07-31，等待真机验收）
 - World：新增 `LegacyMinimalTriangle` / `Cube` 最小类型、Add Cube、场景唯一名称、受控重命名、删除与快照原身份恢复；快照持有 ParentId/SiblingOrder，恢复拒绝重复 ID、非法类型、失效父级和顺序冲突。

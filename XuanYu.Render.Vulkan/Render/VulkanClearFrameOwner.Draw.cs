@@ -35,32 +35,23 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdSetViewport(cb, 0, 1, pVp);
             _vk.CmdSetScissor(cb, 0, 1, pSc);
             if (!_hasRenderProjection) return;
-            var entities = _renderProjection.Entities;
-            for (var i = 0; i < entities.Count; i++)
+            foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
-                var e = entities[i];
-                var isCube = e.EntityType == RenderEntityType.Cube;
-                var fillCount = isCube ? RenderDrawPlan.CubeFillVertexCount : RenderDrawPlan.FillVertexCount;
-                var outlineCount = isCube ? RenderDrawPlan.CubeOutlineRibbonVertexCount : RenderDrawPlan.OutlineRibbonVertexCount;
-                var entityMode = isCube ? -1.0f : 0.0f;
-                // R4-R3-R2：实体主体填充，顶点数=RenderDrawPlan.FillVertexCount(3)
-                FillScenePushConstants(pScene, _renderProjection,
-                    e.Position, e.Rotation, e.Scale, 0.0f,
-                    e.IsSelected ? 1.0f : 0.0f, entityMode);
-                PushSceneConstants(cb, pScene);
-                _vk.CmdDraw(cb, (uint)fillCount, 1, 0, 0);
-                // R4-R3-R2：选中实体额外绘制外轮廓边带，顶点数=RenderDrawPlan.OutlineRibbonVertexCount(18)
-                if (e.IsSelected)
-                {
-                    FillScenePushConstants(pScene, _renderProjection,
-                        e.Position, e.Rotation, e.Scale, 0.0f, 2.0f, entityMode);
-                    PushSceneConstants(cb, pScene);
-                    _vk.CmdDraw(cb, (uint)outlineCount, 1, 0, 0);
-                }
+                if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
+                else DrawGizmo(cb, pScene, draw);
             }
-            if (_renderProjection.GizmoVisible || _renderProjection.RotateGizmoVisible || _renderProjection.ScaleGizmoVisible)
-                DrawActiveGizmo(cb, pScene, _renderProjection);
         }
     }
 
+    void DrawEntity(CommandBuffer cb, float* scene, RenderDrawPlan.FrameEntry draw)
+    {
+        var entity = _renderProjection.Entities[draw.EntityIndex];
+        var entityMode = draw.EntityType == RenderEntityType.Cube ? -1.0f : -2.0f;
+        var selectionMode = draw.Kind == RenderDrawKind.EntityOutline
+            ? 2.0f : (entity.IsSelected ? 1.0f : 0.0f);
+        FillScenePushConstants(scene, _renderProjection, entity.Position, entity.Rotation,
+            entity.Scale, 0.0f, selectionMode, entityMode);
+        PushSceneConstants(cb, scene);
+        _vk.CmdDraw(cb, (uint)draw.VertexCount, 1, 0, 0);
+    }
 }

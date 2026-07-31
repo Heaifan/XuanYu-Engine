@@ -89,7 +89,8 @@
                 <Path Grid.Column="2" Classes="treeIcon" Data="{StaticResource EntityIcon}" IsVisible="{Binding IsEntity}"/>
                 <TextBlock Grid.Column="3" Text="{Binding Title}" Classes="treeText" IsVisible="{Binding !IsRenaming}"/>
                 <TextBox Grid.Column="3" Text="{Binding RenameText, Mode=TwoWay}" IsVisible="{Binding IsRenaming}"
-                         AttachedToVisualTree="RenameTextBox_AttachedToVisualTree" KeyDown="RenameTextBox_KeyDown" LostFocus="RenameTextBox_LostFocus"/>
+                         AttachedToVisualTree="RenameTextBox_AttachedToVisualTree" DetachedFromVisualTree="RenameTextBox_DetachedFromVisualTree"
+                         KeyDown="RenameTextBox_KeyDown" LostFocus="RenameTextBox_LostFocus"/>
               </Grid>
             </Border>
           </DataTemplate></ListBox.ItemTemplate>

@@ -5,7 +5,7 @@ internal static class VulkanScenePushConstants
     // std140 布局：
     //   mat4 viewProjection      @0   (64)
     //   vec4 worldPosition       @64  (16)
-    //   float gizmoMode          @80  (4)    0=Move Gizmo / 1=Rotate Gizmo
+    //   float gizmoMode          @80  (4)    -2=Legacy / -1=Cube / 0=Move / 1=Rotate / 2=Scale
     //   float gizmoRingRadius    @84  (4)    仅旋转 Gizmo 环使用（屏幕空间世界半径）
     //   float selectionMode      @88  (4)    0=未选中填充 / 1=选中填充 / 2=外轮廓边带
     //   vec4 entityRotation      @96  (16)   xyz=欧拉角（度），w=viewportWidth

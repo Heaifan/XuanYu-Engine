@@ -45,6 +45,10 @@ public sealed partial class UiVm
         return true;
     }
 
+    public bool BeginRenameFromShortcut() => BeginRenameSelectedEntity();
+
+    public bool BeginRenameFromHierarchyContext() => BeginRenameSelectedEntity();
+
     public void CommitInlineRename(EditorTreeNode node)
     {
         if (!node.IsRenaming) return;

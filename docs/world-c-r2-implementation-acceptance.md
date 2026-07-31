@@ -2,7 +2,14 @@
 
 ## 状态
 
-`WAITING FOR REAL-MACHINE ACCEPTANCE`（等待真机验收）。本报告不宣布 WORLD-C-R2 CLOSED。
+`WAITING FOR REAL-MACHINE RETEST`（等待真机复测）。首次真机验收发现选中 Cube 叠加黄色旧三角形，并要求补全重命名全选体验；已进入 WORLD-C-R2-R2 最小修复，本报告不宣布 WORLD-C-R2 CLOSED。
+
+## R2-R2 真机退回与修复
+
+- 根因：Gizmo Draw 仍把前三个顶点留给旧 Legacy Triangle，GLSL 又在三类 Gizmo 分支前优先消费这三个顶点。
+- 修复：最终帧由统一 DrawPlan 生成实体填充、实体轮廓和唯一活动 Gizmo；Legacy/Cube/Move/Rotate/Scale 模式互斥，Move/Rotate/Scale 顶点数为 36/864/252，不再携带旧三角形。
+- 重命名：内联文本框实际可见后排队执行 Focus + SelectAll；F2 与层级右键使用同一入口合同。
+- 边界：未通过透明、缩小或遮挡掩盖三角形；未加入地面、网格、更多几何、项目管理器、材质或资产系统。
 
 ## 实施范围
 
@@ -25,11 +32,11 @@
 - GLSL `scene.vert` 已由 `glslc` 编译，嵌入 `ShaderBytecode.Vert.cs`。
 - 初始环境曾被 Avalonia 用户缓存权限、缺失 restore 资产和默认并行内存峰值阻断；授权 restore 后统一改用 `-m:1` 串行门禁。
 - 10 项目串行 build：0 warning / 0 error。
-- Core Tests：130 passed / 0 failed / 0 skipped。
-- World Tests：188 passed / 0 failed / 0 skipped。
+- Core Tests：135 passed / 0 failed / 0 skipped。
+- World Tests：191 passed / 0 failed / 0 skipped。
 - `scripts/arch-a-guard.ps1`：PASS（含架构边界与全仓 5+100）。
 - `git diff --check`、R2 SVG XML、仓库 `.xyscene` JSON：PASS。
 
 ## 真机入口
 
-按 `docs/world-c-r2-ipo-manual-checklist.md` 执行 8 组 IPO 测试。通过后另行裁定 CLOSED；本轮不创建 Tag/Release。
+按 `docs/world-c-r2-ipo-manual-checklist.md` 重点复测 02、03、04。通过后另行裁定 CLOSED；本轮不创建 Tag/Release。
