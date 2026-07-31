@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620">
+  <rect width="1120" height="620" fill="#f7f9fc"/>
+  <text x="560" y="48" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="28" fill="#1f2a37" font-weight="700">WORLD-C-R1 最小场景保存与打开闭环 CLOSED</text>
+  <text x="560" y="82" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="15" fill="#526173">v0.2.21.5-fix · 真机验收通过 · 仓库收口完成 · 不进入 R2 代码</text>
+
+  <rect x="70" y="125" width="250" height="138" rx="10" fill="#eaf4ff" stroke="#94b9e6" stroke-width="2"/>
+  <text x="195" y="158" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="20" fill="#174a7c" font-weight="700">输入与状态</text>
+  <text x="98" y="194" font-family="Microsoft YaHei, Arial" font-size="15" fill="#24415f">空白启动 / 新建</text>
+  <text x="98" y="222" font-family="Microsoft YaHei, Arial" font-size="15" fill="#24415f">打开 / 保存 / 另存为</text>
+  <text x="98" y="250" font-family="Microsoft YaHei, Arial" font-size="15" fill="#24415f">Dirty 标题与未保存提示</text>
+
+  <rect x="435" y="125" width="250" height="138" rx="10" fill="#eef8ef" stroke="#8bc79b" stroke-width="2"/>
+  <text x="560" y="158" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="20" fill="#236137" font-weight="700">场景文档链</text>
+  <text x="463" y="194" font-family="Microsoft YaHei, Arial" font-size="15" fill="#2f5639">严格 .xyscene JSON</text>
+  <text x="463" y="222" font-family="Microsoft YaHei, Arial" font-size="15" fill="#2f5639">候选加载与失败保护</text>
+  <text x="463" y="250" font-family="Microsoft YaHei, Arial" font-size="15" fill="#2f5639">原子保存与诊断日志</text>
+
+  <rect x="800" y="125" width="250" height="138" rx="10" fill="#fff5df" stroke="#d9b85b" stroke-width="2"/>
+  <text x="925" y="158" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="20" fill="#765615" font-weight="700">World 恢复</text>
+  <text x="828" y="194" font-family="Microsoft YaHei, Arial" font-size="15" fill="#614d1d">实体身份 / 名称</text>
+  <text x="828" y="222" font-family="Microsoft YaHei, Arial" font-size="15" fill="#614d1d">层级顺序 / Transform</text>
+  <text x="828" y="250" font-family="Microsoft YaHei, Arial" font-size="15" fill="#614d1d">失败不破坏当前场景</text>
+
+  <path d="M320 194 H435" stroke="#6d7f94" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M685 194 H800" stroke="#6d7f94" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="105" y="335" width="910" height="154" rx="12" fill="#ffffff" stroke="#d5dee9" stroke-width="2"/>
+  <text x="560" y="372" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="20" fill="#1f2a37" font-weight="700">验收证据</text>
+  <text x="145" y="410" font-family="Microsoft YaHei, Arial" font-size="16" fill="#2e3b4e">真机：测试 01-09 PASS；测试 10-13 由自动门禁覆盖，不追加重复总验收。</text>
+  <text x="145" y="442" font-family="Microsoft YaHei, Arial" font-size="16" fill="#2e3b4e">自动：WorldC 10 passed；Core 129 passed；World 173 passed；默认 build 10 项目 0W0E。</text>
+  <text x="145" y="474" font-family="Microsoft YaHei, Arial" font-size="16" fill="#2e3b4e">边界：不包含项目管理器、实体完整 CRUD、资产导入、Prefab、环境系统、Tag 或 Release。</text>
+
+  <rect x="336" y="535" width="448" height="44" rx="22" fill="#eaf7ee" stroke="#8bc79b" stroke-width="2"/>
+  <text x="560" y="563" text-anchor="middle" font-family="Microsoft YaHei, Arial" font-size="18" fill="#236137" font-weight="700">下一步：WORLD-C-R2 最小项目管理器 / 项目容器</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#6d7f94"/>
+    </marker>
+  </defs>
+</svg>

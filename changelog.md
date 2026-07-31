@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.21.5-fix
+WORLD-C-R1 真机验收通过与正式收口（2026-07-31 17:58:02）
+- 用户裁定：测试 01-09 均已 PASS；测试 10-13 不再追加真机重复测试，由现有自动门禁覆盖。WORLD-C-R1 真机验收通过。
+- 收口内容：新增 `docs/world-c-r1-closure-report.md` 与 `docs/world-c-r1-closure.svg`，正式记录 WORLD-C-R1 `CLOSED`、真机验收记录、自动门禁、完成边界和下一阶段入口。
+- 完成边界：已完成空白场景启动、新建、打开、保存、另存为、未保存处理、严格 `.xyscene` 读写、候选加载、原子保存、Dirty 保存检查点及重启恢复；不包含项目管理器、实体完整 CRUD、资产导入、Prefab、通用组件序列化与环境系统。
+- 样例处理：真机保存污染了 `samples/world-c-r1-ten-triangles.xyscene`（Entity 1 Transform 与格式化/中文转义变化），已按测试污染恢复仓库基线，不制造单独样例布局提交。
+- 验证结果：按用户要求补跑正常输出目录 `dotnet build XuanYu.Engine.slnx`，10 项目 **0 warning / 0 error**；未重复运行已通过的完整测试。
+- 状态：WORLD-C-R1 **CLOSED**；暂不创建 Tag 或 Release；下一阶段为 WORLD-C-R2 最小项目管理器 / 项目容器，但本提交不混入 R2 代码。
+
 ## v0.2.21.4-fix
 WORLD-C-R1 保存反馈与 Dirty 可见性修复（2026-07-31 17:34:28）
 - 当前事实：用户真机截图已确认测试 02 打开 `samples/world-c-r1-ten-triangles.xyscene` 改判 PASS；测试 03/04 暴露的是“另存为/保存成功反馈不明显、Dirty 中文状态不够可见”的交互反馈缺口，不是保存链路本身失效。

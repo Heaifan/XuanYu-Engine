@@ -1,7 +1,7 @@
-版本：v0.2.21.4-fix
+版本：v0.2.21.5-fix
 # XuanYu Engine 文件树
 
-文件总数：566
+文件总数：568
 
 ## 根目录
 
@@ -138,6 +138,8 @@
 - `docs/world-b-r5-scale-transform.svg`：WORLD-B-R5 缩放闭环状态图；展示 SelectionKey、TransformSession、ScaleGizmoDrag、SceneRenderSnapshot、RenderProjection、Vulkan 绘制链路和 WORLD-B-R5 CLOSED 状态，不承载运行时代码。
 - `docs/world-c-r0-scene-document-contract.md`：WORLD-C-R0 场景文档契约报告；冻结场景文件格式、所有权、实体最小字段、文档状态机、错误模型、原子保存策略与 R1 验收入口，不承载运行时代码。
 - `docs/world-c-r0-scene-document-contract.svg`：WORLD-C-R0 场景文档契约图；展示 Editor.UI、Editor.SceneDocument、World 运行态、原子保存和错误结果边界，不承载运行时代码。
+- `docs/world-c-r1-closure-report.md`：WORLD-C-R1 最小场景保存与打开闭环收口报告；固化真机验收 PASS、自动门禁、完成边界、测试污染处理和 R2 入口，不承载运行时代码。
+- `docs/world-c-r1-closure.svg`：WORLD-C-R1 收口状态图；展示输入状态、场景文档链、World 恢复、验收证据和下一阶段入口，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
