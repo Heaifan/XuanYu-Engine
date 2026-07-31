@@ -1,7 +1,7 @@
-版本：v0.2.20.19-fix
+版本：v0.2.21.1-rz
 # XuanYu Engine 文件树
 
-文件总数：543
+文件总数：547
 
 ## 根目录
 
@@ -131,6 +131,8 @@
 - `docs/world-b-r3-move-transform-closure.svg`：WORLD-B-R3 移动变换闭环浅色中文图；展示控制柄、移动会话、World 权威、一致投影和输入优先级，不承载运行时代码。
 - `docs/world-b-r5-scale-transform-report.md`：WORLD-B-R5 Scale Gizmo 缩放变换闭环报告；记录 R5 实装、v0.2.20.18-rz 真机退回、R5-R1 尺寸/Uniform 可发现性修复、自动验证、用户真机验收通过和 WORLD-B-R5 CLOSED 裁定，不承载运行时代码。
 - `docs/world-b-r5-scale-transform.svg`：WORLD-B-R5 缩放闭环状态图；展示 SelectionKey、TransformSession、ScaleGizmoDrag、SceneRenderSnapshot、RenderProjection、Vulkan 绘制链路和 WORLD-B-R5 CLOSED 状态，不承载运行时代码。
+- `docs/world-c-r0-scene-document-contract.md`：WORLD-C-R0 场景文档契约报告；冻结场景文件格式、所有权、实体最小字段、文档状态机、错误模型、原子保存策略与 R1 验收入口，不承载运行时代码。
+- `docs/world-c-r0-scene-document-contract.svg`：WORLD-C-R0 场景文档契约图；展示 Editor.UI、Editor.SceneDocument、World 运行态、原子保存和错误结果边界，不承载运行时代码。
 - `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
 - `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
 - `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。

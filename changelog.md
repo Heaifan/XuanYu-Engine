@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.21.1-rz
+WORLD-C-R0 场景文档契约冻结（2026-07-31 13:48:34）
+- 任务目标：从 WORLD-B 最终收口 commit `4ae360b55754d7385f294d1181808f58ab0dc84e` 创建 `feat/WORLD-C-scene-authoring`，启动 `WORLD-C：场景创作与持久化闭环`，只冻结 R0 场景文档契约，不混入 WORLD-C-R1 运行时代码。
+- 契约裁定：场景文件扩展名为 `.xyscene`，首版为 UTF-8 JSON，`schemaVersion=1`；最小元数据为 `name`、`createdUtc`、`modifiedUtc`、`entities`；实体首轮只冻结稳定 ID、名称、父子关系或根节点、Position、Rotation、Scale。
+- 所有权裁定：未来 `XuanYu.Editor.SceneDocument` 拥有文档读写契约、状态机和错误结果；`XuanYu.World` 继续拥有运行期 `GlobalWorld / EntityRegistry / Transform` 事实；`Editor.UI` 只发起新建、打开、保存、另存为、关闭意图，不得成为持久化权威。
+- 状态机与错误：冻结 `Untitled / Clean / Dirty / Saving / Loading / Failed`；保存采用临时文件写入成功后替换正式文件；错误模型覆盖文件不存在、不可读、JSON/结构损坏、版本不支持、ID 重复、层级引用不存在、层级循环、Transform 非法、路径不可写和写入失败。
+- 禁止扩张：不设计完整资产数据库、GUID 资产注册中心、Prefab、通用 ECS 组件序列化、组件反射、脚本系统、模型导入、材质、动画、热重载、云同步、自动恢复系统或完整项目管理器。
+- 修改范围：新增 `docs/world-c-r0-scene-document-contract.md` 与 `docs/world-c-r0-scene-document-contract.svg`；同步 `run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`file-tree.md` 和 `changelog.md` 到 `v0.2.21.1-rz`。
+- 验证结果：本轮未重跑完整 build/test；`git diff --check` PASS；`docs/world-c-r0-scene-document-contract.svg` XML PASS；版本源一致（`run.bat` / `UiWin.axaml` / `file-tree.md` / `changelog.md` = `v0.2.21.1-rz`）；`scripts/arch-a-guard.ps1` EXIT=0；完整 diff 与修改范围已核对。Commit Hash 以本轮最终 Git 记录为准。
+
 ## v0.2.20.19-fix
 WORLD-B-R5 与 WORLD-B 正式收口（2026-07-31 13:44:13）
 - 任务目标：根据用户真机验收结论正式关闭 `WORLD-B-R5` 和整个 `WORLD-B`；不新增 `WORLD-B-R6`，不重复执行已经通过的 R5 真机测试，不进入 WarCore，不创建 Tag 或 Release。
