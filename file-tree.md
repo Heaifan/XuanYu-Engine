@@ -1,16 +1,19 @@
-版本：v0.2.21.9-rz
+版本：v0.2.21.10-fix
 # XuanYu Engine 文件树
 
-## WORLD-C-R3 自动实现职责索引（v0.2.21.9-rz）
+## WORLD-C-R3-R2 修复职责索引（v0.2.21.10-fix）
 
-- `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；只表达构造网格、世界原点、世界坐标轴和编辑器背景开关，不拥有场景事实。
-- `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；不写 SceneDocument、不进 History、不触发 Dirty。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawAssist.cs`：Vulkan 辅助层绘制分派；在实体前提交背景、网格、原点和世界短轴。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：R3 增加程序化背景、XY 构造网格、世界原点与有限 X/Y/Z 短轴；仍由 glslc 生成嵌入 SPIR-V。
-- `XuanYu.Core.Tests/Render/ViewportAssistDrawPlanTests.cs`：辅助层 DrawPlan 顺序与关闭状态回归。
+- `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；世界坐标轴默认关闭，不拥有场景事实。
+- `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；显示菜单文本提供统一勾选列，不写 SceneDocument、不进 History、不触发 Dirty。
+- `XuanYu.Editor.UI/Top/Top.axaml`：顶部命令栏和视口工具栏视觉收敛；透明默认、浅蓝灰悬停、当前工具深蓝实底。
+- `XuanYu.Editor.UI/Left/Left.axaml`：层级右键菜单简化并对删除使用克制警示色。
+- `XuanYu.Editor.UI/Foot/Foot.axaml`：底部状态栏只保留当前工具/交互状态，不重复场景保存状态。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：世界原点缩小为克制标识；世界坐标轴改为可选、低饱和、细短辅助轴；仍由 glslc 生成嵌入 SPIR-V。
+- `XuanYu.Core.Tests/Render/ViewportAssistDrawPlanTests.cs`：默认无世界轴线、开启后进入辅助 DrawPlan 的回归。
 - `XuanYu.World.Tests/World/WorldCR3ViewportAssistTests.cs`：辅助开关不污染 Dirty / History / Selection / Tool 和 `.xyscene` 回归。
-- `docs/world-c-r3-viewport-reference-report.md`：R3 自动实现报告与等待真机验收状态。
-- `docs/world-c-r3-viewport-reference.svg`：R3 空间参照层状态图。
+- `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.cs`：未选择/选择/框选/移动/旋转/缩放/取消选择的 Gizmo 显示矩阵回归。
+- `docs/world-c-r3-viewport-reference-report.md`：R3-R2 修复报告与等待真机重新验收状态。
+- `docs/world-c-r3-viewport-reference.svg`：R3-R2 空间参照层状态图。
 
 ## WORLD-C-R2 CLOSED 职责索引（v0.2.21.8-rz）
 

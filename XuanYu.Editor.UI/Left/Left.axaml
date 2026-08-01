@@ -69,8 +69,8 @@
                SelectedItem="{Binding SelectedHierarchyItem, Mode=TwoWay}"
                Background="Transparent" BorderThickness="0"
                KeyDown="SelectionList_KeyDown">
-        <ListBox.ContextMenu><ContextMenu><MenuItem Header="添加"><MenuItem Header="基础实体">
-          <MenuItem Header="立方体" Click="AddCube_Click"/></MenuItem></MenuItem><Separator/><MenuItem Header="重命名" Click="Rename_Click"/><MenuItem Header="删除" Click="Delete_Click"/>
+        <ListBox.ContextMenu><ContextMenu><MenuItem Header="添加立方体" Click="AddCube_Click"/><Separator/>
+          <MenuItem Header="重命名" Click="Rename_Click"/><MenuItem Header="删除" Foreground="#9b2f2f" Click="Delete_Click"/>
         </ContextMenu></ListBox.ContextMenu>
         <ListBox.ItemTemplate><DataTemplate>
             <Border Classes="treeRow" PointerPressed="HierarchyRow_Pressed">

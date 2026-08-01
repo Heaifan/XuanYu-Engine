@@ -11,18 +11,20 @@
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
-    <Style Selector="Border.topGroup"><Setter Property="Background" Value="#f5f8fc"/><Setter Property="BorderBrush" Value="#d9e2ee"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="5"/><Setter Property="Padding" Value="5,3"/></Style>
+    <Style Selector="Border.topGroup"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="#cfd9e7"/><Setter Property="BorderThickness" Value="0,0,1,0"/><Setter Property="CornerRadius" Value="0"/><Setter Property="Padding" Value="3,0,9,0"/></Style>
     <Style Selector="Border.statePill"><Setter Property="Background" Value="#eef7f1"/><Setter Property="BorderBrush" Value="#c9e3d0"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="5"/><Setter Property="Padding" Value="8,3"/></Style>
     <Style Selector="TextBlock.groupLabel"><Setter Property="FontSize" Value="11"/><Setter Property="Foreground" Value="#6d788a"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <Style Selector="Button.cmdBtn"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="6,2"/><Setter Property="Margin" Value="0"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/></Style>
-    <Style Selector="Button.cmdBtn:pointerover"><Setter Property="Background" Value="#edf3fb"/><Setter Property="BorderBrush" Value="#c7d5e8"/></Style>
-    <Style Selector="ToggleButton.toolBtn"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="6,2"/><Setter Property="Margin" Value="0"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/></Style>
-    <Style Selector="ToggleButton.toolBtn:pointerover"><Setter Property="Background" Value="#edf3fb"/><Setter Property="BorderBrush" Value="#c7d5e8"/></Style>
-    <Style Selector="ToggleButton.toolBtn:checked"><Setter Property="Background" Value="#e8f1ff"/><Setter Property="BorderBrush" Value="#93b7e8"/><Setter Property="Foreground" Value="#185aa6"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="MenuItem"><Setter Property="MinHeight" Value="32"/><Setter Property="Padding" Value="10,5"/><Setter Property="Foreground" Value="#2f3d52"/></Style>
+    <Style Selector="MenuItem:pointerover"><Setter Property="Background" Value="#edf3fb"/></Style>
+    <Style Selector="Button.cmdBtn"><Setter Property="MinHeight" Value="32"/><Setter Property="MinWidth" Value="32"/><Setter Property="Padding" Value="7,4"/><Setter Property="Margin" Value="0"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style Selector="Button.cmdBtn:pointerover"><Setter Property="Background" Value="#edf3fb"/></Style>
+    <Style Selector="ToggleButton.toolBtn"><Setter Property="MinHeight" Value="32"/><Setter Property="MinWidth" Value="32"/><Setter Property="Padding" Value="7,4"/><Setter Property="Margin" Value="0"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style Selector="ToggleButton.toolBtn:pointerover"><Setter Property="Background" Value="#edf3fb"/></Style>
+    <Style Selector="ToggleButton.toolBtn:checked"><Setter Property="Background" Value="#185aa6"/><Setter Property="BorderBrush" Value="#185aa6"/><Setter Property="Foreground" Value="White"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
     <Style Selector="Path.topIcon"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="#5d6d83"/><Setter Property="StrokeThickness" Value="1.6"/></Style>
     <Style Selector="Button.cmdBtn:pointerover Path.topIcon"><Setter Property="Stroke" Value="#365d8d"/></Style>
     <Style Selector="ToggleButton.toolBtn:pointerover Path.topIcon"><Setter Property="Stroke" Value="#365d8d"/></Style>
-    <Style Selector="ToggleButton.toolBtn:checked Path.topIcon"><Setter Property="Stroke" Value="#185aa6"/></Style>
+    <Style Selector="ToggleButton.toolBtn:checked Path.topIcon"><Setter Property="Stroke" Value="White"/></Style>
   </UserControl.Styles>
 
   <Grid RowDefinitions="Auto,Auto" RowSpacing="3">

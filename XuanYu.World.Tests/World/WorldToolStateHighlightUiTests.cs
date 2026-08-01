@@ -53,6 +53,53 @@ public sealed class WorldToolStateHighlightUiTests
         Assert.Equal(1, active);
     }
 
+    [Fact]
+    public void Selection_tools_do_not_show_transform_gizmos()
+    {
+        var vm = new UiVm(null, () => true);
+        Assert.False(vm.RenderSnapshot.ShowMoveGizmo);
+        Assert.False(vm.RenderSnapshot.ShowRotateGizmo);
+        Assert.False(vm.RenderSnapshot.ShowScaleGizmo);
+
+        vm.SelectedHierarchyItem = EntityNode(vm, 1);
+        vm.SelectToolCommand.Execute("选择");
+        Assert.False(vm.RenderSnapshot.ShowMoveGizmo);
+        Assert.False(vm.RenderSnapshot.ShowRotateGizmo);
+        Assert.False(vm.RenderSnapshot.ShowScaleGizmo);
+
+        vm.SelectToolCommand.Execute("框选");
+        Assert.False(vm.RenderSnapshot.ShowMoveGizmo);
+        Assert.False(vm.RenderSnapshot.ShowRotateGizmo);
+        Assert.False(vm.RenderSnapshot.ShowScaleGizmo);
+    }
+
+    [Fact]
+    public void Transform_tools_show_only_matching_gizmo_and_clear_selection_hides_all()
+    {
+        var vm = new UiVm(null, () => true);
+        vm.SelectedHierarchyItem = EntityNode(vm, 1);
+
+        vm.SelectToolCommand.Execute("移动");
+        Assert.True(vm.RenderSnapshot.ShowMoveGizmo);
+        Assert.False(vm.RenderSnapshot.ShowRotateGizmo);
+        Assert.False(vm.RenderSnapshot.ShowScaleGizmo);
+
+        vm.SelectToolCommand.Execute("旋转");
+        Assert.False(vm.RenderSnapshot.ShowMoveGizmo);
+        Assert.True(vm.RenderSnapshot.ShowRotateGizmo);
+        Assert.False(vm.RenderSnapshot.ShowScaleGizmo);
+
+        vm.SelectToolCommand.Execute("缩放");
+        Assert.False(vm.RenderSnapshot.ShowMoveGizmo);
+        Assert.False(vm.RenderSnapshot.ShowRotateGizmo);
+        Assert.True(vm.RenderSnapshot.ShowScaleGizmo);
+
+        vm.SelectedHierarchyItem = null;
+        Assert.False(vm.RenderSnapshot.ShowMoveGizmo);
+        Assert.False(vm.RenderSnapshot.ShowRotateGizmo);
+        Assert.False(vm.RenderSnapshot.ShowScaleGizmo);
+    }
+
     static EditorTreeNode EntityNode(UiVm vm, int id) =>
         vm.HierarchyItems.Single(item => item.Key == $"EntityId({id})");
 }

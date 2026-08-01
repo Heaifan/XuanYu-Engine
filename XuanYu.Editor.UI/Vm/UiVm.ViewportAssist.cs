@@ -6,7 +6,7 @@ public sealed partial class UiVm
 {
     bool _showGrid = true;
     bool _showOrigin = true;
-    bool _showWorldAxes = true;
+    bool _showWorldAxes;
     bool _showEditorBackground = true;
 
     public bool ShowGrid => _showGrid;
@@ -43,7 +43,7 @@ public sealed partial class UiVm
         return true;
     }
 
-    static string AssistText(string name, bool enabled) => $"{name} {(enabled ? "开" : "关")}";
+    static string AssistText(string name, bool enabled) => $"{(enabled ? "✓" : " ")}  {name}";
 
     void RaiseAssistTextChanged()
     {

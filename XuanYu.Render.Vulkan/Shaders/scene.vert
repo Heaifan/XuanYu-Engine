@@ -209,19 +209,19 @@ vec3 gridVertex(int vi, out vec4 color) {
 }
 
 vec3 originVertex(int vi, out vec4 color) {
-    color = vec4(0.96, 0.92, 0.78, 1.0);
-    return cube(vec3(0.0, 0.0, 0.025), vec3(0.09, 0.09, 0.025), vi);
+    color = vec4(0.82, 0.78, 0.64, 1.0);
+    return cube(vec3(0.0, 0.0, 0.015), vec3(0.055, 0.055, 0.015), vi);
 }
 
 vec3 axisVertex(int vi, out vec4 color) {
     int axis = vi / 36;
     int li = vi % 36;
-    vec3 center = axis == 0 ? vec3(0.95, 0.0, 0.05)
-        : (axis == 1 ? vec3(0.0, 0.95, 0.05) : vec3(0.0, 0.0, 0.95));
-    vec3 extent = axis == 0 ? vec3(0.95, 0.035, 0.035)
-        : (axis == 1 ? vec3(0.035, 0.95, 0.035) : vec3(0.035, 0.035, 0.95));
-    color = axis == 0 ? vec4(0.72, 0.28, 0.24, 1.0)
-        : (axis == 1 ? vec4(0.25, 0.58, 0.34, 1.0) : vec4(0.28, 0.43, 0.74, 1.0));
+    vec3 center = axis == 0 ? vec3(1.25, 0.0, 0.02)
+        : (axis == 1 ? vec3(0.0, 1.25, 0.02) : vec3(0.0, 0.0, 1.25));
+    vec3 extent = axis == 0 ? vec3(1.25, 0.01, 0.01)
+        : (axis == 1 ? vec3(0.01, 1.25, 0.01) : vec3(0.01, 0.01, 1.25));
+    color = axis == 0 ? vec4(0.54, 0.36, 0.34, 1.0)
+        : (axis == 1 ? vec4(0.35, 0.50, 0.39, 1.0) : vec4(0.36, 0.43, 0.56, 1.0));
     return cube(center, extent, li);
 }
 

@@ -11,6 +11,7 @@ public sealed class WorldCR3ViewportAssistTests
         var tool = vm.ActiveTool;
         var selection = vm.SelectionKey;
 
+        Assert.False(vm.ShowWorldAxes);
         vm.RunCommand.Execute("显示构造网格");
         vm.RunCommand.Execute("显示世界原点");
         vm.RunCommand.Execute("显示世界坐标轴");
@@ -18,10 +19,15 @@ public sealed class WorldCR3ViewportAssistTests
 
         Assert.False(vm.ShowGrid);
         Assert.False(vm.ShowOrigin);
-        Assert.False(vm.ShowWorldAxes);
+        Assert.True(vm.ShowWorldAxes);
         Assert.False(vm.ShowEditorBackground);
         Assert.False(vm.IsSceneDirty);
         Assert.Equal(0, vm.TransformHistoryCount);
+        Assert.Equal(selection, vm.SelectionKey);
+        Assert.Equal(tool, vm.ActiveTool);
+
+        vm.RunCommand.Execute("显示世界坐标轴");
+        Assert.False(vm.ShowWorldAxes);
         Assert.Equal(selection, vm.SelectionKey);
         Assert.Equal(tool, vm.ActiveTool);
     }

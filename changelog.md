@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.21.10-fix
+WORLD-C-R3-R2 轴线语义校正与编辑器菜单视觉优化（2026-08-01）
+- 真机裁定：`WORLD-C-R3-R1` 未通过；粗大 X/Y/Z 轴在未选择对象时与 Move Gizmo 混淆，顶部工具栏、显示菜单和层级右键菜单仍接近系统默认控件风格。
+- 行为修复：`ShowWorldAxes` 默认关闭；世界坐标轴只作为可选辅助层进入渲染输入，开启后为世界原点处低饱和细短轴；世界原点缩小为独立克制标识；辅助层仍不进入 Picking、Selection、Dirty、History、SceneDocument 或 `.xyscene`。
+- Gizmo 合同：补充未选择、选择工具、框选工具、移动、旋转、缩放和取消选择的 Transform Gizmo 显示矩阵回归；只有选中实体且当前工具匹配时才显示对应 Gizmo。
+- UI 修复：顶部按钮默认透明、悬停浅蓝灰、当前工具深蓝实底；显示菜单改为勾选列文本；层级右键菜单简化为添加立方体/重命名/删除，删除使用克制警示色；底部状态栏不再重复显示场景保存状态。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 195/195 PASS；后续架构守卫、diff-check、5+100、SVG XML、glslc 复核、commit/push 与远端 tip 复核见最终报告。
+- 状态：`WORLD-C-R3-R2` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+
 ## v0.2.21.9-rz
 WORLD-C-R3 编辑器空间参照层自动实现（2026-08-01 10:21:46）
 - 任务目标：按已批准计划进入 `WORLD-C-R3：编辑器空间参照层` 正式开发；实现编辑器背景、XY 构造网格、世界原点、X/Y/Z 世界短轴、新建/打开场景相机接入和四个显示开关；不修改 `.xyscene` Schema，不新增场景实体，不进入地面、天空、环境、地形、材质、灯光、吸附或工作区状态持久化。

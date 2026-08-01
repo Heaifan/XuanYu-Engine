@@ -24,12 +24,11 @@
   </UserControl.Styles>
 
   <Grid RowDefinitions="Auto,*">
-    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16" MinHeight="28">
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" MinHeight="28">
       <Button Classes="logSummary" Command="{Binding ToggleLogCommand}">
         <TextBlock Text="{Binding LogSummary}" VerticalAlignment="Center"/>
       </Button>
       <TextBlock Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center" Foreground="#50607a"/>
-      <TextBlock Grid.Column="2" Text="{Binding DocumentStatusText}" VerticalAlignment="Center" Foreground="{Binding DocumentStatusForeground}" FontWeight="SemiBold"/>
     </Grid>
 
     <Border Grid.Row="1" IsVisible="{Binding IsLogOpen}" MinHeight="180" Margin="0,8,0,0" BorderBrush="#d9e2ee" BorderThickness="1" CornerRadius="6" Background="#f8fbff" Padding="8">
