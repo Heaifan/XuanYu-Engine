@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.21.12-fix
+WORLD-C-R3-R4 Global Gizmo 语义与 UI 重构补修（2026-08-01）
+- 真机裁定：`WORLD-C-R3-R3` 视觉复测 FAIL；Scale Gizmo 在对象旋转后跟随局部轴偏转，且顶部命令栏、菜单和未保存确认框仍未达到已确认 SVG 视觉层级。
+- Gizmo 语义修复：在没有可见 Global/Local 切换入口前，Scale Gizmo 可见轴与 CPU 命中布局锁定世界 X/Y/Z；渲染投影对 Scale 下传零旋转，避免对象 Rotation 让缩放轴自动进入 Local 语义。
+- UI 修复：顶部命令栏补强透明/悬停/按下/禁用状态与菜单 rail 风格；未保存场景确认框改为编辑器自绘浅色面板、统一按钮和间距，去除系统默认标题栏观感。
+- 测试变化：新增 `WorldCR3R4GlobalGizmoTests` 覆盖“旋转 180° 后切换缩放仍为 Global”和“无可见 Global/Local 入口时不自动切 Local”；更新 Core Scale 布局回归，锁定 Rotation 不改变轴端点。
+- 合同边界：不修改 `.xyscene`、SceneDocument、EntityRegistry、Vulkan 生命周期、TransformSession 提交/撤销合同；Scale 数值仍写入实体 TRS Scale 分量，本轮只冻结可见/命中轴语义为 Global。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 199/199 PASS；architecture guard PASS；git diff --check PASS；5+100 PASS；SVG XML PASS；GLSL PASS。commit/push 与远端 tip 复核见最终报告。
+- 状态：`WORLD-C-R3-R4` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+
 ## v0.2.21.11-fix
 WORLD-C-R3-R3 顶部命令栏与 Transform Gizmo 视觉重构（2026-08-01）
 - 真机裁定：`WORLD-C-R3-R2` 自动验证通过但视觉复测仍未达标；顶部两行 UI 仍有默认控件观感，Transform Gizmo 仍不符合已确认 SVG 视觉方案。

@@ -1,7 +1,7 @@
-版本：v0.2.21.11-fix
+版本：v0.2.21.12-fix
 # XuanYu Engine 文件树
 
-## WORLD-C-R3-R3 视觉修复职责索引（v0.2.21.11-fix）
+## WORLD-C-R3-R4 视觉与 Global Gizmo 修复职责索引（v0.2.21.12-fix）
 
 - `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；世界坐标轴默认关闭，不拥有场景事实。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；显示菜单文本提供统一勾选列，不写 SceneDocument、不进 History、不触发 Dirty。
@@ -249,7 +249,7 @@
 - `XuanYu.Core/Gizmo/RotateGizmoScreenRadius.cs`：Rotate Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R4-R1，WORLD-B-R4-R2 将目标屏幕半径由 120 DIP 调至 90 DIP 使近远相机下尺寸更合理且减少误触）；按相机深度、FOV 与视口逻辑高度把目标屏幕半径（90 DIP）反算为世界半径，供 CPU 命中测试与 Shader 共用同一公式，做到"所见即所命中"且任意 DPI 一致。
 - `XuanYu.Core/Gizmo/ScaleGizmoAxis.cs`：Scale Gizmo 世界轴身份与手柄身份；定义 `ScaleGizmoAxis`（X/Y/Z）与 `ScaleGizmoHandle`（X/Y/Z/Uniform），Uniform 跨三轴等比，不承担 Transform 或渲染状态（WORLD-B-R5）。
 - `XuanYu.Core/Gizmo/ScaleGizmoScreenSize.cs`：Scale Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R5-R1）；`TargetScreenAxisDip=63`、`HandleScreenSizeDip=8`、`CenterScreenSizeDip=15`、`CenterHitRadiusDip=12`，按相机深度/FOV/视口逻辑高度反算世界轴长（`ComputeWorldAxisLength`），供 CPU 命中与 Shader 共用同一公式。
-- `XuanYu.Core/Gizmo/ScaleGizmoLayout.cs`：Scale Gizmo 屏幕投影；生成中心立方体与三轴端点（X/Y/Z 各沿对应世界轴），按实体 Rotation 经欧拉旋转（Rz·Ry·Rx，与 shader 一致）使轴跟随朝向，不访问 Scene/Vulkan。
+- `XuanYu.Core/Gizmo/ScaleGizmoLayout.cs`：Scale Gizmo 屏幕投影；生成中心立方体与三轴端点，R3-R4 在无可见 Global/Local 切换入口前锁定世界 X/Y/Z 可见轴与 CPU 命中轴，忽略实体 Rotation，不访问 Scene/Vulkan。
 - `XuanYu.Core/Gizmo/ScaleGizmoHitTester.cs`：Scale Gizmo 命中测试（WORLD-B-R5-R1）；中心 Uniform 核心区先裁决，X/Y/Z 轴线段从中心核心区外参与命中，避免中心整体缩放误判为单轴，margin=5 DIP。
 - `XuanYu.Core/Gizmo/ScaleGizmoDrag.cs`：Scale Gizmo 拖动状态主体；持有 StartScale/指针起点/轴方向，`Solve` 经 `ApplyFactor`（单轴只改对应分量、Uniform 三轴同乘）以 exp 因子（从 StartScale，非累积）解算预览 Scale，并 Clamp 到 MinimumScale=0.01（WORLD-B-R5）。
 
@@ -426,7 +426,7 @@
 - `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs`：NativeHost Surface 句柄值对象。
 - `XuanYu.Render.Abstractions/RenderCameraProjection.cs`：最小 Render 相机投影；携带显式相机数值并按 Render 视口生成 ViewProjection，不创建默认相机。
 - `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：最小实体渲染投影；携带实体 Key 与跨边界前解析完成的 Position / Rotation / Scale（WORLD-B-R4-R1 TRS 合同：旋转/缩放经 RenderProjection 真正下传，不再被渲染链丢弃）；WORLD-B-R4-R3 增 `IsSelected` 选择态，驱动视口轮廓高亮。
-- `XuanYu.Render.Abstractions/RenderProjection.cs`：R5 最小渲染投影合同；包含显式相机、实体投影（Position/Rotation/Scale）、Move Gizmo 可见性与位置、Rotate Gizmo 可见性与世界半径，以及 Scale Gizmo 可见性/世界轴长/朝向（`ScaleGizmoVisible` / `ScaleGizmoWorldRadius` 复用 `gizmoRingRadius` 槽 / `GizmoRotation` 复用 `entityRotation` 槽，WORLD-B-R5，`gizmoMode`=2 区分）；屏幕空间恒定尺寸。
+- `XuanYu.Render.Abstractions/RenderProjection.cs`：R5 最小渲染投影合同；包含显式相机、实体投影（Position/Rotation/Scale）、Move Gizmo 可见性与位置、Rotate Gizmo 可见性与世界半径，以及 Scale Gizmo 可见性/世界轴长/朝向槽；R3-R4 中 Scale 模式下 `GizmoRotation` 默认清零以保持 Global 可见轴。
 - `XuanYu.Render.Abstractions/RenderProjectionResult.cs`：Render Projection 创建结果；表达成功投影或明确失败原因。
 - `XuanYu.Render.Abstractions/RenderDrawPlan.cs`：实体与唯一活动 Gizmo 的最终帧绘制计划；Legacy/Cube 填充和轮廓保持类型，Move/Rotate/Scale 使用 36/864/252 顶点且不再夹带旧三角形。
 - `XuanYu.Render.Abstractions/FrameExecutionPolicy.cs`：WORLD-B-R4-R3-R2 抽取的 Vulkan Present 帧执行顺序策略；`FrameStep` 枚举（WaitFence/ApplyPendingProjection/ResetFence/QueueSubmit）与固定 `Order`（WaitFence→ApplyPendingProjection→ResetFence→QueueSubmit），供 VulkanPresentLoop 与测试共同引用，固化"Fence 等待在重录前、Reset 在提交前"的同步约束。
@@ -576,7 +576,7 @@
 - `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点 UI 投影模型；携带图标身份、连续树线 Guide 和展开折叠 UI 状态。
 - `XuanYu.Editor.UI/Vm/LogEntry.cs`：编辑器日志条目模型。
 - `XuanYu.Editor.UI/Vm/SampleLogEntries.cs`：底部日志栏示例数据。
-- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：R5 Render Projection 组合边界适配器；从 `SceneRenderSnapshot` 抽取最终实体 Position/Rotation/Scale、Move/Rotate Gizmo 状态与显式相机，缺相机时返回明确失败（WORLD-B-R4-R1 把旋转/缩放与显式旋转环世界半径一并下传，默认半径 1.2 仅作不显示时的占位）；WORLD-B-R4-R3 按 `IsSelected && EntityKey==Entity.EntityKey` 标记当前选中实体供 Vulkan 轮廓高亮；WORLD-B-R5 增 `scaleGizmoWorldAxisLength`/`gizmoRotation` 参数并映射 `ScaleGizmoVisible: snapshot.ShowScaleGizmo`、`ScaleGizmoWorldRadius`、`GizmoRotation`。
+- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：R5 Render Projection 组合边界适配器；从 `SceneRenderSnapshot` 抽取最终实体 Position/Rotation/Scale、Move/Rotate Gizmo 状态与显式相机，缺相机时返回明确失败；WORLD-B-R5 增 `scaleGizmoWorldAxisLength`/`gizmoRotation` 参数，R3-R4 由上游在 Scale 模式传入零旋转以锁定 Global 可见轴。
 - `XuanYu.Editor.UI/Vm/TreeGuideBuilder.cs`：树形 UI Guide 构造器；从可视节点层级推导祖先连续竖线、中间 Tee、末节点 Elbow 和折叠过滤。
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm Undo / Redo 接线分部；成功 Commit 后记录 History，撤销恢复 Before，重做恢复 After。
@@ -596,7 +596,7 @@
 - `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 轴/平面 Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。WORLD-B-R4-R2 去掉 `OwnerTool!="移动"` 限制，旋转提交/取消同样记录并带 EntityKey 与旋转前后；WORLD-B-R5 增 `缩放` 同格式日志（前后 Scale X/Y/Z），仍不记录 PointerMove。
-- `XuanYu.Editor.UI/Vm/UiVm.ScaleGizmo.cs`（WORLD-B-R5-R1）：Scale Gizmo 适配分部；`ScaleGizmoDrag? _scaleDrag` 状态、`TryBeginScaleGizmoCapture`（中心 Uniform 优先命中、三轴→对应轴、构造 `ScaleGizmoLayout.Project`+`ScaleGizmoHitTester.HitTest`+`TransformSession.BeginScale`+轴屏幕方向，并记录低频 `缩放开始捕获 Entity=... Handle=...` 日志）与 `PreviewScaleGizmo`（拖拽 `Solve`→`TryPreviewScale`→`PublishSceneRenderSnapshot`），复用 Selection/Camera/Render 既有链路，不拥有 Capture。
+- `XuanYu.Editor.UI/Vm/UiVm.ScaleGizmo.cs`（WORLD-B-R5-R1，R3-R4 Global 修正）：Scale Gizmo 适配分部；`ScaleGizmoDrag? _scaleDrag` 状态、`TryBeginScaleGizmoCapture`（中心 Uniform 优先命中、三轴→对应轴、构造 Global 轴 `ScaleGizmoLayout.Project`+`ScaleGizmoHitTester.HitTest`+`TransformSession.BeginScale`+轴屏幕方向，并记录低频日志）与 `PreviewScaleGizmo`，复用 Selection/Camera/Render 既有链路，不拥有 Capture。
 - `XuanYu.Editor.UI/Vm/UiVm.RenderProjection.cs`：UiVm Render Projection 创建分部；从 `SceneRenderSnapshot.RenderTransform` 读取 Preview 后的位置、缩放和旋转来计算 Rotate / Scale Gizmo 投影，保证缩放 Preview 时实体、轮廓与 Gizmo 同步。
 - `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令、组合快照与 Render Projection 发布分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo 与 ShowScaleGizmo（WORLD-B-R5 `ShowScaleGizmo` 由 ActiveTool==Scale 且已选中驱动）。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。

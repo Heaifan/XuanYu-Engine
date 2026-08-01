@@ -33,7 +33,7 @@ public sealed partial class UiVm
         _lastViewport = viewport;
         var worldAxisLength = ComputeScaleGizmoWorldAxisLength(entity.Transform.Position);
         var layout = ScaleGizmoLayout.Project(
-            state, entity.Transform.Position, worldAxisLength, entity.Transform.Rotation);
+            state, entity.Transform.Position, worldAxisLength, default);
         var handle = ScaleGizmoHitTester.HitTest(layout, x, y);
         if (handle is null) return false;
 
@@ -48,7 +48,7 @@ public sealed partial class UiVm
             return false;
         }
 
-        // 轴向屏幕归一化方向（Uniform 未使用）；CPU 命中层与绘制层共用 worldAxisLength + entityRotation。
+        // 轴向屏幕归一化方向（Uniform 未使用）；Scale 当前锁定 Global，CPU 命中层与绘制层共用世界轴。
         ScreenPoint axisDir = default;
         if (handle.Value != ScaleGizmoHandle.Uniform)
         {

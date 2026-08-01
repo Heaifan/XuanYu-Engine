@@ -29,13 +29,14 @@ public sealed partial class ScaleGizmoTests
     }
 
     [Fact]
-    public void Layout_rotation_z90_maps_x_end_onto_y_end()
+    public void Layout_rotation_does_not_change_global_axis_ends()
     {
         var zero = Layout(Vector3d.Zero);
         var rotated = Layout(new Vector3d(0, 0, 90));
-        // 绕 Z 旋转 90°：世界 X 轴映射到原世界 Y 轴方向，故旋转后的 X 端 ≈ 原 Y 端。
-        Assert.True(Near(zero.AxisEnd[1].X, rotated.AxisEnd[0].X, 1.5));
-        Assert.True(Near(zero.AxisEnd[1].Y, rotated.AxisEnd[0].Y, 1.5));
+        Assert.True(Near(zero.AxisEnd[0].X, rotated.AxisEnd[0].X, 1.5));
+        Assert.True(Near(zero.AxisEnd[0].Y, rotated.AxisEnd[0].Y, 1.5));
+        Assert.True(Near(zero.AxisEnd[1].X, rotated.AxisEnd[1].X, 1.5));
+        Assert.True(Near(zero.AxisEnd[1].Y, rotated.AxisEnd[1].Y, 1.5));
     }
 
     [Fact]

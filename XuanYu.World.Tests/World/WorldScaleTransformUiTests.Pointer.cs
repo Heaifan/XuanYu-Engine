@@ -15,8 +15,7 @@ public sealed partial class WorldScaleTransformUiTests
         var origin = vm.RenderSnapshot.Entity.Transform.Position;
         var length = ScaleGizmoScreenSize.ComputeWorldAxisLength(camera, viewport, origin);
         var state = ViewProjectionState.Create(camera, viewport);
-        var layout = ScaleGizmoLayout.Project(
-            state, origin, length, vm.RenderSnapshot.Entity.Transform.Rotation);
+        var layout = ScaleGizmoLayout.Project(state, origin, length, default);
         var p = handle == ScaleGizmoHandle.Uniform
             ? layout.Center
             : layout.AxisEnd[handle == ScaleGizmoHandle.X ? 0 : (handle == ScaleGizmoHandle.Y ? 1 : 2)];
@@ -30,8 +29,7 @@ public sealed partial class WorldScaleTransformUiTests
         var origin = vm.RenderSnapshot.Entity.Transform.Position;
         var length = ScaleGizmoScreenSize.ComputeWorldAxisLength(camera, viewport, origin);
         var layout = ScaleGizmoLayout.Project(
-            ViewProjectionState.Create(camera, viewport), origin, length,
-            vm.RenderSnapshot.Entity.Transform.Rotation);
+            ViewProjectionState.Create(camera, viewport), origin, length, default);
         if (handle == ScaleGizmoHandle.Uniform) return (layout.Center.X, layout.Center.Y - d);
         var i = handle == ScaleGizmoHandle.X ? 0 : (handle == ScaleGizmoHandle.Y ? 1 : 2);
         var dx = layout.AxisEnd[i].X - layout.Center.X;
