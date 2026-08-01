@@ -1,5 +1,19 @@
-版本：v0.2.21.18-rz
+版本：v0.2.21.19-rz
 # XuanYu Engine 文件树
+
+## WORLD-C-R4-D1 COMPLETE 职责索引（v0.2.21.19-rz）
+
+- `XuanYu.Editor/Assets/GlbImportService.cs`：D1 静态 GLB 导入入口；负责文件/流/byte 输入、SharpGLTF 边界验证和统一结果返回，不依赖 UI、SceneDocument、World 或 Vulkan。
+- `XuanYu.Editor/Assets/GlbContainer.cs`：GLB 2.0 Header、JSON/BIN Chunk 和基础容器错误校验。
+- `XuanYu.Editor/Assets/GltfStaticModelImporter.cs`：D1 GLB JSON/BIN 静态几何导入适配；遍历 Node/Mesh/Primitive，输出玄域自有模型数据。
+- `XuanYu.Editor/Assets/GltfAccessorReader.cs`：读取 D1 支持的 POSITION/NORMAL/UV/Index Accessor 子集，统一索引为 uint。
+- `XuanYu.Editor/Assets/GltfNodeTransform.cs`：GLB 静态 Node Matrix/TRS 求值、Position 烘焙和法线逆转置变换。
+- `XuanYu.Editor/Assets/GltfJsonAccess.cs`：导入适配层的 JSON 字段读取辅助，不作为通用 SceneDocument 解析器。
+- `XuanYu.Editor/Assets/StaticModel*.cs`：玄域自有静态模型输出合同、Primitive、颜色、顶点、Warning/Error 和元数据；不暴露 SharpGLTF 或 Vulkan 类型。
+- `XuanYu.Editor/Assets/ImportStop.cs`：导入适配层内部受控停止异常，转换为 `StaticModelImportResult`。
+- `XuanYu.World.Tests/World/WorldCR4D1GlbFactory.cs`：D1 测试专用极小 GLB 动态生成器，不提交二进制模型。
+- `XuanYu.World.Tests/World/WorldCR4D1GlbImportTests.cs`：D1 静态导入回归，覆盖成功、Warning、错误、坐标 Bounds 和第三方类型隔离。
+- `docs/world-c-r4-d1-glb-import-core.md`：D1 实现范围、支持/拒绝能力和 D2 入口说明。
 
 ## WORLD-C-R4-D0 COMPLETE 职责索引（v0.2.21.18-rz）
 

@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.21.19-rz
+WORLD-C-R4-D1 GLB 静态模型解析与玄域数据转换（2026-08-01 15:07:05）
+- 任务目标：执行 `WORLD-C-R4-D1`，建立合法 GLB → 玄域自有静态模型数据的纯数据链路；不接入 Vulkan、UI、SceneDocument、AssetId 注册、场景实体、Undo/Redo、Picking 或保存恢复。
+- 导入核心：新增 `GlbImportService`，提供文件、只读流和 byte[] 入口；先做 GLB 2.0 容器校验，再用 `SharpGLTF.Core` 1.0.6 在导入边界内验证解析，第三方类型不进入公共输出合同。
+- 自有数据：新增 `StaticModelData`、顶点、UV、颜色、Primitive、元数据、Warning/Error 结果模型；输出拥有自己的顶点数组、uint 索引数组、Primitive 列表和转换后 LocalBounds。
+- 数据转换：支持 TRIANGLES、多 Primitive、多 Node、多 Mesh 引用、16/32 位索引和无索引顺序 Primitive；静态 Node Transform 烘焙进顶点；法线使用逆转置矩阵；坐标按 D0 `(x,y,z)->(x,-z,y)` 转玄域右手 Z-Up，不翻转绕序，不自动居中、贴地或缩放。
+- 能力边界：Required Extension、Skinned Mesh、非法 Header、损坏解析、无可绘制 Primitive、非法 Accessor/Index/Transform 均返回明确 Error；缺 UV 使用默认值并记录 Warning；动画不导入并记录 Warning；非 TRIANGLES 可跳过并 Warning。
+- 测试变化：新增动态 GLB 样本工厂与 D1 导入回归，覆盖 indexed/unindexed triangle、缺 UV、32 位索引、多 Primitive 基础颜色、节点平移后 Bounds、非 TRIANGLES、Required Extension、非法 Header 和第三方类型隔离；不提交二进制模型样本。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 141/141 PASS；World Tests 216/216 PASS（含 D1 新增动态 GLB 测试）；`scripts/arch-a-guard.ps1` PASS；第三方依赖边界检查 PASS（SharpGLTF 仅在 Editor 导入服务和测试断言）；`git diff --check` PASS；GLSL 编译 PASS；SVG XML PASS；`.xyscene` JSON PASS；裸行数扫描仅剩 3 个既有非本轮触碰超线文件，D1 新增/触碰文件均 ≤100。D1 不宣布 WORLD-C-R4 CLOSED，模型仍不会显示在视口。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：D2 才进入 Vulkan Vertex/Index Buffer、多 Primitive Draw、基础颜色显示、GPU 资源缓存、场景切换释放和缺失资源占位体。
+
 ## v0.2.21.18-rz
 WORLD-C-R4-D0 GLB 资产合同、依赖与场景 Schema 冻结（2026-08-01 14:41:28）
 - 任务目标：执行 `WORLD-C-R4-D0`，冻结命名治理、GLB 依赖、AssetId、资源目录、Scene Schema 草案、坐标转换、运行时状态、Bounds/Picking 与 Save As 事务边界；不进入导入 UI、Vulkan 模型 Draw、资产浏览器、贴图、项目系统或精确 Mesh Picking。
