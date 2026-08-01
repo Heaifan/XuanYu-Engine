@@ -228,7 +228,7 @@ vec3 quadCorner(vec3 center, vec3 halfExtent, int li) {
 
 void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
     vec2 p[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
-    clipPos = vec4(p[vi], 0.98, 1.0);
+    clipPos = vec4(p[vi], 1.0, 1.0);
     float t = clamp(p[vi].y * 0.5 + 0.5, 0.0, 1.0);
     vec3 bottom = vec3(0.50, 0.56, 0.61);
     vec3 horizon = vec3(0.66, 0.71, 0.76);

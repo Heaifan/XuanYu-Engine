@@ -1,5 +1,12 @@
-版本：v0.2.21.20-rz
+版本：v0.2.21.21-fix
 # XuanYu Engine 文件树
+
+## WORLD-C-R4-D2-F1 验收缺陷修复职责索引（v0.2.21.21-fix）
+
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：修复 D2 depth 接入后的背景深度污染；背景全屏三角固定写 far depth `1.0`，不得遮挡实体或静态模型。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.StaticModelInput.cs`：拆出静态模型顶点输入布局，撤销 D2 为压行数造成的 Pipeline 可读性退化。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs`：拆出 depth state 构造，保持 Pipeline 主文件职责清晰。
+- `XuanYu.Core.Tests/Render/StaticModelDepthRegressionTests.cs`：锁定背景 shader 不得回退到 `0.98` depth，防止模型随缩放才完整显示的回归复发。
 
 ## WORLD-C-R4-D2 COMPLETE 职责索引（v0.2.21.20-rz）
 
@@ -77,7 +84,7 @@
 - `docs/world-c-r2-ipo-manual-checklist.md`：中文 IPO 合同与测试 01–08 真机 PASS 记录。
 - `docs/world-c-r2-status.svg`：R2 真机验收通过与 CLOSED 状态图。
 
-文件总数：648
+文件总数：651
 
 ## 根目录
 

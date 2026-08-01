@@ -2,11 +2,11 @@ using System;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Render;
-using XuanYu.Render.Vulkan.Render.StaticModels;
 using XuanYu.Render.Vulkan.Swapchain;
 
 namespace XuanYu.Render.Vulkan.Pipeline;
-internal sealed unsafe class VulkanGraphicsPipelineOwner : IDisposable
+
+internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
 {
     readonly Vk _vk;
     readonly VulkanDeviceOwner _deviceOwner;
@@ -50,19 +50,17 @@ internal sealed unsafe class VulkanGraphicsPipelineOwner : IDisposable
             var fragStage = new PipelineShaderStageCreateInfo { SType = StructureType.PipelineShaderStageCreateInfo, Stage = ShaderStageFlags.FragmentBit, Module = frag, PName = pName };
             PipelineShaderStageCreateInfo* pStages = stackalloc PipelineShaderStageCreateInfo[2];
             pStages[0] = vertStage; pStages[1] = fragStage;
-            var binding = new VertexInputBindingDescription { Binding = 0, Stride = VulkanStaticModelVertex.Stride, InputRate = VertexInputRate.Vertex };
+            var binding = StaticModelVertexBinding();
             VertexInputAttributeDescription* attrs = stackalloc VertexInputAttributeDescription[3];
-            attrs[0] = new() { Binding = 0, Location = 0, Format = Format.R32G32B32Sfloat, Offset = 0 };
-            attrs[1] = new() { Binding = 0, Location = 1, Format = Format.R32G32B32Sfloat, Offset = 12 };
-            attrs[2] = new() { Binding = 0, Location = 2, Format = Format.R32G32Sfloat, Offset = 24 };
-            var vertexInput = new PipelineVertexInputStateCreateInfo { SType = StructureType.PipelineVertexInputStateCreateInfo, VertexBindingDescriptionCount = 1, PVertexBindingDescriptions = &binding, VertexAttributeDescriptionCount = 3, PVertexAttributeDescriptions = attrs };
+            FillStaticModelAttributes(attrs);
+            var vertexInput = StaticModelVertexInput(&binding, attrs);
             var inputAssembly = new PipelineInputAssemblyStateCreateInfo { SType = StructureType.PipelineInputAssemblyStateCreateInfo, Topology = PrimitiveTopology.TriangleList };
             var viewportState = new PipelineViewportStateCreateInfo { SType = StructureType.PipelineViewportStateCreateInfo, ViewportCount = 1, ScissorCount = 1 };
             DynamicState* pDynamic = stackalloc DynamicState[2]; pDynamic[0] = DynamicState.Viewport; pDynamic[1] = DynamicState.Scissor;
             var dynamicState = new PipelineDynamicStateCreateInfo { SType = StructureType.PipelineDynamicStateCreateInfo, DynamicStateCount = 2, PDynamicStates = pDynamic };
             var raster = new PipelineRasterizationStateCreateInfo { SType = StructureType.PipelineRasterizationStateCreateInfo, PolygonMode = PolygonMode.Fill, CullMode = CullModeFlags.None, FrontFace = FrontFace.Clockwise, LineWidth = 1.0f };
             var multisample = new PipelineMultisampleStateCreateInfo { SType = StructureType.PipelineMultisampleStateCreateInfo, RasterizationSamples = SampleCountFlags.Count1Bit };
-            var depth = new PipelineDepthStencilStateCreateInfo { SType = StructureType.PipelineDepthStencilStateCreateInfo, DepthTestEnable = true, DepthWriteEnable = true, DepthCompareOp = CompareOp.LessOrEqual };
+            var depth = DepthState();
             var blendAttach = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.RBit | ColorComponentFlags.GBit | ColorComponentFlags.BBit | ColorComponentFlags.ABit,
                 BlendEnable = true, SrcColorBlendFactor = BlendFactor.SrcAlpha, DstColorBlendFactor = BlendFactor.OneMinusSrcAlpha, ColorBlendOp = BlendOp.Add, SrcAlphaBlendFactor = BlendFactor.One, DstAlphaBlendFactor = BlendFactor.OneMinusSrcAlpha, AlphaBlendOp = BlendOp.Add };
             var colorBlend = new PipelineColorBlendStateCreateInfo { SType = StructureType.PipelineColorBlendStateCreateInfo, AttachmentCount = 1, PAttachments = &blendAttach, LogicOpEnable = false };

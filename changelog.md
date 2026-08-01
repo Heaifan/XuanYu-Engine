@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.21.21-fix
+WORLD-C-R4-D2-F1 视口 Depth 遮挡与宪法格式修复（2026-08-01 16:56:53）
+- 真机反馈：`v0.2.21.20-rz` 接入 depth 后，打开 `world-c-r1-ten-triangles.xyscene` 或 D2 受控模型时出现模型不能完整显示、需要继续缩放后才显示的视口回归。
+- 根因：D2 在单 Pipeline 中开启 `DepthTestEnable/DepthWriteEnable` 后，背景全屏三角仍写入 `z=0.98`，会在部分相机距离先占住深度并遮挡后续实体/静态模型；这是 D2 depth 接入遗漏，不是 SceneDocument、World 或 D1 导入问题。
+- 修复：`scene.vert` 背景全屏三角改为 far depth `1.0`，保留实体、Cube、静态模型、网格和 Gizmo 的现有 draw 顺序，不移除 depth attachment，不回退静态模型 indexed draw。
+- 治理修复：撤销 D2 为满足 5+100 而压缩 `VulkanGraphicsPipelineOwner` 的不良格式处理，将静态模型 VertexInput 与 DepthState 拆到独立 partial 文件；遵守宪法禁止靠压缩格式降行数的规则。
+- 测试变化：新增 `StaticModelDepthRegressionTests`，锁定背景 shader 不得回退到 `0.98` depth；后续测试清单按开发宪法 IPO 格式给出。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 216/216 PASS；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；SVG XML PASS；`.xyscene` JSON PASS；`git diff --check` PASS；5+100 PASS。
+- Commit Hash：以本轮最终 Git 记录为准。
+
 ## v0.2.21.20-rz
 WORLD-C-R4-D2 Vulkan 静态模型显示与 GPU 资源生命周期（2026-08-01）
 - 任务目标：执行 `WORLD-C-R4-D2`，建立 `StaticModelData → Render 静态模型合同 → Vulkan Vertex/Index Buffer → 多 Primitive Draw` 链路；不进入正式导入按钮、文件选择器、`.xyassets` 托管、SceneDocument Assets、模型实体持久化、Inspector、Picking、纹理、PBR、动画或资源重定位。
