@@ -1,7 +1,7 @@
-版本：v0.2.21.16-fix
+版本：v0.2.21.17-rz
 # XuanYu Engine 文件树
 
-## WORLD-C-R3-R8 Move Gizmo 正方形平面手柄修复职责索引（v0.2.21.16-fix）
+## WORLD-C-R3 CLOSED 职责索引（v0.2.21.17-rz）
 
 - `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；世界坐标轴默认关闭，不拥有场景事实。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；显示菜单文本提供统一勾选列，不写 SceneDocument、不进 History、不触发 Dirty。
@@ -17,8 +17,8 @@
 - `XuanYu.World.Tests/World/WorldCR3ViewportAssistTests.cs`：辅助开关不污染 Dirty / History / Selection / Tool 和 `.xyscene` 回归。
 - `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.cs`：未选择/选择/框选/移动/旋转/缩放/取消选择的 Gizmo 显示矩阵回归。
 - `XuanYu.World.Tests/World/WorldCR3R3CommandSmokeTests.cs`：顶部文件命令、工具栏命令和环境显示命令仍可调用且不污染 Dirty/History 的 UI 冒烟回归。
-- `docs/world-c-r3-viewport-reference-report.md`：R3-R8 Move Gizmo 专项报告与等待真机重新验收状态。
-- `docs/world-c-r3-viewport-reference.svg`：R3-R8 空间参照层状态图。
+- `docs/world-c-r3-viewport-reference-report.md`：R3-R8 Move Gizmo 专项报告、真机 PASS 与 WORLD-C-R3 CLOSED 收口记录。
+- `docs/world-c-r3-viewport-reference.svg`：R3-R8 真机 PASS 与 WORLD-C-R3 CLOSED 状态图。
 
 ## WORLD-C-R2 CLOSED 职责索引（v0.2.21.8-rz）
 

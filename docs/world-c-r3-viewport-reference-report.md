@@ -1,12 +1,12 @@
 # WORLD-C-R3 编辑器空间参照层实施报告
 
-版本：`v0.2.21.16-fix`
+版本：`v0.2.21.17-rz`
 日期：2026-08-01
 分支：`feat/WORLD-C-scene-authoring`
 
 ## 状态
 
-`WORLD-C-R3-R8：真机视觉修复轮，等待真机重新验收`。
+`WORLD-C-R3-R8 真机验收：PASS`；`WORLD-C-R3：CLOSED`。
 
 本轮在 R3-R5 真机复测反馈基础上继续修复：上一轮的平面面片尺寸和形状不符合合同。本轮将平面可见层改为贴近轴根部的低饱和正方形面片，与 Move 箭头共用同一屏幕恒定尺度；交互、命中、拖动、提交、撤销和场景文档合同保持不变。
 
@@ -47,6 +47,21 @@ R3-R8 根据代码审计修复 Move Gizmo 平面尺寸：旧平面 CPU/GPU 可�
 - `powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1`：PASS。
 - `git diff --check` / 5+100 / SVG XML / GLSL：PASS。
 
-## 等待真机验收
+## 真机验收结论
 
-WORLD-C-R3 尚未 CLOSED。必须完成 R2 真机复测 01-05 并由用户明确裁定 PASS 后，才能正式收口；本轮不创建 Tag 或 Release。
+1. 编辑器背景、XY 构造网格、原点参照正常。
+2. 辅助显示不进入 `.xyscene`、Dirty、History、Picking。
+3. 新建和打开场景的默认取景正常。
+4. Move / Rotate / Scale Gizmo 显示矩阵正常。
+5. Transform Gizmo 默认使用 Global 世界坐标。
+6. Move Gizmo 箭头、中性中心和正方形平面手柄正常。
+7. 平面手柄使用屏幕恒定 DIP，Dolly 后不再放大成墙面。
+8. 可见几何与 Picking 热区已分离。
+9. 顶部命令栏和工具栏完成当前阶段样式整理。
+10. 层级树 SelectionModel 越界问题已修复并通过回归测试。
+
+用户确认：近、中、远距离表现正常，Dolly 后尺寸稳定，Picking 与变换闭环正常。
+
+## 正式状态
+
+`WORLD-C-R3：CLOSED`。本轮仅做验收、版本和文档收口；不创建 Tag/Release，不操作 stash。下一阶段为 `WORLD-C-R4` 方案讨论，优先讨论检查器数值编辑闭环。

@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.21.17-rz
+WORLD-C-R3 正式验收收口（2026-08-01）
+- 真机验收：用户确认 WORLD-C-R3-R8 PASS。近、中、远距离 Move Gizmo 平面手柄表现正常，Dolly 后不再放大成墙面，Picking 与变换闭环正常。
+- 验收结论：编辑器背景、XY 构造网格、原点参照；辅助显示边界；新建/打开默认取景；Move/Rotate/Scale 显示矩阵；Global 世界坐标；Move 箭头、中性中心与正方形平面；屏幕恒定 DIP；可见/命中分离；顶部 UI 整理；层级树 SelectionModel 越界修复，全部 PASS。
+- 自动门禁证据沿用 `e62e242`：10 项目 0 Warning / 0 Error；Core 141/141；World 200/200；architecture guard、git diff --check、5+100、SVG XML、GLSL 全部 PASS。
+- 收口：`WORLD-C-R3-R8 真机验收：PASS`；`WORLD-C-R3：CLOSED`。下一阶段进入 WORLD-C-R4 方案讨论，不在本轮实装检查器数值编辑。
+- 本轮仅更新版本与验收文档，不创建 Tag/Release，不操作 stash。
+
 ## v0.2.21.16-fix
 WORLD-C-R3-R8 Move Gizmo 正方形平面手柄专项修复（2026-08-01）
 - 代码证据：箭头通过相机深度换算 `MoveGizmoWorldRadius`；旧 XY/XZ/YZ 平面 CPU/GPU 可见层却直接使用固定世界单位，导致 Dolly 后尺寸漂移，并与箭头不是同一尺寸真源。
