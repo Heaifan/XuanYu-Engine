@@ -1,31 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520">
   <rect width="960" height="520" fill="#f4f7fb"/>
   <text x="40" y="52" font-size="26" font-family="Microsoft YaHei, Arial" fill="#22324a">WORLD-C-R3 编辑器空间参照层</text>
-  <text x="40" y="84" font-size="15" font-family="Microsoft YaHei, Arial" fill="#5d6b7c">v0.2.21.10-fix R3-R2 自动验证后等待真机重新验收</text>
+  <text x="40" y="84" font-size="15" font-family="Microsoft YaHei, Arial" fill="#5d6b7c">v0.2.21.11-fix R3-R3 视觉修复后等待真机重新验收</text>
   <rect x="48" y="122" width="250" height="270" rx="8" fill="#e8eef6" stroke="#bdc9d8"/>
   <text x="76" y="158" font-size="18" font-family="Microsoft YaHei, Arial" fill="#2e415d">编辑器运行会话</text>
   <text x="76" y="194" font-size="15" font-family="Microsoft YaHei, Arial" fill="#40536d">构造网格 开关</text>
   <text x="76" y="224" font-size="15" font-family="Microsoft YaHei, Arial" fill="#40536d">世界原点 开关</text>
   <text x="76" y="254" font-size="15" font-family="Microsoft YaHei, Arial" fill="#40536d">世界坐标轴 默认关闭</text>
   <text x="76" y="284" font-size="15" font-family="Microsoft YaHei, Arial" fill="#40536d">编辑器背景 开关</text>
-  <text x="76" y="332" font-size="14" font-family="Microsoft YaHei, Arial" fill="#68788e">不进入 Dirty / History / SceneDocument</text>
+  <text x="76" y="332" font-size="14" font-family="Microsoft YaHei, Arial" fill="#68788e">顶部 UI / 菜单仅改视觉，不进 Dirty</text>
   <rect x="360" y="122" width="230" height="270" rx="8" fill="#edf7f1" stroke="#b7d7c2"/>
   <text x="392" y="158" font-size="18" font-family="Microsoft YaHei, Arial" fill="#2d5739">RenderProjection</text>
   <text x="392" y="198" font-size="15" font-family="Microsoft YaHei, Arial" fill="#3e6249">正式实体投影</text>
   <text x="392" y="230" font-size="15" font-family="Microsoft YaHei, Arial" fill="#3e6249">相机投影</text>
   <text x="392" y="262" font-size="15" font-family="Microsoft YaHei, Arial" fill="#3e6249">EditorViewportAssistState</text>
-  <text x="392" y="332" font-size="14" font-family="Microsoft YaHei, Arial" fill="#68788e">辅助层无 EntityId</text>
+  <text x="392" y="332" font-size="14" font-family="Microsoft YaHei, Arial" fill="#68788e">Gizmo 可见性与命中合同不变</text>
   <rect x="650" y="122" width="250" height="270" rx="8" fill="#fff7e6" stroke="#dec88a"/>
   <text x="682" y="158" font-size="18" font-family="Microsoft YaHei, Arial" fill="#705320">Vulkan 程序化绘制</text>
   <text x="682" y="198" font-size="15" font-family="Microsoft YaHei, Arial" fill="#6b5832">1 背景</text>
   <text x="682" y="228" font-size="15" font-family="Microsoft YaHei, Arial" fill="#6b5832">2 XY 网格</text>
-  <text x="682" y="258" font-size="15" font-family="Microsoft YaHei, Arial" fill="#6b5832">3 原点与可选细短轴</text>
-  <text x="682" y="288" font-size="15" font-family="Microsoft YaHei, Arial" fill="#6b5832">4 实体 / 轮廓 / Gizmo</text>
+  <text x="682" y="258" font-size="15" font-family="Microsoft YaHei, Arial" fill="#6b5832">3 Move 箭头 / Rotate 细环</text>
+  <text x="682" y="288" font-size="15" font-family="Microsoft YaHei, Arial" fill="#6b5832">4 Scale 小端点 / 中性中心</text>
   <text x="682" y="332" font-size="14" font-family="Microsoft YaHei, Arial" fill="#68788e">不使用天空盒、地形或纹理</text>
   <path d="M300 250 H356" stroke="#7487a3" stroke-width="3" marker-end="url(#arrow)"/>
   <path d="M592 250 H646" stroke="#7487a3" stroke-width="3" marker-end="url(#arrow)"/>
   <rect x="86" y="430" width="788" height="44" rx="6" fill="#ffffff" stroke="#d6deea"/>
-  <text x="116" y="458" font-size="15" font-family="Microsoft YaHei, Arial" fill="#34465f">状态：WORLD-C-R3-R2 自动验证后等待真机复验；未修改 .xyscene，未新增场景实体。</text>
+  <text x="116" y="458" font-size="15" font-family="Microsoft YaHei, Arial" fill="#34465f">状态：WORLD-C-R3-R3 自动验证后等待真机复验；未修改 .xyscene，未新增场景实体。</text>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <path d="M0,0 L0,6 L9,3 z" fill="#7487a3"/>

@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.21.11-fix
+WORLD-C-R3-R3 顶部命令栏与 Transform Gizmo 视觉重构（2026-08-01）
+- 真机裁定：`WORLD-C-R3-R2` 自动验证通过但视觉复测仍未达标；顶部两行 UI 仍有默认控件观感，Transform Gizmo 仍不符合已确认 SVG 视觉方案。
+- UI 修复：顶部主命令栏和视口工具栏改为两条浅色 rail 容器；去掉第二行“选择/变换/视图/辅助”小标题，改用间距和细分隔线分组；工具当前态改为浅蓝背景、淡蓝边框和底部指示；顶部菜单与层级右键菜单统一菜单项行高、悬停和背景风格。
+- Gizmo 修复：Move Gizmo 改为细轴 + 箭头 + 中性中心手柄，平面手柄缩小并改为低饱和色；Rotate Gizmo 改为三条细圆环并新增中性中心手柄；Scale Gizmo 保留端点立方体和 Uniform 中心立方体，但尺寸与颜色收敛；移除 Move 平面原有高饱和青/紫/黄视觉。
+- 合同边界：仅修改 Avalonia 视觉、RenderDrawPlan 绘制顶点数和 Vulkan shader 可见几何；不修改 `.xyscene`、SceneDocument、Vulkan 生命周期、Gizmo 命中/拖动/Preview/Commit/Undo/Redo 合同。
+- 测试变化：更新 Gizmo 绘制顶点数回归；新增 `WorldCR3R3CommandSmokeTests` 覆盖顶部文件命令、工具栏命令和环境显示命令仍可调用且不污染 Dirty/History。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 197/197 PASS；后续架构守卫、diff-check、5+100、SVG XML、glslc 复核、commit/push 与远端 tip 复核见最终报告。
+- 状态：`WORLD-C-R3-R3` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+
 ## v0.2.21.10-fix
 WORLD-C-R3-R2 轴线语义校正与编辑器菜单视觉优化（2026-08-01）
 - 真机裁定：`WORLD-C-R3-R1` 未通过；粗大 X/Y/Z 轴在未选择对象时与 Move Gizmo 混淆，顶部工具栏、显示菜单和层级右键菜单仍接近系统默认控件风格。

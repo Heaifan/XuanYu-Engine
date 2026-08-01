@@ -20,21 +20,21 @@ vec3 triangleVertex(int index) {
     return vertices[index];
 }
 
-vec3 gizmoVertex(int axis, int index) {
-    vec3 direction = axis == 0 ? vec3(1.2, 0, 0) :
-        (axis == 1 ? vec3(0, 1.2, 0) : vec3(0, 0, 1.2));
-    vec3 side = axis == 1 ? vec3(0.035, 0, 0) : vec3(0, 0.035, 0);
-    vec3 vertices[6] = vec3[6](
-        -side, side, direction + side,
-        -side, direction + side, direction - side);
-    return vertices[index];
+vec3 axisDir(int axis) {
+    return axis == 0 ? vec3(1.0, 0.0, 0.0) :
+        (axis == 1 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0));
+}
+
+vec3 axisColor(int axis) {
+    return axis == 0 ? vec3(0.91, 0.35, 0.35) :
+        (axis == 1 ? vec3(0.27, 0.66, 0.40) : vec3(0.30, 0.50, 0.93));
 }
 
 vec3 planeVertex(int plane, int index) {
     vec3 a = plane == 2 ? vec3(0, 1, 0) : vec3(1, 0, 0);
     vec3 b = plane == 0 ? vec3(0, 1, 0) : vec3(0, 0, 1);
-    float i = 0.22;
-    float o = 0.60;
+    float i = 0.18;
+    float o = 0.38;
     vec3 vertices[6] = vec3[6](
         (a * i) + (b * i), (a * o) + (b * i), (a * o) + (b * o),
         (a * i) + (b * i), (a * o) + (b * o), (a * i) + (b * o));
@@ -54,7 +54,7 @@ mat3 eulerRot(vec3 deg) {
 
 vec3 ringVertex(int ring, int seg, int vert) {
     float R = pc.gizmoRingRadius;
-    float w = R * 0.025;
+    float w = R * 0.012;
     vec3 b1 = ring == 0 ? vec3(0.0, 1.0, 0.0) : (ring == 1 ? vec3(1.0, 0.0, 0.0) : vec3(1.0, 0.0, 0.0));
     vec3 b2 = ring == 0 ? vec3(0.0, 0.0, 1.0) : (ring == 1 ? vec3(0.0, 0.0, 1.0) : vec3(0.0, 1.0, 0.0));
     float t1 = float(seg) * 6.2831853 / 48.0;
@@ -123,6 +123,37 @@ vec3 cube(vec3 center, vec3 halfExtent, int li) {
     return corners[idx[li]];
 }
 
+vec3 moveRodVertex(int axis, int li) {
+    float L = pc.gizmoRingRadius;
+    float bar = L * 0.018;
+    vec3 a = axisDir(axis);
+    vec3 halfExtent = axis == 0 ? vec3(L * 0.36, bar, bar)
+        : (axis == 1 ? vec3(bar, L * 0.36, bar) : vec3(bar, bar, L * 0.36));
+    return cube(a * (L * 0.42), halfExtent, li);
+}
+
+vec3 moveArrowVertex(int axis, int li) {
+    float L = pc.gizmoRingRadius;
+    vec3 a = axisDir(axis);
+    vec3 u = axis == 0 ? vec3(0, 1, 0) : vec3(1, 0, 0);
+    vec3 v = axis == 2 ? vec3(0, 1, 0) : vec3(0, 0, 1);
+    vec3 tip = a * (L * 0.94);
+    vec3 base = a * (L * 0.74);
+    float s = L * 0.075;
+    vec3 b0 = base + u * s;
+    vec3 b1 = base + v * s;
+    vec3 b2 = base - u * s;
+    vec3 b3 = base - v * s;
+    vec3 p[18] = vec3[18](
+        tip,b0,b1, tip,b1,b2, tip,b2,b3, tip,b3,b0,
+        b0,b2,b1, b0,b3,b2);
+    return p[li];
+}
+
+vec3 neutralCenterVertex(int li, float size) {
+    return cube(vec3(0.0), vec3(size), li);
+}
+
 vec3 cubeCorner(int index) {
     vec3 c[8] = vec3[8](
         vec3(-0.5,-0.5,-0.5), vec3(0.5,-0.5,-0.5),
@@ -160,7 +191,7 @@ vec3 scaleVertex(int vi) {
         int li = vi % 36;
         vec3 a = (b == 0) ? vec3(1.0, 0.0, 0.0)
             : (b == 1 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0));
-        float bar = L * 0.035;
+        float bar = L * 0.025;
         vec3 halfExtent = (b == 0) ? vec3(L * 0.8, bar, bar)
             : (b == 1 ? vec3(bar, L * 0.8, bar) : vec3(bar, bar, L * 0.8));
         vec3 centerBox = a * (L * 0.42);
@@ -171,11 +202,11 @@ vec3 scaleVertex(int vi) {
         vec3 a = (c == 0) ? vec3(1.0, 0.0, 0.0)
             : (c == 1 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0));
         vec3 centerBox = a * L;
-        vec3 halfExtent = vec3(L * 0.13);
+        vec3 halfExtent = vec3(L * 0.09);
         return eulerRot(pc.entityRotation.xyz) * cube(centerBox, halfExtent, li);
     } else {
         int li = vi - 216;
-        return cube(vec3(0.0), vec3(L * 0.15), li);
+        return cube(vec3(0.0), vec3(L * 0.12), li);
     }
 }
 
@@ -275,14 +306,22 @@ void main() {
         if (gi < 18) {
             int plane = gi / 6;
             vec3 world = planeVertex(plane, gi % 6) + pc.worldPosition.xyz;
-            vBaseColor = plane == 0 ? vec4(0.82, 0.66, 0.16, 1.0) :
-                (plane == 1 ? vec4(0.64, 0.26, 0.82, 1.0) : vec4(0.16, 0.68, 0.76, 1.0));
+            vBaseColor = plane == 0 ? vec4(0.70, 0.64, 0.55, 1.0) :
+                (plane == 1 ? vec4(0.62, 0.58, 0.72, 1.0) : vec4(0.55, 0.69, 0.70, 1.0));
+            gl_Position = pc.viewProjection * vec4(world, 1.0);
+        } else if (gi < 126) {
+            int axis = (gi - 18) / 36;
+            vec3 world = moveRodVertex(axis, (gi - 18) % 36) + pc.worldPosition.xyz;
+            vBaseColor = vec4(axisColor(axis), 1.0);
+            gl_Position = pc.viewProjection * vec4(world, 1.0);
+        } else if (gi < 180) {
+            int axis = (gi - 126) / 18;
+            vec3 world = moveArrowVertex(axis, (gi - 126) % 18) + pc.worldPosition.xyz;
+            vBaseColor = vec4(axisColor(axis), 1.0);
             gl_Position = pc.viewProjection * vec4(world, 1.0);
         } else {
-            int axis = (gi - 18) / 6;
-            vec3 world = gizmoVertex(axis, (gi - 18) % 6) + pc.worldPosition.xyz;
-            vBaseColor = axis == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
-                (axis == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
+            vec3 world = neutralCenterVertex(gi - 180, pc.gizmoRingRadius * 0.075) + pc.worldPosition.xyz;
+            vBaseColor = vec4(0.96, 0.97, 0.98, 1.0);
             gl_Position = pc.viewProjection * vec4(world, 1.0);
         }
     } else if (pc.gizmoMode > 1.5) {
@@ -294,24 +333,27 @@ void main() {
         vec3 col;
         if (vi < 108) {
             int b = vi / 36;
-            col = (b == 0) ? vec3(0.9, 0.18, 0.16)
-                : (b == 1 ? vec3(0.16, 0.72, 0.28) : vec3(0.18, 0.42, 0.95));
+            col = axisColor(b);
         } else if (vi < 216) {
             int c = (vi - 108) / 36;
-            col = (c == 0) ? vec3(0.9, 0.18, 0.16)
-                : (c == 1 ? vec3(0.16, 0.72, 0.28) : vec3(0.18, 0.42, 0.95));
+            col = axisColor(c);
         } else {
-            col = vec3(0.95, 0.95, 0.95);
+            col = vec3(0.96, 0.97, 0.98);
         }
         vBaseColor = vec4(col, 1.0);
     } else {
         int ri = gl_VertexIndex;
-        int ring = ri / (48 * 6);
-        int seg = (ri % (48 * 6)) / 6;
-        int vert = ri % 6;
-        vec3 world = ringVertex(ring, seg, vert) + pc.worldPosition.xyz;
-        vBaseColor = ring == 0 ? vec4(0.9, 0.18, 0.16, 1.0) :
-            (ring == 1 ? vec4(0.16, 0.72, 0.28, 1.0) : vec4(0.18, 0.42, 0.95, 1.0));
-        gl_Position = pc.viewProjection * vec4(world, 1.0);
+        if (ri < 864) {
+            int ring = ri / (48 * 6);
+            int seg = (ri % (48 * 6)) / 6;
+            int vert = ri % 6;
+            vec3 world = ringVertex(ring, seg, vert) + pc.worldPosition.xyz;
+            vBaseColor = vec4(axisColor(ring), 1.0);
+            gl_Position = pc.viewProjection * vec4(world, 1.0);
+        } else {
+            vec3 world = neutralCenterVertex(ri - 864, pc.gizmoRingRadius * 0.06) + pc.worldPosition.xyz;
+            vBaseColor = vec4(0.96, 0.97, 0.98, 1.0);
+            gl_Position = pc.viewProjection * vec4(world, 1.0);
+        }
     }
 }

@@ -24,8 +24,8 @@ public sealed class CubeRenderDrawPlanTests
     }
 
     [Theory]
-    [InlineData(true, false, false, RenderDrawKind.MoveGizmo, 36)]
-    [InlineData(false, true, false, RenderDrawKind.RotateGizmo, 864)]
+    [InlineData(true, false, false, RenderDrawKind.MoveGizmo, 216)]
+    [InlineData(false, true, false, RenderDrawKind.RotateGizmo, 900)]
     [InlineData(false, false, true, RenderDrawKind.ScaleGizmo, 252)]
     public void Selected_cube_frame_never_submits_legacy_triangle_for_any_transform_tool(
         bool move, bool rotate, bool scale, RenderDrawKind gizmoKind, int gizmoVertices)

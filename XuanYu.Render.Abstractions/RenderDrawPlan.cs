@@ -9,8 +9,8 @@ public static class RenderDrawPlan
     public const int OutlineRibbonVertexCount = 18;
     public const int CubeFillVertexCount = 36;
     public const int CubeOutlineRibbonVertexCount = 72;
-    public const int MoveGizmoVertexCount = 36;
-    public const int RotateGizmoVertexCount = 864;
+    public const int MoveGizmoVertexCount = 216;
+    public const int RotateGizmoVertexCount = 900;
     public const int ScaleGizmoVertexCount = 252;
     public const int BackgroundVertexCount = 3;
     public const int GridVertexCount = 252;
