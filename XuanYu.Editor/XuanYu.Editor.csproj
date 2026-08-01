@@ -9,4 +9,8 @@
     <ProjectReference Include="..\XuanYu.Core\XuanYu.Core.csproj" />
     <ProjectReference Include="..\XuanYu.World\XuanYu.World.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpGLTF.Core" Version="1.0.6" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,17 @@
-版本：v0.2.21.17-rz
+版本：v0.2.21.18-rz
 # XuanYu Engine 文件树
+
+## WORLD-C-R4-D0 COMPLETE 职责索引（v0.2.21.18-rz）
+
+- `XuanYu.Editor/Assets/AssetId.cs`：场景托管资产稳定身份；与文件名、实体名、绝对路径、GPU Buffer 和第三方 GLB 对象无关。
+- `XuanYu.Editor/Assets/SceneAssetPathPolicy.cs`：`.xyscene` 同级 `.xyassets` 根目录、模型托管相对路径和路径逃逸验证单一入口。
+- `XuanYu.Editor/Assets/GltfCoordinatePolicy.cs`：GLB `+Y Up` 到玄域右手 `+Z Up` 的一次性导入层坐标转换与转换后局部 Bounds 生成。
+- `XuanYu.Editor/Assets/ModelAssetRuntimeState.cs`：模型资产运行时 `Unloaded/Loading/Ready/Missing/Failed` 状态枚举；不写入 `.xyscene`。
+- `XuanYu.Editor/XuanYu.Editor.csproj`：锁定 `SharpGLTF.Core` 1.0.6，作为 D1 静态 GLB 解析唯一批准依赖；第三方类型禁止越过导入边界。
+- `XuanYu.World.Tests/World/WorldCR4D0AssetContractTests.cs`：D0 AssetId、路径安全和坐标转换合同测试。
+- `docs/world-c-r4-d0-asset-contracts.md`：D0 真实代码审计、依赖裁定、AssetId、资源目录、Schema 草案、坐标、运行时状态、Picking/Bounds、Save As 和 D1 精确范围冻结报告。
+- `docs/玄域引擎_AI开发宪法.md`：自 WORLD-C-R4 起生效的 `R/D/A/F/CLOSED` 命名治理规则。
+- `docs/dev-rules.md`：命名治理硬规则摘要，禁止双 `R` 和历史追溯重命名。
 
 ## WORLD-C-R3 CLOSED 职责索引（v0.2.21.17-rz）
 

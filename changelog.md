@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.21.18-rz
+WORLD-C-R4-D0 GLB 资产合同、依赖与场景 Schema 冻结（2026-08-01 14:41:28）
+- 任务目标：执行 `WORLD-C-R4-D0`，冻结命名治理、GLB 依赖、AssetId、资源目录、Scene Schema 草案、坐标转换、运行时状态、Bounds/Picking 与 Save As 事务边界；不进入导入 UI、Vulkan 模型 Draw、资产浏览器、贴图、项目系统或精确 Mesh Picking。
+- 命名治理：`docs/玄域引擎_AI开发宪法.md` 与 `docs/dev-rules.md` 新增 `R/D/A/F/CLOSED` 规则；自 WORLD-C-R4 起禁止 `WORLD-C-R4-R1` 双 R 命名；历史 `WORLD-C-R3-R8` 等不追溯重命名。
+- 依赖裁定：批准 `SharpGLTF.Core` 1.0.6，落点 `XuanYu.Editor`，第三方类型只允许停留在导入边界；拒绝 Assimp 系列原生依赖和 Unity glTF 包体系；不新增 `.csproj`。
+- 合同代码：新增 `XuanYu.Editor.Assets` 最小资产合同，包含 `AssetId`、托管路径安全策略、GLB 到玄域 Z-Up 坐标转换和运行时状态枚举；路径策略禁止 `..`、盘符、UNC、反斜杠和规范化逃逸。
+- D0 报告：新增 `docs/world-c-r4-d0-asset-contracts.md`，记录真实代码审计结论、v3 Schema 草案、旧场景兼容、坐标转换、Bounds/Picking、Save As 事务和 D1 精确范围。
+- 测试变化：新增 `WorldCR4D0AssetContractTests` 覆盖 AssetId 序列化、托管资源路径安全、路径解析留在 `.xyassets` 内，以及 glTF `+Y Up` 到玄域 `+Z Up` 的无绕序翻转映射。
+- 验证结果：授权 restore PASS；串行 build 10 项目 0 warning / 0 error；Core Tests 141/141 PASS；World Tests 207/207 PASS；`scripts/arch-a-guard.ps1` PASS；`git diff --check` PASS；SVG XML、`.xyscene` JSON、GLSL 编译 PASS。裸行数扫描仍显示 3 个既有非本轮触碰超线文件，正式架构守卫 5+100 门禁通过。D0 不宣布 WORLD-C-R4 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：D1 仍需实现静态 GLB 解析、模型资产局部 Bounds 生成、Scene Schema v3 实装和 Save As 资源复制事务。
+
 ## v0.2.21.17-rz
 WORLD-C-R3 正式验收收口（2026-08-01）
 - 真机验收：用户确认 WORLD-C-R3-R8 PASS。近、中、远距离 Move Gizmo 平面手柄表现正常，Dolly 后不再放大成墙面，Picking 与变换闭环正常。

@@ -116,6 +116,16 @@
 - 数据 / 资源文件可用领域前缀：`cfg_/dat_/scn_/rpl_/log_/mesh_/tex_/mat_/shd_/spv_/loc_`。
 - 明确命名职责（`ScenarioEntityLoader`），禁 `cls_/fuc_/var_/obj_/str_/int_` 前缀，禁 `BingWuChangShiEngine/Bwc.*`。
 
+### 8.1 里程碑与轮次代号
+
+- `R` 只表示 `Round`，即可独立定义目标、范围、自动门禁、真机验收和 `CLOSED` 结论的正式开发轮次。
+- `D` 表示 Round 内正常开发步骤；涉及新 Schema、新依赖、新资产边界或重要架构决策时，`D0` 可用于审计、合同、依赖和边界冻结。
+- `A` 只表示正式真机验收批次；自动测试、构建、架构守卫、静态检查和代码审计不得命名为 `A`。
+- `F` 只用于正式验收 FAIL 后需要追加代码修复的批次；普通开发、编译错误、自动测试首次暴露问题和文档措辞修正不得命名为 `F`。
+- `CLOSED` 是 Round 最终状态，不是层级；写作 `WORLD-C-R4：CLOSED`。
+- 自 `WORLD-C-R4` 起禁止双 `R` 命名，例如 `WORLD-C-R4-R1`；尚未开始的计划改为 `WORLD-C-R4-D1` / `F1` / `A1`。
+- 历史记录不追溯重命名；`WORLD-C-R3-R8` 等已落库名称作为审计事实保留。
+
 ## 9. 构建 / 测试 / 审计门禁
 
 - `dotnet build` **0 warning / 0 error**。
