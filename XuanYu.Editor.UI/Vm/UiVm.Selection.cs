@@ -45,7 +45,8 @@ public sealed partial class UiVm
         if (!Set(ref _selectedProjectItem, value, nameof(SelectedProjectItem)) && !already) return;
         SetSelectedNodeKey(value?.Key ?? "");
         if (value is null) { ApplyClearSelection(); return; }
-        if (value.CanToggle) ToggleProjectNode(value);
+        // Expansion is owned by the arrow pointer handler. Do not mutate the
+        // ItemsSource while Avalonia is committing a ListBox selection.
         _selectedHierarchyItem = null; OnPropertyChanged(nameof(SelectedHierarchyItem));
         ApplySelection("项目树", value);
     }
@@ -62,7 +63,8 @@ public sealed partial class UiVm
             SetSelectedNodeKey(value?.Key ?? "");
             if (_isSynchronizingSelectionProjection) return;
             if (value is null) { ApplyClearSelection(); return; }
-            if (value.CanToggle) ToggleHierarchyNode(value);
+            // Expansion is owned by the arrow pointer handler. Changing the
+            // ItemsSource here reenters Avalonia SelectionModel with stale indexes.
             _selectedProjectItem = null; OnPropertyChanged(nameof(SelectedProjectItem));
             ApplySelection("层级树", value);
         }

@@ -32,7 +32,7 @@ public sealed class WorldUiTreeToggleTests
     }
 
     [Fact]
-    public void Re_selecting_same_collapsed_project_node_can_expand_it()
+    public void Selecting_collapsed_project_node_does_not_mutate_items_source()
     {
         var vm = new UiVm(null, () => true);
         var root = vm.ProjectItems[0];
@@ -41,7 +41,8 @@ public sealed class WorldUiTreeToggleTests
         Assert.Single(vm.ProjectItems);
 
         vm.SelectedProjectItem = root;
-        Assert.True(vm.ProjectItems.Count > 1);
+        Assert.Single(vm.ProjectItems);
+        Assert.Contains(root.Key, CollapsedProjectKeys(vm));
     }
 
     [Fact]
@@ -60,5 +61,18 @@ public sealed class WorldUiTreeToggleTests
         vm.ToggleHierarchyNode(root);
         Assert.Empty(CollapsedHierarchyKeys(vm));
         Assert.Equal(before, vm.HierarchyItems.Count);
+    }
+
+    [Fact]
+    public void Selecting_hierarchy_parent_does_not_mutate_items_source()
+    {
+        var vm = new UiVm(null, () => true);
+        var root = vm.HierarchyItems[0];
+        var before = vm.HierarchyItems.Count;
+
+        vm.SelectedHierarchyItem = root;
+
+        Assert.Equal(before, vm.HierarchyItems.Count);
+        Assert.Equal(root.Key, vm.SelectedHierarchyItem!.Key);
     }
 }

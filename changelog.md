@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.21.15-fix
+WORLD-C-R3-R7 Avalonia 层级树选择崩溃修复（2026-08-01）
+- 真机/运行时错误：点击层级树可展开节点时，`SelectedItems` 在 Avalonia 选中事务中回读了已被刷新列表淘汰的旧 index，触发 `ItemsSourceView.GetAt` 的 `ArgumentOutOfRangeException`。
+- 修复落点：选择 setter 不再同步切换展开状态；展开/收起统一由已有箭头指针处理，避免在 `SelectionModel` 提交期间更换 `ItemsSource`。
+- 回归测试：选择已折叠项目节点和层级父节点均不改变列表投影；直接 `ToggleProjectNode` / `ToggleHierarchyNode` 的折叠合同保持不变。
+- 状态：`WORLD-C-R3-R7` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 200/200 PASS；architecture guard PASS；git diff --check PASS；5+100 PASS；SVG XML PASS。
+
 ## v0.2.21.14-fix
 WORLD-C-R3-R6 Move Gizmo 平面手柄协调视觉修复（2026-08-01）
 - 真机复测反馈：R3-R5 将大方块缩成三角片后，仍然形成三块悬浮彩色面片，与 Move 箭头的视觉语言不协调。
