@@ -65,10 +65,22 @@ public sealed partial class UiVm
         FooterMessage = $"聚焦：{EditorDisplayText.Entity(EntityId.FromInt(key.Value))} 已进入视野。";
     }
 
-    void ResetCameraForSceneReplacement()
+    void ResetCameraForSceneReplacement(bool frameEntities = false)
     {
-        _camera = DefaultEditorCamera.Create(++_cameraRevision);
-        _observationCenter = DefaultEditorCamera.Target;
+        if (frameEntities)
+        {
+            var frame = EditorCameraFraming.FrameAllWithCenter(
+                _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position),
+                _viewportAspect,
+                ++_cameraRevision);
+            _camera = frame.Camera;
+            _observationCenter = frame.ObservationCenter;
+        }
+        else
+        {
+            _camera = DefaultEditorCamera.Create(++_cameraRevision);
+            _observationCenter = DefaultEditorCamera.Target;
+        }
         _viewportCameraFramed = true;
         PublishSceneRenderSnapshot();
     }

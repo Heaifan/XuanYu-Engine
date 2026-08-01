@@ -1,5 +1,16 @@
-版本：v0.2.21.8-rz
+版本：v0.2.21.9-rz
 # XuanYu Engine 文件树
+
+## WORLD-C-R3 自动实现职责索引（v0.2.21.9-rz）
+
+- `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；只表达构造网格、世界原点、世界坐标轴和编辑器背景开关，不拥有场景事实。
+- `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；不写 SceneDocument、不进 History、不触发 Dirty。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawAssist.cs`：Vulkan 辅助层绘制分派；在实体前提交背景、网格、原点和世界短轴。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：R3 增加程序化背景、XY 构造网格、世界原点与有限 X/Y/Z 短轴；仍由 glslc 生成嵌入 SPIR-V。
+- `XuanYu.Core.Tests/Render/ViewportAssistDrawPlanTests.cs`：辅助层 DrawPlan 顺序与关闭状态回归。
+- `XuanYu.World.Tests/World/WorldCR3ViewportAssistTests.cs`：辅助开关不污染 Dirty / History / Selection / Tool 和 `.xyscene` 回归。
+- `docs/world-c-r3-viewport-reference-report.md`：R3 自动实现报告与等待真机验收状态。
+- `docs/world-c-r3-viewport-reference.svg`：R3 空间参照层状态图。
 
 ## WORLD-C-R2 CLOSED 职责索引（v0.2.21.8-rz）
 
@@ -18,7 +29,7 @@
 - `docs/world-c-r2-ipo-manual-checklist.md`：中文 IPO 合同与测试 01–08 真机 PASS 记录。
 - `docs/world-c-r2-status.svg`：R2 真机验收通过与 CLOSED 状态图。
 
-文件总数：570
+文件总数：577
 
 ## 根目录
 

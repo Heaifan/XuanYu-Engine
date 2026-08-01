@@ -44,6 +44,7 @@ public sealed partial class UiVm
 
     void ApplyRunCommand(string name)
     {
+        if (TryToggleViewportAssist(name)) return;
         if (name is "聚焦") { FrameSelectedCamera(); return; }
         if (name is "查看全部") { FrameAllCamera("查看全部"); return; }
         FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}");

@@ -12,6 +12,7 @@ public sealed partial class UiVm
             snapshot,
             ComputeRotateGizmoWorldRadius(transform.Position),
             ComputeScaleGizmoWorldAxisLength(transform.Position),
-            transform.Rotation);
+            transform.Rotation,
+            ViewportAssistState);
     }
 }

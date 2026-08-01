@@ -37,7 +37,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
             if (!_hasRenderProjection) return;
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
-                if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
+                if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);
+                else if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
                 else DrawGizmo(cb, pScene, draw);
             }
         }

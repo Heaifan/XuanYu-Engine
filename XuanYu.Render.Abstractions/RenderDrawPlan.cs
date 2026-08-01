@@ -12,6 +12,10 @@ public static class RenderDrawPlan
     public const int MoveGizmoVertexCount = 36;
     public const int RotateGizmoVertexCount = 864;
     public const int ScaleGizmoVertexCount = 252;
+    public const int BackgroundVertexCount = 3;
+    public const int GridVertexCount = 252;
+    public const int OriginVertexCount = 36;
+    public const int WorldAxesVertexCount = 108;
 
     public readonly record struct Entry(
         RenderEntityType EntityType,
@@ -50,7 +54,16 @@ public static class RenderDrawPlan
 
     public static IReadOnlyList<FrameEntry> GetFrameDrawPlan(RenderProjection projection)
     {
-        var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 1);
+        var assist = projection.AssistState;
+        var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 5);
+        if (assist.ShowEditorBackground)
+            plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
+        if (assist.ShowGrid)
+            plan.Add(new FrameEntry(RenderDrawKind.EditorGrid, GridVertexCount));
+        if (assist.ShowOrigin)
+            plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
+        if (assist.ShowWorldAxes)
+            plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
         {
             var entity = projection.Entities[i];
@@ -74,6 +87,10 @@ public static class RenderDrawPlan
 
 public enum RenderDrawKind
 {
+    EditorBackground,
+    EditorGrid,
+    WorldOrigin,
+    WorldAxes,
     EntityFill,
     EntityOutline,
     MoveGizmo,

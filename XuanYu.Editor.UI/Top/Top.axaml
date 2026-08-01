@@ -36,6 +36,12 @@
               </MenuItem>
             </MenuItem>
           </MenuItem>
+          <MenuItem Header="显示">
+            <MenuItem Header="{Binding GridDisplayText}" Command="{Binding RunCommand}" CommandParameter="显示构造网格"/>
+            <MenuItem Header="{Binding OriginDisplayText}" Command="{Binding RunCommand}" CommandParameter="显示世界原点"/>
+            <MenuItem Header="{Binding WorldAxesDisplayText}" Command="{Binding RunCommand}" CommandParameter="显示世界坐标轴"/>
+            <MenuItem Header="{Binding EditorBackgroundDisplayText}" Command="{Binding RunCommand}" CommandParameter="显示编辑器背景"/>
+          </MenuItem>
         </Menu>
         <Border Classes="topGroup"><StackPanel Orientation="Horizontal" Spacing="4"><TextBlock Text="文件" Classes="groupLabel"/><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="新建"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource NewFileIcon}"/><TextBlock Text="新建"/></StackPanel></Button><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="打开"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource OpenIcon}"/><TextBlock Text="打开"/></StackPanel></Button><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="保存" IsEnabled="{Binding CanRunSaveCommand}" Background="{Binding SaveButtonBackground}" BorderBrush="{Binding SaveButtonBorderBrush}"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource SaveIcon}"/><TextBlock Text="保存"/></StackPanel></Button><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="另存为"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource SaveIcon}"/><TextBlock Text="另存为"/></StackPanel></Button></StackPanel></Border>
         <Border Classes="topGroup"><StackPanel Orientation="Horizontal" Spacing="4"><TextBlock Text="编辑" Classes="groupLabel"/><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="撤销"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource UndoIcon}"/><TextBlock Text="撤销"/></StackPanel></Button><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="重做"><StackPanel Orientation="Horizontal" Spacing="4"><Path Classes="topIcon" Data="{StaticResource RedoIcon}"/><TextBlock Text="重做"/></StackPanel></Button></StackPanel></Border>

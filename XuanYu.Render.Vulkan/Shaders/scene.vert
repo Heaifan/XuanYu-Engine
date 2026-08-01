@@ -179,8 +179,74 @@ vec3 scaleVertex(int vi) {
     }
 }
 
+vec3 quadCorner(vec3 center, vec3 halfExtent, int li) {
+    return cube(center, halfExtent, li);
+}
+
+void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
+    vec2 p[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
+    clipPos = vec4(p[vi], 0.98, 1.0);
+    float t = clamp(p[vi].y * 0.5 + 0.5, 0.0, 1.0);
+    vec3 bottom = vec3(0.50, 0.56, 0.61);
+    vec3 horizon = vec3(0.66, 0.71, 0.76);
+    vec3 top = vec3(0.42, 0.50, 0.60);
+    color = vec4(mix(mix(bottom, horizon, t), top, smoothstep(0.45, 1.0, t)), 1.0);
+}
+
+vec3 gridVertex(int vi, out vec4 color) {
+    int line = vi / 6;
+    int corner = vi % 6;
+    bool xLine = line < 21;
+    int offsetIndex = xLine ? line : line - 21;
+    float coord = float(offsetIndex - 10);
+    bool major = (offsetIndex % 5) == 0;
+    float gridHalf = 10.0;
+    float w = major ? 0.012 : 0.005;
+    vec3 center = xLine ? vec3(0.0, coord, 0.0) : vec3(coord, 0.0, 0.0);
+    vec3 extent = xLine ? vec3(gridHalf, w, 0.0) : vec3(w, gridHalf, 0.0);
+    color = major ? vec4(0.43, 0.49, 0.54, 1.0) : vec4(0.54, 0.59, 0.63, 1.0);
+    return quadCorner(center, extent, corner);
+}
+
+vec3 originVertex(int vi, out vec4 color) {
+    color = vec4(0.96, 0.92, 0.78, 1.0);
+    return cube(vec3(0.0, 0.0, 0.025), vec3(0.09, 0.09, 0.025), vi);
+}
+
+vec3 axisVertex(int vi, out vec4 color) {
+    int axis = vi / 36;
+    int li = vi % 36;
+    vec3 center = axis == 0 ? vec3(0.95, 0.0, 0.05)
+        : (axis == 1 ? vec3(0.0, 0.95, 0.05) : vec3(0.0, 0.0, 0.95));
+    vec3 extent = axis == 0 ? vec3(0.95, 0.035, 0.035)
+        : (axis == 1 ? vec3(0.035, 0.95, 0.035) : vec3(0.035, 0.035, 0.95));
+    color = axis == 0 ? vec4(0.72, 0.28, 0.24, 1.0)
+        : (axis == 1 ? vec4(0.25, 0.58, 0.34, 1.0) : vec4(0.28, 0.43, 0.74, 1.0));
+    return cube(center, extent, li);
+}
+
 void main() {
-    if (pc.gizmoMode > -1.5 && pc.gizmoMode < -0.5 && pc.selectionMode > 1.5) {
+    if (pc.gizmoMode < -12.5) {
+        vec4 color;
+        vec3 local = axisVertex(gl_VertexIndex, color);
+        gl_Position = pc.viewProjection * vec4(local, 1.0);
+        vBaseColor = color;
+    } else if (pc.gizmoMode < -11.5) {
+        vec4 color;
+        vec3 local = originVertex(gl_VertexIndex, color);
+        gl_Position = pc.viewProjection * vec4(local, 1.0);
+        vBaseColor = color;
+    } else if (pc.gizmoMode < -10.5) {
+        vec4 color;
+        vec3 local = gridVertex(gl_VertexIndex, color);
+        gl_Position = pc.viewProjection * vec4(local, 1.0);
+        vBaseColor = color;
+    } else if (pc.gizmoMode < -9.5) {
+        vec4 clipPos; vec4 color;
+        backgroundVertex(gl_VertexIndex, clipPos, color);
+        gl_Position = clipPos;
+        vBaseColor = color;
+    } else if (pc.gizmoMode > -1.5 && pc.gizmoMode < -0.5 && pc.selectionMode > 1.5) {
         vec4 clipPos; vec4 color;
         cubeOutlineVertex(gl_VertexIndex, clipPos, color);
         gl_Position = clipPos;

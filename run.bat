@@ -1,6 +1,6 @@
 @echo off
 setlocal
-title XuanYu Engine Editor v0.2.21.8-rz
+title XuanYu Engine Editor v0.2.21.9-rz
 
 cd /d "%~dp0"
 if errorlevel 1 (

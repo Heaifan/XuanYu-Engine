@@ -1,0 +1,10 @@
+namespace XuanYu.Render.Abstractions;
+
+public readonly record struct EditorViewportAssistState(
+    bool ShowGrid = true,
+    bool ShowOrigin = true,
+    bool ShowWorldAxes = true,
+    bool ShowEditorBackground = true)
+{
+    public static EditorViewportAssistState Default { get; } = new(true, true, true, true);
+}

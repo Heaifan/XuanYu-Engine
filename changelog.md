@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.21.9-rz
+WORLD-C-R3 编辑器空间参照层自动实现（2026-08-01 10:21:46）
+- 任务目标：按已批准计划进入 `WORLD-C-R3：编辑器空间参照层` 正式开发；实现编辑器背景、XY 构造网格、世界原点、X/Y/Z 世界短轴、新建/打开场景相机接入和四个显示开关；不修改 `.xyscene` Schema，不新增场景实体，不进入地面、天空、环境、地形、材质、灯光、吸附或工作区状态持久化。
+- 架构合同：新增 `EditorViewportAssistState` 随 `RenderProjection` 进入渲染输入；`UiVm.ViewportAssist` 只保存运行会话开关；`RenderDrawPlan` 在正式实体前提交 Background/Grid/Origin/Axes，辅助 DrawKind 无 `EntityIndex`/`EntityId`，不进入 Picking、Selection、TransformSession、History、Dirty 或 SceneDocument。
+- Render：`scene.vert` 增加程序化低饱和编辑器背景、世界 XY / Z=0 构造网格、世界 `(0,0,0)` 原点小标识和有限 X/Y/Z 短轴；`VulkanClearFrameOwner.DrawAssist` 负责辅助层绘制；`ShaderBytecode.Vert.cs` 已由 `glslc` 从正式 GLSL 重新生成。
+- UI/相机：顶部新增“显示”菜单，四项默认为开、切换立即更新视口且不改变选择/工具/Dirty/History；新建/空场景使用默认斜俯视相机，打开非空场景调用现有 Frame All，打开失败仍保留原相机。
+- 测试变化：新增 `ViewportAssistDrawPlanTests` 和 `WorldCR3ViewportAssistTests`；更新 `WorldCR2CameraDocumentTests` 的非空打开相机期望为 Frame All。
+- 验证结果：快速/正式串行 build 已通过，10 项目 0 warning / 0 error；Core Tests 137/137 PASS；World Tests 193/193 PASS；后续完整门禁、架构守卫、diff-check、5+100、SVG XML、commit/push 与远端 tip 复核见最终报告。
+- 状态：`WORLD-C-R3-R1` 自动实现完成后仍为“等待真机验收”；不得宣布 CLOSED，不创建 Tag/Release。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：R3 无已知自动门禁阻断；真机 01-07 仍待用户验收。
+
 ## v0.2.21.8-rz
 WORLD-C-R2 真机验收通过与正式收口（2026-08-01 00:23:44）
 - 用户裁定：测试 01–08 全部 PASS；空白场景无测试实体，Cube 添加与三类 Transform 正常且黄色 Legacy Triangle 残影消失，重命名 Focus→SelectAll 符合预期，删除、Dirty、保存恢复与 R1 兼容均通过。

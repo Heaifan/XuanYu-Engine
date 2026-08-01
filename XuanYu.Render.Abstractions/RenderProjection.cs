@@ -11,7 +11,9 @@ public readonly record struct RenderProjection(
     double RotateGizmoWorldRadius = 1.2,
     bool ScaleGizmoVisible = false,
     double ScaleGizmoWorldRadius = 1.2,
-    Vector3d GizmoRotation = default)
+    Vector3d GizmoRotation = default,
+    EditorViewportAssistState Assist = default)
 {
     public int EntityCount => Entities.Count;
+    public EditorViewportAssistState AssistState => Assist;
 }
