@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.21.14-fix
+WORLD-C-R3-R6 Move Gizmo 平面手柄协调视觉修复（2026-08-01）
+- 真机复测反馈：R3-R5 将大方块缩成三角片后，仍然形成三块悬浮彩色面片，与 Move 箭头的视觉语言不协调。
+- 修复落点：`scene.vert` 将 XY/XZ/YZ 平面可见层改为贴近轴根部的两条短细折角标记；不再绘制漂浮三角面，平面拖拽的 CPU 命中热区、捕获、Preview/Commit/Undo/Redo 合同不变。
+- 颜色：平面标记改为低饱和轴向灰色，并与 X/Y/Z 箭头保持同一中性编辑器语言。
+- Shader：`ShaderBytecode.Vert.cs` 已用本机 `glslc` 从正式 `scene.vert` 重新生成，保持紧凑行数以满足 5+100。
+- 状态：`WORLD-C-R3-R6` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 199/199 PASS；architecture guard PASS；git diff --check PASS；5+100 PASS；SVG XML PASS；GLSL PASS。
+
 ## v0.2.21.13-fix
 WORLD-C-R3-R5 Move Gizmo 平面手柄视觉急修（2026-08-01）
 - 真机裁定：`v0.2.21.12-fix` 仍在 Move Gizmo 中显示三块明显的青/紫/黄平面方块；这是 `scene.vert` 旧 `planeVertex` 可见面片未彻底收敛导致，不符合“Move Gizmo 以箭头轴为主体、平面手柄低存在感”的视觉合同。
