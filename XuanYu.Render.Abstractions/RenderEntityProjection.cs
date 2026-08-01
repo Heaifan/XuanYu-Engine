@@ -9,4 +9,5 @@ public readonly record struct RenderEntityProjection(
     Vector3d Rotation,
     Vector3d Scale,
     bool IsSelected = false,
-    RenderEntityType EntityType = RenderEntityType.LegacyMinimalTriangle);
+    RenderEntityType EntityType = RenderEntityType.LegacyMinimalTriangle,
+    RenderStaticModelKey StaticModelKey = default);

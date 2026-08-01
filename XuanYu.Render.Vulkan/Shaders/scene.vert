@@ -6,10 +6,14 @@ layout(push_constant) uniform ScenePush {
     float gizmoMode;
     float gizmoRingRadius;
     float selectionMode;
+    float staticAlpha;
     vec4 entityRotation;  // xyz=欧拉角(度), w=viewportWidth
     vec4 entityScale;     // xyz=实体缩放, w=viewportHeight
 } pc;
 
+layout(location = 0) in vec3 inPosition;
+layout(location = 1) in vec3 inNormal;
+layout(location = 2) in vec2 inUv0;
 layout(location = 0) out vec4 vBaseColor;
 
 vec3 triangleVertex(int index) {
@@ -265,7 +269,14 @@ vec3 axisVertex(int vi, out vec4 color) {
 }
 
 void main() {
-    if (pc.gizmoMode < -12.5) {
+    if (pc.gizmoMode > -3.5 && pc.gizmoMode < -2.5) {
+        mat3 R = eulerRot(pc.entityRotation.xyz);
+        vec3 local = inPosition * pc.entityScale.xyz;
+        vec3 n = normalize(R * (inNormal / max(abs(pc.entityScale.xyz), vec3(0.0001))));
+        float lit = 0.45 + (0.55 * max(dot(n, normalize(vec3(0.35, 0.55, 0.75))), 0.0));
+        gl_Position = pc.viewProjection * vec4((R * local) + pc.worldPosition.xyz, 1.0);
+        vBaseColor = vec4(vec3(pc.worldPosition.w, pc.gizmoRingRadius, pc.selectionMode) * lit, pc.staticAlpha);
+    } else if (pc.gizmoMode < -12.5) {
         vec4 color;
         vec3 local = axisVertex(gl_VertexIndex, color);
         gl_Position = pc.viewProjection * vec4(local, 1.0);

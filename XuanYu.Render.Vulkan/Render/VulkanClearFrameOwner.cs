@@ -3,11 +3,10 @@ using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
+using XuanYu.Render.Vulkan.Render.StaticModels;
 using XuanYu.Render.Vulkan.Swapchain;
 
 namespace XuanYu.Render.Vulkan.Render;
-
-// VK-LIFE-1：创建失败必须显式失败，交给 Session 逆序回滚。
 public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
 {
     readonly Vk _vk;
@@ -18,10 +17,12 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     CommandPool _commandPool;
     CommandBuffer[] _commandBuffers = [];
     Framebuffer[] _framebuffers = [];
-    ImageView[] _views = [];
+    ImageView[] _views = []; VulkanDepthAttachment? _depthAttachment;
     Silk.NET.Vulkan.Pipeline _pipeline = default;
     PipelineLayout _pipelineLayout = default;
     RenderProjection _renderProjection;
+    readonly VulkanStaticModelCache _staticModels;
+    VulkanStaticModelBuffer? _proceduralVertexBuffer;
     bool _hasRenderProjection;
     Extent2D _extent;
     int _recordCommandDepth;
@@ -30,13 +31,13 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     int _lastLoggedCommandViewCount = -1;
     bool _disposed;
 
-    public VulkanClearFrameOwner(Vk vk, VulkanDeviceOwner deviceOwner,
-        VulkanSwapchainOwner swapchainOwner, int graphicsFamily, Action<string>? log)
+    public VulkanClearFrameOwner(Vk vk, VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner, int graphicsFamily, Action<string>? log)
     {
-        _vk = vk;
-        _deviceOwner = deviceOwner;
-        _swapchainOwner = swapchainOwner;
-        _log = log;
+        _vk = vk; _deviceOwner = deviceOwner; _swapchainOwner = swapchainOwner; _log = log;
+        _staticModels = new VulkanStaticModelCache(vk, deviceOwner, log);
+        _proceduralVertexBuffer = VulkanStaticModelBuffer.Create(vk, deviceOwner,
+            new VulkanStaticModelVertex[RenderDrawPlan.RotateGizmoVertexCount],
+            BufferUsageFlags.VertexBufferBit, out _);
         try
         {
             BuildRenderPass();
@@ -52,10 +53,8 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     }
 
     public CommandBuffer[] CommandBuffers => _commandBuffers;
-    public Extent2D Extent => _extent;
-    public RenderPass RenderPass => _renderPass;
-    public RenderProjection RenderProjection => _renderProjection;
-    public bool HasRenderProjection => _hasRenderProjection;
+    public Extent2D Extent => _extent; public RenderPass RenderPass => _renderPass;
+    public RenderProjection RenderProjection => _renderProjection; public bool HasRenderProjection => _hasRenderProjection;
 
     public void SetPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
     {
@@ -82,7 +81,8 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
 
     public bool RebuildFramebuffers(uint generation = 0, bool force = false)
     {
-        if (!force && _framebuffers.Length > 0 && _extent.Width == _swapchainOwner.Extent.Width && _extent.Height == _swapchainOwner.Extent.Height)
+        if (!force && _framebuffers.Length > 0 &&
+            _extent.Width == _swapchainOwner.Extent.Width && _extent.Height == _swapchainOwner.Extent.Height)
         {
             Log(VulkanClearFrameLogFormatter.Skipped($"同尺寸跳过帧缓冲重建（{_extent.Width}x{_extent.Height}）"));
             return true;

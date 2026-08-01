@@ -7,7 +7,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     void BuildRenderPass()
     {
-        var attachment = new AttachmentDescription
+        AttachmentDescription* attachments = stackalloc AttachmentDescription[2];
+        attachments[0] = new AttachmentDescription
         {
             Format = _swapchainOwner.Format,
             Samples = SampleCountFlags.Count1Bit,
@@ -18,18 +19,28 @@ public sealed unsafe partial class VulkanClearFrameOwner
             InitialLayout = ImageLayout.Undefined,
             FinalLayout = ImageLayout.PresentSrcKhr
         };
+        attachments[1] = new AttachmentDescription
+        {
+            Format = VulkanDepthAttachment.DepthFormat, Samples = SampleCountFlags.Count1Bit,
+            LoadOp = AttachmentLoadOp.Clear, StoreOp = AttachmentStoreOp.DontCare,
+            StencilLoadOp = AttachmentLoadOp.DontCare, StencilStoreOp = AttachmentStoreOp.DontCare,
+            InitialLayout = ImageLayout.Undefined,
+            FinalLayout = ImageLayout.DepthStencilAttachmentOptimal
+        };
         var colorRef = new AttachmentReference { Attachment = 0, Layout = ImageLayout.ColorAttachmentOptimal };
+        var depthRef = new AttachmentReference { Attachment = 1, Layout = ImageLayout.DepthStencilAttachmentOptimal };
         var subpass = new SubpassDescription
         {
             PipelineBindPoint = PipelineBindPoint.Graphics,
             ColorAttachmentCount = 1,
-            PColorAttachments = &colorRef
+            PColorAttachments = &colorRef,
+            PDepthStencilAttachment = &depthRef
         };
         var info = new RenderPassCreateInfo
         {
             SType = StructureType.RenderPassCreateInfo,
-            AttachmentCount = 1,
-            PAttachments = &attachment,
+            AttachmentCount = 2,
+            PAttachments = attachments,
             SubpassCount = 1,
             PSubpasses = &subpass
         };

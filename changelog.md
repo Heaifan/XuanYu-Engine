@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.21.20-rz
+WORLD-C-R4-D2 Vulkan 静态模型显示与 GPU 资源生命周期（2026-08-01）
+- 任务目标：执行 `WORLD-C-R4-D2`，建立 `StaticModelData → Render 静态模型合同 → Vulkan Vertex/Index Buffer → 多 Primitive Draw` 链路；不进入正式导入按钮、文件选择器、`.xyassets` 托管、SceneDocument Assets、模型实体持久化、Inspector、Picking、纹理、PBR、动画或资源重定位。
+- Render 合同：新增 `RenderStaticModelKey`、`RenderStaticModelVertex`、`RenderStaticModelPrimitive`、`RenderStaticModelResource`，实体投影只携带 `StaticModelKey`；资源表位于 `RenderProjection`，同 Key 多实例共享，不暴露 SharpGLTF、Vulkan Handle、路径或 SceneDocument 类型。
+- Vulkan 资源：新增静态模型 buffer/cache/validator/log；首期采用 HostVisible + HostCoherent 单模型 Vertex Buffer 与 Index Buffer，统一 `VK_INDEX_TYPE_UINT32`；按 Key+Revision 成功后替换，失败保留旧资源，场景切换/无引用时释放，Renderer Dispose 先释放模型资源再释放上层 Vulkan 资源。
+- Draw 与 Shader：Graphics Pipeline 增加 Position/Normal/UV0 顶点输入；静态模型逐 Primitive 设置 `baseColorFactor` 并 `CmdDrawIndexed`；shader 对实体非均匀 Scale 使用 inverse-scale normal 修正并提供基础方向光；旧三角形、Cube、Gizmo 仍走既有程序化几何路径。
+- 深度与选择：新增 swapchain 尺寸相关 depth attachment 和 depth test；模型 GPU buffer 不因 resize 重传；选中静态模型使用 LocalBounds 轮廓作为 D2 首期反馈，与实体 Transform 同源，不冒充最终几何轮廓。
+- 受控演示：新增 `XUANYU_D2_STATIC_MODEL_DEMO=1` 开关，现有测试实体可被 D1 数据形态的 `StaticModelData` 适配为静态模型资源用于真机观察；不开启时无产品入口变化，不写 `.xyscene`。
+- 测试变化：新增 D2 Render 合同测试，覆盖 D1 数据到 Render 资源映射、多 Primitive 范围与基础颜色保留、StaticModel DrawPlan 不回退 Legacy/Cube 占位；D1 GLB 导入回归保持通过。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 144/144 PASS；World Tests 216/216 PASS；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；第三方边界、SVG XML、`.xyscene` JSON、`git diff --check` 与 5+100 待最终 Git 收口复核。D2 不宣布 WORLD-C-R4 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：D3 才接入正式编辑器导入、AssetId 注册、`.xyassets` 托管、场景模型实体、层级树、Inspector、Picking、保存/重开与缺失资源处理。
+
 ## v0.2.21.19-rz
 WORLD-C-R4-D1 GLB 静态模型解析与玄域数据转换（2026-08-01 15:07:05）
 - 任务目标：执行 `WORLD-C-R4-D1`，建立合法 GLB → 玄域自有静态模型数据的纯数据链路；不接入 Vulkan、UI、SceneDocument、AssetId 注册、场景实体、Undo/Redo、Picking 或保存恢复。

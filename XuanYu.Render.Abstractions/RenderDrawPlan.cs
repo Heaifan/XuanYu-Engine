@@ -1,8 +1,6 @@
 namespace XuanYu.Render.Abstractions;
 
-// R4-R3-R2：实体绘制计划提取，纯逻辑函数，供 Vulkan 绘制层与测试共同使用。
-// 未选中实体：Fill(3 顶点)；选中实体：Fill(3) + OutlineRibbon(18)。
-// 禁止复制完整面（第二个 Fill(3)），禁止重心坐标内部边线。
+// R4-R3-R2：实体绘制计划提取，供 Vulkan 与测试共同使用。
 public static class RenderDrawPlan
 {
     public const int FillVertexCount = 3;
@@ -34,12 +32,12 @@ public static class RenderDrawPlan
         var plan = new List<Entry>(entities.Count * 2);
         foreach (var entity in entities)
         {
-            var fill = entity.EntityType == RenderEntityType.Cube
-                ? CubeFillVertexCount : FillVertexCount;
+            var fill = FillVertices(entity);
             var outline = entity.EntityType == RenderEntityType.Cube
                 ? CubeOutlineRibbonVertexCount : OutlineRibbonVertexCount;
             plan.Add(new Entry(entity.EntityType, fill, false));
-            if (entity.IsSelected) plan.Add(new Entry(entity.EntityType, outline, true));
+            if (entity.IsSelected && entity.EntityType != RenderEntityType.StaticModel)
+                plan.Add(new Entry(entity.EntityType, outline, true));
         }
         return plan;
     }
@@ -56,33 +54,32 @@ public static class RenderDrawPlan
     {
         var assist = projection.AssistState;
         var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 5);
-        if (assist.ShowEditorBackground)
-            plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
-        if (assist.ShowGrid)
-            plan.Add(new FrameEntry(RenderDrawKind.EditorGrid, GridVertexCount));
-        if (assist.ShowOrigin)
-            plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
-        if (assist.ShowWorldAxes)
-            plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
+        if (assist.ShowEditorBackground) plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
+        if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorGrid, GridVertexCount));
+        if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
+        if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
         {
             var entity = projection.Entities[i];
-            var fill = entity.EntityType == RenderEntityType.Cube
-                ? CubeFillVertexCount : FillVertexCount;
+            var fill = FillVertices(entity);
             var outline = entity.EntityType == RenderEntityType.Cube
                 ? CubeOutlineRibbonVertexCount : OutlineRibbonVertexCount;
             plan.Add(new FrameEntry(RenderDrawKind.EntityFill, fill, i, entity.EntityType));
-            if (entity.IsSelected)
-                plan.Add(new FrameEntry(RenderDrawKind.EntityOutline, outline, i, entity.EntityType));
+            if (entity.IsSelected && entity.EntityType != RenderEntityType.StaticModel) plan.Add(new FrameEntry(RenderDrawKind.EntityOutline, outline, i, entity.EntityType));
         }
-        if (projection.ScaleGizmoVisible)
-            plan.Add(new FrameEntry(RenderDrawKind.ScaleGizmo, ScaleGizmoVertexCount));
-        else if (projection.RotateGizmoVisible)
-            plan.Add(new FrameEntry(RenderDrawKind.RotateGizmo, RotateGizmoVertexCount));
-        else if (projection.GizmoVisible)
-            plan.Add(new FrameEntry(RenderDrawKind.MoveGizmo, MoveGizmoVertexCount));
+        if (projection.ScaleGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.ScaleGizmo, ScaleGizmoVertexCount));
+        else if (projection.RotateGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.RotateGizmo, RotateGizmoVertexCount));
+        else if (projection.GizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.MoveGizmo, MoveGizmoVertexCount));
         return plan;
     }
+
+    static int FillVertices(RenderEntityProjection entity) =>
+        entity.EntityType switch
+        {
+            RenderEntityType.Cube => CubeFillVertexCount,
+            RenderEntityType.StaticModel => 0,
+            _ => FillVertexCount
+        };
 }
 
 public enum RenderDrawKind

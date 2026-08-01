@@ -6,19 +6,18 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     bool CreateFramebuffers()
     {
+        _depthAttachment = VulkanDepthAttachment.Create(_vk, _deviceOwner, _extent);
+        if (_depthAttachment is null) return false;
         for (var i = 0; i < _views.Length; i++)
         {
-            fixed (ImageView* pView = &_views[i])
+            var attachments = new[] { _views[i], _depthAttachment.View };
+            fixed (ImageView* pAttachments = attachments)
             {
                 var fbInfo = new FramebufferCreateInfo
                 {
                     SType = StructureType.FramebufferCreateInfo,
-                    RenderPass = _renderPass,
-                    AttachmentCount = 1,
-                    PAttachments = pView,
-                    Width = _extent.Width,
-                    Height = _extent.Height,
-                    Layers = 1
+                    RenderPass = _renderPass, AttachmentCount = 2, PAttachments = pAttachments,
+                    Width = _extent.Width, Height = _extent.Height, Layers = 1
                 };
                 var result = _vk.CreateFramebuffer(_deviceOwner.LogicalDevice, &fbInfo, null, out _framebuffers[i]);
                 if (!Ok(result, "CreateFramebuffer")) return false;
@@ -67,15 +66,17 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo };
         if (!Ok(_vk.BeginCommandBuffer(cb, &begin), "BeginCommandBuffer")) return false;
-        var clear = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.25f, Float32_1 = 0.45f, Float32_2 = 0.70f, Float32_3 = 1.0f } };
+        ClearValue* clears = stackalloc ClearValue[2];
+        clears[0] = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.25f, Float32_1 = 0.45f, Float32_2 = 0.70f, Float32_3 = 1.0f } };
+        clears[1] = new ClearValue { DepthStencil = new ClearDepthStencilValue { Depth = 1.0f, Stencil = 0 } };
         var rp = new RenderPassBeginInfo
         {
             SType = StructureType.RenderPassBeginInfo,
             RenderPass = _renderPass,
             Framebuffer = fb,
             RenderArea = new Rect2D { Offset = new Offset2D { X = 0, Y = 0 }, Extent = _extent },
-            ClearValueCount = 1,
-            PClearValues = &clear
+            ClearValueCount = 2,
+            PClearValues = clears
         };
         _vk.CmdBeginRenderPass(cb, &rp, SubpassContents.Inline);
         RecordDraw(cb);

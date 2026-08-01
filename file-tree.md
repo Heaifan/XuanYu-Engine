@@ -1,5 +1,19 @@
-版本：v0.2.21.19-rz
+版本：v0.2.21.20-rz
 # XuanYu Engine 文件树
+
+## WORLD-C-R4-D2 COMPLETE 职责索引（v0.2.21.20-rz）
+
+- `XuanYu.Render.Abstractions/RenderStaticModel*.cs`：D2 静态模型渲染输入合同；包含 ResourceKey、顶点、Primitive、基础颜色、Revision 和 Bounds，不含 SharpGLTF、Vulkan Handle、文件路径或 SceneDocument 类型。
+- `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：实体投影新增 `StaticModelKey`，允许同一模型资源被多个实体 Transform 共享。
+- `XuanYu.Render.Vulkan/Render/StaticModels/*.cs`：D2 Vulkan 静态模型 GPU buffer、校验、缓存、低频日志和资源释放；使用 uint32 index，按 Key+Revision 替换，未引用资源在命令重录安全点释放。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawStaticModel.cs`：StaticModel indexed draw 路径；逐 Primitive 设置 baseColorFactor 并提交 `CmdDrawIndexed`。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawStaticBounds.cs`：D2 选中模型 Bounds 轮廓；与模型实体共享 Transform，不冒充最终几何描边。
+- `XuanYu.Render.Vulkan/Render/VulkanDepthAttachment.cs`：随 swapchain 尺寸重建的最小深度附件；模型 vertex/index buffer 不随 resize 重传。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert` 与 `Pipeline/ShaderBytecode.Vert.cs`：静态模型顶点输入、非均匀缩放 normal 修正、基础方向光和 D2 SPIR-V 字节码。
+- `XuanYu.Editor.UI/Vm/StaticModelRenderAdapter.cs`：D1 `StaticModelData` 到 Render 静态模型资源合同的适配，不引入 Vulkan。
+- `XuanYu.Editor.UI/Vm/D2StaticModelDemo.cs`：`XUANYU_D2_STATIC_MODEL_DEMO=1` 受控真机观察入口；不提供导入按钮、不写 `.xyscene`、不建立资产工作流。
+- `XuanYu.Core.Tests/Render/StaticModelRenderContractTests.cs`：D2 合同回归，覆盖 D1 数据映射、多 Primitive 颜色保留和 StaticModel 不回退旧占位 draw。
+- `docs/world-c-r4-d2-static-model-rendering.md`：D2 范围、实现、生命周期、验收方式和 D3 边界报告。
 
 ## WORLD-C-R4-D1 COMPLETE 职责索引（v0.2.21.19-rz）
 
@@ -63,7 +77,7 @@
 - `docs/world-c-r2-ipo-manual-checklist.md`：中文 IPO 合同与测试 01–08 真机 PASS 记录。
 - `docs/world-c-r2-status.svg`：R2 真机验收通过与 CLOSED 状态图。
 
-文件总数：577
+文件总数：648
 
 ## 根目录
 

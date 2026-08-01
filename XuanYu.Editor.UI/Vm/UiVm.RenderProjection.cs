@@ -8,12 +8,12 @@ public sealed partial class UiVm
     RenderProjectionResult CreateRenderProjection(SceneRenderSnapshot snapshot)
     {
         var transform = snapshot.RenderTransform;
-        return SceneRenderProjectionAdapter.TryCreate(
+        return D2StaticModelDemo.Apply(SceneRenderProjectionAdapter.TryCreate(
             snapshot,
             ComputeRotateGizmoWorldRadius(transform.Position),
             ComputeScaleGizmoWorldAxisLength(transform.Position),
             snapshot.ShowScaleGizmo ? default : transform.Rotation,
             ViewportAssistState,
-            ComputeMoveGizmoWorldAxisLength(transform.Position));
+            ComputeMoveGizmoWorldAxisLength(transform.Position)));
     }
 }

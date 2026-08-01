@@ -34,7 +34,9 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
             _vk.CmdSetViewport(cb, 0, 1, pVp);
             _vk.CmdSetScissor(cb, 0, 1, pSc);
+            BindProceduralVertexBuffer(cb);
             if (!_hasRenderProjection) return;
+            _staticModels.RetainOnly(_renderProjection.Entities.Select(e => e.StaticModelKey));
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
                 if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);
@@ -44,9 +46,22 @@ public sealed unsafe partial class VulkanClearFrameOwner
         }
     }
 
+    void BindProceduralVertexBuffer(CommandBuffer cb)
+    {
+        if (_proceduralVertexBuffer is null) return;
+        var buffer = _proceduralVertexBuffer.Buffer;
+        ulong offset = 0;
+        _vk.CmdBindVertexBuffers(cb, 0, 1, &buffer, &offset);
+    }
+
     void DrawEntity(CommandBuffer cb, float* scene, RenderDrawPlan.FrameEntry draw)
     {
         var entity = _renderProjection.Entities[draw.EntityIndex];
+        if (entity.EntityType == RenderEntityType.StaticModel)
+        {
+            DrawStaticModel(cb, scene, entity);
+            return;
+        }
         var entityMode = draw.EntityType == RenderEntityType.Cube ? -1.0f : -2.0f;
         var selectionMode = draw.Kind == RenderDrawKind.EntityOutline
             ? 2.0f : (entity.IsSelected ? 1.0f : 0.0f);
@@ -55,4 +70,5 @@ public sealed unsafe partial class VulkanClearFrameOwner
         PushSceneConstants(cb, scene);
         _vk.CmdDraw(cb, (uint)draw.VertexCount, 1, 0, 0);
     }
+
 }

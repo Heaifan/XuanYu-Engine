@@ -13,8 +13,10 @@ public readonly record struct RenderProjection(
     double ScaleGizmoWorldRadius = 1.2,
     Vector3d GizmoRotation = default,
     EditorViewportAssistState Assist = default,
-    double MoveGizmoWorldRadius = 1.2)
+    double MoveGizmoWorldRadius = 1.2,
+    IReadOnlyList<RenderStaticModelResource>? StaticModels = null)
 {
     public int EntityCount => Entities.Count;
     public EditorViewportAssistState AssistState => Assist;
+    public IReadOnlyList<RenderStaticModelResource> StaticModelResources => StaticModels ?? [];
 }

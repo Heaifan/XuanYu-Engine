@@ -8,18 +8,19 @@ namespace XuanYu.Render.Vulkan.Device;
 // VK4-B：LogicalDevice 持有者。基于 VK4-A 的 VulkanPhysicalDeviceSelection 创建 VkDevice 与队列。
 // 严禁：重新枚举 PhysicalDevice、自行选择设备、创建 Swapchain / ImageView / RenderPass / CommandBuffer、清屏、Present。
 // 队列族索引来自 VK4-A 已确认结果；同族则 Graphics/Present 共用一个队列。
-public sealed unsafe class VulkanDeviceOwner : IDisposable
+public sealed unsafe partial class VulkanDeviceOwner : IDisposable
 {
     readonly Vk _vk;
     readonly Action<string>? _log;
     VulkanDevice _device;
     Queue _graphicsQueue;
     Queue _presentQueue;
+    PhysicalDevice _physicalDevice;
     bool _disposed;
 
-    VulkanDeviceOwner(Vk vk, VulkanDevice device, Queue g, Queue p, Action<string>? log)
+    VulkanDeviceOwner(Vk vk, VulkanDevice device, PhysicalDevice physicalDevice, Queue g, Queue p, Action<string>? log)
     {
-        _vk = vk; _device = device; _graphicsQueue = g; _presentQueue = p; _log = log;
+        _vk = vk; _device = device; _physicalDevice = physicalDevice; _graphicsQueue = g; _presentQueue = p; _log = log;
     }
 
     public VulkanDevice LogicalDevice => _device;
@@ -83,7 +84,7 @@ public sealed unsafe class VulkanDeviceOwner : IDisposable
         Queue pq = gq;
         if (!q.SameFamily) vk.GetDeviceQueue(device, (uint)q.PresentFamily, 0, out pq);
         Log(log, "【VulkanDevice】Queue 获取成功（Graphics + Present）");
-        return new VulkanDeviceOwner(vk, device, gq, pq, log);
+        return new VulkanDeviceOwner(vk, device, sel.Handle, gq, pq, log);
     }
 
     public void Dispose()
@@ -91,7 +92,7 @@ public sealed unsafe class VulkanDeviceOwner : IDisposable
         if (_disposed) return;
         _disposed = true;
         if (_device.Handle != 0) _vk.DestroyDevice(_device, null);
-        _device = default; _graphicsQueue = default; _presentQueue = default;
+        _device = default; _physicalDevice = default; _graphicsQueue = default; _presentQueue = default;
         Log(_log, "【VulkanDevice】LogicalDevice 释放成功");
     }
 

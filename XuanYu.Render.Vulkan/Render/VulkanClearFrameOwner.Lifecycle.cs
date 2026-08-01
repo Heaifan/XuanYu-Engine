@@ -9,12 +9,17 @@ public sealed unsafe partial class VulkanClearFrameOwner
         foreach (var f in _framebuffers)
             if (f.Handle != 0) _vk.DestroyFramebuffer(_deviceOwner.LogicalDevice, f, null);
         _framebuffers = [];
+        _depthAttachment?.Dispose();
+        _depthAttachment = null;
     }
 
     public void Dispose()
     {
         if (_disposed) return;
         _disposed = true;
+        _proceduralVertexBuffer?.Dispose();
+        _proceduralVertexBuffer = null;
+        _staticModels.Dispose();
         DestroyFramebuffers();
         if (_commandBuffers.Length > 0)
             _vk.FreeCommandBuffers(_deviceOwner.LogicalDevice, _commandPool, (uint)_commandBuffers.Length, _commandBuffers);
