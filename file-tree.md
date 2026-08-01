@@ -1,7 +1,7 @@
-版本：v0.2.21.15-fix
+版本：v0.2.21.16-fix
 # XuanYu Engine 文件树
 
-## WORLD-C-R3-R7 层级树选择稳定性修复职责索引（v0.2.21.15-fix）
+## WORLD-C-R3-R8 Move Gizmo 正方形平面手柄修复职责索引（v0.2.21.16-fix）
 
 - `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；世界坐标轴默认关闭，不拥有场景事实。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；显示菜单文本提供统一勾选列，不写 SceneDocument、不进 History、不触发 Dirty。
@@ -9,13 +9,16 @@
 - `XuanYu.Editor.UI/Left/Left.axaml`：层级右键菜单使用编辑器菜单行高与悬停样式；删除保持克制警示色。
 - `XuanYu.Editor.UI/Foot/Foot.axaml`：底部状态栏只保留当前工具/交互状态，不重复场景保存状态。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：选择提交不再在 Avalonia ListBox 选择事务中切换树展开状态；展开/收起由箭头指针处理，避免失效 index 崩溃。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：Move Gizmo 以细轴箭头与中性中心手柄为主体；R3-R6 将 XY/XZ/YZ 平面可见层改为贴近轴根部的短细折角标记，命中热区仍由 Core 布局保留；Rotate Gizmo 改为细环加中性中心；Scale Gizmo 端点和中心视觉收敛；仍由 glslc 生成嵌入 SPIR-V。
+- `XuanYu.Core/Gizmo/MoveGizmoScreenSize.cs`：Move 箭头、中心和平面共用的 DIP 到世界尺寸换算；定义正方形 offset、边长和 Picking padding。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.Plane.cs`：生成屏幕恒定正方形平面可见几何与独立命中几何。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoScreenSize.cs`：将 Move Gizmo 的屏幕恒定轴长计算接入 UiVm 视口与渲染投影。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：Move Gizmo 以细轴箭头、中性中心和统一屏幕尺寸正方形面片为主体；实体 RenderTransform 不进入 Gizmo；仍由 glslc 生成嵌入 SPIR-V。
 - `XuanYu.Core.Tests/Render/ViewportAssistDrawPlanTests.cs`：默认无世界轴线、开启后进入辅助 DrawPlan 的回归。
 - `XuanYu.World.Tests/World/WorldCR3ViewportAssistTests.cs`：辅助开关不污染 Dirty / History / Selection / Tool 和 `.xyscene` 回归。
 - `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.cs`：未选择/选择/框选/移动/旋转/缩放/取消选择的 Gizmo 显示矩阵回归。
 - `XuanYu.World.Tests/World/WorldCR3R3CommandSmokeTests.cs`：顶部文件命令、工具栏命令和环境显示命令仍可调用且不污染 Dirty/History 的 UI 冒烟回归。
-- `docs/world-c-r3-viewport-reference-report.md`：R3-R7 运行时修复报告与等待真机重新验收状态。
-- `docs/world-c-r3-viewport-reference.svg`：R3-R3 空间参照层状态图。
+- `docs/world-c-r3-viewport-reference-report.md`：R3-R8 Move Gizmo 专项报告与等待真机重新验收状态。
+- `docs/world-c-r3-viewport-reference.svg`：R3-R8 空间参照层状态图。
 
 ## WORLD-C-R2 CLOSED 职责索引（v0.2.21.8-rz）
 

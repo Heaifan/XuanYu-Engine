@@ -33,20 +33,19 @@ vec3 axisColor(int axis) {
 vec3 planeVertex(int plane, int index) {
     vec3 a = plane == 2 ? vec3(0, 1, 0) : vec3(1, 0, 0);
     vec3 b = plane == 0 ? vec3(0, 1, 0) : vec3(0, 0, 1);
-    // Plane drags keep their larger CPU hit regions, while the visible mark stays
-    // as a small, axis-aligned corner accent instead of a floating face.
-    float i = 0.12;
-    float o = 0.28;
-    float t = 0.024;
+    // The visible square shares the arrow's screen-constant world radius.
+    float L = pc.gizmoRingRadius;
+    float i = L * (12.0 / 90.0);
+    float o = i + (L * (16.0 / 90.0));
     vec3 p0 = (a * i) + (b * i);
     vec3 p1 = (a * o) + (b * i);
-    vec3 p2 = (a * o) + (b * (i + t));
+    vec3 p2 = (a * o) + (b * o);
     vec3 p3 = (a * i) + (b * i);
-    vec3 p4 = (a * i) + (b * o);
-    vec3 p5 = (a * (i + t)) + (b * o);
+    vec3 p4 = (a * o) + (b * o);
+    vec3 p5 = (a * i) + (b * o);
     vec3 vertices[6] = vec3[6](
         p0, p1, p2,
-        p3, p4, p5);
+        p0, p2, p5);
     return vertices[index];
 }
 
@@ -315,8 +314,8 @@ void main() {
         if (gi < 18) {
             int plane = gi / 6;
             vec3 world = planeVertex(plane, gi % 6) + pc.worldPosition.xyz;
-            vBaseColor = plane == 0 ? vec4(0.76, 0.72, 0.67, 0.88) :
-                (plane == 1 ? vec4(0.71, 0.73, 0.80, 0.88) : vec4(0.69, 0.76, 0.73, 0.88));
+            vBaseColor = plane == 0 ? vec4(0.76, 0.72, 0.67, 0.18) :
+                (plane == 1 ? vec4(0.71, 0.73, 0.80, 0.18) : vec4(0.69, 0.76, 0.73, 0.18));
             gl_Position = pc.viewProjection * vec4(world, 1.0);
         } else if (gi < 126) {
             int axis = (gi - 18) / 36;

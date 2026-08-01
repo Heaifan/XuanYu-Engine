@@ -5,10 +5,26 @@ public readonly record struct MoveGizmoPlane(
     ScreenPoint A,
     ScreenPoint B,
     ScreenPoint C,
-    ScreenPoint D)
+    ScreenPoint D,
+    ScreenPoint HitA,
+    ScreenPoint HitB,
+    ScreenPoint HitC,
+    ScreenPoint HitD)
 {
-    public bool Contains(double x, double y) =>
+    public bool ContainsVisible(double x, double y) =>
         InTriangle(x, y, A, B, C) || InTriangle(x, y, A, C, D);
+
+    public bool Contains(double x, double y) =>
+        InTriangle(x, y, HitA, HitB, HitC) || InTriangle(x, y, HitA, HitC, HitD);
+
+    public double CenterDistanceSquared(double x, double y)
+    {
+        var cx = (A.X + B.X + C.X + D.X) / 4.0;
+        var cy = (A.Y + B.Y + C.Y + D.Y) / 4.0;
+        var dx = x - cx;
+        var dy = y - cy;
+        return (dx * dx) + (dy * dy);
+    }
 
     static bool InTriangle(
         double x,

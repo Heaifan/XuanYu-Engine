@@ -1,4 +1,5 @@
 using XuanYu.Core.Gizmo;
+using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Core.Transform;
 using XuanYu.Editor.Transform;
@@ -30,7 +31,9 @@ public sealed partial class UiVm
         }
 
         var state = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        var layout = MoveGizmoLayout.Project(state, entity.Transform.Position);
+        _lastViewport = viewport;
+        var worldAxisLength = ComputeMoveGizmoWorldAxisLength(entity.Transform.Position);
+        var layout = MoveGizmoLayout.Project(state, entity.Transform.Position, worldAxisLength);
         var axis = layout.HitTest(x, y);
         if (axis is null) return false;
 
@@ -77,7 +80,8 @@ public sealed partial class UiVm
         double y)
     {
         if (axis is MoveGizmoAxis.X or MoveGizmoAxis.Y or MoveGizmoAxis.Z)
-            return new MoveGizmoDragConstraint(layout.Segments.Single(s => s.Axis == axis), x, y);
+            return new MoveGizmoDragConstraint(
+                layout.Segments.Single(s => s.Axis == axis), x, y, layout.WorldAxisLength);
         var a = axis is MoveGizmoAxis.YZ ? MoveGizmoAxis.Y : MoveGizmoAxis.X;
         var b = axis is MoveGizmoAxis.XY ? MoveGizmoAxis.Y : MoveGizmoAxis.Z;
         return MoveGizmoDragConstraint.Plane(
@@ -85,6 +89,8 @@ public sealed partial class UiVm
             layout.Segments.Single(s => s.Axis == a),
             layout.Segments.Single(s => s.Axis == b),
             x,
-            y);
+            y,
+            layout.WorldAxisLength);
     }
+
 }

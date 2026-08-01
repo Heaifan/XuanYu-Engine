@@ -19,11 +19,13 @@ public sealed partial class WorldMoveTransformUiTests
         Assert.True(vm.PreviewViewportPointer(7, hit.EndX, hit.EndY));
         Assert.True(vm.CommitViewportPointer(7, hit.EndX, hit.EndY));
 
-        Assert.Equal(new Vector3d(0.6, 0, 0), vm.RenderSnapshot.Entity.Transform.Position);
+        Assert.Equal(new Vector3d(hit.WorldAxisLength / 2.0, 0, 0),
+            vm.RenderSnapshot.Entity.Transform.Position);
         vm.RunCommand.Execute("撤销");
         Assert.Equal(Vector3d.Zero, vm.RenderSnapshot.Entity.Transform.Position);
         vm.RunCommand.Execute("重做");
-        Assert.Equal(new Vector3d(0.6, 0, 0), vm.RenderSnapshot.Entity.Transform.Position);
+        Assert.Equal(new Vector3d(hit.WorldAxisLength / 2.0, 0, 0),
+            vm.RenderSnapshot.Entity.Transform.Position);
     }
 
     [Fact]
@@ -40,16 +42,19 @@ public sealed partial class WorldMoveTransformUiTests
         Assert.Equal("EntityId(1)", vm.SelectionKey);
     }
 
-    static (double X, double Y, double EndX, double EndY, ViewportState Viewport) AxisHit(
+    static (double X, double Y, double EndX, double EndY, ViewportState Viewport, double WorldAxisLength) AxisHit(
         UiVm vm,
         MoveGizmoAxis axis)
     {
         var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
         var state = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, viewport);
-        var layout = MoveGizmoLayout.Project(state, vm.RenderSnapshot.Entity.Transform.Position);
+        var length = MoveGizmoScreenSize.ComputeWorldAxisLength(
+            vm.RenderSnapshot.CameraState, viewport, vm.RenderSnapshot.Entity.Transform.Position);
+        var layout = MoveGizmoLayout.Project(
+            state, vm.RenderSnapshot.Entity.Transform.Position, length);
         var segment = layout.Segments.Single(item => item.Axis == axis);
         var x = (segment.Start.X + segment.End.X) / 2.0;
         var y = (segment.Start.Y + segment.End.Y) / 2.0;
-        return (x, y, segment.End.X, segment.End.Y, viewport);
+        return (x, y, segment.End.X, segment.End.Y, viewport, layout.WorldAxisLength);
     }
 }

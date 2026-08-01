@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.21.16-fix
+WORLD-C-R3-R8 Move Gizmo 正方形平面手柄专项修复（2026-08-01）
+- 代码证据：箭头通过相机深度换算 `MoveGizmoWorldRadius`；旧 XY/XZ/YZ 平面 CPU/GPU 可见层却直接使用固定世界单位，导致 Dolly 后尺寸漂移，并与箭头不是同一尺寸真源。
+- 修复：新增 `MoveGizmoScreenSize`，箭头、中心和三个平面共用屏幕恒定世界轴长；平面可见层恢复为贴近中心的正方形面片（offset 12 DIP、边长 16 DIP），不读取实体 Rotation/Scale。
+- Picking：可见正方形与命中正方形分离，命中 padding 7 DIP；优先级为可见平面中心、单轴、隐形 padding，避免平面中心和轴线中段互相抢占。
+- Render：Move 平面与箭头仍在同一 MoveGizmo Draw / RenderPass；移除旧固定世界单位面片逻辑，保留交互顶点槽位但改为统一屏幕尺寸正方形；实体绘制的 RenderTransform 不进入 Gizmo。
+- 测试：新增相机 Dolly 尺寸稳定、可见/命中尺寸分离、实体 Scale 不污染 Move 布局测试；保留 Preview/Commit/Cancel/Undo/Redo/Target Switch 合同。
+- 验证：串行 build 10 项目 0 warning / 0 error；Core Tests 141/141 PASS；World Tests 200/200 PASS；architecture guard、git diff --check、5+100、SVG XML、GLSL PASS。
+- 状态：`WORLD-C-R3-R8` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+
 ## v0.2.21.15-fix
 WORLD-C-R3-R7 Avalonia 层级树选择崩溃修复（2026-08-01）
 - 真机/运行时错误：点击层级树可展开节点时，`SelectedItems` 在 Avalonia 选中事务中回读了已被刷新列表淘汰的旧 index，触发 `ItemsSourceView.GetAt` 的 `ArgumentOutOfRangeException`。

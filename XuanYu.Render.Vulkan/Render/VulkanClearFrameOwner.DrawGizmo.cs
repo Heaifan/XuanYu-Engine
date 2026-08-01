@@ -27,7 +27,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         else
         {
             rotation = Vector3d.Zero;
-            radius = _renderProjection.RotateGizmoWorldRadius;
+            radius = _renderProjection.MoveGizmoWorldRadius;
             mode = 0.0f;
         }
         FillScenePushConstants(scene, _renderProjection, _renderProjection.GizmoPosition,

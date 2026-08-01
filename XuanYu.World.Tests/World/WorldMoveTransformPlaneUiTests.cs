@@ -69,7 +69,10 @@ public sealed partial class WorldMoveTransformUiTests
     {
         var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
         var state = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, viewport);
-        var layout = MoveGizmoLayout.Project(state, vm.RenderSnapshot.Entity.Transform.Position);
+        var length = MoveGizmoScreenSize.ComputeWorldAxisLength(
+            vm.RenderSnapshot.CameraState, viewport, vm.RenderSnapshot.Entity.Transform.Position);
+        var layout = MoveGizmoLayout.Project(
+            state, vm.RenderSnapshot.Entity.Transform.Position, length);
         var plane = layout.Planes.Single(p => p.Axis == axis);
         var x = (plane.A.X + plane.B.X + plane.C.X + plane.D.X) / 4.0;
         var y = (plane.A.Y + plane.B.Y + plane.C.Y + plane.D.Y) / 4.0;

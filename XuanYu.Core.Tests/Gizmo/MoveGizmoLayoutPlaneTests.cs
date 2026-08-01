@@ -35,8 +35,10 @@ public sealed partial class MoveGizmoLayoutTests
     {
         var layout = Layout();
         var x = layout.Segments.Single(s => s.Axis == MoveGizmoAxis.X);
-        var px = x.Start.X + ((x.End.X - x.Start.X) * MoveGizmoLayout.PlaneInset);
-        var py = x.Start.Y + ((x.End.Y - x.Start.Y) * MoveGizmoLayout.PlaneInset);
+        var inset = layout.WorldAxisLength
+            * MoveGizmoScreenSize.PlaneOffsetDip / MoveGizmoScreenSize.TargetScreenAxisDip;
+        var px = x.Start.X + ((x.End.X - x.Start.X) * inset / MoveGizmoLayout.AxisLength);
+        var py = x.Start.Y + ((x.End.Y - x.Start.Y) * inset / MoveGizmoLayout.AxisLength);
 
         Assert.Equal(MoveGizmoAxis.X, layout.HitTest(px, py));
     }

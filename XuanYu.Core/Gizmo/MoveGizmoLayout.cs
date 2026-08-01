@@ -16,41 +16,56 @@ public sealed partial class MoveGizmoLayout
 
     // 命中半径 = 可见半径 + 交互容差 ⇒ 看得到 ≈ 点得到。
     public const double HitWidth = (GizmoVisualLineWidth / 2.0) + HitMargin;
+    [Obsolete("Use MoveGizmoScreenSize for plane DIP dimensions.")]
     public const double PlaneInset = 0.22;
+    [Obsolete("Use MoveGizmoScreenSize for plane DIP dimensions.")]
     public const double PlaneSize = 0.38;
+    public double WorldAxisLength { get; }
 
-    MoveGizmoLayout(MoveGizmoSegment[] segments, MoveGizmoPlane[] planes)
+    MoveGizmoLayout(
+        MoveGizmoSegment[] segments, MoveGizmoPlane[] planes, double worldAxisLength)
     {
         Segments = segments;
         Planes = planes;
+        WorldAxisLength = worldAxisLength;
     }
 
     public IReadOnlyList<MoveGizmoSegment> Segments { get; }
     public IReadOnlyList<MoveGizmoPlane> Planes { get; }
 
-    public static MoveGizmoLayout Project(ViewProjectionState state, Vector3d origin)
+    public static MoveGizmoLayout Project(
+        ViewProjectionState state, Vector3d origin, double worldAxisLength = AxisLength)
     {
+        if (!double.IsFinite(worldAxisLength) || worldAxisLength <= 0)
+            worldAxisLength = AxisLength;
         var start = state.ProjectWorldPoint(origin);
         return new MoveGizmoLayout(
         [
             Segment(MoveGizmoAxis.X, start,
-                state.ProjectWorldPoint(origin + new Vector3d(AxisLength, 0, 0))),
+                state.ProjectWorldPoint(origin + new Vector3d(worldAxisLength, 0, 0))),
             Segment(MoveGizmoAxis.Y, start,
-                state.ProjectWorldPoint(origin + new Vector3d(0, AxisLength, 0))),
+                state.ProjectWorldPoint(origin + new Vector3d(0, worldAxisLength, 0))),
             Segment(MoveGizmoAxis.Z, start,
-                state.ProjectWorldPoint(origin + new Vector3d(0, 0, AxisLength)))
+                state.ProjectWorldPoint(origin + new Vector3d(0, 0, worldAxisLength)))
         ],
         [
-            Plane(state, origin, MoveGizmoAxis.XY, Vector3d.UnitX, Vector3d.UnitY),
-            Plane(state, origin, MoveGizmoAxis.XZ, Vector3d.UnitX, Vector3d.UnitZ),
-            Plane(state, origin, MoveGizmoAxis.YZ, Vector3d.UnitY, Vector3d.UnitZ)
-        ]);
+            Plane(state, origin, MoveGizmoAxis.XY, Vector3d.UnitX, Vector3d.UnitY, worldAxisLength),
+            Plane(state, origin, MoveGizmoAxis.XZ, Vector3d.UnitX, Vector3d.UnitZ, worldAxisLength),
+            Plane(state, origin, MoveGizmoAxis.YZ, Vector3d.UnitY, Vector3d.UnitZ, worldAxisLength)
+        ], worldAxisLength);
     }
 
     public MoveGizmoAxis? HitTest(double x, double y, double width = HitWidth)
     {
         if (!double.IsFinite(x) || !double.IsFinite(y) || !double.IsFinite(width) || width <= 0)
             throw new ArgumentOutOfRangeException(nameof(x));
+        var visiblePlane = Planes
+            .Where(plane => plane.ContainsVisible(x, y))
+            .OrderBy(plane => plane.CenterDistanceSquared(x, y))
+            .Select(plane => (MoveGizmoPlane?)plane)
+            .FirstOrDefault();
+        if (visiblePlane is { } visible)
+            return visible.Axis;
         var origin = Segments[0].Start;
         var axis = Segments
             .Select(segment => Hit(segment, origin, x, y))
@@ -71,23 +86,6 @@ public sealed partial class MoveGizmoLayout
         var segment = new MoveGizmoSegment(axis, start, end);
         if (segment.Length < 1.0) throw new InvalidOperationException($"Gizmo {axis} 轴投影已退化。");
         return segment;
-    }
-
-    static MoveGizmoPlane Plane(
-        ViewProjectionState state,
-        Vector3d origin,
-        MoveGizmoAxis axis,
-        Vector3d a,
-        Vector3d b)
-    {
-        var i = PlaneInset;
-        var o = PlaneInset + PlaneSize;
-        return new MoveGizmoPlane(
-            axis,
-            state.ProjectWorldPoint(origin + (a * i) + (b * i)),
-            state.ProjectWorldPoint(origin + (a * o) + (b * i)),
-            state.ProjectWorldPoint(origin + (a * o) + (b * o)),
-            state.ProjectWorldPoint(origin + (a * i) + (b * o)));
     }
 
 }

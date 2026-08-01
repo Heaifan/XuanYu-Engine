@@ -12,7 +12,8 @@ public static class SceneRenderProjectionAdapter
         double rotateGizmoWorldRadius = 1.2,
         double scaleGizmoWorldAxisLength = 1.2,
         Vector3d gizmoRotation = default,
-        EditorViewportAssistState assist = default)
+        EditorViewportAssistState assist = default,
+        double moveGizmoWorldAxisLength = 1.2)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -43,7 +44,8 @@ public static class SceneRenderProjectionAdapter
             ScaleGizmoVisible: snapshot.ShowScaleGizmo,
             ScaleGizmoWorldRadius: scaleGizmoWorldAxisLength,
             GizmoRotation: gizmoRotation,
-            Assist: assist);
+            Assist: assist,
+            MoveGizmoWorldRadius: moveGizmoWorldAxisLength);
         return RenderProjectionResult.Ok(projection);
     }
 }
