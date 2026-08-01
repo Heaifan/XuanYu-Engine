@@ -1,14 +1,14 @@
-版本：v0.2.21.12-fix
+版本：v0.2.21.13-fix
 # XuanYu Engine 文件树
 
-## WORLD-C-R3-R4 视觉与 Global Gizmo 修复职责索引（v0.2.21.12-fix）
+## WORLD-C-R3-R5 Move Gizmo 平面视觉修复职责索引（v0.2.21.13-fix）
 
 - `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；世界坐标轴默认关闭，不拥有场景事实。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；显示菜单文本提供统一勾选列，不写 SceneDocument、不进 History、不触发 Dirty。
 - `XuanYu.Editor.UI/Top/Top.axaml`：顶部主命令栏和视口工具栏重构为两条浅色 rail；去掉挤占空间的小组标题，工具当前态改为浅蓝背景、淡蓝边框和底部指示。
 - `XuanYu.Editor.UI/Left/Left.axaml`：层级右键菜单使用编辑器菜单行高与悬停样式；删除保持克制警示色。
 - `XuanYu.Editor.UI/Foot/Foot.axaml`：底部状态栏只保留当前工具/交互状态，不重复场景保存状态。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：Move Gizmo 改为细轴箭头与中性中心手柄；Rotate Gizmo 改为细环加中性中心；Scale Gizmo 端点和中心视觉收敛；仍由 glslc 生成嵌入 SPIR-V。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：Move Gizmo 以细轴箭头与中性中心手柄为主体；R3-R5 将 XY/XZ/YZ 平面可见层从大正方形面片压为中心附近小三角角标，命中热区仍由 Core 布局保留；Rotate Gizmo 改为细环加中性中心；Scale Gizmo 端点和中心视觉收敛；仍由 glslc 生成嵌入 SPIR-V。
 - `XuanYu.Core.Tests/Render/ViewportAssistDrawPlanTests.cs`：默认无世界轴线、开启后进入辅助 DrawPlan 的回归。
 - `XuanYu.World.Tests/World/WorldCR3ViewportAssistTests.cs`：辅助开关不污染 Dirty / History / Selection / Tool 和 `.xyscene` 回归。
 - `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.cs`：未选择/选择/框选/移动/旋转/缩放/取消选择的 Gizmo 显示矩阵回归。
@@ -464,7 +464,7 @@
 - `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs`：Vulkan 队列族选择结果。
 - `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs`：Vulkan Resize 追踪诊断工具。
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs`：片元着色器 SPIR-V 字节码；WORLD-B-R4-R3-R2 重生成，改为直接透传基础色（轮廓由顶点着色器外轮廓边带生成，不再使用重心坐标 fwidth 内部边线）。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：由正式 `scene.vert` 经 glslc 生成的 SPIR-V；R2-R2 使用互斥模式 -2=Legacy、-1=Cube、0=Move、1=Rotate、2=Scale，紧凑 70 行满足 5+100。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：由正式 `scene.vert` 经 glslc 生成的 SPIR-V；R2-R2 使用互斥模式 -2=Legacy、-1=Cube、0=Move、1=Rotate、2=Scale；R3-R5 重新生成后紧凑 88 行满足 5+100。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`：Vulkan 图形管线生命周期持有者。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：Vulkan 管线日志格式化器。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；128 字节（32 float）std140；@88 / index 22 为 `selectionMode`（0/1=填充、2=外轮廓边带）；复用 `entityRotation.w`（target 27）= viewportWidth、`entityScale.w`（target 31）= viewportHeight 供屏幕空间定宽边带；负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
@@ -476,7 +476,7 @@
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan 最终帧只消费 `GetFrameDrawPlan`；实体 Draw 使用条目携带的 Legacy/Cube 类型，Gizmo Draw 独立分发，选择态不再回退到三角形。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PushConstants.cs`：写入相机、实体 Transform、轮廓参数及互斥视觉模式；实体显式传 -2 Legacy/-1 Cube，Gizmo 显式传 0/1/2。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Matrix.cs`：Vulkan ClearFrame 矩阵辅助分部；提供 push constant 矩阵转置和 Vulkan Clip Y 投影副本转换，不持有渲染资源生命周期。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景三角形与 Move Gizmo 三轴/三平面顶点着色器源码；由 glslc 生成内嵌 SPIR-V，不负责命中测试。WORLD-B-R5 新增 `cube(center,halfExtent,li)` 与 `scaleVertex(vi)`；WORLD-B-R5-R1 保持 252 顶点绘制结构，随 63 DIP 世界轴长整体缩小 Scale Gizmo，并将中心白色 Uniform 立方体半径调为 `L*0.15` 以提升可发现性。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景与 Transform Gizmo 顶点着色器源码；Move 三轴为箭头，平面拖动只保留小型角标可见层，真实平面命中仍在 Core；由 glslc 生成内嵌 SPIR-V，不负责命中测试。WORLD-B-R5 新增 `cube(center,halfExtent,li)` 与 `scaleVertex(vi)`；WORLD-B-R5-R1 保持 252 顶点绘制结构，随 63 DIP 世界轴长整体缩小 Scale Gizmo，并将中心白色 Uniform 立方体半径调为 `L*0.15`。
 - `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；WORLD-B-R4-R3-R2 改为直接透传基础色 `outColor=vec4(vBaseColor.rgb,1.0)`，删除重心坐标 `fwidth` 内部边线逻辑（轮廓改由顶点着色器外轮廓边带生成），不负责 Pipeline 生命周期。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
 - `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。

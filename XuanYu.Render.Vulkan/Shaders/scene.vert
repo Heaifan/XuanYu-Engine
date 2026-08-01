@@ -33,11 +33,15 @@ vec3 axisColor(int axis) {
 vec3 planeVertex(int plane, int index) {
     vec3 a = plane == 2 ? vec3(0, 1, 0) : vec3(1, 0, 0);
     vec3 b = plane == 0 ? vec3(0, 1, 0) : vec3(0, 0, 1);
-    float i = 0.18;
-    float o = 0.38;
+    float i = 0.13;
+    float o = 0.23;
+    vec3 p0 = (a * i) + (b * i);
+    vec3 p1 = (a * o) + (b * i);
+    vec3 p2 = (a * i) + (b * o);
+    vec3 p3 = (a * 0.19) + (b * 0.19);
     vec3 vertices[6] = vec3[6](
-        (a * i) + (b * i), (a * o) + (b * i), (a * o) + (b * o),
-        (a * i) + (b * i), (a * o) + (b * o), (a * i) + (b * o));
+        p0, p1, p3,
+        p0, p3, p2);
     return vertices[index];
 }
 
@@ -182,7 +186,7 @@ void cubeOutlineVertex(int vi, out vec4 clipPos, out vec4 color) {
     color = vec4(0.80, 0.90, 1.0, 1.0);
 }
 
-// Scale Gizmo 几何（相对 Gizmo 中心，轴方向随实体局部旋转）：
+// Scale Gizmo 几何（相对 Gizmo 中心；无可见 Global/Local 切换前由上游传入零旋转，锁定世界轴）：
 // [0..107] 三轴杆（沿旋转轴方向拉长）；[108..215] 三轴端立方体；[216..251] 中心等比立方体。
 vec3 scaleVertex(int vi) {
     float L = pc.gizmoRingRadius;
@@ -306,8 +310,8 @@ void main() {
         if (gi < 18) {
             int plane = gi / 6;
             vec3 world = planeVertex(plane, gi % 6) + pc.worldPosition.xyz;
-            vBaseColor = plane == 0 ? vec4(0.70, 0.64, 0.55, 1.0) :
-                (plane == 1 ? vec4(0.62, 0.58, 0.72, 1.0) : vec4(0.55, 0.69, 0.70, 1.0));
+            vBaseColor = plane == 0 ? vec4(0.72, 0.69, 0.63, 1.0) :
+                (plane == 1 ? vec4(0.70, 0.68, 0.76, 1.0) : vec4(0.66, 0.73, 0.73, 1.0));
             gl_Position = pc.viewProjection * vec4(world, 1.0);
         } else if (gi < 126) {
             int axis = (gi - 18) / 36;
