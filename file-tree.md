@@ -1,5 +1,12 @@
-版本：v0.2.24.1-rz
+版本：v0.2.24.2-rz
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D3 职责索引（v0.2.24.2-rz）
+
+- `XuanYu.Core/Map/`：唯一地表采样源（MapSurfaceKind/MapSurfaceSampler，Flat/GentleHillsV1 确定性）+ MapRenderSnapshot（供 D4 的最小渲染快照）。
+- `XuanYu.World/Map/`：World 地图状态（WorldMapState 有限边界+高度查询 / WorldMapStateOwner 加载切换卸载+快照）。
+- `XuanYu.Editor/MapDocument/MapDocumentWorldBridge.cs`：MapDocument → WorldMapState 桥接。
+- `XuanYu.World.Tests/Map/`：地表采样确定性、边界、Owner 状态、桥接端到端测试。
 
 ## MAP-A-R1-D2 职责索引（v0.2.24.1-rz）
 

@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.24.2-rz
+MAP-A-R1-D3 World 地表能力（2026-08-02 18:24:41）
+- 任务目标：把地图文档转化为 World 可查询的确定性地表能力——有限边界、唯一地表采样器、世界 X/Y → 地表 Z、加载/切换/卸载、最小渲染快照；本轮不渲染、不做 UI 与场景引用。
+- 新增 `XuanYu.Core/Map/`：`MapSurfaceKind`（Flat/GentleHillsV1）、`MapSurfaceSampler`（唯一采样源：Flat 固定高度；GentleHillsV1 双正交正弦叠加，相位由 seed 固定派生，输出 [base−amp, base+amp]，纯算术确定性）、`MapRenderSnapshot`（供 D4 Render 消费的最小快照：尺寸+地表参数+MapId，卸载后 Empty）。
+- 新增 `XuanYu.World/Map/`：`WorldMapState`（纯数据+有限边界判断+高度查询；世界 X 横向/Y 纵向/Z 高度，Z-Up 直写无映射层；闭区间边界，边界点属于地图；地图外不钳制不返回虚假零高度）、`WorldMapStateOwner`（当前地图状态：Load/Unload/Switch、TryGetSurfaceHeight(X,Y,out Z)、BuildRenderSnapshot）。
+- 桥接：`XuanYu.Editor/MapDocument/MapDocumentWorldBridge.ToWorldState`（MapDocument → WorldMapState，字符串 kind → 枚举映射，对齐 SceneDocumentWorldBridge 模式）。
+- 测试（XuanYu.World.Tests/Map/，新增 4 文件 32 项）：Flat/GentleHills 确定性（同坐标多次一致、200 点扫描）、幅度范围、seed/位置差异；边界闭区间（中心/四边/角在内，外 0.001 米拒绝）；Owner 加载/切换/卸载/快照清空不残留；桥接字段完整与端到端查询一致。
+- 治理：版本 v0.2.24.1-rz → v0.2.24.2-rz（五处同步）；无新增项目/依赖；Core 新增纯数学 Map 类型（非 Scene/World/Picking/Gizmo 禁区）；World → Core 仅、Editor 桥接不反向依赖。
+- 验证结果：串行 build 12 项目 0 error / 1 warning（既有 xUnit2013）；Core Tests 145/145；World Tests 411/411（含地图新增 32 项）；WarCore Tests 22/22；arch-a-guard PASS；glslc PASS；git diff --check PASS；5+100 全仓扫描 PASS（守卫口径与 wc 均 ≤100）。
+- 状态：MAP-A-R1-D3 完成（无 UI/视口，验收以自动测试为准），等待批准后进入 MAP-A-R1-D4 有限地表、天空和光照。
+
 ## v0.2.24.1-rz
 MAP-A-R1-D2 .xymap 地图存储闭环（2026-08-02 18:15:25）
 - 任务目标：地图资产可靠创建、严格校验、保存、关闭并重新读取；本轮不渲染、不查询、不做 UI 与场景引用。
