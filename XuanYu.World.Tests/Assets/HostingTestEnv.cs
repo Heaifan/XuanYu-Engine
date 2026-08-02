@@ -3,7 +3,7 @@ using XuanYu.Editor.Assets;
 
 namespace XuanYu.World.Tests.Assets;
 
-// D4-R1：托管事务测试辅助。所有测试使用独立临时目录，测试结束清理；
+// D4-I1：托管事务测试辅助。所有测试使用独立临时目录，测试结束清理；
 // AssetId 使用确定性值，不依赖随机排序。
 static class HostingTestEnv
 {

@@ -2,7 +2,7 @@ using XuanYu.Editor.SceneDocument;
 
 namespace XuanYu.Editor.Assets;
 
-// D4-R1：Activate 将 staging 激活为正式 .xyassets，同时保留旧目录为备份。
+// D4-I1：Activate 将 staging 激活为正式 .xyassets，同时保留旧目录为备份。
 public sealed partial class SceneAssetHostingTransaction
 {
     public SceneDocumentResult<bool> Activate()

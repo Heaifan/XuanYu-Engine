@@ -1,6 +1,6 @@
 namespace XuanYu.Editor.Assets;
 
-// D4-R1：托管事务错误码。复用 SceneDocumentResult 的 ErrorCode 字符串约定，
+// D4-I1：托管事务错误码。复用 SceneDocumentResult 的 ErrorCode 字符串约定，
 // 不创建独立错误框架；不得把所有失败退化为 Unknown。
 public static class SceneAssetHostingError
 {

@@ -2,7 +2,7 @@ using XuanYu.Editor.SceneDocument;
 
 namespace XuanYu.Editor.Assets;
 
-// D4-R1：托管规划生成。只计算路径与规划，不写磁盘。
+// D4-I1：托管规划生成。只计算路径与规划，不写磁盘。
 public static class SceneAssetHostingPlanner
 {
     public static SceneDocumentResult<SceneAssetHostingPlan> Create(

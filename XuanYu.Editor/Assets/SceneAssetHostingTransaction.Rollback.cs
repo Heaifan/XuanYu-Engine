@@ -2,7 +2,7 @@ using XuanYu.Editor.SceneDocument;
 
 namespace XuanYu.Editor.Assets;
 
-// D4-R1：Rollback 恢复旧目录。旧数据安全优先于清理整洁。
+// D4-I1：Rollback 恢复旧目录。旧数据安全优先于清理整洁。
 public sealed partial class SceneAssetHostingTransaction
 {
     public SceneDocumentResult<bool> Rollback()

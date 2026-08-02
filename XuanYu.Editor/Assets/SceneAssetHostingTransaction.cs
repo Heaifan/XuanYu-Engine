@@ -2,7 +2,7 @@ using XuanYu.Editor.SceneDocument;
 
 namespace XuanYu.Editor.Assets;
 
-// D4-R1：托管资源事务。Prepare 只写 staging；Activate 激活正式 .xyassets 并保留备份；
+// D4-I1：托管资源事务。Prepare 只写 staging；Activate 激活正式 .xyassets 并保留备份；
 // Complete 清理备份；Rollback 恢复旧目录。状态机见 partial 文件。
 public sealed partial class SceneAssetHostingTransaction
 {

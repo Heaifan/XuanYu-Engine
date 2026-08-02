@@ -1,4 +1,4 @@
-# WORLD-C-R4-D4-R1：`.xyassets` 托管资源事务内核报告
+# WORLD-C-R4-D4-I1：`.xyassets` 托管资源事务内核报告
 
 版本：`v0.2.21.24-rz`
 状态：自动验证 PASS；本轮无用户可见功能，不单独真机验收
@@ -60,7 +60,7 @@ Failed(任意失败)
 |---|---|
 | 串行 build 10 项目 | 0 warning / 0 error |
 | Core Tests | 145/145 PASS |
-| World Tests | 全量 PASS(含 D4-R1 新增 28 项) |
+| World Tests | 全量 PASS(含 D4-I1 新增 28 项) |
 | `scripts/arch-a-guard.ps1` | PASS |
 | glslc 编译 scene.vert / scene.frag | PASS |
 | `git diff --check` | PASS |
@@ -87,7 +87,7 @@ Failed(任意失败)
 
 ```text
 WORLD-C-R4-D3：COMPLETE
-WORLD-C-R4-D4-R1 自动验证：PASS
+WORLD-C-R4-D4-I1 自动验证：PASS
 WORLD-C-R4-D4：IN PROGRESS
 WORLD-C-R4：IN PROGRESS
 ```

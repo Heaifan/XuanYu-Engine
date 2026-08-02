@@ -2,7 +2,7 @@ using XuanYu.Editor.SceneDocument;
 
 namespace XuanYu.Editor.Assets;
 
-// D4-R1：Complete 在后续场景文件保存成功后调用，删除备份并收尾。
+// D4-I1：Complete 在后续场景文件保存成功后调用，删除备份并收尾。
 public sealed partial class SceneAssetHostingTransaction
 {
     public SceneDocumentResult<bool> Complete()
