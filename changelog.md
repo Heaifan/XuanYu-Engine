@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.21.24-rz
+WORLD-C-R4-D4-R1 `.xyassets` 托管资源事务内核（2026-08-02 14:10:00）
+- 任务目标：按 D0 冻结合同实现独立、可测试、可回滚的托管资源事务内核：运行时 GLB SourcePath → 托管目标规划 → 复制到同目录临时 staging → 验证 → 激活新 `<SceneName>.xyassets` → 后续保存成功 Complete / 失败 Rollback。本轮不接 Schema v3、不接正式保存/另存为、不接加载/占位/弹窗。
+- 冻结目录与相对路径：`<SceneName>.xyassets/models/<AssetId>/source.glb`、相对路径 `models/<AssetId>/source.glb`（复用 `SceneAssetPathPolicy.ModelSourceRelativePath` 与 `IsSafeRelativePath`，禁止 `..`/盘符/UNC/反斜杠/逃逸）。
+- 新增（`XuanYu.Editor/Assets/`）：`HostedSceneAsset`（AssetId/SourcePath/RelativePath/StagedPath/FinalPath）、`SceneAssetHostingPlan`（场景路径/资产根/staging/backup/资产列表，按 AssetId 稳定排序）、`SceneAssetHostingPlanner`（场景路径校验、SourcePath 校验、重复 AssetId 同源去重、同 AssetId 异源拒绝 AssetSourceConflict、同源异 AssetId 允许、FinalPath 防逃逸）、`SceneAssetHostingTransaction`（Prepare/Activate/Complete/Rollback 状态机 + 三个 partial：Activate 激活并备份旧目录、Complete 删除备份、Rollback 旧数据安全优先）、`SceneAssetHostingState`、`SceneAssetHostingError`（14 个错误码，复用 `SceneDocumentResult<T>` 模式）。
+- 事务语义：Prepare 只写 `.Battle01.xyassets.staging-<Guid>` 不碰正式根；Activate 目标不存在时直接 Move、已存在时先移旧目录为 backup 再移入 staging、第 3 步失败自动恢复旧目录；Complete 仅在 Activated 且 staging 已清时删 backup；Rollback Prepared 删 staging、无旧根删新根、有旧根恢复旧内容；错误调用返回明确失败不静默成功。
+- 测试（`XuanYu.World.Tests/Assets/`，独立临时目录，确定性 AssetId）：PlannerTests/PlannerRejectTests（目录、排序、去重、冲突、扩展名、缺失、相对路径、中文与空格场景名）、TransactionTests（Prepare 复制与不碰旧根、失败清理、Activate 新旧根、重复 Activate 拒绝）、CompleteTests（删备份留根、状态守卫）、RollbackTests（三态回滚、重复回滚拒绝、Completed 回滚拒绝）、SaveAsTests（两场景规划独立根、独立激活）。共 28 项新增。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 全量 PASS（含 D4-R1 新增）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；`git diff --check` PASS；守卫口径 5+100 PASS。本轮无用户可见功能，不单独真机验收；Schema v3、正式保存入口、加载/占位/弹窗均未接线。
+- Commit Hash：以本轮最终 Git 记录为准。
+
 ## v0.2.21.23-fix
 WORLD-C-R4-D3-F1 非零 BaseVertex 索引归一化与失败去重修复（2026-08-02 12:45:00）
 - 真机证据：导入 `german_ss_soldier_mp40.glb` 前半段成功（Entity=EntityId(1)、Asset=asset_26a8723a…、Vertices=211517、Indices=926148），但 Vulkan GPU 资源创建失败：`Stage=Create Reason=non-zero BaseVertex not supported`；同一错误在后续投影更新中反复出现刷屏。

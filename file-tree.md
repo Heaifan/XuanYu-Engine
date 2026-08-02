@@ -1,5 +1,16 @@
-版本：v0.2.21.23-fix
+版本：v0.2.21.24-rz
 # XuanYu Engine 文件树
+
+## WORLD-C-R4-D4-R1 职责索引（v0.2.21.24-rz）
+
+- `XuanYu.Editor/Assets/HostedSceneAsset.cs`：托管资产项（AssetId/SourcePath/RelativePath/StagedPath/FinalPath）。
+- `XuanYu.Editor/Assets/SceneAssetHostingPlan.cs`：托管规划（场景路径/资产根/staging/backup/资产列表，按 AssetId 稳定排序）。
+- `XuanYu.Editor/Assets/SceneAssetHostingPlanner.cs`：场景路径与 SourcePath 校验、同 AssetId 同源去重/异源拒绝、FinalPath 防逃逸。
+- `XuanYu.Editor/Assets/SceneAssetHostingTransaction.cs` + `.Activate/.Complete/.Rollback.cs`：Prepare/Activate/Complete/Rollback 状态机；旧目录备份与恢复，旧数据安全优先。
+- `XuanYu.Editor/Assets/SceneAssetHostingState.cs`：事务状态（Prepared/Activated/Completed/RolledBack/Failed）。
+- `XuanYu.Editor/Assets/SceneAssetHostingError.cs`：14 个托管事务错误码，复用 SceneDocumentResult 模式。
+- `XuanYu.World.Tests/Assets/WorldCR4D4Hosting*.cs`：D4-R1 托管事务自动测试（Planner/Reject/Transaction/Complete/Rollback/SaveAs + 测试环境辅助）。
+- `docs/world-c-r4-d4-r1-hosted-assets-report.md`：D4-R1 事务内核实现、验证与边界报告。
 
 ## WORLD-C-R4-D3-F1 职责索引（v0.2.21.23-fix）
 
