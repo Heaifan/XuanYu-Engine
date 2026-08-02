@@ -8,5 +8,5 @@ public readonly record struct RenderStaticModelPrimitive(
 
 public readonly record struct RenderStaticModelColor(double R, double G, double B, double A)
 {
-    public static RenderStaticModelColor Neutral { get; } = new(0.8, 0.8, 0.8, 1.0);
+    public static RenderStaticModelColor Neutral { get; } = new(0.72, 0.73, 0.76, 1.0);
 }

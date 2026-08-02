@@ -7,6 +7,19 @@ namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
 {
+    Silk.NET.Vulkan.Pipeline _skyPipeline;
+    PipelineLayout _skyPipelineLayout;
+
+    // WORLD-D-R1：天空管线（深度不写）注入；与主管线共用 PushConstants 布局，
+    // 命令缓冲按绘制类型在 RecordDraw 时选择绑定。
+    public void SetSkyPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
+    {
+        _skyPipeline = pipeline;
+        _skyPipelineLayout = layout;
+        if (_views.Length > 0 && !RecordCommandBuffers(_views))
+            throw new InvalidOperationException("天空 Pipeline 注入后 CommandBuffer 重录失败");
+    }
+
     void RecordDraw(CommandBuffer cb)
     {
         if (_pipeline.Handle == 0 || _pipelineLayout.Handle == 0) return;
@@ -31,7 +44,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         fixed (Rect2D* pSc = scissor)
         fixed (float* pScene = scene)
         {
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
             _vk.CmdSetViewport(cb, 0, 1, pVp);
             _vk.CmdSetScissor(cb, 0, 1, pSc);
             BindProceduralVertexBuffer(cb);
@@ -39,11 +51,23 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _staticModels.RetainOnly(_renderProjection.Entities.Select(e => e.StaticModelKey));
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
+                BindFramePipeline(cb, draw.Kind);
                 if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);
                 else if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
                 else DrawGizmo(cb, pScene, draw);
             }
         }
+    }
+
+    void BindFramePipeline(CommandBuffer cb, RenderDrawKind kind)
+    {
+        if (kind != RenderDrawKind.EditorBackground)
+        {
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
+            return;
+        }
+        if (_skyPipeline.Handle == 0 || _skyPipelineLayout.Handle == 0) return;
+        _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _skyPipeline);
     }
 
     void BindProceduralVertexBuffer(CommandBuffer cb)

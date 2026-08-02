@@ -1,5 +1,16 @@
-版本：v0.2.21.25-rz
+版本：v0.2.22.0-rz
 # XuanYu Engine 文件树
+
+## WORLD-D-R1 职责索引（v0.2.22.0-rz）
+
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：背景改为世界空间程序化天空（逆视图投影恢复方向、按世界 Z 分量三段插值，地平线世界稳定）；静态模型分支固定方向光 + 半球环境光（常量内联，不进场景文档）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Sky.cs`：天空专用管线工厂（DepthTest/Write=Off、Blend=Off），与主管线共用 Shader/顶点输入/RenderPass 与兼容 PushConstants 布局。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：由 glslc -O 从正式 scene.vert 重新生成（7969 字 SPIR-V）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：新增天空管线创建日志。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：SetSkyPipeline 注入；RecordDraw 按绘制类型绑定切换（EditorBackground→天空管线）。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession(.Lifecycle).cs`：天空管线创建/持有/释放。
+- `XuanYu.Editor/Assets/StaticModelColor.cs` + `XuanYu.Render.Abstractions/RenderStaticModelPrimitive.cs`：默认材质 Neutral 0.8 灰 → 中性浅灰 (0.72, 0.73, 0.76)。
+- `XuanYu.World.Tests/World/WorldDR1EnvironmentTests.cs`：默认材质路径与场景文档无光照字段契约测试。
 
 ## WORLD-C-R4-D4 职责索引（v0.2.21.25-rz）
 

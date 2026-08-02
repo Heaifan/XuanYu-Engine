@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.22.0-rz
+WORLD-D-R1 基础光照与天空环境（2026-08-02 15:28:21）
+- 任务目标：把视口从灰色调试画面提升为明亮、稳定、有天空与地平方向、有基础立体感的三维编辑环境：程序化世界空间天空、固定世界方向光、半球环境补光、默认材质调整、天空专用管线（深度不写）、Resize/Swapchain 重建回归。不做 HDRI/Cubemap/场景灯光/阴影/雾/昼夜/后处理/PBR。
+- Render（scene.vert）：背景从屏幕空间三段渐变改为世界空间程序化天空——逆视图投影恢复世界观察方向，按世界 Z 分量（右手系 Z 轴向上）区分上/下半球，地平线（月白）世界稳定、随相机旋转不漂移；静态模型分支改为固定方向光（近白微暖 1.0/0.98/0.94、指向光源方向 vec3(0.35,0.55,0.75)）+ 半球环境光（天空略冷稍亮 0.54/0.60/0.68、地面中性稍暗 0.40/0.41/0.43，按世界法线 n.z 混合）+ 最终亮度 clamp；无法线时安全回退（无漫反射、均匀环境光）。光照常量全部内联在 Shader，不进入 World/SceneDocument/.xyscene。
+- Render（管线）：新增天空专用管线 VulkanGraphicsPipelineOwner.CreateSky——与主管线共用 Shader、顶点输入与 RenderPass，仅深度状态不同（DepthTest=Off、DepthWrite=Off），天空不写深度、不遮挡网格/模型/Bounds/Gizmo；VulkanClearFrameOwner.RecordDraw 按绘制类型切换管线（EditorBackground 绑天空管线），PushConstants 布局与主管线兼容；VulkanRenderSession 创建/持有/释放天空管线，Dispose 完整。
+- 默认材质：StaticModelColor.Neutral 与 RenderStaticModelColor.Neutral 从 0.8 灰调整为中性浅灰 (0.72, 0.73, 0.76)——比地面环境色亮、与月白地平线保持差异、非纯白。Gizmo/Bounds/选择轮廓/Grid/UI 主题色/导入格式/SceneDocument 数据均未改动。
+- ShaderBytecode.Vert.cs 由 glslc -O 从正式 scene.vert 重新生成（7969 字 SPIR-V），scene.frag 无需改动。
+- 测试：新增 WorldDR1EnvironmentTests——无材质 GLB 导入使用 Neutral 默认基础色；.xyscene 保存 JSON 不含 sky/light 字段（固定编辑器光照不进场景文档）；天空绘制顺序（plan[0]=EditorBackground）已有 ViewportAssistDrawPlanTests 覆盖。
+- 验证结果：正式串行 build 10 项目 0 error / 1 warning（既有 xUnit2013，非本轮引入）；Core Tests 145/145 PASS；World Tests 305/305 PASS（含新增 2 项）；架构守卫 PASS、diff-check PASS、5+100 全仓扫描 PASS、glslc 编译与内嵌字节码一致性复核 PASS。
+- 状态：WORLD-D-R1 等待真机验收（测试 01–10）。
+
 ## v0.2.21.25-rz
 WORLD-C-R4-D4 静态模型持久化完整闭环（2026-08-02 15:30:00）
 - 任务目标：一次完成 D4 全部剩余工作：Schema v3 资产持久化、保存/另存为托管事务、加载候选/提交事务、缺失与损坏资源非破坏加载、固定 Bounds 占位、错误弹窗。宪法新增 R/I/F 命名规范（I 为可选实施切片、禁止过度拆分），D4-I1 托管事务作为既有基础复用。

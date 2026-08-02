@@ -229,11 +229,21 @@ vec3 quadCorner(vec3 center, vec3 halfExtent, int li) {
 void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
     vec2 p[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
     clipPos = vec4(p[vi], 1.0, 1.0);
-    float t = clamp(p[vi].y * 0.5 + 0.5, 0.0, 1.0);
-    vec3 bottom = vec3(0.50, 0.56, 0.61);
-    vec3 horizon = vec3(0.66, 0.71, 0.76);
-    vec3 top = vec3(0.42, 0.50, 0.60);
-    color = vec4(mix(mix(bottom, horizon, t), top, smoothstep(0.45, 1.0, t)), 1.0);
+    // WORLD-D-R1：程序化天空。逆视图投影恢复世界观察方向，按世界 Z 分量
+    // （右手系 Z 轴向上）判断上下半球，地平线保持世界空间稳定。
+    mat4 invVP = inverse(pc.viewProjection);
+    vec4 farWorld = invVP * vec4(p[vi], 1.0, 1.0);
+    vec4 camWorld = invVP * vec4(0.0, 0.0, 0.0, 1.0);
+    vec3 dir = normalize(farWorld.xyz / farWorld.w - camWorld.xyz / camWorld.w);
+    float up = clamp(dir.z, 0.0, 1.0);      // 上半球：0=地平线 .. 1=正上方
+    float down = clamp(-dir.z, 0.0, 1.0);   // 下半球：0=地平线 .. 1=正下方
+    vec3 skyTop = vec3(0.52, 0.60, 0.72);   // 天空顶部：明亮低饱和蓝灰
+    vec3 horizon = vec3(0.85, 0.88, 0.92);  // 地平线：月白/浅灰白
+    vec3 ground = vec3(0.55, 0.58, 0.62);   // 下半球：浅中性灰蓝/淡地面色
+    vec3 rgb = dir.z >= 0.0
+        ? mix(horizon, skyTop, smoothstep(0.0, 0.7, up))
+        : mix(horizon, ground, smoothstep(0.0, 0.45, down));
+    color = vec4(rgb, 1.0);
 }
 
 vec3 gridVertex(int vi, out vec4 color) {
@@ -273,9 +283,19 @@ void main() {
         mat3 R = eulerRot(pc.entityRotation.xyz);
         vec3 local = inPosition * pc.entityScale.xyz;
         vec3 n = normalize(R * (inNormal / max(abs(pc.entityScale.xyz), vec3(0.0001))));
-        float lit = 0.45 + (0.55 * max(dot(n, normalize(vec3(0.35, 0.55, 0.75))), 0.0));
+        vec3 base = vec3(pc.worldPosition.w, pc.gizmoRingRadius, pc.selectionMode);
+        // WORLD-D-R1：固定世界方向光（指向光源方向）+ 半球环境光（世界 Z 轴向上）。
+        vec3 lightDir = normalize(vec3(0.35, 0.55, 0.75));   // 斜上方固定方向，不随相机/模型变化
+        vec3 lightColor = vec3(1.0, 0.98, 0.94);             // 近白微暖
+        float nlen = length(n);
+        float ndl = nlen > 0.0001 ? max(dot(n, lightDir), 0.0) : 0.0;   // 缺法线安全回退：无漫反射
+        float hemi = nlen > 0.0001 ? clamp(n.z * 0.5 + 0.5, 0.0, 1.0) : 0.5; // 朝上=天空、朝下=地面
+        vec3 skyAmbient = vec3(0.54, 0.60, 0.68);            // 略冷、稍亮
+        vec3 groundAmbient = vec3(0.40, 0.41, 0.43);         // 中性、稍暗
+        vec3 ambient = mix(groundAmbient, skyAmbient, hemi);
+        vec3 shaded = base * (ambient + (lightColor * ndl * 0.50));
         gl_Position = pc.viewProjection * vec4((R * local) + pc.worldPosition.xyz, 1.0);
-        vBaseColor = vec4(vec3(pc.worldPosition.w, pc.gizmoRingRadius, pc.selectionMode) * lit, pc.staticAlpha);
+        vBaseColor = vec4(min(shaded, vec3(1.0)), pc.staticAlpha);
     } else if (pc.gizmoMode < -12.5) {
         vec4 color;
         vec3 local = axisVertex(gl_VertexIndex, color);

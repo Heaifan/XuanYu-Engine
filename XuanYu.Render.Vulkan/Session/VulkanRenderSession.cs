@@ -18,6 +18,7 @@ public sealed partial class VulkanRenderSession : IDisposable
     readonly VulkanClearFrameOwner _clearFrame;
     readonly VulkanPresentLoop _presentLoop;
     readonly VulkanGraphicsPipelineOwner? _pipeline;
+    readonly VulkanGraphicsPipelineOwner? _skyPipeline;
     readonly Action<string>? _log;
     readonly NativeHostSurfaceHandle? _surfaceHandle;
     readonly object _rebuildLock = new();
@@ -31,13 +32,15 @@ public sealed partial class VulkanRenderSession : IDisposable
 
     VulkanRenderSession(VulkanDeviceOwner deviceOwner, VulkanSwapchainOwner swapchainOwner,
         VulkanClearFrameOwner clearFrame, VulkanPresentLoop presentLoop,
-        VulkanGraphicsPipelineOwner? pipeline, Action<string>? log, NativeHostSurfaceHandle? surfaceHandle)
+        VulkanGraphicsPipelineOwner? pipeline, VulkanGraphicsPipelineOwner? skyPipeline,
+        Action<string>? log, NativeHostSurfaceHandle? surfaceHandle)
     {
         _deviceOwner = deviceOwner;
         _swapchainOwner = swapchainOwner;
         _clearFrame = clearFrame;
         _presentLoop = presentLoop;
         _pipeline = pipeline;
+        _skyPipeline = skyPipeline;
         _log = log;
         _surfaceHandle = surfaceHandle;
     }
@@ -53,6 +56,7 @@ public sealed partial class VulkanRenderSession : IDisposable
         }
         VulkanClearFrameOwner? clear = null;
         VulkanGraphicsPipelineOwner? pipeline = null;
+        VulkanGraphicsPipelineOwner? skyPipeline = null;
         VulkanPresentLoop? loop = null;
         try
         {
@@ -64,17 +68,20 @@ public sealed partial class VulkanRenderSession : IDisposable
                     fail.FailureReason ?? "未知原因"));
             pipeline = VulkanGraphicsPipelineOwner.Create(vk, deviceOwner, clear, swapchainOwner, log);
             if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline, pipeline.Layout);
+            skyPipeline = VulkanGraphicsPipelineOwner.CreateSky(vk, deviceOwner, clear, swapchainOwner, log);
+            if (skyPipeline is not null) clear.SetSkyPipeline(skyPipeline.Pipeline, skyPipeline.Layout);
             loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,
                 source => session!.RecoverFromOutOfDate(source),
                 reason => session!.MarkFailed(reason),
                 log);
-            session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, log, surfaceHandle);
+            session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, skyPipeline, log, surfaceHandle);
             if (!loop.Start()) throw new InvalidOperationException("Present 泵启动失败");
             return session;
         }
         catch (Exception ex)
         {
             loop?.Dispose();
+            skyPipeline?.Dispose();
             pipeline?.Dispose();
             clear?.Dispose();
             log?.Invoke(VulkanClearFrameLogFormatter.PresentError($"创建异常：{ex.Message}"));
