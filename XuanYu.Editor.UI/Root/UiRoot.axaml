@@ -42,9 +42,13 @@
                     ResizeDirection="Columns"
                     ResizeBehavior="PreviousAndNext"/>
 
-      <Border Grid.Column="2" MinWidth="360" CornerRadius="8" Background="#101827" BorderBrush="#1d2a42" BorderThickness="1" Padding="18" BoxShadow="0 18 36 0 #260f172a">
-        <local:Main />
-      </Border>
+      <Grid Grid.Column="2" MinWidth="360">
+        <Border CornerRadius="8" Background="#101827" BorderBrush="#1d2a42" BorderThickness="1" Padding="18" BoxShadow="0 18 36 0 #260f172a">
+          <local:Main />
+        </Border>
+        <!-- EDITOR-VIEW-R1/D5-R1：右上角视角 Gizmo（Avalonia 覆盖层，在原生渲染窗口之上） -->
+        <local:ViewGizmo IsHitTestVisible="True"/>
+      </Grid>
 
       <GridSplitter Grid.Column="3"
                     Classes="layoutSplitter"

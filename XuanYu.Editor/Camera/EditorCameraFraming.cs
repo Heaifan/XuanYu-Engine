@@ -35,11 +35,23 @@ public static class EditorCameraFraming
     }
 
     // MAP-A-R1-D4-F4：地图取景入口，45° 斜上方俯视完整容纳地图。
+    // D5-R1：按目标屏幕占用率（约 70%）计算距离，而不是固定 Padding 导致地图过小。
     public static CameraFrameResult FrameMapAllWithCenter(IEnumerable<Vector3d> positions, double aspect, long revision)
     {
         var points = positions.ToArray();
         if (points.Length == 0) return new CameraFrameResult(DefaultEditorCamera.Create(revision), DefaultEditorCamera.Target);
-        return Frame(points, aspect, revision, 1.2, MapPitchDirection);
+        var center = Center(points);
+        var fov = global::System.Math.Min(DefaultFov, HorizontalFov(DefaultFov, global::System.Math.Max(0.1, aspect)));
+        // 地图深度（Y 跨度）投影到垂直视线方向：×cos(45°)。目标占屏幕垂直半宽约 70%。
+        // 45° 俯视的透视放大效应使地图投影比平面近似更大，×1.55 补偿（扫描实测 d≈2850 时占用率≈69%）。
+        var depth = points.Max(p => p.Y) - points.Min(p => p.Y);
+        var halfDepthProj = (depth / 2.0) * global::System.Math.Cos(ToRadians(45.0));
+        var targetAngle = ToRadians(fov * 0.5) * 0.70;
+        var distance = global::System.Math.Max(50.0, halfDepthProj / global::System.Math.Tan(targetAngle) * 1.55);
+        var position = center - (MapPitchDirection * distance);
+        var camera = new CameraState(position, MapPitchDirection, DefaultEditorCamera.Up,
+            DefaultFov, 0.05, global::System.Math.Max(100.0, distance + (depth * 4.0)), revision);
+        return new CameraFrameResult(camera, center);
     }
 
     public static CameraState FrameSelected(Vector3d center, double aspect, long revision) =>

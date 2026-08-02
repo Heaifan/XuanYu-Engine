@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.24.5-rz
+MAP-A-R1-D5-R1 视口参照与导航（2026-08-02 22:57:00，Commit 2fdf470 之后待收口）
+- 任务目标：按用户最新真机裁定修正视口参照与导航——视觉无限参考网格、地图外网格延伸、右上角视角 Gizmo 真实可见、程序化天空渐变、自动取景屏幕占用率 65~75%。
+- 视觉无限 EditorReferenceGrid：`scene.vert gridVertex` 重构——网格重心跟随相机（worldPosition.xy 对齐间距）、间距按相机高度分级 0.1/1/10/100/1000/10000 米、线长覆盖 step×12、主次线分级宽度；`RenderDrawPlan` 取消 HasMap 时移除 EditorGrid（地图存在时网格保留，地图矩形由 shader 裁切避免穿透地表与 Z-Fighting，卸载后网格继续存在）；`VulkanClearFrameOwner.DrawAssist` EditorGrid 分支传相机位置 + 地图半宽/半深（entityScale.xy 复用，push constant 128B 不扩容）。
+- 视角 Gizmo 真实可见：根因是 ViewGizmo 位于 VulkanViewport Grid 内被嵌入 Win32 原生窗口遮挡——移至 `UiRoot.axaml` 视口 Border 外层 Grid（Avalonia 覆盖层，位于原生渲染窗口之上），六方向按钮 + 当前朝向琥珀描边。
+- 程序化天空增强：天顶饱和蓝 (0.22,0.45,0.85) → 地平线更雾白 (0.88,0.92,0.97)，pow 0.55→0.35 渐变更快集中；仍为独立 Sky Pipeline（DepthTest/Write=Off、Z-Up 读 dir.z、只依赖相机旋转）。
+- 地图自动取景：`FrameMapAllWithCenter` 改为按目标屏幕占用率（垂直投影约 70%，透视补偿 ×1.55，实测 d≈2850 时占用率≈69%、最大视锥角 28.5°<30°）计算距离，地图不再过小；新增 `WorldCameraFramingOccupancyTests`（NDC 投影包围盒 65%~80%）。
+- 世界坐标轴颜色：X=浅蓝灰 (0.55,0.62,0.70)、Y=冷钢蓝 (0.42,0.52,0.64)、Z=柔和琥珀 (0.78,0.66,0.42)，禁止高饱和红绿轴。
+- ShaderBytecode：glslc -O 重新生成（8762 词，83 行）逐字比对一致。
+- 测试：`WorldCameraFramingOccupancyTests` 新增（占用率 65~75%）；`MapRenderDrawPlanTests.With_map_grid_kept_and_bounds_added` 更新（D5-R1 需求变更：网格保留而非移除）；World 435/435、Core 148/148、WarCore 22/22；arch-a-guard PASS。
+- 治理：版本 v0.2.24.4-rz → v0.2.24.5-rz（五处同步）；无新增项目/依赖；不创建 Tag/Release。
+- 状态：MAP-A-R1-D5-R1 真机人工验收待用户执行；通过后进入 D5-R2 真实参数编辑。
+
 ## v0.2.24.4-rz
 MAP-A-R1 D4 视觉收口 + D5 正式地图编辑器/场景引用（2026-08-02 22:32:36，Commit 5fcd02b 之后待收口）
 - 任务目标：把 D4 真机视觉缺陷收口（程序化天空、视角 Gizmo、正式地图编辑器、场景地图引用），完成 MAP-A-R1 功能闭环；D4/D5 各轮独立提交推送。

@@ -6,7 +6,8 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Core.Tests.Render;
 
-// MAP-A-R1-D4：RenderProjection 携带地图快照后，绘制计划移除无限网格并添加边界线。
+// MAP-A-R1-D4/D5-R1：RenderProjection 携带地图快照后，参考网格保留（地图外延伸），
+// 地图矩形由 shader 裁切网格；边界线添加。卸载后网格继续存在。
 public sealed class MapRenderDrawPlanTests
 {
     static RenderProjection ProjectionWithMap(bool hasMap)
@@ -35,10 +36,11 @@ public sealed class MapRenderDrawPlanTests
     }
 
     [Fact]
-    public void With_map_grid_removed_and_bounds_added()
+    public void With_map_grid_kept_and_bounds_added()
     {
+        // D5-R1：地图存在时参考网格保留（地图外延伸，shader 按地图矩形裁切），边界线添加。
         var plan = RenderDrawPlan.GetFrameDrawPlan(ProjectionWithMap(true));
-        Assert.DoesNotContain(plan, x => x.Kind == RenderDrawKind.EditorGrid);
+        Assert.Contains(plan, x => x.Kind == RenderDrawKind.EditorGrid);
         Assert.Contains(plan, x => x.Kind == RenderDrawKind.MapBounds
             && x.VertexCount == RenderDrawPlan.MapBoundsVertexCount);
     }

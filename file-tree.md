@@ -1,7 +1,7 @@
-版本：v0.2.24.4-rz
+版本：v0.2.24.5-rz
 # XuanYu Engine 文件树
 
-## MAP-A-R1-D4 职责索引（v0.2.24.4-rz）
+## MAP-A-R1-D4 职责索引（v0.2.24.5-rz）
 
 - `XuanYu.Core/Map/MapTerrainMeshBuilder.cs`：CPU 地形网格构建器（唯一采样源 MapSurfaceSampler 的渲染侧消费方；数值差分法线；CPU 亮度合成 ambient×0.3×hemi + sun×0.85×ndl，clamp [0,1]）。
 - `XuanYu.Core/Map/MapBoundsMeshBuilder.cs`：地图边界线网格（48 顶点，亮度 1.0）。
@@ -14,6 +14,7 @@
 - `XuanYu.World.Tests/Map/MapTerrainMeshBuilderTests.cs`：网格构建（顶点/索引/高度/法线/边界线）。
 - `XuanYu.World.Tests/Map/MapTerrainBrightnessTests.cs`：亮度合成（Flat 稳定 / 缓丘明暗差 / 方向光贡献）。
 - `XuanYu.World.Tests/World/WorldCameraFramingTests.cs`：取景测试（45° 俯视 + 四角容纳）。
+- `XuanYu.World.Tests/World/WorldCameraFramingOccupancyTests.cs`：地图取景屏幕占用率测试（65~75%）。
 - `XuanYu.Editor.UI/Vm/UiVm.ViewGizmo.cs`：视角 Gizmo 六方向相机命令（顶/底/前/后/左/右，保持中心与距离）。
 - `XuanYu.Editor.UI/Viewport/ViewGizmo.axaml(.cs)`：右上角视角 Gizmo 覆盖层（3×3 网格，当前朝向琥珀描边）。
 - `XuanYu.Editor.UI/Vm/UiVm.MapEditor.cs`：正式地图编辑器文档状态与生命周期命令（新建/打开/保存/卸载/聚焦，复用 D2 存储与 D3 World）。

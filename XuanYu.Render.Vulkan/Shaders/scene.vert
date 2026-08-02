@@ -237,11 +237,11 @@ void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
     vec4 camWorld = invVP * vec4(0.0, 0.0, 0.0, 1.0);
     vec3 dir = normalize(farWorld.xyz / farWorld.w - camWorld.xyz / camWorld.w);
 
-    // F5：清晰天空层次 —— 顶部饱和蓝 → 地平线浅蓝雾白 → 地平线以下轻微大气泛光。
-    vec3 skyTop = vec3(0.28, 0.50, 0.85);    // 天顶：清晰蓝色
-    vec3 horizon = vec3(0.78, 0.87, 0.96);   // 地平线：浅蓝偏雾白
-    vec3 ground = vec3(0.42, 0.48, 0.56);    // 地平线以下：轻微大气泛光（冷灰蓝，比地表暗）
-    float up01 = pow(clamp(dir.z, 0.0, 1.0), 0.55);   // 上半球渐变集中系数
+    // F5/D5-R1：清晰天空层次 —— 顶部饱和蓝 → 地平线浅蓝雾白 → 地平线以下轻微大气泛光。
+    vec3 skyTop = vec3(0.22, 0.45, 0.85);    // 天顶：饱和蓝（Unity/Godot 风格）
+    vec3 horizon = vec3(0.88, 0.92, 0.97);   // 地平线：更浅、雾白蓝
+    vec3 ground = vec3(0.45, 0.52, 0.60);    // 地平线以下：轻微大气泛光（冷灰蓝，比地表暗）
+    float up01 = pow(clamp(dir.z, 0.0, 1.0), 0.35);   // 上半球渐变集中系数
     vec3 rgb = dir.z >= 0.0
         ? mix(horizon, skyTop, up01)
         : mix(horizon, ground, smoothstep(0.0, 0.5, clamp(-dir.z, 0.0, 1.0)));
@@ -257,16 +257,32 @@ void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
 }
 
 vec3 gridVertex(int vi, out vec4 color) {
+    // D5-R1：视觉无限参考网格。重心跟随相机（pc.worldPosition.xy 对齐到间距），
+    // 间距按相机高度分级 0.1/1/10/100/1000/10000 米；地图矩形（entityScale.xy=半宽/半深）
+    // 内的线整条裁掉，避免穿透地表与 Z-Fighting；不创建真正无限几何体。
     int line = vi / 6;
     int corner = vi % 6;
+    float camH = max(abs(pc.worldPosition.z), 0.5);
+    float step = camH > 5000.0 ? 1000.0 : camH > 500.0 ? 100.0
+        : camH > 50.0 ? 10.0 : camH > 5.0 ? 1.0 : 0.1;
+    vec2 cam = floor(pc.worldPosition.xy / step) * step;
     bool xLine = line < 21;
     int offsetIndex = xLine ? line : line - 21;
-    float coord = float(offsetIndex - 10);
+    float coord = (float(offsetIndex) - 10.0) * step;
     bool major = (offsetIndex % 5) == 0;
-    float gridHalf = 10.0;
-    float w = major ? 0.012 : 0.005;
-    vec3 center = xLine ? vec3(0.0, coord, 0.0) : vec3(coord, 0.0, 0.0);
-    vec3 extent = xLine ? vec3(gridHalf, w, 0.0) : vec3(w, gridHalf, 0.0);
+    float halfLen = step * 12.0;
+    float w = major ? step * 0.12 : step * 0.05;
+    vec3 center = xLine ? vec3(cam.x, cam.y + coord, 0.0) : vec3(cam.x + coord, cam.y, 0.0);
+    float halfW = pc.entityScale.x;
+    float halfD = pc.entityScale.y;
+    if (halfW > 0.0 && halfD > 0.0 &&
+        center.x > -halfW && center.x < halfW &&
+        center.y > -halfD && center.y < halfD)
+    {
+        // 地图矩形内：推离视锥被裁剪，不参与绘制。
+        return vec3(0.0, 0.0, -1.0e6);
+    }
+    vec3 extent = xLine ? vec3(halfLen, w, 0.0) : vec3(w, halfLen, 0.0);
     color = major ? vec4(0.43, 0.49, 0.54, 1.0) : vec4(0.54, 0.59, 0.63, 1.0);
     return quadCorner(center, extent, corner);
 }
@@ -283,8 +299,9 @@ vec3 axisVertex(int vi, out vec4 color) {
         : (axis == 1 ? vec3(0.0, 1.25, 0.02) : vec3(0.0, 0.0, 1.25));
     vec3 extent = axis == 0 ? vec3(1.25, 0.01, 0.01)
         : (axis == 1 ? vec3(0.01, 1.25, 0.01) : vec3(0.01, 0.01, 1.25));
-    color = axis == 0 ? vec4(0.54, 0.36, 0.34, 1.0)
-        : (axis == 1 ? vec4(0.35, 0.50, 0.39, 1.0) : vec4(0.36, 0.43, 0.56, 1.0));
+    // D5-R1：玄域浅色体系，禁止高饱和红绿轴——X=浅蓝灰、Y=冷钢蓝、Z=柔和琥珀。
+    color = axis == 0 ? vec4(0.55, 0.62, 0.70, 1.0)
+        : (axis == 1 ? vec4(0.42, 0.52, 0.64, 1.0) : vec4(0.78, 0.66, 0.42, 1.0));
     return cube(center, extent, li);
 }
 

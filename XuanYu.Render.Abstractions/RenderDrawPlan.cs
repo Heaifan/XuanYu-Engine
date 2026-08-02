@@ -11,6 +11,7 @@ public static class RenderDrawPlan
     public const int RotateGizmoVertexCount = 900;
     public const int ScaleGizmoVertexCount = 252;
     public const int BackgroundVertexCount = 3;
+    // D5-R1：视觉无限参考网格（shader 按相机位置动态生成，42 条线）。
     public const int GridVertexCount = 252;
     public const int OriginVertexCount = 36;
     public const int WorldAxesVertexCount = 108;
@@ -48,7 +49,6 @@ public static class RenderDrawPlan
             .Select(x => (x.VertexCount, x.IsOutline))
             .ToArray();
     }
-
     public static IReadOnlyList<FrameEntry> GetFrameDrawPlan(RenderProjection projection)
     {
         var assist = projection.AssistState;
@@ -59,8 +59,8 @@ public static class RenderDrawPlan
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
         if (projection.HasMap)
         {
-            // 地图存在时不再绘制无限编辑器网格，改为有限地表（顶点数由 CPU 网格决定，0=由 Renderer 解析）。
-            plan.RemoveAll(x => x.Kind == RenderDrawKind.EditorGrid);
+            // D5-R1：地图存在时参考网格保留（地图外继续延伸），地表绘制在地图矩形范围内，
+            // 网格由 shader 按地图范围裁切避免穿透地表；卸载后网格继续存在。
             plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
         }
         for (var i = 0; i < projection.Entities.Count; i++)

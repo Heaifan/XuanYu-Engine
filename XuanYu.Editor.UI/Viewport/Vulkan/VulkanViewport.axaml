@@ -13,7 +13,5 @@
         <TextBlock x:Name="FallbackText" Text="正在初始化渲染后端..." Foreground="#9fb6d8" TextWrapping="Wrap" TextAlignment="Center"/>
       </StackPanel>
     </Border>
-    <!-- EDITOR-VIEW-R1：右上角视角 Gizmo（屏幕空间覆盖层，不参与渲染交互） -->
-    <local:ViewGizmo IsHitTestVisible="True"/>
   </Grid>
 </UserControl>
