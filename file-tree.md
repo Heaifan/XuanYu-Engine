@@ -14,6 +14,13 @@
 - `XuanYu.World.Tests/Map/MapTerrainMeshBuilderTests.cs`：网格构建（顶点/索引/高度/法线/边界线）。
 - `XuanYu.World.Tests/Map/MapTerrainBrightnessTests.cs`：亮度合成（Flat 稳定 / 缓丘明暗差 / 方向光贡献）。
 - `XuanYu.World.Tests/World/WorldCameraFramingTests.cs`：取景测试（45° 俯视 + 四角容纳）。
+- `XuanYu.Editor.UI/Vm/UiVm.ViewGizmo.cs`：视角 Gizmo 六方向相机命令（顶/底/前/后/左/右，保持中心与距离）。
+- `XuanYu.Editor.UI/Viewport/ViewGizmo.axaml(.cs)`：右上角视角 Gizmo 覆盖层（3×3 网格，当前朝向琥珀描边）。
+- `XuanYu.Editor.UI/Vm/UiVm.MapEditor.cs`：正式地图编辑器文档状态与生命周期命令（新建/打开/保存/卸载/聚焦，复用 D2 存储与 D3 World）。
+- `XuanYu.Editor.UI/Right/MapEditorPanel.axaml(.cs)`：地图编辑器面板（地图资产/基础地表/环境三组）。
+- `XuanYu.Editor.UI/Win/UiWin.MapCommands.cs`：.xymap 文件选择器（打开/保存）。
+- `XuanYu.World.Tests/World/UiViewGizmoTests.cs`：视角 Gizmo 测试（六方向/中心距离保持/选择保持）。
+- `XuanYu.World.Tests/World/UiMapEditorTests.cs`：地图编辑器闭环测试（新建/保存打开/卸载/失败不污染）。
 
 ## MAP-A-R1-D3 职责索引（v0.2.24.2-rz）
 

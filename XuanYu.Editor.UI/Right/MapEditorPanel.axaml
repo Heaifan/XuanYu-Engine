@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.MapEditorPanel"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <Style Selector="Border.infoPanel"><Setter Property="Background" Value="#f7faff"/><Setter Property="BorderBrush" Value="#dce6f3"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="6"/><Setter Property="Padding" Value="10"/></Style>
+    <Style Selector="TextBlock.key"><Setter Property="Foreground" Value="#6b7688"/><Setter Property="FontSize" Value="12"/></Style>
+    <Style Selector="TextBlock.value"><Setter Property="Foreground" Value="#253247"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
+  </UserControl.Styles>
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="10" Margin="0,6,0,0">
+      <Border Classes="infoPanel">
+        <StackPanel Spacing="5">
+          <TextBlock Text="地图资产" Classes="section"/>
+          <Grid ColumnDefinitions="90,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="3">
+            <TextBlock Text="名称" Classes="key"/><TextBlock Grid.Column="1" Text="{Binding MapName}" Classes="value"/>
+            <TextBlock Grid.Row="1" Text="路径" Classes="key"/><TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MapPath}" Classes="value" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Grid.Row="2" Text="MapId" Classes="key"/><TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MapIdText}" Classes="value"/>
+            <TextBlock Grid.Row="3" Text="尺寸" Classes="key"/><TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MapSizeText}" Classes="value"/>
+            <TextBlock Grid.Row="4" Text="状态" Classes="key"/><TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding MapStatusText}" Classes="value"/>
+          </Grid>
+          <UniformGrid Columns="3" Margin="0,6,0,0">
+            <Button Content="新建地图" Command="{Binding RunCommand}" CommandParameter="新建地图"/>
+            <Button Content="打开地图" Command="{Binding RunCommand}" CommandParameter="打开地图"/>
+            <Button Content="保存地图" Command="{Binding RunCommand}" CommandParameter="保存地图"/>
+            <Button Content="卸载地图" Command="{Binding RunCommand}" CommandParameter="卸载地图"/>
+            <Button Content="聚焦地图" Command="{Binding RunCommand}" CommandParameter="聚焦地图"/>
+          </UniformGrid>
+        </StackPanel>
+      </Border>
+      <Border Classes="infoPanel">
+        <StackPanel Spacing="5">
+          <TextBlock Text="基础地表" Classes="section"/>
+          <TextBlock Text="地表类型 / 宽度 / 深度 / 基础高度 / 起伏幅度 / 波长 / Seed 编辑将在 D5 后续补齐。" Classes="muted" TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+      <Border Classes="infoPanel">
+        <StackPanel Spacing="5">
+          <TextBlock Text="环境" Classes="section"/>
+          <TextBlock Text="天空预设 / 天顶颜色 / 地平线颜色 / 太阳方向 / 太阳强度 / 环境光强度编辑将在 D5 后续补齐。" Classes="muted" TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

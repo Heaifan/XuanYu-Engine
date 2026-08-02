@@ -36,6 +36,11 @@ public partial class UiWin
     async Task RunSceneCommand(string command)
     {
         if (DataContext is not UiVm vm) return;
+        if (command is "新建地图" or "打开地图" or "保存地图" or "卸载地图" or "聚焦地图")
+        {
+            await RunMapCommand(command);
+            return;
+        }
         if (command is "新建" or "打开" && !await ConfirmUnsavedBeforeContinue(vm)) return;
         if (command == "新建") { vm.NewBlankScene(); return; }
         if (command == "打开") { await OpenScene(vm); return; }

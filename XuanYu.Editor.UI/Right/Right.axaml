@@ -48,6 +48,11 @@
       </StackPanel>
     </TabItem>
 
+    <!-- MAP-A-R1-D5-A：正式地图编辑器（与检查器平级的一级模块） -->
+    <TabItem Classes="sideTab" Header="地图编辑器">
+      <local:MapEditorPanel/>
+    </TabItem>
+
     <TabItem Classes="sideTab" Header="调试">
       <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Spacing="10" Margin="0,6,0,0">
