@@ -52,20 +52,24 @@ public static class MapTerrainMeshBuilder
         return (-dzDx / len, -dzDy / len, 1.0 / len);
     }
 
-    // sunDirection = 光线传播方向（从天空射向地面）；Lambert 使用反方向（表面指向光源）。
+    // sunDirection = 指向光源方向（光射来方向，D1 合同冻结，Z>0 朝上）；
+    // Lambert 直接使用 sunDirection 单位化后的方向点积法线。
+    // F4：降低环境光与方向光的满额叠加，避免全部顶点被 shader clamp 成同色；
+    // 目标区间约 [0.5, 0.85]，保留受光/背光可见明暗差。
     static double Brightness(MapRenderSnapshot map, double nx, double ny, double nz)
     {
         var sunLen = System.Math.Sqrt(
             map.SunDirectionX * map.SunDirectionX +
             map.SunDirectionY * map.SunDirectionY +
             map.SunDirectionZ * map.SunDirectionZ);
-        if (sunLen <= 0.0) return map.AmbientIntensity;
-        var toLightX = -map.SunDirectionX / sunLen;
-        var toLightY = -map.SunDirectionY / sunLen;
-        var toLightZ = -map.SunDirectionZ / sunLen;
+        if (sunLen <= 0.0) return map.AmbientIntensity * 0.3;
+        var toLightX = map.SunDirectionX / sunLen;
+        var toLightY = map.SunDirectionY / sunLen;
+        var toLightZ = map.SunDirectionZ / sunLen;
         var ndl = System.Math.Max(nx * toLightX + ny * toLightY + nz * toLightZ, 0.0);
         var hemi = System.Math.Clamp(nz * 0.5 + 0.5, 0.0, 1.0);
-        return map.AmbientIntensity * hemi + map.SunIntensity * ndl;
+        var combined = map.AmbientIntensity * 0.3 * hemi + map.SunIntensity * 0.85 * ndl;
+        return System.Math.Clamp(combined, 0.0, 1.0);
     }
 
     static uint[] BuildIndices(int segments)

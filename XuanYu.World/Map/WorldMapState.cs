@@ -5,7 +5,7 @@ namespace XuanYu.World.Map;
 // MAP-A-R1-D3/D4：World 地图状态（纯数据 + 有限边界 + 高度查询 + 环境参数）。
 // 世界坐标语义：X 水平横向、Y 水平纵向、Z 高度；水平面 XY。
 // 地图范围：X ∈ [-Width/2, Width/2]、Y ∈ [-Depth/2, Depth/2]（闭区间，边界属于地图）。
-// sunDirection = 光线传播方向；渲染 Lambert 使用反方向。
+// sunDirection = 指向光源方向（光射来方向，D1 合同冻结，Z>0 朝上）。
 public sealed record WorldMapState(
     string MapId,
     string Name,
@@ -18,7 +18,7 @@ public sealed record WorldMapState(
     int Seed,
     double SunDirectionX = -0.35,
     double SunDirectionY = -0.55,
-    double SunDirectionZ = -0.75,
+    double SunDirectionZ = 0.75,
     double SunIntensity = 1.0,
     double AmbientIntensity = 0.35)
 {

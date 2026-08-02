@@ -237,8 +237,8 @@ void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
     vec3 dir = normalize(farWorld.xyz / farWorld.w - camWorld.xyz / camWorld.w);
     float up = clamp(dir.z, 0.0, 1.0);      // 上半球：0=地平线 .. 1=正上方
     float down = clamp(-dir.z, 0.0, 1.0);   // 下半球：0=地平线 .. 1=正下方
-    vec3 skyTop = vec3(0.52, 0.60, 0.72);   // 天空顶部：明亮低饱和蓝灰
-    vec3 horizon = vec3(0.85, 0.88, 0.92);  // 地平线：月白/浅灰白
+    vec3 skyTop = vec3(0.45, 0.56, 0.74);   // 天空顶部：较深但明亮的浅蓝
+    vec3 horizon = vec3(0.88, 0.90, 0.94);  // 地平线：更浅、雾白蓝
     vec3 ground = vec3(0.55, 0.58, 0.62);   // 下半球：浅中性灰蓝/淡地面色
     vec3 rgb = dir.z >= 0.0
         ? mix(horizon, skyTop, smoothstep(0.0, 0.7, up))

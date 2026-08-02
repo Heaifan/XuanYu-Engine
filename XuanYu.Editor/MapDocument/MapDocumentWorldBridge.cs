@@ -5,7 +5,7 @@ namespace XuanYu.Editor.MapDocument;
 
 // MAP-A-R1-D3/D4：MapDocument（Editor 文档）→ WorldMapState（World 状态）桥接。
 // 对齐 SceneDocumentWorldBridge 模式；D4 前不做反向桥接。
-// 环境语义：sunDirection = 光线传播方向（与 .xymap 合同一致，Z 分量通常为负=向下）。
+// 环境语义：sunDirection = 指向光源方向（与 .xymap 合同一致，Z 分量 > 0 朝上）。
 public static class MapDocumentWorldBridge
 {
     public static WorldMapState ToWorldState(MapDocument doc)

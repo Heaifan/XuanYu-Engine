@@ -46,14 +46,14 @@ public sealed partial class UiVm
             new Core.Math.Vector3d(halfW, halfD, 0));
     }
 
-    // 地图取景：复用 EditorCameraFraming 以地图四角取景整张地图。
+    // 地图取景：45° 斜上方俯视完整容纳地图，复用 EditorCameraFraming。
     void FrameMapCamera(params Core.Math.Vector3d[] corners)
     {
-        var frame = XuanYu.Editor.Camera.EditorCameraFraming.FrameAllWithCenter(
+        var frame = XuanYu.Editor.Camera.EditorCameraFraming.FrameMapAllWithCenter(
             corners, _viewportAspect, ++_cameraRevision);
         _camera = frame.Camera;
         _observationCenter = frame.ObservationCenter;
         _viewportCameraFramed = true;
-        FooterMessage = "相机已取景整张地图。";
+        FooterMessage = "相机已从斜上方取景整张地图。";
     }
 }

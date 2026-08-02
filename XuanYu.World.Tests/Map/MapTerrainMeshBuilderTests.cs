@@ -2,18 +2,19 @@ using XuanYu.Core.Map;
 
 namespace XuanYu.World.Tests.Map;
 
-// MAP-A-R1-D4：CPU 地形网格构建器——顶点/索引/高度一致性/法线/亮度。
+// MAP-A-R1-D4：CPU 地形网格构建器——顶点/索引/高度一致性/法线/边界线亮度。
+// 亮度合成测试见 MapTerrainBrightnessTests（F4 拆分，单一职责）。
 public sealed class MapTerrainMeshBuilderTests
 {
     static MapRenderSnapshot Flat() => new(
         "21e4a2d34d4a4a1eb2539eac76d412a8", "FlatMap", 2000, 2000,
         MapSurfaceKind.Flat, 5.0, 0.0, 1.0, 1,
-        -0.35, -0.55, -0.75, 1.0, 0.35);
+        -0.35, -0.55, 0.75, 1.0, 0.35);
 
     static MapRenderSnapshot Hills() => new(
         "21e4a2d34d4a4a1eb2539eac76d412a8", "Hills", 2000, 2000,
         MapSurfaceKind.GentleHillsV1, 0.0, 12.0, 400.0, 1,
-        -0.35, -0.55, -0.75, 1.0, 0.35);
+        -0.35, -0.55, 0.75, 1.0, 0.35);
 
     [Fact]
     public void Build_produces_expected_vertex_and_index_counts()
@@ -44,14 +45,6 @@ public sealed class MapTerrainMeshBuilderTests
             Assert.Equal(0.0, v.Ny, 6);
             Assert.Equal(1.0, v.Nz, 6);
         }
-    }
-
-    [Fact]
-    public void Flat_terrain_brightness_is_positive()
-    {
-        var mesh = MapTerrainMeshBuilder.Build(Flat(), segments: 4);
-        foreach (var v in mesh.Vertices)
-            Assert.True(v.Brightness > 0.0f, $"亮度应为正：{v.Brightness}");
     }
 
     [Fact]

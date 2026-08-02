@@ -9,6 +9,19 @@ public static class EditorCameraFraming
     const double Padding = 1.35;
     static readonly Vector3d Direction = (DefaultEditorCamera.Target - DefaultEditorCamera.Position).Normalize();
 
+    // MAP-A-R1-D4-F4：地图取景使用 45° 斜上方俯视，保证看得到地表内部。
+    static readonly Vector3d MapPitchDirection = BuildMapPitchDirection(45.0);
+
+    static Vector3d BuildMapPitchDirection(double pitchDegrees)
+    {
+        var horizontal = new Vector3d(Direction.X, Direction.Y, 0).Normalize();
+        var pitch = ToRadians(pitchDegrees);
+        return new Vector3d(
+            horizontal.X * System.Math.Cos(pitch),
+            horizontal.Y * System.Math.Cos(pitch),
+            -System.Math.Sin(pitch));
+    }
+
     public static CameraState FrameAll(IEnumerable<Vector3d> positions, double aspect, long revision)
     {
         return FrameAllWithCenter(positions, aspect, revision).Camera;
@@ -18,23 +31,31 @@ public static class EditorCameraFraming
     {
         var points = positions.ToArray();
         if (points.Length == 0) return new CameraFrameResult(DefaultEditorCamera.Create(revision), DefaultEditorCamera.Target);
-        return Frame(points, aspect, revision, 1.2);
+        return Frame(points, aspect, revision, 1.2, Direction);
+    }
+
+    // MAP-A-R1-D4-F4：地图取景入口，45° 斜上方俯视完整容纳地图。
+    public static CameraFrameResult FrameMapAllWithCenter(IEnumerable<Vector3d> positions, double aspect, long revision)
+    {
+        var points = positions.ToArray();
+        if (points.Length == 0) return new CameraFrameResult(DefaultEditorCamera.Create(revision), DefaultEditorCamera.Target);
+        return Frame(points, aspect, revision, 1.2, MapPitchDirection);
     }
 
     public static CameraState FrameSelected(Vector3d center, double aspect, long revision) =>
         FrameSelectedWithCenter(center, aspect, revision).Camera;
 
     public static CameraFrameResult FrameSelectedWithCenter(Vector3d center, double aspect, long revision) =>
-        Frame([center], aspect, revision, 1.8);
+        Frame([center], aspect, revision, 1.8, Direction);
 
-    static CameraFrameResult Frame(Vector3d[] points, double aspect, long revision, double minRadius)
+    static CameraFrameResult Frame(Vector3d[] points, double aspect, long revision, double minRadius, Vector3d direction)
     {
         var center = Center(points);
         var radius = global::System.Math.Max(minRadius, points.Max(point => point.DistanceTo(center))) * Padding;
         var fov = global::System.Math.Min(DefaultFov, HorizontalFov(DefaultFov, global::System.Math.Max(0.1, aspect)));
         var distance = radius / global::System.Math.Sin(ToRadians(fov) * 0.5);
-        var position = center - (Direction * distance);
-        var camera = new CameraState(position, Direction, DefaultEditorCamera.Up,
+        var position = center - (direction * distance);
+        var camera = new CameraState(position, direction, DefaultEditorCamera.Up,
             DefaultFov, 0.05, global::System.Math.Max(100.0, distance + (radius * 4.0)), revision);
         return new CameraFrameResult(camera, center);
     }

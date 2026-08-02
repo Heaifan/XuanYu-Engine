@@ -1,8 +1,8 @@
 namespace XuanYu.Core.Map;
 
 // MAP-A-R1-D3/D4：供 Render 消费的最小地图快照（D4 生成网格的唯一数据源）。
-// 携带地表参数与环境参数；环境语义：sunDirection = 光线传播方向（从天空射向地面），
-// Lambert 渲染使用其反方向（表面指向光源）。
+// 携带地表参数与环境参数；环境语义：sunDirection = 指向光源方向（光射来方向，
+// D1 合同冻结，Z>0 朝上），Lambert 直接使用，不再取反。
 public readonly record struct MapRenderSnapshot(
     string MapId,
     string Name,

@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.24.3-rz
+MAP-A-R1-D4 有限地表渲染与自动取景（2026-08-02 21:46:52，Commit 9d1f2c9 之后待收口）
+- 任务目标：让地图以可观察、可编辑的战场方式出现在视口——有限地表网格、缓丘明暗、程序化天空、地图边界、加载后斜上方自动取景；D4 真机修复收口。
+- D4 主体（基线 9d1f2c9 已含）：`MapTerrainMeshBuilder`（唯一采样源 MapSurfaceSampler 的渲染侧消费方，4225 顶点/24576 索引，CPU 数值差分法线 + 预计算亮度）、`MapBoundsMeshBuilder`（48 顶点琥珀色边界线）、`RenderDrawPlan` 地图绘制（EditorBackground 天空 → WorldOrigin/Axes → MapBounds 地形+边界 → EntityFill → Gizmo，HasMap 时移除 EditorGrid）、`RenderProjection.Map` 携带 `MapRenderSnapshot` 传播链、shader kind=-14 地表 / -15 边界分支、F1 临时加载/卸载按钮、F2 绘制顺序修复（地表在天空之后）。
+- F3 真机修复（本轮）：Lambert 方向语义与 D1 合同对齐——`sunDirection` = 指向光源方向（Z>0 朝上），`MapTerrainMeshBuilder.Brightness` 不再取反（修复前 toLight 指向地面下方，平面 ndl=-0.75→0，地表只剩环境光 0.35，视觉为灰蒙暗绿）；`WorldMapState` 默认 SunDirectionZ 同步 +0.75；`MapRenderSnapshot`/`MapDocumentWorldBridge` 注释同步合同语义。
+- F4 可读性（本轮）：`EditorCameraFraming.FrameMapAllWithCenter` 地图取景 45° 斜上方俯视（Forward.Z=-0.707，完整容纳四角 + 安全边距）；`Brightness` 合成降为 `ambient×0.3×hemi + sun×0.85×ndl`（clamp [0,1]），避免全部顶点被 shader 钳制同色，缓丘受光/背光差 ≈0.086 肉眼可辨；scene.vert 天空顶部加深蓝 (0.45,0.56,0.74)、地平线更雾白 (0.88,0.90,0.94)，ShaderBytecode 由 glslc -O 重新生成并逐字比对。
+- 测试（XuanYu.World.Tests/Map/ 与 /World/）：`MapTerrainBrightnessTests` 新增（Flat 亮度稳定∈[0.5,0.9]、缓丘明暗差>0.03、方向光贡献>0.05）；`WorldCameraFramingTests` 新增（45° 俯视 + 四角完整容纳）；`MapTerrainMeshBuilderTests` 亮度断言按 F4 合成公式更新。
+- 治理：版本 v0.2.24.2-rz → v0.2.24.3-rz（五处同步：changelog/file-tree/UiVm.SceneDocument.cs/UiWin.axaml/run.bat）；无新增项目/依赖；ShaderBytecode 为生成物，行数 78（≤100 守卫口径通过）；第二排「加载测试地图/卸载地图」为 D4 临时验收入口，D5 移入右侧「地图编辑器」一级模块。
+- 验证结果：串行 build 12 项目 0 error / 0 warning（ShaderBytecode 重生成后增量构建）；Core Tests 148/148；World Tests 423/423（含地图新增 4 项）；WarCore Tests 22/22；arch-a-guard PASS；glslc 字节码逐字比对 PASS（8204 词，工具链经 9d1f2c9 原始 scene.vert 复验一致）；git diff --check PASS；5+100 全仓扫描 PASS。
+- 状态：MAP-A-R1-D4 真机人工验收待用户执行（IPO 清单见报告）；验收通过后 D4 CLOSED，进入 MAP-A-R1-D5 正式地图编辑器与场景引用。
+
 ## v0.2.24.2-rz
 MAP-A-R1-D3 World 地表能力（2026-08-02 18:24:41）
 - 任务目标：把地图文档转化为 World 可查询的确定性地表能力——有限边界、唯一地表采样器、世界 X/Y → 地表 Z、加载/切换/卸载、最小渲染快照；本轮不渲染、不做 UI 与场景引用。
