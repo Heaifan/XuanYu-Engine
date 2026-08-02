@@ -1,5 +1,10 @@
-版本：v0.2.24.0-rz
+版本：v0.2.24.1-rz
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D2 职责索引（v0.2.24.1-rz）
+
+- `XuanYu.Editor/MapDocument/`：.xymap v1 地图文档域（MapDocument/MapId/值对象/Validator/JsonSerializer/Mapper/StorageService/Owner），严格校验 + 候选加载 + 原子保存 + Dirty/Clean 状态机。
+- `XuanYu.World.Tests/Map/`：地图存储闭环自动测试（合同校验/Round-trip/拒绝路径/失败保护/状态链）。
 
 ## MAP-A-R1-D1 职责索引（v0.2.24.0-rz）
 

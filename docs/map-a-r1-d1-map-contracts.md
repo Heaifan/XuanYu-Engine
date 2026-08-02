@@ -38,7 +38,7 @@
 ```json
 {
   "schemaVersion": 1,
-  "mapId": "map_<32位十六进制>",
+  "mapId": "21e4a2d34d4a4a1eb2539eac76d412a8",
   "name": "TestBattlefield",
   "sizeMeters": { "width": 2000.0, "depth": 2000.0 },
   "coordinateSystem": { "unit": "meter", "upAxis": "Z", "origin": { "x": 0.0, "y": 0.0, "z": 0.0 } },
@@ -51,7 +51,7 @@
 ### 字段语义（冻结）
 
 - `schemaVersion`：固定 1；非 1 拒绝。
-- `mapId`：`map_` + 32 位十六进制（对齐 `AssetId` 风格，独立类型 `MapId`）；稳定唯一，保存后不变。
+- `mapId`：**32 位十六进制，无前缀**（D2 §5.2 口径，如 `21e4a2d34d4a4a1eb2539eac76d412a8`；独立类型 `MapId`，创建后保持稳定）；保存后不变。
 - `name`：非空白；长度 1–128。
 - `sizeMeters.width/depth`：`100 ≤ v ≤ 10000`，有限数；越界拒绝，不自动截断。
 - `coordinateSystem`：unit 固定 "meter"；upAxis 固定 "Z"；origin 固定 0/0/0（World Origin=地图中心）。
