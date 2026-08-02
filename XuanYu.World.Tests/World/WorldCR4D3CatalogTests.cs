@@ -10,8 +10,9 @@ public sealed class WorldCR4D3CatalogTests
     {
         var catalog = new SceneStaticModelCatalog();
         var model = Model();
-        var a1 = AssetId.New();
-        var a2 = AssetId.New();
+        // 确定性 AssetId，保证字典序固定：…00 < …01。
+        var a1 = Parse("asset_00000000000000000000000000000000");
+        var a2 = Parse("asset_00000000000000000000000000000001");
 
         Assert.True(catalog.Bind(EntityId.FromInt(2), a1, "p2.glb", model));
         Assert.True(catalog.Bind(EntityId.FromInt(1), a2, "p1.glb", model));
@@ -79,4 +80,7 @@ public sealed class WorldCR4D3CatalogTests
 
     static StaticModelData Model() =>
         new GlbImportService().ImportBytes(WorldCR4D1GlbFactory.Triangle(), "t.glb").Model!;
+
+    static AssetId Parse(string value) =>
+        AssetId.TryParse(value, out var id) ? id : throw new InvalidOperationException($"非法 AssetId：{value}");
 }
