@@ -1,7 +1,7 @@
-版本：v0.2.24.3-rz
+版本：v0.2.24.4-rz
 # XuanYu Engine 文件树
 
-## MAP-A-R1-D4 职责索引（v0.2.24.3-rz）
+## MAP-A-R1-D4 职责索引（v0.2.24.4-rz）
 
 - `XuanYu.Core/Map/MapTerrainMeshBuilder.cs`：CPU 地形网格构建器（唯一采样源 MapSurfaceSampler 的渲染侧消费方；数值差分法线；CPU 亮度合成 ambient×0.3×hemi + sun×0.85×ndl，clamp [0,1]）。
 - `XuanYu.Core/Map/MapBoundsMeshBuilder.cs`：地图边界线网格（48 顶点，亮度 1.0）。

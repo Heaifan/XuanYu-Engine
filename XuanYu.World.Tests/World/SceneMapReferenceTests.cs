@@ -8,14 +8,14 @@ namespace XuanYu.World.Tests.World;
 public sealed class SceneMapReferenceTests
 {
     [Fact]
-    public void Scene_save_carries_map_reference()
+    public async Task Scene_save_carries_map_reference()
     {
         var vm = new UiVm(null, () => true);
         vm.NewMap();
-        vm.SaveMapAsync(Path.Combine(Path.GetTempPath(), "sceneRefMap.xymap")).GetAwaiter().GetResult();
+        await vm.SaveMapAsync(Path.Combine(Path.GetTempPath(), "sceneRefMap.xymap"));
         var scenePath = Path.Combine(Path.GetTempPath(), "sceneRef.xyscene");
 
-        vm.SaveSceneAsync(scenePath).GetAwaiter().GetResult();
+        await vm.SaveSceneAsync(scenePath);
 
         var text = File.ReadAllText(scenePath);
         Assert.Contains("mapReference", text);
@@ -24,49 +24,49 @@ public sealed class SceneMapReferenceTests
     }
 
     [Fact]
-    public void Scene_open_restores_map_reference()
+    public async Task Scene_open_restores_map_reference()
     {
         var vm = new UiVm(null, () => true);
         vm.NewMap();
         var mapPath = Path.Combine(Path.GetTempPath(), "sceneRefMap2.xymap");
-        vm.SaveMapAsync(mapPath).GetAwaiter().GetResult();
+        await vm.SaveMapAsync(mapPath);
         var scenePath = Path.Combine(Path.GetTempPath(), "sceneRef2.xyscene");
-        vm.SaveSceneAsync(scenePath).GetAwaiter().GetResult();
+        await vm.SaveSceneAsync(scenePath);
 
         var reopened = new UiVm(null, () => true);
-        reopened.OpenSceneAsync(scenePath).GetAwaiter().GetResult();
+        await reopened.OpenSceneAsync(scenePath);
 
         Assert.True(reopened.HasMap);
         Assert.Equal(vm.MapIdText, reopened.MapIdText);
     }
 
     [Fact]
-    public void Scene_without_map_reference_opens_normally()
+    public async Task Scene_without_map_reference_opens_normally()
     {
         var vm = new UiVm(null, () => true);
         var scenePath = Path.Combine(Path.GetTempPath(), "noRef.xyscene");
-        vm.SaveSceneAsync(scenePath).GetAwaiter().GetResult();
+        await vm.SaveSceneAsync(scenePath);
 
         var reopened = new UiVm(null, () => true);
-        reopened.OpenSceneAsync(scenePath).GetAwaiter().GetResult();
+        await reopened.OpenSceneAsync(scenePath);
 
         Assert.False(reopened.HasMap);
         Assert.Equal("未加载", reopened.MapStatusText);
     }
 
     [Fact]
-    public void Missing_map_file_marks_reference_invalid_without_crashing()
+    public async Task Missing_map_file_marks_reference_invalid_without_crashing()
     {
         var vm = new UiVm(null, () => true);
         vm.NewMap();
         var mapPath = Path.Combine(Path.GetTempPath(), "willBeDeleted.xymap");
-        vm.SaveMapAsync(mapPath).GetAwaiter().GetResult();
+        await vm.SaveMapAsync(mapPath);
         var scenePath = Path.Combine(Path.GetTempPath(), "brokenRef.xyscene");
-        vm.SaveSceneAsync(scenePath).GetAwaiter().GetResult();
+        await vm.SaveSceneAsync(scenePath);
         File.Delete(mapPath);
 
         var reopened = new UiVm(null, () => true);
-        reopened.OpenSceneAsync(scenePath).GetAwaiter().GetResult();
+        await reopened.OpenSceneAsync(scenePath);
 
         Assert.False(reopened.HasMap);
         Assert.Contains("引用失效", reopened.FooterMessage);

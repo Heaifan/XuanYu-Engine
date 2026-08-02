@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.24.4-rz
+MAP-A-R1 D4 视觉收口 + D5 正式地图编辑器/场景引用（2026-08-02 22:32:36，Commit 5fcd02b 之后待收口）
+- 任务目标：把 D4 真机视觉缺陷收口（程序化天空、视角 Gizmo、正式地图编辑器、场景地图引用），完成 MAP-A-R1 功能闭环；D4/D5 各轮独立提交推送。
+- EDITOR-VIEW-R1 视角 Gizmo：`UiVm.ViewGizmo.cs` + `ViewGizmo.axaml`——视口右上角 3×3 网格六方向按钮（顶/底/前/后/左/右）+ 中心当前朝向琥珀描边；Z-Up 坐标合同冻结（顶=+Z 看向 -Z、前=-Y 看向 +Y 等）；保持观察中心（选中实体→地图中心→原点）与距离只改朝向；浅蓝灰主体、白字，无红绿蓝三轴配色；不建第二套 CameraState；测试 3 项（六方向朝向/中心距离保持/选择保持）。
+- D5-A 正式地图编辑器：右侧一级「地图编辑器」Tab（与检查器平级）——地图资产区（名称/路径/MapId/尺寸/状态）+ 新建/打开/保存/卸载/聚焦五命令；复用 D2 MapDocumentOwner/MapStorageService 与 D3 WorldMapStateOwner；打开失败保持原地图；第二排「加载测试地图/卸载地图」临时按钮已删除；测试 4 项。
+- D5-B 场景地图引用：`.xyscene` schema v3→v4 新增可选 `mapReference{mapId, assetPath}`（只存引用不复制地图数据）；旧场景无引用正常打开；缺失/损坏时场景主体打开 + 显示「引用失效」+ 路径原因 + 不自动建默认地图；保存附加引用、打开自动加载；测试 4 项 + schema v4 断言更新。
+- 验证结果（D6 最终门禁）：全解决方案强制重编译 0 error / 1 既有 warning（xUnit2013，非本轮引入）；Core 148/148、World 434/434、WarCore 22/22；arch-a-guard PASS；glslc 字节码 8293 词逐字一致；git diff --check PASS；5+100 本轮文件全过（3 个既有超限文件非本轮范围，守卫口径 PASS）。
+- 治理：版本 v0.2.24.3-rz → v0.2.24.4-rz（五处同步：changelog/file-tree/UiVm.SceneDocument.cs/UiWin.axaml/run.bat）；无新增项目/依赖；不创建 Tag/Release。
+- 状态：MAP-A-R1-D4/D5 真机人工验收待用户执行（IPO 清单见报告）；全部通过后 MAP-A-R1 CLOSED，进入 MAP-A-R2 区域与图层。
+
 ## v0.2.24.3-rz
 MAP-A-R1-D4 有限地表渲染与自动取景（2026-08-02 21:46:52，Commit 9d1f2c9 之后待收口）
 - 任务目标：让地图以可观察、可编辑的战场方式出现在视口——有限地表网格、缓丘明暗、程序化天空、地图边界、加载后斜上方自动取景；D4 真机修复收口。
