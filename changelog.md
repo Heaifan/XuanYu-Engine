@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.21.23-fix
+WORLD-C-R4-D3-F1 非零 BaseVertex 索引归一化与失败去重修复（2026-08-02 12:45:00）
+- 真机证据：导入 `german_ss_soldier_mp40.glb` 前半段成功（Entity=EntityId(1)、Asset=asset_26a8723a…、Vertices=211517、Indices=926148），但 Vulkan GPU 资源创建失败：`Stage=Create Reason=non-zero BaseVertex not supported`；同一错误在后续投影更新中反复出现刷屏。
+- 根因一（阻断）：`StaticModelBuilder.AddPrimitive` 已将局部索引归一化为全局索引（`globalIndex = localIndex + baseVertex`），但 Primitive 仍记录非零 `baseVertex`；`VulkanStaticModelValidator` 拒绝 `BaseVertex != 0`，导致多 Primitive / 局部索引 / 非零 BaseVertex 的真实 GLB 无法上传 GPU。D1/D3 测试 GLB 恰好满足单 Primitive 或全零 BaseVertex，未覆盖该组合。
+- 根因二（伴生）：`VulkanStaticModelCache.Get` 失败后无失败状态记录，每次 RenderProjection 更新都重试创建并重打错误日志。
+- 修复一：`StaticModelBuilder.AddPrimitive` 索引归一化后记录 `BaseVertex = 0`（索引已是全局索引，Vulkan 绘制不再附加顶点偏移）；不修改顶点/法线/UV/Bounds、不修改 Vulkan 生命周期、Shader、SceneDocument、不新增依赖。
+- 修复二：新增 `VulkanStaticModelFailureTracker`（按 `RenderStaticModelKey + Revision` 记录失败状态）；`VulkanStaticModelCache` 失败后记录，相同 Key+Revision 不再创建、不再重复日志；Revision 改变或重新导入允许重试；`RetainOnly` 清理未引用失败记录。
+- 测试：新增 `WorldCR4D3F1BaseVertexTests`（多 Primitive 归一化、三 Primitive、无索引连续全局索引、越界索引拒绝、溢出拒绝、单 Primitive 不回归、归一化资源过 Vulkan 验证器、非零 BaseVertex 仍被验证器拒绝）与 `WorldCR4D3F1FailureTrackerTests`（同 Key+Revision 只记一次、Revision 变可重试、Clear/ClearNotIn）；`WorldCR4D1GlbFactory` 新增 `ThreePrimitives` / `BadIndexTriangle` 工厂。
+- 测试可达性：`XuanYu.Editor` / `XuanYu.Render.Vulkan` 新增 `InternalsVisibleTo XuanYu.World.Tests`；`XuanYu.World.Tests` 新增 Render.Vulkan 项目引用（仅用于验证器与失败去重纯逻辑测试，不触碰 Vulkan 设备）。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 全量 PASS（含 F1 新增）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；`git diff --check` PASS；守卫口径 5+100 PASS。F1 不宣布 D3 PASS，等待真机复验。
+- Commit Hash：以本轮最终 Git 记录为准。
+
 ## v0.2.21.22-rz
 WORLD-C-R4-D3 真实 GLB 导入闭环（2026-08-02 11:40:00）
 - 任务目标：执行 `WORLD-C-R4-D3`，把 D1 GLB 导入与 D2 静态模型渲染接入真实编辑器操作：文件选择 → `GltfStaticModelImporter` 导入 → 静态模型实体 → Catalog 绑定 → 层级树 → 视口显示 → 选择/变换复用既有主链；D3 不修改 `.xyscene`，不进入保存/重开（D4）。

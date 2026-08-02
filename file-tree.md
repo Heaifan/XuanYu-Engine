@@ -1,5 +1,17 @@
-版本：v0.2.21.22-rz
+版本：v0.2.21.23-fix
 # XuanYu Engine 文件树
+
+## WORLD-C-R4-D3-F1 职责索引（v0.2.21.23-fix）
+
+- `XuanYu.Editor/Assets/StaticModelBuilder.cs`：`AddPrimitive` 索引归一化后记录 `BaseVertex = 0`；修复非零 BaseVertex 真实 GLB 无法上传 GPU。
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelFailureTracker.cs`：按 RenderStaticModelKey+Revision 记录创建失败状态；相同 Key+Revision 不重试不重打日志。
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelCache.cs`：接入失败去重；`RetainOnly` 清理未引用失败记录。
+- `XuanYu.World.Tests/World/WorldCR4D3F1BaseVertexTests.cs`：多/三 Primitive 归一化、无索引连续全局索引、越界与溢出拒绝、单 Primitive 不回归、Vulkan 验证器通过/拒绝。
+- `XuanYu.World.Tests/World/WorldCR4D3F1FailureTrackerTests.cs`：失败去重语义（同 Key+Revision 只记一次、Revision 变可重试、Clear/ClearNotIn、按 Key 独立）。
+- `XuanYu.World.Tests/World/WorldCR4D1GlbFactory.cs`：新增 `ThreePrimitives` / `BadIndexTriangle` 测试 GLB 工厂。
+- `XuanYu.Editor/XuanYu.Editor.csproj` 与 `XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj`：新增 `InternalsVisibleTo XuanYu.World.Tests`。
+- `XuanYu.World.Tests/XuanYu.World.Tests.csproj`：新增 Render.Vulkan 项目引用（仅验证器/失败去重纯逻辑测试）。
+- `run.bat` / `XuanYu.Editor.UI/Win/UiWin.axaml` / `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：版本号 v0.2.21.23-fix。
 
 ## WORLD-C-R4-D3 职责索引（v0.2.21.22-rz）
 

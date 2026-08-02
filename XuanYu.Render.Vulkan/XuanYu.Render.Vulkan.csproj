@@ -15,4 +15,8 @@
     <ProjectReference Include="..\XuanYu.Core\XuanYu.Core.csproj" />
     <ProjectReference Include="..\XuanYu.Render.Abstractions\XuanYu.Render.Abstractions.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="XuanYu.World.Tests" />
+  </ItemGroup>
 </Project>

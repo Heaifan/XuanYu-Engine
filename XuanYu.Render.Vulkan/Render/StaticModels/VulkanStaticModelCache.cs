@@ -8,14 +8,17 @@ sealed class VulkanStaticModelCache : IDisposable
 {
     readonly Vk _vk; readonly VulkanDeviceOwner _device; readonly Action<string>? _log;
     readonly Dictionary<RenderStaticModelKey, VulkanStaticModelResource> _items = [];
+    readonly VulkanStaticModelFailureTracker _failures = new();
     public VulkanStaticModelCache(Vk vk, VulkanDeviceOwner device, Action<string>? log) =>
         (_vk, _device, _log) = (vk, device, log);
 
     public VulkanStaticModelResource? Get(RenderStaticModelResource model)
     {
         if (_items.TryGetValue(model.Key, out var old) && old.Revision == model.Revision) return old;
+        if (_failures.ShouldSkip(model.Key, model.Revision)) return old;
         if (!TryCreate(model, out var next, out var reason))
         {
+            _failures.Record(model.Key, model.Revision);
             _log?.Invoke(VulkanStaticModelLog.Failed(model.Key, "Create", reason));
             return old;
         }
@@ -34,6 +37,8 @@ sealed class VulkanStaticModelCache : IDisposable
             _items.Remove(key);
             _log?.Invoke(VulkanStaticModelLog.Disposed(key));
         }
+
+        _failures.ClearNotIn(keys);
     }
 
     bool TryCreate(RenderStaticModelResource m, out VulkanStaticModelResource? resource, out string error)

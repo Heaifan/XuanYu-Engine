@@ -22,8 +22,10 @@ sealed class StaticModelBuilder
         var baseVertex = _vertices.Count;
         var firstIndex = _indices.Count;
         _vertices.AddRange(vertices);
+        // 索引在此处已归一化为全局索引（localIndex + baseVertex），
+        // 因此 Primitive 的 BaseVertex 必须记录为 0；Vulkan 绘制不再附加顶点偏移。
         foreach (var index in indices) _indices.Add(checked((uint)(index + baseVertex)));
-        _primitives.Add(new StaticModelPrimitive(firstIndex, indices.Count, baseVertex, color));
+        _primitives.Add(new StaticModelPrimitive(firstIndex, indices.Count, 0, color));
         foreach (var vertex in vertices) Include(vertex.Position);
     }
 

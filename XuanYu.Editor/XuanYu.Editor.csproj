@@ -13,4 +13,8 @@
   <ItemGroup>
     <PackageReference Include="SharpGLTF.Core" Version="1.0.6" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="XuanYu.World.Tests" />
+  </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 
 namespace XuanYu.World.Tests.World;
 
-static class WorldCR4D1GlbFactory
+static partial class WorldCR4D1GlbFactory
 {
     public static byte[] Triangle(
         bool indices = true,
