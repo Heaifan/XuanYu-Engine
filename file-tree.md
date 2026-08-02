@@ -1,5 +1,10 @@
-版本：v0.2.23.0-rz
+版本：v0.2.24.0-rz
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D1 职责索引（v0.2.24.0-rz）
+
+- `docs/map-a-r1-d1-map-contracts.md`：`.xymap` 第一版 Schema 与 `.xyscene` mapReference 合同冻结（坐标方案 B：X 横向/Z 高度/Y 纵向，世界轴直写，Z-Up）。
+- 本轮零产品代码：只读核查 SceneDocument / World Snapshot / 渲染地面（EditorGrid+天空第二管线）/ 右侧模块，未重构旧代码。
 
 ## WARCORE-A-R1-D1 职责索引（v0.2.23.0-rz）
 
