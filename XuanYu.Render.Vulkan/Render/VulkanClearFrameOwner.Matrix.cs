@@ -16,6 +16,16 @@ public sealed unsafe partial class VulkanClearFrameOwner
         target[14] = matrix.M43; target[15] = matrix.M44;
     }
 
+    // F2：求逆后转置存储（GLSL 列主序），供参考网格 Pass 的 inverseViewProjection 使用。
+    static void FillMatrixTransposeInverse(float* target, Matrix4x4 matrix)
+    {
+        if (!Matrix4x4.Invert(matrix, out var inv))
+        {
+            inv = Matrix4x4.Identity;
+        }
+        FillMatrixTranspose(target, inv);
+    }
+
     static Matrix4x4 ToVulkanProjection(Matrix4x4 projection)
     {
         projection.M12 = -projection.M12;

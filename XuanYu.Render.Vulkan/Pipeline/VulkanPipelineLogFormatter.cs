@@ -7,6 +7,7 @@ internal static class VulkanPipelineLogFormatter
     internal static string PipelineLayoutCreated() => "PipelineLayout 创建成功";
     internal static string GraphicsPipelineCreated() => "GraphicsPipeline 创建成功";
     internal static string SkyCreated() => "天空 GraphicsPipeline 创建成功（深度不写）";
+    internal static string GridCreated() => "参考网格 GraphicsPipeline 创建成功（深度写关/混合开）";
     internal static string Created() => "GraphicsPipeline 资源创建完成";
     internal static string Disposed() => "GraphicsPipeline 资源释放完成";
     internal static string Skipped(string reason) => $"Pipeline 跳过：{reason}";

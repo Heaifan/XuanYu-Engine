@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.24.6-rz
+MAP-A-R1-D5-R1-F2/F2A Blender 风格自适应参考网格（2026-08-03 00:30:55，Commit 909b6fd 之后待收口）
+- 任务目标：废弃 42 条世界空间粗四边形网格，改为独立全屏 Pass + 片元解析世界 Z=0 平面，实现 Blender 式无限自适应参考网格；只动网格，不处理 Gizmo/天空/取景。
+- 独立渲染管线：新增 `editor_reference_grid.vert/.frag` + `VulkanGraphicsPipelineOwner.Grid.cs`（独立 192B PushConstant，创建时校验设备 maxPushConstantsSize；DepthTest=On/LessOrEqual、DepthWrite=Off、AlphaBlend=On）+ `VulkanClearFrameOwner.Grid.cs`（VP/InvVP/相机/视口/far/地图参数填充）；`RenderDrawKind.EditorGrid` → `EditorReferenceGrid`（顶点数 252→3 全屏三角形）；scene.vert 移除 gridVertex 与 -10.5 魔法分支；DrawAssist 不再处理网格。
+- 自适应分级：`desiredStep = worldMetersPerPixel × 20`（合法层级 0.1/1/10/100/1000/10000，钳制 0.1~10000）；只混合相邻两个十进制层级，权重和=1，平滑交叉淡入（细格 1px α0.18、主格 2px α0.32）。
+- 淡出：距离淡出 0~45% far 完整 / 45~75% 平滑 / >75% 隐藏；掠射角淡出 abs(dot(N,V))<0.03 隐藏 / 0.03~0.12 淡入 / >0.12 完整。
+- 主轴与地图：X 轴（世界 Y=0，#5A7FA3 α0.78）、Y 轴（世界 X=0，#B68B54 α0.78）、原点标记（#D1AE69 α0.85），屏幕恒定 ~2.5px 贯穿可见平面；地图矩形内逐片元 discard（feather=像素×1.5 或 0.05），地图外网格继续显示，卸载后完整恢复。
+- 配色（玄域浅色编辑器，禁高饱和/荧光/红绿工程轴）：细格 #7E8FA1 α0.18、主格 #607487 α0.32。
+- 测试：`ReferenceGridRayIntersectionTests`（G1 射线求交 7 项）+ `ReferenceGridAdaptiveTests`（层级选择/权重和/钳制/淡出曲线/裁切，28 项）+ `ReferenceGridDrawPlanTests`（有/无地图网格存在+顺序）；Core 183/183、World 435/435、WarCore 22/22；arch-a-guard PASS；glslc 字节码逐字一致（GridVert 348、GridFrag 1559、scene.vert 7864 词）。
+- 已知基线说明：909b6fd 的 scene.frag 源码（78 词透传版）与内嵌 ShaderBytecode.Frag.cs（113 词 F1 版）本身不一致（基线遗留，本轮未触碰 scene.frag/其字节码，超出 F2A 冻结范围）。
+- 治理：版本 v0.2.24.5-rz → v0.2.24.6-rz（五处同步）；无新增项目/依赖；不创建 Tag/Release。
+- 状态：MAP-A-R1-D5-R1 网格专项真机验收通过（用户授权收口 push）；后续 Gizmo/天空/取景按 F2 纪律单独轮次处理。
+
 ## v0.2.24.5-rz
 MAP-A-R1-D5-R1 视口参照与导航（2026-08-02 22:57:00，Commit 2fdf470 之后待收口）
 - 任务目标：按用户最新真机裁定修正视口参照与导航——视觉无限参考网格、地图外网格延伸、右上角视角 Gizmo 真实可见、程序化天空渐变、自动取景屏幕占用率 65~75%。

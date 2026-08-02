@@ -31,7 +31,7 @@ public sealed class MapRenderDrawPlanTests
     public void Without_map_grid_remains_and_no_bounds()
     {
         var plan = RenderDrawPlan.GetFrameDrawPlan(ProjectionWithMap(false));
-        Assert.Contains(plan, x => x.Kind == RenderDrawKind.EditorGrid);
+        Assert.Contains(plan, x => x.Kind == RenderDrawKind.EditorReferenceGrid);
         Assert.DoesNotContain(plan, x => x.Kind == RenderDrawKind.MapBounds);
     }
 
@@ -40,7 +40,7 @@ public sealed class MapRenderDrawPlanTests
     {
         // D5-R1：地图存在时参考网格保留（地图外延伸，shader 按地图矩形裁切），边界线添加。
         var plan = RenderDrawPlan.GetFrameDrawPlan(ProjectionWithMap(true));
-        Assert.Contains(plan, x => x.Kind == RenderDrawKind.EditorGrid);
+        Assert.Contains(plan, x => x.Kind == RenderDrawKind.EditorReferenceGrid);
         Assert.Contains(plan, x => x.Kind == RenderDrawKind.MapBounds
             && x.VertexCount == RenderDrawPlan.MapBoundsVertexCount);
     }

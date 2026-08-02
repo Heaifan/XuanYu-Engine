@@ -57,6 +57,7 @@ public sealed partial class VulkanRenderSession : IDisposable
         VulkanClearFrameOwner? clear = null;
         VulkanGraphicsPipelineOwner? pipeline = null;
         VulkanGraphicsPipelineOwner? skyPipeline = null;
+        VulkanGraphicsPipelineOwner? gridPipeline = null;
         VulkanPresentLoop? loop = null;
         try
         {
@@ -70,6 +71,9 @@ public sealed partial class VulkanRenderSession : IDisposable
             if (pipeline is not null) clear.SetPipeline(pipeline.Pipeline, pipeline.Layout);
             skyPipeline = VulkanGraphicsPipelineOwner.CreateSky(vk, deviceOwner, clear, swapchainOwner, log);
             if (skyPipeline is not null) clear.SetSkyPipeline(skyPipeline.Pipeline, skyPipeline.Layout);
+            // F2：独立参考网格管线（192B 独立 PushConstant；设备不支持则明确日志并禁用网格）。
+            gridPipeline = VulkanGraphicsPipelineOwner.CreateReferenceGrid(vk, deviceOwner, clear, swapchainOwner, selection.Handle, log);
+            if (gridPipeline is not null) clear.SetReferenceGridPipeline(gridPipeline.Pipeline, gridPipeline.Layout);
             loop = new VulkanPresentLoop(vk, deviceOwner, swapchainOwner, clear,
                 source => session!.RecoverFromOutOfDate(source),
                 reason => session!.MarkFailed(reason),
@@ -81,6 +85,7 @@ public sealed partial class VulkanRenderSession : IDisposable
         catch (Exception ex)
         {
             loop?.Dispose();
+            gridPipeline?.Dispose();
             skyPipeline?.Dispose();
             pipeline?.Dispose();
             clear?.Dispose();

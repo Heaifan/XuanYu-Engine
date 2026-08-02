@@ -11,8 +11,8 @@ public static class RenderDrawPlan
     public const int RotateGizmoVertexCount = 900;
     public const int ScaleGizmoVertexCount = 252;
     public const int BackgroundVertexCount = 3;
-    // D5-R1：视觉无限参考网格（shader 按相机位置动态生成，42 条线）。
-    public const int GridVertexCount = 252;
+    // MAP-A-R1-D5-R1-F2：独立编辑器参考网格 Pass（全屏三角形，片元解析世界 Z=0 平面）。
+    public const int ReferenceGridVertexCount = 3;
     public const int OriginVertexCount = 36;
     public const int WorldAxesVertexCount = 108;
     // D4：地图边界线（四条边 + 四角标识），CPU 生成细条四边形顶点。
@@ -54,13 +54,12 @@ public static class RenderDrawPlan
         var assist = projection.AssistState;
         var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 6);
         if (assist.ShowEditorBackground) plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
-        if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorGrid, GridVertexCount));
+        // F2：独立参考网格 Pass——有/无地图都存在，地图加载不再移除网格。
+        if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
         if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
         if (projection.HasMap)
         {
-            // D5-R1：地图存在时参考网格保留（地图外继续延伸），地表绘制在地图矩形范围内，
-            // 网格由 shader 按地图范围裁切避免穿透地表；卸载后网格继续存在。
             plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
         }
         for (var i = 0; i < projection.Entities.Count; i++)
@@ -88,7 +87,7 @@ public static class RenderDrawPlan
 public enum RenderDrawKind
 {
     EditorBackground,
-    EditorGrid,
+    EditorReferenceGrid,
     WorldOrigin,
     WorldAxes,
     MapBounds,

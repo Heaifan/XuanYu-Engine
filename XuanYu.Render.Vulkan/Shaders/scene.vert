@@ -256,37 +256,6 @@ void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
     color = vec4(clamp(rgb, 0.0, 1.0), 1.0);
 }
 
-vec3 gridVertex(int vi, out vec4 color) {
-    // D5-R1：视觉无限参考网格。重心跟随相机（pc.worldPosition.xy 对齐到间距），
-    // 间距按相机高度分级 0.1/1/10/100/1000/10000 米；地图矩形（entityScale.xy=半宽/半深）
-    // 内的线整条裁掉，避免穿透地表与 Z-Fighting；不创建真正无限几何体。
-    int line = vi / 6;
-    int corner = vi % 6;
-    float camH = max(abs(pc.worldPosition.z), 0.5);
-    float step = camH > 5000.0 ? 1000.0 : camH > 500.0 ? 100.0
-        : camH > 50.0 ? 10.0 : camH > 5.0 ? 1.0 : 0.1;
-    vec2 cam = floor(pc.worldPosition.xy / step) * step;
-    bool xLine = line < 21;
-    int offsetIndex = xLine ? line : line - 21;
-    float coord = (float(offsetIndex) - 10.0) * step;
-    bool major = (offsetIndex % 5) == 0;
-    float halfLen = step * 12.0;
-    float w = major ? step * 0.12 : step * 0.05;
-    vec3 center = xLine ? vec3(cam.x, cam.y + coord, 0.0) : vec3(cam.x + coord, cam.y, 0.0);
-    float halfW = pc.entityScale.x;
-    float halfD = pc.entityScale.y;
-    if (halfW > 0.0 && halfD > 0.0 &&
-        center.x > -halfW && center.x < halfW &&
-        center.y > -halfD && center.y < halfD)
-    {
-        // 地图矩形内：推离视锥被裁剪，不参与绘制。
-        return vec3(0.0, 0.0, -1.0e6);
-    }
-    vec3 extent = xLine ? vec3(halfLen, w, 0.0) : vec3(w, halfLen, 0.0);
-    color = major ? vec4(0.43, 0.49, 0.54, 1.0) : vec4(0.54, 0.59, 0.63, 1.0);
-    return quadCorner(center, extent, corner);
-}
-
 vec3 originVertex(int vi, out vec4 color) {
     color = vec4(0.82, 0.78, 0.64, 1.0);
     return cube(vec3(0.0, 0.0, 0.015), vec3(0.055, 0.055, 0.015), vi);
@@ -344,11 +313,6 @@ void main() {
     } else if (pc.gizmoMode < -11.5) {
         vec4 color;
         vec3 local = originVertex(gl_VertexIndex, color);
-        gl_Position = pc.viewProjection * vec4(local, 1.0);
-        vBaseColor = color;
-    } else if (pc.gizmoMode < -10.5) {
-        vec4 color;
-        vec3 local = gridVertex(gl_VertexIndex, color);
         gl_Position = pc.viewProjection * vec4(local, 1.0);
         vBaseColor = color;
     } else if (pc.gizmoMode < -9.5) {
