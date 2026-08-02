@@ -67,7 +67,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var begin = new CommandBufferBeginInfo { SType = StructureType.CommandBufferBeginInfo };
         if (!Ok(_vk.BeginCommandBuffer(cb, &begin), "BeginCommandBuffer")) return false;
         ClearValue* clears = stackalloc ClearValue[2];
-        clears[0] = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.25f, Float32_1 = 0.45f, Float32_2 = 0.70f, Float32_3 = 1.0f } };
+        // F5：ClearColor 仅作天空失败回退，改为浅蓝色，不再用灰色掩盖天空管线失败。
+        clears[0] = new ClearValue { Color = new ClearColorValue { Float32_0 = 0.35f, Float32_1 = 0.55f, Float32_2 = 0.80f, Float32_3 = 1.0f } };
         clears[1] = new ClearValue { DepthStencil = new ClearDepthStencilValue { Depth = 1.0f, Stencil = 0 } };
         var rp = new RenderPassBeginInfo
         {

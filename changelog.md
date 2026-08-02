@@ -8,7 +8,8 @@ MAP-A-R1-D4 有限地表渲染与自动取景（2026-08-02 21:46:52，Commit 9d1
 - F4 可读性（本轮）：`EditorCameraFraming.FrameMapAllWithCenter` 地图取景 45° 斜上方俯视（Forward.Z=-0.707，完整容纳四角 + 安全边距）；`Brightness` 合成降为 `ambient×0.3×hemi + sun×0.85×ndl`（clamp [0,1]），避免全部顶点被 shader 钳制同色，缓丘受光/背光差 ≈0.086 肉眼可辨；scene.vert 天空顶部加深蓝 (0.45,0.56,0.74)、地平线更雾白 (0.88,0.90,0.94)，ShaderBytecode 由 glslc -O 重新生成并逐字比对。
 - 测试（XuanYu.World.Tests/Map/ 与 /World/）：`MapTerrainBrightnessTests` 新增（Flat 亮度稳定∈[0.5,0.9]、缓丘明暗差>0.03、方向光贡献>0.05）；`WorldCameraFramingTests` 新增（45° 俯视 + 四角完整容纳）；`MapTerrainMeshBuilderTests` 亮度断言按 F4 合成公式更新。
 - 治理：版本 v0.2.24.2-rz → v0.2.24.3-rz（五处同步：changelog/file-tree/UiVm.SceneDocument.cs/UiWin.axaml/run.bat）；无新增项目/依赖；ShaderBytecode 为生成物，行数 78（≤100 守卫口径通过）；第二排「加载测试地图/卸载地图」为 D4 临时验收入口，D5 移入右侧「地图编辑器」一级模块。
-- 验证结果：串行 build 12 项目 0 error / 0 warning（ShaderBytecode 重生成后增量构建）；Core Tests 148/148；World Tests 423/423（含地图新增 4 项）；WarCore Tests 22/22；arch-a-guard PASS；glslc 字节码逐字比对 PASS（8204 词，工具链经 9d1f2c9 原始 scene.vert 复验一致）；git diff --check PASS；5+100 全仓扫描 PASS。
+- F5 程序化天空（用户真机截图裁定：D4 视觉验收 FAIL 后追加，D4 保持 IN PROGRESS，15c9a0e 保留不回滚）：重建 Unity/Godot 风格程序化天空——天顶清晰蓝 (0.28,0.50,0.85) → 地平线浅蓝雾白 (0.78,0.87,0.96) → 地平线以下轻微大气泛光 (0.42,0.48,0.56)；上半球渐变改用 pow(dir.z, 0.55) 集中；新增最小太阳圆盘（方向与 D1 合同 sunDirection 一致，仅圆盘+微弱辉光，无耀斑/体积光）；ClearColor 改为浅蓝失败回退 (0.35,0.55,0.80)，不再用灰色掩盖天空失败；天空失败日志保留（ShaderModule/PipelineLayout/GraphicsPipelines 三处明确记录）；绘制仍为独立 Sky Pipeline（DepthTest/Write=Off、先于地表、只依赖相机旋转不依赖平移，Z-Up 读 dir.z）。
+- 验证结果（F5 追加）：串行 build 12 项目 0 error / 1 warning（既有 xUnit2013）；Core 148/148、World 423/423、WarCore 22/22；arch-a-guard PASS；glslc 重新生成 ShaderBytecode（8293 词，79 行）逐字比对一致，新天空色与太阳常量全部在字节码中。
 - 状态：MAP-A-R1-D4 真机人工验收待用户执行（IPO 清单见报告）；验收通过后 D4 CLOSED，进入 MAP-A-R1-D5 正式地图编辑器与场景引用。
 
 ## v0.2.24.2-rz

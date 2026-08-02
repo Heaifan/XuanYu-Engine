@@ -229,21 +229,31 @@ vec3 quadCorner(vec3 center, vec3 halfExtent, int li) {
 void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
     vec2 p[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
     clipPos = vec4(p[vi], 1.0, 1.0);
-    // WORLD-D-R1：程序化天空。逆视图投影恢复世界观察方向，按世界 Z 分量
-    // （右手系 Z 轴向上）判断上下半球，地平线保持世界空间稳定。
+    // WORLD-D-R1 / MAP-A-R1-D4-F5：程序化天空（Unity/Godot 风格）。
+    // 逆视图投影恢复世界观察方向，按世界 Z 分量（右手系 Z-Up）区分上下半球；
+    // 方向仅依赖相机旋转与投影（far-cam 差值），不受相机平移影响。
     mat4 invVP = inverse(pc.viewProjection);
     vec4 farWorld = invVP * vec4(p[vi], 1.0, 1.0);
     vec4 camWorld = invVP * vec4(0.0, 0.0, 0.0, 1.0);
     vec3 dir = normalize(farWorld.xyz / farWorld.w - camWorld.xyz / camWorld.w);
-    float up = clamp(dir.z, 0.0, 1.0);      // 上半球：0=地平线 .. 1=正上方
-    float down = clamp(-dir.z, 0.0, 1.0);   // 下半球：0=地平线 .. 1=正下方
-    vec3 skyTop = vec3(0.45, 0.56, 0.74);   // 天空顶部：较深但明亮的浅蓝
-    vec3 horizon = vec3(0.88, 0.90, 0.94);  // 地平线：更浅、雾白蓝
-    vec3 ground = vec3(0.55, 0.58, 0.62);   // 下半球：浅中性灰蓝/淡地面色
+
+    // F5：清晰天空层次 —— 顶部饱和蓝 → 地平线浅蓝雾白 → 地平线以下轻微大气泛光。
+    vec3 skyTop = vec3(0.28, 0.50, 0.85);    // 天顶：清晰蓝色
+    vec3 horizon = vec3(0.78, 0.87, 0.96);   // 地平线：浅蓝偏雾白
+    vec3 ground = vec3(0.42, 0.48, 0.56);    // 地平线以下：轻微大气泛光（冷灰蓝，比地表暗）
+    float up01 = pow(clamp(dir.z, 0.0, 1.0), 0.55);   // 上半球渐变集中系数
     vec3 rgb = dir.z >= 0.0
-        ? mix(horizon, skyTop, smoothstep(0.0, 0.7, up))
-        : mix(horizon, ground, smoothstep(0.0, 0.45, down));
-    color = vec4(rgb, 1.0);
+        ? mix(horizon, skyTop, up01)
+        : mix(horizon, ground, smoothstep(0.0, 0.5, clamp(-dir.z, 0.0, 1.0)));
+
+    // 最小太阳圆盘：方向与 D1 合同 sunDirection 一致（归一化 (-0.35,-0.55,0.75)）。
+    // 只做简单圆盘 + 微弱辉光，不做耀斑与体积光。
+    vec3 sunDir = normalize(vec3(-0.35, -0.55, 0.75));
+    float facingSun = max(dot(dir, sunDir), 0.0);
+    float disk = smoothstep(0.9992, 0.9998, facingSun);       // 圆盘
+    float glow = smoothstep(0.9950, 1.0000, facingSun) * 0.35; // 微弱辉光
+    rgb += vec3(1.0, 0.96, 0.88) * (disk + glow);
+    color = vec4(clamp(rgb, 0.0, 1.0), 1.0);
 }
 
 vec3 gridVertex(int vi, out vec4 color) {
