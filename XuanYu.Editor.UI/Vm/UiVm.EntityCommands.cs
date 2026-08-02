@@ -1,4 +1,5 @@
 using XuanYu.Core.Identity;
+using XuanYu.Editor.Assets;
 
 namespace XuanYu.Editor.UI;
 
@@ -18,8 +19,10 @@ public sealed partial class UiVm
     {
         if (HasBlockingInput || !TrySelectedEntityKey(out var key) ||
             !_sceneState.TryGetEntity(key, out var entity)) return false;
+        SceneStaticModelBinding? binding = _staticModelCatalog.TryGetByEntity(key, out var found) ? found : null;
         if (!_sceneState.DestroyEntity(key)) return false;
-        _historyOwner.PushEntry(new DeleteEntityHistoryEntry(entity));
+        if (binding is { } b) _staticModelCatalog.Remove(b.EntityId);
+        _historyOwner.PushEntry(new DeleteEntityHistoryEntry(entity, binding));
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "删除实体");
         FooterMessage = $"已删除实体：{entity.Name}";
         RaiseDocumentChanged();

@@ -1,7 +1,9 @@
 using XuanYu.Core.Identity;
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
+using XuanYu.Editor.Assets;
 using XuanYu.Render.Abstractions;
+using XuanYu.World;
 
 namespace XuanYu.Editor.UI;
 
@@ -13,7 +15,9 @@ public static class SceneRenderProjectionAdapter
         double scaleGizmoWorldAxisLength = 1.2,
         Vector3d gizmoRotation = default,
         EditorViewportAssistState assist = default,
-        double moveGizmoWorldAxisLength = 1.2)
+        double moveGizmoWorldAxisLength = 1.2,
+        SceneStaticModelCatalog? staticModelCatalog = null,
+        IReadOnlyDictionary<AssetId, RenderStaticModelResource>? staticModelResources = null)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -21,16 +25,33 @@ public static class SceneRenderProjectionAdapter
         }
 
         var selectedKey = snapshot.IsSelected ? snapshot.Entity.EntityKey : EntityId.None;
-        var entities = snapshot.Entities
-            .Select(e =>
+        var entities = new List<RenderEntityProjection>(snapshot.Entities.Count);
+        foreach (var e in snapshot.Entities)
+        {
+            var t = snapshot.TransformFor(e);
+            if (e.Type == WorldEntityTypes.StaticModel)
             {
-                var t = snapshot.TransformFor(e);
-                var type = e.Type == XuanYu.World.WorldEntityTypes.Cube
-                    ? RenderEntityType.Cube : RenderEntityType.LegacyMinimalTriangle;
-                return new RenderEntityProjection(e.EntityKey, t.Position, t.Rotation, t.Scale,
-                    e.EntityKey == selectedKey, type);
-            })
-            .ToArray();
+                if (staticModelCatalog is null ||
+                    !staticModelCatalog.TryGetByEntity(e.EntityKey, out var binding) ||
+                    staticModelResources is null ||
+                    !staticModelResources.TryGetValue(binding.AssetId, out var resource))
+                {
+                    // 绑定缺失（导入事务中间帧 / 资产缺失）时跳过该实体，不让整帧投影失败。
+                    // 持久缺失的诊断与恢复由场景加载事务负责（D4），D3 导入路径总是先建实体后绑定。
+                    continue;
+                }
+
+                entities.Add(new RenderEntityProjection(e.EntityKey, t.Position, t.Rotation, t.Scale,
+                    e.EntityKey == selectedKey, RenderEntityType.StaticModel, resource.Key));
+                continue;
+            }
+
+            var type = e.Type == WorldEntityTypes.Cube
+                ? RenderEntityType.Cube : RenderEntityType.LegacyMinimalTriangle;
+            entities.Add(new RenderEntityProjection(e.EntityKey, t.Position, t.Rotation, t.Scale,
+                e.EntityKey == selectedKey, type));
+        }
+
         var projection = new RenderProjection(
             new RenderCameraProjection(
                 camera.Position, camera.Forward, camera.Up,
@@ -45,7 +66,10 @@ public static class SceneRenderProjectionAdapter
             ScaleGizmoWorldRadius: scaleGizmoWorldAxisLength,
             GizmoRotation: gizmoRotation,
             Assist: assist,
-            MoveGizmoWorldRadius: moveGizmoWorldAxisLength);
+            MoveGizmoWorldRadius: moveGizmoWorldAxisLength,
+            StaticModels: staticModelResources?.Values
+                .OrderBy(r => r.Key.Value)
+                .ToArray());
         return RenderProjectionResult.Ok(projection);
     }
 }

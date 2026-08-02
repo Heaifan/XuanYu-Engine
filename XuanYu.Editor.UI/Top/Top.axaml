@@ -41,6 +41,7 @@
             <MenuItem Header="打开" Command="{Binding RunCommand}" CommandParameter="打开"/>
             <MenuItem Header="保存" Command="{Binding RunCommand}" CommandParameter="保存"/>
             <MenuItem Header="另存为" Command="{Binding RunCommand}" CommandParameter="另存为"/>
+            <MenuItem Header="导入 GLB" Command="{Binding RunCommand}" CommandParameter="导入 GLB"/>
           </MenuItem>
           <MenuItem Header="添加">
             <MenuItem Header="基础实体"><MenuItem Header="立方体" Command="{Binding RunCommand}" CommandParameter="添加立方体"/></MenuItem>

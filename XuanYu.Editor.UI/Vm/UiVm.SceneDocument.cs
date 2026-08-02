@@ -14,7 +14,7 @@ public sealed partial class UiVm
     public event Action<string>? FileCommandRequested;
     public bool IsSceneDirty => _documentSession.IsDirty(_historyOwner.CurrentRevision);
     public string CurrentScenePath => _documentSession.CurrentPath ?? "";
-    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.21.21-fix - {DocumentTitle}";
+    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.21.22-rz - {DocumentTitle}";
     public string DocumentTitle => $"{DocumentFileName}{(IsSceneDirty ? "（未保存）" : "")}";
     public string DocumentFileName =>
         string.IsNullOrWhiteSpace(CurrentScenePath) ? "未命名场景" : Path.GetFileName(CurrentScenePath);
@@ -24,6 +24,7 @@ public sealed partial class UiVm
         CancelActiveInput("新建场景");
         _historyOwner.Clear();
         _documentSession.MarkNew();
+        _staticModelCatalog.Clear();
         _sceneState.ReplaceEntities([]);
         ResetCameraForSceneReplacement();
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "新建场景");
@@ -55,6 +56,7 @@ public sealed partial class UiVm
         LogSceneLoadStage("ReplaceWorld");
         CancelActiveInput("打开场景");
         _sceneState.ReplaceEntities(entities);
+        _staticModelCatalog.Clear();
         ResetCameraForSceneReplacement(entities.Count > 0);
         _historyOwner.Clear();
         _documentSession.MarkLoaded(path, result.Value);

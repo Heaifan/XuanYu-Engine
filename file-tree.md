@@ -1,5 +1,24 @@
-版本：v0.2.21.21-fix
+版本：v0.2.21.22-rz
 # XuanYu Engine 文件树
+
+## WORLD-C-R4-D3 职责索引（v0.2.21.22-rz）
+
+- `XuanYu.World/WorldEntityType.cs`：`WorldEntityType` 新增 `StaticModel` 枚举与 `WorldEntityTypes.StaticModel` 常量。
+- `XuanYu.World/Scene/SceneStateOwner.StaticModel.cs`：`AddStaticModelEntity(name, transform, extent)`；extent 来自模型 LocalBounds 供 Picking/空间查询，World 不接收资产或 GPU 语义。
+- `XuanYu.Editor/Assets/SceneStaticModelBinding.cs`：实体 → 资产最小绑定（EntityId/AssetId/SourcePath）；不含 RenderKey（Editor 不引用 Render.Abstractions）。
+- `XuanYu.Editor/Assets/SceneStaticModelCatalog.cs`：场景静态模型绑定目录；Bind/TryGetByEntity/TryGetByAsset/Remove/Clear/Snapshot/Revision/Changed；Snapshot 按 AssetId 稳定排序。
+- `XuanYu.Editor/Assets/StaticModelAuthoringService.cs`：GLB 导入 → World 实体创建 → Catalog 绑定事务组合服务；回滚保证不留半成品。
+- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：投影适配增加 Catalog 与渲染资源缓存输入；StaticModel 实体按绑定携带 RenderKey；缺失绑定跳过不整帧失败。
+- `XuanYu.Editor.UI/Vm/UiVm.RenderProjection.cs`：生产投影路径移除 `D2StaticModelDemo.Apply`，改经 Catalog 派生渲染资源。
+- `XuanYu.Editor.UI/Vm/UiVm.StaticModelImport.cs`：导入命令、选择新实体、日志（顶点/索引）、Dirty 与 RenderProjection 发布。
+- `XuanYu.Editor.UI/Vm/SceneHistoryEntry.cs` 与 `UiVm.History.Entities.cs`：Add/Delete 历史条目携带绑定，Undo/Redo 保持绑定一致。
+- `XuanYu.Editor.UI/Vm/UiVm.EntityCommands.cs`：删除实体时解除模型绑定。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：新建/打开场景清空 Catalog 绑定；窗口标题版本号。
+- `XuanYu.Editor.UI/Top/Top.axaml`：顶部菜单「文件 → 导入 GLB」。
+- `XuanYu.Editor.UI/Win/UiWin.SceneCommands.cs`：GLB 文件选择器（`*.glb` 单选），取消不改变状态。
+- `XuanYu.World.Tests/World/WorldCR4D3*.cs`：D3 自动测试（AuthoringService/Catalog/Projection/UI 四组）。
+- `docs/world-c-r4-d3-static-model-authoring-report.md`：D3 实现、边界、验证与真机验收入口报告。
+- `run.bat` / `XuanYu.Editor.UI/Win/UiWin.axaml`：版本号 v0.2.21.22-rz。
 
 ## WORLD-C-R4-D2-F1 验收缺陷修复职责索引（v0.2.21.21-fix）
 

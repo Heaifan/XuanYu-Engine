@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.21.22-rz
+WORLD-C-R4-D3 真实 GLB 导入闭环（2026-08-02 11:40:00）
+- 任务目标：执行 `WORLD-C-R4-D3`，把 D1 GLB 导入与 D2 静态模型渲染接入真实编辑器操作：文件选择 → `GltfStaticModelImporter` 导入 → 静态模型实体 → Catalog 绑定 → 层级树 → 视口显示 → 选择/变换复用既有主链；D3 不修改 `.xyscene`，不进入保存/重开（D4）。
+- World：`WorldEntityType` 新增 `StaticModel`；`SceneStateOwner.StaticModel.cs` 新增 `AddStaticModelEntity(name, transform, extent)`，extent 取模型 LocalBounds 供 Picking/空间查询，World 不接收 AssetId/RenderKey/GLB 路径/GPU 资源。
+- Editor：新增 `SceneStaticModelBinding(EntityId, AssetId, SourcePath)`、`SceneStaticModelCatalog`（Bind/TryGetByEntity/TryGetByAsset/Remove/Clear/Snapshot/Revision/Changed，Snapshot 按 AssetId 稳定排序）、`StaticModelAuthoringService`（路径校验 → GLB 导入 → 实体创建 → 绑定的事务组合，含回滚：导入失败不建实体、绑定失败删实体）。`StaticModelImportResult` 既有文件未动。
+- 架构边界：Editor 层不引用 Render.Abstractions（arch-a-guard 强制 Editor 只引用 Core/World），故 Binding 不含 RenderKey，UI 层按 AssetId 派生稳定 `RenderStaticModelKey` 并缓存 `RenderStaticModelResource`。
+- RenderProjection：`SceneRenderProjectionAdapter.TryCreate` 增加 Catalog 与渲染资源缓存输入；`StaticModel` 实体按 EntityId 查询绑定并携带正确 RenderKey，绑定缺失（导入事务中间帧）跳过该实体不让整帧投影失败；`RenderProjection.StaticModels` 来自缓存资源快照。生产路径 `UiVm.RenderProjection.cs` 移除 `D2StaticModelDemo.Apply` 调用；`D2StaticModelDemo.cs` 文件按宪法删除流程保留待用户批准。
+- UI：顶部菜单「文件 → 导入 GLB」（`Top.axaml`），文件选择器过滤 `*.glb` 单选；取消选择不建实体、不改 Dirty、不写错误、不产生 Undo；`UiVm.StaticModelImport.cs` 导入成功选择新实体、刷新层级/检查器、发布 RenderProjection、写低频日志（顶点/索引计数）、Dirty=true。
+- Undo/Redo：`AddEntityHistoryEntry`/`DeleteEntityHistoryEntry` 携带可选 `SceneStaticModelBinding`，恢复实体时重新绑定、移除实体时解除绑定；新建/打开场景清空 Catalog 绑定。
+- 测试：新增 `WorldCR4D3AuthoringServiceTests`、`WorldCR4D3CatalogTests`、`WorldCR4D3ProjectionTests`、`WorldCR4D3StaticModelUiTests`，覆盖合法/缺失/非 GLB/损坏导入、重复导入独立绑定、Catalog 排序与变更、投影 RenderKey 正确、资源不串绑、无绑定跳过、Undo/Redo 绑定保持、删除实体解绑、Dirty、生产路径不再调用 D2StaticModelDemo。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 235/235 PASS（含 D3 新增 19 项）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译（vert/frag）PASS；`.xyscene` JSON PASS；`git diff --check` PASS；守卫口径 5+100（459 手写文件 0 超线）。D3 不宣布 WORLD-C-R4 CLOSED，等待真机验收（`docs/world-c-r4-d3-static-model-authoring-report.md`）。
+- Commit Hash：以本轮最终 Git 记录为准。
+
 ## v0.2.21.21-fix
 WORLD-C-R4-D2-F1 视口 Depth 遮挡与宪法格式修复（2026-08-01 16:56:53）
 - 真机反馈：`v0.2.21.20-rz` 接入 depth 后，打开 `world-c-r1-ten-triangles.xyscene` 或 D2 受控模型时出现模型不能完整显示、需要继续缩放后才显示的视口回归。
