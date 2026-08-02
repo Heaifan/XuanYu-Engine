@@ -10,12 +10,13 @@ public sealed partial class UiVm
         var target = path ?? _documentSession.CurrentPath;
         if (string.IsNullOrWhiteSpace(target)) return false;
         var snapshot = SceneDocumentWorldBridge.Capture(
-            _sceneState, _documentSession.SceneId, _documentSession.SceneName);
+            _sceneState, _documentSession.SceneId, _documentSession.SceneName, _staticModelCatalog);
         SetSceneBusy(true);
         FooterState = "状态：正在保存";
-        var result = await _sceneStorage.SaveAsync(target, snapshot);
-        if (!result.Succeeded) return FailSave(target, result);
-        _documentSession.MarkSaved(target, snapshot, _historyOwner.CurrentRevision);
+        var result = await _saveTransaction.ExecuteAsync(target, snapshot, _staticModelCatalog.Snapshot);
+        if (!result.Succeeded || result.Value is null) return FailSave(target, result);
+        _staticModelCatalog.RebindSourcePaths(result.Value.HostedSourcePaths);
+        _documentSession.MarkSaved(target, result.Value.SavedSnapshot, _historyOwner.CurrentRevision);
         FooterMessage = saveAs ? "场景已另存为。" : "场景已保存。";
         LogSceneSaveSuccess(target, saveAs);
         SetSceneBusy(false);
@@ -24,7 +25,7 @@ public sealed partial class UiVm
         return true;
     }
 
-    bool FailSave<T>(string path, SceneDocumentResult<T> result)
+    bool FailSave(string path, SceneDocumentResult<SceneSaveOutcome> result)
     {
         SetSceneBusy(false);
         _documentSession.MarkError(result.Message);

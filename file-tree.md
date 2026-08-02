@@ -1,7 +1,26 @@
-版本：v0.2.21.24-rz
+版本：v0.2.21.25-rz
 # XuanYu Engine 文件树
 
-## WORLD-C-R4-D4-R1 职责索引（v0.2.21.24-rz）
+## WORLD-C-R4-D4 职责索引（v0.2.21.25-rz）
+
+- `docs/玄域引擎_AI开发宪法.md`：二十九章新增 3.1 I（可选实施切片）与 3.2 防止过度拆分；R/I/F 命名规范冻结。
+- `XuanYu.Editor/SceneDocument/SceneDocumentJson.cs`：v3 增加 `Assets` 与实体 `ModelAssetId`（可空兼容 v1/v2）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentAsset.cs`：资产记录（AssetId/Kind=ModelGltf/RelativePath/DisplayName/ImporterVersion）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentValidator.cs`：v3 资产/引用校验与新错误码；v1/v2 规则不变。
+- `XuanYu.Editor/SceneDocument/SceneDocumentMapper.cs`：v3 双向映射（资产/ModelAssetId）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentSaveTransaction.cs` + `SceneSaveOutcome.cs`：保存事务（Hosting 组合 + 原子写 + 回滚 + 改绑映射）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentLoadTransaction.cs` + `SceneLoadCandidate.cs`：加载候选/提交事务；Missing/Failed 保留实体+固定 Bounds 占位。
+- `XuanYu.Editor/SceneDocument/SceneDocumentWorldBridge.cs`：Capture 携带 ModelAssetId。
+- `XuanYu.Editor/Assets/SceneStaticModelCatalog.cs`：新增 ReplaceAll / RebindSourcePaths。
+- `XuanYu.Editor.UI/Dialogs/IEditorDialogService.cs` + `NullEditorDialogService.cs`：最小弹窗接口与空实现。
+- `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs`：UiWin 错误/警告弹窗实现。
+- `XuanYu.Editor.UI/Bootstrap/App.axaml.cs`：组合根传入 UiWin 作为 DialogService。
+- `XuanYu.Editor.UI/Vm/UiVm*.cs`（SceneDocument/SceneDocumentSave/SceneDocument.New/StaticModelImport）：保存/加载事务接线、弹窗触发、新建清空、Catalog 改绑。
+- `XuanYu.World.Tests/Assets/WorldCR4D4*.cs`：D4 自动测试（Save/SaveAs/Load/StructureError/SchemaCompatibility/Dialog + ScenePersistenceEnv 辅助）。
+- `docs/world-c-r4-d4-static-model-persistence-report.md`：D4 完整实现、验证与真机验收入口。
+- `docs/world-c-r4-d4-i1-hosted-assets-report.md`：D4-I1 托管事务内核报告（改名自 D4-R1）。
+
+## WORLD-C-R4-D4-I1 职责索引（v0.2.21.24-rz）
 
 - `XuanYu.Editor/Assets/HostedSceneAsset.cs`：托管资产项（AssetId/SourcePath/RelativePath/StagedPath/FinalPath）。
 - `XuanYu.Editor/Assets/SceneAssetHostingPlan.cs`：托管规划（场景路径/资产根/staging/backup/资产列表，按 AssetId 稳定排序）。
@@ -9,8 +28,8 @@
 - `XuanYu.Editor/Assets/SceneAssetHostingTransaction.cs` + `.Activate/.Complete/.Rollback.cs`：Prepare/Activate/Complete/Rollback 状态机；旧目录备份与恢复，旧数据安全优先。
 - `XuanYu.Editor/Assets/SceneAssetHostingState.cs`：事务状态（Prepared/Activated/Completed/RolledBack/Failed）。
 - `XuanYu.Editor/Assets/SceneAssetHostingError.cs`：14 个托管事务错误码，复用 SceneDocumentResult 模式。
-- `XuanYu.World.Tests/Assets/WorldCR4D4Hosting*.cs`：D4-R1 托管事务自动测试（Planner/Reject/Transaction/Complete/Rollback/SaveAs + 测试环境辅助）。
-- `docs/world-c-r4-d4-r1-hosted-assets-report.md`：D4-R1 事务内核实现、验证与边界报告。
+- `XuanYu.World.Tests/Assets/WorldCR4D4Hosting*.cs`：D4-I1 托管事务自动测试（Planner/Reject/Transaction/Complete/Rollback/SaveAs + 测试环境辅助）。
+- `docs/world-c-r4-d4-i1-hosted-assets-report.md`：D4-I1 事务内核实现、验证与边界报告。
 
 ## WORLD-C-R4-D3-F1 职责索引（v0.2.21.23-fix）
 

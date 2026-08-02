@@ -3,11 +3,11 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia.Threading;
 using XuanYu.Core.History;
+using XuanYu.Editor.Assets;
 using XuanYu.Editor.SceneDocument;
 using XuanYu.Render.Abstractions;
 using XuanYu.World;
 using XuanYu.World.Scene;
-
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISceneRenderSnapshotSource,
@@ -15,6 +15,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
 {
     readonly EditorStateOwner _editorState;
     readonly EditorHistoryOwner _historyOwner = new();
+    readonly IEditorDialogService _dialogService = new NullEditorDialogService();
     readonly Dictionary<string, EditorTreeNode> _hierarchyNodeCache = new();
     readonly HashSet<string> _collapsedProjectKeys = new(StringComparer.Ordinal);
     readonly HashSet<string> _collapsedHierarchyKeys = new(StringComparer.Ordinal);
@@ -22,18 +23,21 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     string _selectedNodeKey = EditorSelectionSnapshot.Initial.SelectionKey;
     string _footerMessage = "已就绪。当前为空白未命名场景。", _footerState = "状态：就绪";
     bool _isLogOpen;
-
     public UiVm() : this(null) { }
     public UiVm(
         INativeHostSurfaceBridgeFactory? surfaceBridgeFactory,
         Func<bool>? isWriteThread = null,
-        bool seedInitialScene = true)
+        bool seedInitialScene = true,
+        IEditorDialogService? dialogService = null)
     {
         _editorState = new EditorStateOwner(isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         _sceneState = new SceneStateOwner(_partitionStrategy, seedInitialScene);
+        _saveTransaction = new SceneDocumentSaveTransaction(_sceneStorage);
+        _loadTransaction = new SceneDocumentLoadTransaction(_sceneStorage, new GlbImportService(), _partitionStrategy);
         _sceneState.RenderSnapshotChanged += _ => RefreshWorldProjectionBindings();
         if (seedInitialScene) _sceneState.EnsureEntityCount(10);
         SurfaceBridgeFactory = surfaceBridgeFactory;
+        if (dialogService is not null) _dialogService = dialogService;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
         SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
         ToggleSnapCommand = new RelayCommand(_ => ToggleSnap());
@@ -42,7 +46,6 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
         InitLogs();
     }
-
     public event PropertyChangedEventHandler? PropertyChanged;
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }
     public ICommand RunCommand { get; }
@@ -82,7 +85,6 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
     public void ToggleProjectNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedProjectKeys, nameof(ProjectItems));
     public void ToggleHierarchyNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedHierarchyKeys, nameof(HierarchyItems));
-
     void Run(string name)
     {
         if (TryRequestFileCommand(name)) return;
@@ -92,9 +94,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         if (name == "重做") { TryRedoFromCommand(); return; }
         ApplyRunCommand(name);
     }
-
     bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return false; field = value; OnPropertyChanged(name); return true; }
-
     void OnPropertyChanged([CallerMemberName] string? name = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }

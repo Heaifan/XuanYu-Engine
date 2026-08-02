@@ -81,7 +81,7 @@ public sealed partial class WorldCSceneDocumentTests
         Assert.True(vm.IsSaveButtonHighlighted);
         Assert.Contains("（未保存）", vm.DocumentTitle);
         Assert.Contains(vm.LogItems, x => x.Message == "场景保存失败" &&
-            x.Detail.Contains("Code=WriteFailed", StringComparison.Ordinal));
+            x.Detail.Contains("Code=InvalidScenePath", StringComparison.Ordinal));
     }
 
     static async Task<UiVm> OpenDirtyScene(string path)

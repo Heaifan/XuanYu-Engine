@@ -1,4 +1,5 @@
 using XuanYu.Core.Math;
+using XuanYu.Editor.Assets;
 using XuanYu.World;
 
 namespace XuanYu.Editor.SceneDocument;
@@ -9,10 +10,31 @@ static class SceneDocumentValidator
     {
         if (doc is null) return Fail("BrokenJson", "场景文件结构损坏。", "Parse");
         if (doc.Format != "XuanYuScene") return Fail("UnsupportedFormat", "不是玄域场景文件。", "Schema", "format");
-        if (doc.SchemaVersion is < 1 or > 2) return Fail("UnsupportedSchema", "场景文件版本不受支持。", "Schema", "schemaVersion");
+        if (doc.SchemaVersion is < 1 or > 3) return Fail("UnsupportedSchema", "场景文件版本不受支持。", "Schema", "schemaVersion");
         if (doc.Scene is null || doc.Entities is null)
             return Fail("BrokenJson", "场景文件结构损坏。", "Validate");
         if (string.IsNullOrWhiteSpace(doc.Scene.Id)) return Fail("InvalidSceneId", "场景ID不能为空。", "Validate", "scene.id");
+
+        var assets = doc.Assets ?? [];
+        var assetIds = new HashSet<string>(StringComparer.Ordinal);
+        if (doc.SchemaVersion >= 3)
+        {
+            foreach (var asset in assets)
+            {
+                if (asset is null) return Fail("BrokenJson", "资产数据不能为空。", "Validate");
+                if (!AssetId.TryParse(asset.AssetId, out _))
+                    return Fail("InvalidAssetId", "资产ID非法。", "Validate", $"asset.id={asset.AssetId}");
+                if (!assetIds.Add(asset.AssetId))
+                    return Fail("DuplicateAssetId", "资产ID重复。", "Validate", $"asset.id={asset.AssetId}");
+                if (asset.Kind != SceneDocumentAsset.ModelGltfKind)
+                    return Fail("UnknownAssetKind", "资产类型不受支持。", "Validate", $"asset.kind={asset.Kind}");
+                if (string.IsNullOrWhiteSpace(asset.RelativePath))
+                    return Fail("InvalidAssetPath", "资产路径不能为空。", "Validate", $"asset.id={asset.AssetId}");
+                if (!SceneAssetPathPolicy.IsSafeRelativePath(asset.RelativePath))
+                    return Fail("UnsafeAssetPath", "资产路径不安全。", "Validate", $"asset.path={asset.RelativePath}");
+            }
+        }
+
         var ids = new HashSet<int>();
         foreach (var entity in doc.Entities)
         {
@@ -30,6 +52,13 @@ static class SceneDocumentValidator
                 return Fail("InvalidTransform", "实体Transform包含非法数值。", "Validate", $"entity.id={entity.Id}");
             if (entity.Scale.X <= 0 || entity.Scale.Y <= 0 || entity.Scale.Z <= 0)
                 return Fail("InvalidTransform", "实体Scale必须大于0。", "Validate", $"entity.id={entity.Id}");
+            if (doc.SchemaVersion >= 3 && entity.EntityType == WorldEntityTypes.StaticModel)
+            {
+                if (string.IsNullOrWhiteSpace(entity.ModelAssetId))
+                    return Fail("MissingEntityAssetId", "静态模型实体缺少 ModelAssetId。", "Validate", $"entity.id={entity.Id}");
+                if (!assetIds.Contains(entity.ModelAssetId))
+                    return Fail("UnknownEntityAssetId", "实体引用了不存在的资产。", "Validate", $"entity.id={entity.Id}");
+            }
         }
         if (doc.Entities.Any(e => e.ParentId is not null && !ids.Contains(e.ParentId.Value)))
             return Fail("MissingParent", "实体父节点不存在。", "Validate", "parentId");

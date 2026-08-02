@@ -52,6 +52,39 @@ public sealed class SceneStaticModelCatalog
         Changed?.Invoke();
     }
 
+    // D4：加载事务候选提交。整体替换目录内容；SourcePath 已解析为托管绝对路径。
+    public void ReplaceAll(IEnumerable<SceneStaticModelBinding> bindings, IReadOnlyDictionary<AssetId, StaticModelData> models)
+    {
+        _byEntity.Clear();
+        _byAsset.Clear();
+        foreach (var binding in bindings)
+        {
+            if (!binding.EntityId.IsValid || !binding.AssetId.IsValid) continue;
+            _byEntity[binding.EntityId] = binding;
+        }
+
+        foreach (var (assetId, model) in models)
+        {
+            if (assetId.IsValid && model is not null) _byAsset[assetId] = model;
+        }
+
+        _revision++;
+        Changed?.Invoke();
+    }
+
+    // D4：保存成功后把外部 SourcePath 改绑为托管 .xyassets 内绝对路径。
+    public void RebindSourcePaths(IReadOnlyDictionary<EntityId, string> hostedPaths)
+    {
+        foreach (var (entityId, hostedPath) in hostedPaths)
+        {
+            if (!_byEntity.TryGetValue(entityId, out var binding)) continue;
+            _byEntity[entityId] = binding with { SourcePath = hostedPath };
+        }
+
+        _revision++;
+        Changed?.Invoke();
+    }
+
     public IReadOnlyList<SceneStaticModelBinding> Snapshot =>
         _byEntity.Values.OrderBy(binding => binding.AssetId.Value).ToArray();
 }

@@ -14,12 +14,20 @@ public static class SceneDocumentWorldBridge
     public static SceneDocumentSnapshot Capture(
         SceneStateOwner scene,
         string sceneId,
-        string sceneName)
+        string sceneName,
+        XuanYu.Editor.Assets.SceneStaticModelCatalog? catalog = null)
     {
         var entities = scene.Entities.OrderBy(e => e.SiblingOrder).ThenBy(e => e.EntityKey.Value)
-            .Select(e => new SceneDocumentEntity(
-                e.EntityKey, e.Name, e.ParentId, e.SiblingOrder, e.Transform,
-                NormalizeType(e.Type)))
+            .Select(e =>
+            {
+                string? modelAssetId = null;
+                if (e.Type == WorldEntityTypes.StaticModel && catalog is not null &&
+                    catalog.TryGetByEntity(e.EntityKey, out var binding))
+                    modelAssetId = binding.AssetId.Value;
+                return new SceneDocumentEntity(
+                    e.EntityKey, e.Name, e.ParentId, e.SiblingOrder, e.Transform,
+                    NormalizeType(e.Type), modelAssetId);
+            })
             .ToArray();
         return new SceneDocumentSnapshot(sceneId, sceneName, entities);
     }

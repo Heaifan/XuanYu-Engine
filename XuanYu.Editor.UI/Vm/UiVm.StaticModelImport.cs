@@ -17,6 +17,7 @@ public sealed partial class UiVm
         {
             LogStaticModelImportFailure(result);
             FooterMessage = result.UserMessage;
+            _ = ShowImportFailureAsync(result, path);
             return false;
         }
 
@@ -51,5 +52,13 @@ public sealed partial class UiVm
             "静态模型导入失败",
             $"原因={result.UserMessage}；路径={result.SourcePath}");
         RefreshLogBindings();
+    }
+
+    async Task ShowImportFailureAsync(StaticModelAuthorResult result, string path)
+    {
+        var fileName = Path.GetFileName(path);
+        var detail = result.UserMessage;
+        var message = $"无法导入所选模型。\n\n原因：{detail}\n文件：{fileName}";
+        await _dialogService.ShowErrorAsync("导入 GLB 失败", message);
     }
 }

@@ -1,13 +1,27 @@
 # changelog
 
+## v0.2.21.25-rz
+WORLD-C-R4-D4 静态模型持久化完整闭环（2026-08-02 15:30:00）
+- 任务目标：一次完成 D4 全部剩余工作：Schema v3 资产持久化、保存/另存为托管事务、加载候选/提交事务、缺失与损坏资源非破坏加载、固定 Bounds 占位、错误弹窗。宪法新增 R/I/F 命名规范（I 为可选实施切片、禁止过度拆分），D4-I1 托管事务作为既有基础复用。
+- 宪法修订（docs/玄域引擎_AI开发宪法.md）：二十九章新增 3.1 I（可选实施切片，仅真实独立风险且获批才允许）与 3.2 防止过度拆分（默认一个 D 一次完成）；明确 D4-I1 是已批准切片、D4 剩余功能一次完成。AI_DEVELOPMENT_RULES.md / dev-rules.md 无冲突规则，未改。
+- 命名统一：`D4-R1` → `D4-I1`（报告文件 docs/world-c-r4-d4-i1-hosted-assets-report.md、changelog、file-tree、测试注释）；不重写 Git 历史，commit e089325 保持原样。
+- Schema v3：`SceneDocumentJson` 增加 `Assets`（可空，v1/v2 缺失合法）；`SceneEntityJson` 增加 `ModelAssetId`（可空）；新增 `SceneAssetJson`（AssetId/Kind/RelativePath/DisplayName/ImporterVersion）与 `SceneDocumentAsset`（Kind 固定 ModelGltf）。保存固定写 v3；加载继续接受 v1/v2/v3。不得写入外部 SourcePath、RenderKey、顶点/索引/GPU 数据。
+- 校验（SceneDocumentValidator）：v3 下 AssetId 合法且不重复、Kind 仅 ModelGltf、RelativePath 经 SceneAssetPathPolicy 安全校验；StaticModel 实体必须有 ModelAssetId 且引用存在的 Asset；普通实体无 ModelAssetId 合法；新错误码 DuplicateAssetId/UnknownAssetKind/InvalidAssetPath/MissingEntityAssetId/UnknownEntityAssetId。既有 v1/v2 规则不变。
+- 保存事务（SceneDocumentSaveTransaction）：候选构建 → Hosting Prepare/Activate → 原子写 .xyscene（v3 + Assets）→ Hosting Complete；写入失败 Rollback 恢复旧目录；StaticModel 无 Catalog 绑定保存失败（MissingStaticModelBinding）；保存成功后 Catalog.RebindSourcePaths 改绑到托管路径（AssetId/Key/GPU 资源不变，Dirty=false）。重复保存：SourcePath 已托管，经 staging 替换正式 assetRoot，无 staging/backup 残留。另存为：目标场景独立 .xyassets，源场景不变，Session/Catalog 切换，Dirty=false。
+- 加载事务（SceneDocumentLoadTransaction）：候选阶段只读构建（读 JSON → 校验 → 解析 .xyassets 相对路径 → 逐 Asset 导入 → 候选 World/Catalog/资源）；结构错误（BrokenJson/UnsupportedSchema/重复 AssetId/未知 ModelAssetId/不安全路径等）整场打开失败且原场景完全不变；单资源 Missing/Failed 不导致整场失败，实体/ModelAssetId/层级/Transform 保留，使用固定占位 Bounds，其余 Ready 资产正常加载。提交阶段一次性替换 World/Catalog/资源/Selection/History/Session，Dirty=false。缺失资源再保存保留资产记录与 RelativePath，不删除实体。
+- 错误弹窗：新增 `IEditorDialogService`（ShowErrorAsync/ShowWarningAsync）与 UiWin 实现（UiWin.Dialogs.cs，复用 UnsavedDialog 窗口风格，无第三方包）；UiVm 经 NullEditorDialogService 兜底，App 组合根传入 UiWin。触发：导入 GLB 失败（标题「导入 GLB 失败」）、场景结构打开失败（「打开场景失败」）、部分资源缺失（「场景已打开，但部分资源不可用」，一次汇总）。用户取消选择/相机/投影/GPU 重试不弹窗。
+- 测试（XuanYu.World.Tests/Assets/，独立临时目录 + Fake Dialog + 确定性 AssetId）：SaveTransactionTests（v3 资产与托管文件、双模型、改绑、无绑定失败）、SaveAsTests（重复保存、独立根、源场景不变）、LoadTransactionTests（单/双模型往返、缺失/损坏保留实体）、LoadStructureErrorTests（非法 JSON/Schema/缺 ModelAssetId/重复 AssetId）、SchemaCompatibilityTests（v1/v2/v3 兼容、普通实体无 ModelAssetId 合法、未知 Kind/不安全路径/未知引用拒绝）、DialogTests（损坏导入 1 次、成功 0 次、非法打开 1 次、缺失汇总 1 次）。既有 WorldCR2DocumentTests 保存断言更新为 v3（行为变化，非缺陷）。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 303/303 PASS（含 D4 新增 54 项）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；`git diff --check` PASS；守卫口径 5+100 PASS；D4-R1 标签零残留；无 staging/backup 残留。D4 不宣布 COMPLETE，等待真机验收。
+- Commit Hash：以本轮最终 Git 记录为准。
+
 ## v0.2.21.24-rz
-WORLD-C-R4-D4-R1 `.xyassets` 托管资源事务内核（2026-08-02 14:10:00）
+WORLD-C-R4-D4-I1 `.xyassets` 托管资源事务内核（2026-08-02 14:10:00）
 - 任务目标：按 D0 冻结合同实现独立、可测试、可回滚的托管资源事务内核：运行时 GLB SourcePath → 托管目标规划 → 复制到同目录临时 staging → 验证 → 激活新 `<SceneName>.xyassets` → 后续保存成功 Complete / 失败 Rollback。本轮不接 Schema v3、不接正式保存/另存为、不接加载/占位/弹窗。
 - 冻结目录与相对路径：`<SceneName>.xyassets/models/<AssetId>/source.glb`、相对路径 `models/<AssetId>/source.glb`（复用 `SceneAssetPathPolicy.ModelSourceRelativePath` 与 `IsSafeRelativePath`，禁止 `..`/盘符/UNC/反斜杠/逃逸）。
 - 新增（`XuanYu.Editor/Assets/`）：`HostedSceneAsset`（AssetId/SourcePath/RelativePath/StagedPath/FinalPath）、`SceneAssetHostingPlan`（场景路径/资产根/staging/backup/资产列表，按 AssetId 稳定排序）、`SceneAssetHostingPlanner`（场景路径校验、SourcePath 校验、重复 AssetId 同源去重、同 AssetId 异源拒绝 AssetSourceConflict、同源异 AssetId 允许、FinalPath 防逃逸）、`SceneAssetHostingTransaction`（Prepare/Activate/Complete/Rollback 状态机 + 三个 partial：Activate 激活并备份旧目录、Complete 删除备份、Rollback 旧数据安全优先）、`SceneAssetHostingState`、`SceneAssetHostingError`（14 个错误码，复用 `SceneDocumentResult<T>` 模式）。
 - 事务语义：Prepare 只写 `.Battle01.xyassets.staging-<Guid>` 不碰正式根；Activate 目标不存在时直接 Move、已存在时先移旧目录为 backup 再移入 staging、第 3 步失败自动恢复旧目录；Complete 仅在 Activated 且 staging 已清时删 backup；Rollback Prepared 删 staging、无旧根删新根、有旧根恢复旧内容；错误调用返回明确失败不静默成功。
 - 测试（`XuanYu.World.Tests/Assets/`，独立临时目录，确定性 AssetId）：PlannerTests/PlannerRejectTests（目录、排序、去重、冲突、扩展名、缺失、相对路径、中文与空格场景名）、TransactionTests（Prepare 复制与不碰旧根、失败清理、Activate 新旧根、重复 Activate 拒绝）、CompleteTests（删备份留根、状态守卫）、RollbackTests（三态回滚、重复回滚拒绝、Completed 回滚拒绝）、SaveAsTests（两场景规划独立根、独立激活）。共 28 项新增。
-- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 全量 PASS（含 D4-R1 新增）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；`git diff --check` PASS；守卫口径 5+100 PASS。本轮无用户可见功能，不单独真机验收；Schema v3、正式保存入口、加载/占位/弹窗均未接线。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 全量 PASS（含 D4-I1 新增）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；`git diff --check` PASS；守卫口径 5+100 PASS。本轮无用户可见功能，不单独真机验收；Schema v3、正式保存入口、加载/占位/弹窗均未接线。
 - Commit Hash：以本轮最终 Git 记录为准。
 
 ## v0.2.21.23-fix
