@@ -1,5 +1,18 @@
-版本：v0.2.22.0-rz
+版本：v0.2.23.0-rz
 # XuanYu Engine 文件树
+
+## WARCORE-A-R1-D1 职责索引（v0.2.23.0-rz）
+
+- `XuanYu.WarCore/XuanYu.WarCore.csproj`：新程序集，仅引用 Core（宪法依赖禁区 WarCore→Editor/Vulkan 禁止）。
+- `XuanYu.WarCore/Identity/UnitId.cs`：单位编号（int 单调，FromInt 校验 >0，None 无效）。
+- `XuanYu.WarCore/Identity/UnitKind.cs`：单位类型枚举（R1 仅 Soldier）。
+- `XuanYu.WarCore/Identity/MilitaryIdentity.cs`：军事身份（UnitId / DisplayName / UnitKind，空名拒绝）。
+- `XuanYu.WarCore/Identity/FactionId.cs`：阵营编号（0=未命名）。
+- `XuanYu.WarCore/Identity/OrganizationId.cs`：组织编号（0=未编组）。
+- `XuanYu.WarCore/State/SoldierState.cs`：士兵状态（身体状态/体力/士气/压制，0–100，越界抛明确错误）。
+- `XuanYu.WarCore.Tests/`：D1 自动测试（身份生成/越界/隔离/程序集依赖方向运行时复核）。
+- `scripts/arch-a-guard-warcore.ps1`：WarCore 依赖禁区守卫（Core→WarCore、World→WarCore、WarCore→Editor/Vulkan 禁止），挂载于主守卫。
+- `XuanYu.Engine.slnx`：增加 XuanYu.WarCore + XuanYu.WarCore.Tests（12 项目）。
 
 ## WORLD-D-R1 职责索引（v0.2.22.0-rz）
 

@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.23.0-rz
+WARCORE-A-R1-D1 最小领域骨架（2026-08-02 16:00:00）
+- 任务目标：按 WARCORE-A-R1 计划建立最小 WarCore 单位领域骨架，为士兵闭环提供身份、归属与状态数据结构；本步不接场景、检查器、渲染与持久化。
+- 新增程序集 `XuanYu.WarCore`（仅引用 Core，满足宪法依赖禁区 Core→WarCore / World→WarCore / WarCore→Editor/Vulkan 全部禁止）：`MilitaryIdentity`（UnitId / DisplayName / UnitKind=Soldier）、`UnitId`（int 单调，FromInt 校验 >0，None 无效）、`FactionId`（0=未命名）、`OrganizationId`（0=未编组）、`UnitKind`（R1 仅 Soldier）、`SoldierState`（身体状态/体力/士气/压制，统一 0–100，构造时越界抛出明确 ArgumentOutOfRangeException）。
+- 约束落实：不建立 CurrentSoldier 单例；数据通过 UnitId 关联（EntityId 关联留待 D3）；WarCore 不含 Editor/Render 依赖；不为未来兵种预造继承体系；四项状态为外部输入。
+- 测试（XuanYu.WarCore.Tests，12 项）：合法身份生成、UnitId 零/负数拒绝、None 无效、空显示名拒绝、身份隔离、状态边界 0/100 接受、四项越界各自拒绝（-1/101）、状态值隔离；程序集引用运行时复核（不引用 Editor/Vulkan、引用 Core）。
+- 治理：slnx 增加 XuanYu.WarCore + XuanYu.WarCore.Tests（12 项目）；scripts/arch-a-guard-warcore.ps1 新增 WarCore 依赖禁区守卫并挂载主守卫；版本 v0.2.22.0-rz → v0.2.23.0-rz（WARCORE-A=模块 23，四件套同步）。
+- 验证结果：串行 build 12 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 305/305 PASS；WarCore Tests 12/12 PASS；架构守卫 PASS（含新增 WarCore 守卫）；git diff --check PASS；5+100 全仓扫描 PASS。
+- 状态：WARCORE-A-R1-D1 完成，等待真机验收（领域类型无 UI，验收以自动测试 + 代码审查为准）。
+
 ## v0.2.22.0-rz
 WORLD-D-R1 基础光照与天空环境（2026-08-02 15:28:21）
 - 任务目标：把视口从灰色调试画面提升为明亮、稳定、有天空与地平方向、有基础立体感的三维编辑环境：程序化世界空间天空、固定世界方向光、半球环境补光、默认材质调整、天空专用管线（深度不写）、Resize/Swapchain 重建回归。不做 HDRI/Cubemap/场景灯光/阴影/雾/昼夜/后处理/PBR。
