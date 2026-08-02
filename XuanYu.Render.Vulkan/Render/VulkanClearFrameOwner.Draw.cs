@@ -52,6 +52,10 @@ public sealed unsafe partial class VulkanClearFrameOwner
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
                 BindFramePipeline(cb, draw.Kind);
+                // MAP-A-R1-D4-F2：地表必须在天空（EditorBackground，DepthTest=Off 全屏）
+                // 之后绘制，否则会被后画的天空覆盖；边界线（MapBounds）紧随其后。
+                if (draw.Kind == RenderDrawKind.MapBounds && _mapTerrainIndexBuffer is not null)
+                    DrawMapTerrain(cb, pScene);
                 if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);
                 else if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
                 else DrawGizmo(cb, pScene, draw);
@@ -69,7 +73,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_skyPipeline.Handle == 0 || _skyPipelineLayout.Handle == 0) return;
         _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _skyPipeline);
     }
-
     void BindProceduralVertexBuffer(CommandBuffer cb)
     {
         if (_proceduralVertexBuffer is null) return;
@@ -77,7 +80,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         ulong offset = 0;
         _vk.CmdBindVertexBuffers(cb, 0, 1, &buffer, &offset);
     }
-
     void DrawEntity(CommandBuffer cb, float* scene, RenderDrawPlan.FrameEntry draw)
     {
         var entity = _renderProjection.Entities[draw.EntityIndex];

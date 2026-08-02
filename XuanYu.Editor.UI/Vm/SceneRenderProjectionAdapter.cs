@@ -1,4 +1,5 @@
 using XuanYu.Core.Identity;
+using XuanYu.Core.Map;
 using XuanYu.Core.Math;
 using XuanYu.Core.Scene;
 using XuanYu.Editor.Assets;
@@ -17,7 +18,8 @@ public static class SceneRenderProjectionAdapter
         EditorViewportAssistState assist = default,
         double moveGizmoWorldAxisLength = 1.2,
         SceneStaticModelCatalog? staticModelCatalog = null,
-        IReadOnlyDictionary<AssetId, RenderStaticModelResource>? staticModelResources = null)
+        IReadOnlyDictionary<AssetId, RenderStaticModelResource>? staticModelResources = null,
+        MapRenderSnapshot map = default)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -69,7 +71,8 @@ public static class SceneRenderProjectionAdapter
             MoveGizmoWorldRadius: moveGizmoWorldAxisLength,
             StaticModels: staticModelResources?.Values
                 .OrderBy(r => r.Key.Value)
-                .ToArray());
+                .ToArray(),
+            Map: map);
         return RenderProjectionResult.Ok(projection);
     }
 }

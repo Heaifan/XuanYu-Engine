@@ -2,7 +2,7 @@ using XuanYu.Core.Map;
 
 namespace XuanYu.World.Map;
 
-// MAP-A-R1-D3：当前 World 地图状态所有者。加载/切换/卸载，暴露高度查询与渲染快照。
+// MAP-A-R1-D3/D4：当前 World 地图状态所有者。加载/切换/卸载，暴露高度查询与渲染快照。
 public sealed class WorldMapStateOwner
 {
     WorldMapState? _current;
@@ -37,6 +37,8 @@ public sealed class WorldMapStateOwner
             ? new MapRenderSnapshot(
                 map.MapId, map.Name, map.WidthMeters, map.DepthMeters,
                 map.SurfaceKind, map.BaseHeightMeters, map.AmplitudeMeters,
-                map.WavelengthMeters, map.Seed)
+                map.WavelengthMeters, map.Seed,
+                map.SunDirectionX, map.SunDirectionY, map.SunDirectionZ,
+                map.SunIntensity, map.AmbientIntensity)
             : MapRenderSnapshot.Empty;
 }

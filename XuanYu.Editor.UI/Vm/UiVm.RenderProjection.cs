@@ -1,3 +1,4 @@
+using XuanYu.Core.Map;
 using XuanYu.Core.Scene;
 using XuanYu.Render.Abstractions;
 
@@ -16,6 +17,7 @@ public sealed partial class UiVm
             ViewportAssistState,
             ComputeMoveGizmoWorldAxisLength(transform.Position),
             _staticModelCatalog,
-            _staticModelResources);
+            _staticModelResources,
+            MapWorld.BuildRenderSnapshot());
     }
 }

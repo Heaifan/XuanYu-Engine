@@ -9,6 +9,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     void DrawAssist(CommandBuffer cb, float* scene, RenderDrawPlan.FrameEntry draw)
     {
+        if (draw.Kind == RenderDrawKind.MapBounds)
+        {
+            DrawMapBounds(cb, scene);
+            return;
+        }
+
         var mode = draw.Kind switch
         {
             RenderDrawKind.EditorBackground => -10.0f,

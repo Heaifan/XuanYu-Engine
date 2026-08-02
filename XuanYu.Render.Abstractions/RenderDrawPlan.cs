@@ -14,7 +14,8 @@ public static class RenderDrawPlan
     public const int GridVertexCount = 252;
     public const int OriginVertexCount = 36;
     public const int WorldAxesVertexCount = 108;
-
+    // D4：地图边界线（四条边 + 四角标识），CPU 生成细条四边形顶点。
+    public const int MapBoundsVertexCount = 8 * 3 * 2;
     public readonly record struct Entry(
         RenderEntityType EntityType,
         int VertexCount,
@@ -25,7 +26,6 @@ public static class RenderDrawPlan
         int VertexCount,
         int EntityIndex = -1,
         RenderEntityType? EntityType = null);
-
     public static IReadOnlyList<Entry> GetTypedDrawPlan(
         IReadOnlyList<RenderEntityProjection> entities)
     {
@@ -41,7 +41,6 @@ public static class RenderDrawPlan
         }
         return plan;
     }
-
     public static IReadOnlyList<(int VertexCount, bool IsOutline)> GetDrawPlan(
         IReadOnlyList<RenderEntityProjection> entities)
     {
@@ -53,11 +52,17 @@ public static class RenderDrawPlan
     public static IReadOnlyList<FrameEntry> GetFrameDrawPlan(RenderProjection projection)
     {
         var assist = projection.AssistState;
-        var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 5);
+        var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 6);
         if (assist.ShowEditorBackground) plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
         if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorGrid, GridVertexCount));
         if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
+        if (projection.HasMap)
+        {
+            // 地图存在时不再绘制无限编辑器网格，改为有限地表（顶点数由 CPU 网格决定，0=由 Renderer 解析）。
+            plan.RemoveAll(x => x.Kind == RenderDrawKind.EditorGrid);
+            plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
+        }
         for (var i = 0; i < projection.Entities.Count; i++)
         {
             var entity = projection.Entities[i];
@@ -72,7 +77,6 @@ public static class RenderDrawPlan
         else if (projection.GizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.MoveGizmo, MoveGizmoVertexCount));
         return plan;
     }
-
     static int FillVertices(RenderEntityProjection entity) =>
         entity.EntityType switch
         {
@@ -81,13 +85,13 @@ public static class RenderDrawPlan
             _ => FillVertexCount
         };
 }
-
 public enum RenderDrawKind
 {
     EditorBackground,
     EditorGrid,
     WorldOrigin,
     WorldAxes,
+    MapBounds,
     EntityFill,
     EntityOutline,
     MoveGizmo,

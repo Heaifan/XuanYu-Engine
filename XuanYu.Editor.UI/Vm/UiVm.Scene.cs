@@ -4,7 +4,6 @@ using XuanYu.Core.Space;
 using XuanYu.Render.Abstractions;
 using XuanYu.World.Scene;
 using XuanYu.World;
-
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
@@ -41,12 +40,13 @@ public sealed partial class UiVm
     public event Action<SceneRenderSnapshot>? RenderSnapshotChanged;
     public RenderProjectionResult RenderProjection => CreateRenderProjection(RenderSnapshot);
     public event Action<RenderProjectionResult>? RenderProjectionChanged;
-
     void ApplyRunCommand(string name)
     {
         if (TryToggleViewportAssist(name)) return;
         if (name is "聚焦") { FrameSelectedCamera(); return; }
         if (name is "查看全部") { FrameAllCamera("查看全部"); return; }
+        if (name is "加载地图") { LoadDefaultMap(); return; }
+        if (name is "卸载地图") { UnloadMap(); return; }
         FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}");
         FooterState = name is "运行" ? "状态：运行中" : "状态：就绪";
         if (name is "运行") CommitTestEntityPosition(new Vector3d(1.0, 0.0, 0.0));

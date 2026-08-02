@@ -37,6 +37,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         }
         _renderProjection = projection.Projection;
         _hasRenderProjection = true;
+        SetMapTerrain(projection.Projection.Map);
         return _views.Length == 0 || RecordCommandBuffers(_views);
     }
 }

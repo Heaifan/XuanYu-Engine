@@ -3,8 +3,9 @@ using XuanYu.World.Map;
 
 namespace XuanYu.Editor.MapDocument;
 
-// MAP-A-R1-D3：MapDocument（Editor 文档）→ WorldMapState（World 状态）桥接。
+// MAP-A-R1-D3/D4：MapDocument（Editor 文档）→ WorldMapState（World 状态）桥接。
 // 对齐 SceneDocumentWorldBridge 模式；D4 前不做反向桥接。
+// 环境语义：sunDirection = 光线传播方向（与 .xymap 合同一致，Z 分量通常为负=向下）。
 public static class MapDocumentWorldBridge
 {
     public static WorldMapState ToWorldState(MapDocument doc)
@@ -19,7 +20,12 @@ public static class MapDocumentWorldBridge
             doc.Surface.BaseHeightMeters,
             doc.Surface.AmplitudeMeters,
             doc.Surface.WavelengthMeters,
-            doc.Surface.Seed);
+            doc.Surface.Seed,
+            doc.Environment.SunDirection.X,
+            doc.Environment.SunDirection.Y,
+            doc.Environment.SunDirection.Z,
+            doc.Environment.SunIntensity,
+            doc.Environment.AmbientIntensity);
     }
 
     static MapSurfaceKind ParseKind(string kind) =>

@@ -279,7 +279,20 @@ vec3 axisVertex(int vi, out vec4 color) {
 }
 
 void main() {
-    if (pc.gizmoMode > -3.5 && pc.gizmoMode < -2.5) {
+    if (pc.gizmoMode < -14.5) {
+        // MAP-A-R1-D4：地图边界线（CPU 顶点，世界坐标），亮琥珀色。
+        gl_Position = pc.viewProjection * vec4(inPosition, 1.0);
+        vBaseColor = vec4(0.96, 0.72, 0.25, 1.0);
+    } else if (pc.gizmoMode < -13.5) {
+        // MAP-A-R1-D4：有限地表（CPU 网格顶点：世界坐标 + 法线 + 预计算亮度 uv.x）。
+        // 亮度由 MapTerrainMeshBuilder 用同一 MapSurfaceSampler 与 sunDirection 预计算。
+        vec3 n = normalize(inNormal);
+        float brightness = inUv0.x;
+        vec3 base = vec3(0.42, 0.52, 0.36);   // 地表基色：土绿
+        vec3 shaded = base * clamp(brightness, 0.0, 1.0);
+        gl_Position = pc.viewProjection * vec4(inPosition, 1.0);
+        vBaseColor = vec4(min(shaded, vec3(1.0)), 1.0);
+    } else if (pc.gizmoMode > -3.5 && pc.gizmoMode < -2.5) {
         mat3 R = eulerRot(pc.entityRotation.xyz);
         vec3 local = inPosition * pc.entityScale.xyz;
         vec3 n = normalize(R * (inNormal / max(abs(pc.entityScale.xyz), vec3(0.0001))));

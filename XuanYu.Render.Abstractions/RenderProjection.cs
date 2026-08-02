@@ -1,3 +1,4 @@
+using XuanYu.Core.Map;
 using XuanYu.Core.Math;
 
 namespace XuanYu.Render.Abstractions;
@@ -14,9 +15,11 @@ public readonly record struct RenderProjection(
     Vector3d GizmoRotation = default,
     EditorViewportAssistState Assist = default,
     double MoveGizmoWorldRadius = 1.2,
-    IReadOnlyList<RenderStaticModelResource>? StaticModels = null)
+    IReadOnlyList<RenderStaticModelResource>? StaticModels = null,
+    MapRenderSnapshot Map = default)
 {
     public int EntityCount => Entities.Count;
     public EditorViewportAssistState AssistState => Assist;
     public IReadOnlyList<RenderStaticModelResource> StaticModelResources => StaticModels ?? [];
+    public bool HasMap => Map.HasMap;
 }
