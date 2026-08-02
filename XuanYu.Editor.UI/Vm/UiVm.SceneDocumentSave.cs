@@ -9,8 +9,8 @@ public sealed partial class UiVm
         CommitActiveInteractionForSave();
         var target = path ?? _documentSession.CurrentPath;
         if (string.IsNullOrWhiteSpace(target)) return false;
-        var snapshot = SceneDocumentWorldBridge.Capture(
-            _sceneState, _documentSession.SceneId, _documentSession.SceneName, _staticModelCatalog);
+        var snapshot = WithMapReference(SceneDocumentWorldBridge.Capture(
+            _sceneState, _documentSession.SceneId, _documentSession.SceneName, _staticModelCatalog), target);
         SetSceneBusy(true);
         FooterState = "状态：正在保存";
         var result = await _saveTransaction.ExecuteAsync(target, snapshot, _staticModelCatalog.Snapshot);

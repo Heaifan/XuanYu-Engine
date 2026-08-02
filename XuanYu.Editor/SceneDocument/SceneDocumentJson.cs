@@ -7,7 +7,13 @@ sealed record SceneDocumentJson(
     [property: JsonPropertyOrder(1)] int SchemaVersion,
     [property: JsonPropertyOrder(2)] SceneInfoJson Scene,
     [property: JsonPropertyOrder(3)] IReadOnlyList<SceneEntityJson> Entities,
-    [property: JsonPropertyOrder(4)] IReadOnlyList<SceneAssetJson>? Assets = null);
+    [property: JsonPropertyOrder(4)] IReadOnlyList<SceneAssetJson>? Assets = null,
+    [property: JsonPropertyOrder(5)] MapReferenceJson? MapReference = null);
+
+// MAP-A-R1-D5-B：可选地图引用（v4，旧场景无此字段正常打开）。
+sealed record MapReferenceJson(
+    [property: JsonPropertyOrder(0)] string MapId,
+    [property: JsonPropertyOrder(1)] string AssetPath);
 
 sealed record SceneInfoJson(
     [property: JsonPropertyOrder(0)] string Id,

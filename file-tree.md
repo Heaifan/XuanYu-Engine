@@ -21,6 +21,10 @@
 - `XuanYu.Editor.UI/Win/UiWin.MapCommands.cs`：.xymap 文件选择器（打开/保存）。
 - `XuanYu.World.Tests/World/UiViewGizmoTests.cs`：视角 Gizmo 测试（六方向/中心距离保持/选择保持）。
 - `XuanYu.World.Tests/World/UiMapEditorTests.cs`：地图编辑器闭环测试（新建/保存打开/卸载/失败不污染）。
+- `XuanYu.Editor/SceneDocument/MapReference.cs`：场景地图引用（mapId + 相对路径，只引用不复制）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentValidator.MapReference.cs`：mapReference 校验（空=旧场景兼容）。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentMapRef.cs`：场景保存附加引用 / 打开解析加载 / 引用失效标记。
+- `XuanYu.World.Tests/World/SceneMapReferenceTests.cs`：场景地图引用闭环测试（携带/恢复/旧场景/失效）。
 
 ## MAP-A-R1-D3 职责索引（v0.2.24.2-rz）
 

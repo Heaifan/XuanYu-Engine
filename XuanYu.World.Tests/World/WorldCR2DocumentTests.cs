@@ -18,7 +18,7 @@ public sealed class WorldCR2DocumentTests
 
         Assert.True((await storage.SaveAsync(path, snapshot)).Succeeded);
         using var json = JsonDocument.Parse(await File.ReadAllTextAsync(path));
-        Assert.Equal(3, json.RootElement.GetProperty("schemaVersion").GetInt32());
+        Assert.Equal(4, json.RootElement.GetProperty("schemaVersion").GetInt32());
         Assert.Equal(WorldEntityTypes.Cube,
             json.RootElement.GetProperty("entities")[0].GetProperty("entityType").GetString());
         var loaded = await storage.LoadAsync(path);
@@ -41,9 +41,9 @@ public sealed class WorldCR2DocumentTests
     }
 
     [Theory]
-    [InlineData(2, "", "MissingEntityType")]
-    [InlineData(2, ",\"entityType\":\"Sphere\"", "UnknownEntityType")]
-    [InlineData(4, ",\"entityType\":\"Cube\"", "UnsupportedSchema")]
+    [InlineData(4, ",\"entityType\":\"Sphere\"", "UnknownEntityType")]
+    [InlineData(4, ",\"entityType\":\"StaticModel\"", "MissingEntityAssetId")]
+    [InlineData(5, ",\"entityType\":\"Cube\"", "UnsupportedSchema")]
     public async Task Invalid_schema_or_type_is_rejected(int version, string typeLine, string code)
     {
         var path = TempScene();

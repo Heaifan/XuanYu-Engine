@@ -20,7 +20,7 @@ public sealed class UiMapEditorTests
     }
 
     [Fact]
-    public void Save_then_open_round_trips_full_document()
+    public async Task Save_then_open_round_trips_full_document()
     {
         var vm = new UiVm(null, () => true);
         vm.NewMap();
@@ -28,12 +28,12 @@ public sealed class UiMapEditorTests
         Directory.CreateDirectory(dir);
         var path = Path.Combine(dir, "roundtrip.xymap");
 
-        Assert.True(vm.SaveMapAsync(path).GetAwaiter().GetResult());
+        Assert.True(await vm.SaveMapAsync(path));
         Assert.Equal("已保存", vm.MapStatusText);
         var savedMapId = vm.MapIdText;
 
         var reopened = new UiVm(null, () => true);
-        Assert.True(reopened.OpenMapAsync(path).GetAwaiter().GetResult());
+        Assert.True(await reopened.OpenMapAsync(path));
         Assert.Equal("TestBattlefield", reopened.MapName);
         Assert.Equal(savedMapId, reopened.MapIdText);
         Assert.Equal("已保存", reopened.MapStatusText);
@@ -53,13 +53,13 @@ public sealed class UiMapEditorTests
     }
 
     [Fact]
-    public void Open_missing_file_fails_without_touching_current_map()
+    public async Task Open_missing_file_fails_without_touching_current_map()
     {
         var vm = new UiVm(null, () => true);
         vm.NewMap();
         var missing = Path.Combine(Path.GetTempPath(), "missing-map.xymap");
 
-        Assert.False(vm.OpenMapAsync(missing).GetAwaiter().GetResult());
+        Assert.False(await vm.OpenMapAsync(missing));
         Assert.True(vm.HasMap, "失败时原地图保持不变");
         Assert.Equal("TestBattlefield", vm.MapName);
     }

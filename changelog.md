@@ -12,6 +12,8 @@ MAP-A-R1-D4 有限地表渲染与自动取景（2026-08-02 21:46:52，Commit 9d1
 - 验证结果（F5 追加）：串行 build 12 项目 0 error / 1 warning（既有 xUnit2013）；Core 148/148、World 423/423、WarCore 22/22；arch-a-guard PASS；glslc 重新生成 ShaderBytecode（8293 词，79 行）逐字比对一致，新天空色与太阳常量全部在字节码中。
 - D5-A 正式地图编辑器（用户真机裁定后追加，独立轮次）：右侧一级模块新增「地图编辑器」Tab（检查器之后，与检查器平级）——地图资产区（名称/路径/MapId/尺寸/状态：未加载/已保存/未保存）+ 新建/打开/保存/卸载/聚焦五命令；新建默认 TestBattlefield 2000×2000，复用 D2 MapDocumentOwner/MapStorageService（候选加载+原子保存）与 D3 WorldMapStateOwner，无第二套系统；打开失败保持原地图不变；第二排「加载测试地图/卸载地图」临时按钮已删除；基础地表/环境编辑组留 D5 后续补齐。新增 UiVm.MapEditor.cs（文档状态+命令，100 行）、UiWin.MapCommands.cs（.xymap 文件选择器）、MapEditorPanel.axaml（面板，Right.axaml 引用）；测试 UiMapEditorTests 4 项（新建入 World+Dirty、保存/打开 Round-trip、卸载清空、打开失败不污染）。
 - 验证结果（D5-A 追加）：串行 build 12 项目 0 error；Core 148/148、World 430/430（含 D5-A 新增 4 项）、WarCore 22/22；arch-a-guard PASS（5+100 全过）；git diff --check PASS。
+- D5-B 场景地图引用（独立轮次）：`.xyscene` schema v3 → v4，新增可选 `mapReference{mapId, assetPath}`（只存 mapId + 相对场景目录路径，不复制地图尺寸/地表/环境参数）；旧场景无 mapReference 正常打开；Validator 校验 mapId 合法 + 路径安全（非法拒绝），无效引用场景主体仍打开、地图编辑器显示「引用失效」+ 路径原因、不自动创建默认地图。新增 MapReference.cs、SceneDocumentValidator.MapReference.cs（校验拆分，Validator 保持 100 行）；SceneDocumentJson/Mapper/Snapshot 双向映射；UiVm.SceneDocumentMapRef.cs（保存附加引用 + 打开解析加载）；测试 SceneMapReferenceTests 4 项（保存携带/打开恢复/旧场景兼容/缺失失效）。
+- 验证结果（D5-B 追加）：串行 build 12 项目 0 error；Core 148/148、World 434/434（含 D5-B 新增 4 项 + schema v4 断言更新 3 处）、WarCore 22/22；arch-a-guard PASS；git diff --check PASS。
 - 状态：MAP-A-R1-D4 真机人工验收待用户执行（IPO 清单见报告）；验收通过后 D4 CLOSED，进入 MAP-A-R1-D5 正式地图编辑器与场景引用。
 
 ## v0.2.24.2-rz

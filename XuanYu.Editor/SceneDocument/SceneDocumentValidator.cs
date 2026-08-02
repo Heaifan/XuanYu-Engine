@@ -4,16 +4,18 @@ using XuanYu.World;
 
 namespace XuanYu.Editor.SceneDocument;
 
-static class SceneDocumentValidator
+static partial class SceneDocumentValidator
 {
     public static SceneDocumentResult<SceneDocumentJson> Validate(SceneDocumentJson? doc)
     {
         if (doc is null) return Fail("BrokenJson", "场景文件结构损坏。", "Parse");
         if (doc.Format != "XuanYuScene") return Fail("UnsupportedFormat", "不是玄域场景文件。", "Schema", "format");
-        if (doc.SchemaVersion is < 1 or > 3) return Fail("UnsupportedSchema", "场景文件版本不受支持。", "Schema", "schemaVersion");
+        if (doc.SchemaVersion is < 1 or > 4) return Fail("UnsupportedSchema", "场景文件版本不受支持。", "Schema", "schemaVersion");
         if (doc.Scene is null || doc.Entities is null)
             return Fail("BrokenJson", "场景文件结构损坏。", "Validate");
         if (string.IsNullOrWhiteSpace(doc.Scene.Id)) return Fail("InvalidSceneId", "场景ID不能为空。", "Validate", "scene.id");
+
+        if (!ValidateMapReference(doc.MapReference)) return Fail("InvalidMapReference", "地图引用非法。", "Validate", "mapReference");
 
         var assets = doc.Assets ?? [];
         var assetIds = new HashSet<string>(StringComparer.Ordinal);

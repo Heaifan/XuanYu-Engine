@@ -20,7 +20,7 @@ public sealed class WorldCR4D4SaveTransactionTests : IDisposable
 
         Assert.True(result.Succeeded);
         var text = await File.ReadAllTextAsync(scenePath);
-        Assert.Contains("\"schemaVersion\": 3", text);
+        Assert.Contains("\"schemaVersion\": 4", text);
         Assert.Contains($"\"assetId\": \"{assetId}\"", text);
         Assert.Contains("\"kind\": \"ModelGltf\"", text);
         Assert.Contains("models/", text);

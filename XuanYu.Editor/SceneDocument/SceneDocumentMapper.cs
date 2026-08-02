@@ -8,9 +8,12 @@ namespace XuanYu.Editor.SceneDocument;
 static class SceneDocumentMapper
 {
     public static SceneDocumentJson ToJson(SceneDocumentSnapshot snapshot) =>
-        new("XuanYuScene", 3, new SceneInfoJson(snapshot.SceneId, snapshot.SceneName),
+        new("XuanYuScene", 4, new SceneInfoJson(snapshot.SceneId, snapshot.SceneName),
             snapshot.Entities.OrderBy(e => e.SiblingOrder).ThenBy(e => e.Id.Value).Select(ToJson).ToArray(),
-            snapshot.Assets?.OrderBy(a => a.AssetId, StringComparer.Ordinal).Select(ToJson).ToArray());
+            snapshot.Assets?.OrderBy(a => a.AssetId, StringComparer.Ordinal).Select(ToJson).ToArray(),
+            snapshot.MapReference is { } map
+                ? new MapReferenceJson(map.MapId, map.AssetPath)
+                : null);
 
     public static SceneEntityJson ToJson(SceneDocumentEntity entity)
     {
@@ -25,7 +28,8 @@ static class SceneDocumentMapper
 
     public static SceneDocumentSnapshot ToSnapshot(SceneDocumentJson doc) =>
         new(doc.Scene.Id, doc.Scene.Name, doc.Entities.Select(ToEntity).ToArray(),
-            doc.Assets?.Select(ToAsset).ToArray());
+            doc.Assets?.Select(ToAsset).ToArray(),
+            doc.MapReference is { } map ? new MapReference(map.MapId, map.AssetPath) : null);
 
     static SceneDocumentEntity ToEntity(SceneEntityJson entity) =>
         new(EntityId.FromInt(entity.Id), entity.Name,

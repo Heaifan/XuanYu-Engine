@@ -56,7 +56,9 @@ public sealed partial class UiVm
         _historyOwner.Clear();
         _documentSession.MarkLoaded(path, value.Snapshot);
         ApplySelectionCommand(new ClearEditorSelectionCommand(), "打开场景");
-        FooterMessage = value.HasUnavailableAssets ? "场景已打开，部分资源不可用。" : "场景已打开。";
+        await ResolveMapReferenceAsync(value.Snapshot, path);
+        if (string.IsNullOrEmpty(MapReferenceError))
+            FooterMessage = value.HasUnavailableAssets ? "场景已打开，部分资源不可用。" : "场景已打开。";
         LogSceneLoadSuccess(path, value.Entities.Count);
         SetSceneBusy(false);
         RaiseDocumentChanged();
