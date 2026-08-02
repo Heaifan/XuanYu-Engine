@@ -47,6 +47,7 @@ public sealed partial class UiVm
         if (name is "查看全部") { FrameAllCamera("查看全部"); return; }
         if (name is "加载地图") { LoadDefaultMap(); return; }
         if (name is "卸载地图") { UnloadMap(); return; }
+        if (TryApplyViewFaceCommand(name)) return;
         FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}");
         FooterState = name is "运行" ? "状态：运行中" : "状态：就绪";
         if (name is "运行") CommitTestEntityPosition(new Vector3d(1.0, 0.0, 0.0));
@@ -89,12 +90,11 @@ public sealed partial class UiVm
         var entity = _sceneState.RenderSnapshot.Entity;
         if (!entity.IsValid) return ["实体：无"];
         var position = entity.Transform.Position;
-        return
-        [
+        return [
             $"实体编号：{EditorDisplayText.Entity(entity.EntityKey)}",
             $"名称：{entity.Name}",
             $"类型：{EditorDisplayText.EntityType(entity.Type)}",
-            $"位置：{EditorDisplayText.Position(position)}"
+            $"位置：{EditorDisplayText.Position(position)}",
         ];
     }
 }

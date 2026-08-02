@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.ViewGizmo"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <Style Selector="Button.viewFace">
+      <Setter Property="MinWidth" Value="26"/>
+      <Setter Property="MinHeight" Value="26"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="Margin" Value="2"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Background" Value="#8fa6c4"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    <Style Selector="Button.viewFace:pointerover">
+      <Setter Property="Background" Value="#a8bcd8"/>
+    </Style>
+    <Style Selector="Button.viewFace:pressed">
+      <Setter Property="Background" Value="#7d95b5"/>
+    </Style>
+    <Style Selector="Border.viewCurrent">
+      <Setter Property="MinWidth" Value="26"/>
+      <Setter Property="MinHeight" Value="26"/>
+      <Setter Property="Margin" Value="2"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Background" Value="#a8bcd8"/>
+      <Setter Property="BorderBrush" Value="#e8a33d"/>
+      <Setter Property="BorderThickness" Value="2"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Border CornerRadius="10" Background="#dce6f2" BorderBrush="#b9c8dd" BorderThickness="1"
+          Padding="6" HorizontalAlignment="Right" VerticalAlignment="Top"
+          Margin="0,12,12,0" BoxShadow="0 4 12 0 #330f172a">
+    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto,Auto">
+      <Button Classes="viewFace" Grid.Row="0" Grid.Column="1" Content="顶"
+              Command="{Binding RunCommand}" CommandParameter="视角-顶"/>
+      <Button Classes="viewFace" Grid.Row="1" Grid.Column="0" Content="左"
+              Command="{Binding RunCommand}" CommandParameter="视角-左"/>
+      <Border Classes="viewCurrent" Grid.Row="1" Grid.Column="1">
+        <TextBlock Text="{Binding ActiveViewFace}" Foreground="White" FontWeight="SemiBold"
+                   FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <Button Classes="viewFace" Grid.Row="1" Grid.Column="2" Content="右"
+              Command="{Binding RunCommand}" CommandParameter="视角-右"/>
+      <Button Classes="viewFace" Grid.Row="2" Grid.Column="1" Content="底"
+              Command="{Binding RunCommand}" CommandParameter="视角-底"/>
+      <Button Classes="viewFace" Grid.Row="2" Grid.Column="0" Content="前"
+              Command="{Binding RunCommand}" CommandParameter="视角-前"/>
+      <Button Classes="viewFace" Grid.Row="2" Grid.Column="2" Content="后"
+              Command="{Binding RunCommand}" CommandParameter="视角-后"/>
+    </Grid>
+  </Border>
+</UserControl>
