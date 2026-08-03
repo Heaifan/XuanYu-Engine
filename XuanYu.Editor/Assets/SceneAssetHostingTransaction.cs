@@ -63,6 +63,7 @@ public sealed partial class SceneAssetHostingTransaction
 
     void CleanupStaging()
     {
+        // 回滚清理失败不影响已确定的事务失败结果（best-effort）；不得让清理异常覆盖原始异常。
         try { if (Directory.Exists(_plan.StagingRootPath)) Directory.Delete(_plan.StagingRootPath, true); }
         catch (IOException) { }
         catch (UnauthorizedAccessException) { }

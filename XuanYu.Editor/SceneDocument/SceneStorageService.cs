@@ -68,6 +68,7 @@ public sealed class SceneStorageService
 
     static void TryDeleteTemp(string path)
     {
+        // 清理辅助失败不影响已确定的失败结果（best-effort）；不得让清理异常覆盖原始保存异常。
         try { if (File.Exists(path)) File.Delete(path); }
         catch (IOException) { }
         catch (UnauthorizedAccessException) { }

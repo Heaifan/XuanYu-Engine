@@ -45,6 +45,7 @@ public sealed class LogListAutoScrollController : IDisposable
     {
         _pendingScroll = false;
         if (_scroll is null) return;
+        // 列表模板重建/分离期间滚动目标失效（控件生命周期竞态）；已优先用 _scroll 空检查缩窄，此异常可安全忽略。
         try { _scroll.ScrollToEnd(); }
         catch (InvalidOperationException) { }
     }

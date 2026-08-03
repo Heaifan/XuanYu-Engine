@@ -72,8 +72,10 @@ public sealed partial class RotateGizmoDrag
     {
         var ndc = ToNdc(x, y);
         Vector3d worldPoint;
+        // 投影退化（非有限 NDC / W=0）时本帧无有效平面命中，回退 null（不命中），不污染任何状态。
         try { worldPoint = _state.TransformPointToWorld(ndc.X, ndc.Y, 0.0); }
-        catch { return null; }
+        catch (ArgumentOutOfRangeException) { return null; }
+        catch (InvalidOperationException) { return null; }
         var dir = (worldPoint - _eye).Normalize();
         var normal = AxisUnit(_axis);
         var denom = dir.Dot(normal);
