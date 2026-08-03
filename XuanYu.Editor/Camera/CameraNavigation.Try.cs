@@ -12,12 +12,24 @@ public static partial class CameraNavigation
     const double MaxPitch = 1.4835298641951802;
     const double MinDistance = 0.25;
     const double MaxDistance = 1_000_000_000.0;
+    const double MinOrthoScale = 0.001;
+    const double MaxOrthoScale = 1_000_000.0;
 
     public static bool TryDolly(CameraState start, Vector3d center, double wheelDelta, long revision,
         out CameraFrameResult result, out string failureReason)
     {
         result = default; failureReason = "";
         if (!double.IsFinite(wheelDelta) || wheelDelta == 0.0) { failureReason = "滚轮增量无效或为零"; return false; }
+        // F3-F4：正交模式缩放使用 OrthographicScale，不得用距离模拟缩放（用户冻结）。
+        if (start.Mode == ProjectionMode.Orthographic)
+        {
+            var nextScale = ClampOrthoScale(start.OrthographicScale * global::System.Math.Pow(0.85, wheelDelta));
+            result = new CameraFrameResult(
+                new CameraState(start.Position, start.Forward, start.Up, start.VerticalFovDegrees,
+                    start.NearPlane, start.FarPlane, revision, ProjectionMode.Orthographic, nextScale),
+                center);
+            return true;
+        }
         var distance = ClampDistance(start.Position.DistanceTo(center));
         var nextDistance = ClampDistance(distance * global::System.Math.Pow(0.85, wheelDelta));
         var position = center - (start.Forward * nextDistance);
@@ -48,6 +60,14 @@ public static partial class CameraNavigation
         out CameraFrameResult result, out string failureReason)
     {
         result = default; failureReason = "";
+        // F3-F4：正交平移按正交尺度换算（每像素世界距离 = 尺度 / 视口高），保持正交模式。
+        if (start.Mode == ProjectionMode.Orthographic)
+        {
+            var orthoScale = start.OrthographicScale / height;
+            var orthoTranslation = ((-start.Right * dx) + (start.Up * dy)) * orthoScale;
+            return TryResult(start, start.Position + orthoTranslation, center + orthoTranslation, revision, start.Up,
+                out result, out failureReason, ProjectionMode.Orthographic, start.OrthographicScale);
+        }
         var distance = ClampDistance(start.Position.DistanceTo(center));
         var scale = PanScale(start.VerticalFovDegrees, distance, height);
         var translation = ((-start.Right * dx) + (start.Up * dy)) * scale;
@@ -56,7 +76,8 @@ public static partial class CameraNavigation
     }
 
     static bool TryResult(CameraState start, Vector3d position, Vector3d center, long revision,
-        Vector3d preferredUp, out CameraFrameResult result, out string failureReason)
+        Vector3d preferredUp, out CameraFrameResult result, out string failureReason,
+        ProjectionMode mode = ProjectionMode.Perspective, double orthographicScale = 0.0)
     {
         result = default; failureReason = "";
         // 统一正交基路径：PreferredUp 由调用方决定（Orbit=世界 +Z 防 Roll；Dolly/Pan=start.Up 保留语义）；
@@ -69,8 +90,11 @@ public static partial class CameraNavigation
         var far = global::System.Math.Max(start.FarPlane, position.DistanceTo(center) * 4.0);
         result = new CameraFrameResult(
             new CameraState(position, forward, up,
-                start.VerticalFovDegrees, start.NearPlane, far, revision),
+                start.VerticalFovDegrees, start.NearPlane, far, revision, mode, orthographicScale),
             center);
         return true;
     }
+
+    static double ClampOrthoScale(double value) =>
+        global::System.Math.Clamp(value, MinOrthoScale, MaxOrthoScale);
 }

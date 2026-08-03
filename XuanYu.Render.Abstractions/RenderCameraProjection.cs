@@ -10,14 +10,16 @@ public readonly record struct RenderCameraProjection(
     double VerticalFovDegrees,
     double NearPlane,
     double FarPlane,
-    long Revision)
+    long Revision,
+    ProjectionMode Mode = ProjectionMode.Perspective,
+    double OrthographicScale = 0.0)
 {
     public ViewProjectionState ToViewProjection(ViewportState viewport)
     {
         var camera = new CameraState(
             Position, Forward, Up,
             VerticalFovDegrees, NearPlane, FarPlane,
-            Revision);
+            Revision, Mode, OrthographicScale);
         return ViewProjectionState.Create(camera, viewport);
     }
 

@@ -68,11 +68,33 @@ public sealed class ReferenceGridDrawPlanTests
         var planAllOff = RenderDrawPlan.GetFrameDrawPlan(Projection(false, false, false, showAxes: false, showOrigin: false)).ToList();
         Assert.DoesNotContain(planAllOff, e => e.Kind is RenderDrawKind.EditorReferenceGrid or RenderDrawKind.WorldAxes or RenderDrawKind.WorldOrigin);
     }
-
     [Fact]
     public void Grid_absent_when_show_grid_disabled()
     {
         var plan = RenderDrawPlan.GetFrameDrawPlan(Projection(true, true, false));
         Assert.DoesNotContain(plan, e => e.Kind == RenderDrawKind.EditorReferenceGrid);
+    }
+
+    // F3-F4：正交标准视图启用视图平面网格时替代地面网格条目；非标准视图无视图平面网格。
+    [Fact]
+    public void View_plane_grid_entry_replaces_reference_grid()
+    {
+        var ortho = new RenderProjection(default, [], true, Vector3d.Zero,
+            Assist: new EditorViewportAssistState(ShowGrid: true, ShowOrigin: false,
+                ShowWorldAxes: false, ShowEditorBackground: false,
+                ViewPlaneGrid: EditorViewPlaneGridKind.YZ));
+        var plan = RenderDrawPlan.GetFrameDrawPlan(ortho);
+        Assert.Contains(plan, e => e.Kind == RenderDrawKind.EditorViewPlaneGrid);
+        Assert.DoesNotContain(plan, e => e.Kind == RenderDrawKind.EditorReferenceGrid);
+    }
+    [Fact]
+    public void No_view_plane_grid_without_standard_view()
+    {
+        var perspective = new RenderProjection(default, [], true, Vector3d.Zero,
+            Assist: new EditorViewportAssistState(ShowGrid: true, ShowOrigin: false,
+                ShowWorldAxes: false, ShowEditorBackground: false));
+        var plan = RenderDrawPlan.GetFrameDrawPlan(perspective);
+        Assert.Contains(plan, e => e.Kind == RenderDrawKind.EditorReferenceGrid);
+        Assert.DoesNotContain(plan, e => e.Kind == RenderDrawKind.EditorViewPlaneGrid);
     }
 }

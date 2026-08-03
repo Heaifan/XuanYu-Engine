@@ -41,42 +41,14 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 else if (draw.Kind == RenderDrawKind.WorldOrigin) DrawWorldOrigin(cb);
                 else if (draw.Kind == RenderDrawKind.WorldAxes) DrawWorldAxes(cb);
                 else if (draw.Kind == RenderDrawKind.NavigationGizmo) DrawNavigationGizmo(cb);
+                else if (draw.Kind == RenderDrawKind.EditorViewPlaneGrid) DrawViewPlaneGrid(cb);
                 else if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);
                 else if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
                 else DrawGizmo(cb, pScene, draw);
             }
         }
     }
-    void BindFramePipeline(CommandBuffer cb, RenderDrawKind kind)
-    {
-        if (kind == RenderDrawKind.EditorReferenceGrid)
-        {
-            if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _gridPipeline); return;
-        }
-        if (kind == RenderDrawKind.WorldOrigin)
-        {
-            if (_originPipeline.Handle == 0 || _originPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _originPipeline); return;
-        }
-        if (kind == RenderDrawKind.WorldAxes)
-        {
-            if (_axesPipeline.Handle == 0 || _axesPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _axesPipeline); return;
-        }
-        if (kind == RenderDrawKind.NavigationGizmo)
-        {
-            if (_navGizmoPipeline.Handle == 0 || _navGizmoPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _navGizmoPipeline); return;
-        }
-        if (kind != RenderDrawKind.EditorBackground)
-        {
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _pipeline);
-            return;
-        }
-        if (_skyPipeline.Handle == 0 || _skyPipelineLayout.Handle == 0) return;
-        _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _skyPipeline);
-    }    void BindProceduralVertexBuffer(CommandBuffer cb)
+    void BindProceduralVertexBuffer(CommandBuffer cb)
     {
         if (_proceduralVertexBuffer is null) return;
         var buffer = _proceduralVertexBuffer.Buffer;

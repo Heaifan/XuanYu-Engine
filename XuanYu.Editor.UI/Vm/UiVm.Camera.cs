@@ -36,7 +36,9 @@ public sealed partial class UiVm
         _camera.VerticalFovDegrees,
         _camera.NearPlane,
         _camera.FarPlane,
-        Math.Max(revision, _camera.Revision));
+        Math.Max(revision, _camera.Revision),
+        _camera.Mode,
+        _camera.OrthographicScale);
 
     public void UpdateViewportFrame(int width, int height)
     {
@@ -52,33 +54,7 @@ public sealed partial class UiVm
         _viewportCameraFramed = true;
         FrameAllCamera("启动看全");
     }
-    void FrameAllCamera(string source)
-    {
-        var frame = EditorCameraFraming.FrameAllWithCenter(
-            _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position),
-            _viewportAspect,
-            ++_cameraRevision);
-        _camera = frame.Camera;
-        _observationCenter = frame.ObservationCenter;
-        PublishSceneRenderSnapshot();
-        FooterMessage = $"{source}：当前可见实体已进入视野。";
-    }
 
-    void FrameSelectedCamera()
-    {
-        if (!TrySelectedEntityKey(out var key) || !_sceneState.TryGetEntity(key, out var entity))
-        {
-            FrameAllCamera("未选中实体，查看全部");
-            return;
-        }
-
-        var frame = EditorCameraFraming.FrameSelectedWithCenter(entity.Transform.Position,
-            _viewportAspect, ++_cameraRevision);
-        _camera = frame.Camera;
-        _observationCenter = frame.ObservationCenter;
-        PublishSceneRenderSnapshot();
-        FooterMessage = $"聚焦：{EditorDisplayText.Entity(EntityId.FromInt(key.Value))} 已进入视野。";
-    }
     void ResetCameraForSceneReplacement(bool frameEntities = false)
     {
         if (frameEntities)

@@ -19,7 +19,8 @@ public sealed partial class UiVm
     public string EditorBackgroundDisplayText => AssistText("编辑器背景", _showEditorBackground);
 
     EditorViewportAssistState ViewportAssistState => new(
-        _showGrid, _showOrigin, _showWorldAxes, _showEditorBackground);
+        _showGrid, _showOrigin, _showWorldAxes, _showEditorBackground,
+        ViewPlaneGrid: StandardViewResolver.ViewPlaneGridFor(_activeViewFace));
 
     bool TryToggleViewportAssist(string name)
     {

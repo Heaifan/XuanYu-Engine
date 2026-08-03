@@ -1,4 +1,5 @@
 using XuanYu.Core.Math;
+using XuanYu.Core.Space;
 using XuanYu.Editor.Camera;
 
 namespace XuanYu.Editor.UI;
@@ -86,6 +87,12 @@ public sealed partial class UiVm
     {
         _camera = result.Camera;
         _observationCenter = result.ObservationCenter;
+        // F3-F4：从标准正交视图开始自由环绕时退出标准视图——Orbit 输出透视（恢复自由观察）。
+        if (_activeViewFace != "默认视角" && _camera.Mode == ProjectionMode.Perspective)
+        {
+            _activeViewFace = "默认视角";
+            OnPropertyChanged(nameof(ActiveViewFace));
+        }
         // F3-D3：导航 Gizmo 实时跟随相机姿态。
         OnPropertyChanged(nameof(NavigationCamera));
         PublishSceneRenderSnapshot();

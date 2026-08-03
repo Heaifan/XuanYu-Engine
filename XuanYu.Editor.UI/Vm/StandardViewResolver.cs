@@ -1,5 +1,6 @@
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
+using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
 
@@ -38,5 +39,14 @@ public static class StandardViewResolver
         "+Z" => Top,
         "-Z" => Bottom,
         _ => $"{endpoint} 视图",
+    };
+
+    // F3-F4：标准视图对应的视图平面网格类型。
+    // ±X → YZ 平面、±Y → XZ 平面；±Z（顶/底）→ None（Z=0 地面网格即 XY 平面，复用现有网格）。
+    public static EditorViewPlaneGridKind ViewPlaneGridFor(string name) => name switch
+    {
+        "+X 视图" or "-X 视图" => EditorViewPlaneGridKind.YZ,
+        "+Y 视图" or "-Y 视图" => EditorViewPlaneGridKind.XZ,
+        _ => EditorViewPlaneGridKind.None,
     };
 }

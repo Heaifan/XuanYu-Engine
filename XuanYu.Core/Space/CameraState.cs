@@ -14,7 +14,9 @@ public readonly record struct CameraState
         double verticalFovDegrees,
         double nearPlane,
         double farPlane,
-        long revision)
+        long revision,
+        ProjectionMode mode = ProjectionMode.Perspective,
+        double orthographicScale = 0.0)
     {
         ValidateFinite(position, nameof(position));
         ValidateFinite(forward, nameof(forward));
@@ -30,6 +32,11 @@ public readonly record struct CameraState
         if (!double.IsFinite(nearPlane) || nearPlane <= 0.0) throw new ArgumentOutOfRangeException(nameof(nearPlane));
         if (!double.IsFinite(farPlane) || farPlane <= nearPlane) throw new ArgumentOutOfRangeException(nameof(farPlane));
         if (revision < 0) throw new ArgumentOutOfRangeException(nameof(revision));
+        if (mode == ProjectionMode.Orthographic &&
+            (!double.IsFinite(orthographicScale) || orthographicScale <= 0.0))
+        {
+            throw new ArgumentOutOfRangeException(nameof(orthographicScale));
+        }
 
         Position = position;
         Forward = forward.Normalize();
@@ -39,6 +46,8 @@ public readonly record struct CameraState
         NearPlane = nearPlane;
         FarPlane = farPlane;
         Revision = revision;
+        Mode = mode;
+        OrthographicScale = mode == ProjectionMode.Orthographic ? orthographicScale : 0.0;
     }
 
     public Vector3d Position { get; }
@@ -56,6 +65,11 @@ public readonly record struct CameraState
     public double FarPlane { get; }
 
     public long Revision { get; }
+
+    public ProjectionMode Mode { get; }
+
+    // 正交视图高度（米）；透视模式下恒为 0。
+    public double OrthographicScale { get; }
 
     static void ValidateFinite(Vector3d vector, string name)
     {

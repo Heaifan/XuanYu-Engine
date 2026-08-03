@@ -3,7 +3,7 @@ using XuanYu.Core.Space;
 
 namespace XuanYu.Editor.Camera;
 
-public static class EditorCameraFraming
+public static partial class EditorCameraFraming
 {
     const double DefaultFov = 60.0;
     const double Padding = 1.35;

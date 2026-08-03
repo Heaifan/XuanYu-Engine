@@ -57,7 +57,12 @@ public static class RenderDrawPlan
         // F2-R2 顺序（方案 12）：地形 → 网格 → 原点 → 轴 → 实体填充 → 轮廓 → Gizmo。
         // 网格画在地形之上（深度偏移），原点/轴覆盖网格，实体最终遮挡一切。
         if (projection.HasMap) plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
-        if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
+        if (assist.ViewPlaneGrid != EditorViewPlaneGridKind.None)
+        {
+            // F3-F4：正交标准视图的视图平面网格（±X→YZ / ±Y→XZ），画在地面网格同一层。
+            plan.Add(new FrameEntry(RenderDrawKind.EditorViewPlaneGrid, ReferenceGridVertexCount));
+        }
+        else if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
         if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
@@ -91,5 +96,5 @@ public static class RenderDrawPlan
 public enum RenderDrawKind
 {
     EditorBackground, EditorReferenceGrid, WorldOrigin, WorldAxes, MapBounds,
-    EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo, NavigationGizmo
+    EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo, NavigationGizmo, EditorViewPlaneGrid
 }

@@ -20,6 +20,17 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.17-fix
+MAP-A-R1-D5-R1-F3-F4 正交投影 + 视图平面网格（2026-08-03，Commit 本轮落库为准）
+- **F3-F3 正式 PASS/CLOSED**：用户补充真机验收事实（此前未同步），本轮不重验、不补跑。
+- **正交投影链路**：`CameraState` 新增 `ProjectionMode`（Perspective/Orthographic）+ `OrthographicScale`（>0 校验）；`ViewProjectionState.Create` 正交矩阵分支（`CreateOrthographic`，与透视同族深度 [0,1]）；`RenderCameraProjection` 透传模式；世界射线（`WorldRayFactory` 逆 VP 反投影）正交下自动成立。
+- **标准视图正交化（用户冻结语义）**：六方向标准视图（±X/±Y/±Z）自动进入正交投影（正交尺度=当前透视可见高度，切换视觉连续）；自由环绕（Orbit）从正交视图开始自动恢复透视并退出标准视图；正交 Dolly=缩放 OrthographicScale（禁距离模拟缩放）；正交 Pan 保持正交（每像素世界距离=尺度/视口高）；正交取景（FrameAll/Selected 保持正交，尺度按包围范围适配）。
+- **视图平面网格（用户冻结语义）**：±X→YZ 平面、±Y→XZ 平面（世界原点基准、自适应间距/LOD、屏幕恒定线宽、深度偏移、距离淡出）；±Z 复用现有地面网格（Z=0 即 XY 平面）；独立 Pass（复用 GridVert + 新 `editor_view_plane_grid.frag` + 192B PushConstant 含平面法线；glslc 字节码生成前完成工具链一致性复验 MATCH）；`RenderDrawKind.EditorViewPlaneGrid` + DrawPlan 条目（启用时替代地面网格）。
+- **正交配套**：Gizmo 屏幕尺寸正交分支（Move/Rotate/Scale：worldHeight=OrthographicScale 恒定）；网格 LOD 采样正交化（wmpp=尺度/视口高解析式，规避侧视正交射线求交退化）。
+- 验证：新增 CameraOrthographicTests 7 + CameraOrthographicNavigationTests 5 + ViewPlaneGridFor 映射 7 + DrawPlan 2；Core 312/312、World 435/435、WarCore 22/22 全 PASS；arch-a-guard PASS；5+100 全合规（Draw.cs 拆 PipelineBind 分部、RenderDrawPlan 枚举压缩）；glslc 工具链一致性复验 MATCH。
+- 视觉冒烟：**未执行**（本环境无法操作画面，留真机验收）；请用户重点复验：六方向正交视图、正交滚轮缩放（尺度）、Orbit 恢复透视、±X/±Y 视图平面网格、±Z 地面网格。
+- 治理：版本 v0.2.24.16-fix → v0.2.24.17-fix（五处同步）；F3-F3 正式 CLOSED；未创建 Tag/Release。
+
 ## v0.2.24.16-fix
 MAP-A-R1-D5-R1-F3-F3 Blender 风格导航视图收尾（2026-08-03，Commit 本轮落库为准）
 - F3-F2 真机复验：相机崩溃修复基本通过；**普通 Orbit 地平线滚转 FAIL + 导航 Gizmo 视觉 FAIL + 侧视表现体验 FAIL**（数学正确，但缺正交视图/视图平面网格）。

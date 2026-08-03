@@ -23,7 +23,10 @@ public static class RotateGizmoScreenRadius
         if (depth <= 1e-3) depth = toOrigin.Length;
         if (depth <= 1e-3) return RotateGizmoLayout.RingRadius;
         var fovRad = camera.VerticalFovDegrees * (global::System.Math.PI / 180.0);
-        var worldHeight = 2.0 * depth * global::System.Math.Tan(fovRad / 2.0);
+        // F3-F4：正交投影下世界高度恒定等于正交尺度，不随深度变化。
+        var worldHeight = camera.Mode == ProjectionMode.Orthographic
+            ? camera.OrthographicScale
+            : 2.0 * depth * global::System.Math.Tan(fovRad / 2.0);
         return targetScreenRadiusDip * worldHeight / h;
     }
 }

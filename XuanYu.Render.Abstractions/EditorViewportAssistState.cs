@@ -6,7 +6,8 @@ public readonly record struct EditorViewportAssistState(
     bool ShowOrigin = true,
     bool ShowWorldAxes = false,
     bool ShowEditorBackground = true,
-    int NavGizmoHoverIndex = -1)
+    int NavGizmoHoverIndex = -1,
+    EditorViewPlaneGridKind ViewPlaneGrid = EditorViewPlaneGridKind.None)
 {
     public static EditorViewportAssistState Default { get; } = new(true, true, false, true);
 }

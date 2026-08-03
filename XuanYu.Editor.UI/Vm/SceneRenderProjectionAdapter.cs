@@ -59,7 +59,8 @@ public static class SceneRenderProjectionAdapter
             new RenderCameraProjection(
                 camera.Position, camera.Forward, camera.Up,
                 camera.VerticalFovDegrees, camera.NearPlane,
-                camera.FarPlane, camera.Revision),
+                camera.FarPlane, camera.Revision,
+                camera.Mode, camera.OrthographicScale),
             entities,
             snapshot.ShowMoveGizmo,
             snapshot.RenderPosition,

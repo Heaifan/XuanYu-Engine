@@ -12,18 +12,21 @@ namespace XuanYu.Render.Vulkan.Session;
 internal sealed class GridPipelineSet : IDisposable
 {
     GridPipelineSet(VulkanGraphicsPipelineOwner? grid, VulkanGraphicsPipelineOwner? axes,
-        VulkanGraphicsPipelineOwner? origin, VulkanGraphicsPipelineOwner? navGizmo)
+        VulkanGraphicsPipelineOwner? origin, VulkanGraphicsPipelineOwner? navGizmo,
+        VulkanGraphicsPipelineOwner? viewPlaneGrid)
     {
         Grid = grid;
         Axes = axes;
         Origin = origin;
         NavGizmo = navGizmo;
+        ViewPlaneGrid = viewPlaneGrid;
     }
 
     public VulkanGraphicsPipelineOwner? Grid { get; }
     public VulkanGraphicsPipelineOwner? Axes { get; }
     public VulkanGraphicsPipelineOwner? Origin { get; }
     public VulkanGraphicsPipelineOwner? NavGizmo { get; }
+    public VulkanGraphicsPipelineOwner? ViewPlaneGrid { get; }
 
     public static GridPipelineSet Create(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clear, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
@@ -36,7 +39,9 @@ internal sealed class GridPipelineSet : IDisposable
         if (origin is not null) clear.SetWorldOriginPipeline(origin.Pipeline, origin.Layout);
         var navGizmo = VulkanGraphicsPipelineOwner.CreateNavigationGizmo(vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (navGizmo is not null) clear.SetNavGizmoPipeline(navGizmo.Pipeline, navGizmo.Layout);
-        return new GridPipelineSet(grid, axes, origin, navGizmo);
+        var viewPlaneGrid = VulkanGraphicsPipelineOwner.CreateViewPlaneGrid(vk, deviceOwner, clear, swapchain, physicalDevice, log);
+        if (viewPlaneGrid is not null) clear.SetViewPlaneGridPipeline(viewPlaneGrid.Pipeline, viewPlaneGrid.Layout);
+        return new GridPipelineSet(grid, axes, origin, navGizmo, viewPlaneGrid);
     }
 
     public void Dispose()
@@ -45,5 +50,6 @@ internal sealed class GridPipelineSet : IDisposable
         Axes?.Dispose();
         Origin?.Dispose();
         NavGizmo?.Dispose();
+        ViewPlaneGrid?.Dispose();
     }
 }

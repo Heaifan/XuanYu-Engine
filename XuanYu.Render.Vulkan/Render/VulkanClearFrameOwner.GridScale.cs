@@ -16,6 +16,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var viewport = new ViewportState(
             0, 0, _extent.Width, _extent.Height,
             (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
+        // F3-F4：正交投影下每像素世界距离为解析式（尺度/视口高）；射线求交在侧视正交下退化。
+        if (projection.Camera.Mode == ProjectionMode.Orthographic)
+        {
+            _lastReferenceWorldPerPixel = projection.Camera.OrthographicScale / viewport.LogicalHeight;
+            return;
+        }
         var state = projection.Camera.ToViewProjection(viewport);
         var halfW = viewport.LogicalWidth * 0.5;
         var halfH = viewport.LogicalHeight * 0.5;

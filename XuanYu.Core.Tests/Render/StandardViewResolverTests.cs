@@ -1,5 +1,6 @@
 using XuanYu.Core.Math;
 using XuanYu.Editor.UI;
+using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Core.Tests.Render;
 
@@ -61,6 +62,20 @@ public sealed class StandardViewResolverTests
     public void Endpoint_to_view_name_mapping(string endpoint, string expected)
     {
         Assert.Equal(expected, StandardViewResolver.EndpointToViewName(endpoint));
+    }
+
+    // F3-F4：标准视图 → 视图平面网格映射（±X→YZ、±Y→XZ、±Z/其他→None）。
+    [Theory]
+    [InlineData("+X 视图", EditorViewPlaneGridKind.YZ)]
+    [InlineData("-X 视图", EditorViewPlaneGridKind.YZ)]
+    [InlineData("+Y 视图", EditorViewPlaneGridKind.XZ)]
+    [InlineData("-Y 视图", EditorViewPlaneGridKind.XZ)]
+    [InlineData("顶视图", EditorViewPlaneGridKind.None)]
+    [InlineData("底视图", EditorViewPlaneGridKind.None)]
+    [InlineData("默认视角", EditorViewPlaneGridKind.None)]
+    public void View_plane_grid_kind_maps_standard_views(string name, EditorViewPlaneGridKind kind)
+    {
+        Assert.Equal(kind, StandardViewResolver.ViewPlaneGridFor(name));
     }
 
     // 相机位置：Pivot 不变、距离不变（Position = center - forward × distance）。

@@ -1,5 +1,20 @@
-版本：v0.2.24.16-fix
+版本：v0.2.24.17-fix
 # XuanYu Engine 文件树
+
+## F3-F4 职责索引（v0.2.24.17-fix）
+
+- `XuanYu.Core/Space/ProjectionMode.cs`：相机投影模式枚举（Perspective/Orthographic）
+- `XuanYu.Editor/Camera/OrthographicViewFactory.cs`：正交视图尺度推导（透视可见高度 → OrthographicScale）
+- `XuanYu.Editor/Camera/EditorCameraFraming.Orthographic.cs`：正交取景（包围范围适配尺度，保持观察方向）
+- `XuanYu.Render.Abstractions/EditorViewPlaneGridKind.cs`：视图平面网格类型（YZ=±X / XZ=±Y；±Z 复用地面网格）
+- `XuanYu.Render.Vulkan/Shaders/editor_view_plane_grid.frag`：视图平面网格片元（平面求交/屏幕恒定线宽/LOD）
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.ViewPlaneGridFrag.cs`：视图平面网格 glslc 字节码（生成物）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.ViewPlaneGrid.cs`：视图平面网格绘制（192B PushConstant 含平面法线）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PipelineBind.cs`：全屏 Pass 管线绑定分发分部
+- `XuanYu.Editor.UI/Vm/UiVm.Camera.Framing.cs`：取景命令（正交模式保持正交）
+- `XuanYu.Core.Tests/Space/CameraOrthographicTests.cs`：正交投影契约测试（矩阵/射线/往返/深度/Fov 无关）
+- `XuanYu.Core.Tests/Camera/CameraOrthographicNavigationTests.cs`：正交导航语义测试（Dolly 缩放/Pan 保持/Orbit 恢复透视）
+- 修改：`CameraState.cs`（投影模式+正交尺度校验）、`ViewProjectionState.cs`（正交矩阵分支）、`RenderCameraProjection.cs`（模式透传）、`CameraNavigation.Try.cs`（正交 Dolly/Pan）、`UiVm.ViewGizmo.cs`（六方向正交化）、`UiVm.CameraNavigation.cs`（Orbit 退出标准视图）、`UiVm.ViewportAssist.cs`（视图平面状态）、`StandardViewResolver.cs`（ViewPlaneGridFor）、`SceneRenderProjectionAdapter.cs`（相机模式透传）、`EditorViewportAssistState.cs`（ViewPlaneGrid 字段）、`RenderDrawPlan.cs`（EditorViewPlaneGrid 条目）、Gizmo 屏幕尺寸三文件（正交分支）、`VulkanClearFrameOwner.GridScale.cs`（正交 wmpp 解析式）、`VulkanGraphicsPipelineOwner.Grid.cs`/`GridPipelineSet.cs`（视图平面网格管线）、测试（StandardViewResolverTests/ReferenceGridDrawPlanTests）
 
 ## F3-F3 职责索引（v0.2.24.16-fix）
 

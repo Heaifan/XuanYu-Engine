@@ -32,4 +32,10 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
         => CreateFullscreenPass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
             ShaderBytecodeNavGizmoVert.Code, ShaderBytecodeNavGizmoFrag.Code, VulkanClearFrameOwner.NavGizmoPushSize, log,
             depthTest: false);
+
+    // F3-F4：正交标准视图的视图平面网格（复用 GridVert；独立 192B PushConstant 含平面法线）。
+    internal static VulkanGraphicsPipelineOwner? CreateViewPlaneGrid(Vk vk, VulkanDeviceOwner deviceOwner,
+        VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
+        => CreateFullscreenPass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
+            ShaderBytecodeGridVert.Code, ShaderBytecodeViewPlaneGridFrag.Code, VulkanClearFrameOwner.ViewPlaneGridPushSize, log);
 }
