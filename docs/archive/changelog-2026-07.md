@@ -1,0 +1,3602 @@
+# changelog 归档：2026-07
+> 归档时间：2026-08（SHR-2026-08 月度治理归档）
+> 条目范围：v0.2.1.1-rz（2026-07-05）～ v0.2.23.0-rz（2026-07-31）
+> 内容按归档时原文迁移，未润色；索引见 changelog.md「历史归档索引」
+
+## v0.2.23.0-rz
+WARCORE-A-R1-D1 最小领域骨架（2026-08-02 16:00:00）
+- 任务目标：按 WARCORE-A-R1 计划建立最小 WarCore 单位领域骨架，为士兵闭环提供身份、归属与状态数据结构；本步不接场景、检查器、渲染与持久化。
+- 新增程序集 `XuanYu.WarCore`（仅引用 Core，满足宪法依赖禁区 Core→WarCore / World→WarCore / WarCore→Editor/Vulkan 全部禁止）：`MilitaryIdentity`（UnitId / DisplayName / UnitKind=Soldier）、`UnitId`（int 单调，FromInt 校验 >0，None 无效）、`FactionId`（0=未命名）、`OrganizationId`（0=未编组）、`UnitKind`（R1 仅 Soldier）、`SoldierState`（身体状态/体力/士气/压制，统一 0–100，构造时越界抛出明确 ArgumentOutOfRangeException）。
+- 约束落实：不建立 CurrentSoldier 单例；数据通过 UnitId 关联（EntityId 关联留待 D3）；WarCore 不含 Editor/Render 依赖；不为未来兵种预造继承体系；四项状态为外部输入。
+- 测试（XuanYu.WarCore.Tests，12 项）：合法身份生成、UnitId 零/负数拒绝、None 无效、空显示名拒绝、身份隔离、状态边界 0/100 接受、四项越界各自拒绝（-1/101）、状态值隔离；程序集引用运行时复核（不引用 Editor/Vulkan、引用 Core）。
+- 治理：slnx 增加 XuanYu.WarCore + XuanYu.WarCore.Tests（12 项目）；scripts/arch-a-guard-warcore.ps1 新增 WarCore 依赖禁区守卫并挂载主守卫；版本 v0.2.22.0-rz → v0.2.23.0-rz（WARCORE-A=模块 23，四件套同步）。
+- 验证结果：串行 build 12 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 305/305 PASS；WarCore Tests 12/12 PASS；架构守卫 PASS（含新增 WarCore 守卫）；git diff --check PASS；5+100 全仓扫描 PASS。
+- 状态：WARCORE-A-R1-D1 完成，等待真机验收（领域类型无 UI，验收以自动测试 + 代码审查为准）。
+
+## v0.2.22.0-rz
+WORLD-D-R1 基础光照与天空环境（2026-08-02 15:28:21）
+- 任务目标：把视口从灰色调试画面提升为明亮、稳定、有天空与地平方向、有基础立体感的三维编辑环境：程序化世界空间天空、固定世界方向光、半球环境补光、默认材质调整、天空专用管线（深度不写）、Resize/Swapchain 重建回归。不做 HDRI/Cubemap/场景灯光/阴影/雾/昼夜/后处理/PBR。
+- Render（scene.vert）：背景从屏幕空间三段渐变改为世界空间程序化天空——逆视图投影恢复世界观察方向，按世界 Z 分量（右手系 Z 轴向上）区分上/下半球，地平线（月白）世界稳定、随相机旋转不漂移；静态模型分支改为固定方向光（近白微暖 1.0/0.98/0.94、指向光源方向 vec3(0.35,0.55,0.75)）+ 半球环境光（天空略冷稍亮 0.54/0.60/0.68、地面中性稍暗 0.40/0.41/0.43，按世界法线 n.z 混合）+ 最终亮度 clamp；无法线时安全回退（无漫反射、均匀环境光）。光照常量全部内联在 Shader，不进入 World/SceneDocument/.xyscene。
+- Render（管线）：新增天空专用管线 VulkanGraphicsPipelineOwner.CreateSky——与主管线共用 Shader、顶点输入与 RenderPass，仅深度状态不同（DepthTest=Off、DepthWrite=Off），天空不写深度、不遮挡网格/模型/Bounds/Gizmo；VulkanClearFrameOwner.RecordDraw 按绘制类型切换管线（EditorBackground 绑天空管线），PushConstants 布局与主管线兼容；VulkanRenderSession 创建/持有/释放天空管线，Dispose 完整。
+- 默认材质：StaticModelColor.Neutral 与 RenderStaticModelColor.Neutral 从 0.8 灰调整为中性浅灰 (0.72, 0.73, 0.76)——比地面环境色亮、与月白地平线保持差异、非纯白。Gizmo/Bounds/选择轮廓/Grid/UI 主题色/导入格式/SceneDocument 数据均未改动。
+- ShaderBytecode.Vert.cs 由 glslc -O 从正式 scene.vert 重新生成（7969 字 SPIR-V），scene.frag 无需改动。
+- 测试：新增 WorldDR1EnvironmentTests——无材质 GLB 导入使用 Neutral 默认基础色；.xyscene 保存 JSON 不含 sky/light 字段（固定编辑器光照不进场景文档）；天空绘制顺序（plan[0]=EditorBackground）已有 ViewportAssistDrawPlanTests 覆盖。
+- 验证结果：正式串行 build 10 项目 0 error / 1 warning（既有 xUnit2013，非本轮引入）；Core Tests 145/145 PASS；World Tests 305/305 PASS（含新增 2 项）；架构守卫 PASS、diff-check PASS、5+100 全仓扫描 PASS、glslc 编译与内嵌字节码一致性复核 PASS。
+- 状态：WORLD-D-R1 等待真机验收（测试 01–10）。
+
+## v0.2.21.25-rz
+WORLD-C-R4-D4 静态模型持久化完整闭环（2026-08-02 15:30:00）
+- 任务目标：一次完成 D4 全部剩余工作：Schema v3 资产持久化、保存/另存为托管事务、加载候选/提交事务、缺失与损坏资源非破坏加载、固定 Bounds 占位、错误弹窗。宪法新增 R/I/F 命名规范（I 为可选实施切片、禁止过度拆分），D4-I1 托管事务作为既有基础复用。
+- 宪法修订（docs/玄域引擎_AI开发宪法.md）：二十九章新增 3.1 I（可选实施切片，仅真实独立风险且获批才允许）与 3.2 防止过度拆分（默认一个 D 一次完成）；明确 D4-I1 是已批准切片、D4 剩余功能一次完成。AI_DEVELOPMENT_RULES.md / dev-rules.md 无冲突规则，未改。
+- 命名统一：`D4-R1` → `D4-I1`（报告文件 docs/world-c-r4-d4-i1-hosted-assets-report.md、changelog、file-tree、测试注释）；不重写 Git 历史，commit e089325 保持原样。
+- Schema v3：`SceneDocumentJson` 增加 `Assets`（可空，v1/v2 缺失合法）；`SceneEntityJson` 增加 `ModelAssetId`（可空）；新增 `SceneAssetJson`（AssetId/Kind/RelativePath/DisplayName/ImporterVersion）与 `SceneDocumentAsset`（Kind 固定 ModelGltf）。保存固定写 v3；加载继续接受 v1/v2/v3。不得写入外部 SourcePath、RenderKey、顶点/索引/GPU 数据。
+- 校验（SceneDocumentValidator）：v3 下 AssetId 合法且不重复、Kind 仅 ModelGltf、RelativePath 经 SceneAssetPathPolicy 安全校验；StaticModel 实体必须有 ModelAssetId 且引用存在的 Asset；普通实体无 ModelAssetId 合法；新错误码 DuplicateAssetId/UnknownAssetKind/InvalidAssetPath/MissingEntityAssetId/UnknownEntityAssetId。既有 v1/v2 规则不变。
+- 保存事务（SceneDocumentSaveTransaction）：候选构建 → Hosting Prepare/Activate → 原子写 .xyscene（v3 + Assets）→ Hosting Complete；写入失败 Rollback 恢复旧目录；StaticModel 无 Catalog 绑定保存失败（MissingStaticModelBinding）；保存成功后 Catalog.RebindSourcePaths 改绑到托管路径（AssetId/Key/GPU 资源不变，Dirty=false）。重复保存：SourcePath 已托管，经 staging 替换正式 assetRoot，无 staging/backup 残留。另存为：目标场景独立 .xyassets，源场景不变，Session/Catalog 切换，Dirty=false。
+- 加载事务（SceneDocumentLoadTransaction）：候选阶段只读构建（读 JSON → 校验 → 解析 .xyassets 相对路径 → 逐 Asset 导入 → 候选 World/Catalog/资源）；结构错误（BrokenJson/UnsupportedSchema/重复 AssetId/未知 ModelAssetId/不安全路径等）整场打开失败且原场景完全不变；单资源 Missing/Failed 不导致整场失败，实体/ModelAssetId/层级/Transform 保留，使用固定占位 Bounds，其余 Ready 资产正常加载。提交阶段一次性替换 World/Catalog/资源/Selection/History/Session，Dirty=false。缺失资源再保存保留资产记录与 RelativePath，不删除实体。
+- 错误弹窗：新增 `IEditorDialogService`（ShowErrorAsync/ShowWarningAsync）与 UiWin 实现（UiWin.Dialogs.cs，复用 UnsavedDialog 窗口风格，无第三方包）；UiVm 经 NullEditorDialogService 兜底，App 组合根传入 UiWin。触发：导入 GLB 失败（标题「导入 GLB 失败」）、场景结构打开失败（「打开场景失败」）、部分资源缺失（「场景已打开，但部分资源不可用」，一次汇总）。用户取消选择/相机/投影/GPU 重试不弹窗。
+- 测试（XuanYu.World.Tests/Assets/，独立临时目录 + Fake Dialog + 确定性 AssetId）：SaveTransactionTests（v3 资产与托管文件、双模型、改绑、无绑定失败）、SaveAsTests（重复保存、独立根、源场景不变）、LoadTransactionTests（单/双模型往返、缺失/损坏保留实体）、LoadStructureErrorTests（非法 JSON/Schema/缺 ModelAssetId/重复 AssetId）、SchemaCompatibilityTests（v1/v2/v3 兼容、普通实体无 ModelAssetId 合法、未知 Kind/不安全路径/未知引用拒绝）、DialogTests（损坏导入 1 次、成功 0 次、非法打开 1 次、缺失汇总 1 次）。既有 WorldCR2DocumentTests 保存断言更新为 v3（行为变化，非缺陷）。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 303/303 PASS（含 D4 新增 54 项）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；`git diff --check` PASS；守卫口径 5+100 PASS；D4-R1 标签零残留；无 staging/backup 残留。D4 不宣布 COMPLETE，等待真机验收。
+- Commit Hash：以本轮最终 Git 记录为准。
+
+## v0.2.21.24-rz
+WORLD-C-R4-D4-I1 `.xyassets` 托管资源事务内核（2026-08-02 14:10:00）
+- 任务目标：按 D0 冻结合同实现独立、可测试、可回滚的托管资源事务内核：运行时 GLB SourcePath → 托管目标规划 → 复制到同目录临时 staging → 验证 → 激活新 `<SceneName>.xyassets` → 后续保存成功 Complete / 失败 Rollback。本轮不接 Schema v3、不接正式保存/另存为、不接加载/占位/弹窗。
+- 冻结目录与相对路径：`<SceneName>.xyassets/models/<AssetId>/source.glb`、相对路径 `models/<AssetId>/source.glb`（复用 `SceneAssetPathPolicy.ModelSourceRelativePath` 与 `IsSafeRelativePath`，禁止 `..`/盘符/UNC/反斜杠/逃逸）。
+- 新增（`XuanYu.Editor/Assets/`）：`HostedSceneAsset`（AssetId/SourcePath/RelativePath/StagedPath/FinalPath）、`SceneAssetHostingPlan`（场景路径/资产根/staging/backup/资产列表，按 AssetId 稳定排序）、`SceneAssetHostingPlanner`（场景路径校验、SourcePath 校验、重复 AssetId 同源去重、同 AssetId 异源拒绝 AssetSourceConflict、同源异 AssetId 允许、FinalPath 防逃逸）、`SceneAssetHostingTransaction`（Prepare/Activate/Complete/Rollback 状态机 + 三个 partial：Activate 激活并备份旧目录、Complete 删除备份、Rollback 旧数据安全优先）、`SceneAssetHostingState`、`SceneAssetHostingError`（14 个错误码，复用 `SceneDocumentResult<T>` 模式）。
+- 事务语义：Prepare 只写 `.Battle01.xyassets.staging-<Guid>` 不碰正式根；Activate 目标不存在时直接 Move、已存在时先移旧目录为 backup 再移入 staging、第 3 步失败自动恢复旧目录；Complete 仅在 Activated 且 staging 已清时删 backup；Rollback Prepared 删 staging、无旧根删新根、有旧根恢复旧内容；错误调用返回明确失败不静默成功。
+- 测试（`XuanYu.World.Tests/Assets/`，独立临时目录，确定性 AssetId）：PlannerTests/PlannerRejectTests（目录、排序、去重、冲突、扩展名、缺失、相对路径、中文与空格场景名）、TransactionTests（Prepare 复制与不碰旧根、失败清理、Activate 新旧根、重复 Activate 拒绝）、CompleteTests（删备份留根、状态守卫）、RollbackTests（三态回滚、重复回滚拒绝、Completed 回滚拒绝）、SaveAsTests（两场景规划独立根、独立激活）。共 28 项新增。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 全量 PASS（含 D4-I1 新增）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；`git diff --check` PASS；守卫口径 5+100 PASS。本轮无用户可见功能，不单独真机验收；Schema v3、正式保存入口、加载/占位/弹窗均未接线。
+- Commit Hash：以本轮最终 Git 记录为准。
+
+## v0.2.21.23-fix
+WORLD-C-R4-D3-F1 非零 BaseVertex 索引归一化与失败去重修复（2026-08-02 12:45:00）
+- 真机证据：导入 `german_ss_soldier_mp40.glb` 前半段成功（Entity=EntityId(1)、Asset=asset_26a8723a…、Vertices=211517、Indices=926148），但 Vulkan GPU 资源创建失败：`Stage=Create Reason=non-zero BaseVertex not supported`；同一错误在后续投影更新中反复出现刷屏。
+- 根因一（阻断）：`StaticModelBuilder.AddPrimitive` 已将局部索引归一化为全局索引（`globalIndex = localIndex + baseVertex`），但 Primitive 仍记录非零 `baseVertex`；`VulkanStaticModelValidator` 拒绝 `BaseVertex != 0`，导致多 Primitive / 局部索引 / 非零 BaseVertex 的真实 GLB 无法上传 GPU。D1/D3 测试 GLB 恰好满足单 Primitive 或全零 BaseVertex，未覆盖该组合。
+- 根因二（伴生）：`VulkanStaticModelCache.Get` 失败后无失败状态记录，每次 RenderProjection 更新都重试创建并重打错误日志。
+- 修复一：`StaticModelBuilder.AddPrimitive` 索引归一化后记录 `BaseVertex = 0`（索引已是全局索引，Vulkan 绘制不再附加顶点偏移）；不修改顶点/法线/UV/Bounds、不修改 Vulkan 生命周期、Shader、SceneDocument、不新增依赖。
+- 修复二：新增 `VulkanStaticModelFailureTracker`（按 `RenderStaticModelKey + Revision` 记录失败状态）；`VulkanStaticModelCache` 失败后记录，相同 Key+Revision 不再创建、不再重复日志；Revision 改变或重新导入允许重试；`RetainOnly` 清理未引用失败记录。
+- 测试：新增 `WorldCR4D3F1BaseVertexTests`（多 Primitive 归一化、三 Primitive、无索引连续全局索引、越界索引拒绝、溢出拒绝、单 Primitive 不回归、归一化资源过 Vulkan 验证器、非零 BaseVertex 仍被验证器拒绝）与 `WorldCR4D3F1FailureTrackerTests`（同 Key+Revision 只记一次、Revision 变可重试、Clear/ClearNotIn）；`WorldCR4D1GlbFactory` 新增 `ThreePrimitives` / `BadIndexTriangle` 工厂。
+- 测试可达性：`XuanYu.Editor` / `XuanYu.Render.Vulkan` 新增 `InternalsVisibleTo XuanYu.World.Tests`；`XuanYu.World.Tests` 新增 Render.Vulkan 项目引用（仅用于验证器与失败去重纯逻辑测试，不触碰 Vulkan 设备）。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 全量 PASS（含 F1 新增）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；`git diff --check` PASS；守卫口径 5+100 PASS。F1 不宣布 D3 PASS，等待真机复验。
+- Commit Hash：以本轮最终 Git 记录为准。
+
+## v0.2.21.22-rz
+WORLD-C-R4-D3 真实 GLB 导入闭环（2026-08-02 11:40:00）
+- 任务目标：执行 `WORLD-C-R4-D3`，把 D1 GLB 导入与 D2 静态模型渲染接入真实编辑器操作：文件选择 → `GltfStaticModelImporter` 导入 → 静态模型实体 → Catalog 绑定 → 层级树 → 视口显示 → 选择/变换复用既有主链；D3 不修改 `.xyscene`，不进入保存/重开（D4）。
+- World：`WorldEntityType` 新增 `StaticModel`；`SceneStateOwner.StaticModel.cs` 新增 `AddStaticModelEntity(name, transform, extent)`，extent 取模型 LocalBounds 供 Picking/空间查询，World 不接收 AssetId/RenderKey/GLB 路径/GPU 资源。
+- Editor：新增 `SceneStaticModelBinding(EntityId, AssetId, SourcePath)`、`SceneStaticModelCatalog`（Bind/TryGetByEntity/TryGetByAsset/Remove/Clear/Snapshot/Revision/Changed，Snapshot 按 AssetId 稳定排序）、`StaticModelAuthoringService`（路径校验 → GLB 导入 → 实体创建 → 绑定的事务组合，含回滚：导入失败不建实体、绑定失败删实体）。`StaticModelImportResult` 既有文件未动。
+- 架构边界：Editor 层不引用 Render.Abstractions（arch-a-guard 强制 Editor 只引用 Core/World），故 Binding 不含 RenderKey，UI 层按 AssetId 派生稳定 `RenderStaticModelKey` 并缓存 `RenderStaticModelResource`。
+- RenderProjection：`SceneRenderProjectionAdapter.TryCreate` 增加 Catalog 与渲染资源缓存输入；`StaticModel` 实体按 EntityId 查询绑定并携带正确 RenderKey，绑定缺失（导入事务中间帧）跳过该实体不让整帧投影失败；`RenderProjection.StaticModels` 来自缓存资源快照。生产路径 `UiVm.RenderProjection.cs` 移除 `D2StaticModelDemo.Apply` 调用；`D2StaticModelDemo.cs` 文件按宪法删除流程保留待用户批准。
+- UI：顶部菜单「文件 → 导入 GLB」（`Top.axaml`），文件选择器过滤 `*.glb` 单选；取消选择不建实体、不改 Dirty、不写错误、不产生 Undo；`UiVm.StaticModelImport.cs` 导入成功选择新实体、刷新层级/检查器、发布 RenderProjection、写低频日志（顶点/索引计数）、Dirty=true。
+- Undo/Redo：`AddEntityHistoryEntry`/`DeleteEntityHistoryEntry` 携带可选 `SceneStaticModelBinding`，恢复实体时重新绑定、移除实体时解除绑定；新建/打开场景清空 Catalog 绑定。
+- 测试：新增 `WorldCR4D3AuthoringServiceTests`、`WorldCR4D3CatalogTests`、`WorldCR4D3ProjectionTests`、`WorldCR4D3StaticModelUiTests`，覆盖合法/缺失/非 GLB/损坏导入、重复导入独立绑定、Catalog 排序与变更、投影 RenderKey 正确、资源不串绑、无绑定跳过、Undo/Redo 绑定保持、删除实体解绑、Dirty、生产路径不再调用 D2StaticModelDemo。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 235/235 PASS（含 D3 新增 19 项）；`scripts/arch-a-guard.ps1` PASS；GLSL 编译（vert/frag）PASS；`.xyscene` JSON PASS；`git diff --check` PASS；守卫口径 5+100（459 手写文件 0 超线）。D3 不宣布 WORLD-C-R4 CLOSED，等待真机验收（`docs/world-c-r4-d3-static-model-authoring-report.md`）。
+- Commit Hash：以本轮最终 Git 记录为准。
+
+## v0.2.21.21-fix
+WORLD-C-R4-D2-F1 视口 Depth 遮挡与宪法格式修复（2026-08-01 16:56:53）
+- 真机反馈：`v0.2.21.20-rz` 接入 depth 后，打开 `world-c-r1-ten-triangles.xyscene` 或 D2 受控模型时出现模型不能完整显示、需要继续缩放后才显示的视口回归。
+- 根因：D2 在单 Pipeline 中开启 `DepthTestEnable/DepthWriteEnable` 后，背景全屏三角仍写入 `z=0.98`，会在部分相机距离先占住深度并遮挡后续实体/静态模型；这是 D2 depth 接入遗漏，不是 SceneDocument、World 或 D1 导入问题。
+- 修复：`scene.vert` 背景全屏三角改为 far depth `1.0`，保留实体、Cube、静态模型、网格和 Gizmo 的现有 draw 顺序，不移除 depth attachment，不回退静态模型 indexed draw。
+- 治理修复：撤销 D2 为满足 5+100 而压缩 `VulkanGraphicsPipelineOwner` 的不良格式处理，将静态模型 VertexInput 与 DepthState 拆到独立 partial 文件；遵守宪法禁止靠压缩格式降行数的规则。
+- 测试变化：新增 `StaticModelDepthRegressionTests`，锁定背景 shader 不得回退到 `0.98` depth；后续测试清单按开发宪法 IPO 格式给出。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 145/145 PASS；World Tests 216/216 PASS；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；SVG XML PASS；`.xyscene` JSON PASS；`git diff --check` PASS；5+100 PASS。
+- Commit Hash：以本轮最终 Git 记录为准。
+
+## v0.2.21.20-rz
+WORLD-C-R4-D2 Vulkan 静态模型显示与 GPU 资源生命周期（2026-08-01）
+- 任务目标：执行 `WORLD-C-R4-D2`，建立 `StaticModelData → Render 静态模型合同 → Vulkan Vertex/Index Buffer → 多 Primitive Draw` 链路；不进入正式导入按钮、文件选择器、`.xyassets` 托管、SceneDocument Assets、模型实体持久化、Inspector、Picking、纹理、PBR、动画或资源重定位。
+- Render 合同：新增 `RenderStaticModelKey`、`RenderStaticModelVertex`、`RenderStaticModelPrimitive`、`RenderStaticModelResource`，实体投影只携带 `StaticModelKey`；资源表位于 `RenderProjection`，同 Key 多实例共享，不暴露 SharpGLTF、Vulkan Handle、路径或 SceneDocument 类型。
+- Vulkan 资源：新增静态模型 buffer/cache/validator/log；首期采用 HostVisible + HostCoherent 单模型 Vertex Buffer 与 Index Buffer，统一 `VK_INDEX_TYPE_UINT32`；按 Key+Revision 成功后替换，失败保留旧资源，场景切换/无引用时释放，Renderer Dispose 先释放模型资源再释放上层 Vulkan 资源。
+- Draw 与 Shader：Graphics Pipeline 增加 Position/Normal/UV0 顶点输入；静态模型逐 Primitive 设置 `baseColorFactor` 并 `CmdDrawIndexed`；shader 对实体非均匀 Scale 使用 inverse-scale normal 修正并提供基础方向光；旧三角形、Cube、Gizmo 仍走既有程序化几何路径。
+- 深度与选择：新增 swapchain 尺寸相关 depth attachment 和 depth test；模型 GPU buffer 不因 resize 重传；选中静态模型使用 LocalBounds 轮廓作为 D2 首期反馈，与实体 Transform 同源，不冒充最终几何轮廓。
+- 受控演示：新增 `XUANYU_D2_STATIC_MODEL_DEMO=1` 开关，现有测试实体可被 D1 数据形态的 `StaticModelData` 适配为静态模型资源用于真机观察；不开启时无产品入口变化，不写 `.xyscene`。
+- 测试变化：新增 D2 Render 合同测试，覆盖 D1 数据到 Render 资源映射、多 Primitive 范围与基础颜色保留、StaticModel DrawPlan 不回退 Legacy/Cube 占位；D1 GLB 导入回归保持通过。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 144/144 PASS；World Tests 216/216 PASS；`scripts/arch-a-guard.ps1` PASS；GLSL 编译 PASS；第三方边界、SVG XML、`.xyscene` JSON、`git diff --check` 与 5+100 待最终 Git 收口复核。D2 不宣布 WORLD-C-R4 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：D3 才接入正式编辑器导入、AssetId 注册、`.xyassets` 托管、场景模型实体、层级树、Inspector、Picking、保存/重开与缺失资源处理。
+
+## v0.2.21.19-rz
+WORLD-C-R4-D1 GLB 静态模型解析与玄域数据转换（2026-08-01 15:07:05）
+- 任务目标：执行 `WORLD-C-R4-D1`，建立合法 GLB → 玄域自有静态模型数据的纯数据链路；不接入 Vulkan、UI、SceneDocument、AssetId 注册、场景实体、Undo/Redo、Picking 或保存恢复。
+- 导入核心：新增 `GlbImportService`，提供文件、只读流和 byte[] 入口；先做 GLB 2.0 容器校验，再用 `SharpGLTF.Core` 1.0.6 在导入边界内验证解析，第三方类型不进入公共输出合同。
+- 自有数据：新增 `StaticModelData`、顶点、UV、颜色、Primitive、元数据、Warning/Error 结果模型；输出拥有自己的顶点数组、uint 索引数组、Primitive 列表和转换后 LocalBounds。
+- 数据转换：支持 TRIANGLES、多 Primitive、多 Node、多 Mesh 引用、16/32 位索引和无索引顺序 Primitive；静态 Node Transform 烘焙进顶点；法线使用逆转置矩阵；坐标按 D0 `(x,y,z)->(x,-z,y)` 转玄域右手 Z-Up，不翻转绕序，不自动居中、贴地或缩放。
+- 能力边界：Required Extension、Skinned Mesh、非法 Header、损坏解析、无可绘制 Primitive、非法 Accessor/Index/Transform 均返回明确 Error；缺 UV 使用默认值并记录 Warning；动画不导入并记录 Warning；非 TRIANGLES 可跳过并 Warning。
+- 测试变化：新增动态 GLB 样本工厂与 D1 导入回归，覆盖 indexed/unindexed triangle、缺 UV、32 位索引、多 Primitive 基础颜色、节点平移后 Bounds、非 TRIANGLES、Required Extension、非法 Header 和第三方类型隔离；不提交二进制模型样本。
+- 验证结果：串行 build 10 项目 0 warning / 0 error；Core Tests 141/141 PASS；World Tests 216/216 PASS（含 D1 新增动态 GLB 测试）；`scripts/arch-a-guard.ps1` PASS；第三方依赖边界检查 PASS（SharpGLTF 仅在 Editor 导入服务和测试断言）；`git diff --check` PASS；GLSL 编译 PASS；SVG XML PASS；`.xyscene` JSON PASS；裸行数扫描仅剩 3 个既有非本轮触碰超线文件，D1 新增/触碰文件均 ≤100。D1 不宣布 WORLD-C-R4 CLOSED，模型仍不会显示在视口。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：D2 才进入 Vulkan Vertex/Index Buffer、多 Primitive Draw、基础颜色显示、GPU 资源缓存、场景切换释放和缺失资源占位体。
+
+## v0.2.21.18-rz
+WORLD-C-R4-D0 GLB 资产合同、依赖与场景 Schema 冻结（2026-08-01 14:41:28）
+- 任务目标：执行 `WORLD-C-R4-D0`，冻结命名治理、GLB 依赖、AssetId、资源目录、Scene Schema 草案、坐标转换、运行时状态、Bounds/Picking 与 Save As 事务边界；不进入导入 UI、Vulkan 模型 Draw、资产浏览器、贴图、项目系统或精确 Mesh Picking。
+- 命名治理：`docs/玄域引擎_AI开发宪法.md` 与 `docs/dev-rules.md` 新增 `R/D/A/F/CLOSED` 规则；自 WORLD-C-R4 起禁止 `WORLD-C-R4-R1` 双 R 命名；历史 `WORLD-C-R3-R8` 等不追溯重命名。
+- 依赖裁定：批准 `SharpGLTF.Core` 1.0.6，落点 `XuanYu.Editor`，第三方类型只允许停留在导入边界；拒绝 Assimp 系列原生依赖和 Unity glTF 包体系；不新增 `.csproj`。
+- 合同代码：新增 `XuanYu.Editor.Assets` 最小资产合同，包含 `AssetId`、托管路径安全策略、GLB 到玄域 Z-Up 坐标转换和运行时状态枚举；路径策略禁止 `..`、盘符、UNC、反斜杠和规范化逃逸。
+- D0 报告：新增 `docs/world-c-r4-d0-asset-contracts.md`，记录真实代码审计结论、v3 Schema 草案、旧场景兼容、坐标转换、Bounds/Picking、Save As 事务和 D1 精确范围。
+- 测试变化：新增 `WorldCR4D0AssetContractTests` 覆盖 AssetId 序列化、托管资源路径安全、路径解析留在 `.xyassets` 内，以及 glTF `+Y Up` 到玄域 `+Z Up` 的无绕序翻转映射。
+- 验证结果：授权 restore PASS；串行 build 10 项目 0 warning / 0 error；Core Tests 141/141 PASS；World Tests 207/207 PASS；`scripts/arch-a-guard.ps1` PASS；`git diff --check` PASS；SVG XML、`.xyscene` JSON、GLSL 编译 PASS。裸行数扫描仍显示 3 个既有非本轮触碰超线文件，正式架构守卫 5+100 门禁通过。D0 不宣布 WORLD-C-R4 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：D1 仍需实现静态 GLB 解析、模型资产局部 Bounds 生成、Scene Schema v3 实装和 Save As 资源复制事务。
+
+## v0.2.21.17-rz
+WORLD-C-R3 正式验收收口（2026-08-01）
+- 真机验收：用户确认 WORLD-C-R3-R8 PASS。近、中、远距离 Move Gizmo 平面手柄表现正常，Dolly 后不再放大成墙面，Picking 与变换闭环正常。
+- 验收结论：编辑器背景、XY 构造网格、原点参照；辅助显示边界；新建/打开默认取景；Move/Rotate/Scale 显示矩阵；Global 世界坐标；Move 箭头、中性中心与正方形平面；屏幕恒定 DIP；可见/命中分离；顶部 UI 整理；层级树 SelectionModel 越界修复，全部 PASS。
+- 自动门禁证据沿用 `e62e242`：10 项目 0 Warning / 0 Error；Core 141/141；World 200/200；architecture guard、git diff --check、5+100、SVG XML、GLSL 全部 PASS。
+- 收口：`WORLD-C-R3-R8 真机验收：PASS`；`WORLD-C-R3：CLOSED`。下一阶段进入 WORLD-C-R4 方案讨论，不在本轮实装检查器数值编辑。
+- 本轮仅更新版本与验收文档，不创建 Tag/Release，不操作 stash。
+
+## v0.2.21.16-fix
+WORLD-C-R3-R8 Move Gizmo 正方形平面手柄专项修复（2026-08-01）
+- 代码证据：箭头通过相机深度换算 `MoveGizmoWorldRadius`；旧 XY/XZ/YZ 平面 CPU/GPU 可见层却直接使用固定世界单位，导致 Dolly 后尺寸漂移，并与箭头不是同一尺寸真源。
+- 修复：新增 `MoveGizmoScreenSize`，箭头、中心和三个平面共用屏幕恒定世界轴长；平面可见层恢复为贴近中心的正方形面片（offset 12 DIP、边长 16 DIP），不读取实体 Rotation/Scale。
+- Picking：可见正方形与命中正方形分离，命中 padding 7 DIP；优先级为可见平面中心、单轴、隐形 padding，避免平面中心和轴线中段互相抢占。
+- Render：Move 平面与箭头仍在同一 MoveGizmo Draw / RenderPass；移除旧固定世界单位面片逻辑，保留交互顶点槽位但改为统一屏幕尺寸正方形；实体绘制的 RenderTransform 不进入 Gizmo。
+- 测试：新增相机 Dolly 尺寸稳定、可见/命中尺寸分离、实体 Scale 不污染 Move 布局测试；保留 Preview/Commit/Cancel/Undo/Redo/Target Switch 合同。
+- 验证：串行 build 10 项目 0 warning / 0 error；Core Tests 141/141 PASS；World Tests 200/200 PASS；architecture guard、git diff --check、5+100、SVG XML、GLSL PASS。
+- 状态：`WORLD-C-R3-R8` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+
+## v0.2.21.15-fix
+WORLD-C-R3-R7 Avalonia 层级树选择崩溃修复（2026-08-01）
+- 真机/运行时错误：点击层级树可展开节点时，`SelectedItems` 在 Avalonia 选中事务中回读了已被刷新列表淘汰的旧 index，触发 `ItemsSourceView.GetAt` 的 `ArgumentOutOfRangeException`。
+- 修复落点：选择 setter 不再同步切换展开状态；展开/收起统一由已有箭头指针处理，避免在 `SelectionModel` 提交期间更换 `ItemsSource`。
+- 回归测试：选择已折叠项目节点和层级父节点均不改变列表投影；直接 `ToggleProjectNode` / `ToggleHierarchyNode` 的折叠合同保持不变。
+- 状态：`WORLD-C-R3-R7` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 200/200 PASS；architecture guard PASS；git diff --check PASS；5+100 PASS；SVG XML PASS。
+
+## v0.2.21.14-fix
+WORLD-C-R3-R6 Move Gizmo 平面手柄协调视觉修复（2026-08-01）
+- 真机复测反馈：R3-R5 将大方块缩成三角片后，仍然形成三块悬浮彩色面片，与 Move 箭头的视觉语言不协调。
+- 修复落点：`scene.vert` 将 XY/XZ/YZ 平面可见层改为贴近轴根部的两条短细折角标记；不再绘制漂浮三角面，平面拖拽的 CPU 命中热区、捕获、Preview/Commit/Undo/Redo 合同不变。
+- 颜色：平面标记改为低饱和轴向灰色，并与 X/Y/Z 箭头保持同一中性编辑器语言。
+- Shader：`ShaderBytecode.Vert.cs` 已用本机 `glslc` 从正式 `scene.vert` 重新生成，保持紧凑行数以满足 5+100。
+- 状态：`WORLD-C-R3-R6` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 199/199 PASS；architecture guard PASS；git diff --check PASS；5+100 PASS；SVG XML PASS；GLSL PASS。
+
+## v0.2.21.13-fix
+WORLD-C-R3-R5 Move Gizmo 平面手柄视觉急修（2026-08-01）
+- 真机裁定：`v0.2.21.12-fix` 仍在 Move Gizmo 中显示三块明显的青/紫/黄平面方块；这是 `scene.vert` 旧 `planeVertex` 可见面片未彻底收敛导致，不符合“Move Gizmo 以箭头轴为主体、平面手柄低存在感”的视觉合同。
+- 修复落点：`scene.vert` 将 XY/XZ/YZ 平面可见层从大正方形面片改为中心附近的小型三角角标，颜色进一步收灰；CPU 平面 Picking、拖动、Preview/Commit/Undo/Redo 合同不变。
+- Shader：`ShaderBytecode.Vert.cs` 已用本机 `glslc` 从正式 `scene.vert` 重新生成，生成文件保持 88 行以满足 5+100。
+- 状态：`WORLD-C-R3-R5` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 199/199 PASS；architecture guard PASS；git diff --check PASS；5+100 PASS；SVG XML PASS；GLSL PASS。commit/push 与远端 tip 复核见最终报告。
+
+## v0.2.21.12-fix
+WORLD-C-R3-R4 Global Gizmo 语义与 UI 重构补修（2026-08-01）
+- 真机裁定：`WORLD-C-R3-R3` 视觉复测 FAIL；Scale Gizmo 在对象旋转后跟随局部轴偏转，且顶部命令栏、菜单和未保存确认框仍未达到已确认 SVG 视觉层级。
+- Gizmo 语义修复：在没有可见 Global/Local 切换入口前，Scale Gizmo 可见轴与 CPU 命中布局锁定世界 X/Y/Z；渲染投影对 Scale 下传零旋转，避免对象 Rotation 让缩放轴自动进入 Local 语义。
+- UI 修复：顶部命令栏补强透明/悬停/按下/禁用状态与菜单 rail 风格；未保存场景确认框改为编辑器自绘浅色面板、统一按钮和间距，去除系统默认标题栏观感。
+- 测试变化：新增 `WorldCR3R4GlobalGizmoTests` 覆盖“旋转 180° 后切换缩放仍为 Global”和“无可见 Global/Local 入口时不自动切 Local”；更新 Core Scale 布局回归，锁定 Rotation 不改变轴端点。
+- 合同边界：不修改 `.xyscene`、SceneDocument、EntityRegistry、Vulkan 生命周期、TransformSession 提交/撤销合同；Scale 数值仍写入实体 TRS Scale 分量，本轮只冻结可见/命中轴语义为 Global。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 199/199 PASS；architecture guard PASS；git diff --check PASS；5+100 PASS；SVG XML PASS；GLSL PASS。commit/push 与远端 tip 复核见最终报告。
+- 状态：`WORLD-C-R3-R4` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+
+## v0.2.21.11-fix
+WORLD-C-R3-R3 顶部命令栏与 Transform Gizmo 视觉重构（2026-08-01）
+- 真机裁定：`WORLD-C-R3-R2` 自动验证通过但视觉复测仍未达标；顶部两行 UI 仍有默认控件观感，Transform Gizmo 仍不符合已确认 SVG 视觉方案。
+- UI 修复：顶部主命令栏和视口工具栏改为两条浅色 rail 容器；去掉第二行“选择/变换/视图/辅助”小标题，改用间距和细分隔线分组；工具当前态改为浅蓝背景、淡蓝边框和底部指示；顶部菜单与层级右键菜单统一菜单项行高、悬停和背景风格。
+- Gizmo 修复：Move Gizmo 改为细轴 + 箭头 + 中性中心手柄，平面手柄缩小并改为低饱和色；Rotate Gizmo 改为三条细圆环并新增中性中心手柄；Scale Gizmo 保留端点立方体和 Uniform 中心立方体，但尺寸与颜色收敛；移除 Move 平面原有高饱和青/紫/黄视觉。
+- 合同边界：仅修改 Avalonia 视觉、RenderDrawPlan 绘制顶点数和 Vulkan shader 可见几何；不修改 `.xyscene`、SceneDocument、Vulkan 生命周期、Gizmo 命中/拖动/Preview/Commit/Undo/Redo 合同。
+- 测试变化：更新 Gizmo 绘制顶点数回归；新增 `WorldCR3R3CommandSmokeTests` 覆盖顶部文件命令、工具栏命令和环境显示命令仍可调用且不污染 Dirty/History。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 197/197 PASS；后续架构守卫、diff-check、5+100、SVG XML、glslc 复核、commit/push 与远端 tip 复核见最终报告。
+- 状态：`WORLD-C-R3-R3` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+
+## v0.2.21.10-fix
+WORLD-C-R3-R2 轴线语义校正与编辑器菜单视觉优化（2026-08-01）
+- 真机裁定：`WORLD-C-R3-R1` 未通过；粗大 X/Y/Z 轴在未选择对象时与 Move Gizmo 混淆，顶部工具栏、显示菜单和层级右键菜单仍接近系统默认控件风格。
+- 行为修复：`ShowWorldAxes` 默认关闭；世界坐标轴只作为可选辅助层进入渲染输入，开启后为世界原点处低饱和细短轴；世界原点缩小为独立克制标识；辅助层仍不进入 Picking、Selection、Dirty、History、SceneDocument 或 `.xyscene`。
+- Gizmo 合同：补充未选择、选择工具、框选工具、移动、旋转、缩放和取消选择的 Transform Gizmo 显示矩阵回归；只有选中实体且当前工具匹配时才显示对应 Gizmo。
+- UI 修复：顶部按钮默认透明、悬停浅蓝灰、当前工具深蓝实底；显示菜单改为勾选列文本；层级右键菜单简化为添加立方体/重命名/删除，删除使用克制警示色；底部状态栏不再重复显示场景保存状态。
+- 验证结果：正式串行 build 10 项目 0 warning / 0 error；Core Tests 138/138 PASS；World Tests 195/195 PASS；后续架构守卫、diff-check、5+100、SVG XML、glslc 复核、commit/push 与远端 tip 复核见最终报告。
+- 状态：`WORLD-C-R3-R2` 自动验证后仍为“WORLD-C-R3 等待真机重新验收”；不创建 Tag/Release，不宣布 CLOSED。
+- Commit Hash：以本轮最终 Git 记录为准。
+
+## v0.2.21.9-rz
+WORLD-C-R3 编辑器空间参照层自动实现（2026-08-01 10:21:46）
+- 任务目标：按已批准计划进入 `WORLD-C-R3：编辑器空间参照层` 正式开发；实现编辑器背景、XY 构造网格、世界原点、X/Y/Z 世界短轴、新建/打开场景相机接入和四个显示开关；不修改 `.xyscene` Schema，不新增场景实体，不进入地面、天空、环境、地形、材质、灯光、吸附或工作区状态持久化。
+- 架构合同：新增 `EditorViewportAssistState` 随 `RenderProjection` 进入渲染输入；`UiVm.ViewportAssist` 只保存运行会话开关；`RenderDrawPlan` 在正式实体前提交 Background/Grid/Origin/Axes，辅助 DrawKind 无 `EntityIndex`/`EntityId`，不进入 Picking、Selection、TransformSession、History、Dirty 或 SceneDocument。
+- Render：`scene.vert` 增加程序化低饱和编辑器背景、世界 XY / Z=0 构造网格、世界 `(0,0,0)` 原点小标识和有限 X/Y/Z 短轴；`VulkanClearFrameOwner.DrawAssist` 负责辅助层绘制；`ShaderBytecode.Vert.cs` 已由 `glslc` 从正式 GLSL 重新生成。
+- UI/相机：顶部新增“显示”菜单，四项默认为开、切换立即更新视口且不改变选择/工具/Dirty/History；新建/空场景使用默认斜俯视相机，打开非空场景调用现有 Frame All，打开失败仍保留原相机。
+- 测试变化：新增 `ViewportAssistDrawPlanTests` 和 `WorldCR3ViewportAssistTests`；更新 `WorldCR2CameraDocumentTests` 的非空打开相机期望为 Frame All。
+- 验证结果：快速/正式串行 build 已通过，10 项目 0 warning / 0 error；Core Tests 137/137 PASS；World Tests 193/193 PASS；后续完整门禁、架构守卫、diff-check、5+100、SVG XML、commit/push 与远端 tip 复核见最终报告。
+- 状态：`WORLD-C-R3-R1` 自动实现完成后仍为“等待真机验收”；不得宣布 CLOSED，不创建 Tag/Release。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：R3 无已知自动门禁阻断；真机 01-07 仍待用户验收。
+
+## v0.2.21.8-rz
+WORLD-C-R2 真机验收通过与正式收口（2026-08-01 00:23:44）
+- 用户裁定：测试 01–08 全部 PASS；空白场景无测试实体，Cube 添加与三类 Transform 正常且黄色 Legacy Triangle 残影消失，重命名 Focus→SelectAll 符合预期，删除、Dirty、保存恢复与 R1 兼容均通过。
+- 根因收口：R2-R2 已将 Legacy Triangle、Cube、Move、Rotate、Scale 改为互斥绘制模式，Gizmo Draw 不再携带前三个 Legacy 顶点；该修复已获得真机证据确认。
+- 收口资料：实施验收报告、中文 IPO 验收记录、状态 SVG 与 `file-tree.md` 已同步为 `WORLD-C-R2 CLOSED`；本轮仅同步文档、状态和可见版本号，不修改运行时代码逻辑或测试逻辑。
+- 边界：不制造 R2-R3，不加入地面、网格、天空、更多几何、项目管理器、材质或资产系统；不创建 Tag/Release，不处理保留 stash，不 force/merge/rebase。
+- 验证结果：R2 代码自动门禁沿用已落库的 10 项目 0W0E、Core 135/135、World 191/191 证据，本纯收口轮未无意义复跑 build/test；本轮 `git diff --check` PASS，`scripts/arch-a-guard.ps1` EXIT=0（含 5+100），版本源、Markdown 标题/表格、SVG XML、当前状态引用与 8 文件修改范围核对均 PASS，无运行时代码逻辑或测试逻辑夹带。
+- Commit Hash：以本轮最终 Git 记录为准。
+- 遗留问题：R2 无运行时阻断；R3 候选范围尚未冻结，需先讨论再实施。
+- 下一阶段：进入 `WORLD-C-R3：基础场景空间参照` 方案讨论；候选范围尚未冻结，本提交不直接实装。
+
+## v0.2.21.7-rz
+WORLD-C-R2-R2 真机退回最小修复（2026-07-31，等待真机复测）
+- 真机裁定：空白场景、重命名功能、删除、Dirty、保存恢复和 R1 兼容通过；添加/Transform 因选中 Cube 内叠加黄色旧三角形失败，R2 不得 CLOSED。
+- 根因：Gizmo Draw 仍保留旧合同的前三个 Legacy Triangle 顶点，`scene.vert` 又在 Move/Rotate/Scale 分支前优先绘制这三个顶点；三种工具因此都提交黄色三角形，Scale 同时漏掉末尾三个真实 Gizmo 顶点。
+- Render 修复：最终帧统一消费 `RenderDrawPlan.GetFrameDrawPlan`；Legacy、Cube、Move、Rotate、Scale 模式互斥，Gizmo 顶点数改为 36/864/252，不再包含旧三角形额度；Legacy 仅由显式 Legacy 实体类型生成。
+- 重命名修复：内联文本框在实际变为可见并完成布局调度后执行 Focus + SelectAll；F2 与层级右键入口显式汇入同一重命名合同。
+- 回归：新增选中 Cube 在 Move/Rotate/Scale 最终帧无 Legacy 命令、Cube 填充/轮廓同类型、显式 Legacy 保留，以及重命名 Focus/SelectAll 和双入口一致性测试。
+- 验证：10 项目串行 build 0W0E；Core Tests 135/135、World Tests 191/191；架构守卫（含正式 5+100）、diff-check、GLSL、SVG XML 与样例 JSON 均 PASS。
+- 状态：自动门禁完成后仍标记“等待真机复测”；不宣布 WORLD-C-R2 CLOSED，不扩入地面、网格、更多几何、项目管理器、材质或资产系统，不创建 Tag/Release。
+
+## v0.2.21.6-rz
+WORLD-C-R2 真实场景实体创作主闭环（2026-07-31，等待真机验收）
+- World：新增 `LegacyMinimalTriangle` / `Cube` 最小类型、Add Cube、场景唯一名称、受控重命名、删除与快照原身份恢复；快照持有 ParentId/SiblingOrder，恢复拒绝重复 ID、非法类型、失效父级和顺序冲突。
+- History/Dirty：Core 历史容器保持业务无关并可承载上层条目；Editor/UI 统一记录 Transform/Add/Delete/Rename，Undo/Redo 恢复原 EntityId；Dirty 改为历史内容位置与保存检查点比较，支持回到保存点 Clean、离开保存点 Dirty。
+- SceneDocument：Schema 正式升至 v2，新保存必写 EntityType；v1 缺类型解释为 Legacy Triangle；v2 严格拒绝缺失/未知类型、重复 ID、非法 Transform、父级/顺序错误和高版本，候选失败不污染当前编辑状态。
+- Render：Render Projection / DrawPlan 显式携带实体类型；Cube 使用 36 顶点填充和同类型 72 顶点十二边轮廓，Picking/Preview/Gizmo 继续消费同一 World Transform；GLSL 与嵌入 SPIR-V 已同步生成。
+- UI/启动：生产 App 保持真正空白启动；顶部“场景→添加→基础实体→立方体”和层级右键 Add 接入；Add 自动选择，Delete/F2/右键删除和内联重命名接入，文本框焦点时全局 Delete 不删除实体；新建和成功打开恢复默认相机。
+- 测试/资料：新增 World、History/Dirty、SceneDocument v1/v2、Cube DrawPlan 回归，以及 R2 实施验收报告、中文 IPO 真机卡和状态 SVG。
+- 架构守卫：WorldQuery 单写者白名单同步识别 `GlobalWorld.Authoring.cs`；该 partial 仍属于同一 GlobalWorld 权威，不新增第二 Writer。
+- 验证结果：10 项目串行 build 0W0E；Core Tests 130/130、World Tests 188/188；架构守卫（含 5+100）、`git diff --check`、SVG XML、样例 JSON 与 GLSL 编译均 PASS。
+- 状态：自动门禁与真机验收结果完成前仅标记“等待真机验收”，不宣布 WORLD-C-R2 CLOSED，不创建 Tag/Release。
+
+## v0.2.21.5-fix
+WORLD-C-R1 真机验收通过与正式收口（2026-07-31 17:58:02）
+- 用户裁定：测试 01-09 均已 PASS；测试 10-13 不再追加真机重复测试，由现有自动门禁覆盖。WORLD-C-R1 真机验收通过。
+- 收口内容：新增 `docs/world-c-r1-closure-report.md` 与 `docs/world-c-r1-closure.svg`，正式记录 WORLD-C-R1 `CLOSED`、真机验收记录、自动门禁、完成边界和下一阶段入口。
+- 完成边界：已完成空白场景启动、新建、打开、保存、另存为、未保存处理、严格 `.xyscene` 读写、候选加载、原子保存、Dirty 保存检查点及重启恢复；不包含项目管理器、实体完整 CRUD、资产导入、Prefab、通用组件序列化与环境系统。
+- 样例处理：真机保存污染了 `samples/world-c-r1-ten-triangles.xyscene`（Entity 1 Transform 与格式化/中文转义变化），已按测试污染恢复仓库基线，不制造单独样例布局提交。
+- 验证结果：按用户要求补跑正常输出目录 `dotnet build XuanYu.Engine.slnx`，10 项目 **0 warning / 0 error**；未重复运行已通过的完整测试。
+- 状态：WORLD-C-R1 **CLOSED**；暂不创建 Tag 或 Release；下一阶段为 WORLD-C-R2 最小项目管理器 / 项目容器，但本提交不混入 R2 代码。
+
+## v0.2.21.4-fix
+WORLD-C-R1 保存反馈与 Dirty 可见性修复（2026-07-31 17:34:28）
+- 当前事实：用户真机截图已确认测试 02 打开 `samples/world-c-r1-ten-triangles.xyscene` 改判 PASS；测试 03/04 暴露的是“另存为/保存成功反馈不明显、Dirty 中文状态不够可见”的交互反馈缺口，不是保存链路本身失效。
+- 修复内容：文档标题 Dirty 标记从 `*` 改为 `（未保存）`；顶部与底部状态统一经 `DocumentStatusText` 投影，Dirty 显示 amber “状态：未保存”，保存失败保持红色，保存/另存为成功显示绿色短暂反馈后回到就绪；Dirty 会主动打断短暂成功提示。
+- 保存反馈：普通保存成功写 `场景保存成功：<文件名>`，另存为成功写 `场景另存为成功：<文件名>`，日志 Detail 包含完整 `Path=<路径>`；保存失败继续保留 Dirty、标题未保存和红色失败状态，日志保留 Path/Stage/Code/Message/Detail。
+- UI 行为：保存按钮在 Dirty 时轻量 amber 强调，保存中禁用；`Ctrl+S` 走普通保存，未命名场景仍经另存为入口，`Ctrl+Shift+S` 明确记录另存为成功反馈。
+- 测试变化：新增 WORLD-C-R1 保存反馈回归，覆盖另存为成功、普通保存成功、Dirty 中文状态、Undo 回保存点 Clean / Redo 重新 Dirty、保存失败保护 Dirty 与错误 Code。
+- 状态：WORLD-C-R1 仍等待用户真机重新执行测试 03/04；不宣布 CLOSED，不进入 WORLD-C-R2。
+
+## v0.2.21.3-fix
+WORLD-C-R1-R1 真机场景加载失败诊断与 sample 修复（2026-07-31 16:50:16）
+- 当前事实：用户真机测试 01 已确认启动空白场景 PASS；测试 02 打开 `samples/world-c-r1-ten-triangles.xyscene` 后 UI 显示“加载失败”、World 仍为 0 实体，且控制台/编辑器日志缺少 Path、Stage、Code、Message 和 Detail，无法审计失败根因。
+- 根因链：打开按钮与 `Ctrl+O` 均进入 `UiWin.SceneCommands.OpenScene`，文件路径传入 `UiVm.OpenSceneAsync`；失败时 `SceneStorageService.LoadAsync` 仅返回 `ErrorCode/Message`，UI 只写 Footer，不写编辑器日志和 Console。生产 JSON 读取使用默认 `System.Text.Json` 大小写敏感策略，而仓库 sample 使用 `format/schemaVersion/scene/entities/x/y/z` lower-camel 键，真实 sample 未经过生产 OpenSceneAsync 回归。
+- 修复内容：`SceneDocumentResult` 增 `Stage/Detail`；`SceneStorageService.LoadAsync` 增低频阶段回调 `Read/Parse/Schema/Validate`，JSON 读取改为 lower-camel 写出、大小写兼容读入；`UiVm.OpenSceneAsync` 记录“场景加载开始/阶段/成功/失败”到编辑器日志和 Console，失败详情包含 Path、Stage、Code、Message、Detail、CurrentScenePreserved；候选场景构建成功前不清选择、不清历史、不替换 World。
+- 测试变化：`WorldCSceneDocumentTests` 增加真实仓库 sample 生产入口回归，断言文件存在、OpenSceneAsync 成功、World/Hierarchy 均含 10 实体、中文名称可读、日志含 `Entities=10`；新增非空旧场景打开损坏文件保护回归，断言旧 World、路径、Dirty、选择和 History 均保留且日志含同一错误 Code。
+- 验证结果：定向 `WorldCSceneDocumentTests` **5 passed / 0 failed / 0 skipped**；正式串行 build 全 10 项目 **0W0E**；`XuanYu.Core.Tests` **129 passed / 0 failed / 0 skipped**；`XuanYu.World.Tests` **168 passed / 0 failed / 0 skipped**；`scripts\arch-a-guard.ps1` PASS；`git diff --check` PASS；`.xyscene` JSON PASS；SVG XML PASS。裸 5+100 扫描仅剩 2 个既有非本轮触碰超线文件，项目守卫通过。Push 结果见最终收口报告。
+- 状态：WORLD-C-R1 仍等待用户重新执行真机测试 02；未宣布 CLOSED，不进入 WORLD-C-R2，不创建 Tag 或 Release。
+
+## v0.2.21.2-rz
+WORLD-C-R1 最小场景保存与打开闭环（2026-07-31 16:04:38）
+- 任务目标：进入 WORLD-C-R1 运行时代码实现；完成启动空白场景、`.xyscene` 严格 JSON 保存/打开、安全加载、Dirty 保存检查点、未保存提示入口和快捷键主链；不进入 WORLD-C-R2 项目管理器，不实现资产库、Prefab、通用组件序列化或自动恢复。
+- 场景存储：新增 `XuanYu.Editor.SceneDocument` 模块，`SceneStorageService` 负责 `format=XuanYuScene`、`schemaVersion=1`、稳定 `scene.id`、稳定实体 ID、名称、父关系、同级顺序和 Transform 的 UTF-8 JSON 读写；校验文件损坏、格式不支持、Schema 过高、重复 ID、父实体不存在、层级循环和非法 Transform；保存采用同目录临时文件写入后替换正式文件。
+- World 边界：`SceneStateOwner` 增空白启动与整体替换入口；`GlobalWorld` / `EntityRegistry` 只在候选场景验证成功后一次性替换实体快照，加载失败不会清空旧场景；启动 App 显式使用空白未命名场景，旧十实体入口仅保留给自动测试和专用 `.xyscene`。
+- UI 接入：顶部增加“另存为”；窗口层接入 `Ctrl+N`、`Ctrl+O`、`Ctrl+S`、`Ctrl+Shift+S`、文件打开/保存对话框和关闭前“保存 / 不保存 / 取消”；`UiVm` 维护文档路径、Untitled/Clean-Dirty、保存检查点和错误消息，不复制实体列表。拖动中保存会先提交当前 Preview 并写入 History，再保存。
+- 测试变化：新增 `WorldCSceneDocumentTests` 覆盖保存/打开往返、损坏 JSON 不替换旧场景、Dirty/保存/Undo 检查点；新增 `samples/world-c-r1-ten-triangles.xyscene` 供真机手动打开。
+- 验证结果：本轮授权串行 build 全 10 项目 **0W0E**；`XuanYu.Core.Tests` **129 passed / 0 failed / 0 skipped**；`XuanYu.World.Tests` **166 passed / 0 failed / 0 skipped**。首次未授权 build 被 Avalonia BuildServices 写 `C:\Users\Heai\AppData\Local\AvaloniaUI\BuildServices\buildtasks.log` 权限阻断，授权后通过。后续守卫、diff、5+100、SVG、commit/push 结果见最终收口报告。
+- 状态：WORLD-C-R1 自动化主链完成，等待用户真机验收；未宣布 CLOSED，暂不创建 Tag 或 Release。
+
+## v0.2.21.1-rz
+WORLD-C-R0 场景文档契约冻结（2026-07-31 13:48:34）
+- 任务目标：从 WORLD-B 最终收口 commit `4ae360b55754d7385f294d1181808f58ab0dc84e` 创建 `feat/WORLD-C-scene-authoring`，启动 `WORLD-C：场景创作与持久化闭环`，只冻结 R0 场景文档契约，不混入 WORLD-C-R1 运行时代码。
+- 契约裁定：场景文件扩展名为 `.xyscene`，首版为 UTF-8 JSON，`schemaVersion=1`；最小元数据为 `name`、`createdUtc`、`modifiedUtc`、`entities`；实体首轮只冻结稳定 ID、名称、父子关系或根节点、Position、Rotation、Scale。
+- 所有权裁定：未来 `XuanYu.Editor.SceneDocument` 拥有文档读写契约、状态机和错误结果；`XuanYu.World` 继续拥有运行期 `GlobalWorld / EntityRegistry / Transform` 事实；`Editor.UI` 只发起新建、打开、保存、另存为、关闭意图，不得成为持久化权威。
+- 状态机与错误：冻结 `Untitled / Clean / Dirty / Saving / Loading / Failed`；保存采用临时文件写入成功后替换正式文件；错误模型覆盖文件不存在、不可读、JSON/结构损坏、版本不支持、ID 重复、层级引用不存在、层级循环、Transform 非法、路径不可写和写入失败。
+- 禁止扩张：不设计完整资产数据库、GUID 资产注册中心、Prefab、通用 ECS 组件序列化、组件反射、脚本系统、模型导入、材质、动画、热重载、云同步、自动恢复系统或完整项目管理器。
+- 修改范围：新增 `docs/world-c-r0-scene-document-contract.md` 与 `docs/world-c-r0-scene-document-contract.svg`；同步 `run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`file-tree.md` 和 `changelog.md` 到 `v0.2.21.1-rz`。
+- 验证结果：本轮未重跑完整 build/test；`git diff --check` PASS；`docs/world-c-r0-scene-document-contract.svg` XML PASS；版本源一致（`run.bat` / `UiWin.axaml` / `file-tree.md` / `changelog.md` = `v0.2.21.1-rz`）；`scripts/arch-a-guard.ps1` EXIT=0；完整 diff 与修改范围已核对。Commit Hash 以本轮最终 Git 记录为准。
+
+## v0.2.20.19-fix
+WORLD-B-R5 与 WORLD-B 正式收口（2026-07-31 13:44:13）
+- 任务目标：根据用户真机验收结论正式关闭 `WORLD-B-R5` 和整个 `WORLD-B`；不新增 `WORLD-B-R6`，不重复执行已经通过的 R5 真机测试，不进入 WarCore，不创建 Tag 或 Release。
+- R5 裁定：用户真机验收已确认 Scale Gizmo 尺寸调整符合预期，X/Y/Z 单轴缩放有效，中心 Uniform 等比缩放有效，实体、选中轮廓和 Gizmo 在 Preview 中同步，Commit、Escape Cancel、Undo/Redo、工具状态和目标切换未发现阻断问题。`WORLD-B-R5` 正式 CLOSED；该结论记录为用户验收结果，不以自动测试伪装真机证据。
+- WORLD-B 裁定：`WORLD-B` 正式 CLOSED。已完成相机、选择、移动、旋转、缩放及撤销取消等基础编辑交互；不代表场景创建、保存、资产导入和环境系统已经完成。
+- 范围边界：WORLD-B 已完成编辑器相机基础交互、层级/检查器/视口选择同步、视口 Picking、空白取消选择、Move/Rotate/Scale Gizmo、Preview/Commit/Cancel、Undo/Redo、目标切换、捕获取消、基础日志与自动验证。WORLD-B 未包含场景新建/打开/保存/另存为、实体完整 CRUD、静态模型导入、资产数据库、Prefab、地面、天空环境和 WarCore。
+- 修改范围：更新 `docs/world-b-r5-scale-transform-report.md` 的 R5 CLOSED 与真机结论；更新 `docs/world-b-r0-editor-interaction-audit.md` 的 WORLD-B 总收口边界；更新 `docs/world-b-r5-scale-transform.svg` 与 `file-tree.md` 中仍指向“等待真机验收/未 CLOSED”的阶段状态描述。
+- 验证结果：本轮为纯文档收口，未重跑完整 build/test；状态一致性搜索仅剩历史 changelog 与非 WORLD-B 条目；`git diff --check` PASS；`docs/world-b-r5-scale-transform.svg` XML PASS；`scripts/arch-a-guard.ps1` EXIT=0；完整 diff 与修改范围已核对，无运行时代码夹带。Commit Hash 以本轮最终 Git 记录为准。
+
+## v0.2.20.19-fix
+WORLD-B-R5-R1 Scale Gizmo 尺寸与整体缩放可发现性修复（2026-07-31）
+- 任务目标：修复 v0.2.20.18-rz 真机验收退回项——Scale Gizmo 视觉尺寸过大、遮挡实体和场景，中心 `Uniform` 整体等比缩放手柄不可发现/不可理解或难以稳定命中。状态从 R5 待验收转为 R5-R1 修复完成后等待真机重新验收；不得宣布 R5 CLOSED，不进入 F6，不进入 WarCore。
+- 修复落点（Core Gizmo）：`ScaleGizmoScreenSize` 将主体屏幕轴长从 90 DIP 缩至 63 DIP（约 70%），端点手柄从 11 DIP 缩至 8 DIP，中心视觉尺寸调为 15 DIP，并新增 `CenterHitRadiusDip=12`；`ScaleGizmoHitTester` 改为中心 Uniform 核心区先裁决，X/Y/Z 轴段从中心核心区外参与命中，避免中心拖动误判为单轴。
+- 修复落点（Render + UI）：`scene.vert` 保持 Scale Gizmo 252 顶点结构，随 63 DIP 世界轴长整体缩小，并把中心白色 Uniform 立方体半径调为 `L*0.15`，使中心形状独立可见；`ShaderBytecode.Vert.cs` 由 glslc 从正式 GLSL 重新生成。`UiVm.ScaleGizmo.cs` 补低频“缩放开始捕获 Entity=... Handle=...”日志；`UiVm.MoveGizmoLogging.cs` 在缩放 Commit / Cancel 中补 `Handle` 与最终 Scale / Reason，支撑真机区分 Uniform 与 X/Y/Z。
+- 保持语义：未修改 `TransformSession → SceneStateOwner → GlobalWorld` 提交链；未改实体 Transform、相机参数、Move/Rotate Gizmo、Preview/Commit/Cancel/Undo/Redo 语义；未新增多选、Pivot、吸附、数值输入、Global/Local、负缩放、WarCore。
+- 测试变化：新增 `ScaleGizmoTests.R5R1.cs` 覆盖中心 Uniform 优先命中、中心外单轴命中、Uniform Preview 按同倍率保持原比例、63 DIP 尺寸契约和距离稳定性；新增 `WorldScaleTransformUiTests.R5R1.cs` 覆盖 Y/Z 单轴回归、Uniform 一次提交一条 History、Undo/Redo、Escape 后延迟 MouseUp 不提交。
+- 验证（本轮实测，非沿用）：首次沙箱内 `dotnet build XuanYu.Engine.slnx --no-restore -m:1 -nr:false -p:UseSharedCompilation=false` 因 Avalonia BuildServices 写 `C:\Users\Heai\AppData\Local\AvaloniaUI\BuildServices\buildtasks.log` 权限失败（0 warning / 2 errors），授权后同命令通过，全 10 项目 **0W0E**；`dotnet test XuanYu.Core.Tests\XuanYu.Core.Tests.csproj --no-build -m:1 -nr:false` **129 passed / 0 failed / 0 skipped**；`dotnet test XuanYu.World.Tests\XuanYu.World.Tests.csproj --no-build -m:1 -nr:false` **163 passed / 0 failed / 0 skipped**。后续守卫、diff、5+100 与 push 结果见本轮最终回复。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md`、`changelog.md` 同步到 `v0.2.20.19-fix`；更新 `docs/world-b-r5-scale-transform-report.md`，明确 v0.2.20.18-rz 真机退回、R5-R1 修复和“等待真机重新验收、未 CLOSED”。
+
+## v0.2.20.18-rz
+WORLD-B-R5 Scale Gizmo 缩放变换闭环（2026-07-27 22:32:12）
+- 任务目标：在 R4（移动/旋转）基础上补齐第三变换工具——Scale Gizmo 缩放闭环；三轴 X/Y/Z 单轴只改对应 Scale 分量、中心 Uniform 三轴等比；实体局部 Scale 语义、下限 0.01、拒绝 0/负/NaN/Infinity；闭环 PointerDown→Begin→Preview→Commit→Escape Cancel→Undo/Redo，实时预览、单次提交、松手无跳变、工具内切换实体、轮廓同步。冻结：不进 Local/多选/Pivot/吸附/数值输入/负缩放/镜像/父子传播/重开 R4/重构稳定 Vulkan Fence/顺手清文档/扩范围。
+- 复用体系：SelectionKey 单一权威、TransformSession（TryPreviewScale/TryCommit/TryCancel 轴无关）、SceneRenderSnapshot/RenderProjection、History.RecordTransformHistory、Capture Cancel、Vulkan Pending Projection、工具内点选切换；push constant 槽零新增——gizmoMode(@80/index20: 0=Move/1=Rotate/2=Scale)、gizmoRingRadius 复用为 Scale 世界轴长、entityRotation 复用为 GizmoRotation。
+- 修复落点（Core Gizmo，无平台依赖）：
+  - `ScaleGizmoAxis`：定义 `ScaleGizmoAxis{X,Y,Z}` 与 `ScaleGizmoHandle{X,Y,Z,Uniform}`（Uniform 跨三轴）。
+  - `ScaleGizmoScreenSize.ComputeWorldAxisLength(camera,viewport,origin)`：DIP→世界轴长，屏幕空间恒定尺寸（TargetScreenAxisDip=90/Handle11/Center13），CPU 命中与 Shader 共用。
+  - `ScaleGizmoLayout.Project(state,pos,worldAxisLength,entityRotation)`：生成中心立方体+三轴端点，按实体 Rotation 经欧拉旋转（Rz·Ry·Rx，与 shader 一致）使轴跟随朝向。
+  - `ScaleGizmoHitTester.HitTest(layout,x,y,margin=5)`：中心→Uniform、三轴线段→对应 X/Y/Z。
+  - `ScaleGizmoDrag.ApplyFactor(s,handle,factor)`+`Solve`：单轴只改对应分量、Uniform 三轴同乘；exp 因子（factor=exp(Δ/SensitivityDip)，从 StartScale 非累积）；Clamp 到 MinimumScale=0.01。
+- 修复落点（Editor + UI + Render）：
+  - `XuanYu.Editor/Transform/TransformSession.Scale.cs`：`ScaleHandle` + `BeginScale(sessionId,entity,handle)`，复用 TryPreviewScale/TryCommit/TryCancel；`TransformSession.End()` 重置 `ScaleHandle=null`。
+  - `Render.Abstractions/RenderProjection.cs` 增 `ScaleGizmoVisible`/`ScaleGizmoWorldRadius`(复用 gizmoRingRadius)/`GizmoRotation`(复用 entityRotation)；`SceneRenderSnapshot.cs` 增 `ShowScaleGizmo`。
+  - `Editor.UI/EditorState/EditorTransformCapturePolicy.cs` 增 `CanBeginScaleGizmo`(ActiveTool==Scale)/`ShouldShowScaleGizmo`；`UiVm.Tool.cs` 放开"缩放"拦截（原 `name is "框选" or "缩放"` 改仅 `name is "框选"`）；`UiVm.InteractionPointer.cs` 旋转后增 `PreviewScaleGizmo` 分支；`UiVm.Interaction.cs` Commit/Cancel 补 `_scaleDrag=null`；`UiVm.MoveGizmoLogging.cs` 增"缩放"前后 Scale 日志；`SceneRenderProjectionAdapter.cs` 增 scaleGizmoWorldAxisLength/gizmoRotation 映射；`VulkanNativeHost.Gizmo.cs` ActiveTool=="缩放"改路由 `TryBeginScaleGizmoCapture`；`UiVm.Scene.cs` 增 `ComputeScaleGizmoWorldAxisLength`+下传 GizmoRotation；`UiVm.ScaleGizmo.cs`(新) 承载捕获/预览/轴方向。
+  - `Render.Vulkan`：`VulkanClearFrameOwner.Draw.cs` 增 `ScaleGizmoVertexCount=252`（36×3 轴条+36×3 轴端立方体+36 中心立方体）+ `DrawActiveGizmo` 按 `gizmoMode` 切换；`VulkanClearFrameOwner.PushConstants.cs` `target[20]=gizmoMode`；`scene.vert` 增 `cube`+`scaleVertex(vi)`（gizmoMode>1.5 经 `eulerRot(entityRotation)` 跟随朝向，按轴红/绿/蓝或中心白色）；`ShaderBytecode.Vert.cs` 以 glslc 重生成、80 字/行紧凑 75 行满足 5+100。
+- 测试（R5 自动测试 23，全绿）：`XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.cs`（14：Layout 三轴/旋转、HitTester 中心→Uniform/轴→对应手柄/远端→null、Drag 单轴只改自身/Uniform 三轴相等/零位移保持/负向 Clamp/NaN 回落/更远拉更大）；`XuanYu.World.Tests/World/WorldScaleTransformUiTests.cs`（9：Begin+Preview 提交前更新渲染 Scale、Preview→Commit 不跳变、X 提交只改 X、Uniform 三轴相等、一次提交+Undo/Redo、Esc 不入历史、空白点击不 Begin、切换 B 后第一次拖动改 B 不改 A、Resize 世界轴长有界）。另修正 2 个 stale 测试以反映缩放已实装：`WorldToolStateHighlightUiTests.Unimplemented_scale_keeps_move_tool_single_highlight`→`Scale_tool_switches_highlight_to_scale_gizmo`（点击"缩放"进入缩放工具+ShowScaleGizmo）；`WorldSelectionToolStateUiTests.Implemented_rotate_switches_active_tool_unimplemented_tools_keep_current`→`Implemented_rotate_and_scale_switch_active_tool_box_select_keeps_current`（"缩放"实装可切换、"框选"仍保持当前）。
+- 本轮补修：`UiVm.Scene` 原下传 Gizmo 投影时仍读取正式 `Entity.Transform`，缩放 Preview 时 Gizmo 朝向/轴长可能滞后；已新增 `UiVm.RenderProjection.cs` 并统一从 `snapshot.RenderTransform` 计算 RenderProjection，保证实体、轮廓与 Scale Gizmo 同步。`ScaleGizmoTests` 与 `WorldScaleTransformUiTests` 拆为 partial 分部，恢复全仓 5+100；`ScaleGizmoLayout` 空 `catch` 改为明确 `InvalidOperationException` 降级。
+- 版本与文档：`run.bat`/`UiWin.axaml`/`file-tree.md` 首行与 `changelog.md` 顶部同步到 `v0.2.20.18-rz`；新增 `docs/world-b-r5-scale-transform-report.md` 与 `docs/world-b-r5-scale-transform.svg`；`file-tree.md` 登记 ScaleGizmo 5 文件、测试 partial、`TransformSession.Scale.cs`、`UiVm.ScaleGizmo.cs`、`UiVm.RenderProjection.cs`，并补充 RenderProjection/SceneRenderSnapshot/Render.Vulkan 绘制与 PushConstants/scene.vert/ShaderBytecode 的 R5 变更。
+- 状态：**WORLD-B-R5 功能实装完成、自动化门禁全绿**；五项动态真机验收（点轴只缩轴/中心等比/拖动实时/轮廓同步/Undo-Redo-Esc）待用户真机裁定（用户已令"不需确认直接开发"），裁定通过即 WORLD-B-R5 CLOSED 并进入 R6 三工具整体验收与 WORLD-B 退出。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行）；`dotnet test` 串行 **Core 125 passed / 0 failed**、**World 160 passed / 0 failed**（合计 285，较 R4 净增 14+9=23）；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过，含 ShaderBytecode.Vert.cs 75 行 <100、版本四源一致）。
+
+## v0.2.20.17-fix
+WORLD-B-R4-R3-R2 选中实体外轮廓边带 + Present 同步顺序修正（2026-07-27）
+- 任务目标：v0.2.20.16-fix 经真机验收判定 **FAIL**——`5c717b5` 废除的浅蓝复制面确实消失，但新"重心坐标真实边缘高亮"几乎不可见（仅三角形内约 1-2px 内边线，吃黄色、受透视畸变、被 Gizmo 环盖住），并非 Blender 式外轮廓；且真机发现真正的 Vulkan 同步 bug：`VulkanPresentLoop.RunFrames` 在 `WaitAndResetFence()` 之前调用 `TryApplyPendingRenderProjection()` 重录并释放/替换上一帧 CommandBuffer，可能释放仍在 GPU 执行的 CommandBuffer，导致呈现延迟/帧错乱、旋转"看起来滞后"。本轮回填两者；**不进 F5、不改放大复制面、不加粗重心坐标内线、不做每帧 `DeviceWaitIdle`、不重写 World/Picking/TransformSession、不扩文档注水、测试全绿后不扩测**。
+- 根因审计（用户真机审计 `0925dda` / v0.2.20.16-fix 结论）：(1) 重心坐标 `fwidth(vBary)` 仅着色三角形内部 ~1-2px 近边，本质是"内描边"而非"外轮廓"，放大倍数被禁且放大仍非外轮廓；(2) `RunFrames` 旧顺序 `ApplyPendingProjection → WaitAndResetFence → Submit` 在等待 Fence 之前已重录/释放旧 CommandBuffer，违反"Fence 等待应在重录前"的 Vulkan 生命周期铁律，是旋转实时呈现滞后的真正根因（B/C/D/E 仅验 `UiVm`/`RenderSnapshot`，未验 GPU Present）。
+- 修复落点（Target A 真实外轮廓）：
+  - 顶点着色器：`scene.vert` 删除重心坐标 `vBary` 输出，新增 `outlineRibbonVertex(vi)`——选中实体（`selectionMode>1.5`）按原始三角三边各生成 2 三角形共 **18 顶点**外轮廓边带（非放大整面），NDC 边方向取垂直分量按 `perp*(halfWidth*2.0/vec2(vpW,vpH))` 屏幕空间偏移，halfWidth=1.5px≈3 DIP 全宽，颜色 `vec3(0.80,0.90,1.0)`（浅蓝白）。
+  - push constant：`entityRotation.w`（target 27）= viewportWidth、`entityScale.w`（target 31）= viewportHeight，复用为屏幕空间定宽依据；`selectionMode`（@88/index 22）语义 0/1=填充、2=外轮廓边带；128 字节 std140 不变。
+  - 绘制层：`VulkanClearFrameOwner.Draw` 每实体先 `Fill(3)` 单次填充，选中实体再追加 `OutlineRibbon(18)`；顶点数取自 `RenderDrawPlan.FillVertexCount(3)`/`OutlineRibbonVertexCount(18)`；绘制顺序 Fill→OutlineRibbon→Gizmo。
+  - 片元着色器：`scene.frag` 改为直接透传基础色，删除重心坐标 `fwidth` 内部边线。
+- 修复落点（Target B 同步顺序）：
+  - `VulkanPresentLoop.Frame.cs` 拆分 `WaitFence`（`WaitForFences`）/ `ResetFence`（`ResetFences`）/ `SubmitFrame` / `PresentFrame`。
+  - `VulkanPresentLoop.cs` 的 `RunFrames` 改为 `WaitFence`（等上一帧 GPU 完成）→ `ApplyPendingProjection`（重录 CommandBuffer）→ `ResetFence` → `QueueSubmit`，杜绝释放/替换 GPU 执行中 CommandBuffer；禁止每帧 `DeviceWaitIdle`，禁止 Reset 后跳过提交。
+- 抽象与测试（抽出可测纯函数供 Vulkan 与测试共同引用）：
+  - `XuanYu.Render.Abstractions/RenderDrawPlan.cs`：`GetDrawPlan` 纯函数（未选中 `Fill(3)`、选中 `Fill(3)+OutlineRibbon(18)`），顶点数常量单一来源。
+  - `XuanYu.Render.Abstractions/FrameExecutionPolicy.cs`：`FrameStep` 枚举 + 固定 `Order`（WaitFence→ApplyPendingProjection→ResetFence→QueueSubmit）。
+  - `XuanYu.Core.Tests/Render/RenderDrawPlanTests.cs`（6）：未选中仅 `Fill(3)`、选中 `Fill(3)+OutlineRibbon(18)`、无第二 `Fill(3)`、边带总 18 顶点、混合选择各自正确、全不选皆 `Fill`。
+  - `XuanYu.Core.Tests/Render/FrameExecutionPolicyTests.cs`（6）：四步顺序与"Reset 不在 Apply 之前"等约束。
+  - 保留 B/C/D/E（`WorldRotateTransformUiTests.R4R3R1` + `SceneRenderProjectionAdapterTests.Selection`）作为投影层证据，但明确不作为 GPU Present 证据。
+- 本轮补修（工作树既有 R4-R3-R2 实装经核验后的缺口）：`ShaderBytecode.Vert.cs` 既有重生成被截断（495 行、末行 `0x0003003Eu, 0x000` 半字）→ 用 `glslc` 重新生成并 Python 转 C# 数组还原完整 4366 字 SPIR-V（紧凑 60 字/行，85 行，满足 5+100）；`FrameExecutionPolicyTests.cs` 原对 `IReadOnlyList` 误用 `.IndexOf` 编译失败 → 改为本地 `StepIndex` 索引查找。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.17-fix`；`file-tree.md` 更新渲染层描述（ShaderBytecode.Vert/Frag、VulkanScenePushConstants、VulkanClearFrameOwner.Draw/PushConstants、scene.vert/frag、VulkanPresentLoop.Frame/主体、Render.Abstractions 新增 RenderDrawPlan/FrameExecutionPolicy）。
+- 状态：**WORLD-B-R4 CLOSED（2026-07-27 用户真机裁定）**。用户真机验收裁定：选中轮廓 PASS、旋转实时预览 PASS、目标切换 PASS、Undo PASS；18 顶点外轮廓边带 + Vulkan 同步顺序修正经真机验收通过。R4 收口，禁止重开；立即进入 WORLD-B-R5（候选 v0.2.20.18-rz Scale Gizmo 缩放闭环）。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行）；`dotnet test` 串行 **Core 111 passed / 0 failed**、**World 151 passed / 0 failed**；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过，含 ShaderBytecode.Vert.cs 85 行 <100）。
+
+## v0.2.20.16-fix
+WORLD-B-R4-R3-R1 废除放大复制面，改用重心坐标真实边缘高亮（2026-07-27）
+- 根因审计（用户真机审计 GitHub `5c717b5` / v0.2.20.15-fix 结论）：R4-R3 实装的"轮廓高亮"实为对选中实体执行两次完整 CmdDraw——outlineMode=1 画放大 1.16 的浅蓝白整面、outlineMode=0 画黄色实体盖顶；三角形几何中心不在局部原点，`*1.16` 绕原点放大造成偏移与边宽不均，根本不是真正的轮廓。预览旋转链本就实时（PreviewRotateGizmo 每次 PublishSceneRenderSnapshot），用户看到的"点击其他实体才应用旋转"是放大复制面随选择切换消失造成的视觉假象。R4-R3 真机判定 FAIL。
+- 修复落点（禁止再选"放大外壳"方案）：
+  - 渲染层：`VulkanClearFrameOwner.Draw` 删除 `IsSelected` 额外 Draw 分支，每个实体永远单次 Draw，仅以 `e.IsSelected ? 1.0f : 0.0f` 下传选中标志。
+  - push constant：`outlineMode` 改名 `selectionMode`（@88 / index 22），语义收紧为"是否选中"，不再携带放大比例。
+  - `scene.vert`：删除 `local *= 1.16`，保留 Scale→Rotation→Position；按 `gl_VertexIndex` 输出重心坐标 `vBary`((1,0,0)/(0,1,0)/(0,0,1))，并把 `vSelected`/`vEntity` 传给 frag。
+  - `scene.frag`：对选中实体（`vEntity>0.5 && vSelected>0.5`）用 `fwidth(vBary)` + `smoothstep` 算边缘，边缘浅蓝白 `vec3(0.80,0.90,1.0)`、内部保持黄色；禁止第二张完整面，浅蓝白方向非荧光。
+  - SPIR-V 重生成：`glslc` 由 GLSL 重新生成 `scene.spv`，Python 转 C# 数组覆盖 `ShaderBytecode.Vert.cs`（1689 字）与 `ShaderBytecode.Frag.cs`（307 字）。
+- 测试（新增 A/B/C/D/E，覆盖双 Draw 废除与真实边缘语义）：
+  - A：渲染层每个实体只 Draw 一次（代码审查 + arch-a-guard 兜底，真机验收复核 CmdDraw 计数）。
+  - B：`WorldRotateTransformUiTests.R4R3R1.Begin_rotate_then_single_preview_updates_render_rotation_before_commit` —— Begin Rotate 后一次 Preview 未 Commit 时 `RenderSnapshot.RenderTransform.Rotation` 已变、正式 `scene.TryGetEntity` 的 Rotation 仍为 0。
+  - C：`Preview_to_commit_keeps_render_rotation_stable` —— 同位置 Preview→Commit 不跳变。
+  - D：`Commit_A_then_select_B_does_not_mutate_A_rotation` —— Commit A 后 Pick B 不改 A 的正式 Rotation。
+  - E：`SceneRenderProjectionAdapterTests.Selection.Selection_marks_single_entity_without_duplicating_into_render_projection` —— 投影层实体不倍增（`Entities.Count==2`、唯一 `IsSelected` 为 A）。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.16-fix`；`file-tree.md` 更新渲染层 7 处描述（去除 outlineMode/1.16 旧表述，改为 selectionMode 语义 + 重心坐标边缘高亮）。
+- 状态：**R4 仍 FAIL、未 CLOSED，禁止 F5**。本轮只修正"轮廓高亮"的实现缺陷，其余 R4 缺陷须统一真机复测通过后才可宣布 R4 CLOSED。禁止后处理/Stencil/大规模重构、不改无关 Picking/Camera/World、Transform 正式提交链暂不重写。
+
+## v0.2.20.15-fix
+WORLD-B-R4-R3 选中实体视口轮廓高亮（2026-07-27）
+- 任务目标：R4 真机缺陷"选中缺少 Blender 式轮廓高亮"本轮实装。三条冻结目标：(1) 选中实体在视口有清晰轮廓；(2) A→B 切换立即同步轮廓、无残留/无 1 帧延迟；(3) 轮廓由同一 SelectionKey 经 Select/Rotate 工具与层级树统一驱动，与 Gizmo 一致。视觉：浅蓝白/青色亮轮廓，非荧光/高饱和/红，非填充/红点/文字。禁项：F5、缩放重构、hover、多选、框选、材质系统、渲染重写。
+- 根因与方案：实体为程序化三角形（无顶点缓冲/法线、无深度缓冲、画家序），故采用零重构"先画放大浅蓝白三角作底、实体三角随后压顶"形成轮廓；多实体同屏渲染（UiVm.Scene 把全部 world entities 作为 RenderEntities），故轮廓必须跟随显式 `IsSelected` 标志，而非"列表内即选中"。
+- 修复落点：
+  - 投影层：`RenderEntityProjection` 增加 `IsSelected`；`SceneRenderProjectionAdapter` 按 `snapshot.IsSelected && e.EntityKey == snapshot.Entity.EntityKey` 标记当前选中实体。
+  - 渲染层：`scene.vert` 新增 `outlineMode` push constant（@88 / index 22），>0.5 时放大本地点 1.16 并以浅蓝白 `vec4(0.80,0.90,1.0,1.0)` 着色；`VulkanClearFrameOwner.Draw` 对 `IsSelected` 实体先以 outlineMode=1 画底三角、再以 outlineMode=0 画实体；`ShaderBytecode.Vert` 重生成容纳新 SPIR-V（1622 字）。
+  - 文件拆分布局：因 Draw 文件加入轮廓后超 5+100 硬门禁（107 行），将 `FillScenePushConstants` 抽入新建 `VulkanClearFrameOwner.PushConstants.cs`（同 partial 类），主 Draw 文件回到 82 行。
+  - 测试：`SceneRenderProjectionAdapterTests.Selection`（选中实体 IsSelected=true、非选中 false、切到 B 仅 B 标记）。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.15-fix`；`file-tree.md` 登记新增 `SceneRenderProjectionAdapterTests.Selection.cs` 与 `VulkanClearFrameOwner.PushConstants.cs`，并补充 `RenderEntityProjection`/`SceneRenderSnapshot`/`SceneRenderProjectionAdapter`/`ShaderBytecode.Vert`/`VulkanClearFrameOwner.Draw`/`scene.vert` 本轮变更说明。
+- 状态：**R4 仍 FAIL、未 CLOSED，禁止 F5**。本轮只解决"轮廓高亮"，其余 R4 缺陷（旋转可视/尺寸/日志/切换）已分别由 R4-R1/R2 处理，须统一真机复测通过后才可宣布 R4 CLOSED。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全项目 **0W0E**（GOV 串行）；`dotnet test --no-build --no-restore` 串行 **Core 98 passed / 0 failed**、**World 148 passed / 0 failed**（合计 246，较 R2 净增 3）；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过）。
+
+## v0.2.20.14-fix
+WORLD-B-R4-R2 选择与旋转目标一致性修复（2026-07-27）
+- 任务目标：R4 真机缺陷（旋转工具激活时不能直接点其他实体切换 Gizmo、选择/旋转目标疑似不同步有延迟感、缺旋转日志、环尺寸不合适）中，本轮只修前三类与尺寸，并把"全链路单一权威选中实体"固化；**不碰选择轮廓（已冻结为 R4-R3）、不进入 F5、不顺手修历史文档**。
+- 根因审计（链路闭合即停，未全仓库考古）：`UiVm.InputGuards.CanPickViewportSelection()` 原要求 `IsSelectTool`，导致旋转/移动/缩放工具下点击非 Gizmo 区域时 `PickViewportPointer` 首行短路、选择永不切换，Gizmo/Inspector/旋转目标全卡旧实体 A；实为"切换入口被工具限制堵死"，并非多缓存字段不一致（权威选中实体本就是单一的 `_editorState.SelectionKey` → `SetActiveEntity` → `RenderSnapshot.Entity` → `TransformSession.EntityKey`）。
+- 修复落点：
+  - 切换入口：`UiVm.InputGuards.CanPickViewportSelection()` 去掉 `IsSelectTool` 前提，改为 `!IsBoxSelectTool && !HasMoveCapture && !IsCameraNavigationActive`；指针按下已先 `TryBeginGizmo`，Gizmo 未命中才 Picking，不会与变换捕获冲突。旋转/移动/缩放工具下点击其他实体立即切换选择，工具保持原样。
+  - 单一权威一致性：因全链路本就派生自 `SelectionKey`，切换后 Selected/Gizmo/Inspector/Render/Transform/History 目标自动统一为 B，无延迟、无旧目标残留、无点 B 转 A。
+  - Gizmo 尺寸：`RotateGizmoScreenRadius.TargetScreenRadiusDip` 由 120 DIP 调至 90 DIP，近远相机下环更合理且减少误触。
+  - 最小诊断日志：`UiVm.MoveGizmoLogging` 去掉 `OwnerTool!="移动"` 限制，旋转提交/取消同样记录并带 EntityKey 与旋转前后；`UiVm.SelectionProjection.LogSelectionCommit` 补 EntityKey 作为 TargetSwitch 日志；仍不记录 PointerMoved 噪声。
+  - 测试：`WorldRotateTransformUiTests.R4R2`（旋转工具下点击 B 切选择且工具保持 Rotate、Selected/Gizmo/Inspector/Render/Transform/History 统一为 B、切换后第一次拖动改 B 不改 A、Commit/Undo EntityKey==B、Gizmo 屏幕半径有界）。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 首行同步到 `v0.2.20.14-fix`；`file-tree.md` 登记新增 `WorldRotateTransformUiTests.R4R2.cs` 并补充 `RotateGizmoScreenRadius`/`InputGuards`/`MoveGizmoLogging`/`SelectionProjection` 本轮变更说明。
+- 状态：**R4 仍 FAIL、未 CLOSED，禁止 F5**。本轮只解决"切换与目标一致性 + 尺寸 + 日志"，"Blender 式轮廓高亮"已冻结为 R4-R3，须 R4-R2 真机复测通过后再进入 R4-R3。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行）；`dotnet test --no-build --no-restore` 串行 **Core 95 passed / 0 failed**、**World 148 passed / 0 failed**（合计 243，较 R1 净增 3）；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与边界通过）。
+
+## v0.2.20.13-fix
+GOV-FLOW-R1 关键路径、范围冻结与及时交付治理（2026-07-27 08:45:39）
+- 任务目标：WORLD-B-R4 真机复测仍判定 **FAIL**（旋转环尺寸不合适、旋转目标疑似与选中实体不同步有延迟感、缺少旋转交互日志、变换工具激活时不能直接点选其他实体切换 Gizmo、选中缺少 Blender 式轮廓高亮），缺陷全部登记、保留到治理轮后处理；**不修运行时代码、不进入 F5**。本治理轮只改 6 个批准文档文件，把 R4 FAIL 暴露的流程问题固化成长期治理规则，冻结每轮目标、范围、门禁、停止条件与禁止事项。
+- 实装结果：`玄域引擎_AI开发宪法.md` 新增**第二十八章「开发轮流程与关键路径治理」**，写入 14 条不可违反原则（目标冻结≤3项、固定状态流程、根因链闭合即停、快速验证前置、正式门禁只跑一次有效链、并行纪律、文档最小同步、完成即落库、汇报收敛、停止条件、验收前禁启后续、速度与真实并重、同文件禁并行编辑、落库即等待验收）+ WORLD-B-R4 宪法案例（真机未过禁止 F5）；`docs/dev-rules.md` 新增 **§17** 稳定流程模板与要点，条款与第二十八章一一对齐；`run.bat` / `XuanYu.Editor.UI/Win/UiWin.axaml` / `file-tree.md` 首行版本号同步到 `v0.2.20.13-fix`。
+- 本轮禁止：修改任何 `.cs`/Shader/测试/csproj/脚本；修复 Rotate Gizmo、选择、高亮或日志；启动 F5；顺手清理历史文档；新建治理脚本；制造 GOV-FLOW-R2。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.13-fix`；本轮未触碰任何运行时代码，`file-tree.md` 仅更新首行版本号，不扩写历史文件描述（遵循"文档最小同步"）。
+- 状态：**GOV-FLOW-R1 CLOSED**；**WORLD-B-R4 仍 FAIL、未 CLOSED，禁止 F5**；治理后的功能顺序为 GOV-FLOW-R1 收口 → 重新审计 R4 真机问题 → 修选择目标同步与延迟 → 调 Gizmo 尺寸 → 补最小旋转日志 → 变换工具下直接切换选中实体 → Blender 式轮廓高亮 → 真机验收 → R4 CLOSED → 才进 F5。
+- 验证（本轮真实，非沿用）：起始工作区 `git status` **CLEAN**；修改范围恰好 6 个批准文件（宪法/dev-rules/changelog/run.bat/UiWin.axaml/file-tree首行），无越界；`git diff --check` **PASS**；5+100 仅文档变更、无 `.cs`/`.axaml` 越界；版本源一致（run.bat / UiWin.axaml / file-tree 首行均为 `v0.2.20.13-fix`）；`scripts/arch-a-guard.ps1` **EXIT=0**（仅文档变更，门禁一次）；宪法第二十八章与 dev-rules §17 条款一致。纯文档治理轮按第二十七章第十二条豁免全解决方案构建，未跑 `dotnet build`/`dotnet test`，不记录未执行的构建/测试结果。
+
+## v0.2.20.12-fix
+WORLD-B-R4-R1 旋转 Gizmo 真机收口修复（2026-07-27）
+- 任务目标：R4 实装（F4 旋转工具闭环）经真机验收判定 **FAIL**——旋转在视口无可见效果。本轮回填 R4 FAIL 审计的全部缺陷，使旋转真正可旋转、命中与渲染一致、零误触发历史；**不进入 F5 缩放**、不扩架构、不改日志/测试断言伪装过关、不宣布 R4 CLOSED。
+- 缺陷与修复（FAIL 审计 → 落点）：
+  - P0 渲染链丢弃 Rotation：`RenderEntityProjection` 新增 `Rotation`/`Scale`；`RenderProjection` 实体投影与 `SceneRenderProjectionAdapter` 一并下传 TRS；`scene.vert` 已含 `eulerRot()` 与缩放应用、`VulkanClearFrameOwner.Draw` 已按 `RotateGizmoVisible` 门控 CmdDraw——本轮确认 TRS 真正贯通到 `gl_Position`。
+  - P1 旋转环固定世界半径 1.2：新增纯辅助 `RotateGizmoScreenRadius.ComputeWorldRadius`（目标 120 DIP，按相机深度/FOV/视口逻辑高度反算世界半径），CPU 命中（`RotateGizmoLayout`）与 Shader（`RenderProjection.RotateGizmoWorldRadius`）共用同一公式，做到"所见即所命中"且任意 DPI 一致，不再只是换一个魔法数。
+  - P1 `RotateGizmoDrag` 首帧吞角：`RotateGizmoDrag.Math.TryInitialize` 在指针按下即初始化角度，无效射线交返回 false 拒绝捕获（修复 `UiVm.RotateGizmo.TryBeginRotateGizmoCapture`）。
+  - P1 近零旋转空历史：`SceneStateOwner.Transform` 以 `EquivalentTransform`（分量 1e-4 容差）取代精确相等，避免浮点抖动污染 History。
+  - P2 `_rotateDrag` 提交/取消不对称清空：`UiVm.Interaction` 的 `CommitInteraction`/`CancelInteraction` 均补 `_rotateDrag = null`。
+  - 测试缺口：新增 `SceneRenderProjectionAdapterTests.Rotation`（实体 R/S 下传、显式旋转环半径透传、不显示回落默认半径）、`WorldRotateTransformUiTests.R4R1`（零位移无历史、提交/取消清空拖拽态）、`RotateGizmoLayoutTests.Custom_world_radius_scales_ring_screen_radius`；原 `WorldRotateTransformUiTests.RingHit` 改用屏幕空间半径公式，命中点与生产捕获对齐。
+- 版本与文档：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.12-fix`；`file-tree.md` 补齐 F4 漏登记的 `RotateGizmo*` 系列与 `WorldRotateTransformUiTests`，并同步 TRS 合同与旋转环半径描述。
+- 状态：**R4 未 CLOSED**。本轮回填 FAIL 审计缺陷，全测试通过、构建清洁，但必须回真机重新验收旋转可视效果后才可宣布 R4 CLOSED；验收通过前不进入 F5 缩放。
+- 验证（本轮实测，非沿用）：`git diff --check` PASS；`dotnet build` 全 10 项目 **0W0E**（GOV 串行 `-m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false`）；`dotnet test --no-build --no-restore` 串行 **Core 95 passed / 0 failed**、**World 145 passed / 0 failed**（合计 240，较 F4 净增 6）；`scripts\arch-a-guard.ps1` **EXIT=0**（5+100 与 ARCH-WORLD/RENDER 边界均通过）。
+
+## v0.2.20.11-fix
+WORLD-B 治理·.NET 构建测试子进程生命周期（GOV-DOTNET-R1，2026-07-27）
+- 任务目标：把 WORLD-B-R4 收口期暴露的治理缺口正式写入宪法与执行手册——dotnet 构建/测试必须串行、子进程生命周期可控、超时无输出有上限、环境失败不伪装代码失败、安全策略限制时停止而非绕过、changelog 只记本轮真实退出码。本轮不修改任何 .cs、不修改测试、不新增脚本、不清理构建系统、不扩张架构、不触碰 CI。
+- 实装结果：`docs/玄域引擎_AI开发宪法.md` 新增第二十七章「.NET 构建、测试与子进程生命周期治理」（十二条不可违反原则：串行/前命令未返回不启下条/MSBUILDDISABLENODEREUSE/起止 build-server shutdown/-m:1 -nr:false/只构建一次后续 --no-build/单命令5min连续2min无输出停/取消杀完整进程树/无法终止子进程则停/环境失败不伪装代码失败/禁删 obj-bin 代替释放/安全策略拦进程管理不得绕过/同失败命令仅环境真变后重试一次/changelog 只记本轮真实退出码）；`docs/dev-rules.md` 新增第 16 节稳定验证模板（build-server shutdown + -m:1 -nr:false BuildInParallel=false UseSharedCompilation=false + 串行 --no-build --no-restore 测试 + 收尾 shutdown）。
+- 版本同步：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.11-fix`。
+- 状态：GOV-DOTNET-R1 CLOSED；下一动作回到 WORLD-B-R4-F5 缩放闭环（待用户真机验收 R4 后启动）。
+- 验证（本轮实际执行，非沿用）：`git diff --check` PASS；修改范围仅 6 个批准文件（2 文档 + 3 版本源 + 本条目）；架构守卫 `scripts/arch-a-guard.ps1` 执行一次 EXIT=0；5+100 对 .cs/.axaml 无新增越界（UiWin.axaml 仅改版本行）；无运行时代码变化，未跑全解决方案构建（文档治理轮按第二十七条第十二条豁免）。
+
+## v0.2.20.10-rz
+WORLD-B-R4-F4 旋转工具闭环（2026-07-26）
+- 任务目标：在 F2/F3 建立的 Transform 会话与工具状态合同之上，正式启用旋转工具——可见 X/Y/Z 三轴旋转环、屏幕命中、旋转会话、一次拖拽一次历史提交、取消不改写历史；Vulkan 顶点着色器按 `gizmoMode` 切换移动/旋转几何并按 `RotateGizmoVisible` 门控 CmdDraw。本轮不实现缩放柄、全局/局部或检查器旋转输入。
+- 实装结果：`XuanYu.Core/Gizmo` 新增 `RotateGizmoAxis`/`RotateGizmoRing`/`RotateGizmoLayout`/`RotateGizmoDrag(.Math)` 纯几何与稳定旋转数学（欧拉角度，分量独立回绕 ±180）；`XuanYu.Editor/Transform/TransformSession.Rotate.cs` 扩展 `BeginRotate` 与 `RotateAxis`；`UiVm.RotateGizmo`/`UiVm.Tool` 接通旋转命中、指针派发与工具高亮；`SceneRenderSnapshot`/`RenderProjection` 各加 `ShowRotateGizmo`/`RotateGizmoVisible` 尾随可选参数（位置记录结构，零破坏性）；`scene.vert` 旋转环 3×48×6=867 顶点，`VulkanClearFrameOwner.Draw` 按可见性选择 39/867 顶点计数。
+- 测试变化：新增 `RotateGizmoLayoutTests`(Core 3 项) 与 `WorldRotateTransformUiTests`(World 2 项：一次拖拽一次提交+撤销重做、取消不入历史)；修订 `WorldToolStateHighlightUiTests`(旋转切换高亮)、`EditorTransformCapturePolicyTests`(可起旋转捕获)、`WorldSelectionToolStateUiTests`(旋转已实装不再假激活)。实测测试数 Core 91 / World 143，合计 234（相对 F3 的 226 净增 8）。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.10-rz`；新增 `XuanYu.Editor` 旋转会话分部，遵守 ≤100 行红线（拆 `RotateGizmoDrag.Math` 偏部）。
+- 状态：R4 继续推进；下一步 F5 缩放闭环（X/Y/Z 单轴 + 等比，复用 ValidateScale）。
+- 验证（本轮实测，非沿用上轮记录）：`git diff --check` PASS；本轮差异文件 5+100 PASS；`scripts\arch-a-guard.ps1` EXIT=0；`dotnet build` 10 项目 **0W0E**（用时 15.44s，串行 -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false）；`dotnet test` **Core 91 / World 143 passed，0 failed / 0 skipped**，`--no-build --no-restore` 串行执行；无环境性失败。
+
+## v0.2.20.9-fix
+WORLD-B-R4-F3 工具状态真相修复（2026-07-26）
+- 任务目标：修复点击未实装“旋转”后“移动”与“旋转”同时高亮的双高亮问题，恢复 R2 已冻结合同（唯一 ToolMode → 工具栏高亮 / 右上角状态 / 视口控制柄 / 输入行为 四者一致）；旋转/缩放真正接通前不得假激活。本轮不实现旋转环、缩放柄或全局/局部。
+- 实装结果：`UiVm.Tool.cs` 在“未实装”分支提前 `return` 前补 `RaiseToolChanged()`，让被误点的 ToggleButton 视觉回落，消除双高亮；日志语义由“当前工具切换为：旋转未实装”改正为“旋转工具尚未实装，当前工具仍为：{当前工具}”，避免造成“已切换成功”的错误审计证据；当前真实工具、右上角状态与视口移动控制柄在点击未实装工具后均保持不变。
+- 测试变化：新增 `WorldToolStateHighlightUiTests` 2 项，覆盖未实装旋转/缩放点击后唯一高亮、状态与移动控制柄一致、至多一个工具按钮活动。测试数由 224 增至 226。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.9-fix`；新增 `.gitattributes`（`* text=auto`）统一换行，消除工作树 CRLF 误标。
+- 状态：R4 继续推进；下一步 F4 正式启用旋转工具（可见旋转环 + 命中 + 会话 + 提交）。
+- 验证：`git diff --check` PASS；本轮差异文件 5+100 PASS；SVG XML PASS；`scripts\arch-a-guard.ps1` EXIT=0；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **226 passed / 0 failed / 0 skipped**（Core 85 + World 141）。
+- 关联提交：`fd9ef059`。
+
+## v0.2.20.8-rz
+WORLD-B-R4-F2 完整 Transform 会话与检查器提交合同（2026-07-26）
+- 任务目标：继续 WORLD-B-R4，不补 CRUD、不进入 WarCore；把 R4-F1 的 Position / Rotation / Scale 数据落点推进为正式会话提交和检查器数值输入合同。本轮不宣布 R4 CLOSED，旋转/缩放可见控制柄与全局/局部模式仍待后续 R4 子轮完成。
+- 实装结果：`CommittedTransform` 增加 `WithRotation` / `WithScale` 与缩放安全下限，拒绝零、负数和接近零缩放；`PreviewTransform` 与 `TransformSession` 升级为完整 Transform Preview / Commit，旧移动预览继续保留 Rotation / Scale；`SceneStateOwner` 新增 `CommitTransformWithResult` 作为完整 Transform 唯一提交入口；右侧“检查器”标题改为“变换”，数值显示限制为 6 位小数，新增中文 `位置` / `旋转` / `缩放` 数值提交入口并接入 History。
+- 测试变化：扩展 R4 Transform 基础测试到 15 项，覆盖完整 Transform 提交、移动会话保留 Rotation / Scale、旋转缩放会话候选、危险缩放拒绝、检查器输入提交 / 撤销 / 重做、格式化显示不降内部精度与非法输入不污染 Transform。测试数由 212 增至 224。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.8-rz`。
+- 状态：R4 继续推进；下一步进入可见旋转环、缩放控制柄和“全局 / 局部”模式实装。
+- 验证：`git diff --check` PASS；本轮差异文件 5+100 PASS（14 个 `.cs` / `.axaml`）；SVG XML **55/55 PASS**；`scripts\arch-a-guard.ps1` EXIT=0；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **224 passed / 0 failed / 0 skipped**（Core 85 + World 139）。首次 build 被当前工作区 `XuanYu.Editor.App` PID 28612 锁定，核对 ExecutablePath 后终止该进程并重跑通过。
+
+## v0.2.20.7-rz
+WORLD-B-R4-F1 Transform 数据合同与检查器真实投影（2026-07-26）
+- 任务目标：在 WORLD-B-R3 CLOSED 后立即进入 WORLD-B-R4 代码实装；先补正式 Transform 数据合同和检查器真实字段，为后续 Rotate / Scale / Global / Local / Inspector 输入建立落点。本轮不实现旋转控制柄、缩放控制柄、Local 模式数学、检查器数值编辑、CRUD 或 WarCore。
+- 实装结果：`CommittedTransform` 扩展为 Position / Rotation / Scale，旧 Position 构造默认 Rotation=0、Scale=1；新增 `WithPosition`，移动提交经 `SceneStateOwner` 保留已有 Rotation / Scale；新增 `UiVm.Inspector` 分部，让右侧“检查器”显示实体真实位置、旋转、缩放字段。
+- 测试变化：新增 `WorldR4TransformFoundationTests` 3 项，覆盖 Transform 默认值、移动提交保留旋转缩放、检查器显示真实 Transform 字段。测试数由 209 增至 212。
+- 文档与版本：`run.bat`、`UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.7-rz`。
+- 状态：R4 已开始但尚未 CLOSED；下一步继续实装 Rotate / Scale 操作会话、Global / Local 模式和检查器数值输入。
+- 验证：`git diff --check` PASS；本轮差异文件 5+100 PASS（6 个 `.cs` / `.axaml`）；SVG XML **55/55 PASS**；`scripts\arch-a-guard.ps1` EXIT=0；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **212 passed / 0 failed / 0 skipped**（Core 85 + World 127）。
+
+## v0.2.20.6-rz
+WORLD-B-R3 移动变换闭环收口（2026-07-26）
+- 任务目标：在 `53b6dd7` R3 基础加固后继续完成剩余 R3 代码，不另开规划轮；补齐可见 XY / XZ / YZ 平面控制柄、平面 Picking / Drag、提交 / 撤销 / 重做、跨 Region、取消路径和输入互斥。本轮不加入 CRUD、Rotate、Scale、Global / Local、Inspector 数值输入或 WarCore。
+- 实装结果：`MoveGizmoLayout` 增加平面面片投影和命中；新增 `MoveGizmoPlane`；`UiVm.MoveGizmo` 在平面命中后复用当前 `TransformSession` 并构造平面约束；Vulkan `scene.vert` 绘制中心标记、三平面和三轴，顶点 draw 数从 21 扩到 39，`ShaderBytecode.Vert.cs` 由 glslc 重新生成；Resize 汇入移动取消路径。
+- 测试变化：新增 Core 平面控制柄命中测试、UiVm 平面移动 / 无位移提交 / 取消 / 延迟 PointerUp / 输入互斥 / 跨 Region 自动测试。测试数由 193 增至 209。
+- 文档与可视化：新增 `docs/world-b-r3-move-transform-closure.md` 与 `docs/world-b-r3-move-transform-closure.svg`，记录 R3 中文 IPO 真机清单与最终 CLOSED 裁定；`run.bat`、`UiWin.axaml`、`file-tree.md` 同步到 `v0.2.20.6-rz`。
+- 状态：**WORLD-B-R3 CLOSED**。下一入口为 WORLD-B-R4：旋转 / 缩放 / Global / Local / 检查器变换输入；仍不进入 CRUD 或 WarCore。
+- 验证：`git diff --check` PASS；本轮差异手写文件 5+100 PASS（13 个 `.cs` / `.axaml`，生成文件 `ShaderBytecode.Vert.cs` 行数 79）；SVG XML **55/55 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **209 passed / 0 failed / 0 skipped**（Core 85 + World 124）。沙箱 build 因 NuGet 网络权限 NU1301 失败，非沙箱重跑时 PID 31752 的当前工作区 `XuanYu.Editor.App` 锁定输出 DLL，核对路径后终止该进程并重跑通过。
+
+## v0.2.20.5-rz
+WORLD-B-R3 移动变换闭环基础加固（2026-07-26）
+- 任务目标：在 R2 CLOSED 后立即进入 WORLD-B-R3，先补移动变换基础风险：平面移动数学约束、实体失效后的会话安全结束、UiVm 级移动提交 / 撤销 / 重做主链自动测试。本轮不补完整 CRUD，不进入 Rotate / Scale、Inspector 数值输入、吸附、多选、批量移动、WarCore。
+- 实装结果：`MoveGizmoAxis` 增加 XY / XZ / YZ 平面枚举；`MoveGizmoDragConstraint` 增加平面约束求解，解两根屏幕轴的 2x2 投影并只修改对应世界平面；`TransformSession.TryCommit` 在目标实体失效或 active entity 不匹配时结束会话并拒绝生成提交结果。
+- 测试变化：`MoveGizmoDragConstraintTests` 新增 3 项平面约束测试；`TransformSessionTests` 新增实体失效提交安全结束测试；新增 `WorldMoveTransformUiTests` 2 项，覆盖真实 UiVm X 轴拖动提交、撤销、重做，以及移动会话阻止选择改写。测试数由 187 增至 193。
+- 状态：R3 已开始但尚未 CLOSED；平面控制柄目前只有数学约束，尚未完成可见平面控制柄与真机可操作入口，因此不能宣布 R3 完整闭环。
+- 验证：`git diff --check` PASS；本轮差异文件 5+100 PASS（7 个 `.cs` / `.axaml`）；SVG XML **54/54 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **193 passed / 0 failed / 0 skipped**（Core 80 + World 113）；`scripts\arch-a-guard.ps1` EXIT=0。沙箱 build 因 NuGet 网络权限 NU1301 失败，非沙箱重跑通过；此前 PID 33152 的当前工作区 `XuanYu.Editor.App` 锁定输出 DLL，核对路径后终止该进程并重跑通过。
+
+## v0.2.20.4-rz
+WORLD-B-R2 选择与工具状态闭环实装（2026-07-26）
+- 任务目标：建立编辑器唯一 Selection / ToolMode 的边界加固，让中央视口、左侧“层级”、右侧“检查器”、顶部工具栏和移动控制柄消费同一选择与工具状态；本轮不进入 Rotate / Scale 数学、Inspector 数值变换、多选、框选算法或 WarCore。
+- 实装结果：新增 `UiVm.InputGuards` 与 `UiVm.SelectionValidity`；Picking 只允许“选择”工具在无活动会话时写入 Selection；活动相机或移动会话期间拒绝 Picking、层级/项目树选择写入和工具切换；“框选”“旋转”“缩放”不进入虚假活动态；删除/失效实体后按 World 权威清理 Selection。
+- 测试变化：新增 `WorldSelectionToolStateUiTests` 5 项，覆盖层级选择同步检查器、清除选择同步清层级/检查器/移动控制柄、删除选中实体清除失效选择、未实现工具拒绝虚假高亮、移动会话阻止工具切换/相机/Picking。测试数由 182 增至 187。
+- 文档与可视化：新增 `docs/world-b-r2-selection-tool-state-report.md` 与 `docs/world-b-r2-selection-tool-state.svg`；`run.bat`、`UiWin.axaml`、`file-tree.md` 同步到 `v0.2.20.4-rz`。
+- 状态：R2 代码与自动门禁完成；中文 IPO 真机验收 01–06 PASS，07 因当前编辑器没有实体删除入口标记 N/A；失效实体选择清理由自动测试覆盖。最终裁定：**WORLD-B-R2 CLOSED**。
+- 验证：`git diff --check` PASS；全仓 5+100 PASS（311 个 tracked/untracked `.cs` / `.axaml`）；SVG XML **54/54 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **187 passed / 0 failed / 0 skipped**（Core 77 + World 110）；`scripts\arch-a-guard.ps1` EXIT=0。
+
+## v0.2.20.3-rz
+WORLD-B-R1 编辑器相机操作验收收口（2026-07-26）
+- 任务目标：记录 R1 中文 IPO 真机证据通过，将 WORLD-B-R1 从“代码与自动门禁完成、等待真机记录”推进到正式 CLOSED，并冻结下一入口为 WORLD-B-R2。
+- 收口结果：新增 `docs/world-b-r1-camera-acceptance-closure.md` 与 `docs/world-b-r1-camera-acceptance-closure.svg`，记录 11 项中文 IPO 真机验收 PASS、相机焦点合同 PASS、相机 / 选择 / 移动输入互斥 PASS、窗口调整与捕获取消 PASS。
+- 版本同步：`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`file-tree.md` 与 `changelog.md` 同步到 `v0.2.20.3-rz`。
+- 范围纪律：本轮只做 R1 验收收口与文档版本推进，不修改生产逻辑；不进入 R2 代码、Rotate、Scale、Inspector Transform 或 WarCore。
+- 验证：`git diff --check` PASS；全仓 5+100 PASS（308 个 tracked `.cs` / `.axaml`）；SVG XML **53/53 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **182 passed / 0 failed / 0 skipped**（Core 77 + World 105）；`scripts\arch-a-guard.ps1` EXIT=0。首次沙箱 build 因 NuGet 网络权限 NU1301 失败；非沙箱重跑时 PID 34672 的当前工作区 `XuanYu.Editor.App` 锁定输出 DLL，核对路径后终止该进程并重跑通过。
+
+## v0.2.20.2-rz
+WORLD-B-R1 中文 IPO 真机测试治理补丁（2026-07-26 14:25:28）
+- 任务目标：将人工与真机测试清单统一为“序号 / 路径 / 输入 I / 过程 P / 输出 O”格式，确保测试者可以逐步照做，结果可以由画面、状态、日志或数据明确判断。
+- 治理更新：`docs/玄域引擎_AI开发宪法.md` 在测试验收章节新增 IPO 强制条款；`docs/dev-rules.md` 同步简版硬规则；禁止在人工或真机清单中用 `Frame Selected`、`Frame All`、`Orbit`、`Pan` 等内部英文名替代当前 UI 中文名称。
+- 验收文档：`docs/world-b-r1-camera-operation-report.md` 将 R1 真机验收项替换为 11 项中文 IPO 清单，覆盖“聚焦”“查看全部”、Shift + 鼠标中键平移、滚轮调整观察距离、Escape 取消、窗口失焦、调整窗口大小、选择保持和“移动”互斥。
+- 范围纪律：本轮只修改治理文档、R1 验收文档与 changelog，不修改生产逻辑；未新增、删除、改名或移动文件，因此不机械修改 `file-tree.md`。
+- 验证：`git diff --check` PASS；全仓 5+100 PASS（308 个 tracked `.cs` / `.axaml`）；SVG XML **52/52 PASS**；`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **182 passed / 0 failed / 0 skipped**（Core 77 + World 105）；`scripts\arch-a-guard.ps1` EXIT=0。首次沙箱 build 因 NuGet 网络权限 NU1301 失败；非沙箱重跑时 PID 3288 的当前工作区 `XuanYu.Editor.App` 锁定输出 DLL，核对路径后终止该进程并重跑通过。
+
+WORLD-B-R1 编辑器相机操作实装（2026-07-26 13:56:52）
+- 任务目标：完成编辑器相机操作主链，建立唯一 `ObservationCenter`，让 Frame All / Frame Selected、MMB Orbit、Shift+MMB Pan、Wheel Dolly 与 Cancel 生命周期读取同一焦点来源；本轮不进入 WarCore、Rotate、Scale、Inspector Transform 或实体 Transform 改造。
+- 实装结果：`XuanYu.Editor.Camera` 新增 `CameraFrameResult` 与 `CameraNavigation` 纯算法；`EditorCameraFraming` 增加带中心返回的 Frame API；`UiVm.Camera` 增 `_observationCenter`；`UiVm.CameraNavigation` 增最小 CameraSession；Win32 NativeHost 与 Avalonia Pointer 路由接入 MMB / Shift+MMB / Wheel；Camera Capture 与 Gizmo / Picking 互斥。
+- 测试变化：新增 `CameraNavigationTests` 与 `WorldCameraNavigationUiTests`，覆盖 Orbit / Pan / Dolly 不变量、Frame 更新观察中心、Cancel 恢复、Gizmo 抢占、旧 PointerUp 拒绝、Camera Capture 阻止 Dolly / Picking。测试数由 171 增至 182。
+- 文档与可视化：新增 `docs/world-b-r1-camera-operation-report.md` 与 `docs/world-b-r1-camera-operation.svg`；`run.bat`、`UiWin.axaml`、`file-tree.md` 同步到 `v0.2.20.2-rz`。
+- 验证：`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **182 passed / 0 failed / 0 skipped**（Core 77 + World 105）；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS；SVG XML **52/52 PASS**；`git diff --check` PASS；版本源四处一致（`run.bat`/`UiWin.axaml`/`changelog`/`file-tree`=`v0.2.20.2-rz`）。
+- Commit Hash：`f48a441`（R1 相机操作实装提交）；哈希补录提交见最终 Git 记录。
+- 遗留问题：R1 尚未真机 CLOSED；仍需用户运行 `run.bat` 验收 MMB Orbit、Shift+MMB Pan、Wheel Dolly、Resize、Escape / LostCapture / WM_CANCELMODE 与输入抢占。真机通过后补验收收口文档；不得直接跳入 R2、Rotate、Scale 或 WarCore。
+
+## v0.2.20.1-rz
+WORLD-B-R0 编辑器基本操作现状审计与合同冻结（2026-07-26 10:16:13）
+- 任务目标：纠正“ARCH-WORLD 后立即进入 WarCore”的错误路线，正式建立 `WORLD-B：编辑器基本操作与实体变换闭环` 的 R0 入口门；本轮不创建 WarCore、士兵、战斗、编制或战争结算。
+- 审计结论：确认现有 `CameraState` / `EditorCameraFraming` / `ViewportPickingService` / `EditorStateOwner` / `EditorToolSnapshot` / `TransformSession` / `EditorHistoryOwner` / Win32+Avalonia Capture Cancel 链均可复用；R1-R4 必须沿这些入口扩展，不得重造 Camera、Selection、Transform 或 GlobalWorld 权威。
+- 合同冻结：新增 `docs/world-b-r0-editor-interaction-audit.md`，冻结输入优先级、Camera / Selection / ToolMode / Transform 权威图、保留项、缺口和 R1-R4 入口边界；新增 `docs/world-b-r0-editor-interaction-audit.svg` 作为本轮可视化证据。
+- 明确缺口：Orbit / Pan / Zoom 尚无真实输入会话；Frame Selected 后 Orbit 焦点尚未保持；Move 仅有 X/Y/Z 单轴且无平面；`CommittedTransform` 当前只有 Position；Rotate / Scale / Local / Inspector 数值编辑均未实装，后续不得伪装能力。
+- 修改范围：`docs/world-b-r0-editor-interaction-audit.md`、`docs/world-b-r0-editor-interaction-audit.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证：首次沙箱内 `dotnet build .\XuanYu.Engine.slnx --no-incremental` 因 NuGet 网络权限失败（NU1301，api.nuget.org:443），非沙箱重跑通过，10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **171 passed / 0 failed / 0 skipped**（Core 72 + World 99）；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS（322 文件）；SVG XML **51/51 PASS**；`git diff --check` PASS；版本源四处一致（`run.bat`/`UiWin.axaml`/`changelog`/`file-tree`=`v0.2.20.1-rz`）。
+- Commit Hash：本条记录在提交前写入；最终提交 Hash 以本轮最终报告和 Git 记录为准。
+- 遗留问题：R1 开始真实相机操作；R2 收口选择与工具状态；R3 收口 Move；R4 再进入 Rotate / Scale / Local / Inspector。WarCore 后移到 WORLD-B 稳定后再裁定。
+
+## v0.2.19.9-rz
+ARCH-WORLD-R6 架构退出门禁（2026-07-26）
+- 任务目标：不继续制造 R7/R8 架构阶段，只回答 ARCH-WORLD 是否可以退出纯引擎架构治理并进入一个士兵 WarCore 闭环。
+- 测试分层审计：列出 `Core.Tests` / `World.Tests` 全部测试文件及真实被测层；确认 `SceneRenderProjectionAdapterTests` 真实被测为 Editor.UI 组合边界 + Render.Abstractions，长期留在 Core.Tests 不理想，但新增 `Render.Tests` 不正确。D3 测试程序集混层债务范围较广，R6 不移动少量文件制造假干净，登记为非阻断退出后债务。
+- WarCore 入口冻结：下一阶段最小链路为 World Entity → WarCore `MilitaryIdentity` / `FactionId` / 最小组织归属 → 士兵可观察状态 → Editor / Render 显示投影。第一轮禁止战斗、接触面、命令、后勤、国家、AI 和完整编制树。
+- 收口文档：新增 `docs/arch-world-r6-exit-gate.md` 与 `docs/arch-world-r6-exit-gate.svg`；`docs/arch-world-debts.md` 更新 D3 状态；`file-tree.md`、`run.bat`、`UiWin.axaml` 同步到 `v0.2.19.9-rz`。
+- 验证：`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **171 passed / 0 failed / 0 skipped**；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS；SVG XML 50/50 PASS；`git diff --check` PASS；版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.9-rz`）。**ARCH-WORLD 可以退出**。
+
+## v0.2.19.8-rz
+ARCH-WORLD-R5 正式收口（2026-07-26）
+- 真机裁定：R5-R1 自动验收与真机功能验收均通过。启动首帧、查看全部、聚焦选中对象、Gizmo 显示、Preview、Commit、Escape Cancel、Resize、日志栏展开/收起、Vulkan 关闭释放链全部 PASS；未发现 DefaultEditorCamera、相机缺失、跳过帧、Fatal 或新增异常。R5-R1 不因日志噪声退回，不重跑已通过的真机功能测试。
+- 最小日志降噪：定位并处理三类高频调试噪声。`UiVm.Scene.PublishSceneRenderSnapshot` 不再逐次输出，改为首次、实体数变化和每 100 次摘要；`VulkanClearFrameOwner.Commands` 不再输出每次命令缓冲录制开始/结束，改为成功重录后的低频摘要；失败仍由既有 `Ok(...)` / Fatal / 异常日志保留。
+- 收口文档：新增 `docs/arch-world-r5-final-closure.md` 与 `docs/arch-world-r5-final-closure.svg`，更新 `docs/arch-world-debts.md` 将 D2 对 Render 生产路径标记为已收口；`file-tree.md`、`run.bat`、`UiWin.axaml` 同步至 `v0.2.19.8-rz`。
+- 范围红线：未修改 Render Projection 合同，未修改 Scene / World / Gizmo / Picking / Selection / Camera 系统，未改 Vulkan 生命周期，未新开 R5-R2。
+- 验证：`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **171 passed / 0 failed / 0 skipped**；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS；SVG XML 49/49 PASS；`git diff --check` PASS；版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.8-rz`）。**ARCH-WORLD R5 = CLOSED**。
+
+## v0.2.19.7-rz
+ARCH-WORLD-R5-R1 显式 Render Projection 最小合同实装（2026-07-26）
+- 任务目标：在 `9048176` 已完成本机复证（10 项目 0W0E、168 tests passed、Git/5+100/架构守卫/SVG/版本一致性通过）的基线上，完成 R5-R1 剩余工作：Render 不再直接消费 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource`，相机输入显式化，缺相机时明确失败并跳过当前帧提交。
+- 实装结果：`XuanYu.Render.Abstractions` 新增最小只读合同 `RenderProjection`、`RenderEntityProjection`、`RenderCameraProjection`、`RenderProjectionResult`、`IRenderProjectionSource`；`INativeHostSurfaceBridgeFactory` 改收 `IRenderProjectionSource`。`XuanYu.Editor.UI` 新增 `SceneRenderProjectionAdapter`，在组合边界把 `SceneRenderSnapshot` 解析为最终渲染数据：实体最终渲染位置（含 Preview 覆盖）、Gizmo 可见性与位置、显式相机投影均在跨 Render 边界前完成。
+- Render 迁移：`VulkanNativeHostSurfaceBridge` / `VulkanRenderSession` / `VulkanClearFrameOwner` 改为接收、排队和消费 `RenderProjectionResult` / `RenderProjection`；`VulkanClearFrameOwner.Draw` 不再读取旧快照，诊断实体数改读投影实体数；`VulkanPresentLoop` 在 Acquire 前应用投影，无有效投影时短暂等待并跳过提交，避免相机缺失被升级为 Vulkan 生命周期失败。
+- 守卫与测试：新增 `scripts/arch-a-guard-render.ps1`，锁定 `Render.Vulkan` 禁止 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `DefaultEditorCamera`，`Render.Abstractions` 禁止 `Core.Scene` / World / Editor.UI；新增 `SceneRenderProjectionAdapterTests` 覆盖缺相机失败、显式相机矩阵等价、Preview/Gizmo 边界前解析。测试数量由 168 增至 171。
+- 受控未做：未删除 `SceneRenderSnapshot`，未重构 Scene / World / Gizmo / Picking / Selection / Camera 系统，未改 Vulkan 生命周期，未新增渲染功能字段，未预埋材质/光照/天空盒等未来功能。
+- 验证：`dotnet build .\XuanYu.Engine.slnx --no-incremental` 10 项目 **0W0E**；`dotnet test .\XuanYu.Engine.slnx --no-build` **171 passed / 0 failed / 0 skipped**；`scripts/arch-a-guard.ps1` EXIT=0；全仓 5+100 PASS；SVG XML 48/48 PASS；`git diff --check` PASS；版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.7-rz`）。真机验收待用户执行。
+
+## v0.2.19.6-rz
+ARCH-WORLD-R5-R0A 渲染合同边界只读审计（2026-07-25）
+- 任务目标：从已确认的 R4 终点 `6ccfb66` 新建 `refactor/ARCH-WORLD-R5-render-contract`（旧分支保留归档，不重写、不强推），以一轮只读审计确定 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` 与 Render 的真实边界，锁定后续方案，不再围绕旧分支状态打转。
+- 审计结论：① `SceneRenderSnapshot`（`Core/Scene`）是"World 事实 + Editor 状态 + Render 相机"的组合 DTO，6 字段跨 A/B/C 三类（`Entity`/`RenderEntities`=World；`IsSelected`/`PreviewTransform`/`ShowMoveGizmo`=Editor；`Camera`=Render 输入），非纯渲染合同；② 双 `ISceneRenderSnapshotSource` 实现（`SceneStateOwner` 基础投影 + `UiVm` 组合装饰器）为"基础生产者+组合装饰器"关系，非并列权威源，无第二事实源风险；③ `DefaultEditorCamera.Create(0)` 后门仅在 `Camera==null` 时触发（活动路径 `UiVm` 恒传 `_camera` 不触发），属掩盖缺相机的兜底，R5 应移除；④ Render（`VulkanClearFrameOwner.Draw`）实测仅消费 `Entities`/`PositionFor`/`ShowMoveGizmo`/`CameraState`，`IsSelected` 零消费——证实 Render 真实最小输入 = {实体渲染位置(+预览)、Gizmo 可见、相机、视口}。
+- 方案裁定：**B 提取最小 Render Projection**（在 `Render.Abstractions` 自持不可变投影类型，由 Editor/UI 适配层从组合快照抽取 Render 消费字段）；否决 A（快照含 Editor 污染与后门）与 C（含 World/Editor 权威语义，不能整体迁 Render.Abstractions）。R5-R1 直接进入最小合同实装，不再额外开计划轮。
+- 本轮范围（R0A 停止线）：仅新增审计文档 + 版本/元信息 bump；零生产代码改动。修改：`docs/arch-world-r5-r0a-render-contract-audit.md`（新建）、`docs/arch-world-r5-r0a-render-contract.svg`（新建）、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证：版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.6-rz`）；`git diff --check` 通过；SVG XML 解析通过；全仓 5+100 扫描 0 超限（本轮无 .cs 改动，继承 R4 CLOSED 基线）；10 项目 0W0E 与 168 passed 为**继承证据**（`6ccfb66` 已 CLOSED，本轮零生产逻辑改动）；三项架构守卫 EXIT=0（版本一致性当场复证，生产边界继承 R4）。下一阶段：R5-R1 实装最小 Render Projection。
+
+## v0.2.19.5-fix
+ARCH-WORLD-R4-R1-FIX1 恢复 5+100 全局硬门禁合规（2026-07-25）
+- 任务目标：修正仓库全局 5+100 硬门禁违例。经稳健全仓扫描（此前一次 `< <(find)` 进程替换写法在沙箱静默失败，曾误报"仅 1 个违例 / 5+100 PASS"，系假阴性），真实违例为 4 个 `.cs` >100 行：`UiVm.Selection.cs`(102，Editor.UI)、`WorldPartitionR1Tests.cs`(108)、`WorldPartitionTests.cs`(101)、`WorldSpatialQueryTests.cs`(103，后三者均在 XuanYu.World.Tests，R4 提交 `9bce3ad` 时即已违规，非 R4 引入)。
+- 处理：纯物理 partial 拆分，行为零变化（namespace / partial 类 / public-private 可见性 / 测试覆盖不变；同 partial 类，零调用点改动）。
+  - `UiVm.Selection.cs`：`RaiseSelectionChanged()`(13 行) 迁入 `UiVm.SelectionProjection.cs`（同为 partial UiVm，语义匹配——其直接调用 `SynchronizeSelectionProjection()` 与 `LogSelectionCommit()` 均在该文件）；Selection.cs 102→88、Projection.cs 61→75。
+  - `WorldPartitionR1Tests.cs` / `WorldSpatialQueryTests.cs` / `WorldPartitionTests.cs`：各自改为 `sealed partial class`，将 1 个完整方法迁入同名 partial 新文件：`WorldPartitionR1Tests.Activity.cs`（Active/Dormant 用例）、`WorldSpatialQueryTests.Geometry.cs`（`DistanceSquared` 辅助）、`WorldPartitionTests.PartitionStrategy.cs`（分区策略可替换用例）。原文件分别 108→93 / 103→95 / 101→89，新文件均 ≤22 行。
+- 行为红线：未修改 R4 Editor 边界；未处理零位移 Undo；未重命名或清理其他代码；测试数量与结论不变（168 passed / 0 failed / 0 skipped）。
+- 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/Vm/UiVm.SelectionProjection.cs`、`XuanYu.World.Tests/World/WorldPartitionR1Tests.cs`(+`WorldPartitionR1Tests.Activity.cs`)、`XuanYu.World.Tests/World/WorldPartitionTests.cs`(+`WorldPartitionTests.PartitionStrategy.cs`)、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`(+`WorldSpatialQueryTests.Geometry.cs`)、`changelog.md`、`file-tree.md`、`run.bat`。
+- 验证结果：`dotnet build` 10 项目 **0W0E**；`dotnet test` Core.Tests + World.Tests 共 **168 passed / 0 failed / 0 skipped**；`arch-a-guard.ps1` / `arch-a-guard-world.ps1` / `arch-a-guard-editor.ps1` 全部 **EXIT=0**；`git diff --check` 通过；SVG XML 47/47 通过；**全仓 5+100 扫描 0 个超限文件（PASS）**。
+- 状态：**ARCH-WORLD-R4-R1-FIX1 完成，R4 自动门禁现已全 PASS**（含此前漏报的 3 个 World.Tests 违例一并修复）。后续 `Gate 2` 用户真机 11 项验收 → `Gate 3` 文档 CLOSED 收口 → `Gate 4` 收口推送。版本源 `run.bat` 随本轮同步 bump 至 v0.2.19.5-fix，与 changelog 版本保持一致。
+- 补（同轮治理收口）：真实版本源 `XuanYu.Editor.UI/Win/UiWin.axaml` 主窗口标题由 `v0.2.19.4-rz` 同步为 `v0.2.19.5-fix`（arch-a-guard 第 88 行比对 changelog 顶部版本；此前仅更新 run.bat 标题导致守卫判 `main window title version missing`）。现 `arch-a-guard.ps1`（链式 world+editor）EXIT=0。
+
+### ARCH-WORLD-R4-R1-FIX1 收尾（v0.2.19.5-fix 内，2026-07-25）
+- run.bat 构建崩溃修复（commit `25bd66b`，线性子提交 `8e80098f..25bd66b`）：`run.bat` 加 `MSBUILDDISABLENODEREUSE=1` + build 行 `-p:UseSharedCompilation=false`，关闭 Roslyn 共享编译/节点复用以规避 `error MSB6006: csc.exe 已退出，代码为 1`（无 CS 错误，纯编译器进程崩溃，与 FIX1 代码无关；Core 在 FIX1 未改动且 Gate 1 全 0W0E）。仅改 `run.bat`，不升版本号、不动 file-tree 计数。
+- Gate 2 真机验收清单文档化：`docs/arch-world-r4-gate2-acceptance.md`（新建）+ `file-tree.md` 总数 444→445；把原简略 11 项清单扩为操作手册（A 组交互 6 项 + B 组门禁 5 项，各含操作/预期/通过判定/风险盯防 + 结果记录表），供真机逐项勾选。本提交后远端 tip = `25bd66b`。
+- 当前状态（写于 FIX1 收尾时）：Gate 0 PASS / Gate 1 全 PASS（含 5+100=0）/ Gate 2 待用户真机 / Gate 3 文档 CLOSED / Gate 4 收口推送。**→ 已于 v0.2.19.5-fix 简化回归后整体 CLOSED，见下「ARCH-WORLD-R4 正式关闭」。**
+
+### ARCH-WORLD-R4 正式关闭（v0.2.19.5-fix，2026-07-25）
+- **ARCH-WORLD R4 = CLOSED。**
+- 边界建立完成：`XuanYu.Editor` 程序集（仅引 Core+World）已落地；`EditorCameraFraming`（Core.Space→Editor.Camera）与 `TransformSession`（World.Transform→Editor.Transform）归位；写入链 `UiVm→TransformSession→SceneStateOwner→GlobalWorld` 不变，World 仍为唯一空间权威，Editor 不持有实体永久位置。
+- FIX1 恢复全仓 5+100：`8e80098f` 纯 partial 拆分（4 文件超限，零行为变化）；真实版本源 `UiWin.axaml` / `run.bat` / `changelog` 三处一致为 `v0.2.19.5-fix`。
+- 自动门禁核验：R4-R2 文档收口轮（commit `6635e989`）仅改三份文档、无生产代码变化，未重新执行 `dotnet build`/`dotnet test`；本轮**当场复证**的静态门禁 = 三守卫 `arch-a-guard*.ps1` EXIT=0、SVG 47/47、全仓 5+100 = 0、`git diff --check` 通过、版本源三处一致（`run.bat`/`UiWin.axaml`/`changelog`=`v0.2.19.5-fix`）、远端引用=`6635e989`。`10 项目 0W0E` 与 `168 passed / 0 failed / 0 skipped` 为**继承证据**：来自前序提交 `8e80098f` 的自动验证（自该提交后无生产逻辑改动），并由用户本轮 `v0.2.19.5-fix` 真机六项回归（含完整构建 + Vulkan 释放链）作为外部补充证据佐证无生产回归。
+- 真机验收：`v0.2.19.4-rz` 完整 11 项验收通过；`v0.2.19.5-fix` 简化回归六项（实体命中/空白取消、Move Commit、跨 Region、Undo/Redo、Escape Cancel、Resize/Swapchain 恢复、Vulkan 关闭释放链）全部 PASS，FIX1 未发现运行回归。
+- 非阻断后续项（不塞入 R4）：高频 `PublishSceneRenderSnapshot` / 命令缓冲重录日志风暴（诊断/性能噪声，P1 非阻断），独立登记为日志限流 / Snapshot 发布合并待办，留后续轮处理。
+- 下一阶段：**R5-R0A** 只读审计：核心问题非"是否把 `SceneRenderSnapshot` 迁入 `Render.Abstractions`"（渲染器消费某对象≠该对象归渲染层），而是分离三类概念——① 世界事实快照（实体是谁/在哪/状态，属 World/场景权威层）；② 编辑器组合状态（选中/Gizmo/Editor 相机/辅助开关，属 Editor）；③ 渲染输入投影（Render 真正消费的不可变只读帧级数据合同，才可能属 `Render.Abstractions`）。真实审计问题：是否从 `SceneRenderSnapshot` 提取最小 Render Projection，而非整体搬入 Render.Abstractions。交付五部分：① 类型归属矩阵；② 字段逐项分类；③ 双 `ISceneRenderSnapshotSource` 真实关系；④ 三套迁移选项（A 保持现状仅修正命名 / B 拆出最小 Render Projection / C 整体迁移，默认不直选 C）；⑤ 明确停止线（R5-R0A 只读阶段不得：移动 DTO、修改项目引用、拆分接口、改 Vulkan、顺手处理日志风暴、因"不顺眼"批量整理）。
+- 补（审计措辞校正）：修正本段"自动门禁全绿（e8d3593）"表述——`10 项目 0W0E` 与 `168 passed` 为前序 `8e80098f` 继承证据 + 用户真机回归佐证，非 R4-R2 文档收口轮当场重跑；R5 目标由"是否迁入 Render.Abstractions"修正为"世界事实/编辑器组合状态/渲染投影三者分离"。R4 功能与架构验收仍为 **CLOSED**。
+
+## v0.2.19.4-rz
+ARCH-WORLD-R4-R1 建立 XuanYu.Editor 编辑器领域边界（2026-07-25）
+- 任务目标：在 R4-R0A 只读审计（提交 `9459447`，远端已确认）确认污染归属后，建立最小 `XuanYu.Editor` 程序集，确立"Core 通用机制 / World 世界事实 / Editor 编辑规则 / Editor.UI 界面与输入"的长期稳定边界。
+- 新增 `XuanYu.Editor`（仅引用 Core + World，禁 Avalonia/Vulkan/Editor.UI/Silk/第三方）；首批两个生产类型：`EditorCameraFraming`（Core.Space → Editor.Camera）、`TransformSession`（World.Transform → Editor.Transform）；行为完全不变（Frame All/Selected、空集合、Begin/Preview/Commit/Cancel、延迟 MouseUp、WM_CANCELMODE、写入经 SceneStateOwner→GlobalWorld）。
+- Editor.UI 新增对 Editor 引用；World.Tests / Core.Tests 新增 Editor 引用以承载迁移回归测试（暂未新建 XuanYu.Editor.Tests，待 R5 后判断）。
+- 架构守卫新增 Editor 依赖禁区：Core/World 不得引用 Editor；Editor 不得引用 Editor.UI/Avalonia/Render.Vulkan/Silk.NET.Vulkan；Editor.csproj 引用仅 Core+World；Editor.UI 允许引用 Editor；Solution 必须含 Editor。
+- 修改范围：`XuanYu.Editor/`（新建 csproj + Camera/EditorCameraFraming.cs + Transform/TransformSession.cs）、`XuanYu.Core/Space/EditorCameraFraming.cs`（删除）、`XuanYu.World/Transform/TransformSession.cs`（删除）、`XuanYu.Editor.UI/Vm/UiVm.Camera.cs`、`XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`、`XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`、`XuanYu.World.Tests/XuanYu.World.Tests.csproj`、`XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`、`XuanYu.Engine.slnx`、`scripts/arch-a-guard.ps1`、`scripts/arch-a-guard-editor.ps1`（新建）、`docs/arch-world-layer-attribution.md`、`docs/玄域引擎_AI开发宪法.md`、`docs/dev-rules.md`、`docs/arch-world-r4-editor-pollution-audit.md`、`docs/arch-world-r4-editor-boundary.svg`（新建）、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证结果：`dotnet build` 10 项目 `0W0E`；`dotnet test` Core.Tests + World.Tests 共 168 passed / 0 failed（含迁移回归用例）；`arch-a-guard.ps1` 通过；`git diff --check` 通过；SVG XML 通过；5+100 通过。
+- 状态：**R4-R1 代码完成、自动测试全绿、架构守卫通过；待用户真机验收（见 R4-R2 收口清单）后正式 CLOSED**。R4 其余迁移（Gizmo/History/ViewportPicking/DefaultEditorCamera/ScreenPoint）留待后续 R4 子轮；DefaultEditorCamera/SceneRenderSnapshot/ISceneRenderSnapshotSource 归 R5。
+
+### ARCH-WORLD-R4-R0A Editor 污染归属只读审计（v0.2.19.4-rz 内，2026-07-25）
+- 前置：ARCH-WORLD-R3 CLOSED（`e50d890`）+ changelog 哈希纠偏（`b82a240`）。
+- 只读审计 DefaultEditorCamera.Create(0) 后门、TransformSession 归属、Framing/Selection/Preview 污染、依赖方向精确表；结论 D1 TransformSession→Editor、D4 EditorCameraFraming→Editor、D2 DefaultEditorCamera 后门随 R5。审计提交 `9459447`（远端已确认）。
+- 本条目在本轮 R4-R1 实装提交中补录（原审计提交未写入 changelog 条目）。
+
+## v0.2.19.3-rz
+ARCH-WORLD-R2 单一空间权威收敛（2026-07-24）
+- 任务目标：收敛双轨空间索引（`SceneStateOwner._spatialIndex` 与 `GlobalWorld→WorldQuery` 内部索引）为唯一权威查询源；`GlobalWorld` 已是世界事实 + 唯一写链（`Create`/`Destroy`/`UpdateTransform`/`Rebuild`），`SceneStateOwner` 不再持有第二套索引，其 `QuerySpatial`/`RaycastSpatial`/`SpatialRevision` 经 `_world` 兼容门面读唯一索引。运行行为（Picking/Undo/Redo/跨 Region）保持。
+- 唯一权威链：`GlobalWorld` → `WorldQuery`（新增 `Query(SpatialAabb/ray)` public + `Raycast(ray)` + `SpatialRevision`）→ 唯一 `SpatialIndexOwner`；`SceneStateOwner` 删 `_spatialIndex` 字段与 4 处双写（构造/`ApplyTransform`/`CreateEntity`/`DestroyEntity`），只读委托。
+- 索引表示统一：唯一索引实体 AABB 半长由 0（点）改为 0.5（1×1×1 盒），与旧 Scene B 索引（`SceneSpatialBoundsProjection` ±0.5）一致，确保 Picking 射线命中行为不变；`WorldQuery.QueryRadius` 窄筛用实体中心距离，结果不受影响。受此影响，按"点"写的 WorldQuery 边界 oracle（`WorldSpatialR1Oracle.Bounds`/`WorldSpatialQueryTests.BruteBounds`）改为盒感知（±0.5）。**（注：此 ±0.5 经 R2-R1 修正——不再由 `WorldQuery` 硬编码为所有实体的全局默认，改为实体/占位工厂显式提供的 `SpatialBounds`；缺省为点，World 不发明尺寸。详见 `### ARCH-WORLD-R2-R1`。）**
+- 新增自动测试 `XuanYu.World.Tests/World/WorldSceneSingleAuthorityTests.cs`：Case1 Create / Case2 Move（核心：旧位不命中、新位必命中）/ Case3 Undo-Redo 一致 / Case4 Destroy / Case5 跨 Region / Case6 反射断言 `SceneStateOwner` 无 `_spatialIndex` 字段（单权威守护）。
+- 源码守卫补强：`scripts/arch-a-guard-world.ps1` 新增 `XuanYu.World/Scene/*` 禁止 `new SpatialIndexOwner`，防第二索引回潮。
+- 修改范围：`XuanYu.World/WorldQuery.cs`、`XuanYu.World/GlobalWorld.Query.cs`、`XuanYu.World/Scene/SceneStateOwner.cs`、`XuanYu.World/Scene/SceneStateOwner.Lifecycle.cs`、`XuanYu.World.Tests/World/WorldSceneSingleAuthorityTests.cs`（新建）、`XuanYu.World.Tests/World/WorldSpatialR1Oracle.cs`、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`、`scripts/arch-a-guard-world.ps1`、`docs/arch-world-r2-single-spatial-authority.md`（R2 方案 Gate）、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 97 passed（含 R2 新用例，Picking 回归 `Moved_entity_hits_new_position_not_old_position` 通过）；`arch-a-guard.ps1` 通过；5+100 通过。
+- 状态：**R2 代码完成、自动测试全绿、架构守卫通过；待用户真机验收（13 项，重点盯移动后 / Undo 后 / Redo 后 Picking）后正式 CLOSED**（验收清单与停手条件见 `docs/arch-world-r2-single-spatial-authority.md` 第九/十节）。
+- 后续：进入 R3 Scene Truth 归位（按治理序列）；R2 不碰 D1/D2/D3/O1/Camera Inspector/Large World（均保留）。
+
+### ARCH-WORLD-R2-R1 空间 Bounds 职责归位（v0.2.19.3-rz 内，2026-07-24）
+- 裁定来源：项目负责人审计指出初版 R2 把 `Position ± 0.5` 硬编码进 `WorldQuery.ToBounds`，等于"World 底层替所有实体发明 1×1×1 尺寸"，属"底层把当前答案写死成通用机制"的错层（同类于地球坐标写死进 Core）。R2 主体（单一权威）保留，暂缓 CLOSED，先执行本最小修正。
+- 原则：**`WorldQuery` 只消费空间 Bounds，不发明实体尺寸**。实体空间状态 = `Transform/Position` + 显式 `SpatialBounds`（本地盒）。未来士兵/坦克/建筑/行星各自携带自身 Bounds，WorldQuery 无需改动——"专用目标，开放上限"。
+- 代码改动：`WorldEntitySnapshot` 增本地 `Extent`（相对位置的盒）+ 绝对 `Bounds` 属性；`SpatialAabb` 增纯几何 `Translate`；`EntityRegistry`/`GlobalWorld.Create` 透传显式 `extent`（缺省 = 零尺寸点，World 不发明尺寸）；`WorldQuery.ToBounds` 改为 `entity.Bounds` 并删 `PointBounds` ±0.5；`WorldQuery.Insert`/`Update`/`Remove`/`Rebuild` 收 `internal`（仅 `GlobalWorld` 权威链可写，机器保证唯一 Writer）；`SceneStateOwner` 以占位实体工厂身份显式给 ±0.5 拾取代理，`CreateEntity` 增可选 `extent` 参数；`SceneSpatialBoundsProjection` 保留（旧 Scene B 投影，未再使用于权威索引）。
+- 测试 Oracle 诚实化：`WorldSpatialR1Oracle.Bounds` / `WorldSpatialQueryTests.BruteBounds` 改用 `e.Bounds.WorldBounds`（实体真实盒），不再硬编码 ±0.5；`WorldSpatialQueryTests`/`WorldSpatialR1RebuildTests` 的 `CreateWorld` 显式给测试实体 ±0.5（尺寸属测试数据）；冻结 `QueryBounds` 正式语义 ="实体显式 Bounds 与查询区域相交"。
+- 守卫强化：`scripts/arch-a-guard-world.ps1` 由 `XuanYu.World/Scene/*` 禁第二索引升级为整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs`，把"单一空间索引"锁成机器约束而非约定。
+- 修改范围：`XuanYu.Core/Spatial/SpatialAabb.cs`、`XuanYu.World/WorldEntitySnapshot.cs`、`XuanYu.World/EntityRegistry.cs`、`XuanYu.World/GlobalWorld.cs`、`XuanYu.World/WorldQuery.cs`、`XuanYu.World/Scene/SceneStateOwner.cs`、`XuanYu.World/Scene/SceneStateOwner.Lifecycle.cs`、`XuanYu.World.Tests/World/WorldSpatialR1Oracle.cs`、`XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`、`XuanYu.World.Tests/World/WorldSpatialR1RebuildTests.cs`、`scripts/arch-a-guard-world.ps1`、`docs/arch-world-r2-status.md`。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 99 passed（含 R2 新用例与 R2-R1 修正，Picking 回归 `Moved_entity_hits_new_position_not_old_position` 通过）；`arch-a-guard.ps1` 通过；5+100 通过。
+- 状态：**R2 主体 + R2-R1 修正完成、自动全绿、守卫通过；暂缓 CLOSED，待用户真机验收 13 项（含补入的 Frame All、Create/Destroy 一致）后正式收口**（验收清单与裁定见 `docs/arch-world-r2-status.md`）。
+
+### ARCH-WORLD-R2-R1 收尾补丁（v0.2.19.3-rz 内，2026-07-24）
+- 裁定来源：项目负责人二审 R2-R1，认可"Bounds 职责归位"方向，但指出两点须最终钉死才可达真机收口：① `internal` 仅挡跨程序集、挡不住 `XuanYu.World` 内第二个调用方，须把"唯一 Writer"升级为机器约束；②须把 ±0.5 真实归属与 extent=0 语义正式记录，防未来回潮。
+- 代码改动（纯机器约束 + 语义测试，无生产行为变化）：`scripts/arch-a-guard-world.ps1` 新增"WorldQuery mutation 调用点（`_query.Insert/Update/Remove/Rebuild`）仅允许出现在白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail"，与既有"全 World 禁 `new SpatialIndexOwner`"共同锁死唯一 Writer；新建 `XuanYu.World.Tests/World/WorldEntityBoundsSemanticsTests.cs`（Test A 默认 extent=零尺寸点：`Bounds.Min==Max==Position` 且 QueryBounds 维持点语义；Test B 显式 ±0.5 → 绝对盒 `Min=(9.5,-0.5,-0.5)`/`Max=(10.5,0.5,0.5)` 且盒外 0.55 仍 HIT、1.2 外 MISS）；`SceneStateOwner.cs` 注释澄清 `MinimalSceneEntityExtent=±0.5` 为占位实体**自身空间 Bounds**（情况 A 正确），非 Picking 容差伪装，未来 Pick Proxy 分离登记为非阻断选项。
+- ±0.5 归属裁定：占位工厂为自身单位尺寸最小场景对象声明的实体空间 Bounds，属"实体创建点决定自身尺寸"，不是 WorldQuery 通用默认、也不是纯 Picking 容差。extent=0 语义冻结：缺省 = 点状空间足迹（`Min==Max==Position`），非"无空间信息"；保持"默认点 + 显式盒"两极，不引入 HasBounds/Optional。
+- 修改范围：`scripts/arch-a-guard-world.ps1`、`XuanYu.World.Tests/World/WorldEntityBoundsSemanticsTests.cs`（新建）、`XuanYu.World/Scene/SceneStateOwner.cs`、`docs/arch-world-r2-status.md`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 67 passed / World.Tests 99 passed（较 R2-R1 +2 收尾语义测试）；`arch-a-guard.ps1` 通过（含新唯一 Writer 调用点守卫）；5+100 通过。
+- 状态：**R2 主体 + R2-R1 + 收尾补丁完成、自动全绿、守卫通过；暂缓 CLOSED，待用户真机验收 13 项后正式收口**。仍不碰 D1/D2/D3/O1/Camera/Large World/Streaming。
+
+### ARCH-WORLD-R2-G1-R0A-R1 治理文档闭环（v0.2.19.3-rz 内，2026-07-25）
+- 任务目标：补齐 `d40b806` 落库 G1 修复前证据时漏做的治理同步；该提交已新增 `docs/arch-world-r2-g1-audit.md`（Gizmo 输入抢占只读审计：P0 命中兜底根因 + P1 零位移 Commit）与 `docs/arch-world-r2-manual-checklist.html`（R2 真机验收 13 项清单），但当时未同轮更新 `changelog.md` / `file-tree.md`，违反冻结的治理规则，本轮纠偏。
+- 本轮范围：仅文档治理闭环，不修改任何运行时代码、不触碰 G1 / Gizmo / Picking / 输入 / WorldQuery / 空间索引 / Vulkan / Editor.UI 依赖；不修复 G1、不宣布 R2 CLOSED。
+- 修改范围：`changelog.md`、`file-tree.md`（新增两证据文件路径与简短职责）。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` 0 failed；`arch-a-guard.ps1` EXIT=0。
+- 状态：**R0A-R1 治理闭环完成；G1 尚未修复、R2 尚未完成 13 项真机验收，保持 AWAITING；下一步 ARCH-WORLD-R2-G1-R0B 最小修复 Gizmo 输入抢占 P0**。
+
+### ARCH-WORLD-R2-G1-R0B Gizmo 输入抢占 P0 修复（v0.2.19.3-rz 内，2026-07-25）
+- 任务目标：按 `docs/arch-world-r2-g1-audit.md` 第 0–6 节只读审计结论，执行最小 P0 修复——移除 48px 隐形大范围命中守卫，使 Gizmo 命中几何与可见几何同源（可见线宽 + 显式容差），命中失败即落场景 Picking。
+- 修复原则：① 可见几何真源 `GizmoVisualLineWidth = 2.0`（DIP，与 Vulkan 顶点着色器 Gizmo 几何同尺度）；② 有限显式容差 `HitMargin = 5.0`（DIP）；③ `HitWidth = (GizmoVisualLineWidth / 2.0) + HitMargin = 6.0` 派生，非魔法数字；④ 删 `GuardWidth = 48.0` 与 `GuardHitTest`，`UiVm.MoveGizmo` 输入分流仅 `HitTest`，命中失败 `return false` 落 Picking。
+- 修改范围：`XuanYu.Core/Gizmo/MoveGizmoLayout.cs`（删 Guard、增派生 HitWidth）、`XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`（去 `?? GuardHitTest` 兜底）、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`（锁 HitWidth 派生 + `< 12` 防回归，替换 48/Guard 断言）、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutG1Tests.cs`（新建部分类，3 个 G1 回归测试）。
+- 受控未做（守禁区）：未改 WorldQuery / 空间索引 / Region / EntityRegistry / 实体 Picking 算法；未重构输入系统；未改 Gizmo 外观（Vulkan 绘制线宽未动）；未处理 P1 零位移 Undo；未碰 Vulkan / Editor.UI 旧债；未宣布 R2 CLOSED。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 69 passed / World.Tests 99 passed / 0 failed；`arch-a-guard.ps1` EXIT=0；5+100（4 文件均 ≤100 行）通过；`git diff --check` 通过。
+- Commit Hash：`d4f6919d261013dff4d094639c18e52427f868c8`
+- 状态：**G1 P0 自动验证全绿；待用户真机验收（移动后 / Undo 后 / Redo 后 Picking，相邻实体不再被 Gizmo 光环抢占）后 G1 视为 CLOSED**。R2 整体仍 AWAITING 13 项真机验收。
+
+### ARCH-WORLD-R2-R0D 最终文档收口（R2 CLOSED，2026-07-25）
+- 任务目标：用户真机验收 13 项全部通过（1–12 真机操作 PASS；第 13 项因编辑器未开放实体创建/删除 UI 入口，改为只读核查底层能力，记为 PASS（自动测试覆盖，UI N/A））；Undo 经用户日志 PASS（15:17:00 撤销已执行）。据此收口 R2，并随 R2 一并 CLOSED G1 P0。
+- 第 13 项只读核查（未改任何生产代码）：① 注册/删除 API 存在（`EntityRegistry.Create/Destroy`、`GlobalWorld.Create/Destroy`）；② 自动测试存在（`EntityRegistryTests.Create_get_exists_and_destroy_single_entity`、`GlobalWorldTests` 三项、`WorldSceneSingleAuthorityTests.Case4_destroy_removes_entity_from_spatial_query`）；③ 删除后从唯一空间索引与查询移除（`GlobalWorld.Destroy` 顺序 `_registry.Destroy`→`_partition.Remove`→`_query.Remove`，`_query` 即 R2 收敛后的唯一 `SpatialIndexOwner`）；④ 旧位置不可继续命中（`Case4` 销毁后 `RaycastSpatial(旧位).HasHit==false` 且 `QuerySpatial(旧位).Candidates` 为空；`Case2` 覆盖移动幽灵）。
+- 修改范围：仅文档 `docs/arch-world-r2-status.md`（裁定表真机验收改 PASS；第四节 13 项逐项标注；新增『四之一、第 13 项只读核查』；第五节 R2 CLOSED）、`docs/arch-world-r2-single-spatial-authority.md`（第九节补 R2 CLOSED 状态行）。未改任何生产代码。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 69 passed / World.Tests 99 passed / 0 failed（含第 13 项 Create/Destroy 用例）；`arch-a-guard.ps1` EXIT=0；5+100 通过；`git diff --check` 通过。
+- Commit Hash：`bd49285369364a4e395d9df24911b17011b952e5`
+- 状态：**R2 CLOSED（13 项真机验收全 PASS，G1 P0 随 R2 一并 CLOSED）。下一轮按治理序列进入 R3 Scene Truth 归位；实体创建/删除编辑器 UI 作为独立功能轮开发，不在本轮范围。**
+
+### ARCH-WORLD-R3-R0A Scene Truth 现状审计（v0.2.19.3-rz 内，2026-07-25）
+- 任务目标：只读审计 Scene 层是否仍保存本应来自 World 的权威状态、哪些只是编辑器投影、是否仍构成第二套真相；产出 R3 最小迁移计划，不动代码、不移动目录。
+- 八项核查结论：① `SceneStateOwner` 无第二套实体/空间状态（仅 `_world`/`_snapshot`/`_activeEntityKey`，全部经 `GlobalWorld`）；② `SceneRenderSnapshot` 来源混合 World 真相 + Editor 语义（`IsSelected`/`PreviewTransform`/`ShowMoveGizmo`/`Camera`），按设计但 DTO 在 Core（D2）；③ `DefaultEditorCamera.Create(0)` 隐藏后门（`SceneRenderSnapshot.CameraState => Camera ?? DefaultEditorCamera.Create(0)`）掩盖缺失相机（D4）；④ Writer 单一链 Editor→SceneStateOwner→GlobalWorld，Editor.UI 全仓无 `GlobalWorld` 直接引用；⑤ Selection/Hierarchy/Inspector 全为只读投影，无写回；⑥ Preview 仅进 RenderSnapshot 显示、Commit 最终写入权在 World；⑦ 无 Scene→World 未登记旁路；⑧ `SceneStateOwner` 与 `UiVm` 双实现 `ISceneRenderSnapshotSource`（生产只用 UiVm）为双源气味。
+- R3 最小迁移计划：R3-M1 确立 UiVm 唯一活动源、抽离 SceneStateOwner 测试投影助手；R3-M2→R4（DefaultEditorCamera/Framing、TransformSession 迁 Editor）；R3-M3→R5（SceneRenderSnapshot 迁 Render.Abstractions + 删相机 fallback）。不纳入 R3：实体创建/删除 UI、P1 零位移 Undo、VK-LIFE-1、债A。
+- 修改范围：仅文档 `docs/arch-world-r3-scene-truth-audit.md`（新建）+ `file-tree.md`（登记一行）。未改任何生产代码。
+- Commit Hash：`68a87c7beb9fce51da2f1622f4fd3bd143a29fcc`
+- 状态：**R3-R0A 审计完成；其 R3-M1 建议经 R3-R0B 调用链核查推翻并正式撤销，R3 最终收口见 ARCH-WORLD-R3-R0B。R2 维持 CLOSED。**
+
+### ARCH-WORLD-R3-R0B Snapshot Source 语义核查与 R3 收口（v0.2.19.3-rz 内，2026-07-25）
+- 任务目标：按 R3-R0A 后续只读核查两个 `ISceneRenderSnapshotSource` 实现的真实消费者、构造链、注入链与返回语义，判定是重复实现还是两层投影，据此收口 R3。
+- 核查结论（调用链）：`SceneStateOwner`（基础 World/Scene 投影，返回 `SceneWorldProjection.ToRenderSnapshot`，无 Selection/Preview/Gizmo/Camera）仅被 `UiVm` 当具体 World 门面读取，**从未作为 `ISceneRenderSnapshotSource` 注入任何生产消费者**；`UiVm`（编辑器组合投影，叠加 selected/Preview/showMove/camera）经 `SurfaceBridgeFactory.Create(vm.SceneSnapshotSource)` 注入 `VulkanNativeHostSurfaceBridge._sceneSource`，是**生产渲染端唯一活动组合源**。
+- 决策：命中决策 B——两者为"基础快照"与"编辑器组合快照"两个不同语义层，非重复权威、不构成第二套真相；`GlobalWorld` 仍为唯一实体/Transform/Region/空间查询权威。
+- R3 收口裁定（8 条，详见 `docs/arch-world-r3-scene-truth-audit.md` 第三节）：① R3-M1 正式撤销、不实施（不删 `SceneStateOwner` 接口实现、不提升 `UiVm` 为基础场景权威）；② `SceneStateOwner` = 基础 World/Scene 投影；③ `UiVm` = 编辑器组合投影；④ 生产渲染端唯一活动组合源为 `UiVm`；⑤ 两者非重复权威；⑥ `ISceneRenderSnapshotSource` 语义过宽转交 R5 拆分；⑦ `DefaultEditorCamera` 与 Editor 职责归位转交 R4；⑧ **ARCH-WORLD R3 = CLOSED**。
+- 修改范围：仅文档 `docs/arch-world-r3-scene-truth-audit.md`（撤销 R3-M1、补收口裁定）、`changelog.md`（本条目）。未改任何生产代码、未新增/移动文件、无 file-tree 改动。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` Core.Tests 69 + World.Tests 99 = 168 passed / 0 failed；`arch-a-guard.ps1` EXIT=0；`git diff --check` 通过。
+- Commit Hash：`e50d8903122fcf014e19f8b9e21a807fe2c3d550`
+- 状态：**R3 CLOSED（技术目标通过，R3-M1 撤销，接口拆分归 R5、Editor 污染归 R4）。下一轮进入 ARCH-WORLD-R4 Editor 污染剥离**。
+
+## v0.2.19.2-rz
+ARCH-WORLD-R1 建立 XuanYu.World 物理边界（2026-07-24）
+- 任务目标：在 R0 冻结基础上新建 `XuanYu.World` + `XuanYu.World.Tests` 程序集，把物理世界真相（World 根域 / Scene 簇 / Spatial 索引实现 / Transform 簇）从 Core 迁出，确立 Core→World 红线物理边界；本轮纯归属重构，运行行为不变。
+- 语义拆分裁定：纯几何与查询契约（`SpatialAabb` / `SpatialBounds` / `SpatialQuery*` / `SpatialRay*` / `RayAabb*`）留 `XuanYu.Core.Spatial`；`PreviewTransform` / `TransformStartSnapshot` 留 `XuanYu.Core.Transform`（待 R4 Editor 剥离）；`SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `CameraState` 等边界 DTO 留 R5。
+- 迁移范围：`XuanYu.World`（根域 `EntityRegistry` / `GlobalWorld` / `RegionKey` / `WorldQuery` / `WorldPartition*` / `WorldEntity*`；`Scene/` `SceneStateOwner` 簇 + 投影；`Spatial/` `ISpatialIndex` / `DynamicAabbTree*` / `SpatialIndexOwner` / `SpatialRaycastResolver`；`Transform/` `TransformSession`）+ `XuanYu.World.Tests`（`World` / `Spatial` / `Transform` 镜像测试）。
+- 跨程序集可访问性修复：`SpatialRayAabb` 由默认 internal 改 public（纯几何跨程序集能力，合理，保留）；`SpatialRaycastResolver(Action<SpatialBounds>)` 构造在 R1 中临时由 internal 改 public 供 `XuanYu.World.Tests` 使用，**已于 R1-R1 退回 internal**，改由 `XuanYu.World.csproj` 的 `InternalsVisibleTo("XuanYu.World.Tests")` 暴露，消除测试后门。
+- 测试依赖（非生产红线）：`XuanYu.Editor.UI`→`XuanYu.World`、`XuanYu.Core.Tests`→`XuanYu.World`；`scripts/arch-a-guard.ps1` 通过。Core 纯几何契约测试（`SpatialBoundsTests` / `RayAabbIntersectionTests`）保留 `XuanYu.Core.Tests/Spatial`，并补建 Core-only `SpatialTestData` 助手。
+- 修改范围：`XuanYu.World/*`（新建 29 .cs）、`XuanYu.World.Tests/*`（新建 35 .cs）、`XuanYu.Core/{World,Scene,Spatial,Transform}` 迁出、`XuanYu.Core.Tests/{World,Spatial,Transform}` 迁出、`XuanYu.Core/Spatial/SpatialRayAabb.cs`、`XuanYu.Editor.UI/Vm/{EditorDisplayText,UiVm.Scene,UiVm.MoveGizmo}.cs`、`XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`、`XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`、`XuanYu.Engine.slnx`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`file-tree.md`、`.gitignore`。
+- 验证结果：`dotnet build` 9 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped（Core.Tests 67 + World.Tests 91）；`scripts/arch-a-guard.ps1` 通过；5+100（World 文件均 ≤100 行）通过；`file-tree.md` 429 / 429 一致。
+- Commit Hash：`eb4f34ddd8a3c9f173d6bc524ad10db0e0a76015`
+- 遗留问题：R1 仅归属重构、行为不变；R2 收敛双轨空间索引（`SceneStateOwner._spatialIndex` 与 `WorldQuery._index` → 唯一 `SpatialIndexOwner`）未启动；真机回归（启动→实体→层级→拾取→选择→移动 Gizmo→撤销/重做→取景→分区→缩放→关闭）需用户手动验收；R3 Scene Truth / R4 Editor 剥离 / R5 Snapshot 边界按序列后续推进。
+
+### ARCH-WORLD-R1-R1 边界守卫补强（v0.2.19.2-rz 内，2026-07-24）
+- 任务目标：R1 核心物理分层已 PASS，但独立审计发现 `arch-a-guard.ps1` 仍只校验旧红线（Editor.UI ✕→ Vulkan、Render.Abstractions ✕→ Vulkan/Avalonia），**未自动校验 ARCH-WORLD 新边界**，且 `$projects` 清单仅为旧 6 项目（缺 World/World.Tests）。本步为治理补强，不搬代码、不改运行行为。
+- 守卫补强（`scripts/arch-a-guard.ps1` + 新建 `scripts/arch-a-guard-world.ps1`）：新增 ARCH-WORLD 红线自动校验——Core 禁止引用 World/Editor/Vulkan；World 仅允许引用 Core；World 生产源码禁止 `using XuanYu.Editor.*` / `XuanYu.Render.Vulkan` / `Silk.NET.Vulkan` / `Avalonia`；Solution 必须包含 `XuanYu.World` 与 `XuanYu.World.Tests`；并将 `$projects` 由 6 扩展为全 9 项目。因主脚本新增检查后超 100 行，按 5+100 红线将 ARCH-WORLD 检查拆入 `arch-a-guard-world.ps1`（主脚本 dot-source），两文件均 ≤100 行。ProjectReference 按元素解析（非整文件子串），故 `InternalsVisibleTo` 属性合法。
+- 关闭测试后门：`SpatialRaycastResolver(Action<SpatialBounds>)` 单参构造由 public 退回 internal，改由 `XuanYu.World.csproj` 的 `InternalsVisibleTo("XuanYu.World.Tests")` 暴露；`SpatialRayAabb` 维持 public（纯几何能力，合理）。
+- 受控债务登记（`docs/arch-world-debts.md`）：D1 `TransformSession` 暂居 World 含 Gizmo/Editor 语义 → R4（并令禁止新增 World→`Core.Gizmo` 依赖）；D2 `SceneRenderSnapshot` 含 EditorCamera/Gizmo/Selection → R5；D3 `Core.Tests`/`World.Tests` 跨层测试依赖 → R4/R5。
+- 语义重定性：R1 执行报告中"语义拆分已正确"改为"物理依赖方向正确；TransformSession 等 Editor 语义仍为受控过渡债务"。双轨 SpatialIndex 确证存在，R2 优先级不变。
+- 修改范围：`scripts/arch-a-guard.ps1`、`XuanYu.World/XuanYu.World.csproj`、`XuanYu.World/Spatial/SpatialRaycastResolver.cs`、`docs/arch-world-debts.md`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build` 9 项目 `0W0E`；`dotnet test` 158 passed / 0 failed；`arch-a-guard.ps1` 通过（含新增 ARCH-WORLD 红线）；5+100 通过。
+- 状态：**R1 已真机验收通过，正式 CLOSED**（2026-07-24，证据见 `docs/arch-world-r1-acceptance.md` + `docs/arch-world-r1-acceptance.svg`）；随即进入 R2 单一空间权威。
+
+### ARCH-WORLD-R1 真机验收与 CLOSED（v0.2.19.2-rz，2026-07-24）
+- 验收方式：项目负责人逐张截图 + 运行日志人工核对（`run.bat` 启动，Windows + RTX 3060 + Vulkan + Avalonia）。R1 为纯归属重构、运行行为不变，验收仅验证跨程序集迁移后核心风险链路未断。
+- 13 项核心风险链路 PASS：① 启动/程序集加载/Vulkan 主链（16×16→714×639，10 实体持续渲染）；② Project/Hierarchy 世界投影（世界根/相机/地面/区域树完整）；③ Hierarchy Selection；④ Viewport Picking（两条入口均进入同一选择投影链）；⑤ Inspector 实体状态；⑥ Move Gizmo Preview→Commit（D1 过渡债务仍完整工作）；⑦ Undo/Redo；⑧ Resize/Swapchain 多代际重建（16×16→714×639→714×274→1234×442→714×274，Swapchain 代际 0→4，R1 未破坏 Vulkan 生命周期）；⑨ 关闭生命周期（泵停→Pipeline/Framebuffer/Swapchain/Device/Surface/Instance 依次释放，无崩溃）；⑩ 物理程序集边界；⑪ Core→World 红线；⑫ ARCH-WORLD 自动守卫；⑬ 9 项目 0W0E + 158 Tests。
+- 观察项（非阻断，不判 bug）：O1 Camera Inspector 选中"主相机"时基础信息仍显示项目占位数据，疑似复用项目占位，性质不像 World 拆分核心错误，登记为独立 Editor/Inspector 小债务，**不夹入 R2**；O2 移动 Gizmo 期间 `PublishSceneRenderSnapshot` 高频刷屏，无错误/卡死，暂不判性能问题；O3 Frame All/Frame Selected 本轮无独立日志标记、截图尺度变化不能可靠归因（同时 Resize），**不伪称有日志证明**，自动测试已覆盖 Camera Framing 主链。
+- 受控债务保留：D1 `TransformSession`→R4（禁止新增 World→`Core.Gizmo` 依赖）；D2 `SceneRenderSnapshot`→R5；D3 `Core.Tests`/`World.Tests` 跨层→R4/R5（详见 `docs/arch-world-debts.md`）。
+- 最终裁定：**✅ PASS / CLOSED**。版本维持 `v0.2.19.2-rz`，未升版；本步仅文档收口，未改生产代码。
+- 后续：进入 **ARCH-WORLD-R2 单一空间权威**——收敛双轨 `SpatialIndexOwner`（GlobalWorld→WorldQuery A 与 SceneStateOwner B）为唯一权威查询源；R2 不碰 D1/D2/O1/Camera Inspector/Large World。
+
+## v0.2.19.1-rz
+ARCH-WORLD-R0 物理分层归属冻结 + 归属审计修正版落库（2026-07-23 21:56:11）
+- 任务目标：在继续 WORLD-A 功能扩张前完成归属审计修正版落库与 ARCH-WORLD-R0 边界冻结；本轮纯文档治理，不改任何代码归属、不迁移文件、不触碰运行行为与 Vulkan 生命周期。
+- 五项架构裁定：① `EntityId` 保持纯稳定身份，Generation 归未来 `EntityHandle`、Revision 独立；② 术语统一 `EntityId`，弃用 `EntityKey`；③ Viewport Picking 归 Editor（Core 留 Ray/AABB 数学、World 留空间查询）；④ `ISpatialIndex` / `DynamicAabbTree` 归 World，纯几何数学留 Core；⑤ `SceneStateOwner` 归 World/Scene，`SceneRenderSnapshot` 为边界 DTO 归 Render.Abstractions，`DefaultEditorCamera` 归 Editor。
+- 双轨空间索引立案：`SceneStateOwner._spatialIndex`（SceneStateOwner.cs:11）与 `WorldQuery._index`（WorldQuery.cs:9）构成双轨空间真相，裁定收敛为 `GlobalWorld → 唯一 SpatialIndexOwner → WorldQuery`，由 ARCH-WORLD-R2 收口；收敛前旧索引列为受控债务，禁止新增消费者。
+- 治理序列：ARCH-WORLD-R0（本轮，文档冻结）→ R1 建立 `XuanYu.World` → R2 收敛唯一 SpatialIndex → R3 Scene Truth 归位 → R4 Editor 污染剥离 → R5 Snapshot 边界整理 → 恢复 WORLD-A 功能开发；禁止大爆炸式迁移。
+- 治理同步：`docs/玄域引擎_AI开发宪法.md` 新增第二十六条（物理分层归属与身份边界），第二十三条补双轨索引受控债务标注；`docs/dev-rules.md` 新增第 15 节（物理分层与归属门禁），第 13 节补同款债务标注。
+- 文档同步：新增 `docs/arch-world-layer-attribution.md` 与 `docs/arch-world-layer-attribution.svg`；`file-tree.md` 更新到 424；主窗口标题与 `run.bat` 同步到 `v0.2.19.1-rz`。
+- 修改范围：`docs/arch-world-layer-attribution.md`（新增）、`docs/arch-world-layer-attribution.svg`（新增）、`docs/玄域引擎_AI开发宪法.md`、`docs/dev-rules.md`、`file-tree.md`、`changelog.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1` 通过；SVG XML 解析通过；`git diff --check` 通过；`file-tree.md` 424 / 424 一致。
+- Commit Hash：`01689fdfbb3cf8d0d8d6e7c0bf3a5c601f71d293`
+- 遗留问题：R0 仅冻结边界，代码归属未动；R1 建立 `XuanYu.World` 前需确认是否随 ARCH-WORLD 主阶段切换开发分支；R2 双轨收敛将触碰 Picking 主链，需真机验收；`docs/architecture/layer-attribution.md` 原定路径按仓库扁平惯例落为 `docs/arch-world-layer-attribution.md`，是否保留扁平命名待确认。
+
+## v0.2.18.23-fix
+UI-TREE-R1 后续：修复项目树折叠后再展开失效 + 延长树形横线（2026-07-23）
+- 任务目标：继续 UI-TREE-R1 收尾，不扩 WORLD-A、不重做图标、不改动世界数据模型。修复真机验收发现的两个问题：① 点击根节点（或箭头）折叠后再次点击无法展开；② 树形连接线横线过短、不显眼。
+- 根因裁定：
+  - 折叠后再展开失败：`UiVm.Selection.cs` 中 `SetProjectSelection` / `SetHierarchySelection` 在选择对象引用未改变时（`Set` 返回 false）直接 `return`，导致折叠后同一节点仍被选中时再次点击无法触发 `ToggleProjectNode` / `ToggleHierarchyNode`。根节点折叠后项目树只剩根节点一行，该节点仍保持选中，因此再次点击无反应。
+  - 横线过短：`TreeGuide` 中 `Tee / Elbow` 的横向支线仅从槽中点（x = Depth*20+10）画到槽右边缘（Depth*20+20），长度仅 10px，在浅色背景下视觉权重太弱。
+- 最小正确修复：
+  - 选择未变仍允许 toggle：在 `SetProjectSelection` / `SetHierarchySelection` 中记录 `already = _selected*Item == value`，即使 `Set` 失败但引用相同时仍继续执行后续逻辑（含 CanToggle 时 toggle）。未改变"点击节点文字也展开/折叠"的现有交互，只修复"选择相同节点时漏 toggle"的边界。
+  - 横线延长 7px：在 `TreeGuide.Render` 中把 `Tee / Elbow` 横线终点从槽右边缘延长 `Grid.ColumnSpacing`（7px）到 Toggle 列左边缘，长度从 10px 增至 17px，与左面板 `ColumnSpacing="7"` 对齐。未改动竖线、图标、文字、TreeView 结构。
+- 测试加固：新增 `XuanYu.Core.Tests/World/WorldUiTreeToggleTests.cs`，覆盖 `ToggleProjectNode` 两次恢复、`SelectedProjectItem = root` 在折叠后仍能展开、`ToggleHierarchyNode` 两次恢复。
+- 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/TreeGuide.cs`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`XuanYu.Core.Tests/World/WorldUiTreeToggleTests.cs`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 158 passed / 0 failed / 0 skipped（新增 `WorldUiTreeToggleTests` 3 例全过，覆盖 Project/Hierarchy 连续 toggle 与选择未变展开）；`scripts/arch-a-guard.ps1` 通过；5+100 与红线规则未触发。
+- Commit Hash：`d327b8c73c537a2f803e034b1799831793e45c15`
+- 遗留问题：本轮仍属 UI-TREE-R1 收尾，真机验收需确认：竖线连续、横线长度适中、折叠/展开稳定、图标无回退、文字无位移。
+
+## v0.2.18.22-fix
+UI-TREE-R1 连续树形层级分支连接线渲染断口修复（2026-07-23）
+- 任务目标：按 UI-TREE-R1 计划只修左侧"层级"面板树形连接线，不重做图标、不改动 World / Scene / Hierarchy 数据模型、不扩 WORLD-A。把"每个节点一小截短线、兄弟间断裂"修复为经典连续树形分支连接线。
+- 根因裁定（代码审计）：连续树线模型（`XuanYu.Editor.UI.TreeGuide` 的 `Full / Tee / Elbow / Blank` 段 + `TreeGuideBuilder` 祖先延续推导）已在 `v0.2.18.21-fix` 正确实现，既有 `WorldUiTreeGuideTests` 也锁定了段逻辑；真正渲染断口是 `Left.axaml` 中 `Border.treeRow` 的 `Padding="0,3,5,3"` 上下各 3px 内边距——`TreeGuide` 只在每行中间 28px 内容区画竖线，行间累计 6px 空白，层级越深断裂越明显（Project 树仅 2 层不易察觉，上次验收漏检）。
+- 最小正确修复：将 `treeRow` 垂直内边距从 3px 置 0（水平 5px 保留给图标/文字间距），使连续竖线在行间真正衔接。未采用"延长短线 / 负 Margin / 改颜色 / Unicode 字符 / 重构 TreeView"等禁止方案。
+- 测试加固：新增 `XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`，按计划 Case1-5 构造真实玄域层级结构（root / 相机 / 地面 / 区域0+实体 / 区域1+实体）并断言 `Tee / Elbow / Full / Blank` 段，重点锁定"末区域（区域1）子节点 `Blank@0`（根延续线正确停在区域1）"与折叠后可见节点重算。
+- 修改范围：`XuanYu.Editor.UI/Left/Left.axaml`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build` 7 项目 `0 warning / 0 error`；`dotnet test` 155 passed / 0 failed / 0 skipped（`WorldUiHierarchyConnectorTests` 4 例全过，含末区域 `Blank@0` 与折叠重算）；`scripts/arch-a-guard.ps1` 通过；5+100 与红线规则未触发。
+- Commit Hash：`3cd3c8c`。
+- 遗留问题：本轮仅改 UI 行内边距断口，未做真机截图验收；需用户运行 `run.bat` 启动 `v0.2.18.22-fix` 真机核对 P0（竖线连续 / 无断点 / 无重叠粗线 / ├└ 关系正确 / 多层祖先线正确 / 折叠不残留 / 展开重新正确 / 图标无回退 / 文字无异常位移）。UI-TREE-R2 视真机结果做第二轮微调，再返回 WORLD-A。
+
+## v0.2.18.21-fix
+WORLD-A-UI-R2 Continuous Tree + Icon Refresh（2026-07-23）
+- 任务目标：修正 `WORLD-A-UI-R1` 人工视觉验收退回项；本轮唯一重点是 Project Tree / Hierarchy Tree 连续树干与确认图标替换，不进入 `WORLD-A-R3-R2` Picking 正式接线，不改变 GlobalWorld、Partition、WorldQuery、SpatialIndex、Selection、Move、Undo、Redo 或 Region 迁移事实语义。
+- 连续树线：新增共享 `TreeGuide` / `TreeGuideSegment` / `TreeGuideBuilder`；每个可视节点按 Depth、IsLastChild 与祖先末节点状态生成 `Full` / `Tee` / `Elbow` / `Blank` Guide，父级竖线从第一个子节点连续延伸到最后一个子节点中心。
+- 折叠重算：Project Tree 与 Hierarchy Tree 共用折叠状态过滤与 Guide 重算；折叠父节点后子节点不可见，后续兄弟线段重新收敛，无多余残线。
+- 视觉冻结：缩进 20 px、箭头 16 px、图标 16x16、行高 28 px、树线 `#C7D7EA` / 1 px、图标 `#2F80C9` / 2.2、图标与文字间距 7 px。
+- 图标替换：`EditorIcons.axaml` 统一项目、世界、文件夹、图标/图片、材质、脚本、相机、地面、区域、实体、构建配置图标资源；禁止 Emoji、Unicode 字符或字体 Glyph 充当节点图标。
+- 构建节点：项目树资源分类中的 `构建` 改为 `构建配置`，使用构建配置图标；仅处理显示语义，不修改 dotnet build 命令或构建系统逻辑。
+- 文档同步：新增 `docs/world-a-ui-r2-continuous-tree-report.md` 与 `docs/world-a-ui-r2-continuous-tree.svg`；`file-tree.md` 更新到 420；主窗口标题与 `run.bat` 同步到 `v0.2.18.21-fix`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 151 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、SVG XML、版本残留扫描和 `file-tree.md` 420 / 420 通过。真机截图已覆盖 Project Tree 全展开、Project Tree 折叠、Hierarchy Tree 全展开、选中态与 Hover；跨 Region 迁移后额外真机截图本轮未取得，因此不据此宣布人工 PASS。
+
+## v0.2.18.20-fix
+WORLD-A-UI-R1 Display Cleanup（2026-07-23）
+- 任务目标：暂停 `WORLD-A-R3-R2` Picking 正式接线，只处理多实体 / Region / Spatial Query 阶段暴露出的 UI 可读性债务；本轮不改 SpatialIndex 算法、不接 Organization Graph、不引入 ECS、场景保存或层级拖拽重排。
+- 日志清理：底部日志表格改为 `时间 / 级别 / 来源 / 模块 / 消息 / 详情`；运行期模块显示中文化，清理普通日志中的阶段代号、英文调试字段和裸函数名；终端桥接日志补时间前缀。
+- 树与显示：Project Tree / Hierarchy Tree 统一分支线、缩进、行高和矢量路径图标；Region、Camera、Ground、Entity、脚本、构建等节点使用 SVG Path 数据；测试实体、Region、Inspector 字段和 Activity 走中文显示映射。
+- 治理同步：`docs/玄域引擎_AI开发宪法.md` 与 `docs/dev-rules.md` 新增运行日志模块名、时间首字段、中文显示映射和树形 UI 图标边界规则。
+- 文档同步：新增 `docs/world-a-ui-r1-display-cleanup-report.md` 与 `docs/world-a-ui-r1-display-cleanup.svg`；`file-tree.md` 更新到 414；主窗口标题与 `run.bat` 同步到 `v0.2.18.20-fix`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 149 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、残留文本扫描和 `file-tree.md` 414 / 414 通过；`run.bat` 真机确认标题、项目树、日志表头、模块列和中文 Inspector 显示。
+
+## v0.2.18.19-rz
+WORLD-A-R3-R1 Spatial Consistency（2026-07-23 16:18:06）
+- 任务目标：在 `WORLD-A-R3 / v0.2.18.18-rz` 基础骨架后，不新增查询 API，完成 SpatialIndex 生命周期一致性闭环；证明 Create、Move、Cross Region、Preview Cancel、Undo、Redo、Destroy 与 Rebuild 后索引始终跟随 `GlobalWorld` 正式 Position。本轮不进入 R4 Organization Graph，不扩张 AI / Gameplay / Terrain / GIS / Streaming / Persistence / ECS / GPU Driven Renderer。
+- Spatial Owner Audit：确认当前存在 `GlobalWorld -> WorldQuery` 正式 World 派生索引，以及 `SceneStateOwner._spatialIndex` 旧 Scene / Picking 派生索引；本轮不盲目大重构，先裁定旧索引仍服务既有 Picking 路径，R3-R2 必须优先把 Picking 候选查询接向 WorldQuery，避免长期双轨。
+- Rebuild 能力：`GlobalWorld` 新增 `SpatialEntityCount` 与 `RebuildSpatialIndexFromWorld()`；`WorldQuery` 新增从当前 `WorldEntitySnapshot` 集合重建空索引的入口，证明 SpatialIndex 可从 World 正式状态恢复。
+- 生命周期 Gate：新增 `WorldSpatialR1LifecycleTests` 覆盖 Create 入索引、Move 旧位置消失 / 新位置出现、Cross Region 后 Region 与 Spatial Query 同步、Preview Cancel 不污染正式索引、Undo / Redo 跟随 Before / After、Destroy 后 QueryRadius / QueryBounds 无空间幽灵。
+- Rebuild / Oracle Gate：新增 `WorldSpatialR1RebuildTests` 与 `WorldSpatialR1Oracle`；1000 Entity Rebuild 前后 QueryRadius / QueryBounds 结果一致，确定性随机 Move / Radius / Bounds 均与测试侧 O(N) Oracle 一致。
+- 文档同步：新增 `docs/world-a-r3-r1-spatial-consistency-report.md` 与 `docs/world-a-r3-r1-spatial-consistency.svg`；`file-tree.md` 更新到 411；主窗口标题与 `run.bat` 同步到 `v0.2.18.19-rz`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 149 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 411 / 411 通过。普通 sandbox build 因 Avalonia BuildServices 写用户日志被拒绝，已按权限规则升级重跑通过。
+- 遗留问题：R3-R1 已封死正式 WorldQuery 生命周期一致性；R3-R2 必须接入第一个真实消费者，优先 Picking，并最小收敛旧 Scene SpatialIndex 的正式查询地位。
+
+## v0.2.18.18-rz
+WORLD-A-R3 Spatial Index + World Query Foundation（2026-07-23 15:45:12）
+- 任务目标：正式裁定 `WORLD-A-R2 = CLOSED` 后进入 `WORLD-A-R3`；建立 Spatial Index + World Query 最小正式骨架。本轮不进入 Organization Graph、Gameplay、Terrain、Earth Mesh、GIS、完整 Streaming、Persistence、Octree 大工程、GPU Driven Renderer 或 ECS 重构。
+- 所有权边界：`GlobalWorld` 继续作为 Entity / Position / Activity / 生命周期唯一事实源；`WorldPartition` 继续作为 Region Membership 管理事实；`WorldQuery` 与 `SpatialIndex` 只作为从正式实体位置派生出的查询加速结构。
+- 查询接口：新增 `GlobalWorld.QueryRadius` 与 `GlobalWorld.QueryBounds`，返回 `EntityId` 集合；调用者必须回到 `GlobalWorld` 查询正式 Entity State。Radius Query 先走 Spatial AABB 候选，再对候选执行半径精确过滤。
+- 派生同步：`GlobalWorld.Create` 插入 WorldQuery；`UpdateTransform` 在正式 Position / Partition 更新后同步 SpatialIndex；`Destroy` 从 Registry / Partition / SpatialIndex 中移除同一 `EntityId`。
+- 治理红线：`docs/玄域引擎_AI开发宪法.md` 与 `docs/dev-rules.md` 新增 World Query / Spatial Index 门禁，冻结“禁止正式查询全扫 Registry”“SpatialIndex 不成为第三套实体事实”“Region 不等于 Spatial Cell”。
+- 测试覆盖：新增 `WorldSpatialQueryTests` 与 `WorldSpatialQueryGovernanceTests`；1000 / 10000 Entity 的 `QueryRadius` / `QueryBounds` 使用 O(N) 测试 Oracle 校验正确性，Move / Cross Region / Destroy 后查询结果同步正确，生产 World Query 文件不得扫描 `GlobalWorld.Entities`。
+- 文档同步：新增 `docs/world-a-r3-spatial-query-report.md` 与 `docs/world-a-r3-spatial-query.svg`；`file-tree.md` 更新到 406；主窗口标题与 `run.bat` 同步到 `v0.2.18.18-rz`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 144 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 406 / 406 通过。普通 sandbox build 因 Avalonia BuildServices 写用户日志被拒绝，已按权限规则升级重跑通过。
+- Performance Gate：R3 targeted tests 记录 `1000` Entity 查询 `Visited=813 / Candidates=76`；`10000` Entity 查询 `Visited=3569 / Candidates=289`；两者结果均与测试侧 O(N) Oracle 完全一致，正式生产查询路径未扫描 `GlobalWorld.Entities`。
+- 遗留问题：本轮只建立 R3 Foundation；后续 `WORLD-A-R3-R1` 可继续把 World Query 接给 Editor / Picking / AI / Gameplay 等消费者，但不得回到 O(N) 正式查询路径。
+
+## v0.2.18.17-rz
+WORLD-A-R2-R4 Editor Camera Framing + Branch Governance（2026-07-23 13:58:03）
+- 任务目标：从 `ac75bf0` 干净 HEAD 创建 `feat/WORLD-A-global-world` 并推送 upstream；补齐 WORLD-A 多实体 / 跨 Region 真机验收所需的编辑器相机构图能力。本轮不进入完整 Blender Camera、FPS Free Fly、Camera Asset、相机动画、WORLD-B、Terrain、Grid、Skybox 或 Earth Orbit Camera。
+- 分支治理：旧 `fix/RZ-VK3-A-surface-contract` 保留不改写；新 WORLD-A 主里程碑分支 `feat/WORLD-A-global-world` 已从当前 HEAD 创建并推送。`docs/玄域引擎_AI开发宪法.md` 与 `docs/dev-rules.md` 新增“主里程碑换分支”和“提交轮最终回复展示 SVG”硬规则。
+- 相机地基：新增 `EditorCameraFraming`，根据当前调试可见实体位置、Viewport Aspect 与 FOV 计算 Camera Target / Distance / Far；`UiVm.Camera` 持有当前 CameraState，提供启动看全、`聚焦` Frame Selected 和 `查看全部` Frame All。
+- 同源链路：`SceneRenderSnapshot` 携带 CameraState；Vulkan Render、Viewport Picking、Move Gizmo 全部消费同一个 CameraState / ViewportState / ViewProjectionState，禁止通过缩放 Renderer 模型或修改实体 Transform 实现看全。
+- UI：顶部 `视图` 组增加 `查看全部` 按钮；既有 `聚焦` 从提示命令升级为真实 Frame Selected。
+- 文档同步：新增 `docs/world-a-r2-r4-camera-framing-report.md` 与 `docs/world-a-r2-r4-camera-framing.svg`；`file-tree.md` 更新到 400；主窗口标题与 `run.bat` 同步到 `v0.2.18.17-rz`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 140 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 400 / 400 通过。
+- 真机 Gate：`run.bat` 启动 `v0.2.18.17-rz` 后当前调试实体直接可见；`查看全部` / `聚焦` 工作；EntityId(2) 跨 Region Commit 到 `Region(1,0,0)` / X=5.9043412667376955 后 Selection、Inspector、Hierarchy、Render 不丢不串；Undo 回 `Region(0,0,0)` / X=1.5，Redo 再回 `Region(1,0,0)`；Preview -> Escape Cancel 留在 `Region(0,0,0)` / X=1.5，日志显示“移动工具会话取消，原因=Escape”；Maximize/Resize 后 NativeHost 尺寸合并、`查看全部`、Undo/Redo 仍通过。
+- 遗留问题：本轮只补 WORLD-A 可观察性基础设施；Activity 仍无正式手动切换 UI，继续按自动 Gate 覆盖 / 手动 N/A 记录。
+
+## v0.2.18.16-rz
+WORLD-A-R2-R3 Inspector Manual Gate Fix（2026-07-23 13:25:06）
+- 任务目标：修正 `v0.2.18.15-rz` 真机 Gate 暴露的流程和 UI 缺口；暂停进入 R2-R3 之外的新世界能力，只让 Inspector 明确显示 EntityId、Region、Activity、GlobalPosition 和 Transform 字段。
+- 真机退回：`run.bat` 启动后标题、10 实体可见、Hierarchy Region 分组、EntityId(2) Selection、跨 Region Commit、Preview -> Escape Cancel、Undo / Redo、Restore / Maximize + Undo / Redo 均获得真机证据；但检查器页只显示名称 / 类型 / 路径，不满足 Gate 对 Inspector 字段的明文要求。
+- 主要修正：`Right.axaml` 检查器信息面板改为绑定 `InspectorFields`，直接消费 `UiVm.WorldProjection.cs` 已生成的完整字段列表；不新增第二份 Inspector 真相，不改变 GlobalWorld、Partition、Selection、Gizmo、History 或 Vulkan 行为。
+- 文档同步：新增 `docs/world-a-r2-r3-inspector-manual-gate-report.md` 与 `docs/world-a-r2-r3-inspector-manual-gate.svg`；`file-tree.md` 更新到 395；主窗口标题与 `run.bat` 同步到 `v0.2.18.16-rz`。
+- 验证结果：`dotnet build .\XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test .\XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 138 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、AXAML 5+100 和 SVG XML 通过；`run.bat` 真机复验确认 `v0.2.18.16-rz` 选中 `EntityId(2)` 后 Inspector 显示 EntityId、Region、活跃状态、GlobalPosition 与 Transform。
+- 遗留问题：本轮只修 Inspector Gate 缺口；Activity 仍无正式交互控件，真机 Activity 切换项记为 UI N/A / 自动 Gate 覆盖；R2 在本轮验证和提交完成前不得宣称 CLOSED。
+
+## v0.2.18.15-rz
+WORLD-A-R2-R2 Partition Scale + Consistency Gate（2026-07-23）
+- 任务目标：在 `WORLD-A-R2-R1 / v0.2.18.14-rz` PASS 后，不新增世界能力，只完成 R2 毕业前分区规模与一致性 Gate；重点验证 Partition Invariant、1000 Entity 多 Region 随机迁移、Hierarchy 稳定节点生命周期、Activity 查询不变和 RegionKey 几何依赖红线。本轮不进入 Spatial Index 新阶段、Organization Graph、Terrain、Earth Mesh、GIS、完整 Streaming、Persistence、ECS 或 GPU-driven Renderer。
+- 一致性合同：新增 `WorldPartitionEntry` 与 `GlobalWorld.PartitionSnapshot`，自动 Gate 校验所有 Alive Entity 恰好一份 Membership，`Membership.RegionKey == ResolveRegion(GlobalPosition)`，Entity Snapshot Region 与 Membership Region 一致，Activity 不被迁移污染。
+- 迁移入口收紧：`GlobalWorld.Create` 不再允许调用方手写 Region 绕过策略；`MoveToRegion` 只接受与当前 Position 策略推导一致的 Region，真实迁移继续由 Transform / Position Commit 驱动，避免 RegionKey 成为第二份位置真相。
+- 规模 Gate：新增 `WorldPartitionR2Tests`，创建 1000 Entity，执行 10000 次确定性随机迁移，并在每次迁移后立即验证 Partition Invariant；记录 Create / Migration / LookupCount 观察基线，不设置拍脑袋性能门槛。
+- Hierarchy / Activity：Hierarchy 投影刷新后清理不再存活的 node cache，Destroy 后 Entity 节点和 cache 均无幽灵；Dormant Entity 仍可 Exists / TryGet，RegionKey 与 GlobalPosition 不变；生产代码红线测试确认除 `GridWorldPartitionStrategy` 和 `RegionKey` 自身外不得调用 `RegionKey.FromGrid` 解释网格几何。
+- 真机准备：`UiVm` 的编辑器调试场景使用 `GridWorldPartitionStrategy(regionSize: 5)`，便于用当前 Move Gizmo 做近距离跨 Region 真机验证；Inspector 已显示 EntityId、GlobalPosition、RegionKey 与 Activity。
+- 文档同步：新增 `docs/world-a-r2-r2-partition-consistency-report.md` 与 `docs/world-a-r2-r2-partition-consistency.svg`；`file-tree.md` 更新到 393；主窗口标题与 `run.bat` 同步到 `v0.2.18.15-rz`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 138 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 393 / 393 均通过。普通 sandbox build 因 Avalonia BuildServices 写用户日志被拒绝，已按权限规则升级重跑通过。
+- 遗留问题：R2 自动毕业 Gate 已基本齐备；最终 CLOSED 前仍需用户真机回传选中实体 A->B Commit、Undo B->A、Redo A->B 时 Selection / Inspector / Hierarchy / Render 全程不丢不串的证据。
+
+## v0.2.18.14-rz
+WORLD-A-R2-R1 跨 Region 迁移与 Activity 生命周期第一阶段（2026-07-23）
+- 任务目标：在 `WORLD-A-R2 / v0.2.18.13-rz` 基础骨架通过后，完成真实跨 Region 迁移语义与 Activity 生命周期第一阶段；冻结 `GlobalPosition -> Partition Strategy -> RegionKey` 单向合同，RegionKey 只能是派生管理事实，不得反向成为位置真相。本轮不进入完整 Streaming、Persistence、Earth Mesh、GIS、Terrain、Organization、Spatial Index 新阶段、ECS 重构或 GPU Renderer 大改。
+- 分区策略：新增 `IWorldPartitionStrategy` 与默认 `GridWorldPartitionStrategy`，把当前平面网格算法从 World 核心抽成可替换策略；`GlobalWorld.UpdateTransform` 在正式 Position 落地后用策略重新推导 Region，并原子更新 Membership 与 Entity Snapshot。
+- Preview / Commit / History：新增自动测试锁定 Preview into B 不正式修改 Membership、Cancel 后仍在 A、Commit 后正式进入 B；Undo / Redo 只恢复 Position，Region 由 Position 重新推导，不在 History 中保存另一套 Region 真相。
+- Activity：本轮正式实现并验证 `Active -> Dormant -> Active`，要求 EntityId、Region、GlobalPosition 均不变；`Externalized` 只保留接口边界，`SetActivity(Externalized)` 暂不伪造完整卸载能力。
+- Hierarchy / Inspector：`EditorTreeNode` 改为按 key 复用的可更新投影节点；Hierarchy 增加 Region 调试分组，Region 节点 key 为 `RegionKey`，Entity 节点 key 仍为 `EntityId`；Inspector 明确显示 EntityId、GlobalPosition、RegionKey 与 Activity。
+- 测试覆盖：新增 `WorldPartitionR1Tests` 并扩展 `WorldPartitionTests` / `WorldPartitionUiTests`，覆盖 A->B、Preview Cancel、Preview Commit、Undo/Redo A/B 恢复、多实体迁移隔离、Active/Dormant、1000 Entity 多 Region 迁移后一实体恰好一个 Region，以及 Region 变化后 Entity 节点对象身份复用。
+- 文档同步：新增 `docs/world-a-r2-r1-migration-activity-report.md` 与 `docs/world-a-r2-r1-migration-activity.svg`；`file-tree.md` 更新到 389；主窗口标题与 `run.bat` 同步到 `v0.2.18.14-rz`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 134 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 389 / 389 均通过。普通 sandbox build 因 Avalonia BuildServices 写用户日志被拒绝，已按权限规则升级重跑通过。
+- 遗留问题：`WORLD-A-R2-R1` 自动 Gate 已覆盖迁移语义；后续还需真机验证选中实体跨 Region 后 Commit / Undo / Redo 时 Selection、Inspector、Hierarchy、Render 全程不丢不串，并继续规划 Externalized / Streaming 的真实数据驻留边界。
+
+## v0.2.18.13-rz
+WORLD-A-R2 Global Coordinate + World Partition 最小正式骨架（2026-07-23）
+- 任务目标：在 `WORLD-A-R1` 完整 CLOSED 后进入 `WORLD-A-R2` 基础轮；先处理 Stable HierarchyNode Identity / Key-based Hierarchy Selection 的最小必要收敛，再建立 `RegionKey`、Partition Membership、Global Position Contract 与 Active / Dormant / Externalized 语义。本轮不进入 Spatial Index 新阶段、Organization、Terrain、Earth Mesh、GIS 大工程、完整 Streaming Persistence、Gameplay、ECS 重构或 Renderer 大重构。
+- World 合同：`GlobalWorld` 仍是唯一 Entity 生命周期 Owner；`EntityRegistry` 继续保存唯一实体快照；`WorldPartitionMembership` 只维护 `EntityId -> RegionKey` 与运行成本状态，Region 不拥有第二套 Entity 生命周期；Destroy 与 Unload / Externalized 严格区分。
+- 坐标与迁移：`WorldEntitySnapshot` 增加双精度 `GlobalPosition`、`RegionKey` 与 `Activity`；正式 Transform 更新同步 GlobalPosition，并按固定 Region 尺寸推导 Region；`MoveToRegion` 只更新 membership，跨区后 `EntityId` 保持不变，旧 Region 清理、新 Region 归属正确。
+- Editor 前置收敛：UI Selection 增加稳定 `SelectedNodeKey`；Hierarchy 节点仍可按投影重建，但 Selection / Inspector / RenderSnapshot 均按 EntityId key 重投影；Region 变化后 `SelectionPath` 与 Inspector 同步到新 Region，不依赖节点对象引用碰巧稳定。
+- 测试覆盖：新增 `WorldPartitionTests` 与 `WorldPartitionUiTests`，覆盖 Region membership 非实体 Owner、GlobalPosition -> RegionKey、Active / Dormant / Externalized 不改变身份、10 Entity / Selection / Inspector 跨区不丢、1000 Entity 多 Region 迁移冒烟。
+- 文档同步：新增 `docs/world-a-r2-global-partition-report.md` 与 `docs/world-a-r2-global-partition.svg`；`file-tree.md` 更新到 384；主窗口标题与 `run.bat` 同步到 `v0.2.18.13-rz`。
+- 验证结果：`dotnet restore XuanYu.Engine.slnx --configfile .\NuGet.Config` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 127 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 384 / 384 均通过。首次 restore 因沙箱网络限制 `NU1301`，已按权限规则升级联网重跑通过；首次 build 因 Avalonia BuildServices 写用户日志被沙箱拒绝，已按权限规则升级重跑通过。
+- 遗留问题：`WORLD-A-R2` 基础骨架已具备；后续 `WORLD-A-R2-R1` 应继续做更完整的拖动跨边界、Region 激活 / 休眠刷新、Hierarchy 分组视图和真机交互验收。
+
+## v0.2.18.12-rz
+WORLD-A-R1 FINAL 多实体中央总账最终收口（2026-07-22 23:27:24）
+- 任务目标：不新增世界能力，只完成 `WORLD-A-R1` 多实体最终毕业验收；验证 10 实体同时存在、连续选择、Move 隔离、Undo / Redo 身份不串线、Destroy 无幽灵、1K Registry Gate 以及 Resize / Vulkan 回归。本轮不进入 WORLD-A-R2、Partition、Organization、Terrain、Streaming、ECS、Instancing、Rotation / Scale / Local Gizmo。
+- 自动 Gate：新增 `WorldR1FinalSelectionTests`，覆盖 EntityId(1) 到 EntityId(10) 连续选择、Inspector 同步和 RenderSnapshot 全量实体稳定；新增 `WorldR1FinalSceneTests`，覆盖 Entity5 Move / Undo / Redo 只影响同一实体，以及 Destroy 后 World / RenderSnapshot / Spatial / Render active 均无幽灵。
+- 测试治理：`UiVm` 保持默认 Avalonia UI 线程写入检查，同时允许测试注入写线程判定，避免为了测试削弱 EditorStateOwner 的线程守卫；既有 Selection 重入测试同步改用该测试 seam。
+- 1K Registry：`GlobalWorldTests` 补充 Snapshot / Destroy 计时记录，继续确认 1000 个 EntityId 唯一、存在、可查询、可快照、可销毁且运行期不立即复用身份。
+- 文档收口：新增 `docs/world-a-r1-final-closure-report.md` 与 `docs/world-a-r1-final-closure.svg`；`docs/world-a-r1-r2-final-gate.md` 更新最终 Gate；登记 R2 前置债务：Stable HierarchyNode Identity、Key-based Hierarchy Selection、正式可见实体渲染策略。
+- 修改范围：`UiVm.cs`、`WorldSceneSelectionReentryTests.cs`、`WorldR1FinalSelectionTests.cs`、`WorldR1FinalSceneTests.cs`、`GlobalWorldTests.cs`、`UiWin.axaml`、`run.bat`、`docs/world-a-r1-final-closure-report.md`、`docs/world-a-r1-final-closure.svg`、`docs/world-a-r1-r2-final-gate.md`、`changelog.md`、`file-tree.md`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 121 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 379 / 379 均通过。
+- Commit Hash：`67445a3`。
+- 遗留问题：`WORLD-A-R1` 正式 CLOSED；下一阶段进入 `WORLD-A-R2 Global Coordinate + World Partition` 前，应先给稳定层级节点身份和 Key-based Selection 方案。
+
+## v0.2.18.11-rz
+WORLD-A-R1-R2-R1 真机验收固化与影响面裁定（2026-07-22 23:08:01）
+- 任务目标：根据用户真机回传固化 `v0.2.18.10-fix` 验收结果，回答点击实体闪退的原因、是否属于架构问题以及是否影响其他能力；本轮只写验收报告与版本收口，不进入 WORLD-A-R2、Partition、Instancing、ECS 或 Vulkan 生命周期重构。
+- 真机结论：用户确认连续狂点不再闪退；日志显示从 `EntityId(2)` 到 `EntityId(10)` 的选择提交按 `Revision=1->2` 到 `9->10` 线性递增，未出现重复提交、回流递归、转圈或 `0xC00000FD`；日志栏展开触发 Resize 后 Swapchain 自愈到 `1248x478` 并恢复 Present。
+- 原因裁定：这不是 Vulkan 地基问题，也不是 GlobalWorld / Registry 方向错误；它是编辑器 Selection 链的局部架构债——业务选择提交、ActiveEntity 切换和 UI TwoWay 投影同步曾存在同步回流风险。`v0.2.18.10-fix` 通过 ActiveEntity 幂等 no-op、选择单入口提交和内部投影同步保护把一次用户选择收敛为一次事实提交。
+- 影响面：短期已覆盖 Hierarchy、Inspector、RenderSnapshot、Picking 选择入口和 Select B 后 Move / Undo / Redo；后续 R1 / R2 规模扩大时仍需关注 `HierarchyItems` 每次重建节点对象的结构性债务，未来接入 Partition / Organization 前应评估稳定 HierarchyNode Identity。
+- 修改范围：`docs/world-a-r1-r2-r1-acceptance-report.md`、`docs/world-a-r1-r2-r1-acceptance.svg`、`docs/world-a-r1-r2-final-gate.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 118 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML 和 `file-tree.md` 375 / 375 均通过。
+- Commit Hash：`a7eb411`。
+- 遗留问题：`WORLD-A-R1-R2` 阻断解除；若后续实体规模扩大到 1K 可见或引入分区/组织树，应优先治理稳定 Hierarchy 节点身份，而不是继续依赖每次 getter 重建列表。
+
+## v0.2.18.10-fix
+WORLD-A-R1-R2-R1 Selection 同步重入诊断与最小修复（2026-07-22 22:58:00）
+- 任务目标：定位并修复 `v0.2.18.9-fix` 真机点击第二个实体后转圈并以 `-1073741571 / 0xC00000FD` 闪退的问题；本轮只处理 Selection / Hierarchy / ActiveEntity 同步重入最高嫌疑，不进入 WORLD-A-R2、Partition、Instancing、ECS、Hierarchy 大重构或 Vulkan 生命周期重构。
+- 根因证据状态：多实体同时可见已由用户截图确认，说明 UI 全量 RenderSnapshot 链路恢复；点击第二实体后崩溃把 P0 缩小到 Selection 切换链。当前仍按“最高概率嫌疑”处理，不把同步重入写成已完全证明的根因，需真机低频 Depth 日志回传确认。
+- 主要改动：`SceneStateOwner.SetActiveEntity` 增加同 EntityId no-op，避免重复 ActiveEntity 广播；树与视口选择统一走 `ApplySelection` 单入口，先提交 Editor Selection，再无广播切换 Scene ActiveEntity，最后统一同步投影并发布一次 RenderSnapshot；Selection Projection 加内部同步保护，程序同步 Project / Hierarchy 选中项时不得回流成业务选择。
+- 诊断与测试：新增 `[DIAG Selection]` 与 `[DIAG Vulkan]` 低频深度日志，只记录 Selection、Projection、Publish、RecordCommandBuffers 的 Depth / ThreadId / EntityCount；新增选择重入回归测试，覆盖 Entity1→Entity2、重复选择 no-op、1→2→3→1、Select B 后 Move / Undo / Redo。
+- 修改范围：`SceneStateOwner.Lifecycle.cs`、`UiVm.Selection.cs`、`UiVm.SelectionProjection.cs`、`UiVm.SelectionTrace.cs`、`UiVm.ViewportSelection.cs`、`UiVm.WorldProjection.cs`、`UiVm.Scene.cs`、`VulkanClearFrameOwner.Commands.cs`、`VulkanClearFrameOwner.Trace.cs`、`VulkanClearFrameOwner.cs`、`WorldSceneSelectionReentryTests.cs`、`UiWin.axaml`、`run.bat`、`docs/world-a-r1-r2-final-gate.md`、`docs/world-a-r1-r2-runtime-fix.svg`、`file-tree.md`、`changelog.md`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 118 passed / 0 failed / 0 skipped。5+100 通过。
+- Commit Hash：`7fc0fad`。
+- 遗留问题：必须真机复验连续点击 Entity1~Entity10，不得转圈、不得 `0xC00000FD`；若仍失败，下一轮必须依据 Depth 日志或调用栈继续定位，不能继续叠保护位。
+
+## v0.2.18.9-fix
+WORLD-A-R1-R2 真机退回：UI RenderSnapshot 全量投影与 Vulkan 录制稳定化（2026-07-22 22:28:07）
+- 任务目标：处理用户真机复验中 `v0.2.18.8-fix` 仍以 `-1073741571 / 0xC00000FD` 退出，以及多个实体“不点到就不显示”的阻断问题；本轮不进入 WORLD-A-R2 Partition，不新增 Instancing、批处理、完整 ECS、Terrain、Streaming、Gameplay、Rotation / Scale / Local Gizmo。
+- 根因修正：`UiVm.RenderSnapshot` 重新包装 Core 快照时丢失 `RenderSnapshot.Entities`，导致 UI 到 Vulkan 的渲染事实退化为 active entity；这解释了多实体只有被选中/激活后才显示的现象。
+- 主要改动：UI RenderSnapshot 保留 Core 的完整实体列表；Vulkan draw path 保持堆数组 + `fixed` 指针，同时把多实体绘制从 `foreach` 改为稳定索引循环，降低命令录制阶段的枚举/派生属性风险并保留多实体可见语义。
+- 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Scene.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`docs/world-a-r1-r2-final-gate.md`、`docs/world-a-r1-r2-runtime-fix.svg`、`file-tree.md`、`changelog.md`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 114 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100 和 SVG XML 均通过。首次 build 因 Avalonia BuildServices 写本机日志缓存被沙箱拒绝，已按权限规则升级重跑通过。
+- Commit Hash：`ccf6124`。
+- 遗留问题：`WORLD-A-R1-R2` 必须重新真机验收，重点确认启动不再崩溃、层级中未点击实体也在视口可见、点击不同实体后高亮/Inspector/Picking 不串线；通过前不得宣称 `WORLD-A-R1` CLOSED。
+
+## v0.2.18.8-fix
+WORLD-A-R1-R2 Vulkan 多实体绘制栈风险止血（2026-07-22）
+- 问题现象：真机启动在 Vulkan Instance、Surface、Device、Swapchain、Pipeline、首帧 Present 与 Resize 自愈均成功后，进程以 `-1073741571` 退出；该 Windows 退出码对应 `0xC00000FD`，语义为 Stack Overflow。
+- 根因判断：崩溃点不在 Vulkan 初始化或 Swapchain 生命周期，而在 R1-R2 新增的多实体 Vulkan draw path；该路径在渲染命令录制中使用 unsafe 指针与 `stackalloc` 组织 push constants，真机 Present 线程暴露栈风险。
+- 主要改动：`VulkanClearFrameOwner.Draw` 改为堆数组 + `fixed` 指针提交 Viewport、Scissor 与 Scene PushConstants，移除该路径中的 `stackalloc`；保留多实体循环绘制语义，不引入 Instancing、Partition 或性能优化。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 114 passed / 0 failed / 0 skipped。
+
+## v0.2.18.7-rz
+WORLD-A-R1-R2 Multi-Entity Gate + WORLD-A-R1 CLOSED（2026-07-22）
+- 阶段裁定：基于用户真机验收，`WORLD-A-R1-R1 / v0.2.18.6-rz` PASS；本轮进入 R1 最后一段，多实体真实闭环、Destroy 无幽灵和 1K Registry Gate，完成后 `WORLD-A-R1` 可判定 CLOSED。
+- 主要改动：`SceneRenderSnapshot` 保留 active `Entity` 兼容字段，同时新增多实体 `Entities` 投影；`SceneStateOwner` 增加 R1-R2 10 实体种子、生命周期分部和 Destroy 后全量刷新，避免非 active 实体销毁后残留在 RenderSnapshot；Vulkan 使用同一基础三角形循环绘制 Snapshot 中的多个实体，未引入 Instancing 或性能压测。
+- Editor / Picking：启动时补足 10 个可区分实体，Hierarchy 从 World-backed Scene 投影出多个 EntityId；选择实体会同步 active entity；视口 Picking 不再要求命中当前 active entity，而是用返回的稳定 EntityId 查询 World-backed Scene 后提交 Selection。
+- Destroy Gate：自动测试抓出并修复了非 active entity Destroy 后仍残留在 RenderSnapshot.Entities 的幽灵实体问题；修复后 Destroy 会刷新 World 投影，Spatial / Picking 不再命中已销毁实体。
+- 1K Registry Gate：`GlobalWorldTests` 覆盖 Create 1000、Lookup、Exists、Snapshot、Destroy、Destroy 后 Exists=false、EntityId 唯一且运行期不立即复用；记录创建 ticks、查询 ticks 和内存变化 bytes，仅作结构冒烟，不作为 R6 性能毕业测试。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 114 passed / 0 failed / 0 skipped。5+100 通过。
+- 文档同步：新增 `docs/world-a-r1-r2-final-gate.md` 与 `docs/world-a-r1-r2-multi-entity-gate.svg`；`file-tree.md` 更新到 368 / 368；治理文档补充运行期 EntityId 默认单调递增、不立即复用以避免 ABA 身份风险。
+
+## v0.2.18.6-rz
+WORLD-A-R1-R1 Scene Consumption Integration（2026-07-22）
+- 任务目标：让现有 Scene / Editor / Render 链真正消费 `GlobalWorld -> EntityRegistry -> Entity State`，消除 ARCH-C 单测试实体时代遗留的双事实风险；本轮不进入 WORLD-A-R2 Partition，也不实现 Organization、完整 ECS、Terrain、Streaming、Gameplay、Rotation / Scale / Local Gizmo。
+- 审计结论：变更前 `SceneStateOwner` 自持 `SceneRenderSnapshot.TestEntityAtOrigin` 并作为正式 Transform Owner，`Hierarchy` 与 `Inspector` 的实体信息来自静态 `UiText`；Picking / Gizmo 返回和消费的是 EntityId，但最终仍落在 SceneStateOwner 自有实体上。
+- 主要改动：`SceneStateOwner` 改为持有 `GlobalWorld`，默认实体由 `GlobalWorld.Create` 生成，再通过 `SceneWorldProjection` 投影成 `SceneRenderSnapshot`；`CommitPosition`、`RestoreTransform`、Undo / Redo 均写回同一个 World Entity State；`SceneRenderSnapshot` 支持 Empty，Vulkan 空快照时 draw 0 顶点，防止 Destroy 后幽灵实体。
+- Editor 接入：`HierarchyItems` 改为从 `_sceneState.Entities` 动态生成实体节点；`InspectorFields` 在选中 `EntityId(...)` 时通过 World-backed Scene 查询 `WorldEntitySnapshot`；Selection 仍只保存稳定 EntityId 字符串，不保存实体对象或 Transform 副本。
+- 测试覆盖：新增 WORLD-A-R1-R1 Scene 消费与多实体隔离测试，覆盖 Create -> Projection、Select/Move/Undo/Redo 全程 EntityId 稳定、Move B 不污染 A/C、Undo 只恢复 B、Destroy active entity 后 RenderSnapshot 清空或安全回退且不复用身份。
+- 治理与文档：新增 `docs/world-a-r1-r1-scene-consumption-audit.md` 当前事实 Owner 矩阵与 `docs/world-a-r1-r1-scene-consumption.svg` 中文可视化；同步 `file-tree.md` 到 363 / 363；补充 dev-rules 与 AI 开发宪法中 Scene 投影、Transform Commit、Undo / Redo 必须落同一 World Fact 的长期规则。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 111 passed / 0 failed / 0 skipped；5+100、SVG XML、ARCH-A guard、`git diff --check` 均通过。
+
+## v0.2.18.5-rz
+WORLD-A-R1 Global World + Entity Registry（2026-07-22）
+- 阶段裁定：基于用户真机截图裁定 `WORLD-A-R0 CLOSED`，正式进入 `WORLD-A-R1`；本轮只建立 GlobalWorld 与稳定 Entity Registry，不进入 Partition、Spatial Index、Organization、Terrain、Streaming、Gameplay、ECS、Rotation / Scale / Local Gizmo。
+- 主要改动：新增 `XuanYu.Core.World`，以既有 `EntityId` 作为唯一实体身份；`EntityRegistry` 提供 `Create`、`Destroy`、`Get`、`TryGet`、`Exists`，`GlobalWorld` 作为上层唯一世界入口，实体状态以 `WorldEntitySnapshot` 保存名称、类型和正式 Transform。
+- 治理边界：冻结长期所有权链路为 `GlobalWorld -> EntityRegistry -> Entity State`；UI、Renderer、Hierarchy、Inspector、Snapshot、Picking 和 Gizmo 只能消费或投影实体事实，不得拥有第二份正式实体真相。
+- 测试覆盖：新增 1 / 10 / 1000 实体自动测试，覆盖创建、查询、销毁、重复删除、缺失键、稳定 key、销毁后不复用 key，以及 1000 实体创建时间、查询时间、内存变化基线记录。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 7 项目 `0 warning / 0 error`；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 104 passed / 0 failed / 0 skipped。
+- 文档同步：版本更新到 `v0.2.18.5-rz`；新增 `docs/world-a-r1-entity-registry.svg`；同步 `file-tree.md` 到 356 / 356，并更新 dev-rules 与 AI 开发宪法的 GlobalWorld / EntityRegistry 长期事实源规则。
+
+## v0.2.18.4-fix
+WORLD-A-R0-R3 Tool-aware Gizmo Visibility（2026-07-22 21:09:43）
+- 任务目标：修复 WORLD-A-R0 最后一个 UI/交互一致性缺口：ActiveTool=Rotate / Scale 时视口仍显示 Move Gizmo，虽然捕获已被拒绝，导致“看得见但不能用”的误导。本轮不实现 Rotation / Scale / Local Gizmo，不进入 WORLD-A-R1。
+- 根因结论：`SceneRenderSnapshot.IsSelected` 同时承担“实体选中”和“显示 Move Gizmo”两个语义；Vulkan 渲染用 `IsSelected ? 21 : 3` 画三轴，所以只要实体被选中就会显示 Move Gizmo，没有消费 ActiveTool 与真实能力矩阵。
+- 主要改动：`SceneRenderSnapshot` 新增 `ShowMoveGizmo`；`UiVm.RenderSnapshot` 使用 `EditorTransformCapturePolicy.ShouldShowMoveGizmo(selection, ActiveTool)` 生成 Gizmo 可见性；工具切换后立即发布 Scene Render Snapshot；Vulkan 改为只在 `ShowMoveGizmo=true` 时绘制 21 顶点 Move Gizmo。Move Gizmo Picking 仍由 R2 的 `CanBeginMoveGizmo` 拦截，Render 与 Picking 共享同一能力策略。
+- 测试变化：扩展 `EditorTransformCapturePolicyTests`，覆盖 Selected+Move 显示、Selected+Rotate/Scale 隐藏、无选择隐藏、Snap Toggle 不影响 Move Gizmo Visibility。
+- 治理与可视化：新增 `docs/world-a-r0-r3-gizmo-visibility.svg`；同步 `docs/dev-rules.md` 与 AI 开发宪法，冻结“视口 Gizmo 可见性必须对应当前 ActiveTool 的真实可操作能力”；`file-tree.md` 更新到 350 / 350。
+- 自动验收：首次 build 被当前工作区 `XuanYu.Editor.App (34832)` 锁定输出 DLL 阻断；已按宪法核对进程名、PID、启动时间与路径后终止该编辑器进程并重跑。最终 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 通过，97 passed / 0 failed / 0 skipped。
+- 遗留问题：WORLD-A-R0 还需最后真机 Gate：Rotate / Scale 下 Move Gizmo 消失，Move 下 Move Gizmo 出现且可拖，Move → Rotate → Move 显示/隐藏/显示链路通过；通过后可判定 WORLD-A-R0 CLOSED。
+
+## v0.2.18.3-fix
+WORLD-A-R0-R2 Transform 输入路由一致性与旋转图标优化（2026-07-22 20:01:12）
+- 任务目标：修复 `v0.2.18.2-fix` 真机验收第 2 项失败：工具显示已切到移动，但真实拖拽 Session 仍可能不按 ActiveTool 创建；本轮继续暂缓 WORLD-A-R1 Registry，只处理 R0 真机阻断和旋转按钮图标。
+- 根因结论：`TryBeginMoveGizmoCapture` 命中 Move Gizmo 后直接以硬编码 `"移动"` 创建交互 Session，没有先校验当前 `ActiveTool`。因此 Rotate / Scale 尚未真实实现时，仍可能偷偷落入 Move Gizmo Capture，形成 UI 工具状态与真实输入路由不一致。
+- 主要改动：新增 `EditorTransformCapturePolicy`，规定只有 `ActiveTool=Move` 才能开始 Move Gizmo Capture；PointerDown 创建 Session 时使用当前 ActiveTool 快照作为 `SessionTool`；Rotate / Scale 未实现真实能力时拒绝捕获，不再退化执行 Move；新增 WORLD-A-R0-R2 低频 Begin / Commit / Cancel / Reject 日志，明确打印 `ActiveTool` 与 `SessionTool`。
+- 图标变化：替换 `RotateIcon`，改为中心点 + 双段环形箭头构型，保持现有 Toolbar 的 ViewBox、StrokeWidth、LineCap、LineJoin 和视觉重量，但避免与 Undo / Redo / Refresh 语义混淆。
+- 测试变化：新增 `EditorTransformCapturePolicyTests`，覆盖 Move 可开始捕获、Rotate / Scale 不会回退成 Move 捕获、Move 下切换 Snap 后仍保持 Move 捕获。
+- 治理与可视化：新增 `docs/world-a-r0-r2-transform-route-fix.svg`，同步 `docs/dev-rules.md` 和 `docs/玄域引擎_AI开发宪法.md` 的交互 Session 工具事实规则；`file-tree.md` 更新到 349 / 349。
+- 自动验收：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 通过，92 passed / 0 failed / 0 skipped。
+- 遗留问题：WORLD-A-R0 仍需真机复验 `Rotate → Move → PointerDown` 日志中 `ActiveTool=移动; SessionTool=移动`，并确认 Rotate / Scale 不再偷偷执行 Move Session；通过前 R0 不封版，WORLD-A-R1 继续暂缓。
+
+## v0.2.18.2-fix
+WORLD-A-R0-R1 工具状态同步与 Redo 修复（2026-07-21 23:10:00）
+- 任务目标：修复 WORLD-A-R0 真机验收暴露的工具状态事实源、Redo 历史恢复和撤销/重做图标一致性问题；本轮不得进入 WORLD-A-R1 Registry，不新增 Ground、Grid、Skybox、Terrain、地球 Mesh、玩法系统或完整 UI 重构。
+- 根因结论：`EditorToolId` 把 Select / Move / Rotate / Scale 等持续工具与 Focus / Pan / Orbit 命令、Snap Toggle 混在同一 ActiveTool 里，导致顶部高亮、右上角模式和底部工具文本共享错误事实；`EditorHistoryOwner` 只有 Undo 栈，Redo 按钮没有真实 AfterSnapshot 恢复链。
+- 主要改动：ActiveTool 收敛为 Select、BoxSelect、Move、Rotate、Scale 五项；Snap 改为 `EditorToolSnapshot.IsSnapEnabled` 独立 Toggle，点击吸附不再改变当前工具；聚焦、平移、环绕改为普通命令按钮，不参与工具高亮；Redo 增加 `_redo` 栈，Undo 把 Entry 移入 Redo，Redo 恢复 AfterSnapshot，新 Commit 清空旧 Redo 分支；UiVm 执行 Undo/Redo 后重新发布 Scene Render Snapshot，且不改变 ActiveTool；`Ctrl+Y` 接入 Redo。
+- 测试变化：新增 `EditorHistoryRedoTests` 和 `TransformHistoryRedoIntegrationTests`，覆盖 P0→P1→Undo→Redo、连续 Undo/Redo 顺序、新 Commit 后 Redo Branch 失效；既有 Preview / Cancel / Late MouseUp 不进 History 测试保留。
+- UI 与图标：Redo 图标改为 Undo 图标的水平镜像构型，共用同一 `Path.topIcon` 样式、线宽、端点、留白和视觉重量；右侧“模式”页补充显示 Snap 状态，避免把“吸附”写成当前工具。
+- 治理与可视化：工具状态长期规则同步到 AI 开发宪法与 dev-rules；新增浅色中文 `docs/world-a-r0-r1-tool-history-fix.svg` 描述 ActiveTool / Toggle / Command 与 History Redo 链路；`file-tree.md` 更新到 345 / 345。
+- 自动验收：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore --no-build -p:UseSharedCompilation=false -maxcpucount:1` 通过，89 passed / 0 failed / 0 skipped；旧工具状态绑定与“工具：吸附”残留扫描为空。
+- 遗留问题：WORLD-A-R0 真机 Gate 仍需复验 Rotate→Move、Move→Snap ON、Move Commit→Undo→Redo、Resize、DPI 与 ARCH-C Preview / Commit / Cancel / Undo / Redo；通过前 R0 不封闭，WORLD-A-R1 继续暂缓。
+
+## v0.2.18.1-rz
+WORLD-A-R0 坐标契约冻结与方向轴纠正（2026-07-21 22:38:53）
+- 任务目标：冻结 World、Transform、Camera、Projection、Vulkan、Screen、Picking 与 Gizmo 的唯一坐标事实，只修坐标链；禁止 Ground、Grid、Skybox、Terrain、PBR、世界地图与 WORLD-A-R1 之后能力。
+- 审计结论：默认 Camera 与 `YawRotation` 隐含 Y-Up；正高度 Vulkan Viewport 缺少 Clip Y 边界转换，使 Camera Up 显示向下；CPU World→Screen 也把 NDC +Y 映射到屏幕下方，而 Picking 的 Screen→NDC 本身正确，形成 Render/Gizmo/Picking 多套解释。Shader、Push Constant 内存适配和 Vulkan 生命周期不是根因。
+- 主要改动：世界契约冻结为右手系、Z-Up、XY 水平面，且不定义世界唯一 Forward；`Vector3d` 增加 Cross；`YawRotation` 改为绕 +Z 的 XY 局部基轴；默认相机改为 Z-Up 斜视姿态；`CameraState` 正交化 Forward/Right/Up；Core `ViewProjectionState` 保持标准右手 Projection 并修正左上屏幕 Y 映射；`Render.Vulkan` 只在生成 Push Constant 时翻转 Projection 副本的 Clip Y。Picking 保持 Core Screen→NDC 语义，不携带 Vulkan 补丁。未改 Shader、Viewport/Scissor、Surface、Swapchain、Present 或关闭释放链。
+- 治理与证据：新增 `docs/world-a-r0-coordinate-contract.md` 审计矩阵与全球双精度边界，新增浅色中文 `docs/world-a-r0-coordinate-chain.svg`；坐标长期规则同步到 AI 开发宪法与 dev-rules。自动测试增加右手 Basis、Z-Up Yaw 局部基轴、Camera 正交轴、World-Clip-World Round Trip、Camera Up 屏幕方向与投影/射线一致性。
+- 自动验收：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test` 通过，基线 78 tests 增至 84 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1` 通过。Local Gizmo 当前缺少正式 Entity Rotation 与 Local 模式，本轮没有用假 Rotation 或新移动系统冒充完成；因此 R0 仍需用户真机 Gate，且不能在 Global/Local 能力补齐前宣称最终收口。
+- 禁止项确认：未新增 Ground、Grid、Origin Marker、Skybox、Terrain、地球 Mesh、世界地图、PBR、Camera 新玩法、完整 Blender 快捷键或 Gameplay Movement。
+
+## v0.2.17.33-fix-final-acceptance
+ARCH-C-R8 最终真机验收固化（2026-07-21 21:45:00）
+- 任务目标：按最终补测日志固化 ARCH-C-R8 最终真机验收通过结论，并明确 ARCH-C 具备正式收口条件；本轮不修改运行时代码。
+- 主要改动：新增 `docs/arch-c-r8-final-acceptance-report.md` 与 `docs/arch-c-r8-final-acceptance-status.svg`；在 `docs/arch-c-plan.md` 追加 R8 最终验收结论；同步 `file-tree.md` 至 340 / 340。报告保留两条证据范围注记：Captured Ctrl+Z 按结果证据判定通过但未直接打印忽略日志；本轮 Resize 连续链未单独重新记录 viewport Picking，但 Undo 后正式 Scene 能正确驱动后续 Transform。
+- 验证结果：`docs/arch-c-r8-final-acceptance-status.svg` XML 有效性检查通过；`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过；`file-tree.md` 提交后预期 340 / 340 通过。纯文档最终验收固化，不重新运行 build/test；最近一次运行时代码验证仍为 `v0.2.17.33-fix` 的 7 项目 0 warning / 0 error、78 passed。
+- 范围确认：未修改运行时代码、Undo、Transform、Picking、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖；未新增 R8 禁区功能。
+
+## v0.2.17.33-fix-stage-report
+ARCH-C-R8 阶段性真机验收报告固化（2026-07-21 20:10:00）
+- 任务目标：按当前真机证据固化 ARCH-C-R8 阶段性验收报告，明确 R8 阶段性真机验收通过，但 ARCH-C 尚未最终封板；本轮不修改运行时代码。
+- 主要改动：新增 `docs/arch-c-r8-stage-acceptance-report.md` 与 `docs/arch-c-r8-stage-acceptance-status.svg`，记录 Git 状态、已通过主链、Undo 与迟到 MouseUp 的谨慎判定、剩余三项组合生命周期证据、项目进度百分比和阻断项；同步 `file-tree.md` 至 338 / 338。
+- 验证结果：`docs/arch-c-r8-stage-acceptance-status.svg` XML 有效性检查通过；`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过；`file-tree.md` 提交后预期 338 / 338 通过。纯文档固化，不重新运行 build/test。
+- 范围确认：未修改运行时代码、Undo、Transform、Picking、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖；未新增 R8 禁区功能。
+
+## v0.2.17.33-fix
+LOG-UX 窗口级日志复制焦点修复（2026-07-21 19:55:00）
+- 任务目标：修复 R8 补测中发现的 LOG-UX 焦点路由问题：点击视口后再 Shift 多选底部日志，按 `Ctrl+C` 没有复制反馈。本轮只修日志复制快捷键路由，不修改 ARCH-C-R7 Undo、Transform、Picking、Scene、History 或 Vulkan 生命周期。
+- 根因结论：`v0.2.17.32-fix` 的多选复制仍主要依赖底部 Foot 区域收到 `KeyDown`。当用户先点击视口后，键盘焦点可能停在视口 / 窗口路由链上；随后日志列表虽然视觉上有多选集合，但 `Ctrl+C` 不一定进入 Foot 的 Tunnel handler，导致剪贴板写入链不触发。
+- 主要改动：`UiWin` 窗口级 Tunnel 快捷键新增日志复制兜底：当日志栏打开且存在已选日志时，`Ctrl+C` 直接写入 `SelectedEntriesClipboardText` 并发布既有“已复制 N 条日志到剪贴板”日志；保留 Foot 区域内原有 `Ctrl+A / Ctrl+C` 行为；新增 `docs/log-ux-window-copy-focus-fix.svg` 绘制焦点路由。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、版本一致性和 `file-tree.md` 336 / 336 均通过。
+- 范围确认：未修改 Undo、Redo、Transform、Picking、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖；未新增 R8 禁区功能。
+
+## v0.2.17.32-fix
+LOG-UX 自动滚动与后端噪声降级（2026-07-21 00:20:00）
+- 任务目标：修复 R8 真机验收中发现的两个 LOG-UX 问题：日志列表选中 / 复制旧行后不再稳定滚到最新行；打开日志栏 / Resize 后普通 Render Backend 噪声大量占据底部日志，干扰人工验收。本轮不删除 Vulkan 后端生命周期代码。
+- 主要改动：`LogListAutoScrollController` 改为新日志到来时强制尾随最新行，选择旧日志不再永久关闭自动滚动；新增 `EditorLogNoiseFilter`，屏蔽普通 Info 级 `VulkanSwapchain 能力查询成功`、同尺寸跳过、`Resize跳过`、`Resize 快速跳过` 与 TryRecreate / ResizeStart 探针进入 UI 日志；新增 `docs/log-ux-r8-tail-noise-fix.svg` 说明噪声降级边界；错误、致命、实际 Swapchain 重建、Present 停启、释放链仍保留。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、版本一致性和 `file-tree.md` 335 / 335 均通过。
+- 范围确认：未修改 Vulkan 后端资源所有权、Swapchain 重建合同、Present 生命周期、Scene / Transform / Undo 语义、存档格式或项目依赖；未新增 R8 禁区功能。
+
+## v0.2.17.31-fix
+ARCH-C-R8 真机验收清单细化（2026-07-20 23:45:00）
+- 任务目标：修正 `v0.2.17.30-rz` 最终报告和验收文档中 R8-B~E 过于概括的问题，把“阶段名式清单”改为可执行真机操作手册；本轮不修改运行时代码。
+- 主要改动：重写 `docs/arch-c-r8-acceptance.md`，为 R8-B / R8-C / R8-D / R8-E 分别补齐具体操作步骤、必须出现的日志、检查点、P0 失败判定和一次回传应包含的材料；同步 `docs/arch-c-plan.md`、主窗口标题与 `run.bat` 至 `v0.2.17.31-fix`。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、版本一致性和 `file-tree.md` 331 / 331 均通过。
+- 范围确认：未修改运行时代码、SVG 结构、ARCH-C-R7 Undo、LOG-UX 复制逻辑、Transform、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖。
+
+## v0.2.17.30-rz
+ARCH-C-R8 综合真机验收启动（2026-07-20 23:35:00）
+- 任务目标：进入 ARCH-C-R8 综合验收轮；本轮不新增运行时能力，只冻结 R8-A 自动审计结果并补齐 R8-B~E 真机验收清单，用于判断 ARCH-C 是否可正式收口。
+- 主要改动：新增 `docs/arch-c-r8-acceptance.md`，记录 R8-A 自动审计、R8-B 主链、R8-C Cancel / History / Session、R8-D Resize / DPI / Vulkan、R8-E 持续操作与关闭释放、P0 阻断项和禁区；新增 `docs/arch-c-r8-integration-acceptance.svg` 浅色中文综合验收图；同步 `docs/arch-c-plan.md`、`file-tree.md`、主窗口标题与 `run.bat` 至 `v0.2.17.30-rz`。
+- 验证结果：`dotnet restore XuanYu.Engine.slnx` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、SVG XML、版本一致性和 `file-tree.md` 331 / 331 均通过。首次沙箱内 restore 因 nuget.org 网络权限失败，已按审批流程联网重跑通过。
+- 范围确认：未修改运行时代码、ARCH-C-R7 Undo、LOG-UX 复制逻辑、Transform、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖；未新增 Redo / Rotate / Scale / Snapping / Local Transform / 多选 / History UI / 地平面 / 世界原点 / 世界坐标轴 / 天空盒。
+- 当前结论：R8-A 自动审计通过；R8-B~E 真机综合验收待用户回传；ARCH-C 最终收口暂未判定。
+
+## v0.2.17.29-fix
+ARCH-C-R7 / LOG-UX 收口报告补图（2026-07-20 23:20:00）
+- 任务目标：补齐上轮 `v0.2.17.28-fix` 最终报告中缺失的窗口内可视化 SVG；本轮是宪法第十八章交付格式修正，不改变运行时代码语义。
+- 主要改动：新增 `docs/arch-c-r7-log-copy-fix.svg`，用浅色中文图说明 Shift 多选日志、旧 ListBox 局部 KeyDown 漏洞、Foot 隧道路由、SelectedEntriesClipboardText 与系统剪贴板的关系；同步 `docs/arch-c-plan.md`、`file-tree.md`、主窗口标题与 `run.bat` 至 `v0.2.17.29-fix`。
+- 验证结果：`docs/arch-c-r7-log-copy-fix.svg` XML 有效性检查通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、版本一致性和 `file-tree.md` 329 / 329 均通过。
+- 范围确认：未修改 LOG-UX 运行时代码、ARCH-C-R7 Undo、Transform、Scene、History、Vulkan、Swapchain、Pipeline、Shader、存档格式或项目依赖。
+
+## v0.2.17.28-fix
+LOG-UX 多选日志 Ctrl+C 路由修复（2026-07-20 23:00:44）
+- 任务目标：修复真机发现的日志列表 Shift 多选若干行后按 `Ctrl+C` 无法复制的问题；本轮只修日志面板快捷键路由，不修改 ARCH-C-R7 Undo、Transform、Scene、History、Vulkan 生命周期或渲染链路。
+- 根因结论：旧实现把 `Ctrl+A / Ctrl+C` 只挂在 `LogList.KeyDown` 上，Shift 多选虽然能更新选中集合，但焦点落到 ListBoxItem、详情区或其它日志区子控件时，按键事件不一定进入该 handler，导致剪贴板写入链未触发。
+- 主要改动：`Foot` 构造时通过 `AddHandler(KeyDownEvent, Foot_KeyDown, RoutingStrategies.Tunnel)` 接管日志区隧道路由；`Foot.axaml` 移除 ListBox 局部 `KeyDown` 接线；`Ctrl+A` 仍选择当前筛选结果全部日志，`Ctrl+C` 写入 `SelectedEntriesClipboardText` 后发布既有“已复制 N 条日志到剪贴板”低频日志。
+- 验证结果：`dotnet build XuanYu.Editor.UI/XuanYu.Editor.UI.csproj --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，0 warning / 0 error；默认输出目录全解 build 首次因正在运行的 `XuanYu.Editor.App (36204)` 锁定 DLL 被阻断，已改用临时 `OutDir` 重跑 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100 和版本一致性检查均通过。
+- 范围确认：未新增文件；未修改 `UiVm.Logging.cs` 剪贴板格式、日志缓冲、日志详情按钮、ARCH-C-R7 Undo、Render.Vulkan、NativeHost、Swapchain、Pipeline、Shader 或 Scene 状态。
+- 真机复验清单：启动 `v0.2.17.28-fix`，展开日志栏，Shift 多选 3 行以上，按 `Ctrl+C`，粘贴到记事本 / Codex 后应出现 TSV 表头与多行日志；随后点击右侧“复制详情”仍只复制当前详情；`Ctrl+A` 后 `Ctrl+C` 应复制当前筛选结果全部日志。
+
+## v0.2.17.27-rz
+ARCH-C-R7 最小 Undo（2026-07-20 11:41:16）
+- 任务目标：建立最小编辑历史链，一次成功 Transform Commit 只生成一条 Undo 记录，Ctrl+Z 恢复 Commit 前正式 Transform；Preview、Cancel、`WM_CANCELMODE`、迟到 MouseUp 和无变化 Commit 均不得进入 History。
+- Entry Gate：确认 R5 正式写入点为 `SceneStateOwner.CommitPosition`；R7 History 只能接在 Scene 正式 Commit 成功且 `Changed=true` 之后，不能接 PointerMove、MouseUp 输入事件或 UI 猜测。
+- 主要改动：新增 `SceneTransformCommitResult` 返回 Entity / Before / After / Changed；新增 `TransformHistoryEntry` 与 `EditorHistoryOwner` 撤销栈；`TransformSession.TryCommit` 返回 Scene Commit 结果；UiVm 在 Changed Commit 后记录 History，Ctrl+Z / 顶部撤销在 Interaction Idle 时执行 Undo，拖动中不执行历史 Undo；Undo 通过 `SceneStateOwner.RestoreTransform` 恢复正式 Scene，不直接写渲染 Preview。
+- 测试：新增 History Owner 空栈、无变化忽略、LIFO 测试，以及 Transform Commit -> History -> Undo 集成测试；覆盖多次 Preview 只生成一条历史、Cancel 与迟到 MouseUp 不进 History、无变化 Commit 不进 History、Undo 后 History 归零。
+- 可视化：新增 `docs/arch-c-r7-undo.svg`，以浅色中文图说明 Commit / History / Undo / Scene / Render 与禁止入口。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，78 passed / 0 failed / 0 skipped；`scripts/arch-a-guard.ps1`、`git diff --check`、5+100、`docs/arch-c-r7-undo.svg` XML 和 `file-tree.md` 328 / 328 均通过。R7 真机 Ctrl+Z 验收尚待用户运行确认。
+- 范围确认：未实现 Redo、Rotate、Scale、Local Transform、Snapping、多选、多实体事务、History 持久化、History UI、地平面、世界原点、世界坐标轴、天空盒或 Vulkan 生命周期改动。
+- Push 状态：本轮只做本地 Commit，不 Push。
+
+## v0.2.17.26-rz
+ARCH-C-R5 Transform Preview / Commit / Cancel（2026-07-20）
+- 任务目标：让 R4 已选单实体沿世界 X/Y/Z 轴实时预览移动，MouseUp 最多正式 Commit 一次，Escape / `WM_CANCELMODE` / 捕获丢失完整 Cancel，迟到 MouseUp 不得复活会话；不实现 Undo 或其他 Transform 能力。
+- Entry Gate：确认旧 Scene 更新会执行 `Present Stop -> CommandBuffer 全量重录 -> Present Start`；新增覆盖式单槽快照通道，由 Present 线程在 fence 安全点消费最新请求并重录命令，拖动期间持续 Present、不排队、不输出逐帧日志。
+- 状态所有权：新增 `TransformStartSnapshot`、`PreviewTransform`、`TransformSession`；Preview 只进入 `SceneRenderSnapshot.RenderPosition`，不修改 `CommittedTransform` 或 SpatialIndex；Commit 让 Session 先失效再调用 `SceneStateOwner.CommitPosition`，Cancel 清 Preview 并保留正式事实。
+- 拖动数学：把 Pointer 位移投影到 R4 轴屏幕线段，仅改变对应世界 X/Y/Z 分量；Gizmo 与实体共同消费 Preview 渲染位置。
+- 测试：新增轴向约束、垂直位移、三轴 Preview、正式事实隔离、单次 Commit、Cancel、迟到 Commit 和 Render Preview 覆盖测试。
+- 可视化：新增 `docs/arch-c-r5-transform-session.svg`，补齐 R5 窗口内浅色可视化图，视觉主标签使用中文，必要代码标识只作精确引用；最终报告需附完整纯文本 SVG 源码。
+- 后续路线：保留历史编号，原 R6 Commit / Cancel 合同已由 R5 吸收完成并真机验收通过，不再单独开发；新增 `docs/arch-c-r5-to-r8-route.svg`，下一实际开发阶段为 R7 最小 Undo，并冻结 History 入口红线。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；原位全解构建通过，7 项目 0 warning / 0 error；全解测试通过，72 passed / 0 failed / 0 skipped；`git diff --check`、5+100、版本一致性和 `file-tree.md` 320 / 320 通过。用户真机回传确认拖动正常；日志显示 X / Y / Z / Z / X 五次真实 Move 会话均 Begin -> Commit -> End，Position 只沿对应轴变化，拖动期间无 Present Stop / Start；日志栏 Resize 后 Swapchain 自愈到 1248x478 并恢复 Present，正常关闭释放链完整。Cancel 专项真机日志显示 Escape、`WM_CANCELMODE` 和 Cancel 后迟到 MouseUp 均未触发旧 Session Commit，Position 保持 StartSnapshot。
+- 范围确认：未实现 Undo、Rotate、Scale、Local Space、Snapping、多选、Gizmo 美化、地平面、原点、世界轴或天空盒；未新增依赖、项目或 Vulkan 资源类型。
+- Push 状态：R4 ahead 5 已按授权推送至 `origin/fix/RZ-VK3-A-surface-contract`；本轮 R5 只做本地 Commit，不 Push。
+
+## v0.2.17.25-fix
+ARCH-C-R4-R4 Move Gizmo Vulkan 屏幕投影修复（2026-07-19 23:28:00）
+- 原历史编号：ARCH-C-R4-R4。
+- 任务目标：修复真机三轴颜色与日志轴身份整体错位的问题：绿色 Y 点击显示 X、红色 X 点击显示 Z、蓝色 Z 点击显示 X；本轮只修 Gizmo CPU 投影到 Vulkan 屏幕坐标的 Y 映射，不修改 WorldRay/Picking、Selection、Transform、Undo 或 Vulkan 生命周期。
+- 主要改动：`ViewProjectionState.ProjectWorldPoint` 的屏幕 Y 映射改为与 Vulkan 正高度 viewport 呈现一致，避免 CPU HitTest 使用 UI 常规 Y 翻转而 Vulkan 画面使用另一套落屏方向；新增 Gizmo 测试锁住默认斜视相机下红 X、绿 Y、蓝 Z 的屏幕方向与 Vulkan 可见方向一致。
+- 修改范围：`XuanYu.Core/Space/ViewProjectionState.cs`、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 `WorldRayFactory`、Picking 服务、Selection Owner、Scene Transform、SpatialIndex、Shader、Pipeline、Swapchain、Present、存档格式、项目结构或依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；构建 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；测试 `dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，62 passed / 0 failed / 0 skipped；`git diff --check` 通过且仅有既有 CRLF 工作区提示；5+100、版本一致性、file-tree 311 / 311 和 Core 依赖方向检查均通过。真机复验仍需确认红 X、绿 Y、蓝 Z 分别显示 `Axis=X/Y/Z`。
+- Push 状态：本轮未获授权，不 Push。
+
+## v0.2.17.24-fix
+ARCH-C-R4-R3 Move Gizmo 轴身份裁决修复（2026-07-19 23:18:00）
+- 原历史编号：ARCH-C-R4-R3。
+- 任务目标：修复真机点击绿色 Y 轴后虽进入 R4 Capture、但日志详情显示 `Axis=X` 的问题；本轮只修共享起点附近的轴身份裁决，不新增 Gizmo UX、Transform Preview、Commit、Cancel、Undo 或 Vulkan 生命周期改动。
+- 主要改动：`MoveGizmoLayout.HitTest` 从“距离优先”改为“从 Gizmo 起点指向鼠标的方向一致性优先，距离作为次级裁决”；这样在 X/Y/Z 共用起点的区域，点击绿色方向会判为 Y，而不是因为红轴也在附近或平局顺序而误判 X。新增回归测试覆盖绿色 Y 轴靠近共享起点时必须返回 `MoveGizmoAxis.Y`。
+- 修改范围：`XuanYu.Core/Gizmo/MoveGizmoLayout.cs`、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Selection Owner、Scene Transform、SpatialIndex、Shader、Pipeline、Swapchain、Present、存档格式、项目结构或依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；构建 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；测试 `dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，61 passed / 0 failed / 0 skipped；`git diff --check` 通过且仅有既有 CRLF 工作区提示；5+100、版本一致性、file-tree 310 / 310、SVG XML 和 Core 依赖方向检查均通过。真机复验仍需确认点击绿色 Y 轴日志详情显示 `Axis=Y`。
+- Push 状态：本轮未获授权，不 Push。
+
+## v0.2.17.23-fix
+ARCH-C-R4-R2 Move Gizmo Guard 命中修复（2026-07-19 23:12:00）
+- 原历史编号：ARCH-C-R4-R2。
+- 任务目标：修复 `v0.2.17.22-fix` 后真机点击绿色 Y 轴仍回落 Scene Picking 并清除 Selection 的问题；本轮只补 R4 最小入口 Guard 命中，不新增 Gizmo UX、Transform Preview、Commit、Cancel、Undo 或 Vulkan 生命周期改动。
+- 主要改动：`MoveGizmoLayout` 增加 `GuardWidth=48 logical px` 与 `GuardHitTest`，`UiVm.MoveGizmo` 在精确 `HitTest` 失败后对已选中对象执行 Guard 命中，防止点击可见 Gizmo 轴时落入 Scene Picking 清空分支；新增自动测试覆盖绿色 Y 轴可见入口在普通命中失败时仍由 Guard 捕获，远处空白仍 miss。
+- 修改范围：`XuanYu.Core/Gizmo/MoveGizmoLayout.cs`、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`、`XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Selection Owner、Scene Transform、SpatialIndex、Shader、Pipeline、Swapchain、Present、存档格式、项目结构或依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；构建 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；测试 `dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，60 passed / 0 failed / 0 skipped；`git diff --check` 通过且仅有既有 CRLF 工作区提示；5+100、版本一致性、file-tree 310 / 310、SVG XML 和 Core 依赖方向检查均通过。真机复验仍需确认绿色 Y 轴点击进入 `Axis=Y` Capture，且不再清除 Selection。
+- Push 状态：本轮未获授权，不 Push。
+
+## v0.2.17.22-fix
+ARCH-C-R4-R1 Move Gizmo 真机命中收口（2026-07-19 22:58:00）
+- 原历史编号：ARCH-C-R4-R1。
+- 任务目标：修复真机点击绿色 Y 轴时未进入 Gizmo Capture、回落到 Scene Picking 的问题；本轮只修最小 Move Gizmo 入口命中一致性，不新增箭头、Hover、标签、屏幕恒定尺寸、遮挡策略、Preview Transform、Commit、Cancel、Undo、Rotate、Scale 或 Vulkan 生命周期重构。
+- 主要改动：`MoveGizmoLayout.HitWidth` 从 9 logical px 调整为 18 logical px，使 R4 最小入口覆盖真机手点偏差和细矩形视觉宽度；同步更新 Core 自动测试边界，保留 X/Y/Z 轴确定性命中、Miss 和轴顺序裁决规则；新增浅色中文 `docs/arch-c-r4-r1-gizmo-hit.svg` 说明可见轴、命中容错、Capture 与 Scene Picking 回落边界。
+- 修改范围：`XuanYu.Core/Gizmo/MoveGizmoLayout.cs`、`XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`、`docs/arch-c-r4-r1-gizmo-hit.svg`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Scene Transform、SpatialIndex、Selection Owner、Interaction Owner、Shader、Pipeline、Swapchain、Present、存档格式、项目结构或依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，59 passed / 0 failed / 0 skipped；`git diff --check` 通过且仅有既有 CRLF 工作区提示；5+100、版本一致性、file-tree 310 / 310、SVG XML 和 Core 依赖方向检查均通过。真机复验仍需确认绿色 Y 轴点击能进入 `Axis=Y` Capture。
+- Push 状态：本轮未获授权，不 Push。
+
+## v0.2.17.21-rz
+ARCH-C-R4 Move Gizmo（2026-07-19 22:31:16，统一斜视相机与三轴 Capture）
+
+- 原历史编号：ARCH-C-R4。
+- 日期：2026-07-19 22:31:16。
+- 任务目标：一次完成默认编辑器斜视相机、Move Gizmo X/Y/Z 显示与屏幕空间命中、Gizmo Hit 优先于 Scene Picking、既有 EditorInteraction Capture；本轮不移动实体，不实现 Preview Transform、Commit Position、SpatialIndex Update、Undo、Rotate、Scale、多选或 Vulkan 生命周期重构。
+- 主要改动：新增 Core `DefaultEditorCamera`，固定 `Position=(4,3,-5)`、`Target=(0,0,0)`、`Up=+Y` 并由 Target-Position 派生 Forward，Render、Picking、Gizmo 共用；新增 `MoveGizmoLayout` 把实体 CommittedTransform Origin 与世界 X/Y/Z 投影为逻辑像素线段，以 9 logical px 命中宽度、距离优先及 X→Y→Z 平局顺序裁决；Native PointerDown 优先执行 Gizmo Hit，命中后提交既有 `EditorStateOwner.Begin` 并阻断 Scene Picking，Miss 才回落 R2-F/R3；Selection 派生 `SceneRenderSnapshot.IsSelected` 供 Vulkan 使用，不保存第二份 Selection；现有 Pipeline 在选中时以同一 Draw 追加三根彩色细矩形轴，正式 GLSL 源码经 glslc 生成内嵌 SPIR-V；PointerUp/Cancel 只结束既有 Capture，不修改 Scene Transform。
+- 测试变化：新增默认相机 Forward/中心射线测试和 Move Gizmo 三轴非退化、X/Y/Z 命中、Miss、9 px 边界与确定性平局测试；保留旧轴向相机测试作为一般 Camera/ViewProjection 数学合同，不把旧默认姿态误当世界坐标永恒合同。
+- 修改范围：新增 `XuanYu.Core/Gizmo/*`、`XuanYu.Core/Space/DefaultEditorCamera.cs`、对应 Core Tests、`UiVm.MoveGizmo.cs`、`VulkanNativeHost.Gizmo.cs`、正式 shader 源码与 `docs/arch-c-r4-move-gizmo.svg`；修改 ViewProjection 投影、Picking/Render 默认相机、Selection 派生渲染快照、Pointer 优先级、Interaction 日志、shader 字节码、Draw 顶点数、版本与治理文档。未新增依赖、项目、Scene Entity、SpatialIndex 条目、第二套 Selection/Capture Owner 或 Transform 写入。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；首轮 Build 因 `VulkanNativeHost.Picking.cs` 提取统一 ViewportState 后遗漏 Core.Space using 失败，局部补齐后第二轮 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；测试首轮发现斜视中心射线与双精度 Forward 存在 Matrix4x4 单精度约 3.8e-6 分量误差，改为直接验证方向点积合同后 `dotnet test` 通过，59 passed / 0 failed / 0 skipped；`git diff --check`、5+100、Core 依赖方向、版本一致性、file-tree 309 / 309、SVG XML 均通过；正式 GLSL 重新编译产物与内嵌 SPIR-V 逐字节一致。仓库未获批新增 UI 测试项目，因此真实 Pointer Capture 与视觉像素结果仍需按最终清单真机验收，不把测试依赖加入生产 UI。
+- Commit Hash：本条 Hash 以 Git 记录和最终报告为准。
+- Push 状态：本轮只创建本地 Commit，不 Push。
+- 遗留问题：R5 Entry Gate 仍需解决高频 Preview Render Update，禁止 PointerMove 复用当前低频 Present Stop/CommandBuffer 重录/Start 路径。
+
+## v0.2.17.20-fix
+ARCH-C-R3 真机收口 Timeout 修复与 R4 Entry Gate（2026-07-19 21:01:29）
+
+- 原历史编号：ARCH-C-R3-R1。
+- 日期：2026-07-19 21:01:29。
+- 任务目标：修复 R3 真机日志暴露的 `AcquireNextImage == Timeout` 被误判为 Present 致命退出问题，并完成 R4 Move Gizmo 入口审计；不修改线程模型、Swapchain 自愈、Selection、Scene SpatialIndex、Transform 或 Undo。
+- 主要改动：`VulkanPresentLoop` 在一秒有限 Acquire 等待返回 `Result.Timeout` 时只跳过当前空帧并继续循环，不再调用 Fatal 或使 RenderSession 失效；`ErrorOutOfDateKhr` 仍进入既有 Swapchain 自愈，其他 Vulkan 错误仍保持快速失败。R4 入口审计确认默认相机严格沿世界 `+Z`，导致世界 Z 轴投影退化为点；在产品层冻结相机或屏幕空间 Handle 方案前，不伪造三轴显示与命中。
+- 治理规则：用户明确授权，后续 Build 若被本工作区 `XuanYu.Editor.App` 锁定 DLL，AI 在核实进程身份与工作区关联后自行终止并重跑验证；禁止终止身份不明或无关进程。该规则已同步写入开发宪法。
+- 修改范围：`XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`、`docs/arch-c-plan.md`、`docs/arch-c-r3-timeout-fix.svg`、`docs/玄域引擎_AI开发宪法.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Shader、Pipeline、Swapchain、Selection、Gizmo 运行时代码、Transform、Undo、项目结构或依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，51 passed / 0 failed / 0 skipped；`git diff --check`、全仓 5+100、版本一致性、`file-tree.md` 297 / 297 和 SVG XML 检查通过。首次 Build 因用户真机编辑器进程锁定输出 DLL 失败，正常关闭该进程后同一命令通过，确认不是代码错误。Timeout 的真实驱动行为与关闭释放链仍需真机复验。
+- Commit Hash：本条 Hash 以 Git 记录和最终报告为准。
+- Push 状态：只创建本地 Commit，不 Push。
+- 遗留问题：R4 被默认相机与世界 Z 轴共线阻断；需先冻结可观察三轴的默认相机，或明确授权屏幕空间 Z Handle，之后才能保证视觉与命中使用同一契约。
+
+## v0.2.17.19-rz
+ARCH-C-R3 真实 Selection（2026-07-19 20:30:44，Picking 接入统一选择事实）
+
+- 原历史编号：ARCH-C-R3。
+- 日期：2026-07-19 20:30:44。
+- 任务目标：一次完成真实 Pointer Picking 到既有 ARCH-B Selection 主链的接线，使视口命中、空白清除、Tree 与 Inspector 共同消费 `EditorStateOwner` 的唯一 `EditorSelectionSnapshot`；禁止拆分 R3-A/B/C，禁止 Gizmo、Transform Preview、Commit/Cancel、Undo、多选、Mesh Picking、Vulkan 生命周期与 Shader/Pipeline 扩围。
+- 主要改动：`UiVm.Picking` 在发布 R2-F 低频日志后把结果交给 `UiVm.ViewportSelection`；命中时校验 Picking EntityKey 与当前场景实体一致并提交既有 `SelectEditorItemCommand`，NoHit 提交既有 `ClearEditorSelectionCommand`；`UiVm.Selection` 统一处理命令返回值并仅在 Owner 真实变更时发布属性通知和低频 Revision 日志，重复选择保持幂等；层级树真实实体节点采用 `EntityId(1)` 稳定身份，Tree 的 SelectedItem 由 Snapshot Key 投影，Inspector 继续直接绑定同一 Snapshot；实体节点图标按显示身份判断，不与真实类型文本耦合；新增浅色中文 `docs/arch-c-r3-selection.svg`；版本同步到 `v0.2.17.19-rz`。
+- 修改范围：`XuanYu.Editor.UI/Vm/UiVm.Picking.cs`、`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`、`XuanYu.Editor.UI/Vm/UiText.cs`、`XuanYu.Editor.UI/Vm/EditorTreeNode.cs`、`docs/arch-c-r3-selection.svg`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Core Picking/Spatial、Vulkan、Shader、Pipeline、Swapchain、Present、Gizmo、Transform、Undo、存档格式、项目结构或依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，执行 51 项测试，0 failed / 0 skipped；`git diff --check`、全仓 5+100、版本一致性、UI 到 Vulkan 依赖方向和 `docs/arch-c-r3-selection.svg` XML 检查通过；`file-tree.md` 按既有口径记录 296 个项目文件（不计 `.gitignore` 与空目录 `.gitkeep`）。真实 UI 交互仍需按最终报告清单真机验收。
+- Commit Hash：本条 Hash 以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求只本地 Commit，不 Push。
+- 遗留问题：R3 不提供复杂 Viewport 高亮；层级树选中与 Inspector 真实事实同步作为本轮最小可见反馈。R5 高频 Preview 渲染更新路径仍是后续 Entry Gate，不在 R3 提前实现。
+
+## v0.2.17.18-rz
+ARCH-C-R2-F 真实 Pointer Picking（2026-07-19 20:01:53，视口点击到 EntityKey）
+
+- 原历史编号：ARCH-C-R2-F。
+- 日期：2026-07-19 20:01:53。
+- 任务目标：一次性完成真实 Pointer Picking 最小闭环，让 Avalonia / NativeHost 的真实 `PointerPressed` 通过 `ViewportState`、统一默认 `CameraState`、`WorldRayFactory` 和 `SceneStateOwner.RaycastSpatial` 返回 `EntityKey / NoHit`；本轮不拆 R2-F-A / B / C，不实现 Selection、Gizmo、Undo、新 PickingCamera、全场景扫描、Vulkan 生命周期、Shader、Pipeline、Swapchain 或 Present 修改。
+- 主要改动：新增 `XuanYu.Core.Picking` 请求、结果和 `ViewportPickingService`，将视口逻辑坐标转换为 `WorldRay` 并复用 R2-E `SpatialRaycastResult`；结果发布前校验 `ViewportRevision` 与 `SpatialRevision`，过期结果抛出明确异常；新增 Core 自动测试覆盖黄色三角形中心命中、空白 NoHit、Run 后新位置命中 / 旧位置 NoHit、DPI=1.75 逻辑坐标、ViewportRevision 过期拒绝和 SpatialRevision 过期拒绝；新增 `VulkanNativeHost.Picking` 与 `UiVm.Picking`，真实 PointerPressed 记录当前视口逻辑尺寸、物理尺寸、DPI 和 ViewportRevision 后写入低频中文拾取日志；新增 `ViewportPickingLogFormatter` 与 `docs/arch-c-r2f-pointer-picking.svg`；版本同步到 `v0.2.17.18-rz`。
+- 修改范围：`XuanYu.Core/Picking/ViewportPickingRequest.cs`、`XuanYu.Core/Picking/ViewportPickingResult.cs`、`XuanYu.Core/Picking/ViewportPickingService.cs`、`XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs`、`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs`、`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`、`XuanYu.Editor.UI/Vm/UiVm.Picking.cs`、`XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`、`docs/arch-c-r2f-pointer-picking.svg`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Selection、Gizmo、Undo、Vulkan 渲染生命周期、Shader、Pipeline、Swapchain、Present、存档格式或项目依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 51 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2f-pointer-picking.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.18-rz`；`file-tree.md` 实际条目 294 且总数声明 294；依赖方向扫描确认 `XuanYu.Core` / `XuanYu.Core.Tests` 未引入 Avalonia、Vulkan 或 Silk.NET，未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。真实 Pointer 点击仍需按最终报告清单做人工验收。
+- Commit Hash：本条 Hash 以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求未经授权不得 Push；本轮只允许本地 Commit。
+- 遗留问题：R2-F 只输出低频中文 Picking 结果日志，不写 Selection；R3 才把 PickingResult 接入 SelectionCommand / EditorStateOwner；R5 Entry Gate 前仍需处理高频 Preview 渲染更新路径，避免 PointerMove 频繁 Stop / Start Present。
+
+## v0.2.17.17-fix
+ARCH-C-R2-E-R1 精确命中封版补强（2026-07-19 19:39:31，Revision 最终校验）
+
+- 原历史编号：ARCH-C-R2-E-R1。
+- 日期：2026-07-19 19:39:31。
+- 任务目标：补齐 `v0.2.17.16-rz — ARCH-C-R2-E` 封版审计发现的两个局部 GAP：Narrow Phase 完成后必须再次校验 `SpatialRevision`，且必须补充 Broad 候选不等于最终命中的责任分离证据；本轮不实现 Pointer、Selection、Gizmo、Undo、Vulkan、Shader、Pipeline、Swapchain、Present、Fat AABB、Mesh Picking 或 R2-F。
+- 主要改动：`SpatialRaycastResolver` 在 Broad Phase 后与结果发布前各校验一次 `SpatialRevision`，任何 Narrow Phase 期间发生的代际变化都会抛出既有“空间索引代际已变化。”失败语义，避免发布混代 HitResult；新增内部测试构造入口，仅供 `XuanYu.Core.Tests` 精确触发第一道校验之后、Narrow 期间的变代场景；补充 `SpatialRaycastRevisionTests` 覆盖 Narrow 期间变代拒绝；补充 `SpatialRaycastNearestTests` 的 `ISpatialIndex` 合同层责任分离测试，证明 Resolver 不把 Broad Candidate 直接发布为 Hit；审计确认当前 `DynamicAabbTree` 叶节点 Broad Bounds 等于真实 `SpatialBounds.WorldBounds`，生产链路暂不具备自然 Fat AABB false-positive 场景，并在 `docs/arch-c-plan.md` 冻结未来 Fat AABB / 粗代理 Bounds 的真实 false-positive 集成测试 Entry Gate；重写 `docs/arch-c-r2e-ray-hit.svg` 为浅色中文 R2-E-R1 收口图；版本同步到 `v0.2.17.17-fix`。
+- 修改范围：`XuanYu.Core/Spatial/SpatialRaycastResolver.cs`、`XuanYu.Core/Properties/AssemblyInfo.cs`、`XuanYu.Core.Tests/Spatial/SpatialRaycastNearestTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRaycastRevisionTests.cs`、`docs/arch-c-plan.md`、`docs/arch-c-r2e-ray-hit.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Vulkan、Render.Abstractions、Pointer、EditorStateOwner、Selection、Gizmo、Undo、存档格式或项目依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 45 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2e-ray-hit.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.17-fix`；`file-tree.md` 实际条目 286 且总数声明 286；依赖方向扫描确认 `XuanYu.Core` 未引入测试依赖、`XuanYu.Core.Tests` 只依赖既有测试包和 `XuanYu.Core`，未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：本条 Hash 以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求未经授权不得 Push / Tag / Release；本轮只允许本地 Commit。
+- 遗留问题：当前精确命中仍为实体 AABB 级别，不是 Mesh Triangle Picking；真实 Pointer Picking 留给 R2-F；未来引入 Fat AABB / 粗代理 Bounds 前必须补真实 false-positive 集成测试。
+
+## v0.2.17.16-rz
+ARCH-C-R2-E 实体级 Ray-AABB / 最近命中（2026-07-19 00:04:15，Core 精确命中）
+
+- 原历史编号：ARCH-C-R2-E。
+- 日期：2026-07-19 00:04:15。
+- 任务目标：在 R2-D 的 WorldRay Broad Phase 候选查询基础上，建立实体级真实 `SpatialBounds` 的 Ray-AABB Narrow Phase、最近命中和稳定 HitResult；本轮不实现真实鼠标 Pointer 接线、正式 Picking UI、Selection、Tree / Inspector 同步、Gizmo、Transform Preview、Undo、GPU Picking、Mesh Triangle Picking、地形 Picking、多选、框选、Vulkan 生命周期、Shader、Pipeline、Swapchain 或 Present 修改。
+- 主要改动：新增 `RayAabbIntersection` 与 `RayAabbHit` 冻结正向命中、最大距离、起点在 AABB 内距离 0、擦边 / 擦角、平行轴和背向拒绝规则；新增 `SpatialRaycastResolver`、`SpatialRaycastHit`、`SpatialRaycastResult` 与 `SpatialRaycastStats`，通过 `SpatialIndexOwner.Raycast` 先获取 R2-D 候选，再对候选集合执行 O(k) Narrow Phase，并按最小合法距离、等距稳定 EntityKey 规则选最近；`SceneStateOwner` 暴露 `RaycastSpatial` 作为真实场景 Core 命中入口；新增自动测试覆盖 Ray-AABB 边界、多实体最近命中、候选顺序变化、等距稳定性、Revision 携带、NoHit 统计和 1,000 / 10,000 实体端到端规模回归；新增 `docs/arch-c-r2e-ray-hit.svg` 浅色中文架构图；`docs/arch-c-plan.md`、主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.16-rz`。
+- 修改范围：`XuanYu.Core/Spatial/RayAabbHit.cs`、`XuanYu.Core/Spatial/RayAabbIntersection.cs`、`XuanYu.Core/Spatial/SpatialRaycastStats.cs`、`XuanYu.Core/Spatial/SpatialRaycastHit.cs`、`XuanYu.Core/Spatial/SpatialRaycastResult.cs`、`XuanYu.Core/Spatial/SpatialRaycastResolver.cs`、`XuanYu.Core/Spatial/SpatialIndexOwner.cs`、`XuanYu.Core/Scene/SceneStateOwner.cs`、`XuanYu.Core.Tests/Spatial/RayAabbIntersectionTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRaycastNearestTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRaycastRevisionTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRaycastScaleTests.cs`、`docs/arch-c-r2e-ray-hit.svg`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Vulkan、Render.Abstractions、EditorStateOwner、Selection、Gizmo、Undo、存档格式或项目依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 43 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2e-ray-hit.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.16-rz`；`file-tree.md` 实际条目 285 且总数声明 285；依赖方向扫描确认 `XuanYu.Core` / `XuanYu.Core.Tests` 未引入 Avalonia、Vulkan 或 Silk.NET，未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖；端到端规模审计确认 1,000 实体访问 79 节点 / 候选 5 / 精确检测 5 / 真实命中 5 / 最近 `EntityId(6)`，10,000 实体访问 571 节点 / 候选 6 / 精确检测 6 / 真实命中 6 / 最近 `EntityId(3931)`，均未退化为全量扫描。
+- Commit Hash：主实现提交 `221673ccd26682cab2a7077481e678cd879839ef`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求未经授权不得 Push；本轮完成本地 Commit 后停止在本地，不创建 Tag / Release。
+- 遗留问题：R2-E 的精确命中是实体 AABB 级别，不是 Mesh Triangle Picking；真实 Pointer 输入接线和最终 Picking 留给 R2-F，Selection / Gizmo / Undo 仍未进入。
+
+## v0.2.17.15-fix
+ARCH-C-R2-D-R1 封版补全（2026-07-18 23:48:24，真实 Scene 接线与 WorldRay 候选查询）
+
+- 原历史编号：ARCH-C-R2-D-R1。
+- 日期：2026-07-18 23:48:24。
+- 任务目标：补齐 `v0.2.17.14-rz — ARCH-C-R2-D` 封版审计发现的两个 GAP：空间索引必须进入真实 `SceneStateOwner` 主链，且空间索引必须具备有界 `WorldRay` 候选查询契约；本轮不实现实体级最终 Ray-AABB、最近命中、正式 Picking、Selection、Gizmo、Undo、Camera 工具、GPU Picking、ECS、地形系统、Vulkan 生命周期或存档。
+- 主要改动：`SceneStateOwner` 初始化时将 `EntityId(1)` 的世界 `SpatialBounds` 插入 `SpatialIndexOwner`，`CommitPosition` 改变正式 Transform 时先增量更新同一个 EntityKey 的空间记录再发布场景快照，相同 Position 保持幂等且不增加 `SpatialRevision`；新增 `SpatialRayQuery` 与 `SpatialRayAabb`，`ISpatialIndex` / `SpatialIndexOwner` / `DynamicAabbTree` 支持带最大距离的 WorldRay Broad Phase 候选查询；新增自动测试覆盖真实 Scene -> SpatialIndex 初始化 / Update / Revision、Ray 命中 / 空查询 / Mask / Update / Remove / 起点在盒内 / 平行轴 / 背向 / 负方向 / 最大距离，以及 1,000 / 10,000 实体 Ray Query 结构统计。
+- 修改范围：`XuanYu.Core/Scene/SceneStateOwner.cs`、`XuanYu.Core/Spatial/ISpatialIndex.cs`、`XuanYu.Core/Spatial/DynamicAabbTree.cs`、`XuanYu.Core/Spatial/DynamicAabbTree.Query.cs`、`XuanYu.Core/Spatial/SpatialIndexOwner.cs`、`XuanYu.Core/Spatial/SpatialRayQuery.cs`、`XuanYu.Core/Spatial/SpatialRayAabb.cs`、`XuanYu.Core.Tests/Spatial/SceneStateOwnerSpatialTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRayQueryTests.cs`、`XuanYu.Core.Tests/Spatial/SpatialRayQueryLifecycleTests.cs`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Vulkan、Render.Abstractions、EditorStateOwner、Selection、Gizmo、Undo、存档格式或项目依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 34 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2d-spatial-index.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.15-fix`；`file-tree.md` 实际条目 274 且总数声明 274；依赖方向扫描确认 `XuanYu.Core` / `XuanYu.Core.Tests` 未引入 Avalonia、Vulkan 或 Silk.NET，未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖；Ray Query 规模审计确认 1,000 实体访问 79 节点 / 候选 5，10,000 实体访问 571 节点 / 候选 6，均未退化为全量扫描。
+- Commit Hash：主修复提交 `c482505f577d86c7c791ac3e6ed797d7e3b33a11`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求不要 Push；本轮完成本地 Commit 后停止在本地，不创建 Tag / Release。
+- 遗留问题：当前真实 Scene 仍没有实体删除生命周期，因此没有虚构 Delete / Clear 接线；`SpatialIndexOwner.Remove` 能力和测试已存在，真实删除接线冻结为未来实体删除生命周期 Entry Gate。R2-D 仍只返回候选，不做实体级最终 Ray-AABB、最近命中或 Selection。
+
+## v0.2.17.14-rz
+ARCH-C-R2-D 长期可扩展空间索引（2026-07-18 23:33:11，Core 空间查询地基）
+
+- 原历史编号：ARCH-C-R2-D。
+- 日期：2026-07-18 23:33:11。
+- 任务目标：建立 Core 层长期可扩展空间索引基础设施，让场景实体可通过 `SpatialBounds`、`SpatialIndexOwner` 和动态 AABB 树类结构增量维护，并提供候选对象查询；本轮不实现实体级最终 Ray-AABB、最近命中、正式 Picking、Selection、Gizmo、Undo、Camera 工具、GPU Picking、ECS、地形系统或 Vulkan 生命周期修改。
+- 主要改动：新增 `XuanYu.Core.Spatial` 命名空间，包含 `SpatialAabb`、`SpatialBounds`、`SpatialQueryCategory`、`ISpatialIndex`、`DynamicAabbTree`、`SpatialIndexOwner`、`SpatialQueryResult` 与 `SpatialQueryStats`；支持 Insert / Remove / Update / Query、QueryCategory / QueryMask、SpatialRevision、访问节点数、候选数和低频中文诊断文本；新增 Core 自动测试覆盖生命周期、Revision、幂等更新、幽灵候选清理、1,000 / 10,000 实体规模回归和结构性查询统计；新增 `docs/arch-c-r2d-spatial-index.svg` 浅色中文架构图；`docs/arch-c-plan.md`、主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.14-rz`。
+- 修改范围：`XuanYu.Core/Spatial/*`、`XuanYu.Core.Tests/Spatial/*`、`docs/arch-c-r2d-spatial-index.svg`、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Vulkan、Render.Abstractions、EditorStateOwner、SceneStateOwner 现有渲染快照行为、Selection、Gizmo、Undo、存档格式或项目依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 26 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2d-spatial-index.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.14-rz`；`file-tree.md` 实际条目 269 且总数声明 269；依赖方向扫描确认 `XuanYu.Core` / `XuanYu.Core.Tests` 未引入 Avalonia、Vulkan 或 Silk.NET，未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：主实现提交 `d766197b707dde8d5f57763555a5ba0a665dac9e`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：用户本轮明确要求未经授权不得 Push；本轮完成本地 Commit 后停止在本地，不创建 Tag / Release。
+- 遗留问题：R2-D 只产出候选查询和 Broad Phase 统计；实体级精确 Ray-AABB、最近命中与真实 Pointer Picking 留给 R2-E / R2-F。当前 `SceneStateOwner` 仍是单测试实体渲染事实入口，未来多实体创建 / 删除入口出现后再接入 `SpatialIndexOwner` 的增量同步。
+
+## v0.2.17.13-fix
+ARCH-C-R2-C 正式封版回填（2026-07-18 23:24:18，真机验收裁定）
+
+- 原历史编号：ARCH-C-R2-C-FINAL。
+- 日期：2026-07-18 23:24:18。
+- 任务目标：根据用户对 `v0.2.17.12-rz — ARCH-C-R2-C` 的正式裁定，回填 R2-C 100% 通过结论；本轮不新增功能，不进入 R2-D 实现，不实现 Picking、空间索引、Ray-AABB、Selection、Gizmo 或 Undo。
+- 主要改动：记录 R2-C 启动显示、场景 Position 影响画面、Run / Stop 重复一致、日志栏 Resize、窗口 Resize、Swapchain 自愈、同尺寸重建抑制、Vulkan 生命周期和关闭释放链均通过；记录默认相机下世界 `+X` 映射到屏幕左侧属于已冻结坐标约定，且 Vulkan 渲染与 WorldRay 测试契约一致；`docs/arch-c-plan.md` 更新为 R2-C 已封版、R2-D 动态空间索引为下一步；新增 `docs/arch-c-r2c-closure.svg` 作为浅色中文封版状态图；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.13-fix`。
+- 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`docs/arch-c-plan.md`、`docs/arch-c-r2c-closure.svg`。未修改生产代码实现、测试断言、公共 API、Vulkan 生命周期、渲染管线、SceneStateOwner、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2c-closure.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.13-fix`；`file-tree.md` 实际条目 250 且总数声明 250；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：主封版回填提交 `5c86473c4aaa1d52447bd86a577cbf16c2d5a437`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
+- 下一步：`ARCH-C-R2-D` 动态空间索引；只能建立空间目录与候选查询地基，仍禁止 Selection、Gizmo、Undo 和真实 Picking 偷跑。
+
+## v0.2.17.12-rz
+ARCH-C-R2-C 渲染接入统一空间事实（2026-07-18 22:34:21，最小实装）
+
+- 原历史编号：ARCH-C-R2-C。
+- 日期：2026-07-18 22:34:21。
+- 任务目标：让当前 Vulkan 黄色三角形渲染路径正式消费 `CameraState / ViewportState / ViewProjectionState`，证明画面位置开始服从 Core 的统一 3D 空间规则；本轮不实现 Picking、空间索引、Ray-AABB、Selection、Gizmo 或 Undo，不重构 Vulkan 生命周期。
+- 主要改动：`VulkanClearFrameOwner.Draw.cs` 新增 R2-C 绘制分部，基于 swapchain extent 构造 `ViewportState`、固定相机构造 `CameraState`、通过 `ViewProjectionState` 生成 ViewProjection，并把 ViewProjection 与场景实体 World Position 作为顶点 push constant 推入 Vulkan；`VulkanGraphicsPipelineOwner` 为顶点阶段声明 80 字节 push constant range 并暴露 PipelineLayout；顶点 shader 从固定 NDC 三角形改为局部三角形 + push constant 世界位置 / ViewProjection；`RecordDraw` 不再用 `Position * swapchain 尺寸` 偏移 Vulkan viewport；新增 `VulkanScenePushConstants` 统一 push constant 大小；新增 `docs/arch-c-r2c-render-space.svg` 作为浅色中文架构图；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.12-rz`。
+- 修改范围：`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`、`XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`、`XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`、`XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`、`XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs`、`docs/arch-c-r2c-render-space.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 SceneStateOwner、EditorStateOwner、Render.Abstractions、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2c-render-space.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.12-rz`；`file-tree.md` 实际条目 249 且总数声明 249；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：主实现提交 `39bfe4b2fadf70b283005554364a05e0ba0a1595`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：本轮只完成单测试实体的渲染空间接入，尚未暴露可交互相机控制，也未进入真实 Pointer Picking。R2-D 才能进入动态空间索引。
+
+## v0.2.17.11-fix
+ARCH-C-R2 后续路线同步（2026-07-18 22:21:39，R2-C Entry Gate 冻结）
+
+- 原历史编号：ARCH-C-R2-ROUTE-AFTER-R2B。
+- 日期：2026-07-18 22:21:39。
+- 任务目标：根据用户对 `v0.2.17.10-fix — ARCH-C-R2-B` 的正式收口裁定，同步 ARCH-C-R2 后续路线；本轮不进入 R2-C 实现，不修改生产代码，不实现渲染接入、Picking、空间索引、Ray-AABB、Selection、Gizmo 或 Undo。
+- 主要改动：`docs/arch-c-plan.md` 将 R2 后续顺序冻结为 R2-C 渲染正式消费统一空间事实、R2-D 动态空间索引、R2-E Ray-AABB / 最近命中、R2-F 真实鼠标 Picking；`docs/dev-rules.md` 增加 Render 与 Picking 必须共享同一 `CameraState / ViewportState / ViewProjectionState` 的执行红线；新增 `docs/arch-c-r2-current-route.svg` 作为浅色中文路线图；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.11-fix`。
+- 修改范围：`docs/arch-c-plan.md`、`docs/dev-rules.md`、`docs/arch-c-r2-current-route.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改生产代码实现、测试断言、公共 API、Vulkan 生命周期、渲染管线、SceneStateOwner、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验收结论：R2-B 已正式封版；下一步建议版本候选为 `v0.2.17.11-rz — ARCH-C-R2-C` 的结论被本轮治理记录吸收，但当前版本已作为路线同步使用 `v0.2.17.11-fix`，因此 R2-C 实装版本建议顺延为 `v0.2.17.12-rz`。R2-C Entry Gate 是让 Vulkan 渲染正式消费统一空间事实，禁止直接进入 Picking。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2-current-route.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`docs/arch-c-plan.md`、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.11-fix`；`file-tree.md` 实际条目 246 且总数声明 246；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：主路线同步提交 `a9ad144275c1698c4ac99233c519c85c37382106`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：当前黄色三角形仍属于旧 Vulkan 测试渲染路径；R2-C 必须建立 Render 正式消费统一空间事实的最小正确实现，随后才能进入空间索引与真实 Picking。
+
+## v0.2.17.10-fix
+ARCH-C-R2-B 正式封版裁定回填（2026-07-18 22:08:55，封版记录）
+
+- 原历史编号：ARCH-C-R2-B-FINAL。
+- 日期：2026-07-18 22:08:55。
+- 任务目标：根据用户对 `v0.2.17.9-fix — ARCH-C-R2-B` 的正式裁定，回填 R2-B 封版通过结论；本轮不进入 R2-C，不修改生产代码，不实现 Render 接入、Picking、空间索引、Ray-AABB、Selection、Gizmo 或 Undo。
+- 主要改动：记录 `ARCH-C-R2-B` 100% 正式通过；确认测试地基、CameraState、ViewportState、ViewProjectionState、WorldRay、WorldRayFactory、A-E 坐标契约、Build、16 tests、5+100 和依赖边界全部通过；新增 `docs/arch-c-r2b-closure.svg` 作为浅色中文封版状态图；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.10-fix`。
+- 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`docs/arch-c-r2b-closure.svg`。未修改生产代码实现、公共 API、测试断言、Vulkan 生命周期、渲染管线、SceneStateOwner、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验收结论：`ARCH-C-R2-B` 正式封版通过；玄域第一套相机、视口、屏幕点到 3D 世界射线的统一数学规则已经站稳。下一道门建议调整为 `ARCH-C-R2-C`：让 Vulkan 渲染正式消费统一空间事实，再进入空间索引与真实 Picking。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2b-closure.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.10-fix`；`file-tree.md` 实际条目 245 且总数声明 245；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：主封版记录提交 `c0c071d91e12ae8357e9a8a267613719d283bc1c`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：当前黄色三角形仍属于旧 Vulkan 测试渲染路径，尚未正式消费 `CameraState / ViewportState / ViewProjectionState`；该问题不阻断 R2-B 封版，但会成为 R2-C Entry Gate。
+
+## v0.2.17.9-fix
+ARCH-C-R2-B 数学契约验收补测（2026-07-18 21:58:23，坐标约定冻结）
+
+- 原历史编号：ARCH-C-R2-B-CONTRACT-VERIFY。
+- 日期：2026-07-18 21:58:23。
+- 任务目标：按用户对 R2-B 的验收意见，只补齐坐标约定证据测试；已有覆盖直接保留，不新增运行时 UI，不接 Pointer，不实现实体 Picking、空间索引、Ray-AABB、Selection、Gizmo 或 Undo。
+- 主要改动：`WorldRayFactoryTests` 将原两角差异测试升级为四角坐标约定冻结测试；新增非零 Viewport Origin 中心射线测试；新增 Resize 后中心射线不漂移测试；新增 `WorldRayTests` 验证零方向、NaN 和 Infinity 方向不会产生合法世界射线；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.9-fix`。
+- 契约覆盖：A 视口中心对应 Camera Forward 已覆盖；B 左上 / 右上 / 左下 / 右下四角方向已覆盖；C 非零 Viewport Origin 已覆盖；D Resize 后中心语义不漂移已覆盖；E 非法 Viewport、Camera、输入点和 WorldRay 非法方向均明确失败。逆矩阵失败不通过新增测试注入不可达非法状态，而由 Camera / Viewport 构造期拒绝退化输入、`ViewProjectionState.Create` 内部失败即抛出保证，不为了测试暴露额外 public API。
+- 修改范围：`XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`、`XuanYu.Core.Tests/Space/WorldRayTests.cs`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改生产代码实现、公共 API、Vulkan 生命周期、渲染管线、SceneStateOwner、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；并行运行 `dotnet build` / `dotnet test` 时 MSBuild 子节点因内存 / 节点占用异常失败，已改为串行验证；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false -maxcpucount:1` 通过，发现 `XuanYu.Core.Tests.dll`，执行 16 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.9-fix`；`file-tree.md` 实际条目 244 且总数声明 244；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：主补测提交 `b45dcb680d97541b4b57807256190df4ca17f754`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：黄色三角形仍未接入正式 World / View / Projection 渲染链；在 Pointer -> WorldRay -> Spatial Query 串联前，仍需单独确认 Render 与 Picking 消费同一 ViewProjection 空间事实。
+
+## v0.2.17.8-rz
+ARCH-C-R2-B 统一空间事实与 WorldRay 契约（2026-07-18 21:41:33，空间数学实现）
+
+- 原历史编号：ARCH-C-R2-B。
+- 日期：2026-07-18 21:41:33。
+- 任务目标：建立玄域第一套渲染后端无关、可由渲染与未来 Picking 共享的空间观察事实；本轮只完成 ViewportState、CameraState、ViewProjectionState 与 WorldRay 数学契约，禁止实体 Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo。
+- 主要改动：新增 `XuanYu.Core.Space` 空间事实类型；`ViewportState` 记录逻辑视口、物理尺寸、DPI 与 Revision；`CameraState` 校验位置、方向、Up、FOV、Near/Far 与 Revision；`ViewProjectionState` 基于 Core 空间事实生成 View / Projection / ViewProjection / InverseViewProjection；`WorldRayFactory` 将视口局部坐标转换为确定的世界射线；新增对应自动测试覆盖合法/非法状态、矩阵可逆性、中心射线、角落方向变化、Resize 后宽高比变化、稳定复现和非法输入拒绝。
+- 修改范围：`XuanYu.Core/Space/ViewportState.cs`、`XuanYu.Core/Space/CameraState.cs`、`XuanYu.Core/Space/ViewProjectionState.cs`、`XuanYu.Core/Space/WorldRay.cs`、`XuanYu.Core/Space/WorldRayFactory.cs`、`XuanYu.Core.Tests/Space/SpaceAssert.cs`、`XuanYu.Core.Tests/Space/ViewportStateTests.cs`、`XuanYu.Core.Tests/Space/CameraStateTests.cs`、`XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs`、`XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`、`docs/arch-c-r2b-space-fact.svg`、`changelog.md`、`file-tree.md`。未修改 Vulkan 生命周期、渲染管线、SceneStateOwner、Selection、Gizmo、Undo、空间索引、Ray-AABB 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，7 项目 0 warning / 0 error；`dotnet test XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，发现 `XuanYu.Core.Tests.dll`，执行 14 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2b-space-fact.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.8-rz`；`file-tree.md` 实际条目 243 且总数声明 243；测试依赖扫描确认新增 `Microsoft.NET.Test.Sdk`、`xunit`、`xunit.runner.visualstudio` 仅存在于 `XuanYu.Core.Tests`；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：主实现提交 `f8cfc09ca6d8ae0760cfd309efc817de1db0e488`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：黄色三角形尚未接入正式 World / View / Projection 渲染链；R2-C 才能进入空间索引，R2-D 才能进入 Ray-AABB，R2-E 才能进入真实 Pointer Picking。
+
+## v0.2.17.8-rz
+ARCH-C-R2-B 测试地基预提交（2026-07-18 21:25:00，Core 长期测试宿主）
+
+- 原历史编号：ARCH-C-R2-B-TEST-HOST。
+- 日期：2026-07-18 21:25:00。
+- 任务目标：按用户明确授权新增 `XuanYu.Core.Tests`，先建立玄域 Core 层长期自动测试宿主，确保 `dotnet test` 能发现并执行测试；本提交不实现 CameraState、ViewportState、ViewProjection、WorldRay，也不进入 Picking。
+- 主要改动：新增 `XuanYu.Core.Tests` 项目并加入 `XuanYu.Engine.slnx`；测试项目引用 `XuanYu.Core`；移除模板默认覆盖率依赖；新增最小 smoke test 验证 Core 自检和 `Vector3d` 基础行为；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.8-rz`。
+- 测试依赖：`Microsoft.NET.Test.Sdk` `17.14.1`、`xunit` `2.9.3`、`xunit.runner.visualstudio` `3.1.4`；依赖仅进入 `XuanYu.Core.Tests`，未污染生产项目；未引入 Mock、Benchmark、覆盖率采集器、数学库或额外工具链。
+- 修改范围：`XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`、`XuanYu.Core.Tests/CoreSmokeTests.cs`、`XuanYu.Engine.slnx`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改生产代码架构边界、公共 API、Vulkan 生命周期、Picking、空间索引、Ray-AABB、Selection、Gizmo、Undo 或存档格式。
+- 验证结果：首次沙箱内 `dotnet test XuanYu.Engine.slnx -p:UseSharedCompilation=false` 因 NuGet 网络权限报 `NU1301`，已按规则使用提升权限重跑；`dotnet test XuanYu.Engine.slnx -p:UseSharedCompilation=false` 通过，发现 `XuanYu.Core.Tests.dll`，执行 2 项测试，0 failed / 0 skipped；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出。
+- Commit Hash：`f5fee1fc80d5b715fbd980d59cbf4813492acacc`
+- Push 状态：待 R2-B 完整收口后一并 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：R2-B 仍需在独立提交中实现 CameraState / ViewportState / ViewProjection / WorldRay，并补齐对应自动测试；当前仓库根目录存在历史 `codex_chat_export_*.zip`，本轮不扩散、不删除、不改写历史。
+
+## v0.2.17.7-fix
+ARCH-C-R2-A 正式通过验收回填（2026-07-18 20:55:35，封版验证）
+
+- 原历史编号：ARCH-C-R2-A-FINAL。
+- 日期：2026-07-18 20:55:35。
+- 任务目标：根据用户对 R2-A 的裁定，正式回填 ARCH-C-R2-A 验收通过结论；本轮不进入 ARCH-C-R2-B，不实现 Picking、空间索引、Camera 或 WorldRay。
+- 主要改动：记录 R2-A 通过；确认治理规则已同步到宪法 / dev-rules / arch-c-plan；确认未硬做 Picking，Entry Gate 因缺 ViewportState / CameraState / WorldRay 正确阻断；确认空间查询从 Picking 算法升级为引擎地基；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.7-fix`。
+- 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期、Picking、空间索引、CameraState、ViewportState、WorldRay、Selection、Gizmo、Undo、测试项目或存档格式。
+- 验收结果：ARCH-C-R2-A PASS；R2-A 完成的是长期空间查询地基规则和 Entry Gate 审计，不是 Picking 功能；当前黄色三角形仍不能视为真实 World / View / Projection 渲染对象，R2-B 必须先建立统一空间事实契约。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.7-fix`；`file-tree.md` 实际条目 230 且总数声明 230；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：主验收提交 `5cb630625de7e860bd467d5ec73c9049353b2a4e`；本条 Hash 回填提交以 Git 记录和交付报告为准。
+- Push 状态：待本轮 Hash 回填提交后 Push 当前工作分支；未创建 Tag / Release。
+- 遗留问题：R2-B 建议版本顺延为 `v0.2.17.8-rz`；其唯一目标是 ViewportState / CameraState / ViewProjection / WorldRay，禁止实体 Picking。空间数学 / 索引自动测试宿主建议另开受控任务，新增项目需用户批准。
+
+## v0.2.17.6-rz
+ARCH-C-R2：长期空间查询地基规则与坐标入口门审计（2026-07-18 20:44:10，规划/审计）
+
+- 原历史编号：ARCH-C-R2-A
+- 日期：2026-07-18 20:44:10
+- 任务目标：按用户确认的长期原则修正 R2 方向，先同步开发治理规则，再审计当前坐标与相机入口门；禁止在缺少统一 Viewport / Camera 空间事实时实现临时 Picking。
+- 主要改动：`docs/玄域引擎_AI开发宪法.md` 新增地基型架构原则、Entry Gate / Exit Gate、受控架构债务与治理规则实时同步要求；`docs/dev-rules.md` 新增地基型架构自检项和空间查询 / Picking 主链硬规则；`docs/arch-c-plan.md` 将 R2 从“少量对象可线性遍历”修正为“空间查询索引 + CPU Ray Picking + Ray-AABB”，并冻结 R2 Entry / Exit Gate；新增 `docs/arch-c-r2-entry-audit.md` 记录坐标与相机入口门审计；新增 `docs/arch-c-r2-spatial-query.svg` 作为浅色中文架构图；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.6-rz`。
+- 修改范围：`docs/玄域引擎_AI开发宪法.md`、`docs/dev-rules.md`、`docs/arch-c-plan.md`、`docs/arch-c-r2-entry-audit.md`、`docs/arch-c-r2-spatial-query.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期实现、Selection、Gizmo、Transform Preview、Undo、ECS、资产系统或存档格式。
+- 入口门审计结果：当前不存在正式 `World -> View -> Projection -> NDC` 坐标事实，也不存在渲染后端无关 `ViewportState / CameraState`；R1 Position 仍通过 Vulkan viewport 偏移驱动画面，不能作为 Picking 世界射线依据。因此 R2 Picking 实装被 Entry Gate 阻断，下一步必须先建立最小视口 / 相机变换契约。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；首次 `git diff --check` 发现 `docs/arch-c-plan.md` 两处尾随空格，已修正后重跑通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；`docs/arch-c-r2-spatial-query.svg` XML 有效性检查通过；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md`、`docs/arch-c-plan.md` 同步到 `v0.2.17.6-rz`；`file-tree.md` 实际条目 230 且总数声明 230；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：`1259f1e8248d2febbf1c37e45e58788ef7e99fd0`
+- Push 状态：已 Push 到 `origin/fix/RZ-VK3-A-surface-contract`；未创建 Tag / Release。
+- 遗留问题：空间索引 / 坐标数学缺少正式自动测试宿主；新增最小测试项目属于解决方案结构变更，需用户批准后才能执行。`ARCH-C-R2` 下一步应建立 `ViewportState / CameraState / WorldRay / SpatialBounds / SpatialQueryService` 最小正确契约，再继续 Picking。
+
+## v0.2.17.5-fix
+ARCH-C-R1 真机封版验收回填（2026-07-18，封版验证）
+
+- 原历史编号：ARCH-C-R1-FINAL
+- 日期：2026-07-18
+- 任务目标：根据用户回传的真机关闭日志，完成 `ARCH-C-R1` 最后一项生命周期验收记录，正式裁定 R1 封版通过；本轮不进入 `ARCH-C-R2`。
+- 主要改动：回填真机验收结论，确认启动显示、Position 0→1、Position 1→0、`EntityId(1)` 稳定、重复运行/停止、相同 Position 幂等、Resize / 日志栏、Scene 与 Swapchain 生命周期解耦、静止无重复快照、关闭释放链全部通过；登记 R5 前置约束：高频 Transform Preview 不得沿用 R1 的 Stop Present → 重录 CB → Start Present 低频路径；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.5-fix`。
+- 修改范围：`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改源码逻辑、项目依赖、Vulkan 生命周期实现、Picking / Ray-AABB / Gizmo / Undo / ECS / 资产系统 / 存档格式。
+- 真机验收结果：启动显示 PASS；Position 0→1 PASS；Position 1→0 PASS；EntityKey 稳定 PASS；重复运行/停止 PASS；幂等相同 Position PASS；Resize / 日志栏 PASS；Swapchain 与 Scene 解耦 PASS；静止无重复快照 PASS；关闭释放 PASS。关闭日志证据包含：`Present 泵已停止`、`GraphicsPipeline 资源释放完成`、`RenderPass + Framebuffer 释放成功`、`VulkanRenderSession 释放完成`、`Swapchain 释放成功`、`LogicalDevice 释放成功`、`Surface 已释放`、`Instance 已销毁`、`分离完成`；未见 `[ERROR] Editor failed` 或 `Exit code: -1`。
+- 自动验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.5-fix`；`file-tree.md` 实际条目 228 且总数声明 228；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：`116cca2d59002b443e1eae8d7b80b6bf19453587`
+- Push 状态：已 Push 到 `origin/fix/RZ-VK3-A-surface-contract`；未创建 Tag / Release。
+- 遗留问题：`ARCH-C-R1` 正式封版通过；下一阶段可规划进入 `ARCH-C-R2` 屏幕坐标 → 世界射线 → Ray-AABB → EntityKey。`ARCH-C-R5` 前必须设计高频 Preview 专用更新路径，不得沿用 R1 低频停止 / 启动 Present 泵路径。
+
+## v0.2.17.4-fix
+ARCH-C-R1 真机验收前收口修正（2026-07-18，修复）
+
+- 原历史编号：ARCH-C-R1-R1
+- 日期：2026-07-18
+- 任务目标：根据 R1 本地收口裁定，补齐版本链记录，并冻结“只有有效场景快照变化才发布与重录”的 R1 性能边界；当前仍不进入 ARCH-C-R2。
+- 主要改动：`SceneStateOwner.CommitPosition` 在 Position 未变化时返回 NoChange，不发布重复 `RenderSnapshotChanged`；`VulkanRenderSession.UpdateScene` 在快照未变化时不停止 Present 泵；`VulkanClearFrameOwner.SetSceneSnapshot` 在相同快照下不重录 CommandBuffer；补记 `v0.2.17.2-fix` 对应 `44d9e00` 的 file-tree 独立修正；主窗口标题、`run.bat` 与 `file-tree.md` 第一行同步到 `v0.2.17.4-fix`。
+- 修改范围：`XuanYu.Core/Scene/SceneStateOwner.cs`、`XuanYu.Editor.UI/Vm/UiVm.Scene.cs`、`XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`、`XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`file-tree.md`、`changelog.md`。未实现 Picking / Ray-AABB / Gizmo / Undo / ECS / 资产系统 / 存档格式；未修改 Vulkan Instance / Surface / Device / Swapchain / Present 主生命周期所有权。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.4-fix`；`file-tree.md` 实际条目 228 且总数声明 228；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：`381298b1c6aeb2645f7d60d4fd099808d768d603`
+- Push 状态：本轮不 Push；未创建 Tag / Release。
+- 遗留问题：R1 真机验收仍待完成，需确认同一 EntityKey、P0→P1 画面变化、Resize 和日志栏变化保持最新 Position、静止时无持续无效重录、关闭释放正常。
+
+## v0.2.17.3-rz
+ARCH-C-R1：最小场景实体与 CommittedTransform 所有权闭环（2026-07-17，实施）
+
+- 原历史编号：ARCH-C-R1
+- 日期：2026-07-17
+- 任务目标：在 `ARCH-C-Plan` 通过后，建立单一最小真实场景实体、稳定 `EntityKey`、`CommittedTransform.Position` 正式状态所有权，以及从场景状态到 Vulkan 渲染快照的单向数据流。
+- 主要改动：新增 `XuanYu.Core/Scene/*`，由 `SceneStateOwner` 持有单实体状态并发布 `SceneRenderSnapshot`；`UiVm.Scene.cs` 通过顶部“运行/停止”提交测试实体 Position 并刷新右侧对象调试信息；`INativeHostSurfaceBridgeFactory` 接收可选 `ISceneRenderSnapshotSource`；Vulkan Bridge / Session / ClearFrame 消费快照并通过重录命令缓冲让现有三角形随 Position 平移；主窗口标题、`run.bat` 和 `file-tree.md` 同步到 `v0.2.17.3-rz`。
+- 修改范围：`XuanYu.Core/Scene/*`、`XuanYu.Editor.UI/Vm/UiVm.Scene.cs`、`UiVm.cs`、`VulkanNativeHost.Bridge.cs`、`XuanYu.Render.Abstractions/*`、`XuanYu.Render.Vulkan/*Bridge*`、`VulkanRenderSession*`、`VulkanClearFrameOwner*`、`run.bat`、`UiWin.axaml`、`file-tree.md`、`changelog.md`。未实现 Picking / Ray-AABB / Gizmo / Preview / Commit-Cancel 输入事务 / Undo / 多选 / 父子 Transform / Rotation / Scale / ECS / 资产系统 / 存档格式；未修改 Vulkan Instance / Surface / Device / Swapchain / Present / Resize 主生命周期所有权。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查无超限输出；版本一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 同步到 `v0.2.17.3-rz`；`file-tree.md` 实际条目 228 且总数声明 228；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；依赖方向扫描未发现新的 UI -> Vulkan 或 Render.Abstractions -> Vulkan 实现依赖。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：本轮不 Push；未创建 Tag / Release。
+- 遗留问题：仍需真机人工确认对象可见、运行后 Position 改变对应渲染结果变化、停止后回到原点、Resize 不破坏渲染、日志栏展开/收起与关闭释放链正常。
+
+## v0.2.17.2-fix
+file-tree 清单独立修正（2026-07-17，修复）
+
+- 原历史编号：FILE-TREE-R1
+- 日期：2026-07-17
+- 任务目标：按用户要求删除 `file-tree.md` 中过度展开的树形内容，只保留当前仓库文件清单、每个文件的清晰简介、文件总数和首行版本号。
+- 主要改动：重写 `file-tree.md` 为纯文件清单，首行版本为 `v0.2.17.2-fix`，文件总数统计为 220。
+- 修改范围：仅 `file-tree.md`。
+- 验证结果：清单条目统计 220，文件总数声明 220；未修改源码、项目依赖、Vulkan 生命周期、UI 布局或 ARCH-C 规划文档。
+- Commit Hash：`44d9e00`
+- Push 状态：未 Push；未创建 Tag / Release。
+- 遗留问题：该修正仅补齐文件清单表达方式，不改变运行时行为；后续新增、删除、移动、重命名或职责变化时继续更新首行版本和文件总数。
+
+## v0.2.17.1-rz
+ARCH-C-Plan：真实场景编辑交互闭环规划（2026-07-17 22:49:25，规划文档）
+
+- 原历史编号：ARCH-C-Plan
+- 日期：2026-07-17 22:49:25
+- 任务目标：在 ARCH-B 输入事务闭环完成后，冻结真实场景编辑阶段的所有权、数据流、实现顺序和验收标准，约束后续 `ARCH-C-R1` 到 `ARCH-C-R8`，避免在开发中途再次改变 Picking、Selection、Transform、Gizmo 与 Undo 的方向。
+- 主要改动：新增 `docs/arch-c-plan.md`，明确单场景、单测试对象、单选、Position Transform、CPU Ray-AABB Picking、Session / RequestSequence / ViewportGeneration 过期保护、Selection 唯一事实源、Committed / StartSnapshot / Preview 三层 Transform 状态、世界坐标 X/Y/Z Move Gizmo、Commit / Cancel / Undo 契约、性能预算、日志探针格式、R1-R8 里程碑与自动/真机验收矩阵；新增 `docs/arch-c-overview.svg`，展示 ARCH-A、ARCH-B、ARCH-C-Plan 与 C-R1 到 C-R8 的依赖顺序；主窗口标题与 `run.bat` 同步到 `v0.2.17.1-rz`。
+- 修改范围：`docs/arch-c-plan.md`、`docs/arch-c-overview.svg`、`changelog.md`、`file-tree.md`、`run.bat`、`XuanYu.Editor.UI/Win/UiWin.axaml`。未修改 Vulkan Instance / Surface / Device、Swapchain / Present / Resize、RenderPass / Framebuffer、鼠标捕获实现、EditorStateOwner 运行时逻辑、Selection 运行时逻辑、场景渲染代码、Picking / Gizmo / Transform / Undo / Camera 代码、项目依赖、测试框架或解决方案结构。
+- 验证结果：`git status` 确认执行前工作区干净；`git diff --check` 通过，仅提示既有 LF/CRLF 工作区换行提示；版本号一致性检查确认 `run.bat`、主窗口标题、`changelog.md`、`file-tree.md` 与规划文档均同步到 `v0.2.17.1-rz`；`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 首次因正在运行的 `XuanYu.Editor.App (26164)` 锁定输出 DLL 失败，结束该进程后重跑通过，6 项目 0 warning / 0 error；全仓 `.cs/.axaml/.js/.ps1` 5+100 检查通过；未发现 `*Tests*.csproj`，因此无现有测试项目可运行；`docs/arch-c-overview.svg` XML 有效性检查通过；文档链接检查无缺失链接。
+- Commit Hash：提交后回填；本条不预填未来 Hash。
+- Push 状态：未 Push；未创建 Tag / Release。
+- 遗留问题：ARCH-C-R1 实现前仍需审计相机矩阵契约、真实场景实体身份放置位置、固定三角形与真实对象的边界、视口逻辑像素 / 物理像素 / DPI 换算以及 SelectionKey 到 EntityKey 的迁移策略。
+
+## v0.2.16.12-fix
+ARCH-B-R4-R2：原生鼠标捕获正常释放与异常丢失判定修复（2026-07-17 22:13:56，修复）
+
+- 原历史编号：ARCH-B-R4-R2
+- 日期：2026-07-17 22:13:56
+- 任务目标：修复 `v0.2.16.11-fix` 真机日志中真实视口点击已经进入 Begin，但随后多次因 `PointerCaptureLost` 被取消，导致 Preview 与 Commit 主路径无法成立的问题。
+- 主要改动：`Win32ViewportHost.Input.cs` 不再在 `WM_LBUTTONUP` 前提前 `ReleaseCapture()`，并把 `WM_CAPTURECHANGED` 的新捕获 HWND、SetCapture 前后捕获状态传给上层；`NativePointerMessage` 增加捕获相关字段与 `WM_CANCELMODE` 常量；`VulkanNativeHost.Pointer.cs` 增加最小原生拖动状态，区分正常 Commit/Cancel 后的预期释放与真正捕获转移；`UiVm.Interaction.cs` 增加原生 Pointer Cancel 入口；主窗口标题与 `run.bat` 同步到 `v0.2.16.12-fix`。
+- 修改范围：`XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs`、`NativePointerMessage.cs`、`VulkanNativeHost.Pointer.cs`、`XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、Framebuffer、CommandBuffer、Surface 生命周期、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 `.cs/.axaml/.js` 5+100 扫描无超限输出；依赖边界扫描确认 `Editor.UI` 未直接引用 `Render.Vulkan` / `Silk.NET.Vulkan`，`Render.Abstractions` 命中仅为历史迁移注释。真机验收（2026-07-17 22:33:50）通过：`Session=1` 真实拖动从 `164,300` 到 `242,374`，Delta=`78,74`，Preview=`513`，Commit 一次且无 `PointerCaptureLost` 误取消；`Session=2` 因 `Escape` Cancel，延迟 MouseUp 未 Commit；`Session=3` 因 `WM_CANCELMODE` Cancel，旧 Session 未复活；日志栏展开 / 收起 Resize 回归通过，Swapchain 代际推进到 `gen=4`，Framebuffer / CommandBuffer 同步重建与重录，未见 DeviceLost / Fatal / 黑屏 / Present 无法恢复。
+- Commit Hash：主实现提交 `e7440527b97e37fde6fd1c9789b0e1e25c2125c4`；不追记回填提交自身 Hash。
+- Push 状态：主实现与 Hash 回填已推送；本条人工验收收口记录提交后推送；未创建 Tag / Release。
+- 遗留问题：`v0.2.16.12-fix — ARCH-B-R4-R2` 与 ARCH-B-R4 正式验收通过；后续进入 ARCH-B 收口总结与下一阶段规划，仍不创建 Tag / Release。
+
+## v0.2.16.11-fix
+ARCH-B-R4-R1：Win32 子窗口 Pointer 消息转发修复（2026-07-17 21:56:17，修复）
+
+- 原历史编号：ARCH-B-R4-R1
+- 日期：2026-07-17 21:56:17
+- 任务目标：修复 `v0.2.16.10-rz` 真机验证中“选择移动工具后视口拖动无反应”的问题。日志只有“当前工具切换为：移动”，没有“开始捕获 / Preview / 提交捕获”，证明 Avalonia `NativeControlHost` Pointer 事件没有收到 Win32 子窗口鼠标消息。
+- 主要改动：`Win32ViewportHost` 的窗口过程从直接 `DefWindowProc` 改为最小输入路由，转发 `WM_LBUTTONDOWN / WM_MOUSEMOVE / WM_LBUTTONUP / WM_CAPTURECHANGED / WM_KILLFOCUS`；新增 Native Pointer 消息快照与输入 Sink 注册；`VulkanNativeHost.Pointer` 接收 Win32 子窗口消息，将物理像素除以 DPI 还原为逻辑像素后继续调用既有 `UiVm` 事务入口；主窗口标题与 `run.bat` 同步到 `v0.2.16.11-fix`。
+- 修改范围：`XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs`、`Win32ViewportHost.Input.cs`、`NativePointerMessage.cs`、`VulkanNativeHost.cs`、`VulkanNativeHost.Pointer.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、自愈、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 `.cs/.axaml/.js` 5+100 扫描无超限输出；首次 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 因正在运行的 `XuanYu.Editor.App (4972)` 占用输出 DLL 失败，停止该进程后重跑通过，6 项目 0 warning / 0 error。
+- Commit Hash：主实现提交 `6e910577f001a881827dd8df84c1d5183fe944ae`；不追记回填提交自身 Hash。
+- Push 状态：待 Hash 回填提交后推送；未创建 Tag / Release。
+- 遗留问题：仍需真机重新验证真实视口拖动：移动工具左键按下进入捕获、拖动期间 Preview 次数递增、释放只 Commit 一次、Escape / CaptureLost / Window Deactivated 取消、取消后的延迟 Release 不得 Commit。
+
+## v0.2.16.10-rz
+ARCH-B-R4：真实视口 Pointer 输入事务闭环（2026-07-17 21:28:27，实施）
+
+- 原历史编号：ARCH-B-R4
+- 日期：2026-07-17 21:28:27
+- 任务目标：把真实视口鼠标按下、移动、释放和失焦接入 R3 已验收的 Begin / Preview / Commit / Cancel 事务边界；本轮不接入 Picking、不移动黄色三角形、不实现 Gizmo、不修改 Vulkan / Swapchain / Present / Resize 生命周期。
+- 主要改动：`EditorInteractionSnapshot` 增加只读 Pointer 快照，记录 PointerId、逻辑起点、当前点、Delta 和 Preview 次数；`EditorStateOwner.Interaction` 在 Preview / Commit 时校验 Session、Owner 与 PointerId；`UiVm.InteractionPointer.cs` 将真实视口 Pointer 意图转换为 Begin / Preview / Commit，且只允许“移动”工具启动真实拖动；`VulkanNativeHost.Pointer.cs` 在 UI 边界接入 PointerPressed / PointerMoved / PointerReleased / PointerCaptureLost，按逻辑像素传递坐标并调用既有 Owner；窗口失焦汇聚到统一 Cancel；主窗口标题与 `run.bat` 同步到 `v0.2.16.10-rz`。
+- 修改范围：`XuanYu.Editor.UI/EditorState/EditorInteractionPointerSnapshot.cs`、`EditorInteractionSnapshot.cs`、`EditorInteractionCommand.cs`、`EditorStateOwner.Interaction.cs`、`XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`、`UiVm.Interaction.cs`、`UiVm.cs`、`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml.cs`、`UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、自愈、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 通过，6 项目 0 warning / 0 error；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 `.cs/.axaml/.js` 5+100 扫描无超限输出；依赖边界扫描确认 `Editor.UI` 未直接引用 `Render.Vulkan` / `Silk.NET.Vulkan`，`Render.Abstractions` 对 `XuanYu.Render.Vulkan` 的命中仅为历史迁移注释。首次构建因正在运行的 `XuanYu.Editor.App (17576)` 占用输出 DLL 失败，停止该进程后重跑通过。
+- Commit Hash：主实现提交 `dbc6a7beafb069882b820b48e007d0788cd7e5ec`；不追记回填提交自身 Hash。
+- Push 状态：待 Hash 回填提交后推送；未创建 Tag / Release。
+- 遗留问题：仍需真机人工验收真实视口拖动：移动工具左键按下进入捕获、拖动期间 Preview 次数递增、释放只 Commit 一次、Escape / CaptureLost / Window Deactivated 取消、取消后的延迟 Release 不得 Commit、Resize 不破坏 Vulkan 与事务状态。
+
+## v0.2.16.9-fix
+ARCH-B-R3-R1：窗口级 Escape Cancel 与宪法优先级补充（2026-07-17 21:00:05，修复）
+
+- 原历史编号：ARCH-B-R3-R1
+- 日期：2026-07-17 21:00:05
+- 任务目标：修复 ARCH-B-R3 人工验收发现的 Escape 无响应问题，让 Escape 不依赖左侧树焦点即可进入统一 Cancel 路径；同时补充开发宪法优先级规则，明确用户临时提示与宪法冲突时必须以宪法为准。
+- 主要改动：`UiWin.axaml.cs` 增加窗口级 `KeyDown` 隧道路由，捕获 Escape 后调用 `CancelInteractionFromEscape()` 并标记已处理；右侧临时调试按钮从英文改为中文短文案，避免 Begin / Preview / Commit / Cancel 裁切；主窗口标题与 `run.bat` 同步到 `v0.2.16.9-fix`；`docs/玄域引擎_AI开发宪法.md` 新增“宪法优先级”条款。
+- 修改范围：`XuanYu.Editor.UI/Win/UiWin.axaml.cs`、`XuanYu.Editor.UI/Right/Right.axaml`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`docs/玄域引擎_AI开发宪法.md`、`changelog.md`、`file-tree.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、自愈、Picking、Gizmo、WorldState、Undo / Redo 或存档格式。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 5+100 扫描无超限输出；首次 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 因正在运行的 `XuanYu.Editor.App (27352)` 占用输出 DLL 失败，停止该进程后重跑通过，6 项目 0 warning / 0 error。人工验收（2026-07-17 21:07:35）正式通过：两次独立 Escape 路由均正确触发统一 Cancel，Session=1 于 21:07:12 开始捕获、21:07:15 因 Escape 取消，Session=2 于 21:07:28 开始捕获、21:07:35 因 Escape 取消；取消后阶段=空闲、Owner=无、Preview=无、状态=就绪。日志栏展开/收起 Resize 回归通过，Swapchain 代际 `gen=1 → gen=2 → gen=3 → gen=4`，Framebuffer / CommandBuffer 同步重建与重录，随后 UI 合并 Resize 正确跳过同尺寸重复重建，未出现 DeviceLost、Fatal、黑屏或 Present 无法恢复；临时调试按钮中文文案通过界面观察验收。
+- Commit Hash：主实现提交 `35514f1b582b3c0a4fd6166a33303e25787a767e`；不追记回填提交自身 Hash。
+- Push 状态：主实现与 Hash 回填已推送到 `origin/fix/RZ-VK3-A-surface-contract`；本条人工验收收口记录待提交后推送；未创建 Tag / Release。
+- 遗留问题：`v0.2.16.9-fix` 与 ARCH-B-R3 正式验收通过；本轮不创建 Tag / Release，后续可进入下一阶段规划。
+
+## v0.2.16.8-rz
+ARCH-B-R3：交互捕获与 Preview / Commit / Cancel 事务边界（2026-07-17 20:15:16，实施）
+
+- 原历史编号：ARCH-B-R3
+- 日期：2026-07-17 20:15:16
+- 任务目标：在选择状态与活动工具状态封版后，建立最小交互捕获所有权和 Preview / Commit / Cancel 事务边界，避免后续 Gizmo、Picking、视口输入和正式状态写入各自维护拖动状态。
+- 主要改动：新增 `EditorInteractionSnapshot`、交互命令、交互变更结果和 `EditorStateOwner.Interaction` 分部，统一管理 Idle / Captured、SessionId、OwnerTool、开始快照和最新 Preview；`UiVm` 拆出 `UiVm.Tool.cs` 与 `UiVm.Interaction.cs`，工具切换、选择切换、Escape、窗口关闭和 NativeHost Detach 均汇聚到同一个 Cancel 路径；右侧调试页新增最小事务测试面板，可触发 Begin / Preview / Commit / Cancel；主窗口标题与 `run.bat` 同步到 `v0.2.16.8-rz`。
+- 修改范围：`XuanYu.Editor.UI/EditorState/EditorInteraction*.cs`、`EditorStateOwner.Interaction.cs`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`UiVm.Tool.cs`、`UiVm.Interaction.cs`、`UiVm.Selection.cs`、`UiVm.Logging.cs`、`XuanYu.Editor.UI/Right/Right.axaml`、`Left.axaml.cs`、`UiWin.axaml(.cs)`、`VulkanNativeHost.cs`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Render.Vulkan、Swapchain、Resize、Present、自愈、Picking、真实 Gizmo、WorldState、Undo / Redo、存档格式或第三方依赖。
+- 验证结果：`powershell -ExecutionPolicy Bypass -File scripts/arch-a-guard.ps1` 通过；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；全仓 5+100 扫描无超限输出。项目暂无测试工程，本轮未引入测试框架或第三方依赖；重复 Begin、非 Owner 拒绝、Commit / Cancel 回 Idle 等需通过右侧调试面板和后续人工验收确认。
+- Commit Hash：主实现提交 `a706e975795fc694abc3cc9fc481bfc0f3efb6ba`；不追记回填提交自身 Hash。
+- Push 状态：待本轮验证、提交后推送；未创建 Tag / Release。
+- 遗留问题：本轮只建立交互事务地基，尚未开发完整移动 Gizmo、真实 Picking、Transform Preview、WorldState 写入、Undo / Redo 或场景存档。
+
+## v0.2.16.7-fix
+Vulkan 既有 5+100 超限文件纯结构拆分（2026-07-14 22:41:08，修复）
+
+- 原历史编号：ARCH-B-R2-POST-5+100
+- 日期：2026-07-14 22:41:08
+- 任务目标：在进入 ARCH-B-R3 前，先治理全仓已发现的两个既有 5+100 硬红线文件，让 `VulkanNativeHost.cs` 与 `VulkanSwapchainOwner.cs` 回到 100 行以内。
+- 主要改动：`VulkanNativeHost.cs` 将后台 Present 泵日志回 UI 线程的两个方法拆入 `VulkanNativeHost.Log.cs`；`VulkanSwapchainOwner.cs` 将只读访问器与内部 `Log` 辅助拆入 `VulkanSwapchainOwner.Accessors.cs`；主窗口标题与 `run.bat` 同步到 `v0.2.16.7-fix`。
+- 修改范围：`XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`、`VulkanNativeHost.Log.cs`、`XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs`、`VulkanSwapchainOwner.Accessors.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。仅做结构拆分，不改变 Attach、Resize、Present、自愈、释放顺序、公开契约、Picking、Gizmo、Transform Preview、场景存档或第三方依赖。
+- 验证结果：开发中预检目标文件行数为 `VulkanNativeHost.cs` 92 行、`VulkanNativeHost.Log.cs` 15 行、`VulkanSwapchainOwner.cs` 99 行、`VulkanSwapchainOwner.Accessors.cs` 17 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；人工验收（2026-07-14 23:13:39）正式通过：启动通过，`XuanYu.Editor.App` 注入路径正常，Vulkan Instance / Surface / LogicalDevice / Swapchain / Pipeline 创建成功，首帧 Present 成功；日志栏展开 Resize 回归通过，Swapchain 从 `1248×1110` 实际重建到 `1248×478`，代际 `gen=1 → gen=2`，Framebuffer 重建并重录 CommandBuffer，随后 UI 合并 Resize 正确跳过第二次重建，未出现 DeviceLost、Fatal 或黑屏；正常关闭释放链通过，Present 泵、GraphicsPipeline、RenderPass + Framebuffer、RenderSession、Swapchain、LogicalDevice、Surface、Instance 与 Bridge 均按序释放。
+- Commit Hash：主实现提交 `4ac7d977b4dcf13356039cfcecbdb17f9f115d8a`；不追记回填提交自身 Hash。
+- Push 状态：主实现与 Hash 回填已推送到 `origin/fix/RZ-VK3-A-surface-contract`；本条人工验收收口记录待提交后推送；未创建 Tag / Release。
+- 遗留问题：`v0.2.16.7-fix` 正式验收通过，可进入 `v0.2.16.8-rz — ARCH-B-R3`；R3 仍禁止开发完整移动 Gizmo、真实 Picking、修改 Vulkan、通用事件总线、Undo / Redo 或场景存档格式。
+
+## v0.2.16.6-rz
+ARCH-B-R2：活动工具状态与工具捕获状态唯一所有权（2026-07-14 22:25:24，实施）
+
+- 原历史编号：ARCH-B-R2
+- 日期：2026-07-14 22:25:24
+- 任务目标：在 ARCH-B-R1 选择状态封版后，建立活动工具状态和工具捕获状态的唯一所有权，让工具栏只提交工具切换意图，状态栏明确区分“工具”和“编辑器交互阶段”。
+- 主要改动：`EditorStateOwner` 改为 partial 并新增工具状态分部；新增 `EditorToolId`、`EditorToolSnapshot`、`ChangeEditorToolCommand`、`EditorToolChangedResult` 和工具文本映射；`UiVm` 移除活动工具可变字段和工具布尔字段，工具名称、高亮和 `FooterMode` 全部从 Owner 的只读工具快照派生；顶部工具按钮 `IsChecked` 改为单向绑定，只通过命令提交切换意图；选择项目或层级节点后不再把 `FooterState` 写成“状态：聚焦”，避免与“聚焦”工具混淆；主窗口标题与 `run.bat` 同步到 `v0.2.16.6-rz`。
+- 修改范围：`XuanYu.Editor.UI/EditorState/EditorStateOwner.cs`、`EditorStateOwner.Tool.cs`、`EditorToolId.cs`、`EditorToolText.cs`、`EditorToolSnapshot.cs`、`EditorToolCommand.cs`、`EditorToolChangedResult.cs`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`UiVm.Selection.cs`、`XuanYu.Editor.UI/Top/Top.axaml`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge、Picking、Gizmo、Transform Preview、场景存档、通用事件总线或第三方依赖。
+- 验证结果：开发中预检 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；本轮触碰 `.cs/.axaml/.js` 文件均未超过 100 行；全仓 5+100 扫描发现既有禁区文件 `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` 101 行、`XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` 103 行，本轮按 R2 禁区未修改 Vulkan / Swapchain，作为既有范围风险如实记录；人工验收（2026-07-14 22:37:29）正式通过：九种活动工具切换、当前工具唯一高亮、顶部与底部工具文字同步、工具与“就绪 / 运行中”语义分离、运行/停止后保持原活动工具、选择对象不污染工具、Vulkan Resize 回归和正常关闭释放链均通过；正常关窗出现 Present 泵停止、GraphicsPipeline / RenderPass + Framebuffer / VulkanRenderSession / Swapchain / LogicalDevice / Surface / Instance / Bridge 依次释放，未出现 DeviceLost、Fatal、`[ERROR] Editor failed` 或 `Exit code: -1`。
+- Commit Hash：主实现提交 `ad1894e450de70ffd362912092ced16aadd7cc94`；不追记回填提交自身 Hash。
+- Push 状态：主实现与 Hash 回填已推送到 `origin/fix/RZ-VK3-A-surface-contract`；本条人工验收收口记录待提交后推送；未创建 Tag / Release。
+- 遗留问题：R2 正式封版；本轮准确成果边界为活动工具状态唯一所有权。尚未开发指针捕获、CaptureOwner、CapturePhase、BeginCapture、CommitCapture、CancelCapture、失焦取消、Escape 取消交互事务、真实 Gizmo 拖动、Picking、Transform Preview 或场景存档；这些进入后续 ARCH-B-R3。全仓仍有两个既有 5+100 超限文件，建议下一轮 `v0.2.16.7-fix` 先做 Vulkan 既有超限文件纯结构拆分。
+
+## v0.2.16.5-fix
+ARCH-B-R1-R3：跨树选择同步与 Inspector 刷新收口（2026-07-14 21:15:02，修复）
+
+- 原历史编号：ARCH-B-R1-R3
+- 日期：2026-07-14 21:15:02
+- 任务目标：修复层级树视觉选中后未同步到正式选择和 Inspector 的阻断问题，确保项目树与层级树共享同一个 `EditorStateOwner` 正式选择状态。
+- 主要改动：左侧项目树与层级树 `SelectedItem` 绑定显式设为 `Mode=TwoWay`，确保视觉选中回写 `UiVm` 并提交 Owner；Escape 清空时同时清空两棵树的 `SelectedItem`，触发既有 Clear 路径，让 Inspector 回到无选择状态；主窗口标题与 `run.bat` 同步到 `v0.2.16.5-fix`。
+- 修改范围：`XuanYu.Editor.UI/Left/Left.axaml`、`XuanYu.Editor.UI/Left/Left.axaml.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改树视觉、Owner 架构、Vulkan、Resize、Present、Bridge、Picking、Gizmo、场景存档或第三方依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；5+100 扫描无超限；首次构建因上一轮启动的 `XuanYu.Editor.App` 仍占用输出 DLL 失败，关闭该进程后 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error；人工验收通过：项目树“构建”、层级树“地面/主相机”、项目树“MainWorld”均能通过同一个 `EditorStateOwner` 更新 Inspector；Escape 清空正式选择、两棵树 UI 选择和 Inspector 空状态；正常关窗释放链完整（Present 泵停止、Pipeline / Framebuffer / Swapchain / LogicalDevice / Surface / Instance / Bridge 依次释放），未出现 DeviceLost、Fatal、`[ERROR] Editor failed` 或 `Exit code: -1`。
+- Commit Hash：以 Git 记录和本轮交付报告为准。
+- Push 状态：未执行；未创建 Tag / Release。
+- 遗留问题：ARCH-B-R1 已正式验收通过；后续进入 `v0.2.16.6-rz — ARCH-B-R2`，聚焦活动工具状态与工具捕获状态的唯一所有权。
+
+## v0.2.16.4-fix
+ARCH-B-R1-R2：项目树 / 层级树视觉恢复与 Inspector 元数据修正（2026-07-14 20:47:57，修复）
+
+- 原历史编号：ARCH-B-R1-R2
+- 日期：2026-07-14 20:47:57
+- 任务目标：保留 ARCH-B-R1 的 `EditorStateOwner` / Snapshot / Command 链路，恢复左侧项目树和层级树的树形视觉表达，统一左右字体层级，并修正 Inspector 类型与路径元数据。
+- 主要改动：新增 UI 专用 `EditorTreeNode` 与 `UiVm.Selection.cs`；项目树 / 层级树改为带层级缩进、节点图标和稳定 Key 的树节点列表；选择命令携带 Key / 标题 / 类型 / 路径；Snapshot 增加 `SelectionPath`；Inspector 路径改为绑定真实选择元数据；左侧页签与树项字号收敛到右侧体系；主窗口标题和 `run.bat` 同步到 `v0.2.16.4-fix`。
+- 修改范围：`XuanYu.Editor.UI/EditorState/*`、`XuanYu.Editor.UI/Vm/EditorTreeNode.cs`、`XuanYu.Editor.UI/Vm/UiVm.Selection.cs`、`XuanYu.Editor.UI/Vm/UiText.cs`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`XuanYu.Editor.UI/Left/Left.axaml`、`XuanYu.Editor.UI/Right/Right.axaml`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge、Picking、Gizmo、场景存档或第三方依赖。
+- 验证结果：首次构建预检因上一轮启动的 `XuanYu.Editor.App` 仍占用输出 DLL 失败；关闭该进程后重跑通过：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 LF/CRLF 工作区提示）；5+100 扫描无超限；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：以 Git 记录和本轮交付报告为准。
+- Push 状态：未执行；未创建 Tag / Release。
+- 遗留问题：仍需真机人工确认左侧树视觉层级、Inspector 元数据、Escape 清空选择、日志栏/工具按钮和正常关闭释放链。
+
+## v0.2.16.3-fix
+ARCH-B-R1-R1：选择状态幂等性与清空选择真实入口（2026-07-14 20:26:21，修复）
+
+- 原历史编号：ARCH-B-R1-R1
+- 日期：2026-07-14 20:26:21
+- 任务目标：补齐 ARCH-B-R1 收口缺口，让重复选择和重复清空成为 NoChange，并让现有左侧选择控件具备真实清空选择路径。
+- 主要改动：`EditorSelectionSnapshot` 增加稳定 `SelectionKey`；`EditorStateOwner.Select/Clear` 在状态未变化时返回 `null`，不递增 Revision、不发布伪变化；`UiVm` 将项目/层级选择缓存接入同一个 Owner，null 选择进入 `ClearEditorSelectionCommand`；`Left.axaml` 改用现有 `ProjectItems` / `HierarchyItems` 的 `ListBox` 绑定，Escape 清空当前列表选择；主窗口标题与 `run.bat` 同步到 `v0.2.16.3-fix`。
+- 修改范围：`XuanYu.Editor.UI/EditorState/*`、`XuanYu.Editor.UI/Vm/UiVm.cs`、`XuanYu.Editor.UI/Left/Left.axaml`、`XuanYu.Editor.UI/Left/Left.axaml.cs`、`XuanYu.Editor.UI/Win/UiWin.axaml`、`run.bat`、`changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge、Picking、Gizmo、场景存档或第三方依赖。
+- 验证结果：待本轮最终验证回填；已完成一次构建预检：`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：以 Git 记录和本轮交付报告为准。
+- Push 状态：待本轮裁定；未创建 Tag / Release。
+- 遗留问题：仍需真机交互验收选择 A / 重复选择 A / 选择 B / Escape 清空 / 重复清空 / 日志栏与工具按钮 / 正常关闭释放链。
+
+## v0.2.16.2-rz
+ARCH-B-R1：最小 Editor State Owner 与只读快照边界（2026-07-14 19:35:40，实施）
+
+- 原历史编号：ARCH-B-R1
+- 日期：2026-07-14 19:35:40
+- 任务目标：按 ARCH-B-Plan 建立第一个真实编辑器状态闭环，让当前选择状态由唯一 `EditorStateOwner` 持有，UI / ViewModel 只提交明确命令并从不可变快照读取显示结果。
+- 主要改动：新增 `EditorStateOwner`、`EditorSelectionSnapshot`、`SelectEditorItemCommand` / `ClearEditorSelectionCommand`、`EditorStateChangedResult`；`UiVm` 移除选择显示字段的正式所有权，项目树 / 层级树选择 setter 仅转发为具体选择命令，检查器标题、类型和空选择状态从 Owner 快照派生；Owner 写入由 UI 线程门禁校验，非 UI 线程写入快速失败。
+- 修改范围：`XuanYu.Editor.UI/EditorState/*` 与 `XuanYu.Editor.UI/Vm/UiVm.cs`；同步 `changelog.md`、`file-tree.md`。未修改 Vulkan、Resize、Present、Bridge 生命周期、渲染请求系统、Inspector 布局、真实 Picking、Gizmo、存档格式或第三方依赖。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 `UiVm.cs` LF/CRLF 工作区提示，无空白错误）；本轮触碰 `.cs` 文件均不超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：主实现提交 `a1bfe8a716c99e0a8d1c624972f51d6b158a3295`；本条 Hash 回填随 ARCH-B-R1-R1 文档修复提交进入历史。
+- Push 状态：按本轮用户裁定暂不执行 Push / Tag / Release。
+- 遗留问题：当前只迁移选择状态；当前工具、工具捕获、交互事务和视口请求状态仍在后续 ARCH-B-R2/R3/R4 收口；未做真实交互启动验收。
+
+## v0.2.16.2-rz
+DOC-GIT-PUSH-1：开发提交必须 Push 到 GitHub 远端工作分支（2026-07-13 23:41:18，规范修订）
+
+- 原历史编号：DOC-GIT-PUSH-1
+- 日期：2026-07-13 23:41:18
+- 任务目标：将“每轮本地提交后必须 Push 到 GitHub 远端当前工作分支”写入开发宪法，满足多电脑开发的远端备份需求，并同步当前可见版本号。
+- 主要改动：`docs/玄域引擎_AI开发宪法.md` 默认流程新增 Push 步骤；Git Push 章节改为验证通过并 Commit 后必须 Push 当前工作分支，同时保留 main 合并、PR、Tag、Release、强推、Rebase、重写历史必须明确确认的红线；主窗口标题和 `run.bat` 标题更新为 `v0.2.16.2-rz`。
+- 影响范围：仅开发规范、版本标题和同步文档；不修改 UiVm、状态所有权实现、NativeHost、Bridge、Vulkan、Resize、Present 或项目依赖结构。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅 Git LF/CRLF 工作区提示，无空白错误）；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：主提交 `b32e760a2fedc6cad2de919edb9c51c89bc8298e`；哈希回填修正以 Git 记录和交付报告为准。
+- Push 状态：已推送到 `origin/fix/RZ-VK3-A-surface-contract`；首次推送区间 `c823312..f9c6953`；Push 状态回填提交以 Git 记录和交付报告为准。
+- 遗留问题：后续 ARCH-B-R1 版本号需顺延到下一个有效开发版本。
+
+## v0.2.16.1-rz
+ARCH-B-Plan：编辑器状态所有权与交互事务边界审计（2026-07-13 23:33:18，规划文档）
+
+- 原历史编号：ARCH-B-Plan
+- 日期：2026-07-13 23:33:18
+- 任务目标：在 ARCH-A 总收口后进入 ARCH-B，审计当前 ViewModel、Viewport、层级树、Inspector、工具、日志和 NativeHost 状态写入路径，并规划最小状态所有权与 Preview / Commit / Cancel 事务边界。
+- 主要改动：新增 `docs/arch-b-plan.md`，记录当前状态所有权清单、写入路径、风险判断、ARCH-B 禁区、R1-R4 分轮方案和中文 SVG 状态流图；主窗口标题与 `run.bat` 标题同步推进为 `v0.2.16.1-rz`。
+- 影响范围：仅规划文档、版本标题和同步索引；不修改 UiVm 运行行为、NativeHost、Bridge、Swapchain、Resize、Present、Vulkan 生命周期或项目依赖结构。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过（仅出现 Git LF/CRLF 工作区提示，无空白错误）；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：主提交 `cab420a02d25e403802eb8460605163c29b10613`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：ARCH-B-R1 仍需在实现前决定最小 Editor State Owner 放置位置；本轮不创建新项目、不引入状态框架、不实现 Picking / Gizmo / 场景存档。
+
+## v0.2.15.8-fix
+ARCH-A-R4-R2：版本格式守卫与 ARCH-A 最终封版修正（2026-07-13 23:19:16，修正）
+
+- 原历史编号：ARCH-A-R4-R2
+- 日期：2026-07-13 23:19:16
+- 任务目标：修正无效开发期版本号 `v0.2.15.7-r1-rz`，将“R1/R2”保留在任务编号而非版本号中，并让 ARCH-A 守卫同时检查版本一致性与版本格式合法性。
+- 主要改动：主窗口标题和 `run.bat` 标题更新为 `v0.2.15.8-fix`；`scripts/arch-a-guard.ps1` 增加开发期版本格式校验，当前允许 `rz` / `fix` / `vk` 类型；本条 changelog 作为 ARCH-A 最终封版修正条目。
+- 影响范围：仅版本字符串、版本格式守卫和同步文档；不修改 Swapchain、Resize、Present、Vulkan 生命周期、依赖结构或 `Editor.Win` 项目结构。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过，已同时校验版本一致性与版本格式合法性；`git diff --check` 通过；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；放开网络后 `dotnet restore XuanYu.Engine.slnx` 通过，随后普通权限 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。当前 Codex 普通沙箱仍会阻止访问 `api.nuget.org:443`，属于网络权限限制而非仓库缺陷。
+- Commit Hash：主提交 `b3d5d7941aeea0c3e740705ea025d9213b3097f7`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：版本号仍分散在标题、run.bat 和 changelog 中；后续可考虑单一版本来源。
+
+## v0.2.15.7-r1-rz
+ARCH-A-R4-R1：唯一启动入口守卫与普通权限构建收口（2026-07-13 23:04:38，修正；版本号格式已由 v0.2.15.8-fix 接续修正）
+
+- 原历史编号：ARCH-A-R4-R1
+- 日期：2026-07-13 23:04:38
+- 任务目标：补齐 ARCH-A-R4 守卫缺口，确保只有 `XuanYu.Editor.App` 是可执行入口，并按普通权限清理缓存后重新验证完整构建；同步标题版本号。
+- 主要改动：`XuanYu.Editor.Win` 移除 `OutputType=WinExe` 并删除旧 `Program.cs` 启动入口，降为非独立启动项目；`scripts/arch-a-guard.ps1` 增加 `OutputType` 检查，强制只有 `Editor.App` 可为 `WinExe/Exe`；主窗口标题和 `run.bat` 标题更新为 `v0.2.15.7-r1-rz`。
+- 影响范围：仅启动入口守卫、旧 WinForms 壳输出类型、标题版本号和同步文档；不修改 Swapchain、Resize、Present、Vulkan 释放链或 App 注入逻辑。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过，已覆盖唯一可执行入口；5+100 扫描通过；`git diff --check` 通过；`XuanYu.Editor.Win` 普通权限 `dotnet build --no-restore` 0 warning / 0 error；清理 `XuanYu.Editor.UI/bin,obj` 后修复用户级 `NuGet.Config` 对 `CodexSandboxUsers` 的读取权限，`dotnet restore XuanYu.Engine.slnx` 不再出现 `Access denied`，但当前 Codex 普通沙箱仍因 socket 权限阻止访问 `api.nuget.org:443`；放开网络后 restore 通过，随后普通权限 `dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 6 项目 0 warning / 0 error。
+- Commit Hash：主提交 `ab4fecdd50da6ef9deb0a315193abb424284122e`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：版本号仍分散在标题、run.bat 和 changelog 中；后续可考虑单一版本来源，但本轮仅用守卫防漂移。
+
+## v0.2.15.7-rz
+ARCH-A-R4：架构守卫、标题版本号与 ARCH-A 总收口（2026-07-13 22:53:06，实施）
+
+- 原历史编号：ARCH-A-R4
+- 日期：2026-07-13 22:53:06
+- 任务目标：在 ARCH-A-R3 真机关闭与交互回归验收通过后，将 UI 禁止依赖 Vulkan/Silk、App 唯一组装入口、run.bat 启动 App、解决方案六项目、5+100 与窗口标题版本号等边界固化为可重复执行的自动守卫，并补充开发宪法。
+- 主要改动：新增 `scripts/arch-a-guard.ps1`；主窗口标题更新为 `玄域引擎编辑器 v0.2.15.7-rz`；`run.bat` 控制台标题同步版本号；开发宪法新增窗口标题版本号规则，并强化 `changelog.md` 日期必须精确到秒、不得只写日期或分钟。
+- 影响范围：仅架构守卫脚本、窗口标题、启动脚本标题与同步文档；不修改 Swapchain、Resize、Present、渲染资源释放或 Vulkan 主链。
+- 验证结果：`scripts/arch-a-guard.ps1` 通过；`git diff --check` 通过；5+100 扫描无 `.cs/.axaml/.js/.ps1` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 在提升权限下 0 warning / 0 error。普通权限构建仍会被 Avalonia UI `obj` 资源缓存写入权限阻断，属于本机权限环境问题。
+- Commit Hash：主提交 `b72993ba5fcfb33b81183c1693b50cb208376154`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：R4 为守卫与总收口轮，不处理启动 16x16 Swapchain 后自愈到真实尺寸的后续优化项。
+
+## v0.2.15.6-rz
+ARCH-A-R3：移除 Editor.UI 对 Vulkan / Silk 的旧直接依赖与 fallback 链路（2026-07-13 22:38:14，实施）
+
+- 原历史编号：ARCH-A-R3
+- 日期：2026-07-13 22:38:14
+- 任务目标：在 ARCH-A-R2 真机 Resize / 代际一致性验收通过后，移除 `XuanYu.Editor.UI` 对 `XuanYu.Render.Vulkan` / `Silk.NET.Vulkan` 的旧直接依赖，删除旧 fallback 和历史 Vulkan 探针 / ClearSession 死链，让 UI 只依赖 `XuanYu.Render.Abstractions`。
+- 主要改动：`XuanYu.Editor.UI.csproj` 移除 `Silk.NET.Vulkan`、`Silk.NET.Vulkan.Extensions.KHR` 和 `XuanYu.Render.Vulkan` 引用；`VulkanNativeHost.CreateBridge` 在缺少应用注入 factory 时明确拒绝旧 fallback；删除 `VulkanSurfaceBridgeProvider`、`VulkanProbeRoute`、`UiVm.VulkanProbe` 和 4 个旧 `VulkanClearSession.*` 文件；UI 启动不再运行 VulkanProbe；视口 fallback 文案改为后端中性表达。
+- 影响范围：仅 `XuanYu.Editor.UI` 依赖边界、旧死链删除与同步文档；不修改 `XuanYu.Editor.App` 组装根，不修改 `XuanYu.Render.Vulkan` 的 Resize / Swapchain / Present 主逻辑，不删除 R2 代际探针。
+- 验证结果：`Editor.UI` 内对 `XuanYu.Render.Vulkan` / `Silk.NET.Vulkan` / `VulkanSurfaceBridgeProvider` / `VulkanApiProbe` / `VulkanClearSession` 的扫描为 0 命中；5+100 扫描无 `.cs/.axaml/.js` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 在提升权限下 0 warning / 0 error；受控启动 `XuanYu.Editor.App` 10 秒显示桥接工厂来源为“应用注入（XuanYu.Editor.App）”，未触发旧 fallback，Instance / Surface / Swapchain / Present 正常启动。
+- Commit Hash：主提交 `4bf4c67827c51c714d783950225e35ad66e01af8`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：受控启动使用 `Stop-Process` 结束，不构成手动关闭释放顺序验收；仍建议用户在真机手动关闭一次，确认 Present 停止、Pipeline / Framebuffer / Swapchain / Device / Surface / Instance 释放顺序完整。
+
+## v0.2.15.5-fix
+ARCH-A-R2-R2：Swapchain 代际依赖与重复 Resize 修复（2026-07-13 22:24:18，修复）
+
+- 原历史编号：ARCH-A-R2-R2
+- 日期：2026-07-13 22:24:18
+- 任务目标：修复日志栏 Resize 后可重复出现的 `QueueSubmit ErrorDeviceLost`，根因是 Swapchain 实际重建并生成新 ImageView 后，仅因 extent 相同而错误跳过 Framebuffer 重建与 CommandBuffer 重录。
+- 主要改动：`VulkanSwapchainOwner` 新增资源代际 `ResourceGeneration`，仅在 Swapchain / ImageView 实际换代后推进；`VulkanClearFrameOwner.RebuildFramebuffers` 增加 `force` 参数，Swapchain 换代时即使 extent 相同也强制销毁旧 FB、创建新 FB 并重录 CB；`VulkanRenderSession.Resize` 改为查询当前 Surface extent，若 Present 自愈已完成目标尺寸则在 Recreate 前快速跳过；Present 自愈与 UI 合并 Resize 均输出低频中文代际日志。
+- 影响范围：仅 `XuanYu.Render.Vulkan` 的 Swapchain / RenderSession / ClearFrame 代际一致性路径，以及 `changelog.md`、`file-tree.md`；不修改 ARCH-A 注入链，不删除 fallback，不进入 ARCH-A-R3。
+- 验证结果：`git diff --check` 通过；5+100 扫描无 `.cs/.axaml/.js` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 在释放本项目 App 文件锁后 0 warning / 0 error。普通权限构建曾被残留 `XuanYu.Editor.App (29216)` 锁定输出 DLL 阻断，停止该进程后通过。
+- Commit Hash：主提交 `7822a1761200f9d294687b414cfd68ddf4d8f86c`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：仍需用户按 175% DPI 真机验收清单复验：展开/收起日志栏 10 次、拖动日志栏分隔线至少 5 秒、改变主窗口尺寸、最小化恢复、确认不再出现 `ErrorDeviceLost`，且 Swapchain / Framebuffer / CommandBuffer 代际不落后。
+
+## v0.2.15.4-r2-fix
+ARCH-A-R2-R2：日志栏布局同步后的 Swapchain 高度滞后修复（2026-07-13 22:05:10，修复）
+
+- 原历史编号：ARCH-A-R2-R2
+- 日期：2026-07-13 22:05:10
+- 任务目标：修复日志详情栏展开/收起后，Win32 子窗口已经同步到正确物理尺寸，但 Vulkan 交换链/Framebuffer 仍可能沿用旧高度，导致视口下半部分黑屏的问题。
+- 主要改动：`VulkanNativeHost.LayoutSync.SyncFinalSize` 不再在 `Win32ViewportHost.Resize` 后立即调用 `_bridge.Resize`；改为先完成 HWND 物理尺寸同步和探针日志，再把同一逻辑尺寸交回现有 `NativeHostResizeCoalescer` 延后合并触发，让 Surface CurrentExtent 有机会稳定到新的物理尺寸。
+- 影响范围：仅 `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`、`changelog.md`、`file-tree.md`；不修改 Vulkan Attach/Present/Swapchain 主链，不删除 fallback，不进入 ARCH-A-R3。
+- 验证结果：`git diff --check` 通过；5+100 扫描无 `.cs/.axaml/.js` 超过 100 行；`dotnet build XuanYu.Engine.slnx --no-restore -p:UseSharedCompilation=false` 在提升权限下 0 warning / 0 error；受控启动 `XuanYu.Editor.App` 12 秒日志显示桥接工厂来源为“应用注入（XuanYu.Editor.App）”、未触发旧 fallback，Surface CurrentExtent 与 Swapchain/Framebuffer 自愈并稳定到 `1248x1110`。
+- Commit Hash：主提交 `2e03a58dd303fa78fa554975b864fc7005f43d67`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：仍需用户真机复验展开/收起日志详情栏后的画面完整性，确认蓝灰背景覆盖完整 Vulkan 视口、黄色三角形正常、底部黑屏不再出现。
+
+## v0.2.15.4-r1-fix
+ARCH-A-R2-R1：run.bat 批处理编码修复（2026-07-13 21:51:44，修复）
+
+- 原历史编号：ARCH-A-R2-R1-bat
+- 日期：2026-07-13 21:51:44
+- 任务目标：修复 `run.bat` 在 Windows `cmd.exe` 下因 UTF-8 中文正文 / 换行解析导致的半截命令、乱码命令和错误启动问题。
+- 主要改动：将 `run.bat` 脚本正文改为 ASCII-only 命令与提示，保留仓库根切换、`XuanYu.Editor.App` 唯一启动入口、NuGet.Config restore、build、run、退出码透传和失败 pause 逻辑。
+- 影响范围：仅 `run.bat` 与 `changelog.md`；不修改 App / UI / Vulkan 代码，不改变 DPI 修复逻辑。
+- 验证结果：`cmd /c type run.bat` 输出脚本结构正常，无乱码命令；`git diff --check` 通过；`dotnet build XuanYu.Editor.App\\XuanYu.Editor.App.csproj --no-restore` 0 warning / 0 error。未完整执行 `run.bat`，因为它会启动窗口并等待用户关闭。
+- Commit Hash：主提交 `9b514c4d6e8e3357ff10502f9b71f074dc32c3f5`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：仍需用户双击或命令行运行 `run.bat` 做真实启动确认。
+
+## v0.2.15.4-fix
+ARCH-A-R2-R1：新启动入口 DPI / 物理像素一致性修复（2026-07-13 21:42:14，修复）
+
+- 原历史编号：ARCH-A-R2-R1
+- 日期：2026-07-13 21:42:14
+- 任务目标：修复 `XuanYu.Editor.App` 新启动入口下 175% DPI 环境中 Vulkan 只绘制左上角的问题，并迁移 `run.bat` 到唯一 App 入口。
+- 主要改动：`app.manifest` 补 PerMonitorV2 DPI awareness 并将 manifest 身份改为 `XuanYu.Editor.App.app`；`VulkanNativeHost.OnSizeChanged` 与日志栏同步路径统一使用 `逻辑尺寸 × DPI` 后的物理像素调整 Win32 子窗口；新增 `VulkanNativeHost.Dpi.cs` 承载物理尺寸换算；`run.bat` 改为还原/构建/启动 `XuanYu.Editor.App`，切换到仓库根、UTF-8 输出并透传退出码。
+- 影响范围：仅 App 启动配置、Native HWND 物理尺寸、run.bat 与同步文档；不修改 Vulkan Attach/Resize/Present/Fatal/Detach 行为，不修改 RenderArea/Viewport/Scissor，不进入 ARCH-A-R3。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore` 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；受控运行 `XuanYu.Editor.App` 12 秒后自动停止，日志显示应用注入路径生效、未触发 fallback、Instance / Surface / Swapchain / Present 启动成功，Swapchain / Framebuffer 重建到 `1248x1110` 物理 extent；无残留 `XuanYu.Editor.App` 进程。因本次为定时停止，蓝灰背景是否覆盖完整视口、日志栏拖动和关闭释放顺序仍需用户真机确认。
+- Commit Hash：主提交 `3a403d4cc768bf582e8054aa076f66d736985cb7`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：仍需用户在 175% 缩放率下真机确认蓝灰背景覆盖完整 Vulkan 视口、黄色三角形正常、展开/收起日志栏与窗口 Resize 后无黑边。
+
+## v0.2.15.3-r3-rz
+DOC-CONSTITUTION-2：SVG 中文化规则补充（2026-07-13 21:37:28，纯文档）
+
+- 原历史编号：DOC-CONSTITUTION-2
+- 日期：2026-07-13 21:37:28
+- 任务目标：补充开发宪法中的可视化输出规范，要求后续收口报告 SVG 尽量使用中文表达。
+- 主要改动：在 `docs/玄域引擎_AI开发宪法.md` 第十八章“可视化与人工验收”中新增规则：SVG 内标题、节点、说明和标注应尽量使用中文；仅代码标识、项目名、文件名、协议名等确需精确引用时保留英文。
+- 影响范围：仅 `docs/玄域引擎_AI开发宪法.md` 与 `changelog.md`；不修改代码、不修改构建配置、不进入 ARCH-A-R2-R1。
+- 验证结果：待验证后补齐。
+- Commit Hash：主提交 `e56c729bf989da28d8f5fe2325a9ef80c0dd0615`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：历史报告中的英文 SVG 不在本轮批量改写；后续新报告按本规则执行。
+
+## v0.2.15.3-r2-rz
+ARCH-A-R2-Verify：桥接工厂来源日志与解决方案入口说明（2026-07-13 20:57:24，验收补充）
+
+- 原历史编号：ARCH-A-R2-Verify
+- 日期：2026-07-13 20:57:24
+- 任务目标：补足 R2 真机验收前的可观测性，明确区分 `XuanYu.Editor.App` 注入路径与旧 fallback 路径，并说明当前唯一解决方案入口。
+- 主要改动：`VulkanNativeHost.CreateBridge` 在创建 Bridge 前输出一条低频中文日志，分别标明“桥接工厂来源：应用注入（XuanYu.Editor.App）”或“桥接工厂来源：旧兼容回退（VulkanSurfaceBridgeProvider）”；`file-tree.md` 明确当前分支只有 `XuanYu.Engine.slnx`，没有 `XuanYu.Engine.sln`。
+- 影响范围：仅 UI 低频生命周期日志与同步文档；不修改 Vulkan Attach/Resize/Present/Fatal/Detach 行为，不删除 fallback，不进入 R3。
+- 验证结果：`dotnet build XuanYu.Engine.slnx --no-restore` 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；`Render.Abstractions` 对 `Silk.NET.Vulkan` / `XuanYu.Render.Vulkan` 的命中仅为历史说明注释，无实际 using / PackageReference / ProjectReference；受控运行 `XuanYu.Editor.App` 12 秒并自动停止，stdout 首行证明桥接工厂来源为“应用注入（XuanYu.Editor.App）”，未出现“旧兼容回退”文本，且日志显示 Instance / Surface / Swapchain / Present 已启动。因本次为定时停止，不判定关闭释放顺序和人工视觉验收通过。
+- Commit Hash：主提交 `5414dc7839826da0051390541e66bdaa66b972be`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：仍需从 `XuanYu.Editor.App` 真机启动并确认日志出现“应用注入”且不出现“旧兼容回退”；R3 在真机验收通过前不得开始。
+
+## v0.2.15.3-rz
+ARCH-A-R2：建立 Avalonia 应用组装层（2026-07-13 20:44:15，实装）
+
+- 原历史编号：ARCH-A-R2
+- 日期：2026-07-13 20:44:15
+- 任务目标：新增 `XuanYu.Editor.App` 作为 Avalonia 启动与依赖组装入口，由 App 层创建 `VulkanNativeHostSurfaceBridgeFactory` 并以 `INativeHostSurfaceBridgeFactory` 抽象身份传入 UI；防止双启动入口、双 Bridge、双渲染线程。
+- 主要改动：新增 `XuanYu.Editor.App` 项目与 `EditorCompositionRoot`；`AppBuilder` 通过工厂函数创建带抽象 factory 的 UI `App`；`UiVm` 接收并保存 `INativeHostSurfaceBridgeFactory`；`VulkanNativeHost` 优先使用注入 factory 创建 Bridge，旧 `VulkanSurfaceBridgeProvider` 仅保留为兼容 fallback；`XuanYu.Editor.UI` 改为类库；新增 `XuanYu.Engine.slnx` 纳入 6 个项目。
+- 影响范围：`XuanYu.Editor.App`、`XuanYu.Editor.UI` 启动/组装入口、`changelog.md`、`file-tree.md` 与解决方案文件；不修改 Vulkan Attach/Resize/Present/Fatal/Detach 行为，不删除 UI 旧 Vulkan 链路，不调整 UI 布局。
+- 验证结果：`dotnet restore XuanYu.Engine.slnx` 通过；Core、Render.Abstractions、Render.Vulkan、Editor.UI、Editor.Win、Editor.App 六个项目分别 `dotnet build --no-restore` 全部 0 warning / 0 error；`dotnet build XuanYu.Engine.slnx --no-restore` 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；`Render.Abstractions` 对 `Silk.NET.Vulkan` / `XuanYu.Render.Vulkan` 的命中仅为历史说明注释，无实际 using / PackageReference / ProjectReference。真机启动与渲染验收待用户执行。
+- Commit Hash：主提交 `ded3af5c64bb32ef88a9f1fe526a014b8dc3efdd`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：`Editor.UI` 项目引用层面仍保留 `Render.Vulkan` / `Silk.NET.Vulkan` 旧依赖，旧 `VulkanProbeRoute`、`UiVm.VulkanProbe`、`VulkanClearSession.*` 仍待 R3+ 独立处理；真机启动、Resize、关闭释放需用户验收。
+
+## v0.2.15.2-rz
+ARCH-A-R1：最小渲染生命周期契约与 Vulkan 工厂适配（2026-07-13 20:30:44，实装）
+
+- 原历史编号：ARCH-A-R1
+- 日期：2026-07-13 20:30:44
+- 任务目标：在 `XuanYu.Render.Abstractions` 建立现有 NativeHost 渲染生命周期所需的最小契约，并让 Vulkan 实现开始适配；不删除 `Editor.UI` 旧 Vulkan 调用链，不新增 `Editor.App`。
+- 主要改动：`INativeHostSurfaceBridge` 继承 `IDisposable`，把释放纳入抽象生命周期契约；新增 `INativeHostSurfaceBridgeFactory`；新增 `VulkanNativeHostSurfaceBridgeFactory` 返回 `VulkanNativeHostSurfaceBridge`。
+- 影响范围：仅 `XuanYu.Render.Abstractions`、`XuanYu.Render.Vulkan` 与同步文档；未修改 `XuanYu.Editor.UI`，未移除任何旧 Vulkan/Silk 引用，未改变 Attach/Resize/Detach 行为。
+- 验证结果：5 个项目按顺序 `dotnet build --no-restore` 全部 0 warning / 0 error；`git diff --check` 通过；5+100 扫描无超 100 行 `.cs/.axaml/.js`；`Render.Abstractions` 对 `Silk.NET.Vulkan` / `XuanYu.Render.Vulkan` 的命中仅为历史说明注释，无实际 using / PackageReference / ProjectReference；`Editor.UI` 旧链路未改动。
+- Commit Hash：主提交 `a8c9672729e49a113924f9b128856139e3f25c12`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：UI 侧仍由 `VulkanSurfaceBridgeProvider` 直接装配 Vulkan 实现；`XuanYu.Editor.UI.csproj` 仍直接引用 `Render.Vulkan` / `Silk.NET.Vulkan`；旧 `VulkanClearSession.*` 仍待后续独立轮次清理。
+
+## v0.2.15.1-rz
+ARCH-A-Plan：Editor.UI Vulkan 直接依赖边界审计与迁移计划（2026-07-13 20:27:01，规划文档）
+
+- 原历史编号：ARCH-A-Plan
+- 日期：2026-07-13 20:27:01
+- 任务目标：确认 `Editor.UI` 直接依赖 `Render.Vulkan` / `Silk.NET.Vulkan` 的真实边界，并规划后续 ARCH-A-R1 的最小契约迁移顺序。
+- 主要改动：新增 `docs/arch-a-plan.md`，记录活跃直接依赖文件、历史旧探针依赖、R1 允许/禁止范围与架构 SVG；同步 `file-tree.md`。
+- 影响范围：仅 `docs/arch-a-plan.md`、`changelog.md`、`file-tree.md`；不修改代码、不修改项目引用、不改变运行逻辑。
+- 验证结果：纯文档计划；已确认 `Editor.UI` 活跃直接依赖清单包含 `XuanYu.Editor.UI.csproj`、`VulkanSurfaceBridgeProvider.cs`、`UiVm.VulkanProbe.cs`、`VulkanProbeRoute.cs`；`Render.Abstractions` 无实际 Silk.NET / Vulkan 依赖。
+- Commit Hash：主提交 `db041ae9e845d2a810b73adfb09214b4cafdcf50`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：正式依赖迁移留给 `v0.2.15.2-rz` 起的独立轮次；本轮不删除旧 `VulkanClearSession.*`，不新增 `Editor.App`。
+
+## v0.2.14.12-rz
+DOC-CONSTITUTION-1：changelog 时间精度规则补充（2026-07-13 20:24:59，纯文档）
+
+- 原历史编号：DOC-CONSTITUTION-1
+- 日期：2026-07-13 20:24:59
+- 任务目标：补充最高开发宪法中的 `changelog.md` 时间记录规则，要求后续日志时间记录到提交发生时的分秒级时间。
+- 主要改动：在 `docs/玄域引擎_AI开发宪法.md` 第十七章 `changelog.md` 字段清单中，将“日期”明确为本轮提交发生时的本地时间，并规定格式为 `YYYY-MM-DD HH:mm:ss`，精确到秒。
+- 影响范围：仅 `docs/玄域引擎_AI开发宪法.md` 与 `changelog.md`；不修改代码、不修改构建配置、不改变既有版本编号规则。
+- 验证结果：纯文档修改；已确认规则位置在最高规范的文档同步章节，`file-tree.md` 无需更新，因为未新增、删除、移动、重命名文件，也未改变文件职责或依赖边界。
+- Commit Hash：主提交 `080e05e572683a2236d0df116d18d706fc3d6ea7`；哈希回填修正以 Git 记录和交付报告为准。
+- 遗留问题：历史 changelog 条目仍保留原有日期精度，不在本轮批量改写；后续新条目按本规则执行。
+
+## v0.2.14.11-rz
+VK-LIFE-1-R2：Present Fatal 状态跨线程发布收口（2026-07-13，修复）
+
+- 原历史编号：VK-LIFE-1-R2
+- 日期：2026-07-13
+- 任务目标：在 VK-LIFE-1-R1 正常路径真机通过后，只补 Present Fatal 状态跨线程发布契约；不再修改 Resize、Swapchain、Framebuffer 正常路径。
+- 主要改动：`VulkanRenderSession` 将 `_failed` 改为 `int` 发布位；`MarkFailed` 通过 `Interlocked.CompareExchange` 原子抢占首个失败原因，成功后再 `Volatile.Write` 发布失败状态，并保证 `PresentFatal` 日志只输出一次；`IsFailed` 与 `FailureReason` 使用 `Volatile.Read`。
+- 影响范围：仅 `XuanYu.Render.Vulkan/Session` 失败状态发布相关代码及两份同步文档；不修改 `.axaml/.csproj`，不触碰已验收通过的 Resize 自愈路径。
+- 验证结果：5 个当前分支项目按顺序 `dotnet build --no-restore` 全部 0 warning / 0 error；5+100 全量检查无超 100 行文件；空 `catch` 扫描 0 命中；Fatal 状态扫描确认 `MarkFailed` 使用 `Interlocked.CompareExchange` 抢占首个 `_failureReason`，成功后 `Volatile.Write` 发布 `_failed`，读侧 `IsFailed` / `FailureReason` 走 `Volatile.Read`；`git diff --check` 通过。沿用 VK-LIFE-1-R1 真机日志作为正常 Resize / 自愈路径验收证据。
+- Commit Hash：R2 主提交 `90128dd0f7aacd0f8ca0edfa07a10e5009fb90b5`；首因所有权补正提交以 Git 记录和交付报告为准。
+- 遗留问题：PresentFatal 人为失败路径仍需后续按需构造故障注入验证；ARCH-A-PLAN/IMPL 与 VK5-E 仍在后续。
+
+## v0.2.14.10-rz
+VK-LIFE-1-R1：Resize 自愈竞态与失败状态传播补正（2026-07-13，修复）
+
+- 原历史编号：VK-LIFE-1-R1
+- 日期：2026-07-13
+- 任务目标：在 VK-LIFE-1 真机部分通过的基础上补正 Resize 与 Present 自愈竞态、generation 语义、Present 致命退出状态传播和重复释放日志，不扩大到 ARCH-A / VK5-E / VulkanClearSession。
+- 主要改动：`VulkanRenderSession.Resize` 改为先等待自愈锁、锁内复查尺寸并标记 Resize 接管，再锁外 Stop Present，避免自愈已完成后 UI Resize 仍无意义停泵；generation 仅在 Swapchain extent 实际变化后增加；`VulkanPresentLoop` 增加致命退出回调，Wait/Reset/Submit/Present 等失败会使 RenderSession 进入 Failed 状态；Bridge 后续 Resize 会识别 Failed Session 并拒绝按正常状态继续；Session 释放日志改为 `【VulkanRenderSession】释放完成`，ClearFrame 释放日志只由 ClearFrameOwner 输出一次。
+- 影响范围：仅 `XuanYu.Render.Vulkan` 生命周期相关文件与 `changelog.md`、`file-tree.md`；未修改 `.axaml/.csproj`；未处理 Editor.UI → Render.Vulkan 依赖迁移；未删除 VulkanClearSession；未新增渲染功能。
+- 验证结果：5 个当前分支项目 `dotnet build --no-restore` 全部 0 warning / 0 error；5+100 全量检查无超 100 行文件（最大 100）；空 `catch` 扫描 0 命中；`git ls-files -- 111.ps1` 仍为 0 命中；`git diff --check` 通过；状态传播扫描确认 Present 致命错误进入 `PresentFatal` / `SessionFailed` 路径；generation 递增仅保留在 Resize extent 实际变化与自愈 rebuilt 两处。仍需用户真机复验连续快速展开/收起日志栏至少 10 次。
+- Commit Hash：待提交后补齐。
+- 遗留问题：本轮自动验证通过后，VK-LIFE-1 是否封版取决于用户真机复验；ARCH-A-PLAN/IMPL 与 VK5-E 仍在后续。
+
+## v0.2.14.9-rz
+VK-LIFE-1：Vulkan 生命周期失败安全与仓库收尾（2026-07-13，修复）
+
+- 原历史编号：VK-LIFE-1
+- 日期：2026-07-13
+- 任务目标：正常 Vulkan 成功路径不退化；失败路径可回滚；Present 线程能够可靠停止；异常不再静默吞掉；顺带删除已批准删除的 `111.ps1`。
+- 主要改动：删除 tracked 的 `111.ps1`；`VulkanPresentLoop` 拆分为主循环与生命周期 partial，补 Semaphore/Fence 创建结果、WaitForFences/ResetFences/QueueSubmit/QueuePresent 等关键 Result 检查，`Stop()` 检查 `Join(2000)` 返回值，日志回调异常改为受限 Debug 兜底；`VulkanClearFrameOwner` 拆分创建/命令/生命周期 partial，补 RenderPass、CommandPool、Framebuffer、CommandBuffer 创建与录制结果检查；`VulkanRenderSession.Create` 对 ClearFrame/Pipeline/PresentLoop 做失败逆序释放，Resize 失败进入明确释放路径；`VulkanNativeHostSurfaceBridge.Attach` 改为全成功后再写字段，失败按现有释放顺序回滚，Resize 失败时不假装可用。
+- 影响范围：仓库收尾 `111.ps1` 删除；Vulkan 生命周期文件限于 `XuanYu.Render.Vulkan`；同步 `changelog.md` 与 `file-tree.md`。不处理 Editor.UI → Render.Vulkan 依赖迁移，不处理 ARCH-A，不删除 VulkanClearSession，不新增渲染功能。
+- 验证结果：5 个当前分支项目 `dotnet build --no-restore` 全部 0 warning / 0 error；5+100 全量检查无超 100 行的 `.cs/.axaml/.js`；空 `catch` 扫描 0 命中；`git ls-files -- 111.ps1` 0 命中；`111.ps1` 引用仅剩 changelog/file-tree 与历史审计文档说明；Vulkan 关键 Result 扫描确认 Wait/Reset/Submit/Present 与同步对象、RenderPass、CommandPool、Framebuffer、CommandBuffer、Pipeline、ShaderModule 创建均进入 `Check`/`Ok`/显式 `Result` 处理；`git diff --check` 通过。
+- Commit Hash：仓库收尾与 Vulkan 生命周期修复分别以本轮实际 Git 提交为准。
+- 遗留问题：需用户真机验收启动、Resize、日志栏、关闭释放顺序与人为失败路径；Editor.UI 活跃 Vulkan 依赖留给 ARCH-A-PLAN/IMPL；VulkanClearSession 清理留给后续 VK5-E。
+
+## v0.2.14.8-rz
+SAFE-1：仓库危险脚本与误提交风险收口（2026-07-13，仓库安全）
+
+- 原历史编号：SAFE-1
+- 日期：2026-07-13
+- 任务目标：只处理 ORG-1 后续指定的两项仓库安全问题：tracked 的 `111.ps1` 与 untracked、未忽略的 `qizheng-mvp-fixed/`。
+- 主要改动：将 `111.ps1` 安全隔离为立即报错退出的占位脚本，移除原脚本中的 `.git` 删除、`git init`、`git add -A`、提交和推送流程；在 `.gitignore` 中加入 `qizheng-mvp-fixed/`，避免误 `git add -A` 纳入独立 MVP 项目。
+- 影响范围：仅 `111.ps1`、`.gitignore`、`changelog.md`、`file-tree.md`；未修改任何 `.cs/.axaml/.csproj`；未删除或迁移 `qizheng-mvp-fixed/`；未继续修改 ORG-1 审计报告。
+- 验证结果：`git diff --check` 通过；`git check-ignore -v qizheng-mvp-fixed` 命中根 `.gitignore`；`111.ps1` 中 `Remove-Item`、`git init`、`git add -A`、`git commit`、`git push`、`Read-Host` 0 命中；`.cs/.axaml/.csproj` 改动 0。纯仓库安全修改，不重新构建五个项目。
+- Commit Hash：本轮最终提交 Hash 以 Git 记录和交付报告为准。
+- 遗留问题：`111.ps1` 当前为安全隔离状态，如需彻底删除需按删除流程另行批准；`qizheng-mvp-fixed/` 仍留在本地工作区但已被根 `.gitignore` 覆盖。
+
+## v0.2.14.7-rz
+ORG-1：项目基线审计最终文档收口（2026-07-13，纯文档）
+
+- 原历史编号：ORG-1 收口
+- 日期：2026-07-13
+- 任务目标：将 ORG-1 收口为可指导后续开发的已验收基线；不重新审计项目、不增加新风险项，下一轮直接进入 SAFE-1。
+- 主要改动：仅修改 `docs/project-baseline-audit-org-1-r1.md` 与 `changelog.md`。① 非构建扫描不再使用 Shell/GNU 工具自然退出码作为结论，A1 直接记录 111 个文件、0 个超限，A5 直接记录 tracked 源码范围与 0 个 FluidWarfare 命中；② 后续工作统一拆为 ORG-1、SAFE-1、VK-LIFE-1、ARCH-A-PLAN、ARCH-A-IMPL、ORG-2 六个独立轮次；③ 密钥结论收窄为“指定模式未发现真实凭据泄漏”，明确不替代完整 secret scanning；④ 5+100 明确只统计 tracked 手写 `.cs/.axaml`，且 `.gitignore` 不会使已跟踪文件自动消失；⑤ 债务 A 明确须经过 ARCH-A-PLAN 设计、ARCH-A-IMPL 实装、构建与真机验收后才能收口；⑥ Hash 身份统一为代码基线、原报告、修正过程和 ORG-1 收口提交。
+- 状态结论：**ORG-1 已完成并通过文档验收。** R1、R2 仅作为历史提交过程保留，不再作为持续状态标签。
+- 影响范围：仅两份文档；未修改 `file-tree.md`，未修改任何 `.cs/.axaml/.csproj`，未删除 `111.ps1`，未处理 `qizheng-mvp-fixed/`，未新增测试、报告或 SVG。
+- 验证结果：`git diff --check` 通过；旧错误措辞 0 命中；Markdown 标题、表格、代码围栏格式通过；未新增 Markdown 超链接；内容一致性、文件引用和事实准确性检查通过。纯文档修改不重新构建五个项目。
+- Commit Hash：ORG-1 收口提交 `0667f2a`；其后宪法复核采用独立补正提交，不 amend、不强推，补正 Hash 以实际提交和最终交付报告为准。
+- 文档同步：`changelog.md` 已更新；`file-tree.md` 未更新，因为本轮没有新增、删除、移动、重命名文件，也没有文件职责或依赖边界变化。
+- 遗留问题：tracked 的 `111.ps1` 与 untracked、未忽略的 `qizheng-mvp-fixed/` 留给 SAFE-1；空 `catch`、Vulkan 失败回滚与 Present 线程可靠性留给 VK-LIFE-1；活跃 Vulkan 依赖留给 ARCH-A-PLAN/IMPL；本分支测试缺口、旧治理文档及 VK5-E 均未在本轮处理。
+- 下一轮：SAFE-1，只处理 tracked 的 `111.ps1` 与 untracked、未忽略的 `qizheng-mvp-fixed/`。
+
+## v0.2.14.6-rz
+ORG-1-R1：项目基线审计修正版（2026-07-12，审计文档修正）
+
+- 原历史编号：ORG-1-R1
+- 日期：2026-07-12
+- 任务目标：退回修正 ORG-1 审计报告（f187174）的 11 项误判；后续修正与收口完成后，该报告已作为 ORG-1 已验收基线。纯文档修正，不改代码。
+- 主要改动：新增 `docs/project-baseline-audit-org-1-r1.md`（修正版，17 节含审计命令与结果附录）；原 `docs/project-baseline-audit-org-1.md` 顶部加"已退回，见 R1" superseded 注。修正要点：① 分支范围——所有"无 .sln/无测试"限定为 `fix/RZ-VK3-A-surface-contract` 分支 `f187174` 快照（实测 `origin/main` 含 `XuanYu.Engine.sln` + `XuanYu.Engine.Tests/`）；② 5+100——物理行数通过（111 文件 0 超限，最大 100）但质量条件不通过（VulkanRenderSession.cs / VulkanPresentLoop.cs 压行），红线总判定不成立；③ 空 catch（VulkanPresentLoop.cs:96-97）列为 P1；④ Editor.UI→Vulkan 为活跃组合根违反（VulkanSurfaceBridgeProvider + UiVm.VulkanProbe + VulkanProbeRoute 共 3 活跃 .cs + csproj）；⑤ Vk 所有权表重写（VulkanNativeHostSurfaceBridge 唯一持有/释放，Session 无 `_vk`）；⑥ Vulkan 失败路径回滚+Present 线程 Stop 可靠性列为 P1；⑦ 能力表数字修正 A=10/B=1/D=1 + 新增"未规划/不在当前阶段"类；⑧ 基线与报告身份分离；⑨ 新增标准命令、范围与结果记录；⑩ 111.ps1 修正为"非强推"（普通 git push -u）；⑪ 后续拆为 6 个独立轮次（ORG-1 / SAFE-1 / VK-LIFE-1 / ARCH-A-PLAN / ARCH-A-IMPL / ORG-2）。
+- 影响范围：仅四份文档（changelog.md / file-tree.md / 新增 R1 审计文档 / 原审计文档加注）；零源码改动；不改 Git 历史/Commit/分支/Tag。
+- 验证结果：5 项目 `dotnet build` 全 0W0E EXIT=0（复跑确认）；git ls-files 统计 111 手写 .cs/.axaml 全 ≤100（0 超限）；origin/main 实测含 .sln 与 Tests；密钥扫描（`git grep` 全 tracked 文本、指定模式）命中 3 处均复核为误报（0 真实凭据），FluidWarfare 源码层 0 命中、全文本 15 处均旧文档（**指定范围与指定模式未命中真实泄漏，非全仓安全结论**）；Editor.UI 活跃 Render.Vulkan 引用 3 处确认。
+- Commit Hash：R1 主体 `e6f96b5` + R1 文字补正 `ef0ca11`。
+- 历史修正过程：后续提交继续修正证据范围、Hash 身份、密钥扫描边界、Vulkan 生命周期风险、独立 ARCH-A-IMPL、能力计数口径与 SAFE-1 范围；ORG-1 收口 Hash 最终统一记录在 `v0.2.14.7-rz`，后续补正不改写已推送历史。
+- 遗留问题（修正后仍仅报告不修复，排入对应轮）：P1 四项（债务A 活跃收口 / 空 catch / Vulkan 失败路径回滚 / 111.ps1 删除）；P2 多项（本分支无测试 / qizheng-mvp-fixed / 旧治理文档 / codex_log）；VK5-E 待实装。
+
+## v0.2.14.5-rz
+ORG-1：项目真实基线审计（2026-07-12，审计文档）
+
+- 原历史编号：ORG-1
+- 日期：2026-07-12
+- 任务目标：建立可作为后续开发依据的项目基线——当前真实状态 / 已完成并真机验收的能力 / 仅有代码或计划未验收的能力 / 架构依赖与 Vulkan 生命周期是否符合宪法 / 代码·文档·仓库卫生债务。纯审计，不改代码、不重构、不删文件、不实装 VK5-E。
+- 主要改动：新增 `docs/project-baseline-audit-org-1.md`（16 节：Git 状态 / 构建测试 / 项目依赖 / 5+100 / Vulkan 生命周期 / 能力状态 / 真机证据 / 文档基线 / 三份治理文档规则矩阵 / 仓库卫生 / 风险分级 P0-P3 / ORG-2 建议）。
+- 影响范围：仅三份文档（changelog.md / file-tree.md / 新增审计文档）；零源码改动；不改 Git 历史/Commit/分支/Tag。
+- 验证结果（关键数字）：5 项目 `dotnet build` 全 **0 警告 0 错误 EXIT=0**；本分支**无测试项目**（0 自动化测试覆盖）；5+100 审计 **111 个 tracked 手写 .cs/.axaml 全部 ≤100 行（0 超限）**；红线2（Abstractions 不依赖 Silk）成立；红线1（Editor.UI 不直接依赖 Vulkan）**当前违反=债务 A**（csproj 直接引用 Render.Vulkan + Silk.NET.Vulkan）；VulkanClearSession 死代码 4 文件确认真实（无外部引用）；关闭 RenderPass/Framebuffer 仅日志重复一行（非双重释放）；源码层 FluidWarfare 旧命名 0 命中；在本次指定模式扫描范围内未发现真实凭据泄漏，该检查不替代完整 secret scanning。
+- Commit Hash：f187174（ORG-1 原始审计报告提交；后被 ORG-1-R1 取代，原报告已加 superseded 注）。
+- 遗留问题：P1 两项（债务 A 收口 / `111.ps1` 危险脚本已入库待删）；P2 多项（零测试 / `qizheng-mvp-fixed` 未忽略 / 旧治理文档待裁决）；VK5-E 待实装。均仅报告不修复。
+
+## v0.2.14.4-rz
+DOC-VERSION-1：历史版本号标准化（含本轮 R1 修正）
+
+- 原历史编号：DOC-VERSION-1
+- 日期：2026-07-12
+- 任务目标：将 changelog 多套历史版本号统一为 `v0.<里程碑>.<模块>.<修订次数>-<类型>`；本轮 R1 修正 changelog 自身登记缺失、将类型标签绝对表述改为暂用三类、将版本说明与映射表从 changelog 移出至配套 docs 文件、修正统计措辞。
+- 主要改动：146 条历史条目标题统一为新版本号，正文首行保留「原历史编号」；changelog 恢复为纯更新日志（移除版本号说明与历史编号映射表），配套说明与映射索引另置于 docs/版本号规范与历史映射.md。
+- 影响范围：changelog.md（纯文档）、新增 docs/版本号规范与历史映射.md；零源码改动。
+- 验证结果：146 条标题全部唯一、原历史编号保留、原正文事实（日期/Commit/失败记录/真机验收）未改写；git diff 仅触达 changelog.md 与新增 docs 文件。
+- Commit Hash：原始实施 3f03725；本轮 R1 修正提交：9bc210e。
+- 遗留问题：无。
+
+## v0.2.14.3-rz 新增《玄域引擎 AI 开发宪法》总治理文档（2026-07-12，文档）
+- 原历史编号：[DOC]（宪法入库）
+
+类型：纯文档补充，无代码改动。
+
+- **新增** `docs/玄域引擎_AI开发宪法.md`（826 行，从用户 Downloads 移入 docs/）：作为后续所有开发、审计、修复、规划与 Codex 协作的**统一最高执行标准**，覆盖二十章——总执行原则 / 绝对红线（5+100、分层边界、敏感信息禁入库、聊天记录禁入库、禁止掩盖失败）/ AI 自主权限 / 计划与范围控制 / Bug 排查 / 日志 / 测试验证 / 异常处理 / 存档兼容 / 依赖配置 / 生成文件 / Git 规范 / 删移重命名 / 注释与 TODO / 警告静态检查 / 版本规范 / 文档同步 / 收口报告 / 重大事项请示。
+- **关系说明**：原 `docs/AI_DEVELOPMENT_RULES.md`、`docs/CODE_CONSTITUTION.md` 内容已被本宪法统辖；本轮保留作历史参考，不删除、不重写原意（是否正式标记 deprecated 待用户定夺）。
+- **文档同步**：`file-tree.md` 已更新（新增文件登记 + 文档补充快照 + 文件总数更新为 121）；`changelog.md` 本条。
+- **验证**：纯文档任务按"文档同步规范"校验——格式（Markdown 标题层级完整）/ 链接（无失效内部链接）/ 内容一致性（5+100、分层边界与 `docs/dev-rules.md` 红线表述一致）/ 文件引用（指向 file-tree/changelog 机制）/ 事实准确性。无编译、无代码改动、无新增警告。
+- **Commit Hash**：见本次提交（docs 文档补充，未动源码）。
+- **遗留问题**：无阻断项。`AI_DEVELOPMENT_RULES.md` / `CODE_CONSTITUTION.md` 是否归档待用户决定，本轮不擅自删改。
+
+## v0.2.12.1-vk 清理 VulkanClearSession 死代码（债务 B）规划（2026-07-11，规划·待确认实装）
+- 原历史编号：RZ-VK5-E-Plan
+
+分支：fix/RZ-VK3-A-surface-contract；基线 HEAD：139c748（RZ-VK5-C 封版）。
+结论：**VulkanClearSession 为确定无引用的死代码，可安全删除，收口债务 B**。经审计：`VulkanClearSession`（Editor.UI 4 个 partial 文件）是 VK3-A 前早期探针，已被 `VulkanRenderSession` 正式链路取代；全仓 grep 确认无任何 `.cs` 外部引用或 `TryCreate` 调用方。
+- 新增 `docs/rz-vk5-e-plan.md`：9 项规划（死代码确认 / 文件+调用方+替代链路+删除影响 / 正式链路由 VulkanRenderSession 承担 / 只删无引用死代码 / 不改三角形·Resize·PresentLoop·Pipeline / 不新增 / 全 .cs ≤100 / 双项目 0W0E / 实装步骤 + 风险回滚）+ 红线。
+- 实装步骤（确认后）：`git rm` 4 文件 → 低内存构建验证 0W0E → 更新 changelog/file-tree → 独立 commit + push。
+- 红线守住：只删死代码；不碰 VulkanRenderSession 链路 / UI / NativeHost / LOG-UX；不扩大 Editor.UI→Render.Vulkan 引用；双项目 0W0E；全 .cs ≤100。
+
+## v0.2.10.1-vk viewport/scissor 与 Resize 关系验证收口（2026-07-11，验证收口·已封版）
+- 原历史编号：RZ-VK5-C-Plan
+
+分支：fix/RZ-VK3-A-surface-contract；基线 HEAD：c53b7a8（RZ-VK5-D-R3 封版）。
+结论：**VK5-C 无需改代码，改为「验证收口轮」**。经源码取证，viewport/scissor 已使用动态状态、Resize 后 CommandBuffer 必然重录且取最新 Swapchain extent、GraphicsPipeline 不随 Resize 重建——三项诉求全部已满足。
+- 新增 `docs/rz-vk5-c-plan.md`：8 问逐答（带文件/行号源码证据）+ 验证收口方案 + 真机 run-list。
+- **审计通过（2026-07-11 用户回传）**：确认三件事成立（viewport/scissor 用动态状态、Resize 重录取最新 extent、Pipeline 不重建）。**修正目标表述**：禁止声称「三角形在不同宽高比下不变形」——viewport/scissor 仅决定绘制/裁剪区域，不负责几何宽高比保持；当前 NDC 固定坐标三角形随视口比例变宽/变扁属预期，宽高比修正留待 Camera/Projection，不纳入 VK5-C。
+- 红线守住：不进 VK5-E；不新增渲染能力；不改三角形/shader/UI/NativeHost；不清 VulkanClearSession；不扩大 Editor.UI→Render.Vulkan 引用；全 .cs ≤100；双项目 0W0E；**本轮 0 代码改动**（无 .cs/.axaml/.csproj 变更）。
+- 进度指针：VK5-C 验证收口后推进到 **VK5-E**（清 VulkanClearSession 死代码 = 债务 B）。
+
+## v0.2.11.4-fix Resize 同尺寸快速跳过 Present 泵停启（2026-07-10，实装）
+- 原历史编号：RZ-VK5-D-R3
+
+分支：fix/RZ-VK3-A-surface-contract
+R2 真实成绩：同尺寸 Swapchain/Framebuffer 重建已跳过、gen 追踪已真实化、三角形仍显示——但日志仍反复出现"自愈成功后又 Present 泵停止/启动"。根因进一步缩小：Resize 流程在调用 `PresentLoop.Stop()` 之前**未判断尺寸是否已经一致**，无论 Swapchain/Framebuffer 是否跳过重修，泵都被无意义地停一下再开，造成视觉停顿（慢半拍）。
+
+- **快速跳过（核心）**：`VulkanRenderSession.Resize` 在 Stop 泵之前新增短路——若目标尺寸 `(width,height)` 已等于当前 `Swapchain.Extent`，直接打一条低频中文日志 `【VulkanClearFrame】Resize 快速跳过：尺寸已由自愈恢复（WxH）；generation=N` 并 `return`，**不** Stop/Start 泵、**不**重建 Swapchain/Framebuffer、**不**重录 CommandBuffer。尺寸一致时三者必然同源一致（Framebuffer extent 源自 Swapchain，CommandBuffer 已在上一轮对应重录），故快速返回安全。
+- **保留 R2 去重**：同尺寸 Swapchain/Framebuffer 重建跳过逻辑原样保留（Resize 真正走全量时仍受益于去重）。
+- **保留自愈**：Present 自愈机制（OutOfDate → RecoverFromOutOfDate）原样保留，未被删除。
+- **日志新增**：`VulkanClearFrameLogFormatter.ResizeFastSkipped(uint generation, int w, int h)` 输出上述中文日志。
+- 红线守住：不进 VK5-C/E；不新增渲染能力；不改三角形绘制/shader/UI/NativeHost；不清 VulkanClearSession；双项目 0W0E；全 .cs ≤100 行。
+- **真机验收通过（2026-07-11，用户 run.bat 回传 trace）**：全部 11 项验收 PASS。
+  - ①启动不重复 714x639：首帧 Present 成功（imageIndex=0）后，仅由 OutOfDate 自愈 16x16→714x639 一次，无重复 714x639 重建。
+  - ②展开只 1 次 714x274 全量：自愈 714x639→714x274 一次（gen=2），符合预期。
+  - ③同尺寸 Resize 快速跳过、不再 Stop/Start 泵：日志出现两条 `【VulkanClearFrame】Resize 快速跳过：尺寸已由自愈恢复（714x639）；generation=1` 与 `（714x274）；generation=2`，**均无** `Present 泵已停止/启动` 配对——同尺寸 Resize 导致的无意义停泵已消除；真实尺寸变化时仍会正常停泵重建。
+  - ④唯一一次 `Present 泵已停止`/`已启动` 出现在收尾真实的窗口展开 Resize（714x274→714x639，gen=3→4），属尺寸真变化的正确必要行为，非慢半拍。
+  - ⑤关闭释放顺序正确：Present泵停止→GraphicsPipeline释放→RenderPass+Framebuffer释放→Swapchain释放→LogicalDevice释放→Surface释放→Instance释放→Bridge分离。三角形全程持续 Present（未报丢失）。
+  - 遗留非阻断：`RenderPass + Framebuffer 释放成功` 关闭时仍重复一行（LOG-CLEANUP，不影响功能）；UI 250ms Coalescer 防抖不在红线内。
+  - 改动 .cs 行数 RenderSession 98→100、LogFormatter 21→23，均 ≤100；双项目 0W0E（Editor.UI 锁 dll 仅环境，改临时目录构建复验 0W0E）。
+  - **正式封版（2026-07-11，用户拍板）**：RZ-VK5-D-R3 验收全过，文档封版。不追慢半拍后续；若仍疑有极轻视觉延迟，归因 UI 布局/防抖/日志面板刷新层，另开 UI 体验轮，不在 VK5-D 继续挖掘。下一步候选 VK5-C（viewport/scissor 边界收口）先于 VK5-E（清 VulkanClearSession 死代码）。
+
+## v0.2.11.3-fix Resize / Present 重复重建去重 + 追踪 gen 修正（2026-07-10，实装）
+- 原历史编号：RZ-VK5-D-R2
+
+分支：fix/RZ-VK3-A-surface-contract
+R1 真机 trace 铁证：3 处同尺寸重复 Swapchain 重建（启动 16x16→714x639 后 Resize 又建 714x639；展开时两次 714x274；幻影自愈 714x639→714x274 本已是 714x274）。根因=Resize 重建与 Present 自愈重建撞车，目标 extent 相同却各建一次。本轮最小修复（用户选方案1）。
+
+- **去重（核心）**：`VulkanSwapchainOwner.Recreate/TryRecreateToCurrent` 与 `VulkanClearFrameOwner.RebuildFramebuffers` 均新增「目标 extent == 当前 extent 时跳过重建」短路（同尺寸打 Skipped 日志直接返回）。Resize 与自愈两条路径都受益，彻底消除重复重建。
+- **修追踪 gen 硬编码 0**：`VulkanPresentLoop` 的 OutOfDate 日志原本 `gen=0` 硬编码，已移除；改在 `VulkanRenderSession.RecoverFromOutOfDate` 顶部用真实 `_generation` 打 `Present.OutOfDate` 日志。`Recreate/TryRecreateToCurrent/RebuildFramebuffers` 新增 `generation` 参数，所有 Stage 日志透传真实 gen。
+- 红线守住：不建 VertexBuffer/DescriptorSet/Mesh/Camera/Scene；不改 UI/NativeHost/Shader；不清 VulkanClearSession；不进 VK5-C/E。
+- 验证：Render.Vulkan 构建 0W0E；Editor.UI 无 C# 编译错误（仅因运行中的编辑器 PID 7236 锁 dll 致拷贝失败，非代码问题）；改动 .cs 行数 98/96/98/99 均 ≤100。
+
+## v0.2.11.2-fix Resize / Present 慢半拍全链路诊断（2026-07-10，实装）
+- 原历史编号：RZ-VK5-D-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+VK5-D 边界收口后，用户真机发现"展开/收起日志栏时视口画面慢半拍"——功能最终正确（三角形保留、自愈恢复），但切换时有明显延迟。
+本轮目标：**不修、先诊断**——给整条 Resize/Present 链路加 T+elapsedMs 追踪日志，定位慢在哪一段。
+
+- 新增 `Diagnostic/VulkanResizeTracer.cs`（48 行）：共享 Stopwatch 诊断工具，提供 StartTrace()/ElapsedMs()/Stage()/HealStage()/DuplicateWarning() 方法。每次 Resize/自愈生成 `[T+XXXms gen=N]` 前缀的阶段日志。
+- 修改 4 个文件加追踪点（行为零变化）：
+  - `VulkanRenderSession.cs`（97 行）：Resize() 打 T+0 起点 + 完成日志；RecoverFromOutOfDate() 打自愈阶段日志（旧→新 extent）。LogProbe 内联消除。
+  - `VulkanSwapchainOwner.cs`（96 行）：Recreate() 打请求尺寸 + 重建完成；TryRecreateToCurrent() 打旧 extent + Surface 查询。
+  - `VulkanClearFrameOwner.cs`（95 行）：RebuildFramebuffers() 打开始 + FB创建完成+重录CB。
+  - `VulkanPresentLoop.cs`（100 行）：AcquireNextImage/QueuePresent 的 OutOfDate 事件打来源追踪。
+- 追踪覆盖的完整链路：UI Coalescer(250ms) → Bridge.Resize → RenderSession.Resize(T+0) → Stop泵 → Swapchain.Recreate(T+) → Framebuffer.Rebuild(T+) → CB重录(T+) → Start泵 → Present.OutOfDate(T+) → 自愈(T+) → 恢复Present(T+)。
+- 红线守住：不进 VK5-C/D-E；不新增渲染能力；不改 UI/NativeHost/Shader/三角形逻辑；不清 VulkanClearSession；双项目 0W0E；全 .cs ≤100 行。
+- 下一步：用户 run.bat 真机操作（展开/收起日志栏），回传完整 trace 日志，定位慢半拍根因后决定是否 R2 修复。
+
+## v0.2.11.1-vk 清屏/绘制/录制/管线注入/Resize 重录 职责边界收口（2026-07-10，实装）
+- 原历史编号：RZ-VK5-D
+
+分支：fix/RZ-VK3-A-surface-contract
+VK5-B 封版后，对"第一个三角形"链路做职责边界整理——只动 `VulkanClearFrameOwner.cs`，不新增任何渲染能力。
+- 边界整理（仍 1 个文件、行为不变）：
+  - 抽出 `RecordDraw(CommandBuffer cb)`：把"绘制"（BindPipeline + SetViewport + SetScissor + CmdDraw(3)）从 `RecordOne` 的"清屏"（BeginRenderPass 带 ClearValue）中拆出，`RecordOne` 变为 `清屏 → RecordDraw → 结束`。清屏与绘制成为两个一眼分开的方法。
+  - 类头注释如实改写为"持有 RenderPass+CommandPool+CommandBuffer[]+Framebuffer[]"，并显式列出 VK5-D 职责边界：帧缓冲管理（BuildRenderPass/RebuildFramebuffers）｜命令录制（RecordCommandBuffers/RecordOne/RecordDraw）｜绘制（RecordDraw）｜管线注入（SetPipeline 触发重录）。
+  - `SetPipeline`（管线注入）、`RebuildFramebuffers`（Resize 重建）两个重录触发入口保持各自直调 `RecordCommandBuffers` 的现状，但在类注释中统一说明"最终只走 RecordCommandBuffers 一处"，厘清两条重录路径的意图差异。
+- 不参与（红线）：不建 VertexBuffer/IndexBuffer/UniformBuffer/DescriptorSet；不建 Mesh/Camera/Material/Scene；不改 UI/NativeHost/LOG-UX；不改 SwapchainOwner/PipelineOwner/PresentLoop/RenderSession 对外行为；不清 VulkanClearSession 死代码（留 VK5-E）。`SwapchainOwner`/`PipelineOwner` 经审计确认已是干净 SRP，本轮零改动。
+- 验收：双项目 `dotnet build` **0W0E**；`VulkanClearFrameOwner.cs` 99→100（≤100 硬门禁守住，靠局部变量取地址 + 精简注释 + 去空行达成）；全仓 `.cs` 无新增超 100 行文件；`dotnet build` 0W0E；功能行为零变化（清屏+三角形显示、Resize 自愈、关闭释放顺序均与 VK5-B 封版一致）。
+- 决策（用户拍板）：仅内部整理，**不重命名** `VulkanClearFrameOwner`（保守、零跨文件风险）。
+
+## v0.2.9.1-vk 固定三角形绘制（gl_VertexIndex + CmdDraw，2026-07-10，实装）
+- 原历史编号：RZ-VK5-B
+
+分支：fix/RZ-VK3-A-surface-contract
+在 VK5-A 已创建好的 GraphicsPipeline 基础上，画出蓝灰背景上的第一个固定三角形。不建 VertexBuffer / IndexBuffer / UniformBuffer / DescriptorSet，顶点由 `gl_VertexIndex` 在顶点着色器内生成。
+- 着色器（`glslangValidator -V` 重新编译，内嵌 SPIR-V 字流，无 .vert/.frag/.spv 源文件入库）：
+  - `ShaderBytecode.Vert.cs` 重写：顶点着色器用 `gl_VertexIndex` 索引 3 个常量顶点位置，输出 `gl_Position`（三角形居中、底边长、尖朝上）。
+  - `ShaderBytecode.Frag.cs` 重写：片元着色器输出固定琥珀色 `vec4(1.0, 0.85, 0.2, 1.0)`（蓝灰背景上醒目）。
+- 录制 + 装配：
+  - `VulkanClearFrameOwner.cs` 95→99：新增 `_pipeline` 字段与 `SetPipeline(Pipeline)`（由 RenderSession 注入后重录 CommandBuffer，含 Draw）；`RecordOne` 在 `CmdBeginRenderPass` 之后、`CmdEndRenderPass` 之前插入 `CmdBindPipeline` + `CmdSetViewport` + `CmdSetScissor` + `CmdDraw(3,1,0,0)`；Resize 重建 Framebuffer 后重录自然带上 Draw（沿用原有 RebuildFramebuffers 路径，未改 Resize/Present 泵）。
+  - `VulkanGraphicsPipelineOwner.cs` 96→97：新增 `public Silk.NET.Vulkan.Pipeline Pipeline => _pipeline` 供注入。
+  - `VulkanRenderSession.cs` 97→98：`Create` 把 Pipeline 创建提前到 `loop.Start()` 之前，创建后 `clear.SetPipeline(pipeline.Pipeline)`（泵启动前注入，避免首帧竞态）；PresentLoop 完全未改。
+- 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 99）；蓝灰清屏背景上出现琥珀色固定三角形；Resize 后三角形仍显示且 Present 自愈能力保留（RZ-VK5-A-R2 未破坏）；关闭释放顺序不变。
+- 红线守住：不建 VertexBuffer/IndexBuffer/UniformBuffer/DescriptorSet；不接 Scene/Camera/Mesh/Material/Gizmo；不改 UI/NativeHost/LOG-UX；不扩大 Editor.UI→Render.Vulkan 引用；不清 VulkanClearSession；不破坏 RZ-VK5-A-R2 的 Resize 后 Present 恢复。
+- **真机最终验收通过（2026-07-10，正式封版）**：①蓝灰背景上已显示琥珀色固定三角形；②展开底部日志栏后三角形仍显示；③Resize/日志栏变化后 Present 自愈恢复正常（控制台日志 `Swapchain 自愈成功，已恢复 Present；generation=3`）；④关闭窗口释放顺序正确（Present泵停止→GraphicsPipeline释放→RenderPass+Framebuffer释放→Swapchain→LogicalDevice→Surface→Instance→分离完成）；⑤未进入复杂渲染器（无 VertexBuffer/Scene/Camera/Mesh/Material/Gizmo）。遗留非阻断项：`RenderPass + Framebuffer 释放成功` 关闭日志重复打印一行，留待 LOG-CLEANUP 清理。**RZ-VK5-B 正式收口，Vulkan 最小图形渲染闭环成立。**
+
+## v0.2.8.4-fix Present 泵 OutOfDate 受控自愈（Resize 后 Present 恢复，2026-07-10，实装）
+- 原历史编号：RZ-VK5-A-R2
+
+分支：fix/RZ-VK3-A-surface-contract
+修复 Resize（拖窗口/调整日志栏）后 Present 泵重启即 `ErrorOutOfDateKhr` 并永久 `break`、最终停在"Swapchain 已过期"的问题。本轮只收口 Present 恢复，不 Draw、不画三角形、不进 VK5-B。
+- 根因（用户真机 + 代码审计双重确认）：Windows 上 `VulkanSwapchainCapabilities.ChooseExtent` 直接 `return caps.CurrentExtent`，Swapchain extent = 创建/重建时刻 Surface 报告的尺寸；Resize 触发 `WM_SIZE` 异步、Avalonia 逻辑×DPI 与 Surface 实际客户区存在残余偏差，导致新 Swapchain 基于"旧时刻"尺寸建出，Present 时 Surface 已变 → OutOfDate。
+- 修复设计：OutOfDate 不再永久 `break`，改经 RenderSession 统一入口 `RecoverFromOutOfDate` 自愈——查 Surface 当前 `CurrentExtent`、重建 Swapchain + 重建 Framebuffer + 重录 CommandBuffer、更新 `_generation`，PresentLoop `continue` 不退出线程（满足红线：PresentLoop 线程不 join 自身 Stop/Dispose）。
+- 新增/修改：
+  - `VulkanPresentLoop.cs` 99→100：构造函数新增 `Func<string,bool>? onOutOfDate`；Acquire/QueuePresent 遇 OutOfDate 调 `onOutOfDate(source)`（返回 false 才 break）；移除原 `_outOfDateLogged`/`OutOfDatePaused` 永久暂停分支。
+  - `VulkanRenderSession.cs` 63→97：`RecoverFromOutOfDate(string source)` 统一自愈入口（返回 true=继续 / false=放弃暂停）；`_rebuildLock` 锁住 Resize 与自愈路径防并发重建；`_generation` 标记重建代次；连续自愈上限 `MaxRecoverTries=5`，超上限输出 `OutOfDateRecoverFailed` 中文日志并暂停（防刷屏/无限重建）；`Resize` 走 `lock(_rebuildLock)` 统一入口；`Create` 新增 `NativeHostSurfaceHandle?` 形参（供探针取 DPI）；lambda 绑定规避静态方法组引用实例方法。
+  - `VulkanSwapchainOwner.cs` 88→100：新增 `TryRecreateToCurrent(out Extent2D)`——按 Surface 当前 `CurrentExtent` 重建（0/uint.MaxValue 尺寸跳过）。
+  - `VulkanClearFrameLogFormatter.cs` 17→21：移除 `OutOfDatePaused`；新增 `OutOfDateProbe`（来源/旧 extent/新 Surface CurrentExtent/DPI/逻辑尺寸/generation）、`OutOfDateRecovered`、`OutOfDateRecoverFailed`。
+  - `VulkanBridgeRenderSessionAttachStep.cs` 15→16 + `VulkanNativeHostSurfaceBridge.cs` 83：Attach 把 `NativeHostSurfaceHandle` 透传给 RenderSession（走 Abstractions 契约，不扩大 Editor.UI→Render.Vulkan）。
+- 低频中文探针日志（自愈时一次）：OutOfDate 来源 / 旧 Swapchain extent / 新 Surface CurrentExtent / DPI / 逻辑尺寸 / generation / 自愈次数 / 成败。
+- 验收：双项目 `dotnet build` **0W0E**；全改动 `.cs` ≤100（最大 100）；Resize 后 Present 自愈恢复（不再永久停在"Swapchain 已过期"）；关闭释放顺序不变（PresentLoop→GraphicsPipeline→ClearFrame→Swapchain→LogicalDevice→Surface→Instance）。
+- 红线守住：不 Draw / 不画三角形 / 不建 VertexBuffer·DescriptorSet / 不接 Scene·Camera·Mesh·Material·Gizmo / 不改 UI overlay / 不扩大 Editor.UI→Render.Vulkan 引用（handle 走 Abstractions）/ 不清 VulkanClearSession / 不无限重建（守护上限）/ PresentLoop 线程不 join 自身 Stop/Dispose。
+
+## v0.2.13.1-rz 移除视口内部顶部/底部 overlay，只留纯 Vulkan 视口（2026-07-09，UI 只改）
+- 原历史编号：视口 UI 收口
+
+分支：fix/RZ-VK3-A-surface-contract
+- 修改 `XuanYu.Editor.UI/Main/Main.axaml`：移除视口内部顶部（透视 / NativeHost Probe）与底部（左键选择 / 中键环绕 / 右键平移 / 工具：选择）两组叠加条，UserControl 内容简化为仅 `<local:VulkanViewport/>`，中间区域只显示纯视口画面。
+- 不删除选择/环绕/平移功能本身（`VulkanViewport` 交互逻辑未动），仅移除可见提示条。
+- 不改 Vulkan / NativeHost 渲染逻辑；不改外部主工具栏、左侧项目树、右侧检查器、底部总状态栏；不碰 LOG-UX / Resize。
+- 验收：双项目 `dotnet build` **0W0E**；视口内部顶部/底部叠加条消失，中间只剩纯视口，清屏与 Resize 不受影响。
+- 同轮 `RZ-VK5-A-R1`：静态验证 Detach 释放顺序正确（PresentLoop → GraphicsPipeline 资源 → ClearFrame(RenderPass+Framebuffer) → Swapchain → LogicalDevice → Surface → Instance）；ShaderModule 短生命周期已落地（关闭链不含 ShaderModule）；释放顺序无破坏，**未改代码**。
+
+## v0.2.8.3-vk ShaderModule + GraphicsPipeline 最小接入（2026-07-09，实装）
+- 原历史编号：RZ-VK5-A
+
+分支：fix/RZ-VK3-A-surface-contract
+在 VK4-D Clear+Present 闭环上新增最小 Graphics Pipeline 创建/释放能力。不 Draw、不画三角形。
+- 新增 `XuanYu.Render.Vulkan/Pipeline/`：
+  - `ShaderBytecode.Vert.cs` / `ShaderBytecode.Frag.cs`：内嵌 SPIR-V `uint[]`（glslangValidator 本地编译，vertex+fragment passthrough，entry main）。CodeSize = Code.Length * 4。
+  - `VulkanShaderModuleOwner.cs`：`unsafe` 助手，用 `uint[]` 建/销 vert+frag 两个 ShaderModule。
+  - `VulkanGraphicsPipelineOwner.cs`：建空 PipelineLayout + 绑 RenderPass 的 GraphicsPipeline（动态 viewport/scissor、空 vertex input、TriangleList）；**建 Pipeline 后立即释放两个 ShaderModule**（短生命周期）；Dispose 释放 Pipeline→Layout。
+  - `VulkanPipelineLogFormatter.cs`：中文日志格式器（经注入的 `Action<string> log`，日志单出口）。
+- 修改：
+  - `VulkanClearFrameOwner.cs`：+1 只读 getter `RenderPass => _renderPass`（供 Pipeline 绑定；构造时建一次，Resize 稳定）。
+  - `VulkanRenderSession.cs`：+pipeline 字段；`Create` 中 ClearFrame 之后建 Pipeline；`Dispose` 中最先释放 Pipeline。
+- 关键结论沿用规划：PresentLoop 提交 ClearFrameOwner 录好的 CommandBuffer，VK5-A 未绑定 Pipeline（无 Draw）→ PresentLoop 零改动；RenderPass 构造时建一次、Resize 只重建 Framebuffer → GraphicsPipeline Resize 稳定。
+- 验收：双项目 `dotnet build` **0W0E**；所有改动 `.cs` ≤100（最大 96）；`Pipeline/` 4 文件。
+- 红线守住：不 Draw / 不画三角形 / 不建 VertexBuffer·DescriptorSet / 不接 Scene·Camera·Mesh·Material·Gizmo / 不改 UI·NativeHost·LOG-UX·Resize / 不扩大 Editor.UI→Render.Vulkan 引用 / 不清 VulkanClearSession。
+
+## v0.2.8.2-vk 采纳两条实装前修正（2026-07-09，仅文档）
+- 原历史编号：RZ-VK5-A 规划修正
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮仅修正 `docs/rz-vk5-a-plan.md`（RZ-VK5-A 规划），未改任何代码。
+- 修正 1：Shader 字节码由 `byte[]` 改为 `uint[]`（`ShaderBytecode.Vert.cs` / `ShaderBytecode.Frag.cs`）。`PCode` 直接按 `uint*` 传入，`CodeSize = Code.Length * 4`，免 unsafe 字节转换/对齐/长度换算；SPIR-V 由 glslangValidator 本地编译生成，不引入运行时编译工具链。
+- 修正 2：ShaderModule 生命周期由「持有到会话结束」改为「短生命周期」——创建 GraphicsPipeline 成功后立即释放两个 ShaderModule；Detach 只释放 GraphicsPipeline + PipelineLayout。Detach 顺序更短、更不易埋雷（采纳用户修正）。
+- 同步更新 §2/§3/§6/§7/§9/§10/§11。
+
+## v0.2.8.1-vk VK5-A 规划：ShaderModule + GraphicsPipeline 最小接入（2026-07-09，仅规划）
+- 原历史编号：RZ-VK5-A-Plan
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮**只规划、不写代码**（未改任何 `.cs` / `.axaml` / `.csproj`）。
+- 新增 `docs/rz-vk5-a-plan.md`：RZ-VK5-A 规划——在当前 VK4-D Clear+Present 闭环上接入 ShaderModule + PipelineLayout + GraphicsPipeline 最小方案。
+- 必读已读：`rz-vk4-closure.md` / `rz-vk5-plan.md` / `file-tree.md` / `docs/dev-rules.md`（已存在，不新建）/ 当前 Vulkan Clear+Present 源。
+- 关键结论：①`PresentLoop` 提交 `ClearFrameOwner` 录好的 CommandBuffer，VK5-A/B 加 `CmdBindPipeline`+`CmdDraw` 会被自动提交，PresentLoop 零改动；②`RenderPass` 构造时建一次、Resize 只重建 Framebuffer，故绑它的 GraphicsPipeline 在 Resize 时无需重建。
+- 输出 10 项：当前 Vulkan 文件职责 / VK5-A 新增+修改清单 / ShaderModule 创建释放 / PipelineLayout 创建释放 / GraphicsPipeline 创建释放 / RenderPass·Swapchain·Framebuffer·Pipeline 依赖 / ≤100 拆分 / 禁止事项 / 验收 / 风险与回滚；含 3 个决策点（内嵌 SPIR-V byte[] / 动态 viewport-scissor / ShaderModule 持有到会话结束）。
+- VK5-A 实装禁止事项（承 red lines）：不 Draw、不画三角形、不建 VertexBuffer/DescriptorSet、不接 Scene/Camera/Mesh/Material/Gizmo、不改 UI/NativeHost/LOG-UX/Resize、不扩大 Editor.UI→Render.Vulkan 引用、不清 VulkanClearSession。
+
+## v0.2.14.2-rz 仓库记忆文件收口：.workbuddy/memory 移出追踪并 gitignore（2026-07-09，仅仓库卫生）
+- 原历史编号：VK5-Plan-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮不触碰任何代码，仅做仓库卫生收口。
+- 将 `.workbuddy/memory/`（4 文件：2026-07-07.md / 2026-07-08.md / 2026-07-09.md / MEMORY.md）从 Git 追踪移除（`git rm --cached`），本地文件保留。
+- `.gitignore` 新增 `.workbuddy/`，使本地 AI 工作记忆不再进入仓库历史，避免污染项目文档与协作历史。
+- 理由：项目文档（`docs/`）面向仓库与协作者；AI 本地工作记忆面向工具/会话/用户偏好，二者混库会污染历史。
+- 重要项目信息无损：架构债务 A/B 的收口节奏已固化于 `docs/rz-vk5-plan.md` §12，不依赖 `.workbuddy/memory`。
+- 报表格式等跨项目用户偏好改为写入用户级 `~/.workbuddy/MEMORY.md`（本地，不进仓库）。
+- `file-tree.md` 无需更新（无 `.workbuddy` 登记项）。
+
+红线：未改任何 `.cs`/`.axaml`/`.csproj`/Vulkan/UI/NativeHost/LOG-UX 代码。
+
+## v0.2.14.1-rz 两条已知债务升格为架构债务并锁死节奏（2026-07-09，仅文档）
+- 原历史编号：VK5-Plan 债务升格
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮仅对 `docs/rz-vk5-plan.md` 增补「架构债务升级」节（§12，原 §12 规划图顺延为 §13），未改任何代码。
+- **债务 A：`Editor.UI` 仍直接引用 Render.Vulkan** 升格为架构债务：VK5-A~D 可暂缓但**禁止扩大**；VK6 / 独立 ARCH 轮必须收口到 `Render.Abstractions` 契约层。
+- **债务 B：`VulkanClearSession` 死代码** 清理排在 **VK5-E**（VK5-A/B/C/D 之后），不在 VK5-A 前清，以免弄乱已验证的 Clear+Present 闭环；清理独立 commit。
+- 提交复核：`fe6d5d3` 仅含 6 文件（`.workbuddy/memory/` 项目级工作记忆 + 两份新 doc + changelog + file-tree），无 `.codex/`/`.ai-memory/`/密钥；`.workbuddy/memory/` 为本项目惯例追踪，非用户级 AI 文件。
+
+## v0.2.6.8-vk VK4 收口归档 + VK5 最小几何渲染规划（2026-07-09，仅文档）
+- 原历史编号：VK4-Closure + VK5-Plan
+
+分支：fix/RZ-VK3-A-surface-contract
+本轮**只写文档，不写实装代码**（未改任何 `.cs` / `.axaml` / `.csproj` / Vulkan 实装 / LOG-UX / NativeHost 代码）。
+
+### 新增文档
+- `docs/rz-vk4-closure.md`  # VK4 阶段正式收口确认：VK4-A（PhysicalDevice）/ VK4-B（LogicalDevice+Queue）/ VK4-C（Swapchain+ImageView）/ VK4-D（Clear+Present 单色清屏）+ VIEWPORT-RESIZE-R2（DPI 逻辑/物理尺寸错配修复）逐项收口表；已验证清单（首帧 Present、蓝灰覆盖、Resize 恢复、详情栏不慢半拍、日志单出口、双项目 0W0E、全 .cs ≤100）；长期硬规则（Bounds 逻辑尺寸 / Win32+Surface 物理像素 / physical=round(logical×DPI) / Render.Vulkan 不引用 Avalonia / UI 不接触 Silk.NET.Vulkan）；已知债务与下一阶段指向。
+- `docs/rz-vk5-plan.md`  # VK5 最小几何渲染规划（只规划不实装）：从「单色清屏」进入「最小图元渲染」，先画固定三角形/测试图元，不接场景/相机/网格/材质/Gizmo。分阶段 VK5-A（Shader+Pipeline）/ VK5-B（gl_VertexIndex 画固定三角形，暂不建 VertexBuffer）/ VK5-C（viewport/scissor 动态状态同步 extent，Resize 不重建 Pipeline）/ VK5-D（Clear/Draw 职责收进清晰 RenderPass/FrameRenderer 边界，不进场景系统）；资源创建/释放顺序、文件结构、12 条红线、逐阶段验收、SVG 规划图。
+
+### 更新
+- `changelog.md` / `file-tree.md` 同步登记两份新文档。
+
+红线：本轮不触碰任何代码；VK5 第一步不是场景渲染，而是「固定三角形 / 最小 Pipeline / 最小 Draw」；规划通过后再开 VK5-A 实装。
+
+## v0.2.6.7-vk 正式收口确认（2026-07-09）
+- 原历史编号：VK4-D
+
+VK4-D（最小 Clear+Present 单色清屏闭环）经三轮收口全部完成：VK4-D-R3（Render.Vulkan 侧 OutOfDate 优雅降级 + Resize 日志顺序 + 物理像素诚实日志）、VIEWPORT-RESIZE-R1（Editor.UI 日志详情栏切换后布局稳定主动同步最终尺寸）、VIEWPORT-RESIZE-R2（修正 R1 的 DPI 错配，物理像素 = round(逻辑×DPI)）。双项目均 0 warning / 0 error，全 .cs ≤100。
+
+运行态验收（用户真机，2026-07-09）：
+1. 蓝灰铺满整个 NativeHost 区域，不再半屏黑。✅
+2. 打开/关闭日志详情栏立即同步，不慢半拍。✅
+3. Win32 子窗口物理尺寸 = 逻辑尺寸 × DPI（DPI=1.75 时 713×188 → 1248×330）。✅ R2 修复。
+4. Swapchain / Framebuffer extent 与 Win32 子窗口物理尺寸一致。✅ R3 同源物理像素。
+5. 无闪退 / 未响应。✅ VK4-D-R2 已修后台线程日志回调线程派发导致闪退。
+6. 关闭释放顺序：Present 泵停止 → ClearFrame 释放 → Swapchain 释放 → LogicalDevice 释放 → Surface 释放 → Instance 销毁 → 分离完成。✅（VK4-D-R3 真机验证；R2 未触碰 Release 路径，释放顺序不变；建议收口后跑一次关闭日志做最终确认。）
+
+结论：VK4-D 正式收口。下一阶段：VK4-D 收口文档归档 / VK5 规划（场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加，均不在 VK4-D 红线内）。
+
+红线全程守住：不进场景渲染；Resize 不重建 Surface/Instance/Device/Queue；Editor.UI 不接触 Silk.NET.Vulkan；日志单出口；全 .cs ≤100。
+
+## v0.2.6.6-fix 修复 R1 的 DPI 错配：Win32 子窗口 Resize 必须收物理像素（2026-07-09）
+- 原历史编号：VIEWPORT-RESIZE-R2
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D-R3 + VIEWPORT-RESIZE-R1 后用户真机验收，R1 解决了「慢半拍」，但引入更关键的 DPI 尺寸错配。R1 的 `VulkanNativeHost.LayoutSync.SyncFinalSize` 把 Avalonia `Bounds` 的**逻辑尺寸**（713×188）直接当物理像素喂给 `Win32ViewportHost.Resize`（裸 `SetWindowPos`，不乘 DPI），把子 HWND 缩成逻辑尺寸；探针日志显示 `Win32子窗口=713x188`、`Surface CurrentExtent=713x188`，蓝灰画面只占左上角，右侧/下方露黑。真因：`Bounds` 是逻辑像素，Win32/Vulkan 要物理像素；R1 少了 `×DPI` 换算、绕过了 Avalonia 本来的 DPI 感知摆放。
+状态：已收口。双项目 0W0E，全 .cs ≤100；2026-07-09 用户真机验收通过（蓝灰覆盖整个 NativeHost 可视区、逻辑×DPI≈目标物理≈Win32子窗口≈Surface CurrentExtent）。
+
+### 修复点（Editor.UI 侧，VIEWPORT-RESIZE-R2）
+1. **`SyncFinalSize` 物理像素换算**：`Bounds` 逻辑尺寸先 `physical = max(1, round(logical × GetDpiScale()))`，`Win32ViewportHost.Resize(_hwnd, physicalW, physicalH)` 收**物理像素**；`_bridge.Resize(logicalW, logicalH)` 仍收逻辑尺寸（供日志与请求尺寸，Render.Vulkan 侧最终用 `caps.CurrentExtent` 建 Swapchain，与 VK4-D-R3 同源）。
+2. **探针补「目标物理」字段**：`LogNativeHostProbe` 现输出「日志详情栏；逻辑；DPI；目标物理=CWxCH；Win32子窗口=AWxAH」与 detail「逻辑×DPI≈…；目标物理=…；子窗口实际=…」；验收必须看到 `目标物理≈1248x330` 且 `Win32子窗口≈1248x330`，若仍 `713x188` 即未修好。
+3. **`_resizer.Cancel()` 仍保留**：布局稳定后主动同步立即取消待处理的 250ms Coalescer，避免重复重建；拖动窗口仍走 `OnSizeChanged → NativeHostResizeCoalescer`（高频合并），互不干扰。
+
+### 红线守住（均未触碰）
+- 不新增场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加。
+- 不修改日志 UX（LOG-UX 自动滚动 / 多选复制保持）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型（仅动 Win32 `user32` P/Invoke 与 Avalonia 调度）。
+- 不重建 Surface / Instance / LogicalDevice / Queue（Resize 只到 HWND + Swapchain/Framebuffer 重建）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge。
+- 全 .cs ≤100：`VulkanNativeHost.cs` 98 / `VulkanNativeHost.LayoutSync.cs` 49 / `Win32ViewportHost.cs` 67 / `ViewportNativeHostRoute.cs` 18 / `UiVm.NativeHostLifecycle.cs` 38。
+
+### 验收
+1. 启动不闪退、不未响应。
+2. 蓝灰覆盖整个 NativeHost 可视区，不再半屏黑。
+3. 打开/关闭日志详情栏，视口立即同步，不慢半拍。
+4. 探针日志：逻辑×DPI ≈ 目标物理 ≈ Win32子窗口 ≈ Surface CurrentExtent（DPI=1.75 时 713×188 → 1248×330）。
+5. Resize 不重建 Surface / Instance / Device / Queue；控制台日志不重复。
+
+## v0.2.6.5-fix Editor.UI 日志详情栏展开/收起后 NativeHost 最终尺寸主动同步（2026-07-09）
+- 原历史编号：VIEWPORT-RESIZE-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D-R3 后用户真机验收，OutOfDate 刷屏已止，但「半屏蓝灰、下半黑」仍在；日志证明 Swapchain/Framebuffer/RenderArea 已同源物理像素（Surface CurrentExtent=1248x961 = 713x549×1.75 DPI）。根因转向 Editor.UI：日志详情栏展开/收起是低频离散布局变化，但 Vulkan Swapchain 重建只走 250ms Coalescer，导致 Present 泵停（OutOfDate）后等 250ms 才重建，旧小 Swapchain 帧停在顶部、下方黑；且离散变化可能不被 Coalescer 及时捕获。
+状态：修复完成，双项目 0W0E，全 .cs ≤100。待用户真机验收「蓝灰覆盖整个 NativeHost 可视区、不再半屏黑；关闭日志详情栏视口立即恢复不慢半拍；逻辑×DPI 与 Surface CurrentExtent 对齐」。
+
+### 修复点（Editor.UI 侧，VIEWPORT-RESIZE-R1）
+1. **日志详情栏切换不等 Coalescer，布局稳定后立即同步最终尺寸（修法 A/C）**：`VulkanNativeHost` 改为 `partial`，新增 `VulkanNativeHost.LayoutSync.cs`；在 `DataContextChanged` 时订阅 `UiVm.IsLogOpen` 的 `PropertyChanged`，变化后以 `Dispatcher.UIThread.InvokeAsync(SyncFinalSize, DispatcherPriority.Render)` 调度——等布局稳定后读 `Bounds` 最终值，立即 `Win32ViewportHost.Resize` + `_bridge.Resize(w, h)`，并先 `_resizer.Cancel()` 取消待处理的 250ms debounce，避免重复重建。拖动窗口仍走 `OnSizeChanged → NativeHostResizeCoalescer`（高频合并），互不干扰。
+2. **中文探针核对四者对齐**：`SyncFinalSize` 经 `ViewportNativeHostRoute.ReportProbe` → `UiVm.LogNativeHostProbe` 打印「日志详情栏=展开/收起；逻辑=WxH；Win32子窗口=CWxCH；DPI」与「逻辑×DPI≈…；子窗口物理=…」，与 Render.Vulkan 侧已有的「Surface CurrentExtent / Swapchain chosen extent / Framebuffer extent」交叉核对：Avalonia 逻辑尺寸 × DPI ≈ Win32 子窗口物理尺寸 ≈ Surface CurrentExtent ≈ Swapchain/Framebuffer extent。
+3. **Win32 子窗口真实尺寸可读**：`Win32ViewportHost` 新增 `GetClientSize(hwnd)`（P/Invoke `GetClientRect` + `RECT`），供探针取子窗口物理像素。
+
+### 红线守住（均未触碰）
+- 不新增场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加。
+- 不修改日志 UX（LOG-UX 自动滚动 / 多选复制保持）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型（本轮仅动 Win32 `user32` P/Invoke 与 Avalonia 调度，未引入 Vulkan 类型；遗留的 `VulkanClearSession.cs` 属死代码、非活跃链路，本轮不动）。
+- 不重建 Surface / Instance / LogicalDevice / Queue（Resize 只到 HWND + Swapchain/Framebuffer 重建）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge。
+- 全 .cs ≤100：`VulkanNativeHost.cs` 99 / `VulkanNativeHost.LayoutSync.cs` 38 / `Win32ViewportHost.cs` 67 / `ViewportNativeHostRoute.cs` 18 / `UiVm.NativeHostLifecycle.cs` 40。
+
+### 关键实现细节
+- `SyncFinalSize` 读取的 `Bounds` 为 Avalonia 逻辑像素；`_bridge.Resize(w, h)` 传入逻辑尺寸，Render.Vulkan 侧 `VulkanSwapchainOwner.Recreate` 用 `caps.CurrentExtent`（HWND 真实物理像素）建 Swapchain，故 extent 始终以物理像素为准，与 VK4-D-R3 同源。
+- `DispatcherPriority.Render` 确保 `SyncFinalSize` 在布局 pass 完成后运行，读到最终 `Bounds`；若布局仍微抖，Coalescer 作为兜底会在末次 `OnSizeChanged` 后 250ms 再同步一次（冗余但无害）。
+- `HookLayoutSync`/`UnhookLayoutSync` 用 `_layoutSyncHooked` 守卫避免重复订阅；`OnDetachedFromVisualTree`/`DestroyNativeControlCore` 中 `UnhookLayoutSync()` 防泄漏。
+
+### 验收
+1. 启动不闪退、不未响应。
+2. 蓝灰覆盖整个 NativeHost 可视区，不再半屏黑。
+3. 关闭日志详情栏，视口立即恢复，不慢半拍。
+4. 打开日志详情栏，视口缩小正常。
+5. 日志显示「布局同步探针」：逻辑×DPI ≈ Win32 子窗口 ≈ Surface CurrentExtent。
+6. Resize 不重建 Surface / Instance / Device / Queue；控制台日志不重复。
+
+## v0.2.6.4-fix Present 泵 OutOfDate 降级 + Resize 日志顺序 + 物理像素诚实日志（2026-07-09）
+- 原历史编号：VK4-D-R3
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D-R2 收口后用户真机验收发现（1）蓝灰清屏只覆盖上半部分（半屏）；（2）`QueuePresent` 反复返回 `ErrorOutOfDateKhr` 刷屏；（3）日志详情栏展开/收起后 NativeHost 视口尺寸同步慢半拍；（4）Resize 时序竞争。用户给出两阶段方案：VK4-D-R3（Render.Vulkan 侧）修 ①②，VIEWPORT-RESIZE-R1（Editor.UI 侧）修 ③。
+状态：VK4-D-R3 修复完成，双项目 0W0E，全 .cs ≤100（VulkanPresentLoop 99 / VulkanRenderSession 59 / VulkanSwapchainOwner 88 / VulkanSwapchainCapabilities 81 / VulkanSwapchainLogFormatter 15 / VulkanClearFrameLogFormatter 17）；待用户真机验收「全区域蓝灰不再半屏 + Resize 单次重建 + OutOfDate 不再反复刷 + 关闭/打开日志详情栏后视口立即同步」。VIEWPORT-RESIZE-R1 尚未开始。
+
+### 修复点（Render.Vulkan 侧，VK4-D-R3）
+1. **OutOfDate 优雅降级（不再刷屏）**：`VulkanPresentLoop.Run` 中 `QueuePresent` 返回 `ErrorOutOfDateKhr` 时，仅在首次（`_outOfDateLogged` 守卫）记录一次 `【VulkanClearFrame】Swapchain 已过期，暂停 Present，等待 Resize 重建`，随后 `break` 退出 Present 泵；不再当作错误反复刷屏并 break。新增字段 `_outOfDateLogged`，`Start()` 重置为 false。
+2. **Acquire 的 OutOfDate 仍 sleep continue**：`AcquireNextImage` 返回 `ErrorOutOfDateKhr` 保持 `Thread.Sleep(1); continue;` 等下次 Resize 重建（与 VK4-D-R1 一致，不当失败）。
+3. **Resize 日志顺序收口**：`VulkanRenderSession.Resize` 改为 `Stop 泵 → Swapchain Recreate → RebuildFramebuffers → 记 Rebuilt（用 _swapchainOwner.Extent 物理像素）→ Start 泵`，确保「Framebuffer 重建成功」日志在「泵启动」之前，且 extent 来源统一为物理像素。
+4. **物理像素诚实日志**：`VulkanSwapchainCapabilities.Query` 能力日志同时打印「请求逻辑尺寸 / Surface CurrentExtent（物理像素）/ 选择 extent（物理像素）」；`VulkanSwapchainLogFormatter.Created/Recreated` 与 `VulkanClearFrameLogFormatter.Rebuilt` 改收 `Extent2D` 打印「（物理像素）」；`VulkanSwapchainOwner` 创建/重建改传实际 `_extent`。
+
+### 关于「半屏蓝灰」的判断
+- 经核对：`VulkanSwapchainOwner._extent`（= `caps.CurrentExtent` 物理像素）、`VulkanClearFrameOwner` 的 Framebuffer/RenderPass/RenderArea 均以此 `Extent2D` 为唯一来源，三者同源。用户方案中「Framebuffer 用逻辑尺寸」的假设在代码中不成立，故本阶段不盲改已正确的 extent 统一，只通过诚实日志让半屏真因在真机运行日志中暴露，交由 VIEWPORT-RESIZE-R1 视 probe 结果决定。
+
+### 严禁（均未触碰）
+- 不新增场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加 / 持续动画。
+- 不修改日志 UX（LOG-UX 成果保持）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型（VK4-D-R3 仅动 Render.Vulkan）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge（Bridge 83 行仅委托）。
+
+### 关键实现细节
+- `Result.SuboptimalKhr` 仍是成功码（`res != Success && res != SuboptimalKhr` 才判失败）；`ErrorOutOfDateKhr` 反映 Swapchain 过期，需重建而非当错误。
+- `Stop()` 局部捕获 `_thread` 引用（`var t = _thread;`），避免 Join 后外部置 null 造成 NRE。
+- 日志单出口：`VulkanClearFrameLogFormatter` 纯文本格式器，经 Bridge `Emit` 统一输出；新增 `OutOfDatePaused()` 走同一通道。
+
+### 验收
+1. XuanYu.Render.Vulkan 0 warning / 0 error。
+2. XuanYu.Editor.UI 0 warning / 0 error（VK4-D-R3 未动 Editor.UI）。
+3. 所有 .cs 文件 ≤100 行（VulkanPresentLoop 99 / VulkanRenderSession 59 / VulkanSwapchainOwner 88 / VulkanSwapchainCapabilities 81 / VulkanSwapchainLogFormatter 15 / VulkanClearFrameLogFormatter 17）。
+4. 真机：全区域蓝灰不再半屏（以物理像素 extent 日志核对）。
+5. 真机：Resize 一次只重建一次 Swapchain；日志顺序「Framebuffer 重建成功」在「Present 泵已启动」之前。
+6. 真机：OutOfDate 不再反复刷屏，仅记一次「Swapchain 已过期，暂停 Present」。
+7. 关闭时释放顺序正确（ClearFrame→Swapchain→Device→Surface→Instance）。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.6.3-fix Present 泵后台线程日志回调线程派发修复（2026-07-09）
+- 原历史编号：VK4-D-R2
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D-R1 修复后用户真机启动即闪退，退出码 -532462766；异常为 `System.InvalidOperationException: The calling thread cannot access this object because a different thread owns it`，堆栈指向 `XuanYu.Editor.UI.VulkanNativeHost.<OnAttachedToVisualTree>b__6_0` 访问 `DataContext` 时崩溃，该日志来自 `VulkanPresentLoop.Run` 独立后台线程。
+根因：VK4-D 引入独立 Present 线程后，PresentLoop 后台线程经 `VulkanBridgeLogFormatter.Emit` → `VulkanNativeHostSurfaceBridge.Emit` → 回调 `msg => ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg)` 直接访问 Avalonia `DataContext`（仅 UI 线程可访问），Avalonia 抛异常未处理，进程闪退。
+状态：修复完成，双项目 0W0E，全 .cs ≤100（VulkanNativeHost 95 / VulkanPresentLoop 96）；待用户真机验收「启动不闪退 + 首帧 Present 成功 + 蓝灰清屏 + Resize 单次重建」。
+
+### 修复点
+1. **日志回调线程安全入口**：`VulkanNativeHost.cs` 把原内联回调 `msg => ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg)` 改为方法 `ReportVulkanMessage`；内部 `Dispatcher.UIThread.CheckAccess()` 判断——UI 线程直接调用 `ReportVulkanMessageOnUiThread`，非 UI 线程经 `Dispatcher.UIThread.Post(...)` 切回 UI 线程后再访问 `DataContext` / `UiVm` / 日志集合。新增 `using Avalonia.Threading;`。
+2. **Present 泵日志防御**：`VulkanPresentLoop.Log` 由 `_log?.Invoke(m)` 改为 `try { _log?.Invoke(m); } catch { }`，后台线程日志回调异常被吞掉，绝不终止 Present 泵或炸进程（第二层保护）。
+
+### 严禁（均未触碰）
+- 不新增渲染能力：未改 RenderPass / Framebuffer / CommandBuffer / Present / Swapchain Resize 逻辑。
+- 不修改日志 UX（LOG-UX 成果保持）。
+- 不让 Render.Vulkan 引用 Avalonia：线程派发全部落在 Editor.UI 的 `VulkanNativeHost.cs`；`VulkanPresentLoop` 仅 `try/catch` 包裹 `Action<string> log` 调用，不引用任何 Avalonia 类型。
+- Bridge 不膨胀（仍 83 行仅委托）。
+
+### 关键实现细节
+- 日志回调契约仍为 `Action<string> log`；契约不变，仅消费方（Editor.UI）保证线程安全。
+- Emit 单出口不变：`VulkanBridgeLogFormatter.Emit` 仍先 `log?.Invoke` 后 `Console.WriteLine`；UI 集合更新经 Dispatcher 在 UI 线程发生，与控制台输出并行不悖。
+- 控制台单出口、日志不重复、无种子日志：均保持。
+
+### 验收
+1. XuanYu.Render.Vulkan 0 warning / 0 error。
+2. XuanYu.Editor.UI 0 warning / 0 error。
+3. 所有 .cs 文件 ≤100 行（VulkanNativeHost 95 / VulkanPresentLoop 96）。
+4. run.bat 启动不闪退，不再出现 "The calling thread cannot access this object"。
+5. 控制台出现 "Present 泵已启动（独立线程）"。
+6. 控制台出现 "首帧 Present 成功"。
+7. 视口变成明显蓝灰色（0.25/0.45/0.70）。
+8. Resize 后只重建一次 Swapchain。
+9. 关闭时释放顺序正确（ClearFrame→Swapchain→Device→Surface→Instance）。
+10. Vulkan 日志不重复，旧种子日志不出现。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.6.2-fix Clear + Present 运行审计与 Resize 去重（2026-07-09）
+- 原历史编号：VK4-D-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+前提：VK4-D 初版实装后，用户真机发现（1）视口仍为黑色，（2）一次 Resize 触发两次 Swapchain 重建。
+状态：修复完成，双项目 0W0E，全 .cs ≤100；待用户真机验收「单色清屏画面 + Resize 单次重建 + 首帧 Present 成功日志」。
+
+### 修复点
+1. **Resize 去重**：`VulkanNativeHostSurfaceBridge.Resize` 不再直接调用 `_swapchainOwner?.Recreate`，只转发 `_renderSession?.Resize(width, height)`；统一入口在 `VulkanRenderSession.Resize`：Stop pump → Swapchain recreate → Rebuild Framebuffers → Start pump。
+2. **首帧 Present 可观测**：`VulkanPresentLoop` 成功完成第一次 `QueuePresent` 后，输出一次 `【VulkanClearFrame】首帧 Present 成功；imageIndex=...`，不每帧刷屏。
+3. **Present 错误可见**：`AcquireNextImage` / `QueuePresent` 返回非成功/非 `SuboptimalKhr` 时，输出中文错误日志。
+4. **修正 `SuboptimalKhr` 处理**：`AcquireNextImage` 返回 `SuboptimalKhr`（成功码）不再被误判为失败并退出 Present 泵；`ErrorOutOfDateKhr` 则 sleep 后继续，等下次 Resize 重建。
+5. **clear 颜色更明显**：由 0.10/0.30/0.45 改为 0.25/0.45/0.70 蓝灰，便于肉眼区分黑屏与清屏。
+
+### 严禁（均未触碰）
+- 不做场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加 / 持续动画。
+- 不修改日志 UX（LOG-UX 成果保持）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge（Bridge 83 行仅委托）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型。
+
+### 关键实现细节
+- Present 泵独立后台 `Thread(IsBackground)`；Detach/Resize 先 `Stop()`（Join 2000ms）再释放/重建资源。
+- 单 in-flight 帧 + 单 Fence；`_submitted` 守卫避免首帧 `WaitForFences` 空等。
+- `KhrSwapchain` 方法名无 KHR 后缀：`AcquireNextImage` / `QueuePresent`。
+- `using Semaphore = Silk.NET.Vulkan.Semaphore` 消除 `System.Threading.Semaphore` 歧义。
+
+### 验收
+1. XuanYu.Render.Vulkan 0 warning / 0 error。
+2. XuanYu.Editor.UI 0 warning / 0 error。
+3. 所有 .cs 文件 ≤100 行。
+4. 编辑器启动不未响应。
+5. 视口从黑色变为明显单色。
+6. 控制台出现 `首帧 Present 成功`。
+7. 一次 Resize 只出现一次 Swapchain 重建。
+8. Resize 后单色画面恢复。
+9. Detach 顺序正确。
+10. Vulkan 日志不重复，旧种子日志不出现。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.6.1-vk 最小 Clear + Present 单色清屏闭环（D1+D2+D3 同轮）(2026-07-09)
+- 原历史编号：VK4-D
+
+分支：fix/RZ-VK3-A-surface-contract
+依据：docs/rz-vk4-d-plan.md（用户已认可并批准实装）
+状态：初版实装完成，VK4-D-R1 修复后待验收「单色清屏画面」。
+
+### 目标（最小单色清屏）
+1. 黑屏 → 单色背景（clear 颜色 0.10/0.30/0.45/1.0 蓝）。✅ 实装
+2. RenderPass + Framebuffer。✅ D1
+3. CommandPool + CommandBuffer + 静态 clear 录制。✅ D2
+4. Semaphore/Fence + AcquireNextImage → QueueSubmit → QueuePresent。✅ D3
+5. Present 泵必须独立后台线程，不阻塞 UI 线程。✅ D3（Thread + IsBackground）
+6. 引入薄 VulkanRenderSession 组合根，Bridge 只委托。✅ Session
+7. Resize 只重建 Framebuffers（RenderPass/CP/CB/Sync 不动）。✅
+8. OUT_OF_DATE/SUBOPTIMAL 当帧不强行 Present，交下次 Resize 重建。✅（loop continue）
+9. Detach 顺序 ClearFrame → Swapchain → LogicalDevice → Surface → Instance。✅
+
+### 严禁（均未触碰）
+- 不做场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加 / 持续动画。
+- 不修改日志 UX（LOG-UX 成果保持）。
+- 不把 RenderPass/CommandBuffer/PresentLoop 塞进 Bridge（Bridge 84 行仅委托）。
+- 不让 Editor.UI 直接接触 Silk.NET.Vulkan 类型。
+
+### 关键实现细节
+- 每 Swapchain 图像一张 CommandBuffer，clear 命令录制一次；Resize 重建 Framebuffer 后重录。
+- 单 in-flight 帧 + 单 Fence：`_submitted` 守卫避免首帧 WaitForFences 空等 1s。
+- Acquire 用指针重载（`&idx`），仅 CommandBuffer[] 用 `fixed` 钉住；其余栈本地 `&` 直接取址。
+- `KhrSwapchain` 方法名无 KHR 后缀（Silk.NET.Vulkan 2.22.0）：`AcquireNextImage` / `QueuePresent`。
+- `SampleCountFlags.Count1Bit`、`ImageLayout.PresentSrcKhr`、`StructureType.PresentInfoKhr`、`ClearColorValue.Float32_0..3`。
+- `using Semaphore = Silk.NET.Vulkan.Semaphore` 消除与 `System.Threading.Semaphore` 歧义。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.5.1-vk Swapchain 生命周期规划（只规划不实装）(2026-07-08)
+- 原历史编号：VK4-C-Plan
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：VK4-C-Plan（仅文档，不写 Vulkan 实装代码）
+
+### 背景
+VK4-A / VK4-A-R1 / VK4-B / VK4-B-R1 全部完成，VK4-B 正式完全收口（Detach 顺序 `LogicalDevice → Surface → Instance` 已运行时验证）。LOG-UX-1 保留，LOG-UX-2 已回退删除。当前链路停在 LogicalDevice + Graphics/Present Queue，仍黑屏（Swapchain 未接）。
+
+### 目标（只规划 Swapchain + Images + ImageViews）
+1. VK4-C 只创建 `VkSwapchainKHR` + Swapchain Images + ImageViews。 ✅ 规划
+2. 不创建 `RenderPass`。 ✅ 红线
+3. 不创建 `Framebuffer`。 ✅ 红线
+4. 不创建 `CommandPool` / `CommandBuffer`。 ✅ 红线
+5. 不 `Clear`、不 `Present`。 ✅ 红线（仍黑屏为预期）
+6. Resize 只重建 Swapchain + ImageViews。 ✅ 规划
+7. Resize 不重建 Surface / Instance / LogicalDevice / Queue。 ✅ 红线
+8. Dispose 顺序必须为 `ImageViews → Swapchain → LogicalDevice → Surface → Instance`。 ✅ 硬约束
+9. Bridge 不再膨胀，Swapchain 进入独立 owner / attach step。 ✅ 约束（Bridge 已接近 100 行红线）
+10. `VulkanDeviceOwner` 不增加职责。 ✅ 约束
+11. 所有新增 .cs ≤100 行。 ✅ 约束
+12. UI 不接触 `Silk.NET.Vulkan` 类型。 ✅ 约束
+13. 不复制 `VulkanClearSession` 旧探针路径。 ✅ 约束
+
+### 规划要点（详见 docs/rz-vk4-c-swapchain-plan.md）
+- 新增 `XuanYu.Render.Vulkan/Swapchain/` 子目录（目标 3 文件）：`VulkanSwapchainCapabilities.cs`（查 caps/format/present mode/extent，输出纯数据）、`VulkanSwapchainOwner.cs`（建 Swapchain+Images+ImageViews，Dispose 先 ImageView 后 Swapchain）、`VulkanSwapchainLogFormatter.cs`（中文日志）。
+- 新增 `Bridge/VulkanBridgeSwapchainAttachStep.cs`：在「选择 step → 设备 step」之后链式驱动 Swapchain 创建；前置失败只跳过、不崩。
+- Attach 扩展：`... → LogicalDevice → Swapchain → ImageViews`；Detach 扩展：`ImageViews → Swapchain → LogicalDevice → Surface → Instance`。
+- Resize：Bridge 现有 Resize 入口转发 `_swapchainOwner?.Recreate(newExtent)`，仅重建 Swapchain+ImageViews，跳过 0 尺寸 / 重复尺寸。
+
+### 红线校验（本轮）
+- 无代码改动；`git diff` 仅 `docs/rz-vk4-c-swapchain-plan.md`（新增）+ `changelog.md` + `file-tree.md`。
+- 不构建（仅文档，依指令「如果动了代码则必须 build 0W0E」不适用）。
+
+### 下一步
+规划通过后开 `VK4-C`（Swapchain + ImageViews 实装）→ `VK4-C-R1`（Resize 重建 Swapchain 审计）→ `VK4-D`（ClearFrame 出画面）。**当前不进 VK4-C 实装。**
+
+## v0.2.5.2-vk Swapchain + Images + ImageViews 实装（2026-07-08）
+- 原历史编号：VK4-C
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：VK4-C（Swapchain + Swapchain Images + ImageViews 实装，仍不出画面）｜状态：代码完成，待 VK4-C-R1 运行验证，未完全收口；VK4-D 暂缓。
+
+### 背景
+VK4-C-Plan 审计通过（只规划 Swapchain+Images+ImageViews，不建 RenderPass/Framebuffer/CommandPool/CommandBuffer、不 Clear/Present）。按用户拍板「开 VK4-C 实装，继续压边界」推进。当前链路停在 LogicalDevice + Graphics/Present Queue，仍黑屏。
+
+### 目标（逐条对照规划）
+1. 只创建 `VkSwapchainKHR` + Swapchain Images + ImageViews。 ✅
+2. 不创建 `RenderPass` / `Framebuffer` / `CommandPool` / `CommandBuffer`。 ✅ 红线（grep 仅注释命中）
+3. 不 `Clear`、不 `Present`。 ✅ 红线（仍黑屏为预期）
+4. Resize 只重建 Swapchain + ImageViews。 ✅（`VulkanNativeHostSurfaceBridge.Resize` 转发 `_swapchainOwner?.Recreate(width,height)`）
+5. Resize 不重建 Surface / Instance / LogicalDevice / Queue。 ✅
+6. Dispose 顺序 `ImageViews → Swapchain → LogicalDevice → Surface → Instance`。 ✅（`VulkanNativeHostSurfaceBridge.Detach` 首行 `_swapchainOwner?.Dispose()`）
+7. Bridge 不再膨胀：Swapchain 进独立 owner / attach step，Bridge 仅 98 行（接近 100 红线，未增 Swapchain 逻辑）。 ✅
+8. `VulkanDeviceOwner` 不增加职责（仍仅 `CreateDevice` / `GetQueue` / `DisposeDevice`）。 ✅
+9. 所有新增 .cs ≤100 行。 ✅（最大 Bridge 98）
+10. UI 不接触 `Silk.NET.Vulkan` 类型（`XuanYu.Editor.UI` 零改动，仅随 Render.Vulkan 编译）。 ✅
+11. 不复制 `VulkanClearSession` 旧探针路径。 ✅
+
+### 新增文件（XuanYu.Render.Vulkan/Swapchain/，4 文件）
+- `VulkanSwapchainCapabilities.cs`（80 行）：`Query` 查 Surface caps / formats / present modes / extent；`ChooseFormat` 优先 B8G8R8A8+SRGB、`ChoosePresentMode` 优先 MailboxKhr 否则 FifoKhr、`ChooseExtent` 处理 0/MaxValue；输出 `SwapchainCaps` record + `VulkanSwapchainCapabilitiesResult` record。
+- `VulkanSwapchainBuilder.cs`（74 行）：`Build` 串 Query→CreateSwapchain→GetSwapchainImages→CreateImageViews；`CreateSwapchain` 用 `SwapchainCreateInfoKHR`（ColorAttachmentBit / OpaqueBitKhr / SpaceSrgbNonlinearKhr）；`CreateImagesAndViews` 循环建 `ImageViewCreateInfo`（ColorBit）并 `vk.CreateImageView`。
+- `VulkanSwapchainOwner.cs`（77 行）：`Create(vk, instance, deviceOwner, surface, physicalDevice, width, height, log)` 经 `vk.TryGetDeviceExtension(instance, deviceOwner.LogicalDevice, out KhrSwapchain? khr)`；`Recreate(width,height)` 调 Builder 后 DestroyImagesAndViews 再赋值；`Dispose` 先 ImageView 后 Swapchain；不建 RenderPass 等。
+- `VulkanSwapchainLogFormatter.cs`（13 行）：`Creating/Created(views)/Recreating/Recreated(w,h,views)/Disposed/Skipped/Failed` 中文格式器。
+
+### 新增文件（XuanYu.Render.Vulkan/Bridge/，1 文件）
+- `VulkanBridgeSwapchainAttachStep.cs`（32 行）：`Run(vk, instance, deviceOwner, surface, selection, width, height, log)` 在设备 step 后链式驱动 `VulkanSwapchainOwner.Create`；前置 null/Success 检查跳过。
+
+### 改写文件
+- `VulkanNativeHostSurfaceBridge.cs`（98 行）：新增 `using ...Swapchain`；字段 `_swapchainOwner`；`Attach` 串「选择→设备→Swapchain」；`Resize` 加 `_swapchainOwner?.Recreate(width,height)`；`Detach` 首行 `_swapchainOwner?.Dispose()`；`Emit` 改调 `VulkanBridgeLogFormatter.Emit(_log, message)`。
+- `VulkanBridgeLogFormatter.cs`（35 行）：新增 `public static void Emit(Action<string>? log, string message) { log?.Invoke(message); Console.WriteLine(message); }`，原 Bridge 内联 Emit 逻辑迁出。
+
+### 关键 API 坑（Silk.NET.Vulkan 2.22.0 真实成员名，经反射确认）
+- `KhrSurface` 方法无 `KHR` 后缀：`GetPhysicalDeviceSurfaceCapabilities` / `GetPhysicalDeviceSurfaceFormats` / `GetPhysicalDeviceSurfacePresentModes`。
+- 枚举成员均带 `_Khr` 或同义短名：`ImageUsageFlags.ColorAttachmentBit`、`ColorSpaceKHR.SpaceSrgbNonlinearKhr`、`PresentModeKHR.MailboxKhr` / `FifoKhr`、`CompositeAlphaFlagsKHR.OpaqueBitKhr`、`ImageAspectFlags.ColorBit`。
+- `Vk.TryGetDeviceExtension<T>` 需 4 参数：`(Instance, Device, out T, string?)`。
+- 弃用成员（`*_Khr` 旧名）改用非弃用短名，达成两项目 0W0E（0 警告 0 错误）。
+
+### 验收
+- `XuanYu.Render.Vulkan` 构建 0W0E；`XuanYu.Editor.UI` 构建 0W0E（零改动，仅随依赖编译）。
+- 红线 grep：RenderPass / Framebuffer / CommandPool / CommandBuffer / Clear / Present 仅注释命中，无实装。
+- 全部 .cs ≤100 行（最大 Bridge 98）。
+
+### 下一步
+- `VK4-C-R1`（Resize 重建 Swapchain 审计）：核对 `Recreate` 不重建 Surface/Instance/Device/Queue、`DestroyImagesAndViews` 顺序、异常路径资源不泄漏；严禁顺手推进 VK4-D。
+- 用户真机运行时验证：启动→Swapchain 创建成功日志→Resize 重建→关闭 Detach 顺序（ImageViews→Swapchain→LogicalDevice→Surface→Instance）；仍黑屏为预期（ClearFrame 在 VK4-D）。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.5.3-fix 启用 VK_KHR_swapchain + 0 尺寸跳过 + 格式暴露（2026-07-08）
+- 原历史编号：VK4-C-Fix
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：VK4-C 运行前置修正（非新渲染能力；仍不出画面；VK4-D 暂缓）
+
+### 背景（审计发现）
+用户审计 VK4-C 指出最大运行时风险：`VK_KHR_swapchain` 设备扩展可能未启用。静态核查 `VulkanDeviceOwner.Create` 确认 `DeviceCreateInfo` 未设置 `EnabledExtensionCount` / `PpEnabledExtensionNames` —— 编译过、扩展函数拿得到，但运行时 `CreateSwapchainKHR` 会失败。这是 VK4-C 必须补的运行缺口，非 VK4-D 问题。
+
+### 修正（逐条）
+1. `VulkanDeviceOwner.Create` 新增 `requiredDeviceExtension` 参数，创建 `DeviceCreateInfo` 时启用该设备扩展（`EnabledExtensionCount=1` + `PpEnabledExtensionNames` 指向 null 结尾的扩展名）。**扩展名由调用方传入**（当前 `VulkanSwapchainOwner.DeviceExtensionName = "VK_KHR_swapchain"`），DeviceOwner 不自带 swapchain 知识，守住「DeviceOwner 不增 Swapchain 职责」。DeviceOwner 96→99 行（≤100）。
+2. 扩展名穿程：`VulkanSwapchainOwner.DeviceExtensionName` → `VulkanBridgeDeviceAttachStep.Run(..., requiredDeviceExtension)` → `VulkanDeviceOwner.Create`；`VulkanNativeHostSurfaceBridge.Attach` 调设备 step 时传入。`Bridge` 98 行不变（仅多一个实参）。
+3. `VulkanSwapchainOwner.Recreate` 新增 0 尺寸跳过：`width<=0 || height<=0` 时记 `Skipped` 日志并 return，不重建、不崩溃（R1 #8）。初始 `Create` 不改（启动窗口必有有效尺寸；`ChooseExtent` 已夹取下限）。
+4. `VulkanSwapchainOwner` 暴露只读信息：`Format` / `Extent` / `ImageViews`（ReadOnlySpan<ImageView>），供 VK4-D 建 RenderPass/Framebuffer 直接使用，免反查。Owner 77→86 行（≤100）。`VulkanSwapchainBuilder.Build` 返回元组追加 `Format` / `Extent`（74→74，未增行）。
+
+### 红线校验
+- 未建 RenderPass / Framebuffer / CommandPool / CommandBuffer、未 Clear / Present（仍黑屏为预期）。✅
+- UI 零改动；`XuanYu.Editor.UI` 仅随依赖编译。✅
+- 全 .cs ≤100（最大 DeviceOwner 99）。✅
+- 两项目 0W0E。✅
+- 仍非「完全收口」：上述为代码修正，运行时需 VK4-C-R1 真机验证（Swapchain 创建成功 / Resize 重建 / Detach 顺序）。
+
+### 下一步
+- `VK4-C-R1`：运行验证（见 `docs/rz-vk4-c-r1-audit-plan.md`），拿真机日志确认三项；严禁进 VK4-D。
+- `VK4-D`：待 R1 通过后，才出画面（ClearFrame）。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.5.4-fix Swapchain 重建（OldSwapchain）修复与二次运行验证（2026-07-08 晚）
+- 原历史编号：VK4-C-R1
+- 性质：VK4-C-R1 首次真机运行发现 Resize 重建运行时失败，仅修复 Swapchain 重建路径、不新增渲染能力；不进 VK4-D。
+- 运行结果（用户真机，RTX 3050 4GB Laptop GPU）：
+  - ✅ 第一项 首次 Swapchain 创建成功（`Swapchain 创建成功；ImageView 创建成功 3 张`）—— 证明 VK4-C-Fix 启用的 `VK_KHR_swapchain` 设备扩展已生效（编译过≠能建，现确证能建）。
+  - ❌ 第二项 Resize 重建失败：两次 `CreateSwapchain 失败：ErrorNativeWindowInUseKhr`（713x549 与 713x188）；Resize 红线正确（日志 `不重建 Surface`）。
+  - ⚠️ 第三项 Detach 顺序本次日志未含关闭事件，未验证。
+- 根因：`VulkanSwapchainOwner.Recreate` 调 `Build` 建新 Swapchain 时旧 Swapchain 仍存在，且 `VulkanSwapchainBuilder.CreateSwapchain` 的 `SwapchainCreateInfoKHR` **未设置 `OldSwapchain`** → 驱动判窗口被旧 Swapchain 占用 → `VK_ERROR_NATIVE_WINDOW_IN_USE_KHR`。
+- 修复：
+  - `Build` 新增 `SwapchainKHR oldSwapchain = default` 参数并透传给 `CreateSwapchain`。
+  - `CreateSwapchain` 设置 `info.OldSwapchain = oldSwapchain`（首次创建传 default=0，重建传 `_swapchain`）。
+  - `Recreate` 调 `Build(..., _log, _swapchain)` 把当前 Swapchain 作为旧句柄传入；新建成功后再 `DestroyImagesAndViews` 退役旧 Swapchain（顺序：先 ImageView 后旧 Swapchain）。
+- 红线校验：未新增 RenderPass/Framebuffer/CommandPool/CommandBuffer、未 Clear/Present；UI 零改动；行数 `VulkanSwapchainBuilder` 74→75、`VulkanSwapchainOwner` 86 不变，全 ≤100；双项目低内存构建 0W0E（Editor.UI 首次因 PID 8636 旧编辑器锁 bin 拷贝失败，taskkill 释放后重建通过）。
+- 状态：**VK4-C 待二次 R1 验证（Resize 重建成功 + Detach 顺序正确）**，未完全收口；VK4-D 暂缓。
+- 下一步：用户重跑编辑器，核对 Resize 后 `Swapchain 创建成功；ImageView 创建成功 N 张` + 关闭后 Detach 顺序 `ImageViews → Swapchain → LogicalDevice → Surface → Instance`；全过则 VK4-C 收口、开 VK4-D。
+- 可视化：`docs/vk4-c-r1-swapchain-fix.svg`（修复前后 Swapchain 重建对比图：修复前未设 `OldSwapchain` → `ErrorNativeWindowInUseKhr`；修复后传当前 Swapchain 作旧句柄 → 创建成功后再退役旧 Swapchain）。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.7.5-fix 日志系统三修：自动滚动根因修复 + 种子清理 + 控制台去重（2026-07-09）
+- 原历史编号：LOG-UX-1-R4
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R4（用户指令称 LOG-UX-1-R2，但 R2/R3 已被占用，顺延 R4）。仅改 UI shell + 低层 Vulkan Log 辅助（去 Console.WriteLine）；不碰 Vulkan 生命周期行为 / NativeHost / Swapchain 逻辑；不进 VK4-D。
+
+### 一、自动滚动根因修复（前两次 R2/R3 仍失效）
+- **根因（确证）**：R3 在 `TryHook`（`AttachedToVisualTree`/`DataContextChanged`）时 ListBox 模板尚未应用，`FindDescendantOfType<ScrollViewer>()` 返回 null 且不再重试 → `_logScroll` 永远为 null → `OnVmPropertyChanged` 每次 `if (_logScroll is null) return` 直接退出 → 滚动完全死。
+- **修复**：
+  - `LogList.TemplateApplied` 事件 + `Dispatcher.InvokeAsync(ResolveScrollViewer, Loaded)` 延迟重试，确保拿到内部 ScrollViewer 后才挂 `ScrollChanged` 并首次 `ScrollToTail`。
+  - 新日志进入：`ResolveScrollViewer()` 兜底补解析 → `Dispatcher.InvokeAsync(ScrollToTail, Render)`，布局完成后 `ScrollToEnd()` 直接控 Offset 到底部。
+  - 跟随态判定不变：`ScrollChanged` 仅当用户主动滚动（`|OffsetDelta.Y|>=0.5`）才重算 `_followTail`，Extent 增长不误判。上翻暂停、回底恢复。
+- 代码：`Foot.axaml.cs` 91→98 行（注释精简，仍 <100）。
+
+### 二、清理 21:32 示例/种子日志
+- **现象**：日志面板混入 `编辑器布局已恢复`/`已打开项目：SampleProject`/`Vulkan Surface 生命周期已接入；Device / Swapchain 尚未接入`/`构建队列空闲`/`点击拾取未命中任何对象`/`资源导入队列为空`，且「Device / Swapchain 尚未接入」已过期（现已接入）。
+- **来源**：`UiVm.Logging.InitLogs` 调 `_logBuffer.Seed(SampleLogEntries.All)` + 3 条 `_logBus.Info` 种子。
+- **修复**：删除 `_logBuffer.Seed(...)` 与 3 条种子 `_logBus.Info`；空状态由 UI「暂无日志」占位呈现。`SampleLogEntries.cs` 数据类保留（无引用，无害）。
+- 效果：启动后日志面板从真实 Vulkan 生命周期日志起，无假数据污染审计。
+
+### 三、控制台 Vulkan 日志去重
+- **现象**：`AttachConsole(-1)` 生效后终端每条 Vulkan 日志出现两遍。
+- **根因（确认）**：低层 Vulkan `Log(log, m)` 辅助在 `log?.Invoke(m)` 之外**又各自 `Console.WriteLine(m)`**；而 `log` 就是 Bridge 的 `Emit` → `VulkanBridgeLogFormatter.Emit` 本身已 `Console.WriteLine` → 双写。同样问题在 `VulkanPhysicalDeviceSelector` 2 处内联、`VulkanBridge{Device,PhysicalDevice,Swapchain}AttachStep` 共 5 处。
+- **修复（统一单出口）**：删除所有低层 `Console.WriteLine`，仅保留 `VulkanBridgeLogFormatter.Emit` 内的唯一 `Console.WriteLine` 作为控制台单出口。
+- **未动**：`VulkanInstanceOwner`/`VulkanSurfaceOwner` 仅直接 `Console.WriteLine`（不走 `Emit`），终端已单现，不重复，保持。
+- 效果：终端每条 Vulkan 生命周期日志仅一次；UI 面板仍正常一次。
+
+### 红线校验
+- `Foot.axaml.cs` 98 行 <100 ✅；`UiVm.Logging.cs` 100 行未动（仅删种子调用）✅；5 低层文件仅删 1 行 Console.WriteLine、AttachStep 删 5 处，全 ≤100 ✅。
+- 不碰 Render.Vulkan 生命周期行为 / NativeHost Attach·Resize·Detach / Swapchain 创建·重建·释放 ✅。
+- 双项目低内存构建 0W0E ✅。
+
+### 下一步
+- 用户重跑编辑器：① 日志面板自动滚到最新（不再卡在旧种子位置）；② 面板无 21:32 假日志；③ 终端每条 Vulkan 日志仅一次。
+- 全过 → VK4-C 日志链路收口，开 VK4-D 出画面。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.7.6-fix 止血：彻底禁用日志自动滚动（2026-07-09）
+- 原历史编号：LOG-UX-1-R5A
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R5A（用户称 R5 后仍「未响应」，指令止血而非继续叠补丁）。
+
+### 现象
+- 用户 run.bat 贴截图：编辑器窗口标题「**玄域编辑器（未响应）**」，终端日志已跑到 `【VulkanSwapchain】Swapchain 创建成功；ImageView 创建成功 3 张`。
+- 结论：**Vulkan 主链路全过（Instance✅ Surface✅ PhysicalDevice✅ LogicalDevice✅ Queue✅ Swapchain✅ ImageView✅）**，未响应发生在 Editor.UI 层，系 UI 线程卡死。截图黑色大块为 Windows DWM 未响应残影，非代码 bug。
+
+### 判断与决策
+- 自动滚动状态机（TemplateApplied 解析 ScrollViewer + ScrollChanged 跟随 + Dispatcher 自动 ScrollToTail）在 Vulkan `Attach`（UI 线程同步执行 ~25 条日志）期间触发视觉树遍历 / Dispatcher 堆积 → UI 线程卡死。
+- 用户明确：**不要在 `Foot.axaml.cs` 继续叠自动滚动补丁**。改做止血——禁用自动滚动，保留其余 LOG-UX 成果。
+
+### 保留（不受影响）
+- 控制台日志去重（R4 单出口）；种子日志清理（R4）；Ctrl+A/Ctrl+C 多行复制；详情换行；AttachConsole（-1）。
+
+### 禁用 / 移除
+- `Foot.axaml.cs` 全部自动滚动逻辑：ResolveScrollViewer / HookVm / OnVmPropertyChanged / OnScrollChanged / ScrollToTail / TemplateApplied 订阅 全部删除。
+- `Foot.axaml.cs` 由 96 行精简至 **42 行**（仅保留 SelectionChanged / KeyDown 复制逻辑）。
+
+### 红线校验
+- `Foot.axaml.cs` 42 行 <100 ✅；不碰 Render.Vulkan / NativeHost / Swapchain 创建·Resize·释放 ✅；双项目低内存构建 0W0E ✅。
+
+### 后续
+- 自动滚动由 **LOG-UX-2** 重新设计：拆出 `Foot/LogListAutoScrollController.cs`，`Foot.axaml.cs` 只创建 controller + 交 ListBox + 通知新日志；controller 内部节流（已安排滚动则不重复安排，等布局完成只滚一次），避免 Dispatcher/ScrollChanged 套娃。
+- 当前阶段：VK4-C Vulkan 链路通过；VK4-D 暂停；先稳定编辑器，再重开自动滚动设计。
+
+### Commit
+`8407657`（已推送 origin fix/RZ-VK3-A-surface-contract）。
+
+---
+
+## v0.2.7.8-rz 自动滚动重设计：独立控制器（2026-07-09）
+- 原历史编号：LOG-UX-2
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-2（R5A 止血后，按「独立 controller + 节流 + 防重入 + 不碰 Vulkan」方案重做）。
+
+### 背景
+R5A 已禁用自动滚动、编辑器恢复稳定。本轮把自动滚动按用户给定方案重做，但**禁止再把状态机塞进 `Foot.axaml.cs`**。
+
+### 设计
+- 新增 `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`（74 行）：独立控制器，职责只有「控制日志 ListBox 的自动滚动」。
+- `Foot.axaml.cs`（64 行）只做接线：创建 controller、SelectionChanged 详情选中、Ctrl+A/Ctrl+C 复制、Unloaded 时 Dispose controller。
+
+### 关键防卡死机制
+1. **单次解析**：`Resolve()` 用 `_resolved` 守卫，仅 `TemplateApplied` 后 `FindDescendantOfType<ScrollViewer>()` 一次；模板未就绪则静默等待，**不每条日志遍历视觉树**。
+2. **节流**：`OnLogItemsChanged` 用 `_pendingScroll` 标志，连续多条日志只排一次 `Dispatcher.UIThread.InvokeAsync(ScrollToTail, Render)`。
+3. **防重入**：`_isProgrammaticScroll` 标志，程序滚动期间 `ScrollChanged` 直接 return，不重算跟随态，避开 ScrollChanged↔ScrollToEnd 套娃。
+4. **不阻塞 UI 线程**：`OnVmPropertyChanged` 只调 `_autoScroll.OnLogItemsChanged()` 做布尔判定；Vulkan `Attach`（UI 线程同步 ~25 条日志）期间 `_scroll` 尚未解析 → 直接返回，**零视觉树遍历**。
+5. **跟随态**：`_followTail` 用户上翻（>12px 容差）置 false 暂停；滚回底部恢复；用户在看历史时不强制拉回。
+
+### 红线校验
+- `Foot.axaml.cs` 64 行、`LogListAutoScrollController.cs` 74 行，均 ≤100 ✅。
+- 不碰 `Render.Vulkan` / `NativeHost` / `Swapchain` 生命周期 / `UiVm.Logging.cs` ✅。
+- 保留：控制台去重、种子清理、Ctrl+A/Ctrl+C、详情换行、AttachConsole ✅。
+- 双项目低内存构建 **0W0E** ✅。
+
+### 验收（待用户 run.bat 真机验证）
+- 编辑器稳定启动，不再「未响应」；Vulkan 链路仍到 Swapchain+ImageView。
+- 新日志自动滚到底；用户上翻不被强制拉回；滚回底部恢复跟随。
+- Ctrl+A/Ctrl+C、详情换行、控制台 Vulkan 日志单次、无种子日志 均保持。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+---
+
+## v0.2.7.9-vk 正式收口 + VK4-D-Plan 启动（2026-07-09）
+- 原历史编号：VK4-C / LOG-UX-2
+
+分支：fix/RZ-VK3-A-surface-contract
+文档：docs/rz-vk4-d-plan.md（新建）
+
+### 收口确认（用户真机验证）
+- **VK4-C 正式收口**：Instance→Surface→PhysicalDevice→LogicalDevice→Queue→Swapchain→ImageView 全链路通过；VK4-C-R1 Resize 重建（旧 Swapchain 句柄修复 `ErrorNativeWindowInUseKHR`）与 Detach 逆序释放（Swapchain→LogicalDevice→Surface→Instance）均运行时验证。
+- **LOG-UX-2 正式收口**：独立 `Foot/LogListAutoScrollController.cs`（74 行）真机通过——新日志自动滚到底、上翻不禁、回底恢复；`Foot.axaml.cs`（64 行）只做接线。
+- **控制台日志单出口去重 / 旧 21:32 种子假日志清理**：均保持无回归。
+- LOG-UX-2 收口 Commit：`a7149f6`（已推送 origin）。
+
+### 三问题最终归因（用户总结，作防回潮基线）
+| 问题 | 根因 | 处理结果 |
+|---|---|---|
+| UI 未响应 | 自动滚动逻辑堆在 `Foot.axaml.cs`，视觉树查找 + Dispatcher + ScrollChanged 套娃 | ✅ 拆出 `LogListAutoScrollController` |
+| 控制台日志重复 | 多处低层 `Console.WriteLine` 与统一 `Emit` 双出口 | ✅ 保留单出口 |
+| 21:32 假日志 | 示例/种子日志混入真实运行日志 | ✅ 清理 |
+
+### 下一阶段：VK4-D-Plan
+- 文档 `docs/rz-vk4-d-plan.md` 已落定：目标 **最小 Clear + Present 单色清屏闭环**。
+- VK4-D 首次真正涉及：RenderPass / Framebuffer / CommandPool / CommandBuffer / Semaphore / Fence / AcquireNextImage / QueueSubmit / QueuePresent。
+- **红线（写死）**：只做最小清屏闭环；不做场景渲染 / 相机 / 网格 / 材质 / Gizmo / UI 叠加 / 持续动画。
+- **边界**：Resize 只重建 Framebuffers（RenderPass/CP/CB/Sync 不动）；Detach 顺序 ClearFrame→Swapchain→Device→Surface→Instance；Present 泵独立线程，禁在 UI 线程。
+- 为守住 `VulkanNativeHostSurfaceBridge` ≤100 红线与契约优先设计，VK4-D 实装时顺带引入薄组合根 `VulkanRenderSession`（原 VK4-E 范围），Bridge 委托给它。
+- 当前阶段：VK4-A/B/C 完成；LOG-UX-1/2 收口；**进入 VK4-D-Plan**，不回头补日志功能。
+
+## v0.2.7.4-fix 自动滚动修复 + WinExe 控制台输出（2026-07-09）
+- 原历史编号：LOG-UX-1-R3
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R3（仅 UI 改动 + Program.cs 一行 P/Invoke；不碰 Vulkan / Render.Vulkan / 日志数据模型）
+
+### 性质
+双修复：① R2 自动滚动未生效的根因修复；② WinExe 进程 Console.WriteLine 不显示在父终端的问题。
+
+### 问题 1：R2 自动滚动不生效
+- **现象**：用户真机验证 Foot 面板日志不自动滚到底。
+- **根因**：R2 用 `LayoutUpdated` 事件触发 `ScrollToEnd`，但 Avalonia 的 `LayoutUpdated` 触发时机与 `PropertyChanged(LogItems)` 的时序不可靠——新日志写入 buffer → `RefreshLogBindings()` → `OnPropertyChanged(LogItems)` → 设置 `_pendingScroll=true`，但 `LayoutUpdated` 可能在设置前已触发过、或 ListBox 虚拟化延迟导致 LayoutUpdated 不再为本次变更触发。
+- **修复**：改用 `Dispatcher.InvokeAsync(ScrollToTail, DispatcherPriority.Render)`——将滚动操作显式放入 dispatcher 队列的 Render 优先级，确保 Avalonia 布局完成后再执行，比事件驱动更可靠。
+- **代码**：`Foot.axaml.cs` 重写（89→91 行，去掉了 R2 的自定义 `DispatcherTimerExt` 辅助类）。
+
+### 问题 2：WinExe 控制台无输出
+- **现象**：用户运行 `dotnet run` 后终端只显示 build 输出，所有 Vulkan 生命周期日志（Console.WriteLine）不出现。
+- **根因**：`XuanYu.Editor.UI.csproj` 的 `<OutputType>WinExe</OutputType>`。Windows 上 WinExe 进程不继承父控制台句柄，`Console.WriteLine` 写入虚空。
+- **影响范围**：Vulkan 代码已有 6 处 `Console.WriteLine`（BridgeLogFormatter.Emit / DeviceOwner.Log / SwapchainOwner.Log / Capabilities.Log / Builder.Log / Selector.Log），全部因 WinExe 无效。
+- **修复**：`Program.cs:Main()` 首行调用 `AttachConsole(-1)`（ATTACH_PARENT_PROCESS），使 WinExe 进程继承 `dotnet run` 父终端。零改动 Vulkan 代码。
+- **效果**：关闭编辑器后，终端窗口仍显示完整 Detach 释放顺序（ImageViews→Swapchain→LogicalDevice→Surface→Instance），直接解决 T6 审计问题。
+
+### 红线校验
+- `Foot.axaml.cs` 91 行 <100 ✅；`Program.cs` 28 行 ✅。
+- UiVm.Logging.cs 保持 100 行未动 ✅。
+- 不碰 Vulkan / Render.Vulkan / NativeHost / 日志数据模型 ✅。
+- Editor.UI 构建 0W0E ✅。
+
+### 下一步
+- 用户重跑编辑器，验证两项：
+  1. 启动后日志面板自动滚到最新（不再需手动拖到底）；
+  2. 关闭编辑器后，`dotnet run` 终端显示 Detach 释放序列（AttachConsole 使 Console.WriteLine 生效）；
+- 两项全过 → VK4-C 正式收口（T6 拿到证据），开 VK4-D 出画面。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.7.3-fix 日志面板自动滚动到最新 (2026-07-09)
+- 原历史编号：LOG-UX-1-R2
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R2（仅 UI 改动，服务 VK4-C-R1 审计；不碰 Vulkan / Render.Vulkan / NativeHost 生命周期 / 日志数据模型）
+注：用户指令称本轮为 LOG-UX-1-R1，但 changelog 中 LOG-UX-1-R1 已被 Ctrl+C 复制修复占用，按命名顺延为本节 R2。
+
+### 性质
+VK4-C-R1 二次运行已验证 Resize 重建 Swapchain 通过，但审计 Vulkan 生命周期时每次 Resize/Attach/Detach 都要手动把日志拖到底，影响可用性。本轮只补日志面板自动滚动，不新增渲染能力、不进 VK4-D。
+
+### 目标（逐条对照）
+1. 新日志进入且用户在底部时，自动滚动到最新日志 — ✅
+2. 用户手动上翻历史时不强制拉回底部（暂停跟随）— ✅
+3. 用户再滚到底部时恢复自动跟随 — ✅
+4. `Ctrl+A` / `Ctrl+C` 多选复制不受影响 — ✅ 沿用 LOG-UX-1-R1 的 `LogList_KeyDown`
+5. 多选日志不强制跳动、不破坏选择 — ✅ 滚动只改视图偏移，不触动 `SelectedItems`
+6. 不修改 Vulkan 代码 — ✅ 仅 `XuanYu.Editor.UI`
+7. 不修改 NativeHost 生命周期 — ✅
+8. 不修改 Render.Vulkan 项目 — ✅ `git diff` 仅 `Foot.axaml.cs`
+9. 不修改日志数据模型（EditorLogBuffer / EditorLogBus）— ✅
+10. 所有 .cs ≤100 行 — ✅ `Foot.axaml.cs` 36→89
+11. `XuanYu.Editor.UI` 构建 0W0E — ✅
+
+### 实现
+- `Foot.axaml.cs`：
+  - 构造里 `AttachedToVisualTree` / `DataContextChanged` 双重挂接 `TryHook`（含重复订阅防护）。
+  - `TryHook`：用 `LogList.FindDescendantOfType<ScrollViewer>()` 取内部 `ScrollViewer`；订阅其 `ScrollChanged` 与 `LogList.LayoutUpdated`；订阅 `UiVm.PropertyChanged` 仅在 `LogItems` 变化时置 `_pendingScroll = _followTail`。
+  - 跟随判定 `LogScroll_OnScrollChanged`：仅当 `Math.Abs(e.OffsetDelta.Y) >= 0.5`（用户主动滚动）才重算 `_followTail`，`Offset.Y + Viewport.Height >= Extent.Height - 2.0` 视为在底部；Extent 增长（新日志）不误判，规避「用户本在底部却被误停跟随」的经典竞态。
+  - 实际滚动放 `LogList_OnLayoutUpdated`：布局完成后再 `ScrollToEnd()`，确保新项已测量；`_pendingScroll` 一次性标志，防每帧空滚。
+  - 首次附着若 `_followTail` 为真，立即 `_pendingScroll = true` 对齐到底部。
+- 未触碰 `UiVm.Logging.cs`（已 100 行，遵守「不往里塞逻辑」红线）、`Foot.axaml`、`EditorLogBuffer/EditorLogBus`。
+
+### 验收（用户重测）
+- `run.bat` 启动编辑器 → 日志随新事件自动滚到最底；向上翻看历史时不再被拽回底部；滚回底部后恢复跟随。
+- 关闭编辑器，确认底部自动跟到 Detach 释放顺序日志（T6 证据）：
+  `【VulkanSwapchain】Swapchain 释放成功` → `【VulkanDevice】LogicalDevice 释放成功` → `【VulkanBridge】Surface 已释放` → `【VulkanBridge】Instance 已销毁` → `【VulkanBridge】分离完成：Surface + Instance 已释放`。
+  （注：`VulkanSwapchainOwner.Dispose` 内部 `DestroyImagesAndViews` 先 ImageView 后 Swapchain，与 `Swapchain 释放成功` 单次日志合并，顺序正确；无需另开 Vulkan 改动轮。）
+
+### 红线校验
+- `git diff` 仅 `XuanYu.Editor.UI/Foot/Foot.axaml.cs`；`UiVm.Logging.cs` 保持 100 行未动、`Foot.axaml` 95 行未动；未改 `Render.Vulkan` / NativeHost。
+- `Foot.axaml.cs` 36→89 行，<100。
+- 可视化：`docs/log-ux-1-r2-autoscroll.svg`（跟随状态机 FOLLOW/PAUSED + 滚动时序 LogItems→LayoutUpdated→ScrollToEnd）。
+
+### Commit
+见交付报告（本 commit 哈希在回复中给出）。
+
+## v0.2.7.7-rz 会话日志落盘（关闭后仍可审计 Detach 顺序）(2026-07-08)
+- 原历史编号：LOG-UX-2
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-2（仅 Editor.UI 日志系统，不碰 Vulkan / NativeHost）
+
+### 背景
+VK4-B-R1 最后一项需验证关闭窗口时 Detach 释放顺序（LogicalDevice → Surface → Instance）。
+但原日志只进 UI 内存 `EditorLogBuffer`，关闭窗口后面板消失无法复制。
+方案 A（看控制台）经代码核查不成立：`EditorLogBus` 仅 `buffer.Add(...)`，无 `Console`/`File`/`Trace` 输出，控制台不会出现 Vulkan 生命周期日志。故按「A 不行就 B」决策树开 LOG-UX-2 落盘。
+
+### 目标（逐条对照）
+1. UI 日志照常显示，同时同步追加写入 `logs/editor-session-latest.log` — ✅
+2. 不碰 Vulkan 代码 — ✅ 仅在 `EditorLogBus.Write` 加文件追加
+3. 不碰 NativeHost 生命周期 — ✅
+4. 所有 .cs ≤100 行 — ✅ `EditorLogBus.cs` 21→44
+5. `XuanYu.Editor.UI` 0W0E — ✅
+6. `logs/` 加入 `.gitignore` 避免入仓 — ✅
+
+### 实现
+- `EditorLogBus.cs`：新增 `_logDir`/`_logPath`（相对 `Environment.CurrentDirectory/logs`）；首次写时 `Directory.CreateDirectory` + 写会话头；之后每条日志 `File.AppendAllText`，格式与剪贴板一致（`时间\t级别\t来源\t分类\t消息\t详情`）。包 `try/catch`，落盘失败不阻塞 UI（诊断安全约定）。
+- 每次启动重建 `editor-session-latest.log`（只保留最近一次会话），便于关闭后直接打开审计。
+
+### 验收（用户重测）
+- `run.bat` 启动编辑器 → 正常操作 → 关闭 → 打开 `logs/editor-session-latest.log`。
+- grep `LogicalDevice 释放成功` / `Surface 已销毁` / `Instance 已销毁`，确认顺序为 Device → Surface → Instance。
+- 至此 VK4-B-R1 最后一项（第⑪项）可从文件可靠审计，VK4-B 即可完全收口。
+
+### 红线校验
+- `git diff` 仅 `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs` 与 `.gitignore`；未改 `XuanYu.Render.Vulkan` / `VulkanNativeHostSurfaceBridge` / NativeHost。
+
+### 回退（2026-07-08 收尾）
+LOG-UX-2 仅为临时调试手段，用于关闭窗口后从文件审计 Detach 顺序。VK4-B-R1 第⑪项已通过文件日志确认顺序为 `LogicalDevice 释放成功 → Surface 已释放 → Instance 已销毁`（Device→Surface→Instance），VK4-B 完全收口后，按用户要求删除该落盘功能：
+- `EditorLogBus.cs` 还原为纯内存版（44→21 行，移除 `System.IO` 依赖与文件追加）。
+- `.gitignore` 移除 `logs/` 条目。
+- 磁盘 `logs/` 目录已删除。
+- 不碰 Vulkan / NativeHost；`XuanYu.Editor.UI` 构建 0W0E。
+
+## v0.2.7.2-fix Ctrl+C 复制无响应修复 (2026-07-08)
+- 原历史编号：LOG-UX-1-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1-R1（对 LOG-UX-1 的缺陷修复，仅 Editor.UI）
+
+### 根因
+LOG-UX-1 在 `Foot.axaml` 用 `KeyUp` 事件 + `e.KeyModifiers.HasFlag(KeyModifiers.Control)` 判断快捷键。
+Avalonia 中 `KeyUp` 的 `KeyModifiers` 反映「松开该键那一刻」的按键状态；用户按 `Ctrl+C` 后若先松开 Ctrl，则 `KeyUp(C)` 时 `KeyModifiers` 不再含 `Control`，`Ctrl+C` 分支条件不满足被跳过 → 表现为按了没反应。
+原 `async void` + `await SetTextAsync` 也无异常兜底，剪贴板失败静默消失。
+
+### 修复
+1. `Foot.axaml`：`KeyUp="LogList_KeyUp"` → `KeyDown="LogList_KeyDown"`（按下 C 瞬间 Ctrl 必仍按着，检测稳定）。
+2. `Foot.axaml.cs`：`LogList_KeyDown` 用 `KeyDown`；`Ctrl+A`→`SelectAll()`，`Ctrl+C`→`TopLevel.Clipboard.SetTextAsync(...)` 且包 `try/catch`，失败仅 `Debug.WriteLine` 不崩。
+3. `UiVm.Logging.cs`：新增 `NotifyLogCopied()`（当前 96 行，未突破 100 红线）；复制成功后写一条「已复制 N 条日志到剪贴板」信息日志，提供可见反馈。
+4. 为腾出空间，把 11 行 `RefreshLogBindings` 压成单行（行为不变）。
+
+### 验收
+- `XuanYu.Editor.UI` 构建 0W0E。
+- `Foot.axaml.cs` 36 行 / `UiVm.Logging.cs` 96 行 / `Foot.axaml` 95 行，均 ≤100。
+- 未碰 `Render.Vulkan` / NativeHost / Vulkan 链路。
+- 用户重测：日志面板选中若干行 → `Ctrl+C` → 面板出现「已复制 N 条日志到剪贴板」→ 粘贴到记事本为纯文本表格。
+
+## v0.2.7.1-fix 日志多选复制与详情换行修复 (2026-07-08)
+- 原历史编号：LOG-UX-1
+
+分支：fix/RZ-VK3-A-surface-contract
+版本：LOG-UX-1（仅 UI 改动，不进入 VK4-C，不碰 Vulkan 链路）
+
+### 背景与目标
+VK4-B-R1 审计时需要把完整 Vulkan 生命周期日志贴回对话，但旧日志面板只能单行查看、详情被横向截断、无法整段复制。
+用户拍板插一轮极小 `LOG-UX-1`：只修日志面板交互，服务 VK4-B-R1 审计，不修改 Vulkan 渲染链路 / NativeHost 生命周期 / Render.Vulkan。
+
+### 目标（逐条对照）
+1. 日志列表支持多选 — ✅ `SelectionMode` 改为 `Multiple`（Avalonia 12 已含 Shift 范围选择 + Ctrl 切换，等价于旧 `Extended`）。
+2. Shift + 单击范围多选 — ✅ 由 Avalonia `Multiple` 原生支持。
+3. Ctrl + 单击追加/取消选择 — ✅ 由 Avalonia `Multiple` 原生支持。
+4. Ctrl + A 选择当前筛选结果中的全部日志 — ✅ `Foot.axaml.cs` 处理 `KeyUp` 调 `ListBox.SelectAll()`（= 当前 `ItemsSource` 即筛选结果）。
+5. Ctrl + C 复制当前选中的日志 — ✅ `KeyUp` 调 `TopLevel.Clipboard.SetTextAsync(SelectedEntriesClipboardText)`。
+6. 复制格式为纯文本表格：表头 `时间\t级别\t来源\t分类\t消息\t详情`，每行一条，详情不截断 — ✅ `EditorLogClipboardText.FromMany`。
+7. 右侧「日志详情」的消息与详情自动换行、不横向截断 — ✅ `LogDetailPanel.axaml` 的 `detailBody` 样式补 `TextWrapping=Wrap` + `AcceptsReturn=True`。
+8. 右侧详情文本可复制 — ✅ 详情用只读 `TextBox`，默认可选中复制。
+9. 保留「复制详情」按钮 — ✅ 未改动其逻辑（单条 `EditorLogClipboardText.From`）。
+10. 仅日志区域可复制/可选择 — ✅ 改动仅限 `Foot.axaml` / `LogDetailPanel.axaml`；项目树 / Inspector / 按钮 / 普通标签均为 `TextBlock`，未引入可选文本。
+11. 不修改 Vulkan 代码 — ✅ 仅 `Editor.UI`。
+12. 不修改 NativeHost 生命周期 — ✅。
+13. 不修改 Render.Vulkan 项目 — ✅ `git diff` 仅 `XuanYu.Editor.UI`。
+14. 所有 .cs 文件 ≤100 行 — ✅ `Foot.axaml.cs` 34 / `UiVm.Logging.cs` 100 / `EditorLogClipboardText.cs` 25。
+15. `dotnet build XuanYu.Editor.UI` 0W0E — ✅。
+16. 更新 changelog.md — ✅ 本节；无新增/移动文件，故 file-tree.md 不更新。
+
+### 技术注记（Avalonia 12 陷阱）
+- 本机 Avalonia 为 **12.0.4**，其 `Avalonia.Controls.SelectionMode` 枚举**没有 `Extended` 成员**（旧版才有）。
+  旧 `Extended`（单击选一行 / Shift 范围 / Ctrl 切换）语义在 12.0.4 由 `SelectionMode.Multiple` 提供（含 Shift 范围 + Ctrl 切换）。
+  XAML 中 `SelectionMode="Extended"` 会触发 AVLN3000（字符串无法转枚举）。须用 `SelectionMode="{x:Static av:SelectionMode.Multiple}"`，
+  并在根元素加 `xmlns:av="using:Avalonia.Controls"`。
+- `Multiple` 模式下「普通单击」是**切换该行**（而非「只选这一行」）；但详情面板仍按最后点击项显示，审计复制（Shift 范围 / Ctrl+A）不受影响。
+
+### 改动文件
+- `XuanYu.Editor.UI/Foot/Foot.axaml`（95 行）：ListBox 加 `x:Name="LogList"`、`SelectionMode=Multiple(x:Static)`、`SelectionChanged`/`KeyUp` 事件接线；根加 `av` 命名空间。
+- `XuanYu.Editor.UI/Foot/Foot.axaml.cs`（34 行，+27→34）：`LogList_SelectionChanged` 把选中 `LogEntry[]` 推给 VM；`LogList_KeyUp` 处理 `Ctrl+A`(SelectAll) 与 `Ctrl+C`(写剪贴板)。
+- `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`（88→100 行）：新增 `_selectedEntries` 字段、`SetSelectedEntries(...)`、`HasSelectedEntries`、`SelectedEntriesClipboardText`（委托 `EditorLogClipboardText.FromMany`）。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogClipboardText.cs`（15→25 行）：新增 `FromMany(IEnumerable<LogEntry>)` 输出纯文本表格（表头 + 每行 \t 分隔）。
+- `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`（63→64 行）：`detailBody` 样式补 `TextWrapping=Wrap` + `AcceptsReturn=True`，详情不再横向截断。
+
+### 验收（需用户机运行）
+- 单击日志行可切换选中；Shift+单击可范围多选；Ctrl+单击可追加/取消。
+- Ctrl+A 选中当前筛选结果全部；Ctrl+C 复制到记事本为表格、每行一条、详情完整。
+- 右侧详情「消息 / 详情」自动换行、可复制、不横向截断。
+- Vulkan 日志仍正常显示，VK4-B 运行链路不受影响。
+
+### 下一步
+用户重跑编辑器，`Ctrl+A` + `Ctrl+C` 贴出完整 Vulkan 生命周期日志，据此核对 VK4-B-R1 最后一项（关闭时 `LogicalDevice → Surface → Instance` 释放顺序），收口 VK4-B。
+
+## v0.2.4.3-vk 基于 VK4-A 选择结果创建 LogicalDevice + 队列 (2026-07-08)
+- 原历史编号：VK4-B
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：21f24026ff7b102c12b8346563c066b8a64449a7
+版本：VK4-B
+
+### 口径订正（重要）
+本次截图验收机 GPU = `NVIDIA GeForce RTX 3050 4GB Laptop GPU`（备用机）；主力机为 RTX 3060。
+VK4-B **不以具体显卡型号为准**，而以 **VK4-A 最终选择结果（`VulkanPhysicalDeviceSelection`）** 为准创建 LogicalDevice，
+禁止硬编码 RTX 3050 / RTX 3060 或任何具体型号；在备用机上最终选择结果应为 RTX 3050 Laptop，在主力机上应为 RTX 3060。
+
+### 目标
+在 VK4-A 已选出的 PhysicalDevice 之上创建 `VkDevice`（LogicalDevice）与 Graphics / Present 队列。
+只创建设备与队列，不建 Swapchain、不建 ImageView/RenderPass/CommandBuffer、不清屏、不 Present。
+硬约束：必须复用 VK4-A 的最终选择结果，不得重新枚举 PhysicalDevice、不得自行选择其他设备（尤其不得选 D3D12 wrapper / Basic Render / iGPU）。
+
+### 新增文件
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelection.cs`（12 行）：将原内联在选择器末尾的「物理设备选择结果」记录抽出为独立文件，并补 `PhysicalDevice Handle` 字段（被选中的原生句柄），供 VK4-B 复用、禁止泄漏给 UI。
+- `XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.cs`（96 行）：基于 `VulkanPhysicalDeviceSelection` 创建 `VkDevice`，启用 Graphics/Present 队列族（同族合并），取 Graphics/Present `VkQueue`，`Dispose` 幂等释放 Device；输出中文日志（开始创建/物理设备名/队列族/创建成功/Queue 获取成功/释放成功）。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeDeviceAttachStep.cs`（29 行）：在 VK4-A 选择成功后调用 `VulkanDeviceOwner.Create`；选择失败则跳过（`sel` 为 null 或 `!Success` 时记日志返回 null）；异常仅记日志、不影响已附加的 Instance+Surface+已选中设备。
+
+### 修改内容
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`（99→93 行）：移除末尾内联记录定义（已抽至独立文件）；`Select` 内捕获 `bestDevice = devices[i]` 并随结果返回 `Handle`；三处返回点补 `Handle` 实参。selector 仅负责枚举与选择，未触及 VK4-B 逻辑。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`（23→24 行）：`Run` 返回类型由 `void` 改为 `VulkanPhysicalDeviceSelection?`，把选择结果交回 Bridge 以驱动设备创建。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`（96→98 行）：`Attach` 在 Instance+Surface 就绪后先跑选择 step、再跑设备 step（链式 `_deviceOwner = VulkanBridgeDeviceAttachStep.Run(_vk, 选择step.Run(...), Emit)`）；`Detach` 逆序释放 `Device → Surface → Instance`；Resize 仍只记尺寸、不重建 Surface/Device/Queue；新增 `using XuanYu.Render.Vulkan.Device;` 与 `_deviceOwner` 字段。
+
+### 未做内容（红线）
+- 未建 `Swapchain` / `ImageView` / `RenderPass` / `CommandPool` / `CommandBuffer`、未清屏、未 `Present`、未取交换链图像。
+- 未重新枚举 PhysicalDevice、未自行选择设备；选择结果直接复用 VK4-A 选定设备。
+- UI（Editor.UI）未新增任何 `Silk.NET.Vulkan` 引用（仅历史探针债 `VulkanClearSession.*.cs` 与 csproj ProjectReference，未触碰）；未复制旧探针 `VulkanClearSession` 路径。
+- 未顺手推进 VK4-C（Swapchain）；`Bridge/` 子目录 2 文件、`Device/` 子目录 5 文件，均未越 5-7 文件上限。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| VulkanDeviceOwner.cs 行数 | ✅ 96（≤100） |
+| VulkanBridgeDeviceAttachStep.cs 行数 | ✅ 29（≤100，新增） |
+| VulkanPhysicalDeviceSelection.cs 行数 | ✅ 12（≤100，新增） |
+| VulkanPhysicalDeviceSelector.cs 行数 | ✅ 93（≤100） |
+| VulkanBridgePhysicalDeviceAttachStep.cs 行数 | ✅ 24（≤100） |
+| VulkanNativeHostSurfaceBridge.cs 行数 | ✅ 98（≤100） |
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Editor.UI 构建（集成验证） | ✅ 0W0E |
+| git grep 禁止项 | ✅ 无 Swapchain/ImageView/RenderPass/CommandBuffer/Clear/CreateSwapchain 新增实装（仅注释/日志）；`VkDevice`/`VkQueue` 仅出现在注释 |
+| Editor.UI 新增 Silk.NET.Vulkan 引用 | ✅ 无（仍仅历史探针债） |
+
+### 人工测试清单（需在用户机器运行编辑器）
+1. 启动编辑器，确认无崩溃、NativeHost 正常附加。
+2. 打开日志面板，确认出现 `【VulkanDevice】开始创建 LogicalDevice；物理设备：<最终选中设备名>`。
+3. 确认日志含 `使用的 Graphics 队列族：N；Present 队列族：M`（应与 VK4-A 选择结果一致）。
+4. 确认 `【VulkanDevice】LogicalDevice 创建成功` 与 `【VulkanDevice】Queue 获取成功（Graphics + Present）`。
+5. 确认**仍黑屏**（无 Swapchain/ImageView/RenderPass，预期；真正出画面要等 VK4-D）。
+6. 缩放窗口，确认 `尺寸变化已接收：不重建 Surface`，且**不重建 Device / Queue**（VK4-B 红线延续）。
+7. 关闭编辑器，确认出现 `【VulkanDevice】LogicalDevice 释放成功`，且 Detach 顺序为 Device→Surface→Instance（无设备资源泄漏告警）。
+8. 确认无 `Swapchain`/`ClearFrame`/`Present` 相关新增日志。
+
+### 下一步
+VK4-B 边界与行数红线均守住，可判 VK4-B 功能收口。但**必须先做 VK4-B-R1 生命周期审计**，重点核对 Detach 释放顺序 `LogicalDevice → Surface → Instance` 与异常路径资源不泄漏；严禁顺手推进 VK4-C（Swapchain）。
+
+## v0.2.4.4-fix 生命周期审计与运行验证（静态审计已通过；运行时待用户机）(2026-07-08)
+- 原历史编号：VK4-B-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+关联提交：21f2402（VK4-B 代码） / 1f5da30（VK4-B 文档）
+性质：仅审计与运行验证，不新增 Vulkan 能力；不进入 VK4-C；不新增 Swapchain 相关代码。
+
+### 静态审计结果（已通过，无需用户机）
+| 项 | 结果 |
+|---|---|
+| Detach 释放顺序 LogicalDevice → Surface → Instance | ✅ VulkanNativeHostSurfaceBridge.Detach 第 78–80 行已逆序释放 |
+| Attach 异常路径逆序回滚 | ✅ catch 块（51–56 行）逆序释放 surface/instance/_vk；设备 step 失败仅返回 null 不抛 |
+| 未重新枚举设备 / 基于 VK4-A 选择结果 | ✅ VulkanDeviceOwner.Create 复用 sel.Handle，不重枚举 |
+| 未建 Swapchain/ImageView/RenderPass/CommandPool/CommandBuffer | ✅ 仅注释出现，grep 无实装 |
+| 未清屏 / 未 Present | ✅ red-line B grep NONE_MATCH |
+| UI(Editor.UI) 未新增 Silk.NET.Vulkan 引用 | ✅ 仅历史探针债 VulkanClearSession*.cs（4 文件）+ 生成 obj/bin |
+| 命名约定（VulkanDevice 别名 / LogicalDevice 属性） | ✅ VulkanDeviceOwner 用别名，属性名 LogicalDevice，无 Device 作属性名 |
+| 全 .cs ≤100 行 | ✅ 最大 Bridge 98 / DeviceOwner 96 / SurfaceOwner 75 |
+| Render.Vulkan 构建 | ✅ 0W0E（3.9s） |
+| Editor.UI 构建 | ✅ 0W0E（10.6s） |
+
+### 行数明细（实际，订正用户口头「DeviceOwner 95」为 96）
+- VulkanNativeHostSurfaceBridge.cs：98（余 2）
+- VulkanDeviceOwner.cs：96（余 4）
+- VulkanPhysicalDeviceSelector.cs：93
+- VulkanBridgePhysicalDeviceAttachStep.cs：24
+- VulkanBridgeDeviceAttachStep.cs：29
+- VulkanPhysicalDeviceSelection.cs：12
+- 其余（Instance/Surface 系列）：9–75
+
+### 风险点（移交 VK4-C 必须遵守）
+- **Bridge 98 行，仅余 2 行**：VK4-C 禁止再向 Bridge 塞 Swapchain 逻辑；Swapchain 必须进入独立 owner / attach step（与 VK4-B 的 DeviceOwner / BridgeDeviceAttachStep 同构）。
+- **DeviceOwner 96 行，仅余 4 行**：VulkanDeviceOwner 只负责 CreateDevice / GetQueue / DisposeDevice；VK4-C 禁止顺手塞 Swapchain/CommandPool/RenderPass；补日志也须防越 100 行。
+- **命名口径（用户明确）**：Silk.NET.Vulkan.Device 类型一律用 VulkanDevice 类型别名；业务 owner = VulkanDeviceOwner；业务属性 = LogicalDevice；禁止再用 Device 作属性名（避免与 XuanYu.Render.Vulkan.Device 命名空间混淆）。
+
+### 待用户机运行验证（12 项，本环境无 GPU/窗口无法跑）
+1. 启动编辑器无崩溃
+2. VulkanBridge 附加成功：Instance + Surface 已创建
+3. VulkanDevice 开始枚举物理设备
+4. VulkanDevice 已选择物理设备：本机独显
+5. VulkanDevice 开始创建 LogicalDevice
+6. 日志显示 Graphics QueueFamily
+7. 日志显示 Present QueueFamily
+8. 日志显示 LogicalDevice 创建成功
+9. 日志显示 Queue 获取成功
+10. 缩放窗口：Resize 只记尺寸，不重建 Surface / Device / Queue
+11. 关闭编辑器：释放顺序 LogicalDevice → Surface → Instance
+12. 确认仍黑屏，无 Swapchain / Clear / Present 日志
+
+> 运行验证通过前，VK4-B 不宣布完全收口；VK4-C 暂缓。
+
+### 下一步
+用户提供运行日志/截图后，核对 12 项；若全过则 VK4-B 完全收口，再议 VK4-C（Swapchain 独立 owner/step）。
+
+### 日志路由补强（第⑪项证据闭合）(2026-07-08)
+- **问题**：用户运行验证发现 `logs/editor-session-latest.log` 仅有 `【VulkanDevice】LogicalDevice 释放成功` 与合并行 `【VulkanBridge】分离完成：Surface + Instance 已释放`；缺 Surface / Instance 各自释放行，无法逐行核对顺序。
+- **根因**：`VulkanSurfaceOwner.Dispose` / `VulkanInstanceOwner.Dispose` 用 `Console.WriteLine` 直写控制台，不经 `_log` 回调，故不入 UI 缓冲、不被 LOG-UX-2 落盘；Bridge 只发一条合并行。释放顺序在代码中本就正确（Device → Surface → Instance），只是文件证据缺独立行。
+- **修复（仅日志，不改 Vulkan 语义与释放顺序）**：
+  - `VulkanBridgeLogFormatter` 新增 `SurfaceDisposed()` / `InstanceDisposed()`（23 → 29 行）。
+  - `VulkanNativeHostSurfaceBridge.Detach` 在 ②Surface、③Instance 释放后各补一条 `Emit`；文件现出现独立行：
+    ```
+    【VulkanDevice】LogicalDevice 释放成功
+    【VulkanBridge】Surface 已释放
+    【VulkanBridge】Instance 已销毁
+    【VulkanBridge】分离完成：Surface + Instance 已释放
+    ```
+- **构建**：Render.Vulkan 0W0E；Bridge 由 98 → **100**（压红线边界，符合 ≤100）；格式化器 29 行。
+- **关联提交**：c4c804a
+- **结论**：第⑪项释放顺序证据闭合（Device → Surface → Instance 现可逐行核对）；VK4-B 可宣布完全收口。
+
+## v0.2.4.2-fix 物理设备选择链路收口修正（压回 100 行红线）(2026-07-08)
+- 原历史编号：VK4-A-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：fffb6d1a006306f3051ac8cabc2fa27a977301ec
+版本：VK4-A-R1
+
+### 目标
+VK4-A 审计发现 `VulkanNativeHostSurfaceBridge.cs` 由 93 行涨到 110 行，违反“所有代码文件应 ≤100 行”红线
+（“新增文件 ≤100 行”口径不够，被修改的旧文件涨行同样要处理）。本次仅做收口修正，不新增 Vulkan 能力、不改变 VK4-A 行为。
+
+### 新增文件
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`（23 行）：在 Instance+Surface 就绪后调用 `VulkanPhysicalDeviceSelector.Select`，把选择结果与中文日志写入面板；选择异常仅记日志、不影响已附加的 Instance+Surface。
+
+### 修改内容
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`（110→96 行）：删除内联私有方法 `RunDeviceSelection()`，改在 `Attach` 末尾以带引用空值守卫的调用委托给 `VulkanBridgePhysicalDeviceAttachStep.Run(...)`；Bridge 只保留生命周期编排（Attach→Instance+Surface→run attach step / Resize 只记尺寸不重建 Surface / Detach 逆序释放）；`using XuanYu.Render.Vulkan.Device;` 换为 `using XuanYu.Render.Vulkan.Bridge;`。
+
+### 未做内容（红线）
+- 未创建 `VkDevice` / `LogicalDevice`、未取 `VkQueue`、未建 `Swapchain`、未建 `ImageView`、未清屏、未 `Present`。
+- UI（Editor.UI）未新增任何 `Silk.NET.Vulkan` 引用；未复制旧探针 `VulkanClearSession`；未搬 `VulkanApiProbe`/`VulkanDeviceInfo` 旧代码。
+- 未顺手推进 VK4-B（LogicalDevice + Queue）；目录 `Bridge/` 仅 1 文件，未越过 5-7 文件上限。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| VulkanNativeHostSurfaceBridge.cs 行数 | ✅ 96（≤100） |
+| VulkanBridgePhysicalDeviceAttachStep.cs 行数 | ✅ 23（≤100，新增文件） |
+| VulkanPhysicalDeviceSelector.cs 行数 | ✅ 99（≤100，未改） |
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Editor.UI 构建（集成验证） | ✅ 0W0E |
+| VK4-A 日志仍可见 | ✅ 候选设备/队列族/最终选择经面板输出（调用点不变） |
+| git grep 禁止项 | ✅ 无 VkDevice/Queue/Swapchain/ClearFrame 新增实装（仅注释/日志） |
+
+### 人工测试清单（需在用户机器运行编辑器）
+1. 启动编辑器，确认无崩溃、NativeHost 正常附加。
+2. 打开日志面板，确认仍出现 `【VulkanDevice】开始枚举物理设备；候选数量：N`（拆分后日志链路未断）。
+3. 确认每个候选设备的 `候选设备[i]` 日志（名称/类型/API/队列族/呈现支持/可用性）。
+4. 确认 RTX 3050 4GB Laptop（备用机；或本机最终选中的独显）被选为 `已选择物理设备`，原因 `优先独立显卡`。（口径订正：历史「RTX 3060」系误写；VK4 系列不以具体型号为准，而以 VK4-A 最终选择结果为准。）
+5. 确认 `Surface 呈现支持：是` 且 `可用性：可用`。
+6. 确认无 `VkDevice`/`Swapchain`/`ClearFrame` 相关新增日志（仍黑屏，预期）。
+7. 缩放窗口，确认 `尺寸变化已接收：不重建 Surface`（VK3 契约不变）。
+8. 关闭编辑器，确认 `分离完成：Surface + Instance 已释放`，无设备相关资源泄漏告警。
+
+### 下一步
+VK4-A 边界与行数红线均已守住，可判定 VK4-A 正式收口。下一步进入 VK4-B（创建 LogicalDevice + Queue），仍独立文件、独立 commit、独立红线校验；严禁把 B/C/D 混写。
+
+## v0.2.4.1-vk 物理设备选择链路（仅选择，不创建设备） (2026-07-08)
+- 原历史编号：VK4-A
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：79eabd0c5f11c88ab78607041395353cf05156ae
+版本：VK4-A
+
+### 目标
+在 VK3 已接入的 Instance + Surface 生命周期之后，新增 PhysicalDevice 选择链路。
+只选设备、不渲染：枚举设备、检查 Graphics/Present 队列族与 Surface 呈现支持、
+优先独显、输出中文日志、返回纯数据结果。严禁创建 LogicalDevice/Queue/Swapchain。
+边界由审计压死：VK4-A 只做 PhysicalDevice 选择，不碰 Device/Queue/Swapchain/清屏。
+
+### 新增文件
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceInfo.cs`（12 行）：纯数据设备信息（名称/类型/API 版本/是否独显/是否可用），不持有任何 Vulkan 句柄。
+- `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs`（14 行）：纯数据队列族选择（Graphics/Present 索引与可用性，`None` 静态默认值）。
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`（99 行，含结果 record `VulkanPhysicalDeviceSelection`）：`Select` 主入口枚举+选择+中文日志；`SelectQueueFamilies` 队列族与 Surface 支持检查；`TypeName` 类型中文化。
+
+### 修改内容
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs`：VK4-A 时由 93→110 行（内联 `RunDeviceSelection()`）；**该 110 行状态已被 VK4-A-R1 修正**——选择逻辑迁出至 `Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`，Bridge 回到 96 行，仅保留生命周期编排。此处记录原始 VK4-A 行为：`Attach` 在 Instance+Surface 就绪后触发选择、经 `Emit` 输出选择器日志、选择异常不影响已附加的 Instance+Surface、`Resize` 不重建 Surface。
+
+### 未做内容（红线）
+- 未创建 `VkDevice` / `LogicalDevice`、未取 `VkQueue`、未建 `Swapchain`、未建 `ImageView`、未清屏、未 `Present`。
+- UI（Editor.UI）未新增任何 `Silk.NET.Vulkan` 引用；选择器结果仅经日志字符串间接可见，不把 `VkPhysicalDevice` 泄漏给上层。
+- 未复制旧探针 `VulkanClearSession`；未搬 `VulkanApiProbe`/`VulkanDeviceInfo` 旧代码。
+- 文件落在现有 `XuanYu.Render.Vulkan/Device/` 子目录（复用项目与 Silk.NET 引用，避免新建工程扩大改动面），3 个新文件均 ≤100 行。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Editor.UI 构建（集成验证） | ✅ 0W0E |
+| 新增文件行数 | ✅ 均 ≤100（info 12 / queue 14 / selector 99） |
+| 选择器边界 | ✅ 仅枚举+选择+日志，无 Device/Queue/Swapchain 实装 |
+| UI 依赖 | ✅ Editor.UI 未新增 Silk.NET.Vulkan 引用 |
+| git grep 禁止项 | ✅ 无 VkDevice/Queue/Swapchain 新增实装（仅注释/日志） |
+
+### 人工测试清单（需在用户机器运行编辑器）
+1. 启动编辑器，确认无崩溃、NativeHost 正常附加。
+2. 打开日志面板，确认出现 `【VulkanDevice】开始枚举物理设备；候选数量：N`。
+3. 确认每个候选设备的 `候选设备[i]` 日志（名称/类型/API/队列族/呈现支持/可用性）。
+4. 确认 RTX 3050 4GB Laptop（备用机；或本机最终选中的独显）被选为 `已选择物理设备`，原因 `优先独立显卡`。（口径订正：历史「RTX 3060」系误写；VK4 系列不以具体型号为准，而以 VK4-A 最终选择结果为准。）
+5. 确认 `Surface 呈现支持：是` 且 `可用性：可用`。
+6. 确认无 `VkDevice`/`Swapchain`/`ClearFrame` 相关新增日志（仍黑屏，预期）。
+7. 缩放窗口，确认 `尺寸变化已接收：不重建 Surface`（VK3 契约）。
+8. 关闭编辑器，确认 `分离完成：Surface + Instance 已释放`，无设备相关资源泄漏告警。
+
+### 下一步
+VK4-A 收口后可进入 VK4-A-R1（审计 + 日志补强）。严禁顺手推进 VK4-B（LogicalDevice + Queue）；B 阶段单独开。
+
+## v0.2.3.12-vk VK3 收口确认 + VK4 规划落地 (2026-07-08)
+- 原历史编号：VK3-Closure + VK4-Plan
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：49403707f152c9a60f88f7944ca1375b770cdc0a
+
+### 目标
+VK3 验收通过，收口确认；并落地 VK4 规划（只规划不实装）。不改任何 Vulkan 生命周期代码，不进入 VK4 实装。
+
+### 新增文档
+- `docs/rz-vk3-closure.md`  # VK3 收口确认：验收项表格、已完成阶段（VK3-A..VK3-C2-R1）、红线遵守确认、已知债务（UI 对 Render.Vulkan 工程级引用移交 VK4）、收口日期。结论：NativeHost HWND 生命周期已正式接入 Vulkan Instance + Surface；Swapchain 留 VK4。
+- `docs/rz-vk4-plan.md`  # VK4 规划（不实装）：最小渲染闭环 PhysicalDevice→LogicalDevice→Queue→Swapchain→ClearFrame→RenderSession，五问规划、目标依赖方向、阶段分解 VK4-A..VK4-E、防回潮门禁（Resize 不重建 Surface、不搬探针、UI 不持 Vulkan、每步 5+100）。
+
+### 同步
+- `file-tree.md`  # 追加 VK3 收口 + VK4 规划文档小节，更新顶部摘要。
+
+### 未做内容（红线）
+- 未写任何 Vulkan 实装代码；未选 PhysicalDevice / 未创 LogicalDevice / 未建 Swapchain / 未碰 RenderFrame。
+- 未扩大 UI 对 Vulkan 的直接认识。
+
+## v0.2.3.11-fix VulkanBridge 日志面板可见性修复 (2026-07-08)
+- 原历史编号：RZ-VK3-C2-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：2390c6314c75b30097e689fee60e6fdf05bfd31e
+
+### 目标
+不改 Vulkan 生命周期、不进入 VK4、不碰 Device/Queue/Swapchain，只把 `VulkanNativeHostSurfaceBridge` 的 Attach/Resize/Detach/Dispose 结果接入编辑器日志面板，让 VK3-C2 能在 UI 日志中验收。
+
+### 修改内容
+- `VulkanNativeHostSurfaceBridge.cs`（84→93 行）：新增 `Action<string>? _log` 日志回调（构造函数注入，默认 null 保留 Console.WriteLine 兜底）。`Attach/Resize/Detach` 经 `Emit` 同时 `_log?.Invoke` 与 `Console.WriteLine`。`Attach` 失败由“抛出不可见异常”改为“记录 `AttachFailed(原因)` 后吞掉异常”，避免编辑器崩溃且失败可见；回滚语义不变。
+- `VulkanBridgeLogFormatter.cs`（20→23 行）：文案对齐验收串——`【VulkanBridge】附加成功：Instance + Surface 已创建（含窗口句柄）`、`【VulkanBridge】尺寸变化已接收：不重建 Surface`、`【VulkanBridge】分离完成：Surface + Instance 已释放`；新增 `AttachFailed(reason)`。
+- `VulkanSurfaceBridgeProvider.cs`（12→13 行）：`Create()` 改为 `Create(Action<string> log)`，把日志回调接进具体桥接（组合根仍持有 `using Render.Vulkan`，保持 Editor.UI → Abstractions 方向）。
+- `ViewportNativeHostRoute.cs`（12→15 行）：新增 `ReportVulkanBridge(UiVm?, string)` → `vm?.LogVulkanLifecycle(message, "")`，复用既有的 NativeHost→UiVm 日志面板路径。
+- `VulkanNativeHost.cs`（82→83 行）：`OnAttachedToVisualTree` 中 `_bridge ??= VulkanSurfaceBridgeProvider.Create(msg => ViewportNativeHostRoute.ReportVulkanBridge(DataContext as UiVm, msg))`，把回调接到面板；其余生命周期钩子不变。
+- `UiVm.Logging.cs`（line 45）：旧启动告警 `当前渲染后端尚未接入 Vulkan` 改为 `Vulkan Surface 生命周期已接入；Device / Swapchain 尚未接入`，级别 Warning→Info。
+- `SampleLogEntries.cs`（line 13-15）：种子示例同步改为上述准确文案，级别 Warning→Info，避免面板出现互相矛盾的两行。
+
+### 未做内容（红线）
+- 未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame`。
+- `Resize` 不重建 Surface（桥 `Resize` 仅记中文日志）。
+- 未搬 `VulkanClearSession` 探针到正式路径；旧探针未改动。
+- 无新增文件，`file-tree.md` 未改（总数维持 105）。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（未改动，仍零 Vulkan 代码引用） |
+| Editor.UI 构建 | ✅ 0W0E（临时输出目录编译验证；in-place bin 复制因运行中的编辑器占用 XuanYu.Render.Vulkan.dll 而锁，代码本身 0W0E） |
+| git grep 禁止项 | ✅ 7 文件无 PhysicalDevice/LogicalDevice/Queue/Swapchain 实装（仅注释） |
+| 文件行数 | ✅ 均 ≤100（bridge 93 / formatter 23 / provider 13 / route 15 / nativehost 83 / logging 88 / sample 35） |
+| 旧文案残留 | ✅ 已清除 |
+
+### 下一步
+关闭编辑器后 rebuild + run，即可在日志面板看到 `【VulkanBridge】附加成功 / 尺寸变化已接收 / 分离完成`；VK3 系列收尾，Device/Swapchain/RenderFrame 留待 VK4。
+
+## v0.2.3.10-vk 组合根接线：桥接接入 NativeHost 生命周期 (2026-07-08)
+- 原历史编号：RZ-VK3-C2
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：a01855702866f5b243efa23a796831af1a1a6d7f
+
+### 目标
+把 `VulkanNativeHostSurfaceBridge` 接入现有 `VulkanNativeHost` 的 Attach/Resize/Detach 生命周期流，验证真实 HWND 能创建并释放 Instance+Surface。Resize 只记录尺寸不重建 Surface；仍不碰 Device/Queue/Swapchain/RenderFrame。
+
+### 修改内容
+- 新增 `VulkanSurfaceBridgeProvider.cs`（12 行，组合根）：`using XuanYu.Render.Vulkan` + `using XuanYu.Render.Abstractions`，`Create()` 返回 `INativeHostSurfaceBridge`。UI 宿主只认契约，具体类实例化隔离在组合根，保持 Editor.UI → Abstractions 依赖方向。
+- `VulkanNativeHost.cs`（73→82 行）：
+  - 新增 `INativeHostSurfaceBridge? _bridge` 字段（契约类型，不引入 Render.Vulkan 具体类）。
+  - `Report` 返回 `NativeHostHandleSnapshot`；`OnAttachedToVisualTree` 用其构造 `NativeHostSurfaceHandle` 并 `_bridge ??= VulkanSurfaceBridgeProvider.Create(); _bridge.Attach(handle)`。
+  - `OnSizeChanged` 合并回调内调 `_bridge?.Resize(snap.Width, snap.Height)`（经 250ms Coalescer 节流，高频路径不直写）。
+  - `OnDetachedFromVisualTree` 调 `_bridge?.Detach()`。
+  - `DestroyNativeControlCore` 调 `(_bridge as IDisposable)?.Dispose()` 并置空（Dispose 顺序：Surface→Instance→Vk，复用 C1-R2 所有权）。
+
+### 未做内容（红线）
+- 未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame/CommandBuffer/RenderPass/Framebuffer`。
+- `Resize` 不重建 Surface（桥 `Resize` 仅记中文日志）。
+- 未搬 `VulkanClearSession` 探针到正式路径；旧探针未改动。
+- `XuanYu.Editor.UI` 工程级对 `Render.Vulkan` 的引用未解耦（组合根 provider 已 `using Render.Vulkan`，口径不变）。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 代码引用） |
+| Editor.UI 构建 | ✅ 0W0E |
+| git grep 禁止项 | ✅ 两 VK3-C2 文件无 PhysicalDevice/LogicalDevice/Queue/Swapchain 实装 |
+| 文件行数 | ✅ VulkanNativeHost 82 / VulkanSurfaceBridgeProvider 12，均 ≤100 |
+| Abstractions 纯净 | ✅ 仅解释性注释，无代码引用 |
+| file-tree.md | 新增 1 文件，已更新（总数 104→105） |
+
+### 下一步
+VK3 系列 Instance/Surface 层已收口（VK3-A / B / C 全完成）。Device/Swapchain/RenderFrame 留待 VK4。
+
+## v0.2.3.9-fix Vk 生命周期所有权收口 (2026-07-08)
+- 原历史编号：RZ-VK3-C1-R2
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：a176eb365dc42ade0d2c72cff9901ac9b9d740e0
+
+### 目标
+统一 `Vk.GetApi()` / `Vk.Dispose()` 的所有权，避免 VK3-C2 接真实 NativeHost 生命周期后出现重复 Dispose、提前 Dispose 或泄漏。不接 UI 组合根，不碰 Device/Swapchain。
+
+### 修改内容
+- `VulkanInstanceOwner.cs`（66→57 行）：
+  - `Create` / `CreateWithResult` 改为接收 `Vk vk` 参数，移除内部 `Vk.GetApi()`。
+  - `CreateWithResult` 失败路径不再 `vk.Dispose()`（所有权在调用方）。
+  - `Dispose` 仅 `vk.DestroyInstance` 释放 Instance，**移除 `_vk.Dispose()`**——Vk 不再由本类释放。
+- `VulkanSurfaceOwner.cs`（注释补强，75 行）：明确「Vk 由调用方（Bridge）统一持有与释放，本类只使用传入的 Vk，不持有也不释放 Vk」。
+- `VulkanNativeHostSurfaceBridge.cs`（76→84 行）：
+  - 新增 `Vk? _vk` 字段，由 `Attach` 统一 `Vk.GetApi()` 持有。
+  - `Attach` 复用既有 `_vk`（避免重复 GetApi）；仅本轮新创建时才在失败回滚中 `vk.Dispose()`，复用则不释放，杜绝重复 Dispose。
+  - 两个 Owner 均接收同一 `Vk` 实例。
+  - `Dispose` 顺序固定：`Detach()`（Surface→Instance）→ `_vk?.Dispose()`（Vk 最后释放）。
+  - `Attach` 失败回滚顺序与 Dispose 一致：Surface→Instance→（如本轮新创建）Vk。
+
+### 未做内容（红线）
+- 未接 UI 组合根；未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame/CommandBuffer/RenderPass/Framebuffer`。
+- 旧 `VulkanClearSession` / `VulkanApiProbe` 探针未改动，仍为历史债务，不纳入正式路径。
+- `XuanYu.Editor.UI` 工程级对 `Render.Vulkan` 的引用未解耦（口径不变）。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 代码引用） |
+| Editor.UI 构建 | ✅ 0W0E |
+| git grep 禁止项 | ✅ 三 VK3 文件仅注释提及，无 PhysicalDevice/LogicalDevice/Queue/Swapchain 实装 |
+| 文件行数 | ✅ InstanceOwner 57 / SurfaceOwner 75 / Bridge 84，均 ≤100 |
+| file-tree.md | 无新增文件，未改（总数维持 104） |
+
+### 已知债务（已消解项）
+- ~~`Vk.GetApi()` 所有权不统一~~ → 本轮已收口：Bridge 唯一所有者，Owner 仅使用。
+- UI 工程级对 Render.Vulkan 的引用待后续解耦。
+
+### 下一步
+VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface；接线时复用已收口的 Vk 所有权。
+
+## v0.2.3.8-fix Bridge 生命周期异常安全收口 (2026-07-08)
+- 原历史编号：RZ-VK3-C1-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：733ccaef7f2a89477d32a01c6dc5dcce0879cb6d
+
+### 目标
+为 VK3-C1 的 `VulkanNativeHostSurfaceBridge` 补生命周期异常安全收口，避免半初始化状态、重复 Attach/Dispose 与误导日志。**不接 UI 组合根，不碰 Device/Swapchain**。
+
+### 修改内容
+- `VulkanNativeHostSurfaceBridge.cs`（46→76 行）：
+  - `Attach` 开头检查 `_disposed`，已 Dispose 抛 `ObjectDisposedException`。
+  - `Attach` 已附加判断改为 `_instanceOwner` 与 `_surfaceOwner` 双字段均非 null。
+  - `Attach` 用临时变量 `instance`/`surface` 先创建，全成功后才落字段；任一失败进入 `catch`，先 `surface?.Dispose()` 再 `instance?.Dispose()`，并把两字段恢复为 null 后 `throw`——消除“有 Instance 无 Surface”的半初始化。
+  - `Resize` 未附加时输出「收到尺寸变化但尚未 Attach，不处理 Surface」，仍不重建 Surface。
+  - `Detach` 无资源时输出「跳过分离：尚未 Attach」，避免误判。
+- `VulkanBridgeLogFormatter.cs`（14→20 行）：新增 `ResizedSkipped(int,int)` 与 `DetachedSkipped()` 两条跳过日志。
+
+### 未做内容（红线）
+- 未接 UI 组合根；未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame/CommandBuffer/RenderPass/Framebuffer`。
+- `Vk.GetApi()` 所有权统一问题（Bridge/InstanceOwner/SurfaceOwner 共用 Silk.NET 单例，避免在多处重复 Dispose）**未在本轮解决**，列为 VK3-C2 前需确认项，记于「已知债务」。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用） |
+| Editor.UI 构建 | ✅ 0W0E（未改其代码路径） |
+| git grep 禁止项 | ✅ 无 PhysicalDevice/LogicalDevice/Queue/Swapchain 实装 |
+| dotnet test | ⚠️ 仓库无独立测试项目（MSB1003），如实记录 |
+| file-tree.md | 无新增文件，未改（总数维持 104） |
+
+### 已知债务
+- `Vk.GetApi()` 在 `VulkanNativeHostSurfaceBridge` 与两个 Owner 内共用同一 Silk.NET 单例，`VulkanInstanceOwner.Dispose` 会 `vk.Dispose()`；VK3-C2 接线前须确认不会多处获取/释放导致重复 Dispose 或泄漏。
+- `VulkanClearSession` 仍是历史探针，不得搬进正式路径；C2 接线走新桥而非复用探针逻辑。
+- UI 工程级对 Render.Vulkan 的引用待后续解耦。
+
+### 下一步
+VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface；接线前先确认 `Vk.GetApi()` 所有权。
+
+## v0.2.3.7-vk NativeHost 生命周期桥接类 (2026-07-08)
+- 原历史编号：RZ-VK3-C1
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：2eb6cc930ae51eccb62546509df5925bd9eab146
+
+### 目标
+实现 `INativeHostSurfaceBridge` 的 Vulkan 桥接类，把已完成的 `VulkanInstanceOwner` 与 `VulkanSurfaceOwner` 串起来；**暂不接 UI 组合根**，只做桥本身。
+
+### 修改内容
+- 新增 `VulkanNativeHostSurfaceBridge.cs`（46 行，unsafe）：实现 `INativeHostSurfaceBridge` + `IDisposable`。
+  - `Attach(handle)`：先 `VulkanInstanceOwner.Create()`，再 `VulkanSurfaceOwner.Create(Vk.GetApi(), instance, handle)`；幂等（已 Attach 则跳过）。
+  - `Detach()`：先释放 Surface 再释放 Instance（顺序相反于创建）。
+  - `Resize(w, h)`：仅 `Console.WriteLine` 中文日志，**不重建 Surface**（红线：Surface 仅绑定 Attach/Detach）。
+  - `Dispose()`：幂等，转调 `Detach()`。
+  - 暴露 `Instance` / `Surface` 只读属性供后续 VK3-C2 / VK4 取用。
+- 新增 `VulkanBridgeLogFormatter.cs`（14 行）：纯中文生命周期日志格式器（Attached / Resized / Detached）。
+
+### 未做内容（红线）
+- 未接 UI 组合根（`VulkanNativeHostSurfaceBridge` 仅作为可独立实例存在的桥，未被任何 NativeHost 生命周期流引用）。
+- 未选 `PhysicalDevice`、未创 `LogicalDevice`、未取 `Queue`、未建 `Swapchain`、未碰 `RenderFrame/CommandBuffer/RenderPass/Framebuffer`。
+- 未把 Vulkan 实现放进 `XuanYu.Render.Abstractions`。
+- `XuanYu.Editor.UI` 工程级仍因历史 Vulkan 探针（VulkanClearSession 等）保留对 `Render.Vulkan` 的引用，未完全解耦。
+
+### 验收结果
+| 项 | 结果 |
+|---|---|
+| Render.Vulkan 构建 | ✅ 0W0E |
+| Abstractions 构建 | ✅ 0W0E（仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用） |
+| Editor.UI 构建 | ✅ 0W0E（未改其代码路径） |
+| git grep 禁止项 | ✅ 无 PhysicalDevice/LogicalDevice/Queue/Swapchain/RenderFrame 实装 |
+| dotnet test | ⚠️ 仓库无独立测试项目（MSB1003），如实记录 |
+| file-tree.md / changelog.md | ✅ 已更新（总数 102→104） |
+
+### 已知债务
+- `VulkanClearSession` 仍是历史 Vulkan 探针，不得搬进正式路径；VK3-C2 接线应走新桥而非复用探针逻辑。
+- UI 工程级对 Render.Vulkan 的引用待后续解耦。
+
+### 下一步
+VK3-C2：把 `VulkanNativeHostSurfaceBridge` 挂到现有 NativeHost 生命周期流（组合根接线），仍不碰 Device/Swapchain，Resize 只传尺寸不重建 Surface。
+
+## v0.2.3.6-fix VulkanSurfaceOwner 健壮性收口 (2026-07-08)
+- 原历史编号：RZ-VK3-B2-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：7a1299a9aa1d4f80b3dcd135ec5952a721ef4280
+推送状态：已推送 origin
+
+### 本轮目标
+VK3-B2-R1：在正式接 VK3-C 组合根前，补强 VulkanSurfaceOwner 的失败诊断与入参校验。不进入 VK3-C，不接组合根，不碰 PhysicalDevice / LogicalDevice / Queue / Swapchain，未新增文件。
+
+### 修改内容
+- `VulkanSurfaceOwner.CreateWithResult`：将 `KhrWin32Surface.CreateWin32Surface` 的返回值保存为 `Result`，失败时把真实 `result.ToString()`（如 ErrorExtensionNotPresent / ErrorNativeWindowInUseKhr / ErrorOutOfHostMemory）写入 `VulkanSurfaceResult.ErrorMessage`，对齐 B1-R1 已落地的真实 VkResult 记录标准；不再只返回泛化的"CreateWin32Surface 失败"。
+- `VulkanSurfaceOwner.CreateWithResult`：创建前校验 `handle.Hwnd != 0` 与 `handle.Hinstance != 0`，任一为 0 即返回失败结果（错误类型"无效句柄"，详情指明对应字段），避免 VK3-C 接入真实 NativeHost 生命周期后收到 0 句柄时错误难看。
+
+### 未做内容
+- 未选择 PhysicalDevice；未创建 LogicalDevice；未获取 Queue；未创建 Swapchain。
+- 未碰 RenderFrame / CommandBuffer / RenderPass / Framebuffer。
+- 未接组合根（INativeHostSurfaceBridge），未改动 Editor.UI。
+- 未把任何 Vulkan 实现类型放进 XuanYu.Render.Abstractions。
+- 未新增文件，file-tree.md 不变。
+
+### 验收结果
+- git diff 自审：无 PhysicalDevice / LogicalDevice / Queue / Swapchain 实装（仅注释提及）。
+- `VulkanSurfaceOwner.cs` 由 69 → 74 行，仍 ≤100 行。
+- XuanYu.Render.Abstractions 仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用。
+- XuanYu.Render.Vulkan / Abstractions / Editor.UI 构建均 0 warning / 0 error。
+- 仓库无独立测试项目：`dotnet test` 退出 MSB1003，如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦 Vulkan。
+- VulkanSurfaceOwner 仍未接入任何使用方（含组合根），等待 VK3-C 接线。
+
+### 下一步
+VK3-B2-R1 收口后，可进入 VK3-C：经 INativeHostSurfaceBridge 由组合根把 VulkanInstanceOwner + VulkanSurfaceOwner 接线到 NativeHost Attach/Detach，仍不碰 Device / Swapchain。
+
+## v0.2.3.5-vk Vulkan Surface 持有者 (2026-07-08)
+- 原历史编号：RZ-VK3-B2
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：9b41b28fc2a33f0953ccd00db7287353eb543be0
+推送状态：已推送 origin
+
+### 本轮目标
+VK3-B2：在 XuanYu.Render.Vulkan 内新增 VulkanSurfaceOwner，仅负责创建与释放 VkSurfaceKHR（Win32），生命周期绑定 NativeHost Attach/Detach，不绑定 Resize。不碰 PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame。组合根接线（INativeHostSurfaceBridge）留给 VK3-C，本轮不接入 Editor.UI 正式路径。
+
+### 修改内容
+- 新增 `VulkanSurfaceOwner`（Render.Vulkan 内部 unsafe 类）：从 `Vk` + `Instance` + `NativeHostSurfaceHandle` 创建 `VkSurfaceKHR`；创建经 `KhrWin32Surface.CreateWin32Surface`，销毁经 `KhrSurface.DestroySurface`（双扩展分别取用，与既有 VulkanClearSession 模式一致）；`Dispose` 幂等（重复调用不炸）且释放后 `_surface = default`；通过 `VulkanSurfaceLogFormatter` 输出中文生命周期日志（创建成功含窗口句柄 / 释放含 Surface 句柄 / 失败含错误类型与详情）。
+- 新增 `VulkanSurfaceLogFormatter`：纯中文生命周期日志格式器（创建成功含窗口句柄、释放含 Surface 句柄、失败含错误类型与详情）。
+- 新增 `VulkanSurfaceResult`：极小创建结果类型，携带 Success / Owner / 错误类型与详情；`Create()` 抛异常，`CreateWithResult()` 返回结果，二者共用同一条创建链路。
+- `XuanYu.Render.Vulkan.csproj` 补 `Silk.NET.Vulkan.Extensions.KHR` 包（提供 KhrWin32Surface / KhrSurface）与 `XuanYu.Render.Abstractions` 项目引用（取 `NativeHostSurfaceHandle`），对齐 Editor.UI 的 KHR 包版本 2.22.0。
+
+### 范围口径（延续 VK3-B1 / B1-R1）
+- "Editor.UI 改经 Abstractions 而非直接持有 Render.Vulkan" 仅限定为 NativeHost 生命周期链路；Editor.UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用，本轮未改动 Editor.UI 正式路径。
+- VulkanSurfaceOwner 仅消费 `NativeHostSurfaceHandle`（Abstractions 纯契约），不反向引用 Editor.UI。
+
+### 未做内容
+- 未选择 PhysicalDevice；未创建 LogicalDevice；未获取 Queue；未创建 Swapchain。
+- 未碰 RenderFrame / CommandBuffer / RenderPass / Framebuffer。
+- 未把 VulkanSurfaceOwner 接入任何使用方（组合根接线留给 VK3-C）。
+- 未把任何 Vulkan 实现类型放进 XuanYu.Render.Abstractions。
+
+### 验收结果
+- git diff 自审：无 PhysicalDevice / LogicalDevice / Queue / Swapchain / RenderFrame 实装（仅注释提及）。
+- 新增 3 文件，均 ≤100 行（Owner 69 / Result 9 / LogFormatter 16）。
+- XuanYu.Render.Abstractions 仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用。
+- XuanYu.Render.Vulkan / Abstractions / Editor.UI 构建均 0 warning / 0 error。
+- 仓库无独立测试项目：`dotnet test` 退出 MSB1003，如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦 Vulkan。
+- VulkanSurfaceOwner 仍未接入任何使用方（含组合根），等待 VK3-C 接线。
+
+### 下一步
+VK3-B2 收口后，可进入 VK3-C：经 INativeHostSurfaceBridge 由组合根把 VulkanInstanceOwner + VulkanSurfaceOwner 接线到 NativeHost Attach/Detach，仍不碰 Device / Swapchain。
+
+## v0.2.3.4-fix VulkanInstanceOwner 行数与健壮性收口 (2026-07-08)
+- 原历史编号：RZ-VK3-B1-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：fde25d2fe8140022a7273e133081fc8da23393d9
+推送状态：已推送 origin
+
+### 本轮目标
+VK3-B1-R1：在进 VK3-B2 前，先把 VulkanInstanceOwner 从 98 行（贴 100 行红线）拆干净，避免 B2 接 VulkanSurfaceOwner 时顺手改 Owner 立刻破线。不新增 Surface，不进入 VK3-B2，不碰 Device / Swapchain / Queue。
+
+### 修改内容
+- `VulkanInstanceOwner` 由 98 行降到 66 行（<70）：移除内联的 ApplicationInfo / InstanceCreateInfo / 扩展指针构造，改调 `VulkanInstanceCreateInfoBuilder.BuildAndUse`。
+- 新增 `VulkanInstanceExtensions`：仅存 Instance 启用的最小扩展名集合（VK_KHR_surface、VK_KHR_win32_surface，以 null 结尾字节序列）；明确禁止在此添加 Device / Swapchain / 其他扩展。
+- 新增 `VulkanInstanceCreateInfoBuilder`：在 fixed 作用域内构造 InstanceCreateInfo 并交给回调，确保扩展名指针在创建调用期间有效；仅构造信息，不直接调用 Vulkan。
+- `vk.CreateInstance` 失败时记录实际 `Result`（错误类型记为 `VkResult`），不再只写“创建 Vulkan Instance 失败”。
+- `Dispose` 释放后 `_instance = default`，避免实例属性暴露已释放的旧句柄。
+
+### 范围口径（延续 VK3-B1）
+- "Editor.UI 改经 Abstractions 而非直接持有 Render.Vulkan" 仅限定为 NativeHost 生命周期链路；Editor.UI 工程级仍因历史 Vulkan 探针保留对 Render.Vulkan 的引用。本轮未改动 Editor.UI 正式路径。
+
+### 未做内容
+- 未新增 VulkanSurfaceOwner；未创建 VkSurfaceKHR；未调用 CreateWin32Surface。
+- 未选择 PhysicalDevice；未创建 LogicalDevice；未获取 Queue；未创建 Swapchain。
+- 未碰 RenderFrame / CommandBuffer / RenderPass / Framebuffer。
+- 未把任何 Vulkan 实现类型放进 XuanYu.Render.Abstractions。
+
+### 验收结果
+- git diff 自审：无 Surface / Device / Swapchain / Queue 实装（仅注释提及）。
+- 新增 2 文件 + 重构 1 文件，均 ≤100 行（Owner 66 / Builder 40 / Extensions 9）。
+- XuanYu.Render.Abstractions 仍零 Silk.NET/Avalonia/Editor.Win/Vulkan 引用。
+- XuanYu.Render.Vulkan / Abstractions / Editor.UI 构建均 0 warning / 0 error。
+- 仓库无独立测试项目：`dotnet test` 退出 MSB1003，如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦 Vulkan。
+- VulkanInstanceOwner 仍未接入任何使用方，等待 VK3-B2 接线。
+
+### 下一步
+VK3-B1-R1 收口后，可进入 VK3-B2：VulkanSurfaceOwner 经 INativeHostSurfaceBridge 由组合根实现，仍不碰 Device / Swapchain。
+
+## v0.2.3.3-vk Vulkan Instance 持有者 (2026-07-08)
+- 原历史编号：RZ-VK3-B1
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：aa56857
+推送状态：已推送 origin
+
+### 本轮目标
+VK3-B1：在 XuanYu.Render.Vulkan 内新增 VulkanInstanceOwner，只负责创建与释放 Vulkan Instance，并确认启用 VK_KHR_surface 与 VK_KHR_win32_surface 扩展。不碰 Surface / Device / Swapchain / Queue。
+
+### 修改内容
+- 新增 `VulkanInstanceOwner`（Render.Vulkan 内部 unsafe 类）：创建 VkInstance 并启用 VK_KHR_surface、VK_KHR_win32_surface 两个扩展；`Dispose` 幂等（重复调用不炸）；通过 `VulkanInstanceLogFormatter` 输出中文生命周期日志（创建成功 / 释放 / 失败）。
+- 新增 `VulkanInstanceLogFormatter`：纯中文生命周期日志格式器（创建成功含 API 版本与启用扩展清单、释放含实例句柄、失败含错误类型与详情）。
+- 新增 `VulkanInstanceResult`：极小创建结果类型，携带 Success / Owner / ApiVersion / 错误类型与详情；`Create()` 抛异常，`CreateWithResult()` 返回结果，二者共用同一条创建链路。
+
+### 范围口径（修正 VK3-A 表述）
+- "Editor.UI 改经 Abstractions 而非直接持有 Render.Vulkan" 仅限定为：NativeHost 生命周期链路已改经 Abstractions；Editor.UI 工程级仍因历史 Vulkan 探针（`VulkanApiProbe` 等）保留对 Render.Vulkan 的引用。本轮未改动 Editor.UI 正式路径。
+
+### 未做内容
+- 未新增 VulkanSurfaceOwner；未创建 VkSurfaceKHR；未调用 CreateWin32Surface。
+- 未选择 PhysicalDevice；未创建 LogicalDevice；未获取 Queue；未创建 Swapchain。
+- 未碰 RenderFrame / CommandBuffer / RenderPass / Framebuffer。
+- 未把任何 Vulkan 实现类型放进 XuanYu.Render.Abstractions。
+
+### 验收结果
+- git diff 自审：新增文件仅含 Instance 创建/释放与中文日志，无 Surface / Device / Swapchain / Queue 实装。
+- XuanYu.Render.Abstractions 不引用 Silk.NET / Avalonia / Editor.Win / Render.Vulkan（仅注释提及，无 using/工程引用）；构建 0W0E。
+- XuanYu.Render.Vulkan 构建 0 warning / 0 error。
+- XuanYu.Editor.UI 构建 0 warning / 0 error（依赖方，本轮未改其代码路径）。
+- 仓库无独立测试项目：根目录无 .sln / 测试 .csproj，`dotnet test` 因无项目/解决方案可运行而退出（MSB1003）；如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦 Vulkan。
+- VulkanInstanceOwner 当前未接入任何使用方（组合根 / 探针入口），仅作为 VK3-B1 交付物落地，等待 VK3-B2 接线。
+- Instance 扩展写死为最小集合（仅 surface + win32_surface 两项），符合 VK3-B1 审计点 1。
+
+### 下一步
+VK3-B1 审计三点已过：扩展为最小集合 / Dispose 幂等 / 无 Surface(Swapchain) 实装。可进入 VK3-B2：VulkanSurfaceOwner 经 INativeHostSurfaceBridge 由组合根实现，仍不碰 Device / Swapchain。
+
+## v0.2.3.2-fix Surface 契约层依赖收口 (2026-07-08)
+- 原历史编号：RZ-VK3-A-R1
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：37504b0
+推送状态：已推送 origin
+
+### 本轮目标
+收口 VK3-A 契约层，避免 UI 继续通过 Render.Vulkan 获取 NativeHost 生命周期类型。
+
+### 修改内容
+- 将 `NativeHostHandleSnapshot` / `NativeHostLifecycleState` / `NativeHostLifecycleProbe` / `NativeHostLifecycleLogFormatter` 从 `XuanYu.Render.Vulkan` 迁入 `XuanYu.Render.Abstractions`（均为纯数据/枚举/探针/日志格式器，无 Silk.NET / Vulkan 依赖），删除 Render.Vulkan 内对应 4 个文件（git 识别为 rename）。
+- UI 侧 5 个生命周期链路文件（`NativeHostSurfaceContract` / `NativeHostResizeCoalescer` / `ViewportNativeHostRoute` / `Vm/UiVm.NativeHostLifecycle` / `Viewport/Vulkan/VulkanNativeHost`）的 `using XuanYu.Render.Vulkan` 改为 `using XuanYu.Render.Abstractions`。
+- 同步 `changelog.md` 与 `file-tree.md`。
+
+### 未做内容
+- 未创建 VulkanInstanceOwner / VulkanSurfaceOwner / VkSurfaceKHR。
+- 未碰 Swapchain / Device / Queue / PhysicalDevice / LogicalDevice。
+- 未迁移 `VulkanClearSession` 历史探针（留 Editor.UI，不进正式路径）。
+
+### 验收结果
+- `XuanYu.Render.Abstractions` 不引用 Silk.NET / Avalonia / Editor.Win / Render.Vulkan。
+- 低内存模式构建 Editor.UI：0 warning / 0 error；Abstractions 0W0E。
+- 仓库无独立测试项目，如实记录。
+
+### 已知债务
+- Editor.UI 仍因历史 Vulkan 探针（`VulkanApiProbe` 等）保留对 Render.Vulkan 的工程级引用，不能宣称 UI 已完全解耦。
+- `VulkanClearSession` 探针仍留 Editor.UI（历史债），VK3-B 不得直接搬用。
+
+### 下一步
+VK3-B1：VulkanInstanceOwner。只做 Instance（启用 `VK_KHR_surface` + `VK_KHR_win32_surface`），不碰 Surface / Device / Swapchain。
+
+## v0.2.3.1-vk Surface 契约层建立 (2026-07-07)
+- 原历史编号：RZ-VK3-A
+
+分支：fix/RZ-VK3-A-surface-contract
+提交：2bfbe2e
+推送状态：已推送 origin
+
+### 本轮目标
+建立 UI 与 Vulkan 之间的纯净交接契约层，为后续 SurfaceOwner 接线铺路。
+
+### 修改内容
+- 新增独立 `XuanYu.Render.Abstractions` 契约工程（net10.0，零 Silk.NET 引用）。
+- 定义 `NativeHostSurfaceHandle`（HWND / Hinstance / 尺寸 / DPI）与 `INativeHostSurfaceBridge`（Attach / Resize / Detach 契约接口）。
+- Editor.UI 侧新增 `NativeHostSurfaceContract`，把现有 `NativeHostHandleSnapshot` 映射为交接句柄（取 `Win32ViewportHost.ModuleHandle` 作 Hinstance），不引入任何 Vulkan 实现使用点。
+- `XuanYu.Editor.UI.csproj` 加对 Abstractions 的工程引用。
+
+### 未做内容
+- 未创建 VulkanSurfaceOwner / VulkanInstanceOwner / VkSurfaceKHR / Swapchain / Device。
+- UI 到 Render.Vulkan 的解耦收口见 RZ-VK3-A-R1。
+
+### 验收结果
+- 低内存模式构建 Editor.UI：0 warning / 0 error。
+- 仓库无独立测试项目，如实记录。
+
+### 已知债务
+- VK3-A 仅新建 Abstractions 工程，UI 对 Render.Vulkan 的工程级引用与 7 处 using 当时未移除，故 VK3-A 只算「契约层雏形已建立，解耦未完成」。
+
+### 下一步
+RZ-VK3-A-R1 收口依赖。
+
+## v0.2.2.7-vk VK3 Surface 生命周期规划 (2026-07-07)
+- 原历史编号：RZ-VK3-Plan
+- 仅规划正式 Vulkan Surface 生命周期，替代 `VulkanClearSession` 探针状态；本轮不写任何 Vulkan 实装代码。
+- 明确：Surface 由 `XuanYu.Render.Vulkan` 内部 `VulkanSurfaceOwner` 创建/持有；NativeHost 只提供 HWND/尺寸与 Attach/Detach 生命周期，不直接管理 Vulkan；Editor.UI 不直接创建 Surface/Device/Swapchain；`VulkanClearSession` 仅作探针参考，不能直接搬进正式路径。
+- VK3 只做 Surface，Swapchain 留给 VK4；阶段边界硬于技术规则，禁止 VK3 夹带 Swapchain。
+- 产出 `docs/rz-vk3-surface-lifecycle-plan.md`。
+
+## v0.2.2.6-rz Windows 兼容清单提交 (2026-07-07)
+- 原历史编号：Fix-M1
+- 单独提交 `XuanYu.Editor.UI/app.manifest` 中遗留的 Windows `supportedOS` 兼容清单块（10/11/8.1/8/7），仅声明系统兼容，无任何 Vulkan / 逻辑改动。
+- 不碰 Vulkan / NativeHost / Resize / Surface / Swapchain / LogicalDevice；`.workbuddy/` 与 `qizheng-mvp-fixed/` 维持未跟踪，不纳入提交。
+- 提交信息：`chore(editor): declare Windows compatibility manifest`。
+
+## v0.2.2.5-fix NativeHost Resize 合并验证/收口 (2026-07-07)
+- 原历史编号：RZ-VK2-R2
+- 验证 RZ-VK2-R1 合并边界干净：NativeHostResizeCoalescer 只合并 UI 生命周期日志，未改变 Win32ViewportHost.Resize 调用时机，未牵连 VulkanClearSession.Resize / Surface / Swapchain / LogicalDevice。
+- git diff 确认 VulkanClearSession.* 相对 HEAD 零改动；本回合文件均不引用它；无新增 Silk.NET.Vulkan 使用点。
+- 确认工作树仅 app.manifest 为 tracked modified（非本轮任务），不混入提交。
+- 新增 `docs/audit-RZ-VK2-R2-nativehost-resize-coalesce-verify.md`，回答四问：日志已转合并 / 无残留高频直写 / 未动 Surface/Swapchain/Device / Editor.UI 直接引用 Vulkan 债务仍在但未扩大。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
+- 提交信息：`test(editor): RZ-VK2-R2 verify native host resize coalescing`。
+
+## v0.2.2.4-fix NativeHost 尺寸变化日志合并 (2026-07-07)
+- 原历史编号：RZ-VK2-R1
+- 修复 NativeHost 尺寸变化高频事件连续进入 `EditorLogBus` 的问题（`VulkanNativeHost.OnSizeChanged` 每次直写日志并 `RefreshLogBindings`，导致截图「重复 138 次」）。
+- 新增 `NativeHostResizeSnapshot`（只保存尺寸数据）与 `NativeHostResizeCoalescer`（250ms debounce，连续 SizeChanged 只更新快照与合并计数，稳定后才生成一条低频合并日志）。
+- `ViewportNativeHostRoute` 增加 `ReportMerged` 薄入口；`UiVm.NativeHostLifecycle` 增加 `LogNativeHostResizedMerged`（合并日志含最终宽度、高度、DPI、生命周期版本、合并次数；无效句柄只写一条低频失效日志）。
+- `NativeHostLifecycleLogFormatter` 增加 `MergedMessage` 中文合并日志格式。
+- `VulkanNativeHost` 的 `OnSizeChanged` 改为走 Coalescer；`OnDetachedFromVisualTree` / `DestroyNativeControlCore` 调用 `Cancel()` 安全停止 pending debounce，不补写日志。
+- 中央视口文案 `Vulkan Clear Probe` 改为 `NativeHost Probe`（`Main.axaml`）与 `Vulkan Probe`（`VulkanViewport.axaml`）。
+- 未创建 Surface / Swapchain / LogicalDevice，未接入真实渲染循环，未修改顶部/左侧/右侧/底部布局与输入链路。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；本轮新增/修改 `.cs` / `.axaml` 全部 ≤100 行；`dotnet test` 退出正常且仓库无独立测试项目。
+
+## v0.2.2.1-rz 新人接手规则审计 (2026-07-07)
+- 原历史编号：RZ-New-0
+- 新增开发规范两份（经人工校正 5+100 / 依赖隔离 / 日志边界 / VK 阶段边界表述）：`docs/dev-rules.md`（硬规则执行手册 + 接手红线清单）、`docs/dev-rules-understanding.md`（事故来源与动机解释）。
+- 新增 `docs/audit-RZ-New-0-onboarding.md`：按 10 项清单完成接手验收。实测确认 Editor.UI 仍直接引用 Silk.NET.Vulkan / XuanYu.Render.Vulkan（过渡期冲突）；VulkanClearSession 探针已创建 Instance/Surface/Device/Swapchain；NativeHost 高频 SizeChanged 直写 EditorLogBus 风险属实。
+- 同步 file-tree.md。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
+- 提交信息：`docs(dev): 新增开发规范文档与 RZ-New-0 接手审计`。
+
+## v0.2.2.3-vk NativeHost / HWND 生命周期收口 (2026-07-07)
+- 原历史编号：RZ-VK2
+- 新增 `XuanYu.Render.Vulkan` 内的 NativeHost 生命周期快照、状态、探针与中文日志格式化。
+- `VulkanNativeHost` 收口为纯 HWND 生命周期宿主，只记录创建、附加、句柄可用、尺寸变化、移除、释放、失效，不再触碰 Vulkan 会话。
+- 新增 `ViewportNativeHostRoute` 与 `UiVm.NativeHostLifecycle`，UI 仅通过薄入口把快照写入现有日志系统。
+- 新增审计文档 `docs/audit-RZ-VK2-native-host-lifecycle.md`，记录 HWND 生命周期、验证结果与 RZ-VK3 接 Surface 的接点。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`dotnet test` 退出正常且仓库无独立测试项目。
+
+## v0.2.2.2-vk Vulkan 依赖接入与环境探针 (2026-07-07)
+- 原历史编号：RZ-VK1
+- 新增独立 `XuanYu.Render.Vulkan` 项目，接入 `Silk.NET.Vulkan`，只负责最小 Vulkan 环境探针。
+- 探针完成 Vulkan API 入口创建、Instance 版本枚举、PhysicalDevice 枚举，并输出中文诊断日志。
+- UI 只通过 `VulkanProbeRoute.Run(vm)` 这一薄入口触发探针，未修改布局、输入或日志面板结构。
+- 未接入 Surface、Swapchain、LogicalDevice、CommandPool、CommandBuffer，也未进入真实渲染循环。
+- 新增审计文档 `docs/audit-RZ-VK1-vulkan-probe.md`，记录本轮文件清单、验证范围和下一步建议。
+
+## v0.2.1.14-rz Vulkan 接入前置审计 (2026-07-07)
+- 原历史编号：RZ-Fix3-0
+- 新增 `docs/vulkan-preflight-audit-RZ-Fix3-0.md`，收口当前中央视口、Avalonia NativeControlHost、Win32 子窗口、Vulkan Surface/Swapchain 生命周期和 fallback 策略。
+- 确认当前工程已经存在 `Viewport/Vulkan` 预接入代码，实际状态已超过纯审计阶段，应在 RZ-Fix3-A 中收口为最小 Clear Probe，而不是继续扩大到完整 Renderer。
+- 明确 Vulkan 只允许进入中央视口链路：`UiRoot` -> `Main` -> `VulkanViewport` -> `VulkanNativeHost` -> `VulkanClearSession`。
+- 明确低频日志边界：只记录初始化、失败、Swapchain 重建、释放等生命周期摘要，禁止每帧 Acquire / Present / RenderFrame 日志。
+- 明确 fallback UI 要求：Vulkan 初始化失败时中央视口显示占位提示，并引导查看底部日志详情，不能白屏或崩溃。
+- 保持顶部工具栏、左侧项目树、右侧检查器、底部日志系统职责不变；本次不接 Gizmo、Picking、模型、相机、资源系统。
+- 验收：`dotnet restore` 通过；`dotnet build --no-restore` 通过，0 Warning / 0 Error；`.cs` / `.axaml` 文件未发现超过 100 行。
+
+## v0.2.1.13-rz — Vulkan 接入前置验证 (2026-07-06)
+- 原历史编号：RZ-Fix3-A
+- 中央视口从静态假网格切换为 `VulkanViewport` 宿主，保留顶部/底部视口状态提示
+- 新增 `Viewport/Vulkan` 小模块，使用 Avalonia `NativeControlHost` 在中央区域创建 Win32 子窗口作为 Vulkan Surface 承载点
+- 新增 Silk.NET Vulkan 依赖：`Silk.NET.Vulkan` 与 `Silk.NET.Vulkan.Extensions.KHR`
+- 最小 Vulkan 生命周期已接入：Instance / Win32 Surface / PhysicalDevice / LogicalDevice / Swapchain 创建与释放
+- Resize 时跳过 0 尺寸与重复尺寸，并在尺寸变化时重建 Swapchain；仅记录重建成功 / 失败摘要
+- Vulkan 初始化失败时显示中央 fallback 占位提示，不影响编辑器其他 UI
+- 低频日志只记录 Vulkan 初始化开始、成功 / 失败、Swapchain 重建、释放完成；不写每帧日志
+- 本轮不接模型、Gizmo、Picking、相机、资源系统，不改顶部、左侧、右侧、底部日志结构
+- 当前为 Vulkan Host / Surface / Swapchain 前置验证；逐帧 Clear + Present 留到 RZ-Fix3-A-R1 收口
+- Build: 0 Warning, 0 Error；GUI 烟测启动 5 秒存活
+
+## v0.2.1.12-rz — 右侧检查器 / 调试 / 偏好 / 模式页收口 (2026-07-06)
+- 原历史编号：RZ-Fix2-D
+- 右侧面板收口为四个职责明确的页签：检查器、调试、偏好、模式
+- 检查器页改为当前选中对象 / 项目的属性查看区，使用紧凑键值布局显示名称、类型和路径
+- 检查器页补明确空状态：未选择对象时提示从左侧项目树、层级页或视口选择对象
+- 调试页收口为当前上下文快照，分组显示当前上下文、当前对象、工具状态和输入状态，不显示日志流
+- 偏好页保留编辑器偏好占位，说明布局保存、主题、快捷键和编辑器偏好后续在此收口
+- 模式页显示当前工作模式与当前工具说明，作为模式状态占位
+- 图标继续全部使用 SVG / PathIcon 资源，不使用字符图标、emoji 或 Unicode 图标符号
+- 不改中央视口、不接 Vulkan、不改日志系统、不改顶部工具栏、不改左侧项目树
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.11-rz — 左侧项目树视觉与层级收口 (2026-07-06)
+- 原历史编号：RZ-Fix2-C
+- 左侧项目区收口为更稳定的编辑器侧栏：项目 / 层级 Tab、搜索框、项目树、选中态、Hover 和空状态统一整理
+- 项目页保留静态示例结构：SampleProject、世界、MainWorld、TestWorld、资源、图标、材质、脚本、构建
+- 项目树行高统一为约 28px，一级、二级、三级缩进分别保持 0、18px、36px
+- 选中态使用浅蓝背景和半粗文字，Hover 使用轻量底色，不抢中央视口视觉
+- 搜索框文案统一为“搜索项目树...”，本轮不接真实搜索逻辑
+- 层级页改为明确空状态：暂无场景对象，提示打开世界或创建对象后显示层级
+- 图标继续全部使用 SVG / PathIcon 资源，不使用字符图标、emoji 或 Unicode 图标符号
+- 不接真实资源扫描、不做导入导出、不做右键菜单、不改中央视口、不接 Vulkan、不改日志系统
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.10-fix — Splitter 默认布局与最小宽度修复 (2026-07-06)
+- 原历史编号：RZ-Fix2-B-R1
+- 修复 RZ-Fix2-B 后左右面板可能被 splitter 或窗口压窄的问题
+- 主布局根容器增加最小宽度兜底，避免左侧、中央、右侧的最小可用宽度总和被整体压穿
+- 左侧项目列继续默认 270px，并在列定义与面板上双层限制 200px 至 420px
+- 右侧检查器列继续默认 340px，并在列定义与面板上双层限制 260px 至 480px
+- `UiRoot` 增加轻量 clamp：监听 splitter 改动后的列宽，超出范围时回弹到合法宽度
+- 明确底部日志默认收起：只显示摘要条；点击展开后显示日志列表与详情，拖拽只调整底部区域高度
+- 不改中央视口绘制逻辑、不接 Vulkan、不扩展日志系统、不接 Probe
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.9-rz — 主布局 Splitter 可拖拽收口 (2026-07-06)
+- 原历史编号：RZ-Fix2-B
+- 主布局改为可拖拽尺寸骨架：左侧项目区、中央视口、右侧检查器、底部日志区域通过轻量 splitter 调整空间
+- 左侧项目区默认约 270px，限制为 200px 至 420px，避免项目树被压没或过度挤占中央视口
+- 右侧检查器默认约 340px，限制为 260px 至 480px，为属性、调试、偏好等后续内容预留可调空间
+- 底部日志区域增加横向 splitter，展开时跟随底部行高伸缩，收起时保留摘要条语义
+- Splitter 视觉统一为 6px 轻量分隔条，Hover 时轻微高亮，默认不抢顶部和视口视觉
+- 仅调整主布局容器，不改中央视口绘制逻辑、不接 Vulkan、不扩展日志系统、不接 Probe
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.8-rz — 顶部菜单栏与工具栏收口 (2026-07-06)
+- 原历史编号：RZ-Fix2-A
+- RZ-Fix1 日志阶段判定完成并冻结：后续只维护，不继续扩展 Probe、文件日志或诊断包
+- 撤回 ProbeScope / Trace / 高频摘要预研入口，Probe 系统延期到真实 bug 复现且普通日志不足时再做
+- 顶部区域继续保持两行结构，改为主命令区与编辑工具区的分组式布局
+- 第一行按“文件 / 编辑 / 运行”分组，右侧保留克制的状态显示
+- 第二行按“选择 / 变换 / 视图 / 辅助”分组，右侧保留当前工具状态
+- 不改中央视口、不接 Vulkan、不扩展日志系统、不接 Probe
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.7-fix — 日志详情可读性与复制验收 (2026-07-06)
+- 原历史编号：RZ-Fix1-G-R1
+- 右侧日志详情区改为更紧凑的可读布局：顶部聚合显示时间、级别、来源和分类
+- 消息与详情继续使用只读正文区域，便于选择/复制日志正文
+- 重复次数、上下文 ID、操作链路 ID 改为键值行，空值继续显示“无”
+- 保留“复制详情”按钮与结构化中文复制文本格式
+- 保持详情只由点击日志行选择驱动，不使用 Hover / PointerMoved 刷新
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.6-rz — 日志详情面板与复制单条日志 (2026-07-06)
+- 原历史编号：RZ-Fix1-G
+- 底部日志展开区改为左侧日志列表 + 右侧日志详情，点击日志行后通过 `SelectedLogEntry` 显示详情
+- 新增 `LogDetailPanel`，显示时间、级别、来源、分类、消息、详情、重复次数、上下文 ID、操作链路 ID
+- 未选择日志时显示明确空状态：“未选择日志，点击左侧日志行后显示详情”
+- 新增 `EditorLogClipboardText`，集中生成结构化中文复制文本，复制逻辑不写入 XAML 或主 VM
+- 新增“复制详情”按钮，使用 Avalonia 剪贴板接口复制单条日志详情
+- 日志详情由点击选择驱动，不使用 Hover / PointerMoved 刷新详情
+- 保持普通 UI 标签不可选，仅日志消息和详情正文使用只读文本框便于复制
+- `docs/diagnostic-safety.md` 补充日志详情选择规则：禁止 hover 驱动详情刷新
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.5-fix — 构建环境与低频日志总线验收收口 (2026-07-06)
+- 原历史编号：RZ-Fix1-F-R1
+- `NuGet.Config` 移除缺失的 `.nuget-local` 本地源，改为只保留 `nuget.org`，避免新克隆仓库因本地源不存在而无法 restore
+- `run.bat` 改为稳定入口：先 restore，再 `--no-restore` build，最后启动当前 `XuanYu.Editor.UI`
+- 审计低频日志总线：`SampleLogEntries` 仅在 `UiVm` 实例初始化时作为种子进入实例内 Buffer，过滤切换不会重复追加种子日志
+- 确认摘要条来自 `EditorLogSummary.From(_logBuffer.All)` 计算错误数、警告数和最近事件
+- 确认过滤按钮只返回过滤视图，不删除 `EditorLogBuffer` 原始日志
+- 搜索确认 `PointerMoved / Hover / DragPreview / RenderFrame / Picking Hover / Splitter Drag` 未写入普通底部日志
+- `docs/diagnostic-safety.md` 补充后台任务日志规则：后台构建、导入、加载、保存或渲染摘要未来接入时必须通过日志队列或 UI 调度合批刷新，不得直接修改 UI 绑定集合
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.4-rz — 低频日志总线接入 (2026-07-06)
+- 原历史编号：RZ-Fix1-F
+- 新增 `Vm/Logging` 低频日志模块：`EditorLogBus`、`EditorLogBuffer`、`EditorLogSummary`、`EditorLogFilter`、`EditorLogFilterQuery`、`EditorLogRepeatKey`
+- 底部日志从纯 `SampleLogEntries` 过渡为 Buffer 驱动；`SampleLogEntries` 仅作为初始化种子，运行中的按钮命令和工具切换会通过 `EditorLogBus` 写入
+- `EditorLogBuffer` 最多保留最近 500 条日志，并对连续相同日志使用 `RepeatCount` 合并
+- 摘要条改为从 Buffer 真实计算错误数、警告数和最近事件
+- 过滤按钮接入真实过滤：全部 / 信息 / 警告 / 错误 / 构建 / 任务 / 输入 / 渲染
+- 首批只接低频 UI 事件：编辑器布局恢复、项目打开、启动渲染提示、新建/打开/保存/运行/停止/构建命令、工具切换
+- 明确不接 PointerMoved / Hover / Picking Hover / DragPreview / RenderFrame / Splitter Drag / Vulkan 初始化 / 中央视口渲染链路
+- `docs/diagnostic-safety.md` 补充低频日志准入清单和禁止高频接入清单
+- `file-tree.md` 同步当前真实文件数：102
+
+## v0.2.1.3-fix — 日志显示语义与高频风险小修审计 (2026-07-06)
+- 原历史编号：RZ-Fix1-E-R1
+- 底部日志显示层中文化：内部枚举仍保留 `Editor / Layout` 等稳定标识，UI 显示为“编辑器 / 布局 / 项目 / 加载 / 渲染 / 后端 / 输入 / 捕获”等中文文本
+- 重复折叠确认绑定到对应日志行末尾，示例行显示“点击拾取未命中任何对象  重复 6 次”，不再像面板级状态
+- 示例拾取日志从“拾取结果为空”改为“点击拾取未命中任何对象”，明确它是低频点击事实日志，不代表 Hover / PointerMoved 逐条输出
+- 搜索框界面文案从开发占位“搜索占位”改为用户可见的“搜索日志...”
+- `docs/diagnostic-safety.md` 新增“底部普通日志准入”规则：PointerMoved / Hover / DragPreview / RenderFrame / Picking Hover / Splitter Drag 禁止逐条进入底部日志
+- 截图复查右侧“调试”页：当前上下文、当前对象、工具/输入状态以快照方式显示，不作为第二个日志面板
+- Build: 0 Warning, 0 Error
+
+## v0.2.1.2-rz — 日志系统布局与调试快照职责收口 (2026-07-06)
+- 原历史编号：RZ-Fix1-E
+- `file-tree.md` 重建为当前工作区真实文件树，按 `rg --files` 统计 95 个文件，删除旧文档中已不存在的历史项目/目录记录
+- 底部日志栏从滚动文本占位升级为全局事实日志视图：摘要条、级别/来源过滤入口、搜索占位、列式日志列表、空状态与重复折叠占位
+- 明确底部日志只展示低频事实记录，示例覆盖 Editor / Project / Render / Build / Task / Input，不接真实日志后端、不接 Vulkan、不改中央视口
+- 新增轻量日志模型：`LogEntry`、`EditorLogLevel`、`EditorLogSource`、`EditorLogCategory`，字段预留 Detail / ContextId / CorrelationId / RepeatCount
+- `SampleLogEntries` 替代旧 `LogText`，避免 UI 内硬编码纯字符串日志，为后续 `EditorLogBuffer / EditorLogBus` 接入预留边界
+- 右侧“调试”页收口为当前状态快照：当前上下文、当前对象、工具状态、输入状态；不追加滚动日志，不与底部日志抢职责
+- 调试示例文案明确高频事件策略：PointerMoved / Hover / DragPreview 后续走摘要、覆盖快照或探针，不逐条进入普通日志 UI
+- 所有新增和修改的 `XuanYu.Editor.UI` `.cs / .axaml` 文件均保持 ≤100 行
+- Build: 0 Warning, 0 Error；截图复查底部日志与右侧调试职责清晰
+
+## v0.2.1.1-rz — Avalonia 编辑器 UI 骨架收口与底部日志栏接入 (2026-07-05 20:47)
+- 原历史编号：RZ-Fix1-D
+- 新增轻量 `XuanYu.Editor.UI` 编辑器外壳：顶部工具区、左侧项目/层级、中央深色视口、右侧检查器、底部状态/日志栏
+- 顶部改为两行紧凑工具栏：第一行主命令（新建/打开/保存/撤销/重做/运行/停止），第二行编辑工具（选择/移动/旋转/缩放/框选/聚焦/平移/环绕/吸附）
+- 顶部命令和编辑工具全部改为集中管理的 SVG / PathData 图标，禁止字符、Unicode、emoji 占位
+- 左侧面板收口为 `项目 / 层级` 两个页签；项目树和层级树均使用 SVG 图标，去掉重复的“工具”页
+- 右侧检查器收口为对象摘要 + 基础信息，删除重复的“当前选择”文案
+- 左右侧栏页签统一为轻量 Tab Bar：浅蓝激活态、蓝色底线、非激活灰蓝文字
+- 中央视口加入编辑器感占位：网格、原点轴线、视图标签、方向提示、操作提示
+- 底部栏升级为可展开日志面板：默认一行日志摘要，点击后展开 `日志 / 问题 / 构建 / 任务` 四页签，日志格式保持中文
+- 新增 `XuanYu.Editor.UI/Icons/EditorIcons.axaml` 集中管理 UI 图标
+- 新增 `XuanYu.Editor.UI/Vm/LogText.cs` 保存静态中文日志示例
+- Build: 0 Warning, 0 Error
+
