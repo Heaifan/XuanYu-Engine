@@ -20,6 +20,18 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.16-fix
+MAP-A-R1-D5-R1-F3-F3 Blender 风格导航视图收尾（2026-08-03，Commit 本轮落库为准）
+- F3-F2 真机复验：相机崩溃修复基本通过；**普通 Orbit 地平线滚转 FAIL + 导航 Gizmo 视觉 FAIL + 侧视表现体验 FAIL**（数学正确，但缺正交视图/视图平面网格）。
+- 根因（本轮源码确认）：F3-F2 的 TryOrbit 以 start.Up 为 PreferredUp——顶视（Up=+Y）后 Orbit 继承 +Y，画面整体转 90°（Roll）；Gizmo 为 88 DIP 调试图形（六端点全绘无正对处理、轴线穿过中心球、标签层级弱）。
+- 修复（本轮目标 1/2；目标 3 正交投影审计为无 → 拆 F3-F4）：
+  - **无 Roll Orbit**：TryOrbit 改用世界 +Z 重建基（Right=Forward×WorldUp、Up=Right×Forward），顶/底视平行时 CameraBasis 自动回退最不平行世界轴（+Y/+X），Up 永不下翻、连续环绕不累积倾斜；Dolly/Pan 保留 start.Up 语义；删除无调用点的 Result 死代码；
+  - **Gizmo 视觉重做（Blender 结构）**：控件 88→96 DIP、边距 12→14、轴投影 25→27、负端点 5.5→5；七层绘制（后轴→后端点→中心球→前轴→前端点→标签→Hover 环）；轴线从中心球边缘开始（不穿过球）；轴正对相机（投影 <6 DIP）时隐藏背向端点与轴线、朝向端点置于中心球中央；标签仅正方向且朝向时显示（11 DIP 半粗）；新配色 X #C4874F / Y #5684A8 / Z #8EA8C2、球 #D7DEE6、描边 #66788B、背向 30% Alpha；Hover 亮环；editor_nav_gizmo.frag 重写并经 glslc 重新生成 ShaderBytecode.NavGizmoFrag.cs（120 词/行，38 行）；
+  - **正交投影/视图平面网格**：审计确认仓库无 Orthographic（仅透视 FOV）→ 按计划冻结为 F3-F4。
+- 验证：新增 CameraNavigationRollTests（斜视 Orbit 后 Up 保持 +Z 主导且无水平横移、100 次环绕不累积倾斜、顶/底视 Orbit 稳定）+ Gizmo 正对合同测试（.Facing.cs）；红→绿：修正 4 处测试期望（均为合同变更/测试数据错误：85° 俯角 fallback +Y 是稳定态、斜视 up 自然倾斜、顶视基测试数据）；Core 全量 291/291、World 435/435、WarCore 22/22。
+- 视觉冒烟：**未执行**（本环境无法操作画面），如实记录——自动测试通过、真机待用户验收；不宣布 F3-F3 视觉通过、不关闭阶段。
+- 治理：版本 v0.2.24.15-fix → v0.2.24.16-fix（五处同步）；新增 CameraNavigationRollTests.cs/NavigationGizmoLayoutTests.Facing.cs；CameraState 严格合同未放宽；未创建 Tag/Release。
+
 ## v0.2.24.15-fix
 MAP-A-R1-D5-R1-F3-F2 相机正交基不变量与导航组合链崩溃修复（2026-08-03，Commit 本轮落库为准）
 - F3-F1 真机验收：**FAIL**。故障：滚轮 Dolly 构造 CameraState 时 up 非法，ArgumentOutOfRangeException 逃出 Win32 消息循环，编辑器进程退出。

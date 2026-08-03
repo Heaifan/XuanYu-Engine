@@ -30,7 +30,8 @@ public sealed class CameraNavigationTests
 
         AssertFinite(result.Camera.Position);
         AssertFinite(result.Camera.Forward);
-        Assert.True(result.Camera.Up.Dot(Vector3d.UnitZ) > 0.0001);
+        Assert.True(result.Camera.Up.Dot(Vector3d.UnitZ) > -0.2, "F3-F3：顶点奇异区回退稳定 Up，不翻转");
+        Assert.True(System.Math.Abs(result.Camera.Forward.Cross(result.Camera.Up).Length - 1.0) < 1e-6);
     }
 
     [Fact]

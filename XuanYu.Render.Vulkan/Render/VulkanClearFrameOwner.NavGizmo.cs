@@ -40,8 +40,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
         scene[12] = _extent.Width;
         scene[13] = _extent.Height;
         scene[14] = (float)_renderProjection.ViewportDpiScale;
-        scene[16] = 88.0f; // 区域尺寸 DIP
-        scene[17] = 12.0f; // 边距 DIP
+        scene[16] = 96.0f; // 区域尺寸 DIP（F3-F3）
+        scene[17] = 14.0f; // 边距 DIP（F3-F3）
         scene[18] = _renderProjection.AssistState.NavGizmoHoverIndex;
         fixed (float* pScene = scene)
         {

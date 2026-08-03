@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460" font-family="Microsoft YaHei, sans-serif">
+  <rect width="760" height="460" rx="10" fill="#0f172a"/>
+  <text x="380" y="34" text-anchor="middle" fill="#e2e8f0" font-size="18" font-weight="bold">F3-F3 Blender 风格导航视图收尾</text>
+  <text x="380" y="56" text-anchor="middle" fill="#94a3b8" font-size="12">v0.2.24.16-fix · 目标 1/2 完成；正交投影+视图平面网格审计无能力 → 拆 F3-F4</text>
+
+  <g font-size="12">
+    <rect x="30" y="76" width="330" height="30" rx="6" fill="#7f1d1d"/>
+    <text x="195" y="96" text-anchor="middle" fill="#fecaca" font-weight="bold">修复前（F3-F2 复验 FAIL）</text>
+    <rect x="30" y="112" width="330" height="116" rx="6" fill="#1e293b"/>
+    <text x="42" y="134" fill="#fbbf24">① 顶视后 Orbit 继承 Up=+Y → 画面转 90° Roll</text>
+    <text x="42" y="156" fill="#fbbf24">② Gizmo 88 DIP：六端点全绘、正对成团</text>
+    <text x="42" y="178" fill="#fbbf24">③ 轴线穿过中心球、无前后遮挡分层</text>
+    <text x="42" y="200" fill="#fbbf24">④ 标签层级弱、配色低区分度</text>
+    <text x="42" y="222" fill="#f87171">⑤ 侧视：透视+XY 地面 → 网格消失（数学正常，体验 FAIL）</text>
+
+    <rect x="380" y="76" width="350" height="30" rx="6" fill="#14532d"/>
+    <text x="555" y="96" text-anchor="middle" fill="#bbf7d0" font-weight="bold">修复后（本轮）</text>
+    <rect x="380" y="112" width="350" height="116" rx="6" fill="#1e293b"/>
+    <text x="392" y="134" fill="#86efac">① Orbit 用世界 +Z 重建基 → 地平线水平无 Roll</text>
+    <text x="392" y="156" fill="#86efac">② Gizmo 96 DIP：正对只显示朝向端点</text>
+    <text x="392" y="178" fill="#86efac">③ 七层绘制：后轴/端点→球→前轴/端点→标签→Hover 环</text>
+    <text x="392" y="200" fill="#86efac">④ 轴线从球边缘开始；标签仅朝向正方向</text>
+    <text x="392" y="222" fill="#86efac">⑤ 配色 X #C4874F / Y #5684A8 / Z #8EA8C2 · 背向 30%</text>
+  </g>
+
+  <g font-size="12">
+    <rect x="30" y="248" width="700" height="30" rx="6" fill="#1e293b"/>
+    <text x="380" y="268" text-anchor="middle" fill="#e2e8f0" font-weight="bold">无 Roll Orbit 合同（CameraNavigationRollTests）</text>
+    <rect x="30" y="284" width="700" height="64" rx="6" fill="#0b1220"/>
+    <text x="50" y="306" fill="#4ade80">✓ 斜视 Orbit 后 Up 保持 +Z 主导、无水平横移 · 100 次环绕不累积倾斜</text>
+    <text x="50" y="328" fill="#4ade80">✓ 顶/底视 Orbit 稳定（顶点奇异区回退 +Y/+X，Up 永不下翻）· Dolly/Pan 保留 Up 语义</text>
+    <text x="50" y="344" fill="#4ade80">✓ CameraBasis 严格合同未放宽 · CameraState 合同未放宽</text>
+  </g>
+
+  <g font-size="12">
+    <rect x="30" y="364" width="700" height="30" rx="6" fill="#14532d"/>
+    <text x="380" y="384" text-anchor="middle" fill="#bbf7d0" font-weight="bold">验证与 Git</text>
+    <rect x="30" y="400" width="700" height="52" rx="6" fill="#0b1220"/>
+    <text x="50" y="422" fill="#4ade80">✓ 正式门禁：Build 0E · Core 291/291 · World 435/435 · WarCore 22/22 · arch-a-guard PASS</text>
+    <text x="50" y="444" fill="#4ade80">✓ glslc 字节码重生成（38 行）· 版本五处 v0.2.24.16-fix · 视觉冒烟未执行（待真机验收）</text>
+  </g>
+</svg>

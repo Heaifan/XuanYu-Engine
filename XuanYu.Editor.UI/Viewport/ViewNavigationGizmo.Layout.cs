@@ -5,9 +5,10 @@ using XuanYu.Core.Math;
 
 namespace XuanYu.Editor.UI;
 
-// F3-D2：导航 Gizmo 布局纯数学——六个世界方向投影到 Gizmo 屏幕平面。
+// F3-D2/F3-F3：导航 Gizmo 布局纯数学——六个世界方向投影到 Gizmo 屏幕平面。
 // 投影：screenX = dot(d, Right)；screenY = -dot(d, Up)；depth = dot(d, Forward)。
 // 深度从远到近排序：背向端点先绘制（小、淡），朝向端点后绘制（大、标签）。
+// F3-F3：轴正对相机（投影长度 < 6 DIP）时只显示朝向端点（置于中心球中央），隐藏背向端点与轴线。
 public sealed record GizmoEndpoint(
     string Name,
     bool IsPositive,
@@ -19,13 +20,14 @@ public sealed record GizmoEndpoint(
 
 public static class NavigationGizmoLayout
 {
-    public const double GizmoSize = 88.0;
-    public const double AxisRadius = 25.0;
+    public const double GizmoSize = 96.0;
+    public const double AxisRadius = 27.0;
     public const double CenterRadius = 13.0;
     public const double PositiveEndpointRadius = 9.0;
-    public const double NegativeEndpointRadius = 5.5;
+    public const double NegativeEndpointRadius = 5.0;
     public const double HitRadius = 13.0;
     public const double AxisWidth = 1.5;
+    public const double FacingProjectionLimit = 6.0; // 轴正对相机判定（屏幕投影长度，DIP）
 
     // 六方向（Z-Up 右手系）。顺序固定，供绘制与命中统一使用。
     public static readonly IReadOnlyList<(string Name, Vector3d Direction, bool Positive)> Directions =
@@ -56,21 +58,23 @@ public static class NavigationGizmoLayout
         foreach (var (name, direction, positive) in Directions)
         {
             var depth = Depth(direction, forward);
-            // 背向（depth<0）：35~45% Alpha、小端点；侧向（|depth|<0.35）：70~85%；朝向：100%。
+            var sx = direction.Dot(right);
+            var sy = -direction.Dot(up);
+            var projectionLength = Math.Sqrt((sx * sx) + (sy * sy)) * AxisRadius;
+            var facingCamera = projectionLength < FacingProjectionLimit;
+            // F3-F3：正对相机时只显示朝向端点（位于中心球中央）；背向端点与轴线隐藏。
+            var visible = !facingCamera || depth > 0.0;
+            // 背向 28~35% Alpha、侧向 70~85%、朝向 100%（F3-F3 合同）。
             double alpha;
-            if (depth < -0.35) alpha = 0.40;
+            if (depth < -0.35) alpha = 0.30;
             else if (depth < 0.35) alpha = 0.78;
             else alpha = 1.0;
             var radius = positive ? PositiveEndpointRadius : NegativeEndpointRadius;
-            list.Add(new GizmoEndpoint(name, positive, Project(direction, right, up, center),
-                depth, alpha, radius, IsVisible: true));
+            var screen = facingCamera ? center : Project(direction, right, up, center);
+            list.Add(new GizmoEndpoint(name, positive, screen, depth, alpha, radius, visible));
         }
+
         list.Sort((a, b) => a.Depth.CompareTo(b.Depth));
         return list;
     }
-
-    // 轴正对相机时投影长度趋零——端点收缩到中心附近，不产生 NaN（Avalonia Point 有界）。
-    public static Point ClampToBounds(Point p) => new(
-        double.IsFinite(p.X) ? Math.Clamp(p.X, 0.0, GizmoSize) : GizmoSize * 0.5,
-        double.IsFinite(p.Y) ? Math.Clamp(p.Y, 0.0, GizmoSize) : GizmoSize * 0.5);
 }

@@ -57,6 +57,22 @@ public sealed class NavigationGizmoOverlayContractTests
         Assert.Contains("sortEndpoints", frag); // 深度排序（背向先画）
     }
 
+    // F3-F3：Blender 结构合同——正对处理、轴线从球边缘开始、新配色、标签仅朝向正方向。
+    [Fact]
+    public void Nav_gizmo_shader_f3_f3_contract()
+    {
+        var frag = ShaderFile("editor_nav_gizmo.frag");
+        Assert.Contains("FACING_LIMIT", frag);     // 正对相机判定
+        Assert.Contains("axisMask", frag);         // 轴线从中心球边缘开始（不穿过球）
+        Assert.Contains("#C4874F", frag);          // X 淡金褐（注释即合同）
+        Assert.Contains("#5684A8", frag);          // Y 蓝灰
+        Assert.Contains("#8EA8C2", frag);          // Z 浅钢蓝
+        Assert.Contains("#D7DEE6", frag);          // 中心球填充
+        Assert.Contains("#66788B", frag);          // 中心球描边
+        Assert.Contains("e.visible = !facingCamera || depth > 0.0", frag); // 正对只显示朝向端点
+        Assert.Contains("!e.positive || e.depth <= 0.0", frag);            // 标签仅朝向正方向
+    }
+
     // 4. 悬停索引默认 -1 且流转到 RenderProjection。
     [Fact]
     public void Hover_index_defaults_to_none_and_flows_to_projection()

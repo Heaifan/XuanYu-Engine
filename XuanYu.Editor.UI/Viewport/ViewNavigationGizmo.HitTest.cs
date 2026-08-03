@@ -4,9 +4,10 @@ using Avalonia;
 
 namespace XuanYu.Editor.UI;
 
-// F3-D3：导航 Gizmo 命中测试——六端点与中心球。
+// F3-D3/F3-F3：导航 Gizmo 命中测试——六端点与中心球。
 // 命中半径 ≥13 DIP；重叠时最靠近相机的端点优先（按深度倒序检查）；
-// 控件区域（88×88）外不捕获——点击继续进入实体 Picking / 框选 / 相机 / 变换 Gizmo。
+// 控件区域（96×96）外不捕获——点击继续进入实体 Picking / 框选 / 相机 / 变换 Gizmo。
+// 正对相机的朝向端点位于中心球中央，端点命中优先于中心球（先查端点再查球）。
 public sealed record GizmoHitResult(string? Endpoint, bool HitCenter, bool HitGizmo)
 {
     public bool IsEndpoint => Endpoint is not null;
@@ -29,7 +30,7 @@ public static class NavigationGizmoHitTest
         return new GizmoHitResult(null, false, false);
     }
 
-    // 控件区域外（88×88）不截获输入。
+    // 控件区域外（96×96）不截获输入。
     public static bool IsInsideGizmo(Point point) =>
         point.X >= 0.0 && point.X <= NavigationGizmoLayout.GizmoSize &&
         point.Y >= 0.0 && point.Y <= NavigationGizmoLayout.GizmoSize;

@@ -5,10 +5,11 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.Core.Tests.Render;
 
-// F3-D2/D3：导航 Gizmo 布局投影与命中测试（计划 11.2/11.3）。
-public sealed class NavigationGizmoLayoutTests
+// F3-D2/D3/F3-F3：导航 Gizmo 布局投影与命中测试（96 DIP 区域；正对合同见 .Facing.cs）。
+public sealed partial class NavigationGizmoLayoutTests
 {
-    static readonly Point Center = new(44.0, 44.0);
+    static readonly Point Center = new(48.0, 48.0);
+
     [Fact]
     public void Default_direction_projections_are_correct()
     {
@@ -20,8 +21,8 @@ public sealed class NavigationGizmoLayoutTests
         Assert.True(py.Screen.Y < Center.Y, "+Y 应投影在中心上方（-Up 映射）");
         foreach (var e in endpoints)
         {
-            Assert.InRange(e.Screen.X, 0.0, 88.0);
-            Assert.InRange(e.Screen.Y, 0.0, 88.0);
+            Assert.InRange(e.Screen.X, 0.0, 96.0);
+            Assert.InRange(e.Screen.Y, 0.0, 96.0);
         }
     }
 
@@ -36,7 +37,6 @@ public sealed class NavigationGizmoLayoutTests
             new Vector3d(0, 1, 0), new Vector3d(-1, 0, 0), new Vector3d(0, 0, -1), Center);
         var x1 = endpoints1.First(e => e.Name == "+X").Screen;
         var y1 = endpoints1.First(e => e.Name == "+Y").Screen;
-        // +Y 占据原 +X 位置；+X 为原 +Y 的中心镜像（Y 轴翻转）。
         Assert.True(System.Math.Abs(x0.X - y1.X) < 0.001 && System.Math.Abs(x0.Y - y1.Y) < 0.001,
             "旋转后 +Y 位置应等于旋转前 +X 位置（X/Y 交换）");
         Assert.True(System.Math.Abs(y0.X - x1.X) < 0.001
@@ -44,33 +44,25 @@ public sealed class NavigationGizmoLayoutTests
             "旋转后 +X 位置应为旋转前 +Y 的中心镜像");
     }
 
+    // F3-F3：轴正对相机（投影长度 < 6 DIP）时只显示朝向端点（中心球中央），隐藏背向端点与轴线。
     [Fact]
-    public void Top_view_z_endpoint_collapses_to_center()
+    public void Slant_view_all_endpoints_visible_and_sorted()
     {
+        // 真实斜视相机基（DefaultEditorCamera）：无轴正对，六端点全部可见。
+        var camera = DefaultEditorCamera.Create(1);
         var endpoints = NavigationGizmoLayout.Compute(
-            new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, -1), Center);
-        foreach (var e in endpoints)
-            Assert.True(double.IsFinite(e.Screen.X) && double.IsFinite(e.Screen.Y), "投影不得产生 NaN");
-        var pz = endpoints.First(e => e.Name == "+Z");
-        Assert.Equal(44.0, pz.Screen.X, 3);
-        Assert.Equal(44.0, pz.Screen.Y, 3);
-    }
-
-    [Fact]
-    public void Depth_sorting_back_first_front_last()
-    {
-        var endpoints = NavigationGizmoLayout.Compute(
-            new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, -1), Center);
+            camera.Right, camera.Up, camera.Forward, Center);
+        Assert.All(endpoints, e => Assert.True(e.IsVisible));
         for (var i = 1; i < endpoints.Count; i++)
             Assert.True(endpoints[i - 1].Depth <= endpoints[i].Depth, "端点应按深度升序排列");
         Assert.True(endpoints[0].Alpha < endpoints[^1].Alpha, "背向端点应比朝向端点更淡");
+        Assert.Equal(0.30, endpoints[0].Alpha, 2); // F3-F3 背向 Alpha 合同
     }
 
     // 命中：正方向端点命中；中心命中中心球（不误触端点）；负方向可点击；区域外不捕获。
     [Fact]
     public void Hit_test_prefers_front_endpoint_and_center()
     {
-        // 默认斜视相机：无端点与中心重叠（顶视图下 ±Z 都收缩在中心，不适用此断言）。
         var camera = DefaultEditorCamera.Create(1);
         var endpoints = NavigationGizmoLayout.Compute(
             camera.Right, camera.Up, camera.Forward, Center);
@@ -84,6 +76,8 @@ public sealed class NavigationGizmoLayoutTests
         Assert.False(NavigationGizmoHitTest.IsInsideGizmo(new Point(-5, -5)));
         Assert.False(NavigationGizmoHitTest.IsInsideGizmo(new Point(100, 100)));
     }
+
+    // F3-F3：正对朝向端点位于中心，命中优先于中心球（见 .Facing.cs）。
 
     // 交互阈值：<4 DIP 点击；≥4 DIP Orbit（纯数学镜像）。
     [Theory]

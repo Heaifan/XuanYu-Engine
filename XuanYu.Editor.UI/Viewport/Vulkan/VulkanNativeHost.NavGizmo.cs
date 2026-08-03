@@ -7,8 +7,8 @@ namespace XuanYu.Editor.UI;
 // 端点点击 → 标准视角命令；中心球/空白按下 → 复用 UiVm 相机会话 Orbit（<4 DIP 视为点击不触发视角跳转）。
 public sealed partial class VulkanNativeHost
 {
-    const double NavGizmoMarginDips = 12.0;
-    const double NavGizmoSizeDips = 88.0;
+    const double NavGizmoMarginDips = 14.0;
+    const double NavGizmoSizeDips = 96.0;
     bool _navGizmoPressed;
     string? _navGizmoEndpoint;
     Point _navGizmoDown;

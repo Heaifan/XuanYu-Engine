@@ -1,5 +1,11 @@
-版本：v0.2.24.15-fix
+版本：v0.2.24.16-fix
 # XuanYu Engine 文件树
+
+## F3-F3 职责索引（v0.2.24.16-fix）
+
+- `XuanYu.Core.Tests/Camera/CameraNavigationRollTests.cs`：Orbit 地平线合同（+Z 主导、无 Roll、100 次环绕不累积、顶/底视稳定）
+- `XuanYu.Core.Tests/Render/NavigationGizmoLayoutTests.Facing.cs`：Gizmo 正对相机合同（只显示朝向端点、命中优先端点）
+- 修改：`CameraNavigation.Try.cs`（Orbit 用世界 +Z 重建基防 Roll；删除 Result 死代码）、`ViewNavigationGizmo.Layout.cs`（96 DIP/27 轴长/5 负端点/正对处理/背向 30%）、`ViewNavigationGizmo.HitTest.cs`（96 区域）、`VulkanNativeHost.NavGizmo.cs`（96/14）、`VulkanClearFrameOwner.NavGizmo.cs`（push 96/14）、`editor_nav_gizmo.frag`（七层绘制/遮挡/正对/配色/标签/Hover 环）+ `ShaderBytecode.NavGizmoFrag.cs`（glslc 重生成）、测试合同更新（NavigationGizmoLayoutTests/OverlayContractTests/CameraNavigationTests）
 
 ## F3-F2 职责索引（v0.2.24.15-fix）
 
