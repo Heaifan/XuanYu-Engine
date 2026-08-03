@@ -2,7 +2,6 @@ using Silk.NET.Vulkan;
 using XuanYu.Core.Space;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Pipeline;
-
 namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
@@ -17,8 +16,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _skyPipeline = pipeline;
         _skyPipelineLayout = layout;
         if (_views.Length > 0 && !RecordCommandBuffers(_views)) throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
-    }
-    void RecordDraw(CommandBuffer cb)
+    }    void RecordDraw(CommandBuffer cb)
     {
         if (_pipeline.Handle == 0 || _pipelineLayout.Handle == 0) return;
         var viewport = new[] { new Viewport { X = 0, Y = 0, Width = _extent.Width, Height = _extent.Height, MinDepth = 0, MaxDepth = 1 } };
@@ -38,36 +36,38 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 BindFramePipeline(cb, draw.Kind);
                 if (draw.Kind == RenderDrawKind.MapBounds && _mapTerrainIndexBuffer is not null)
                     DrawMapTerrain(cb, pScene);
-                // F2-R2：网格/轴/原点独立全屏 Pass（单一事实源，独立开关）。
+                // F2-R2/F3-F1：网格/轴/原点/导航 Gizmo 独立全屏 Pass。
                 if (draw.Kind == RenderDrawKind.EditorReferenceGrid) DrawReferenceGrid(cb);
                 else if (draw.Kind == RenderDrawKind.WorldOrigin) DrawWorldOrigin(cb);
                 else if (draw.Kind == RenderDrawKind.WorldAxes) DrawWorldAxes(cb);
+                else if (draw.Kind == RenderDrawKind.NavigationGizmo) DrawNavigationGizmo(cb);
                 else if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);
                 else if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
                 else DrawGizmo(cb, pScene, draw);
             }
         }
     }
-
     void BindFramePipeline(CommandBuffer cb, RenderDrawKind kind)
     {
         if (kind == RenderDrawKind.EditorReferenceGrid)
         {
             if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _gridPipeline);
-            return;
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _gridPipeline); return;
         }
         if (kind == RenderDrawKind.WorldOrigin)
         {
             if (_originPipeline.Handle == 0 || _originPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _originPipeline);
-            return;
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _originPipeline); return;
         }
         if (kind == RenderDrawKind.WorldAxes)
         {
             if (_axesPipeline.Handle == 0 || _axesPipelineLayout.Handle == 0) return;
-            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _axesPipeline);
-            return;
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _axesPipeline); return;
+        }
+        if (kind == RenderDrawKind.NavigationGizmo)
+        {
+            if (_navGizmoPipeline.Handle == 0 || _navGizmoPipelineLayout.Handle == 0) return;
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _navGizmoPipeline); return;
         }
         if (kind != RenderDrawKind.EditorBackground)
         {
@@ -76,8 +76,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         }
         if (_skyPipeline.Handle == 0 || _skyPipelineLayout.Handle == 0) return;
         _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _skyPipeline);
-    }
-    void BindProceduralVertexBuffer(CommandBuffer cb)
+    }    void BindProceduralVertexBuffer(CommandBuffer cb)
     {
         if (_proceduralVertexBuffer is null) return;
         var buffer = _proceduralVertexBuffer.Buffer;

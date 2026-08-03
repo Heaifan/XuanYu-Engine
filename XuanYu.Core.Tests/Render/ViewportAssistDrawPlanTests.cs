@@ -3,6 +3,7 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Core.Tests.Render;
 
+// F3-F1：导航 Gizmo 恒为最后一项（Overlay Pass 收尾）。
 public sealed class ViewportAssistDrawPlanTests
 {
     [Fact]
@@ -13,12 +14,12 @@ public sealed class ViewportAssistDrawPlanTests
 
         var plan = RenderDrawPlan.GetFrameDrawPlan(projection);
 
-        // F2-R2 顺序：背景 → 网格 → 原点（无地图、无世界轴）。
+        // F2-R2 顺序：背景 → 网格 → 原点（无地图、无世界轴）；F3-F1：导航 Gizmo 收尾。
         Assert.Equal(RenderDrawKind.EditorBackground, plan[0].Kind);
         Assert.Equal(RenderDrawKind.EditorReferenceGrid, plan[1].Kind);
         Assert.Equal(RenderDrawKind.WorldOrigin, plan[2].Kind);
         Assert.DoesNotContain(plan, entry => entry.Kind == RenderDrawKind.WorldAxes);
-        Assert.Equal(RenderDrawKind.MoveGizmo, plan[^1].Kind);
+        Assert.Equal(RenderDrawKind.NavigationGizmo, plan[^1].Kind);
     }
 
     [Fact]
@@ -34,7 +35,7 @@ public sealed class ViewportAssistDrawPlanTests
         Assert.Equal(RenderDrawKind.WorldAxes, axes.Kind);
         Assert.Equal(-1, axes.EntityIndex);
         Assert.Null(axes.EntityType);
-        Assert.Equal(RenderDrawKind.MoveGizmo, plan[^1].Kind);
+        Assert.Equal(RenderDrawKind.NavigationGizmo, plan[^1].Kind);
     }
 
     [Fact]
@@ -45,6 +46,8 @@ public sealed class ViewportAssistDrawPlanTests
 
         var plan = RenderDrawPlan.GetFrameDrawPlan(projection);
 
-        Assert.Empty(plan);
+        // F3-F1：导航 Gizmo 独立于视口辅助开关（始终显示覆盖层）。
+        Assert.Single(plan);
+        Assert.Equal(RenderDrawKind.NavigationGizmo, plan[0].Kind);
     }
 }

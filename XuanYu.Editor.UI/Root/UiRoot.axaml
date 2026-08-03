@@ -47,8 +47,7 @@
         <Border BorderBrush="#C9D2DC" BorderThickness="1" ClipToBounds="True">
           <local:Main />
         </Border>
-        <!-- F3：右上角 Blender 风格导航 Gizmo（Avalonia 覆盖层，在原生渲染窗口之上） -->
-        <local:ViewGizmo IsHitTestVisible="True"/>
+        <!-- F3-F1：导航 Gizmo 已移入 Vulkan Overlay Pass（原生子窗口 airspace 遮挡 Avalonia 覆盖层，命中走原生指针流） -->
       </Grid>
 
       <GridSplitter Grid.Column="3"

@@ -36,12 +36,14 @@ public sealed class ViewportChromeContractTests
     [Fact]
     public void View_gizmo_white_card_replaced()
     {
-        var xaml = UiFile(Path.Combine("Viewport", "ViewGizmo.axaml"));
-        Assert.DoesNotContain("#dce6f2", xaml);        // 白色卡片背景已删除
-        Assert.DoesNotContain("CornerRadius=\"10\"", xaml);
-        Assert.DoesNotContain("BoxShadow", xaml);
-        Assert.DoesNotContain("Button", xaml);         // 3×3 按钮网格已删除
-        Assert.Contains("ViewNavigationGizmo", xaml);  // 替换为导航 Gizmo
+        // F3-F1：Avalonia 覆盖层已删除（airspace 遮挡），导航 Gizmo 移入 Vulkan Overlay Pass。
+        var uiRoot = UiFile(Path.Combine("Root", "UiRoot.axaml"));
+        Assert.DoesNotContain("ViewGizmo", uiRoot);
+        var dir = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Viewport");
+        Assert.False(File.Exists(Path.Combine(dir, "ViewGizmo.axaml")), "ViewGizmo.axaml 应已删除");
+        Assert.False(File.Exists(Path.Combine(dir, "ViewNavigationGizmo.cs")), "Avalonia Gizmo 控件应已删除");
+        Assert.True(File.Exists(Path.Combine(dir, "ViewNavigationGizmo.Layout.cs")), "投影纯数学应保留（命中复用）");
+        Assert.True(File.Exists(Path.Combine(dir, "ViewNavigationGizmo.HitTest.cs")), "命中纯数学应保留");
     }
 
     [Fact]

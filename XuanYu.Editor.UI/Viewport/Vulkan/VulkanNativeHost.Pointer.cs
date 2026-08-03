@@ -13,15 +13,25 @@ public sealed partial class VulkanNativeHost
         if (DataContext is not UiVm vm) return;
         if (message.Message == NativePointerMessage.LeftDown)
         {
+            // F3-F1：导航 Gizmo 优先（右上角区域）；否则进入变换 Gizmo / Picking。
+            if (TryNavGizmoPress(vm, x, y)) return;
             if (TryBeginGizmo(vm, NativePointerId, x, y)) { _nativeDragActive = true; return; }
             ReportPointerPicking(vm, x, y);
             ReleaseExpectedCapture();
         }
         else if (message.Message == NativePointerMessage.MiddleDown)
             TryBeginNativeCamera(vm, NativePointerId, x, y, message.IsShiftDown);
-        else if (message.Message == NativePointerMessage.Move && message.IsLeftButtonDown) PreviewNativePointer(vm, x, y);
+        else if (message.Message == NativePointerMessage.Move && message.IsLeftButtonDown)
+        {
+            if (TryNavGizmoMove(vm, x, y)) return;
+            PreviewNativePointer(vm, x, y);
+        }
         else if (message.Message == NativePointerMessage.Move && message.IsMiddleButtonDown) PreviewNativeCamera(vm, x, y);
-        else if (message.Message == NativePointerMessage.LeftUp) CommitNativePointer(vm, x, y);
+        else if (message.Message == NativePointerMessage.LeftUp)
+        {
+            if (TryNavGizmoRelease(vm, x, y)) return;
+            CommitNativePointer(vm, x, y);
+        }
         else if (message.Message == NativePointerMessage.MiddleUp) EndNativeCamera(vm);
         else if (message.Message == NativePointerMessage.Wheel) vm.DollyCamera(message.WheelDelta / 120.0);
         else if (message.Message == NativePointerMessage.CaptureChanged) HandleNativeCaptureChanged(vm, message);
@@ -46,6 +56,7 @@ public sealed partial class VulkanNativeHost
     }
     void CancelNativeInput(UiVm vm, string reason)
     {
+        CancelNavGizmo(vm);
         CancelNativePointer(vm, reason);
         CancelNativeCamera(vm, reason);
     }

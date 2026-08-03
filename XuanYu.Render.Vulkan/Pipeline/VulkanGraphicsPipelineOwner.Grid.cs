@@ -25,4 +25,11 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
         => CreateFullscreenPass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
             ShaderBytecodeGridVert.Code, ShaderBytecodeWorldOriginFrag.Code, VulkanClearFrameOwner.ReferenceGridPushSize, log);
+
+    // F3-F1：导航 Gizmo Overlay Pass——屏幕空间、深度测试/写入关闭、始终最后绘制（不受原生窗口遮挡）。
+    internal static VulkanGraphicsPipelineOwner? CreateNavigationGizmo(Vk vk, VulkanDeviceOwner deviceOwner,
+        VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
+        => CreateFullscreenPass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
+            ShaderBytecodeNavGizmoVert.Code, ShaderBytecodeNavGizmoFrag.Code, VulkanClearFrameOwner.NavGizmoPushSize, log,
+            depthTest: false);
 }

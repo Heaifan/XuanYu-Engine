@@ -1,5 +1,17 @@
-版本：v0.2.24.11-fix
+版本：v0.2.24.12-fix
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D5-R1-F3-F1 职责索引（v0.2.24.12-fix）
+
+- `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.vert`：导航 Gizmo Overlay 顶点（全屏三角形，纯屏幕空间）
+- `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag`：导航 Gizmo 绘制（中心球/三轴/六端点/X·Y·Z 标签/深度排序/hover 高亮）
+- `XuanYu.Render.Vulkan/Shaders/editor_world_origin.frag`：世界原点**屏幕空间标记**（细十字线+空心圆+中心点，蓝灰描边+淡金褐中心点，恒定 10~16 DIP，不再贴地）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.NavGizmo.cs`：Gizmo Overlay Pass 绘制（80B push：Right/Up/Forward+视口+DPI+hover）
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoVert.cs` / `ShaderBytecode.NavGizmoFrag.cs` / `ShaderBytecode.WorldOriginFrag.cs`：字节码生成物
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs`：Gizmo 命中（原生指针流——右上角区域 → 局部坐标 → 端点命令 / Orbit 复用）
+- `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：NavGizmoHoverIndex（悬停索引流转）
+- `XuanYu.Render.Abstractions/RenderProjection.cs` / `RenderCameraProjection.cs`：ViewportDpiScale + Right 计算属性
+- 已删除：`ViewGizmo.axaml/.cs`、`ViewNavigationGizmo.cs/.Render.cs/.Input.cs`（Avalonia 覆盖层——airspace 遮挡；保留 Layout/HitTest 纯数学供命中）
 
 ## MAP-A-R1-D5-R1-F3 职责索引（v0.2.24.11-fix）
 

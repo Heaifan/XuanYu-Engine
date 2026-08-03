@@ -1,57 +1,56 @@
 #version 450
 
-// MAP-A-R1-D5-R1-F2-R2：世界原点标记独立全屏 Pass —— 片元着色器。
-// 只画世界原点标记（屏幕恒定 ~4px 半径，琥珀 #D1AE69 α0.70）；
-// 开关独立于 ShowGrid/ShowWorldAxes（DrawPlan 按 ShowOrigin 单独发放）。
+// MAP-A-R1-D5-R1-F3-F1：世界原点标记独立全屏 Pass —— 片元着色器（屏幕空间版）。
+// 不再投影到 Z=0 地面（旧版低角度透视被压扁成黄色面片）；
+// 改为：世界原点 (0,0,0) 投影到屏幕中心，画恒定尺寸的细十字线 + 小空心圆 + 中心点。
+// 蓝灰描边 #718096，中心淡金褐小点 #C18A55；开关独立于 ShowGrid/ShowWorldAxes。
 
 layout(push_constant) uniform GridPush {
-    mat4 viewProjection;        // 0   世界→裁剪（深度投影用）
-    mat4 inverseViewProjection; // 64  裁剪→世界（射线重建）
-    vec4 cameraPosition;        // 128 相机世界位置
-    vec4 viewportAndFar;        // 144 x,y=视口尺寸; z=Far; w=GridMaxDistance
-    vec4 gridScale;             // 160 未使用（保持布局与网格 Pass 一致）
+    mat4 viewProjection;        // 0   世界→裁剪
+    mat4 inverseViewProjection; // 64  未使用（保留布局）
+    vec4 cameraPosition;        // 128 未使用
+    vec4 viewportAndFar;        // 144 x,y=视口尺寸(px); z,w 未使用
 } pc;
 
-layout(location = 0) in vec4 vFarWorld;
-layout(location = 1) in vec4 vNearWorld;
 layout(location = 0) out vec4 outColor;
 
-const float ORIGIN_RADIUS_PX = 4.0;
-const float DEPTH_BIAS_FACTOR = 0.5;
-const float MIN_DEPTH_BIAS = 0.0000001;
-const float MAX_DEPTH_BIAS = 0.00002;
+const float CROSS_HALF_LEN = 8.0;   // 十字线半长（像素）
+const float CROSS_HALF_WID = 1.1;   // 十字线半宽
+const float RING_RADIUS = 5.0;      // 空心圆半径
+const float RING_HALF_WID = 1.2;    // 圆环半宽
+const float DOT_RADIUS = 1.8;       // 中心点半径
+
+vec3 BLUE_GRAY = vec3(0.443, 0.502, 0.588);   // #718096
+vec3 CENTER_GOLD = vec3(0.757, 0.541, 0.333); // #C18A55
 
 void main() {
-    vec3 nearWorld = vNearWorld.xyz / vNearWorld.w;
-    vec3 farWorld = vFarWorld.xyz / vFarWorld.w;
-    vec3 rayDirection = farWorld - nearWorld;
+    vec4 clip = pc.viewProjection * vec4(0.0, 0.0, 0.0, 1.0);
+    if (clip.w <= 0.0) discard; // 原点在相机后方
+    vec2 ndc = clip.xy / clip.w;
+    if (abs(ndc.x) > 1.0 || abs(ndc.y) > 1.0) discard; // 屏幕外
+    vec2 screenCenter = (ndc * 0.5 + 0.5) * pc.viewportAndFar.xy;
 
-    if (abs(rayDirection.z) < 0.001) discard;
-    float t = -nearWorld.z / rayDirection.z;
-    if (t <= 0.0) discard;
-    vec3 worldPosition = nearWorld + rayDirection * t;
-    if (t > pc.viewportAndFar.w) discard;
+    vec2 px = gl_FragCoord.xy;
+    vec2 d = px - screenCenter;
+    float dist = length(d);
+    float ax = abs(d.x);
+    float ay = abs(d.y);
 
-    vec4 clipPosition = pc.viewProjection * vec4(worldPosition, 1.0);
-    float depth = clipPosition.z / clipPosition.w;
-    if (!(depth >= 0.0 && depth <= 1.0)) discard;
-    float bias = clamp(fwidth(depth) * DEPTH_BIAS_FACTOR, MIN_DEPTH_BIAS, MAX_DEPTH_BIAS);
+    // 深度保持原点平面深度（实体更近则自然遮挡标记）。
+    float depth = clip.z / clip.w;
+    float bias = clamp(fwidth(depth) * 0.5, 0.0000001, 0.00002);
     gl_FragDepth = depth - bias;
 
-    float distToCamera = length(worldPosition - pc.cameraPosition.xyz);
-    float distanceFade = 1.0 - smoothstep(pc.viewportAndFar.z * 0.45,
-        pc.viewportAndFar.z * 0.75, distToCamera);
-    vec3 viewDirection = normalize(pc.cameraPosition.xyz - worldPosition);
-    float grazingFactor = abs(dot(vec3(0.0, 0.0, 1.0), viewDirection));
-    float grazingFade = smoothstep(0.015, 0.080, grazingFactor);
+    // 十字线：竖线 |dx|<w 且 |dy|<len；横线 |dy|<w 且 |dx|<len。
+    float cross = (ax < CROSS_HALF_WID && ay < CROSS_HALF_LEN)
+        || (ay < CROSS_HALF_WID && ax < CROSS_HALF_LEN) ? 1.0 : 0.0;
+    // 空心圆环。
+    float ring = abs(dist - RING_RADIUS) < RING_HALF_WID ? 1.0 : 0.0;
+    // 中心淡金褐点。
+    float dotMask = dist < DOT_RADIUS ? 1.0 : 0.0;
 
-    // 屏幕恒定半径（正方形标记，取两方向导数最大值）。
-    float pixelRadius = max(abs(worldPosition.x), abs(worldPosition.y))
-        / max(max(fwidth(worldPosition.x), fwidth(worldPosition.y)), 0.000001);
-    float originMark = 1.0 - smoothstep(ORIGIN_RADIUS_PX - 0.5, ORIGIN_RADIUS_PX + 0.5, pixelRadius);
-    if (originMark < 0.005) discard;
-
-    vec3 originColor = vec3(0.820, 0.682, 0.412); // #D1AE69 琥珀
-    float alpha = originMark * 0.70 * distanceFade * grazingFade;
-    outColor = vec4(originColor, alpha);
+    vec3 color = mix(BLUE_GRAY, CENTER_GOLD, dotMask);
+    float alpha = max(max(cross, ring), dotMask) * 0.85;
+    if (alpha < 0.01) discard;
+    outColor = vec4(color, alpha);
 }

@@ -39,6 +39,7 @@ public sealed partial class VulkanNativeHost
         var dpi = GetDpiScale();
         var (physicalW, physicalH) = ToPhysicalSize(logicalW, logicalH, dpi);
         (DataContext as UiVm)?.UpdateViewportFrame(logicalW, logicalH);
+        (DataContext as UiVm)?.UpdateViewportDpi(dpi);
         _resizer.Cancel();
         Win32ViewportHost.Resize(_hwnd, physicalW, physicalH);
         var (aw, ah) = Win32ViewportHost.GetClientSize(_hwnd);

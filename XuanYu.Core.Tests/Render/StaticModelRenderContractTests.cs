@@ -46,10 +46,12 @@ public sealed class StaticModelRenderContractTests
 
         var plan = RenderDrawPlan.GetFrameDrawPlan(new RenderProjection(default, [entity], false, Vector3d.Zero));
 
-        Assert.Single(plan);
+        // F3-F1：NavigationGizmo 恒为最后一项（Overlay 收尾）。
+        Assert.Equal(2, plan.Count);
         Assert.Equal(RenderDrawKind.EntityFill, plan[0].Kind);
         Assert.Equal(RenderEntityType.StaticModel, plan[0].EntityType);
         Assert.Equal(0, plan[0].VertexCount);
+        Assert.Equal(RenderDrawKind.NavigationGizmo, plan[^1].Kind);
     }
 
     static (int, int, int) Range(RenderStaticModelPrimitive p) =>

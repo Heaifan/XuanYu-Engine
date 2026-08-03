@@ -18,6 +18,7 @@ public sealed partial class UiVm
             ComputeMoveGizmoWorldAxisLength(transform.Position),
             _staticModelCatalog,
             _staticModelResources,
-            MapWorld.BuildRenderSnapshot());
+            MapWorld.BuildRenderSnapshot(),
+            _viewportDpiScale);
     }
 }

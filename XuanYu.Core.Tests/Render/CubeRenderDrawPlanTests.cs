@@ -59,7 +59,9 @@ public sealed class CubeRenderDrawPlanTests
             x => Assert.Equal((RenderDrawKind.EntityFill, 3, RenderEntityType.LegacyMinimalTriangle),
                 (x.Kind, x.VertexCount, x.EntityType)),
             x => Assert.Equal((RenderDrawKind.EntityOutline, 18, RenderEntityType.LegacyMinimalTriangle),
-                (x.Kind, x.VertexCount, x.EntityType)));
+                (x.Kind, x.VertexCount, x.EntityType)),
+            // F3-F1：NavigationGizmo 恒为最后一项（Overlay 收尾，EntityType 为空）。
+            x => Assert.Equal(RenderDrawKind.NavigationGizmo, x.Kind));
     }
 
     [Fact]
@@ -73,6 +75,9 @@ public sealed class CubeRenderDrawPlanTests
         var projection = SceneRenderProjectionAdapter.TryCreate(snapshot).Projection;
         var plan = RenderDrawPlan.GetFrameDrawPlan(projection);
 
-        Assert.All(plan, x => Assert.Equal(RenderEntityType.Cube, x.EntityType));
+        // F3-F1：NavigationGizmo 是覆盖层（EntityType 为空），实体项必须保留 Cube 类型。
+        Assert.All(plan.Where(x => x.EntityType is not null),
+            x => Assert.Equal(RenderEntityType.Cube, x.EntityType));
+        Assert.Equal(RenderDrawKind.NavigationGizmo, plan[^1].Kind);
     }
 }

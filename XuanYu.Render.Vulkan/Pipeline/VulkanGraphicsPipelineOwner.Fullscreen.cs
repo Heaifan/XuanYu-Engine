@@ -13,7 +13,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
     internal static VulkanGraphicsPipelineOwner? CreateFullscreenPass(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice,
-        uint[] vertCode, uint[] fragCode, uint pushSize, Action<string>? log)
+        uint[] vertCode, uint[] fragCode, uint pushSize, Action<string>? log, bool depthTest = true)
     {
         var props = new PhysicalDeviceProperties();
         vk.GetPhysicalDeviceProperties(physicalDevice, &props);
@@ -67,7 +67,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             var multisample = new PipelineMultisampleStateCreateInfo { SType = StructureType.PipelineMultisampleStateCreateInfo, RasterizationSamples = SampleCountFlags.Count1Bit };
             var depth = new PipelineDepthStencilStateCreateInfo
             {
-                SType = StructureType.PipelineDepthStencilStateCreateInfo, DepthTestEnable = true, DepthWriteEnable = false,
+                SType = StructureType.PipelineDepthStencilStateCreateInfo, DepthTestEnable = depthTest, DepthWriteEnable = false,
                 DepthCompareOp = CompareOp.LessOrEqual
             };
             var blendAttach = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.RBit | ColorComponentFlags.GBit | ColorComponentFlags.BBit | ColorComponentFlags.ABit, BlendEnable = true, SrcColorBlendFactor = BlendFactor.SrcAlpha, DstColorBlendFactor = BlendFactor.OneMinusSrcAlpha, ColorBlendOp = BlendOp.Add, SrcAlphaBlendFactor = BlendFactor.One, DstAlphaBlendFactor = BlendFactor.OneMinusSrcAlpha, AlphaBlendOp = BlendOp.Add };

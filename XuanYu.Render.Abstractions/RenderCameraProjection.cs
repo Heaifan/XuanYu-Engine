@@ -20,4 +20,7 @@ public readonly record struct RenderCameraProjection(
             Revision);
         return ViewProjectionState.Create(camera, viewport);
     }
+
+    // F3-F1：导航 Gizmo Overlay Pass 需要相机 Right（Up/Forward 合同同 CameraState）。
+    public Vector3d Right => Forward.Cross(Up).Normalize();
 }

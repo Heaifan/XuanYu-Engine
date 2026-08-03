@@ -76,6 +76,8 @@ public static class RenderDrawPlan
         if (projection.ScaleGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.ScaleGizmo, ScaleGizmoVertexCount));
         else if (projection.RotateGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.RotateGizmo, RotateGizmoVertexCount));
         else if (projection.GizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.MoveGizmo, MoveGizmoVertexCount));
+        // F3-F1：导航 Gizmo Overlay 始终最后绘制（深度关、不受原生窗口遮挡）。
+        plan.Add(new FrameEntry(RenderDrawKind.NavigationGizmo, ReferenceGridVertexCount));
         return plan;
     }
     static int FillVertices(RenderEntityProjection entity) =>
@@ -89,5 +91,5 @@ public static class RenderDrawPlan
 public enum RenderDrawKind
 {
     EditorBackground, EditorReferenceGrid, WorldOrigin, WorldAxes, MapBounds,
-    EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo
+    EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo, NavigationGizmo
 }

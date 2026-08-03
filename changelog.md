@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.24.12-fix
+MAP-A-R1-D5-R1-F3-F1 世界原点屏幕空间标记 + 导航 Gizmo 移入 Vulkan Overlay Pass（2026-08-03 16:10:00，Commit 本轮落库为准）
+- F3-A1（v0.2.24.11-fix）：**FAIL**。用户真机验收：
+  1. 世界原点退化为黄色地面面片（旧实现贴 Z=0 世界空间面片，低角度透视被压扁成梯形）；
+  2. 导航 Gizmo 真机零像素（Avalonia 覆盖层被 NativeControlHost 承载的 WS_CHILD 原生子窗口遮挡——airspace 问题，ZIndex/Margin/Opacity 均无效）。
+- 修复（本版本，按用户指定方向——先调查层级后实现，不再调 XAML）：
+  - **F3-F1-A 世界原点重写**（editor_world_origin.frag）：去掉射线求交与贴地投影；改为世界原点 (0,0,0) 投影到屏幕后画**恒定屏幕尺寸**的细十字线 + 小空心圆 + 中心点（蓝灰描边 #718096、中心淡金褐点 #C18A55、十字半长 8px/圆环半径 5px≈10~16 DIP）；相机后方/屏幕外 discard；深度保持原点平面深度（实体近则自然遮挡）；不再随视角压扁、不与地平线混同；
+  - **F3-F1-B 导航 Gizmo → Vulkan 屏幕空间 Overlay Pass**：新增 editor_nav_gizmo.vert/.frag + ShaderBytecode.NavGizmoVert/Frag；新增 VulkanClearFrameOwner.NavGizmo.cs（80B push：cameraRight/Up/Forward + 视口 + DPI + gizmo 参数 + hover 索引）；CreateFullscreenPass 增加 depthTest 参数（Gizmo 用 DepthTest=Off/DepthWrite=Off）；GridPipelineSet 增加 NavGizmo 管线；DrawPlan 恒以 NavigationGizmo 收尾（RenderDrawKind 新增）；右上角 12 DIP 边距 88 DIP 区域；中心球 #CDD6DF + 三轴（X #C18A55/Y #5F87A7/Z #A9B8C7）+ 六端点（背向 40% Alpha 小点、朝向 100% 大点带 X/Y/Z 标签）+ 深度排序 + hover 高亮；
+  - **F3-F1-C 命中走原生指针流**：Avalonia ViewGizmo/ViewNavigationGizmo 控件删除（UiRoot 移除引用）；VulkanNativeHost.NavGizmo.cs 在 OnNativePointerMessage 中先判右上角区域（视口→Gizmo 局部坐标），端点点击 → StandardViewResolver 标准视角命令，中心球/空白拖动 → 复用 UiVm 相机会话 Orbit（4 DIP 阈值区分点击/拖动）；CaptureLost/取消正常结束；控件区域外不截获（实体 Picking/框选/变换 Gizmo 不受影响）；导航不进入 Dirty/Undo；
+  - DPI 链路：RenderProjection 增加 ViewportDpiScale；UiVm.UpdateViewportDpi（LayoutSync 调用）；RenderCameraProjection 增加 Right 计算属性。
+- 验证：聚焦 NavigationGizmo/StandardViewResolver/ViewportChrome/OverlayContract 33/33；Core 258/258、World 435/435、WarCore 22/22；arch-a-guard PASS（含 5+100）；git diff --check OK；glslc 字节码三文件逐字 MATCH。
+- 视觉冒烟：**未执行**（沿用用户决定，留真机验收）；请重点复验：原点不再贴地压扁（十字+空心圆+中心点）、右上角 Gizmo 可见且随相机旋转、六方向点击/拖动、顶底视图无滚转。
+- 治理：版本 v0.2.24.11-fix → v0.2.24.12-fix（五处同步）；无新增依赖/项目；不创建 Tag/Release。
+
 ## v0.2.24.11-fix
 MAP-A-R1-D5-R1-F3 视口黑边移除 + Blender 风格导航 Gizmo（2026-08-03 15:20:00，Commit 本轮落库为准）
 - F3 问题（用户验收反馈）：

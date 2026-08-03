@@ -69,7 +69,7 @@ public sealed class ReferenceGridShaderContractTests
     public void World_origin_shader_draws_origin_mark_only()
     {
         var frag = ShaderSource("editor_world_origin.frag");
-        Assert.Contains("ORIGIN_RADIUS_PX", frag);
+        Assert.Contains("CROSS_HALF_LEN", frag);
         Assert.DoesNotContain("axisXColor", frag);
     }
 }

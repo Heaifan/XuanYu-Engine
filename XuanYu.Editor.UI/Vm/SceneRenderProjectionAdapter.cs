@@ -19,7 +19,8 @@ public static class SceneRenderProjectionAdapter
         double moveGizmoWorldAxisLength = 1.2,
         SceneStaticModelCatalog? staticModelCatalog = null,
         IReadOnlyDictionary<AssetId, RenderStaticModelResource>? staticModelResources = null,
-        MapRenderSnapshot map = default)
+        MapRenderSnapshot map = default,
+        double viewportDpiScale = 1.0)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -72,7 +73,8 @@ public static class SceneRenderProjectionAdapter
             StaticModels: staticModelResources?.Values
                 .OrderBy(r => r.Key.Value)
                 .ToArray(),
-            Map: map);
+            Map: map,
+            ViewportDpiScale: viewportDpiScale);
         return RenderProjectionResult.Ok(projection);
     }
 }
