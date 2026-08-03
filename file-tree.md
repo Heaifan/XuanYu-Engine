@@ -1,5 +1,11 @@
-版本：v0.2.24.8-fix
+版本：v0.2.24.9-fix
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D5-R1-F2-R3 职责索引（v0.2.24.9-fix）
+
+- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.frag`：无限参考网格独立 Pass——F2-R3 唯一像素线宽 0.82px（Fine==Coarse）、重合非累加合成（max）、配色收敛（#5D6670/#525C67）；仍只画网格（轴/原点在独立 Pass）
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`（backgroundVertex，gizmoMode=-10）：程序化编辑器环境——职责从"天空"扩展为"天空 + 中性灰编辑器参考地面"（#9DBBE0→#AEC4DC→#9DA5AD→#8B9299→#7B8289，dir.z 地平线柔和过渡；不写深度、不进地图/场景/拾取/碰撞）
+- `XuanYu.Core.Tests/Render/ReferenceGridVisualStyleTests.cs`：视觉样式合同（唯一线宽、max 合成、alpha 差 ≤0.10、背景中性灰）
 
 ## MAP-A-R1-D5-R1-F2-R2 职责索引（v0.2.24.8-fix）
 

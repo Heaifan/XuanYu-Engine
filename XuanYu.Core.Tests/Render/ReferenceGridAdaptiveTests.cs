@@ -70,14 +70,18 @@ public sealed class ReferenceGridAdaptiveTests
         Assert.InRange(fade, 0.0, expectedRange + 0.001);
     }
 
-    // 网格线宽合同（方案 9.1）：细 0.70px、主 1.00px；细 alpha < 主 alpha。
+    // 网格线宽合同（F2-R3）：唯一像素线宽 0.82（0.78~0.90 允许，≤1.0）；
+    // Fine/Coarse 只通过轻微透明度差区分（≤0.10）；网格线宽必须小于世界轴 1.25px。
     [Fact]
     public void Line_width_and_alpha_contract()
     {
-        const double fineWidth = 0.70, coarseWidth = 1.00;
-        const double fineAlpha = 0.18, coarseAlpha = 0.32;
-        Assert.True(fineWidth < coarseWidth, "细格线宽必须小于主格");
+        const double gridWidth = 0.82;
+        const double fineAlpha = 0.16, coarseAlpha = 0.24;
+        const double worldAxisWidth = 1.25;
+        Assert.InRange(gridWidth, 0.78, 0.90);
+        Assert.True(gridWidth <= 1.0, "网格线宽不得超过 1.0px");
         Assert.True(fineAlpha < coarseAlpha, "细格 alpha 必须小于主格");
-        Assert.True(coarseAlpha <= 0.4, "主格 alpha 不应过强");
+        Assert.True(coarseAlpha - fineAlpha <= 0.10, "粗细 alpha 差必须 ≤ 0.10");
+        Assert.True(worldAxisWidth > gridWidth, "世界轴必须比普通网格粗");
     }
 }

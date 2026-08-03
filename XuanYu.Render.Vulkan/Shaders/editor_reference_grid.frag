@@ -1,10 +1,11 @@
 #version 450
 
-// MAP-A-R1-D5-R1-F2-R2：Blender 式统一尺度参考网格 —— 片元着色器。
+// MAP-A-R1-D5-R1-F2-R3：Blender 式统一尺度参考网格 —— 片元着色器。
 // 本 Pass 只画普通网格（不画 X/Y 轴、不画原点标记——它们由独立 WorldAxes/WorldOrigin Pass 负责）。
 // Fine/Coarse 两个全局层级由 CPU 每帧计算一次（1/2/5 序列），本 Shader 不再逐 Fragment 选 LOD；
-// 互补交叉淡化（FineWeight + CoarseWeight = 1）；分方向投影密度淡出抗摩尔纹；
-// 距离淡出 + 掠射角淡出；有界深度偏移保证与平坦地形共面稳定。
+// 唯一像素线宽（GridLineWidthPixels，Fine 与 Coarse 完全相同）；互补交叉淡化（FineWeight + CoarseWeight = 1）；
+// 重合处使用非累加合成（max，禁止 fine+coarse 直接相加 → 无双重 Alpha、无粗黑线）；
+// 分方向投影密度淡出抗摩尔纹；距离淡出 + 掠射角淡出；有界深度偏移。
 
 layout(push_constant) uniform GridPush {
     mat4 viewProjection;        // 0   世界→裁剪（深度投影用）
@@ -18,13 +19,16 @@ layout(location = 0) in vec4 vFarWorld;
 layout(location = 1) in vec4 vNearWorld;
 layout(location = 0) out vec4 outColor;
 
+// F2-R3：唯一像素线宽（Fine == Coarse，硬合同；范围 0.78~0.90，不得超过 1.0）。
+const float GRID_LINE_WIDTH_PX = 0.82;
+
 // 深度偏移（方案 12.2）：clamp(fwidth(depth)×0.5, 1e-7, 2e-5)，仅解决共面闪烁。
 const float DEPTH_BIAS_FACTOR = 0.5;
 const float MIN_DEPTH_BIAS = 0.0000001;
 const float MAX_DEPTH_BIAS = 0.00002;
 
 // 分方向线掩码：coordinate 为 worldXY/step 的对应轴分量。
-// 返回 0..1 线强度，线宽以像素为单位（widthPixels）。
+// 标准像素距离模型：1 - smoothstep(w-0.5, w+0.5, d)；不得把 alpha 乘到宽度。
 float axisLineMask(float coordinate, float widthPixels) {
     float derivative = max(fwidth(coordinate), 0.000001);
     float distanceToLine = abs(fract(coordinate - 0.5) - 0.5) / derivative;
@@ -32,6 +36,7 @@ float axisLineMask(float coordinate, float widthPixels) {
 }
 
 // 方向性密度淡出：某方向单元屏幕间距 <6px 隐藏、6~12px 渐入、>12px 正常。
+// 只影响透明度，不影响线宽。
 float densityFade(float coordinate, float spacing) {
     float cellPixels = 1.0 / max(fwidth(coordinate / spacing), 0.000001);
     return smoothstep(6.0, 12.0, cellPixels);
@@ -78,19 +83,27 @@ void main() {
     float fadeX = densityFade(worldPosition.x, fineSpacing);
     float fadeY = densityFade(worldPosition.y, fineSpacing);
 
-    // 两个全局层级，分别画 X/Y 方向线再合成；互补权重不允许同时为 1。
-    float fineLine = axisLineMask(worldPosition.x / fineSpacing, 0.70) * fadeX
-                   + axisLineMask(worldPosition.y / fineSpacing, 0.70) * fadeY;
-    float coarseLine = axisLineMask(worldPosition.x / coarseSpacing, 1.00) * fadeX
-                     + axisLineMask(worldPosition.y / coarseSpacing, 1.00) * fadeY;
-    float gridAlpha = fineLine * 0.18 * fineWeight + coarseLine * 0.32 * coarseWeight;
+    // F2-R3：唯一线宽 —— Fine 与 Coarse 调用同一函数同一宽度，仅透明度差。
+    float fineLine = axisLineMask(worldPosition.x / fineSpacing, GRID_LINE_WIDTH_PX) * fadeX
+                   + axisLineMask(worldPosition.y / fineSpacing, GRID_LINE_WIDTH_PX) * fadeY;
+    float coarseLine = axisLineMask(worldPosition.x / coarseSpacing, GRID_LINE_WIDTH_PX) * fadeX
+                     + axisLineMask(worldPosition.y / coarseSpacing, GRID_LINE_WIDTH_PX) * fadeY;
 
-    // 配色（玄域浅色编辑器，克制蓝灰体系）：细格 #566A82、主格 #344A63。
-    vec3 fineColor = vec3(0.337, 0.408, 0.510); // #566A82
-    vec3 coarseColor = vec3(0.204, 0.290, 0.388); // #344A63
-    vec3 color = mix(fineColor, coarseColor, coarseWeight);
+    // F2-R3：非累加合成 —— 重合处取 max，禁止 fine+coarse 直接相加（防双重 Alpha / 粗黑线）。
+    // 颜色按贡献加权归一化混合（总 Alpha 仍为 max，不归一化后相加）。
+    float fineContribution = fineLine * 0.16 * fineWeight;
+    float coarseContribution = coarseLine * 0.24 * coarseWeight;
+    float gridAlpha = max(fineContribution, coarseContribution);
+
+    // F2-R3 配色（玄域浅色体系，克制灰蓝）：Fine #5D6670、Coarse #525C67。
+    vec3 fineColor = vec3(0.365, 0.400, 0.439); // #5D6670
+    vec3 coarseColor = vec3(0.322, 0.361, 0.404); // #525C67
+    float total = fineContribution + coarseContribution;
+    vec3 gridColor = total > 0.000001
+        ? (fineColor * fineContribution + coarseColor * coarseContribution) / total
+        : fineColor;
 
     float alpha = gridAlpha * distanceFade * grazingFade;
     if (alpha < 0.005) discard;
-    outColor = vec4(color, alpha);
+    outColor = vec4(gridColor, alpha);
 }

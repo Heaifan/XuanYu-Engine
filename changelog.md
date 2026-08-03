@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.24.9-fix
+MAP-A-R1-D5-R1-F2-R3 网格线宽统一 + Unity 风格灰色参考地面（2026-08-03 13:05:00，Commit 本轮落库为准）
+- F2-R2-A2（v0.2.24.8-fix）：**FAIL**。现象：缩放时 Fine/Coarse 使用不同线宽（0.70px vs 1.00px）且重合处直接相加，部分网格线看起来忽粗忽细、层级交界出现明暗脉冲；编辑器参考地面整体偏蓝，与天空层次不足。
+- 修复（本版本）：
+  - **R3-A 唯一像素线宽**：删除 FineWidthPixels/CoarseWidthPixels 双宽度，统一 `GRID_LINE_WIDTH_PX = 0.82`（硬合同 0.78~0.90，≤1.0；世界轴保持 1.25px > 网格）；
+  - **R3-A 非累加合成**：`gridAlpha = max(fineContribution, coarseContribution)`（禁止 fine+coarse 相加 → 无双重 Alpha、无粗黑线）；颜色按贡献加权归一化混合（total 仅用于颜色，Alpha 仍为 max）；
+  - **R3-A 配色收敛**：Fine `#5D6670` α0.16 / Coarse `#525C67` α0.24（差 0.08 ≤ 0.10，克制深浅差防"深色=更粗"错觉）；
+  - **R3-B 中性灰参考地面**：scene.vert backgroundVertex 程序化背景扩展为 天空顶部 `#9DBBE0` → 天空近地平线 `#AEC4DC` → 地平线混合区 `#9DA5AD` → 远处地面 `#8B9299` → 近处地面 `#7B8289`；地平线过渡按视线方向 dir.z（[-0.06,0] 柔和混合），地面远近按 dir.z ∈ [-0.06,-0.5] 轻微渐变；不写深度、不进地图/场景/拾取/碰撞，地图与实体自然覆盖；
+  - 未触碰：ReferenceGridScale 1/2/5 选级、48px 目标、相机求交、LOD 权重、方向性抗摩尔纹、深度偏移、世界轴/原点架构、地图/地形/光照。
+- 验证：聚焦 ReferenceGrid/VisualStyle/ShaderContract/DrawPlan 82/82；Core 224/224、World 435/435、WarCore 22/22；arch-a-guard PASS（含 5+100，ShaderBytecode.Vert.cs 保持原 120 词/行紧凑格式 76 行）；glslc 字节码 GridFrag/SceneVert 逐字 MATCH；git diff --check OK。
+- 视觉冒烟：**未执行**（用户选择跳过，图像待用户真机验收 F2-R3-A3 十项清单——不得视为 PASS）。
+- 治理：版本 v0.2.24.8-fix → v0.2.24.9-fix（五处同步）；新增 ReferenceGridVisualStyleTests.cs；无新增第三方依赖/项目；不创建 Tag/Release。
+
 ## v0.2.24.8-fix
 MAP-A-R1-D5-R1-F2-R2 统一网格尺度与轴线修复（2026-08-03 11:40:00，Commit 本轮落库为准）
 - F2-A1（v0.2.24.7-fix）：**FAIL**。现象：逐屏幕位置 LOD 导致横向密度分区（近 0.1/中 1/远 10 单位并存）；近处摩尔纹与灰色叠块；世界轴出现楔形；网格 Shader 与独立 WorldAxes Pass 存在轴线重复绘制。

@@ -237,14 +237,28 @@ void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
     vec4 camWorld = invVP * vec4(0.0, 0.0, 0.0, 1.0);
     vec3 dir = normalize(farWorld.xyz / farWorld.w - camWorld.xyz / camWorld.w);
 
-    // F5/D5-R1：清晰天空层次 —— 顶部饱和蓝 → 地平线浅蓝雾白 → 地平线以下轻微大气泛光。
-    vec3 skyTop = vec3(0.22, 0.45, 0.85);    // 天顶：饱和蓝（Unity/Godot 风格）
-    vec3 horizon = vec3(0.88, 0.92, 0.97);   // 地平线：更浅、雾白蓝
-    vec3 ground = vec3(0.45, 0.52, 0.60);    // 地平线以下：轻微大气泛光（冷灰蓝，比地表暗）
+    // F2-R3：Unity 风格中性灰编辑器参考地面（玄域浅色适配版）。
+    // 天空顶部 #9DBBE0 → 天空近地平线 #AEC4DC → 地平线混合区 #9DA5AD
+    // → 远处参考地面 #8B9299 → 近处参考地面 #7B8289。
+    // 地面只是视口背景（不写深度、不进地图/场景/拾取/碰撞），地图与实体自然覆盖。
+    vec3 skyTop = vec3(0.616, 0.733, 0.878);    // #9DBBE0 天顶清淡蓝
+    vec3 skyHorizon = vec3(0.682, 0.769, 0.863); // #AEC4DC 天空近地平线
+    vec3 horizonBand = vec3(0.616, 0.647, 0.678); // #9DA5AD 地平线混合区（低饱和蓝灰）
+    vec3 groundFar = vec3(0.545, 0.573, 0.600);  // #8B9299 远处参考地面
+    vec3 groundNear = vec3(0.482, 0.510, 0.537); // #7B8289 近处参考地面
     float up01 = pow(clamp(dir.z, 0.0, 1.0), 0.35);   // 上半球渐变集中系数
-    vec3 rgb = dir.z >= 0.0
-        ? mix(horizon, skyTop, up01)
-        : mix(horizon, ground, smoothstep(0.0, 0.5, clamp(-dir.z, 0.0, 1.0)));
+    vec3 rgb;
+    if (dir.z >= 0.0) {
+        // 天空：地平线雾蓝 → 天顶清淡蓝。
+        rgb = mix(skyHorizon, skyTop, up01);
+    } else {
+        // 地平线过渡：dir.z ∈ [-0.06, 0] 从混合区到远处地面（约 6% 视口高度，柔和）。
+        float below01 = smoothstep(0.0, -0.06, dir.z);
+        // 地面远近：dir.z ∈ [-0.06, -0.5] 从远处到近处（轻微渐变，防水平色带）。
+        float groundNearness = smoothstep(-0.06, -0.5, -dir.z);
+        vec3 groundBase = mix(groundFar, groundNear, groundNearness);
+        rgb = mix(horizonBand, groundBase, below01);
+    }
 
     // 最小太阳圆盘：方向与 D1 合同 sunDirection 一致（归一化 (-0.35,-0.55,0.75)）。
     // 只做简单圆盘 + 微弱辉光，不做耀斑与体积光。
