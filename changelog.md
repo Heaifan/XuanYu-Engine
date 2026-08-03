@@ -20,6 +20,15 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.15-fix
+MAP-A-R1-D5-R1-F3-F2 相机正交基不变量与导航组合链崩溃修复（2026-08-03，Commit 本轮落库为准）
+- F3-F1 真机验收：**FAIL**。故障：滚轮 Dolly 构造 CameraState 时 up 非法，ArgumentOutOfRangeException 逃出 Win32 消息循环，编辑器进程退出。
+- 根因（失败测试先行 + 源码确认，非计划推测）：`CameraNavigation.Result()` 硬编码 `Up=Vector3d.UnitZ` 拼接新 Forward——点击导航 Gizmo 顶视（Forward=-Z）/底视（Forward=+Z）后，任何 Dolly/Orbit/Pan 都令 Forward 与 UnitZ 平行，触发 CameraState 第 24 行合同（`Forward.Cross(up).Length<1e-6` 抛异常）。另确认两项伴随缺陷：标准视角命令未同步 `_observationCenter`；底视 Up=+Y 导致屏幕右方向为 -X（镜像）。
+- 修复：新增 `XuanYu.Editor/Camera/CameraBasis.cs`（唯一正交基生成器：Forward 有限非零 → PreferredUp 优先（|dot|<0.98）→ 平行时回退世界轴 +Z/+Y/+X 最不平行者 → Right=Forward×Ref、Up=Right×Forward，输出前正交验证；不进入 Core）；`CameraNavigation` 拆 `CameraNavigation.Try.cs`，TryDolly/TryOrbit/TryPan/TryResult 统一走 CameraBasis（PreferredUp=start.Up 保留 Up 语义），同步版 API 保留；UiVm 失败安全：Try* 成功才替换相机/中心/Revision，失败保留旧状态并记录「相机 Dolly 失败」错误日志，异常不再逃出输入循环；标准视角同步 `_observationCenter`；底视 Up 修正为 `-Y`（Right 保持 +X，防镜像，计划八合同）。
+- 验证：新增 CameraBasisTests 9 项（零/NaN/平行/顶底视/重合失败/超大坐标正交）+ CameraNavigationSequenceTests 11 项（六方向后 Dolly/Orbit/Pan 链）+ CameraNavigationUiSequenceTests 8 项（顶视→Orbit→Pan→Dolly、底视→Resize→Dolly、Gizmo Commit/Cancel 后 Dolly、失败保留状态、不 Dirty/Undo）+ CameraNavigationStressTests（100 次循环正交保持）；红→绿：修复前 9 项 FAIL（含崩溃复现），修复后聚焦 49/49；Core 相机/视口/Gizmo 151/151、World 435/435、Core 全量 267/267。
+- 视觉冒烟：**未执行**（本环境无法操作画面），按计划如实记录——自动测试通过、真机待用户验收；不宣布 F3-F2 视觉通过、不关闭阶段。
+- 治理：版本 v0.2.24.14-fix → v0.2.24.15-fix（五处同步）；新增 CameraBasis.cs/CameraNavigation.Try.cs/4 个测试文件（file-tree 已登记）；CameraState 严格合同未放宽；未创建 Tag/Release。
+
 ## v0.2.24.14-fix
 SHR-2026-08-R2 全盘阶段考核：文档事实源审计与 docs 分类治理（2026-08-03，Commit 本轮落库为准）
 - **file-tree.md 重建**（885→843 行）：删除全部按轮次职责索引（宪法第五十五条禁止的每轮快照）；以真实 `git ls-files` 树为准重建，修正 ARCH-WORLD 迁移后失效路径（Scene/World/History 等不再误写 Core），补齐 WarCore/Map/Assets/StaticModel/F2-F3 新文件职责，全部条目一行职责、无历史流水账。

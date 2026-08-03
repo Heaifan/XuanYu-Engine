@@ -30,6 +30,7 @@ public sealed partial class UiVm
             _camera.NearPlane,
             _camera.FarPlane,
             ++_cameraRevision);
+        _observationCenter = center; // F3-F2：标准视角必须同步观察中心（计划八硬要求）。
         _activeViewFace = name;
         OnPropertyChanged(nameof(ActiveViewFace));
         OnPropertyChanged(nameof(NavigationCamera));

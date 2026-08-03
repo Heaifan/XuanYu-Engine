@@ -1,5 +1,15 @@
-版本：v0.2.24.14-fix
+版本：v0.2.24.15-fix
 # XuanYu Engine 文件树
+
+## F3-F2 职责索引（v0.2.24.15-fix）
+
+- `XuanYu.Editor/Camera/CameraBasis.cs`：唯一相机正交基生成器（Position/Center/PreferredUp → Forward/Right/Up 或失败原因；平行回退世界轴）
+- `XuanYu.Editor/Camera/CameraNavigation.Try.cs`：失败安全导航（TryDolly/TryOrbit/TryPan/TryResult，统一正交基路径）
+- `XuanYu.Core.Tests/Camera/CameraBasisTests.cs`：正交基合同测试（零/NaN/平行/顶底视/重合/超大坐标）
+- `XuanYu.Core.Tests/Camera/CameraNavigationSequenceTests.cs`：六方向后导航组合链回归测试
+- `XuanYu.Core.Tests/Camera/CameraNavigationUiSequenceTests.cs` / `.Safety.cs`：UiVm 组合序列与失败安全/状态合同测试
+- `XuanYu.Core.Tests/Camera/CameraNavigationStressTests.cs`：100 次导航循环正交保持压力测试
+- 修改：`CameraNavigation.cs`（拆 partial）、`StandardViewResolver.cs`（底视 Up=-Y）、`UiVm.CameraNavigation.cs`（Try 失败安全）、`UiVm.ViewGizmo.cs`（同步观察中心）
 
 ## 根目录
 - `.gitattributes`：换行与属性规则

@@ -16,14 +16,14 @@ public static class StandardViewResolver
         switch (name)
         {
             case Top: forward = new Vector3d(0, 0, -1); up = new Vector3d(0, 1, 0); return true;
-            case Bottom: forward = new Vector3d(0, 0, 1); up = new Vector3d(0, 1, 0); return true;
+            case Bottom: forward = new Vector3d(0, 0, 1); up = new Vector3d(0, -1, 0); return true;
             case "+X 视图": forward = new Vector3d(-1, 0, 0); up = Vector3d.UnitZ; return true;
             case "-X 视图": forward = new Vector3d(1, 0, 0); up = Vector3d.UnitZ; return true;
             case "+Y 视图": forward = new Vector3d(0, -1, 0); up = Vector3d.UnitZ; return true;
             case "-Y 视图": forward = new Vector3d(0, 1, 0); up = Vector3d.UnitZ; return true;
             // 旧名兼容（EDITOR-VIEW-R1 按钮）。
             case "顶": forward = new Vector3d(0, 0, -1); up = new Vector3d(0, 1, 0); return true;
-            case "底": forward = new Vector3d(0, 0, 1); up = new Vector3d(0, 1, 0); return true;
+            case "底": forward = new Vector3d(0, 0, 1); up = new Vector3d(0, -1, 0); return true;
             case "前": forward = new Vector3d(0, 1, 0); up = Vector3d.UnitZ; return true;
             case "后": forward = new Vector3d(0, -1, 0); up = Vector3d.UnitZ; return true;
             case "右": forward = new Vector3d(-1, 0, 0); up = Vector3d.UnitZ; return true;

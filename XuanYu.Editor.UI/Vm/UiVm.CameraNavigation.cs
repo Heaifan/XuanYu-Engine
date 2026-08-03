@@ -29,9 +29,14 @@ public sealed partial class UiVm
         if (_cameraSession is not { } session || session.PointerId != pointerId) return false;
         var dx = x - session.StartX;
         var dy = y - session.StartY;
-        var result = session.Mode == CameraSessionMode.Orbit
-            ? CameraNavigation.Orbit(session.StartCamera, session.StartCenter, dx, dy, ++_cameraRevision)
-            : CameraNavigation.Pan(session.StartCamera, session.StartCenter, dx, dy, session.Height, ++_cameraRevision);
+        // F3-F2：失败安全——Try* 成功才应用；失败保留上次预览且不递增 Revision。
+        var ok = session.Mode == CameraSessionMode.Orbit
+            ? CameraNavigation.TryOrbit(session.StartCamera, session.StartCenter, dx, dy,
+                _cameraRevision + 1, out var result, out _)
+            : CameraNavigation.TryPan(session.StartCamera, session.StartCenter, dx, dy, session.Height,
+                _cameraRevision + 1, out result, out _);
+        if (!ok) return false;
+        _cameraRevision = result.Camera.Revision;
         ApplyCameraResult(result);
         return true;
     }
@@ -49,7 +54,16 @@ public sealed partial class UiVm
     public bool DollyCamera(double wheelDelta)
     {
         if (_cameraSession is not null || _editorState.InteractionSnapshot.HasCapture) return false;
-        ApplyCameraResult(CameraNavigation.Dolly(_camera, _observationCenter, wheelDelta, ++_cameraRevision));
+        // F3-F2：失败安全——成功才替换相机/中心/Revision；失败保留旧状态并记录，不让异常逃出输入循环。
+        if (!CameraNavigation.TryDolly(_camera, _observationCenter, wheelDelta,
+            _cameraRevision + 1, out var result, out var reason))
+        {
+            _logBus.Error(EditorLogSource.Input, EditorLogCategory.Command, "相机 Dolly 失败", reason);
+            return false;
+        }
+
+        _cameraRevision = result.Camera.Revision;
+        ApplyCameraResult(result);
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command, "相机 Dolly 已执行", $"滚轮={wheelDelta:g}");
         RefreshLogBindings();
         return true;

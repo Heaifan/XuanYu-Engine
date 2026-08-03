@@ -21,7 +21,7 @@ public sealed class StandardViewResolverTests
         Assert.Equal(fz, forward.Z, 9);
     }
 
-    // Up 合同：±X/±Y 侧视图 Up=+Z；顶/底视图 Up=+Y（防滚转/镜像）。
+    // Up 合同：±X/±Y 侧视图 Up=+Z；顶视图 Up=+Y；底视图 Up=-Y（防镜像，保证 Right=+X）。
     [Fact]
     public void Up_contract_prevents_roll()
     {
@@ -35,7 +35,7 @@ public sealed class StandardViewResolverTests
         Assert.Equal(0.0, upTop.Z, 9);
         Assert.True(StandardViewResolver.TryResolve("底视图", out _, out var upBottom));
         Assert.Equal(0.0, upBottom.X, 9);
-        Assert.Equal(1.0, upBottom.Y, 9);
+        Assert.Equal(-1.0, upBottom.Y, 9); // F3-F2 合同修正：底视 -Y，Right 保持 +X
         Assert.Equal(0.0, upBottom.Z, 9);
     }
 
