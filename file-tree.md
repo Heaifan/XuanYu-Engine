@@ -1,5 +1,15 @@
-版本：v0.2.24.12-fix
+版本：v0.2.24.13-fix
 # XuanYu Engine 文件树
+
+## SHR-2026-08 治理职责索引（v0.2.24.13-fix）
+
+- `docs/archive/`：历史归档分类（changelog 月度归档，单一位置；当前含 changelog-2026-05/06/07.md）
+- `docs/玄域引擎_AI开发宪法.md`：宪法 2.0 正式生效版本（唯一宪法事实源）
+- `scripts/arch-a-guard.ps1`：5+100 门禁修复（ReadAllLines 确定性统计 + 自验证样本；范围对齐宪法第十三条）
+- `XuanYu.World.Tests/World/WorldRotateTransformUiTests.R4R2.Helpers.cs`：旋转测试辅助（partial，拆分自 R4R2.cs）
+- `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.Selection.cs`：选择工具无 Gizmo 测试（partial，拆分自主文件）
+- `XuanYu.Editor.UI/Left/Left.Styles.axaml`：左侧栏样式资源（拆分自 Left.axaml，StyleInclude 引用）
+- catch 语义治理：`XuanYu.Core/Gizmo/RotateGizmoDrag.cs`、`RotateGizmoLayout.cs`（D 类类型化+回退注释）、`XuanYu.Editor/MapDocument/MapStorageService.cs`、`SceneDocument/SceneStorageService.cs`、`Assets/SceneAssetHostingTransaction.cs`（B 类 best-effort 注释）、`XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`（C 类竞态注释）
 
 ## MAP-A-R1-D5-R1-F3-F1 职责索引（v0.2.24.12-fix）
 
