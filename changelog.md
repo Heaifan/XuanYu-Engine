@@ -27,6 +27,7 @@ MAP-A-R1-D5-R1-F3-F3 Blender 风格导航视图收尾（2026-08-03，Commit 本�
 - 修复（本轮目标 1/2；目标 3 正交投影审计为无 → 拆 F3-F4）：
   - **无 Roll Orbit**：TryOrbit 改用世界 +Z 重建基（Right=Forward×WorldUp、Up=Right×Forward），顶/底视平行时 CameraBasis 自动回退最不平行世界轴（+Y/+X），Up 永不下翻、连续环绕不累积倾斜；Dolly/Pan 保留 start.Up 语义；删除无调用点的 Result 死代码；
   - **Gizmo 视觉重做（Blender 结构）**：控件 88→96 DIP、边距 12→14、轴投影 25→27、负端点 5.5→5；七层绘制（后轴→后端点→中心球→前轴→前端点→标签→Hover 环）；轴线从中心球边缘开始（不穿过球）；轴正对相机（投影 <6 DIP）时隐藏背向端点与轴线、朝向端点置于中心球中央；标签仅正方向且朝向时显示（11 DIP 半粗）；新配色 X #C4874F / Y #5684A8 / Z #8EA8C2、球 #D7DEE6、描边 #66788B、背向 30% Alpha；Hover 亮环；editor_nav_gizmo.frag 重写并经 glslc 重新生成 ShaderBytecode.NavGizmoFrag.cs（120 词/行，38 行）；
+  - **Gizmo 视觉终版（用户直接提供 shader，同轮替换）**：保持 80B Push/96 DIP/14 边距/CPU 命中热区 13 DIP 不变，视觉半径与命中半径分离——中心球缩至 9.5 DIP 轻量球（径向渐变+左上高光+细描边，不再是大白圆盘）；轴线 1.25 DIP、从球边缘开始；端点正 7.5/背 3.8/正对 8.5 DIP；正对相机只保留一个前方端点；X/Y/Z 文字绘制在端点圆内部（含正对负方向的轴字母）；五层合成（背向轴/端点→中心球→朝向轴/端点→端点内部标签→单一 Hover 环），预乘合成适配 SrcAlpha 混合；新配色 X #C66A5E 珊瑚红 / Y #6B9F84 豆青 / Z #628EC2 钢蓝；editor_nav_gizmo.frag 经 glslc 重新生成 ShaderBytecode.NavGizmoFrag.cs（120 词/行，58 行）；OverlayContractTests 合同断言同步至新结构；NavigationGizmoLayout/HitTest/相机/DrawPlan/Pipeline 零改动；
   - **正交投影/视图平面网格**：审计确认仓库无 Orthographic（仅透视 FOV）→ 按计划冻结为 F3-F4。
 - 验证：新增 CameraNavigationRollTests（斜视 Orbit 后 Up 保持 +Z 主导且无水平横移、100 次环绕不累积倾斜、顶/底视 Orbit 稳定）+ Gizmo 正对合同测试（.Facing.cs）；红→绿：修正 4 处测试期望（均为合同变更/测试数据错误：85° 俯角 fallback +Y 是稳定态、斜视 up 自然倾斜、顶视基测试数据）；Core 全量 291/291、World 435/435、WarCore 22/22。
 - 视觉冒烟：**未执行**（本环境无法操作画面），如实记录——自动测试通过、真机待用户验收；不宣布 F3-F3 视觉通过、不关闭阶段。

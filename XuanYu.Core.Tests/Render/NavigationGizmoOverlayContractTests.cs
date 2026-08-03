@@ -44,7 +44,7 @@ public sealed class NavigationGizmoOverlayContractTests
         Assert.Contains("#718096", frag);          // 蓝灰描边（注释即合同）
     }
 
-    // 3. Gizmo shader：相机姿态投影 + 屏幕空间 + 悬停索引。
+    // 3. Gizmo shader：相机姿态投影 + 屏幕空间 + 悬停索引 + 分层合成。
     [Fact]
     public void Nav_gizmo_shader_uses_camera_basis_screen_space()
     {
@@ -54,23 +54,23 @@ public sealed class NavigationGizmoOverlayContractTests
         Assert.Contains("cameraForward", frag);
         Assert.Contains("gl_FragCoord", frag);
         Assert.Contains("hoverIndex", frag);
-        Assert.Contains("sortEndpoints", frag); // 深度排序（背向先画）
+        Assert.Contains("drawAxis", frag);    // 前后分层绘制（背向先、朝向后的结构）
+        Assert.Contains("compositeOver", frag); // 预乘合成（SrcAlpha 混合管线）
     }
 
-    // F3-F3：Blender 结构合同——正对处理、轴线从球边缘开始、新配色、标签仅朝向正方向。
+    // F3-F3：Blender 结构合同——正对处理、轴线从球边缘开始、新配色、标签规则。
     [Fact]
     public void Nav_gizmo_shader_f3_f3_contract()
     {
         var frag = ShaderFile("editor_nav_gizmo.frag");
-        Assert.Contains("FACING_LIMIT", frag);     // 正对相机判定
-        Assert.Contains("axisMask", frag);         // 轴线从中心球边缘开始（不穿过球）
-        Assert.Contains("#C4874F", frag);          // X 淡金褐（注释即合同）
-        Assert.Contains("#5684A8", frag);          // Y 蓝灰
-        Assert.Contains("#8EA8C2", frag);          // Z 浅钢蓝
-        Assert.Contains("#D7DEE6", frag);          // 中心球填充
-        Assert.Contains("#66788B", frag);          // 中心球描边
-        Assert.Contains("e.visible = !facingCamera || depth > 0.0", frag); // 正对只显示朝向端点
-        Assert.Contains("!e.positive || e.depth <= 0.0", frag);            // 标签仅朝向正方向
+        Assert.Contains("FACING_LIMIT_DIP", frag); // 正对相机判定
+        Assert.Contains("drawAxis", frag);         // 轴线从球边缘开始（startRadius=HUB+1.6）
+        Assert.Contains("#C66A5E", frag);          // X 低饱和珊瑚红（注释即合同）
+        Assert.Contains("#6B9F84", frag);          // Y 低饱和豆青
+        Assert.Contains("#628EC2", frag);          // Z 钢蓝
+        Assert.Contains("HUB_RADIUS_DIP = 9.5", frag); // 轻量球心（不再是大白圆盘）
+        Assert.Contains("e.visible = !facing || front", frag); // 正对只显示朝向端点
+        Assert.Contains("bool showLabel = e.positive || e.facing", frag); // 标签：正方向或正对
     }
 
     // 4. 悬停索引默认 -1 且流转到 RenderProjection。
