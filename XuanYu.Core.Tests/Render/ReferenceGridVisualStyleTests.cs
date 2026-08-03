@@ -3,11 +3,9 @@ using System.IO;
 namespace XuanYu.Core.Tests.Render;
 
 // MAP-A-R1-D5-R1-F2-R3：网格视觉样式合同（10.1）与重合合成合同（10.2）。
-// 唯一像素线宽：Fine == Coarse；GridWidth ∈ [0.78, 0.90]；CoarseAlpha-FineAlpha ≤ 0.10；
-// 重合处非累加合成（max），禁止 fine+coarse 相加。
+// 唯一像素线宽：Fine == Coarse；GridWidth ∈ [0.78, 0.90]；CoarseAlpha-FineAlpha ≤ 0.10；重合处 max 合成。
 public sealed class ReferenceGridVisualStyleTests
 {
-    // 10.1：唯一线宽参数（shader 源码合同，防误删双宽度）。
     [Fact]
     public void Grid_shader_has_single_line_width()
     {
@@ -15,10 +13,7 @@ public sealed class ReferenceGridVisualStyleTests
         Assert.Contains("GRID_LINE_WIDTH_PX", frag);
         Assert.DoesNotContain("fineWidthPixels", frag);
         Assert.DoesNotContain("coarseWidthPixels", frag);
-        // Fine 与 Coarse 调用同一宽度常量：不得出现两个不同数值字面量。
-        var widthLiteral = ExtractConstant(frag, "GRID_LINE_WIDTH_PX");
-        Assert.InRange(widthLiteral, 0.78, 0.90);
-        Assert.True(widthLiteral <= 1.0, "网格线宽不得超过 1.0px");
+        Assert.InRange(ExtractConstant(frag, "GRID_LINE_WIDTH_PX"), 0.78, 0.90);
     }
 
     // 10.1：线宽与透明度合同。
@@ -43,7 +38,6 @@ public sealed class ReferenceGridVisualStyleTests
     {
         var alpha = System.Math.Max(fine, coarse);
         Assert.Equal(expected, alpha, 6);
-        // 两者都非零时，max 必须严格小于加法（重合处不得叠成双倍强度）。
         if (fine > 0.0 && coarse > 0.0)
             Assert.True(alpha < fine + coarse, $"重合处 alpha 必须 < fine+coarse（{fine}+{coarse}）");
     }
@@ -54,11 +48,8 @@ public sealed class ReferenceGridVisualStyleTests
     {
         const double fineC = 0.10, coarseC = 0.18;
         var total = fineC + coarseC;
-        var colorFine = 0.365; // #5D6670 R
-        var colorCoarse = 0.322; // #525C67 R
-        var blended = (colorFine * fineC + colorCoarse * coarseC) / total;
-        Assert.InRange(blended, colorCoarse, colorFine);
-        // Alpha 不随颜色归一化改变。
+        var blended = (0.365 * fineC + 0.322 * coarseC) / total;
+        Assert.InRange(blended, 0.322, 0.365);
         Assert.Equal(0.18, System.Math.Max(fineC, coarseC), 6);
     }
 
@@ -83,7 +74,6 @@ public sealed class ReferenceGridVisualStyleTests
         Assert.DoesNotContain(".xymap", vert);
         Assert.DoesNotContain("MapRenderSnapshot", vert);
         Assert.DoesNotContain("gl_FragDepth", vert);
-        // 地面与天空必须一眼区分：天空近地平线偏蓝（B>R），地面偏中性（差值小）。
         Assert.True(0.863 - 0.682 >= 0.1, "天空近地平线应保持蓝调");
     }
 
@@ -99,7 +89,7 @@ public sealed class ReferenceGridVisualStyleTests
     {
         var line = source.Split('\n').FirstOrDefault(l => l.Contains(name) && l.Contains('='))
             ?? throw new Xunit.Sdk.XunitException($"常量 {name} 未找到");
-        var valuePart = line.Split('=')[1].Trim().TrimEnd(';');
-        return double.Parse(valuePart, System.Globalization.CultureInfo.InvariantCulture);
+        return double.Parse(line.Split('=')[1].Trim().TrimEnd(';'),
+            System.Globalization.CultureInfo.InvariantCulture);
     }
 }
