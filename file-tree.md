@@ -1,697 +1,311 @@
-版本：v0.2.24.13-fix
+版本：v0.2.24.14-fix
 # XuanYu Engine 文件树
 
-## SHR-2026-08 治理职责索引（v0.2.24.13-fix）
-
-- `docs/archive/`：历史归档分类（changelog 月度归档，单一位置；当前含 changelog-2026-05/06/07.md）
-- `docs/玄域引擎_AI开发宪法.md`：宪法 2.0 正式生效版本（唯一宪法事实源）
-- `scripts/arch-a-guard.ps1`：5+100 门禁修复（ReadAllLines 确定性统计 + 自验证样本；范围对齐宪法第十三条）
-- `XuanYu.World.Tests/World/WorldRotateTransformUiTests.R4R2.Helpers.cs`：旋转测试辅助（partial，拆分自 R4R2.cs）
-- `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.Selection.cs`：选择工具无 Gizmo 测试（partial，拆分自主文件）
-- `XuanYu.Editor.UI/Left/Left.Styles.axaml`：左侧栏样式资源（拆分自 Left.axaml，StyleInclude 引用）
-- catch 语义治理：`XuanYu.Core/Gizmo/RotateGizmoDrag.cs`、`RotateGizmoLayout.cs`（D 类类型化+回退注释）、`XuanYu.Editor/MapDocument/MapStorageService.cs`、`SceneDocument/SceneStorageService.cs`、`Assets/SceneAssetHostingTransaction.cs`（B 类 best-effort 注释）、`XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`（C 类竞态注释）
-
-## MAP-A-R1-D5-R1-F3-F1 职责索引（v0.2.24.12-fix）
-
-- `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.vert`：导航 Gizmo Overlay 顶点（全屏三角形，纯屏幕空间）
-- `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag`：导航 Gizmo 绘制（中心球/三轴/六端点/X·Y·Z 标签/深度排序/hover 高亮）
-- `XuanYu.Render.Vulkan/Shaders/editor_world_origin.frag`：世界原点**屏幕空间标记**（细十字线+空心圆+中心点，蓝灰描边+淡金褐中心点，恒定 10~16 DIP，不再贴地）
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.NavGizmo.cs`：Gizmo Overlay Pass 绘制（80B push：Right/Up/Forward+视口+DPI+hover）
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoVert.cs` / `ShaderBytecode.NavGizmoFrag.cs` / `ShaderBytecode.WorldOriginFrag.cs`：字节码生成物
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs`：Gizmo 命中（原生指针流——右上角区域 → 局部坐标 → 端点命令 / Orbit 复用）
-- `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：NavGizmoHoverIndex（悬停索引流转）
-- `XuanYu.Render.Abstractions/RenderProjection.cs` / `RenderCameraProjection.cs`：ViewportDpiScale + Right 计算属性
-- 已删除：`ViewGizmo.axaml/.cs`、`ViewNavigationGizmo.cs/.Render.cs/.Input.cs`（Avalonia 覆盖层——airspace 遮挡；保留 Layout/HitTest 纯数学供命中）
-
-## MAP-A-R1-D5-R1-F3 职责索引（v0.2.24.11-fix）
-
-- `XuanYu.Editor.UI/Viewport/ViewGizmo.axaml`：右上角导航 Gizmo 宿主（透明覆盖层，无白色卡片）
-- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.cs`：导航 Gizmo 主控件（88×88、相机快照属性、Hover 状态）
-- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Layout.cs`：六方向投影纯数学（Right/Up/Forward → 屏幕端点 + 深度排序）
-- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Render.cs`：绘制（中心球/三轴/六端点/X·Y·Z 标签/Hover 亮环）
-- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.HitTest.cs`：命中（端点/中心球/88×88 区域外不捕获）
-- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Input.cs`：指针捕获（<4 DIP 点击视角、≥4 DIP 复用 Orbit 会话）
-- `XuanYu.Editor.UI/Vm/StandardViewResolver.cs`：六方向标准视角解析（+X/-X/+Y/-Y/顶/底，Up 合同防滚转）
-- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：NavigationCamera 快照（Gizmo 数据源，相机变化统一通知）
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml`、`Root/UiRoot.axaml`：视口容器去黑边（浅灰 1 DIP 分隔、无圆角/Padding）
-
-## MAP-A-R1-D5-R1-F2-R3-R2 职责索引（v0.2.24.10-fix）
-
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`（backgroundVertex，gizmoMode=-10）：背景顶点只输出全屏三角形位置与 NDC（哨兵 (2,2) 非背景）；invVP 每顶点算一次 flat 传出——颜色计算不再在顶点级
-- `XuanYu.Render.Vulkan/Shaders/scene.frag`：程序化编辑器环境（天空 + 中性灰参考地面）**片元级每像素重建视线**：天空顶部 #A6C0DF → 天空近地平线 #B3C6DA → 地平线 #9CA6AF → 远处地面 #858B91 → 近处地面 #747A80；smoothstep 全部 edge0<edge1；不写深度、不进地图/场景/拾取/碰撞
-
-## MAP-A-R1-D5-R1-F2-R3 职责索引（v0.2.24.9-fix）
-
-- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.frag`：无限参考网格独立 Pass——F2-R3 唯一像素线宽 0.82px（Fine==Coarse）、重合非累加合成（max）、配色收敛（#5D6670/#525C67）；仍只画网格（轴/原点在独立 Pass）
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`（backgroundVertex，gizmoMode=-10）：程序化编辑器环境——职责从"天空"扩展为"天空 + 中性灰编辑器参考地面"（#9DBBE0→#AEC4DC→#9DA5AD→#8B9299→#7B8289，dir.z 地平线柔和过渡；不写深度、不进地图/场景/拾取/碰撞）
-- `XuanYu.Core.Tests/Render/ReferenceGridVisualStyleTests.cs`：视觉样式合同（唯一线宽、max 合成、alpha 差 ≤0.10、背景中性灰）
-
-## MAP-A-R1-D5-R1-F2-R2 职责索引（v0.2.24.8-fix）
-
-- `XuanYu.Render.Abstractions/ReferenceGridScale.cs`：每帧全局网格尺度纯数学（1/2/5 序列、48px 目标、对数域互补权重；不持相机/不调 Vulkan）
-- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert/.frag`：无限参考网格独立 Pass（只画网格，不画轴/原点；双全局层级、方向性密度淡出、有界深度偏移）
-- `XuanYu.Render.Vulkan/Shaders/editor_world_axes.frag`：X/Y 世界轴独立全屏 Pass（单一轴线事实源；金 X=世界 Y=0、蓝 Y=世界 X=0；方向导数固定 1.25px）
-- `XuanYu.Render.Vulkan/Shaders/editor_world_origin.frag`：世界原点标记独立全屏 Pass（琥珀、≤4px 半径）
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.cs`：全屏 Pass 管线通用创建（三个 Pass 共用）
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs`：网格/轴/原点管线工厂（176B PushConstant）
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Grid.cs`：参考网格绘制（gridScale 填充）
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.GridScale.cs`：每帧参考尺度（视口中心射线 Z=0 求交，失败回退上一帧）
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.WorldAxes.cs`：世界轴/原点 Pass 绘制与管线注入
-- `XuanYu.Render.Vulkan/Session/GridPipelineSet.cs`：三全屏 Pass 管线组合（设备不支持则禁用对应 Pass）
-- `XuanYu.Core.Tests/Render/ReferenceGridScaleTests.cs`：1/2/5 序列与互补权重合同
-- `XuanYu.Core.Tests/Render/ReferenceGridShaderContractTests.cs`：Shader 防退化合同（无轴/无逐 Fragment LOD/clamp 深度偏移）
-- 测试更新：ReferenceGridAdaptiveTests（互补权重+密度淡出+深度 clamp）、ReferenceGridDrawPlanTests（方案 12 顺序+开关独立）、ViewportAssistDrawPlanTests（新索引）
-
-## MAP-A-R1-D5-R1-F2 职责索引（v0.2.24.7-fix）
-
-- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert/.frag`：无限参考网格独立 Pass（全屏三角形；片元射线与 Z=0 平面求交；fwidth 像素恒定线宽 0.75/1.10/1.35px；目标 36px/格十进制层级 + 细格/主格加深跨级连续权重；深度输出带像素级偏移；不按地图矩形裁剪）。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridVert.cs/.GridFrag.cs`：参考网格字节码（生成物，glslc 逐字一致）。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs`：参考网格独立管线（160B PushConstant、DepthTest=On(LessOrEqual)、DepthWrite=Off、AlphaBlend=On）。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Grid.cs`：参考网格绘制（VP/InvVP/相机/视口/far 参数填充，40 float）。
-- `XuanYu.Render.Abstractions/RenderDrawPlan.cs`：网格 Pass 顺序在地形/实体之后、轮廓/Gizmo 之前（实体可遮挡网格）。
-- `XuanYu.Core.Tests/Render/ReferenceGridAdaptiveTests.cs`：层级/权重/跨级连续性/淡出曲线数学合同。
-- `XuanYu.Core.Tests/Render/ReferenceGridDrawPlanTests.cs`：DrawPlan 网格存在性与顺序合同。
-- `XuanYu.Core.Tests/Render/MapRenderDrawPlanTests.cs` / `ViewportAssistDrawPlanTests.cs`：地图与辅助显示下网格顺序断言（F2 同步）。
-
-## MAP-A-R1-D4 职责索引（v0.2.24.6-rz）
-
-- `XuanYu.Core/Map/MapTerrainMeshBuilder.cs`：CPU 地形网格构建器（唯一采样源 MapSurfaceSampler 的渲染侧消费方；数值差分法线；CPU 亮度合成 ambient×0.3×hemi + sun×0.85×ndl，clamp [0,1]）。
-- `XuanYu.Core/Map/MapBoundsMeshBuilder.cs`：地图边界线网格（48 顶点，亮度 1.0）。
-- `XuanYu.Core/Map/MapRenderSnapshot.cs`：D4 扩展环境参数（sunDirection 指向光源方向 Z>0 / sunIntensity / ambientIntensity）。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.MapTerrain.cs`：地形/边界 Draw（kind=-14/-15，CmdDrawIndexed 24576）。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：地形/边界分支 + 程序化天空渐变（skyTop 0.45,0.56,0.74 / horizon 0.88,0.90,0.94）。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：glslc -O 生成物（8204 词，78 行）。
-- `XuanYu.Editor/Camera/EditorCameraFraming.cs`：FrameMapAllWithCenter 地图 45° 斜上方俯视取景。
-- `XuanYu.Editor.UI/Vm/UiVm.MapWorld.cs`：D4 临时加载/卸载入口（第二排按钮，D5 移入地图编辑器）。
-- `XuanYu.World.Tests/Map/MapTerrainMeshBuilderTests.cs`：网格构建（顶点/索引/高度/法线/边界线）。
-- `XuanYu.World.Tests/Map/MapTerrainBrightnessTests.cs`：亮度合成（Flat 稳定 / 缓丘明暗差 / 方向光贡献）。
-- `XuanYu.World.Tests/World/WorldCameraFramingTests.cs`：取景测试（45° 俯视 + 四角容纳）。
-- `XuanYu.World.Tests/World/WorldCameraFramingOccupancyTests.cs`：地图取景屏幕占用率测试（65~75%）。
-- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert/.frag`：独立参考网格 Pass（片元解析世界 Z=0 平面）。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridVert.cs/.GridFrag.cs`：参考网格字节码（生成物）。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs`：参考网格独立管线（192B PushConstant、DepthWrite=Off、Blend=On）。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Grid.cs`：参考网格绘制（VP/InvVP/相机/视口/far/地图参数）。
-- `XuanYu.Core.Tests/Render/ReferenceGridRayIntersectionTests.cs`：射线求交测试（G1）。
-- `XuanYu.Core.Tests/Render/ReferenceGridAdaptiveTests.cs`：自适应层级/淡出/裁切数学测试。
-- `XuanYu.Core.Tests/Render/ReferenceGridDrawPlanTests.cs`：DrawPlan 网格存在性测试。
-- `XuanYu.Editor.UI/Vm/UiVm.ViewGizmo.cs`：视角 Gizmo 六方向相机命令（顶/底/前/后/左/右，保持中心与距离）。
-- `XuanYu.Editor.UI/Viewport/ViewGizmo.axaml(.cs)`：右上角视角 Gizmo 覆盖层（3×3 网格，当前朝向琥珀描边）。
-- `XuanYu.Editor.UI/Vm/UiVm.MapEditor.cs`：正式地图编辑器文档状态与生命周期命令（新建/打开/保存/卸载/聚焦，复用 D2 存储与 D3 World）。
-- `XuanYu.Editor.UI/Right/MapEditorPanel.axaml(.cs)`：地图编辑器面板（地图资产/基础地表/环境三组）。
-- `XuanYu.Editor.UI/Win/UiWin.MapCommands.cs`：.xymap 文件选择器（打开/保存）。
-- `XuanYu.World.Tests/World/UiViewGizmoTests.cs`：视角 Gizmo 测试（六方向/中心距离保持/选择保持）。
-- `XuanYu.World.Tests/World/UiMapEditorTests.cs`：地图编辑器闭环测试（新建/保存打开/卸载/失败不污染）。
-- `XuanYu.Editor/SceneDocument/MapReference.cs`：场景地图引用（mapId + 相对路径，只引用不复制）。
-- `XuanYu.Editor/SceneDocument/SceneDocumentValidator.MapReference.cs`：mapReference 校验（空=旧场景兼容）。
-- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentMapRef.cs`：场景保存附加引用 / 打开解析加载 / 引用失效标记。
-- `XuanYu.World.Tests/World/SceneMapReferenceTests.cs`：场景地图引用闭环测试（携带/恢复/旧场景/失效）。
-
-## MAP-A-R1-D3 职责索引（v0.2.24.2-rz）
-
-- `XuanYu.Core/Map/`：唯一地表采样源（MapSurfaceKind/MapSurfaceSampler，Flat/GentleHillsV1 确定性）+ MapRenderSnapshot（供 D4 的最小渲染快照）。
-- `XuanYu.World/Map/`：World 地图状态（WorldMapState 有限边界+高度查询 / WorldMapStateOwner 加载切换卸载+快照）。
-- `XuanYu.Editor/MapDocument/MapDocumentWorldBridge.cs`：MapDocument → WorldMapState 桥接。
-- `XuanYu.World.Tests/Map/`：地表采样确定性、边界、Owner 状态、桥接端到端测试。
-
-## MAP-A-R1-D2 职责索引（v0.2.24.1-rz）
-
-- `XuanYu.Editor/MapDocument/`：.xymap v1 地图文档域（MapDocument/MapId/值对象/Validator/JsonSerializer/Mapper/StorageService/Owner），严格校验 + 候选加载 + 原子保存 + Dirty/Clean 状态机。
-- `XuanYu.World.Tests/Map/`：地图存储闭环自动测试（合同校验/Round-trip/拒绝路径/失败保护/状态链）。
-
-## MAP-A-R1-D1 职责索引（v0.2.24.0-rz）
-
-- `docs/map-a-r1-d1-map-contracts.md`：`.xymap` 第一版 Schema 与 `.xyscene` mapReference 合同冻结（坐标方案 B：X 横向/Z 高度/Y 纵向，世界轴直写，Z-Up）。
-- 本轮零产品代码：只读核查 SceneDocument / World Snapshot / 渲染地面（EditorGrid+天空第二管线）/ 右侧模块，未重构旧代码。
-
-## WARCORE-A-R1-D1 职责索引（v0.2.23.0-rz）
-
-- `XuanYu.WarCore/XuanYu.WarCore.csproj`：新程序集，仅引用 Core（宪法依赖禁区 WarCore→Editor/Vulkan 禁止）。
-- `XuanYu.WarCore/Identity/UnitId.cs`：单位编号（int 单调，FromInt 校验 >0，None 无效）。
-- `XuanYu.WarCore/Identity/UnitKind.cs`：单位类型枚举（R1 仅 Soldier）。
-- `XuanYu.WarCore/Identity/MilitaryIdentity.cs`：军事身份（UnitId / DisplayName / UnitKind，空名拒绝）。
-- `XuanYu.WarCore/Identity/FactionId.cs`：阵营编号（0=未命名）。
-- `XuanYu.WarCore/Identity/OrganizationId.cs`：组织编号（0=未编组）。
-- `XuanYu.WarCore/State/SoldierState.cs`：士兵状态（身体状态/体力/士气/压制，0–100，越界抛明确错误）。
-- `XuanYu.WarCore.Tests/`：D1 自动测试（身份生成/越界/隔离/程序集依赖方向运行时复核）。
-- `scripts/arch-a-guard-warcore.ps1`：WarCore 依赖禁区守卫（Core→WarCore、World→WarCore、WarCore→Editor/Vulkan 禁止），挂载于主守卫。
-- `XuanYu.Engine.slnx`：增加 XuanYu.WarCore + XuanYu.WarCore.Tests（12 项目）。
-
-## WORLD-D-R1 职责索引（v0.2.22.0-rz）
-
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：背景改为世界空间程序化天空（逆视图投影恢复方向、按世界 Z 分量三段插值，地平线世界稳定）；静态模型分支固定方向光 + 半球环境光（常量内联，不进场景文档）。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Sky.cs`：天空专用管线工厂（DepthTest/Write=Off、Blend=Off），与主管线共用 Shader/顶点输入/RenderPass 与兼容 PushConstants 布局。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：由 glslc -O 从正式 scene.vert 重新生成（7969 字 SPIR-V）。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：新增天空管线创建日志。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：SetSkyPipeline 注入；RecordDraw 按绘制类型绑定切换（EditorBackground→天空管线）。
-- `XuanYu.Render.Vulkan/Session/VulkanRenderSession(.Lifecycle).cs`：天空管线创建/持有/释放。
-- `XuanYu.Editor/Assets/StaticModelColor.cs` + `XuanYu.Render.Abstractions/RenderStaticModelPrimitive.cs`：默认材质 Neutral 0.8 灰 → 中性浅灰 (0.72, 0.73, 0.76)。
-- `XuanYu.World.Tests/World/WorldDR1EnvironmentTests.cs`：默认材质路径与场景文档无光照字段契约测试。
-
-## WORLD-C-R4-D4 职责索引（v0.2.21.25-rz）
-
-- `docs/玄域引擎_AI开发宪法.md`：二十九章新增 3.1 I（可选实施切片）与 3.2 防止过度拆分；R/I/F 命名规范冻结。
-- `XuanYu.Editor/SceneDocument/SceneDocumentJson.cs`：v3 增加 `Assets` 与实体 `ModelAssetId`（可空兼容 v1/v2）。
-- `XuanYu.Editor/SceneDocument/SceneDocumentAsset.cs`：资产记录（AssetId/Kind=ModelGltf/RelativePath/DisplayName/ImporterVersion）。
-- `XuanYu.Editor/SceneDocument/SceneDocumentValidator.cs`：v3 资产/引用校验与新错误码；v1/v2 规则不变。
-- `XuanYu.Editor/SceneDocument/SceneDocumentMapper.cs`：v3 双向映射（资产/ModelAssetId）。
-- `XuanYu.Editor/SceneDocument/SceneDocumentSaveTransaction.cs` + `SceneSaveOutcome.cs`：保存事务（Hosting 组合 + 原子写 + 回滚 + 改绑映射）。
-- `XuanYu.Editor/SceneDocument/SceneDocumentLoadTransaction.cs` + `SceneLoadCandidate.cs`：加载候选/提交事务；Missing/Failed 保留实体+固定 Bounds 占位。
-- `XuanYu.Editor/SceneDocument/SceneDocumentWorldBridge.cs`：Capture 携带 ModelAssetId。
-- `XuanYu.Editor/Assets/SceneStaticModelCatalog.cs`：新增 ReplaceAll / RebindSourcePaths。
-- `XuanYu.Editor.UI/Dialogs/IEditorDialogService.cs` + `NullEditorDialogService.cs`：最小弹窗接口与空实现。
-- `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs`：UiWin 错误/警告弹窗实现。
-- `XuanYu.Editor.UI/Bootstrap/App.axaml.cs`：组合根传入 UiWin 作为 DialogService。
-- `XuanYu.Editor.UI/Vm/UiVm*.cs`（SceneDocument/SceneDocumentSave/SceneDocument.New/StaticModelImport）：保存/加载事务接线、弹窗触发、新建清空、Catalog 改绑。
-- `XuanYu.World.Tests/Assets/WorldCR4D4*.cs`：D4 自动测试（Save/SaveAs/Load/StructureError/SchemaCompatibility/Dialog + ScenePersistenceEnv 辅助）。
-- `docs/world-c-r4-d4-static-model-persistence-report.md`：D4 完整实现、验证与真机验收入口。
-- `docs/world-c-r4-d4-i1-hosted-assets-report.md`：D4-I1 托管事务内核报告（改名自 D4-R1）。
-
-## WORLD-C-R4-D4-I1 职责索引（v0.2.21.24-rz）
-
-- `XuanYu.Editor/Assets/HostedSceneAsset.cs`：托管资产项（AssetId/SourcePath/RelativePath/StagedPath/FinalPath）。
-- `XuanYu.Editor/Assets/SceneAssetHostingPlan.cs`：托管规划（场景路径/资产根/staging/backup/资产列表，按 AssetId 稳定排序）。
-- `XuanYu.Editor/Assets/SceneAssetHostingPlanner.cs`：场景路径与 SourcePath 校验、同 AssetId 同源去重/异源拒绝、FinalPath 防逃逸。
-- `XuanYu.Editor/Assets/SceneAssetHostingTransaction.cs` + `.Activate/.Complete/.Rollback.cs`：Prepare/Activate/Complete/Rollback 状态机；旧目录备份与恢复，旧数据安全优先。
-- `XuanYu.Editor/Assets/SceneAssetHostingState.cs`：事务状态（Prepared/Activated/Completed/RolledBack/Failed）。
-- `XuanYu.Editor/Assets/SceneAssetHostingError.cs`：14 个托管事务错误码，复用 SceneDocumentResult 模式。
-- `XuanYu.World.Tests/Assets/WorldCR4D4Hosting*.cs`：D4-I1 托管事务自动测试（Planner/Reject/Transaction/Complete/Rollback/SaveAs + 测试环境辅助）。
-- `docs/world-c-r4-d4-i1-hosted-assets-report.md`：D4-I1 事务内核实现、验证与边界报告。
-
-## WORLD-C-R4-D3-F1 职责索引（v0.2.21.23-fix）
-
-- `XuanYu.Editor/Assets/StaticModelBuilder.cs`：`AddPrimitive` 索引归一化后记录 `BaseVertex = 0`；修复非零 BaseVertex 真实 GLB 无法上传 GPU。
-- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelFailureTracker.cs`：按 RenderStaticModelKey+Revision 记录创建失败状态；相同 Key+Revision 不重试不重打日志。
-- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelCache.cs`：接入失败去重；`RetainOnly` 清理未引用失败记录。
-- `XuanYu.World.Tests/World/WorldCR4D3F1BaseVertexTests.cs`：多/三 Primitive 归一化、无索引连续全局索引、越界与溢出拒绝、单 Primitive 不回归、Vulkan 验证器通过/拒绝。
-- `XuanYu.World.Tests/World/WorldCR4D3F1FailureTrackerTests.cs`：失败去重语义（同 Key+Revision 只记一次、Revision 变可重试、Clear/ClearNotIn、按 Key 独立）。
-- `XuanYu.World.Tests/World/WorldCR4D1GlbFactory.cs`：新增 `ThreePrimitives` / `BadIndexTriangle` 测试 GLB 工厂。
-- `XuanYu.Editor/XuanYu.Editor.csproj` 与 `XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj`：新增 `InternalsVisibleTo XuanYu.World.Tests`。
-- `XuanYu.World.Tests/XuanYu.World.Tests.csproj`：新增 Render.Vulkan 项目引用（仅验证器/失败去重纯逻辑测试）。
-- `run.bat` / `XuanYu.Editor.UI/Win/UiWin.axaml` / `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：版本号 v0.2.21.23-fix。
-
-## WORLD-C-R4-D3 职责索引（v0.2.21.22-rz）
-
-- `XuanYu.World/WorldEntityType.cs`：`WorldEntityType` 新增 `StaticModel` 枚举与 `WorldEntityTypes.StaticModel` 常量。
-- `XuanYu.World/Scene/SceneStateOwner.StaticModel.cs`：`AddStaticModelEntity(name, transform, extent)`；extent 来自模型 LocalBounds 供 Picking/空间查询，World 不接收资产或 GPU 语义。
-- `XuanYu.Editor/Assets/SceneStaticModelBinding.cs`：实体 → 资产最小绑定（EntityId/AssetId/SourcePath）；不含 RenderKey（Editor 不引用 Render.Abstractions）。
-- `XuanYu.Editor/Assets/SceneStaticModelCatalog.cs`：场景静态模型绑定目录；Bind/TryGetByEntity/TryGetByAsset/Remove/Clear/Snapshot/Revision/Changed；Snapshot 按 AssetId 稳定排序。
-- `XuanYu.Editor/Assets/StaticModelAuthoringService.cs`：GLB 导入 → World 实体创建 → Catalog 绑定事务组合服务；回滚保证不留半成品。
-- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：投影适配增加 Catalog 与渲染资源缓存输入；StaticModel 实体按绑定携带 RenderKey；缺失绑定跳过不整帧失败。
-- `XuanYu.Editor.UI/Vm/UiVm.RenderProjection.cs`：生产投影路径移除 `D2StaticModelDemo.Apply`，改经 Catalog 派生渲染资源。
-- `XuanYu.Editor.UI/Vm/UiVm.StaticModelImport.cs`：导入命令、选择新实体、日志（顶点/索引）、Dirty 与 RenderProjection 发布。
-- `XuanYu.Editor.UI/Vm/SceneHistoryEntry.cs` 与 `UiVm.History.Entities.cs`：Add/Delete 历史条目携带绑定，Undo/Redo 保持绑定一致。
-- `XuanYu.Editor.UI/Vm/UiVm.EntityCommands.cs`：删除实体时解除模型绑定。
-- `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：新建/打开场景清空 Catalog 绑定；窗口标题版本号。
-- `XuanYu.Editor.UI/Top/Top.axaml`：顶部菜单「文件 → 导入 GLB」。
-- `XuanYu.Editor.UI/Win/UiWin.SceneCommands.cs`：GLB 文件选择器（`*.glb` 单选），取消不改变状态。
-- `XuanYu.World.Tests/World/WorldCR4D3*.cs`：D3 自动测试（AuthoringService/Catalog/Projection/UI 四组）。
-- `docs/world-c-r4-d3-static-model-authoring-report.md`：D3 实现、边界、验证与真机验收入口报告。
-- `run.bat` / `XuanYu.Editor.UI/Win/UiWin.axaml`：版本号 v0.2.21.22-rz。
-
-## WORLD-C-R4-D2-F1 验收缺陷修复职责索引（v0.2.21.21-fix）
-
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：修复 D2 depth 接入后的背景深度污染；背景全屏三角固定写 far depth `1.0`，不得遮挡实体或静态模型。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.StaticModelInput.cs`：拆出静态模型顶点输入布局，撤销 D2 为压行数造成的 Pipeline 可读性退化。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs`：拆出 depth state 构造，保持 Pipeline 主文件职责清晰。
-- `XuanYu.Core.Tests/Render/StaticModelDepthRegressionTests.cs`：锁定背景 shader 不得回退到 `0.98` depth，防止模型随缩放才完整显示的回归复发。
-
-## WORLD-C-R4-D2 COMPLETE 职责索引（v0.2.21.20-rz）
-
-- `XuanYu.Render.Abstractions/RenderStaticModel*.cs`：D2 静态模型渲染输入合同；包含 ResourceKey、顶点、Primitive、基础颜色、Revision 和 Bounds，不含 SharpGLTF、Vulkan Handle、文件路径或 SceneDocument 类型。
-- `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：实体投影新增 `StaticModelKey`，允许同一模型资源被多个实体 Transform 共享。
-- `XuanYu.Render.Vulkan/Render/StaticModels/*.cs`：D2 Vulkan 静态模型 GPU buffer、校验、缓存、低频日志和资源释放；使用 uint32 index，按 Key+Revision 替换，未引用资源在命令重录安全点释放。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawStaticModel.cs`：StaticModel indexed draw 路径；逐 Primitive 设置 baseColorFactor 并提交 `CmdDrawIndexed`。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawStaticBounds.cs`：D2 选中模型 Bounds 轮廓；与模型实体共享 Transform，不冒充最终几何描边。
-- `XuanYu.Render.Vulkan/Render/VulkanDepthAttachment.cs`：随 swapchain 尺寸重建的最小深度附件；模型 vertex/index buffer 不随 resize 重传。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert` 与 `Pipeline/ShaderBytecode.Vert.cs`：静态模型顶点输入、非均匀缩放 normal 修正、基础方向光和 D2 SPIR-V 字节码。
-- `XuanYu.Editor.UI/Vm/StaticModelRenderAdapter.cs`：D1 `StaticModelData` 到 Render 静态模型资源合同的适配，不引入 Vulkan。
-- `XuanYu.Editor.UI/Vm/D2StaticModelDemo.cs`：`XUANYU_D2_STATIC_MODEL_DEMO=1` 受控真机观察入口；不提供导入按钮、不写 `.xyscene`、不建立资产工作流。
-- `XuanYu.Core.Tests/Render/StaticModelRenderContractTests.cs`：D2 合同回归，覆盖 D1 数据映射、多 Primitive 颜色保留和 StaticModel 不回退旧占位 draw。
-- `docs/world-c-r4-d2-static-model-rendering.md`：D2 范围、实现、生命周期、验收方式和 D3 边界报告。
-
-## WORLD-C-R4-D1 COMPLETE 职责索引（v0.2.21.19-rz）
-
-- `XuanYu.Editor/Assets/GlbImportService.cs`：D1 静态 GLB 导入入口；负责文件/流/byte 输入、SharpGLTF 边界验证和统一结果返回，不依赖 UI、SceneDocument、World 或 Vulkan。
-- `XuanYu.Editor/Assets/GlbContainer.cs`：GLB 2.0 Header、JSON/BIN Chunk 和基础容器错误校验。
-- `XuanYu.Editor/Assets/GltfStaticModelImporter.cs`：D1 GLB JSON/BIN 静态几何导入适配；遍历 Node/Mesh/Primitive，输出玄域自有模型数据。
-- `XuanYu.Editor/Assets/GltfAccessorReader.cs`：读取 D1 支持的 POSITION/NORMAL/UV/Index Accessor 子集，统一索引为 uint。
-- `XuanYu.Editor/Assets/GltfNodeTransform.cs`：GLB 静态 Node Matrix/TRS 求值、Position 烘焙和法线逆转置变换。
-- `XuanYu.Editor/Assets/GltfJsonAccess.cs`：导入适配层的 JSON 字段读取辅助，不作为通用 SceneDocument 解析器。
-- `XuanYu.Editor/Assets/StaticModel*.cs`：玄域自有静态模型输出合同、Primitive、颜色、顶点、Warning/Error 和元数据；不暴露 SharpGLTF 或 Vulkan 类型。
-- `XuanYu.Editor/Assets/ImportStop.cs`：导入适配层内部受控停止异常，转换为 `StaticModelImportResult`。
-- `XuanYu.World.Tests/World/WorldCR4D1GlbFactory.cs`：D1 测试专用极小 GLB 动态生成器，不提交二进制模型。
-- `XuanYu.World.Tests/World/WorldCR4D1GlbImportTests.cs`：D1 静态导入回归，覆盖成功、Warning、错误、坐标 Bounds 和第三方类型隔离。
-- `docs/world-c-r4-d1-glb-import-core.md`：D1 实现范围、支持/拒绝能力和 D2 入口说明。
-
-## WORLD-C-R4-D0 COMPLETE 职责索引（v0.2.21.18-rz）
-
-- `XuanYu.Editor/Assets/AssetId.cs`：场景托管资产稳定身份；与文件名、实体名、绝对路径、GPU Buffer 和第三方 GLB 对象无关。
-- `XuanYu.Editor/Assets/SceneAssetPathPolicy.cs`：`.xyscene` 同级 `.xyassets` 根目录、模型托管相对路径和路径逃逸验证单一入口。
-- `XuanYu.Editor/Assets/GltfCoordinatePolicy.cs`：GLB `+Y Up` 到玄域右手 `+Z Up` 的一次性导入层坐标转换与转换后局部 Bounds 生成。
-- `XuanYu.Editor/Assets/ModelAssetRuntimeState.cs`：模型资产运行时 `Unloaded/Loading/Ready/Missing/Failed` 状态枚举；不写入 `.xyscene`。
-- `XuanYu.Editor/XuanYu.Editor.csproj`：锁定 `SharpGLTF.Core` 1.0.6，作为 D1 静态 GLB 解析唯一批准依赖；第三方类型禁止越过导入边界。
-- `XuanYu.World.Tests/World/WorldCR4D0AssetContractTests.cs`：D0 AssetId、路径安全和坐标转换合同测试。
-- `docs/world-c-r4-d0-asset-contracts.md`：D0 真实代码审计、依赖裁定、AssetId、资源目录、Schema 草案、坐标、运行时状态、Picking/Bounds、Save As 和 D1 精确范围冻结报告。
-- `docs/玄域引擎_AI开发宪法.md`：自 WORLD-C-R4 起生效的 `R/D/A/F/CLOSED` 命名治理规则。
-- `docs/dev-rules.md`：命名治理硬规则摘要，禁止双 `R` 和历史追溯重命名。
-
-## WORLD-C-R3 CLOSED 职责索引（v0.2.21.17-rz）
-
-- `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；世界坐标轴默认关闭，不拥有场景事实。
-- `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；显示菜单文本提供统一勾选列，不写 SceneDocument、不进 History、不触发 Dirty。
-- `XuanYu.Editor.UI/Top/Top.axaml`：顶部主命令栏和视口工具栏重构为两条浅色 rail；去掉挤占空间的小组标题，工具当前态改为浅蓝背景、淡蓝边框和底部指示。
-- `XuanYu.Editor.UI/Left/Left.axaml`：层级右键菜单使用编辑器菜单行高与悬停样式；删除保持克制警示色。
-- `XuanYu.Editor.UI/Foot/Foot.axaml`：底部状态栏只保留当前工具/交互状态，不重复场景保存状态。
-- `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：选择提交不再在 Avalonia ListBox 选择事务中切换树展开状态；展开/收起由箭头指针处理，避免失效 index 崩溃。
-- `XuanYu.Core/Gizmo/MoveGizmoScreenSize.cs`：Move 箭头、中心和平面共用的 DIP 到世界尺寸换算；定义正方形 offset、边长和 Picking padding。
-- `XuanYu.Core/Gizmo/MoveGizmoLayout.Plane.cs`：生成屏幕恒定正方形平面可见几何与独立命中几何。
-- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoScreenSize.cs`：将 Move Gizmo 的屏幕恒定轴长计算接入 UiVm 视口与渲染投影。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：Move Gizmo 以细轴箭头、中性中心和统一屏幕尺寸正方形面片为主体；实体 RenderTransform 不进入 Gizmo；仍由 glslc 生成嵌入 SPIR-V。
-- `XuanYu.Core.Tests/Render/ViewportAssistDrawPlanTests.cs`：默认无世界轴线、开启后进入辅助 DrawPlan 的回归。
-- `XuanYu.World.Tests/World/WorldCR3ViewportAssistTests.cs`：辅助开关不污染 Dirty / History / Selection / Tool 和 `.xyscene` 回归。
-- `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.cs`：未选择/选择/框选/移动/旋转/缩放/取消选择的 Gizmo 显示矩阵回归。
-- `XuanYu.World.Tests/World/WorldCR3R3CommandSmokeTests.cs`：顶部文件命令、工具栏命令和环境显示命令仍可调用且不污染 Dirty/History 的 UI 冒烟回归。
-- `docs/world-c-r3-viewport-reference-report.md`：R3-R8 Move Gizmo 专项报告、真机 PASS 与 WORLD-C-R3 CLOSED 收口记录。
-- `docs/world-c-r3-viewport-reference.svg`：R3-R8 真机 PASS 与 WORLD-C-R3 CLOSED 状态图。
-
-## WORLD-C-R2 CLOSED 职责索引（v0.2.21.8-rz）
-
-- `XuanYu.World/WorldEntityType.cs`：R2 最小实体类型与 Legacy 名称兼容解析。
-- `XuanYu.World/WorldEntityName.cs`：场景范围唯一命名与最小可用三位后缀。
-- `XuanYu.Editor.UI/Vm/SceneHistoryEntry.cs`：Add/Delete/Rename 上层历史数据条目。
-- `XuanYu.Editor.UI/Vm/UiVm.EntityCommands.cs`：立方体添加、选择、删除、重命名与历史接入。
-- `XuanYu.Editor.UI/Left/Left.EntityCommands.cs`：层级右键命令和内联重命名输入生命周期。
-- `XuanYu.Editor.UI/Left/InlineRenameActivation.cs`：文本框可见布局完成后的 Focus + SelectAll 调度合同。
-- `XuanYu.Editor.UI/Win/UiWin.EntityShortcuts.cs`：F2/Delete 窗口快捷键与文本输入保护。
-- `XuanYu.Render.Abstractions/RenderEntityType.cs`：跨渲染边界的 Legacy/Cube 类型判别。
-- `XuanYu.World.Tests/World/WorldCR2*.cs`：R2 World、UI 历史、Dirty 与文档兼容回归。
-- `XuanYu.Core.Tests/Render/CubeRenderDrawPlanTests.cs`：Cube 填充/轮廓及三类 Gizmo 无 Legacy Draw 的最终帧合同。
-- `XuanYu.World.Tests/World/WorldCR2InlineRenameTests.cs`：F2/右键重命名、延迟 Focus 与 SelectAll 回归。
-- `docs/world-c-r2-implementation-acceptance.md`：R2 实施范围、自动门禁、R2-R2 修复与真机 CLOSED 裁定。
-- `docs/world-c-r2-ipo-manual-checklist.md`：中文 IPO 合同与测试 01–08 真机 PASS 记录。
-- `docs/world-c-r2-status.svg`：R2 真机验收通过与 CLOSED 状态图。
-
-文件总数：651
-
 ## 根目录
-
-- `NuGet.Config`：NuGet 源配置。
-- `XuanYu.Engine.slnx`：解决方案入口，组织当前各项目。
-- `changelog.md`：项目变更记录，按时间倒序记录阶段性修改。
-- `file-tree.md`：当前文件树与每个文件职责说明。
-- `run.bat`：Windows 启动脚本，负责 restore、build 并运行编辑器。
+- `.gitattributes`：换行与属性规则
+- `.gitignore`：忽略规则
+- `NuGet.Config`：NuGet 源配置
+- `XuanYu.Engine.slnx`：解决方案入口
+- `run.bat`：Windows 启动脚本（restore/build/运行）
 
 ## scripts
-
-- `scripts/arch-a-guard.ps1`：ARCH-A 自动守卫主脚本，检查依赖边界（含 ARCH-WORLD 红线）、启动入口、版本一致性和 5+100 等约束；Solution 必须含 World/World.Tests/Editor；dot-source `arch-a-guard-world.ps1` 与 `arch-a-guard-editor.ps1`。
-- `scripts/arch-a-guard-world.ps1`：ARCH-WORLD 红线子守卫（R1-R1 拆分，主脚本 dot-source）；按 `<ProjectReference>` 元素解析校验 Core ✕→ World/Editor/Vulkan、World only → Core、World 生产源码 ✕ Editor/Vulkan/Avalonia/Silk，并校验 Solution 含 World/World.Tests；**R2-R1 升级：整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs` 可建唯一索引，把"单一空间索引"锁成机器约束**；**R2-R1 收尾：新增 WorldQuery mutation 调用点（`_query.Insert/Update/Remove/Rebuild`）仅允许出现在白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail，与单索引锁共同钉死"唯一 Writer"**。
+- `scripts/arch-a-guard-editor.ps1`：Editor 领域边界守卫（Editor 不引用 UI/Vulkan）
 - `scripts/arch-a-guard-render.ps1`：ARCH-WORLD-R5 Render Projection 边界守卫；禁止 Render.Vulkan 回退引用 `SceneRenderSnapshot` / `ISceneRenderSnapshotSource` / `DefaultEditorCamera`，并禁止 Render.Abstractions 引入 Core.Scene / World / Editor.UI。
+- `scripts/arch-a-guard-warcore.ps1`：WarCore 依赖禁区守卫（Core→WarCore、World→WarCore、WarCore→Editor/Vulkan 禁止），挂载于主守卫。
+- `scripts/arch-a-guard-world.ps1`：ARCH-WORLD 红线子守卫；按 `<ProjectReference>` 元素解析校验 Core ✕→ World/Editor/Vulkan、World only → Core、World 生产源码 ✕ Editor/Vulkan/Avalonia/Silk，并校验 Solution 含 World/World.Tests；**R2-R1 升级：整个 `XuanYu.World/**` 禁止 `new SpatialIndexOwner`，唯独白名单 `WorldQuery.cs` 可建唯一索引，把"单一空间索引"锁成机器约束**；**R2-R1 收尾：新增 WorldQuery mutation 调用点（`_query.Insert/Update/Remove/Rebuild`）仅允许出现在白名单 `GlobalWorld.cs`/`GlobalWorld.Query.cs`/`WorldQuery.cs`，其余 `XuanYu.World/**` 直接 guard fail，与单索引锁共同钉死"唯一 Writer"**。
+- `scripts/arch-a-guard.ps1`：ARCH-A 自动守卫主脚本，检查依赖边界、启动入口、版本一致性和 5+100 等约束；Solution 必须含 World/World.Tests/Editor；dot-source `arch-a-guard-world.ps1` 与 `arch-a-guard-editor.ps1`。
 
 ## samples
-
 - `samples/world-c-r1-ten-triangles.xyscene`：WORLD-C-R1 专用十个三角形测试场景；用于手动打开、保存往返和真机验收，不参与编辑器启动自动加载。
 
-## XuanYu.World
-- 物理世界真相层（ARCH-WORLD-R1 新建，2026-07-24 真机验收 **CLOSED**）。命名空间 `XuanYu.World`（根）、`XuanYu.World.Scene`、`XuanYu.World.Spatial`、`XuanYu.World.Transform`。
-- 根域：`EntityRegistry`（实体总账）、`GlobalWorld`（全局世界根 + 查询入口，**R2 单一空间权威入口**；`Create` 透传显式 `extent`，缺省零尺寸点）、`WorldEntitySnapshot`（含本地 `Extent` + 绝对 `Bounds`，**R2-R1 实体显式空间描述**）、`WorldEntityActivity`、`RegionKey`、`WorldPartition*`、`WorldPartitionEntry`、`WorldPartitionMembership`、`IWorldPartitionStrategy`、`GridWorldPartitionStrategy`、`WorldQuery`（世界查询门面，**R2 新增 `Query(SpatialAabb/ray)` public + `Raycast(ray)` + `SpatialRevision`**；`Insert`/`Update`/`Remove`/`Rebuild` 收 `internal` 仅 `GlobalWorld` 可写；`ToBounds` 消费 `entity.Bounds`，**R2-R1 不再硬编码 ±0.5**）。
-- `Scene/`：`SceneStateOwner`（场景真相所有权；**R2 已删除第二套 `_spatialIndex`，`QuerySpatial`/`RaycastSpatial`/`SpatialRevision` 经 `_world` 兼容门面读唯一索引**；`CreateEntity` 增可选 `extent`，**R2-R1 占位实体显式 ±0.5 拾取代理由工厂提供而非 World 默认**）、`SceneStateOwner.Transform`（WORLD-B-R4-F2 完整 `CommitTransformWithResult`，移动提交只替换 Position 并保留 Rotation / Scale）、`SceneStateOwner.Lifecycle`、`SceneStateOwner.Seeding`、`SceneWorldProjection`、`SceneSpatialBoundsProjection`（Scene↔World 旧投影；`ToSpatialBounds` ±0.5 为历史 B 索引来源，**R2-R1 起不再用于权威索引**，保留作边界 DTO）。
-- `Spatial/`：`ISpatialIndex`、`DynamicAabbTree*`（AABB 树实现）、`SpatialIndexOwner`（**R2-R1 确认仅 `WorldQuery` 可构造，全 World 守卫锁死**）、`SpatialRaycastResolver`、Core `SpatialAabb.Translate`（**R2-R1 新增纯几何辅助**，供 `WorldEntitySnapshot.Bounds` 由本地 `Extent` 平移为绝对盒）。
-- `Transform/`：原 `TransformSession` 已于 R4-R1 迁至 `XuanYu.Editor.Transform`；`PreviewTransform`/`TransformStartSnapshot` 留 `XuanYu.Core.Transform`；本目录当前不再承载编辑器会话类型。
-
-## XuanYu.World.Tests
-- `XuanYu.World` 物理边界测试层（ARCH-WORLD-R1 新建）。`World/`、`Spatial/`、`Transform/` 镜像生产子域；Core 纯几何契约测试（`SpatialBoundsTests`、`RayAabbIntersectionTests`）仍留 `XuanYu.Core.Tests/Spatial`。
-
-## XuanYu.Editor
-- 编辑器领域规则层（ARCH-WORLD-R4-R1 新建，2026-07-25）。命名空间 `XuanYu.Editor`（根）、`XuanYu.Editor.Camera`、`XuanYu.Editor.Transform`。
-- `Camera/`：`EditorCameraFraming`（编辑器构图纯函数，由 Core.Space 迁入；Frame All / Frame Selected、空集合、大坐标处理，并可返回唯一 ObservationCenter）、`CameraFrameResult`（相机和观察中心组合结果）、`CameraNavigation`（Orbit / Pan / Dolly 纯算法；不依赖 UI、Vulkan 或 World 权威）。
-- `Transform/`：`TransformSession`（变换事务会话，由 World.Transform 迁入；Begin / Preview / Commit / Cancel、捕获 SessionId、原始与完整预览 Transform、Escape 取消、延迟 MouseUp 防误提交；最终 Commit 经 `SceneStateOwner` → `GlobalWorld`，不拥有实体永久 Transform）。
-- `Transform/TransformSession.Scale.cs`（WORLD-B-R5）：Scale 变换事务分部；`ScaleHandle` 状态 + `BeginScale(sessionId, entity, handle)`，复用 `TryPreviewScale`/`TryCommit`/`TryCancel` 轴无关逻辑，不拥有实体永久 Transform。
-- `SceneDocument/`：WORLD-C-R1 场景文档模块；`SceneStorageService` 负责严格 JSON 读写、lower-camel / Pascal 兼容读取和临时文件替换，`SceneDocumentSession` 只持有路径/Untitled/Clean-Dirty/错误状态，`SceneDocumentWorldBridge` 只在事务边界从 World 快照生成或恢复场景，不复制第二份实体权威。
-- 仅引用 `XuanYu.Core` 与 `XuanYu.World`；禁止引用 Avalonia / `XuanYu.Editor.UI` / `XuanYu.Render.Vulkan` / Silk.NET；不新增第三方依赖。
-
-## docs
-
-- `docs/AI_DEVELOPMENT_RULES.md`：AI 协作开发规则，保留作历史参考。
-- `docs/CODE_CONSTITUTION.md`：代码宪法与结构约束，保留作治理参考。
-- `docs/ENGINE_ARCHITECTURE.md`：引擎总体架构说明。
-- `docs/LEGACY_FLUIDWARFARE_OLD_AUDIT.md`：旧 FluidWarfare 项目审计记录。
-- `docs/MILESTONE1_PUBLIC_VALIDATION.md`：里程碑 1 公开验证说明。
-- `docs/NAMING_RULES.md`：命名规则文档。
-- `docs/PHASE1_SCOPE.md`：Phase 1 范围定义。
-- `docs/PROJECT_CHARTER.md`：项目章程。
-- `docs/arch-a-plan.md`：ARCH-A 规划文档，记录 UI 与 Vulkan 依赖边界。
-- `docs/arch-b-plan.md`：ARCH-B 规划文档，记录编辑器状态所有权与交互事务边界。
-- `docs/arch-world-layer-attribution.md`：ARCH-WORLD 物理分层归属审计（修正版）；冻结 Core / World / Editor / Render / WarCore 归属、EntityId 身份边界、双轨索引收敛与 R0→R5 治理序列，不承载运行时代码。
-- `docs/arch-world-layer-attribution.svg`：ARCH-WORLD-R0 分层与依赖方向冻结图；展示五层归属、允许依赖与禁止边界，不承载运行时代码。
-- `docs/arch-world-debts.md`：ARCH-WORLD 受控债务登记（R1-R1 新建）；记录 D1 TransformSession 暂居 World（R4）、D2 SceneRenderSnapshot 污染 Core（R5）、D3 测试程序集跨层（R4/R5）三项受控债务与红线路令。
-- `docs/arch-world-r1-acceptance.md`：ARCH-WORLD-R1 真机验收报告（R1 CLOSED 收口，2026-07-24）；逐条证据链 8 项 PASS、3 观察项（O1 Camera Inspector 占位 / O2 Preview 高频日志 / O3 Frame All-Selected 无独立日志，均非阻断）、保留 D1/D2/D3、最终裁定 PASS/CLOSED、下一步 R2 单一空间权威；版本维持 v0.2.19.2-rz。
-- `docs/arch-world-r1-acceptance.svg`：ARCH-WORLD-R1 真机验收证据图；展示 13/13 核心风险链路 PASS、D1/D2/D3 受控债务、O1/O2/O3 观察项与最终 CLOSED 裁定，不承载运行时代码。
-- `docs/arch-world-r2-single-spatial-authority.md`：ARCH-WORLD-R2 单一空间权威方案（2026-07-24）；短硬实施 Gate：双轨只读审计结论、唯一权威目标、Writer/Reader/Owner/Derived 四列、不动项、迁移步骤、6 用例自动测试、自动验收门、13 项真机验收清单与停手条件；版本 v0.2.19.3-rz。
-- `docs/arch-world-r2-status.md`：ARCH-WORLD-R2 实施状态与真机验收（2026-07-24）；记录裁定（R2 主体 PASS、Bounds 语义/Writing 访问控制/全局守卫 NEED FIX→R2-R1 已修）、R2-R1 修正完成项、`QueryBounds` 冻结语义、自动验证结果、真机 13 项验收清单（含补入的 Frame All 与 Create/Destroy 一致，修正原"13/11"不一致）、当前 AWAITING 用户真机验收；版本 v0.2.19.3-rz。
-- `docs/arch-world-r2-g1-audit.md`：ARCH-WORLD-R2-G1 Gizmo 输入抢占缺陷只读审计（P0 命中兜底根因 + P1 零位移 Commit）；属修复前证据，不承载运行时代码，不宣布 G1 已修复。
-- `docs/arch-world-r2-manual-checklist.html`：ARCH-WORLD-R2 十三项真机验收清单；含操作手册、重点盯防与签署区，不承载运行时代码。
-- `docs/arch-world-r3-scene-truth-audit.md`：ARCH-WORLD-R3-R0A Scene Truth 现状只读审计（2026-07-25）；核对 SceneStateOwner 是否仍含第二套真相、SceneRenderSnapshot 来源、DefaultEditorCamera 后门、各层 Writer、Selection/Hierarchy/Inspector 投影性、Preview/Commit 写入权、Scene→World 旁路，结论"无第二真相、DTO 混 Editor 语义、相机后门为真实风险、双源气味"，并给出 R3-M1/M2/M3 最小迁移计划；不承载运行时代码。
-- `docs/arch-world-r4-editor-pollution-audit.md`：ARCH-WORLD-R4-R0A Editor 污染归属只读审计（2026-07-25）；聚焦 DefaultEditorCamera.Create(0) 后门（生产中死代码、UiVm 恒传 Camera）、TransformSession 仅 Editor.UI 消费且 Commit 写入权在 World、Framing/Selection/Preview 污染判定，输出依赖方向精确表与 R4-M1/M2/M3 迁移草案；R4-R1 实装结果已追加于文档末尾；不承载运行时代码。
-- `docs/arch-world-r4-editor-boundary.svg`：ARCH-WORLD-R4 Editor 领域边界图（2026-07-25）；展示 Core/World → XuanYu.Editor → XuanYu.Editor.UI 依赖方向、TransformSession 与 EditorCameraFraming 迁移、World 写入权不变、R5 待处理范围与依赖禁区，不承载运行时代码。
-- `docs/arch-world-r4-gate2-acceptance.md`：ARCH-WORLD-R4 Gate 2 真机验收清单（操作手册，2026-07-25）；R4 机械拆分 + 构建配置变更后的 11 项真机验收（A 组交互 6 项：Frame/Move Gizmo/Undo-Redo/Viewport Picking/Selection 面板/Resize；B 组门禁 5 项：构建 0W0E+168 测试/三架构守卫/5+100/SVG 47/47/git clean+远端 tip），含操作手册、通过判定、风险盯防与结果记录表；不承载运行时代码。
-- `docs/arch-c-overview.svg`：ARCH-C 规划总览图。
-- `docs/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
-- `docs/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。
-- `docs/arch-c-r2-spatial-query.svg`：ARCH-C-R2 空间查询架构图；不承载运行时代码，仅用于人工验收与规划沟通。
-- `docs/arch-c-r2b-space-fact.svg`：ARCH-C-R2-B 统一空间事实架构图；用于说明 Camera / Viewport / ViewProjection / WorldRay 的共享关系，不承载运行时代码。
-- `docs/arch-c-r2b-closure.svg`：ARCH-C-R2-B 正式封版状态图；用于说明数学契约已通过、下一步转入渲染接入统一空间事实，不承载运行时代码。
-- `docs/arch-c-r2-current-route.svg`：ARCH-C-R2 当前阶段路线图；用于说明 R2-A / R2-B 已完成以及 R2-C 渲染接入统一空间事实的下一步，不承载运行时代码。
-- `docs/arch-c-r2c-render-space.svg`：ARCH-C-R2-C 渲染接入统一空间事实架构图；用于说明世界位置、统一 ViewProjection 与 Vulkan push constant 的关系，不承载运行时代码。
-- `docs/arch-c-r2c-closure.svg`：ARCH-C-R2-C 正式封版状态图；用于说明真机渲染、坐标契约、Resize、自愈和释放链均已通过，不承载运行时代码。
-- `docs/arch-c-r2d-spatial-index.svg`：ARCH-C-R2-D 空间索引架构图；用于说明场景事实、增量维护、动态索引和候选查询关系，不承载运行时代码。
-- `docs/arch-c-r2e-ray-hit.svg`：ARCH-C-R2-E 精确命中架构图；用于说明 WorldRay、Broad Phase、Ray-AABB Narrow Phase 和最近命中的关系，不承载运行时代码。
-- `docs/arch-c-r2f-pointer-picking.svg`：ARCH-C-R2-F 真实 Pointer Picking 架构图；用于说明 PointerPressed 到 EntityKey / NoHit 的最小闭环，不承载运行时代码。
-- `docs/arch-c-r3-selection.svg`：ARCH-C-R3 真实 Selection 架构图；说明 Picking 结果经唯一 Owner 同步到 Tree 与 Inspector，不承载运行时代码。
-- `docs/arch-c-r3-timeout-fix.svg`：R3 真机收口 Timeout 修复图；说明 Acquire 超时按可恢复空帧处理、其他错误仍保持致命语义，不承载运行时代码。
-- `docs/arch-c-r4-move-gizmo.svg`：R4 Move Gizmo 架构图；说明统一相机、三轴投影、输入优先级和 Capture 唯一所有权，不承载运行时代码。
-- `docs/arch-c-r4-r1-gizmo-hit.svg`：R4-R1 Move Gizmo 命中收口图；说明真机点击容错、Gizmo 优先级和 Scene Picking 回落边界，不承载运行时代码。
-- `docs/arch-c-r5-to-r8-route.svg`：ARCH-C R5 收口后路线图；说明 R6 由 R5 吸收、下一实际开发进入 R7 最小 Undo、R8 综合收口，不承载运行时代码。
-- `docs/arch-c-r5-transform-session.md`：R5 高频 Preview Entry Gate、三层 Transform 状态、Commit / Cancel 合同与封版验证记录。
-- `docs/arch-c-r5-transform-session.svg`：R5 Transform Preview / Commit / Cancel 可视化图；说明三层 Transform、单槽 Preview 渲染、Commit / Cancel 与迟到 MouseUp 边界，不承载运行时代码。
-- `docs/arch-c-r7-undo.svg`：R7 最小 Undo 开发主链图；说明成功 Commit 进入 History、Undo 恢复正式 Scene、Preview / Cancel 禁止进历史，不承载运行时代码。
-- `docs/arch-c-r7-log-copy-fix.svg`：R7 后 LOG-UX 多选复制修复图；说明 Shift 多选日志、Foot 隧道路由、选中集合文本和系统剪贴板关系，不承载运行时代码。
-- `docs/arch-c-r8-acceptance.md`：ARCH-C-R8 综合真机验收与收口判断文档；冻结 R8-A 自动审计，并以操作手册形式列出 R8-B~E 步骤、日志、检查点、失败判定和回传要求。
-- `docs/arch-c-r8-integration-acceptance.svg`：ARCH-C-R8 综合验收图；说明 Scene、Picking、Transform、Undo、Resize、Vulkan 生命周期与 P0 收口判断关系，不承载运行时代码。
-- `docs/arch-c-r8-stage-acceptance-report.md`：ARCH-C-R8 阶段性真机验收报告；固定当前 R8 阶段性通过、ARCH-C 尚未最终封板以及剩余 3 项组合闭环。
-- `docs/arch-c-r8-stage-acceptance-status.svg`：ARCH-C-R8 阶段性真机验收状态图；说明已通过主链和待补最终 3 项，不承载运行时代码。
-- `docs/arch-c-r8-final-acceptance-report.md`：ARCH-C-R8 最终真机验收报告；固化 R8 最终通过、ARCH-C 具备正式收口条件以及两个证据范围注记。
-- `docs/arch-c-r8-final-acceptance-status.svg`：ARCH-C-R8 最终真机验收状态图；说明最后组合风险项已取得足够证据，不承载运行时代码。
-- `docs/world-a-r0-coordinate-contract.md`：WORLD-A-R0 坐标链审计矩阵、RH/Z-Up 契约、Vulkan 边界和全球/局部坐标边界记录。
-- `docs/world-a-r0-coordinate-chain.svg`：WORLD-A-R0 浅色中文坐标事实链图；展示 World、Transform、Camera、Projection、Picking、Vulkan 与 Gizmo 的唯一事实关系。
-- `docs/world-a-r0-r1-tool-history-fix.svg`：WORLD-A-R0-R1 工具状态与 Redo 修复图；说明 ActiveTool、Command、Toggle 和 Redo Snapshot 恢复边界，不承载运行时代码。
-- `docs/world-a-r0-r2-transform-route-fix.svg`：WORLD-A-R0-R2 Transform 输入路由修复图；说明 PointerDown 从 ActiveTool 快照生成 SessionTool，不承载运行时代码。
-- `docs/world-a-r0-r3-gizmo-visibility.svg`：WORLD-A-R0-R3 Gizmo 可见性收口图；说明 Selection、ActiveTool、真实能力与 ShowMoveGizmo 的关系，不承载运行时代码。
-- `docs/world-a-r1-entity-registry.svg`：WORLD-A-R1 Global World 与 Entity Registry 事实源图；说明 GlobalWorld、EntityRegistry、EntityId、查询者和后续接入边界，不承载运行时代码。
-- `docs/world-a-r1-final-closure-report.md`：WORLD-A-R1 最终收口报告；固化 10 实体、Selection、Move、Destroy、1K Registry 与 Resize/Vulkan 回归结论。
-- `docs/world-a-r1-final-closure.svg`：WORLD-A-R1 最终收口状态图；说明 R0 坐标尺、R1 中央总账和 R2 分区入口关系。
-- `docs/world-a-r1-r1-scene-consumption-audit.md`：WORLD-A-R1-R1 当前事实 Owner 审计矩阵；记录 GlobalWorld、SceneStateOwner、Selection、Hierarchy、Inspector、RenderSnapshot、Picking、Gizmo 与 Undo/Redo 的收敛结果。
-- `docs/world-a-r1-r1-scene-consumption.svg`：WORLD-A-R1-R1 Scene / Editor 消费 GlobalWorld 图；说明 SceneStateOwner 从实体 Owner 收敛为投影、会话和派生索引层，不承载运行时代码。
-- `docs/world-a-r1-r2-final-gate.md`：WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate 验收报告；记录 R1 封闭条件、真机退回项和禁止项确认。
-- `docs/world-a-r1-r2-multi-entity-gate.svg`：WORLD-A-R1-R2 多实体闭环图；说明 10 实体互不串线、Destroy 无幽灵和 1K Registry Gate。
-- `docs/world-a-r1-r2-r1-acceptance-report.md`：WORLD-A-R1-R2-R1 真机验收报告；固化连续点击 Entity1~10、Resize 和 Selection 单入口修复结论。
-- `docs/world-a-r1-r2-r1-acceptance.svg`：WORLD-A-R1-R2-R1 真机验收状态图；说明选择链局部架构债、修复边界和后续影响面。
-- `docs/world-a-r1-r2-runtime-fix.svg`：WORLD-A-R1-R2 真机退回修复图；说明 UI 全量实体投影、Selection 同步重入保护、Vulkan 录制诊断和真机复验 Gate。
-- `docs/world-a-r2-global-partition-report.md`：WORLD-A-R2 基础轮报告；记录 RegionKey、Partition Membership、Global Position、活跃态和 Key-based Selection 收敛边界。
-- `docs/world-a-r2-global-partition.svg`：WORLD-A-R2 基础轮架构图；说明 GlobalWorld、Partition Membership、Editor Projection 和跨区不是 Destroy/Create。
-- `docs/world-a-r2-r1-migration-activity-report.md`：WORLD-A-R2-R1 跨 Region 迁移与 Activity 第一阶段报告；记录 Preview / Commit / Undo / Redo 边界和 Active / Dormant 语义。
-- `docs/world-a-r2-r1-migration-activity.svg`：WORLD-A-R2-R1 迁移与活跃态图；说明 Preview 不写 Membership、Commit 原子迁移、Undo / Redo 由 Position 推导 Region。
-- `docs/world-a-r2-r2-partition-consistency-report.md`：WORLD-A-R2-R2 分区规模与一致性报告；记录 Partition Invariant、1000 实体迁移、Hierarchy cache 清理和真机准备。
-- `docs/world-a-r2-r2-partition-consistency.svg`：WORLD-A-R2-R2 一致性 Gate 图；说明 Alive Entity、Membership、Strategy(GlobalPosition) 与 Editor Projection 的关系。
-- `docs/world-a-r2-r3-inspector-manual-gate-report.md`：WORLD-A-R2-R3 真机 Gate 退回修正报告；记录 Inspector 缺项、真实交互复验与 R2 未 CLOSED 裁定。
-- `docs/world-a-r2-r3-inspector-manual-gate.svg`：WORLD-A-R2-R3 Inspector 修正图；说明 InspectorFields、Selection、Hierarchy 和真机 Gate 关系。
-- `docs/world-a-r2-r4-camera-framing-report.md`：WORLD-A-R2-R4 相机构图与分支治理报告；记录 Frame All / Frame Selected、分支切换和真机 Gate 复验。
-- `docs/world-a-r2-r4-camera-framing.svg`：WORLD-A-R2-R4 相机收口图；说明 World Bounds、CameraState、Render、Picking 和 Gizmo 同源关系。
-- `docs/world-a-r3-spatial-query-report.md`：WORLD-A-R3 Spatial Index + World Query 基础报告；记录查询所有权、红线、正确性 Gate 与性能观察。
-- `docs/world-a-r3-spatial-query.svg`：WORLD-A-R3 空间查询收口图；说明 GlobalWorld、Partition、SpatialIndex 和 Query API 的事实边界。
-- `docs/world-a-r3-r1-spatial-consistency-report.md`：WORLD-A-R3-R1 空间一致性报告；记录 Spatial Owner Matrix、生命周期 Gate、Rebuild Gate 和双轨裁定。
-- `docs/world-a-r3-r1-spatial-consistency.svg`：WORLD-A-R3-R1 空间一致性图；说明正式 WorldQuery 生命周期闭环与 SceneIndex 待收敛边界。
-- `docs/world-a-ui-r1-display-cleanup-report.md`：WORLD-A-UI-R1 显示清理报告；记录日志、树形 UI、中文显示映射、治理规则和禁止项确认。
-- `docs/world-a-ui-r1-display-cleanup.svg`：WORLD-A-UI-R1 显示清理图；说明日志表格、树形投影、Inspector 显示映射与事实源边界。
-- `docs/world-a-ui-r2-continuous-tree-report.md`：WORLD-A-UI-R2 连续树线与图标重制报告；记录 UI-R1 视觉退回、共享 TreeGuide、图标来源和验收证据。
-- `docs/world-a-ui-r2-continuous-tree.svg`：WORLD-A-UI-R2 连续树干验收图；展示 Project / Hierarchy 的 Full、Tee、Elbow 树线模型。
-- `docs/world-b-r0-editor-interaction-audit.md`：WORLD-B-R0 编辑器基本操作现状审计与合同冻结文档；冻结 Camera / Selection / ToolMode / Transform 权威、输入优先级、保留项、缺口和 R1-R4 入口边界，不承载运行时代码。
-- `docs/world-b-r0-editor-interaction-audit.svg`：WORLD-B-R0 编辑器相机、选择、工具与 Transform 权威关系图；展示 WarCore 后移和 R1-R4 路线，不承载运行时代码。
-- `docs/world-b-r1-camera-acceptance-closure.md`：WORLD-B-R1 编辑器相机操作验收收口报告；记录 11 项中文 IPO 真机验收 PASS、R1 CLOSED 裁定和下一入口 WORLD-B-R2，不承载运行时代码。
-- `docs/world-b-r1-camera-acceptance-closure.svg`：WORLD-B-R1 相机操作验收收口状态图；展示聚焦/查看全部、平移/滚轮、Escape/失焦和输入互斥均通过，不承载运行时代码。
-- `docs/world-b-r1-camera-operation-report.md`：WORLD-B-R1 编辑器相机操作实装报告；记录唯一 ObservationCenter、CameraSession、输入抢占、测试覆盖和真机待验清单，不承载运行时代码。
-- `docs/world-b-r1-camera-operation.svg`：WORLD-B-R1 相机操作实装状态图；展示 Frame、Orbit、Pan、Dolly、CameraSession、输入抢占和真机待验状态，不承载运行时代码。
-- `docs/world-b-r2-selection-tool-state-report.md`：WORLD-B-R2 选择与工具状态闭环报告；记录唯一 Selection / ToolMode、输入抢占、自动测试和中文 IPO 真机验收清单，不承载运行时代码。
-- `docs/world-b-r2-selection-tool-state.svg`：WORLD-B-R2 选择与工具状态闭环图；展示视口/层级、SelectionState、检查器/控制柄和 ToolMode 的同源关系，不承载运行时代码。
-- `docs/world-b-r3-move-transform-closure.md`：WORLD-B-R3 移动变换闭环报告；记录单轴/平面移动、取消、Undo/Redo、跨 Region、输入互斥、中文 IPO 真机清单和 CLOSED 裁定，不承载运行时代码。
-- `docs/world-b-r3-move-transform-closure.svg`：WORLD-B-R3 移动变换闭环浅色中文图；展示控制柄、移动会话、World 权威、一致投影和输入优先级，不承载运行时代码。
-- `docs/world-b-r5-scale-transform-report.md`：WORLD-B-R5 Scale Gizmo 缩放变换闭环报告；记录 R5 实装、v0.2.20.18-rz 真机退回、R5-R1 尺寸/Uniform 可发现性修复、自动验证、用户真机验收通过和 WORLD-B-R5 CLOSED 裁定，不承载运行时代码。
-- `docs/world-b-r5-scale-transform.svg`：WORLD-B-R5 缩放闭环状态图；展示 SelectionKey、TransformSession、ScaleGizmoDrag、SceneRenderSnapshot、RenderProjection、Vulkan 绘制链路和 WORLD-B-R5 CLOSED 状态，不承载运行时代码。
-- `docs/world-c-r0-scene-document-contract.md`：WORLD-C-R0 场景文档契约报告；冻结场景文件格式、所有权、实体最小字段、文档状态机、错误模型、原子保存策略与 R1 验收入口，不承载运行时代码。
-- `docs/world-c-r0-scene-document-contract.svg`：WORLD-C-R0 场景文档契约图；展示 Editor.UI、Editor.SceneDocument、World 运行态、原子保存和错误结果边界，不承载运行时代码。
-- `docs/world-c-r1-closure-report.md`：WORLD-C-R1 最小场景保存与打开闭环收口报告；固化真机验收 PASS、自动门禁、完成边界、测试污染处理和 R2 入口，不承载运行时代码。
-- `docs/world-c-r1-closure.svg`：WORLD-C-R1 收口状态图；展示输入状态、场景文档链、World 恢复、验收证据和下一阶段入口，不承载运行时代码。
-- `docs/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
-- `docs/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
-- `docs/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
-- `docs/audit-EditorShellV2-input-9.1A-2R.md`：EditorShellV2 输入链路复审。
-- `docs/audit-EditorShellV2-picking-gizmo-9.1A-3.md`：EditorShellV2 Picking / Gizmo 审计。
-- `docs/audit-EditorShellV2-picking-gizmo-9.1A-3R.md`：EditorShellV2 Picking / Gizmo 复审。
-- `docs/audit-EditorShellV2-plan-9.1A-0.md`：EditorShellV2 9.1A 审计计划。
-- `docs/audit-NativeViewportMouseCapture-lifecycle-9.0X.md`：Native Viewport 鼠标捕获生命周期审计。
-- `docs/audit-RZ-New-0-onboarding.md`：RZ-New-0 接手与初始化审计。
-- `docs/audit-RZ-VK1-vulkan-probe.md`：RZ-VK1 Vulkan Probe 审计。
-- `docs/audit-RZ-VK2-R1-nativehost-resize-coalesce.md`：NativeHost Resize 合并第一轮审计。
-- `docs/audit-RZ-VK2-R2-nativehost-resize-coalesce-verify.md`：NativeHost Resize 合并验证审计。
-- `docs/audit-RZ-VK2-native-host-lifecycle.md`：NativeHost 生命周期审计。
-- `docs/audit-gizmo-chain-9.0Y-1.md`：Gizmo 链路审计 9.0Y-1。
-- `docs/audit-gizmo-chain-9.0Y-2.md`：Gizmo 链路审计 9.0Y-2。
-- `docs/audit-gizmo-chain-9.0Y-3.md`：Gizmo 链路审计 9.0Y-3。
-- `docs/audit-gizmo-stash-9.0Y-0.md`：Gizmo 暂存状态审计。
-- `docs/audit-input-lifecycle-9.0X-1.md`：输入生命周期审计 9.0X-1。
-- `docs/audit-input-lifecycle-9.0X-2.md`：输入生命周期审计 9.0X-2。
-- `docs/audit-input-lifecycle-9.0X-3.md`：输入生命周期审计 9.0X-3。
-- `docs/audit-inspector-transform-9.0C-0.md`：Inspector / Transform 同步审计。
-- `docs/dev-rules-understanding.md`：开发规则理解与执行说明。
-- `docs/dev-rules.md`：开发规则文档。
-- `docs/diagnostic-safety.md`：诊断日志、底部日志准入与 UI 调度安全规范。
-- `docs/editor-top-area-target-9.1B.md`：顶部区域目标说明。
-- `docs/editor-top-svg-icons-9.1C-R.md`：顶部 SVG 图标细修说明。
-- `docs/editor-top-svg-icons-9.1C.md`：顶部 SVG 图标替换说明。
-- `docs/editor-ui-terms-9.1B.md`：编辑器 UI 术语说明。
-- `docs/gizmo_drag_audit_2026-06-25.md`：Gizmo 拖动审计报告。
-- `docs/gizmo_drag_audit_probe.log`：Gizmo 拖动审计探针日志。
-- `docs/log-ux-1-r2-autoscroll.svg`：LOG-UX 自动滚动设计图。
-- `docs/log-ux-r8-tail-noise-fix.svg`：LOG-UX R8 尾随最新日志与 Render Backend 噪声降级图；说明不删除 Vulkan 后端代码，只过滤普通 UI 噪声。
-- `docs/log-ux-window-copy-focus-fix.svg`：LOG-UX 窗口级日志复制焦点修复图；说明视口获得焦点后仍可复制已选日志，不承载运行时代码。
-- `docs/naming-XuanYu-Engine.md`：XuanYu Engine 命名迁移说明。
-- `docs/plan-9.0D-move-gizmo-final.md`：Move Gizmo 最终验收计划。
-- `docs/project-baseline-audit-org-1-r1.md`：ORG-1-R1 项目基线审计修正版。
-- `docs/project-baseline-audit-org-1.md`：ORG-1 项目真实基线审计。
-- `docs/rz-vk3-closure.md`：RZ-VK3 阶段收口文档。
-- `docs/rz-vk3-surface-lifecycle-plan.md`：RZ-VK3 Surface 生命周期规划。
-- `docs/rz-vk4-c-r1-audit-plan.md`：RZ-VK4-C-R1 审计计划。
-- `docs/rz-vk4-c-swapchain-plan.md`：RZ-VK4-C Swapchain 规划。
-- `docs/rz-vk4-closure.md`：RZ-VK4 阶段收口文档。
-- `docs/rz-vk4-d-plan.md`：RZ-VK4-D 规划文档。
-- `docs/rz-vk4-plan.md`：RZ-VK4 总规划文档。
-- `docs/rz-vk5-a-plan.md`：RZ-VK5-A 规划文档。
-- `docs/rz-vk5-c-plan.md`：RZ-VK5-C 规划文档。
-- `docs/rz-vk5-e-plan.md`：RZ-VK5-E 规划文档。
-- `docs/rz-vk5-plan.md`：RZ-VK5 总规划文档。
-- `docs/vk4-c-r1-swapchain-fix.svg`：VK4-C-R1 Swapchain 修复示意图。
-- `docs/vulkan-lifecycle-plan.md`：Vulkan 生命周期规划。
-- `docs/vulkan-preflight-audit-RZ-Fix3-0.md`：Vulkan 前置审计文档。
-- `docs/版本号规范与历史映射.md`：版本号规范与历史编号映射。
-- `docs/玄域引擎_AI开发宪法.md`：玄域引擎 AI 开发宪法，总治理文档。
-- `docs/arch-world-r5-r0a-render-contract-audit.md`：ARCH-WORLD R5-R0A 只读审计——Render 合同边界（类型归属矩阵 / 字段逐项分类 / 双 Source 定性 / DefaultEditorCamera 后门 / Render 实际消费 / 方案 B）。
-- `docs/arch-world-r5-r0a-render-contract.svg`：R5-R0A 渲染合同边界流程图（World 权威→Editor 组合→最小 Render Projection→Render.Abstractions→Render.Vulkan，标禁止反向依赖）。
-- `docs/arch-world-r5-final-closure.md`：ARCH-WORLD R5 最终收口报告；固化 R5-R1 自动与真机验收通过、日志降噪、D2 收口和 R5 CLOSED 裁定。
-- `docs/arch-world-r5-final-closure.svg`：ARCH-WORLD R5 最终收口图；展示 World 事实、Editor/UI 组合边界、Render Projection、真机验收、日志治理和边界守卫。
-- `docs/arch-world-r6-exit-gate.md`：ARCH-WORLD R6 架构退出门禁报告；审计测试程序集分层债务并冻结一个士兵 WarCore 最小闭环入口。
-- `docs/arch-world-r6-exit-gate.svg`：ARCH-WORLD R6 退出门禁图；展示测试分层门禁、WarCore 入口和下一阶段一个士兵闭环。
-
 ## XuanYu.Core
-
-- `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴/平面身份；定义 X/Y/Z 与 XY/XZ/YZ，不承担 Transform 或渲染状态。
-- `XuanYu.Core/Gizmo/MoveGizmoDragConstraint.cs`：把 Pointer 屏幕位移投影到已命中轴或平面，并只生成对应世界轴/平面 Position 预览。
-- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影、方向优先轴裁决、平面命中与 R4-R3 Guard 命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
-- `XuanYu.Core/Gizmo/MoveGizmoLayout.Hit.cs`：Move Gizmo 轴命中距离和方向对齐数学分部；供 `MoveGizmoLayout` 复用，不持有交互状态。
-- `XuanYu.Core/Gizmo/MoveGizmoPlane.cs`：Move Gizmo 平面控制柄屏幕四边形值对象；用同一面片支持可见区域和 Picking 命中。
-- `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
-- `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
-- `XuanYu.Core/Gizmo/RotateGizmoAxis.cs`：Rotate Gizmo 世界轴身份；定义 X/Y/Z，不承担 Transform 或渲染状态（WORLD-B-R4-F4）。
-- `XuanYu.Core/Gizmo/RotateGizmoRing.cs`：Rotate Gizmo 单轴环屏幕弧线值对象；承载轴、屏幕点序列与屏幕半径，供命中与可见共用（WORLD-B-R4-F4）。
-- `XuanYu.Core/Gizmo/RotateGizmoLayout.cs`：Rotate Gizmo 屏幕投影、轴环生成与命中；默认世界半径 1.2，可由显式 `worldRadius` 覆盖以支持屏幕空间恒定尺寸（WORLD-B-R4-F4 + R4-R1 屏幕空间半径）。
-- `XuanYu.Core/Gizmo/RotateGizmoDrag.cs`：Rotate Gizmo 拖动状态主体；持有初始化标记与上一帧角度，经 `RotateGizmoDrag.Math` 解算平面角度差（WORLD-B-R4-F4）。
-- `XuanYu.Core/Gizmo/RotateGizmoDrag.Math.cs`：Rotate Gizmo 稳定旋转数学分部；纯方法 `PlaneAngle` 与 `TryInitialize`（指针按下初始化角度、无效射线交返回 false 拒绝捕获），欧拉角度分量独立回绕 ±180（WORLD-B-R4-F4 + R4-R1 首帧吞角修复）。
-- `XuanYu.Core/Gizmo/RotateGizmoScreenRadius.cs`：Rotate Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R4-R1，WORLD-B-R4-R2 将目标屏幕半径由 120 DIP 调至 90 DIP 使近远相机下尺寸更合理且减少误触）；按相机深度、FOV 与视口逻辑高度把目标屏幕半径（90 DIP）反算为世界半径，供 CPU 命中测试与 Shader 共用同一公式，做到"所见即所命中"且任意 DPI 一致。
-- `XuanYu.Core/Gizmo/ScaleGizmoAxis.cs`：Scale Gizmo 世界轴身份与手柄身份；定义 `ScaleGizmoAxis`（X/Y/Z）与 `ScaleGizmoHandle`（X/Y/Z/Uniform），Uniform 跨三轴等比，不承担 Transform 或渲染状态（WORLD-B-R5）。
-- `XuanYu.Core/Gizmo/ScaleGizmoScreenSize.cs`：Scale Gizmo 屏幕空间恒定尺寸纯辅助（WORLD-B-R5-R1）；`TargetScreenAxisDip=63`、`HandleScreenSizeDip=8`、`CenterScreenSizeDip=15`、`CenterHitRadiusDip=12`，按相机深度/FOV/视口逻辑高度反算世界轴长（`ComputeWorldAxisLength`），供 CPU 命中与 Shader 共用同一公式。
-- `XuanYu.Core/Gizmo/ScaleGizmoLayout.cs`：Scale Gizmo 屏幕投影；生成中心立方体与三轴端点，R3-R4 在无可见 Global/Local 切换入口前锁定世界 X/Y/Z 可见轴与 CPU 命中轴，忽略实体 Rotation，不访问 Scene/Vulkan。
-- `XuanYu.Core/Gizmo/ScaleGizmoHitTester.cs`：Scale Gizmo 命中测试（WORLD-B-R5-R1）；中心 Uniform 核心区先裁决，X/Y/Z 轴线段从中心核心区外参与命中，避免中心整体缩放误判为单轴，margin=5 DIP。
-- `XuanYu.Core/Gizmo/ScaleGizmoDrag.cs`：Scale Gizmo 拖动状态主体；持有 StartScale/指针起点/轴方向，`Solve` 经 `ApplyFactor`（单轴只改对应分量、Uniform 三轴同乘）以 exp 因子（从 StartScale，非累积）解算预览 Scale，并 Clamp 到 MinimumScale=0.01（WORLD-B-R5）。
-
-- `XuanYu.Core/XuanYu.Core.csproj`：核心类库项目文件。
-- `XuanYu.Core/Properties/AssemblyInfo.cs`：Core 程序集内部可见性声明；仅允许 `XuanYu.Core.Tests` 访问内部测试入口，不承载生产行为或运行时依赖。
 - `XuanYu.Core/Diagnostics/CoreSelfTest.cs`：Core 自检入口。
+- `XuanYu.Core/Gizmo/MoveGizmoAxis.cs`：Move Gizmo 世界轴/平面身份；定义 X/Y/Z 与 XY/XZ/YZ，不承担 Transform 或渲染状态。
+- `XuanYu.Core/Gizmo/MoveGizmoDragConstraint.Axes.cs`：移动拖动轴约束分部（轴优先裁决）
+- `XuanYu.Core/Gizmo/MoveGizmoDragConstraint.cs`：把 Pointer 屏幕位移投影到已命中轴或平面，并只生成对应世界轴/平面 Position 预览。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.Hit.cs`：Move Gizmo 轴命中距离和方向对齐数学分部；供 `MoveGizmoLayout` 复用，不持有交互状态。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.Plane.cs`：生成屏幕恒定正方形平面可见几何与独立命中几何。
+- `XuanYu.Core/Gizmo/MoveGizmoLayout.cs`：Move Gizmo 屏幕投影、方向优先轴裁决、平面命中与 R4-R3 Guard 命中；消费统一 ViewProjection，不访问 Scene SpatialIndex、Selection 或 Vulkan。
+- `XuanYu.Core/Gizmo/MoveGizmoPlane.cs`：Move Gizmo 平面控制柄屏幕四边形值对象；用同一面片支持可见区域和 Picking 命中。
+- `XuanYu.Core/Gizmo/MoveGizmoScreenSize.cs`：Move 箭头、中心和平面共用的 DIP 到世界尺寸换算；定义正方形 offset、边长和 Picking padding。
+- `XuanYu.Core/Gizmo/MoveGizmoSegment.cs`：单根 Gizmo 轴的屏幕线段值对象；只提供投影长度，不持有交互生命周期。
+- `XuanYu.Core/Gizmo/RotateGizmoAxis.cs`：Rotate Gizmo 世界轴身份；定义 X/Y/Z，不承担 Transform 或渲染状态。
+- `XuanYu.Core/Gizmo/RotateGizmoDrag.Math.cs`：Rotate Gizmo 稳定旋转数学分部；纯方法 `PlaneAngle` 与 `TryInitialize`（指针按下初始化角度、无效射线交返回 false 拒绝捕获），欧拉角度分量独立回绕 ±180。
+- `XuanYu.Core/Gizmo/RotateGizmoDrag.cs`：Rotate Gizmo 拖动状态主体；持有初始化标记与上一帧角度，经 `RotateGizmoDrag.Math` 解算平面角度差。
+- `XuanYu.Core/Gizmo/RotateGizmoLayout.cs`：Rotate Gizmo 屏幕投影、轴环生成与命中；默认世界半径 1.2，可由显式 `worldRadius` 覆盖以支持屏幕空间恒定尺寸。
+- `XuanYu.Core/Gizmo/RotateGizmoRing.cs`：Rotate Gizmo 单轴环屏幕弧线值对象；承载轴、屏幕点序列与屏幕半径，供命中与可见共用。
+- `XuanYu.Core/Gizmo/RotateGizmoScreenRadius.cs`：Rotate Gizmo 屏幕空间恒定尺寸纯辅助；按相机深度、FOV 与视口逻辑高度把目标屏幕半径（90 DIP）反算为世界半径，供 CPU 命中测试与 Shader 共用同一公式，做到"所见即所命中"且任意 DPI 一致。
+- `XuanYu.Core/Gizmo/ScaleGizmoAxis.cs`：Scale Gizmo 世界轴身份与手柄身份；定义 `ScaleGizmoAxis`（X/Y/Z）与 `ScaleGizmoHandle`（X/Y/Z/Uniform），Uniform 跨三轴等比，不承担 Transform 或渲染状态。
+- `XuanYu.Core/Gizmo/ScaleGizmoDrag.cs`：Scale Gizmo 拖动状态主体；持有 StartScale/指针起点/轴方向，`Solve` 经 `ApplyFactor`（单轴只改对应分量、Uniform 三轴同乘）以 exp 因子（从 StartScale，非累积）解算预览 Scale，并 Clamp 到 MinimumScale=0.01。
+- `XuanYu.Core/Gizmo/ScaleGizmoHitTester.cs`：Scale Gizmo 命中测试；中心 Uniform 核心区先裁决，X/Y/Z 轴线段从中心核心区外参与命中，避免中心整体缩放误判为单轴，margin=5 DIP。
+- `XuanYu.Core/Gizmo/ScaleGizmoLayout.cs`：Scale Gizmo 屏幕投影；生成中心立方体与三轴端点。
+- `XuanYu.Core/Gizmo/ScaleGizmoScreenSize.cs`：Scale Gizmo 屏幕空间恒定尺寸纯辅助；`TargetScreenAxisDip=63`、`HandleScreenSizeDip=8`、`CenterScreenSizeDip=15`、`CenterHitRadiusDip=12`，按相机深度/FOV/视口逻辑高度反算世界轴长（`ComputeWorldAxisLength`），供 CPU 命中与 Shader 共用同一公式。
+- `XuanYu.Core/Gizmo/ScreenPoint.cs`：后端无关屏幕逻辑坐标值对象；不依赖 Avalonia、Win32 或 Vulkan。
+- `XuanYu.Core/History/EditorHistoryOwner.cs`：编辑历史所有者，维护 Undo / Redo 栈；只接收正式 Transform History Entry，不执行 Scene 恢复。
+- `XuanYu.Core/History/TransformHistoryEntry.cs`：Transform 历史记录值对象，保存实体身份以及提交前后的正式 Transform。
 - `XuanYu.Core/Identity/EntityId.cs`：实体 ID 值对象。
 - `XuanYu.Core/Logging/EngineLogEntry.cs`：引擎日志条目。
 - `XuanYu.Core/Logging/EngineLogLevel.cs`：引擎日志等级。
+- `XuanYu.Core/Map/MapBoundsMeshBuilder.cs`：地图边界线网格（48 顶点，亮度 1.0）。
+- `XuanYu.Core/Map/MapRenderSnapshot.cs`：D4 扩展环境参数（sunDirection 指向光源方向 Z>0 / sunIntensity / ambientIntensity）。
+- `XuanYu.Core/Map/MapSurfaceKind.cs`：地图表面类型枚举（Flat/缓丘等）
+- `XuanYu.Core/Map/MapSurfaceSampler.cs`：地图地表采样唯一源（世界 X/Y → 地表 Z 高度）
+- `XuanYu.Core/Map/MapTerrainMeshBuilder.cs`：CPU 地形网格构建器（唯一采样源 MapSurfaceSampler 的渲染侧消费方；数值差分法线；CPU 亮度合成 ambient×0.3×hemi + sun×0.85×ndl，clamp [0,1]）。
+- `XuanYu.Core/Map/MapTerrainVertex.cs`：地形网格顶点值对象（位置/法线/亮度）
 - `XuanYu.Core/Math/Vector3d.cs`：双精度三维向量值对象；提供确定性距离、点积、叉积与基础向量运算。
 - `XuanYu.Core/Math/YawRotation.cs`：Z-Up 世界中绕 +Z 的 Yaw 值对象；显式提供旋转后的 XY 局部 X/Y 基轴，不定义世界唯一 Forward。
 - `XuanYu.Core/Picking/ViewportPickingRequest.cs`：视口拾取请求值对象；负责携带请求序号、ViewportState、CameraState、逻辑坐标、查询掩码和 SpatialRevision，不执行射线命中。
 - `XuanYu.Core/Picking/ViewportPickingResult.cs`：视口拾取结果值对象；负责表达 EntityKey / NoHit、ViewportRevision、SpatialRevision 和 Raycast 统计，不写 Selection。
 - `XuanYu.Core/Picking/ViewportPickingService.cs`：视口拾取 Core 服务；负责把视口点转换为 WorldRay 并调用空间 Raycast，同时校验 ViewportRevision / SpatialRevision，不依赖 Avalonia 或 Vulkan。
+- `XuanYu.Core/Properties/AssemblyInfo.cs`：Core 程序集内部可见性声明；仅允许 `XuanYu.Core.Tests` 访问内部测试入口，不承载生产行为或运行时依赖。
+- `XuanYu.Core/Results/EngineError.cs`：引擎错误值对象。
+- `XuanYu.Core/Results/EngineResult.cs`：引擎结果类型。
+- `XuanYu.Core/Scene/CommittedTransform.cs`：已提交 Transform 值对象
+- `XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs`：场景渲染快照源抽象，向渲染侧发布只读快照。
+- `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
+- `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体、选择态、Preview、Move Gizmo 可见性与 Rotate Gizmo 可见性，以及 Scale Gizmo 可见性，并经 `SceneRenderProjectionAdapter` 解析为带 Rotation/Scale 的 RenderProjection。
+- `XuanYu.Core/Scene/SceneTransformCommitResult.cs`：Scene Transform 正式提交结果，携带 EntityKey、Before、After 与 Changed 供 History 判断。
 - `XuanYu.Core/Space/CameraState.cs`：渲染后端无关的相机状态契约；负责校验并正交化 Forward/Right/Up、FOV、裁剪面和 Revision。
-- `XuanYu.Core/Space/ViewportState.cs`：渲染后端无关的视口状态契约；负责记录逻辑区域、物理尺寸、DPI 和 Revision，不等同于 Vulkan Swapchain。
-- `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；生成标准右手 Projection、逆矩阵与左上原点屏幕投影点，不携带 Vulkan 差异。
 - `XuanYu.Core/Space/DefaultEditorCamera.cs`：默认 Z-Up 编辑器斜视相机合同；从固定 Position/Target/+Z Up 派生 CameraState，供 Render、Picking、Gizmo 共用。
-- `XuanYu.Core/Space/EditorCameraFraming.cs`：编辑器最小 Frame All / Frame Selected 构图计算；根据当前可见实体位置、视口比例和 FOV 生成 CameraState，不修改实体 Transform。
+- `XuanYu.Core/Space/ViewProjectionState.cs`：统一观察事实构建器；生成标准右手 Projection、逆矩阵与左上原点屏幕投影点，不携带 Vulkan 差异。
+- `XuanYu.Core/Space/ViewportState.cs`：渲染后端无关的视口状态契约；负责记录逻辑区域、物理尺寸、DPI 和 Revision，不等同于 Vulkan Swapchain。
 - `XuanYu.Core/Space/WorldRay.cs`：世界射线值对象；负责保存有限 Origin 和归一化 Direction，不负责命中测试或实体选择。
 - `XuanYu.Core/Space/WorldRayFactory.cs`：视口点到世界射线的转换入口；按左上屏幕原点映射 Core NDC 并用同一逆矩阵反投影。
-- `XuanYu.Core/Spatial/DynamicAabbTree.cs`：动态 AABB 树索引入口；负责 Insert、Remove、Update 和 Query 调度，不暴露内部节点给调用方。
-- `XuanYu.Core/Spatial/DynamicAabbTree.Insert.cs`：动态 AABB 树插入分部；负责寻找兄弟节点和接入叶节点，不负责场景事实所有权。
-- `XuanYu.Core/Spatial/DynamicAabbTree.Node.cs`：动态 AABB 树内部节点模型；只在索引内部保存父子关系和包围盒，不作为公共契约。
-- `XuanYu.Core/Spatial/DynamicAabbTree.Query.cs`：动态 AABB 树候选查询分部；负责 AABB / WorldRay Broad Phase 节点裁剪和统计访问节点数，不做最近命中或最终 Picking。
-- `XuanYu.Core/Spatial/DynamicAabbTree.Refit.cs`：动态 AABB 树回填分部；负责实体增删改后的父级 AABB 更新，不负责平衡策略外露。
-- `XuanYu.Core/Spatial/DynamicAabbTree.Remove.cs`：动态 AABB 树删除分部；负责移除叶节点并接回兄弟节点，不负责实体生命周期决策。
-- `XuanYu.Core/Spatial/ISpatialIndex.cs`：空间索引抽象契约；负责屏蔽具体索引实现并提供 AABB / WorldRay 候选查询，不绑定 DynamicAabbTree、UI 或 Vulkan。
 - `XuanYu.Core/Spatial/RayAabbHit.cs`：Ray-AABB 命中值对象；负责保存命中距离与命中点，不保存实体选择状态。
 - `XuanYu.Core/Spatial/RayAabbIntersection.cs`：实体 AABB Narrow Phase 数学；负责正向、最大距离、盒内起点、擦边和轴平行命中规则，不执行空间索引遍历。
 - `XuanYu.Core/Spatial/SpatialAabb.cs`：世界空间 AABB 值对象；负责有限性、大小关系、相交和合并计算，不保存实体状态。
 - `XuanYu.Core/Spatial/SpatialBounds.cs`：实体空间边界值对象；负责绑定 EntityKey、WorldBounds 和 QueryCategory，不成为第二份场景数据库。
-- `XuanYu.Core/Spatial/SpatialIndexOwner.cs`：空间索引生命周期所有者；负责增量维护索引、SpatialRevision、AABB / WorldRay 查询统计，不拥有正式 Transform。
-- `XuanYu.Core/Spatial/SpatialRayAabb.cs`：空间射线与 AABB 的 Broad Phase 相交计算；只服务候选裁剪，不裁定最近命中。
-- `XuanYu.Core/Spatial/SpatialRayQuery.cs`：有界 WorldRay 查询值对象；负责携带射线和最大查询距离，不绑定 Picking 或 Selection。
-- `XuanYu.Core/Spatial/SpatialRaycastHit.cs`：空间射线最近命中值对象；负责携带 EntityKey、距离、命中点和 SpatialRevision，不触发 Selection。
-- `XuanYu.Core/Spatial/SpatialRaycastResolver.cs`：空间射线命中解析器；负责对 Broad Phase 候选执行 O(k) Ray-AABB、前后校验 SpatialRevision 并按距离 / EntityKey 稳定选最近，不扫描全场景。
-- `XuanYu.Core/Spatial/SpatialRaycastResult.cs`：空间射线命中结果；负责表达 Hit / NoHit 与统计信息，不包含材质、法线、Mesh 三角形或 UI 状态。
-- `XuanYu.Core/Spatial/SpatialRaycastStats.cs`：空间射线命中诊断统计；负责记录总实体、访问节点、候选数、精确检测数和真实命中数，并生成低频中文探针文本。
 - `XuanYu.Core/Spatial/SpatialQueryCategory.cs`：空间查询分类掩码；负责长期扩展场景实体、地形、Gizmo 和编辑器辅助对象分类。
 - `XuanYu.Core/Spatial/SpatialQueryResult.cs`：空间候选查询结果；负责携带候选 Bounds 与统计信息，不裁定最近命中。
 - `XuanYu.Core/Spatial/SpatialQueryStats.cs`：空间查询诊断统计；负责记录 Revision、总实体、访问节点和候选数，并生成低频中文探针文本。
-- `XuanYu.Core/World/GlobalWorld.Query.cs`：GlobalWorld 的正式 World Query API 分部；只暴露 QueryRadius / QueryBounds，不扫描 Registry。
-- `XuanYu.Core/World/WorldQuery.cs`：World 级派生空间查询层；负责随 Entity Create / Move / Destroy 增量维护 SpatialIndex 并返回 EntityId。
-- `XuanYu.Core/Scene/CommittedTransform.cs`：已提交 Transform 值对象；WORLD-B-R4-F1 起保存正式 Position / Rotation / Scale，并提供移动保留旋转缩放的 `WithPosition`。
-- `XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs`：场景渲染快照源抽象，向渲染侧发布只读快照。
-- `XuanYu.Core/Scene/SceneEntitySnapshot.cs`：最小场景实体快照，包含 EntityKey、名称、类型和 Transform。
-- `XuanYu.Core/Scene/SceneRenderSnapshot.cs`：渲染侧消费的场景快照，当前包含单个最小实体、选择态、Preview、Move Gizmo 可见性与 Rotate Gizmo 可见性，以及 Scale Gizmo 可见性（`ShowScaleGizmo`，WORLD-B-R5），并经 `SceneRenderProjectionAdapter` 解析为带 Rotation/Scale 的 RenderProjection（WORLD-B-R4-R3 选择态经 `IsSelected` 驱动视口轮廓高亮）。
-- `XuanYu.Core/Scene/SceneSpatialBoundsProjection.cs`：Scene 实体到 SpatialBounds 的派生投影；负责为 Picking / SpatialIndex 构造 AABB，不拥有正式 Transform。
-- `XuanYu.Core/Scene/SceneStateOwner.Lifecycle.cs`：SceneStateOwner 生命周期分部；负责通过 GlobalWorld 创建、销毁、查询、切换 active entity 和转发 Region / Activity 变更，不拥有第二份实体真相。
-- `XuanYu.Core/Scene/SceneStateOwner.Seeding.cs`：SceneStateOwner R1-R2 测试实体种子分部；负责补足 10 个可区分编辑器实体，不进入组织系统或分区系统。
-- `XuanYu.Core/Scene/SceneStateOwner.Transform.cs`：SceneStateOwner Transform 提交分部；提供完整 Transform 与 Position 包装提交入口，并返回 History 所需 Before / After。
-- `XuanYu.Core/Scene/SceneStateOwner.cs`：场景状态所有者，负责持有 GlobalWorld、转发空间查询并发布渲染快照；空间索引不是第二份场景真相。
-- `XuanYu.Core/Scene/SceneTransformCommitResult.cs`：Scene Transform 正式提交结果，携带 EntityKey、Before、After 与 Changed 供 History 判断。
-- `XuanYu.Core/Scene/SceneWorldProjection.cs`：WorldEntitySnapshot 到 SceneEntitySnapshot / SceneRenderSnapshot 的单向投影入口；负责防止 Scene 重新成为实体事实源。
-- `XuanYu.Core/World/EntityRegistry.cs`：实体注册表；负责 EntityId 分配、实体快照保存与生命周期入口，不拥有 Region Membership 运行策略。
-- `XuanYu.Core/World/GlobalWorld.cs`：全局世界最小所有者；负责把实体生命周期委托给唯一 EntityRegistry，并协调 Transform、GlobalPosition 与 Partition Membership。
-- `XuanYu.Core/World/GridWorldPartitionStrategy.cs`：默认网格分区策略；按当前固定尺寸把双精度 GlobalPosition 映射到 RegionKey，可被后续地理或球面策略替换。
-- `XuanYu.Core/World/IWorldPartitionStrategy.cs`：世界分区策略接口；冻结 GlobalPosition -> RegionKey 的单向策略边界，不让 RegionKey 反向成为位置真相。
-- `XuanYu.Core/World/RegionKey.cs`：WORLD-A-R2 区域身份值对象；表达全局世界中的管理分区坐标，不代表实体身份。
-- `XuanYu.Core/World/WorldEntityActivity.cs`：世界实体活跃等级枚举；本阶段正式支持 Active / Dormant，并保留 Externalized 接口边界等待 Streaming / Persistence。
-- `XuanYu.Core/World/WorldEntitySnapshot.cs`：世界实体快照值对象；负责绑定 EntityKey、名称、类型、正式 Transform、GlobalPosition、RegionKey 和 Activity，不生成第二套实体身份。
-- `XuanYu.Core/World/WorldPartitionEntry.cs`：Partition Membership 只读快照项；用于一致性 Gate 校验 EntityId、RegionKey 与 Activity。
-- `XuanYu.Core/World/WorldPartitionMembership.cs`：WORLD-A-R2 分区归属表；维护 EntityId 到 RegionKey / Activity 的关系，Region 不拥有 Entity 生命周期。
-- `XuanYu.Core/History/EditorHistoryOwner.cs`：编辑历史所有者，维护 Undo / Redo 栈；只接收正式 Transform History Entry，不执行 Scene 恢复。
-- `XuanYu.Core/History/TransformHistoryEntry.cs`：Transform 历史记录值对象，保存实体身份以及提交前后的正式 Transform。
-- `XuanYu.Core/Transform/PreviewTransform.cs`：拖动期间的临时 Position；只供渲染预览，不是正式场景事实。
-- `XuanYu.Core/Transform/TransformSession.cs`：单实体 Move 会话，校验 Session、维护 Start / Preview，并保证最多一次 Commit 或 Cancel。
-- `XuanYu.Core/Transform/TransformStartSnapshot.cs`：Transform Begin 时的实体身份与正式 Transform 快照。
-- `XuanYu.Core/Results/EngineError.cs`：引擎错误值对象。
-- `XuanYu.Core/Results/EngineResult.cs`：引擎结果类型。
+- `XuanYu.Core/Spatial/SpatialRayAabb.cs`：空间射线与 AABB 的 Broad Phase 相交计算；只服务候选裁剪，不裁定最近命中。
+- `XuanYu.Core/Spatial/SpatialRayQuery.cs`：有界 WorldRay 查询值对象；负责携带射线和最大查询距离，不绑定 Picking 或 Selection。
+- `XuanYu.Core/Spatial/SpatialRaycastHit.cs`：空间射线最近命中值对象；负责携带 EntityKey、距离、命中点和 SpatialRevision，不触发 Selection。
+- `XuanYu.Core/Spatial/SpatialRaycastResult.cs`：空间射线命中结果；负责表达 Hit / NoHit 与统计信息，不包含材质、法线、Mesh 三角形或 UI 状态。
+- `XuanYu.Core/Spatial/SpatialRaycastStats.cs`：空间射线命中诊断统计；负责记录总实体、访问节点、候选数、精确检测数和真实命中数，并生成低频中文探针文本。
 - `XuanYu.Core/Time/SimulationTime.cs`：模拟时间值对象。
 - `XuanYu.Core/Time/TimeStep.cs`：时间步长值对象。
+- `XuanYu.Core/Transform/PreviewTransform.cs`：拖动期间的临时 Position；只供渲染预览，不是正式场景事实。
+- `XuanYu.Core/Transform/TransformStartSnapshot.cs`：Transform Begin 时的实体身份与正式 Transform 快照。
+- `XuanYu.Core/XuanYu.Core.csproj`：核心类库项目文件。
 
-## XuanYu.Core.Tests
+## XuanYu.World
+- `XuanYu.World/EntityRegistry.Authoring.cs`：实体创作入口分部
+- `XuanYu.World/EntityRegistry.Replace.cs`：实体状态替换分部
+- `XuanYu.World/EntityRegistry.cs`：实体注册表；负责 EntityId 分配、实体快照保存与生命周期入口，不拥有 Region Membership 运行策略。
+- `XuanYu.World/GlobalWorld.Authoring.cs`：全局世界创作入口分部
+- `XuanYu.World/GlobalWorld.Query.cs`：GlobalWorld 的正式 World Query API 分部；只暴露 QueryRadius / QueryBounds，不扫描 Registry。
+- `XuanYu.World/GlobalWorld.Snapshot.cs`：全局世界快照分部
+- `XuanYu.World/GlobalWorld.cs`：全局世界最小所有者；负责把实体生命周期委托给唯一 EntityRegistry，并协调 Transform、GlobalPosition 与 Partition Membership。
+- `XuanYu.World/GridWorldPartitionStrategy.cs`：默认网格分区策略；按当前固定尺寸把双精度 GlobalPosition 映射到 RegionKey，可被后续地理或球面策略替换。
+- `XuanYu.World/IWorldPartitionStrategy.cs`：世界分区策略接口；冻结 GlobalPosition -> RegionKey 的单向策略边界，不让 RegionKey 反向成为位置真相。
+- `XuanYu.World/Map/WorldMapState.cs`：地图文档状态（路径/尺寸/表面参数）
+- `XuanYu.World/Map/WorldMapStateOwner.cs`：地图状态唯一所有者（加载/卸载/查询）
+- `XuanYu.World/RegionKey.cs`：WORLD-A-R2 区域身份值对象；表达全局世界中的管理分区坐标，不代表实体身份。
+- `XuanYu.World/Scene/SceneSpatialBoundsProjection.cs`：Scene 实体到 SpatialBounds 的派生投影；负责为 Picking / SpatialIndex 构造 AABB，不拥有正式 Transform。
+- `XuanYu.World/Scene/SceneStateOwner.Lifecycle.cs`：SceneStateOwner 生命周期分部；负责通过 GlobalWorld 创建、销毁、查询、切换 active entity 和转发 Region / Activity 变更，不拥有第二份实体真相。
+- `XuanYu.World/Scene/SceneStateOwner.Seeding.cs`：SceneStateOwner R1-R2 测试实体种子分部；负责补足 10 个可区分编辑器实体，不进入组织系统或分区系统。
+- `XuanYu.World/Scene/SceneStateOwner.StaticModel.cs`：`AddStaticModelEntity(name, transform, extent)`；extent 来自模型 LocalBounds 供 Picking/空间查询，World 不接收资产或 GPU 语义。
+- `XuanYu.World/Scene/SceneStateOwner.Transform.cs`：SceneStateOwner Transform 提交分部；提供完整 Transform 与 Position 包装提交入口，并返回 History 所需 Before / After。
+- `XuanYu.World/Scene/SceneStateOwner.cs`：场景状态所有者，负责持有 GlobalWorld、转发空间查询并发布渲染快照；空间索引不是第二份场景真相。
+- `XuanYu.World/Scene/SceneWorldProjection.cs`：WorldEntitySnapshot 到 SceneEntitySnapshot / SceneRenderSnapshot 的单向投影入口；负责防止 Scene 重新成为实体事实源。
+- `XuanYu.World/Spatial/DynamicAabbTree.Insert.cs`：动态 AABB 树插入分部；负责寻找兄弟节点和接入叶节点，不负责场景事实所有权。
+- `XuanYu.World/Spatial/DynamicAabbTree.Node.cs`：动态 AABB 树内部节点模型；只在索引内部保存父子关系和包围盒，不作为公共契约。
+- `XuanYu.World/Spatial/DynamicAabbTree.Query.cs`：动态 AABB 树候选查询分部；负责 AABB / WorldRay Broad Phase 节点裁剪和统计访问节点数，不做最近命中或最终 Picking。
+- `XuanYu.World/Spatial/DynamicAabbTree.Refit.cs`：动态 AABB 树回填分部；负责实体增删改后的父级 AABB 更新，不负责平衡策略外露。
+- `XuanYu.World/Spatial/DynamicAabbTree.Remove.cs`：动态 AABB 树删除分部；负责移除叶节点并接回兄弟节点，不负责实体生命周期决策。
+- `XuanYu.World/Spatial/DynamicAabbTree.cs`：动态 AABB 树索引入口；负责 Insert、Remove、Update 和 Query 调度，不暴露内部节点给调用方。
+- `XuanYu.World/Spatial/ISpatialIndex.cs`：空间索引抽象契约；负责屏蔽具体索引实现并提供 AABB / WorldRay 候选查询，不绑定 DynamicAabbTree、UI 或 Vulkan。
+- `XuanYu.World/Spatial/SpatialIndexOwner.cs`：空间索引生命周期所有者；负责增量维护索引、SpatialRevision、AABB / WorldRay 查询统计，不拥有正式 Transform。
+- `XuanYu.World/Spatial/SpatialRaycastResolver.cs`：空间射线命中解析器；负责对 Broad Phase 候选执行 O(k) Ray-AABB、前后校验 SpatialRevision 并按距离 / EntityKey 稳定选最近，不扫描全场景。
+- `XuanYu.World/WorldEntityActivity.cs`：世界实体活跃等级枚举；本阶段正式支持 Active / Dormant，并保留 Externalized 接口边界等待 Streaming / Persistence。
+- `XuanYu.World/WorldEntityName.cs`：场景范围唯一命名与最小可用三位后缀。
+- `XuanYu.World/WorldEntitySnapshot.cs`：世界实体快照值对象；负责绑定 EntityKey、名称、类型、正式 Transform、GlobalPosition、RegionKey 和 Activity，不生成第二套实体身份。
+- `XuanYu.World/WorldEntityType.cs`：R2 最小实体类型与 Legacy 名称兼容解析。
+- `XuanYu.World/WorldPartitionEntry.cs`：Partition Membership 只读快照项；用于一致性 Gate 校验 EntityId、RegionKey 与 Activity。
+- `XuanYu.World/WorldPartitionMembership.cs`：WORLD-A-R2 分区归属表；维护 EntityId 到 RegionKey / Activity 的关系，Region 不拥有 Entity 生命周期。
+- `XuanYu.World/WorldQuery.cs`：World 级派生空间查询层；负责随 Entity Create / Move / Destroy 增量维护 SpatialIndex 并返回 EntityId。
+- `XuanYu.World/XuanYu.World.csproj`：项目配置
 
-- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
-- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutPlaneTests.cs`：WORLD-B-R3 平面控制柄投影与命中测试；覆盖 XY/XZ/YZ 平面存在、平面中心命中和轴优先于平面。
-- `XuanYu.Core.Tests/Camera/CameraNavigationTests.cs`：WORLD-B-R1 相机导航纯算法测试；覆盖 Orbit 保中心/保距离/防极点翻转、Pan 屏幕平面平移和 Dolly 距离缩放保护。
-- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
-- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.cs`：WORLD-B-R5 Scale Gizmo 单元测试主体；覆盖 Layout 三轴投影/旋转和 HitTester 中心→Uniform/轴→对应手柄/远端→null。
-- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.Drag.cs`：WORLD-B-R5 ScaleGizmoTests 拖动分部；覆盖 X/Y/Z 单轴只改自身、Uniform 三轴相等。
-- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.DragSafety.cs`：WORLD-B-R5 ScaleGizmoTests 安全分部；覆盖零位移保持、负向 Clamp 到下限、NaN 回落 Clamp、更远拉更大。
-- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.Helpers.cs`：WORLD-B-R5 ScaleGizmoTests 辅助分部；集中构造布局、拖拽起点和屏幕拉动向量，避免主测试文件超过 100 行。
-- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.R5R1.cs`：WORLD-B-R5-R1 ScaleGizmoTests 修复分部；覆盖中心 Uniform 优先命中、中心外单轴命中、Uniform 按同倍率保持原比例、63 DIP 尺寸常量和距离稳定性。
-- `XuanYu.Core.Tests/Gizmo/RotateGizmoLayoutTests.cs`：WORLD-B-R4-F4 Rotate Gizmo 屏幕投影与轴环命中测试；WORLD-B-R4-R1 扩 `Custom_world_radius_scales_ring_screen_radius`，断言显式世界半径线性放大环屏幕半径。
-- `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.cs`：R5 Render Projection 适配器测试；覆盖缺相机失败、显式相机矩阵等价、Preview 与 Gizmo 在跨 Render 边界前解析。WORLD-B-R4-R1 拆出 `SceneRenderProjectionAdapterTests.Rotation.cs` 偏部（实体 Rotation/Scale 下传、显式旋转环世界半径透传、不显示时回落默认半径）。
-- `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.Selection.cs`：WORLD-B-R4-R3 选中实体轮廓高亮投影测试；覆盖选中实体 `IsSelected=true`、非选中 `IsSelected=false`、切到 B 仅 B 标记，验证轮廓由显式 `IsSelected` 而非实体列表成员决定。
-- `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
-- `XuanYu.Core.Tests/EditorTool/EditorTransformCapturePolicyTests.cs`：编辑器 Transform 捕获策略测试；测试侧引用 Editor.UI，验证 Move 可捕获 / 可显示、Rotate / Scale 不伪装 Move、Snap 不改变捕获和 Gizmo 可见性。
-- `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs`：编辑历史 Owner 基础合同测试；覆盖空栈、无变化忽略和 LIFO Undo。
-- `XuanYu.Core.Tests/History/EditorHistoryRedoTests.cs`：编辑历史 Redo 合同测试；覆盖 Redo Cursor、多次 Redo 顺序和新 Commit 清空 Redo Branch。
-- `XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs`：Transform Commit / History / Restore 基础集成测试；覆盖 Preview、Cancel、迟到输入和无变化提交不污染 History。
-- `XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs`：Transform History Redo 集成测试；验证 Undo 恢复 Before、Redo 恢复 After 和新提交后 Redo 不可用。
-- `XuanYu.Core.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
-- `XuanYu.Core.Tests/World/EntityRegistryTests.cs`：实体注册表测试；覆盖 1 / 10 实体创建、查询、删除、重复删除、缺失键和稳定身份。
-- `XuanYu.Core.Tests/World/GlobalWorldTests.cs`：GlobalWorld 生命周期测试；覆盖所有者入口、销毁后不复用 EntityId，以及 1000 实体创建 / 查询 / Snapshot / Destroy / 内存基线烟测记录。
-- `XuanYu.Core.Tests/World/WorldR1FinalSceneTests.cs`：WORLD-A-R1 FINAL 场景毕业测试；覆盖 Entity5 Move / Undo / Redo 隔离和 Destroy 后 World / Snapshot / Spatial / Render 无幽灵。
-- `XuanYu.Core.Tests/World/WorldR1FinalSelectionTests.cs`：WORLD-A-R1 FINAL 选择毕业测试；覆盖 EntityId(1) 到 EntityId(10) 连续选择、Inspector 同步和 RenderSnapshot 全量实体稳定。
-- `XuanYu.Core.Tests/World/WorldSceneMultiEntityGateTests.cs`：WORLD-A-R1-R2 多实体 Gate 测试；覆盖 10 实体 RenderSnapshot 投影、Picking 不同 EntityId、Destroy 后 Snapshot / Picking 无幽灵。
-- `XuanYu.Core.Tests/World/WorldSceneSelectionReentryTests.cs`：WORLD-A-R1-R2-R1 选择同步重入测试；覆盖 Entity1→Entity2、重复选择 no-op、快速切换和 Select B 后 Move / Undo / Redo。
-- `XuanYu.Core.Tests/World/WorldSceneConsumptionTests.cs`：WORLD-A-R1-R1 Scene 消费 World 测试；覆盖默认实体投影、Move Commit 同 EntityId、Undo/Redo 同 World Entity 和 Destroy 清空渲染投影。
-- `XuanYu.Core.Tests/World/WorldSceneIsolationTests.cs`：WORLD-A-R1-R1 多实体隔离测试；覆盖移动 B 不污染 A/C、Undo 只恢复 B、销毁选中实体不复用身份且安全回退。
-- `XuanYu.Core.Tests/World/WorldPartitionTests.cs`：WORLD-A-R2 分区基础测试；覆盖 Region membership 非实体 Owner、全局位置推导 Region、活跃态切换和 1000 实体迁移。
-- `XuanYu.World.Tests/World/WorldPartitionTests.PartitionStrategy.cs`：WorldPartitionTests 的 partial 拆分（R4-R1-FIX1，2026-07-25）；承载 `Partition_strategy_can_be_replaced_without_changing_entity_owner` 用例，使主文件 ≤100 行，职责为"分区策略可替换性"测试。
-- `XuanYu.Core.Tests/World/WorldPartitionR1Tests.cs`：WORLD-A-R2-R1 迁移测试；覆盖 Preview Cancel、Preview Commit、Undo / Redo Region 恢复、多实体迁移隔离和 Active / Dormant。
-- `XuanYu.World.Tests/World/WorldPartitionR1Tests.Activity.cs`：WorldPartitionR1Tests 的 partial 拆分（R4-R1-FIX1）；承载 `Active_dormant_active_keeps_identity_region_and_position` 用例，职责为"Active/Dormant 活动态往返"测试。
-- `XuanYu.Core.Tests/World/WorldPartitionR2Tests.cs`：WORLD-A-R2-R2 一致性与规模 Gate 测试；覆盖 1000 Entity / 10000 随机迁移、Partition Invariant、Dormant 查询和 RegionKey 几何依赖红线。
-- `XuanYu.Core.Tests/World/WorldPartitionUiTests.cs`：WORLD-A-R2 UI 投影测试；覆盖跨 Region 后 EntityId、RenderSnapshot、SelectedNodeKey、SelectionPath 和 Inspector 不丢。
-- `XuanYu.Core.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
-- `XuanYu.World.Tests/World/WorldCameraNavigationUiTests.cs`：WORLD-B-R1 UiVm 相机会话测试；覆盖 Frame 更新 ObservationCenter、Cancel 恢复、输入抢占、旧 PointerUp 和 Camera Capture 阻止 Picking / Dolly。
-- `XuanYu.World.Tests/World/WorldSelectionToolStateUiTests.cs`：WORLD-B-R2 UiVm 选择与工具状态测试；覆盖层级选择同步检查器、清除选择、删除失效选择、未实现工具拒绝虚假活动态和移动会话输入抢占。
-- `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.cs`：WORLD-B-R4-F3 UiVm 工具状态高亮测试；覆盖未实装旋转/缩放点击后唯一高亮、右上角状态与视口移动控制柄一致、至多一个工具按钮活动。
-- `XuanYu.World.Tests/World/WorldMoveTransformUiTests.cs`：WORLD-B-R3 UiVm 移动变换基础测试；覆盖真实 X 轴拖动提交、撤销、重做，以及移动会话期间选择改写被拒绝。
-- `XuanYu.World.Tests/World/WorldMoveTransformPlaneUiTests.cs`：WORLD-B-R3 平面移动 UiVm 测试；覆盖 XY/XZ/YZ 平面只改对应轴、Preview 不写正式位置、无位移不进 History。
-- `XuanYu.World.Tests/World/WorldMoveTransformRegionUiTests.cs`：WORLD-B-R3 跨 Region 移动 UiVm 测试；覆盖 EntityId 不变、世界单实体、层级/检查器/Selection 更新和 Undo/Redo 区域恢复。
-- `XuanYu.World.Tests/World/WorldMoveTransformSessionUiTests.cs`：WORLD-B-R3 移动会话取消与输入互斥测试；覆盖 Escape、PointerCaptureLost、WM_CANCELMODE、Resize、延迟 PointerUp、相机/Picking/工具切换抢占。
-- `XuanYu.World.Tests/World/WorldR4InspectorInputTests.cs`：WORLD-B-R4-F2 检查器输入防污染测试；覆盖格式化显示保留内部精度、非法缩放 / NaN / 非数字不写 Transform 与 History。
-- `XuanYu.World.Tests/World/WorldR4TransformFoundationTests.cs`：WORLD-B-R4-F1/F2 Transform 数据合同测试；覆盖 Rotation/Scale 默认值、移动提交保留旋转缩放，以及检查器显示真实 Transform 字段。
-- `XuanYu.World.Tests/World/WorldR4TransformInputTests.cs`：WORLD-B-R4-F2 完整 Transform 输入测试；覆盖完整提交入口、会话 Preview / Commit 保留字段、旋转缩放候选与检查器提交撤销重做。
-- `XuanYu.World.Tests/World/WorldRotateTransformUiTests.cs`：WORLD-B-R4-F4 Rotate Gizmo UiVm 闭环测试；覆盖一次拖拽一次提交+撤销重做、取消不入历史，命中点按屏幕空间半径（与生产捕获同公式）构造以对齐命中。WORLD-B-R4-R1 拆出 `WorldRotateTransformUiTests.R4R1.cs` 偏部（`Rotate_with_no_pointer_movement_creates_no_history` 近零旋转不污染历史、`Rotate_commit_and_cancel_clear_drag_state` 提交/取消对称清空 `_rotateDrag`）。WORLD-B-R4-R2 拆出 `WorldRotateTransformUiTests.R4R2.cs` 偏部（旋转工具下点击其他实体立即切换选择且工具保持 Rotate、Selected/Gizmo/Inspector/Render/Transform/History 目标统一为 B、切换后第一次拖动改 B 不改 A、Commit/Undo 的 EntityKey 一致、Gizmo 屏幕半径有界）。
-- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.cs`：WORLD-B-R5 Scale Gizmo UiVm 闭环测试主体；覆盖 Begin+Preview 提交前更新渲染 Scale、Preview→Commit 不跳变、X 提交只改 X、Uniform 三轴相等。
-- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.History.cs`：WORLD-B-R5 缩放 History / Cancel 测试分部；覆盖一次拖动只进一条 History、Undo/Redo、Escape Cancel 丢弃预览且不入历史。
-- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Target.cs`：WORLD-B-R5 缩放目标切换与 Resize 测试分部；覆盖空白不 Begin、缩放工具下点击 B 后首拖只改 B、Resize 后世界轴长正且有界。
-- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Helpers.cs`：WORLD-B-R5 缩放 UiVm 测试辅助分部；集中构造测试 Vm、第二实体和 History 反射入口。
-- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Pointer.cs`：WORLD-B-R5 缩放 UiVm 指针辅助分部；集中构造 Scale Gizmo 命中点、拖动点和实体屏幕点，确保测试命中与生产布局同源。
-- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.R5R1.cs`：WORLD-B-R5-R1 缩放 UiVm 修复分部；覆盖 Y/Z 单轴回归、Uniform 一次提交一条 History、Undo/Redo 和 Escape 后延迟 MouseUp 不提交。
-- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.cs`：WORLD-C-R1 场景文档基础测试；覆盖保存/打开往返、损坏 JSON 失败日志和 Dirty 保存检查点。
-- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.R1R1.cs`：WORLD-C-R1-R1 真机失败回归测试；走生产 `OpenSceneAsync` 打开仓库 sample，并验证损坏文件加载失败时旧 World、路径、Dirty、选择和 History 保留。
-- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.R1SaveFeedback.cs`：WORLD-C-R1 保存反馈回归测试；覆盖另存为成功、普通保存成功、Dirty 中文状态、Undo/Redo Clean-Dirty 和保存失败保护。
-- `XuanYu.Core.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
-- `XuanYu.Core.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
-- `XuanYu.Core.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
-- `XuanYu.Core.Tests/World/WorldSpatialR1Oracle.cs`：WORLD-A-R3-R1 空间查询测试 Oracle；只在测试侧使用 O(N) 真值校验，不进入生产 World Query。
-- `XuanYu.World.Tests/World/WorldSpatialQueryTests.Geometry.cs`：WorldSpatialQueryTests 的 partial 拆分（R4-R1-FIX1）；承载 `DistanceSquared` 几何辅助，职责为"空间距离平方"纯函数（被 `BruteRadius` Oracle 复用）。
-- `XuanYu.Core.Tests/World/WorldSpatialR1RebuildTests.cs`：WORLD-A-R3-R1 Rebuild 与随机一致性测试；覆盖 1000 Entity 重建前后 Query 一致和确定性随机 Move / Radius / Bounds。
-- `XuanYu.Core.Tests/World/WorldUiTreeGuideTests.cs`：WORLD-A-UI-R2 树线投影测试；覆盖 Project Tree 连续 Guide、折叠后可视节点和 `构建配置` 命名。
-- `XuanYu.Core.Tests/World/WorldUiHierarchyConnectorTests.cs`：UI-TREE-R1 层级树连接线测试；构造真实玄域层级结构断言 `Tee / Elbow / Full / Blank` 段，锁定末区域子节点 `Blank@0` 与折叠重算。
-- `XuanYu.Core.Tests/World/WorldUiTreeToggleTests.cs`：UI-TREE-R1 后续折叠/展开回归测试；覆盖 Project/Hierarchy 树同一节点连续 toggle 与选择未变时仍能展开。
+## XuanYu.WarCore
+- `XuanYu.WarCore/Identity/FactionId.cs`：阵营编号（0=未命名）。
+- `XuanYu.WarCore/Identity/MilitaryIdentity.cs`：军事身份（UnitId / DisplayName / UnitKind，空名拒绝）。
+- `XuanYu.WarCore/Identity/OrganizationId.cs`：组织编号（0=未编组）。
+- `XuanYu.WarCore/Identity/UnitId.cs`：单位编号（int 单调，FromInt 校验 >0，None 无效）。
+- `XuanYu.WarCore/Identity/UnitKind.cs`：单位类型枚举（R1 仅 Soldier）。
+- `XuanYu.WarCore/State/SoldierState.cs`：士兵状态（身体状态/体力/士气/压制，0–100，越界抛明确错误）。
+- `XuanYu.WarCore/XuanYu.WarCore.csproj`：新程序集，仅引用 Core（宪法依赖禁区 WarCore→Editor/Vulkan 禁止）。
 
-- `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
-- `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
-- `XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs`：视口拾取 Core 测试；负责中心命中、空白 NoHit、移动后新旧位置、DPI 逻辑坐标和代际过期拒绝覆盖。
-- `XuanYu.Core.Tests/Space/CameraStateTests.cs`：CameraState 自动测试；负责合法相机、退化方向、共线 Up、非法 FOV / Near / Far / 非有限数覆盖，不负责渲染画面验收。
-- `XuanYu.Core.Tests/Space/SpaceAssert.cs`：空间数学测试辅助断言；只负责局部近似比较，不进入生产项目。
-- `XuanYu.Core.Tests/Space/ViewportStateTests.cs`：ViewportState 自动测试；负责合法尺寸、DPI、Revision、幂等和非法尺寸覆盖，不负责平台窗口尺寸同步。
-- `XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs`：ViewProjectionState 自动测试；覆盖标准右手 Projection、Camera Up 屏幕方向、World-Clip-World Round Trip 与可逆性。
-- `XuanYu.Core.Tests/Space/DefaultEditorCameraTests.cs`：默认 Z-Up 斜视相机 Forward/Up 派生与 Resize 中心射线合同测试。
-- `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`：WorldRay 自动测试；覆盖中心、四角、Resize、投影反投影方向一致性、稳定复现和非法输入。
-- `XuanYu.Core.Tests/Space/WorldRayTests.cs`：WorldRay 值对象自动测试；负责非法 Origin / Direction 失败边界，不负责射线命中或空间查询。
-- `XuanYu.Core.Tests/Spatial/SpatialBoundsTests.cs`：空间边界测试；负责 AABB 非法输入、相交和合并行为覆盖，不测试 Picking。
-- `XuanYu.Core.Tests/Spatial/RayAabbIntersectionTests.cs`：Ray-AABB 数学测试；负责正面命中、miss、背向、负方向、盒内起点、平行轴、擦边、擦角和最大距离覆盖。
-- `XuanYu.Core.Tests/Spatial/SceneStateOwnerSpatialTests.cs`：SceneStateOwner 空间索引集成测试；负责初始化 Insert、Position Update、EntityKey 稳定和 Revision 幂等覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialIndexOwnerLifecycleTests.cs`：空间索引生命周期测试；负责 Insert、Remove、Update、重复实体和分类掩码覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialIndexOwnerRevisionTests.cs`：空间索引 Revision 测试；负责 SpatialRevision 增长、幂等更新和中文探针统计覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialIndexScaleTests.cs`：空间索引规模回归测试；负责 1k / 10k 实体查询统计、连续移动和批量删除一致性覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialRayQueryLifecycleTests.cs`：WorldRay 候选查询生命周期与规模测试；负责 Update、Remove、1k / 10k Ray Query 统计覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialRayQueryTests.cs`：WorldRay 候选查询边界测试；负责命中、空查询、Mask、起点在盒内、平行轴、背向和最大距离覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialRaycastNearestTests.cs`：最近命中测试；负责多实体最近命中、候选顺序变化、等距 EntityKey 稳定裁决和 Broad 候选必须经过 Narrow 才能发布命中的责任分离覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialRaycastRevisionTests.cs`：射线命中 Revision 测试；负责命中 / 未命中结果携带同一 SpatialRevision，以及 Narrow Phase 期间变代会被最终校验拒绝的覆盖。
-- `XuanYu.Core.Tests/Spatial/SpatialRaycastScaleTests.cs`：射线命中规模回归测试；负责 1k / 10k Broad 到 Narrow 端到端统计和不全量扫描约束。
-- `XuanYu.Core.Tests/Spatial/SpatialTestData.cs`：空间索引测试数据工厂；负责确定性网格实体和查询 AABB 构造，不进入生产项目。
+## XuanYu.Editor
+- `XuanYu.Editor/Assets/AssetId.cs`：场景托管资产稳定身份；与文件名、实体名、绝对路径、GPU Buffer 和第三方 GLB 对象无关。
+- `XuanYu.Editor/Assets/GlbContainer.cs`：GLB 2.0 Header、JSON/BIN Chunk 和基础容器错误校验。
+- `XuanYu.Editor/Assets/GlbImportService.cs`：D1 静态 GLB 导入入口；负责文件/流/byte 输入、SharpGLTF 边界验证和统一结果返回，不依赖 UI、SceneDocument、World 或 Vulkan。
+- `XuanYu.Editor/Assets/GltfAccessorReader.cs`：读取 D1 支持的 POSITION/NORMAL/UV/Index Accessor 子集，统一索引为 uint。
+- `XuanYu.Editor/Assets/GltfCoordinatePolicy.cs`：GLB `+Y Up` 到玄域右手 `+Z Up` 的一次性导入层坐标转换与转换后局部 Bounds 生成。
+- `XuanYu.Editor/Assets/GltfJsonAccess.cs`：导入适配层的 JSON 字段读取辅助，不作为通用 SceneDocument 解析器。
+- `XuanYu.Editor/Assets/GltfNodeTransform.cs`：GLB 静态 Node Matrix/TRS 求值、Position 烘焙和法线逆转置变换。
+- `XuanYu.Editor/Assets/GltfStaticModelImporter.cs`：D1 GLB JSON/BIN 静态几何导入适配；遍历 Node/Mesh/Primitive，输出玄域自有模型数据。
+- `XuanYu.Editor/Assets/HostedSceneAsset.cs`：托管资产项（AssetId/SourcePath/RelativePath/StagedPath/FinalPath）。
+- `XuanYu.Editor/Assets/ImportStop.cs`：导入适配层内部受控停止异常，转换为 `StaticModelImportResult`。
+- `XuanYu.Editor/Assets/ModelAssetRuntimeState.cs`：模型资产运行时 `Unloaded/Loading/Ready/Missing/Failed` 状态枚举；不写入 `.xyscene`。
+- `XuanYu.Editor/Assets/SceneAssetHostingError.cs`：14 个托管事务错误码，复用 SceneDocumentResult 模式。
+- `XuanYu.Editor/Assets/SceneAssetHostingPlan.cs`：托管规划（场景路径/资产根/staging/backup/资产列表，按 AssetId 稳定排序）。
+- `XuanYu.Editor/Assets/SceneAssetHostingPlanner.cs`：场景路径与 SourcePath 校验、同 AssetId 同源去重/异源拒绝、FinalPath 防逃逸。
+- `XuanYu.Editor/Assets/SceneAssetHostingState.cs`：事务状态（Prepared/Activated/Completed/RolledBack/Failed）。
+- `XuanYu.Editor/Assets/SceneAssetHostingTransaction.Activate.cs`：事务激活（备份目录替换）
+- `XuanYu.Editor/Assets/SceneAssetHostingTransaction.Complete.cs`：事务完成（清理备份）
+- `XuanYu.Editor/Assets/SceneAssetHostingTransaction.Rollback.cs`：事务回滚（恢复备份）
+- `XuanYu.Editor/Assets/SceneAssetHostingTransaction.cs`：托管资源事务内核（staging/激活/回滚）
+- `XuanYu.Editor/Assets/SceneAssetPathPolicy.cs`：`.xyscene` 同级 `.xyassets` 根目录、模型托管相对路径和路径逃逸验证单一入口。
+- `XuanYu.Editor/Assets/SceneStaticModelBinding.cs`：实体 → 资产最小绑定（EntityId/AssetId/SourcePath）；不含 RenderKey（Editor 不引用 Render.Abstractions）。
+- `XuanYu.Editor/Assets/SceneStaticModelCatalog.cs`：场景静态模型绑定目录；Bind/TryGetByEntity/TryGetByAsset/Remove/Clear/Snapshot/Revision/Changed；Snapshot 按 AssetId 稳定排序。
+- `XuanYu.Editor/Assets/StaticModelAuthoringService.cs`：GLB 导入 → World 实体创建 → Catalog 绑定事务组合服务；回滚保证不留半成品。
+- `XuanYu.Editor/Assets/StaticModelBuilder.cs`：`AddPrimitive` 索引归一化后记录 `BaseVertex = 0`；修复非零 BaseVertex 真实 GLB 无法上传 GPU。
+- `XuanYu.Editor/Assets/StaticModelColor.cs`：静态模型顶点颜色值对象
+- `XuanYu.Editor/Assets/StaticModelData.cs`：静态模型数据（顶点/索引/材质）
+- `XuanYu.Editor/Assets/StaticModelImportCodes.cs`：静态模型导入错误码
+- `XuanYu.Editor/Assets/StaticModelImportResult.cs`：静态模型导入结果
+- `XuanYu.Editor/Assets/StaticModelImportWarning.cs`：静态模型导入警告
+- `XuanYu.Editor/Assets/StaticModelPrimitive.cs`：静态模型 Primitive（全局索引归一化）
+- `XuanYu.Editor/Assets/StaticModelVertex.cs`：静态模型顶点（位置/法线/UV）
+- `XuanYu.Editor/Camera/CameraFrameResult.cs`：相机与观察中心组合结果
+- `XuanYu.Editor/Camera/CameraNavigation.cs`：Orbit/Pan/Dolly 纯算法
+- `XuanYu.Editor/Camera/EditorCameraFraming.cs`：编辑器最小 Frame All / Frame Selected 构图计算；根据当前可见实体位置、视口比例和 FOV 生成 CameraState，不修改实体 Transform。
+- `XuanYu.Editor/MapDocument/MapDocument.cs`：地图文档模型（.xymap 数据）
+- `XuanYu.Editor/MapDocument/MapDocumentJson.cs`：地图文档 JSON 模型
+- `XuanYu.Editor/MapDocument/MapDocumentOwner.cs`：地图文档所有者（唯一状态入口）
+- `XuanYu.Editor/MapDocument/MapDocumentResult.cs`：地图文档操作结果
+- `XuanYu.Editor/MapDocument/MapDocumentValidator.cs`：地图文档校验（错误码）
+- `XuanYu.Editor/MapDocument/MapDocumentWorldBridge.cs`：MapDocument → WorldMapState 桥接。
+- `XuanYu.Editor/MapDocument/MapEnvironmentDefinition.cs`：地图环境参数定义（光照/天空）
+- `XuanYu.Editor/MapDocument/MapGeometry.cs`：地图几何定义（尺寸/表面）
+- `XuanYu.Editor/MapDocument/MapId.cs`：地图标识值对象
+- `XuanYu.Editor/MapDocument/MapJsonMapper.cs`：地图 JSON 映射
+- `XuanYu.Editor/MapDocument/MapJsonSerializer.cs`：地图 JSON 序列化
+- `XuanYu.Editor/MapDocument/MapStorageService.cs`：地图文件存储服务（原子保存/清理）
+- `XuanYu.Editor/MapDocument/MapSurfaceDefinition.cs`：地图表面参数定义
+- `XuanYu.Editor/SceneDocument/MapReference.cs`：场景地图引用（mapId + 相对路径，只引用不复制）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentAsset.cs`：资产记录（AssetId/Kind=ModelGltf/RelativePath/DisplayName/ImporterVersion）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentEntity.cs`：场景文档实体字段模型
+- `XuanYu.Editor/SceneDocument/SceneDocumentJson.cs`：v3 增加 `Assets` 与实体 `ModelAssetId`（可空兼容 v1/v2）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentLoadTransaction.cs`：场景加载事务（两阶段候选）
+- `XuanYu.Editor/SceneDocument/SceneDocumentMapper.cs`：v3 双向映射（资产/ModelAssetId）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentResult.cs`：场景文档操作结果
+- `XuanYu.Editor/SceneDocument/SceneDocumentSaveTransaction.cs`：场景保存事务
+- `XuanYu.Editor/SceneDocument/SceneDocumentSession.cs`：场景文档会话（路径/Untitled/Dirty）
+- `XuanYu.Editor/SceneDocument/SceneDocumentSnapshot.cs`：场景文档快照（实体/相机/环境投影）
+- `XuanYu.Editor/SceneDocument/SceneDocumentValidator.MapReference.cs`：mapReference 校验（空=旧场景兼容）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentValidator.cs`：v3 资产/引用校验与新错误码；v1/v2 规则不变。
+- `XuanYu.Editor/SceneDocument/SceneDocumentWorldBridge.cs`：Capture 携带 ModelAssetId。
+- `XuanYu.Editor/SceneDocument/SceneLoadCandidate.cs`：场景加载候选（两阶段路径校验）
+- `XuanYu.Editor/SceneDocument/SceneSaveOutcome.cs`：场景保存结果（路径/Dirty/错误）
+- `XuanYu.Editor/SceneDocument/SceneStorageService.cs`：场景文件存储服务（原子保存/清理）
+- `XuanYu.Editor/Transform/TransformSession.Rotate.cs`：旋转变换事务分部（轴环 Begin/Preview/Commit）
+- `XuanYu.Editor/Transform/TransformSession.Scale.cs`：缩放变换事务分部（手柄 Begin/Preview/Commit）
+- `XuanYu.Editor/Transform/TransformSession.cs`：单实体 Move 会话，校验 Session、维护 Start / Preview，并保证最多一次 Commit 或 Cancel。
+- `XuanYu.Editor/XuanYu.Editor.csproj`：锁定 `SharpGLTF.Core` 1.0.6，作为 D1 静态 GLB 解析唯一批准依赖；第三方类型禁止越过导入边界。
 
 ## XuanYu.Render.Abstractions
-
-- `XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj`：渲染抽象项目文件。
+- `XuanYu.Render.Abstractions/EditorViewportAssistState.cs`：编辑器辅助显示渲染输入状态；世界坐标轴默认关闭，不拥有场景事实。
+- `XuanYu.Render.Abstractions/FrameExecutionPolicy.cs`：WORLD-B-R4-R3-R2 抽取的 Vulkan Present 帧执行顺序策略；`FrameStep` 枚举（WaitFence/ApplyPendingProjection/ResetFence/QueueSubmit）与固定 `Order`（WaitFence→ApplyPendingProjection→ResetFence→QueueSubmit），供 VulkanPresentLoop 与测试共同引用，固化"Fence 等待在重录前、Reset 在提交前"的同步约束。
 - `XuanYu.Render.Abstractions/INativeHostSurfaceBridge.cs`：NativeHost Surface 桥接抽象。
-- `XuanYu.Render.Abstractions/INativeHostSurfaceBridgeFactory.cs`：NativeHost Surface 桥接工厂抽象；R5-R1 起只接收 `IRenderProjectionSource`，不再暴露 Scene 快照源。
+- `XuanYu.Render.Abstractions/INativeHostSurfaceBridgeFactory.cs`：NativeHost Surface 桥接工厂抽象
 - `XuanYu.Render.Abstractions/IRenderProjectionSource.cs`：Render Projection Source 抽象；发布显式投影结果或可审计失败原因。
 - `XuanYu.Render.Abstractions/NativeHostHandleSnapshot.cs`：NativeHost 句柄快照。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleLogFormatter.cs`：NativeHost 生命周期日志格式化器。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleProbe.cs`：NativeHost 生命周期探针数据。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleState.cs`：NativeHost 生命周期状态枚举。
 - `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs`：NativeHost Surface 句柄值对象。
+- `XuanYu.Render.Abstractions/ReferenceGridScale.cs`：每帧全局网格尺度纯数学（1/2/5 序列、48px 目标、对数域互补权重；不持相机/不调 Vulkan）
 - `XuanYu.Render.Abstractions/RenderCameraProjection.cs`：最小 Render 相机投影；携带显式相机数值并按 Render 视口生成 ViewProjection，不创建默认相机。
-- `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：最小实体渲染投影；携带实体 Key 与跨边界前解析完成的 Position / Rotation / Scale（WORLD-B-R4-R1 TRS 合同：旋转/缩放经 RenderProjection 真正下传，不再被渲染链丢弃）；WORLD-B-R4-R3 增 `IsSelected` 选择态，驱动视口轮廓高亮。
-- `XuanYu.Render.Abstractions/RenderProjection.cs`：R5 最小渲染投影合同；包含显式相机、实体投影（Position/Rotation/Scale）、Move Gizmo 可见性与位置、Rotate Gizmo 可见性与世界半径，以及 Scale Gizmo 可见性/世界轴长/朝向槽；R3-R4 中 Scale 模式下 `GizmoRotation` 默认清零以保持 Global 可见轴。
-- `XuanYu.Render.Abstractions/RenderProjectionResult.cs`：Render Projection 创建结果；表达成功投影或明确失败原因。
 - `XuanYu.Render.Abstractions/RenderDrawPlan.cs`：实体与唯一活动 Gizmo 的最终帧绘制计划；Legacy/Cube 填充和轮廓保持类型，Move/Rotate/Scale 使用 36/864/252 顶点且不再夹带旧三角形。
-- `XuanYu.Render.Abstractions/FrameExecutionPolicy.cs`：WORLD-B-R4-R3-R2 抽取的 Vulkan Present 帧执行顺序策略；`FrameStep` 枚举（WaitFence/ApplyPendingProjection/ResetFence/QueueSubmit）与固定 `Order`（WaitFence→ApplyPendingProjection→ResetFence→QueueSubmit），供 VulkanPresentLoop 与测试共同引用，固化"Fence 等待在重录前、Reset 在提交前"的同步约束。
+- `XuanYu.Render.Abstractions/RenderEntityProjection.cs`：最小实体渲染投影；携带实体 Key 与跨边界前解析完成的 Position / Rotation / Scale
+- `XuanYu.Render.Abstractions/RenderEntityType.cs`：跨渲染边界的 Legacy/Cube 类型判别。
+- `XuanYu.Render.Abstractions/RenderProjection.cs`：R5 最小渲染投影合同；包含显式相机、实体投影（Position/Rotation/Scale）、Move Gizmo 可见性与位置、Rotate Gizmo 可见性与世界半径，以及 Scale Gizmo 可见性/世界轴长/朝向槽
+- `XuanYu.Render.Abstractions/RenderProjectionResult.cs`：Render Projection 创建结果；表达成功投影或明确失败原因。
+- `XuanYu.Render.Abstractions/RenderStaticModelKey.cs`：静态模型渲染键值对象
+- `XuanYu.Render.Abstractions/RenderStaticModelPrimitive.cs`：静态模型渲染 Primitive 投影
+- `XuanYu.Render.Abstractions/RenderStaticModelResource.cs`：静态模型渲染资源句柄
+- `XuanYu.Render.Abstractions/RenderStaticModelVertex.cs`：静态模型渲染顶点投影
+- `XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj`：渲染抽象项目文件。
 
 ## XuanYu.Render.Vulkan
-
-- `XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj`：Vulkan 渲染实现项目文件。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeDeviceAttachStep.cs`：Vulkan 桥接逻辑设备 Attach 步骤。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`：Vulkan 桥接物理设备 Attach 步骤。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeRenderSessionAttachStep.cs`：Vulkan 桥接渲染 Session Attach 步骤。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeSwapchainAttachStep.cs`：Vulkan 桥接 Swapchain Attach 步骤。
+- `XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.Physical.cs`：逻辑设备物理信息分部
+- `XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.cs`：Vulkan 逻辑设备生命周期持有者。
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceInfo.cs`：Vulkan 物理设备信息。
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelection.cs`：Vulkan 物理设备选择结果。
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`：Vulkan 物理设备选择器。
+- `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs`：Vulkan 队列族选择结果。
+- `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs`：Vulkan Resize 追踪诊断工具。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs`：片元着色器 SPIR-V 字节码
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridFrag.cs`：网格片元字节码（生成物）
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridVert.cs`：网格着色器字节码（生成物）
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoFrag.cs`：导航 Gizmo 片元字节码（生成物）
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoVert.cs`：导航 Gizmo 顶点字节码（生成物）
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：由正式 `scene.vert` 经 glslc 生成的 SPIR-V
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldAxesFrag.cs`：世界轴片元字节码（生成物）
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldOriginFrag.cs`：世界原点片元字节码（生成物）
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs`：拆出 depth state 构造，保持 Pipeline 主文件职责清晰。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.cs`：全屏 Pass 管线通用创建（三个 Pass 共用）
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs`：参考网格独立管线（192B PushConstant、DepthWrite=Off、Blend=On）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Sky.cs`：天空专用管线工厂（DepthTest/Write=Off、Blend=Off），与主管线共用 Shader/顶点输入/RenderPass 与兼容 PushConstants 布局。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.StaticModelInput.cs`：拆出静态模型顶点输入布局，撤销 D2 为压行数造成的 Pipeline 可读性退化。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`：Vulkan 图形管线生命周期持有者。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：Vulkan 管线日志格式化器。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；128 字节（32 float）std140；@88 / index 22 为 `selectionMode`（0/1=填充、2=外轮廓边带）；复用 `entityRotation.w`（target 27）= viewportWidth、`entityScale.w`（target 31）= viewportHeight 供屏幕空间定宽边带；负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs`：Vulkan ShaderModule 生命周期持有者。
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelBuffer.cs`：静态模型 GPU 缓冲上传
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelCache.cs`：接入失败去重；`RetainOnly` 清理未引用失败记录。
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelFailureTracker.cs`：按 RenderStaticModelKey+Revision 记录创建失败状态；相同 Key+Revision 不重试不重打日志。
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelLog.cs`：静态模型上传日志格式化
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelResource.cs`：静态模型 GPU 资源（缓冲/数量）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelValidator.cs`：静态模型 GPU 上传校验（BaseVertex 等）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelVertex.cs`：静态模型 GPU 顶点布局
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan 最终帧只消费 `GetFrameDrawPlan`；实体 Draw 使用条目携带的 Legacy/Cube 类型，Gizmo Draw 独立分发，选择态不再回退到三角形。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawAssist.cs`：辅助显示 Pass 绘制（网格/轴/原点）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawGizmo.cs`：Gizmo Draw 分发分部
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawStaticBounds.cs`：D2 选中模型 Bounds 轮廓；与模型实体共享 Transform，不冒充最终几何描边。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.DrawStaticModel.cs`：StaticModel indexed draw 路径；逐 Primitive 设置 baseColorFactor 并提交 `CmdDrawIndexed`。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Grid.cs`：参考网格绘制（VP/InvVP/相机/视口/far/地图参数）。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.GridScale.cs`：每帧参考尺度（视口中心射线 Z=0 求交，失败回退上一帧）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.MapTerrain.cs`：地形/边界 Draw（kind=-14/-15，CmdDrawIndexed 24576）。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Matrix.cs`：Vulkan ClearFrame 矩阵辅助分部；提供 push constant 矩阵转置和 Vulkan Clip Y 投影副本转换，不持有渲染资源生命周期。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.NavGizmo.cs`：Gizmo Overlay Pass 绘制（80B push：Right/Up/Forward+视口+DPI+hover）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PushConstants.cs`：写入相机、实体 Transform、轮廓参数及互斥视觉模式；实体显式传 -2 Legacy/-1 Cube，Gizmo 显式传 0/1/2。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Render Projection，并由 Present 线程在安全点消费；缺相机失败仅清空当前可提交投影并记录跳过原因。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Trace.cs`：Vulkan ClearFrame 低频录制诊断分部；记录 RecordCommandBuffers 深度、线程、实体数和视图数，不改变生命周期。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.WorldAxes.cs`：世界轴/原点 Pass 绘制与管线注入
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`：Vulkan ClearFrame 资源持有主体。
+- `XuanYu.Render.Vulkan/Render/VulkanDepthAttachment.cs`：随 swapchain 尺寸重建的最小深度附件；模型 vertex/index buffer 不随 resize 重传。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Frame.cs`：Vulkan Present 单帧执行分部
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Lifecycle.cs`：Vulkan Present 泵生命周期分部。
+- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`：Vulkan Present 泵主体；有限 Acquire 等待超时只跳过当前帧，其他结果交由既有错误与自愈合同处理，不负责 Selection 或 Gizmo。
+- `XuanYu.Render.Vulkan/Session/GridPipelineSet.cs`：三全屏 Pass 管线组合（设备不支持则禁用对应 Pass）
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs`：Vulkan 渲染 Session 生命周期分部。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs`：Vulkan 渲染 Session 自愈分部。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`：Vulkan 渲染 Session Resize 分部。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs`：Vulkan 渲染 Session 主体。
+- `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag`：导航 Gizmo 绘制（中心球/三轴/六端点/X·Y·Z 标签/深度排序/hover 高亮）
+- `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.vert`：导航 Gizmo Overlay 顶点（全屏三角形，纯屏幕空间）
+- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.frag`：无限参考网格独立 Pass——F2-R3 唯一像素线宽 0.82px（Fine==Coarse）、重合非累加合成（max）、配色收敛；仍只画网格（轴/原点在独立 Pass）
+- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert`：无限网格顶点（全屏三角形）
+- `XuanYu.Render.Vulkan/Shaders/editor_world_axes.frag`：X/Y 世界轴独立全屏 Pass（单一轴线事实源；金 X=世界 Y=0、蓝 Y=世界 X=0；方向导数固定 1.25px）
+- `XuanYu.Render.Vulkan/Shaders/editor_world_origin.frag`：世界原点标记独立全屏 Pass（琥珀、≤4px 半径）
+- `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景与 Transform Gizmo 顶点着色器源码；Move 三轴为箭头，平面拖动只保留贴近轴根部的短细折角可见层，真实平面命中仍在 Core；由 glslc 生成内嵌 SPIR-V，不负责命中测试。WORLD-B-R5 新增 `cube(center,halfExtent,li)` 与 `scaleVertex(vi)`
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainBuilder.cs`：Vulkan Swapchain 创建参数构建器。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainCapabilities.cs`：Vulkan Swapchain 能力查询结果。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainLogFormatter.cs`：Vulkan Swapchain 日志格式化器。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.Accessors.cs`：Vulkan Swapchain 只读访问器分部。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs`：Vulkan Swapchain 生命周期持有者。
 - `XuanYu.Render.Vulkan/VulkanApiProbe.cs`：Vulkan API 可用性探针。
 - `XuanYu.Render.Vulkan/VulkanBridgeLogFormatter.cs`：Vulkan 桥接日志格式化器。
 - `XuanYu.Render.Vulkan/VulkanDeviceInfo.cs`：Vulkan 设备信息模型。
@@ -711,73 +325,23 @@
 - `XuanYu.Render.Vulkan/VulkanSurfaceLogFormatter.cs`：Vulkan Surface 日志格式化器。
 - `XuanYu.Render.Vulkan/VulkanSurfaceOwner.cs`：Vulkan Surface 生命周期持有者。
 - `XuanYu.Render.Vulkan/VulkanSurfaceResult.cs`：Vulkan Surface 创建结果。
-- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeDeviceAttachStep.cs`：Vulkan 桥接逻辑设备 Attach 步骤。
-- `XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs`：Vulkan 桥接物理设备 Attach 步骤。
-- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeRenderSessionAttachStep.cs`：Vulkan 桥接渲染 Session Attach 步骤。
-- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeSwapchainAttachStep.cs`：Vulkan 桥接 Swapchain Attach 步骤。
-- `XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.cs`：Vulkan 逻辑设备生命周期持有者。
-- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceInfo.cs`：Vulkan 物理设备信息。
-- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelection.cs`：Vulkan 物理设备选择结果。
-- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs`：Vulkan 物理设备选择器。
-- `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs`：Vulkan 队列族选择结果。
-- `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs`：Vulkan Resize 追踪诊断工具。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs`：片元着色器 SPIR-V 字节码；WORLD-B-R4-R3-R2 重生成，改为直接透传基础色（轮廓由顶点着色器外轮廓边带生成，不再使用重心坐标 fwidth 内部边线）。
-- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs`：由正式 `scene.vert` 经 glslc 生成的 SPIR-V；R2-R2 使用互斥模式 -2=Legacy、-1=Cube、0=Move、1=Rotate、2=Scale；R3-R6 重新生成后紧凑 89 行满足 5+100。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs`：Vulkan 图形管线生命周期持有者。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs`：Vulkan 管线日志格式化器。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs`：Vulkan 场景 push constant 布局常量；128 字节（32 float）std140；@88 / index 22 为 `selectionMode`（0/1=填充、2=外轮廓边带）；复用 `entityRotation.w`（target 27）= viewportWidth、`entityScale.w`（target 31）= viewportHeight 供屏幕空间定宽边带；负责统一 shader、PipelineLayout 与命令录制的字节大小，不负责资源生命周期。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs`：Vulkan ShaderModule 生命周期持有者。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameLogFormatter.cs`：Vulkan ClearFrame 日志格式化器。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Commands.cs`：Vulkan ClearFrame 命令录制分部。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Trace.cs`：Vulkan ClearFrame 低频录制诊断分部；记录 RecordCommandBuffers 深度、线程、实体数和视图数，不改变生命周期。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Scene.cs`：覆盖合并 Render Projection，并由 Present 线程在安全点消费；缺相机失败仅清空当前可提交投影并记录跳过原因。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Draw.cs`：Vulkan 最终帧只消费 `GetFrameDrawPlan`；实体 Draw 使用条目携带的 Legacy/Cube 类型，Gizmo Draw 独立分发，选择态不再回退到三角形。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.PushConstants.cs`：写入相机、实体 Transform、轮廓参数及互斥视觉模式；实体显式传 -2 Legacy/-1 Cube，Gizmo 显式传 0/1/2。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Matrix.cs`：Vulkan ClearFrame 矩阵辅助分部；提供 push constant 矩阵转置和 Vulkan Clip Y 投影副本转换，不持有渲染资源生命周期。
-- `XuanYu.Render.Vulkan/Shaders/scene.vert`：场景与 Transform Gizmo 顶点着色器源码；Move 三轴为箭头，平面拖动只保留贴近轴根部的短细折角可见层，真实平面命中仍在 Core；由 glslc 生成内嵌 SPIR-V，不负责命中测试。WORLD-B-R5 新增 `cube(center,halfExtent,li)` 与 `scaleVertex(vi)`；WORLD-B-R5-R1 保持 252 顶点绘制结构，随 63 DIP 世界轴长整体缩小 Scale Gizmo，并将中心白色 Uniform 立方体半径调为 `L*0.15`。
-- `XuanYu.Render.Vulkan/Shaders/scene.frag`：场景与 Move Gizmo 顶点颜色片元着色器源码；WORLD-B-R4-R3-R2 改为直接透传基础色 `outColor=vec4(vBaseColor.rgb,1.0)`，删除重心坐标 `fwidth` 内部边线逻辑（轮廓改由顶点着色器外轮廓边带生成），不负责 Pipeline 生命周期。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Lifecycle.cs`：Vulkan ClearFrame 生命周期分部。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Resources.cs`：Vulkan ClearFrame 资源创建分部。
-- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.cs`：Vulkan ClearFrame 资源持有主体。
-- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Frame.cs`：Vulkan Present 单帧执行分部；WORLD-B-R4-R3-R2 拆分出 `WaitFence`（`WaitForFences`）、`ResetFence`（`ResetFences`）、`SubmitFrame`、`PresentFrame`，使同步顺序固定为 WaitFence→ApplyPendingProjection→ResetFence→QueueSubmit，禁止 Fence 等待前重录 CommandBuffer、禁止 Reset 后跳过提交。
-- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.Lifecycle.cs`：Vulkan Present 泵生命周期分部。
-- `XuanYu.Render.Vulkan/Render/VulkanPresentLoop.cs`：Vulkan Present 泵主体；WORLD-B-R4-R3-R2 修正 `RunFrames` 同步顺序——`ApplyPendingProjection`（重录 CommandBuffer）前先 `WaitFence` 等上一帧 GPU 完成，提交前再 `ResetFence`，杜绝"释放/替换仍在 GPU 执行的 CommandBuffer"导致的呈现延迟与帧错乱；有限 Acquire 等待超时只跳过当前帧，其他结果交由既有错误与自愈合同处理，不负责 Selection 或 Gizmo。
-- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs`：Vulkan 渲染 Session 生命周期分部。
-- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs`：Vulkan 渲染 Session 自愈分部。
-- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs`：Vulkan 渲染 Session Resize 分部。
-- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs`：Vulkan 渲染 Session 主体。
-- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainBuilder.cs`：Vulkan Swapchain 创建参数构建器。
-- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainCapabilities.cs`：Vulkan Swapchain 能力查询结果。
-- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainLogFormatter.cs`：Vulkan Swapchain 日志格式化器。
-- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.Accessors.cs`：Vulkan Swapchain 只读访问器分部。
-- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs`：Vulkan Swapchain 生命周期持有者。
+- `XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj`：Vulkan 渲染实现项目文件。
 
 ## XuanYu.Editor.App
-
-- `XuanYu.Editor.App/XuanYu.Editor.App.csproj`：编辑器应用组装入口项目文件。
 - `XuanYu.Editor.App/EditorCompositionRoot.cs`：编辑器依赖组装根。
-- `XuanYu.Editor.App/Program.cs`：编辑器应用启动入口。
+- `XuanYu.Editor.App/Program.cs`：Avalonia 桌面启动入口。
+- `XuanYu.Editor.App/XuanYu.Editor.App.csproj`：编辑器应用组装入口项目文件。
 
 ## XuanYu.Editor.Win
-
-- `XuanYu.Editor.Win/XuanYu.Editor.Win.csproj`：旧 WinForms 编辑器壳项目文件。
 - `XuanYu.Editor.Win/MainForm.cs`：旧 WinForms 主窗体。
+- `XuanYu.Editor.Win/XuanYu.Editor.Win.csproj`：旧 WinForms 编辑器壳项目文件。
 
 ## XuanYu.Editor.UI
-
-- `XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`：Avalonia 编辑器 UI 项目文件。
-- `XuanYu.Editor.UI/NativeHostResizeCoalescer.cs`：NativeHost Resize 合并器。
-- `XuanYu.Editor.UI/NativeHostResizeSnapshot.cs`：NativeHost Resize 快照。
-- `XuanYu.Editor.UI/NativeHostSurfaceContract.cs`：NativeHost Surface 合约。
-- `XuanYu.Editor.UI/RelayCommand.cs`：ICommand 简易实现。
-- `XuanYu.Editor.UI/TreeGuide.cs`：共享树线绘制控件；按节点 GuideSegments 绘制连续 Full、Tee 与 Elbow 分支线。
-- `XuanYu.Editor.UI/TreeGuideSegment.cs`：树线段值对象与类型枚举；描述 Blank、Full、Tee、Elbow 四种可视 Guide。
-- `XuanYu.Editor.UI/Ui.axaml`：全局 UI 样式资源。
-- `XuanYu.Editor.UI/ViewportNativeHostRoute.cs`：视口 NativeHost 路由入口。
-- `XuanYu.Editor.UI/app.manifest`：Windows 应用清单。
 - `XuanYu.Editor.UI/Bootstrap/App.axaml`：Avalonia 应用资源入口。
 - `XuanYu.Editor.UI/Bootstrap/App.axaml.cs`：Avalonia 应用启动与主窗口挂载。
 - `XuanYu.Editor.UI/Bootstrap/Program.cs`：Avalonia 桌面启动入口。
+- `XuanYu.Editor.UI/Dialogs/IEditorDialogService.cs`：编辑器对话框服务抽象
+- `XuanYu.Editor.UI/Dialogs/NullEditorDialogService.cs`：对话框服务空实现兜底
 - `XuanYu.Editor.UI/EditorState/EditorInteractionChangedResult.cs`：交互事务状态变更结果。
 - `XuanYu.Editor.UI/EditorState/EditorInteractionCommand.cs`：交互事务命令定义。
 - `XuanYu.Editor.UI/EditorState/EditorInteractionPointerSnapshot.cs`：交互事务 Pointer 快照。
@@ -793,93 +357,487 @@
 - `XuanYu.Editor.UI/EditorState/EditorToolId.cs`：编辑器持续工具身份枚举；不包含 Snap、Undo、Redo、Focus 等 Toggle / Command。
 - `XuanYu.Editor.UI/EditorState/EditorToolSnapshot.cs`：编辑器工具只读快照；包含 ActiveTool、Snap Toggle 与捕获状态。
 - `XuanYu.Editor.UI/EditorState/EditorToolText.cs`：工具身份与中文文案映射。
-- `XuanYu.Editor.UI/EditorState/EditorTransformCapturePolicy.cs`：Transform 捕获与 Gizmo 可见性策略；规定 Move Gizmo 只能由 ActiveTool=Move 且已选中时显示和捕获；WORLD-B-R5 新增 `CanBeginScaleGizmo`（ActiveTool==Scale 且已选中）与 `ShouldShowScaleGizmo`，不执行 UI 或场景修改。
+- `XuanYu.Editor.UI/EditorState/EditorTransformCapturePolicy.cs`：Transform 捕获与 Gizmo 可见性策略；规定 Move Gizmo 只能由 ActiveTool=Move 且已选中时显示和捕获
 - `XuanYu.Editor.UI/Foot/Foot.axaml`：底部日志栏界面；底部状态文本复用文档状态投影，Dirty、保存成功和失败与顶部一致。
 - `XuanYu.Editor.UI/Foot/Foot.axaml.cs`：底部日志栏代码后置，含日志区 Ctrl+A / Ctrl+C 隧道路由接线。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml`：日志详情面板界面。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs`：日志详情面板代码后置。
 - `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs`：日志列表自动滚动控制器；R8 验收期间新日志到来时强制尾随最新行。
 - `XuanYu.Editor.UI/Icons/EditorIcons.axaml`：编辑器图标资源；树节点图标统一 24x24 viewBox、`#2F80C9` 主色和 2.2 线宽。
+- `XuanYu.Editor.UI/Left/InlineRenameActivation.cs`：文本框可见布局完成后的 Focus + SelectAll 调度合同。
+- `XuanYu.Editor.UI/Left/Left.EntityCommands.cs`：层级右键命令和内联重命名输入生命周期。
+- `XuanYu.Editor.UI/Left/Left.Styles.axaml`：左侧栏样式资源（拆分自 Left.axaml，StyleInclude 引用）
 - `XuanYu.Editor.UI/Left/Left.axaml`：左侧项目与层级面板界面；Project / Hierarchy 共用连续 TreeGuide 树线模板。
 - `XuanYu.Editor.UI/Left/Left.axaml.cs`：左侧面板代码后置；接收 Project / Hierarchy 展开折叠点击并交给 UiVm。
 - `XuanYu.Editor.UI/Main/Main.axaml`：中央主视口区域界面。
 - `XuanYu.Editor.UI/Main/Main.axaml.cs`：中央主视口区域代码后置。
+- `XuanYu.Editor.UI/NativeHostResizeCoalescer.cs`：NativeHost Resize 合并器。
+- `XuanYu.Editor.UI/NativeHostResizeSnapshot.cs`：NativeHost Resize 快照。
+- `XuanYu.Editor.UI/NativeHostSurfaceContract.cs`：NativeHost Surface 合约。
+- `XuanYu.Editor.UI/RelayCommand.cs`：ICommand 简易实现。
+- `XuanYu.Editor.UI/Right/MapEditorPanel.axaml`：界面资源
+- `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs`：地图编辑器面板代码后置
 - `XuanYu.Editor.UI/Right/Right.axaml`：右侧检查器与调试面板界面；检查器显示 Selection 的完整 World 字段，模式页显示 ActiveTool 与 Snap Toggle。
 - `XuanYu.Editor.UI/Right/Right.axaml.cs`：右侧面板代码后置。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml`：主布局根界面。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml.cs`：主布局根代码后置。
 - `XuanYu.Editor.UI/Top/Top.axaml`：顶部工具栏界面；持续工具高亮、文档状态胶囊、保存按钮 Dirty 提示和保存中禁用。
 - `XuanYu.Editor.UI/Top/Top.axaml.cs`：顶部工具栏代码后置。
+- `XuanYu.Editor.UI/TreeGuide.cs`：共享树线绘制控件；按节点 GuideSegments 绘制连续 Full、Tee 与 Elbow 分支线。
+- `XuanYu.Editor.UI/TreeGuideSegment.cs`：树线段值对象与类型枚举；描述 Blank、Full、Tee、Elbow 四种可视 Guide。
+- `XuanYu.Editor.UI/Ui.axaml`：全局 UI 样式资源。
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.HitTest.cs`：命中（端点/中心球/88×88 区域外不捕获）
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Layout.cs`：六方向投影纯数学（Right/Up/Forward → 屏幕端点 + 深度排序）
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs`：Win32 原生 Pointer 消息快照；R1 起包含 Middle Button、Wheel、Shift 和滚轮 Delta。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaCamera.cs`：Avalonia 中键相机会话启动辅助；负责 Shift+MMB 模式冻结与 Pointer Capture，不拥有 CameraState。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaPointer.cs`：Avalonia Pointer 覆盖分部；分发 Left Gizmo / Picking 与 Middle Camera 输入，不拥有业务状态。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs`：Vulkan NativeHost 桥接分部。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.CameraPointer.cs`：Vulkan NativeHost 相机输入辅助分部；负责 Native Camera Begin / Preview / End / Cancel 与 Wheel 入口，不拥有 CameraState。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs`：Vulkan NativeHost DPI 辅助分部。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Gizmo.cs`：NativeHost Gizmo 命中入口；复用 Picking 的 ViewportState 捕获并调用 UiVm，命中时阻断 Scene Picking，不拥有 Capture
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs`：Vulkan NativeHost 布局同步分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Log.cs`：Vulkan NativeHost 日志转发分部。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs`：Gizmo 命中（原生指针流——右上角区域 → 局部坐标 → 端点命令 / Orbit 复用）
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs`：Vulkan NativeHost 拾取接线分部；负责把当前 Bounds、DPI、物理尺寸和 ViewportRevision 送入 UiVm，不执行 Selection 或 Vulkan 修改。
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Gizmo.cs`：NativeHost Gizmo 命中入口；复用 Picking 的 ViewportState 捕获并调用 UiVm，命中时阻断 Scene Picking，不拥有 Capture；WORLD-B-R5 在 `ActiveTool=="缩放"` 时改路由 `TryBeginScaleGizmoCapture`。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs`：Vulkan NativeHost 原生 Pointer 输入分部；负责 Left Gizmo / Picking 与 Middle Camera / Wheel Dolly 的 Native 消息分发。
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.CameraPointer.cs`：Vulkan NativeHost 相机输入辅助分部；负责 Native Camera Begin / Preview / End / Cancel 与 Wheel 入口，不拥有 CameraState。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs`：Vulkan NativeHost 主体。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml`：Vulkan 视口控件界面。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs`：Vulkan 视口控件代码后置。
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs`：Win32 子窗口输入路由分部。
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs`：Win32 子窗口宿主主体。
+- `XuanYu.Editor.UI/ViewportNativeHostRoute.cs`：视口 NativeHost 路由入口。
+- `XuanYu.Editor.UI/Vm/CameraSessionMode.cs`：WORLD-B-R1 相机会话模式枚举；区分 Orbit 与 Pan，不进入持续 ToolMode。
+- `XuanYu.Editor.UI/Vm/CameraSessionSnapshot.cs`：WORLD-B-R1 相机会话起始快照；保存 SessionId、Pointer、Mode、StartCamera、StartCenter 与视口尺寸，供 Cancel 恢复。
+- `XuanYu.Editor.UI/Vm/D2StaticModelDemo.cs`：`XUANYU_D2_STATIC_MODEL_DEMO=1` 受控真机观察入口；不提供导入按钮、不写 `.xyscene`、不建立资产工作流。
 - `XuanYu.Editor.UI/Vm/DebugText.cs`：右侧调试页状态快照示例数据。
-- `XuanYu.Editor.UI/Vm/EditorLogCategory.cs`：编辑器日志分类枚举。
 - `XuanYu.Editor.UI/Vm/EditorDisplayText.cs`：编辑器中文显示文本映射；只处理 Entity、Region、Activity、类型和坐标展示，不重命名内部 C# 标识。
+- `XuanYu.Editor.UI/Vm/EditorLogCategory.cs`：编辑器日志分类枚举。
 - `XuanYu.Editor.UI/Vm/EditorLogLevel.cs`：编辑器日志等级枚举。
 - `XuanYu.Editor.UI/Vm/EditorLogSource.cs`：编辑器日志来源枚举。
 - `XuanYu.Editor.UI/Vm/EditorTreeNode.cs`：编辑器树节点 UI 投影模型；携带图标身份、连续树线 Guide 和展开折叠 UI 状态。
 - `XuanYu.Editor.UI/Vm/LogEntry.cs`：编辑器日志条目模型。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs`：编辑器内存日志缓冲区。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs`：编辑器低频日志入口。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogClipboardText.cs`：日志复制文本格式化器。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogFilter.cs`：日志过滤枚举与中文映射。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogFilterQuery.cs`：日志过滤匹配规则。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogNoiseFilter.cs`：UI 日志噪声过滤器；屏蔽普通 Info 级 Render Backend Resize / 同尺寸探针噪声，不承载 Vulkan 生命周期所有权。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogRepeatKey.cs`：重复日志折叠键。
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogSummary.cs`：日志摘要统计。
 - `XuanYu.Editor.UI/Vm/SampleLogEntries.cs`：底部日志栏示例数据。
-- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：R5 Render Projection 组合边界适配器；从 `SceneRenderSnapshot` 抽取最终实体 Position/Rotation/Scale、Move/Rotate Gizmo 状态与显式相机，缺相机时返回明确失败；WORLD-B-R5 增 `scaleGizmoWorldAxisLength`/`gizmoRotation` 参数，R3-R4 由上游在 Scale 模式传入零旋转以锁定 Global 可见轴。
+- `XuanYu.Editor.UI/Vm/SceneHistoryEntry.cs`：Add/Delete/Rename 上层历史数据条目。
+- `XuanYu.Editor.UI/Vm/SceneRenderProjectionAdapter.cs`：R5 Render Projection 组合边界适配器；从 `SceneRenderSnapshot` 抽取最终实体 Position/Rotation/Scale、Move/Rotate Gizmo 状态与显式相机，缺相机时返回明确失败
+- `XuanYu.Editor.UI/Vm/StandardViewResolver.cs`：六方向标准视角解析（+X/-X/+Y/-Y/顶/底，Up 合同防滚转）
+- `XuanYu.Editor.UI/Vm/StaticModelRenderAdapter.cs`：D1 `StaticModelData` 到 Render 静态模型资源合同的适配，不引入 Vulkan。
 - `XuanYu.Editor.UI/Vm/TreeGuideBuilder.cs`：树形 UI Guide 构造器；从可视节点层级推导祖先连续竖线、中间 Tee、末节点 Elbow 和折叠过滤。
 - `XuanYu.Editor.UI/Vm/UiText.cs`：静态中文 UI 文案与树节点投影数据；真实场景节点使用稳定 EntityKey，不拥有 Selection 状态，也不依赖 Vulkan。
+- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：UiVm 编辑器相机状态分部；持有当前 CameraState 与唯一 ObservationCenter，并提供启动看全、查看全部、聚焦选中实体和 Resize 取消活动输入。
+- `XuanYu.Editor.UI/Vm/UiVm.CameraNavigation.cs`：UiVm 相机会话入口分部；负责 Begin / Preview / End / Cancel 与 Dolly，调用 Editor.Camera 纯算法，不写实体 History。
+- `XuanYu.Editor.UI/Vm/UiVm.DocumentStatus.cs`：WORLD-C-R1 文档状态投影分部；把 Dirty、保存/另存为成功、失败和 Busy 映射到顶部/底部状态与保存按钮视觉。
+- `XuanYu.Editor.UI/Vm/UiVm.EntityCommands.cs`：立方体添加、选择、删除、重命名与历史接入。
+- `XuanYu.Editor.UI/Vm/UiVm.History.Entities.cs`：实体历史（创建/销毁）接线分部
 - `XuanYu.Editor.UI/Vm/UiVm.History.cs`：UiVm Undo / Redo 接线分部；成功 Commit 后记录 History，撤销恢复 Before，重做恢复 After。
 - `XuanYu.Editor.UI/Vm/UiVm.InputGuards.cs`：WORLD-B-R2 输入门禁分部；集中判断活动移动会话 / 相机会话对 Picking、选择写入、工具切换和移动会话启动的抢占关系。WORLD-B-R4-R2 放开非选择工具下的视口 Picking：旋转/移动/缩放工具下点击非 Gizmo 区域也允许切换选择（仍排除框选与活动会话），修复"旋转工具下不能直接点其他实体切换 Gizmo"。
 - `XuanYu.Editor.UI/Vm/UiVm.Inspector.cs`：WORLD-B-R4-F2 检查器投影分部；从当前 World Entity 的正式 Transform 以中文和 6 位小数显示位置、旋转和缩放，不保存第二份 Inspector 状态。
-- `XuanYu.Editor.UI/Vm/UiVm.InspectorInput.cs`：WORLD-B-R4-F2 检查器提交分部；将中文位置 / 旋转 / 缩放数值输入提交到 SceneStateOwner 并记录 History。
 - `XuanYu.Editor.UI/Vm/UiVm.InspectorInput.Parse.cs`：WORLD-B-R4-F2 检查器输入解析分部；负责数值解析、轴替换和非法缩放防污染。
-- `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`：UiVm 交互事务入口分部；WORLD-B-R5 在 `CommitInteraction`/`CancelInteraction` 均补 `_scaleDrag = null`，与 `_rotateDrag` 对称清空。
-- `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部；WORLD-B-R5 在 Rotate 之后新增 `PreviewScaleGizmo` 分支，缩放工具下优先消费 Gizmo 命中。
-- `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
-- `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
-- `XuanYu.Editor.UI/Vm/CameraSessionMode.cs`：WORLD-B-R1 相机会话模式枚举；区分 Orbit 与 Pan，不进入持续 ToolMode。
-- `XuanYu.Editor.UI/Vm/CameraSessionSnapshot.cs`：WORLD-B-R1 相机会话起始快照；保存 SessionId、Pointer、Mode、StartCamera、StartCenter 与视口尺寸，供 Cancel 恢复。
-- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：UiVm 编辑器相机状态分部；持有当前 CameraState 与唯一 ObservationCenter，并提供启动看全、查看全部、聚焦选中实体和 Resize 取消活动输入。
-- `XuanYu.Editor.UI/Vm/UiVm.CameraNavigation.cs`：UiVm 相机会话入口分部；负责 Begin / Preview / End / Cancel 与 Dolly，调用 Editor.Camera 纯算法，不写实体 History。
+- `XuanYu.Editor.UI/Vm/UiVm.InspectorInput.cs`：WORLD-B-R4-F2 检查器提交分部；将中文位置 / 旋转 / 缩放数值输入提交到 SceneStateOwner 并记录 History。
+- `XuanYu.Editor.UI/Vm/UiVm.Interaction.cs`：UiVm 交互事务入口分部
 - `XuanYu.Editor.UI/Vm/UiVm.InteractionCancel.cs`：UiVm 输入取消入口分部；统一 Escape、窗口失焦、Host Detach、PointerCaptureLost 对 Transform / Camera 的取消优先级。
-- `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
+- `XuanYu.Editor.UI/Vm/UiVm.InteractionPointer.cs`：UiVm Pointer 交互转换分部
+- `XuanYu.Editor.UI/Vm/UiVm.Logging.cs`：UiVm 日志绑定与日志入口分部。
+- `XuanYu.Editor.UI/Vm/UiVm.MapEditor.cs`：正式地图编辑器文档状态与生命周期命令。
+- `XuanYu.Editor.UI/Vm/UiVm.MapWorld.cs`：D4 临时加载/卸载入口。
 - `XuanYu.Editor.UI/Vm/UiVm.MoveGizmo.cs`：Selection 到 Move Gizmo 轴/平面 Hit 与 Capture 的适配分部；PointerDown 只允许 ActiveTool=Move 创建 Session，不直接写正式 Transform、SpatialIndex 或 History。
-- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。WORLD-B-R4-R2 去掉 `OwnerTool!="移动"` 限制，旋转提交/取消同样记录并带 EntityKey 与旋转前后；WORLD-B-R5 增 `缩放` 同格式日志（前后 Scale X/Y/Z），仍不记录 PointerMove。
-- `XuanYu.Editor.UI/Vm/UiVm.ScaleGizmo.cs`（WORLD-B-R5-R1，R3-R4 Global 修正）：Scale Gizmo 适配分部；`ScaleGizmoDrag? _scaleDrag` 状态、`TryBeginScaleGizmoCapture`（中心 Uniform 优先命中、三轴→对应轴、构造 Global 轴 `ScaleGizmoLayout.Project`+`ScaleGizmoHitTester.HitTest`+`TransformSession.BeginScale`+轴屏幕方向，并记录低频日志）与 `PreviewScaleGizmo`，复用 Selection/Camera/Render 既有链路，不拥有 Capture。
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoLogging.cs`：Move Gizmo 低频诊断日志分部；记录 R0-R2 Begin / Commit / Cancel / Reject 证据，不记录 PointerMove 高频事件。WORLD-B-R4-R2 去掉 `OwnerTool!="移动"` 限制，旋转提交/取消同样记录并带 EntityKey 与旋转前后
+- `XuanYu.Editor.UI/Vm/UiVm.MoveGizmoScreenSize.cs`：将 Move Gizmo 的屏幕恒定轴长计算接入 UiVm 视口与渲染投影。
+- `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs`：UiVm NativeHost 生命周期日志分部。
+- `XuanYu.Editor.UI/Vm/UiVm.Picking.cs`：UiVm 视口拾取分部；负责构造 Picking 请求、调用 Core 服务、写低频日志并把结果交给既有 Selection 命令链，不直接修改 Tree、Inspector 或 Vulkan。
 - `XuanYu.Editor.UI/Vm/UiVm.RenderProjection.cs`：UiVm Render Projection 创建分部；从 `SceneRenderSnapshot.RenderTransform` 读取 Preview 后的位置、缩放和旋转来计算 Rotate / Scale Gizmo 投影，保证缩放 Preview 时实体、轮廓与 Gizmo 同步。
-- `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令、组合快照与 Render Projection 发布分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo 与 ShowScaleGizmo（WORLD-B-R5 `ShowScaleGizmo` 由 ActiveTool==Scale 且已选中驱动）。
+- `XuanYu.Editor.UI/Vm/UiVm.RotateGizmo.cs`：旋转 Gizmo 适配分部（捕获/预览/提交）
+- `XuanYu.Editor.UI/Vm/UiVm.ScaleGizmo.cs`：缩放 Gizmo 适配分部（捕获/预览/提交）
+- `XuanYu.Editor.UI/Vm/UiVm.Scene.cs`：UiVm 场景命令、组合快照与 Render Projection 发布分部；提交 R1 测试实体 Position，并从 Selection / ActiveTool / 真实能力生成 ShowMoveGizmo 与 ShowScaleGizmo。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.New.cs`：新建场景分部
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：WORLD-C-R1 文档打开分部；负责新建空白场景、打开候选场景和文档状态更新，不持有实体副本。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentLog.cs`：WORLD-C-R1-R1 场景加载/保存低频诊断分部；同步写编辑器日志和 Console，记录 Path、Stage、Code、Message、Detail 和保护状态。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentMapRef.cs`：场景保存附加引用 / 打开解析加载 / 引用失效标记。
+- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentSave.cs`：WORLD-C-R1 文档保存分部；负责保存/另存为和保存失败处理，不复制实体数据。
 - `XuanYu.Editor.UI/Vm/UiVm.Selection.cs`：UiVm Selection 命令适配与 Snapshot 投影分部；把视口或树入口统一提交给 EditorStateOwner，再同步 Tree 和 Inspector 通知，不持有第二份 Selection 真相。
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionProjection.cs`：UiVm Selection 投影同步分部；用内部同步保护位更新 Project / Hierarchy 选中项，禁止程序同步回流成业务选择。WORLD-B-R4-R2 `LogSelectionCommit` 补 EntityKey，作为 TargetSwitch 最小诊断日志。
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionTrace.cs`：UiVm Selection 低频诊断分部；记录选择提交、层级选择、投影同步和渲染发布深度。
 - `XuanYu.Editor.UI/Vm/UiVm.SelectionValidity.cs`：WORLD-B-R2 选择失效清理分部；根据 World 权威 `TryGetEntity` 清理已不存在的 EntityId 选择，不依赖层级节点显示状态。
-- `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部；WORLD-B-R5 放开"缩放"工具拦截（原 `name is "框选" or "缩放"` 改为仅 `name is "框选"`），使缩放工具可激活并驱动 Scale Gizmo。
-- `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
-- `XuanYu.Editor.UI/Vm/UiVm.DocumentStatus.cs`：WORLD-C-R1 文档状态投影分部；把 Dirty、保存/另存为成功、失败和 Busy 映射到顶部/底部状态与保存按钮视觉。
-- `XuanYu.Editor.UI/Vm/UiVm.SceneDocument.cs`：WORLD-C-R1 文档打开分部；负责新建空白场景、打开候选场景和文档状态更新，不持有实体副本。
-- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentLog.cs`：WORLD-C-R1-R1 场景加载/保存低频诊断分部；同步写编辑器日志和 Console，记录 Path、Stage、Code、Message、Detail 和保护状态。
-- `XuanYu.Editor.UI/Vm/UiVm.SceneDocumentSave.cs`：WORLD-C-R1 文档保存分部；负责保存/另存为和保存失败处理，不复制实体数据。
+- `XuanYu.Editor.UI/Vm/UiVm.StaticModelImport.cs`：导入命令、选择新实体、日志（顶点/索引）、Dirty 与 RenderProjection 发布。
+- `XuanYu.Editor.UI/Vm/UiVm.Tool.cs`：UiVm 工具切换分部
 - `XuanYu.Editor.UI/Vm/UiVm.TreeCommands.cs`：UiVm 树折叠与文件命令触发分部；只转发文件意图给窗口层，不执行存储。
-- `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点、Inspector 字段并重算连续树线；WORLD-C-R1 移除启动层级中的非实体相机/地面占位。
+- `XuanYu.Editor.UI/Vm/UiVm.ViewGizmo.cs`：视角 Gizmo 六方向相机命令（顶/底/前/后/左/右，保持中心与距离）。
+- `XuanYu.Editor.UI/Vm/UiVm.ViewportAssist.cs`：R3 运行会话内的辅助显示开关；显示菜单文本提供统一勾选列，不写 SceneDocument、不进 History、不触发 Dirty。
+- `XuanYu.Editor.UI/Vm/UiVm.ViewportSelection.cs`：视口 Picking 到既有 Selection 命令的适配分部；校验命中实体并选择或清空，不持有状态、不直接操作 Tree/Inspector。
+- `XuanYu.Editor.UI/Vm/UiVm.WorldProjection.cs`：编辑器 World 投影分部；从 World-backed SceneStateOwner 生成 Hierarchy 实体节点、Inspector 字段并重算连续树线
 - `XuanYu.Editor.UI/Vm/UiVm.cs`：UiVm 主体与 UI 绑定状态；真实 App 启动传入空白场景，旧自动测试可显式保留十实体测试种子。
+- `XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`：视口拾取日志格式化器；负责生成 R2-F 中文摘要和详情文本，不持有状态。
+- `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs`：UiWin 错误/警告弹窗实现。
+- `XuanYu.Editor.UI/Win/UiWin.EntityShortcuts.cs`：F2/Delete 窗口快捷键与文本输入保护。
+- `XuanYu.Editor.UI/Win/UiWin.MapCommands.cs`：.xymap 文件选择器（打开/保存）。
 - `XuanYu.Editor.UI/Win/UiWin.SceneCommands.cs`：WORLD-C-R1 文件对话框与 Ctrl+N/O/S/Shift+S 分部；只负责 UI 文件选择和命令路由。
 - `XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs`：WORLD-C-R1 未保存提示窗口；提供保存、不保存、取消三路结果，不保存实体数据。
-- `XuanYu.Editor.UI/Vm/ViewportPickingLogFormatter.cs`：视口拾取日志格式化器；负责生成 R2-F 中文摘要和详情文本，不持有状态。
-- `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs`：编辑器内存日志缓冲区。
-- `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs`：编辑器低频日志入口。
-- `XuanYu.Editor.UI/Vm/Logging/EditorLogClipboardText.cs`：日志复制文本格式化器。
-- `XuanYu.Editor.UI/Vm/Logging/EditorLogNoiseFilter.cs`：UI 日志噪声过滤器；屏蔽普通 Info 级 Render Backend Resize / 同尺寸探针噪声，不承载 Vulkan 生命周期所有权。
-- `XuanYu.Editor.UI/Vm/Logging/EditorLogFilter.cs`：日志过滤枚举与中文映射。
-- `XuanYu.Editor.UI/Vm/Logging/EditorLogFilterQuery.cs`：日志过滤匹配规则。
-- `XuanYu.Editor.UI/Vm/Logging/EditorLogRepeatKey.cs`：重复日志折叠键。
-- `XuanYu.Editor.UI/Vm/Logging/EditorLogSummary.cs`：日志摘要统计。
 - `XuanYu.Editor.UI/Win/UiWin.axaml`：Avalonia 主窗口界面定义。
 - `XuanYu.Editor.UI/Win/UiWin.axaml.cs`：Avalonia 主窗口代码后置。
+- `XuanYu.Editor.UI/XuanYu.Editor.UI.csproj`：Avalonia 编辑器 UI 项目文件。
+- `XuanYu.Editor.UI/app.manifest`：Windows 应用清单。
+
+## XuanYu.Core.Tests
+- `XuanYu.Core.Tests/`：Core 测试宿主：空间/拾取/Gizmo/历史/实体/渲染投影合同测试
+- `XuanYu.Core.Tests/Camera/CameraNavigationTests.cs`：WORLD-B-R1 相机导航纯算法测试；覆盖 Orbit 保中心/保距离/防极点翻转、Pan 屏幕平面平移和 Dolly 距离缩放保护。
+- `XuanYu.Core.Tests/CoreSmokeTests.cs`：Core 测试宿主最小烟雾测试；验证测试发现、执行链路和基础 Core 行为，不负责 R2-B 空间数学覆盖。
+- `XuanYu.Core.Tests/EditorTool/EditorTransformCapturePolicyTests.cs`：编辑器 Transform 捕获策略测试；测试侧引用 Editor.UI，验证 Move 可捕获 / 可显示、Rotate / Scale 不伪装 Move、Snap 不改变捕获和 Gizmo 可见性。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs`：世界 X/Y/Z 轴向拖动投影与垂直位移不移动测试。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutPlaneTests.cs`：WORLD-B-R3 平面控制柄投影与命中测试；覆盖 XY/XZ/YZ 平面存在、平面中心命中和轴优先于平面。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs`：三轴投影、Vulkan 屏幕方向、X/Y/Z 命中、R4-R3 方向优先 Guard 容错、Miss 和确定性裁决测试；不验证 Vulkan 像素输出。
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs`：Move Gizmo 默认斜视相机下的 Vulkan 屏幕方向回归测试；不访问 Vulkan 后端或窗口系统。
+- `XuanYu.Core.Tests/Gizmo/RotateGizmoLayoutTests.cs`：WORLD-B-R4-F4 Rotate Gizmo 屏幕投影与轴环命中测试
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.Drag.cs`：WORLD-B-R5 ScaleGizmoTests 拖动分部；覆盖 X/Y/Z 单轴只改自身、Uniform 三轴相等。
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.DragSafety.cs`：WORLD-B-R5 ScaleGizmoTests 安全分部；覆盖零位移保持、负向 Clamp 到下限、NaN 回落 Clamp、更远拉更大。
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.Helpers.cs`：WORLD-B-R5 ScaleGizmoTests 辅助分部；集中构造布局、拖拽起点和屏幕拉动向量，避免主测试文件超过 100 行。
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.R5R1.cs`：WORLD-B-R5-R1 ScaleGizmoTests 修复分部；覆盖中心 Uniform 优先命中、中心外单轴命中、Uniform 按同倍率保持原比例、63 DIP 尺寸常量和距离稳定性。
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.cs`：WORLD-B-R5 Scale Gizmo 单元测试主体；覆盖 Layout 三轴投影/旋转和 HitTester 中心→Uniform/轴→对应手柄/远端→null。
+- `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs`：编辑历史 Owner 基础合同测试；覆盖空栈、无变化忽略和 LIFO Undo。
+- `XuanYu.Core.Tests/History/EditorHistoryRedoTests.cs`：编辑历史 Redo 合同测试；覆盖 Redo Cursor、多次 Redo 顺序和新 Commit 清空 Redo Branch。
+- `XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs`：Transform Commit / History / Restore 基础集成测试；覆盖 Preview、Cancel、迟到输入和无变化提交不污染 History。
+- `XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs`：Transform History Redo 集成测试；验证 Undo 恢复 Before、Redo 恢复 After 和新提交后 Redo 不可用。
+- `XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs`：视口拾取 Core 测试；负责中心命中、空白 NoHit、移动后新旧位置、DPI 逻辑坐标和代际过期拒绝覆盖。
+- `XuanYu.Core.Tests/Render/CubeRenderDrawPlanTests.cs`：Cube 填充/轮廓及三类 Gizmo 无 Legacy Draw 的最终帧合同。
+- `XuanYu.Core.Tests/Render/MapRenderDrawPlanTests.cs`：地图下网格顺序断言测试
+- `XuanYu.Core.Tests/Render/ReferenceGridAdaptiveTests.cs`：自适应层级/淡出/裁切数学测试。
+- `XuanYu.Core.Tests/Render/ReferenceGridDrawPlanTests.cs`：DrawPlan 网格存在性测试。
+- `XuanYu.Core.Tests/Render/ReferenceGridRayIntersectionTests.cs`：射线求交测试（G1）。
+- `XuanYu.Core.Tests/Render/ReferenceGridScaleTests.cs`：1/2/5 序列与互补权重合同
+- `XuanYu.Core.Tests/Render/ReferenceGridShaderContractTests.cs`：Shader 防退化合同（无轴/无逐 Fragment LOD/clamp 深度偏移）
+- `XuanYu.Core.Tests/Render/ReferenceGridVisualStyleTests.cs`：视觉样式合同（唯一线宽、max 合成、alpha 差 ≤0.10、背景中性灰）
+- `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.Selection.cs`：WORLD-B-R4-R3 选中实体轮廓高亮投影测试；覆盖选中实体 `IsSelected=true`、非选中 `IsSelected=false`、切到 B 仅 B 标记，验证轮廓由显式 `IsSelected` 而非实体列表成员决定。
+- `XuanYu.Core.Tests/Render/SceneRenderProjectionAdapterTests.cs`：R5 Render Projection 适配器测试；覆盖缺相机失败、显式相机矩阵等价、Preview 与 Gizmo 在跨 Render 边界前解析。WORLD-B-R4-R1 拆出 `SceneRenderProjectionAdapterTests.Rotation.cs` 偏部（实体 Rotation/Scale 下传、显式旋转环世界半径透传、不显示时回落默认半径）。
+- `XuanYu.Core.Tests/Render/StandardViewResolverTests.cs`：六方向解析与 Up 合同测试
+- `XuanYu.Core.Tests/Render/StaticModelDepthRegressionTests.cs`：锁定背景 shader 不得回退到 `0.98` depth，防止模型随缩放才完整显示的回归复发。
+- `XuanYu.Core.Tests/Render/StaticModelRenderContractTests.cs`：D2 合同回归，覆盖 D1 数据映射、多 Primitive 颜色保留和 StaticModel 不回退旧占位 draw。
+- `XuanYu.Core.Tests/Render/ViewportAssistDrawPlanTests.cs`：默认无世界轴线、开启后进入辅助 DrawPlan 的回归。
+- `XuanYu.Core.Tests/Space/CameraStateTests.cs`：CameraState 自动测试；负责合法相机、退化方向、共线 Up、非法 FOV / Near / Far / 非有限数覆盖，不负责渲染画面验收。
+- `XuanYu.Core.Tests/Space/DefaultEditorCameraTests.cs`：默认 Z-Up 斜视相机 Forward/Up 派生与 Resize 中心射线合同测试。
+- `XuanYu.Core.Tests/Space/SpaceAssert.cs`：空间数学测试辅助断言；只负责局部近似比较，不进入生产项目。
+- `XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs`：ViewProjectionState 自动测试；覆盖标准右手 Projection、Camera Up 屏幕方向、World-Clip-World Round Trip 与可逆性。
+- `XuanYu.Core.Tests/Space/ViewportStateTests.cs`：ViewportState 自动测试；负责合法尺寸、DPI、Revision、幂等和非法尺寸覆盖，不负责平台窗口尺寸同步。
+- `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs`：WorldRay 自动测试；覆盖中心、四角、Resize、投影反投影方向一致性、稳定复现和非法输入。
+- `XuanYu.Core.Tests/Space/WorldRayTests.cs`：WorldRay 值对象自动测试；负责非法 Origin / Direction 失败边界，不负责射线命中或空间查询。
+- `XuanYu.Core.Tests/Spatial/RayAabbIntersectionTests.cs`：Ray-AABB 数学测试；负责正面命中、miss、背向、负方向、盒内起点、平行轴、擦边、擦角和最大距离覆盖。
+- `XuanYu.Core.Tests/Spatial/SpatialBoundsTests.cs`：空间边界测试；负责 AABB 非法输入、相交和合并行为覆盖，不测试 Picking。
+- `XuanYu.Core.Tests/Spatial/SpatialTestData.cs`：空间索引测试数据工厂；负责确定性网格实体和查询 AABB 构造，不进入生产项目。
+- `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj`：自动测试宿主项目文件；测试侧引用 `XuanYu.Core` 与 `XuanYu.Editor.UI`，不向生产项目传递测试依赖或工具链。
+
+## XuanYu.World.Tests
+- `XuanYu.World.Tests/`：World 测试宿主：实体/空间/场景文档/地图/编辑器交互 UiVm 闭环测试
+- `XuanYu.World.Tests/Assets/WorldCR4D4SaveTransactionTests.cs`：资源托管事务保存测试
+- `XuanYu.World.Tests/Map/MapTerrainBrightnessTests.cs`：亮度合成（Flat 稳定 / 缓丘明暗差 / 方向光贡献）。
+- `XuanYu.World.Tests/Map/MapTerrainMeshBuilderTests.cs`：网格构建（顶点/索引/高度/法线/边界线）。
+- `XuanYu.World.Tests/Map/WorldMapStateTests.cs`：地图状态所有者合同测试
+- `XuanYu.World.Tests/Spatial/SceneStateOwnerSpatialTests.cs`：SceneStateOwner 空间索引集成测试；负责初始化 Insert、Position Update、EntityKey 稳定和 Revision 幂等覆盖。
+- `XuanYu.World.Tests/Spatial/SpatialIndexOwnerLifecycleTests.cs`：空间索引生命周期测试；负责 Insert、Remove、Update、重复实体和分类掩码覆盖。
+- `XuanYu.World.Tests/Spatial/SpatialIndexOwnerRevisionTests.cs`：空间索引 Revision 测试；负责 SpatialRevision 增长、幂等更新和中文探针统计覆盖。
+- `XuanYu.World.Tests/Spatial/SpatialIndexScaleTests.cs`：空间索引规模回归测试；负责 1k / 10k 实体查询统计、连续移动和批量删除一致性覆盖。
+- `XuanYu.World.Tests/Spatial/SpatialRayQueryLifecycleTests.cs`：WorldRay 候选查询生命周期与规模测试；负责 Update、Remove、1k / 10k Ray Query 统计覆盖。
+- `XuanYu.World.Tests/Spatial/SpatialRayQueryTests.cs`：WorldRay 候选查询边界测试；负责命中、空查询、Mask、起点在盒内、平行轴、背向和最大距离覆盖。
+- `XuanYu.World.Tests/Spatial/SpatialRaycastNearestTests.cs`：最近命中测试；负责多实体最近命中、候选顺序变化、等距 EntityKey 稳定裁决和 Broad 候选必须经过 Narrow 才能发布命中的责任分离覆盖。
+- `XuanYu.World.Tests/Spatial/SpatialRaycastRevisionTests.cs`：射线命中 Revision 测试；负责命中 / 未命中结果携带同一 SpatialRevision，以及 Narrow Phase 期间变代会被最终校验拒绝的覆盖。
+- `XuanYu.World.Tests/Spatial/SpatialRaycastScaleTests.cs`：射线命中规模回归测试；负责 1k / 10k Broad 到 Narrow 端到端统计和不全量扫描约束。
+- `XuanYu.World.Tests/Spatial/SpatialTestData.cs`：空间索引测试数据工厂；负责确定性网格实体和查询 AABB 构造，不进入生产项目。
+- `XuanYu.World.Tests/Transform/TransformSessionTests.cs`：Preview 隔离、单次 Commit、Cancel、迟到输入与 Render Preview 覆盖合同测试。
+- `XuanYu.World.Tests/World/EntityRegistryTests.cs`：实体注册表测试；覆盖 1 / 10 实体创建、查询、删除、重复删除、缺失键和稳定身份。
+- `XuanYu.World.Tests/World/GlobalWorldTests.cs`：GlobalWorld 生命周期测试；覆盖所有者入口、销毁后不复用 EntityId，以及 1000 实体创建 / 查询 / Snapshot / Destroy / 内存基线烟测记录。
+- `XuanYu.World.Tests/World/SceneMapReferenceTests.cs`：场景地图引用闭环测试（携带/恢复/旧场景/失效）。
+- `XuanYu.World.Tests/World/UiMapEditorTests.cs`：地图编辑器闭环测试（新建/保存打开/卸载/失败不污染）。
+- `XuanYu.World.Tests/World/UiViewGizmoTests.cs`：视角 Gizmo 测试（六方向/中心距离保持/选择保持）。
+- `XuanYu.World.Tests/World/WorldCR2InlineRenameTests.cs`：F2/右键重命名、延迟 Focus 与 SelectAll 回归。
+- `XuanYu.World.Tests/World/WorldCR3R3CommandSmokeTests.cs`：顶部文件命令、工具栏命令和环境显示命令仍可调用且不污染 Dirty/History 的 UI 冒烟回归。
+- `XuanYu.World.Tests/World/WorldCR3ViewportAssistTests.cs`：辅助开关不污染 Dirty / History / Selection / Tool 和 `.xyscene` 回归。
+- `XuanYu.World.Tests/World/WorldCR4D0AssetContractTests.cs`：D0 AssetId、路径安全和坐标转换合同测试。
+- `XuanYu.World.Tests/World/WorldCR4D1GlbFactory.cs`：D1 测试专用极小 GLB 动态生成器，不提交二进制模型。
+- `XuanYu.World.Tests/World/WorldCR4D1GlbImportTests.cs`：D1 静态导入回归，覆盖成功、Warning、错误、坐标 Bounds 和第三方类型隔离。
+- `XuanYu.World.Tests/World/WorldCR4D3F1BaseVertexTests.cs`：多/三 Primitive 归一化、无索引连续全局索引、越界与溢出拒绝、单 Primitive 不回归、Vulkan 验证器通过/拒绝。
+- `XuanYu.World.Tests/World/WorldCR4D3F1FailureTrackerTests.cs`：失败去重语义（同 Key+Revision 只记一次、Revision 变可重试、Clear/ClearNotIn、按 Key 独立）。
+- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.R1R1.cs`：WORLD-C-R1-R1 真机失败回归测试；走生产 `OpenSceneAsync` 打开仓库 sample，并验证损坏文件加载失败时旧 World、路径、Dirty、选择和 History 保留。
+- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.R1SaveFeedback.cs`：WORLD-C-R1 保存反馈回归测试；覆盖另存为成功、普通保存成功、Dirty 中文状态、Undo/Redo Clean-Dirty 和保存失败保护。
+- `XuanYu.World.Tests/World/WorldCSceneDocumentTests.cs`：WORLD-C-R1 场景文档基础测试；覆盖保存/打开往返、损坏 JSON 失败日志和 Dirty 保存检查点。
+- `XuanYu.World.Tests/World/WorldCameraFramingOccupancyTests.cs`：地图取景屏幕占用率测试（65~75%）。
+- `XuanYu.World.Tests/World/WorldCameraFramingTests.cs`：WORLD-A 相机构图回归测试；负责 Frame All / Frame Selected 不改变实体身份并生成可用 CameraState。
+- `XuanYu.World.Tests/World/WorldCameraNavigationUiTests.cs`：WORLD-B-R1 UiVm 相机会话测试；覆盖 Frame 更新 ObservationCenter、Cancel 恢复、输入抢占、旧 PointerUp 和 Camera Capture 阻止 Picking / Dolly。
+- `XuanYu.World.Tests/World/WorldDR1EnvironmentTests.cs`：默认材质路径与场景文档无光照字段契约测试。
+- `XuanYu.World.Tests/World/WorldMoveTransformPlaneUiTests.cs`：WORLD-B-R3 平面移动 UiVm 测试；覆盖 XY/XZ/YZ 平面只改对应轴、Preview 不写正式位置、无位移不进 History。
+- `XuanYu.World.Tests/World/WorldMoveTransformRegionUiTests.cs`：WORLD-B-R3 跨 Region 移动 UiVm 测试；覆盖 EntityId 不变、世界单实体、层级/检查器/Selection 更新和 Undo/Redo 区域恢复。
+- `XuanYu.World.Tests/World/WorldMoveTransformSessionUiTests.cs`：WORLD-B-R3 移动会话取消与输入互斥测试；覆盖 Escape、PointerCaptureLost、WM_CANCELMODE、Resize、延迟 PointerUp、相机/Picking/工具切换抢占。
+- `XuanYu.World.Tests/World/WorldMoveTransformUiTests.cs`：WORLD-B-R3 UiVm 移动变换基础测试；覆盖真实 X 轴拖动提交、撤销、重做，以及移动会话期间选择改写被拒绝。
+- `XuanYu.World.Tests/World/WorldPartitionR1Tests.Activity.cs`：WorldPartitionR1Tests 的 partial 拆分；承载 `Active_dormant_active_keeps_identity_region_and_position` 用例，职责为"Active/Dormant 活动态往返"测试。
+- `XuanYu.World.Tests/World/WorldPartitionR1Tests.cs`：WORLD-A-R2-R1 迁移测试；覆盖 Preview Cancel、Preview Commit、Undo / Redo Region 恢复、多实体迁移隔离和 Active / Dormant。
+- `XuanYu.World.Tests/World/WorldPartitionR2Tests.cs`：WORLD-A-R2-R2 一致性与规模 Gate 测试；覆盖 1000 Entity / 10000 随机迁移、Partition Invariant、Dormant 查询和 RegionKey 几何依赖红线。
+- `XuanYu.World.Tests/World/WorldPartitionTests.PartitionStrategy.cs`：WorldPartitionTests 的 partial 拆分；承载 `Partition_strategy_can_be_replaced_without_changing_entity_owner` 用例，使主文件 ≤100 行，职责为"分区策略可替换性"测试。
+- `XuanYu.World.Tests/World/WorldPartitionTests.cs`：WORLD-A-R2 分区基础测试；覆盖 Region membership 非实体 Owner、全局位置推导 Region、活跃态切换和 1000 实体迁移。
+- `XuanYu.World.Tests/World/WorldPartitionUiTests.cs`：WORLD-A-R2 UI 投影测试；覆盖跨 Region 后 EntityId、RenderSnapshot、SelectedNodeKey、SelectionPath 和 Inspector 不丢。
+- `XuanYu.World.Tests/World/WorldR1FinalSceneTests.cs`：WORLD-A-R1 FINAL 场景毕业测试；覆盖 Entity5 Move / Undo / Redo 隔离和 Destroy 后 World / Snapshot / Spatial / Render 无幽灵。
+- `XuanYu.World.Tests/World/WorldR1FinalSelectionTests.cs`：WORLD-A-R1 FINAL 选择毕业测试；覆盖 EntityId(1) 到 EntityId(10) 连续选择、Inspector 同步和 RenderSnapshot 全量实体稳定。
+- `XuanYu.World.Tests/World/WorldR4InspectorInputTests.cs`：WORLD-B-R4-F2 检查器输入防污染测试；覆盖格式化显示保留内部精度、非法缩放 / NaN / 非数字不写 Transform 与 History。
+- `XuanYu.World.Tests/World/WorldR4TransformFoundationTests.cs`：WORLD-B-R4-F1/F2 Transform 数据合同测试；覆盖 Rotation/Scale 默认值、移动提交保留旋转缩放，以及检查器显示真实 Transform 字段。
+- `XuanYu.World.Tests/World/WorldR4TransformInputTests.cs`：WORLD-B-R4-F2 完整 Transform 输入测试；覆盖完整提交入口、会话 Preview / Commit 保留字段、旋转缩放候选与检查器提交撤销重做。
+- `XuanYu.World.Tests/World/WorldRotateTransformUiTests.R4R2.Helpers.cs`：旋转测试辅助（partial，拆分自 R4R2.cs）
+- `XuanYu.World.Tests/World/WorldRotateTransformUiTests.cs`：WORLD-B-R4-F4 Rotate Gizmo UiVm 闭环测试；覆盖一次拖拽一次提交+撤销重做、取消不入历史，命中点按屏幕空间半径（与生产捕获同公式）构造以对齐命中。WORLD-B-R4-R1 拆出 `WorldRotateTransformUiTests.R4R1.cs` 偏部（`Rotate_with_no_pointer_movement_creates_no_history` 近零旋转不污染历史、`Rotate_commit_and_cancel_clear_drag_state` 提交/取消对称清空 `_rotateDrag`）。WORLD-B-R4-R2 拆出 `WorldRotateTransformUiTests.R4R2.cs` 偏部（旋转工具下点击其他实体立即切换选择且工具保持 Rotate、Selected/Gizmo/Inspector/Render/Transform/History 目标统一为 B、切换后第一次拖动改 B 不改 A、Commit/Undo 的 EntityKey 一致、Gizmo 屏幕半径有界）。
+- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Helpers.cs`：WORLD-B-R5 缩放 UiVm 测试辅助分部；集中构造测试 Vm、第二实体和 History 反射入口。
+- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.History.cs`：WORLD-B-R5 缩放 History / Cancel 测试分部；覆盖一次拖动只进一条 History、Undo/Redo、Escape Cancel 丢弃预览且不入历史。
+- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Pointer.cs`：WORLD-B-R5 缩放 UiVm 指针辅助分部；集中构造 Scale Gizmo 命中点、拖动点和实体屏幕点，确保测试命中与生产布局同源。
+- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.R5R1.cs`：WORLD-B-R5-R1 缩放 UiVm 修复分部；覆盖 Y/Z 单轴回归、Uniform 一次提交一条 History、Undo/Redo 和 Escape 后延迟 MouseUp 不提交。
+- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.Target.cs`：WORLD-B-R5 缩放目标切换与 Resize 测试分部；覆盖空白不 Begin、缩放工具下点击 B 后首拖只改 B、Resize 后世界轴长正且有界。
+- `XuanYu.World.Tests/World/WorldScaleTransformUiTests.cs`：WORLD-B-R5 Scale Gizmo UiVm 闭环测试主体；覆盖 Begin+Preview 提交前更新渲染 Scale、Preview→Commit 不跳变、X 提交只改 X、Uniform 三轴相等。
+- `XuanYu.World.Tests/World/WorldSceneConsumptionTests.cs`：WORLD-A-R1-R1 Scene 消费 World 测试；覆盖默认实体投影、Move Commit 同 EntityId、Undo/Redo 同 World Entity 和 Destroy 清空渲染投影。
+- `XuanYu.World.Tests/World/WorldSceneIsolationTests.cs`：WORLD-A-R1-R1 多实体隔离测试；覆盖移动 B 不污染 A/C、Undo 只恢复 B、销毁选中实体不复用身份且安全回退。
+- `XuanYu.World.Tests/World/WorldSceneMultiEntityGateTests.cs`：WORLD-A-R1-R2 多实体 Gate 测试；覆盖 10 实体 RenderSnapshot 投影、Picking 不同 EntityId、Destroy 后 Snapshot / Picking 无幽灵。
+- `XuanYu.World.Tests/World/WorldSceneSelectionReentryTests.cs`：WORLD-A-R1-R2-R1 选择同步重入测试；覆盖 Entity1→Entity2、重复选择 no-op、快速切换和 Select B 后 Move / Undo / Redo。
+- `XuanYu.World.Tests/World/WorldSelectionToolStateUiTests.cs`：WORLD-B-R2 UiVm 选择与工具状态测试；覆盖层级选择同步检查器、清除选择、删除失效选择、未实现工具拒绝虚假活动态和移动会话输入抢占。
+- `XuanYu.World.Tests/World/WorldSpatialQueryGovernanceTests.cs`：WORLD-A-R3 查询治理测试；锁定生产 World Query 不偷扫 GlobalWorld.Entities。
+- `XuanYu.World.Tests/World/WorldSpatialQueryTests.Geometry.cs`：WorldSpatialQueryTests 的 partial 拆分；承载 `DistanceSquared` 几何辅助，职责为"空间距离平方"纯函数（被 `BruteRadius` Oracle 复用）。
+- `XuanYu.World.Tests/World/WorldSpatialQueryTests.cs`：WORLD-A-R3 空间查询正确性与规模测试；用 O(N) Oracle 校验 1K / 10K QueryRadius、QueryBounds、Move、Cross Region 和 Destroy。
+- `XuanYu.World.Tests/World/WorldSpatialR1LifecycleTests.cs`：WORLD-A-R3-R1 空间索引生命周期测试；覆盖 Create、Move、Cross Region、Preview Cancel、Undo、Redo 和 Destroy。
+- `XuanYu.World.Tests/World/WorldSpatialR1Oracle.cs`：WORLD-A-R3-R1 空间查询测试 Oracle；只在测试侧使用 O(N) 真值校验，不进入生产 World Query。
+- `XuanYu.World.Tests/World/WorldSpatialR1RebuildTests.cs`：WORLD-A-R3-R1 Rebuild 与随机一致性测试；覆盖 1000 Entity 重建前后 Query 一致和确定性随机 Move / Radius / Bounds。
+- `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.Selection.cs`：选择工具无 Gizmo 测试（partial，拆分自主文件）
+- `XuanYu.World.Tests/World/WorldToolStateHighlightUiTests.cs`：WORLD-B-R4-F3 UiVm 工具状态高亮测试；覆盖未实装旋转/缩放点击后唯一高亮、右上角状态与视口移动控制柄一致、至多一个工具按钮活动。
+- `XuanYu.World.Tests/World/WorldUiHierarchyConnectorTests.cs`：UI-TREE-R1 层级树连接线测试；构造真实玄域层级结构断言 `Tee / Elbow / Full / Blank` 段，锁定末区域子节点 `Blank@0` 与折叠重算。
+- `XuanYu.World.Tests/World/WorldUiTreeGuideTests.cs`：WORLD-A-UI-R2 树线投影测试；覆盖 Project Tree 连续 Guide、折叠后可视节点和 `构建配置` 命名。
+- `XuanYu.World.Tests/World/WorldUiTreeToggleTests.cs`：UI-TREE-R1 后续折叠/展开回归测试；覆盖 Project/Hierarchy 树同一节点连续 toggle 与选择未变时仍能展开。
+- `XuanYu.World.Tests/XuanYu.World.Tests.csproj`：新增 Render.Vulkan 项目引用（仅验证器/失败去重纯逻辑测试）。
+
+## XuanYu.WarCore.Tests
+- `XuanYu.WarCore.Tests/`：WarCore 测试宿主：军事身份/士兵状态/依赖边界测试
+- `XuanYu.WarCore.Tests/Identity/MilitaryIdentityTests.cs`：军事身份构造与字段合同测试
+- `XuanYu.WarCore.Tests/State/SoldierStateTests.cs`：士兵状态字段与单位类型合同测试
+- `XuanYu.WarCore.Tests/WarCoreDependencyTests.cs`：WarCore 依赖禁区与领域纯净测试
+- `XuanYu.WarCore.Tests/XuanYu.WarCore.Tests.csproj`：项目配置
+
+## docs
+- `docs/CODE_CONSTITUTION.md`：代码宪法与结构约束，保留作治理参考。
+- `docs/dev-rules.md`：开发规则文档。
+
+## docs/architecture/ENGINE_ARCHITECTURE.md
+- `docs/architecture/ENGINE_ARCHITECTURE.md`：引擎总体架构说明。
+
+## docs/architecture/world-a-r0-coordinate-contract.md
+- `docs/architecture/world-a-r0-coordinate-contract.md`：WORLD-A-R0 坐标链审计矩阵、RH/Z-Up 契约、Vulkan 边界和全球/局部坐标边界记录。
+
+## docs/archive/changelog/changelog-2026-05.md
+- `docs/archive/changelog/changelog-2026-05.md`：2026-05 changelog 月度归档（原样迁移）
+
+## docs/archive/changelog/changelog-2026-06.md
+- `docs/archive/changelog/changelog-2026-06.md`：2026-06 changelog 月度归档（原样迁移）
+
+## docs/archive/changelog/changelog-2026-07.md
+- `docs/archive/changelog/changelog-2026-07.md`：2026-07 changelog 月度归档（原样迁移）
+
+## docs/archive/superseded/AI_DEVELOPMENT_RULES.md
+- `docs/archive/superseded/AI_DEVELOPMENT_RULES.md`：AI 协作开发规则，保留作历史参考。
+
+## docs/archive/superseded/LEGACY_FLUIDWARFARE_OLD_AUDIT.md
+- `docs/archive/superseded/LEGACY_FLUIDWARFARE_OLD_AUDIT.md`：旧 FluidWarfare 项目审计记录。
+
+## docs/governance/NAMING_RULES.md
+- `docs/governance/NAMING_RULES.md`：命名规则文档。
+
+## docs/governance/debts/arch-world-debts.md
+- `docs/governance/debts/arch-world-debts.md`：ARCH-WORLD 受控债务登记；记录 D1 TransformSession 暂居 World（R4）、D2 SceneRenderSnapshot 污染 Core（R5）、D3 测试程序集跨层（R4/R5）三项受控债务与红线路令。
+
+## docs/governance/dev-rules-understanding.md
+- `docs/governance/dev-rules-understanding.md`：开发规则理解与执行说明。
+
+## docs/governance/diagnostic-safety.md
+- `docs/governance/diagnostic-safety.md`：诊断日志、底部日志准入与 UI 调度安全规范。
+
+## docs/governance/naming-XuanYu-Engine.md
+- `docs/governance/naming-XuanYu-Engine.md`：XuanYu Engine 命名迁移说明。
+
+## docs/governance/shr-2026-08-closure.svg
+- `docs/governance/shr-2026-08-closure.svg`：阶段可视化图
+
+## docs/milestones/closed/ARCH-A
+- `docs/milestones/closed/ARCH-A/arch-a-plan.md`：ARCH-A 规划文档，记录 UI 与 Vulkan 依赖边界。
+
+## docs/milestones/closed/ARCH-B
+- `docs/milestones/closed/ARCH-B/arch-b-plan.md`：ARCH-B 规划文档，记录编辑器状态所有权与交互事务边界。
+
+## docs/milestones/closed/ARCH-C
+- `docs/milestones/closed/ARCH-C/arch-c-overview.svg`：ARCH-C 规划总览图。
+- `docs/milestones/closed/ARCH-C/arch-c-plan.md`：ARCH-C 真实场景编辑交互闭环规划文档。
+- `docs/milestones/closed/ARCH-C/arch-c-r2-current-route.svg`：ARCH-C-R2 当前阶段路线图；用于说明 R2-A / R2-B 已完成以及 R2-C 渲染接入统一空间事实的下一步，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r2-entry-audit.md`：ARCH-C-R2 坐标与相机入口门审计；不实现 Picking，只记录阻断证据和下一步契约边界。
+- `docs/milestones/closed/ARCH-C/arch-c-r2-spatial-query.svg`：ARCH-C-R2 空间查询架构图；不承载运行时代码，仅用于人工验收与规划沟通。
+- `docs/milestones/closed/ARCH-C/arch-c-r2b-closure.svg`：ARCH-C-R2-B 正式封版状态图；用于说明数学契约已通过、下一步转入渲染接入统一空间事实，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r2b-space-fact.svg`：ARCH-C-R2-B 统一空间事实架构图；用于说明 Camera / Viewport / ViewProjection / WorldRay 的共享关系，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r2c-closure.svg`：ARCH-C-R2-C 正式封版状态图；用于说明真机渲染、坐标契约、Resize、自愈和释放链均已通过，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r2c-render-space.svg`：ARCH-C-R2-C 渲染接入统一空间事实架构图；用于说明世界位置、统一 ViewProjection 与 Vulkan push constant 的关系，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r2d-spatial-index.svg`：ARCH-C-R2-D 空间索引架构图；用于说明场景事实、增量维护、动态索引和候选查询关系，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r2e-ray-hit.svg`：ARCH-C-R2-E 精确命中架构图；用于说明 WorldRay、Broad Phase、Ray-AABB Narrow Phase 和最近命中的关系，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r2f-pointer-picking.svg`：ARCH-C-R2-F 真实 Pointer Picking 架构图；用于说明 PointerPressed 到 EntityKey / NoHit 的最小闭环，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r3-selection.svg`：ARCH-C-R3 真实 Selection 架构图；说明 Picking 结果经唯一 Owner 同步到 Tree 与 Inspector，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r3-timeout-fix.svg`：R3 真机收口 Timeout 修复图；说明 Acquire 超时按可恢复空帧处理、其他错误仍保持致命语义，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r4-move-gizmo.svg`：R4 Move Gizmo 架构图；说明统一相机、三轴投影、输入优先级和 Capture 唯一所有权，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r4-r1-gizmo-hit.svg`：R4-R1 Move Gizmo 命中收口图；说明真机点击容错、Gizmo 优先级和 Scene Picking 回落边界，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r5-to-r8-route.svg`：ARCH-C R5 收口后路线图；说明 R6 由 R5 吸收、下一实际开发进入 R7 最小 Undo、R8 综合收口，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r5-transform-session.md`：R5 高频 Preview Entry Gate、三层 Transform 状态、Commit / Cancel 合同与封版验证记录。
+- `docs/milestones/closed/ARCH-C/arch-c-r5-transform-session.svg`：R5 Transform Preview / Commit / Cancel 可视化图；说明三层 Transform、单槽 Preview 渲染、Commit / Cancel 与迟到 MouseUp 边界，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r7-log-copy-fix.svg`：R7 后 LOG-UX 多选复制修复图；说明 Shift 多选日志、Foot 隧道路由、选中集合文本和系统剪贴板关系，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r7-undo.svg`：R7 最小 Undo 开发主链图；说明成功 Commit 进入 History、Undo 恢复正式 Scene、Preview / Cancel 禁止进历史，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r8-acceptance.md`：ARCH-C-R8 综合真机验收与收口判断文档；冻结 R8-A 自动审计，并以操作手册形式列出 R8-B~E 步骤、日志、检查点、失败判定和回传要求。
+- `docs/milestones/closed/ARCH-C/arch-c-r8-final-acceptance-report.md`：ARCH-C-R8 最终真机验收报告；固化 R8 最终通过、ARCH-C 具备正式收口条件以及两个证据范围注记。
+- `docs/milestones/closed/ARCH-C/arch-c-r8-final-acceptance-status.svg`：ARCH-C-R8 最终真机验收状态图；说明最后组合风险项已取得足够证据，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r8-integration-acceptance.svg`：ARCH-C-R8 综合验收图；说明 Scene、Picking、Transform、Undo、Resize、Vulkan 生命周期与 P0 收口判断关系，不承载运行时代码。
+- `docs/milestones/closed/ARCH-C/arch-c-r8-stage-acceptance-report.md`：ARCH-C-R8 阶段性真机验收报告；固定当前 R8 阶段性通过、ARCH-C 尚未最终封板以及剩余 3 项组合闭环。
+- `docs/milestones/closed/ARCH-C/arch-c-r8-stage-acceptance-status.svg`：ARCH-C-R8 阶段性真机验收状态图；说明已通过主链和待补最终 3 项，不承载运行时代码。
+
+## docs/milestones/closed/ARCH-WORLD
+- `docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.md`：ARCH-WORLD 物理分层归属审计（修正版）；冻结 Core / World / Editor / Render / WarCore 归属、EntityId 身份边界、双轨索引收敛与 R0→R5 治理序列，不承载运行时代码。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.svg`：ARCH-WORLD-R0 分层与依赖方向冻结图；展示五层归属、允许依赖与禁止边界，不承载运行时代码。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r1-acceptance.md`：ARCH-WORLD-R1 真机验收报告；逐条证据链 8 项 PASS、3 观察项（O1 Camera Inspector 占位 / O2 Preview 高频日志 / O3 Frame All-Selected 无独立日志，均非阻断）、保留 D1/D2/D3、最终裁定 PASS/CLOSED、下一步 R2 单一空间权威。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r1-acceptance.svg`：ARCH-WORLD-R1 真机验收证据图；展示 13/13 核心风险链路 PASS、D1/D2/D3 受控债务、O1/O2/O3 观察项与最终 裁定，不承载运行时代码。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r2-g1-audit.md`：ARCH-WORLD-R2-G1 Gizmo 输入抢占缺陷只读审计（P0 命中兜底根因 + P1 零位移 Commit）；属修复前证据，不承载运行时代码，不宣布 G1 已修复。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r2-manual-checklist.html`：ARCH-WORLD-R2 十三项真机验收清单；含操作手册、重点盯防与签署区，不承载运行时代码。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r2-single-spatial-authority.md`：ARCH-WORLD-R2 单一空间权威方案；短硬实施 Gate：双轨只读审计结论、唯一权威目标、Writer/Reader/Owner/Derived 四列、不动项、迁移步骤、6 用例自动测试、自动验收门、13 项真机验收清单与停手条件。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r2-status.md`：ARCH-WORLD-R2 实施状态与真机验收；记录裁定、R2-R1 修正完成项、`QueryBounds` 冻结语义、自动验证结果、真机 13 项验收清单（含补入的 Frame All 与 Create/Destroy 一致，修正原"13/11"不一致）、当前 AWAITING 用户真机验收。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r3-scene-truth-audit.md`：ARCH-WORLD-R3-R0A Scene Truth 现状只读审计；核对 SceneStateOwner 是否仍含第二套真相、SceneRenderSnapshot 来源、DefaultEditorCamera 后门、各层 Writer、Selection/Hierarchy/Inspector 投影性、Preview/Commit 写入权、Scene→World 旁路，结论"无第二真相、DTO 混 Editor 语义、相机后门为真实风险、双源气味"，并给出 R3-M1/M2/M3 最小迁移计划；不承载运行时代码。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r4-editor-boundary.svg`：ARCH-WORLD-R4 Editor 领域边界图；展示 Core/World → XuanYu.Editor → XuanYu.Editor.UI 依赖方向、TransformSession 与 EditorCameraFraming 迁移、World 写入权不变、R5 待处理范围与依赖禁区，不承载运行时代码。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r4-editor-pollution-audit.md`：ARCH-WORLD-R4-R0A Editor 污染归属只读审计；聚焦 DefaultEditorCamera.Create(0) 后门（生产中死代码、UiVm 恒传 Camera）、TransformSession 仅 Editor.UI 消费且 Commit 写入权在 World、Framing/Selection/Preview 污染判定，输出依赖方向精确表与 R4-M1/M2/M3 迁移草案；不承载运行时代码。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r4-gate2-acceptance.md`：ARCH-WORLD-R4 Gate 2 真机验收清单；R4 机械拆分 + 构建配置变更后的 11 项真机验收（A 组交互 6 项：Frame/Move Gizmo/Undo-Redo/Viewport Picking/Selection 面板/Resize；B 组门禁 5 项：构建 0W0E+168 测试/三架构守卫/5+100/SVG 47/47/git clean+远端 tip），含操作手册、通过判定、风险盯防与结果记录表；不承载运行时代码。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r5-final-closure.md`：ARCH-WORLD R5 最终收口报告；固化 R5-R1 自动与真机验收通过、日志降噪、D2 收口和 R5 裁定。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r5-final-closure.svg`：ARCH-WORLD R5 最终收口图；展示 World 事实、Editor/UI 组合边界、Render Projection、真机验收、日志治理和边界守卫。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r5-r0a-render-contract-audit.md`：ARCH-WORLD R5-R0A 只读审计——Render 合同边界（类型归属矩阵 / 字段逐项分类 / 双 Source 定性 / DefaultEditorCamera 后门 / Render 实际消费 / 方案 B）。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r5-r0a-render-contract.svg`：R5-R0A 渲染合同边界流程图（World 权威→Editor 组合→最小 Render Projection→Render.Abstractions→Render.Vulkan，标禁止反向依赖）。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r6-exit-gate.md`：ARCH-WORLD R6 架构退出门禁报告；审计测试程序集分层债务并冻结一个士兵 WarCore 最小闭环入口。
+- `docs/milestones/closed/ARCH-WORLD/arch-world-r6-exit-gate.svg`：ARCH-WORLD R6 退出门禁图；展示测试分层门禁、WarCore 入口和下一阶段一个士兵闭环。
+
+## docs/milestones/closed/M1
+- `docs/milestones/closed/M1/MILESTONE1_PUBLIC_VALIDATION.md`：里程碑 1 公开验证说明。
+- `docs/milestones/closed/M1/PHASE1_SCOPE.md`：Phase 1 范围定义。
+- `docs/milestones/closed/M1/PROJECT_CHARTER.md`：项目章程。
+- `docs/milestones/closed/M1/audit-EditorShellV2-9.1A-1.md`：EditorShellV2 9.1A 第一轮审计。
+- `docs/milestones/closed/M1/audit-EditorShellV2-freeze-9.1A-Freeze.md`：EditorShellV2 冻结问题审计。
+- `docs/milestones/closed/M1/audit-EditorShellV2-input-9.1A-2.md`：EditorShellV2 输入链路审计。
+- `docs/milestones/closed/M1/audit-EditorShellV2-input-9.1A-2R.md`：EditorShellV2 输入链路复审。
+- `docs/milestones/closed/M1/audit-EditorShellV2-picking-gizmo-9.1A-3.md`：EditorShellV2 Picking / Gizmo 审计。
+- `docs/milestones/closed/M1/audit-EditorShellV2-picking-gizmo-9.1A-3R.md`：EditorShellV2 Picking / Gizmo 复审。
+- `docs/milestones/closed/M1/audit-EditorShellV2-plan-9.1A-0.md`：EditorShellV2 9.1A 审计计划。
+- `docs/milestones/closed/M1/audit-NativeViewportMouseCapture-lifecycle-9.0X.md`：Native Viewport 鼠标捕获生命周期审计。
+- `docs/milestones/closed/M1/audit-RZ-New-0-onboarding.md`：RZ-New-0 接手与初始化审计。
+- `docs/milestones/closed/M1/audit-RZ-VK1-vulkan-probe.md`：RZ-VK1 Vulkan Probe 审计。
+- `docs/milestones/closed/M1/audit-RZ-VK2-R1-nativehost-resize-coalesce.md`：NativeHost Resize 合并第一轮审计。
+- `docs/milestones/closed/M1/audit-RZ-VK2-R2-nativehost-resize-coalesce-verify.md`：NativeHost Resize 合并验证审计。
+- `docs/milestones/closed/M1/audit-RZ-VK2-native-host-lifecycle.md`：NativeHost 生命周期审计。
+- `docs/milestones/closed/M1/audit-gizmo-chain-9.0Y-1.md`：Gizmo 链路审计 9.0Y-1。
+- `docs/milestones/closed/M1/audit-gizmo-chain-9.0Y-2.md`：Gizmo 链路审计 9.0Y-2。
+- `docs/milestones/closed/M1/audit-gizmo-chain-9.0Y-3.md`：Gizmo 链路审计 9.0Y-3。
+- `docs/milestones/closed/M1/audit-gizmo-stash-9.0Y-0.md`：Gizmo 暂存状态审计。
+- `docs/milestones/closed/M1/audit-input-lifecycle-9.0X-1.md`：输入生命周期审计 9.0X-1。
+- `docs/milestones/closed/M1/audit-input-lifecycle-9.0X-2.md`：输入生命周期审计 9.0X-2。
+- `docs/milestones/closed/M1/audit-input-lifecycle-9.0X-3.md`：输入生命周期审计 9.0X-3。
+- `docs/milestones/closed/M1/audit-inspector-transform-9.0C-0.md`：Inspector / Transform 同步审计。
+- `docs/milestones/closed/M1/editor-top-area-target-9.1B.md`：顶部区域目标说明。
+- `docs/milestones/closed/M1/editor-top-svg-icons-9.1C-R.md`：顶部 SVG 图标细修说明。
+- `docs/milestones/closed/M1/editor-top-svg-icons-9.1C.md`：顶部 SVG 图标替换说明。
+- `docs/milestones/closed/M1/editor-ui-terms-9.1B.md`：编辑器 UI 术语说明。
+- `docs/milestones/closed/M1/gizmo_drag_audit_2026-06-25.md`：Gizmo 拖动审计报告。
+- `docs/milestones/closed/M1/gizmo_drag_audit_probe.log`：Gizmo 拖动审计探针日志。
+- `docs/milestones/closed/M1/plan-9.0D-move-gizmo-final.md`：Move Gizmo 最终验收计划。
+- `docs/milestones/closed/M1/project-baseline-audit-org-1-r1.md`：ORG-1-R1 项目基线审计修正版。
+- `docs/milestones/closed/M1/project-baseline-audit-org-1.md`：ORG-1 项目真实基线审计。
+
+## docs/milestones/closed/RZ-VK
+- `docs/milestones/closed/RZ-VK/log-ux-1-r2-autoscroll.svg`：LOG-UX 自动滚动设计图。
+- `docs/milestones/closed/RZ-VK/log-ux-r8-tail-noise-fix.svg`：LOG-UX R8 尾随最新日志与 Render Backend 噪声降级图；说明不删除 Vulkan 后端代码，只过滤普通 UI 噪声。
+- `docs/milestones/closed/RZ-VK/log-ux-window-copy-focus-fix.svg`：LOG-UX 窗口级日志复制焦点修复图；说明视口获得焦点后仍可复制已选日志，不承载运行时代码。
+- `docs/milestones/closed/RZ-VK/rz-vk3-closure.md`：RZ-VK3 阶段收口文档。
+- `docs/milestones/closed/RZ-VK/rz-vk3-surface-lifecycle-plan.md`：RZ-VK3 Surface 生命周期规划。
+- `docs/milestones/closed/RZ-VK/rz-vk4-c-r1-audit-plan.md`：RZ-VK4-C-R1 审计计划。
+- `docs/milestones/closed/RZ-VK/rz-vk4-c-swapchain-plan.md`：RZ-VK4-C Swapchain 规划。
+- `docs/milestones/closed/RZ-VK/rz-vk4-closure.md`：RZ-VK4 阶段收口文档。
+- `docs/milestones/closed/RZ-VK/rz-vk4-d-plan.md`：RZ-VK4-D 规划文档。
+- `docs/milestones/closed/RZ-VK/rz-vk4-plan.md`：RZ-VK4 总规划文档。
+- `docs/milestones/closed/RZ-VK/rz-vk5-a-plan.md`：RZ-VK5-A 规划文档。
+- `docs/milestones/closed/RZ-VK/rz-vk5-c-plan.md`：RZ-VK5-C 规划文档。
+- `docs/milestones/closed/RZ-VK/rz-vk5-e-plan.md`：RZ-VK5-E 规划文档。
+- `docs/milestones/closed/RZ-VK/rz-vk5-plan.md`：RZ-VK5 总规划文档。
+- `docs/milestones/closed/RZ-VK/vk4-c-r1-swapchain-fix.svg`：VK4-C-R1 Swapchain 修复示意图。
+- `docs/milestones/closed/RZ-VK/vulkan-lifecycle-plan.md`：Vulkan 生命周期规划。
+- `docs/milestones/closed/RZ-VK/vulkan-preflight-audit-RZ-Fix3-0.md`：Vulkan 前置审计文档。
+
+## docs/milestones/closed/WORLD-A
+- `docs/milestones/closed/WORLD-A/world-a-r0-coordinate-chain.svg`：WORLD-A-R0 浅色中文坐标事实链图；展示 World、Transform、Camera、Projection、Picking、Vulkan 与 Gizmo 的唯一事实关系。
+- `docs/milestones/closed/WORLD-A/world-a-r0-r1-tool-history-fix.svg`：WORLD-A-R0-R1 工具状态与 Redo 修复图；说明 ActiveTool、Command、Toggle 和 Redo Snapshot 恢复边界，不承载运行时代码。
+- `docs/milestones/closed/WORLD-A/world-a-r0-r2-transform-route-fix.svg`：WORLD-A-R0-R2 Transform 输入路由修复图；说明 PointerDown 从 ActiveTool 快照生成 SessionTool，不承载运行时代码。
+- `docs/milestones/closed/WORLD-A/world-a-r0-r3-gizmo-visibility.svg`：WORLD-A-R0-R3 Gizmo 可见性收口图；说明 Selection、ActiveTool、真实能力与 ShowMoveGizmo 的关系，不承载运行时代码。
+- `docs/milestones/closed/WORLD-A/world-a-r1-entity-registry.svg`：WORLD-A-R1 Global World 与 Entity Registry 事实源图；说明 GlobalWorld、EntityRegistry、EntityId、查询者和后续接入边界，不承载运行时代码。
+- `docs/milestones/closed/WORLD-A/world-a-r1-final-closure-report.md`：WORLD-A-R1 最终收口报告；固化 10 实体、Selection、Move、Destroy、1K Registry 与 Resize/Vulkan 回归结论。
+- `docs/milestones/closed/WORLD-A/world-a-r1-final-closure.svg`：WORLD-A-R1 最终收口状态图；说明 R0 坐标尺、R1 中央总账和 R2 分区入口关系。
+- `docs/milestones/closed/WORLD-A/world-a-r1-r1-scene-consumption-audit.md`：WORLD-A-R1-R1 当前事实 Owner 审计矩阵；记录 GlobalWorld、SceneStateOwner、Selection、Hierarchy、Inspector、RenderSnapshot、Picking、Gizmo 与 Undo/Redo 的收敛结果。
+- `docs/milestones/closed/WORLD-A/world-a-r1-r1-scene-consumption.svg`：WORLD-A-R1-R1 Scene / Editor 消费 GlobalWorld 图；说明 SceneStateOwner 从实体 Owner 收敛为投影、会话和派生索引层，不承载运行时代码。
+- `docs/milestones/closed/WORLD-A/world-a-r1-r2-final-gate.md`：WORLD-A-R1-R2 多实体真实闭环与 1K Registry Gate 验收报告；记录 R1 封闭条件、真机退回项和禁止项确认。
+- `docs/milestones/closed/WORLD-A/world-a-r1-r2-multi-entity-gate.svg`：WORLD-A-R1-R2 多实体闭环图；说明 10 实体互不串线、Destroy 无幽灵和 1K Registry Gate。
+- `docs/milestones/closed/WORLD-A/world-a-r1-r2-r1-acceptance-report.md`：WORLD-A-R1-R2-R1 真机验收报告；固化连续点击 Entity1~10、Resize 和 Selection 单入口修复结论。
+- `docs/milestones/closed/WORLD-A/world-a-r1-r2-r1-acceptance.svg`：WORLD-A-R1-R2-R1 真机验收状态图；说明选择链局部架构债、修复边界和后续影响面。
+- `docs/milestones/closed/WORLD-A/world-a-r1-r2-runtime-fix.svg`：WORLD-A-R1-R2 真机退回修复图；说明 UI 全量实体投影、Selection 同步重入保护、Vulkan 录制诊断和真机复验 Gate。
+- `docs/milestones/closed/WORLD-A/world-a-r2-global-partition-report.md`：WORLD-A-R2 基础轮报告；记录 RegionKey、Partition Membership、Global Position、活跃态和 Key-based Selection 收敛边界。
+- `docs/milestones/closed/WORLD-A/world-a-r2-global-partition.svg`：WORLD-A-R2 基础轮架构图；说明 GlobalWorld、Partition Membership、Editor Projection 和跨区不是 Destroy/Create。
+- `docs/milestones/closed/WORLD-A/world-a-r2-r1-migration-activity-report.md`：WORLD-A-R2-R1 跨 Region 迁移与 Activity 第一阶段报告；记录 Preview / Commit / Undo / Redo 边界和 Active / Dormant 语义。
+- `docs/milestones/closed/WORLD-A/world-a-r2-r1-migration-activity.svg`：WORLD-A-R2-R1 迁移与活跃态图；说明 Preview 不写 Membership、Commit 原子迁移、Undo / Redo 由 Position 推导 Region。
+- `docs/milestones/closed/WORLD-A/world-a-r2-r2-partition-consistency-report.md`：WORLD-A-R2-R2 分区规模与一致性报告；记录 Partition Invariant、1000 实体迁移、Hierarchy cache 清理和真机准备。
+- `docs/milestones/closed/WORLD-A/world-a-r2-r2-partition-consistency.svg`：WORLD-A-R2-R2 一致性 Gate 图；说明 Alive Entity、Membership、Strategy(GlobalPosition) 与 Editor Projection 的关系。
+- `docs/milestones/closed/WORLD-A/world-a-r2-r3-inspector-manual-gate-report.md`：WORLD-A-R2-R3 真机 Gate 退回修正报告；记录 Inspector 缺项、真实交互复验与 R2 未 裁定。
+- `docs/milestones/closed/WORLD-A/world-a-r2-r3-inspector-manual-gate.svg`：WORLD-A-R2-R3 Inspector 修正图；说明 InspectorFields、Selection、Hierarchy 和真机 Gate 关系。
+- `docs/milestones/closed/WORLD-A/world-a-r2-r4-camera-framing-report.md`：WORLD-A-R2-R4 相机构图与分支治理报告；记录 Frame All / Frame Selected、分支切换和真机 Gate 复验。
+- `docs/milestones/closed/WORLD-A/world-a-r2-r4-camera-framing.svg`：WORLD-A-R2-R4 相机收口图；说明 World Bounds、CameraState、Render、Picking 和 Gizmo 同源关系。
+- `docs/milestones/closed/WORLD-A/world-a-r3-r1-spatial-consistency-report.md`：WORLD-A-R3-R1 空间一致性报告；记录 Spatial Owner Matrix、生命周期 Gate、Rebuild Gate 和双轨裁定。
+- `docs/milestones/closed/WORLD-A/world-a-r3-r1-spatial-consistency.svg`：WORLD-A-R3-R1 空间一致性图；说明正式 WorldQuery 生命周期闭环与 SceneIndex 待收敛边界。
+- `docs/milestones/closed/WORLD-A/world-a-r3-spatial-query-report.md`：WORLD-A-R3 Spatial Index + World Query 基础报告；记录查询所有权、红线、正确性 Gate 与性能观察。
+- `docs/milestones/closed/WORLD-A/world-a-r3-spatial-query.svg`：WORLD-A-R3 空间查询收口图；说明 GlobalWorld、Partition、SpatialIndex 和 Query API 的事实边界。
+- `docs/milestones/closed/WORLD-A/world-a-ui-r1-display-cleanup-report.md`：WORLD-A-UI-R1 显示清理报告；记录日志、树形 UI、中文显示映射、治理规则和禁止项确认。
+- `docs/milestones/closed/WORLD-A/world-a-ui-r1-display-cleanup.svg`：WORLD-A-UI-R1 显示清理图；说明日志表格、树形投影、Inspector 显示映射与事实源边界。
+- `docs/milestones/closed/WORLD-A/world-a-ui-r2-continuous-tree-report.md`：WORLD-A-UI-R2 连续树线与图标重制报告；记录 UI-R1 视觉退回、共享 TreeGuide、图标来源和验收证据。
+- `docs/milestones/closed/WORLD-A/world-a-ui-r2-continuous-tree.svg`：WORLD-A-UI-R2 连续树干验收图；展示 Project / Hierarchy 的 Full、Tee、Elbow 树线模型。
+
+## docs/milestones/closed/WORLD-B
+- `docs/milestones/closed/WORLD-B/world-b-r0-editor-interaction-audit.md`：WORLD-B-R0 编辑器基本操作现状审计与合同冻结文档；冻结 Camera / Selection / ToolMode / Transform 权威、输入优先级、保留项、缺口和 R1-R4 入口边界，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r0-editor-interaction-audit.svg`：WORLD-B-R0 编辑器相机、选择、工具与 Transform 权威关系图；展示 WarCore 后移和 R1-R4 路线，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r1-camera-acceptance-closure.md`：WORLD-B-R1 编辑器相机操作验收收口报告；记录 11 项中文 IPO 真机验收 PASS、R1 裁定和下一入口 WORLD-B-R2，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r1-camera-acceptance-closure.svg`：WORLD-B-R1 相机操作验收收口状态图；展示聚焦/查看全部、平移/滚轮、Escape/失焦和输入互斥均通过，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r1-camera-operation-report.md`：WORLD-B-R1 编辑器相机操作实装报告；记录唯一 ObservationCenter、CameraSession、输入抢占、测试覆盖和真机待验清单，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r1-camera-operation.svg`：WORLD-B-R1 相机操作实装状态图；展示 Frame、Orbit、Pan、Dolly、CameraSession、输入抢占和真机待验状态，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r2-selection-tool-state-report.md`：WORLD-B-R2 选择与工具状态闭环报告；记录唯一 Selection / ToolMode、输入抢占、自动测试和中文 IPO 真机验收清单，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r2-selection-tool-state.svg`：WORLD-B-R2 选择与工具状态闭环图；展示视口/层级、SelectionState、检查器/控制柄和 ToolMode 的同源关系，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r3-move-transform-closure.md`：WORLD-B-R3 移动变换闭环报告；记录单轴/平面移动、取消、Undo/Redo、跨 Region、输入互斥、中文 IPO 真机清单和 裁定，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r3-move-transform-closure.svg`：WORLD-B-R3 移动变换闭环浅色中文图；展示控制柄、移动会话、World 权威、一致投影和输入优先级，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r5-scale-transform-report.md`：WORLD-B-R5 Scale Gizmo 缩放变换闭环报告；记录 R5 实装、v0.2.20.18-rz 真机退回、R5-R1 尺寸/Uniform 可发现性修复、自动验证、用户真机验收通过和 WORLD-B-R5 裁定，不承载运行时代码。
+- `docs/milestones/closed/WORLD-B/world-b-r5-scale-transform.svg`：WORLD-B-R5 缩放闭环状态图；展示 SelectionKey、TransformSession、ScaleGizmoDrag、SceneRenderSnapshot、RenderProjection、Vulkan 绘制链路和 WORLD-B-R5 状态，不承载运行时代码。
+
+## docs/milestones/closed/WORLD-C
+- `docs/milestones/closed/WORLD-C/world-c-r0-scene-document-contract.md`：WORLD-C-R0 场景文档契约报告；冻结场景文件格式、所有权、实体最小字段、文档状态机、错误模型、原子保存策略与 R1 验收入口，不承载运行时代码。
+- `docs/milestones/closed/WORLD-C/world-c-r0-scene-document-contract.svg`：WORLD-C-R0 场景文档契约图；展示 Editor.UI、Editor.SceneDocument、World 运行态、原子保存和错误结果边界，不承载运行时代码。
+- `docs/milestones/closed/WORLD-C/world-c-r1-closure-report.md`：WORLD-C-R1 最小场景保存与打开闭环收口报告；固化真机验收 PASS、自动门禁、完成边界、测试污染处理和 R2 入口，不承载运行时代码。
+- `docs/milestones/closed/WORLD-C/world-c-r1-closure.svg`：WORLD-C-R1 收口状态图；展示输入状态、场景文档链、World 恢复、验收证据和下一阶段入口，不承载运行时代码。
+- `docs/milestones/closed/WORLD-C/world-c-r2-implementation-acceptance.md`：R2 实施范围、自动门禁、R2-R2 修复与真机 裁定。
+- `docs/milestones/closed/WORLD-C/world-c-r2-ipo-manual-checklist.md`：中文 IPO 合同与测试 01–08 真机 PASS 记录。
+- `docs/milestones/closed/WORLD-C/world-c-r2-status.svg`：R2 真机验收通过与 状态图。
+- `docs/milestones/closed/WORLD-C/world-c-r3-viewport-reference-report.md`：R3-R8 Move Gizmo 专项报告、真机 PASS 与 WORLD-C-R3 收口记录。
+- `docs/milestones/closed/WORLD-C/world-c-r3-viewport-reference.svg`：R3-R8 真机 PASS 与 WORLD-C-R3 状态图。
+- `docs/milestones/closed/WORLD-C/world-c-r4-d0-asset-contracts.md`：D0 真实代码审计、依赖裁定、AssetId、资源目录、Schema 草案、坐标、运行时状态、Picking/Bounds、Save As 和 D1 精确范围冻结报告。
+- `docs/milestones/closed/WORLD-C/world-c-r4-d1-glb-import-core.md`：D1 实现范围、支持/拒绝能力和 D2 入口说明。
+- `docs/milestones/closed/WORLD-C/world-c-r4-d2-f1-ipo-checklist.md`：静态模型渲染真机 IPO 验收清单
+- `docs/milestones/closed/WORLD-C/world-c-r4-d2-static-model-rendering.md`：D2 范围、实现、生命周期、验收方式和 D3 边界报告。
+- `docs/milestones/closed/WORLD-C/world-c-r4-d3-static-model-authoring-report.md`：D3 实现、边界、验证与真机验收入口报告。
+- `docs/milestones/closed/WORLD-C/world-c-r4-d4-i1-hosted-assets-report.md`：D4-I1 事务内核实现、验证与边界报告。
+- `docs/milestones/closed/WORLD-C/world-c-r4-d4-static-model-persistence-report.md`：D4 完整实现、验证与真机验收入口。
+
+## docs/milestones/current/MAP-A
+- `docs/milestones/current/MAP-A/map-a-r1-d1-map-contracts.md`：`.xymap` 第一版 Schema 与 `.xyscene` mapReference 合同冻结（坐标方案 B：X 横向/Z 高度/Y 纵向，世界轴直写，Z-Up）。
+- `docs/milestones/current/MAP-A/map-a-r1-d5-r1-f2-grid-stabilize.svg`：阶段可视化图
+- `docs/milestones/current/MAP-A/map-a-r1-d5-r1-f2-r2-unified-grid-lod.svg`：阶段可视化图
+- `docs/milestones/current/MAP-A/map-a-r1-d5-r1-f2-r3-grid-ground-visual.svg`：阶段可视化图
+- `docs/milestones/current/MAP-A/map-a-r1-d5-r1-f2-r3-r2-per-pixel-background.svg`：阶段可视化图
+- `docs/milestones/current/MAP-A/map-a-r1-d5-r1-f3-f1-overlay-gizmo.svg`：阶段可视化图
+- `docs/milestones/current/MAP-A/map-a-r1-d5-r1-f3-viewport-navigation-gizmo.svg`：阶段可视化图
