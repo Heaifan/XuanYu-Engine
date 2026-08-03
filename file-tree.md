@@ -1,5 +1,17 @@
-版本：v0.2.24.10-fix
+版本：v0.2.24.11-fix
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D5-R1-F3 职责索引（v0.2.24.11-fix）
+
+- `XuanYu.Editor.UI/Viewport/ViewGizmo.axaml`：右上角导航 Gizmo 宿主（透明覆盖层，无白色卡片）
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.cs`：导航 Gizmo 主控件（88×88、相机快照属性、Hover 状态）
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Layout.cs`：六方向投影纯数学（Right/Up/Forward → 屏幕端点 + 深度排序）
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Render.cs`：绘制（中心球/三轴/六端点/X·Y·Z 标签/Hover 亮环）
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.HitTest.cs`：命中（端点/中心球/88×88 区域外不捕获）
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Input.cs`：指针捕获（<4 DIP 点击视角、≥4 DIP 复用 Orbit 会话）
+- `XuanYu.Editor.UI/Vm/StandardViewResolver.cs`：六方向标准视角解析（+X/-X/+Y/-Y/顶/底，Up 合同防滚转）
+- `XuanYu.Editor.UI/Vm/UiVm.Camera.cs`：NavigationCamera 快照（Gizmo 数据源，相机变化统一通知）
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml`、`Root/UiRoot.axaml`：视口容器去黑边（浅灰 1 DIP 分隔、无圆角/Padding）
 
 ## MAP-A-R1-D5-R1-F2-R3-R2 职责索引（v0.2.24.10-fix）
 

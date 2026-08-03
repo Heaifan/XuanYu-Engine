@@ -72,6 +72,8 @@ public sealed partial class UiVm
     {
         _camera = result.Camera;
         _observationCenter = result.ObservationCenter;
+        // F3-D3：导航 Gizmo 实时跟随相机姿态。
+        OnPropertyChanged(nameof(NavigationCamera));
         PublishSceneRenderSnapshot();
     }
 }

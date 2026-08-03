@@ -5,6 +5,14 @@ using XuanYu.Editor.Camera;
 
 namespace XuanYu.Editor.UI;
 
+// F3-D2：导航 Gizmo 相机快照（Right/Up/Forward 投影输入；不含平移）。
+public sealed record NavigationCameraSnapshot(
+    Vector3d Position,
+    Vector3d Right,
+    Vector3d Up,
+    Vector3d Forward,
+    long Revision);
+
 public sealed partial class UiVm
 {
     CameraState _camera = DefaultEditorCamera.Create(1);
@@ -12,6 +20,9 @@ public sealed partial class UiVm
     double _viewportAspect = 16.0 / 9.0;
     long _cameraRevision = 1;
     bool _viewportCameraFramed;
+
+    public NavigationCameraSnapshot NavigationCamera => new(
+        _camera.Position, _camera.Right, _camera.Up, _camera.Forward, _cameraRevision);
 
     CameraState CurrentCamera(long revision) => new(
         _camera.Position,

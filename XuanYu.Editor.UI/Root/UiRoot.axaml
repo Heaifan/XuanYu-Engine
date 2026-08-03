@@ -43,10 +43,11 @@
                     ResizeBehavior="PreviousAndNext"/>
 
       <Grid Grid.Column="2" MinWidth="360">
-        <Border CornerRadius="8" Background="#101827" BorderBrush="#1d2a42" BorderThickness="1" Padding="18" BoxShadow="0 18 36 0 #260f172a">
+        <!-- F3：去除深色粗框与大 Padding——视口贴合，最多 1 DIP 浅灰分隔。 -->
+        <Border BorderBrush="#C9D2DC" BorderThickness="1" ClipToBounds="True">
           <local:Main />
         </Border>
-        <!-- EDITOR-VIEW-R1/D5-R1：右上角视角 Gizmo（Avalonia 覆盖层，在原生渲染窗口之上） -->
+        <!-- F3：右上角 Blender 风格导航 Gizmo（Avalonia 覆盖层，在原生渲染窗口之上） -->
         <local:ViewGizmo IsHitTestVisible="True"/>
       </Grid>
 

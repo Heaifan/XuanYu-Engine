@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.24.11-fix
+MAP-A-R1-D5-R1-F3 视口黑边移除 + Blender 风格导航 Gizmo（2026-08-03 15:20:00，Commit 本轮落库为准）
+- F3 问题（用户验收反馈）：
+  1. 视口外层存在黑色粗边框和厚重圆角（两层深色容器：VulkanViewport.axaml `#0b1220`/`#31405d` + UiRoot 中央 `#101827`/Padding=18/圆角8/BoxShadow）；
+  2. 右上角仍是白色占位块（ViewGizmo.axaml 3×3 按钮 + `#dce6f2` 圆角卡片），缺少正式导航 Gizmo。
+- 修复（本版本）：
+  - **F3-D1 去黑边**：VulkanViewport 与 UiRoot 中央容器改为浅灰 1 DIP 分隔（`#C9D2DC`）、无圆角、无 Padding、无深色背景、无 BoxShadow；Fallback 层改浅色 `#E8EEF5`；ClipToBounds 保留；
+  - **F3-D2 Blender 风格导航 Gizmo**：替换白色占位为透明 88×88 覆盖层（右上 12 DIP）——中心球（`#CDD6DF`/描边 `#718096`）+ 三根世界轴 + 六正负端点 + X/Y/Z 标签；玄域低饱和配色（X `#C18A55` 淡金褐、Y `#5F87A7` 蓝灰、Z `#A9B8C7` 浅钢灰）；背向端点 40% Alpha 小圆点、侧向 78%、朝向 100% 大端点带标签；按深度升序绘制（背向先、朝向后）；轴正对相机时端点收缩中心无 NaN；控件完全透明无底板；
+  - **F3-D3 交互**：点击六端点 → 标准视角命令（+X/-X/+Y/-Y/顶/底视图，保留 Pivot 与距离，Up 合同：±X/±Y=+Z、顶/底=+Y 防滚转）；中心球/空白拖动 → 复用 UiVm 相机会话 Orbit（同一灵敏度/俯仰限制/Pivot）；点击/拖动阈值 4 DIP；Hover 亮环 + Hand 光标；PointerCaptureLost 正常取消；控件 88×88 外不截获输入（实体 Picking/框选/变换 Gizmo 不受影响）；导航不进入 Dirty/Undo/场景文件；
+  - 拆分职责（5+100）：ViewNavigationGizmo.cs（属性状态）/ .Layout.cs（投影纯数学）/ .Render.cs（绘制）/ .HitTest.cs（命中）/ .Input.cs（输入命令）；StandardViewResolver.cs（六方向解析 + 端点名映射）；UiVm.NavigationCamera 快照（相机变化统一通知 Gizmo）。
+- 验证：聚焦 NavigationGizmo/StandardViewResolver/ViewportChrome 29/29；Core 254/254、World 435/435、WarCore 22/22；arch-a-guard PASS（含 5+100）；git diff --check OK；XAML 加载由构建编译验证。
+- 视觉冒烟：**未执行**（沿用上轮用户决定——冒烟留用户真机验收 F3 十一项清单）；请用户重点复验：黑边消失、白色卡片消失、Gizmo 六方向与网格一致、点击/拖动、顶底视图无滚转。
+- 治理：版本 v0.2.24.10-fix → v0.2.24.11-fix（五处同步）；无新增第三方依赖/项目；不创建 Tag/Release。
+
 ## v0.2.24.10-fix
 MAP-A-R1-D5-R1-F2-R3-R2 背景颜色移到片元级（2026-08-03 14:10:00，Commit 本轮落库为准）
 - F2-R3-A3（v0.2.24.9-fix）：**PARTIAL FAIL——中性灰参考地面 FAIL**。现象：截图下半部分仍是偏蓝背景（比天空略暗），未形成明确中性灰地面；网格线宽统一与 LOD 缩放观感 PASS。

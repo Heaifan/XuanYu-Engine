@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" font-family="Microsoft YaHei, sans-serif">
+  <rect width="960" height="640" fill="#F5F7FA"/>
+  <text x="480" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1F2937">MAP-A-R1-D5-R1-F3 · 视口黑边移除 + Blender 风格导航 Gizmo</text>
+  <text x="480" y="58" text-anchor="middle" font-size="13" fill="#6B7280">v0.2.24.10-fix → v0.2.24.11-fix · 透明覆盖层 · 六方向点击 · 拖动 Orbit</text>
+
+  <rect x="40" y="84" width="880" height="140" rx="10" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="60" y="112" font-size="15" font-weight="bold" fill="#111827">F3-D1：移除视口黑色粗边框</text>
+  <text x="60" y="138" font-size="13" fill="#374151">原问题：两层深色容器（VulkanViewport #0b1220/#31405d + UiRoot #101827/Padding=18/圆角8/BoxShadow）</text>
+  <text x="60" y="162" font-size="13" fill="#374151">现改为：浅灰 1 DIP 分隔（#C9D2DC）、无圆角、无 Padding、无深色背景、无阴影；ClipToBounds 保留</text>
+  <text x="60" y="186" font-size="13" fill="#374151">Fallback 层改浅色 #E8EEF5（Resize 间隙不露黑）</text>
+  <text x="60" y="210" font-size="13" fill="#6B7280">Native Host 填满视口（Stretch/Margin=0）；Swapchain 与容器尺寸一致</text>
+
+  <rect x="40" y="240" width="880" height="170" rx="10" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="60" y="268" font-size="15" font-weight="bold" fill="#111827">F3-D2：Blender 风格导航 Gizmo（替换白色占位块）</text>
+  <text x="60" y="296" font-size="13" fill="#374151">透明 88×88 覆盖层（右上 12 DIP）：中心球 + 三根世界轴 + 六正负端点 + X/Y/Z 标签</text>
+  <circle cx="300" cy="390" r="16" fill="#CDD6DF" stroke="#718096" stroke-width="1.5"/>
+  <line x1="300" y1="390" x2="300" y2="330" stroke="#C18A55" stroke-width="2"/><circle cx="300" cy="324" r="6" fill="#C18A55"/><text x="296" y="327" font-size="8" fill="#fff">X</text>
+  <line x1="300" y1="390" x2="330" y2="390" stroke="#5F87A7" stroke-width="2"/><circle cx="336" cy="390" r="6" fill="#5F87A7"/><text x="332" y="393" font-size="8" fill="#fff">Y</text>
+  <line x1="300" y1="390" x2="330" y2="356" stroke="#A9B8C7" stroke-width="2"/><circle cx="336" cy="350" r="6" fill="#A9B8C7"/><text x="332" y="353" font-size="8" fill="#fff">Z</text>
+  <circle cx="270" cy="400" r="4" fill="#A9B8C7" opacity="0.4"/>
+  <text x="420" y="296" font-size="13" fill="#374151">玄域低饱和配色：X #C18A55 淡金褐 / Y #5F87A7 蓝灰 / Z #A9B8C7 浅钢灰</text>
+  <text x="420" y="320" font-size="13" fill="#374151">背向端点 40% Alpha 小圆点 → 侧向 78% → 朝向 100% 大端点带标签</text>
+  <text x="420" y="344" font-size="13" fill="#374151">深度升序绘制（背向先、朝向后）；轴正对相机时端点收缩中心、无 NaN</text>
+  <text x="420" y="368" font-size="13" fill="#374151">控件完全透明无底板；相机姿态来自 UiVm.NavigationCamera 快照</text>
+  <text x="420" y="392" font-size="13" fill="#6B7280">不进入 Core / 不保存 / 不进 .xymap/.xyscene / 不参与 Picking 与运行时</text>
+
+  <rect x="40" y="426" width="880" height="150" rx="10" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="60" y="454" font-size="15" font-weight="bold" fill="#111827">F3-D3：交互行为</text>
+  <text x="60" y="480" font-size="13" fill="#374151">点击六端点 → 标准视角（+X/-X/+Y/-Y/顶/底），保留 Pivot 与距离；Up 合同：±X/±Y=+Z、顶/底=+Y 防滚转</text>
+  <text x="60" y="504" font-size="13" fill="#374151">中心球/空白拖动 → 复用 UiVm 相机会话 Orbit（同一灵敏度/俯仰限制/Pivot/取消处理）</text>
+  <text x="60" y="528" font-size="13" fill="#374151">点击/拖动阈值 4 DIP；Hover 亮环 + Hand 光标；PointerCaptureLost 正常取消</text>
+  <text x="60" y="552" font-size="13" fill="#374151">88×88 外不截获输入（实体 Picking/框选/变换 Gizmo 不受影响）；导航不进入 Dirty/Undo</text>
+  <text x="60" y="576" font-size="13" fill="#6B7280">拆分职责：Layout（投影数学）/ Render / HitTest / Input，均 ≤100 行</text>
+
+  <rect x="40" y="592" width="880" height="30" rx="8" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="60" y="612" font-size="13" fill="#6B7280">门禁：Core 254 / World 435 / WarCore 22 全过 · arch-a-guard PASS · 待用户真机验收 F3 十一项清单</text>
+</svg>
