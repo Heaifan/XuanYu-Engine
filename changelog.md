@@ -20,6 +20,16 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.20-rz
+MAP-A-R2-D2 地图编辑会话与状态权威（2026-08-03，Commit 本轮落库为准）
+- **D1 遗留小修**：`MapDefinition` 移除 `Revision`（领域聚合纯净不可变，版本/游标语义由编辑会话持有）；`MapLayerKind`/`MapRegionKind` 枚举值合法性检查（`Enum.IsDefined`，未知角色不得默认为可承载层）+ UnknownLayerKindRejected/UnknownRegionKindRejected 测试。
+- **历史方案（审计裁定：方案 A 直接复用）**：现有 `EditorHistoryOwner` 已通用（PushEntry(object)/TryUndoAny/TryRedoAny/CurrentRevision Undo 回退/新编辑清 Redo 分支），地图直接复用同一 Core 实现（独立实例），不建第二套历史系统；CurrentStateId=历史游标（可回退旧节点）、ChangeSequence=单调递增（事件/去重，不可回退）、SavedStateId=保存点；IsDirty=路径空 ∥ 保存点空 ∥ 状态不一致（随 Undo/Redo 回到保存点）。
+- **MapEditSession（XuanYu.Editor/MapEditing/，11 文件）**：唯一地图权威 CurrentMap: MapDefinition；统一 `CommitMapChange` 管线（纯修改→No-op 检测→领域校验→记录历史→替换，失败零污染）；命令 RenameMap/ResizeMap/SetBaseHeight/CreateNewMap/ReplaceCurrentMap/MarkSaved；Undo/Redo/分支清除；选择（None/Map/Layer/Region 只存稳定 ID + 变更后规范化）；低频事件（ContentChanged/SelectionChanged/DirtyChanged/HistoryAvailabilityChanged）；写线程保护（注入 `Func<bool>`，复用现有判断器）。
+- **错误合同**：复用 Core.EngineResult/EngineError（未新建 MapEditResult 等容器）；错误码 NotOnWriteThread/InvalidMapName/InvalidMapSize/RegionWouldBeOutOfBounds（缩小致区域越界整体拒绝，不裁剪不移动）/NoUndoAvailable/NoRedoAvailable/UnknownLayer/UnknownRegion；No-op=成功且无状态变化。
+- **组装**：UiVm 增加 `MapSession`（同一写线程判断器注入，headless 测试兼容）；无 Vulkan/UI 视觉改动。
+- 验证：新增 MapEditSession 测试 7 文件 36 用例（创建/命令/历史/Dirty/选择/验证/线程）；Core 312/312、World 528/528（490→528）、WarCore 22/22 全 PASS；arch-a-guard PASS；5+100 全合规（守卫 ReadAllLines 口径：UiVm 压至 99、SelectionTests 100）；--no-incremental 全量重编译 0 error（3 个既有 warning 如实记录）。
+- 治理：版本 v0.2.24.19-rz → v0.2.24.20-rz（五处同步）；未创建 Tag/Release。
+
 ## v0.2.24.19-rz
 MAP-A-R2-D1-F1 架构与领域合同修正（REVISE 裁定）（2026-08-03，Commit 本轮落库为准）
 - **审查裁定**：D1 三个阻断问题（领域权威层错误/无完整地图聚合/区域合法性过弱）全部修复；版本后缀修正为 -rz（正常开发轮，F 修复轮才用 -fix）。

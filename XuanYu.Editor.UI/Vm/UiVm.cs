@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Avalonia.Threading;
 using XuanYu.Core.History;
 using XuanYu.Editor.Assets;
+using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.SceneDocument;
 using XuanYu.Render.Abstractions;
 using XuanYu.World;
@@ -44,6 +45,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         InteractionCommand = new RelayCommand(name => RunInteraction(name?.ToString() ?? string.Empty));
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
         SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
+        MapSession = new MapEditSession(isWriteThread: isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         InitLogs();
     }
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -53,13 +55,12 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public ICommand ToggleSnapCommand { get; }
     public ICommand InteractionCommand { get; }
     public ICommand ToggleLogCommand { get; }
-    public ICommand SelectLogFilterCommand { get; }
+    public ICommand SelectLogFilterCommand { get; } public MapEditSession MapSession { get; }
     public IReadOnlyList<EditorTreeNode> ProjectItems => TreeGuideBuilder.Visible(UiText.ProjectTreeItems, _collapsedProjectKeys);
     public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
     public IReadOnlyList<string> InspectorFields => BuildInspectorFields();
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems; public IReadOnlyList<string> PropertyItems => UiText.PropertyItems;
-    public IReadOnlyList<string> ToolItems => UiText.ToolItems;
-    public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => BuildDebugObjectItems();
+    public IReadOnlyList<string> ToolItems => UiText.ToolItems; public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => BuildDebugObjectItems();
     public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => BuildDebugInputItems();
     public string ActiveTool => _editorState.ToolSnapshot.ActiveToolText;
     public bool IsSelectTool => IsTool(EditorToolId.Select);
@@ -95,6 +96,5 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         ApplyRunCommand(name);
     }
     bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null) { if (EqualityComparer<T>.Default.Equals(field, value)) return false; field = value; OnPropertyChanged(name); return true; }
-    void OnPropertyChanged([CallerMemberName] string? name = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }

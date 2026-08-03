@@ -1,5 +1,20 @@
-版本：v0.2.24.19-rz
+版本：v0.2.24.20-rz
 # XuanYu Engine 文件树
+
+## R2-D2 职责索引（v0.2.24.20-rz）
+
+- `XuanYu.Editor/MapEditing/MapEditSession.cs`：地图编辑会话根状态（CurrentMap/StateId/SavedStateId/ChangeSequence/Path/Selection/IsDirty/事件）
+- `XuanYu.Editor/MapEditing/MapEditSession.Commit.cs`：统一提交管线（纯修改→No-op→领域校验→历史→替换；失败零污染）
+- `XuanYu.Editor/MapEditing/MapEditSession.Commands.cs`：地图基础命令（RenameMap/ResizeMap/SetBaseHeight）
+- `XuanYu.Editor/MapEditing/MapEditSession.Document.cs`：文档生命周期（CreateNewMap/ReplaceCurrentMap/MarkSaved）
+- `XuanYu.Editor/MapEditing/MapEditSession.History.cs`：Undo/Redo 与事件广播
+- `XuanYu.Editor/MapEditing/MapEditSession.Selection.cs`：选择状态（稳定 ID/变更后规范化/不产生 Dirty）
+- `XuanYu.Editor/MapEditing/MapSelection.cs` + `MapSelectionKind.cs`：选择模型（None/Map/Layer/Region）
+- `XuanYu.Editor/MapEditing/MapHistoryEntry.cs`：历史条目（Before/After 不可变快照 + Reason）
+- `XuanYu.Editor/MapEditing/MapEditReason.cs`：编辑原因枚举（NewMap/Rename/Resize/BaseHeightChanged/Undo/Redo/Replace）
+- `XuanYu.Editor/MapEditing/MapEditEvents.cs`：低频事件参数（Content/Selection/Dirty/HistoryAvailability）
+- `XuanYu.World.Tests/MapEditing/`：MapEditSession 测试 7 文件（创建/命令/历史/Dirty/选择/验证/线程）
+- 修改：`MapDefinition.cs`（移除 Revision）、`MapDefaultDefinition.cs`（删 Revision 参数）、`MapLayerValidator.cs`/`MapRegionValidator.cs`（枚举合法性）、`UiVm.cs`（组装 MapSession，压至 99 行）、测试（MapDefaultMapTests 删 Revision 断言、MapLayerTests.Base/MapRegionTests 加枚举用例）
 
 ## R2-D1-F1 职责索引（v0.2.24.19-rz）
 

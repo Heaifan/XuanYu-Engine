@@ -31,6 +31,8 @@ public static class MapRegionValidator
         {
             if (!region.RegionId.IsValid)
                 return MapValidationResult.Fail("InvalidRegionId", $"区域ID非法：{region.RegionId}。");
+            if (!Enum.IsDefined(region.Kind))
+                return MapValidationResult.Fail("UnknownRegionKind", $"区域类型未知：{region.DisplayName}。");
             if (!ids.Add(region.RegionId))
                 return MapValidationResult.Fail("DuplicateRegionId", $"区域ID重复：{region.RegionId}。");
             if (!layerIds.Contains(region.LayerId))

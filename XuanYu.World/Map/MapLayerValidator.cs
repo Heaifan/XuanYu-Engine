@@ -20,6 +20,8 @@ public static class MapLayerValidator
         {
             if (!layer.LayerId.IsValid)
                 return MapValidationResult.Fail("InvalidLayerId", $"图层ID非法：{layer.LayerId}。");
+            if (!Enum.IsDefined(layer.Kind))
+                return MapValidationResult.Fail("UnknownLayerKind", $"图层角色未知：{layer.DisplayName}。");
             if (!ids.Add(layer.LayerId))
                 return MapValidationResult.Fail("DuplicateLayerId", $"图层ID重复：{layer.LayerId}。");
             if (string.IsNullOrWhiteSpace(layer.DisplayName))

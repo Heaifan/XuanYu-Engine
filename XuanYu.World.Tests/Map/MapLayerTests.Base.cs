@@ -27,6 +27,16 @@ public sealed partial class MapLayerTests
     }
 
     [Fact]
+    public void Unknown_layer_kind_rejected()
+    {
+        var layers = Default();
+        var unknown = layers.SetItem(1, layers[1] with { Kind = (MapLayerKind)99 });
+        var result = MapLayerValidator.Validate(unknown);
+        Assert.False(result.Succeeded);
+        Assert.Equal("UnknownLayerKind", result.ErrorCode);
+    }
+
+    [Fact]
     public void Base_layer_must_be_order_zero()
     {
         var layers = Default();

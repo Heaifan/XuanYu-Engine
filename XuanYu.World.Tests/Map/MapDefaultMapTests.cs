@@ -18,7 +18,6 @@ public sealed class MapDefaultMapTests
         Assert.Equal(MapCoordinateSystem.ZUpMeter, map.CoordinateSystem);
         Assert.Equal(2, map.Layers.Length);
         Assert.True(map.Regions.IsEmpty);
-        Assert.Equal(0, map.Revision);
     }
 
     [Fact]

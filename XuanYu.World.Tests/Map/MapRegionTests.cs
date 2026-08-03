@@ -68,4 +68,15 @@ public sealed partial class MapRegionTests
         Assert.False(result.Succeeded);
         Assert.Equal("InvalidRegionId", result.ErrorCode);
     }
+
+    [Fact]
+    public void Unknown_region_kind_rejected()
+    {
+        var layers = Layers();
+        var unknown = Region(layers[1].LayerId) with { Kind = (MapRegionKind)99 };
+        var result = MapRegionValidator.Validate(
+            ImmutableArray.Create(unknown), layers, Map10km);
+        Assert.False(result.Succeeded);
+        Assert.Equal("UnknownRegionKind", result.ErrorCode);
+    }
 }
