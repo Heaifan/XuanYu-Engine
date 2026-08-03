@@ -1,5 +1,21 @@
-版本：v0.2.24.7-fix
+版本：v0.2.24.8-fix
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D5-R1-F2-R2 职责索引（v0.2.24.8-fix）
+
+- `XuanYu.Render.Abstractions/ReferenceGridScale.cs`：每帧全局网格尺度纯数学（1/2/5 序列、48px 目标、对数域互补权重；不持相机/不调 Vulkan）
+- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert/.frag`：无限参考网格独立 Pass（只画网格，不画轴/原点；双全局层级、方向性密度淡出、有界深度偏移）
+- `XuanYu.Render.Vulkan/Shaders/editor_world_axes.frag`：X/Y 世界轴独立全屏 Pass（单一轴线事实源；金 X=世界 Y=0、蓝 Y=世界 X=0；方向导数固定 1.25px）
+- `XuanYu.Render.Vulkan/Shaders/editor_world_origin.frag`：世界原点标记独立全屏 Pass（琥珀、≤4px 半径）
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.cs`：全屏 Pass 管线通用创建（三个 Pass 共用）
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs`：网格/轴/原点管线工厂（176B PushConstant）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Grid.cs`：参考网格绘制（gridScale 填充）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.GridScale.cs`：每帧参考尺度（视口中心射线 Z=0 求交，失败回退上一帧）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.WorldAxes.cs`：世界轴/原点 Pass 绘制与管线注入
+- `XuanYu.Render.Vulkan/Session/GridPipelineSet.cs`：三全屏 Pass 管线组合（设备不支持则禁用对应 Pass）
+- `XuanYu.Core.Tests/Render/ReferenceGridScaleTests.cs`：1/2/5 序列与互补权重合同
+- `XuanYu.Core.Tests/Render/ReferenceGridShaderContractTests.cs`：Shader 防退化合同（无轴/无逐 Fragment LOD/clamp 深度偏移）
+- 测试更新：ReferenceGridAdaptiveTests（互补权重+密度淡出+深度 clamp）、ReferenceGridDrawPlanTests（方案 12 顺序+开关独立）、ViewportAssistDrawPlanTests（新索引）
 
 ## MAP-A-R1-D5-R1-F2 职责索引（v0.2.24.7-fix）
 

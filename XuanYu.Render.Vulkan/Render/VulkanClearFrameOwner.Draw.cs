@@ -11,24 +11,13 @@ public sealed unsafe partial class VulkanClearFrameOwner
     PipelineLayout _skyPipelineLayout;
     Silk.NET.Vulkan.Pipeline _gridPipeline;
     PipelineLayout _gridPipelineLayout;
-
-    // WORLD-D-R1：天空管线（深度不写）注入；与主管线共用 PushConstants 布局，
-    // 命令缓冲按绘制类型在 RecordDraw 时选择绑定。
+    // WORLD-D-R1：天空管线（深度不写）注入；与主管线共用 PushConstants 布局。
     public void SetSkyPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
     {
         _skyPipeline = pipeline;
         _skyPipelineLayout = layout;
         if (_views.Length > 0 && !RecordCommandBuffers(_views)) throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
     }
-
-    // MAP-A-R1-D5-R1-F2：独立参考网格管线注入（独立 PushConstant，深度写关/混合开）。
-    public void SetReferenceGridPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
-    {
-        _gridPipeline = pipeline;
-        _gridPipelineLayout = layout;
-        if (_views.Length > 0 && !RecordCommandBuffers(_views)) throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
-    }
-
     void RecordDraw(CommandBuffer cb)
     {
         if (_pipeline.Handle == 0 || _pipelineLayout.Handle == 0) return;
@@ -47,12 +36,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
                 BindFramePipeline(cb, draw.Kind);
-                // D4-F2：地表在天空之后绘制（否则被覆盖）；边界线紧随其后。
                 if (draw.Kind == RenderDrawKind.MapBounds && _mapTerrainIndexBuffer is not null)
                     DrawMapTerrain(cb, pScene);
-                // F2：参考网格走独立管线与独立 PushConstant（DrawAssist 不再处理网格）。
-                if (draw.Kind == RenderDrawKind.EditorReferenceGrid)
-                    DrawReferenceGrid(cb);
+                // F2-R2：网格/轴/原点独立全屏 Pass（单一事实源，独立开关）。
+                if (draw.Kind == RenderDrawKind.EditorReferenceGrid) DrawReferenceGrid(cb);
+                else if (draw.Kind == RenderDrawKind.WorldOrigin) DrawWorldOrigin(cb);
+                else if (draw.Kind == RenderDrawKind.WorldAxes) DrawWorldAxes(cb);
                 else if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);
                 else if (draw.EntityIndex >= 0) DrawEntity(cb, pScene, draw);
                 else DrawGizmo(cb, pScene, draw);
@@ -66,6 +55,18 @@ public sealed unsafe partial class VulkanClearFrameOwner
         {
             if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
             _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _gridPipeline);
+            return;
+        }
+        if (kind == RenderDrawKind.WorldOrigin)
+        {
+            if (_originPipeline.Handle == 0 || _originPipelineLayout.Handle == 0) return;
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _originPipeline);
+            return;
+        }
+        if (kind == RenderDrawKind.WorldAxes)
+        {
+            if (_axesPipeline.Handle == 0 || _axesPipelineLayout.Handle == 0) return;
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _axesPipeline);
             return;
         }
         if (kind != RenderDrawKind.EditorBackground)

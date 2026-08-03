@@ -36,6 +36,7 @@ public sealed partial class VulkanRenderSession
         _presentLoop.Dispose();
         _pipeline?.Dispose();
         _skyPipeline?.Dispose();
+        _gridPipelines?.Dispose();
         _clearFrame.Dispose();
         _log?.Invoke(VulkanClearFrameLogFormatter.SessionDisposed());
         return true;

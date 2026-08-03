@@ -1,41 +1,44 @@
 using Silk.NET.Vulkan;
-using XuanYu.Core.Space;
 using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// MAP-A-R1-D5-R1-F2：独立参考网格绘制。使用本 Pass 专属 160B PushConstant：
+// MAP-A-R1-D5-R1-F2-R2：参考网格绘制。
+// PushConstant 176B（44 float）：
 //   mat4 viewProjection @0    mat4 inverseViewProjection @64
 //   vec4 cameraPosition @128  vec4 viewportAndFar @144 (xy=视口, z=Far, w=GridMaxDist)
-// 不挤占场景 128B 布局，不修改实体/Gizmo PushConstants。
+//   vec4 gridScale @160 (x=FineSpacing, y=CoarseSpacing, z=FineWeight, w=CoarseWeight)
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    const uint GridPushFloatCount = 40;
+    const uint GridPushFloatCount = 44;
+    public const uint ReferenceGridPushSize = GridPushFloatCount * 4;
+
+    public void SetReferenceGridPipeline(Silk.NET.Vulkan.Pipeline pipeline, PipelineLayout layout)
+    {
+        _gridPipeline = pipeline;
+        _gridPipelineLayout = layout;
+        if (_views.Length > 0 && !RecordCommandBuffers(_views)) throw new InvalidOperationException("Pipeline 注入后 CommandBuffer 重录失败");
+    }
 
     void DrawReferenceGrid(CommandBuffer cb)
     {
         if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
         var scene = new float[GridPushFloatCount];
+        FillGridPushConstants(scene, _renderProjection);
+        // gridScale：每帧全局尺度（1/2/5 序列 + 互补权重），禁止逐 Fragment LOD。
+        var levels = ReferenceGridScale.Compute(_lastReferenceWorldPerPixel);
+        scene[40] = (float)levels.FineSpacing;
+        scene[41] = (float)levels.CoarseSpacing;
+        scene[42] = (float)levels.FineWeight;
+        scene[43] = (float)levels.CoarseWeight;
+        PushGridConstants(cb, scene);
+        _vk.CmdDraw(cb, RenderDrawPlan.ReferenceGridVertexCount, 1, 0, 0);
+    }
+
+    void PushGridConstants(CommandBuffer cb, float[] scene)
+    {
         fixed (float* pScene = scene)
         {
-            var projection = _renderProjection;
-            var camera = projection.Camera;
-            var viewport = new ViewportState(
-                0, 0, _extent.Width, _extent.Height,
-                (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
-            var state = camera.ToViewProjection(viewport);
-            var vulkanProjection = ToVulkanProjection(state.Projection);
-            var viewProjection = state.View * vulkanProjection;
-            FillMatrixTranspose(pScene, viewProjection);
-            FillMatrixTransposeInverse(pScene + 16, viewProjection);
-            pScene[32] = (float)camera.Position.X;
-            pScene[33] = (float)camera.Position.Y;
-            pScene[34] = (float)camera.Position.Z;
-            pScene[35] = 1.0f;
-            pScene[36] = _extent.Width;
-            pScene[37] = _extent.Height;
-            pScene[38] = (float)camera.FarPlane;
-            pScene[39] = (float)(camera.FarPlane * 0.75); // gridMaxDistance：不满强度到 Far
             var range = new PushConstantRange
             {
                 StageFlags = ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit,
@@ -44,7 +47,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
             };
             _vk.CmdPushConstants(cb, _gridPipelineLayout, range.StageFlags, 0,
                 GridPushFloatCount * 4, pScene);
-            _vk.CmdDraw(cb, RenderDrawPlan.ReferenceGridVertexCount, 1, 0, 0);
         }
     }
 }

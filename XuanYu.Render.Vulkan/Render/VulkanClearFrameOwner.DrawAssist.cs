@@ -15,13 +15,9 @@ public sealed unsafe partial class VulkanClearFrameOwner
             return;
         }
 
-        var mode = draw.Kind switch
-        {
-            RenderDrawKind.EditorBackground => -10.0f,
-            RenderDrawKind.WorldOrigin => -12.0f,
-            RenderDrawKind.WorldAxes => -13.0f,
-            _ => -10.0f
-        };
+        // F2-R2：WorldOrigin / WorldAxes 已改为独立全屏 Pass（Draw.cs 分发），
+        // 此处只处理 EditorBackground（天空）。
+        var mode = -10.0f;
         FillScenePushConstants(scene, _renderProjection, Vector3d.Zero,
             Vector3d.Zero, new Vector3d(1, 1, 1), 0.0f, gizmoModeOverride: mode);
         PushSceneConstants(cb, scene);

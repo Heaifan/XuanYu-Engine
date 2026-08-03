@@ -4,18 +4,18 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Core.Tests.Render;
 
-// MAP-A-R1-D5-R1-F2：DrawPlan 网格合同——有/无地图、有/无实体时网格都在，
-// 且顺序位于地形/实体之后、Gizmo 之前（实体可遮挡网格）。
+// MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
+// 顺序：地形(MapBounds) → 网格 → 原点 → 世界轴 → 实体填充 → 轮廓 → Gizmo。
 public sealed class ReferenceGridDrawPlanTests
 {
-    static RenderProjection Projection(bool hasMap, bool withEntity, bool showGrid)
+    static RenderProjection Projection(bool hasMap, bool withEntity, bool showGrid, bool showAxes = true, bool showOrigin = true)
     {
         var entities = withEntity
-            ? new[] { new RenderEntityProjection(EntityId.FromInt(1), Vector3d.Zero, Vector3d.Zero, new(1.0, 1.0, 1.0)) }
+            ? new[] { new RenderEntityProjection(EntityId.FromInt(1), Vector3d.Zero, Vector3d.Zero, new(1.0, 1.0, 1.0), IsSelected: true) }
             : [];
         return new RenderProjection(default, entities, true, Vector3d.Zero,
             Assist: new EditorViewportAssistState(
-                ShowGrid: showGrid, ShowOrigin: false, ShowWorldAxes: false, ShowEditorBackground: false),
+                ShowGrid: showGrid, ShowOrigin: showOrigin, ShowWorldAxes: showAxes, ShowEditorBackground: false),
             Map: hasMap ? new Core.Map.MapRenderSnapshot(
                 "21e4a2d34d4a4a1eb2539eac76d412a8", "M", 2000, 2000,
                 Core.Map.MapSurfaceKind.Flat, 0, 0, 1, 1,
@@ -27,24 +27,46 @@ public sealed class ReferenceGridDrawPlanTests
     public void Grid_kept_with_map_and_entity_combinations(bool hasMap, bool withEntity)
     {
         var plan = RenderDrawPlan.GetFrameDrawPlan(Projection(hasMap, withEntity, true));
-        var gridIndex = System.Array.FindIndex(
-            plan.ToArray(), e => e.Kind == RenderDrawKind.EditorReferenceGrid);
-        Assert.True(gridIndex >= 0, "网格必须存在");
+        Assert.Contains(plan, e => e.Kind == RenderDrawKind.EditorReferenceGrid);
     }
 
+    // 方案 12 顺序：Terrain < Grid < WorldAxes < EntityFill < EntityOutline < Gizmo。
     [Fact]
-    public void Grid_after_entities_before_gizmo()
+    public void Draw_order_matches_scheme_twelve()
     {
-        var plan = RenderDrawPlan.GetFrameDrawPlan(Projection(false, true, true));
-        var gridIndex = System.Array.FindIndex(
-            plan.ToArray(), e => e.Kind == RenderDrawKind.EditorReferenceGrid);
-        var entityIndex = System.Array.FindIndex(
-            plan.ToArray(), e => e.Kind == RenderDrawKind.EntityFill);
-        var gizmoIndex = System.Array.FindIndex(
-            plan.ToArray(), e => e.Kind == RenderDrawKind.MoveGizmo);
-        Assert.True(entityIndex >= 0 && entityIndex < gridIndex,
-            "网格必须在实体之后");
-        Assert.True(gridIndex < gizmoIndex, "网格必须在 Gizmo 之前");
+        var plan = RenderDrawPlan.GetFrameDrawPlan(Projection(true, true, true)).ToList();
+        int IndexOf(RenderDrawKind kind) => plan.FindIndex(e => e.Kind == kind);
+        var terrain = IndexOf(RenderDrawKind.MapBounds);
+        var grid = IndexOf(RenderDrawKind.EditorReferenceGrid);
+        var origin = IndexOf(RenderDrawKind.WorldOrigin);
+        var axes = IndexOf(RenderDrawKind.WorldAxes);
+        var fill = IndexOf(RenderDrawKind.EntityFill);
+        var outline = IndexOf(RenderDrawKind.EntityOutline);
+        var gizmo = IndexOf(RenderDrawKind.MoveGizmo);
+        Assert.True(terrain >= 0 && terrain < grid, "地形必须在网格之前");
+        Assert.True(grid < origin && origin < axes, "网格→原点→轴顺序错误");
+        Assert.True(axes < fill && fill < outline && outline < gizmo, "轴→实体→轮廓→Gizmo 顺序错误");
+    }
+
+    // 开关独立（方案 11.2）：网格关世界轴开 → 只有轴；网格开世界轴关 → 只有网格。
+    [Fact]
+    public void Switches_are_independent()
+    {
+        var planGridOff = RenderDrawPlan.GetFrameDrawPlan(Projection(false, false, false, showAxes: true, showOrigin: true)).ToList();
+        Assert.DoesNotContain(planGridOff, e => e.Kind == RenderDrawKind.EditorReferenceGrid);
+        Assert.Contains(planGridOff, e => e.Kind == RenderDrawKind.WorldAxes);
+        Assert.Contains(planGridOff, e => e.Kind == RenderDrawKind.WorldOrigin);
+
+        var planAxesOff = RenderDrawPlan.GetFrameDrawPlan(Projection(false, false, true, showAxes: false, showOrigin: true)).ToList();
+        Assert.Contains(planAxesOff, e => e.Kind == RenderDrawKind.EditorReferenceGrid);
+        Assert.DoesNotContain(planAxesOff, e => e.Kind == RenderDrawKind.WorldAxes);
+
+        var planOriginOff = RenderDrawPlan.GetFrameDrawPlan(Projection(false, false, true, showAxes: true, showOrigin: false)).ToList();
+        Assert.DoesNotContain(planOriginOff, e => e.Kind == RenderDrawKind.WorldOrigin);
+        Assert.Contains(planOriginOff, e => e.Kind == RenderDrawKind.WorldAxes);
+
+        var planAllOff = RenderDrawPlan.GetFrameDrawPlan(Projection(false, false, false, showAxes: false, showOrigin: false)).ToList();
+        Assert.DoesNotContain(planAllOff, e => e.Kind is RenderDrawKind.EditorReferenceGrid or RenderDrawKind.WorldAxes or RenderDrawKind.WorldOrigin);
     }
 
     [Fact]

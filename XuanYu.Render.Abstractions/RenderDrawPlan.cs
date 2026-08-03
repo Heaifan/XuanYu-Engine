@@ -54,17 +54,17 @@ public static class RenderDrawPlan
         var assist = projection.AssistState;
         var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 6);
         if (assist.ShowEditorBackground) plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
+        // F2-R2 顺序（方案 12）：地形 → 网格 → 原点 → 轴 → 实体填充 → 轮廓 → Gizmo。
+        // 网格画在地形之上（深度偏移），原点/轴覆盖网格，实体最终遮挡一切。
+        if (projection.HasMap) plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
+        if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
         if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
-        if (projection.HasMap) plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
         {
             var entity = projection.Entities[i];
             plan.Add(new FrameEntry(RenderDrawKind.EntityFill, FillVertices(entity), i, entity.EntityType));
         }
-        // MAP-A-R1-D5-R1-F2：参考网格在地形/实体之后、轮廓/Gizmo 之前——实体可遮挡网格，
-        // 平坦地形上经深度偏移稳定显示；有/无地图都保留（无限参考平面，不按地图裁剪）。
-        if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
         {
             var entity = projection.Entities[i];

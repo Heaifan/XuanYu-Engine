@@ -1,5 +1,21 @@
 # changelog
 
+## v0.2.24.8-fix
+MAP-A-R1-D5-R1-F2-R2 统一网格尺度与轴线修复（2026-08-03 11:40:00，Commit 本轮落库为准）
+- F2-A1（v0.2.24.7-fix）：**FAIL**。现象：逐屏幕位置 LOD 导致横向密度分区（近 0.1/中 1/远 10 单位并存）；近处摩尔纹与灰色叠块；世界轴出现楔形；网格 Shader 与独立 WorldAxes Pass 存在轴线重复绘制。
+- 修复（本版本）：
+  - 取消逐 Fragment LOD——每帧 CPU 由视口中心射线与 Z=0 求交（中心±1px 世界距离取 max）得参考世界每像素，整帧统一 Fine/Coarse 层级；
+  - 1/2/5 十进制序列（0.01/0.02/0.05/0.1/0.2/0.5/1/2/5/10…），目标 48px/格，对数域相位 + smoothstep 互补交叉淡化（FineWeight+CoarseWeight≈1，边界旧 Coarse=新 Fine 无缝）；
+  - 求交失败回退：中心 → 视口偏下 60% → 上一帧合法尺度（禁止重置为 1）；
+  - 方向性抗摩尔纹：X/Y 各自按单元屏幕间距淡出（<6px 隐藏、6~12 渐入、>12 正常）；
+  - 轴线单一事实源：网格 Shader 删除 X/Y 轴与原点绘制；新增独立 WorldAxes 全屏 Pass（金 X=世界 Y=0、蓝 Y=世界 X=0，各自方向导数固定 1.25px 屏幕宽度）与 WorldOrigin 全屏 Pass（琥珀原点标记 ≤4px 半径）；三个 Pass 开关（ShowGrid/ShowWorldAxes/ShowOrigin）完全独立；
+  - 深度偏移有界化：clamp(fwidth(depth)×0.5, 1e-7, 2e-5)；
+  - DrawPlan 顺序（方案 12）：背景 → 地形(MapBounds) → 网格 → 原点 → 世界轴 → 实体填充 → 轮廓 → Gizmo。
+- 验证：聚焦 ReferenceGrid/WorldAxes/DrawPlan/Shader 合同测试 73/73；Core 215/215、World 435/435、WarCore 22/22；arch-a-guard PASS（含 5+100）；glslc 字节码四文件逐字一致；git diff --check OK。
+- 视觉冒烟：**仅完成启动冒烟，图像待用户验收**（本环境无 computer_use 工具无法读取编辑器截图，按宪法不得写视觉 PASS）。启动冒烟实测：编辑器进程启动后存活 72.9s 无崩溃、无 Vulkan 会话回滚（三全屏 Pass 管线创建成功）；F2-A2 三张截图（默认斜视/拉近/拉远）待用户执行。
+- 治理：版本 v0.2.24.7-fix → v0.2.24.8-fix（五处同步）；新增 ReferenceGridScale.cs（纯数学）、WorldAxes/WorldOrigin Shader + 字节码、GridPipelineSet.cs、GridScale.cs、ShaderContractTests/ReferenceGridScaleTests；无新增第三方依赖；不创建 Tag/Release。
+- F2-A2 真机验收清单已交付（9 项：默认斜视/拉近/拉远/平移/环绕/独立开关/实体遮挡/有地图无地图/窗口尺寸），待用户执行。
+
 ## v0.2.24.7-fix
 MAP-A-R1-D5-R1-F2 无限参考网格稳定性修复（2026-08-03 10:40:00，Commit 本轮落库为准）
 - 任务目标：修复截图中"普通网格几乎不可见、只剩两条坐标轴"问题——稳定的缩放自适应层级、普通网格可见、远处无闪烁/地平线无噪声、有地图时网格不受地图边界裁剪；不修改天空/光照/地形/视角 Gizmo/地图编辑器/Schema。

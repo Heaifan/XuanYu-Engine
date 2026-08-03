@@ -38,6 +38,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _renderProjection = projection.Projection;
         _hasRenderProjection = true;
         SetMapTerrain(projection.Projection.Map);
+        // F2-R2：每帧全局网格尺度（视口中心射线求交，1/2/5 层级），求交失败沿用上一帧。
+        UpdateReferenceGridScale(projection.Projection);
         return _views.Length == 0 || RecordCommandBuffers(_views);
     }
 }
