@@ -10,6 +10,11 @@ public sealed record MapSurfaceDefinition(
 {
     public static MapSurfaceDefinition DefaultGentleHills { get; } = new(
         MapSurfaceKinds.GentleHillsV1, 0.0, 12.0, 400.0, 1);
+
+    // MAP-A-R2-D1：R2 默认地表。Flat 采样忽略振幅/波长（恒返回基准高度）；
+    // 波长取 1.0 仅为满足既有合同"波长必须大于 0"。
+    public static MapSurfaceDefinition DefaultFlat { get; } = new(
+        MapSurfaceKinds.Flat, 0.0, 0.0, 1.0, 1);
 }
 
 // R1 已知地表类型清单（D1 合同冻结）。

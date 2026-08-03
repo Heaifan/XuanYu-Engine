@@ -7,7 +7,8 @@ namespace XuanYu.World.Tests.Map;
 // MAP-A-R1-D3：MapDocument → WorldMapState 桥接与端到端查询一致。
 public sealed class MapDocumentWorldBridgeTests
 {
-    static MapDocument Doc() => MapDocument.CreateNew("TestBattlefield", 2000, 2000);
+    static MapDocument Doc() => MapDocument.CreateNew("TestBattlefield", 2000, 2000,
+        new MapSurfaceDefinition(MapSurfaceKinds.GentleHillsV1, 0.0, 12.0, 400.0, 1));
 
     [Fact]
     public void Bridge_carries_all_fields()

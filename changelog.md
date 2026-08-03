@@ -20,6 +20,19 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.18-fix
+MAP-A-R2-D1 地图领域合同：图层/区域模型与验证（2026-08-03，Commit 本轮落库为准）
+- **R2 范围裁定**：R1 后半（地图尺寸/边界/地表/区域/图层/保存）按用户纠正转入 MAP-A-R2；`.xymap` ZIP 封装与 DGD 衔接整体后移，不抢在地图本体之前开发。
+- **稳定 ID**：新增 `MapLayerId`/`MapRegionId`（32 位十六进制，与 MapId 同族）；名称可改、ID 不变，不依赖列表序号/UI 索引。
+- **图层领域模型**：`MapLayer`（ID/名称/顺序/可见/锁定/固定层）+ `MapDefaultLayers` 默认工厂（"基础地图"固定层 + "区域"层）。
+- **区域领域模型**：`MapRegion`（ID/所属图层/类型/顶点/闭合）+ `MapRegionKind`（Generic/Playable/Restricted/Deployment/Objective）；顶点只存水平面 X/Y（沿用已冻结 Z-Up 合同，高度由地表采样取得）。
+- **边界合同**：`MapBounds` 中心原点闭区间（X/Y ∈ [-W/2, W/2]），与 `WorldMapState.Contains` 语义一致。
+- **验证器**：`MapLayerValidator`（ID 唯一/名称非空/顺序非负/固定层至多一个）、`MapRegionValidator`（闭合/≥3 顶点/≤1024 顶点/引用图层存在/有限数值/边界内），结构化结果不抛来源不明异常。
+- **默认工厂**：`MapDocument.CreateDefault()`（"未命名地图" 10000×10000 Flat）；`CreateNew` 默认值按 R2 合同调整（10000×10000、`DefaultFlat`）；最大尺寸 10000 → 1000000（R2 测试 02 需 20000，上限仅为输入保护）。
+- 分层裁定：Layers/Regions 本轮为独立领域模型，不挂载 MapDocument（.xymap v1 强制 layerReferences 空数组，schema v2 升级属 D6）；无 Editor.UI/Vulkan 依赖。
+- 验证：新增 MapBoundsTests/MapLayerTests/MapRegionTests(+Helpers)/MapDefaultMapTests 4 文件 35 用例；Core 312/312、World 470/470（435→470）、WarCore 22/22 全 PASS；arch-a-guard PASS；5+100 全合规；`--no-incremental` 全量重编译 0 error（3 个既有 warning 如实记录：xUnit2000/xUnit2013/CS8602）。
+- 治理：版本 v0.2.24.17-fix → v0.2.24.18-fix（五处同步）；F3-F4 视觉冒烟仍待用户真机验收；未创建 Tag/Release。
+
 ## v0.2.24.17-fix
 MAP-A-R1-D5-R1-F3-F4 正交投影 + 视图平面网格（2026-08-03，Commit 本轮落库为准）
 - **F3-F3 正式 PASS/CLOSED**：用户补充真机验收事实（此前未同步），本轮不重验、不补跑。

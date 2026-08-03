@@ -1,5 +1,22 @@
-版本：v0.2.24.17-fix
+版本：v0.2.24.18-fix
 # XuanYu Engine 文件树
+
+## R2-D1 职责索引（v0.2.24.18-fix）
+
+- `XuanYu.Editor/MapDocument/MapLayerId.cs`：图层稳定唯一标识（32 hex，与 MapId 同族）
+- `XuanYu.Editor/MapDocument/MapRegionId.cs`：区域稳定唯一标识（32 hex）
+- `XuanYu.Editor/MapDocument/MapRegionKind.cs`：区域类型（Generic/Playable/Restricted/Deployment/Objective）
+- `XuanYu.Editor/MapDocument/MapLayer.cs`：图层领域模型（ID/名称/顺序/可见/锁定/固定层）
+- `XuanYu.Editor/MapDocument/MapRegion.cs`：区域领域模型（ID/所属图层/类型/顶点/闭合，顶点只存水平面 X/Y）
+- `XuanYu.Editor/MapDocument/MapBounds.cs`：有限地图边界（中心原点、闭区间，与 WorldMapState.Contains 一致）
+- `XuanYu.Editor/MapDocument/MapDefaultLayers.cs`：默认图层工厂（"基础地图"固定层 + "区域"层）
+- `XuanYu.Editor/MapDocument/MapLayerValidator.cs`：图层集合校验（ID 唯一/名称/顺序/固定层至多一个）
+- `XuanYu.Editor/MapDocument/MapRegionValidator.cs`：区域集合校验（闭合/≥3 顶点/≤1024/引用图层/有限数值/边界内）
+- `XuanYu.World.Tests/Map/MapBoundsTests.cs`：边界合同测试（中心原点/闭区间/尺寸变化）
+- `XuanYu.World.Tests/Map/MapLayerTests.cs`：默认图层与图层校验测试
+- `XuanYu.World.Tests/Map/MapRegionTests.cs` + `.Helpers.cs`：区域校验测试（partial 辅助拆分）
+- `XuanYu.World.Tests/Map/MapDefaultMapTests.cs`：默认地图工厂合同测试
+- 修改：`MapDocument.cs`（默认 10000×10000 Flat + `CreateDefault()` 默认地图工厂）、`MapSurfaceDefinition.cs`（新增 `DefaultFlat`）、`MapDocumentValidator.cs`（最大尺寸 10000 → 1000000）、`MapGeometry.cs`（新增 `MapPoint` 水平面坐标点）、测试（`MapSizeValidationTests` 上限断言更新、`MapDocumentWorldBridgeTests` 显式 GentleHills 地表）
 
 ## F3-F4 职责索引（v0.2.24.17-fix）
 

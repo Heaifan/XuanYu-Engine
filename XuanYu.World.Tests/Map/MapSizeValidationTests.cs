@@ -16,6 +16,8 @@ public sealed class MapSizeValidationTests
     [Theory]
     [InlineData(100.0, 100.0)]
     [InlineData(10000.0, 10000.0)]
+    [InlineData(20000.0, 8000.0)]
+    [InlineData(1000000.0, 1000000.0)]
     public void Boundary_sizes_are_valid(double w, double d)
     {
         var doc = Valid() with { SizeMeters = new MapSize(w, d) };
@@ -24,7 +26,7 @@ public sealed class MapSizeValidationTests
 
     [Theory]
     [InlineData(99.9)]
-    [InlineData(10000.1)]
+    [InlineData(1000000.1)]
     [InlineData(0.0)]
     [InlineData(-5.0)]
     public void Invalid_width_rejected(double width)

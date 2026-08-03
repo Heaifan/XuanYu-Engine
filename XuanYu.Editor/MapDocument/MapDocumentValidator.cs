@@ -6,7 +6,7 @@ namespace XuanYu.Editor.MapDocument;
 public static class MapDocumentValidator
 {
     public const double MinSizeMeters = 100.0;
-    public const double MaxSizeMeters = 10000.0;
+    public const double MaxSizeMeters = 1000000.0;
 
     readonly record struct Issue(string Code, string Message, string Detail);
     public static MapDocumentResult<MapDocument> Validate(MapDocument? doc)
