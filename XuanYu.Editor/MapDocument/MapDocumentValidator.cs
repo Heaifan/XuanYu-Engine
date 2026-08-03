@@ -1,14 +1,16 @@
 using System.Collections.Immutable;
+using XuanYu.World.Map;
 
 namespace XuanYu.Editor.MapDocument;
 
-// MAP-A-R1-D2：地图文档严格校验。返回结构化结果，不抛出来源不明的异常。
+// MAP-A-R1-D2：地图文档 DTO（.xymap v1）严格校验。领域合法性（尺寸范围）单一事实源在 World.MapDefinitionValidator。
 public static class MapDocumentValidator
 {
-    public const double MinSizeMeters = 100.0;
-    public const double MaxSizeMeters = 1000000.0;
+    public const double MinSizeMeters = MapDefinitionValidator.MinSizeMeters;
+    public const double MaxSizeMeters = MapDefinitionValidator.MaxSizeMeters;
 
     readonly record struct Issue(string Code, string Message, string Detail);
+
     public static MapDocumentResult<MapDocument> Validate(MapDocument? doc)
     {
         if (doc is null) return Fail("BrokenDocument", "地图文档为空。", "Validate", "");
@@ -24,7 +26,7 @@ public static class MapDocumentValidator
             ?? ValidateSurface(doc.Surface)
             ?? ValidateEnvironment(doc.Environment)
             ?? ValidateLayers(doc.LayerReferences);
-        if (issue is { } found) return Fail(found);
+        if (issue is { } found) return MapDocumentResult<MapDocument>.Fail(found.Code, found.Message, "Validate", found.Detail);
         return MapDocumentResult<MapDocument>.Ok(doc);
     }
 
@@ -39,6 +41,7 @@ public static class MapDocumentValidator
             return new Issue("InvalidSize", $"sizeMeters.depth 必须位于 {MinSizeMeters}～{MaxSizeMeters} 米之间。", "sizeMeters.depth");
         return null;
     }
+
     static Issue? ValidateCoordinateSystem(MapCoordinateSystem? coord)
     {
         if (coord is null) return new Issue("InvalidCoordinateSystem", "coordinateSystem 缺失。", "coordinateSystem");
@@ -64,6 +67,7 @@ public static class MapDocumentValidator
             return new Issue("InvalidSurface", "地表波长必须大于 0。", "surface.wavelengthMeters");
         return null;
     }
+
     static Issue? ValidateEnvironment(MapEnvironmentDefinition? env)
     {
         if (env is null) return new Issue("InvalidEnvironment", "environment 缺失。", "environment");
@@ -83,17 +87,12 @@ public static class MapDocumentValidator
 
     static Issue? ValidateLayers(ImmutableArray<string> layers)
     {
-        if (layers.IsDefault)
-            return new Issue("InvalidLayerReferences", "图层引用字段缺失。", "layerReferences");
-        if (layers.Length != 0)
-            return new Issue("NonEmptyLayerReferences", "R1 图层引用必须为空数组。", "layerReferences");
+        if (layers.IsDefault) return new Issue("InvalidLayerReferences", "图层引用字段缺失。", "layerReferences");
+        if (layers.Length != 0) return new Issue("NonEmptyLayerReferences", "R1 图层引用必须为空数组。", "layerReferences");
         return null;
     }
-    static bool Finite(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
-    static Issue NewIssue(string code, string message, string detail) => new(code, message, detail);
 
-    static MapDocumentResult<MapDocument> Fail(Issue issue) =>
-        MapDocumentResult<MapDocument>.Fail(issue.Code, issue.Message, "Validate", issue.Detail);
+    static bool Finite(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
 
     static MapDocumentResult<MapDocument> Fail(string code, string message, string stage, string detail) =>
         MapDocumentResult<MapDocument>.Fail(code, message, stage, detail);

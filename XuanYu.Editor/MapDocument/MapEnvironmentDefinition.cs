@@ -1,3 +1,5 @@
+using XuanYu.World.Map;
+
 namespace XuanYu.Editor.MapDocument;
 
 // MAP-A-R1-D2：环境定义。D2 只保存与校验，不渲染。

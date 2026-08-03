@@ -1,4 +1,5 @@
 using XuanYu.Editor.Assets;
+using XuanYu.World.Map;
 
 namespace XuanYu.Editor.SceneDocument;
 
@@ -9,7 +10,7 @@ public sealed record MapReference(
     string AssetPath)
 {
     public bool IsValid =>
-        XuanYu.Editor.MapDocument.MapId.TryParse(MapId, out _) &&
+        XuanYu.World.Map.MapId.TryParse(MapId, out _) &&
         !string.IsNullOrWhiteSpace(AssetPath) &&
         SceneAssetPathPolicy.IsSafeRelativePath(AssetPath);
 }

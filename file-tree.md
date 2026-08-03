@@ -1,22 +1,41 @@
-版本：v0.2.24.18-fix
+版本：v0.2.24.19-rz
 # XuanYu Engine 文件树
 
-## R2-D1 职责索引（v0.2.24.18-fix）
+## R2-D1-F1 职责索引（v0.2.24.19-rz）
 
-- `XuanYu.Editor/MapDocument/MapLayerId.cs`：图层稳定唯一标识（32 hex，与 MapId 同族）
-- `XuanYu.Editor/MapDocument/MapRegionId.cs`：区域稳定唯一标识（32 hex）
-- `XuanYu.Editor/MapDocument/MapRegionKind.cs`：区域类型（Generic/Playable/Restricted/Deployment/Objective）
-- `XuanYu.Editor/MapDocument/MapLayer.cs`：图层领域模型（ID/名称/顺序/可见/锁定/固定层）
-- `XuanYu.Editor/MapDocument/MapRegion.cs`：区域领域模型（ID/所属图层/类型/顶点/闭合，顶点只存水平面 X/Y）
-- `XuanYu.Editor/MapDocument/MapBounds.cs`：有限地图边界（中心原点、闭区间，与 WorldMapState.Contains 一致）
-- `XuanYu.Editor/MapDocument/MapDefaultLayers.cs`：默认图层工厂（"基础地图"固定层 + "区域"层）
-- `XuanYu.Editor/MapDocument/MapLayerValidator.cs`：图层集合校验（ID 唯一/名称/顺序/固定层至多一个）
-- `XuanYu.Editor/MapDocument/MapRegionValidator.cs`：区域集合校验（闭合/≥3 顶点/≤1024/引用图层/有限数值/边界内）
+- `XuanYu.World/Map/MapDefinition.cs`：完整地图领域聚合（唯一权威根：基础信息/地表/图层/区域/Revision）
+- `XuanYu.World/Map/MapDefaultDefinition.cs`：默认地图工厂（10 km×10 km Flat + 基础层 + 区域层 + 空区域，一次创建完整地图）
+- `XuanYu.World/Map/MapDefinitionValidator.cs`：地图聚合校验入口（尺寸/坐标/地表/图层/区域；尺寸常量单一事实源 100～1000000）
+- `XuanYu.World/Map/MapValidationResult.cs`：领域验证结构化结果
+- `XuanYu.World/Map/MapLayerKind.cs`：图层角色（Base/Region/Custom 稳定标识，替代中文名识别）
+- `XuanYu.World/Map/MapRegionDraft.cs`：绘制中草稿（未闭合顶点序列 → Close 提交为正式区域）
+- `XuanYu.World/Map/MapLayer.cs` + `MapLayerValidator.cs`：图层模型与校验（ID 合法唯一/Order 唯一/基础层唯一且第 0 位）
+- `XuanYu.World/Map/MapRegion.cs` + `MapRegionValidator.cs`：区域模型（天然闭合，不重复保存首尾）与校验（ID/相邻重复/三不同点/非零面积/Base 层不可承载）
+- `XuanYu.World/Map/MapId.cs`/`MapLayerId.cs`/`MapRegionId.cs`/`MapBounds.cs`/`MapGeometry.cs`/`MapSurfaceDefinition.cs`/`MapRegionKind.cs`：地图领域合同（自 Editor 迁移，权威层统一）
+- `XuanYu.World.Tests/Map/MapDefinitionTests.cs`：聚合验证测试（尺寸/坐标/地表/区域组合入口）
+- `XuanYu.World.Tests/Map/MapRegionDraftTests.cs`：绘制草稿合同测试（CanClose/Close 提交）
+- `XuanYu.World.Tests/Map/MapLayerTests.Base.cs`：基础层合同测试（唯一/第 0 位）
+- `XuanYu.World.Tests/Map/MapRegionTests.Strictness.cs`：区域严格性测试（相邻重复/首尾/共线零面积/三不同点/上限/越界）
+- 修改：`MapDocument.cs`（DTO 回归，删 CreateDefault，默认值引用 World 合同）、`MapDocumentValidator.cs`（常量引用 World 单一事实源，压缩至 99 行）、`MapReference.cs`/`SceneDocumentValidator.MapReference.cs`（MapId 引用迁移）、测试 using 迁移 8 文件
+- 迁移：`XuanYu.Editor/MapDocument/` 删除 12 个领域文件 → `XuanYu.World/Map/` 权威层
+
+## R2-D1 职责索引（v0.2.24.18-fix）
+> 注记：F1（v0.2.24.19-rz）已将下述领域类型迁至 `XuanYu.World/Map/` 权威层，路径同步更新；默认图层工厂并入 `MapDefaultDefinition`。
+
+- `XuanYu.World/Map/MapLayerId.cs`：图层稳定唯一标识（32 hex，与 MapId 同族）
+- `XuanYu.World/Map/MapRegionId.cs`：区域稳定唯一标识（32 hex）
+- `XuanYu.World/Map/MapRegionKind.cs`：区域类型（Generic/Playable/Restricted/Deployment/Objective）
+- `XuanYu.World/Map/MapLayer.cs`：图层领域模型（ID/名称/顺序/角色/可见/锁定）
+- `XuanYu.World/Map/MapRegion.cs`：区域领域模型（ID/所属图层/类型/顶点，天然闭合）
+- `XuanYu.World/Map/MapBounds.cs`：有限地图边界（中心原点、闭区间，与 WorldMapState.Contains 一致）
+- `XuanYu.World/Map/MapDefaultDefinition.cs`：默认图层工厂（"基础地图"固定层 + "区域"层）
+- `XuanYu.World/Map/MapLayerValidator.cs`：图层集合校验（ID 唯一/名称/顺序/固定层至多一个）
+- `XuanYu.World/Map/MapRegionValidator.cs`：区域集合校验（闭合/≥3 顶点/≤1024/引用图层/有限数值/边界内）
 - `XuanYu.World.Tests/Map/MapBoundsTests.cs`：边界合同测试（中心原点/闭区间/尺寸变化）
 - `XuanYu.World.Tests/Map/MapLayerTests.cs`：默认图层与图层校验测试
-- `XuanYu.World.Tests/Map/MapRegionTests.cs` + `.Helpers.cs`：区域校验测试（partial 辅助拆分）
+- `XuanYu.World.Tests/Map/MapRegionTests.cs` + `.Helpers.cs` + `.Strictness.cs`：区域校验测试（partial 拆分）
 - `XuanYu.World.Tests/Map/MapDefaultMapTests.cs`：默认地图工厂合同测试
-- 修改：`MapDocument.cs`（默认 10000×10000 Flat + `CreateDefault()` 默认地图工厂）、`MapSurfaceDefinition.cs`（新增 `DefaultFlat`）、`MapDocumentValidator.cs`（最大尺寸 10000 → 1000000）、`MapGeometry.cs`（新增 `MapPoint` 水平面坐标点）、测试（`MapSizeValidationTests` 上限断言更新、`MapDocumentWorldBridgeTests` 显式 GentleHills 地表）
+- 修改：`MapDocument.cs`（默认 10000×10000 Flat + 默认地图工厂，F1 后 DTO 回归）、`MapSurfaceDefinition.cs`（新增 `DefaultFlat`）、`MapDocumentValidator.cs`（最大尺寸 10000 → 1000000）、`MapGeometry.cs`（新增 `MapPoint` 水平面坐标点）、测试（`MapSizeValidationTests` 上限断言更新、`MapDocumentWorldBridgeTests` 显式 GentleHills 地表）
 
 ## F3-F4 职责索引（v0.2.24.17-fix）
 

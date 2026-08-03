@@ -20,6 +20,16 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.19-rz
+MAP-A-R2-D1-F1 架构与领域合同修正（REVISE 裁定）（2026-08-03，Commit 本轮落库为准）
+- **审查裁定**：D1 三个阻断问题（领域权威层错误/无完整地图聚合/区域合法性过弱）全部修复；版本后缀修正为 -rz（正常开发轮，F 修复轮才用 -fix）。
+- **F1-1 架构边界恢复**：图层/区域/边界/验证/聚合全部迁至 `XuanYu.World/Map/`（地图权威层，World 仅依赖 Core）；Editor 删除 12 个迁移文件，`MapDocument` 回归纯 DTO（.xymap v1 持久化模型）；`MapId` 同步迁移（`SceneDocument/MapReference.cs` 与 `SceneDocumentValidator.MapReference.cs` 引用修复）；Editor 仅保留 DTO/JSON/存储/校验与桥接。
+- **F1-2 完整地图聚合**：新增 `MapDefinition`（MapId/DisplayName/尺寸/坐标系统/地表/图层/区域/Revision）为唯一权威根；`MapDefaultDefinition.CreateDefault()` 一次创建完整地图（10 km × 10 km Flat + 基础地图层 + 区域层 + 空区域）；D2 起 CurrentMap/Undo/Dirty 围绕单一聚合；持久化 schema v2 仍属 D6。
+- **F1-3 领域合法性收紧**：`MapRegion` 移除 `IsClosed`（正式区域天然闭合，顶点不重复保存首尾）+ 新增 `MapRegionDraft`（绘制中草稿，CanClose/Close 提交）；`MapLayerKind`（Base/Region/Custom）稳定角色标识替代中文名；新增检查：ID 合法性（MapId/LayerId/RegionId）、图层 Order 唯一、基础层必须且仅有一个且位于第 0 位、区域不得挂载 Base 层、相邻重复点（含首尾）、至少三个不同顶点、非零面积（鞋带公式，共线三点拒绝）；自交检测明确归 D5（绘制轮），不在 F1 默默放行。
+- **修正内部缺陷**：`MapDefinitionValidator` 的 `??` 短路 bug（MapValidationResult 为引用类型，Ok() 非 null 导致区域验证永不执行）→ 显式 if 链；`MapLayerValidator` 基础层先查唯一性再查顺序。
+- 验证：新增 MapDefinitionTests/MapRegionDraftTests/MapLayerTests.Base + 区域严格性用例；Core 312/312、World 490/490（470→490）、WarCore 22/22 全 PASS；arch-a-guard PASS；5+100 全合规（MapDocumentValidator 压缩至 99 行、MapRegionTests 拆 Strictness 分部）；--no-incremental 全量重编译 0 error（3 个既有 warning 如实记录）。
+- 治理：版本 v0.2.24.18-fix → v0.2.24.19-rz（五处同步；后缀修正为正常开发轮）；未创建 Tag/Release。
+
 ## v0.2.24.18-fix
 MAP-A-R2-D1 地图领域合同：图层/区域模型与验证（2026-08-03，Commit 本轮落库为准）
 - **R2 范围裁定**：R1 后半（地图尺寸/边界/地表/区域/图层/保存）按用户纠正转入 MAP-A-R2；`.xymap` ZIP 封装与 DGD 衔接整体后移，不抢在地图本体之前开发。

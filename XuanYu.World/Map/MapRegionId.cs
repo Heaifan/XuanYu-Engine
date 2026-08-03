@@ -1,6 +1,6 @@
-namespace XuanYu.Editor.MapDocument;
+namespace XuanYu.World.Map;
 
-// MAP-A-R2-D1：区域稳定唯一标识。与 MapId 同族格式（32 个十六进制字符，无前缀）。
+// MAP-A-R2-D1：区域稳定唯一标识（领域权威层）。与 MapId 同族格式（32 位十六进制，无前缀）。
 // 名称可修改，ID 不得变化；不得依赖列表序号/UI 索引。
 public readonly record struct MapRegionId
 {

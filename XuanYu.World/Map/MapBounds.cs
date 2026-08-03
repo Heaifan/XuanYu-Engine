@@ -1,4 +1,4 @@
-namespace XuanYu.Editor.MapDocument;
+namespace XuanYu.World.Map;
 
 // MAP-A-R2-D1：有限地图边界（米）。地图中心为世界原点，范围 X/Y ∈ [-W/2, W/2]。
 // 与 WorldMapState.Contains 闭区间语义一致（边界属于地图）。

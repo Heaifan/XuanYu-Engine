@@ -1,4 +1,4 @@
-namespace XuanYu.Editor.MapDocument;
+namespace XuanYu.World.Map;
 
 // MAP-A-R1-D2：地图尺寸（米）。width 对应世界 X，depth 对应世界 Y，Z-Up 下高度沿 Z。
 public sealed record MapSize(double Width, double Depth);
@@ -13,7 +13,7 @@ public sealed record MapVector3(double X, double Y, double Z)
 // 区域顶点只保存水平面坐标；Flat 地表不重复保存每个点的 Y（高度）。
 public readonly record struct MapPoint(double X, double Y);
 
-// MAP-A-R1-D2：坐标系统。R1 固定 meter + Z-Up + 零原点，其余一律拒绝。
+// MAP-A-R1-D2：坐标系统。固定 meter + Z-Up + 零原点，其余一律拒绝。
 public sealed record MapCoordinateSystem(
     string Unit,
     string UpAxis,

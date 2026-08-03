@@ -1,6 +1,6 @@
-namespace XuanYu.Editor.MapDocument;
+namespace XuanYu.World.Map;
 
-// MAP-A-R1-D2：地图稳定唯一标识。D1 合同冻结格式：32 个十六进制字符，无前缀。
+// MAP-A-R2-D1/D1-F1：地图稳定唯一标识（领域权威层）。D1 合同冻结格式：32 位十六进制，无前缀。
 public readonly record struct MapId
 {
     public const int HexLength = 32;

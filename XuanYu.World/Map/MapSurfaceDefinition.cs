@@ -1,6 +1,6 @@
-namespace XuanYu.Editor.MapDocument;
+namespace XuanYu.World.Map;
 
-// MAP-A-R1-D2：地表定义。R1 仅支持 Flat 与 GentleHillsV1（确定性参数化起伏）。
+// MAP-A-R1-D2：地表定义。支持 Flat 与 GentleHillsV1（确定性参数化起伏）。
 public sealed record MapSurfaceDefinition(
     string Kind,
     double BaseHeightMeters,
@@ -17,7 +17,7 @@ public sealed record MapSurfaceDefinition(
         MapSurfaceKinds.Flat, 0.0, 0.0, 1.0, 1);
 }
 
-// R1 已知地表类型清单（D1 合同冻结）。
+// 已知地表类型清单（D1 合同冻结）。
 public static class MapSurfaceKinds
 {
     public const string Flat = "Flat";

@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using XuanYu.Editor.MapDocument;
+using XuanYu.World.Map;
 
 namespace XuanYu.World.Tests.Map;
 
@@ -11,9 +11,9 @@ public sealed partial class MapRegionTests
         new MapPoint(-100, -100), new MapPoint(100, -100),
         new MapPoint(100, 100), new MapPoint(-100, 100));
 
-    static MapRegion Region(MapLayerId layerId, ImmutableArray<MapPoint>? vertices = null, bool closed = true) =>
+    static MapRegion Region(MapLayerId layerId, ImmutableArray<MapPoint>? vertices = null) =>
         new(MapRegionId.New(), layerId, "部署区A", MapRegionKind.Deployment,
-            vertices ?? Square(), closed);
+            vertices ?? Square());
 
-    static ImmutableArray<MapLayer> Layers() => MapDefaultLayers.CreateDefault();
+    static ImmutableArray<MapLayer> Layers() => MapDefaultDefinition.CreateDefault().Layers;
 }

@@ -1,4 +1,5 @@
 using XuanYu.Editor.MapDocument;
+using XuanYu.World.Map;
 
 namespace XuanYu.World.Tests.Map;
 

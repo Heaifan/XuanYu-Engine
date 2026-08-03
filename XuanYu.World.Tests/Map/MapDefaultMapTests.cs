@@ -1,31 +1,35 @@
 using XuanYu.Editor.MapDocument;
+using XuanYu.World.Map;
 
 namespace XuanYu.World.Tests.Map;
 
-// MAP-A-R2-D1：默认地图工厂合同（10 km × 10 km、Flat、中心原点、稳定 ID）。
+// MAP-A-R2-D1-F1：默认地图工厂合同（完整聚合 + DTO 默认值一致）。
 public sealed class MapDefaultMapTests
 {
     [Fact]
-    public void CreateDefault_produces_unnamed_10km_flat_map()
+    public void CreateDefault_produces_complete_aggregate()
     {
-        var doc = MapDocument.CreateDefault();
-        Assert.Equal("未命名地图", doc.Name);
-        Assert.Equal(10000.0, doc.SizeMeters.Width);
-        Assert.Equal(10000.0, doc.SizeMeters.Depth);
-        Assert.Equal(MapSurfaceKinds.Flat, doc.Surface.Kind);
-        Assert.True(doc.MapId.IsValid);
-        Assert.Equal(MapCoordinateSystem.ZUpMeter, doc.CoordinateSystem);
+        var map = MapDefaultDefinition.CreateDefault();
+        Assert.Equal("未命名地图", map.DisplayName);
+        Assert.Equal(10000.0, map.SizeMeters.Width);
+        Assert.Equal(10000.0, map.SizeMeters.Depth);
+        Assert.Equal(MapSurfaceKinds.Flat, map.Surface.Kind);
+        Assert.True(map.MapId.IsValid);
+        Assert.Equal(MapCoordinateSystem.ZUpMeter, map.CoordinateSystem);
+        Assert.Equal(2, map.Layers.Length);
+        Assert.True(map.Regions.IsEmpty);
+        Assert.Equal(0, map.Revision);
     }
 
     [Fact]
     public void CreateDefault_passes_strict_validation()
     {
-        var result = MapDocumentValidator.Validate(MapDocument.CreateDefault());
+        var result = MapDefinitionValidator.Validate(MapDefaultDefinition.CreateDefault());
         Assert.True(result.Succeeded);
     }
 
     [Fact]
-    public void CreateNew_defaults_to_10km_flat()
+    public void CreateNew_dto_defaults_to_10km_flat()
     {
         var doc = MapDocument.CreateNew("测试战场");
         Assert.Equal(10000.0, doc.SizeMeters.Width);
