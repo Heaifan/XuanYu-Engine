@@ -1,5 +1,10 @@
-版本：v0.2.24.9-fix
+版本：v0.2.24.10-fix
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D5-R1-F2-R3-R2 职责索引（v0.2.24.10-fix）
+
+- `XuanYu.Render.Vulkan/Shaders/scene.vert`（backgroundVertex，gizmoMode=-10）：背景顶点只输出全屏三角形位置与 NDC（哨兵 (2,2) 非背景）；invVP 每顶点算一次 flat 传出——颜色计算不再在顶点级
+- `XuanYu.Render.Vulkan/Shaders/scene.frag`：程序化编辑器环境（天空 + 中性灰参考地面）**片元级每像素重建视线**：天空顶部 #A6C0DF → 天空近地平线 #B3C6DA → 地平线 #9CA6AF → 远处地面 #858B91 → 近处地面 #747A80；smoothstep 全部 edge0<edge1；不写深度、不进地图/场景/拾取/碰撞
 
 ## MAP-A-R1-D5-R1-F2-R3 职责索引（v0.2.24.9-fix）
 

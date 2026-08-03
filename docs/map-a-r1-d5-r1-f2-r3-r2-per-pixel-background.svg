@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" font-family="Microsoft YaHei, sans-serif">
+  <rect width="960" height="640" fill="#F5F7FA"/>
+  <text x="480" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1F2937">MAP-A-R1-D5-R1-F2-R3-R2 · 背景颜色移到片元级</text>
+  <text x="480" y="58" text-anchor="middle" font-size="13" fill="#6B7280">v0.2.24.9-fix → v0.2.24.10-fix · 每像素重建视线 · smoothstep 方向修正 · 中性灰参考地面</text>
+
+  <rect x="40" y="84" width="880" height="170" rx="10" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="60" y="112" font-size="15" font-weight="bold" fill="#111827">失败根因（F2-R3-A3 验收确认）</text>
+  <text x="60" y="140" font-size="13" fill="#374151">1. 颜色计算在顶点着色器 backgroundVertex()——全屏三角形仅 3 个顶点判断天空/地面，</text>
+  <text x="80" y="162" font-size="13" fill="#374151">中间像素全靠插值 → 地平线与灰地被冲淡成整片蓝灰渐变</text>
+  <text x="60" y="188" font-size="13" fill="#374151">2. smoothstep 参数反写（edge0 &gt; edge1 未定义行为）+ 地面远近符号错误 → 远近不变化</text>
+  <text x="60" y="214" font-size="13" fill="#374151">3. 自动测试只能证明"灰色数字写进 Shader"，不能证明颜色出现在视口地面区域</text>
+  <text x="60" y="240" font-size="13" fill="#6B7280">→ 结论：必须把环境颜色计算从顶点级移到片元级，不是再调一组颜色</text>
+
+  <rect x="40" y="270" width="880" height="160" rx="10" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="60" y="298" font-size="15" font-weight="bold" fill="#111827">修复方案：Vertex 只输出射线信息，Fragment 每像素重建视线</text>
+  <text x="60" y="326" font-size="13" fill="#374151">scene.vert：backgroundVertex 只输出全屏三角形位置与 NDC（哨兵 (2,2) 非背景）；</text>
+  <text x="80" y="348" font-size="13" fill="#374151">invVP 每顶点算一次 flat 传出（避免每像素求逆）</text>
+  <text x="60" y="374" font-size="13" fill="#374151">scene.frag：每像素 dir = normalize(farWorld − camWorld)，dir.z ≥ 0 天空 / dir.z &lt; 0 灰色地面</text>
+  <text x="60" y="400" font-size="13" fill="#374151">修正公式（全部 edge0 &lt; edge1）：belowHorizon = 1 − smoothstep(−0.06, 0.0, dir.z)</text>
+  <text x="80" y="422" font-size="13" fill="#374151">groundNearness = smoothstep(0.06, 0.50, −dir.z) → 远处灰 #858B91 → 近处深灰 #747A80</text>
+
+  <rect x="40" y="446" width="880" height="140" rx="10" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="60" y="474" font-size="15" font-weight="bold" fill="#111827">配色（对比拉开，浅色体系适配）</text>
+  <rect x="60" y="490" width="110" height="14" fill="#A6C0DF"/><text x="182" y="502" font-size="12" fill="#374151">#A6C0DF 天空顶部</text>
+  <rect x="60" y="508" width="110" height="14" fill="#B3C6DA"/><text x="182" y="520" font-size="12" fill="#374151">#B3C6DA 天空近地平线</text>
+  <rect x="60" y="526" width="110" height="14" fill="#9CA6AF"/><text x="182" y="538" font-size="12" fill="#374151">#9CA6AF 地平线</text>
+  <rect x="60" y="544" width="110" height="14" fill="#858B91"/><text x="182" y="556" font-size="12" fill="#374151">#858B91 远处地面</text>
+  <rect x="60" y="562" width="110" height="14" fill="#747A80"/><text x="182" y="574" font-size="12" fill="#374151">#747A80 近处地面</text>
+  <text x="420" y="504" font-size="13" fill="#374151">最终应一眼看出：上半蓝天空 → 蓝灰地平线 → 下半中性灰地面</text>
+  <text x="420" y="528" font-size="13" fill="#374151">地平线跟随相机俯仰；背景不写深度，地图/实体自然覆盖</text>
+  <text x="420" y="552" font-size="13" fill="#374151">太阳圆盘保留（D1 合同 sunDirection 不变）</text>
+
+  <rect x="40" y="602" width="880" height="30" rx="8" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="60" y="622" font-size="13" fill="#6B7280">门禁：Core 225 / World 435 / WarCore 22 全过 · arch-a-guard PASS · glslc SceneVert/SceneFrag 逐字 MATCH · 待用户复验</text>
+</svg>

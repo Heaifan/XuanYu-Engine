@@ -15,6 +15,9 @@ layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inNormal;
 layout(location = 2) in vec2 inUv0;
 layout(location = 0) out vec4 vBaseColor;
+// F2-R3-R2：每像素背景——invVP（flat，每个顶点算一次）与背景 NDC（哨兵 (2,2) 表示非背景）。
+layout(location = 1) flat out mat4 vInvViewProjection;
+layout(location = 5) out vec2 vBackgroundNdc;
 
 vec3 triangleVertex(int index) {
     vec3 vertices[3] = vec3[3](
@@ -226,48 +229,14 @@ vec3 quadCorner(vec3 center, vec3 halfExtent, int li) {
     return cube(center, halfExtent, li);
 }
 
-void backgroundVertex(int vi, out vec4 clipPos, out vec4 color) {
+// F2-R3-R2：背景顶点只输出全屏三角形位置与 NDC——天空/地平线/地面颜色移到片元级
+// （每像素重建视线，避免三顶点插值冲淡地平线与灰色地面）。
+// vBackgroundNdc 哨兵：非背景分支输出 (2,2)（NDC 范围外），片元据此透传 vBaseColor。
+void backgroundVertex(int vi, out vec4 clipPos) {
     vec2 p[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
     clipPos = vec4(p[vi], 1.0, 1.0);
-    // WORLD-D-R1 / MAP-A-R1-D4-F5：程序化天空（Unity/Godot 风格）。
-    // 逆视图投影恢复世界观察方向，按世界 Z 分量（右手系 Z-Up）区分上下半球；
-    // 方向仅依赖相机旋转与投影（far-cam 差值），不受相机平移影响。
-    mat4 invVP = inverse(pc.viewProjection);
-    vec4 farWorld = invVP * vec4(p[vi], 1.0, 1.0);
-    vec4 camWorld = invVP * vec4(0.0, 0.0, 0.0, 1.0);
-    vec3 dir = normalize(farWorld.xyz / farWorld.w - camWorld.xyz / camWorld.w);
-
-    // F2-R3：Unity 风格中性灰编辑器参考地面（玄域浅色适配版）。
-    // 天空顶部 #9DBBE0 → 天空近地平线 #AEC4DC → 地平线混合区 #9DA5AD
-    // → 远处参考地面 #8B9299 → 近处参考地面 #7B8289。
-    // 地面只是视口背景（不写深度、不进地图/场景/拾取/碰撞），地图与实体自然覆盖。
-    vec3 skyTop = vec3(0.616, 0.733, 0.878);    // #9DBBE0 天顶清淡蓝
-    vec3 skyHorizon = vec3(0.682, 0.769, 0.863); // #AEC4DC 天空近地平线
-    vec3 horizonBand = vec3(0.616, 0.647, 0.678); // #9DA5AD 地平线混合区（低饱和蓝灰）
-    vec3 groundFar = vec3(0.545, 0.573, 0.600);  // #8B9299 远处参考地面
-    vec3 groundNear = vec3(0.482, 0.510, 0.537); // #7B8289 近处参考地面
-    float up01 = pow(clamp(dir.z, 0.0, 1.0), 0.35);   // 上半球渐变集中系数
-    vec3 rgb;
-    if (dir.z >= 0.0) {
-        // 天空：地平线雾蓝 → 天顶清淡蓝。
-        rgb = mix(skyHorizon, skyTop, up01);
-    } else {
-        // 地平线过渡：dir.z ∈ [-0.06, 0] 从混合区到远处地面（约 6% 视口高度，柔和）。
-        float below01 = smoothstep(0.0, -0.06, dir.z);
-        // 地面远近：dir.z ∈ [-0.06, -0.5] 从远处到近处（轻微渐变，防水平色带）。
-        float groundNearness = smoothstep(-0.06, -0.5, -dir.z);
-        vec3 groundBase = mix(groundFar, groundNear, groundNearness);
-        rgb = mix(horizonBand, groundBase, below01);
-    }
-
-    // 最小太阳圆盘：方向与 D1 合同 sunDirection 一致（归一化 (-0.35,-0.55,0.75)）。
-    // 只做简单圆盘 + 微弱辉光，不做耀斑与体积光。
-    vec3 sunDir = normalize(vec3(-0.35, -0.55, 0.75));
-    float facingSun = max(dot(dir, sunDir), 0.0);
-    float disk = smoothstep(0.9992, 0.9998, facingSun);       // 圆盘
-    float glow = smoothstep(0.9950, 1.0000, facingSun) * 0.35; // 微弱辉光
-    rgb += vec3(1.0, 0.96, 0.88) * (disk + glow);
-    color = vec4(clamp(rgb, 0.0, 1.0), 1.0);
+    vBackgroundNdc = p[vi];
+    vBaseColor = vec4(0.0, 0.0, 0.0, 1.0);
 }
 
 vec3 originVertex(int vi, out vec4 color) {
@@ -289,6 +258,9 @@ vec3 axisVertex(int vi, out vec4 color) {
 }
 
 void main() {
+    // F2-R3-R2：invVP 每顶点算一次（flat 传给片元，避免每像素求逆）；背景 NDC 哨兵默认非背景。
+    vInvViewProjection = inverse(pc.viewProjection);
+    vBackgroundNdc = vec2(2.0, 2.0);
     if (pc.gizmoMode < -14.5) {
         // MAP-A-R1-D4：地图边界线（CPU 顶点，世界坐标），亮琥珀色。
         gl_Position = pc.viewProjection * vec4(inPosition, 1.0);
@@ -330,10 +302,9 @@ void main() {
         gl_Position = pc.viewProjection * vec4(local, 1.0);
         vBaseColor = color;
     } else if (pc.gizmoMode < -9.5) {
-        vec4 clipPos; vec4 color;
-        backgroundVertex(gl_VertexIndex, clipPos, color);
+        vec4 clipPos;
+        backgroundVertex(gl_VertexIndex, clipPos);
         gl_Position = clipPos;
-        vBaseColor = color;
     } else if (pc.gizmoMode > -1.5 && pc.gizmoMode < -0.5 && pc.selectionMode > 1.5) {
         vec4 clipPos; vec4 color;
         cubeOutlineVertex(gl_VertexIndex, clipPos, color);
