@@ -1,5 +1,16 @@
-版本：v0.2.24.6-rz
+版本：v0.2.24.7-fix
 # XuanYu Engine 文件树
+
+## MAP-A-R1-D5-R1-F2 职责索引（v0.2.24.7-fix）
+
+- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert/.frag`：无限参考网格独立 Pass（全屏三角形；片元射线与 Z=0 平面求交；fwidth 像素恒定线宽 0.75/1.10/1.35px；目标 36px/格十进制层级 + 细格/主格加深跨级连续权重；深度输出带像素级偏移；不按地图矩形裁剪）。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridVert.cs/.GridFrag.cs`：参考网格字节码（生成物，glslc 逐字一致）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs`：参考网格独立管线（160B PushConstant、DepthTest=On(LessOrEqual)、DepthWrite=Off、AlphaBlend=On）。
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.Grid.cs`：参考网格绘制（VP/InvVP/相机/视口/far 参数填充，40 float）。
+- `XuanYu.Render.Abstractions/RenderDrawPlan.cs`：网格 Pass 顺序在地形/实体之后、轮廓/Gizmo 之前（实体可遮挡网格）。
+- `XuanYu.Core.Tests/Render/ReferenceGridAdaptiveTests.cs`：层级/权重/跨级连续性/淡出曲线数学合同。
+- `XuanYu.Core.Tests/Render/ReferenceGridDrawPlanTests.cs`：DrawPlan 网格存在性与顺序合同。
+- `XuanYu.Core.Tests/Render/MapRenderDrawPlanTests.cs` / `ViewportAssistDrawPlanTests.cs`：地图与辅助显示下网格顺序断言（F2 同步）。
 
 ## MAP-A-R1-D4 职责索引（v0.2.24.6-rz）
 

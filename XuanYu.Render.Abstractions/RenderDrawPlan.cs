@@ -54,22 +54,24 @@ public static class RenderDrawPlan
         var assist = projection.AssistState;
         var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 6);
         if (assist.ShowEditorBackground) plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
-        // F2：独立参考网格 Pass——有/无地图都存在，地图加载不再移除网格。
-        if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
         if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
-        if (projection.HasMap)
-        {
-            plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
-        }
+        if (projection.HasMap) plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
         {
             var entity = projection.Entities[i];
-            var fill = FillVertices(entity);
-            var outline = entity.EntityType == RenderEntityType.Cube
-                ? CubeOutlineRibbonVertexCount : OutlineRibbonVertexCount;
-            plan.Add(new FrameEntry(RenderDrawKind.EntityFill, fill, i, entity.EntityType));
-            if (entity.IsSelected && entity.EntityType != RenderEntityType.StaticModel) plan.Add(new FrameEntry(RenderDrawKind.EntityOutline, outline, i, entity.EntityType));
+            plan.Add(new FrameEntry(RenderDrawKind.EntityFill, FillVertices(entity), i, entity.EntityType));
+        }
+        // MAP-A-R1-D5-R1-F2：参考网格在地形/实体之后、轮廓/Gizmo 之前——实体可遮挡网格，
+        // 平坦地形上经深度偏移稳定显示；有/无地图都保留（无限参考平面，不按地图裁剪）。
+        if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
+        for (var i = 0; i < projection.Entities.Count; i++)
+        {
+            var entity = projection.Entities[i];
+            if (!entity.IsSelected || entity.EntityType == RenderEntityType.StaticModel) continue;
+            plan.Add(new FrameEntry(RenderDrawKind.EntityOutline,
+                entity.EntityType == RenderEntityType.Cube ? CubeOutlineRibbonVertexCount : OutlineRibbonVertexCount,
+                i, entity.EntityType));
         }
         if (projection.ScaleGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.ScaleGizmo, ScaleGizmoVertexCount));
         else if (projection.RotateGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.RotateGizmo, RotateGizmoVertexCount));
@@ -86,14 +88,6 @@ public static class RenderDrawPlan
 }
 public enum RenderDrawKind
 {
-    EditorBackground,
-    EditorReferenceGrid,
-    WorldOrigin,
-    WorldAxes,
-    MapBounds,
-    EntityFill,
-    EntityOutline,
-    MoveGizmo,
-    RotateGizmo,
-    ScaleGizmo
+    EditorBackground, EditorReferenceGrid, WorldOrigin, WorldAxes, MapBounds,
+    EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo
 }

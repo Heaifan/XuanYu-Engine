@@ -8,9 +8,7 @@ layout(push_constant) uniform GridPush {
     mat4 viewProjection;        // 0   世界→裁剪（深度投影用）
     mat4 inverseViewProjection; // 64  裁剪→世界（射线重建）
     vec4 cameraPosition;        // 128 相机世界位置
-    vec4 viewportAndFar;        // 144 x,y=视口尺寸; z=Far; w=gridMaxDistance
-    vec4 mapParams;             // 160 x=HasMap; y=MapCenterX; z=MapCenterY; w=MapHalfWidth
-    vec4 mapParams2;            // 176 x=MapHalfDepth; yzw 保留
+    vec4 viewportAndFar;        // 144 x,y=视口尺寸; z=Far; w=GridMaxDistance
 } pc;
 
 layout(location = 0) out vec4 vFarWorld;

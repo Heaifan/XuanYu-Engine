@@ -14,8 +14,8 @@ public sealed class ViewportAssistDrawPlanTests
         var plan = RenderDrawPlan.GetFrameDrawPlan(projection);
 
         Assert.Equal(RenderDrawKind.EditorBackground, plan[0].Kind);
-        Assert.Equal(RenderDrawKind.EditorReferenceGrid, plan[1].Kind);
-        Assert.Equal(RenderDrawKind.WorldOrigin, plan[2].Kind);
+        Assert.Equal(RenderDrawKind.WorldOrigin, plan[1].Kind);
+        Assert.Equal(RenderDrawKind.EditorReferenceGrid, plan[2].Kind);
         Assert.DoesNotContain(plan, entry => entry.Kind == RenderDrawKind.WorldAxes);
         Assert.Equal(RenderDrawKind.MoveGizmo, plan[^1].Kind);
     }
@@ -28,7 +28,7 @@ public sealed class ViewportAssistDrawPlanTests
 
         var plan = RenderDrawPlan.GetFrameDrawPlan(projection);
 
-        var axes = plan[3];
+        var axes = plan[2];
         Assert.Equal(RenderDrawKind.WorldAxes, axes.Kind);
         Assert.Equal(-1, axes.EntityIndex);
         Assert.Null(axes.EntityType);

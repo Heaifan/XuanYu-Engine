@@ -1,5 +1,27 @@
 # changelog
 
+## v0.2.24.7-fix
+MAP-A-R1-D5-R1-F2 无限参考网格稳定性修复（2026-08-03 10:40:00，Commit 本轮落库为准）
+- 任务目标：修复截图中"普通网格几乎不可见、只剩两条坐标轴"问题——稳定的缩放自适应层级、普通网格可见、远处无闪烁/地平线无噪声、有地图时网格不受地图边界裁剪；不修改天空/光照/地形/视角 Gizmo/地图编辑器/Schema。
+- 根因（代码调查，非计划推测）：
+  1. **线宽公式参数反转（主因）**：`gridLine` 内 `smoothstep(vec2(0.5), edge, f)` 中 `edge = 0.5 - d×linePixels/2 < 0.5`，edge0 > edge1 属 GLSL 未定义行为，实际线宽 = `1/d - linePixels` 像素——远处 d→0 时线宽爆炸为数十像素宽的淡带，近处趋近 0，普通网格视觉上消失；
+  2. **层级目标间距 20px 过小**：desiredStep = worldMetersPerPixel×20，量化后细格屏幕间隔平均仅 ~8px，过密成噪声，且权重窗口 0.25~0.75 互补导致细格常被完全压掉（仅剩 0.18 基础 α）；
+  3. **地图矩形内 discard**：F2A 为规避 Z-fighting 在 shader 内按地图矩形裁剪网格，有地图时视野内网格全部消失，违背"无限网格不受有限地图边界裁剪"；
+  4. **坐标轴过强**：α0.78/2.5px 压过网格，且 X/Y 颜色与方案相反。
+- 修复（editor_reference_grid.frag 重写 + DrawPlan 顺序调整）：
+  - 线宽改用方案 4.6 标准公式 `1 - smoothstep(w-0.5, w+0.5, 像素距离)`：细 0.75px / 主 1.10px / 轴 1.35px，屏幕恒定不再随距离爆炸；
+  - 目标间距 36px/格（`worldMetersPerPixel×36`，合法层级 0.1~10000 钳制）；细格权重 `1-smoothstep(0.5,1.0,phase)` 1→0、主格加深权重 `smoothstep(0.0,0.5,phase)` 0→1；
+  - **跨级透明度连续**：主格线位置是细格子集，细格基础 α0.20 + 主格加深 α0.18，同组线跨级时从主格 0.18 平滑过渡为细格 0.20（差 ≤0.02），不跳格不闪烁；
+  - **移除地图矩形 discard**：网格为无限参考平面，不再按地图裁剪；共面稳定改由 `gl_FragDepth = depth - max(fwidth(depth)×1.5, 1e-7)` 像素级深度偏移实现（实体/凸起地形仍正常遮挡，符合方案八）；
+  - 配色按方案：细格 #566A82 α0.20、主格 #344A63（基础 0.20+加深 0.18）、X 轴 #AD8550 α0.62（世界 Y=0 线）、Y 轴 #557C9E α0.62（世界 X=0 线）、原点 #D1AE69 α0.70；坐标轴 1.35px 不再抢眼；
+  - 掠射角淡出窗口 0.015~0.080（方案七）；距离淡出保持 0.45~0.75 far、gridMaxDistance=far×0.75（基于 far 约定，未硬编码米数）；
+  - **DrawPlan 顺序修正**：网格从"天空之后"移到"地形/实体之后、轮廓/Gizmo 之前"（RenderDrawPlan.GetFrameDrawPlan），实体可遮挡网格、平坦地形上经深度偏移稳定显示；有/无地图、有/无实体均保留网格；
+  - PushConstant 从 192B 缩为 160B（移除 mapParams/mapParams2，40 float），vert/frag/C# 三处同步，管线 maxPushConstantsSize 校验同步；
+  - 相机相对坐标：本轮保持绝对 float32（与实体同机制，地图 2000m 量级内精度足够）；大尺度世界相机相对化属全局渲染原点架构问题，按方案九不强行扩围，另行登记。
+- 测试：`ReferenceGridAdaptiveTests` 重写（×36 目标、两级相邻+权重区间、跨级 α 差 ≤0.02 连续性、phase=0.5 峰值 0.38、距离/掠射角曲线）；`ReferenceGridDrawPlanTests` 新增 4 组合（有/无地图×有/无实体）+顺序断言（实体后、Gizmo 前）+关闭开关缺席；`ViewportAssistDrawPlanTests`/`MapRenderDrawPlanTests` 顺序断言同步；Core 189/189、World 435/435、WarCore 22/22；arch-a-guard PASS；glslc 字节码逐字一致（GridVert 336、GridFrag 1379 词）。
+- 治理：版本 v0.2.24.6-rz → v0.2.24.7-fix（五处同步）；无新增项目/依赖；不创建 Tag/Release。
+- 状态：MAP-A-R1-D5-R1-F2 自动门禁全绿，真机验收待用户执行（IPO 清单见报告）；通过前不宣布 D5-R1 CLOSED，不进入 D5-R2。
+
 ## v0.2.24.6-rz
 MAP-A-R1-D5-R1-F2/F2A Blender 风格自适应参考网格（2026-08-03 00:30:55，Commit 909b6fd 之后待收口）
 - 任务目标：废弃 42 条世界空间粗四边形网格，改为独立全屏 Pass + 片元解析世界 Z=0 平面，实现 Blender 式无限自适应参考网格；只动网格，不处理 Gizmo/天空/取景。
