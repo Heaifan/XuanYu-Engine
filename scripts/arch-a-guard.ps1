@@ -30,10 +30,40 @@ function Get-SourceFiles([string]$dir) {
         ForEach-Object { Get-Item -LiteralPath $_ }
 }
 function Get-TrackedHandwrittenFiles {
+    # 5+100 检查范围与宪法第十三条一致：.cs / .axaml / .js（ps1 不在红线内，SHR-2026-08-D2）
     $tracked = git ls-files
     $untracked = git ls-files --others --exclude-standard
-    @($tracked) + @($untracked) | Where-Object { $_ -match '\.(cs|axaml|js|ps1)$' -and (Test-Path $_) } | ForEach-Object { Get-Item -LiteralPath $_ }
+    @($tracked) + @($untracked) | Where-Object { $_ -match '\.(cs|axaml|js)$' -and (Test-Path $_) } | ForEach-Object { Get-Item -LiteralPath $_ }
 }
+
+# 5+100 行数统计（SHR-2026-08-D2）：逻辑物理行数。
+# 空白行计入；无末尾换行时最后一行仍计入；CRLF/LF/CR 均正确识别；中文 UTF-8 正确。
+# 禁止改回 Get-Content | Measure-Object -Line：PS 5.1 实测行数失真（109 行数成 96），导致门禁漏检。
+function Get-PhysicalLineCount([string]$path) {
+    return [System.IO.File]::ReadAllLines($path).Count
+}
+
+function Assert-LineCounter([string]$label, [string]$content, [int]$expected) {
+    $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ("arch-guard-linecheck-" + [guid]::NewGuid().ToString("N") + ".txt")
+    try {
+        [System.IO.File]::WriteAllBytes($tmp, [System.Text.Encoding]::UTF8.GetBytes($content))
+        $actual = Get-PhysicalLineCount $tmp
+        if ($actual -ne $expected) { Add-Failure "5+100 self-check FAIL [$label]: expected $expected, got $actual" }
+    }
+    finally {
+        Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
+    }
+}
+
+# 门禁自验证（SHR-2026-08-D2）：统计函数必须通过这些样本；任一失败即门禁 FAIL。
+Assert-LineCounter "99行PASS" (("x`n") * 99) 99
+Assert-LineCounter "100行PASS" (("x`n") * 100) 100
+Assert-LineCounter "101行须检出" (("x`n") * 101) 101
+Assert-LineCounter "连续空白行计入" ("a`n`n`nb`n") 3
+Assert-LineCounter "CRLF正确" ("a`r`nb`r`n") 2
+Assert-LineCounter "LF正确" ("a`nb`n") 2
+Assert-LineCounter "无末尾换行末行计入" ("a`nb") 2
+Assert-LineCounter "中文UTF-8正确" ("中文第一行`n中文第二行") 2
 
 $uiCsproj = "XuanYu.Editor.UI/XuanYu.Editor.UI.csproj"
 $appCsproj = "XuanYu.Editor.App/XuanYu.Editor.App.csproj"
@@ -102,7 +132,7 @@ else {
 . "$PSScriptRoot/arch-a-guard-warcore.ps1"
 
 foreach ($file in Get-TrackedHandwrittenFiles) {
-    $lines = (Get-Content -LiteralPath $file.FullName -Encoding utf8 | Measure-Object -Line).Lines
+    $lines = Get-PhysicalLineCount $file.FullName
     if ($lines -gt 100) { Add-Failure "5+100 exceeded: $lines lines $($file.FullName)" }
 }
 
