@@ -3,20 +3,31 @@
 ## 归档规则
 
 - 每个自然月执行一次 changelog 归档（宪法第五十三条《月度归档》）。
-- 当前自然月记录保留在本文件；已结束月份按自然月归档至 `docs/archive/changelog-YYYY-MM.md`（单一归档位置，不为每个轮次单独建文件）。
+- 当前自然月记录保留在本文件；已结束月份按自然月归档至 `docs/archive/changelog/changelog-YYYY-MM.md`（单一归档位置，不为每个轮次单独建文件）。
 - 归档内容原则上原样迁移，保留版本、日期、验证与遗留事项；版本历史不丢失，按下方索引可定位。
 
 ## 历史归档索引
 
 | 月份 | 归档文件 | 条目范围 |
 |---|---|---|
-| 2026-07 | `docs/archive/changelog-2026-07.md` | v0.2.1.1-rz ～ v0.2.23.0-rz |
-| 2026-06 | `docs/archive/changelog-2026-06.md` | v0.1.1.5-rz ～ v0.1.8.10-fix |
-| 2026-05 | `docs/archive/changelog-2026-05.md` | v0.1.1.1-rz ～ v0.1.1.4-rz |
+| 2026-07 | `docs/archive/changelog/changelog-2026-07.md` | v0.2.1.1-rz ～ v0.2.23.0-rz |
+| 2026-06 | `docs/archive/changelog/changelog-2026-06.md` | v0.1.1.5-rz ～ v0.1.8.10-fix |
+| 2026-05 | `docs/archive/changelog/changelog-2026-05.md` | v0.1.1.1-rz ～ v0.1.1.4-rz |
+
+> 历史审计注记（SHR-2026-08-R2）：7 月归档内存在 3 处同一版本号分配给两个不同轮次的历史缺陷（v0.2.16.2-rz、v0.2.17.8-rz、v0.2.20.19-fix 各 2 条，内容不同）；按归档原则保留原文不篡改，追溯时以 Commit Hash 为准。版本号与日期顺序另有 18 处非单调，为历史既成事实，登记不重排。
 
 ---
 
 ## 2026-08（当前自然月）
+
+## v0.2.24.14-fix
+SHR-2026-08-R2 全盘阶段考核：文档事实源审计与 docs 分类治理（2026-08-03，Commit 本轮落库为准）
+- **file-tree.md 重建**（885→843 行）：删除全部按轮次职责索引（宪法第五十五条禁止的每轮快照）；以真实 `git ls-files` 树为准重建，修正 ARCH-WORLD 迁移后失效路径（Scene/World/History 等不再误写 Core），补齐 WarCore/Map/Assets/StaticModel/F2-F3 新文件职责，全部条目一行职责、无历史流水账。
+- **changelog 审计**：条目守恒 310（296 归档 + 14 当前）；审计发现 7 月归档 3 处同一版本号分配给两个不同轮次的历史缺陷（v0.2.16.2-rz/v0.2.17.8-rz/v0.2.20.19-fix）与 18 处版本号-日期非单调——按不篡改历史原则登记注记不重写；归档结构调整为 `docs/archive/changelog/` 子目录。
+- **docs 分类迁移**：根目录 178 文件 → 3 个入口（+docs-index.md 新增）；建立 governance（版本/债务/审计）、architecture（引擎架构/坐标合同）、milestones/current/MAP-A、milestones/closed/{ARCH-A,ARCH-B,ARCH-C,ARCH-WORLD,WORLD-A,WORLD-B,WORLD-C,RZ-VK,M1}、archive/{changelog,superseded} 分类；全部 `git mv` 保留历史；修复 4 处失效路径引用（dev-rules×2、map 合同、债务登记、changelog 活跃条目×2）。
+- **代码架构语义审计**：依赖图与宪法/arch-a-guard 一致（Core 零依赖、Editor.UI 无 Vulkan、App=组合根、Win=宿主）；Core 无地球/经纬/国家语义；无第二套 EntityRegistry/空间索引；地图文档=MapDocumentOwner(Editor)、运行时=WorldMapStateOwner(World)、渲染只消费 MapRenderSnapshot；高频路径无日志/全量扫描。结论无 BLOCKER；2 观察项（地图元素尚未实体化须走 EntityId；地图文档编辑入 Undo 链待正式地图编辑器明确）。
+- 验证：D6 交叉核对 10 问全 PASS（路径/归档/分类/守恒/残留/重复/版本）；正式串行门禁见本轮报告。
+- 治理：版本 v0.2.24.13-fix → v0.2.24.14-fix（五处同步）；未创建 Tag/Release；SHR-2026-08 重新 CLOSED。
 
 ## v0.2.24.13-fix
 SHR-2026-08 阶段健康考核与治理收敛（2026-08-03，Commit 本轮落库为准）
@@ -190,7 +201,7 @@ MAP-A-R1-D2 .xymap 地图存储闭环（2026-08-02 18:15:25）
 - 任务目标：地图资产可靠创建、严格校验、保存、关闭并重新读取；本轮不渲染、不查询、不做 UI 与场景引用。
 - 新增 `XuanYu.Editor/MapDocument/`：`MapDocument`（SchemaVersion/MapId/Name/SizeMeters/CoordinateSystem/Surface/Environment/LayerReferences）、`MapId`（32 位十六进制，创建后稳定）、`MapSize`/`MapCoordinateSystem`/`MapSurfaceDefinition`/`MapEnvironmentDefinition`/`MapVector3` 值对象、`MapDocumentValidator`（结构化 Issue 校验：尺寸 100–10000、坐标 Z-Up 米制零原点、地表仅 Flat/GentleHillsV1、环境参数有限非负、layerReferences 必须为空、未知类型拒绝）、`MapDocumentResult<T>`（对齐 SceneDocumentResult 模式）。
 - 存储闭环：`MapJsonSerializer`（严格 JSON：字段大小写敏感 + 未知字段拒绝 + JsonPropertyName 固定 camelCase + JsonPropertyOrder 确定性输出 + UTF-8）、`MapJsonMapper`、`MapStorageService`（候选加载=解析→验证→成功才返回；原子保存=同目录临时文件→完整写入→File.Move 替换→失败清理并保留旧文件）、`MapDocumentOwner`（CurrentMap/CurrentPath/IsDirty 最小状态机：New→Dirty、Load→Clean、Modify→Dirty、Save→Clean、Unload→清空；失败不污染）。
-- 路径合同：`Maps/<MapName>/map.xymap`；不存绝对路径；目录按需创建。D1 合同修正：`mapId` 口径更新为纯 32 位十六进制（无 `map_` 前缀，D2 §5.2 明确），docs/map-a-r1-d1-map-contracts.md 已同步。
+- 路径合同：`Maps/<MapName>/map.xymap`；不存绝对路径；目录按需创建。D1 合同修正：`mapId` 口径更新为纯 32 位十六进制（无 `map_` 前缀，D2 §5.2 明确），docs/milestones/current/MAP-A/map-a-r1-d1-map-contracts.md 已同步。
 - 测试（XuanYu.World.Tests/Map/，新增 9 文件）：MapId 格式/稳定性、尺寸边界与拒绝、坐标合同、地表/环境参数、图层引用空约束、JSON Round-trip 与确定性、大小写/未知字段/类型/损坏拒绝、候选加载失败不污染、原子保存与临时文件清理、Owner 状态链闭环。
 - 治理：版本 v0.2.24.0-rz → v0.2.24.1-rz（五处同步）；无新增项目/依赖；不触碰 SceneDocument、WarCore、渲染与 UI。
 - 验证结果：串行 build 12 项目 0 error / 1 warning（既有 xUnit2013）；Core Tests 145/145；World Tests 379/379（含地图新增 65 项）；WarCore Tests 22/22；arch-a-guard PASS；glslc PASS；git diff --check PASS；5+100 全仓扫描 PASS（守卫口径与 wc 均 ≤100）。
@@ -201,7 +212,7 @@ MAP-A-R1-D2 .xymap 地图存储闭环（2026-08-02 18:15:25）
 MAP-A-R1-D1 地图合同冻结（2026-08-02 17:42:55）
 - 任务目标：只读核查现有 SceneDocument / World Snapshot / 渲染地面 / 右侧模块结构后，冻结 `.xymap` 第一版 Schema 与 `.xyscene` mapReference 合同；本轮零产品代码，不重构旧代码。
 - 坐标裁定（用户拍板，方案 B）：`.xymap` 语义与世界轴直写——X 横向（世界 X）、Z 高度（世界 Z=Up）、Y 纵向（世界 Y），与官方坐标合同 WORLD-A-R0（Z-Up、XY 水平）一致；不引入映射层；查询合同为「输入世界 X/Y 水平面坐标 → 输出地表 Z 高度」。
-- 合同冻结（docs/map-a-r1-d1-map-contracts.md）：`.xymap` schemaVersion=1，mapId=`map_`+32hex，尺寸 100–10000 米，surface 仅 Flat/GentleHillsV1（确定性采样），environment 仅 ClearDayV1 + 方向光/环境光；保存路径 `Maps/<Name>/map.xymap`，原子替换，候选完整验证；`.xyscene` 升 v4 增可选 `mapReference{mapId, assetPath}`（项目相对路径，场景不复制地图数据），旧场景兼容，引用缺失明确报「引用失效」。
+- 合同冻结（docs/milestones/current/MAP-A/map-a-r1-d1-map-contracts.md）：`.xymap` schemaVersion=1，mapId=`map_`+32hex，尺寸 100–10000 米，surface 仅 Flat/GentleHillsV1（确定性采样），environment 仅 ClearDayV1 + 方向光/环境光；保存路径 `Maps/<Name>/map.xymap`，原子替换，候选完整验证；`.xyscene` 升 v4 增可选 `mapReference{mapId, assetPath}`（项目相对路径，场景不复制地图数据），旧场景兼容，引用缺失明确报「引用失效」。
 - 核查事实：无限灰网格=RenderDrawKind.EditorGrid（252 顶点，scene.vert gridVertex，±10 米 21×21 线，z=0 平面）；天空=EditorBackground+深度不写第二管线（WORLD-D 成品，直接复用）；光照=shader 硬编码固定方向光+半球环境光；右侧模块 Right.axaml=检查器/调试/偏好/模式四 Tab（MAP-A 收为检查器+地图编辑器）；全库无任何地图类型；版本源五处一致。
 - 治理：新里程碑 MAP-A（模块 24），新分支 feat/MAP-A-map；版本 v0.2.23.0-rz → v0.2.24.0-rz（五处同步）；基线 HEAD cbb694b = origin tip，ahead/behind 0/0；已知偏差 untracked `IDEA.md` 与残留 `XuanYu.Editor.Avalonia/` bin 目录未处理。
 - 状态：MAP-A-R1-D1 合同冻结完成，等待批准后进入 D1 域类型编码（MapId/MapDocument/MapSurfaceDefinition/字段验证）。
