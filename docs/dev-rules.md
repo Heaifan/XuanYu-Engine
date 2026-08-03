@@ -38,7 +38,8 @@
 - Vulkan 只写在 `Render.Vulkan`；Avalonia 只在编辑器；不引入 Unity / Unreal / Godot / MonoGame。
 - 目标依赖方向：
   - `Editor.UI` → `Render.Abstractions`
-  - `Editor.Win`（平台宿主 / 组合根）→ `Render.Vulkan`
+  - `Editor.App`（组合根 / 依赖装配）→ `Render.Vulkan`
+  - `Editor.Win`（Windows 平台宿主，仅引用 `Core`）
   - `Render.Vulkan` → `Render.Abstractions`
   - `Editor` → `Core` / `World`（编辑器领域规则层，仅引用基础与 World；不得引用 `Editor.UI` / Avalonia / `Render.Vulkan` / `Silk.NET.Vulkan`）
   - `Editor.UI` → `Editor`（界面与输入适配消费编辑器规则，不得反向让 Editor 依赖 UI）
@@ -229,7 +230,7 @@ dotnet build-server shutdown
 
 ## 17. 开发轮流程与关键路径治理（GOV-FLOW-R1）
 
-> 因 WORLD-B-R4 收口期暴露“目标不冻结即扩围、调查无限考古、快速验证滞后、文档对账拖慢落库、自动测试通过即误判 CLOSED”而设立（v0.2.20.13-fix）。与 §16 生命周期治理互补；冲突时以 §16 + 本章共同约束为准。详细条款见 `玄域引擎_AI开发宪法.md` 第二十八章。
+> 因 WORLD-B-R4 收口期暴露“目标不冻结即扩围、调查无限考古、快速验证滞后、文档对账拖慢落库、自动测试通过即误判 CLOSED”而设立（v0.2.20.13-fix）。与 §16 生命周期治理互补；冲突时以 §16 + 本章共同约束为准。详细条款见 `玄域引擎_AI开发宪法.md` 第十九条《任务冻结》、第二十条《范围控制》、第三十四条《串行验证》。
 
 ### 17.1 稳定流程模板（每轮开工前冻结）
 
