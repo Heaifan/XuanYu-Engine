@@ -182,8 +182,8 @@
 - `EntityId` 禁止加入 Generation / Revision；实体身份术语只用 `EntityId`，不用 `EntityKey`。
 - 空间索引唯一权威：禁止在 `GlobalWorld → SpatialIndexOwner → WorldQuery` 之外新增第二套空间查询索引。
 - `SceneRenderSnapshot` 等 Snapshot 是派生表现边界 DTO，不得携带 Editor 相机创建后门；相机只能由 Editor/View 以 `CameraState` 传入。
-- 归属迁移按 `ARCH-WORLD-R0 → R5` 序列执行（`docs/arch-world-layer-attribution.md`），每轮 build 0W0E + 全量测试 + arch-a-guard 通过后 commit；禁止一轮全搬、禁止跨轮夹带。
-- R1 完成前禁止在 Core 继续扩张 World 概念新类型；确需新增必须先在 `docs/arch-world-layer-attribution.md` 归属总表登记裁定。
+- 归属迁移按 `ARCH-WORLD-R0 → R5` 序列执行（`docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.md`），每轮 build 0W0E + 全量测试 + arch-a-guard 通过后 commit；禁止一轮全搬、禁止跨轮夹带。
+- R1 完成前禁止在 Core 继续扩张 World 概念新类型；确需新增必须先在 `docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.md` 归属总表登记裁定。
 
 ---
 

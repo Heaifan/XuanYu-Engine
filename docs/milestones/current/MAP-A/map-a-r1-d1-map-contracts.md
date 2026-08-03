@@ -8,7 +8,7 @@
 
 - **坐标系（方案 B，用户裁定）**：`.xymap` 语义与世界轴直写，不引入映射层。
   `X`=地图横向（世界 X）、`Z`=高度（世界 Z=Up）、`Y`=地图纵向（世界 Y）。
-  与官方坐标合同 `docs/world-a-r0-coordinate-contract.md`（Z-Up、XY 水平、X×Y=Z）完全一致。
+  与官方坐标合同 `docs/architecture/world-a-r0-coordinate-contract.md`（Z-Up、XY 水平、X×Y=Z）完全一致。
   地图范围：`X ∈ [-Width/2, Width/2]`、`Y ∈ [-Depth/2, Depth/2]`；高度沿世界 Z。
 - **查询合同**：输入世界 X、Y（水平面坐标），输出地表 Z 高度；地图外/未加载返回失败。
 - **`.xyscene` 升级 v4**：新增可选 `mapReference`（mapId + assetPath 项目相对路径）；保存固定写 v4，加载兼容 v1–v4。

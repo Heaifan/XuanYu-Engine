@@ -2,7 +2,7 @@
 
 > 本文件登记 ARCH-WORLD 分层治理过程中已知的、经裁定的受控债务（Controlled Debt）。
 > 债务不代表 R1 失败，而是"第一刀切开后暴露出的耦合"，须在指定轮次收口。
-> 在收口前，相关方向禁止新增依赖。治理序列见 `docs/arch-world-layer-attribution.md`。
+> 在收口前，相关方向禁止新增依赖。治理序列见 `docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.md`。
 
 ## D1 — TransformSession 暂居 World，含 Editor/Gizmo 语义（收口轮次：R4）
 
