@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="480" viewBox="0 0 760 480" font-family="Microsoft YaHei, sans-serif">
+  <rect width="760" height="480" rx="10" fill="#0f172a"/>
+  <text x="380" y="36" text-anchor="middle" fill="#e2e8f0" font-size="18" font-weight="bold">SHR-2026-08 阶段健康考核 · 治理收口</text>
+  <text x="380" y="58" text-anchor="middle" fill="#94a3b8" font-size="12">v0.2.24.12-fix → v0.2.24.13-fix · 分支 feat/MAP-A-map</text>
+
+  <g font-size="12">
+    <rect x="30" y="80" width="220" height="30" rx="6" fill="#7f1d1d"/>
+    <text x="140" y="100" text-anchor="middle" fill="#fecaca" font-weight="bold">P0 阻断 · 已修复</text>
+    <rect x="30" y="116" width="220" height="120" rx="6" fill="#1e293b"/>
+    <text x="42" y="138" fill="#fbbf24">① 宪法 2.0 入库 b99e087</text>
+    <text x="42" y="160" fill="#fbbf24">② 门禁 5+100 漏检修复</text>
+    <text x="42" y="182" fill="#fbbf24">③ 超限 109/105/101→66/85/89</text>
+    <text x="42" y="204" fill="#fbbf24">④ 自验证 8 样本 + 全量扫描</text>
+    <text x="42" y="226" fill="#94a3b8">双事实源消除 · 审计可信恢复</text>
+
+    <rect x="270" y="80" width="220" height="30" rx="6" fill="#78350f"/>
+    <text x="380" y="100" text-anchor="middle" fill="#fde68a" font-weight="bold">P1 本轮治理 · 完成</text>
+    <rect x="270" y="116" width="220" height="120" rx="6" fill="#1e293b"/>
+    <text x="282" y="138" fill="#fbbf24">① catch 10 处分类治理</text>
+    <text x="282" y="160" fill="#fbbf24">② dev-rules/版本规范引用修复</text>
+    <text x="282" y="182" fill="#fbbf24">③ Editor.App/Win 职责修正</text>
+    <text x="282" y="204" fill="#fbbf24">④ changelog 5/6/7 月归档</text>
+    <text x="282" y="226" fill="#94a3b8">4436 行→200 行 + archive 索引</text>
+
+    <rect x="510" y="80" width="220" height="30" rx="6" fill="#14532d"/>
+    <text x="620" y="100" text-anchor="middle" fill="#bbf7d0" font-weight="bold">P2/P3 渐进 · 已登记</text>
+    <rect x="510" y="116" width="220" height="120" rx="6" fill="#1e293b"/>
+    <text x="522" y="138" fill="#86efac">① docs/archive/ 分类框架落地</text>
+    <text x="522" y="160" fill="#86efac">② 175 文档平铺 = 渐进治理</text>
+    <text x="522" y="182" fill="#86efac">③ IDEA.md 已删除</text>
+    <text x="522" y="204" fill="#86efac">④ 每月一个逻辑簇，不阻断</text>
+    <text x="522" y="226" fill="#94a3b8">历史 Tag 保留 · 无新 Tag</text>
+  </g>
+
+  <g font-size="12">
+    <rect x="30" y="260" width="700" height="30" rx="6" fill="#1e293b"/>
+    <text x="380" y="280" text-anchor="middle" fill="#e2e8f0" font-weight="bold">正式串行门禁（最后一次修改后新鲜执行）</text>
+    <rect x="30" y="296" width="700" height="86" rx="6" fill="#0b1220"/>
+    <text x="50" y="318" fill="#4ade80">✓ Build 全解决方案 0 错误（3 既有 xUnit 警告登记观察）</text>
+    <text x="50" y="340" fill="#4ade80">✓ Core 258/258 · World 435/435 · WarCore 22/22</text>
+    <text x="50" y="362" fill="#4ade80">✓ arch-a-guard PASS（自验证 + 边界 + 全量 5+100，600 文件零超限）</text>
+    <text x="50" y="378" fill="#4ade80">✓ git diff --check · 版本五处一致 · 工作区 clean</text>
+  </g>
+
+  <g font-size="12">
+    <rect x="30" y="402" width="700" height="30" rx="6" fill="#14532d"/>
+    <text x="380" y="422" text-anchor="middle" fill="#bbf7d0" font-weight="bold">Git 状态</text>
+    <rect x="30" y="438" width="700" height="34" rx="6" fill="#0b1220"/>
+    <text x="50" y="459" fill="#e2e8f0">HEAD = origin tip afda0df · 6 commits（宪法/门禁/catch/文档/归档/版本）· ahead 0 / behind 0 · Tag 未创建</text>
+  </g>
+</svg>
