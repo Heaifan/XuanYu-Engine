@@ -20,6 +20,16 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.22-rz
+MAP-A-R2-D3 A1 前收口（2026-08-04 10:51:34，Commit 本轮落库为准）
+- 修正地图 GPU 资源判等：新增 `MapSurfaceResourceKey`（MapId/尺寸/BaseHeight/地表参数/可见性，**不含 ChangeSequence**）+ `MapSurfaceResourceUpdatePolicy` 纯策略（旧序号拒绝/同键不重建/异键重建）；Vulkan `SetMapSurface` 改为策略驱动（`_lastConsumedMapSequence` 与资源键分离），Rename 等非几何变化不再重建地面与边界缓冲。
+- 地图属性改为单次原子提交：`MapEditSession.UpdateMapProperties`（一次 CommitMapChange = 单历史节点/单次 ChangeSequence/单次 ContentChanged），失败整体拒绝零污染（NaN/Infinity/尺寸越界/区域冲突）；UI「应用修改」只调用组合命令（删除 ResizeMap+SetBaseHeight 连续调用），单字段命令保留供未来 Inspector/自动化 API。
+- 默认首帧地图快照验证：新增 `UiMapInitialProjectionTests`——构造后首个 RenderProjection 即携带 10 km×10 km Flat 默认地图快照，无需新建地图。
+- 重建 `file-tree.md`：从 `git ls-files` 全量生成当前树（882 个跟踪文件全覆盖、零缺失、零重复），删除全部版本化「职责索引」与迁移记录；历史仅保留于 changelog。
+- 验证：Core 334/334（+13 资源键/策略）、World 535/535（+11 原子提交/首帧投影/错误消息同步）、WarCore 22/22 全 PASS；arch-a-guard PASS（依赖边界+5+100）；--no-incremental 全量重编译 0 error（1 个既有 warning 如实记录）；git diff --check PASS；Shader 本轮未修改，字节码 --verify 复验一致未污染。
+- 治理：版本 v0.2.24.21-rz → v0.2.24.22-rz（五处同步）；未创建 Tag/Release。
+- 状态：**MAP-A-R2-D3：等待真机验收**；MAP-A-R2-D3-A1：NOT RUN。
+
 ## v0.2.24.21-rz
 MAP-A-R2-D3 有限地图地面、边界与渲染快照（2026-08-04 10:24:50，Commit 本轮落库为准）
 - **渲染唯一输入**：`MapRenderSnapshot` 迁至 `XuanYu.Render.Abstractions`（MapId/尺寸/地表/BaseHeight/Seed/SourceChangeSequence/IsVisible + Min/Max；**无 Name**——Rename 不引发 GPU 资源重建）；由 `MapRenderSnapshotProjection`（Editor.UI）从 `MapEditSession.CurrentMap` 投影，首次组装生成初始快照，仅响应 `ContentChanged` 低频事件（相机/Hover/选择不重建）；ChangeSequence 单调去重，禁在 Render 自增。

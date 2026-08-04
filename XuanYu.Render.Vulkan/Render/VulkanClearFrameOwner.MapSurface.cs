@@ -1,72 +1,72 @@
 using Silk.NET.Vulkan;
+using XuanYu.Core.Map;
 using XuanYu.Core.Math;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Render.StaticModels;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// MAP-A-R2-D3：有限 Flat 地面（4 顶点 6 索引常量几何）+ 四条边界（24 顶点细条）。
-// 地图尺寸只进入顶点坐标，不随米数增加顶点；map resize 只重建本资源。
+// MAP-A-R2-D3：有限 Flat 地面（4 顶点 6 索引）+ 四条边界（24 顶点细条）。
+// A1：资源判等用 MapSurfaceResourceKey（不含 ChangeSequence）——Rename 不重建，旧序号拒绝。
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    VulkanStaticModelBuffer? _mapSurfaceVertexBuffer;
-    VulkanStaticModelBuffer? _mapSurfaceIndexBuffer;
-    VulkanStaticModelBuffer? _mapBoundsVertexBuffer;
-    uint _mapSurfaceIndexCount;
-    uint _mapBoundsVertexCount;
-    MapRenderSnapshot _mapSnapshot;
+    VulkanStaticModelBuffer? _mapSurfaceVertexBuffer, _mapSurfaceIndexBuffer, _mapBoundsVertexBuffer;
+    uint _mapSurfaceIndexCount, _mapBoundsVertexCount;
+    long _lastConsumedMapSequence = long.MinValue;
+    MapSurfaceResourceKey _mapSurfaceResourceKey;
+    bool _hasMapSurfaceResourceKey;
 
     public void SetMapSurface(MapRenderSnapshot map)
     {
-        if (map.Equals(_mapSnapshot)) return;
+        var update = MapSurfaceResourceUpdatePolicy.Decide(
+            map, _lastConsumedMapSequence, _hasMapSurfaceResourceKey ? _mapSurfaceResourceKey : null);
+        if (update.Kind == MapSurfaceResourceUpdateKind.RejectStale) return;
+        if (update.Kind == MapSurfaceResourceUpdateKind.NoRebuild)
+        {
+            _lastConsumedMapSequence = map.SourceChangeSequence;
+            return;
+        }
+
         ClearMapSurface();
+        _mapSurfaceResourceKey = update.Key;
+        _hasMapSurfaceResourceKey = true;
+        _lastConsumedMapSequence = map.SourceChangeSequence;
         if (!map.HasMap) return;
-        var geometry = MapSurfaceGeometryBuilder.Build(map);
-        var bounds = MapBoundsGeometryBuilder.Build(map);
+        if (!CreateMapBuffers(MapSurfaceGeometryBuilder.Build(map), MapBoundsGeometryBuilder.Build(map)))
+            ClearMapSurface();
+    }
+
+    bool CreateMapBuffers(MapSurfaceGeometry geometry, MapTerrainVertex[] bounds)
+    {
         _mapSurfaceVertexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
             geometry.Vertices, BufferUsageFlags.VertexBufferBit, out var vbErr);
-        if (_mapSurfaceVertexBuffer is null)
-        {
-            Log($"地图地面顶点缓冲创建失败：{vbErr}");
-            ClearMapSurface();
-            return;
-        }
-
+        if (_mapSurfaceVertexBuffer is null) return CreateFailed("地图地面顶点缓冲创建失败", vbErr);
         _mapSurfaceIndexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
             geometry.Indices, BufferUsageFlags.IndexBufferBit, out var ibErr);
-        if (_mapSurfaceIndexBuffer is null)
-        {
-            Log($"地图地面索引缓冲创建失败：{ibErr}");
-            ClearMapSurface();
-            return;
-        }
-
+        if (_mapSurfaceIndexBuffer is null) return CreateFailed("地图地面索引缓冲创建失败", ibErr);
         _mapBoundsVertexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
             bounds, BufferUsageFlags.VertexBufferBit, out var bErr);
-        if (_mapBoundsVertexBuffer is null)
-        {
-            Log($"地图边界线缓冲创建失败：{bErr}");
-            ClearMapSurface();
-            return;
-        }
-
+        if (_mapBoundsVertexBuffer is null) return CreateFailed("地图边界线缓冲创建失败", bErr);
         _mapSurfaceIndexCount = (uint)geometry.Indices.Length;
         _mapBoundsVertexCount = (uint)bounds.Length;
-        _mapSnapshot = map;
-        Log($"地图渲染资源已创建：{map.WidthMeters:0}×{map.DepthMeters:0} 米（{_mapSurfaceIndexCount} 索引）");
+        Log($"地图渲染资源已创建：{geometry.Vertices.Length} 顶点 {_mapSurfaceIndexCount} 索引");
+        return true;
+    }
+
+    bool CreateFailed(string what, string error)
+    {
+        Log($"{what}失败：{error}");
+        return false;
     }
 
     public void ClearMapSurface()
     {
-        _mapSurfaceVertexBuffer?.Dispose();
-        _mapSurfaceVertexBuffer = null;
-        _mapSurfaceIndexBuffer?.Dispose();
-        _mapSurfaceIndexBuffer = null;
-        _mapBoundsVertexBuffer?.Dispose();
-        _mapBoundsVertexBuffer = null;
+        _mapSurfaceVertexBuffer?.Dispose(); _mapSurfaceVertexBuffer = null;
+        _mapSurfaceIndexBuffer?.Dispose(); _mapSurfaceIndexBuffer = null;
+        _mapBoundsVertexBuffer?.Dispose(); _mapBoundsVertexBuffer = null;
         _mapSurfaceIndexCount = 0;
         _mapBoundsVertexCount = 0;
-        _mapSnapshot = default;
+        _hasMapSurfaceResourceKey = false;
     }
 
     void DrawMapSurface(CommandBuffer cb, float* scene)

@@ -62,7 +62,7 @@ public sealed class UiMapEditorTests
         var vm = new UiVm(null, () => true);
         vm.MapBaseHeightText = "abc";
         vm.ApplyMapProperties();
-        Assert.Equal("基础高度必须是数字。", vm.MapEditError);
+        Assert.Equal("基础高度必须是有限数字。", vm.MapEditError);
         Assert.Equal(0.0, vm.MapSession.CurrentMap.Surface.BaseHeightMeters);
     }
     [Fact]

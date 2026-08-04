@@ -34,7 +34,7 @@ public sealed partial class UiVm
         RaiseMapDocumentChanged();
     }
 
-    // 应用修改：全部解析合法后才提交（ResizeMap + SetBaseHeight 两个独立历史，D2 无组合命令）。
+    // 应用修改：单次原子提交（UpdateMapProperties 一个历史节点，失败整体拒绝零污染）。
     public void ApplyMapProperties()
     {
         if (!TryParseMeters(MapWidthText, "宽度", out var width, out var error) ||
@@ -45,17 +45,10 @@ public sealed partial class UiVm
             return;
         }
 
-        var resize = MapSession.ResizeMap(width, depth);
-        if (!resize.IsSuccess)
+        var result = MapSession.UpdateMapProperties(width, depth, height);
+        if (!result.IsSuccess)
         {
-            FailEdit(resize.Error?.Message ?? "");
-            return;
-        }
-
-        var heightResult = MapSession.SetBaseHeight(height);
-        if (!heightResult.IsSuccess)
-        {
-            FailEdit(heightResult.Error?.Message ?? "");
+            FailEdit(result.Error?.Message ?? "");
             return;
         }
 
@@ -92,7 +85,7 @@ public sealed partial class UiVm
         }
 
         value = 0;
-        error = $"{fieldName}必须是数字。";
+        error = $"{fieldName}必须是有限数字。";
         return false;
     }
 
