@@ -24,6 +24,12 @@ public sealed class LogAutoScrollPolicyTests
         Assert.False(LogAutoScrollPolicy.ShouldFollow(offset: 400, maxOffset: 500));
     }
     [Fact]
+    public void Above_threshold_does_not_follow()
+    {
+        Assert.False(LogAutoScrollPolicy.ShouldFollow(
+            offset: 500 - LogAutoScrollPolicy.FollowThresholdDips - 0.1, maxOffset: 500));
+    }
+    [Fact]
     public void No_scrollable_range_always_follows()
     {
         Assert.True(LogAutoScrollPolicy.ShouldFollow(offset: 0, maxOffset: 0));

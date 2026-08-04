@@ -302,7 +302,9 @@ XuanYuEngine/
 │   │   ├── LogAutoScrollPolicy.cs：日志自动跟随纯策略（底部附近跟随/远离不拉回）
 │   │   ├── LogDetailPanel.axaml：界面布局
 │   │   ├── LogDetailPanel.axaml.cs：日志Detail面板UserControl类
-│   │   └── LogListAutoScrollController.cs：日志列表自动跟随控制器（尾部跟随/分类强制/滚到底恢复）
+│   │   ├── LogListAutoScrollController.cs：日志列表尾项定位控制器（请求合并/跟随状态/统一入口）
+│   │   ├── LogListAutoScrollController.Follow.cs：日志尾项两阶段定位（ScrollIntoView + 布局后最终修正）
+│   │   └── LogListAutoScrollController.Layout.cs：日志列表布局变化统一处理（Extent/Viewport 变化触发尾项修正）
 │   ├── Icons
 │   │   └── EditorIcons.axaml：界面布局
 │   ├── Left
@@ -710,6 +712,8 @@ XuanYuEngine/
 │   │   └── UiViewGizmoTests.cs：视角 Gizmo 六方向相机命令——朝向正确、观察中心与距离保持
 │   ├── Logging
 │   │   ├── LogAutoScrollPolicyTests.cs：日志跟随策略纯测试
+│   │   ├── FootAxamlTailContractTests.cs：日志面板 AXAML 合同（虚拟化保持/12 DIP 尾距/旧 Padding 移除）
+│   │   ├── LogListAutoScrollControllerContractTests.cs：日志尾项控制器源码合同（两阶段/请求合并/副作用禁令）
 │   │   └── UiMapLogChineseTests.cs：日志中文化测试（中文键/无英文键/显示映射）
 │   ├── Map
 │   │   ├── Editing

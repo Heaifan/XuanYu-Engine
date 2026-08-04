@@ -20,6 +20,15 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.27-fix
+MAP-A-R2-D3-F3 日志面板尾项完整显示修复（2026-08-04 15:10:00，Commit 本轮落库为准）
+- 真实尾部安全区：`Foot.axaml` 日志列表 ItemsPanel 改为 `VirtualizingStackPanel Margin="0,0,0,12"`（12 DIP 进入滚动 Extent——Avalonia MeasureCore 将 Margin 计入 DesiredSize，ScrollContentPresenter.ComputeExtent 基于内容 Bounds 计算），移除仅承担视觉间距、不进滚动范围的 ListBox `Padding="0,0,0,8"`；虚拟化保持（ItemsPanelTemplate 仍是 VirtualizingStackPanel，未退化为 StackPanel）。
+- 两阶段尾项定位：`LogListAutoScrollController` 重写并拆 partial（主文件 84 行 + Follow.cs 61 行 + Layout.cs 27 行）——唯一入口 `RequestLatestItemVisibility`（新日志/分类切换/清空/布局变化统一经过）；`_requestVersion` 请求合并（高频日志不堆积 Dispatcher 任务，旧请求执行时版本不一致即退出）；第一阶段 `ScrollIntoView(最后一项)`（Render 优先级）；第二阶段 `ContainerFromItem/ContainerFromIndex → BringIntoView` + 读取最终 `Extent/Viewport` 修正 `Offset`（Background 优先级，`_tailCorrectionScheduled` 保证每请求最多一次，无递归无定时器）；修正保留水平偏移（`new Vector(Offset.X, maximumY)`），`_programmaticCorrection` 防止程序滚动被误判为用户滚动。
+- 阅读状态保持（计划 8.1 关键修正）：`_atTail` 只由用户滚动（OffsetDelta≠0）维护——新日志增大 Extent 时不得用新最大滚动值重算（否则底部被误判为已离开、跟随失效）；ScrollChanged 集中处理 Extent/Viewport 变化（Resize/展开折叠/水平滚动条出现/DPI 重测），仅跟随态安排合并修正；清空日志取消旧请求并恢复跟随。
+- 测试：`FootAxamlTailContractTests` 3 项（AXAML 合同：虚拟化 ItemsPanel 保持/12 DIP 尾距/旧 Padding 移除）、`LogListAutoScrollControllerContractTests` 9 项（控制器合同：最后一项为滚动目标/两阶段 Render+Background/读取最终滚动范围/第二阶段至多一次/保留水平偏移/请求合并失效/程序化修正保护/无递归定时器/无 EditorLogBus 引用）、`LogAutoScrollPolicyTests` 新增 1 项（阈值外 20.1 DIP 不跟随）；仓库无 Avalonia Headless 基础设施，几何级验证由 A4 真机承担（合同测试已注明）。
+- 验证：Core 334/334、World 569/569（+13）、WarCore 22/22 全 PASS；arch-a-guard PASS（依赖边界+5+100）；全解决方案 build 0 error；git diff --check PASS；无 Debug.WriteLine/EditorLogBus/地图代码/中文文案/新增依赖；5+100 手写复核 84/61/27/99/33/79/38 行全合规。
+- 治理：版本 v0.2.24.26-rz → v0.2.24.27-fix（四处同步）；未创建 Tag/Release。
+
 ## v0.2.24.26-rz
 REPO-GOV-R1 目录职责分类与命名去里程碑化（2026-08-04 14:20:00，Commit 本轮落库为准）
 - 生产目录按职责拆分子目录（宪法 5+100 的 5 规则落地映射）：`Vm/` → Camera/Map/Scene/Selection/Transform{Move,Rotate,Scale}/Logging/Inspector/History/Tree（根只留 UiVm.cs）；`Render.Vulkan/Render/` → ClearFrame/Grid/Map/Scene/StaticModels/Present；`Editor/Assets/` → Import/Gltf、Hosting{Planning,Transactions}、StaticModels、Catalog、Identity；`Core/Gizmo/` → Common/Move/Rotate/Scale；移动不改 namespace（SDK-style csproj 自动包含，零代码改动）。
