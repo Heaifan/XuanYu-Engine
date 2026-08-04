@@ -1,9 +1,10 @@
-using Avalonia.Platform.Storage;
+using XuanYu.Editor.UI;
 
 namespace XuanYu.Editor.UI;
 
-// MAP-A-R2-D3：地图命令分发（唯一数据源 = MapSession）。
-// 打开/保存为 v1 DTO 旧链，D3 起按钮禁用防双权威分叉（持久化 D6 接入后恢复）。
+// MAP-A-R2-D3-F1：UiWin 地图命令仅保留快捷键可达的窗口无关命令（新建/聚焦）。
+// 面板按钮命令统一走 UiVm.RunCommand → UiVm.MapCommandRouting（真实按钮链）。
+// 打开/保存文件选择器在持久化（D6）恢复后回到本层。
 public partial class UiWin
 {
     async Task RunMapCommand(string command)
@@ -11,8 +12,6 @@ public partial class UiWin
         if (DataContext is not UiVm vm) return;
         if (command == "新建地图") { vm.NewMap(); return; }
         if (command == "聚焦地图") { vm.FocusMap(); return; }
-        if (command == "应用地图属性") { vm.ApplyMapProperties(); return; }
-        if (command == "撤销地图修改") { vm.MapUndo(); return; }
-        if (command == "重做地图修改") { vm.MapRedo(); return; }
+        await Task.CompletedTask;
     }
 }

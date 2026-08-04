@@ -11,26 +11,42 @@ public sealed partial class UiVm
 
     public void MapUndo()
     {
+        var before = FormatMeters(MapSession.CurrentMap.SizeMeters.Width) + "×" +
+                     FormatMeters(MapSession.CurrentMap.SizeMeters.Depth);
         var result = MapSession.Undo();
         if (!result.IsSuccess)
         {
+            LogMapHistoryResult("撤销", false, before, before, MapSession.CurrentStateId,
+                MapSession.ChangeSequence, MapSession.CanUndo, MapSession.CanRedo, result.Error?.Code);
             FailEdit(result.Error?.Message ?? "");
             return;
         }
 
+        var after = FormatMeters(MapSession.CurrentMap.SizeMeters.Width) + "×" +
+                    FormatMeters(MapSession.CurrentMap.SizeMeters.Depth);
+        LogMapHistoryResult("撤销", true, before, after, MapSession.CurrentStateId,
+            MapSession.ChangeSequence, MapSession.CanUndo, MapSession.CanRedo, null);
         SyncPropertyTexts();
         FooterMessage = "已撤销地图修改。";
     }
 
     public void MapRedo()
     {
+        var before = FormatMeters(MapSession.CurrentMap.SizeMeters.Width) + "×" +
+                     FormatMeters(MapSession.CurrentMap.SizeMeters.Depth);
         var result = MapSession.Redo();
         if (!result.IsSuccess)
         {
+            LogMapHistoryResult("重做", false, before, before, MapSession.CurrentStateId,
+                MapSession.ChangeSequence, MapSession.CanUndo, MapSession.CanRedo, result.Error?.Code);
             FailEdit(result.Error?.Message ?? "");
             return;
         }
 
+        var after = FormatMeters(MapSession.CurrentMap.SizeMeters.Width) + "×" +
+                    FormatMeters(MapSession.CurrentMap.SizeMeters.Depth);
+        LogMapHistoryResult("重做", true, before, after, MapSession.CurrentStateId,
+            MapSession.ChangeSequence, MapSession.CanUndo, MapSession.CanRedo, null);
         SyncPropertyTexts();
         FooterMessage = "已重做地图修改。";
     }

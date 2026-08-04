@@ -20,6 +20,15 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.24-fix
+MAP-A-R2-D3-F1 地图面板真实命令路由与验收日志修复（2026-08-04 11:59:52，Commit 本轮落库为准）
+- 修复地图面板 RunCommand 未路由到地图编辑命令的问题：新增 `UiVm.MapCommandRouting`（TryRouteMapCommand 在通用兜底之前匹配新建/聚焦/应用属性/撤销/重做），面板按钮 → RunCommand → 地图命令 → MapSession 全链打通；`UiWin.RunMapCommand` 精简为仅快捷键可达的新建/聚焦（打开/保存/卸载分支移除）；修复「聚焦地图」未发布相机快照（FrameMapCamera 补 PublishSceneRenderSnapshot，与 FrameSelectedCamera 同模式）。
+- 增加低频验收日志（复用既有日志总线，不建第二套 Logger）：地图命令收到、属性提交开始/成功/失败（含 Code/StateId/ChangeSequence/StateUnchanged）、撤销/重做成功/失败、渲染快照已发布（Reason/Sequence/Size/Surface）、Vulkan 资源更新决策（Recreate/NoRebuild/RejectStale 三态）、资源重建完成（顶点数/尺寸/BaseHeight/Sequence）；每帧/Hover/Getter 不记录。
+- 增加真实入口自动测试：`UiMapCommandRoutingTests` 8 项——从 `RunCommand.Execute("应用地图属性"/"撤销地图修改"/"重做地图修改")` 出发验证会话/快照/输入框/历史状态；非法尺寸与 NaN/Infinity/-Infinity 零污染；命令路由合同（新建/聚焦/未知命令兜底）；日志链含命令收到/提交开始/提交成功/快照发布。
+- 验证：Core 334/334、World 547/547（+8）、WarCore 22/22 全 PASS；arch-a-guard PASS（依赖边界+5+100）；--no-incremental 全量重编译 0 error（1 个既有 warning 如实记录）；git diff --check PASS；Shader 未修改。
+- 治理：版本 v0.2.24.23-rz → v0.2.24.24-fix（四处同步；file-tree 按新治理不含版本号，仅插入新增文件行）；未创建 Tag/Release。
+- 状态：**MAP-A-R2-D3-F1：已修复并落库**；MAP-A-R2-D3-A2：NOT RUN；MAP-A-R2-D3：IN PROGRESS。
+
 ## v0.2.24.23-rz
 MAP-A-R2-D3 A1 入口补接（2026-08-04 11:20:14，Commit 本轮落库为准）
 - 地图面板新增「撤销地图修改 / 重做地图修改」按钮：分别调用 `MapSession.Undo/Redo`（地图独立历史实例，不触碰场景实体历史；全局 Ctrl+Z 的焦点上下文规则未设计，D3 用显式按钮最安全）；`IsEnabled` 绑定 `CanUndo/CanRedo`（由 `HistoryAvailabilityChanged` 驱动刷新）；成功后同步宽/深/高文本与状态文字，渲染快照由 `ContentChanged` 自动更新（无历史时防御性报错，按钮禁用态下不可达）。

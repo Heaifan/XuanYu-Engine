@@ -32,6 +32,7 @@ public sealed partial class UiVm
         _camera = frame.Camera;
         _observationCenter = frame.ObservationCenter;
         _viewportCameraFramed = true;
+        PublishSceneRenderSnapshot(); // F1：取景后必须发布新相机（与 FrameSelectedCamera 同模式）
         FooterMessage = "相机已从斜上方取景整张地图。";
     }
 }

@@ -43,9 +43,9 @@ public sealed partial class UiVm
     void ApplyRunCommand(string name)
     {
         if (TryToggleViewportAssist(name)) return;
+        if (TryRouteMapCommand(name)) return; // F1：地图面板命令真实路由（兜底之前）
         if (name is "聚焦") { FrameSelectedCamera(); return; }
         if (name is "查看全部") { FrameAllCamera("查看全部"); return; }
-        if (name is "加载地图") { NewMap(); return; }
         if (TryApplyViewFaceCommand(name)) return;
         FooterMessage = UiText.CommandMessages.GetValueOrDefault(name, $"已执行：{name}");
         FooterState = name is "运行" ? "状态：运行中" : "状态：就绪";

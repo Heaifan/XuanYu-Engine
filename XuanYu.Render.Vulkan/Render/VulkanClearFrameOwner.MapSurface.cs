@@ -6,8 +6,7 @@ using XuanYu.Render.Vulkan.Render.StaticModels;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// MAP-A-R2-D3：有限 Flat 地面（4 顶点 6 索引）+ 四条边界（24 顶点细条）。
-// A1：资源判等用 MapSurfaceResourceKey（不含 ChangeSequence）——Rename 不重建，旧序号拒绝。
+// MAP-A-R2-D3：有限 Flat 地面（4 顶点 6 索引）+ 四条边界（24 顶点细条）；资源判等用 ResourceKey（Rename 不重建）。
 public sealed unsafe partial class VulkanClearFrameOwner
 {
     VulkanStaticModelBuffer? _mapSurfaceVertexBuffer, _mapSurfaceIndexBuffer, _mapBoundsVertexBuffer;
@@ -20,23 +19,26 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         var update = MapSurfaceResourceUpdatePolicy.Decide(
             map, _lastConsumedMapSequence, _hasMapSurfaceResourceKey ? _mapSurfaceResourceKey : null);
-        if (update.Kind == MapSurfaceResourceUpdateKind.RejectStale) return;
+        if (update.Kind == MapSurfaceResourceUpdateKind.RejectStale)
+        {
+            Log($"地图资源更新决策：Decision=RejectStale；IncomingSequence={map.SourceChangeSequence}；ConsumedSequence={_lastConsumedMapSequence}");
+            return;
+        }
         if (update.Kind == MapSurfaceResourceUpdateKind.NoRebuild)
         {
+            Log($"地图资源更新决策：Decision=NoRebuild；Sequence={map.SourceChangeSequence}；KeyChanged=False");
             _lastConsumedMapSequence = map.SourceChangeSequence;
             return;
         }
-
+        Log($"地图资源更新决策：Decision=Recreate；Sequence={map.SourceChangeSequence}；KeyChanged=True；Size={map.WidthMeters:0.####}×{map.DepthMeters:0.####}；BaseHeight={map.BaseHeightMeters}");
         ClearMapSurface();
-        _mapSurfaceResourceKey = update.Key;
-        _hasMapSurfaceResourceKey = true;
+        _mapSurfaceResourceKey = update.Key; _hasMapSurfaceResourceKey = true;
         _lastConsumedMapSequence = map.SourceChangeSequence;
         if (!map.HasMap) return;
-        if (!CreateMapBuffers(MapSurfaceGeometryBuilder.Build(map), MapBoundsGeometryBuilder.Build(map)))
+        if (!CreateMapBuffers(MapSurfaceGeometryBuilder.Build(map), MapBoundsGeometryBuilder.Build(map), map))
             ClearMapSurface();
     }
-
-    bool CreateMapBuffers(MapSurfaceGeometry geometry, MapTerrainVertex[] bounds)
+    bool CreateMapBuffers(MapSurfaceGeometry geometry, MapTerrainVertex[] bounds, MapRenderSnapshot map)
     {
         _mapSurfaceVertexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
             geometry.Vertices, BufferUsageFlags.VertexBufferBit, out var vbErr);
@@ -49,16 +51,14 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_mapBoundsVertexBuffer is null) return CreateFailed("地图边界线缓冲创建失败", bErr);
         _mapSurfaceIndexCount = (uint)geometry.Indices.Length;
         _mapBoundsVertexCount = (uint)bounds.Length;
-        Log($"地图渲染资源已创建：{geometry.Vertices.Length} 顶点 {_mapSurfaceIndexCount} 索引");
+        Log($"地图渲染资源重建完成：Vertices={geometry.Vertices.Length}；Indices={_mapSurfaceIndexCount}；BoundsVertices={_mapBoundsVertexCount}；Size={map.WidthMeters:0.####}×{map.DepthMeters:0.####}；BaseHeight={map.BaseHeightMeters}；Sequence={map.SourceChangeSequence}");
         return true;
     }
-
     bool CreateFailed(string what, string error)
     {
         Log($"{what}失败：{error}");
         return false;
     }
-
     public void ClearMapSurface()
     {
         _mapSurfaceVertexBuffer?.Dispose(); _mapSurfaceVertexBuffer = null;
@@ -68,7 +68,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _mapBoundsVertexCount = 0;
         _hasMapSurfaceResourceKey = false;
     }
-
     void DrawMapSurface(CommandBuffer cb, float* scene)
     {
         if (_mapSurfaceVertexBuffer is null || _mapSurfaceIndexBuffer is null) return;
@@ -83,7 +82,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         _vk.CmdDrawIndexed(cb, _mapSurfaceIndexCount, 1, 0, 0, 0);
         BindProceduralVertexBuffer(cb);
     }
-
     void DrawMapBounds(CommandBuffer cb, float* scene)
     {
         if (_mapBoundsVertexBuffer is null) return;

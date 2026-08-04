@@ -378,6 +378,8 @@ XuanYuEngine/
 │   │   ├── UiVm.InteractionCancel.cs：UiVm类
 │   │   ├── UiVm.InteractionPointer.cs：UiVm类
 │   │   ├── UiVm.Logging.cs：UiVm类
+│   │   ├── UiVm.MapCommandRouting.cs：地图面板命令真实路由（RunCommand → 地图命令，兜底前返回）
+│   │   ├── UiVm.MapDiagnostics.cs：地图命令低频诊断日志（命令/提交/撤销/重做节点）
 │   │   ├── UiVm.MapEditor.cs：地图属性入口（唯一数据源 = MapSession；保存/打开按钮禁用防 v1 双权威，
 │   │   ├── UiVm.MapHistory.cs：入口补接：地图撤销/重做（独立历史实例，不触碰场景实体历史）。 全局 Ctrl+Z 的"焦
 │   │   ├── UiVm.MapRender.cs：MapSession → 渲染快照 适配（唯一渲染输入）。 首次组装生成初始快照；后续只响
@@ -705,6 +707,7 @@ XuanYuEngine/
 │   │   ├── GlobalWorldTests.cs：Global世界测试类
 │   │   ├── SceneMapReferenceTests.cs：MAP-A---B（ 适配）：.xyscene mapReference 闭环——保存携带
 │   │   ├── UiMapEditorTests.cs：地图属性入口——会话恒有默认地图、应用修改、非法输入保护、取景数据源
+│   │   ├── UiMapCommandRoutingTests.cs：真实按钮链测试（RunCommand.Execute → MapSession）
 │   │   ├── UiMapHistoryTests.cs：入口补接：地图撤销/重做按钮路由到 MapSession 独立历史
 │   │   ├── UiMapInitialProjectionTests.cs：默认地图初始快照进入首帧 RenderProjection（无需新建地图）
 │   │   ├── UiViewGizmoTests.cs：视角 Gizmo 六方向相机命令——朝向正确、观察中心与距离保持

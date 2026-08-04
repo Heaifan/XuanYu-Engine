@@ -43,15 +43,24 @@ public sealed partial class UiVm
             return;
         }
 
+        var before = $"{MapSession.CurrentMap.SizeMeters.Width:0.####}×{MapSession.CurrentMap.SizeMeters.Depth:0.####}";
+        LogMapPropertiesStarted(MapSession.CurrentMap.MapId.Value, before,
+            MapSession.CurrentMap.Surface.BaseHeightMeters, $"{width:0.####}×{depth:0.####}", height,
+            MapSession.CurrentStateId, MapSession.ChangeSequence);
         var result = MapSession.UpdateMapProperties(width, depth, height);
         if (!result.IsSuccess)
         {
+            LogMapPropertiesFailed(result.Error?.Code ?? "Unknown", result.Error?.Message ?? "",
+                before, MapSession.CurrentStateId, MapSession.ChangeSequence);
             FailEdit(result.Error?.Message ?? "");
             return;
         }
 
-        MapEditError = ""; FooterMessage = "地图属性已应用。";
-        RaiseMapDocumentChanged();
+        var after = $"{MapSession.CurrentMap.SizeMeters.Width:0.####}×{MapSession.CurrentMap.SizeMeters.Depth:0.####}";
+        LogMapPropertiesSucceeded(MapSession.CurrentMap.MapId.Value, after,
+            MapSession.CurrentMap.Surface.BaseHeightMeters, MapSession.CurrentStateId,
+            MapSession.ChangeSequence, MapSession.CanUndo, MapSession.CanRedo);
+        MapEditError = ""; FooterMessage = "地图属性已应用。"; RaiseMapDocumentChanged();
     }
 
     public void FocusMap()
