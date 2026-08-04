@@ -20,6 +20,15 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.25-fix
+MAP-A-R2-D3-F2 日志中文化与日志面板尾部显示修复（2026-08-04 13:27:18，Commit 本轮落库为准）
+- 日志全部中文化（用户可见键名与状态值）：命令/宽度输入/深度输入/基础高度输入/地图标识/原尺寸/原基础高度/候选尺寸/候选基础高度/历史状态/变更序号/新尺寸/新基础高度/可撤销/可重做/原因/序号/尺寸/基础高度/地表/错误类型/错误说明/当前尺寸/状态保持不变/处理/资源键已变化/地面顶点/索引/边界顶点/接收序号/已消费序号；内部枚举与错误码保持英文，显示映射集中在 `UiVm.MapDiagnostics.Format.cs`（FormatMapEditReason/FormatSurfaceKind/FormatErrorCode/FormatBoolean）与 `Render.Abstractions/MapSurfaceResourceUpdateText.cs`（三态决策中文，Vulkan 层无 UI 依赖引用），未反写任何领域类型。
+- 日志面板尾部显示修复：`LogListAutoScrollController` 重写为尾部跟随规则（纯策略 `LogAutoScrollPolicy`：距底 ≤20 DIP 视为底部附近）——位于底部时新日志自动跟随、用户向上阅读旧日志不强制拉回、滚到底恢复跟随、切换日志分类（ForceFollow）定位最新、清空日志滚动范围归零自动回跟随态；列表底部加 8 DIP 安全间距（ListBox Padding），最后一行不再被底边裁切。
+- 测试：`UiMapLogChineseTests` 5 项（成功/失败/撤销日志中文键与状态值断言 + 无英文键断言 + 显示映射全覆盖）、`LogAutoScrollPolicyTests` 4 项（底部跟随/阈值内跟随/远离不跟随/无滚动范围恒跟随）。
+- 验证：Core 334/334、World 556/556（+9）、WarCore 22/22 全 PASS；arch-a-guard PASS（依赖边界+5+100）；--no-incremental 全量重编译 0 error（首次因真机编辑器进程 dll 锁报 MSB3021，进程退出后重跑 0 error；1 个既有 warning 如实记录）；git diff --check PASS；Shader/地图/历史/渲染/相机/Vulkan 生命周期零改动。
+- 治理：版本 v0.2.24.24-fix → v0.2.24.25-fix（四处同步；file-tree 按新治理不含版本号，仅插入新增文件行）；未创建 Tag/Release。
+- 状态：**MAP-A-R2-D3-F2：已修复并落库**；MAP-A-R2-D3-A3：NOT RUN；MAP-A-R2-D3：IN PROGRESS。
+
 ## v0.2.24.24-fix
 MAP-A-R2-D3-F1 地图面板真实命令路由与验收日志修复（2026-08-04 11:59:52，Commit 本轮落库为准）
 - 修复地图面板 RunCommand 未路由到地图编辑命令的问题：新增 `UiVm.MapCommandRouting`（TryRouteMapCommand 在通用兜底之前匹配新建/聚焦/应用属性/撤销/重做），面板按钮 → RunCommand → 地图命令 → MapSession 全链打通；`UiWin.RunMapCommand` 精简为仅快捷键可达的新建/聚焦（打开/保存/卸载分支移除）；修复「聚焦地图」未发布相机快照（FrameMapCamera 补 PublishSceneRenderSnapshot，与 FrameSelectedCamera 同模式）。

@@ -21,16 +21,16 @@ public sealed unsafe partial class VulkanClearFrameOwner
             map, _lastConsumedMapSequence, _hasMapSurfaceResourceKey ? _mapSurfaceResourceKey : null);
         if (update.Kind == MapSurfaceResourceUpdateKind.RejectStale)
         {
-            Log($"地图资源更新决策：Decision=RejectStale；IncomingSequence={map.SourceChangeSequence}；ConsumedSequence={_lastConsumedMapSequence}");
+            Log($"地图资源更新决策：处理={MapSurfaceResourceUpdateText.Of(update.Kind)}；接收序号={map.SourceChangeSequence}；已消费序号={_lastConsumedMapSequence}");
             return;
         }
         if (update.Kind == MapSurfaceResourceUpdateKind.NoRebuild)
         {
-            Log($"地图资源更新决策：Decision=NoRebuild；Sequence={map.SourceChangeSequence}；KeyChanged=False");
+            Log($"地图资源更新决策：处理={MapSurfaceResourceUpdateText.Of(update.Kind)}；序号={map.SourceChangeSequence}；资源键已变化=否");
             _lastConsumedMapSequence = map.SourceChangeSequence;
             return;
         }
-        Log($"地图资源更新决策：Decision=Recreate；Sequence={map.SourceChangeSequence}；KeyChanged=True；Size={map.WidthMeters:0.####}×{map.DepthMeters:0.####}；BaseHeight={map.BaseHeightMeters}");
+        Log($"地图资源更新决策：处理={MapSurfaceResourceUpdateText.Of(update.Kind)}；序号={map.SourceChangeSequence}；资源键已变化=是；尺寸={map.WidthMeters:0.####}×{map.DepthMeters:0.####}；基础高度={map.BaseHeightMeters}");
         ClearMapSurface();
         _mapSurfaceResourceKey = update.Key; _hasMapSurfaceResourceKey = true;
         _lastConsumedMapSequence = map.SourceChangeSequence;
@@ -51,7 +51,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_mapBoundsVertexBuffer is null) return CreateFailed("地图边界线缓冲创建失败", bErr);
         _mapSurfaceIndexCount = (uint)geometry.Indices.Length;
         _mapBoundsVertexCount = (uint)bounds.Length;
-        Log($"地图渲染资源重建完成：Vertices={geometry.Vertices.Length}；Indices={_mapSurfaceIndexCount}；BoundsVertices={_mapBoundsVertexCount}；Size={map.WidthMeters:0.####}×{map.DepthMeters:0.####}；BaseHeight={map.BaseHeightMeters}；Sequence={map.SourceChangeSequence}");
+        Log($"地图渲染资源重建完成：地面顶点={geometry.Vertices.Length}；索引={_mapSurfaceIndexCount}；边界顶点={_mapBoundsVertexCount}；尺寸={map.WidthMeters:0.####}×{map.DepthMeters:0.####}；基础高度={map.BaseHeightMeters}；序号={map.SourceChangeSequence}");
         return true;
     }
     bool CreateFailed(string what, string error)

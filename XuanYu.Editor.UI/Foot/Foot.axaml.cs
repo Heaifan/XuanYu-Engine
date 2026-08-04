@@ -39,6 +39,8 @@ public partial class Foot : UserControl
     {
         if (e.PropertyName == nameof(UiVm.LogItems))
             _autoScroll.OnLogItemsChanged();
+        if (e.PropertyName?.StartsWith("IsLogFilter") == true)
+            _autoScroll.ForceFollow(); // F2：切换日志分类 → 定位到该分类最新一条
     }
 
     void LogList_SelectionChanged(object? sender, SelectionChangedEventArgs e)

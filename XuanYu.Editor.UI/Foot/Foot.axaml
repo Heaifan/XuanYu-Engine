@@ -65,6 +65,7 @@
           <Grid>
             <ListBox x:Name="LogList" Classes="logList" ItemsSource="{Binding LogItems}" SelectedItem="{Binding SelectedLogEntry}"
                      SelectionMode="{x:Static av:SelectionMode.Multiple}" Background="Transparent" BorderThickness="0"
+                     Padding="0,0,0,8"
                      SelectionChanged="LogList_SelectionChanged">
               <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="local:LogEntry">

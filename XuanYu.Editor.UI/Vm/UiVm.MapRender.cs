@@ -1,3 +1,4 @@
+using XuanYu.Core.Map;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Render.Abstractions;
 using XuanYu.World.Map;
@@ -30,10 +31,10 @@ public sealed partial class UiVm
         _mapRenderSnapshot = MapRenderSnapshotProjection.Project(e.CurrentMap, e.ChangeSequence);
         _mapWorld.Load(WorldMapState.From(e.CurrentMap));
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
-            $"地图渲染快照已发布：Reason={e.Reason}；Sequence={e.ChangeSequence}；" +
-            $"MapId={e.CurrentMap.MapId.Value}；Size={e.CurrentMap.SizeMeters.Width:0.####}×" +
-            $"{e.CurrentMap.SizeMeters.Depth:0.####}；BaseHeight={e.CurrentMap.Surface.BaseHeightMeters}；" +
-            $"Surface={e.CurrentMap.Surface.Kind}",
+            $"地图渲染快照已发布：原因={FormatMapEditReason(e.Reason)}；序号={e.ChangeSequence}；" +
+            $"地图标识={e.CurrentMap.MapId.Value}；尺寸={e.CurrentMap.SizeMeters.Width:0.####}×" +
+            $"{e.CurrentMap.SizeMeters.Depth:0.####}；基础高度={e.CurrentMap.Surface.BaseHeightMeters}；" +
+            $"地表={FormatSurfaceKind(e.CurrentMap.Surface.Kind)}",
             "仅地图内容变化时发布（选择/相机/面板不触发）。");
         RefreshLogBindings();
         PublishSceneRenderSnapshot();

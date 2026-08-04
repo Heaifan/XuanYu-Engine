@@ -283,7 +283,8 @@ XuanYuEngine/
 │   │   ├── Foot.axaml.cs：Foot.axaml.cs 只做接线——自动滚动 controller、日志选中、Ctrl
 │   │   ├── LogDetailPanel.axaml：界面布局
 │   │   ├── LogDetailPanel.axaml.cs：日志Detail面板UserControl类
-│   │   └── LogListAutoScrollController.cs：日志ListAutoScrollControllerIDisposable类
+│   │   ├── LogAutoScrollPolicy.cs：日志自动跟随纯策略（底部附近跟随/远离不拉回）
+│   │   └── LogListAutoScrollController.cs：日志列表自动跟随控制器（尾部跟随/分类强制/滚到底恢复）
 │   ├── Icons
 │   │   └── EditorIcons.axaml：界面布局
 │   ├── Left
@@ -379,6 +380,7 @@ XuanYuEngine/
 │   │   ├── UiVm.InteractionPointer.cs：UiVm类
 │   │   ├── UiVm.Logging.cs：UiVm类
 │   │   ├── UiVm.MapCommandRouting.cs：地图面板命令真实路由（RunCommand → 地图命令，兜底前返回）
+│   │   ├── UiVm.MapDiagnostics.Format.cs：地图日志显示映射（原因/地表/错误码/布尔中文化）
 │   │   ├── UiVm.MapDiagnostics.cs：地图命令低频诊断日志（命令/提交/撤销/重做节点）
 │   │   ├── UiVm.MapEditor.cs：地图属性入口（唯一数据源 = MapSession；保存/打开按钮禁用防 v1 双权威，
 │   │   ├── UiVm.MapHistory.cs：入口补接：地图撤销/重做（独立历史实例，不触碰场景实体历史）。 全局 Ctrl+Z 的"焦
@@ -437,6 +439,7 @@ XuanYuEngine/
 │   ├── MapSurfaceGeometry.cs：有限 Flat 地面常量几何——固定 4 顶点 / 6 索引（两个三角形）， 地图尺寸只进
 │   ├── MapSurfaceResourceKey.cs：收口：GPU 地图资源判等键。 只包含会改变地面/边界缓冲内容的字段；SourceChan
 │   ├── MapSurfaceResourceUpdatePolicy.cs：收口：地图 GPU 资源更新决策（纯策略，不依赖 Vulkan，可独立测试）。 职责分离：
+│   ├── MapSurfaceResourceUpdateText.cs：资源更新决策显示文本（日志中文化）
 │   ├── NativeHostHandleSnapshot.cs：从 XuanYu.Render.Vulkan 迁入的纯生命周期快照。 不含任何 Vulka
 │   ├── NativeHostLifecycleLogFormatter.cs：从 XuanYu.Render.Vulkan 迁入的纯生命周期日志格式器。 仅生成中文生命
 │   ├── NativeHostLifecycleProbe.cs：从 XuanYu.Render.Vulkan 迁入的纯生命周期探针。 仅负责按生命周期阶段
@@ -709,6 +712,8 @@ XuanYuEngine/
 │   │   ├── UiMapEditorTests.cs：地图属性入口——会话恒有默认地图、应用修改、非法输入保护、取景数据源
 │   │   ├── UiMapCommandRoutingTests.cs：真实按钮链测试（RunCommand.Execute → MapSession）
 │   │   ├── UiMapHistoryTests.cs：入口补接：地图撤销/重做按钮路由到 MapSession 独立历史
+│   │   ├── UiMapLogChineseTests.cs：日志中文化测试（中文键/无英文键/显示映射）
+│   │   ├── LogAutoScrollPolicyTests.cs：日志跟随策略纯测试
 │   │   ├── UiMapInitialProjectionTests.cs：默认地图初始快照进入首帧 RenderProjection（无需新建地图）
 │   │   ├── UiViewGizmoTests.cs：视角 Gizmo 六方向相机命令——朝向正确、观察中心与距离保持
 │   │   ├── WorldCR2CameraDocumentTests.cs：世界CR2相机文档测试类

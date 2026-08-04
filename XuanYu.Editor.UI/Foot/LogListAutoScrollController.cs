@@ -6,6 +6,8 @@ using Avalonia.VisualTree;
 
 namespace XuanYu.Editor.UI;
 
+// MAP-A-R2-D3-F2：日志列表自动跟随——底部附近跟随、阅读旧日志不强制拉回、滚到底恢复。
+// 分类切换（ForceFollow）定位最新；清空日志时滚动范围归零自动回到跟随态。
 public sealed class LogListAutoScrollController : IDisposable
 {
     readonly ListBox _listBox;
@@ -14,6 +16,8 @@ public sealed class LogListAutoScrollController : IDisposable
     bool _pendingScroll;
     bool _resolved;
     bool _disposed;
+    bool _atTail = true;
+    bool _forceNext;
 
     public LogListAutoScrollController(ListBox listBox)
     {
@@ -29,16 +33,30 @@ public sealed class LogListAutoScrollController : IDisposable
         var sv = _listBox.FindDescendantOfType<ScrollViewer>();
         if (sv is null) return;
         _scroll = sv;
+        _scroll.ScrollChanged += OnScrollChanged;
         _resolved = true;
         ScrollToTail();
     }
 
+    void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
+    {
+        var max = _scroll!.Extent.Height - _scroll.Viewport.Height;
+        _atTail = LogAutoScrollPolicy.ShouldFollow(_scroll.Offset.Y, max);
+        if (_atTail) _forceNext = false; // 用户滚到底 → 恢复跟随并清除强制
+    }
+
     public void OnLogItemsChanged()
     {
-        // R8 人工验收优先尾随最新日志；选择/复制旧行不得永久关闭自动滚动。
         if (_scroll is null || _pendingScroll) return;
+        if (!_atTail && !_forceNext) return; // 阅读旧日志时新日志不强制拉回
         _pendingScroll = true;
         Dispatcher.UIThread.InvokeAsync(ScrollToTail, DispatcherPriority.Render);
+    }
+
+    public void ForceFollow()
+    {
+        _forceNext = true;
+        OnLogItemsChanged();
     }
 
     void ScrollToTail()
@@ -55,5 +73,6 @@ public sealed class LogListAutoScrollController : IDisposable
         if (_disposed) return;
         _disposed = true;
         _listBox.TemplateApplied -= _onTemplateApplied;
+        if (_scroll is not null) _scroll.ScrollChanged -= OnScrollChanged;
     }
 }
