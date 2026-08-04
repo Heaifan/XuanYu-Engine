@@ -34,8 +34,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
                 BindFramePipeline(cb, draw.Kind);
-                if (draw.Kind == RenderDrawKind.MapBounds && _mapTerrainIndexBuffer is not null)
-                    DrawMapTerrain(cb, pScene);
+                if (draw.Kind == RenderDrawKind.MapBounds && _mapSurfaceIndexBuffer is not null)
+                    DrawMapSurface(cb, pScene);
                 // F2-R2/F3-F1：网格/轴/原点/导航 Gizmo 独立全屏 Pass。
                 if (draw.Kind == RenderDrawKind.EditorReferenceGrid) DrawReferenceGrid(cb);
                 else if (draw.Kind == RenderDrawKind.WorldOrigin) DrawWorldOrigin(cb);

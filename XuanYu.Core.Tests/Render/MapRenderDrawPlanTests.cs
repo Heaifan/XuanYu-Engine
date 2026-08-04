@@ -21,9 +21,8 @@ public sealed class MapRenderDrawPlanTests
             Vector3d.Zero,
             Assist: EditorViewportAssistState.Default,
             Map: hasMap ? new MapRenderSnapshot(
-                "21e4a2d34d4a4a1eb2539eac76d412a8", "M", 2000, 2000,
-                MapSurfaceKind.Flat, 0, 0, 1, 1,
-                -0.35, -0.55, -0.75, 1.0, 0.35)
+                "21e4a2d34d4a4a1eb2539eac76d412a8", 2000, 2000,
+                MapSurfaceKind.Flat, 0, 0, 1, 1, 1)
                 : default);
     }
 

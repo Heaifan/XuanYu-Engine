@@ -15,8 +15,8 @@ public static class RenderDrawPlan
     public const int ReferenceGridVertexCount = 3;
     public const int OriginVertexCount = 36;
     public const int WorldAxesVertexCount = 108;
-    // D4：地图边界线（四条边 + 四角标识），CPU 生成细条四边形顶点。
-    public const int MapBoundsVertexCount = 8 * 3 * 2;
+    // D3：地图边界线（四条边细条四边形，CPU 生成），24 顶点。
+    public const int MapBoundsVertexCount = MapBoundsGeometryBuilder.VertexCount;
     public readonly record struct Entry(
         RenderEntityType EntityType,
         int VertexCount,

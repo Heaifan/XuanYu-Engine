@@ -1,86 +1,86 @@
 using Silk.NET.Vulkan;
-using XuanYu.Core.Map;
 using XuanYu.Core.Math;
+using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Render.StaticModels;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// MAP-A-R1-D4：有限地表与边界线渲染。
-// CPU 网格（MapTerrainMeshBuilder，唯一采样源）→ 顶点/索引缓冲 → indexed draw。
+// MAP-A-R2-D3：有限 Flat 地面（4 顶点 6 索引常量几何）+ 四条边界（24 顶点细条）。
+// 地图尺寸只进入顶点坐标，不随米数增加顶点；map resize 只重建本资源。
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    VulkanStaticModelBuffer? _mapTerrainVertexBuffer;
-    VulkanStaticModelBuffer? _mapTerrainIndexBuffer;
+    VulkanStaticModelBuffer? _mapSurfaceVertexBuffer;
+    VulkanStaticModelBuffer? _mapSurfaceIndexBuffer;
     VulkanStaticModelBuffer? _mapBoundsVertexBuffer;
-    uint _mapTerrainIndexCount;
+    uint _mapSurfaceIndexCount;
     uint _mapBoundsVertexCount;
     MapRenderSnapshot _mapSnapshot;
 
-    public void SetMapTerrain(MapRenderSnapshot map)
+    public void SetMapSurface(MapRenderSnapshot map)
     {
         if (map.Equals(_mapSnapshot)) return;
-        ClearMapTerrain();
+        ClearMapSurface();
         if (!map.HasMap) return;
-        var mesh = MapTerrainMeshBuilder.Build(map);
-        _mapTerrainVertexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
-            mesh.Vertices, BufferUsageFlags.VertexBufferBit, out var vbErr);
-        if (_mapTerrainVertexBuffer is null)
+        var geometry = MapSurfaceGeometryBuilder.Build(map);
+        var bounds = MapBoundsGeometryBuilder.Build(map);
+        _mapSurfaceVertexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
+            geometry.Vertices, BufferUsageFlags.VertexBufferBit, out var vbErr);
+        if (_mapSurfaceVertexBuffer is null)
         {
-            Log($"地图地形顶点缓冲创建失败：{vbErr}");
-            ClearMapTerrain();
+            Log($"地图地面顶点缓冲创建失败：{vbErr}");
+            ClearMapSurface();
             return;
         }
 
-        _mapTerrainIndexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
-            mesh.Indices, BufferUsageFlags.IndexBufferBit, out var ibErr);
-        if (_mapTerrainIndexBuffer is null)
+        _mapSurfaceIndexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
+            geometry.Indices, BufferUsageFlags.IndexBufferBit, out var ibErr);
+        if (_mapSurfaceIndexBuffer is null)
         {
-            Log($"地图地形索引缓冲创建失败：{ibErr}");
-            ClearMapTerrain();
+            Log($"地图地面索引缓冲创建失败：{ibErr}");
+            ClearMapSurface();
             return;
         }
 
-        var bounds = MapBoundsMeshBuilder.BuildBounds(map);
         _mapBoundsVertexBuffer = VulkanStaticModelBuffer.Create(_vk, _deviceOwner,
             bounds, BufferUsageFlags.VertexBufferBit, out var bErr);
         if (_mapBoundsVertexBuffer is null)
         {
             Log($"地图边界线缓冲创建失败：{bErr}");
-            ClearMapTerrain();
+            ClearMapSurface();
             return;
         }
 
-        _mapTerrainIndexCount = (uint)mesh.Indices.Length;
+        _mapSurfaceIndexCount = (uint)geometry.Indices.Length;
         _mapBoundsVertexCount = (uint)bounds.Length;
         _mapSnapshot = map;
-        Log($"地图渲染资源已创建：{map.Name} {map.WidthMeters}x{map.DepthMeters} 米");
+        Log($"地图渲染资源已创建：{map.WidthMeters:0}×{map.DepthMeters:0} 米（{_mapSurfaceIndexCount} 索引）");
     }
 
-    public void ClearMapTerrain()
+    public void ClearMapSurface()
     {
-        _mapTerrainVertexBuffer?.Dispose();
-        _mapTerrainVertexBuffer = null;
-        _mapTerrainIndexBuffer?.Dispose();
-        _mapTerrainIndexBuffer = null;
+        _mapSurfaceVertexBuffer?.Dispose();
+        _mapSurfaceVertexBuffer = null;
+        _mapSurfaceIndexBuffer?.Dispose();
+        _mapSurfaceIndexBuffer = null;
         _mapBoundsVertexBuffer?.Dispose();
         _mapBoundsVertexBuffer = null;
-        _mapTerrainIndexCount = 0;
+        _mapSurfaceIndexCount = 0;
         _mapBoundsVertexCount = 0;
         _mapSnapshot = default;
     }
 
-    void DrawMapTerrain(CommandBuffer cb, float* scene)
+    void DrawMapSurface(CommandBuffer cb, float* scene)
     {
-        if (_mapTerrainVertexBuffer is null || _mapTerrainIndexBuffer is null) return;
-        var vb = _mapTerrainVertexBuffer.Buffer;
-        var ib = _mapTerrainIndexBuffer.Buffer;
+        if (_mapSurfaceVertexBuffer is null || _mapSurfaceIndexBuffer is null) return;
+        var vb = _mapSurfaceVertexBuffer.Buffer;
+        var ib = _mapSurfaceIndexBuffer.Buffer;
         ulong offset = 0;
         _vk.CmdBindVertexBuffers(cb, 0, 1, &vb, &offset);
         _vk.CmdBindIndexBuffer(cb, ib, 0, IndexType.Uint32);
         FillScenePushConstants(scene, _renderProjection, Vector3d.Zero,
             Vector3d.Zero, new Vector3d(1, 1, 1), 0.0f, gizmoModeOverride: -14.0f);
         PushSceneConstants(cb, scene);
-        _vk.CmdDrawIndexed(cb, _mapTerrainIndexCount, 1, 0, 0, 0);
+        _vk.CmdDrawIndexed(cb, _mapSurfaceIndexCount, 1, 0, 0, 0);
         BindProceduralVertexBuffer(cb);
     }
 

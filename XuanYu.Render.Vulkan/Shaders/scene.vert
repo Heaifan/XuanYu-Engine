@@ -262,15 +262,15 @@ void main() {
     vInvViewProjection = inverse(pc.viewProjection);
     vBackgroundNdc = vec2(2.0, 2.0);
     if (pc.gizmoMode < -14.5) {
-        // MAP-A-R1-D4：地图边界线（CPU 顶点，世界坐标），亮琥珀色。
+        // MAP-A-R2-D3：地图边界线（CPU 顶点，世界坐标），淡金褐（D3 配色，克制不荧光）。
         gl_Position = pc.viewProjection * vec4(inPosition, 1.0);
-        vBaseColor = vec4(0.96, 0.72, 0.25, 1.0);
+        vBaseColor = vec4(0.85, 0.76, 0.55, 1.0);
     } else if (pc.gizmoMode < -13.5) {
-        // MAP-A-R1-D4：有限地表（CPU 网格顶点：世界坐标 + 法线 + 预计算亮度 uv.x）。
-        // 亮度由 MapTerrainMeshBuilder 用同一 MapSurfaceSampler 与 sunDirection 预计算。
+        // MAP-A-R2-D3：有限地表（CPU 顶点：世界坐标 + 法线 + 预计算亮度 uv.x）。
+        // Flat 平面亮度恒 1.0；基色为低饱和豆青灰，与背景灰蓝拉开色差。
         vec3 n = normalize(inNormal);
         float brightness = inUv0.x;
-        vec3 base = vec3(0.42, 0.52, 0.36);   // 地表基色：土绿
+        vec3 base = vec3(0.52, 0.60, 0.55);   // 地表基色：豆青灰
         vec3 shaded = base * clamp(brightness, 0.0, 1.0);
         gl_Position = pc.viewProjection * vec4(inPosition, 1.0);
         vBaseColor = vec4(min(shaded, vec3(1.0)), 1.0);

@@ -1,5 +1,18 @@
-版本：v0.2.24.20-rz
+版本：v0.2.24.21-rz
 # XuanYu Engine 文件树
+
+## R2-D3 职责索引（v0.2.24.21-rz）
+
+- `XuanYu.Render.Abstractions/MapRenderSnapshot.cs`：地图渲染快照（唯一渲染输入；MapId/尺寸/地表/BaseHeight/Seed/ChangeSequence/IsVisible；无名称字段）
+- `XuanYu.Render.Abstractions/MapSurfaceGeometry.cs`：有限 Flat 地面常量几何（4 顶点 6 索引，尺寸只进顶点坐标）
+- `XuanYu.Render.Abstractions/MapBoundsGeometry.cs`：地图边界几何（四条边细条四边形 24 顶点 + 世界宽度公式）
+- `XuanYu.Editor.UI/Vm/MapRenderSnapshotProjection.cs`：MapDefinition → MapRenderSnapshot 纯投影
+- `XuanYu.Editor.UI/Vm/UiVm.MapRender.cs`：会话 ContentChanged → 快照/World 同步适配（首次组装初始快照）
+- `XuanYu.Editor.UI/Vm/UiVm.MapEditor.cs`：地图属性入口（宽/深/基础高度 + 应用修改 + 新建/聚焦；保存/打开禁用 D6）
+- `XuanYu.Editor/MapDocument/MapDocumentAggregateBridge.cs`：.xymap v1 DTO → 领域聚合投影（场景 mapReference 保活链）
+- `XuanYu.Render.Vulkan/Render/VulkanClearFrameOwner.MapSurface.cs`：地图地面/边界 GPU 资源与绘制（SetMapSurface，原 MapTerrain.cs 更名）
+- 修改：`WorldMapState.From(MapDefinition)`（World 投影，替代 MapDocumentWorldBridge）、`MapSurfaceKinds.ToKind`（唯一映射点）、网格 Pass push 176B→192B（mapBounds 对齐 BaseHeight+边缘淡出）、`scene.vert` 地表豆青灰/边界淡金褐（glslc 重生成 2 产物）、DrawPlan MapBounds 24 顶点、面板编辑区
+- 删除：`MapTerrainMeshBuilder`/`MapBoundsMeshBuilder`/`MapRenderSnapshot`（Core，按米细分 C 类退役+迁移）、`MapDocumentWorldBridge`、`MapTerrainBrightnessTests`/`MapTerrainMeshBuilderTests`
 
 ## R2-D2 职责索引（v0.2.24.20-rz）
 

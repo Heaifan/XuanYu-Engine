@@ -56,45 +56,28 @@ public sealed class WorldMapStateOwnerTests
         Assert.Equal(replacement.SampleHeight(1500, 0), z);
     }
     [Fact]
-    public void Empty_snapshot_without_map()
+    public void From_aggregate_projects_to_world_state()
     {
-        var owner = new WorldMapStateOwner();
-        var snap = owner.BuildRenderSnapshot();
-        Assert.False(snap.HasMap);
-        Assert.Equal("", snap.MapId);
-    }
-    [Fact]
-    public void Snapshot_carries_map_surface_data()
-    {
-        var owner = new WorldMapStateOwner();
-        owner.Load(State());
-        var snap = owner.BuildRenderSnapshot();
-        Assert.True(snap.HasMap);
-        Assert.Equal("TestBattlefield", snap.Name);
-        Assert.Equal(2000.0, snap.WidthMeters);
-        Assert.Equal(2000.0, snap.DepthMeters);
-        Assert.Equal(MapSurfaceKind.GentleHillsV1, snap.SurfaceKind);
-        Assert.Equal(12.0, snap.AmplitudeMeters);
-        Assert.Equal(400.0, snap.WavelengthMeters);
-        Assert.Equal(1, snap.Seed);
-    }
+        Assert.True(MapId.TryParse("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", out var mapId));
+        var map = new MapDefinition(
+            mapId, "战场",
+            new MapSize(4000, 3000),
+            MapCoordinateSystem.ZUpMeter,
+            new MapSurfaceDefinition(MapSurfaceKinds.GentleHillsV1, 12, 5, 200, 7),
+            [new MapLayer(MapLayerId.New(), "基础地图", 0, MapLayerKind.Base)],
+            []);
+        var state = WorldMapState.From(map);
 
-    [Fact]
-    public void Snapshot_after_unload_is_empty()
-    {
-        var owner = new WorldMapStateOwner();
-        owner.Load(State());
-        owner.Unload();
-        Assert.False(owner.BuildRenderSnapshot().HasMap);
-    }
-
-    [Fact]
-    public void Switch_does_not_leak_old_snapshot()
-    {
-        var owner = new WorldMapStateOwner();
-        owner.Load(State("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
-        owner.Load(State("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
-        var snap = owner.BuildRenderSnapshot();
-        Assert.Equal("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", snap.MapId);
+        Assert.Equal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", state.MapId);
+        Assert.Equal("战场", state.Name);
+        Assert.Equal(4000.0, state.WidthMeters);
+        Assert.Equal(3000.0, state.DepthMeters);
+        Assert.Equal(MapSurfaceKind.GentleHillsV1, state.SurfaceKind);
+        Assert.Equal(12.0, state.BaseHeightMeters);
+        Assert.Equal(5.0, state.AmplitudeMeters);
+        Assert.Equal(200.0, state.WavelengthMeters);
+        Assert.Equal(7, state.Seed);
+        Assert.True(state.Contains(1500, 1000));
+        Assert.False(state.Contains(2500, 0));
     }
 }

@@ -25,4 +25,10 @@ public static class MapSurfaceKinds
 
     public static bool IsKnown(string? kind) =>
         kind is Flat or GentleHillsV1;
+
+    // 字符串类型 → Core 枚举（唯一映射点；未知类型抛参数异常，调用方应先用 IsKnown 过滤）。
+    public static XuanYu.Core.Map.MapSurfaceKind ToKind(string kind) =>
+        kind == Flat ? XuanYu.Core.Map.MapSurfaceKind.Flat
+        : kind == GentleHillsV1 ? XuanYu.Core.Map.MapSurfaceKind.GentleHillsV1
+        : throw new ArgumentException($"不支持的地表类型：{kind}", nameof(kind));
 }

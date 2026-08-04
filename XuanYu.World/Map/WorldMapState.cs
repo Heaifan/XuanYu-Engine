@@ -43,4 +43,20 @@ public sealed record WorldMapState(
         surfaceZ = SampleHeight(worldX, worldY);
         return true;
     }
+
+    // MAP-A-R2-D3：从领域聚合投影（World 同层，零跨层依赖）。
+    // 聚合不携带环境参数（R2 领域裁定），环境使用默认 ClearDay 语义；
+    // D3 渲染快照不再经由本类型（改由 Editor 适配器从 MapEditSession 投影）。
+    public static WorldMapState From(MapDefinition map) => new(
+        map.MapId.Value,
+        map.DisplayName,
+        map.SizeMeters.Width,
+        map.SizeMeters.Depth,
+        ParseKind(map.Surface.Kind),
+        map.Surface.BaseHeightMeters,
+        map.Surface.AmplitudeMeters,
+        map.Surface.WavelengthMeters,
+        map.Surface.Seed);
+
+    static MapSurfaceKind ParseKind(string kind) => MapSurfaceKinds.ToKind(kind);
 }

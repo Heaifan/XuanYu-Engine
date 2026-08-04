@@ -46,7 +46,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
         SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
         MapSession = new MapEditSession(isWriteThread: isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
-        InitLogs();
+        AttachMapSession(MapSession); InitLogs();
     }
     public event PropertyChangedEventHandler? PropertyChanged;
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }

@@ -1,94 +1,74 @@
-using XuanYu.Editor.MapDocument;
+using System.Globalization;
+using XuanYu.Editor.MapEditing;
 
 namespace XuanYu.Editor.UI;
 
-// 复用 D2 MapDocumentOwner/MapStorageService 与 D3 WorldMapStateOwner，不建第二套系统。
+// MAP-A-R2-D3：地图属性入口（唯一数据源 = MapSession；保存/打开按钮禁用防 v1 双权威，D6 恢复）。
 public sealed partial class UiVm
 {
-    readonly MapDocumentOwner _mapDocument = new();
-    readonly MapStorageService _mapStorage = new();
-
-    public MapDocumentOwner MapDocument => _mapDocument;
-    public string MapName => _mapDocument.CurrentMap?.Name ?? "未加载地图";
-    public string MapPath => _mapDocument.CurrentPath ?? "";
-    public string MapIdText => _mapDocument.CurrentMap?.MapId.ToString() ?? "—";
-    public string MapSizeText => _mapDocument.CurrentMap is { } m
-        ? $"{m.SizeMeters.Width} × {m.SizeMeters.Depth} 米"
-        : "—";
-    public string MapStatusText => !_mapWorld.HasMap ? "未加载"
-        : _mapDocument.IsDirty ? "未保存" : "已保存";
+    public string MapName => MapSession.CurrentMap.DisplayName;
+    public string MapPath => MapSession.CurrentFilePath ?? "";
+    public string MapIdText => MapSession.CurrentMap.MapId.ToString();
+    public string MapSizeText =>
+        $"{MapSession.CurrentMap.SizeMeters.Width:0.####} × {MapSession.CurrentMap.SizeMeters.Depth:0.####} 米";
+    public string MapStatusText => MapSession.IsDirty ? "未保存" : "已保存";
+    public bool HasMap => true; // D2 会话语义：编辑器恒有当前地图（初始默认 10 km）。
+    string _mapWidthText = "10000"; public string MapWidthText { get => _mapWidthText; set { _mapWidthText = value; OnPropertyChanged(nameof(MapWidthText)); } }
+    string _mapDepthText = "10000"; public string MapDepthText { get => _mapDepthText; set { _mapDepthText = value; OnPropertyChanged(nameof(MapDepthText)); } }
+    string _mapBaseHeightText = "0"; public string MapBaseHeightText { get => _mapBaseHeightText; set { _mapBaseHeightText = value; OnPropertyChanged(nameof(MapBaseHeightText)); } }
+    public string MapEditError { get; private set; } = "";
 
     public void NewMap()
     {
-        var doc = XuanYu.Editor.MapDocument.MapDocument.CreateNew("TestBattlefield", 2000, 2000);
-        _mapDocument.New(doc);
-        SyncMapToWorld(doc);
-        FooterMessage = "地图已新建（未保存）。";
-        RaiseMapDocumentChanged();
-    }
-
-    public async Task<bool> OpenMapAsync(string path)
-    {
-        var result = await _mapStorage.LoadAsync(path);
-        if (!result.Succeeded || result.Value is null)
+        var result = MapSession.CreateNewMap();
+        if (!result.IsSuccess)
         {
-            _mapDocument.MarkError(result.Message);
-            FooterMessage = result.Message;
-            FooterState = "状态：地图打开失败";
-            RaiseMapDocumentChanged();
-            return false;
+            FailEdit(result.Error?.Message ?? "");
+            return;
         }
 
-        var doc = result.Value;
-        _mapDocument.Load(path, doc);
-        SyncMapToWorld(doc);
-        FooterMessage = $"地图已打开：{doc.Name}。";
-        FooterState = "状态：就绪";
+        MapWidthText = FormatMeters(MapSession.CurrentMap.SizeMeters.Width);
+        MapDepthText = FormatMeters(MapSession.CurrentMap.SizeMeters.Depth);
+        MapBaseHeightText = FormatMeters(MapSession.CurrentMap.Surface.BaseHeightMeters);
+        MapEditError = ""; FooterMessage = "地图已新建（未保存）。";
         RaiseMapDocumentChanged();
-        return true;
     }
 
-    public async Task<bool> SaveMapAsync(string path)
+    // 应用修改：全部解析合法后才提交（ResizeMap + SetBaseHeight 两个独立历史，D2 无组合命令）。
+    public void ApplyMapProperties()
     {
-        if (_mapDocument.CurrentMap is not { } doc) return false;
-        var result = await _mapStorage.SaveAsync(path, doc);
-        if (!result.Succeeded || result.Value is null)
+        if (!TryParseMeters(MapWidthText, "宽度", out var width, out var error) ||
+            !TryParseMeters(MapDepthText, "深度", out var depth, out error) ||
+            !TryParseMeters(MapBaseHeightText, "基础高度", out var height, out error))
         {
-            _mapDocument.MarkError(result.Message);
-            FooterMessage = result.Message;
-            FooterState = "状态：地图保存失败";
-            RaiseMapDocumentChanged();
-            return false;
+            FailEdit(error);
+            return;
         }
 
-        _mapDocument.Save(path);
-        FooterMessage = $"地图已保存：{doc.Name}。";
-        FooterState = "状态：就绪";
-        RaiseMapDocumentChanged();
-        return true;
-    }
+        var resize = MapSession.ResizeMap(width, depth);
+        if (!resize.IsSuccess)
+        {
+            FailEdit(resize.Error?.Message ?? "");
+            return;
+        }
 
-    public void UnloadMapFromEditor()
-    {
-        UnloadMap();
-        _mapDocument.Unload();
-        FooterMessage = "地图已卸载。";
+        var heightResult = MapSession.SetBaseHeight(height);
+        if (!heightResult.IsSuccess)
+        {
+            FailEdit(heightResult.Error?.Message ?? "");
+            return;
+        }
+
+        MapEditError = ""; FooterMessage = "地图属性已应用。";
         RaiseMapDocumentChanged();
     }
 
     public void FocusMap()
     {
-        if (!_mapWorld.HasMap) return;
         ApplyMapViewFraming();
         FooterMessage = "相机已从斜上方取景整张地图。";
     }
 
-    void SyncMapToWorld(XuanYu.Editor.MapDocument.MapDocument doc)
-    {
-        _mapWorld.Load(MapDocumentWorldBridge.ToWorldState(doc));
-        OnPropertyChanged(nameof(HasMap)); ApplyMapViewFraming();
-        PublishSceneRenderSnapshot();
-    }
     void RaiseMapDocumentChanged()
     {
         OnPropertyChanged(nameof(MapName));
@@ -97,4 +77,24 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(MapSizeText));
         OnPropertyChanged(nameof(MapStatusText));
     }
+    void FailEdit(string message)
+    {
+        MapEditError = message;
+        OnPropertyChanged(nameof(MapEditError));
+    }
+
+    static bool TryParseMeters(string text, string fieldName, out double value, out string error)
+    {
+        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) && double.IsFinite(value))
+        {
+            error = "";
+            return true;
+        }
+
+        value = 0;
+        error = $"{fieldName}必须是数字。";
+        return false;
+    }
+
+    static string FormatMeters(double meters) => meters.ToString("0.####", CultureInfo.InvariantCulture);
 }

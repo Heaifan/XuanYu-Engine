@@ -20,6 +20,18 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.21-rz
+MAP-A-R2-D3 有限地图地面、边界与渲染快照（2026-08-04 10:24:50，Commit 本轮落库为准）
+- **渲染唯一输入**：`MapRenderSnapshot` 迁至 `XuanYu.Render.Abstractions`（MapId/尺寸/地表/BaseHeight/Seed/SourceChangeSequence/IsVisible + Min/Max；**无 Name**——Rename 不引发 GPU 资源重建）；由 `MapRenderSnapshotProjection`（Editor.UI）从 `MapEditSession.CurrentMap` 投影，首次组装生成初始快照，仅响应 `ContentChanged` 低频事件（相机/Hover/选择不重建）；ChangeSequence 单调去重，禁在 Render 自增。
+- **有限地面常量几何**：`MapSurfaceGeometryBuilder`（Render.Abstractions）Flat 地面固定 **4 顶点 6 索引**（左下→右下→右上→左上，Z=BaseHeight；10 km/20 km/百万米均为 4 顶点，尺寸只进顶点坐标）；删除按米细分的 `MapTerrainMeshBuilder`（4225 顶点，C 类退役）与 `MapBoundsMeshBuilder`（48 顶点）；新 `MapBoundsGeometryBuilder` 四条边细条四边形 **24 顶点**（世界宽度 clamp(尺寸×0.001, 1, 50) 米 + 渲染抬升 0.05，真机验证远近后决定是否屏幕恒宽 Pass）。
+- **Vulkan 绘制**：`VulkanClearFrameOwner.MapTerrain.cs` → `MapSurface.cs`（`SetMapSurface`，值相等去重；地面索引 draw kind -14 + 边界 -15 分支复用）；`scene.vert` 地表基色土绿 → **低饱和豆青灰 (0.52,0.60,0.55)**、边界亮琥珀 → **淡金褐 (0.85,0.76,0.55)**（glslc 重生成 ShaderBytecode.Vert.cs 7430 词/GridFrag.cs 1315 词，--verify 逐字一致）。
+- **网格对齐地图**（计划 9.1）：参考网格 Pass push 176B → **192B**（新增 vec4 mapBounds：半宽/半深/BaseHeight/边缘淡出宽度=min(尺寸)×0.08）；`editor_reference_grid.frag` 求交平面 Z=0 → **Z=BaseHeight** + 地图矩形外平滑淡出（无地图 w=0 保持无限网格）；ViewPlaneGrid 共用 FillGridPushConstants 且自行覆盖 [44..47]，F3-F4 正交视图不受影响。
+- **权威统一**：UiVm 渲染数据源 `MapWorld.BuildRenderSnapshot()`（R1 旧链）→ `_mapRenderSnapshot`（会话直出）；`MapDocumentWorldBridge` 退役，新增 `WorldMapState.From(MapDefinition)`（World 同层投影，环境默认 ClearDay）；`MapDocumentAggregateBridge`（v1 DTO → 聚合，场景 mapReference 保活链：加载→投影→`ReplaceCurrentMap(markSaved:true)`，D2 预留入口）；**保存/打开按钮禁用**（v1 DTO 双权威分叉风险，持久化 D6 接入）；"卸载地图"按钮/命令移除（D2 会话语义=恒有默认地图）；场景引用失效时显示错误 + 会话默认地图保持（非 R1"未加载"空状态）。
+- **真机入口**（计划目标 3）：地图编辑器面板"基础地表"区升级为**地图属性**区——宽度/深度/基础高度编辑框 + 应用修改（全解析合法后 `ResizeMap`+`SetBaseHeight` 提交，非法输入中文错误/不产生历史/不部分更新）+ 地表类型 Flat 只读；聚焦地图复用 `FrameMapAllWithCenter`（**已含动态 Far**=max(100, distance+depth×4)，Near 0.05，70% 占用率，正交版 F3-F4 兼容），角点 Z 取 BaseHeight。
+- 验证：新增 MapSurfaceGeometryTests（9 项：4/6 常量、坐标对称、BaseHeight、边界 24 顶点/宽度公式/抬升）+ MapRenderSnapshotProjectionTests（5 项：默认/Resize/地表/会话驱动/Rename 不重建）+ UiMapEditorTests 重写 7 项（会话默认地图/应用/非法/非数字/取景 Far）+ SceneMapReferenceTests 适配 4 项 + MapDocumentAggregateBridgeTests 5 项；Core 321/321（312→321）、World 524/524（528→524，删 2 文件+旧 4 用例）、WarCore 22/22 全 PASS；arch-a-guard PASS（含依赖边界+5+100）；--no-incremental 全量重编译 0 error（1 个既有 warning 如实记录）；git diff --check PASS。
+- 治理：版本 v0.2.24.20-rz → v0.2.24.21-rz（五处同步）；登记：百万米地图远距深度精度（~17 m@85 km）为后续大世界问题；边界屏幕恒宽待真机验证后决定；未创建 Tag/Release。
+- 状态：**MAP-A-R2-D3：等待真机验收**（自动测试通过 ≠ COMPLETE）。
+
 ## v0.2.24.20-rz
 MAP-A-R2-D2 地图编辑会话与状态权威（2026-08-03，Commit 本轮落库为准）
 - **D1 遗留小修**：`MapDefinition` 移除 `Revision`（领域聚合纯净不可变，版本/游标语义由编辑会话持有）；`MapLayerKind`/`MapRegionKind` 枚举值合法性检查（`Enum.IsDefined`，未知角色不得默认为可承载层）+ UnknownLayerKindRejected/UnknownRegionKindRejected 测试。

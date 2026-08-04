@@ -22,17 +22,23 @@
           </Grid>
           <UniformGrid Columns="3" Margin="0,6,0,0">
             <Button Content="新建地图" Command="{Binding RunCommand}" CommandParameter="新建地图"/>
-            <Button Content="打开地图" Command="{Binding RunCommand}" CommandParameter="打开地图"/>
-            <Button Content="保存地图" Command="{Binding RunCommand}" CommandParameter="保存地图"/>
-            <Button Content="卸载地图" Command="{Binding RunCommand}" CommandParameter="卸载地图"/>
+            <Button Content="打开地图" IsEnabled="False" ToolTip.Tip="地图持久化将在 D6 接入"/>
+            <Button Content="保存地图" IsEnabled="False" ToolTip.Tip="地图持久化将在 D6 接入"/>
             <Button Content="聚焦地图" Command="{Binding RunCommand}" CommandParameter="聚焦地图"/>
           </UniformGrid>
         </StackPanel>
       </Border>
       <Border Classes="infoPanel">
         <StackPanel Spacing="5">
-          <TextBlock Text="基础地表" Classes="section"/>
-          <TextBlock Text="地表类型 / 宽度 / 深度 / 基础高度 / 起伏幅度 / 波长 / Seed 编辑将在 D5 后续补齐。" Classes="muted" TextWrapping="Wrap"/>
+          <TextBlock Text="地图属性" Classes="section"/>
+          <Grid ColumnDefinitions="90,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="3">
+            <TextBlock Text="宽度（米）" Classes="key"/><TextBox Grid.Column="1" Text="{Binding MapWidthText}"/>
+            <TextBlock Grid.Row="1" Text="深度（米）" Classes="key"/><TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MapDepthText}"/>
+            <TextBlock Grid.Row="2" Text="基础高度（米）" Classes="key"/><TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MapBaseHeightText}"/>
+            <TextBlock Grid.Row="3" Text="地表类型" Classes="key"/><TextBlock Grid.Row="3" Grid.Column="1" Text="Flat（只读）" Classes="value"/>
+          </Grid>
+          <Button Content="应用修改" Command="{Binding RunCommand}" CommandParameter="应用地图属性" HorizontalAlignment="Left"/>
+          <TextBlock Text="{Binding MapEditError}" Foreground="#C0392B" TextWrapping="Wrap"/>
         </StackPanel>
       </Border>
       <Border Classes="infoPanel">

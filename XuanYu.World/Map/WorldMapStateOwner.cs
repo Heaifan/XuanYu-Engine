@@ -31,14 +31,4 @@ public sealed class WorldMapStateOwner
 
         return _current.TryGetSurfaceHeight(worldX, worldY, out surfaceZ);
     }
-
-    public MapRenderSnapshot BuildRenderSnapshot() =>
-        _current is { } map
-            ? new MapRenderSnapshot(
-                map.MapId, map.Name, map.WidthMeters, map.DepthMeters,
-                map.SurfaceKind, map.BaseHeightMeters, map.AmplitudeMeters,
-                map.WavelengthMeters, map.Seed,
-                map.SunDirectionX, map.SunDirectionY, map.SunDirectionZ,
-                map.SunIntensity, map.AmbientIntensity)
-            : MapRenderSnapshot.Empty;
 }

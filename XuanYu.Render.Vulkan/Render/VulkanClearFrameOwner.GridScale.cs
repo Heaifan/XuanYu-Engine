@@ -73,5 +73,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
         scene[37] = _extent.Height;
         scene[38] = (float)camera.FarPlane;
         scene[39] = (float)(camera.FarPlane * 0.75); // gridMaxDistance：不满强度到 Far
+        // D3：地图平面对齐（Z=BaseHeight）+ 地图矩形边缘淡出；无地图时全零 = 无限 Z=0 网格。
+        var map = projection.Map;
+        scene[40 + 4] = map.HasMap ? (float)(map.WidthMeters / 2.0) : 0.0f;
+        scene[41 + 4] = map.HasMap ? (float)(map.DepthMeters / 2.0) : 0.0f;
+        scene[42 + 4] = map.HasMap ? (float)map.BaseHeightMeters : 0.0f;
+        scene[43 + 4] = map.HasMap ? (float)(System.Math.Min(map.WidthMeters, map.DepthMeters) * 0.08) : 0.0f;
     }
 }

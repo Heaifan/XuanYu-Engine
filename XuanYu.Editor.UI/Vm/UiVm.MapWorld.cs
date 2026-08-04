@@ -1,49 +1,27 @@
-using XuanYu.Core.Map;
-using XuanYu.Editor.MapDocument;
 using XuanYu.World.Map;
 
 namespace XuanYu.Editor.UI;
 
-// MAP-A-R1-D4：UiVm 地图世界状态持有者（最小程序化入口，D4 不做 UI 对话框）。
-// 提供默认地图加载/卸载与查询转发；D5 将接入地图编辑器 UI。
+// MAP-A-R2-D3：World 地图查询状态持有者（高度查询/边界判断权威，由会话 ContentChanged 同步）。
+// 渲染快照不再经由本类型（改由 MapSession → MapRenderSnapshotProjection 直出）。
 public sealed partial class UiVm
 {
     readonly WorldMapStateOwner _mapWorld = new();
 
     public WorldMapStateOwner MapWorld => _mapWorld;
-    public bool HasMap => _mapWorld.HasMap;
 
-    public void LoadDefaultMap()
-    {
-        var doc = XuanYu.Editor.MapDocument.MapDocument.CreateNew("TestBattlefield", 2000, 2000);
-        _mapWorld.Load(MapDocumentWorldBridge.ToWorldState(doc));
-        OnPropertyChanged(nameof(HasMap));
-        ApplyMapViewFraming();
-        FooterMessage = $"地图已加载：{_mapWorld.CurrentMap!.Name}（2000×2000 米）。";
-        PublishSceneRenderSnapshot();
-    }
-
-    public void UnloadMap()
-    {
-        if (!_mapWorld.HasMap) return;
-        _mapWorld.Unload();
-        OnPropertyChanged(nameof(HasMap));
-        ApplyMapViewFraming();
-        FooterMessage = "地图已卸载。";
-        PublishSceneRenderSnapshot();
-    }
-
+    // 地图取景：读会话当前尺寸与基础高度，45° 斜上方俯视完整容纳四角。
     void ApplyMapViewFraming()
     {
-        if (!_mapWorld.HasMap) return;
-        var map = _mapWorld.CurrentMap!;
-        var halfW = map.WidthMeters / 2.0;
-        var halfD = map.DepthMeters / 2.0;
+        var map = MapSession.CurrentMap;
+        var halfW = map.SizeMeters.Width / 2.0;
+        var halfD = map.SizeMeters.Depth / 2.0;
+        var z = map.Surface.BaseHeightMeters;
         FrameMapCamera(
-            new Core.Math.Vector3d(-halfW, -halfD, 0),
-            new Core.Math.Vector3d(halfW, -halfD, 0),
-            new Core.Math.Vector3d(-halfW, halfD, 0),
-            new Core.Math.Vector3d(halfW, halfD, 0));
+            new Core.Math.Vector3d(-halfW, -halfD, z),
+            new Core.Math.Vector3d(halfW, -halfD, z),
+            new Core.Math.Vector3d(-halfW, halfD, z),
+            new Core.Math.Vector3d(halfW, halfD, z));
     }
 
     // 地图取景：45° 斜上方俯视完整容纳地图，复用 EditorCameraFraming。
