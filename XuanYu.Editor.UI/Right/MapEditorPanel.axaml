@@ -38,6 +38,10 @@
             <TextBlock Grid.Row="3" Text="地表类型" Classes="key"/><TextBlock Grid.Row="3" Grid.Column="1" Text="Flat（只读）" Classes="value"/>
           </Grid>
           <Button Content="应用修改" Command="{Binding RunCommand}" CommandParameter="应用地图属性" HorizontalAlignment="Left"/>
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <Button Content="撤销地图修改" Command="{Binding RunCommand}" CommandParameter="撤销地图修改" IsEnabled="{Binding CanUndo}"/>
+            <Button Content="重做地图修改" Command="{Binding RunCommand}" CommandParameter="重做地图修改" IsEnabled="{Binding CanRedo}"/>
+          </StackPanel>
           <TextBlock Text="{Binding MapEditError}" Foreground="#C0392B" TextWrapping="Wrap"/>
         </StackPanel>
       </Border>

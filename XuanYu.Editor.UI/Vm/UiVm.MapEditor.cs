@@ -27,9 +27,7 @@ public sealed partial class UiVm
             return;
         }
 
-        MapWidthText = FormatMeters(MapSession.CurrentMap.SizeMeters.Width);
-        MapDepthText = FormatMeters(MapSession.CurrentMap.SizeMeters.Depth);
-        MapBaseHeightText = FormatMeters(MapSession.CurrentMap.Surface.BaseHeightMeters);
+        SyncPropertyTexts();
         MapEditError = ""; FooterMessage = "地图已新建（未保存）。";
         RaiseMapDocumentChanged();
     }

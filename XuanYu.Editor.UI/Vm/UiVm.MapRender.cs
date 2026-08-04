@@ -16,6 +16,13 @@ public sealed partial class UiVm
         _mapRenderSnapshot = MapRenderSnapshotProjection.Project(session.CurrentMap, session.ChangeSequence);
         _mapWorld.Load(WorldMapState.From(session.CurrentMap));
         session.ContentChanged += OnMapContentChanged;
+        session.HistoryAvailabilityChanged += OnMapHistoryAvailabilityChanged;
+    }
+
+    void OnMapHistoryAvailabilityChanged(MapHistoryAvailabilityChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(CanUndo));
+        OnPropertyChanged(nameof(CanRedo));
     }
 
     void OnMapContentChanged(MapContentChangedEventArgs e)

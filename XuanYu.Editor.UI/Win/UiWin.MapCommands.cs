@@ -12,5 +12,7 @@ public partial class UiWin
         if (command == "新建地图") { vm.NewMap(); return; }
         if (command == "聚焦地图") { vm.FocusMap(); return; }
         if (command == "应用地图属性") { vm.ApplyMapProperties(); return; }
+        if (command == "撤销地图修改") { vm.MapUndo(); return; }
+        if (command == "重做地图修改") { vm.MapRedo(); return; }
     }
 }

@@ -20,6 +20,16 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.23-rz
+MAP-A-R2-D3 A1 入口补接（2026-08-04 11:20:14，Commit 本轮落库为准）
+- 地图面板新增「撤销地图修改 / 重做地图修改」按钮：分别调用 `MapSession.Undo/Redo`（地图独立历史实例，不触碰场景实体历史；全局 Ctrl+Z 的焦点上下文规则未设计，D3 用显式按钮最安全）；`IsEnabled` 绑定 `CanUndo/CanRedo`（由 `HistoryAvailabilityChanged` 驱动刷新）；成功后同步宽/深/高文本与状态文字，渲染快照由 `ContentChanged` 自动更新（无历史时防御性报错，按钮禁用态下不可达）。
+- 测试：新增 `UiMapHistoryTests` 4 项（撤销/重做恢复三字段 + 文本同步 + 按钮可用性翻转 + World 查询随会话恢复 + 快照经事件驱动更新）；Rename 不重建由自动测试负责（ResourceKey/策略），不进真机清单。
+- 治理登记（非阻断，待用户正式治理修订落库）：`file-tree.md` 退出版本号同步源，版本同步由五处调整为**四处**（changelog/run.bat/UiWin.axaml/UiVm.SceneDocument.cs）。
+- 已知限制登记：**GentleHillsV1 地表视觉渲染尚未支持**（World 高度查询为起伏、画面为 Flat 平面）——D3 真机只验收 Flat；非 Flat 地形视觉渲染归后续地形轮，不得静默宣称显示正确。
+- 验证：Core 334/334、World 539/539（+4）、WarCore 22/22 全 PASS；arch-a-guard PASS；--no-incremental 全量重编译 0 error（1 个既有 warning 如实记录）；git diff --check PASS。
+- 治理：版本 v0.2.24.22-rz → v0.2.24.23-rz（四处同步；file-tree 按新治理不含版本号）；未创建 Tag/Release。
+- 状态：**MAP-A-R2-D3：等待真机验收**；MAP-A-R2-D3-A1：NOT RUN。
+
 ## v0.2.24.22-rz
 MAP-A-R2-D3 A1 前收口（2026-08-04 10:51:34，Commit 本轮落库为准）
 - 修正地图 GPU 资源判等：新增 `MapSurfaceResourceKey`（MapId/尺寸/BaseHeight/地表参数/可见性，**不含 ChangeSequence**）+ `MapSurfaceResourceUpdatePolicy` 纯策略（旧序号拒绝/同键不重建/异键重建）；Vulkan `SetMapSurface` 改为策略驱动（`_lastConsumedMapSequence` 与资源键分离），Rename 等非几何变化不再重建地面与边界缓冲。
