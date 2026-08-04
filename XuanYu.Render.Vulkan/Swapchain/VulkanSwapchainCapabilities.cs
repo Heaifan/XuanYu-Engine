@@ -5,7 +5,7 @@ using Silk.NET.Vulkan.Extensions.KHR;
 namespace XuanYu.Render.Vulkan.Swapchain;
 
 // VK4-C：Swapchain 能力查询（纯数据，不创建 Swapchain）。
-// 复用 VK4-A 已选 PhysicalDevice 与 Surface，不重枚举；偏好 B8G8R8A8+SRGB / FIFO（Mailbox 优先）。
+// 复用 VK4-A 已选 PhysicalDevice 与 Surface，不重枚举；偏好 B8G8R8A8+SRGB / FIFO（垂直同步优先）。
 public static unsafe class VulkanSwapchainCapabilities
 {
     public static VulkanSwapchainCapabilitiesResult Query(
@@ -48,10 +48,11 @@ public static unsafe class VulkanSwapchainCapabilities
         return formats.Length > 0 ? formats[0] : new SurfaceFormatKHR { Format = Format.B8G8R8A8Unorm, ColorSpace = ColorSpaceKHR.SpaceSrgbNonlinearKhr };
     }
 
-    static PresentModeKHR ChoosePresentMode(PresentModeKHR[] modes)
+    // VK-PERF-R1：FIFO（垂直同步）为首选，Mailbox 不再作为默认；Vulkan 规范保证 FIFO 必被支持。
+    internal static PresentModeKHR ChoosePresentMode(PresentModeKHR[] modes)
     {
         foreach (var m in modes)
-            if (m == PresentModeKHR.MailboxKhr) return m;
+            if (m == PresentModeKHR.FifoKhr) return m;
         return PresentModeKHR.FifoKhr;
     }
 

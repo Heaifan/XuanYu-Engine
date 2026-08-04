@@ -757,6 +757,9 @@ XuanYuEngine/
 │   │   ├── MapEditSessionThreadTests.cs：写线程保护（非法线程拒绝且状态完全不变）
 │   │   ├── MapEditSessionValidationTests.cs：候选校验与失败不污染（缩小越界整体拒绝/无效替换拒绝）
 │   │   └── MapRenderSnapshotProjectionTests.cs：MapDefinition → MapRenderSnapshot 投影合同（渲染唯一输入
+│   ├── Render
+│   │   ├── VulkanPresentLoopContractTests.cs：Present 循环源码合同（无投影受控等待/无逐帧日志/投影语义不变/模式日志一次性/无新依赖）
+│   │   └── VulkanPresentModeSelectionTests.cs：Present Mode 选择合同（FIFO 首选/Mailbox 非默认/确定性）
 │   ├── Scene
 │   │   ├── CommandSmokeTests.cs：命令冒烟测试
 │   │   ├── EditorEnvironmentTests.cs：编辑器环境（天空/光照）契约测试

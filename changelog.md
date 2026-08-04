@@ -20,6 +20,16 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.29-fix
+VK-PERF-R1 空闲渲染帧率与资源占用收敛（2026-08-04 21:13:49，Commit 本轮落库为准）
+- 根因（只读调查 + 线程级采样证实）：`VulkanSwapchainCapabilities.ChoosePresentMode` 默认优先 `MailboxKhr`（无 vsync 上限），`VulkanPresentLoop.RunFrames` 有投影时全速 Acquire→Submit→Present 无帧率限制，`AcquireNextImage` 超时后 `continue` 立即重试形成忙循环——线程级采样显示单线程（Present）4 秒内消耗 3125ms（≈78% 单核当量），UI 线程接近 0；最小化窗口后占用不变（Swapchain 仍被消费）。
+- 修复（第一层，最小修改）：`ChoosePresentMode` 改为 **FIFO（垂直同步）首选**（遍历找 `FifoKhr`，Vulkan 规范保证必被支持；保留原安全回退），Mailbox 不再作为默认；不新增 UI 开关，不改 Swapchain 自愈流程，不清除 `_hasRenderProjection` 语义，无逐帧日志（启动日志保留创建/重建时一次「呈现模式=…」）。
+- 实测数据（本机 i5-10400F + RTX 3060 12GB + 144Hz 显示器；GPU 3D 用 Windows 计数器 `\GPU Engine(*)\Utilization Percentage`（任务管理器同源），CPU 为进程 CPU 时间差单核当量，任务管理器进程页约等于该值 ÷12）：基线（Mailbox）默认窗口静止 GPU 3D 19.4~21.3% / CPU 73~81%，最小化 GPU 17~21% / CPU 70~78%；FIFO 后默认窗口静止 GPU 3D 稳态 7~8%（峰值 19.4% 为启动过渡）/ CPU 稳态 10~11%（排除首样本初始化误差），最小化 GPU 7.6~8.1% / CPU 17~24%。按计划判定表「GPU 已持续 ≤40% → 停止扩展」，FIFO 即最终方案，**未启用第二层 60 FPS 节流**。注：基线 GPU 数值与 F4 轮记录的 91~96%（任务管理器口径）存在口径/采样时机差异，本轮以修改前后同口径对比为准。
+- 测试：`VulkanPresentModeSelectionTests` 4 项（FIFO 优先/乱序优先/Mailbox 非默认/选择确定性）、`VulkanPresentLoopContractTests` 5 项（无投影受控等待/无逐帧日志/投影语义不变/模式日志只在创建重建/无新依赖），World 574→583（+9）。
+- 验证：Core 334/334、World 583/583、WarCore 22/22 全 PASS；arch-a-guard PASS（依赖边界+5+100）；全解决方案 build 0 error；git diff --check PASS；地图/Shader/相机/Gizmo/输入/Swapchain 自愈/Avalonia UI 零改动；无新增 NuGet；临时采样脚本（Temp 目录 hermes-verify-*）不入库。
+- 遗留：① 最小化后 GPU/CPU 未降至近零（FIFO 后仍 ~8%/~20%）→ 后续窗口可见性/遮挡暂停轮（P1-A7）；② 显示器 144Hz 时 FIFO 提交率=144fps，CPU 单核当量 ~10%，如需更低可启用 60 FPS deadline 节流（预留方向，本轮未启用）；③ Resize 多代际重建为既有问题，不属本轮。
+- 治理：版本 v0.2.24.28-fix → v0.2.24.29-fix（四处同步）；未创建 Tag/Release。
+
 ## v0.2.24.28-fix
 MAP-A-R2-D3-F4 日志面板垂直尺寸自适应修复（2026-08-04 15:50:00，Commit 本轮落库为准）
 - 根因（A4 真机裁定）：日志区被裁切不是滚动问题而是**外部布局边界**——`UiRoot.axaml` Row3 日志区 `Auto+MaxHeight=420`（Auto 行优先按内容期望满额 420）与 Row1 主工作区 `*+MinHeight=320` 的最小和，加上工具栏与分隔条后超过矮窗口可用高度（约 1400×820 窗口可用仅 ~369 < 420）→ 日志区被窗口底部裁切，ScrollIntoView 只能控制内部滚动位置救不了外部边界；约 1032 高窗口可容纳（与截图矩阵 820 失败/1032 正常/最大化正常完全吻合）。
