@@ -1,6 +1,8 @@
-# FluidWarfare 引擎架构
+# XuanYu Engine（玄域引擎）架构
 
-创建时间：2026-06-10
+创建时间：2026-06-10 ｜ 最近修订：2026-08-04（治理轮合并已关闭里程碑的仍然有效裁定）
+
+> 原标题为「FluidWarfare 引擎架构」；FluidWarfare 为历史开发代号，逐步废弃（见 governance/naming-XuanYu-Engine.md）。
 
 ## 架构原则
 
@@ -71,3 +73,22 @@ Phase 1 需要完成以下架构验证：
 `FluidWarfare.sln` 暂无项目引用。
 
 下一步进入 Core 前，才创建 `FluidWarfare.Core.csproj` 和 `FluidWarfare.Tests.csproj`。
+## 演进后的关键架构裁定（2026-07 归档自 ARCH-WORLD / ARCH-C 关闭里程碑）
+
+### 世界事实与空间权威（ARCH-WORLD R2/R3 CLOSED 裁定）
+
+- `GlobalWorld` 是**世界唯一事实源 + 唯一写链**：`Create` / `Destroy` / `UpdateTransform` / `RebuildSpatialIndexFromWorld` 全部同步内部 `WorldQuery`。
+- 空间索引只有一份（`SpatialIndexOwner`，可重建的加速结构）；Scene、Picking、Streaming 共用同一权威查询答案，同一 `EntityId` 在世界中的空间状态只允许一个权威答案。
+- `SceneStateOwner` 不保有第二套实体/空间真相：状态仅三类——`_world`（真相引用）、`_snapshot`（World 投影的渲染快照缓存）、`_activeEntityKey`（编辑器选择态游标）。Scene 是 World 的**门面（Facade）+ 投影层**。
+- 渲染快照双语义层：`SceneStateOwner` 返回基础 World/Scene 投影（无 Selection/Preview/Gizmo/Camera），`UiVm` 返回叠加编辑器语义的组合投影；生产渲染端只把 `UiVm` 作为 `ISceneRenderSnapshotSource` 注入。
+- 受控债务（R4/R5 登记，P2 渐进）：`SceneRenderSnapshot` 自带编辑器语义（`IsSelected`/`PreviewTransform`/`ShowMoveGizmo`/`Camera ?? DefaultEditorCamera.Create(0)` 后门）位于 Core.Scene；`DefaultEditorCamera`/`EditorCameraFraming` 位于 Core.Space；`TransformSession`（含 Core.Gizmo 语义）暂居 World.Transform。
+
+### 坐标系与渲染转换（WORLD-A-R0 合同，详细见 architecture/world-a-r0-coordinate-contract.md）
+
+- 世界空间右手笛卡尔：`+Z = Up`、`XY = 水平面`、`X × Y = Z`；世界 X/Y 是固定水平轴，不定义唯一 Forward。
+- Vulkan 唯一 Y 转换发生在 `Render.Vulkan` 组装 Push Constant 的边界副本：`VulkanProjection = FlipClipY(CoreProjection)`，不回写 Core Projection。
+- 显示、命中、拖动约束与 Picking 共用同一 `ViewProjectionState`，不得各自维护坐标补丁。
+
+### 编辑器边界（ARCH-WORLD R4 + 宪法硬红线）
+
+- `Editor.UI` 不直接依赖 Vulkan；`Render.Abstractions` 不引用 `Silk.NET.Vulkan`；arch-a-guard 守卫。

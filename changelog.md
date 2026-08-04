@@ -20,6 +20,15 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.26-rz
+REPO-GOV-R1 目录职责分类与命名去里程碑化（2026-08-04 14:20:00，Commit 本轮落库为准）
+- 生产目录按职责拆分子目录（宪法 5+100 的 5 规则落地映射）：`Vm/` → Camera/Map/Scene/Selection/Transform{Move,Rotate,Scale}/Logging/Inspector/History/Tree（根只留 UiVm.cs）；`Render.Vulkan/Render/` → ClearFrame/Grid/Map/Scene/StaticModels/Present；`Editor/Assets/` → Import/Gltf、Hosting{Planning,Transactions}、StaticModels、Catalog、Identity；`Core/Gizmo/` → Common/Move/Rotate/Scale；移动不改 namespace（SDK-style csproj 自动包含，零代码改动）。
+- 测试镜像生产代码：`World.Tests/` 按领域目录（Map{Editing}/Scene/Spatial/Camera/Selection/Transform{Move,Rotate,Scale}/WorldPartition/Assets/Logging/Tree），`Core.Tests/Render/` 按 Map/Grid/NavigationGizmo/StaticModels/DrawPlan/Camera；命名去里程碑化（`WorldCR4D3F1ValidatorTests` → `StaticModelValidatorTests`，含 partial 切片后缀 .R4R2 → 职责后缀 .DragState/.ToolSwitch/.Preview/.AxisUniform，测试方法名 `R5R1_*` 一并清理）。
+- docs 只保留当前事实源（184→16 文件）：删除 closed/**、历史验收/审计/计划/报告、全部里程碑 SVG、superseded/**；仍有效结论并入 `ENGINE_ARCHITECTURE.md`（世界事实/坐标合同/编辑器边界）；`map-contract.md` 就位；`AGENTS.md` 仓库入口文件入库（索引+红线摘要，唯一权威仍为宪法）。
+- file-tree.md 从 git ls-files 全量重建，每个 tracked 文件一句话职责（730/730 全覆盖），无版本号/阶段号/职责索引。
+- 验证：Core 334/334、World 556/556、WarCore 22/22 全 PASS；arch-a-guard PASS（依赖边界+5+100）；--no-incremental 全量 0 error；git diff --check PASS；ad-hoc 16 项断言（file-tree↔ls-files 全路径一致/无里程碑前缀残留/目录根瘦身/docs 16 事实源/禁用词/路径合同）ALL PASS；代码行为零改动。
+- 治理：版本 v0.2.24.25-fix → v0.2.24.26-rz（四处同步）；未创建 Tag/Release。
+
 ## v0.2.24.25-fix
 MAP-A-R2-D3-F2 日志中文化与日志面板尾部显示修复（2026-08-04 13:27:18，Commit 本轮落库为准）
 - 日志全部中文化（用户可见键名与状态值）：命令/宽度输入/深度输入/基础高度输入/地图标识/原尺寸/原基础高度/候选尺寸/候选基础高度/历史状态/变更序号/新尺寸/新基础高度/可撤销/可重做/原因/序号/尺寸/基础高度/地表/错误类型/错误说明/当前尺寸/状态保持不变/处理/资源键已变化/地面顶点/索引/边界顶点/接收序号/已消费序号；内部枚举与错误码保持英文，显示映射集中在 `UiVm.MapDiagnostics.Format.cs`（FormatMapEditReason/FormatSurfaceKind/FormatErrorCode/FormatBoolean）与 `Render.Abstractions/MapSurfaceResourceUpdateText.cs`（三态决策中文，Vulkan 层无 UI 依赖引用），未反写任何领域类型。
