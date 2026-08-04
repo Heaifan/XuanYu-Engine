@@ -327,7 +327,7 @@ XuanYuEngine/
 │   │   └── Right.axaml.cs：右侧UserControl类
 │   ├── Root
 │   │   ├── UiRoot.axaml：界面布局
-│   │   └── UiRoot.axaml.cs：Ui根UserControl类
+│   │   └── UiRoot.axaml.cs：根布局控件——列宽/日志行高按窗口尺寸 Clamp（日志区垂直自适应）
 │   ├── Top
 │   │   ├── Top.axaml：界面布局
 │   │   └── Top.axaml.cs：TopUserControl类
@@ -714,6 +714,7 @@ XuanYuEngine/
 │   │   ├── LogAutoScrollPolicyTests.cs：日志跟随策略纯测试
 │   │   ├── FootAxamlTailContractTests.cs：日志面板 AXAML 合同（虚拟化保持/12 DIP 尾距/旧 Padding 移除）
 │   │   ├── LogListAutoScrollControllerContractTests.cs：日志尾项控制器源码合同（两阶段/请求合并/副作用禁令）
+│   │   ├── UiRootLogRowContractTests.cs：日志区垂直尺寸自适应源码合同（Clamp 逻辑/无固定 MinHeight 阻断）
 │   │   └── UiMapLogChineseTests.cs：日志中文化测试（中文键/无英文键/显示映射）
 │   ├── Map
 │   │   ├── Editing

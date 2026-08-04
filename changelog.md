@@ -20,6 +20,15 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.28-fix
+MAP-A-R2-D3-F4 日志面板垂直尺寸自适应修复（2026-08-04 15:50:00，Commit 本轮落库为准）
+- 根因（A4 真机裁定）：日志区被裁切不是滚动问题而是**外部布局边界**——`UiRoot.axaml` Row3 日志区 `Auto+MaxHeight=420`（Auto 行优先按内容期望满额 420）与 Row1 主工作区 `*+MinHeight=320` 的最小和，加上工具栏与分隔条后超过矮窗口可用高度（约 1400×820 窗口可用仅 ~369 < 420）→ 日志区被窗口底部裁切，ScrollIntoView 只能控制内部滚动位置救不了外部边界；约 1032 高窗口可容纳（与截图矩阵 820 失败/1032 正常/最大化正常完全吻合）。
+- 修复（不再堆滚动算法）：`UiRoot.axaml.cs` 新增 `ClampLogRow()`——监听 `IsLogOpen`（DataContext PropertyChanged）与窗口 `SizeChanged`，日志展开时把 Row3 设为像素行 `Math.Clamp(420, 120, 可用高度)`（可用 = 窗口高度 − 根 Margin 24 − 分隔条 6 − 主区最小 320 − 工具栏实际高），折叠时回 `GridLength.Auto`（只占标题栏）；极端矮窗口可用 ≤0 时保持现状由 `MinHeight=32` 兜底。`Foot.axaml` 日志展开 Border `MinHeight=180 → 0`（解除矮窗口下阻止列表 Viewport 缩小的最低高度，改由外层像素行约束）。
+- 测试：`UiRootLogRowContractTests` 5 项（Row3 MaxHeight=420 存在/主区 MinHeight=320 存在/代码含 GridLength.Auto+Math.Clamp+IsLogOpen 自适应/日志 Border 不再 MinHeight=180/可优雅缩小 MinHeight=0）；几何级验证由 F4-A1~A8 真机复验承担（合同测试已注明）。
+- 验证：Core 334/334、World 574/574（+5）、WarCore 22/22 全 PASS；arch-a-guard PASS（依赖边界+5+100）；全解决方案 build 0 error；git diff --check PASS；5+100 手写复核（UiRoot.axaml.cs 81 / Foot.axaml 99 / 合同测试 52 行全合规）；无地图代码/中文文案/滚动策略主体改动。
+- 性能诊断（只读采样，独立轮处理，不进本轮提交）：PresentMode 优先 `MailboxKhr`（无 vsync 上限）；主循环 `RunFrames` 有投影时全速 Acquire→Submit→Present 无帧率限制（仅无投影时 `Thread.Sleep(16)`）；`_hasRenderProjection` 一旦为 true 不消费清除 → 空闲场景 GPU 91%~96% 根因与用户第一嫌疑吻合；建议独立性能轮：PresentMode 改 FIFO 或主循环节流 60 FPS，再测空闲/最小化/遮挡/网格开关采样矩阵。
+- 治理：版本 v0.2.24.27-fix → v0.2.24.28-fix（四处同步）；未创建 Tag/Release。
+
 ## v0.2.24.27-fix
 MAP-A-R2-D3-F3 日志面板尾项完整显示修复（2026-08-04 15:10:00，Commit 本轮落库为准）
 - 真实尾部安全区：`Foot.axaml` 日志列表 ItemsPanel 改为 `VirtualizingStackPanel Margin="0,0,0,12"`（12 DIP 进入滚动 Extent——Avalonia MeasureCore 将 Margin 计入 DesiredSize，ScrollContentPresenter.ComputeExtent 基于内容 Bounds 计算），移除仅承担视觉间距、不进滚动范围的 ListBox `Padding="0,0,0,8"`；虚拟化保持（ItemsPanelTemplate 仍是 VirtualizingStackPanel，未退化为 StackPanel）。

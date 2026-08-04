@@ -31,7 +31,7 @@
       <TextBlock Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center" Foreground="#50607a"/>
     </Grid>
 
-    <Border Grid.Row="1" IsVisible="{Binding IsLogOpen}" MinHeight="180" Margin="0,8,0,0" BorderBrush="#d9e2ee" BorderThickness="1" CornerRadius="6" Background="#f8fbff" Padding="8">
+    <Border Grid.Row="1" IsVisible="{Binding IsLogOpen}" MinHeight="0" Margin="0,8,0,0" BorderBrush="#d9e2ee" BorderThickness="1" CornerRadius="6" Background="#f8fbff" Padding="8">
       <Grid RowDefinitions="Auto,Auto,*">
         <Grid ColumnDefinitions="*,220" Margin="0,0,0,6">
           <StackPanel Orientation="Horizontal" Spacing="4">
