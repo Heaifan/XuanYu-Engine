@@ -6,7 +6,7 @@
 XuanYuEngine/
 ├── .gitattributes
 ├── .gitignore
-├── NuGet.Config：NuGet 源配置
+├── NuGet.Config
 ├── XuanYu.Core
 │   ├── .gitkeep
 │   ├── Diagnostics
@@ -19,22 +19,22 @@ XuanYuEngine/
 │   │   ├── MoveGizmoLayout.Plane.cs
 │   │   ├── MoveGizmoLayout.cs
 │   │   ├── MoveGizmoPlane.cs
-│   │   ├── MoveGizmoScreenSize.cs：移动 Gizmo 屏幕尺寸合同
+│   │   ├── MoveGizmoScreenSize.cs
 │   │   ├── MoveGizmoSegment.cs
 │   │   ├── RotateGizmoAxis.cs
 │   │   ├── RotateGizmoDrag.Math.cs
 │   │   ├── RotateGizmoDrag.cs
 │   │   ├── RotateGizmoLayout.cs
 │   │   ├── RotateGizmoRing.cs
-│   │   ├── RotateGizmoScreenRadius.cs：旋转 Gizmo 屏幕半径合同
+│   │   ├── RotateGizmoScreenRadius.cs
 │   │   ├── ScaleGizmoAxis.cs
 │   │   ├── ScaleGizmoDrag.cs
 │   │   ├── ScaleGizmoHitTester.cs
 │   │   ├── ScaleGizmoLayout.cs
-│   │   ├── ScaleGizmoScreenSize.cs：缩放 Gizmo 屏幕尺寸合同
+│   │   ├── ScaleGizmoScreenSize.cs
 │   │   └── ScreenPoint.cs
 │   ├── History
-│   │   ├── EditorHistoryOwner.cs：通用编辑历史游标与 Undo/Redo 栈
+│   │   ├── EditorHistoryOwner.cs
 │   │   └── TransformHistoryEntry.cs
 │   ├── Identity
 │   │   └── EntityId.cs
@@ -43,8 +43,8 @@ XuanYuEngine/
 │   │   └── EngineLogLevel.cs
 │   ├── Map
 │   │   ├── MapSurfaceKind.cs
-│   │   ├── MapSurfaceSampler.cs：地图地表采样唯一源（世界 X/Y → Z）
-│   │   └── MapTerrainVertex.cs：地形网格顶点布局（pos+normal+亮度）
+│   │   ├── MapSurfaceSampler.cs
+│   │   └── MapTerrainVertex.cs
 │   ├── Math
 │   │   ├── Vector3d.cs
 │   │   └── YawRotation.cs
@@ -55,22 +55,22 @@ XuanYuEngine/
 │   ├── Properties
 │   │   └── AssemblyInfo.cs
 │   ├── Results
-│   │   ├── EngineError.cs：结构化错误（码 + 中文消息）
-│   │   └── EngineResult.cs：结构化操作结果（成功/失败合同）
+│   │   ├── EngineError.cs
+│   │   └── EngineResult.cs
 │   ├── Scene
 │   │   ├── CommittedTransform.cs
 │   │   ├── ISceneRenderSnapshotSource.cs
 │   │   ├── SceneEntitySnapshot.cs
-│   │   ├── SceneRenderSnapshot.cs：场景渲染快照合同
+│   │   ├── SceneRenderSnapshot.cs
 │   │   └── SceneTransformCommitResult.cs
 │   ├── Space
-│   │   ├── CameraState.cs：相机状态（透视/正交、裁剪面、Revision）
-│   │   ├── DefaultEditorCamera.cs：默认编辑器相机工厂
-│   │   ├── ProjectionMode.cs：相机投影模式（透视/正交）
-│   │   ├── ViewProjectionState.cs：视图投影状态（矩阵族）
+│   │   ├── CameraState.cs
+│   │   ├── DefaultEditorCamera.cs
+│   │   ├── ProjectionMode.cs
+│   │   ├── ViewProjectionState.cs
 │   │   ├── ViewportState.cs
-│   │   ├── WorldRay.cs：世界射线（逆投影反求）
-│   │   └── WorldRayFactory.cs：世界射线工厂（透视/正交兼容）
+│   │   ├── WorldRay.cs
+│   │   └── WorldRayFactory.cs
 │   ├── Spatial
 │   │   ├── RayAabbHit.cs
 │   │   ├── RayAabbIntersection.cs
@@ -129,6 +129,8 @@ XuanYuEngine/
 │   │   ├── FrameExecutionPolicyTests.cs
 │   │   ├── MapRenderDrawPlanTests.cs
 │   │   ├── MapSurfaceGeometryTests.cs
+│   │   ├── MapSurfaceResourceKeyTests.cs：资源键合同测试（Rename 不重建等）
+│   │   ├── MapSurfaceResourceUpdatePolicyTests.cs：资源更新决策纯策略测试
 │   │   ├── NavigationGizmoLayoutTests.Facing.cs
 │   │   ├── NavigationGizmoLayoutTests.cs
 │   │   ├── NavigationGizmoOverlayContractTests.cs
@@ -182,7 +184,7 @@ XuanYuEngine/
 │   │   ├── SceneAssetHostingTransaction.Complete.cs
 │   │   ├── SceneAssetHostingTransaction.Rollback.cs
 │   │   ├── SceneAssetHostingTransaction.cs
-│   │   ├── SceneAssetPathPolicy.cs：场景资产相对路径安全策略
+│   │   ├── SceneAssetPathPolicy.cs
 │   │   ├── SceneStaticModelBinding.cs
 │   │   ├── SceneStaticModelCatalog.cs
 │   │   ├── StaticModelAuthoringService.cs
@@ -195,53 +197,53 @@ XuanYuEngine/
 │   │   ├── StaticModelPrimitive.cs
 │   │   └── StaticModelVertex.cs
 │   ├── Camera
-│   │   ├── CameraBasis.cs：相机正交基生成器（PreferredUp 回退）
+│   │   ├── CameraBasis.cs
 │   │   ├── CameraFrameResult.cs
-│   │   ├── CameraNavigation.Try.cs：相机导航 Try* 失败安全实现
-│   │   ├── CameraNavigation.cs：相机导航（Orbit/Dolly/Pan 安全 API）
-│   │   ├── EditorCameraFraming.Orthographic.cs：相机取景（正交分支）
-│   │   ├── EditorCameraFraming.cs：相机取景（全部/选中/地图，透视）
-│   │   └── OrthographicViewFactory.cs：正交视图构造
+│   │   ├── CameraNavigation.Try.cs
+│   │   ├── CameraNavigation.cs
+│   │   ├── EditorCameraFraming.Orthographic.cs
+│   │   ├── EditorCameraFraming.cs
+│   │   └── OrthographicViewFactory.cs
 │   ├── MapDocument
-│   │   ├── MapDocument.cs：地图持久化 DTO（.xymap v1 模型）
-│   │   ├── MapDocumentAggregateBridge.cs：v1 DTO → 领域聚合投影（场景引用链）
-│   │   ├── MapDocumentJson.cs：地图 DTO JSON 形态
-│   │   ├── MapDocumentOwner.cs：地图文档持有者（路径/Dirty/错误）
-│   │   ├── MapDocumentResult.cs：地图存储操作结果
-│   │   ├── MapDocumentValidator.cs：地图 DTO 校验
-│   │   ├── MapEnvironmentDefinition.cs：环境定义（天空预设/太阳/环境光）
-│   │   ├── MapJsonMapper.cs：地图 JSON 双向映射
-│   │   ├── MapJsonSerializer.cs：地图 JSON 序列化
-│   │   └── MapStorageService.cs：地图文件读写（原子替换）
+│   │   ├── MapDocument.cs
+│   │   ├── MapDocumentAggregateBridge.cs
+│   │   ├── MapDocumentJson.cs
+│   │   ├── MapDocumentOwner.cs
+│   │   ├── MapDocumentResult.cs
+│   │   ├── MapDocumentValidator.cs
+│   │   ├── MapEnvironmentDefinition.cs
+│   │   ├── MapJsonMapper.cs
+│   │   ├── MapJsonSerializer.cs
+│   │   └── MapStorageService.cs
 │   ├── MapEditing
-│   │   ├── MapEditEvents.cs：低频事件参数（内容/选择/Dirty/历史可用）
-│   │   ├── MapEditReason.cs：编辑原因枚举（含原子属性变更）
-│   │   ├── MapEditSession.Commands.cs：地图编辑命令（属性/尺寸/高度/原子属性）
-│   │   ├── MapEditSession.Commit.cs：地图内容统一提交管线（No-op/校验/历史）
-│   │   ├── MapEditSession.Document.cs：文档生命周期（新建/替换/标记已保存）
-│   │   ├── MapEditSession.History.cs：Undo/Redo 与事件广播
-│   │   ├── MapEditSession.Selection.cs：选择状态（稳定 ID + 规范化）
-│   │   ├── MapEditSession.cs：地图编辑会话状态权威
-│   │   ├── MapHistoryEntry.cs：历史条目（Before/After 不可变快照）
-│   │   ├── MapSelection.cs：地图选择模型（None/Map/Layer/Region）
-│   │   └── MapSelectionKind.cs：地图选择类型
+│   │   ├── MapEditEvents.cs
+│   │   ├── MapEditReason.cs
+│   │   ├── MapEditSession.Commands.cs
+│   │   ├── MapEditSession.Commit.cs
+│   │   ├── MapEditSession.Document.cs
+│   │   ├── MapEditSession.History.cs
+│   │   ├── MapEditSession.Selection.cs
+│   │   ├── MapEditSession.cs
+│   │   ├── MapHistoryEntry.cs
+│   │   ├── MapSelection.cs
+│   │   └── MapSelectionKind.cs
 │   ├── SceneDocument
-│   │   ├── MapReference.cs：场景地图引用记录
+│   │   ├── MapReference.cs
 │   │   ├── SceneDocumentAsset.cs
 │   │   ├── SceneDocumentEntity.cs
-│   │   ├── SceneDocumentJson.cs：场景文档 JSON 形态
-│   │   ├── SceneDocumentLoadTransaction.cs：场景加载事务（候选构建）
-│   │   ├── SceneDocumentMapper.cs：场景文档 JSON 双向映射
+│   │   ├── SceneDocumentJson.cs
+│   │   ├── SceneDocumentLoadTransaction.cs
+│   │   ├── SceneDocumentMapper.cs
 │   │   ├── SceneDocumentResult.cs
-│   │   ├── SceneDocumentSaveTransaction.cs：场景保存事务（临时文件+原子替换）
-│   │   ├── SceneDocumentSession.cs：场景文档会话（Dirty/Revision）
-│   │   ├── SceneDocumentSnapshot.cs：场景文档快照（含可选地图引用）
-│   │   ├── SceneDocumentValidator.MapReference.cs：mapReference 校验（可空）
-│   │   ├── SceneDocumentValidator.cs：场景文档校验（含 mapReference）
+│   │   ├── SceneDocumentSaveTransaction.cs
+│   │   ├── SceneDocumentSession.cs
+│   │   ├── SceneDocumentSnapshot.cs
+│   │   ├── SceneDocumentValidator.MapReference.cs
+│   │   ├── SceneDocumentValidator.cs
 │   │   ├── SceneDocumentWorldBridge.cs
 │   │   ├── SceneLoadCandidate.cs
 │   │   ├── SceneSaveOutcome.cs
-│   │   └── SceneStorageService.cs：场景文件读写（原子保存）
+│   │   └── SceneStorageService.cs
 │   ├── Transform
 │   │   ├── TransformSession.Rotate.cs
 │   │   ├── TransformSession.Scale.cs
@@ -298,12 +300,12 @@ XuanYuEngine/
 │   ├── NativeHostSurfaceContract.cs
 │   ├── RelayCommand.cs
 │   ├── Right
-│   │   ├── MapEditorPanel.axaml：地图编辑器面板（资产区 + 属性编辑区）
+│   │   ├── MapEditorPanel.axaml
 │   │   ├── MapEditorPanel.axaml.cs
-│   │   ├── Right.axaml：右侧面板（检查器/地图编辑器等 Tab）
+│   │   ├── Right.axaml
 │   │   └── Right.axaml.cs
 │   ├── Root
-│   │   ├── UiRoot.axaml：编辑器根布局
+│   │   ├── UiRoot.axaml
 │   │   └── UiRoot.axaml.cs
 │   ├── Top
 │   │   ├── Top.axaml
@@ -328,7 +330,7 @@ XuanYuEngine/
 │   │       ├── VulkanNativeHost.Picking.cs
 │   │       ├── VulkanNativeHost.Pointer.cs
 │   │       ├── VulkanNativeHost.cs
-│   │       ├── VulkanViewport.axaml：视口宿主布局
+│   │       ├── VulkanViewport.axaml
 │   │       ├── VulkanViewport.axaml.cs
 │   │       ├── Win32ViewportHost.Input.cs
 │   │       └── Win32ViewportHost.cs
@@ -353,17 +355,17 @@ XuanYuEngine/
 │   │   │   ├── EditorLogNoiseFilter.cs
 │   │   │   ├── EditorLogRepeatKey.cs
 │   │   │   └── EditorLogSummary.cs
-│   │   ├── MapRenderSnapshotProjection.cs：MapDefinition → 渲染快照纯投影
+│   │   ├── MapRenderSnapshotProjection.cs
 │   │   ├── SampleLogEntries.cs
 │   │   ├── SceneHistoryEntry.cs
-│   │   ├── SceneRenderProjectionAdapter.cs：场景快照 → 渲染投影适配（含地图）
+│   │   ├── SceneRenderProjectionAdapter.cs
 │   │   ├── StandardViewResolver.cs
 │   │   ├── StaticModelRenderAdapter.cs
 │   │   ├── TreeGuideBuilder.cs
 │   │   ├── UiText.cs
-│   │   ├── UiVm.Camera.Framing.cs：相机取景命令
-│   │   ├── UiVm.Camera.cs：相机操作与投影发布
-│   │   ├── UiVm.CameraNavigation.cs：相机导航命令接入
+│   │   ├── UiVm.Camera.Framing.cs
+│   │   ├── UiVm.Camera.cs
+│   │   ├── UiVm.CameraNavigation.cs
 │   │   ├── UiVm.DocumentStatus.cs
 │   │   ├── UiVm.EntityCommands.cs
 │   │   ├── UiVm.History.Entities.cs
@@ -376,22 +378,22 @@ XuanYuEngine/
 │   │   ├── UiVm.InteractionCancel.cs
 │   │   ├── UiVm.InteractionPointer.cs
 │   │   ├── UiVm.Logging.cs
-│   │   ├── UiVm.MapEditor.cs：地图属性入口（宽/深/基础高度原子应用）
-│   │   ├── UiVm.MapRender.cs：会话 ContentChanged → 渲染快照适配
-│   │   ├── UiVm.MapWorld.cs：World 地图查询状态与取景
+│   │   ├── UiVm.MapEditor.cs
+│   │   ├── UiVm.MapRender.cs
+│   │   ├── UiVm.MapWorld.cs
 │   │   ├── UiVm.MoveGizmo.cs
 │   │   ├── UiVm.MoveGizmoLogging.cs
 │   │   ├── UiVm.MoveGizmoScreenSize.cs
 │   │   ├── UiVm.NativeHostLifecycle.cs
 │   │   ├── UiVm.Picking.cs
-│   │   ├── UiVm.RenderProjection.cs：渲染投影创建（含地图快照）
+│   │   ├── UiVm.RenderProjection.cs
 │   │   ├── UiVm.RotateGizmo.cs
 │   │   ├── UiVm.ScaleGizmo.cs
-│   │   ├── UiVm.Scene.cs：场景命令分发与渲染快照发布
+│   │   ├── UiVm.Scene.cs
 │   │   ├── UiVm.SceneDocument.New.cs
-│   │   ├── UiVm.SceneDocument.cs：场景文档状态与窗口标题
+│   │   ├── UiVm.SceneDocument.cs
 │   │   ├── UiVm.SceneDocumentLog.cs
-│   │   ├── UiVm.SceneDocumentMapRef.cs：场景地图引用闭环（保存附加/打开恢复）
+│   │   ├── UiVm.SceneDocumentMapRef.cs
 │   │   ├── UiVm.SceneDocumentSave.cs
 │   │   ├── UiVm.Selection.cs
 │   │   ├── UiVm.SelectionProjection.cs
@@ -400,51 +402,53 @@ XuanYuEngine/
 │   │   ├── UiVm.StaticModelImport.cs
 │   │   ├── UiVm.Tool.cs
 │   │   ├── UiVm.TreeCommands.cs
-│   │   ├── UiVm.ViewGizmo.cs：视角 Gizmo 状态与观察中心
-│   │   ├── UiVm.ViewportAssist.cs：视口辅助开关命令
+│   │   ├── UiVm.ViewGizmo.cs
+│   │   ├── UiVm.ViewportAssist.cs
 │   │   ├── UiVm.ViewportSelection.cs
 │   │   ├── UiVm.WorldProjection.cs
-│   │   ├── UiVm.cs：组合根视图模型（会话/命令/快照发布）
+│   │   ├── UiVm.cs
 │   │   └── ViewportPickingLogFormatter.cs
 │   ├── Win
 │   │   ├── UiWin.Dialogs.cs
 │   │   ├── UiWin.EntityShortcuts.cs
-│   │   ├── UiWin.MapCommands.cs：地图命令分发（新建/聚焦/应用属性）
+│   │   ├── UiWin.MapCommands.cs
 │   │   ├── UiWin.SceneCommands.cs
 │   │   ├── UiWin.UnsavedDialog.cs
-│   │   ├── UiWin.axaml：主窗口（标题含版本号）
+│   │   ├── UiWin.axaml
 │   │   └── UiWin.axaml.cs
 │   ├── XuanYu.Editor.UI.csproj
 │   └── app.manifest
 ├── XuanYu.Editor.Win
 │   ├── MainForm.cs
 │   └── XuanYu.Editor.Win.csproj
-├── XuanYu.Engine.slnx：解决方案入口
+├── XuanYu.Engine.slnx
 ├── XuanYu.Render.Abstractions
-│   ├── EditorViewPlaneGridKind.cs：视图平面网格类型（YZ/XZ）
-│   ├── EditorViewportAssistState.cs：视口辅助状态合同
+│   ├── EditorViewPlaneGridKind.cs
+│   ├── EditorViewportAssistState.cs
 │   ├── FrameExecutionPolicy.cs
 │   ├── INativeHostSurfaceBridge.cs
 │   ├── INativeHostSurfaceBridgeFactory.cs
 │   ├── IRenderProjectionSource.cs
-│   ├── MapBoundsGeometry.cs：地图边界几何（四条边细条四边形）
-│   ├── MapRenderSnapshot.cs：地图渲染不可变快照（唯一渲染输入）
-│   ├── MapSurfaceGeometry.cs：有限地面常量几何（4 顶点 6 索引）
+│   ├── MapBoundsGeometry.cs
+│   ├── MapRenderSnapshot.cs
+│   ├── MapSurfaceGeometry.cs
+│   ├── MapSurfaceResourceKey.cs：地图 GPU 资源判等键（不含 ChangeSequence）
+│   ├── MapSurfaceResourceUpdatePolicy.cs：地图资源更新决策（旧序拒绝/同键不重建）
 │   ├── NativeHostHandleSnapshot.cs
 │   ├── NativeHostLifecycleLogFormatter.cs
 │   ├── NativeHostLifecycleProbe.cs
 │   ├── NativeHostLifecycleState.cs
 │   ├── NativeHostSurfaceHandle.cs
 │   ├── ReferenceGridScale.cs
-│   ├── RenderCameraProjection.cs：相机渲染投影合同
-│   ├── RenderDrawPlan.cs：帧绘制计划（顺序合同）
-│   ├── RenderEntityProjection.cs：实体渲染投影合同
+│   ├── RenderCameraProjection.cs
+│   ├── RenderDrawPlan.cs
+│   ├── RenderEntityProjection.cs
 │   ├── RenderEntityType.cs
-│   ├── RenderProjection.cs：渲染投影（相机/实体/Gizmo/地图快照）
+│   ├── RenderProjection.cs
 │   ├── RenderProjectionResult.cs
 │   ├── RenderStaticModelKey.cs
 │   ├── RenderStaticModelPrimitive.cs
-│   ├── RenderStaticModelResource.cs：静态模型渲染资源合同
+│   ├── RenderStaticModelResource.cs
 │   ├── RenderStaticModelVertex.cs
 │   └── XuanYu.Render.Abstractions.csproj
 ├── XuanYu.Render.Vulkan
@@ -463,23 +467,23 @@ XuanYuEngine/
 │   ├── Diagnostic
 │   │   └── VulkanResizeTracer.cs
 │   ├── Pipeline
-│   │   ├── ShaderBytecode.Frag.cs：scene.frag 字节码（生成物）
-│   │   ├── ShaderBytecode.GridFrag.cs：参考网格片元字节码（生成物）
-│   │   ├── ShaderBytecode.GridVert.cs：网格顶点字节码（生成物）
-│   │   ├── ShaderBytecode.NavGizmoFrag.cs：导航 Gizmo 片元字节码（生成物）
-│   │   ├── ShaderBytecode.NavGizmoVert.cs：导航 Gizmo 顶点字节码（生成物）
-│   │   ├── ShaderBytecode.Vert.cs：scene.vert 字节码（生成物）
-│   │   ├── ShaderBytecode.ViewPlaneGridFrag.cs：视图平面网格片元字节码（生成物）
-│   │   ├── ShaderBytecode.WorldAxesFrag.cs：世界轴片元字节码（生成物）
-│   │   ├── ShaderBytecode.WorldOriginFrag.cs：世界原点片元字节码（生成物）
+│   │   ├── ShaderBytecode.Frag.cs
+│   │   ├── ShaderBytecode.GridFrag.cs
+│   │   ├── ShaderBytecode.GridVert.cs
+│   │   ├── ShaderBytecode.NavGizmoFrag.cs
+│   │   ├── ShaderBytecode.NavGizmoVert.cs
+│   │   ├── ShaderBytecode.Vert.cs
+│   │   ├── ShaderBytecode.ViewPlaneGridFrag.cs
+│   │   ├── ShaderBytecode.WorldAxesFrag.cs
+│   │   ├── ShaderBytecode.WorldOriginFrag.cs
 │   │   ├── VulkanGraphicsPipelineOwner.Depth.cs
-│   │   ├── VulkanGraphicsPipelineOwner.Fullscreen.cs：全屏 Pass 泛化创建
-│   │   ├── VulkanGraphicsPipelineOwner.Grid.cs：网格 Pass 管线创建
-│   │   ├── VulkanGraphicsPipelineOwner.Sky.cs：天空管线创建
+│   │   ├── VulkanGraphicsPipelineOwner.Fullscreen.cs
+│   │   ├── VulkanGraphicsPipelineOwner.Grid.cs
+│   │   ├── VulkanGraphicsPipelineOwner.Sky.cs
 │   │   ├── VulkanGraphicsPipelineOwner.StaticModelInput.cs
-│   │   ├── VulkanGraphicsPipelineOwner.cs：主管线创建（scene.vert/frag）
+│   │   ├── VulkanGraphicsPipelineOwner.cs
 │   │   ├── VulkanPipelineLogFormatter.cs
-│   │   ├── VulkanScenePushConstants.cs：场景 PushConstants 布局
+│   │   ├── VulkanScenePushConstants.cs
 │   │   └── VulkanShaderModuleOwner.cs
 │   ├── Render
 │   │   ├── StaticModels
@@ -492,45 +496,45 @@ XuanYuEngine/
 │   │   │   └── VulkanStaticModelVertex.cs
 │   │   ├── VulkanClearFrameLogFormatter.cs
 │   │   ├── VulkanClearFrameOwner.Commands.cs
-│   │   ├── VulkanClearFrameOwner.Draw.cs：帧绘制分发（DrawPlan 消费）
+│   │   ├── VulkanClearFrameOwner.Draw.cs
 │   │   ├── VulkanClearFrameOwner.DrawAssist.cs
 │   │   ├── VulkanClearFrameOwner.DrawGizmo.cs
 │   │   ├── VulkanClearFrameOwner.DrawStaticBounds.cs
 │   │   ├── VulkanClearFrameOwner.DrawStaticModel.cs
-│   │   ├── VulkanClearFrameOwner.Grid.cs：参考网格 Pass（192B push）
-│   │   ├── VulkanClearFrameOwner.GridScale.cs：网格尺度计算与 push 填充
-│   │   ├── VulkanClearFrameOwner.Lifecycle.cs：GPU 资源生命周期（释放）
-│   │   ├── VulkanClearFrameOwner.MapSurface.cs：地图地面/边界 GPU 资源与绘制（策略判等）
+│   │   ├── VulkanClearFrameOwner.Grid.cs
+│   │   ├── VulkanClearFrameOwner.GridScale.cs
+│   │   ├── VulkanClearFrameOwner.Lifecycle.cs
+│   │   ├── VulkanClearFrameOwner.MapSurface.cs
 │   │   ├── VulkanClearFrameOwner.Matrix.cs
 │   │   ├── VulkanClearFrameOwner.NavGizmo.cs
-│   │   ├── VulkanClearFrameOwner.PipelineBind.cs：DrawKind → 管线绑定
+│   │   ├── VulkanClearFrameOwner.PipelineBind.cs
 │   │   ├── VulkanClearFrameOwner.PushConstants.cs
 │   │   ├── VulkanClearFrameOwner.Resources.cs
-│   │   ├── VulkanClearFrameOwner.Scene.cs：场景投影注入与网格尺度更新
+│   │   ├── VulkanClearFrameOwner.Scene.cs
 │   │   ├── VulkanClearFrameOwner.Trace.cs
-│   │   ├── VulkanClearFrameOwner.ViewPlaneGrid.cs：视图平面网格 Pass
+│   │   ├── VulkanClearFrameOwner.ViewPlaneGrid.cs
 │   │   ├── VulkanClearFrameOwner.WorldAxes.cs
-│   │   ├── VulkanClearFrameOwner.cs：清屏/场景绘制所有者
+│   │   ├── VulkanClearFrameOwner.cs
 │   │   ├── VulkanDepthAttachment.cs
 │   │   ├── VulkanPresentLoop.Frame.cs
 │   │   ├── VulkanPresentLoop.Lifecycle.cs
 │   │   └── VulkanPresentLoop.cs
 │   ├── Session
-│   │   ├── GridPipelineSet.cs：网格管线组（参考网格/轴/原点/视图平面）
+│   │   ├── GridPipelineSet.cs
 │   │   ├── VulkanRenderSession.Lifecycle.cs
 │   │   ├── VulkanRenderSession.Recover.cs
 │   │   ├── VulkanRenderSession.Resize.cs
 │   │   └── VulkanRenderSession.cs
 │   ├── Shaders
-│   │   ├── editor_nav_gizmo.frag：导航 Gizmo 片元（用户权威终版）
-│   │   ├── editor_nav_gizmo.vert：导航 Gizmo 顶点
-│   │   ├── editor_reference_grid.frag：参考网格片元（地图对齐/边缘淡出）
-│   │   ├── editor_reference_grid.vert：参考网格顶点（全屏三角形）
-│   │   ├── editor_view_plane_grid.frag：视图平面网格片元
-│   │   ├── editor_world_axes.frag：世界轴片元
-│   │   ├── editor_world_origin.frag：世界原点屏幕空间标记片元
-│   │   ├── scene.frag：场景片元着色器（天空/参考地面）
-│   │   └── scene.vert：场景顶点着色器（地表/边界/Gizmo 分支）
+│   │   ├── editor_nav_gizmo.frag
+│   │   ├── editor_nav_gizmo.vert
+│   │   ├── editor_reference_grid.frag
+│   │   ├── editor_reference_grid.vert
+│   │   ├── editor_view_plane_grid.frag
+│   │   ├── editor_world_axes.frag
+│   │   ├── editor_world_origin.frag
+│   │   ├── scene.frag
+│   │   └── scene.vert
 │   ├── Swapchain
 │   │   ├── VulkanSwapchainBuilder.cs
 │   │   ├── VulkanSwapchainCapabilities.cs
@@ -585,25 +589,25 @@ XuanYuEngine/
 │   ├── GridWorldPartitionStrategy.cs
 │   ├── IWorldPartitionStrategy.cs
 │   ├── Map
-│   │   ├── MapBounds.cs：地图边界合同（中心原点闭区间）
-│   │   ├── MapDefaultDefinition.cs：默认地图工厂（10 km×10 km Flat）
-│   │   ├── MapDefinition.cs：地图领域聚合根（唯一权威）
-│   │   ├── MapDefinitionValidator.cs：地图聚合严格校验
-│   │   ├── MapGeometry.cs：地图几何值类型（尺寸/坐标系统/点）
-│   │   ├── MapId.cs：地图稳定唯一标识（32 位十六进制）
-│   │   ├── MapLayer.cs：地图图层领域模型
-│   │   ├── MapLayerId.cs：图层稳定唯一标识
-│   │   ├── MapLayerKind.cs：图层角色（Base/Region/Custom）
-│   │   ├── MapLayerValidator.cs：图层集合校验（基础层唯一且第 0 位）
-│   │   ├── MapRegion.cs：正式闭合区域领域模型
-│   │   ├── MapRegionDraft.cs：绘制中区域草稿（CanClose/Close）
-│   │   ├── MapRegionId.cs：区域稳定唯一标识
-│   │   ├── MapRegionKind.cs：区域类型（Generic/Playable 等）
-│   │   ├── MapRegionValidator.cs：区域严格校验（顶点/面积/图层/边界）
-│   │   ├── MapSurfaceDefinition.cs：地表定义（Flat/GentleHillsV1）
-│   │   ├── MapValidationResult.cs：领域验证结构化结果
-│   │   ├── WorldMapState.cs：World 地图状态（边界判断/高度查询/聚合投影）
-│   │   └── WorldMapStateOwner.cs：当前 World 地图状态所有者
+│   │   ├── MapBounds.cs
+│   │   ├── MapDefaultDefinition.cs
+│   │   ├── MapDefinition.cs
+│   │   ├── MapDefinitionValidator.cs
+│   │   ├── MapGeometry.cs
+│   │   ├── MapId.cs
+│   │   ├── MapLayer.cs
+│   │   ├── MapLayerId.cs
+│   │   ├── MapLayerKind.cs
+│   │   ├── MapLayerValidator.cs
+│   │   ├── MapRegion.cs
+│   │   ├── MapRegionDraft.cs
+│   │   ├── MapRegionId.cs
+│   │   ├── MapRegionKind.cs
+│   │   ├── MapRegionValidator.cs
+│   │   ├── MapSurfaceDefinition.cs
+│   │   ├── MapValidationResult.cs
+│   │   ├── WorldMapState.cs
+│   │   └── WorldMapStateOwner.cs
 │   ├── RegionKey.cs
 │   ├── Scene
 │   │   ├── SceneSpatialBoundsProjection.cs
@@ -677,6 +681,7 @@ XuanYuEngine/
 │   │   ├── MapEditSessionCreationTests.cs
 │   │   ├── MapEditSessionDirtyTests.cs
 │   │   ├── MapEditSessionHistoryTests.cs
+│   │   ├── MapEditSessionMapPropertiesTests.cs：地图属性原子提交测试（单历史/零污染）
 │   │   ├── MapEditSessionSelectionTests.cs
 │   │   ├── MapEditSessionThreadTests.cs
 │   │   ├── MapEditSessionValidationTests.cs
@@ -699,6 +704,7 @@ XuanYuEngine/
 │   │   ├── GlobalWorldTests.cs
 │   │   ├── SceneMapReferenceTests.cs
 │   │   ├── UiMapEditorTests.cs
+│   │   ├── UiMapInitialProjectionTests.cs：默认地图首帧投影测试
 │   │   ├── UiViewGizmoTests.cs
 │   │   ├── WorldCR2CameraDocumentTests.cs
 │   │   ├── WorldCR2DocumentTests.cs
@@ -771,12 +777,12 @@ XuanYuEngine/
 │   │   ├── WorldUiTreeGuideTests.cs
 │   │   └── WorldUiTreeToggleTests.cs
 │   └── XuanYu.World.Tests.csproj
-├── changelog.md：变更记录（版本条目，按自然月归档）
+├── changelog.md
 ├── docs
-│   ├── CODE_CONSTITUTION.md：代码与架构硬规则
+│   ├── CODE_CONSTITUTION.md
 │   ├── architecture
-│   │   ├── ENGINE_ARCHITECTURE.md：引擎总体架构
-│   │   └── world-a-r0-coordinate-contract.md：官方坐标合同（Z-Up、XY 水平）
+│   │   ├── ENGINE_ARCHITECTURE.md
+│   │   └── world-a-r0-coordinate-contract.md
 │   ├── archive
 │   │   ├── changelog
 │   │   │   ├── changelog-2026-05.md
@@ -785,8 +791,8 @@ XuanYuEngine/
 │   │   └── superseded
 │   │       ├── AI_DEVELOPMENT_RULES.md
 │   │       └── LEGACY_FLUIDWARFARE_OLD_AUDIT.md
-│   ├── dev-rules.md：开发硬规则执行手册
-│   ├── docs-index.md：docs 分类索引
+│   ├── dev-rules.md
+│   ├── docs-index.md
 │   ├── governance
 │   │   ├── NAMING_RULES.md
 │   │   ├── debts
@@ -795,7 +801,7 @@ XuanYuEngine/
 │   │   ├── diagnostic-safety.md
 │   │   ├── naming-XuanYu-Engine.md
 │   │   ├── shr-2026-08-closure.svg
-│   │   └── 版本号规范与历史映射.md：版本格式与历史编号映射
+│   │   └── 版本号规范与历史映射.md
 │   ├── milestones
 │   │   ├── closed
 │   │   │   ├── ARCH-A
@@ -966,7 +972,7 @@ XuanYuEngine/
 │   │   │       └── world-c-r4-d4-static-model-persistence-report.md
 │   │   └── current
 │   │       └── MAP-A
-│   │           ├── map-a-r1-d1-map-contracts.md：地图合同冻结（.xymap/.xyscene v4）
+│   │           ├── map-a-r1-d1-map-contracts.md
 │   │           ├── map-a-r1-d5-r1-f2-grid-stabilize.svg
 │   │           ├── map-a-r1-d5-r1-f2-r2-unified-grid-lod.svg
 │   │           ├── map-a-r1-d5-r1-f2-r3-grid-ground-visual.svg
@@ -975,9 +981,9 @@ XuanYuEngine/
 │   │           ├── map-a-r1-d5-r1-f3-f2-camera-basis-recovery.svg
 │   │           ├── map-a-r1-d5-r1-f3-f3-gizmo-recovery.svg
 │   │           └── map-a-r1-d5-r1-f3-viewport-navigation-gizmo.svg
-│   └── 玄域引擎_AI开发宪法.md：最高开发治理规则（唯一宪法事实源）
-├── file-tree.md：当前仓库结构与文件职责（本文档）
-├── run.bat：编辑器启动脚本（窗口标题带版本号）
+│   └── 玄域引擎_AI开发宪法.md
+├── file-tree.md
+├── run.bat
 ├── samples
 │   └── world-c-r1-ten-triangles.xyscene
 └── scripts
@@ -985,5 +991,5 @@ XuanYuEngine/
     ├── arch-a-guard-render.ps1
     ├── arch-a-guard-warcore.ps1
     ├── arch-a-guard-world.ps1
-    └── arch-a-guard.ps1：架构守卫（依赖边界 + 5+100 门禁）
+    └── arch-a-guard.ps1
 ```
