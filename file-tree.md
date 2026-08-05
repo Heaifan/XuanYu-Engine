@@ -289,6 +289,7 @@
 │  │  ├─ UiTokens.Icons.axaml
 │  │  ├─ UiTokens.Motion.axaml
 │  │  ├─ UiTokens.Spacing.axaml
+│  │  ├─ UiTokenManifest.json
 │  │  └─ UiTokens.axaml
 │  ├─ Dialogs/
 │  │  ├─ IEditorDialogService.cs
@@ -881,14 +882,15 @@
 │  │  ├─ UiDebtBaseline.Colors.Cs.cs
 │  │  ├─ UiDebtBaseline.Typography.cs
 │  │  ├─ UiDebtBaseline.cs
+│  │  ├─ UiDebtBaselineBypassTests.cs
 │  │  ├─ UiDebtBaselineTests.cs
+│  │  ├─ UiSourceContractAnalyzer.Icon.cs
+│  │  ├─ UiSourceContractAnalyzer.Inline.cs
+│  │  ├─ UiSourceContractAnalyzer.Rules.cs
 │  │  ├─ UiSourceContractAnalyzer.cs
 │  │  ├─ UiSourceContractAnalyzerTests.cs
-│  │  ├─ UiTokenColorValuesTests.cs
-│  │  ├─ UiTokenContractCatalog.cs
-│  │  ├─ UiTokenContractTests.cs
-│  │  ├─ UiTokenFontValuesTests.cs
-│  │  └─ UiTokenSizeValuesTests.cs
+│  │  ├─ UiTokenManifestGraphTests.cs
+│  │  └─ UiTokenManifestTests.cs
 │  ├─ WorldPartition/
 │  │  ├─ WorldPartitionInvariantTests.cs
 │  │  ├─ WorldPartitionMigrationTests.Activity.cs
@@ -1090,7 +1092,8 @@
 - `XuanYu.Editor.UI/Design/UiTokens.Icons.axaml` — UI Token 图标（视口/笔画，§8.1）
 - `XuanYu.Editor.UI/Design/UiTokens.Motion.axaml` — UI Token 动效时长（悬停/展开，§15.3）
 - `XuanYu.Editor.UI/Design/UiTokens.Spacing.axaml` — UI Token 间距/内边距/圆角（§5.1/§5.2/§5.4）
-- `XuanYu.Editor.UI/Design/UiTokens.axaml` — UI Token 聚合入口（合并 7 个 Token 文件，ARCH-UI-SPEC-R1-D2）
+- `XuanYu.Editor.UI/Design/UiTokenManifest.json` — UI Token 唯一机器事实源（112 条：Key/Type/Value/Category/SpecSection/Purpose/SpecStatus；D2-F1）
+- `XuanYu.Editor.UI/Design/UiTokens.axaml` — UI Token 聚合入口（合并 7 个 Token 文件；由 UiTokenManifest.json 生成，禁手改）
 - `XuanYu.Editor.UI/Dialogs/IEditorDialogService.cs` — D4：最小错误弹窗服务。只用于用户主动操作失败（导入 GLB / 打开场景 / 部分资源缺失）。
 - `XuanYu.Editor.UI/Dialogs/NullEditorDialogService.cs` — D4：无窗口环境的空实现（测试 / 无 UI 宿主），避免 NRE。
 - `XuanYu.Editor.UI/EditorState/EditorInteractionChangedResult.cs` — enum EditorInteractionChangeKind
@@ -1638,15 +1641,16 @@
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml2.cs` — 旧 UI 债务基线（AXAML 色值 2/2，D2 自动生成）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Cs.cs` — 旧 UI 债务基线（code-behind 视觉源色值，D2 自动生成）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Typography.cs` — 旧 UI 债务基线（字号/圆角/高度/阴影/笔画，D2 自动生成）
-- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.cs` — 旧 UI 债务基线匹配逻辑（173 条指纹：路径+规则+值+允许次数）
-- `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — 基线门禁：真实扫描 vs 基线（已知允许/新增失败/减少允许/范围排除）
-- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.cs` — UI 源码违规分析器（八规则，测试侧，D2）
-- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzerTests.cs` — 门禁自验证正反例（10 项，内存字符串）
-- `XuanYu.World.Tests/UiTokens/UiTokenColorValuesTests.cs` — Token 颜色数值合同（核心 20 + 组件 18 断言）
-- `XuanYu.World.Tests/UiTokens/UiTokenContractCatalog.cs` — Token 合同清单（112 键，依据 UI Spec 1.0）
-- `XuanYu.World.Tests/UiTokens/UiTokenContractTests.cs` — Token 合同测试（键唯一/聚合/循环/100 行/应用加载）
-- `XuanYu.World.Tests/UiTokens/UiTokenFontValuesTests.cs` — Token 字体数值合同（21 断言 + 配对完整性）
-- `XuanYu.World.Tests/UiTokens/UiTokenSizeValuesTests.cs` — Token 尺寸数值合同（41 断言）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.cs` — 旧 UI 债务基线匹配逻辑（225 条指纹：路径+Locator+规则+属性+值+允许次数）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — 基线门禁：真实扫描（递归 axaml+cs）vs 225 条细粒度基线
+- `XuanYu.World.Tests/UiTokens/UiDebtBaselineBypassTests.cs` — 基线绕过反例 10 项（换位/换选择器/换 x:Name/换属性/注释漂移/增长禁止）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.cs` — UI 源码违规分析器（允许值从 UiTokenManifest.json 读取；cs 递归分析；D2-F1）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.Rules.cs` — 分析器 AXAML 规则入口（属性违规归类，D2-F1）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.Inline.cs` — 分析器 AXAML 规则（Style 块/内联元素 + Locator 提取，D2-F1）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.Icon.cs` — 分析器图标位置 Emoji/Unicode 与 Design 外 Token 声明规则（D2-F1）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzerTests.cs` — 门禁自验证正反例（合法引用/未登记值/Emoji 正反例/Design 外 Token/cs 构造，D2-F1）
+- `XuanYu.World.Tests/UiTokens/UiTokenManifestTests.cs` — Token 合同测试（Manifest↔XAML 双向 112/112 键类型值，D2-F1）
+- `XuanYu.World.Tests/UiTokens/UiTokenManifestGraphTests.cs` — Token 资源引用图检查（目标存在/无循环/聚合批准文件/应用单次合并，D2-F1）
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionInvariantTests.cs` — sealed class WorldPartitionInvariantTests
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.Activity.cs` — sealed partial class WorldPartitionMigrationTests
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.cs` — sealed partial class WorldPartitionMigrationTests

@@ -1,29 +1,25 @@
+<!-- 生成文件（ARCH-UI-SPEC-R1-D2-F1）：由 UiTokenManifest.json 确定性生成，禁止手工修改。 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <!-- 字体回退链（UI Spec 1.0 §3.1）：Microsoft YaHei UI → Segoe UI → Noto Sans CJK SC → 系统无衬线（Avalonia 平台兜底） -->
-  <FontFamily x:Key="Font.Family">Microsoft YaHei UI, Segoe UI, Noto Sans CJK SC</FontFamily>
-
-  <!-- 8 级字号 + 标准行高（UI Spec 1.0 §3.2；行高只用于多行文本，单行控件由控件高度 Token 决定） -->
-  <x:Double x:Key="Font.Meta.Size">10</x:Double>
-  <x:Double x:Key="Font.Meta.LineHeight">14</x:Double>
-  <x:Double x:Key="Font.Small.Size">11</x:Double>
-  <x:Double x:Key="Font.Small.LineHeight">16</x:Double>
-  <x:Double x:Key="Font.Label.Size">12</x:Double>
-  <x:Double x:Key="Font.Label.LineHeight">18</x:Double>
-  <x:Double x:Key="Font.Body.Size">13</x:Double>
   <x:Double x:Key="Font.Body.LineHeight">20</x:Double>
-  <x:Double x:Key="Font.Section.Size">14</x:Double>
-  <x:Double x:Key="Font.Section.LineHeight">22</x:Double>
-  <x:Double x:Key="Font.Title.Size">16</x:Double>
-  <x:Double x:Key="Font.Title.LineHeight">24</x:Double>
-  <x:Double x:Key="Font.Page.Size">20</x:Double>
-  <x:Double x:Key="Font.Page.LineHeight">28</x:Double>
-  <x:Double x:Key="Font.Display.Size">24</x:Double>
+  <x:Double x:Key="Font.Body.Size">13</x:Double>
   <x:Double x:Key="Font.Display.LineHeight">32</x:Double>
-
-  <!-- 批准字重（UI Spec 1.0 §3.4）：Regular 正文 / Medium·SemiBold 页签分组选中 / Bold 主标题；禁止 Light -->
-  <FontWeight x:Key="Font.Weight.Regular">Regular</FontWeight>
-  <FontWeight x:Key="Font.Weight.Medium">Medium</FontWeight>
-  <FontWeight x:Key="Font.Weight.SemiBold">SemiBold</FontWeight>
+  <x:Double x:Key="Font.Display.Size">24</x:Double>
+  <FontFamily x:Key="Font.Family">Microsoft YaHei UI, Segoe UI, Noto Sans CJK SC</FontFamily>
+  <x:Double x:Key="Font.Label.LineHeight">18</x:Double>
+  <x:Double x:Key="Font.Label.Size">12</x:Double>
+  <x:Double x:Key="Font.Meta.LineHeight">14</x:Double>
+  <x:Double x:Key="Font.Meta.Size">10</x:Double>
+  <x:Double x:Key="Font.Page.LineHeight">28</x:Double>
+  <x:Double x:Key="Font.Page.Size">20</x:Double>
+  <x:Double x:Key="Font.Section.LineHeight">22</x:Double>
+  <x:Double x:Key="Font.Section.Size">14</x:Double>
+  <x:Double x:Key="Font.Small.LineHeight">16</x:Double>
+  <x:Double x:Key="Font.Small.Size">11</x:Double>
+  <x:Double x:Key="Font.Title.LineHeight">24</x:Double>
+  <x:Double x:Key="Font.Title.Size">16</x:Double>
   <FontWeight x:Key="Font.Weight.Bold">Bold</FontWeight>
+  <FontWeight x:Key="Font.Weight.Medium">Medium</FontWeight>
+  <FontWeight x:Key="Font.Weight.Regular">Regular</FontWeight>
+  <FontWeight x:Key="Font.Weight.SemiBold">SemiBold</FontWeight>
 </ResourceDictionary>

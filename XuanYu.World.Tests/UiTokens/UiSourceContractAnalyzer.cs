@@ -1,87 +1,98 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace XuanYu.World.Tests.UiTokens;
 
-// ARCH-UI-SPEC-R1-D2：UI 源码违规分析器（测试侧，不进入运行时产品代码）。
-// 输入为内存字符串或测试读取的真实文件文本；输出潜在违规，由 UiDebtBaselineTests 按基线过滤。
-// 规则只针对 Avalonia UI 控件语义：Path 图标尺寸、布局容器高度、CornerRadius 0（无圆角）不误报。
+// ARCH-UI-SPEC-R1-D2-F1：UI 源码违规分析器（测试侧）。允许值从 UiTokenManifest.json 读取。
 
-public readonly record struct UiViolation(string Path, UiRuleKind Kind, string Property, string Value);
+public readonly record struct UiViolation(string Path, string Locator, UiRuleKind Kind, string Property, string Value);
 
-public static class UiSourceContractAnalyzer
+public static partial class UiSourceContractAnalyzer
 {
-    private static readonly string[] AllowedFontSizes = ["10", "11", "12", "13", "14", "16", "20", "24"];
-    private static readonly string[] AllowedRadii = ["0", "3", "6", "10"];
-    private static readonly string[] AllowedHeights = ["24", "28", "32"];
-    private const string AllowedStroke = "1.5";
+    private static readonly string ManifestPath = Path.Combine(
+        AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Design", "UiTokenManifest.json");
 
-    private static readonly Regex HexRx = new(@"#[0-9A-Fa-f]{6,8}\b", RegexOptions.Compiled);
-    private static readonly Regex FontSizeRx = new(
-        @"FontSize=""([\d.]+)""|<Setter Property=""FontSize"" Value=""([\d.]+)""", RegexOptions.Compiled);
-    private static readonly Regex RadiusRx = new(
-        @"CornerRadius=""([\d.]+)""|<Setter Property=""CornerRadius"" Value=""([\d.]+)""", RegexOptions.Compiled);
-    private static readonly Regex ShadowRx = new(
-        @"BoxShadow=""([^""]+)""|<Setter Property=""BoxShadow"" Value=""([^""]+)""", RegexOptions.Compiled);
-    private static readonly Regex StrokeRx = new(
-        @"StrokeThickness=""([\d.]+)""|<Setter Property=""StrokeThickness"" Value=""([\d.]+)""", RegexOptions.Compiled);
-    private static readonly Regex CtrlHeightRx = new(
-        @"<(Button|ToggleButton|TextBox|TabItem|MenuItem|CheckBox|ComboBox|RadioButton|ListBoxItem)\b[^>]*?\b(?:Height|MinHeight)=""([\d.]+)""", RegexOptions.Compiled);
-    private static readonly Regex StyleBlockRx = new(
-        @"<Style Selector=""([^""]+)""\s*>([\s\S]*?)</Style>", RegexOptions.Compiled);
-    private static readonly Regex SetterHeightRx = new(
-        @"<Setter Property=""(?:Height|MinHeight)"" Value=""([\d.]+)""", RegexOptions.Compiled);
-    private static readonly Regex SkipSelectorRx = new(
-        @"Path|Icon|Image|Grid|Border|StackPanel|DockPanel|UniformGrid|ScrollViewer|ListBox$|TabControl|Window|RowDefinition|ColumnDefinition|Canvas|WrapPanel|ItemsControl|ContentControl|Panel",
+    public static IReadOnlyList<string> AllowedFontSizes { get; } = LoadAllowed("Font");
+    public static IReadOnlyList<string> AllowedRadii { get; } = ["0", "3", "6", "10"];
+    public static IReadOnlyList<string> AllowedHeights { get; } = LoadAllowed("Control.Height");
+    public const string AllowedStroke = "1.5";
+
+    private static readonly Regex SymbolRx = new( // Emoji/Dingbats/Misc Symbols/Arrows/Geometric；CJK 正文不在其中
+        @"[\u2190-\u21FF\u2300-\u23FF\u25A0-\u25FF\u2600-\u26FF\u2700-\u27BF\u2B00-\u2BFF\uFE0F\uD83C-\uDBFF\uDC00-\uDFFF]",
         RegexOptions.Compiled);
-    private static readonly Regex PathDataRx = new(@"<Path\b[^>]*?Data=""([^""]*)""", RegexOptions.Compiled);
-    // SVG Path 数据允许字符：数字、逗号、空格、正负号、指令字母；出现其他字符（含 Emoji/Unicode 符号）即疑似非法图标。
-    private static readonly Regex PathDataInvalidRx = new(@"[^\d.,\sMmHhVvLlZzCcSsQqTtAaEe+-]", RegexOptions.Compiled);
+    private static readonly Regex PathDataRx = new(@"<(?:Path|PathIcon)\b[^>]*?Data=""([^""]*)""", RegexOptions.Compiled);
+    private static readonly Regex ContentRx = new(@"<(Button|ToggleButton)\b[^>]*?\bContent=""([^""]*)""", RegexOptions.Compiled);
+    private static readonly Regex IconTextRx = new(
+        @"<TextBlock\b[^>]*?(?:Classes=""[^""]*icon[^""]*""|x:Name=""[^""]*(?:Icon|icon)[^""]*"")[^>]*?Text=""([^""]*)""",
+        RegexOptions.Compiled);
+    private static readonly Regex IconContentRx = new(
+        @"<TextBlock\b[^>]*?(?:Classes=""[^""]*icon[^""]*""|x:Name=""[^""]*(?:Icon|icon)[^""]*"")[^>]*>([^<>]*)</TextBlock>",
+        RegexOptions.Compiled);
+    private static readonly Regex TokenDeclRx = new(
+        @"<(SolidColorBrush|x:Double|x:String|Thickness|CornerRadius|FontWeight|FontFamily)\s+x:Key=""[^""]+""",
+        RegexOptions.Compiled);
+    private static readonly Regex ClassRx = new(@"(?:class|record)\s+([A-Za-z_]\w*)", RegexOptions.Compiled); // 类型上下文
+    private static readonly Regex MemberRx = new(
+        @"^\s*(?:(?:public|private|internal|protected)\s+[\w<>\[\],\s\?\.]+\s+[A-Za-z_]\w*\s*(=|\(|=>|\{)|(?:[\w<>\[\],\s]+)\s+[\w.]+\.[A-Za-z_]\w*\s*\()",
+        RegexOptions.Compiled);
+    private static readonly Regex ExplicitMemberRx = new(@"\.([A-Za-z_]\w*)\s*\(", RegexOptions.Compiled);
+    private static readonly Regex PlainMemberRx = new(@"\b[A-Za-z_]\w*\s*(?:=|\(|=>|\{)", RegexOptions.Compiled);
 
-    public static List<UiViolation> AnalyzeAxaml(string text, string relPath)
+    private static List<string> LoadAllowed(string prefix) =>
+        ParseManifest().Where(t => t.Key.StartsWith(prefix)).Select(t => t.Value).Distinct().ToList();
+
+    public static IReadOnlyList<ManifestEntry> ParseManifest()
     {
-        var result = new List<UiViolation>();
-        foreach (Match m in HexRx.Matches(text))
-            result.Add(new(relPath, UiRuleKind.HexColor, "Color", m.Value));
-        foreach (Match m in FontSizeRx.Matches(text))
-            AddIfNotAllowed(result, relPath, UiRuleKind.FontSize, "FontSize", m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value, AllowedFontSizes);
-        foreach (Match m in RadiusRx.Matches(text))
-            AddIfNotAllowed(result, relPath, UiRuleKind.CornerRadius, "CornerRadius", m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value, AllowedRadii);
-        foreach (Match m in ShadowRx.Matches(text))
-            result.Add(new(relPath, UiRuleKind.BoxShadow, "BoxShadow", m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value));
-        foreach (Match m in StrokeRx.Matches(text))
-        {
-            var v = m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value;
-            if (v != AllowedStroke)
-                result.Add(new(relPath, UiRuleKind.StrokeThickness, "StrokeThickness", v));
-        }
-        foreach (Match m in CtrlHeightRx.Matches(text))
-            AddIfNotAllowed(result, relPath, UiRuleKind.ControlHeight, "Height", m.Groups[2].Value, AllowedHeights);
-        foreach (Match m in StyleBlockRx.Matches(text))
-        {
-            if (SkipSelectorRx.IsMatch(m.Groups[1].Value))
-                continue;
-            foreach (Match s in SetterHeightRx.Matches(m.Groups[2].Value))
-                AddIfNotAllowed(result, relPath, UiRuleKind.ControlHeight, "Setter", s.Groups[1].Value, AllowedHeights);
-        }
-        foreach (Match m in PathDataRx.Matches(text))
-            if (PathDataInvalidRx.IsMatch(m.Groups[1].Value))
-                result.Add(new(relPath, UiRuleKind.EmojiIcon, "PathData", m.Groups[1].Value));
-        return result;
+        using var doc = JsonDocument.Parse(File.ReadAllText(ManifestPath));
+        var list = new List<ManifestEntry>();
+        foreach (var el in doc.RootElement.GetProperty("Tokens").EnumerateArray())
+            list.Add(new ManifestEntry(el.GetProperty("Key").GetString() ?? "",
+                el.GetProperty("Type").GetString() ?? "", el.GetProperty("Value").GetString() ?? ""));
+        return list;
     }
 
     public static List<UiViolation> AnalyzeCs(string text, string relPath)
     {
         var result = new List<UiViolation>();
-        foreach (Match m in HexRx.Matches(text))
-            result.Add(new(relPath, UiRuleKind.CsHexColor, "Color", m.Value));
+        text = StripCsComments(text);
+        string type = "", member = ""; // 成员上下文：类型名.成员名
+        foreach (var line in text.Split('\n'))
+        {
+            var cm = ClassRx.Match(line);
+            if (cm.Success)
+            {
+                type = cm.Groups[1].Value;
+                member = "";
+            }
+            else if (MemberRx.IsMatch(line))
+            {
+                var em = ExplicitMemberRx.Match(line);
+                if (em.Success)
+                    member = em.Groups[1].Value;
+                else
+                    member = PlainMemberRx.Match(line).Value.TrimEnd('=', '(', '>', '{', ' ').Trim();
+            }
+            foreach (Match m in Regex.Matches(line, @"#[0-9A-Fa-f]{6,8}\b"))
+                result.Add(new(relPath, $"{type}.{(string.IsNullOrEmpty(member) ? "Unknown" : member)}",
+                    UiRuleKind.CsHexColor, "Color", m.Value));
+        }
         return result;
     }
 
-    private static void AddIfNotAllowed(List<UiViolation> result, string path, UiRuleKind kind,
-        string prop, string value, string[] allowed)
-    {
-        if (!System.Array.Exists(allowed, a => a == value))
-            result.Add(new(path, kind, prop, value));
-    }
+    public static bool IsSymbolText(string s) => SymbolRx.IsMatch(s);
+    public static MatchCollection PathDataMatches(string text) => PathDataRx.Matches(text);
+    public static MatchCollection ContentMatches(string text) => ContentRx.Matches(text);
+    public static MatchCollection IconTextMatches(string text) => IconTextRx.Matches(text);
+    public static MatchCollection TokenDeclMatches(string text) => TokenDeclRx.Matches(text);
+
+    // 剥离注释，避免注释内容漂移造成基线变化（反例 9）。
+    public static string StripAxamlComments(string text) =>
+        Regex.Replace(text, "<!--[\\s\\S]*?-->", "");
+    public static string StripCsComments(string text) =>
+        Regex.Replace(Regex.Replace(text, "/\\*[\\s\\S]*?\\*/", ""), "//[^\\r\\n]*", "");
 }
+
+public sealed record ManifestEntry(string Key, string Type, string Value);

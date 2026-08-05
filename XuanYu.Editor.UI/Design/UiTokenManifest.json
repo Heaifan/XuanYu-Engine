@@ -1,0 +1,1014 @@
+{
+  "_comment": "UI Token 唯一机器事实源（ARCH-UI-SPEC-R1-D2-F1）。人工编辑本文件，XAML 由 scripts/generate-ui-tokens.py 确定性生成。",
+  "_rule": "SpecStatus=Frozen 表示 UI Spec 1.0 已冻结具体数值；PendingReview 表示规范只有区间/方向，值待规范审订（见 changelog D2-F1 缺失项清单）。",
+  "Tokens": [
+    {
+      "Key": "Font.Body.LineHeight",
+      "Type": "Double",
+      "Value": "20",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "字号标准行高",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Body.Size",
+      "Type": "Double",
+      "Value": "13",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "8 级字号",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Display.LineHeight",
+      "Type": "Double",
+      "Value": "32",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "字号标准行高",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Display.Size",
+      "Type": "Double",
+      "Value": "24",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "8 级字号",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Family",
+      "Type": "FontFamily",
+      "Value": "Microsoft YaHei UI, Segoe UI, Noto Sans CJK SC",
+      "Category": "Fonts",
+      "SpecSection": "§3.1",
+      "Purpose": "字体回退链",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Label.LineHeight",
+      "Type": "Double",
+      "Value": "18",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "字号标准行高",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Label.Size",
+      "Type": "Double",
+      "Value": "12",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "8 级字号",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Meta.LineHeight",
+      "Type": "Double",
+      "Value": "14",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "字号标准行高",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Meta.Size",
+      "Type": "Double",
+      "Value": "10",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "8 级字号",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Page.LineHeight",
+      "Type": "Double",
+      "Value": "28",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "字号标准行高",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Page.Size",
+      "Type": "Double",
+      "Value": "20",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "8 级字号",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Section.LineHeight",
+      "Type": "Double",
+      "Value": "22",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "字号标准行高",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Section.Size",
+      "Type": "Double",
+      "Value": "14",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "8 级字号",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Small.LineHeight",
+      "Type": "Double",
+      "Value": "16",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "字号标准行高",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Small.Size",
+      "Type": "Double",
+      "Value": "11",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "8 级字号",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Title.LineHeight",
+      "Type": "Double",
+      "Value": "24",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "字号标准行高",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Title.Size",
+      "Type": "Double",
+      "Value": "16",
+      "Category": "Fonts",
+      "SpecSection": "§3.2",
+      "Purpose": "8 级字号",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Weight.Bold",
+      "Type": "FontWeight",
+      "Value": "Bold",
+      "Category": "Fonts",
+      "SpecSection": "§3.4",
+      "Purpose": "批准字重",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Weight.Medium",
+      "Type": "FontWeight",
+      "Value": "Medium",
+      "Category": "Fonts",
+      "SpecSection": "§3.4",
+      "Purpose": "批准字重",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Weight.Regular",
+      "Type": "FontWeight",
+      "Value": "Regular",
+      "Category": "Fonts",
+      "SpecSection": "§3.4",
+      "Purpose": "批准字重",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Font.Weight.SemiBold",
+      "Type": "FontWeight",
+      "Value": "SemiBold",
+      "Category": "Fonts",
+      "SpecSection": "§3.4",
+      "Purpose": "批准字重",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Accent",
+      "Type": "Color",
+      "Value": "#326F8A",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "强调",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Accent.Hover",
+      "Type": "Color",
+      "Value": "#285F77",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "强调",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Bg.Application",
+      "Type": "Color",
+      "Value": "#F3F6F8",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.1",
+      "Purpose": "四级背景",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Bg.Control",
+      "Type": "Color",
+      "Value": "#FFFFFF",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.1",
+      "Purpose": "四级背景",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Bg.Overlay",
+      "Type": "Color",
+      "Value": "#FFFFFF",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.1",
+      "Purpose": "四级背景",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Bg.Panel",
+      "Type": "Color",
+      "Value": "#F8FAFB",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.1",
+      "Purpose": "四级背景",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Border.Default",
+      "Type": "Color",
+      "Value": "#D5DEE4",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "边框",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Border.Strong",
+      "Type": "Color",
+      "Value": "#B9C7D0",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "边框",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Danger",
+      "Type": "Color",
+      "Value": "#A53F43",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "状态语义",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Error",
+      "Type": "Color",
+      "Value": "#B14A4A",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "状态语义",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Focus",
+      "Type": "Color",
+      "Value": "#2B6F9B",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "焦点",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Hover.Bg",
+      "Type": "Color",
+      "Value": "#EEF4F6",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "悬停",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Object.System",
+      "Type": "Color",
+      "Value": "#7B8794",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "对象语义",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Object.User",
+      "Type": "Color",
+      "Value": "#326F8A",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "对象语义",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Selection.Bg",
+      "Type": "Color",
+      "Value": "#E5F0F4",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "选中",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Success",
+      "Type": "Color",
+      "Value": "#2F7658",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "状态语义",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Text.Disabled",
+      "Type": "Color",
+      "Value": "#929FA8",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "文字",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Text.Primary",
+      "Type": "Color",
+      "Value": "#243744",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "文字",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Text.Secondary",
+      "Type": "Color",
+      "Value": "#5D6F7C",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "文字",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Color.Warning",
+      "Type": "Color",
+      "Value": "#93651F",
+      "Category": "Colors.Core",
+      "SpecSection": "§4.2",
+      "Purpose": "状态语义",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.ErrorBg",
+      "Type": "Color",
+      "Value": "#fdeeee",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.ErrorBorder",
+      "Type": "Color",
+      "Value": "#e2aaaa",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.ErrorText",
+      "Type": "Color",
+      "Value": "#a43f3f",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.SaveHighlightBg",
+      "Type": "Color",
+      "Value": "#fff6dd",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "保存按钮高亮",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.SaveHighlightBorder",
+      "Type": "Color",
+      "Value": "#d9ad43",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "保存按钮高亮",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.SuccessBg",
+      "Type": "Color",
+      "Value": "#eef7f1",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.SuccessBorder",
+      "Type": "Color",
+      "Value": "#c9e3d0",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.SuccessText",
+      "Type": "Color",
+      "Value": "#1f7a4d",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.WarningBg",
+      "Type": "Color",
+      "Value": "#fff7df",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.WarningBorder",
+      "Type": "Color",
+      "Value": "#e7c66d",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "DocStatus.WarningText",
+      "Type": "Color",
+      "Value": "#8a6417",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.4",
+      "Purpose": "文档状态三态",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Layer.DropLine",
+      "Type": "Color",
+      "Value": "#7FA8C6",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "拖动插入线色",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.Kind.Region.Bg",
+      "Type": "Color",
+      "Value": "#E8F3F6",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "区域类型标签",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.Kind.Region.Border",
+      "Type": "Color",
+      "Value": "#B9D7DE",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "区域类型标签",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.Kind.Region.Text",
+      "Type": "Color",
+      "Value": "#326B7B",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "区域类型标签",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.Kind.System.Bg",
+      "Type": "Color",
+      "Value": "#F0F2F4",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "系统类型标签",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.Kind.System.Border",
+      "Type": "Color",
+      "Value": "#D5DBE0",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "系统类型标签",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.Kind.System.Text",
+      "Type": "Color",
+      "Value": "#687582",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "系统类型标签",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.State.Hidden",
+      "Type": "Color",
+      "Value": "#8995A2",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "图层状态图标",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.State.Locked",
+      "Type": "Color",
+      "Value": "#7A6238",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "图层状态图标",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.State.LockedBg",
+      "Type": "Color",
+      "Value": "#F4EFE5",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "图层状态背景",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.State.Unlocked",
+      "Type": "Color",
+      "Value": "#7B8794",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "图层状态图标",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.State.Visible",
+      "Type": "Color",
+      "Value": "#326F8A",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "图层状态图标",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Layer.State.VisibleBg",
+      "Type": "Color",
+      "Value": "#EAF3F7",
+      "Category": "Colors.Components",
+      "SpecSection": "§12.2",
+      "Purpose": "图层状态背景",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Log.Accent.Debug",
+      "Type": "Color",
+      "Value": "#6b7a90",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.3",
+      "Purpose": "日志级别标识色",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Log.Accent.Error",
+      "Type": "Color",
+      "Value": "#c75b5b",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.3",
+      "Purpose": "日志级别标识色",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Log.Accent.Info",
+      "Type": "Color",
+      "Value": "#4f7fb8",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.3",
+      "Purpose": "日志级别标识色",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Log.Accent.Trace",
+      "Type": "Color",
+      "Value": "#8b96a8",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.3",
+      "Purpose": "日志级别标识色",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Log.Accent.Warning",
+      "Type": "Color",
+      "Value": "#d89b32",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.3",
+      "Purpose": "日志级别标识色",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Log.RepeatText",
+      "Type": "Color",
+      "Value": "#7a5a19",
+      "Category": "Colors.Components",
+      "SpecSection": "§4.3",
+      "Purpose": "日志重复折叠文字",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Tree.Guide",
+      "Type": "Color",
+      "Value": "#C7D7EA",
+      "Category": "Colors.Components",
+      "SpecSection": "§19.2",
+      "Purpose": "树引导线允许清单",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Padding.Compact",
+      "Type": "Thickness",
+      "Value": "6,2",
+      "Category": "Spacing",
+      "SpecSection": "§5.2",
+      "Purpose": "内边距档位",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Padding.Relaxed",
+      "Type": "Thickness",
+      "Value": "12,6",
+      "Category": "Spacing",
+      "SpecSection": "§5.2",
+      "Purpose": "内边距档位",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Padding.Standard",
+      "Type": "Thickness",
+      "Value": "8,4",
+      "Category": "Spacing",
+      "SpecSection": "§5.2",
+      "Purpose": "内边距档位",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Radius.Large",
+      "Type": "CornerRadius",
+      "Value": "10",
+      "Category": "Spacing",
+      "SpecSection": "§5.4",
+      "Purpose": "圆角",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Radius.Small",
+      "Type": "CornerRadius",
+      "Value": "3",
+      "Category": "Spacing",
+      "SpecSection": "§5.4",
+      "Purpose": "圆角",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Radius.Standard",
+      "Type": "CornerRadius",
+      "Value": "6",
+      "Category": "Spacing",
+      "SpecSection": "§5.4",
+      "Purpose": "圆角",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Space.12",
+      "Type": "Double",
+      "Value": "12",
+      "Category": "Spacing",
+      "SpecSection": "§5.1",
+      "Purpose": "间距主网格",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Space.16",
+      "Type": "Double",
+      "Value": "16",
+      "Category": "Spacing",
+      "SpecSection": "§5.1",
+      "Purpose": "间距主网格",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Space.2",
+      "Type": "Double",
+      "Value": "2",
+      "Category": "Spacing",
+      "SpecSection": "§5.1",
+      "Purpose": "间距主网格",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Space.24",
+      "Type": "Double",
+      "Value": "24",
+      "Category": "Spacing",
+      "SpecSection": "§5.1",
+      "Purpose": "间距主网格",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Space.32",
+      "Type": "Double",
+      "Value": "32",
+      "Category": "Spacing",
+      "SpecSection": "§5.1",
+      "Purpose": "间距主网格",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Space.4",
+      "Type": "Double",
+      "Value": "4",
+      "Category": "Spacing",
+      "SpecSection": "§5.1",
+      "Purpose": "间距主网格",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Space.6",
+      "Type": "Double",
+      "Value": "6",
+      "Category": "Spacing",
+      "SpecSection": "§5.1",
+      "Purpose": "受控半级",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Space.8",
+      "Type": "Double",
+      "Value": "8",
+      "Category": "Spacing",
+      "SpecSection": "§5.1",
+      "Purpose": "间距主网格",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Border.Width.Default",
+      "Type": "Double",
+      "Value": "1",
+      "Category": "Controls",
+      "SpecSection": "§9.1",
+      "Purpose": "边框",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Border.Width.Focus",
+      "Type": "Double",
+      "Value": "2",
+      "Category": "Controls",
+      "SpecSection": "§9.3",
+      "Purpose": "焦点框",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Border.Width.Insert",
+      "Type": "Double",
+      "Value": "2",
+      "Category": "Controls",
+      "SpecSection": "§9.1",
+      "Purpose": "插入线",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Control.Field.MinWidth",
+      "Type": "Double",
+      "Value": "128",
+      "Category": "Controls",
+      "SpecSection": "§5.3",
+      "Purpose": "字段最小宽度",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Control.Height.Compact",
+      "Type": "Double",
+      "Value": "24",
+      "Category": "Controls",
+      "SpecSection": "§6.1",
+      "Purpose": "控件高度",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Control.Height.Emphasized",
+      "Type": "Double",
+      "Value": "32",
+      "Category": "Controls",
+      "SpecSection": "§6.1",
+      "Purpose": "控件高度",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Control.Height.Standard",
+      "Type": "Double",
+      "Value": "28",
+      "Category": "Controls",
+      "SpecSection": "§6.1",
+      "Purpose": "控件高度",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Control.LabelColumn.Width",
+      "Type": "Double",
+      "Value": "96",
+      "Category": "Controls",
+      "SpecSection": "§5.3",
+      "Purpose": "标签列宽",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Focus.Offset",
+      "Type": "Double",
+      "Value": "1",
+      "Category": "Controls",
+      "SpecSection": "§9.3",
+      "Purpose": "焦点外偏移",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "LogTable.Columns",
+      "Type": "String",
+      "Value": "4,72,56,72,92,*,82",
+      "Category": "Controls",
+      "SpecSection": "§13.1",
+      "Purpose": "日志列宽组件 Token",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Shadow.Blur",
+      "Type": "Double",
+      "Value": "12",
+      "Category": "Controls",
+      "SpecSection": "§9.2",
+      "Purpose": "悬浮层阴影",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Shadow.OffsetY",
+      "Type": "Double",
+      "Value": "4",
+      "Category": "Controls",
+      "SpecSection": "§9.2",
+      "Purpose": "悬浮层阴影",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Shadow.Opacity",
+      "Type": "Double",
+      "Value": "0.14",
+      "Category": "Controls",
+      "SpecSection": "§9.2",
+      "Purpose": "悬浮层阴影",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Size.Hit.Compact",
+      "Type": "Double",
+      "Value": "24",
+      "Category": "Controls",
+      "SpecSection": "§6.4",
+      "Purpose": "最小点击热区",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Size.Hit.Standard",
+      "Type": "Double",
+      "Value": "28",
+      "Category": "Controls",
+      "SpecSection": "§6.4",
+      "Purpose": "最小点击热区",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Size.Hit.Touch",
+      "Type": "Double",
+      "Value": "36",
+      "Category": "Controls",
+      "SpecSection": "§6.4",
+      "Purpose": "最小点击热区",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Size.Width.128",
+      "Type": "Double",
+      "Value": "128",
+      "Category": "Controls",
+      "SpecSection": "§5.3",
+      "Purpose": "固定宽度等级",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Size.Width.160",
+      "Type": "Double",
+      "Value": "160",
+      "Category": "Controls",
+      "SpecSection": "§5.3",
+      "Purpose": "固定宽度等级",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Size.Width.240",
+      "Type": "Double",
+      "Value": "240",
+      "Category": "Controls",
+      "SpecSection": "§5.3",
+      "Purpose": "固定宽度等级",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Size.Width.64",
+      "Type": "Double",
+      "Value": "64",
+      "Category": "Controls",
+      "SpecSection": "§5.3",
+      "Purpose": "固定宽度等级",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Size.Width.96",
+      "Type": "Double",
+      "Value": "96",
+      "Category": "Controls",
+      "SpecSection": "§5.3",
+      "Purpose": "固定宽度等级",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Icon.Size.Standard",
+      "Type": "Double",
+      "Value": "16",
+      "Category": "Icons",
+      "SpecSection": "§8.1",
+      "Purpose": "图标视口",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Icon.Size.Tool",
+      "Type": "Double",
+      "Value": "20",
+      "Category": "Icons",
+      "SpecSection": "§8.1",
+      "Purpose": "图标视口",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Icon.Stroke.Width",
+      "Type": "Double",
+      "Value": "1.5",
+      "Category": "Icons",
+      "SpecSection": "§8.1",
+      "Purpose": "图标笔画",
+      "SpecStatus": "Frozen"
+    },
+    {
+      "Key": "Motion.ExpandMs",
+      "Type": "Double",
+      "Value": "140",
+      "Category": "Motion",
+      "SpecSection": "§15.3",
+      "Purpose": "展开折叠动效",
+      "SpecStatus": "PendingReview"
+    },
+    {
+      "Key": "Motion.HoverMs",
+      "Type": "Double",
+      "Value": "100",
+      "Category": "Motion",
+      "SpecSection": "§15.3",
+      "Purpose": "悬停选中动效",
+      "SpecStatus": "PendingReview"
+    }
+  ]
+}

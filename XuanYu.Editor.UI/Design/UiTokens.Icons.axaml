@@ -1,6 +1,6 @@
+<!-- 生成文件（ARCH-UI-SPEC-R1-D2-F1）：由 UiTokenManifest.json 确定性生成，禁止手工修改。 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <!-- 图标视口与笔画（UI Spec 1.0 §8.1）：标准 16×16 / 工具栏独立操作 20×20 / 线性笔画 1.5 -->
   <x:Double x:Key="Icon.Size.Standard">16</x:Double>
   <x:Double x:Key="Icon.Size.Tool">20</x:Double>
   <x:Double x:Key="Icon.Stroke.Width">1.5</x:Double>

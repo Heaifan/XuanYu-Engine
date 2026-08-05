@@ -17,15 +17,18 @@ public enum UiRuleKind
     StrokeThickness,
     CsHexColor,
     EmojiIcon,
+    TokenDeclaration,
 }
 
 public sealed record BaselineEntry(
     string WId,
     string Path,
+    string Locator,
     UiRuleKind Kind,
     string Property,
     string Value,
-    int AllowedCount = 1);
+    int AllowedCount = 1,
+    string Phase = "D3");
 
 internal static partial class UiDebtBaseline
 {
@@ -41,13 +44,14 @@ internal static partial class UiDebtBaseline
         return list;
     }
 
-    // 规范化比较：hex 大小写不敏感，数值去掉前导零。
+    // 规范化比较：hex 大小写不敏感。
     private static string Norm(string s) => s.Trim().ToUpperInvariant();
 
-    public static int AllowedCountFor(string path, UiRuleKind kind, string value) =>
+    // 细粒度指纹匹配：Path + Locator + Kind + Property + Value 全部参与。
+    public static int AllowedCountFor(string path, string locator, UiRuleKind kind, string property, string value) =>
         Entries
-            .Where(e => e.Path == path && e.Kind == kind
-                && Norm(e.Value ?? "") == Norm(value ?? ""))
+            .Where(e => e.Path == path && e.Locator == locator && e.Kind == kind
+                && e.Property == property && Norm(e.Value ?? "") == Norm(value ?? ""))
             .Select(e => e.AllowedCount)
             .DefaultIfEmpty(0)
             .First();

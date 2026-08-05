@@ -31,6 +31,18 @@ ARCH-UI-SPEC-R1-D2：Token 基础设施与自动化门禁（2026-08-05，Commit 
 - 治理：版本 v0.2.24.38-rz → v0.2.24.39-rz（四处同步）；未创建 Tag/Release。
 - 状态：ARCH-UI-SPEC-R1-D2 COMPLETE；D3 主窗口/顶层页签/滚动治理待用户批准启动。
 
+### D2-F1 Token 门禁可靠性纠偏（2026-08-05，Commit 本轮落库为准；同版本不升版）
+- 用户复核裁定 D2 REVIEW BLOCKED 四项：基线可换位绕过、测试侧第二套事实源、Token 值覆盖不全（112 键仅 100 项值断言）、扫描范围不足（固定 cs 清单/Design 外 Token/Emoji 图标位置）。
+- **基线升级为细粒度指纹**：每条含 W 编号/相对路径/稳定定位（Style Selector → x:Name → 元素类型；code-behind 为 类型名.成员名）/属性名/规则类型/规范化值/允许次数；匹配 Path+Locator+Kind+Property+Value 全部参与。225 条基线重新生成（含 Locator，注释剥离）。10 项绕过反例全部通过：原位置保留 PASS、删除 PASS、同选择器第二处 FAIL、异控件/异 Style/异 x:Name/异属性/异 Kind 换位 FAIL、注释漂移不影响基线、基线不自动增长。
+- **单一机器事实源**：新增 `Design/UiTokenManifest.json`（112 条：Key/Type/Value/Category/SpecSection/Purpose/SpecStatus）；`scripts/generate-ui-tokens.py`（≤100 行，无第三方依赖）确定性生成 8 个 Token XAML（带"生成文件"头，幂等验证通过）；删除测试侧手写键清单与 100 项手写期望值表（UiTokenContractCatalog/Fonts/Colors/Sizes 测试），改为 Manifest↔XAML 双向合同（112/112 键、类型、值全覆盖，无重复/缺失/大小写漂移）。
+- **SpecStatus 核查（D2-F1）**：97 条 Frozen（规范已冻结具体值，含 Log.Accent.*/DocStatus.*/LogTable.Columns/Tree.Guide 等）；**15 条 PendingReview**（规范只有区间或方向，值待规范审订）：Motion.HoverMs/ExpandMs（规范仅 80～120/120～160 区间，此前取中值为执行 AI 自选，已停止数值冻结）、Layer.Kind.* 6 色、Layer.State.* 6 色、Layer.DropLine（规范 §12.2 仅交互规则无色值）。缺失项已报告，等待规范审订裁决。
+- **递归扫描全部 UI code-behind**：删除固定 CsVisualSources；递归 `XuanYu.Editor.UI/**/*.cs`（排除 bin/obj/生成文件）；确认仅 5 个视觉文件含 hex；新增"新 UI .cs 加入原始颜色必被报告"测试。
+- **Design 外 Token 声明检测**：非 Design/ AXAML 的 SolidColorBrush/x:Double/x:String/Thickness/CornerRadius/FontWeight/FontFamily x:Key 声明即违规（EditorIcons.axaml 的 StreamGeometry 图标资源合法不误报）。
+- **Emoji/Unicode 图标检测**：按钮 Content、切换按钮 Content、图标 TextBlock（Classes/x:Name 特征）Text 与元素内容、Path/PathIcon Data；中文按钮/工具提示/StreamGeometry 不误判（Path 数据用 Unicode 符号区检测，兼容 F1 填充标记）。
+- **ResourceInclude 完整图**：聚合含 7 个批准文件、目标存在、子文件不反向引用、应用只合并一次。
+- 验证：全解决方案串行 Build 0W0E；Core 339/339、World 719/719（含 UiTokens 33 项）、WarCore 22/22，合计 1080/1080 PASS；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS。
+- 事实表述（修正后）：Token 门禁已实现"已知债务允许（细粒度定位）、任何新增债务（含换位）失败"；112/112 键、类型、值与 Manifest 一致（Manifest 为唯一机器事实源）；15 条组件值待规范审订，未声称全部与规范数值一致；W01～W71 未清零。
+
 ## v0.2.24.38-rz
 ARCH-UI-SPEC-R1-D1：正式规范冻结（2026-08-05，Commit 本轮落库为准）
 - `docs/ui/玄域引擎_UI规范_1.0.md` 由 WORKING DRAFT 转为**正式规范（UI Spec 1.0，唯一 UI 规范事实源）**，24 节结构：身份与适用范围、条款分级、字体字号（回退链/字号表/字重/行高）、颜色背景（四级背景/语义色/日志色/文档状态色）、间距尺寸圆角、控件高度与热区、窗口阈值、图标、边框阴影焦点、页签菜单弹窗、表单错误、树列表拖拽、日志加载空状态、键盘可访问、DPI 性能、游戏 UI 边界、Token 层级命名、自动化矩阵、允许清单、受控例外、变更流程、真机验收、版本历史、文档关系。
