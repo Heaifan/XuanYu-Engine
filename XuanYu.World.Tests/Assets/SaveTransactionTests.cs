@@ -58,7 +58,7 @@ public sealed class SaveTransactionTests : IDisposable
         var result = await _env.SaveAsync(scenePath);
 
         Assert.True(result.Succeeded);
-        Assert.Equal(1, result.Value!.HostedSourcePaths.Count);
+        Assert.Single(result.Value!.HostedSourcePaths);
         var hosted = result.Value.HostedSourcePaths.Values.Single();
         Assert.Contains(".xyassets", hosted);
     }

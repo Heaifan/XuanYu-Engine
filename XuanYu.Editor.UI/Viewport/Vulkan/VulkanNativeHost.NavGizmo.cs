@@ -16,15 +16,17 @@ public sealed partial class VulkanNativeHost
     bool TryNavGizmoPress(UiVm vm, double x, double y)
     {
         if (!NavGizmoLocal(x, y, Bounds.Width, Bounds.Height, out var local)) return false;
-        var hit = vm.NavigationCamera is null ? null
-            : NavigationGizmoHitTest.Hit(NavigationGizmoLayout.Compute(
-                vm.NavigationCamera.Right, vm.NavigationCamera.Up, vm.NavigationCamera.Forward,
-                new Point(NavGizmoSizeDips * 0.5, NavGizmoSizeDips * 0.5)), local, new Point(NavGizmoSizeDips * 0.5, NavGizmoSizeDips * 0.5));
+        var camera = vm.NavigationCamera;
+        // 相机未就绪（启动/重建/销毁期）：无法计算 Gizmo 方向，不消费事件（继续走实体 Picking）。
+        if (camera is null) return false;
+        var hit = NavigationGizmoHitTest.Hit(NavigationGizmoLayout.Compute(
+            camera.Right, camera.Up, camera.Forward,
+            new Point(NavGizmoSizeDips * 0.5, NavGizmoSizeDips * 0.5)), local, new Point(NavGizmoSizeDips * 0.5, NavGizmoSizeDips * 0.5));
         _navGizmoPressed = true;
         _navGizmoEndpoint = hit.IsEndpoint ? hit.Endpoint : null;
         _navGizmoDown = new Point(x, y);
         // 非端点（中心球/空白）：直接进入 Orbit 候选。
-        if (_navGizmoEndpoint is null && vm.NavigationCamera is not null)
+        if (_navGizmoEndpoint is null)
             vm.BeginCameraNavigation(NativePointerId, x, y, false, (int)Bounds.Width, (int)Bounds.Height);
         return true;
     }

@@ -71,7 +71,7 @@ public sealed class ReferenceGridScaleTests
         var a = ReferenceGridScale.Compute(0.05);
         var b = ReferenceGridScale.Compute(0.05);
         Assert.Equal(a, b);
-        Assert.Equal(ReferenceGridScale.IdealSpacing(0.05), 2.4, 6);
+        Assert.Equal(2.4, ReferenceGridScale.IdealSpacing(0.05), 6);
     }
 
     // 目标屏幕间距 48px（方案 7.2）。

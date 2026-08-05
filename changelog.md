@@ -20,6 +20,15 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.32-fix
+VK-WARN-NAVGIZMO-R1 导航 Gizmo 空引用警告消除，恢复全解决方案 0W0E（2026-08-05，Commit 本轮落库为准）
+- 根因（只读调查确认）：`VulkanNativeHost.NavGizmo.cs` 第 19~22 行三元表达式 `vm.NavigationCamera is null ? null : NavigationGizmoHitTest.Hit(...)` 使 `hit` 推断为可空 `GizmoHitResult?`（`Hit` 本身返回非空类型），第 24 行 `hit.IsEndpoint` 触发 CS8602——相机在启动/重建/销毁期允许为 null（情况 B：生命周期期间可空），原代码该路径若可达即为真实 NRE。
+- 修复（最小，仅 1 个生产文件，+2 行）：捕获相机局部快照 `var camera = vm.NavigationCamera;`，`camera is null → return false`（相机未就绪时无法计算 Gizmo 方向，不消费事件，继续走实体 Picking，与"区域外不捕获"语义一致）；`hit` 恢复非空类型；第 27 行条件简化为 `_navGizmoEndpoint is null`（guard 后相机非空已保证，行为等价）。未使用 `!`/pragma/NoWarn/`?.`，未改 Vulkan 生命周期、Gizmo 尺寸/颜色/命中半径，无新增日志。
+- 存量警告合规修正（Rebuild 暴露，与本轮无关但 0W0E 出口必需，语义等价）：`ReferenceGridScaleTests` xUnit2000（Assert.Equal 参数交换 expected=2.4）、`SaveTransactionTests` xUnit2013（Assert.Equal(1, Count) → Assert.Single）。
+- 验证：全解决方案 Rebuild 0 Warning / 0 Error（含 `-warnaserror` 与 `-p:WarningsAsErrors=CS8602` 双口径）；Core 339/339、World 636/636、WarCore 22/22 全 PASS；NavigationGizmo 聚焦 16/16；arch-a-guard PASS；git diff --check PASS；无新增 NuGet；无 Schema 改动。
+- 遗留：真机 WN-A01～WN-A08 冒烟（Gizmo 显示/Hover/轴向/缩放/启动/关闭）。
+- 治理：版本 v0.2.24.31-rz → v0.2.24.32-fix（四处同步）；file-tree 无结构变化仅校验不重建；未创建 Tag/Release。
+
 ## v0.2.24.31-rz
 MAP-A-R2-D4-F1 图层 UI 归位：迁入右侧地图编辑器二级导航（2026-08-05，Commit 本轮落库为准）
 - 撤回 D4 左侧"图层"页签（信息架构修正）：`MapLayer` 属于地图资产，不是项目资源/场景层级/全局功能，不应与"项目、层级"并列；左侧全局导航恢复仅"项目 | 层级"。
