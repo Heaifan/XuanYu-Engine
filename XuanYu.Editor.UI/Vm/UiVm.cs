@@ -59,7 +59,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public IReadOnlyList<EditorTreeNode> ProjectItems => TreeGuideBuilder.Visible(UiText.ProjectTreeItems, _collapsedProjectKeys);
     public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
     public IReadOnlyList<string> InspectorFields => BuildInspectorFields();
-    public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems; public IReadOnlyList<string> PropertyItems => UiText.PropertyItems;
+    public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems;
     public IReadOnlyList<string> ToolItems => UiText.ToolItems; public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => BuildDebugObjectItems();
     public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => BuildDebugInputItems();
     public string ActiveTool => _editorState.ToolSnapshot.ActiveToolText;
@@ -69,7 +69,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public bool IsScaleTool => IsTool(EditorToolId.Scale);
     public bool IsBoxSelectTool => IsTool(EditorToolId.BoxSelect);
     public bool IsSnapEnabled => _editorState.ToolSnapshot.IsSnapEnabled;
-    public string SnapMode => _editorState.ToolSnapshot.SnapText;
+    public string SnapMode => _editorState.ToolSnapshot.SnapText; // F2：模式页已删，仅保留状态读取
     public string SelectionTitle => _editorState.Snapshot.SelectionTitle;
     public string SelectionKey => _editorState.Snapshot.SelectionKey;
     public string SelectionSubtitle => _editorState.Snapshot.SelectionSubtitle;

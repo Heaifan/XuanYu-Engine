@@ -28,9 +28,11 @@ public sealed partial class UiMapLayerPanelTests
         vm.LayerInspectorLocked = true;
         var region = vm.MapSession.CurrentMap.Layers.First(l => l.Kind == MapLayerKind.Region);
         Assert.True(region.IsLocked);
-        Assert.Contains("图层锁定：区域 1=是", Logs(vm));
+        Assert.Contains("锁定图层：区域 1（区域）", Logs(vm));
+        vm.LayerInspectorLocked = false;
+        Assert.False(vm.MapSession.CurrentMap.Layers.First(l => l.Kind == MapLayerKind.Region).IsLocked);
+        Assert.Contains("解锁图层：区域 1（区域）", Logs(vm));
     }
-
     [Fact]
     public void Delete_last_region_layer_rejected_with_chinese_error()
     {
@@ -68,7 +70,6 @@ public sealed partial class UiMapLayerPanelTests
         Assert.Equal("区域 3", vm.LayerItems[0].Name);
         Assert.Contains("调整图层顺序：区域 3，上移", Logs(vm));
     }
-
     [Fact]
     public void Set_active_layer_command_chain_marks_active()
     {

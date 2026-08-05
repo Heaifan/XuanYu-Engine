@@ -66,14 +66,6 @@ public static class UiText
         "当前阶段：UI 骨架实用化"
     ];
 
-    public static readonly string[] PropertyItems =
-    [
-        "布局保存：待接入",
-        "主题：浅色外壳 + 深色视口",
-        "快捷键：待接入",
-        "编辑器偏好：待接入"
-    ];
-
     public static readonly Dictionary<string, string> CommandMessages = new(StringComparer.Ordinal)
     {
         ["新建"] = "已准备创建新资源。",

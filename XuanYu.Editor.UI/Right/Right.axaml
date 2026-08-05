@@ -63,17 +63,5 @@
         </StackPanel>
       </ScrollViewer>
     </TabItem>
-
-    <TabItem Classes="sideTab" Header="偏好">
-      <StackPanel Spacing="10" Margin="0,6,0,0">
-        <Border Classes="infoPanel"><StackPanel Spacing="6"><TextBlock Text="编辑器偏好" Classes="section"/><TextBlock Text="布局保存、主题、快捷键和编辑器偏好后续会在这里收口。" Classes="muted" TextWrapping="Wrap"/><ListBox ItemsSource="{Binding PropertyItems}" Background="Transparent" BorderThickness="0"/></StackPanel></Border>
-      </StackPanel>
-    </TabItem>
-
-    <TabItem Classes="sideTab" Header="模式">
-      <StackPanel Spacing="10" Margin="0,6,0,0">
-        <Border Classes="infoPanel"><StackPanel Spacing="6"><TextBlock Text="当前工作模式" Classes="section"/><TextBlock Text="{Binding ActiveTool}" Classes="panelTitle"/><TextBlock Text="{Binding SnapMode}" Classes="value"/><TextBlock Text="{Binding FooterMessage}" Classes="muted" TextWrapping="Wrap"/></StackPanel></Border>
-      </StackPanel>
-    </TabItem>
   </TabControl>
 </UserControl>

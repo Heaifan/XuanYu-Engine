@@ -63,7 +63,9 @@ public sealed partial class UiVm
         var layer = MapLayerRules.Find(MapSession.CurrentMap.Layers, layerId);
         var result = MapSession.SetLayerLocked(layerId, locked);
         if (!result.IsSuccess) { FailLayerEdit("图层锁定", result); return false; }
-        LogLayer($"图层锁定：{layer?.DisplayName ?? ""}={FormatBoolean(locked)}");
+        // 仅状态真实变化时记录一次（同值 No-op 不记录）。
+        if (layer is not null && layer.IsLocked != locked)
+            LogLayerLockChanged(layer, layer.IsLocked, locked);
         return true;
     }
 

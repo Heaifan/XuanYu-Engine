@@ -15,6 +15,9 @@ public sealed class UiMapLayoutContractTests
     static readonly string Right = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "Right.axaml"));
 
+    static readonly string Top = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
+        "..", "..", "..", "..", "XuanYu.Editor.UI", "Top", "Top.axaml"));
+
     [Fact]
     public void Left_keeps_only_project_and_hierarchy_tabs()
     {
@@ -43,5 +46,25 @@ public sealed class UiMapLayoutContractTests
     public void Global_inspector_has_no_layer_panel()
     {
         Assert.DoesNotContain("LayerInspectorPanel", Right);
+    }
+
+    // F2：顶部"添加"菜单扁平化——无"基础实体"级联，"立方体"为直接子项。
+    [Fact]
+    public void Add_menu_has_no_category_level()
+    {
+        Assert.DoesNotContain("基础实体", Top);
+        Assert.Contains("<MenuItem Header=\"立方体\" Command=\"{Binding RunCommand}\" CommandParameter=\"添加立方体\"/>", Top);
+    }
+
+    // F2：右侧顶层仅 检查器 / 地图编辑器 / 调试。
+    [Fact]
+    public void Right_keeps_only_three_top_tabs()
+    {
+        Assert.Contains("Header=\"检查器\"", Right);
+        Assert.Contains("Header=\"地图编辑器\"", Right);
+        Assert.Contains("Header=\"调试\"", Right);
+        Assert.DoesNotContain("Header=\"偏好\"", Right);
+        Assert.DoesNotContain("Header=\"模式\"", Right);
+        Assert.DoesNotContain("PropertyItems", Right);
     }
 }

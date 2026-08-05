@@ -44,7 +44,7 @@
             <MenuItem Header="导入 GLB" Command="{Binding RunCommand}" CommandParameter="导入 GLB"/>
           </MenuItem>
           <MenuItem Header="添加">
-            <MenuItem Header="基础实体"><MenuItem Header="立方体" Command="{Binding RunCommand}" CommandParameter="添加立方体"/></MenuItem>
+            <MenuItem Header="立方体" Command="{Binding RunCommand}" CommandParameter="添加立方体"/>
           </MenuItem>
         </Menu>
         <Border Classes="topGroup"><StackPanel Orientation="Horizontal" Spacing="4"><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="新建"><StackPanel Orientation="Horizontal" Spacing="5"><Path Classes="topIcon" Data="{StaticResource NewFileIcon}"/><TextBlock Text="新建"/></StackPanel></Button><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="打开"><StackPanel Orientation="Horizontal" Spacing="5"><Path Classes="topIcon" Data="{StaticResource OpenIcon}"/><TextBlock Text="打开"/></StackPanel></Button><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="保存" IsEnabled="{Binding CanRunSaveCommand}" Background="{Binding SaveButtonBackground}" BorderBrush="{Binding SaveButtonBorderBrush}"><StackPanel Orientation="Horizontal" Spacing="5"><Path Classes="topIcon" Data="{StaticResource SaveIcon}"/><TextBlock Text="保存"/></StackPanel></Button><Button Classes="cmdBtn" Command="{Binding RunCommand}" CommandParameter="另存为"><StackPanel Orientation="Horizontal" Spacing="5"><Path Classes="topIcon" Data="{StaticResource SaveIcon}"/><TextBlock Text="另存为"/></StackPanel></Button></StackPanel></Border>

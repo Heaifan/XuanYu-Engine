@@ -319,8 +319,8 @@ XuanYuEngine/
 │   ├── Right
 │   │   ├── LayerInspectorPanel.axaml：LayerInspectorPanel.axaml
 │   │   ├── LayerInspectorPanel.axaml.cs：LayerInspectorPanel.axaml.cs
-│   │   ├── LayerPanel.axaml：图层面板（工具栏+图层列表，位于地图编辑器图层页）
-│   │   ├── LayerPanel.axaml.cs：图层面板代码后置（无逻辑）
+│   │   ├── LayerPanel.axaml：LayerPanel.axaml
+│   │   ├── LayerPanel.axaml.cs：LayerPanel.axaml.cs
 │   │   ├── MapEditorPanel.axaml：MapEditorPanel.axaml
 │   │   ├── MapEditorPanel.axaml.cs：MapEditorPanel.axaml.cs
 │   │   ├── Right.axaml：Right.axaml
@@ -735,9 +735,10 @@ XuanYuEngine/
 │   │   ├── UiMapEditorTests.cs：UiMapEditorTests.cs
 │   │   ├── UiMapHistoryTests.cs：UiMapHistoryTests.cs
 │   │   ├── UiMapInitialProjectionTests.cs：UiMapInitialProjectionTests.cs
+│   │   ├── UiMapLayerLockLogTests.cs：图层锁定日志细化与立方体单次创建测试
 │   │   ├── UiMapLayerPanelTests.Behavior.cs：UiMapLayerPanelTests.Behavior.cs
 │   │   ├── UiMapLayerPanelTests.cs：UiMapLayerPanelTests.cs
-│   │   ├── UiMapLayoutContractTests.cs：图层 UI 归位源码合同测试
+│   │   ├── UiMapLayoutContractTests.cs：UiMapLayoutContractTests.cs
 │   │   ├── MapBoundsTests.cs：MapBoundsTests.cs
 │   │   ├── MapCoordinateValidationTests.cs：MapCoordinateValidationTests.cs
 │   │   ├── MapDefaultMapTests.cs：MapDefaultMapTests.cs

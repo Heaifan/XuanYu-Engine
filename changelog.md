@@ -20,6 +20,17 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.33-fix
+MAP-A-R2-D4-F2 顶部菜单与右侧冗余 UI 收敛（2026-08-05，Commit 本轮落库为准）
+- F2-01 顶部"添加"菜单扁平化：删除"基础实体"级联层，"立方体"成为"添加"直接子项（Top.axaml）；与"文件"共用同一 Menu/MenuItem 样式（背景/边框/行高/留白/悬停反馈/字号全一致），无横向级联箭头；命令与 CommandParameter（添加立方体）零改动，未新建第二套命令。
+- F2-02 删除右侧顶层"偏好"页签及占位面板（布局保存/主题/快捷键占位）；同步清理仅服务该页的绑定字段：`PropertyItems` 属性（UiVm.cs）与 `UiText.PropertyItems` 字段整体删除。
+- F2-03 删除右侧顶层"模式"页签（非可选模式、无控件、制造无意义空白）；右侧顶层收敛为 检查器 | 地图编辑器 | 调试，地图编辑器二级导航（地图/图层/环境）直接贴近顶层页签；`SnapMode` 属性保留（工具状态读取，注释登记暂无 UI 消费者）。
+- F2-04 图层锁定日志细化：新增专用帮助函数 `LogLayerLockChanged(layer, before, after)`（不再用 FormatBoolean 拼"是/否"）；消息列"锁定图层：区域 1（区域）/解锁图层：边界（系统）"，详情列 `LayerId=<完整 ID>；状态：未锁定 → 已锁定`；仅状态真实变化记录一次（同值 No-op 不记录），失败日志保留原因；LogLayer 增加详情列参数重载。
+- 测试：新增 `UiMapLayerLockLogTests`（L01 锁定区域图层/L02 解锁/L03 系统层带（系统）/L04 详情含 LayerId 与状态变化/L05 同值 No-op 无日志/L06 一次点击一条日志 + C01 添加立方体单次创建）；`UiMapLayoutContractTests` 扩展 U01（无基础实体）/U02（立方体为添加直接子项）/U03（无偏好页签）/U04（无模式页签）+ 既有 U05/U06；`UiMapLayerPanelTests.Behavior` 锁定断言更新为"锁定图层：区域 1（区域）"与解锁断言。
+- 验证：全解决方案 Rebuild 0 Warning / 0 Error；Core 339/339、World 645/645、WarCore 22/22 全 PASS；arch-a-guard PASS（依赖边界+5+100）；git diff --check PASS；无新增 NuGet；无 Schema 改动；Vulkan 生命周期零改动；NavGizmo CS8602 已在前轮（v0.2.24.32-fix）独立修复，本轮未触碰。
+- 遗留：真机 F2-A01～A12 验收（菜单展开样式对比、偏好/模式消失、锁定日志、滚动布局、可见性/重命名回归）。
+- 治理：版本 v0.2.24.32-fix → v0.2.24.33-fix（四处同步）；file-tree 重建（新增 UiMapLayerLockLogTests.cs）；未创建 Tag/Release。
+
 ## v0.2.24.32-fix
 VK-WARN-NAVGIZMO-R1 导航 Gizmo 空引用警告消除，恢复全解决方案 0W0E（2026-08-05，Commit 本轮落库为准）
 - 根因（只读调查确认）：`VulkanNativeHost.NavGizmo.cs` 第 19~22 行三元表达式 `vm.NavigationCamera is null ? null : NavigationGizmoHitTest.Hit(...)` 使 `hit` 推断为可空 `GizmoHitResult?`（`Hit` 本身返回非空类型），第 24 行 `hit.IsEndpoint` 触发 CS8602——相机在启动/重建/销毁期允许为 null（情况 B：生命周期期间可空），原代码该路径若可达即为真实 NRE。
