@@ -1680,11 +1680,11 @@
 - `docs/governance/dev-rules-understanding.md` — dev-rules 规则动机解释
 - `docs/governance/diagnostic-safety.md` — 诊断日志与 UI 调度安全规范
 - `docs/governance/naming-XuanYu-Engine.md` — 玄域引擎命名与品牌规范
-- `docs/governance/ui-spec.md` — UI 规范 1.0 讨论初稿：全项目 UI 强约束默认标准、三级 Token 体系与受控例外机制（待审订）
+- `docs/governance/ui-spec.md` — UI 规范 45 项讨论决策的历史记录（D1 起不再作为实施合同，正式规则以 UI 规范 1.0 为准）
 - `docs/governance/版本号规范与历史映射.md` — 版本格式与历史编号映射
 - `docs/milestones/current/MAP-A/map-contract.md` — MAP-A 地图合同与当前轮验收材料
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
-- `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 审订工作副本：首批冻结参数与条款审订状态（D1 定稿底稿）
+- `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪
 - `docs/玄域引擎_AI开发宪法.md` — 最高长期治理规则（唯一宪法事实源）
 - `file-tree.md` — （职责待补）

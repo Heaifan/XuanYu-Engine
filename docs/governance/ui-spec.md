@@ -1,6 +1,8 @@
 # 玄域引擎 UI 规范 1.0
 
-> **落库信息**：2026-08-05 由讨论产物《玄域引擎_UI规范_1.0_讨论初稿》落库为 `docs/governance/ui-spec.md`（ARCH-UI-SPEC-R1）；状态：讨论完成、**待审订**（Token 数值/测试矩阵/整改计划未冻结，不得由实施 AI 自行决定）。立项状态以 `docs/governance/debts/arch-ui-spec-debts.md` 登记为准。
+> **文档状态**：**历史讨论决策记录**（ARCH-UI-SPEC-R1-D1 起）——本文件为 UI 规范 45 项讨论决策的原始沉淀，**不再作为实施合同**；正式规则以 `docs/ui/玄域引擎_UI规范_1.0.md`（UI Spec 1.0）为准。
+>
+> **落库信息**：2026-08-05 由讨论产物《玄域引擎_UI规范_1.0_讨论初稿》落库为 `docs/governance/ui-spec.md`（ARCH-UI-SPEC-R1）。立项状态以 `docs/governance/debts/arch-ui-spec-debts.md` 登记为准。
 
 ## 讨论汇总初稿
 
