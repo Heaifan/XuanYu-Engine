@@ -900,10 +900,14 @@
 │  │  ├─ diagnostic-safety.md
 │  │  ├─ naming-XuanYu-Engine.md
 │  │  └─ ui-spec.md
-│  └─ milestones/
-│     └─ current/
-│        └─ MAP-A/
-│           └─ map-contract.md
+│  ├─ milestones/
+│  │  └─ current/
+│  │     └─ MAP-A/
+│  │        └─ map-contract.md
+│  └─ ui/
+│     ├─ 玄域引擎_UI真机基线清单.md
+│     ├─ 玄域引擎_UI规范_1.0.md
+│     └─ 玄域引擎_旧UI审计矩阵.md
 ├─ file-tree.md
 ├─ run.bat
 ├─ samples/
@@ -1683,7 +1687,10 @@
 - `docs/governance/ui-spec.md` — UI 规范 1.0 讨论初稿：全项目 UI 强约束默认标准、三级 Token 体系与受控例外机制（待审订）
 - `"docs/governance/\347\211\210\346\234\254\345\217\267\350\247\204\350\214\203\344\270\216\345\216\206\345\217\262\346\230\240\345\260\204.md"` — （职责待补）
 - `docs/milestones/current/MAP-A/map-contract.md` — （职责待补）
-- `"docs/\347\216\204\345\237\237\345\274\225\346\223\216_AI\345\274\200\345\217\221\345\256\252\346\263\225.md"` — （职责待补）
+- `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
+- `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 审订工作副本：首批冻结参数与条款审订状态（D1 定稿底稿）
+- `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪
+- `"docs/玄域引擎_AI开发宪法.md"` — （职责待补）
 - `file-tree.md` — （职责待补）
 - `run.bat` — （职责待补）
 - `samples/world-c-r1-ten-triangles.xyscene` — （职责待补）

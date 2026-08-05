@@ -19,6 +19,13 @@
 
 - `docs/milestones/current/MAP-A/`：MAP-A 地图合同与当前轮验收材料
 
+## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
+
+- `docs/ui/玄域引擎_UI规范_1.0.md`：UI 规范 1.0 审订工作副本（首批冻结参数与条款审订状态，D1 定稿底稿）
+- `docs/ui/玄域引擎_旧UI审计矩阵.md`：旧 UI 全量审计矩阵（违规清零追踪）
+- `docs/ui/玄域引擎_UI真机基线清单.md`：真机验收共用 IPO 清单与 D0 基线
+- 讨论初稿决策原文：`docs/governance/ui-spec.md`（唯一讨论结论源；正式规范以 UI 规范 1.0 定稿为准）
+
 ## 架构文档（architecture/）
 
 - `docs/architecture/ENGINE_ARCHITECTURE.md`：引擎总体架构

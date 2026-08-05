@@ -1,0 +1,245 @@
+# 玄域引擎 旧 UI 审计矩阵（ARCH-UI-SPEC-R1-D0）
+
+> **治理编号**：ARCH-UI-SPEC-R1-D0
+> **生成日期**：2026-08-05
+> **审计基线**：`feat/MAP-A-map` HEAD=0380192（v0.2.24.36-rz 落库后），工作区 clean
+> **依据**：《玄域引擎 UI 规范 1.0 讨论初稿》（`docs/governance/ui-spec.md`）+ 治理实施计划第三章《首批冻结参数》
+> **性质**：D0 只审计、不整改。违规项清零属 D6，整改归属轮次已在每项标注。
+> **方法**：逐个读取全部 16 个 `.axaml` 真实内容 + 5 处 code-behind 视觉源，对照冻结参数逐项判定；不凭文件名猜测。
+
+---
+
+## 一、界面清单总览
+
+| # | 界面 | 路径 | 主密度 | 现有字号 | 现有控件高度 | 滚动结构 | 图标来源 | 违规项 | 整改归属 |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 主窗口 | `Win/UiWin.axaml` | — | 继承全局 | — | — | — | 3 | D3 |
+| 2 | 全局样式 | `Ui.axaml` | — | 12 默认 | 30/34 | — | — | 14 | D2/D3 |
+| 3 | 应用引导 | `Bootstrap/App.axaml` | — | — | — | — | — | 0（浅色主题显式 ✓） | — |
+| 4 | 主布局 | `Root/UiRoot.axaml` | — | — | — | 主区+日志区 | — | 4 | D3 |
+| 5 | 顶部菜单/工具条 | `Top/Top.axaml` | 紧凑 | 继承 | 32 | — | EditorIcons | 6 | D3 |
+| 6 | 左侧树（项目/层级） | `Left/Left.axaml` + `Left.Styles.axaml` | 紧凑 | 15/13 | 28 | 单列表 | EditorIcons | 8 | D3 |
+| 7 | 右侧工作面板 | `Right/Right.axaml` | 标准 | 15/12 | 30 | 调试页独立 | EditorIcons | 8 | D4 |
+| 8 | 地图编辑器 | `Right/MapEditorPanel.axaml` | 标准 | 14/13/12/10 | 32 | 每页独立 | EditorIcons | 5 | D4 |
+| 9 | 图层面板 | `Right/LayerPanel.axaml` | 紧凑 | 13/12/10 | 25/32 | 整页滚动（F1 合同 ✓） | EditorIcons | 3 | D4 |
+| 10 | 图层属性 | `Right/LayerInspectorPanel.axaml` | 标准 | 12（值缺省） | — | — | — | 2 | D4 |
+| 11 | 底部日志 | `Foot/Foot.axaml` | 紧凑 | 16/12 | 28 | 虚拟化+自动跟随 ✓ | EditorIcons | 5 | D5 |
+| 12 | 日志详情 | `Foot/LogDetailPanel.axaml` | 标准 | 12 | 42 | 独立详情滚动 | — | 3 | D5 |
+| 13 | 渲染视口 | `Viewport/Vulkan/VulkanViewport.axaml` | — | — | — | — | — | 2 | D3 |
+| 14 | 主区装配 | `Main/Main.axaml` | — | — | — | — | — | 0 | — |
+| 15 | 图标资产 | `Icons/EditorIcons.axaml` | — | — | — | — | 35 个 StreamGeometry | 2 | D2 |
+| 16 | 弹窗/状态 code-behind | `Win/UiWin.Dialogs.cs`、`UnsavedDialog.cs`、`UiVm.DocumentStatus.cs`、`LogEntry.cs`、`TreeGuide.cs` | — | — | — | — | — | 6 | D5 |
+
+**合计**：16 界面 + 5 处 code-behind 视觉源，**违规项 71**（含需 Token 化/登记项）。全部为零后进入 D6 清零验收。
+
+---
+
+## 二、违规明细（编号 W01 起，D6 按编号逐项清零）
+
+### 2.1 全局样式 `Ui.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W01 | 字号 | `Window` 样式 | 未设 FontSize，全应用正文落默认 12 | 正文 Body=13；字号必须 Token 化 | D2/D3 |
+| W02 | 颜色 | `Window` Foreground | `#172033` | Text.Primary `#243744` | D2 |
+| W03 | 字体 | `Window` FontFamily | `Microsoft YaHei UI, Segoe UI, Inter` | 回退链 `Microsoft YaHei UI → Segoe UI → Noto Sans CJK SC → 系统无衬线`（无 Inter） | D2 |
+| W04 | 阴影 | `Border.panel` BoxShadow | `0 14 30 0 #160f172a`（偏移14/模糊30/25%黑） | 普通面板禁阴影；悬浮层统一 `垂直4 / 模糊12 / 约14%黑` | D2/D3 |
+| W05 | 颜色 | `Border.panel` | bg `#fbfcff` / 边框 `#d9e0ec` | Bg.Panel `#F8FAFB` / Border.Default `#D5DEE4` | D2 |
+| W06 | 圆角 | `Border.pill` | `5` | 只允许 3/6/10 | D2 |
+| W07 | 间距 | `Button` | Padding `10,7`、MinWidth `52` | 内边距档位 6×2 / 8×4 / 12×6；宽度等级 64/96/128/160/240 | D2 |
+| W08 | 颜色 | `Button` / `:pointerover` | bg `#eef3fa` / fg `#26324a`；hover `#e4edf8`/`#9fb5d6` | Bg.Control `#FFFFFF` / Text.Primary `#243744`；Hover.Bg `#EEF4F6` | D2 |
+| W09 | 高度 | `TabItem.sideTab` MinHeight | `30` | 控件高度只允许 24/28/32 | D2 |
+| W10 | 圆角 | `TabItem.sideTab` | `5` | 只允许 3/6/10 | D2 |
+| W11 | 颜色 | `sideTab:selected` | fg `#185aa6` / bg `#edf4ff` / 边 `#8cb2e2` | Accent `#326F8A` / Selection.Bg `#E5F0F4`（旧蓝强调系整体替换） | D2 |
+| W12 | 高度 | `ListBoxItem` MinHeight | `34` | 只允许 24/28/32 | D2 |
+| W13 | 间距 | `ListBoxItem` Padding | `10,7` | 内边距档位 | D2 |
+| W14 | 字号/颜色 | `TextBlock.section` | 12 SemiBold / `#40516f` | 分组标题应为 Section=14 或登记为 Label=12（F3 合同曾定 13 半粗，需审订定夺）；色 `#40516f` 需 Token 化 | D1 审订 |
+
+### 2.2 主窗口 `Win/UiWin.axaml`
+
+| 编号 | 类别 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|
+| W15 | 窗口 | `1400×820` | 推荐初始 `1360×820`（≤工作区可用范围） | D3 |
+| W16 | 窗口 | MinWidth `1100` / MinHeight `720` | 应用最小窗口 `1024×640` | D3 |
+| W17 | 颜色 | 背景 `#e9eef5` | Bg.Application `#F3F6F8` | D2 |
+
+### 2.3 主布局 `Root/UiRoot.axaml`
+
+| 编号 | 类别 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|
+| W18 | 布局 | RootGrid MinWidth `980`（+Margin 24） | 应用最小窗口 `1024×640`（对齐） | D3 |
+| W19 | 布局 | 左列 MinWidth `200` | 左侧层级树最小 `220` | D3 |
+| W20 | 布局 | 右列 MinWidth `260` | 右侧工作面板最小 `300` | D3 |
+| W21 | 布局 | 日志行 MinHeight `32` | 底部日志最小 `120`（F4 折叠态 32 + ClampLogRow code-behind 展开态 420；需与规范对齐并登记） | D3 |
+
+> 合规项：右列标准宽度 `340` ✓；主区 MinHeight `320` = 视口最小 480×320 高度维 ✓；分隔条 6 DIP；视口 1 DIP 浅灰边框 ✓。
+
+### 2.4 顶部 `Top/Top.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W22 | 圆角 | `commandRail` | `9` | 只允许 3/6/10（10 仅大容器） | D2 |
+| W23 | 圆角 | `statePill` | `7` | 只允许 3/6/10 | D2 |
+| W24 | 圆角 | `cmdBtn`/`toolBtn` | `4` | 只允许 3/6/10 | D2 |
+| W25 | 间距 | `commandRail`/`MenuItem`/`cmdBtn`/`toolBtn` Padding | `10,5`/`11,5`/`7,4` | 内边距档位 6×2 / 8×4 / 12×6（工具栏按钮允许组件级 Token） | D2 |
+| W26 | 颜色 | `toolBtn:checked`、`cmdBtn:pressed`、MenuItem | `#eef5ff`/`#94b9e8`/`#185aa6`、`#dfeaf8`、fg `#2f3d52` | Accent `#326F8A` / Hover.Bg `#EEF4F6`（旧蓝系替换） | D2 |
+| W27 | 图标 | `Path.topIcon` StrokeThickness | `1.6` | 线性图标标准笔画 `1.5` | D2 |
+| W28 | 菜单 | 顶层菜单 | 仅「文件/添加」 | 标准结构「文件→编辑→视图→地图→工具→窗口→帮助」只在功能存在时显示；当前功能集下不凑空菜单（合规），D3 复核命名一致性与右键菜单 | D3 |
+
+> 合规项：工具按钮 32×32 ✓；图标 16×16 ✓；无文字图标按钮均带文字标签 ✓（无需 Tooltip 兜底项）。
+
+### 2.5 左侧树 `Left/Left.axaml` + `Left.Styles.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W29 | 字号 | `leftTab` | `15` | 顶层页签 `13` | D3 |
+| W30 | 颜色 | `leftTab:selected` | bg `#edf4ff` / fg `#185aa6` / 边 `#8cb2e2` | Selection.Bg `#E5F0F4` / Accent `#326F8A` | D2 |
+| W31 | 圆角 | `leftTab` / `treeRow` | `5` | 只允许 3/6/10 | D2 |
+| W32 | 图标 | `Path.treeIcon` StrokeThickness | `2.2`（全树图标） | 标准笔画 `1.5` | D2 |
+| W33 | 颜色 | `treeIcon` Stroke | `#2F80C9` | Accent 系 `#326F8A`（或登记对象色） | D2 |
+| W34 | 颜色 | `treeRow.selected` | `#e7f1ff` | Selection.Bg `#E5F0F4` | D2 |
+| W35 | 颜色 | `selectedText` | `#165ca8` | Accent `#326F8A` | D2 |
+| W36 | 其他 | 层级菜单「删除」 | fg `#9b2f2f` | Danger `#A53F43`；危险操作需与普通操作分组 | D2/D5 |
+
+> 合规项：树行 28 ✓；树文本 13 ✓；图标 16×16 ✓；搜索框 24 ✓；重命名内联编辑 ✓。
+
+### 2.6 右侧工作面板 `Right/Right.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W37 | 字号 | `panelTitle` | `15` | Title=16 或 Section=14（不得出现 15） | D2 |
+| W38 | 字号 | `TextBlock.value` | 无 FontSize（落默认 12） | 字段值 Body=13 | D2 |
+| W39 | 高度 | `kvRow` MinHeight | `30` | 只允许 24/28/32 | D2 |
+| W40 | 图标 | `panelIcon` StrokeThickness | `1.6` | 标准笔画 `1.5` | D2 |
+| W41 | 颜色 | `key`/`value`/`panelTitle`/`emptyTitle` | `#6b7688`/`#253247`/`#243149`/`#334155` | Text.Secondary `#5D6F7C` / Text.Primary `#243744` | D2 |
+| W42 | 间距 | `infoPanel` Padding | `10` | 内边距档位 | D2 |
+| W43 | 页签 | `sideTabs`（检查器/地图编辑器/调试） | 无单行溢出/横向滚动/箭头/全部页签入口/管理模式 | 顶层页签强制合同 15 条全部未实现 | D3 |
+| W44 | 布局 | 调试页 Grid 标签列 | `70` | 检查器标签列默认 `96` | D4 |
+
+> 合规项：空选择状态 ✓（图标+标题+说明，单一主入口）；调试页独立滚动 ✓；字段标签 12 ✓。
+
+### 2.7 地图编辑器 `Right/MapEditorPanel.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W45 | 颜色 | `layerSubTab:selected` | fg `#185aa6` / bg `#edf4ff` / 边 `#8cb2e2` | Accent `#326F8A` / Selection.Bg `#E5F0F4` | D2 |
+| W46 | 圆角 | `layerSubTab` | `5` | 只允许 3/6/10 | D2 |
+| W47 | 颜色 | `MapEditError` | `#C0392B` | Error `#B14A4A` | D2 |
+| W48 | 布局 | 地图资产/属性 Grid 标签列 | `90` | 检查器标签列默认 `96` | D4 |
+| W49 | 间距 | `layerSubTab` Padding | `9,4` | 内边距档位 | D2 |
+
+> 合规项：二级页签 14 ✓；字段值 13 ✓；按钮 12 ✓；类型标签 10 ✓；禁用按钮带 Tooltip ✓；错误信息字段附近展示 ✓。
+
+### 2.8 图层面板 `Right/LayerPanel.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W50 | 高度 | `layerTool` MinHeight | `25` | 只允许 24/28/32 | D2 |
+| W51 | 圆角 | `layerSwitch`/`layerLockSwitch`/`activeMark`/`dropLine` | `4`/`4`/`1.5`/`1` | 只允许 3/6/10（装饰标记可登记例外或并入组件 Token） | D2 |
+| W52 | 颜色 | `activeMark` | `#5b8db8` | 需 Token 化（选中语义）或登记例外 | D2 |
+
+> 合规项（D4-F3 合同已落地）：状态热区 26×24 ✓；可见/隐藏/锁定/解锁形态+颜色双表达 ✓；区域/系统类型标签双色+文字 ✓；拖动插入线 2 DIP `#7FA8C6` ✓；行高 32 ✓；图标 14×14 笔画 1.5 ✓；行内操作悬停/选中显示 ✓；拖动事务式（DragDrop.cs）✓。
+
+### 2.9 图层属性 `Right/LayerInspectorPanel.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W53 | 布局 | Grid 标签列 | `70` | 检查器标签列默认 `96` | D4 |
+| W54 | 字号 | `TextBlock.value` | 无 FontSize（落默认 12） | 字段值 Body=13 | D2 |
+
+### 2.10 底部日志 `Foot/Foot.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W55 | 字号 | 空状态标题 | `16` | 需 Token 化（Title=16 语义可映射，不得裸写） | D2 |
+| W56 | 颜色 | `logFilter.selected` | bg `#edf4ff` / fg `#185aa6` | Selection.Bg `#E5F0F4` / Accent `#326F8A` | D2 |
+| W57 | 圆角 | `logSummary`/`logFilter`/日志行 Accent 圆点 | `4`/`4`/`2` | 只允许 3/6/10（圆点可登记组件例外） | D2 |
+| W58 | 颜色 | `logMono`/`logHead`/选中行/RepeatText | `#27354a`/`#64748b`/`#eaf3ff`/`#7a5a19` | 语义色 Token 化（重复计数属 Warning 系） | D2 |
+| W59 | 魔法值 | 日志列宽 `4,72,56,72,92,*,82` | 固定列宽 | 建立组件级 Token 或登记；长文本省略 ✓ | D2/D5 |
+
+> 合规项：日志行 28 ✓；虚拟化 ✓；自动跟随策略已实现（LogAutoScroll）✓；过滤按钮 ✓；搜索框 ✓；优先级通知（ChooseLatest）✓。
+
+### 2.11 日志详情 `Foot/LogDetailPanel.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W60 | 高度 | `detailBody` MinHeight | `42` | 只允许 24/28/32 | D2 |
+| W61 | 圆角 | 详情信息卡 | `5` | 只允许 3/6/10 | D2 |
+| W62 | 颜色 | 详情卡 `#edf4ff` 等 | 旧蓝系 | Selection/信息块语义 Token | D2 |
+
+### 2.12 渲染视口 `Viewport/Vulkan/VulkanViewport.axaml`
+
+| 编号 | 类别 | 位置 | 现值 | 冻结参数 | 归属 |
+|---|---|---|---|---|---|
+| W63 | 颜色 | FallbackLayer（初始化占位） | `#E8EEF5`/`#4A5A70`/`#6B7688` | Token 化（面板/次要文字语义） | D2 |
+| W64 | 间距 | FallbackLayer Padding | `18` | 宽松档 16/24 或登记 | D2 |
+
+> 合规项：视口 1 DIP `#C9D2DC` 浅灰分隔 ✓（F3 合同）；无深色粗框 ✓。
+
+### 2.13 图标资产 `Icons/EditorIcons.axaml`
+
+| 编号 | 类别 | 说明 | 归属 |
+|---|---|---|---|
+| W65 | 笔画统一 | 引用样式笔画 1.5（layerIcon）/1.6（topIcon/panelIcon）/2.2（treeIcon）三套并存 | D2 |
+| W66 | 视觉中心 | 无视觉中心校正证据；需 D2 图标合同测试（几何/视觉中心采样） | D2 |
+
+> 合规项：35 个图标全部线性 StreamGeometry ✓；无 Emoji/Unicode/系统字体符号 ✓；单一来源文件 ✓；24 网格坐标体系一致 ✓；状态图标（可见/隐藏/锁定/解锁）形态+颜色双表达 ✓。
+
+### 2.14 弹窗与状态 code-behind（D5 整改，D0 登记）
+
+| 编号 | 位置 | 现值 | 冻结参数/要求 | 归属 |
+|---|---|---|---|---|
+| W67 | `Win/UiWin.Dialogs.cs` | 错误/警告弹窗底色 `#fdeeee`/`#fff7df`、边框 `#e2aaaa`/`#e7c66d`、文字 `#a43f3f`/`#8a6417` | Error/Warning 语义 Token 化 | D2/D5 |
+| W68 | `Win/UiWin.Dialogs.cs` | 主按钮 `#e9f2ff`/`#94b9e8`/`#185aa6`（旧蓝） | Accent `#326F8A`；弹窗按钮顺序「取消→次要→主要」、危险按钮非默认焦点、Esc 取消 | D5 |
+| W69 | `Win/UiWin.UnsavedDialog.cs` | `#243447`/`#64748b`/`#fbfdff` | 语义 Token 化；丢弃未保存内容必须确认 ✓（已存在） | D2/D5 |
+| W70 | `Vm/Logging/LogEntry.cs` | 级别色 Error `#c75b5b`/Warning `#d89b32`/Info `#4f7fb8`/Debug `#6b7a90`/Trace `#8b96a8` | 状态语义色 Token 化（浅底行首圆点用）或登记为数据可视化允许清单 | D2 |
+| W71 | `Vm/Scene/UiVm.DocumentStatus.cs` | 文档状态三态 × 3 色（未保存 `#fff7df/#e7c66d/#8a6417`、失败 `#fdeeee/#e2aaaa/#a43f3f`、成功 `#eef7f1/#c9e3d0/#1f7a4d`） | Warning/Error/Success 语义 Token 化 | D2 |
+| — | `TreeGuide.cs` | 树引导线 `#C7D7EA` | 进入 D2 允许清单（领域视觉/装饰线）或 Token 化 | D2 |
+
+---
+
+## 三、结构性缺口（非单点违规，需整组能力）
+
+| 编号 | 缺口 | 现状 | 冻结要求 | 归属 |
+|---|---|---|---|---|
+| G01 | 顶层页签溢出管理 | Right sideTabs 与 Left leftTabs 均为普通 TabControl，无横向溢出/箭头/渐隐/全部入口/管理模式 | 15 条强制合同（单行/横向滚动/箭头/渐隐/当前页签可见/一次性提示/全部入口/禁拖动/管理模式/偏好保存） | D3 |
+| G02 | 键盘焦点视觉 | 全仓库无 Focus 样式定义（无 FocusAdorner/焦点边框），焦点态不可辨识 | 焦点框 2 DIP 外偏移 1；不得与选中态混淆；不得被裁切 | D3/D6 |
+| G03 | 检查器响应式双模式 | 检查器字段为 ListBox 渲染（InspectorFields），无「宽=左右、窄=上下」切换逻辑 | 切换阈值 内容宽 <360 DIP 整组切换；标签列 96；字段最小 128 | D4 |
+| G04 | 面板紧凑/折叠 | 无紧凑模式切换、无面板折叠与恢复入口 | 内容宽 <320 进紧凑；折叠次要区/隐藏低优先级面板且保留恢复入口 | D3 |
+| G05 | 空状态体系 | 检查器/日志有局部空状态，无「筛选无结果/权限不足/加载失败」区分 | 完整空状态体系（原因说明 + 单一主入口） | D5 |
+| G06 | 屏幕阅读器/可识别名称 | 未发现 AutomationProperties 使用 | 所有交互控件可识别名称；基础结构 D6 建立，高级项登记待办 | D6 |
+| G07 | 减少动画偏好 | 无动画自定义（FluentTheme 默认），未接入系统 Reduce Motion | 支持系统「减少动画」设置 | D6 |
+| G08 | 菜单结构一致性 | 顶部仅「文件/添加」；上下文菜单（层级树）与顶部菜单命名/分组未统一审计 | 同一功能在菜单/按钮/Tooltip/日志/文档名称一致；右键菜单只放对象相关操作 | D5 |
+
+---
+
+## 四、按整改轮次汇总
+
+| 轮次 | 范围 | 违规项 |
+|---|---|---|
+| D2 | Token 基础设施（颜色/字号/间距/圆角/笔画/阴影语义化） | W01-W14、W17、W22-W27、W30-W35、W37-W42、W45-W47、W49-W52、W54-W58、W60-W66、W67/W69-W71（约 45 项） |
+| D3 | 主窗口/布局/页签/滚动/焦点 | W15、W16、W18-W21、W28、W29、W36（部分）、W43、G01、G02、G04 |
+| D4 | 右侧面板/检查器/图层 | W44、W48、W53、G03 |
+| D5 | 状态/表单/菜单/弹窗/日志 | W36、W59、W68、G05、G08 |
+| D6 | DPI/键盘/性能/全量清零 | 全部剩余项 + G06、G07 + 审计矩阵清零复核 |
+
+> 注：D2 与 D3-D6 存在依赖（先 Token 后整改），违规项按「数值语义化」与「布局改造」双轨归属，实际执行时以轮次计划为准。
+
+---
+
+## 五、合规确认清单（本次审计判为合规的事实）
+
+1. 浅色主题显式声明（`App.axaml` RequestedThemeVariant=Light）✓
+2. 全部尺寸使用 DIP 逻辑单位，无物理像素手工补偿 ✓
+3. 图标全部为线性 StreamGeometry，无 Emoji/Unicode/系统字体符号 ✓
+4. 图层状态（可见/隐藏/锁定/解锁）形态 + 颜色双表达 ✓
+5. 区域/系统类型标签双色 + 文字区分，不依赖单一颜色 ✓
+6. 拖动插入线 2 DIP、事务式拖拽（预览/提交/取消/单历史/Dirty 规则）✓
+7. 日志虚拟化 + 自动跟随 + 优先级通知（错误/警告 > 操作 > 技术日志）✓
+8. 禁用控件提供 Tooltip 或禁用原因说明 ✓（打开地图/保存地图、图层按钮）
+9. 视口贴合 1 DIP 浅灰分隔，无深色粗框 ✓
+10. 弹窗分级确认已存在（危险/未保存对话框 code-behind）✓
+
+---
+
+*文档结束（ARCH-UI-SPEC-R1-D0 输出物之一；整改清零状态以 D6 报告为准）*
