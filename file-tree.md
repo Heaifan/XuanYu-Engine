@@ -5,10 +5,6 @@
 ## 目录树
 
 ```
-├─ "docs/
-│  ├─ \347\216\204\345\237\237\345\274\225\346\223\216_AI\345\274\200\345\217\221\345\256\252\346\263\225.md"
-│  └─ governance/
-│     └─ \347\211\210\346\234\254\345\217\267\350\247\204\350\214\203\344\270\216\345\216\206\345\217\262\346\230\240\345\260\204.md"
 ├─ .gitattributes
 ├─ .gitignore
 ├─ AGENTS.md
@@ -1669,28 +1665,28 @@
 - `XuanYu.World/WorldPartitionMembership.cs` — sealed class WorldPartitionMembership
 - `XuanYu.World/WorldQuery.cs` — Mutation is reserved
 - `XuanYu.World/XuanYu.World.csproj` — （职责待补）
-- `changelog.md` — （职责待补）
-- `docs/CODE_CONSTITUTION.md` — （职责待补）
-- `docs/architecture/ENGINE_ARCHITECTURE.md` — （职责待补）
-- `docs/architecture/world-a-r0-coordinate-contract.md` — （职责待补）
-- `docs/archive/changelog/changelog-2026-05.md` — （职责待补）
-- `docs/archive/changelog/changelog-2026-06.md` — （职责待补）
-- `docs/archive/changelog/changelog-2026-07.md` — （职责待补）
-- `docs/dev-rules.md` — （职责待补）
-- `docs/docs-index.md` — （职责待补）
-- `docs/governance/NAMING_RULES.md` — （职责待补）
-- `docs/governance/debts/arch-ui-spec-debts.md` — （职责待补）
-- `docs/governance/debts/arch-world-debts.md` — （职责待补）
-- `docs/governance/dev-rules-understanding.md` — （职责待补）
-- `docs/governance/diagnostic-safety.md` — （职责待补）
-- `docs/governance/naming-XuanYu-Engine.md` — （职责待补）
+- `changelog.md` — 已发生有效变化日志（版本+日期+验证，月度归档）
+- `docs/CODE_CONSTITUTION.md` — 代码与架构硬规则
+- `docs/architecture/ENGINE_ARCHITECTURE.md` — 引擎总体架构说明
+- `docs/architecture/world-a-r0-coordinate-contract.md` — 官方坐标合同（Z-Up、XY 水平、X×Y=Z）
+- `docs/archive/changelog/changelog-2026-05.md` — 2026-05 changelog 月度归档
+- `docs/archive/changelog/changelog-2026-06.md` — 2026-06 changelog 月度归档
+- `docs/archive/changelog/changelog-2026-07.md` — 2026-07 changelog 月度归档
+- `docs/dev-rules.md` — 开发硬规则执行手册（接手红线清单）
+- `docs/docs-index.md` — docs 目录分类索引（哪类文档在哪里）
+- `docs/governance/NAMING_RULES.md` — 命名与品牌规范
+- `docs/governance/debts/arch-ui-spec-debts.md` — UI 规范受控待办登记（ARCH-UI-SPEC-R1）
+- `docs/governance/debts/arch-world-debts.md` — 架构受控债务登记
+- `docs/governance/dev-rules-understanding.md` — dev-rules 规则动机解释
+- `docs/governance/diagnostic-safety.md` — 诊断日志与 UI 调度安全规范
+- `docs/governance/naming-XuanYu-Engine.md` — 玄域引擎命名与品牌规范
 - `docs/governance/ui-spec.md` — UI 规范 1.0 讨论初稿：全项目 UI 强约束默认标准、三级 Token 体系与受控例外机制（待审订）
-- `"docs/governance/\347\211\210\346\234\254\345\217\267\350\247\204\350\214\203\344\270\216\345\216\206\345\217\262\346\230\240\345\260\204.md"` — （职责待补）
-- `docs/milestones/current/MAP-A/map-contract.md` — （职责待补）
+- `docs/governance/版本号规范与历史映射.md` — 版本格式与历史编号映射
+- `docs/milestones/current/MAP-A/map-contract.md` — MAP-A 地图合同与当前轮验收材料
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 审订工作副本：首批冻结参数与条款审订状态（D1 定稿底稿）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪
-- `"docs/玄域引擎_AI开发宪法.md"` — （职责待补）
+- `docs/玄域引擎_AI开发宪法.md` — 最高长期治理规则（唯一宪法事实源）
 - `file-tree.md` — （职责待补）
 - `run.bat` — （职责待补）
 - `samples/world-c-r1-ten-triangles.xyscene` — （职责待补）
