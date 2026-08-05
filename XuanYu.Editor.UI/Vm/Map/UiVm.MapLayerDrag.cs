@@ -22,7 +22,7 @@ public sealed partial class UiVm
         }
     }
 
-    // Drop 最终提交：一次调用一次会话命令；同位置 No-op 不记录。
+    // Drop 最终提交：一次调用一次会话命令；同位置 No-op（不 Dirty/不增历史/不记录/不改 Footer）。
     public void CommitLayerDrag(string layerIdValue, int targetIndex)
     {
         if (!MapLayerId.TryParse(layerIdValue, out var layerId)) return;
@@ -32,6 +32,7 @@ public sealed partial class UiVm
         var result = MapSession.MoveLayerToRegionIndex(layerId, targetIndex);
         if (!result.IsSuccess) { FailLayerEdit("调整图层顺序", result); return; }
         var after = RegionPositionOf(layerId);
+        if (before == after) return; // No-op：位置未变，静默成功
         LogLayer($"调整图层顺序：{layer.DisplayName} → 第 {after + 1} 位",
             $"LayerId={layer.LayerId.Value}；顺序：{before + 1} → {after + 1}");
         FooterMessage = $"图层已移动：{layer.DisplayName} → 第 {after + 1} 位。";

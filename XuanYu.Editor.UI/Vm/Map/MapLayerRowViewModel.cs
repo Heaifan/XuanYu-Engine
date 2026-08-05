@@ -35,8 +35,18 @@ public sealed class MapLayerRowViewModel : INotifyPropertyChanged
     // F3：区域图层（可拖动、蓝青标签）；系统图层不显示拖动手柄。
     public bool IsRegion => !IsSystem;
 
-    // F3：拖动插入线（2 DIP 低饱和蓝，显示在本行上方）。
-    public bool IsDropBefore { get; internal set; }
+    // F3：拖动插入线（2 DIP 低饱和蓝，显示在本行上方）；通知式属性供绑定实时刷新。
+    bool _isDropBefore;
+    public bool IsDropBefore
+    {
+        get => _isDropBefore;
+        internal set => Set(ref _isDropBefore, value);
+    }
+
+    // 预验收补丁：隐藏/解锁使用独立图标形状（与 IsVisible/IsLocked 同步通知）。
+    public bool IsHidden => !_isVisible;
+
+    public bool IsUnlocked => !_isLocked;
 
     public bool IsActive { get => _isActive; set => Set(ref _isActive, value); }
 
@@ -49,6 +59,7 @@ public sealed class MapLayerRowViewModel : INotifyPropertyChanged
             if (!_owner.SetLayerVisibility(LayerId, value)) return;
             _isVisible = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsHidden));
         }
     }
 
@@ -61,6 +72,7 @@ public sealed class MapLayerRowViewModel : INotifyPropertyChanged
             if (!_owner.SetLayerLock(LayerId, value)) return;
             _isLocked = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsUnlocked));
         }
     }
 

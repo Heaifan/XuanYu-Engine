@@ -20,6 +20,16 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.35-fix
+MAP-A-R2-D4-F3 预验收补丁：图层状态反馈与通知时序修正（2026-08-05，Commit 本轮落库为准）
+- P1 状态图标真实切换：`MapLayerRowViewModel` 增加派生状态 `IsHidden`/`IsUnlocked`（IsVisible/IsLocked 变化时同步通知）；行模板分别显示 VisibleIcon/HiddenIcon、LockedIcon/UnlockedIcon（形状与颜色共同表达状态），保留 F3 配色合同与 26×24 热区。
+- P2 拖动插入线通知：`IsDropBefore` 从无通知自动属性改为 backing field + `Set` 通知；插入线补 `Grid.ColumnSpan="6"` 与 `ZIndex="10"`（整行宽、置顶）；`SetDropTarget(null)` 清理所有行插入线。
+- P3 同位置拖动 No-op：`CommitLayerDrag` 在 `before == after` 时立即返回——不写日志、不改 FooterMessage、不 Dirty、不增历史（会话层本就 No-op，UI 层补齐静默）。
+- P4 通知时序：`EditorLogSummary.ChooseLatest` 由"先扫全部 Error/Warning 再扫 Editor"改为单次逆序扫描（最新一条 Error/Warning/Editor/Project 即返回）——旧警告不再永久霸占底部通知，新操作可取代已处理的旧警告，新警告仍覆盖旧操作；Vulkan/Render Info 在完整日志中按真实时间保留。
+- P5 拖动异步收口：`DragCandidate_PointerMoved` 改 `async void` + `await DragDrop.DoDragDropAsync`，`finally` 中清理插入线（拖动结束才清理，异常不成为未观察任务）；无 Sleep/Timer/fire-and-forget。
+- 验证：全解决方案 Rebuild 0W0E；Core 339/339、World 686/686（+8：A/B/C/D/E/F/G/H）、WarCore 22/22；arch-a-guard PASS；git diff --check PASS。
+- 遗留/下一步：F3 真机补验（F3-A01~A16 + P-A01~P-A06）→ A5 全量复验 → D4 COMPLETE；ARCH-UI-SPEC-R1 立项讨论；D5 区域绘制。
+
 ## v0.2.24.34-fix
 MAP-A-R2-D4-F3 图层视觉、拖动排序与通知收口（2026-08-05，Commit 本轮落库为准）
 - F3-01 状态图标重做：取消强蓝实心底，改为图标本体为主浅色底辅助（可见 #326F8A/#EAF3F7/#BDD5DF、隐藏 #8995A2；锁定 #7A6238/#F4EFE5/#DCCDAE、未锁定 #7B8794）；热区 26×24 DIP、图标 14、圆角 4、独立 ToolTip。

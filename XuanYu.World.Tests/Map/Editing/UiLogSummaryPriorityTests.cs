@@ -60,7 +60,6 @@ public sealed class UiLogSummaryPriorityTests
         var summary = EditorLogSummary.From(entries);
         Assert.Contains("交换链重建", summary.Text);
     }
-
     [Fact]
     public void Lock_then_summary_shows_lock_action()
     {

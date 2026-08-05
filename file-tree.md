@@ -745,8 +745,10 @@
 │  │  │  ├─ MapLayerSessionTests.Drag.History.cs
 │  │  │  ├─ MapLayerSessionTests.Drag.cs
 │  │  │  ├─ MapLayerSessionTests.cs
+│  │  │  ├─ UiLayerStateFeedbackTests.cs
 │  │  │  ├─ UiLayerVisualContractTests.cs
 │  │  │  ├─ UiLogSummaryPriorityTests.cs
+│  │  │  ├─ UiLogSummaryTimingTests.cs
 │  │  │  ├─ UiMapCommandRoutingTests.cs
 │  │  │  ├─ UiMapEditorTests.cs
 │  │  │  ├─ UiMapHistoryTests.cs
@@ -1097,7 +1099,7 @@
 - `XuanYu.Editor.UI/RelayCommand.cs` — sealed class RelayCommand
 - `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml.cs` — MAP-A-R2-D4：图层检查器（名称 Enter/失焦提交；开关/按钮走绑定，无额外逻辑）。
-- `XuanYu.Editor.UI/Right/LayerPanel.DragDrop.cs` — 图层拖动 code-behind（4DIP 阈值/插入线/Drop）
+- `XuanYu.Editor.UI/Right/LayerPanel.DragDrop.cs` — MAP-A-R2-D4-F3：区域图层拖动（code-behind 只处理指针/Drop；手柄按下 ≥4 DIP 启动；仅区域行接受；一次交给 UiVm）。
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml.cs` — MAP-A-R2-D4：图层面板（左侧"图层"页签内容，纯绑定；无 code-behind 逻辑）。
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml` — github.com/avaloniaui"
@@ -1169,7 +1171,7 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.cs` — MAP-A-R2-D3：地图属性入口（唯一数据源 = MapSession；保存/打开按钮禁用防 v1 双权威，D6 恢复）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapHistory.cs` — MAP-A-R2-D3-A1 入口补接：地图撤销/重做（独立历史实例，不触碰场景实体历史）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDiagnostics.cs` — MAP-A-R2-D4/D4-F2：图层操作低频中文日志（复用既有日志总线）。
-- `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDrag.cs` — 图层拖动排序 UI 入口（插入线/一次提交/日志）
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDrag.cs` — MAP-A-R2-D4-F3：区域图层拖动排序（UI 层入口）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerInspector.cs` — MAP-A-R2-D4：图层检查器入口（右侧检查器选中图层时显示）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerSelection.cs` — MAP-A-R2-D4：图层选择状态与列表刷新（选中是 UI 临时状态；内容/活动变化后重建列表）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayers.cs` — MAP-A-R2-D4：图层列表与工具栏命令入口（唯一数据源 = MapSession.CurrentMap）。
@@ -1482,16 +1484,18 @@
 - `XuanYu.World.Tests/Logging/UiMapLogChineseTests.cs` — MAP-A-R2-D3-F2：日志中文化——字段名/状态值中文，内部枚举保持英文。
 - `XuanYu.World.Tests/Logging/UiRootLogRowContractTests.cs` — MAP-A-R2-D3-F4：日志区垂直尺寸自适应源码合同。
 - `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.Behavior.cs` — MAP-A-R2-D4：图层命令会话行为（T02 默认活动图层 + H07～H10、活动转移、No-op）。
-- `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.Drag.History.cs` — 拖动排序会话行为（H04-H06）
-- `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.Drag.cs` — 拖动排序会话命令（H01-H03）
+- `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.Drag.History.cs` — MAP-A-R2-D4-F3：拖动排序会话行为（H04 No-op / H05 失败零污染 / H06 活动图层保持）。
+- `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.Drag.cs` — MAP-A-R2-D4-F3：拖动排序会话命令（H01～H03 单历史节点与 Undo/Redo）。
 - `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.cs` — MAP-A-R2-D4：图层命令接入 MapEditSession（H01～H06 撤销/重做；T02 见 Behavior）。
-- `XuanYu.World.Tests/Map/Editing/UiLayerVisualContractTests.cs` — 图层视觉与字号源码合同（V01-V06）
-- `XuanYu.World.Tests/Map/Editing/UiLogSummaryPriorityTests.cs` — 底部通知优先级（L01-L05）
+- `XuanYu.World.Tests/Map/Editing/UiLayerStateFeedbackTests.cs` — 状态图标消费与插入线反馈合同（A-D/E）
+- `XuanYu.World.Tests/Map/Editing/UiLayerVisualContractTests.cs` — MAP-A-R2-D4-F3：图层视觉合同（V01～V06，源码合同模式）——状态样式/类型标签/热区/字号层级。
+- `XuanYu.World.Tests/Map/Editing/UiLogSummaryPriorityTests.cs` — MAP-A-R2-D4-F3：底部通知优先级（L01/L02/L04/L05）——Error/Warning > Editor 动作 > Render 兜底。
+- `XuanYu.World.Tests/Map/Editing/UiLogSummaryTimingTests.cs` — 通知时序（F/G/H）
 - `XuanYu.World.Tests/Map/Editing/UiMapCommandRoutingTests.cs` — MAP-A-R2-D3-F1：真实按钮链测试（RunCommand.Execute → MapSession）。
 - `XuanYu.World.Tests/Map/Editing/UiMapEditorTests.cs` — MAP-A-R2-D3：地图属性入口——会话恒有默认地图、应用修改、非法输入保护、取景数据源。
 - `XuanYu.World.Tests/Map/Editing/UiMapHistoryTests.cs` — MAP-A-R2-D3-A1 入口补接：地图撤销/重做按钮路由到 MapSession 独立历史。
 - `XuanYu.World.Tests/Map/Editing/UiMapInitialProjectionTests.cs` — MAP-A-R2-D3-A1：默认地图初始快照进入首帧 RenderProjection（无需新建地图）。
-- `XuanYu.World.Tests/Map/Editing/UiMapLayerDragTests.cs` — 图层拖动 UI 入口与通知（U01-U06/L03）
+- `XuanYu.World.Tests/Map/Editing/UiMapLayerDragTests.cs` — MAP-A-R2-D4-F3：区域图层拖动 UI 入口（U01～U06 + L03 通知）。
 - `XuanYu.World.Tests/Map/Editing/UiMapLayerLockLogTests.cs` — MAP-A-R2-D4-F2：图层锁定日志细化（L01～L06）+ 添加立方体单次创建（C01）。
 - `XuanYu.World.Tests/Map/Editing/UiMapLayerPanelTests.Behavior.cs` — MAP-A-R2-D4：图层面板行为——显隐/锁定/删除/排序/活动图层/撤销重做（真实命令链）。
 - `XuanYu.World.Tests/Map/Editing/UiMapLayerPanelTests.cs` — MAP-A-R2-D4：图层面板 ViewModel——默认列表/添加/按钮状态/系统层只读/重命名（真实命令链）。
@@ -1508,7 +1512,7 @@
 - `XuanYu.World.Tests/Map/MapJsonRoundTripTests.cs` — MAP-A-R1-D2：.xymap 严格 JSON Round-trip 与确定性。
 - `XuanYu.World.Tests/Map/MapJsonStrictnessTests.cs` — MAP-A-R1-D2：严格 JSON 拒绝路径（大小写 / 未知字段 / 类型 / 损坏）。
 - `XuanYu.World.Tests/Map/MapLayerRulesTests.cs` — MAP-A-R2-D4：图层操作规则（T05 名称校验、T06 系统层保护、T07/T08 删除保护、T04 自动命名）。
-- `XuanYu.World.Tests/Map/MapLayerStackTests.Drag.cs` — 拖动排序领域合同（T01-T08）
+- `XuanYu.World.Tests/Map/MapLayerStackTests.Drag.cs` — MAP-A-R2-D4-F3：区域图层拖动排序领域合同（T01～T08）。
 - `XuanYu.World.Tests/Map/MapLayerStackTests.Order.cs` — MAP-A-R2-D4：图层顺序边界与状态操作（T10 系统层顺序固定、显隐/锁定/改名保身份）。
 - `XuanYu.World.Tests/Map/MapLayerStackTests.cs` — MAP-A-R2-D4：图层顺序与状态操作（T03/T09 区域层内排序、T11/T12 显隐锁定保身份）。
 - `XuanYu.World.Tests/Map/MapLayerTests.Base.cs` — MAP-A-R2-D4：系统图层合同（地面层恰好一个 Order 0、边界层恰好一个 Order 1、区域层 Order ≥ 2）。
@@ -1670,7 +1674,7 @@
 - `docs/dev-rules.md` — （职责待补）
 - `docs/docs-index.md` — （职责待补）
 - `docs/governance/NAMING_RULES.md` — （职责待补）
-- `docs/governance/debts/arch-ui-spec-debts.md` — ARCH-UI-SPEC-R1 UI 规范待办登记
+- `docs/governance/debts/arch-ui-spec-debts.md` — （职责待补）
 - `docs/governance/debts/arch-world-debts.md` — （职责待补）
 - `docs/governance/dev-rules-understanding.md` — （职责待补）
 - `docs/governance/diagnostic-safety.md` — （职责待补）

@@ -50,11 +50,14 @@
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="local:MapLayerRowViewModel">
           <Grid ColumnDefinitions="3,28,22,*,Auto,28" ColumnSpacing="4" MinHeight="32">
-            <!-- F3：拖动插入线（2 DIP 低饱和蓝，显示在目标行上方） -->
-            <Border Classes="dropLine" IsVisible="{Binding IsDropBefore}" VerticalAlignment="Top" Margin="0,-1,0,0"/>
+            <!-- F3：拖动插入线（2 DIP 低饱和蓝，整行宽，显示在目标行上方） -->
+            <Border Classes="dropLine" Grid.ColumnSpan="6" ZIndex="10" IsVisible="{Binding IsDropBefore}" VerticalAlignment="Top" Margin="0,-1,0,0"/>
             <Border Classes="activeMark" IsVisible="{Binding IsActive}"/>
             <ToggleButton Grid.Column="1" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏">
-              <Path Classes="layerIcon" Data="{StaticResource VisibleIcon}"/>
+              <StackPanel>
+                <Path Classes="layerIcon" Data="{StaticResource VisibleIcon}" IsVisible="{Binding IsVisible}"/>
+                <Path Classes="layerIcon" Data="{StaticResource HiddenIcon}" IsVisible="{Binding IsHidden}"/>
+              </StackPanel>
             </ToggleButton>
             <Path Grid.Column="2" Classes="dragHandle" Data="{StaticResource DragHandleIcon}"
                   IsVisible="{Binding IsRegion}" ToolTip.Tip="拖动排序"
@@ -67,7 +70,10 @@
               <TextBlock Classes="kindTagSystemText" Text="系统"/>
             </Border>
             <ToggleButton Grid.Column="5" Classes="layerLockSwitch" IsChecked="{Binding IsLocked, Mode=TwoWay}" ToolTip.Tip="锁定/解锁">
-              <Path Classes="layerIcon" Data="{StaticResource LockedIcon}"/>
+              <StackPanel>
+                <Path Classes="layerIcon" Data="{StaticResource LockedIcon}" IsVisible="{Binding IsLocked}"/>
+                <Path Classes="layerIcon" Data="{StaticResource UnlockedIcon}" IsVisible="{Binding IsUnlocked}"/>
+              </StackPanel>
             </ToggleButton>
           </Grid>
         </DataTemplate>

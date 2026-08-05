@@ -4,14 +4,12 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using XuanYu.World.Map;
 namespace XuanYu.Editor.UI;
-// MAP-A-R2-D4-F3：区域图层拖动排序（code-behind 只处理指针/Drop，不直接修改领域状态）。
-// 手柄按下 → 移动 ≥4 DIP 启动 DoDragDrop（文本载荷 LayerId）；仅区域行接受 Drop；一次交给 UiVm。
+// MAP-A-R2-D4-F3：区域图层拖动（code-behind 只处理指针/Drop；手柄按下 ≥4 DIP 启动；仅区域行接受；一次交给 UiVm）。
 public partial class LayerPanel
 {
     MapLayerRowViewModel? _dragCandidate;
     PointerPressedEventArgs? _dragPressedArgs;
     Point _dragStart;
-
     void DragHandle_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (sender is not Control { DataContext: MapLayerRowViewModel row } handle || !row.IsRegion) return;
@@ -21,7 +19,7 @@ public partial class LayerPanel
         handle.PointerReleased += DragCandidate_PointerReleased;
         e.Handled = true;
     }
-    void DragCandidate_PointerMoved(object? sender, PointerEventArgs e)
+    async void DragCandidate_PointerMoved(object? sender, PointerEventArgs e)
     {
         if (_dragCandidate is null || _dragPressedArgs is null || sender is not Control handle) return;
         var p = e.GetPosition(handle);
@@ -35,9 +33,15 @@ public partial class LayerPanel
         var data = new DataTransfer();
         data.Add(item);
         _dragCandidate = null;
-        _ = DragDrop.DoDragDropAsync(_dragPressedArgs, data, DragDropEffects.Move);
-        _dragPressedArgs = null;
-        if (DataContext is UiVm vm) vm.SetDropTarget(null);
+        try
+        {
+            await DragDrop.DoDragDropAsync(_dragPressedArgs, data, DragDropEffects.Move);
+        }
+        finally
+        {
+            _dragPressedArgs = null;
+            if (DataContext is UiVm vm) vm.SetDropTarget(null); // 拖动结束才清理插入线
+        }
     }
     void DragCandidate_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
@@ -68,20 +72,14 @@ public partial class LayerPanel
         if (TryGetDragLayerId(e, out var fromId) && TryGetDropTarget(e, out var targetIndex))
             vm.CommitLayerDrag(fromId, targetIndex);
     }
-
     static bool TryGetDragLayerId(DragEventArgs e, out string layerId)
     {
         layerId = "";
         if (e.DataTransfer is not { } data) return false;
         foreach (var item in data.GetItems(DataFormat.Text))
-            if (item.TryGetRaw(DataFormat.Text) is string text && !string.IsNullOrEmpty(text))
-            {
-                layerId = text;
-                return true;
-            }
+            if (item.TryGetRaw(DataFormat.Text) is string text && !string.IsNullOrEmpty(text)) { layerId = text; return true; }
         return false;
     }
-
     // 指针所在行必须是区域图层（系统层/空白不接受）；targetIndex=该区域层位置（插入其前）。
     bool TryGetDropTarget(DragEventArgs e, out int targetIndex)
     {

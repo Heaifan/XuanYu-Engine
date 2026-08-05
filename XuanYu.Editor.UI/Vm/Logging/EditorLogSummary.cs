@@ -18,15 +18,13 @@ public sealed record EditorLogSummary(int ErrorCount, int WarningCount, string L
     static string ChooseLatest(IReadOnlyList<LogEntry> entries)
     {
         if (entries.Count == 0) return "暂无日志";
+        // 单次逆序扫描：最新一条 Error/Warning/Editor/Project 即返回（旧警告不会永久霸占）。
         for (var i = entries.Count - 1; i >= 0; i--)
         {
-            var level = entries[i].Level;
-            if (level is EditorLogLevel.Error or EditorLogLevel.Warning) return entries[i].Message;
-        }
-        for (var i = entries.Count - 1; i >= 0; i--)
-        {
-            var source = entries[i].Source;
-            if (source is EditorLogSource.Editor or EditorLogSource.Project) return entries[i].Message;
+            var entry = entries[i];
+            if (entry.Level is EditorLogLevel.Error or EditorLogLevel.Warning ||
+                entry.Source is EditorLogSource.Editor or EditorLogSource.Project)
+                return entry.Message;
         }
         return entries[^1].Message;
     }
