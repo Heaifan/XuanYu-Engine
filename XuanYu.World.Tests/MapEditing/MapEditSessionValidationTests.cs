@@ -11,7 +11,7 @@ public sealed class MapEditSessionValidationTests
     {
         var map = MapDefaultDefinition.CreateDefault();
         var region = new MapRegion(
-            MapRegionId.New(), map.Layers[1].LayerId, "部署区", MapRegionKind.Deployment,
+            MapRegionId.New(), map.Layers[2].LayerId, "部署区", MapRegionKind.Deployment,
             ImmutableArray.Create(
                 new MapPoint(-100, -100), new MapPoint(100, -100),
                 new MapPoint(100, 100), new MapPoint(-100, 100)));

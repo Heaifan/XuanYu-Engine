@@ -85,5 +85,8 @@
           </DataTemplate></ListBox.ItemTemplate>
       </ListBox>
     </TabItem>
+    <TabItem Classes="leftTab" Header="图层">
+      <local:LayerPanel/>
+    </TabItem>
   </TabControl>
 </UserControl>

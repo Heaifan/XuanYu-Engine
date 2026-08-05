@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.LayerPanel"
+             x:DataType="local:UiVm">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Icons/EditorIcons.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Button.layerTool"><Setter Property="MinHeight" Value="24"/><Setter Property="Padding" Value="6,2"/><Setter Property="FontSize" Value="12"/></Style>
+    <Style Selector="ToggleButton.layerSwitch"><Setter Property="Width" Value="22"/><Setter Property="Height" Value="20"/><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/></Style>
+    <Style Selector="Path.layerIcon"><Setter Property="Width" Value="13"/><Setter Property="Height" Value="13"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="#66758f"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
+    <Style Selector="TextBlock.layerName"><Setter Property="Foreground" Value="#253247"/><Setter Property="FontSize" Value="13"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="Border.kindTag"><Setter Property="Background" Value="#eef1f5"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="4,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.kindTagText"><Setter Property="Foreground" Value="#7a8698"/><Setter Property="FontSize" Value="10"/></Style>
+    <Style Selector="Border.activeMark"><Setter Property="Background" Value="#5b8db8"/><Setter Property="Width" Value="3"/><Setter Property="Margin" Value="0,4"/><Setter Property="CornerRadius" Value="1.5"/><Setter Property="VerticalAlignment" Value="Stretch"/></Style>
+  </UserControl.Styles>
+  <DockPanel>
+    <UniformGrid DockPanel.Dock="Top" Columns="4" Margin="0,8,0,4" ColumnSpacing="4">
+      <Button Classes="layerTool" Content="添加" Command="{Binding RunCommand}" CommandParameter="添加图层" ToolTip.Tip="添加图层"/>
+      <Button Classes="layerTool" Content="上移" Command="{Binding RunCommand}" CommandParameter="上移图层" IsEnabled="{Binding CanMoveLayerUp}"/>
+      <Button Classes="layerTool" Content="下移" Command="{Binding RunCommand}" CommandParameter="下移图层" IsEnabled="{Binding CanMoveLayerDown}"/>
+      <Button Classes="layerTool" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}"/>
+    </UniformGrid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <ListBox ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
+               Background="Transparent" BorderThickness="0" Margin="0,2,0,0">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="local:MapLayerRowViewModel">
+            <Grid ColumnDefinitions="3,26,*,Auto,26" ColumnSpacing="4" MinHeight="30">
+              <Border Classes="activeMark" IsVisible="{Binding IsActive}"/>
+              <ToggleButton Grid.Column="1" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏">
+                <Path Classes="layerIcon" Data="{StaticResource VisibleIcon}"/>
+              </ToggleButton>
+              <TextBlock Grid.Column="2" Classes="layerName" Text="{Binding Name}"/>
+              <Border Grid.Column="3" Classes="kindTag">
+                <TextBlock Classes="kindTagText" Text="{Binding KindTagText}"/>
+              </Border>
+              <ToggleButton Grid.Column="4" Classes="layerSwitch" IsChecked="{Binding IsLocked, Mode=TwoWay}" ToolTip.Tip="锁定/解锁">
+                <Path Classes="layerIcon" Data="{StaticResource LockedIcon}"/>
+              </ToggleButton>
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

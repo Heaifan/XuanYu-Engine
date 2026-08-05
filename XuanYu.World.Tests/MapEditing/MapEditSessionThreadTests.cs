@@ -49,7 +49,7 @@ public sealed class MapEditSessionThreadTests
     public void Selection_blocked_off_write_thread()
     {
         var session = BlockedSession();
-        var layerId = session.CurrentMap.Layers[1].LayerId;
+        var layerId = session.CurrentMap.Layers[2].LayerId;
         Assert.Equal("NotOnWriteThread", session.SelectLayer(layerId).Error!.Value.Code);
         Assert.Equal("NotOnWriteThread", session.SelectMap().Error!.Value.Code);
         Assert.Equal("NotOnWriteThread", session.ClearSelection().Error!.Value.Code);

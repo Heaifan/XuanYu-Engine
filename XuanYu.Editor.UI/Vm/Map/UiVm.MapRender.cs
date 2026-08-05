@@ -18,6 +18,13 @@ public sealed partial class UiVm
         _mapWorld.Load(WorldMapState.From(session.CurrentMap));
         session.ContentChanged += OnMapContentChanged;
         session.HistoryAvailabilityChanged += OnMapHistoryAvailabilityChanged;
+        session.ActiveRegionLayerChanged += OnActiveRegionLayerChanged; // D4：活动图层刷新
+        RefreshLayerItems(); // D4：首次组装图层列表
+    }
+
+    void OnActiveRegionLayerChanged(MapLayerId layerId)
+    {
+        RefreshLayerItems();
     }
 
     void OnMapHistoryAvailabilityChanged(MapHistoryAvailabilityChangedEventArgs e)
@@ -39,5 +46,6 @@ public sealed partial class UiVm
         RefreshLogBindings();
         PublishSceneRenderSnapshot();
         RaiseMapDocumentChanged();
+        RefreshLayerItems(); // D4：地图内容变化后重建图层列表
     }
 }

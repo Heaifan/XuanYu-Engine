@@ -10,7 +10,7 @@ public sealed class MapEditSessionSelectionTests
     {
         var map = MapDefaultDefinition.CreateDefault();
         var region = new MapRegion(
-            MapRegionId.New(), map.Layers[1].LayerId, "部署区", MapRegionKind.Deployment,
+            MapRegionId.New(), map.Layers[2].LayerId, "部署区", MapRegionKind.Deployment,
             ImmutableArray.Create(new MapPoint(-100, -100), new MapPoint(100, -100),
                 new MapPoint(100, 100), new MapPoint(-100, 100)));
         return map with { Regions = [region] };
@@ -20,7 +20,7 @@ public sealed class MapEditSessionSelectionTests
     public void Select_layer_succeeds_and_keeps_id()
     {
         var session = new MapEditSession();
-        var layerId = session.CurrentMap.Layers[1].LayerId;
+        var layerId = session.CurrentMap.Layers[2].LayerId;
         Assert.True(session.SelectLayer(layerId).IsSuccess);
         Assert.Equal(MapSelectionKind.Layer, session.Selection.Kind);
         Assert.Equal(layerId, session.Selection.LayerId);
@@ -55,7 +55,7 @@ public sealed class MapEditSessionSelectionTests
         var stateId = session.CurrentStateId;
         var sequence = session.ChangeSequence;
         var dirty = session.IsDirty;
-        session.SelectLayer(session.CurrentMap.Layers[1].LayerId);
+        session.SelectLayer(session.CurrentMap.Layers[2].LayerId);
         Assert.Same(map, session.CurrentMap);
         Assert.Equal(stateId, session.CurrentStateId);
         Assert.Equal(sequence, session.ChangeSequence);
@@ -88,13 +88,13 @@ public sealed class MapEditSessionSelectionTests
     [Fact]
     public void Normalize_to_map_when_layer_removed()
     {
-        var map = MapDefaultDefinition.CreateDefault();
-        var session = new MapEditSession(map);
-        session.SelectLayer(map.Layers[1].LayerId);
+        var session = new MapEditSession();
+        session.AddRegionLayer();
+        var second = MapLayerStack.RegionLayers(session.CurrentMap.Layers)[0];
+        session.SelectLayer(second.LayerId);
         Assert.Equal(MapSelectionKind.Layer, session.Selection.Kind);
 
-        var noRegionLayer = map with { Layers = [map.Layers[0]] };
-        session.ReplaceCurrentMap(noRegionLayer, markSaved: false, path: null);
+        session.RemoveLayer(second.LayerId);
         Assert.Equal(MapSelectionKind.Map, session.Selection.Kind);
     }
 }

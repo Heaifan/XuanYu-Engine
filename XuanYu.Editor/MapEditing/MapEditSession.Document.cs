@@ -17,6 +17,7 @@ public sealed partial class MapEditSession
         _savedStateId = null;
         _changeSequence++;
         SetSelection(MapSelection.Map);
+        NormalizeActiveLayer();
         RaiseContentChanged(MapEditReason.NewMap);
         RaiseDirtyChanged();
         RaiseHistoryAvailabilityChanged();
@@ -36,6 +37,7 @@ public sealed partial class MapEditSession
         _savedStateId = markSaved ? CurrentStateId : null;
         _changeSequence++;
         SetSelection(MapSelection.Map);
+        NormalizeActiveLayer();
         RaiseContentChanged(MapEditReason.Replace);
         RaiseDirtyChanged();
         RaiseHistoryAvailabilityChanged();

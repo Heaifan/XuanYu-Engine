@@ -1,7 +1,9 @@
 namespace XuanYu.Render.Abstractions;
 
-// R4-R3-R2：实体绘制计划提取，供 Vulkan 与测试共同使用。
-public static class RenderDrawPlan
+// R4-R3-R2：实体绘制计划提取（帧级），供 Vulkan 与测试共同使用。
+// D4：地图地面（MapGround）与边界（MapBounds）分项——地面/边界图层显隐分别过滤绘制项，
+// 隐藏 = 跳过对应绘制项（渲染过滤，不删除领域数据）；网格/原点/轴/Gizmo 不受影响。
+public static partial class RenderDrawPlan
 {
     public const int FillVertexCount = 3;
     public const int OutlineRibbonVertexCount = 18;
@@ -17,38 +19,15 @@ public static class RenderDrawPlan
     public const int WorldAxesVertexCount = 108;
     // D3：地图边界线（四条边细条四边形，CPU 生成），24 顶点。
     public const int MapBoundsVertexCount = MapBoundsGeometryBuilder.VertexCount;
-    public readonly record struct Entry(
-        RenderEntityType EntityType,
-        int VertexCount,
-        bool IsOutline);
+    // D4：地图地面索引数（4 顶点 6 索引，两个三角形）。
+    public const int MapGroundIndexCount = MapSurfaceGeometry.IndexCount;
 
     public readonly record struct FrameEntry(
         RenderDrawKind Kind,
         int VertexCount,
         int EntityIndex = -1,
         RenderEntityType? EntityType = null);
-    public static IReadOnlyList<Entry> GetTypedDrawPlan(
-        IReadOnlyList<RenderEntityProjection> entities)
-    {
-        var plan = new List<Entry>(entities.Count * 2);
-        foreach (var entity in entities)
-        {
-            var fill = FillVertices(entity);
-            var outline = entity.EntityType == RenderEntityType.Cube
-                ? CubeOutlineRibbonVertexCount : OutlineRibbonVertexCount;
-            plan.Add(new Entry(entity.EntityType, fill, false));
-            if (entity.IsSelected && entity.EntityType != RenderEntityType.StaticModel)
-                plan.Add(new Entry(entity.EntityType, outline, true));
-        }
-        return plan;
-    }
-    public static IReadOnlyList<(int VertexCount, bool IsOutline)> GetDrawPlan(
-        IReadOnlyList<RenderEntityProjection> entities)
-    {
-        return GetTypedDrawPlan(entities)
-            .Select(x => (x.VertexCount, x.IsOutline))
-            .ToArray();
-    }
+
     public static IReadOnlyList<FrameEntry> GetFrameDrawPlan(RenderProjection projection)
     {
         var assist = projection.AssistState;
@@ -56,7 +35,11 @@ public static class RenderDrawPlan
         if (assist.ShowEditorBackground) plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
         // F2-R2 顺序（方案 12）：地形 → 网格 → 原点 → 轴 → 实体填充 → 轮廓 → Gizmo。
         // 网格画在地形之上（深度偏移），原点/轴覆盖网格，实体最终遮挡一切。
-        if (projection.HasMap) plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
+        if (projection.HasMap)
+        {
+            if (projection.Map.ShowGround) plan.Add(new FrameEntry(RenderDrawKind.MapGround, MapGroundIndexCount));
+            if (projection.Map.ShowBoundary) plan.Add(new FrameEntry(RenderDrawKind.MapBounds, MapBoundsVertexCount));
+        }
         if (assist.ViewPlaneGrid != EditorViewPlaneGridKind.None)
         {
             // F3-F4：正交标准视图的视图平面网格（±X→YZ / ±Y→XZ），画在地面网格同一层。
@@ -85,16 +68,9 @@ public static class RenderDrawPlan
         plan.Add(new FrameEntry(RenderDrawKind.NavigationGizmo, ReferenceGridVertexCount));
         return plan;
     }
-    static int FillVertices(RenderEntityProjection entity) =>
-        entity.EntityType switch
-        {
-            RenderEntityType.Cube => CubeFillVertexCount,
-            RenderEntityType.StaticModel => 0,
-            _ => FillVertexCount
-        };
 }
 public enum RenderDrawKind
 {
-    EditorBackground, EditorReferenceGrid, WorldOrigin, WorldAxes, MapBounds,
+    EditorBackground, EditorReferenceGrid, WorldOrigin, WorldAxes, MapGround, MapBounds,
     EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo, NavigationGizmo, EditorViewPlaneGrid
 }

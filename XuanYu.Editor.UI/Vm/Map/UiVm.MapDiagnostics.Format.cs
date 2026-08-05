@@ -16,6 +16,12 @@ public sealed partial class UiVm
         MapEditReason.Redo => "重做",
         MapEditReason.Replace => "替换地图",
         MapEditReason.MapPropertiesChanged => "地图属性修改",
+        MapEditReason.LayerAdded => "添加图层",
+        MapEditReason.LayerRemoved => "删除图层",
+        MapEditReason.LayerRenamed => "重命名图层",
+        MapEditReason.LayerMoved => "调整图层顺序",
+        MapEditReason.LayerVisibilityChanged => "图层可见性",
+        MapEditReason.LayerLockChanged => "图层锁定",
         _ => reason.ToString()
     };
 
@@ -36,6 +42,11 @@ public sealed partial class UiVm
         "NoRedoAvailable" => "无重做历史",
         "UnknownLayer" => "未知图层",
         "UnknownRegion" => "未知区域",
+        "SystemLayerProtected" => "系统图层保护",
+        "LayerRemovalRejected" => "删除图层被拒绝",
+        "LayerMoveRejected" => "调整顺序被拒绝",
+        "InvalidLayerName" => "图层名称无效",
+        "NotRegionLayer" => "非区域图层",
         _ => code
     };
 

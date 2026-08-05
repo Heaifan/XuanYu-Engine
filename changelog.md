@@ -20,6 +20,17 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.30-rz
+MAP-A-R2-D4 图层管理与可见性闭环（2026-08-05，Commit 本轮落库为准）
+- 领域（World）：`MapLayerKind` 迁移为 Ground/Boundary/Region（值 0/1/2 不变：Base→Ground 同值、Custom→Boundary 同值，零持久化风险）；新增 `MapLayerRules`（名称校验 1~32 字符禁控制字符、系统层/最后区域层删除保护、区域层排序边界保护、自动命名"区域 N"按最小可用序号）与 `MapLayerStack`（纯函数顺序操作：区域层间交换 Order、系统层顺序固定、显隐/锁定/改名保身份）；`MapLayerValidator` 升级（Ground 恰 1 且 Order 0、Boundary 恰 1 且 Order 1、Region ≥1 且 Order ≥2）；`MapRegionValidator` 区域仅可挂载 Region 图层；默认地图 = 地面/边界/区域 1（区域 1 可见未锁定）。
+- 编辑（Editor）：`MapEditSession` 新增六类图层内容命令（AddRegionLayer/RenameLayer/RemoveLayer/MoveLayerUp/Down/SetLayerVisibility/SetLayerLocked）全部走既有 CommitMapChange 管线（单历史节点、失败零污染、同值 No-op 无历史），MapEditReason 扩展 6 项；活动区域图层为会话临时状态（`ActiveRegionLayerId` + 事件，不 Dirty 不进历史），添加自动设为活动、删除自动转移相邻、内容变化自动规范化到有效区域层（H10）；撤销恢复相同 MapLayerId。
+- 渲染：`MapRenderSnapshot` 增 ShowGround/ShowBoundary（渲染过滤，不删除领域数据）；投影从图层取系统层可见性；`RenderDrawPlan` 拆分 MapGround/MapBounds 两绘制项（主文件拆 partial 控 100 行），隐藏=跳过对应绘制项，网格/原点/轴/Gizmo 不受影响；显隐不进 `MapSurfaceResourceKey`（R06：显隐切换 NoRebuild 不重建 GPU 资源）；Vulkan Draw.cs 按 MapGround/MapBounds 分发。
+- UI：左侧新增"图层"页签（LayerPanel：添加/上移/下移/删除 + 行内可见/锁定开关 + 系统标签 + 活动左标记，路径图标体系）；右侧检查器选中图层显示 LayerInspectorPanel（名称 Enter/失焦提交、类型/可见/锁定/顺序/ID 只读、设为当前图层）；命令路由 5 项（添加/上移/下移/删除图层/设为当前图层）；中文日志 9 类（添加图层：名称=… / 重命名图层：… → … / 图层可见性：…=隐藏 / 图层锁定：…=是 / 调整图层顺序：…，上移 / 设置当前图层：… / 删除图层：… / 图层删除失败：至少保留一个区域图层）。
+- 测试：新增 MapLayerRulesTests/MapLayerStackTests(+Order)/MapLayerSessionTests(+Behavior)/UiMapLayerPanelTests(+Behavior)/MapSurfaceLayerVisibilityTests；更新 MapLayerTests(+Base)/MapRegionTests(+Strictness)/MapDefaultMapTests/MapEditSession* 等默认图层结构断言（区域层索引 2）。
+- 验证：Core 339/339、World 632/632 全 PASS；arch-a-guard PASS（依赖边界+5+100）；全解决方案 build 0 error；git diff --check PASS；无新增 NuGet；无 .xymap schema 改动；Vulkan 生命周期零改动。
+- 遗留：① 区域图层隐藏的消费（D5 绘制区域时读取 IsVisible）；② 锁定状态阻止编辑行为由 D5 接入；③ 图层保存/重新打开归 D6；④ 拖拽排序/混合模式/图层组明确不做。
+- 治理：版本 v0.2.24.29-fix → v0.2.24.30-rz（四处同步）；未创建 Tag/Release。
+
 ## v0.2.24.29-fix
 VK-PERF-R1 空闲渲染帧率与资源占用收敛（2026-08-04 21:13:49，Commit 本轮落库为准）
 - 根因（只读调查 + 线程级采样证实）：`VulkanSwapchainCapabilities.ChoosePresentMode` 默认优先 `MailboxKhr`（无 vsync 上限），`VulkanPresentLoop.RunFrames` 有投影时全速 Acquire→Submit→Present 无帧率限制，`AcquireNextImage` 超时后 `continue` 立即重试形成忙循环——线程级采样显示单线程（Present）4 秒内消耗 3125ms（≈78% 单核当量），UI 线程接近 0；最小化窗口后占用不变（Swapchain 仍被消费）。

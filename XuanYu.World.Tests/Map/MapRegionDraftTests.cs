@@ -30,7 +30,7 @@ public sealed class MapRegionDraftTests
     public void Close_produces_valid_region()
     {
         var layers = MapDefaultDefinition.CreateDefault().Layers;
-        var draft = new MapRegionDraft(layers[1].LayerId, "部署区A",
+        var draft = new MapRegionDraft(layers[2].LayerId, "部署区A",
             MapRegionKind.Deployment, ThreePoints());
         var region = draft.Close(MapRegionId.New());
         var result = MapRegionValidator.Validate(
@@ -42,12 +42,12 @@ public sealed class MapRegionDraftTests
     public void Close_keeps_metadata()
     {
         var layers = MapDefaultDefinition.CreateDefault().Layers;
-        var draft = new MapRegionDraft(layers[1].LayerId, "部署区A",
+        var draft = new MapRegionDraft(layers[2].LayerId, "部署区A",
             MapRegionKind.Deployment, ThreePoints());
         var regionId = MapRegionId.New();
         var region = draft.Close(regionId);
         Assert.Equal(regionId, region.RegionId);
-        Assert.Equal(layers[1].LayerId, region.LayerId);
+        Assert.Equal(layers[2].LayerId, region.LayerId);
         Assert.Equal("部署区A", region.DisplayName);
         Assert.Equal(MapRegionKind.Deployment, region.Kind);
         Assert.Equal(3, region.Vertices.Length);

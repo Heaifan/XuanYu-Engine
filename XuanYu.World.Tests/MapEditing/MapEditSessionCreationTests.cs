@@ -14,7 +14,7 @@ public sealed class MapEditSessionCreationTests
         Assert.Equal(10000.0, map.SizeMeters.Width);
         Assert.Equal(10000.0, map.SizeMeters.Depth);
         Assert.Equal(MapSurfaceKinds.Flat, map.Surface.Kind);
-        Assert.Equal(2, map.Layers.Length);
+        Assert.Equal(3, map.Layers.Length);
         Assert.True(map.Regions.IsEmpty);
     }
 

@@ -14,7 +14,7 @@ public sealed partial class MapRegionTests
             new MapPoint(-100, -100), new MapPoint(100, -100),
             new MapPoint(100, 100), new MapPoint(100, 100), new MapPoint(-100, 100));
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId, duplicated)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId, duplicated)), layers, Map10km);
         Assert.False(result.Succeeded);
         Assert.Equal("AdjacentDuplicateVertex", result.ErrorCode);
     }
@@ -27,7 +27,7 @@ public sealed partial class MapRegionTests
             new MapPoint(-100, -100), new MapPoint(100, -100),
             new MapPoint(100, 100), new MapPoint(-100, 100), new MapPoint(-100, -100));
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId, duplicated)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId, duplicated)), layers, Map10km);
         Assert.False(result.Succeeded);
         Assert.Equal("AdjacentDuplicateVertex", result.ErrorCode);
     }
@@ -39,7 +39,7 @@ public sealed partial class MapRegionTests
         var collinear = ImmutableArray.Create(
             new MapPoint(0, 0), new MapPoint(10, 0), new MapPoint(20, 0));
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId, collinear)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId, collinear)), layers, Map10km);
         Assert.False(result.Succeeded);
         Assert.Equal("ZeroAreaRegion", result.ErrorCode);
     }
@@ -52,7 +52,7 @@ public sealed partial class MapRegionTests
             new MapPoint(0, 0), new MapPoint(10, 0),
             new MapPoint(0, 0), new MapPoint(10, 0));
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId, alternating)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId, alternating)), layers, Map10km);
         Assert.False(result.Succeeded);
         Assert.Equal("TooFewDistinctVertices", result.ErrorCode);
     }
@@ -64,7 +64,7 @@ public sealed partial class MapRegionTests
         var many = Enumerable.Range(0, MapRegionValidator.MaxVerticesPerRegion + 1)
             .Select(i => new MapPoint(i - 512.0, 0.0)).ToImmutableArray();
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId, many)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId, many)), layers, Map10km);
         Assert.False(result.Succeeded);
         Assert.Equal("TooManyRegionVertices", result.ErrorCode);
     }
@@ -76,7 +76,7 @@ public sealed partial class MapRegionTests
         var layers = Layers();
         var bad = ImmutableArray.Create(new MapPoint(x, y), new MapPoint(0, 0), new MapPoint(1, 1));
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId, bad)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId, bad)), layers, Map10km);
         Assert.False(result.Succeeded);
         Assert.Equal("NonFiniteRegionVertex", result.ErrorCode);
     }
@@ -89,7 +89,7 @@ public sealed partial class MapRegionTests
             new MapPoint(-100, -100), new MapPoint(100, -100),
             new MapPoint(6000, 100), new MapPoint(-100, 100));
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId, escaped)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId, escaped)), layers, Map10km);
         Assert.False(result.Succeeded);
         Assert.Equal("RegionVertexOutOfBounds", result.ErrorCode);
     }

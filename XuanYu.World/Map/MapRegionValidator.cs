@@ -2,8 +2,8 @@ using System.Collections.Immutable;
 
 namespace XuanYu.World.Map;
 
-// MAP-A-R2-D1：区域集合严格校验（领域权威层）。
-// 检查：ID 合法且唯一、引用图层存在且可承载区域（非 Base）、名称非空、
+// MAP-A-R2-D1/D4：区域集合严格校验（领域权威层）。
+// 检查：ID 合法且唯一、引用图层存在且可承载区域（仅 Region 层）、名称非空、
 // 至少三个不同顶点、无相邻重复点（含首尾）、顶点数上限、有限数值、边界内、非零面积。
 // 自交检测明确归 D5（绘制轮），不在 F1 范围。
 public static class MapRegionValidator
@@ -24,7 +24,7 @@ public static class MapRegionValidator
             : layers.Select(l => l.LayerId).ToHashSet();
         var carrierIds = layers.IsDefault
             ? new HashSet<MapLayerId>()
-            : layers.Where(l => l.Kind != MapLayerKind.Base)
+            : layers.Where(l => l.Kind == MapLayerKind.Region)
                 .Select(l => l.LayerId).ToHashSet();
         var ids = new HashSet<MapRegionId>();
         foreach (var region in regions)
@@ -38,7 +38,7 @@ public static class MapRegionValidator
             if (!layerIds.Contains(region.LayerId))
                 return MapValidationResult.Fail("UnknownRegionLayer", $"区域引用的图层不存在：{region.RegionId}。");
             if (!carrierIds.Contains(region.LayerId))
-                return MapValidationResult.Fail("RegionOnBaseLayer", $"区域不得挂载到基础地图层：{region.DisplayName}。");
+                return MapValidationResult.Fail("RegionOnBaseLayer", $"区域只能挂载到区域图层：{region.DisplayName}。");
             if (string.IsNullOrWhiteSpace(region.DisplayName))
                 return MapValidationResult.Fail("InvalidRegionName", $"区域名称不能为空：{region.RegionId}。");
 

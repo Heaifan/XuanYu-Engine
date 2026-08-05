@@ -16,7 +16,7 @@ public sealed class MapDefaultMapTests
         Assert.Equal(MapSurfaceKinds.Flat, map.Surface.Kind);
         Assert.True(map.MapId.IsValid);
         Assert.Equal(MapCoordinateSystem.ZUpMeter, map.CoordinateSystem);
-        Assert.Equal(2, map.Layers.Length);
+        Assert.Equal(3, map.Layers.Length);
         Assert.True(map.Regions.IsEmpty);
     }
 

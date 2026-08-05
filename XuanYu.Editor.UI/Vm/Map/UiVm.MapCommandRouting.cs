@@ -42,6 +42,41 @@ public sealed partial class UiVm
             return true;
         }
 
+        if (name == "添加图层")
+        {
+            LogMapCommandReceived(name);
+            AddLayer();
+            return true;
+        }
+
+        if (name == "上移图层")
+        {
+            LogMapCommandReceived(name);
+            MoveLayerUp();
+            return true;
+        }
+
+        if (name == "下移图层")
+        {
+            LogMapCommandReceived(name);
+            MoveLayerDown();
+            return true;
+        }
+
+        if (name == "删除图层")
+        {
+            LogMapCommandReceived(name);
+            DeleteLayer();
+            return true;
+        }
+
+        if (name == "设为当前图层")
+        {
+            LogMapCommandReceived(name);
+            SetActiveLayer();
+            return true;
+        }
+
         return false;
     }
 }

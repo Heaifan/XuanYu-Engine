@@ -9,13 +9,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
 {
     void DrawAssist(CommandBuffer cb, float* scene, RenderDrawPlan.FrameEntry draw)
     {
-        if (draw.Kind == RenderDrawKind.MapBounds)
-        {
-            DrawMapBounds(cb, scene);
-            return;
-        }
-
-        // F2-R2：WorldOrigin / WorldAxes 已改为独立全屏 Pass（Draw.cs 分发），
+        // D4：地图地面/边界已改由 Draw.cs 按 MapGround/MapBounds 分项分发；
         // 此处只处理 EditorBackground（天空）。
         var mode = -10.0f;
         FillScenePushConstants(scene, _renderProjection, Vector3d.Zero,

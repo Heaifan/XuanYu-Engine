@@ -64,7 +64,7 @@ public sealed class WorldMapStateOwnerTests
             new MapSize(4000, 3000),
             MapCoordinateSystem.ZUpMeter,
             new MapSurfaceDefinition(MapSurfaceKinds.GentleHillsV1, 12, 5, 200, 7),
-            [new MapLayer(MapLayerId.New(), "基础地图", 0, MapLayerKind.Base)],
+            [new MapLayer(MapLayerId.New(), "地面", 0, MapLayerKind.Ground)],
             []);
         var state = WorldMapState.From(map);
 

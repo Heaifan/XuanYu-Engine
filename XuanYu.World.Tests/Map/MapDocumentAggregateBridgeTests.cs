@@ -29,9 +29,10 @@ public sealed class MapDocumentAggregateBridgeTests
     {
         var aggregate = MapDocumentAggregateBridge.ToAggregate(Doc());
 
-        Assert.Equal(2, aggregate.Layers.Length);
-        Assert.Equal(MapLayerKind.Base, aggregate.Layers[0].Kind);
-        Assert.Equal(MapLayerKind.Region, aggregate.Layers[1].Kind);
+        Assert.Equal(3, aggregate.Layers.Length);
+        Assert.Equal(MapLayerKind.Ground, aggregate.Layers[0].Kind);
+        Assert.Equal(MapLayerKind.Boundary, aggregate.Layers[1].Kind);
+        Assert.Equal(MapLayerKind.Region, aggregate.Layers[2].Kind);
         Assert.True(aggregate.Regions.IsDefaultOrEmpty);
         Assert.True(MapDefinitionValidator.Validate(aggregate).Succeeded);
     }

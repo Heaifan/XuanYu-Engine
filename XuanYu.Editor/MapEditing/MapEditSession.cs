@@ -22,9 +22,17 @@ public sealed partial class MapEditSession
     {
         _currentMap = initialMap ?? MapDefaultDefinition.CreateDefault();
         _isWriteThread = isWriteThread ?? (() => true);
+        _activeRegionLayerId = FirstRegionLayerId(_currentMap);
     }
 
     public MapDefinition CurrentMap => _currentMap;
+
+    static MapLayerId FirstRegionLayerId(MapDefinition map) =>
+        MapLayerStack.RegionLayers(map.Layers).FirstOrDefault()?.LayerId ?? MapLayerId.New();
+
+    // D4：活动图层（会话临时状态）——显式字段避免构造期触发事件。
+    MapLayerId _activeRegionLayerId;
+    public MapLayerId ActiveRegionLayerId => _activeRegionLayerId;
 
     public long CurrentStateId => _history.CurrentRevision;
 

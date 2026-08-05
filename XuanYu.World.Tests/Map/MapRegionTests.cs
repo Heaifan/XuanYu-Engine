@@ -11,7 +11,7 @@ public sealed partial class MapRegionTests
     {
         var layers = Layers();
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId)), layers, Map10km);
         Assert.True(result.Succeeded);
     }
 
@@ -21,7 +21,7 @@ public sealed partial class MapRegionTests
         var layers = Layers();
         var twoPoints = ImmutableArray.Create(new MapPoint(0, 0), new MapPoint(10, 10));
         var result = MapRegionValidator.Validate(
-            ImmutableArray.Create(Region(layers[1].LayerId, twoPoints)), layers, Map10km);
+            ImmutableArray.Create(Region(layers[2].LayerId, twoPoints)), layers, Map10km);
         Assert.False(result.Succeeded);
         Assert.Equal("TooFewRegionVertices", result.ErrorCode);
     }
@@ -50,7 +50,7 @@ public sealed partial class MapRegionTests
     public void Duplicate_region_id_rejected()
     {
         var layers = Layers();
-        var region = Region(layers[1].LayerId);
+        var region = Region(layers[2].LayerId);
         var duplicated = region with { DisplayName = "另一个区域" };
         var result = MapRegionValidator.Validate(
             ImmutableArray.Create(region, duplicated), layers, Map10km);
@@ -62,7 +62,7 @@ public sealed partial class MapRegionTests
     public void Invalid_region_id_rejected()
     {
         var layers = Layers();
-        var region = Region(layers[1].LayerId) with { RegionId = default };
+        var region = Region(layers[2].LayerId) with { RegionId = default };
         var result = MapRegionValidator.Validate(
             ImmutableArray.Create(region), layers, Map10km);
         Assert.False(result.Succeeded);
@@ -73,7 +73,7 @@ public sealed partial class MapRegionTests
     public void Unknown_region_kind_rejected()
     {
         var layers = Layers();
-        var unknown = Region(layers[1].LayerId) with { Kind = (MapRegionKind)99 };
+        var unknown = Region(layers[2].LayerId) with { Kind = (MapRegionKind)99 };
         var result = MapRegionValidator.Validate(
             ImmutableArray.Create(unknown), layers, Map10km);
         Assert.False(result.Succeeded);

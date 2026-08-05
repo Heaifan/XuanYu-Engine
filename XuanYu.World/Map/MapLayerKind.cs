@@ -1,11 +1,12 @@
 namespace XuanYu.World.Map;
 
-// MAP-A-R2-D1-F1：图层角色（稳定标识，不依赖中文名称识别）。
-// Base=基础地图层（唯一、Order 必须 0、不可删除、不可承载区域）；
-// Region=区域层（承载区域）；Custom=自定义层（承载区域）。
+// MAP-A-R2-D4：图层角色（稳定标识，不依赖中文名称识别）。
+// Ground=地面层（固定 1 个、Order 0、不可删除/重命名/排序、不承载区域）；
+// Boundary=边界层（固定 1 个、Order 1、系统层、不承载区域）；
+// Region=区域层（至少 1 个，可添加/删除/重命名/排序，承载区域）。
 public enum MapLayerKind
 {
-    Base = 0,
-    Region = 1,
-    Custom = 2
+    Ground = 0,
+    Boundary = 1,
+    Region = 2
 }

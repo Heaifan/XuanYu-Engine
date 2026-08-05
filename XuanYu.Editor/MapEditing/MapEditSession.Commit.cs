@@ -32,6 +32,7 @@ public sealed partial class MapEditSession
         _currentMap = map;
         _changeSequence++;
         NormalizeSelection();
+        NormalizeActiveLayer(); // D4：活动图层失效时回退第一个区域图层
         RaiseContentChanged(reason);
         RaiseDirtyChanged();
         RaiseHistoryAvailabilityChanged();

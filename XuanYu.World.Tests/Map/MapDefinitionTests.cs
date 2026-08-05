@@ -64,7 +64,7 @@ public sealed class MapDefinitionTests
         var collinear = ImmutableArray.Create(
             new MapPoint(0, 0), new MapPoint(10, 0), new MapPoint(20, 0));
         var region = new MapRegion(
-            MapRegionId.New(), map.Layers[1].LayerId, "坏区域",
+            MapRegionId.New(), map.Layers[2].LayerId, "坏区域",
             MapRegionKind.Generic, collinear);
         var result = MapDefinitionValidator.Validate(map with { Regions = [region] });
         Assert.False(result.Succeeded);

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.LayerInspectorPanel"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <Style Selector="Border.infoPanel"><Setter Property="Background" Value="#f7faff"/><Setter Property="BorderBrush" Value="#dce6f3"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="6"/><Setter Property="Padding" Value="10"/></Style>
+    <Style Selector="TextBlock.key"><Setter Property="Foreground" Value="#6b7688"/><Setter Property="FontSize" Value="12"/></Style>
+    <Style Selector="TextBlock.value"><Setter Property="Foreground" Value="#253247"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
+  </UserControl.Styles>
+  <Border Classes="infoPanel">
+    <StackPanel Spacing="6">
+      <TextBlock Text="图层信息" Classes="section"/>
+      <Grid ColumnDefinitions="70,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
+        <TextBlock Text="名称" Classes="key" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="1" Text="{Binding LayerInspectorNameText, Mode=TwoWay}"
+                 IsReadOnly="{Binding LayerInspectorIsSystem}"
+                 LostFocus="NameBox_LostFocus" KeyDown="NameBox_KeyDown"/>
+        <TextBlock Grid.Row="1" Text="类型" Classes="key"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding LayerInspectorKindText}" Classes="value"/>
+        <TextBlock Grid.Row="2" Text="可见" Classes="key" VerticalAlignment="Center"/>
+        <ToggleButton Grid.Row="2" Grid.Column="1" Content="显示" HorizontalAlignment="Left"
+                      IsChecked="{Binding LayerInspectorVisible, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="3" Text="锁定" Classes="key" VerticalAlignment="Center"/>
+        <ToggleButton Grid.Row="3" Grid.Column="1" Content="锁定" HorizontalAlignment="Left"
+                      IsChecked="{Binding LayerInspectorLocked, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="4" Text="显示顺序" Classes="key"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding LayerInspectorOrderText}" Classes="value"/>
+        <TextBlock Grid.Row="5" Text="图层 ID" Classes="key"/>
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding LayerInspectorIdText}" Classes="value"/>
+      </Grid>
+      <Button Content="设为当前图层" Command="{Binding RunCommand}" CommandParameter="设为当前图层"
+              HorizontalAlignment="Left" IsVisible="{Binding LayerInspectorIsRegion}"/>
+    </StackPanel>
+  </Border>
+</UserControl>

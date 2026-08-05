@@ -72,7 +72,7 @@ public sealed class MapEditSessionMapPropertiesTests
     public void Shrinking_over_region_rejected_without_crop_or_move()
     {
         var session = Session();
-        var region = new MapRegion(MapRegionId.New(), session.CurrentMap.Layers[1].LayerId,
+        var region = new MapRegion(MapRegionId.New(), session.CurrentMap.Layers[2].LayerId,
             "主区域", MapRegionKind.Generic,
             [new MapPoint(-3000, 0), new MapPoint(3000, 0), new MapPoint(0, 3000)]);
         session.ReplaceCurrentMap(session.CurrentMap with { Regions = [region] }, markSaved: false, path: null);
