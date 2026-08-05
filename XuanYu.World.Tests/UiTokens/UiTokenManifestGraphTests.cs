@@ -29,8 +29,8 @@ public sealed class UiTokenManifestGraphTests
     public void Application_merges_token_aggregate_exactly_once()
     {
         var ui = File.ReadAllText(Path.Combine(RepoRoot, "XuanYu.Editor.UI", "Ui.axaml"));
-        Assert.Equal(1, System.Text.RegularExpressions.Regex.Matches(
-            ui, @"ResourceInclude Source=""avares://XuanYu.Editor.UI/Design/UiTokens.axaml""").Count);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(
+            ui, @"ResourceInclude Source=""avares://XuanYu.Editor.UI/Design/UiTokens.axaml"""));
     }
 
     [Fact]
