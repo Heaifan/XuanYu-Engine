@@ -14,10 +14,10 @@
 - **当前追踪**：
   - 旧 UI 审计矩阵：违规 W01～W71、结构性缺口 G01～G08（清零属 D6）；
   - 真机基线：已知问题 K01～K07（整改轮复验）；
-  - **Token 基础设施（D2 已建）**：`XuanYu.Editor.UI/Design/`（UiTokens.Fonts / Colors.Core / Colors.Components / Spacing / Controls / Icons / Motion + UiTokens 聚合入口，8 文件）；**唯一机器事实源 `Design/UiTokenManifest.json`**（112 条，含 SpecStatus），XAML 由 `scripts/generate-ui-tokens.py` 确定性生成（生成文件禁手改）；
-  - **自动化门禁（D2-F1 已建）**：Token 合同测试（Manifest↔XAML 双向）+ 源码违规分析器 + 旧债务细粒度基线（`XuanYu.World.Tests/UiTokens/`，225 条指纹：路径+稳定定位 Locator+规则类型+属性+值+允许次数，映射审计矩阵 W 编号）；分析器允许字号/圆角/高度/笔画从 Manifest 读取；
-  - 旧债务基线规则：已知债务允许（细粒度定位）、新增债务（含删除原位置后异位/异选择器/异 x:Name/异属性新增同值）使正式测试失败、债务减少允许、基线不自动增长（增加基线项必须独立治理批准）；D6 清零后切换零容忍；
-  - **待规范审订（SpecStatus=PendingReview，15 条）**：Motion.HoverMs/ExpandMs（规范仅区间 80～120/120～160）、Layer.Kind.* 6 色、Layer.State.* 6 色、Layer.DropLine（规范 §12.2 仅交互规则无色值）——不得由执行 AI 自行冻结数值；
+  - **Token 基础设施（D2 已建）**：`XuanYu.Editor.UI/Design/`（UiTokens.Fonts / Colors.Core / Colors.Components / Spacing / Controls / Icons / Motion + UiTokens 聚合入口，8 文件）；**唯一机器事实源 `Design/UiTokenManifest.json`**（112 条，**D2-F2 起全部 Frozen / 0 PendingReview**，含 §12.2.1 图层 Token 与 §15.3 动效默认 Token 的用户正式裁决值），XAML 由 `scripts/generate-ui-tokens.py` 确定性生成（生成文件禁手改）；
+  - **自动化门禁（D2-F2 已建）**：Token 合同测试（Manifest↔XAML 双向）+ 源码违规分析器（AXAML 父链定位 v3 + cs 八类颜色写法）+ 旧债务细粒度基线（`XuanYu.World.Tests/UiTokens/`，**230 条指纹**：路径+稳定定位 Locator+规则类型+真实属性名+值+允许次数，**Unknown=0**，映射审计矩阵 W 编号）；分析器允许字号/圆角/高度/笔画从 Manifest 读取；
+  - 旧债务基线规则：已知债务允许（父链细粒度定位）、新增债务（含同 Style 属性换位/匿名控件换位/父级换位）使正式测试失败、债务减少允许、基线不自动增长（增加基线项必须独立治理批准）；D6 清零后切换零容忍；
+  - **允许清单（按路径+规则类型+API 模式+原因登记）**：TreeGuide.cs Render（树引导线渲染色 ALLOW-RENDER）、Win32ViewportHost.cs（Win32 样式常量非颜色 ALLOW-WIN32）；
   - 下一步：D3 主窗口/顶层页签/滚动治理（D2 完成待用户复核）；
   - 治理完成前暂停新增 UI 功能（编辑器、游戏 UI、地图功能面板、工具面板）；
   - 未经用户批准不得创建受控例外。

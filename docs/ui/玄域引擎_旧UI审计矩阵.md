@@ -242,22 +242,23 @@
 
 ---
 
-## 六、验证方式标注（ARCH-UI-SPEC-R1-D2 补充；D2-F1 细化）
+## 六、验证方式标注（ARCH-UI-SPEC-R1-D2 补充；D2-F1 细化；D2-F2 最终）
 
-每项 W/G/K 的验证方式如下；D2-F1 已建立细粒度自动门禁（`XuanYu.World.Tests/UiTokens/`），D3~D6 按轮次将自动项清零。
+每项 W/G/K 的验证方式如下；D2-F2 已建立最终自动门禁（`XuanYu.World.Tests/UiTokens/`），D3~D6 按轮次将自动项清零。
 
-### 6.1 自动门禁（已接入正式测试，225 条细粒度基线指纹）
+### 6.1 自动门禁（已接入正式测试，230 条稳定定位基线指纹，Unknown=0）
 
-违规值已登记**稳定定位基线**（相对路径 + 稳定定位 + 规则类型 + 属性 + 规范化值 + 允许次数）：
+违规值已登记**稳定定位基线**（相对路径 + 稳定定位 + 规则类型 + 真实属性名 + 规范化值 + 允许次数）：
 
-- AXAML 稳定定位优先级：Style Selector → x:Name → 元素类型（如 `Style:Window`、`Name:MyPanel`、`Elm:Border`）；
-- code-behind 稳定定位：完整类型名 + 方法/属性/字段名（如 `UiWin.ShowErrorAsync`、`LogEntry.Accent`）；
-- 匹配 Path + Locator + Kind + Property + Value 全部参与——删除旧债务后异位/异选择器/异 x:Name/异属性新增同值均使测试失败；注释漂移不改变基线；基线不自动增长。
+- AXAML 稳定定位（父链 v3）：Setter → `Style:<Selector>`；命名元素 → `Name:<x:Name>`；匿名元素 → `Path:<最近命名祖先|ROOT>/<父类型链>/<类型>:<同父序号>`（如 `Path:Name:LogList/ListBox/DataTemplate/Grid/Border:1`）；
+- code-behind 稳定定位：完整类型名 + 方法/属性/字段名（补齐 async/无修饰符/const 字段/显式接口实现），**Locator=Unknown 条目 = 0**；
+- 颜色违规记录真实属性名（Background/Foreground/BorderBrush/Fill/Stroke/Color 等），不再统一记 `Color`；
+- 匹配 Path + Locator + Kind + Property + Value 全部参与——同 Style 属性换位（Foreground→Background→BorderBrush）、匿名同类型控件换位、不同父级同类型换位均使测试失败；空白/注释/无关属性变化不造成漂移；基线不自动增长。
 
 | 规则类型 | 覆盖 W 项 | 基线数量 |
 |---|---|---|
-| AXAML 十六进制色值（HexColor） | W02/W05/W08/W10/W11/W14/W17/W21/W22/W26/W30/W33/W34/W35/W36/W41/W45/W47/W51/W52/W53/W56/W58/W61/W62/W63/W71-GEN | 124 |
-| code-behind 色值（CsHexColor） | W67/W69/W70/W71/W71-ALLOW | 36 |
+| AXAML 十六进制色值（HexColor，真实属性名） | W02/W05/W08/W10/W11/W14/W17/W21/W22/W26/W30/W33/W34/W35/W36/W41/W45/W47/W51/W52/W53/W56/W58/W61/W62/W63/W71-GEN | 124 |
+| code-behind 色值（CsHexColor：Hex/Colors/ColorAPI/Brush/Uint 五类写法） | W67/W69/W70/W71/W71-ALLOW + ALLOW-RENDER/ALLOW-WIN32 | 41 |
 | 字号（FontSize） | W29/W37 等（按 Locator 细分） | 19 |
 | 圆角（CornerRadius） | W10/W22/W31/W46/W51/W57/W61 等 | 27 |
 | 控件高度（ControlHeight） | W09/W12/W50/W60 等（保留真实属性名 Height/MinHeight） | 14 |
@@ -275,14 +276,13 @@
 - 颜色对比度与状态辨识（W 色值类自动拦截 + 真机判断可读性）；
 - 页签/滚动/拖拽行为（自动化结构合同测试 + 真机手感）。
 
-### 6.4 待规范审订项（SpecStatus=PendingReview，15 条，D2-F1 核查）
+### 6.4 允许清单（按路径+规则类型+API 模式+原因登记，D2-F2）
 
-以下 Token 的键与类型已入 Manifest 并通过双向合同，但**具体数值在正式规范中只有区间/方向，未冻结**——数值冻结已停止，等待规范审订裁决，不得由实施 AI 自选：
+- `TreeGuide.cs` Render：`#C7D7EA` / `Color.Parse` / `new SolidColorBrush` —— 树引导线渲染（D4 允许清单组件，色值 = `Tree.Guide` Token）；
+- `Win32ViewportHost.cs`：`0x` 常量 —— Win32 窗口样式宏（WS_CHILD 等），非颜色；
+- 禁止整文件/整目录/整扩展名放行。
 
-- `Motion.HoverMs` / `Motion.ExpandMs`（规范 §15.3 仅区间 80～120 / 120～160 ms）；
-- `Layer.Kind.Region.*`（3）、`Layer.Kind.System.*`（3）、`Layer.State.*`（6）、`Layer.DropLine`（规范 §12.2 仅交互规则，无色值）。
-
-> 说明：W 编号为主关联项，具体色值归属以审计矩阵第二节明细为准；基线数据由脚本按分析器同逻辑自动生成自真实 UI 源码现状值（D2-F1），整改时同步删除对应条目。
+> 说明：W 编号为主关联项，具体色值归属以审计矩阵第二节明细为准；基线数据由脚本按分析器同逻辑自动生成自真实 UI 源码现状值（D2-F2，父链定位 v3 + cs 八类规则），整改时同步删除对应条目。
 
 ---
 

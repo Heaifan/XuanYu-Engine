@@ -43,6 +43,16 @@ ARCH-UI-SPEC-R1-D2：Token 基础设施与自动化门禁（2026-08-05，Commit 
 - 验证：全解决方案串行 Build 0W0E；Core 339/339、World 719/719（含 UiTokens 33 项）、WarCore 22/22，合计 1080/1080 PASS；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS。
 - 事实表述（修正后）：Token 门禁已实现"已知债务允许（细粒度定位）、任何新增债务（含换位）失败"；112/112 键、类型、值与 Manifest 一致（Manifest 为唯一机器事实源）；15 条组件值待规范审订，未声称全部与规范数值一致；W01～W71 未清零。
 
+### D2-F2 缺失参数冻结与门禁最终加固（2026-08-05，Commit 本轮落库为准；同版本不升版）
+- 用户复核裁定 D2-F1 仍 BLOCKED 四项：① 15 个 PendingReview Token 在运行时生效（数值未冻结却已加载）；② AXAML 指纹末级仅元素类型（匿名控件可换位）+ 颜色属性统一记 Color（Foreground/Background 不可区分）+ 2 个 code-behind Unknown；③ code-behind 只扫 hex 字符串（Colors.*/FromRgb/FromArgb/SolidColorBrush/0x 常量未覆盖）；④ 首次 Build 出现 1 个 Warning 后复跑消除且未定位来源。
+- **15 项缺失参数由用户正式裁决并写入 UI Spec 1.0**：新增 §12.2.1 图层组件 Token 表（Layer.Kind.Region/System 6 色、Layer.State 6 色、Layer.DropLine）与 §15.3 动效默认 Token（Motion.HoverMs=100 / ExpandMs=140）；其中两项修正执行 AI 旧值：`Layer.Kind.System.Text` #687582→**#5D6F7C**（对比度 4.64:1）、`Layer.DropLine` #7FA8C6→**#5B8DB8**（选中背景对比约 3.04:1）；变更历史登记"用户 D2-F2 缺失参数补充裁决"。Manifest 全部冻结：**112 Frozen / 0 PendingReview**，生成器重新生成 XAML（幂等验证通过，全部 ≤100 行）。
+- **AXAML 稳定定位升级 v3（父链定位）**：匿名元素 Locator = `Path:<最近命名祖先|ROOT>/<父类型链>/<类型>:<同父序号>`（如 `Path:Name:LogList/ListBox/DataTemplate/Grid/Border:1`）；颜色违规记录真实属性名（Background/Foreground/BorderBrush/Fill/Stroke/Color 等）；**基线 Unknown Locator = 0**（cs 成员正则补齐 async/无修饰符/const 字段/显式接口实现）。新增 7 项反例：同 Style Foreground→Background FAIL、Background→BorderBrush FAIL、匿名 Border/TextBlock 换位 FAIL、不同父级同类型换位 FAIL、空白/注释/无关属性变化 PASS。基线重生成 **230 条**（父链定位 v3）。
+- **code-behind 八类颜色写法全覆盖**：`#RRGGBB`/`#AARRGGBB`、`Colors.*`、`Color.FromRgb/FromArgb/Parse`、`new SolidColorBrush`、`0xRRGGBB`/`0xAARRGGBB` 常量——每种至少一个 FAIL 样例（含 const 字段 Locator）；递归扫描全部 UI .cs 维持。允许清单按"路径+规则类型+API 模式+原因"登记：TreeGuide.cs Render（树引导线渲染色，ALLOW-RENDER）、Win32ViewportHost.cs（Win32 样式常量非颜色，ALLOW-WIN32）；渲染/宿主代码不误报。
+- **上一轮 Warning 追溯**：D2-F1 首次 Build 的完整 stdout/stderr 未落盘（仅冒烟日志），**无法追溯警告来源；流程不合规（正式 build 输出必须落盘）——如实登记**。本轮首次正式 Build 一次性执行并完整落盘 stdout/stderr/返回码。
+- 验证：全解决方案串行 Build 首次执行 0W0E（落盘 d2f2-build.log）；Core 339/339、World 739/739（含 UiTokens 53 项）、WarCore 22/22，合计 1100/1100 PASS；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS。
+- 事实表述（D2-F2 修正后）：UI Spec 1.0 已正式冻结全部 112 个 Token；Manifest 112 Frozen / 0 PendingReview；112/112 键、类型、值一致；Locator 无 Unknown；同值在属性/匿名控件/父级之间换位均失败；全部 UI code-behind 颜色构造被覆盖；W01～W71 未清零。
+- 治理：TODO 同步纪律经用户明确授权写入宪法第十九条与三个技能（xuanyu-engine-dev / xuanyu-engine-development / xuan-yu-engine-development）；宪法变更记录授权来源。
+
 ## v0.2.24.38-rz
 ARCH-UI-SPEC-R1-D1：正式规范冻结（2026-08-05，Commit 本轮落库为准）
 - `docs/ui/玄域引擎_UI规范_1.0.md` 由 WORKING DRAFT 转为**正式规范（UI Spec 1.0，唯一 UI 规范事实源）**，24 节结构：身份与适用范围、条款分级、字体字号（回退链/字号表/字重/行高）、颜色背景（四级背景/语义色/日志色/文档状态色）、间距尺寸圆角、控件高度与热区、窗口阈值、图标、边框阴影焦点、页签菜单弹窗、表单错误、树列表拖拽、日志加载空状态、键盘可访问、DPI 性能、游戏 UI 边界、Token 层级命名、自动化矩阵、允许清单、受控例外、变更流程、真机验收、版本历史、文档关系。

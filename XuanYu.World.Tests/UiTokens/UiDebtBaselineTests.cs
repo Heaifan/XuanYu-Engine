@@ -34,7 +34,7 @@ public sealed class UiDebtBaselineTests
             var rel = Path.GetRelativePath(RepoRoot, f).Replace('\\', '/');
             AssertBaseline(UiSourceContractAnalyzer.AnalyzeCs(File.ReadAllText(f), rel), over);
         }
-        Assert.Empty(over);
+        Assert.True(over.Count == 0, "超基线项:\n" + string.Join("\n", over.Take(60)));
     }
 
     private static void AssertBaseline(IEnumerable<UiViolation> violations, List<string> over)

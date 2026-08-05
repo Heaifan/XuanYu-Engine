@@ -1,5 +1,6 @@
-// 旧 UI 债务基线（字号/圆角/高度/阴影/笔画，D2-F1 重生成）。
-// 基线=审计矩阵 W01~W71 的自动化子集快照（D2-F1 重生成，含稳定定位 Locator，注释已剥离）。
+// 旧 UI 债务基线（字号/圆角/高度/阴影/笔画，D2-F2 重生成）。
+// 基线=审计矩阵 W01~W71 的自动化子集快照（D2-F2 重生成：父链定位 v3 + 真实属性名 + cs 八类规则，Unknown=0）。
+// ALLOW-* = 正式允许清单（渲染/宿主/领域色，按路径+规则+API 模式+原因登记）。
 namespace XuanYu.World.Tests.UiTokens;
 
 internal static partial class UiDebtBaseline
@@ -10,12 +11,12 @@ internal static partial class UiDebtBaseline
         list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:Button.logFilter", UiRuleKind.CornerRadius, "CornerRadius", "4"));
         list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:TextBlock.logHead", UiRuleKind.FontSize, "FontSize", "12"));
         list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:ListBox.logList ListBoxItem", UiRuleKind.ControlHeight, "MinHeight", "28"));
-        list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Elm:Border", UiRuleKind.CornerRadius, "CornerRadius", "6"));
-        list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Elm:Border", UiRuleKind.CornerRadius, "CornerRadius", "2"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/Foot.axaml", "Elm:TextBlock", UiRuleKind.FontSize, "FontSize", "16"));
+        list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:ROOT/UserControl/Grid/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "6"));
+        list.Add(new("W57", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:Name:LogList/ListBox/DataTemplate/Grid/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "2"));
+        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:ROOT/UserControl/Grid/Border/Grid/Grid/Grid/StackPanel/TextBlock:1", UiRuleKind.FontSize, "FontSize", "16"));
         list.Add(new("W71-GEN", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBlock.detailLabel", UiRuleKind.FontSize, "FontSize", "12"));
         list.Add(new("W60", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBox.detailBody", UiRuleKind.ControlHeight, "MinHeight", "42"));
-        list.Add(new("W61", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Elm:Border", UiRuleKind.CornerRadius, "CornerRadius", "5"));
+        list.Add(new("W61", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Path:ROOT/UserControl/Border/Grid/Grid/ScrollViewer/StackPanel/Border:1", UiRuleKind.CornerRadius, "CornerRadius", "5"));
         list.Add(new("W29", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:TabItem.leftTab", UiRuleKind.FontSize, "FontSize", "15"));
         list.Add(new("W71-GEN", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:TabItem.leftTab", UiRuleKind.ControlHeight, "MinHeight", "28"));
         list.Add(new("W31", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:TabItem.leftTab", UiRuleKind.CornerRadius, "CornerRadius", "5"));

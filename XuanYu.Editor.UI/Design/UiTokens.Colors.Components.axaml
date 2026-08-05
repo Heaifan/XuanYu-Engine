@@ -12,13 +12,13 @@
   <SolidColorBrush x:Key="DocStatus.WarningBg" Color="#fff7df"/>
   <SolidColorBrush x:Key="DocStatus.WarningBorder" Color="#e7c66d"/>
   <SolidColorBrush x:Key="DocStatus.WarningText" Color="#8a6417"/>
-  <SolidColorBrush x:Key="Layer.DropLine" Color="#7FA8C6"/>
+  <SolidColorBrush x:Key="Layer.DropLine" Color="#5B8DB8"/>
   <SolidColorBrush x:Key="Layer.Kind.Region.Bg" Color="#E8F3F6"/>
   <SolidColorBrush x:Key="Layer.Kind.Region.Border" Color="#B9D7DE"/>
   <SolidColorBrush x:Key="Layer.Kind.Region.Text" Color="#326B7B"/>
   <SolidColorBrush x:Key="Layer.Kind.System.Bg" Color="#F0F2F4"/>
   <SolidColorBrush x:Key="Layer.Kind.System.Border" Color="#D5DBE0"/>
-  <SolidColorBrush x:Key="Layer.Kind.System.Text" Color="#687582"/>
+  <SolidColorBrush x:Key="Layer.Kind.System.Text" Color="#5D6F7C"/>
   <SolidColorBrush x:Key="Layer.State.Hidden" Color="#8995A2"/>
   <SolidColorBrush x:Key="Layer.State.Locked" Color="#7A6238"/>
   <SolidColorBrush x:Key="Layer.State.LockedBg" Color="#F4EFE5"/>

@@ -473,11 +473,11 @@
     {
       "Key": "Layer.DropLine",
       "Type": "Color",
-      "Value": "#7FA8C6",
+      "Value": "#5B8DB8",
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "拖动插入线色",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.Kind.Region.Bg",
@@ -486,7 +486,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "区域类型标签",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.Kind.Region.Border",
@@ -495,7 +495,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "区域类型标签",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.Kind.Region.Text",
@@ -504,7 +504,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "区域类型标签",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.Kind.System.Bg",
@@ -513,7 +513,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "系统类型标签",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.Kind.System.Border",
@@ -522,16 +522,16 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "系统类型标签",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.Kind.System.Text",
       "Type": "Color",
-      "Value": "#687582",
+      "Value": "#5D6F7C",
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "系统类型标签",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.State.Hidden",
@@ -540,7 +540,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "图层状态图标",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.State.Locked",
@@ -549,7 +549,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "图层状态图标",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.State.LockedBg",
@@ -558,7 +558,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "图层状态背景",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.State.Unlocked",
@@ -567,7 +567,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "图层状态图标",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.State.Visible",
@@ -576,7 +576,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "图层状态图标",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Layer.State.VisibleBg",
@@ -585,7 +585,7 @@
       "Category": "Colors.Components",
       "SpecSection": "§12.2",
       "Purpose": "图层状态背景",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Log.Accent.Debug",
@@ -999,7 +999,7 @@
       "Category": "Motion",
       "SpecSection": "§15.3",
       "Purpose": "展开折叠动效",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     },
     {
       "Key": "Motion.HoverMs",
@@ -1008,7 +1008,7 @@
       "Category": "Motion",
       "SpecSection": "§15.3",
       "Purpose": "悬停选中动效",
-      "SpecStatus": "PendingReview"
+      "SpecStatus": "Frozen"
     }
   ]
 }

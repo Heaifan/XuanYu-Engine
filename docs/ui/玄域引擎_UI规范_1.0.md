@@ -449,6 +449,29 @@ Microsoft YaHei UI → Segoe UI → Noto Sans CJK SC → 系统无衬线字体
 - 锁定、未锁定、显示、隐藏必须形态不同（图标形态 + 颜色双表达）；
 - 选中行使用浅色背景（`Color.Selection.Bg`），状态图标保持足够对比（锁/眼睛图标深色可辨识，不得在深色实心框中降低可见度）。
 
+### 12.2.1 图层组件 Token 表（D2-F2 用户正式裁决冻结）
+
+| Token | 值 | 用途 |
+|---|---|---|
+| `Layer.Kind.Region.Bg` | `#E8F3F6` | 区域类型标签底色 |
+| `Layer.Kind.Region.Border` | `#B9D7DE` | 区域类型标签边框 |
+| `Layer.Kind.Region.Text` | `#326B7B` | 区域类型标签文字 |
+| `Layer.Kind.System.Bg` | `#F0F2F4` | 系统类型标签底色 |
+| `Layer.Kind.System.Border` | `#D5DBE0` | 系统类型标签边框 |
+| `Layer.Kind.System.Text` | `#5D6F7C` | 系统类型标签文字（在 `#F0F2F4` 上约 4.64:1，满足 10～11 DIP 标签可读性） |
+| `Layer.State.Visible` | `#326F8A` | 可见状态图标 |
+| `Layer.State.Hidden` | `#8995A2` | 隐藏状态图标 |
+| `Layer.State.Locked` | `#7A6238` | 锁定状态图标 |
+| `Layer.State.Unlocked` | `#7B8794` | 未锁定状态图标 |
+| `Layer.State.VisibleBg` | `#EAF3F7` | 可见状态浅色辅助背景 |
+| `Layer.State.LockedBg` | `#F4EFE5` | 锁定状态浅色辅助背景 |
+| `Layer.DropLine` | `#5B8DB8` | 拖动插入线（2 DIP；在普通/选中/悬停背景上对比 ≥3:1，约 3.04:1） |
+
+规则：
+
+- 系统与用户图层必须通过文字和形态双重表达，不得只依赖颜色；
+- 插入线为 2 DIP，必须在普通、选中和悬停背景上保持清晰。
+
 ## 12.3 图层拖动（必须，事务式）
 
 1. 操作开始时保存原状态；
@@ -526,8 +549,11 @@ Microsoft YaHei UI → Segoe UI → Noto Sans CJK SC → 系统无衬线字体
 
 | 场景 | 时长 |
 |---|---|
-| 悬停、选中 | `80～120 ms` |
-| 展开、折叠 | `120～160 ms` |
+| 悬停、选中 | `80～120 ms`（默认 Token `Motion.HoverMs = 100`） |
+| 展开、折叠 | `120～160 ms`（默认 Token `Motion.ExpandMs = 140`） |
+
+- `Motion.HoverMs = 100`、`Motion.ExpandMs = 140` 为规范区间内的**全局默认 Token**（D2-F2 用户正式裁决冻结）；
+- 专业组件如需使用区间内其他时长，必须走受控组件 Token 或受控例外，不得在页面直接写数字；
 
 - 拖动、缩放、面板调整、视口交互、滚动、Gizmo 操作必须直接跟手，不得加入迟滞动画；
 - 动效只用于解释状态变化，不用于装饰；
@@ -705,6 +731,7 @@ Microsoft YaHei UI → Segoe UI → Noto Sans CJK SC → 系统无衬线字体
 | 版本 | 日期 | 变更 |
 |---|---|---|
 | UI Spec 1.0 | 2026-08-05 | 正式冻结：由讨论初稿（45 项决策）审订；D1 完成 16 项审订事项裁决；建立 Token 体系、允许清单、受控例外与变更流程 |
+| UI Spec 1.0（D2-F2 补充） | 2026-08-05 | **用户缺失参数补充裁决**：D1 冻结遗漏 15 项参数，由用户在 D2-F2 直接裁决——新增 §12.2.1 图层组件 Token 表（13 项）与 §15.3 动效默认 Token（2 项），其中 `Layer.Kind.System.Text` 由执行 AI 旧值 `#687582` 调整为 `#5D6F7C`（对比度 4.64:1）、`Layer.DropLine` 由 `#7FA8C6` 调整为 `#5B8DB8`（选中背景对比约 3.04:1）；全部 112 个 Token 正式冻结（Frozen=112，PendingReview=0） |
 
 版本变更只允许通过第 21 节流程进行。
 

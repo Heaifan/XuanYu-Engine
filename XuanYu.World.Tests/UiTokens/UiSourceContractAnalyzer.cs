@@ -36,7 +36,7 @@ public static partial class UiSourceContractAnalyzer
         RegexOptions.Compiled);
     private static readonly Regex ClassRx = new(@"(?:class|record)\s+([A-Za-z_]\w*)", RegexOptions.Compiled); // 类型上下文
     private static readonly Regex MemberRx = new(
-        @"^\s*(?:(?:public|private|internal|protected)\s+[\w<>\[\],\s\?\.]+\s+[A-Za-z_]\w*\s*(=|\(|=>|\{)|(?:[\w<>\[\],\s]+)\s+[\w.]+\.[A-Za-z_]\w*\s*\()",
+        @"^\s*(?:(?:async\s+)?(?:public|private|internal|protected)\s+[\w<>\[\],\s\?\.]+\s+[A-Za-z_]\w*\s*(?:=|\(|=>|\{)|(?:[\w<>\[\],\s]+)\s+[\w.]+\.[A-Za-z_]\w*\s*\(|(?:async\s+)?(?!if|for|while|foreach|switch|using|return|catch|lock|await|var|yield|const)[\w<>\[\],\s\?\.]+\s+[A-Za-z_]\w*\s*\(|^\s*const\s+[\w<>\[\],\s\?\.]+\s+[A-Za-z_]\w*\s*=)",
         RegexOptions.Compiled);
     private static readonly Regex ExplicitMemberRx = new(@"\.([A-Za-z_]\w*)\s*\(", RegexOptions.Compiled);
     private static readonly Regex PlainMemberRx = new(@"\b[A-Za-z_]\w*\s*(?:=|\(|=>|\{)", RegexOptions.Compiled);
@@ -52,34 +52,6 @@ public static partial class UiSourceContractAnalyzer
             list.Add(new ManifestEntry(el.GetProperty("Key").GetString() ?? "",
                 el.GetProperty("Type").GetString() ?? "", el.GetProperty("Value").GetString() ?? ""));
         return list;
-    }
-
-    public static List<UiViolation> AnalyzeCs(string text, string relPath)
-    {
-        var result = new List<UiViolation>();
-        text = StripCsComments(text);
-        string type = "", member = ""; // 成员上下文：类型名.成员名
-        foreach (var line in text.Split('\n'))
-        {
-            var cm = ClassRx.Match(line);
-            if (cm.Success)
-            {
-                type = cm.Groups[1].Value;
-                member = "";
-            }
-            else if (MemberRx.IsMatch(line))
-            {
-                var em = ExplicitMemberRx.Match(line);
-                if (em.Success)
-                    member = em.Groups[1].Value;
-                else
-                    member = PlainMemberRx.Match(line).Value.TrimEnd('=', '(', '>', '{', ' ').Trim();
-            }
-            foreach (Match m in Regex.Matches(line, @"#[0-9A-Fa-f]{6,8}\b"))
-                result.Add(new(relPath, $"{type}.{(string.IsNullOrEmpty(member) ? "Unknown" : member)}",
-                    UiRuleKind.CsHexColor, "Color", m.Value));
-        }
-        return result;
     }
 
     public static bool IsSymbolText(string s) => SymbolRx.IsMatch(s);

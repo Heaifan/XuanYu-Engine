@@ -877,16 +877,19 @@
 │  │  ├─ UiTreeGuideTests.cs
 │  │  └─ UiTreeToggleTests.cs
 │  ├─ UiTokens/
+│  │  ├─ UiCsColorRulesTests.cs
 │  │  ├─ UiDebtBaseline.Colors.Axaml1.cs
 │  │  ├─ UiDebtBaseline.Colors.Axaml2.cs
 │  │  ├─ UiDebtBaseline.Colors.Cs.cs
 │  │  ├─ UiDebtBaseline.Typography.cs
 │  │  ├─ UiDebtBaseline.cs
+│  │  ├─ UiDebtBaselineBypassF2Tests.cs
 │  │  ├─ UiDebtBaselineBypassTests.cs
 │  │  ├─ UiDebtBaselineTests.cs
+│  │  ├─ UiSourceContractAnalyzer.CsRules.cs
 │  │  ├─ UiSourceContractAnalyzer.Icon.cs
 │  │  ├─ UiSourceContractAnalyzer.Inline.cs
-│  │  ├─ UiSourceContractAnalyzer.Rules.cs
+│  │  ├─ UiSourceContractAnalyzer.Structure.cs
 │  │  ├─ UiSourceContractAnalyzer.cs
 │  │  ├─ UiSourceContractAnalyzerTests.cs
 │  │  ├─ UiTokenManifestGraphTests.cs
@@ -1641,12 +1644,15 @@
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml2.cs` — 旧 UI 债务基线（AXAML 色值 2/2，D2 自动生成）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Cs.cs` — 旧 UI 债务基线（code-behind 视觉源色值，D2 自动生成）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Typography.cs` — 旧 UI 债务基线（字号/圆角/高度/阴影/笔画，D2 自动生成）
-- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.cs` — 旧 UI 债务基线匹配逻辑（225 条指纹：路径+Locator+规则+属性+值+允许次数）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.cs` — 旧 UI 债务基线匹配逻辑（230 条指纹：路径+Locator+规则+属性+值+允许次数）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — 基线门禁：真实扫描（递归 axaml+cs）vs 225 条细粒度基线
 - `XuanYu.World.Tests/UiTokens/UiDebtBaselineBypassTests.cs` — 基线绕过反例 10 项（换位/换选择器/换 x:Name/换属性/注释漂移/增长禁止）
 - `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.cs` — UI 源码违规分析器（允许值从 UiTokenManifest.json 读取；cs 递归分析；D2-F1）
-- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.Rules.cs` — 分析器 AXAML 规则入口（属性违规归类，D2-F1）
-- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.Inline.cs` — 分析器 AXAML 规则（Style 块/内联元素 + Locator 提取，D2-F1）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.Inline.cs` — 分析器 AXAML 规则入口（Style 块/内联元素，D2-F2）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.Structure.cs` — 分析器 AXAML 结构索引（父链定位 v3：命名祖先/父类型链/同父序号，D2-F2）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.CsRules.cs` — 分析器 code-behind 八类颜色写法规则（Hex/Colors/ColorAPI/Brush/Uint，D2-F2）
+- `XuanYu.World.Tests/UiTokens/UiCsColorRulesTests.cs` — code-behind 八类颜色写法正反例（每种 FAIL 样例 + 注释/无颜色 PASS，D2-F2）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaselineBypassF2Tests.cs` — AXAML 属性/位置换位反例（同 Style 属性换位/匿名控件换位/父级换位，D2-F2）
 - `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.Icon.cs` — 分析器图标位置 Emoji/Unicode 与 Design 外 Token 声明规则（D2-F1）
 - `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzerTests.cs` — 门禁自验证正反例（合法引用/未登记值/Emoji 正反例/Design 外 Token/cs 构造，D2-F1）
 - `XuanYu.World.Tests/UiTokens/UiTokenManifestTests.cs` — Token 合同测试（Manifest↔XAML 双向 112/112 键类型值，D2-F1）
