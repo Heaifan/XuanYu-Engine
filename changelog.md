@@ -20,6 +20,12 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.36-rz
+UI 规范 1.0 讨论初稿落库（2026-08-05，Commit 本轮落库为准）
+- 新增 `docs/governance/ui-spec.md`：ARCH-UI-SPEC-R1 讨论汇总初稿（45 项关键决策）落库，覆盖规范定位与例外机制、三级 Token 体系、颜色/文字/间距/布局、页签/图标/反馈/表单/键盘/拖拽/菜单/弹窗/空状态/高密度组件/DPI/动效、游戏 UI 边界、执行闭环、当前局部基线（MAP-A-R2-D4-F3）与待补充项；状态待审订，Token 数值/测试矩阵/整改计划未冻结（不得由实施 AI 自行决定）。
+- `docs-index.md` 登记新文档；`file-tree.md` 目录树与职责索引同步。
+- 治理：版本 v0.2.24.35-fix → v0.2.24.36-rz（四处同步）；未创建 Tag/Release。
+
 ## v0.2.24.35-fix
 MAP-A-R2-D4-F3 预验收补丁：图层状态反馈与通知时序修正（2026-08-05，Commit 本轮落库为准）
 - P1 状态图标真实切换：`MapLayerRowViewModel` 增加派生状态 `IsHidden`/`IsUnlocked`（IsVisible/IsLocked 变化时同步通知）；行模板分别显示 VisibleIcon/HiddenIcon、LockedIcon/UnlockedIcon（形状与颜色共同表达状态），保留 F3 配色合同与 26×24 热区。

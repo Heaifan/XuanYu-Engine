@@ -898,7 +898,8 @@
 │  │  │  └─ arch-world-debts.md
 │  │  ├─ dev-rules-understanding.md
 │  │  ├─ diagnostic-safety.md
-│  │  └─ naming-XuanYu-Engine.md
+│  │  ├─ naming-XuanYu-Engine.md
+│  │  └─ ui-spec.md
 │  └─ milestones/
 │     └─ current/
 │        └─ MAP-A/
@@ -1679,6 +1680,7 @@
 - `docs/governance/dev-rules-understanding.md` — （职责待补）
 - `docs/governance/diagnostic-safety.md` — （职责待补）
 - `docs/governance/naming-XuanYu-Engine.md` — （职责待补）
+- `docs/governance/ui-spec.md` — UI 规范 1.0 讨论初稿：全项目 UI 强约束默认标准、三级 Token 体系与受控例外机制（待审订）
 - `"docs/governance/\347\211\210\346\234\254\345\217\267\350\247\204\350\214\203\344\270\216\345\216\206\345\217\262\346\230\240\345\260\204.md"` — （职责待补）
 - `docs/milestones/current/MAP-A/map-contract.md` — （职责待补）
 - `"docs/\347\216\204\345\237\237\345\274\225\346\223\216_AI\345\274\200\345\217\221\345\256\252\346\263\225.md"` — （职责待补）
