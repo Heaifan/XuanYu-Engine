@@ -20,6 +20,18 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.31-rz
+MAP-A-R2-D4-F1 图层 UI 归位：迁入右侧地图编辑器二级导航（2026-08-05，Commit 本轮落库为准）
+- 撤回 D4 左侧"图层"页签（信息架构修正）：`MapLayer` 属于地图资产，不是项目资源/场景层级/全局功能，不应与"项目、层级"并列；左侧全局导航恢复仅"项目 | 层级"。
+- `MapEditorPanel` 内部新增二级导航（地图 / 图层 / 环境）："地图"= 地图资产+地图属性（原内容），"图层"= 图层列表+图层属性，"环境"= 环境占位；每页独立 ScrollViewer 整页滚动（禁止内容穿透固定标题、禁止嵌套滚动）。
+- `LayerPanel`（git mv Left/ → Right/）去掉内层 ScrollViewer，列表全量展示由页面滚动接管；`LayerInspectorPanel` 精简为"图层属性"（名称/类型/顺序/图层 ID/设为当前图层；可见/锁定开关保留在列表行内），与图层列表同页位于下方。
+- 右侧全局"检查器"移除图层面板嵌入，`IsEmptySelection` 恢复为 `!HasSelection`（图层选中不再送到全局检查器）。
+- 领域/命令/撤销重做/显隐渲染逻辑零改动（沿用 D4 实现）。
+- 测试：新增 `UiMapLayoutContractTests` 4 项（左侧仅项目/层级且无图层页签、地图编辑器含地图/图层/环境三页、图层 UI 位于地图编辑器图层页、全局检查器无图层面板），源码合同模式防回归。
+- 验证：Core 339/339、World 636/636 全 PASS；arch-a-guard PASS（依赖边界+5+100）；全解决方案 build 0 error；git diff --check PASS；无新增 NuGet；无 .xymap schema 改动。
+- 遗留：真机 A5 复验（图层页签位置、滚动、穿透）。
+- 治理：版本 v0.2.24.30-rz → v0.2.24.31-rz（四处同步）；未创建 Tag/Release。
+
 ## v0.2.24.30-rz
 MAP-A-R2-D4 图层管理与可见性闭环（2026-08-05，Commit 本轮落库为准）
 - 领域（World）：`MapLayerKind` 迁移为 Ground/Boundary/Region（值 0/1/2 不变：Base→Ground 同值、Custom→Boundary 同值，零持久化风险）；新增 `MapLayerRules`（名称校验 1~32 字符禁控制字符、系统层/最后区域层删除保护、区域层排序边界保护、自动命名"区域 N"按最小可用序号）与 `MapLayerStack`（纯函数顺序操作：区域层间交换 Order、系统层顺序固定、显隐/锁定/改名保身份）；`MapLayerValidator` 升级（Ground 恰 1 且 Order 0、Boundary 恰 1 且 Order 1、Region ≥1 且 Order ≥2）；`MapRegionValidator` 区域仅可挂载 Region 图层；默认地图 = 地面/边界/区域 1（区域 1 可见未锁定）。

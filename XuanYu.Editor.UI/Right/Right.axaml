@@ -38,8 +38,6 @@
                      BorderThickness="0"/>
           </StackPanel>
         </Border>
-        <!-- D4：选中图层时显示图层检查器 -->
-        <local:LayerInspectorPanel IsVisible="{Binding HasLayerSelection}"/>
         <Grid IsVisible="{Binding IsEmptySelection}" MinHeight="220">
           <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" MaxWidth="220">
             <Path Classes="panelIcon" Data="{StaticResource SelectIcon}" Width="28" Height="28"/>

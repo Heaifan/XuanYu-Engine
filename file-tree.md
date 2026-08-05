@@ -146,7 +146,7 @@ XuanYuEngine/
 │   │   ├── Map
 │   │   │   ├── MapRenderDrawPlanTests.cs：MapRenderDrawPlanTests.cs
 │   │   │   ├── MapSurfaceGeometryTests.cs：MapSurfaceGeometryTests.cs
-│   │   │   ├── MapSurfaceLayerVisibilityTests.cs：图层显隐不触发资源重建测试
+│   │   │   ├── MapSurfaceLayerVisibilityTests.cs：MapSurfaceLayerVisibilityTests.cs
 │   │   │   ├── MapSurfaceResourceKeyTests.cs：MapSurfaceResourceKeyTests.cs
 │   │   │   ├── MapSurfaceResourceUpdatePolicyTests.cs：MapSurfaceResourceUpdatePolicyTests.cs
 │   │   ├── NavigationGizmo
@@ -234,12 +234,12 @@ XuanYuEngine/
 │   ├── MapEditing
 │   │   ├── MapEditEvents.cs：MapEditEvents.cs
 │   │   ├── MapEditReason.cs：MapEditReason.cs
-│   │   ├── MapEditSession.ActiveLayer.cs：地图编辑会话活动区域图层状态与规范化 partial
+│   │   ├── MapEditSession.ActiveLayer.cs：MapEditSession.ActiveLayer.cs
 │   │   ├── MapEditSession.Commands.cs：MapEditSession.Commands.cs
 │   │   ├── MapEditSession.Commit.cs：MapEditSession.Commit.cs
 │   │   ├── MapEditSession.Document.cs：MapEditSession.Document.cs
 │   │   ├── MapEditSession.History.cs：MapEditSession.History.cs
-│   │   ├── MapEditSession.Layers.cs：地图编辑会话图层内容修改命令 partial
+│   │   ├── MapEditSession.Layers.cs：MapEditSession.Layers.cs
 │   │   ├── MapEditSession.Selection.cs：MapEditSession.Selection.cs
 │   │   ├── MapEditSession.cs：MapEditSession.cs
 │   │   ├── MapHistoryEntry.cs：MapHistoryEntry.cs
@@ -309,8 +309,6 @@ XuanYuEngine/
 │   │   ├── EditorIcons.axaml：EditorIcons.axaml
 │   ├── Left
 │   │   ├── InlineRenameActivation.cs：InlineRenameActivation.cs
-│   │   ├── LayerPanel.axaml：左侧图层面板（工具栏+图层列表）
-│   │   ├── LayerPanel.axaml.cs：图层面板代码后置（无逻辑）
 │   │   ├── Left.EntityCommands.cs：Left.EntityCommands.cs
 │   │   ├── Left.Styles.axaml：Left.Styles.axaml
 │   │   ├── Left.axaml：Left.axaml
@@ -319,8 +317,10 @@ XuanYuEngine/
 │   │   ├── Main.axaml：Main.axaml
 │   │   ├── Main.axaml.cs：Main.axaml.cs
 │   ├── Right
-│   │   ├── LayerInspectorPanel.axaml：右侧图层检查器面板
-│   │   ├── LayerInspectorPanel.axaml.cs：图层检查器名称提交代码后置
+│   │   ├── LayerInspectorPanel.axaml：LayerInspectorPanel.axaml
+│   │   ├── LayerInspectorPanel.axaml.cs：LayerInspectorPanel.axaml.cs
+│   │   ├── LayerPanel.axaml：图层面板（工具栏+图层列表，位于地图编辑器图层页）
+│   │   ├── LayerPanel.axaml.cs：图层面板代码后置（无逻辑）
 │   │   ├── MapEditorPanel.axaml：MapEditorPanel.axaml
 │   │   ├── MapEditorPanel.axaml.cs：MapEditorPanel.axaml.cs
 │   │   ├── Right.axaml：Right.axaml
@@ -388,17 +388,17 @@ XuanYuEngine/
 │   │   │   ├── UiText.cs：UiText.cs
 │   │   │   ├── UiVm.Logging.cs：UiVm.Logging.cs
 │   │   ├── Map
-│   │   │   ├── MapLayerRowViewModel.cs：图层行显示模型（行内开关转发会话命令）
+│   │   │   ├── MapLayerRowViewModel.cs：MapLayerRowViewModel.cs
 │   │   │   ├── MapRenderSnapshotProjection.cs：MapRenderSnapshotProjection.cs
 │   │   │   ├── UiVm.MapCommandRouting.cs：UiVm.MapCommandRouting.cs
 │   │   │   ├── UiVm.MapDiagnostics.Format.cs：UiVm.MapDiagnostics.Format.cs
 │   │   │   ├── UiVm.MapDiagnostics.cs：UiVm.MapDiagnostics.cs
 │   │   │   ├── UiVm.MapEditor.cs：UiVm.MapEditor.cs
 │   │   │   ├── UiVm.MapHistory.cs：UiVm.MapHistory.cs
-│   │   │   ├── UiVm.MapLayerDiagnostics.cs：图层操作低频中文日志 partial
-│   │   │   ├── UiVm.MapLayerInspector.cs：图层检查器属性与重命名提交 partial
-│   │   │   ├── UiVm.MapLayerSelection.cs：图层选择状态/按钮启用/列表刷新 partial
-│   │   │   ├── UiVm.MapLayers.cs：图层面板列表与工具栏命令入口 partial
+│   │   │   ├── UiVm.MapLayerDiagnostics.cs：UiVm.MapLayerDiagnostics.cs
+│   │   │   ├── UiVm.MapLayerInspector.cs：UiVm.MapLayerInspector.cs
+│   │   │   ├── UiVm.MapLayerSelection.cs：UiVm.MapLayerSelection.cs
+│   │   │   ├── UiVm.MapLayers.cs：UiVm.MapLayers.cs
 │   │   │   ├── UiVm.MapRender.cs：UiVm.MapRender.cs
 │   │   │   ├── UiVm.MapWorld.cs：UiVm.MapWorld.cs
 │   │   ├── Scene
@@ -640,8 +640,8 @@ XuanYuEngine/
 │   │   ├── MapLayer.cs：MapLayer.cs
 │   │   ├── MapLayerId.cs：MapLayerId.cs
 │   │   ├── MapLayerKind.cs：MapLayerKind.cs
-│   │   ├── MapLayerRules.cs：图层操作规则（名称校验/删除保护/排序保护/自动命名）
-│   │   ├── MapLayerStack.cs：图层顺序与领域操作纯函数（区域层内排序/系统层固定）
+│   │   ├── MapLayerRules.cs：MapLayerRules.cs
+│   │   ├── MapLayerStack.cs：MapLayerStack.cs
 │   │   ├── MapLayerValidator.cs：MapLayerValidator.cs
 │   │   ├── MapRegion.cs：MapRegion.cs
 │   │   ├── MapRegionDraft.cs：MapRegionDraft.cs
@@ -729,14 +729,15 @@ XuanYuEngine/
 │   │   ├── UiRootLogRowContractTests.cs：UiRootLogRowContractTests.cs
 │   ├── Map
 │   │   └── Editing
-│   │   ├── MapLayerSessionTests.Behavior.cs：图层命令会话行为测试 partial
-│   │   ├── MapLayerSessionTests.cs：图层命令撤销/重做会话测试
+│   │   ├── MapLayerSessionTests.Behavior.cs：MapLayerSessionTests.Behavior.cs
+│   │   ├── MapLayerSessionTests.cs：MapLayerSessionTests.cs
 │   │   ├── UiMapCommandRoutingTests.cs：UiMapCommandRoutingTests.cs
 │   │   ├── UiMapEditorTests.cs：UiMapEditorTests.cs
 │   │   ├── UiMapHistoryTests.cs：UiMapHistoryTests.cs
 │   │   ├── UiMapInitialProjectionTests.cs：UiMapInitialProjectionTests.cs
-│   │   ├── UiMapLayerPanelTests.Behavior.cs：图层面板行为测试 partial
-│   │   ├── UiMapLayerPanelTests.cs：图层面板 ViewModel 测试
+│   │   ├── UiMapLayerPanelTests.Behavior.cs：UiMapLayerPanelTests.Behavior.cs
+│   │   ├── UiMapLayerPanelTests.cs：UiMapLayerPanelTests.cs
+│   │   ├── UiMapLayoutContractTests.cs：图层 UI 归位源码合同测试
 │   │   ├── MapBoundsTests.cs：MapBoundsTests.cs
 │   │   ├── MapCoordinateValidationTests.cs：MapCoordinateValidationTests.cs
 │   │   ├── MapDefaultMapTests.cs：MapDefaultMapTests.cs
@@ -748,9 +749,9 @@ XuanYuEngine/
 │   │   ├── MapIdTests.cs：MapIdTests.cs
 │   │   ├── MapJsonRoundTripTests.cs：MapJsonRoundTripTests.cs
 │   │   ├── MapJsonStrictnessTests.cs：MapJsonStrictnessTests.cs
-│   │   ├── MapLayerRulesTests.cs：图层操作规则测试
-│   │   ├── MapLayerStackTests.Order.cs：图层顺序边界与状态操作测试 partial
-│   │   ├── MapLayerStackTests.cs：图层顺序与状态操作测试
+│   │   ├── MapLayerRulesTests.cs：MapLayerRulesTests.cs
+│   │   ├── MapLayerStackTests.Order.cs：MapLayerStackTests.Order.cs
+│   │   ├── MapLayerStackTests.cs：MapLayerStackTests.cs
 │   │   ├── MapLayerTests.Base.cs：MapLayerTests.Base.cs
 │   │   ├── MapLayerTests.cs：MapLayerTests.cs
 │   │   ├── MapRegionDraftTests.cs：MapRegionDraftTests.cs

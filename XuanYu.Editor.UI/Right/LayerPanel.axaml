@@ -26,9 +26,9 @@
       <Button Classes="layerTool" Content="下移" Command="{Binding RunCommand}" CommandParameter="下移图层" IsEnabled="{Binding CanMoveLayerDown}"/>
       <Button Classes="layerTool" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}"/>
     </UniformGrid>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-      <ListBox ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
-               Background="Transparent" BorderThickness="0" Margin="0,2,0,0">
+    <!-- F1：整页滚动由外层 ScrollViewer 接管，列表全量展示（禁止嵌套滚动穿透标题） -->
+    <ListBox ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
+             Background="Transparent" BorderThickness="0" Margin="0,2,0,0">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="local:MapLayerRowViewModel">
             <Grid ColumnDefinitions="3,26,*,Auto,26" ColumnSpacing="4" MinHeight="30">
@@ -47,6 +47,5 @@
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
-    </ScrollViewer>
   </DockPanel>
 </UserControl>

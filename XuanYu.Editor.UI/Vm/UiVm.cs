@@ -80,7 +80,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public string FooterState { get => _footerState; private set => SetFooterState(value); }
     public bool HasSelection => _editorState.Snapshot.HasSelection;
     public bool IsLogOpen { get => _isLogOpen; set => Set(ref _isLogOpen, value); }
-    public bool IsEmptySelection => !HasSelection && !HasLayerSelection;
+    public bool IsEmptySelection => !HasSelection;
     public int LeftTabIndex { get => _leftTabIndex; set => Set(ref _leftTabIndex, value); }
     public EditorTreeNode? SelectedProjectItem { get => _selectedProjectItem; set => SetProjectSelection(value); }
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
