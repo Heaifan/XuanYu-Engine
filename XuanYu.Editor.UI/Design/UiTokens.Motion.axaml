@@ -1,0 +1,7 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- 动效时长（UI Spec 1.0 §15.3）：悬停/选中 80～120 ms、展开/折叠 120～160 ms，取区间中值；
+       拖动/缩放/滚动/Gizmo/面板调整必须直接跟手，禁止迟滞动画 -->
+  <x:Double x:Key="Motion.HoverMs">100</x:Double>
+  <x:Double x:Key="Motion.ExpandMs">140</x:Double>
+</ResourceDictionary>

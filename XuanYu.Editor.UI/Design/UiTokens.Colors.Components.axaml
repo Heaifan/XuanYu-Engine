@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- 日志级别标识色（UI Spec 1.0 §4.3，组件 Token：浅底行首圆点与级别标识，允许高于语义色明度但禁荧光） -->
+  <SolidColorBrush x:Key="Log.Accent.Error" Color="#c75b5b"/>
+  <SolidColorBrush x:Key="Log.Accent.Warning" Color="#d89b32"/>
+  <SolidColorBrush x:Key="Log.Accent.Info" Color="#4f7fb8"/>
+  <SolidColorBrush x:Key="Log.Accent.Debug" Color="#6b7a90"/>
+  <SolidColorBrush x:Key="Log.Accent.Trace" Color="#8b96a8"/>
+  <SolidColorBrush x:Key="Log.RepeatText" Color="#7a5a19"/>
+
+  <!-- 文档状态三态（UI Spec 1.0 §4.4，组件 Token：底色/边框/文字，映射 Success/Warning/Error 语义） -->
+  <SolidColorBrush x:Key="DocStatus.SuccessBg" Color="#eef7f1"/>
+  <SolidColorBrush x:Key="DocStatus.SuccessBorder" Color="#c9e3d0"/>
+  <SolidColorBrush x:Key="DocStatus.SuccessText" Color="#1f7a4d"/>
+  <SolidColorBrush x:Key="DocStatus.WarningBg" Color="#fff7df"/>
+  <SolidColorBrush x:Key="DocStatus.WarningBorder" Color="#e7c66d"/>
+  <SolidColorBrush x:Key="DocStatus.WarningText" Color="#8a6417"/>
+  <SolidColorBrush x:Key="DocStatus.ErrorBg" Color="#fdeeee"/>
+  <SolidColorBrush x:Key="DocStatus.ErrorBorder" Color="#e2aaaa"/>
+  <SolidColorBrush x:Key="DocStatus.ErrorText" Color="#a43f3f"/>
+  <SolidColorBrush x:Key="DocStatus.SaveHighlightBg" Color="#fff6dd"/>
+  <SolidColorBrush x:Key="DocStatus.SaveHighlightBorder" Color="#d9ad43"/>
+
+  <!-- 层类型标签（UI Spec 1.0 §4.2 + D4-F3 合同收敛，组件 Token） -->
+  <SolidColorBrush x:Key="Layer.Kind.Region.Bg" Color="#E8F3F6"/>
+  <SolidColorBrush x:Key="Layer.Kind.Region.Border" Color="#B9D7DE"/>
+  <SolidColorBrush x:Key="Layer.Kind.Region.Text" Color="#326B7B"/>
+  <SolidColorBrush x:Key="Layer.Kind.System.Bg" Color="#F0F2F4"/>
+  <SolidColorBrush x:Key="Layer.Kind.System.Border" Color="#D5DBE0"/>
+  <SolidColorBrush x:Key="Layer.Kind.System.Text" Color="#687582"/>
+
+  <!-- 图层状态图标（UI Spec 1.0 §12.2 + D4-F3 合同收敛，组件 Token：形态+颜色双表达） -->
+  <SolidColorBrush x:Key="Layer.State.Visible" Color="#326F8A"/>
+  <SolidColorBrush x:Key="Layer.State.Hidden" Color="#8995A2"/>
+  <SolidColorBrush x:Key="Layer.State.Locked" Color="#7A6238"/>
+  <SolidColorBrush x:Key="Layer.State.Unlocked" Color="#7B8794"/>
+  <SolidColorBrush x:Key="Layer.State.VisibleBg" Color="#EAF3F7"/>
+  <SolidColorBrush x:Key="Layer.State.LockedBg" Color="#F4EFE5"/>
+  <SolidColorBrush x:Key="Layer.DropLine" Color="#7FA8C6"/>
+
+  <!-- 树引导线（UI Spec 1.0 §19.2 允许清单组件例外） -->
+  <SolidColorBrush x:Key="Tree.Guide" Color="#C7D7EA"/>
+</ResourceDictionary>

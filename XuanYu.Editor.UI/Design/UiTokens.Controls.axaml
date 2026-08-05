@@ -1,0 +1,35 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- 控件高度三档（UI Spec 1.0 §6.1）：紧凑 24 / 标准 28 / 强调 32 -->
+  <x:Double x:Key="Control.Height.Compact">24</x:Double>
+  <x:Double x:Key="Control.Height.Standard">28</x:Double>
+  <x:Double x:Key="Control.Height.Emphasized">32</x:Double>
+
+  <!-- 固定宽度等级（UI Spec 1.0 §5.3）：64/96/128/160/240；表格列宽·热区·分隔条不属本等级 -->
+  <x:Double x:Key="Size.Width.64">64</x:Double>
+  <x:Double x:Key="Size.Width.96">96</x:Double>
+  <x:Double x:Key="Size.Width.128">128</x:Double>
+  <x:Double x:Key="Size.Width.160">160</x:Double>
+  <x:Double x:Key="Size.Width.240">240</x:Double>
+  <x:Double x:Key="Control.LabelColumn.Width">96</x:Double>
+  <x:Double x:Key="Control.Field.MinWidth">128</x:Double>
+
+  <!-- 最小点击热区（UI Spec 1.0 §6.4）：紧凑 24 / 常规 28 / 触控 36；图标本体可小于热区 -->
+  <x:Double x:Key="Size.Hit.Compact">24</x:Double>
+  <x:Double x:Key="Size.Hit.Standard">28</x:Double>
+  <x:Double x:Key="Size.Hit.Touch">36</x:Double>
+
+  <!-- 边框与焦点（UI Spec 1.0 §9.1/§9.3）：普通 1 / 插入线 2 / 焦点框 2 外偏移 1 -->
+  <x:Double x:Key="Border.Width.Default">1</x:Double>
+  <x:Double x:Key="Border.Width.Insert">2</x:Double>
+  <x:Double x:Key="Border.Width.Focus">2</x:Double>
+  <x:Double x:Key="Focus.Offset">1</x:Double>
+
+  <!-- 悬浮层阴影（UI Spec 1.0 §9.2）：垂直偏移 4 / 模糊 12 / 约 14% 黑；普通面板禁阴影 -->
+  <x:Double x:Key="Shadow.OffsetY">4</x:Double>
+  <x:Double x:Key="Shadow.Blur">12</x:Double>
+  <x:Double x:Key="Shadow.Opacity">0.14</x:Double>
+
+  <!-- 日志列宽（UI Spec 1.0 §13.1 组件 Token）：Grid ColumnDefinitions 模式 -->
+  <x:String x:Key="LogTable.Columns">4,72,56,72,92,*,82</x:String>
+</ResourceDictionary>

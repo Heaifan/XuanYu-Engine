@@ -1,0 +1,34 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- 四级背景（UI Spec 1.0 §4.1） -->
+  <SolidColorBrush x:Key="Color.Bg.Application" Color="#F3F6F8"/>
+  <SolidColorBrush x:Key="Color.Bg.Panel" Color="#F8FAFB"/>
+  <SolidColorBrush x:Key="Color.Bg.Control" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="Color.Bg.Overlay" Color="#FFFFFF"/>
+
+  <!-- 边框与分隔（§4.2） -->
+  <SolidColorBrush x:Key="Color.Border.Default" Color="#D5DEE4"/>
+  <SolidColorBrush x:Key="Color.Border.Strong" Color="#B9C7D0"/>
+
+  <!-- 文字（§4.2） -->
+  <SolidColorBrush x:Key="Color.Text.Primary" Color="#243744"/>
+  <SolidColorBrush x:Key="Color.Text.Secondary" Color="#5D6F7C"/>
+  <SolidColorBrush x:Key="Color.Text.Disabled" Color="#929FA8"/>
+
+  <!-- 强调与交互（§4.2） -->
+  <SolidColorBrush x:Key="Color.Accent" Color="#326F8A"/>
+  <SolidColorBrush x:Key="Color.Accent.Hover" Color="#285F77"/>
+  <SolidColorBrush x:Key="Color.Selection.Bg" Color="#E5F0F4"/>
+  <SolidColorBrush x:Key="Color.Hover.Bg" Color="#EEF4F6"/>
+  <SolidColorBrush x:Key="Color.Focus" Color="#2B6F9B"/>
+
+  <!-- 状态语义（§4.2；仅局部使用，禁止大面积高饱和色块） -->
+  <SolidColorBrush x:Key="Color.Success" Color="#2F7658"/>
+  <SolidColorBrush x:Key="Color.Warning" Color="#93651F"/>
+  <SolidColorBrush x:Key="Color.Error" Color="#B14A4A"/>
+  <SolidColorBrush x:Key="Color.Danger" Color="#A53F43"/>
+
+  <!-- 对象语义（§4.2；除颜色外必须标签文字或图标形态区分） -->
+  <SolidColorBrush x:Key="Color.Object.System" Color="#7B8794"/>
+  <SolidColorBrush x:Key="Color.Object.User" Color="#326F8A"/>
+</ResourceDictionary>

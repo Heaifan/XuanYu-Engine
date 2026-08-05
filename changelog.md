@@ -20,6 +20,17 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.39-rz
+ARCH-UI-SPEC-R1-D2：Token 基础设施与自动化门禁（2026-08-05，Commit 本轮落库为准）
+- **Token 基础设施**：新增 `XuanYu.Editor.UI/Design/` 8 个 Token 文件（UiTokens.Fonts / Colors.Core / Colors.Components / Spacing / Controls / Icons / Motion + UiTokens 聚合入口），数值、类型与命名全部直接来自 UI Spec 1.0（112 个 Token 键，无临时/兼容 Token）；`Ui.axaml` 仅新增资源聚合（Styles.Resources 合并 Design/UiTokens.axaml），**未修改任何现有页面视觉、布局、交互或业务行为**（当前编辑器视觉与 D1 基线一致）。
+- **Token 合同测试**（`XuanYu.World.Tests/UiTokens/`，复用既有 UI 源码合同测试承载点，无新项目/新依赖）：键全局唯一、代码键集合==规范合同清单（UiTokenContractCatalog 112 键，无缺失无额外）、数值与规范一致（Fonts 21/Colors 38/Sizes 41 项断言）、字号与行高一一配对、聚合入口含 7 子文件、无循环引用、8 个 Token 文件全部 ≤100 行、应用资源已合并聚合入口。
+- **源码违规分析器 + 旧债务基线门禁**：测试侧 `UiSourceContractAnalyzer`（HexColor/FontSize/CornerRadius/ControlHeight/BoxShadow/StrokeThickness/EmojiIcon/CsHexColor 八规则，限定 UI 控件语义，Path 图标尺寸/布局容器/CornerRadius 0 不误报）；旧债务细粒度基线 173 条指纹（相对路径+规则类型+规范化值+允许次数，映射 W 编号，自动生成自真实源码现状值）：已知债务允许、新增债务（含同文件第二处同值）测试失败、债务减少允许、基线不自动增长；扫描范围排除 Design/ 与渲染目录。
+- **门禁自验证**：10 项正反例（合法 Token 引用 PASS、未登记色/字号 15/圆角 5/高度 34/Emoji 图标/BoxShadow/笔画 2.2 FAIL、布局与图标值不误报、cs 色构造 FAIL）全部通过。
+- 审计矩阵新增「六、验证方式标注」：W/G/K 标注自动门禁/真机/混合/暂不可自动化及原因；不宣称 W01~W71 已整改。债务登记更新 D2 状态与基线规则。
+- 验证：全解决方案串行 Build 0W0E；Core 339/339、World 809/809（+123 UiTokens）、WarCore 22/22，合计 1170/1170 PASS；arch-a-guard PASS；git diff --check PASS。
+- 治理：版本 v0.2.24.38-rz → v0.2.24.39-rz（四处同步）；未创建 Tag/Release。
+- 状态：ARCH-UI-SPEC-R1-D2 COMPLETE；D3 主窗口/顶层页签/滚动治理待用户批准启动。
+
 ## v0.2.24.38-rz
 ARCH-UI-SPEC-R1-D1：正式规范冻结（2026-08-05，Commit 本轮落库为准）
 - `docs/ui/玄域引擎_UI规范_1.0.md` 由 WORKING DRAFT 转为**正式规范（UI Spec 1.0，唯一 UI 规范事实源）**，24 节结构：身份与适用范围、条款分级、字体字号（回退链/字号表/字重/行高）、颜色背景（四级背景/语义色/日志色/文档状态色）、间距尺寸圆角、控件高度与热区、窗口阈值、图标、边框阴影焦点、页签菜单弹窗、表单错误、树列表拖拽、日志加载空状态、键盘可访问、DPI 性能、游戏 UI 边界、Token 层级命名、自动化矩阵、允许清单、受控例外、变更流程、真机验收、版本历史、文档关系。

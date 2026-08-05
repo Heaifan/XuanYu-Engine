@@ -281,6 +281,15 @@
 │  │  ├─ App.axaml
 │  │  ├─ App.axaml.cs
 │  │  └─ Program.cs
+│  ├─ Design/
+│  │  ├─ UiTokens.Colors.Components.axaml
+│  │  ├─ UiTokens.Colors.Core.axaml
+│  │  ├─ UiTokens.Controls.axaml
+│  │  ├─ UiTokens.Fonts.axaml
+│  │  ├─ UiTokens.Icons.axaml
+│  │  ├─ UiTokens.Motion.axaml
+│  │  ├─ UiTokens.Spacing.axaml
+│  │  └─ UiTokens.axaml
 │  ├─ Dialogs/
 │  │  ├─ IEditorDialogService.cs
 │  │  └─ NullEditorDialogService.cs
@@ -866,6 +875,20 @@
 │  │  ├─ UiHierarchyConnectorTests.cs
 │  │  ├─ UiTreeGuideTests.cs
 │  │  └─ UiTreeToggleTests.cs
+│  ├─ UiTokens/
+│  │  ├─ UiDebtBaseline.Colors.Axaml1.cs
+│  │  ├─ UiDebtBaseline.Colors.Axaml2.cs
+│  │  ├─ UiDebtBaseline.Colors.Cs.cs
+│  │  ├─ UiDebtBaseline.Typography.cs
+│  │  ├─ UiDebtBaseline.cs
+│  │  ├─ UiDebtBaselineTests.cs
+│  │  ├─ UiSourceContractAnalyzer.cs
+│  │  ├─ UiSourceContractAnalyzerTests.cs
+│  │  ├─ UiTokenColorValuesTests.cs
+│  │  ├─ UiTokenContractCatalog.cs
+│  │  ├─ UiTokenContractTests.cs
+│  │  ├─ UiTokenFontValuesTests.cs
+│  │  └─ UiTokenSizeValuesTests.cs
 │  ├─ WorldPartition/
 │  │  ├─ WorldPartitionInvariantTests.cs
 │  │  ├─ WorldPartitionMigrationTests.Activity.cs
@@ -1060,6 +1083,14 @@
 - `XuanYu.Editor.UI/Bootstrap/App.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Bootstrap/App.axaml.cs` — sealed class App
 - `XuanYu.Editor.UI/Bootstrap/Program.cs` — WinExe 进程默认无控制台；AttachConsole(-1) 继承父终端（dotnet run 控制台），
+- `XuanYu.Editor.UI/Design/UiTokens.Colors.Components.axaml` — UI Token 组件色（日志/文档状态/图层，UI Spec 1.0 §4.3/§4.4/§12.2）
+- `XuanYu.Editor.UI/Design/UiTokens.Colors.Core.axaml` — UI Token 核心语义色（四级背景/文字/强调/状态/对象，§4.1/§4.2）
+- `XuanYu.Editor.UI/Design/UiTokens.Controls.axaml` — UI Token 控件尺寸（高度/宽度等级/热区/边框/焦点/阴影/日志列宽，§5.3/§6/§9/§13）
+- `XuanYu.Editor.UI/Design/UiTokens.Fonts.axaml` — UI Token 字体（回退链/8 级字号行高/字重，§3.1/§3.2/§3.4）
+- `XuanYu.Editor.UI/Design/UiTokens.Icons.axaml` — UI Token 图标（视口/笔画，§8.1）
+- `XuanYu.Editor.UI/Design/UiTokens.Motion.axaml` — UI Token 动效时长（悬停/展开，§15.3）
+- `XuanYu.Editor.UI/Design/UiTokens.Spacing.axaml` — UI Token 间距/内边距/圆角（§5.1/§5.2/§5.4）
+- `XuanYu.Editor.UI/Design/UiTokens.axaml` — UI Token 聚合入口（合并 7 个 Token 文件，ARCH-UI-SPEC-R1-D2）
 - `XuanYu.Editor.UI/Dialogs/IEditorDialogService.cs` — D4：最小错误弹窗服务。只用于用户主动操作失败（导入 GLB / 打开场景 / 部分资源缺失）。
 - `XuanYu.Editor.UI/Dialogs/NullEditorDialogService.cs` — D4：无窗口环境的空实现（测试 / 无 UI 宿主），避免 NRE。
 - `XuanYu.Editor.UI/EditorState/EditorInteractionChangedResult.cs` — enum EditorInteractionChangeKind
@@ -1603,6 +1634,19 @@
 - `XuanYu.World.Tests/Tree/UiHierarchyConnectorTests.cs` — sealed class UiHierarchyConnectorTests
 - `XuanYu.World.Tests/Tree/UiTreeGuideTests.cs` — sealed class UiTreeGuideTests
 - `XuanYu.World.Tests/Tree/UiTreeToggleTests.cs` — sealed class UiTreeToggleTests
+- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml1.cs` — 旧 UI 债务基线（AXAML 色值 1/2，D2 自动生成）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml2.cs` — 旧 UI 债务基线（AXAML 色值 2/2，D2 自动生成）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Cs.cs` — 旧 UI 债务基线（code-behind 视觉源色值，D2 自动生成）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Typography.cs` — 旧 UI 债务基线（字号/圆角/高度/阴影/笔画，D2 自动生成）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaseline.cs` — 旧 UI 债务基线匹配逻辑（173 条指纹：路径+规则+值+允许次数）
+- `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — 基线门禁：真实扫描 vs 基线（已知允许/新增失败/减少允许/范围排除）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzer.cs` — UI 源码违规分析器（八规则，测试侧，D2）
+- `XuanYu.World.Tests/UiTokens/UiSourceContractAnalyzerTests.cs` — 门禁自验证正反例（10 项，内存字符串）
+- `XuanYu.World.Tests/UiTokens/UiTokenColorValuesTests.cs` — Token 颜色数值合同（核心 20 + 组件 18 断言）
+- `XuanYu.World.Tests/UiTokens/UiTokenContractCatalog.cs` — Token 合同清单（112 键，依据 UI Spec 1.0）
+- `XuanYu.World.Tests/UiTokens/UiTokenContractTests.cs` — Token 合同测试（键唯一/聚合/循环/100 行/应用加载）
+- `XuanYu.World.Tests/UiTokens/UiTokenFontValuesTests.cs` — Token 字体数值合同（21 断言 + 配对完整性）
+- `XuanYu.World.Tests/UiTokens/UiTokenSizeValuesTests.cs` — Token 尺寸数值合同（41 断言）
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionInvariantTests.cs` — sealed class WorldPartitionInvariantTests
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.Activity.cs` — sealed partial class WorldPartitionMigrationTests
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.cs` — sealed partial class WorldPartitionMigrationTests
