@@ -25,9 +25,16 @@ ARCH-UI-SPEC-R1-D1：正式规范冻结（2026-08-05，Commit 本轮落库为准
 - `docs/ui/玄域引擎_UI规范_1.0.md` 由 WORKING DRAFT 转为**正式规范（UI Spec 1.0，唯一 UI 规范事实源）**，24 节结构：身份与适用范围、条款分级、字体字号（回退链/字号表/字重/行高）、颜色背景（四级背景/语义色/日志色/文档状态色）、间距尺寸圆角、控件高度与热区、窗口阈值、图标、边框阴影焦点、页签菜单弹窗、表单错误、树列表拖拽、日志加载空状态、键盘可访问、DPI 性能、游戏 UI 边界、Token 层级命名、自动化矩阵、允许清单、受控例外、变更流程、真机验收、版本历史、文档关系。
 - **16 项待审订全部裁决**（无待定项）：分组标题=Section 14（列头=Label 12，废止 13 三套并存）；字重四档适用表；回退链 Avalonia 三级+平台兜底（禁 Inter）；行高组合定义+单行控件不套行高；日志级别色=Log.Accent.* 组件 Token；文档状态色=DocStatus 三态组件 Token；渲染/Shader/Gizmo/网格/数据可视化=允许清单边界；宽度等级例外（表格列宽/热区/分隔条=组件级）；控件高度 24/28/32+现状迁移目标表（34→28/30→28/25→24/42→公式）；圆角 3/6/10 场景分配表；阴影（面板禁阴影+悬浮层 4/12/14%+Popup 系统阴影不叠加）；焦点五态区分+焦点框 2/外偏移 1+与选中并存规则；顶层页签 15 条合同入规范；菜单顺序与弹窗按钮顺序冻结；游戏 UI 基础强约束/艺术弱约束边界；D2 自动检查矩阵+允许清单格式+例外八要素。
 - **事实源治理**：`docs/governance/ui-spec.md` 降级为历史讨论决策记录（顶部标注「不再作为实施合同」）；审计矩阵与真机清单补充正式规范引用；债务登记 `arch-ui-spec-debts.md` 状态「待立项」→「治理中」（记录 D0/D1 COMPLETE、W01~W71/G01~G08/K01~K07、下一步 D2、暂停新增 UI 功能、未经批准不得创建例外）。
-- 本轮未修改任何 .axaml / UI .cs / Token / 渲染 / 地图 / WarCore / 宪法 / 技能；未创建 Tag/Release。
+- 本轮未修改任何 UI 视觉、布局、交互或业务行为实现；仅为版本同步修改 `UiWin.axaml` 与 `UiVm.SceneDocument.cs` 中的版本字符串，并同步修改 `run.bat`。未创建 Token；未修改渲染、地图、WarCore、Scene、持久化、宪法与技能；未创建 Tag/Release。
 - 治理：版本 v0.2.24.37-rz → v0.2.24.38-rz（四处同步，升版依据：治理文档正式状态变化按项目惯例升版）；未创建 Tag/Release。
 - 状态：ARCH-UI-SPEC-R1-D1 COMPLETE；D2 Token 基础设施待用户批准启动。
+
+### D1-F1 治理层级与事实表述纠偏（2026-08-05，Commit 本轮落库为准；同版本不升版）
+- 用户复核裁定 D1 REVIEW BLOCKED 两项：① 规范 1.4 治理优先级将 UI Spec 置于代码宪法与开发硬规则之上，且遗漏 AI_DEVELOPMENT_RULES.md 与已冻结架构/领域合同；② changelog 的 D1 条目曾声称文件层面零 UI 修改，与实际（版本字符串修改了 UiWin.axaml / UiVm.SceneDocument.cs）不符。
+- ① 规范 1.4 重写为五层治理层级：第一层 AI 开发宪法；第二层 CODE_CONSTITUTION / AI_DEVELOPMENT_RULES / dev-rules 及已冻结架构·领域·持久化合同；第三层 UI Spec 1.0（**UI 设计规则领域内唯一事实源**）；第四层阶段治理计划；第五层阶段局部 UI 合同。明确：UI Spec 不得覆盖第一、二层；第二层内部跨领域冲突不得由 UI Spec 裁定，必须停止实施并上报；冲突时停止并上报、不得自行选择。
+- ② changelog 事实表述修正为：「本轮未修改任何 UI 视觉、布局、交互或业务行为实现；仅为版本同步修改 UiWin.axaml 与 UiVm.SceneDocument.cs 中的版本字符串，并同步修改 run.bat。未创建 Token」。明确区分「文件发生修改」与「UI 行为没有发生修改」。
+- 全仓错误表述零残留检查：当前文档仅归档 changelog-2026-07（历史记录，按归档原则不改）；changelog.md / 规范 / debts / docs-index / file-tree 已清零。
+- 状态：ARCH-UI-SPEC-R1-D1-F1 完成；D1 COMPLETE；D2 Token 基础设施待用户批准启动。
 
 ## v0.2.24.37-rz
 ARCH-UI-SPEC-R1-D0 启动：UI 治理基线（2026-08-05，Commit 本轮落库为准）
