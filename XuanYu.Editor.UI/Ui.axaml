@@ -45,11 +45,11 @@
     <Setter Property="Padding" Value="0"/>
   </Style>
   <Style Selector="TabItem.sideTab">
-    <Setter Property="FontSize" Value="15"/>
+    <Setter Property="FontSize" Value="13"/>
     <Setter Property="Foreground" Value="#6d788a"/>
     <Setter Property="Padding" Value="10,4"/>
     <Setter Property="Margin" Value="0,0,4,0"/>
-    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MinHeight" Value="30"/>
     <Setter Property="Background" Value="Transparent"/>
     <Setter Property="BorderBrush" Value="Transparent"/>
     <Setter Property="BorderThickness" Value="0,0,0,0"/>

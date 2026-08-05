@@ -32,6 +32,12 @@ public sealed class MapLayerRowViewModel : INotifyPropertyChanged
 
     public bool IsSystem { get; }
 
+    // F3：区域图层（可拖动、蓝青标签）；系统图层不显示拖动手柄。
+    public bool IsRegion => !IsSystem;
+
+    // F3：拖动插入线（2 DIP 低饱和蓝，显示在本行上方）。
+    public bool IsDropBefore { get; internal set; }
+
     public bool IsActive { get => _isActive; set => Set(ref _isActive, value); }
 
     public bool IsVisible

@@ -20,6 +20,17 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.34-fix
+MAP-A-R2-D4-F3 图层视觉、拖动排序与通知收口（2026-08-05，Commit 本轮落库为准）
+- F3-01 状态图标重做：取消强蓝实心底，改为图标本体为主浅色底辅助（可见 #326F8A/#EAF3F7/#BDD5DF、隐藏 #8995A2；锁定 #7A6238/#F4EFE5/#DCCDAE、未锁定 #7B8794）；热区 26×24 DIP、图标 14、圆角 4、独立 ToolTip。
+- F3-02 类型标签区分：区域 #E8F3F6/#326B7B/#B9D7DE（蓝青），系统 #F0F2F4/#687582/#D5DBE0（灰蓝）；系统层不显示拖动手柄，区域层显示六点手柄。
+- F3-03 右侧字号收敛：顶层页签 15→13（Ui.axaml sideTab）、地图二级页签新增 layerSubTab 14 选中半粗、字段标签 12 / 字段值 13 / 按钮 12；不扩张全局主题。
+- F3-04 区域图层拖动排序：`MapLayerStack.MoveRegionToIndex`（纯函数，targetIndex 0=最上区域层，Ground/Boundary 固定 Order 0/1，区域层 Order 连续唯一，越界/同位置安全返回原集合）；`MapEditSession.MoveLayerToRegionIndex` 单历史节点命令（系统层/未知/越界失败零污染，同位置 No-op 不 Dirty 不增历史）；UI 用 Avalonia DragDrop（DataTransfer 文本载荷 LayerId、4 DIP 启动阈值、2 DIP 插入线 #7FA8C6、仅区域行接受 Drop、一次 Drop 一次提交一次日志）；上移/下移按钮保留。
+- F3-05 通知优先级（方案 B）：Vulkan 日志经 Dispatcher.Post 异步到达（根因确认）覆盖用户通知；`EditorLogSummary` 改为选择策略——最新 Error/Warning > 最新 Editor/Project 动作 > 最新兜底；完整日志面板仍按真实时间保留 Vulkan 记录；无 Sleep/计时器。
+- F3-06 登记 `ARCH-UI-SPEC-R1`（docs/governance/debts/arch-ui-spec-debts.md，17 项范围，待立项，不展开实施）。
+- 验证：全解决方案 Rebuild 0W0E；Core 339/339、World 678/678（+33：T01-T08、H01-H06、U01-U06、V01-V06、L01-L05）、WarCore 22/22；arch-a-guard PASS；git diff --check PASS。
+- 遗留/下一步：F3 真机补验（F3-A01~A16）→ A5 全量复验 → D4 COMPLETE；ARCH-UI-SPEC-R1 立项讨论；D5 区域绘制。
+
 ## v0.2.24.33-fix
 MAP-A-R2-D4-F2 顶部菜单与右侧冗余 UI 收敛（2026-08-05，Commit 本轮落库为准）
 - F2-01 顶部"添加"菜单扁平化：删除"基础实体"级联层，"立方体"成为"添加"直接子项（Top.axaml）；与"文件"共用同一 Menu/MenuItem 样式（背景/边框/行高/留白/悬停反馈/字号全一致），无横向级联箭头；命令与 CommandParameter（添加立方体）零改动，未新建第二套命令。

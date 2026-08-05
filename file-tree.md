@@ -1,902 +1,1688 @@
-# XuanYu Engine 文件树
+# 玄域引擎文件树（自动重建）
 
-> 本文仅描述当前仓库结构与文件职责，不记录版本历史、阶段过程、迁移记录或测试统计。
+> 由 `git ls-files` 全量重建（每轮收口时）；职责为一句摘要，非权威规范。
 
-```text
-XuanYuEngine/
-├── XuanYu.Core
-│   ├── Diagnostics
-│   │   ├── CoreSelfTest.cs：CoreSelfTest.cs
-│   ├── Gizmo
-│   │   ├── Common
-│   │   │   ├── ScreenPoint.cs：ScreenPoint.cs
-│   │   ├── Move
-│   │   │   ├── MoveGizmoAxis.cs：MoveGizmoAxis.cs
-│   │   │   ├── MoveGizmoDragConstraint.Axes.cs：MoveGizmoDragConstraint.Axes.cs
-│   │   │   ├── MoveGizmoDragConstraint.cs：MoveGizmoDragConstraint.cs
-│   │   │   ├── MoveGizmoLayout.Hit.cs：MoveGizmoLayout.Hit.cs
-│   │   │   ├── MoveGizmoLayout.Plane.cs：MoveGizmoLayout.Plane.cs
-│   │   │   ├── MoveGizmoLayout.cs：MoveGizmoLayout.cs
-│   │   │   ├── MoveGizmoPlane.cs：MoveGizmoPlane.cs
-│   │   │   ├── MoveGizmoScreenSize.cs：MoveGizmoScreenSize.cs
-│   │   │   ├── MoveGizmoSegment.cs：MoveGizmoSegment.cs
-│   │   ├── Rotate
-│   │   │   ├── RotateGizmoAxis.cs：RotateGizmoAxis.cs
-│   │   │   ├── RotateGizmoDrag.Math.cs：RotateGizmoDrag.Math.cs
-│   │   │   ├── RotateGizmoDrag.cs：RotateGizmoDrag.cs
-│   │   │   ├── RotateGizmoLayout.cs：RotateGizmoLayout.cs
-│   │   │   ├── RotateGizmoRing.cs：RotateGizmoRing.cs
-│   │   │   ├── RotateGizmoScreenRadius.cs：RotateGizmoScreenRadius.cs
-│   │   └── Scale
-│   │   ├── ScaleGizmoAxis.cs：ScaleGizmoAxis.cs
-│   │   ├── ScaleGizmoDrag.cs：ScaleGizmoDrag.cs
-│   │   ├── ScaleGizmoHitTester.cs：ScaleGizmoHitTester.cs
-│   │   ├── ScaleGizmoLayout.cs：ScaleGizmoLayout.cs
-│   │   ├── ScaleGizmoScreenSize.cs：ScaleGizmoScreenSize.cs
-│   ├── History
-│   │   ├── EditorHistoryOwner.cs：EditorHistoryOwner.cs
-│   │   ├── TransformHistoryEntry.cs：TransformHistoryEntry.cs
-│   ├── Identity
-│   │   ├── EntityId.cs：EntityId.cs
-│   ├── Logging
-│   │   ├── EngineLogEntry.cs：EngineLogEntry.cs
-│   │   ├── EngineLogLevel.cs：EngineLogLevel.cs
-│   ├── Map
-│   │   ├── MapSurfaceKind.cs：MapSurfaceKind.cs
-│   │   ├── MapSurfaceSampler.cs：MapSurfaceSampler.cs
-│   │   ├── MapTerrainVertex.cs：MapTerrainVertex.cs
-│   ├── Math
-│   │   ├── Vector3d.cs：Vector3d.cs
-│   │   ├── YawRotation.cs：YawRotation.cs
-│   ├── Picking
-│   │   ├── ViewportPickingRequest.cs：ViewportPickingRequest.cs
-│   │   ├── ViewportPickingResult.cs：ViewportPickingResult.cs
-│   │   ├── ViewportPickingService.cs：ViewportPickingService.cs
-│   ├── Properties
-│   │   ├── AssemblyInfo.cs：AssemblyInfo.cs
-│   ├── Results
-│   │   ├── EngineError.cs：EngineError.cs
-│   │   ├── EngineResult.cs：EngineResult.cs
-│   ├── Scene
-│   │   ├── CommittedTransform.cs：CommittedTransform.cs
-│   │   ├── ISceneRenderSnapshotSource.cs：ISceneRenderSnapshotSource.cs
-│   │   ├── SceneEntitySnapshot.cs：SceneEntitySnapshot.cs
-│   │   ├── SceneRenderSnapshot.cs：SceneRenderSnapshot.cs
-│   │   ├── SceneTransformCommitResult.cs：SceneTransformCommitResult.cs
-│   ├── Space
-│   │   ├── CameraState.cs：CameraState.cs
-│   │   ├── DefaultEditorCamera.cs：DefaultEditorCamera.cs
-│   │   ├── ProjectionMode.cs：ProjectionMode.cs
-│   │   ├── ViewProjectionState.cs：ViewProjectionState.cs
-│   │   ├── ViewportState.cs：ViewportState.cs
-│   │   ├── WorldRay.cs：WorldRay.cs
-│   │   ├── WorldRayFactory.cs：WorldRayFactory.cs
-│   ├── Spatial
-│   │   ├── RayAabbHit.cs：RayAabbHit.cs
-│   │   ├── RayAabbIntersection.cs：RayAabbIntersection.cs
-│   │   ├── SpatialAabb.cs：SpatialAabb.cs
-│   │   ├── SpatialBounds.cs：SpatialBounds.cs
-│   │   ├── SpatialQueryCategory.cs：SpatialQueryCategory.cs
-│   │   ├── SpatialQueryResult.cs：SpatialQueryResult.cs
-│   │   ├── SpatialQueryStats.cs：SpatialQueryStats.cs
-│   │   ├── SpatialRayAabb.cs：SpatialRayAabb.cs
-│   │   ├── SpatialRayQuery.cs：SpatialRayQuery.cs
-│   │   ├── SpatialRaycastHit.cs：SpatialRaycastHit.cs
-│   │   ├── SpatialRaycastResult.cs：SpatialRaycastResult.cs
-│   │   ├── SpatialRaycastStats.cs：SpatialRaycastStats.cs
-│   ├── Time
-│   │   ├── SimulationTime.cs：SimulationTime.cs
-│   │   ├── TimeStep.cs：TimeStep.cs
-│   └── Transform
-│   ├── PreviewTransform.cs：PreviewTransform.cs
-│   ├── TransformStartSnapshot.cs：TransformStartSnapshot.cs
-│   ├── .gitkeep：.gitkeep
-│   ├── XuanYu.Core.csproj：XuanYu.Core.csproj
-├── XuanYu.Core.Tests
-│   ├── Camera
-│   │   ├── CameraBasisTests.cs：CameraBasisTests.cs
-│   │   ├── CameraNavigationRollTests.cs：CameraNavigationRollTests.cs
-│   │   ├── CameraNavigationSequenceTests.cs：CameraNavigationSequenceTests.cs
-│   │   ├── CameraNavigationStressTests.cs：CameraNavigationStressTests.cs
-│   │   ├── CameraNavigationTests.cs：CameraNavigationTests.cs
-│   │   ├── CameraNavigationUiSequenceTests.Safety.cs：CameraNavigationUiSequenceTests.Safety.cs
-│   │   ├── CameraNavigationUiSequenceTests.cs：CameraNavigationUiSequenceTests.cs
-│   │   ├── CameraOrthographicNavigationTests.cs：CameraOrthographicNavigationTests.cs
-│   ├── EditorTool
-│   │   ├── EditorTransformCapturePolicyTests.cs：EditorTransformCapturePolicyTests.cs
-│   ├── Gizmo
-│   │   ├── MoveGizmoDragConstraintTests.cs：MoveGizmoDragConstraintTests.cs
-│   │   ├── MoveGizmoLayoutG1Tests.cs：MoveGizmoLayoutG1Tests.cs
-│   │   ├── MoveGizmoLayoutPlaneTests.cs：MoveGizmoLayoutPlaneTests.cs
-│   │   ├── MoveGizmoLayoutTests.cs：MoveGizmoLayoutTests.cs
-│   │   ├── MoveGizmoLayoutVulkanTests.cs：MoveGizmoLayoutVulkanTests.cs
-│   │   ├── MoveGizmoScreenSizeTests.cs：MoveGizmoScreenSizeTests.cs
-│   │   ├── RotateGizmoLayoutTests.cs：RotateGizmoLayoutTests.cs
-│   │   ├── ScaleGizmoTests.Drag.cs：ScaleGizmoTests.Drag.cs
-│   │   ├── ScaleGizmoTests.DragSafety.cs：ScaleGizmoTests.DragSafety.cs
-│   │   ├── ScaleGizmoTests.Helpers.cs：ScaleGizmoTests.Helpers.cs
-│   │   ├── ScaleGizmoTests.R5R1.cs：ScaleGizmoTests.R5R1.cs
-│   │   ├── ScaleGizmoTests.cs：ScaleGizmoTests.cs
-│   ├── History
-│   │   ├── EditorHistoryOwnerTests.cs：EditorHistoryOwnerTests.cs
-│   │   ├── EditorHistoryRedoTests.cs：EditorHistoryRedoTests.cs
-│   │   ├── TransformHistoryIntegrationTests.cs：TransformHistoryIntegrationTests.cs
-│   │   ├── TransformHistoryRedoIntegrationTests.cs：TransformHistoryRedoIntegrationTests.cs
-│   ├── Picking
-│   │   ├── ViewportPickingServiceTests.cs：ViewportPickingServiceTests.cs
-│   ├── Render
-│   │   ├── Camera
-│   │   │   ├── StandardViewResolverTests.cs：StandardViewResolverTests.cs
-│   │   ├── DrawPlan
-│   │   │   ├── CubeRenderDrawPlanTests.cs：CubeRenderDrawPlanTests.cs
-│   │   │   ├── FrameExecutionPolicyTests.cs：FrameExecutionPolicyTests.cs
-│   │   │   ├── RenderDrawPlanTests.cs：RenderDrawPlanTests.cs
-│   │   │   ├── SceneRenderProjectionAdapterTests.Rotation.cs：SceneRenderProjectionAdapterTests.Rotation.cs
-│   │   │   ├── SceneRenderProjectionAdapterTests.Selection.cs：SceneRenderProjectionAdapterTests.Selection.cs
-│   │   │   ├── SceneRenderProjectionAdapterTests.cs：SceneRenderProjectionAdapterTests.cs
-│   │   │   ├── ViewportAssistDrawPlanTests.cs：ViewportAssistDrawPlanTests.cs
-│   │   │   ├── ViewportChromeContractTests.cs：ViewportChromeContractTests.cs
-│   │   ├── Grid
-│   │   │   ├── ReferenceGridAdaptiveTests.cs：ReferenceGridAdaptiveTests.cs
-│   │   │   ├── ReferenceGridDrawPlanTests.cs：ReferenceGridDrawPlanTests.cs
-│   │   │   ├── ReferenceGridRayIntersectionTests.cs：ReferenceGridRayIntersectionTests.cs
-│   │   │   ├── ReferenceGridScaleTests.cs：ReferenceGridScaleTests.cs
-│   │   │   ├── ReferenceGridShaderContractTests.cs：ReferenceGridShaderContractTests.cs
-│   │   │   ├── ReferenceGridVisualStyleTests.cs：ReferenceGridVisualStyleTests.cs
-│   │   ├── Map
-│   │   │   ├── MapRenderDrawPlanTests.cs：MapRenderDrawPlanTests.cs
-│   │   │   ├── MapSurfaceGeometryTests.cs：MapSurfaceGeometryTests.cs
-│   │   │   ├── MapSurfaceLayerVisibilityTests.cs：MapSurfaceLayerVisibilityTests.cs
-│   │   │   ├── MapSurfaceResourceKeyTests.cs：MapSurfaceResourceKeyTests.cs
-│   │   │   ├── MapSurfaceResourceUpdatePolicyTests.cs：MapSurfaceResourceUpdatePolicyTests.cs
-│   │   ├── NavigationGizmo
-│   │   │   ├── NavigationGizmoLayoutTests.Facing.cs：NavigationGizmoLayoutTests.Facing.cs
-│   │   │   ├── NavigationGizmoLayoutTests.cs：NavigationGizmoLayoutTests.cs
-│   │   │   ├── NavigationGizmoOverlayContractTests.cs：NavigationGizmoOverlayContractTests.cs
-│   │   └── StaticModels
-│   │   ├── StaticModelDepthRegressionTests.cs：StaticModelDepthRegressionTests.cs
-│   │   ├── StaticModelRenderContractTests.cs：StaticModelRenderContractTests.cs
-│   ├── Space
-│   │   ├── CameraOrthographicTests.cs：CameraOrthographicTests.cs
-│   │   ├── CameraStateTests.cs：CameraStateTests.cs
-│   │   ├── DefaultEditorCameraTests.cs：DefaultEditorCameraTests.cs
-│   │   ├── SpaceAssert.cs：SpaceAssert.cs
-│   │   ├── ViewProjectionStateTests.cs：ViewProjectionStateTests.cs
-│   │   ├── ViewportStateTests.cs：ViewportStateTests.cs
-│   │   ├── WorldRayFactoryTests.cs：WorldRayFactoryTests.cs
-│   │   ├── WorldRayTests.cs：WorldRayTests.cs
-│   └── Spatial
-│   ├── RayAabbIntersectionTests.cs：RayAabbIntersectionTests.cs
-│   ├── SpatialBoundsTests.cs：SpatialBoundsTests.cs
-│   ├── SpatialTestData.cs：SpatialTestData.cs
-│   ├── CoreSmokeTests.cs：CoreSmokeTests.cs
-│   ├── XuanYu.Core.Tests.csproj：XuanYu.Core.Tests.csproj
-├── XuanYu.Editor
-│   ├── Assets
-│   │   ├── Catalog
-│   │   │   ├── SceneStaticModelCatalog.cs：SceneStaticModelCatalog.cs
-│   │   ├── Hosting
-│   │   │   ├── Planning
-│   │   │   │   ├── SceneAssetHostingPlan.cs：SceneAssetHostingPlan.cs
-│   │   │   │   ├── SceneAssetHostingPlanner.cs：SceneAssetHostingPlanner.cs
-│   │   │   └── Transactions
-│   │   │   ├── SceneAssetHostingTransaction.Activate.cs：SceneAssetHostingTransaction.Activate.cs
-│   │   │   ├── SceneAssetHostingTransaction.Complete.cs：SceneAssetHostingTransaction.Complete.cs
-│   │   │   ├── SceneAssetHostingTransaction.Rollback.cs：SceneAssetHostingTransaction.Rollback.cs
-│   │   │   ├── SceneAssetHostingTransaction.cs：SceneAssetHostingTransaction.cs
-│   │   │   ├── HostedSceneAsset.cs：HostedSceneAsset.cs
-│   │   │   ├── ModelAssetRuntimeState.cs：ModelAssetRuntimeState.cs
-│   │   │   ├── SceneAssetHostingError.cs：SceneAssetHostingError.cs
-│   │   │   ├── SceneAssetHostingState.cs：SceneAssetHostingState.cs
-│   │   │   ├── SceneAssetPathPolicy.cs：SceneAssetPathPolicy.cs
-│   │   ├── Identity
-│   │   │   ├── AssetId.cs：AssetId.cs
-│   │   ├── Import
-│   │   │   └── Gltf
-│   │   │   ├── GlbContainer.cs：GlbContainer.cs
-│   │   │   ├── GlbImportService.cs：GlbImportService.cs
-│   │   │   ├── GltfAccessorReader.cs：GltfAccessorReader.cs
-│   │   │   ├── GltfCoordinatePolicy.cs：GltfCoordinatePolicy.cs
-│   │   │   ├── GltfJsonAccess.cs：GltfJsonAccess.cs
-│   │   │   ├── GltfNodeTransform.cs：GltfNodeTransform.cs
-│   │   │   ├── GltfStaticModelImporter.cs：GltfStaticModelImporter.cs
-│   │   │   ├── ImportStop.cs：ImportStop.cs
-│   │   └── StaticModels
-│   │   ├── SceneStaticModelBinding.cs：SceneStaticModelBinding.cs
-│   │   ├── StaticModelAuthoringService.cs：StaticModelAuthoringService.cs
-│   │   ├── StaticModelBuilder.cs：StaticModelBuilder.cs
-│   │   ├── StaticModelColor.cs：StaticModelColor.cs
-│   │   ├── StaticModelData.cs：StaticModelData.cs
-│   │   ├── StaticModelImportCodes.cs：StaticModelImportCodes.cs
-│   │   ├── StaticModelImportResult.cs：StaticModelImportResult.cs
-│   │   ├── StaticModelImportWarning.cs：StaticModelImportWarning.cs
-│   │   ├── StaticModelPrimitive.cs：StaticModelPrimitive.cs
-│   │   ├── StaticModelVertex.cs：StaticModelVertex.cs
-│   ├── Camera
-│   │   ├── CameraBasis.cs：CameraBasis.cs
-│   │   ├── CameraFrameResult.cs：CameraFrameResult.cs
-│   │   ├── CameraNavigation.Try.cs：CameraNavigation.Try.cs
-│   │   ├── CameraNavigation.cs：CameraNavigation.cs
-│   │   ├── EditorCameraFraming.Orthographic.cs：EditorCameraFraming.Orthographic.cs
-│   │   ├── EditorCameraFraming.cs：EditorCameraFraming.cs
-│   │   ├── OrthographicViewFactory.cs：OrthographicViewFactory.cs
-│   ├── MapDocument
-│   │   ├── MapDocument.cs：MapDocument.cs
-│   │   ├── MapDocumentAggregateBridge.cs：MapDocumentAggregateBridge.cs
-│   │   ├── MapDocumentJson.cs：MapDocumentJson.cs
-│   │   ├── MapDocumentOwner.cs：MapDocumentOwner.cs
-│   │   ├── MapDocumentResult.cs：MapDocumentResult.cs
-│   │   ├── MapDocumentValidator.cs：MapDocumentValidator.cs
-│   │   ├── MapEnvironmentDefinition.cs：MapEnvironmentDefinition.cs
-│   │   ├── MapJsonMapper.cs：MapJsonMapper.cs
-│   │   ├── MapJsonSerializer.cs：MapJsonSerializer.cs
-│   │   ├── MapStorageService.cs：MapStorageService.cs
-│   ├── MapEditing
-│   │   ├── MapEditEvents.cs：MapEditEvents.cs
-│   │   ├── MapEditReason.cs：MapEditReason.cs
-│   │   ├── MapEditSession.ActiveLayer.cs：MapEditSession.ActiveLayer.cs
-│   │   ├── MapEditSession.Commands.cs：MapEditSession.Commands.cs
-│   │   ├── MapEditSession.Commit.cs：MapEditSession.Commit.cs
-│   │   ├── MapEditSession.Document.cs：MapEditSession.Document.cs
-│   │   ├── MapEditSession.History.cs：MapEditSession.History.cs
-│   │   ├── MapEditSession.Layers.cs：MapEditSession.Layers.cs
-│   │   ├── MapEditSession.Selection.cs：MapEditSession.Selection.cs
-│   │   ├── MapEditSession.cs：MapEditSession.cs
-│   │   ├── MapHistoryEntry.cs：MapHistoryEntry.cs
-│   │   ├── MapSelection.cs：MapSelection.cs
-│   │   ├── MapSelectionKind.cs：MapSelectionKind.cs
-│   ├── SceneDocument
-│   │   ├── MapReference.cs：MapReference.cs
-│   │   ├── SceneDocumentAsset.cs：SceneDocumentAsset.cs
-│   │   ├── SceneDocumentEntity.cs：SceneDocumentEntity.cs
-│   │   ├── SceneDocumentJson.cs：SceneDocumentJson.cs
-│   │   ├── SceneDocumentLoadTransaction.cs：SceneDocumentLoadTransaction.cs
-│   │   ├── SceneDocumentMapper.cs：SceneDocumentMapper.cs
-│   │   ├── SceneDocumentResult.cs：SceneDocumentResult.cs
-│   │   ├── SceneDocumentSaveTransaction.cs：SceneDocumentSaveTransaction.cs
-│   │   ├── SceneDocumentSession.cs：SceneDocumentSession.cs
-│   │   ├── SceneDocumentSnapshot.cs：SceneDocumentSnapshot.cs
-│   │   ├── SceneDocumentValidator.MapReference.cs：SceneDocumentValidator.MapReference.cs
-│   │   ├── SceneDocumentValidator.cs：SceneDocumentValidator.cs
-│   │   ├── SceneDocumentWorldBridge.cs：SceneDocumentWorldBridge.cs
-│   │   ├── SceneLoadCandidate.cs：SceneLoadCandidate.cs
-│   │   ├── SceneSaveOutcome.cs：SceneSaveOutcome.cs
-│   │   ├── SceneStorageService.cs：SceneStorageService.cs
-│   └── Transform
-│   ├── TransformSession.Rotate.cs：TransformSession.Rotate.cs
-│   ├── TransformSession.Scale.cs：TransformSession.Scale.cs
-│   ├── TransformSession.cs：TransformSession.cs
-│   ├── XuanYu.Editor.csproj：XuanYu.Editor.csproj
-├── XuanYu.Editor.App
-│   ├── EditorCompositionRoot.cs：EditorCompositionRoot.cs
-│   ├── Program.cs：Program.cs
-│   ├── XuanYu.Editor.App.csproj：XuanYu.Editor.App.csproj
-├── XuanYu.Editor.UI
-│   ├── Bootstrap
-│   │   ├── App.axaml：App.axaml
-│   │   ├── App.axaml.cs：App.axaml.cs
-│   │   ├── Program.cs：Program.cs
-│   ├── Dialogs
-│   │   ├── IEditorDialogService.cs：IEditorDialogService.cs
-│   │   ├── NullEditorDialogService.cs：NullEditorDialogService.cs
-│   ├── EditorState
-│   │   ├── EditorInteractionChangedResult.cs：EditorInteractionChangedResult.cs
-│   │   ├── EditorInteractionCommand.cs：EditorInteractionCommand.cs
-│   │   ├── EditorInteractionPointerSnapshot.cs：EditorInteractionPointerSnapshot.cs
-│   │   ├── EditorInteractionSnapshot.cs：EditorInteractionSnapshot.cs
-│   │   ├── EditorSelectionCommand.cs：EditorSelectionCommand.cs
-│   │   ├── EditorSelectionSnapshot.cs：EditorSelectionSnapshot.cs
-│   │   ├── EditorStateChangedResult.cs：EditorStateChangedResult.cs
-│   │   ├── EditorStateOwner.Interaction.cs：EditorStateOwner.Interaction.cs
-│   │   ├── EditorStateOwner.Tool.cs：EditorStateOwner.Tool.cs
-│   │   ├── EditorStateOwner.cs：EditorStateOwner.cs
-│   │   ├── EditorToolChangedResult.cs：EditorToolChangedResult.cs
-│   │   ├── EditorToolCommand.cs：EditorToolCommand.cs
-│   │   ├── EditorToolId.cs：EditorToolId.cs
-│   │   ├── EditorToolSnapshot.cs：EditorToolSnapshot.cs
-│   │   ├── EditorToolText.cs：EditorToolText.cs
-│   │   ├── EditorTransformCapturePolicy.cs：EditorTransformCapturePolicy.cs
-│   ├── Foot
-│   │   ├── Foot.axaml：Foot.axaml
-│   │   ├── Foot.axaml.cs：Foot.axaml.cs
-│   │   ├── LogAutoScrollPolicy.cs：LogAutoScrollPolicy.cs
-│   │   ├── LogDetailPanel.axaml：LogDetailPanel.axaml
-│   │   ├── LogDetailPanel.axaml.cs：LogDetailPanel.axaml.cs
-│   │   ├── LogListAutoScrollController.Follow.cs：LogListAutoScrollController.Follow.cs
-│   │   ├── LogListAutoScrollController.Layout.cs：LogListAutoScrollController.Layout.cs
-│   │   ├── LogListAutoScrollController.cs：LogListAutoScrollController.cs
-│   ├── Icons
-│   │   ├── EditorIcons.axaml：EditorIcons.axaml
-│   ├── Left
-│   │   ├── InlineRenameActivation.cs：InlineRenameActivation.cs
-│   │   ├── Left.EntityCommands.cs：Left.EntityCommands.cs
-│   │   ├── Left.Styles.axaml：Left.Styles.axaml
-│   │   ├── Left.axaml：Left.axaml
-│   │   ├── Left.axaml.cs：Left.axaml.cs
-│   ├── Main
-│   │   ├── Main.axaml：Main.axaml
-│   │   ├── Main.axaml.cs：Main.axaml.cs
-│   ├── Right
-│   │   ├── LayerInspectorPanel.axaml：LayerInspectorPanel.axaml
-│   │   ├── LayerInspectorPanel.axaml.cs：LayerInspectorPanel.axaml.cs
-│   │   ├── LayerPanel.axaml：LayerPanel.axaml
-│   │   ├── LayerPanel.axaml.cs：LayerPanel.axaml.cs
-│   │   ├── MapEditorPanel.axaml：MapEditorPanel.axaml
-│   │   ├── MapEditorPanel.axaml.cs：MapEditorPanel.axaml.cs
-│   │   ├── Right.axaml：Right.axaml
-│   │   ├── Right.axaml.cs：Right.axaml.cs
-│   ├── Root
-│   │   ├── UiRoot.axaml：UiRoot.axaml
-│   │   ├── UiRoot.axaml.cs：UiRoot.axaml.cs
-│   ├── Top
-│   │   ├── Top.axaml：Top.axaml
-│   │   ├── Top.axaml.cs：Top.axaml.cs
-│   ├── Viewport
-│   │   └── Vulkan
-│   │   ├── NativePointerMessage.cs：NativePointerMessage.cs
-│   │   ├── VulkanNativeHost.AvaloniaCamera.cs：VulkanNativeHost.AvaloniaCamera.cs
-│   │   ├── VulkanNativeHost.AvaloniaPointer.cs：VulkanNativeHost.AvaloniaPointer.cs
-│   │   ├── VulkanNativeHost.Bridge.cs：VulkanNativeHost.Bridge.cs
-│   │   ├── VulkanNativeHost.CameraPointer.cs：VulkanNativeHost.CameraPointer.cs
-│   │   ├── VulkanNativeHost.Dpi.cs：VulkanNativeHost.Dpi.cs
-│   │   ├── VulkanNativeHost.Gizmo.cs：VulkanNativeHost.Gizmo.cs
-│   │   ├── VulkanNativeHost.LayoutSync.cs：VulkanNativeHost.LayoutSync.cs
-│   │   ├── VulkanNativeHost.Log.cs：VulkanNativeHost.Log.cs
-│   │   ├── VulkanNativeHost.NavGizmo.cs：VulkanNativeHost.NavGizmo.cs
-│   │   ├── VulkanNativeHost.Picking.cs：VulkanNativeHost.Picking.cs
-│   │   ├── VulkanNativeHost.Pointer.cs：VulkanNativeHost.Pointer.cs
-│   │   ├── VulkanNativeHost.cs：VulkanNativeHost.cs
-│   │   ├── VulkanViewport.axaml：VulkanViewport.axaml
-│   │   ├── VulkanViewport.axaml.cs：VulkanViewport.axaml.cs
-│   │   ├── Win32ViewportHost.Input.cs：Win32ViewportHost.Input.cs
-│   │   ├── Win32ViewportHost.cs：Win32ViewportHost.cs
-│   │   ├── ViewNavigationGizmo.HitTest.cs：ViewNavigationGizmo.HitTest.cs
-│   │   ├── ViewNavigationGizmo.Layout.cs：ViewNavigationGizmo.Layout.cs
-│   ├── Vm
-│   │   ├── Camera
-│   │   │   ├── CameraSessionMode.cs：CameraSessionMode.cs
-│   │   │   ├── CameraSessionSnapshot.cs：CameraSessionSnapshot.cs
-│   │   │   ├── StandardViewResolver.cs：StandardViewResolver.cs
-│   │   │   ├── UiVm.Camera.Framing.cs：UiVm.Camera.Framing.cs
-│   │   │   ├── UiVm.Camera.cs：UiVm.Camera.cs
-│   │   │   ├── UiVm.CameraNavigation.cs：UiVm.CameraNavigation.cs
-│   │   │   ├── UiVm.ViewGizmo.cs：UiVm.ViewGizmo.cs
-│   │   ├── History
-│   │   │   ├── UiVm.EntityCommands.cs：UiVm.EntityCommands.cs
-│   │   │   ├── UiVm.History.Entities.cs：UiVm.History.Entities.cs
-│   │   │   ├── UiVm.History.cs：UiVm.History.cs
-│   │   ├── Inspector
-│   │   │   ├── UiVm.Inspector.cs：UiVm.Inspector.cs
-│   │   │   ├── UiVm.InspectorInput.Parse.cs：UiVm.InspectorInput.Parse.cs
-│   │   │   ├── UiVm.InspectorInput.cs：UiVm.InspectorInput.cs
-│   │   ├── Logging
-│   │   │   ├── DebugText.cs：DebugText.cs
-│   │   │   ├── EditorDisplayText.cs：EditorDisplayText.cs
-│   │   │   ├── EditorLogBuffer.cs：EditorLogBuffer.cs
-│   │   │   ├── EditorLogBus.cs：EditorLogBus.cs
-│   │   │   ├── EditorLogCategory.cs：EditorLogCategory.cs
-│   │   │   ├── EditorLogClipboardText.cs：EditorLogClipboardText.cs
-│   │   │   ├── EditorLogFilter.cs：EditorLogFilter.cs
-│   │   │   ├── EditorLogFilterQuery.cs：EditorLogFilterQuery.cs
-│   │   │   ├── EditorLogLevel.cs：EditorLogLevel.cs
-│   │   │   ├── EditorLogNoiseFilter.cs：EditorLogNoiseFilter.cs
-│   │   │   ├── EditorLogRepeatKey.cs：EditorLogRepeatKey.cs
-│   │   │   ├── EditorLogSource.cs：EditorLogSource.cs
-│   │   │   ├── EditorLogSummary.cs：EditorLogSummary.cs
-│   │   │   ├── LogEntry.cs：LogEntry.cs
-│   │   │   ├── SampleLogEntries.cs：SampleLogEntries.cs
-│   │   │   ├── UiText.cs：UiText.cs
-│   │   │   ├── UiVm.Logging.cs：UiVm.Logging.cs
-│   │   ├── Map
-│   │   │   ├── MapLayerRowViewModel.cs：MapLayerRowViewModel.cs
-│   │   │   ├── MapRenderSnapshotProjection.cs：MapRenderSnapshotProjection.cs
-│   │   │   ├── UiVm.MapCommandRouting.cs：UiVm.MapCommandRouting.cs
-│   │   │   ├── UiVm.MapDiagnostics.Format.cs：UiVm.MapDiagnostics.Format.cs
-│   │   │   ├── UiVm.MapDiagnostics.cs：UiVm.MapDiagnostics.cs
-│   │   │   ├── UiVm.MapEditor.cs：UiVm.MapEditor.cs
-│   │   │   ├── UiVm.MapHistory.cs：UiVm.MapHistory.cs
-│   │   │   ├── UiVm.MapLayerDiagnostics.cs：UiVm.MapLayerDiagnostics.cs
-│   │   │   ├── UiVm.MapLayerInspector.cs：UiVm.MapLayerInspector.cs
-│   │   │   ├── UiVm.MapLayerSelection.cs：UiVm.MapLayerSelection.cs
-│   │   │   ├── UiVm.MapLayers.cs：UiVm.MapLayers.cs
-│   │   │   ├── UiVm.MapRender.cs：UiVm.MapRender.cs
-│   │   │   ├── UiVm.MapWorld.cs：UiVm.MapWorld.cs
-│   │   ├── Scene
-│   │   │   ├── D2StaticModelDemo.cs：D2StaticModelDemo.cs
-│   │   │   ├── SceneHistoryEntry.cs：SceneHistoryEntry.cs
-│   │   │   ├── SceneRenderProjectionAdapter.cs：SceneRenderProjectionAdapter.cs
-│   │   │   ├── StaticModelRenderAdapter.cs：StaticModelRenderAdapter.cs
-│   │   │   ├── UiVm.DocumentStatus.cs：UiVm.DocumentStatus.cs
-│   │   │   ├── UiVm.RenderProjection.cs：UiVm.RenderProjection.cs
-│   │   │   ├── UiVm.Scene.cs：UiVm.Scene.cs
-│   │   │   ├── UiVm.SceneDocument.New.cs：UiVm.SceneDocument.New.cs
-│   │   │   ├── UiVm.SceneDocument.cs：UiVm.SceneDocument.cs
-│   │   │   ├── UiVm.SceneDocumentLog.cs：UiVm.SceneDocumentLog.cs
-│   │   │   ├── UiVm.SceneDocumentMapRef.cs：UiVm.SceneDocumentMapRef.cs
-│   │   │   ├── UiVm.SceneDocumentSave.cs：UiVm.SceneDocumentSave.cs
-│   │   │   ├── UiVm.StaticModelImport.cs：UiVm.StaticModelImport.cs
-│   │   │   ├── UiVm.WorldProjection.cs：UiVm.WorldProjection.cs
-│   │   ├── Selection
-│   │   │   ├── UiVm.Picking.cs：UiVm.Picking.cs
-│   │   │   ├── UiVm.Selection.cs：UiVm.Selection.cs
-│   │   │   ├── UiVm.SelectionProjection.cs：UiVm.SelectionProjection.cs
-│   │   │   ├── UiVm.SelectionTrace.cs：UiVm.SelectionTrace.cs
-│   │   │   ├── UiVm.SelectionValidity.cs：UiVm.SelectionValidity.cs
-│   │   │   ├── UiVm.ViewportSelection.cs：UiVm.ViewportSelection.cs
-│   │   │   ├── ViewportPickingLogFormatter.cs：ViewportPickingLogFormatter.cs
-│   │   ├── Transform
-│   │   │   ├── Move
-│   │   │   │   ├── UiVm.MoveGizmo.cs：UiVm.MoveGizmo.cs
-│   │   │   │   ├── UiVm.MoveGizmoLogging.cs：UiVm.MoveGizmoLogging.cs
-│   │   │   │   ├── UiVm.MoveGizmoScreenSize.cs：UiVm.MoveGizmoScreenSize.cs
-│   │   │   ├── Rotate
-│   │   │   │   ├── UiVm.RotateGizmo.cs：UiVm.RotateGizmo.cs
-│   │   │   └── Scale
-│   │   │   ├── UiVm.ScaleGizmo.cs：UiVm.ScaleGizmo.cs
-│   │   │   ├── UiVm.InputGuards.cs：UiVm.InputGuards.cs
-│   │   │   ├── UiVm.Interaction.cs：UiVm.Interaction.cs
-│   │   │   ├── UiVm.InteractionCancel.cs：UiVm.InteractionCancel.cs
-│   │   │   ├── UiVm.InteractionPointer.cs：UiVm.InteractionPointer.cs
-│   │   │   ├── UiVm.Tool.cs：UiVm.Tool.cs
-│   │   │   ├── UiVm.ViewportAssist.cs：UiVm.ViewportAssist.cs
-│   │   └── Tree
-│   │   ├── EditorTreeNode.cs：EditorTreeNode.cs
-│   │   ├── TreeGuideBuilder.cs：TreeGuideBuilder.cs
-│   │   ├── UiVm.TreeCommands.cs：UiVm.TreeCommands.cs
-│   │   ├── UiVm.NativeHostLifecycle.cs：UiVm.NativeHostLifecycle.cs
-│   │   ├── UiVm.cs：UiVm.cs
-│   └── Win
-│   ├── UiWin.Dialogs.cs：UiWin.Dialogs.cs
-│   ├── UiWin.EntityShortcuts.cs：UiWin.EntityShortcuts.cs
-│   ├── UiWin.MapCommands.cs：UiWin.MapCommands.cs
-│   ├── UiWin.SceneCommands.cs：UiWin.SceneCommands.cs
-│   ├── UiWin.UnsavedDialog.cs：UiWin.UnsavedDialog.cs
-│   ├── UiWin.axaml：UiWin.axaml
-│   ├── UiWin.axaml.cs：UiWin.axaml.cs
-│   ├── NativeHostResizeCoalescer.cs：NativeHostResizeCoalescer.cs
-│   ├── NativeHostResizeSnapshot.cs：NativeHostResizeSnapshot.cs
-│   ├── NativeHostSurfaceContract.cs：NativeHostSurfaceContract.cs
-│   ├── RelayCommand.cs：RelayCommand.cs
-│   ├── TreeGuide.cs：TreeGuide.cs
-│   ├── TreeGuideSegment.cs：TreeGuideSegment.cs
-│   ├── Ui.axaml：Ui.axaml
-│   ├── ViewportNativeHostRoute.cs：ViewportNativeHostRoute.cs
-│   ├── XuanYu.Editor.UI.csproj：XuanYu.Editor.UI.csproj
-│   ├── app.manifest：app.manifest
-├── XuanYu.Editor.Win
-│   ├── MainForm.cs：MainForm.cs
-│   ├── XuanYu.Editor.Win.csproj：XuanYu.Editor.Win.csproj
-├── XuanYu.Render.Abstractions
-│   ├── EditorViewPlaneGridKind.cs：EditorViewPlaneGridKind.cs
-│   ├── EditorViewportAssistState.cs：EditorViewportAssistState.cs
-│   ├── FrameExecutionPolicy.cs：FrameExecutionPolicy.cs
-│   ├── INativeHostSurfaceBridge.cs：INativeHostSurfaceBridge.cs
-│   ├── INativeHostSurfaceBridgeFactory.cs：INativeHostSurfaceBridgeFactory.cs
-│   ├── IRenderProjectionSource.cs：IRenderProjectionSource.cs
-│   ├── MapBoundsGeometry.cs：MapBoundsGeometry.cs
-│   ├── MapRenderSnapshot.cs：MapRenderSnapshot.cs
-│   ├── MapSurfaceGeometry.cs：MapSurfaceGeometry.cs
-│   ├── MapSurfaceResourceKey.cs：MapSurfaceResourceKey.cs
-│   ├── MapSurfaceResourceUpdatePolicy.cs：MapSurfaceResourceUpdatePolicy.cs
-│   ├── MapSurfaceResourceUpdateText.cs：MapSurfaceResourceUpdateText.cs
-│   ├── NativeHostHandleSnapshot.cs：NativeHostHandleSnapshot.cs
-│   ├── NativeHostLifecycleLogFormatter.cs：NativeHostLifecycleLogFormatter.cs
-│   ├── NativeHostLifecycleProbe.cs：NativeHostLifecycleProbe.cs
-│   ├── NativeHostLifecycleState.cs：NativeHostLifecycleState.cs
-│   ├── NativeHostSurfaceHandle.cs：NativeHostSurfaceHandle.cs
-│   ├── ReferenceGridScale.cs：ReferenceGridScale.cs
-│   ├── RenderCameraProjection.cs：RenderCameraProjection.cs
-│   ├── RenderDrawPlan.Typed.cs：RenderDrawPlan.Typed.cs
-│   ├── RenderDrawPlan.cs：RenderDrawPlan.cs
-│   ├── RenderEntityProjection.cs：RenderEntityProjection.cs
-│   ├── RenderEntityType.cs：RenderEntityType.cs
-│   ├── RenderProjection.cs：RenderProjection.cs
-│   ├── RenderProjectionResult.cs：RenderProjectionResult.cs
-│   ├── RenderStaticModelKey.cs：RenderStaticModelKey.cs
-│   ├── RenderStaticModelPrimitive.cs：RenderStaticModelPrimitive.cs
-│   ├── RenderStaticModelResource.cs：RenderStaticModelResource.cs
-│   ├── RenderStaticModelVertex.cs：RenderStaticModelVertex.cs
-│   ├── XuanYu.Render.Abstractions.csproj：XuanYu.Render.Abstractions.csproj
-├── XuanYu.Render.Vulkan
-│   ├── Bridge
-│   │   ├── VulkanBridgeDeviceAttachStep.cs：VulkanBridgeDeviceAttachStep.cs
-│   │   ├── VulkanBridgePhysicalDeviceAttachStep.cs：VulkanBridgePhysicalDeviceAttachStep.cs
-│   │   ├── VulkanBridgeRenderSessionAttachStep.cs：VulkanBridgeRenderSessionAttachStep.cs
-│   │   ├── VulkanBridgeSwapchainAttachStep.cs：VulkanBridgeSwapchainAttachStep.cs
-│   ├── Device
-│   │   ├── VulkanDeviceOwner.Physical.cs：VulkanDeviceOwner.Physical.cs
-│   │   ├── VulkanDeviceOwner.cs：VulkanDeviceOwner.cs
-│   │   ├── VulkanPhysicalDeviceInfo.cs：VulkanPhysicalDeviceInfo.cs
-│   │   ├── VulkanPhysicalDeviceSelection.cs：VulkanPhysicalDeviceSelection.cs
-│   │   ├── VulkanPhysicalDeviceSelector.cs：VulkanPhysicalDeviceSelector.cs
-│   │   ├── VulkanQueueFamilySelection.cs：VulkanQueueFamilySelection.cs
-│   ├── Diagnostic
-│   │   ├── VulkanResizeTracer.cs：VulkanResizeTracer.cs
-│   ├── Pipeline
-│   │   ├── ShaderBytecode.Frag.cs：ShaderBytecode.Frag.cs
-│   │   ├── ShaderBytecode.GridFrag.cs：ShaderBytecode.GridFrag.cs
-│   │   ├── ShaderBytecode.GridVert.cs：ShaderBytecode.GridVert.cs
-│   │   ├── ShaderBytecode.NavGizmoFrag.cs：ShaderBytecode.NavGizmoFrag.cs
-│   │   ├── ShaderBytecode.NavGizmoVert.cs：nav gizmo vert
-│   │   ├── ShaderBytecode.Vert.cs：ShaderBytecode.Vert.cs
-│   │   ├── ShaderBytecode.ViewPlaneGridFrag.cs：ShaderBytecode.ViewPlaneGridFrag.cs
-│   │   ├── ShaderBytecode.WorldAxesFrag.cs：ShaderBytecode.WorldAxesFrag.cs
-│   │   ├── ShaderBytecode.WorldOriginFrag.cs：world origin frag
-│   │   ├── VulkanGraphicsPipelineOwner.Depth.cs：VulkanGraphicsPipelineOwner.Depth.cs
-│   │   ├── VulkanGraphicsPipelineOwner.Fullscreen.cs：VulkanGraphicsPipelineOwner.Fullscreen.cs
-│   │   ├── VulkanGraphicsPipelineOwner.Grid.cs：VulkanGraphicsPipelineOwner.Grid.cs
-│   │   ├── VulkanGraphicsPipelineOwner.Sky.cs：VulkanGraphicsPipelineOwner.Sky.cs
-│   │   ├── VulkanGraphicsPipelineOwner.StaticModelInput.cs：VulkanGraphicsPipelineOwner.StaticModelInput.cs
-│   │   ├── VulkanGraphicsPipelineOwner.cs：VulkanGraphicsPipelineOwner.cs
-│   │   ├── VulkanPipelineLogFormatter.cs：VulkanPipelineLogFormatter.cs
-│   │   ├── VulkanScenePushConstants.cs：VulkanScenePushConstants.cs
-│   │   ├── VulkanShaderModuleOwner.cs：VulkanShaderModuleOwner.cs
-│   ├── Render
-│   │   ├── ClearFrame
-│   │   │   ├── VulkanClearFrameLogFormatter.cs：VulkanClearFrameLogFormatter.cs
-│   │   │   ├── VulkanClearFrameOwner.Commands.cs：VulkanClearFrameOwner.Commands.cs
-│   │   │   ├── VulkanClearFrameOwner.Lifecycle.cs：VulkanClearFrameOwner.Lifecycle.cs
-│   │   │   ├── VulkanClearFrameOwner.Matrix.cs：VulkanClearFrameOwner.Matrix.cs
-│   │   │   ├── VulkanClearFrameOwner.PipelineBind.cs：VulkanClearFrameOwner.PipelineBind.cs
-│   │   │   ├── VulkanClearFrameOwner.PushConstants.cs：VulkanClearFrameOwner.PushConstants.cs
-│   │   │   ├── VulkanClearFrameOwner.Resources.cs：VulkanClearFrameOwner.Resources.cs
-│   │   │   ├── VulkanClearFrameOwner.Trace.cs：VulkanClearFrameOwner.Trace.cs
-│   │   │   ├── VulkanClearFrameOwner.cs：VulkanClearFrameOwner.cs
-│   │   ├── Grid
-│   │   │   ├── VulkanClearFrameOwner.Grid.cs：VulkanClearFrameOwner.Grid.cs
-│   │   │   ├── VulkanClearFrameOwner.GridScale.cs：VulkanClearFrameOwner.GridScale.cs
-│   │   │   ├── VulkanClearFrameOwner.NavGizmo.cs：VulkanClearFrameOwner.NavGizmo.cs
-│   │   │   ├── VulkanClearFrameOwner.ViewPlaneGrid.cs：VulkanClearFrameOwner.ViewPlaneGrid.cs
-│   │   │   ├── VulkanClearFrameOwner.WorldAxes.cs：VulkanClearFrameOwner.WorldAxes.cs
-│   │   ├── Map
-│   │   │   ├── VulkanClearFrameOwner.MapSurface.cs：VulkanClearFrameOwner.MapSurface.cs
-│   │   ├── Present
-│   │   │   ├── VulkanPresentLoop.Frame.cs：VulkanPresentLoop.Frame.cs
-│   │   │   ├── VulkanPresentLoop.Lifecycle.cs：VulkanPresentLoop.Lifecycle.cs
-│   │   │   ├── VulkanPresentLoop.cs：VulkanPresentLoop.cs
-│   │   ├── Scene
-│   │   │   ├── VulkanClearFrameOwner.Draw.cs：VulkanClearFrameOwner.Draw.cs
-│   │   │   ├── VulkanClearFrameOwner.DrawAssist.cs：VulkanClearFrameOwner.DrawAssist.cs
-│   │   │   ├── VulkanClearFrameOwner.DrawGizmo.cs：VulkanClearFrameOwner.DrawGizmo.cs
-│   │   │   ├── VulkanClearFrameOwner.Scene.cs：VulkanClearFrameOwner.Scene.cs
-│   │   └── StaticModels
-│   │   ├── VulkanClearFrameOwner.DrawStaticBounds.cs：VulkanClearFrameOwner.DrawStaticBounds.cs
-│   │   ├── VulkanClearFrameOwner.DrawStaticModel.cs：VulkanClearFrameOwner.DrawStaticModel.cs
-│   │   ├── VulkanStaticModelBuffer.cs：VulkanStaticModelBuffer.cs
-│   │   ├── VulkanStaticModelCache.cs：VulkanStaticModelCache.cs
-│   │   ├── VulkanStaticModelFailureTracker.cs：VulkanStaticModelFailureTracker.cs
-│   │   ├── VulkanStaticModelLog.cs：VulkanStaticModelLog.cs
-│   │   ├── VulkanStaticModelResource.cs：VulkanStaticModelResource.cs
-│   │   ├── VulkanStaticModelValidator.cs：VulkanStaticModelValidator.cs
-│   │   ├── VulkanStaticModelVertex.cs：VulkanStaticModelVertex.cs
-│   │   ├── VulkanDepthAttachment.cs：VulkanDepthAttachment.cs
-│   ├── Session
-│   │   ├── GridPipelineSet.cs：GridPipelineSet.cs
-│   │   ├── VulkanRenderSession.Lifecycle.cs：VulkanRenderSession.Lifecycle.cs
-│   │   ├── VulkanRenderSession.Recover.cs：VulkanRenderSession.Recover.cs
-│   │   ├── VulkanRenderSession.Resize.cs：VulkanRenderSession.Resize.cs
-│   │   ├── VulkanRenderSession.cs：VulkanRenderSession.cs
-│   ├── Shaders
-│   │   ├── editor_nav_gizmo.frag：玄域编辑器：Blender 风格导航 Gizmo
-│   │   ├── editor_nav_gizmo.vert：导航 Gizmo Overlay Pass —— 顶点着色器。
-│   │   ├── editor_reference_grid.frag：Blender 式统一尺度参考网格 —— 片元着色器。
-│   │   ├── editor_reference_grid.vert：独立编辑器参考网格 Pass —— 顶点着色器。
-│   │   ├── editor_view_plane_grid.frag：F3-F4：正交标准视图的视图平面网格（YZ/XZ 平面，以世界原点为基准）。
-│   │   ├── editor_world_axes.frag：X/Y 世界轴独立全屏 Pass —— 片元着色器。
-│   │   ├── editor_world_origin.frag：世界原点标记独立全屏 Pass —— 片元着色器（屏幕空间版）。
-│   │   ├── scene.frag：每像素程序化编辑器环境（天空 + 中性灰参考地面）。
-│   │   ├── scene.vert：F2-R3-R2：每像素背景——invVP（flat，每个顶点算一次）与背景 NDC（哨兵 (2,2) 表示非背景）。
-│   └── Swapchain
-│   ├── VulkanSwapchainBuilder.cs：VulkanSwapchainBuilder.cs
-│   ├── VulkanSwapchainCapabilities.cs：VulkanSwapchainCapabilities.cs
-│   ├── VulkanSwapchainLogFormatter.cs：VulkanSwapchainLogFormatter.cs
-│   ├── VulkanSwapchainOwner.Accessors.cs：VulkanSwapchainOwner.Accessors.cs
-│   ├── VulkanSwapchainOwner.cs：VulkanSwapchainOwner.cs
-│   ├── VulkanApiProbe.cs：VulkanApiProbe.cs
-│   ├── VulkanBridgeLogFormatter.cs：VulkanBridgeLogFormatter.cs
-│   ├── VulkanDeviceInfo.cs：VulkanDeviceInfo.cs
-│   ├── VulkanInstanceCreateInfoBuilder.cs：VulkanInstanceCreateInfoBuilder.cs
-│   ├── VulkanInstanceExtensions.cs：VulkanInstanceExtensions.cs
-│   ├── VulkanInstanceLogFormatter.cs：VulkanInstanceLogFormatter.cs
-│   ├── VulkanInstanceOwner.cs：VulkanInstanceOwner.cs
-│   ├── VulkanInstanceResult.cs：VulkanInstanceResult.cs
-│   ├── VulkanNativeHostSurfaceBridge.Attach.cs：VulkanNativeHostSurfaceBridge.Attach.cs
-│   ├── VulkanNativeHostSurfaceBridge.Lifecycle.cs：VulkanNativeHostSurfaceBridge.Lifecycle.cs
-│   ├── VulkanNativeHostSurfaceBridge.Resize.cs：VulkanNativeHostSurfaceBridge.Resize.cs
-│   ├── VulkanNativeHostSurfaceBridge.Scene.cs：VulkanNativeHostSurfaceBridge.Scene.cs
-│   ├── VulkanNativeHostSurfaceBridge.cs：VulkanNativeHostSurfaceBridge.cs
-│   ├── VulkanNativeHostSurfaceBridgeFactory.cs：VulkanNativeHostSurfaceBridgeFactory.cs
-│   ├── VulkanProbeLogFormatter.cs：VulkanProbeLogFormatter.cs
-│   ├── VulkanProbeResult.cs：VulkanProbeResult.cs
-│   ├── VulkanSurfaceLogFormatter.cs：VulkanSurfaceLogFormatter.cs
-│   ├── VulkanSurfaceOwner.cs：VulkanSurfaceOwner.cs
-│   ├── VulkanSurfaceResult.cs：VulkanSurfaceResult.cs
-│   ├── XuanYu.Render.Vulkan.csproj：XuanYu.Render.Vulkan.csproj
-├── XuanYu.WarCore
-│   ├── Identity
-│   │   ├── FactionId.cs：FactionId.cs
-│   │   ├── MilitaryIdentity.cs：MilitaryIdentity.cs
-│   │   ├── OrganizationId.cs：OrganizationId.cs
-│   │   ├── UnitId.cs：UnitId.cs
-│   │   ├── UnitKind.cs：UnitKind.cs
-│   └── State
-│   ├── SoldierState.cs：SoldierState.cs
-│   ├── XuanYu.WarCore.csproj：XuanYu.WarCore.csproj
-├── XuanYu.WarCore.Tests
-│   ├── Identity
-│   │   ├── MilitaryIdentityTests.cs：MilitaryIdentityTests.cs
-│   └── State
-│   ├── SoldierStateTests.cs：SoldierStateTests.cs
-│   ├── WarCoreDependencyTests.cs：WarCoreDependencyTests.cs
-│   ├── XuanYu.WarCore.Tests.csproj：XuanYu.WarCore.Tests.csproj
-├── XuanYu.World
-│   ├── Map
-│   │   ├── MapBounds.cs：MapBounds.cs
-│   │   ├── MapDefaultDefinition.cs：MapDefaultDefinition.cs
-│   │   ├── MapDefinition.cs：MapDefinition.cs
-│   │   ├── MapDefinitionValidator.cs：MapDefinitionValidator.cs
-│   │   ├── MapGeometry.cs：MapGeometry.cs
-│   │   ├── MapId.cs：MapId.cs
-│   │   ├── MapLayer.cs：MapLayer.cs
-│   │   ├── MapLayerId.cs：MapLayerId.cs
-│   │   ├── MapLayerKind.cs：MapLayerKind.cs
-│   │   ├── MapLayerRules.cs：MapLayerRules.cs
-│   │   ├── MapLayerStack.cs：MapLayerStack.cs
-│   │   ├── MapLayerValidator.cs：MapLayerValidator.cs
-│   │   ├── MapRegion.cs：MapRegion.cs
-│   │   ├── MapRegionDraft.cs：MapRegionDraft.cs
-│   │   ├── MapRegionId.cs：MapRegionId.cs
-│   │   ├── MapRegionKind.cs：MapRegionKind.cs
-│   │   ├── MapRegionValidator.cs：MapRegionValidator.cs
-│   │   ├── MapSurfaceDefinition.cs：MapSurfaceDefinition.cs
-│   │   ├── MapValidationResult.cs：MapValidationResult.cs
-│   │   ├── WorldMapState.cs：WorldMapState.cs
-│   │   ├── WorldMapStateOwner.cs：WorldMapStateOwner.cs
-│   ├── Scene
-│   │   ├── SceneSpatialBoundsProjection.cs：SceneSpatialBoundsProjection.cs
-│   │   ├── SceneStateOwner.Lifecycle.cs：SceneStateOwner.Lifecycle.cs
-│   │   ├── SceneStateOwner.Seeding.cs：SceneStateOwner.Seeding.cs
-│   │   ├── SceneStateOwner.StaticModel.cs：SceneStateOwner.StaticModel.cs
-│   │   ├── SceneStateOwner.Transform.cs：SceneStateOwner.Transform.cs
-│   │   ├── SceneStateOwner.cs：SceneStateOwner.cs
-│   │   ├── SceneWorldProjection.cs：SceneWorldProjection.cs
-│   └── Spatial
-│   ├── DynamicAabbTree.Insert.cs：DynamicAabbTree.Insert.cs
-│   ├── DynamicAabbTree.Node.cs：DynamicAabbTree.Node.cs
-│   ├── DynamicAabbTree.Query.cs：DynamicAabbTree.Query.cs
-│   ├── DynamicAabbTree.Refit.cs：DynamicAabbTree.Refit.cs
-│   ├── DynamicAabbTree.Remove.cs：DynamicAabbTree.Remove.cs
-│   ├── DynamicAabbTree.cs：DynamicAabbTree.cs
-│   ├── ISpatialIndex.cs：ISpatialIndex.cs
-│   ├── SpatialIndexOwner.cs：SpatialIndexOwner.cs
-│   ├── SpatialRaycastResolver.cs：SpatialRaycastResolver.cs
-│   ├── EntityRegistry.Authoring.cs：EntityRegistry.Authoring.cs
-│   ├── EntityRegistry.Replace.cs：EntityRegistry.Replace.cs
-│   ├── EntityRegistry.cs：EntityRegistry.cs
-│   ├── GlobalWorld.Authoring.cs：GlobalWorld.Authoring.cs
-│   ├── GlobalWorld.Query.cs：GlobalWorld.Query.cs
-│   ├── GlobalWorld.Snapshot.cs：GlobalWorld.Snapshot.cs
-│   ├── GlobalWorld.cs：GlobalWorld.cs
-│   ├── GridWorldPartitionStrategy.cs：GridWorldPartitionStrategy.cs
-│   ├── IWorldPartitionStrategy.cs：IWorldPartitionStrategy.cs
-│   ├── RegionKey.cs：RegionKey.cs
-│   ├── WorldEntityActivity.cs：WorldEntityActivity.cs
-│   ├── WorldEntityName.cs：WorldEntityName.cs
-│   ├── WorldEntitySnapshot.cs：WorldEntitySnapshot.cs
-│   ├── WorldEntityType.cs：WorldEntityType.cs
-│   ├── WorldPartitionEntry.cs：WorldPartitionEntry.cs
-│   ├── WorldPartitionMembership.cs：WorldPartitionMembership.cs
-│   ├── WorldQuery.cs：WorldQuery.cs
-│   ├── XuanYu.World.csproj：XuanYu.World.csproj
-├── XuanYu.World.Tests
-│   ├── Assets
-│   │   ├── AssetContractTests.cs：AssetContractTests.cs
-│   │   ├── AssetDialogTests.cs：AssetDialogTests.cs
-│   │   ├── GlbFactory.cs：GlbFactory.cs
-│   │   ├── GlbImportTests.cs：GlbImportTests.cs
-│   │   ├── GlbMultiPrimitiveFactory.cs：GlbMultiPrimitiveFactory.cs
-│   │   ├── HostingCompleteTests.cs：HostingCompleteTests.cs
-│   │   ├── HostingPlannerRejectTests.cs：HostingPlannerRejectTests.cs
-│   │   ├── HostingPlannerTests.cs：HostingPlannerTests.cs
-│   │   ├── HostingRollbackTests.cs：HostingRollbackTests.cs
-│   │   ├── HostingSaveAsTests.cs：HostingSaveAsTests.cs
-│   │   ├── HostingTestEnv.cs：HostingTestEnv.cs
-│   │   ├── HostingTransactionTests.cs：HostingTransactionTests.cs
-│   │   ├── LoadStructureErrorTests.cs：LoadStructureErrorTests.cs
-│   │   ├── LoadTransactionTests.cs：LoadTransactionTests.cs
-│   │   ├── SaveAsTests.cs：SaveAsTests.cs
-│   │   ├── SaveTransactionTests.cs：SaveTransactionTests.cs
-│   │   ├── ScenePersistenceEnv.cs：ScenePersistenceEnv.cs
-│   │   ├── SchemaCompatibilityTests.cs：SchemaCompatibilityTests.cs
-│   │   ├── StaticModelAuthoringServiceTests.cs：StaticModelAuthoringServiceTests.cs
-│   │   ├── StaticModelBaseVertexTests.cs：StaticModelBaseVertexTests.cs
-│   │   ├── StaticModelCatalogTests.cs：StaticModelCatalogTests.cs
-│   │   ├── StaticModelFailureTrackerTests.cs：StaticModelFailureTrackerTests.cs
-│   │   ├── StaticModelProjectionTests.cs：StaticModelProjectionTests.cs
-│   │   ├── StaticModelUiTests.cs：StaticModelUiTests.cs
-│   │   ├── StaticModelValidatorTests.cs：StaticModelValidatorTests.cs
-│   ├── Camera
-│   │   ├── CameraDocumentTests.cs：CameraDocumentTests.cs
-│   │   ├── CameraFramingOccupancyTests.cs：CameraFramingOccupancyTests.cs
-│   │   ├── CameraFramingTests.cs：CameraFramingTests.cs
-│   │   ├── CameraNavigationUiTests.cs：CameraNavigationUiTests.cs
-│   │   ├── UiViewGizmoTests.cs：UiViewGizmoTests.cs
-│   ├── Logging
-│   │   ├── FootAxamlTailContractTests.cs：FootAxamlTailContractTests.cs
-│   │   ├── LogAutoScrollPolicyTests.cs：LogAutoScrollPolicyTests.cs
-│   │   ├── LogListAutoScrollControllerContractTests.cs：LogListAutoScrollControllerContractTests.cs
-│   │   ├── UiMapLogChineseTests.cs：UiMapLogChineseTests.cs
-│   │   ├── UiRootLogRowContractTests.cs：UiRootLogRowContractTests.cs
-│   ├── Map
-│   │   └── Editing
-│   │   ├── MapLayerSessionTests.Behavior.cs：MapLayerSessionTests.Behavior.cs
-│   │   ├── MapLayerSessionTests.cs：MapLayerSessionTests.cs
-│   │   ├── UiMapCommandRoutingTests.cs：UiMapCommandRoutingTests.cs
-│   │   ├── UiMapEditorTests.cs：UiMapEditorTests.cs
-│   │   ├── UiMapHistoryTests.cs：UiMapHistoryTests.cs
-│   │   ├── UiMapInitialProjectionTests.cs：UiMapInitialProjectionTests.cs
-│   │   ├── UiMapLayerLockLogTests.cs：图层锁定日志细化与立方体单次创建测试
-│   │   ├── UiMapLayerPanelTests.Behavior.cs：UiMapLayerPanelTests.Behavior.cs
-│   │   ├── UiMapLayerPanelTests.cs：UiMapLayerPanelTests.cs
-│   │   ├── UiMapLayoutContractTests.cs：UiMapLayoutContractTests.cs
-│   │   ├── MapBoundsTests.cs：MapBoundsTests.cs
-│   │   ├── MapCoordinateValidationTests.cs：MapCoordinateValidationTests.cs
-│   │   ├── MapDefaultMapTests.cs：MapDefaultMapTests.cs
-│   │   ├── MapDefinitionTests.cs：MapDefinitionTests.cs
-│   │   ├── MapDocumentAggregateBridgeTests.cs：MapDocumentAggregateBridgeTests.cs
-│   │   ├── MapDocumentOwnerChainTests.cs：MapDocumentOwnerChainTests.cs
-│   │   ├── MapDocumentOwnerTests.cs：MapDocumentOwnerTests.cs
-│   │   ├── MapEnvironmentValidationTests.cs：MapEnvironmentValidationTests.cs
-│   │   ├── MapIdTests.cs：MapIdTests.cs
-│   │   ├── MapJsonRoundTripTests.cs：MapJsonRoundTripTests.cs
-│   │   ├── MapJsonStrictnessTests.cs：MapJsonStrictnessTests.cs
-│   │   ├── MapLayerRulesTests.cs：MapLayerRulesTests.cs
-│   │   ├── MapLayerStackTests.Order.cs：MapLayerStackTests.Order.cs
-│   │   ├── MapLayerStackTests.cs：MapLayerStackTests.cs
-│   │   ├── MapLayerTests.Base.cs：MapLayerTests.Base.cs
-│   │   ├── MapLayerTests.cs：MapLayerTests.cs
-│   │   ├── MapRegionDraftTests.cs：MapRegionDraftTests.cs
-│   │   ├── MapRegionTests.Helpers.cs：MapRegionTests.Helpers.cs
-│   │   ├── MapRegionTests.Strictness.cs：MapRegionTests.Strictness.cs
-│   │   ├── MapRegionTests.cs：MapRegionTests.cs
-│   │   ├── MapSizeValidationTests.cs：MapSizeValidationTests.cs
-│   │   ├── MapStorageFailureTests.cs：MapStorageFailureTests.cs
-│   │   ├── MapStorageTests.cs：MapStorageTests.cs
-│   │   ├── MapSurfaceSamplerTests.cs：MapSurfaceSamplerTests.cs
-│   │   ├── MapSurfaceValidationTests.cs：MapSurfaceValidationTests.cs
-│   │   ├── SceneMapReferenceTests.cs：SceneMapReferenceTests.cs
-│   │   ├── WorldMapStateOwnerTests.cs：WorldMapStateOwnerTests.cs
-│   │   ├── WorldMapStateTests.cs：WorldMapStateTests.cs
-│   ├── MapEditing
-│   │   ├── MapEditSessionCommandTests.cs：MapEditSessionCommandTests.cs
-│   │   ├── MapEditSessionCreationTests.cs：MapEditSessionCreationTests.cs
-│   │   ├── MapEditSessionDirtyTests.cs：MapEditSessionDirtyTests.cs
-│   │   ├── MapEditSessionHistoryTests.cs：MapEditSessionHistoryTests.cs
-│   │   ├── MapEditSessionMapPropertiesTests.cs：MapEditSessionMapPropertiesTests.cs
-│   │   ├── MapEditSessionSelectionTests.cs：MapEditSessionSelectionTests.cs
-│   │   ├── MapEditSessionThreadTests.cs：MapEditSessionThreadTests.cs
-│   │   ├── MapEditSessionValidationTests.cs：MapEditSessionValidationTests.cs
-│   │   ├── MapRenderSnapshotProjectionTests.cs：MapRenderSnapshotProjectionTests.cs
-│   ├── Render
-│   │   ├── VulkanPresentLoopContractTests.cs：VulkanPresentLoopContractTests.cs
-│   │   ├── VulkanPresentModeSelectionTests.cs：VulkanPresentModeSelectionTests.cs
-│   ├── Scene
-│   │   ├── CommandSmokeTests.cs：CommandSmokeTests.cs
-│   │   ├── EditorEnvironmentTests.cs：EditorEnvironmentTests.cs
-│   │   ├── EntityBoundsSemanticsTests.cs：EntityBoundsSemanticsTests.cs
-│   │   ├── EntityRegistryTests.cs：EntityRegistryTests.cs
-│   │   ├── EntityTests.cs：EntityTests.cs
-│   │   ├── FinalSceneTests.cs：FinalSceneTests.cs
-│   │   ├── GlobalWorldTests.cs：GlobalWorldTests.cs
-│   │   ├── SceneConsumptionTests.cs：SceneConsumptionTests.cs
-│   │   ├── SceneDocumentPersistenceTests.cs：SceneDocumentPersistenceTests.cs
-│   │   ├── SceneDocumentTests.Opening.cs：SceneDocumentTests.Opening.cs
-│   │   ├── SceneDocumentTests.SaveFeedback.cs：SceneDocumentTests.SaveFeedback.cs
-│   │   ├── SceneDocumentTests.cs：SceneDocumentTests.cs
-│   │   ├── SceneIsolationTests.cs：SceneIsolationTests.cs
-│   │   ├── SceneMultiEntityGateTests.cs：SceneMultiEntityGateTests.cs
-│   │   ├── SceneSelectionReentryTests.cs：SceneSelectionReentryTests.cs
-│   │   ├── SceneSingleAuthorityTests.cs：SceneSingleAuthorityTests.cs
-│   │   ├── UiHistoryTests.InlineRename.cs：UiHistoryTests.InlineRename.cs
-│   │   ├── UiHistoryTests.cs：UiHistoryTests.cs
-│   ├── Selection
-│   │   ├── FinalSelectionTests.cs：FinalSelectionTests.cs
-│   │   ├── SelectionToolStateUiTests.cs：SelectionToolStateUiTests.cs
-│   │   ├── ToolStateHighlightUiTests.Selection.cs：ToolStateHighlightUiTests.Selection.cs
-│   │   ├── ToolStateHighlightUiTests.cs：ToolStateHighlightUiTests.cs
-│   ├── Spatial
-│   │   ├── SceneStateOwnerSpatialTests.cs：SceneStateOwnerSpatialTests.cs
-│   │   ├── SpatialIndexEditLifecycleTests.cs：SpatialIndexEditLifecycleTests.cs
-│   │   ├── SpatialIndexOwnerLifecycleTests.cs：SpatialIndexOwnerLifecycleTests.cs
-│   │   ├── SpatialIndexOwnerRevisionTests.cs：SpatialIndexOwnerRevisionTests.cs
-│   │   ├── SpatialIndexRebuildTests.cs：SpatialIndexRebuildTests.cs
-│   │   ├── SpatialIndexScaleTests.cs：SpatialIndexScaleTests.cs
-│   │   ├── SpatialQueryGovernanceTests.cs：SpatialQueryGovernanceTests.cs
-│   │   ├── SpatialQueryOracle.cs：SpatialQueryOracle.cs
-│   │   ├── SpatialQueryTests.Geometry.cs：SpatialQueryTests.Geometry.cs
-│   │   ├── SpatialQueryTests.cs：SpatialQueryTests.cs
-│   │   ├── SpatialRayQueryLifecycleTests.cs：SpatialRayQueryLifecycleTests.cs
-│   │   ├── SpatialRayQueryTests.cs：SpatialRayQueryTests.cs
-│   │   ├── SpatialRaycastNearestTests.cs：SpatialRaycastNearestTests.cs
-│   │   ├── SpatialRaycastRevisionTests.cs：SpatialRaycastRevisionTests.cs
-│   │   ├── SpatialRaycastScaleTests.cs：SpatialRaycastScaleTests.cs
-│   │   ├── SpatialTestData.cs：SpatialTestData.cs
-│   ├── Transform
-│   │   ├── Move
-│   │   │   ├── MoveTransformUiTests.Plane.cs：MoveTransformUiTests.Plane.cs
-│   │   │   ├── MoveTransformUiTests.Region.cs：MoveTransformUiTests.Region.cs
-│   │   │   ├── MoveTransformUiTests.Session.cs：MoveTransformUiTests.Session.cs
-│   │   │   ├── MoveTransformUiTests.cs：MoveTransformUiTests.cs
-│   │   ├── Rotate
-│   │   │   ├── RotateTransformUiTests.DragState.cs：RotateTransformUiTests.DragState.cs
-│   │   │   ├── RotateTransformUiTests.Helpers.cs：RotateTransformUiTests.Helpers.cs
-│   │   │   ├── RotateTransformUiTests.Preview.cs：RotateTransformUiTests.Preview.cs
-│   │   │   ├── RotateTransformUiTests.ToolSwitch.cs：RotateTransformUiTests.ToolSwitch.cs
-│   │   │   ├── RotateTransformUiTests.cs：RotateTransformUiTests.cs
-│   │   └── Scale
-│   │   ├── ScaleGizmoGlobalModeTests.cs：ScaleGizmoGlobalModeTests.cs
-│   │   ├── ScaleTransformUiTests.AxisUniform.cs：ScaleTransformUiTests.AxisUniform.cs
-│   │   ├── ScaleTransformUiTests.Helpers.cs：ScaleTransformUiTests.Helpers.cs
-│   │   ├── ScaleTransformUiTests.History.cs：ScaleTransformUiTests.History.cs
-│   │   ├── ScaleTransformUiTests.Pointer.cs：ScaleTransformUiTests.Pointer.cs
-│   │   ├── ScaleTransformUiTests.Target.cs：ScaleTransformUiTests.Target.cs
-│   │   ├── ScaleTransformUiTests.cs：ScaleTransformUiTests.cs
-│   │   ├── TransformFoundationTests.Input.cs：TransformFoundationTests.Input.cs
-│   │   ├── TransformFoundationTests.Inspector.cs：TransformFoundationTests.Inspector.cs
-│   │   ├── TransformFoundationTests.cs：TransformFoundationTests.cs
-│   │   ├── TransformSessionTests.cs：TransformSessionTests.cs
-│   │   ├── ViewportAssistTests.cs：ViewportAssistTests.cs
-│   ├── Tree
-│   │   ├── UiHierarchyConnectorTests.cs：UiHierarchyConnectorTests.cs
-│   │   ├── UiTreeGuideTests.cs：UiTreeGuideTests.cs
-│   │   ├── UiTreeToggleTests.cs：UiTreeToggleTests.cs
-│   └── WorldPartition
-│   ├── WorldPartitionInvariantTests.cs：WorldPartitionInvariantTests.cs
-│   ├── WorldPartitionMigrationTests.Activity.cs：WorldPartitionMigrationTests.Activity.cs
-│   ├── WorldPartitionMigrationTests.cs：WorldPartitionMigrationTests.cs
-│   ├── WorldPartitionTests.PartitionStrategy.cs：WorldPartitionTests.PartitionStrategy.cs
-│   ├── WorldPartitionTests.cs：WorldPartitionTests.cs
-│   ├── WorldPartitionUiTests.cs：WorldPartitionUiTests.cs
-│   ├── XuanYu.World.Tests.csproj：XuanYu.World.Tests.csproj
-├── docs
-│   ├── architecture
-│   │   ├── ENGINE_ARCHITECTURE.md：ENGINE_ARCHITECTURE.md
-│   │   ├── world-a-r0-coordinate-contract.md：world-a-r0-coordinate-contract.md
-│   ├── archive
-│   │   └── changelog
-│   │   ├── changelog-2026-05.md：changelog-2026-05.md
-│   │   ├── changelog-2026-06.md：changelog-2026-06.md
-│   │   ├── changelog-2026-07.md：changelog-2026-07.md
-│   ├── governance
-│   │   └── debts
-│   │   ├── arch-world-debts.md：arch-world-debts.md
-│   │   ├── NAMING_RULES.md：NAMING_RULES.md
-│   │   ├── dev-rules-understanding.md：dev-rules-understanding.md
-│   │   ├── diagnostic-safety.md：启动期将 UI 日志回调注入纯逻辑层
-│   │   ├── naming-XuanYu-Engine.md：naming-XuanYu-Engine.md
-│   │   ├── 版本号规范与历史映射.md：版本号规范与历史映射.md
-│   └── milestones
-│   └── current
-│   └── MAP-A
-│   ├── map-contract.md：map-contract.md
-│   ├── CODE_CONSTITUTION.md：CODE_CONSTITUTION.md
-│   ├── dev-rules.md：dev-rules.md
-│   ├── docs-index.md：docs-index.md
-│   ├── 玄域引擎_AI开发宪法.md：玄域引擎_AI开发宪法.md
-├── samples
-│   ├── world-c-r1-ten-triangles.xyscene：world-c-r1-ten-triangles.xyscene
-└── scripts
-├── arch-a-guard-editor.ps1：arch-a-guard-editor.ps1
-├── arch-a-guard-render.ps1：arch-a-guard-render.ps1
-├── arch-a-guard-warcore.ps1：arch-a-guard-warcore.ps1
-├── arch-a-guard-world.ps1：arch-a-guard-world.ps1
-├── arch-a-guard.ps1：arch-a-guard.ps1
-├── .gitattributes：Git 属性规则
-├── .gitignore：Git 忽略规则
-├── AGENTS.md：AGENTS.md
-├── NuGet.Config：配置文件
-├── XuanYu.Engine.slnx：解决方案文件
-├── changelog.md：changelog
-├── file-tree.md：XuanYu Engine 文件树
-├── run.bat：启动脚本
+## 目录树
+
 ```
+├─ "docs/
+│  ├─ \347\216\204\345\237\237\345\274\225\346\223\216_AI\345\274\200\345\217\221\345\256\252\346\263\225.md"
+│  └─ governance/
+│     └─ \347\211\210\346\234\254\345\217\267\350\247\204\350\214\203\344\270\216\345\216\206\345\217\262\346\230\240\345\260\204.md"
+├─ .gitattributes
+├─ .gitignore
+├─ AGENTS.md
+├─ NuGet.Config
+├─ XuanYu.Core/
+│  ├─ .gitkeep
+│  ├─ Diagnostics/
+│  │  └─ CoreSelfTest.cs
+│  ├─ Gizmo/
+│  │  ├─ Common/
+│  │  │  └─ ScreenPoint.cs
+│  │  ├─ Move/
+│  │  │  ├─ MoveGizmoAxis.cs
+│  │  │  ├─ MoveGizmoDragConstraint.Axes.cs
+│  │  │  ├─ MoveGizmoDragConstraint.cs
+│  │  │  ├─ MoveGizmoLayout.Hit.cs
+│  │  │  ├─ MoveGizmoLayout.Plane.cs
+│  │  │  ├─ MoveGizmoLayout.cs
+│  │  │  ├─ MoveGizmoPlane.cs
+│  │  │  ├─ MoveGizmoScreenSize.cs
+│  │  │  └─ MoveGizmoSegment.cs
+│  │  ├─ Rotate/
+│  │  │  ├─ RotateGizmoAxis.cs
+│  │  │  ├─ RotateGizmoDrag.Math.cs
+│  │  │  ├─ RotateGizmoDrag.cs
+│  │  │  ├─ RotateGizmoLayout.cs
+│  │  │  ├─ RotateGizmoRing.cs
+│  │  │  └─ RotateGizmoScreenRadius.cs
+│  │  └─ Scale/
+│  │     ├─ ScaleGizmoAxis.cs
+│  │     ├─ ScaleGizmoDrag.cs
+│  │     ├─ ScaleGizmoHitTester.cs
+│  │     ├─ ScaleGizmoLayout.cs
+│  │     └─ ScaleGizmoScreenSize.cs
+│  ├─ History/
+│  │  ├─ EditorHistoryOwner.cs
+│  │  └─ TransformHistoryEntry.cs
+│  ├─ Identity/
+│  │  └─ EntityId.cs
+│  ├─ Logging/
+│  │  ├─ EngineLogEntry.cs
+│  │  └─ EngineLogLevel.cs
+│  ├─ Map/
+│  │  ├─ MapSurfaceKind.cs
+│  │  ├─ MapSurfaceSampler.cs
+│  │  └─ MapTerrainVertex.cs
+│  ├─ Math/
+│  │  ├─ Vector3d.cs
+│  │  └─ YawRotation.cs
+│  ├─ Picking/
+│  │  ├─ ViewportPickingRequest.cs
+│  │  ├─ ViewportPickingResult.cs
+│  │  └─ ViewportPickingService.cs
+│  ├─ Properties/
+│  │  └─ AssemblyInfo.cs
+│  ├─ Results/
+│  │  ├─ EngineError.cs
+│  │  └─ EngineResult.cs
+│  ├─ Scene/
+│  │  ├─ CommittedTransform.cs
+│  │  ├─ ISceneRenderSnapshotSource.cs
+│  │  ├─ SceneEntitySnapshot.cs
+│  │  ├─ SceneRenderSnapshot.cs
+│  │  └─ SceneTransformCommitResult.cs
+│  ├─ Space/
+│  │  ├─ CameraState.cs
+│  │  ├─ DefaultEditorCamera.cs
+│  │  ├─ ProjectionMode.cs
+│  │  ├─ ViewProjectionState.cs
+│  │  ├─ ViewportState.cs
+│  │  ├─ WorldRay.cs
+│  │  └─ WorldRayFactory.cs
+│  ├─ Spatial/
+│  │  ├─ RayAabbHit.cs
+│  │  ├─ RayAabbIntersection.cs
+│  │  ├─ SpatialAabb.cs
+│  │  ├─ SpatialBounds.cs
+│  │  ├─ SpatialQueryCategory.cs
+│  │  ├─ SpatialQueryResult.cs
+│  │  ├─ SpatialQueryStats.cs
+│  │  ├─ SpatialRayAabb.cs
+│  │  ├─ SpatialRayQuery.cs
+│  │  ├─ SpatialRaycastHit.cs
+│  │  ├─ SpatialRaycastResult.cs
+│  │  └─ SpatialRaycastStats.cs
+│  ├─ Time/
+│  │  ├─ SimulationTime.cs
+│  │  └─ TimeStep.cs
+│  ├─ Transform/
+│  │  ├─ PreviewTransform.cs
+│  │  └─ TransformStartSnapshot.cs
+│  └─ XuanYu.Core.csproj
+├─ XuanYu.Core.Tests/
+│  ├─ Camera/
+│  │  ├─ CameraBasisTests.cs
+│  │  ├─ CameraNavigationRollTests.cs
+│  │  ├─ CameraNavigationSequenceTests.cs
+│  │  ├─ CameraNavigationStressTests.cs
+│  │  ├─ CameraNavigationTests.cs
+│  │  ├─ CameraNavigationUiSequenceTests.Safety.cs
+│  │  ├─ CameraNavigationUiSequenceTests.cs
+│  │  └─ CameraOrthographicNavigationTests.cs
+│  ├─ CoreSmokeTests.cs
+│  ├─ EditorTool/
+│  │  └─ EditorTransformCapturePolicyTests.cs
+│  ├─ Gizmo/
+│  │  ├─ MoveGizmoDragConstraintTests.cs
+│  │  ├─ MoveGizmoLayoutG1Tests.cs
+│  │  ├─ MoveGizmoLayoutPlaneTests.cs
+│  │  ├─ MoveGizmoLayoutTests.cs
+│  │  ├─ MoveGizmoLayoutVulkanTests.cs
+│  │  ├─ MoveGizmoScreenSizeTests.cs
+│  │  ├─ RotateGizmoLayoutTests.cs
+│  │  ├─ ScaleGizmoTests.Drag.cs
+│  │  ├─ ScaleGizmoTests.DragSafety.cs
+│  │  ├─ ScaleGizmoTests.Helpers.cs
+│  │  ├─ ScaleGizmoTests.R5R1.cs
+│  │  └─ ScaleGizmoTests.cs
+│  ├─ History/
+│  │  ├─ EditorHistoryOwnerTests.cs
+│  │  ├─ EditorHistoryRedoTests.cs
+│  │  ├─ TransformHistoryIntegrationTests.cs
+│  │  └─ TransformHistoryRedoIntegrationTests.cs
+│  ├─ Picking/
+│  │  └─ ViewportPickingServiceTests.cs
+│  ├─ Render/
+│  │  ├─ Camera/
+│  │  │  └─ StandardViewResolverTests.cs
+│  │  ├─ DrawPlan/
+│  │  │  ├─ CubeRenderDrawPlanTests.cs
+│  │  │  ├─ FrameExecutionPolicyTests.cs
+│  │  │  ├─ RenderDrawPlanTests.cs
+│  │  │  ├─ SceneRenderProjectionAdapterTests.Rotation.cs
+│  │  │  ├─ SceneRenderProjectionAdapterTests.Selection.cs
+│  │  │  ├─ SceneRenderProjectionAdapterTests.cs
+│  │  │  ├─ ViewportAssistDrawPlanTests.cs
+│  │  │  └─ ViewportChromeContractTests.cs
+│  │  ├─ Grid/
+│  │  │  ├─ ReferenceGridAdaptiveTests.cs
+│  │  │  ├─ ReferenceGridDrawPlanTests.cs
+│  │  │  ├─ ReferenceGridRayIntersectionTests.cs
+│  │  │  ├─ ReferenceGridScaleTests.cs
+│  │  │  ├─ ReferenceGridShaderContractTests.cs
+│  │  │  └─ ReferenceGridVisualStyleTests.cs
+│  │  ├─ Map/
+│  │  │  ├─ MapRenderDrawPlanTests.cs
+│  │  │  ├─ MapSurfaceGeometryTests.cs
+│  │  │  ├─ MapSurfaceLayerVisibilityTests.cs
+│  │  │  ├─ MapSurfaceResourceKeyTests.cs
+│  │  │  └─ MapSurfaceResourceUpdatePolicyTests.cs
+│  │  ├─ NavigationGizmo/
+│  │  │  ├─ NavigationGizmoLayoutTests.Facing.cs
+│  │  │  ├─ NavigationGizmoLayoutTests.cs
+│  │  │  └─ NavigationGizmoOverlayContractTests.cs
+│  │  └─ StaticModels/
+│  │     ├─ StaticModelDepthRegressionTests.cs
+│  │     └─ StaticModelRenderContractTests.cs
+│  ├─ Space/
+│  │  ├─ CameraOrthographicTests.cs
+│  │  ├─ CameraStateTests.cs
+│  │  ├─ DefaultEditorCameraTests.cs
+│  │  ├─ SpaceAssert.cs
+│  │  ├─ ViewProjectionStateTests.cs
+│  │  ├─ ViewportStateTests.cs
+│  │  ├─ WorldRayFactoryTests.cs
+│  │  └─ WorldRayTests.cs
+│  ├─ Spatial/
+│  │  ├─ RayAabbIntersectionTests.cs
+│  │  ├─ SpatialBoundsTests.cs
+│  │  └─ SpatialTestData.cs
+│  └─ XuanYu.Core.Tests.csproj
+├─ XuanYu.Editor/
+│  ├─ Assets/
+│  │  ├─ Catalog/
+│  │  │  └─ SceneStaticModelCatalog.cs
+│  │  ├─ Hosting/
+│  │  │  ├─ HostedSceneAsset.cs
+│  │  │  ├─ ModelAssetRuntimeState.cs
+│  │  │  ├─ Planning/
+│  │  │  │  ├─ SceneAssetHostingPlan.cs
+│  │  │  │  └─ SceneAssetHostingPlanner.cs
+│  │  │  ├─ SceneAssetHostingError.cs
+│  │  │  ├─ SceneAssetHostingState.cs
+│  │  │  ├─ SceneAssetPathPolicy.cs
+│  │  │  └─ Transactions/
+│  │  │     ├─ SceneAssetHostingTransaction.Activate.cs
+│  │  │     ├─ SceneAssetHostingTransaction.Complete.cs
+│  │  │     ├─ SceneAssetHostingTransaction.Rollback.cs
+│  │  │     └─ SceneAssetHostingTransaction.cs
+│  │  ├─ Identity/
+│  │  │  └─ AssetId.cs
+│  │  ├─ Import/
+│  │  │  └─ Gltf/
+│  │  │     ├─ GlbContainer.cs
+│  │  │     ├─ GlbImportService.cs
+│  │  │     ├─ GltfAccessorReader.cs
+│  │  │     ├─ GltfCoordinatePolicy.cs
+│  │  │     ├─ GltfJsonAccess.cs
+│  │  │     ├─ GltfNodeTransform.cs
+│  │  │     ├─ GltfStaticModelImporter.cs
+│  │  │     └─ ImportStop.cs
+│  │  └─ StaticModels/
+│  │     ├─ SceneStaticModelBinding.cs
+│  │     ├─ StaticModelAuthoringService.cs
+│  │     ├─ StaticModelBuilder.cs
+│  │     ├─ StaticModelColor.cs
+│  │     ├─ StaticModelData.cs
+│  │     ├─ StaticModelImportCodes.cs
+│  │     ├─ StaticModelImportResult.cs
+│  │     ├─ StaticModelImportWarning.cs
+│  │     ├─ StaticModelPrimitive.cs
+│  │     └─ StaticModelVertex.cs
+│  ├─ Camera/
+│  │  ├─ CameraBasis.cs
+│  │  ├─ CameraFrameResult.cs
+│  │  ├─ CameraNavigation.Try.cs
+│  │  ├─ CameraNavigation.cs
+│  │  ├─ EditorCameraFraming.Orthographic.cs
+│  │  ├─ EditorCameraFraming.cs
+│  │  └─ OrthographicViewFactory.cs
+│  ├─ MapDocument/
+│  │  ├─ MapDocument.cs
+│  │  ├─ MapDocumentAggregateBridge.cs
+│  │  ├─ MapDocumentJson.cs
+│  │  ├─ MapDocumentOwner.cs
+│  │  ├─ MapDocumentResult.cs
+│  │  ├─ MapDocumentValidator.cs
+│  │  ├─ MapEnvironmentDefinition.cs
+│  │  ├─ MapJsonMapper.cs
+│  │  ├─ MapJsonSerializer.cs
+│  │  └─ MapStorageService.cs
+│  ├─ MapEditing/
+│  │  ├─ MapEditEvents.cs
+│  │  ├─ MapEditReason.cs
+│  │  ├─ MapEditSession.ActiveLayer.cs
+│  │  ├─ MapEditSession.Commands.cs
+│  │  ├─ MapEditSession.Commit.cs
+│  │  ├─ MapEditSession.Document.cs
+│  │  ├─ MapEditSession.History.cs
+│  │  ├─ MapEditSession.Layers.cs
+│  │  ├─ MapEditSession.Selection.cs
+│  │  ├─ MapEditSession.cs
+│  │  ├─ MapHistoryEntry.cs
+│  │  ├─ MapSelection.cs
+│  │  └─ MapSelectionKind.cs
+│  ├─ SceneDocument/
+│  │  ├─ MapReference.cs
+│  │  ├─ SceneDocumentAsset.cs
+│  │  ├─ SceneDocumentEntity.cs
+│  │  ├─ SceneDocumentJson.cs
+│  │  ├─ SceneDocumentLoadTransaction.cs
+│  │  ├─ SceneDocumentMapper.cs
+│  │  ├─ SceneDocumentResult.cs
+│  │  ├─ SceneDocumentSaveTransaction.cs
+│  │  ├─ SceneDocumentSession.cs
+│  │  ├─ SceneDocumentSnapshot.cs
+│  │  ├─ SceneDocumentValidator.MapReference.cs
+│  │  ├─ SceneDocumentValidator.cs
+│  │  ├─ SceneDocumentWorldBridge.cs
+│  │  ├─ SceneLoadCandidate.cs
+│  │  ├─ SceneSaveOutcome.cs
+│  │  └─ SceneStorageService.cs
+│  ├─ Transform/
+│  │  ├─ TransformSession.Rotate.cs
+│  │  ├─ TransformSession.Scale.cs
+│  │  └─ TransformSession.cs
+│  └─ XuanYu.Editor.csproj
+├─ XuanYu.Editor.App/
+│  ├─ EditorCompositionRoot.cs
+│  ├─ Program.cs
+│  └─ XuanYu.Editor.App.csproj
+├─ XuanYu.Editor.UI/
+│  ├─ Bootstrap/
+│  │  ├─ App.axaml
+│  │  ├─ App.axaml.cs
+│  │  └─ Program.cs
+│  ├─ Dialogs/
+│  │  ├─ IEditorDialogService.cs
+│  │  └─ NullEditorDialogService.cs
+│  ├─ EditorState/
+│  │  ├─ EditorInteractionChangedResult.cs
+│  │  ├─ EditorInteractionCommand.cs
+│  │  ├─ EditorInteractionPointerSnapshot.cs
+│  │  ├─ EditorInteractionSnapshot.cs
+│  │  ├─ EditorSelectionCommand.cs
+│  │  ├─ EditorSelectionSnapshot.cs
+│  │  ├─ EditorStateChangedResult.cs
+│  │  ├─ EditorStateOwner.Interaction.cs
+│  │  ├─ EditorStateOwner.Tool.cs
+│  │  ├─ EditorStateOwner.cs
+│  │  ├─ EditorToolChangedResult.cs
+│  │  ├─ EditorToolCommand.cs
+│  │  ├─ EditorToolId.cs
+│  │  ├─ EditorToolSnapshot.cs
+│  │  ├─ EditorToolText.cs
+│  │  └─ EditorTransformCapturePolicy.cs
+│  ├─ Foot/
+│  │  ├─ Foot.axaml
+│  │  ├─ Foot.axaml.cs
+│  │  ├─ LogAutoScrollPolicy.cs
+│  │  ├─ LogDetailPanel.axaml
+│  │  ├─ LogDetailPanel.axaml.cs
+│  │  ├─ LogListAutoScrollController.Follow.cs
+│  │  ├─ LogListAutoScrollController.Layout.cs
+│  │  └─ LogListAutoScrollController.cs
+│  ├─ Icons/
+│  │  └─ EditorIcons.axaml
+│  ├─ Left/
+│  │  ├─ InlineRenameActivation.cs
+│  │  ├─ Left.EntityCommands.cs
+│  │  ├─ Left.Styles.axaml
+│  │  ├─ Left.axaml
+│  │  └─ Left.axaml.cs
+│  ├─ Main/
+│  │  ├─ Main.axaml
+│  │  └─ Main.axaml.cs
+│  ├─ NativeHostResizeCoalescer.cs
+│  ├─ NativeHostResizeSnapshot.cs
+│  ├─ NativeHostSurfaceContract.cs
+│  ├─ RelayCommand.cs
+│  ├─ Right/
+│  │  ├─ LayerInspectorPanel.axaml
+│  │  ├─ LayerInspectorPanel.axaml.cs
+│  │  ├─ LayerPanel.DragDrop.cs
+│  │  ├─ LayerPanel.axaml
+│  │  ├─ LayerPanel.axaml.cs
+│  │  ├─ MapEditorPanel.axaml
+│  │  ├─ MapEditorPanel.axaml.cs
+│  │  ├─ Right.axaml
+│  │  └─ Right.axaml.cs
+│  ├─ Root/
+│  │  ├─ UiRoot.axaml
+│  │  └─ UiRoot.axaml.cs
+│  ├─ Top/
+│  │  ├─ Top.axaml
+│  │  └─ Top.axaml.cs
+│  ├─ TreeGuide.cs
+│  ├─ TreeGuideSegment.cs
+│  ├─ Ui.axaml
+│  ├─ Viewport/
+│  │  ├─ ViewNavigationGizmo.HitTest.cs
+│  │  ├─ ViewNavigationGizmo.Layout.cs
+│  │  └─ Vulkan/
+│  │     ├─ NativePointerMessage.cs
+│  │     ├─ VulkanNativeHost.AvaloniaCamera.cs
+│  │     ├─ VulkanNativeHost.AvaloniaPointer.cs
+│  │     ├─ VulkanNativeHost.Bridge.cs
+│  │     ├─ VulkanNativeHost.CameraPointer.cs
+│  │     ├─ VulkanNativeHost.Dpi.cs
+│  │     ├─ VulkanNativeHost.Gizmo.cs
+│  │     ├─ VulkanNativeHost.LayoutSync.cs
+│  │     ├─ VulkanNativeHost.Log.cs
+│  │     ├─ VulkanNativeHost.NavGizmo.cs
+│  │     ├─ VulkanNativeHost.Picking.cs
+│  │     ├─ VulkanNativeHost.Pointer.cs
+│  │     ├─ VulkanNativeHost.cs
+│  │     ├─ VulkanViewport.axaml
+│  │     ├─ VulkanViewport.axaml.cs
+│  │     ├─ Win32ViewportHost.Input.cs
+│  │     └─ Win32ViewportHost.cs
+│  ├─ ViewportNativeHostRoute.cs
+│  ├─ Vm/
+│  │  ├─ Camera/
+│  │  │  ├─ CameraSessionMode.cs
+│  │  │  ├─ CameraSessionSnapshot.cs
+│  │  │  ├─ StandardViewResolver.cs
+│  │  │  ├─ UiVm.Camera.Framing.cs
+│  │  │  ├─ UiVm.Camera.cs
+│  │  │  ├─ UiVm.CameraNavigation.cs
+│  │  │  └─ UiVm.ViewGizmo.cs
+│  │  ├─ History/
+│  │  │  ├─ UiVm.EntityCommands.cs
+│  │  │  ├─ UiVm.History.Entities.cs
+│  │  │  └─ UiVm.History.cs
+│  │  ├─ Inspector/
+│  │  │  ├─ UiVm.Inspector.cs
+│  │  │  ├─ UiVm.InspectorInput.Parse.cs
+│  │  │  └─ UiVm.InspectorInput.cs
+│  │  ├─ Logging/
+│  │  │  ├─ DebugText.cs
+│  │  │  ├─ EditorDisplayText.cs
+│  │  │  ├─ EditorLogBuffer.cs
+│  │  │  ├─ EditorLogBus.cs
+│  │  │  ├─ EditorLogCategory.cs
+│  │  │  ├─ EditorLogClipboardText.cs
+│  │  │  ├─ EditorLogFilter.cs
+│  │  │  ├─ EditorLogFilterQuery.cs
+│  │  │  ├─ EditorLogLevel.cs
+│  │  │  ├─ EditorLogNoiseFilter.cs
+│  │  │  ├─ EditorLogRepeatKey.cs
+│  │  │  ├─ EditorLogSource.cs
+│  │  │  ├─ EditorLogSummary.cs
+│  │  │  ├─ LogEntry.cs
+│  │  │  ├─ SampleLogEntries.cs
+│  │  │  ├─ UiText.cs
+│  │  │  └─ UiVm.Logging.cs
+│  │  ├─ Map/
+│  │  │  ├─ MapLayerRowViewModel.cs
+│  │  │  ├─ MapRenderSnapshotProjection.cs
+│  │  │  ├─ UiVm.MapCommandRouting.cs
+│  │  │  ├─ UiVm.MapDiagnostics.Format.cs
+│  │  │  ├─ UiVm.MapDiagnostics.cs
+│  │  │  ├─ UiVm.MapEditor.cs
+│  │  │  ├─ UiVm.MapHistory.cs
+│  │  │  ├─ UiVm.MapLayerDiagnostics.cs
+│  │  │  ├─ UiVm.MapLayerDrag.cs
+│  │  │  ├─ UiVm.MapLayerInspector.cs
+│  │  │  ├─ UiVm.MapLayerSelection.cs
+│  │  │  ├─ UiVm.MapLayers.cs
+│  │  │  ├─ UiVm.MapRender.cs
+│  │  │  └─ UiVm.MapWorld.cs
+│  │  ├─ Scene/
+│  │  │  ├─ D2StaticModelDemo.cs
+│  │  │  ├─ SceneHistoryEntry.cs
+│  │  │  ├─ SceneRenderProjectionAdapter.cs
+│  │  │  ├─ StaticModelRenderAdapter.cs
+│  │  │  ├─ UiVm.DocumentStatus.cs
+│  │  │  ├─ UiVm.RenderProjection.cs
+│  │  │  ├─ UiVm.Scene.cs
+│  │  │  ├─ UiVm.SceneDocument.New.cs
+│  │  │  ├─ UiVm.SceneDocument.cs
+│  │  │  ├─ UiVm.SceneDocumentLog.cs
+│  │  │  ├─ UiVm.SceneDocumentMapRef.cs
+│  │  │  ├─ UiVm.SceneDocumentSave.cs
+│  │  │  ├─ UiVm.StaticModelImport.cs
+│  │  │  └─ UiVm.WorldProjection.cs
+│  │  ├─ Selection/
+│  │  │  ├─ UiVm.Picking.cs
+│  │  │  ├─ UiVm.Selection.cs
+│  │  │  ├─ UiVm.SelectionProjection.cs
+│  │  │  ├─ UiVm.SelectionTrace.cs
+│  │  │  ├─ UiVm.SelectionValidity.cs
+│  │  │  ├─ UiVm.ViewportSelection.cs
+│  │  │  └─ ViewportPickingLogFormatter.cs
+│  │  ├─ Transform/
+│  │  │  ├─ Move/
+│  │  │  │  ├─ UiVm.MoveGizmo.cs
+│  │  │  │  ├─ UiVm.MoveGizmoLogging.cs
+│  │  │  │  └─ UiVm.MoveGizmoScreenSize.cs
+│  │  │  ├─ Rotate/
+│  │  │  │  └─ UiVm.RotateGizmo.cs
+│  │  │  ├─ Scale/
+│  │  │  │  └─ UiVm.ScaleGizmo.cs
+│  │  │  ├─ UiVm.InputGuards.cs
+│  │  │  ├─ UiVm.Interaction.cs
+│  │  │  ├─ UiVm.InteractionCancel.cs
+│  │  │  ├─ UiVm.InteractionPointer.cs
+│  │  │  ├─ UiVm.Tool.cs
+│  │  │  └─ UiVm.ViewportAssist.cs
+│  │  ├─ Tree/
+│  │  │  ├─ EditorTreeNode.cs
+│  │  │  ├─ TreeGuideBuilder.cs
+│  │  │  └─ UiVm.TreeCommands.cs
+│  │  ├─ UiVm.NativeHostLifecycle.cs
+│  │  └─ UiVm.cs
+│  ├─ Win/
+│  │  ├─ UiWin.Dialogs.cs
+│  │  ├─ UiWin.EntityShortcuts.cs
+│  │  ├─ UiWin.MapCommands.cs
+│  │  ├─ UiWin.SceneCommands.cs
+│  │  ├─ UiWin.UnsavedDialog.cs
+│  │  ├─ UiWin.axaml
+│  │  └─ UiWin.axaml.cs
+│  ├─ XuanYu.Editor.UI.csproj
+│  └─ app.manifest
+├─ XuanYu.Editor.Win/
+│  ├─ MainForm.cs
+│  └─ XuanYu.Editor.Win.csproj
+├─ XuanYu.Engine.slnx
+├─ XuanYu.Render.Abstractions/
+│  ├─ EditorViewPlaneGridKind.cs
+│  ├─ EditorViewportAssistState.cs
+│  ├─ FrameExecutionPolicy.cs
+│  ├─ INativeHostSurfaceBridge.cs
+│  ├─ INativeHostSurfaceBridgeFactory.cs
+│  ├─ IRenderProjectionSource.cs
+│  ├─ MapBoundsGeometry.cs
+│  ├─ MapRenderSnapshot.cs
+│  ├─ MapSurfaceGeometry.cs
+│  ├─ MapSurfaceResourceKey.cs
+│  ├─ MapSurfaceResourceUpdatePolicy.cs
+│  ├─ MapSurfaceResourceUpdateText.cs
+│  ├─ NativeHostHandleSnapshot.cs
+│  ├─ NativeHostLifecycleLogFormatter.cs
+│  ├─ NativeHostLifecycleProbe.cs
+│  ├─ NativeHostLifecycleState.cs
+│  ├─ NativeHostSurfaceHandle.cs
+│  ├─ ReferenceGridScale.cs
+│  ├─ RenderCameraProjection.cs
+│  ├─ RenderDrawPlan.Typed.cs
+│  ├─ RenderDrawPlan.cs
+│  ├─ RenderEntityProjection.cs
+│  ├─ RenderEntityType.cs
+│  ├─ RenderProjection.cs
+│  ├─ RenderProjectionResult.cs
+│  ├─ RenderStaticModelKey.cs
+│  ├─ RenderStaticModelPrimitive.cs
+│  ├─ RenderStaticModelResource.cs
+│  ├─ RenderStaticModelVertex.cs
+│  └─ XuanYu.Render.Abstractions.csproj
+├─ XuanYu.Render.Vulkan/
+│  ├─ Bridge/
+│  │  ├─ VulkanBridgeDeviceAttachStep.cs
+│  │  ├─ VulkanBridgePhysicalDeviceAttachStep.cs
+│  │  ├─ VulkanBridgeRenderSessionAttachStep.cs
+│  │  └─ VulkanBridgeSwapchainAttachStep.cs
+│  ├─ Device/
+│  │  ├─ VulkanDeviceOwner.Physical.cs
+│  │  ├─ VulkanDeviceOwner.cs
+│  │  ├─ VulkanPhysicalDeviceInfo.cs
+│  │  ├─ VulkanPhysicalDeviceSelection.cs
+│  │  ├─ VulkanPhysicalDeviceSelector.cs
+│  │  └─ VulkanQueueFamilySelection.cs
+│  ├─ Diagnostic/
+│  │  └─ VulkanResizeTracer.cs
+│  ├─ Pipeline/
+│  │  ├─ ShaderBytecode.Frag.cs
+│  │  ├─ ShaderBytecode.GridFrag.cs
+│  │  ├─ ShaderBytecode.GridVert.cs
+│  │  ├─ ShaderBytecode.NavGizmoFrag.cs
+│  │  ├─ ShaderBytecode.NavGizmoVert.cs
+│  │  ├─ ShaderBytecode.Vert.cs
+│  │  ├─ ShaderBytecode.ViewPlaneGridFrag.cs
+│  │  ├─ ShaderBytecode.WorldAxesFrag.cs
+│  │  ├─ ShaderBytecode.WorldOriginFrag.cs
+│  │  ├─ VulkanGraphicsPipelineOwner.Depth.cs
+│  │  ├─ VulkanGraphicsPipelineOwner.Fullscreen.cs
+│  │  ├─ VulkanGraphicsPipelineOwner.Grid.cs
+│  │  ├─ VulkanGraphicsPipelineOwner.Sky.cs
+│  │  ├─ VulkanGraphicsPipelineOwner.StaticModelInput.cs
+│  │  ├─ VulkanGraphicsPipelineOwner.cs
+│  │  ├─ VulkanPipelineLogFormatter.cs
+│  │  ├─ VulkanScenePushConstants.cs
+│  │  └─ VulkanShaderModuleOwner.cs
+│  ├─ Render/
+│  │  ├─ ClearFrame/
+│  │  │  ├─ VulkanClearFrameLogFormatter.cs
+│  │  │  ├─ VulkanClearFrameOwner.Commands.cs
+│  │  │  ├─ VulkanClearFrameOwner.Lifecycle.cs
+│  │  │  ├─ VulkanClearFrameOwner.Matrix.cs
+│  │  │  ├─ VulkanClearFrameOwner.PipelineBind.cs
+│  │  │  ├─ VulkanClearFrameOwner.PushConstants.cs
+│  │  │  ├─ VulkanClearFrameOwner.Resources.cs
+│  │  │  ├─ VulkanClearFrameOwner.Trace.cs
+│  │  │  └─ VulkanClearFrameOwner.cs
+│  │  ├─ Grid/
+│  │  │  ├─ VulkanClearFrameOwner.Grid.cs
+│  │  │  ├─ VulkanClearFrameOwner.GridScale.cs
+│  │  │  ├─ VulkanClearFrameOwner.NavGizmo.cs
+│  │  │  ├─ VulkanClearFrameOwner.ViewPlaneGrid.cs
+│  │  │  └─ VulkanClearFrameOwner.WorldAxes.cs
+│  │  ├─ Map/
+│  │  │  └─ VulkanClearFrameOwner.MapSurface.cs
+│  │  ├─ Present/
+│  │  │  ├─ VulkanPresentLoop.Frame.cs
+│  │  │  ├─ VulkanPresentLoop.Lifecycle.cs
+│  │  │  └─ VulkanPresentLoop.cs
+│  │  ├─ Scene/
+│  │  │  ├─ VulkanClearFrameOwner.Draw.cs
+│  │  │  ├─ VulkanClearFrameOwner.DrawAssist.cs
+│  │  │  ├─ VulkanClearFrameOwner.DrawGizmo.cs
+│  │  │  └─ VulkanClearFrameOwner.Scene.cs
+│  │  ├─ StaticModels/
+│  │  │  ├─ VulkanClearFrameOwner.DrawStaticBounds.cs
+│  │  │  ├─ VulkanClearFrameOwner.DrawStaticModel.cs
+│  │  │  ├─ VulkanStaticModelBuffer.cs
+│  │  │  ├─ VulkanStaticModelCache.cs
+│  │  │  ├─ VulkanStaticModelFailureTracker.cs
+│  │  │  ├─ VulkanStaticModelLog.cs
+│  │  │  ├─ VulkanStaticModelResource.cs
+│  │  │  ├─ VulkanStaticModelValidator.cs
+│  │  │  └─ VulkanStaticModelVertex.cs
+│  │  └─ VulkanDepthAttachment.cs
+│  ├─ Session/
+│  │  ├─ GridPipelineSet.cs
+│  │  ├─ VulkanRenderSession.Lifecycle.cs
+│  │  ├─ VulkanRenderSession.Recover.cs
+│  │  ├─ VulkanRenderSession.Resize.cs
+│  │  └─ VulkanRenderSession.cs
+│  ├─ Shaders/
+│  │  ├─ editor_nav_gizmo.frag
+│  │  ├─ editor_nav_gizmo.vert
+│  │  ├─ editor_reference_grid.frag
+│  │  ├─ editor_reference_grid.vert
+│  │  ├─ editor_view_plane_grid.frag
+│  │  ├─ editor_world_axes.frag
+│  │  ├─ editor_world_origin.frag
+│  │  ├─ scene.frag
+│  │  └─ scene.vert
+│  ├─ Swapchain/
+│  │  ├─ VulkanSwapchainBuilder.cs
+│  │  ├─ VulkanSwapchainCapabilities.cs
+│  │  ├─ VulkanSwapchainLogFormatter.cs
+│  │  ├─ VulkanSwapchainOwner.Accessors.cs
+│  │  └─ VulkanSwapchainOwner.cs
+│  ├─ VulkanApiProbe.cs
+│  ├─ VulkanBridgeLogFormatter.cs
+│  ├─ VulkanDeviceInfo.cs
+│  ├─ VulkanInstanceCreateInfoBuilder.cs
+│  ├─ VulkanInstanceExtensions.cs
+│  ├─ VulkanInstanceLogFormatter.cs
+│  ├─ VulkanInstanceOwner.cs
+│  ├─ VulkanInstanceResult.cs
+│  ├─ VulkanNativeHostSurfaceBridge.Attach.cs
+│  ├─ VulkanNativeHostSurfaceBridge.Lifecycle.cs
+│  ├─ VulkanNativeHostSurfaceBridge.Resize.cs
+│  ├─ VulkanNativeHostSurfaceBridge.Scene.cs
+│  ├─ VulkanNativeHostSurfaceBridge.cs
+│  ├─ VulkanNativeHostSurfaceBridgeFactory.cs
+│  ├─ VulkanProbeLogFormatter.cs
+│  ├─ VulkanProbeResult.cs
+│  ├─ VulkanSurfaceLogFormatter.cs
+│  ├─ VulkanSurfaceOwner.cs
+│  ├─ VulkanSurfaceResult.cs
+│  └─ XuanYu.Render.Vulkan.csproj
+├─ XuanYu.WarCore/
+│  ├─ Identity/
+│  │  ├─ FactionId.cs
+│  │  ├─ MilitaryIdentity.cs
+│  │  ├─ OrganizationId.cs
+│  │  ├─ UnitId.cs
+│  │  └─ UnitKind.cs
+│  ├─ State/
+│  │  └─ SoldierState.cs
+│  └─ XuanYu.WarCore.csproj
+├─ XuanYu.WarCore.Tests/
+│  ├─ Identity/
+│  │  └─ MilitaryIdentityTests.cs
+│  ├─ State/
+│  │  └─ SoldierStateTests.cs
+│  ├─ WarCoreDependencyTests.cs
+│  └─ XuanYu.WarCore.Tests.csproj
+├─ XuanYu.World/
+│  ├─ EntityRegistry.Authoring.cs
+│  ├─ EntityRegistry.Replace.cs
+│  ├─ EntityRegistry.cs
+│  ├─ GlobalWorld.Authoring.cs
+│  ├─ GlobalWorld.Query.cs
+│  ├─ GlobalWorld.Snapshot.cs
+│  ├─ GlobalWorld.cs
+│  ├─ GridWorldPartitionStrategy.cs
+│  ├─ IWorldPartitionStrategy.cs
+│  ├─ Map/
+│  │  ├─ MapBounds.cs
+│  │  ├─ MapDefaultDefinition.cs
+│  │  ├─ MapDefinition.cs
+│  │  ├─ MapDefinitionValidator.cs
+│  │  ├─ MapGeometry.cs
+│  │  ├─ MapId.cs
+│  │  ├─ MapLayer.cs
+│  │  ├─ MapLayerId.cs
+│  │  ├─ MapLayerKind.cs
+│  │  ├─ MapLayerRules.cs
+│  │  ├─ MapLayerStack.cs
+│  │  ├─ MapLayerValidator.cs
+│  │  ├─ MapRegion.cs
+│  │  ├─ MapRegionDraft.cs
+│  │  ├─ MapRegionId.cs
+│  │  ├─ MapRegionKind.cs
+│  │  ├─ MapRegionValidator.cs
+│  │  ├─ MapSurfaceDefinition.cs
+│  │  ├─ MapValidationResult.cs
+│  │  ├─ WorldMapState.cs
+│  │  └─ WorldMapStateOwner.cs
+│  ├─ RegionKey.cs
+│  ├─ Scene/
+│  │  ├─ SceneSpatialBoundsProjection.cs
+│  │  ├─ SceneStateOwner.Lifecycle.cs
+│  │  ├─ SceneStateOwner.Seeding.cs
+│  │  ├─ SceneStateOwner.StaticModel.cs
+│  │  ├─ SceneStateOwner.Transform.cs
+│  │  ├─ SceneStateOwner.cs
+│  │  └─ SceneWorldProjection.cs
+│  ├─ Spatial/
+│  │  ├─ DynamicAabbTree.Insert.cs
+│  │  ├─ DynamicAabbTree.Node.cs
+│  │  ├─ DynamicAabbTree.Query.cs
+│  │  ├─ DynamicAabbTree.Refit.cs
+│  │  ├─ DynamicAabbTree.Remove.cs
+│  │  ├─ DynamicAabbTree.cs
+│  │  ├─ ISpatialIndex.cs
+│  │  ├─ SpatialIndexOwner.cs
+│  │  └─ SpatialRaycastResolver.cs
+│  ├─ WorldEntityActivity.cs
+│  ├─ WorldEntityName.cs
+│  ├─ WorldEntitySnapshot.cs
+│  ├─ WorldEntityType.cs
+│  ├─ WorldPartitionEntry.cs
+│  ├─ WorldPartitionMembership.cs
+│  ├─ WorldQuery.cs
+│  └─ XuanYu.World.csproj
+├─ XuanYu.World.Tests/
+│  ├─ Assets/
+│  │  ├─ AssetContractTests.cs
+│  │  ├─ AssetDialogTests.cs
+│  │  ├─ GlbFactory.cs
+│  │  ├─ GlbImportTests.cs
+│  │  ├─ GlbMultiPrimitiveFactory.cs
+│  │  ├─ HostingCompleteTests.cs
+│  │  ├─ HostingPlannerRejectTests.cs
+│  │  ├─ HostingPlannerTests.cs
+│  │  ├─ HostingRollbackTests.cs
+│  │  ├─ HostingSaveAsTests.cs
+│  │  ├─ HostingTestEnv.cs
+│  │  ├─ HostingTransactionTests.cs
+│  │  ├─ LoadStructureErrorTests.cs
+│  │  ├─ LoadTransactionTests.cs
+│  │  ├─ SaveAsTests.cs
+│  │  ├─ SaveTransactionTests.cs
+│  │  ├─ ScenePersistenceEnv.cs
+│  │  ├─ SchemaCompatibilityTests.cs
+│  │  ├─ StaticModelAuthoringServiceTests.cs
+│  │  ├─ StaticModelBaseVertexTests.cs
+│  │  ├─ StaticModelCatalogTests.cs
+│  │  ├─ StaticModelFailureTrackerTests.cs
+│  │  ├─ StaticModelProjectionTests.cs
+│  │  ├─ StaticModelUiTests.cs
+│  │  └─ StaticModelValidatorTests.cs
+│  ├─ Camera/
+│  │  ├─ CameraDocumentTests.cs
+│  │  ├─ CameraFramingOccupancyTests.cs
+│  │  ├─ CameraFramingTests.cs
+│  │  ├─ CameraNavigationUiTests.cs
+│  │  └─ UiViewGizmoTests.cs
+│  ├─ Logging/
+│  │  ├─ FootAxamlTailContractTests.cs
+│  │  ├─ LogAutoScrollPolicyTests.cs
+│  │  ├─ LogListAutoScrollControllerContractTests.cs
+│  │  ├─ UiMapLogChineseTests.cs
+│  │  └─ UiRootLogRowContractTests.cs
+│  ├─ Map/
+│  │  ├─ Editing/
+│  │  │  ├─ MapLayerSessionTests.Behavior.cs
+│  │  │  ├─ MapLayerSessionTests.Drag.History.cs
+│  │  │  ├─ MapLayerSessionTests.Drag.cs
+│  │  │  ├─ MapLayerSessionTests.cs
+│  │  │  ├─ UiLayerVisualContractTests.cs
+│  │  │  ├─ UiLogSummaryPriorityTests.cs
+│  │  │  ├─ UiMapCommandRoutingTests.cs
+│  │  │  ├─ UiMapEditorTests.cs
+│  │  │  ├─ UiMapHistoryTests.cs
+│  │  │  ├─ UiMapInitialProjectionTests.cs
+│  │  │  ├─ UiMapLayerDragTests.cs
+│  │  │  ├─ UiMapLayerLockLogTests.cs
+│  │  │  ├─ UiMapLayerPanelTests.Behavior.cs
+│  │  │  ├─ UiMapLayerPanelTests.cs
+│  │  │  └─ UiMapLayoutContractTests.cs
+│  │  ├─ MapBoundsTests.cs
+│  │  ├─ MapCoordinateValidationTests.cs
+│  │  ├─ MapDefaultMapTests.cs
+│  │  ├─ MapDefinitionTests.cs
+│  │  ├─ MapDocumentAggregateBridgeTests.cs
+│  │  ├─ MapDocumentOwnerChainTests.cs
+│  │  ├─ MapDocumentOwnerTests.cs
+│  │  ├─ MapEnvironmentValidationTests.cs
+│  │  ├─ MapIdTests.cs
+│  │  ├─ MapJsonRoundTripTests.cs
+│  │  ├─ MapJsonStrictnessTests.cs
+│  │  ├─ MapLayerRulesTests.cs
+│  │  ├─ MapLayerStackTests.Drag.cs
+│  │  ├─ MapLayerStackTests.Order.cs
+│  │  ├─ MapLayerStackTests.cs
+│  │  ├─ MapLayerTests.Base.cs
+│  │  ├─ MapLayerTests.cs
+│  │  ├─ MapRegionDraftTests.cs
+│  │  ├─ MapRegionTests.Helpers.cs
+│  │  ├─ MapRegionTests.Strictness.cs
+│  │  ├─ MapRegionTests.cs
+│  │  ├─ MapSizeValidationTests.cs
+│  │  ├─ MapStorageFailureTests.cs
+│  │  ├─ MapStorageTests.cs
+│  │  ├─ MapSurfaceSamplerTests.cs
+│  │  ├─ MapSurfaceValidationTests.cs
+│  │  ├─ SceneMapReferenceTests.cs
+│  │  ├─ WorldMapStateOwnerTests.cs
+│  │  └─ WorldMapStateTests.cs
+│  ├─ MapEditing/
+│  │  ├─ MapEditSessionCommandTests.cs
+│  │  ├─ MapEditSessionCreationTests.cs
+│  │  ├─ MapEditSessionDirtyTests.cs
+│  │  ├─ MapEditSessionHistoryTests.cs
+│  │  ├─ MapEditSessionMapPropertiesTests.cs
+│  │  ├─ MapEditSessionSelectionTests.cs
+│  │  ├─ MapEditSessionThreadTests.cs
+│  │  ├─ MapEditSessionValidationTests.cs
+│  │  └─ MapRenderSnapshotProjectionTests.cs
+│  ├─ Render/
+│  │  ├─ VulkanPresentLoopContractTests.cs
+│  │  └─ VulkanPresentModeSelectionTests.cs
+│  ├─ Scene/
+│  │  ├─ CommandSmokeTests.cs
+│  │  ├─ EditorEnvironmentTests.cs
+│  │  ├─ EntityBoundsSemanticsTests.cs
+│  │  ├─ EntityRegistryTests.cs
+│  │  ├─ EntityTests.cs
+│  │  ├─ FinalSceneTests.cs
+│  │  ├─ GlobalWorldTests.cs
+│  │  ├─ SceneConsumptionTests.cs
+│  │  ├─ SceneDocumentPersistenceTests.cs
+│  │  ├─ SceneDocumentTests.Opening.cs
+│  │  ├─ SceneDocumentTests.SaveFeedback.cs
+│  │  ├─ SceneDocumentTests.cs
+│  │  ├─ SceneIsolationTests.cs
+│  │  ├─ SceneMultiEntityGateTests.cs
+│  │  ├─ SceneSelectionReentryTests.cs
+│  │  ├─ SceneSingleAuthorityTests.cs
+│  │  ├─ UiHistoryTests.InlineRename.cs
+│  │  └─ UiHistoryTests.cs
+│  ├─ Selection/
+│  │  ├─ FinalSelectionTests.cs
+│  │  ├─ SelectionToolStateUiTests.cs
+│  │  ├─ ToolStateHighlightUiTests.Selection.cs
+│  │  └─ ToolStateHighlightUiTests.cs
+│  ├─ Spatial/
+│  │  ├─ SceneStateOwnerSpatialTests.cs
+│  │  ├─ SpatialIndexEditLifecycleTests.cs
+│  │  ├─ SpatialIndexOwnerLifecycleTests.cs
+│  │  ├─ SpatialIndexOwnerRevisionTests.cs
+│  │  ├─ SpatialIndexRebuildTests.cs
+│  │  ├─ SpatialIndexScaleTests.cs
+│  │  ├─ SpatialQueryGovernanceTests.cs
+│  │  ├─ SpatialQueryOracle.cs
+│  │  ├─ SpatialQueryTests.Geometry.cs
+│  │  ├─ SpatialQueryTests.cs
+│  │  ├─ SpatialRayQueryLifecycleTests.cs
+│  │  ├─ SpatialRayQueryTests.cs
+│  │  ├─ SpatialRaycastNearestTests.cs
+│  │  ├─ SpatialRaycastRevisionTests.cs
+│  │  ├─ SpatialRaycastScaleTests.cs
+│  │  └─ SpatialTestData.cs
+│  ├─ Transform/
+│  │  ├─ Move/
+│  │  │  ├─ MoveTransformUiTests.Plane.cs
+│  │  │  ├─ MoveTransformUiTests.Region.cs
+│  │  │  ├─ MoveTransformUiTests.Session.cs
+│  │  │  └─ MoveTransformUiTests.cs
+│  │  ├─ Rotate/
+│  │  │  ├─ RotateTransformUiTests.DragState.cs
+│  │  │  ├─ RotateTransformUiTests.Helpers.cs
+│  │  │  ├─ RotateTransformUiTests.Preview.cs
+│  │  │  ├─ RotateTransformUiTests.ToolSwitch.cs
+│  │  │  └─ RotateTransformUiTests.cs
+│  │  ├─ Scale/
+│  │  │  ├─ ScaleGizmoGlobalModeTests.cs
+│  │  │  ├─ ScaleTransformUiTests.AxisUniform.cs
+│  │  │  ├─ ScaleTransformUiTests.Helpers.cs
+│  │  │  ├─ ScaleTransformUiTests.History.cs
+│  │  │  ├─ ScaleTransformUiTests.Pointer.cs
+│  │  │  ├─ ScaleTransformUiTests.Target.cs
+│  │  │  └─ ScaleTransformUiTests.cs
+│  │  ├─ TransformFoundationTests.Input.cs
+│  │  ├─ TransformFoundationTests.Inspector.cs
+│  │  ├─ TransformFoundationTests.cs
+│  │  ├─ TransformSessionTests.cs
+│  │  └─ ViewportAssistTests.cs
+│  ├─ Tree/
+│  │  ├─ UiHierarchyConnectorTests.cs
+│  │  ├─ UiTreeGuideTests.cs
+│  │  └─ UiTreeToggleTests.cs
+│  ├─ WorldPartition/
+│  │  ├─ WorldPartitionInvariantTests.cs
+│  │  ├─ WorldPartitionMigrationTests.Activity.cs
+│  │  ├─ WorldPartitionMigrationTests.cs
+│  │  ├─ WorldPartitionTests.PartitionStrategy.cs
+│  │  ├─ WorldPartitionTests.cs
+│  │  └─ WorldPartitionUiTests.cs
+│  └─ XuanYu.World.Tests.csproj
+├─ changelog.md
+├─ docs/
+│  ├─ CODE_CONSTITUTION.md
+│  ├─ architecture/
+│  │  ├─ ENGINE_ARCHITECTURE.md
+│  │  └─ world-a-r0-coordinate-contract.md
+│  ├─ archive/
+│  │  └─ changelog/
+│  │     ├─ changelog-2026-05.md
+│  │     ├─ changelog-2026-06.md
+│  │     └─ changelog-2026-07.md
+│  ├─ dev-rules.md
+│  ├─ docs-index.md
+│  ├─ governance/
+│  │  ├─ NAMING_RULES.md
+│  │  ├─ debts/
+│  │  │  ├─ arch-ui-spec-debts.md
+│  │  │  └─ arch-world-debts.md
+│  │  ├─ dev-rules-understanding.md
+│  │  ├─ diagnostic-safety.md
+│  │  └─ naming-XuanYu-Engine.md
+│  └─ milestones/
+│     └─ current/
+│        └─ MAP-A/
+│           └─ map-contract.md
+├─ file-tree.md
+├─ run.bat
+├─ samples/
+│  └─ world-c-r1-ten-triangles.xyscene
+└─ scripts/
+   ├─ arch-a-guard-editor.ps1
+   ├─ arch-a-guard-render.ps1
+   ├─ arch-a-guard-warcore.ps1
+   ├─ arch-a-guard-world.ps1
+   └─ arch-a-guard.ps1
+```
+
+## 文件职责索引
+
+- `.gitattributes` — （职责待补）
+- `.gitignore` — （职责待补）
+- `AGENTS.md` — （职责待补）
+- `NuGet.Config` — api.nuget.org/v3/index.json" />
+- `XuanYu.Core.Tests/Camera/CameraBasisTests.cs` — F3-F2：唯一相机正交基生成器合同——成功结果必须三轴单位正交，失败必须明确原因。
+- `XuanYu.Core.Tests/Camera/CameraNavigationRollTests.cs` — F3-F3：Orbit 地平线合同——普通环绕保持世界 +Z Up、无 Roll、不累积倾斜。
+- `XuanYu.Core.Tests/Camera/CameraNavigationSequenceTests.cs` — F3-F2：导航组合链崩溃回归——顶/底视后任何导航不得再抛 CameraState 参数异常。
+- `XuanYu.Core.Tests/Camera/CameraNavigationStressTests.cs` — F3-F2（计划 14.4）：重复导航压力测试——固定序列循环 100 次，检测累积误差与逐步失去正交。
+- `XuanYu.Core.Tests/Camera/CameraNavigationTests.cs` — sealed class CameraNavigationTests
+- `XuanYu.Core.Tests/Camera/CameraNavigationUiSequenceTests.Safety.cs` — F3-F2（计划 14.5/14.6）：失败安全与状态合同——取消恢复、非法输入拒绝、导航不 Dirty/Undo。
+- `XuanYu.Core.Tests/Camera/CameraNavigationUiSequenceTests.cs` — F3-F2：UiVm 相机导航组合序列——标准视角/Orbit/Pan/Dolly/Resize 任意组合不抛异常且基合法。
+- `XuanYu.Core.Tests/Camera/CameraOrthographicNavigationTests.cs` — F3-F4：正交导航语义（Dolly 缩放尺度不动位置、Pan 保持正交、Orbit 恢复透视）+ 正交视图工厂。
+- `XuanYu.Core.Tests/CoreSmokeTests.cs` — sealed class CoreSmokeTests
+- `XuanYu.Core.Tests/EditorTool/EditorTransformCapturePolicyTests.cs` — sealed class EditorTransformCapturePolicyTests
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoDragConstraintTests.cs` — sealed class MoveGizmoDragConstraintTests
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutG1Tests.cs` — sealed partial class MoveGizmoLayoutTests
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutPlaneTests.cs` — sealed partial class MoveGizmoLayoutTests
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutTests.cs` — 命中半径必须由“可见几何 + 显式容差”派生，禁止再开大半径
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoLayoutVulkanTests.cs` — sealed partial class MoveGizmoLayoutTests
+- `XuanYu.Core.Tests/Gizmo/MoveGizmoScreenSizeTests.cs` — sealed class MoveGizmoScreenSizeTests
+- `XuanYu.Core.Tests/Gizmo/RotateGizmoLayoutTests.cs` — 命中半径必须由“可见环几何 + 显式容差”派生，禁止再开大半径
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.Drag.cs` — sealed partial class ScaleGizmoTests
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.DragSafety.cs` — sealed partial class ScaleGizmoTests
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.Helpers.cs` — sealed partial class ScaleGizmoTests
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.R5R1.cs` — sealed partial class ScaleGizmoTests
+- `XuanYu.Core.Tests/Gizmo/ScaleGizmoTests.cs` — R5：Scale Gizmo 纯函数契约测试 —— 单轴只改对应分量、Uniform 三轴同倍、倍率恒正且不穿过零。
+- `XuanYu.Core.Tests/History/EditorHistoryOwnerTests.cs` — sealed class EditorHistoryOwnerTests
+- `XuanYu.Core.Tests/History/EditorHistoryRedoTests.cs` — sealed class EditorHistoryRedoTests
+- `XuanYu.Core.Tests/History/TransformHistoryIntegrationTests.cs` — sealed class TransformHistoryIntegrationTests
+- `XuanYu.Core.Tests/History/TransformHistoryRedoIntegrationTests.cs` — sealed class TransformHistoryRedoIntegrationTests
+- `XuanYu.Core.Tests/Picking/ViewportPickingServiceTests.cs` — sealed class ViewportPickingServiceTests
+- `XuanYu.Core.Tests/Render/Camera/StandardViewResolverTests.cs` — F3-D3：六方向标准视角解析测试（计划 11.4——Pivot/距离保留、Up 合同、无滚转/镜像）。
+- `XuanYu.Core.Tests/Render/DrawPlan/CubeRenderDrawPlanTests.cs` — sealed class CubeRenderDrawPlanTests
+- `XuanYu.Core.Tests/Render/DrawPlan/FrameExecutionPolicyTests.cs` — R4-R3-R2：验证 Vulkan Present 循环帧执行顺序：
+- `XuanYu.Core.Tests/Render/DrawPlan/RenderDrawPlanTests.cs` — R4-R3-R2：验证绘制计划——未选中仅 Fill(3)，选中 Fill(3) + OutlineRibbon(18)，
+- `XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.Rotation.cs` — sealed partial class SceneRenderProjectionAdapterTests
+- `XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.Selection.cs` — R4-R3：轮廓高亮目标必须等价于“当前选中实体”，且与工具/层级树来源无关。
+- `XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.cs` — sealed partial class SceneRenderProjectionAdapterTests
+- `XuanYu.Core.Tests/Render/DrawPlan/ViewportAssistDrawPlanTests.cs` — F3-F1：导航 Gizmo 恒为最后一项（Overlay Pass 收尾）。
+- `XuanYu.Core.Tests/Render/DrawPlan/ViewportChromeContractTests.cs` — F3-D1：视口黑边合同测试（计划 11.1）——XAML 防退化：
+- `XuanYu.Core.Tests/Render/Grid/ReferenceGridAdaptiveTests.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格片元行为合同（CPU 镜像）。
+- `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
+- `XuanYu.Core.Tests/Render/Grid/ReferenceGridRayIntersectionTests.cs` — MAP-A-R1-D5-R1-F2 GRID-G1：世界射线与 Z=0 平面求交的数学合同。
+- `XuanYu.Core.Tests/Render/Grid/ReferenceGridScaleTests.cs` — MAP-A-R1-D5-R1-F2-R2：每帧全局网格尺度合同（1/2/5 序列 + 互补交叉淡化）。
+- `XuanYu.Core.Tests/Render/Grid/ReferenceGridShaderContractTests.cs` — MAP-A-R1-D5-R1-F2-R2：Shader 合同低层门禁（方案 15.5）。
+- `XuanYu.Core.Tests/Render/Grid/ReferenceGridVisualStyleTests.cs` — MAP-A-R1-D5-R1-F2-R3：网格视觉样式合同（10.1）与重合合成合同（10.2）。
+- `XuanYu.Core.Tests/Render/Map/MapRenderDrawPlanTests.cs` — MAP-A-R1-D4/D5-R1（F2-R2/D4）：RenderProjection 携带地图快照后，参考网格保留（无限参考平面，
+- `XuanYu.Core.Tests/Render/Map/MapSurfaceGeometryTests.cs` — MAP-A-R2-D3：有限地面常量几何合同——固定 4 顶点 6 索引，尺寸只进顶点坐标。
+- `XuanYu.Core.Tests/Render/Map/MapSurfaceLayerVisibilityTests.cs` — MAP-A-R2-D4（R06）：图层显隐不进 GPU 资源判等键——显隐切换只推进序号，不重建资源。
+- `XuanYu.Core.Tests/Render/Map/MapSurfaceResourceKeyTests.cs` — MAP-A-R2-D3-A1：GPU 资源判等键合同——Rename 不重建、几何变化必重建、Sequence 不进键。
+- `XuanYu.Core.Tests/Render/Map/MapSurfaceResourceUpdatePolicyTests.cs` — MAP-A-R2-D3-A1：地图 GPU 资源更新决策（纯策略）——旧序号拒绝、同键不重建、异键重建。
+- `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoLayoutTests.Facing.cs` — F3-F3：导航 Gizmo 正对相机合同——轴正对时只显示朝向端点、隐藏背向端点、命中优先端点。
+- `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoLayoutTests.cs` — F3-D2/D3/F3-F3：导航 Gizmo 布局投影与命中测试（96 DIP 区域；正对合同见 .Facing.cs）。
+- `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoOverlayContractTests.cs` — F3-F1：导航 Gizmo Overlay Pass 与屏幕空间原点标记合同测试。
+- `XuanYu.Core.Tests/Render/StaticModels/StaticModelDepthRegressionTests.cs` — sealed class StaticModelDepthRegressionTests
+- `XuanYu.Core.Tests/Render/StaticModels/StaticModelRenderContractTests.cs` — sealed class StaticModelRenderContractTests
+- `XuanYu.Core.Tests/Space/CameraOrthographicTests.cs` — F3-F4：正交投影契约（模式校验/射线/尺度投影/往返/深度/Fov 无关）。
+- `XuanYu.Core.Tests/Space/CameraStateTests.cs` — sealed class CameraStateTests
+- `XuanYu.Core.Tests/Space/DefaultEditorCameraTests.cs` — sealed class DefaultEditorCameraTests
+- `XuanYu.Core.Tests/Space/SpaceAssert.cs` — （职责待补）
+- `XuanYu.Core.Tests/Space/ViewProjectionStateTests.cs` — sealed class ViewProjectionStateTests
+- `XuanYu.Core.Tests/Space/ViewportStateTests.cs` — sealed class ViewportStateTests
+- `XuanYu.Core.Tests/Space/WorldRayFactoryTests.cs` — sealed class WorldRayFactoryTests
+- `XuanYu.Core.Tests/Space/WorldRayTests.cs` — sealed class WorldRayTests
+- `XuanYu.Core.Tests/Spatial/RayAabbIntersectionTests.cs` — sealed class RayAabbIntersectionTests
+- `XuanYu.Core.Tests/Spatial/SpatialBoundsTests.cs` — sealed class SpatialBoundsTests
+- `XuanYu.Core.Tests/Spatial/SpatialTestData.cs` — （职责待补）
+- `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj` — （职责待补）
+- `XuanYu.Core/.gitkeep` — （职责待补）
+- `XuanYu.Core/Diagnostics/CoreSelfTest.cs` — static class CoreSelfTest
+- `XuanYu.Core/Gizmo/Common/ScreenPoint.cs` — （职责待补）
+- `XuanYu.Core/Gizmo/Move/MoveGizmoAxis.cs` — enum MoveGizmoAxis
+- `XuanYu.Core/Gizmo/Move/MoveGizmoDragConstraint.Axes.cs` — （职责待补）
+- `XuanYu.Core/Gizmo/Move/MoveGizmoDragConstraint.cs` — （职责待补）
+- `XuanYu.Core/Gizmo/Move/MoveGizmoLayout.Hit.cs` — sealed partial class MoveGizmoLayout
+- `XuanYu.Core/Gizmo/Move/MoveGizmoLayout.Plane.cs` — sealed partial class MoveGizmoLayout
+- `XuanYu.Core/Gizmo/Move/MoveGizmoLayout.cs` — 可见轴杆线宽（DIP）。与 Vulkan 顶点着色器生成的 Gizmo 几何同尺度（审计实测约 2–3px）。
+- `XuanYu.Core/Gizmo/Move/MoveGizmoPlane.cs` — （职责待补）
+- `XuanYu.Core/Gizmo/Move/MoveGizmoScreenSize.cs` — Move Gizmo 的屏幕恒定尺寸真源。CPU 布局与 Vulkan 绘制共用同一世界轴长。
+- `XuanYu.Core/Gizmo/Move/MoveGizmoSegment.cs` — （职责待补）
+- `XuanYu.Core/Gizmo/Rotate/RotateGizmoAxis.cs` — enum RotateGizmoAxis
+- `XuanYu.Core/Gizmo/Rotate/RotateGizmoDrag.Math.cs` — 旋转解算的纯静态数学辅助，与实例状态分离的 partial。
+- `XuanYu.Core/Gizmo/Rotate/RotateGizmoDrag.cs` — 旋转拖拽解算：将指针在"垂直于旋转轴的平面"上的投影角度变化，映射为
+- `XuanYu.Core/Gizmo/Rotate/RotateGizmoLayout.cs` — 旋转环世界半径默认值（与 MoveGizmo AxisLength=1.2 同尺度）。
+- `XuanYu.Core/Gizmo/Rotate/RotateGizmoRing.cs` — 一条旋转环的屏幕折线几何。命中以"指针到折线最近距离"为唯一真源，
+- `XuanYu.Core/Gizmo/Rotate/RotateGizmoScreenRadius.cs` — 旋转环屏幕空间恒定尺寸换算：将目标 DIP 半径按相机深度与视口逻辑高度换算为世界半径。
+- `XuanYu.Core/Gizmo/Scale/ScaleGizmoAxis.cs` — 单轴缩放手柄：修改实体自身 TRS 的局部 X / Y / Z 分量。
+- `XuanYu.Core/Gizmo/Scale/ScaleGizmoDrag.cs` — Scale Gizmo 拖拽解算：指数映射，倍率恒为正、不穿过零，且不逐帧累乘。
+- `XuanYu.Core/Gizmo/Scale/ScaleGizmoHitTester.cs` — CPU 命中布局与 Vulkan 绘制共用 ScaleGizmoLayout，保证“看见的位置 = 实际命中位置”。
+- `XuanYu.Core/Gizmo/Scale/ScaleGizmoLayout.cs` — Scale Gizmo 屏幕空间布局：三轴末端控制柄 + 中心等比控制柄。
+- `XuanYu.Core/Gizmo/Scale/ScaleGizmoScreenSize.cs` — Scale Gizmo 屏幕空间恒定尺寸换算（与 RotateGizmoScreenRadius 同思路）。
+- `XuanYu.Core/History/EditorHistoryOwner.cs` — sealed class EditorHistoryOwner
+- `XuanYu.Core/History/TransformHistoryEntry.cs` — （职责待补）
+- `XuanYu.Core/Identity/EntityId.cs` — （职责待补）
+- `XuanYu.Core/Logging/EngineLogEntry.cs` — （职责待补）
+- `XuanYu.Core/Logging/EngineLogLevel.cs` — enum EngineLogLevel
+- `XuanYu.Core/Map/MapSurfaceKind.cs` — MAP-A-R1-D3：R1 地表类型。与 .xymap 合同 surface.kind 对应（Editor 桥接负责字符串映射）。
+- `XuanYu.Core/Map/MapSurfaceSampler.cs` — MAP-A-R1-D3：唯一地表采样源。
+- `XuanYu.Core/Map/MapTerrainVertex.cs` — MAP-A-R1-D4：地形网格顶点。布局与 Vulkan 侧 StaticModelVertex 一致：
+- `XuanYu.Core/Math/Vector3d.cs` — （职责待补）
+- `XuanYu.Core/Math/YawRotation.cs` — （职责待补）
+- `XuanYu.Core/Picking/ViewportPickingRequest.cs` — （职责待补）
+- `XuanYu.Core/Picking/ViewportPickingResult.cs` — （职责待补）
+- `XuanYu.Core/Picking/ViewportPickingService.cs` — static class ViewportPickingService
+- `XuanYu.Core/Properties/AssemblyInfo.cs` — （职责待补）
+- `XuanYu.Core/Results/EngineError.cs` — （职责待补）
+- `XuanYu.Core/Results/EngineResult.cs` — （职责待补）
+- `XuanYu.Core/Scene/CommittedTransform.cs` — （职责待补）
+- `XuanYu.Core/Scene/ISceneRenderSnapshotSource.cs` — interface ISceneRenderSnapshotSource
+- `XuanYu.Core/Scene/SceneEntitySnapshot.cs` — （职责待补）
+- `XuanYu.Core/Scene/SceneRenderSnapshot.cs` — （职责待补）
+- `XuanYu.Core/Scene/SceneTransformCommitResult.cs` — （职责待补）
+- `XuanYu.Core/Space/CameraState.cs` — （职责待补）
+- `XuanYu.Core/Space/DefaultEditorCamera.cs` — static class DefaultEditorCamera
+- `XuanYu.Core/Space/ProjectionMode.cs` — F3-F4：相机投影模式。透视=自由观察默认；正交=标准方向视图（±X/±Y/±Z）。
+- `XuanYu.Core/Space/ViewProjectionState.cs` — sealed class ViewProjectionState
+- `XuanYu.Core/Space/ViewportState.cs` — （职责待补）
+- `XuanYu.Core/Space/WorldRay.cs` — （职责待补）
+- `XuanYu.Core/Space/WorldRayFactory.cs` — static class WorldRayFactory
+- `XuanYu.Core/Spatial/RayAabbHit.cs` — （职责待补）
+- `XuanYu.Core/Spatial/RayAabbIntersection.cs` — static class RayAabbIntersection
+- `XuanYu.Core/Spatial/SpatialAabb.cs` — （职责待补）
+- `XuanYu.Core/Spatial/SpatialBounds.cs` — （职责待补）
+- `XuanYu.Core/Spatial/SpatialQueryCategory.cs` — enum SpatialQueryCategory
+- `XuanYu.Core/Spatial/SpatialQueryResult.cs` — sealed class SpatialQueryResult
+- `XuanYu.Core/Spatial/SpatialQueryStats.cs` — （职责待补）
+- `XuanYu.Core/Spatial/SpatialRayAabb.cs` — static class SpatialRayAabb
+- `XuanYu.Core/Spatial/SpatialRayQuery.cs` — （职责待补）
+- `XuanYu.Core/Spatial/SpatialRaycastHit.cs` — （职责待补）
+- `XuanYu.Core/Spatial/SpatialRaycastResult.cs` — sealed class SpatialRaycastResult
+- `XuanYu.Core/Spatial/SpatialRaycastStats.cs` — （职责待补）
+- `XuanYu.Core/Time/SimulationTime.cs` — （职责待补）
+- `XuanYu.Core/Time/TimeStep.cs` — （职责待补）
+- `XuanYu.Core/Transform/PreviewTransform.cs` — （职责待补）
+- `XuanYu.Core/Transform/TransformStartSnapshot.cs` — （职责待补）
+- `XuanYu.Core/XuanYu.Core.csproj` — （职责待补）
+- `XuanYu.Editor.App/EditorCompositionRoot.cs` — static class EditorCompositionRoot
+- `XuanYu.Editor.App/Program.cs` — （职责待补）
+- `XuanYu.Editor.App/XuanYu.Editor.App.csproj` — （职责待补）
+- `XuanYu.Editor.UI/Bootstrap/App.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Bootstrap/App.axaml.cs` — sealed class App
+- `XuanYu.Editor.UI/Bootstrap/Program.cs` — WinExe 进程默认无控制台；AttachConsole(-1) 继承父终端（dotnet run 控制台），
+- `XuanYu.Editor.UI/Dialogs/IEditorDialogService.cs` — D4：最小错误弹窗服务。只用于用户主动操作失败（导入 GLB / 打开场景 / 部分资源缺失）。
+- `XuanYu.Editor.UI/Dialogs/NullEditorDialogService.cs` — D4：无窗口环境的空实现（测试 / 无 UI 宿主），避免 NRE。
+- `XuanYu.Editor.UI/EditorState/EditorInteractionChangedResult.cs` — enum EditorInteractionChangeKind
+- `XuanYu.Editor.UI/EditorState/EditorInteractionCommand.cs` — sealed record BeginInteractionCommand
+- `XuanYu.Editor.UI/EditorState/EditorInteractionPointerSnapshot.cs` — （职责待补）
+- `XuanYu.Editor.UI/EditorState/EditorInteractionSnapshot.cs` — enum EditorInteractionPhase
+- `XuanYu.Editor.UI/EditorState/EditorSelectionCommand.cs` — sealed record SelectEditorItemCommand
+- `XuanYu.Editor.UI/EditorState/EditorSelectionSnapshot.cs` — sealed record EditorSelectionSnapshot
+- `XuanYu.Editor.UI/EditorState/EditorStateChangedResult.cs` — enum EditorStateChangeKind
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.Interaction.cs` — sealed partial class EditorStateOwner
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.Tool.cs` — sealed partial class EditorStateOwner
+- `XuanYu.Editor.UI/EditorState/EditorStateOwner.cs` — sealed partial class EditorStateOwner
+- `XuanYu.Editor.UI/EditorState/EditorToolChangedResult.cs` — sealed record EditorToolChangedResult
+- `XuanYu.Editor.UI/EditorState/EditorToolCommand.cs` — sealed record ChangeEditorToolCommand
+- `XuanYu.Editor.UI/EditorState/EditorToolId.cs` — enum EditorToolId
+- `XuanYu.Editor.UI/EditorState/EditorToolSnapshot.cs` — sealed record EditorToolSnapshot
+- `XuanYu.Editor.UI/EditorState/EditorToolText.cs` — static class EditorToolText
+- `XuanYu.Editor.UI/EditorState/EditorTransformCapturePolicy.cs` — static class EditorTransformCapturePolicy
+- `XuanYu.Editor.UI/Foot/Foot.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Foot/Foot.axaml.cs` — LOG-UX-2：Foot.axaml.cs 只做接线——自动滚动 controller、日志选中、Ctrl+A/Ctrl+C。
+- `XuanYu.Editor.UI/Foot/LogAutoScrollPolicy.cs` — MAP-A-R2-D3-F2：日志自动跟随纯策略——底部附近跟随、远离不强制拉回、滚到底恢复。
+- `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml.cs` — partial class LogDetailPanel
+- `XuanYu.Editor.UI/Foot/LogListAutoScrollController.Follow.cs` — MAP-A-R2-D3-F3：两阶段尾项定位——第一阶段目标式滚动（Render），
+- `XuanYu.Editor.UI/Foot/LogListAutoScrollController.Layout.cs` — MAP-A-R2-D3-F3：布局变化统一处理——ScrollChanged 集中覆盖
+- `XuanYu.Editor.UI/Foot/LogListAutoScrollController.cs` — MAP-A-R2-D3-F3：日志列表尾项定位——两阶段（Render 目标滚动 + Background 布局后修正），
+- `XuanYu.Editor.UI/Icons/EditorIcons.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Left/InlineRenameActivation.cs` — static class InlineRenameActivation
+- `XuanYu.Editor.UI/Left/Left.EntityCommands.cs` — partial class Left
+- `XuanYu.Editor.UI/Left/Left.Styles.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Left/Left.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Left/Left.axaml.cs` — partial class Left
+- `XuanYu.Editor.UI/Main/Main.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Main/Main.axaml.cs` — partial class Main
+- `XuanYu.Editor.UI/NativeHostResizeCoalescer.cs` — / <summary>
+- `XuanYu.Editor.UI/NativeHostResizeSnapshot.cs` — / <summary>
+- `XuanYu.Editor.UI/NativeHostSurfaceContract.cs` — VK3-A：把现有 NativeHost 生命周期快照映射为渲染层交接句柄。
+- `XuanYu.Editor.UI/RelayCommand.cs` — sealed class RelayCommand
+- `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml.cs` — MAP-A-R2-D4：图层检查器（名称 Enter/失焦提交；开关/按钮走绑定，无额外逻辑）。
+- `XuanYu.Editor.UI/Right/LayerPanel.DragDrop.cs` — 图层拖动 code-behind（4DIP 阈值/插入线/Drop）
+- `XuanYu.Editor.UI/Right/LayerPanel.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Right/LayerPanel.axaml.cs` — MAP-A-R2-D4：图层面板（左侧"图层"页签内容，纯绑定；无 code-behind 逻辑）。
+- `XuanYu.Editor.UI/Right/MapEditorPanel.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs` — MAP-A-R1-D5-A：地图编辑器面板（地图资产/基础地表/环境三组，DataContext=UiVm）。
+- `XuanYu.Editor.UI/Right/Right.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Right/Right.axaml.cs` — partial class Right
+- `XuanYu.Editor.UI/Root/UiRoot.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Root/UiRoot.axaml.cs` — Row1 主工作区最低高度（与 axaml MinHeight 一致）
+- `XuanYu.Editor.UI/Top/Top.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Top/Top.axaml.cs` — partial class Top
+- `XuanYu.Editor.UI/TreeGuide.cs` — sealed class TreeGuide
+- `XuanYu.Editor.UI/TreeGuideSegment.cs` — enum TreeGuideSegmentKind
+- `XuanYu.Editor.UI/Ui.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.HitTest.cs` — F3-D3/F3-F3：导航 Gizmo 命中测试——六端点与中心球。
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Layout.cs` — F3-D2/F3-F3：导航 Gizmo 布局纯数学——六个世界方向投影到 Gizmo 屏幕平面。
+- `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs` — （职责待补）
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaCamera.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaPointer.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.CameraPointer.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Gizmo.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs` — VIEWPORT-RESIZE-R2：修复 R1 引入的 DPI 错配。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Log.cs` — VK4-D-R2：后台 Present 泵日志必须回 UI 线程访问 DataContext / UiVm。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs` — F3-F1：导航 Gizmo 命中——原生指针消息流（Avalonia 覆盖层被原生子窗口遮挡，命中走这里）。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs` — partial class VulkanViewport
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs` — （职责待补）
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` — （职责待补）
+- `XuanYu.Editor.UI/ViewportNativeHostRoute.cs` — static class ViewportNativeHostRoute
+- `XuanYu.Editor.UI/Vm/Camera/CameraSessionMode.cs` — enum CameraSessionMode
+- `XuanYu.Editor.UI/Vm/Camera/CameraSessionSnapshot.cs` — sealed record CameraSessionSnapshot
+- `XuanYu.Editor.UI/Vm/Camera/StandardViewResolver.cs` — F3-D3：六方向标准视角解析（计划 8.1 命名：+X 视图/-X 视图/+Y 视图/-Y 视图/顶视图/底视图）。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.cs` — F3-F4：取景命令。正交模式保持正交（尺度按包围范围适配），透视模式沿用距离构图。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.cs` — F3-D2：导航 Gizmo 相机快照（Right/Up/Forward 投影输入；不含平移）。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.ViewGizmo.cs` — F3-D3：六方向标准视角命令（计划 8.1 命名；复用现有 ApplyViewFaceCommand 相机逻辑）。
+- `XuanYu.Editor.UI/Vm/History/UiVm.EntityCommands.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/History/UiVm.History.Entities.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/History/UiVm.History.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Inspector/UiVm.Inspector.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorInput.Parse.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorInput.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Logging/DebugText.cs` — static class DebugText
+- `XuanYu.Editor.UI/Vm/Logging/EditorDisplayText.cs` — static class EditorDisplayText
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs` — sealed class EditorLogBuffer
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogBus.cs` — sealed class EditorLogBus
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogCategory.cs` — enum EditorLogCategory
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogClipboardText.cs` — static class EditorLogClipboardText
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogFilter.cs` — enum EditorLogFilter
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogFilterQuery.cs` — static class EditorLogFilterQuery
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogLevel.cs` — enum EditorLogLevel
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogNoiseFilter.cs` — static class EditorLogNoiseFilter
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogRepeatKey.cs` — （职责待补）
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogSource.cs` — enum EditorLogSource
+- `XuanYu.Editor.UI/Vm/Logging/EditorLogSummary.cs` — 底部"最近"通知（F3 方案 B）：完整日志仍按真实时间保留在面板；
+- `XuanYu.Editor.UI/Vm/Logging/LogEntry.cs` — sealed record LogEntry
+- `XuanYu.Editor.UI/Vm/Logging/SampleLogEntries.cs` — static class SampleLogEntries
+- `XuanYu.Editor.UI/Vm/Logging/UiText.cs` — static class UiText
+- `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.cs` — MAP-A-R2-D4：图层行显示模型（面板行绑定；写操作转发会话命令，不直接持有领域状态）。
+- `XuanYu.Editor.UI/Vm/Map/MapRenderSnapshotProjection.cs` — MAP-A-R2-D3/D4：MapDefinition → MapRenderSnapshot 纯投影（渲染唯一输入）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.cs` — MAP-A-R2-D3-F1：地图面板命令真实路由（UiVm.RunCommand → 地图命令）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.Format.cs` — MAP-A-R2-D3-F2：地图日志显示映射（纯函数，内部枚举/错误码保持英文）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.cs` — MAP-A-R2-D3-F2：地图命令低频诊断日志（复用既有日志总线，字段名/状态值全部中文显示）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.cs` — MAP-A-R2-D3：地图属性入口（唯一数据源 = MapSession；保存/打开按钮禁用防 v1 双权威，D6 恢复）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapHistory.cs` — MAP-A-R2-D3-A1 入口补接：地图撤销/重做（独立历史实例，不触碰场景实体历史）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDiagnostics.cs` — MAP-A-R2-D4/D4-F2：图层操作低频中文日志（复用既有日志总线）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDrag.cs` — 图层拖动排序 UI 入口（插入线/一次提交/日志）
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerInspector.cs` — MAP-A-R2-D4：图层检查器入口（右侧检查器选中图层时显示）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerSelection.cs` — MAP-A-R2-D4：图层选择状态与列表刷新（选中是 UI 临时状态；内容/活动变化后重建列表）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayers.cs` — MAP-A-R2-D4：图层列表与工具栏命令入口（唯一数据源 = MapSession.CurrentMap）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapRender.cs` — MAP-A-R2-D3：MapSession → 渲染快照 适配（唯一渲染输入）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapWorld.cs` — MAP-A-R2-D3：World 地图查询状态持有者（高度查询/边界判断权威，由会话 ContentChanged 同步）。
+- `XuanYu.Editor.UI/Vm/Scene/D2StaticModelDemo.cs` — （职责待补）
+- `XuanYu.Editor.UI/Vm/Scene/SceneHistoryEntry.cs` — （职责待补）
+- `XuanYu.Editor.UI/Vm/Scene/SceneRenderProjectionAdapter.cs` — static class SceneRenderProjectionAdapter
+- `XuanYu.Editor.UI/Vm/Scene/StaticModelRenderAdapter.cs` — static class StaticModelRenderAdapter
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.RenderProjection.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.Scene.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocument.New.cs` — D4：新建场景（5+100 拆分自 UiVm.SceneDocument.cs）。
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocument.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentLog.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentMapRef.cs` — MAP-A-R1-D5-B：场景与地图引用的双向闭环。
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.SceneDocumentSave.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.StaticModelImport.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Scene/UiVm.WorldProjection.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Selection/UiVm.Picking.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Selection/UiVm.Selection.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Selection/UiVm.SelectionProjection.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Selection/UiVm.SelectionTrace.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Selection/UiVm.SelectionValidity.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Selection/UiVm.ViewportSelection.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Selection/ViewportPickingLogFormatter.cs` — static class ViewportPickingLogFormatter
+- `XuanYu.Editor.UI/Vm/Transform/Move/UiVm.MoveGizmo.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/Move/UiVm.MoveGizmoLogging.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/Move/UiVm.MoveGizmoScreenSize.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/Rotate/UiVm.RotateGizmo.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/Scale/UiVm.ScaleGizmo.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/UiVm.InputGuards.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/UiVm.Interaction.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionCancel.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionPointer.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/UiVm.Tool.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Transform/UiVm.ViewportAssist.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Tree/EditorTreeNode.cs` — sealed class EditorTreeNode
+- `XuanYu.Editor.UI/Vm/Tree/TreeGuideBuilder.cs` — static class TreeGuideBuilder
+- `XuanYu.Editor.UI/Vm/Tree/UiVm.TreeCommands.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/UiVm.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs` — D4：UiWin 错误/警告弹窗实现。复用 UiWin.UnsavedDialog 的窗口构建风格，
+- `XuanYu.Editor.UI/Win/UiWin.EntityShortcuts.cs` — partial class UiWin
+- `XuanYu.Editor.UI/Win/UiWin.MapCommands.cs` — MAP-A-R2-D3-F1：UiWin 地图命令仅保留快捷键可达的窗口无关命令（新建/聚焦）。
+- `XuanYu.Editor.UI/Win/UiWin.SceneCommands.cs` — partial class UiWin
+- `XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs` — partial class UiWin
+- `XuanYu.Editor.UI/Win/UiWin.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Win/UiWin.axaml.cs` — partial class UiWin
+- `XuanYu.Editor.UI/XuanYu.Editor.UI.csproj` — （职责待补）
+- `XuanYu.Editor.UI/app.manifest` — （职责待补）
+- `XuanYu.Editor.Win/MainForm.cs` — （职责待补）
+- `XuanYu.Editor.Win/XuanYu.Editor.Win.csproj` — （职责待补）
+- `XuanYu.Editor/Assets/Catalog/SceneStaticModelCatalog.cs` — D3：场景静态模型绑定目录。Editor 层唯一事实源：实体 → 资产 → 模型数据。
+- `XuanYu.Editor/Assets/Hosting/HostedSceneAsset.cs` — D4-I1：托管资产项。SourcePath 是 D3 导入时记录的规范化绝对路径（运行时来源）；
+- `XuanYu.Editor/Assets/Hosting/ModelAssetRuntimeState.cs` — enum ModelAssetRuntimeState
+- `XuanYu.Editor/Assets/Hosting/Planning/SceneAssetHostingPlan.cs` — D4-I1：托管规划。Assets 按 AssetId.Value 稳定排序；所有绝对路径已 GetFullPath；
+- `XuanYu.Editor/Assets/Hosting/Planning/SceneAssetHostingPlanner.cs` — D4-I1：托管规划生成。只计算路径与规划，不写磁盘。
+- `XuanYu.Editor/Assets/Hosting/SceneAssetHostingError.cs` — D4-I1：托管事务错误码。复用 SceneDocumentResult 的 ErrorCode 字符串约定，
+- `XuanYu.Editor/Assets/Hosting/SceneAssetHostingState.cs` — D4-I1：托管事务状态机。
+- `XuanYu.Editor/Assets/Hosting/SceneAssetPathPolicy.cs` — static class SceneAssetPathPolicy
+- `XuanYu.Editor/Assets/Hosting/Transactions/SceneAssetHostingTransaction.Activate.cs` — D4-I1：Activate 将 staging 激活为正式 .xyassets，同时保留旧目录为备份。
+- `XuanYu.Editor/Assets/Hosting/Transactions/SceneAssetHostingTransaction.Complete.cs` — D4-I1：Complete 在后续场景文件保存成功后调用，删除备份并收尾。
+- `XuanYu.Editor/Assets/Hosting/Transactions/SceneAssetHostingTransaction.Rollback.cs` — D4-I1：Rollback 恢复旧目录。旧数据安全优先于清理整洁。
+- `XuanYu.Editor/Assets/Hosting/Transactions/SceneAssetHostingTransaction.cs` — D4-I1：托管资源事务。Prepare 只写 staging；Activate 激活正式 .xyassets 并保留备份；
+- `XuanYu.Editor/Assets/Identity/AssetId.cs` — （职责待补）
+- `XuanYu.Editor/Assets/Import/Gltf/GlbContainer.cs` — （职责待补）
+- `XuanYu.Editor/Assets/Import/Gltf/GlbImportService.cs` — sealed class GlbImportService
+- `XuanYu.Editor/Assets/Import/Gltf/GltfAccessorReader.cs` — （职责待补）
+- `XuanYu.Editor/Assets/Import/Gltf/GltfCoordinatePolicy.cs` — static class GltfCoordinatePolicy
+- `XuanYu.Editor/Assets/Import/Gltf/GltfJsonAccess.cs` — （职责待补）
+- `XuanYu.Editor/Assets/Import/Gltf/GltfNodeTransform.cs` — （职责待补）
+- `XuanYu.Editor/Assets/Import/Gltf/GltfStaticModelImporter.cs` — （职责待补）
+- `XuanYu.Editor/Assets/Import/Gltf/ImportStop.cs` — （职责待补）
+- `XuanYu.Editor/Assets/StaticModels/SceneStaticModelBinding.cs` — D3：场景内实体 → 托管资产的最小绑定记录。
+- `XuanYu.Editor/Assets/StaticModels/StaticModelAuthoringService.cs` — sealed record StaticModelAuthorResult
+- `XuanYu.Editor/Assets/StaticModels/StaticModelBuilder.cs` — （职责待补）
+- `XuanYu.Editor/Assets/StaticModels/StaticModelColor.cs` — （职责待补）
+- `XuanYu.Editor/Assets/StaticModels/StaticModelData.cs` — sealed record StaticModelData
+- `XuanYu.Editor/Assets/StaticModels/StaticModelImportCodes.cs` — enum StaticModelImportErrorCode
+- `XuanYu.Editor/Assets/StaticModels/StaticModelImportResult.cs` — sealed record StaticModelImportResult
+- `XuanYu.Editor/Assets/StaticModels/StaticModelImportWarning.cs` — sealed record StaticModelImportWarning
+- `XuanYu.Editor/Assets/StaticModels/StaticModelPrimitive.cs` — （职责待补）
+- `XuanYu.Editor/Assets/StaticModels/StaticModelVertex.cs` — （职责待补）
+- `XuanYu.Editor/Camera/CameraBasis.cs` — F3-F2：唯一相机正交基生成器（Editor 相机规则；不进入 Core，不持有 UiVm/Vulkan）。
+- `XuanYu.Editor/Camera/CameraFrameResult.cs` — （职责待补）
+- `XuanYu.Editor/Camera/CameraNavigation.Try.cs` — F3-F2：失败安全导航入口（partial）——Try* 成功才输出结果；失败给出原因且不修改任何状态。
+- `XuanYu.Editor/Camera/CameraNavigation.cs` — （职责待补）
+- `XuanYu.Editor/Camera/EditorCameraFraming.Orthographic.cs` — F3-F4：正交取景。保持当前正交模式与观察方向，尺度按包围范围适配
+- `XuanYu.Editor/Camera/EditorCameraFraming.cs` — MAP-A-R1-D4-F4：地图取景使用 45° 斜上方俯视，保证看得到地表内部。
+- `XuanYu.Editor/Camera/OrthographicViewFactory.cs` — F3-F4：正交视图生成。六方向标准视图（±X/±Y/±Z）切换为正交投影时，
+- `XuanYu.Editor/MapDocument/MapDocument.cs` — MAP-A-R1-D2：地图文档 DTO（.xymap v1 持久化模型）。表达地图文件数据，
+- `XuanYu.Editor/MapDocument/MapDocumentAggregateBridge.cs` — MAP-A-R2-D3：.xymap v1 DTO → 领域聚合投影（场景 mapReference 保活链）。
+- `XuanYu.Editor/MapDocument/MapDocumentJson.cs` — MAP-A-R1-D2：.xymap v1 严格 JSON 模型。
+- `XuanYu.Editor/MapDocument/MapDocumentOwner.cs` — MAP-A-R1-D2：当前地图状态所有者（最小状态机）。
+- `XuanYu.Editor/MapDocument/MapDocumentResult.cs` — MAP-A-R1-D2：地图操作结构化结果（对齐 SceneDocumentResult 模式，语义独立）。
+- `XuanYu.Editor/MapDocument/MapDocumentValidator.cs` — MAP-A-R1-D2：地图文档 DTO（.xymap v1）严格校验。领域合法性（尺寸范围）单一事实源在 World.MapDefinitionValidator。
+- `XuanYu.Editor/MapDocument/MapEnvironmentDefinition.cs` — MAP-A-R1-D2：环境定义。D2 只保存与校验，不渲染。
+- `XuanYu.Editor/MapDocument/MapJsonMapper.cs` — MAP-A-R1-D2：MapDocument ↔ MapDocumentJson 双向映射。
+- `XuanYu.Editor/MapDocument/MapJsonSerializer.cs` — MAP-A-R1-D2：.xymap 严格 JSON 读写。字段大小写敏感、未知字段拒绝、确定性输出、UTF-8。
+- `XuanYu.Editor/MapDocument/MapStorageService.cs` — MAP-A-R1-D2：地图文件存储。候选加载 + 同目录临时文件原子保存，不直接替换任何状态。
+- `XuanYu.Editor/MapEditing/MapEditEvents.cs` — MAP-A-R2-D2：地图编辑低频事件参数（禁止记录鼠标移动/Hover/每帧渲染）。
+- `XuanYu.Editor/MapEditing/MapEditReason.cs` — MAP-A-R2-D2/D3-A1/D4：地图编辑原因（内容变更事件携带）。
+- `XuanYu.Editor/MapEditing/MapEditSession.ActiveLayer.cs` — MAP-A-R2-D4：活动区域图层（会话临时状态：不进历史、不设 Dirty、不产生内容变更事件）。
+- `XuanYu.Editor/MapEditing/MapEditSession.Commands.cs` — MAP-A-R2-D2：地图基础属性编辑命令（D2 只实现地图级修改，图层/区域命令属 D4/D5）。
+- `XuanYu.Editor/MapEditing/MapEditSession.Commit.cs` — MAP-A-R2-D2：统一提交管线。所有地图内容修改必须经过本方法：
+- `XuanYu.Editor/MapEditing/MapEditSession.Document.cs` — MAP-A-R2-D2：文档生命周期（新建/替换/标记已保存）。
+- `XuanYu.Editor/MapEditing/MapEditSession.History.cs` — MAP-A-R2-D2：Undo/Redo 与事件广播。历史游标移动恢复对应 MapDefinition；
+- `XuanYu.Editor/MapEditing/MapEditSession.Layers.cs` — MAP-A-R2-D4：图层内容修改命令（走 CommitMapChange：单历史节点、失败零污染）。
+- `XuanYu.Editor/MapEditing/MapEditSession.Selection.cs` — MAP-A-R2-D2：选择状态。只保存稳定 ID；选择不产生 Dirty、不写入历史。
+- `XuanYu.Editor/MapEditing/MapEditSession.cs` — MAP-A-R2-D2：地图编辑会话（唯一状态权威）。
+- `XuanYu.Editor/MapEditing/MapHistoryEntry.cs` — MAP-A-R2-D2：地图历史条目（不可变快照）。MapDefinition 与 ImmutableArray
+- `XuanYu.Editor/MapEditing/MapSelection.cs` — MAP-A-R2-D2：地图选择状态。只保存稳定 ID，不保存 UI 控件/列表下标/中文名。
+- `XuanYu.Editor/MapEditing/MapSelectionKind.cs` — MAP-A-R2-D2：地图选择类型（未选择/地图/图层/区域）。
+- `XuanYu.Editor/SceneDocument/MapReference.cs` — MAP-A-R1-D5-B：场景对地图的可选引用（D1 合同冻结）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentAsset.cs` — D4：场景资产记录（D0 合同字段）。只描述托管来源，不含顶点/索引/GPU 数据。
+- `XuanYu.Editor/SceneDocument/SceneDocumentEntity.cs` — （职责待补）
+- `XuanYu.Editor/SceneDocument/SceneDocumentJson.cs` — （职责待补）
+- `XuanYu.Editor/SceneDocument/SceneDocumentLoadTransaction.cs` — D4：加载候选阶段。只读构建候选，不修改当前 World/Catalog/Selection/History/Dirty。
+- `XuanYu.Editor/SceneDocument/SceneDocumentMapper.cs` — （职责待补）
+- `XuanYu.Editor/SceneDocument/SceneDocumentResult.cs` — sealed record SceneDocumentResult
+- `XuanYu.Editor/SceneDocument/SceneDocumentSaveTransaction.cs` — D4：保存完整事务。候选构建 → Hosting Prepare/Activate → 原子写 .xyscene
+- `XuanYu.Editor/SceneDocument/SceneDocumentSession.cs` — sealed class SceneDocumentSession
+- `XuanYu.Editor/SceneDocument/SceneDocumentSnapshot.cs` — sealed record SceneDocumentSnapshot
+- `XuanYu.Editor/SceneDocument/SceneDocumentValidator.MapReference.cs` — MAP-A-R1-D5-B：mapReference 校验（可空；空=旧场景无引用，正常打开）。
+- `XuanYu.Editor/SceneDocument/SceneDocumentValidator.cs` — （职责待补）
+- `XuanYu.Editor/SceneDocument/SceneDocumentWorldBridge.cs` — static class SceneDocumentWorldBridge
+- `XuanYu.Editor/SceneDocument/SceneLoadCandidate.cs` — D4：加载候选。候选阶段构建，提交阶段一次性替换 World/Catalog。
+- `XuanYu.Editor/SceneDocument/SceneSaveOutcome.cs` — D4：保存事务结果。SavedSnapshot 带 v3 Assets；HostedSourcePaths 是
+- `XuanYu.Editor/SceneDocument/SceneStorageService.cs` — sealed class SceneStorageService
+- `XuanYu.Editor/Transform/TransformSession.Rotate.cs` — 旋转起始：与 Begin（移动）互斥，复用同一会话生命周期与提交/取消路径。
+- `XuanYu.Editor/Transform/TransformSession.Scale.cs` — 缩放起始：与 Begin（移动）/ BeginRotate（旋转）互斥，复用同一会话生命周期与提交/取消路径。
+- `XuanYu.Editor/Transform/TransformSession.cs` — sealed partial class TransformSession
+- `XuanYu.Editor/XuanYu.Editor.csproj` — （职责待补）
+- `XuanYu.Engine.slnx` — （职责待补）
+- `XuanYu.Render.Abstractions/EditorViewPlaneGridKind.cs` — F3-F4：正交标准视图的视图平面网格类型。None=不显示；
+- `XuanYu.Render.Abstractions/EditorViewportAssistState.cs` — F3-F1：导航 Gizmo 悬停索引（-1=无；0..5=六个端点）——UI 指针流更新，Overlay Pass 高亮。
+- `XuanYu.Render.Abstractions/FrameExecutionPolicy.cs` — R4-R3-R2：Vulkan Present 循环帧执行顺序策略，供 VulkanPresentLoop 实现与测试共同使用。
+- `XuanYu.Render.Abstractions/INativeHostSurfaceBridge.cs` — NativeHost 生命周期到 Surface 生命周期的交接契约。
+- `XuanYu.Render.Abstractions/INativeHostSurfaceBridgeFactory.cs` — ARCH-A-R1：NativeHost 渲染桥的最小装配契约。
+- `XuanYu.Render.Abstractions/IRenderProjectionSource.cs` — interface IRenderProjectionSource
+- `XuanYu.Render.Abstractions/MapBoundsGeometry.cs` — MAP-A-R2-D3：地图边界几何——四条边各一条细条四边形（每边 6 顶点 = 2 三角形），
+- `XuanYu.Render.Abstractions/MapRenderSnapshot.cs` — MAP-A-R2-D3/D4：地图渲染快照（唯一渲染输入；渲染层/Vulkan 只读，禁止反向访问编辑会话）。
+- `XuanYu.Render.Abstractions/MapSurfaceGeometry.cs` — MAP-A-R2-D3：有限 Flat 地面常量几何——固定 4 顶点 / 6 索引（两个三角形），
+- `XuanYu.Render.Abstractions/MapSurfaceResourceKey.cs` — MAP-A-R2-D3-A1 收口：GPU 地图资源判等键。
+- `XuanYu.Render.Abstractions/MapSurfaceResourceUpdatePolicy.cs` — MAP-A-R2-D3-A1 收口：地图 GPU 资源更新决策（纯策略，不依赖 Vulkan，可独立测试）。
+- `XuanYu.Render.Abstractions/MapSurfaceResourceUpdateText.cs` — MAP-A-R2-D3-F2：地图资源更新决策的显示文本（日志中文化）。
+- `XuanYu.Render.Abstractions/NativeHostHandleSnapshot.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期快照。
+- `XuanYu.Render.Abstractions/NativeHostLifecycleLogFormatter.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期日志格式器。
+- `XuanYu.Render.Abstractions/NativeHostLifecycleProbe.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期探针。
+- `XuanYu.Render.Abstractions/NativeHostLifecycleState.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期状态枚举。
+- `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs` — NativeHost 交给渲染层的窗口交接句柄。
+- `XuanYu.Render.Abstractions/ReferenceGridScale.cs` — MAP-A-R1-D5-R1-F2-R2：每帧统一参考网格尺度（1/2/5 十进制序列 + 互补交叉淡化）。
+- `XuanYu.Render.Abstractions/RenderCameraProjection.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/RenderDrawPlan.Typed.cs` — R4-R3-R2：实体绘制计划提取（typed 部分），供 Vulkan 与测试共同使用。
+- `XuanYu.Render.Abstractions/RenderDrawPlan.cs` — R4-R3-R2：实体绘制计划提取（帧级），供 Vulkan 与测试共同使用。
+- `XuanYu.Render.Abstractions/RenderEntityProjection.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/RenderEntityType.cs` — enum RenderEntityType
+- `XuanYu.Render.Abstractions/RenderProjection.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/RenderProjectionResult.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/RenderStaticModelKey.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/RenderStaticModelPrimitive.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/RenderStaticModelResource.cs` — sealed record RenderStaticModelResource
+- `XuanYu.Render.Abstractions/RenderStaticModelVertex.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj` — （职责待补）
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeDeviceAttachStep.cs` — VK4-B：在 VK4-A 物理设备选择成功后，基于其选择结果创建 LogicalDevice（VkDevice + 队列）。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgePhysicalDeviceAttachStep.cs` — VK4-A-R1：将 Attach 后的 PhysicalDevice 选择与中文日志从 VulkanNativeHostSurfaceBridge 迁出，
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeRenderSessionAttachStep.cs` — VK4-D：把 RenderSession 创建从 Bridge 抽离，Bridge 只委托，不内联 VK4-D 细节。
+- `XuanYu.Render.Vulkan/Bridge/VulkanBridgeSwapchainAttachStep.cs` — VK4-C：在设备 step 之后链式驱动 Swapchain 创建（Swapchain + Images + ImageViews）。
+- `XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.Physical.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Device/VulkanDeviceOwner.cs` — VK4-B：LogicalDevice 持有者。基于 VK4-A 的 VulkanPhysicalDeviceSelection 创建 VkDevice 与队列。
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceInfo.cs` — VK4-A：纯数据物理设备信息。仅描述候选设备，不持有任何 Vulkan 句柄（VkPhysicalDevice 不外露）。
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelection.cs` — VK4-A：物理设备选择结果（纯数据，渲染层）。Success 为 true 时 Handle / Device / Queue 非空。
+- `XuanYu.Render.Vulkan/Device/VulkanPhysicalDeviceSelector.cs` — VK4-A：物理设备选择器。在已有 Instance + Surface 前提下枚举并选择可用于渲染/呈现的设备。
+- `XuanYu.Render.Vulkan/Device/VulkanQueueFamilySelection.cs` — VK4-A：纯数据队列族选择结果。索引为 -1 表示未找到对应能力。
+- `XuanYu.Render.Vulkan/Diagnostic/VulkanResizeTracer.cs` — RZ-VK5-D-R1：Resize / Present 慢半拍全链路诊断追踪器。
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Frag.cs` — MAP-A-R1-D5-R1-F2-R3-R2: generated by glslc -O from scene.frag.
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridFrag.cs` — MAP-A: generated by glslc -O from d3_grid_frag.spv.
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridVert.cs` — MAP-A-R1-D5-R1-F2-R2: generated by glslc -O from editor_reference_grid.vert.
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoFrag.cs` — MAP-A: generated by glslc -O from navgizmo_frag.spv.
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoVert.cs` — AUTO-GENERATED from editor_nav_gizmo.vert / editor_nav_gizmo.frag / editor_world_origin.frag (glslc -O)
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs` — MAP-A: generated by glslc -O from d3_scene_vert.spv.
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.ViewPlaneGridFrag.cs` — F3-F4: generated by glslc -O from editor_view_plane_grid.frag.
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldAxesFrag.cs` — MAP-A-R1-D5-R1-F2-R2: generated by glslc -O from editor_world_axes.frag.
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldOriginFrag.cs` — AUTO-GENERATED from editor_nav_gizmo.vert / editor_nav_gizmo.frag / editor_world_origin.frag (glslc -O)
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.cs` — MAP-A-R1-D5-R1-F2-R2：全屏 Pass 管线通用创建（参考网格 / 世界轴 / 世界原点共用）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs` — MAP-A-R1-D5-R1-F2-R2：全屏 Pass 工厂（网格 / 世界轴 / 世界原点）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Sky.cs` — WORLD-D-R1：天空专用管线。与主管线共用 Shader、顶点输入与 RenderPass，
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.StaticModelInput.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Pipeline/VulkanPipelineLogFormatter.cs` — VK5-A：GraphicsPipeline 资源中文日志格式器。仅生成字符串，经注入的 Action<string> log 回调输出（日志单出口）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanScenePushConstants.cs` — std140 布局：
+- `XuanYu.Render.Vulkan/Pipeline/VulkanShaderModuleOwner.cs` — VK5-A：ShaderModule 创建助手。创建后由 GraphicsPipelineOwner 在管道建好后立即释放（短生命周期，不持有到会话结束）。
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameLogFormatter.cs` — VK4-D：单色清屏日志格式化（统一经 Bridge 的 Emit 单出口）。
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Commands.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Lifecycle.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Matrix.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.PipelineBind.cs` — 全屏 Pass 管线绑定分发（网格/轴/原点/导航 Gizmo/视图平面网格/天空）。
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.PushConstants.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Resources.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Trace.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.Grid.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格绘制。
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.GridScale.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格每帧全局尺度计算（视口中心射线与 Z=0 求交）。
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.NavGizmo.cs` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 屏幕空间、深度测试/写入关闭、最后绘制。
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.ViewPlaneGrid.cs` — F3-F4：正交标准视图的视图平面网格绘制（±X→YZ / ±Y→XZ，以世界原点为基准）。
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.WorldAxes.cs` — MAP-A-R1-D5-R1-F2-R2：世界轴 / 世界原点独立全屏 Pass。
+- `XuanYu.Render.Vulkan/Render/Map/VulkanClearFrameOwner.MapSurface.cs` — MAP-A-R2-D3：有限 Flat 地面（4 顶点 6 索引）+ 四条边界（24 顶点细条）；资源判等用 ResourceKey（Rename 不重建）。
+- `XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.Frame.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.Lifecycle.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.cs` — VK-LIFE-1：Present 泵必须确认停止成功后，才允许释放同步对象。
+- `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Draw.cs` — WORLD-D-R
+- `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.DrawAssist.cs` — D4：地图地面/边界已改由 Draw.cs 按 MapGround/MapBounds 分项分发；
+- `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.DrawGizmo.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Scene.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawStaticBounds.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawStaticModel.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelBuffer.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelCache.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelFailureTracker.cs` — D3-F1：静态模型 GPU 资源创建失败去重。
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelLog.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelResource.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelValidator.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelVertex.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/VulkanDepthAttachment.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Session/GridPipelineSet.cs` — MAP-A-R1-D5-R1-F2-R2/F3-F1：全屏 Pass 管线组合（参考网格 / 世界轴 / 世界原点 / 导航 Gizmo）。
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs` — sealed partial class VulkanRenderSession
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs` — sealed partial class VulkanRenderSession
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs` — sealed partial class VulkanRenderSession
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` — VK-LIFE-1：组合根负责失败回滚，不把半初始化资源留给 Bridge。
+- `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag` — 玄域编辑器：Blender 风格导航 Gizmo
+- `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.vert` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 顶点着色器。
+- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.frag` — MAP-A-R1-D5-R1-F2-R3：Blender 式统一尺度参考网格 —— 片元着色器。
+- `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert` — MAP-A-R1-D5-R1-F2：独立编辑器参考网格 Pass —— 顶点着色器。
+- `XuanYu.Render.Vulkan/Shaders/editor_view_plane_grid.frag` — F3-F4：正交标准视图的视图平面网格（YZ/XZ 平面，以世界原点为基准）。
+- `XuanYu.Render.Vulkan/Shaders/editor_world_axes.frag` — MAP-A-R1-D5-R1-F2-R2：X/Y 世界轴独立全屏 Pass —— 片元着色器。
+- `XuanYu.Render.Vulkan/Shaders/editor_world_origin.frag` — MAP-A-R1-D5-R1-F3-F1：世界原点标记独立全屏 Pass —— 片元着色器（屏幕空间版）。
+- `XuanYu.Render.Vulkan/Shaders/scene.frag` — MAP-A-R1-D5-R1-F2-R3-R2：每像素程序化编辑器环境（天空 + 中性灰参考地面）。
+- `XuanYu.Render.Vulkan/Shaders/scene.vert` — xyz=欧拉角(度), w=viewportWidth
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainBuilder.cs` — VK4-C：Swapchain 构建细节（创建 Swapchain + 取 Images + 建 ImageViews）。纯逻辑，不持有状态。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainCapabilities.cs` — VK4-C：Swapchain 能力查询（纯数据，不创建 Swapchain）。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainLogFormatter.cs` — VK4-C：Swapchain 中文生命周期日志格式器。纯文本，无副作用。
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.Accessors.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Swapchain/VulkanSwapchainOwner.cs` — VK4-C：Swapchain 持有者（创建/重建/释放）。RZ-VK5-D-R1：Recreate 内部加 T+ 阶段日志。
+- `XuanYu.Render.Vulkan/VulkanApiProbe.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/VulkanBridgeLogFormatter.cs` — VK3-C1/C2-R1：NativeHost → Instance+Surface 桥接中文生命周期日志格式器。纯文本，无副作用。
+- `XuanYu.Render.Vulkan/VulkanDeviceInfo.cs` — sealed record VulkanDeviceInfo
+- `XuanYu.Render.Vulkan/VulkanInstanceCreateInfoBuilder.cs` — VK3-B1：Instance 创建信息构造辅助。仅构造 InstanceCreateInfo（含最小扩展集），不直接调用 Vulkan。
+- `XuanYu.Render.Vulkan/VulkanInstanceExtensions.cs` — VK3-B1：Instance 启用的最小扩展名集合（仅 surface 相关，以 null 结尾字节序列）。
+- `XuanYu.Render.Vulkan/VulkanInstanceLogFormatter.cs` — VK3-B1：Vulkan Instance 生命周期中文日志格式器。纯文本生成，无副作用。
+- `XuanYu.Render.Vulkan/VulkanInstanceOwner.cs` — VK3-B1 / C1-R2：Vulkan Instance 持有者。仅创建/释放 Instance，启用 VK_KHR_surface 与 VK_KHR_win32_surface。
+- `XuanYu.Render.Vulkan/VulkanInstanceResult.cs` — VK3-B1：Vulkan Instance 创建结果。Owner 非空表示创建成功。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Attach.cs` — sealed partial class VulkanNativeHostSurfaceBridge
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Lifecycle.cs` — sealed partial class VulkanNativeHostSurfaceBridge
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Resize.cs` — sealed partial class VulkanNativeHostSurfaceBridge
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.Scene.cs` — sealed partial class VulkanNativeHostSurfaceBridge
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridge.cs` — VK-LIFE-1：Attach 全成功后才写入字段；失败按现有释放顺序回滚。
+- `XuanYu.Render.Vulkan/VulkanNativeHostSurfaceBridgeFactory.cs` — ARCH-A-R1：Vulkan 侧开始适配抽象装配契约。
+- `XuanYu.Render.Vulkan/VulkanProbeLogFormatter.cs` — static class VulkanProbeLogFormatter
+- `XuanYu.Render.Vulkan/VulkanProbeResult.cs` — sealed record VulkanProbeResult
+- `XuanYu.Render.Vulkan/VulkanSurfaceLogFormatter.cs` — VK3-B2：Vulkan Surface 生命周期中文日志格式器。纯文本生成，无副作用。
+- `XuanYu.Render.Vulkan/VulkanSurfaceOwner.cs` — VK3-B2 / C1-R2：Vulkan Surface 持有者。仅创建/释放 VkSurfaceKHR（Win32），
+- `XuanYu.Render.Vulkan/VulkanSurfaceResult.cs` — VK3-B2：Vulkan Surface 创建结果。Owner 非空表示创建成功。
+- `XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj` — （职责待补）
+- `XuanYu.WarCore.Tests/Identity/MilitaryIdentityTests.cs` — WARCORE-A-R1-D1：身份生成与校验契约测试。
+- `XuanYu.WarCore.Tests/State/SoldierStateTests.cs` — WARCORE-A-R1-D1：士兵状态边界与隔离契约测试。
+- `XuanYu.WarCore.Tests/WarCoreDependencyTests.cs` — WARCORE-A-R1-D1：WarCore 程序集依赖方向契约测试。
+- `XuanYu.WarCore.Tests/XuanYu.WarCore.Tests.csproj` — （职责待补）
+- `XuanYu.WarCore/Identity/FactionId.cs` — / <summary>
+- `XuanYu.WarCore/Identity/MilitaryIdentity.cs` — / <summary>
+- `XuanYu.WarCore/Identity/OrganizationId.cs` — / <summary>
+- `XuanYu.WarCore/Identity/UnitId.cs` — / <summary>
+- `XuanYu.WarCore/Identity/UnitKind.cs` — / <summary>
+- `XuanYu.WarCore/State/SoldierState.cs` — / <summary>
+- `XuanYu.WarCore/XuanYu.WarCore.csproj` — （职责待补）
+- `XuanYu.World.Tests/Assets/AssetContractTests.cs` — sealed class AssetContractTests
+- `XuanYu.World.Tests/Assets/AssetDialogTests.cs` — sealed class AssetDialogTests
+- `XuanYu.World.Tests/Assets/GlbFactory.cs` — （职责待补）
+- `XuanYu.World.Tests/Assets/GlbImportTests.cs` — sealed class GlbImportTests
+- `XuanYu.World.Tests/Assets/GlbMultiPrimitiveFactory.cs` — D3-F1：确定性多 Primitive / 越界索引测试 GLB 工厂（5+100 拆分自 GlbFactory）。
+- `XuanYu.World.Tests/Assets/HostingCompleteTests.cs` — sealed class HostingCompleteTests
+- `XuanYu.World.Tests/Assets/HostingPlannerRejectTests.cs` — sealed class HostingPlannerRejectTests
+- `XuanYu.World.Tests/Assets/HostingPlannerTests.cs` — sealed class HostingPlannerTests
+- `XuanYu.World.Tests/Assets/HostingRollbackTests.cs` — sealed class HostingRollbackTests
+- `XuanYu.World.Tests/Assets/HostingSaveAsTests.cs` — sealed class HostingSaveAsTests
+- `XuanYu.World.Tests/Assets/HostingTestEnv.cs` — D4-I1：托管事务测试辅助。所有测试使用独立临时目录，测试结束清理；
+- `XuanYu.World.Tests/Assets/HostingTransactionTests.cs` — sealed class HostingTransactionTests
+- `XuanYu.World.Tests/Assets/LoadStructureErrorTests.cs` — D4：结构错误事务（拆分自 LoadTransactionTests，5+100）。
+- `XuanYu.World.Tests/Assets/LoadTransactionTests.cs` — sealed class LoadTransactionTests
+- `XuanYu.World.Tests/Assets/SaveAsTests.cs` — D4：另存为与重复保存（拆分自 SaveTransactionTests，5+100）。
+- `XuanYu.World.Tests/Assets/SaveTransactionTests.cs` — sealed class SaveTransactionTests
+- `XuanYu.World.Tests/Assets/ScenePersistenceEnv.cs` — D4 测试辅助：独立临时目录 + 保存/加载事务 + Fake Dialog 计数。
+- `XuanYu.World.Tests/Assets/SchemaCompatibilityTests.cs` — sealed class SchemaCompatibilityTests
+- `XuanYu.World.Tests/Assets/StaticModelAuthoringServiceTests.cs` — sealed class StaticModelAuthoringServiceTests
+- `XuanYu.World.Tests/Assets/StaticModelBaseVertexTests.cs` — sealed class StaticModelBaseVertexTests
+- `XuanYu.World.Tests/Assets/StaticModelCatalogTests.cs` — 确定性 AssetId，保证字典序固定：…00 < …01。
+- `XuanYu.World.Tests/Assets/StaticModelFailureTrackerTests.cs` — sealed class StaticModelFailureTrackerTests
+- `XuanYu.World.Tests/Assets/StaticModelProjectionTests.cs` — sealed class StaticModelProjectionTests
+- `XuanYu.World.Tests/Assets/StaticModelUiTests.cs` — sealed class StaticModelUiTests
+- `XuanYu.World.Tests/Assets/StaticModelValidatorTests.cs` — SharpGLTF 边界会先拒绝索引越界 GLB（ParserFailure）；
+- `XuanYu.World.Tests/Camera/CameraDocumentTests.cs` — sealed class CameraDocumentTests
+- `XuanYu.World.Tests/Camera/CameraFramingOccupancyTests.cs` — MAP-A-R1-D5-R1：地图取景屏幕占用率（65%~75%）。
+- `XuanYu.World.Tests/Camera/CameraFramingTests.cs` — sealed class CameraFramingTests
+- `XuanYu.World.Tests/Camera/CameraNavigationUiTests.cs` — sealed class CameraNavigationUiTests
+- `XuanYu.World.Tests/Camera/UiViewGizmoTests.cs` — EDITOR-VIEW-R1：视角 Gizmo 六方向相机命令——朝向正确、观察中心与距离保持。
+- `XuanYu.World.Tests/Logging/FootAxamlTailContractTests.cs` — MAP-A-R2-D3-F3：源码合同——AXAML 尾部安全区与控制器两阶段定位结构。
+- `XuanYu.World.Tests/Logging/LogAutoScrollPolicyTests.cs` — MAP-A-R2-D3-F2：日志自动跟随纯策略——底部附近跟随、远离不强制拉回、滚到底恢复。
+- `XuanYu.World.Tests/Logging/LogListAutoScrollControllerContractTests.cs` — MAP-A-R2-D3-F3：控制器源码合同——两阶段尾项定位结构与副作用禁令。
+- `XuanYu.World.Tests/Logging/UiMapLogChineseTests.cs` — MAP-A-R2-D3-F2：日志中文化——字段名/状态值中文，内部枚举保持英文。
+- `XuanYu.World.Tests/Logging/UiRootLogRowContractTests.cs` — MAP-A-R2-D3-F4：日志区垂直尺寸自适应源码合同。
+- `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.Behavior.cs` — MAP-A-R2-D4：图层命令会话行为（T02 默认活动图层 + H07～H10、活动转移、No-op）。
+- `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.Drag.History.cs` — 拖动排序会话行为（H04-H06）
+- `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.Drag.cs` — 拖动排序会话命令（H01-H03）
+- `XuanYu.World.Tests/Map/Editing/MapLayerSessionTests.cs` — MAP-A-R2-D4：图层命令接入 MapEditSession（H01～H06 撤销/重做；T02 见 Behavior）。
+- `XuanYu.World.Tests/Map/Editing/UiLayerVisualContractTests.cs` — 图层视觉与字号源码合同（V01-V06）
+- `XuanYu.World.Tests/Map/Editing/UiLogSummaryPriorityTests.cs` — 底部通知优先级（L01-L05）
+- `XuanYu.World.Tests/Map/Editing/UiMapCommandRoutingTests.cs` — MAP-A-R2-D3-F1：真实按钮链测试（RunCommand.Execute → MapSession）。
+- `XuanYu.World.Tests/Map/Editing/UiMapEditorTests.cs` — MAP-A-R2-D3：地图属性入口——会话恒有默认地图、应用修改、非法输入保护、取景数据源。
+- `XuanYu.World.Tests/Map/Editing/UiMapHistoryTests.cs` — MAP-A-R2-D3-A1 入口补接：地图撤销/重做按钮路由到 MapSession 独立历史。
+- `XuanYu.World.Tests/Map/Editing/UiMapInitialProjectionTests.cs` — MAP-A-R2-D3-A1：默认地图初始快照进入首帧 RenderProjection（无需新建地图）。
+- `XuanYu.World.Tests/Map/Editing/UiMapLayerDragTests.cs` — 图层拖动 UI 入口与通知（U01-U06/L03）
+- `XuanYu.World.Tests/Map/Editing/UiMapLayerLockLogTests.cs` — MAP-A-R2-D4-F2：图层锁定日志细化（L01～L06）+ 添加立方体单次创建（C01）。
+- `XuanYu.World.Tests/Map/Editing/UiMapLayerPanelTests.Behavior.cs` — MAP-A-R2-D4：图层面板行为——显隐/锁定/删除/排序/活动图层/撤销重做（真实命令链）。
+- `XuanYu.World.Tests/Map/Editing/UiMapLayerPanelTests.cs` — MAP-A-R2-D4：图层面板 ViewModel——默认列表/添加/按钮状态/系统层只读/重命名（真实命令链）。
+- `XuanYu.World.Tests/Map/Editing/UiMapLayoutContractTests.cs` — MAP-A-R2-D4-F1：图层 UI 归位合同——左侧仅项目/层级，图层管理迁入右侧地图编辑器二级页。
+- `XuanYu.World.Tests/Map/MapBoundsTests.cs` — MAP-A-R2-D1：有限地图边界合同（中心原点、闭区间、尺寸变化同步）。
+- `XuanYu.World.Tests/Map/MapCoordinateValidationTests.cs` — MAP-A-R1-D2：坐标合同 / 图层引用 / schema / 名称校验。
+- `XuanYu.World.Tests/Map/MapDefaultMapTests.cs` — MAP-A-R2-D1-F1：默认地图工厂合同（完整聚合 + DTO 默认值一致）。
+- `XuanYu.World.Tests/Map/MapDefinitionTests.cs` — MAP-A-R2-D1-F1：地图聚合验证（尺寸/坐标/地表/图层/区域组合入口）。
+- `XuanYu.World.Tests/Map/MapDocumentAggregateBridgeTests.cs` — MAP-A-R2-D3：.xymap v1 DTO → 领域聚合桥接（场景 mapReference 保活链）与端到端查询一致。
+- `XuanYu.World.Tests/Map/MapDocumentOwnerChainTests.cs` — MAP-A-R1-D2：状态链闭环与失败不污染。
+- `XuanYu.World.Tests/Map/MapDocumentOwnerTests.cs` — MAP-A-R1-D2：当前地图状态所有者（New/Load/Modify/Save/Unload 基础状态）。
+- `XuanYu.World.Tests/Map/MapEnvironmentValidationTests.cs` — MAP-A-R1-D2：环境定义与参数校验。
+- `XuanYu.World.Tests/Map/MapIdTests.cs` — MAP-A-R1-D2：MapId 与地图合同校验（纯内存）。
+- `XuanYu.World.Tests/Map/MapJsonRoundTripTests.cs` — MAP-A-R1-D2：.xymap 严格 JSON Round-trip 与确定性。
+- `XuanYu.World.Tests/Map/MapJsonStrictnessTests.cs` — MAP-A-R1-D2：严格 JSON 拒绝路径（大小写 / 未知字段 / 类型 / 损坏）。
+- `XuanYu.World.Tests/Map/MapLayerRulesTests.cs` — MAP-A-R2-D4：图层操作规则（T05 名称校验、T06 系统层保护、T07/T08 删除保护、T04 自动命名）。
+- `XuanYu.World.Tests/Map/MapLayerStackTests.Drag.cs` — 拖动排序领域合同（T01-T08）
+- `XuanYu.World.Tests/Map/MapLayerStackTests.Order.cs` — MAP-A-R2-D4：图层顺序边界与状态操作（T10 系统层顺序固定、显隐/锁定/改名保身份）。
+- `XuanYu.World.Tests/Map/MapLayerStackTests.cs` — MAP-A-R2-D4：图层顺序与状态操作（T03/T09 区域层内排序、T11/T12 显隐锁定保身份）。
+- `XuanYu.World.Tests/Map/MapLayerTests.Base.cs` — MAP-A-R2-D4：系统图层合同（地面层恰好一个 Order 0、边界层恰好一个 Order 1、区域层 Order ≥ 2）。
+- `XuanYu.World.Tests/Map/MapLayerTests.cs` — MAP-A-R2-D4：图层领域模型与验证（默认图层/稳定 ID/唯一性）。
+- `XuanYu.World.Tests/Map/MapRegionDraftTests.cs` — MAP-A-R2-D1-F1：绘制草稿合同（未闭合草稿 → 提交为天然闭合正式区域）。
+- `XuanYu.World.Tests/Map/MapRegionTests.Helpers.cs` — sealed partial class MapRegionTests
+- `XuanYu.World.Tests/Map/MapRegionTests.Strictness.cs` — MAP-A-R2-D1-F1：区域严格性（相邻重复点/首尾规则/三不同顶点/非零面积）。
+- `XuanYu.World.Tests/Map/MapRegionTests.cs` — MAP-A-R2-D1：区域验证（闭合/顶点数/引用图层/边界/有限数值）。
+- `XuanYu.World.Tests/Map/MapSizeValidationTests.cs` — MAP-A-R1-D2：地图尺寸与坐标合同校验。
+- `XuanYu.World.Tests/Map/MapStorageFailureTests.cs` — MAP-A-R1-D2：加载失败保护 / 非法合同拒绝 / 保存失败不写坏文件。
+- `XuanYu.World.Tests/Map/MapStorageTests.cs` — MAP-A-R1-D2：候选加载 / 原子保存（真实文件，临时目录）。
+- `XuanYu.World.Tests/Map/MapSurfaceSamplerTests.cs` — MAP-A-R1-D3：唯一地表采样器——确定性、范围与参数语义。
+- `XuanYu.World.Tests/Map/MapSurfaceValidationTests.cs` — MAP-A-R1-D2：地表定义与参数校验。
+- `XuanYu.World.Tests/Map/SceneMapReferenceTests.cs` — MAP-A-R1-D5-B（D3 适配）：.xyscene mapReference 闭环——保存携带、打开恢复、缺失失效、旧场景兼容。
+- `XuanYu.World.Tests/Map/WorldMapStateOwnerTests.cs` — MAP-A-R1-D3：World 地图状态所有者——加载/切换/卸载/查询/渲染快照。
+- `XuanYu.World.Tests/Map/WorldMapStateTests.cs` — MAP-A-R1-D3：World 地图状态——有限边界（闭区间）与高度查询。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionCommandTests.cs` — MAP-A-R2-D2：地图基础编辑命令（改名/尺寸/基础高度/No-op/非法输入）。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionCreationTests.cs` — MAP-A-R2-D2：默认会话与根状态合同。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionDirtyTests.cs` — MAP-A-R2-D2：Saved/Dirty 合同（Dirty 随 Undo/Redo 回到保存点）。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionHistoryTests.cs` — MAP-A-R2-D2：Undo/Redo、分支清除与 ChangeSequence 单调递增。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionMapPropertiesTests.cs` — MAP-A-R2-D3-A1：地图属性原子提交（单历史节点/失败零污染）。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionSelectionTests.cs` — MAP-A-R2-D2：选择状态（稳定 ID/存在性/不产生 Dirty/规范化）。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionThreadTests.cs` — MAP-A-R2-D2：写线程保护（非法线程拒绝且状态完全不变）。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionValidationTests.cs` — MAP-A-R2-D2：候选校验与失败不污染（缩小越界整体拒绝/无效替换拒绝）。
+- `XuanYu.World.Tests/MapEditing/MapRenderSnapshotProjectionTests.cs` — MAP-A-R2-D3：MapDefinition → MapRenderSnapshot 投影合同（渲染唯一输入）。
+- `XuanYu.World.Tests/Render/VulkanPresentLoopContractTests.cs` — VK-PERF-R1：Present 循环合同测试——防性能轮回归：
+- `XuanYu.World.Tests/Render/VulkanPresentModeSelectionTests.cs` — VK-PERF-R1：Present Mode 选择合同——FIFO（垂直同步）为首选，Mailbox 不再是默认。
+- `XuanYu.World.Tests/Scene/CommandSmokeTests.cs` — sealed class CommandSmokeTests
+- `XuanYu.World.Tests/Scene/EditorEnvironmentTests.cs` — WORLD-D-R1：编辑器环境（天空/光照）契约测试。
+- `XuanYu.World.Tests/Scene/EntityBoundsSemanticsTests.cs` — R2-R1 final patch: lock the two spatial-bounds semantics so a future change cannot
+- `XuanYu.World.Tests/Scene/EntityRegistryTests.cs` — sealed class EntityRegistryTests
+- `XuanYu.World.Tests/Scene/EntityTests.cs` — sealed class EntityTests
+- `XuanYu.World.Tests/Scene/FinalSceneTests.cs` — sealed class FinalSceneTests
+- `XuanYu.World.Tests/Scene/GlobalWorldTests.cs` — sealed class GlobalWorldTests
+- `XuanYu.World.Tests/Scene/SceneConsumptionTests.cs` — sealed class SceneConsumptionTests
+- `XuanYu.World.Tests/Scene/SceneDocumentPersistenceTests.cs` — sealed class SceneDocumentPersistenceTests
+- `XuanYu.World.Tests/Scene/SceneDocumentTests.Opening.cs` — sealed partial class SceneDocumentTests
+- `XuanYu.World.Tests/Scene/SceneDocumentTests.SaveFeedback.cs` — sealed partial class SceneDocumentTests
+- `XuanYu.World.Tests/Scene/SceneDocumentTests.cs` — sealed partial class SceneDocumentTests
+- `XuanYu.World.Tests/Scene/SceneIsolationTests.cs` — sealed class SceneIsolationTests
+- `XuanYu.World.Tests/Scene/SceneMultiEntityGateTests.cs` — sealed class SceneMultiEntityGateTests
+- `XuanYu.World.Tests/Scene/SceneSelectionReentryTests.cs` — sealed class SceneSelectionReentryTests
+- `XuanYu.World.Tests/Scene/SceneSingleAuthorityTests.cs` — sealed class SceneSingleAuthorityTests
+- `XuanYu.World.Tests/Scene/UiHistoryTests.InlineRename.cs` — sealed partial class UiHistoryTests
+- `XuanYu.World.Tests/Scene/UiHistoryTests.cs` — sealed partial class UiHistoryTests
+- `XuanYu.World.Tests/Selection/FinalSelectionTests.cs` — sealed class FinalSelectionTests
+- `XuanYu.World.Tests/Selection/SelectionToolStateUiTests.cs` — sealed class SelectionToolStateUiTests
+- `XuanYu.World.Tests/Selection/ToolStateHighlightUiTests.Selection.cs` — sealed partial class ToolStateHighlightUiTests
+- `XuanYu.World.Tests/Selection/ToolStateHighlightUiTests.cs` — sealed partial class ToolStateHighlightUiTests
+- `XuanYu.World.Tests/Spatial/SceneStateOwnerSpatialTests.cs` — sealed class SceneStateOwnerSpatialTests
+- `XuanYu.World.Tests/Spatial/SpatialIndexEditLifecycleTests.cs` — sealed class SpatialIndexEditLifecycleTests
+- `XuanYu.World.Tests/Spatial/SpatialIndexOwnerLifecycleTests.cs` — sealed class SpatialIndexOwnerLifecycleTests
+- `XuanYu.World.Tests/Spatial/SpatialIndexOwnerRevisionTests.cs` — sealed class SpatialIndexOwnerRevisionTests
+- `XuanYu.World.Tests/Spatial/SpatialIndexRebuildTests.cs` — sealed class SpatialIndexRebuildTests
+- `XuanYu.World.Tests/Spatial/SpatialIndexScaleTests.cs` — sealed class SpatialIndexScaleTests
+- `XuanYu.World.Tests/Spatial/SpatialQueryGovernanceTests.cs` — sealed class SpatialQueryGovernanceTests
+- `XuanYu.World.Tests/Spatial/SpatialQueryOracle.cs` — （职责待补）
+- `XuanYu.World.Tests/Spatial/SpatialQueryTests.Geometry.cs` — sealed partial class SpatialQueryTests
+- `XuanYu.World.Tests/Spatial/SpatialQueryTests.cs` — sealed partial class SpatialQueryTests
+- `XuanYu.World.Tests/Spatial/SpatialRayQueryLifecycleTests.cs` — sealed class SpatialRayQueryLifecycleTests
+- `XuanYu.World.Tests/Spatial/SpatialRayQueryTests.cs` — sealed class SpatialRayQueryTests
+- `XuanYu.World.Tests/Spatial/SpatialRaycastNearestTests.cs` — sealed class SpatialRaycastNearestTests
+- `XuanYu.World.Tests/Spatial/SpatialRaycastRevisionTests.cs` — sealed class SpatialRaycastRevisionTests
+- `XuanYu.World.Tests/Spatial/SpatialRaycastScaleTests.cs` — sealed class SpatialRaycastScaleTests
+- `XuanYu.World.Tests/Spatial/SpatialTestData.cs` — （职责待补）
+- `XuanYu.World.Tests/Transform/Move/MoveTransformUiTests.Plane.cs` — sealed partial class MoveTransformUiTests
+- `XuanYu.World.Tests/Transform/Move/MoveTransformUiTests.Region.cs` — sealed partial class MoveTransformUiTests
+- `XuanYu.World.Tests/Transform/Move/MoveTransformUiTests.Session.cs` — sealed partial class MoveTransformUiTests
+- `XuanYu.World.Tests/Transform/Move/MoveTransformUiTests.cs` — sealed partial class MoveTransformUiTests
+- `XuanYu.World.Tests/Transform/Rotate/RotateTransformUiTests.DragState.cs` — sealed partial class RotateTransformUiTests
+- `XuanYu.World.Tests/Transform/Rotate/RotateTransformUiTests.Helpers.cs` — sealed partial class RotateTransformUiTests
+- `XuanYu.World.Tests/Transform/Rotate/RotateTransformUiTests.Preview.cs` — R4-R3-R1：旋转预览必须是实时的，且“选中轮廓”改用单 Draw 重心坐标边缘高亮后，
+- `XuanYu.World.Tests/Transform/Rotate/RotateTransformUiTests.ToolSwitch.cs` — R4-R2：旋转工具激活时点击其他实体必须立即切换选择，且工具保持 Rotate；
+- `XuanYu.World.Tests/Transform/Rotate/RotateTransformUiTests.cs` — sealed partial class RotateTransformUiTests
+- `XuanYu.World.Tests/Transform/Scale/ScaleGizmoGlobalModeTests.cs` — sealed class ScaleGizmoGlobalModeTests
+- `XuanYu.World.Tests/Transform/Scale/ScaleTransformUiTests.AxisUniform.cs` — sealed partial class ScaleTransformUiTests
+- `XuanYu.World.Tests/Transform/Scale/ScaleTransformUiTests.Helpers.cs` — sealed partial class ScaleTransformUiTests
+- `XuanYu.World.Tests/Transform/Scale/ScaleTransformUiTests.History.cs` — sealed partial class ScaleTransformUiTests
+- `XuanYu.World.Tests/Transform/Scale/ScaleTransformUiTests.Pointer.cs` — sealed partial class ScaleTransformUiTests
+- `XuanYu.World.Tests/Transform/Scale/ScaleTransformUiTests.Target.cs` — sealed partial class ScaleTransformUiTests
+- `XuanYu.World.Tests/Transform/Scale/ScaleTransformUiTests.cs` — R5：Scale Gizmo 缩放变换闭环集成测试。复用既有 SelectionKey / TransformSession / History 体系，
+- `XuanYu.World.Tests/Transform/TransformFoundationTests.Input.cs` — sealed partial class TransformFoundationTests
+- `XuanYu.World.Tests/Transform/TransformFoundationTests.Inspector.cs` — sealed partial class TransformFoundationTests
+- `XuanYu.World.Tests/Transform/TransformFoundationTests.cs` — sealed partial class TransformFoundationTests
+- `XuanYu.World.Tests/Transform/TransformSessionTests.cs` — sealed class TransformSessionTests
+- `XuanYu.World.Tests/Transform/ViewportAssistTests.cs` — sealed class ViewportAssistTests
+- `XuanYu.World.Tests/Tree/UiHierarchyConnectorTests.cs` — sealed class UiHierarchyConnectorTests
+- `XuanYu.World.Tests/Tree/UiTreeGuideTests.cs` — sealed class UiTreeGuideTests
+- `XuanYu.World.Tests/Tree/UiTreeToggleTests.cs` — sealed class UiTreeToggleTests
+- `XuanYu.World.Tests/WorldPartition/WorldPartitionInvariantTests.cs` — sealed class WorldPartitionInvariantTests
+- `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.Activity.cs` — sealed partial class WorldPartitionMigrationTests
+- `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.cs` — sealed partial class WorldPartitionMigrationTests
+- `XuanYu.World.Tests/WorldPartition/WorldPartitionTests.PartitionStrategy.cs` — sealed partial class WorldPartitionTests
+- `XuanYu.World.Tests/WorldPartition/WorldPartitionTests.cs` — sealed partial class WorldPartitionTests
+- `XuanYu.World.Tests/WorldPartition/WorldPartitionUiTests.cs` — sealed class WorldPartitionUiTests
+- `XuanYu.World.Tests/XuanYu.World.Tests.csproj` — （职责待补）
+- `XuanYu.World/EntityRegistry.Authoring.cs` — sealed partial class EntityRegistry
+- `XuanYu.World/EntityRegistry.Replace.cs` — sealed partial class EntityRegistry
+- `XuanYu.World/EntityRegistry.cs` — sealed partial class EntityRegistry
+- `XuanYu.World/GlobalWorld.Authoring.cs` — sealed partial class GlobalWorld
+- `XuanYu.World/GlobalWorld.Query.cs` — sealed partial class GlobalWorld
+- `XuanYu.World/GlobalWorld.Snapshot.cs` — sealed partial class GlobalWorld
+- `XuanYu.World/GlobalWorld.cs` — sealed partial class GlobalWorld
+- `XuanYu.World/GridWorldPartitionStrategy.cs` — sealed class GridWorldPartitionStrategy
+- `XuanYu.World/IWorldPartitionStrategy.cs` — interface IWorldPartitionStrategy
+- `XuanYu.World/Map/MapBounds.cs` — MAP-A-R2-D1：有限地图边界（米）。地图中心为世界原点，范围 X/Y ∈ [-W/2, W/2]。
+- `XuanYu.World/Map/MapDefaultDefinition.cs` — MAP-A-R2-D4：默认地图工厂。一次性创建完整地图聚合：
+- `XuanYu.World/Map/MapDefinition.cs` — MAP-A-R2-D1-F1：完整地图领域聚合（权威根）。只描述地图内容（纯净、不可变），
+- `XuanYu.World/Map/MapDefinitionValidator.cs` — MAP-A-R2-D1-F1：地图聚合严格校验（领域权威层）。
+- `XuanYu.World/Map/MapGeometry.cs` — MAP-A-R1-D2：地图尺寸（米）。width 对应世界 X，depth 对应世界 Y，Z-Up 下高度沿 Z。
+- `XuanYu.World/Map/MapId.cs` — MAP-A-R2-D1/D1-F1：地图稳定唯一标识（领域权威层）。D1 合同冻结格式：32 位十六进制，无前缀。
+- `XuanYu.World/Map/MapLayer.cs` — MAP-A-R2-D1：图层领域模型（领域权威层）。用于组织地图元素，不承担渲染管线功能。
+- `XuanYu.World/Map/MapLayerId.cs` — MAP-A-R2-D1：图层稳定唯一标识（领域权威层）。与 MapId 同族格式（32 位十六进制，无前缀）。
+- `XuanYu.World/Map/MapLayerKind.cs` — MAP-A-R2-D4：图层角色（稳定标识，不依赖中文名称识别）。
+- `XuanYu.World/Map/MapLayerRules.cs` — MAP-A-R2-D4：图层操作规则（名称校验、系统层保护、最后区域层保护、自动命名）。
+- `XuanYu.World/Map/MapLayerStack.cs` — MAP-A-R2-D4：图层顺序与领域操作（纯函数，返回新不可变集合）。
+- `XuanYu.World/Map/MapLayerValidator.cs` — MAP-A-R2-D4：图层集合严格校验（领域权威层）。
+- `XuanYu.World/Map/MapRegion.cs` — MAP-A-R2-D1：区域领域模型（领域权威层）。地图上的二维闭合多边形（水平面坐标）。
+- `XuanYu.World/Map/MapRegionDraft.cs` — MAP-A-R2-D1-F1：绘制中的区域草稿（未闭合顶点序列）。D5 绘制流程使用；
+- `XuanYu.World/Map/MapRegionId.cs` — MAP-A-R2-D1：区域稳定唯一标识（领域权威层）。与 MapId 同族格式（32 位十六进制，无前缀）。
+- `XuanYu.World/Map/MapRegionKind.cs` — MAP-A-R2-D1：区域类型（领域权威层）。R2 仅承载几何与基础元数据，不解释战斗含义。
+- `XuanYu.World/Map/MapRegionValidator.cs` — MAP-A-R2-D1/D4：区域集合严格校验（领域权威层）。
+- `XuanYu.World/Map/MapSurfaceDefinition.cs` — MAP-A-R1-D2：地表定义。支持 Flat 与 GentleHillsV1（确定性参数化起伏）。
+- `XuanYu.World/Map/MapValidationResult.cs` — MAP-A-R2-D1-F1：地图领域验证结构化结果（不抛出来源不明的异常）。
+- `XuanYu.World/Map/WorldMapState.cs` — MAP-A-R1-D3/D4：World 地图状态（纯数据 + 有限边界 + 高度查询 + 环境参数）。
+- `XuanYu.World/Map/WorldMapStateOwner.cs` — MAP-A-R1-D3/D4：当前 World 地图状态所有者。加载/切换/卸载，暴露高度查询与渲染快照。
+- `XuanYu.World/RegionKey.cs` — （职责待补）
+- `XuanYu.World/Scene/SceneSpatialBoundsProjection.cs` — static class SceneSpatialBoundsProjection
+- `XuanYu.World/Scene/SceneStateOwner.Lifecycle.cs` — sealed partial class SceneStateOwner
+- `XuanYu.World/Scene/SceneStateOwner.Seeding.cs` — sealed partial class SceneStateOwner
+- `XuanYu.World/Scene/SceneStateOwner.StaticModel.cs` — D3：静态模型只是 World 的一种普通实体类型。World 不接收 AssetId、
+- `XuanYu.World/Scene/SceneStateOwner.Transform.cs` — sealed partial class SceneStateOwner
+- `XuanYu.World/Scene/SceneStateOwner.cs` — Placeholder scene entities declare their OWN spatial extent (1
+- `XuanYu.World/Scene/SceneWorldProjection.cs` — static class SceneWorldProjection
+- `XuanYu.World/Spatial/DynamicAabbTree.Insert.cs` — sealed partial class DynamicAabbTree
+- `XuanYu.World/Spatial/DynamicAabbTree.Node.cs` — sealed partial class DynamicAabbTree
+- `XuanYu.World/Spatial/DynamicAabbTree.Query.cs` — sealed partial class DynamicAabbTree
+- `XuanYu.World/Spatial/DynamicAabbTree.Refit.cs` — sealed partial class DynamicAabbTree
+- `XuanYu.World/Spatial/DynamicAabbTree.Remove.cs` — sealed partial class DynamicAabbTree
+- `XuanYu.World/Spatial/DynamicAabbTree.cs` — sealed partial class DynamicAabbTree
+- `XuanYu.World/Spatial/ISpatialIndex.cs` — interface ISpatialIndex
+- `XuanYu.World/Spatial/SpatialIndexOwner.cs` — sealed class SpatialIndexOwner
+- `XuanYu.World/Spatial/SpatialRaycastResolver.cs` — sealed class SpatialRaycastResolver
+- `XuanYu.World/WorldEntityActivity.cs` — enum WorldEntityActivity
+- `XuanYu.World/WorldEntityName.cs` — static class WorldEntityName
+- `XuanYu.World/WorldEntitySnapshot.cs` — （职责待补）
+- `XuanYu.World/WorldEntityType.cs` — enum WorldEntityType
+- `XuanYu.World/WorldPartitionEntry.cs` — （职责待补）
+- `XuanYu.World/WorldPartitionMembership.cs` — sealed class WorldPartitionMembership
+- `XuanYu.World/WorldQuery.cs` — Mutation is reserved
+- `XuanYu.World/XuanYu.World.csproj` — （职责待补）
+- `changelog.md` — （职责待补）
+- `docs/CODE_CONSTITUTION.md` — （职责待补）
+- `docs/architecture/ENGINE_ARCHITECTURE.md` — （职责待补）
+- `docs/architecture/world-a-r0-coordinate-contract.md` — （职责待补）
+- `docs/archive/changelog/changelog-2026-05.md` — （职责待补）
+- `docs/archive/changelog/changelog-2026-06.md` — （职责待补）
+- `docs/archive/changelog/changelog-2026-07.md` — （职责待补）
+- `docs/dev-rules.md` — （职责待补）
+- `docs/docs-index.md` — （职责待补）
+- `docs/governance/NAMING_RULES.md` — （职责待补）
+- `docs/governance/debts/arch-ui-spec-debts.md` — ARCH-UI-SPEC-R1 UI 规范待办登记
+- `docs/governance/debts/arch-world-debts.md` — （职责待补）
+- `docs/governance/dev-rules-understanding.md` — （职责待补）
+- `docs/governance/diagnostic-safety.md` — （职责待补）
+- `docs/governance/naming-XuanYu-Engine.md` — （职责待补）
+- `"docs/governance/\347\211\210\346\234\254\345\217\267\350\247\204\350\214\203\344\270\216\345\216\206\345\217\262\346\230\240\345\260\204.md"` — （职责待补）
+- `docs/milestones/current/MAP-A/map-contract.md` — （职责待补）
+- `"docs/\347\216\204\345\237\237\345\274\225\346\223\216_AI\345\274\200\345\217\221\345\256\252\346\263\225.md"` — （职责待补）
+- `file-tree.md` — （职责待补）
+- `run.bat` — （职责待补）
+- `samples/world-c-r1-ten-triangles.xyscene` — （职责待补）
+- `scripts/arch-a-guard-editor.ps1` — （职责待补）
+- `scripts/arch-a-guard-render.ps1` — （职责待补）
+- `scripts/arch-a-guard-warcore.ps1` — （职责待补）
+- `scripts/arch-a-guard-world.ps1` — （职责待补）
+- `scripts/arch-a-guard.ps1` — （职责待补）

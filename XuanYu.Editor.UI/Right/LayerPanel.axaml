@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:input="using:Avalonia.Input"
              x:Class="XuanYu.Editor.UI.LayerPanel"
              x:DataType="local:UiVm">
   <UserControl.Resources>
@@ -11,13 +12,29 @@
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
-    <Style Selector="Button.layerTool"><Setter Property="MinHeight" Value="24"/><Setter Property="Padding" Value="6,2"/><Setter Property="FontSize" Value="12"/></Style>
-    <Style Selector="ToggleButton.layerSwitch"><Setter Property="Width" Value="22"/><Setter Property="Height" Value="20"/><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/></Style>
-    <Style Selector="Path.layerIcon"><Setter Property="Width" Value="13"/><Setter Property="Height" Value="13"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="#66758f"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
+    <Style Selector="Button.layerTool"><Setter Property="MinHeight" Value="25"/><Setter Property="Padding" Value="6,2"/><Setter Property="FontSize" Value="12"/></Style>
+    <!-- F3：状态开关——图标本体为主、浅色底辅助；热区 26×24 -->
+    <Style Selector="ToggleButton.layerSwitch"><Setter Property="Width" Value="26"/><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="4"/><Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+    <Style Selector="ToggleButton.layerSwitch:pointerover"><Setter Property="BorderBrush" Value="#D9E1E7"/></Style>
+    <Style Selector="ToggleButton.layerSwitch:checked"><Setter Property="Background" Value="#EAF3F7"/><Setter Property="BorderBrush" Value="#BDD5DF"/></Style>
+    <Style Selector="ToggleButton.layerSwitch Path.layerIcon"><Setter Property="Stroke" Value="#8995A2"/></Style>
+    <Style Selector="ToggleButton.layerSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="#326F8A"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch"><Setter Property="Width" Value="26"/><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="4"/><Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch:pointerover"><Setter Property="BorderBrush" Value="#D9E1E7"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch:checked"><Setter Property="Background" Value="#F4EFE5"/><Setter Property="BorderBrush" Value="#DCCDAE"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch Path.layerIcon"><Setter Property="Stroke" Value="#7B8794"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="#7A6238"/></Style>
+    <Style Selector="Path.layerIcon"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
+    <Style Selector="Path.dragHandle"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Fill" Value="#9AA6B5"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
     <Style Selector="TextBlock.layerName"><Setter Property="Foreground" Value="#253247"/><Setter Property="FontSize" Value="13"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <Style Selector="Border.kindTag"><Setter Property="Background" Value="#eef1f5"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="4,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <Style Selector="TextBlock.kindTagText"><Setter Property="Foreground" Value="#7a8698"/><Setter Property="FontSize" Value="10"/></Style>
+    <!-- F3：类型标签——区域蓝青 / 系统灰蓝 -->
+    <Style Selector="Border.kindTagRegion"><Setter Property="Background" Value="#E8F3F6"/><Setter Property="BorderBrush" Value="#B9D7DE"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="5,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.kindTagRegionText"><Setter Property="Foreground" Value="#326B7B"/><Setter Property="FontSize" Value="10"/></Style>
+    <Style Selector="Border.kindTagSystem"><Setter Property="Background" Value="#F0F2F4"/><Setter Property="BorderBrush" Value="#D5DBE0"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="5,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.kindTagSystemText"><Setter Property="Foreground" Value="#687582"/><Setter Property="FontSize" Value="10"/></Style>
     <Style Selector="Border.activeMark"><Setter Property="Background" Value="#5b8db8"/><Setter Property="Width" Value="3"/><Setter Property="Margin" Value="0,4"/><Setter Property="CornerRadius" Value="1.5"/><Setter Property="VerticalAlignment" Value="Stretch"/></Style>
+    <!-- F3：拖动插入线（2 DIP 低饱和蓝） -->
+    <Style Selector="Border.dropLine"><Setter Property="Background" Value="#7FA8C6"/><Setter Property="Height" Value="2"/><Setter Property="CornerRadius" Value="1"/></Style>
   </UserControl.Styles>
   <DockPanel>
     <UniformGrid DockPanel.Dock="Top" Columns="4" Margin="0,8,0,4" ColumnSpacing="4">
@@ -26,26 +43,35 @@
       <Button Classes="layerTool" Content="下移" Command="{Binding RunCommand}" CommandParameter="下移图层" IsEnabled="{Binding CanMoveLayerDown}"/>
       <Button Classes="layerTool" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}"/>
     </UniformGrid>
-    <!-- F1：整页滚动由外层 ScrollViewer 接管，列表全量展示（禁止嵌套滚动穿透标题） -->
-    <ListBox ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
-             Background="Transparent" BorderThickness="0" Margin="0,2,0,0">
-        <ListBox.ItemTemplate>
-          <DataTemplate x:DataType="local:MapLayerRowViewModel">
-            <Grid ColumnDefinitions="3,26,*,Auto,26" ColumnSpacing="4" MinHeight="30">
-              <Border Classes="activeMark" IsVisible="{Binding IsActive}"/>
-              <ToggleButton Grid.Column="1" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏">
-                <Path Classes="layerIcon" Data="{StaticResource VisibleIcon}"/>
-              </ToggleButton>
-              <TextBlock Grid.Column="2" Classes="layerName" Text="{Binding Name}"/>
-              <Border Grid.Column="3" Classes="kindTag">
-                <TextBlock Classes="kindTagText" Text="{Binding KindTagText}"/>
-              </Border>
-              <ToggleButton Grid.Column="4" Classes="layerSwitch" IsChecked="{Binding IsLocked, Mode=TwoWay}" ToolTip.Tip="锁定/解锁">
-                <Path Classes="layerIcon" Data="{StaticResource LockedIcon}"/>
-              </ToggleButton>
-            </Grid>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
+    <!-- F3：整页滚动由外层 ScrollViewer 接管；拖动事件见 LayerPanel.DragDrop.cs -->
+    <ListBox x:Name="LayerList" ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
+             Background="Transparent" BorderThickness="0" Margin="0,2,0,0"
+             input:DragDrop.AllowDrop="True" input:DragDrop.DragOver="LayerList_DragOver" input:DragDrop.Drop="LayerList_Drop">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="local:MapLayerRowViewModel">
+          <Grid ColumnDefinitions="3,28,22,*,Auto,28" ColumnSpacing="4" MinHeight="32">
+            <!-- F3：拖动插入线（2 DIP 低饱和蓝，显示在目标行上方） -->
+            <Border Classes="dropLine" IsVisible="{Binding IsDropBefore}" VerticalAlignment="Top" Margin="0,-1,0,0"/>
+            <Border Classes="activeMark" IsVisible="{Binding IsActive}"/>
+            <ToggleButton Grid.Column="1" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏">
+              <Path Classes="layerIcon" Data="{StaticResource VisibleIcon}"/>
+            </ToggleButton>
+            <Path Grid.Column="2" Classes="dragHandle" Data="{StaticResource DragHandleIcon}"
+                  IsVisible="{Binding IsRegion}" ToolTip.Tip="拖动排序"
+                  PointerPressed="DragHandle_PointerPressed"/>
+            <TextBlock Grid.Column="3" Classes="layerName" Text="{Binding Name}"/>
+            <Border Grid.Column="4" Classes="kindTagRegion" IsVisible="{Binding IsRegion}">
+              <TextBlock Classes="kindTagRegionText" Text="区域"/>
+            </Border>
+            <Border Grid.Column="4" Classes="kindTagSystem" IsVisible="{Binding IsSystem}">
+              <TextBlock Classes="kindTagSystemText" Text="系统"/>
+            </Border>
+            <ToggleButton Grid.Column="5" Classes="layerLockSwitch" IsChecked="{Binding IsLocked, Mode=TwoWay}" ToolTip.Tip="锁定/解锁">
+              <Path Classes="layerIcon" Data="{StaticResource LockedIcon}"/>
+            </ToggleButton>
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
   </DockPanel>
 </UserControl>

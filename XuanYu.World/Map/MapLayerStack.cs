@@ -54,4 +54,27 @@ public static class MapLayerStack
 
     public static MapLayer SetLocked(MapLayer layer, bool locked) =>
         layer with { IsLocked = locked };
+
+    // F3：区域图层拖动排序——targetIndex 0=最上方区域图层；仅区域层间重排，
+    // 重新分配连续 Order（地面=0、边界=1、最下方区域=2、越靠上越大）；
+    // 同位置返回原集合；LayerId/名称/显隐/锁定保持不变。
+    public static ImmutableArray<MapLayer> MoveRegionToIndex(
+        ImmutableArray<MapLayer> layers, MapLayerId layerId, int targetIndex)
+    {
+        var regions = RegionLayers(layers);
+        var sourceIndex = MapLayerRules.IndexOfId(regions, layerId);
+        if (sourceIndex < 0) return layers;
+        if (sourceIndex == targetIndex) return layers;
+        if (targetIndex < 0 || targetIndex >= regions.Length) return layers; // 越界安全返回原集合
+        var list = regions.ToList();
+        var moving = list[sourceIndex];
+        list.RemoveAt(sourceIndex);
+        list.Insert(targetIndex, moving);
+        var order = 2 + list.Count - 1; // 最上方区域层 Order
+        var byId = new Dictionary<MapLayerId, MapLayer>();
+        foreach (var item in list)
+            byId[item.LayerId] = item with { Order = order-- };
+        return layers.Select(l => byId.TryGetValue(l.LayerId, out var updated) ? updated : l)
+            .ToImmutableArray();
+    }
 }
