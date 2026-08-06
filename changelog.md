@@ -55,7 +55,7 @@ ARCH-UI-SPEC-R1-D5：控件状态、表单、弹窗、通知、空状态与日�
   - **延期登记 D5-DEFER-01**：地图「保存并新建」暂缓——归属未来独立的地图持久化专项（**不归入 D6**）；专项必须补：保存成功后才新建/失败不新建/取消路径不新建/防重复提交/成功后更新路径与状态/写盘失败保留地图图层历史。
   - 验证：新增 **UiD5MapStatusTests（8 项）+ UiD5UnsavedDialogTests（8 项）+ UiD5UnsavedDialogBehaviorTests（9 项）**，共 25 项覆盖计划 26 个断言点；World **912/912**（887+25）；全量 `--no-incremental` **0W0E**（落盘 /tmp/d5-final-build.log）；**Core 339 + World 912 + WarCore 22 = 1273/1273 PASS**；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS；D3/D4/D5 回归 **156/156 PASS**。
   - 债务基线 122 保持；Manifest 112 Frozen / 0 Pending。
-- 状态：**ARCH-UI-SPEC-R1-D5：READY FOR USER RE-ACCEPTANCE**（等待真机复验；不自行宣布 COMPLETE，不进入 D6）（等待真机复验）（等待真机复验；通过后 D5 改 COMPLETE）（尚未获得用户真机裁决；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项）。
+- 状态：**ARCH-UI-SPEC-R1-D5：READY FOR USER RE-ACCEPTANCE**（等待真机复验；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项；不自行宣布 COMPLETE，不进入 D6）。
 - 保留（审计矩阵归属但本轮范围外）：G02 焦点框系统与 DPI/减少动画/屏幕阅读器（D6）；日志搜索实现（占位保留）；加载/进度长任务场景（无真实加载流程，不虚构）。
 
 
