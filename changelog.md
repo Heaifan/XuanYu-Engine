@@ -20,6 +20,18 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.40-rz
+ARCH-UI-SPEC-R1-D3：主窗口、顶层页签与滚动治理（2026-08-06，Commit 本轮落库为准）
+- **主窗口与四区外壳**（W15/W16/W18/W19/W20/W21）：初始 1400×820 → **1360×820**；Min 1100×720 → **1024×640**；左列 Min 200 → **220**；右列 Min 260 → **300**；视口列 Min 360 → **480**（视口最小可用区域 480×320 合同）；RootGrid Margin 12→6 + MinWidth 980→1012（1024 窗口下 6+220+6+480+6+300=1012 恰好满足全部面板最小，无遮挡无溢出）；日志折叠态 MinHeight 32 保留、展开态 120~420（既有 ClampLogRow 登记对齐规范 §7.1）。
+- **外壳 Token 迁移**（清除 4 条基线）：UiWin 背景 `#e9eef5` → `Color.Bg.Application`（W17）；UiRoot 分隔条 `#dce4ef/#9fb5d6` → `Color.Border.Strong`/`Color.Hover.Bg`（规范 §9.1 可调整边界 / §9.3 悬停）；视口 1 DIP 边框 `#C9D2DC` → `Color.Border.Default`。**旧债务基线 230 → 226 条，只减不增**；每项下降对应真实代码迁移，未用 Locator/AllowedCount 掩盖。
+- **顶层页签单行溢出系统**（W43/G01，合同 §10.1 15 条中本轮范围）：新增 `Right/TopTabStripTemplate.axaml` 页签宿主模板（单行 ScrollViewer + ItemsPresenter 横向 StackPanel，禁止换行；Hidden 滚动条——宽度充足无滚动控件）；左右箭头（宽度不足显示、到达边界禁用、单击步进 96=Token Size.Width.96）；左右边缘低饱和渐隐（基础命名色 White/Transparent，非业务色值）；**滚轮横向路由**（页签条 Grid 隧道消费 e.Handled=true，上滚=向左；离开页签条滚轮自然回到内容区；到达边界后剩余增量不传递——内容区/日志区不是页签条祖先，树结构隔离）；当前页签自动完整可见（SelectionChanged/ScrollChanged 双路径，窗口缩放后保持）；「全部页签」入口（真实页签动态读取，当前项半粗+Accent 标记，点击跳转并自动显露；当前架构无关闭能力，入口只负责发现与跳转，未扩张关闭系统）；首次溢出一次性提示（文案「滚动鼠标滚轮或点击箭头查看更多页签。」，仅当前用户环境首次触发，状态持久化 %APPDATA%\XuanYuEngine\ui-once.json，本会话不重复）。全部新视觉值引用正式 Token 或规范允许值；无每帧/PointerMoved/Hover 日志。
+- **分析器门禁完善**（对应正式测试）：`{StaticResource}` 正式 Token 引用在 Setter/内联属性豁免数值与颜色检查（未登记字面量仍 FAIL，正反例见 UiSourceContractAnalyzerTokenRefTests）。
+- 验证：全解决方案 `--no-incremental` 串行 Build 0W0E（落盘 /tmp/d3-final-build.log）；Core 339/339、World 759/759（+20 D3 测试）、WarCore 22/22，合计 **1120/1120 PASS**；启动冒烟 PASS（进程存活 10s 无崩溃）；arch-a-guard PASS；git diff --check PASS。
+- 治理：版本 v0.2.24.39-rz → v0.2.24.40-rz（四处同步）；未创建 Tag/Release。
+- 状态：**ARCH-UI-SPEC-R1-D3：READY FOR USER ACCEPTANCE**（尚未获得用户真机裁决；真机通过后 D3 改 COMPLETE，失败则建 D3-F1 只修真实失败项）。
+- 保留（审计矩阵归属 D3 但本轮范围外，报告已说明）：W28 菜单复核（合规无改动）、W29 leftTab 字号（Left.Styles 不在本轮允许范围）、W36 删除菜单色（Left.axaml 不在范围，留 D5）、G02 键盘焦点（留 D6）、G04 面板紧凑/折叠（留后续轮）、K07 日志六档复验（D5）。
+
+
 ## v0.2.24.39-rz
 ARCH-UI-SPEC-R1-D2：Token 基础设施与自动化门禁（2026-08-05，Commit 本轮落库为准）
 - **Token 基础设施**：新增 `XuanYu.Editor.UI/Design/` 8 个 Token 文件（UiTokens.Fonts / Colors.Core / Colors.Components / Spacing / Controls / Icons / Motion + UiTokens 聚合入口），数值、类型与命名全部直接来自 UI Spec 1.0（112 个 Token 键，无临时/兼容 Token）；`Ui.axaml` 仅新增资源聚合（Styles.Resources 合并 Design/UiTokens.axaml），**未修改任何现有页面视觉、布局、交互或业务行为**（当前编辑器视觉与 D1 基线一致）。

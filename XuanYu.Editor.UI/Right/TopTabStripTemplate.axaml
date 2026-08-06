@@ -1,0 +1,100 @@
+<!-- ARCH-UI-SPEC-R1-D3：顶层页签单行溢出宿主模板（合同 §10.1）；渐隐用基础命名色 White/Transparent（低饱和提示），逻辑在 TopTabStripController。 -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ControlTemplate x:Key="TopTabStripTemplate" TargetType="TabControl">
+    <Grid RowDefinitions="Auto,*">
+      <Grid.Styles>
+        <Style Selector="Button.tabNavBtn">
+          <Setter Property="MinWidth" Value="{StaticResource Control.Height.Standard}"/>
+          <Setter Property="MinHeight" Value="{StaticResource Control.Height.Standard}"/>
+          <Setter Property="Padding" Value="0"/>
+          <Setter Property="Margin" Value="0"/>
+          <Setter Property="Background" Value="Transparent"/>
+          <Setter Property="BorderBrush" Value="Transparent"/>
+          <Setter Property="BorderThickness" Value="0"/>
+          <Setter Property="CornerRadius" Value="{StaticResource Radius.Standard}"/>
+        </Style>
+        <Style Selector="Button.tabNavBtn:pointerover">
+          <Setter Property="Background" Value="{StaticResource Color.Hover.Bg}"/>
+        </Style>
+        <Style Selector="Button.tabNavBtn:disabled">
+          <Setter Property="Opacity" Value="0.4"/>
+        </Style>
+        <Style Selector="Path.tabNavIcon">
+          <Setter Property="Width" Value="16"/>
+          <Setter Property="Height" Value="16"/>
+          <Setter Property="Stretch" Value="Uniform"/>
+          <Setter Property="Stroke" Value="{StaticResource Color.Text.Secondary}"/>
+          <Setter Property="StrokeThickness" Value="1.5"/>
+        </Style>
+        <Style Selector="Border.tabFade">
+          <Setter Property="Width" Value="16"/>
+          <Setter Property="IsHitTestVisible" Value="False"/>
+        </Style>
+        <Style Selector="Border.overflowHint">
+          <Setter Property="Padding" Value="8,4"/>
+          <Setter Property="CornerRadius" Value="{StaticResource Radius.Standard}"/>
+          <Setter Property="Background" Value="{StaticResource Color.Bg.Overlay}"/>
+          <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
+          <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="TextBlock.overflowHintText">
+          <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+          <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+        </Style>
+      </Grid.Styles>
+      <Grid x:Name="TabStripBar" ColumnDefinitions="Auto,*,Auto,Auto">
+        <Button x:Name="TabScrollLeft" Classes="tabNavBtn" IsVisible="False" ToolTip.Tip="向左查看更多页签">
+          <Path Classes="tabNavIcon" Data="{StaticResource ChevronRightIcon}">
+            <Path.RenderTransform>
+              <RotateTransform Angle="180"/>
+            </Path.RenderTransform>
+          </Path>
+        </Button>
+        <Grid Grid.Column="1">
+          <ScrollViewer x:Name="TabScroller" HorizontalScrollBarVisibility="Hidden"
+                        VerticalScrollBarVisibility="Disabled" HorizontalContentAlignment="Left">
+            <ItemsPresenter Name="PART_TabStrip">
+              <ItemsPresenter.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+              </ItemsPresenter.ItemsPanel>
+            </ItemsPresenter>
+          </ScrollViewer>
+          <Border x:Name="TabFadeLeft" Classes="tabFade" HorizontalAlignment="Left" IsVisible="False">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Offset="0" Color="White"/>
+                <GradientStop Offset="1" Color="Transparent"/>
+              </LinearGradientBrush>
+            </Border.Background>
+          </Border>
+          <Border x:Name="TabFadeRight" Classes="tabFade" HorizontalAlignment="Right" IsVisible="False">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Offset="0" Color="Transparent"/>
+                <GradientStop Offset="1" Color="White"/>
+              </LinearGradientBrush>
+            </Border.Background>
+          </Border>
+        </Grid>
+        <Button x:Name="TabScrollRight" Grid.Column="2" Classes="tabNavBtn" IsVisible="False"
+                ToolTip.Tip="向右查看更多页签">
+          <Path Classes="tabNavIcon" Data="{StaticResource ChevronRightIcon}"/>
+        </Button>
+        <Button x:Name="TabAllTabs" Grid.Column="3" Classes="tabNavBtn" ToolTip.Tip="全部页签">
+          <Path Classes="tabNavIcon" Data="{StaticResource ChevronDownIcon}"/>
+        </Button>
+      </Grid>
+      <ContentPresenter Name="PART_SelectedContentHost" Grid.Row="1"
+                        Content="{TemplateBinding SelectedContent}"
+                        ContentTemplate="{TemplateBinding SelectedContentTemplate}"/>
+      <Popup x:Name="OverflowHintPopup" Placement="Bottom" IsLightDismissEnabled="True" IsOpen="False">
+        <Border Classes="overflowHint">
+          <TextBlock Classes="overflowHintText" Text="滚动鼠标滚轮或点击箭头查看更多页签。"/>
+        </Border>
+      </Popup>
+    </Grid>
+  </ControlTemplate>
+</ResourceDictionary>

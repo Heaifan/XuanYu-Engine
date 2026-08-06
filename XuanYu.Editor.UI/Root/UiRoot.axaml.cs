@@ -8,9 +8,9 @@ public partial class UiRoot : UserControl
 {
     const double MainRowMinHeight = 320;   // Row1 主工作区最低高度（与 axaml MinHeight 一致）
     const double SplitterHeight = 6;       // Row2 分隔条
-    const double RootMargin = 24;          // 根 Grid Margin 12*2
+    const double RootMargin = 12;          // 根 Grid Margin 6*2（D3：与最小窗口 1024×640 对齐）
     const double LogRowPreferred = 420;    // 日志区期望高度上限（与 axaml MaxHeight 一致）
-    const double LogRowFloor = 120;        // 矮窗口下日志区最低可压缩高度
+    const double LogRowFloor = 120;        // 矮窗口下日志区最低可压缩高度（展开态最小 120，规范 §7.1）
 
     bool _clamping;
     bool _vmHooked;
@@ -46,8 +46,8 @@ public partial class UiRoot : UserControl
     {
         if (_clamping) return;
         _clamping = true;
-        ClampColumn(LeftColumn, 270, 200, 420);
-        ClampColumn(RightColumn, 340, 260, 480);
+        ClampColumn(LeftColumn, 270, 220, 420);
+        ClampColumn(RightColumn, 340, 300, 480);
         ClampLogRow();
         _clamping = false;
     }

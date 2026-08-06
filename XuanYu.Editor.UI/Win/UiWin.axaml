@@ -3,11 +3,11 @@
         xmlns:local="using:XuanYu.Editor.UI"
         x:Class="XuanYu.Editor.UI.UiWin"
         x:DataType="local:UiVm"
-        Title="玄域引擎编辑器 v0.2.24.39-rz"
-        Width="1400"
+        Title="玄域引擎编辑器 v0.2.24.40-rz"
+        Width="1360"
         Height="820"
-        MinWidth="1100"
-        MinHeight="720"
-        Background="#e9eef5">
+        MinWidth="1024"
+        MinHeight="640"
+        Background="{StaticResource Color.Bg.Application}">
   <local:UiRoot />
 </Window>

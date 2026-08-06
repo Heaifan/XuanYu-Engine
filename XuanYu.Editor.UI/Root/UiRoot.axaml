@@ -4,15 +4,17 @@
              x:Class="XuanYu.Editor.UI.UiRoot"
              x:DataType="local:UiVm">
   <UserControl.Styles>
+    <!-- ARCH-UI-SPEC-R1-D3：分隔条属可调整边界，用 Color.Border.Strong（规范 §9.1）；悬停用 Color.Hover.Bg（§9.3） -->
     <Style Selector="GridSplitter.layoutSplitter">
-      <Setter Property="Background" Value="#dce4ef"/>
+      <Setter Property="Background" Value="{StaticResource Color.Border.Strong}"/>
     </Style>
     <Style Selector="GridSplitter.layoutSplitter:pointerover">
-      <Setter Property="Background" Value="#9fb5d6"/>
+      <Setter Property="Background" Value="{StaticResource Color.Hover.Bg}"/>
     </Style>
   </UserControl.Styles>
 
-  <Grid x:Name="RootGrid" Margin="12" MinWidth="980">
+  <!-- ARCH-UI-SPEC-R1-D3（W18~W21）：最小窗口 1024×640 下 6 边距 + 左 220 + 分隔 6 + 视口 480 + 分隔 6 + 右 300 = 1012 恰好满足 -->
+  <Grid x:Name="RootGrid" Margin="6" MinWidth="1012">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*" MinHeight="320"/>
@@ -25,13 +27,13 @@
 
     <Grid x:Name="MainLayoutGrid" Grid.Row="1" Margin="0,6,0,0">
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="270" MinWidth="200" MaxWidth="420"/>
+        <ColumnDefinition Width="270" MinWidth="220" MaxWidth="420"/>
         <ColumnDefinition Width="6"/>
-        <ColumnDefinition Width="*" MinWidth="360"/>
+        <ColumnDefinition Width="*" MinWidth="480"/>
         <ColumnDefinition Width="6"/>
-        <ColumnDefinition Width="340" MinWidth="260" MaxWidth="480"/>
+        <ColumnDefinition Width="340" MinWidth="300" MaxWidth="480"/>
       </Grid.ColumnDefinitions>
-      <Border Classes="panel" Padding="14" MinWidth="200" MaxWidth="420">
+      <Border Classes="panel" Padding="14" MinWidth="220" MaxWidth="420">
         <local:Left />
       </Border>
 
@@ -42,9 +44,9 @@
                     ResizeDirection="Columns"
                     ResizeBehavior="PreviousAndNext"/>
 
-      <Grid Grid.Column="2" MinWidth="360">
-        <!-- F3：去除深色粗框与大 Padding——视口贴合，最多 1 DIP 浅灰分隔。 -->
-        <Border BorderBrush="#C9D2DC" BorderThickness="1" ClipToBounds="True">
+      <Grid Grid.Column="2" MinWidth="480">
+        <!-- F3：去除深色粗框与大 Padding——视口贴合，最多 1 DIP 浅灰分隔（D3：色值 Token 化 Color.Border.Default） -->
+        <Border BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1" ClipToBounds="True">
           <local:Main />
         </Border>
         <!-- F3-F1：导航 Gizmo 已移入 Vulkan Overlay Pass（原生子窗口 airspace 遮挡 Avalonia 覆盖层，命中走原生指针流） -->
@@ -57,7 +59,7 @@
                     ResizeDirection="Columns"
                     ResizeBehavior="PreviousAndNext"/>
 
-      <Border Grid.Column="4" Classes="panel" Padding="14" MinWidth="260" MaxWidth="480">
+      <Border Grid.Column="4" Classes="panel" Padding="14" MinWidth="300" MaxWidth="480">
         <local:Right />
       </Border>
     </Grid>

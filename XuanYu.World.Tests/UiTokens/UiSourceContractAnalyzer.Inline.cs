@@ -10,9 +10,7 @@ public static partial class UiSourceContractAnalyzer
         @"<Setter\s+Property=""([^""]+)""\s+Value=""([^""]+)""", RegexOptions.Compiled);
     private static readonly Regex AttrValRx = new(
         @"(?<prop>FontSize|CornerRadius|BoxShadow|StrokeThickness)=""(?<val>[^""]+)""", RegexOptions.Compiled);
-    private static readonly Regex CtrlHeightRx = new(
-        @"<(Button|ToggleButton|TextBox|TabItem|MenuItem|CheckBox|ComboBox|RadioButton|ListBoxItem)\b[^>]*?\b(?:Height|MinHeight)=""([\d.]+)""",
-        RegexOptions.Compiled);
+    private static readonly Regex CtrlHeightRx = new(@"<(Button|ToggleButton|TextBox|TabItem|MenuItem|CheckBox|ComboBox|RadioButton|ListBoxItem)\b[^>]*?\b(?:Height|MinHeight)=""([\d.]+)""", RegexOptions.Compiled);
     private static readonly Regex SkipSelectorRx = new(@"Path|Icon|Image|Grid|Border|StackPanel|DockPanel|UniformGrid|ScrollViewer|ListBox$|TabControl|Window|RowDefinition|ColumnDefinition|Canvas|WrapPanel|ItemsControl|ContentControl|Panel", RegexOptions.Compiled);
     private static readonly Regex HexRx = new(@"#[0-9A-Fa-f]{6,8}\b", RegexOptions.Compiled);
 
@@ -32,6 +30,7 @@ public static partial class UiSourceContractAnalyzer
             {
                 var prop = set.Groups[1].Value;
                 var val = set.Groups[2].Value;
+                if (val.StartsWith("{StaticResource", System.StringComparison.Ordinal)) continue; // D3：Token 资源引用豁免
                 if ((prop == "Height" || prop == "MinHeight") && SkipSelectorRx.IsMatch(selector))
                     continue;
                 AddPropViolations(result, relPath, $"Style:{selector}", prop, val);
@@ -43,6 +42,7 @@ public static partial class UiSourceContractAnalyzer
         {
             if (spans.Any(sp => m.Index > sp.Start && m.Index < sp.End))
                 continue;
+            if (m.Groups["val"].Value.StartsWith("{StaticResource", System.StringComparison.Ordinal)) continue; // D3：Token 引用豁免（同 Setter 规则）
             var el = FindEl(index, m.Index);
             AddPropViolations(result, relPath, el != null ? LocatorOf(el) : "Elm:Unknown", m.Groups["prop"].Value, m.Groups["val"].Value);
         }

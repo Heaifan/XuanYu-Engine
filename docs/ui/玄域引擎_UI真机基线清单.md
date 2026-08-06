@@ -27,12 +27,12 @@
 
 | 编号 | 已知问题 | 证据（代码位置） | 整改轮次 |
 |---|---|---|---|
-| K01 | 顶层页签无溢出管理：检查器/地图编辑器/调试页签超出宽度时无横向滚动、无箭头、无全部页签入口、无一次性提示 | `Right/Right.axaml` sideTabs（普通 TabControl） | D3 |
+| K01 | 顶层页签无溢出管理：检查器/地图编辑器/调试页签超出宽度时无横向滚动、无箭头、无全部页签入口、无一次性提示 | `Right/Right.axaml` sideTabs（普通 TabControl） | D3（D3 已整改：`Right/TopTabStripTemplate.axaml` + `TopTabStripController*` 单行溢出系统；**待真机复验**） |
 | K02 | 检查器字号偏大：面板标题 15 DIP（规范外），字段值落默认 12（应为 13） | `Right/Right.axaml` panelTitle=15、value 无 FontSize | D2/D4 |
 | K03 | 锁和眼睛状态图标在选中行中的对比度：现状浅选中背景 `#E5F0F4` 系 + 深色图标（D4-F3 已优化），需真机确认「选中行 + 图标」组合清晰 | `LayerPanel.axaml` layerSwitch/layerLockSwitch + 选中态 | D4 |
 | K04 | 系统图层与用户图层辨识：已用「双色标签 + 文字（区域/系统）」+ 行内图标，需真机确认不依赖颜色也能区分 | `LayerPanel.axaml` kindTagRegion/kindTagSystem | D4 |
-| K05 | 初始非最大化窗口挤压：现窗口 1400×820 下右列 340 + 日志 420 的挤压行为未真机确认；最小窗口 1100×720 与规范 1024×640 不符 | `UiWin.axaml`、`UiRoot.axaml` | D3 |
-| K06 | 嵌套滚动与内容溢出：地图编辑器「图层」页签整页滚动（F1 合同）与日志区独立滚动并存，需真机确认无滚轮穿透/双区联动 | `MapEditorPanel.axaml`、`Foot.axaml` | D3 |
+| K05 | 初始非最大化窗口挤压：现窗口 1400×820 下右列 340 + 日志 420 的挤压行为未真机确认；最小窗口 1100×720 与规范 1024×640 不符 | `UiWin.axaml`、`UiRoot.axaml` | D3（D3 已整改：初始 1360×820 / 最小 1024×640，面板最小 220/300/480 对齐；**待真机复验**） |
+| K06 | 嵌套滚动与日志穿透：地图编辑器「图层」页签整页滚动（F1 合同）与日志区独立滚动并存，需真机确认无滚轮穿透/双区联动 | `MapEditorPanel.axaml`、`Foot.axaml` | D3（D3 已整改：页签条滚轮隧道消费、内容/日志树结构隔离；**待真机复验**） |
 | K07 | 日志完整显示与滚动跟随：F2~F4 已实现两阶段尾距定位与自适应，需在 850/1000/默认/最大化/恢复/连续拖动六档窗口下复验 | `LogListAutoScrollController*`、`UiRoot.axaml.cs` | D5 |
 
 ---

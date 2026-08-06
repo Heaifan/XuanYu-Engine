@@ -19,9 +19,6 @@ internal static partial class UiDebtBaseline
         list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.key", UiRuleKind.HexColor, "Foreground", "#6b7688"));
         list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.value", UiRuleKind.HexColor, "Foreground", "#253247"));
         list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.emptyTitle", UiRuleKind.HexColor, "Foreground", "#334155"));
-        list.Add(new("W21", "XuanYu.Editor.UI/Root/UiRoot.axaml", "Style:GridSplitter.layoutSplitter", UiRuleKind.HexColor, "Background", "#dce4ef"));
-        list.Add(new("W21", "XuanYu.Editor.UI/Root/UiRoot.axaml", "Style:GridSplitter.layoutSplitter:pointerover", UiRuleKind.HexColor, "Background", "#9fb5d6"));
-        list.Add(new("W21", "XuanYu.Editor.UI/Root/UiRoot.axaml", "Path:Name:MainLayoutGrid/Grid/Border:1", UiRuleKind.HexColor, "BorderBrush", "#C9D2DC"));
         list.Add(new("W26", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.commandRail", UiRuleKind.HexColor, "Background", "#fbfdff"));
         list.Add(new("W26", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.commandRail", UiRuleKind.HexColor, "BorderBrush", "#d5dfec"));
         list.Add(new("W26", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.topGroup", UiRuleKind.HexColor, "BorderBrush", "#d0dae8"));
@@ -68,6 +65,5 @@ internal static partial class UiDebtBaseline
         list.Add(new("W63", "XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml", "Name:FallbackLayer", UiRuleKind.HexColor, "Background", "#E8EEF5"));
         list.Add(new("W63", "XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml", "Path:Name:FallbackLayer/StackPanel/TextBlock:1", UiRuleKind.HexColor, "Foreground", "#4A5A70"));
         list.Add(new("W63", "XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml", "Name:FallbackText", UiRuleKind.HexColor, "Foreground", "#6B7688"));
-        list.Add(new("W17", "XuanYu.Editor.UI/Win/UiWin.axaml", "Path:ROOT/Window:1", UiRuleKind.HexColor, "Background", "#e9eef5"));
     }
 }
