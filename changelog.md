@@ -19,14 +19,7 @@
 ---
 
 ## 2026-08（当前自然月）
-## v0.2.24.46-fix
-MAP-A-R2-D5-F1：Navigation Gizmo DPI 与图层拖拽排序修复（2026-08-06，Commit 本轮落库为准）
-- Navigation Gizmo：初始/Resize 时同步实际 RenderScaling，保证逻辑 DIP × RenderScaling 只应用一次；不改变现有尺寸、几何或管线。
-- 图层排序：移除上移/下移按钮；用户图层通过六点手柄拖拽，系统图层固定；单用户层显示“至少需要两个用户图层才能调整顺序”，DragLeave 清理插入线，Drop 单次进入 Undo。
-- 测试：Core 341/341、World 928/928、WarCore 22/22；完整解决方案 Build 0W0E；arch-a-guard EXIT=0；启动冒烟 PASS；git diff --check PASS。
-- 治理：版本 v0.2.24.45-fix → v0.2.24.46-fix（四处同步）；D6 区域绘制暂停，未修改地图持久化、系统图层顺序、Tag/Release。
-- 状态：MAP-A-R2-D5-F1：READY FOR USER ACCEPTANCE；等待 DPI 100%～200% 与多用户图层拖拽真机复验。
-
+## v0.2.24.45-fix
 MAP-A-R2-D5：焦点框作用域与世界原点 Overlay 修复（2026-08-06，Commit 本轮落库为准）
 - **焦点框**：视口原生宿主设为不可聚焦并清除 FocusAdorner；布局分隔器不显示焦点装饰；Button 保留正式 `2 DIP` 焦点框与 `1 DIP` 外偏移合同。
 - **世界原点**：DrawPlan 调整为实体/轮廓之后绘制；WorldOrigin 管线关闭深度测试并保持关闭深度写入；片元 Shader 不再写入深度，中心标记保持屏幕恒定尺寸，模型或地面不再遮挡。

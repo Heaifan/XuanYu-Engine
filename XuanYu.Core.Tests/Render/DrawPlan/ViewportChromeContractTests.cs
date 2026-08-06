@@ -52,11 +52,4 @@ public sealed class ViewportChromeContractTests
         var xaml = UiFile(Path.Combine("Viewport", "Vulkan", "VulkanViewport.axaml"));
         Assert.Contains("<local:VulkanNativeHost/>", xaml);
     }
-
-    [Fact]
-    public void Native_host_publishes_dpi_before_render_resize()
-    {
-        var source = UiFile(Path.Combine("Viewport", "Vulkan", "VulkanNativeHost.cs"));
-        Assert.Contains("UpdateViewportDpi(dpi)", source);
-    }
 }

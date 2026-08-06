@@ -53,7 +53,6 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         var height = (int)e.NewSize.Height;
         var isValid = _hwnd != 0 && width > 0 && height > 0;
         var dpi = GetDpiScale();
-        (DataContext as UiVm)?.UpdateViewportDpi(dpi);
         if (isValid)
         {
             var (physicalW, physicalH) = ToPhysicalSize(width, height, dpi);
@@ -97,4 +96,5 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     }
 
     double GetDpiScale() => TopLevel.GetTopLevel(this)?.RenderScaling ?? 1d;
+
 }

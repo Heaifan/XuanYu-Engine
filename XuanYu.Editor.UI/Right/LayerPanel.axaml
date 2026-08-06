@@ -44,15 +44,16 @@
     <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
   </UserControl.Styles>
   <DockPanel>
-    <UniformGrid DockPanel.Dock="Top" Columns="2" Margin="0,8,0,2" ColumnSpacing="4">
+    <UniformGrid DockPanel.Dock="Top" Columns="4" Margin="0,8,0,4" ColumnSpacing="4">
       <Button Classes="layerTool" Content="添加" Command="{Binding RunCommand}" CommandParameter="添加图层" ToolTip.Tip="添加图层" AutomationProperties.Name="添加图层"/>
+      <Button Classes="layerTool" Content="上移" Command="{Binding RunCommand}" CommandParameter="上移图层" IsEnabled="{Binding CanMoveLayerUp}" AutomationProperties.Name="上移图层"/>
+      <Button Classes="layerTool" Content="下移" Command="{Binding RunCommand}" CommandParameter="下移图层" IsEnabled="{Binding CanMoveLayerDown}" AutomationProperties.Name="下移图层"/>
       <Button Classes="layerTool" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}" AutomationProperties.Name="删除图层"/>
     </UniformGrid>
-    <TextBlock Text="至少需要两个用户图层才能调整顺序" IsVisible="{Binding IsLayerReorderHintVisible}" Margin="0,0,0,4"/>
     <!-- F3：整页滚动由外层 ScrollViewer 接管；拖动事件见 LayerPanel.DragDrop.cs -->
     <ListBox x:Name="LayerList" Classes="layerList" ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
              Background="Transparent" BorderThickness="0" Margin="0,2,0,0"
-             input:DragDrop.AllowDrop="True" input:DragDrop.DragOver="LayerList_DragOver" input:DragDrop.DragLeave="LayerList_DragLeave" input:DragDrop.Drop="LayerList_Drop">
+             input:DragDrop.AllowDrop="True" input:DragDrop.DragOver="LayerList_DragOver" input:DragDrop.Drop="LayerList_Drop">
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="local:MapLayerRowViewModel">
           <Grid ColumnDefinitions="3,28,22,*,Auto,28" ColumnSpacing="4" MinHeight="32">
@@ -66,7 +67,7 @@
               </StackPanel>
             </ToggleButton>
             <Path Grid.Column="2" Classes="dragHandle" Data="{StaticResource DragHandleIcon}"
-                  IsVisible="{Binding IsRegion}" IsEnabled="{Binding IsDragEnabled}" ToolTip.Tip="{Binding DragHandleToolTip}"
+                  IsVisible="{Binding IsRegion}" ToolTip.Tip="拖动排序"
                   PointerPressed="DragHandle_PointerPressed"/>
             <TextBlock Grid.Column="3" Classes="layerName" Text="{Binding Name}" ToolTip.Tip="{Binding Name}"/>
             <Border Grid.Column="4" Classes="kindTagRegion" IsVisible="{Binding IsRegion}">
