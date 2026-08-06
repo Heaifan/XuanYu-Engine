@@ -33,6 +33,16 @@ ARCH-UI-SPEC-R1-D4-F1：单行属性行、文本溢出与字体统一修复（20
 - 验证：全解决方案 `--no-incremental` 串行 Build **0W0E**（落盘 /tmp/d4f1-final-build.log）；Core 339/339、World 811/811、WarCore 22/22，合计 **1172/1172 PASS**；启动冒烟 PASS（XuanYu.Editor.App.exe 存活）；arch-a-guard PASS；git diff --check PASS。
 - 治理：版本 v0.2.24.41-rz → **v0.2.24.42-fix**（四处同步）；基线维持 **159 条**（未新增债务、未改允许项）；未创建 Tag/Release。
 - 状态：**ARCH-UI-SPEC-R1-D4-F1：READY FOR USER RE-ACCEPTANCE**（尚未获得用户真机复验；复验通过后 D4 改 COMPLETE，失败则建 D4-F2 只修真实失败项）。
+- **交付前审查纠偏（REVIEW BLOCKED → 修复，同版本 v0.2.24.42-fix 不升版，2026-08-06）**：
+  - **恢复双模型并存**：`MapEditorLayoutModel`（<320 面板紧凑密度：根水平留白 12/8、分组间距 12/8、字段行距 6/4，MapPagePanel 密度接线）+ `EditableFormLayoutModel`（<360 输入表单上下）职责分离、互不替代（319/320 与 359/360 两组边界分别生效，组合测试 6 组）；只读资产摘要始终单行双列；
+  - **Ui.axaml 恢复可读性**：放弃 26 行压缩版，恢复多行格式（每个 Style/Setter 正常分行）；D4-F1 公共样式（uiLabel/uiValue/uiSingleLine/uiMultiline/uiSection/uiTextButton）拆分至新 `Design/UiStyles.D4F1.axaml`（75→拆分后 Ui.axaml 76 行 + 样式文件 59 行，全部 ≤100，无压缩单行 Style）；Ui.axaml 仅聚合（StyleInclude 一次）；
+  - **按钮真实接线**：`uiTextButton` 提供 ContentTemplate（TextBlock NoWrap+Ellipsis+MaxLines1）与 Tooltip=完整按钮名（绑定 Content）；地图 7 按钮（新建/打开/保存/聚焦/应用修改/撤销/重做）+ 调试 4 按钮（开始/预览/提交/取消）全部真实引用；
+  - **按钮布局 v2**：地图属性按钮由横向 StackPanel 改为 `Grid *,*`（应用修改跨两列第一行、撤销/重做第二行等宽，高 28/间距 6）；地图资产按钮为真 2×2 等宽 UniformGrid（Stretch/MinWidth 0/MinHeight 28）；约 300 DIP 下每列约 139 DIP 无裁切；
+  - **拆分 MapFormPanel**（新 UserControl：地图属性表单方向切换，职责单一）；测试新增 UiD4F1ButtonContractTests + 边界组合测试，World 811 → **823**；
+  - **Stash 说明**：当前设备本地 `git stash list` 为 0（纠偏前后一致）；先前 D2/D3 轮次登记的「2 个历史 Stash」位于另一开发设备，无法在当前设备复现，本设备从未 stash/pop 操作。
+- 验证（纠偏后最终代码状态）：全解决方案 `--no-incremental` 串行 Build **0W0E**（落盘 /tmp/d4f1-fix-final-build2.log）；Core 339/339、World 823/823、WarCore 22/22，合计 **1184/1184 PASS**；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS；版本四处一致（v0.2.24.42-fix 不变）；基线维持 159；Manifest 112 Frozen / 0 Pending。
+- 状态：**ARCH-UI-SPEC-R1-D4-F1：READY FOR USER RE-ACCEPTANCE**（纠偏完成，等待真机复验 F1-1~F1-9）。
+
 
 ## v0.2.24.41-rz
 ARCH-UI-SPEC-R1-D4：检查器、地图编辑器与图层工作面板治理（2026-08-06，Commit 本轮落库为准）

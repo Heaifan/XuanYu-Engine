@@ -3,8 +3,8 @@ using System.Linq;
 
 namespace XuanYu.World.Tests.UiTokens;
 
-// ARCH-UI-SPEC-R1-D4-F1：字体统一——Section14/Label12/Body13/Button12 全走公共 Token；
-// D4-F1 范围页面无裸 FontSize、无局部 FontFamily、无语义字重散落。
+// ARCH-UI-SPEC-R1-D4-F1（纠偏 v2）：样式文件可读性（Setter 正常分行、≤100 行、无压缩行）；
+// 公共样式全部引用正式 Token；Manifest 保持 112 Frozen / 0 Pending。
 public sealed class UiD4F1TypographyContractTests
 {
     static readonly string RepoRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..");
@@ -12,6 +12,7 @@ public sealed class UiD4F1TypographyContractTests
     static readonly string[] Scope =
     [
         "Ui.axaml",
+        "Design/UiStyles.D4F1.axaml",
         "Right/InspectorPanel.axaml",
         "Right/Right.axaml",
         "Right/MapPagePanel.axaml",
@@ -25,10 +26,26 @@ public sealed class UiD4F1TypographyContractTests
     [Fact]
     public void Public_semantic_styles_use_formal_tokens()
     {
-        var ui = Read("Ui.axaml");
-        Assert.Contains("Font.Label.Size", ui);   // uiLabel 12
+        var ui = Read("Design/UiStyles.D4F1.axaml");
+        Assert.Contains("Font.Label.Size", ui);   // uiLabel / uiTextButton 12
         Assert.Contains("Font.Body.Size", ui);    // uiValue 13
         Assert.Contains("Font.Section.Size", ui); // uiSection 14
+    }
+
+    [Fact]
+    public void Style_files_are_readable_and_within_100_lines()
+    {
+        foreach (var rel in new[] { "Ui.axaml", "Design/UiStyles.D4F1.axaml" })
+        {
+            var lines = File.ReadAllLines(Path.Combine(RepoRoot, "XuanYu.Editor.UI", rel));
+            Assert.True(lines.Length <= 100, $"{rel} 超过 100 行（{lines.Length}）");
+            foreach (var line in lines)
+            {
+                // 禁止压缩 Style 行：同一行同时出现 <Style 与 </Style>（多 Setter 挤在一行）
+                Assert.False(line.Contains("<Style") && line.Contains("</Style>"),
+                    $"{rel} 存在压缩单行 Style：{line.Trim()[..System.Math.Min(60, line.Trim().Length)]}");
+            }
+        }
     }
 
     [Fact]
@@ -72,13 +89,7 @@ public sealed class UiD4F1TypographyContractTests
         Assert.All(manifest.Tokens, t => Assert.Equal("Frozen", t.SpecStatus));
     }
 
-    sealed class UiTokenManifestSnapshot
-    {
-        public UiTokenSnapshot[]? Tokens { get; set; }
-    }
+    sealed class UiTokenManifestSnapshot { public UiTokenSnapshot[]? Tokens { get; set; } }
 
-    sealed class UiTokenSnapshot
-    {
-        public string? SpecStatus { get; set; }
-    }
+    sealed class UiTokenSnapshot { public string? SpecStatus { get; set; } }
 }

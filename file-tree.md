@@ -346,7 +346,10 @@
 │  │  ├─ MapIdDisplayFormat.cs
 │  │  ├─ MapPagePanel.axaml
 │  │  ├─ MapPagePanel.axaml.cs
+│  │  ├─ MapFormPanel.axaml
+│  │  ├─ MapFormPanel.axaml.cs
 │  │  ├─ EditableFormLayoutModel.cs
+│  │  ├─ MapEditorLayoutModel.cs
 │  │  ├─ InspectorPanel.axaml
 │  │  ├─ InspectorPanel.axaml.cs
 │  │  ├─ Right.axaml
@@ -1121,6 +1124,7 @@
 - `XuanYu.Editor.UI/Design/UiTokens.Icons.axaml` — UI Token 图标（视口/笔画，§8.1）
 - `XuanYu.Editor.UI/Design/UiTokens.Motion.axaml` — UI Token 动效时长（悬停/展开，§15.3）
 - `XuanYu.Editor.UI/Design/UiTokens.Spacing.axaml` — UI Token 间距/内边距/圆角（§5.1/§5.2/§5.4）
+- `XuanYu.Editor.UI/Design/UiStyles.D4F1.axaml` — D4-F1（纠偏）：公共语义样式独立文件（uiLabel/uiValue/uiSingleLine/uiMultiline/uiSection/uiTextButton，Setter 正常分行，全部 Token 引用；由 Ui.axaml 聚合一次）。
 - `XuanYu.Editor.UI/Design/UiTokenManifest.json` — UI Token 唯一机器事实源（112 条：Key/Type/Value/Category/SpecSection/Purpose/SpecStatus；D2-F1）
 - `XuanYu.Editor.UI/Design/UiTokens.axaml` — UI Token 聚合入口（合并 7 个 Token 文件；由 UiTokenManifest.json 生成，禁手改）
 - `XuanYu.Editor.UI/Dialogs/IEditorDialogService.cs` — D4：最小错误弹窗服务。只用于用户主动操作失败（导入 GLB / 打开场景 / 部分资源缺失）。
@@ -1170,7 +1174,10 @@
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs` — MAP-A-R1-D5-A：地图编辑器面板（二级页签宿主：地图/图层/环境，每页独立滚动）。
 - `XuanYu.Editor.UI/Right/MapIdDisplayFormat.cs` — D4：MapId 显示压缩纯逻辑（>18 字符「前 8+…+后 6」）。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — D4：地图页（只读资产摘要 72 列紧凑 / MapId 压缩+复制 / 属性表单 96 列 + 紧凑模式双布局 / 按钮组）。
-- `XuanYu.Editor.UI/Right/MapPagePanel.axaml.cs` — D4：地图页模式切换（<320 紧凑）与 MapId 完整值复制（Clipboard）。
+- `XuanYu.Editor.UI/Right/MapPagePanel.axaml.cs` — D4/D4-F1（纠偏）：地图页密度切换（<320 紧凑：根留白/分组间距/行距）+ MapId 完整值复制（Clipboard）。
+- `XuanYu.Editor.UI/Right/MapFormPanel.axaml` — D4-F1（纠偏拆分）：地图属性输入表单（96 列标准 / <360 窄模式双布局 / 按钮 Grid *,* 跨列布局）。
+- `XuanYu.Editor.UI/Right/MapFormPanel.axaml.cs` — D4-F1（纠偏）：地图属性表单方向切换（EditableFormLayoutModel <360 整组上下）。
+- `XuanYu.Editor.UI/Right/MapEditorLayoutModel.cs` — ARCH-UI-SPEC-R1-D4/D4-F1（纠偏恢复）：面板紧凑密度纯逻辑（<320 紧凑：根留白/分组间距/字段行距；与 EditableFormLayoutModel 并存互不替代）。
 - `XuanYu.Editor.UI/Right/EditableFormLayoutModel.cs` — ARCH-UI-SPEC-R1-D4/D4-F1：可编辑表单行（EditableFormRow）布局模式纯逻辑（仅真实输入控件在内容宽 <360 整组上下；96 标签列/128 字段最小；只读键值行不参与）。
 - `XuanYu.Editor.UI/Right/InspectorPanel.axaml` — D4：检查器面板（字号 Token 层级 / 宽窄双布局树 / 全宽分组+分隔线 / 空状态）。
 - `XuanYu.Editor.UI/Right/InspectorPanel.axaml.cs` — D4：检查器模式切换（<360 窄模式，同一 InspectorFields 数据源）。
@@ -1706,7 +1713,8 @@
 - `XuanYu.World.Tests/UiTokens/UiD4InspectorContractTests.cs` — D4：检查器结构合同（字号 Token/双模式/96/128/无卡片/调试页 96 列）
 - `XuanYu.World.Tests/UiTokens/UiD4LayerContractTests.cs` — D4：图层面板结构合同（图标 16/热区/笔画/Layer.* Token/插入线/选中样式/三重区分）
 - `XuanYu.World.Tests/UiTokens/UiD4LayoutModelTests.cs` — D4/D4-F1：纯布局逻辑测试（可编辑表单 360 阈值、MapId 压缩、字段行结构）
-- `XuanYu.World.Tests/UiTokens/UiD4F1LayoutModelTests.cs` — D4-F1：只读键值行 300~480 均水平 + 可编辑表单 359/360 阈值
+- `XuanYu.World.Tests/UiTokens/UiD4F1LayoutModelTests.cs` — D4-F1（纠偏）：319/320 密度与 359/360 表单边界 + 6 组独立组合 + 只读行水平
+- `XuanYu.World.Tests/UiTokens/UiD4F1ButtonContractTests.cs` — D4-F1（纠偏）：uiTextButton 真实接线（地图 7+调试 4）+ Grid *,* 跨列 + 2×2 等宽网格
 - `XuanYu.World.Tests/UiTokens/UiD4F1TextOverflowContractTests.cs` — D4-F1：展示型文本默认（NoWrap+Ellipsis+MaxLines1）+ 完整值 Tooltip + 多行专用类
 - `XuanYu.World.Tests/UiTokens/UiD4F1TypographyContractTests.cs` — D4-F1：公共语义样式 Token / 无裸 FontSize / 无局部 FontFamily / Manifest 112 Frozen
 - `XuanYu.World.Tests/UiTokens/UiD4MapEditorContractTests.cs` — D4：地图页结构合同（72 列摘要/MapId 不换行+复制/96 列表单/紧凑模式/单滚动/按钮组）

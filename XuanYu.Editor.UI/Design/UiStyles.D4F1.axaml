@@ -1,0 +1,52 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- ARCH-UI-SPEC-R1-D4-F1：公共语义样式（D4-F1 纠偏：Setter 正常分行，不压缩）。
+       只读键值行（ReadonlyKeyValueRow）/ 展示型动态文本默认（NoWrap+Ellipsis+MaxLines1）/
+       按钮统一文本合同（NoWrap+Ellipsis+MaxLines1+Tooltip 完整名称）。全部引用正式 Token。 -->
+  <Style Selector="TextBlock.uiLabel">
+    <Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/>
+    <Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+  <Style Selector="TextBlock.uiValue">
+    <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+    <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="MaxLines" Value="1"/>
+  </Style>
+  <Style Selector="TextBlock.uiSingleLine">
+    <Setter Property="TextWrapping" Value="NoWrap"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    <Setter Property="MaxLines" Value="1"/>
+  </Style>
+  <Style Selector="TextBlock.uiMultiline">
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="MaxLines" Value="0"/>
+  </Style>
+  <Style Selector="TextBlock.uiSection">
+    <Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/>
+    <Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/>
+    <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+  </Style>
+  <Style Selector="Button.uiTextButton">
+    <Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="Padding" Value="8,2"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="ToolTip.Tip" Value="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+    <Setter Property="ContentTemplate">
+      <DataTemplate>
+        <TextBlock Text="{Binding}"
+                   TextWrapping="NoWrap"
+                   TextTrimming="CharacterEllipsis"
+                   MaxLines="1"
+                   VerticalAlignment="Center"/>
+      </DataTemplate>
+    </Setter>
+  </Style>
+</Styles>

@@ -4,70 +4,67 @@
              x:Class="XuanYu.Editor.UI.MapPagePanel"
              x:DataType="local:UiVm">
   <UserControl.Styles>
-    <!-- ARCH-UI-SPEC-R1-D4/D4-F1：只读资产摘要标签列 72（组件级例外 72~80）、表单标签列 96；值统一单行省略 -->
-    <Style Selector="Border.groupSeparator"><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/><Setter Property="BorderThickness" Value="0,0,0,1"/><Setter Property="Margin" Value="0,2,0,6"/></Style>
-    <Style Selector="Grid.summaryRow"><Setter Property="MinHeight" Value="24"/><Setter Property="Margin" Value="0,1"/></Style>
-    <Style Selector="Button"><Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/></Style>
-    <Style Selector="Button.copyBtn"><Setter Property="MinHeight" Value="24"/><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="6,2"/><Setter Property="Margin" Value="0"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4/D4-F1：只读资产摘要标签列 72（组件级例外 72~80）；值统一单行省略 -->
+    <Style Selector="Border.groupSeparator">
+      <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+      <Setter Property="Margin" Value="0,2,0,6"/>
+    </Style>
+    <Style Selector="Grid.summaryRow">
+      <Setter Property="MinHeight" Value="24"/>
+      <Setter Property="Margin" Value="0,3"/>
+    </Style>
+    <Style Selector="Button.copyBtn">
+      <Setter Property="MinHeight" Value="24"/>
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="Padding" Value="6,2"/>
+      <Setter Property="Margin" Value="0"/>
+    </Style>
   </UserControl.Styles>
 
-  <StackPanel Spacing="8" Margin="0,6,0,0">
-  <!-- 地图资产：只读紧凑摘要（72 标签列 / 单行 24；D4-F1：始终单行双列，不随宽度上下拆行） -->
-  <StackPanel Spacing="2">
-    <TextBlock Text="地图资产" Classes="uiSection"/>
+  <StackPanel x:Name="Root" Spacing="12" Margin="0,6,0,0">
+    <!-- 地图资产：只读紧凑摘要（72 标签列；始终单行双列，D4-F1 不随宽度上下拆行） -->
+    <StackPanel x:Name="SummaryGroup" Spacing="2">
+      <TextBlock Text="地图资产" Classes="uiSection"/>
       <Border Classes="groupSeparator"/>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
-        <TextBlock Text="名称" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding MapName}" Classes="uiValue" ToolTip.Tip="{Binding MapName}"/>
+        <TextBlock Text="名称" Classes="uiLabel"/>
+        <TextBlock Grid.Column="1" Text="{Binding MapName}" Classes="uiValue" ToolTip.Tip="{Binding MapName}"/>
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
-        <TextBlock Text="路径" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding MapPathDisplay}" Classes="uiValue" ToolTip.Tip="{Binding MapPath}"/>
+        <TextBlock Text="路径" Classes="uiLabel"/>
+        <TextBlock Grid.Column="1" Text="{Binding MapPathDisplay}" Classes="uiValue" ToolTip.Tip="{Binding MapPath}"/>
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
         <TextBlock Text="MapId" Classes="uiLabel"/>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
-          <TextBlock Text="{Binding MapIdDisplay}" Classes="uiValue" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" MaxLines="1" ToolTip.Tip="{Binding MapIdText}"/>
+          <TextBlock Text="{Binding MapIdDisplay}" Classes="uiValue" TextWrapping="NoWrap"
+                     TextTrimming="CharacterEllipsis" MaxLines="1" ToolTip.Tip="{Binding MapIdText}"/>
           <Button Classes="copyBtn" Content="复制" Click="CopyMapId_Click" ToolTip.Tip="复制完整 MapId"/>
         </StackPanel>
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
-        <TextBlock Text="尺寸" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding MapSizeText}" Classes="uiValue" ToolTip.Tip="{Binding MapSizeText}"/>
+        <TextBlock Text="尺寸" Classes="uiLabel"/>
+        <TextBlock Grid.Column="1" Text="{Binding MapSizeText}" Classes="uiValue" ToolTip.Tip="{Binding MapSizeText}"/>
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
-        <TextBlock Text="状态" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding MapStatusText}" Classes="uiValue" ToolTip.Tip="{Binding MapStatusText}"/>
+        <TextBlock Text="状态" Classes="uiLabel"/>
+        <TextBlock Grid.Column="1" Text="{Binding MapStatusText}" Classes="uiValue" ToolTip.Tip="{Binding MapStatusText}"/>
       </Grid>
     </StackPanel>
 
-    <StackPanel Spacing="2">
-      <TextBlock Text="地图属性" Classes="uiSection"/>
-      <Border Classes="groupSeparator"/>
-      <!-- EditableFormRow 标准模式（内容宽 ≥360）：标签列 96 / 左标签右输入 -->
-      <Grid x:Name="PropsWide" ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4">
-        <TextBlock Text="宽度（米）" Classes="uiLabel"/><TextBox Grid.Column="1" Text="{Binding MapWidthText}"/>
-        <TextBlock Grid.Row="1" Text="深度（米）" Classes="uiLabel"/><TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MapDepthText}"/>
-        <TextBlock Grid.Row="2" Text="基础高度（米）" Classes="uiLabel"/><TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MapBaseHeightText}"/>
-        <TextBlock Grid.Row="3" Text="地表类型" Classes="uiLabel"/><TextBlock Grid.Row="3" Grid.Column="1" Text="Flat（只读）" Classes="uiValue"/>
-      </Grid>
-      <!-- EditableFormRow 窄模式（内容宽 <360）：整组标签在上、输入控件在下（标签→字段 2，字段组间距 6） -->
-      <StackPanel x:Name="PropsNarrow" Spacing="6" IsVisible="False">
-        <StackPanel Spacing="2"><TextBlock Text="宽度（米）" Classes="uiLabel"/><TextBox Text="{Binding MapWidthText}"/></StackPanel>
-        <StackPanel Spacing="2"><TextBlock Text="深度（米）" Classes="uiLabel"/><TextBox Text="{Binding MapDepthText}"/></StackPanel>
-        <StackPanel Spacing="2"><TextBlock Text="基础高度（米）" Classes="uiLabel"/><TextBox Text="{Binding MapBaseHeightText}"/></StackPanel>
-        <StackPanel Spacing="2"><TextBlock Text="地表类型" Classes="uiLabel"/><TextBlock Text="Flat（只读）" Classes="uiValue"/></StackPanel>
-      </StackPanel>
-      <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,6,0,0">
-        <Button Content="应用修改" Command="{Binding RunCommand}" CommandParameter="应用地图属性"/>
-        <Button Content="撤销地图修改" Command="{Binding RunCommand}" CommandParameter="撤销地图修改" IsEnabled="{Binding CanUndo}"/>
-        <Button Content="重做地图修改" Command="{Binding RunCommand}" CommandParameter="重做地图修改" IsEnabled="{Binding CanRedo}"/>
-      </StackPanel>
-      <TextBlock Text="{Binding MapEditError}" Classes="uiMultiline" Foreground="{StaticResource Color.Error}"/>
-    </StackPanel>
+    <local:MapFormPanel/>
 
-    <!-- 地图资产操作按钮组：2×2 均匀网格（按钮完整不换行），按钮间距 6 -->
+    <!-- 地图资产操作按钮组（纠偏 v2）：真正的 2×2 等宽网格，按钮水平拉伸 -->
     <UniformGrid Columns="2" ColumnSpacing="6" RowSpacing="6">
-      <Button Content="新建地图" Command="{Binding RunCommand}" CommandParameter="新建地图"/>
-      <Button Content="打开地图" IsEnabled="False" ToolTip.Tip="地图持久化将在 D6 接入"/>
-      <Button Content="保存地图" IsEnabled="False" ToolTip.Tip="地图持久化将在 D6 接入"/>
-      <Button Content="聚焦地图" Command="{Binding RunCommand}" CommandParameter="聚焦地图"/>
+      <Button Classes="uiTextButton" HorizontalAlignment="Stretch" MinWidth="0" MinHeight="28" Content="新建地图"
+              Command="{Binding RunCommand}" CommandParameter="新建地图"/>
+      <Button Classes="uiTextButton" HorizontalAlignment="Stretch" MinWidth="0" MinHeight="28" Content="打开地图"
+              IsEnabled="False" ToolTip.Tip="地图持久化将在 D6 接入"/>
+      <Button Classes="uiTextButton" HorizontalAlignment="Stretch" MinWidth="0" MinHeight="28" Content="保存地图"
+              IsEnabled="False" ToolTip.Tip="地图持久化将在 D6 接入"/>
+      <Button Classes="uiTextButton" HorizontalAlignment="Stretch" MinWidth="0" MinHeight="28" Content="聚焦地图"
+              Command="{Binding RunCommand}" CommandParameter="聚焦地图"/>
     </UniformGrid>
   </StackPanel>
 </UserControl>

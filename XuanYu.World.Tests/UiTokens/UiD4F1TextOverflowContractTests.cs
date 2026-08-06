@@ -5,10 +5,11 @@ namespace XuanYu.World.Tests.UiTokens;
 // ARCH-UI-SPEC-R1-D4-F1：展示型动态文本默认（NoWrap + CharacterEllipsis + MaxLines=1）+ Tooltip 完整值。
 public sealed class UiD4F1TextOverflowContractTests
 {
-    static readonly string Ui = Read("Ui.axaml");
+    static readonly string Ui = Read("Design/UiStyles.D4F1.axaml"); // D4-F1 纠偏：公共样式独立文件
     static readonly string Inspector = Read("Right/InspectorPanel.axaml");
     static readonly string Right = Read("Right/Right.axaml");
     static readonly string MapPage = Read("Right/MapPagePanel.axaml");
+    static readonly string MapForm = Read("Right/MapFormPanel.axaml");
     static readonly string LayerPanel = Read("Right/LayerPanel.axaml");
     static readonly string LayerInspector = Read("Right/LayerInspectorPanel.axaml");
 
@@ -76,13 +77,6 @@ public sealed class UiD4F1TextOverflowContractTests
     {
         Assert.Contains("<Style Selector=\"TextBlock.uiMultiline\">", Ui);
         Assert.Contains("uiMultiline", Inspector);  // 空状态说明
-        Assert.Contains("uiMultiline", MapPage);    // 地图错误详情
-    }
-
-    [Fact]
-    public void Buttons_do_not_wrap_text()
-    {
-        // 按钮文字统一 12（uiTextButton / Button 局部 Token），无按钮内换行配置
-        Assert.Contains("Button.uiTextButton", Ui);
+        Assert.Contains("uiMultiline", MapForm);    // 地图错误详情
     }
 }

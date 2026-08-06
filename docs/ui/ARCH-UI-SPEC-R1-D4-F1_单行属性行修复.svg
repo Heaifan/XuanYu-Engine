@@ -50,8 +50,9 @@
   <text x="592" y="192" font-size="12" fill="#5D6F7C">宽度（米）</text>
   <rect x="688" y="180" width="80" height="18" rx="3" fill="#FFFFFF" stroke="#B9C7D0" stroke-width="1"/>
   <text x="592" y="214" font-size="12" fill="#5D6F7C">≥360 左右（96 列）；&lt;360 整组上下</text>
-  <text x="592" y="232" font-size="12" fill="#5D6F7C">仅真实输入控件参与响应式</text>
+  <text x="592" y="232" font-size="12" fill="#5D6F7C">按钮（纠偏 v2）：应用修改跨两列｜撤销/重做第二行</text>
+  <text x="592" y="250" font-size="12" fill="#5D6F7C">资产按钮 2×2 等宽拉伸；319/320 密度、359/360 表单</text>
 
   <text x="16" y="262" font-size="12" fill="#5D6F7C">规范 §7.1.1 定稿：ReadonlyKeyValueRow（80 默认 / 72~96 组件范围 / 间距 8 / 值列 * 可收缩）· EditableFormRow（96/128，&lt;360 上下）· 展示型文本默认 NoWrap+Ellipsis+MaxLines1+完整 Tooltip</text>
-  <text x="16" y="282" font-size="12" fill="#5D6F7C">公共样式 uiLabel/uiValue/uiSingleLine/uiMultiline/uiSection/uiTextButton · 基线维持 159 · Manifest 112 Frozen · 测试 1172/1172</text>
+  <text x="16" y="282" font-size="12" fill="#5D6F7C">公共样式 uiLabel/uiValue/uiSingleLine/uiMultiline/uiSection/uiTextButton · 基线维持 159 · Manifest 112 Frozen · 测试 1184/1184</text>
 </svg>

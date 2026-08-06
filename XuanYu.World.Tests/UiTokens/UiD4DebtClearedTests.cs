@@ -46,8 +46,12 @@ public sealed class UiD4DebtClearedTests
             "XuanYu.Editor.UI/Right/InspectorPanel.axaml.cs",
             "XuanYu.Editor.UI/Right/MapPagePanel.axaml",
             "XuanYu.Editor.UI/Right/MapPagePanel.axaml.cs",
+            "XuanYu.Editor.UI/Right/MapFormPanel.axaml",
+            "XuanYu.Editor.UI/Right/MapFormPanel.axaml.cs",
             "XuanYu.Editor.UI/Right/EditableFormLayoutModel.cs",
+            "XuanYu.Editor.UI/Right/MapEditorLayoutModel.cs",
             "XuanYu.Editor.UI/Right/MapIdDisplayFormat.cs",
+            "XuanYu.Editor.UI/Design/UiStyles.D4F1.axaml",
             "XuanYu.Editor.UI/Vm/Inspector/InspectorFieldRow.cs",
             "XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Display.cs",
         })
