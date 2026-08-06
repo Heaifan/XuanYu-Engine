@@ -31,6 +31,10 @@
       </Setter.Value>
     </Setter>
   </Style>
+  <!-- D5：视口与布局分隔器不是可操作按钮，不显示全局焦点装饰。 -->
+  <Style Selector="GridSplitter.layoutSplitter:focus">
+    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+  </Style>
   <Style Selector="Button:disabled">
     <Setter Property="Foreground" Value="{StaticResource Color.Text.Disabled}"/>
     <Setter Property="Background" Value="{StaticResource Color.Bg.Control}"/>

@@ -19,6 +19,15 @@
 ---
 
 ## 2026-08（当前自然月）
+## v0.2.24.45-fix
+MAP-A-R2-D5：焦点框作用域与世界原点 Overlay 修复（2026-08-06，Commit 本轮落库为准）
+- **焦点框**：视口原生宿主设为不可聚焦并清除 FocusAdorner；布局分隔器不显示焦点装饰；Button 保留正式 `2 DIP` 焦点框与 `1 DIP` 外偏移合同。
+- **世界原点**：DrawPlan 调整为实体/轮廓之后绘制；WorldOrigin 管线关闭深度测试并保持关闭深度写入；片元 Shader 不再写入深度，中心标记保持屏幕恒定尺寸，模型或地面不再遮挡。
+- **测试**：新增原点 Overlay 深度与 Shader 合同；Core **340/340**、World **928/928**、WarCore **22/22** 全部通过；完整解决方案 Build **0W0E**；`git diff --check` PASS。
+- **架构守卫**：当前 Windows PowerShell 5.1 运行 `scripts/arch-a-guard.ps1` 被既有 UTF-8 无 BOM 脚本解析错误阻断（非本轮代码错误），未伪造 PASS。
+- **治理**：版本 v0.2.24.44-rz → **v0.2.24.45-fix**（四处同步）；无 Schema/依赖/Tag/Release 变更；file-tree 无结构变化，无需更新。
+- **状态**：**MAP-A-R2-D5：READY FOR USER ACCEPTANCE**；等待用户真机复验焦点框四边、100%～200% DPI 与世界原点遮挡场景。
+
 ## v0.2.24.44-rz
 ARCH-UI-SPEC-R1-D6：DPI、键盘/可访问性、减少动画、日志性能与剩余 UI 债务复核（2026-08-06，Commit 本轮落库为准）
 - **DPI/缩放合同**：新增 `UiDpiContract`，冻结 100%/125%/150%/175%/200% 桌面缩放清单；主窗口最小/推荐 DIP 尺寸与检查器/地图表单宽度阈值保持 DIP 口径，不做物理像素补偿。

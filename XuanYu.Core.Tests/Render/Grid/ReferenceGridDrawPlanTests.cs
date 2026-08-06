@@ -5,7 +5,7 @@ using XuanYu.Render.Abstractions;
 namespace XuanYu.Core.Tests.Render;
 
 // MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
-// 顺序：地形(MapBounds) → 网格 → 原点 → 世界轴 → 实体填充 → 轮廓 → Gizmo。
+// 顺序：地形(MapBounds) → 网格/世界轴 → 实体填充 → 轮廓 → 原点 Overlay → Gizmo。
 public sealed class ReferenceGridDrawPlanTests
 {
     static RenderProjection Projection(bool hasMap, bool withEntity, bool showGrid, bool showAxes = true, bool showOrigin = true)
@@ -29,7 +29,7 @@ public sealed class ReferenceGridDrawPlanTests
         Assert.Contains(plan, e => e.Kind == RenderDrawKind.EditorReferenceGrid);
     }
 
-    // 方案 12 顺序：Terrain < Grid < WorldAxes < EntityFill < EntityOutline < Gizmo。
+    // D5 Overlay 顺序：Terrain < Grid < WorldAxes < EntityFill < EntityOutline < Origin < Gizmo。
     [Fact]
     public void Draw_order_matches_scheme_twelve()
     {
@@ -43,8 +43,8 @@ public sealed class ReferenceGridDrawPlanTests
         var outline = IndexOf(RenderDrawKind.EntityOutline);
         var gizmo = IndexOf(RenderDrawKind.MoveGizmo);
         Assert.True(terrain >= 0 && terrain < grid, "地形必须在网格之前");
-        Assert.True(grid < origin && origin < axes, "网格→原点→轴顺序错误");
-        Assert.True(axes < fill && fill < outline && outline < gizmo, "轴→实体→轮廓→Gizmo 顺序错误");
+        Assert.True(grid < axes && axes < fill && fill < outline, "网格→轴→实体顺序错误");
+        Assert.True(outline < origin && origin < gizmo, "实体→原点 Overlay→Gizmo 顺序错误");
     }
 
     // 开关独立（方案 11.2）：网格关世界轴开 → 只有轴；网格开世界轴关 → 只有网格。

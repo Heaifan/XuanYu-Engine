@@ -33,8 +33,8 @@ public static partial class RenderDrawPlan
         var assist = projection.AssistState;
         var plan = new List<FrameEntry>(projection.Entities.Count * 2 + 6);
         if (assist.ShowEditorBackground) plan.Add(new FrameEntry(RenderDrawKind.EditorBackground, BackgroundVertexCount));
-        // F2-R2 顺序（方案 12）：地形 → 网格 → 原点 → 轴 → 实体填充 → 轮廓 → Gizmo。
-        // 网格画在地形之上（深度偏移），原点/轴覆盖网格，实体最终遮挡一切。
+        // D5 Overlay 顺序：地形 → 网格/轴 → 实体 → 原点 → 变换 Gizmo → 导航 Gizmo。
+        // 原点独立覆盖层不参与深度测试，并在实体之后绘制，避免模型或地面遮挡中心标记。
         if (projection.HasMap)
         {
             if (projection.Map.ShowGround) plan.Add(new FrameEntry(RenderDrawKind.MapGround, MapGroundIndexCount));
@@ -46,7 +46,6 @@ public static partial class RenderDrawPlan
             plan.Add(new FrameEntry(RenderDrawKind.EditorViewPlaneGrid, ReferenceGridVertexCount));
         }
         else if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
-        if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
         {
@@ -61,6 +60,7 @@ public static partial class RenderDrawPlan
                 entity.EntityType == RenderEntityType.Cube ? CubeOutlineRibbonVertexCount : OutlineRibbonVertexCount,
                 i, entity.EntityType));
         }
+        if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
         if (projection.ScaleGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.ScaleGizmo, ScaleGizmoVertexCount));
         else if (projection.RotateGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.RotateGizmo, RotateGizmoVertexCount));
         else if (projection.GizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.MoveGizmo, MoveGizmoVertexCount));

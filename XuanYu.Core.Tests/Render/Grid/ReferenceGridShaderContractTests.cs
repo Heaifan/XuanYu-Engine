@@ -71,5 +71,17 @@ public sealed class ReferenceGridShaderContractTests
         var frag = ShaderSource("editor_world_origin.frag");
         Assert.Contains("CROSS_HALF_LEN", frag);
         Assert.DoesNotContain("axisXColor", frag);
+        Assert.DoesNotContain("gl_FragDepth", frag);
+    }
+
+    [Fact]
+    public void World_origin_pipeline_is_depth_disabled_overlay()
+    {
+        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var source = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
+        var start = source.IndexOf("CreateWorldOrigin", StringComparison.Ordinal);
+        Assert.True(start >= 0, "WorldOrigin 管线工厂缺失");
+        var call = source[start..];
+        Assert.Contains("depthTest: false", call);
     }
 }

@@ -36,11 +36,6 @@ void main() {
     float ax = abs(d.x);
     float ay = abs(d.y);
 
-    // 深度保持原点平面深度（实体更近则自然遮挡标记）。
-    float depth = clip.z / clip.w;
-    float bias = clamp(fwidth(depth) * 0.5, 0.0000001, 0.00002);
-    gl_FragDepth = depth - bias;
-
     // 十字线：竖线 |dx|<w 且 |dy|<len；横线 |dy|<w 且 |dx|<len。
     float cross = (ax < CROSS_HALF_WID && ay < CROSS_HALF_LEN)
         || (ay < CROSS_HALF_WID && ax < CROSS_HALF_LEN) ? 1.0 : 0.0;

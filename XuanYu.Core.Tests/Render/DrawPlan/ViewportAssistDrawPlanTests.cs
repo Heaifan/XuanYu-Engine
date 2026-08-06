@@ -14,7 +14,7 @@ public sealed class ViewportAssistDrawPlanTests
 
         var plan = RenderDrawPlan.GetFrameDrawPlan(projection);
 
-        // F2-R2 顺序：背景 → 网格 → 原点（无地图、无世界轴）；F3-F1：导航 Gizmo 收尾。
+        // D5 顺序：背景 → 网格 → 原点 Overlay（无实体）；F3-F1：导航 Gizmo 收尾。
         Assert.Equal(RenderDrawKind.EditorBackground, plan[0].Kind);
         Assert.Equal(RenderDrawKind.EditorReferenceGrid, plan[1].Kind);
         Assert.Equal(RenderDrawKind.WorldOrigin, plan[2].Kind);
@@ -30,11 +30,12 @@ public sealed class ViewportAssistDrawPlanTests
 
         var plan = RenderDrawPlan.GetFrameDrawPlan(projection);
 
-        // F2-R2 顺序：背景 → 网格 → 原点 → 世界轴。
-        var axes = plan[3];
+        // D5 顺序：背景 → 网格 → 世界轴 → 原点 Overlay。
+        var axes = plan[2];
         Assert.Equal(RenderDrawKind.WorldAxes, axes.Kind);
         Assert.Equal(-1, axes.EntityIndex);
         Assert.Null(axes.EntityType);
+        Assert.Equal(RenderDrawKind.WorldOrigin, plan[3].Kind);
         Assert.Equal(RenderDrawKind.NavigationGizmo, plan[^1].Kind);
     }
 

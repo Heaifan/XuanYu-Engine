@@ -16,6 +16,8 @@ public sealed partial class VulkanNativeHost : NativeControlHost
 
     public VulkanNativeHost()
     {
+        Focusable = false;
+        FocusAdorner = null;
         _resizer = new NativeHostResizeCoalescer((snap, count) =>
         {
             _bridge?.Resize(snap.Width, snap.Height);
