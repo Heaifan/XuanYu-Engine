@@ -28,12 +28,13 @@
 | 编号 | 已知问题 | 证据（代码位置） | 整改轮次 |
 |---|---|---|---|
 | K01 | 顶层页签无溢出管理：检查器/地图编辑器/调试页签超出宽度时无横向滚动、无箭头、无全部页签入口、无一次性提示 | `Right/Right.axaml` sideTabs（普通 TabControl） | D3（**D3-A1 复验 PASS，2026-08-06**；当前组件经用户批准采用滚轮/渐隐/自动显露/全部页签入口，不要求箭头——D3-EX-01） |
-| K02 | 检查器字号偏大：面板标题 15 DIP（规范外），字段值落默认 12（应为 13） | `Right/Right.axaml` panelTitle=15、value 无 FontSize | D4（D4 已整改：InspectorPanel 字号 Token 层级——面板标题 Title16/分组 Section14/标签 Label12/值 Body13；**待真机复验**） |
-| K03 | 锁和眼睛状态图标在选中行中的对比度：现状浅选中背景 `#E5F0F4` 系 + 深色图标（D4-F3 已优化），需真机确认「选中行 + 图标」组合清晰 | `LayerPanel.axaml` layerSwitch/layerLockSwitch + 选中态 | D4（D4 已整改：图标 16 视口 + 显式选中行样式 Selection.Bg + 按开关类型保留状态色；**待真机复验**） |
-| K04 | 系统图层与用户图层辨识：已用「双色标签 + 文字（区域/系统）」+ 行内图标，需真机确认不依赖颜色也能区分 | `LayerPanel.axaml` kindTagRegion/kindTagSystem | D4（D4 已整改：标签文字+形态+低饱和色三重区分，全部 Layer.Kind.* 冻结 Token；**待真机复验**） |
+| K02 | 检查器字号偏大：面板标题 15 DIP（规范外），字段值落默认 12（应为 13） | `Right/Right.axaml` panelTitle=15、value 无 FontSize | D4（D4 已整改：InspectorPanel 字号 Token 层级——面板标题 Title16/分组 Section14/标签 Label12/值 Body13；**D4-A1 复验 PASS，2026-08-06（F1-1~F1-9 全部通过，D4 COMPLETE）**） |
+| K03 | 锁和眼睛状态图标在选中行中的对比度：现状浅选中背景 `#E5F0F4` 系 + 深色图标（D4-F3 已优化），需真机确认「选中行 + 图标」组合清晰 | `LayerPanel.axaml` layerSwitch/layerLockSwitch + 选中态 | D4（D4 已整改：图标 16 视口 + 显式选中行样式 Selection.Bg + 按开关类型保留状态色；**D4-A1 复验 PASS，2026-08-06（F1-1~F1-9 全部通过，D4 COMPLETE）**） |
+| K04 | 系统图层与用户图层辨识：已用「双色标签 + 文字（区域/系统）」+ 行内图标，需真机确认不依赖颜色也能区分 | `LayerPanel.axaml` kindTagRegion/kindTagSystem | D4（D4 已整改：标签文字+形态+低饱和色三重区分，全部 Layer.Kind.* 冻结 Token；**D4-A1 复验 PASS，2026-08-06（F1-1~F1-9 全部通过，D4 COMPLETE）**） |
 | K05 | 初始非最大化窗口挤压：现窗口 1400×820 下右列 340 + 日志 420 的挤压行为未真机确认；最小窗口 1100×720 与规范 1024×640 不符 | `UiWin.axaml`、`UiRoot.axaml` | D3（**D3-A1 复验 PASS，2026-08-06**：初始 1360×820 / 最小 1024×640，最大化/恢复/连续缩放全部通过） |
 | K06 | 嵌套滚动与日志穿透：地图编辑器「图层」页签整页滚动（F1 合同）与日志区独立滚动并存，需真机确认无滚轮穿透/双区联动 | `MapEditorPanel.axaml`、`Foot.axaml` | D3（**D3-A1 复验 PASS，2026-08-06**：页签/地图面板/日志滚动无穿透串扰） |
 | K07 | 日志完整显示与滚动跟随：F2~F4 已实现两阶段尾距定位与自适应，需在 850/1000/默认/最大化/恢复/连续拖动六档窗口下复验 | `LogListAutoScrollController*`、`UiRoot.axaml.cs` | D5 |
+| D5-FIX-01 | 按钮内容未水平/垂直居中（截图确认，用户批准延期） | 全部标准按钮（uiTextButton/Button） | D5 第一项统一处理（居中 + 完整状态），禁止逐按钮 Margin 偏移修补 |
 
 ---
 

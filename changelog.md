@@ -41,7 +41,12 @@ ARCH-UI-SPEC-R1-D4-F1：单行属性行、文本溢出与字体统一修复（20
   - **拆分 MapFormPanel**（新 UserControl：地图属性表单方向切换，职责单一）；测试新增 UiD4F1ButtonContractTests + 边界组合测试，World 811 → **823**；
   - **Stash 说明**：当前设备本地 `git stash list` 为 0（纠偏前后一致）；先前 D2/D3 轮次登记的「2 个历史 Stash」位于另一开发设备，无法在当前设备复现，本设备从未 stash/pop 操作。
 - 验证（纠偏后最终代码状态）：全解决方案 `--no-incremental` 串行 Build **0W0E**（落盘 /tmp/d4f1-fix-final-build2.log）；Core 339/339、World 823/823、WarCore 22/22，合计 **1184/1184 PASS**；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS；版本四处一致（v0.2.24.42-fix 不变）；基线维持 159；Manifest 112 Frozen / 0 Pending。
-- 状态：**ARCH-UI-SPEC-R1-D4-F1：READY FOR USER RE-ACCEPTANCE**（纠偏完成，等待真机复验 F1-1~F1-9）。
+- 状态：**ARCH-UI-SPEC-R1-D4：COMPLETE**（2026-08-06 用户正式裁决：D4-F1 真机复验 F1-1~F1-9 全部通过；截图「按钮内容未居中」登记 **D5-FIX-01**：按钮内容水平、垂直居中统一——用户批准延期的已知缺陷，不阻塞 D4，由 D5 第一项统一处理，禁止逐按钮 Margin 偏移修补）。
+
+## D4-A1 文档收口（2026-08-06，不升版）
+- **D5-FIX-01 登记**（用户正式裁决）：`按钮内容未居中`——截图确认按钮文字/图标未水平垂直居中；适用范围：全部标准按钮；处置：D5 第一项统一处理（按钮内容居中 + 完整状态），禁止逐按钮 Margin 偏移修补；当前 D4 不阻塞。
+- D4/D4-F1 全部收口完成：K02/K03/K04 复验 PASS；真机 IPO 组 1~21 + F1-1~F1-9 通过。
+
 
 
 ## v0.2.24.41-rz
