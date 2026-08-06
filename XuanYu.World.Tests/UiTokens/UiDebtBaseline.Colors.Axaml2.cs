@@ -7,18 +7,6 @@ internal static partial class UiDebtBaseline
 {
     private static void AddAxaml2(System.Collections.Generic.List<BaselineEntry> list)
     {
-        list.Add(new("W45", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TabItem.layerSubTab", UiRuleKind.HexColor, "Foreground", "#6d788a"));
-        list.Add(new("W45", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TabItem.layerSubTab:selected", UiRuleKind.HexColor, "Foreground", "#185aa6"));
-        list.Add(new("W45", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TabItem.layerSubTab:selected", UiRuleKind.HexColor, "Background", "#edf4ff"));
-        list.Add(new("W45", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TabItem.layerSubTab:selected", UiRuleKind.HexColor, "BorderBrush", "#8cb2e2"));
-        list.Add(new("W47", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Path:ROOT/UserControl/TabControl/TabItem/ScrollViewer/StackPanel/Border/StackPanel/TextBlock:3", UiRuleKind.HexColor, "Foreground", "#C0392B"));
-        list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:Border.infoPanel", UiRuleKind.HexColor, "Background", "#f7faff"));
-        list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:Border.infoPanel", UiRuleKind.HexColor, "BorderBrush", "#dce6f3"));
-        list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:Path.panelIcon", UiRuleKind.HexColor, "Stroke", "#66758f"));
-        list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.panelTitle", UiRuleKind.HexColor, "Foreground", "#243149"));
-        list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.key", UiRuleKind.HexColor, "Foreground", "#6b7688"));
-        list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.value", UiRuleKind.HexColor, "Foreground", "#253247"));
-        list.Add(new("W41", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.emptyTitle", UiRuleKind.HexColor, "Foreground", "#334155"));
         list.Add(new("W26", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.commandRail", UiRuleKind.HexColor, "Background", "#fbfdff"));
         list.Add(new("W26", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.commandRail", UiRuleKind.HexColor, "BorderBrush", "#d5dfec"));
         list.Add(new("W26", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.topGroup", UiRuleKind.HexColor, "BorderBrush", "#d0dae8"));
@@ -58,7 +46,6 @@ internal static partial class UiDebtBaseline
         list.Add(new("W11", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab:selected", UiRuleKind.HexColor, "Foreground", "#185aa6"));
         list.Add(new("W11", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab:selected", UiRuleKind.HexColor, "Background", "#edf4ff"));
         list.Add(new("W11", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab:selected", UiRuleKind.HexColor, "BorderBrush", "#8cb2e2"));
-        list.Add(new("W14", "XuanYu.Editor.UI/Ui.axaml", "Style:TextBlock.section", UiRuleKind.HexColor, "Foreground", "#40516f"));
         list.Add(new("W14", "XuanYu.Editor.UI/Ui.axaml", "Style:TextBlock.muted", UiRuleKind.HexColor, "Foreground", "#758197"));
         list.Add(new("W14", "XuanYu.Editor.UI/Ui.axaml", "Style:TextBlock.caption", UiRuleKind.HexColor, "Foreground", "#758197"));
         list.Add(new("W63", "XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml", "Path:ROOT/UserControl/Grid/Border:1", UiRuleKind.HexColor, "BorderBrush", "#C9D2DC"));

@@ -32,23 +32,23 @@ public static class UiText
         "框选工具"
     ];
 
-    public static readonly string[] InspectorFields =
+    public static readonly InspectorFieldRow[] InspectorFields =
     [
-        "Transform",
-        "位置    X 0    Y 0    Z 0",
-        "旋转    X 0    Y 0    Z 0",
-        "缩放    X 1    Y 1    Z 1",
-        "标记",
-        "静态对象：否",
-        "可拾取：否",
-        "参与碰撞：否"
+        new("变换", "", IsGroupHeader: true),
+        new("位置", "X 0    Y 0    Z 0"),
+        new("旋转", "X 0    Y 0    Z 0"),
+        new("缩放", "X 1    Y 1    Z 1"),
+        new("标记", "", IsGroupHeader: true),
+        new("静态对象", "否"),
+        new("可拾取", "否"),
+        new("参与碰撞", "否")
     ];
 
-    public static readonly string[] ProjectInspectorFields =
+    public static readonly InspectorFieldRow[] ProjectInspectorFields =
     [
-        "名称：玄域示例项目",
-        "类型：项目",
-        "路径：玄域示例项目"
+        new("名称", "玄域示例项目"),
+        new("类型", "项目"),
+        new("路径", "玄域示例项目")
     ];
 
     public static readonly string[] EmptyHints =

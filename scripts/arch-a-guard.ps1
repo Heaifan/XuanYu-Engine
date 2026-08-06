@@ -59,7 +59,7 @@ function Assert-LineCounter([string]$label, [string]$content, [int]$expected) {
 Assert-LineCounter "99行PASS" (("x`n") * 99) 99
 Assert-LineCounter "100行PASS" (("x`n") * 100) 100
 Assert-LineCounter "101行须检出" (("x`n") * 101) 101
-Assert-LineCounter "连续空白行计入" ("a`n`n`nb`n") 3
+Assert-LineCounter "连续空白行计入" ("a`n`n`nb`n") 4
 Assert-LineCounter "CRLF正确" ("a`r`nb`r`n") 2
 Assert-LineCounter "LF正确" ("a`nb`n") 2
 Assert-LineCounter "无末尾换行末行计入" ("a`nb") 2

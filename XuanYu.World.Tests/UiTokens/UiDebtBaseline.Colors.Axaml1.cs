@@ -41,33 +41,5 @@ internal static partial class UiDebtBaseline
         list.Add(new("W35", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:TextBlock.selectedText", UiRuleKind.HexColor, "Foreground", "#165ca8"));
         list.Add(new("W30", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:TextBlock.emptyTitle", UiRuleKind.HexColor, "Foreground", "#334155"));
         list.Add(new("W36", "XuanYu.Editor.UI/Left/Left.axaml", "Path:Name:HierarchyList/ListBox/ContextMenu/MenuItem:3", UiRuleKind.HexColor, "Foreground", "#9b2f2f"));
-        list.Add(new("W53", "XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml", "Style:Border.infoPanel", UiRuleKind.HexColor, "Background", "#f7faff"));
-        list.Add(new("W53", "XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml", "Style:Border.infoPanel", UiRuleKind.HexColor, "BorderBrush", "#dce6f3"));
-        list.Add(new("W53", "XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml", "Style:TextBlock.key", UiRuleKind.HexColor, "Foreground", "#6b7688"));
-        list.Add(new("W53", "XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml", "Style:TextBlock.value", UiRuleKind.HexColor, "Foreground", "#253247"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerSwitch:pointerover", UiRuleKind.HexColor, "BorderBrush", "#D9E1E7"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerSwitch:checked", UiRuleKind.HexColor, "Background", "#EAF3F7"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerSwitch:checked", UiRuleKind.HexColor, "BorderBrush", "#BDD5DF"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerSwitch Path.layerIcon", UiRuleKind.HexColor, "Stroke", "#8995A2"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerSwitch:checked Path.layerIcon", UiRuleKind.HexColor, "Stroke", "#326F8A"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerLockSwitch:pointerover", UiRuleKind.HexColor, "BorderBrush", "#D9E1E7"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerLockSwitch:checked", UiRuleKind.HexColor, "Background", "#F4EFE5"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerLockSwitch:checked", UiRuleKind.HexColor, "BorderBrush", "#DCCDAE"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerLockSwitch Path.layerIcon", UiRuleKind.HexColor, "Stroke", "#7B8794"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerLockSwitch:checked Path.layerIcon", UiRuleKind.HexColor, "Stroke", "#7A6238"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Path.dragHandle", UiRuleKind.HexColor, "Fill", "#9AA6B5"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:TextBlock.layerName", UiRuleKind.HexColor, "Foreground", "#253247"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.kindTagRegion", UiRuleKind.HexColor, "Background", "#E8F3F6"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.kindTagRegion", UiRuleKind.HexColor, "BorderBrush", "#B9D7DE"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:TextBlock.kindTagRegionText", UiRuleKind.HexColor, "Foreground", "#326B7B"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.kindTagSystem", UiRuleKind.HexColor, "Background", "#F0F2F4"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.kindTagSystem", UiRuleKind.HexColor, "BorderBrush", "#D5DBE0"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:TextBlock.kindTagSystemText", UiRuleKind.HexColor, "Foreground", "#687582"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.activeMark", UiRuleKind.HexColor, "Background", "#5b8db8"));
-        list.Add(new("W52", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.dropLine", UiRuleKind.HexColor, "Background", "#7FA8C6"));
-        list.Add(new("W45", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:Border.infoPanel", UiRuleKind.HexColor, "Background", "#f7faff"));
-        list.Add(new("W45", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:Border.infoPanel", UiRuleKind.HexColor, "BorderBrush", "#dce6f3"));
-        list.Add(new("W45", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TextBlock.key", UiRuleKind.HexColor, "Foreground", "#6b7688"));
-        list.Add(new("W45", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TextBlock.value", UiRuleKind.HexColor, "Foreground", "#253247"));
     }
 }

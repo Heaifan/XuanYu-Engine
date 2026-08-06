@@ -26,7 +26,7 @@ public sealed partial class MoveTransformUiTests
         Assert.Equal(RegionKey.FromGrid(1, 0, 0), SceneOf(vm).GetRegion(key));
         Assert.Contains(vm.HierarchyItems, i => i.Key == "Region(1,0,0)" && i.IsRegion);
         Assert.Contains("区域 1,0,0", vm.SelectionPath);
-        Assert.Contains(vm.InspectorFields, f => f.Contains("区域 1,0,0"));
+        Assert.Contains(vm.InspectorFields, f => f.Value.Contains("1,0,0"));
 
         vm.RunCommand.Execute("撤销");
         Assert.Equal(RegionKey.Origin, SceneOf(vm).GetRegion(key));

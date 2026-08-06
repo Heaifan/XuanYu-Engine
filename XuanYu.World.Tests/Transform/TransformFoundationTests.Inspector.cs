@@ -13,8 +13,8 @@ public sealed partial class TransformFoundationTests
         Assert.True(vm.TryCommitInspectorTransformValue("位置", "X", "3.114397031608849"));
         Assert.True(vm.TryCommitInspectorTransformValue("旋转", "Z", "90"));
 
-        Assert.Contains("位置    X 3.114397    Y 0    Z 0", vm.InspectorFields);
-        Assert.Contains("旋转    X 0°    Y 0°    Z 90°", vm.InspectorFields);
+        Assert.Contains(vm.InspectorFields, f => f.Label == "位置" && f.Value == "X 3.114397    Y 0    Z 0");
+        Assert.Contains(vm.InspectorFields, f => f.Label == "旋转" && f.Value == "X 0°    Y 0°    Z 90°");
         Assert.Equal(3.114397031608849, SceneOf(vm).RenderSnapshot.Entity.Transform.Position.X);
     }
 

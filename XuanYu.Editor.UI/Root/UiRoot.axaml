@@ -59,7 +59,7 @@
                     ResizeDirection="Columns"
                     ResizeBehavior="PreviousAndNext"/>
 
-      <Border Grid.Column="4" Classes="panel" Padding="14" MinWidth="300" MaxWidth="480">
+      <Border Grid.Column="4" Classes="panel" Padding="8" MinWidth="300" MaxWidth="480">
         <local:Right />
       </Border>
     </Grid>

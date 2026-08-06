@@ -50,10 +50,10 @@ public sealed partial class TransformFoundationTests
         SceneOf(vm).RestoreTransform(key, transform);
         vm.SelectedHierarchyItem = vm.HierarchyItems.Single(i => i.Key == key.ToString());
 
-        Assert.Contains("变换", vm.InspectorFields);
-        Assert.Contains("位置    X 1    Y 2    Z 3", vm.InspectorFields);
-        Assert.Contains("旋转    X 10°    Y 20°    Z 30°", vm.InspectorFields);
-        Assert.Contains("缩放    X 2    Y 2    Z 2", vm.InspectorFields);
+        Assert.Contains(vm.InspectorFields, f => f.IsGroupHeader && f.Label == "变换");
+        Assert.Contains(vm.InspectorFields, f => f.Label == "位置" && f.Value == "X 1    Y 2    Z 3");
+        Assert.Contains(vm.InspectorFields, f => f.Label == "旋转" && f.Value == "X 10°    Y 20°    Z 30°");
+        Assert.Contains(vm.InspectorFields, f => f.Label == "缩放" && f.Value == "X 2    Y 2    Z 2");
     }
 
     static SceneStateOwner SceneOf(UiVm vm)

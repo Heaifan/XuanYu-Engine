@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.InspectorPanel"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <!-- ARCH-UI-SPEC-R1-D4（K02/W37~W42）：检查器样式全 Token 化；分组标题全宽 + 分隔线（密度合同） -->
+    <Style Selector="Path.panelIcon"><Setter Property="Width" Value="16"/><Setter Property="Height" Value="16"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Stroke" Value="{StaticResource Color.Text.Secondary}"/><Setter Property="StrokeThickness" Value="1.5"/></Style>
+    <Style Selector="TextBlock.panelTitle"><Setter Property="FontSize" Value="{StaticResource Font.Title.Size}"/><Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+    <Style Selector="TextBlock.emptyTitle"><Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/><Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="HorizontalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.key"><Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.value"><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="Border.fieldSeparator"><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/><Setter Property="BorderThickness" Value="0,0,0,1"/><Setter Property="Margin" Value="0,2,0,4"/></Style>
+    <Style Selector="Grid.fieldRow"><Setter Property="MinHeight" Value="28"/><Setter Property="Margin" Value="0,2"/></Style>
+  </UserControl.Styles>
+
+  <StackPanel Spacing="8" Margin="0,6,0,0">
+    <Grid ColumnDefinitions="20,*" ColumnSpacing="8">
+      <Path Classes="panelIcon" Data="{StaticResource ProjectIcon}" VerticalAlignment="Center"/>
+      <StackPanel Grid.Column="1" Spacing="1">
+        <TextBlock Text="{Binding SelectionTitle}" Classes="panelTitle"/>
+        <TextBlock Text="{Binding SelectionSubtitle}" Classes="muted"/>
+      </StackPanel>
+    </Grid>
+
+    <!-- 基础信息分组：全宽标题 + 1 DIP 分隔线 + 紧凑字段行（无卡片嵌套，密度合同） -->
+    <StackPanel IsVisible="{Binding HasSelection}" Spacing="4">
+      <TextBlock Text="基础信息" Classes="section"/>
+      <Border Classes="fieldSeparator"/>
+
+      <!-- 宽模式（内容宽 ≥360）：标签列 96 / 字段最小 128 / 左标签右字段 -->
+      <ItemsControl x:Name="WideFields" ItemsSource="{Binding InspectorFields}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="local:InspectorFieldRow">
+            <StackPanel>
+              <TextBlock Text="{Binding Label}" Classes="section" IsVisible="{Binding IsGroupHeader}" Margin="0,6,0,0"/>
+              <Grid Classes="fieldRow" ColumnSpacing="8" IsVisible="{Binding !IsGroupHeader}">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="96"/>
+                  <ColumnDefinition Width="*" MinWidth="128"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Label}" Classes="key"/>
+                <TextBlock Grid.Column="1" Text="{Binding Value}" Classes="value"/>
+              </Grid>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <!-- 窄模式（内容宽 <360）：整组切换为标签在上、字段在下 -->
+      <ItemsControl x:Name="NarrowFields" ItemsSource="{Binding InspectorFields}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="local:InspectorFieldRow">
+            <StackPanel Spacing="2" Margin="0,3">
+              <TextBlock Text="{Binding Label}" Classes="section" IsVisible="{Binding IsGroupHeader}"/>
+              <TextBlock Text="{Binding Label}" Classes="key" IsVisible="{Binding !IsGroupHeader}"/>
+              <TextBlock Text="{Binding Value}" Classes="value" IsVisible="{Binding !IsGroupHeader}"/>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+
+    <Grid IsVisible="{Binding IsEmptySelection}" MinHeight="220">
+      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" MaxWidth="220">
+        <Path Classes="panelIcon" Data="{StaticResource SelectIcon}" Width="28" Height="28" HorizontalAlignment="Center"/>
+        <TextBlock Text="未选择对象" Classes="emptyTitle"/>
+        <TextBlock Text="在左侧项目树、层级页或视口中选择对象后，这里会显示属性。" Classes="muted" TextWrapping="Wrap" TextAlignment="Center"/>
+      </StackPanel>
+    </Grid>
+  </StackPanel>
+</UserControl>

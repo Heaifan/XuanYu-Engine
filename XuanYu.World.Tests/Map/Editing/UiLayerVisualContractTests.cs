@@ -3,6 +3,7 @@ using System.IO;
 namespace XuanYu.World.Tests.Map.Editing;
 
 // MAP-A-R2-D4-F3：图层视觉合同（V01～V06，源码合同模式）——状态样式/类型标签/热区/字号层级。
+// ARCH-UI-SPEC-R1-D4：色值断言升级为 Token 引用（Layer.*/Color.* 正式 Token，不依赖具体 hex）。
 public sealed class UiLayerVisualContractTests
 {
     static readonly string LayerPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
@@ -22,24 +23,24 @@ public sealed class UiLayerVisualContractTests
     {
         Assert.Contains("kindTagRegion", LayerPanel);
         Assert.Contains("kindTagSystem", LayerPanel);
-        Assert.Contains("#E8F3F6", LayerPanel);
-        Assert.Contains("#F0F2F4", LayerPanel);
+        Assert.Contains("Layer.Kind.Region.Bg", LayerPanel);   // D4：正式 Token 引用
+        Assert.Contains("Layer.Kind.System.Bg", LayerPanel);
     }
 
     [Fact]
     public void V02_visible_and_hidden_have_distinct_state_styles()
     {
         Assert.Contains("layerSwitch:checked", LayerPanel);
-        Assert.Contains("#326F8A", LayerPanel);
-        Assert.Contains("#8995A2", LayerPanel);
+        Assert.Contains("Layer.State.Visible", LayerPanel);
+        Assert.Contains("Layer.State.Hidden", LayerPanel);
     }
 
     [Fact]
     public void V03_locked_and_unlocked_have_distinct_state_styles()
     {
         Assert.Contains("layerLockSwitch:checked", LayerPanel);
-        Assert.Contains("#7A6238", LayerPanel);
-        Assert.Contains("#7B8794", LayerPanel);
+        Assert.Contains("Layer.State.Locked", LayerPanel);
+        Assert.Contains("Layer.State.Unlocked", LayerPanel);
     }
 
     [Fact]
@@ -54,13 +55,13 @@ public sealed class UiLayerVisualContractTests
     {
         Assert.Contains("FontSize\" Value=\"13\"", Ui);
         Assert.Contains("layerSubTab", MapEditor);
-        Assert.Contains("FontSize\" Value=\"14\"", MapEditor);
+        Assert.Contains("Font.Section.Size", MapEditor); // D4：二级页签 14 走正式 Token
     }
 
     [Fact]
     public void V06_inspector_field_font_below_tab_font()
     {
         Assert.Contains("TextBlock.key", Inspector);
-        Assert.Contains("FontSize\" Value=\"12\"", Inspector);
+        Assert.Contains("Font.Label.Size", Inspector); // D4：字段标签 12 走正式 Token
     }
 }

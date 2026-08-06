@@ -18,7 +18,7 @@ public sealed class FinalSelectionTests
             Assert.Equal(entity.Key, vm.SelectionKey);
             Assert.Equal(entity.Key, vm.RenderSnapshot.Entity.EntityKey.ToString());
             Assert.Equal(entity.Title, vm.SelectionTitle);
-            Assert.Contains(vm.InspectorFields, item => item.Contains(DisplayEntity(entity.Key)));
+            Assert.Contains(vm.InspectorFields, item => item.Value.Contains(DisplayEntity(entity.Key)));
             Assert.Equal(10, vm.RenderSnapshot.Entities.Count);
         }
 

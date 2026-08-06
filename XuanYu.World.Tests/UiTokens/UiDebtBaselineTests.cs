@@ -57,6 +57,6 @@ public sealed class UiDebtBaselineTests
             .Select(f => Path.GetRelativePath(RepoRoot, f).Replace('\\', '/'));
         Assert.DoesNotContain(files, f => f.Contains("XuanYu.Render") || f.Contains("/Design/"));
         Assert.Contains(files, f => f.EndsWith("Ui.axaml"));
-        Assert.Equal(17, files.Count()); // ARCH-UI-SPEC-R1-D3：新增 Right/TopTabStripTemplate.axaml（页签宿主模板）
+        Assert.Equal(19, files.Count()); // ARCH-UI-SPEC-R1-D3(+2)：TopTabStripTemplate + D4 InspectorPanel/MapPagePanel
     }
 }

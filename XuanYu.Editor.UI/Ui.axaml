@@ -84,9 +84,9 @@
     <Setter Property="Margin" Value="0,1"/>
   </Style>
   <Style Selector="TextBlock.section">
-    <Setter Property="FontSize" Value="12"/>
-    <Setter Property="FontWeight" Value="SemiBold"/>
-    <Setter Property="Foreground" Value="#40516f"/>
+    <Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/>
+    <Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/>
+    <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
   </Style>
   <Style Selector="TextBlock.muted">
     <Setter Property="Foreground" Value="#758197"/>

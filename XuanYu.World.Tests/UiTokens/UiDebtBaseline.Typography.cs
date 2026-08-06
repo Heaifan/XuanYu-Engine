@@ -26,33 +26,8 @@ internal static partial class UiDebtBaseline
         list.Add(new("W71-GEN", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:ListBox.treeList ListBoxItem", UiRuleKind.ControlHeight, "MinHeight", "28"));
         list.Add(new("W71-GEN", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:MenuItem", UiRuleKind.ControlHeight, "MinHeight", "32"));
         list.Add(new("W29", "XuanYu.Editor.UI/Left/Left.Styles.axaml", "Style:TextBlock.treeText", UiRuleKind.FontSize, "FontSize", "13"));
-        list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml", "Style:Border.infoPanel", UiRuleKind.CornerRadius, "CornerRadius", "6"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml", "Style:TextBlock.key", UiRuleKind.FontSize, "FontSize", "12"));
-        list.Add(new("W50", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Button.layerTool", UiRuleKind.ControlHeight, "MinHeight", "25"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Button.layerTool", UiRuleKind.FontSize, "FontSize", "12"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerSwitch", UiRuleKind.ControlHeight, "Height", "24"));
-        list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerSwitch", UiRuleKind.CornerRadius, "CornerRadius", "4"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerLockSwitch", UiRuleKind.ControlHeight, "Height", "24"));
-        list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:ToggleButton.layerLockSwitch", UiRuleKind.CornerRadius, "CornerRadius", "4"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Path.layerIcon", UiRuleKind.StrokeThickness, "StrokeThickness", "1.5"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:TextBlock.layerName", UiRuleKind.FontSize, "FontSize", "13"));
-        list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.kindTagRegion", UiRuleKind.CornerRadius, "CornerRadius", "3"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:TextBlock.kindTagRegionText", UiRuleKind.FontSize, "FontSize", "10"));
-        list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.kindTagSystem", UiRuleKind.CornerRadius, "CornerRadius", "3"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:TextBlock.kindTagSystemText", UiRuleKind.FontSize, "FontSize", "10"));
         list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.activeMark", UiRuleKind.CornerRadius, "CornerRadius", "1.5"));
         list.Add(new("W51", "XuanYu.Editor.UI/Right/LayerPanel.axaml", "Style:Border.dropLine", UiRuleKind.CornerRadius, "CornerRadius", "1"));
-        list.Add(new("W46", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:Border.infoPanel", UiRuleKind.CornerRadius, "CornerRadius", "6"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TextBlock.key", UiRuleKind.FontSize, "FontSize", "12"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TextBlock.value", UiRuleKind.FontSize, "FontSize", "13"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:Button", UiRuleKind.FontSize, "FontSize", "12"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TabItem.layerSubTab", UiRuleKind.FontSize, "FontSize", "14"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TabItem.layerSubTab", UiRuleKind.ControlHeight, "MinHeight", "32"));
-        list.Add(new("W46", "XuanYu.Editor.UI/Right/MapEditorPanel.axaml", "Style:TabItem.layerSubTab", UiRuleKind.CornerRadius, "CornerRadius", "5"));
-        list.Add(new("W51", "XuanYu.Editor.UI/Right/Right.axaml", "Style:Border.infoPanel", UiRuleKind.CornerRadius, "CornerRadius", "6"));
-        list.Add(new("W40", "XuanYu.Editor.UI/Right/Right.axaml", "Style:Path.panelIcon", UiRuleKind.StrokeThickness, "StrokeThickness", "1.6"));
-        list.Add(new("W37", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.panelTitle", UiRuleKind.FontSize, "FontSize", "15"));
-        list.Add(new("W37", "XuanYu.Editor.UI/Right/Right.axaml", "Style:TextBlock.key", UiRuleKind.FontSize, "FontSize", "12"));
         list.Add(new("W22", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.commandRail", UiRuleKind.CornerRadius, "CornerRadius", "9"));
         list.Add(new("W22", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.topGroup", UiRuleKind.CornerRadius, "CornerRadius", "0"));
         list.Add(new("W22", "XuanYu.Editor.UI/Top/Top.axaml", "Style:Border.statePill", UiRuleKind.CornerRadius, "CornerRadius", "7"));
@@ -70,7 +45,6 @@ internal static partial class UiDebtBaseline
         list.Add(new("W09", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.ControlHeight, "MinHeight", "30"));
         list.Add(new("W10", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.CornerRadius, "CornerRadius", "5"));
         list.Add(new("W12", "XuanYu.Editor.UI/Ui.axaml", "Style:ListBoxItem", UiRuleKind.ControlHeight, "MinHeight", "34"));
-        list.Add(new("W71-GEN", "XuanYu.Editor.UI/Ui.axaml", "Style:TextBlock.section", UiRuleKind.FontSize, "FontSize", "12"));
         list.Add(new("W71-GEN", "XuanYu.Editor.UI/Ui.axaml", "Style:TextBlock.caption", UiRuleKind.FontSize, "FontSize", "12"));
     }
 }

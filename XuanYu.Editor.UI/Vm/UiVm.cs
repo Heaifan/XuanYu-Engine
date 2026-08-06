@@ -58,7 +58,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public ICommand SelectLogFilterCommand { get; } public MapEditSession MapSession { get; }
     public IReadOnlyList<EditorTreeNode> ProjectItems => TreeGuideBuilder.Visible(UiText.ProjectTreeItems, _collapsedProjectKeys);
     public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
-    public IReadOnlyList<string> InspectorFields => BuildInspectorFields();
+    public IReadOnlyList<InspectorFieldRow> InspectorFields => BuildInspectorFields();
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems;
     public IReadOnlyList<string> ToolItems => UiText.ToolItems; public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => BuildDebugObjectItems();
     public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => BuildDebugInputItems();

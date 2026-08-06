@@ -12,29 +12,36 @@
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
-    <Style Selector="Button.layerTool"><Setter Property="MinHeight" Value="25"/><Setter Property="Padding" Value="6,2"/><Setter Property="FontSize" Value="12"/></Style>
-    <!-- F3：状态开关——图标本体为主、浅色底辅助；热区 26×24 -->
-    <Style Selector="ToggleButton.layerSwitch"><Setter Property="Width" Value="26"/><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="4"/><Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
-    <Style Selector="ToggleButton.layerSwitch:pointerover"><Setter Property="BorderBrush" Value="#D9E1E7"/></Style>
-    <Style Selector="ToggleButton.layerSwitch:checked"><Setter Property="Background" Value="#EAF3F7"/><Setter Property="BorderBrush" Value="#BDD5DF"/></Style>
-    <Style Selector="ToggleButton.layerSwitch Path.layerIcon"><Setter Property="Stroke" Value="#8995A2"/></Style>
-    <Style Selector="ToggleButton.layerSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="#326F8A"/></Style>
-    <Style Selector="ToggleButton.layerLockSwitch"><Setter Property="Width" Value="26"/><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="4"/><Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
-    <Style Selector="ToggleButton.layerLockSwitch:pointerover"><Setter Property="BorderBrush" Value="#D9E1E7"/></Style>
-    <Style Selector="ToggleButton.layerLockSwitch:checked"><Setter Property="Background" Value="#F4EFE5"/><Setter Property="BorderBrush" Value="#DCCDAE"/></Style>
-    <Style Selector="ToggleButton.layerLockSwitch Path.layerIcon"><Setter Property="Stroke" Value="#7B8794"/></Style>
-    <Style Selector="ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="#7A6238"/></Style>
-    <Style Selector="Path.layerIcon"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
-    <Style Selector="Path.dragHandle"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Fill" Value="#9AA6B5"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <Style Selector="TextBlock.layerName"><Setter Property="Foreground" Value="#253247"/><Setter Property="FontSize" Value="13"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <!-- F3：类型标签——区域蓝青 / 系统灰蓝 -->
-    <Style Selector="Border.kindTagRegion"><Setter Property="Background" Value="#E8F3F6"/><Setter Property="BorderBrush" Value="#B9D7DE"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="5,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <Style Selector="TextBlock.kindTagRegionText"><Setter Property="Foreground" Value="#326B7B"/><Setter Property="FontSize" Value="10"/></Style>
-    <Style Selector="Border.kindTagSystem"><Setter Property="Background" Value="#F0F2F4"/><Setter Property="BorderBrush" Value="#D5DBE0"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="5,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <Style Selector="TextBlock.kindTagSystemText"><Setter Property="Foreground" Value="#687582"/><Setter Property="FontSize" Value="10"/></Style>
-    <Style Selector="Border.activeMark"><Setter Property="Background" Value="#5b8db8"/><Setter Property="Width" Value="3"/><Setter Property="Margin" Value="0,4"/><Setter Property="CornerRadius" Value="1.5"/><Setter Property="VerticalAlignment" Value="Stretch"/></Style>
-    <!-- F3：拖动插入线（2 DIP 低饱和蓝） -->
-    <Style Selector="Border.dropLine"><Setter Property="Background" Value="#7FA8C6"/><Setter Property="Height" Value="2"/><Setter Property="CornerRadius" Value="1"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4（W50）：工具栏按钮 24 紧凑档 -->
+    <Style Selector="Button.layerTool"><Setter Property="MinHeight" Value="{StaticResource Control.Height.Compact}"/><Setter Property="Padding" Value="6,2"/><Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4（K03）：状态开关——热区 26×24（组件例外登记）；图标 16 视口、笔画 1.5 -->
+    <Style Selector="ToggleButton.layerSwitch"><Setter Property="Width" Value="26"/><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+    <Style Selector="ToggleButton.layerSwitch:pointerover"><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/></Style>
+    <Style Selector="ToggleButton.layerSwitch:checked"><Setter Property="Background" Value="{StaticResource Layer.State.VisibleBg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/></Style>
+    <Style Selector="ToggleButton.layerSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Hidden}"/></Style>
+    <Style Selector="ToggleButton.layerSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Visible}"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch"><Setter Property="Width" Value="26"/><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch:pointerover"><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch:checked"><Setter Property="Background" Value="{StaticResource Layer.State.LockedBg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Unlocked}"/></Style>
+    <Style Selector="ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
+    <Style Selector="Path.layerIcon"><Setter Property="Width" Value="16"/><Setter Property="Height" Value="16"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
+    <Style Selector="Path.dragHandle"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Fill" Value="{StaticResource Color.Text.Disabled}"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.layerName"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4（K04）：系统/用户图层三重区分（文字+形态+低饱和色），Token 冻结值 -->
+    <Style Selector="Border.kindTagRegion"><Setter Property="Background" Value="{StaticResource Layer.Kind.Region.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Layer.Kind.Region.Border}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="5,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.kindTagRegionText"><Setter Property="Foreground" Value="{StaticResource Layer.Kind.Region.Text}"/><Setter Property="FontSize" Value="{StaticResource Font.Meta.Size}"/></Style>
+    <Style Selector="Border.kindTagSystem"><Setter Property="Background" Value="{StaticResource Layer.Kind.System.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Layer.Kind.System.Border}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="5,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.kindTagSystemText"><Setter Property="Foreground" Value="{StaticResource Layer.Kind.System.Text}"/><Setter Property="FontSize" Value="{StaticResource Font.Meta.Size}"/></Style>
+    <Style Selector="Border.activeMark"><Setter Property="Background" Value="{StaticResource Color.Accent}"/><Setter Property="Width" Value="3"/><Setter Property="Margin" Value="0,4"/><Setter Property="CornerRadius" Value="1.5"/><Setter Property="VerticalAlignment" Value="Stretch"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4：拖动插入线 2 DIP，Layer.DropLine 冻结值 -->
+    <Style Selector="Border.dropLine"><Setter Property="Background" Value="{StaticResource Layer.DropLine}"/><Setter Property="Height" Value="2"/><Setter Property="CornerRadius" Value="1"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4（K03）：图层行选中态显式定义（Selection.Bg；状态图标按开关类型保留各自状态色） -->
+    <Style Selector="ListBox.layerList ListBoxItem:selected"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/></Style>
+    <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Hidden}"/></Style>
+    <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Visible}"/></Style>
+    <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerLockSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Unlocked}"/></Style>
+    <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
   </UserControl.Styles>
   <DockPanel>
     <UniformGrid DockPanel.Dock="Top" Columns="4" Margin="0,8,0,4" ColumnSpacing="4">
@@ -44,13 +51,13 @@
       <Button Classes="layerTool" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}"/>
     </UniformGrid>
     <!-- F3：整页滚动由外层 ScrollViewer 接管；拖动事件见 LayerPanel.DragDrop.cs -->
-    <ListBox x:Name="LayerList" ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
+    <ListBox x:Name="LayerList" Classes="layerList" ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
              Background="Transparent" BorderThickness="0" Margin="0,2,0,0"
              input:DragDrop.AllowDrop="True" input:DragDrop.DragOver="LayerList_DragOver" input:DragDrop.Drop="LayerList_Drop">
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="local:MapLayerRowViewModel">
           <Grid ColumnDefinitions="3,28,22,*,Auto,28" ColumnSpacing="4" MinHeight="32">
-            <!-- F3：拖动插入线（2 DIP 低饱和蓝，整行宽，显示在目标行上方） -->
+            <!-- F3：拖动插入线（2 DIP，整行宽，显示在目标行上方） -->
             <Border Classes="dropLine" Grid.ColumnSpan="6" ZIndex="10" IsVisible="{Binding IsDropBefore}" VerticalAlignment="Top" Margin="0,-1,0,0"/>
             <Border Classes="activeMark" IsVisible="{Binding IsActive}"/>
             <ToggleButton Grid.Column="1" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏">

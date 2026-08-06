@@ -20,10 +20,10 @@ public sealed class UiD3DebtClearedTests
     }
 
     [Fact]
-    public void Baseline_total_shrinks_by_exactly_four()
+    public void Baseline_never_grows_after_d3()
     {
-        // D3 清除 4 条（W17×1 + W21×3）；基线 230 → 226。
-        Assert.Equal(226, UiDebtBaseline.Entries.Count);
+        // D3 收口时 226 条；后续轮只允许减少（D4 已降至 159，精确值由 UiD4DebtClearedTests 断言）。
+        Assert.True(UiDebtBaseline.Entries.Count <= 226, $"基线增长：{UiDebtBaseline.Entries.Count}");
     }
 
     [Fact]

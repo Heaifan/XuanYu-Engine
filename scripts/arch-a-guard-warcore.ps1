@@ -2,7 +2,9 @@ $ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
-$failures = New-Object System.Collections.Generic.List[string]
+# ARCH-UI-SPEC-R1-D4：仅当主守卫未先创建失败列表时才初始化——避免清空主守卫
+# 已累积的失败（版本一致性等检查在子守卫源入之前执行，曾被本行重置吞掉）。
+if ($null -eq $failures) { $failures = New-Object System.Collections.Generic.List[string] }
 
 function Add-Failure([string]$message) { $failures.Add($message) }
 function Read-Text([string]$path) { Get-Content -LiteralPath $path -Raw -Encoding utf8 }
@@ -52,6 +54,8 @@ if ($slnx.IndexOf("XuanYu.WarCore.Tests/XuanYu.WarCore.Tests.csproj", [StringCom
 }
 
 if ($failures.Count -gt 0) {
+    # 被主守卫源入时不做输出与退出（统一由主守卫收尾），仅独立运行本脚本时收口。
+    if ($MyInvocation.InvocationName -eq '.') { return }
     $failures | ForEach-Object { Write-Error $_ }
     exit 1
 }

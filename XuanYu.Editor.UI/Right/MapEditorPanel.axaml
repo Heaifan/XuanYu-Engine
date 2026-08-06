@@ -4,55 +4,15 @@
              x:Class="XuanYu.Editor.UI.MapEditorPanel"
              x:DataType="local:UiVm">
   <UserControl.Styles>
-    <Style Selector="Border.infoPanel"><Setter Property="Background" Value="#f7faff"/><Setter Property="BorderBrush" Value="#dce6f3"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="6"/><Setter Property="Padding" Value="10"/></Style>
-    <Style Selector="TextBlock.key"><Setter Property="Foreground" Value="#6b7688"/><Setter Property="FontSize" Value="12"/></Style>
-    <Style Selector="TextBlock.value"><Setter Property="Foreground" Value="#253247"/><Setter Property="FontSize" Value="13"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
-    <Style Selector="Button"><Setter Property="FontSize" Value="12"/></Style>
-    <!-- F3：地图编辑器二级页签字号收敛（14，选中半粗） -->
-    <Style Selector="TabItem.layerSubTab"><Setter Property="FontSize" Value="14"/><Setter Property="MinHeight" Value="32"/><Setter Property="Padding" Value="9,4"/><Setter Property="Margin" Value="0,0,4,0"/><Setter Property="CornerRadius" Value="5"/><Setter Property="Foreground" Value="#6d788a"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
-    <Style Selector="TabItem.layerSubTab:selected"><Setter Property="Foreground" Value="#185aa6"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Background" Value="#edf4ff"/><Setter Property="BorderBrush" Value="#8cb2e2"/><Setter Property="BorderThickness" Value="0,0,0,2"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4（W45/W46/W49）：二级页签 Token 化——字号 14、强调档 32、圆角 6、Padding 10,4 -->
+    <Style Selector="TabItem.layerSubTab"><Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/><Setter Property="MinHeight" Value="{StaticResource Control.Height.Emphasized}"/><Setter Property="Padding" Value="10,4"/><Setter Property="Margin" Value="0,0,4,0"/><Setter Property="CornerRadius" Value="{StaticResource Radius.Standard}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style Selector="TabItem.layerSubTab:selected"><Setter Property="Foreground" Value="{StaticResource Color.Accent}"/><Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Accent}"/><Setter Property="BorderThickness" Value="0,0,0,2"/></Style>
   </UserControl.Styles>
   <!-- F1：地图编辑器内部二级导航（地图 / 图层 / 环境）；每页独立滚动，内容不穿透固定标题 -->
   <TabControl Margin="0,4,0,0">
     <TabItem Classes="layerSubTab" Header="地图">
       <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="10" Margin="0,6,0,0">
-          <Border Classes="infoPanel">
-            <StackPanel Spacing="5">
-              <TextBlock Text="地图资产" Classes="section"/>
-              <Grid ColumnDefinitions="90,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="3">
-                <TextBlock Text="名称" Classes="key"/><TextBlock Grid.Column="1" Text="{Binding MapName}" Classes="value"/>
-                <TextBlock Grid.Row="1" Text="路径" Classes="key"/><TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MapPath}" Classes="value" TextTrimming="CharacterEllipsis"/>
-                <TextBlock Grid.Row="2" Text="MapId" Classes="key"/><TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MapIdText}" Classes="value"/>
-                <TextBlock Grid.Row="3" Text="尺寸" Classes="key"/><TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MapSizeText}" Classes="value"/>
-                <TextBlock Grid.Row="4" Text="状态" Classes="key"/><TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding MapStatusText}" Classes="value"/>
-              </Grid>
-              <UniformGrid Columns="3" Margin="0,6,0,0">
-                <Button Content="新建地图" Command="{Binding RunCommand}" CommandParameter="新建地图"/>
-                <Button Content="打开地图" IsEnabled="False" ToolTip.Tip="地图持久化将在 D6 接入"/>
-                <Button Content="保存地图" IsEnabled="False" ToolTip.Tip="地图持久化将在 D6 接入"/>
-                <Button Content="聚焦地图" Command="{Binding RunCommand}" CommandParameter="聚焦地图"/>
-              </UniformGrid>
-            </StackPanel>
-          </Border>
-          <Border Classes="infoPanel">
-            <StackPanel Spacing="5">
-              <TextBlock Text="地图属性" Classes="section"/>
-              <Grid ColumnDefinitions="90,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="3">
-                <TextBlock Text="宽度（米）" Classes="key"/><TextBox Grid.Column="1" Text="{Binding MapWidthText}"/>
-                <TextBlock Grid.Row="1" Text="深度（米）" Classes="key"/><TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MapDepthText}"/>
-                <TextBlock Grid.Row="2" Text="基础高度（米）" Classes="key"/><TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MapBaseHeightText}"/>
-                <TextBlock Grid.Row="3" Text="地表类型" Classes="key"/><TextBlock Grid.Row="3" Grid.Column="1" Text="Flat（只读）" Classes="value"/>
-              </Grid>
-              <Button Content="应用修改" Command="{Binding RunCommand}" CommandParameter="应用地图属性" HorizontalAlignment="Left"/>
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <Button Content="撤销地图修改" Command="{Binding RunCommand}" CommandParameter="撤销地图修改" IsEnabled="{Binding CanUndo}"/>
-                <Button Content="重做地图修改" Command="{Binding RunCommand}" CommandParameter="重做地图修改" IsEnabled="{Binding CanRedo}"/>
-              </StackPanel>
-              <TextBlock Text="{Binding MapEditError}" Foreground="#C0392B" TextWrapping="Wrap"/>
-            </StackPanel>
-          </Border>
-        </StackPanel>
+        <local:MapPagePanel/>
       </ScrollViewer>
     </TabItem>
     <TabItem Classes="layerSubTab" Header="图层">
@@ -67,12 +27,10 @@
     <TabItem Classes="layerSubTab" Header="环境">
       <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Spacing="10" Margin="0,6,0,0">
-          <Border Classes="infoPanel">
-            <StackPanel Spacing="5">
-              <TextBlock Text="环境" Classes="section"/>
-              <TextBlock Text="天空预设 / 天顶颜色 / 地平线颜色 / 太阳方向 / 太阳强度 / 环境光强度编辑将在 D5 后续补齐。" Classes="muted" TextWrapping="Wrap"/>
-            </StackPanel>
-          </Border>
+          <StackPanel Spacing="4">
+            <TextBlock Text="环境" Classes="section"/>
+            <TextBlock Text="天空预设 / 天顶颜色 / 地平线颜色 / 太阳方向 / 太阳强度 / 环境光强度编辑将在 D5 后续补齐。" Classes="muted" TextWrapping="Wrap"/>
+          </StackPanel>
         </StackPanel>
       </ScrollViewer>
     </TabItem>

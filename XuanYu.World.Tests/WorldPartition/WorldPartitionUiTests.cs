@@ -37,7 +37,7 @@ public sealed class WorldPartitionUiTests
         Assert.Equal(entity.Key, vm.SelectionKey);
         Assert.Equal(entity.Key, vm.SelectedHierarchyItem!.Key);
         Assert.Contains("区域 3,2,0", vm.SelectionPath);
-        Assert.Contains(vm.InspectorFields, item => item.Contains("区域 3,2,0"));
+        Assert.Contains(vm.InspectorFields, item => item.Value.Contains("区域 3,2,0"));
         Assert.Equal(entity.Key, vm.RenderSnapshot.Entity.EntityKey.ToString());
     }
 

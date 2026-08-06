@@ -15,13 +15,13 @@ public sealed class SelectionToolStateUiTests
         var second = EntityNode(vm, 2);
 
         vm.SelectedHierarchyItem = first;
-        Assert.Contains("实体编号：实体编号(1)", vm.InspectorFields);
+        Assert.Contains(vm.InspectorFields, f => f.Label == "实体编号" && f.Value == "实体编号(1)");
         vm.SelectedHierarchyItem = second;
 
         Assert.Equal(second.Key, vm.SelectionKey);
         Assert.Equal(second.Key, vm.SelectedHierarchyItem!.Key);
-        Assert.Contains("实体编号：实体编号(2)", vm.InspectorFields);
-        Assert.DoesNotContain("实体编号：实体编号(1)", vm.InspectorFields);
+        Assert.Contains(vm.InspectorFields, f => f.Label == "实体编号" && f.Value == "实体编号(2)");
+        Assert.DoesNotContain(vm.InspectorFields, f => f.Label == "实体编号" && f.Value == "实体编号(1)");
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public sealed class SelectionToolStateUiTests
         Assert.False(vm.HasSelection);
         Assert.Null(vm.SelectedHierarchyItem);
         Assert.False(vm.RenderSnapshot.ShowMoveGizmo);
-        Assert.Contains("名称：玄域示例项目", vm.InspectorFields);
+        Assert.Contains(vm.InspectorFields, f => f.Label == "名称" && f.Value == "玄域示例项目");
         Assert.Equal("移动", vm.ActiveTool);
     }
 
