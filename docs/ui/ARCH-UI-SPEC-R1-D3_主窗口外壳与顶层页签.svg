@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="520" viewBox="0 0 860 520" font-family="Microsoft YaHei UI, sans-serif">
+  <rect x="0" y="0" width="860" height="520" fill="#FFFFFF"/>
+  <text x="16" y="30" font-size="16" font-weight="bold" fill="#243744">ARCH-UI-SPEC-R1-D3 主窗口外壳与顶层页签（1360×820 示意，浅色）</text>
+
+  <!-- 窗口底框（Bg.Application） -->
+  <rect x="16" y="44" width="828" height="462" rx="6" fill="#F3F6F8" stroke="#D5DEE4" stroke-width="1"/>
+
+  <!-- 顶部工具条 -->
+  <rect x="28" y="56" width="804" height="34" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="40" y="78" font-size="13" fill="#243744">文件 添加 ｜ 新建 打开 保存 另存为 撤销 重做 运行 停止</text>
+  <rect x="28" y="96" width="804" height="34" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="40" y="118" font-size="13" fill="#243744">选择 框选 ｜ 移动 旋转 缩放 ｜ 聚焦 查看全部 ｜ 平移 环绕 ｜ 吸附 环境</text>
+
+  <!-- 左列（示意 220） -->
+  <rect x="28" y="140" width="150" height="252" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="40" y="162" font-size="13" font-weight="bold" fill="#243744">项目</text>
+  <text x="88" y="162" font-size="13" fill="#5D6F7C">层级</text>
+  <text x="40" y="188" font-size="12" fill="#5D6F7C">项目树 / 层级树</text>
+  <text x="40" y="206" font-size="12" fill="#5D6F7C">（最小 220 DIP）</text>
+
+  <!-- 视口（示意 480×320） -->
+  <rect x="184" y="140" width="300" height="252" fill="#FFFFFF" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="334" y="262" font-size="13" fill="#5D6F7C" text-anchor="middle">渲染视口（最小 480×320 DIP）</text>
+
+  <!-- 右列（示意 340）：页签条 + 内容 -->
+  <rect x="490" y="140" width="76" height="34" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="502" y="161" font-size="12" fill="#243744">检查器</text>
+  <rect x="570" y="140" width="92" height="34" rx="6" fill="#E5F0F4" stroke="#326F8A" stroke-width="1"/>
+  <text x="582" y="161" font-size="12" font-weight="bold" fill="#326F8A">地图编辑器</text>
+  <rect x="666" y="140" width="52" height="34" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="678" y="161" font-size="12" fill="#243744">调试</text>
+  <text x="724" y="161" font-size="14" fill="#5D6F7C">&#9654;</text>
+  <text x="742" y="161" font-size="14" fill="#5D6F7C">&#9660;</text>
+  <text x="776" y="161" font-size="12" fill="#5D6F7C">渐隐</text>
+  <rect x="490" y="180" width="342" height="212" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="502" y="204" font-size="12" fill="#5D6F7C">地图资产 / 地图属性</text>
+  <text x="502" y="226" font-size="12" fill="#5D6F7C">二级页签：地图 图层 环境</text>
+  <text x="502" y="300" font-size="12" fill="#5D6F7C">工作面板（最小 300 DIP）</text>
+
+  <!-- 底部日志（展开态最小 120） -->
+  <rect x="28" y="402" width="804" height="92" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="40" y="424" font-size="13" fill="#243744">日志（展开态最小 120 DIP）</text>
+  <text x="40" y="446" font-size="12" fill="#5D6F7C">全部 信息 警告 错误 构建 任务 输入 渲染 ｜ 时间 级别 来源 模块 消息 折叠</text>
+
+  <text x="16" y="506" font-size="12" fill="#5D6F7C">页签单行不换行｜溢出时左右箭头+边缘渐隐｜滚轮横向滚动｜全部页签入口｜首次溢出一次性提示｜当前页签自动完整可见</text>
+</svg>
