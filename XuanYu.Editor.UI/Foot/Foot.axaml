@@ -33,7 +33,7 @@
 
   <Grid RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16" MinHeight="28">
-      <Button Classes="logSummary" Command="{Binding ToggleLogCommand}">
+      <Button Classes="logSummary" Command="{Binding ToggleLogCommand}" AutomationProperties.Name="展开或折叠日志">
         <TextBlock Text="{Binding LogSummary}" VerticalAlignment="Center"/>
       </Button>
       <TextBlock Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center" Foreground="{StaticResource Color.Text.Secondary}"/>
@@ -44,8 +44,8 @@
       <Grid RowDefinitions="Auto,Auto,*">
         <Grid ColumnDefinitions="*,220" Margin="0,0,0,6">
           <StackPanel Orientation="Horizontal" Spacing="4">
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterAll}" Content="全部" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInfo}" Content="信息" Command="{Binding SelectLogFilterCommand}" CommandParameter="信息"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterWarning}" Content="警告" Command="{Binding SelectLogFilterCommand}" CommandParameter="警告"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterError}" Content="错误" Command="{Binding SelectLogFilterCommand}" CommandParameter="错误"/>
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterBuild}" Content="构建" Command="{Binding SelectLogFilterCommand}" CommandParameter="构建"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterTask}" Content="任务" Command="{Binding SelectLogFilterCommand}" CommandParameter="任务"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInput}" Content="输入" Command="{Binding SelectLogFilterCommand}" CommandParameter="输入"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterRender}" Content="渲染" Command="{Binding SelectLogFilterCommand}" CommandParameter="渲染"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterAll}" Content="全部" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部" AutomationProperties.Name="筛选全部日志"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInfo}" Content="信息" Command="{Binding SelectLogFilterCommand}" CommandParameter="信息" AutomationProperties.Name="筛选信息日志"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterWarning}" Content="警告" Command="{Binding SelectLogFilterCommand}" CommandParameter="警告" AutomationProperties.Name="筛选警告日志"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterError}" Content="错误" Command="{Binding SelectLogFilterCommand}" CommandParameter="错误" AutomationProperties.Name="筛选错误日志"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterBuild}" Content="构建" Command="{Binding SelectLogFilterCommand}" CommandParameter="构建" AutomationProperties.Name="筛选构建日志"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterTask}" Content="任务" Command="{Binding SelectLogFilterCommand}" CommandParameter="任务" AutomationProperties.Name="筛选任务日志"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInput}" Content="输入" Command="{Binding SelectLogFilterCommand}" CommandParameter="输入" AutomationProperties.Name="筛选输入日志"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterRender}" Content="渲染" Command="{Binding SelectLogFilterCommand}" CommandParameter="渲染" AutomationProperties.Name="筛选渲染日志"/>
           </StackPanel>
           <Border Grid.Column="1" Classes="chrome" Padding="8,4">
             <Grid ColumnDefinitions="18,*">
@@ -82,14 +82,14 @@
             <StackPanel IsVisible="{Binding ShowInitialLogEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock Text="暂无日志" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center"/>
               <TextBlock Text="低频事实记录会显示在这里，调试快照和临时探针不进入普通日志。" Classes="muted" TextWrapping="Wrap" HorizontalAlignment="Center"/>
-              <Button Content="清空筛选" IsVisible="{Binding ShowNoFilterResults}" Margin="0,8,0,0" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部" HorizontalAlignment="Center"/>
+              <Button Content="清空筛选" IsVisible="{Binding ShowNoFilterResults}" Margin="0,8,0,0" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部" HorizontalAlignment="Center" AutomationProperties.Name="清空日志筛选"/>
             </StackPanel>
             <StackPanel IsVisible="{Binding ShowNoFilterResults}" HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock Text="没有匹配的日志" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center"/>
               <TextBlock Text="当前筛选条件下没有日志，可以清空筛选查看全部。" Classes="muted" TextWrapping="Wrap" HorizontalAlignment="Center"/>
             </StackPanel>
             <!-- D5：用户离开底部时显示「回到底部」；点击恢复自动跟随 -->
-            <Button x:Name="ScrollToBottomButton" IsVisible="False" Click="ScrollToBottom_Click" Content="回到底部" Classes="scrollToBottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
+            <Button x:Name="ScrollToBottomButton" IsVisible="False" Click="ScrollToBottom_Click" Content="回到底部" Classes="scrollToBottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6" AutomationProperties.Name="回到底部"/>
           </Grid>
           <local:LogDetailPanel Grid.Column="1"/>
         </Grid>

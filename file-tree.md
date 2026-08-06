@@ -277,6 +277,10 @@
 │  ├─ Program.cs
 │  └─ XuanYu.Editor.App.csproj
 ├─ XuanYu.Editor.UI/
+│  ├─ Accessibility/
+│  │  ├─ UiAutomationNamer.cs
+│  │  ├─ UiDpiContract.cs
+│  │  └─ UiMotionPreference.cs
 │  ├─ Bootstrap/
 │  │  ├─ App.axaml
 │  │  ├─ App.axaml.cs
@@ -488,8 +492,10 @@
 │  │  │  ├─ TreeGuideBuilder.cs
 │  │  │  └─ UiVm.TreeCommands.cs
 │  │  ├─ UiVm.NativeHostLifecycle.cs
+│  │  ├─ UiVm.NotificationLifetime.cs
 │  │  └─ UiVm.cs
 │  ├─ Win/
+│  │  ├─ UiWin.Accessibility.cs
 │  │  ├─ UiWin.Dialogs.cs
 │  │  ├─ UiWin.EntityShortcuts.cs
 │  │  ├─ UiWin.MapCommands.cs
@@ -905,6 +911,10 @@
 │  │  ├─ UiDebtBaselineBypassF2Tests.cs
 │  │  ├─ UiDebtBaselineBypassTests.cs
 │  │  ├─ UiDebtBaselineTests.cs
+│  │  ├─ UiD6AccessibilityContractTests.cs
+│  │  ├─ UiD6DpiContractTests.cs
+│  │  ├─ UiD6LogPerformanceTests.cs
+│  │  ├─ UiD6MotionContractTests.cs
 │  │  ├─ UiSourceContractAnalyzer.CsRules.cs
 │  │  ├─ UiSourceContractAnalyzer.Icon.cs
 │  │  ├─ UiSourceContractAnalyzer.Inline.cs
@@ -1133,6 +1143,9 @@
 - `XuanYu.Editor.UI/Bootstrap/App.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Bootstrap/App.axaml.cs` — sealed class App
 - `XuanYu.Editor.UI/Bootstrap/Program.cs` — WinExe 进程默认无控制台；AttachConsole(-1) 继承父终端（dotnet run 控制台），
+- `XuanYu.Editor.UI/Accessibility/UiAutomationNamer.cs` — D6：启动后为缺失自动化名称的基础控件补名，并阻止 ARCH/D6 等内部治理代号进入自动化名称。
+- `XuanYu.Editor.UI/Accessibility/UiDpiContract.cs` — D6：桌面缩放与 DIP 阈值合同（100/125/150/175/200，最小/推荐窗口与表单阈值）。
+- `XuanYu.Editor.UI/Accessibility/UiMotionPreference.cs` — D6：减少动画偏好合同（Reduce 归零非必要动效，Default 保持短反馈）。
 - `XuanYu.Editor.UI/Design/UiTokens.Colors.Components.axaml` — UI Token 组件色（日志/文档状态/图层，UI Spec 1.0 §4.3/§4.4/§12.2）
 - `XuanYu.Editor.UI/Design/UiTokens.Colors.Core.axaml` — UI Token 核心语义色（四级背景/文字/强调/状态/对象，§4.1/§4.2）
 - `XuanYu.Editor.UI/Design/UiTokens.Controls.axaml` — UI Token 控件尺寸（高度/宽度等级/热区/边框/焦点/阴影/日志列宽，§5.3/§6/§9/§13）
@@ -1848,6 +1861,12 @@
 - `XuanYu.World.Tests/UiTokens/UiD5MapStatusTests.cs` — D5-FINAL：地图状态四态测试（未落盘/未保存/已保存/有未保存修改 + Undo 回保存点 + MarkBaseline 不动路径）。
 - `XuanYu.World.Tests/UiTokens/UiD5UnsavedDialogTests.cs` — D5-FINAL：未保存地图弹窗测试（正式文案无内部编号/按钮严格/默认焦点取消/Enter 不危险/Esc=取消）。
 - `XuanYu.World.Tests/UiTokens/UiD5UnsavedDialogBehaviorTests.cs` — D5-FINAL：弹窗行为合同测试（无修改直接新建/仅 discard 放行/不调用任何保存/服务缺失不新建）。
+- `XuanYu.Editor.UI/Vm/UiVm.NotificationLifetime.cs` — D6：通知自动消失时间合同（基于 CreatedAt 与 lifetime，纯逻辑）。
+- `XuanYu.Editor.UI/Win/UiWin.Accessibility.cs` — D6：窗口打开后应用自动化名称补全。
+- `XuanYu.World.Tests/UiTokens/UiD6AccessibilityContractTests.cs` — D6：可访问性名称覆盖与内部编号不外泄合同。
+- `XuanYu.World.Tests/UiTokens/UiD6DpiContractTests.cs` — D6：DPI/缩放与 DIP 阈值合同测试。
+- `XuanYu.World.Tests/UiTokens/UiD6LogPerformanceTests.cs` — D6：日志 500 条尾窗与重复项压缩合同测试。
+- `XuanYu.World.Tests/UiTokens/UiD6MotionContractTests.cs` — D6：减少动画偏好与默认短反馈合同测试。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

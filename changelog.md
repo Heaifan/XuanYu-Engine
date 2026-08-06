@@ -19,6 +19,18 @@
 ---
 
 ## 2026-08（当前自然月）
+## v0.2.24.44-rz
+ARCH-UI-SPEC-R1-D6：DPI、键盘/可访问性、减少动画、日志性能与剩余 UI 债务复核（2026-08-06，Commit 本轮落库为准）
+- **DPI/缩放合同**：新增 `UiDpiContract`，冻结 100%/125%/150%/175%/200% 桌面缩放清单；主窗口最小/推荐 DIP 尺寸与检查器/地图表单宽度阈值保持 DIP 口径，不做物理像素补偿。
+- **键盘与可访问性**：新增 `UiAutomationNamer` 与窗口打开后的自动补名；地图页、地图表单、图层工具、日志筛选/回到底部等 D4/D5 新增交互控件显式声明 `AutomationProperties.Name`；自动补名拒绝导出 ARCH/D6 等内部治理代号。
+- **减少动画合同**：新增 `UiMotionPreference`/`UiMotionContract`，Reduce 模式下非必要 Hover/Dialog 动效时长归零；Default 模式保持 80/120/180ms 短反馈；未新增 Token。
+- **日志与通知性能**：`EditorLogBuffer.MaxEntries` 升为公开合同常量并保持 500 条尾窗；D6 测试覆盖日志上限与相邻重复项压缩；通知自动消失策略独立为 `UiVm.NotificationLifetime`。
+- **范围收口**：未接入地图持久化；未新增业务功能；未新增 Token；未触碰 Render/Vulkan/Shader/Gizmo/WarCore/AI 宪法/本地技能。D5-DEFER-01 仍归未来独立地图持久化专项。
+- 验证：全解决方案 `--no-incremental` 串行 Build **0W0E**；Core **339/339**、World **928/928**、WarCore **22/22**，合计 **1289/1289 PASS**；启动冒烟 PASS（`XuanYu.Editor.App.exe` 存活 8 秒）；arch-a-guard PASS；git diff --check PASS。
+- 治理：版本 v0.2.24.43-rz → **v0.2.24.44-rz**（四处同步）；file-tree 登记新增 D6 文件；未创建 Tag/Release。
+- 状态：**ARCH-UI-SPEC-R1-D6：READY FOR USER ACCEPTANCE**（自动化通过不等于 CLOSED；等待用户按 D6-A1 真机验收）。
+- 保留：D5-DEFER-01 地图「保存并新建」仍等待未来地图持久化专项；D6-A1 真机验收未执行。
+
 ## v0.2.24.43-rz
 ARCH-UI-SPEC-R1-D5：控件状态、表单、弹窗、通知、空状态与日志治理（2026-08-06，Commit 本轮落库为准）
 - **按钮治理**（D5-FIX-01 统一处理）：`Design/UiStyles.D5.axaml` 新增——Button 内容水平/垂直居中（HorizontalContentAlignment/VerticalContentAlignment=Center，禁止逐按钮 Margin 偏移修补）；完整状态 Normal/Hover（Color.Hover.Bg+Border.Strong）/Pressed（边框 Accent）/Focused（Color.Focus 边框 1px，不跳动）/Disabled（Text.Disabled+Bg.Control）；危险按钮 `Button.uiDanger`（Color.Danger 底 + 白字）；全局 Button 色迁移正式 Token（Bg.Panel/Border.Default/Text.Primary），基线 -5。

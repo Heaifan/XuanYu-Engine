@@ -30,7 +30,7 @@
 | 15 | 图标资产 | `Icons/EditorIcons.axaml` | — | — | — | — | 35 个 StreamGeometry | 2 | D2 |
 | 16 | 弹窗/状态 code-behind | `Win/UiWin.Dialogs.cs`、`UnsavedDialog.cs`、`UiVm.DocumentStatus.cs`、`LogEntry.cs`、`TreeGuide.cs` | — | — | — | — | — | 6 | D5 |
 
-**合计**：16 界面 + 5 处 code-behind 视觉源，**违规项 71**（含需 Token 化/登记项）。全部为零后进入 D6 清零验收。
+**合计**：16 界面 + 5 处 code-behind 视觉源，**违规项 71**（含需 Token 化/登记项）。D6 代码已完成剩余复核，状态为 READY FOR USER ACCEPTANCE；自动化通过不等于 CLOSED。
 
 ---
 

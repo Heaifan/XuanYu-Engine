@@ -2,7 +2,7 @@ namespace XuanYu.Editor.UI;
 
 public sealed class EditorLogBuffer
 {
-    const int MaxEntries = 500;
+    public const int MaxEntries = 500;
     readonly List<LogEntry> _entries = [];
 
     public IReadOnlyList<LogEntry> All => _entries;
