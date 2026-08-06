@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="520" viewBox="0 0 860 520" font-family="Microsoft YaHei UI, sans-serif">
+  <rect x="0" y="0" width="860" height="520" fill="#FFFFFF"/>
+  <text x="16" y="30" font-size="16" font-weight="bold" fill="#243744">ARCH-UI-SPEC-R1-D4 工作面板治理（浅色示意）</text>
+
+  <!-- 检查器：宽模式（≥360 左右布局 96/128） -->
+  <rect x="16" y="44" width="270" height="216" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="28" y="66" font-size="14" font-weight="bold" fill="#243744">立方体</text>
+  <text x="28" y="84" font-size="12" fill="#5D6F7C">实体</text>
+  <line x1="28" y1="92" x2="274" y2="92" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="28" y="110" font-size="14" font-weight="bold" fill="#243744">基础信息</text>
+  <line x1="28" y1="116" x2="274" y2="116" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="28" y="136" font-size="12" fill="#5D6F7C">名称</text>
+  <text x="124" y="136" font-size="13" fill="#243744">立方体</text>
+  <text x="28" y="158" font-size="12" fill="#5D6F7C">类型</text>
+  <text x="124" y="158" font-size="13" fill="#243744">实体</text>
+  <text x="28" y="180" font-size="12" fill="#5D6F7C">全局位置</text>
+  <text x="124" y="180" font-size="13" fill="#243744">X 0  Y 0  Z 0</text>
+  <text x="28" y="206" font-size="12" fill="#5D6F7C">标签列 96 ｜ 字段 ≥128 ｜ 全宽分组标题+分隔线（无卡片）</text>
+  <text x="28" y="226" font-size="12" fill="#5D6F7C">标题 Title16 ｜ 分组 Section14 ｜ 标签 Label12 ｜ 值 Body13</text>
+  <text x="28" y="248" font-size="12" fill="#5D6F7C">内容宽 &lt;360 整组切换：标签在上、字段在下</text>
+
+  <!-- 地图编辑器：只读摘要 72 列 + MapId 压缩 -->
+  <rect x="298" y="44" width="270" height="216" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="310" y="66" font-size="14" font-weight="bold" fill="#243744">地图资产</text>
+  <line x1="310" y1="72" x2="556" y2="72" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="310" y="92" font-size="12" fill="#5D6F7C">名称</text>
+  <text x="382" y="92" font-size="13" fill="#243744">示例地图</text>
+  <text x="310" y="112" font-size="12" fill="#5D6F7C">MapId</text>
+  <text x="382" y="112" font-size="13" fill="#243744">a1ea150c…7b2f11</text>
+  <rect x="470" y="100" width="34" height="18" rx="3" fill="#FFFFFF" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="478" y="113" font-size="11" fill="#243744">复制</text>
+  <text x="310" y="132" font-size="12" fill="#5D6F7C">路径</text>
+  <text x="382" y="132" font-size="13" fill="#243744">—</text>
+  <text x="310" y="152" font-size="12" fill="#5D6F7C">尺寸</text>
+  <text x="382" y="152" font-size="13" fill="#243744">64×64</text>
+  <text x="310" y="178" font-size="14" font-weight="bold" fill="#243744">地图属性</text>
+  <line x1="310" y1="184" x2="556" y2="184" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="310" y="204" font-size="12" fill="#5D6F7C">宽度（米）</text>
+  <text x="406" y="204" font-size="13" fill="#243744">表单 96 列；&lt;320 紧凑上下</text>
+  <text x="310" y="226" font-size="12" fill="#5D6F7C">摘要标签列 72（组件级例外）｜单行 24｜按钮间距 6</text>
+  <text x="310" y="248" font-size="12" fill="#5D6F7C">MapId 前 8…后 6 + 完整 Tooltip + 复制完整值</text>
+
+  <!-- 图层面板：状态图标 + 三重区分 -->
+  <rect x="580" y="44" width="264" height="216" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="592" y="66" font-size="14" font-weight="bold" fill="#243744">图层</text>
+  <rect x="592" y="76" width="240" height="32" rx="4" fill="#E5F0F4" stroke="#B9C7D0" stroke-width="1"/>
+  <text x="600" y="90" font-size="12" fill="#326F8A">&#9679;</text>
+  <text x="612" y="96" font-size="13" fill="#243744">地面</text>
+  <rect x="700" y="80" width="34" height="16" rx="3" fill="#E8F3F6" stroke="#B9D7DE" stroke-width="1"/>
+  <text x="708" y="92" font-size="10" fill="#326B7B">区域</text>
+  <text x="600" y="122" font-size="12" fill="#5D6F7C">图标 16 视口 / 热区 26×24 / 笔画 1.5</text>
+  <text x="600" y="142" font-size="12" fill="#5D6F7C">可见睁眼/隐藏闭眼、锁定闭合锁/未锁定开锁</text>
+  <text x="600" y="162" font-size="12" fill="#5D6F7C">形态+颜色双重表达，全部 Layer.* 冻结 Token</text>
+  <text x="600" y="182" font-size="12" fill="#5D6F7C">选中行 Selection.Bg，状态色保留可读</text>
+  <text x="600" y="202" font-size="12" fill="#5D6F7C">系统/用户：文字+形态+低饱和色三重区分</text>
+  <text x="600" y="222" font-size="12" fill="#5D6F7C">插入线 Layer.DropLine #5B8DB8，2 DIP</text>
+  <text x="600" y="248" font-size="12" fill="#5D6F7C">类型标签 Meta 10 DIP 清晰可读</text>
+
+  <text x="16" y="282" font-size="12" fill="#5D6F7C">基线 226 → 159（-67 条真实迁移）｜Manifest 112 Frozen / 0 Pending｜守卫缺陷修复（warcore 失败列表重置 + 5+100 自验证期望）</text>
+</svg>

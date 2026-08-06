@@ -343,6 +343,13 @@
 │  │  ├─ LayerPanel.axaml.cs
 │  │  ├─ MapEditorPanel.axaml
 │  │  ├─ MapEditorPanel.axaml.cs
+│  │  ├─ MapEditorLayoutModel.cs
+│  │  ├─ MapIdDisplayFormat.cs
+│  │  ├─ MapPagePanel.axaml
+│  │  ├─ MapPagePanel.axaml.cs
+│  │  ├─ InspectorLayoutModel.cs
+│  │  ├─ InspectorPanel.axaml
+│  │  ├─ InspectorPanel.axaml.cs
 │  │  ├─ Right.axaml
 │  │  ├─ Right.axaml.cs
 │  │  ├─ TopTabStripController.AllTabs.cs
@@ -424,6 +431,7 @@
 │  │  │  ├─ UiVm.MapDiagnostics.Format.cs
 │  │  │  ├─ UiVm.MapDiagnostics.cs
 │  │  │  ├─ UiVm.MapEditor.cs
+│  │  │  ├─ UiVm.MapEditor.Display.cs
 │  │  │  ├─ UiVm.MapHistory.cs
 │  │  │  ├─ UiVm.MapLayerDiagnostics.cs
 │  │  │  ├─ UiVm.MapLayerDrag.cs
@@ -900,6 +908,11 @@
 │  │  ├─ UiSourceContractAnalyzerTests.cs
 │  │  ├─ UiSourceContractAnalyzerTokenRefTests.cs
 │  │  ├─ UiD3DebtClearedTests.cs
+│  │  ├─ UiD4DebtClearedTests.cs
+│  │  ├─ UiD4InspectorContractTests.cs
+│  │  ├─ UiD4LayerContractTests.cs
+│  │  ├─ UiD4LayoutModelTests.cs
+│  │  ├─ UiD4MapEditorContractTests.cs
 │  │  ├─ UiTokenManifestGraphTests.cs
 │  │  ├─ UiTokenManifestTests.cs
 │  │  ├─ UiTopTabStripContractTests.cs
@@ -1152,7 +1165,14 @@
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml.cs` — MAP-A-R2-D4：图层面板（左侧"图层"页签内容，纯绑定；无 code-behind 逻辑）。
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml` — github.com/avaloniaui"
-- `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs` — MAP-A-R1-D5-A：地图编辑器面板（地图资产/基础地表/环境三组，DataContext=UiVm）。
+- `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs` — MAP-A-R1-D5-A：地图编辑器面板（二级页签宿主：地图/图层/环境，每页独立滚动）。
+- `XuanYu.Editor.UI/Right/MapEditorLayoutModel.cs` — ARCH-UI-SPEC-R1-D4：地图页密度模式纯逻辑（内容宽 <320 紧凑，无 Avalonia 依赖）。
+- `XuanYu.Editor.UI/Right/MapIdDisplayFormat.cs` — D4：MapId 显示压缩纯逻辑（>18 字符「前 8+…+后 6」）。
+- `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — D4：地图页（只读资产摘要 72 列紧凑 / MapId 压缩+复制 / 属性表单 96 列 + 紧凑模式双布局 / 按钮组）。
+- `XuanYu.Editor.UI/Right/MapPagePanel.axaml.cs` — D4：地图页模式切换（<320 紧凑）与 MapId 完整值复制（Clipboard）。
+- `XuanYu.Editor.UI/Right/InspectorLayoutModel.cs` — D4：检查器表单模式纯逻辑（内容宽 <360 整组上下；96 标签列/128 字段最小）。
+- `XuanYu.Editor.UI/Right/InspectorPanel.axaml` — D4：检查器面板（字号 Token 层级 / 宽窄双布局树 / 全宽分组+分隔线 / 空状态）。
+- `XuanYu.Editor.UI/Right/InspectorPanel.axaml.cs` — D4：检查器模式切换（<360 窄模式，同一 InspectorFields 数据源）。
 - `XuanYu.Editor.UI/Right/Right.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/Right.axaml.cs` — partial class Right（D3：挂载 TopTabStripController 顶层页签控制器）
 - `XuanYu.Editor.UI/Right/TopTabStripModel.cs` — ARCH-UI-SPEC-R1-D3：顶层页签条纯布局状态机（溢出/箭头/渐隐/滚轮路由/可见性/提示门/全部页签列表，无 Avalonia 依赖）
@@ -1198,7 +1218,8 @@
 - `XuanYu.Editor.UI/Vm/History/UiVm.EntityCommands.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/History/UiVm.History.Entities.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/History/UiVm.History.cs` — sealed partial class UiVm
-- `XuanYu.Editor.UI/Vm/Inspector/UiVm.Inspector.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Inspector/UiVm.Inspector.cs` — sealed partial class UiVm（D4：BuildInspectorFields 输出结构化 InspectorFieldRow）
+- `XuanYu.Editor.UI/Vm/Inspector/InspectorFieldRow.cs` — D4：检查器字段行结构（Label/Value/IsGroupHeader，替代字符串拼接）
 - `XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorInput.Parse.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorInput.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Logging/DebugText.cs` — static class DebugText
@@ -1224,6 +1245,7 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.Format.cs` — MAP-A-R2-D3-F2：地图日志显示映射（纯函数，内部枚举/错误码保持英文）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.cs` — MAP-A-R2-D3-F2：地图命令低频诊断日志（复用既有日志总线，字段名/状态值全部中文显示）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.cs` — MAP-A-R2-D3：地图属性入口（唯一数据源 = MapSession；保存/打开按钮禁用防 v1 双权威，D6 恢复）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Display.cs` — D4：MapIdDisplay（前 8…后 6 压缩）与 MapPathDisplay（空路径 —）显示层属性。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapHistory.cs` — MAP-A-R2-D3-A1 入口补接：地图撤销/重做（独立历史实例，不触碰场景实体历史）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDiagnostics.cs` — MAP-A-R2-D4/D4-F2：图层操作低频中文日志（复用既有日志总线）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDrag.cs` — MAP-A-R2-D4-F3：区域图层拖动排序（UI 层入口）。
@@ -1678,7 +1700,12 @@
 - `XuanYu.World.Tests/UiTokens/UiTopTabStripModelTests.cs` — D3：页签状态机测试（溢出/箭头边界/渐隐/滚轮/钳制/步进 Token 对齐/可见性）
 - `XuanYu.World.Tests/UiTokens/UiTopTabStripModelHintAndListTests.cs` — D3：一次性提示门与全部页签列表测试
 - `XuanYu.World.Tests/UiTokens/UiTopTabStripContractTests.cs` — D3：外壳尺寸与页签宿主结构合同（§7.1/§10.1：窗口/面板/视口/单行/箭头/渐隐/文案/真实页签集合）
-- `XuanYu.World.Tests/UiTokens/UiD3DebtClearedTests.cs` — D3：债务清零断言（基线 230→226 只减不增）+ 新文件 5+100 防回归
+- `XuanYu.World.Tests/UiTokens/UiD3DebtClearedTests.cs` — D3：债务清零断言（基线只减不增，226 上限）+ 新文件 5+100 防回归
+- `XuanYu.World.Tests/UiTokens/UiD4DebtClearedTests.cs` — D4：债务清零断言（基线 226→159，保留 2 条组件例外）+ 新文件 5+100 防回归
+- `XuanYu.World.Tests/UiTokens/UiD4InspectorContractTests.cs` — D4：检查器结构合同（字号 Token/双模式/96/128/无卡片/调试页 96 列）
+- `XuanYu.World.Tests/UiTokens/UiD4LayerContractTests.cs` — D4：图层面板结构合同（图标 16/热区/笔画/Layer.* Token/插入线/选中样式/三重区分）
+- `XuanYu.World.Tests/UiTokens/UiD4LayoutModelTests.cs` — D4：纯布局逻辑测试（360/320 阈值、MapId 压缩、字段行结构）
+- `XuanYu.World.Tests/UiTokens/UiD4MapEditorContractTests.cs` — D4：地图页结构合同（72 列摘要/MapId 不换行+复制/96 列表单/紧凑模式/单滚动/按钮组）
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionInvariantTests.cs` — sealed class WorldPartitionInvariantTests
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.Activity.cs` — sealed partial class WorldPartitionMigrationTests
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.cs` — sealed partial class WorldPartitionMigrationTests
@@ -1768,6 +1795,6 @@
 - `samples/world-c-r1-ten-triangles.xyscene` — （职责待补）
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
-- `scripts/arch-a-guard-warcore.ps1` — （职责待补）
+- `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）
 - `scripts/arch-a-guard-world.ps1` — （职责待补）
 - `scripts/arch-a-guard.ps1` — （职责待补）

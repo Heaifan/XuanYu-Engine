@@ -20,6 +20,22 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.41-rz
+ARCH-UI-SPEC-R1-D4：检查器、地图编辑器与图层工作面板治理（2026-08-06，Commit 本轮落库为准）
+- **检查器治理**（K02/G03/W37~W42/W44）：检查器页签内容拆分至新 `Right/InspectorPanel.axaml`（+code-behind）；字号全 Token 化（面板标题 Title16 / 分组标题 Section14 / 字段标签 Label12 / 字段值 Body13 / 空状态标题 Section14）；`InspectorFields` 从字符串拼接改为结构化 `InspectorFieldRow(Label/Value/IsGroupHeader)`（对应 6 个既有测试同步更新为结构断言）；**响应式双模式**（纯逻辑 `InspectorLayoutModel`：内容宽 ≥360 左右布局/标签列 96/字段最小 128，<360 整组上下，同一数据源双布局树切换，无逐字段宽度判断）；空状态保留单一主入口；密度合同（全宽分组标题+1 DIP 分隔线、去卡片嵌套、字段行距 4~6）；调试页标签列 70→96（W44）。
+- **地图编辑器治理**（W48/补充裁决）：地图页拆分至新 `Right/MapPagePanel.axaml`（+code-behind）；**只读资产摘要紧凑化**（标签列 72 组件级例外、单行高 24、空路径显示 —）；**MapId 显示压缩**（纯逻辑 `MapIdDisplayFormat`：>18 字符显示「前 8+…+后 6」，TextWrapping=NoWrap + CharacterEllipsis，Tooltip 完整 ID，复制按钮走 Clipboard 复制未经截断的完整 MapId）；地图属性编辑表单标签列 96 + **紧凑模式**（纯逻辑 `MapEditorLayoutModel`：内容宽 <320 整组标签上字段下，标签→字段 2、字段组 6~8，关键操作保留）；操作按钮组间距 6（2×2 均匀网格，按钮文字不换行）；每页单一纵向滚动容器；错误色 Token（W47）。
+- **图层面板治理**（K03/K04/W50~W52）：状态图标视口 14→**16**（Icon.Size.Standard）、笔画 1.5、热区 26×24（登记组件例外不变）；可见/隐藏、锁定/未锁定保持形态+颜色双重表达（VisibleIcon/HiddenIcon/LockedIcon/UnlockedIcon 四个正式矢量图标）；全部状态色迁移 Layer.* 冻结 Token（Visible/Hidden/Locked/LockedBg/Unlocked/VisibleBg、Kind.Region.*/Kind.System.*，System.Text 值 #687582→#5D6F7C）；**插入线 → Layer.DropLine #5B8DB8**（2 DIP，用户冻结）；活动标记 → Color.Accent；**选中行显式样式**（Color.Selection.Bg + 按开关类型保留状态色）；类型标签文字（区域/系统）+ 形态 + 低饱和色三重区分；工具栏按钮 24 紧凑档（W50）；图层属性表单标签列 96/字段值 13（W53/W54）；系统图层保护与图层选择/显隐/锁定/拖动/插入线/Cancel/Undo/Redo 业务合同零改动（既有行为测试 795 全绿为证）。
+- **守卫缺陷修复**（ARCH-UI-SPEC-R1-D4 发现）：①`arch-a-guard-warcore.ps1` 无条件重新初始化 `$failures`，**清空主守卫在子守卫源入前累积的全部失败**（版本一致性检查恰在其前，失败被吞，门禁长期假 PASS）——改为条件初始化；被源入时不提前 exit（`InvocationName -eq '.'` 时 return，统一由主守卫收尾）。②`arch-a-guard.ps1` 5+100 自验证样本 `"a
+
+
+b
+"`（a+2 连续空行+b=4 行）期望误写 3（SHR-2026-08-D2 引入，同样被吞）——修正为 4。修复后门禁如实检出版本不一致（验证通过后随本条目版本同步消除）。
+- **Token 迁移**：Manifest 保持 **112 Frozen / 0 PendingReview**（未新增 Token）；**债务基线 226 → 159 条（-67）**：Right.axaml（W41/W37/W40/W51 等 12 条）、MapEditorPanel.axaml（W45/W46/W47/W49 等 16 条）、LayerPanel.axaml（W50/W51/W52 等 30 条）、LayerInspectorPanel.axaml（W53/W54 等 6 条）、Ui.axaml section（W14 字号+颜色 2 条）全部真实代码迁移；保留 2 条登记组件例外（activeMark 圆角 1.5、dropLine 圆角 1，规范 §5.4）；未用 Locator/AllowedCount 掩盖。
+- 验证：全解决方案 `--no-incremental` 串行 Build 0W0E（落盘 /tmp/d4-final-build.log）；Core 339/339、World 795/795（+36 D4 测试）、WarCore 22/22，合计 **1156/1156 PASS**；启动冒烟 PASS；arch-a-guard PASS（含守卫缺陷修复后真实版本一致性）；git diff --check PASS。
+- 治理：版本 v0.2.24.40-rz → v0.2.24.41-rz（四处同步）；未创建 Tag/Release。
+- 状态：**ARCH-UI-SPEC-R1-D4：READY FOR USER ACCEPTANCE**（尚未获得用户真机裁决；真机通过后 D4 改 COMPLETE，失败则建 D4-F1 只修真实失败项）。
+- 保留（审计矩阵归属 D4 但本轮范围外，报告已说明）：K02 真机复验项随 IPO 组 1~4 验收；地图环境页内容补齐（D5 后续）；日志区/弹窗/状态语义（D5）；焦点与 DPI 全量（D6）。
+
 ## v0.2.24.40-rz
 ARCH-UI-SPEC-R1-D3：主窗口、顶层页签与滚动治理（2026-08-06，Commit 本轮落库为准）
 - **主窗口与四区外壳**（W15/W16/W18/W19/W20/W21）：初始 1400×820 → **1360×820**；Min 1100×720 → **1024×640**；左列 Min 200 → **220**；右列 Min 260 → **300**；视口列 Min 360 → **480**（视口最小可用区域 480×320 合同）；RootGrid Margin 12→6 + MinWidth 980→1012（1024 窗口下 6+220+6+480+6+300=1012 恰好满足全部面板最小，无遮挡无溢出）；日志折叠态 MinHeight 32 保留、展开态 120~420（既有 ClampLogRow 登记对齐规范 §7.1）。
