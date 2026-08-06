@@ -12,7 +12,7 @@ public partial class LayerPanel
     Point _dragStart;
     void DragHandle_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not Control { DataContext: MapLayerRowViewModel row } handle || !row.IsRegion) return;
+        if (sender is not Control { DataContext: MapLayerRowViewModel row } handle || !row.IsDragEnabled) return;
         if (e.GetCurrentPoint(handle).Properties.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed) return;
         _dragCandidate = row; _dragPressedArgs = e; _dragStart = e.GetPosition(handle);
         handle.PointerMoved += DragCandidate_PointerMoved;
@@ -72,6 +72,8 @@ public partial class LayerPanel
         if (TryGetDragLayerId(e, out var fromId) && TryGetDropTarget(e, out var targetIndex))
             vm.CommitLayerDrag(fromId, targetIndex);
     }
+    void LayerList_DragLeave(object? sender, RoutedEventArgs e) =>
+        (DataContext as UiVm)?.SetDropTarget(null);
     static bool TryGetDragLayerId(DragEventArgs e, out string layerId)
     {
         layerId = "";

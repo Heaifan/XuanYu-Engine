@@ -9,6 +9,10 @@ public sealed partial class UiVm
 
     public bool CanMoveLayerDown => CanMoveSelected(up: false);
 
+    public bool CanReorderLayers => MapLayerStack.RegionLayers(MapSession.CurrentMap.Layers).Length > 1;
+
+    public bool IsLayerReorderHintVisible => !CanReorderLayers;
+
     public bool CanDeleteLayer =>
         SelectedLayer is { } layer &&
         MapLayerRules.CanRemove(MapSession.CurrentMap.Layers, layer.LayerId) is null;
@@ -27,6 +31,7 @@ public sealed partial class UiVm
             .Select(l => new MapLayerRowViewModel(this, l))
             .ToList();
         foreach (var row in _layerItems) row.IsActive = row.LayerId == MapSession.ActiveRegionLayerId;
+        foreach (var row in _layerItems) row.OnDragStateChanged();
         OnPropertyChanged(nameof(LayerItems));
         OnPropertyChanged(nameof(SelectedLayer));
         OnLayerSelectionChanged();
@@ -38,6 +43,8 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(HasLayerSelection));
         OnPropertyChanged(nameof(CanMoveLayerUp));
         OnPropertyChanged(nameof(CanMoveLayerDown));
+        OnPropertyChanged(nameof(CanReorderLayers));
+        OnPropertyChanged(nameof(IsLayerReorderHintVisible));
         OnPropertyChanged(nameof(CanDeleteLayer));
         OnPropertyChanged(nameof(LayerInspectorNameText));
         OnPropertyChanged(nameof(LayerInspectorKindText));

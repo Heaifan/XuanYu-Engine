@@ -16,6 +16,12 @@ public sealed class UiMapLayerDragTests
         var vm = NewVm();
         Assert.True(vm.LayerItems[0].IsRegion);
         Assert.True(vm.LayerItems[0].IsVisible);
+        Assert.False(vm.CanReorderLayers);
+        Assert.False(vm.LayerItems[0].IsDragEnabled);
+        Assert.Contains("至少需要两个用户图层", vm.LayerItems[0].DragHandleToolTip);
+        vm.RunCommand.Execute("添加图层");
+        Assert.True(vm.CanReorderLayers);
+        Assert.True(vm.LayerItems[0].IsDragEnabled);
     }
 
     [Fact]

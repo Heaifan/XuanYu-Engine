@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using XuanYu.World.Map;
-
 namespace XuanYu.Editor.UI;
 
 // MAP-A-R2-D4：图层行显示模型（面板行绑定；写操作转发会话命令，不直接持有领域状态）。
@@ -34,6 +33,17 @@ public sealed class MapLayerRowViewModel : INotifyPropertyChanged
 
     // F3：区域图层（可拖动、蓝青标签）；系统图层不显示拖动手柄。
     public bool IsRegion => !IsSystem;
+
+    public bool IsDragEnabled => IsRegion && _owner.CanReorderLayers;
+    public string DragHandleToolTip => IsDragEnabled
+        ? "\u62d6\u52a8\u8c03\u6574\u987a\u5e8f"
+        : "\u81f3\u5c11\u9700\u8981\u4e24\u4e2a\u7528\u6237\u56fe\u5c42\u624d\u80fd\u8c03\u6574\u987a\u5e8f";
+
+    internal void OnDragStateChanged()
+    {
+        OnPropertyChanged(nameof(IsDragEnabled));
+        OnPropertyChanged(nameof(DragHandleToolTip));
+    }
 
     // F3：拖动插入线（2 DIP 低饱和蓝，显示在本行上方）；通知式属性供绑定实时刷新。
     bool _isDropBefore;
