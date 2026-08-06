@@ -43,7 +43,13 @@ ARCH-UI-SPEC-R1-D5：控件状态、表单、弹窗、通知、空状态与日�
   - **Inter 零残留**：删除 `.WithInterFont()`（Avalonia.Fonts.Inter）；FontFamily 冻结链修正为 `Microsoft YaHei UI, Segoe UI, Noto Sans CJK SC`（D1 规范，禁止 Inter）。
   - 验证：新增 **UiD5CorrectionBehaviorTests（7 项）+ UiD5CorrectionNotifyTests（5 项）+ UiD5CorrectionStructureTests（7 项）**，合计 **19 项纠偏测试**；World **871/871**（852+19）；全量 `--no-incremental` **0W0E**（落盘 /tmp/d5-fix-final-build3.log）；**Core 339 + World 871 + WarCore 22 = 1232/1232 PASS**；启动冒烟 PASS（含 FocusAdorner 模板化运行时验证——首次直跑捕获 Setter-Control 崩溃并已修复）；arch-a-guard PASS；git diff --check PASS。
   - 债务基线 **143 → 122（-21）**；Manifest 112 Frozen / 0 Pending（未新增 Token；FocusAdorner 基于 Color.Focus 派生）。
-- 状态：**ARCH-UI-SPEC-R1-D5（纠偏后）：READY FOR USER RE-ACCEPTANCE**（等待真机复验；通过后 D5 改 COMPLETE）（尚未获得用户真机裁决；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项）。
+- **二次审查纠偏（REVIEW BLOCKED → 修复，同版本 v0.2.24.43-rz 不升版，2026-08-06，按用户方案逐字执行）**：
+  - **硬阻塞一：未保存地图判断（按用户方案）**——`HasPendingMapFormChanges`（表单值与当前模型不一致）+ `HasUnsavedMapChanges = MapSession.IsDirty || HasPendingMapFormChanges`（图层/显隐/锁定/已应用未落盘全部捕获）；**默认地图基线修正**：MapEditSession 新增 `MarkBaseline()`（内存基线保存点，不动路径），IsDirty 改为保存点判定（`SavedStateId is null || CurrentStateId != SavedStateId`）——初始未修改的默认地图不误判为未保存（新建不弹窗）；新建（CreateNewMap 清空保存点）与任何修改仍为未保存。
+  - **「保存并新建」停止上报**：地图持久化（真实保存到资产文件）尚未接入（D6）——**不使用「保存并新建」文案，禁止用「应用属性」冒充保存**；未保存弹窗为「不保存并新建」（危险/具体动作，明确丢弃）/「取消」（默认焦点）；仅 discard 放行新建，取消 → 原地图与全部修改保持不变；D6 接入真实保存后恢复三选（登记）。
+  - **硬阻塞二：输入阶段真实校验（按用户方案）**——`ValidateMapFieldOnInput` 替换「只清错」逻辑：输入阶段执行轻量规则（非法字符/NaN/Infinity/**明显超界** 100~1000000 米，边界与领域 MapDefinitionValidator 一致）；**值仍非法时错误不得消失**（继续输入非法值错误保持）；合法值错误立即清除；**输入中态**（空/-/./1./1e- 等临时文本）不清除已有错误；失焦执行完整单字段校验（格式+范围）；提交执行全部字段+跨字段（MapSession 业务兜底）+ 定位第一处错误 + 页面汇总；校验失败不清空输入；基础高度仅有限数字（领域 ValidateSurface 无范围）。
+  - 验证：新增 **UiD5InputValidationTests（8 项）+ UiD5UnsavedFlowTests（8 项）**，World **887/887**（871+16）；全量 `--no-incremental` **0W0E**（落盘 /tmp/d5-fix2-final-build.log）；**Core 339 + World 887 + WarCore 22 = 1248/1248 PASS**；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS；既有测试适配 4 处（默认地图状态「已保存」、范围错误字段级拦截、新建地图流程断言、MapStatusText 基线语义）。
+  - 债务基线 122 保持；Manifest 112 Frozen / 0 Pending。
+- 状态：**ARCH-UI-SPEC-R1-D5（二次纠偏后）：READY FOR USER RE-ACCEPTANCE**（等待真机复验）（等待真机复验；通过后 D5 改 COMPLETE）（尚未获得用户真机裁决；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项）。
 - 保留（审计矩阵归属但本轮范围外）：G02 焦点框系统与 DPI/减少动画/屏幕阅读器（D6）；日志搜索实现（占位保留）；加载/进度长任务场景（无真实加载流程，不虚构）。
 
 

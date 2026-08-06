@@ -46,11 +46,17 @@ public sealed class UiMapLogChineseTests
     [Fact]
     public void Invalid_size_log_uses_chinese_error_and_unchanged()
     {
-        var text = Apply(NewVm(), "50");
+        // D5 二次纠偏：范围校验前移到 UI 字段级（失焦/提交完整校验，用户方案）——
+        // 50 < MinSizeMeters(100) 在字段级拦截，不达 MapSession 业务层（无业务错误日志），
+        // 地图保持不变、表单不清空、错误显示在字段与汇总行。
+        var vm = NewVm();
+        var text = Apply(vm, "50");
 
-        Assert.Contains("错误类型=地图尺寸无效", text);
-        Assert.Contains("状态保持不变=是", text);
-        Assert.Contains("当前尺寸=10000×10000", text);
+        Assert.NotEqual("", vm.MapWidthError);
+        Assert.Contains("宽度必须位于 100～1000000 米之间", vm.MapEditError);
+        Assert.Equal(10000.0, vm.MapSession.CurrentMap.SizeMeters.Width); // 地图保持不变
+        Assert.Equal("50", vm.MapWidthText); // 校验失败不清空输入
+        Assert.DoesNotContain("错误类型=地图尺寸无效", text); // 未达业务层（字段级拦截）
     }
     [Fact]
     public void Undo_log_uses_chinese_reason_and_booleans()

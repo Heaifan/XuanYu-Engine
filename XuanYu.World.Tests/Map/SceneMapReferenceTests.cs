@@ -65,7 +65,7 @@ public sealed class SceneMapReferenceTests
 
         // D3 会话语义：编辑器恒有当前地图（默认 10 km），非 R1 的"未加载"空状态。
         Assert.True(reopened.HasMap);
-        Assert.Equal("未保存", reopened.MapStatusText);
+        Assert.Equal("已保存", reopened.MapStatusText); // D5 二次纠偏：默认地图处于内存基线（未修改不算未保存）
         Assert.Equal(10000.0, reopened.MapSession.CurrentMap.SizeMeters.Width);
     }
 

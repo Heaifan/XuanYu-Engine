@@ -12,7 +12,7 @@ public sealed class UiMapEditorTests
         var vm = new UiVm(null, () => true);
         Assert.True(vm.HasMap);
         Assert.Equal("未命名地图", vm.MapName);
-        Assert.Equal("未保存", vm.MapStatusText);
+        Assert.Equal("已保存", vm.MapStatusText); // D5 二次纠偏：默认地图建立基线保存点（初始不误判未保存）
         Assert.Equal(10000.0, vm.MapSession.CurrentMap.SizeMeters.Width);
         Assert.Equal(10000.0, vm.MapSession.CurrentMap.SizeMeters.Depth);
         Assert.Equal(0.0, vm.MapSession.CurrentMap.Surface.BaseHeightMeters);

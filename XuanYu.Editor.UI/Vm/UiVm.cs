@@ -10,7 +10,6 @@ using XuanYu.Render.Abstractions;
 using XuanYu.World;
 using XuanYu.World.Scene;
 namespace XuanYu.Editor.UI;
-
 public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISceneRenderSnapshotSource,
     XuanYu.Render.Abstractions.IRenderProjectionSource
 {
@@ -46,6 +45,8 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
         SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
         MapSession = new MapEditSession(isWriteThread: isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
+        // D5 二次纠偏（用户方案）：默认地图建立内存基线——初始未修改不误判为有未保存修改
+        MapSession.MarkBaseline();
         AttachMapSession(MapSession); InitLogs();
     }
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -84,8 +85,6 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public int LeftTabIndex { get => _leftTabIndex; set => Set(ref _leftTabIndex, value); }
     public EditorTreeNode? SelectedProjectItem { get => _selectedProjectItem; set => SetProjectSelection(value); }
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
-    public void ToggleProjectNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedProjectKeys, nameof(ProjectItems));
-    public void ToggleHierarchyNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedHierarchyKeys, nameof(HierarchyItems));
     void Run(string name)
     {
         if (TryRequestFileCommand(name)) return;

@@ -52,4 +52,13 @@ public sealed partial class MapEditSession
         RaiseDirtyChanged();
         return Ok();
     }
+
+    // D5 二次纠偏（用户方案）：建立内存基线保存点（不改变路径）——默认地图初始基线。
+    public EngineResult MarkBaseline()
+    {
+        if (!GuardWriteThread()) return Fail("NotOnWriteThread", "建立基线必须在编辑写线程执行。");
+        _savedStateId = CurrentStateId;
+        RaiseDirtyChanged();
+        return Ok();
+    }
 }

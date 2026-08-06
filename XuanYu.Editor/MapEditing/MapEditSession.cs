@@ -48,8 +48,11 @@ public sealed partial class MapEditSession
 
     public bool CanRedo => _history.RedoCount > 0;
 
+    // D5 二次纠偏（用户方案）：默认地图基线修正——未保存与否由保存点判定。
+    // 内存默认地图无文件路径但处于基线状态（MarkBaseline）时不算未保存；
+    // 新建（CreateNewMap 清空保存点）与任何修改（状态偏离保存点）仍为未保存。
     public bool IsDirty =>
-        CurrentFilePath is null || SavedStateId is null || CurrentStateId != SavedStateId;
+        SavedStateId is null || CurrentStateId != SavedStateId;
 
     public event Action<MapContentChangedEventArgs>? ContentChanged;
 

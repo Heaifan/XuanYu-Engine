@@ -435,6 +435,7 @@
 │  │  │  ├─ UiVm.MapEditor.cs
 │  │  │  ├─ UiVm.MapEditor.Display.cs
 │  │  ├─ UiVm.MapEditor.Validation.cs
+│  │  ├─ UiVm.MapEditor.Validation.Rules.cs
 │  │  ├─ UiVm.MapDanger.cs
 │  │  │  ├─ UiVm.MapHistory.cs
 │  │  │  ├─ UiVm.MapLayerDiagnostics.cs
@@ -928,6 +929,8 @@
 │  │  ├─ UiD5CorrectionBehaviorTests.cs
 │  │  ├─ UiD5CorrectionNotifyTests.cs
 │  │  ├─ UiD5CorrectionStructureTests.cs
+│  │  ├─ UiD5InputValidationTests.cs
+│  │  ├─ UiD5UnsavedFlowTests.cs
 │  │  ├─ UiTokenManifestGraphTests.cs
 │  │  ├─ UiTokenManifestTests.cs
 │  │  ├─ UiTopTabStripContractTests.cs
@@ -1835,6 +1838,10 @@
 - `XuanYu.World.Tests/UiTokens/UiD5CorrectionBehaviorTests.cs` — D5 纠偏：fail-closed/字段校验/场景重试行为测试。
 - `XuanYu.World.Tests/UiTokens/UiD5CorrectionNotifyTests.cs` — D5 纠偏：空态互斥与通知合并/关闭/优先级测试。
 - `XuanYu.World.Tests/UiTokens/UiD5CorrectionStructureTests.cs` — D5 纠偏：焦点环/焦点陷阱/日志零原始色/Inter 零残留/无压缩行测试。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Validation.Rules.cs` — D5 二次纠偏：字段校验规则（解析/范围 100~1000000/输入中态，边界与领域一致）。
+- `XuanYu.Editor/MapEditing/MapEditSession.Document.cs`（MarkBaseline）— D5 二次纠偏：内存基线保存点（默认地图初始不误判未保存）。
+- `XuanYu.World.Tests/UiTokens/UiD5InputValidationTests.cs` — D5 二次纠偏：输入阶段真实校验 8 项测试。
+- `XuanYu.World.Tests/UiTokens/UiD5UnsavedFlowTests.cs` — D5 二次纠偏：未保存判断 8 项测试（IsDirty 捕获/停止上报）。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

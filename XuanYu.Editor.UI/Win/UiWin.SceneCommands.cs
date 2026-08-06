@@ -70,18 +70,15 @@ public partial class UiWin
             ? await vm.SaveSceneAsync()
             : await SaveSceneAs(vm);
 
-    // D5 纠偏：新建地图未保存流程——无修改直接新建；有修改 → 保存并新建/不保存并新建/取消
+    // D5 二次纠偏（按用户方案）：新建地图未保存流程——
+    // 无未保存修改直接新建；有修改 → 不保存并新建（明确丢弃）/ 取消。
+    // **停止并上报**：地图持久化（真实保存到资产文件）尚未接入（D6），
+    // 「保存并新建」三选在 D6 恢复；禁止用「应用属性」冒充保存。
     async Task<bool> ConfirmNewMapUnsaved(UiVm vm)
     {
         if (!vm.HasUnsavedMapChanges) return true;
         var choice = await ShowUnsavedMapChangesDialog();
-        if (choice == "cancel") return false;
-        if (choice == "save")
-        {
-            vm.RunCommand.Execute("应用地图属性");
-            return !vm.IsMapFormError; // 应用失败：不新建，表单错误区已提示
-        }
-        return true; // discard：不保存并新建
+        return choice == "discard"; // 仅「不保存并新建」（明确丢弃）放行；取消 → 不新建
     }
     async Task<bool> SaveSceneAs(UiVm vm)
     {

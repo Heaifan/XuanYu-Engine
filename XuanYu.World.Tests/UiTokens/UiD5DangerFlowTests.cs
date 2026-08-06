@@ -67,17 +67,21 @@ public sealed class UiD5DangerFlowTests
     [Fact]
     public void New_map_confirmation_flow_is_registered_in_window_layer()
     {
-        // UiWin 层接线断言：新建地图走未保存三选流程（保存并新建/不保存并新建/取消）；危险按钮写具体动作
+        // UiWin 层接线断言：新建地图未保存流程（D5 二次纠偏，用户方案）——
+        // 无修改直接新建；有修改 → 「不保存并新建」（危险/具体动作）/「取消」；
+        // **停止上报**：地图持久化未接入（D6），不得出现「保存并新建」（禁止冒充保存）。
         var scene = System.IO.File.ReadAllText(System.IO.Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
         Assert.Contains("ShowUnsavedMapChangesDialog", scene);
         Assert.Contains("HasUnsavedMapChanges", scene);
+        Assert.Contains("地图持久化（真实保存到资产文件）尚未接入（D6）", scene);
         var unsaved = System.IO.File.ReadAllText(System.IO.Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Win", "UiWin.UnsavedDialog.cs"));
-        Assert.Contains("保存并新建", unsaved);
         Assert.Contains("不保存并新建", unsaved);
+        Assert.Contains("地图持久化尚未接入（D6）", unsaved);
+        Assert.DoesNotContain("[(\"保存并新建\"", unsaved); // 停止上报：按钮数组不得出现「保存并新建」（禁止冒充保存）
         var win = System.IO.File.ReadAllText(System.IO.Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Win", "UiWin.DialogHost.Danger.cs"));

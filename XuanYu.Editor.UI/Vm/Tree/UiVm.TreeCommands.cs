@@ -2,6 +2,8 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
+    public void ToggleProjectNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedProjectKeys, nameof(ProjectItems));
+    public void ToggleHierarchyNode(EditorTreeNode node) => ToggleTreeNode(node, _collapsedHierarchyKeys, nameof(HierarchyItems));
     void ToggleTreeNode(EditorTreeNode node, HashSet<string> collapsed, string propertyName)
     {
         if (!node.CanToggle) return;
