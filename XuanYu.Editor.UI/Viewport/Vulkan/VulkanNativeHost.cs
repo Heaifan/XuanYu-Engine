@@ -25,7 +25,6 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         });
         DataContextChanged += (_, _) => HookLayoutSync();
     }
-
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
