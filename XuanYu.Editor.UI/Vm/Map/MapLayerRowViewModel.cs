@@ -34,6 +34,8 @@ public sealed class MapLayerRowViewModel : INotifyPropertyChanged
 
     // F3：区域图层（可拖动、蓝青标签）；系统图层不显示拖动手柄。
     public bool IsRegion => !IsSystem;
+    public bool IsDragEnabled => IsRegion && _owner.CanReorderLayers;
+    public string DragHandleToolTip => IsDragEnabled ? "拖动调整顺序" : "至少需要两个用户图层才能调整顺序";
 
     // F3：拖动插入线（2 DIP 低饱和蓝，显示在本行上方）；通知式属性供绑定实时刷新。
     bool _isDropBefore;

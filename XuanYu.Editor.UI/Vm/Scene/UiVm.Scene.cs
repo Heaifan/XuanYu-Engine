@@ -76,9 +76,7 @@ public sealed partial class UiVm
     void TraceRenderSnapshotPublish(int entityCount)
     {
         _renderSnapshotPublishCount++;
-        if (_renderSnapshotPublishCount != 1 &&
-            entityCount == _lastLoggedRenderEntityCount &&
-            _renderSnapshotPublishCount % 100 != 0) return;
+        if (_renderSnapshotPublishCount != 1) return;
         _lastLoggedRenderEntityCount = entityCount;
         TraceSelection("PublishSceneRenderSnapshot摘要", 1,
             $"次数={_renderSnapshotPublishCount}；实体数={entityCount}");

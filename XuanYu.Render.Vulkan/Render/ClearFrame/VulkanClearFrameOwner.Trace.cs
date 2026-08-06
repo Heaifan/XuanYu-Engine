@@ -6,10 +6,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
     {
         _recordCommandTraceCount++;
         var entityCount = _hasRenderProjection ? _renderProjection.EntityCount : 0;
-        if (_recordCommandTraceCount != 1 &&
-            entityCount == _lastLoggedCommandEntityCount &&
-            viewCount == _lastLoggedCommandViewCount &&
-            _recordCommandTraceCount % 100 != 0) return;
+        if (_recordCommandTraceCount != 1) return;
         _lastLoggedCommandEntityCount = entityCount;
         _lastLoggedCommandViewCount = viewCount;
         var time = DateTime.Now.ToString("HH:mm:ss");

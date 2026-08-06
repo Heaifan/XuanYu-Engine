@@ -10,7 +10,7 @@ layout(push_constant) uniform GizmoPush
     vec4 cameraUp;         // xyz
     vec4 cameraForward;    // xyz
     vec4 viewportAndDpi;   // xy = viewport px, z = DPI
-    vec4 gizmoParams;      // x = size DIP, y = margin DIP, z = hover index
+    vec4 gizmoParams;      // x = size DIP, y = margin DIP, z = hover index, w = RenderScaling
 } pc;
 
 layout(location = 0) in vec2 vNdc;
@@ -250,7 +250,7 @@ void drawEndpointLabel(
 
 void main()
 {
-    float dpi = max(pc.viewportAndDpi.z, 0.5);
+    float dpi = max(pc.gizmoParams.w, 0.5);
     vec2 viewportPx = pc.viewportAndDpi.xy;
     float sizeDip = pc.gizmoParams.x;
     float marginDip = pc.gizmoParams.y;

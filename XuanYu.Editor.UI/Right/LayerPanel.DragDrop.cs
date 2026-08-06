@@ -1,98 +1,73 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using XuanYu.World.Map;
+
 namespace XuanYu.Editor.UI;
-// MAP-A-R2-D4-F3：区域图层拖动（code-behind 只处理指针/Drop；手柄按下 ≥4 DIP 启动；仅区域行接受；一次交给 UiVm）。
+
+// F2：仅六点手柄捕获 Pointer；不进入全局 DragDrop，不替换 ItemsSource。
 public partial class LayerPanel
 {
-    MapLayerRowViewModel? _dragCandidate;
-    PointerPressedEventArgs? _dragPressedArgs;
+    MapLayerRowViewModel? _dragRow;
+    IPointer? _dragPointer;
     Point _dragStart;
+    int? _dragTarget;
+    bool _dragging;
+
     void DragHandle_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not Control { DataContext: MapLayerRowViewModel row } handle || !row.IsRegion) return;
+        if (sender is not Control { DataContext: MapLayerRowViewModel row } handle || !row.IsDragEnabled) return;
         if (e.GetCurrentPoint(handle).Properties.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed) return;
-        _dragCandidate = row; _dragPressedArgs = e; _dragStart = e.GetPosition(handle);
-        handle.PointerMoved += DragCandidate_PointerMoved;
-        handle.PointerReleased += DragCandidate_PointerReleased;
+        _dragRow = row; _dragPointer = e.Pointer; _dragStart = e.GetPosition(handle);
+        _dragTarget = null; _dragging = false;
+        e.Pointer.Capture(handle); handle.PointerMoved += DragHandle_PointerMoved;
+        handle.PointerReleased += DragHandle_PointerReleased; handle.PointerCaptureLost += DragHandle_PointerCaptureLost;
         e.Handled = true;
     }
-    async void DragCandidate_PointerMoved(object? sender, PointerEventArgs e)
+
+    void DragHandle_PointerMoved(object? sender, PointerEventArgs e)
     {
-        if (_dragCandidate is null || _dragPressedArgs is null || sender is not Control handle) return;
-        var p = e.GetPosition(handle);
-        var dx = p.X - _dragStart.X;
-        var dy = p.Y - _dragStart.Y;
-        if ((dx * dx) + (dy * dy) < 16.0) return; // 4 DIP 阈值
-        handle.PointerMoved -= DragCandidate_PointerMoved;
-        handle.PointerReleased -= DragCandidate_PointerReleased;
-        var item = new DataTransferItem();
-        item.SetText(_dragCandidate.LayerId.Value);
-        var data = new DataTransfer();
-        data.Add(item);
-        _dragCandidate = null;
-        try
+        if (!_dragging && _dragRow is not null && sender is Control handle)
         {
-            await DragDrop.DoDragDropAsync(_dragPressedArgs, data, DragDropEffects.Move);
+            var p = e.GetPosition(handle); var dx = p.X - _dragStart.X; var dy = p.Y - _dragStart.Y;
+            if ((dx * dx) + (dy * dy) < 16.0) return;
+            _dragging = true;
         }
-        finally
-        {
-            _dragPressedArgs = null;
-            if (DataContext is UiVm vm) vm.SetDropTarget(null); // 拖动结束才清理插入线
-        }
+        if (!_dragging || DataContext is not UiVm vm) return;
+        _dragTarget = TargetAt(e.GetPosition(LayerList)); vm.SetDropTarget(_dragTarget);
     }
-    void DragCandidate_PointerReleased(object? sender, PointerReleasedEventArgs e)
+
+    void DragHandle_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (sender is Control handle)
-        {
-            handle.PointerMoved -= DragCandidate_PointerMoved;
-            handle.PointerReleased -= DragCandidate_PointerReleased;
-        }
-        _dragCandidate = null;
+        if (_dragging && _dragRow is { } row && _dragTarget is { } target && DataContext is UiVm vm)
+            vm.CommitLayerDrag(row.LayerId.Value, target);
+        EndLayerDrag();
     }
-    void LayerList_DragOver(object? sender, DragEventArgs e)
+
+    void DragHandle_PointerCaptureLost(object? sender, PointerCaptureLostEventArgs e) => EndLayerDrag();
+
+    void LayerPanel_KeyDown(object? sender, KeyEventArgs e)
     {
-        e.DragEffects = DragDropEffects.None;
-        e.Handled = true;
-        if (DataContext is not UiVm vm || !TryGetDragLayerId(e, out var fromId)) return;
-        if (MapLayerId.TryParse(fromId, out var from) && TryGetDropTarget(e, out var targetIndex))
-        {
-            e.DragEffects = DragDropEffects.Move;
-            vm.SetDropTarget(targetIndex);
-        }
-        else vm.SetDropTarget(null);
+        if (e.Key != Key.Escape || !_dragging) return;
+        EndLayerDrag(); e.Handled = true;
     }
-    void LayerList_Drop(object? sender, DragEventArgs e)
+
+    void EndLayerDrag()
     {
-        e.Handled = true;
-        if (DataContext is not UiVm vm) return;
-        vm.SetDropTarget(null);
-        if (TryGetDragLayerId(e, out var fromId) && TryGetDropTarget(e, out var targetIndex))
-            vm.CommitLayerDrag(fromId, targetIndex);
+        if (DataContext is UiVm vm) vm.SetDropTarget(null);
+        if (_dragPointer is { } pointer) pointer.Capture(null);
+        _dragRow = null; _dragPointer = null; _dragTarget = null; _dragging = false;
     }
-    static bool TryGetDragLayerId(DragEventArgs e, out string layerId)
+
+    int? TargetAt(Point position)
     {
-        layerId = "";
-        if (e.DataTransfer is not { } data) return false;
-        foreach (var item in data.GetItems(DataFormat.Text))
-            if (item.TryGetRaw(DataFormat.Text) is string text && !string.IsNullOrEmpty(text)) { layerId = text; return true; }
-        return false;
-    }
-    // 指针所在行必须是区域图层（系统层/空白不接受）；targetIndex=该区域层位置（插入其前）。
-    bool TryGetDropTarget(DragEventArgs e, out int targetIndex)
-    {
-        targetIndex = -1;
-        var pos = e.GetPosition(LayerList);
         for (var i = 0; i < LayerList.ItemCount; i++)
         {
             var container = LayerList.ContainerFromIndex(i);
-            if (container is null || !container.Bounds.Contains(pos)) continue;
-            if (container.DataContext is not MapLayerRowViewModel { IsRegion: true } row) return false;
-            targetIndex = (DataContext as UiVm)?.RegionPositionOf(row.LayerId) ?? -1;
-            return targetIndex >= 0;
+            if (container is null || !container.Bounds.Contains(position)) continue;
+            if (container.DataContext is not MapLayerRowViewModel { IsRegion: true } row) return null;
+            return (DataContext as UiVm)?.RegionPositionOf(row.LayerId);
         }
-        return false;
+        return null;
     }
 }

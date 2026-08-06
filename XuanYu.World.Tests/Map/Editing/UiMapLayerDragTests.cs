@@ -16,6 +16,11 @@ public sealed class UiMapLayerDragTests
         var vm = NewVm();
         Assert.True(vm.LayerItems[0].IsRegion);
         Assert.True(vm.LayerItems[0].IsVisible);
+        Assert.Equal(1, vm.UserLayerCount);
+        Assert.False(vm.LayerItems[0].IsDragEnabled);
+        vm.RunCommand.Execute("添加图层");
+        Assert.Equal(2, vm.UserLayerCount);
+        Assert.True(vm.LayerItems[0].IsDragEnabled);
     }
 
     [Fact]
@@ -52,7 +57,7 @@ public sealed class UiMapLayerDragTests
     }
 
     [Fact]
-    public void U05_up_down_buttons_still_available()
+    public void U05_reorder_commands_remain_the_single_commit_path()
     {
         var vm = NewVm();
         vm.RunCommand.Execute("添加图层");

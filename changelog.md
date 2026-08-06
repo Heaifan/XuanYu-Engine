@@ -19,7 +19,13 @@
 ---
 
 ## 2026-08（当前自然月）
-## v0.2.24.45-fix
+## v0.2.24.47-fix
+MAP-A-R2-D5-F2：Navigation Gizmo DIP、局部图层拖拽与日志降噪重做（2026-08-06，Commit 本轮落库为准）
+- T1：普通 revert 撤销 F1，保留世界原点 Overlay、焦点框修复与 PowerShell 守卫兼容；恢复提交 `ecb9134` 已推送。
+- T2：Navigation Gizmo 使用独立 `gizmoParams.w=RenderScaling`，Shader 在 DIP 空间计算，物理 viewport/scissor 不变；CPU/Shader 不重复缩放。
+- T3：移除全局 DragDrop，改为六点手柄局部 Pointer Capture；不替换 ItemsSource、不移除源行、不禁用窗口；NoRebuild、周期选择投影与命令缓冲摘要不再刷屏。
+- 状态：MAP-A-R2-D5-F2：READY FOR USER ACCEPTANCE；D6 顺延至 v0.2.24.48-rz，未创建 Tag/Release。
+
 MAP-A-R2-D5：焦点框作用域与世界原点 Overlay 修复（2026-08-06，Commit 本轮落库为准）
 - **焦点框**：视口原生宿主设为不可聚焦并清除 FocusAdorner；布局分隔器不显示焦点装饰；Button 保留正式 `2 DIP` 焦点框与 `1 DIP` 外偏移合同。
 - **世界原点**：DrawPlan 调整为实体/轮廓之后绘制；WorldOrigin 管线关闭深度测试并保持关闭深度写入；片元 Shader 不再写入深度，中心标记保持屏幕恒定尺寸，模型或地面不再遮挡。

@@ -26,7 +26,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
         }
         if (update.Kind == MapSurfaceResourceUpdateKind.NoRebuild)
         {
-            Log($"地图资源更新决策：处理={MapSurfaceResourceUpdateText.Of(update.Kind)}；序号={map.SourceChangeSequence}；资源键已变化=否");
             _lastConsumedMapSequence = map.SourceChangeSequence;
             return;
         }

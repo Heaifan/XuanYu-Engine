@@ -43,6 +43,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         scene[16] = 96.0f; // 区域尺寸 DIP（F3-F3）
         scene[17] = 14.0f; // 边距 DIP（F3-F3）
         scene[18] = _renderProjection.AssistState.NavGizmoHoverIndex;
+        scene[19] = (float)_renderProjection.ViewportDpiScale;
         fixed (float* pScene = scene)
         {
             var range = new PushConstantRange
