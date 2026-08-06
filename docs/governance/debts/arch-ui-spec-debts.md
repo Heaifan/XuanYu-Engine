@@ -6,7 +6,7 @@
 
 ## ARCH-UI-SPEC-R1：玄域引擎 UI 规范 1.0
 
-- **状态**：**治理中**（2026-08-06 更新：D0/D1/D2/D3/D4 **COMPLETE**（D4-F1 真机复验 F1-1~F1-9 全部通过）；**D5 控件状态/表单/弹窗/通知/空状态/日志治理为当前轮**；已知缺陷 **D5-FIX-01**（按钮内容未居中，用户批准延期由 D5 第一项统一处理））
+- **状态**：**治理中**（2026-08-06 更新：D0/D1/D2/D3/D4 COMPLETE；**D5 控件状态/表单/弹窗/通知/空状态/日志治理 READY FOR USER ACCEPTANCE**（D5-FIX-01 已由 D5 第一项统一处理，待真机裁决））
 - **范围**：字体、字重、颜色、间距、控件、图标、布局、导航、日志通知、
   状态语义、拖拽、空状态、最小点击热区、最小窗口、自适应、Tooltip、
   菜单与可访问性规范
@@ -21,7 +21,8 @@
   - **D4 完成（2026-08-06，用户真机验收未通过 → D4-F1）**：检查器（字号 Token 层级/结构化字段/全宽分组去卡片/调试页 96 列）；地图编辑器（只读摘要 72 列/MapId 前 8…后 6+Tooltip+复制）；图层面板（图标 16/热区 26×24/Layer.* Token/选中样式/三重区分/插入线 DropLine #5B8DB8）；**基线 226 → 159（-67，真实迁移）**；守卫缺陷修复（warcore $failures 重置吞失败 + 5+100 self-check 期望笔误）；**D4-F1（2026-08-06，READY FOR USER RE-ACCEPTANCE）**：只读键值行始终单行双列（规范 §7.1.1 定稿：默认标签列 80、72~96 组件范围、单行省略+完整 Tooltip）、可编辑表单行仅真实输入控件 <360 整组上下（EditableFormLayoutModel 统一 360，删除 320 紧凑模型）、调试页四列表结构化（DebugText/BuildDebug* → InspectorFieldRow）、公共语义样式 uiLabel/uiValue/uiSingleLine/uiMultiline/uiSection/uiTextButton（Ui.axaml，全部 Token 引用）、sideTab/caption 裸 FontSize 迁移 Token（值不变）、图层名/属性单行省略+Tooltip；基线维持 159（未新增债务）；
   - **允许清单（按路径+规则类型+API 模式+原因登记）**：TreeGuide.cs Render（树引导线渲染色 ALLOW-RENDER）、Win32ViewportHost.cs（Win32 样式常量非颜色 ALLOW-WIN32）、activeMark/dropLine 圆角 1.5/1（组件例外，规范 §5.4，基线保留 2 条）；
   - **D4-A1 收口（2026-08-06，用户正式裁决 D4 COMPLETE）**：F1-1~F1-9 全部通过；K02/K03/K04 复验 PASS；登记 **D5-FIX-01**（按钮内容未居中，D5 第一项统一处理）；
-  - 下一步：**D5 控件状态/表单/弹窗/通知/空状态/日志治理 → 真机验收 → D6**；
+  - **D5 完成（2026-08-06，READY FOR USER ACCEPTANCE）**：按钮（D5-FIX-01 内容居中 + 完整状态 + uiDanger，基线 -5）；表单（TextBox 状态 + error/warning 非仅颜色 + 提交反馈）；弹窗（DialogHost 普通/危险/未保存，危险非默认焦点 Enter=Escape 安全，未保存重构删代码 Window 基线 -11，新建地图/删除图层危险确认）；通知（四级状态机单条不刷屏 + Footer 通知条）；空状态（日志初次/筛选无结果区分 + 清空筛选）；日志（回到底部按钮 + TailStateChanged，自动跟随/用户上滚保留）；**基线 159 → 143（-16）**；
+  - 下一步：**D5 真机验收（IPO 清单组 22~30）→ D6 DPI/焦点/可访问性/性能收口与债务清零**；
   - 治理完成前暂停新增 UI 功能（编辑器、游戏 UI、地图功能面板、工具面板）；
   - 未经用户批准不得创建受控例外。
 - **前置约束**：

@@ -17,11 +17,11 @@
     <!-- EditableFormRow 标准模式（内容宽 ≥360）：标签列 96 / 左标签右输入 -->
     <Grid x:Name="PropsWide" ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4">
       <TextBlock Text="宽度（米）" Classes="uiLabel"/>
-      <TextBox Grid.Column="1" Text="{Binding MapWidthText}"/>
+      <TextBox Grid.Column="1" Text="{Binding MapWidthText}" Classes.error="{Binding IsMapFormError}"/>
       <TextBlock Grid.Row="1" Text="深度（米）" Classes="uiLabel"/>
-      <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MapDepthText}"/>
+      <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MapDepthText}" Classes.error="{Binding IsMapFormError}"/>
       <TextBlock Grid.Row="2" Text="基础高度（米）" Classes="uiLabel"/>
-      <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MapBaseHeightText}"/>
+      <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MapBaseHeightText}" Classes.error="{Binding IsMapFormError}"/>
       <TextBlock Grid.Row="3" Text="地表类型" Classes="uiLabel"/>
       <TextBlock Grid.Row="3" Grid.Column="1" Text="Flat（只读）" Classes="uiValue"/>
     </Grid>
@@ -29,15 +29,15 @@
     <StackPanel x:Name="PropsNarrow" Spacing="6" IsVisible="False">
       <StackPanel Spacing="2">
         <TextBlock Text="宽度（米）" Classes="uiLabel"/>
-        <TextBox Text="{Binding MapWidthText}"/>
+        <TextBox Text="{Binding MapWidthText}" Classes.error="{Binding IsMapFormError}"/>
       </StackPanel>
       <StackPanel Spacing="2">
         <TextBlock Text="深度（米）" Classes="uiLabel"/>
-        <TextBox Text="{Binding MapDepthText}"/>
+        <TextBox Text="{Binding MapDepthText}" Classes.error="{Binding IsMapFormError}"/>
       </StackPanel>
       <StackPanel Spacing="2">
         <TextBlock Text="基础高度（米）" Classes="uiLabel"/>
-        <TextBox Text="{Binding MapBaseHeightText}"/>
+        <TextBox Text="{Binding MapBaseHeightText}" Classes.error="{Binding IsMapFormError}"/>
       </StackPanel>
       <StackPanel Spacing="2">
         <TextBlock Text="地表类型" Classes="uiLabel"/>
@@ -54,6 +54,12 @@
       <Button Classes="uiTextButton" Grid.Row="1" Grid.Column="1" Content="重做地图修改"
               Command="{Binding RunCommand}" CommandParameter="重做地图修改" IsEnabled="{Binding CanRedo}"/>
     </Grid>
-    <TextBlock Text="{Binding MapEditError}" Classes="uiMultiline" Foreground="{StaticResource Color.Error}"/>
+    <!-- 表单错误反馈（D5：非仅颜色——图标 + 文字 + 输入框错误边框） -->
+    <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsMapFormError}">
+      <PathIcon Data="{StaticResource ErrorIcon}" Width="14" Height="14"
+                Foreground="{StaticResource Color.Error}" VerticalAlignment="Center"/>
+      <TextBlock Text="{Binding MapEditError}" Classes="uiMultiline"
+                 Foreground="{StaticResource Color.Error}" VerticalAlignment="Center"/>
+    </StackPanel>
   </StackPanel>
 </UserControl>

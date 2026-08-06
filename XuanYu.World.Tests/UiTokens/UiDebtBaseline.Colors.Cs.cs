@@ -37,16 +37,5 @@ internal static partial class UiDebtBaseline
         list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#94b9e8"));
         list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#185aa6"));
         list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.SetDock", UiRuleKind.CsHexColor, "Hex", "#d5dfec"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.ShowUnsavedDialog", UiRuleKind.CsHexColor, "Hex", "#243447"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.ShowUnsavedDialog", UiRuleKind.CsHexColor, "Hex", "#64748b"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.Add", UiRuleKind.CsHexColor, "Hex", "#64748b"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.SetDock", UiRuleKind.CsHexColor, "Hex", "#fbfdff"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.SetDock", UiRuleKind.CsHexColor, "Hex", "#d5dfec"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.Button", UiRuleKind.CsHexColor, "Hex", "#e9f2ff"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.Button", UiRuleKind.CsHexColor, "Hex", "#ffffff"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.Button", UiRuleKind.CsHexColor, "Hex", "#94b9e8"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.Button", UiRuleKind.CsHexColor, "Hex", "#d5dfec"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.Button", UiRuleKind.CsHexColor, "Hex", "#185aa6"));
-        list.Add(new("W69", "XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs", "UiWin.Button", UiRuleKind.CsHexColor, "Hex", "#2f3d52"));
     }
 }

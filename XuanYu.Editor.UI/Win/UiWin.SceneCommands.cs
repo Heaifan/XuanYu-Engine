@@ -38,6 +38,13 @@ public partial class UiWin
         if (DataContext is not UiVm vm) return;
         if (command is "新建地图" or "聚焦地图")
         {
+            if (command == "新建地图")
+            {
+                // D5：新建地图会替换当前地图属性并清空修改历史——危险确认
+                var proceed = await ShowDanger("新建地图",
+                    "新建地图将替换当前地图属性并清空地图修改历史，此操作不可撤销。是否继续？");
+                if (proceed != "ok") return;
+            }
             await RunMapCommand(command);
             return;
         }

@@ -80,10 +80,15 @@ public partial class UiWin : Window
 
     void AttachVm()
     {
-        if (_attachedVm is not null) _attachedVm.FileCommandRequested -= OnFileCommandRequested;
+        if (_attachedVm is not null)
+        {
+            _attachedVm.FileCommandRequested -= OnFileCommandRequested;
+            _attachedVm.DangerousCommandConfirmRequested -= OnDangerousCommandRequested;
+        }
         _attachedVm = DataContext as UiVm;
         if (_attachedVm is null) return;
         _attachedVm.FileCommandRequested += OnFileCommandRequested;
+        _attachedVm.DangerousCommandConfirmRequested += OnDangerousCommandRequested;
         Title = _attachedVm.DocumentWindowTitle;
         _attachedVm.PropertyChanged += (_, e) =>
         {

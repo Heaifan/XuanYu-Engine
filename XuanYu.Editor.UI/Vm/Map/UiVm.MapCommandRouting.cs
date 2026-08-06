@@ -25,6 +25,9 @@ public sealed partial class UiVm
         {
             LogMapCommandReceived(name);
             ApplyMapProperties();
+            // D5：提交反馈通知（成功/失败；失败详情同时进入日志与表单错误区）
+            if (string.IsNullOrEmpty(MapEditError)) NotifySuccess("地图属性已应用");
+            else NotifyError(MapEditError);
             return true;
         }
 
@@ -66,7 +69,9 @@ public sealed partial class UiVm
         if (name == "删除图层")
         {
             LogMapCommandReceived(name);
-            DeleteLayer();
+            // D5：危险操作先请求 UI 确认（未注入处理器时直接执行，兼容既有测试）
+            if (DangerousCommandConfirmRequested is not null) RequestDangerousConfirmation(name);
+            else DeleteLayer();
             return true;
         }
 

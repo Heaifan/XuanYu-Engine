@@ -3,11 +3,46 @@
         xmlns:local="using:XuanYu.Editor.UI"
         x:Class="XuanYu.Editor.UI.UiWin"
         x:DataType="local:UiVm"
-        Title="玄域引擎编辑器 v0.2.24.42-fix"
+        Title="玄域引擎编辑器 v0.2.24.43-rz"
         Width="1360"
         Height="820"
         MinWidth="1024"
         MinHeight="640"
         Background="{StaticResource Color.Bg.Application}">
-  <local:UiRoot />
+  <Window.Styles>
+    <!-- ARCH-UI-SPEC-R1-D5：弹窗宿主样式（普通/危险/未保存确认共用卡片） -->
+    <Style Selector="TextBlock.dialogTitle">
+      <Setter Property="FontSize" Value="{StaticResource Font.Title.Size}"/>
+      <Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/>
+      <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+    </Style>
+    <Style Selector="TextBlock.dialogMessage">
+      <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+      <Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="Border.dialogCard">
+      <Setter Property="Background" Value="{StaticResource Color.Bg.Overlay}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="{StaticResource Radius.Standard}"/>
+      <Setter Property="Padding" Value="20,18"/>
+    </Style>
+  </Window.Styles>
+  <Grid>
+    <local:UiRoot/>
+    <!-- D5 弹窗宿主：遮罩 + 卡片（Enter=默认按钮[非危险]，Escape=取消） -->
+    <Border x:Name="DialogOverlay" IsVisible="False"
+            Background="{StaticResource Color.Bg.Overlay}" Opacity="0.55"/>
+    <Border x:Name="DialogCard" IsVisible="False" Classes="dialogCard"
+            Width="420" HorizontalAlignment="Center" VerticalAlignment="Center"
+            KeyDown="DialogCard_KeyDown">
+      <StackPanel Spacing="10">
+        <TextBlock x:Name="DialogTitle" Classes="dialogTitle"/>
+        <TextBlock x:Name="DialogMessage" Classes="dialogMessage"/>
+        <StackPanel x:Name="DialogButtons" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Spacing="8" Margin="0,8,0,0"/>
+      </StackPanel>
+    </Border>
+  </Grid>
 </Window>

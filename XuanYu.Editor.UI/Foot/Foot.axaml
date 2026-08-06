@@ -18,31 +18,34 @@
     <Style Selector="TextBlock.logMono"><Setter Property="FontFamily" Value="Consolas, Microsoft YaHei UI"/><Setter Property="Foreground" Value="#27354a"/></Style>
     <Style Selector="TextBlock.logHead"><Setter Property="FontSize" Value="12"/><Setter Property="Foreground" Value="#64748b"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
     <Style Selector="ListBox.logList ListBoxItem"><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,1"/></Style>
-    <Style Selector="ListBox.logList ListBoxItem:selected">
-      <Setter Property="Background" Value="#eaf3ff"/><Setter Property="Foreground" Value="#172337"/>
+    <Style Selector="ListBox.logList ListBoxItem:selected"><Setter Property="Background" Value="#eaf3ff"/><Setter Property="Foreground" Value="#172337"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D5：回到底部按钮（紧凑，不遮日志行） -->
+    <Style Selector="Button.scrollToBottom">
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="Padding" Value="8,3"/>
+      <Setter Property="Margin" Value="0"/>
+      <Setter Property="Background" Value="{StaticResource Color.Bg.Panel}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="3"/>
     </Style>
   </UserControl.Styles>
 
   <Grid RowDefinitions="Auto,*">
-    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" MinHeight="28">
+    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16" MinHeight="28">
       <Button Classes="logSummary" Command="{Binding ToggleLogCommand}">
         <TextBlock Text="{Binding LogSummary}" VerticalAlignment="Center"/>
       </Button>
       <TextBlock Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center" Foreground="#50607a"/>
+      <local:NotificationBar Grid.Column="2"/>
     </Grid>
 
     <Border Grid.Row="1" IsVisible="{Binding IsLogOpen}" MinHeight="0" Margin="0,8,0,0" BorderBrush="#d9e2ee" BorderThickness="1" CornerRadius="6" Background="#f8fbff" Padding="8">
       <Grid RowDefinitions="Auto,Auto,*">
         <Grid ColumnDefinitions="*,220" Margin="0,0,0,6">
           <StackPanel Orientation="Horizontal" Spacing="4">
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterAll}" Content="全部" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部"/>
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInfo}" Content="信息" Command="{Binding SelectLogFilterCommand}" CommandParameter="信息"/>
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterWarning}" Content="警告" Command="{Binding SelectLogFilterCommand}" CommandParameter="警告"/>
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterError}" Content="错误" Command="{Binding SelectLogFilterCommand}" CommandParameter="错误"/>
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterBuild}" Content="构建" Command="{Binding SelectLogFilterCommand}" CommandParameter="构建"/>
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterTask}" Content="任务" Command="{Binding SelectLogFilterCommand}" CommandParameter="任务"/>
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInput}" Content="输入" Command="{Binding SelectLogFilterCommand}" CommandParameter="输入"/>
-            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterRender}" Content="渲染" Command="{Binding SelectLogFilterCommand}" CommandParameter="渲染"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterAll}" Content="全部" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInfo}" Content="信息" Command="{Binding SelectLogFilterCommand}" CommandParameter="信息"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterWarning}" Content="警告" Command="{Binding SelectLogFilterCommand}" CommandParameter="警告"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterError}" Content="错误" Command="{Binding SelectLogFilterCommand}" CommandParameter="错误"/>
+            <Button Classes="logFilter" Classes.selected="{Binding IsLogFilterBuild}" Content="构建" Command="{Binding SelectLogFilterCommand}" CommandParameter="构建"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterTask}" Content="任务" Command="{Binding SelectLogFilterCommand}" CommandParameter="任务"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterInput}" Content="输入" Command="{Binding SelectLogFilterCommand}" CommandParameter="输入"/><Button Classes="logFilter" Classes.selected="{Binding IsLogFilterRender}" Content="渲染" Command="{Binding SelectLogFilterCommand}" CommandParameter="渲染"/>
           </StackPanel>
           <Border Grid.Column="1" Classes="chrome" Padding="8,4">
             <Grid ColumnDefinitions="18,*">
@@ -53,12 +56,7 @@
         </Grid>
 
         <Grid Grid.Row="1" ColumnDefinitions="4,72,56,72,92,*,82" ColumnSpacing="10" Margin="0,0,0,4">
-          <TextBlock Grid.Column="1" Text="时间" Classes="logHead"/>
-          <TextBlock Grid.Column="2" Text="级别" Classes="logHead"/>
-          <TextBlock Grid.Column="3" Text="来源" Classes="logHead"/>
-          <TextBlock Grid.Column="4" Text="模块" Classes="logHead"/>
-          <TextBlock Grid.Column="5" Text="消息" Classes="logHead"/>
-          <TextBlock Grid.Column="6" Text="折叠" Classes="logHead"/>
+          <TextBlock Grid.Column="1" Text="时间" Classes="logHead"/><TextBlock Grid.Column="2" Text="级别" Classes="logHead"/><TextBlock Grid.Column="3" Text="来源" Classes="logHead"/><TextBlock Grid.Column="4" Text="模块" Classes="logHead"/><TextBlock Grid.Column="5" Text="消息" Classes="logHead"/><TextBlock Grid.Column="6" Text="折叠" Classes="logHead"/>
         </Grid>
 
         <Grid Grid.Row="2" ColumnDefinitions="*,280" ColumnSpacing="10">
@@ -74,22 +72,24 @@
               <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="local:LogEntry">
                   <Grid ColumnDefinitions="4,72,56,72,92,*,82" ColumnSpacing="10">
-                    <Border Background="{Binding Accent}" CornerRadius="2"/>
-                    <TextBlock Grid.Column="1" Text="{Binding Time}" Classes="logMono"/>
-                    <TextBlock Grid.Column="2" Text="{Binding LevelText}" FontWeight="SemiBold"/>
-                    <TextBlock Grid.Column="3" Text="{Binding SourceText}" Classes="logMono"/>
-                    <TextBlock Grid.Column="4" Text="{Binding ModuleText}" Classes="logMono"/>
-                    <TextBlock Grid.Column="5" Text="{Binding Message}" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Grid.Column="6" Text="{Binding RepeatText}" Foreground="#7a5a19"/>
+                    <Border Background="{Binding Accent}" CornerRadius="2"/><TextBlock Grid.Column="1" Text="{Binding Time}" Classes="logMono"/><TextBlock Grid.Column="2" Text="{Binding LevelText}" FontWeight="SemiBold"/><TextBlock Grid.Column="3" Text="{Binding SourceText}" Classes="logMono"/><TextBlock Grid.Column="4" Text="{Binding ModuleText}" Classes="logMono"/><TextBlock Grid.Column="5" Text="{Binding Message}" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="6" Text="{Binding RepeatText}" Foreground="#7a5a19"/>
                   </Grid>
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>
 
+            <!-- D5：空状态区分（初次/无数据 与 筛选无结果；筛选空态提供清空入口） -->
             <StackPanel IsVisible="{Binding HasNoLogItems}" HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock Text="暂无日志" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center"/>
               <TextBlock Text="低频事实记录会显示在这里，调试快照和临时探针不进入普通日志。" Classes="muted" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+              <Button Content="清空筛选" IsVisible="{Binding ShowNoFilterResults}" Margin="0,8,0,0" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部" HorizontalAlignment="Center"/>
             </StackPanel>
+            <StackPanel IsVisible="{Binding ShowNoFilterResults}" HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock Text="没有匹配的日志" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+              <TextBlock Text="当前筛选条件下没有日志，可以清空筛选查看全部。" Classes="muted" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <!-- D5：用户离开底部时显示「回到底部」；点击恢复自动跟随 -->
+            <Button x:Name="ScrollToBottomButton" IsVisible="False" Click="ScrollToBottom_Click" Content="回到底部" Classes="scrollToBottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
           </Grid>
           <local:LogDetailPanel Grid.Column="1"/>
         </Grid>

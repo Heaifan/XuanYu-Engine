@@ -22,8 +22,16 @@ public partial class Foot : UserControl
         InitializeComponent();
         AddHandler(KeyDownEvent, Foot_KeyDown, RoutingStrategies.Tunnel);
         _autoScroll = new LogListAutoScrollController(LogList);
+        _autoScroll.TailStateChanged += atTail => ScrollToBottomButton.IsVisible = !atTail; // D5
         DataContextChanged += (_, _) => HookVm();
         Unloaded += (_, _) => _autoScroll.Dispose();
+    }
+
+    // D5：用户离开底部时按钮可见；点击恢复自动跟随并隐藏
+    void ScrollToBottom_Click(object? sender, RoutedEventArgs e)
+    {
+        _autoScroll.ForceFollow();
+        ScrollToBottomButton.IsVisible = false;
     }
 
     void HookVm()

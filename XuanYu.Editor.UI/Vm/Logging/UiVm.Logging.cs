@@ -16,7 +16,7 @@ public sealed partial class UiVm
     public IReadOnlyList<LogEntry> BuildItems => _logBuffer.Filter(EditorLogFilter.Build);
     public IReadOnlyList<LogEntry> TaskItems => _logBuffer.Filter(EditorLogFilter.Task);
     public string LogSummary => EditorLogSummary.From(_logBuffer.All).Text;
-    public bool HasNoLogItems => LogItems.Count == 0;
+    public bool HasNoLogItems => LogItems.Count == 0; public bool ShowNoFilterResults => !IsLogFilterAll && HasNoLogItems; // D5：筛选空态区分
     public bool IsLogFilterAll => _logFilter == EditorLogFilter.All;
     public bool IsLogFilterInfo => _logFilter == EditorLogFilter.Info;
     public bool IsLogFilterWarning => _logFilter == EditorLogFilter.Warning;
@@ -96,5 +96,5 @@ public sealed partial class UiVm
         RefreshLogBindings();
     }
 
-    void RefreshLogBindings() { OnPropertyChanged(nameof(LogItems)); OnPropertyChanged(nameof(ProblemItems)); OnPropertyChanged(nameof(BuildItems)); OnPropertyChanged(nameof(TaskItems)); OnPropertyChanged(nameof(LogSummary)); OnPropertyChanged(nameof(HasNoLogItems)); OnPropertyChanged(nameof(SelectedLogEntry)); OnPropertyChanged(nameof(HasSelectedLogEntry)); OnPropertyChanged(nameof(SelectedLogClipboardText)); OnPropertyChanged(nameof(IsLogFilterAll)); OnPropertyChanged(nameof(IsLogFilterInfo)); OnPropertyChanged(nameof(IsLogFilterWarning)); OnPropertyChanged(nameof(IsLogFilterError)); OnPropertyChanged(nameof(IsLogFilterBuild)); OnPropertyChanged(nameof(IsLogFilterTask)); OnPropertyChanged(nameof(IsLogFilterInput)); OnPropertyChanged(nameof(IsLogFilterRender)); }
+    void RefreshLogBindings() { OnPropertyChanged(nameof(LogItems)); OnPropertyChanged(nameof(ProblemItems)); OnPropertyChanged(nameof(BuildItems)); OnPropertyChanged(nameof(TaskItems)); OnPropertyChanged(nameof(LogSummary)); OnPropertyChanged(nameof(HasNoLogItems)); OnPropertyChanged(nameof(ShowNoFilterResults)); OnPropertyChanged(nameof(SelectedLogEntry)); OnPropertyChanged(nameof(HasSelectedLogEntry)); OnPropertyChanged(nameof(SelectedLogClipboardText)); OnPropertyChanged(nameof(IsLogFilterAll)); OnPropertyChanged(nameof(IsLogFilterInfo)); OnPropertyChanged(nameof(IsLogFilterWarning)); OnPropertyChanged(nameof(IsLogFilterError)); OnPropertyChanged(nameof(IsLogFilterBuild)); OnPropertyChanged(nameof(IsLogFilterTask)); OnPropertyChanged(nameof(IsLogFilterInput)); OnPropertyChanged(nameof(IsLogFilterRender)); }
 }

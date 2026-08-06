@@ -10,6 +10,8 @@
   </Styles.Resources>
   <!-- ARCH-UI-SPEC-R1-D4-F1（纠偏）：公共语义样式独立文件，只在此聚合一次 -->
   <StyleInclude Source="avares://XuanYu.Editor.UI/Design/UiStyles.D4F1.axaml"/>
+  <!-- ARCH-UI-SPEC-R1-D5：按钮与表单状态样式（含 D5-FIX-01 内容居中） -->
+  <StyleInclude Source="avares://XuanYu.Editor.UI/Design/UiStyles.D5.axaml"/>
   <Style Selector="Window">
     <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI, Inter"/>
     <Setter Property="Foreground" Value="#172033"/>
@@ -36,14 +38,10 @@
     <Setter Property="MinWidth" Value="52"/>
     <Setter Property="Padding" Value="10,7"/>
     <Setter Property="Margin" Value="0,0,6,0"/>
-    <Setter Property="Background" Value="#eef3fa"/>
-    <Setter Property="BorderBrush" Value="#d4ddea"/>
+    <Setter Property="Background" Value="{StaticResource Color.Bg.Panel}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
     <Setter Property="BorderThickness" Value="1"/>
-    <Setter Property="Foreground" Value="#26324a"/>
-  </Style>
-  <Style Selector="Button:pointerover">
-    <Setter Property="Background" Value="#e4edf8"/>
-    <Setter Property="BorderBrush" Value="#9fb5d6"/>
+    <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
   </Style>
   <Style Selector="TabControl">
     <Setter Property="Background" Value="Transparent"/>

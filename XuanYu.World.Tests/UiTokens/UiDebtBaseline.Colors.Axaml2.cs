@@ -35,11 +35,6 @@ internal static partial class UiDebtBaseline
         list.Add(new("W02", "XuanYu.Editor.UI/Ui.axaml", "Style:Border.chrome", UiRuleKind.HexColor, "Background", "#edf2f8"));
         list.Add(new("W02", "XuanYu.Editor.UI/Ui.axaml", "Style:Border.chrome", UiRuleKind.HexColor, "BorderBrush", "#d7dfeb"));
         list.Add(new("W02", "XuanYu.Editor.UI/Ui.axaml", "Style:Border.pill", UiRuleKind.HexColor, "Background", "#e8eef7"));
-        list.Add(new("W08", "XuanYu.Editor.UI/Ui.axaml", "Style:Button", UiRuleKind.HexColor, "Background", "#eef3fa"));
-        list.Add(new("W02", "XuanYu.Editor.UI/Ui.axaml", "Style:Button", UiRuleKind.HexColor, "BorderBrush", "#d4ddea"));
-        list.Add(new("W08", "XuanYu.Editor.UI/Ui.axaml", "Style:Button", UiRuleKind.HexColor, "Foreground", "#26324a"));
-        list.Add(new("W08", "XuanYu.Editor.UI/Ui.axaml", "Style:Button:pointerover", UiRuleKind.HexColor, "Background", "#e4edf8"));
-        list.Add(new("W08", "XuanYu.Editor.UI/Ui.axaml", "Style:Button:pointerover", UiRuleKind.HexColor, "BorderBrush", "#9fb5d6"));
         list.Add(new("W02", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab", UiRuleKind.HexColor, "Foreground", "#6d788a"));
         list.Add(new("W11", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab:pointerover", UiRuleKind.HexColor, "Background", "#f2f6fb"));
         list.Add(new("W11", "XuanYu.Editor.UI/Ui.axaml", "Style:TabItem.sideTab:pointerover", UiRuleKind.HexColor, "Foreground", "#47627f"));

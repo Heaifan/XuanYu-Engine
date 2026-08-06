@@ -2,8 +2,9 @@ using Avalonia.Controls;
 
 namespace XuanYu.Editor.UI;
 
-// ARCH-UI-SPEC-R1-D4-F1（纠偏 v2）：地图属性输入表单——EditableFormRow 方向切换
-// （内容宽 <360 整组上下）。只控制输入表单方向，不参与面板密度（MapEditorLayoutModel）。
+// ARCH-UI-SPEC-R1-D4-F1（纠偏 v2）/D5：地图属性输入表单——EditableFormRow 方向切换
+// （内容宽 <360 整组上下）；错误状态非仅颜色（输入框错误边框 + 图标 + 说明文字）。
+// 只控制输入表单方向，不参与面板密度（MapEditorLayoutModel）。
 public partial class MapFormPanel : UserControl
 {
     public MapFormPanel()

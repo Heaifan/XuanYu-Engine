@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.NotificationBar"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <!-- ARCH-UI-SPEC-R1-D5：四级通知条（不刷屏——只保留最新一条；技术详情进日志） -->
+    <Style Selector="Border.notificationBar">
+      <Setter Property="Background" Value="{StaticResource Color.Bg.Panel}"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="3"/>
+      <Setter Property="Padding" Value="8,3"/>
+      <Setter Property="MaxWidth" Value="320"/>
+    </Style>
+  </UserControl.Styles>
+  <Border Classes="notificationBar" IsVisible="{Binding HasNotification}">
+    <StackPanel Orientation="Horizontal" Spacing="6">
+      <PathIcon Data="{StaticResource InfoIcon}" IsVisible="{Binding IsNotificationInfo}" Width="14" Height="14" Foreground="{StaticResource Color.Text.Secondary}"/>
+      <PathIcon Data="{StaticResource SuccessIcon}" IsVisible="{Binding IsNotificationSuccess}" Width="14" Height="14" Foreground="{StaticResource Color.Success}"/>
+      <PathIcon Data="{StaticResource WarningIcon}" IsVisible="{Binding IsNotificationWarning}" Width="14" Height="14" Foreground="{StaticResource Color.Warning}"/>
+      <PathIcon Data="{StaticResource ErrorIcon}" IsVisible="{Binding IsNotificationError}" Width="14" Height="14" Foreground="{StaticResource Color.Error}"/>
+      <TextBlock Text="{Binding NotificationText}" Classes="uiSingleLine" ToolTip.Tip="{Binding NotificationText}"/>
+    </StackPanel>
+  </Border>
+</UserControl>

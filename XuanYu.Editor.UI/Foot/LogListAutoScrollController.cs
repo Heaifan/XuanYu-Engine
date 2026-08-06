@@ -31,6 +31,16 @@ public sealed partial class LogListAutoScrollController : IDisposable
         Resolve();
     }
 
+    // ARCH-UI-SPEC-R1-D5：尾部状态变化（true=在底部/false=用户离开底部），供「回到底部」按钮显隐
+    public event Action<bool>? TailStateChanged;
+
+    void SetTail(bool atTail)
+    {
+        if (_atTail == atTail) return;
+        _atTail = atTail;
+        TailStateChanged?.Invoke(atTail);
+    }
+
     void Resolve()
     {
         if (_resolved) return;
@@ -56,7 +66,7 @@ public sealed partial class LogListAutoScrollController : IDisposable
         if (lastItem is null) // 空集合：恢复跟随，不安排滚动
         {
             _requestVersion++;
-            _atTail = true;
+            SetTail(true);
             _forceNext = false;
             _tailCorrectionScheduled = false;
             return;

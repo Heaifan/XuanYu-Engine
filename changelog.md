@@ -19,6 +19,20 @@
 ---
 
 ## 2026-08（当前自然月）
+## v0.2.24.43-rz
+ARCH-UI-SPEC-R1-D5：控件状态、表单、弹窗、通知、空状态与日志治理（2026-08-06，Commit 本轮落库为准）
+- **按钮治理**（D5-FIX-01 统一处理）：`Design/UiStyles.D5.axaml` 新增——Button 内容水平/垂直居中（HorizontalContentAlignment/VerticalContentAlignment=Center，禁止逐按钮 Margin 偏移修补）；完整状态 Normal/Hover（Color.Hover.Bg+Border.Strong）/Pressed（边框 Accent）/Focused（Color.Focus 边框 1px，不跳动）/Disabled（Text.Disabled+Bg.Control）；危险按钮 `Button.uiDanger`（Color.Danger 底 + 白字）；全局 Button 色迁移正式 Token（Bg.Panel/Border.Default/Text.Primary），基线 -5。
+- **表单状态**：TextBox 完整状态样式（Normal/Hover/Focus/Disabled，全部 Token）+ `TextBox.error`/`TextBox.warning` 边框类；地图属性表单 6 个输入框绑定 `IsMapFormError`；**错误反馈非仅颜色**（错误图标 ErrorIcon + 说明文字 + 输入框红色边框三重表达，规范 §11.2）；提交反馈通知（应用地图属性成功→Success 通知/失败→Error 通知 + 表单错误区）；表单错误行在无错误时隐藏。
+- **弹窗系统**（新）：UiWin 内置 DialogHost（遮罩 + 卡片，XAML 模板化）；`ShowMessage`/`ShowConfirm`/`ShowDanger` 三形态；**危险弹窗默认按钮=取消（非危险），Enter 触发默认按钮、Escape 取消**；未保存确认重构为 DialogHost（保存=默认/不保存=危险/取消=Escape），删除代码构建 Window（基线 -11）；**新建地图**走危险确认（替换地图属性+清空历史，不可撤销）；**删除图层**走危险确认（UiVm `DangerousCommandConfirmRequested` 事件 + `ConfirmDangerousCommand`，未注入处理器时保持直接执行兼容既有测试）。
+- **通知系统**（新）：UiVm 四级通知状态机（`UiNotificationLevel` Info/Success/Warning/Error；`NotifyInfo/Success/Warning/Error`）；**不刷屏**——只保留最新一条（序列号递增）；技术详情由调用方写入既有日志系统；Footer 通知条（级别图标 + 单行省略 + 完整 Tooltip，四级色 Token）；真实触发点：地图属性应用成功/失败、日志复制（既有）。
+- **空状态**：日志空状态区分两类——初次/无数据（「暂无日志」）与**筛选无结果**（「没有匹配的日志」+「清空筛选」入口，`ShowNoFilterResults`）；检查器空状态保持（D4）。
+- **日志治理**：自动跟随与用户上滚互不冲突（既有 `LogAutoScrollPolicy` 保留）；**「回到底部」按钮**（用户离开底部时右下角显示，点击恢复跟随并隐藏——控制器新增 `TailStateChanged` 事件）；级别视觉/筛选/行高/列宽保持（D4/D3 验收基础）；搜索框占位保持（不扩张）。
+- **Token 迁移**：Manifest 保持 **112 Frozen / 0 PendingReview**（未新增 Token——按钮/表单状态色全部映射现有 Token：Color.Hover.Bg/Focus/Danger/Bg.Control/Bg.Panel 等）；**债务基线 159 → 143（-16）**：Ui.axaml Button 状态色×5 + UiWin.UnsavedDialog 代码 Window 颜色×11（真实代码迁移）；未用 Locator/AllowedCount 掩盖。
+- 验证：全解决方案 `--no-incremental` 串行 Build **0W0E**（落盘 /tmp/d5-final-build.log）；Core 339/339、World 852/852（+29 D5 测试）、WarCore 22/22，合计 **1213/1213 PASS**；启动冒烟 PASS；arch-a-guard PASS（版本一致性检查有效）；git diff --check PASS。
+- 治理：版本 v0.2.24.42-fix → **v0.2.24.43-rz**（四处同步）；未创建 Tag/Release。
+- 状态：**ARCH-UI-SPEC-R1-D5：READY FOR USER ACCEPTANCE**（尚未获得用户真机裁决；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项）。
+- 保留（审计矩阵归属但本轮范围外）：G02 焦点框系统与 DPI/减少动画/屏幕阅读器（D6）；日志搜索实现（占位保留）；加载/进度长任务场景（无真实加载流程，不虚构）。
+
 
 ## v0.2.24.42-fix
 ARCH-UI-SPEC-R1-D4-F1：单行属性行、文本溢出与字体统一修复（2026-08-06，Commit 本轮落库为准）

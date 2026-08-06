@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="480" viewBox="0 0 860 480" font-family="Microsoft YaHei UI, sans-serif">
+  <rect x="0" y="0" width="860" height="480" fill="#FFFFFF"/>
+  <text x="16" y="30" font-size="16" font-weight="bold" fill="#243744">ARCH-UI-SPEC-R1-D5 控件状态/表单/弹窗/通知/空状态/日志治理（浅色示意）</text>
+
+  <!-- 按钮状态 -->
+  <rect x="16" y="44" width="270" height="200" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="28" y="66" font-size="14" font-weight="bold" fill="#243744">按钮（D5-FIX-01 居中）</text>
+  <line x1="28" y1="72" x2="274" y2="72" stroke="#D5DEE4" stroke-width="1"/>
+  <rect x="28" y="84" width="70" height="26" rx="3" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="48" y="101" font-size="12" fill="#243744">正常</text>
+  <rect x="110" y="84" width="70" height="26" rx="3" fill="#EEF4F6" stroke="#B9C7D0" stroke-width="1"/>
+  <text x="130" y="101" font-size="12" fill="#243744">悬停</text>
+  <rect x="192" y="84" width="70" height="26" rx="3" fill="#EEF4F6" stroke="#326F8A" stroke-width="1"/>
+  <text x="212" y="101" font-size="12" fill="#243744">按下</text>
+  <rect x="28" y="120" width="70" height="26" rx="3" fill="#F8FAFB" stroke="#2B6F9B" stroke-width="1.5"/>
+  <text x="48" y="137" font-size="12" fill="#243744">焦点</text>
+  <rect x="110" y="120" width="70" height="26" rx="3" fill="#FFFFFF" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="128" y="137" font-size="12" fill="#929FA8">禁用</text>
+  <rect x="192" y="120" width="70" height="26" rx="3" fill="#A53F43" stroke="#A53F43" stroke-width="1"/>
+  <text x="212" y="137" font-size="12" fill="#FFFFFF">危险</text>
+  <text x="28" y="166" font-size="12" fill="#5D6F7C">内容水平垂直居中，状态切换尺寸不跳动</text>
+  <text x="28" y="184" font-size="12" fill="#5D6F7C">全部状态映射现有 Token（未新增）</text>
+  <text x="28" y="202" font-size="12" fill="#5D6F7C">全局按钮色迁移 Token，基线 -5</text>
+
+  <!-- 表单错误非仅颜色 -->
+  <rect x="298" y="44" width="270" height="200" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="310" y="66" font-size="14" font-weight="bold" fill="#243744">表单（错误非仅颜色）</text>
+  <line x1="310" y1="72" x2="556" y2="72" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="310" y="94" font-size="12" fill="#5D6F7C">宽度（米）</text>
+  <rect x="406" y="80" width="120" height="20" rx="3" fill="#FFFFFF" stroke="#B14A4A" stroke-width="1"/>
+  <text x="310" y="120" font-size="12" fill="#5D6F7C">&#9888;</text>
+  <text x="328" y="120" font-size="12" fill="#B14A4A">宽度必须是 0.01～10000 之间的数字</text>
+  <text x="310" y="146" font-size="12" fill="#5D6F7C">边框（Error 色）+ 图标 + 说明文字三重表达</text>
+  <text x="310" y="164" font-size="12" fill="#5D6F7C">TextBox Normal/Hover/Focus/Disabled 完整状态</text>
+  <text x="310" y="182" font-size="12" fill="#5D6F7C">提交反馈：成功→Success 通知 / 失败→Error 通知</text>
+  <text x="310" y="200" font-size="12" fill="#5D6F7C">错误恢复合法值后自动消失</text>
+
+  <!-- 弹窗与通知 -->
+  <rect x="580" y="44" width="264" height="200" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="592" y="66" font-size="14" font-weight="bold" fill="#243744">弹窗与通知</text>
+  <line x1="592" y1="72" x2="832" y2="72" stroke="#D5DEE4" stroke-width="1"/>
+  <rect x="592" y="80" width="200" height="60" rx="6" fill="#FFFFFF" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="606" y="100" font-size="13" font-weight="bold" fill="#243744">危险操作</text>
+  <text x="606" y="118" font-size="12" fill="#5D6F7C">删除图层将移除该图层及其中的对象，此操作不可撤销。</text>
+  <rect x="636" y="128" width="60" height="22" rx="3" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="652" y="143" font-size="11" fill="#243744">取消&#9673;</text>
+  <rect x="702" y="128" width="60" height="22" rx="3" fill="#A53F43" stroke="#A53F43" stroke-width="1"/>
+  <text x="718" y="143" font-size="11" fill="#FFFFFF">继续</text>
+  <text x="592" y="160" font-size="12" fill="#5D6F7C">默认焦点=取消（&#9673;），Enter 不执行危险操作</text>
+  <text x="592" y="178" font-size="12" fill="#5D6F7C">通知：Info/Success/Warning/Error 四级单条不刷屏</text>
+  <text x="592" y="196" font-size="12" fill="#5D6F7C">未保存确认（保存/不保存/取消）· 新建地图/删除图层确认</text>
+
+  <text x="16" y="266" font-size="12" fill="#5D6F7C">空状态：日志初次「暂无日志」与筛选无结果「没有匹配的日志 + 清空筛选」区分</text>
+  <text x="16" y="286" font-size="12" fill="#5D6F7C">日志：自动跟随与用户上滚互不冲突；「回到底部」按钮仅在离开底部时显示</text>
+  <text x="16" y="306" font-size="12" fill="#5D6F7C">基线 159 → 143（-16：按钮×5 + 未保存弹窗代码 Window×11）· Manifest 112 Frozen · 测试 1213/1213</text>
+</svg>

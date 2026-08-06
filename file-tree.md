@@ -434,6 +434,7 @@
 │  │  │  ├─ UiVm.MapDiagnostics.cs
 │  │  │  ├─ UiVm.MapEditor.cs
 │  │  │  ├─ UiVm.MapEditor.Display.cs
+│  │  ├─ UiVm.MapDanger.cs
 │  │  │  ├─ UiVm.MapHistory.cs
 │  │  │  ├─ UiVm.MapLayerDiagnostics.cs
 │  │  │  ├─ UiVm.MapLayerDrag.cs
@@ -918,6 +919,11 @@
 │  │  ├─ UiD4LayerContractTests.cs
 │  │  ├─ UiD4LayoutModelTests.cs
 │  │  ├─ UiD4MapEditorContractTests.cs
+│  │  ├─ UiD5ButtonContractTests.cs
+│  │  ├─ UiD5DangerFlowTests.cs
+│  │  ├─ UiD5DialogAndLogContractTests.cs
+│  │  ├─ UiD5FormContractTests.cs
+│  │  ├─ UiD5NotificationTests.cs
 │  │  ├─ UiTokenManifestGraphTests.cs
 │  │  ├─ UiTokenManifestTests.cs
 │  │  ├─ UiTopTabStripContractTests.cs
@@ -1805,6 +1811,17 @@
 - `file-tree.md` — （职责待补）
 - `run.bat` — （职责待补）
 - `samples/world-c-r1-ten-triangles.xyscene` — （职责待补）
+- `XuanYu.Editor.UI/Design/UiStyles.D5.axaml` — ARCH-UI-SPEC-R1-D5：按钮与表单状态样式（D5-FIX-01 内容居中、Normal/Hover/Pressed/Focus/Disabled、uiDanger、TextBox 状态与 error/warning；全部 Token）。
+- `XuanYu.Editor.UI/Vm/UiVm.Notification.cs` — D5：四级通知状态机（Info/Success/Warning/Error，单条覆盖不刷屏，纯逻辑）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDanger.cs` — D5：危险操作确认流（DangerousCommandConfirmRequested 事件 + ConfirmDangerousCommand，未注入处理器保持直接执行）。
+- `XuanYu.Editor.UI/Win/UiWin.DialogHost.cs` — D5：弹窗宿主（ShowMessage/ShowConfirm/ShowDanger；危险按钮非默认焦点，Enter=默认/非危险，Escape=取消）+ 危险操作确认接线。
+- `XuanYu.Editor.UI/Foot/NotificationBar.axaml` — D5：四级通知条（图标+单行省略+完整 Tooltip）。
+- `XuanYu.Editor.UI/Foot/NotificationBar.axaml.cs` — D5：通知条 code-behind（纯绑定，无逻辑）。
+- `XuanYu.World.Tests/UiTokens/UiD5ButtonContractTests.cs` — D5：按钮居中/状态/Token 迁移合同。
+- `XuanYu.World.Tests/UiTokens/UiD5DangerFlowTests.cs` — D5：危险确认流（注入/未注入/确认执行/忽略）+ 接线断言。
+- `XuanYu.World.Tests/UiTokens/UiD5DialogAndLogContractTests.cs` — D5：弹窗宿主结构 + 日志空状态/回到底部合同。
+- `XuanYu.World.Tests/UiTokens/UiD5FormContractTests.cs` — D5：表单状态/错误非仅颜色合同。
+- `XuanYu.World.Tests/UiTokens/UiD5NotificationTests.cs` — D5：通知状态机测试。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

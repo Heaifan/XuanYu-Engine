@@ -16,7 +16,7 @@ public sealed partial class LogListAutoScrollController
         if (e.OffsetDelta.Y != 0 && !_programmaticCorrection)
         {
             var max = Math.Max(0, _scroll.Extent.Height - _scroll.Viewport.Height);
-            _atTail = LogAutoScrollPolicy.ShouldFollow(_scroll.Offset.Y, max);
+            SetTail(LogAutoScrollPolicy.ShouldFollow(_scroll.Offset.Y, max));
             if (_atTail) _forceNext = false; // 用户滚到底 → 恢复跟随并清除强制
         }
         if (_programmaticCorrection) return; // 程序自己的 Offset 变化不误判为用户滚动
