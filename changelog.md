@@ -45,7 +45,7 @@ ARCH-UI-SPEC-R1-D5：控件状态、表单、弹窗、通知、空状态与日�
   - 债务基线 **143 → 122（-21）**；Manifest 112 Frozen / 0 Pending（未新增 Token；FocusAdorner 基于 Color.Focus 派生）。
 - **二次审查纠偏（REVIEW BLOCKED → 修复，同版本 v0.2.24.43-rz 不升版，2026-08-06，按用户方案逐字执行）**：
   - **硬阻塞一：未保存地图判断（按用户方案）**——`HasPendingMapFormChanges`（表单值与当前模型不一致）+ `HasUnsavedMapChanges = MapSession.IsDirty || HasPendingMapFormChanges`（图层/显隐/锁定/已应用未落盘全部捕获）；**默认地图基线修正**：MapEditSession 新增 `MarkBaseline()`（内存基线保存点，不动路径），IsDirty 改为保存点判定（`SavedStateId is null || CurrentStateId != SavedStateId`）——初始未修改的默认地图不误判为未保存（新建不弹窗）；新建（CreateNewMap 清空保存点）与任何修改仍为未保存。
-  - **「保存并新建」停止上报**：地图持久化（真实保存到资产文件）尚未接入（D6）——**不使用「保存并新建」文案，禁止用「应用属性」冒充保存**；未保存弹窗为「不保存并新建」（危险/具体动作，明确丢弃）/「取消」（默认焦点）；仅 discard 放行新建，取消 → 原地图与全部修改保持不变；D6 接入真实保存后恢复三选（登记）。
+  - **「保存并新建」停止上报**：地图持久化（真实保存到资产文件）尚未接入，归未来独立地图持久化专项——**不使用「保存并新建」文案，禁止用「应用属性」冒充保存**；未保存弹窗为「不保存并新建」（危险/具体动作，明确丢弃）/「取消」（默认焦点）；仅 discard 放行新建，取消 → 原地图与全部修改保持不变；未来专项接入真实保存后恢复三选（登记）。
   - **硬阻塞二：输入阶段真实校验（按用户方案）**——`ValidateMapFieldOnInput` 替换「只清错」逻辑：输入阶段执行轻量规则（非法字符/NaN/Infinity/**明显超界** 100~1000000 米，边界与领域 MapDefinitionValidator 一致）；**值仍非法时错误不得消失**（继续输入非法值错误保持）；合法值错误立即清除；**输入中态**（空/-/./1./1e- 等临时文本）不清除已有错误；失焦执行完整单字段校验（格式+范围）；提交执行全部字段+跨字段（MapSession 业务兜底）+ 定位第一处错误 + 页面汇总；校验失败不清空输入；基础高度仅有限数字（领域 ValidateSurface 无范围）。
   - 验证：新增 **UiD5InputValidationTests（8 项）+ UiD5UnsavedFlowTests（8 项）**，World **887/887**（871+16）；全量 `--no-incremental` **0W0E**（落盘 /tmp/d5-fix2-final-build.log）；**Core 339 + World 887 + WarCore 22 = 1248/1248 PASS**；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS；既有测试适配 4 处（默认地图状态「已保存」、范围错误字段级拦截、新建地图流程断言、MapStatusText 基线语义）。
   - 债务基线 122 保持；Manifest 112 Frozen / 0 Pending。
@@ -55,8 +55,10 @@ ARCH-UI-SPEC-R1-D5：控件状态、表单、弹窗、通知、空状态与日�
   - **延期登记 D5-DEFER-01**：地图「保存并新建」暂缓——归属未来独立的地图持久化专项（**不归入 D6**）；专项必须补：保存成功后才新建/失败不新建/取消路径不新建/防重复提交/成功后更新路径与状态/写盘失败保留地图图层历史。
   - 验证：新增 **UiD5MapStatusTests（8 项）+ UiD5UnsavedDialogTests（8 项）+ UiD5UnsavedDialogBehaviorTests（9 项）**，共 25 项覆盖计划 26 个断言点；World **912/912**（887+25）；全量 `--no-incremental` **0W0E**（落盘 /tmp/d5-final-build.log）；**Core 339 + World 912 + WarCore 22 = 1273/1273 PASS**；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS；D3/D4/D5 回归 **156/156 PASS**。
   - 债务基线 122 保持；Manifest 112 Frozen / 0 Pending。
-- 状态：**ARCH-UI-SPEC-R1-D5：READY FOR USER RE-ACCEPTANCE**（等待真机复验；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项；不自行宣布 COMPLETE，不进入 D6）。
-- 保留（审计矩阵归属但本轮范围外）：G02 焦点框系统与 DPI/减少动画/屏幕阅读器（D6）；日志搜索实现（占位保留）；加载/进度长任务场景（无真实加载流程，不虚构）。
+- **D5-A1 真机验收收口（同版本不升版，2026-08-06 用户正式裁决）**：ARCH-UI-SPEC-R1-D5-A1：PASS；D5 指令组 22~30 全部通过；按钮居中、控件状态、表单字段校验、危险弹窗、通知、日志跟随、日志空态、地图状态四态与未保存新建流程均通过真机复验。D5 → **COMPLETE**。
+- **D5-DEFER-01 保留**：地图「保存并新建」暂缓，归属未来独立地图持久化专项；不归入 D6，不允许以「应用地图属性」冒充保存。
+- 状态：**ARCH-UI-SPEC-R1-D5：COMPLETE**；当前阶段进入 **ARCH-UI-SPEC-R1-D6**（DPI、键盘/可访问性、减少动画、性能、剩余 UI 债务收口）；剩余轮次 D6 + A1。
+- 保留（D6 范围）：G02 焦点框系统与 DPI/减少动画/屏幕阅读器；日志搜索实现仍为占位；加载/进度长任务无真实流程，不虚构。
 
 
 ## v0.2.24.42-fix
