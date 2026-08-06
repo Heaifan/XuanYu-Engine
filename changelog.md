@@ -29,7 +29,8 @@ ARCH-UI-SPEC-R1-D3：主窗口、顶层页签与滚动治理（2026-08-06，Comm
 - 验证：全解决方案 `--no-incremental` 串行 Build 0W0E（落盘 /tmp/d3-final-build.log）；Core 339/339、World 759/759（+20 D3 测试）、WarCore 22/22，合计 **1120/1120 PASS**；启动冒烟 PASS（进程存活 10s 无崩溃）；arch-a-guard PASS；git diff --check PASS。
 - 治理：版本 v0.2.24.39-rz → v0.2.24.40-rz（四处同步）；未创建 Tag/Release。
 - **补充修复（同版本不升版，2026-08-06）**：run.bat 新增 `[0/3]` 清理段（Build 前 `taskkill /IM XuanYu.Editor.App.exe /T /F` + `dotnet build-server shutdown` + 1s 等待，失败以 `|| ver >nul` 兜底不中断流程），根治「上次编辑器实例/MSBuild 节点残留导致 `XuanYu.Editor.UI.pdb` 文件锁 CS2012」；只针对本编辑器进程与 MSBuild 服务器，**禁止 `taskkill /IM dotnet.exe`**（避免误杀其他 .NET 任务）；`timeout` 用 `%SystemRoot%\System32\timeout.exe` 全路径（避免 MSYS PATH 下命中 GNU timeout）；注释全英文（.bat 在 GBK 代码页下 UTF-8 中文会乱码成命令）。验证：干净 cmd 环境 run.bat 全流程 [0/3]→[3/3] PASS（构建 0W0E，编辑器进程启动存活，关闭后无残留）。
-- 状态：**ARCH-UI-SPEC-R1-D3：READY FOR USER ACCEPTANCE**（尚未获得用户真机裁决；真机通过后 D3 改 COMPLETE，失败则建 D3-F1 只修真实失败项）。
+- **D3-A1 真机验收收口（同版本不升版，2026-08-06 用户正式裁决）**：真机验收 15 组中 **1～5、7～15 全部通过**；第 6 项（左右滚动箭头）在验收尺寸下未出现——用户明确裁定「滚轮横向导航、渐隐提示、当前页签显露和全部页签入口已覆盖发现与跳转需求」，**批准通过**；最大化/恢复/初始非最大化/最小窗口/连续缩放全部通过；页签、地图面板与日志滚动无穿透串扰；顶层页签保持单行、窗口缩窄后仍可访问全部页签。**登记用户批准偏离项 `D3-EX-01：右侧顶层页签不显示左右滚动箭头`**（适用范围仅限当前右侧顶层页签组件；当前导航合同=滚轮横向滚动+边缘渐隐+当前页签自动显露+全部页签入口；不自动修改 UI Spec 通用规则，D6/A1 若出现键盘可访问性或页签数量增长问题再重新审查）。K01/K05/K06 复验 PASS；D3 → **COMPLETE**。
+- 状态：**ARCH-UI-SPEC-R1-D3：COMPLETE（用户真机验收通过，2026-08-06）**。
 - 保留（审计矩阵归属 D3 但本轮范围外，报告已说明）：W28 菜单复核（合规无改动）、W29 leftTab 字号（Left.Styles 不在本轮允许范围）、W36 删除菜单色（Left.axaml 不在范围，留 D5）、G02 键盘焦点（留 D6）、G04 面板紧凑/折叠（留后续轮）、K07 日志六档复验（D5）。
 
 
