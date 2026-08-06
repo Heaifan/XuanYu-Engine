@@ -30,7 +30,20 @@ ARCH-UI-SPEC-R1-D5：控件状态、表单、弹窗、通知、空状态与日�
 - **Token 迁移**：Manifest 保持 **112 Frozen / 0 PendingReview**（未新增 Token——按钮/表单状态色全部映射现有 Token：Color.Hover.Bg/Focus/Danger/Bg.Control/Bg.Panel 等）；**债务基线 159 → 143（-16）**：Ui.axaml Button 状态色×5 + UiWin.UnsavedDialog 代码 Window 颜色×11（真实代码迁移）；未用 Locator/AllowedCount 掩盖。
 - 验证：全解决方案 `--no-incremental` 串行 Build **0W0E**（落盘 /tmp/d5-final-build.log）；Core 339/339、World 852/852（+29 D5 测试）、WarCore 22/22，合计 **1213/1213 PASS**；启动冒烟 PASS；arch-a-guard PASS（版本一致性检查有效）；git diff --check PASS。
 - 治理：版本 v0.2.24.42-fix → **v0.2.24.43-rz**（四处同步）；未创建 Tag/Release。
-- 状态：**ARCH-UI-SPEC-R1-D5：READY FOR USER ACCEPTANCE**（尚未获得用户真机裁决；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项）。
+- **审查纠偏（REVIEW BLOCKED → 修复，同版本 v0.2.24.43-rz 不升版，2026-08-06）**：
+  - **危险操作 fail-closed（硬阻塞修复）**：删除图层等危险操作——确认处理器缺失时**阻止执行并记录错误**（不再为测试兼容绕过安全流程）；只有用户明确确认（`ConfirmDangerousCommand`）才执行；取消（`CancelDangerousCommand`）不执行；既有测试改为显式注入批准确认服务。
+  - **新建地图未保存流程（硬阻塞修复）**：无未保存修改 → 直接新建（不弹窗）；有修改 → **保存并新建 / 不保存并新建 / 取消**（`HasUnsavedMapChanges` 以表单与地图值一致性判定，非 IsDirty）；危险按钮写**具体动作**（「不保存并新建」「删除图层」），不以「继续」代替。
+  - **字段级校验（硬阻塞修复）**：`MapWidthError/MapDepthError/MapBaseHeightError` 每输入框只绑定自身错误（不再统一全局染红）；**ValidateOnInput**（输入即清除）/ **ValidateOnLostFocus**（失焦单字段校验）/ **ValidateOnSubmit**（提交全校验）；`FirstInvalidField` 提交后自动聚焦第一处错误；`FormErrorSummary` 页面汇总；校验失败不清空输入。
+  - **日志空态互斥（硬阻塞修复）**：`ShowInitialLogEmpty`（「全部」筛选且无日志）与 `ShowNoFilterResults`（非全部且无结果）严格互斥；筛选空态提供「清空筛选」入口。
+  - **焦点合同**：官方 **FocusAdorner** 焦点环（2 DIP 焦点框 + 1 DIP 外偏移，`Button:focus-visible` 模板化，不占布局/不改变控件尺寸/不裁切；Setter 值用 `<Template>` 包裹避免运行时 Setter-Control 异常）；Hover/Pressed/Focused 形态互不相同；弹窗 **Tab/Shift+Tab 焦点陷阱**（`DialogFocusTrap` 纯逻辑可测）与**关闭后焦点返回原控件**。
+  - **通知合并/关闭/优先级**：同类同文案合并计数（「保存成功 ×5」，`NotificationCount/ShowNotificationCount`）；`DismissNotification` 可关闭；**优先级 Error(3) > Warning(2) > Success(1) > Info(0)**——高优先级不被低优先级覆盖；`CreatedAt` 生命周期（自动消失策略归 D6）。
+  - **加载/失败/重试**：打开场景失败弹窗改为 **ShowRetryAsync**（重试/取消，重试重新加载同一路径，循环安全）；错误/警告弹窗宿主化到 DialogHost（ErrorIcon/WarningIcon 图标，非仅颜色）；无真实加载流程的场景（地图持久化 D6 接入）在报告中登记为 D6 触发项。
+  - **日志视觉 Token 化**：Foot.axaml 全部原始色迁移正式 Token（logFilter/logHead/logMono/logList 选中/FooterMode/搜索图标/日志边框底色/RepeatText→Log.RepeatText），基线 -12；UiWin.Dialogs 代码 Window 颜色全部清除（宿主化），基线 -9。
+  - **5+100 拆分**：UiVm.Logging 按职责拆（State/Refresh）、UiVm.MapEditor.Validation 独立、UiWin.DialogHost.Danger 独立、DialogFocusTrap 独立；恢复多行书写（无单行压缩逃避）；Foot 日志区 99 行、SceneCommands 97 行。
+  - **Inter 零残留**：删除 `.WithInterFont()`（Avalonia.Fonts.Inter）；FontFamily 冻结链修正为 `Microsoft YaHei UI, Segoe UI, Noto Sans CJK SC`（D1 规范，禁止 Inter）。
+  - 验证：新增 **UiD5CorrectionBehaviorTests（7 项）+ UiD5CorrectionNotifyTests（5 项）+ UiD5CorrectionStructureTests（7 项）**，合计 **19 项纠偏测试**；World **871/871**（852+19）；全量 `--no-incremental` **0W0E**（落盘 /tmp/d5-fix-final-build3.log）；**Core 339 + World 871 + WarCore 22 = 1232/1232 PASS**；启动冒烟 PASS（含 FocusAdorner 模板化运行时验证——首次直跑捕获 Setter-Control 崩溃并已修复）；arch-a-guard PASS；git diff --check PASS。
+  - 债务基线 **143 → 122（-21）**；Manifest 112 Frozen / 0 Pending（未新增 Token；FocusAdorner 基于 Color.Focus 派生）。
+- 状态：**ARCH-UI-SPEC-R1-D5（纠偏后）：READY FOR USER RE-ACCEPTANCE**（等待真机复验；通过后 D5 改 COMPLETE）（尚未获得用户真机裁决；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项）。
 - 保留（审计矩阵归属但本轮范围外）：G02 焦点框系统与 DPI/减少动画/屏幕阅读器（D6）；日志搜索实现（占位保留）；加载/进度长任务场景（无真实加载流程，不虚构）。
 
 

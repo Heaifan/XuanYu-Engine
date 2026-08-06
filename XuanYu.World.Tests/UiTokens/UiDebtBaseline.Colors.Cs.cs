@@ -28,14 +28,5 @@ internal static partial class UiDebtBaseline
         list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.DocumentStatusForeground", UiRuleKind.CsHexColor, "Hex", "#1f7a4d"));
         list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.SaveButtonBackground", UiRuleKind.CsHexColor, "Hex", "#fff6dd"));
         list.Add(new("W71", "XuanYu.Editor.UI/Vm/Scene/UiVm.DocumentStatus.cs", "UiVm.SaveButtonBorderBrush", UiRuleKind.CsHexColor, "Hex", "#d9ad43"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#fdeeee"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#a43f3f"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#fff7df"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#8a6417"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#243447"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#e9f2ff"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#94b9e8"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.ShowMessageDialog", UiRuleKind.CsHexColor, "Hex", "#185aa6"));
-        list.Add(new("W67", "XuanYu.Editor.UI/Win/UiWin.Dialogs.cs", "UiWin.SetDock", UiRuleKind.CsHexColor, "Hex", "#d5dfec"));
     }
 }

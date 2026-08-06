@@ -2,8 +2,9 @@ using System;
 
 namespace XuanYu.Editor.UI;
 
-// ARCH-UI-SPEC-R1-D5：危险操作确认流——路由层请求 UI 确认（事件），UI 确认后调用
-// ConfirmDangerousCommand 执行。未注入确认处理器时保持原行为（直接执行，兼容既有测试）。
+// ARCH-UI-SPEC-R1-D5（纠偏）：危险操作确认流——**fail-closed**。
+// 确认处理器缺失 / 用户未确认 / 未响应 → 一律不执行（并记录错误）；
+// 只有用户明确确认（ConfirmDangerousCommand）才执行实际操作。
 public sealed partial class UiVm
 {
     public event Action<string>? DangerousCommandConfirmRequested;
@@ -17,6 +18,15 @@ public sealed partial class UiVm
         if (_pendingDangerousCommand != name) return;
         _pendingDangerousCommand = null;
         ExecutePendingDangerous(name);
+    }
+
+    public void CancelDangerousCommand(string name)
+    {
+        if (_pendingDangerousCommand != name) return;
+        _pendingDangerousCommand = null;
+        _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
+            $"危险操作「{name}」已取消", "用户取消确认，操作未执行。");
+        RefreshLogBindings();
     }
 
     void RequestDangerousConfirmation(string name)

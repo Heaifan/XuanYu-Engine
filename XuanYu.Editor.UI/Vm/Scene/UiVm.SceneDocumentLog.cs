@@ -17,6 +17,9 @@ public sealed partial class UiVm
         LogScene(EditorLogLevel.Error, "场景加载失败",
             $"Path={path}；Stage={result.Stage}；Code={result.ErrorCode}；Message={result.Message}；Detail={result.Detail}；CurrentScenePreserved=True");
 
+    void LogSceneRetry(string path) =>
+        LogScene(EditorLogLevel.Warning, "场景加载重试", $"Path={path}；用户选择重试加载");
+
     void LogSceneSaveFailure<T>(string path, SceneDocumentResult<T> result) =>
         LogScene(EditorLogLevel.Error, EditorLogCategory.Save, "场景保存失败",
             $"Path={path}；Stage={result.Stage}；Code={result.ErrorCode}；Message={result.Message}；Detail={result.Detail}");

@@ -50,7 +50,7 @@
   <text x="592" y="178" font-size="12" fill="#5D6F7C">通知：Info/Success/Warning/Error 四级单条不刷屏</text>
   <text x="592" y="196" font-size="12" fill="#5D6F7C">未保存确认（保存/不保存/取消）· 新建地图/删除图层确认</text>
 
-  <text x="16" y="266" font-size="12" fill="#5D6F7C">空状态：日志初次「暂无日志」与筛选无结果「没有匹配的日志 + 清空筛选」区分</text>
-  <text x="16" y="286" font-size="12" fill="#5D6F7C">日志：自动跟随与用户上滚互不冲突；「回到底部」按钮仅在离开底部时显示</text>
-  <text x="16" y="306" font-size="12" fill="#5D6F7C">基线 159 → 143（-16：按钮×5 + 未保存弹窗代码 Window×11）· Manifest 112 Frozen · 测试 1213/1213</text>
+  <text x="16" y="266" font-size="12" fill="#5D6F7C">纠偏：危险操作 fail-closed（无确认不执行）· 新建地图 保存/不保存/取消 · 字段级校验（只标记错误字段+自动聚焦）</text>
+  <text x="16" y="286" font-size="12" fill="#5D6F7C">纠偏：通知同类合并×N/可关闭/优先级 · 焦点环 2 DIP+1 DIP 偏移（FocusAdorner）· 弹窗 Tab 陷阱/焦点返回</text>
+  <text x="16" y="306" font-size="12" fill="#5D6F7C">纠偏：日志空态互斥 · 场景打开失败重试入口 · 日志视觉全 Token · 基线 159 → 122 · 测试 1232/1232</text>
 </svg>

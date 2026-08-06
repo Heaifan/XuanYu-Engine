@@ -19,7 +19,6 @@ public sealed partial class UiMapLayerPanelTests
         Assert.True(vm.MapSession.CurrentMap.Layers.First(l => l.Kind == MapLayerKind.Boundary).IsVisible);
         Assert.Contains("图层可见性：边界=显示", Logs(vm));
     }
-
     [Fact]
     public void Lock_toggle_updates_session_and_logs_chinese()
     {
@@ -37,24 +36,24 @@ public sealed partial class UiMapLayerPanelTests
     public void Delete_last_region_layer_rejected_with_chinese_error()
     {
         var vm = NewVm();
+        vm.DangerousCommandConfirmRequested += vm.ConfirmDangerousCommand; // 测试批准确认服务
         vm.SelectedLayer = vm.LayerItems[0];
         vm.RunCommand.Execute("删除图层");
         Assert.Equal(3, vm.LayerItems.Count);
         Assert.Contains("至少保留一个区域图层", vm.MapEditError);
         Assert.Contains("图层删除失败：至少保留一个区域图层", Logs(vm));
     }
-
     [Fact]
     public void Delete_region_layer_transfers_active_and_logs()
     {
         var vm = NewVm();
+        vm.DangerousCommandConfirmRequested += vm.ConfirmDangerousCommand; // 测试批准确认服务
         vm.RunCommand.Execute("添加图层");
         vm.RunCommand.Execute("删除图层");
         Assert.Equal(3, vm.LayerItems.Count);
         Assert.Equal("区域 1", vm.LayerItems[0].Name);
         Assert.Contains("删除图层：区域 2", Logs(vm));
     }
-
     [Fact]
     public void Move_up_down_command_chain_reorders_region_layers()
     {
@@ -82,7 +81,6 @@ public sealed partial class UiMapLayerPanelTests
         Assert.False(vm.LayerItems[0].IsActive);
         Assert.Contains("设置当前图层：区域 1", Logs(vm));
     }
-
     [Fact]
     public void Undo_redo_via_top_toolbar_restores_layer_state()
     {

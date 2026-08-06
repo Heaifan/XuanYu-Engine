@@ -13,7 +13,7 @@
   <!-- ARCH-UI-SPEC-R1-D5：按钮与表单状态样式（含 D5-FIX-01 内容居中） -->
   <StyleInclude Source="avares://XuanYu.Editor.UI/Design/UiStyles.D5.axaml"/>
   <Style Selector="Window">
-    <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI, Inter"/>
+    <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI, Noto Sans CJK SC"/>
     <Setter Property="Foreground" Value="#172033"/>
   </Style>
   <Style Selector="Border.panel">

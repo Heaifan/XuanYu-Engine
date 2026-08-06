@@ -30,10 +30,13 @@ public sealed class UiD5FormContractTests
     }
 
     [Fact]
-    public void Map_form_inputs_bind_error_state()
+    public void Map_form_inputs_bind_field_level_errors()
     {
-        // 宽/窄两套布局各 3 个输入框，全部绑定错误状态（共 6 处）
-        Assert.Equal(6, CountOccurrences(Form, "Classes.error=\"{Binding IsMapFormError}\""));
+        // D5 纠偏：每个输入框只绑定自身字段错误（宽/窄两套布局各 3 处）
+        Assert.Equal(2, CountOccurrences(Form, "Classes.error=\"{Binding MapWidthError}\""));
+        Assert.Equal(2, CountOccurrences(Form, "Classes.error=\"{Binding MapDepthError}\""));
+        Assert.Equal(2, CountOccurrences(Form, "Classes.error=\"{Binding MapBaseHeightError}\""));
+        Assert.DoesNotContain("Classes.error=\"{Binding IsMapFormError}\"", Form); // 输入框不再统一全局染红
     }
 
     [Fact]

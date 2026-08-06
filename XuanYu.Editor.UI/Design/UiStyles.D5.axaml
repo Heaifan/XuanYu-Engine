@@ -1,7 +1,8 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <!-- ARCH-UI-SPEC-R1-D5：按钮与表单状态样式（全部正式 Token，无新增 Token）。
-       D5-FIX-01：按钮内容统一水平垂直居中（禁止逐按钮 Margin 偏移修补）。 -->
+       D5-FIX-01：按钮内容统一水平垂直居中（禁止逐按钮 Margin 偏移修补）。
+       焦点态：官方 FocusAdorner（2 DIP 焦点框 + 1 DIP 外偏移，基于 Color.Focus，非新增 Token）。 -->
   <Style Selector="Button">
     <Setter Property="HorizontalContentAlignment" Value="Center"/>
     <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -16,6 +17,19 @@
   </Style>
   <Style Selector="Button:focus-visible">
     <Setter Property="BorderBrush" Value="{StaticResource Color.Focus}"/>
+    <!-- D5 纠偏：官方 FocusAdorner 焦点环（2 DIP 框 + 1 DIP 外偏移；不占布局、不改变控件尺寸、不裁切）。
+         Setter 值必须是 Template（Avalonia 禁止 Control 直接作 Setter 值）。 -->
+    <Setter Property="FocusAdorner">
+      <Setter.Value>
+        <Template>
+          <Border Background="Transparent"
+                  BorderBrush="{StaticResource Color.Focus}"
+                  BorderThickness="2"
+                  CornerRadius="{StaticResource Radius.Standard}"
+                  Margin="-1"/>
+        </Template>
+      </Setter.Value>
+    </Setter>
   </Style>
   <Style Selector="Button:disabled">
     <Setter Property="Foreground" Value="{StaticResource Color.Text.Disabled}"/>

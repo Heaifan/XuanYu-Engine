@@ -25,8 +25,9 @@ public sealed class UiD5DialogAndLogContractTests
     [Fact]
     public void Danger_dialog_defaults_to_non_dangerous_button()
     {
-        // 危险弹窗：默认按钮（Enter 触发）是「取消」（非危险）；危险按钮「继续」不接收默认焦点
-        Assert.Contains("[(\"取消\", false, \"cancel\"), (\"继续\", true, \"ok\")], \"cancel\")", Dialog);
+        // 危险弹窗：默认按钮（Enter 触发）是「取消」（非危险）；危险按钮「删除图层」写具体动作
+        Assert.Contains("[(\"取消\", false, \"cancel\"), (actionText, true, \"ok\")], \"cancel\")", Dialog);
+        Assert.Contains("ShowDanger(string title, string message, string actionText", Dialog);
     }
 
     [Fact]

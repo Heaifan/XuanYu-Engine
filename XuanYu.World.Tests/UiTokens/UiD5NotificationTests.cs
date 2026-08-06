@@ -52,10 +52,11 @@ public sealed class UiD5NotificationTests
         var vm = NewVm();
         var count = 0;
         vm.NotificationChanged += () => count++;
-        vm.NotifyError("错误");
         vm.NotifyInfo("信息");
+        vm.NotifyError("错误");
+        vm.NotifyInfo("低优先级不覆盖"); // Error(3) > Info(0)：不覆盖 → 不触发事件
         Assert.Equal(2, count);
-        Assert.Equal(2, vm.NotificationSequence);
+        Assert.Equal(UiNotificationLevel.Error, vm.NotificationLevel);
     }
 
     [Fact]

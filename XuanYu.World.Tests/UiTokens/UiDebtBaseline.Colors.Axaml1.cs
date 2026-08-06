@@ -7,18 +7,6 @@ internal static partial class UiDebtBaseline
 {
     private static void AddAxaml1(System.Collections.Generic.List<BaselineEntry> list)
     {
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:Button.logFilter", UiRuleKind.HexColor, "Foreground", "#55667d"));
-        list.Add(new("W56", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:Button.logFilter.selected", UiRuleKind.HexColor, "Background", "#edf4ff"));
-        list.Add(new("W56", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:Button.logFilter.selected", UiRuleKind.HexColor, "Foreground", "#185aa6"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:TextBlock.logMono", UiRuleKind.HexColor, "Foreground", "#27354a"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:TextBlock.logHead", UiRuleKind.HexColor, "Foreground", "#64748b"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:ListBox.logList ListBoxItem:selected", UiRuleKind.HexColor, "Background", "#eaf3ff"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Style:ListBox.logList ListBoxItem:selected", UiRuleKind.HexColor, "Foreground", "#172337"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:ROOT/UserControl/Grid/Grid/TextBlock:1", UiRuleKind.HexColor, "Foreground", "#50607a"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:ROOT/UserControl/Grid/Border:1", UiRuleKind.HexColor, "BorderBrush", "#d9e2ee"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:ROOT/UserControl/Grid/Border:1", UiRuleKind.HexColor, "Background", "#f8fbff"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:ROOT/UserControl/Grid/Border/Grid/Grid/Border/Grid/PathIcon:1", UiRuleKind.HexColor, "Foreground", "#6b7a90"));
-        list.Add(new("W58", "XuanYu.Editor.UI/Foot/Foot.axaml", "Path:Name:LogList/ListBox/DataTemplate/Grid/TextBlock:6", UiRuleKind.HexColor, "Foreground", "#7a5a19"));
         list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBlock.detailLabel", UiRuleKind.HexColor, "Foreground", "#64748b"));
         list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBlock.detailValue", UiRuleKind.HexColor, "Foreground", "#243246"));
         list.Add(new("W62", "XuanYu.Editor.UI/Foot/LogDetailPanel.axaml", "Style:TextBlock.detailTitle", UiRuleKind.HexColor, "Foreground", "#172337"));

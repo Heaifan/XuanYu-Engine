@@ -4,7 +4,7 @@
              x:Class="XuanYu.Editor.UI.NotificationBar"
              x:DataType="local:UiVm">
   <UserControl.Styles>
-    <!-- ARCH-UI-SPEC-R1-D5：四级通知条（不刷屏——只保留最新一条；技术详情进日志） -->
+    <!-- ARCH-UI-SPEC-R1-D5：四级通知条（不刷屏——同类合并计数；可关闭；技术详情进日志） -->
     <Style Selector="Border.notificationBar">
       <Setter Property="Background" Value="{StaticResource Color.Bg.Panel}"/>
       <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
@@ -12,6 +12,15 @@
       <Setter Property="CornerRadius" Value="3"/>
       <Setter Property="Padding" Value="8,3"/>
       <Setter Property="MaxWidth" Value="320"/>
+    </Style>
+    <Style Selector="Button.notificationClose">
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="MinHeight" Value="{StaticResource Control.Height.Compact}"/>
+      <Setter Property="Margin" Value="0"/>
+      <Setter Property="Padding" Value="4,2"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/>
     </Style>
   </UserControl.Styles>
   <Border Classes="notificationBar" IsVisible="{Binding HasNotification}">
@@ -21,6 +30,10 @@
       <PathIcon Data="{StaticResource WarningIcon}" IsVisible="{Binding IsNotificationWarning}" Width="14" Height="14" Foreground="{StaticResource Color.Warning}"/>
       <PathIcon Data="{StaticResource ErrorIcon}" IsVisible="{Binding IsNotificationError}" Width="14" Height="14" Foreground="{StaticResource Color.Error}"/>
       <TextBlock Text="{Binding NotificationText}" Classes="uiSingleLine" ToolTip.Tip="{Binding NotificationText}"/>
+      <TextBlock Text="{Binding NotificationCount, StringFormat=×{0}}" IsVisible="{Binding ShowNotificationCount}" FontWeight="SemiBold"/>
+      <Button Classes="notificationClose" Click="Dismiss_Click" ToolTip.Tip="关闭通知" VerticalAlignment="Center">
+        <PathIcon Data="{StaticResource CloseIcon}" Width="10" Height="10"/>
+      </Button>
     </StackPanel>
   </Border>
 </UserControl>

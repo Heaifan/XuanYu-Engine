@@ -5,15 +5,9 @@ namespace XuanYu.Editor.UI;
 
 public partial class UiWin
 {
-    static readonly FilePickerFileType SceneFileType = new("玄域场景")
-    {
-        Patterns = ["*.xyscene"]
-    };
+    static readonly FilePickerFileType SceneFileType = new("玄域场景") { Patterns = ["*.xyscene"] };
 
-    static readonly FilePickerFileType GlbFileType = new("glTF 二进制模型")
-    {
-        Patterns = ["*.glb"]
-    };
+    static readonly FilePickerFileType GlbFileType = new("glTF 二进制模型") { Patterns = ["*.glb"] };
 
     async Task<bool> HandleSceneShortcut(KeyEventArgs e)
     {
@@ -32,19 +26,12 @@ public partial class UiWin
         await RunSceneCommand(command);
         return true;
     }
-
     async Task RunSceneCommand(string command)
     {
         if (DataContext is not UiVm vm) return;
         if (command is "新建地图" or "聚焦地图")
         {
-            if (command == "新建地图")
-            {
-                // D5：新建地图会替换当前地图属性并清空修改历史——危险确认
-                var proceed = await ShowDanger("新建地图",
-                    "新建地图将替换当前地图属性并清空地图修改历史，此操作不可撤销。是否继续？");
-                if (proceed != "ok") return;
-            }
+            if (command == "新建地图" && !await ConfirmNewMapUnsaved(vm)) return;
             await RunMapCommand(command);
             return;
         }
@@ -55,7 +42,6 @@ public partial class UiWin
         if (command == "保存" && await SaveExistingOrPick(vm)) return;
         if (command == "另存为") await SaveSceneAs(vm);
     }
-
     async Task ImportGlb(UiVm vm)
     {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
@@ -68,7 +54,6 @@ public partial class UiWin
         if (string.IsNullOrWhiteSpace(path)) return;
         vm.ImportStaticModel(path);
     }
-
     async Task OpenScene(UiVm vm)
     {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
@@ -80,12 +65,24 @@ public partial class UiWin
         var path = files.FirstOrDefault()?.TryGetLocalPath();
         if (!string.IsNullOrWhiteSpace(path)) await vm.OpenSceneAsync(path);
     }
-
     async Task<bool> SaveExistingOrPick(UiVm vm) =>
         !string.IsNullOrWhiteSpace(vm.CurrentScenePath)
             ? await vm.SaveSceneAsync()
             : await SaveSceneAs(vm);
 
+    // D5 纠偏：新建地图未保存流程——无修改直接新建；有修改 → 保存并新建/不保存并新建/取消
+    async Task<bool> ConfirmNewMapUnsaved(UiVm vm)
+    {
+        if (!vm.HasUnsavedMapChanges) return true;
+        var choice = await ShowUnsavedMapChangesDialog();
+        if (choice == "cancel") return false;
+        if (choice == "save")
+        {
+            vm.RunCommand.Execute("应用地图属性");
+            return !vm.IsMapFormError; // 应用失败：不新建，表单错误区已提示
+        }
+        return true; // discard：不保存并新建
+    }
     async Task<bool> SaveSceneAs(UiVm vm)
     {
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions

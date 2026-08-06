@@ -77,4 +77,12 @@ public sealed class FakeDialogService : IEditorDialogService
         Shown.Add((title, message));
         return Task.CompletedTask;
     }
+
+    public bool RetryResult { get; set; } // D5：重试弹窗返回（测试可控）
+
+    public Task<bool> ShowRetryAsync(string title, string message)
+    {
+        Shown.Add((title, message));
+        return Task.FromResult(RetryResult);
+    }
 }

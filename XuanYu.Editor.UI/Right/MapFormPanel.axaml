@@ -14,14 +14,19 @@
   <StackPanel x:Name="Root" Spacing="2">
     <TextBlock Text="地图属性" Classes="uiSection"/>
     <Border Classes="groupSeparator"/>
-    <!-- EditableFormRow 标准模式（内容宽 ≥360）：标签列 96 / 左标签右输入 -->
+    <!-- EditableFormRow 标准模式（内容宽 ≥360）：标签列 96 / 左标签右输入。
+         D5 纠偏：每个输入框只绑定自身字段错误（MapWidthError/MapDepthError/MapBaseHeightError）；
+         失焦触发单字段校验；FirstInvalidField 变化自动聚焦第一处错误。 -->
     <Grid x:Name="PropsWide" ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4">
       <TextBlock Text="宽度（米）" Classes="uiLabel"/>
-      <TextBox Grid.Column="1" Text="{Binding MapWidthText}" Classes.error="{Binding IsMapFormError}"/>
+      <TextBox x:Name="WidthBoxWide" Grid.Column="1" Text="{Binding MapWidthText}"
+               Classes.error="{Binding MapWidthError}" LostFocus="Field_LostFocus"/>
       <TextBlock Grid.Row="1" Text="深度（米）" Classes="uiLabel"/>
-      <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MapDepthText}" Classes.error="{Binding IsMapFormError}"/>
+      <TextBox x:Name="DepthBoxWide" Grid.Row="1" Grid.Column="1" Text="{Binding MapDepthText}"
+               Classes.error="{Binding MapDepthError}" LostFocus="Field_LostFocus"/>
       <TextBlock Grid.Row="2" Text="基础高度（米）" Classes="uiLabel"/>
-      <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MapBaseHeightText}" Classes.error="{Binding IsMapFormError}"/>
+      <TextBox x:Name="HeightBoxWide" Grid.Row="2" Grid.Column="1" Text="{Binding MapBaseHeightText}"
+               Classes.error="{Binding MapBaseHeightError}" LostFocus="Field_LostFocus"/>
       <TextBlock Grid.Row="3" Text="地表类型" Classes="uiLabel"/>
       <TextBlock Grid.Row="3" Grid.Column="1" Text="Flat（只读）" Classes="uiValue"/>
     </Grid>
@@ -29,15 +34,18 @@
     <StackPanel x:Name="PropsNarrow" Spacing="6" IsVisible="False">
       <StackPanel Spacing="2">
         <TextBlock Text="宽度（米）" Classes="uiLabel"/>
-        <TextBox Text="{Binding MapWidthText}" Classes.error="{Binding IsMapFormError}"/>
+        <TextBox x:Name="WidthBoxNarrow" Text="{Binding MapWidthText}"
+                 Classes.error="{Binding MapWidthError}" LostFocus="Field_LostFocus"/>
       </StackPanel>
       <StackPanel Spacing="2">
         <TextBlock Text="深度（米）" Classes="uiLabel"/>
-        <TextBox Text="{Binding MapDepthText}" Classes.error="{Binding IsMapFormError}"/>
+        <TextBox x:Name="DepthBoxNarrow" Text="{Binding MapDepthText}"
+                 Classes.error="{Binding MapDepthError}" LostFocus="Field_LostFocus"/>
       </StackPanel>
       <StackPanel Spacing="2">
         <TextBlock Text="基础高度（米）" Classes="uiLabel"/>
-        <TextBox Text="{Binding MapBaseHeightText}" Classes.error="{Binding IsMapFormError}"/>
+        <TextBox x:Name="HeightBoxNarrow" Text="{Binding MapBaseHeightText}"
+                 Classes.error="{Binding MapBaseHeightError}" LostFocus="Field_LostFocus"/>
       </StackPanel>
       <StackPanel Spacing="2">
         <TextBlock Text="地表类型" Classes="uiLabel"/>
@@ -54,11 +62,11 @@
       <Button Classes="uiTextButton" Grid.Row="1" Grid.Column="1" Content="重做地图修改"
               Command="{Binding RunCommand}" CommandParameter="重做地图修改" IsEnabled="{Binding CanRedo}"/>
     </Grid>
-    <!-- 表单错误反馈（D5：非仅颜色——图标 + 文字 + 输入框错误边框） -->
+    <!-- 表单错误反馈（D5：非仅颜色——图标 + 文字 + 输入框错误边框；FormErrorSummary 汇总行） -->
     <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsMapFormError}">
       <PathIcon Data="{StaticResource ErrorIcon}" Width="14" Height="14"
                 Foreground="{StaticResource Color.Error}" VerticalAlignment="Center"/>
-      <TextBlock Text="{Binding MapEditError}" Classes="uiMultiline"
+      <TextBlock Text="{Binding FormErrorSummary}" Classes="uiMultiline"
                  Foreground="{StaticResource Color.Error}" VerticalAlignment="Center"/>
     </StackPanel>
   </StackPanel>

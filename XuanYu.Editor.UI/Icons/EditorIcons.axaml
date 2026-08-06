@@ -28,6 +28,7 @@
   <StreamGeometry x:Key="WarningIcon">M12 2L1 21h22L12 2zm0 5l7.5 12h-15L12 7zm-1 4h2v5h-2zm0 7h2v2h-2z</StreamGeometry>
   <StreamGeometry x:Key="InfoIcon">M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1 5h2v2h-2zm0 4h2v7h-2z</StreamGeometry>
   <StreamGeometry x:Key="SuccessIcon">M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-4-4 1.4-1.4L10 14.2l6.6-6.6L18 9l-8 8z</StreamGeometry>
+  <StreamGeometry x:Key="CloseIcon">M5 5L19 19M19 5L5 19</StreamGeometry>
   <!-- D4 图层：可见性/锁定开关图标（路径风格，与既有图标体系一致） -->
   <StreamGeometry x:Key="VisibleIcon">M1 12C4 7.5 8 5.5 12 5.5C16 5.5 20 7.5 23 12C20 16.5 16 18.5 12 18.5C8 18.5 4 16.5 1 12ZM12 8.5A3.5 3.5 0 1 0 12 15.5A3.5 3.5 0 0 0 12 8.5</StreamGeometry>
   <StreamGeometry x:Key="HiddenIcon">M3 3L21 21M6.2 6.9C4.4 8.1 2.9 9.9 1 12C4 16.5 8 18.5 12 18.5C13.3 18.5 14.5 18.3 15.7 17.9M14.1 14.1C13.5 14.6 12.8 14.9 12 14.9C9.8 14.9 8 13.1 8 10.9C8 10.1 8.3 9.4 8.8 8.8M10.6 5.1C11.1 5 11.5 5 12 5C16 5 20 7 23 12C21.8 14.1 20.1 15.7 18.2 16.9</StreamGeometry>

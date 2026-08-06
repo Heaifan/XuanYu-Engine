@@ -434,6 +434,7 @@
 │  │  │  ├─ UiVm.MapDiagnostics.cs
 │  │  │  ├─ UiVm.MapEditor.cs
 │  │  │  ├─ UiVm.MapEditor.Display.cs
+│  │  ├─ UiVm.MapEditor.Validation.cs
 │  │  ├─ UiVm.MapDanger.cs
 │  │  │  ├─ UiVm.MapHistory.cs
 │  │  │  ├─ UiVm.MapLayerDiagnostics.cs
@@ -924,6 +925,9 @@
 │  │  ├─ UiD5DialogAndLogContractTests.cs
 │  │  ├─ UiD5FormContractTests.cs
 │  │  ├─ UiD5NotificationTests.cs
+│  │  ├─ UiD5CorrectionBehaviorTests.cs
+│  │  ├─ UiD5CorrectionNotifyTests.cs
+│  │  ├─ UiD5CorrectionStructureTests.cs
 │  │  ├─ UiTokenManifestGraphTests.cs
 │  │  ├─ UiTokenManifestTests.cs
 │  │  ├─ UiTopTabStripContractTests.cs
@@ -1822,6 +1826,15 @@
 - `XuanYu.World.Tests/UiTokens/UiD5DialogAndLogContractTests.cs` — D5：弹窗宿主结构 + 日志空状态/回到底部合同。
 - `XuanYu.World.Tests/UiTokens/UiD5FormContractTests.cs` — D5：表单状态/错误非仅颜色合同。
 - `XuanYu.World.Tests/UiTokens/UiD5NotificationTests.cs` — D5：通知状态机测试。
+- `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.State.cs` — D5 纠偏：日志空态互斥（ShowInitialLogEmpty/ShowNoFilterResults）。
+- `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.Refresh.cs` — D5 纠偏：日志绑定刷新通知（多行拆分）。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Validation.cs` — D5 纠偏：地图表单字段级校验（三字段错误/输入即清除/失焦与提交校验/FirstInvalidField/解析）。
+- `XuanYu.Editor.UI/Win/UiWin.DialogHost.Danger.cs` — D5 纠偏：危险操作确认接线（fail-closed，具体动作文案）。
+- `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs` — D5 纠偏：错误/警告/重试弹窗宿主化（ErrorIcon/WarningIcon + ShowRetryAsync）。
+- `XuanYu.Editor.UI/Win/DialogFocusTrap.cs` — D5 纠偏：弹窗焦点陷阱纯逻辑（Tab 环形循环）。
+- `XuanYu.World.Tests/UiTokens/UiD5CorrectionBehaviorTests.cs` — D5 纠偏：fail-closed/字段校验/场景重试行为测试。
+- `XuanYu.World.Tests/UiTokens/UiD5CorrectionNotifyTests.cs` — D5 纠偏：空态互斥与通知合并/关闭/优先级测试。
+- `XuanYu.World.Tests/UiTokens/UiD5CorrectionStructureTests.cs` — D5 纠偏：焦点环/焦点陷阱/日志零原始色/Inter 零残留/无压缩行测试。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

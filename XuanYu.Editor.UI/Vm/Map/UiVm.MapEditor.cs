@@ -13,11 +13,6 @@ public sealed partial class UiVm
         $"{MapSession.CurrentMap.SizeMeters.Width:0.####} × {MapSession.CurrentMap.SizeMeters.Depth:0.####} 米";
     public string MapStatusText => MapSession.IsDirty ? "未保存" : "已保存";
     public bool HasMap => true; // D2 会话语义：编辑器恒有当前地图（初始默认 10 km）。
-    string _mapWidthText = "10000"; public string MapWidthText { get => _mapWidthText; set { _mapWidthText = value; OnPropertyChanged(nameof(MapWidthText)); } }
-    string _mapDepthText = "10000"; public string MapDepthText { get => _mapDepthText; set { _mapDepthText = value; OnPropertyChanged(nameof(MapDepthText)); } }
-    string _mapBaseHeightText = "0"; public string MapBaseHeightText { get => _mapBaseHeightText; set { _mapBaseHeightText = value; OnPropertyChanged(nameof(MapBaseHeightText)); } }
-    public string MapEditError { get; private set; } = "";
-
     public void NewMap()
     {
         var result = MapSession.CreateNewMap();
@@ -33,15 +28,24 @@ public sealed partial class UiVm
     }
 
     // 应用修改：单次原子提交（UpdateMapProperties 一个历史节点，失败整体拒绝零污染）。
+    // D5 纠偏：字段级校验（每字段独立错误）+ 提交定位第一处错误 + 校验失败不清空输入。
     public void ApplyMapProperties()
     {
-        if (!TryParseMeters(MapWidthText, "宽度", out var width, out var error) ||
-            !TryParseMeters(MapDepthText, "深度", out var depth, out error) ||
-            !TryParseMeters(MapBaseHeightText, "基础高度", out var height, out error))
+        var widthError = ValidateMapField("宽度", MapWidthText, out var width);
+        var depthError = ValidateMapField("深度", MapDepthText, out var depth);
+        var heightError = ValidateMapField("基础高度", MapBaseHeightText, out var height);
+        SetFieldError("宽度", widthError);
+        SetFieldError("深度", depthError);
+        SetFieldError("基础高度", heightError);
+        if (widthError.Length > 0 || depthError.Length > 0 || heightError.Length > 0)
         {
-            FailEdit(error);
+            FirstInvalidField = widthError.Length > 0 ? "宽度"
+                : depthError.Length > 0 ? "深度" : "基础高度";
+            MapEditError = widthError + depthError + heightError;
+            RaiseMapDocumentChanged();
             return;
         }
+        FirstInvalidField = "";
 
         var before = $"{MapSession.CurrentMap.SizeMeters.Width:0.####}×{MapSession.CurrentMap.SizeMeters.Depth:0.####}";
         LogMapPropertiesStarted(MapSession.CurrentMap.MapId.Value, before,
@@ -63,6 +67,7 @@ public sealed partial class UiVm
         MapEditError = ""; FooterMessage = "地图属性已应用。"; RaiseMapDocumentChanged();
     }
 
+
     public void FocusMap()
     {
         ApplyMapViewFraming();
@@ -83,18 +88,4 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(MapEditError));
     }
 
-    static bool TryParseMeters(string text, string fieldName, out double value, out string error)
-    {
-        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) && double.IsFinite(value))
-        {
-            error = "";
-            return true;
-        }
-
-        value = 0;
-        error = $"{fieldName}必须是有限数字。";
-        return false;
-    }
-
-    static string FormatMeters(double meters) => meters.ToString("0.####", CultureInfo.InvariantCulture);
 }

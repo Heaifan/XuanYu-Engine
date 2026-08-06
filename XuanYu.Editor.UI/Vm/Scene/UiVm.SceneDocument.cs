@@ -23,22 +23,25 @@ public sealed partial class UiVm
 
     public async Task<bool> OpenSceneAsync(string path)
     {
-        SetSceneBusy(true);
-        FooterState = "状态：正在加载";
-        LogSceneLoadStart(path);
-        var candidate = await _loadTransaction.BuildCandidateAsync(path);
-        if (!candidate.Succeeded || candidate.Value is null)
+        while (true)
         {
-            SetSceneBusy(false);
-            _documentSession.MarkError(candidate.Message);
-            FooterMessage = candidate.Message;
-            FooterState = "状态：加载失败";
-            LogSceneLoadFailure(path, candidate);
-            RaiseDocumentChanged();
-            await _dialogService.ShowErrorAsync("打开场景失败",
-                "无法打开所选场景。\n场景文件内容无效或版本不受支持。");
-            return false;
-        }
+            SetSceneBusy(true);
+            FooterState = "状态：正在加载"; LogSceneLoadStart(path);
+            var candidate = await _loadTransaction.BuildCandidateAsync(path);
+            if (!candidate.Succeeded || candidate.Value is null)
+            {
+                SetSceneBusy(false);
+                _documentSession.MarkError(candidate.Message);
+                FooterMessage = candidate.Message; FooterState = "状态：加载失败";
+                LogSceneLoadFailure(path, candidate);
+                RaiseDocumentChanged();
+                // D5（纠偏）：失败状态提供重试入口（Retryable）；重试重新加载同一路径，取消则停止
+                var retry = await _dialogService.ShowRetryAsync("打开场景失败",
+                    "无法打开所选场景。\n场景文件内容无效或版本不受支持。是否重试？");
+                if (!retry) return false;
+                LogSceneRetry(path);
+                continue; // 重试：重新走加载流程
+            }
 
         var value = candidate.Value;
         LogSceneLoadStage("ReplaceWorld");
@@ -66,6 +69,7 @@ public sealed partial class UiVm
         RefreshWorldProjectionBindings();
         if (value.HasUnavailableAssets) await ShowAssetSummaryAsync(value);
         return true;
+        }
     }
 
     async Task ShowAssetSummaryAsync(SceneLoadCandidate value)

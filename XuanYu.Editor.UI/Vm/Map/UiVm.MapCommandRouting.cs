@@ -69,9 +69,15 @@ public sealed partial class UiVm
         if (name == "删除图层")
         {
             LogMapCommandReceived(name);
-            // D5：危险操作先请求 UI 确认（未注入处理器时直接执行，兼容既有测试）
-            if (DangerousCommandConfirmRequested is not null) RequestDangerousConfirmation(name);
-            else DeleteLayer();
+            // D5 纠偏：fail-closed——确认处理器缺失时阻止执行并记录错误（禁止为测试兼容绕过安全流程）
+            if (DangerousCommandConfirmRequested is null)
+            {
+                _logBus.Error(EditorLogSource.Editor, EditorLogCategory.Command,
+                    $"危险操作「{name}」已阻止：缺少确认处理器", "危险操作必须在用户确认后才可执行。");
+                RefreshLogBindings();
+                return true;
+            }
+            RequestDangerousConfirmation(name);
             return true;
         }
 

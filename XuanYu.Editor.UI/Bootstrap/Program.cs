@@ -1,6 +1,5 @@
 using System.Runtime.InteropServices;
 using Avalonia;
-using Avalonia.Fonts.Inter;
 
 namespace XuanYu.Editor.UI;
 
@@ -22,7 +21,6 @@ internal static class Program
     {
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .WithInterFont()
             .LogToTrace();
     }
 }
