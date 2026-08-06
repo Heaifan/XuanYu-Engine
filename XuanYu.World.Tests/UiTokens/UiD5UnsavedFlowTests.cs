@@ -72,7 +72,8 @@ public sealed class UiD5UnsavedFlowTests
         var scene = System.IO.File.ReadAllText(System.IO.Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
-        Assert.Contains("地图持久化（真实保存到资产文件）尚未接入（D6）", scene);
+        Assert.Contains("D5-DEFER-01", scene);
+        Assert.Contains("不归入 D6", scene);
         Assert.DoesNotContain("RunCommand.Execute(\"应用地图属性\")", scene); // 未用应用冒充保存
     }
     [Fact]

@@ -49,7 +49,13 @@ ARCH-UI-SPEC-R1-D5：控件状态、表单、弹窗、通知、空状态与日�
   - **硬阻塞二：输入阶段真实校验（按用户方案）**——`ValidateMapFieldOnInput` 替换「只清错」逻辑：输入阶段执行轻量规则（非法字符/NaN/Infinity/**明显超界** 100~1000000 米，边界与领域 MapDefinitionValidator 一致）；**值仍非法时错误不得消失**（继续输入非法值错误保持）；合法值错误立即清除；**输入中态**（空/-/./1./1e- 等临时文本）不清除已有错误；失焦执行完整单字段校验（格式+范围）；提交执行全部字段+跨字段（MapSession 业务兜底）+ 定位第一处错误 + 页面汇总；校验失败不清空输入；基础高度仅有限数字（领域 ValidateSurface 无范围）。
   - 验证：新增 **UiD5InputValidationTests（8 项）+ UiD5UnsavedFlowTests（8 项）**，World **887/887**（871+16）；全量 `--no-incremental` **0W0E**（落盘 /tmp/d5-fix2-final-build.log）；**Core 339 + World 887 + WarCore 22 = 1248/1248 PASS**；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS；既有测试适配 4 处（默认地图状态「已保存」、范围错误字段级拦截、新建地图流程断言、MapStatusText 基线语义）。
   - 债务基线 122 保持；Manifest 112 Frozen / 0 Pending。
-- 状态：**ARCH-UI-SPEC-R1-D5（二次纠偏后）：READY FOR USER RE-ACCEPTANCE**（等待真机复验）（等待真机复验；通过后 D5 改 COMPLETE）（尚未获得用户真机裁决；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项）。
+- **D5-FINAL 最终语义纠偏（同版本 v0.2.24.43-rz 不升版，2026-08-06）**：
+  - **地图状态四态**：无路径+无修改 → `未落盘`；无路径+有修改 → `未保存`；有路径+无修改 → `已保存`；有路径+有修改 → `有未保存修改`（内存基线 ≠ 已保存到磁盘；`MarkBaseline()` 保留且不改变文件路径）。刷新点全覆盖：表单输入（三个 setter 刷新 MapStatusText）、应用属性/图层增删排序显隐锁定/Undo/Redo/新建（`DirtyChanged` 订阅 `OnMapDirtyChanged`）、打开场景加载地图后同步表单文本（`SyncPropertyTexts`，避免误判待提交修改）。
+  - **弹窗去内部编号**：正式文案「当前地图有未保存的修改。当前版本暂不支持保存地图后新建。请选择取消，或不保存并新建。」（无 D5/D6/MAP-A/ARCH-UI-SPEC-R1）；按钮严格「取消 / 不保存并新建」；默认焦点=取消；Enter 只触发默认按钮（取消）；Esc/关闭=取消；仅明确点击「不保存并新建」才允许丢弃修改；确认服务缺失/异常时不新建（`return choice == "discard"` 天然 fail-closed）；不调用场景保存、不调用不存在的地图保存、不用「应用地图属性」冒充保存。
+  - **延期登记 D5-DEFER-01**：地图「保存并新建」暂缓——归属未来独立的地图持久化专项（**不归入 D6**）；专项必须补：保存成功后才新建/失败不新建/取消路径不新建/防重复提交/成功后更新路径与状态/写盘失败保留地图图层历史。
+  - 验证：新增 **UiD5MapStatusTests（8 项）+ UiD5UnsavedDialogTests（8 项）+ UiD5UnsavedDialogBehaviorTests（9 项）**，共 25 项覆盖计划 26 个断言点；World **912/912**（887+25）；全量 `--no-incremental` **0W0E**（落盘 /tmp/d5-final-build.log）；**Core 339 + World 912 + WarCore 22 = 1273/1273 PASS**；启动冒烟 PASS；arch-a-guard PASS；git diff --check PASS；D3/D4/D5 回归 **156/156 PASS**。
+  - 债务基线 122 保持；Manifest 112 Frozen / 0 Pending。
+- 状态：**ARCH-UI-SPEC-R1-D5：READY FOR USER RE-ACCEPTANCE**（等待真机复验；不自行宣布 COMPLETE，不进入 D6）（等待真机复验）（等待真机复验；通过后 D5 改 COMPLETE）（尚未获得用户真机裁决；通过后 D5 改 COMPLETE，失败则建 D5-F1 只修真实失败项）。
 - 保留（审计矩阵归属但本轮范围外）：G02 焦点框系统与 DPI/减少动画/屏幕阅读器（D6）；日志搜索实现（占位保留）；加载/进度长任务场景（无真实加载流程，不虚构）。
 
 

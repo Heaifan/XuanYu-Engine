@@ -11,7 +11,6 @@ public sealed partial class UiVm
     public string MapIdText => MapSession.CurrentMap.MapId.ToString();
     public string MapSizeText =>
         $"{MapSession.CurrentMap.SizeMeters.Width:0.####} × {MapSession.CurrentMap.SizeMeters.Depth:0.####} 米";
-    public string MapStatusText => MapSession.IsDirty ? "未保存" : "已保存";
     public bool HasMap => true; // D2 会话语义：编辑器恒有当前地图（初始默认 10 km）。
     public void NewMap()
     {

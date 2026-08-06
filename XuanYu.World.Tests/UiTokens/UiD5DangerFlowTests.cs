@@ -75,12 +75,12 @@ public sealed class UiD5DangerFlowTests
             "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
         Assert.Contains("ShowUnsavedMapChangesDialog", scene);
         Assert.Contains("HasUnsavedMapChanges", scene);
-        Assert.Contains("地图持久化（真实保存到资产文件）尚未接入（D6）", scene);
+        Assert.Contains("D5-DEFER-01", scene);
         var unsaved = System.IO.File.ReadAllText(System.IO.Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Win", "UiWin.UnsavedDialog.cs"));
         Assert.Contains("不保存并新建", unsaved);
-        Assert.Contains("地图持久化尚未接入（D6）", unsaved);
+        Assert.Contains("当前版本暂不支持保存地图后新建", unsaved);
         Assert.DoesNotContain("[(\"保存并新建\"", unsaved); // 停止上报：按钮数组不得出现「保存并新建」（禁止冒充保存）
         var win = System.IO.File.ReadAllText(System.IO.Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..",

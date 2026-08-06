@@ -12,7 +12,7 @@ public sealed class UiMapEditorTests
         var vm = new UiVm(null, () => true);
         Assert.True(vm.HasMap);
         Assert.Equal("未命名地图", vm.MapName);
-        Assert.Equal("已保存", vm.MapStatusText); // D5 二次纠偏：默认地图建立基线保存点（初始不误判未保存）
+        Assert.Equal("未落盘", vm.MapStatusText); // D5-FINAL：默认地图无路径无修改 → 未落盘（内存基线 ≠ 已保存到磁盘）
         Assert.Equal(10000.0, vm.MapSession.CurrentMap.SizeMeters.Width);
         Assert.Equal(10000.0, vm.MapSession.CurrentMap.SizeMeters.Depth);
         Assert.Equal(0.0, vm.MapSession.CurrentMap.Surface.BaseHeightMeters);

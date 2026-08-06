@@ -70,10 +70,10 @@ public partial class UiWin
             ? await vm.SaveSceneAsync()
             : await SaveSceneAs(vm);
 
-    // D5 二次纠偏（按用户方案）：新建地图未保存流程——
+    // ARCH-UI-SPEC-R1-D5-FINAL：新建地图未保存流程——
     // 无未保存修改直接新建；有修改 → 不保存并新建（明确丢弃）/ 取消。
-    // **停止并上报**：地图持久化（真实保存到资产文件）尚未接入（D6），
-    // 「保存并新建」三选在 D6 恢复；禁止用「应用属性」冒充保存。
+    // 地图持久化（真实保存到资产文件）尚未接入，归属未来独立的地图持久化专项（D5-DEFER-01，
+    // 不归入 D6）；禁止用「应用属性」冒充保存，不得恢复虚假的「保存并新建」分支。
     async Task<bool> ConfirmNewMapUnsaved(UiVm vm)
     {
         if (!vm.HasUnsavedMapChanges) return true;

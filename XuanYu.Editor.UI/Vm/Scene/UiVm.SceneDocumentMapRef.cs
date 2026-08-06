@@ -57,6 +57,7 @@ public sealed partial class UiVm
             return;
         }
 
+        SyncPropertyTexts(); // D5-FINAL：打开场景加载地图后同步表单文本（避免误判待提交表单修改）
         FooterMessage = $"场景引用的地图已加载：{result.Value.Name}。";
         RaiseMapDocumentChanged();
     }

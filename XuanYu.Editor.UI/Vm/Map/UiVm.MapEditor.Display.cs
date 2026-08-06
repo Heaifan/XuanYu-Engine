@@ -6,6 +6,18 @@ public sealed partial class UiVm
     public string MapIdDisplay => MapIdDisplayFormat.Format(MapIdText);
     public string MapPathDisplay => string.IsNullOrEmpty(MapPath) ? "—" : MapPath;
     public bool IsMapFormError => !string.IsNullOrEmpty(MapEditError);
+    // ARCH-UI-SPEC-R1-D5-FINAL：地图状态四态（内存基线 ≠ 已保存到磁盘）。
+    // 无路径+无修改 → 未落盘；无路径+有修改 → 未保存；有路径+无修改 → 已保存；有路径+有修改 → 有未保存修改。
+    public string MapStatusText
+    {
+        get
+        {
+            var hasFilePath = !string.IsNullOrWhiteSpace(MapSession.CurrentFilePath);
+            if (!hasFilePath)
+                return HasUnsavedMapChanges ? "未保存" : "未落盘";
+            return HasUnsavedMapChanges ? "有未保存修改" : "已保存";
+        }
+    }
     // D5 二次纠偏（按用户方案）：表单值与当前模型不一致 = 待提交表单修改
     public bool HasPendingMapFormChanges =>
         !TryParseMeters(MapWidthText, "宽度", out var width, out _) || width != MapSession.CurrentMap.SizeMeters.Width ||

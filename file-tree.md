@@ -931,6 +931,9 @@
 │  │  ├─ UiD5CorrectionStructureTests.cs
 │  │  ├─ UiD5InputValidationTests.cs
 │  │  ├─ UiD5UnsavedFlowTests.cs
+│  │  ├─ UiD5MapStatusTests.cs
+│  │  ├─ UiD5UnsavedDialogTests.cs
+│  │  ├─ UiD5UnsavedDialogBehaviorTests.cs
 │  │  ├─ UiTokenManifestGraphTests.cs
 │  │  ├─ UiTokenManifestTests.cs
 │  │  ├─ UiTopTabStripContractTests.cs
@@ -1842,6 +1845,9 @@
 - `XuanYu.Editor/MapEditing/MapEditSession.Document.cs`（MarkBaseline）— D5 二次纠偏：内存基线保存点（默认地图初始不误判未保存）。
 - `XuanYu.World.Tests/UiTokens/UiD5InputValidationTests.cs` — D5 二次纠偏：输入阶段真实校验 8 项测试。
 - `XuanYu.World.Tests/UiTokens/UiD5UnsavedFlowTests.cs` — D5 二次纠偏：未保存判断 8 项测试（IsDirty 捕获/停止上报）。
+- `XuanYu.World.Tests/UiTokens/UiD5MapStatusTests.cs` — D5-FINAL：地图状态四态测试（未落盘/未保存/已保存/有未保存修改 + Undo 回保存点 + MarkBaseline 不动路径）。
+- `XuanYu.World.Tests/UiTokens/UiD5UnsavedDialogTests.cs` — D5-FINAL：未保存地图弹窗测试（正式文案无内部编号/按钮严格/默认焦点取消/Enter 不危险/Esc=取消）。
+- `XuanYu.World.Tests/UiTokens/UiD5UnsavedDialogBehaviorTests.cs` — D5-FINAL：弹窗行为合同测试（无修改直接新建/仅 discard 放行/不调用任何保存/服务缺失不新建）。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

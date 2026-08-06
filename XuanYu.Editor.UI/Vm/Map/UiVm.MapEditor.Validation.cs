@@ -12,11 +12,11 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     string _mapWidthText = "10000";
-    public string MapWidthText { get => _mapWidthText; set { _mapWidthText = value; OnPropertyChanged(nameof(MapWidthText)); ValidateMapFieldOnInput("宽度", value); } }
+    public string MapWidthText { get => _mapWidthText; set { _mapWidthText = value; OnPropertyChanged(nameof(MapWidthText)); ValidateMapFieldOnInput("宽度", value); OnPropertyChanged(nameof(MapStatusText)); } }
     string _mapDepthText = "10000";
-    public string MapDepthText { get => _mapDepthText; set { _mapDepthText = value; OnPropertyChanged(nameof(MapDepthText)); ValidateMapFieldOnInput("深度", value); } }
+    public string MapDepthText { get => _mapDepthText; set { _mapDepthText = value; OnPropertyChanged(nameof(MapDepthText)); ValidateMapFieldOnInput("深度", value); OnPropertyChanged(nameof(MapStatusText)); } }
     string _mapBaseHeightText = "0";
-    public string MapBaseHeightText { get => _mapBaseHeightText; set { _mapBaseHeightText = value; OnPropertyChanged(nameof(MapBaseHeightText)); ValidateMapFieldOnInput("基础高度", value); } }
+    public string MapBaseHeightText { get => _mapBaseHeightText; set { _mapBaseHeightText = value; OnPropertyChanged(nameof(MapBaseHeightText)); ValidateMapFieldOnInput("基础高度", value); OnPropertyChanged(nameof(MapStatusText)); } }
     public string MapEditError { get; private set; } = "";
 
     public string MapWidthError { get; private set; } = "";
