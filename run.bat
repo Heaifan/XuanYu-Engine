@@ -16,6 +16,15 @@ echo    XuanYu Engine Editor - Build and Run
 echo ========================================
 echo.
 
+rem [0/3] Kill previous editor instance and shutdown build servers to avoid
+rem PDB/DLL file locks (CS2012). Only target this editor and MSBuild servers;
+rem NEVER use "taskkill /IM dotnet.exe" (would kill unrelated .NET tasks).
+echo [0/3] Closing previous editor instance...
+taskkill /IM XuanYu.Editor.App.exe /T /F >nul 2>&1 || ver >nul
+dotnet build-server shutdown >nul 2>&1 || ver >nul
+%SystemRoot%\System32\timeout.exe /t 1 /nobreak >nul 2>&1 || ver >nul
+
+echo.
 echo [1/3] Restoring packages...
 call dotnet restore "%PROJECT%" --configfile ".\NuGet.Config" -nologo
 if errorlevel 1 goto fail
