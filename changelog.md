@@ -20,6 +20,20 @@
 
 ## 2026-08（当前自然月）
 
+## v0.2.24.42-fix
+ARCH-UI-SPEC-R1-D4-F1：单行属性行、文本溢出与字体统一修复（2026-08-06，Commit 本轮落库为准）
+- **真机问题定位**（D4 真机验收未通过 → D4-F1）：只读字段被整体竖排（<360 上下）、展示型长文本换行、字体不统一。D4-F1 将响应式拆为两类：**只读键值行始终单行双列**；**可编辑表单行（真实输入控件）才在 <360 整组上下**。
+- **规范修订**（`docs/ui/玄域引擎_UI规范_1.0.md` §7.1.1 新增 + §23 变更历史登记）：ReadonlyKeyValueRow（始终同一行；默认标签列 80；组件允许 72～96：地图摘要 72/检查器 80/调试页 96；间距 8；值列 `*` 可收缩；NoWrap+CharacterEllipsis+MaxLines=1；Tooltip 完整值）；EditableFormRow（标准 96/128；仅真实输入控件 <360 整组上下；不得套用只读属性）；展示型动态文本默认（NoWrap+Ellipsis+MaxLines1+完整值 Tooltip）；显式多行例外清单（日志正文/错误详情/帮助说明/空状态说明/多行 TextBox/详情区域）。**未修改任何冻结 Token 数值**（112 Frozen / 0 Pending 不变）。
+- **检查器**（InspectorPanel.axaml/.cs）：删除 WideFields/NarrowFields 双布局树（D4-F1 只读字段不再有窄模式）；单套水平 Grid（标签 80 + 值 `*`，MinWidth 0）+ uiLabel/uiValue 公共样式 + 值 Tooltip 完整 Value；分组标题独占一行（uiSection）；空状态说明走 uiMultiline；`InspectorPanel.axaml.cs` 移除模式切换（无输入控件则无响应式）。
+- **调试页**（Right.axaml + DebugText.cs + UiVm.Scene.cs + UiVm.InteractionPointer.cs + UiVm.cs）：当前选择/当前工具/拾取状态/日志策略/类型/对象 ID/选中来源/PointerId/起点/当前/位移/Preview次数 全部从拼接字符串结构化为 `InspectorFieldRow`（Label/Value）；三个 ListBox 改为 ItemsControl 键值行模板（Grid 96 列 + uiLabel/uiValue + Tooltip 完整值）；交互事务 Grid（阶段/Owner/Preview）值加单行省略 + Tooltip；按钮文字统一 12。
+- **地图编辑器**（MapPagePanel.axaml/.cs + MapEditorPanel.axaml）：资产摘要（名称/路径/MapId/尺寸/状态）始终单行双列（72 列），不随宽度上下拆行；路径/名称/尺寸/状态加完整值 Tooltip；MapId 保持「前 8…后 6」+ 完整 Tooltip + 完整复制；地图属性输入表单（宽度/深度/基础高度）标准 96 列、`<360` 整组上下（`EditableFormLayoutModel` 统一 360 阈值，替代原 320 紧凑模型——`MapEditorLayoutModel.cs` 删除）；MapEditError 走 uiMultiline；环境占位页标题 uiSection。
+- **图层**（LayerPanel.axaml + LayerInspectorPanel.axaml）：图层名单行省略（NoWrap+Ellipsis+MaxLines1）+ Tooltip 完整名称；图层属性（类型/顺序/图层 ID）单行双列 96 列 + uiLabel/uiValue + Tooltip；名称输入框保持可编辑；**Layer Token、眼睛/锁、选择、拖动、插入线、Cancel、Undo/Redo、日志与系统保护零改动**。
+- **公共语义样式**（Ui.axaml）：新增 `uiLabel`（Label12+Secondary）、`uiValue`（Body13+Primary+NoWrap+Ellipsis+MaxLines1）、`uiSingleLine`、`uiMultiline`、`uiSection`（Section14 SemiBold Primary）、`uiTextButton`（Label12+紧凑高 24），全部引用正式 Token；页面局部 key/value 样式删除（统一公共样式）；sideTab/caption 裸 FontSize 迁移 Token 引用（值不变）；无新增 Token、无新文件超 100 行（Ui.axaml 压缩为项目既有单行 Style 惯例后 26 行）。
+- **测试**：新增 UiD4F1LayoutModelTests（只读行 300~480 均水平 + 表单 359/360 阈值）、UiD4F1TextOverflowContractTests（uiValue 默认/检查器/调试/地图/图层省略与 Tooltip/多行专用类/按钮）、UiD4F1TypographyContractTests（公共样式 Token/无裸 FontSize/无局部 FontFamily/Manifest 112 Frozen）；更新 UiD4LayoutModelTests（EditableFormLayoutModel）、UiD4InspectorContractTests（80 列单行）、UiD4MapEditorContractTests（MapId NoWrap+MaxLines1/表单 360）、UiD4LayerContractTests（uiValue/无局部 key）、UiD4DebtClearedTests（新文件清单）、UiLayerVisualContractTests V05/V06（Token 引用）。World 759 → **811（+16）**。
+- 验证：全解决方案 `--no-incremental` 串行 Build **0W0E**（落盘 /tmp/d4f1-final-build.log）；Core 339/339、World 811/811、WarCore 22/22，合计 **1172/1172 PASS**；启动冒烟 PASS（XuanYu.Editor.App.exe 存活）；arch-a-guard PASS；git diff --check PASS。
+- 治理：版本 v0.2.24.41-rz → **v0.2.24.42-fix**（四处同步）；基线维持 **159 条**（未新增债务、未改允许项）；未创建 Tag/Release。
+- 状态：**ARCH-UI-SPEC-R1-D4-F1：READY FOR USER RE-ACCEPTANCE**（尚未获得用户真机复验；复验通过后 D4 改 COMPLETE，失败则建 D4-F2 只修真实失败项）。
+
 ## v0.2.24.41-rz
 ARCH-UI-SPEC-R1-D4：检查器、地图编辑器与图层工作面板治理（2026-08-06，Commit 本轮落库为准）
 - **检查器治理**（K02/G03/W37~W42/W44）：检查器页签内容拆分至新 `Right/InspectorPanel.axaml`（+code-behind）；字号全 Token 化（面板标题 Title16 / 分组标题 Section14 / 字段标签 Label12 / 字段值 Body13 / 空状态标题 Section14）；`InspectorFields` 从字符串拼接改为结构化 `InspectorFieldRow(Label/Value/IsGroupHeader)`（对应 6 个既有测试同步更新为结构断言）；**响应式双模式**（纯逻辑 `InspectorLayoutModel`：内容宽 ≥360 左右布局/标签列 96/字段最小 128，<360 整组上下，同一数据源双布局树切换，无逐字段宽度判断）；空状态保留单一主入口；密度合同（全宽分组标题+1 DIP 分隔线、去卡片嵌套、字段行距 4~6）；调试页标签列 70→96（W44）。

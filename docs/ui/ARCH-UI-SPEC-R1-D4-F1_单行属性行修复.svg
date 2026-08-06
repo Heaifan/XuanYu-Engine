@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="460" viewBox="0 0 860 460" font-family="Microsoft YaHei UI, sans-serif">
+  <rect x="0" y="0" width="860" height="460" fill="#FFFFFF"/>
+  <text x="16" y="30" font-size="16" font-weight="bold" fill="#243744">ARCH-UI-SPEC-R1-D4-F1 单行属性行与文本溢出修复（浅色示意）</text>
+
+  <!-- 检查器：只读键值行始终单行双列 -->
+  <rect x="16" y="44" width="270" height="196" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="28" y="66" font-size="14" font-weight="bold" fill="#243744">基础信息</text>
+  <line x1="28" y1="72" x2="274" y2="72" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="28" y="94" font-size="12" fill="#5D6F7C">名称</text>
+  <text x="108" y="94" font-size="13" fill="#243744">立方体</text>
+  <text x="28" y="116" font-size="12" fill="#5D6F7C">类型</text>
+  <text x="108" y="116" font-size="13" fill="#243744">实体</text>
+  <text x="28" y="138" font-size="12" fill="#5D6F7C">路径</text>
+  <text x="108" y="138" font-size="13" fill="#243744">资产/模型/超长路径名称示例…</text>
+  <text x="28" y="160" font-size="12" fill="#5D6F7C">标签列 80 + 值列 *</text>
+  <text x="28" y="178" font-size="12" fill="#5D6F7C">始终同一行（300~480 DIP 均不拆行）</text>
+  <text x="28" y="196" font-size="12" fill="#5D6F7C">超长值单行省略，悬浮显示完整内容</text>
+  <text x="28" y="214" font-size="12" fill="#5D6F7C">只读字段无响应式（只有输入控件才 &lt;360 上下）</text>
+  <text x="28" y="232" font-size="12" fill="#5D6F7C">uiLabel 12 / uiValue 13 / uiSection 14（公共 Token）</text>
+
+  <!-- 调试页：键值行 96 列单行 -->
+  <rect x="298" y="44" width="270" height="196" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="310" y="66" font-size="14" font-weight="bold" fill="#243744">交互事务</text>
+  <line x1="310" y1="72" x2="556" y2="72" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="310" y="94" font-size="12" fill="#5D6F7C">阶段</text>
+  <text x="406" y="94" font-size="13" fill="#243744">已提交</text>
+  <text x="310" y="116" font-size="12" fill="#5D6F7C">Owner</text>
+  <text x="406" y="116" font-size="13" fill="#243744">移动</text>
+  <text x="310" y="138" font-size="12" fill="#5D6F7C">Preview</text>
+  <text x="406" y="138" font-size="13" fill="#243744">X 12  Y 34（超长时省略…）</text>
+  <text x="310" y="166" font-size="12" fill="#5D6F7C">当前选择 / 当前工具 / 拾取状态</text>
+  <text x="310" y="184" font-size="12" fill="#5D6F7C">日志策略 / PointerId / 起点 / 当前 / 位移</text>
+  <text x="310" y="202" font-size="12" fill="#5D6F7C">全部结构化 Label/Value + 标签列 96</text>
+  <text x="310" y="220" font-size="12" fill="#5D6F7C">值单行省略 + Tooltip 完整值</text>
+
+  <!-- 地图页：摘要横向 + 表单 360 响应式 -->
+  <rect x="580" y="44" width="264" height="196" rx="6" fill="#F8FAFB" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="592" y="66" font-size="14" font-weight="bold" fill="#243744">地图资产（始终横向）</text>
+  <line x1="592" y1="72" x2="832" y2="72" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="592" y="94" font-size="12" fill="#5D6F7C">MapId</text>
+  <text x="664" y="94" font-size="13" fill="#243744">a1ea150c…7b2f11</text>
+  <rect x="756" y="82" width="34" height="18" rx="3" fill="#FFFFFF" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="764" y="95" font-size="11" fill="#243744">复制</text>
+  <text x="592" y="116" font-size="12" fill="#5D6F7C">路径</text>
+  <text x="664" y="116" font-size="13" fill="#243744">—</text>
+  <text x="592" y="138" font-size="12" fill="#5D6F7C">尺寸 / 状态</text>
+  <text x="664" y="138" font-size="13" fill="#243744">64×64 / 已加载</text>
+  <text x="592" y="166" font-size="14" font-weight="bold" fill="#243744">地图属性（输入表单）</text>
+  <line x1="592" y1="172" x2="832" y2="172" stroke="#D5DEE4" stroke-width="1"/>
+  <text x="592" y="192" font-size="12" fill="#5D6F7C">宽度（米）</text>
+  <rect x="688" y="180" width="80" height="18" rx="3" fill="#FFFFFF" stroke="#B9C7D0" stroke-width="1"/>
+  <text x="592" y="214" font-size="12" fill="#5D6F7C">≥360 左右（96 列）；&lt;360 整组上下</text>
+  <text x="592" y="232" font-size="12" fill="#5D6F7C">仅真实输入控件参与响应式</text>
+
+  <text x="16" y="262" font-size="12" fill="#5D6F7C">规范 §7.1.1 定稿：ReadonlyKeyValueRow（80 默认 / 72~96 组件范围 / 间距 8 / 值列 * 可收缩）· EditableFormRow（96/128，&lt;360 上下）· 展示型文本默认 NoWrap+Ellipsis+MaxLines1+完整 Tooltip</text>
+  <text x="16" y="282" font-size="12" fill="#5D6F7C">公共样式 uiLabel/uiValue/uiSingleLine/uiMultiline/uiSection/uiTextButton · 基线维持 159 · Manifest 112 Frozen · 测试 1172/1172</text>
+</svg>

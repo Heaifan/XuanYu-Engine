@@ -343,11 +343,10 @@
 │  │  ├─ LayerPanel.axaml.cs
 │  │  ├─ MapEditorPanel.axaml
 │  │  ├─ MapEditorPanel.axaml.cs
-│  │  ├─ MapEditorLayoutModel.cs
 │  │  ├─ MapIdDisplayFormat.cs
 │  │  ├─ MapPagePanel.axaml
 │  │  ├─ MapPagePanel.axaml.cs
-│  │  ├─ InspectorLayoutModel.cs
+│  │  ├─ EditableFormLayoutModel.cs
 │  │  ├─ InspectorPanel.axaml
 │  │  ├─ InspectorPanel.axaml.cs
 │  │  ├─ Right.axaml
@@ -909,6 +908,9 @@
 │  │  ├─ UiSourceContractAnalyzerTokenRefTests.cs
 │  │  ├─ UiD3DebtClearedTests.cs
 │  │  ├─ UiD4DebtClearedTests.cs
+│  │  ├─ UiD4F1LayoutModelTests.cs
+│  │  ├─ UiD4F1TextOverflowContractTests.cs
+│  │  ├─ UiD4F1TypographyContractTests.cs
 │  │  ├─ UiD4InspectorContractTests.cs
 │  │  ├─ UiD4LayerContractTests.cs
 │  │  ├─ UiD4LayoutModelTests.cs
@@ -1166,11 +1168,10 @@
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml.cs` — MAP-A-R2-D4：图层面板（左侧"图层"页签内容，纯绑定；无 code-behind 逻辑）。
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs` — MAP-A-R1-D5-A：地图编辑器面板（二级页签宿主：地图/图层/环境，每页独立滚动）。
-- `XuanYu.Editor.UI/Right/MapEditorLayoutModel.cs` — ARCH-UI-SPEC-R1-D4：地图页密度模式纯逻辑（内容宽 <320 紧凑，无 Avalonia 依赖）。
 - `XuanYu.Editor.UI/Right/MapIdDisplayFormat.cs` — D4：MapId 显示压缩纯逻辑（>18 字符「前 8+…+后 6」）。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — D4：地图页（只读资产摘要 72 列紧凑 / MapId 压缩+复制 / 属性表单 96 列 + 紧凑模式双布局 / 按钮组）。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml.cs` — D4：地图页模式切换（<320 紧凑）与 MapId 完整值复制（Clipboard）。
-- `XuanYu.Editor.UI/Right/InspectorLayoutModel.cs` — D4：检查器表单模式纯逻辑（内容宽 <360 整组上下；96 标签列/128 字段最小）。
+- `XuanYu.Editor.UI/Right/EditableFormLayoutModel.cs` — ARCH-UI-SPEC-R1-D4/D4-F1：可编辑表单行（EditableFormRow）布局模式纯逻辑（仅真实输入控件在内容宽 <360 整组上下；96 标签列/128 字段最小；只读键值行不参与）。
 - `XuanYu.Editor.UI/Right/InspectorPanel.axaml` — D4：检查器面板（字号 Token 层级 / 宽窄双布局树 / 全宽分组+分隔线 / 空状态）。
 - `XuanYu.Editor.UI/Right/InspectorPanel.axaml.cs` — D4：检查器模式切换（<360 窄模式，同一 InspectorFields 数据源）。
 - `XuanYu.Editor.UI/Right/Right.axaml` — github.com/avaloniaui"
@@ -1704,7 +1705,10 @@
 - `XuanYu.World.Tests/UiTokens/UiD4DebtClearedTests.cs` — D4：债务清零断言（基线 226→159，保留 2 条组件例外）+ 新文件 5+100 防回归
 - `XuanYu.World.Tests/UiTokens/UiD4InspectorContractTests.cs` — D4：检查器结构合同（字号 Token/双模式/96/128/无卡片/调试页 96 列）
 - `XuanYu.World.Tests/UiTokens/UiD4LayerContractTests.cs` — D4：图层面板结构合同（图标 16/热区/笔画/Layer.* Token/插入线/选中样式/三重区分）
-- `XuanYu.World.Tests/UiTokens/UiD4LayoutModelTests.cs` — D4：纯布局逻辑测试（360/320 阈值、MapId 压缩、字段行结构）
+- `XuanYu.World.Tests/UiTokens/UiD4LayoutModelTests.cs` — D4/D4-F1：纯布局逻辑测试（可编辑表单 360 阈值、MapId 压缩、字段行结构）
+- `XuanYu.World.Tests/UiTokens/UiD4F1LayoutModelTests.cs` — D4-F1：只读键值行 300~480 均水平 + 可编辑表单 359/360 阈值
+- `XuanYu.World.Tests/UiTokens/UiD4F1TextOverflowContractTests.cs` — D4-F1：展示型文本默认（NoWrap+Ellipsis+MaxLines1）+ 完整值 Tooltip + 多行专用类
+- `XuanYu.World.Tests/UiTokens/UiD4F1TypographyContractTests.cs` — D4-F1：公共语义样式 Token / 无裸 FontSize / 无局部 FontFamily / Manifest 112 Frozen
 - `XuanYu.World.Tests/UiTokens/UiD4MapEditorContractTests.cs` — D4：地图页结构合同（72 列摘要/MapId 不换行+复制/96 列表单/紧凑模式/单滚动/按钮组）
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionInvariantTests.cs` — sealed class WorldPartitionInvariantTests
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.Activity.cs` — sealed partial class WorldPartitionMigrationTests
