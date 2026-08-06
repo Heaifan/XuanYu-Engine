@@ -31,8 +31,8 @@ public sealed class UiD4MapEditorContractTests
     [Fact]
     public void Map_id_never_wraps()
     {
-        // MapId 行显式 NoWrap（覆盖 value 样式的 Wrap）；其他可换行字段不受影响
-        Assert.Contains("<TextBlock Text=\"{Binding MapIdDisplay}\" Classes=\"value\" TextTrimming=\"CharacterEllipsis\" TextWrapping=\"NoWrap\"", Page);
+        // MapId 行显式 NoWrap + Ellipsis + MaxLines=1（D4-F1 展示型动态文本默认）
+        Assert.Contains("<TextBlock Text=\"{Binding MapIdDisplay}\" Classes=\"uiValue\" TextWrapping=\"NoWrap\" TextTrimming=\"CharacterEllipsis\" MaxLines=\"1\"", Page);
     }
 
     [Fact]
@@ -42,13 +42,13 @@ public sealed class UiD4MapEditorContractTests
     }
 
     [Fact]
-    public void Property_form_uses_96_column_and_compact_narrow_mode()
+    public void Property_form_uses_96_column_and_narrow_mode()
     {
         Assert.Contains("PropsWide", Page);
-        Assert.Contains("PropsNarrow", Page);                  // 紧凑模式整组上下
+        Assert.Contains("PropsNarrow", Page);                  // 可编辑表单窄模式（<360 整组上下）
         Assert.Contains("ColumnDefinitions=\"96,*\"", Page);   // 编辑表单标签列 96
-        Assert.Contains("Spacing=\"2\"", Page);                // 紧凑标签→字段 2~4
-        Assert.Contains("Spacing=\"6\"", Page);                // 紧凑字段组 6~8
+        Assert.Contains("Spacing=\"2\"", Page);                // 窄模式标签→字段 2~4
+        Assert.Contains("Spacing=\"6\"", Page);                // 窄模式字段组 6~8
     }
 
     [Fact]

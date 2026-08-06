@@ -4,26 +4,24 @@
              x:Class="XuanYu.Editor.UI.LayerInspectorPanel"
              x:DataType="local:UiVm">
   <UserControl.Styles>
-    <!-- ARCH-UI-SPEC-R1-D4（W53/W54）：图层属性表单——标签列 96、字段值 13、Token 化 -->
-    <Style Selector="TextBlock.key"><Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/><Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <Style Selector="TextBlock.value"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <!-- ARCH-UI-SPEC-R1-D4（W53/W54）/D4-F1：图层属性表单——标签列 96、Label 12 / Body 13、单行省略 -->
     <Style Selector="Border.groupSeparator"><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/><Setter Property="BorderThickness" Value="0,0,0,1"/><Setter Property="Margin" Value="0,2,0,6"/></Style>
   </UserControl.Styles>
   <!-- F1：图层属性（与图层列表同页，位于列表下方；可见/锁定开关在列表行内） -->
   <StackPanel Spacing="4">
-    <TextBlock Text="图层属性" Classes="section"/>
+    <TextBlock Text="图层属性" Classes="uiSection"/>
     <Border Classes="groupSeparator"/>
     <Grid ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4">
-      <TextBlock Text="名称" Classes="key" VerticalAlignment="Center"/>
+      <TextBlock Text="名称" Classes="uiLabel"/>
       <TextBox Grid.Column="1" Text="{Binding LayerInspectorNameText, Mode=TwoWay}"
                IsReadOnly="{Binding LayerInspectorIsSystem}"
                LostFocus="NameBox_LostFocus" KeyDown="NameBox_KeyDown"/>
-      <TextBlock Grid.Row="1" Text="类型" Classes="key"/>
-      <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding LayerInspectorKindText}" Classes="value"/>
-      <TextBlock Grid.Row="2" Text="顺序" Classes="key"/>
-      <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding LayerInspectorOrderText}" Classes="value"/>
-      <TextBlock Grid.Row="3" Text="图层 ID" Classes="key"/>
-      <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding LayerInspectorIdText}" Classes="value"/>
+      <TextBlock Grid.Row="1" Text="类型" Classes="uiLabel"/>
+      <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding LayerInspectorKindText}" Classes="uiValue" ToolTip.Tip="{Binding LayerInspectorKindText}"/>
+      <TextBlock Grid.Row="2" Text="顺序" Classes="uiLabel"/>
+      <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding LayerInspectorOrderText}" Classes="uiValue" ToolTip.Tip="{Binding LayerInspectorOrderText}"/>
+      <TextBlock Grid.Row="3" Text="图层 ID" Classes="uiLabel"/>
+      <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding LayerInspectorIdText}" Classes="uiValue" ToolTip.Tip="{Binding LayerInspectorIdText}"/>
     </Grid>
     <Button Content="设为当前图层" Command="{Binding RunCommand}" CommandParameter="设为当前图层"
             HorizontalAlignment="Left" IsVisible="{Binding LayerInspectorIsRegion}" Margin="0,4,0,0"/>

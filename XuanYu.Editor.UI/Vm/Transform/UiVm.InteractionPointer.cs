@@ -46,16 +46,16 @@ public sealed partial class UiVm
         return snap.HasCapture && snap.Pointer.PointerId == pointerId;
     }
 
-    IReadOnlyList<string> BuildDebugInputItems()
+    IReadOnlyList<InspectorFieldRow> BuildDebugInputItems()
     {
         var snap = _editorState.InteractionSnapshot;
         return
         [
-            $"PointerId：{(snap.Pointer.IsEmpty ? "无" : snap.Pointer.PointerId)}",
-            $"起点：{snap.Pointer.StartX:F0}, {snap.Pointer.StartY:F0}",
-            $"当前：{snap.Pointer.CurrentX:F0}, {snap.Pointer.CurrentY:F0}",
-            $"位移：{snap.Pointer.DeltaX:F0}, {snap.Pointer.DeltaY:F0}",
-            $"Preview次数：{snap.Pointer.PreviewCount}"
+            new("PointerId", snap.Pointer.IsEmpty ? "无" : snap.Pointer.PointerId.ToString()),
+            new("起点", $"{snap.Pointer.StartX:F0}, {snap.Pointer.StartY:F0}"),
+            new("当前", $"{snap.Pointer.CurrentX:F0}, {snap.Pointer.CurrentY:F0}"),
+            new("位移", $"{snap.Pointer.DeltaX:F0}, {snap.Pointer.DeltaY:F0}"),
+            new("Preview次数", snap.Pointer.PreviewCount.ToString())
         ];
     }
 }

@@ -53,15 +53,15 @@ public sealed class UiLayerVisualContractTests
     [Fact]
     public void V05_right_tabs_use_converged_font_sizes()
     {
-        Assert.Contains("FontSize\" Value=\"13\"", Ui);
+        Assert.Contains("Font.Body.Size", Ui);            // D4-F1：顶层页签 13 走正式 Token
         Assert.Contains("layerSubTab", MapEditor);
-        Assert.Contains("Font.Section.Size", MapEditor); // D4：二级页签 14 走正式 Token
+        Assert.Contains("Font.Section.Size", MapEditor);  // D4：二级页签 14 走正式 Token
     }
 
     [Fact]
     public void V06_inspector_field_font_below_tab_font()
     {
-        Assert.Contains("TextBlock.key", Inspector);
-        Assert.Contains("Font.Label.Size", Inspector); // D4：字段标签 12 走正式 Token
+        Assert.Contains("uiLabel", Inspector);            // D4-F1：字段标签走公共 Label 12
+        Assert.Contains("uiValue", Inspector);            // D4-F1：字段值走公共 Body 13
     }
 }

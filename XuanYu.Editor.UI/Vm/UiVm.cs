@@ -60,8 +60,8 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
     public IReadOnlyList<InspectorFieldRow> InspectorFields => BuildInspectorFields();
     public IReadOnlyList<string> EmptyHints => UiText.EmptyHints; public IReadOnlyList<string> DebugItems => UiText.DebugItems;
-    public IReadOnlyList<string> ToolItems => UiText.ToolItems; public IReadOnlyList<string> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<string> DebugObjectItems => BuildDebugObjectItems();
-    public IReadOnlyList<string> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<string> DebugInputItems => BuildDebugInputItems();
+    public IReadOnlyList<string> ToolItems => UiText.ToolItems; public IReadOnlyList<InspectorFieldRow> DebugContextItems => DebugText.ContextItems; public IReadOnlyList<InspectorFieldRow> DebugObjectItems => BuildDebugObjectItems();
+    public IReadOnlyList<InspectorFieldRow> DebugToolItems => DebugText.ToolItems; public IReadOnlyList<InspectorFieldRow> DebugInputItems => BuildDebugInputItems();
     public string ActiveTool => _editorState.ToolSnapshot.ActiveToolText;
     public bool IsSelectTool => IsTool(EditorToolId.Select);
     public bool IsMoveTool => IsTool(EditorToolId.Move);

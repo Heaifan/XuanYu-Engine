@@ -2,31 +2,24 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.UiTokens;
 
-// ARCH-UI-SPEC-R1-D4：纯布局逻辑测试——检查器/地图模式阈值、MapId 显示压缩、字段行结构。
+// ARCH-UI-SPEC-R1-D4/D4-F1：纯布局逻辑测试——可编辑表单阈值、MapId 显示压缩、字段行结构。
 public sealed class UiD4LayoutModelTests
 {
     [Fact]
-    public void Inspector_mode_switches_at_360_content_width()
+    public void Editable_form_mode_switches_at_360_content_width()
     {
-        Assert.Equal(InspectorFormMode.Narrow, InspectorLayoutModel.ModeFor(0));
-        Assert.Equal(InspectorFormMode.Narrow, InspectorLayoutModel.ModeFor(359));
-        Assert.Equal(InspectorFormMode.Wide, InspectorLayoutModel.ModeFor(360));
-        Assert.Equal(InspectorFormMode.Wide, InspectorLayoutModel.ModeFor(600));
+        Assert.Equal(EditableFormMode.Narrow, EditableFormLayoutModel.ModeFor(0));
+        Assert.Equal(EditableFormMode.Narrow, EditableFormLayoutModel.ModeFor(359));
+        Assert.Equal(EditableFormMode.Wide, EditableFormLayoutModel.ModeFor(360));
+        Assert.Equal(EditableFormMode.Wide, EditableFormLayoutModel.ModeFor(600));
     }
 
     [Fact]
-    public void Inspector_columns_match_spec_contract()
+    public void Editable_form_columns_match_spec_contract()
     {
-        Assert.Equal(360, InspectorLayoutModel.WideThreshold);       // §7.1 表单纵向切换阈值
-        Assert.Equal(96, InspectorLayoutModel.LabelColumnWidth);     // §5.3 标签列默认
-        Assert.Equal(128, InspectorLayoutModel.FieldMinWidth);       // §5.3 字段最小
-    }
-
-    [Fact]
-    public void Map_editor_mode_switches_at_320_content_width()
-    {
-        Assert.Equal(MapEditorDensityMode.Compact, MapEditorLayoutModel.ModeFor(319));
-        Assert.Equal(MapEditorDensityMode.Standard, MapEditorLayoutModel.ModeFor(320));
+        Assert.Equal(360, EditableFormLayoutModel.WideThreshold);       // §7.1 表单纵向切换阈值
+        Assert.Equal(96, EditableFormLayoutModel.LabelColumnWidth);     // §5.3 标签列默认
+        Assert.Equal(128, EditableFormLayoutModel.FieldMinWidth);       // §5.3 字段最小
     }
 
     [Fact]

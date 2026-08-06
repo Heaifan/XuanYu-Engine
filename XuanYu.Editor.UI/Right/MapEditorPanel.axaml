@@ -28,7 +28,7 @@
       <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Spacing="10" Margin="0,6,0,0">
           <StackPanel Spacing="4">
-            <TextBlock Text="环境" Classes="section"/>
+            <TextBlock Text="环境" Classes="uiSection"/>
             <TextBlock Text="天空预设 / 天顶颜色 / 地平线颜色 / 太阳方向 / 太阳强度 / 环境光强度编辑将在 D5 后续补齐。" Classes="muted" TextWrapping="Wrap"/>
           </StackPanel>
         </StackPanel>

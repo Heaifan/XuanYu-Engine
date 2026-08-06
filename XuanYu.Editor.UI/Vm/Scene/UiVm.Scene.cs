@@ -84,16 +84,17 @@ public sealed partial class UiVm
             $"次数={_renderSnapshotPublishCount}；实体数={entityCount}");
     }
 
-    IReadOnlyList<string> BuildDebugObjectItems()
+    IReadOnlyList<InspectorFieldRow> BuildDebugObjectItems()
     {
         var entity = _sceneState.RenderSnapshot.Entity;
-        if (!entity.IsValid) return ["实体：无"];
+        if (!entity.IsValid) return [new("实体", "无")];
         var position = entity.Transform.Position;
-        return [
-            $"实体编号：{EditorDisplayText.Entity(entity.EntityKey)}",
-            $"名称：{entity.Name}",
-            $"类型：{EditorDisplayText.EntityType(entity.Type)}",
-            $"位置：{EditorDisplayText.Position(position)}",
+        return
+        [
+            new("实体编号", EditorDisplayText.Entity(entity.EntityKey)),
+            new("名称", entity.Name),
+            new("类型", EditorDisplayText.EntityType(entity.Type)),
+            new("位置", EditorDisplayText.Position(position)),
         ];
     }
 }

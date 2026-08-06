@@ -81,7 +81,8 @@ public sealed class UiD4LayerContractTests
     public void Layer_inspector_migrated_to_96_column_and_body_13()
     {
         Assert.Contains("ColumnDefinitions=\"96,*\"", Inspector);  // W53
-        Assert.Contains("Font.Body.Size", Inspector);              // W54：字段值 13
+        Assert.Contains("uiValue", Inspector);                     // W54：字段值走公共 Body 13
         Assert.DoesNotContain("ColumnDefinitions=\"70,*\"", Inspector);
+        Assert.DoesNotContain("Classes=\"key\"", Inspector);       // D4-F1：局部 key/value 样式已统一为公共样式
     }
 }

@@ -27,7 +27,7 @@
     <Style Selector="ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
     <Style Selector="Path.layerIcon"><Setter Property="Width" Value="16"/><Setter Property="Height" Value="16"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
     <Style Selector="Path.dragHandle"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Fill" Value="{StaticResource Color.Text.Disabled}"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
-    <Style Selector="TextBlock.layerName"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.layerName"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="TextWrapping" Value="NoWrap"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="MaxLines" Value="1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
     <!-- ARCH-UI-SPEC-R1-D4（K04）：系统/用户图层三重区分（文字+形态+低饱和色），Token 冻结值 -->
     <Style Selector="Border.kindTagRegion"><Setter Property="Background" Value="{StaticResource Layer.Kind.Region.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Layer.Kind.Region.Border}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="5,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
     <Style Selector="TextBlock.kindTagRegionText"><Setter Property="Foreground" Value="{StaticResource Layer.Kind.Region.Text}"/><Setter Property="FontSize" Value="{StaticResource Font.Meta.Size}"/></Style>
@@ -69,7 +69,7 @@
             <Path Grid.Column="2" Classes="dragHandle" Data="{StaticResource DragHandleIcon}"
                   IsVisible="{Binding IsRegion}" ToolTip.Tip="拖动排序"
                   PointerPressed="DragHandle_PointerPressed"/>
-            <TextBlock Grid.Column="3" Classes="layerName" Text="{Binding Name}"/>
+            <TextBlock Grid.Column="3" Classes="layerName" Text="{Binding Name}" ToolTip.Tip="{Binding Name}"/>
             <Border Grid.Column="4" Classes="kindTagRegion" IsVisible="{Binding IsRegion}">
               <TextBlock Classes="kindTagRegionText" Text="区域"/>
             </Border>
