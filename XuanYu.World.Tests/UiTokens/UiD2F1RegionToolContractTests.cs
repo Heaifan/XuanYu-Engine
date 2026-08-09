@@ -27,5 +27,7 @@ public sealed class UiD2F1RegionToolContractTests
         Assert.Contains("Color.Hover.Bg", map);
         Assert.Contains("Color.Selection.Bg", map);
         Assert.Contains("Color.Border.Strong", map);
+        Assert.Contains("HorizontalContentAlignment=\"Center\"", map);
+        Assert.Contains("VerticalContentAlignment=\"Center\"", map);
     }
 }

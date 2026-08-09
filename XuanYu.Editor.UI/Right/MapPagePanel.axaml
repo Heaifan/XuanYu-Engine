@@ -42,6 +42,7 @@
       <Border Classes="groupSeparator"/>
       <ToggleButton x:Name="RegionDrawingTool" Classes="mapTool" IsChecked="{Binding IsRegionDrawingTool, Mode=OneWay}"
                     Command="{Binding SelectToolCommand}" CommandParameter="区域绘制"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                     AutomationProperties.Name="区域绘制"><TextBlock Classes="mapToolLabel" Text="区域绘制"/></ToggleButton>
     </StackPanel>
     <!-- 地图资产：只读紧凑摘要（72 标签列；始终单行双列，D4-F1 不随宽度上下拆行） -->

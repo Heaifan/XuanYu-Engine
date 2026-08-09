@@ -26,10 +26,12 @@ public sealed class UiRuntimeRiskTests
                 .Single(x => x.Classes.Contains("toolBtn") && x.IsChecked == true);
             toggle.IsChecked = true;
             top.UpdateLayout();
-            return (toggle.Background as SolidColorBrush)?.Color;
+            var text = UiRuntimeTestHost.Descendants<TextBlock>(toggle).Single(x => x.Text == "选择");
+            return ((toggle.Background as SolidColorBrush)?.Color, (text.Foreground as SolidColorBrush)?.Color);
         });
 
-        Assert.NotEqual(Color.Parse("#0078D7"), color);
+        Assert.NotEqual(Color.Parse("#0078D7"), color.Item1);
+        Assert.Equal(Color.Parse("#243744"), color.Item2);
     }
 
     [Fact]
