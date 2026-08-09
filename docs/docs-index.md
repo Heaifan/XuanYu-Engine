@@ -18,6 +18,7 @@
 ## 当前阶段（milestones/current/）
 
 - `docs/milestones/current/MAP-A/`：MAP-A 地图合同与当前轮验收材料
+- `docs/milestones/current/MAP-A/R3-backlog.md`：R2 关闭后的 MAP-A-R3 候选方向与冻结前约束
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 
@@ -41,6 +42,7 @@
 - `WORLD-A/`、`WORLD-B/`、`WORLD-C/`：世界实体、编辑交互、场景文档里程碑
 - `RZ-VK/`：M2 早期 Vulkan 生命周期与日志 UX（VK1–VK5、LOG-UX）
 - `M1/`：首版引擎构建阶段审计与计划（9.0X/9.1A 系列、项目章程）
+- `MAP-A/`：MAP-A-R2 收口报告与交付证据
 
 ## 归档（archive/）
 

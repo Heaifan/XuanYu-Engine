@@ -1726,6 +1726,8 @@
 - `XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeLayoutTests.cs` — LayerPanel 冷启动与增层布局运行时门禁。
 - `XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeStateTests.cs` — LayerPanel 选中、可见和锁定状态运行时门禁。
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeRiskTests.cs` — Top/Foot Fluent 状态覆盖风险运行时门禁。
+- `XuanYu.World.Tests/UiRuntime/UiRuntimeCollection.cs` — Headless UI 测试串行集合定义。
+- `XuanYu.World.Tests/UiRuntime/UiTestAppBuilder.cs` — 正式 Editor.UI App 的 Headless AppBuilder 配置。
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml2.cs` — 旧 UI 债务基线（AXAML 色值 2/2，D2 自动生成）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Cs.cs` — 旧 UI 债务基线（code-behind 视觉源色值，D2 自动生成）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Typography.cs` — 旧 UI 债务基线（字号/圆角/高度/阴影/笔画，D2 自动生成）
@@ -1837,6 +1839,8 @@
 - `docs/governance/ui-spec.md` — UI 规范 45 项讨论决策的历史记录（D1 起不再作为实施合同，正式规则以 UI 规范 1.0 为准）
 - `docs/governance/版本号规范与历史映射.md` — 版本格式与历史编号映射
 - `docs/milestones/current/MAP-A/map-contract.md` — MAP-A 地图合同与当前轮验收材料
+- `docs/milestones/closed/MAP-A/R2-closeout.md` — MAP-A-R2 CLOSED 收口报告、交付能力盘点与关闭证据。
+- `docs/milestones/current/MAP-A/R3-backlog.md` — MAP-A-R3 冻结前候选方向与范围约束。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪
