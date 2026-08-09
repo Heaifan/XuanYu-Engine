@@ -19,7 +19,7 @@
 ---
 
 ## v0.2.25.3-rz
-MAP-A-R3-F1-FINAL 原生输入与区域绘制返工（2026-08-09）：修复区域工具在释放鼠标后不更新预览的问题；修复正式区域与 Draft 资源 primitive 范围为空/固定颜色导致不可见的问题；增加 App/UI 版本溯源及 A-E 阶段运行时取证，取证同时写入底部日志与临时文件；F2 保持冻结。验证：App 构建 0 Warning / 0 Error，World.Tests PASS，ARCH-A PASS，git diff --check PASS。Hash：待最终提交。遗留：真机验收仍由用户执行，未宣布 CLOSED。
+MAP-A-R3-F1-FINAL 原生输入与区域绘制返工（2026-08-09）：修复区域工具在释放鼠标后不更新预览的问题；修复正式区域与 Draft 资源 primitive 范围为空/固定颜色导致不可见的问题；增加 App/UI 版本溯源及 A-E 阶段运行时取证，取证同时写入底部日志与临时文件；F2 保持冻结。验证：App 构建 0 Warning / 0 Error，World.Tests PASS，ARCH-A PASS，git diff --check PASS。Hash：5dffd70。遗留：真机验收仍由用户执行，未宣布 CLOSED。
 
 ## 2026-08（当前自然月）
 ## v0.2.25.3-rz
