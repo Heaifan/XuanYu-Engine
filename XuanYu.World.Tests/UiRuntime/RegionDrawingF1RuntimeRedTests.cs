@@ -34,7 +34,7 @@ public sealed class RegionDrawingF1RuntimeRedTests
     }
 
     [Fact]
-    public void Region_drawing_selected_text_uses_dark_foreground()
+    public void Region_drawing_runtime_text_uses_dark_foreground_in_normal_and_selected_states()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var color = host.Run(() =>
@@ -44,14 +44,21 @@ public sealed class RegionDrawingF1RuntimeRedTests
             host.Show(right, 420, 720);
             UiRuntimeTestHost.Descendants<TabItem>(right).Single(x => (string?)x.Header == "地图编辑器").IsSelected = true;
             right.UpdateLayout();
-            vm.SelectToolCommand.Execute("区域绘制");
             right.UpdateLayout();
             var toggle = UiRuntimeTestHost.Descendants<ToggleButton>(right)
                 .Single(x => x.Classes.Contains("mapTool"));
-            return (toggle.Foreground as SolidColorBrush)?.Color;
+            var normal = UiRuntimeTestHost.Descendants<TextBlock>(toggle)
+                .Single(x => x.Classes.Contains("mapToolLabel"));
+            var normalColor = (normal.Foreground as SolidColorBrush)?.Color;
+            vm.SelectToolCommand.Execute("区域绘制");
+            right.UpdateLayout();
+            var selectedColor = (normal.Foreground as SolidColorBrush)?.Color;
+            return (normalColor, selectedColor, toggle.IsChecked);
         });
 
-        Assert.Equal(Color.Parse("#243744"), color);
+        Assert.Equal(Color.Parse("#243744"), color.normalColor);
+        Assert.Equal(Color.Parse("#243744"), color.selectedColor);
+        Assert.True(color.IsChecked);
     }
 
     [Fact]

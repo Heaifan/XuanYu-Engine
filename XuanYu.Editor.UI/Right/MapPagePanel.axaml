@@ -23,11 +23,17 @@
     <Style Selector="ToggleButton.mapTool">
       <Setter Property="MinHeight" Value="32"/><Setter Property="Padding" Value="8,4"/>
       <Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
-      <Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
+      <Setter Property="Background" Value="{StaticResource Color.Bg.Control}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
     </Style>
-    <Style Selector="ToggleButton.mapTool:pointerover"><Setter Property="Background" Value="{StaticResource Color.Hover.Bg}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+    <Style Selector="ToggleButton.mapTool:pointerover"><Setter Property="Background" Value="{StaticResource Color.Hover.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
     <Style Selector="ToggleButton.mapTool:checked"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Accent}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
-    <Style Selector="ToggleButton.mapTool:checked:pointerover"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+    <Style Selector="ToggleButton.mapTool:checked:pointerover"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Accent}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+    <Style Selector="ToggleButton.mapTool TextBlock.mapToolLabel"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+    <Style Selector="ToggleButton.mapTool:pointerover TextBlock.mapToolLabel,
+                  ToggleButton.mapTool:checked TextBlock.mapToolLabel,
+                  ToggleButton.mapTool:checked:pointerover TextBlock.mapToolLabel">
+      <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+    </Style>
   </UserControl.Styles>
 
   <StackPanel x:Name="Root" Spacing="12" Margin="0,6,0,0">
@@ -36,7 +42,7 @@
       <Border Classes="groupSeparator"/>
       <ToggleButton x:Name="RegionDrawingTool" Classes="mapTool" IsChecked="{Binding IsRegionDrawingTool, Mode=OneWay}"
                     Command="{Binding SelectToolCommand}" CommandParameter="区域绘制"
-                    AutomationProperties.Name="区域绘制"><TextBlock Text="区域绘制"/></ToggleButton>
+                    AutomationProperties.Name="区域绘制"><TextBlock Classes="mapToolLabel" Text="区域绘制"/></ToggleButton>
     </StackPanel>
     <!-- 地图资产：只读紧凑摘要（72 标签列；始终单行双列，D4-F1 不随宽度上下拆行） -->
     <StackPanel x:Name="SummaryGroup" Spacing="2">

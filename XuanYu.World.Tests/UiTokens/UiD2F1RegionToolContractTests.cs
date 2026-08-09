@@ -20,7 +20,12 @@ public sealed class UiD2F1RegionToolContractTests
     {
         var map = Read("Right/MapPagePanel.axaml");
         Assert.Contains("ToggleButton.mapTool:checked:pointerover", map);
+        Assert.Contains("ToggleButton.mapTool:pointerover TextBlock.mapToolLabel", map);
+        Assert.Contains("ToggleButton.mapTool:checked TextBlock.mapToolLabel", map);
+        Assert.Contains("ToggleButton.mapTool:checked:pointerover TextBlock.mapToolLabel", map);
         Assert.Contains("Color.Text.Primary", map);
+        Assert.Contains("Color.Hover.Bg", map);
         Assert.Contains("Color.Selection.Bg", map);
+        Assert.Contains("Color.Border.Strong", map);
     }
 }
