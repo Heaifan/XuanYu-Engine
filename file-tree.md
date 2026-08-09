@@ -929,6 +929,7 @@
 │  │  ├─ UiD4F1TypographyContractTests.cs
 │  │  ├─ UiD4InspectorContractTests.cs
 │  │  ├─ UiD4LayerContractTests.cs
+│  │  ├─ UiF3LayerRowContractTests.cs
 │  │  ├─ UiD4LayoutModelTests.cs
 │  │  ├─ UiD4MapEditorContractTests.cs
 │  │  ├─ UiD5ButtonContractTests.cs
@@ -1741,6 +1742,7 @@
 - `XuanYu.World.Tests/UiTokens/UiD4DebtClearedTests.cs` — D4：债务清零断言（基线 226→159，保留 2 条组件例外）+ 新文件 5+100 防回归
 - `XuanYu.World.Tests/UiTokens/UiD4InspectorContractTests.cs` — D4：检查器结构合同（字号 Token/双模式/96/128/无卡片/调试页 96 列）
 - `XuanYu.World.Tests/UiTokens/UiD4LayerContractTests.cs` — D4：图层面板结构合同（图标 16/热区/笔画/Layer.* Token/插入线/选中样式/三重区分）
+- `XuanYu.World.Tests/UiTokens/UiF3LayerRowContractTests.cs` — MAP-A-R2-D5-F3：图层行主体布局、拉伸和手柄入口合同
 - `XuanYu.World.Tests/UiTokens/UiD4LayoutModelTests.cs` — D4/D4-F1：纯布局逻辑测试（可编辑表单 360 阈值、MapId 压缩、字段行结构）
 - `XuanYu.World.Tests/UiTokens/UiD4F1LayoutModelTests.cs` — D4-F1（纠偏）：319/320 密度与 359/360 表单边界 + 6 组独立组合 + 只读行水平
 - `XuanYu.World.Tests/UiTokens/UiD4F1ButtonContractTests.cs` — D4-F1（纠偏）：uiTextButton 真实接线（地图 7+调试 4）+ Grid *,* 跨列 + 2×2 等宽网格

@@ -28,6 +28,7 @@
     <Style Selector="ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
     <Style Selector="Path.layerIcon"><Setter Property="Width" Value="16"/><Setter Property="Height" Value="16"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
     <Style Selector="Path.dragHandle"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Fill" Value="{StaticResource Color.Text.Disabled}"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.layerHint"><Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/><Setter Property="FontSize" Value="{StaticResource Font.Meta.Size}"/></Style>
     <Style Selector="TextBlock.layerName"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="TextWrapping" Value="NoWrap"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="MaxLines" Value="1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
     <!-- ARCH-UI-SPEC-R1-D4（K04）：系统/用户图层三重区分（文字+形态+低饱和色），Token 冻结值 -->
     <Style Selector="Border.kindTagRegion"><Setter Property="Background" Value="{StaticResource Layer.Kind.Region.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Layer.Kind.Region.Border}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="3"/><Setter Property="Padding" Value="5,1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
@@ -43,38 +44,39 @@
     <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Visible}"/></Style>
     <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerLockSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Unlocked}"/></Style>
     <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
+    <Style Selector="ListBox.layerList ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style>
   </UserControl.Styles>
   <DockPanel>
     <UniformGrid DockPanel.Dock="Top" Columns="2" Margin="0,8,0,4" ColumnSpacing="4">
       <Button Classes="layerTool" Content="添加" Command="{Binding RunCommand}" CommandParameter="添加图层" ToolTip.Tip="添加图层" AutomationProperties.Name="添加图层"/>
       <Button Classes="layerTool" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}" AutomationProperties.Name="删除图层"/>
     </UniformGrid>
-    <TextBlock Text="至少需要两个用户图层才能调整顺序" IsVisible="{Binding IsLayerReorderHintVisible}" Margin="0,0,0,4"/>
+    <TextBlock Classes="layerHint" Text="添加至少 2 个用户图层后可拖拽排序" IsVisible="{Binding IsLayerReorderHintVisible}" Margin="0,0,0,4"/>
     <!-- F3：整页滚动由外层 ScrollViewer 接管；拖动事件见 LayerPanel.DragDrop.cs -->
     <ListBox x:Name="LayerList" Classes="layerList" ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
              Background="Transparent" BorderThickness="0" Margin="0,2,0,0">
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="local:MapLayerRowViewModel">
-          <Grid ColumnDefinitions="3,28,22,*,Auto,28" ColumnSpacing="4" MinHeight="32">
+          <Grid ColumnDefinitions="3,24,Auto,*,28,28" ColumnSpacing="4" MinHeight="32">
             <!-- F3：拖动插入线（2 DIP，整行宽，显示在目标行上方） -->
             <Border Classes="dropLine" Grid.ColumnSpan="6" ZIndex="10" IsVisible="{Binding IsDropBefore}" VerticalAlignment="Top" Margin="0,-1,0,0"/>
             <Border Classes="activeMark" IsVisible="{Binding IsActive}"/>
-            <ToggleButton Grid.Column="1" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏" AutomationProperties.Name="显示或隐藏图层">
+            <Path Grid.Column="1" Classes="dragHandle" Data="{StaticResource DragHandleIcon}"
+                  IsVisible="{Binding IsRegion}" IsEnabled="{Binding IsDragEnabled}" ToolTip.Tip="{Binding DragHandleToolTip}"
+                  PointerPressed="DragHandle_PointerPressed"/>
+            <Border Grid.Column="2" Classes="kindTagRegion" IsVisible="{Binding IsRegion}">
+              <TextBlock Classes="kindTagRegionText" Text="区域"/>
+            </Border>
+            <Border Grid.Column="2" Classes="kindTagSystem" IsVisible="{Binding IsSystem}">
+              <TextBlock Classes="kindTagSystemText" Text="系统"/>
+            </Border>
+            <TextBlock Grid.Column="3" Classes="layerName" Text="{Binding Name}" ToolTip.Tip="{Binding Name}"/>
+            <ToggleButton Grid.Column="4" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏" AutomationProperties.Name="显示或隐藏图层">
               <StackPanel>
                 <Path Classes="layerIcon" Data="{StaticResource VisibleIcon}" IsVisible="{Binding IsVisible}"/>
                 <Path Classes="layerIcon" Data="{StaticResource HiddenIcon}" IsVisible="{Binding IsHidden}"/>
               </StackPanel>
             </ToggleButton>
-            <Path Grid.Column="2" Classes="dragHandle" Data="{StaticResource DragHandleIcon}"
-                  IsVisible="{Binding IsRegion}" IsEnabled="{Binding IsDragEnabled}" ToolTip.Tip="{Binding DragHandleToolTip}"
-                  PointerPressed="DragHandle_PointerPressed"/>
-            <TextBlock Grid.Column="3" Classes="layerName" Text="{Binding Name}" ToolTip.Tip="{Binding Name}"/>
-            <Border Grid.Column="4" Classes="kindTagRegion" IsVisible="{Binding IsRegion}">
-              <TextBlock Classes="kindTagRegionText" Text="区域"/>
-            </Border>
-            <Border Grid.Column="4" Classes="kindTagSystem" IsVisible="{Binding IsSystem}">
-              <TextBlock Classes="kindTagSystemText" Text="系统"/>
-            </Border>
             <ToggleButton Grid.Column="5" Classes="layerLockSwitch" IsChecked="{Binding IsLocked, Mode=TwoWay}" ToolTip.Tip="锁定/解锁" AutomationProperties.Name="锁定或解锁图层">
               <StackPanel>
                 <Path Classes="layerIcon" Data="{StaticResource LockedIcon}" IsVisible="{Binding IsLocked}"/>

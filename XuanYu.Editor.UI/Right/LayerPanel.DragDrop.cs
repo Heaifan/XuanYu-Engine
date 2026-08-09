@@ -9,8 +9,10 @@ namespace XuanYu.Editor.UI;
 public partial class LayerPanel
 {
     MapLayerRowViewModel? _dragRow;
+    Control? _dragHandle;
     IPointer? _dragPointer;
     Point _dragStart;
+    int _dragSourceIndex = -1;
     int? _dragTarget;
     bool _dragging;
 
@@ -18,7 +20,9 @@ public partial class LayerPanel
     {
         if (sender is not Control { DataContext: MapLayerRowViewModel row } handle || !row.IsDragEnabled) return;
         if (e.GetCurrentPoint(handle).Properties.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed) return;
-        _dragRow = row; _dragPointer = e.Pointer; _dragStart = e.GetPosition(handle);
+        _dragRow = row; _dragHandle = handle; _dragPointer = e.Pointer;
+        _dragStart = e.GetPosition(handle); _dragSourceIndex = (DataContext as UiVm)?.RegionPositionOf(row.LayerId) ?? -1;
+        if (_dragSourceIndex < 0) return;
         _dragTarget = null; _dragging = false;
         e.Pointer.Capture(handle); handle.PointerMoved += DragHandle_PointerMoved;
         handle.PointerReleased += DragHandle_PointerReleased; handle.PointerCaptureLost += DragHandle_PointerCaptureLost;
@@ -33,7 +37,7 @@ public partial class LayerPanel
             if ((dx * dx) + (dy * dy) < 16.0) return;
             _dragging = true;
         }
-        if (!_dragging || DataContext is not UiVm vm) return;
+        if (!_dragging || _dragSourceIndex < 0 || DataContext is not UiVm vm) return;
         _dragTarget = TargetAt(e.GetPosition(LayerList)); vm.SetDropTarget(_dragTarget);
     }
 
@@ -54,20 +58,31 @@ public partial class LayerPanel
 
     void EndLayerDrag()
     {
+        if (_dragHandle is { } handle)
+        {
+            handle.PointerMoved -= DragHandle_PointerMoved;
+            handle.PointerReleased -= DragHandle_PointerReleased;
+            handle.PointerCaptureLost -= DragHandle_PointerCaptureLost;
+        }
         if (DataContext is UiVm vm) vm.SetDropTarget(null);
         if (_dragPointer is { } pointer) pointer.Capture(null);
-        _dragRow = null; _dragPointer = null; _dragTarget = null; _dragging = false;
+        _dragRow = null; _dragHandle = null; _dragPointer = null;
+        _dragTarget = null; _dragSourceIndex = -1; _dragging = false;
     }
 
     int? TargetAt(Point position)
     {
+        var candidates = new List<(int Index, double Center)>();
         for (var i = 0; i < LayerList.ItemCount; i++)
         {
             var container = LayerList.ContainerFromIndex(i);
-            if (container is null || !container.Bounds.Contains(position)) continue;
-            if (container.DataContext is not MapLayerRowViewModel { IsRegion: true } row) return null;
-            return (DataContext as UiVm)?.RegionPositionOf(row.LayerId);
+            if (container is null || container.DataContext is not MapLayerRowViewModel { IsRegion: true } row) continue;
+            if (container.TranslatePoint(new Point(), LayerList) is not { } origin) continue;
+            candidates.Add(((DataContext as UiVm)?.RegionPositionOf(row.LayerId) ?? -1,
+                origin.Y + container.Bounds.Height / 2));
         }
-        return null;
+        foreach (var candidate in candidates.OrderBy(c => c.Center))
+            if (position.Y <= candidate.Center) return candidate.Index;
+        return candidates.Count == 0 ? null : candidates[^1].Index;
     }
 }

@@ -19,6 +19,15 @@
 ---
 
 ## 2026-08（当前自然月）
+## v0.2.24.48-fix
+MAP-A-R2-D5-F3：图层行与手柄拖拽修复（2026-08-09 15:58:47）
+- F2 真机裁定：`MAP-A-R2-D5-F2` 为 FAIL；Gizmo、世界原点 Overlay、日志降噪通过，图层拖拽与图层视觉阻塞，保持未 CLOSED。
+- 根因：图层网格未把名称作为可扩展主体；`TargetAt` 以未转换的条目边界命中 `LayerList` 坐标，拖拽经过条目时目标索引可能为空；上一轮捕获状态也未记录源索引或解绑事件。
+- 修复：图层行固定为「手柄 / 类型 / 名称 / 可见 / 锁定」，名称占 `*` 主体列，ListBoxItem 拉伸到面板宽度，选中态继续使用浅背景，排序提示降级为次要帮助文字；拖拽只从手柄启动，记录 source index，按转换后的条目中心计算 target index，释放时一次提交并完整清理捕获/事件状态。
+- 测试：F3 聚焦合同与拖拽/领域回归 **10/10 PASS**；UI F3/D6 聚焦合同 **19/19 PASS**；完整解决方案 Build **0W0E**；Core **344/344**、World **931/931**、WarCore **22/22** PASS；架构守卫 PASS；`git diff --check` PASS。
+- 范围：未修改 Navigation Gizmo、世界原点 Overlay、Vulkan 日志策略、Schema、依赖或宪法；新增 `UiF3LayerRowContractTests`，同步 `file-tree.md`。
+- 状态：**MAP-A-R2-D5-F3：READY FOR USER ACCEPTANCE**；不得视为 CLOSED，等待用户执行 F3-01～F3-06 真机验收。
+
 ## v0.2.24.47-fix
 MAP-A-R2-D5-F2：Navigation Gizmo DIP、局部图层拖拽与日志降噪重做（2026-08-06，Commit 本轮落库为准）
 - T1：普通 revert 撤销 F1，保留世界原点 Overlay、焦点框修复与 PowerShell 守卫兼容；恢复提交 `ecb9134` 已推送。
