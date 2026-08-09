@@ -22,8 +22,8 @@
 ## v0.2.25.1-rz
 MAP-A-R3-D1：既有 Region 合同审计与加固（2026-08-09 20:35:37）
 - 变化：复用 R2 的 MapRegion/MapRegionDraft/MapPoint/Region Layer；新增非相邻边相交、接触、重叠拒绝；新增 MapEditSession Region Create/Delete 正式提交入口，保持单历史条目与相同 RegionId 的 Undo/Redo；同步 R3 backlog、file-tree 与四处版本号。
-- 验证：解决方案 Build 0 Warning / 0 Error；Core 344/344；World 943/943；WarCore 22/22；ARCH-A、5+100、git diff --check 待本条提交后最终复核。
-- Hash：待本轮代码提交。
+- 验证：解决方案 Build 0 Warning / 0 Error；Core 344/344；World 943/943；WarCore 22/22；ARCH-A、5+100、git diff --check PASS。
+- Hash：dcb4b91。
 - 遗留：D1 不包含绘制 UI、Picking 接入、Renderer、LayerPanel、Inspector、持久化、GIS、DGD、Hole、MultiPolygon 或 Polygon Boolean；D1 完成后停止，D2 另行批准。
 
 ## v0.2.24.50-fix
