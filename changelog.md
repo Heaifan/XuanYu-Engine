@@ -19,6 +19,14 @@
 ---
 
 ## 2026-08（当前自然月）
+## v0.2.24.49-fix
+MAP-A-R2-D5-F4：图层列表测量与拖拽热区修复（2026-08-09 16:18:16）
+- 根因：图层页外层 ScrollViewer 未禁止横向无限测量，Inspector 隐藏时名称 `*` 列失去可用宽度；拖拽事件直接绑定 14 DIP Path，命中区过小。
+- 修复：图层页禁用横向滚动并保持页面、面板、ListBox 横向拉伸；拖拽改由 24×28 DIP 透明 Border 作为实际 Pointer 热区，图标仅作视觉子元素。
+- 验证：解决方案 Build 0W0E；Core 344/344、World 931/931、WarCore 22/22；架构守卫 PASS；`git diff --check` PASS。真机验收待用户执行。
+- 范围：未修改 Gizmo、世界原点 Overlay、Vulkan 日志策略、Inspector 其他页、顶栏、地图渲染、Schema、宪法。
+- 状态：**MAP-A-R2-D5-F4：READY FOR USER ACCEPTANCE**；不得视为 CLOSED，等待用户执行 F4-01～F4-07 真机验收。
+
 ## v0.2.24.48-fix
 MAP-A-R2-D5-F3：图层行与手柄拖拽修复（2026-08-09 15:58:47）
 - F2 真机裁定：`MAP-A-R2-D5-F2` 为 FAIL；Gizmo、世界原点 Overlay、日志降噪通过，图层拖拽与图层视觉阻塞，保持未 CLOSED。

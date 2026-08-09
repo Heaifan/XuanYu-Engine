@@ -27,7 +27,8 @@
     <Style Selector="ToggleButton.layerLockSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Unlocked}"/></Style>
     <Style Selector="ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
     <Style Selector="Path.layerIcon"><Setter Property="Width" Value="16"/><Setter Property="Height" Value="16"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="StrokeThickness" Value="1.5"/><Setter Property="Fill" Value="Transparent"/></Style>
-    <Style Selector="Path.dragHandle"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Fill" Value="{StaticResource Color.Text.Disabled}"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="Border.dragHandle"><Setter Property="Width" Value="24"/><Setter Property="Height" Value="28"/><Setter Property="Background" Value="Transparent"/><Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+    <Style Selector="Path.dragHandleIcon"><Setter Property="Width" Value="14"/><Setter Property="Height" Value="14"/><Setter Property="Stretch" Value="Uniform"/><Setter Property="Fill" Value="{StaticResource Color.Text.Disabled}"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
     <Style Selector="TextBlock.layerHint"><Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/><Setter Property="FontSize" Value="{StaticResource Font.Meta.Size}"/></Style>
     <Style Selector="TextBlock.layerName"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="TextWrapping" Value="NoWrap"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="MaxLines" Value="1"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
     <!-- ARCH-UI-SPEC-R1-D4（K04）：系统/用户图层三重区分（文字+形态+低饱和色），Token 冻结值 -->
@@ -54,16 +55,17 @@
     <TextBlock Classes="layerHint" Text="添加至少 2 个用户图层后可拖拽排序" IsVisible="{Binding IsLayerReorderHintVisible}" Margin="0,0,0,4"/>
     <!-- F3：整页滚动由外层 ScrollViewer 接管；拖动事件见 LayerPanel.DragDrop.cs -->
     <ListBox x:Name="LayerList" Classes="layerList" ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
-             Background="Transparent" BorderThickness="0" Margin="0,2,0,0">
+             Background="Transparent" BorderThickness="0" Margin="0,2,0,0" HorizontalAlignment="Stretch">
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="local:MapLayerRowViewModel">
           <Grid ColumnDefinitions="3,24,Auto,*,28,28" ColumnSpacing="4" MinHeight="32">
             <!-- F3：拖动插入线（2 DIP，整行宽，显示在目标行上方） -->
             <Border Classes="dropLine" Grid.ColumnSpan="6" ZIndex="10" IsVisible="{Binding IsDropBefore}" VerticalAlignment="Top" Margin="0,-1,0,0"/>
             <Border Classes="activeMark" IsVisible="{Binding IsActive}"/>
-            <Path Grid.Column="1" Classes="dragHandle" Data="{StaticResource DragHandleIcon}"
-                  IsVisible="{Binding IsRegion}" IsEnabled="{Binding IsDragEnabled}" ToolTip.Tip="{Binding DragHandleToolTip}"
-                  PointerPressed="DragHandle_PointerPressed"/>
+            <Border Grid.Column="1" Classes="dragHandle" IsVisible="{Binding IsRegion}" IsEnabled="{Binding IsDragEnabled}"
+                    ToolTip.Tip="{Binding DragHandleToolTip}" PointerPressed="DragHandle_PointerPressed">
+              <Path Classes="dragHandleIcon" Data="{StaticResource DragHandleIcon}"/>
+            </Border>
             <Border Grid.Column="2" Classes="kindTagRegion" IsVisible="{Binding IsRegion}">
               <TextBlock Classes="kindTagRegionText" Text="区域"/>
             </Border>

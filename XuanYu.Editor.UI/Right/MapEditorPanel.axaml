@@ -17,9 +17,9 @@
     </TabItem>
     <TabItem Classes="layerSubTab" Header="图层">
       <!-- F1：图层列表与图层属性同页；页面统一滚动（列表在上、属性在下） -->
-      <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="8" Margin="0,6,0,0">
-          <local:LayerPanel/>
+      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="8" Margin="0,6,0,0" HorizontalAlignment="Stretch">
+          <local:LayerPanel HorizontalAlignment="Stretch"/>
           <local:LayerInspectorPanel IsVisible="{Binding HasLayerSelection}"/>
         </StackPanel>
       </ScrollViewer>

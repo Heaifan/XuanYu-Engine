@@ -16,7 +16,7 @@ public sealed partial class UiVm
     public event Action<string>? FileCommandRequested;
     public bool IsSceneDirty => _documentSession.IsDirty(_historyOwner.CurrentRevision);
     public string CurrentScenePath => _documentSession.CurrentPath ?? "";
-    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.24.48-fix - {DocumentTitle}";
+    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.24.49-fix - {DocumentTitle}";
     public string DocumentTitle => $"{DocumentFileName}{(IsSceneDirty ? "（未保存）" : "")}";
     public string DocumentFileName =>
         string.IsNullOrWhiteSpace(CurrentScenePath) ? "未命名场景" : Path.GetFileName(CurrentScenePath);

@@ -38,8 +38,10 @@ public sealed class UiMapLayoutContractTests
     [Fact]
     public void Layer_ui_lives_inside_map_editor_layer_tab()
     {
-        Assert.Contains("<local:LayerPanel/>", MapEditor);
+        Assert.Contains("<local:LayerPanel HorizontalAlignment=\"Stretch\"/>", MapEditor);
         Assert.Contains("<local:LayerInspectorPanel", MapEditor);
+        Assert.Contains("HorizontalScrollBarVisibility=\"Disabled\"", MapEditor);
+        Assert.Contains("HorizontalAlignment=\"Stretch\"", MapEditor);
     }
 
     [Fact]

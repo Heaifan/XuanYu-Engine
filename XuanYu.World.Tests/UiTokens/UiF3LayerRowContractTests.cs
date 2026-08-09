@@ -31,5 +31,7 @@ public sealed class UiF3LayerRowContractTests
     {
         const string binding = "PointerPressed=\"DragHandle_PointerPressed\"";
         Assert.Equal(1, Panel.Split(binding, StringSplitOptions.None).Length - 1);
+        Assert.Contains("Style Selector=\"Border.dragHandle\"", Panel);
+        Assert.Contains("Style Selector=\"Path.dragHandleIcon\"", Panel);
     }
 }
