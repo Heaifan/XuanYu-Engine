@@ -20,6 +20,7 @@
 
 ## 2026-08（当前自然月）
 ## v0.2.25.3-rz
+MAP-A-R3-F1 真机失败返工（2026-08-09 22:52:30）：截图显示点击后既无命中反馈也无 Draft 顶点；审计发现 VulkanViewport 初始化提示层未禁止命中测试，存在遮断 VulkanNativeHost 输入链的风险。修复 FallbackLayer `IsHitTestVisible=False`，并为区域绘制拾取未命中增加状态栏证据；World.Tests 968/968 PASS，解决方案复制 UI DLL 阶段因运行中的 XuanYu.Editor.App 锁文件未完成。F2 未启动，等待重新真机验收。
 ### v0.2.25.1-rz
 MAP-A-R3-D1：既有 Region 合同审计与加固（2026-08-09 20:35:37）
 - 变化：复用 R2 的 MapRegion/MapRegionDraft/MapPoint/Region Layer；新增非相邻边相交、接触、重叠拒绝；新增 MapEditSession Region Create/Delete 正式提交入口，保持单历史条目与相同 RegionId 的 Undo/Redo；同步 R3 backlog、file-tree 与四处版本号。

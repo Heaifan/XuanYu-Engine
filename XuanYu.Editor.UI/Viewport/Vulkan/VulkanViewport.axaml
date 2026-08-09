@@ -7,7 +7,7 @@
     <Border BorderBrush="#C9D2DC" BorderThickness="1" ClipToBounds="True">
       <local:VulkanNativeHost/>
     </Border>
-    <Border x:Name="FallbackLayer" Background="#E8EEF5"
+    <Border x:Name="FallbackLayer" IsHitTestVisible="False" Background="#E8EEF5"
             Padding="18" HorizontalAlignment="Center" VerticalAlignment="Center">
       <StackPanel Spacing="6" MaxWidth="360">
         <TextBlock Text="渲染视口" Foreground="#4A5A70" FontWeight="SemiBold" HorizontalAlignment="Center"/>

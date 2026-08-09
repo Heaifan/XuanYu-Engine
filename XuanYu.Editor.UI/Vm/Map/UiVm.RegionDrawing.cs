@@ -18,7 +18,12 @@ public sealed partial class UiVm
     public bool RegionDrawingPointerPressed(double x, double y, ViewportState viewport)
     {
         if (!IsRegionDrawingTool) return false;
-        if (!IsInsideViewport(x, y, viewport) || !TryPickRegionPoint(x, y, viewport, out var point)) return true;
+        if (!IsInsideViewport(x, y, viewport)) return true;
+        if (!TryPickRegionPoint(x, y, viewport, out var point))
+        {
+            FooterMessage = $"区域绘制收到视口点击：地面拾取未命中 ({x:0.#}, {y:0.#})";
+            return true;
+        }
         LastRegionDrawingHit = point;
         RegionDrawingHitCount++;
         FooterMessage = $"区域绘制地面命中：MapPoint=({point.X:0.##}, {point.Y:0.##})";
