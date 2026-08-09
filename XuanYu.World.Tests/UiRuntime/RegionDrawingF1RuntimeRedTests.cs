@@ -62,7 +62,7 @@ public sealed class RegionDrawingF1RuntimeRedTests
     }
 
     [Fact]
-    public void Real_region_tool_input_adds_first_draft_vertex()
+    public void Real_region_tool_input_reports_ground_hit_without_creating_draft()
     {
         var result = _fixture.Run(() =>
         {
@@ -74,10 +74,12 @@ public sealed class RegionDrawingF1RuntimeRedTests
                 .Select(iy => (X: ix * 50.0, Y: iy * 50.0)))
                 .First(p => MapSurfacePicker.TryPick(vm.MapSession.CurrentMap, projection, p.X, p.Y, out _));
             var handled = vm.RegionDrawingPointerPressed(hit.X, hit.Y, viewport);
-            return (handled, vm.RenderProjection.Projection!.RegionModelResources.Count);
+            return (handled, vm.RegionDrawingHitCount, vm.LastRegionDrawingHit, vm.RenderProjection.Projection!.RegionModelResources.Count);
         });
 
         Assert.True(result.handled);
-        Assert.True(result.Item2 > 0);
+        Assert.Equal(1, result.RegionDrawingHitCount);
+        Assert.NotNull(result.LastRegionDrawingHit);
+        Assert.Equal(0, result.Item4);
     }
 }

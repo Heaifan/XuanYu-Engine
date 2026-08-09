@@ -10,38 +10,16 @@ public sealed partial class UiVm
     readonly RegionDrawingState _regionDrawing = new();
 
     public bool IsRegionDrawingActive => IsRegionDrawingTool;
+    public int RegionDrawingHitCount { get; private set; }
+    public MapPoint? LastRegionDrawingHit { get; private set; }
 
     public bool RegionDrawingPointerPressed(double x, double y, ViewportState viewport)
     {
-        if (!IsRegionDrawingTool || !TryPickRegionPoint(x, y, viewport, out var point)) return false;
-        if (!_regionDrawing.IsActive)
-        {
-            var layer = MapLayerRules.Find(MapSession.CurrentMap.Layers, MapSession.ActiveRegionLayerId);
-            if (layer is not { Kind: MapLayerKind.Region }) return false;
-            _regionDrawing.Start(layer.LayerId, "未命名区域", MapRegionKind.Generic);
-        }
-
-        if (_regionDrawing.IsCloseCandidate)
-        {
-            var draft = _regionDrawing.TakeDraftForClose();
-            if (draft is null) return true;
-            var result = MapSession.CreateRegion(draft);
-            if (!result.IsSuccess)
-            {
-                FooterState = "状态：错误";
-                FooterMessage = result.Error?.Message ?? "区域闭合失败";
-                return true;
-            }
-
-            _regionDrawing.Cancel();
-            FooterState = "状态：就绪";
-            FooterMessage = "区域已创建";
-            PublishSceneRenderSnapshot();
-            return true;
-        }
-
-        _regionDrawing.AddVertex(point);
-        PublishSceneRenderSnapshot();
+        if (!IsRegionDrawingTool) return false;
+        if (!IsInsideViewport(x, y, viewport) || !TryPickRegionPoint(x, y, viewport, out var point)) return true;
+        LastRegionDrawingHit = point;
+        RegionDrawingHitCount++;
+        FooterMessage = $"区域绘制地面命中：MapPoint=({point.X:0.##}, {point.Y:0.##})";
         return true;
     }
 
@@ -75,4 +53,9 @@ public sealed partial class UiVm
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
         return MapSurfacePicker.TryPick(MapSession.CurrentMap, projection, x, y, out point);
     }
+
+    static bool IsInsideViewport(double x, double y, ViewportState viewport) =>
+        x >= viewport.LogicalX && y >= viewport.LogicalY &&
+        x <= viewport.LogicalX + viewport.LogicalWidth &&
+        y <= viewport.LogicalY + viewport.LogicalHeight;
 }

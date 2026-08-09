@@ -1896,7 +1896,7 @@
 - `scripts/arch-a-guard.ps1` — （职责待补）
 - `XuanYu.Editor/MapEditing/MapSurfacePicker.cs` — 复用现有 ViewProjection 与 WorldRayFactory，将视口指针拾取为地图平面 MapPoint。
 - `XuanYu.Editor/MapEditing/RegionDrawingState.cs` — 区域绘制临时草稿、光标与首点闭合候选状态。
-- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.cs` — 区域绘制输入、闭合提交、Esc 取消与临时状态发布。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.cs` — 区域绘制地面命中输入适配、命中状态反馈与既有取消/预览边界。
 - `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为静态模型渲染资源。
 - `XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawRegionModel.cs` — 复用静态模型管线绘制地图区域资源。
 - `XuanYu.World.Tests/MapEditing/MapSurfacePickerTests.cs` — 地图表面拾取边界与中心命中测试。
@@ -1904,4 +1904,5 @@
 - `XuanYu.Core.Tests/Render/Map/MapRegionDrawPlanTests.cs` — 区域渲染资源进入帧绘制计划的合同测试。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — 地图编辑器地图页及内部地图工具入口，含 Region Drawing 归属与 Selected 状态样式。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RuntimeRedTests.cs` — D2-F1 Headless Runtime RED/GREEN：Map Editor 归属与选中态深色文字。
+- `XuanYu.World.Tests/UiRuntime/RegionDrawingF1BTests.cs` — F1-B Ground Hit Runtime：工具开关、命中坐标差异、miss、切换去重与单次输入契约。
 - `XuanYu.World.Tests/UiTokens/UiD2F1RegionToolContractTests.cs` — D2-F1 静态 UI 归属与 Selected/Selected+Hover 样式契约。

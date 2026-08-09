@@ -36,6 +36,7 @@ MAP-A-R3-D2-F1：Region Tool Integration & Selected-State Regression（2026-08-0
 - 本轮实际落地（2026-08-09 21:50:48）：顶部第二行通用工具栏移除“区域绘制”；真实右侧“地图编辑器→地图→地图工具”挂载区域绘制控件；运行时测试改为验证真实 Right/MapEditorPanel 祖先链与选中态深色文字。Picking、Draft、Preview、Renderer、Region 未修改。
 - F1-A-UI03 返工（2026-08-09 22:01:32）：确认原实现仅约束 ToggleButton 父控件，子级文本未被四态状态选择器锁定；新增 `mapToolLabel` 四态深色文字约束，并冻结浅色 Normal/Hover/Selected/Selected+Hover 背景与边框。运行时验证 Normal/Selected 最终文本颜色均为 `#243744`，静态覆盖合同补齐四态 selector；Picking、Draft、Preview、Renderer、Region 未修改。
 - UI 可读性与布局返工（2026-08-09 22:10:04）：顶部通用工具栏选中态内部文字统一锁定 `Color.Text.Primary`，避免浅色选中背景上的白字；区域绘制按钮显式水平/垂直居中。Runtime Focus 7/7；Solution Build 0W0E；Core 345/345、World 952/952、WarCore 22/22；ARCH-A、diff-check PASS。
+- MAP-A-R3-F1-B（2026-08-09 22:21:04）：复用现有 `VulkanNativeHost → UiVm → MapSurfacePicker → ViewProjection/WorldRayFactory` 链路；区域绘制命中只记录真实 `MapPoint` 并反馈底部状态，不创建 Draft、不提交 Region。B01～B07 与既有 Runtime 聚焦测试通过；F1-C 未启动。
 ## v0.2.25.2-rz
 MAP-A-R3-D2：Region Drawing 实装与真机验收前收口（2026-08-09）。
 - 变化：新增区域绘制工具入口；复用既有相机投影完成地图表面拾取；左键添加顶点、移动预览边、首点闭合候选、Esc 取消；闭合调用 `MapEditSession.CreateRegion`，正式区域与临时草稿进入现有静态模型渲染路径。
