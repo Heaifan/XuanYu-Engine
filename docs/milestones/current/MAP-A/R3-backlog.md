@@ -5,25 +5,28 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 ## 当前裁定
 
 - D1：CLOSED。
-- D2：OPEN。真机 A01 FAIL；A02～A06 BLOCKED / NOT EXECUTED；L4 FAIL。
+- D2：OPEN。A01a/A01b 与 A02 已 FAIL；A03～A06 BLOCKED。
+- D2-F1：REOPEN 后已完成返工，等待用户重新执行 S01/S02。
 - D3：禁止启动。
-- 当前轮次：`MAP-A-R3-D2-F1 — Region Tool Integration & Selected-State Regression`。
-- 本轮之后不创建 F2；F1 完成后只回到 D2-A01a/A01b 复验，再决定是否恢复 A02～A06。
+- F2：不创建。
 
-## D2-F1 范围
+## MAP-A-R3-D2-F1：返工范围与结果
 
-只修两个已确认根因：
+只修两个根因：
 
-1. Region Drawing 必须是 Map Editor 内部 tool/mode，入口位于地图编辑器的“地图工具”区，不作为 Top/App-level 并列功能。
-2. Region Drawing 的 Normal、Hover、Selected、Selected+Hover 文字必须使用正式深色正文 token，不得被 FluentTheme 覆盖为白色。
+1. Region Drawing 作为真实可操作 Tool，放入与选择/框选/移动同一行的地图工具栏，不再以旁边状态文字冒充入口。
+2. Normal、Hover、Selected、Selected+Hover 全部使用正式深色正文 token。
 
-禁止修改 Region domain、Validator、Create/Delete、History、Picking、Renderer、LayerPanel、Inspector；禁止全局 UI 重构。
+真实链路已由 Runtime 测试覆盖：Tool 控件 → Tool Active → Viewport PointerPressed → Map Surface Picking → MapPoint → MapRegionDraft 首点 → Draft RenderProjection。F1 聚焦 Runtime/静态测试 5/5，完整门禁通过。
 
-## D2-F1 证据
+禁止修改 Region Domain、Validator、History、LayerPanel、Inspector、地形、持久化或启动 D3。
 
-- RED：真实 Headless Runtime 复现 Region Drawing 不在 Map Editor 树内，以及 Selected Foreground 为 White。
-- GREEN：修复后 Region Drawing 归属与 Selected 深色文字 Runtime 4/4；静态归属/状态契约通过。
-- L4：F1 完成后仍需用户重新执行 D2-A01a/A01b；通过后才恢复 A02～A06。
+## 下一步验收
+
+- S01：真机工具栏真实看到“区域绘制”，且可选中、文字可读。
+- S02：选中后点击有效地图面，立即出现第一个 Draft 顶点。
+- S01/S02 任一失败则继续保持 OPEN；两项通过后才恢复 A03～A06。
+- 本轮没有 F2。
 
 ## 候选主题
 

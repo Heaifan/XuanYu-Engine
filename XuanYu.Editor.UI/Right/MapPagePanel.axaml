@@ -20,19 +20,9 @@
       <Setter Property="Padding" Value="6,2"/>
       <Setter Property="Margin" Value="0"/>
     </Style>
-    <Style Selector="ToggleButton.mapTool"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/></Style>
-    <Style Selector="ToggleButton.mapTool:pointerover"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="Background" Value="{StaticResource Color.Hover.Bg}"/></Style>
-    <Style Selector="ToggleButton.mapTool:checked"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/></Style>
-    <Style Selector="ToggleButton.mapTool:checked:pointerover"><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
   </UserControl.Styles>
 
   <StackPanel x:Name="Root" Spacing="12" Margin="0,6,0,0">
-    <StackPanel Spacing="4">
-      <TextBlock Text="地图工具" Classes="uiSection"/>
-      <ToggleButton Classes="mapTool uiTextButton" Content="区域绘制" IsChecked="{Binding IsRegionDrawingTool, Mode=OneWay}"
-                    Command="{Binding SelectToolCommand}" CommandParameter="区域绘制"
-                    AutomationProperties.Name="区域绘制工具"/>
-    </StackPanel>
     <!-- 地图资产：只读紧凑摘要（72 标签列；始终单行双列，D4-F1 不随宽度上下拆行） -->
     <StackPanel x:Name="SummaryGroup" Spacing="2">
       <TextBlock Text="地图资产" Classes="uiSection"/>

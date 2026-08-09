@@ -28,11 +28,11 @@ MAP-A-R3-D1：既有 Region 合同审计与加固（2026-08-09 20:35:37）
 - 遗留：D1 不包含绘制 UI、Picking 接入、Renderer、LayerPanel、Inspector、持久化、GIS、DGD、Hole、MultiPolygon 或 Polygon Boolean；D1 完成后停止，D2 另行批准。
 
 ### v0.2.25.3-rz
-MAP-A-R3-D2-F1：Region Tool Integration & Selected-State Regression（2026-08-09）。
+MAP-A-R3-D2-F1：Region Tool Integration & Selected-State Regression（2026-08-09，返工后待真机复验）。
 - D2 真机裁定：A01 FAIL；A02～A06 BLOCKED / NOT EXECUTED；L4 FAIL；D2 OPEN；D3 禁止启动。
 - 修复：Region Drawing 从 Top/App-level 入口移入 Map Editor 的“地图工具”区；补齐 Normal/Hover/Selected/Selected+Hover 深色 Foreground；新增真实 Headless Runtime RED→GREEN 与静态归属契约。
-- 验证：F1 聚焦 Runtime/静态测试 4/4 PASS；完整门禁结果以本轮最终执行为准。
-- 遗留：必须重新执行 D2-A01a/A01b；通过后才恢复 A02～A06。无 F2 轮次。
+- 验证：F1 真实工具链 Runtime/静态测试 5/5 PASS；Solution Build 0W0E；Core 345/345；World 952/952；WarCore 22/22；ARCH-A、5+100、diff-check PASS。
+- 遗留：当前仅 READY FOR USER ACCEPTANCE，先执行 S01/S02（即 D2-A01a/A01b）；通过后才恢复 A02～A06。无 F2 轮次。
 ## v0.2.25.2-rz
 MAP-A-R3-D2：Region Drawing 实装与真机验收前收口（2026-08-09）。
 - 变化：新增区域绘制工具入口；复用既有相机投影完成地图表面拾取；左键添加顶点、移动预览边、首点闭合候选、Esc 取消；闭合调用 `MapEditSession.CreateRegion`，正式区域与临时草稿进入现有静态模型渲染路径。
