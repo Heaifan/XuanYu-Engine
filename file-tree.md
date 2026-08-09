@@ -1908,4 +1908,5 @@
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RuntimeRedTests.cs` — D2-F1 Headless Runtime RED/GREEN：Map Editor 归属与选中态深色文字。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1BTests.cs` — F1-B Ground Hit Runtime：工具开关、命中坐标差异、miss、切换去重与单次输入契约。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1FullRuntimeTests.cs` — F1 完整 Runtime：Draft 顶点、预览快照、Enter 闭合、Esc 取消与 DPI 命中回归。
+- `XuanYu.World.Tests/UiRuntime/RegionDrawingF1ResizeTests.cs` — F1 Resize Runtime：视口尺寸变化后区域绘制输入继续命中并累积 Draft 顶点。
 - `XuanYu.World.Tests/UiTokens/UiD2F1RegionToolContractTests.cs` — D2-F1 静态 UI 归属与 Selected/Selected+Hover 样式契约。

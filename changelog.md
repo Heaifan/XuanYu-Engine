@@ -38,6 +38,7 @@ MAP-A-R3-D2-F1：Region Tool Integration & Selected-State Regression（2026-08-0
 - UI 可读性与布局返工（2026-08-09 22:10:04）：顶部通用工具栏选中态内部文字统一锁定 `Color.Text.Primary`，避免浅色选中背景上的白字；区域绘制按钮显式水平/垂直居中。Runtime Focus 7/7；Solution Build 0W0E；Core 345/345、World 952/952、WarCore 22/22；ARCH-A、diff-check PASS。
 - MAP-A-R3-F1-B（2026-08-09 22:21:04）：复用现有 `VulkanNativeHost → UiVm → MapSurfacePicker → ViewProjection/WorldRayFactory` 链路；区域绘制命中只记录真实 `MapPoint` 并反馈底部状态，不创建 Draft、不提交 Region。B01～B07 与既有 Runtime 聚焦测试通过；F1-C 未启动。
 - MAP-A-R3-F1 收口（2026-08-09 22:36:56）：真实命中恢复 Draft 首点、连续顶点、光标预览边、Enter 闭合提交、Esc 取消与正式 Region 快照渲染；补充 DPI 1.75 逻辑坐标回归与完整 Runtime 合同。98e3728 保留为失败中间提交；本提交完成 F1 代码收口，等待用户完整真机验收，F2 未启动。
+- F1 收口补充（2026-08-09）：新增 Resize Runtime 回归 R16；最终 World 968/968，Core 345/345，WarCore 22/22，Build 0W0E，ARCH-A 与 diff-check PASS。
 ## v0.2.25.2-rz
 MAP-A-R3-D2：Region Drawing 实装与真机验收前收口（2026-08-09）。
 - 变化：新增区域绘制工具入口；复用既有相机投影完成地图表面拾取；左键添加顶点、移动预览边、首点闭合候选、Esc 取消；闭合调用 `MapEditSession.CreateRegion`，正式区域与临时草稿进入现有静态模型渲染路径。
