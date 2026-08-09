@@ -18,6 +18,9 @@
 
 ---
 
+## v0.2.25.3-rz
+MAP-A-R3-F1-FINAL 原生输入与区域绘制返工（2026-08-09）：修复区域工具在释放鼠标后不更新预览的问题；修复正式区域与 Draft 资源 primitive 范围为空/固定颜色导致不可见的问题；增加 App/UI 版本溯源及 A-E 阶段运行时取证，取证同时写入底部日志与临时文件；F2 保持冻结。验证：App 构建 0 Warning / 0 Error，World.Tests PASS，ARCH-A PASS，git diff --check PASS。Hash：待最终提交。遗留：真机验收仍由用户执行，未宣布 CLOSED。
+
 ## 2026-08（当前自然月）
 ## v0.2.25.3-rz
 MAP-A-R3-F1 真机失败返工（2026-08-09 22:52:30）：截图显示点击后既无命中反馈也无 Draft 顶点；审计发现 VulkanViewport 初始化提示层未禁止命中测试，存在遮断 VulkanNativeHost 输入链的风险。修复 FallbackLayer `IsHitTestVisible=False`，并为区域绘制拾取未命中增加状态栏证据；World.Tests 968/968 PASS，解决方案复制 UI DLL 阶段因运行中的 XuanYu.Editor.App 锁文件未完成。提交 `fb5af08`。F2 未启动，等待重新真机验收。

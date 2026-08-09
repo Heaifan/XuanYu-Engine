@@ -17,8 +17,11 @@ public sealed partial class VulkanNativeHost
             viewport.Revision, _hwnd != 0);
     }
 
-    bool ReportRegionDrawing(UiVm vm, double x, double y) =>
-        vm.RegionDrawingPointerPressed(x, y, CaptureViewportState());
+    bool ReportRegionDrawing(UiVm vm, double x, double y)
+    {
+        F1ForensicTrace.Routing(vm, x, y);
+        return vm.RegionDrawingPointerPressed(x, y, CaptureViewportState());
+    }
 
     bool PreviewRegionDrawing(UiVm vm, double x, double y) =>
         vm.RegionDrawingPointerMoved(x, y, CaptureViewportState());

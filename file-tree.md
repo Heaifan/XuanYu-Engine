@@ -1870,6 +1870,8 @@
 - `XuanYu.World.Tests/UiTokens/UiD5NotificationTests.cs` — D5：通知状态机测试。
 - `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.State.cs` — D5 纠偏：日志空态互斥（ShowInitialLogEmpty/ShowNoFilterResults）。
 - `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.Refresh.cs` — D5 纠偏：日志绑定刷新通知（多行拆分）。
+- `XuanYu.Editor.UI/Vm/Logging/UiVm.F1Trace.cs` — F1 真机运行时取证写入底部日志并记录 App/UI 版本溯源。
+- `XuanYu.Editor.UI/Vm/Logging/F1ForensicTrace.cs` — F1 原生指针、拾取、Draft 与投影链路取证输出。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Validation.cs` — D5 纠偏：地图表单字段级校验（三字段错误/输入即清除/失焦与提交校验/FirstInvalidField/解析）。
 - `XuanYu.Editor.UI/Win/UiWin.DialogHost.Danger.cs` — D5 纠偏：危险操作确认接线（fail-closed，具体动作文案）。
 - `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs` — D5 纠偏：错误/警告/重试弹窗宿主化（ErrorIcon/WarningIcon + ShowRetryAsync）。

@@ -13,7 +13,15 @@ public sealed partial class VulkanNativeHost
         if (DataContext is not UiVm vm) return;
         if (message.Message == NativePointerMessage.LeftDown)
         {
-            if (ReportRegionDrawing(vm, x, y)) { ReleaseExpectedCapture(); return; }
+            var physical = Win32ViewportHost.GetClientSize(_hwnd);
+            F1ForensicTrace.BeginNativeClick();
+            F1ForensicTrace.NativePointer(vm, x, y, message.PhysicalX, message.PhysicalY,
+                dpi, Bounds.Width, Bounds.Height, physical.Width, physical.Height);
+            try
+            {
+                if (ReportRegionDrawing(vm, x, y)) { ReleaseExpectedCapture(); return; }
+            }
+            finally { F1ForensicTrace.EndNativeClick(); }
             // F3-F1：导航 Gizmo 优先（右上角区域）；否则进入变换 Gizmo / Picking。
             if (TryNavGizmoPress(vm, x, y)) return;
             if (TryBeginGizmo(vm, NativePointerId, x, y)) { _nativeDragActive = true; return; }
@@ -22,11 +30,14 @@ public sealed partial class VulkanNativeHost
         }
         else if (message.Message == NativePointerMessage.MiddleDown)
             TryBeginNativeCamera(vm, NativePointerId, x, y, message.IsShiftDown);
-        else if (message.Message == NativePointerMessage.Move && message.IsLeftButtonDown)
+        else if (message.Message == NativePointerMessage.Move)
         {
-            if (PreviewRegionDrawing(vm, x, y)) return;
-            if (TryNavGizmoMove(vm, x, y)) return;
-            PreviewNativePointer(vm, x, y);
+            if (vm.IsRegionDrawingTool && PreviewRegionDrawing(vm, x, y)) return;
+            if (message.IsLeftButtonDown)
+            {
+                if (TryNavGizmoMove(vm, x, y)) return;
+                PreviewNativePointer(vm, x, y);
+            }
         }
         else if (message.Message == NativePointerMessage.Move && message.IsMiddleButtonDown) PreviewNativeCamera(vm, x, y);
         else if (message.Message == NativePointerMessage.LeftUp)

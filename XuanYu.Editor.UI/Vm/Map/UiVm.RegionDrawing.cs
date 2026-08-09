@@ -35,7 +35,10 @@ public sealed partial class UiVm
         }
         if (_regionDrawing.IsCloseCandidate)
             return CloseRegionDraft();
+        var oldCount = _regionDrawing.Draft?.Vertices.Length ?? 0;
         _regionDrawing.AddVertex(point);
+        F1ForensicTrace.Draft(this, oldCount, _regionDrawing.Draft?.Vertices.Length ?? 0,
+            _regionDrawing.Cursor, _regionDrawing.IsActive);
         PublishSceneRenderSnapshot();
         return true;
     }
@@ -74,7 +77,10 @@ public sealed partial class UiVm
     bool TryPickRegionPoint(double x, double y, ViewportState viewport, out MapPoint point)
     {
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        return MapSurfacePicker.TryPick(MapSession.CurrentMap, projection, x, y, out point);
+        var ray = WorldRayFactory.FromViewportPoint(projection, x, y);
+        var hit = MapSurfacePicker.TryPick(MapSession.CurrentMap, projection, x, y, out point);
+        F1ForensicTrace.Picker(this, hit, ray, point);
+        return hit;
     }
 
     static bool IsInsideViewport(double x, double y, ViewportState viewport) =>
