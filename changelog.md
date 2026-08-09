@@ -33,6 +33,7 @@ MAP-A-R3-D2-F1：Region Tool Integration & Selected-State Regression（2026-08-0
 - 修复：Region Drawing 从 Top/App-level 入口移入 Map Editor 的“地图工具”区；补齐 Normal/Hover/Selected/Selected+Hover 深色 Foreground；新增真实 Headless Runtime RED→GREEN 与静态归属契约。
 - 验证：F1 真实工具链 Runtime/静态测试 5/5 PASS；Solution Build 0W0E；Core 345/345；World 952/952；WarCore 22/22；ARCH-A、5+100、diff-check PASS。
 - 遗留：当前仅 READY FOR USER ACCEPTANCE，先执行 S01/S02（即 D2-A01a/A01b）；通过后才恢复 A02～A06。无 F2 轮次。
+- 本轮实际落地（2026-08-09 21:50:48）：顶部第二行通用工具栏移除“区域绘制”；真实右侧“地图编辑器→地图→地图工具”挂载区域绘制控件；运行时测试改为验证真实 Right/MapEditorPanel 祖先链与选中态深色文字。Picking、Draft、Preview、Renderer、Region 未修改。
 ## v0.2.25.2-rz
 MAP-A-R3-D2：Region Drawing 实装与真机验收前收口（2026-08-09）。
 - 变化：新增区域绘制工具入口；复用既有相机投影完成地图表面拾取；左键添加顶点、移动预览边、首点闭合候选、Esc 取消；闭合调用 `MapEditSession.CreateRegion`，正式区域与临时草稿进入现有静态模型渲染路径。

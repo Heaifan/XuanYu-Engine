@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
@@ -20,10 +21,13 @@ public sealed class RegionDrawingF1RuntimeRedTests
         var found = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
-            var top = new Top { DataContext = vm };
-            host.Show(top, 1200, 180);
-            return UiRuntimeTestHost.Descendants<TextBlock>(top)
-                .Any(text => text.Text == "区域绘制");
+            var right = new Right { DataContext = vm };
+            host.Show(right, 420, 720);
+            UiRuntimeTestHost.Descendants<TabItem>(right).Single(x => (string?)x.Header == "地图编辑器").IsSelected = true;
+            right.UpdateLayout();
+            var tool = UiRuntimeTestHost.Descendants<ToggleButton>(right)
+                .Single(x => x.Classes.Contains("mapTool"));
+            return tool.GetVisualAncestors().OfType<MapEditorPanel>().Any();
         });
 
         Assert.True(found);
@@ -36,12 +40,14 @@ public sealed class RegionDrawingF1RuntimeRedTests
         var color = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
-            var top = new Top { DataContext = vm };
-            host.Show(top, 1200, 180);
+            var right = new Right { DataContext = vm };
+            host.Show(right, 420, 720);
+            UiRuntimeTestHost.Descendants<TabItem>(right).Single(x => (string?)x.Header == "地图编辑器").IsSelected = true;
+            right.UpdateLayout();
             vm.SelectToolCommand.Execute("区域绘制");
-            top.UpdateLayout();
-            var toggle = UiRuntimeTestHost.Descendants<ToggleButton>(top)
-                .Single(x => x.IsChecked == true && x.Classes.Contains("toolBtn"));
+            right.UpdateLayout();
+            var toggle = UiRuntimeTestHost.Descendants<ToggleButton>(right)
+                .Single(x => x.Classes.Contains("mapTool"));
             return (toggle.Foreground as SolidColorBrush)?.Color;
         });
 
