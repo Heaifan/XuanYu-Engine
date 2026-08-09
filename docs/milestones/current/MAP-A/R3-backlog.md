@@ -1,37 +1,33 @@
 # MAP-A-R3 Backlog
 
-R2 已关闭。本文件登记 R3 候选方向，不代表已批准开发；每轮先冻结目标与范围。
+R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结目标和范围。
 
-## 当前批准轮次
+## 当前裁定
 
-`MAP-A-R3-D1 — Existing Region Contract Hardening` 已完成：复用 R2 的 MapRegion、MapRegionDraft、MapPoint、Region Layer 与 MapEditSession 历史链路，补齐非相邻边相交、接触、重叠拒绝，以及 Region 正式 Create/Delete 提交入口。
+- D1：CLOSED。
+- D2：OPEN。真机 A01 FAIL；A02～A06 BLOCKED / NOT EXECUTED；L4 FAIL。
+- D3：禁止启动。
+- 当前轮次：`MAP-A-R3-D2-F1 — Region Tool Integration & Selected-State Regression`。
+- 本轮之后不创建 F2；F1 完成后只回到 D2-A01a/A01b 复验，再决定是否恢复 A02～A06。
 
-`MAP-A-R3-D2 — Region Drawing` 已完成实现，等待真机验收；本轮不启动 D3。
+## D2-F1 范围
 
-## MAP-A-R3-D2：Region Drawing
+只修两个已确认根因：
 
-本轮已完成实现并停在真机验收前：区域绘制模式、地图表面拾取、草稿顶点/边/预览、首点闭合候选、Esc 取消、`CreateRegion` 正式提交，以及正式区域与草稿渲染均已接入。L1 静态 UI PASS；L2 Headless PASS；L3 Visual Regression NOT ENABLED；L4 真机验收 PENDING。
+1. Region Drawing 必须是 Map Editor 内部 tool/mode，入口位于地图编辑器的“地图工具”区，不作为 Top/App-level 并列功能。
+2. Region Drawing 的 Normal、Hover、Selected、Selected+Hover 文字必须使用正式深色正文 token，不得被 FluentTheme 覆盖为白色。
 
-真机 IPO 清单：
+禁止修改 Region domain、Validator、Create/Delete、History、Picking、Renderer、LayerPanel、Inspector；禁止全局 UI 重构。
 
-1. D2-A01 / 进入区域绘制 / 点击“添加→区域绘制” / 工具状态显示“区域绘制”。
-2. D2-A02 / 表面拾取与首点 / 在有效地图面左键一次 / 草稿首点出现且未产生文档历史噪声。
-3. D2-A03 / 连续绘制与预览 / 左键增加至少两个点并移动指针 / 草稿边与指针预览线连续显示。
-4. D2-A04 / 闭合提交 / 移至首点命中范围后左键 / 首点闭合候选显示，合法草稿仅调用一次 `CreateRegion` 并出现正式区域。
-5. D2-A05 / 非法闭合 / 绘制自相交草稿并闭合 / 显示轻量错误，草稿保留，不自动修复。
-6. D2-A06 / Esc 取消 / 有草稿时按 Esc / 草稿消失，工具回到“选择”，地图内容与历史不变。
+## D2-F1 证据
 
-用户完成并确认 6/6 后，才将 D2 标记 CLOSED。
+- RED：真实 Headless Runtime 复现 Region Drawing 不在 Map Editor 树内，以及 Selected Foreground 为 White。
+- GREEN：修复后 Region Drawing 归属与 Selected 深色文字 Runtime 4/4；静态归属/状态契约通过。
+- L4：F1 完成后仍需用户重新执行 D2-A01a/A01b；通过后才恢复 A02～A06。
 
 ## 候选主题
 
-- Inspector 完整编辑闭环：字段编辑、提交、错误反馈、撤销/重做与真机路径。
-- 地图数据落盘：`.xymap` 保存/打开、原子写入、失败保护、Dirty 与历史一致性。
-- 区域绘制与地形表达：从编辑输入到地图区域/地形数据的真实闭环。
-- DGD 衔接：地图数据与 DGD 节点/资源编辑链路的最小真实入口。
-
-## 约束
-
-- 未经 R3 冻结，不修改生产代码、不新增测试目标。
-- 不把 R2 的遗留编号重新包装成 R3 主目标。
-- 每个候选项先补范围、数据权威、Undo/Dirty 语义、真机 IPO 与门禁，再决定是否实施。
+- Inspector 完整编辑闭环。
+- 地图数据落盘与 `.xymap` 持久化。
+- 区域绘制与地形表达的后续真实闭环。
+- DGD 衔接最小真实入口。

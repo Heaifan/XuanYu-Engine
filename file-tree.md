@@ -1902,3 +1902,6 @@
 - `XuanYu.World.Tests/MapEditing/MapSurfacePickerTests.cs` — 地图表面拾取边界与中心命中测试。
 - `XuanYu.World.Tests/MapEditing/RegionDrawingStateTests.cs` — 绘制草稿顶点、闭合候选与取消测试。
 - `XuanYu.Core.Tests/Render/Map/MapRegionDrawPlanTests.cs` — 区域渲染资源进入帧绘制计划的合同测试。
+- `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — 地图编辑器地图页及内部地图工具入口，含 Region Drawing 归属与 Selected 状态样式。
+- `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RuntimeRedTests.cs` — D2-F1 Headless Runtime RED/GREEN：Map Editor 归属与选中态深色文字。
+- `XuanYu.World.Tests/UiTokens/UiD2F1RegionToolContractTests.cs` — D2-F1 静态 UI 归属与 Selected/Selected+Hover 样式契约。
