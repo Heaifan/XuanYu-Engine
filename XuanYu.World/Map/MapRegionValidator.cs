@@ -64,6 +64,8 @@ public static class MapRegionValidator
 
             if (distinct.Count < 3)
                 return MapValidationResult.Fail("TooFewDistinctVertices", $"区域不同顶点数必须至少为 3：{region.DisplayName}。");
+            if (MapRegionIntersection.HasNonAdjacentIntersection(vertices))
+                return MapValidationResult.Fail("SelfIntersectingRegion", $"区域非相邻边不得相交、接触或重叠：{region.DisplayName}。");
             if (!(ShoelaceArea(vertices) > MinAreaSquareMeters))
                 return MapValidationResult.Fail("ZeroAreaRegion", $"区域面积接近零：{region.DisplayName}。");
         }

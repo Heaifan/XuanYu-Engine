@@ -2,6 +2,12 @@
 
 R2 已关闭。本文件只登记候选方向，不代表已经批准开发；R3 开始前必须重新选择一个清晰主目标并冻结范围。
 
+## 当前批准轮次
+
+`MAP-A-R3-D1 — Existing Region Contract Hardening` 已批准并执行：复用 R2 的 `MapRegion`、`MapRegionDraft`、`MapPoint`、Region Layer 与统一 `MapEditSession` 历史管线；仅补齐 Simple Polygon 非相邻边的相交、接触、重叠拒绝，以及 Region 正式 Create/Delete 提交入口。
+
+D1 禁止绘制 UI、Picking 接入、Renderer、LayerPanel、Inspector、持久化、GIS、DGD、Hole、MultiPolygon 与 Polygon Boolean。D1 完成后停止，D2 另行批准。
+
 ## 候选主题
 
 - Inspector 完整编辑闭环：字段编辑、提交、错误反馈、撤销/重做与真机路径。

@@ -239,6 +239,7 @@
 │  ├─ MapEditing/
 │  │  ├─ MapEditEvents.cs
 │  │  ├─ MapEditReason.cs
+│  │  ├─ MapEditSession.Regions.cs
 │  │  ├─ MapEditSession.ActiveLayer.cs
 │  │  ├─ MapEditSession.Commands.cs
 │  │  ├─ MapEditSession.Commit.cs
@@ -696,6 +697,7 @@
 │  │  ├─ MapLayerStack.cs
 │  │  ├─ MapLayerValidator.cs
 │  │  ├─ MapRegion.cs
+│  │  ├─ MapRegionIntersection.cs
 │  │  ├─ MapRegionDraft.cs
 │  │  ├─ MapRegionId.cs
 │  │  ├─ MapRegionKind.cs
@@ -807,6 +809,7 @@
 │  │  ├─ MapLayerTests.Base.cs
 │  │  ├─ MapLayerTests.cs
 │  │  ├─ MapRegionDraftTests.cs
+│  │  ├─ MapRegionTests.Geometry.cs
 │  │  ├─ MapRegionTests.Helpers.cs
 │  │  ├─ MapRegionTests.Strictness.cs
 │  │  ├─ MapRegionTests.cs
@@ -820,6 +823,7 @@
 │  │  └─ WorldMapStateTests.cs
 │  ├─ MapEditing/
 │  │  ├─ MapEditSessionCommandTests.cs
+│  │  ├─ MapEditSessionRegionTests.cs
 │  │  ├─ MapEditSessionCreationTests.cs
 │  │  ├─ MapEditSessionDirtyTests.cs
 │  │  ├─ MapEditSessionHistoryTests.cs
@@ -1393,6 +1397,7 @@
 - `XuanYu.Editor/MapDocument/MapStorageService.cs` — MAP-A-R1-D2：地图文件存储。候选加载 + 同目录临时文件原子保存，不直接替换任何状态。
 - `XuanYu.Editor/MapEditing/MapEditEvents.cs` — MAP-A-R2-D2：地图编辑低频事件参数（禁止记录鼠标移动/Hover/每帧渲染）。
 - `XuanYu.Editor/MapEditing/MapEditReason.cs` — MAP-A-R2-D2/D3-A1/D4：地图编辑原因（内容变更事件携带）。
+- `XuanYu.Editor/MapEditing/MapEditSession.Regions.cs` — MAP-A-R3-D1：区域正式 Create/Delete 入口，复用地图候选校验、单历史条目与 Undo/Redo 快照恢复。
 - `XuanYu.Editor/MapEditing/MapEditSession.ActiveLayer.cs` — MAP-A-R2-D4：活动区域图层（会话临时状态：不进历史、不设 Dirty、不产生内容变更事件）。
 - `XuanYu.Editor/MapEditing/MapEditSession.Commands.cs` — MAP-A-R2-D2：地图基础属性编辑命令（D2 只实现地图级修改，图层/区域命令属 D4/D5）。
 - `XuanYu.Editor/MapEditing/MapEditSession.Commit.cs` — MAP-A-R2-D2：统一提交管线。所有地图内容修改必须经过本方法：
@@ -1639,6 +1644,7 @@
 - `XuanYu.World.Tests/Map/MapRegionTests.Helpers.cs` — sealed partial class MapRegionTests
 - `XuanYu.World.Tests/Map/MapRegionTests.Strictness.cs` — MAP-A-R2-D1-F1：区域严格性（相邻重复点/首尾规则/三不同顶点/非零面积）。
 - `XuanYu.World.Tests/Map/MapRegionTests.cs` — MAP-A-R2-D1：区域验证（闭合/顶点数/引用图层/边界/有限数值）。
+- `XuanYu.World.Tests/Map/MapRegionTests.Geometry.cs` — MAP-A-R3-D1：Simple Polygon 自相交、非相邻 touch 与 overlap 拒绝合同。
 - `XuanYu.World.Tests/Map/MapSizeValidationTests.cs` — MAP-A-R1-D2：地图尺寸与坐标合同校验。
 - `XuanYu.World.Tests/Map/MapStorageFailureTests.cs` — MAP-A-R1-D2：加载失败保护 / 非法合同拒绝 / 保存失败不写坏文件。
 - `XuanYu.World.Tests/Map/MapStorageTests.cs` — MAP-A-R1-D2：候选加载 / 原子保存（真实文件，临时目录）。
@@ -1648,6 +1654,7 @@
 - `XuanYu.World.Tests/Map/WorldMapStateOwnerTests.cs` — MAP-A-R1-D3：World 地图状态所有者——加载/切换/卸载/查询/渲染快照。
 - `XuanYu.World.Tests/Map/WorldMapStateTests.cs` — MAP-A-R1-D3：World 地图状态——有限边界（闭区间）与高度查询。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCommandTests.cs` — MAP-A-R2-D2：地图基础编辑命令（改名/尺寸/基础高度/No-op/非法输入）。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionRegionTests.cs` — MAP-A-R3-D1：Region Create/Delete 单历史条目及相同 ID Undo/Redo 合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCreationTests.cs` — MAP-A-R2-D2：默认会话与根状态合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionDirtyTests.cs` — MAP-A-R2-D2：Saved/Dirty 合同（Dirty 随 Undo/Redo 回到保存点）。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionHistoryTests.cs` — MAP-A-R2-D2：Undo/Redo、分支清除与 ChangeSequence 单调递增。
@@ -1788,6 +1795,7 @@
 - `XuanYu.World/Map/MapLayerStack.cs` — MAP-A-R2-D4：图层顺序与领域操作（纯函数，返回新不可变集合）。
 - `XuanYu.World/Map/MapLayerValidator.cs` — MAP-A-R2-D4：图层集合严格校验（领域权威层）。
 - `XuanYu.World/Map/MapRegion.cs` — MAP-A-R2-D1：区域领域模型（领域权威层）。地图上的二维闭合多边形（水平面坐标）。
+- `XuanYu.World/Map/MapRegionIntersection.cs` — MAP-A-R3-D1：非相邻区域边的相交、接触与重叠检测。
 - `XuanYu.World/Map/MapRegionDraft.cs` — MAP-A-R2-D1-F1：绘制中的区域草稿（未闭合顶点序列）。D5 绘制流程使用；
 - `XuanYu.World/Map/MapRegionId.cs` — MAP-A-R2-D1：区域稳定唯一标识（领域权威层）。与 MapId 同族格式（32 位十六进制，无前缀）。
 - `XuanYu.World/Map/MapRegionKind.cs` — MAP-A-R2-D1：区域类型（领域权威层）。R2 仅承载几何与基础元数据，不解释战斗含义。

@@ -16,5 +16,7 @@ public enum MapEditReason
     LayerRenamed = 10, // D4：重命名图层
     LayerMoved = 11, // D4：调整图层顺序
     LayerVisibilityChanged = 12, // D4：修改图层可见性
-    LayerLockChanged = 13 // D4：修改图层锁定状态
+    LayerLockChanged = 13, // D4：修改图层锁定状态
+    RegionCreated = 14, // R3-D1：正式创建区域
+    RegionDeleted = 15 // R3-D1：正式删除区域
 }
