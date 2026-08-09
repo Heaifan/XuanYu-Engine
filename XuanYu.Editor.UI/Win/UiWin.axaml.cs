@@ -37,37 +37,6 @@ public partial class UiWin : Window
         Close();
     }
 
-    async void Window_KeyDown(object? sender, KeyEventArgs e)
-    {
-        if (HandleEntityShortcut(e)) return;
-        if (e.Key == Key.C && e.KeyModifiers.HasFlag(KeyModifiers.Control)
-            && DataContext is UiVm { IsLogOpen: true, HasSelectedEntries: true } copyVm)
-        {
-            if (await CopySelectedLogs(copyVm)) e.Handled = true;
-            return;
-        }
-
-        if (e.Key == Key.Z && e.KeyModifiers.HasFlag(KeyModifiers.Control))
-        {
-            (DataContext as UiVm)?.TryUndoFromShortcut();
-            e.Handled = true;
-            return;
-        }
-
-        if (e.Key == Key.Y && e.KeyModifiers.HasFlag(KeyModifiers.Control))
-        {
-            (DataContext as UiVm)?.TryRedoFromShortcut();
-            e.Handled = true;
-            return;
-        }
-
-        if (await HandleSceneShortcut(e)) return;
-
-        if (e.Key != Key.Escape) return;
-        (DataContext as UiVm)?.CancelInteractionFromEscape();
-        e.Handled = true;
-    }
-
     async Task<bool> CopySelectedLogs(UiVm vm)
     {
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;

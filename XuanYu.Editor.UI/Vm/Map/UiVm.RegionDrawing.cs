@@ -12,6 +12,8 @@ public sealed partial class UiVm
     public bool IsRegionDrawingActive => IsRegionDrawingTool;
     public int RegionDrawingHitCount { get; private set; }
     public MapPoint? LastRegionDrawingHit { get; private set; }
+    public bool IsRegionDrawingDraftActive => _regionDrawing.IsActive;
+    public int RegionDrawingDraftVertexCount => _regionDrawing.Draft?.Vertices.Length ?? 0;
 
     public bool RegionDrawingPointerPressed(double x, double y, ViewportState viewport)
     {
@@ -20,7 +22,23 @@ public sealed partial class UiVm
         LastRegionDrawingHit = point;
         RegionDrawingHitCount++;
         FooterMessage = $"区域绘制地面命中：MapPoint=({point.X:0.##}, {point.Y:0.##})";
+        if (!_regionDrawing.IsActive)
+        {
+            var layer = MapLayerRules.Find(MapSession.CurrentMap.Layers, MapSession.ActiveRegionLayerId);
+            if (layer is not { Kind: MapLayerKind.Region }) return true;
+            _regionDrawing.Start(layer.LayerId, "未命名区域", MapRegionKind.Generic);
+        }
+        if (_regionDrawing.IsCloseCandidate)
+            return CloseRegionDraft();
+        _regionDrawing.AddVertex(point);
+        PublishSceneRenderSnapshot();
         return true;
+    }
+
+    public bool CommitRegionDrawingFromEnter()
+    {
+        if (!IsRegionDrawingTool || !_regionDrawing.IsActive) return false;
+        return CloseRegionDraft();
     }
 
     public bool RegionDrawingPointerMoved(double x, double y, ViewportState viewport)
@@ -58,4 +76,13 @@ public sealed partial class UiVm
         x >= viewport.LogicalX && y >= viewport.LogicalY &&
         x <= viewport.LogicalX + viewport.LogicalWidth &&
         y <= viewport.LogicalY + viewport.LogicalHeight;
+
+    bool CloseRegionDraft()
+    {
+        var draft = _regionDrawing.TakeDraftForClose();
+        if (draft is null) { FooterMessage = "区域至少需要三个顶点才能闭合。"; return true; }
+        var result = MapSession.CreateRegion(draft);
+        if (!result.IsSuccess) { FooterState = "状态：错误"; FooterMessage = result.Error?.Message ?? "区域闭合失败"; return true; }
+        _regionDrawing.Cancel(); FooterState = "状态：就绪"; FooterMessage = "区域已创建"; PublishSceneRenderSnapshot(); return true;
+    }
 }

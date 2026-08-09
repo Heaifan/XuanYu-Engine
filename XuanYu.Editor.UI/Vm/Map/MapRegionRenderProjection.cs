@@ -29,7 +29,8 @@ static class MapRegionRenderProjection
         var points = draft.Vertices.ToList(); if (cursor is { } p) points.Add(p);
         var vertices = new List<RenderStaticModelVertex>(); var indices = new List<uint>();
         AddRibbon(points, false, z + .03, vertices, indices, new(.95, .72, .12, .95));
-        if (close && draft.Vertices.Length > 0) AddMarker(draft.Vertices[0], z + .04, vertices, indices);
+        foreach (var point in draft.Vertices) AddMarker(point, z + .04, vertices, indices);
+        if (close && draft.Vertices.Length > 0) AddMarker(draft.Vertices[0], z + .06, vertices, indices);
         return Resource(new("map-region-draft"), vertices, indices);
     }
 
@@ -42,14 +43,14 @@ static class MapRegionRenderProjection
 
     static void AddRibbon(IReadOnlyList<MapPoint> points, bool close, double z, List<RenderStaticModelVertex> v, List<uint> i, RenderStaticModelColor color)
     {
-        if (points.Count < 2) return; var start = v.Count; const double width = .35;
+        if (points.Count < 2) return; var start = v.Count; const double width = 8;
         var count = close ? points.Count : points.Count - 1;
         for (var n = 0; n < count; n++) { var a = points[n]; var b = points[(n + 1) % points.Count]; var dx = b.X - a.X; var dy = b.Y - a.Y; var len = Math.Sqrt(dx * dx + dy * dy); if (len < 1e-6) continue; var ox = -dy / len * width; var oy = dx / len * width; v.Add(Vertex(new(a.X + ox, a.Y + oy), z)); v.Add(Vertex(new(a.X - ox, a.Y - oy), z)); v.Add(Vertex(new(b.X + ox, b.Y + oy), z)); v.Add(Vertex(new(b.X - ox, b.Y - oy), z)); var q = (uint)(start + n * 4); i.AddRange([q, q + 1, q + 2, q + 2, q + 1, q + 3]); }
         AddPrimitive(v, i, start, i.Count, color);
     }
 
     static void AddMarker(MapPoint p, double z, List<RenderStaticModelVertex> v, List<uint> i)
-    { AddRibbon([new(p.X - 1, p.Y), new(p.X, p.Y + 1), new(p.X + 1, p.Y), new(p.X, p.Y - 1)], true, z, v, i, new(.98, .30, .08, 1)); }
+    { const double size = 45; AddRibbon([new(p.X - size, p.Y), new(p.X, p.Y + size), new(p.X + size, p.Y), new(p.X, p.Y - size)], true, z, v, i, new(.98, .30, .08, 1)); }
     static RenderStaticModelVertex Vertex(MapPoint p, double z) => new(new Vector3d(p.X, p.Y, z), new(0, 0, 1), 0, 0);
     static void AddPrimitive(List<RenderStaticModelVertex> v, List<uint> i, int start, int count, RenderStaticModelColor color) { _ = v; _ = start; _ = count; _ = color; }
     static RenderStaticModelResource Resource(RenderStaticModelKey key, List<RenderStaticModelVertex> v, List<uint> i) => new(key, Revision(v, i), v, i, [new(0, i.Count, 0, new(.25, .55, .85, .35))], Bounds(v));

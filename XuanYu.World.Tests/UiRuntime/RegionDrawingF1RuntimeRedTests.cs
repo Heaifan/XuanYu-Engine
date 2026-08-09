@@ -62,7 +62,7 @@ public sealed class RegionDrawingF1RuntimeRedTests
     }
 
     [Fact]
-    public void Real_region_tool_input_reports_ground_hit_without_creating_draft()
+    public void Real_region_tool_input_creates_first_draft_vertex()
     {
         var result = _fixture.Run(() =>
         {
@@ -80,6 +80,6 @@ public sealed class RegionDrawingF1RuntimeRedTests
         Assert.True(result.handled);
         Assert.Equal(1, result.RegionDrawingHitCount);
         Assert.NotNull(result.LastRegionDrawingHit);
-        Assert.Equal(0, result.Item4);
+        Assert.True(result.Item4 > 0);
     }
 }

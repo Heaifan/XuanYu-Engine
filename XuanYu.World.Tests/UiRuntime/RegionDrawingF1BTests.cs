@@ -12,7 +12,7 @@ public sealed class RegionDrawingF1BTests
     [Fact]
     public void B01_region_tool_off_does_not_send_hit()
     {
-        var vm = new UiVm(null, seedInitialScene: false);
+        var vm = new UiVm(null, () => true, seedInitialScene: false);
         var hit = FindHit(vm);
         Assert.False(vm.RegionDrawingPointerPressed(hit.ScreenX, hit.ScreenY, Viewport));
         Assert.Equal(0, vm.RegionDrawingHitCount);
@@ -77,7 +77,7 @@ public sealed class RegionDrawingF1BTests
 
     static UiVm CreateVm()
     {
-        var vm = new UiVm(null, seedInitialScene: false);
+        var vm = new UiVm(null, () => true, seedInitialScene: false);
         vm.SelectToolCommand.Execute("区域绘制");
         return vm;
     }
