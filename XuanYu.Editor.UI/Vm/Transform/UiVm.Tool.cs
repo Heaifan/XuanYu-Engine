@@ -5,6 +5,9 @@ public sealed partial class UiVm
     void SelectTool(string name)
     {
         if (!CanChangeToolNow(name)) return;
+        var requestedTool = EditorToolText.FromText(name);
+        if (IsRegionDrawingTool && requestedTool != EditorToolId.RegionDrawing)
+            _regionDrawing.Cancel();
         if (name is "框选")
         {
             FooterState = "状态：就绪";
@@ -49,6 +52,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(IsSelectTool)); OnPropertyChanged(nameof(IsBoxSelectTool));
         OnPropertyChanged(nameof(IsMoveTool)); OnPropertyChanged(nameof(IsRotateTool));
         OnPropertyChanged(nameof(IsScaleTool)); OnPropertyChanged(nameof(IsSnapEnabled));
+        OnPropertyChanged(nameof(IsRegionDrawingTool));
         OnPropertyChanged(nameof(SnapMode));
     }
 }

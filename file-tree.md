@@ -1894,3 +1894,11 @@
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）
 - `scripts/arch-a-guard-world.ps1` — （职责待补）
 - `scripts/arch-a-guard.ps1` — （职责待补）
+- `XuanYu.Editor/MapEditing/MapSurfacePicker.cs` — 复用现有 ViewProjection 与 WorldRayFactory，将视口指针拾取为地图平面 MapPoint。
+- `XuanYu.Editor/MapEditing/RegionDrawingState.cs` — 区域绘制临时草稿、光标与首点闭合候选状态。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.cs` — 区域绘制输入、闭合提交、Esc 取消与临时状态发布。
+- `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为静态模型渲染资源。
+- `XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawRegionModel.cs` — 复用静态模型管线绘制地图区域资源。
+- `XuanYu.World.Tests/MapEditing/MapSurfacePickerTests.cs` — 地图表面拾取边界与中心命中测试。
+- `XuanYu.World.Tests/MapEditing/RegionDrawingStateTests.cs` — 绘制草稿顶点、闭合候选与取消测试。
+- `XuanYu.Core.Tests/Render/Map/MapRegionDrawPlanTests.cs` — 区域渲染资源进入帧绘制计划的合同测试。

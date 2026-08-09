@@ -26,6 +26,12 @@ MAP-A-R3-D1：既有 Region 合同审计与加固（2026-08-09 20:35:37）
 - Hash：dcb4b91。
 - 遗留：D1 不包含绘制 UI、Picking 接入、Renderer、LayerPanel、Inspector、持久化、GIS、DGD、Hole、MultiPolygon 或 Polygon Boolean；D1 完成后停止，D2 另行批准。
 
+## v0.2.25.2-rz
+MAP-A-R3-D2：Region Drawing 实装与真机验收前收口（2026-08-09）。
+- 变化：新增区域绘制工具入口；复用既有相机投影完成地图表面拾取；左键添加顶点、移动预览边、首点闭合候选、Esc 取消；闭合调用 `MapEditSession.CreateRegion`，正式区域与临时草稿进入现有静态模型渲染路径。
+- 验证：解决方案 Build 0 Warning / 0 Error；Core 345/345；World 947/947；WarCore 22/22；ARCH-A PASS；5+100 PASS；`git diff --check` PASS。L1 静态 UI PASS，L2 Headless PASS，L3 Visual Regression NOT ENABLED，L4 真机验收 PENDING。
+- Hash：以本轮最终提交为准。
+- 遗留：等待用户执行 D2-A01..D2-A06 真机 IPO 验收；未进入 D3。
 ## v0.2.24.50-fix
 MAP-A-R2-D5-F5：LayerPanel 根因收口与 Runtime UI Gate 首次落地（2026-08-09 19:42:41）
 - 变化：新增 Avalonia.Headless 12.0.4（仅 World.Tests）；建立可复用 Headless Fixture/Host；LayerPanel 改为 Auto/Auto/* Grid，修复冷启动与增层宽度稳定性；将 Layer/Top/Foot 状态覆盖收口到模板 Presenter 与项目 Token；新增 7 项 Runtime UI 门禁。

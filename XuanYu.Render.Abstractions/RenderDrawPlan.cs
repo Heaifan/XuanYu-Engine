@@ -60,6 +60,8 @@ public static partial class RenderDrawPlan
                 entity.EntityType == RenderEntityType.Cube ? CubeOutlineRibbonVertexCount : OutlineRibbonVertexCount,
                 i, entity.EntityType));
         }
+        for (var i = 0; i < projection.RegionModelResources.Count; i++)
+            plan.Add(new FrameEntry(RenderDrawKind.MapRegion, 0, i));
         if (assist.ShowOrigin) plan.Add(new FrameEntry(RenderDrawKind.WorldOrigin, OriginVertexCount));
         if (projection.ScaleGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.ScaleGizmo, ScaleGizmoVertexCount));
         else if (projection.RotateGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.RotateGizmo, RotateGizmoVertexCount));
@@ -72,5 +74,5 @@ public static partial class RenderDrawPlan
 public enum RenderDrawKind
 {
     EditorBackground, EditorReferenceGrid, WorldOrigin, WorldAxes, MapGround, MapBounds,
-    EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo, NavigationGizmo, EditorViewPlaneGrid
+    MapRegion, EntityFill, EntityOutline, MoveGizmo, RotateGizmo, ScaleGizmo, NavigationGizmo, EditorViewPlaneGrid
 }

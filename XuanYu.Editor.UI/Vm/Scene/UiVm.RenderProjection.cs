@@ -19,6 +19,7 @@ public sealed partial class UiVm
             _staticModelCatalog,
             _staticModelResources,
             _mapRenderSnapshot,
-            _viewportDpiScale);
+            _viewportDpiScale,
+            MapRegionRenderProjection.Build(MapSession.CurrentMap, _regionDrawing));
     }
 }

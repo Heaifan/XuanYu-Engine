@@ -6,7 +6,8 @@ public enum EditorToolId
     BoxSelect,
     Move,
     Rotate,
-    Scale
+    Scale,
+    RegionDrawing
 }
 
 public enum EditorToolCaptureState

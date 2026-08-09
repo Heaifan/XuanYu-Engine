@@ -16,11 +16,13 @@ public readonly record struct RenderProjection(
     EditorViewportAssistState Assist = default,
     double MoveGizmoWorldRadius = 1.2,
     IReadOnlyList<RenderStaticModelResource>? StaticModels = null,
+    IReadOnlyList<RenderStaticModelResource>? RegionModels = null,
     MapRenderSnapshot Map = default,
     double ViewportDpiScale = 1.0)
 {
     public int EntityCount => Entities.Count;
     public EditorViewportAssistState AssistState => Assist;
     public IReadOnlyList<RenderStaticModelResource> StaticModelResources => StaticModels ?? [];
+    public IReadOnlyList<RenderStaticModelResource> RegionModelResources => RegionModels ?? [];
     public bool HasMap => Map.HasMap;
 }

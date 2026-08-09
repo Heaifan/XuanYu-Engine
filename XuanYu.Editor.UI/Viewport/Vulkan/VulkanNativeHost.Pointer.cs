@@ -13,6 +13,7 @@ public sealed partial class VulkanNativeHost
         if (DataContext is not UiVm vm) return;
         if (message.Message == NativePointerMessage.LeftDown)
         {
+            if (ReportRegionDrawing(vm, x, y)) { ReleaseExpectedCapture(); return; }
             // F3-F1：导航 Gizmo 优先（右上角区域）；否则进入变换 Gizmo / Picking。
             if (TryNavGizmoPress(vm, x, y)) return;
             if (TryBeginGizmo(vm, NativePointerId, x, y)) { _nativeDragActive = true; return; }
@@ -23,6 +24,7 @@ public sealed partial class VulkanNativeHost
             TryBeginNativeCamera(vm, NativePointerId, x, y, message.IsShiftDown);
         else if (message.Message == NativePointerMessage.Move && message.IsLeftButtonDown)
         {
+            if (PreviewRegionDrawing(vm, x, y)) return;
             if (TryNavGizmoMove(vm, x, y)) return;
             PreviewNativePointer(vm, x, y);
         }

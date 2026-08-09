@@ -69,6 +69,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public bool IsRotateTool => IsTool(EditorToolId.Rotate);
     public bool IsScaleTool => IsTool(EditorToolId.Scale);
     public bool IsBoxSelectTool => IsTool(EditorToolId.BoxSelect);
+    public bool IsRegionDrawingTool => IsTool(EditorToolId.RegionDrawing);
     public bool IsSnapEnabled => _editorState.ToolSnapshot.IsSnapEnabled;
     public string SnapMode => _editorState.ToolSnapshot.SnapText; // F2：模式页已删，仅保留状态读取
     public string SelectionTitle => _editorState.Snapshot.SelectionTitle;

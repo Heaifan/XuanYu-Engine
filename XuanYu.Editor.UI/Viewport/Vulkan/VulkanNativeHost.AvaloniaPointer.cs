@@ -11,6 +11,10 @@ public sealed partial class VulkanNativeHost
         if (TryBeginAvaloniaCamera(e, point)) return;
         if (!point.Properties.IsLeftButtonPressed) return;
         if (DataContext is not UiVm vm) return;
+        if (ReportRegionDrawing(vm, point.Position.X, point.Position.Y))
+        {
+            e.Handled = true; return;
+        }
         if (TryBeginGizmo(vm, e.Pointer.Id, point.Position.X, point.Position.Y))
         {
             e.Pointer.Capture(this); e.Handled = true; return;
@@ -22,7 +26,9 @@ public sealed partial class VulkanNativeHost
     {
         base.OnPointerMoved(e);
         var point = e.GetCurrentPoint(this);
-        if (DataContext is UiVm vm && vm.PreviewViewportPointer(
+        if (DataContext is UiVm vm && PreviewRegionDrawing(vm, point.Position.X, point.Position.Y))
+            e.Handled = true;
+        else if (DataContext is UiVm vm2 && vm2.PreviewViewportPointer(
             e.Pointer.Id, point.Position.X, point.Position.Y))
             e.Handled = true;
         else if (DataContext is UiVm cameraVm && cameraVm.PreviewCameraNavigation(

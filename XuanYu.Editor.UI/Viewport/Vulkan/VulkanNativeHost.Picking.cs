@@ -17,6 +17,12 @@ public sealed partial class VulkanNativeHost
             viewport.Revision, _hwnd != 0);
     }
 
+    bool ReportRegionDrawing(UiVm vm, double x, double y) =>
+        vm.RegionDrawingPointerPressed(x, y, CaptureViewportState());
+
+    bool PreviewRegionDrawing(UiVm vm, double x, double y) =>
+        vm.RegionDrawingPointerMoved(x, y, CaptureViewportState());
+
     ViewportState CaptureViewportState()
     {
         var width = Math.Max(1, (int)Math.Round(Bounds.Width));

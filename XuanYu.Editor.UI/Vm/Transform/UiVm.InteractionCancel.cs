@@ -4,6 +4,7 @@ public sealed partial class UiVm
 {
     public void CancelInteractionFromEscape()
     {
+        if (CancelRegionDrawingFromEscape()) return;
         if (_editorState.InteractionSnapshot.HasCapture) CancelInteraction("Escape");
         else CancelCameraNavigation("Escape");
     }
