@@ -1,0 +1,27 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ToggleButton.toolBtn /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+  </Style>
+  <Style Selector="ToggleButton.toolBtn:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource Color.Hover.Bg}"/>
+  </Style>
+  <Style Selector="ToggleButton.toolBtn:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/>
+  </Style>
+  <Style Selector="ToggleButton.toolBtn:checked /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/>
+    <Setter Property="BorderThickness" Value="1,1,1,3"/>
+  </Style>
+  <Style Selector="ToggleButton.toolBtn:checked">
+    <Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/>
+  </Style>
+  <Style Selector="ToggleButton.toolBtn:checked:pointerover /template/ ContentPresenter,
+                  ToggleButton.toolBtn:checked:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/>
+  </Style>
+</Styles>

@@ -1,0 +1,49 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ToggleButton.layerSwitch, ToggleButton.layerLockSwitch">
+    <Setter Property="Width" Value="26"/><Setter Property="Height" Value="24"/>
+    <Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="3"/><Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+  <Style Selector="ToggleButton.layerSwitch /template/ ContentPresenter,
+                  ToggleButton.layerLockSwitch /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/>
+  </Style>
+  <Style Selector="ToggleButton.layerSwitch:pointerover /template/ ContentPresenter,
+                  ToggleButton.layerLockSwitch:pointerover /template/ ContentPresenter">
+    <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/>
+  </Style>
+  <Style Selector="ToggleButton.layerSwitch:checked /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource Layer.State.VisibleBg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/>
+  </Style>
+  <Style Selector="ToggleButton.layerLockSwitch:checked /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource Layer.State.LockedBg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/>
+  </Style>
+  <Style Selector="ToggleButton.layerSwitch:checked">
+    <Setter Property="Background" Value="{StaticResource Layer.State.VisibleBg}"/>
+  </Style>
+  <Style Selector="ToggleButton.layerLockSwitch:checked">
+    <Setter Property="Background" Value="{StaticResource Layer.State.LockedBg}"/>
+  </Style>
+  <Style Selector="ToggleButton.layerSwitch:checked:pointerover /template/ ContentPresenter,
+                  ToggleButton.layerLockSwitch:checked:pointerover /template/ ContentPresenter,
+                  ToggleButton.layerSwitch:checked:pressed /template/ ContentPresenter,
+                  ToggleButton.layerLockSwitch:checked:pressed /template/ ContentPresenter">
+    <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Strong}"/>
+  </Style>
+  <Style Selector="ToggleButton.layerSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Hidden}"/></Style>
+  <Style Selector="ToggleButton.layerSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Visible}"/></Style>
+  <Style Selector="ToggleButton.layerLockSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Unlocked}"/></Style>
+  <Style Selector="ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
+  <Style Selector="ListBox.layerList ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter,
+                  ListBox.layerList ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter,
+                  ListBox.layerList ListBoxItem:selected:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+  </Style>
+  <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Hidden}"/></Style>
+  <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Visible}"/></Style>
+  <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerLockSwitch Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Unlocked}"/></Style>
+  <Style Selector="ListBox.layerList ListBoxItem:selected ToggleButton.layerLockSwitch:checked Path.layerIcon"><Setter Property="Stroke" Value="{StaticResource Layer.State.Locked}"/></Style>
+</Styles>

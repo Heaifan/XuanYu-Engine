@@ -1176,6 +1176,7 @@
 - `XuanYu.Editor.UI/EditorState/EditorToolText.cs` — static class EditorToolText
 - `XuanYu.Editor.UI/EditorState/EditorTransformCapturePolicy.cs` — static class EditorTransformCapturePolicy
 - `XuanYu.Editor.UI/Foot/Foot.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Foot/Foot.States.axaml` — Foot 日志选中状态的模板 Presenter 样式覆盖。
 - `XuanYu.Editor.UI/Foot/Foot.axaml.cs` — LOG-UX-2：Foot.axaml.cs 只做接线——自动滚动 controller、日志选中、Ctrl+A/Ctrl+C。
 - `XuanYu.Editor.UI/Foot/LogAutoScrollPolicy.cs` — MAP-A-R2-D3-F2：日志自动跟随纯策略——底部附近跟随、远离不强制拉回、滚到底恢复。
 - `XuanYu.Editor.UI/Foot/LogDetailPanel.axaml` — github.com/avaloniaui"
@@ -1199,6 +1200,7 @@
 - `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml.cs` — MAP-A-R2-D4：图层检查器（名称 Enter/失焦提交；开关/按钮走绑定，无额外逻辑）。
 - `XuanYu.Editor.UI/Right/LayerPanel.DragDrop.cs` — MAP-A-R2-D4-F3：区域图层拖动（code-behind 只处理指针/Drop；手柄按下 ≥4 DIP 启动；仅区域行接受；一次交给 UiVm）。
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Right/LayerPanel.States.axaml` — 图层行选中、可见与锁定状态的最终渲染样式。
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml.cs` — MAP-A-R2-D4：图层面板（左侧"图层"页签内容，纯绑定；无 code-behind 逻辑）。
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs` — MAP-A-R1-D5-A：地图编辑器面板（二级页签宿主：地图/图层/环境，每页独立滚动）。
@@ -1222,6 +1224,7 @@
 - `XuanYu.Editor.UI/Root/UiRoot.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Root/UiRoot.axaml.cs` — Row1 主工作区最低高度（与 axaml MinHeight 一致）
 - `XuanYu.Editor.UI/Top/Top.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Top/Top.States.axaml` — 顶部工具 ToggleButton 状态的模板 Presenter 样式覆盖。
 - `XuanYu.Editor.UI/Top/Top.axaml.cs` — partial class Top
 - `XuanYu.Editor.UI/TreeGuide.cs` — sealed class TreeGuide
 - `XuanYu.Editor.UI/TreeGuideSegment.cs` — enum TreeGuideSegmentKind
@@ -1718,6 +1721,11 @@
 - `XuanYu.World.Tests/Tree/UiTreeGuideTests.cs` — sealed class UiTreeGuideTests
 - `XuanYu.World.Tests/Tree/UiTreeToggleTests.cs` — sealed class UiTreeToggleTests
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml1.cs` — 旧 UI 债务基线（AXAML 色值 1/2，D2 自动生成）
+- `XuanYu.World.Tests/UiRuntime/UiHeadlessFixture.cs` — 可复用 Avalonia Headless 会话与 UI 线程调度夹具。
+- `XuanYu.World.Tests/UiRuntime/UiRuntimeTestHost.cs` — Headless Window、布局和 Visual 树查询辅助。
+- `XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeLayoutTests.cs` — LayerPanel 冷启动与增层布局运行时门禁。
+- `XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeStateTests.cs` — LayerPanel 选中、可见和锁定状态运行时门禁。
+- `XuanYu.World.Tests/UiRuntime/UiRuntimeRiskTests.cs` — Top/Foot Fluent 状态覆盖风险运行时门禁。
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml2.cs` — 旧 UI 债务基线（AXAML 色值 2/2，D2 自动生成）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Cs.cs` — 旧 UI 债务基线（code-behind 视觉源色值，D2 自动生成）
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Typography.cs` — 旧 UI 债务基线（字号/圆角/高度/阴影/笔画，D2 自动生成）

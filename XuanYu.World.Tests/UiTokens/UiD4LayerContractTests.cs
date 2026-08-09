@@ -6,7 +6,9 @@ namespace XuanYu.World.Tests.UiTokens;
 public sealed class UiD4LayerContractTests
 {
     static readonly string Panel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "LayerPanel.axaml"));
+        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "LayerPanel.axaml")) +
+        File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+            "XuanYu.Editor.UI", "Right", "LayerPanel.States.axaml"));
 
     static readonly string Inspector = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "LayerInspectorPanel.axaml"));

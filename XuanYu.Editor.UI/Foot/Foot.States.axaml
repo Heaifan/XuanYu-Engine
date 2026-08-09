@@ -1,0 +1,9 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ListBox.logList ListBoxItem:selected /template/ ContentPresenter,
+                  ListBox.logList ListBoxItem:selected:pointerover /template/ ContentPresenter,
+                  ListBox.logList ListBoxItem:selected:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/>
+    <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
+  </Style>
+</Styles>

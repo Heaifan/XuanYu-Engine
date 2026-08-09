@@ -7,7 +7,9 @@ namespace XuanYu.World.Tests.Map.Editing;
 public sealed class UiLayerVisualContractTests
 {
     static readonly string LayerPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "LayerPanel.axaml"));
+        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "LayerPanel.axaml")) +
+        File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+            "XuanYu.Editor.UI", "Right", "LayerPanel.States.axaml"));
 
     static readonly string Ui = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Ui.axaml"));

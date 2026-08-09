@@ -19,6 +19,12 @@
 ---
 
 ## 2026-08（当前自然月）
+## v0.2.24.50-fix
+MAP-A-R2-D5-F5：LayerPanel 根因收口与 Runtime UI Gate 首次落地（2026-08-09 19:42:41）
+- 变化：新增 Avalonia.Headless 12.0.4（仅 World.Tests）；建立可复用 Headless Fixture/Host；LayerPanel 改为 Auto/Auto/* Grid，修复冷启动与增层宽度稳定性；将 Layer/Top/Foot 状态覆盖收口到模板 Presenter 与项目 Token；新增 7 项 Runtime UI 门禁。
+- 验证：解决方案 Build 0 Warning / 0 Error；Core 344/344、World 938/938、WarCore 22/22；Runtime UI 7/7；Visual Regression：NOT ENABLED；真机验收：PENDING。
+- Hash：6cf16fc。遗留：等待用户执行 MAP-A-R2-D5-F5 真机清单；状态 READY FOR USER ACCEPTANCE，不标记 CLOSED。
+
 ## v0.2.24.49-fix
 MAP-A-R2-D5-F4：图层列表测量与拖拽热区修复（2026-08-09 16:18:16）
 - 根因：图层页外层 ScrollViewer 未禁止横向无限测量，Inspector 隐藏时名称 `*` 列失去可用宽度；拖拽事件直接绑定 14 DIP Path，命中区过小。
