@@ -27,7 +27,7 @@ MAP-A-R3-D2-F1 GRID-RW-1-CORR2（2026-08-10 22:34:00）：按用户真机审计�
 - 测试：新增 FrameState 各向异性门禁（2/30、30/2、0.5/50 按 max 选 Step，2/2 各向同性对照不变）；Shader 合同断言 Major/Minor Alpha、Fade 区间、Depth Bias 与 Empty-input 管线（无 StaticModelVertexBinding 调用、无 CreateFullscreenPass 调用）。
 - 验证：全解决方案 Build 0 Warning / 0 Error（含 `--no-incremental` 全量重编译）；Core.Tests 336/336、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；ARCH-A PASS；5+100 PASS（GridLine.cs 100 行、字节码 Vert 85/Frag 23）；GLSL/SPIR-V 一致性 PASS；`git diff --check` PASS。
 - 状态：F1 保持 OPEN；GRID-RW-1-CORR2 等待 Commit + Push 与用户逐项代码审计（FrameState → anisotropy → Pipeline → Shader → Depth → Major/Minor → Fade → Tests → SPIR-V → 门禁）；审计通过前不启动真机，RW-2 / RW-3 不启动。
-- Hash：待 Commit 后补。
+- Hash：`c5652f3`（GRID-RW-1-CORR2 实现与文档提交）。
 
 ## v0.2.25.25-fix
 MAP-A-R3-D2-F1 GRID-RW-1（2026-08-10 21:49:43）：Reference Grid 从全屏三角形的 Fragment 局部 LOD 重写为全局 `ReferenceGridFrameState` 驱动的 GPU procedural 世界线；全帧固定一个 100m 起步、10~140 DIP 回滞的 Step，并按相机位置 Step 吸附 Anchor。Vulkan 参考网格专用 `LineList` 管线每轴生成 513 条线、总计 2052 顶点；全屏三角形常量独立保留给 ViewPlaneGrid、比例尺、导航 Gizmo、世界轴和原点。删除旧 `fwidth/log10/band-pass/grazing` 网格着色器、字节码与错误合同，新增世界线、全局尺度、锚点、顶点数及 LineList 合同；GLSL 已由 `glslc -O` 重新生成嵌入 SPIR-V。
