@@ -23,7 +23,7 @@ MAP-A-R3-D2-F1 GRID-RW-2B（2026-08-10 23:50:35）：World Grid 保持 RW-2A 的
 - 测试：新增 100→200→500 与回滞区间回归；更新 Shader/Draw 合同，锁定单帧 Step、禁止 BaseHeight/local LOD 与旧 LineList 正式入口；GLSL ↔ SPIR-V（569 words）一致性 PASS。
 - 验证：Render.Vulkan 与 Core.Tests 定向 Build 0 Warning / 0 Error；Core.Tests 335/335、World.Tests 1115/1115、WarCore.Tests 22/22 PASS；ARCH-A、5+100 与 `git diff --check` PASS。完整解决方案 Build 未重试：当前环境的 Editor.App 输出锁定尚未变化，沿用 RW-2A 已记录的环境阻断。
 - 状态：RW-2B 等待真机确认拉远时全帧整体减密且无 100↔200 抖动；RW-2C/2D 仍 BLOCKED，F1 保持 OPEN。
-- Hash：待本轮 Commit + Push 后回填。
+- Hash：`6154078`（RW-2B 帧级自适应密度实现）。
 
 ## v0.2.25.28-fix
 MAP-A-R3-D2-F1 GRID-RW-2A（2026-08-10 23:39:57）：按独立世界网格裁定，恢复 MapGround 正常 Draw；Reference Grid 改为全屏三角形，经 `editor_reference_grid.vert` 重建射线后与 World XY（`Z=0`）求交，固定 100m 间距。Grid Pipeline 关闭 DepthTest/DepthWrite，移除正式入口对 GridLine、LineList 与 Ground Bias 的依赖；Map `BaseHeightMeters` 不再参与 World Grid 平面。旧 GridLine Shader/字节码/管线资产暂保留，不删除。
