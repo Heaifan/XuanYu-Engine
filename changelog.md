@@ -22,7 +22,7 @@
 MAP-A-R3-D2-F1 GRID-DIAG-GROUND-01（2026-08-10 23:23:52）：仅在 Vulkan 帧循环中于管线绑定前跳过 `RenderDrawKind.MapGround`，暂时隔离真实 MapGround 绘制及其深度写入；MapGround 数据、DrawPlan、Reference Grid、World Axis、World Origin、Navigation Gizmo、Camera、Shader、Depth Bias 与 `BaseHeightMeters` 均未修改。新增诊断合同，锁定跳过位置必须早于管线绑定。
 - 验证：Render.Vulkan 快速 Build 0 Warning / 0 Error；全解决方案 Build 0 Warning / 0 Error；Core.Tests 336/336、World.Tests（含新增诊断合同）与 WarCore.Tests 22/22 PASS；ARCH-A、5+100 与 `git diff --check` PASS。
 - 状态：GRID-DIAG-GROUND-01 等待用户真机验收；未据自动测试宣告 F1 CLOSED，未启动 Ground/Grid 分层或 Camera/Depth 后续修改。
-- Hash：待本轮 Commit + Push 后回填。
+- Hash：`9cf951a`（MapGround 诊断隔离实现）。
 
 ## v0.2.25.26-fix
 MAP-A-R3-D2-F1 GRID-RW-1-CORR2（2026-08-10 22:34:00）：按用户真机审计冻结四组修复——
