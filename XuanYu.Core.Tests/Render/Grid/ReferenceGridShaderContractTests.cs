@@ -57,6 +57,16 @@ public sealed class ReferenceGridShaderContractTests
     }
 
     [Fact]
+    public void Grid_shader_is_infinite_and_keeps_base_height()
+    {
+        var frag = ShaderSource("editor_reference_grid.frag");
+        Assert.DoesNotContain("mapFade", frag);
+        Assert.DoesNotContain("abs(worldPosition.x) - pc.mapBounds.x", frag);
+        Assert.DoesNotContain("abs(worldPosition.y) - pc.mapBounds.y", frag);
+        Assert.Contains("pc.mapBounds.z", frag);
+    }
+
+    [Fact]
     public void World_axes_shader_is_single_source_of_axis_truth()
     {
         var frag = ShaderSource("editor_world_axes.frag");

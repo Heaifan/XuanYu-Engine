@@ -1,5 +1,7 @@
 # MAP-A-R3 Backlog
 
+GRID-1：Reference Grid 已解除地图矩形可见性 Fade，保留 `mapBounds.z` BaseHeight 与既有 CPU Push Constant 布局；等待 10km 地图边缘真机观察。GRID-2/GRID-3 禁止在本轮启动。
+
 R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结目标和范围。
 
 ## 当前裁定

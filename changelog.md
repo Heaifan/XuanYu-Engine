@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.22-fix
+MAP-A-R3-D2-F1 GRID-1 参考网格越过地图边界（2026-08-10 20:31:45）：保留现有 192B Push Constant 布局与 `mapBounds.z` BaseHeight，仅移除 Reference Grid Fragment Shader 的地图矩形可见性 Fade；地图范围、MapSurface、Picking、相机、LOD、颜色、线宽与地平线淡出均未修改。新增 Shader 合同，约束不得恢复 `mapFade` 或 x/y 边界裁剪。
+- 验证：全解决方案 Build 0 Warning / 0 Error；Core.Tests 386/386、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；ARCH-A、`git diff --check` PASS；SPIR-V 已由 glslc -O 重新生成。
+- 真机 IPO：10km 地图移动/环绕至边缘，绿色 MapSurface 结束后，灰蓝 Reference Grid 应继续延伸；F1 保持 OPEN，等待用户观察。
+- Hash：待本轮提交。
+
 ## v0.2.25.21-fix
 MAP-A-R3-D2-F1 比例尺固定几何与浅色 UI 视觉收口（2026-08-10 20:10:03）：固定 Vulkan-native 比例尺卡片为 128×28 DIP、左下角 16 DIP 边距，标尺固定 104 DIP；距离标签改为 `metersPerDip × 104` 的真实动态值，不再用 1/2/5 档位改变标尺几何；背景、边框、文字和标尺线统一使用玄域浅色 Token 对应色值，圆角 3 DIP，去除黑色大底与七段数码管字形。
 - 测试：新增固定卡片/标尺合同、真实标签与宽度回归、Shader 视觉合同；重新生成嵌入 SPIR-V。

@@ -13,7 +13,7 @@ layout(push_constant) uniform GridPush {
     vec4 cameraPosition;        // 128 相机世界位置
     vec4 viewportAndFar;        // 144 x,y=视口尺寸; z=Far; w=GridMaxDistance
     vec4 gridScale;             // 160 x=FineSpacing; y=CoarseSpacing; z=FineWeight; w=CoarseWeight
-    vec4 mapBounds;             // 176 x=地图半宽; y=半深; z=BaseHeight; w=边缘淡出宽度（D3；无地图=0）
+    vec4 mapBounds;             // x/y/w 保留旧布局；z=BaseHeight
 } pc;
 
 layout(location = 0) in vec4 vFarWorld;
@@ -59,13 +59,6 @@ void main() {
 
     // D3：地图存在时按矩形边缘淡出（地图内完整、边缘外 w 宽度内衰减、更远隐藏）；
     // 无地图（w=0）时保持无限参考网格。
-    float mapFade = 1.0;
-    if (pc.mapBounds.w > 0.0) {
-        float beyond = max(max(abs(worldPosition.x) - pc.mapBounds.x,
-                               abs(worldPosition.y) - pc.mapBounds.y), 0.0);
-        mapFade = 1.0 - smoothstep(0.0, pc.mapBounds.w, beyond);
-    }
-
     // 真实深度（Vulkan 0~1）+ 有界深度偏移（往相机方向，共面稳定）。
     vec4 clipPosition = pc.viewProjection * vec4(worldPosition, 1.0);
     float depth = clipPosition.z / clipPosition.w;
@@ -113,7 +106,7 @@ void main() {
         ? (fineColor * fineContribution + coarseColor * coarseContribution) / total
         : fineColor;
 
-    float alpha = gridAlpha * distanceFade * grazingFade * mapFade;
+    float alpha = gridAlpha * distanceFade * grazingFade;
     if (alpha < 0.005) discard;
     outColor = vec4(gridColor, alpha);
 }
