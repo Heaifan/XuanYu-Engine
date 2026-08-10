@@ -1337,7 +1337,7 @@
 - `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.cs` — MAP-A-R2-D4：图层行显示模型（面板行绑定；写操作转发会话命令，不直接持有领域状态）。
 - `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为独立 Vector Overlay 资源。
-- `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs` — F1-V1：构建 Fill、屏幕空间 Stroke 与 Marker 几何。
+- `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs` — F1-V1/B1：构建共享 BaseHeightMeters 世界锚点的 Fill、屏幕空间 Stroke 与 Marker 几何。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Finalize.cs` — Vector Overlay AABB 与稳定 revision 计算。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayTriangulation.cs` — F1-V1：Ear Clipping 凹多边形三角化。
 - `XuanYu.Editor.UI/Vm/Map/MapRenderSnapshotProjection.cs` — MAP-A-R2-D3/D4：MapDefinition → MapRenderSnapshot 纯投影（渲染唯一输入）。
@@ -1990,6 +1990,7 @@
 - `XuanYu.Core.Tests/Render/Map/MapRegionDrawPlanTests.cs` — 区域渲染资源进入帧绘制计划的合同测试。
 - `XuanYu.Core.Tests/Render/LatestRenderProjectionQueueTests.cs` — PointerMoved 多次发布时只消费最新渲染投影的合同测试。
 - `XuanYu.World.Tests/UiRuntime/MapVectorOverlayV1Tests.cs` — F1-V1：点、线、凹多边形、屏幕空间尺寸、缓冲复用与无 StaticModel 路径合同。
+- `XuanYu.World.Tests/UiRuntime/MapVectorOverlayAnchorContractTests.cs` — F1-REWORK-B1：Fill、Stroke、Marker 对同一 MapPoint 使用完全一致的 BaseHeightMeters 世界锚点。
 - `docs/milestones/current/MAP-A/R3-C2-closure.md` — C2 RF-M01～RF-M03 真机 IPO 收口记录。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — 地图编辑器地图页及内部地图工具入口，含 Region Drawing 归属与 Selected 状态样式。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RuntimeRedTests.cs` — D2-F1 Headless Runtime RED/GREEN：Map Editor 归属与选中态深色文字。

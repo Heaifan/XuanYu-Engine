@@ -10,6 +10,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - D2-F1-V1：OPEN · ACCEPTANCE FAILED · REWORK。V1-REWORK-A 只恢复 Navigation Gizmo 输入；Region Overlay 视觉回修延后。
 - F1-V2：DONE（`a367f89` 已推送）。
 - F1-V3：DONE（`49b0677` 已推送）。
+- V1-REWORK-B1：DONE（`ef12f4b` 已推送）；仅完成 Region 世界锚点统一，B2 Depth Policy 尚未启动。
 - D3：禁止启动；F2：不创建。
 
 ## MAP-A-R3-D2-F1-C2：正式收口
@@ -119,7 +120,15 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 | --- | --- | --- |
 | MP-T01 | 统一地图投影与拾取的双精度 CPU 路径 | DONE |
 | MP-T02 | 100m/10km/10,000km、DPI 与斜视往返专项 | DONE（108/108） |
-| MP-T03 | 正式 0W0E 门禁与 Commit + Push | DONE（`73c2d63` 已推送） |
+| MP-T03 | 正式 0W0E 门禁与 Commit + Push | DONE（`d90ef4b` 已推送） |
+
+### V1-REWORK-B1：Region 世界锚点统一
+
+| TODO | 内容 | 状态 |
+| --- | --- | --- |
+| B1-T01 | 删除 Stroke 世界坐标 `height + 0.03` 偏移，Fill / Stroke / Marker 共享 `BaseHeightMeters` | DONE |
+| B1-T02 | Fill / Stroke / Marker 世界锚点一致性合同测试，禁止 epsilon 回潮 | DONE（1/1） |
+| B1-T03 | 完整正式门禁、版本更新、Commit + Push、local HEAD == remote HEAD | DONE（`ef12f4b` 已推送，文档随本轮收口） |
 
 ### V1 自动验收
 
@@ -128,4 +137,4 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 
 ## 后续解锁顺序
 
-`V1-REWORK-A → F1-V2 100m Minimum Visible Metric Grid → F1-V3 Scale Indicator + Zoom Floor → Metric/Picking 门禁 → V1-REWORK-B Region Overlay → V1 真机重验 → F1 Final → A03～A06 → D2 Closeout`
+`V1-REWORK-A → F1-V2 100m Minimum Visible Metric Grid → F1-V3 Scale Indicator + Zoom Floor → Metric/Picking 门禁 → V1-REWORK-B1 世界锚点 → V1-REWORK-B2 Depth Policy → V1 真机重验 → F1 Final → A03～A06 → D2 Closeout`
