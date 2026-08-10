@@ -22,7 +22,7 @@
 MAP-A-R3-D2-F1 根因收口（2026-08-10）：修复首点草稿生成零长度 primitive、区域 world-space 绘制误用零缩放，以及拾取未遵守地图中心原点边界合同；新增 MapPoint↔World 直接映射合同与首点资源 Vulkan 合法性回归。
 - 验证：解决方案 Build 0W0E；Core 346/346、World 971/971、WarCore 22/22 PASS；R17～R20 聚焦测试 5/5 PASS；ARCH-A、5+100、git diff --check PASS。
 - 状态：MAP-A-R3-D2-F1 继续 OPEN；既有 S01/S02 失败证据已确认，不重复要求用户证明旧失败；修复后的真机确认仍待用户执行；A03～A06 BLOCKED，D3 禁止启动，F2 未创建。
-- Hash：本轮修复提交后补录。
+- Hash：44280d7。
 
 ## v0.2.25.3-rz
 MAP-A-R3-F1-FINAL 原生输入与区域绘制返工（2026-08-09）：修复区域工具在释放鼠标后不更新预览的问题；修复正式区域与 Draft 资源 primitive 范围为空/固定颜色导致不可见的问题；增加 App/UI 版本溯源及 A-E 阶段运行时取证，取证同时写入底部日志与临时文件；F2 保持冻结。验证：App 构建 0 Warning / 0 Error，World.Tests PASS，ARCH-A PASS，git diff --check PASS。Hash：5dffd70。遗留：真机验收仍由用户执行，未宣布 CLOSED。
