@@ -18,7 +18,7 @@
 ## 开发知识库（knowledge/）
 
 - `docs/knowledge/README.md`：知识库目的、字段、证据、生命周期与使用说明
-- `docs/knowledge/knowledge-index.md`：19 条正式知识的分类总索引
+- `docs/knowledge/knowledge-index.md`：Knowledge / Lesson 类型化总索引
 - `docs/knowledge/engineering.md`：验证、治理与工程流程知识
 - `docs/knowledge/architecture.md`：空间、架构与组合根知识
 - `docs/knowledge/rendering.md`：Vulkan、Depth、Overlay 与 Native 渲染知识
@@ -27,11 +27,13 @@
 - `docs/knowledge/data.md`：数据保存、加载事务与资产处理知识
 - `docs/knowledge/performance.md`：Preview/Commit 高频路径性能知识
 - `docs/knowledge/incidents.md`：代表性事故复盘与 Knowledge 映射
+- `docs/knowledge/lessons.md`：错误前提、停止条件与可复用教训
 
 ## 当前阶段（milestones/current/）
 
 - `docs/milestones/current/MAP-A/`：MAP-A 地图合同与当前轮验收材料
 - `docs/milestones/current/MAP-A/R3-backlog.md`：R2 关闭后的 MAP-A-R3 候选方向与冻结前约束
+- `docs/milestones/current/MAP-A/R3-F1-closeout.md`：F1 FINAL 15 项真机 IPO 收口清单
 - `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md`：OVL-R0～R3 比例尺架构整改开发计划
 - `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg`：Viewport Overlay / Scale Indicator 浅色路线图
 

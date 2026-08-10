@@ -13,8 +13,9 @@
 
 - **宪法 / 规范**：必须遵守什么。
 - **Changelog**：某个版本发生了什么。
-- **Incident**：某次事故为什么发生、如何收口。
-- **Knowledge**：从一个或多个事故中提炼出的可复用工程规则。
+- **Incident**：某次事故发生了什么、如何收口。
+- **Lesson**：为什么会沿着错误前提投入，以及何时必须停止局部修补。
+- **Knowledge**：从事故与教训中提炼出的可复用工程规则。
 
 知识闭环：
 
@@ -22,6 +23,8 @@
 Changelog / Git 事实
         ↓
       Incident
+        ↓ 反思
+       Lesson
         ↓ 提炼
      Knowledge
         ↓ 固化
@@ -41,14 +44,15 @@ docs/knowledge/
 ├─ ui.md
 ├─ data.md
 ├─ performance.md
-└─ incidents.md
+├─ incidents.md
+└─ lessons.md
 ```
 
 **硬规则：不得新增 `docs/knowledge/<category>/...`、`incidents/2026/...` 等嵌套目录。** 细分依靠知识 ID、标签和 `knowledge-index.md`，不依靠继续套文件夹。
 
-## 3. 知识条目最低字段
+## 3. 条目类型与最低字段
 
-每条正式知识至少包含：
+每条正式 Knowledge 至少包含：
 
 1. ID、状态、优先级、证据等级、标签、适用范围；
 2. 首次确认的**绝对日期/时间**、版本、Commit、来源；
@@ -62,6 +66,8 @@ docs/knowledge/
 10. 验证方法；
 11. 边界 / 例外；
 12. 关联 Incident / Knowledge。
+
+每条正式 Lesson 还必须明确区分“已确认事实”和“高置信机制解释（尚未直接证明）”，并包含停止条件、禁止做法、正确做法、关联 Incident / Knowledge / Gate。
 
 禁止使用“今天、昨天、刚才、这次、上一轮、前几天”等相对时间作为证据时间。若原始历史只记录到日期或月份，必须原样说明“原文未记录时分/具体日”，**禁止补造精度**。
 

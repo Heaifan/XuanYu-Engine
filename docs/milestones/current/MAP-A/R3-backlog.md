@@ -27,6 +27,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - GRID-RW-1/CORR2：裁定为不再继续修补的历史 LineList 路线；资产暂保留，禁止恢复为正式入口。
 - GRID-RW-2A：真机核心目标 PASS；World Grid 已独立于 MapGround、稳定存在，Region 当前观察稳定。
 - GRID-RW-2B：已实现全帧唯一 Step，按保守 max(X,Y)、1/2/5 与 24~80 DIP 回滞切档；仅待真机确认拉远整体减密与滚轮不抖动。RW-2C（Analytical AA）与 RW-2D（视觉层级）仍 BLOCKED。
+- MAP-A-R3-D2-F1-CLOSEOUT：RW-2A/RW-2B 真机 PASS 已记录；RW-2C/RW-2D 降级为 `DEFERRED · NON-BLOCKING VISUAL IMPROVEMENT`。F1 FINAL 仅在 15/15 真机 IPO PASS 与完整 0W0E 门禁后 CLOSED；A03～A06 仍待恢复原始验收合同，D3 继续禁止启动。
 - GRID-RW-1-CORR2（2026-08-10）：用户真机审计 FAIL 后冻结四组修复——Step 保守尺度 max(X,Y)、Dedicated Empty-input Line 管线 + 负 Depth Bias、Major/Minor（10:1，α 0.10/0.18）、连续远距/掠射 Fade（禁 band-pass/local LOD/discard）；新增各向异性门禁（2/30、30/2）。完成条件：用户逐项代码审计 PASS（FrameState → anisotropy → Pipeline → Shader → Depth → Major/Minor → Fade → Tests → SPIR-V → 门禁）后才进入真机；真机仍明显摩尔纹则 STOP，转 Screen-space Ribbon Triangle + Analytical AA（FrameState/Step/Anchor 保留）。
 - D3：禁止启动；F2：不创建。
 

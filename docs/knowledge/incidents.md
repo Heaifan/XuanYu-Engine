@@ -156,3 +156,30 @@
 **涉及版本**：`v0.2.16.2-rz`、`v0.2.17.8-rz`、`v0.2.20.19-fix` 均出现重复分配；另有 18 处版本号/日期非单调。
 **处理原则**：历史原文保留，不重排；追溯以 Commit Hash 为准。
 **经验提升**：K-GOV-001。
+
+---
+
+## INC-2026-08-10-006 World Reference Grid 与 MapGround 错误耦合导致持续闪烁排障
+
+**发生窗口**：2026-08-10 22:34:00 ～ 23:50:35（UTC+08:00）
+**版本链**：`v0.2.25.26-fix` → `v0.2.25.29-fix`
+**关键 Commit**：`c1451df`、`2c57893`、`6154078`
+**影响**：World Grid 在缩放、低角度观察时出现闪、抖、断与密度不稳定；Region 周边视觉也可能被误判为自身不稳定。
+
+### 已确认事实
+
+- 旧 Grid 为世界空间 LineList，使用 `DepthTest=On`、`DepthWrite=Off`、`LessOrEqual` 与负 Depth Bias；
+- Grid 的旧平面语义依赖 Map BaseHeight，与 Ground 存在深度承载耦合；
+- Ground 隔离实验改变了旧 Grid 表现，World Axis 在相同条件下连续缩放稳定；
+- RW-2A 采用独立 Fullscreen Triangle、世界射线与 World XY（Z=0）求交、DepthTest/DepthWrite 关闭后，Ground ON/OFF 均可独立显示；
+- RW-2B 采用 CPU 全帧唯一 Step、1/2/5 序列与 24~80 DIP 回滞，真机通过；Region 同时观察到不再闪烁。
+
+### 高置信机制解释（尚未直接 GPU 捕获证明）
+
+共面 Depth 竞争与世界空间 1px LineList 亚像素覆盖变化共同造成主要闪烁。该解释没有 GPU Capture 的直接证明，故不作为已确认根因事实。
+
+### 最终收口
+
+World Reference Grid 被重新定义为独立 Editor Environment Layer：不属于 Map Surface，不读取 Map BaseHeight，不依赖 Ground Depth；LOD/Step 只由 CPU 全帧统一决定，Fragment 的 `fwidth` 只用于 AA。
+
+**经验提升**：L-REN-001、K-REN-004（并关联 K-REN-001、K-REN-002）。

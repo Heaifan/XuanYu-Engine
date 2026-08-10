@@ -1,5 +1,52 @@
 # Rendering 渲染知识
 
+## K-REN-004 Editor World Reference Grid 必须独立于 MapGround
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E3
+**标签**：Vulkan、World Grid、Editor Environment、MapGround、Depth、LOD
+**适用范围**：World Reference Grid、编辑器环境辅助层、Map Surface 与 3D 场景共存的网格显示。
+
+**首次确认**：2026-08-10 23:39:57（UTC+08:00）
+**最近验证**：2026-08-10 23:50:35（UTC+08:00）
+**版本链**：`v0.2.25.28-fix` → `v0.2.25.29-fix`
+**Commit**：`2c57893`、`6154078`
+**来源**：GRID-RW-2A / GRID-RW-2B。
+
+### 工程规则
+
+```text
+World Reference Grid belongs to Editor Environment
+World Reference Grid is not Map Surface
+```
+
+- Grid Plane 固定为 World XY（Z=0），独立于 `Map.BaseHeightMeters`；
+- MapGround 有无不得决定 Grid 是否存在；
+- Grid 不使用 World Z Offset、Ground Depth 或 Ground Bias；
+- Grid Pass 的 DepthTest/DepthWrite 关闭；
+- Step 由 CPU 全帧统一决定，Fragment 不自行决定 Grid LOD；
+- `fwidth` 只用于 AA；
+- MapGround、World Grid、Region 是不同语义层。
+
+### 禁止做法
+
+- 用真实世界 LineList 与 MapGround 共面，再以 Depth Bias 抢可见性；
+- 让 Fragment 自行计算 Step、LOD 或网格层级；
+- 把 Map BaseHeight 隐式作为 World Grid 高度。
+
+### 验证方法
+
+- 自动合同：World XY、CPU Step、禁 Fragment LOD、禁 Grid Ground Bias、Ground ON/OFF 独立性；
+- 真机：Ground ON/OFF、连续缩放、远距减密、低角度、Resize；
+- 完整 F1 FINAL 回归不得以自动测试替代真机结果。
+
+**关联 Incident**：INC-2026-08-10-006
+**关联 Lesson**：L-REN-001
+**关联 Knowledge**：K-REN-001、K-REN-002
+
+---
+
 ## K-REN-001 Editor Overlay 不得用世界坐标偏移制造视觉层级
 
 **状态**：Active
