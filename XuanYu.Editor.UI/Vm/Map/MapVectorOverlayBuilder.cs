@@ -78,8 +78,8 @@ sealed partial class MapVectorOverlayBuilder(double height)
     RenderVectorOverlayVertex Vertex(MapPoint p) =>
         new(MapCoordinateContract.MapToWorld(p, height), Vector3d.Zero, 0, 0);
     RenderVectorOverlayVertex LineVertex(MapPoint p, MapPoint other, double side) =>
-        new(MapCoordinateContract.MapToWorld(p, height + .03),
-            MapCoordinateContract.MapToWorld(other, height + .03), side, 0);
+        new(MapCoordinateContract.MapToWorld(p, height),
+            MapCoordinateContract.MapToWorld(other, height), side, 0);
 
     void AddPrimitive(int first, RenderStaticModelColor color, RenderVectorOverlayPrimitiveKind kind,
         double width, double radius) => _primitives.Add(new(
