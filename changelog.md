@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.25.28-fix
+MAP-A-R3-D2-F1 GRID-RW-2A（2026-08-10 23:39:57）：按独立世界网格裁定，恢复 MapGround 正常 Draw；Reference Grid 改为全屏三角形，经 `editor_reference_grid.vert` 重建射线后与 World XY（`Z=0`）求交，固定 100m 间距。Grid Pipeline 关闭 DepthTest/DepthWrite，移除正式入口对 GridLine、LineList 与 Ground Bias 的依赖；Map `BaseHeightMeters` 不再参与 World Grid 平面。旧 GridLine Shader/字节码/管线资产暂保留，不删除。
+- 测试：新增 Ground 恢复与 World Grid 独立合同；更新 DrawPlan、全屏 Pass、固定 Z=0、固定 100m、禁 Fragment LOD 与禁 Ground Bias 合同；GLSL 经 glslc -O 生成 SPIR-V（538 words）并一致性校验 PASS。
+- 验证：Render.Vulkan 快速 Build 0 Warning / 0 Error；Core.Tests 334/334、World.Tests 1115/1115、WarCore.Tests 22/22 PASS；ARCH-A、5+100、`git diff --check` PASS。完整解决方案 Build 因运行中的 `XuanYu.Editor.App (PID 13416)` 锁定输出 DLL 失败（MSB3027/MSB3021），为环境阻断，非代码错误。
+- 状态：RW-2A 等待真机仅验 Ground ON/OFF 下网格独立存在与缩放不消失；RW-2B/2C/2D 仍 BLOCKED，F1 保持 OPEN。
+- Hash：待本轮 Commit + Push 后回填。
+
 ## v0.2.25.27-fix
 MAP-A-R3-D2-F1 GRID-DIAG-GROUND-01（2026-08-10 23:23:52）：仅在 Vulkan 帧循环中于管线绑定前跳过 `RenderDrawKind.MapGround`，暂时隔离真实 MapGround 绘制及其深度写入；MapGround 数据、DrawPlan、Reference Grid、World Axis、World Origin、Navigation Gizmo、Camera、Shader、Depth Bias 与 `BaseHeightMeters` 均未修改。新增诊断合同，锁定跳过位置必须早于管线绑定。
 - 验证：Render.Vulkan 快速 Build 0 Warning / 0 Error；全解决方案 Build 0 Warning / 0 Error；Core.Tests 336/336、World.Tests（含新增诊断合同）与 WarCore.Tests 22/22 PASS；ARCH-A、5+100 与 `git diff --check` PASS。

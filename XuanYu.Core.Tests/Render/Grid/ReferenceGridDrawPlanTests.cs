@@ -27,7 +27,7 @@ public sealed class ReferenceGridDrawPlanTests
     {
         var plan = RenderDrawPlan.GetFrameDrawPlan(Projection(hasMap, withEntity, true));
         Assert.Contains(plan, e => e.Kind == RenderDrawKind.EditorReferenceGrid);
-        Assert.Equal(RenderDrawPlan.ReferenceGridLineVertexCount, plan.Single(e => e.Kind == RenderDrawKind.EditorReferenceGrid).VertexCount);
+        Assert.Equal(RenderDrawPlan.FullscreenTriangleVertexCount, plan.Single(e => e.Kind == RenderDrawKind.EditorReferenceGrid).VertexCount);
     }
 
     // D5 Overlay 顺序：Terrain < Grid < WorldAxes < EntityFill < EntityOutline < Origin < Gizmo。

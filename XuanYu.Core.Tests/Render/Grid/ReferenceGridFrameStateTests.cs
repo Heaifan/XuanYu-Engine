@@ -32,7 +32,7 @@ public sealed class ReferenceGridFrameStateTests
     }
 
     [Fact]
-    public void Grid_geometry_is_fixed_at_513_lines_per_axis()
+    public void Legacy_line_geometry_is_retained_but_world_grid_draw_is_fullscreen()
     {
         Assert.Equal(513, RenderDrawPlan.ReferenceGridLineCountPerAxis);
         Assert.Equal(2052, RenderDrawPlan.ReferenceGridLineVertexCount);

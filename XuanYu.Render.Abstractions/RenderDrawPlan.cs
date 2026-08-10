@@ -14,6 +14,7 @@ public static partial class RenderDrawPlan
     public const int ScaleGizmoVertexCount = 252;
     public const int BackgroundVertexCount = 3;
     public const int FullscreenTriangleVertexCount = 3;
+    // GRID-RW-1 legacy LineList 常量暂保留；RW-2A 正式 World Grid 使用全屏三角形。
     public const int ReferenceGridLineCountPerAxis = 513;
     public const int ReferenceGridLineVertexCount = ReferenceGridLineCountPerAxis * 4;
     public const int OriginVertexCount = 36;
@@ -46,7 +47,7 @@ public static partial class RenderDrawPlan
             // F3-F4：正交标准视图的视图平面网格（±X→YZ / ±Y→XZ），画在地面网格同一层。
             plan.Add(new FrameEntry(RenderDrawKind.EditorViewPlaneGrid, FullscreenTriangleVertexCount));
         }
-        else if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridLineVertexCount));
+        else if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, FullscreenTriangleVertexCount));
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
         {

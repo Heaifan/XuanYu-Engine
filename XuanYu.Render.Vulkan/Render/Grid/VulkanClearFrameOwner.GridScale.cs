@@ -19,7 +19,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var viewport = new ViewportState(
             0, 0, _extent.Width / dpi, _extent.Height / dpi,
             (int)_extent.Width, (int)_extent.Height, dpi, _swapchainOwner.ResourceGeneration);
-        var height = projection.Map.HasMap ? projection.Map.BaseHeightMeters : 0.0;
+        const double height = 0.0; // GRID-RW-2A：World Reference Plane 固定 Z=0，不随 MapGround 移动。
         if (ViewportMetricScale.TryCreate(projection.Camera, viewport, height, out var metric))
         {
             _lastViewportMetric = metric;
