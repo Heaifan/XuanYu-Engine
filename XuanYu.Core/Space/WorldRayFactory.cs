@@ -15,6 +15,13 @@ public static class WorldRayFactory
 
         var ndcX = ToNdcX(state.Viewport, logicalX);
         var ndcY = ToNdcY(state.Viewport, logicalY);
+        if (!RequiresDoublePrecision(state))
+        {
+            var near = state.TransformPointToWorld(ndcX, ndcY, 0.0);
+            var far = state.TransformPointToWorld(ndcX, ndcY, 1.0);
+            return new WorldRay(near, far - near);
+        }
+
         var aspect = state.Viewport.LogicalWidth / state.Viewport.LogicalHeight;
         if (state.Camera.Mode == ProjectionMode.Orthographic)
         {
@@ -30,7 +37,7 @@ public static class WorldRayFactory
         var direction = state.Camera.Forward
             + (state.Camera.Right * (ndcX * aspect * tangent))
             + (state.Camera.Up * (ndcY * tangent));
-        var origin = state.Camera.Position + (state.Camera.Forward * state.Camera.NearPlane);
+        var origin = state.Camera.Position + (direction * state.Camera.NearPlane);
 
         return new WorldRay(origin, direction);
     }
@@ -44,4 +51,9 @@ public static class WorldRayFactory
     {
         return 1.0 - ((logicalY - viewport.LogicalY) / viewport.LogicalHeight * 2.0);
     }
+
+    static bool RequiresDoublePrecision(ViewProjectionState state) =>
+        global::System.Math.Max(
+            global::System.Math.Max(global::System.Math.Abs(state.Camera.Position.X), global::System.Math.Abs(state.Camera.Position.Y)),
+            global::System.Math.Max(global::System.Math.Abs(state.Camera.Position.Z), state.Camera.FarPlane)) >= 10_000.0;
 }

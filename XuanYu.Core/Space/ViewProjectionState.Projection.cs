@@ -1,3 +1,4 @@
+using System.Numerics;
 using XuanYu.Core.Gizmo;
 using XuanYu.Core.Math;
 
@@ -14,6 +15,27 @@ public sealed partial class ViewProjectionState
 
     public bool TryProjectWorldPoint(Vector3d point, out ScreenPoint screen)
     {
+        if (!RequiresDoublePrecision(point))
+        {
+            var clip = Vector4.Transform(new Vector4(ToVector3(point), 1), ViewProjection);
+            if (!float.IsFinite(clip.W) || clip.W <= 0)
+            {
+                screen = default;
+                return false;
+            }
+
+            var legacyNdcX = clip.X / clip.W;
+            var legacyNdcY = clip.Y / clip.W;
+            if (!float.IsFinite(legacyNdcX) || !float.IsFinite(legacyNdcY))
+            {
+                screen = default;
+                return false;
+            }
+
+            screen = ToScreenPoint(legacyNdcX, legacyNdcY);
+            return true;
+        }
+
         var offset = point - Camera.Position;
         var depth = offset.Dot(Camera.Forward);
         if (!double.IsFinite(depth) || depth <= 0.0)
@@ -45,9 +67,16 @@ public sealed partial class ViewProjectionState
             screen = default;
             return false;
         }
-        screen = new ScreenPoint(
-            Viewport.LogicalX + ((ndcX + 1.0) * 0.5 * Viewport.LogicalWidth),
-            Viewport.LogicalY + ((1.0 - ndcY) * 0.5 * Viewport.LogicalHeight));
+        screen = ToScreenPoint(ndcX, ndcY);
         return true;
     }
+
+    ScreenPoint ToScreenPoint(double ndcX, double ndcY) => new(
+        Viewport.LogicalX + ((ndcX + 1.0) * 0.5 * Viewport.LogicalWidth),
+        Viewport.LogicalY + ((1.0 - ndcY) * 0.5 * Viewport.LogicalHeight));
+
+    bool RequiresDoublePrecision(Vector3d point) =>
+        global::System.Math.Max(
+            global::System.Math.Max(global::System.Math.Abs(point.X), global::System.Math.Abs(point.Y)),
+            global::System.Math.Max(global::System.Math.Abs(point.Z), Camera.FarPlane)) >= 10_000.0;
 }
