@@ -12,11 +12,16 @@ public readonly record struct ScaleIndicatorMetric(
     {
         if (!double.IsFinite(metersPerDip) || metersPerDip <= 0.0)
             return new ScaleIndicatorMetric(0.0, 0.0, "");
-        var distance = metersPerDip * FixedBarWidthDip;
-        return new ScaleIndicatorMetric(distance, FixedBarWidthDip, Format(distance));
+        var rawDistance = metersPerDip * FixedBarWidthDip;
+        if (rawDistance < 100.0)
+            return new ScaleIndicatorMetric(0.0, 0.0, "");
+        var step = Math.Pow(10.0, Math.Floor(Math.Log10(rawDistance)) - 1.0);
+        var distance = Math.Floor(rawDistance / step) * step;
+        var width = distance / metersPerDip;
+        return new ScaleIndicatorMetric(distance, width, Format(distance));
     }
 
-    static string Format(double meters) => meters >= 1000.0
-        ? $"{(meters / 1000.0).ToString("0.##", CultureInfo.InvariantCulture)} km"
-        : $"{meters.ToString("0.##", CultureInfo.InvariantCulture)} m";
+    static string Format(double meters) => meters >= 10000.0
+        ? $"{(meters / 1000.0).ToString("0", CultureInfo.InvariantCulture)} km"
+        : $"{meters.ToString("0", CultureInfo.InvariantCulture)} m";
 }

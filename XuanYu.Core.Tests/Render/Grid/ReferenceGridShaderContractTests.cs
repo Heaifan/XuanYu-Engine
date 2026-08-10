@@ -28,13 +28,15 @@ public sealed class ReferenceGridShaderContractTests
     }
 
     [Fact]
-    public void Grid_shader_uses_global_fine_coarse_not_per_fragment_lod()
+    public void Grid_shader_uses_local_decade_lod()
     {
         var frag = ShaderSource("editor_reference_grid.frag");
-        Assert.Contains("fineSpacing", frag);
-        Assert.Contains("coarseSpacing", frag);
-        Assert.Contains("fineWeight", frag);
-        Assert.Contains("coarseWeight", frag);
+        Assert.Contains("worldPerPixel", frag);
+        Assert.Contains("log10Value(idealSpacing)", frag);
+        Assert.Contains("levelLine", frag);
+        Assert.Contains("return max(xLine, yLine)", frag);
+        Assert.DoesNotContain("float fineSpacing", frag);
+        Assert.DoesNotContain("pc.gridScale.x", frag);
         // 不再由 Fragment 自己乘 36 选层级。
         Assert.DoesNotContain("36.0", frag);
     }

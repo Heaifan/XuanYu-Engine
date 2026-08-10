@@ -48,7 +48,7 @@ public sealed class ReferenceGridVisualStyleTests
     public void Grid_shader_uses_non_accumulative_composition()
     {
         var frag = ReadShader("editor_reference_grid.frag");
-        Assert.Contains("float gridAlpha = max(fineContribution, coarseContribution)", frag);
+        Assert.Contains("float gridAlpha = max(lowerContribution, upperContribution)", frag);
         Assert.DoesNotContain("gridAlpha = fineContribution + coarseContribution", frag);
         Assert.DoesNotContain("gridAlpha +=", frag);
     }
