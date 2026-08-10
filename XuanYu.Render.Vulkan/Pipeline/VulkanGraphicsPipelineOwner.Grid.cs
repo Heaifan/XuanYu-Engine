@@ -7,13 +7,14 @@ using XuanYu.Render.Vulkan.Swapchain;
 namespace XuanYu.Render.Vulkan.Pipeline;
 
 // GRID-RW-1：Reference Grid 使用世界线 LineList；轴、原点和屏幕 Overlay 仍使用全屏三角形。
+// GRID-RW-1-CORR2：管线工厂改为专用 Empty-input Line Pipeline（无 StaticModel binding + 负 Depth Bias），
+// 实现见 VulkanGraphicsPipelineOwner.GridLine.cs。
 internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
     internal static VulkanGraphicsPipelineOwner? CreateReferenceGrid(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
-        => CreateFullscreenPass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
-            ShaderBytecodeGridLineVert.Code, ShaderBytecodeGridLineFrag.Code,
-            VulkanClearFrameOwner.ReferenceGridPushSize, log, topology: PrimitiveTopology.LineList);
+        => CreateReferenceGridLinePass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
+            ShaderBytecodeGridLineVert.Code, ShaderBytecodeGridLineFrag.Code, log);
 
     internal static VulkanGraphicsPipelineOwner? CreateWorldAxes(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)

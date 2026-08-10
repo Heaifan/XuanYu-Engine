@@ -18,6 +18,17 @@
 
 ---
 
+## v0.2.25.26-fix
+MAP-A-R3-D2-F1 GRID-RW-1-CORR2（2026-08-10 22:34:00）：按用户真机审计冻结四组修复——
+① ReferenceGridFrameState 的 Step 选择改用保守尺度 `max(X,Y)`：斜视各向异性（如 2/30 m/DIP）下只要任一方向过密即升级网格；公共 `ViewportMetricScale.MetersPerDip`（min）保持不变，继续服务比例尺；
+② 参考网格管线拆为专用 Empty-input procedural LineList 管线（新增 `VulkanGraphicsPipelineOwner.GridLine.cs`），移除复用 CreateFullscreenPass 时的 StaticModel VertexBinding/Attributes，并启用负 Depth Bias（ConstantFactor=-4.0）消除与 MapGround 共面 Z=BaseHeight 的深度竞争；
+③ Shader 增加 Major/Minor 层级（世界坐标 10×Step 整数倍为 Major；Minor α=0.10 / Major α=0.18）与连续远距/掠射 Fade（Minor 0.30~0.55 dMax 提前淡、Major 0.55~0.85 dMax 保持更远，掠射 0.03~0.12 地平线连续归零）；禁止 band-pass / local LOD / 突然 discard 回归；
+④ GLSL 已由 glslc -O 重新生成嵌入 SPIR-V（vert 751 词 / frag 131 词；工具链一致性复验 PASS，SPIR-V ↔ C# 逐词一致）。
+- 测试：新增 FrameState 各向异性门禁（2/30、30/2、0.5/50 按 max 选 Step，2/2 各向同性对照不变）；Shader 合同断言 Major/Minor Alpha、Fade 区间、Depth Bias 与 Empty-input 管线（无 StaticModelVertexBinding 调用、无 CreateFullscreenPass 调用）。
+- 验证：全解决方案 Build 0 Warning / 0 Error（含 `--no-incremental` 全量重编译）；Core.Tests 336/336、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；ARCH-A PASS；5+100 PASS（GridLine.cs 100 行、字节码 Vert 85/Frag 23）；GLSL/SPIR-V 一致性 PASS；`git diff --check` PASS。
+- 状态：F1 保持 OPEN；GRID-RW-1-CORR2 等待 Commit + Push 与用户逐项代码审计（FrameState → anisotropy → Pipeline → Shader → Depth → Major/Minor → Fade → Tests → SPIR-V → 门禁）；审计通过前不启动真机，RW-2 / RW-3 不启动。
+- Hash：待 Commit 后补。
+
 ## v0.2.25.25-fix
 MAP-A-R3-D2-F1 GRID-RW-1（2026-08-10 21:49:43）：Reference Grid 从全屏三角形的 Fragment 局部 LOD 重写为全局 `ReferenceGridFrameState` 驱动的 GPU procedural 世界线；全帧固定一个 100m 起步、10~140 DIP 回滞的 Step，并按相机位置 Step 吸附 Anchor。Vulkan 参考网格专用 `LineList` 管线每轴生成 513 条线、总计 2052 顶点；全屏三角形常量独立保留给 ViewPlaneGrid、比例尺、导航 Gizmo、世界轴和原点。删除旧 `fwidth/log10/band-pass/grazing` 网格着色器、字节码与错误合同，新增世界线、全局尺度、锚点、顶点数及 LineList 合同；GLSL 已由 `glslc -O` 重新生成嵌入 SPIR-V。
 - 验证：全解决方案 Build 0 Warning / 0 Error；Core.Tests 331/331、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；ARCH-A、5+100、GLSL/SPIR-V 一致性与 `git diff --check` PASS。

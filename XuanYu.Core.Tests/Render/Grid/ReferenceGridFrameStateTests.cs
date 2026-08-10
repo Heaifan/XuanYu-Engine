@@ -38,4 +38,19 @@ public sealed class ReferenceGridFrameStateTests
         Assert.Equal(2052, RenderDrawPlan.ReferenceGridLineVertexCount);
         Assert.Equal(3, RenderDrawPlan.FullscreenTriangleVertexCount);
     }
+
+    // GRID-RW-1-CORR2：Step 必须按保守方向 max(X,Y) 选择。
+    // 斜视下 X/Y 尺度差异巨大（2/30 m/DIP），只要任一方向过密就升级网格；
+    // 公共 ViewportMetricScale.MetersPerDip（min）仍服务比例尺，禁止回退到 min。
+    [Theory]
+    [InlineData(2.0, 30.0, 1000.0)]
+    [InlineData(30.0, 2.0, 1000.0)]
+    [InlineData(0.5, 50.0, 1000.0)]
+    [InlineData(2.0, 2.0, 100.0)]
+    public void Step_uses_conservative_max_axis(double metersPerDipX, double metersPerDipY, double expectedStep)
+    {
+        var metric = new ViewportMetricScale(metersPerDipX, metersPerDipY, 1.0);
+        var state = ReferenceGridFrameState.Create(metric, 0, 0, 0, default);
+        Assert.Equal(expectedStep, state.StepMeters);
+    }
 }

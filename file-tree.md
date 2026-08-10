@@ -607,6 +607,7 @@
 │  │  ├─ VulkanGraphicsPipelineOwner.Depth.cs
 │  │  ├─ VulkanGraphicsPipelineOwner.Fullscreen.cs
 │  │  ├─ VulkanGraphicsPipelineOwner.Grid.cs
+│  │  ├─ VulkanGraphicsPipelineOwner.GridLine.cs
 │  │  ├─ VulkanGraphicsPipelineOwner.Sky.cs
 │  │  ├─ VulkanGraphicsPipelineOwner.StaticModelInput.cs
 │  │  ├─ VulkanGraphicsPipelineOwner.cs
@@ -1587,7 +1588,8 @@
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldOriginFrag.cs` — AUTO-GENERATED from editor_nav_gizmo.vert / editor_nav_gizmo.frag / editor_world_origin.frag (glslc -O)
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs` — STAB-3：主场景与 Vector Overlay 可分别配置深度测试/写入策略。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.cs` — 程序化 Pass 管线创建，支持全屏三角形与 LineList 拓扑。
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs` — GRID-RW-1：Reference Grid 世界线 LineList 与辅助全屏 Pass 工厂。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs` — GRID-RW-1：Reference Grid 管线入口与辅助全屏 Pass 工厂（世界线实现见 GridLine.cs）。
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.GridLine.cs` — GRID-RW-1-CORR2：参考网格专用 Empty-input LineList 管线（无顶点绑定、负 Depth Bias）。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Sky.cs` — WORLD-D-R1：天空专用管线。与主管线共用 Shader、顶点输入与 RenderPass，
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.StaticModelInput.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.cs` — （职责待补）

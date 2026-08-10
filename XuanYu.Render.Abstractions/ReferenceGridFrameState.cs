@@ -1,6 +1,8 @@
 namespace XuanYu.Render.Abstractions;
 
 // GRID-RW-1：一帧只有一个网格尺度与相机吸附锚点，禁止把 LOD 下放到 Fragment。
+// GRID-RW-1-CORR2：Step 选择使用保守尺度 max(X,Y)——斜视下 X/Y 各向异性（如 2/30 m/DIP），
+// 只要任一方向过密就升级网格；公共 ViewportMetricScale.MetersPerDip（min）继续服务比例尺，不受影响。
 public readonly record struct ReferenceGridFrameState(
     double StepMeters, double AnchorX, double AnchorY, double BaseHeightMeters)
 {
@@ -13,7 +15,8 @@ public readonly record struct ReferenceGridFrameState(
         ViewportMetricScale metric, double cameraX, double cameraY,
         double baseHeightMeters, ReferenceGridFrameState previous)
     {
-        var step = SelectStep(metric.MetersPerDip, previous.StepMeters);
+        var conservative = Math.Max(metric.MetersPerDipX, metric.MetersPerDipY);
+        var step = SelectStep(conservative, previous.StepMeters);
         return new(step, Snap(cameraX, step), Snap(cameraY, step), baseHeightMeters);
     }
 
