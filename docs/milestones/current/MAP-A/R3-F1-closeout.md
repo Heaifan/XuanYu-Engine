@@ -1,7 +1,7 @@
 # MAP-A-R3-D2-F1-CLOSEOUT
 
-**状态**：OPEN · 等待 FINAL 真机验收
-**基线**：`feat/MAP-A-R3` / `22c9a9d`
+**状态**：OPEN · FINAL ACCEPTANCE FAILED · 4 ITEMS REMAIN
+**基线**：`feat/MAP-A-R3` / `5648912`
 **自动门禁**：2026-08-11 00:03:14（UTC+08:00）完整 Build 0W0E、Core 335/335、World 1115/1115、WarCore 22/22、ARCH-A、5+100、SPIR-V 与 diff-check PASS
 **关闭条件**：下列 F1-M01～F1-M15 全部由用户真机确认 PASS。
 
@@ -9,21 +9,27 @@
 
 | 编号 | 路径 | 输入 | 过程 | 预期输出 | 结果 |
 |---|---|---|---|---|---|
-| F1-M01 | Map View | Ground ON | 打开地图 | World Grid 正常显示 | PENDING |
-| F1-M02 | Map View | Ground OFF | 关闭 Ground | Grid 仍独立显示 | PENDING |
-| F1-M03 | Map View | 滚轮 | 连续放大/缩小 | Grid 不闪、不消失 | PENDING |
-| F1-M04 | Map View | 滚轮 | 拉远再拉近 | 100→200→500→1k 整体减密、无抖档 | PENDING |
-| F1-M05 | Map View | 滚轮 | 连续缩放 | World Axis 稳定 | PENDING |
-| F1-M06 | Region Tool | 三点/多点 | 绘制、预览、闭合 | Region 正常 | PENDING |
-| F1-M07 | Region Tool | 视角切换 | 俯视、45°、低角度 | Region 不闪 | PENDING |
-| F1-M08 | Region Tool | Gizmo 点击/拖动 | 保持工具激活 | Gizmo 仍可操作 | PENDING |
-| F1-M09 | Map View | 中键/Shift+中键/滚轮 | 环绕、平移、Dolly | 相机正常 | PENDING |
-| F1-M10 | Region Tool | 结束导航 | 松开中键后移动鼠标 | Draft Preview 自动恢复 | PENDING |
-| F1-M11 | Map View | 滚轮 | 改变尺度 | Scale Indicator 更新真实尺度 | PENDING |
-| F1-M12 | Map View | Resize | 调整窗口大小 | Grid/Region/Scale/Gizmo 不消失、不漂移 | PENDING |
-| F1-M13 | Region Tool | 点击 | 落点与顶点比对 | 坐标一致 | PENDING |
-| F1-M14 | Region Tool | 单击 | 多次单击 | 无重复 Hit、无多点 | PENDING |
-| F1-M15 | Editor | 综合操作 | 全流程 | 无 Error/Warning/崩溃/输入卡死 | PENDING |
+| F1-M01 | Map View | Ground ON | 打开地图 | World Grid 正常显示 | PASS |
+| F1-M02 | Map View | Ground OFF | 关闭 Ground | Grid 仍独立显示 | PASS |
+| F1-M03 | Map View | 滚轮 | 连续放大/缩小 | Grid 不闪、不消失 | FAIL |
+| F1-M04 | Map View | 滚轮 | 拉远再拉近 | 100→200→500→1k 整体减密、无抖档 | FAIL |
+| F1-M05 | Map View | 滚轮 | 连续缩放 | World Axis 稳定 | FAIL |
+| F1-M06 | Region Tool | 三点/多点 | 绘制、预览、闭合 | Region 正常 | FAIL |
+| F1-M07 | Region Tool | 视角切换 | 俯视、45°、低角度 | Region 不闪 | PASS |
+| F1-M08 | Region Tool | Gizmo 点击/拖动 | 保持工具激活 | Gizmo 仍可操作 | PASS |
+| F1-M09 | Map View | 中键/Shift+中键/滚轮 | 环绕、平移、Dolly | 相机正常 | PASS |
+| F1-M10 | Region Tool | 结束导航 | 松开中键后移动鼠标 | Draft Preview 自动恢复 | PASS |
+| F1-M11 | Map View | 滚轮 | 改变尺度 | Scale Indicator 更新真实尺度 | PASS |
+| F1-M12 | Map View | Resize | 调整窗口大小 | Grid/Region/Scale/Gizmo 不消失、不漂移 | PASS |
+| F1-M13 | Region Tool | 点击 | 落点与顶点比对 | 坐标一致 | PASS |
+| F1-M14 | Region Tool | 单击 | 多次单击 | 无重复 Hit、无多点 | PASS |
+| F1-M15 | Editor | 综合操作 | 全流程 | 无 Error/Warning/崩溃/输入卡死 | PASS |
+
+## F1-FAR-DIAG-01
+
+- 仅增加每个相机 Revision 一条非阻塞调试输出：Camera Position/Target/Distance、Near/Far、Metric 有效性与 X/Y、Grid Step、中心射线、平面交点 `t` 和 `t/Far`。
+- 不改动 Camera、FarPlane、Fullscreen World Grid、World XY（Z=0）、Depth、Ground、Step 或 Region；M06 留给独立的 `F1-REGION-CLOSE-01`。
+- 当前验收裁定为 11/15 PASS；本轮目标是取得 M03～M05 的根因证据，不重开 M01/M02/M07～M15。
 
 ## 范围冻结
 

@@ -147,6 +147,7 @@
 │  │  │  ├─ ViewportChromeContractTests.cs
 │  │  │  └─ ViewportScaleIndicatorContractTests.cs
 │  │  ├─ Grid/
+│  │  │  ├─ FarProjectionDiagnosticContractTests.cs
 │  │  │  ├─ ReferenceGridDrawPlanTests.cs
 │  │  │  ├─ ReferenceGridFrameStateTests.cs
 │  │  │  ├─ ScaleIndicatorMetricTests.cs
@@ -628,6 +629,7 @@
 │  │  │  ├─ VulkanClearFrameOwner.VectorOverlayPipeline.cs
 │  │  │  └─ VulkanClearFrameOwner.cs
 │  │  ├─ Grid/
+│  │  │  ├─ VulkanClearFrameOwner.FarDiagnostic.cs
 │  │  │  ├─ VulkanClearFrameOwner.Grid.cs
 │  │  │  ├─ VulkanClearFrameOwner.GridScale.cs
 │  │  │  ├─ VulkanClearFrameOwner.NavGizmo.cs
@@ -1124,6 +1126,7 @@
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportAssistDrawPlanTests.cs` — F3-F1：导航 Gizmo 恒为最后一项（Overlay Pass 收尾）。
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportChromeContractTests.cs` — F3-D1：视口黑边合同测试（计划 11.1）——XAML 防退化：
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs` — OVL-R2/R3：比例尺 Vulkan DrawKind、Depth Off、顺序与 Native Popup 删除合同。
+- `XuanYu.Core.Tests/Render/Grid/FarProjectionDiagnosticContractTests.cs` — F1-FAR-DIAG-01：极远共享投影诊断字段、去重与无行为变更合同。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridFrameStateTests.cs` — GRID-RW-2B：1/2/5 全帧 Step 与 24~80 DIP 回滞合同。
 - `XuanYu.Core.Tests/Render/Grid/ScaleIndicatorMetricTests.cs` — MAP-A-R3-D2-F1-V3/A02：比例尺 1/2/5 距离选择、100m 最小距离与目标宽度合同。
@@ -1559,7 +1562,7 @@
 - `XuanYu.Render.Abstractions/RenderDrawPlan.cs` — R4-R3-R2：实体绘制计划提取（帧级），供 Vulkan 与测试共同使用。
 - `XuanYu.Render.Abstractions/RenderEntityProjection.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderEntityType.cs` — enum RenderEntityType
-- `XuanYu.Render.Abstractions/RenderProjection.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/RenderProjection.cs` — 渲染帧投影快照，携带相机、观察中心与各类渲染资源。
 - `XuanYu.Render.Abstractions/RenderProjectionResult.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/ViewportOverlayAnchor.cs` — OVL-R1：Viewport Overlay Anchor、Rect 与布局请求纯合同。
 - `XuanYu.Render.Abstractions/ViewportOverlayLayoutResolver.cs` — OVL-R1：DIP-only Overlay Rect 解析与视口边界钳制。
@@ -1612,6 +1615,7 @@
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Resources.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Trace.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.FarDiagnostic.cs` — F1-FAR-DIAG-01：按相机版本记录极远平面求交与度量诊断，不改变渲染状态。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.Grid.cs` — GRID-RW-2B：以全屏三角形绘制帧级统一 Step 的 World XY 网格。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.GridScale.cs` — GRID-RW-2A：网格公制计算固定消费 World XY 的 Z=0 平面。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.NavGizmo.cs` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 屏幕空间、深度测试/写入关闭、最后绘制。

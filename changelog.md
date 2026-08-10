@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.31-fix
+MAP-A-R3-D2-F1 F1-FAR-DIAG-01（2026-08-11）：F1 FINAL 真机裁定为 11/15 PASS；M03/M04/M05（极远缩放下 Grid 消失/卡顿与 World Axis 同步闪烁）和 M06（四点 Region 闭合/图层删除）FAIL，F1 保持 `OPEN · FINAL ACCEPTANCE FAILED · 4 ITEMS REMAIN`。
+- 变化：仅增加按 Camera Revision 去重的非阻塞调试诊断，输出 Camera Position/Target/Distance、Near/Far、Metric X/Y 与有效性、Grid Step、中心射线、Z=0 平面交点 `t`、`t/Far`，并明确 Grid 截断为 Far、Axis 截断为 Far×0.75；Camera、Depth、Ground、Fullscreen Grid、Step 与 Region 行为未变。
+- 验证：待本轮正式门禁与用户按 F1-FAR-DIAG-01 收集 M03～M05 证据；M06 不混入本轮。
+- Hash：待本轮 Commit + Push。
+
 ## v0.2.25.30-fix
 MAP-A-R3-D2-F1-CLOSEOUT（2026-08-11 00:03:14）：记录 RW-2A/RW-2B 真机 PASS；冻结 World Grid 独立 Fullscreen、World XY（Z=0）、深度关闭、Ground 独立、CPU 全帧 Step、1/2/5 与 24~80 DIP 回滞，RW-2C/RW-2D 降级为 `DEFERRED · NON-BLOCKING VISUAL IMPROVEMENT`。新增 F1 FINAL 15 项 IPO 真机清单；未取得 15/15 前 F1 保持 OPEN。
 - 知识治理：建立扁平 `Lesson` 类型与 `L-REN-001`，新增 `INC-2026-08-10-006` 与 `K-REN-004`，知识索引升级为 ID/类型/分类，并同步 README、docs-index、file-tree 和 R3 backlog；Lesson 严格区分已确认事实与高置信但未 GPU Capture 直接证明的机制解释。

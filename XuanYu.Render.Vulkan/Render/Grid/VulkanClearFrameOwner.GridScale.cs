@@ -20,12 +20,14 @@ public sealed unsafe partial class VulkanClearFrameOwner
             0, 0, _extent.Width / dpi, _extent.Height / dpi,
             (int)_extent.Width, (int)_extent.Height, dpi, _swapchainOwner.ResourceGeneration);
         const double height = 0.0; // GRID-RW-2A：World Reference Plane 固定 Z=0，不随 MapGround 移动。
-        if (ViewportMetricScale.TryCreate(projection.Camera, viewport, height, out var metric))
+        var metricValid = ViewportMetricScale.TryCreate(projection.Camera, viewport, height, out var metric);
+        if (metricValid)
         {
             _lastViewportMetric = metric;
             _referenceGridFrameState = ReferenceGridFrameState.Create(metric,
                 projection.Camera.Position.X, projection.Camera.Position.Y, height, _referenceGridFrameState);
         }
+        TraceFarProjection(projection, viewport, metricValid, metric);
     }
 
     // 前 40 float 填充 VP/InvVP/相机/视口；后 8 float 由各辅助 Pass 专用。

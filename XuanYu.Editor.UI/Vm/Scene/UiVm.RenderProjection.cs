@@ -25,6 +25,7 @@ public sealed partial class UiVm
             _viewportDpiScale,
             overlays,
             new ScaleIndicatorOverlayProjection(
-                IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip));
+                IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip),
+            _observationCenter);
     }
 }
