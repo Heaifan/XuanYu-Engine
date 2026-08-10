@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.5-fix
+MAP-A-R3-D2-F1-C 稳定性与日志收口（2026-08-10 09:09:01）：聚焦在区域草稿或无选中实体时保持相机不变；新增 TryProjectWorldPoint 并让 Region PointerMoved 对投影失败安全降级；移除 F1TRACE 运行时取证、临时文件和高频 PointerMoved/Ray/Mouse/Render 日志；补充 C-R01～C-R06 回归测试。
+- 验证：解决方案 Build 0W0E；Core 348/348、World 976/976、WarCore 22/22 PASS；ARCH-A、5+100、git diff --check PASS。
+- 状态：MAP-A-R3-D2-F1 继续 OPEN；S02 修复确认 PASS；F1-C 等待用户真机确认 Focus 与日志；F1-V 未开始；A03～A06 BLOCKED，D3 禁止启动，F2 未创建。
+- Hash：5739c31。
+
 ## v0.2.25.4-fix
 MAP-A-R3-D2-F1 根因收口（2026-08-10）：修复首点草稿生成零长度 primitive、区域 world-space 绘制误用零缩放，以及拾取未遵守地图中心原点边界合同；新增 MapPoint↔World 直接映射合同与首点资源 Vulkan 合法性回归。
 - 验证：解决方案 Build 0W0E；Core 346/346、World 971/971、WarCore 22/22 PASS；R17～R20 聚焦测试 5/5 PASS；ARCH-A、5+100、git diff --check PASS。
