@@ -28,7 +28,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_viewPlaneGridPipeline.Handle == 0 || _viewPlaneGridPipelineLayout.Handle == 0) return;
         var scene = new float[ViewPlaneGridFloatCount];
         FillGridPushConstants(scene, _renderProjection);
-        var levels = ReferenceGridScale.Compute(_lastReferenceWorldPerPixel);
+        var levels = ReferenceGridScale.Compute(_lastViewportMetric.MetersPerDip);
         scene[40] = (float)levels.FineSpacing;
         scene[41] = (float)levels.CoarseSpacing;
         scene[42] = (float)levels.FineWeight;

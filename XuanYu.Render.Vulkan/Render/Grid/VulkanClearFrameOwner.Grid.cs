@@ -27,7 +27,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var scene = new float[GridPushFloatCount];
         FillGridPushConstants(scene, _renderProjection);
         // gridScale：每帧全局尺度（1/2/5 序列 + 互补权重），禁止逐 Fragment LOD。
-        var levels = ReferenceGridScale.Compute(_lastReferenceWorldPerPixel);
+        var levels = ReferenceGridScale.Compute(_lastViewportMetric.MetersPerDip);
         scene[40] = (float)levels.FineSpacing;
         scene[41] = (float)levels.CoarseSpacing;
         scene[42] = (float)levels.FineWeight;

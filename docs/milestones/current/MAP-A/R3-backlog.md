@@ -8,7 +8,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - D2：OPEN。S01、S02 已由既有真机证据证明 PASS；A03～A06 BLOCKED。
 - D2-F1-C2：CLOSED。RF-M01、RF-M02-A、RF-M03 PASS；RF-M02-B 转交 F1-V。
 - D2-F1-V1：OPEN · ACCEPTANCE FAILED · REWORK。V1-REWORK-A 只恢复 Navigation Gizmo 输入；Region Overlay 视觉回修延后。
-- F1-V2：READY AFTER V1-REWORK-A。目标由 1m 改为 100m Minimum Visible Metric Grid。
+- F1-V2：OPEN。目标为 100m Minimum Visible Metric Grid；已完成 1/2/5 扩展与唯一 ViewportMetricScale，待本轮门禁收口。
 - F1-V3：BLOCKED BY F1-V2；Zoom Floor 只作用于地图编辑视觉尺度。
 - D3：禁止启动；F2：不创建。
 
@@ -88,6 +88,18 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 | MF-T06 | Navigation Gizmo LeftDown 优先于 Region Drawing | DONE |
 | MF-T07 | Active Gizmo Move/Up/CaptureLost/CancelMode/KillFocus 路由 | DONE |
 | MF-T08 | Gizmo 与 Region 共存自动回归 | DONE |
+
+### F1-V2：100m Minimum Visible Metric Grid
+
+| TODO | 内容 | 状态 |
+| --- | --- | --- |
+| V2-T01 | MinSpacing 固定为 100m | DONE |
+| V2-T02 | 1/2/5 序列覆盖至 10,000km | DONE |
+| V2-T03 | TargetCell 语义统一为 48 DIP | DONE |
+| V2-T04 | 提取唯一 ViewportMetricScale | DONE |
+| V2-T05 | Grid 消费 metersPerDip | DONE |
+| V2-T06 | DPI 1.00/1.25/1.50/2.00 自动回归 | DONE |
+| V2-T07 | F1-V2 正式门禁与 Commit + Push | TODO |
 
 ### V1 自动验收
 

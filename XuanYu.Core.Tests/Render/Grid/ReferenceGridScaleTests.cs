@@ -8,14 +8,14 @@ public sealed class ReferenceGridScaleTests
 {
     [Theory]
     // idealSpacing → Fine / Coarse（1/2/5 序列相邻两级）
-    [InlineData(0.13, 0.1, 0.2)]
-    [InlineData(0.34, 0.2, 0.5)]
-    [InlineData(0.82, 0.5, 1.0)]
-    [InlineData(3.1, 2.0, 5.0)]
-    [InlineData(7.4, 5.0, 10.0)]
-    [InlineData(0.05, 0.05, 0.1)]
-    [InlineData(0.2, 0.2, 0.5)]
-    [InlineData(50.0, 50.0, 100.0)]
+    [InlineData(130, 100, 200)]
+    [InlineData(340, 200, 500)]
+    [InlineData(820, 500, 1000)]
+    [InlineData(3100, 2000, 5000)]
+    [InlineData(7400, 5000, 10000)]
+    [InlineData(100, 100, 200)]
+    [InlineData(200, 200, 500)]
+    [InlineData(5000, 5000, 10000)]
     public void One_two_five_sequence_selects_adjacent_levels(double ideal, double expFine, double expCoarse)
     {
         var levels = ReferenceGridScale.FromIdealSpacing(ideal);
@@ -24,8 +24,8 @@ public sealed class ReferenceGridScaleTests
     }
 
     [Theory]
-    [InlineData(0.13), InlineData(0.34), InlineData(0.82), InlineData(3.1), InlineData(7.4),
-     InlineData(0.001), InlineData(0.05), InlineData(0.2), InlineData(1.0), InlineData(50.0), InlineData(999.0)]
+    [InlineData(130), InlineData(340), InlineData(820), InlineData(3100), InlineData(7400),
+     InlineData(100), InlineData(200), InlineData(500), InlineData(1000), InlineData(5000), InlineData(9990000)]
     public void Weights_are_complementary(double ideal)
     {
         var levels = ReferenceGridScale.FromIdealSpacing(ideal);
@@ -41,12 +41,12 @@ public sealed class ReferenceGridScaleTests
     public void Boundary_transition_is_continuous()
     {
         // 边界前：ideal 略小于 0.2 → fine=0.1, coarse=0.2, CoarseWeight 接近 1。
-        var before = ReferenceGridScale.FromIdealSpacing(0.1999);
-        Assert.Equal(0.2, before.CoarseSpacing, 6);
+        var before = ReferenceGridScale.FromIdealSpacing(199.9);
+        Assert.Equal(200, before.CoarseSpacing, 6);
         Assert.True(before.CoarseWeight > 0.99, "边界前主格权重应接近 1");
         // 边界后：ideal=0.2 → fine=0.2, coarse=0.5, FineWeight=1。
-        var after = ReferenceGridScale.FromIdealSpacing(0.2);
-        Assert.Equal(0.2, after.FineSpacing, 6);
+        var after = ReferenceGridScale.FromIdealSpacing(200);
+        Assert.Equal(200, after.FineSpacing, 6);
         Assert.Equal(1.0, after.FineWeight, 6);
         // 同一世界间距 0.2：旧组合主格满 → 新组合细格满，无突跳。
         Assert.Equal(before.CoarseSpacing, after.FineSpacing, 6);
@@ -58,9 +58,9 @@ public sealed class ReferenceGridScaleTests
     public void Clamped_ideal_still_yields_valid_levels()
     {
         var low = ReferenceGridScale.FromIdealSpacing(0.0001);
-        Assert.Equal(0.01, low.FineSpacing, 6);
-        var high = ReferenceGridScale.FromIdealSpacing(100000.0);
-        Assert.Equal(1000.0, high.FineSpacing, 6);
+        Assert.Equal(100, low.FineSpacing, 6);
+        var high = ReferenceGridScale.FromIdealSpacing(10_000_000.0);
+        Assert.Equal(10_000_000.0, high.FineSpacing, 6);
         Assert.Equal(1.0, high.FineWeight + high.CoarseWeight, 6);
     }
 
@@ -68,16 +68,16 @@ public sealed class ReferenceGridScaleTests
     [Fact]
     public void Same_reference_scale_yields_same_levels()
     {
-        var a = ReferenceGridScale.Compute(0.05);
-        var b = ReferenceGridScale.Compute(0.05);
+        var a = ReferenceGridScale.Compute(4.0);
+        var b = ReferenceGridScale.Compute(4.0);
         Assert.Equal(a, b);
-        Assert.Equal(2.4, ReferenceGridScale.IdealSpacing(0.05), 6);
+        Assert.Equal(192.0, ReferenceGridScale.IdealSpacing(4.0), 6);
     }
 
-    // 目标屏幕间距 48px（方案 7.2）。
+    // 目标地图编辑视觉间距约 48 DIP。
     [Fact]
-    public void Target_cell_pixels_is_48()
+    public void Target_cell_dip_is_48()
     {
-        Assert.Equal(48.0, ReferenceGridScale.TargetCellPixels, 6);
+        Assert.Equal(48.0, ReferenceGridScale.TargetCellDip, 6);
     }
 }

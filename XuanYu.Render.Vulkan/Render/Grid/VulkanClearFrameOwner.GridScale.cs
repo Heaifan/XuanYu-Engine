@@ -5,49 +5,21 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// MAP-A-R1-D5-R1-F2-R2：参考网格每帧全局尺度计算（视口中心射线与 Z=0 求交）。
-// 求交失败回退：中心 → 视口偏下 60% → 上一帧合法尺度（禁止突然重置为 1）。
+// MAP-A-R3-D2-F1-V2：参考网格每帧统一消费 ViewportMetricScale。
+// 求交失败时沿用上一帧合法尺度，禁止突然重置为 1。
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    double _lastReferenceWorldPerPixel = 1.0;
+    ViewportMetricScale _lastViewportMetric = new(1.0, 1.0, 1.0);
 
     public void UpdateReferenceGridScale(RenderProjection projection)
     {
+        var dpi = projection.ViewportDpiScale;
         var viewport = new ViewportState(
-            0, 0, _extent.Width, _extent.Height,
-            (int)_extent.Width, (int)_extent.Height, 1, _swapchainOwner.ResourceGeneration);
-        // F3-F4：正交投影下每像素世界距离为解析式（尺度/视口高）；射线求交在侧视正交下退化。
-        if (projection.Camera.Mode == ProjectionMode.Orthographic)
-        {
-            _lastReferenceWorldPerPixel = projection.Camera.OrthographicScale / viewport.LogicalHeight;
-            return;
-        }
-        var state = projection.Camera.ToViewProjection(viewport);
-        var halfW = viewport.LogicalWidth * 0.5;
-        var halfH = viewport.LogicalHeight * 0.5;
-        if (TrySampleWorldPerPixel(state, halfW, halfH, out var wmpp)) { _lastReferenceWorldPerPixel = wmpp; return; }
-        if (TrySampleWorldPerPixel(state, halfW, viewport.LogicalHeight * 0.8, out wmpp)) _lastReferenceWorldPerPixel = wmpp;
-    }
-
-    static bool TrySampleWorldPerPixel(ViewProjectionState state, double centerX, double centerY, out double worldPerPixel)
-    {
-        worldPerPixel = 0.0;
-        if (!TryHitZ0(WorldRayFactory.FromViewportPoint(state, centerX, centerY), out var center)) return false;
-        if (!TryHitZ0(WorldRayFactory.FromViewportPoint(state, centerX + 1.0, centerY), out var right)) return false;
-        if (!TryHitZ0(WorldRayFactory.FromViewportPoint(state, centerX, centerY + 1.0), out var down)) return false;
-        worldPerPixel = System.Math.Max(center.DistanceTo(right), center.DistanceTo(down));
-        return worldPerPixel > 0.0;
-    }
-
-    // 世界射线与 Z=0 平面求交；近似平行或交点在相机后方时失败。
-    static bool TryHitZ0(WorldRay ray, out Vector3d hit)
-    {
-        hit = default;
-        if (System.Math.Abs(ray.Direction.Z) < 0.001) return false;
-        var t = -ray.Origin.Z / ray.Direction.Z;
-        if (t <= 0.0) return false;
-        hit = ray.Origin + (ray.Direction * t);
-        return true;
+            0, 0, _extent.Width / dpi, _extent.Height / dpi,
+            (int)_extent.Width, (int)_extent.Height, dpi, _swapchainOwner.ResourceGeneration);
+        var height = projection.Map.HasMap ? projection.Map.BaseHeightMeters : 0.0;
+        if (ViewportMetricScale.TryCreate(projection.Camera, viewport, height, out var metric))
+            _lastViewportMetric = metric;
     }
 
     // 176B PushConstant 前 40 float 填充（VP/InvVP/相机/视口+far）；gridScale 由各 Pass 填写。

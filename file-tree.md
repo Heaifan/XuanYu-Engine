@@ -149,7 +149,8 @@
 │  │  │  ├─ ReferenceGridRayIntersectionTests.cs
 │  │  │  ├─ ReferenceGridScaleTests.cs
 │  │  │  ├─ ReferenceGridShaderContractTests.cs
-│  │  │  └─ ReferenceGridVisualStyleTests.cs
+│  │  │  ├─ ReferenceGridVisualStyleTests.cs
+│  │  │  └─ ViewportMetricScaleTests.cs
 │  │  ├─ Map/
 │  │  │  ├─ MapRenderDrawPlanTests.cs
 │  │  │  ├─ MapSurfaceGeometryTests.cs
@@ -546,6 +547,7 @@
 │  ├─ NativeHostSurfaceHandle.cs
 │  ├─ ReferenceGridScale.cs
 │  ├─ RenderCameraProjection.cs
+│  ├─ ViewportMetricScale.cs
 │  ├─ RenderDrawPlan.Typed.cs
 │  ├─ RenderDrawPlan.cs
 │  ├─ RenderEntityProjection.cs
@@ -1083,6 +1085,7 @@
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridRayIntersectionTests.cs` — MAP-A-R1-D5-R1-F2 GRID-G1：世界射线与 Z=0 平面求交的数学合同。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridScaleTests.cs` — MAP-A-R1-D5-R1-F2-R2：每帧全局网格尺度合同（1/2/5 序列 + 互补交叉淡化）。
+- `XuanYu.Core.Tests/Render/Grid/ViewportMetricScaleTests.cs` — MAP-A-R3-D2-F1-V2：Perspective/Orthographic 的 DIP 与 physical pixel 尺度合同（1.00/1.25/1.50/2.00 DPI）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridShaderContractTests.cs` — MAP-A-R1-D5-R1-F2-R2：Shader 合同低层门禁（方案 15.5）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridVisualStyleTests.cs` — MAP-A-R1-D5-R1-F2-R3：网格视觉样式合同（10.1）与重合合成合同（10.2）。
 - `XuanYu.Core.Tests/Render/Map/MapRenderDrawPlanTests.cs` — MAP-A-R1-D4/D5-R1（F2-R2/D4）：RenderProjection 携带地图快照后，参考网格保留（无限参考平面，
@@ -1497,7 +1500,8 @@
 - `XuanYu.Render.Abstractions/NativeHostLifecycleProbe.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期探针。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleState.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期状态枚举。
 - `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs` — NativeHost 交给渲染层的窗口交接句柄。
-- `XuanYu.Render.Abstractions/ReferenceGridScale.cs` — MAP-A-R1-D5-R1-F2-R2：每帧统一参考网格尺度（1/2/5 十进制序列 + 互补交叉淡化）。
+- `XuanYu.Render.Abstractions/ReferenceGridScale.cs` — MAP-A-R3-D2-F1-V2：100m 起步、10,000km 覆盖的 1/2/5 公制参考网格尺度。
+- `XuanYu.Render.Abstractions/ViewportMetricScale.cs` — MAP-A-R3-D2-F1-V2：不依赖后端的唯一视口公制尺度源。
 - `XuanYu.Render.Abstractions/RenderCameraProjection.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderDrawPlan.Typed.cs` — R4-R3-R2：实体绘制计划提取（typed 部分），供 Vulkan 与测试共同使用。
 - `XuanYu.Render.Abstractions/RenderDrawPlan.cs` — R4-R3-R2：实体绘制计划提取（帧级），供 Vulkan 与测试共同使用。
@@ -1550,7 +1554,7 @@
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Trace.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.Grid.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格绘制。
-- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.GridScale.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格每帧全局尺度计算（视口中心射线与 Z=0 求交）。
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.GridScale.cs` — MAP-A-R3-D2-F1-V2：参考网格消费 ViewportMetricScale 并填充绘制矩阵。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.NavGizmo.cs` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 屏幕空间、深度测试/写入关闭、最后绘制。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.ViewPlaneGrid.cs` — F3-F4：正交标准视图的视图平面网格绘制（±X→YZ / ±Y→XZ，以世界原点为基准）。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.WorldAxes.cs` — MAP-A-R1-D5-R1-F2-R2：世界轴 / 世界原点独立全屏 Pass。
