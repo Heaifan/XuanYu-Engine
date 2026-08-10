@@ -15,8 +15,6 @@ public static class MapEditorZoomPolicy
         ViewportState viewport, double referenceHeight, out bool clamped)
     {
         clamped = false;
-        if (!TryMetric(start, viewport, referenceHeight, out var startMetric) ||
-            startMetric.MetersPerDip < MinMetersPerDip) return new CameraFrameResult(start, center);
         if (candidate.Camera.Mode == ProjectionMode.Orthographic)
         {
             if (candidate.Camera.OrthographicScale >= MinMetersPerDip * viewport.LogicalHeight)
@@ -27,15 +25,21 @@ public static class MapEditorZoomPolicy
         if (!TryMetric(candidate.Camera, viewport, referenceHeight, out var nextMetric) ||
             nextMetric.MetersPerDip >= MinMetersPerDip) return candidate;
         clamped = true;
-        var startDistance = start.Position.DistanceTo(center);
         var low = candidate.Camera.Position.DistanceTo(center);
-        var high = startDistance;
+        var high = start.Position.DistanceTo(center);
+        if (!TryMetric(start, viewport, referenceHeight, out var startMetric) ||
+            startMetric.MetersPerDip < MinMetersPerDip)
+        {
+            high = Math.Max(high, 1.0);
+            for (var i = 0; i < 40 &&
+                 (!TryMetric(CameraAtDistance(candidate.Camera, center, high), viewport,
+                     referenceHeight, out var metric) || metric.MetersPerDip < MinMetersPerDip); i++)
+                high *= 2.0;
+        }
         for (var i = 0; i < 40; i++)
         {
             var distance = (low + high) * 0.5;
-            var camera = new CameraState(center - (candidate.Camera.Forward * distance),
-                candidate.Camera.Forward, candidate.Camera.Up, candidate.Camera.VerticalFovDegrees,
-                candidate.Camera.NearPlane, candidate.Camera.FarPlane, candidate.Camera.Revision);
+            var camera = CameraAtDistance(candidate.Camera, center, distance);
             if (TryMetric(camera, viewport, referenceHeight, out var metric) &&
                 metric.MetersPerDip >= MinMetersPerDip) high = distance;
             else low = distance;
@@ -55,6 +59,11 @@ public static class MapEditorZoomPolicy
             candidate.Camera.FarPlane, candidate.Camera.Revision, ProjectionMode.Orthographic, scale);
         return new CameraFrameResult(camera, center);
     }
+
+    static CameraState CameraAtDistance(CameraState source, Vector3d center, double distance) => new(
+        center - (source.Forward * distance), source.Forward, source.Up,
+        source.VerticalFovDegrees, source.NearPlane, source.FarPlane, source.Revision,
+        source.Mode, source.OrthographicScale);
 
     static bool TryMetric(CameraState camera, ViewportState viewport, double height,
         out ViewportMetricScale metric) => ViewportMetricScale.TryCreate(

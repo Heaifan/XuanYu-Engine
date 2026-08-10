@@ -13,7 +13,6 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     bool _createdReported;
     bool _layoutSyncHooked;
     nint _hwnd;
-
     public VulkanNativeHost()
     {
         Focusable = false;
@@ -23,7 +22,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
             _bridge?.Resize(snap.Width, snap.Height);
             ViewportNativeHostRoute.ReportMerged(DataContext as UiVm, snap, count);
         });
-        DataContextChanged += (_, _) => HookLayoutSync();
+        DataContextChanged += (_, _) => { HookLayoutSync(); HookScaleIndicator(); };
     }
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -37,15 +36,14 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         _bridge ??= CreateBridge();
         _bridge.Attach(NativeHostSurfaceContract.ToSurfaceHandle(snap));
     }
-
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         _hwnd = Win32ViewportHost.CreateChild(parent.Handle);
+        CreateNativeScaleIndicator();
         Win32ViewportHost.SetInputSink(_hwnd, OnNativePointerMessage);
         Report(NativeHostLifecycleState.HandleAvailable, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), true);
         return new PlatformHandle(_hwnd, "HWND");
     }
-
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
         base.OnSizeChanged(e);
@@ -59,42 +57,42 @@ public sealed partial class VulkanNativeHost : NativeControlHost
             var (physicalW, physicalH) = ToPhysicalSize(width, height, dpi);
             Win32ViewportHost.Resize(_hwnd, physicalW, physicalH);
             (DataContext as UiVm)?.UpdateViewportFrame(width, height);
+            UpdateNativeScaleIndicator();
         }
         _resizer.OnResize(width, height, dpi, isValid, _hwnd);
     }
-
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         if (DataContext is UiVm vm) CancelNativeInput(vm, "HostDetached");
         _resizer.Cancel();
         UnhookLayoutSync();
+        UnhookScaleIndicator();
         Report(NativeHostLifecycleState.Detached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
         _bridge?.Detach();
         base.OnDetachedFromVisualTree(e);
     }
-
     protected override void DestroyNativeControlCore(IPlatformHandle control)
     {
         _resizer.Cancel();
         UnhookLayoutSync();
+        UnhookScaleIndicator();
         Report(NativeHostLifecycleState.Disposed, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
         Report(NativeHostLifecycleState.Invalidated, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
         (_bridge as IDisposable)?.Dispose();
         _bridge = null;
         if (_hwnd != 0)
         {
+            DestroyNativeScaleIndicator();
             Win32ViewportHost.SetInputSink(_hwnd, null);
             Win32ViewportHost.Destroy(_hwnd);
         }
         _hwnd = 0;
     }
-
     NativeHostHandleSnapshot Report(NativeHostLifecycleState state, nint hwnd, int width, int height, double dpiScale, bool isValid)
     {
         var snapshot = _probe.Capture(state, hwnd, width, height, dpiScale, isValid);
         ViewportNativeHostRoute.Report(DataContext as UiVm, snapshot);
         return snapshot;
     }
-
     double GetDpiScale() => TopLevel.GetTopLevel(this)?.RenderScaling ?? 1d;
 }

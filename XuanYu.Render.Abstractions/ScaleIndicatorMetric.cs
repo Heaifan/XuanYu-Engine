@@ -11,10 +11,12 @@ public readonly record struct ScaleIndicatorMetric(
         if (!double.IsFinite(metersPerDip) || metersPerDip <= 0.0)
             return new ScaleIndicatorMetric(0.0, 0.0, "");
         var maxDistance = metersPerDip * 160.0;
-        var distance = ReferenceGridScale.LargestNiceSpacingAtMost(maxDistance);
+        var belowMinimum = maxDistance < ReferenceGridScale.MinSpacing;
+        var distance = Math.Max(ReferenceGridScale.MinSpacing,
+            ReferenceGridScale.LargestNiceSpacingAtMost(maxDistance));
         var width = distance / metersPerDip;
         var next = ReferenceGridScale.NextNiceSpacing(distance);
-        if (width < 80.0 && next / metersPerDip <= 160.0)
+        if (!belowMinimum && width < 80.0 && next / metersPerDip <= 160.0)
         {
             distance = next;
             width = distance / metersPerDip;
