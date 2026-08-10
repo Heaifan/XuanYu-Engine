@@ -55,9 +55,12 @@ public sealed class ViewportOverlayLayoutTests
     public void Scale_indicator_width_cap_keeps_normal_viewport_margin()
     {
         var rect = ViewportOverlayLayoutResolver.Resolve(new(
-            800, 600, 160, 32, 16, 16, ViewportOverlayAnchor.BottomLeft));
+            800, 600, ScaleIndicatorOverlayProjection.CardWidthDip,
+            ScaleIndicatorOverlayProjection.CardHeightDip, 16, 16,
+            ViewportOverlayAnchor.BottomLeft));
 
-        Assert.Equal(160, rect.Width);
+        Assert.Equal(ScaleIndicatorOverlayProjection.CardWidthDip, rect.Width);
+        Assert.Equal(ScaleIndicatorOverlayProjection.CardHeightDip, rect.Height);
         Assert.Equal(16, rect.X);
         Assert.True(rect.Right < 800);
     }

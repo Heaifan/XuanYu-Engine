@@ -6,20 +6,14 @@ namespace XuanYu.Render.Abstractions;
 public readonly record struct ScaleIndicatorMetric(
     double DistanceMeters, double WidthDip, string Label)
 {
+    public const double FixedBarWidthDip = 104.0;
+
     public static ScaleIndicatorMetric FromMetersPerDip(double metersPerDip)
     {
         if (!double.IsFinite(metersPerDip) || metersPerDip <= 0.0)
             return new ScaleIndicatorMetric(0.0, 0.0, "");
-        var maxDistance = metersPerDip * 160.0;
-        var distance = ReferenceGridScale.LargestNiceSpacingAtMost(maxDistance);
-        var width = distance / metersPerDip;
-        var next = ReferenceGridScale.NextNiceSpacing(distance);
-        if (width < 80.0 && next / metersPerDip <= 160.0)
-        {
-            distance = next;
-            width = distance / metersPerDip;
-        }
-        return new ScaleIndicatorMetric(distance, width, Format(distance));
+        var distance = metersPerDip * FixedBarWidthDip;
+        return new ScaleIndicatorMetric(distance, FixedBarWidthDip, Format(distance));
     }
 
     static string Format(double meters) => meters >= 1000.0

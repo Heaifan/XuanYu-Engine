@@ -35,36 +35,33 @@ float box(vec2 p, vec2 center, vec2 halfSize, float radius, float dpi)
     return 1.0 - smoothstep(-aa(d, dpi), aa(d, dpi), d);
 }
 
-int digitSegments(int digit)
-{
-    if (digit == 0) return 119;
-    if (digit == 1) return 36;
-    if (digit == 2) return 93;
-    if (digit == 3) return 109;
-    if (digit == 4) return 46;
-    if (digit == 5) return 107;
-    if (digit == 6) return 123;
-    if (digit == 7) return 37;
-    if (digit == 8) return 127;
-    return 111;
-}
-
-float sevenSegment(vec2 p, int bits, float dpi)
+float digitGlyph(vec2 p, int digit, float dpi)
 {
     float m = 0.0;
-    if ((bits & 1) != 0) m = max(m, segment(p, vec2(-2.2,-4.0), vec2(2.2,-4.0), 1.0, dpi));
-    if ((bits & 2) != 0) m = max(m, segment(p, vec2(-2.2,-4.0), vec2(-2.2,0.0), 1.0, dpi));
-    if ((bits & 4) != 0) m = max(m, segment(p, vec2(2.2,-4.0), vec2(2.2,0.0), 1.0, dpi));
-    if ((bits & 8) != 0) m = max(m, segment(p, vec2(-2.2,0.0), vec2(2.2,0.0), 1.0, dpi));
-    if ((bits & 16) != 0) m = max(m, segment(p, vec2(-2.2,0.0), vec2(-2.2,4.0), 1.0, dpi));
-    if ((bits & 32) != 0) m = max(m, segment(p, vec2(2.2,0.0), vec2(2.2,4.0), 1.0, dpi));
-    if ((bits & 64) != 0) m = max(m, segment(p, vec2(-2.2,4.0), vec2(2.2,4.0), 1.0, dpi));
+    float w = 0.85;
+    vec2 tl = vec2(-2.2,-4.0), tr = vec2(2.2,-4.0);
+    vec2 ml = vec2(-2.2,0.0), mr = vec2(2.2,0.0);
+    vec2 bl = vec2(-2.2,4.0), br = vec2(2.2,4.0);
+    if (digit == 0 || digit == 2 || digit == 3 || digit == 5 || digit == 6 || digit == 7 || digit == 8 || digit == 9)
+        m = max(m, segment(p, tl, tr, w, dpi));
+    if (digit == 0 || digit == 4 || digit == 5 || digit == 6 || digit == 8 || digit == 9)
+        m = max(m, segment(p, tl, ml, w, dpi));
+    if (digit == 0 || digit == 1 || digit == 2 || digit == 3 || digit == 4 || digit == 7 || digit == 8 || digit == 9)
+        m = max(m, segment(p, tr, mr, w, dpi));
+    if (digit == 2 || digit == 3 || digit == 4 || digit == 5 || digit == 6 || digit == 8 || digit == 9)
+        m = max(m, segment(p, ml, mr, w, dpi));
+    if (digit == 0 || digit == 2 || digit == 6 || digit == 8)
+        m = max(m, segment(p, ml, bl, w, dpi));
+    if (digit == 0 || digit == 1 || digit == 3 || digit == 4 || digit == 5 || digit == 6 || digit == 7 || digit == 8 || digit == 9)
+        m = max(m, segment(p, mr, br, w, dpi));
+    if (digit == 0 || digit == 2 || digit == 3 || digit == 5 || digit == 6 || digit == 8)
+        m = max(m, segment(p, bl, br, w, dpi));
     return m;
 }
 
 float glyph(vec2 p, int code, float dpi)
 {
-    if (code >= 0 && code <= 9) return sevenSegment(p, digitSegments(code), dpi);
+    if (code >= 0 && code <= 9) return digitGlyph(p, code, dpi);
     if (code == 10)
     {
         float left = segment(p, vec2(-2.5,4.0), vec2(-2.5,-1.5), 1.0, dpi);
@@ -103,15 +100,23 @@ void main()
     vec2 p = gl_FragCoord.xy / dpi - pc.rect.xy;
     if (p.x < 0.0 || p.y < 0.0 || p.x > pc.rect.z || p.y > pc.rect.w) discard;
 
-    float background = box(p, pc.rect.zw * 0.5, pc.rect.zw * 0.5, 5.0, dpi);
-    vec4 color = vec4(0.055, 0.075, 0.095, background * 0.86);
+    float outer = box(p, pc.rect.zw * 0.5, pc.rect.zw * 0.5, 3.0, dpi);
+    vec2 innerHalf = pc.rect.zw * 0.5 - vec2(1.0);
+    float inner = box(p, pc.rect.zw * 0.5, innerHalf, 2.0, dpi);
+    float border = max(outer - inner, 0.0);
+    vec3 panelColor = vec3(0.973, 0.980, 0.984);
+    vec3 borderColor = vec3(0.835, 0.871, 0.894);
+    vec3 textColor = vec3(0.141, 0.216, 0.267);
+    vec3 accentColor = vec3(0.196, 0.435, 0.541);
+    vec3 cardColor = mix(panelColor, borderColor, border);
+    vec4 color = vec4(cardColor, outer * 0.96);
     float barStart = 6.0;
     float barEnd = min(barStart + pc.scale.x, pc.rect.z - 6.0);
     float barY = pc.rect.w - 8.0;
     float bar = segment(p, vec2(barStart,barY), vec2(barEnd,barY), 1.6, dpi);
     bar = max(bar, segment(p, vec2(barStart,barY-5.0), vec2(barStart,barY+1.0), 1.6, dpi));
     bar = max(bar, segment(p, vec2(barEnd,barY-5.0), vec2(barEnd,barY+1.0), 1.6, dpi));
-    color = mix(color, vec4(0.93,0.95,0.98,1.0), bar);
+    color = mix(color, vec4(accentColor, 1.0), bar);
 
     float text = 0.0;
     for (int i = 0; i < 8; ++i)
@@ -120,7 +125,7 @@ void main()
         vec2 local = p - vec2(8.5 + float(i) * 7.0, 11.5);
         text = max(text, glyph(local, glyphCode(i), dpi));
     }
-    color = mix(color, vec4(0.96,0.97,0.99,1.0), text);
+    color = mix(color, vec4(textColor, 1.0), text);
     if (color.a <= 0.001) discard;
     outColor = color;
 }

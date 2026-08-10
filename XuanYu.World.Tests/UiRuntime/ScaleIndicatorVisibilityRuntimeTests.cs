@@ -1,4 +1,5 @@
 using XuanYu.Editor.UI;
+using XuanYu.Render.Abstractions;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -23,6 +24,6 @@ public sealed class ScaleIndicatorVisibilityRuntimeTests
         vm.UpdateViewportFrame(800, 600);
         for (var i = 0; i < 80; i++) vm.DollyCamera(1.0);
         Assert.NotEqual("100 m", vm.ScaleIndicatorText);
-        Assert.InRange(vm.ScaleIndicatorWidthDip, 80.0, 160.0);
+        Assert.Equal(ScaleIndicatorMetric.FixedBarWidthDip, vm.ScaleIndicatorWidthDip);
     }
 }

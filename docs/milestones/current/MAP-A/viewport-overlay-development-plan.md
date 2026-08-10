@@ -297,7 +297,7 @@ k
 建议版本：
 
 ```text
-v0.2.25.20-fix
+v0.2.25.21-fix
 ```
 
 具体版本由仓库当轮版本治理确认。
@@ -556,7 +556,7 @@ Scale Indicator Presentation Architecture Rework
 当前自动实现状态：
 
 ```text
-Vulkan-native Scale Indicator 已完成动态尺度解耦修复，等待真机验收
+Vulkan-native Scale Indicator 已完成固定几何与浅色 Token 视觉收口，等待真机验收
 ```
 
 下一步：
@@ -572,7 +572,7 @@ OVL-R0
 
 阻塞：
 
-- 用户尚未执行比例尺动态尺度、缩放范围与 Resize/DPI 真机验收。
+- 用户尚未执行固定几何、动态真实标签、缩放范围与 Resize/DPI 真机验收。
 
 Git：
 

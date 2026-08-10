@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.25.21-fix
+MAP-A-R3-D2-F1 比例尺固定几何与浅色 UI 视觉收口（2026-08-10 20:10:03）：固定 Vulkan-native 比例尺卡片为 128×28 DIP、左下角 16 DIP 边距，标尺固定 104 DIP；距离标签改为 `metersPerDip × 104` 的真实动态值，不再用 1/2/5 档位改变标尺几何；背景、边框、文字和标尺线统一使用玄域浅色 Token 对应色值，圆角 3 DIP，去除黑色大底与七段数码管字形。
+- 测试：新增固定卡片/标尺合同、真实标签与宽度回归、Shader 视觉合同；重新生成嵌入 SPIR-V。
+- 验证：Core 385/385、World 1114/1114、WarCore 22/22 PASS；Render.Vulkan 项目 Build 0 Warning / 0 Error；ARCH-A、`git diff --check` PASS。全解决方案 Build 仍因运行中的 `XuanYu.Editor.App (PID 37800)` 锁定输出 DLL 返回 MSB3027/MSB3021，真实记录为环境阻断。
+- 状态：F1 继续 `OPEN · ACCEPTANCE FAILED · REWORK`，等待用户真机确认固定几何、标签真实性、浅色视觉、缩放和 Resize/DPI；不宣告关闭。
+- Hash：待本轮提交。
+
 ## v0.2.25.20-fix
 MAP-A-R3-D2-F1 V06 鼠标滚轮缩放与比例尺解耦修复（2026-08-10 19:50:33）：保留 100m 参考网格下限，比例尺改为独立 1/2/5 动态序列，修复小尺度标签格式，限制比例尺条宽度不超过 160 DIP、高度调整为 32 DIP；删除地图编辑器 100m Zoom Floor 及 Dolly 调用，避免比例尺反向限制相机缩放；补充真实尺度、宽度与 Overlay 边界回归。
 - 文档：同步 MAP-A-R3 backlog、Viewport Overlay 开发计划、file-tree 与四处版本号；删除失效的 Zoom Policy 及其旧合同测试。

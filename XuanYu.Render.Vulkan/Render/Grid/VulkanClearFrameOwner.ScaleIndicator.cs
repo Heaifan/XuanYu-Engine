@@ -31,17 +31,17 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var label = projection.Label ?? "";
         Span<int> glyphs = stackalloc int[ScaleIndicatorGlyphLite.MaxGlyphs];
         var labelLength = ScaleIndicatorGlyphLite.EncodeLabel(label, glyphs);
-        var desiredWidth = Math.Min(160.0,
-            Math.Max(projection.BarWidthDip + 12.0, labelLength * 7.0 + 16.0));
         var rect = ViewportOverlayLayoutResolver.Resolve(new(
-            viewportWidthDip, viewportHeightDip, desiredWidth, 32.0,
+            viewportWidthDip, viewportHeightDip,
+            ScaleIndicatorOverlayProjection.CardWidthDip,
+            ScaleIndicatorOverlayProjection.CardHeightDip,
             16.0, 16.0, ViewportOverlayAnchor.BottomLeft));
         var scene = new float[ScaleIndicatorPushFloatCount];
         scene[0] = _extent.Width; scene[1] = _extent.Height;
         scene[2] = (float)dpi; scene[3] = 1.0f;
         scene[4] = (float)rect.X; scene[5] = (float)rect.Y;
         scene[6] = (float)rect.Width; scene[7] = (float)rect.Height;
-        scene[8] = (float)projection.BarWidthDip; scene[9] = labelLength;
+        scene[8] = (float)ScaleIndicatorMetric.FixedBarWidthDip; scene[9] = labelLength;
         for (var i = 0; i < glyphs.Length; i++) scene[12 + i] = glyphs[i];
         fixed (float* constants = scene)
         {

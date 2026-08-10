@@ -17,11 +17,11 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - V1-STAB-3：DONE（本轮）；Vector Overlay 使用独立无深度测试/无深度写入 Pass，真机俯视/45°/低角度稳定性待重验。
 - A02 follow-up：`REWORK`；100m 参考网格保留，比例尺与相机 Zoom 已拆开，等待用户真机确认动态比例尺、缩放范围和 Overlay 尺寸。
 - STAB-4A/5A：`FAILED · WRONG PRESENTATION ARCHITECTURE`；`ac5d306` 是 Native Popup 路线终点，禁止继续修 Popup Screen Rect。
-- STAB-5B：`REWORK COMPLETE · READY FOR USER ACCEPTANCE`；Vulkan-native Scale Indicator 已完成动态 1/2/5 序列、160 DIP 上限与 32 DIP 高度门禁。
+- STAB-5B：`REWORK COMPLETE · READY FOR USER ACCEPTANCE`；Vulkan-native Scale Indicator 已完成固定 128×28 DIP 卡片、104 DIP 标尺、真实动态标签与浅色 Token 视觉门禁。
 - STAB-4B：代码实现完成；视口公制尺度改为 X/Y 方向值，Zoom Floor 取较小方向并对 Metric 失败 fail-closed；斜视回归已补。
 - STAB-4C：代码实现完成；Vector Overlay 移除过期 Clip-Z Bias，Fill / Stroke / Marker 直接消费 ViewProjection，保留无深度测试/写入 Pass 与绘制顺序。
 - 本轮真机裁定：`MAP-A-R3-D2-F1 联合真机验收 = FAIL · FUNCTIONAL BUT UNSTABLE`；A02、B03、C01、C02 按现象判 FAIL，C03～C07、D01～D04 尚未完成。
-- V06：鼠标滚轮缩放 `FAIL`；根因确认为比例尺 100m 下限、Zoom Floor、Overlay 宽度和测试断言耦合，进入同一 F1 的解耦修复轮。
+- V06：鼠标滚轮缩放根因已修复；比例尺几何与视觉规范进入最终真机复验，固定卡片 128×28 DIP、标尺 104 DIP、标签随真实尺度变化。
 - D3：禁止启动；F2：不创建。
 
 ## Viewport Overlay / Scale Indicator 架构整改

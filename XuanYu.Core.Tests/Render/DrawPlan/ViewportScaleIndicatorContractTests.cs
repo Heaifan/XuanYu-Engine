@@ -21,6 +21,11 @@ public sealed class ViewportScaleIndicatorContractTests
         Assert.Contains("CreateScaleIndicator", pipeline);
         Assert.Contains("depthTest: false", pipeline);
         Assert.Contains("ScaleIndicatorGlyphLite", shader);
+        Assert.DoesNotContain("sevenSegment", shader);
+        Assert.Contains("0.973, 0.980, 0.984", shader);
+        Assert.Contains("0.196, 0.435, 0.541", shader);
+        Assert.Contains("CardWidthDip", File.ReadAllText(Path.Combine(root,
+            "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.ScaleIndicator.cs")));
         Assert.False(File.Exists(Path.Combine(nativeDir, "Win32ViewportHost.ScaleIndicator.cs")));
         Assert.False(File.Exists(Path.Combine(nativeDir, "Win32ViewportHost.ScaleIndicator.Paint.cs")));
         Assert.False(File.Exists(Path.Combine(nativeDir, "VulkanNativeHost.ScaleIndicator.cs")));
@@ -32,7 +37,7 @@ public sealed class ViewportScaleIndicatorContractTests
     {
         var projection = new XuanYu.Render.Abstractions.RenderProjection(
             default, [], false, default,
-            ScaleIndicator: new(true, "100 m", 100));
+            ScaleIndicator: new(true, "104 m", 104));
         var plan = XuanYu.Render.Abstractions.RenderDrawPlan.GetFrameDrawPlan(projection);
         Assert.Equal(XuanYu.Render.Abstractions.RenderDrawKind.ScaleIndicatorOverlay, plan[^2].Kind);
         Assert.Equal(XuanYu.Render.Abstractions.RenderDrawKind.NavigationGizmo, plan[^1].Kind);
