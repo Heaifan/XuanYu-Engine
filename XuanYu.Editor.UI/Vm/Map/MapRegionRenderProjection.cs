@@ -55,8 +55,12 @@ static class MapRegionRenderProjection
 
     static void AddMarker(MapPoint point, double z, List<RenderStaticModelVertex> v, List<uint> i, List<RenderStaticModelPrimitive> p)
     { const double size = 45; AddRibbon([new(point.X - size, point.Y), new(point.X, point.Y + size), new(point.X + size, point.Y), new(point.X, point.Y - size)], true, z, v, i, p, new(.98, .30, .08, 1)); }
-    static RenderStaticModelVertex Vertex(MapPoint p, double z) => new(new Vector3d(p.X, p.Y, z), new(0, 0, 1), 0, 0);
-    static void AddPrimitive(List<uint> i, List<RenderStaticModelPrimitive> p, int start, int count, RenderStaticModelColor color) => p.Add(new(start, count - start, 0, color));
+    static RenderStaticModelVertex Vertex(MapPoint p, double z) => new(MapCoordinateContract.MapToWorld(p, z), new(0, 0, 1), 0, 0);
+    static void AddPrimitive(List<uint> i, List<RenderStaticModelPrimitive> p, int start, int count, RenderStaticModelColor color)
+    {
+        if (count <= start) return;
+        p.Add(new(start, count - start, 0, color));
+    }
     static RenderStaticModelResource Resource(RenderStaticModelKey key, List<RenderStaticModelVertex> v, List<uint> i, List<RenderStaticModelPrimitive> p) => new(key, Revision(v, i), v, i, p, Bounds(v));
     static int Revision(List<RenderStaticModelVertex> v, List<uint> i)
     {

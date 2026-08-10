@@ -30,8 +30,7 @@ public static class MapSurfacePicker
         }
 
         var hit = ray.Origin + (ray.Direction * distance);
-        point = new MapPoint(hit.X, hit.Y);
-        return point.X >= 0.0 && point.Y >= 0.0 &&
-            point.X <= map.SizeMeters.Width && point.Y <= map.SizeMeters.Depth;
+        point = MapCoordinateContract.WorldToMap(hit);
+        return MapBounds.Contains(map.SizeMeters, point.X, point.Y);
     }
 }

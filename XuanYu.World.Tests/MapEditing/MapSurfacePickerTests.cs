@@ -28,12 +28,28 @@ public sealed class MapSurfacePickerTests
     {
         var map = MapDefaultDefinition.CreateDefault();
         var camera = new CameraState(
-            new Vector3d(0, 0, 100), new Vector3d(0, 0, -1),
+            new Vector3d(6000, 0, 100), new Vector3d(0, 0, -1),
             new Vector3d(0, 1, 0), 45, 0.1, 1000, 1,
             ProjectionMode.Orthographic, 100);
         var projection = ViewProjectionState.Create(camera,
             new ViewportState(0, 0, 100, 100, 100, 100, 1, 1));
 
         Assert.False(MapSurfacePicker.TryPick(map, projection, 0, 0, out _));
+    }
+
+    [Fact]
+    public void Picks_negative_world_coordinate_inside_centered_map()
+    {
+        var map = MapDefaultDefinition.CreateDefault();
+        var camera = new CameraState(
+            new Vector3d(-2500, -1500, 100), new Vector3d(0, 0, -1),
+            new Vector3d(0, 1, 0), 45, 0.1, 1000, 1,
+            ProjectionMode.Orthographic, 100);
+        var projection = ViewProjectionState.Create(camera,
+            new ViewportState(0, 0, 100, 100, 100, 100, 1, 1));
+
+        Assert.True(MapSurfacePicker.TryPick(map, projection, 50, 50, out var point));
+        Assert.Equal(-2500, point.X, 5);
+        Assert.Equal(-1500, point.Y, 5);
     }
 }

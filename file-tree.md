@@ -1062,6 +1062,7 @@
 - `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoLayoutTests.cs` — F3-D2/D3/F3-F3：导航 Gizmo 布局投影与命中测试（96 DIP 区域；正对合同见 .Facing.cs）。
 - `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoOverlayContractTests.cs` — F3-F1：导航 Gizmo Overlay Pass 与屏幕空间原点标记合同测试。
 - `XuanYu.Core.Tests/Render/StaticModels/StaticModelDepthRegressionTests.cs` — sealed class StaticModelDepthRegressionTests
+- `XuanYu.Core.Tests/Render/StaticModels/RegionModelTransformContractTests.cs` — 区域 world-space 静态模型单位变换合同测试。
 - `XuanYu.Core.Tests/Render/StaticModels/StaticModelRenderContractTests.cs` — sealed class StaticModelRenderContractTests
 - `XuanYu.Core.Tests/Space/CameraOrthographicTests.cs` — F3-F4：正交投影契约（模式校验/射线/尺度投影/往返/深度/Fov 无关）。
 - `XuanYu.Core.Tests/Space/CameraStateTests.cs` — sealed class CameraStateTests
@@ -1458,6 +1459,7 @@
 - `XuanYu.Render.Abstractions/RenderProjectionResult.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderStaticModelKey.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderStaticModelPrimitive.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/RenderStaticModelTransform.cs` — 静态模型位置、旋转与缩放变换合同，提供单位变换。
 - `XuanYu.Render.Abstractions/RenderStaticModelResource.cs` — sealed record RenderStaticModelResource
 - `XuanYu.Render.Abstractions/RenderStaticModelVertex.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj` — （职责待补）
@@ -1784,6 +1786,7 @@
 - `XuanYu.World/GridWorldPartitionStrategy.cs` — sealed class GridWorldPartitionStrategy
 - `XuanYu.World/IWorldPartitionStrategy.cs` — interface IWorldPartitionStrategy
 - `XuanYu.World/Map/MapBounds.cs` — MAP-A-R2-D1：有限地图边界（米）。地图中心为世界原点，范围 X/Y ∈ [-W/2, W/2]。
+- `XuanYu.World/Map/MapCoordinateContract.cs` — MapPoint 与世界 XY 的唯一直接映射合同。
 - `XuanYu.World/Map/MapDefaultDefinition.cs` — MAP-A-R2-D4：默认地图工厂。一次性创建完整地图聚合：
 - `XuanYu.World/Map/MapDefinition.cs` — MAP-A-R2-D1-F1：完整地图领域聚合（权威根）。只描述地图内容（纯净、不可变），
 - `XuanYu.World/Map/MapDefinitionValidator.cs` — MAP-A-R2-D1-F1：地图聚合严格校验（领域权威层）。
@@ -1897,13 +1900,14 @@
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）
 - `scripts/arch-a-guard-world.ps1` — （职责待补）
 - `scripts/arch-a-guard.ps1` — （职责待补）
-- `XuanYu.Editor/MapEditing/MapSurfacePicker.cs` — 复用现有 ViewProjection 与 WorldRayFactory，将视口指针拾取为地图平面 MapPoint。
+- `XuanYu.Editor/MapEditing/MapSurfacePicker.cs` — 复用 ViewProjection 与 WorldRayFactory，按中心原点合同拾取地图平面 MapPoint。
 - `XuanYu.Editor/MapEditing/RegionDrawingState.cs` — 区域绘制临时草稿、光标与首点闭合候选状态。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.cs` — 区域绘制地面命中输入适配、命中状态反馈与既有取消/预览边界。
 - `XuanYu.Editor.UI/Win/UiWin.Shortcuts.cs` — 窗口快捷键路由，包含区域绘制 Enter 闭合与 Esc 取消入口。
 - `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为静态模型渲染资源。
 - `XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawRegionModel.cs` — 复用静态模型管线绘制地图区域资源。
 - `XuanYu.World.Tests/MapEditing/MapSurfacePickerTests.cs` — 地图表面拾取边界与中心命中测试。
+- `XuanYu.World.Tests/MapEditing/MapCoordinateContractTests.cs` — MapPoint 与世界坐标直接映射往返测试。
 - `XuanYu.World.Tests/MapEditing/RegionDrawingStateTests.cs` — 绘制草稿顶点、闭合候选与取消测试。
 - `XuanYu.Core.Tests/Render/Map/MapRegionDrawPlanTests.cs` — 区域渲染资源进入帧绘制计划的合同测试。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — 地图编辑器地图页及内部地图工具入口，含 Region Drawing 归属与 Selected 状态样式。
@@ -1911,4 +1915,5 @@
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1BTests.cs` — F1-B Ground Hit Runtime：工具开关、命中坐标差异、miss、切换去重与单次输入契约。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1FullRuntimeTests.cs` — F1 完整 Runtime：Draft 顶点、预览快照、Enter 闭合、Esc 取消与 DPI 命中回归。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1ResizeTests.cs` — F1 Resize Runtime：视口尺寸变化后区域绘制输入继续命中并累积 Draft 顶点。
+- `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RenderContractTests.cs` — F1 渲染合同：首点 Draft primitive 合法且通过 Vulkan 资源校验。
 - `XuanYu.World.Tests/UiTokens/UiD2F1RegionToolContractTests.cs` — D2-F1 静态 UI 归属与 Selected/Selected+Hover 样式契约。

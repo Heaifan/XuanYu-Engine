@@ -13,9 +13,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
         var gpu = _staticModels.Get(model);
         if (gpu is null) return;
         BindStaticModelBuffers(cb, gpu);
+        var transform = RenderStaticModelTransform.Identity;
         foreach (var primitive in gpu.Primitives)
         {
-            FillScenePushConstants(scene, _renderProjection, default, default, default,
+            FillScenePushConstants(scene, _renderProjection, transform.Position,
+                transform.Rotation, transform.Scale,
                 (float)primitive.BaseColor.G, (float)primitive.BaseColor.B, -3.0f);
             scene[19] = (float)primitive.BaseColor.R;
             scene[23] = (float)primitive.BaseColor.A;
