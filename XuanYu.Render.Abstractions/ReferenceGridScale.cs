@@ -59,6 +59,24 @@ public static class ReferenceGridScale
         return decade * 2.0;
     }
 
+    public static double LargestNiceSpacingAtMost(double value)
+    {
+        if (!double.IsFinite(value) || value <= 0.0) return 0.0;
+        var decade = Math.Pow(10.0, Math.Floor(Math.Log10(value)));
+        if (decade * 5.0 <= value) return decade * 5.0;
+        if (decade * 2.0 <= value) return decade * 2.0;
+        return decade;
+    }
+
+    public static double NextNiceSpacing(double spacing)
+    {
+        if (!double.IsFinite(spacing) || spacing <= 0.0) return 0.0;
+        var decade = Math.Pow(10.0, Math.Floor(Math.Log10(spacing)));
+        if (spacing >= decade * 5.0) return decade * 10.0;
+        if (spacing >= decade * 2.0) return decade * 5.0;
+        return decade * 2.0;
+    }
+
     // 对数域相位：fine 时 0，coarse 时 1。
     static double Phase(double ideal, double fine, double coarse)
     {

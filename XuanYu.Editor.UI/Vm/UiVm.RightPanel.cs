@@ -11,6 +11,7 @@ public sealed partial class UiVm
         {
             if (!Set(ref _rightTabIndex, value)) return;
             OnPropertyChanged(nameof(IsMapEditorMode));
+            UpdateScaleIndicator();
         }
     }
 

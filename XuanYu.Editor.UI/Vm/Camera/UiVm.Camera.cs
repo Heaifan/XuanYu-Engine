@@ -24,6 +24,12 @@ public sealed partial class UiVm
         if (!double.IsFinite(dpiScale) || dpiScale <= 0.0) return;
         if (System.Math.Abs(_viewportDpiScale - dpiScale) < 0.001) return;
         _viewportDpiScale = dpiScale;
+        if (_lastViewport is { } viewport)
+            _lastViewport = new ViewportState(viewport.LogicalX, viewport.LogicalY,
+                viewport.LogicalWidth, viewport.LogicalHeight,
+                Math.Max(1, (int)Math.Round(viewport.LogicalWidth * dpiScale)),
+                Math.Max(1, (int)Math.Round(viewport.LogicalHeight * dpiScale)),
+                dpiScale, viewport.Revision);
         PublishSceneRenderSnapshot();
     }
     public NavigationCameraSnapshot NavigationCamera => new(
@@ -49,7 +55,10 @@ public sealed partial class UiVm
         if (_cameraSession is not null && aspectChanged)
             CancelCameraNavigation("Resize");
         _viewportAspect = (double)width / height;
-        _lastViewport = new ViewportState(0, 0, width, height, width, height, 1.0, Math.Max(_cameraRevision, 1));
+        var physicalW = Math.Max(1, (int)Math.Round(width * _viewportDpiScale));
+        var physicalH = Math.Max(1, (int)Math.Round(height * _viewportDpiScale));
+        _lastViewport = new ViewportState(0, 0, width, height, physicalW, physicalH,
+            _viewportDpiScale, Math.Max(_cameraRevision, 1));
         if (_viewportCameraFramed) return;
         _viewportCameraFramed = true;
         FrameAllCamera("启动看全");

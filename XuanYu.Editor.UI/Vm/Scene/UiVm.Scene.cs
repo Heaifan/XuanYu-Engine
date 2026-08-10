@@ -67,6 +67,7 @@ public sealed partial class UiVm
 
     void PublishSceneRenderSnapshot()
     {
+        UpdateScaleIndicator();
         var snapshot = RenderSnapshot;
         TraceRenderSnapshotPublish(snapshot.Entities.Count);
         RenderSnapshotChanged?.Invoke(snapshot);

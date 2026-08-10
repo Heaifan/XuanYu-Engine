@@ -52,24 +52,6 @@ public sealed partial class UiVm
         return true;
     }
 
-    public bool DollyCamera(double wheelDelta)
-    {
-        if (_cameraSession is not null || _editorState.InteractionSnapshot.HasCapture) return false;
-        // F3-F2：失败安全——成功才替换相机/中心/Revision；失败保留旧状态并记录，不让异常逃出输入循环。
-        if (!CameraNavigation.TryDolly(_camera, _observationCenter, wheelDelta,
-            _cameraRevision + 1, out var result, out var reason))
-        {
-            _logBus.Error(EditorLogSource.Input, EditorLogCategory.Command, "相机 Dolly 失败", reason);
-            return false;
-        }
-
-        _cameraRevision = result.Camera.Revision;
-        ApplyCameraResult(result);
-        _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command, "相机 Dolly 已执行", $"滚轮={wheelDelta:g}");
-        RefreshLogBindings();
-        return true;
-    }
-
     public bool CancelCameraNavigation(string reason)
     {
         if (_cameraSession is not { } session) return false;

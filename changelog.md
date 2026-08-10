@@ -18,6 +18,11 @@
 
 ---
 
+## v0.2.25.11-rz
+MAP-A-R3-D2-F1-V3 Scale Indicator + MapEditorZoomPolicy（2026-08-10 12:07:40）：新增视口左下角比例尺（12～16 DIP 内边距，80～160 DIP 目标宽度，1/2/5 m/km 格式）；新增仅地图编辑器生效的 Perspective/Orthographic Zoom Floor，100m 网格最大视觉尺寸为 160 DIP（`0.625 m/DIP`）；通用 Camera 的近距离能力保持不变。
+- 验证：待本轮正式门禁完成；真机验收仍需用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
+- 遗留：进入 Metric/Picking `Screen → Pick → World → Screen` 往返门禁；Region Overlay 视觉回修暂缓。
+
 ## v0.2.25.10-rz
 MAP-A-R3-D2-F1-V2 100m Minimum Visible Metric Grid（2026-08-10 11:56:08）：保留 `1 / 2 / 5 × 10ⁿ` 算法，将地图编辑器最小可见网格固定为 100m、动态覆盖扩展到 10,000km；将目标视觉尺度改为 48 DIP；抽出不依赖后端的 `ViewportMetricScale`，网格统一消费 `MetersPerDip`，不改变通用 Camera 或连续 double 世界坐标。
 - 验证：解决方案 Build 0W0E；Core 357/357、World 999/999、WarCore 22/22 PASS；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机验收仍需用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。

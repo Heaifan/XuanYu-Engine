@@ -148,6 +148,7 @@
 │  │  │  ├─ ReferenceGridDrawPlanTests.cs
 │  │  │  ├─ ReferenceGridRayIntersectionTests.cs
 │  │  │  ├─ ReferenceGridScaleTests.cs
+│  │  │  ├─ ScaleIndicatorMetricTests.cs
 │  │  │  ├─ ReferenceGridShaderContractTests.cs
 │  │  │  ├─ ReferenceGridVisualStyleTests.cs
 │  │  │  └─ ViewportMetricScaleTests.cs
@@ -409,7 +410,10 @@
 │  │  │  ├─ UiVm.Camera.Framing.cs
 │  │  │  ├─ UiVm.Camera.Framing.Draft.cs
 │  │  │  ├─ UiVm.Camera.cs
+│  │  │  ├─ UiVm.CameraDolly.cs
+│  │  │  ├─ MapEditorZoomPolicy.cs
 │  │  │  ├─ UiVm.CameraNavigation.cs
+│  │  │  ├─ UiVm.ScaleIndicator.cs
 │  │  │  └─ UiVm.ViewGizmo.cs
 │  │  ├─ History/
 │  │  │  ├─ UiVm.EntityCommands.cs
@@ -546,6 +550,7 @@
 │  ├─ NativeHostLifecycleState.cs
 │  ├─ NativeHostSurfaceHandle.cs
 │  ├─ ReferenceGridScale.cs
+│  ├─ ScaleIndicatorMetric.cs
 │  ├─ RenderCameraProjection.cs
 │  ├─ ViewportMetricScale.cs
 │  ├─ RenderDrawPlan.Typed.cs
@@ -1085,6 +1090,7 @@
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridRayIntersectionTests.cs` — MAP-A-R1-D5-R1-F2 GRID-G1：世界射线与 Z=0 平面求交的数学合同。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridScaleTests.cs` — MAP-A-R1-D5-R1-F2-R2：每帧全局网格尺度合同（1/2/5 序列 + 互补交叉淡化）。
+- `XuanYu.Core.Tests/Render/Grid/ScaleIndicatorMetricTests.cs` — MAP-A-R3-D2-F1-V3：比例尺 1/2/5 距离选择与 80～160 DIP 目标宽度合同。
 - `XuanYu.Core.Tests/Render/Grid/ViewportMetricScaleTests.cs` — MAP-A-R3-D2-F1-V2：Perspective/Orthographic 的 DIP 与 physical pixel 尺度合同（1.00/1.25/1.50/2.00 DPI）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridShaderContractTests.cs` — MAP-A-R1-D5-R1-F2-R2：Shader 合同低层门禁（方案 15.5）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridVisualStyleTests.cs` — MAP-A-R1-D5-R1-F2-R3：网格视觉样式合同（10.1）与重合合成合同（10.2）。
@@ -1299,7 +1305,9 @@
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.cs` — F3-F4：取景命令。正交模式保持正交（尺度按包围范围适配），透视模式沿用距离构图。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.Draft.cs` — F1-C2：按 Draft 顶点 AABB 与最小可视半径聚焦草稿。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.cs` — F3-D2：导航 Gizmo 相机快照（Right/Up/Forward 投影输入；不含平移）。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraDolly.cs` — MAP-A-R3-D2-F1-V3：地图编辑 Dolly 入口与 Zoom Policy 接入。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.ScaleIndicator.cs` — MAP-A-R3-D2-F1-V3：左下角比例尺展示状态，消费统一 ViewportMetricScale。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.ViewGizmo.cs` — F3-D3：六方向标准视角命令（计划 8.1 命名；复用现有 ApplyViewFaceCommand 相机逻辑）。
 - `XuanYu.Editor.UI/Vm/History/UiVm.EntityCommands.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/History/UiVm.History.Entities.cs` — sealed partial class UiVm
@@ -1444,6 +1452,7 @@
 - `XuanYu.Editor/MapDocument/MapJsonSerializer.cs` — MAP-A-R1-D2：.xymap 严格 JSON 读写。字段大小写敏感、未知字段拒绝、确定性输出、UTF-8。
 - `XuanYu.Editor/MapDocument/MapStorageService.cs` — MAP-A-R1-D2：地图文件存储。候选加载 + 同目录临时文件原子保存，不直接替换任何状态。
 - `XuanYu.Editor/MapEditing/MapEditEvents.cs` — MAP-A-R2-D2：地图编辑低频事件参数（禁止记录鼠标移动/Hover/每帧渲染）。
+- `XuanYu.Editor.UI/Vm/Camera/MapEditorZoomPolicy.cs` — MAP-A-R3-D2-F1-V3：地图编辑器视觉 Zoom Floor（100m/160 DIP），不污染通用 Camera。
 - `XuanYu.Editor/MapEditing/MapEditReason.cs` — MAP-A-R2-D2/D3-A1/D4：地图编辑原因（内容变更事件携带）。
 - `XuanYu.Editor/MapEditing/MapEditSession.Regions.cs` — MAP-A-R3-D1：区域正式 Create/Delete 入口，复用地图候选校验、单历史条目与 Undo/Redo 快照恢复。
 - `XuanYu.Editor/MapEditing/MapEditSession.ActiveLayer.cs` — MAP-A-R2-D4：活动区域图层（会话临时状态：不进历史、不设 Dirty、不产生内容变更事件）。
@@ -1501,6 +1510,7 @@
 - `XuanYu.Render.Abstractions/NativeHostLifecycleState.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期状态枚举。
 - `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs` — NativeHost 交给渲染层的窗口交接句柄。
 - `XuanYu.Render.Abstractions/ReferenceGridScale.cs` — MAP-A-R3-D2-F1-V2：100m 起步、10,000km 覆盖的 1/2/5 公制参考网格尺度。
+- `XuanYu.Render.Abstractions/ScaleIndicatorMetric.cs` — MAP-A-R3-D2-F1-V3：比例尺漂亮距离选择与 m/km 文本格式化。
 - `XuanYu.Render.Abstractions/ViewportMetricScale.cs` — MAP-A-R3-D2-F1-V2：不依赖后端的唯一视口公制尺度源。
 - `XuanYu.Render.Abstractions/RenderCameraProjection.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderDrawPlan.Typed.cs` — R4-R3-R2：实体绘制计划提取（typed 部分），供 Vulkan 与测试共同使用。
@@ -1720,6 +1730,7 @@
 - `XuanYu.World.Tests/Map/WorldMapStateOwnerTests.cs` — MAP-A-R1-D3：World 地图状态所有者——加载/切换/卸载/查询/渲染快照。
 - `XuanYu.World.Tests/Map/WorldMapStateTests.cs` — MAP-A-R1-D3：World 地图状态——有限边界（闭区间）与高度查询。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCommandTests.cs` — MAP-A-R2-D2：地图基础编辑命令（改名/尺寸/基础高度/No-op/非法输入）。
+- `XuanYu.World.Tests/MapEditing/MapEditorZoomPolicyTests.cs` — MAP-A-R3-D2-F1-V3：Perspective/Orthographic Zoom Floor 与通用 Camera 极限隔离合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionRegionTests.cs` — MAP-A-R3-D1：Region Create/Delete 单历史条目及相同 ID Undo/Redo 合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCreationTests.cs` — MAP-A-R2-D2：默认会话与根状态合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionDirtyTests.cs` — MAP-A-R2-D2：Saved/Dirty 合同（Dirty 随 Undo/Redo 回到保存点）。
