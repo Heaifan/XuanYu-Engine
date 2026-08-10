@@ -11,6 +11,7 @@ public sealed partial class VulkanNativeHost
     void CreateNativeScaleIndicator(nint parent)
     {
         _scaleHwnd = Win32ViewportHost.CreateScaleIndicator(parent);
+        Win32ViewportHost.SetScaleIndicatorProbeSink(_scaleHwnd, OnScaleIndicatorProbe);
         HookScaleIndicator();
     }
 
@@ -54,11 +55,21 @@ public sealed partial class VulkanNativeHost
             return;
         }
         var vm = DataContext as UiVm;
-        var size = Win32ViewportHost.GetClientSize(_hwnd);
         var dpi = GetDpiScale();
+        var offset = new Avalonia.Point();
+        for (Avalonia.Visual? visual = this; visual is not null;
+            visual = Avalonia.VisualTree.VisualExtensions.GetVisualParent(visual))
+        {
+            offset += visual.Bounds.Position;
+            if (visual is Avalonia.Controls.TopLevel) break;
+        }
+        var width = Math.Max(1, (int)Math.Round(Bounds.Width * dpi));
+        var height = Math.Max(1, (int)Math.Round(Bounds.Height * dpi));
         Win32ViewportHost.UpdateScaleIndicator(_scaleHwnd,
             vm?.IsScaleIndicatorVisible == true, vm?.ScaleIndicatorText ?? "",
-            vm?.ScaleIndicatorWidthDip ?? 80.0, dpi, size.Width, size.Height);
+            vm?.ScaleIndicatorWidthDip ?? 80.0, dpi,
+            (int)Math.Round(offset.X), (int)Math.Round(offset.Y),
+            (int)Math.Round(offset.X) + width, (int)Math.Round(offset.Y) + height);
         var probe = Win32ViewportHost.GetScaleIndicatorProbe(_scaleHwnd);
         ReportScaleIndicatorProbe(probe);
     }
@@ -71,4 +82,7 @@ public sealed partial class VulkanNativeHost
             ViewportNativeHostRoute.ReportScaleIndicatorProbe(DataContext as UiVm, probe);
         }
     }
+
+    void OnScaleIndicatorProbe(Win32ViewportHost.ScaleIndicatorProbe probe) =>
+        ReportScaleIndicatorProbe(probe);
 }

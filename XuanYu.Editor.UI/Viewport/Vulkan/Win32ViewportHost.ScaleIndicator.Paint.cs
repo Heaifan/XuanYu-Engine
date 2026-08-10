@@ -37,6 +37,8 @@ static partial class Win32ViewportHost
             right = 400, bottom = Dip(31, state.Dpi) };
         DrawTextW(hdc, state.Text, -1, ref text, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
         EndPaint(hwnd, ref paint);
+        if (ScaleProbeSinks.TryGetValue(hwnd, out var sink))
+            sink(GetScaleIndicatorProbe(hwnd));
         return 0;
     }
 

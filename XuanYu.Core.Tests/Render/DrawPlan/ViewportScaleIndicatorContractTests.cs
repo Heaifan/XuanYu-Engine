@@ -20,6 +20,10 @@ public sealed class ViewportScaleIndicatorContractTests
         Assert.Contains("IsWindowVisible", native);
         Assert.Contains("GetWindowRect", native);
         Assert.Contains("PaintCount", native);
+        Assert.DoesNotContain("WS_EX_TRANSPARENT", native);
+        Assert.Contains("SetScaleIndicatorProbeSink", native);
+        Assert.Contains("ScaleStates.TryGetValue(hwnd, out var current)", native);
+        Assert.Contains("WS_POPUP | WS_VISIBLE", native);
         Assert.Contains("SetWindowPos(hwnd, 0", native);
         Assert.True(host >= 0, "视口必须保留 Native Host");
     }
