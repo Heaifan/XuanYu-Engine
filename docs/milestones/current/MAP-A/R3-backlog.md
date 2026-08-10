@@ -10,7 +10,8 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - D2-F1-V1：OPEN · ACCEPTANCE FAILED · REWORK。V1-REWORK-A 只恢复 Navigation Gizmo 输入；Region Overlay 视觉回修延后。
 - F1-V2：DONE（`a367f89` 已推送）。
 - F1-V3：DONE（`49b0677` 已推送）。
-- V1-REWORK-B1：DONE（`ef12f4b` 已推送）；仅完成 Region 世界锚点统一，B2 Depth Policy 尚未启动。
+- V1-REWORK-B1：DONE（`ef12f4b` 已推送）。
+- V1-REWORK-B2：DONE（`8c8dfdd` 已推送）；仅完成 Vector Overlay Depth Policy，真机重验尚未执行。
 - D3：禁止启动；F2：不创建。
 
 ## MAP-A-R3-D2-F1-C2：正式收口
@@ -129,6 +130,14 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 | B1-T01 | 删除 Stroke 世界坐标 `height + 0.03` 偏移，Fill / Stroke / Marker 共享 `BaseHeightMeters` | DONE |
 | B1-T02 | Fill / Stroke / Marker 世界锚点一致性合同测试，禁止 epsilon 回潮 | DONE（1/1） |
 | B1-T03 | 完整正式门禁、版本更新、Commit + Push、local HEAD == remote HEAD | DONE（`ef12f4b` 已推送，文档随本轮收口） |
+
+### V1-REWORK-B2：Vector Overlay Depth Policy
+
+| TODO | 内容 | 状态 |
+| --- | --- | --- |
+| B2-T01 | 建立 Vector Overlay 专属裁剪空间 Depth Policy，Ground / Fill / Stroke / Marker 按视觉层级绘制 | DONE |
+| B2-T02 | 俯视、45°、80°、89°、极近合法 Zoom、B1 锚点与 shader/pipeline/draw-order 合同 | DONE（14/14） |
+| B2-T03 | 完整 0W0E 门禁、版本更新、Commit + Push、local HEAD == remote HEAD | DONE（`8c8dfdd` 已推送，文档随本轮收口） |
 
 ### V1 自动验收
 

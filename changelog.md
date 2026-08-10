@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.25.14-fix
+MAP-A-R3-D2-F1-V1-REWORK-B2 Vector Overlay Depth Policy（2026-08-10 13:51:49）：保持 Fill、Stroke、Marker 与 Ground 的世界锚点完全重合；主管线继续使用 DepthTest=On、DepthWrite=On、LessOrEqual，scene.vert 仅对 Vector Overlay 在裁剪空间施加有界 bias，按 Fill → Stroke → Marker 建立视觉层级；重新生成 scene.vert SPIR-V 字节码。
+- 验证：解决方案 Build 0W0E；Core 361/361、World 1116/1116、WarCore 22/22；B2 专项 14/14，覆盖俯视、45°、80°、89°与极近合法正交 Zoom；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机验收仍需用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
+- 遗留：执行 V1 联合真机重验；若视觉仍失败，只针对实际失败项追加修复，不提前宣告 F1 CLOSED。
+- Hash：8c8dfdd。
+
+## v0.2.25.13-rz
 ## v0.2.25.13-rz
 MAP-A-R3-D2-F1-V1-REWORK-B1 Region 世界锚点统一（2026-08-10 13:37:23）：删除 Vector Overlay Stroke 的 `BaseHeightMeters + 0.03` 世界坐标偏移，使 Fill、Stroke、Marker 对同一 MapPoint 共享完全相同的世界锚点；新增世界坐标合同测试，B2 Vulkan Depth Policy 不在本轮。
 - 验证：解决方案 Build 0W0E；Core 361/361、World 1110/1110、WarCore 22/22、B1 专项 1/1、ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机验收仍需用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
