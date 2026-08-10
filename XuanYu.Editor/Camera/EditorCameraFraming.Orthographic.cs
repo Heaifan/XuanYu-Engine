@@ -9,15 +9,15 @@ public static partial class EditorCameraFraming
 {
     public static CameraFrameResult FrameOrthographicWithCenter(
         IEnumerable<Vector3d> positions, Vector3d forward, Vector3d up,
-        double aspect, double distance, long revision)
+        double aspect, double distance, long revision, double minRadius = 1.8)
     {
         var points = positions.ToArray();
         if (points.Length == 0)
             return new CameraFrameResult(DefaultEditorCamera.Create(revision), DefaultEditorCamera.Target);
         var center = Center(points);
         var right = forward.Cross(up).Normalize();
-        var spanY = MaxAbsDot(points, center, up) * 2.0 * Padding;
-        var spanX = MaxAbsDot(points, center, right) * 2.0 * Padding;
+        var spanY = System.Math.Max(MaxAbsDot(points, center, up), minRadius) * 2.0 * Padding;
+        var spanX = System.Math.Max(MaxAbsDot(points, center, right), minRadius) * 2.0 * Padding;
         var scale = System.Math.Max(spanY, spanX / System.Math.Max(0.1, aspect));
         var position = center - (forward * System.Math.Max(1.0, distance));
         var camera = new CameraState(position, forward, up, DefaultFov, 0.05,

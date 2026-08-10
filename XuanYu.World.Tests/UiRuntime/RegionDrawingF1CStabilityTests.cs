@@ -11,15 +11,15 @@ public sealed class RegionDrawingF1CStabilityTests
     static readonly ViewportState Viewport = new(0, 0, 800, 600, 800, 600, 1, 1);
 
     [Fact]
-    public void C_R01_focus_during_draft_leaves_camera_unchanged()
+    public void C_R01_focus_during_draft_focuses_draft_safely()
     {
         var vm = DraftVm();
-        var before = vm.RenderSnapshot.CameraState;
 
         vm.RunCommand.Execute("聚焦");
 
-        Assert.Equal(before, vm.RenderSnapshot.CameraState);
-        Assert.Equal("区域绘制进行中，请完成或取消当前区域后再聚焦。", vm.FooterMessage);
+        var camera = vm.RenderSnapshot.CameraState;
+        Assert.True(camera.Position.DistanceTo(vm.ObservationCenter) > 50.0);
+        Assert.Equal("聚焦：当前区域草稿已进入视野。", vm.FooterMessage);
     }
 
     [Fact]

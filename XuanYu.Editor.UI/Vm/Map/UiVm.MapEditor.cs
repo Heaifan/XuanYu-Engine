@@ -70,7 +70,6 @@ public sealed partial class UiVm
     public void FocusMap()
     {
         ApplyMapViewFraming();
-        FooterMessage = "相机已从斜上方取景整张地图。";
     }
 
     void RaiseMapDocumentChanged()

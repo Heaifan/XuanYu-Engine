@@ -22,7 +22,7 @@
     <Style Selector="ItemsControl.debugList"><Setter Property="Margin" Value="0"/></Style>
   </UserControl.Styles>
 
-  <TabControl x:Name="SideTabs" Classes="sideTabs">
+  <TabControl x:Name="SideTabs" Classes="sideTabs" SelectedIndex="{Binding RightTabIndex, Mode=TwoWay}">
     <TabItem Classes="sideTab" Header="检查器">
       <local:InspectorPanel/>
     </TabItem>

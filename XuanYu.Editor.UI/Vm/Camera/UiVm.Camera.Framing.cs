@@ -10,6 +10,11 @@ public sealed partial class UiVm
 {
     void FrameAllCamera(string source)
     {
+        if (IsMapEditorMode)
+        {
+            ApplyMapViewFraming(source);
+            return;
+        }
         var frame = _camera.Mode == ProjectionMode.Orthographic
             ? EditorCameraFraming.FrameOrthographicWithCenter(
                 _sceneState.RenderSnapshot.Entities.Select(e => e.Transform.Position),
@@ -26,6 +31,7 @@ public sealed partial class UiVm
 
     void FrameSelectedCamera()
     {
+        if (TryFrameDraftCamera()) return;
         if (_regionDrawing.IsActive)
         {
             FooterMessage = "区域绘制进行中，请完成或取消当前区域后再聚焦。";
