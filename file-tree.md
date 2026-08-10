@@ -393,6 +393,7 @@
 │  │     ├─ VulkanNativeHost.NavGizmo.cs
 │  │     ├─ VulkanNativeHost.Picking.cs
 │  │     ├─ VulkanNativeHost.Pointer.cs
+│  │     ├─ NativePointerRoutePolicy.cs
 │  │     ├─ VulkanNativeHost.cs
 │  │     ├─ VulkanViewport.axaml
 │  │     ├─ VulkanViewport.axaml.cs
@@ -1264,6 +1265,7 @@
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs` — F3-F1：导航 Gizmo 命中——原生指针消息流（Avalonia 覆盖层被原生子窗口遮挡，命中走这里）。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerRoutePolicy.cs` — F1-C2 REWORK：Native 中键/区域预览/左键拖动路由优先级纯逻辑合同。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs` — partial class VulkanViewport
@@ -1626,6 +1628,7 @@
 - `XuanYu.World.Tests/Camera/CameraC2MapFramingTests.cs` — F1-C2：地图查看全部、无实体、投影模式与往返取景回归。
 - `XuanYu.World.Tests/Camera/CameraC2MapFramingTests.Helpers.cs` — F1-C2：地图范围、Draft 构造与相机有限性测试辅助。
 - `XuanYu.World.Tests/Camera/CameraC2DraftFramingTests.cs` — F1-C2：Draft 三点/一点聚焦及 PointerMoved 稳定性回归。
+- `XuanYu.World.Tests/Viewport/NativePointerRoutePolicyTests.cs` — F1-C2 REWORK：MiddleDown/Move/Shift+Middle/Up 与 Region Preview 互斥路由回归。
 - `XuanYu.World.Tests/Camera/UiViewGizmoTests.cs` — EDITOR-VIEW-R1：视角 Gizmo 六方向相机命令——朝向正确、观察中心与距离保持。
 - `XuanYu.World.Tests/Logging/FootAxamlTailContractTests.cs` — MAP-A-R2-D3-F3：源码合同——AXAML 尾部安全区与控制器两阶段定位结构。
 - `XuanYu.World.Tests/Logging/LogAutoScrollPolicyTests.cs` — MAP-A-R2-D3-F2：日志自动跟随纯策略——底部附近跟随、远离不强制拉回、滚到底恢复。

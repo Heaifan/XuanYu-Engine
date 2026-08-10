@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.7-fix
+MAP-A-R3-D2-F1-C2 REWORK Native 相机路由与 Draft 往返（2026-08-10 10:00:13）：修复 Native `Move` 分支遮蔽 Middle Move 的不可达条件；抽出共享 `NativePointerRoutePolicy`，让相机预览优先于 Draft Preview；强化 C2-R03/R09 的 Draft Anchor 可见性与三次往返回归，并新增 Native Route Policy 测试。
+- 验证：C2/F1-C/Native Route 专项 19/19 PASS；解决方案 Build 0W0E；Core 348/348、World 991/991、WarCore 22/22 PASS；ARCH-A、5+100、版本一致性、git diff --check 待提交后最终复跑。
+- 状态：MAP-A-R3-D2-F1-C2 继续 REWORK；C2-M02-A Draft Framing PASS，C2-M02-B BLOCKED BY F1-V，C2-M01/C2-M03/C2-M04 等待 Native 路由真机重测；F1-V 暂缓，A03～A06 BLOCKED，D3 禁止启动，F2 未创建。
+- Hash：6a12f00。
+
 ## v0.2.25.6-fix
 MAP-A-R3-D2-F1-C2 地图相机语义（2026-08-10 09:38:15）：地图编辑器模式下“查看全部”按 MapBounds 构图；“聚焦”按 Draft AABB → Selected Entity → 相机不变执行；新增正交地图取景、Draft 最小可视半径与右侧地图模式状态；补充 C2-R01～C2-R09 自动回归。
 - 验证：C2 专项 9/9 PASS；解决方案 Build 0W0E；Core 348/348、World 985/985、WarCore 22/22 PASS；ARCH-A、5+100、版本一致性、git diff --check PASS。
