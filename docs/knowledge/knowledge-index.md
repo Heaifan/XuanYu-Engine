@@ -1,7 +1,7 @@
 # 玄域引擎知识索引
 
 > 索引整理时间：2026-08-11 00:03（UTC+08:00）
-> 状态：V2 正式入库，共 20 条 Knowledge、1 条 Lesson。
+> 状态：V2 正式入库，共 20 条 Knowledge、2 条 Lesson。
 > 使用方法：AI 接到任务后先按标签/分类定位相关 ID，再读取对应主题文件全文；不要默认把全部知识无差别塞入实现上下文。
 
 | ID | 类型 | 分类 | 标题 | 优先级 | 证据 | 首次关键证据 | 状态 |
@@ -18,6 +18,7 @@
 | K-REN-003 | Knowledge | Rendering | Background / Sky 必须具有明确且独立的 Depth 语义 | P0 | E2 | v0.2.21.21-fix · 2026-08-01 16:56:53 · e0a994a | Active |
 | K-REN-004 | Knowledge | Rendering | Editor World Reference Grid 必须独立于 MapGround | P0 | E3 | v0.2.25.28-fix → .29-fix · 2c57893 / 6154078 | Active |
 | K-NATIVE-001 | Knowledge | Rendering | Native Overlay 必须验证真实 HWND 层级与绘制状态 | P0 | E2 | v0.2.25.18-stab · 2026-08-10 16:51:42 · 06b26e9 | Active |
+| L-REN-002 | Lesson | Rendering | 双精度回退必须发生在第一次降精度之前 | P0 | E2 | F1-FAR-SAFE-01 · 2026-08-11 | Active |
 | L-REN-001 | Lesson | Rendering | 连续参数修补失败必须重新审查承载架构 | P0 | E3 | GRID-RW-2A/B · c1451df / 2c57893 / 6154078 | Active |
 | K-INP-001 | Knowledge | Input | 同一 Pointer 手势必须只有一个实时 Owner | P0 | E2 | v0.2.25.9-fix · 2026-08-10 11:48:28 · d621755 | Active |
 | K-INP-002 | Knowledge | Input | Win32 Mouse Capture 必须统一管理完整释放生命周期 | P0 | E2 | v0.1.8.10-fix · 2026-06-26 · 8d6e7fd | Active |
@@ -38,4 +39,4 @@
 - `data.md`：K-DATA-001、K-DATA-002、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
 - `incidents.md`：上述知识的代表性事故记录与映射
-- `lessons.md`：L-REN-001 及后续可复用的停止条件与错误前提复盘
+- `lessons.md`：L-REN-001、L-REN-002 及后续可复用的停止条件与错误前提复盘

@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.25.32-fix
+MAP-A-R3-D2-F1 F1-FAR-SAFE-01（2026-08-11）：实机捕获极远 Dolly 的 `ViewProjection 矩阵不可逆` 未处理异常，F1-M15 改判 FAIL；F1 更新为 10/15 PASS、`OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`。
+- 变化：`ViewportMetricScale.TryCreate` 对不可逆 VP 返回 false；RenderProjection 无法构造时安全失败；Dolly 在 VP 之前使用纯 double 几何计算中心射线与 X/Y Metric，仅跨 10km、100km、1000km 等距离档时写入可见编辑器日志。撤销不可见且依赖 VP 的 Vulkan Debug 诊断；不修改 MaxDistance、FarPlane、Depth、Grid Step 或 Region。
+- 知识治理：新增 `L-REN-002`，固定“double fallback 必须位于第一次 float 降精度之前”；Camera-relative Rendering / Render Origin Rebasing 留作后续独立架构决策。
+- 验证：待本轮正式门禁及真机确认极远 Dolly 不崩溃，并收集 M03/M04/M05/M15 的日志证据。
+- Hash：待本轮 Commit + Push。
+
 ## v0.2.25.31-fix
 MAP-A-R3-D2-F1 F1-FAR-DIAG-01（2026-08-11）：F1 FINAL 真机裁定为 11/15 PASS；M03/M04/M05（极远缩放下 Grid 消失/卡顿与 World Axis 同步闪烁）和 M06（四点 Region 闭合/图层删除）FAIL，F1 保持 `OPEN · FINAL ACCEPTANCE FAILED · 4 ITEMS REMAIN`。
 - 变化：仅增加按 Camera Revision 去重的非阻塞调试诊断，输出 Camera Position/Target/Distance、Near/Far、Metric X/Y 与有效性、Grid Step、中心射线、Z=0 平面交点 `t`、`t/Far`，并明确 Grid 截断为 Far、Axis 截断为 Far×0.75；Camera、Depth、Ground、Fullscreen Grid、Step 与 Region 行为未变。

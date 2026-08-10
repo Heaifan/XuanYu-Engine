@@ -60,6 +60,13 @@ public sealed partial class ViewProjectionState
         return new ViewProjectionState(camera, viewport, view, projection, inverse);
     }
 
+    public static bool TryCreate(CameraState camera, ViewportState viewport,
+        out ViewProjectionState? state)
+    {
+        try { state = Create(camera, viewport); return true; }
+        catch (InvalidOperationException) { state = null; return false; }
+    }
+
     public Vector3d TransformPointToWorld(double ndcX, double ndcY, double ndcZ)
     {
         if (!double.IsFinite(ndcX) || !double.IsFinite(ndcY) || !double.IsFinite(ndcZ))

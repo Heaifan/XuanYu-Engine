@@ -22,8 +22,7 @@ public static class SceneRenderProjectionAdapter
         MapRenderSnapshot map = default,
         double viewportDpiScale = 1.0,
         IReadOnlyList<RenderVectorOverlayResource>? vectorOverlays = null,
-        ScaleIndicatorOverlayProjection scaleIndicator = default,
-        Vector3d cameraTarget = default)
+        ScaleIndicatorOverlayProjection scaleIndicator = default)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -78,8 +77,7 @@ public static class SceneRenderProjectionAdapter
             VectorOverlays: vectorOverlays,
             Map: map,
             ViewportDpiScale: viewportDpiScale,
-            ScaleIndicator: scaleIndicator,
-            CameraTarget: cameraTarget);
+            ScaleIndicator: scaleIndicator);
         return RenderProjectionResult.Ok(projection);
     }
 }

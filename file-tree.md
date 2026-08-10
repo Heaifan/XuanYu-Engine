@@ -147,7 +147,6 @@
 │  │  │  ├─ ViewportChromeContractTests.cs
 │  │  │  └─ ViewportScaleIndicatorContractTests.cs
 │  │  ├─ Grid/
-│  │  │  ├─ FarProjectionDiagnosticContractTests.cs
 │  │  │  ├─ ReferenceGridDrawPlanTests.cs
 │  │  │  ├─ ReferenceGridFrameStateTests.cs
 │  │  │  ├─ ScaleIndicatorMetricTests.cs
@@ -228,6 +227,7 @@
 │  │     └─ StaticModelVertex.cs
 │  ├─ Camera/
 │  │  ├─ CameraBasis.cs
+│  │  ├─ CameraFarProjectionDiagnostic.cs
 │  │  ├─ CameraFrameResult.cs
 │  │  ├─ CameraNavigation.Try.cs
 │  │  ├─ CameraNavigation.cs
@@ -417,6 +417,7 @@
 │  │  │  ├─ UiVm.Camera.Framing.Draft.cs
 │  │  │  ├─ UiVm.Camera.cs
 │  │  │  ├─ UiVm.CameraDolly.cs
+│  │  │  ├─ UiVm.FarProjectionDiagnostic.cs
 │  │  │  ├─ UiVm.CameraNavigation.cs
 │  │  │  ├─ UiVm.ScaleIndicator.cs
 │  │  │  └─ UiVm.ViewGizmo.cs
@@ -629,7 +630,6 @@
 │  │  │  ├─ VulkanClearFrameOwner.VectorOverlayPipeline.cs
 │  │  │  └─ VulkanClearFrameOwner.cs
 │  │  ├─ Grid/
-│  │  │  ├─ VulkanClearFrameOwner.FarDiagnostic.cs
 │  │  │  ├─ VulkanClearFrameOwner.Grid.cs
 │  │  │  ├─ VulkanClearFrameOwner.GridScale.cs
 │  │  │  ├─ VulkanClearFrameOwner.NavGizmo.cs
@@ -1089,6 +1089,7 @@
 - `AGENTS.md` — （职责待补）
 - `NuGet.Config` — api.nuget.org/v3/index.json" />
 - `XuanYu.Core.Tests/Camera/CameraBasisTests.cs` — F3-F2：唯一相机正交基生成器合同——成功结果必须三轴单位正交，失败必须明确原因。
+- `XuanYu.Core.Tests/Camera/FarProjectionSafetyTests.cs` — F1-FAR-SAFE-01：极远 Metric 失败安全与纯 double 诊断回归。
 - `XuanYu.Core.Tests/Camera/CameraNavigationRollTests.cs` — F3-F3：Orbit 地平线合同——普通环绕保持世界 +Z Up、无 Roll、不累积倾斜。
 - `XuanYu.Core.Tests/Camera/CameraNavigationSequenceTests.cs` — F3-F2：导航组合链崩溃回归——顶/底视后任何导航不得再抛 CameraState 参数异常。
 - `XuanYu.Core.Tests/Camera/CameraNavigationStressTests.cs` — F3-F2（计划 14.4）：重复导航压力测试——固定序列循环 100 次，检测累积误差与逐步失去正交。
@@ -1126,7 +1127,6 @@
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportAssistDrawPlanTests.cs` — F3-F1：导航 Gizmo 恒为最后一项（Overlay Pass 收尾）。
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportChromeContractTests.cs` — F3-D1：视口黑边合同测试（计划 11.1）——XAML 防退化：
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs` — OVL-R2/R3：比例尺 Vulkan DrawKind、Depth Off、顺序与 Native Popup 删除合同。
-- `XuanYu.Core.Tests/Render/Grid/FarProjectionDiagnosticContractTests.cs` — F1-FAR-DIAG-01：极远共享投影诊断字段、去重与无行为变更合同。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridFrameStateTests.cs` — GRID-RW-2B：1/2/5 全帧 Step 与 24~80 DIP 回滞合同。
 - `XuanYu.Core.Tests/Render/Grid/ScaleIndicatorMetricTests.cs` — MAP-A-R3-D2-F1-V3/A02：比例尺 1/2/5 距离选择、100m 最小距离与目标宽度合同。
@@ -1347,7 +1347,8 @@
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.cs` — F3-F4：取景命令。正交模式保持正交（尺度按包围范围适配），透视模式沿用距离构图。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.Draft.cs` — F1-C2：按 Draft 顶点 AABB 与最小可视半径聚焦草稿。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.cs` — F3-D2：导航 Gizmo 相机快照（Right/Up/Forward 投影输入；不含平移）。
-- `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraDolly.cs` — MAP-A-R3-D2-F1-V3：地图编辑 Dolly 入口与 Zoom Policy 接入。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraDolly.cs` — 地图编辑 Dolly 入口，在候选相机阶段触发极远安全诊断。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.FarProjectionDiagnostic.cs` — F1-FAR-SAFE-01：跨极远距离档时将纯 double 相机诊断写入编辑器日志。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.ScaleIndicator.cs` — MAP-A-R3-D2-F1-V3/A02：比例尺展示状态消费统一 ViewportMetricScale，并保持 100m 最小层级。
 - `XuanYu.World.Tests/UiRuntime/ScaleIndicatorVisibilityRuntimeTests.cs` — A02：检查器标签下比例尺可见且 Dolly 不能越过 100m Zoom Floor。
@@ -1476,6 +1477,7 @@
 - `XuanYu.Editor/Assets/StaticModels/StaticModelPrimitive.cs` — （职责待补）
 - `XuanYu.Editor/Assets/StaticModels/StaticModelVertex.cs` — （职责待补）
 - `XuanYu.Editor/Camera/CameraBasis.cs` — F3-F2：唯一相机正交基生成器（Editor 相机规则；不进入 Core，不持有 UiVm/Vulkan）。
+- `XuanYu.Editor/Camera/CameraFarProjectionDiagnostic.cs` — F1-FAR-SAFE-01：不依赖 ViewProjection 的双精度中心射线与屏幕公制诊断。
 - `XuanYu.Editor/Camera/CameraFrameResult.cs` — （职责待补）
 - `XuanYu.Editor/Camera/CameraNavigation.Try.cs` — F3-F2：失败安全导航入口（partial）——Try* 成功才输出结果；失败给出原因且不修改任何状态。
 - `XuanYu.Editor/Camera/CameraNavigation.cs` — （职责待补）
@@ -1556,7 +1558,7 @@
 - `XuanYu.Render.Abstractions/ScaleIndicatorMetric.cs` — MAP-A-R3-D2-F1-V3：比例尺漂亮距离选择与 m/km 文本格式化。
 - `XuanYu.Render.Abstractions/ScaleIndicatorGlyphLite.cs` — OVL-R2：比例尺专用 0-9/m/k/点/空格字符编码。
 - `XuanYu.Render.Abstractions/ScaleIndicatorOverlayProjection.cs` — OVL-R2：比例尺可见性、标签与 DIP 宽度渲染投影 DTO。
-- `XuanYu.Render.Abstractions/ViewportMetricScale.cs` — MAP-A-R3-D2-F1：计算视口 X/Y 方向公制尺度并提供最小方向尺度。
+- `XuanYu.Render.Abstractions/ViewportMetricScale.cs` — 计算视口 X/Y 方向公制尺度；不可逆 VP 时返回失败而不抛异常。
 - `XuanYu.Render.Abstractions/RenderCameraProjection.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderDrawPlan.Typed.cs` — R4-R3-R2：实体绘制计划提取（typed 部分），供 Vulkan 与测试共同使用。
 - `XuanYu.Render.Abstractions/RenderDrawPlan.cs` — R4-R3-R2：实体绘制计划提取（帧级），供 Vulkan 与测试共同使用。
@@ -1615,7 +1617,6 @@
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Resources.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Trace.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.cs` — （职责待补）
-- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.FarDiagnostic.cs` — F1-FAR-DIAG-01：按相机版本记录极远平面求交与度量诊断，不改变渲染状态。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.Grid.cs` — GRID-RW-2B：以全屏三角形绘制帧级统一 Step 的 World XY 网格。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.GridScale.cs` — GRID-RW-2A：网格公制计算固定消费 World XY 的 Z=0 平面。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.NavGizmo.cs` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 屏幕空间、深度测试/写入关闭、最后绘制。

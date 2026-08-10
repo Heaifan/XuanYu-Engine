@@ -2,6 +2,40 @@
 
 > 教训记录“为什么会沿着错误前提持续投入”，并定义何时必须停止局部修补、回到共同依赖与承载架构审查。
 
+## L-REN-002 双精度回退必须发生在第一次降精度之前
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E2
+**标签**：Large World、Camera、Projection、Float Precision、Failure Safety
+**确认时间**：2026-08-11（UTC+08:00）
+**来源**：F1 极远 Dolly 真机异常栈；`ViewProjection 矩阵不可逆`。
+
+### 已确认事实
+
+- 相机与世界位置使用 `Vector3d`，但现有 ViewProjection 建立会将 eye 与 target 转为 `Vector3`。
+- 极远 Dolly 可触发不可逆 ViewProjection；异常曾从名称为 Try 的 Metric 路径穿透至 UI。
+- 已有 WorldRay 的双精度分支若必须先创建 ViewProjection，便不能保护这一次 VP 创建本身。
+
+### 教训
+
+精度保护不得放在第一次 float 转换或 float 矩阵构建之后。任何“大世界 double fallback”都必须能在不构造该 float 对象的前提下判定、诊断并安全失败。
+
+### 正确做法
+
+1. 把可能失败的 VP 建立包装为真正不抛异常的 Try API。
+2. 在危险构建之前，用相机 basis、FOV 和视口的 double 几何收集诊断。
+3. 失败时保持 UI 与上一帧合法状态；不得让 Metric、Scale 或诊断成为崩溃入口。
+4. 长期方案另行评审 Camera-relative Rendering / Render Origin Rebasing，禁止在 F1 安全轮次偷偷引入。
+
+### 验证
+
+- 极远距离回归必须证明 Metric/RenderProjection 不抛异常。
+- 用户日志必须能读取预 VP 的距离、Near/Far、Metric 与中心射线数据。
+- 真机继续覆盖 Grid、Axis、Scale 与 Editor 存活性。
+
+---
+
 ## L-REN-001 连续参数修补失败时必须重新审查承载架构和错误前提
 
 **状态**：Active

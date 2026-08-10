@@ -13,6 +13,7 @@ public sealed partial class UiVm
             _logBus.Error(EditorLogSource.Input, EditorLogCategory.Command, "相机 Dolly 失败", reason);
             return false;
         }
+        TraceFarDolly(result);
         _cameraRevision = result.Camera.Revision;
         ApplyCameraResult(result);
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,

@@ -1,5 +1,6 @@
 using XuanYu.Core.Map;
 using XuanYu.Core.Scene;
+using XuanYu.Core.Space;
 using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Editor.UI;
@@ -8,6 +9,8 @@ public sealed partial class UiVm
 {
     RenderProjectionResult CreateRenderProjection(SceneRenderSnapshot snapshot)
     {
+        if (_lastViewport is { } viewport && !ViewProjectionState.TryCreate(_camera, viewport, out _))
+            return RenderProjectionResult.Fail("相机投影超出当前单精度渲染表示范围。");
         var transform = snapshot.RenderTransform;
         var vectorOverlay = MapRegionRenderProjection.Build(MapSession.CurrentMap, _regionDrawing);
         IReadOnlyList<RenderVectorOverlayResource> overlays =
@@ -25,7 +28,6 @@ public sealed partial class UiVm
             _viewportDpiScale,
             overlays,
             new ScaleIndicatorOverlayProjection(
-                IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip),
-            _observationCenter);
+                IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip));
     }
 }

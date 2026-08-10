@@ -27,7 +27,6 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _referenceGridFrameState = ReferenceGridFrameState.Create(metric,
                 projection.Camera.Position.X, projection.Camera.Position.Y, height, _referenceGridFrameState);
         }
-        TraceFarProjection(projection, viewport, metricValid, metric);
     }
 
     // 前 40 float 填充 VP/InvVP/相机/视口；后 8 float 由各辅助 Pass 专用。

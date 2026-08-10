@@ -1,7 +1,7 @@
 # MAP-A-R3-D2-F1-CLOSEOUT
 
-**状态**：OPEN · FINAL ACCEPTANCE FAILED · 4 ITEMS REMAIN
-**基线**：`feat/MAP-A-R3` / `5648912`
+**状态**：OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN
+**基线**：`feat/MAP-A-R3` / `d7a7adf`
 **自动门禁**：2026-08-11 00:03:14（UTC+08:00）完整 Build 0W0E、Core 335/335、World 1115/1115、WarCore 22/22、ARCH-A、5+100、SPIR-V 与 diff-check PASS
 **关闭条件**：下列 F1-M01～F1-M15 全部由用户真机确认 PASS。
 
@@ -23,13 +23,14 @@
 | F1-M12 | Map View | Resize | 调整窗口大小 | Grid/Region/Scale/Gizmo 不消失、不漂移 | PASS |
 | F1-M13 | Region Tool | 点击 | 落点与顶点比对 | 坐标一致 | PASS |
 | F1-M14 | Region Tool | 单击 | 多次单击 | 无重复 Hit、无多点 | PASS |
-| F1-M15 | Editor | 综合操作 | 全流程 | 无 Error/Warning/崩溃/输入卡死 | PASS |
+| F1-M15 | Editor | 综合操作 | 全流程 | 无 Error/Warning/崩溃/输入卡死 | FAIL（极远 Dolly 触发 VP 不可逆异常） |
 
-## F1-FAR-DIAG-01
+## F1-FAR-SAFE-01
 
-- 仅增加每个相机 Revision 一条非阻塞调试输出：Camera Position/Target/Distance、Near/Far、Metric 有效性与 X/Y、Grid Step、中心射线、平面交点 `t` 和 `t/Far`。
-- 不改动 Camera、FarPlane、Fullscreen World Grid、World XY（Z=0）、Depth、Ground、Step 或 Region；M06 留给独立的 `F1-REGION-CLOSE-01`。
-- 当前验收裁定为 11/15 PASS；本轮目标是取得 M03～M05 的根因证据，不重开 M01/M02/M07～M15。
+- 实机崩溃已定位为 `ViewProjectionState.Create` 将极远 `Vector3d` 相机位置降为 `Vector3` 后，`eye` 与 `eye + forward` 合并，导致 ViewProjection 不可逆；旧 `F1-FAR-DIAG-01` 既不可见又依赖该 VP，已撤销。
+- `ViewportMetricScale.TryCreate` 改为真正失败安全；渲染投影无法构造时返回失败快照，Vulkan 清理该帧投影而不让异常穿透 UI。
+- Dolly 候选相机在 VP 构建前以纯 double 几何计算中心射线和 X/Y Metric，并在 10km、100km、1000km 等跨档时写入编辑器日志；不改动 Camera 上限、FarPlane、Fullscreen Grid、Depth、Ground、Step 或 Region。
+- 当前验收裁定为 10/15 PASS；本轮目标是保证极远 Dolly 不崩溃且可读地收集 M03～M05/M15 证据。M06 仍留给独立的 `F1-REGION-CLOSE-01`。
 
 ## 范围冻结
 
