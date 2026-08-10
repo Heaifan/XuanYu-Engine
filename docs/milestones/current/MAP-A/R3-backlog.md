@@ -111,7 +111,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 | V3-T04 | Perspective Zoom Floor | DONE |
 | V3-T05 | Orthographic Zoom Floor | DONE |
 | V3-T06 | 比例尺与 Zoom Metric 自动回归 | DONE |
-| V3-T07 | F1-V3 正式门禁与 Commit + Push | TODO |
+| V3-T07 | F1-V3 正式门禁与 Commit + Push | DONE（`5a6c6c2` 已提交，待推送） |
 
 ### V1 自动验收
 
