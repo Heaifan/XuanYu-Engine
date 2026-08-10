@@ -11,7 +11,21 @@ public sealed partial class VulkanNativeHost
         var x = message.PhysicalX / dpi;
         var y = message.PhysicalY / dpi;
         if (DataContext is not UiVm vm) return;
-        if (message.Message == NativePointerMessage.LeftDown)
+        var route = NativePointerRoutePolicy.Resolve(
+            message, _nativeCameraActive, vm.IsRegionDrawingTool && vm.IsRegionDrawingDraftActive);
+        if (route == NativePointerRoute.MiddleDown)
+            TryBeginNativeCamera(vm, NativePointerId, x, y, message.IsShiftDown);
+        else if (route == NativePointerRoute.CameraPreview)
+        {
+            PreviewNativeCamera(vm, x, y);
+            return;
+        }
+        else if (route == NativePointerRoute.RegionPreview)
+        {
+            PreviewRegionDrawing(vm, x, y);
+            return;
+        }
+        else if (route == NativePointerRoute.LeftDown)
         {
             if (ReportRegionDrawing(vm, x, y)) { ReleaseExpectedCapture(); return; }
             // F3-F1：导航 Gizmo 优先（右上角区域）；否则进入变换 Gizmo / Picking。
@@ -20,28 +34,21 @@ public sealed partial class VulkanNativeHost
             ReportPointerPicking(vm, x, y);
             ReleaseExpectedCapture();
         }
-        else if (message.Message == NativePointerMessage.MiddleDown)
-            TryBeginNativeCamera(vm, NativePointerId, x, y, message.IsShiftDown);
-        else if (message.Message == NativePointerMessage.Move)
+        else if (route == NativePointerRoute.LeftPreview)
         {
-            if (vm.IsRegionDrawingTool && PreviewRegionDrawing(vm, x, y)) return;
-            if (message.IsLeftButtonDown)
-            {
-                if (TryNavGizmoMove(vm, x, y)) return;
-                PreviewNativePointer(vm, x, y);
-            }
+            if (TryNavGizmoMove(vm, x, y)) return;
+            PreviewNativePointer(vm, x, y);
         }
-        else if (message.Message == NativePointerMessage.Move && message.IsMiddleButtonDown) PreviewNativeCamera(vm, x, y);
-        else if (message.Message == NativePointerMessage.LeftUp)
+        else if (route == NativePointerRoute.LeftUp)
         {
             if (TryNavGizmoRelease(vm, x, y)) return;
             CommitNativePointer(vm, x, y);
         }
-        else if (message.Message == NativePointerMessage.MiddleUp) EndNativeCamera(vm);
-        else if (message.Message == NativePointerMessage.Wheel) vm.DollyCamera(message.WheelDelta / 120.0);
-        else if (message.Message == NativePointerMessage.CaptureChanged) HandleNativeCaptureChanged(vm, message);
-        else if (message.Message == NativePointerMessage.KillFocus) CancelNativeInput(vm, "WindowFocusLost");
-        else if (message.Message == NativePointerMessage.CancelMode) CancelNativeInput(vm, "WM_CANCELMODE");
+        else if (route == NativePointerRoute.MiddleUp) EndNativeCamera(vm);
+        else if (route == NativePointerRoute.Wheel) vm.DollyCamera(message.WheelDelta / 120.0);
+        else if (route == NativePointerRoute.CaptureChanged) HandleNativeCaptureChanged(vm, message);
+        else if (route == NativePointerRoute.KillFocus) CancelNativeInput(vm, "WindowFocusLost");
+        else if (route == NativePointerRoute.CancelMode) CancelNativeInput(vm, "WM_CANCELMODE");
     }
     void PreviewNativePointer(UiVm vm, double x, double y)
     {

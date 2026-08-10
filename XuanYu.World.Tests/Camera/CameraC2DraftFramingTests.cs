@@ -20,6 +20,7 @@ public sealed class CameraC2DraftFramingTests
         Assert.Equal((minY + maxY) / 2.0, setup.Vm.ObservationCenter.Y, precision: 6);
         Assert.Equal(setup.Vm.MapSession.CurrentMap.Surface.BaseHeightMeters,
             setup.Vm.ObservationCenter.Z, precision: 6);
+        CameraC2MapFramingTestsHelpers.AssertDraftPointsVisible(setup.Vm, setup.Points);
     }
 
     [Fact]

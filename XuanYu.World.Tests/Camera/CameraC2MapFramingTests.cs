@@ -64,13 +64,23 @@ public sealed class CameraC2MapFramingTests
     [Fact]
     public void C2_R09_view_all_focus_view_all_keeps_camera_finite()
     {
-        var vm = CameraC2MapFramingTestsHelpers.MapVm(seedInitialScene: false);
+        var setup = CameraC2MapFramingTestsHelpers.DraftVm(3);
+        var mapFrames = new List<CameraState>();
+        var draftFrames = new List<CameraState>();
 
-        vm.RunCommand.Execute("查看全部");
-        CameraC2MapFramingTestsHelpers.AssertFinite(vm.RenderSnapshot.CameraState);
-        vm.RunCommand.Execute("聚焦");
-        CameraC2MapFramingTestsHelpers.AssertFinite(vm.RenderSnapshot.CameraState);
-        vm.RunCommand.Execute("查看全部");
-        CameraC2MapFramingTestsHelpers.AssertFinite(vm.RenderSnapshot.CameraState);
+        for (var i = 0; i < 3; i++)
+        {
+            setup.Vm.RunCommand.Execute("查看全部");
+            CameraC2MapFramingTestsHelpers.AssertMapCornersVisible(setup.Vm);
+            mapFrames.Add(setup.Vm.RenderSnapshot.CameraState);
+            setup.Vm.RunCommand.Execute("聚焦");
+            CameraC2MapFramingTestsHelpers.AssertDraftPointsVisible(setup.Vm, setup.Points);
+            draftFrames.Add(setup.Vm.RenderSnapshot.CameraState);
+        }
+
+        CameraC2MapFramingTestsHelpers.AssertSamePose(mapFrames[0], mapFrames[1]);
+        CameraC2MapFramingTestsHelpers.AssertSamePose(mapFrames[1], mapFrames[2]);
+        CameraC2MapFramingTestsHelpers.AssertSamePose(draftFrames[0], draftFrames[1]);
+        CameraC2MapFramingTestsHelpers.AssertSamePose(draftFrames[1], draftFrames[2]);
     }
 }

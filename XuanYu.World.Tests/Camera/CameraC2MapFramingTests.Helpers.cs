@@ -60,6 +60,30 @@ static class CameraC2MapFramingTestsHelpers
         }
     }
 
+    public static void AssertDraftPointsVisible(UiVm vm, IReadOnlyList<MapPoint> points)
+    {
+        var projection = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, Viewport);
+        var height = vm.MapSession.CurrentMap.Surface.BaseHeightMeters;
+        foreach (var point in points)
+        {
+            Assert.True(projection.TryProjectWorldPoint(new(point.X, point.Y, height), out var screen));
+            Assert.InRange(screen.X, 0.0, Viewport.LogicalWidth);
+            Assert.InRange(screen.Y, 0.0, Viewport.LogicalHeight);
+        }
+    }
+
+    public static void AssertSamePose(CameraState expected, CameraState actual)
+    {
+        Assert.Equal(expected.Position.X, actual.Position.X, precision: 6);
+        Assert.Equal(expected.Position.Y, actual.Position.Y, precision: 6);
+        Assert.Equal(expected.Position.Z, actual.Position.Z, precision: 6);
+        Assert.Equal(expected.Forward.X, actual.Forward.X, precision: 6);
+        Assert.Equal(expected.Forward.Y, actual.Forward.Y, precision: 6);
+        Assert.Equal(expected.Forward.Z, actual.Forward.Z, precision: 6);
+        Assert.Equal(expected.Mode, actual.Mode);
+        Assert.Equal(expected.OrthographicScale, actual.OrthographicScale, precision: 6);
+    }
+
     public static void AssertFinite(CameraState camera)
     {
         Assert.True(double.IsFinite(camera.Position.X));
