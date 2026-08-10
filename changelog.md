@@ -22,7 +22,7 @@
 MAP-A-R3-D2-F1-CLOSEOUT（2026-08-11 00:03:14）：记录 RW-2A/RW-2B 真机 PASS；冻结 World Grid 独立 Fullscreen、World XY（Z=0）、深度关闭、Ground 独立、CPU 全帧 Step、1/2/5 与 24~80 DIP 回滞，RW-2C/RW-2D 降级为 `DEFERRED · NON-BLOCKING VISUAL IMPROVEMENT`。新增 F1 FINAL 15 项 IPO 真机清单；未取得 15/15 前 F1 保持 OPEN。
 - 知识治理：建立扁平 `Lesson` 类型与 `L-REN-001`，新增 `INC-2026-08-10-006` 与 `K-REN-004`，知识索引升级为 ID/类型/分类，并同步 README、docs-index、file-tree 和 R3 backlog；Lesson 严格区分已确认事实与高置信但未 GPU Capture 直接证明的机制解释。
 - 验证：完整解决方案 Build 0 Warning / 0 Error；Core.Tests 335/335、World.Tests 1115/1115、WarCore.Tests 22/22 PASS；ARCH-A、5+100、SPIR-V ↔ GLSL（569 words）与 `git diff --check` PASS。F1 FINAL 真机验收仍待用户逐项裁定。
-- Hash：待本轮 Commit + Push 后回填。
+- Hash：`4ab3928`（F1 CLOSEOUT、Incident、Lesson 与 Knowledge 沉淀）。
 
 ## v0.2.25.29-fix
 MAP-A-R3-D2-F1 GRID-RW-2B（2026-08-10 23:50:35）：World Grid 保持 RW-2A 的 Fullscreen Triangle、World XY（Z=0）、DepthTest/DepthWrite 关闭和 MapGround 独立性；仅将固定 100m 改为 `ReferenceGridFrameState` 每帧统一 Step。Step 按保守 `max(X,Y)` 公制尺度、1/2/5 序列与 24~80 DIP 回滞切档，Shader 只消费 `gridState.x`，`fwidth` 仍仅用于 AA，未引入 Fragment LOD。
