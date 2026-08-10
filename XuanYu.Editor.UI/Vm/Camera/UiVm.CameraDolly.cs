@@ -13,9 +13,6 @@ public sealed partial class UiVm
             _logBus.Error(EditorLogSource.Input, EditorLogCategory.Command, "相机 Dolly 失败", reason);
             return false;
         }
-        if (_lastViewport is { } viewport)
-            result = MapEditorZoomPolicy.Clamp(_camera, result, _observationCenter, viewport,
-                MapSession.CurrentMap.Surface.BaseHeightMeters, out _);
         _cameraRevision = result.Camera.Revision;
         ApplyCameraResult(result);
         _logBus.Info(EditorLogSource.Input, EditorLogCategory.Command,

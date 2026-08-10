@@ -3,7 +3,6 @@ using XuanYu.Core.Map;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Editor.Camera;
-using XuanYu.Editor.UI;
 using XuanYu.Render.Abstractions;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -38,13 +37,7 @@ public sealed class MapVectorOverlayDepthPolicyTests
         var direction = Camera(angle, false);
         var start = new CameraState(new(0, -10000, 10000), direction.Forward,
             direction.Up, 60, 0.1, 100000, 1);
-        var candidate = new CameraState(new(0, -1, 1), direction.Forward,
-            direction.Up, 60, 0.1, 100000, 1);
-        var result = MapEditorZoomPolicy.Clamp(start,
-            new CameraFrameResult(candidate, Vector3d.Zero), Vector3d.Zero,
-            viewport, 0, out var clamped);
-        Assert.True(clamped);
-        var state = ViewProjectionState.Create(result.Camera, viewport);
+        var state = ViewProjectionState.Create(start, viewport);
         foreach (var vertex in new[] { new Vector3d(-250, -250, 0), new(250, -250, 0), new(0, 250, 0) })
         {
             var clip = Vector4.Transform(new Vector4((float)vertex.X, (float)vertex.Y,

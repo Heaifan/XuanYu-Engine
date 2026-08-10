@@ -11,12 +11,10 @@ public readonly record struct ScaleIndicatorMetric(
         if (!double.IsFinite(metersPerDip) || metersPerDip <= 0.0)
             return new ScaleIndicatorMetric(0.0, 0.0, "");
         var maxDistance = metersPerDip * 160.0;
-        var belowMinimum = maxDistance < ReferenceGridScale.MinSpacing;
-        var distance = Math.Max(ReferenceGridScale.MinSpacing,
-            ReferenceGridScale.LargestNiceSpacingAtMost(maxDistance));
+        var distance = ReferenceGridScale.LargestNiceSpacingAtMost(maxDistance);
         var width = distance / metersPerDip;
         var next = ReferenceGridScale.NextNiceSpacing(distance);
-        if (!belowMinimum && width < 80.0 && next / metersPerDip <= 160.0)
+        if (width < 80.0 && next / metersPerDip <= 160.0)
         {
             distance = next;
             width = distance / metersPerDip;
@@ -25,6 +23,6 @@ public readonly record struct ScaleIndicatorMetric(
     }
 
     static string Format(double meters) => meters >= 1000.0
-        ? $"{(meters / 1000.0).ToString("0", CultureInfo.InvariantCulture)} km"
-        : $"{meters.ToString("0", CultureInfo.InvariantCulture)} m";
+        ? $"{(meters / 1000.0).ToString("0.##", CultureInfo.InvariantCulture)} km"
+        : $"{meters.ToString("0.##", CultureInfo.InvariantCulture)} m";
 }

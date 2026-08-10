@@ -50,4 +50,15 @@ public sealed class ViewportOverlayLayoutTests
             80, 30, 160, 40, 16, 16, ViewportOverlayAnchor.BottomRight));
         Assert.Equal(new ViewportOverlayRect(0, 0, 80, 30), rect);
     }
+
+    [Fact]
+    public void Scale_indicator_width_cap_keeps_normal_viewport_margin()
+    {
+        var rect = ViewportOverlayLayoutResolver.Resolve(new(
+            800, 600, 160, 32, 16, 16, ViewportOverlayAnchor.BottomLeft));
+
+        Assert.Equal(160, rect.Width);
+        Assert.Equal(16, rect.X);
+        Assert.True(rect.Right < 800);
+    }
 }

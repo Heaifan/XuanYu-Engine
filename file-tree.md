@@ -419,7 +419,6 @@
 │  │  │  ├─ UiVm.Camera.Framing.Draft.cs
 │  │  │  ├─ UiVm.Camera.cs
 │  │  │  ├─ UiVm.CameraDolly.cs
-│  │  │  ├─ MapEditorZoomPolicy.cs
 │  │  │  ├─ UiVm.CameraNavigation.cs
 │  │  │  ├─ UiVm.ScaleIndicator.cs
 │  │  │  └─ UiVm.ViewGizmo.cs
@@ -878,7 +877,6 @@
 │  │  └─ WorldMapStateTests.cs
 │  ├─ MapEditing/
 │  │  ├─ MapEditSessionCommandTests.cs
-│  │  ├─ MapEditorZoomPolicyTests.cs
 │  │  ├─ MapPickingRoundTripTests.cs
 │  │  ├─ MapEditSessionRegionTests.cs
 │  │  ├─ MapEditSessionCreationTests.cs
@@ -1491,7 +1489,6 @@
 - `XuanYu.Editor/MapDocument/MapJsonSerializer.cs` — MAP-A-R1-D2：.xymap 严格 JSON 读写。字段大小写敏感、未知字段拒绝、确定性输出、UTF-8。
 - `XuanYu.Editor/MapDocument/MapStorageService.cs` — MAP-A-R1-D2：地图文件存储。候选加载 + 同目录临时文件原子保存，不直接替换任何状态。
 - `XuanYu.Editor/MapEditing/MapEditEvents.cs` — MAP-A-R2-D2：地图编辑低频事件参数（禁止记录鼠标移动/Hover/每帧渲染）。
-- `XuanYu.Editor.UI/Vm/Camera/MapEditorZoomPolicy.cs` — MAP-A-R3-D2-F1-V3：地图编辑器视觉 Zoom Floor（100m/160 DIP），不污染通用 Camera。
 - `XuanYu.Editor/MapEditing/MapEditReason.cs` — MAP-A-R2-D2/D3-A1/D4：地图编辑原因（内容变更事件携带）。
 - `XuanYu.Editor/MapEditing/MapEditSession.Regions.cs` — MAP-A-R3-D1：区域正式 Create/Delete 入口，复用地图候选校验、单历史条目与 Undo/Redo 快照恢复。
 - `XuanYu.Editor/MapEditing/MapEditSession.ActiveLayer.cs` — MAP-A-R2-D4：活动区域图层（会话临时状态：不进历史、不设 Dirty、不产生内容变更事件）。
@@ -1778,7 +1775,6 @@
 - `XuanYu.World.Tests/Map/WorldMapStateOwnerTests.cs` — MAP-A-R1-D3：World 地图状态所有者——加载/切换/卸载/查询/渲染快照。
 - `XuanYu.World.Tests/Map/WorldMapStateTests.cs` — MAP-A-R1-D3：World 地图状态——有限边界（闭区间）与高度查询。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCommandTests.cs` — MAP-A-R2-D2：地图基础编辑命令（改名/尺寸/基础高度/No-op/非法输入）。
-- `XuanYu.World.Tests/MapEditing/MapEditorZoomPolicyTests.cs` — MAP-A-R3-D2-F1-V3：Perspective/Orthographic Zoom Floor 与通用 Camera 极限隔离合同。
 - `XuanYu.World.Tests/MapEditing/MapPickingRoundTripTests.cs` — MAP-A-R3-D2-F1 Metric/Picking：100m、10km、10,000km 与多 DPI/斜视下 Screen → Pick → World → Screen 误差不超过 1 DIP。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionRegionTests.cs` — MAP-A-R3-D1：Region Create/Delete 单历史条目及相同 ID Undo/Redo 合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCreationTests.cs` — MAP-A-R2-D2：默认会话与根状态合同。

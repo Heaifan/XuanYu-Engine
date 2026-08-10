@@ -15,12 +15,13 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - V1-STAB-1：DONE（本轮）；Gizmo 输入隔离、可见轴线/端点命中与 Avalonia/Native 两条手势路径统一。
 - V1-STAB-2：历史实现已被 STAB-5A 裁定为 `FAILED · WRONG PRESENTATION ARCHITECTURE`；Native Popup 不再作为可接受的 Viewport Overlay。
 - V1-STAB-3：DONE（本轮）；Vector Overlay 使用独立无深度测试/无深度写入 Pass，真机俯视/45°/低角度稳定性待重验。
-- A02 follow-up：`READY FOR USER ACCEPTANCE`；100m Metric/Zoom Floor 保留，比例尺已迁移到 Vulkan-native Overlay，等待用户真机确认可见性。
+- A02 follow-up：`REWORK`；100m 参考网格保留，比例尺与相机 Zoom 已拆开，等待用户真机确认动态比例尺、缩放范围和 Overlay 尺寸。
 - STAB-4A/5A：`FAILED · WRONG PRESENTATION ARCHITECTURE`；`ac5d306` 是 Native Popup 路线终点，禁止继续修 Popup Screen Rect。
-- STAB-5B：`READY FOR USER ACCEPTANCE`；Vulkan-native Scale Indicator 已完成 OVL-R0～R3 自动实现与聚焦门禁。
+- STAB-5B：`REWORK COMPLETE · READY FOR USER ACCEPTANCE`；Vulkan-native Scale Indicator 已完成动态 1/2/5 序列、160 DIP 上限与 32 DIP 高度门禁。
 - STAB-4B：代码实现完成；视口公制尺度改为 X/Y 方向值，Zoom Floor 取较小方向并对 Metric 失败 fail-closed；斜视回归已补。
 - STAB-4C：代码实现完成；Vector Overlay 移除过期 Clip-Z Bias，Fill / Stroke / Marker 直接消费 ViewProjection，保留无深度测试/写入 Pass 与绘制顺序。
 - 本轮真机裁定：`MAP-A-R3-D2-F1 联合真机验收 = FAIL · FUNCTIONAL BUT UNSTABLE`；A02、B03、C01、C02 按现象判 FAIL，C03～C07、D01～D04 尚未完成。
+- V06：鼠标滚轮缩放 `FAIL`；根因确认为比例尺 100m 下限、Zoom Floor、Overlay 宽度和测试断言耦合，进入同一 F1 的解耦修复轮。
 - D3：禁止启动；F2：不创建。
 
 ## Viewport Overlay / Scale Indicator 架构整改
@@ -132,7 +133,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 | --- | --- | --- |
 | V3-T01 | 视口内右下角 12～16 DIP 悬浮比例尺 | DONE |
 | V3-T02 | 1/2/5 m/km 格式器 | DONE |
-| V3-T03 | MapEditorZoomPolicy 独立于通用 Camera | DONE |
+| V3-T03 | MapEditorZoomPolicy 独立于通用 Camera | SUPERSEDED：V06 解耦轮删除该策略 |
 | V3-T04 | Perspective Zoom Floor | DONE |
 | V3-T05 | Orthographic Zoom Floor | DONE |
 | V3-T06 | 比例尺与 Zoom Metric 自动回归 | DONE |
