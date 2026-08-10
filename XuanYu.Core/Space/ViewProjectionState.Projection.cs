@@ -1,4 +1,3 @@
-using System.Numerics;
 using XuanYu.Core.Gizmo;
 using XuanYu.Core.Math;
 
@@ -15,15 +14,33 @@ public sealed partial class ViewProjectionState
 
     public bool TryProjectWorldPoint(Vector3d point, out ScreenPoint screen)
     {
-        var clip = Vector4.Transform(new Vector4(ToVector3(point), 1), ViewProjection);
-        if (!float.IsFinite(clip.W) || clip.W <= 0)
+        var offset = point - Camera.Position;
+        var depth = offset.Dot(Camera.Forward);
+        if (!double.IsFinite(depth) || depth <= 0.0)
         {
             screen = default;
             return false;
         }
-        var ndcX = clip.X / clip.W;
-        var ndcY = clip.Y / clip.W;
-        if (!float.IsFinite(ndcX) || !float.IsFinite(ndcY))
+
+        var horizontal = offset.Dot(Camera.Right);
+        var vertical = offset.Dot(Camera.Up);
+        var aspect = Viewport.LogicalWidth / Viewport.LogicalHeight;
+        double ndcX;
+        double ndcY;
+        if (Camera.Mode == ProjectionMode.Orthographic)
+        {
+            var halfHeight = Camera.OrthographicScale * 0.5;
+            ndcX = horizontal / (halfHeight * aspect);
+            ndcY = vertical / halfHeight;
+        }
+        else
+        {
+            var tangent = global::System.Math.Tan(Camera.VerticalFovDegrees * global::System.Math.PI / 360.0);
+            ndcX = horizontal / (depth * tangent * aspect);
+            ndcY = vertical / (depth * tangent);
+        }
+
+        if (!double.IsFinite(ndcX) || !double.IsFinite(ndcY))
         {
             screen = default;
             return false;
