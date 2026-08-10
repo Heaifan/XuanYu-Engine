@@ -1,5 +1,6 @@
 using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
+using XuanYu.Render.Vulkan.Render.VectorOverlay;
 
 namespace XuanYu.Render.Vulkan.Render;
 
@@ -19,7 +20,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
             var size = primitive.Kind == RenderVectorOverlayPrimitiveKind.Marker
                 ? primitive.RadiusDip : primitive.WidthDip;
             FillScenePushConstants(scene, _renderProjection, default, default, new(1, 1, 1),
-                (float)(size * _renderProjection.ViewportDpiScale), (float)primitive.Kind, -20.0f);
+                (float)(size * _renderProjection.ViewportDpiScale),
+                VulkanVectorOverlayDepthPolicy.ModeFor(primitive.Kind), -20.0f);
             scene[19] = (float)primitive.Color.R;
             scene[23] = (float)primitive.Color.A;
             scene[24] = (float)primitive.Color.R;

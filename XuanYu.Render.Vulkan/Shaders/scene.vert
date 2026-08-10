@@ -257,6 +257,22 @@ vec3 axisVertex(int vi, out vec4 color) {
     return cube(center, extent, li);
 }
 
+// F1-REWORK-B2：Vector Overlay 只在裁剪空间建立视觉层级，绝不修改世界锚点。
+const float VECTOR_OVERLAY_FILL_DEPTH_BIAS = 0.000002;
+const float VECTOR_OVERLAY_STROKE_DEPTH_BIAS = 0.000010;
+const float VECTOR_OVERLAY_MARKER_DEPTH_BIAS = 0.000020;
+
+float vectorOverlayDepthBias() {
+    if (pc.selectionMode < 0.5) return VECTOR_OVERLAY_FILL_DEPTH_BIAS;
+    if (pc.selectionMode < 1.5) return VECTOR_OVERLAY_STROKE_DEPTH_BIAS;
+    return VECTOR_OVERLAY_MARKER_DEPTH_BIAS;
+}
+
+vec4 applyVectorOverlayDepthPolicy(vec4 clipPosition) {
+    clipPosition.z = max(0.0, clipPosition.z - clipPosition.w * vectorOverlayDepthBias());
+    return clipPosition;
+}
+
 void main() {
     // F2-R3-R2：invVP 每顶点算一次（flat 传给片元，避免每像素求逆）；背景 NDC 哨兵默认非背景。
     vInvViewProjection = inverse(pc.viewProjection);
@@ -265,7 +281,8 @@ void main() {
         // F1-V1：Vector Overlay。Stroke 与 Marker 在屏幕空间展开，Fill 保留世界坐标。
         vBaseColor = vec4(pc.entityRotation.xyz, pc.staticAlpha);
         if (pc.selectionMode < 0.5) {
-            gl_Position = pc.viewProjection * vec4(inPosition, 1.0);
+            gl_Position = applyVectorOverlayDepthPolicy(
+                pc.viewProjection * vec4(inPosition, 1.0));
         } else if (pc.selectionMode < 1.5) {
             vec4 current = pc.viewProjection * vec4(inPosition, 1.0);
             vec4 other = pc.viewProjection * vec4(inNormal, 1.0);
@@ -273,12 +290,12 @@ void main() {
             vec2 perp = length(delta) > 0.000001 ? normalize(vec2(-delta.y, delta.x)) : vec2(0.0);
             vec2 viewport = vec2(pc.entityRotation.w, pc.entityScale.w);
             current.xy += perp * pc.gizmoRingRadius * 2.0 / viewport * inUv0.x * current.w;
-            gl_Position = current;
+            gl_Position = applyVectorOverlayDepthPolicy(current);
         } else {
             vec4 center = pc.viewProjection * vec4(inPosition, 1.0);
             vec2 viewport = vec2(pc.entityRotation.w, pc.entityScale.w);
             center.xy += inUv0 * pc.gizmoRingRadius * 2.0 / viewport * center.w;
-            gl_Position = center;
+            gl_Position = applyVectorOverlayDepthPolicy(center);
         }
     } else if (pc.gizmoMode < -14.5) {
         // MAP-A-R2-D3：地图边界线（CPU 顶点，世界坐标），淡金褐（D3 配色，克制不荧光）。
