@@ -111,7 +111,7 @@ foreach ($project in $projects) {
 }
 
 $changelog = Read-Text "changelog.md"
-$versionPattern = 'v0\.[0-9]+\.[0-9]+\.[0-9]+-(rz|fix|vk)'
+$versionPattern = 'v0\.[0-9]+\.[0-9]+\.[0-9]+-(rz|fix|vk|stab)'
 $versionMatch = [regex]::Match($changelog, "(?m)^##\s+($versionPattern)")
 if (!$versionMatch.Success) { Add-Failure "changelog top version missing" }
 else {

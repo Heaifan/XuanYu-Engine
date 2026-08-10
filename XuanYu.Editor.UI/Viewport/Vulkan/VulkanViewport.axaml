@@ -3,23 +3,24 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.VulkanViewport"
              x:DataType="local:UiVm">
-  <Grid>
+  <Grid RowDefinitions="*,Auto">
     <!-- F3：去除黑色粗边框与圆角卡片——Vulkan 画面贴合视口；最多保留 1 DIP 浅灰分隔。 -->
-    <Border BorderBrush="#C9D2DC" BorderThickness="1" ClipToBounds="True">
+    <Border Grid.Row="0" BorderBrush="#C9D2DC" BorderThickness="1" ClipToBounds="True">
       <local:VulkanNativeHost/>
     </Border>
-    <Border x:Name="FallbackLayer" IsHitTestVisible="False" Background="#E8EEF5"
+    <Border Grid.Row="0" x:Name="FallbackLayer" IsHitTestVisible="False" Background="#E8EEF5"
             Padding="18" HorizontalAlignment="Center" VerticalAlignment="Center">
       <StackPanel Spacing="6" MaxWidth="360">
         <TextBlock Text="渲染视口" Foreground="#4A5A70" FontWeight="SemiBold" HorizontalAlignment="Center"/>
         <TextBlock x:Name="FallbackText" Text="正在初始化渲染后端..." Foreground="#6B7688" TextWrapping="Wrap" TextAlignment="Center"/>
       </StackPanel>
     </Border>
-    <Border IsVisible="{Binding IsScaleIndicatorVisible}" IsHitTestVisible="False"
-            HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16"
+    <!-- STAB-2：比例尺位于 Native HWND 之外的独立 Avalonia 行，避免 Airspace 遮挡。 -->
+    <Border Grid.Row="1" IsVisible="{Binding IsScaleIndicatorVisible}" IsHitTestVisible="False"
+            HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0"
             Padding="8,5" Background="{StaticResource Color.Bg.Panel}"
             BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1">
-      <StackPanel Spacing="3">
+      <StackPanel Spacing="3" HorizontalAlignment="Left" Margin="16,0">
         <Border Width="{Binding ScaleIndicatorWidthDip}" Height="2"
                 Background="{StaticResource Color.Text.Primary}" HorizontalAlignment="Left"/>
         <TextBlock Text="{Binding ScaleIndicatorText}" Classes="caption"/>

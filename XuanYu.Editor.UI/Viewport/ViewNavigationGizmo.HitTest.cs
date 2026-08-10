@@ -15,6 +15,8 @@ public sealed record GizmoHitResult(string? Endpoint, bool HitCenter, bool HitGi
 
 public static class NavigationGizmoHitTest
 {
+    const double AxisHitRadius = 4.0;
+
     // 端点命中：按绘制深度倒序（最靠前优先）；命中半径 HitRadius。
     public static GizmoHitResult Hit(IReadOnlyList<GizmoEndpoint> endpoints, Point point, Point center)
     {
@@ -27,6 +29,12 @@ public static class NavigationGizmoHitTest
         }
         var hitCenter = Distance(point, center) <= NavigationGizmoLayout.CenterRadius;
         if (hitCenter) return new GizmoHitResult(null, true, true);
+        foreach (var e in endpoints)
+        {
+            if (!e.IsVisible || Distance(e.Screen, center) < 0.1) continue;
+            if (DistanceToSegment(point, center, e.Screen) <= AxisHitRadius)
+                return new GizmoHitResult(null, false, true);
+        }
         return new GizmoHitResult(null, false, false);
     }
 
@@ -40,5 +48,13 @@ public static class NavigationGizmoHitTest
         var dx = a.X - b.X;
         var dy = a.Y - b.Y;
         return Math.Sqrt((dx * dx) + (dy * dy));
+    }
+
+    static double DistanceToSegment(Point point, Point a, Point b)
+    {
+        var ab = b - a; var lengthSquared = (ab.X * ab.X) + (ab.Y * ab.Y);
+        if (lengthSquared < 0.000001) return Distance(point, a);
+        var t = Math.Clamp(((point - a).X * ab.X + (point - a).Y * ab.Y) / lengthSquared, 0.0, 1.0);
+        return Distance(point, a + (ab * t));
     }
 }

@@ -30,12 +30,16 @@ public sealed class MapVectorOverlayDepthPolicyTests
     }
 
     [Fact]
-    public void Pipeline_and_shader_contract_keep_depth_test_write_and_draw_order()
+    public void Pipeline_and_shader_contract_keep_main_depth_and_overlay_policy()
     {
         var depth = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Depth.cs"));
+        var overlay = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Session", "VulkanRenderSession.VectorOverlay.cs"));
+        var bind = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Render", "ClearFrame", "VulkanClearFrameOwner.PipelineBind.cs"));
         var shader = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Shaders", "scene.vert"));
-        Assert.Contains("DepthTestEnable = true", depth);
-        Assert.Contains("DepthWriteEnable = true", depth);
+        Assert.Contains("DepthTestEnable = depthTest", depth);
+        Assert.Contains("DepthWriteEnable = depthWrite", depth);
+        Assert.Contains("depthTest: false, depthWrite: false", overlay);
+        Assert.Contains("kind == RenderDrawKind.MapVectorOverlay", bind);
         Assert.Contains("DepthCompareOp = CompareOp.LessOrEqual", depth);
         Assert.Contains("applyVectorOverlayDepthPolicy", shader);
         Assert.Contains("VECTOR_OVERLAY_FILL_DEPTH_BIAS", shader);

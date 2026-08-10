@@ -79,6 +79,7 @@ public sealed partial class VulkanRenderSession : IDisposable
                 reason => session!.MarkFailed(reason),
                 log);
             session = new VulkanRenderSession(deviceOwner, swapchainOwner, clear, loop, pipeline, skyPipeline, gridPipelines, log, surfaceHandle);
+            session.AttachVectorOverlayPipeline(vk);
             if (!loop.Start()) throw new InvalidOperationException("Present 泵启动失败");
             return session;
         }
@@ -96,5 +97,4 @@ public sealed partial class VulkanRenderSession : IDisposable
 
     public bool IsFailed => Volatile.Read(ref _failed) != 0;
     public string? FailureReason => Volatile.Read(ref _failureReason);
-
 }

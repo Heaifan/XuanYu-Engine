@@ -22,6 +22,7 @@ public sealed partial class VulkanNativeHost
         var hit = NavigationGizmoHitTest.Hit(NavigationGizmoLayout.Compute(
             camera.Right, camera.Up, camera.Forward,
             new Point(NavGizmoSizeDips * 0.5, NavGizmoSizeDips * 0.5)), local, new Point(NavGizmoSizeDips * 0.5, NavGizmoSizeDips * 0.5));
+        if (!hit.HitGizmo) return false;
         _navGizmoPressed = true;
         _navGizmoEndpoint = hit.IsEndpoint ? hit.Endpoint : null;
         _navGizmoDown = new Point(x, y);

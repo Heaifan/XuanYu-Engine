@@ -19,7 +19,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
     {
         _vk = vk; _deviceOwner = deviceOwner; _layout = layout; _pipeline = pipeline; _log = log;
     }
-    internal static VulkanGraphicsPipelineOwner? Create(Vk vk, VulkanDeviceOwner deviceOwner, VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, Action<string>? log)
+    internal static VulkanGraphicsPipelineOwner? Create(Vk vk, VulkanDeviceOwner deviceOwner, VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, Action<string>? log, bool depthTest = true, bool depthWrite = true)
     {
         var vert = VulkanShaderModuleOwner.Create(vk, deviceOwner, ShaderBytecodeVert.Code);
         var frag = VulkanShaderModuleOwner.Create(vk, deviceOwner, ShaderBytecodeFrag.Code);
@@ -60,7 +60,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner : IDisposable
             var dynamicState = new PipelineDynamicStateCreateInfo { SType = StructureType.PipelineDynamicStateCreateInfo, DynamicStateCount = 2, PDynamicStates = pDynamic };
             var raster = new PipelineRasterizationStateCreateInfo { SType = StructureType.PipelineRasterizationStateCreateInfo, PolygonMode = PolygonMode.Fill, CullMode = CullModeFlags.None, FrontFace = FrontFace.Clockwise, LineWidth = 1.0f };
             var multisample = new PipelineMultisampleStateCreateInfo { SType = StructureType.PipelineMultisampleStateCreateInfo, RasterizationSamples = SampleCountFlags.Count1Bit };
-            var depth = DepthState();
+            var depth = DepthState(depthTest, depthWrite);
             var blendAttach = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.RBit | ColorComponentFlags.GBit | ColorComponentFlags.BBit | ColorComponentFlags.ABit,
                 BlendEnable = true, SrcColorBlendFactor = BlendFactor.SrcAlpha, DstColorBlendFactor = BlendFactor.OneMinusSrcAlpha, ColorBlendOp = BlendOp.Add, SrcAlphaBlendFactor = BlendFactor.One, DstAlphaBlendFactor = BlendFactor.OneMinusSrcAlpha, AlphaBlendOp = BlendOp.Add };
             var colorBlend = new PipelineColorBlendStateCreateInfo { SType = StructureType.PipelineColorBlendStateCreateInfo, AttachmentCount = 1, PAttachments = &blendAttach, LogicOpEnable = false };
