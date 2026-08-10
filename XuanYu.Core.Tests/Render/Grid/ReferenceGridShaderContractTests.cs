@@ -9,17 +9,17 @@ public sealed class ReferenceGridShaderContractTests
     static string PipelineSource() => File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
 
     [Fact]
-    public void World_grid_is_fullscreen_fixed_plane_without_fragment_lod()
+    public void World_grid_is_fullscreen_frame_step_without_fragment_lod()
     {
         var shader = ShaderSource("editor_world_reference_grid.frag");
-        Assert.Contains("STEP_METERS = 100.0", shader);
+        Assert.Contains("pc.gridState.x", shader);
+        Assert.Contains("stepMeters = max", shader);
         Assert.Contains("t = -nearWorld.z / rayDirection.z", shader);
-        Assert.Contains("worldPosition.x / STEP_METERS", shader);
-        Assert.Contains("worldPosition.y / STEP_METERS", shader);
+        Assert.Contains("worldPosition.x / stepMeters", shader);
+        Assert.Contains("worldPosition.y / stepMeters", shader);
         Assert.Contains("fwidth(coordinate)", shader);
         Assert.DoesNotContain("BaseHeight", shader);
         Assert.DoesNotContain("log10", shader);
-        Assert.DoesNotContain("gridScale", shader);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public sealed class ReferenceGridShaderContractTests
     public void World_grid_draw_uses_fullscreen_triangle_and_world_plane_state()
     {
         var source = File.ReadAllText(Path.Combine(Root, "XuanYu.Render.Vulkan", "Render", "Grid", "VulkanClearFrameOwner.Grid.cs"));
-        Assert.Contains("ReferenceGridFrameState.MinStepMeters", source);
+        Assert.Contains("_referenceGridFrameState.StepMeters", source);
         Assert.Contains("scene[43] = 0.0f", source);
         Assert.Contains("RenderDrawPlan.FullscreenTriangleVertexCount", source);
         Assert.DoesNotContain("ReferenceGridLineVertexCount", source);

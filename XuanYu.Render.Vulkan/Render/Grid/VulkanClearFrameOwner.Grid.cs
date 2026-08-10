@@ -3,7 +3,7 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// GRID-RW-2A：独立 World XY(Z=0) 参考网格，全屏射线求交；固定 100m，Map 不参与定位。
+// GRID-RW-2B：独立 World XY(Z=0) 参考网格，全屏射线求交；全帧统一 Step，Map 不参与定位。
 // PushConstant 192B（48 float）：
 //   mat4 viewProjection @0    mat4 inverseViewProjection @64
 //   vec4 cameraPosition @128  vec4 viewportAndFar @144 (xy=视口, z=Far, w=GridMaxDist)
@@ -25,7 +25,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
         var scene = new float[GridPushFloatCount];
         FillGridPushConstants(scene, _renderProjection);
-        scene[40] = (float)ReferenceGridFrameState.MinStepMeters;
+        scene[40] = (float)_referenceGridFrameState.StepMeters;
         scene[41] = 0.0f;
         scene[42] = 0.0f;
         scene[43] = 0.0f;

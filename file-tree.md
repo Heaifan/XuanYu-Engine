@@ -1123,12 +1123,12 @@
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportChromeContractTests.cs` — F3-D1：视口黑边合同测试（计划 11.1）——XAML 防退化：
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs` — OVL-R2/R3：比例尺 Vulkan DrawKind、Depth Off、顺序与 Native Popup 删除合同。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
-- `XuanYu.Core.Tests/Render/Grid/ReferenceGridFrameStateTests.cs` — GRID-RW-1：全局 Step、相机吸附 Anchor 与 513×2 世界线顶点合同。
+- `XuanYu.Core.Tests/Render/Grid/ReferenceGridFrameStateTests.cs` — GRID-RW-2B：1/2/5 全帧 Step 与 24~80 DIP 回滞合同。
 - `XuanYu.Core.Tests/Render/Grid/ScaleIndicatorMetricTests.cs` — MAP-A-R3-D2-F1-V3/A02：比例尺 1/2/5 距离选择、100m 最小距离与目标宽度合同。
 - `XuanYu.Core.Tests/Render/Overlay/ScaleIndicatorGlyphLiteTests.cs` — OVL-R2：比例尺受限字符编码合同。
 - `XuanYu.Core.Tests/Render/Overlay/ViewportOverlayLayoutTests.cs` — OVL-R1：Anchor/Rect/DIP 布局与边界合同。
 - `XuanYu.Core.Tests/Render/Grid/ViewportMetricScaleTests.cs` — MAP-A-R3-D2-F1-V2：Perspective/Orthographic 的 DIP 与 physical pixel 尺度合同（1.00/1.25/1.50/2.00 DPI）。
-- `XuanYu.Core.Tests/Render/Grid/ReferenceGridShaderContractTests.cs` — GRID-RW-2A：World XY 固定网格、全屏 Pass 与无深度依赖合同。
+- `XuanYu.Core.Tests/Render/Grid/ReferenceGridShaderContractTests.cs` — GRID-RW-2B：World XY 全帧 Step、全屏 Pass 与无深度依赖合同。
 - `XuanYu.Core.Tests/Render/Map/MapRenderDrawPlanTests.cs` — MAP-A-R1-D4/D5-R1（F2-R2/D4）：RenderProjection 携带地图快照后，参考网格保留（无限参考平面，
 - `XuanYu.Core.Tests/Render/Map/MapSurfaceGeometryTests.cs` — MAP-A-R2-D3：有限地面常量几何合同——固定 4 顶点 6 索引，尺寸只进顶点坐标。
 - `XuanYu.Core.Tests/Render/Map/MapSurfaceLayerVisibilityTests.cs` — MAP-A-R2-D4（R06）：图层显隐不进 GPU 资源判等键——显隐切换只推进序号，不重建资源。
@@ -1546,7 +1546,7 @@
 - `XuanYu.Render.Abstractions/NativeHostLifecycleProbe.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期探针。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleState.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期状态枚举。
 - `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs` — NativeHost 交给渲染层的窗口交接句柄。
-- `XuanYu.Render.Abstractions/ReferenceGridFrameState.cs` — GRID-RW-1：每帧唯一网格 Step、相机吸附 Anchor 与基准高度纯状态。
+- `XuanYu.Render.Abstractions/ReferenceGridFrameState.cs` — GRID-RW-2B：按 1/2/5 和 24~80 DIP 回滞选择的每帧唯一 World Grid Step。
 - `XuanYu.Render.Abstractions/ReferenceGridScale.cs` — MAP-A-R3-D2-F1-V2：100m 起步、10,000km 覆盖的 1/2/5 公制参考网格尺度。
 - `XuanYu.Render.Abstractions/ScaleIndicatorMetric.cs` — MAP-A-R3-D2-F1-V3：比例尺漂亮距离选择与 m/km 文本格式化。
 - `XuanYu.Render.Abstractions/ScaleIndicatorGlyphLite.cs` — OVL-R2：比例尺专用 0-9/m/k/点/空格字符编码。
@@ -1610,7 +1610,7 @@
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Resources.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Trace.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.cs` — （职责待补）
-- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.Grid.cs` — GRID-RW-2A：以全屏三角形绘制固定 100m 的 World XY 网格。
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.Grid.cs` — GRID-RW-2B：以全屏三角形绘制帧级统一 Step 的 World XY 网格。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.GridScale.cs` — GRID-RW-2A：网格公制计算固定消费 World XY 的 Z=0 平面。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.NavGizmo.cs` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 屏幕空间、深度测试/写入关闭、最后绘制。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.ScaleIndicator.cs` — OVL-R2：解析 BottomLeft LayoutRect、编码 glyph 并绘制比例尺 Overlay。
@@ -1652,7 +1652,7 @@
 - `XuanYu.Render.Vulkan/Shaders/editor_reference_grid_line.frag` — GRID-RW-1：固定颜色与 Alpha 的世界线片元 Shader。
 - `XuanYu.Render.Vulkan/Shaders/editor_reference_grid_line.vert` — GRID-RW-1：按 gl_VertexIndex 生成相机吸附世界线的顶点 Shader。
 - `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert` — MAP-A-R1-D5-R1-F2：独立编辑器参考网格 Pass —— 顶点着色器。
-- `XuanYu.Render.Vulkan/Shaders/editor_world_reference_grid.frag` — GRID-RW-2A：世界射线与 Z=0 平面求交、固定 100m、fwidth 仅抗锯齿。
+- `XuanYu.Render.Vulkan/Shaders/editor_world_reference_grid.frag` — GRID-RW-2B：世界射线与 Z=0 平面求交、CPU 全帧 Step、fwidth 仅抗锯齿。
 - `XuanYu.Render.Vulkan/Shaders/editor_view_plane_grid.frag` — F3-F4：正交标准视图的视图平面网格（YZ/XZ 平面，以世界原点为基准）。
 - `XuanYu.Render.Vulkan/Shaders/editor_world_axes.frag` — MAP-A-R1-D5-R1-F2-R2：X/Y 世界轴独立全屏 Pass —— 片元着色器。
 - `XuanYu.Render.Vulkan/Shaders/editor_world_origin.frag` — MAP-A-R1-D5-R1-F3-F1：世界原点标记独立全屏 Pass —— 片元着色器（屏幕空间版）。

@@ -20,7 +20,7 @@ public sealed class ReferenceGridFrameStateTests
     }
 
     [Theory]
-    [InlineData(20.0, 1000.0)]
+    [InlineData(20.0, 500.0)]
     [InlineData(0.5, 100.0)]
     [InlineData(0.05, 100.0)]
     [InlineData(0.005, 100.0)]
@@ -29,6 +29,17 @@ public sealed class ReferenceGridFrameStateTests
         var metric = new ViewportMetricScale(metersPerDip, metersPerDip, 1.0);
         var state = ReferenceGridFrameState.Create(metric, 0, 0, 0, default);
         Assert.Equal(expectedStep, state.StepMeters);
+    }
+
+    [Fact]
+    public void Step_uses_nice_series_and_wide_hysteresis()
+    {
+        var initial = ReferenceGridFrameState.Create(new(5.0, 5.0, 1.0), 0, 0, 0, default);
+        Assert.Equal(200.0, initial.StepMeters); // 100m 仅 20 DIP，提升至 200m。
+        var stable = ReferenceGridFrameState.Create(new(3.0, 3.0, 1.0), 0, 0, 0, initial);
+        Assert.Equal(200.0, stable.StepMeters); // 66.7 DIP，处于 24~80 DIP 回滞内。
+        var promoted = ReferenceGridFrameState.Create(new(10.0, 10.0, 1.0), 0, 0, 0, stable);
+        Assert.Equal(500.0, promoted.StepMeters); // 200m 仅 20 DIP，按 1/2/5 提升。
     }
 
     [Fact]
@@ -45,7 +56,7 @@ public sealed class ReferenceGridFrameStateTests
     [Theory]
     [InlineData(2.0, 30.0, 1000.0)]
     [InlineData(30.0, 2.0, 1000.0)]
-    [InlineData(0.5, 50.0, 1000.0)]
+    [InlineData(0.5, 50.0, 2000.0)]
     [InlineData(2.0, 2.0, 100.0)]
     public void Step_uses_conservative_max_axis(double metersPerDipX, double metersPerDipY, double expectedStep)
     {
