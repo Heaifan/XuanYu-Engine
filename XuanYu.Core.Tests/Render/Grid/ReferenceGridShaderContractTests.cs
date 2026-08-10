@@ -32,21 +32,19 @@ public sealed class ReferenceGridShaderContractTests
     {
         var frag = ShaderSource("editor_reference_grid.frag");
         Assert.Contains("worldPerPixel", frag);
+        Assert.Contains("worldPerPixelX", frag);
+        Assert.Contains("worldPerPixelY", frag);
+        Assert.Contains("sqrt(worldPerPixelX * worldPerPixelY)", frag);
         Assert.Contains("log10Value(idealSpacing)", frag);
         Assert.Contains("levelLine", frag);
         Assert.Contains("return max(xLine, yLine)", frag);
+        Assert.Contains("projectedCellPixels", frag);
+        Assert.Contains("bandPass", frag);
+        Assert.DoesNotContain("decadePhase", frag);
         Assert.DoesNotContain("float fineSpacing", frag);
         Assert.DoesNotContain("pc.gridScale.x", frag);
         // 不再由 Fragment 自己乘 36 选层级。
         Assert.DoesNotContain("36.0", frag);
-    }
-
-    [Fact]
-    public void Grid_shader_has_directional_density_fade()
-    {
-        var frag = ShaderSource("editor_reference_grid.frag");
-        Assert.Contains("densityFade", frag);
-        Assert.Contains("fwidth", frag);
     }
 
     [Fact]

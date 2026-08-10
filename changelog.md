@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.24-fix
+MAP-A-R3-D2-F1 SCALE-R2 + GRID-2B（2026-08-10）：比例尺采用 1/2/5 × 10ⁿ 离散档位，按 104 DIP 可容纳的最大档位选择，低于 100m 隐藏并保留 5% 回滞；Reference Grid 增加 projected-cell band-pass（10~18px 淡入、80~140px 淡出）、独立 X/Y 投影密度、100m/D/10D 三层候选及按物理 spacing 稳定的 Alpha，未修改 MapBounds、BaseHeight、Camera、Picking、Region 或 192B 布局。
+- 验证：全解决方案 Build 0 Warning / 0 Error；Core.Tests 391/391、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；最终 Render.Vulkan 目标 Build 0 Warning / 0 Error；ARCH-A、`git diff --check` PASS；GLSL glslc -O 编译通过并重新生成 GridFrag SPIR-V。
+- 状态：F1 保持 OPEN；GRID-3 未启动，等待 SCALE-R2 + GRID-2B 真机验收。
+- Hash：待本轮提交。
+
 ## v0.2.25.23-fix
 MAP-A-R3-D2-F1 SCALE-R1 + GRID-2A（2026-08-10）：比例尺对 104 DIP 对应真实距离执行 100m 起步、两位有效十进制向下吸附；低于 100m 隐藏，不改变 Camera Zoom。Reference Grid 改由 Fragment 根据局部 world-per-pixel 计算十进制层级，独立执行层级密度淡出，X/Y 线交叉使用 `max`，保留 BaseHeight、192B Push Constant 和既有地图/拾取边界。
 - 验证：全解决方案 Build 0 Warning / 0 Error；Core.Tests 388/388、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；ARCH-A、`git diff --check` PASS；GLSL glslc -O 编译通过并重新生成 GridFrag SPIR-V。

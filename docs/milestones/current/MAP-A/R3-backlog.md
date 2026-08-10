@@ -3,6 +3,7 @@
 GRID-1：Reference Grid 已解除地图矩形可见性 Fade，保留 `mapBounds.z` BaseHeight 与既有 CPU Push Constant 布局；等待 10km 地图边缘真机观察。GRID-2/GRID-3 禁止在本轮启动。
 
 SCALE-R1：比例尺按 100m 起步的两位有效十进制整值向下吸附，低于 100m 隐藏且不参与相机策略；GRID-2A：Reference Grid 改为 Fragment 局部十进制 LOD，GRID-2B/GRID-3 保持未启动。
+SCALE-R2：比例尺改为 1/2/5 离散档位、真实线宽和 5% 回滞；GRID-2B：Reference Grid 改为 projected-cell band-pass 与物理 spacing 稳定 Alpha；GRID-3 保持未启动。
 
 R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结目标和范围。
 

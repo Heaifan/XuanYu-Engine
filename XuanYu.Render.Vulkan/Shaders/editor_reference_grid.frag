@@ -36,23 +36,38 @@ float axisLineMask(float coordinate, float widthPixels) {
     return 1.0 - smoothstep(widthPixels - 0.5, widthPixels + 0.5, distanceToLine);
 }
 
-// 方向性密度淡出：某方向单元屏幕间距 <6px 隐藏、6~12px 渐入、>12px 正常。
-// 只影响透明度，不影响线宽。
-float densityFade(float coordinate, float spacing) {
-    float cellPixels = 1.0 / max(fwidth(coordinate / spacing), 0.000001);
-    return smoothstep(6.0, 12.0, cellPixels);
+// Anti-Moiré band-pass：过密和过疏的层级都退出，只保留可辨识窗口。
+float projectedCellPixels(float coordinate, float spacing) {
+    return spacing / max(fwidth(coordinate), 0.000001);
+}
+
+float bandPass(float cellPixels) {
+    float fadeIn = smoothstep(10.0, 18.0, cellPixels);
+    float fadeOut = 1.0 - smoothstep(80.0, 140.0, cellPixels);
+    return fadeIn * fadeOut;
 }
 
 float levelLine(vec2 position, float spacing) {
-    float xLine = axisLineMask(position.x / spacing, GRID_LINE_WIDTH_PX)
-                * densityFade(position.x, spacing);
-    float yLine = axisLineMask(position.y / spacing, GRID_LINE_WIDTH_PX)
-                * densityFade(position.y, spacing);
+    float xPixels = projectedCellPixels(position.x, spacing);
+    float yPixels = projectedCellPixels(position.y, spacing);
+    float xLine = axisLineMask(position.x / spacing, GRID_LINE_WIDTH_PX) * bandPass(xPixels);
+    float yLine = axisLineMask(position.y / spacing, GRID_LINE_WIDTH_PX) * bandPass(yPixels);
     return max(xLine, yLine);
 }
 
 float log10Value(float value) {
     return log(value) * 0.434294482;
+}
+
+float levelAlpha(float spacing) {
+    return 0.14 + 0.05 * clamp(log10Value(spacing) - 2.0, 0.0, 2.0);
+}
+
+vec3 levelColor(float spacing) {
+    const vec3 fineColor = vec3(0.365, 0.400, 0.439);
+    const vec3 coarseColor = vec3(0.322, 0.361, 0.404);
+    float t = clamp((log10Value(spacing) - 2.0) * 0.5, 0.0, 1.0);
+    return mix(fineColor, coarseColor, t);
 }
 
 void main() {
@@ -83,30 +98,27 @@ void main() {
     float distanceFade = 1.0 - smoothstep(pc.viewportAndFar.z * 0.45,
         pc.viewportAndFar.z * 0.75, distToCamera);
 
-    // 掠射角淡出：V=相机方向；|V·Z|<0.015 隐藏，0.015~0.080 淡入，>0.080 完整。
+    // Anti-Moiré 保护区：|V·Z|<0.04 隐藏，0.04~0.12 淡入，>0.12 完整。
     vec3 viewDirection = normalize(pc.cameraPosition.xyz - worldPosition);
     float grazingFactor = abs(dot(vec3(0.0, 0.0, 1.0), viewDirection));
-    float grazingFade = smoothstep(0.015, 0.080, grazingFactor);
+    float grazingFade = smoothstep(0.040, 0.120, grazingFactor);
 
-    float worldPerPixel = max(max(fwidth(worldPosition.x), fwidth(worldPosition.y)), 0.000001);
+    float worldPerPixelX = max(fwidth(worldPosition.x), 0.000001);
+    float worldPerPixelY = max(fwidth(worldPosition.y), 0.000001);
+    float worldPerPixel = sqrt(worldPerPixelX * worldPerPixelY);
     float idealSpacing = max(worldPerPixel * 48.0, 100.0);
-    float decade = pow(10.0, floor(log10Value(idealSpacing)));
-    float lowerSpacing = max(decade, 100.0);
-    float upperSpacing = min(lowerSpacing * 10.0, 10000000.0);
-    float decadePhase = smoothstep(0.0, 1.0,
-        (log10Value(idealSpacing) - log10Value(lowerSpacing))
-        / max(log10Value(upperSpacing) - log10Value(lowerSpacing), 0.000001));
-    float lowerContribution = levelLine(worldPosition.xy, lowerSpacing) * 0.16 * (1.0 - decadePhase);
-    float upperContribution = levelLine(worldPosition.xy, upperSpacing) * 0.24 * decadePhase;
-    float gridAlpha = max(lowerContribution, upperContribution);
-
-    // F2-R3 配色（玄域浅色体系，克制灰蓝）：Fine #5D6670、Coarse #525C67。
-    vec3 fineColor = vec3(0.365, 0.400, 0.439); // #5D6670
-    vec3 coarseColor = vec3(0.322, 0.361, 0.404); // #525C67
-    float total = lowerContribution + upperContribution;
-    vec3 gridColor = total > 0.000001
-        ? (fineColor * lowerContribution + coarseColor * upperContribution) / total
-        : fineColor;
+    float centerSpacing = max(pow(10.0, floor(log10Value(idealSpacing))), 100.0);
+    float lowerSpacing = max(centerSpacing * 0.1, 100.0);
+    float upperSpacing = min(centerSpacing * 10.0, 10000000.0);
+    float lowerContribution = levelLine(worldPosition.xy, lowerSpacing) * levelAlpha(lowerSpacing);
+    float centerContribution = levelLine(worldPosition.xy, centerSpacing) * levelAlpha(centerSpacing);
+    float upperContribution = levelLine(worldPosition.xy, upperSpacing) * levelAlpha(upperSpacing);
+    float gridAlpha = max(max(lowerContribution, centerContribution), upperContribution);
+    vec3 gridColor = levelColor(centerSpacing);
+    if (lowerContribution >= centerContribution && lowerContribution >= upperContribution)
+        gridColor = levelColor(lowerSpacing);
+    else if (upperContribution >= centerContribution)
+        gridColor = levelColor(upperSpacing);
 
     float alpha = gridAlpha * distanceFade * grazingFade;
     if (alpha < 0.005) discard;
