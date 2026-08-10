@@ -175,7 +175,7 @@ Bottom <= ViewportHeightDip
 - [x] R1-T04 DPI 只在渲染边界做 DIP→physical pixel；Resolver 本身只处理 DIP。
 - [x] R1-T05 测试 1024×640、1360×820、1920×1080。
 - [x] R1-T06 测试 DPI 1.0 / 1.25 / 1.5 / 2.0 下 DIP 布局不变。
-- [ ] R1-T07 完整门禁 + Commit + Push。
+- [x] R1-T07 完整门禁 + Commit + Push。
 
 禁止：
 
@@ -292,7 +292,7 @@ k
 - [x] R2-T07 Scale Indicator 与 Navigation Gizmo Draw Order 合同。
 - [x] R2-T08 Resize/DPI 更新合同。
 - [x] R2-T09 聚焦测试。
-- [ ] R2-T10 完整正式门禁 + Commit + Push。
+- [x] R2-T10 完整正式门禁 + Commit + Push。
 
 建议版本：
 
@@ -333,10 +333,10 @@ GDI DrawText 比例尺逻辑
 - [x] R3-T02 删除 Popup / GDI 比例尺状态。
 - [x] R3-T03 删除旧源码字符串合同测试。
 - [x] R3-T04 用 Vulkan Overlay 合同替代。
-- [ ] R3-T05 更新 file-tree。
-- [ ] R3-T06 更新 changelog / backlog。
-- [ ] R3-T07 全量门禁。
-- [ ] R3-T08 Commit + Push，确认 local==remote、worktree clean。
+- [x] R3-T05 更新 file-tree。
+- [x] R3-T06 更新 changelog / backlog。
+- [x] R3-T07 全量门禁。
+- [x] R3-T08 Commit + Push，确认 local==remote、worktree clean。
 
 禁止：
 
@@ -578,8 +578,8 @@ Git：
 
 ```text
 feat/MAP-A-R3
-HEAD = ac5d306
-ahead/behind = 0/0
+OVL 实现基线 = b3b024c
+最终远端状态 = 本轮文档收口 Push 后复核
 ```
 
 整体百分比：

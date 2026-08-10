@@ -19,14 +19,14 @@
 ---
 
 ## v0.2.25.19-stab
-MAP-A-R3-D2-F1 OVL-R0～R3 比例尺承载层整改（2026-08-10 18:05:37）：正式裁定 STAB-5A 为 `FAILED · WRONG PRESENTATION ARCHITECTURE`，以 `ac5d306` 作为 Native Popup 路线终点；新增统一 DIP Overlay Layout Contract，并将比例尺以 `RenderDrawKind.ScaleIndicatorOverlay` 接入 Vulkan DrawPlan，固定绘制在 Navigation Gizmo 之前且关闭深度测试/写入。
+MAP-A-R3-D2-F1 OVL-R0～R3 比例尺承载层整改（2026-08-10 18:27:02）：正式裁定 STAB-5A 为 `FAILED · WRONG PRESENTATION ARCHITECTURE`，以 `ac5d306` 作为 Native Popup 路线终点；新增统一 DIP Overlay Layout Contract，并将比例尺以 `RenderDrawKind.ScaleIndicatorOverlay` 接入 Vulkan DrawPlan，固定绘制在 Navigation Gizmo 之前且关闭深度测试/写入。
 - Vulkan 比例尺使用视口左下角 16 DIP 锚点、screen-space bar/tick 与仅支持 `0-9/m/k/./空格` 的 `ScaleIndicatorGlyphLite`；数据沿 `UiVm → RenderProjection → DrawPlan → Vulkan` 单链传递，不在 Vulkan 重算公制尺度。
 - 删除比例尺专属 `VulkanNativeHost.ScaleIndicator.cs`、`Win32ViewportHost.ScaleIndicator.cs`、GDI/WM_PAINT/Probe/Popup 状态；保留通用 `Win32ViewportHost`，并把被旧文件错误夹带的 `WS_CLIPSIBLINGS` 常量归还通用 Host。
 - 治理：新增 Viewport UI 控件知识库、OVL 开发计划和浅色路线图；自动门禁通过后状态只能进入 `READY FOR USER ACCEPTANCE`，F1 继续 OPEN。
 - 知识治理：正式导入 `docs/knowledge/` 扁平 V1 知识库（19 条 Knowledge、代表性 Incident 与索引）；可由本地 Git 可靠追溯的历史 Commit 已补齐；开发宪法修订为 2.1，新增第十六章“知识库、事故复盘与经验沉淀”，原最终原则顺延为第十七章。
-- 验证：受影响项目 Build 0W0E；比例尺/Overlay 聚焦 Core 22/22、World 2/2 PASS；完整正式门禁与真机结果见本条后续收口更新。
+- 验证：解决方案 Build 0W0E；Core 383/383、World 1117/1117、WarCore 22/22 PASS；ARCH-A、5+100、版本一致性、SVG XML、GLSL glslc 与嵌入 SPIR-V 一致性、`git diff --check`、启动冒烟（进程存活 8 秒）PASS。
 - 遗留：用户真机确认比例尺悬浮可见前，不宣告 F1 CLOSED。
-- Hash：3f0a801。
+- Hash：`3f0a801`（功能实现）；`b3b024c`（知识治理哈希收口）。
 
 ## v0.2.25.18-stab
 MAP-A-R3-D2-F1 STAB-5A 比例尺真机可见性收口（2026-08-10 16:51:42）：将比例尺从 Vulkan 同级 `WS_CHILD` 改为拥有主窗口的独立 `WS_POPUP` 悬浮控件，保留点击穿透与非激活行为；修复 App 输出副本未同步导致的假验证；按 Avalonia 视口布局位置重新定位，并将异常过宽的比例尺显示限制在可见悬浮范围内。
