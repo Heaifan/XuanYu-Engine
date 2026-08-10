@@ -23,7 +23,7 @@ MAP-A-R3-D2-F1 比例尺固定几何与浅色 UI 视觉收口（2026-08-10 20:10
 - 测试：新增固定卡片/标尺合同、真实标签与宽度回归、Shader 视觉合同；重新生成嵌入 SPIR-V。
 - 验证：Core 385/385、World 1114/1114、WarCore 22/22 PASS；Render.Vulkan 项目 Build 0 Warning / 0 Error；ARCH-A、`git diff --check` PASS。全解决方案 Build 仍因运行中的 `XuanYu.Editor.App (PID 37800)` 锁定输出 DLL 返回 MSB3027/MSB3021，真实记录为环境阻断。
 - 状态：F1 继续 `OPEN · ACCEPTANCE FAILED · REWORK`，等待用户真机确认固定几何、标签真实性、浅色视觉、缩放和 Resize/DPI；不宣告关闭。
-- Hash：待本轮提交。
+- Hash：`9198886`（功能与文档提交）。
 
 ## v0.2.25.20-fix
 MAP-A-R3-D2-F1 V06 鼠标滚轮缩放与比例尺解耦修复（2026-08-10 19:50:33）：保留 100m 参考网格下限，比例尺改为独立 1/2/5 动态序列，修复小尺度标签格式，限制比例尺条宽度不超过 160 DIP、高度调整为 32 DIP；删除地图编辑器 100m Zoom Floor 及 Dolly 调用，避免比例尺反向限制相机缩放；补充真实尺度、宽度与 Overlay 边界回归。
