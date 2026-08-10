@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.6-fix
+MAP-A-R3-D2-F1-C2 地图相机语义（2026-08-10 09:38:15）：地图编辑器模式下“查看全部”按 MapBounds 构图；“聚焦”按 Draft AABB → Selected Entity → 相机不变执行；新增正交地图取景、Draft 最小可视半径与右侧地图模式状态；补充 C2-R01～C2-R09 自动回归。
+- 验证：C2 专项 9/9 PASS；解决方案 Build 0W0E；Core 348/348、World 985/985、WarCore 22/22 PASS；ARCH-A、5+100、版本一致性、git diff --check PASS。
+- 状态：MAP-A-R3-D2-F1 继续 OPEN；F1-C2 等待用户执行 C2-M01～C2-M04 真机确认；F1-V 未开始；A03～A06 BLOCKED，D3 禁止启动，F2 未创建。
+- Hash：5c23ea7。
+
 ## v0.2.25.5-fix
 MAP-A-R3-D2-F1-C 稳定性与日志收口（2026-08-10 09:09:01）：聚焦在区域草稿或无选中实体时保持相机不变；新增 TryProjectWorldPoint 并让 Region PointerMoved 对投影失败安全降级；移除 F1TRACE 运行时取证、临时文件和高频 PointerMoved/Ray/Mouse/Render 日志；补充 C-R01～C-R06 回归测试。
 - 验证：解决方案 Build 0W0E；Core 348/348、World 976/976、WarCore 22/22 PASS；ARCH-A、5+100、git diff --check PASS。

@@ -224,6 +224,8 @@
 │  │  ├─ CameraNavigation.Try.cs
 │  │  ├─ CameraNavigation.cs
 │  │  ├─ EditorCameraFraming.Orthographic.cs
+│  │  ├─ EditorCameraFraming.Draft.cs
+│  │  ├─ EditorCameraFraming.MapOrthographic.cs
 │  │  ├─ EditorCameraFraming.cs
 │  │  └─ OrthographicViewFactory.cs
 │  ├─ MapDocument/
@@ -403,6 +405,7 @@
 │  │  │  ├─ CameraSessionSnapshot.cs
 │  │  │  ├─ StandardViewResolver.cs
 │  │  │  ├─ UiVm.Camera.Framing.cs
+│  │  │  ├─ UiVm.Camera.Framing.Draft.cs
 │  │  │  ├─ UiVm.Camera.cs
 │  │  │  ├─ UiVm.CameraNavigation.cs
 │  │  │  └─ UiVm.ViewGizmo.cs
@@ -455,6 +458,7 @@
 │  │  │  ├─ UiVm.MapLayers.cs
 │  │  │  ├─ UiVm.MapRender.cs
 │  │  │  └─ UiVm.MapWorld.cs
+│  │  ├─ UiVm.RightPanel.cs
 │  │  ├─ Scene/
 │  │  │  ├─ D2StaticModelDemo.cs
 │  │  │  ├─ SceneHistoryEntry.cs
@@ -770,6 +774,9 @@
 │  │  ├─ CameraDocumentTests.cs
 │  │  ├─ CameraFramingOccupancyTests.cs
 │  │  ├─ CameraFramingTests.cs
+│  │  ├─ CameraC2DraftFramingTests.cs
+│  │  ├─ CameraC2MapFramingTests.Helpers.cs
+│  │  ├─ CameraC2MapFramingTests.cs
 │  │  ├─ CameraNavigationUiTests.cs
 │  │  ├─ CameraNavigationUiTests.Focus.cs
 │  │  └─ UiViewGizmoTests.cs
@@ -1227,6 +1234,7 @@
 - `XuanYu.Editor.UI/Right/InspectorPanel.axaml` — D4：检查器面板（字号 Token 层级 / 宽窄双布局树 / 全宽分组+分隔线 / 空状态）。
 - `XuanYu.Editor.UI/Right/InspectorPanel.axaml.cs` — D4：检查器模式切换（<360 窄模式，同一 InspectorFields 数据源）。
 - `XuanYu.Editor.UI/Right/Right.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Right/Right.axaml` — 顶层右侧页签，向 UiVm 同步当前页签以区分地图编辑模式。
 - `XuanYu.Editor.UI/Right/Right.axaml.cs` — partial class Right（D3：挂载 TopTabStripController 顶层页签控制器）
 - `XuanYu.Editor.UI/Right/TopTabStripModel.cs` — ARCH-UI-SPEC-R1-D3：顶层页签条纯布局状态机（溢出/箭头/渐隐/滚轮路由/可见性/提示门/全部页签列表，无 Avalonia 依赖）
 - `XuanYu.Editor.UI/Right/TopTabStripController.cs` — D3：页签条控制器（模板元素接线/滚轮隧道消费/刷新）
@@ -1266,6 +1274,7 @@
 - `XuanYu.Editor.UI/Vm/Camera/CameraSessionSnapshot.cs` — sealed record CameraSessionSnapshot
 - `XuanYu.Editor.UI/Vm/Camera/StandardViewResolver.cs` — F3-D3：六方向标准视角解析（计划 8.1 命名：+X 视图/-X 视图/+Y 视图/-Y 视图/顶视图/底视图）。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.cs` — F3-F4：取景命令。正交模式保持正交（尺度按包围范围适配），透视模式沿用距离构图。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.Draft.cs` — F1-C2：按 Draft 顶点 AABB 与最小可视半径聚焦草稿。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.cs` — F3-D2：导航 Gizmo 相机快照（Right/Up/Forward 投影输入；不含平移）。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.ViewGizmo.cs` — F3-D3：六方向标准视角命令（计划 8.1 命名；复用现有 ApplyViewFaceCommand 相机逻辑）。
@@ -1308,6 +1317,7 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayers.cs` — MAP-A-R2-D4：图层列表与工具栏命令入口（唯一数据源 = MapSession.CurrentMap）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapRender.cs` — MAP-A-R2-D3：MapSession → 渲染快照 适配（唯一渲染输入）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapWorld.cs` — MAP-A-R2-D3：World 地图查询状态持有者（高度查询/边界判断权威，由会话 ContentChanged 同步）。
+- `XuanYu.Editor.UI/Vm/UiVm.RightPanel.cs` — F1-C2：右侧页签状态与地图编辑模式判定。
 - `XuanYu.Editor.UI/Vm/Scene/D2StaticModelDemo.cs` — （职责待补）
 - `XuanYu.Editor.UI/Vm/Scene/SceneHistoryEntry.cs` — （职责待补）
 - `XuanYu.Editor.UI/Vm/Scene/SceneRenderProjectionAdapter.cs` — static class SceneRenderProjectionAdapter
@@ -1392,6 +1402,8 @@
 - `XuanYu.Editor/Camera/CameraNavigation.Try.cs` — F3-F2：失败安全导航入口（partial）——Try* 成功才输出结果；失败给出原因且不修改任何状态。
 - `XuanYu.Editor/Camera/CameraNavigation.cs` — （职责待补）
 - `XuanYu.Editor/Camera/EditorCameraFraming.Orthographic.cs` — F3-F4：正交取景。保持当前正交模式与观察方向，尺度按包围范围适配
+- `XuanYu.Editor/Camera/EditorCameraFraming.Draft.cs` — F1-C2：Draft 最小焦距半径的透视取景。
+- `XuanYu.Editor/Camera/EditorCameraFraming.MapOrthographic.cs` — F1-C2：地图范围的正交取景，保持 Orthographic 模式。
 - `XuanYu.Editor/Camera/EditorCameraFraming.cs` — MAP-A-R1-D4-F4：地图取景使用 45° 斜上方俯视，保证看得到地表内部。
 - `XuanYu.Editor/Camera/OrthographicViewFactory.cs` — F3-F4：正交视图生成。六方向标准视图（±X/±Y/±Z）切换为正交投影时，
 - `XuanYu.Editor/MapDocument/MapDocument.cs` — MAP-A-R1-D2：地图文档 DTO（.xymap v1 持久化模型）。表达地图文件数据，
@@ -1611,6 +1623,9 @@
 - `XuanYu.World.Tests/Camera/CameraFramingTests.cs` — sealed class CameraFramingTests
 - `XuanYu.World.Tests/Camera/CameraNavigationUiTests.cs` — sealed class CameraNavigationUiTests
 - `XuanYu.World.Tests/Camera/CameraNavigationUiTests.Focus.cs` — 无选中实体时聚焦保持相机与观察中心不变的回归测试
+- `XuanYu.World.Tests/Camera/CameraC2MapFramingTests.cs` — F1-C2：地图查看全部、无实体、投影模式与往返取景回归。
+- `XuanYu.World.Tests/Camera/CameraC2MapFramingTests.Helpers.cs` — F1-C2：地图范围、Draft 构造与相机有限性测试辅助。
+- `XuanYu.World.Tests/Camera/CameraC2DraftFramingTests.cs` — F1-C2：Draft 三点/一点聚焦及 PointerMoved 稳定性回归。
 - `XuanYu.World.Tests/Camera/UiViewGizmoTests.cs` — EDITOR-VIEW-R1：视角 Gizmo 六方向相机命令——朝向正确、观察中心与距离保持。
 - `XuanYu.World.Tests/Logging/FootAxamlTailContractTests.cs` — MAP-A-R2-D3-F3：源码合同——AXAML 尾部安全区与控制器两阶段定位结构。
 - `XuanYu.World.Tests/Logging/LogAutoScrollPolicyTests.cs` — MAP-A-R2-D3-F2：日志自动跟随纯策略——底部附近跟随、远离不强制拉回、滚到底恢复。
