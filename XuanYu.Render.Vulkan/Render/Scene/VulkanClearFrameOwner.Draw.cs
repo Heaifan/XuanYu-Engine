@@ -30,8 +30,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdSetScissor(cb, 0, 1, pSc);
             BindProceduralVertexBuffer(cb);
             if (!_hasRenderProjection) return;
-            _staticModels.RetainOnly(_renderProjection.Entities.Select(e => e.StaticModelKey)
-                .Concat(_renderProjection.RegionModelResources.Select(r => r.Key)));
+            _staticModels.RetainOnly(_renderProjection.Entities.Select(e => e.StaticModelKey));
+            _vectorOverlays.RetainOnly(_renderProjection.VectorOverlayResources.Select(r => r.Key));
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
                 BindFramePipeline(cb, draw.Kind);
@@ -39,8 +39,8 @@ public sealed unsafe partial class VulkanClearFrameOwner
                     DrawMapSurface(cb, pScene);
                 else if (draw.Kind == RenderDrawKind.MapBounds && _mapBoundsVertexBuffer is not null)
                     DrawMapBounds(cb, pScene);
-                else if (draw.Kind == RenderDrawKind.MapRegion)
-                    DrawRegionModel(cb, pScene, draw.EntityIndex);
+                else if (draw.Kind == RenderDrawKind.MapVectorOverlay)
+                    DrawVectorOverlay(cb, pScene, draw.EntityIndex);
                 // F2-R2/F3-F1：网格/轴/原点/导航 Gizmo 独立全屏 Pass。
                 if (draw.Kind == RenderDrawKind.EditorReferenceGrid) DrawReferenceGrid(cb);
                 else if (draw.Kind == RenderDrawKind.WorldOrigin) DrawWorldOrigin(cb);

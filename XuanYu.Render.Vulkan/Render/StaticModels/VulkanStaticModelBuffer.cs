@@ -8,10 +8,11 @@ namespace XuanYu.Render.Vulkan.Render.StaticModels;
 sealed unsafe class VulkanStaticModelBuffer : IDisposable
 {
     readonly Vk _vk; readonly VulkanDeviceOwner _device;
-    VkBuffer _buffer; DeviceMemory _memory;
-    VulkanStaticModelBuffer(Vk vk, VulkanDeviceOwner device, VkBuffer b, DeviceMemory m) =>
-        (_vk, _device, _buffer, _memory) = (vk, device, b, m);
+    VkBuffer _buffer; DeviceMemory _memory; readonly ulong _capacityBytes;
+    VulkanStaticModelBuffer(Vk vk, VulkanDeviceOwner device, VkBuffer b, DeviceMemory m, ulong capacity) =>
+        (_vk, _device, _buffer, _memory, _capacityBytes) = (vk, device, b, m, capacity);
     public VkBuffer Buffer => _buffer;
+    public ulong CapacityBytes => _capacityBytes;
 
     public static VulkanStaticModelBuffer? Create<T>(Vk vk, VulkanDeviceOwner device,
         T[] data, BufferUsageFlags usage, out string error) where T : unmanaged
@@ -29,7 +30,19 @@ sealed unsafe class VulkanStaticModelBuffer : IDisposable
         { vk.FreeMemory(device.LogicalDevice, memory, null); vk.DestroyBuffer(device.LogicalDevice, buffer, null); error = "MapMemory"; return null; }
         bytes.CopyTo(new Span<byte>(dst, bytes.Length));
         vk.UnmapMemory(device.LogicalDevice, memory);
-        return new VulkanStaticModelBuffer(vk, device, buffer, memory);
+        return new VulkanStaticModelBuffer(vk, device, buffer, memory, (ulong)bytes.Length);
+    }
+
+    public bool TryUpdate<T>(T[] data) where T : unmanaged
+    {
+        var bytes = MemoryMarshal.AsBytes(data.AsSpan());
+        if (bytes.Length == 0 || (ulong)bytes.Length > _capacityBytes) return false;
+        void* dst;
+        if (_vk.MapMemory(_device.LogicalDevice, _memory, 0, (ulong)bytes.Length, 0, &dst) != Result.Success)
+            return false;
+        bytes.CopyTo(new Span<byte>(dst, bytes.Length));
+        _vk.UnmapMemory(_device.LogicalDevice, _memory);
+        return true;
     }
 
     static bool CreateRaw(Vk vk, VulkanDeviceOwner d, ulong size, BufferUsageFlags usage,

@@ -9,7 +9,9 @@ public sealed partial class UiVm
     RenderProjectionResult CreateRenderProjection(SceneRenderSnapshot snapshot)
     {
         var transform = snapshot.RenderTransform;
-        var regionModels = MapRegionRenderProjection.Build(MapSession.CurrentMap, _regionDrawing);
+        var vectorOverlay = MapRegionRenderProjection.Build(MapSession.CurrentMap, _regionDrawing);
+        IReadOnlyList<RenderVectorOverlayResource> overlays =
+            vectorOverlay.Primitives.Count == 0 ? [] : [vectorOverlay];
         return SceneRenderProjectionAdapter.TryCreate(
             snapshot,
             ComputeRotateGizmoWorldRadius(transform.Position),
@@ -21,6 +23,6 @@ public sealed partial class UiVm
             _staticModelResources,
             _mapRenderSnapshot,
             _viewportDpiScale,
-            regionModels);
+            overlays);
     }
 }

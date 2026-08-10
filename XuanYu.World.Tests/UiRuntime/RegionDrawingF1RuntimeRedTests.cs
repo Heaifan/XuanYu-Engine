@@ -74,7 +74,7 @@ public sealed class RegionDrawingF1RuntimeRedTests
                 .Select(iy => (X: ix * 50.0, Y: iy * 50.0)))
                 .First(p => MapSurfacePicker.TryPick(vm.MapSession.CurrentMap, projection, p.X, p.Y, out _));
             var handled = vm.RegionDrawingPointerPressed(hit.X, hit.Y, viewport);
-            return (handled, vm.RegionDrawingHitCount, vm.LastRegionDrawingHit, vm.RenderProjection.Projection!.RegionModelResources.Count);
+            return (handled, vm.RegionDrawingHitCount, vm.LastRegionDrawingHit, vm.RenderProjection.Projection!.VectorOverlayResources.Count);
         });
 
         Assert.True(result.handled);

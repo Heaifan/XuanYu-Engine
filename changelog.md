@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.25.8-fix
+MAP-A-R3-D2-F1-V1 Region Vector Overlay（2026-08-10 10:51:22）：记录 C2 真机闭环正式 CLOSED；将 Region/Draft 从 StaticModel 临时路径迁移到独立 Vector Overlay 数据合同与 Vulkan 屏幕空间 Stroke/Marker Pass；新增凹多边形 Ear Clipping、Draft/Region V1 回归与无 StaticModel 路径验证。
+- 真机：RF-M01 PASS；RF-M02-A PASS；RF-M02-B 转交 F1-V；RF-M03 PASS（导航结束后 Draft Preview 自动恢复，无需重选工具、无输入丢失、无崩溃）。
+- 验证：解决方案 Build 0W0E；Core 349/349、World 998/998、WarCore 22/22 PASS；F1-V1/RegionDrawing 专项 31/31 PASS；ARCH-A、5+100、版本一致性、git diff --check PASS。
+- 状态：MAP-A-R3-D2-F1-C2 CLOSED；F1-V1 OPEN；F1-V2 BLOCKED BY V1；F1-V3 BLOCKED BY V2；A03～A06 BLOCKED；D3 禁止启动；F2 未创建。
+- 遗留：F1-V1 真机 V1-M01～M05 验收；通过后才解锁 F1-V2。
+- Hash：20bbf7c。
+
 ## v0.2.25.7-fix
 MAP-A-R3-D2-F1-C2 REWORK Native 相机路由与 Draft 往返（2026-08-10 10:00:13）：修复 Native `Move` 分支遮蔽 Middle Move 的不可达条件；抽出共享 `NativePointerRoutePolicy`，让相机预览优先于 Draft Preview；强化 C2-R03/R09 的 Draft Anchor 可见性与三次往返回归，并新增 Native Route Policy 测试。
 - 验证：C2/F1-C/Native Route 专项 19/19 PASS；解决方案 Build 0W0E；Core 348/348、World 991/991、WarCore 22/22 PASS；ARCH-A、5+100、版本一致性、git diff --check 待提交后最终复跑。

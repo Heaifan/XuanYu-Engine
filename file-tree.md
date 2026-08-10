@@ -438,7 +438,11 @@
 │  │  │  └─ UiVm.Logging.cs
 │  │  ├─ Map/
 │  │  │  ├─ MapLayerRowViewModel.cs
+│  │  │  ├─ MapRegionRenderProjection.cs
 │  │  │  ├─ MapRenderSnapshotProjection.cs
+│  │  │  ├─ MapVectorOverlayBuilder.Finalize.cs
+│  │  │  ├─ MapVectorOverlayBuilder.cs
+│  │  │  ├─ MapVectorOverlayTriangulation.cs
 │  │  │  ├─ UiVm.RegionDrawing.Commit.cs
 │  │  │  ├─ UiVm.RegionDrawing.Input.cs
 │  │  │  ├─ UiVm.RegionDrawing.Logging.cs
@@ -533,6 +537,7 @@
 │  ├─ MapSurfaceGeometry.cs
 │  ├─ MapSurfaceResourceKey.cs
 │  ├─ MapSurfaceResourceUpdatePolicy.cs
+│  ├─ LatestRenderProjectionQueue.cs
 │  ├─ MapSurfaceResourceUpdateText.cs
 │  ├─ NativeHostHandleSnapshot.cs
 │  ├─ NativeHostLifecycleLogFormatter.cs
@@ -551,6 +556,10 @@
 │  ├─ RenderStaticModelPrimitive.cs
 │  ├─ RenderStaticModelResource.cs
 │  ├─ RenderStaticModelVertex.cs
+│  ├─ RenderVectorOverlayKey.cs
+│  ├─ RenderVectorOverlayPrimitive.cs
+│  ├─ RenderVectorOverlayResource.cs
+│  ├─ RenderVectorOverlayVertex.cs
 │  └─ XuanYu.Render.Abstractions.csproj
 ├─ XuanYu.Render.Vulkan/
 │  ├─ Bridge/
@@ -624,6 +633,13 @@
 │  │  │  ├─ VulkanStaticModelResource.cs
 │  │  │  ├─ VulkanStaticModelValidator.cs
 │  │  │  └─ VulkanStaticModelVertex.cs
+│  │  ├─ VectorOverlay/
+│  │  │  ├─ VulkanClearFrameOwner.DrawVectorOverlay.cs
+│  │  │  ├─ VulkanVectorOverlayBufferReusePolicy.cs
+│  │  │  ├─ VulkanVectorOverlayCache.cs
+│  │  │  ├─ VulkanVectorOverlayResource.cs
+│  │  │  ├─ VulkanVectorOverlayValidator.cs
+│  │  │  └─ VulkanVectorOverlayVertex.cs
 │  │  └─ VulkanDepthAttachment.cs
 │  ├─ Session/
 │  │  ├─ GridPipelineSet.cs
@@ -1002,6 +1018,8 @@
 │  ├─ milestones/
 │  │  └─ current/
 │  │     └─ MAP-A/
+│  │        ├─ R3-C2-closure.md
+│  │        ├─ R3-backlog.md
 │  │        └─ map-contract.md
 │  └─ ui/
 │     ├─ 玄域引擎_UI真机基线清单.md
@@ -1305,6 +1323,10 @@
 - `XuanYu.Editor.UI/Vm/Logging/UiText.cs` — static class UiText
 - `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.cs` — MAP-A-R2-D4：图层行显示模型（面板行绑定；写操作转发会话命令，不直接持有领域状态）。
+- `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为独立 Vector Overlay 资源。
+- `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs` — F1-V1：构建 Fill、屏幕空间 Stroke 与 Marker 几何。
+- `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Finalize.cs` — Vector Overlay AABB 与稳定 revision 计算。
+- `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayTriangulation.cs` — F1-V1：Ear Clipping 凹多边形三角化。
 - `XuanYu.Editor.UI/Vm/Map/MapRenderSnapshotProjection.cs` — MAP-A-R2-D3/D4：MapDefinition → MapRenderSnapshot 纯投影（渲染唯一输入）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.cs` — MAP-A-R2-D3-F1：地图面板命令真实路由（UiVm.RunCommand → 地图命令）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.Format.cs` — MAP-A-R2-D3-F2：地图日志显示映射（纯函数，内部枚举/错误码保持英文）。
@@ -1465,6 +1487,11 @@
 - `XuanYu.Render.Abstractions/MapSurfaceResourceKey.cs` — MAP-A-R2-D3-A1 收口：GPU 地图资源判等键。
 - `XuanYu.Render.Abstractions/MapSurfaceResourceUpdatePolicy.cs` — MAP-A-R2-D3-A1 收口：地图 GPU 资源更新决策（纯策略，不依赖 Vulkan，可独立测试）。
 - `XuanYu.Render.Abstractions/MapSurfaceResourceUpdateText.cs` — MAP-A-R2-D3-F2：地图资源更新决策的显示文本（日志中文化）。
+- `XuanYu.Render.Abstractions/LatestRenderProjectionQueue.cs` — PointerMoved 高频发布只保留最新 RenderProjection 的线程安全邮箱。
+- `XuanYu.Render.Abstractions/RenderVectorOverlayKey.cs` — F1-V1：Vector Overlay 稳定资源键。
+- `XuanYu.Render.Abstractions/RenderVectorOverlayPrimitive.cs` — F1-V1：Fill/Stroke/Marker primitive 与 DIP 尺寸合同。
+- `XuanYu.Render.Abstractions/RenderVectorOverlayResource.cs` — F1-V1：Vector Overlay 顶点、索引、primitive 与世界包围盒合同。
+- `XuanYu.Render.Abstractions/RenderVectorOverlayVertex.cs` — F1-V1：世界端点、Secondary 端点与屏幕偏移顶点合同。
 - `XuanYu.Render.Abstractions/NativeHostHandleSnapshot.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期快照。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleLogFormatter.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期日志格式器。
 - `XuanYu.Render.Abstractions/NativeHostLifecycleProbe.cs` — VK3-A-R1：从 XuanYu.Render.Vulkan 迁入的纯生命周期探针。
@@ -1544,6 +1571,12 @@
 - `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelResource.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelValidator.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/StaticModels/VulkanStaticModelVertex.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanClearFrameOwner.DrawVectorOverlay.cs` — F1-V1：Vector Overlay Vulkan Pass 绘制与 DIP 尺寸注入。
+- `XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayBufferReusePolicy.cs` — F1-V1：动态缓冲容量复用纯策略。
+- `XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayCache.cs` — F1-V1：GPU 资源缓存与容量足够时缓冲复用。
+- `XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayResource.cs` — F1-V1：Vector Overlay GPU 资源持有者。
+- `XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayValidator.cs` — F1-V1：索引与 primitive 范围校验。
+- `XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayVertex.cs` — F1-V1：端点/Secondary/屏幕偏移顶点格式。
 - `XuanYu.Render.Vulkan/Render/VulkanDepthAttachment.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Session/GridPipelineSet.cs` — MAP-A-R1-D5-R1-F2-R2/F3-F1：全屏 Pass 管线组合（参考网格 / 世界轴 / 世界原点 / 导航 Gizmo）。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs` — sealed partial class VulkanRenderSession
@@ -1937,6 +1970,9 @@
 - `XuanYu.World.Tests/MapEditing/MapCoordinateContractTests.cs` — MapPoint 与世界坐标直接映射往返测试。
 - `XuanYu.World.Tests/MapEditing/RegionDrawingStateTests.cs` — 绘制草稿顶点、闭合候选与取消测试。
 - `XuanYu.Core.Tests/Render/Map/MapRegionDrawPlanTests.cs` — 区域渲染资源进入帧绘制计划的合同测试。
+- `XuanYu.Core.Tests/Render/LatestRenderProjectionQueueTests.cs` — PointerMoved 多次发布时只消费最新渲染投影的合同测试。
+- `XuanYu.World.Tests/UiRuntime/MapVectorOverlayV1Tests.cs` — F1-V1：点、线、凹多边形、屏幕空间尺寸、缓冲复用与无 StaticModel 路径合同。
+- `docs/milestones/current/MAP-A/R3-C2-closure.md` — C2 RF-M01～RF-M03 真机 IPO 收口记录。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — 地图编辑器地图页及内部地图工具入口，含 Region Drawing 归属与 Selected 状态样式。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RuntimeRedTests.cs` — D2-F1 Headless Runtime RED/GREEN：Map Editor 归属与选中态深色文字。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1CStabilityTests.cs` — F1-C：Draft 聚焦保护、相机导航/指针稳定性与低频日志合同。

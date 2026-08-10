@@ -1,11 +1,10 @@
-using System;
 using Silk.NET.Vulkan;
 using XuanYu.Render.Abstractions;
 using XuanYu.Render.Vulkan.Device;
 using XuanYu.Render.Vulkan.Diagnostic;
 using XuanYu.Render.Vulkan.Render.StaticModels;
+using XuanYu.Render.Vulkan.Render.VectorOverlay;
 using XuanYu.Render.Vulkan.Swapchain;
-
 namespace XuanYu.Render.Vulkan.Render;
 public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
 {
@@ -22,6 +21,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     PipelineLayout _pipelineLayout = default;
     RenderProjection _renderProjection;
     readonly VulkanStaticModelCache _staticModels;
+    readonly VulkanVectorOverlayCache _vectorOverlays;
     VulkanStaticModelBuffer? _proceduralVertexBuffer;
     bool _hasRenderProjection;
     Extent2D _extent;
@@ -35,6 +35,7 @@ public sealed unsafe partial class VulkanClearFrameOwner : IDisposable
     {
         _vk = vk; _deviceOwner = deviceOwner; _swapchainOwner = swapchainOwner; _log = log;
         _staticModels = new VulkanStaticModelCache(vk, deviceOwner, log);
+        _vectorOverlays = new VulkanVectorOverlayCache(vk, deviceOwner, log);
         _proceduralVertexBuffer = VulkanStaticModelBuffer.Create(vk, deviceOwner,
             new VulkanStaticModelVertex[RenderDrawPlan.RotateGizmoVertexCount],
             BufferUsageFlags.VertexBufferBit, out _);

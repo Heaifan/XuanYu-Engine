@@ -261,7 +261,26 @@ void main() {
     // F2-R3-R2：invVP 每顶点算一次（flat 传给片元，避免每像素求逆）；背景 NDC 哨兵默认非背景。
     vInvViewProjection = inverse(pc.viewProjection);
     vBackgroundNdc = vec2(2.0, 2.0);
-    if (pc.gizmoMode < -14.5) {
+    if (pc.gizmoMode < -19.5) {
+        // F1-V1：Vector Overlay。Stroke 与 Marker 在屏幕空间展开，Fill 保留世界坐标。
+        vBaseColor = vec4(pc.entityRotation.xyz, pc.staticAlpha);
+        if (pc.selectionMode < 0.5) {
+            gl_Position = pc.viewProjection * vec4(inPosition, 1.0);
+        } else if (pc.selectionMode < 1.5) {
+            vec4 current = pc.viewProjection * vec4(inPosition, 1.0);
+            vec4 other = pc.viewProjection * vec4(inNormal, 1.0);
+            vec2 delta = (other.xy / other.w) - (current.xy / current.w);
+            vec2 perp = length(delta) > 0.000001 ? normalize(vec2(-delta.y, delta.x)) : vec2(0.0);
+            vec2 viewport = vec2(pc.entityRotation.w, pc.entityScale.w);
+            current.xy += perp * pc.gizmoRingRadius * 2.0 / viewport * inUv0.x * current.w;
+            gl_Position = current;
+        } else {
+            vec4 center = pc.viewProjection * vec4(inPosition, 1.0);
+            vec2 viewport = vec2(pc.entityRotation.w, pc.entityScale.w);
+            center.xy += inUv0 * pc.gizmoRingRadius * 2.0 / viewport * center.w;
+            gl_Position = center;
+        }
+    } else if (pc.gizmoMode < -14.5) {
         // MAP-A-R2-D3：地图边界线（CPU 顶点，世界坐标），淡金褐（D3 配色，克制不荧光）。
         gl_Position = pc.viewProjection * vec4(inPosition, 1.0);
         vBaseColor = vec4(0.85, 0.76, 0.55, 1.0);

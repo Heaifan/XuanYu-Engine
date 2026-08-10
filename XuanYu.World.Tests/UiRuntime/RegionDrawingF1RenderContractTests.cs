@@ -1,7 +1,7 @@
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
-using XuanYu.Render.Vulkan.Render.StaticModels;
+using XuanYu.Render.Vulkan.Render.VectorOverlay;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -17,10 +17,10 @@ public sealed class RegionDrawingF1RenderContractTests
         var hit = FindHit(vm, projection);
 
         vm.RegionDrawingPointerPressed(hit.X, hit.Y, viewport);
-        var resource = vm.RenderProjection.Projection!.RegionModelResources.Single();
+        var resource = vm.RenderProjection.Projection!.VectorOverlayResources.Single();
 
         Assert.All(resource.Primitives, x => Assert.True(x.IndexCount > 0));
-        Assert.True(VulkanStaticModelValidator.Validate(resource, out var error), error);
+        Assert.True(VulkanVectorOverlayValidator.Validate(resource, out var error), error);
     }
 
     static (double X, double Y) FindHit(UiVm vm, ViewProjectionState projection)

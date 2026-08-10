@@ -4,30 +4,18 @@ namespace XuanYu.Render.Vulkan.Render;
 
 public sealed unsafe partial class VulkanClearFrameOwner
 {
-    readonly object _sceneLock = new();
-    RenderProjectionResult _pendingRenderProjection;
-    bool _renderProjectionPending;
+    readonly LatestRenderProjectionQueue _projectionQueue = new();
 
     public void QueueRenderProjection(RenderProjectionResult projection)
     {
-        lock (_sceneLock)
-        {
-            if (!_renderProjectionPending && projection.Success &&
-                _hasRenderProjection && _renderProjection == projection.Projection) return;
-            _pendingRenderProjection = projection;
-            _renderProjectionPending = true;
-        }
+        if (projection.Success && _hasRenderProjection && _renderProjection == projection.Projection) return;
+        _projectionQueue.Publish(projection);
     }
 
     public bool TryApplyPendingRenderProjection()
     {
         RenderProjectionResult projection;
-        lock (_sceneLock)
-        {
-            if (!_renderProjectionPending) return true;
-            projection = _pendingRenderProjection;
-            _renderProjectionPending = false;
-        }
+        if (!_projectionQueue.TryConsume(out projection)) return true;
         if (!projection.Success)
         {
             ClearRenderProjection();

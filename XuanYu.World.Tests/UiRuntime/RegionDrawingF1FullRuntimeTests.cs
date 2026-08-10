@@ -22,7 +22,7 @@ public sealed class RegionDrawingF1FullRuntimeTests
         var vm = CreateVm(); var hit = FindHit(vm, Viewport);
         vm.RegionDrawingPointerPressed(hit.X, hit.Y, Viewport);
         Assert.Equal(1, vm.RegionDrawingDraftVertexCount);
-        Assert.Contains(vm.RenderProjection.Projection!.RegionModelResources, x => x.Key.Value == "map-region-draft");
+        Assert.Contains(vm.RenderProjection.Projection!.VectorOverlayResources, x => x.Key.Value == "map-vector-overlay");
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public sealed class RegionDrawingF1FullRuntimeTests
         Assert.True(vm.CommitRegionDrawingFromEnter());
         Assert.False(vm.IsRegionDrawingDraftActive);
         Assert.Single(vm.MapSession.CurrentMap.Regions);
-        Assert.Contains(vm.RenderProjection.Projection!.RegionModelResources, x => x.Key.Value.StartsWith("map-region-"));
+        Assert.Contains(vm.RenderProjection.Projection!.VectorOverlayResources, x => x.Key.Value == "map-vector-overlay");
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public sealed class RegionDrawingF1FullRuntimeTests
         var vm = CreateVm(); var points = FindHits(vm, Viewport, 2);
         vm.RegionDrawingPointerPressed(points[0].X, points[0].Y, Viewport);
         Assert.True(vm.RegionDrawingPointerMoved(points[1].X, points[1].Y, Viewport));
-        Assert.Contains(vm.RenderProjection.Projection!.RegionModelResources, x => x.Key.Value == "map-region-draft");
+        Assert.Contains(vm.RenderProjection.Projection!.VectorOverlayResources, x => x.Key.Value == "map-vector-overlay");
     }
 
     [Fact]
