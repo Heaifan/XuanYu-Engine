@@ -6,6 +6,8 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 
 ## 当前裁定
 
+- F1-FAR-RECOVERY-01：日志另确认 FarPlane 历史极值粘滞；Far 必须按当前距离回落，编辑器相机工作上限为 1,000km。此轮不引入 Camera-relative Rendering，保留 SAFE，并等待原 IPO 真机复验。
+
 - D1：CLOSED。
 - D2：OPEN。S01、S02 已由既有真机证据证明 PASS；A03～A06 BLOCKED。
 - D2-F1-C2：CLOSED。RF-M01、RF-M02-A、RF-M03 PASS；RF-M02-B 转交 F1-V。

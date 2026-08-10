@@ -27,6 +27,7 @@
 2. 在危险构建之前，用相机 basis、FOV 和视口的 double 几何收集诊断。
 3. 失败时保持 UI 与上一帧合法状态；不得让 Metric、Scale 或诊断成为崩溃入口。
 4. 长期方案另行评审 Camera-relative Rendering / Render Origin Rebasing，禁止在 F1 安全轮次偷偷引入。
+5. 动态安全边界必须可随当前需求收缩；禁止把历史峰值直接作为下一帧 FarPlane、预算或精度范围的下限。
 
 ### 验证
 

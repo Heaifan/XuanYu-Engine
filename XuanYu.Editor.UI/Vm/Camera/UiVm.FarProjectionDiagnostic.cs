@@ -5,9 +5,19 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     int _lastFarDiagnosticBucket = int.MinValue;
+    bool _farDistanceLimitReported;
 
     void TraceFarDolly(CameraFrameResult result)
     {
+        if (result.Camera.Position.DistanceTo(result.ObservationCenter) < CameraNavigation.MaxDistanceMeters)
+            _farDistanceLimitReported = false;
+        if (result.Camera.Position.DistanceTo(result.ObservationCenter) >= CameraNavigation.MaxDistanceMeters &&
+            !_farDistanceLimitReported)
+        {
+            _farDistanceLimitReported = true;
+            _logBus.Warning(EditorLogSource.Input, EditorLogCategory.Command, "相机距离已到工作上限",
+                $"上限={CameraNavigation.MaxDistanceMeters:g}m；已停止继续拉远。");
+        }
         var data = CameraFarProjectionDiagnostic.Create(result.Camera,
             result.ObservationCenter, _lastViewport);
         var bucket = data.Distance <= 0.0 ? int.MinValue : (int)System.Math.Floor(System.Math.Log10(data.Distance));

@@ -30,7 +30,7 @@ public static partial class CameraNavigation
         return 2.0 * distance * global::System.Math.Tan(radians * 0.5) / safeHeight;
     }
 
-    static double ClampDistance(double value) => Clamp(value, MinDistance, MaxDistance);
+    static double ClampDistance(double value) => Clamp(value, MinDistance, MaxDistanceMeters);
 
     static double Clamp(double value, double min, double max)
     {

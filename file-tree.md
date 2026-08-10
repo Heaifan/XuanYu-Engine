@@ -1090,6 +1090,7 @@
 - `NuGet.Config` — api.nuget.org/v3/index.json" />
 - `XuanYu.Core.Tests/Camera/CameraBasisTests.cs` — F3-F2：唯一相机正交基生成器合同——成功结果必须三轴单位正交，失败必须明确原因。
 - `XuanYu.Core.Tests/Camera/FarProjectionSafetyTests.cs` — F1-FAR-SAFE-01：极远 Metric 失败安全与纯 double 诊断回归。
+- `XuanYu.Core.Tests/Camera/CameraFarRecoveryTests.cs` — F1-FAR-RECOVERY-01：Far 随当前距离回落及编辑器距离上限回归。
 - `XuanYu.Core.Tests/Camera/CameraNavigationRollTests.cs` — F3-F3：Orbit 地平线合同——普通环绕保持世界 +Z Up、无 Roll、不累积倾斜。
 - `XuanYu.Core.Tests/Camera/CameraNavigationSequenceTests.cs` — F3-F2：导航组合链崩溃回归——顶/底视后任何导航不得再抛 CameraState 参数异常。
 - `XuanYu.Core.Tests/Camera/CameraNavigationStressTests.cs` — F3-F2（计划 14.4）：重复导航压力测试——固定序列循环 100 次，检测累积误差与逐步失去正交。
@@ -1348,7 +1349,7 @@
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.Framing.Draft.cs` — F1-C2：按 Draft 顶点 AABB 与最小可视半径聚焦草稿。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.cs` — F3-D2：导航 Gizmo 相机快照（Right/Up/Forward 投影输入；不含平移）。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraDolly.cs` — 地图编辑 Dolly 入口，在候选相机阶段触发极远安全诊断。
-- `XuanYu.Editor.UI/Vm/Camera/UiVm.FarProjectionDiagnostic.cs` — F1-FAR-SAFE-01：跨极远距离档时将纯 double 相机诊断写入编辑器日志。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.FarProjectionDiagnostic.cs` — F1-FAR：跨距离档写入纯 double 诊断，并报告一次相机工作上限。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.ScaleIndicator.cs` — MAP-A-R3-D2-F1-V3/A02：比例尺展示状态消费统一 ViewportMetricScale，并保持 100m 最小层级。
 - `XuanYu.World.Tests/UiRuntime/ScaleIndicatorVisibilityRuntimeTests.cs` — A02：检查器标签下比例尺可见且 Dolly 不能越过 100m Zoom Floor。
@@ -1479,7 +1480,8 @@
 - `XuanYu.Editor/Camera/CameraBasis.cs` — F3-F2：唯一相机正交基生成器（Editor 相机规则；不进入 Core，不持有 UiVm/Vulkan）。
 - `XuanYu.Editor/Camera/CameraFarProjectionDiagnostic.cs` — F1-FAR-SAFE-01：不依赖 ViewProjection 的双精度中心射线与屏幕公制诊断。
 - `XuanYu.Editor/Camera/CameraFrameResult.cs` — （职责待补）
-- `XuanYu.Editor/Camera/CameraNavigation.Try.cs` — F3-F2：失败安全导航入口（partial）——Try* 成功才输出结果；失败给出原因且不修改任何状态。
+- `XuanYu.Editor/Camera/CameraNavigation.Far.cs` — F1-FAR-RECOVERY-01：编辑器相机距离上限与按当前距离回落的 FarPlane 公式。
+- `XuanYu.Editor/Camera/CameraNavigation.Try.cs` — F3-F2/F1-FAR：失败安全导航入口，全部透视导航以当前距离重算 FarPlane。
 - `XuanYu.Editor/Camera/CameraNavigation.cs` — （职责待补）
 - `XuanYu.Editor/Camera/EditorCameraFraming.Orthographic.cs` — F3-F4：正交取景。保持当前正交模式与观察方向，尺度按包围范围适配
 - `XuanYu.Editor/Camera/EditorCameraFraming.Draft.cs` — F1-C2：Draft 最小焦距半径的透视取景。

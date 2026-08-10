@@ -1,7 +1,7 @@
 # MAP-A-R3-D2-F1-CLOSEOUT
 
 **状态**：OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN
-**基线**：`feat/MAP-A-R3` / `d7a7adf`
+**基线**：`feat/MAP-A-R3` / `66a8b84`
 **自动门禁**：2026-08-11 00:03:14（UTC+08:00）完整 Build 0W0E、Core 335/335、World 1115/1115、WarCore 22/22、ARCH-A、5+100、SPIR-V 与 diff-check PASS
 **关闭条件**：下列 F1-M01～F1-M15 全部由用户真机确认 PASS。
 
@@ -31,6 +31,14 @@
 - `ViewportMetricScale.TryCreate` 改为真正失败安全；渲染投影无法构造时返回失败快照，Vulkan 清理该帧投影而不让异常穿透 UI。
 - Dolly 候选相机在 VP 构建前以纯 double 几何计算中心射线和 X/Y Metric，并在 10km、100km、1000km 等跨档时写入编辑器日志；不改动 Camera 上限、FarPlane、Fullscreen Grid、Depth、Ground、Step 或 Region。
 - 当前验收裁定为 10/15 PASS；本轮目标是保证极远 Dolly 不崩溃且可读地收集 M03～M05/M15 证据。M06 仍留给独立的 `F1-REGION-CLOSE-01`。
+
+## F1-FAR-RECOVERY-01
+
+- 真机日志确认第二根因：旧导航以 `max(previousFar, currentDistance×4)` 推导 FarPlane；一次极远 Dolly 后，回到正常距离仍保留历史 Far，导致 Near/Far 比持续病态。
+- 透视导航现改为 `max(Near×10, currentDistance×4)`；不读取上一次 Far，因此 Orbit、Pan、Dolly 均可恢复。编辑器相机工作距离固定上限为 1,000km（当前地图 10km 的 100 倍），低于已捕获的 float ViewProjection 失效区；命中上限有一次可见日志。
+- F1-FAR-SAFE-01 的失败安全保留。Camera-relative Rendering / Render Origin Rebasing 不属于本轮，Grid、Depth、Ground、Region 与全帧 Step 均不得修改。
+- 当前状态仍为 10/15 PASS、`OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`；待正式门禁后按原 F1 IPO 复验 M03/M04/M05/M15。
+- 自动回归：Core 339/339、World 1115/1115、WarCore 22/22、ARCH-A 与 diff-check PASS；完整 Solution Build 被运行中的 Editor.App 锁定输出 DLL，属于环境阻塞，待停止编辑器后单独补跑。
 
 ## 范围冻结
 

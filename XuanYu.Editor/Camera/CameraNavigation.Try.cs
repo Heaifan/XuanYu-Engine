@@ -11,7 +11,6 @@ public static partial class CameraNavigation
     const double PitchPerPixel = 0.006;
     const double MaxPitch = 1.4835298641951802;
     const double MinDistance = 0.25;
-    const double MaxDistance = 1_000_000_000.0;
     const double MinOrthoScale = 0.001;
     const double MaxOrthoScale = 1_000_000.0;
 
@@ -87,7 +86,7 @@ public static partial class CameraNavigation
             return false;
         }
 
-        var far = global::System.Math.Max(start.FarPlane, position.DistanceTo(center) * 4.0);
+        var far = FarPlaneFor(start.NearPlane, position.DistanceTo(center));
         result = new CameraFrameResult(
             new CameraState(position, forward, up,
                 start.VerticalFovDegrees, start.NearPlane, far, revision, mode, orthographicScale),

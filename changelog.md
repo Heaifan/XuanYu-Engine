@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.25.33-fix
+MAP-A-R3-D2-F1 F1-FAR-RECOVERY-01（2026-08-11 01:07:31 +08:00）：真机日志确认 FarPlane 会保留极远 Dolly 的历史最大值，返回正常距离后仍维持病态 Near/Far 比；本轮将 Far 改为每次仅由当前距离计算，并给编辑器相机设定 1,000km 工作上限。
+- 变化：透视导航的 `FarPlane = max(NearPlane×10, CurrentDistance×4)`，不再读取先前 FarPlane；Orbit、Pan 与 Dolly 共用该计算。距离钳制从 1,000,000km 收敛为 1,000km，命中上限时只写一条可见编辑器警告；保留 F1-FAR-SAFE-01 的 VP/Metric 失败安全，不修改 Grid、Depth、Ground、Region 或 Camera-relative Rendering。
+- 验证：Core.Tests 339/339、World.Tests 1115/1115、WarCore.Tests 22/22、ARCH-A、`git diff --check` PASS；完整解决方案 Build 被运行中的 `XuanYu.Editor.App`（PID 40508）锁定 Editor/UI 输出 DLL，未重试、未将其记为通过。真机 IPO 待执行。
+- 知识治理：补充 L-REN-002，动态安全边界必须允许随当前需求收缩，不能只向历史极值扩张。
+- Hash：待本轮实现提交。
+
 ## v0.2.25.32-fix
 MAP-A-R3-D2-F1 F1-FAR-SAFE-01（2026-08-11）：实机捕获极远 Dolly 的 `ViewProjection 矩阵不可逆` 未处理异常，F1-M15 改判 FAIL；F1 更新为 10/15 PASS、`OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`。
 - 变化：`ViewportMetricScale.TryCreate` 对不可逆 VP 返回 false；RenderProjection 无法构造时安全失败；Dolly 在 VP 之前使用纯 double 几何计算中心射线与 X/Y Metric，仅跨 10km、100km、1000km 等距离档时写入可见编辑器日志。撤销不可见且依赖 VP 的 Vulkan Debug 诊断；不修改 MaxDistance、FarPlane、Depth、Grid Step 或 Region。
