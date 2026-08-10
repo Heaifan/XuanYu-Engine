@@ -14,7 +14,8 @@ static partial class Win32ViewportHost
         var hinstance = GetModuleHandle(null);
         var name = "XuanYuVulkanViewport";
         RegisterClass(name, hinstance);
-        return CreateWindowEx(0, name, "", WS_CHILD | WS_VISIBLE, 0, 0, 16, 16, parent, 0, hinstance, 0);
+        return CreateWindowEx(0, name, "", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS,
+            0, 0, 16, 16, parent, 0, hinstance, 0);
     }
 
     public static void Resize(nint hwnd, int width, int height) =>

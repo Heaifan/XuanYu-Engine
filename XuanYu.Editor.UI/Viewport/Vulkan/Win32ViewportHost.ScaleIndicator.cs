@@ -32,12 +32,22 @@ static partial class Win32ViewportHost
         var width = Math.Max(barWidth + (int)Math.Round(12 * dpi), (int)Math.Round(78 * dpi));
         var height = Math.Max(28, (int)Math.Round(34 * dpi));
         var margin = (int)Math.Round(12 * dpi);
-        ScaleStates[hwnd] = new ScaleIndicatorState(text, barWidth, dpi);
+        ScaleStates[hwnd] = new ScaleIndicatorState(text, barWidth, dpi, width);
         var x = Math.Max(0, viewportWidth - width - margin);
         var y = Math.Max(0, viewportHeight - height - margin);
         var flags = SWP_NOACTIVATE | (visible ? SWP_SHOWWINDOW : SWP_HIDEWINDOW);
         SetWindowPos(hwnd, 0, x, y, width, height, flags);
         InvalidateRect(hwnd, 0, true);
+    }
+
+    public static ScaleIndicatorProbe GetScaleIndicatorProbe(nint hwnd)
+    {
+        var rect = new RECT();
+        var state = ScaleStates.GetValueOrDefault(hwnd);
+        return new ScaleIndicatorProbe(hwnd, IsWindow(hwnd), IsWindowVisible(hwnd),
+            GetWindowRect(hwnd, ref rect), rect.left, rect.top, rect.right, rect.bottom,
+            state?.Text ?? "", state?.WindowWidth ?? 0,
+            state?.PaintCount ?? 0);
     }
 
     public static void DestroyScaleIndicator(nint hwnd)
@@ -47,9 +57,22 @@ static partial class Win32ViewportHost
         DestroyWindow(hwnd);
     }
 
-    sealed record ScaleIndicatorState(string Text, int BarWidth, double Dpi);
+    sealed record ScaleIndicatorState(string Text, int BarWidth, double Dpi, int WindowWidth)
+    {
+        public int PaintCount { get; set; }
+    }
+    internal readonly record struct ScaleIndicatorProbe(
+        nint Hwnd, bool IsWindow, bool IsVisible, bool HasRect,
+        int Left, int Top, int Right, int Bottom, string Text,
+        int WindowWidth, int PaintCount);
     delegate nint ScaleWndProcDelegate(nint hWnd, uint msg, nint wParam, nint lParam);
 
     [DllImport("user32")] [return: MarshalAs(UnmanagedType.Bool)]
     static extern bool InvalidateRect(nint hWnd, nint rect, [MarshalAs(UnmanagedType.Bool)] bool erase);
+    [DllImport("user32")] [return: MarshalAs(UnmanagedType.Bool)]
+    static extern bool IsWindow(nint hWnd);
+    [DllImport("user32")] [return: MarshalAs(UnmanagedType.Bool)]
+    static extern bool IsWindowVisible(nint hWnd);
+    [DllImport("user32")] [return: MarshalAs(UnmanagedType.Bool)]
+    static extern bool GetWindowRect(nint hWnd, ref RECT rect);
 }

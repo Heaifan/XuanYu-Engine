@@ -16,6 +16,9 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - V1-STAB-2：DONE（本轮）；Scale Indicator 改为 Native Vulkan 视口内右下角悬浮控件，点击穿透且不再占独立底栏，真机可见性待重验。
 - V1-STAB-3：DONE（本轮）；Vector Overlay 使用独立无深度测试/无深度写入 Pass，真机俯视/45°/低角度稳定性待重验。
 - A02 follow-up：DONE（本轮）；比例尺在有效地图视口内右下角悬浮显示，不再受右侧标签页选择影响；相机与比例尺均锁定 100m 最小层级，禁止显示 `0 m`。
+- STAB-4A：代码实现完成；比例尺 HWND 改为 Vulkan HWND 同父级兄弟窗口，并加入真实窗口 Probe；真机可见性待重验。
+- STAB-4B：代码实现完成；视口公制尺度改为 X/Y 方向值，Zoom Floor 取较小方向并对 Metric 失败 fail-closed；斜视回归已补。
+- STAB-4C：代码实现完成；Vector Overlay 移除过期 Clip-Z Bias，Fill / Stroke / Marker 直接消费 ViewProjection，保留无深度测试/写入 Pass 与绘制顺序。
 - 本轮真机裁定：`MAP-A-R3-D2-F1 联合真机验收 = FAIL · FUNCTIONAL BUT UNSTABLE`；A02、B03、C01、C02 按现象判 FAIL，C03～C07、D01～D04 尚未完成。
 - D3：禁止启动；F2：不创建。
 

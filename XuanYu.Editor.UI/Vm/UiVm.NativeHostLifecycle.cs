@@ -35,4 +35,12 @@ public sealed partial class UiVm
         _logBus.Info(EditorLogSource.Render, EditorLogCategory.Backend, message, detail);
         RefreshLogBindings();
     }
+
+    internal void LogScaleIndicatorProbe(Win32ViewportHost.ScaleIndicatorProbe probe)
+    {
+        var message = $"【Native比例尺】HWND=0x{probe.Hwnd.ToInt64():X}；窗口={probe.IsWindow}；可见={probe.IsVisible}；文本={probe.Text}";
+        var detail = $"矩形={probe.Left},{probe.Top},{probe.Right},{probe.Bottom}；尺寸宽度={probe.WindowWidth}；WM_PAINT次数={probe.PaintCount}；矩形有效={probe.HasRect}";
+        _logBus.Info(EditorLogSource.Render, EditorLogCategory.Backend, message, detail);
+        RefreshLogBindings();
+    }
 }

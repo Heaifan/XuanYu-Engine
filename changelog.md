@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.17-stab
+MAP-A-R3-D2-F1 STAB-4A/4B/4C 根因修复（2026-08-10）：将 Native 比例尺改为与 Vulkan HWND 同父级的兄弟窗口，显式置于 Vulkan 之上，并记录 HWND、可见性、矩形、文本、宽度与 WM_PAINT 次数；视口 Metric 拆为 X/Y 方向值，比例尺消费 X，Zoom Floor 取较小方向且 Metric 失败保持上一合法相机；Vector Overlay 删除过期 Clip-Z Bias，Fill、Stroke、Marker 直接使用 ViewProjection，继续使用无深度测试/写入 Pass 与绘制顺序。
+- 新增斜视尺度、Metric fail-closed、10km 地图 Fill 投影、Native Overlay Probe 与无 Bias Shader 合同回归。
+- 验证：解决方案 Build 0W0E；Core 366/366、World 1117/1117、WarCore 22/22；ARCH-A、5+100、ShaderBytecode glslc 生成与 `git diff --check` PASS；真机比例尺可见性与俯视/45°/低角度 Fill 稳定性待用户重验，F1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
+- 遗留：未执行真机验收，不宣告 A02、B03、C01、C02 或 F1 CLOSED。
+
 ## v0.2.25.16-fix
 MAP-A-R3-D2-F1 A02 比例尺悬浮与 100m Zoom Floor 修复（2026-08-10 15:06:09）：删除底部独立 Avalonia 比例尺行，改为 Native Vulkan 视口内右下角悬浮控件，保留点击穿透；有效地图视口无论“检查器”或“地图编辑器”标签均显示比例尺。Map Editor Zoom Policy 改为所有有效地图视口生效，比例尺与相机缩放均禁止低于 100m，彻底消除 `0 m`。
 - 验证：解决方案 Build 0W0E；Core 365/365、World 1118/1118、WarCore 22/22；比例尺 Native Overlay、100m metric 与 Inspector Zoom Floor 合同 PASS；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机重验 A02 仍待用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。

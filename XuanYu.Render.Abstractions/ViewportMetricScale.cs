@@ -5,8 +5,13 @@ namespace XuanYu.Render.Abstractions;
 
 // MAP-A-R3-D2-F1：唯一视口公制尺度源；不依赖 Vulkan、Avalonia 或 World。
 public readonly record struct ViewportMetricScale(
-    double MetersPerDip, double MetersPerPhysicalPixel, double DpiScale)
+    double MetersPerDipX, double MetersPerDipY, double DpiScale)
 {
+    public double MetersPerDip => System.Math.Min(MetersPerDipX, MetersPerDipY);
+    public double MetersPerPhysicalPixel => MetersPerDip / DpiScale;
+    public double MetersPerPhysicalPixelX => MetersPerDipX / DpiScale;
+    public double MetersPerPhysicalPixelY => MetersPerDipY / DpiScale;
+
     public static bool TryCreate(
         RenderCameraProjection camera, ViewportState viewport,
         double referenceHeight, out ViewportMetricScale metric)
@@ -19,10 +24,12 @@ public readonly record struct ViewportMetricScale(
         if (!TryHitPlane(state, x, y, referenceHeight, out var center) ||
             !TryHitPlane(state, x + 1.0, y, referenceHeight, out var right) ||
             !TryHitPlane(state, x, y + 1.0, referenceHeight, out var down)) return false;
-        var metersPerDip = System.Math.Max(center.DistanceTo(right), center.DistanceTo(down));
-        if (!double.IsFinite(metersPerDip) || metersPerDip <= 0.0) return false;
+        var metersPerDipX = center.DistanceTo(right);
+        var metersPerDipY = center.DistanceTo(down);
+        if (!double.IsFinite(metersPerDipX) || metersPerDipX <= 0.0 ||
+            !double.IsFinite(metersPerDipY) || metersPerDipY <= 0.0) return false;
         var dpi = viewport.DpiScale;
-        metric = new ViewportMetricScale(metersPerDip, metersPerDip / dpi, dpi);
+        metric = new ViewportMetricScale(metersPerDipX, metersPerDipY, dpi);
         return true;
     }
 

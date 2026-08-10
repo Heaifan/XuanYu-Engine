@@ -24,7 +24,7 @@ public sealed partial class UiVm
             SetScaleIndicator(false, "", 80.0);
             return;
         }
-        var bar = ScaleIndicatorMetric.FromMetersPerDip(metric.MetersPerDip);
+        var bar = ScaleIndicatorMetric.FromMetersPerDip(metric.MetersPerDipX);
         SetScaleIndicator(bar.DistanceMeters > 0.0, bar.Label, bar.WidthDip);
     }
 

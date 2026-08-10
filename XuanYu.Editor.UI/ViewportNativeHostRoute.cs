@@ -15,4 +15,7 @@ public static class ViewportNativeHostRoute
 
     public static void ReportProbe(UiVm? vm, bool isLogOpen, int logicalW, int logicalH, double dpi, int targetW, int targetH, int clientW, int clientH) =>
         vm?.LogNativeHostProbe(isLogOpen, logicalW, logicalH, dpi, targetW, targetH, clientW, clientH);
+
+    internal static void ReportScaleIndicatorProbe(UiVm? vm, Win32ViewportHost.ScaleIndicatorProbe probe) =>
+        vm?.LogScaleIndicatorProbe(probe);
 }

@@ -2,35 +2,16 @@ using System.Numerics;
 using XuanYu.Core.Map;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
+using XuanYu.Editor.Camera;
+using XuanYu.Editor.UI;
 using XuanYu.Render.Abstractions;
-using XuanYu.Render.Vulkan.Render.VectorOverlay;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
 public sealed class MapVectorOverlayDepthPolicyTests
 {
-    [Theory]
-    [InlineData(0.0, true)]
-    [InlineData(45.0, false)]
-    [InlineData(80.0, false)]
-    [InlineData(89.0, false)]
-    public void Clip_policy_orders_fill_stroke_marker_at_extreme_views(double angle, bool orthographic)
-    {
-        var viewport = new ViewportState(0, 0, 1920, 1080, 1920, 1080, 1, 1);
-        var state = ViewProjectionState.Create(Camera(angle, orthographic), viewport);
-        var clip = Vector4.Transform(new Vector4(0, 0, 0, 1), state.ViewProjection);
-        var fill = VulkanVectorOverlayDepthPolicy.Apply(clip, RenderVectorOverlayPrimitiveKind.Fill);
-        var stroke = VulkanVectorOverlayDepthPolicy.Apply(clip, RenderVectorOverlayPrimitiveKind.Stroke);
-        var marker = VulkanVectorOverlayDepthPolicy.Apply(clip, RenderVectorOverlayPrimitiveKind.Marker);
-
-        Assert.True(float.IsFinite(clip.W) && clip.W > 0);
-        Assert.True(marker.Z < stroke.Z && stroke.Z < fill.Z && fill.Z < clip.Z);
-        Assert.Equal(clip.W, marker.W);
-        Assert.InRange(marker.Z / marker.W, 0.0f, 1.0f);
-    }
-
     [Fact]
-    public void Pipeline_and_shader_contract_keep_main_depth_and_overlay_policy()
+    public void Pipeline_and_shader_contract_disable_depth_and_clip_bias()
     {
         var depth = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Depth.cs"));
         var overlay = File.ReadAllText(FindRepoFile("XuanYu.Render.Vulkan", "Session", "VulkanRenderSession.VectorOverlay.cs"));
@@ -41,11 +22,36 @@ public sealed class MapVectorOverlayDepthPolicyTests
         Assert.Contains("depthTest: false, depthWrite: false", overlay);
         Assert.Contains("kind == RenderDrawKind.MapVectorOverlay", bind);
         Assert.Contains("DepthCompareOp = CompareOp.LessOrEqual", depth);
-        Assert.Contains("applyVectorOverlayDepthPolicy", shader);
-        Assert.Contains("VECTOR_OVERLAY_FILL_DEPTH_BIAS", shader);
-        Assert.Contains("VECTOR_OVERLAY_STROKE_DEPTH_BIAS", shader);
-        Assert.Contains("VECTOR_OVERLAY_MARKER_DEPTH_BIAS", shader);
+        Assert.DoesNotContain("applyVectorOverlayDepthPolicy", shader);
+        Assert.DoesNotContain("VECTOR_OVERLAY_FILL_DEPTH_BIAS", shader);
+        Assert.DoesNotContain("VECTOR_OVERLAY_STROKE_DEPTH_BIAS", shader);
+        Assert.DoesNotContain("VECTOR_OVERLAY_MARKER_DEPTH_BIAS", shader);
         Assert.DoesNotContain("BaseHeightMeters +", shader);
+    }
+
+    [Theory]
+    [InlineData(45.0)]
+    [InlineData(80.0)]
+    public void Large_map_fill_uses_direct_projection_at_legal_zoom(double angle)
+    {
+        var viewport = new ViewportState(0, 0, 1920, 1080, 1920, 1080, 1, 1);
+        var direction = Camera(angle, false);
+        var start = new CameraState(new(0, -10000, 10000), direction.Forward,
+            direction.Up, 60, 0.1, 100000, 1);
+        var candidate = new CameraState(new(0, -1, 1), direction.Forward,
+            direction.Up, 60, 0.1, 100000, 1);
+        var result = MapEditorZoomPolicy.Clamp(start,
+            new CameraFrameResult(candidate, Vector3d.Zero), Vector3d.Zero,
+            viewport, 0, out var clamped);
+        Assert.True(clamped);
+        var state = ViewProjectionState.Create(result.Camera, viewport);
+        foreach (var vertex in new[] { new Vector3d(-250, -250, 0), new(250, -250, 0), new(0, 250, 0) })
+        {
+            var clip = Vector4.Transform(new Vector4((float)vertex.X, (float)vertex.Y,
+                (float)vertex.Z, 1), state.ViewProjection);
+            Assert.True(float.IsFinite(clip.W) && clip.W > 0);
+            Assert.True(float.IsFinite(clip.Z / clip.W));
+        }
     }
 
     [Fact]

@@ -17,25 +17,36 @@ public static class MapEditorZoomPolicy
         clamped = false;
         if (candidate.Camera.Mode == ProjectionMode.Orthographic)
         {
-            if (candidate.Camera.OrthographicScale >= MinMetersPerDip * viewport.LogicalHeight)
-                return candidate;
+            if (!TryMetric(candidate.Camera, viewport, referenceHeight, out var nextMetric))
+                return Hold(start, center, out clamped);
+            if (nextMetric.MetersPerDip >= MinMetersPerDip) return candidate;
+            if (!TryMetric(start, viewport, referenceHeight, out var startMetric) ||
+                startMetric.MetersPerDip < MinMetersPerDip)
+                return Hold(start, center, out clamped);
             clamped = true;
-            return OrthoClamp(candidate, center, viewport);
+            return OrthoClamp(candidate, center, viewport, nextMetric);
         }
-        if (!TryMetric(candidate.Camera, viewport, referenceHeight, out var nextMetric) ||
-            nextMetric.MetersPerDip >= MinMetersPerDip) return candidate;
+        if (!TryMetric(candidate.Camera, viewport, referenceHeight, out var nextPerspectiveMetric))
+            return Hold(start, center, out clamped);
+        if (nextPerspectiveMetric.MetersPerDip >= MinMetersPerDip) return candidate;
+        if (!TryMetric(start, viewport, referenceHeight, out var previousMetric) ||
+            previousMetric.MetersPerDip < MinMetersPerDip)
+            return Hold(start, center, out clamped);
         clamped = true;
         var low = candidate.Camera.Position.DistanceTo(center);
-        var high = start.Position.DistanceTo(center);
-        if (!TryMetric(start, viewport, referenceHeight, out var startMetric) ||
-            startMetric.MetersPerDip < MinMetersPerDip)
+        var high = Math.Max(start.Position.DistanceTo(center), low + 1.0);
+        var foundValidHigh = false;
+        for (var i = 0; i < 40; i++)
         {
-            high = Math.Max(high, 1.0);
-            for (var i = 0; i < 40 &&
-                 (!TryMetric(CameraAtDistance(candidate.Camera, center, high), viewport,
-                     referenceHeight, out var metric) || metric.MetersPerDip < MinMetersPerDip); i++)
-                high *= 2.0;
+            if (TryMetric(CameraAtDistance(candidate.Camera, center, high), viewport,
+                    referenceHeight, out var metric) && metric.MetersPerDip >= MinMetersPerDip)
+            {
+                foundValidHigh = true;
+                break;
+            }
+            high *= 2.0;
         }
+        if (!foundValidHigh) return Hold(start, center, out clamped);
         for (var i = 0; i < 40; i++)
         {
             var distance = (low + high) * 0.5;
@@ -51,13 +62,21 @@ public static class MapEditorZoomPolicy
         return new CameraFrameResult(result, center);
     }
 
-    static CameraFrameResult OrthoClamp(CameraFrameResult candidate, Vector3d center, ViewportState viewport)
+    static CameraFrameResult OrthoClamp(CameraFrameResult candidate, Vector3d center,
+        ViewportState viewport, ViewportMetricScale metric)
     {
-        var scale = Math.Max(candidate.Camera.OrthographicScale, MinMetersPerDip * viewport.LogicalHeight);
+        var scale = candidate.Camera.OrthographicScale * MinMetersPerDip / metric.MetersPerDip;
+        scale = Math.Max(scale, MinMetersPerDip * viewport.LogicalHeight);
         var camera = new CameraState(candidate.Camera.Position, candidate.Camera.Forward,
             candidate.Camera.Up, candidate.Camera.VerticalFovDegrees, candidate.Camera.NearPlane,
             candidate.Camera.FarPlane, candidate.Camera.Revision, ProjectionMode.Orthographic, scale);
         return new CameraFrameResult(camera, center);
+    }
+
+    static CameraFrameResult Hold(CameraState start, Vector3d center, out bool clamped)
+    {
+        clamped = true;
+        return new CameraFrameResult(start, center);
     }
 
     static CameraState CameraAtDistance(CameraState source, Vector3d center, double distance) => new(

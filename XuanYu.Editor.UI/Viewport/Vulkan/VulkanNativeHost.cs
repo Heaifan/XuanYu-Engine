@@ -39,7 +39,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         _hwnd = Win32ViewportHost.CreateChild(parent.Handle);
-        CreateNativeScaleIndicator();
+        CreateNativeScaleIndicator(parent.Handle);
         Win32ViewportHost.SetInputSink(_hwnd, OnNativePointerMessage);
         Report(NativeHostLifecycleState.HandleAvailable, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), true);
         return new PlatformHandle(_hwnd, "HWND");

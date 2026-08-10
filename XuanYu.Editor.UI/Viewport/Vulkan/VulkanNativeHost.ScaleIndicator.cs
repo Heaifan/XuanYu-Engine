@@ -6,10 +6,11 @@ public sealed partial class VulkanNativeHost
 {
     nint _scaleHwnd;
     UiVm? _scaleIndicatorVm;
+    Win32ViewportHost.ScaleIndicatorProbe? _lastScaleProbe;
 
-    void CreateNativeScaleIndicator()
+    void CreateNativeScaleIndicator(nint parent)
     {
-        _scaleHwnd = Win32ViewportHost.CreateScaleIndicator(_hwnd);
+        _scaleHwnd = Win32ViewportHost.CreateScaleIndicator(parent);
         HookScaleIndicator();
     }
 
@@ -53,5 +54,11 @@ public sealed partial class VulkanNativeHost
         Win32ViewportHost.UpdateScaleIndicator(_scaleHwnd,
             vm?.IsScaleIndicatorVisible == true, vm?.ScaleIndicatorText ?? "",
             vm?.ScaleIndicatorWidthDip ?? 80.0, dpi, size.Width, size.Height);
+        var probe = Win32ViewportHost.GetScaleIndicatorProbe(_scaleHwnd);
+        if (_lastScaleProbe != probe)
+        {
+            _lastScaleProbe = probe;
+            ViewportNativeHostRoute.ReportScaleIndicatorProbe(DataContext as UiVm, probe);
+        }
     }
 }

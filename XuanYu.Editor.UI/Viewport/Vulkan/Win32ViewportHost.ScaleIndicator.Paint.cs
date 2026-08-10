@@ -19,6 +19,7 @@ static partial class Win32ViewportHost
     static nint PaintScaleIndicator(nint hwnd)
     {
         if (!ScaleStates.TryGetValue(hwnd, out var state)) return 0;
+        state.PaintCount++;
         var paint = new PAINTSTRUCT { rgbReserved = new byte[32] };
         var hdc = BeginPaint(hwnd, ref paint);
         var area = new RECT { left = 0, top = 0, right = 400, bottom = 400 };
