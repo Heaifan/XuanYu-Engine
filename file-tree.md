@@ -861,6 +861,8 @@
 │  │  └─ WorldMapStateTests.cs
 │  ├─ MapEditing/
 │  │  ├─ MapEditSessionCommandTests.cs
+│  │  ├─ MapEditorZoomPolicyTests.cs
+│  │  ├─ MapPickingRoundTripTests.cs
 │  │  ├─ MapEditSessionRegionTests.cs
 │  │  ├─ MapEditSessionCreationTests.cs
 │  │  ├─ MapEditSessionDirtyTests.cs
@@ -1168,7 +1170,7 @@
 - `XuanYu.Core/Space/ViewProjectionState.Projection.cs` — 世界点严格投影与失败安全 Try 投影 API。
 - `XuanYu.Core/Space/ViewportState.cs` — （职责待补）
 - `XuanYu.Core/Space/WorldRay.cs` — （职责待补）
-- `XuanYu.Core/Space/WorldRayFactory.cs` — static class WorldRayFactory
+- `XuanYu.Core/Space/WorldRayFactory.cs` — 基于 CameraState 与 ViewportState 的双精度世界射线构造。
 - `XuanYu.Core/Spatial/RayAabbHit.cs` — （职责待补）
 - `XuanYu.Core/Spatial/RayAabbIntersection.cs` — static class RayAabbIntersection
 - `XuanYu.Core/Spatial/SpatialAabb.cs` — （职责待补）
@@ -1731,6 +1733,7 @@
 - `XuanYu.World.Tests/Map/WorldMapStateTests.cs` — MAP-A-R1-D3：World 地图状态——有限边界（闭区间）与高度查询。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCommandTests.cs` — MAP-A-R2-D2：地图基础编辑命令（改名/尺寸/基础高度/No-op/非法输入）。
 - `XuanYu.World.Tests/MapEditing/MapEditorZoomPolicyTests.cs` — MAP-A-R3-D2-F1-V3：Perspective/Orthographic Zoom Floor 与通用 Camera 极限隔离合同。
+- `XuanYu.World.Tests/MapEditing/MapPickingRoundTripTests.cs` — MAP-A-R3-D2-F1 Metric/Picking：100m、10km、10,000km 与多 DPI/斜视下 Screen → Pick → World → Screen 误差不超过 1 DIP。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionRegionTests.cs` — MAP-A-R3-D1：Region Create/Delete 单历史条目及相同 ID Undo/Redo 合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCreationTests.cs` — MAP-A-R2-D2：默认会话与根状态合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionDirtyTests.cs` — MAP-A-R2-D2：Saved/Dirty 合同（Dirty 随 Undo/Redo 回到保存点）。

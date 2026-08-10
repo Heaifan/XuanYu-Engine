@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.25.12-rz
+MAP-A-R3-D2-F1 Metric/Picking 精度门禁（2026-08-10 12:20:03）：将地图 Screen → Pick → World → Screen CPU 路径改为基于 CameraState/ViewportState 的双精度投影与射线构造，消除 10,000～10,000,000m 场景中的单精度 W=0 与超过 1 DIP 的往返误差；补充 100m、10km、10,000km、多 DPI、正交/45°/80°斜视自动回归。
+- 验证：解决方案 Build 0W0E；Core 361/361、World 1109/1109、WarCore 22/22、Metric/Picking 108/108、ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机验收仍需用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
+- 遗留：进入 V1-REWORK-B Region Overlay；完成后执行 V1 真机重验，未验收不得宣告 F1 CLOSED。
+- Hash：0594c4c。
+
+## v0.2.25.11-rz
 ## v0.2.25.11-rz
 MAP-A-R3-D2-F1-V3 Scale Indicator + MapEditorZoomPolicy（2026-08-10 12:07:40）：新增视口左下角比例尺（12～16 DIP 内边距，80～160 DIP 目标宽度，1/2/5 m/km 格式）；新增仅地图编辑器生效的 Perspective/Orthographic Zoom Floor，100m 网格最大视觉尺寸为 160 DIP（`0.625 m/DIP`）；通用 Camera 的近距离能力保持不变。
 - 验证：解决方案 Build 0W0E；Core 361/361、World 1001/1001、WarCore 22/22 PASS；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机验收仍需用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。

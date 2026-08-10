@@ -8,8 +8,8 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - D2：OPEN。S01、S02 已由既有真机证据证明 PASS；A03～A06 BLOCKED。
 - D2-F1-C2：CLOSED。RF-M01、RF-M02-A、RF-M03 PASS；RF-M02-B 转交 F1-V。
 - D2-F1-V1：OPEN · ACCEPTANCE FAILED · REWORK。V1-REWORK-A 只恢复 Navigation Gizmo 输入；Region Overlay 视觉回修延后。
-- F1-V2：OPEN。目标为 100m Minimum Visible Metric Grid；已完成 1/2/5 扩展与唯一 ViewportMetricScale，待本轮门禁收口。
-- F1-V3：OPEN。已完成 Scale Indicator、m/km 格式器与地图编辑专属 Zoom Floor；待本轮门禁收口。
+- F1-V2：DONE（`a367f89` 已推送）。
+- F1-V3：DONE（`49b0677` 已推送）。
 - D3：禁止启动；F2：不创建。
 
 ## MAP-A-R3-D2-F1-C2：正式收口
@@ -111,7 +111,15 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 | V3-T04 | Perspective Zoom Floor | DONE |
 | V3-T05 | Orthographic Zoom Floor | DONE |
 | V3-T06 | 比例尺与 Zoom Metric 自动回归 | DONE |
-| V3-T07 | F1-V3 正式门禁与 Commit + Push | DONE（`5a6c6c2` 已提交，待推送） |
+| V3-T07 | F1-V3 正式门禁与 Commit + Push | DONE（`49b0677` 已推送） |
+
+### Metric/Picking：Screen → Pick → World → Screen
+
+| TODO | 内容 | 状态 |
+| --- | --- | --- |
+| MP-T01 | 统一地图投影与拾取的双精度 CPU 路径 | DONE |
+| MP-T02 | 100m/10km/10,000km、DPI 与斜视往返专项 | DONE（108/108） |
+| MP-T03 | 正式 0W0E 门禁与 Commit + Push | DONE（`73c2d63` 已推送） |
 
 ### V1 自动验收
 
