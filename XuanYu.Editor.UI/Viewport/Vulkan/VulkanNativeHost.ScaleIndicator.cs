@@ -18,6 +18,7 @@ public sealed partial class VulkanNativeHost
     {
         Win32ViewportHost.DestroyScaleIndicator(_scaleHwnd);
         _scaleHwnd = 0;
+        _lastScaleProbe = null;
     }
 
     void HookScaleIndicator()
@@ -47,7 +48,11 @@ public sealed partial class VulkanNativeHost
 
     void UpdateNativeScaleIndicator()
     {
-        if (_scaleHwnd == 0) return;
+        if (_scaleHwnd == 0)
+        {
+            ReportScaleIndicatorProbe(Win32ViewportHost.GetScaleIndicatorProbe(0));
+            return;
+        }
         var vm = DataContext as UiVm;
         var size = Win32ViewportHost.GetClientSize(_hwnd);
         var dpi = GetDpiScale();
@@ -55,6 +60,11 @@ public sealed partial class VulkanNativeHost
             vm?.IsScaleIndicatorVisible == true, vm?.ScaleIndicatorText ?? "",
             vm?.ScaleIndicatorWidthDip ?? 80.0, dpi, size.Width, size.Height);
         var probe = Win32ViewportHost.GetScaleIndicatorProbe(_scaleHwnd);
+        ReportScaleIndicatorProbe(probe);
+    }
+
+    void ReportScaleIndicatorProbe(Win32ViewportHost.ScaleIndicatorProbe probe)
+    {
         if (_lastScaleProbe != probe)
         {
             _lastScaleProbe = probe;
