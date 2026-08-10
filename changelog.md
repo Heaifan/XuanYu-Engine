@@ -23,7 +23,7 @@ MAP-A-R3-D2-F1 F1-FAR-RECOVERY-01（2026-08-11 01:07:31 +08:00）：真机日志
 - 变化：透视导航的 `FarPlane = max(NearPlane×10, CurrentDistance×4)`，不再读取先前 FarPlane；Orbit、Pan 与 Dolly 共用该计算。距离钳制从 1,000,000km 收敛为 1,000km，命中上限时只写一条可见编辑器警告；保留 F1-FAR-SAFE-01 的 VP/Metric 失败安全，不修改 Grid、Depth、Ground、Region 或 Camera-relative Rendering。
 - 验证：Core.Tests 339/339、World.Tests 1115/1115、WarCore.Tests 22/22、ARCH-A、`git diff --check` PASS；完整解决方案 Build 被运行中的 `XuanYu.Editor.App`（PID 40508）锁定 Editor/UI 输出 DLL，未重试、未将其记为通过。真机 IPO 待执行。
 - 知识治理：补充 L-REN-002，动态安全边界必须允许随当前需求收缩，不能只向历史极值扩张。
-- Hash：待本轮实现提交。
+- Hash：`ff6ade4`（F1-FAR-RECOVERY-01：Far 回落、1,000km 相机工作上限与回归）。
 
 ## v0.2.25.32-fix
 MAP-A-R3-D2-F1 F1-FAR-SAFE-01（2026-08-11）：实机捕获极远 Dolly 的 `ViewProjection 矩阵不可逆` 未处理异常，F1-M15 改判 FAIL；F1 更新为 10/15 PASS、`OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`。
