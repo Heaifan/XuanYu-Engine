@@ -48,7 +48,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vk.CmdPushConstants(cb, _scaleIndicatorPipelineLayout,
                 ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit,
                 0, ScaleIndicatorPushSize, constants);
-            _vk.CmdDraw(cb, RenderDrawPlan.ReferenceGridVertexCount, 1, 0, 0);
+            _vk.CmdDraw(cb, RenderDrawPlan.FullscreenTriangleVertexCount, 1, 0, 0);
         }
     }
 }

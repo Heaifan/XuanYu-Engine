@@ -2,10 +2,7 @@ using System.IO;
 
 namespace XuanYu.Core.Tests.Render;
 
-// MAP-A-R1-D5-R1-F2-R2：Shader 合同低层门禁（方案 15.5）。
-// 只做防止误删/防退化的字符串检查，不声称视觉正确：
-// 网格 Shader 不再包含轴线颜色/原点绘制；不再逐 Fragment 选 LOD；存在 Fine/Coarse 参数；
-// 存在方向性 fwidth 密度淡出；深度偏移有 clamp。
+// GRID-RW-1：只保护正式世界线承载路径，禁止恢复全屏片元局部 LOD。
 public sealed class ReferenceGridShaderContractTests
 {
     static string ShaderSource(string name)
@@ -17,53 +14,28 @@ public sealed class ReferenceGridShaderContractTests
     }
 
     [Fact]
-    public void Grid_shader_has_no_axis_or_origin_drawing()
+    public void Line_shaders_generate_world_lines_without_local_lod()
     {
-        var frag = ShaderSource("editor_reference_grid.frag");
-        // 轴线/原点已移入独立 Pass（WorldAxes/WorldOrigin）。
-        Assert.DoesNotContain("axisXColor", frag);
-        Assert.DoesNotContain("axisYColor", frag);
-        Assert.DoesNotContain("originColor", frag);
-        Assert.DoesNotContain("originMark", frag);
+        var vert = ShaderSource("editor_reference_grid_line.vert");
+        var frag = ShaderSource("editor_reference_grid_line.frag");
+        Assert.Contains("gl_VertexIndex", vert);
+        Assert.Contains("LINES_PER_AXIS = 513", vert);
+        Assert.Contains("pc.gridState", vert);
+        Assert.DoesNotContain("fwidth(", vert + frag);
+        Assert.DoesNotContain("log10(", vert + frag);
+        Assert.DoesNotContain("bandPass", vert + frag);
+        Assert.DoesNotContain("discard", frag);
     }
 
     [Fact]
-    public void Grid_shader_uses_local_decade_lod()
+    public void Reference_grid_pipeline_uses_line_list()
     {
-        var frag = ShaderSource("editor_reference_grid.frag");
-        Assert.Contains("worldPerPixel", frag);
-        Assert.Contains("worldPerPixelX", frag);
-        Assert.Contains("worldPerPixelY", frag);
-        Assert.Contains("sqrt(worldPerPixelX * worldPerPixelY)", frag);
-        Assert.Contains("log10Value(idealSpacing)", frag);
-        Assert.Contains("levelLine", frag);
-        Assert.Contains("return max(xLine, yLine)", frag);
-        Assert.Contains("projectedCellPixels", frag);
-        Assert.Contains("bandPass", frag);
-        Assert.DoesNotContain("decadePhase", frag);
-        Assert.DoesNotContain("float fineSpacing", frag);
-        Assert.DoesNotContain("pc.gridScale.x", frag);
-        // 不再由 Fragment 自己乘 36 选层级。
-        Assert.DoesNotContain("36.0", frag);
-    }
-
-    [Fact]
-    public void Grid_shader_depth_bias_is_clamped()
-    {
-        var frag = ShaderSource("editor_reference_grid.frag");
-        Assert.Contains("clamp(fwidth(depth) * DEPTH_BIAS_FACTOR", frag);
-        Assert.Contains("MIN_DEPTH_BIAS", frag);
-        Assert.Contains("MAX_DEPTH_BIAS", frag);
-    }
-
-    [Fact]
-    public void Grid_shader_is_infinite_and_keeps_base_height()
-    {
-        var frag = ShaderSource("editor_reference_grid.frag");
-        Assert.DoesNotContain("mapFade", frag);
-        Assert.DoesNotContain("abs(worldPosition.x) - pc.mapBounds.x", frag);
-        Assert.DoesNotContain("abs(worldPosition.y) - pc.mapBounds.y", frag);
-        Assert.Contains("pc.mapBounds.z", frag);
+        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var path = Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs");
+        var source = File.ReadAllText(path);
+        Assert.Contains("ShaderBytecodeGridLineVert.Code", source);
+        Assert.Contains("ShaderBytecodeGridLineFrag.Code", source);
+        Assert.Contains("PrimitiveTopology.LineList", source);
     }
 
     [Fact]

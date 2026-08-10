@@ -42,7 +42,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             };
             _vk.CmdPushConstants(cb, _axesPipelineLayout, range.StageFlags, 0,
                 GridPushFloatCount * 4, pScene);
-            _vk.CmdDraw(cb, RenderDrawPlan.ReferenceGridVertexCount, 1, 0, 0);
+            _vk.CmdDraw(cb, RenderDrawPlan.FullscreenTriangleVertexCount, 1, 0, 0);
         }
     }
 
@@ -61,7 +61,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             };
             _vk.CmdPushConstants(cb, _originPipelineLayout, range.StageFlags, 0,
                 GridPushFloatCount * 4, pScene);
-            _vk.CmdDraw(cb, RenderDrawPlan.ReferenceGridVertexCount, 1, 0, 0);
+            _vk.CmdDraw(cb, RenderDrawPlan.FullscreenTriangleVertexCount, 1, 0, 0);
         }
     }
 }

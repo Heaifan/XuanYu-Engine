@@ -6,15 +6,14 @@ using XuanYu.Render.Vulkan.Swapchain;
 
 namespace XuanYu.Render.Vulkan.Pipeline;
 
-// MAP-A-R1-D5-R1-F2-R2：全屏 Pass 工厂（网格 / 世界轴 / 世界原点）。
-// 三个 Pass 共用 CreateFullscreenPass 通用创建（全屏三角形、深度测试开、深度写关、混合开）。
-// 网格 PushConstant 176B（含 gridScale）；轴/原点使用同布局（gridScale 未用）。
+// GRID-RW-1：Reference Grid 使用世界线 LineList；轴、原点和屏幕 Overlay 仍使用全屏三角形。
 internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
     internal static VulkanGraphicsPipelineOwner? CreateReferenceGrid(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)
         => CreateFullscreenPass(vk, deviceOwner, clearFrame, swapchain, physicalDevice,
-            ShaderBytecodeGridVert.Code, ShaderBytecodeGridFrag.Code, VulkanClearFrameOwner.ReferenceGridPushSize, log);
+            ShaderBytecodeGridLineVert.Code, ShaderBytecodeGridLineFrag.Code,
+            VulkanClearFrameOwner.ReferenceGridPushSize, log, topology: PrimitiveTopology.LineList);
 
     internal static VulkanGraphicsPipelineOwner? CreateWorldAxes(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice, Action<string>? log)

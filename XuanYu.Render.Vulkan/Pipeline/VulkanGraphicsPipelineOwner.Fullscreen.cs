@@ -13,7 +13,8 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
 {
     internal static VulkanGraphicsPipelineOwner? CreateFullscreenPass(Vk vk, VulkanDeviceOwner deviceOwner,
         VulkanClearFrameOwner clearFrame, VulkanSwapchainOwner swapchain, PhysicalDevice physicalDevice,
-        uint[] vertCode, uint[] fragCode, uint pushSize, Action<string>? log, bool depthTest = true)
+        uint[] vertCode, uint[] fragCode, uint pushSize, Action<string>? log, bool depthTest = true,
+        PrimitiveTopology topology = PrimitiveTopology.TriangleList)
     {
         var props = new PhysicalDeviceProperties();
         vk.GetPhysicalDeviceProperties(physicalDevice, &props);
@@ -58,7 +59,7 @@ internal sealed unsafe partial class VulkanGraphicsPipelineOwner
             VertexInputAttributeDescription* attrs = stackalloc VertexInputAttributeDescription[3];
             FillStaticModelAttributes(attrs);
             var vertexInput = StaticModelVertexInput(&binding, attrs);
-            var inputAssembly = new PipelineInputAssemblyStateCreateInfo { SType = StructureType.PipelineInputAssemblyStateCreateInfo, Topology = PrimitiveTopology.TriangleList };
+            var inputAssembly = new PipelineInputAssemblyStateCreateInfo { SType = StructureType.PipelineInputAssemblyStateCreateInfo, Topology = topology };
             var viewportState = new PipelineViewportStateCreateInfo { SType = StructureType.PipelineViewportStateCreateInfo, ViewportCount = 1, ScissorCount = 1 };
             DynamicState* pDynamic = stackalloc DynamicState[2];
             pDynamic[0] = DynamicState.Viewport; pDynamic[1] = DynamicState.Scissor;

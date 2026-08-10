@@ -13,8 +13,9 @@ public static partial class RenderDrawPlan
     public const int RotateGizmoVertexCount = 900;
     public const int ScaleGizmoVertexCount = 252;
     public const int BackgroundVertexCount = 3;
-    // MAP-A-R1-D5-R1-F2：独立编辑器参考网格 Pass（全屏三角形，片元解析世界 Z=0 平面）。
-    public const int ReferenceGridVertexCount = 3;
+    public const int FullscreenTriangleVertexCount = 3;
+    public const int ReferenceGridLineCountPerAxis = 513;
+    public const int ReferenceGridLineVertexCount = ReferenceGridLineCountPerAxis * 4;
     public const int OriginVertexCount = 36;
     public const int WorldAxesVertexCount = 108;
     // D3：地图边界线（四条边细条四边形，CPU 生成），24 顶点。
@@ -43,9 +44,9 @@ public static partial class RenderDrawPlan
         if (assist.ViewPlaneGrid != EditorViewPlaneGridKind.None)
         {
             // F3-F4：正交标准视图的视图平面网格（±X→YZ / ±Y→XZ），画在地面网格同一层。
-            plan.Add(new FrameEntry(RenderDrawKind.EditorViewPlaneGrid, ReferenceGridVertexCount));
+            plan.Add(new FrameEntry(RenderDrawKind.EditorViewPlaneGrid, FullscreenTriangleVertexCount));
         }
-        else if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridVertexCount));
+        else if (assist.ShowGrid) plan.Add(new FrameEntry(RenderDrawKind.EditorReferenceGrid, ReferenceGridLineVertexCount));
         if (assist.ShowWorldAxes) plan.Add(new FrameEntry(RenderDrawKind.WorldAxes, WorldAxesVertexCount));
         for (var i = 0; i < projection.Entities.Count; i++)
         {
@@ -67,9 +68,9 @@ public static partial class RenderDrawPlan
         else if (projection.RotateGizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.RotateGizmo, RotateGizmoVertexCount));
         else if (projection.GizmoVisible) plan.Add(new FrameEntry(RenderDrawKind.MoveGizmo, MoveGizmoVertexCount));
         if (projection.ScaleIndicator.Visible)
-            plan.Add(new FrameEntry(RenderDrawKind.ScaleIndicatorOverlay, ReferenceGridVertexCount));
+            plan.Add(new FrameEntry(RenderDrawKind.ScaleIndicatorOverlay, FullscreenTriangleVertexCount));
         // F3-F1：导航 Gizmo Overlay 始终最后绘制（深度关、不受原生窗口遮挡）。
-        plan.Add(new FrameEntry(RenderDrawKind.NavigationGizmo, ReferenceGridVertexCount));
+        plan.Add(new FrameEntry(RenderDrawKind.NavigationGizmo, FullscreenTriangleVertexCount));
         return plan;
     }
 }

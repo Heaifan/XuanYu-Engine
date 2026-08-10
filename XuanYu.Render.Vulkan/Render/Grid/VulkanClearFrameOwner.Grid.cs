@@ -3,12 +3,11 @@ using XuanYu.Render.Abstractions;
 
 namespace XuanYu.Render.Vulkan.Render;
 
-// MAP-A-R1-D5-R1-F2-R2：参考网格绘制。
+// GRID-RW-1：参考网格绘制（GPU procedural world LineList）。
 // PushConstant 192B（48 float）：
 //   mat4 viewProjection @0    mat4 inverseViewProjection @64
 //   vec4 cameraPosition @128  vec4 viewportAndFar @144 (xy=视口, z=Far, w=GridMaxDist)
-//   vec4 gridScale @160 (x=FineSpacing, y=CoarseSpacing, z=FineWeight, w=CoarseWeight)
-//   vec4 mapBounds @176 (x=半宽, y=半深, z=BaseHeight, w=边缘淡出宽度；无地图=0；D3)
+//   vec4 gridState @160 (x=Step, y=AnchorX, z=AnchorY, w=BaseHeight)
 public sealed unsafe partial class VulkanClearFrameOwner
 {
     const uint GridPushFloatCount = 48;
@@ -26,10 +25,12 @@ public sealed unsafe partial class VulkanClearFrameOwner
         if (_gridPipeline.Handle == 0 || _gridPipelineLayout.Handle == 0) return;
         var scene = new float[GridPushFloatCount];
         FillGridPushConstants(scene, _renderProjection);
-        // gridScale：每帧全局尺度（1/2/5 序列 + 互补权重），禁止逐 Fragment LOD。
-        // Reference Grid 的局部十进制 LOD 在 Fragment Shader 内决定；保留参数槽位兼容布局。
+        scene[40] = (float)_referenceGridFrameState.StepMeters;
+        scene[41] = (float)_referenceGridFrameState.AnchorX;
+        scene[42] = (float)_referenceGridFrameState.AnchorY;
+        scene[43] = (float)_referenceGridFrameState.BaseHeightMeters;
         PushGridConstants(cb, scene);
-        _vk.CmdDraw(cb, RenderDrawPlan.ReferenceGridVertexCount, 1, 0, 0);
+        _vk.CmdDraw(cb, RenderDrawPlan.ReferenceGridLineVertexCount, 1, 0, 0);
     }
 
     void PushGridConstants(CommandBuffer cb, float[] scene)

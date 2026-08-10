@@ -35,7 +35,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
         scene[43] = (float)levels.CoarseWeight;
         FillPlaneNormal(scene, _renderProjection.Assist.ViewPlaneGrid);
         PushViewPlaneGridConstants(cb, scene);
-        _vk.CmdDraw(cb, RenderDrawPlan.ReferenceGridVertexCount, 1, 0, 0);
+        _vk.CmdDraw(cb, RenderDrawPlan.FullscreenTriangleVertexCount, 1, 0, 0);
     }
 
     static void FillPlaneNormal(float[] scene, EditorViewPlaneGridKind kind)
