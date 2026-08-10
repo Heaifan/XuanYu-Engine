@@ -397,11 +397,14 @@
 │  │     ├─ VulkanNativeHost.NavGizmo.cs
 │  │     ├─ VulkanNativeHost.Picking.cs
 │  │     ├─ VulkanNativeHost.Pointer.cs
+│  │     ├─ VulkanNativeHost.ScaleIndicator.cs
 │  │     ├─ NativePointerRoutePolicy.cs
 │  │     ├─ VulkanNativeHost.cs
 │  │     ├─ VulkanViewport.axaml
 │  │     ├─ VulkanViewport.axaml.cs
 │  │     ├─ Win32ViewportHost.Input.cs
+│  │     ├─ Win32ViewportHost.ScaleIndicator.Paint.cs
+│  │     ├─ Win32ViewportHost.ScaleIndicator.cs
 │  │     └─ Win32ViewportHost.cs
 │  ├─ ViewportNativeHostRoute.cs
 │  ├─ Vm/
@@ -1093,12 +1096,12 @@
 - `XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.cs` — sealed partial class SceneRenderProjectionAdapterTests
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportAssistDrawPlanTests.cs` — F3-F1：导航 Gizmo 恒为最后一项（Overlay Pass 收尾）。
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportChromeContractTests.cs` — F3-D1：视口黑边合同测试（计划 11.1）——XAML 防退化：
-- `XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs` — STAB-2：确认比例尺位于 Native HWND 之外的独立 Avalonia 行。
+- `XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs` — A02：确认比例尺由 Native Vulkan 视口内悬浮控件承载，XAML 不得回潮独立底栏。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridAdaptiveTests.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格片元行为合同（CPU 镜像）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridRayIntersectionTests.cs` — MAP-A-R1-D5-R1-F2 GRID-G1：世界射线与 Z=0 平面求交的数学合同。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridScaleTests.cs` — MAP-A-R1-D5-R1-F2-R2：每帧全局网格尺度合同（1/2/5 序列 + 互补交叉淡化）。
-- `XuanYu.Core.Tests/Render/Grid/ScaleIndicatorMetricTests.cs` — MAP-A-R3-D2-F1-V3：比例尺 1/2/5 距离选择与 80～160 DIP 目标宽度合同。
+- `XuanYu.Core.Tests/Render/Grid/ScaleIndicatorMetricTests.cs` — MAP-A-R3-D2-F1-V3/A02：比例尺 1/2/5 距离选择、100m 最小距离与目标宽度合同。
 - `XuanYu.Core.Tests/Render/Grid/ViewportMetricScaleTests.cs` — MAP-A-R3-D2-F1-V2：Perspective/Orthographic 的 DIP 与 physical pixel 尺度合同（1.00/1.25/1.50/2.00 DPI）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridShaderContractTests.cs` — MAP-A-R1-D5-R1-F2-R2：Shader 合同低层门禁（方案 15.5）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridVisualStyleTests.cs` — MAP-A-R1-D5-R1-F2-R3：网格视觉样式合同（10.1）与重合合成合同（10.2）。
@@ -1301,11 +1304,14 @@
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs` — F3-F1/STAB-1：Native 指针流的 Gizmo 命中、轴线/端点手势所有权与 Region 隔离。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.ScaleIndicator.cs` — A02：同步视口内 Native 比例尺状态、位置、DPI 与点击穿透更新。
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerRoutePolicy.cs` — F1-C2 REWORK：Native 中键/区域预览/左键拖动路由优先级纯逻辑合同。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` — sealed partial class VulkanNativeHost
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — STAB-2/A02：Native Vulkan Host 与比例尺分行布局，比例尺脱离 HWND Airspace 并紧凑右对齐。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — A02：Native Vulkan Host 覆盖整个视口，比例尺不再占用 Avalonia 独立行。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs` — partial class VulkanViewport
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs` — （职责待补）
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.ScaleIndicator.Paint.cs` — A02：GDI 绘制右下角比例尺面板、刻度线与文本，并将命中测试穿透给 Vulkan 视口。
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.ScaleIndicator.cs` — A02：创建、定位、显示和销毁 Native 比例尺子窗口。
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` — （职责待补）
 - `XuanYu.Editor.UI/ViewportNativeHostRoute.cs` — static class ViewportNativeHostRoute
 - `XuanYu.Editor.UI/Vm/Camera/CameraSessionMode.cs` — enum CameraSessionMode
@@ -1316,8 +1322,8 @@
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.Camera.cs` — F3-D2：导航 Gizmo 相机快照（Right/Up/Forward 投影输入；不含平移）。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraDolly.cs` — MAP-A-R3-D2-F1-V3：地图编辑 Dolly 入口与 Zoom Policy 接入。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.cs` — sealed partial class UiVm
-- `XuanYu.Editor.UI/Vm/Camera/UiVm.ScaleIndicator.cs` — MAP-A-R3-D2-F1-V3：左下角比例尺展示状态，消费统一 ViewportMetricScale。
-- `XuanYu.World.Tests/UiRuntime/ScaleIndicatorVisibilityRuntimeTests.cs` — A02 follow-up：检查器标签下有效地图视口仍必须显示比例尺。
+- `XuanYu.Editor.UI/Vm/Camera/UiVm.ScaleIndicator.cs` — MAP-A-R3-D2-F1-V3/A02：比例尺展示状态消费统一 ViewportMetricScale，并保持 100m 最小层级。
+- `XuanYu.World.Tests/UiRuntime/ScaleIndicatorVisibilityRuntimeTests.cs` — A02：检查器标签下比例尺可见且 Dolly 不能越过 100m Zoom Floor。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.ViewGizmo.cs` — F3-D3：六方向标准视角命令（计划 8.1 命名；复用现有 ApplyViewFaceCommand 相机逻辑）。
 - `XuanYu.Editor.UI/Vm/History/UiVm.EntityCommands.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/History/UiVm.History.Entities.cs` — sealed partial class UiVm

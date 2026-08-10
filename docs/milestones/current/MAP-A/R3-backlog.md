@@ -13,9 +13,9 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - V1-REWORK-B1：DONE（`ef12f4b` 已推送）。
 - V1-REWORK-B2：DONE（`8c8dfdd` 已推送）；仅完成 Vector Overlay Depth Policy，真机重验尚未执行。
 - V1-STAB-1：DONE（本轮）；Gizmo 输入隔离、可见轴线/端点命中与 Avalonia/Native 两条手势路径统一。
-- V1-STAB-2：DONE（本轮）；Scale Indicator 移出 Native HWND Airspace，真机可见性待重验。
+- V1-STAB-2：DONE（本轮）；Scale Indicator 改为 Native Vulkan 视口内右下角悬浮控件，点击穿透且不再占独立底栏，真机可见性待重验。
 - V1-STAB-3：DONE（本轮）；Vector Overlay 使用独立无深度测试/无深度写入 Pass，真机俯视/45°/低角度稳定性待重验。
-- A02 follow-up：DONE（本轮）；比例尺显示条件改为有效地图视口，不再受右侧标签页选择影响，并以紧凑内容宽度右对齐在视口底部。
+- A02 follow-up：DONE（本轮）；比例尺在有效地图视口内右下角悬浮显示，不再受右侧标签页选择影响；相机与比例尺均锁定 100m 最小层级，禁止显示 `0 m`。
 - 本轮真机裁定：`MAP-A-R3-D2-F1 联合真机验收 = FAIL · FUNCTIONAL BUT UNSTABLE`；A02、B03、C01、C02 按现象判 FAIL，C03～C07、D01～D04 尚未完成。
 - D3：禁止启动；F2：不创建。
 
@@ -112,7 +112,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 
 | TODO | 内容 | 状态 |
 | --- | --- | --- |
-| V3-T01 | 左下角 12～16 DIP 比例尺 | DONE |
+| V3-T01 | 视口内右下角 12～16 DIP 悬浮比例尺 | DONE |
 | V3-T02 | 1/2/5 m/km 格式器 | DONE |
 | V3-T03 | MapEditorZoomPolicy 独立于通用 Camera | DONE |
 | V3-T04 | Perspective Zoom Floor | DONE |

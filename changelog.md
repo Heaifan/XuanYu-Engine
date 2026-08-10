@@ -19,10 +19,10 @@
 ---
 
 ## v0.2.25.16-fix
-MAP-A-R3-D2-F1 A02 比例尺显示条件与布局修复（2026-08-10 14:39:00）：比例尺不再依赖右侧“地图编辑器”标签页，拥有有效地图视口就保持可见；保留其位于 Native Vulkan HWND 之外的 Avalonia 独立行布局，并改为右下角紧凑内容宽度，避免整条底栏占满视口。修复“检查器”标签下比例尺不可见且布局过大的问题。
-- 验证：解决方案 Build 0W0E；Core 364/364、World 1117/1117、WarCore 22/22；World 比例尺运行时合同 1/1 PASS；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机重验 A02 仍待用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
-- 遗留：重启/刷新编辑器后在“检查器”和“地图编辑器”两个标签下分别确认比例尺可见，再继续 A02～D04 联合真机重验。
-- Hash：3c73c0b。
+MAP-A-R3-D2-F1 A02 比例尺悬浮与 100m Zoom Floor 修复（2026-08-10 15:06:09）：删除底部独立 Avalonia 比例尺行，改为 Native Vulkan 视口内右下角悬浮控件，保留点击穿透；有效地图视口无论“检查器”或“地图编辑器”标签均显示比例尺。Map Editor Zoom Policy 改为所有有效地图视口生效，比例尺与相机缩放均禁止低于 100m，彻底消除 `0 m`。
+- 验证：解决方案 Build 0W0E；Core 365/365、World 1118/1118、WarCore 22/22；比例尺 Native Overlay、100m metric 与 Inspector Zoom Floor 合同 PASS；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机重验 A02 仍待用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
+- 遗留：重启编辑器后确认比例尺位于视口右下角且不占独立行，滚轮到 100m 后继续滚轮不再深入，再继续 A02～D04 联合真机重验。
+- Hash：4cd5e82。
 
 ## v0.2.25.15-stab
 MAP-A-R3-D2-F1 稳定化修复（2026-08-10 14:22:43）：修复 Avalonia 输入路径绕过 Navigation Gizmo 导致 Region 误加点的问题，统一 Gizmo 可见端点/轴线命中与手势所有权；将 Scale Indicator 移到 Native Vulkan HWND 之外的独立 Avalonia 行；为 Vector Overlay 创建独立无深度测试/无深度写入 Pass，保持 Fill → Stroke → Marker 绘制顺序，消除透明共面 Overlay 与 Ground 的深度争抢；不修改世界锚点、100m 网格、Zoom Floor 或双精度 Picking。
