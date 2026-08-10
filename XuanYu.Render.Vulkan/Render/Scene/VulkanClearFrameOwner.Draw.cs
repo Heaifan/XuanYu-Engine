@@ -34,11 +34,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vectorOverlays.RetainOnly(_renderProjection.VectorOverlayResources.Select(r => r.Key));
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
+                // GRID-DIAG-GROUND-01：故障隔离实验只停实际 MapGround Draw；
+                // 不修改地图数据、边界、参考网格、世界轴、相机、Shader 或深度参数。
                 if (draw.Kind == RenderDrawKind.MapGround) continue;
                 BindFramePipeline(cb, draw.Kind);
-                if (draw.Kind == RenderDrawKind.MapGround && _mapSurfaceIndexBuffer is not null)
-                    DrawMapSurface(cb, pScene);
-                else if (draw.Kind == RenderDrawKind.MapBounds && _mapBoundsVertexBuffer is not null)
+                if (draw.Kind == RenderDrawKind.MapBounds && _mapBoundsVertexBuffer is not null)
                     DrawMapBounds(cb, pScene);
                 else if (draw.Kind == RenderDrawKind.MapVectorOverlay)
                     DrawVectorOverlay(cb, pScene, draw.EntityIndex);
