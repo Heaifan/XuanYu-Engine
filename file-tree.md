@@ -142,7 +142,8 @@
 │  │  │  ├─ SceneRenderProjectionAdapterTests.Selection.cs
 │  │  │  ├─ SceneRenderProjectionAdapterTests.cs
 │  │  │  ├─ ViewportAssistDrawPlanTests.cs
-│  │  │  └─ ViewportChromeContractTests.cs
+│  │  │  ├─ ViewportChromeContractTests.cs
+│  │  │  └─ ViewportScaleIndicatorContractTests.cs
 │  │  ├─ Grid/
 │  │  │  ├─ ReferenceGridAdaptiveTests.cs
 │  │  │  ├─ ReferenceGridDrawPlanTests.cs
@@ -161,7 +162,8 @@
 │  │  ├─ NavigationGizmo/
 │  │  │  ├─ NavigationGizmoLayoutTests.Facing.cs
 │  │  │  ├─ NavigationGizmoLayoutTests.cs
-│  │  │  └─ NavigationGizmoOverlayContractTests.cs
+│  │  │  ├─ NavigationGizmoOverlayContractTests.cs
+│  │  │  └─ NavigationGizmoInputIsolationTests.cs
 │  │  └─ StaticModels/
 │  │     ├─ StaticModelDepthRegressionTests.cs
 │  │     └─ StaticModelRenderContractTests.cs
@@ -612,6 +614,7 @@
 │  │  │  ├─ VulkanClearFrameOwner.PushConstants.cs
 │  │  │  ├─ VulkanClearFrameOwner.Resources.cs
 │  │  │  ├─ VulkanClearFrameOwner.Trace.cs
+│  │  │  ├─ VulkanClearFrameOwner.VectorOverlayPipeline.cs
 │  │  │  └─ VulkanClearFrameOwner.cs
 │  │  ├─ Grid/
 │  │  │  ├─ VulkanClearFrameOwner.Grid.cs
@@ -654,6 +657,7 @@
 │  │  ├─ VulkanRenderSession.Lifecycle.cs
 │  │  ├─ VulkanRenderSession.Recover.cs
 │  │  ├─ VulkanRenderSession.Resize.cs
+│  │  ├─ VulkanRenderSession.VectorOverlay.cs
 │  │  └─ VulkanRenderSession.cs
 │  ├─ Shaders/
 │  │  ├─ editor_nav_gizmo.frag
@@ -1089,6 +1093,7 @@
 - `XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.cs` — sealed partial class SceneRenderProjectionAdapterTests
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportAssistDrawPlanTests.cs` — F3-F1：导航 Gizmo 恒为最后一项（Overlay Pass 收尾）。
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportChromeContractTests.cs` — F3-D1：视口黑边合同测试（计划 11.1）——XAML 防退化：
+- `XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs` — STAB-2：确认比例尺位于 Native HWND 之外的独立 Avalonia 行。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridAdaptiveTests.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格片元行为合同（CPU 镜像）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridRayIntersectionTests.cs` — MAP-A-R1-D5-R1-F2 GRID-G1：世界射线与 Z=0 平面求交的数学合同。
@@ -1105,6 +1110,7 @@
 - `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoLayoutTests.Facing.cs` — F3-F3：导航 Gizmo 正对相机合同——轴正对时只显示朝向端点、隐藏背向端点、命中优先端点。
 - `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoLayoutTests.cs` — F3-D2/D3/F3-F3：导航 Gizmo 布局投影与命中测试（96 DIP 区域；正对合同见 .Facing.cs）。
 - `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoOverlayContractTests.cs` — F3-F1：导航 Gizmo Overlay Pass 与屏幕空间原点标记合同测试。
+- `XuanYu.Core.Tests/Render/NavigationGizmo/NavigationGizmoInputIsolationTests.cs` — STAB-1：可见 Gizmo 端点/轴线命中，空白区域不消费 Region 输入。
 - `XuanYu.Core.Tests/Render/StaticModels/StaticModelDepthRegressionTests.cs` — sealed class StaticModelDepthRegressionTests
 - `XuanYu.Core.Tests/Render/StaticModels/RegionModelTransformContractTests.cs` — 区域 world-space 静态模型单位变换合同测试。
 - `XuanYu.Core.Tests/Render/StaticModels/StaticModelRenderContractTests.cs` — sealed class StaticModelRenderContractTests
@@ -1281,23 +1287,23 @@
 - `XuanYu.Editor.UI/TreeGuide.cs` — sealed class TreeGuide
 - `XuanYu.Editor.UI/TreeGuideSegment.cs` — enum TreeGuideSegmentKind
 - `XuanYu.Editor.UI/Ui.axaml` — github.com/avaloniaui"
-- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.HitTest.cs` — F3-D3/F3-F3：导航 Gizmo 命中测试——六端点与中心球。
+- `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.HitTest.cs` — F3-D3/F3-F3/STAB-1：导航 Gizmo 端点、轴线与中心球命中统一事实源。
 - `XuanYu.Editor.UI/Viewport/ViewNavigationGizmo.Layout.cs` — F3-D2/F3-F3：导航 Gizmo 布局纯数学——六个世界方向投影到 Gizmo 屏幕平面。
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs` — （职责待补）
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaCamera.cs` — sealed partial class VulkanNativeHost
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaPointer.cs` — sealed partial class VulkanNativeHost
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaPointer.cs` — STAB-1：Avalonia 指针路径先交给 Navigation Gizmo，再进入 Region/Picking，并捕获/释放手势。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.CameraPointer.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Gizmo.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.LayoutSync.cs` — VIEWPORT-RESIZE-R2：修复 R1 引入的 DPI 错配。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Log.cs` — VK4-D-R2：后台 Present 泵日志必须回 UI 线程访问 DataContext / UiVm。
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs` — F3-F1：导航 Gizmo 命中——原生指针消息流（Avalonia 覆盖层被原生子窗口遮挡，命中走这里）。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs` — F3-F1/STAB-1：Native 指针流的 Gizmo 命中、轴线/端点手势所有权与 Region 隔离。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerRoutePolicy.cs` — F1-C2 REWORK：Native 中键/区域预览/左键拖动路由优先级纯逻辑合同。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` — sealed partial class VulkanNativeHost
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — STAB-2：Native Vulkan Host 与比例尺分行布局，比例尺脱离 HWND Airspace。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs` — partial class VulkanViewport
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs` — （职责待补）
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` — （职责待补）
@@ -1548,7 +1554,7 @@
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.ViewPlaneGridFrag.cs` — F3-F4: generated by glslc -O from editor_view_plane_grid.frag.
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldAxesFrag.cs` — MAP-A-R1-D5-R1-F2-R2: generated by glslc -O from editor_world_axes.frag.
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldOriginFrag.cs` — AUTO-GENERATED from editor_nav_gizmo.vert / editor_nav_gizmo.frag / editor_world_origin.frag (glslc -O)
-- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs` — （职责待补）
+- `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Depth.cs` — STAB-3：主场景与 Vector Overlay 可分别配置深度测试/写入策略。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Fullscreen.cs` — MAP-A-R1-D5-R1-F2-R2：全屏 Pass 管线通用创建（参考网格 / 世界轴 / 世界原点共用）。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Grid.cs` — MAP-A-R1-D5-R1-F2-R2：全屏 Pass 工厂（网格 / 世界轴 / 世界原点）。
 - `XuanYu.Render.Vulkan/Pipeline/VulkanGraphicsPipelineOwner.Sky.cs` — WORLD-D-R1：天空专用管线。与主管线共用 Shader、顶点输入与 RenderPass，
@@ -1561,7 +1567,8 @@
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Commands.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Lifecycle.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Matrix.cs` — （职责待补）
-- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.PipelineBind.cs` — 全屏 Pass 管线绑定分发（网格/轴/原点/导航 Gizmo/视图平面网格/天空）。
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.PipelineBind.cs` — STAB-3：按绘制类型绑定主场景、Vector Overlay 与全屏 Pass 管线。
+- `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.VectorOverlayPipeline.cs` — STAB-3：持有独立 Vector Overlay 管线并在命令缓冲重录时注入。
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.PushConstants.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Resources.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/ClearFrame/VulkanClearFrameOwner.Trace.cs` — （职责待补）
@@ -1600,6 +1607,7 @@
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs` — sealed partial class VulkanRenderSession
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs` — sealed partial class VulkanRenderSession
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs` — sealed partial class VulkanRenderSession
+- `XuanYu.Render.Vulkan/Session/VulkanRenderSession.VectorOverlay.cs` — STAB-3：创建并挂接无深度测试/无深度写入的 Vector Overlay 管线。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` — VK-LIFE-1：组合根负责失败回滚，不把半初始化资源留给 Bridge。
 - `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag` — 玄域编辑器：Blender 风格导航 Gizmo
 - `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.vert` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 顶点着色器。
@@ -1993,7 +2001,7 @@
 - `XuanYu.Core.Tests/Render/LatestRenderProjectionQueueTests.cs` — PointerMoved 多次发布时只消费最新渲染投影的合同测试。
 - `XuanYu.World.Tests/UiRuntime/MapVectorOverlayV1Tests.cs` — F1-V1：点、线、凹多边形、屏幕空间尺寸、缓冲复用与无 StaticModel 路径合同。
 - `XuanYu.World.Tests/UiRuntime/MapVectorOverlayAnchorContractTests.cs` — F1-REWORK-B1：Fill、Stroke、Marker 对同一 MapPoint 使用完全一致的 BaseHeightMeters 世界锚点。
-- `XuanYu.World.Tests/UiRuntime/MapVectorOverlayDepthPolicyTests.cs` — F1-REWORK-B2：极端视角深度层级、主管线 depth state、shader 与 Vector Overlay draw order 合同。
+- `XuanYu.World.Tests/UiRuntime/MapVectorOverlayDepthPolicyTests.cs` — F1-REWORK-B2/STAB-3：极端视角深度层级、主/Overlay 管线深度策略、shader 与 draw order 合同。
 - `docs/milestones/current/MAP-A/R3-C2-closure.md` — C2 RF-M01～RF-M03 真机 IPO 收口记录。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — 地图编辑器地图页及内部地图工具入口，含 Region Drawing 归属与 Selected 状态样式。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RuntimeRedTests.cs` — D2-F1 Headless Runtime RED/GREEN：Map Editor 归属与选中态深色文字。

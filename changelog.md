@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.15-stab
+MAP-A-R3-D2-F1 稳定化修复（2026-08-10 14:22:43）：修复 Avalonia 输入路径绕过 Navigation Gizmo 导致 Region 误加点的问题，统一 Gizmo 可见端点/轴线命中与手势所有权；将 Scale Indicator 移到 Native Vulkan HWND 之外的独立 Avalonia 行；为 Vector Overlay 创建独立无深度测试/无深度写入 Pass，保持 Fill → Stroke → Marker 绘制顺序，消除透明共面 Overlay 与 Ground 的深度争抢；不修改世界锚点、100m 网格、Zoom Floor 或双精度 Picking。
+- 验证：解决方案 Build 0W0E；Core 364/364、World 1116/1116、WarCore 22/22；定向 Core 3/3、World Region/Gizmo/Overlay 38/38；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机需重验 A02、B03、C01、C02，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
+- 遗留：执行比例尺可见、Gizmo 不误加 Region 点、俯视/45°/低角度 Overlay 稳定性与未完成真机项联合重验；未通过前不宣告 F1 CLOSED。
+- Hash：751da52。
+
 ## v0.2.25.14-fix
 MAP-A-R3-D2-F1-V1-REWORK-B2 Vector Overlay Depth Policy（2026-08-10 13:51:49）：保持 Fill、Stroke、Marker 与 Ground 的世界锚点完全重合；主管线继续使用 DepthTest=On、DepthWrite=On、LessOrEqual，scene.vert 仅对 Vector Overlay 在裁剪空间施加有界 bias，按 Fill → Stroke → Marker 建立视觉层级；重新生成 scene.vert SPIR-V 字节码。
 - 验证：解决方案 Build 0W0E；Core 361/361、World 1116/1116、WarCore 22/22；B2 专项 14/14，覆盖俯视、45°、80°、89°与极近合法正交 Zoom；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机验收仍需用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
