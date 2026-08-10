@@ -26,9 +26,16 @@ public sealed partial class UiVm
 
     void FrameSelectedCamera()
     {
+        if (_regionDrawing.IsActive)
+        {
+            FooterMessage = "区域绘制进行中，请完成或取消当前区域后再聚焦。";
+            FooterState = "状态：就绪";
+            return;
+        }
         if (!TrySelectedEntityKey(out var key) || !_sceneState.TryGetEntity(key, out var entity))
         {
-            FrameAllCamera("未选中实体，查看全部");
+            FooterMessage = "当前没有可聚焦对象。";
+            FooterState = "状态：就绪";
             return;
         }
 

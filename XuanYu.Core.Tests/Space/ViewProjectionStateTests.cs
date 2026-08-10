@@ -1,4 +1,5 @@
 using System.Numerics;
+using XuanYu.Core.Gizmo;
 using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 
@@ -46,6 +47,24 @@ public sealed class ViewProjectionStateTests
         var actual = state.TransformPointToWorld(clip.X / clip.W, clip.Y / clip.W, clip.Z / clip.W);
 
         Assert.True(expected.DistanceTo(actual) < 0.0001);
+    }
+
+    [Fact]
+    public void Try_project_returns_true_for_front_point()
+    {
+        var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
+
+        Assert.True(state.TryProjectWorldPoint(Vector3d.Zero, out var screen));
+        Assert.Equal(new ScreenPoint(400, 300), screen);
+    }
+
+    [Fact]
+    public void Try_project_returns_false_for_behind_point_and_strict_api_throws()
+    {
+        var state = ViewProjectionState.Create(TestCamera(), TestViewport(800, 600));
+
+        Assert.False(state.TryProjectWorldPoint(new Vector3d(0, 0, -6), out _));
+        Assert.Throws<InvalidOperationException>(() => state.ProjectWorldPoint(new Vector3d(0, 0, -6)));
     }
 
     static CameraState TestCamera()

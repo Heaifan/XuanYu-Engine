@@ -7,7 +7,11 @@ public sealed partial class UiVm
         if (!CanChangeToolNow(name)) return;
         var requestedTool = EditorToolText.FromText(name);
         if (IsRegionDrawingTool && requestedTool != EditorToolId.RegionDrawing)
+        {
+            var hadDraft = _regionDrawing.IsActive;
             _regionDrawing.Cancel();
+            if (hadDraft) LogRegionDrawingCanceled();
+        }
         if (name is "框选")
         {
             FooterState = "状态：就绪";

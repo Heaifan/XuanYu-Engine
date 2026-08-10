@@ -19,7 +19,6 @@ public sealed partial class VulkanNativeHost
 
     bool ReportRegionDrawing(UiVm vm, double x, double y)
     {
-        F1ForensicTrace.Routing(vm, x, y);
         return vm.RegionDrawingPointerPressed(x, y, CaptureViewportState());
     }
 

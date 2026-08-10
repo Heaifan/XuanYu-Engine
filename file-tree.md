@@ -74,6 +74,7 @@
 │  │  ├─ DefaultEditorCamera.cs
 │  │  ├─ ProjectionMode.cs
 │  │  ├─ ViewProjectionState.cs
+│  │  ├─ ViewProjectionState.Projection.cs
 │  │  ├─ ViewportState.cs
 │  │  ├─ WorldRay.cs
 │  │  └─ WorldRayFactory.cs
@@ -434,6 +435,10 @@
 │  │  ├─ Map/
 │  │  │  ├─ MapLayerRowViewModel.cs
 │  │  │  ├─ MapRenderSnapshotProjection.cs
+│  │  │  ├─ UiVm.RegionDrawing.Commit.cs
+│  │  │  ├─ UiVm.RegionDrawing.Input.cs
+│  │  │  ├─ UiVm.RegionDrawing.Logging.cs
+│  │  │  ├─ UiVm.RegionDrawing.cs
 │  │  │  ├─ UiVm.MapCommandRouting.cs
 │  │  │  ├─ UiVm.MapDiagnostics.Format.cs
 │  │  │  ├─ UiVm.MapDiagnostics.cs
@@ -766,6 +771,7 @@
 │  │  ├─ CameraFramingOccupancyTests.cs
 │  │  ├─ CameraFramingTests.cs
 │  │  ├─ CameraNavigationUiTests.cs
+│  │  ├─ CameraNavigationUiTests.Focus.cs
 │  │  └─ UiViewGizmoTests.cs
 │  ├─ Logging/
 │  │  ├─ FootAxamlTailContractTests.cs
@@ -1124,6 +1130,7 @@
 - `XuanYu.Core/Space/DefaultEditorCamera.cs` — static class DefaultEditorCamera
 - `XuanYu.Core/Space/ProjectionMode.cs` — F3-F4：相机投影模式。透视=自由观察默认；正交=标准方向视图（±X/±Y/±Z）。
 - `XuanYu.Core/Space/ViewProjectionState.cs` — sealed class ViewProjectionState
+- `XuanYu.Core/Space/ViewProjectionState.Projection.cs` — 世界点严格投影与失败安全 Try 投影 API。
 - `XuanYu.Core/Space/ViewportState.cs` — （职责待补）
 - `XuanYu.Core/Space/WorldRay.cs` — （职责待补）
 - `XuanYu.Core/Space/WorldRayFactory.cs` — static class WorldRayFactory
@@ -1603,6 +1610,7 @@
 - `XuanYu.World.Tests/Camera/CameraFramingOccupancyTests.cs` — MAP-A-R1-D5-R1：地图取景屏幕占用率（65%~75%）。
 - `XuanYu.World.Tests/Camera/CameraFramingTests.cs` — sealed class CameraFramingTests
 - `XuanYu.World.Tests/Camera/CameraNavigationUiTests.cs` — sealed class CameraNavigationUiTests
+- `XuanYu.World.Tests/Camera/CameraNavigationUiTests.Focus.cs` — 无选中实体时聚焦保持相机与观察中心不变的回归测试
 - `XuanYu.World.Tests/Camera/UiViewGizmoTests.cs` — EDITOR-VIEW-R1：视角 Gizmo 六方向相机命令——朝向正确、观察中心与距离保持。
 - `XuanYu.World.Tests/Logging/FootAxamlTailContractTests.cs` — MAP-A-R2-D3-F3：源码合同——AXAML 尾部安全区与控制器两阶段定位结构。
 - `XuanYu.World.Tests/Logging/LogAutoScrollPolicyTests.cs` — MAP-A-R2-D3-F2：日志自动跟随纯策略——底部附近跟随、远离不强制拉回、滚到底恢复。
@@ -1873,8 +1881,6 @@
 - `XuanYu.World.Tests/UiTokens/UiD5NotificationTests.cs` — D5：通知状态机测试。
 - `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.State.cs` — D5 纠偏：日志空态互斥（ShowInitialLogEmpty/ShowNoFilterResults）。
 - `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.Refresh.cs` — D5 纠偏：日志绑定刷新通知（多行拆分）。
-- `XuanYu.Editor.UI/Vm/Logging/UiVm.F1Trace.cs` — F1 真机运行时取证写入底部日志并记录 App/UI 版本溯源。
-- `XuanYu.Editor.UI/Vm/Logging/F1ForensicTrace.cs` — F1 原生指针、拾取、Draft 与投影链路取证输出。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Validation.cs` — D5 纠偏：地图表单字段级校验（三字段错误/输入即清除/失焦与提交校验/FirstInvalidField/解析）。
 - `XuanYu.Editor.UI/Win/UiWin.DialogHost.Danger.cs` — D5 纠偏：危险操作确认接线（fail-closed，具体动作文案）。
 - `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs` — D5 纠偏：错误/警告/重试弹窗宿主化（ErrorIcon/WarningIcon + ShowRetryAsync）。
@@ -1902,7 +1908,10 @@
 - `scripts/arch-a-guard.ps1` — （职责待补）
 - `XuanYu.Editor/MapEditing/MapSurfacePicker.cs` — 复用 ViewProjection 与 WorldRayFactory，按中心原点合同拾取地图平面 MapPoint。
 - `XuanYu.Editor/MapEditing/RegionDrawingState.cs` — 区域绘制临时草稿、光标与首点闭合候选状态。
-- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.cs` — 区域绘制地面命中输入适配、命中状态反馈与既有取消/预览边界。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Commit.cs` — 区域 Draft 闭合、提交成功与错误反馈。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Input.cs` — 区域绘制视口边界判断与地图表面拾取。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Logging.cs` — 区域绘制开始、成功、取消与错误的低频中文日志。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.cs` — 区域绘制地面命中、Draft 顶点与失败安全预览输入。
 - `XuanYu.Editor.UI/Win/UiWin.Shortcuts.cs` — 窗口快捷键路由，包含区域绘制 Enter 闭合与 Esc 取消入口。
 - `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为静态模型渲染资源。
 - `XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawRegionModel.cs` — 复用静态模型管线绘制地图区域资源。
@@ -1912,6 +1921,7 @@
 - `XuanYu.Core.Tests/Render/Map/MapRegionDrawPlanTests.cs` — 区域渲染资源进入帧绘制计划的合同测试。
 - `XuanYu.Editor.UI/Right/MapPagePanel.axaml` — 地图编辑器地图页及内部地图工具入口，含 Region Drawing 归属与 Selected 状态样式。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RuntimeRedTests.cs` — D2-F1 Headless Runtime RED/GREEN：Map Editor 归属与选中态深色文字。
+- `XuanYu.World.Tests/UiRuntime/RegionDrawingF1CStabilityTests.cs` — F1-C：Draft 聚焦保护、相机导航/指针稳定性与低频日志合同。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1BTests.cs` — F1-B Ground Hit Runtime：工具开关、命中坐标差异、miss、切换去重与单次输入契约。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1FullRuntimeTests.cs` — F1 完整 Runtime：Draft 顶点、预览快照、Enter 闭合、Esc 取消与 DPI 命中回归。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1ResizeTests.cs` — F1 Resize Runtime：视口尺寸变化后区域绘制输入继续命中并累积 Draft 顶点。

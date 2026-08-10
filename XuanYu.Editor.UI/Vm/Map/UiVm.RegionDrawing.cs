@@ -13,6 +13,7 @@ public sealed partial class UiVm
     public int RegionDrawingHitCount { get; private set; }
     public MapPoint? LastRegionDrawingHit { get; private set; }
     public bool IsRegionDrawingDraftActive => _regionDrawing.IsActive;
+    public bool IsRegionDrawingCloseCandidate => _regionDrawing.IsCloseCandidate;
     public int RegionDrawingDraftVertexCount => _regionDrawing.Draft?.Vertices.Length ?? 0;
 
     public bool RegionDrawingPointerPressed(double x, double y, ViewportState viewport)
@@ -32,13 +33,11 @@ public sealed partial class UiVm
             var layer = MapLayerRules.Find(MapSession.CurrentMap.Layers, MapSession.ActiveRegionLayerId);
             if (layer is not { Kind: MapLayerKind.Region }) return true;
             _regionDrawing.Start(layer.LayerId, "未命名区域", MapRegionKind.Generic);
+            LogRegionDrawingStarted();
         }
         if (_regionDrawing.IsCloseCandidate)
             return CloseRegionDraft();
-        var oldCount = _regionDrawing.Draft?.Vertices.Length ?? 0;
         _regionDrawing.AddVertex(point);
-        F1ForensicTrace.Draft(this, oldCount, _regionDrawing.Draft?.Vertices.Length ?? 0,
-            _regionDrawing.Cursor, _regionDrawing.IsActive);
         PublishSceneRenderSnapshot();
         return true;
     }
@@ -55,8 +54,13 @@ public sealed partial class UiVm
             !TryPickRegionPoint(x, y, viewport, out var point)) return false;
         var first = _regionDrawing.Draft!.Vertices[0];
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        var firstScreen = projection.ProjectWorldPoint(new(
-            first.X, first.Y, MapSession.CurrentMap.Surface.BaseHeightMeters));
+        if (!projection.TryProjectWorldPoint(new(
+                first.X, first.Y, MapSession.CurrentMap.Surface.BaseHeightMeters), out var firstScreen))
+        {
+            _regionDrawing.UpdatePointer(point, closeCandidate: false);
+            PublishSceneRenderSnapshot();
+            return true;
+        }
         var distance = Math.Sqrt(Math.Pow(firstScreen.X - x, 2) + Math.Pow(firstScreen.Y - y, 2));
         _regionDrawing.UpdatePointer(point, distance <= ScaleGizmoScreenSize.CenterHitRadiusDip);
         PublishSceneRenderSnapshot();
@@ -70,30 +74,9 @@ public sealed partial class UiVm
         if (IsRegionDrawingTool) SelectTool("选择");
         FooterMessage = "已取消区域绘制";
         FooterState = "状态：就绪";
+        LogRegionDrawingCanceled();
         PublishSceneRenderSnapshot();
         return true;
     }
 
-    bool TryPickRegionPoint(double x, double y, ViewportState viewport, out MapPoint point)
-    {
-        var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        var ray = WorldRayFactory.FromViewportPoint(projection, x, y);
-        var hit = MapSurfacePicker.TryPick(MapSession.CurrentMap, projection, x, y, out point);
-        F1ForensicTrace.Picker(this, hit, ray, point);
-        return hit;
-    }
-
-    static bool IsInsideViewport(double x, double y, ViewportState viewport) =>
-        x >= viewport.LogicalX && y >= viewport.LogicalY &&
-        x <= viewport.LogicalX + viewport.LogicalWidth &&
-        y <= viewport.LogicalY + viewport.LogicalHeight;
-
-    bool CloseRegionDraft()
-    {
-        var draft = _regionDrawing.TakeDraftForClose();
-        if (draft is null) { FooterMessage = "区域至少需要三个顶点才能闭合。"; return true; }
-        var result = MapSession.CreateRegion(draft);
-        if (!result.IsSuccess) { FooterState = "状态：错误"; FooterMessage = result.Error?.Message ?? "区域闭合失败"; return true; }
-        _regionDrawing.Cancel(); FooterState = "状态：就绪"; FooterMessage = "区域已创建"; PublishSceneRenderSnapshot(); return true;
-    }
 }

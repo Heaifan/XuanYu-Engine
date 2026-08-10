@@ -47,7 +47,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         MapSession = new MapEditSession(isWriteThread: isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         // D5 二次纠偏（用户方案）：默认地图建立内存基线——初始未修改不误判为有未保存修改
         MapSession.MarkBaseline();
-        AttachMapSession(MapSession); InitLogs(); LogBuildProvenance();
+        AttachMapSession(MapSession); InitLogs();
     }
     public event PropertyChangedEventHandler? PropertyChanged;
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }

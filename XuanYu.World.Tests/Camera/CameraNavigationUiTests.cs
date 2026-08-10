@@ -3,7 +3,7 @@ using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.World;
 
-public sealed class CameraNavigationUiTests
+public sealed partial class CameraNavigationUiTests
 {
     [Fact]
     public void Frame_selected_updates_observation_center()
