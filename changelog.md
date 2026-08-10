@@ -22,7 +22,7 @@
 MAP-A-R3-D2-F1 SCALE-R1 + GRID-2A（2026-08-10）：比例尺对 104 DIP 对应真实距离执行 100m 起步、两位有效十进制向下吸附；低于 100m 隐藏，不改变 Camera Zoom。Reference Grid 改由 Fragment 根据局部 world-per-pixel 计算十进制层级，独立执行层级密度淡出，X/Y 线交叉使用 `max`，保留 BaseHeight、192B Push Constant 和既有地图/拾取边界。
 - 验证：全解决方案 Build 0 Warning / 0 Error；Core.Tests 388/388、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；ARCH-A、`git diff --check` PASS；GLSL glslc -O 编译通过并重新生成 GridFrag SPIR-V。
 - 状态：F1 保持 OPEN；GRID-2B/GRID-3 未启动，等待下一轮完整门禁与真机验收。
-- Hash：待本轮提交。
+- Hash：`e2df879`。
 
 ## v0.2.25.22-fix
 MAP-A-R3-D2-F1 GRID-1 参考网格越过地图边界（2026-08-10 20:31:45）：保留现有 192B Push Constant 布局与 `mapBounds.z` BaseHeight，仅移除 Reference Grid Fragment Shader 的地图矩形可见性 Fade；地图范围、MapSurface、Picking、相机、LOD、颜色、线宽与地平线淡出均未修改。新增 Shader 合同，约束不得恢复 `mapFade` 或 x/y 边界裁剪。
