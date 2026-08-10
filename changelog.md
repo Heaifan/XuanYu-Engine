@@ -23,7 +23,7 @@ MAP-A-R3-D2-F1 STAB-4A/4B/4C 根因修复（2026-08-10）：将 Native 比例尺
 - 新增斜视尺度、Metric fail-closed、10km 地图 Fill 投影、Native Overlay Probe 与无 Bias Shader 合同回归。
 - 验证：解决方案 Build 0W0E；Core 366/366、World 1117/1117、WarCore 22/22；ARCH-A、5+100、ShaderBytecode glslc 生成与 `git diff --check` PASS；真机比例尺可见性与俯视/45°/低角度 Fill 稳定性待用户重验，F1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
 - 遗留：未执行真机验收，不宣告 A02、B03、C01、C02 或 F1 CLOSED。
-- Hash：6a4c29d。
+- Hash：c307c66。
 
 ## v0.2.25.16-fix
 MAP-A-R3-D2-F1 A02 比例尺悬浮与 100m Zoom Floor 修复（2026-08-10 15:06:09）：删除底部独立 Avalonia 比例尺行，改为 Native Vulkan 视口内右下角悬浮控件，保留点击穿透；有效地图视口无论“检查器”或“地图编辑器”标签均显示比例尺。Map Editor Zoom Policy 改为所有有效地图视口生效，比例尺与相机缩放均禁止低于 100m，彻底消除 `0 m`。
