@@ -23,7 +23,7 @@ MAP-A-R3-D2-F1 STAB-5A 比例尺真机可见性收口（2026-08-10 16:51:42）�
 - 新增比例尺 HWND/可见性/矩形/文本/WM_PAINT 探针回传，修复状态更新重置 PaintCount 的问题；本轮无新增、删除或移动文件，`file-tree.md` 无结构变化无需更新。
 - 验证：解决方案 Build 0W0E；ViewportScaleIndicatorContractTests 1/1、ScaleIndicatorVisibilityRuntimeTests 2/2、WarCore.Tests 22/22；ARCH-A、5+100、`git diff --check` PASS；真机重启编辑器后已看到视口内悬浮 `100 m` 控件。F1 仍保持 `OPEN · ACCEPTANCE FAILED · REWORK`，填充/闭合等其他验收项不在本轮范围。
 - 遗留：等待用户对比例尺位置与其他 F1 项执行正式 IPO 真机验收，未宣告 F1 CLOSED。
-- Hash：待提交。
+- Hash：06b26e9。
 
 ## v0.2.25.17-stab
 MAP-A-R3-D2-F1 STAB-4A/4B/4C 根因修复（2026-08-10）：将 Native 比例尺改为与 Vulkan HWND 同父级的兄弟窗口，显式置于 Vulkan 之上，并记录 HWND、可见性、矩形、文本、宽度与 WM_PAINT 次数；视口 Metric 拆为 X/Y 方向值，比例尺消费 X，Zoom Floor 取较小方向且 Metric 失败保持上一合法相机；Vector Overlay 删除过期 Clip-Z Bias，Fill、Stroke、Marker 直接使用 ViewProjection，继续使用无深度测试/写入 Pass 与绘制顺序。
