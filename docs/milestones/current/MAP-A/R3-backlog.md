@@ -7,8 +7,9 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - D1：CLOSED。
 - D2：OPEN。S01、S02 已由既有真机证据证明 PASS；A03～A06 BLOCKED。
 - D2-F1-C2：CLOSED。RF-M01、RF-M02-A、RF-M03 PASS；RF-M02-B 转交 F1-V。
-- D2-F1-V1：OPEN。本轮只处理 Region/Draft Vector Overlay；F1-V2、F1-V3 暂不启动。
-- F1-V2：BLOCKED BY V1；F1-V3：BLOCKED BY V2。
+- D2-F1-V1：OPEN · ACCEPTANCE FAILED · REWORK。V1-REWORK-A 只恢复 Navigation Gizmo 输入；Region Overlay 视觉回修延后。
+- F1-V2：READY AFTER V1-REWORK-A。目标由 1m 改为 100m Minimum Visible Metric Grid。
+- F1-V3：BLOCKED BY F1-V2；Zoom Floor 只作用于地图编辑视觉尺度。
 - D3：禁止启动；F2：不创建。
 
 ## MAP-A-R3-D2-F1-C2：正式收口
@@ -29,6 +30,24 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - 正式记录：[R3-C2-closure.md](R3-C2-closure.md)。
 
 ## MAP-A-R3-D2-F1-V1：Region Vector Overlay
+
+### 真机裁定与依赖调整
+
+- 当前正式状态：`F1-V1 = OPEN · ACCEPTANCE FAILED · REWORK`。
+- 新顺序：`V1-REWORK-A Navigation Gizmo → F1-V2 100m Metric Grid → F1-V3 Scale Indicator + Zoom Floor → Metric/Picking 门禁 → V1-REWORK-B Region Overlay → V1 真机重验 → F1 Final`。
+- V2/V3 提前执行是已批准的依赖调整，不代表 V1 CLOSED；Region 回修前不得宣告 V1 通过。
+- 本轮真机失败现象按用户提供的六张截图归档：Region Tool 激活时 Navigation Gizmo 点击/拖动无响应；Region Draft 点击与 Gizmo 输入发生竞争；Region Overlay 在斜视/低角度下出现 Fill、Stroke、Marker 锚点或层次不稳定；放大后视觉尺度与地图编辑语义不一致。原始聊天附件不复制进仓库。
+
+### 空间基础合同（冻结）
+
+| ID | 合同 |
+| --- | --- |
+| MC-01 | 玄域世界单位保持 `1 unit = 1 meter`。 |
+| MC-02 | 世界坐标继续使用 `double` 连续坐标，禁止量化为 100m 格子坐标。 |
+| MC-03 | 地图编辑器最细可见参考网格为 `100m × 100m`。 |
+| MC-04 | Region 顶点、实体、道路、节点、高程、DGD 数据与空间索引不受 100m 网格量化。 |
+| MC-05 | 公制网格只使用 `1 / 2 / 5 × 10ⁿ` 序列。 |
+| MC-06 | Zoom Floor 只限制地图编辑器视觉尺度，不修改通用 Camera 能力。 |
 
 ### 冻结范围
 
@@ -54,8 +73,21 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 | V1-T10 | 删除 Region StaticModel 正式路径 | DONE |
 | V1-T11 | 自动专项门禁 | DONE |
 | V1-T12 | 完整 0W0E 门禁 | DONE |
-| V1-T13 | Commit + Push | PENDING |
+| V1-T13 | Commit + Push | DONE（`1e81c33` 已推送） |
 | V1-T14 | 真机验收 | PENDING |
+
+### F1-V1-REWORK-A：Navigation Gizmo 输入恢复
+
+| TODO | 内容 | 状态 |
+| --- | --- | --- |
+| MF-T01 | 修改当前裁定 | DONE |
+| MF-T02 | V2 改为 100m Minimum Visible Metric Grid | DONE |
+| MF-T03 | 修改 V1/V2/V3 解锁顺序 | DONE |
+| MF-T04 | 修正 V1-T13 Commit + Push 状态 | DONE |
+| MF-T05 | 记录用户真机 FAIL 与六张截图现象 | DONE |
+| MF-T06 | Navigation Gizmo LeftDown 优先于 Region Drawing | DONE |
+| MF-T07 | Active Gizmo Move/Up/CaptureLost/CancelMode/KillFocus 路由 | DONE |
+| MF-T08 | Gizmo 与 Region 共存自动回归 | DONE |
 
 ### V1 自动验收
 
@@ -64,4 +96,4 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 
 ## 后续解锁顺序
 
-`F1-V1 PASS → F1-V2 1m Metric Adaptive Grid → F1-V3 Scale Indicator → F1 Final → A03～A06 → D2 Closeout`
+`V1-REWORK-A → F1-V2 100m Minimum Visible Metric Grid → F1-V3 Scale Indicator + Zoom Floor → Metric/Picking 门禁 → V1-REWORK-B Region Overlay → V1 真机重验 → F1 Final → A03～A06 → D2 Closeout`

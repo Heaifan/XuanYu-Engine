@@ -18,6 +18,11 @@
 
 ---
 
+## v0.2.25.9-fix
+MAP-A-R3-D2-F1 V1-REWORK-A Navigation Gizmo 输入恢复（2026-08-10 11:48:28）：冻结 MC-01～MC-06 空间基础合同与新的 Gizmo→Metric→Scale/Zoom→Picking→Region 依赖顺序；修正 R3 backlog 的 F1 状态、100m 网格目标和 V1-T13 推送状态；修复 Region Tool 激活时 Native LeftDown 先消费 Region、以及 Gizmo 会话 Move 被 Region Preview 抢路的问题；HostDetach、CaptureLost、CancelMode、KillFocus 统一清理 Gizmo 会话。
+- 验证：待本轮正式门禁完成；真机验收仍需用户执行，V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
+- 遗留：继续进入 F1-V2 100m Minimum Visible Metric Grid；Region Overlay 视觉回修暂缓。
+
 ## v0.2.25.8-fix
 MAP-A-R3-D2-F1-V1 Region Vector Overlay（2026-08-10 10:51:22）：记录 C2 真机闭环正式 CLOSED；将 Region/Draft 从 StaticModel 临时路径迁移到独立 Vector Overlay 数据合同与 Vulkan 屏幕空间 Stroke/Marker Pass；新增凹多边形 Ear Clipping、Draft/Region V1 回归与无 StaticModel 路径验证。
 - 真机：RF-M01 PASS；RF-M02-A PASS；RF-M02-B 转交 F1-V；RF-M03 PASS（导航结束后 Draft Preview 自动恢复，无需重选工具、无输入丢失、无崩溃）。

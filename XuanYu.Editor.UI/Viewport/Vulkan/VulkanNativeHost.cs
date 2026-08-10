@@ -65,7 +65,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        (DataContext as UiVm)?.CancelInteractionFromHostDetach();
+        if (DataContext is UiVm vm) CancelNativeInput(vm, "HostDetached");
         _resizer.Cancel();
         UnhookLayoutSync();
         Report(NativeHostLifecycleState.Detached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);

@@ -43,6 +43,15 @@ public sealed class NativePointerRoutePolicyTests
     }
 
     [Fact]
+    public void Active_navigation_gizmo_wins_over_region_preview()
+    {
+        var route = NativePointerRoutePolicy.Resolve(
+            Move(buttons: 0x0001), false, true, navGizmoPressed: true);
+
+        Assert.Equal(NativePointerRoute.LeftPreview, route);
+    }
+
+    [Fact]
     public void Middle_down_and_up_have_dedicated_routes()
     {
         Assert.Equal(NativePointerRoute.MiddleDown, NativePointerRoutePolicy.Resolve(

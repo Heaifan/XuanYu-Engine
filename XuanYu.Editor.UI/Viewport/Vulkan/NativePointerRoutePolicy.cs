@@ -19,12 +19,15 @@ public enum NativePointerRoute
 public static class NativePointerRoutePolicy
 {
     public static NativePointerRoute Resolve(
-        NativePointerMessage message, bool cameraActive, bool regionPreviewActive)
+        NativePointerMessage message, bool cameraActive, bool regionPreviewActive,
+        bool navGizmoPressed = false)
     {
         if (message.Message == NativePointerMessage.MiddleDown) return NativePointerRoute.MiddleDown;
         if (message.Message == NativePointerMessage.MiddleUp) return NativePointerRoute.MiddleUp;
         if (message.Message == NativePointerMessage.Move &&
             (cameraActive || message.IsMiddleButtonDown)) return NativePointerRoute.CameraPreview;
+        if (message.Message == NativePointerMessage.Move && navGizmoPressed)
+            return NativePointerRoute.LeftPreview;
         if (message.Message == NativePointerMessage.Move && regionPreviewActive)
             return NativePointerRoute.RegionPreview;
         if (message.Message == NativePointerMessage.Move && message.IsLeftButtonDown)
