@@ -23,7 +23,7 @@ MAP-A-R3-D2-F1 V06 鼠标滚轮缩放与比例尺解耦修复（2026-08-10 19:50
 - 文档：同步 MAP-A-R3 backlog、Viewport Overlay 开发计划、file-tree 与四处版本号；删除失效的 Zoom Policy 及其旧合同测试。
 - 验证：Core 385/385、World 1114/1114、WarCore 22/22 PASS；World.Tests 项目 Build 0 Warning / 0 Error；ARCH-A、`git diff --check` PASS。解决方案完整 Build 因运行中的 `XuanYu.Editor.App (PID 25620)` 锁定输出 DLL，真实阻断并返回 MSB3027/MSB3021，未伪装为代码失败。
 - 状态：F1 继续 `OPEN · ACCEPTANCE FAILED · REWORK`，等待用户真机重验 V06 动态比例尺、缩放范围与 Resize/DPI；不宣告关闭。
-- Hash：待本轮提交。
+- Hash：`b5b0f5f`（功能与文档提交）。
 
 ## v0.2.25.19-stab
 MAP-A-R3-D2-F1 OVL-R0～R3 比例尺承载层整改（2026-08-10 18:27:02）：正式裁定 STAB-5A 为 `FAILED · WRONG PRESENTATION ARCHITECTURE`，以 `ac5d306` 作为 Native Popup 路线终点；新增统一 DIP Overlay Layout Contract，并将比例尺以 `RenderDrawKind.ScaleIndicatorOverlay` 接入 Vulkan DrawPlan，固定绘制在 Navigation Gizmo 之前且关闭深度测试/写入。
