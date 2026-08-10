@@ -99,7 +99,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 | V2-T04 | 提取唯一 ViewportMetricScale | DONE |
 | V2-T05 | Grid 消费 metersPerDip | DONE |
 | V2-T06 | DPI 1.00/1.25/1.50/2.00 自动回归 | DONE |
-| V2-T07 | F1-V2 正式门禁与 Commit + Push | TODO |
+| V2-T07 | F1-V2 正式门禁与 Commit + Push | DONE（`a12d36e` 已提交，待推送） |
 
 ### V1 自动验收
 
