@@ -1,9 +1,6 @@
 # MAP-A-R3 Backlog
 
-GRID-1：Reference Grid 已解除地图矩形可见性 Fade，保留 `mapBounds.z` BaseHeight 与既有 CPU Push Constant 布局；等待 10km 地图边缘真机观察。GRID-2/GRID-3 禁止在本轮启动。
-
-SCALE-R1：比例尺按 100m 起步的两位有效十进制整值向下吸附，低于 100m 隐藏且不参与相机策略；GRID-2A：Reference Grid 改为 Fragment 局部十进制 LOD，GRID-2B/GRID-3 保持未启动。
-SCALE-R2：比例尺改为 1/2/5 离散档位、真实线宽和 5% 回滞；GRID-2B：Reference Grid 改为 projected-cell band-pass 与物理 spacing 稳定 Alpha；GRID-3 保持未启动。
+GRID-RW-1：Reference Grid 正式路径已改为全局 `ReferenceGridFrameState`（100m 起步、10~140 DIP 回滞、相机 Step 吸附）驱动的 GPU procedural 世界线；每轴 513 条、总计 2052 顶点，Vulkan `LineList` 管线。旧 Fullscreen/Fragment-local LOD/band-pass 路径与其错误测试已删除。
 
 R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结目标和范围。
 
@@ -27,6 +24,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - STAB-4C：代码实现完成；Vector Overlay 移除过期 Clip-Z Bias，Fill / Stroke / Marker 直接消费 ViewProjection，保留无深度测试/写入 Pass 与绘制顺序。
 - 本轮真机裁定：`MAP-A-R3-D2-F1 联合真机验收 = FAIL · FUNCTIONAL BUT UNSTABLE`；A02、B03、C01、C02 按现象判 FAIL，C03～C07、D01～D04 尚未完成。
 - V06：鼠标滚轮缩放根因已修复；比例尺几何与视觉规范进入最终真机复验，固定卡片 128×28 DIP、标尺 104 DIP、标签随真实尺度变化。
+- GRID-RW-1：代码实现与定向自动回归完成；等待完整门禁、Commit + Push 后转入真机验收。RW-2 / RW-3 禁止启动。
 - D3：禁止启动；F2：不创建。
 
 ## Viewport Overlay / Scale Indicator 架构整改

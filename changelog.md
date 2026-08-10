@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.25-fix
+MAP-A-R3-D2-F1 GRID-RW-1（2026-08-10 21:49:43）：Reference Grid 从全屏三角形的 Fragment 局部 LOD 重写为全局 `ReferenceGridFrameState` 驱动的 GPU procedural 世界线；全帧固定一个 100m 起步、10~140 DIP 回滞的 Step，并按相机位置 Step 吸附 Anchor。Vulkan 参考网格专用 `LineList` 管线每轴生成 513 条线、总计 2052 顶点；全屏三角形常量独立保留给 ViewPlaneGrid、比例尺、导航 Gizmo、世界轴和原点。删除旧 `fwidth/log10/band-pass/grazing` 网格着色器、字节码与错误合同，新增世界线、全局尺度、锚点、顶点数及 LineList 合同；GLSL 已由 `glslc -O` 重新生成嵌入 SPIR-V。
+- 验证：全解决方案 Build 0 Warning / 0 Error；Core.Tests 331/331、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；ARCH-A、5+100、GLSL/SPIR-V 一致性与 `git diff --check` PASS。
+- 状态：F1 保持 OPEN；GRID-RW-1 等待完整门禁、Commit + Push 和用户真机验收；RW-2 / RW-3 未启动。
+- Hash：`fcf4996`（GRID-RW-1 实现）。
+
 ## v0.2.25.24-fix
 MAP-A-R3-D2-F1 SCALE-R2 + GRID-2B（2026-08-10）：比例尺采用 1/2/5 × 10ⁿ 离散档位，按 104 DIP 可容纳的最大档位选择，低于 100m 隐藏并保留 5% 回滞；Reference Grid 增加 projected-cell band-pass（10~18px 淡入、80~140px 淡出）、独立 X/Y 投影密度、100m/D/10D 三层候选及按物理 spacing 稳定的 Alpha，未修改 MapBounds、BaseHeight、Camera、Picking、Region 或 192B 布局。
 - 验证：全解决方案 Build 0 Warning / 0 Error；Core.Tests 391/391、World.Tests 1114/1114、WarCore.Tests 22/22 PASS；最终 Render.Vulkan 目标 Build 0 Warning / 0 Error；ARCH-A、`git diff --check` PASS；GLSL glslc -O 编译通过并重新生成 GridFrag SPIR-V。
