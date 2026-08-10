@@ -15,6 +15,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - V1-STAB-1：DONE（本轮）；Gizmo 输入隔离、可见轴线/端点命中与 Avalonia/Native 两条手势路径统一。
 - V1-STAB-2：DONE（本轮）；Scale Indicator 移出 Native HWND Airspace，真机可见性待重验。
 - V1-STAB-3：DONE（本轮）；Vector Overlay 使用独立无深度测试/无深度写入 Pass，真机俯视/45°/低角度稳定性待重验。
+- A02 follow-up：DONE（本轮）；比例尺显示条件改为有效地图视口，不再受右侧标签页选择影响，并以紧凑内容宽度右对齐在视口底部。
 - 本轮真机裁定：`MAP-A-R3-D2-F1 联合真机验收 = FAIL · FUNCTIONAL BUT UNSTABLE`；A02、B03、C01、C02 按现象判 FAIL，C03～C07、D01～D04 尚未完成。
 - D3：禁止启动；F2：不创建。
 

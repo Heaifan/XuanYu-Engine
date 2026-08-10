@@ -1303,7 +1303,7 @@
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerRoutePolicy.cs` — F1-C2 REWORK：Native 中键/区域预览/左键拖动路由优先级纯逻辑合同。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` — sealed partial class VulkanNativeHost
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — STAB-2：Native Vulkan Host 与比例尺分行布局，比例尺脱离 HWND Airspace。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — STAB-2/A02：Native Vulkan Host 与比例尺分行布局，比例尺脱离 HWND Airspace 并紧凑右对齐。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs` — partial class VulkanViewport
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs` — （职责待补）
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` — （职责待补）
@@ -1317,6 +1317,7 @@
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraDolly.cs` — MAP-A-R3-D2-F1-V3：地图编辑 Dolly 入口与 Zoom Policy 接入。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.CameraNavigation.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.ScaleIndicator.cs` — MAP-A-R3-D2-F1-V3：左下角比例尺展示状态，消费统一 ViewportMetricScale。
+- `XuanYu.World.Tests/UiRuntime/ScaleIndicatorVisibilityRuntimeTests.cs` — A02 follow-up：检查器标签下有效地图视口仍必须显示比例尺。
 - `XuanYu.Editor.UI/Vm/Camera/UiVm.ViewGizmo.cs` — F3-D3：六方向标准视角命令（计划 8.1 命名；复用现有 ApplyViewFaceCommand 相机逻辑）。
 - `XuanYu.Editor.UI/Vm/History/UiVm.EntityCommands.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/History/UiVm.History.Entities.cs` — sealed partial class UiVm

@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.25.16-fix
+MAP-A-R3-D2-F1 A02 比例尺显示条件与布局修复（2026-08-10 14:39:00）：比例尺不再依赖右侧“地图编辑器”标签页，拥有有效地图视口就保持可见；保留其位于 Native Vulkan HWND 之外的 Avalonia 独立行布局，并改为右下角紧凑内容宽度，避免整条底栏占满视口。修复“检查器”标签下比例尺不可见且布局过大的问题。
+- 验证：解决方案 Build 0W0E；Core 364/364、World 1117/1117、WarCore 22/22；World 比例尺运行时合同 1/1 PASS；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机重验 A02 仍待用户执行，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
+- 遗留：重启/刷新编辑器后在“检查器”和“地图编辑器”两个标签下分别确认比例尺可见，再继续 A02～D04 联合真机重验。
+- Hash：3c73c0b。
+
 ## v0.2.25.15-stab
 MAP-A-R3-D2-F1 稳定化修复（2026-08-10 14:22:43）：修复 Avalonia 输入路径绕过 Navigation Gizmo 导致 Region 误加点的问题，统一 Gizmo 可见端点/轴线命中与手势所有权；将 Scale Indicator 移到 Native Vulkan HWND 之外的独立 Avalonia 行；为 Vector Overlay 创建独立无深度测试/无深度写入 Pass，保持 Fill → Stroke → Marker 绘制顺序，消除透明共面 Overlay 与 Ground 的深度争抢；不修改世界锚点、100m 网格、Zoom Floor 或双精度 Picking。
 - 验证：解决方案 Build 0W0E；Core 364/364、World 1116/1116、WarCore 22/22；定向 Core 3/3、World Region/Gizmo/Overlay 38/38；ARCH-A（含 5+100）、版本一致性、git diff --check PASS；真机需重验 A02、B03、C01、C02，F1-V1 保持 `OPEN · ACCEPTANCE FAILED · REWORK`。
