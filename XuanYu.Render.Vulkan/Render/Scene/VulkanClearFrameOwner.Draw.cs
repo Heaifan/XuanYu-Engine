@@ -34,6 +34,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
             _vectorOverlays.RetainOnly(_renderProjection.VectorOverlayResources.Select(r => r.Key));
             foreach (var draw in RenderDrawPlan.GetFrameDrawPlan(_renderProjection))
             {
+                if (draw.Kind == RenderDrawKind.MapGround) continue;
                 BindFramePipeline(cb, draw.Kind);
                 if (draw.Kind == RenderDrawKind.MapGround && _mapSurfaceIndexBuffer is not null)
                     DrawMapSurface(cb, pScene);

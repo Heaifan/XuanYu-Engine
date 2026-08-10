@@ -889,6 +889,7 @@
 │  │  ├─ MapEditSessionValidationTests.cs
 │  │  └─ MapRenderSnapshotProjectionTests.cs
 │  ├─ Render/
+│  │  ├─ MapGroundDiagnosticIsolationTests.cs
 │  │  ├─ VulkanPresentLoopContractTests.cs
 │  │  └─ VulkanPresentModeSelectionTests.cs
 │  ├─ Scene/
@@ -1616,7 +1617,7 @@
 - `XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.Frame.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.Lifecycle.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/Present/VulkanPresentLoop.cs` — VK-LIFE-1：Present 泵必须确认停止成功后，才允许释放同步对象。
-- `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Draw.cs` — WORLD-D-R
+- `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Draw.cs` — GRID-DIAG-GROUND-01：在管线绑定前暂时跳过 MapGround，隔离地面绘制与深度写入供真机诊断。
 - `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.DrawAssist.cs` — D4：地图地面/边界已改由 Draw.cs 按 MapGround/MapBounds 分项分发；
 - `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.DrawGizmo.cs` — （职责待补）
 - `XuanYu.Render.Vulkan/Render/Scene/VulkanClearFrameOwner.Scene.cs` — （职责待补）
@@ -1787,6 +1788,7 @@
 - `XuanYu.World.Tests/MapEditing/MapEditSessionThreadTests.cs` — MAP-A-R2-D2：写线程保护（非法线程拒绝且状态完全不变）。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionValidationTests.cs` — MAP-A-R2-D2：候选校验与失败不污染（缩小越界整体拒绝/无效替换拒绝）。
 - `XuanYu.World.Tests/MapEditing/MapRenderSnapshotProjectionTests.cs` — MAP-A-R2-D3：MapDefinition → MapRenderSnapshot 投影合同（渲染唯一输入）。
+- `XuanYu.World.Tests/Render/MapGroundDiagnosticIsolationTests.cs` — GRID-DIAG-GROUND-01：锁定 MapGround 在管线绑定前被诊断性跳过。
 - `XuanYu.World.Tests/Render/VulkanPresentLoopContractTests.cs` — VK-PERF-R1：Present 循环合同测试——防性能轮回归：
 - `XuanYu.World.Tests/Render/VulkanPresentModeSelectionTests.cs` — VK-PERF-R1：Present Mode 选择合同——FIFO（垂直同步）为首选，Mailbox 不再是默认。
 - `XuanYu.World.Tests/Scene/CommandSmokeTests.cs` — sealed class CommandSmokeTests
