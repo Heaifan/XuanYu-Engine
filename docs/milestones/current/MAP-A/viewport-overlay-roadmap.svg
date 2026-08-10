@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="520" viewBox="0 0 1600 520" role="img" aria-labelledby="title desc">
+  <title id="title">MAP-A-R3 Viewport Overlay 路线图</title>
+  <desc id="desc">从 OVL-R0 治理冻结，经布局合同、Vulkan 比例尺和旧 Native 技术债清理，到真机验收与 F1 Final。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0 L12 6 L0 12 Z" fill="#6683a0"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#7c91a6" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="520" fill="#f6f9fc"/>
+  <rect x="34" y="32" width="1532" height="456" rx="24" fill="#ffffff" stroke="#dbe5ee"/>
+  <text x="72" y="92" fill="#203449" font-family="Microsoft YaHei, sans-serif" font-size="32" font-weight="700">MAP-A-R3 · Viewport Overlay / Scale Indicator</text>
+  <text x="72" y="130" fill="#65798d" font-family="Microsoft YaHei, sans-serif" font-size="18">Native Popup 路线停止于 ac5d306 · 当前阶段 OVL-R0 · F1 继续 OPEN</text>
+
+  <g filter="url(#shadow)" font-family="Microsoft YaHei, sans-serif">
+    <rect x="72" y="192" width="210" height="156" rx="18" fill="#e8f3ff" stroke="#8fb9df" stroke-width="2"/>
+    <text x="177" y="238" text-anchor="middle" fill="#24577f" font-size="24" font-weight="700">OVL-R0</text>
+    <text x="177" y="276" text-anchor="middle" fill="#365f7f" font-size="18">知识库 / 路线冻结</text>
+    <text x="177" y="312" text-anchor="middle" fill="#66829a" font-size="15">文档治理 · 禁修 Popup</text>
+
+    <rect x="330" y="192" width="210" height="156" rx="18" fill="#edf7f4" stroke="#8bc3b2" stroke-width="2"/>
+    <text x="435" y="238" text-anchor="middle" fill="#276555" font-size="24" font-weight="700">OVL-R1</text>
+    <text x="435" y="276" text-anchor="middle" fill="#3f7062" font-size="18">Overlay Layout Contract</text>
+    <text x="435" y="312" text-anchor="middle" fill="#688a80" font-size="15">Anchor · Rect · DIP</text>
+
+    <rect x="588" y="192" width="210" height="156" rx="18" fill="#f1effb" stroke="#aaa0db" stroke-width="2"/>
+    <text x="693" y="238" text-anchor="middle" fill="#50448f" font-size="24" font-weight="700">OVL-R2</text>
+    <text x="693" y="276" text-anchor="middle" fill="#64599a" font-size="18">Vulkan Scale Indicator</text>
+    <text x="693" y="312" text-anchor="middle" fill="#8078a8" font-size="15">Screen-space · Depth Off</text>
+
+    <rect x="846" y="192" width="210" height="156" rx="18" fill="#fff4e8" stroke="#d8ae7e" stroke-width="2"/>
+    <text x="951" y="238" text-anchor="middle" fill="#855724" font-size="24" font-weight="700">OVL-R3</text>
+    <text x="951" y="276" text-anchor="middle" fill="#94683a" font-size="18">删除 Native 技术债</text>
+    <text x="951" y="312" text-anchor="middle" fill="#a18262" font-size="15">HWND · GDI · Popup</text>
+
+    <rect x="1104" y="192" width="210" height="156" rx="18" fill="#eef7ec" stroke="#92bf88" stroke-width="2"/>
+    <text x="1209" y="238" text-anchor="middle" fill="#3d6d35" font-size="24" font-weight="700">真机验收</text>
+    <text x="1209" y="276" text-anchor="middle" fill="#507b49" font-size="18">V01 ～ V09 IPO</text>
+    <text x="1209" y="312" text-anchor="middle" fill="#718f6c" font-size="15">全 PASS 才可 ACCEPTED</text>
+
+    <rect x="1362" y="192" width="166" height="156" rx="18" fill="#edf2f7" stroke="#95a7b8" stroke-width="2"/>
+    <text x="1445" y="238" text-anchor="middle" fill="#334b61" font-size="24" font-weight="700">F1 Final</text>
+    <text x="1445" y="276" text-anchor="middle" fill="#526a7f" font-size="18">最终收口</text>
+    <text x="1445" y="312" text-anchor="middle" fill="#748798" font-size="15">未验收不得 CLOSED</text>
+  </g>
+
+  <g fill="none" stroke="#6683a0" stroke-width="3" marker-end="url(#arrow)">
+    <path d="M282 270 H320"/>
+    <path d="M540 270 H578"/>
+    <path d="M798 270 H836"/>
+    <path d="M1056 270 H1094"/>
+    <path d="M1314 270 H1352"/>
+  </g>
+
+  <rect x="72" y="394" width="1456" height="54" rx="12" fill="#f8fafc" stroke="#dbe5ee"/>
+  <text x="800" y="428" text-anchor="middle" fill="#526b80" font-family="Microsoft YaHei, sans-serif" font-size="17">共同硬门禁：Visual Rect 与 Hit Rect 同源 · 全部 DIP · 全量测试 · 自动门禁最多 READY FOR USER ACCEPTANCE</text>
+</svg>

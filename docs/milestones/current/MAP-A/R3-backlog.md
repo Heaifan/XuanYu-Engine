@@ -13,14 +13,29 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - V1-REWORK-B1：DONE（`ef12f4b` 已推送）。
 - V1-REWORK-B2：DONE（`8c8dfdd` 已推送）；仅完成 Vector Overlay Depth Policy，真机重验尚未执行。
 - V1-STAB-1：DONE（本轮）；Gizmo 输入隔离、可见轴线/端点命中与 Avalonia/Native 两条手势路径统一。
-- V1-STAB-2：DONE（本轮）；Scale Indicator 改为 Native Vulkan 视口内右下角悬浮控件，点击穿透且不再占独立底栏，真机可见性待重验。
+- V1-STAB-2：历史实现已被 STAB-5A 裁定为 `FAILED · WRONG PRESENTATION ARCHITECTURE`；Native Popup 不再作为可接受的 Viewport Overlay。
 - V1-STAB-3：DONE（本轮）；Vector Overlay 使用独立无深度测试/无深度写入 Pass，真机俯视/45°/低角度稳定性待重验。
-- A02 follow-up：DONE（本轮）；比例尺在有效地图视口内右下角悬浮显示，不再受右侧标签页选择影响；相机与比例尺均锁定 100m 最小层级，禁止显示 `0 m`。
-- STAB-4A：代码实现完成；比例尺 HWND 改为 Vulkan HWND 同父级兄弟窗口，并加入真实窗口 Probe；真机可见性待重验。
+- A02 follow-up：`READY FOR USER ACCEPTANCE`；100m Metric/Zoom Floor 保留，比例尺已迁移到 Vulkan-native Overlay，等待用户真机确认可见性。
+- STAB-4A/5A：`FAILED · WRONG PRESENTATION ARCHITECTURE`；`ac5d306` 是 Native Popup 路线终点，禁止继续修 Popup Screen Rect。
+- STAB-5B：`READY FOR USER ACCEPTANCE`；Vulkan-native Scale Indicator 已完成 OVL-R0～R3 自动实现与聚焦门禁。
 - STAB-4B：代码实现完成；视口公制尺度改为 X/Y 方向值，Zoom Floor 取较小方向并对 Metric 失败 fail-closed；斜视回归已补。
 - STAB-4C：代码实现完成；Vector Overlay 移除过期 Clip-Z Bias，Fill / Stroke / Marker 直接消费 ViewProjection，保留无深度测试/写入 Pass 与绘制顺序。
 - 本轮真机裁定：`MAP-A-R3-D2-F1 联合真机验收 = FAIL · FUNCTIONAL BUT UNSTABLE`；A02、B03、C01、C02 按现象判 FAIL，C03～C07、D01～D04 尚未完成。
 - D3：禁止启动；F2：不创建。
+
+## Viewport Overlay / Scale Indicator 架构整改
+
+| 阶段 | 内容 | 状态 |
+| --- | --- | --- |
+| OVL-R0 | 知识库、错误裁定与路线冻结 | DONE |
+| OVL-R1 | DIP Anchor / Rect / Layout Resolver | DONE |
+| OVL-R2 | Vulkan-native Scale Indicator、GlyphLite、DrawPlan | READY FOR USER ACCEPTANCE |
+| OVL-R3 | 删除比例尺专属 HWND / Popup / GDI / Probe 技术债 | DONE |
+| 真机验收 | 比例尺悬浮可见、Resize/DPI 稳定、Navigation Gizmo 仍最后绘制 | PENDING |
+
+- 唯一数据链：`ScaleIndicatorMetric → UiVm → RenderProjection → ScaleIndicatorOverlay → Vulkan`。
+- 唯一布局：视口左下角 16 DIP；Visual Rect 由 `ViewportOverlayLayoutResolver` 生成。
+- 自动门禁不替代用户真机验收；当前 F1 继续 OPEN。
 
 ## MAP-A-R3-D2-F1-C2：正式收口
 
@@ -154,4 +169,4 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 
 ## 后续解锁顺序
 
-`V1-REWORK-A → F1-V2 100m Minimum Visible Metric Grid → F1-V3 Scale Indicator + Zoom Floor → Metric/Picking 门禁 → V1-REWORK-B1 世界锚点 → V1-REWORK-B2 Depth Policy → V1 真机重验 → F1 Final → A03～A06 → D2 Closeout`
+`OVL-R0 → OVL-R1 → OVL-R2 → OVL-R3 → 比例尺真机验收 → V1 联合真机重验 → F1 Final → A03～A06 → D2 Closeout`

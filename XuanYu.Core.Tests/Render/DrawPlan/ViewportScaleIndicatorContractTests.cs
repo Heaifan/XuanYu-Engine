@@ -5,7 +5,7 @@ namespace XuanYu.Core.Tests.Render;
 public sealed class ViewportScaleIndicatorContractTests
 {
     [Fact]
-    public void Scale_indicator_is_a_native_floating_overlay()
+    public void Scale_indicator_is_a_vulkan_viewport_overlay()
     {
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
         var xaml = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanViewport.axaml"));
@@ -13,18 +13,28 @@ public sealed class ViewportScaleIndicatorContractTests
         Assert.Contains("<Grid>", xaml);
         Assert.DoesNotContain("RowDefinitions=\"*,Auto\"", xaml);
         Assert.DoesNotContain("ScaleIndicator", xaml);
-        var hostCode = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "VulkanNativeHost.cs"));
-        Assert.Contains("CreateNativeScaleIndicator(parent.Handle)", hostCode);
-        var native = File.ReadAllText(Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan", "Win32ViewportHost.ScaleIndicator.cs"));
-        Assert.Contains("CreateScaleIndicator", native);
-        Assert.Contains("IsWindowVisible", native);
-        Assert.Contains("GetWindowRect", native);
-        Assert.Contains("PaintCount", native);
-        Assert.DoesNotContain("WS_EX_TRANSPARENT", native);
-        Assert.Contains("SetScaleIndicatorProbeSink", native);
-        Assert.Contains("ScaleStates.TryGetValue(hwnd, out var current)", native);
-        Assert.Contains("WS_POPUP | WS_VISIBLE", native);
-        Assert.Contains("SetWindowPos(hwnd, 0", native);
+        var drawPlan = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Abstractions", "RenderDrawPlan.cs"));
+        var pipeline = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Vulkan", "Pipeline", "VulkanGraphicsPipelineOwner.Grid.cs"));
+        var shader = File.ReadAllText(Path.Combine(root, "XuanYu.Render.Vulkan", "Shaders", "editor_scale_indicator.frag"));
+        var nativeDir = Path.Combine(root, "XuanYu.Editor.UI", "Viewport", "Vulkan");
+        Assert.Contains("RenderDrawKind.ScaleIndicatorOverlay", drawPlan);
+        Assert.Contains("CreateScaleIndicator", pipeline);
+        Assert.Contains("depthTest: false", pipeline);
+        Assert.Contains("ScaleIndicatorGlyphLite", shader);
+        Assert.False(File.Exists(Path.Combine(nativeDir, "Win32ViewportHost.ScaleIndicator.cs")));
+        Assert.False(File.Exists(Path.Combine(nativeDir, "Win32ViewportHost.ScaleIndicator.Paint.cs")));
+        Assert.False(File.Exists(Path.Combine(nativeDir, "VulkanNativeHost.ScaleIndicator.cs")));
         Assert.True(host >= 0, "视口必须保留 Native Host");
+    }
+
+    [Fact]
+    public void Scale_indicator_draws_before_navigation_gizmo()
+    {
+        var projection = new XuanYu.Render.Abstractions.RenderProjection(
+            default, [], false, default,
+            ScaleIndicator: new(true, "100 m", 100));
+        var plan = XuanYu.Render.Abstractions.RenderDrawPlan.GetFrameDrawPlan(projection);
+        Assert.Equal(XuanYu.Render.Abstractions.RenderDrawKind.ScaleIndicatorOverlay, plan[^2].Kind);
+        Assert.Equal(XuanYu.Render.Abstractions.RenderDrawKind.NavigationGizmo, plan[^1].Kind);
     }
 }

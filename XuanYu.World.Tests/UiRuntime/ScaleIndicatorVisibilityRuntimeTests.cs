@@ -11,6 +11,9 @@ public sealed class ScaleIndicatorVisibilityRuntimeTests
         vm.UpdateViewportFrame(800, 600);
         Assert.True(vm.IsScaleIndicatorVisible);
         Assert.False(string.IsNullOrWhiteSpace(vm.ScaleIndicatorText));
+        var projection = vm.RenderProjection.Projection.ScaleIndicator;
+        Assert.True(projection.Visible);
+        Assert.Equal(vm.ScaleIndicatorText, projection.Label);
     }
 
     [Fact]

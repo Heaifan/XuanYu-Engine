@@ -155,6 +155,9 @@
 │  │  │  ├─ ReferenceGridShaderContractTests.cs
 │  │  │  ├─ ReferenceGridVisualStyleTests.cs
 │  │  │  └─ ViewportMetricScaleTests.cs
+│  │  ├─ Overlay/
+│  │  │  ├─ ScaleIndicatorGlyphLiteTests.cs
+│  │  │  └─ ViewportOverlayLayoutTests.cs
 │  │  ├─ Map/
 │  │  │  ├─ MapRenderDrawPlanTests.cs
 │  │  │  ├─ MapSurfaceGeometryTests.cs
@@ -400,14 +403,11 @@
 │  │     ├─ VulkanNativeHost.NavGizmo.cs
 │  │     ├─ VulkanNativeHost.Picking.cs
 │  │     ├─ VulkanNativeHost.Pointer.cs
-│  │     ├─ VulkanNativeHost.ScaleIndicator.cs
 │  │     ├─ NativePointerRoutePolicy.cs
 │  │     ├─ VulkanNativeHost.cs
 │  │     ├─ VulkanViewport.axaml
 │  │     ├─ VulkanViewport.axaml.cs
 │  │     ├─ Win32ViewportHost.Input.cs
-│  │     ├─ Win32ViewportHost.ScaleIndicator.Paint.cs
-│  │     ├─ Win32ViewportHost.ScaleIndicator.cs
 │  │     └─ Win32ViewportHost.cs
 │  ├─ ViewportNativeHostRoute.cs
 │  ├─ Vm/
@@ -558,7 +558,9 @@
 │  ├─ NativeHostLifecycleState.cs
 │  ├─ NativeHostSurfaceHandle.cs
 │  ├─ ReferenceGridScale.cs
+│  ├─ ScaleIndicatorGlyphLite.cs
 │  ├─ ScaleIndicatorMetric.cs
+│  ├─ ScaleIndicatorOverlayProjection.cs
 │  ├─ RenderCameraProjection.cs
 │  ├─ ViewportMetricScale.cs
 │  ├─ RenderDrawPlan.Typed.cs
@@ -575,6 +577,8 @@
 │  ├─ RenderVectorOverlayPrimitive.cs
 │  ├─ RenderVectorOverlayResource.cs
 │  ├─ RenderVectorOverlayVertex.cs
+│  ├─ ViewportOverlayAnchor.cs
+│  ├─ ViewportOverlayLayoutResolver.cs
 │  └─ XuanYu.Render.Abstractions.csproj
 ├─ XuanYu.Render.Vulkan/
 │  ├─ Bridge/
@@ -597,6 +601,7 @@
 │  │  ├─ ShaderBytecode.GridVert.cs
 │  │  ├─ ShaderBytecode.NavGizmoFrag.cs
 │  │  ├─ ShaderBytecode.NavGizmoVert.cs
+│  │  ├─ ShaderBytecode.ScaleIndicatorFrag.cs
 │  │  ├─ ShaderBytecode.Vert.cs
 │  │  ├─ ShaderBytecode.ViewPlaneGridFrag.cs
 │  │  ├─ ShaderBytecode.WorldAxesFrag.cs
@@ -626,6 +631,7 @@
 │  │  │  ├─ VulkanClearFrameOwner.Grid.cs
 │  │  │  ├─ VulkanClearFrameOwner.GridScale.cs
 │  │  │  ├─ VulkanClearFrameOwner.NavGizmo.cs
+│  │  │  ├─ VulkanClearFrameOwner.ScaleIndicator.cs
 │  │  │  ├─ VulkanClearFrameOwner.ViewPlaneGrid.cs
 │  │  │  └─ VulkanClearFrameOwner.WorldAxes.cs
 │  │  ├─ Map/
@@ -667,6 +673,7 @@
 │  ├─ Shaders/
 │  │  ├─ editor_nav_gizmo.frag
 │  │  ├─ editor_nav_gizmo.vert
+│  │  ├─ editor_scale_indicator.frag
 │  │  ├─ editor_reference_grid.frag
 │  │  ├─ editor_reference_grid.vert
 │  │  ├─ editor_view_plane_grid.frag
@@ -1034,12 +1041,25 @@
 │  │  ├─ diagnostic-safety.md
 │  │  ├─ naming-XuanYu-Engine.md
 │  │  └─ ui-spec.md
+│  ├─ knowledge/
+│  │  ├─ README.md
+│  │  ├─ architecture.md
+│  │  ├─ data.md
+│  │  ├─ engineering.md
+│  │  ├─ incidents.md
+│  │  ├─ input.md
+│  │  ├─ knowledge-index.md
+│  │  ├─ performance.md
+│  │  ├─ rendering.md
+│  │  └─ ui.md
 │  ├─ milestones/
 │  │  └─ current/
 │  │     └─ MAP-A/
 │  │        ├─ R3-C2-closure.md
 │  │        ├─ R3-backlog.md
-│  │        └─ map-contract.md
+│  │        ├─ map-contract.md
+│  │        ├─ viewport-overlay-development-plan.md
+│  │        └─ viewport-overlay-roadmap.svg
 │  └─ ui/
 │     ├─ 玄域引擎_UI真机基线清单.md
 │     ├─ 玄域引擎_UI规范_1.0.md
@@ -1099,12 +1119,14 @@
 - `XuanYu.Core.Tests/Render/DrawPlan/SceneRenderProjectionAdapterTests.cs` — sealed partial class SceneRenderProjectionAdapterTests
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportAssistDrawPlanTests.cs` — F3-F1：导航 Gizmo 恒为最后一项（Overlay Pass 收尾）。
 - `XuanYu.Core.Tests/Render/DrawPlan/ViewportChromeContractTests.cs` — F3-D1：视口黑边合同测试（计划 11.1）——XAML 防退化：
-- `XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs` — A02：确认比例尺由 Native Vulkan 视口内悬浮控件承载，XAML 不得回潮独立底栏。
+- `XuanYu.Core.Tests/Render/DrawPlan/ViewportScaleIndicatorContractTests.cs` — OVL-R2/R3：比例尺 Vulkan DrawKind、Depth Off、顺序与 Native Popup 删除合同。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridAdaptiveTests.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格片元行为合同（CPU 镜像）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridDrawPlanTests.cs` — MAP-A-R1-D5-R1-F2-R2：DrawPlan 合同——顺序（方案 12）与开关独立（方案 11.2）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridRayIntersectionTests.cs` — MAP-A-R1-D5-R1-F2 GRID-G1：世界射线与 Z=0 平面求交的数学合同。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridScaleTests.cs` — MAP-A-R1-D5-R1-F2-R2：每帧全局网格尺度合同（1/2/5 序列 + 互补交叉淡化）。
 - `XuanYu.Core.Tests/Render/Grid/ScaleIndicatorMetricTests.cs` — MAP-A-R3-D2-F1-V3/A02：比例尺 1/2/5 距离选择、100m 最小距离与目标宽度合同。
+- `XuanYu.Core.Tests/Render/Overlay/ScaleIndicatorGlyphLiteTests.cs` — OVL-R2：比例尺受限字符编码合同。
+- `XuanYu.Core.Tests/Render/Overlay/ViewportOverlayLayoutTests.cs` — OVL-R1：Anchor/Rect/DIP 布局与边界合同。
 - `XuanYu.Core.Tests/Render/Grid/ViewportMetricScaleTests.cs` — MAP-A-R3-D2-F1-V2：Perspective/Orthographic 的 DIP 与 physical pixel 尺度合同（1.00/1.25/1.50/2.00 DPI）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridShaderContractTests.cs` — MAP-A-R1-D5-R1-F2-R2：Shader 合同低层门禁（方案 15.5）。
 - `XuanYu.Core.Tests/Render/Grid/ReferenceGridVisualStyleTests.cs` — MAP-A-R1-D5-R1-F2-R3：网格视觉样式合同（10.1）与重合合成合同（10.2）。
@@ -1308,15 +1330,12 @@
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.NavGizmo.cs` — F3-F1/STAB-1：Native 指针流的 Gizmo 命中、轴线/端点手势所有权与 Region 隔离。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Picking.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs` — sealed partial class VulkanNativeHost
-- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.ScaleIndicator.cs` — A02：同步视口内 Native 比例尺状态、位置、DPI 与点击穿透更新。
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerRoutePolicy.cs` — F1-C2 REWORK：Native 中键/区域预览/左键拖动路由优先级纯逻辑合同。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml` — A02：Native Vulkan Host 覆盖整个视口，比例尺不再占用 Avalonia 独立行。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanViewport.axaml.cs` — partial class VulkanViewport
 - `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.Input.cs` — （职责待补）
-- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.ScaleIndicator.Paint.cs` — A02：GDI 绘制右下角比例尺面板、刻度线与文本，并将命中测试穿透给 Vulkan 视口。
-- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.ScaleIndicator.cs` — A02：创建、定位、显示和销毁 Native 比例尺子窗口。
-- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` — （职责待补）
+- `XuanYu.Editor.UI/Viewport/Vulkan/Win32ViewportHost.cs` — 通用 Vulkan 子 HWND 生命周期、尺寸与窗口过程，不承载 Viewport Overlay。
 - `XuanYu.Editor.UI/ViewportNativeHostRoute.cs` — static class ViewportNativeHostRoute
 - `XuanYu.Editor.UI/Vm/Camera/CameraSessionMode.cs` — enum CameraSessionMode
 - `XuanYu.Editor.UI/Vm/Camera/CameraSessionSnapshot.cs` — sealed record CameraSessionSnapshot
@@ -1531,6 +1550,8 @@
 - `XuanYu.Render.Abstractions/NativeHostSurfaceHandle.cs` — NativeHost 交给渲染层的窗口交接句柄。
 - `XuanYu.Render.Abstractions/ReferenceGridScale.cs` — MAP-A-R3-D2-F1-V2：100m 起步、10,000km 覆盖的 1/2/5 公制参考网格尺度。
 - `XuanYu.Render.Abstractions/ScaleIndicatorMetric.cs` — MAP-A-R3-D2-F1-V3：比例尺漂亮距离选择与 m/km 文本格式化。
+- `XuanYu.Render.Abstractions/ScaleIndicatorGlyphLite.cs` — OVL-R2：比例尺专用 0-9/m/k/点/空格字符编码。
+- `XuanYu.Render.Abstractions/ScaleIndicatorOverlayProjection.cs` — OVL-R2：比例尺可见性、标签与 DIP 宽度渲染投影 DTO。
 - `XuanYu.Render.Abstractions/ViewportMetricScale.cs` — MAP-A-R3-D2-F1：计算视口 X/Y 方向公制尺度并提供最小方向尺度。
 - `XuanYu.Render.Abstractions/RenderCameraProjection.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderDrawPlan.Typed.cs` — R4-R3-R2：实体绘制计划提取（typed 部分），供 Vulkan 与测试共同使用。
@@ -1539,6 +1560,8 @@
 - `XuanYu.Render.Abstractions/RenderEntityType.cs` — enum RenderEntityType
 - `XuanYu.Render.Abstractions/RenderProjection.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderProjectionResult.cs` — （职责待补）
+- `XuanYu.Render.Abstractions/ViewportOverlayAnchor.cs` — OVL-R1：Viewport Overlay Anchor、Rect 与布局请求纯合同。
+- `XuanYu.Render.Abstractions/ViewportOverlayLayoutResolver.cs` — OVL-R1：DIP-only Overlay Rect 解析与视口边界钳制。
 - `XuanYu.Render.Abstractions/RenderStaticModelKey.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderStaticModelPrimitive.cs` — （职责待补）
 - `XuanYu.Render.Abstractions/RenderStaticModelTransform.cs` — 静态模型位置、旋转与缩放变换合同，提供单位变换。
@@ -1561,6 +1584,7 @@
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.GridVert.cs` — MAP-A-R1-D5-R1-F2-R2: generated by glslc -O from editor_reference_grid.vert.
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoFrag.cs` — MAP-A: generated by glslc -O from navgizmo_frag.spv.
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.NavGizmoVert.cs` — AUTO-GENERATED from editor_nav_gizmo.vert / editor_nav_gizmo.frag / editor_world_origin.frag (glslc -O)
+- `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.ScaleIndicatorFrag.cs` — OVL-R2：由 glslc -O 生成的比例尺片元 SPIR-V。
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.Vert.cs` — STAB-4C：由 glslc -O 从 scene.vert 生成的直接 ViewProjection 字节码。
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.ViewPlaneGridFrag.cs` — F3-F4: generated by glslc -O from editor_view_plane_grid.frag.
 - `XuanYu.Render.Vulkan/Pipeline/ShaderBytecode.WorldAxesFrag.cs` — MAP-A-R1-D5-R1-F2-R2: generated by glslc -O from editor_world_axes.frag.
@@ -1587,6 +1611,7 @@
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.Grid.cs` — MAP-A-R1-D5-R1-F2-R2：参考网格绘制。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.GridScale.cs` — MAP-A-R3-D2-F1-V2：参考网格消费 ViewportMetricScale 并填充绘制矩阵。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.NavGizmo.cs` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 屏幕空间、深度测试/写入关闭、最后绘制。
+- `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.ScaleIndicator.cs` — OVL-R2：解析 BottomLeft LayoutRect、编码 glyph 并绘制比例尺 Overlay。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.ViewPlaneGrid.cs` — F3-F4：正交标准视图的视图平面网格绘制（±X→YZ / ±Y→XZ，以世界原点为基准）。
 - `XuanYu.Render.Vulkan/Render/Grid/VulkanClearFrameOwner.WorldAxes.cs` — MAP-A-R1-D5-R1-F2-R2：世界轴 / 世界原点独立全屏 Pass。
 - `XuanYu.Render.Vulkan/Render/Map/VulkanClearFrameOwner.MapSurface.cs` — MAP-A-R2-D3：有限 Flat 地面（4 顶点 6 索引）+ 四条边界（24 顶点细条）；资源判等用 ResourceKey（Rename 不重建）。
@@ -1613,7 +1638,7 @@
 - `XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayValidator.cs` — F1-V1：索引与 primitive 范围校验。
 - `XuanYu.Render.Vulkan/Render/VectorOverlay/VulkanVectorOverlayVertex.cs` — F1-V1：端点/Secondary/屏幕偏移顶点格式。
 - `XuanYu.Render.Vulkan/Render/VulkanDepthAttachment.cs` — （职责待补）
-- `XuanYu.Render.Vulkan/Session/GridPipelineSet.cs` — MAP-A-R1-D5-R1-F2-R2/F3-F1：全屏 Pass 管线组合（参考网格 / 世界轴 / 世界原点 / 导航 Gizmo）。
+- `XuanYu.Render.Vulkan/Session/GridPipelineSet.cs` — 全屏 Pass 管线组合（网格、轴、原点、比例尺、Navigation Gizmo）。
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Lifecycle.cs` — sealed partial class VulkanRenderSession
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Recover.cs` — sealed partial class VulkanRenderSession
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.Resize.cs` — sealed partial class VulkanRenderSession
@@ -1621,6 +1646,7 @@
 - `XuanYu.Render.Vulkan/Session/VulkanRenderSession.cs` — VK-LIFE-1：组合根负责失败回滚，不把半初始化资源留给 Bridge。
 - `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.frag` — 玄域编辑器：Blender 风格导航 Gizmo
 - `XuanYu.Render.Vulkan/Shaders/editor_nav_gizmo.vert` — MAP-A-R1-D5-R1-F3-F1：导航 Gizmo Overlay Pass —— 顶点着色器。
+- `XuanYu.Render.Vulkan/Shaders/editor_scale_indicator.frag` — OVL-R2：screen-space 比例尺 bar/tick、背景与 GlyphLite 片元绘制。
 - `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.frag` — MAP-A-R1-D5-R1-F2-R3：Blender 式统一尺度参考网格 —— 片元着色器。
 - `XuanYu.Render.Vulkan/Shaders/editor_reference_grid.vert` — MAP-A-R1-D5-R1-F2：独立编辑器参考网格 Pass —— 顶点着色器。
 - `XuanYu.Render.Vulkan/Shaders/editor_view_plane_grid.frag` — F3-F4：正交标准视图的视图平面网格（YZ/XZ 平面，以世界原点为基准）。
@@ -1947,9 +1973,12 @@
 - `docs/governance/naming-XuanYu-Engine.md` — 玄域引擎命名与品牌规范
 - `docs/governance/ui-spec.md` — UI 规范 45 项讨论决策的历史记录（D1 起不再作为实施合同，正式规则以 UI 规范 1.0 为准）
 - `docs/governance/版本号规范与历史映射.md` — 版本格式与历史编号映射
+- `docs/knowledge/ui/viewport-ui-control-development-guide.md` — Viewport UI 控件承载层与开发验收知识库。
 - `docs/milestones/current/MAP-A/map-contract.md` — MAP-A 地图合同与当前轮验收材料
 - `docs/milestones/closed/MAP-A/R2-closeout.md` — MAP-A-R2 CLOSED 收口报告、交付能力盘点与关闭证据。
 - `docs/milestones/current/MAP-A/R3-backlog.md` — MAP-A-R3 冻结前候选方向与范围约束。
+- `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md` — OVL-R0～R3 比例尺架构整改计划与状态。
+- `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg` — Viewport Overlay / Scale Indicator 浅色路线图。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪

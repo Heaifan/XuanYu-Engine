@@ -45,6 +45,7 @@ public sealed unsafe partial class VulkanClearFrameOwner
                 if (draw.Kind == RenderDrawKind.EditorReferenceGrid) DrawReferenceGrid(cb);
                 else if (draw.Kind == RenderDrawKind.WorldOrigin) DrawWorldOrigin(cb);
                 else if (draw.Kind == RenderDrawKind.WorldAxes) DrawWorldAxes(cb);
+                else if (draw.Kind == RenderDrawKind.ScaleIndicatorOverlay) DrawScaleIndicator(cb);
                 else if (draw.Kind == RenderDrawKind.NavigationGizmo) DrawNavigationGizmo(cb);
                 else if (draw.Kind == RenderDrawKind.EditorViewPlaneGrid) DrawViewPlaneGrid(cb);
                 else if (draw.Kind < RenderDrawKind.EntityFill) DrawAssist(cb, pScene, draw);

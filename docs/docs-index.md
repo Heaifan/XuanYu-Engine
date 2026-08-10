@@ -15,10 +15,25 @@
 - `docs/governance/debts/arch-world-debts.md`：受控债务登记
 - `docs/governance/shr-2026-08-closure.svg`：SHR-2026-08 考核收口图
 
+## 开发知识库（knowledge/）
+
+- `docs/knowledge/README.md`：知识库目的、字段、证据、生命周期与使用说明
+- `docs/knowledge/knowledge-index.md`：19 条正式知识的分类总索引
+- `docs/knowledge/engineering.md`：验证、治理与工程流程知识
+- `docs/knowledge/architecture.md`：空间、架构与组合根知识
+- `docs/knowledge/rendering.md`：Vulkan、Depth、Overlay 与 Native 渲染知识
+- `docs/knowledge/input.md`：Pointer 与 Mouse Capture 输入生命周期知识
+- `docs/knowledge/ui.md`：Avalonia 布局、命中区与 Runtime UI 知识
+- `docs/knowledge/data.md`：数据保存、加载事务与资产处理知识
+- `docs/knowledge/performance.md`：Preview/Commit 高频路径性能知识
+- `docs/knowledge/incidents.md`：代表性事故复盘与 Knowledge 映射
+
 ## 当前阶段（milestones/current/）
 
 - `docs/milestones/current/MAP-A/`：MAP-A 地图合同与当前轮验收材料
 - `docs/milestones/current/MAP-A/R3-backlog.md`：R2 关闭后的 MAP-A-R3 候选方向与冻结前约束
+- `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md`：OVL-R0～R3 比例尺架构整改开发计划
+- `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg`：Viewport Overlay / Scale Indicator 浅色路线图
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

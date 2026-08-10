@@ -13,12 +13,14 @@ internal sealed class GridPipelineSet : IDisposable
 {
     GridPipelineSet(VulkanGraphicsPipelineOwner? grid, VulkanGraphicsPipelineOwner? axes,
         VulkanGraphicsPipelineOwner? origin, VulkanGraphicsPipelineOwner? navGizmo,
+        VulkanGraphicsPipelineOwner? scaleIndicator,
         VulkanGraphicsPipelineOwner? viewPlaneGrid)
     {
         Grid = grid;
         Axes = axes;
         Origin = origin;
         NavGizmo = navGizmo;
+        ScaleIndicator = scaleIndicator;
         ViewPlaneGrid = viewPlaneGrid;
     }
 
@@ -26,6 +28,7 @@ internal sealed class GridPipelineSet : IDisposable
     public VulkanGraphicsPipelineOwner? Axes { get; }
     public VulkanGraphicsPipelineOwner? Origin { get; }
     public VulkanGraphicsPipelineOwner? NavGizmo { get; }
+    public VulkanGraphicsPipelineOwner? ScaleIndicator { get; }
     public VulkanGraphicsPipelineOwner? ViewPlaneGrid { get; }
 
     public static GridPipelineSet Create(Vk vk, VulkanDeviceOwner deviceOwner,
@@ -39,9 +42,13 @@ internal sealed class GridPipelineSet : IDisposable
         if (origin is not null) clear.SetWorldOriginPipeline(origin.Pipeline, origin.Layout);
         var navGizmo = VulkanGraphicsPipelineOwner.CreateNavigationGizmo(vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (navGizmo is not null) clear.SetNavGizmoPipeline(navGizmo.Pipeline, navGizmo.Layout);
+        var scaleIndicator = VulkanGraphicsPipelineOwner.CreateScaleIndicator(
+            vk, deviceOwner, clear, swapchain, physicalDevice, log);
+        if (scaleIndicator is not null)
+            clear.SetScaleIndicatorPipeline(scaleIndicator.Pipeline, scaleIndicator.Layout);
         var viewPlaneGrid = VulkanGraphicsPipelineOwner.CreateViewPlaneGrid(vk, deviceOwner, clear, swapchain, physicalDevice, log);
         if (viewPlaneGrid is not null) clear.SetViewPlaneGridPipeline(viewPlaneGrid.Pipeline, viewPlaneGrid.Layout);
-        return new GridPipelineSet(grid, axes, origin, navGizmo, viewPlaneGrid);
+        return new GridPipelineSet(grid, axes, origin, navGizmo, scaleIndicator, viewPlaneGrid);
     }
 
     public void Dispose()
@@ -50,6 +57,7 @@ internal sealed class GridPipelineSet : IDisposable
         Axes?.Dispose();
         Origin?.Dispose();
         NavGizmo?.Dispose();
+        ScaleIndicator?.Dispose();
         ViewPlaneGrid?.Dispose();
     }
 }

@@ -23,6 +23,8 @@ public sealed partial class UiVm
             _staticModelResources,
             _mapRenderSnapshot,
             _viewportDpiScale,
-            overlays);
+            overlays,
+            new ScaleIndicatorOverlayProjection(
+                IsScaleIndicatorVisible, ScaleIndicatorText, ScaleIndicatorWidthDip));
     }
 }

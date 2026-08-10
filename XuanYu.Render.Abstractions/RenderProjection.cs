@@ -18,7 +18,8 @@ public readonly record struct RenderProjection(
     IReadOnlyList<RenderStaticModelResource>? StaticModels = null,
     IReadOnlyList<RenderVectorOverlayResource>? VectorOverlays = null,
     MapRenderSnapshot Map = default,
-    double ViewportDpiScale = 1.0)
+    double ViewportDpiScale = 1.0,
+    ScaleIndicatorOverlayProjection ScaleIndicator = default)
 {
     public int EntityCount => Entities.Count;
     public EditorViewportAssistState AssistState => Assist;

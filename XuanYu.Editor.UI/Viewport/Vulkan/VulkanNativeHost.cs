@@ -22,7 +22,7 @@ public sealed partial class VulkanNativeHost : NativeControlHost
             _bridge?.Resize(snap.Width, snap.Height);
             ViewportNativeHostRoute.ReportMerged(DataContext as UiVm, snap, count);
         });
-        DataContextChanged += (_, _) => { HookLayoutSync(); HookScaleIndicator(); };
+        DataContextChanged += (_, _) => HookLayoutSync();
     }
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -39,7 +39,6 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         _hwnd = Win32ViewportHost.CreateChild(parent.Handle);
-        CreateNativeScaleIndicator(parent.Handle);
         Win32ViewportHost.SetInputSink(_hwnd, OnNativePointerMessage);
         Report(NativeHostLifecycleState.HandleAvailable, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), true);
         return new PlatformHandle(_hwnd, "HWND");
@@ -57,7 +56,6 @@ public sealed partial class VulkanNativeHost : NativeControlHost
             var (physicalW, physicalH) = ToPhysicalSize(width, height, dpi);
             Win32ViewportHost.Resize(_hwnd, physicalW, physicalH);
             (DataContext as UiVm)?.UpdateViewportFrame(width, height);
-            UpdateNativeScaleIndicator();
         }
         _resizer.OnResize(width, height, dpi, isValid, _hwnd);
     }
@@ -66,7 +64,6 @@ public sealed partial class VulkanNativeHost : NativeControlHost
         if (DataContext is UiVm vm) CancelNativeInput(vm, "HostDetached");
         _resizer.Cancel();
         UnhookLayoutSync();
-        UnhookScaleIndicator();
         Report(NativeHostLifecycleState.Detached, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), _hwnd != 0);
         _bridge?.Detach();
         base.OnDetachedFromVisualTree(e);
@@ -75,14 +72,12 @@ public sealed partial class VulkanNativeHost : NativeControlHost
     {
         _resizer.Cancel();
         UnhookLayoutSync();
-        UnhookScaleIndicator();
         Report(NativeHostLifecycleState.Disposed, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
         Report(NativeHostLifecycleState.Invalidated, _hwnd, (int)Bounds.Width, (int)Bounds.Height, GetDpiScale(), false);
         (_bridge as IDisposable)?.Dispose();
         _bridge = null;
         if (_hwnd != 0)
         {
-            DestroyNativeScaleIndicator();
             Win32ViewportHost.SetInputSink(_hwnd, null);
             Win32ViewportHost.Destroy(_hwnd);
         }

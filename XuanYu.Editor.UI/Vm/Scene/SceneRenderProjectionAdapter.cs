@@ -21,7 +21,8 @@ public static class SceneRenderProjectionAdapter
         IReadOnlyDictionary<AssetId, RenderStaticModelResource>? staticModelResources = null,
         MapRenderSnapshot map = default,
         double viewportDpiScale = 1.0,
-        IReadOnlyList<RenderVectorOverlayResource>? vectorOverlays = null)
+        IReadOnlyList<RenderVectorOverlayResource>? vectorOverlays = null,
+        ScaleIndicatorOverlayProjection scaleIndicator = default)
     {
         if (snapshot.Camera is not { } camera)
         {
@@ -75,7 +76,8 @@ public static class SceneRenderProjectionAdapter
             StaticModels: staticModelResources?.Values.OrderBy(r => r.Key.Value).ToArray(),
             VectorOverlays: vectorOverlays,
             Map: map,
-            ViewportDpiScale: viewportDpiScale);
+            ViewportDpiScale: viewportDpiScale,
+            ScaleIndicator: scaleIndicator);
         return RenderProjectionResult.Ok(projection);
     }
 }

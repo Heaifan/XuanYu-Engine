@@ -32,6 +32,11 @@ public sealed unsafe partial class VulkanClearFrameOwner
             if (_navGizmoPipeline.Handle == 0 || _navGizmoPipelineLayout.Handle == 0) return;
             _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _navGizmoPipeline); return;
         }
+        if (kind == RenderDrawKind.ScaleIndicatorOverlay)
+        {
+            if (_scaleIndicatorPipeline.Handle == 0 || _scaleIndicatorPipelineLayout.Handle == 0) return;
+            _vk.CmdBindPipeline(cb, PipelineBindPoint.Graphics, _scaleIndicatorPipeline); return;
+        }
         if (kind == RenderDrawKind.EditorViewPlaneGrid)
         {
             if (_viewPlaneGridPipeline.Handle == 0 || _viewPlaneGridPipelineLayout.Handle == 0) return;
