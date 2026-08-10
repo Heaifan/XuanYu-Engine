@@ -17,10 +17,10 @@
     </Border>
     <!-- STAB-2：比例尺位于 Native HWND 之外的独立 Avalonia 行，避免 Airspace 遮挡。 -->
     <Border Grid.Row="1" IsVisible="{Binding IsScaleIndicatorVisible}" IsHitTestVisible="False"
-            HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0"
-            Padding="8,5" Background="{StaticResource Color.Bg.Panel}"
+            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,14,0"
+            Padding="6,3" Background="{StaticResource Color.Bg.Panel}"
             BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1">
-      <StackPanel Spacing="3" HorizontalAlignment="Left" Margin="16,0">
+      <StackPanel Spacing="3" HorizontalAlignment="Left">
         <Border Width="{Binding ScaleIndicatorWidthDip}" Height="2"
                 Background="{StaticResource Color.Text.Primary}" HorizontalAlignment="Left"/>
         <TextBlock Text="{Binding ScaleIndicatorText}" Classes="caption"/>

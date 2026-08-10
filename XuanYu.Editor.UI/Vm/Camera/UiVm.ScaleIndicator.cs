@@ -10,7 +10,7 @@ public sealed partial class UiVm
 
     void UpdateScaleIndicator()
     {
-        if (!IsMapEditorMode || _lastViewport is not { } viewport)
+        if (_lastViewport is not { } viewport)
         {
             SetScaleIndicator(false, "", 80.0);
             return;

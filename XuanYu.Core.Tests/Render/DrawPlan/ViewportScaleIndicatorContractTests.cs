@@ -12,6 +12,8 @@ public sealed class ViewportScaleIndicatorContractTests
         var host = xaml.IndexOf("<local:VulkanNativeHost/>", StringComparison.Ordinal);
         var scale = xaml.IndexOf("Grid.Row=\"1\" IsVisible=\"{Binding IsScaleIndicatorVisible}", StringComparison.Ordinal);
         Assert.Contains("<Grid RowDefinitions=\"*,Auto\">", xaml);
+        Assert.Contains("HorizontalAlignment=\"Right\"", xaml[scale..]);
+        Assert.DoesNotContain("HorizontalAlignment=\"Stretch\"", xaml[scale..]);
         Assert.True(host >= 0 && scale > host, "比例尺必须位于 Native Host 所在行之外");
     }
 }
