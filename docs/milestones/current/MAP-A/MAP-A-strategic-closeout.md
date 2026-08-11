@@ -1,6 +1,6 @@
 # MAP-A 战略收口与 EDITOR-A 迁移裁定
 
-**状态**：IMPLEMENTED · AUTOMATED GATES PASS · PUSH PENDING
+**状态**：IMPLEMENTED · AUTOMATED GATES PASS · MAP-A REMOTE CLOSEOUT PENDING
 
 **范围**：本文件只记录 MAP-A 的战略收口、知识沉淀审计和向 EDITOR-A 的迁移边界；不实现 Region Drawing、Workspace UI、Schema、Renderer 或 Picking 修改。
 
@@ -67,4 +67,4 @@ MAP-A 自动门禁、Commit、Push 和远端 HEAD 复核完成后，同一 Trans
 - World.Tests：1115/1115 PASS；
 - WarCore.Tests：22/22 PASS；
 - ARCH-A、5+100、版本一致性、`git diff --check`：PASS；
-- 执行日期：2026-08-11（UTC+08:00）；Commit / Push / Remote HEAD：待本阶段收口提交补证。
+- 执行日期：2026-08-11（UTC+08:00）；收口 Commit：`6724079`；Push / Remote HEAD 在切换 EDITOR-A 分支前核验。
