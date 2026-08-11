@@ -26,6 +26,10 @@ public sealed partial class UiVm
             var result = await _datasetRegistry!.CreateAutoAsync(DatasetCreateType);
             if (!result.Succeeded) return DatasetFailed(result.Message);
             _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
+            var runtime = MapDatasetRuntimeProjection.Apply(MapSession.CurrentMap, _datasetRegistry.CurrentManifest);
+            if (!runtime.Succeeded || runtime.Value is null) return DatasetFailed(runtime.Message);
+            var applied = MapSession.ApplyRuntimeLayerProjection(runtime.Value);
+            if (!applied.IsSuccess) return DatasetFailed(applied.Error!.Value.Message);
             DatasetSelectedId = result.Value!.Id;
             FooterMessage = $"数据集创建成功：{result.Value.Id}（{result.Value.Type}）";
             LogDatasetOutcome(true, "创建", result.Value.Id, result.Value.Type, "");
@@ -46,9 +50,13 @@ public sealed partial class UiVm
         if (string.IsNullOrWhiteSpace(targetId)) return DatasetFailed("请先选择要解除注册的数据集。", false);
         var target = targetId!;
         var removedIndex = _datasetItems.ToList().FindIndex(item => item.Id == target);
+        if (_regionDrawing.IsActive) CancelRegionDrawingFromEscape();
         var result = await _datasetRegistry.UnregisterAsync(target);
         if (!result.Succeeded) return DatasetFailed(result.Message, false);
         _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
+        var runtime = MapDatasetRuntimeProjection.Remove(MapSession.CurrentMap, target);
+        var applied = MapSession.ApplyRuntimeLayerProjection(runtime);
+        if (!applied.IsSuccess) return DatasetFailed(applied.Error!.Value.Message, false);
         FooterMessage = "数据集已解除注册，文件未删除。";
         LogDatasetOutcome(true, "解除注册", target, "", "");
         await RefreshDatasetProjectionAsync();

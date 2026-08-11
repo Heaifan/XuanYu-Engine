@@ -11,7 +11,8 @@ public sealed record MapDatasetDocument(
     ImmutableArray<JsonElement> Features)
 {
     public const string CurrentFormat = "xuanyu-map-dataset";
-    public const string CurrentVersion = "0.1.0";
+    public const string LegacyVersion = "0.1.0";
+    public const string CurrentVersion = "0.2.0";
 
     public static MapDatasetDocument CreateNew(MapDatasetDescriptor descriptor) => new(
         CurrentFormat,

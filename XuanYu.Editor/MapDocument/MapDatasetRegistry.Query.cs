@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace XuanYu.Editor.MapDocument;
 
 public sealed partial class MapDatasetRegistry
@@ -16,6 +18,38 @@ public sealed partial class MapDatasetRegistry
         foreach (var descriptor in CurrentManifest.Datasets)
             entries.Add(await ResolveAsync(descriptor));
         return entries;
+    }
+
+    public async Task<MapDocumentResult<IReadOnlyList<MapDatasetDocument>>> LoadRegionDocumentsAsync()
+    {
+        var result = new List<MapDatasetDocument>();
+        foreach (var descriptor in CurrentManifest.Datasets.Where(item => item.Type == MapDatasetTypes.Region))
+        {
+            if (!MapDatasetPathPolicy.TryResolve(MapRoot, descriptor.Source, out var path))
+                return MapDocumentResult<IReadOnlyList<MapDatasetDocument>>.Fail("InvalidDatasetSource", "Dataset source 不安全。", "Load");
+            var loaded = await _datasetStorage.LoadAsync(path, descriptor);
+            if (loaded.Status != MapDatasetStatus.Normal || loaded.Document is null)
+                return MapDocumentResult<IReadOnlyList<MapDatasetDocument>>.Fail(loaded.ErrorCode, loaded.Message, "Load");
+            result.Add(loaded.Document);
+        }
+        return MapDocumentResult<IReadOnlyList<MapDatasetDocument>>.Ok(result);
+    }
+
+    public MapDocumentResult<IReadOnlyList<(string Path, MapDatasetDocument Document)>> BuildRegionSaveCandidates(
+        XuanYu.World.Map.MapDefinition map)
+    {
+        var result = new List<(string Path, MapDatasetDocument Document)>();
+        foreach (var descriptor in CurrentManifest.Datasets.Where(item => item.Type == MapDatasetTypes.Region))
+        {
+            if (!MapDatasetPathPolicy.TryResolve(MapRoot, descriptor.Source, out var path))
+                return MapDocumentResult<IReadOnlyList<(string, MapDatasetDocument)>>.Fail("InvalidDatasetSource", "Dataset source 不安全。", "Save");
+            var layerId = MapDatasetLayerIdProjection.Project(descriptor.Id);
+            var features = map.Regions.Where(region => region.LayerId == layerId)
+                .Select(MapRegionDatasetCodec.Write).ToImmutableArray();
+            result.Add((path, new(MapDatasetDocument.CurrentFormat, MapDatasetDocument.CurrentVersion,
+                descriptor.Id, descriptor.Type, features)));
+        }
+        return MapDocumentResult<IReadOnlyList<(string, MapDatasetDocument)>>.Ok(result);
     }
 
     public async Task<MapDatasetEntry?> FindByIdAsync(string id)

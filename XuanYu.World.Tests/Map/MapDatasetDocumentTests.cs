@@ -14,7 +14,7 @@ public sealed class MapDatasetDocumentTests
     {
         var document = MapDatasetDocument.CreateNew(Descriptor());
         Assert.Equal("xuanyu-map-dataset", document.Format);
-        Assert.Equal("0.1.0", document.Version);
+        Assert.Equal(MapDatasetDocument.CurrentVersion, document.Version);
         Assert.Empty(document.Features);
         Assert.True(MapDatasetDocumentValidator.Validate(document).Succeeded);
     }

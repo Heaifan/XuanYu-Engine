@@ -42,8 +42,15 @@ public sealed partial class UiVm
             RaiseMapDocumentChanged();
             return false;
         }
+        var registry = new MapDatasetRegistry(path, result.Value);
+        var documents = await registry.LoadRegionDocumentsAsync();
+        if (!documents.Succeeded || documents.Value is null) { FooterMessage = documents.Message; return false; }
+        var runtime = MapDatasetRegionBinding.Build(MapSession.CurrentMap, result.Value, documents.Value);
+        if (!runtime.Succeeded || runtime.Value is null) { FooterMessage = runtime.Message; return false; }
+        var replaced = MapSession.ReplaceCurrentMap(runtime.Value, true, path);
+        if (!replaced.IsSuccess) { FooterMessage = replaced.Error!.Value.Message; return false; }
         _mapManifestOwner.Load(path, result.Value);
-        _datasetRegistry = new MapDatasetRegistry(path, result.Value);
+        _datasetRegistry = registry;
         await RefreshDatasetProjectionAsync();
         FooterMessage = "地图 Manifest 已打开。";
         RaiseMapDocumentChanged();
@@ -52,6 +59,11 @@ public sealed partial class UiVm
 
     public async Task<bool> SaveMapManifestAsync(string path)
     {
+        if (_datasetRegistry is not null)
+        {
+            var regions = await _datasetRegistry.SaveRegionContentAsync(MapSession.CurrentMap);
+            if (!regions.Succeeded) { FooterMessage = regions.Message; return false; }
+        }
         var result = _mapWorkingStorage.HasWorkspace
             ? await _mapWorkingStorage.PromoteAsync(path, CurrentMapManifest)
             : await _mapManifestStorage.SaveAsync(path, CurrentMapManifest);
@@ -64,6 +76,7 @@ public sealed partial class UiVm
         }
         _mapManifestOwner.Save(result.Value);
         _datasetRegistry = new MapDatasetRegistry(result.Value, CurrentMapManifest);
+        MapSession.MarkSaved(result.Value);
         await RefreshDatasetProjectionAsync();
         FooterMessage = "地图 Manifest 已保存。";
         RaiseMapDocumentChanged();

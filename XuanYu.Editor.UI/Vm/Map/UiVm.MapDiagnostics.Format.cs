@@ -22,6 +22,7 @@ public sealed partial class UiVm
         MapEditReason.LayerMoved => "调整图层顺序",
         MapEditReason.LayerVisibilityChanged => "图层可见性",
         MapEditReason.LayerLockChanged => "图层锁定",
+        MapEditReason.RuntimeProjection => "数据集运行时投影",
         _ => reason.ToString()
     };
 

@@ -1,3 +1,5 @@
+using XuanYu.Editor.MapDocument;
+
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
@@ -10,7 +12,9 @@ public sealed partial class UiVm
         set
         {
             if (value == _datasetSelectedId) return;
+            if (_regionDrawing.IsActive) CancelRegionDrawingFromEscape();
             _datasetSelectedId = value;
+            SetDatasetDrawingTarget(value);
             RefreshDatasetSelectionProjection();
             DatasetNameText = SelectedDataset?.Name ?? "";
         }
@@ -50,7 +54,12 @@ public sealed partial class UiVm
         var saved = _datasetRegistry.UpdateLayerStates(states);
         if (!saved.Succeeded) { FooterMessage = saved.Message; return; }
         _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
+        var runtime = MapDatasetRuntimeProjection.Apply(MapSession.CurrentMap, _datasetRegistry.CurrentManifest);
+        if (!runtime.Succeeded || runtime.Value is null) { FooterMessage = runtime.Message; return; }
+        var applied = MapSession.ApplyRuntimeLayerProjection(runtime.Value);
+        if (!applied.IsSuccess) { FooterMessage = applied.Error!.Value.Message; return; }
         await RefreshDatasetProjectionAsync();
+        SetDatasetDrawingTarget(DatasetSelectedId);
         RaiseMapDocumentChanged();
     }
 

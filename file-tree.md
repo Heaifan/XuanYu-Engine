@@ -257,8 +257,14 @@
 │  │  ├─ MapDatasetPathPolicy.cs
 │  │  ├─ MapDatasetRegistry.Commands.cs
 │  │  ├─ MapDatasetIdGenerator.cs
+│  │  ├─ MapDatasetLayerIdProjection.cs
+│  │  ├─ MapDatasetRegionBinding.cs
 │  │  ├─ MapDatasetRegistry.Query.cs
+│  │  ├─ MapDatasetRegistry.RegionTransaction.cs
 │  │  ├─ MapDatasetRegistry.Transaction.cs
+│  │  ├─ MapDatasetRuntimeProjection.cs
+│  │  ├─ MapRegionDatasetCodec.cs
+│  │  ├─ MapRegionDatasetFeature.cs
 │  │  ├─ MapDatasetRegistry.cs
 │  │  ├─ MapDatasetStorageService.cs
 │  │  ├─ MapManifest.cs
@@ -275,6 +281,7 @@
 │  │  ├─ MapEditEvents.cs
 │  │  ├─ MapEditReason.cs
 │  │  ├─ MapEditSession.Regions.cs
+│  │  ├─ MapEditSession.RuntimeProjection.cs
 │  │  ├─ MapEditSession.ActiveLayer.cs
 │  │  ├─ MapEditSession.Commands.cs
 │  │  ├─ MapEditSession.Commit.cs
@@ -506,6 +513,7 @@
 │  │  │  ├─ UiVm.RegionDrawing.cs
 │  │  │  ├─ UiVm.MapCommandRouting.cs
 │  │  │  ├─ UiVm.MapDataset.Commands.cs
+│  │  │  ├─ UiVm.MapDataset.DrawingTarget.cs
 │  │  │  ├─ UiVm.MapDataset.Logging.cs
 │  │  │  ├─ UiVm.MapDataset.Routing.cs
 │  │  │  ├─ UiVm.MapDataset.cs
@@ -911,6 +919,7 @@
 │  │  │  ├─ UiMapLayerPanelTests.cs
 │  │  │  ├─ UiMapLayoutContractTests.cs
 │  │  │  ├─ UiMapManifestIdentityTests.cs
+│  │  │  ├─ UiMapDatasetRegionRuntimeTests.cs
 │  │  │  └─ UiMapManifestNavigationTests.cs
 │  │  ├─ MapBoundsTests.cs
 │  │  ├─ MapCoordinateValidationTests.cs
@@ -924,6 +933,8 @@
 │  │  ├─ MapManifestStorageTests.cs
 │  │  ├─ MapDatasetContractTests.cs
 │  │  ├─ MapDatasetDocumentTests.cs
+│  │  ├─ MapRegionDatasetContractTests.cs
+│  │  ├─ MapRegionDatasetRuntimeTests.cs
 │  │  ├─ MapDatasetStorageContractTests.cs
 │  │  ├─ MapDatasetRegistryFailureTests.cs
 │  │  ├─ MapDatasetRegistryLifecycleTests.cs
@@ -1185,6 +1196,8 @@
 │  │        ├─ MAP-DOC-A-R3-F4-acceptance.md
 │  │        └─ MAP-DOC-A-R3-plan.md
 │  │        └─ MAP-DOC-A-R1-plan.md
+│  │     └─ MAP-DATA-A/
+│  │        └─ MAP-DATA-A-R1-acceptance.md
 │  └─ ui/
 │     ├─ 玄域引擎_UI真机基线清单.md
 │     ├─ 玄域引擎_UI规范_1.0.md
@@ -1519,6 +1532,7 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.cs` — MAP-A-R2-D3-F1：地图面板命令真实路由（UiVm.RunCommand → 地图命令）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.cs` — MAP-DOC-A-R2-F3：Dataset Registry 列表、空态、状态与投影通知。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Selection.cs` — MAP-DOC-A-R2-F3：SelectedDatasetId 单一选择合同及 Dataset-backed Layer 投影。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingTarget.cs` — MAP-DATA-A-R1：Dataset 选择到 Region Runtime Layer 绘制目标与草稿取消保护。
 - `XuanYu.Editor.UI/Vm/Map/MapDatasetTypePresentation.cs` — MAP-DOC-A-R2-F2：六类 Dataset 内部 type 到中文 UI 展示值的映射。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Commands.cs` — MAP-DOC-A-R2-F3：创建自动选中、按选择解除注册与选择迁移。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Logging.cs` — MAP-DOC-A-R2-F1：Dataset Create/Register 最终成功/失败用户可见日志。
@@ -1643,6 +1657,12 @@
 - `XuanYu.Editor/MapDocument/MapWorkingStorage.Promotion.cs` — Working Dataset 到正式地图目录的提升事务。
 - `XuanYu.World.Tests/Map/MapWorkingStorageTests.cs` — 工作区创建、提升、孤儿排除和碰撞失败回归。
 - `XuanYu.Editor/MapDocument/MapDatasetDocument.cs` — MAP-DOC-A-R2-C2：`xuanyu-map-dataset` v0.1.0 文档、状态和空 features 领域模型。
+- `XuanYu.Editor/MapDocument/MapDatasetLayerIdProjection.cs` — MAP-DATA-A-R1：DatasetId 到稳定 Region LayerId 的确定性映射。
+- `XuanYu.Editor/MapDocument/MapDatasetRegionBinding.cs` — MAP-DATA-A-R1：Region Dataset 文档 Hydration 到 MapDefinition Layer/Region。
+- `XuanYu.Editor/MapDocument/MapDatasetRuntimeProjection.cs` — MAP-DATA-A-R1：Manifest Dataset Layer 状态到现有运行时地图的无磁盘投影。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.RegionTransaction.cs` — MAP-DATA-A-R1：多 Region Dataset 的暂存、提交与失败恢复保存事务。
+- `XuanYu.Editor/MapDocument/MapRegionDatasetCodec.cs` — MAP-DATA-A-R1：严格 Region Feature JSON 与 MapRegion 的双向编码。
+- `XuanYu.Editor/MapDocument/MapRegionDatasetFeature.cs` — MAP-DATA-A-R1：Region Feature 的强类型中间表示。
 - `XuanYu.Editor/MapDocument/MapDatasetDocumentJson.cs` — MAP-DOC-A-R2-C2：Dataset 五字段严格 JSON DTO 与映射。
 - `XuanYu.Editor/MapDocument/MapDatasetDocumentSerializer.cs` — MAP-DOC-A-R2-C2：Dataset JSON 严格读写与未知字段拒绝。
 - `XuanYu.Editor/MapDocument/MapDatasetDocumentValidator.cs` — MAP-DOC-A-R2-C2：Dataset 身份、type 与空 features 校验。
@@ -1662,6 +1682,7 @@
 - `XuanYu.Editor/MapDocument/MapStorageService.cs` — MAP-A-R1-D2：地图文件存储。候选加载 + 同目录临时文件原子保存，不直接替换任何状态。
 - `XuanYu.Editor/MapEditing/MapEditEvents.cs` — MAP-A-R2-D2：地图编辑低频事件参数（禁止记录鼠标移动/Hover/每帧渲染）。
 - `XuanYu.Editor/MapEditing/MapEditReason.cs` — MAP-A-R2-D2/D3-A1/D4：地图编辑原因（内容变更事件携带）。
+- `XuanYu.Editor/MapEditing/MapEditSession.RuntimeProjection.cs` — MAP-DATA-A-R1：不进入 History 的 Dataset Runtime Layer 投影发布。
 - `XuanYu.Editor/MapEditing/MapEditSession.Regions.cs` — MAP-A-R3-D1：区域正式 Create/Delete 入口，复用地图候选校验、单历史条目与 Undo/Redo 快照恢复。
 - `XuanYu.Editor/MapEditing/MapEditSession.ActiveLayer.cs` — MAP-A-R2-D4：活动区域图层（会话临时状态：不进历史、不设 Dirty、不产生内容变更事件）。
 - `XuanYu.Editor/MapEditing/MapEditSession.Commands.cs` — MAP-A-R2-D2：地图基础属性编辑命令（D2 只实现地图级修改，图层/区域命令属 D4/D5）。
@@ -1931,6 +1952,7 @@
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF1Tests.cs` — MAP-DOC-A-R2-F1：Create 命令、Manifest/文件/Registry/UI 四层一致性与重开恢复测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF2Tests.cs` — MAP-DOC-A-R2-F2：列表刷新、空态、中文展示、失败不增行与重开多 Dataset 测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF3Tests.cs` — MAP-DOC-A-R2-F3：单一选择、自动选中、按选择解除注册、迁移与重开投影测试。
+- `XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionRuntimeTests.cs` — MAP-DATA-A-R1：选择绘制目标、草稿安全、History 隔离与 Save/Reload 端到端回归。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetLayerR3Tests.cs` — Dataset Layer 显隐、锁定、顺序、选择稳定和保存重开测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF1AcceptanceTests.cs` — Dataset Name、左侧满宽和拖拽投影稳定性回归测试。
 - `XuanYu.World.Tests/Map/MapDatasetLayerStateTests.cs` — Dataset Layer 旧 Manifest 兼容、状态校验、Promotion 与底层锁定保护测试。
@@ -1945,6 +1967,8 @@
 - `XuanYu.World.Tests/Map/MapManifestStorageTests.cs` — MAP-DOC-A-R1：map.json 原子保存、读取与失败安全合同。
 - `XuanYu.World.Tests/Map/MapDatasetContractTests.cs` — MAP-DOC-A-R2-C1：Dataset type、ID、source 与唯一性合同测试。
 - `XuanYu.World.Tests/Map/MapDatasetDocumentTests.cs` — MAP-DOC-A-R2-C2：Dataset 文档 schema、round-trip 与空 features 合同测试。
+- `XuanYu.World.Tests/Map/MapRegionDatasetContractTests.cs` — MAP-DATA-A-R1：0.1.0 兼容、0.2.0 Region Feature 严格性测试。
+- `XuanYu.World.Tests/Map/MapRegionDatasetRuntimeTests.cs` — MAP-DATA-A-R1：Hydration、运行时投影、按 Dataset 保存与组失败恢复测试。
 - `XuanYu.World.Tests/Map/MapDatasetStorageContractTests.cs` — MAP-DOC-A-R2-C2：Dataset 存储状态、身份匹配与失败隔离测试。
 - `XuanYu.World.Tests/Map/MapDatasetRegistryFailureTests.cs` — MAP-DOC-A-R2-C3：注册前置失败与跨文件无污染测试。
 - `XuanYu.World.Tests/Map/MapDatasetRegistryLifecycleTests.cs` — MAP-DOC-A-R2-C3：Dataset Registry 生命周期与状态查询测试。

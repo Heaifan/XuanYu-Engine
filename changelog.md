@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.27.0-rz
+MAP-DATA-A-R1 Region Dataset Binding（2026-08-11 23:47:31）：完成 Region Dataset 从 `map.json` 到运行时绘制、保存与重载的闭环，进入 `READY FOR USER ACCEPTANCE`。
+- 变化：Region Dataset 严格支持 0.1.0 空文件兼容与 0.2.0 Feature；DatasetId 确定性投影 Runtime LayerId；选择、锁定、解除注册取消草稿；Rename/Visible/Lock/Drag 只更新 Runtime Projection；父 Layer Visible 与 Dataset Order 控制 Region Overlay。
+- 保存：运行时 Region 按 LayerId 分桶写回对应 `region-*.json`；多 Dataset 临时写入后组提交，提交失败恢复已替换文件；首次向 0.1.0 写 Region 时升级为 0.2.0。
+- 验证：Solution Build `0 Warning / 0 Error`；Core `339/339`、World `1244/1244`、WarCore `22/22`；ARCH-A、5+100、`git diff --check` PASS。新增 Hydration、隔离、草稿安全、Undo/Redo、Save/Reload 与组提交失败回滚回归。
+- 遗留：R1 真机 IPO 验收待用户执行；未扩展 Road、Settlement、Resource、River、TerrainArea、Feature 编辑器、Relation 或 Runtime 大阶段。
+
 ## MAP-DOC-A CLOSED
 MAP-DOC-A-R3 Closeout（2026-08-11 23:16:15）：用户真机验收裁决 R3-F4 PASS，F4-M01～F4-M03 全部通过；MAP-DOC-A 完成并关闭。
 - 交付：Dataset Registry、工作存储、Name/Selection、Dataset-backed Layer Projection、Visible/Lock/Drag、Inspector 与 28/32 DIP UI Spec 收口。

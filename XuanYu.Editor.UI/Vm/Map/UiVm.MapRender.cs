@@ -42,6 +42,14 @@ public sealed partial class UiVm
 
     void OnMapContentChanged(MapContentChangedEventArgs e)
     {
+        if (e.Reason is MapEditReason.Undo or MapEditReason.Redo && _datasetRegistry is not null)
+        {
+            var runtime = MapDatasetRuntimeProjection.Apply(e.CurrentMap, _datasetRegistry.CurrentManifest);
+            if (!runtime.Succeeded || runtime.Value is null) { FooterMessage = runtime.Message; return; }
+            var applied = MapSession.ApplyRuntimeLayerProjection(runtime.Value);
+            if (!applied.IsSuccess) { FooterMessage = applied.Error!.Value.Message; return; }
+            return;
+        }
         if (e.Reason == MapEditReason.NewMap)
             ResetMapManifestFromCurrentMap();
         else if (e.Reason == MapEditReason.Replace && _mapManifestOwner.CurrentPath is null)
