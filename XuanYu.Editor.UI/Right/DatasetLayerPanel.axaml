@@ -13,16 +13,16 @@
       <ListBox.Styles><Style Selector="ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style></ListBox.Styles>
       <ListBox.ItemTemplate>
         <DataTemplate>
-          <Border Classes="datasetLayerRow" PointerPressed="DatasetRow_Pressed" Opacity="{Binding DragOpacity}">
+          <Border x:Name="DatasetLayerRow" Classes="datasetLayerRow" PointerPressed="DatasetRow_Pressed">
             <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="6" HorizontalAlignment="Stretch">
               <Border Classes="datasetLayerSelection" Grid.ColumnSpan="5" IsVisible="{Binding IsSelected}"/>
-              <Border Height="2" Background="{StaticResource Layer.DropLine}" Grid.ColumnSpan="5" VerticalAlignment="Top" IsVisible="{Binding IsDropBefore}" ZIndex="2"/>
+              <Border x:Name="DropLine" Height="2" Background="{StaticResource Layer.DropLine}" Grid.ColumnSpan="5" VerticalAlignment="Top" IsVisible="False" ZIndex="2"/>
               <Border Grid.Column="0" Width="24" Height="28" Background="Transparent" PointerPressed="DragHandle_PointerPressed" ZIndex="1" ToolTip.Tip="拖动调整顺序"><TextBlock Text="拖动" Classes="uiLabel" VerticalAlignment="Center"/></Border>
               <Button Grid.Column="1" Content="{Binding VisibilityActionText}" Click="Visibility_Click" ZIndex="1"/>
               <Button Grid.Column="2" Content="{Binding LockActionText}" Click="Lock_Click" ZIndex="1"/>
               <StackPanel Grid.Column="3" Spacing="1" ZIndex="1">
-                <TextBlock Text="{Binding Type}" Classes="uiValue"/>
-                <TextBlock Text="{Binding Id}" Classes="uiMultiline"/>
+                <TextBlock Text="{Binding Name}" Classes="uiValue"/>
+                <TextBlock Text="{Binding TypeIdText}" Classes="uiMultiline"/>
               </StackPanel>
               <TextBlock Grid.Column="4" Text="{Binding Status}" Classes="uiValue" ZIndex="1"/>
             </Grid>

@@ -16,7 +16,7 @@ public sealed partial class MapDatasetRegistry
 
     public async Task<MapDocumentResult<MapDatasetDescriptor>> CreateAsync(string id, string type)
     {
-        var descriptor = new MapDatasetDescriptor(id, type, $"data/{id}.json");
+        var descriptor = new MapDatasetDescriptor(id, type, $"data/{id}.json", MapDatasetTypes.DisplayName(type));
         var candidate = PrepareCandidate(descriptor);
         if (!candidate.Succeeded || candidate.Value is null) return Fail< MapDatasetDescriptor>(candidate);
         if (!MapDatasetPathPolicy.TryResolve(MapRoot, descriptor.Source, out var datasetPath))

@@ -2,12 +2,12 @@ using XuanYu.Editor.MapDocument;
 
 namespace XuanYu.Editor.UI;
 
-public sealed record MapDatasetRow(string Type, string Id, string Status, string Source, bool IsSelected = false,
-    bool IsVisible = true, bool IsLocked = false, int Order = 0, bool IsDropBefore = false, bool IsDragging = false)
+public sealed record MapDatasetRow(string Name, string Type, string Id, string Status, string Source, bool IsSelected = false,
+    bool IsVisible = true, bool IsLocked = false, int Order = 0)
 {
     public string VisibilityActionText => IsVisible ? "隐藏" : "显示";
     public string LockActionText => IsLocked ? "解锁" : "锁定";
-    public double DragOpacity => IsDragging ? 0.55 : 1.0;
+    public string TypeIdText => $"{Type} · {Id}";
 }
 
 public sealed partial class UiVm
@@ -41,12 +41,14 @@ public sealed partial class UiVm
             ? []
             : await _datasetRegistry.EnumerateAsync();
         _datasetItems = entries.Select(entry => new MapDatasetRow(
+            entry.Descriptor.Name ?? MapDatasetTypePresentation.Display(entry.Descriptor.Type),
             MapDatasetTypePresentation.Display(entry.Descriptor.Type), entry.Descriptor.Id,
             StatusText(entry.Status), entry.Descriptor.Source,
             string.Equals(entry.Descriptor.Id, _datasetSelectedId, StringComparison.OrdinalIgnoreCase),
             State(entry.Descriptor.Id).IsVisible, State(entry.Descriptor.Id).IsLocked, State(entry.Descriptor.Id).Order))
             .OrderBy(item => item.Order).ToArray();
         if (SelectedDataset is null) _datasetSelectedId = null;
+        DatasetNameText = SelectedDataset?.Name ?? "";
         NotifyDatasetProjection();
     }
 

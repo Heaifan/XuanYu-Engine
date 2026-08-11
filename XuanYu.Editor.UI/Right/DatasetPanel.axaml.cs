@@ -12,4 +12,9 @@ public partial class DatasetPanel : UserControl
         if (sender is Button { DataContext: MapDatasetRow row } && DataContext is UiVm vm)
             vm.SelectDataset(row.Id);
     }
+
+    async void ApplyName_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is UiVm vm) await vm.RenameSelectedDatasetAsync();
+    }
 }

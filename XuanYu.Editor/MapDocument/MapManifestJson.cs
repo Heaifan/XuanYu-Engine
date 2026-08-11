@@ -19,8 +19,9 @@ internal sealed record DatasetLayerStateJson(string? DatasetId, bool IsVisible, 
 
 internal sealed record MapDatasetDescriptorJson(
     [property: JsonPropertyName("id"), JsonPropertyOrder(0)] string? Id,
-    [property: JsonPropertyName("type"), JsonPropertyOrder(1)] string? Type,
-    [property: JsonPropertyName("source"), JsonPropertyOrder(2)] string? Source);
+    [property: JsonPropertyName("name"), JsonPropertyOrder(1)] string? Name,
+    [property: JsonPropertyName("type"), JsonPropertyOrder(2)] string? Type,
+    [property: JsonPropertyName("source"), JsonPropertyOrder(3)] string? Source);
 
 internal sealed record MapManifestCoordinateSystemJson(
     [property: JsonPropertyName("type"), JsonPropertyOrder(0)] string? Type,

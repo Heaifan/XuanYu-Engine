@@ -14,7 +14,7 @@ internal static class MapManifestMapper
             manifest.CoordinateSystem.Type,
             manifest.CoordinateSystem.Unit),
         manifest.Datasets.Select(dataset => new MapDatasetDescriptorJson(
-            dataset.Id, dataset.Type, dataset.Source)).ToArray(),
+            dataset.Id, dataset.Name, dataset.Type, dataset.Source)).ToArray(),
         manifest.DatasetLayerStates.Select(state => new DatasetLayerStateJson(
             state.DatasetId, state.IsVisible, state.IsLocked, state.Order)).ToArray(),
         manifest.Assets);
@@ -28,7 +28,7 @@ internal static class MapManifestMapper
             json.CoordinateSystem?.Type ?? "",
             json.CoordinateSystem?.Unit ?? ""),
         json.Datasets?.Select(dataset => new MapDatasetDescriptor(
-            dataset.Id ?? "", dataset.Type ?? "", dataset.Source ?? "")).ToImmutableArray() ?? default,
+            dataset.Id ?? "", dataset.Type ?? "", dataset.Source ?? "", dataset.Name)).ToImmutableArray() ?? default,
         LayerStates(json),
         json.Assets?.ToImmutableArray() ?? default);
 

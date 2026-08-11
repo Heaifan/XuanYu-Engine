@@ -15,22 +15,28 @@
       <TextBlock Text="数据集" Classes="uiLabel"/>
       <TextBlock Grid.Column="1" Text="状态" Classes="uiLabel"/>
     </Grid>
-    <ItemsControl ItemsSource="{Binding DatasetItems}">
-      <ItemsControl.ItemTemplate>
+    <ListBox ItemsSource="{Binding DatasetItems}" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0">
+      <ListBox.Styles><Style Selector="ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style></ListBox.Styles>
+      <ListBox.ItemTemplate>
         <DataTemplate>
           <Button Classes="datasetRow" Click="DatasetRow_Click">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
               <Border Classes="datasetSelection" Grid.ColumnSpan="2" IsVisible="{Binding IsSelected}"/>
               <StackPanel Spacing="1" ZIndex="1">
-                <TextBlock Text="{Binding Type}" Classes="uiValue"/>
-                <TextBlock Text="{Binding Id}" Classes="uiMultiline" ToolTip.Tip="{Binding Source}"/>
+                <TextBlock Text="{Binding Name}" Classes="uiValue"/>
+                <TextBlock Text="{Binding TypeIdText}" Classes="uiMultiline" ToolTip.Tip="{Binding Source}"/>
               </StackPanel>
               <TextBlock Grid.Column="1" Text="{Binding Status}" Classes="uiValue" ZIndex="1"/>
             </Grid>
           </Button>
         </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBlock Text="数据集名称" Classes="uiLabel"/>
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+      <TextBox Text="{Binding DatasetNameText, Mode=TwoWay}" IsEnabled="{Binding HasSelectedDataset}"/>
+      <Button Grid.Column="1" Content="应用名称" Click="ApplyName_Click" IsEnabled="{Binding HasSelectedDataset}"/>
+    </Grid>
     <TextBlock Text="新建数据集" Classes="uiLabel"/>
     <ComboBox ItemsSource="{Binding DatasetTypeOptions}" SelectedItem="{Binding DatasetCreateTypeOption}">
       <ComboBox.ItemTemplate>

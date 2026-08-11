@@ -20,8 +20,8 @@ public sealed class UiMapDatasetContractTests : IDisposable
         Assert.Contains("DatasetEmptyState", DatasetPanel);
         Assert.Contains("新建数据集", DatasetPanel);
         Assert.Contains("DatasetItems", DatasetPanel);
-        Assert.Contains("{Binding Type}", DatasetPanel);
-        Assert.Contains("{Binding Id}", DatasetPanel);
+        Assert.Contains("{Binding Name}", DatasetPanel);
+        Assert.Contains("{Binding TypeIdText}", DatasetPanel);
         Assert.Contains("{Binding Status}", DatasetPanel);
         Assert.Contains("{Binding Display}", DatasetPanel);
         Assert.DoesNotContain("DatasetCreateId", DatasetPanel);

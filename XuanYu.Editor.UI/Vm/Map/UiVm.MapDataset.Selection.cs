@@ -12,6 +12,7 @@ public sealed partial class UiVm
             if (value == _datasetSelectedId) return;
             _datasetSelectedId = value;
             RefreshDatasetSelectionProjection();
+            DatasetNameText = SelectedDataset?.Name ?? "";
         }
     }
 
@@ -41,18 +42,6 @@ public sealed partial class UiVm
         states.Remove(state);
         states.Insert(Math.Clamp(targetIndex, 0, states.Count), state);
         await UpdateLayersAsync(states);
-    }
-
-    public void SetDatasetLayerDropTarget(int? targetIndex)
-    {
-        _datasetItems = _datasetItems.Select((item, index) => item with { IsDropBefore = index == targetIndex }).ToArray();
-        OnPropertyChanged(nameof(DatasetLayerItems));
-    }
-
-    public void SetDatasetLayerDragging(string? id)
-    {
-        _datasetItems = _datasetItems.Select(item => item with { IsDragging = item.Id == id }).ToArray();
-        OnPropertyChanged(nameof(DatasetLayerItems));
     }
 
     async Task UpdateLayersAsync(IEnumerable<XuanYu.Editor.MapDocument.DatasetLayerState> states)

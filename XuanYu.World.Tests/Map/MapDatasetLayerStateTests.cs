@@ -15,6 +15,7 @@ public sealed class MapDatasetLayerStateTests : IDisposable
             """);
         Assert.True(parsed.Succeeded);
         Assert.Equal(new DatasetLayerState("road-a", true, false, 0), parsed.Value!.DatasetLayerStates.Single());
+        Assert.Null(parsed.Value.Datasets.Single().Name);
     }
 
     [Fact]

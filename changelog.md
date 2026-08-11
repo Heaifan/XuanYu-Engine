@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.26.17-fix
+MAP-DOC-A-R3-F1 验收修复（2026-08-11）：R3 真机验收失败后修复左侧 Dataset 行、Dataset Name 与右侧拖拽容器稳定性；R3 保持 OPEN。
+- 根因与修复：左侧 Item 容器未 Stretch；改为全宽 ListBoxItem。拖拽期间原实现替换 `DatasetLayerItems`，导致 ListBox 容器重建与 Pointer Capture 冲突；改为 `DatasetLayerPanel` 内的 Visual-only 半透明和插入线，拖动期间不替换 Projection 或 ItemsSource。
+- Dataset Name：Descriptor 新增可选 `name`；新建使用中文 Type 默认名，旧 Manifest 缺 Name 仍可打开并在 UI fallback 为中文 Type。显式“应用名称”只改 Name，ID、Type、Source、Order、Visible、Locked 不变，保存重开恢复。
+- 验证：F1/R3 focused `8/8 PASS`；World 全量 `1232/1232 PASS`；最终 Solution、Core、WarCore、ARCH-A 与 `git diff --check` 结果见本轮最终门禁。真机专项复验见 `MAP-DOC-A-R3-acceptance.md`。
+- 遗留：等待 F1-M01～F1-M06 后再继续 R3-M07/M08；未创建 Tag、Release、Merge、Rebase 或 Force Push。
+
 ## v0.2.26.16-rz
 MAP-DOC-A-R3 Dataset Layer Editing（2026-08-11）：完成 DatasetLayerState 的可编辑持久化闭环，状态为 `READY FOR USER ACCEPTANCE`。
 - 变化：Manifest 新增唯一 `dataset_layer_state` 投影；旧 R2 Manifest 打开时在内存补 `visible=true`、`locked=false` 和连续 Order，正式保存或 Working Storage Promotion 才写盘。Create/Unregister 同步维护状态；锁定 Dataset 在 UI 与 Registry 两层均拒绝解除注册。
