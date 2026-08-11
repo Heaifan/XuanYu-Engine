@@ -32,6 +32,13 @@ public sealed class UiMapDatasetContractTests : IDisposable
         Assert.Contains("DatasetLayerPanel", LayerDock);
         Assert.Contains("DatasetLayerItems", DatasetLayerPanel);
         Assert.Contains("DatasetRow_Pressed", DatasetLayerPanel);
+        Assert.Contains("DragHandleIcon", DatasetLayerPanel);
+        Assert.Contains("VisibleIcon", DatasetLayerPanel);
+        Assert.Contains("LockedIcon", DatasetLayerPanel);
+        Assert.DoesNotContain("Text=\"拖动\"", DatasetLayerPanel);
+        Assert.DoesNotContain("VisibilityActionText", DatasetLayerPanel);
+        Assert.DoesNotContain("LockActionText", DatasetLayerPanel);
+        Assert.Contains("危险操作", DatasetPanel);
     }
 
     [Fact]
@@ -51,6 +58,20 @@ public sealed class UiMapDatasetContractTests : IDisposable
         Assert.True(await vm.UnregisterDatasetAsync());
         Assert.Empty(vm.DatasetItems);
         Assert.True(File.Exists(datasetPath));
+    }
+
+    [Fact]
+    public async Task Dataset_selection_projects_to_layer_and_inspector()
+    {
+        Directory.CreateDirectory(_directory);
+        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        Assert.True(await vm.SaveMapManifestAsync(Path.Combine(_directory, "map.json")));
+        Assert.True(await vm.CreateDatasetAsync());
+        var row = Assert.Single(vm.DatasetItems);
+        vm.SelectDataset(row.Id);
+        Assert.Equal(row.Id, Assert.Single(vm.DatasetLayerItems, item => item.IsSelected).Id);
+        Assert.Equal(row.Name, vm.InspectorSelectionTitle);
+        Assert.Contains(vm.InspectorFields, field => field.Label == "数据集 ID" && field.Value == row.Id);
     }
 
     public void Dispose()

@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.26.18-fix
+MAP-DOC-A-R3-F2 UI 收口（2026-08-11 21:25:24）：功能验收通过后暂不 Closeout；重排现有 Dataset/Layer 编辑器 UI，等待专项真机验收。
+- 变化：Dataset 行固定 Name 主信息、`Type · ID` 单行辅助信息和右侧状态；Layer 行改用既有 Drag Handle、Visible/Hidden、Locked/Unlocked StreamGeometry 图标，并统一 28 DIP 操作按钮。
+- 选择：`DatasetSelectedId` 继续作为唯一选择源，Dataset 列表、Layer 与最小 Inspector 投影统一消费；检查器显示名称、类型、ID、状态、可见和锁定。
+- 验证：AXAML XML、UI 项目快速构建与完整 Solution Build 均为 `0 Warning / 0 Error`；Core `339/339`、World `1233/1233`、WarCore `22/22` PASS；ARCH-A、5+100、版本一致性与 `git diff --check` PASS。
+- 遗留：等待 `MAP-DOC-A-R3-F2-acceptance.md` 的 UI-M01～UI-R01 真机验收；未进入 MAP-DATA-A，未创建 Tag、Release、Merge、Rebase 或 Force Push。
+
 ## v0.2.26.17-fix
 MAP-DOC-A-R3-F1 验收修复（2026-08-11）：R3 真机验收失败后修复左侧 Dataset 行、Dataset Name 与右侧拖拽容器稳定性；R3 保持 OPEN。
 - 根因与修复：左侧 Item 容器未 Stretch；改为全宽 ListBoxItem。拖拽期间原实现替换 `DatasetLayerItems`，导致 ListBox 容器重建与 Pointer Capture 冲突；改为 `DatasetLayerPanel` 内的 Visual-only 半透明和插入线，拖动期间不替换 Projection 或 ItemsSource。

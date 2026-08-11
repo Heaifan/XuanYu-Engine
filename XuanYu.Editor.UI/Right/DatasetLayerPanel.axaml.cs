@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 
 namespace XuanYu.Editor.UI;
@@ -13,6 +14,8 @@ public partial class DatasetLayerPanel : UserControl
         if (sender is Border { DataContext: MapDatasetRow row } && DataContext is UiVm vm)
             vm.SelectDataset(row.Id);
     }
+
+    void DatasetAction_PointerPressed(object? sender, PointerPressedEventArgs e) => e.Handled = true;
 
     async void Visibility_Click(object? sender, RoutedEventArgs e)
     {

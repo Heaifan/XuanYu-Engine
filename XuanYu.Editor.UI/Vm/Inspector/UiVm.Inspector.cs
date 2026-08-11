@@ -6,6 +6,9 @@ public sealed partial class UiVm
 {
     IReadOnlyList<InspectorFieldRow> BuildInspectorFields()
     {
+        if (SelectedDataset is { } dataset)
+            return [new("名称", dataset.Name), new("类型", dataset.Type), new("数据集 ID", dataset.Id),
+                new("状态", dataset.Status), new("可见", dataset.IsVisible ? "是" : "否"), new("锁定", dataset.IsLocked ? "是" : "否")];
         if (!TrySelectedEntityKey(out var key) || !_sceneState.TryGetEntity(key, out var entity))
             return UiText.ProjectInspectorFields;
 

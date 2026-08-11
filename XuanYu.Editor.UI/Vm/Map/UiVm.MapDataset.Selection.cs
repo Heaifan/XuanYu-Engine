@@ -70,5 +70,10 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(SelectedDataset));
         OnPropertyChanged(nameof(HasSelectedDataset));
         OnPropertyChanged(nameof(CanUnregisterDataset));
+        OnPropertyChanged(nameof(InspectorSelectionTitle));
+        OnPropertyChanged(nameof(InspectorSelectionSubtitle));
+        OnPropertyChanged(nameof(HasInspectorSelection));
+        OnPropertyChanged(nameof(IsInspectorEmpty));
+        OnPropertyChanged(nameof(InspectorFields));
     }
 }

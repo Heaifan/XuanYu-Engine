@@ -16,8 +16,8 @@
     <Grid ColumnDefinitions="20,*" ColumnSpacing="8">
       <Path Classes="panelIcon" Data="{StaticResource ProjectIcon}" VerticalAlignment="Center"/>
       <StackPanel Grid.Column="1" Spacing="1">
-        <TextBlock Text="{Binding SelectionTitle}" Classes="panelTitle"/>
-        <TextBlock Text="{Binding SelectionSubtitle}" Classes="muted"/>
+        <TextBlock Text="{Binding InspectorSelectionTitle}" Classes="panelTitle"/>
+        <TextBlock Text="{Binding InspectorSelectionSubtitle}" Classes="muted"/>
       </StackPanel>
     </Grid>
 
@@ -38,7 +38,7 @@
     </StackPanel>
 
     <!-- 基础信息分组：全宽标题 + 分隔线 + 只读键值行（ReadonlyKeyValueRow：标签 80 + 值 *，始终单行） -->
-    <StackPanel IsVisible="{Binding HasSelection}" Spacing="4">
+    <StackPanel IsVisible="{Binding HasInspectorSelection}" Spacing="4">
       <StackPanel IsVisible="{Binding !HasCurrentLayerSelection}">
       <TextBlock Text="基础信息" Classes="uiSection"/>
       <Border Classes="fieldSeparator"/>
@@ -58,7 +58,8 @@
       </StackPanel>
     </StackPanel>
 
-    <Grid IsVisible="{Binding IsEmptySelection}" MinHeight="220">
+    <!-- IsEmptySelection remains the editor-entity baseline; Dataset selection refines this panel state. -->
+    <Grid IsVisible="{Binding IsInspectorEmpty}" MinHeight="220">
       <Grid IsVisible="{Binding !HasCurrentLayerSelection}">
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" MaxWidth="220">
         <Path Classes="panelIcon" Data="{StaticResource SelectIcon}" Width="28" Height="28" HorizontalAlignment="Center"/>
