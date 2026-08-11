@@ -23,7 +23,7 @@
 
     <StackPanel IsVisible="{Binding IsMapEditMode}" Spacing="6">
       <StackPanel IsVisible="{Binding !HasCurrentLayerSelection}">
-      <local:MapFormPanel/>
+      <StackPanel IsVisible="{Binding !HasSelectedDataset}"><local:MapFormPanel/></StackPanel>
       </StackPanel>
     </StackPanel>
 
@@ -40,7 +40,7 @@
     <!-- 基础信息分组：全宽标题 + 分隔线 + 只读键值行（ReadonlyKeyValueRow：标签 80 + 值 *，始终单行） -->
     <StackPanel IsVisible="{Binding HasInspectorSelection}" Spacing="4">
       <StackPanel IsVisible="{Binding !HasCurrentLayerSelection}">
-      <TextBlock Text="基础信息" Classes="uiSection"/>
+      <TextBlock Text="{Binding InspectorSectionTitle}" Classes="uiSection"/>
       <Border Classes="fieldSeparator"/>
       <ItemsControl ItemsSource="{Binding InspectorFields}">
         <ItemsControl.ItemTemplate>

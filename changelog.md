@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.19-fix
+MAP-DOC-A-R3-F3 UI Spec Compliance Rework（2026-08-11 22:00:35）：用户真机裁定 R3-F2 为 FAIL，R3 保持 OPEN；按 UI Spec 的 28/32 DIP 单行合同重做 Dataset/Layer，并修正 Dataset Inspector 优先级。
+- 变化：Dataset 仅显示 Name + Status；Layer 仅显示 Drag / Name / Status / Visible / Lock，并复用正式 `LayerPanel.States.axaml` 开关；选中 Dataset 时隐藏 MapFormPanel，显示六项 Dataset 属性及“数据集属性”。
+- 验证：AXAML/SVG XML、静态合同与 Headless 300 DIP Bounds `4/4 PASS`；Solution Build `0 Warning / 0 Error`；Core `339/339`、World `1237/1237`、WarCore `22/22` PASS；ARCH-A、5+100、版本一致性与 `git diff --check` PASS。
+- 遗留：等待 `MAP-DOC-A-R3-F3-acceptance.md` 的 F3-M01～F3-M08 真机验收；未进入 MAP-DATA-A。
+
 ## v0.2.26.18-fix
 MAP-DOC-A-R3-F2 UI 收口（2026-08-11 21:25:24）：功能验收通过后暂不 Closeout；重排现有 Dataset/Layer 编辑器 UI，等待专项真机验收。
 - 变化：Dataset 行固定 Name 主信息、`Type · ID` 单行辅助信息和右侧状态；Layer 行改用既有 Drag Handle、Visible/Hidden、Locked/Unlocked StreamGeometry 图标，并统一 28 DIP 操作按钮。

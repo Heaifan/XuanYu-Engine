@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="230" viewBox="0 0 900 230">
+  <rect width="900" height="230" fill="#F8FAFB"/>
+  <text x="30" y="36" font-size="20" fill="#243744">R3-F3 · UI Spec Compliance Rework</text>
+  <text x="30" y="62" font-size="13" fill="#5D6F7C">列表负责选择 · Layer 负责状态 · Inspector 负责详情</text>
+  <rect x="35" y="98" width="215" height="72" rx="6" fill="#EAF3F6" stroke="#B9C7D0"/>
+  <text x="142" y="124" text-anchor="middle" font-size="14" fill="#243744">Dataset List · 28 DIP</text>
+  <text x="142" y="147" text-anchor="middle" font-size="12" fill="#326F8A">Name + Status · 单行</text>
+  <path d="M250 134H335" stroke="#8196A2" stroke-width="2"/>
+  <rect x="335" y="98" width="230" height="72" rx="6" fill="#EDF7F1" stroke="#9ABCA8"/>
+  <text x="450" y="124" text-anchor="middle" font-size="14" fill="#243744">Dataset Layer · 32 DIP</text>
+  <text x="450" y="147" text-anchor="middle" font-size="12" fill="#39806A">Drag · Name · Status · Eye · Lock</text>
+  <path d="M565 134H650" stroke="#8196A2" stroke-width="2"/>
+  <rect x="650" y="98" width="215" height="72" rx="6" fill="#FFF6DF" stroke="#D4BB77"/>
+  <text x="757" y="124" text-anchor="middle" font-size="14" fill="#243744">Dataset Inspector</text>
+  <text x="757" y="147" text-anchor="middle" font-size="12" fill="#93651F">完整 Type / ID / State</text>
+  <text x="30" y="205" font-size="12" fill="#5D6F7C">F2 FAIL → F3 重做 → 真机 PASS → R3 Closeout；此前不进入 MAP-DATA-A</text>
+</svg>

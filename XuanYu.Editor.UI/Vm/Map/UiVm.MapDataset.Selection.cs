@@ -74,6 +74,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InspectorSelectionSubtitle));
         OnPropertyChanged(nameof(HasInspectorSelection));
         OnPropertyChanged(nameof(IsInspectorEmpty));
+        OnPropertyChanged(nameof(InspectorSectionTitle));
         OnPropertyChanged(nameof(InspectorFields));
     }
 }
