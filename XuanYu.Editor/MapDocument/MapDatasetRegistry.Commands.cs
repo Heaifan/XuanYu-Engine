@@ -49,28 +49,13 @@ public sealed partial class MapDatasetRegistry
         return MapDocumentResult<MapDatasetDescriptor>.Ok(descriptor);
     }
 
-    public async Task<MapDocumentResult<string>> UnregisterAsync(string id)
-    {
-        var descriptor = CurrentManifest.Datasets.FirstOrDefault(
-            item => string.Equals(item.Id, id, StringComparison.OrdinalIgnoreCase));
-        if (descriptor is null) return MapDocumentResult<string>.Fail("NotFound", "Dataset 未注册。", "Validate");
-        var candidate = CurrentManifest with
-        {
-            Datasets = CurrentManifest.Datasets.Where(item => item != descriptor).ToImmutableArray()
-        };
-        var valid = MapManifestValidator.Validate(candidate);
-        if (!valid.Succeeded) return MapDocumentResult<string>.Fail(valid.ErrorCode, valid.Message, valid.Stage, valid.Detail);
-        var saved = await _manifestStorage.SaveAsync(MapPath, candidate);
-        if (!saved.Succeeded) return saved;
-        CurrentManifest = candidate;
-        return MapDocumentResult<string>.Ok(id);
-    }
-
     MapDocumentResult<MapManifest> PrepareCandidate(MapDatasetDescriptor descriptor)
     {
         var candidate = CurrentManifest with
         {
-            Datasets = CurrentManifest.Datasets.Append(descriptor).ToImmutableArray()
+            Datasets = CurrentManifest.Datasets.Append(descriptor).ToImmutableArray(),
+            DatasetLayerStates = CurrentManifest.DatasetLayerStates.Append(
+                DatasetLayerState.CreateDefault(descriptor.Id, CurrentManifest.DatasetLayerStates.Length)).ToImmutableArray()
         };
         var valid = MapManifestValidator.Validate(candidate);
         return valid.Succeeded

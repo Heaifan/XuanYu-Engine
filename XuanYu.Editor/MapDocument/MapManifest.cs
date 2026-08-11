@@ -11,6 +11,7 @@ public sealed record MapManifest(
     string Name,
     MapManifestCoordinateSystem CoordinateSystem,
     ImmutableArray<MapDatasetDescriptor> Datasets,
+    ImmutableArray<DatasetLayerState> DatasetLayerStates,
     ImmutableArray<System.Text.Json.JsonElement> Assets)
 {
     public const string CurrentFormat = "xuanyu-map";
@@ -23,6 +24,7 @@ public sealed record MapManifest(
         name,
         MapManifestCoordinateSystem.LocalCartesianMeter,
         ImmutableArray<MapDatasetDescriptor>.Empty,
+        ImmutableArray<DatasetLayerState>.Empty,
         ImmutableArray<System.Text.Json.JsonElement>.Empty);
 
     public static MapManifest FromMap(MapDefinition map) => CreateNew(

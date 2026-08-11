@@ -7,7 +7,8 @@ public sealed class MapDatasetContractTests
 {
     static MapManifest Valid() => MapManifest.CreateNew("south-china", "华南") with
     {
-        Datasets = ImmutableArray.Create(new MapDatasetDescriptor("roads", "road", "data/roads.json"))
+        Datasets = ImmutableArray.Create(new MapDatasetDescriptor("roads", "road", "data/roads.json")),
+        DatasetLayerStates = [new("roads", true, false, 0)]
     };
 
     [Fact]
@@ -15,10 +16,12 @@ public sealed class MapDatasetContractTests
     {
         var descriptors = MapDatasetTypes.All.Select((type, index) =>
             new MapDatasetDescriptor($"dataset-{index}", type, $"data/dataset-{index}.json"));
+        var datasets = descriptors.Append(new MapDatasetDescriptor("roads-2", "road", "data/roads-2.json"))
+            .ToImmutableArray();
         var result = MapManifestValidator.Validate(Valid() with
         {
-            Datasets = descriptors.Append(new MapDatasetDescriptor("roads-2", "road", "data/roads-2.json"))
-                .ToImmutableArray()
+            Datasets = datasets,
+            DatasetLayerStates = datasets.Select((item, index) => new DatasetLayerState(item.Id, true, false, index)).ToImmutableArray()
         });
         Assert.True(result.Succeeded);
     }
@@ -28,13 +31,15 @@ public sealed class MapDatasetContractTests
     {
         Assert.Equal("InvalidDatasetId", MapManifestValidator.Validate(Valid() with
         {
-            Datasets = ImmutableArray.Create(new MapDatasetDescriptor("Roads.Data", "road", "data/x.json"))
+            Datasets = ImmutableArray.Create(new MapDatasetDescriptor("Roads.Data", "road", "data/x.json")),
+            DatasetLayerStates = [new("Roads.Data", true, false, 0)]
         }).ErrorCode);
         Assert.Equal("DuplicateDatasetId", MapManifestValidator.Validate(Valid() with
         {
             Datasets = ImmutableArray.Create(
                 new MapDatasetDescriptor("roads", "road", "data/a.json"),
-                new MapDatasetDescriptor("roads", "river", "data/b.json"))
+                new MapDatasetDescriptor("roads", "river", "data/b.json")),
+            DatasetLayerStates = [new("roads", true, false, 0), new("roads", true, false, 1)]
         }).ErrorCode);
     }
 
@@ -43,12 +48,14 @@ public sealed class MapDatasetContractTests
     {
         Assert.Equal("InvalidDatasetType", MapManifestValidator.Validate(Valid() with
         {
-            Datasets = ImmutableArray.Create(new MapDatasetDescriptor("x", "building", "data/x.json"))
+            Datasets = ImmutableArray.Create(new MapDatasetDescriptor("x", "building", "data/x.json")),
+            DatasetLayerStates = [new("x", true, false, 0)]
         }).ErrorCode);
         foreach (var source in new[] { "C:/x.json", "/x.json", "data/../x.json", "data\\x.json" })
             Assert.Equal("InvalidDatasetSource", MapManifestValidator.Validate(Valid() with
             {
-                Datasets = ImmutableArray.Create(new MapDatasetDescriptor("x", "road", source))
+                Datasets = ImmutableArray.Create(new MapDatasetDescriptor("x", "road", source)),
+                DatasetLayerStates = [new("x", true, false, 0)]
             }).ErrorCode);
     }
 

@@ -11,8 +11,11 @@ internal sealed record MapManifestJson(
     [property: JsonPropertyName("coordinate_system"), JsonPropertyOrder(4)] MapManifestCoordinateSystemJson? CoordinateSystem,
     [property: JsonPropertyName("datasets"), JsonPropertyOrder(5)]
     IReadOnlyList<MapDatasetDescriptorJson>? Datasets,
-    [property: JsonPropertyName("assets"), JsonPropertyOrder(6)]
+    [property: JsonPropertyName("dataset_layer_state"), JsonPropertyOrder(6)] IReadOnlyList<DatasetLayerStateJson>? DatasetLayerStates,
+    [property: JsonPropertyName("assets"), JsonPropertyOrder(7)]
     IReadOnlyList<System.Text.Json.JsonElement>? Assets);
+
+internal sealed record DatasetLayerStateJson(string? DatasetId, bool IsVisible, bool IsLocked, int Order);
 
 internal sealed record MapDatasetDescriptorJson(
     [property: JsonPropertyName("id"), JsonPropertyOrder(0)] string? Id,

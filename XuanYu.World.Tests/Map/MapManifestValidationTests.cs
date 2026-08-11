@@ -44,7 +44,8 @@ public sealed class MapManifestValidationTests
     {
         var manifest = Valid() with
         {
-            Datasets = ImmutableArray.Create(new MapDatasetDescriptor("future", "region", "data/future.json"))
+            Datasets = ImmutableArray.Create(new MapDatasetDescriptor("future", "region", "data/future.json")),
+            DatasetLayerStates = [new("future", true, false, 0)]
         };
         Assert.True(MapManifestValidator.Validate(manifest).Succeeded);
         Assert.Equal("future", manifest.Datasets[0].Id);

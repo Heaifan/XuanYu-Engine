@@ -4,26 +4,31 @@
              x:Class="XuanYu.Editor.UI.DatasetLayerPanel"
              x:DataType="local:UiVm">
   <UserControl.Styles>
-    <Style Selector="Button.datasetLayerRow"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="4,5"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style>
+    <Style Selector="Border.datasetLayerRow"><Setter Property="Background" Value="Transparent"/><Setter Property="Padding" Value="4,5"/><Setter Property="HorizontalAlignment" Value="Stretch"/></Style>
     <Style Selector="Border.datasetLayerSelection"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Accent}"/><Setter Property="BorderThickness" Value="2,0,0,0"/></Style>
   </UserControl.Styles>
-  <Grid RowDefinitions="Auto,*" Margin="0,4,0,0">
+  <Grid RowDefinitions="Auto,*" Margin="0,4,0,0" HorizontalAlignment="Stretch">
     <TextBlock Grid.Row="0" Text="{Binding DatasetLayerEmptyState}" Classes="uiMultiline" TextWrapping="Wrap" IsVisible="{Binding IsDatasetEmpty}"/>
-    <ItemsControl Grid.Row="1" ItemsSource="{Binding DatasetLayerItems}" IsVisible="{Binding !IsDatasetEmpty}">
-      <ItemsControl.ItemTemplate>
+    <ListBox Grid.Row="1" x:Name="DatasetLayerList" ItemsSource="{Binding DatasetLayerItems}" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" IsVisible="{Binding !IsDatasetEmpty}">
+      <ListBox.Styles><Style Selector="ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style></ListBox.Styles>
+      <ListBox.ItemTemplate>
         <DataTemplate>
-          <Button Classes="datasetLayerRow" Click="DatasetRow_Click">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
-              <Border Classes="datasetLayerSelection" Grid.ColumnSpan="2" IsVisible="{Binding IsSelected}"/>
-              <StackPanel Spacing="1" ZIndex="1">
+          <Border Classes="datasetLayerRow" PointerPressed="DatasetRow_Pressed" Opacity="{Binding DragOpacity}">
+            <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="6" HorizontalAlignment="Stretch">
+              <Border Classes="datasetLayerSelection" Grid.ColumnSpan="5" IsVisible="{Binding IsSelected}"/>
+              <Border Height="2" Background="{StaticResource Layer.DropLine}" Grid.ColumnSpan="5" VerticalAlignment="Top" IsVisible="{Binding IsDropBefore}" ZIndex="2"/>
+              <Border Grid.Column="0" Width="24" Height="28" Background="Transparent" PointerPressed="DragHandle_PointerPressed" ZIndex="1" ToolTip.Tip="拖动调整顺序"><TextBlock Text="拖动" Classes="uiLabel" VerticalAlignment="Center"/></Border>
+              <Button Grid.Column="1" Content="{Binding VisibilityActionText}" Click="Visibility_Click" ZIndex="1"/>
+              <Button Grid.Column="2" Content="{Binding LockActionText}" Click="Lock_Click" ZIndex="1"/>
+              <StackPanel Grid.Column="3" Spacing="1" ZIndex="1">
                 <TextBlock Text="{Binding Type}" Classes="uiValue"/>
                 <TextBlock Text="{Binding Id}" Classes="uiMultiline"/>
               </StackPanel>
-              <TextBlock Grid.Column="1" Text="{Binding Status}" Classes="uiValue" ZIndex="1"/>
+              <TextBlock Grid.Column="4" Text="{Binding Status}" Classes="uiValue" ZIndex="1"/>
             </Grid>
-          </Button>
+          </Border>
         </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+      </ListBox.ItemTemplate>
+    </ListBox>
   </Grid>
 </UserControl>

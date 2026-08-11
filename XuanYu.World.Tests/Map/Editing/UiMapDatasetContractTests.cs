@@ -31,7 +31,7 @@ public sealed class UiMapDatasetContractTests : IDisposable
         Assert.Contains("local:DatasetPanel", EditorPanel);
         Assert.Contains("DatasetLayerPanel", LayerDock);
         Assert.Contains("DatasetLayerItems", DatasetLayerPanel);
-        Assert.Contains("DatasetRow_Click", DatasetLayerPanel);
+        Assert.Contains("DatasetRow_Pressed", DatasetLayerPanel);
     }
 
     [Fact]

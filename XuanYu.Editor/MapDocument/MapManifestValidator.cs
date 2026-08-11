@@ -40,6 +40,18 @@ public static partial class MapManifestValidator
             if (!ids.Add(dataset.Id))
                 return Fail("DuplicateDatasetId", "Dataset ID 必须大小写不敏感唯一。", "datasets.id");
         }
+        if (manifest.DatasetLayerStates.IsDefault || manifest.DatasetLayerStates.Length != manifest.Datasets.Length)
+            return Fail("InvalidDatasetLayerState", "Dataset Layer State 必须与 Dataset 一一对应。", "dataset_layer_state");
+        var stateIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var orders = new HashSet<int>();
+        foreach (var state in manifest.DatasetLayerStates)
+        {
+            if (!ids.Contains(state.DatasetId) || !stateIds.Add(state.DatasetId) ||
+                state.Order < 0 || !orders.Add(state.Order))
+                return Fail("InvalidDatasetLayerState", "Dataset Layer State 引用或顺序无效。", "dataset_layer_state");
+        }
+        if (!orders.SetEquals(Enumerable.Range(0, manifest.DatasetLayerStates.Length)))
+            return Fail("InvalidDatasetLayerState", "Dataset Layer State 顺序必须连续。", "dataset_layer_state");
         return MapDocumentResult<MapManifest>.Ok(manifest);
     }
 

@@ -1410,8 +1410,9 @@
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml.cs` — MAP-A-R2-D4：图层面板（左侧"图层"页签内容，纯绑定；无 code-behind 逻辑）。
 - `XuanYu.Editor.UI/Right/DatasetPanel.axaml` — MAP-DOC-A-R2-F3：Dataset 空态、中文类型、可选中列表与按选择解除注册入口。
 - `XuanYu.Editor.UI/Right/DatasetPanel.axaml.cs` — MAP-DOC-A-R2-F3：Dataset 行点击转发到唯一 SelectedDatasetId 选择状态。
-- `XuanYu.Editor.UI/Right/DatasetLayerPanel.axaml` — MAP-DOC-A-R2-F3：右侧 Dataset-backed Layer Projection 列表与选中态。
-- `XuanYu.Editor.UI/Right/DatasetLayerPanel.axaml.cs` — MAP-DOC-A-R2-F3：右侧投影行点击转发 code-behind。
+- `XuanYu.Editor.UI/Right/DatasetLayerPanel.axaml` — Dataset Layer Dock 的满宽行、状态操作、插入线与拖动热区。
+- `XuanYu.Editor.UI/Right/DatasetLayerPanel.axaml.cs` — Dataset Layer 行选择和显隐/锁定命令转发。
+- `XuanYu.Editor.UI/Right/DatasetLayerPanel.Drag.cs` — 右侧 Dataset Layer 的阈值拖拽、预览和插入目标计算。
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs` — MAP-A-R1-D5-A：地图编辑器面板（二级页签宿主：地图/图层/环境，每页独立滚动）。
 - `XuanYu.Editor.UI/Right/MapIdDisplayFormat.cs` — D4：MapId 显示压缩纯逻辑（>18 字符「前 8+…+后 6」）。
@@ -1627,6 +1628,7 @@
 - `XuanYu.Editor/MapDocument/MapDocumentResult.cs` — MAP-A-R1-D2：地图操作结构化结果（对齐 SceneDocumentResult 模式，语义独立）。
 - `XuanYu.Editor/MapDocument/MapDocumentValidator.cs` — MAP-A-R1-D2：地图文档 DTO（.xymap v1）严格校验。领域合法性（尺寸范围）单一事实源在 World.MapDefinitionValidator。
 - `XuanYu.Editor/MapDocument/MapDatasetDescriptor.cs` — MAP-DOC-A-R2-C1：Dataset Descriptor 与六类允许 type 常量。
+- `XuanYu.Editor/MapDocument/DatasetLayerState.cs` — Dataset 图层显隐、锁定和连续顺序的唯一状态模型。
 - `XuanYu.Editor/MapDocument/MapWorkingStorage.cs` — 未保存地图的内部工作 Manifest 生命周期。
 - `XuanYu.Editor/MapDocument/MapWorkingStorage.Promotion.cs` — Working Dataset 到正式地图目录的提升事务。
 - `XuanYu.World.Tests/Map/MapWorkingStorageTests.cs` — 工作区创建、提升、孤儿排除和碰撞失败回归。
@@ -1637,7 +1639,9 @@
 - `XuanYu.Editor/MapDocument/MapDatasetPathPolicy.cs` — MAP-DOC-A-R2-C1：Dataset source 的 map-root-relative `data/` 安全路径策略。
 - `XuanYu.Editor/MapDocument/MapDatasetStorageService.cs` — MAP-DOC-A-R2-C2：Dataset 原子保存与 Normal/Missing/Invalid 隔离加载。
 - `XuanYu.Editor/MapDocument/MapDatasetRegistry.cs` — MAP-DOC-A-R2-C3：Manifest-backed Dataset Registry 状态与 map 根路径。
-- `XuanYu.Editor/MapDocument/MapDatasetRegistry.Commands.cs` — MAP-DOC-A-R2-C3：Create/Register/Unregister 生命周期命令。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.Commands.cs` — Dataset Create/Register 生命周期命令。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.LayerStates.cs` — Dataset Layer State 的内存更新与连续顺序归一化。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.Unregister.cs` — Dataset 解除注册、锁定保护和状态归一化。
 - `XuanYu.Editor/MapDocument/MapDatasetIdGenerator.cs` — MAP-DOC-A-R2-F2：自动 Dataset ID 生成、六位 hex 后缀与有限重试合同。
 - `XuanYu.Editor/MapDocument/MapDatasetRegistry.Query.cs` — MAP-DOC-A-R2-C3：Resolve/Enumerate/FindById 查询与单项状态投影。
 - `XuanYu.Editor/MapDocument/MapDatasetRegistry.Transaction.cs` — MAP-DOC-A-R2-C3：Dataset 创建的双文件临时写入、提交与恢复。
@@ -1916,6 +1920,8 @@
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF1Tests.cs` — MAP-DOC-A-R2-F1：Create 命令、Manifest/文件/Registry/UI 四层一致性与重开恢复测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF2Tests.cs` — MAP-DOC-A-R2-F2：列表刷新、空态、中文展示、失败不增行与重开多 Dataset 测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF3Tests.cs` — MAP-DOC-A-R2-F3：单一选择、自动选中、按选择解除注册、迁移与重开投影测试。
+- `XuanYu.World.Tests/Map/Editing/UiMapDatasetLayerR3Tests.cs` — Dataset Layer 显隐、锁定、顺序、选择稳定和保存重开测试。
+- `XuanYu.World.Tests/Map/MapDatasetLayerStateTests.cs` — Dataset Layer 旧 Manifest 兼容、状态校验、Promotion 与底层锁定保护测试。
 - `XuanYu.World.Tests/Map/MapBoundsTests.cs` — MAP-A-R2-D1：有限地图边界合同（中心原点、闭区间、尺寸变化同步）。
 - `XuanYu.World.Tests/Map/MapCoordinateValidationTests.cs` — MAP-A-R1-D2：坐标合同 / 图层引用 / schema / 名称校验。
 - `XuanYu.World.Tests/Map/MapDefaultMapTests.cs` — MAP-A-R2-D1-F1：默认地图工厂合同（完整聚合 + DTO 默认值一致）。

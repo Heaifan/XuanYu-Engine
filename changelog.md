@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.26.16-rz
+MAP-DOC-A-R3 Dataset Layer Editing（2026-08-11）：完成 DatasetLayerState 的可编辑持久化闭环，状态为 `READY FOR USER ACCEPTANCE`。
+- 变化：Manifest 新增唯一 `dataset_layer_state` 投影；旧 R2 Manifest 打开时在内存补 `visible=true`、`locked=false` 和连续 Order，正式保存或 Working Storage Promotion 才写盘。Create/Unregister 同步维护状态；锁定 Dataset 在 UI 与 Registry 两层均拒绝解除注册。
+- 交互：右侧 Dataset 图层行满宽、整行选中态，显隐/锁定不改变选择；右侧独有阈值拖拽、半透明预览与插入线，左右列表共同按 Layer State.Order 投影。
+- 验证：R3 focused `6/6 PASS`；完整解决方案、Core/World/WarCore 测试、ARCH-A 与 `git diff --check` 结果见本轮最终门禁。真机 IPO 见 `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-acceptance.md`。
+- 遗留：等待 R3-M01～R3-M08 真机验收；未创建 Tag、Release、Merge、Rebase 或 Force Push。
+
 ## MAP-DOC-A-R2-CLOSEOUT
 MAP-DOC-A-R2（2026-08-11）：用户真机确认 F4 核心路径成立——未保存地图可连续创建 Dataset，左右 Dataset Projection 与选择同步，解除注册后两侧同步移除，窗口仍显示未命名场景。
 - 结论：R2 的 Create、自动 ID、中文 Type、Selection、Unregister、Working Storage 与首次保存 Promotion 闭环完成，状态为 `CLOSED`。
