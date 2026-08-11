@@ -22,7 +22,7 @@
 EDITOR-A-R1 Workspace Contract（2026-08-11）：从已验证的 MAP-A 战略收口远端 `3dd091f` 创建 `feat/EDITOR-A-workspace`，在纯 `XuanYu.Editor` 层建立 Map/Region Workspace 身份、定义、唯一 Manager 与无副作用切换合同。
 - 变化：切换结果要求结束临时 Tool、保留既有 World/Camera/兼容 Selection、回到 Select；新增 8 项聚焦回归，锁定双向/重复切换、无 Region Drawing Tool、无 World/Camera 副本与无 Vulkan 引用。未实现 Workspace UI、Region Drawing、Renderer/Picking 重写或 Schema。
 - 验证：定向 Build 0 Warning / 0 Error；EDITOR-A-R1 focused tests 8/8 PASS；最终 Solution Build 0 Warning / 0 Error，Core.Tests 339/339、World.Tests 1123/1123、WarCore.Tests 22/22 PASS；ARCH-A、5+100、宪法 2.2、四处版本一致性与 diff-check PASS。
-- Hash：`4cabf42`（Workspace Contract、8 项回归、版本同步与 Transition 文档）。
+- Hash：`4cabf42`（Workspace Contract、8 项回归、版本同步与 Transition 文档）；`2b90a46`（用户验收证据）；Push 与 Remote HEAD 核验同轮完成。
 
 ## MAP-A-STRATEGIC-CLOSEOUT
 MAP-A → EDITOR-A Transition Round 阶段 A（2026-08-11）：保留 `MAP-A-R3-D2-F1 = FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN` 的真实事实，将旧 Region Drawing 产品路径战略终止为 `SUPERSEDED · NOT ACCEPTED`，迁移目标 `REGION-A`；不会把旧 F1 改写为 PASS 或 CLOSED。
