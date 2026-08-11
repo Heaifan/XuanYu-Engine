@@ -33,23 +33,35 @@ public sealed partial class UiVm
         }
     }
 
-    public async Task<bool> UnregisterDatasetAsync(string? id = null)
+    public async Task<bool> UnregisterDatasetAsync()
     {
         if (_datasetRegistry is null) return DatasetFailed("当前没有已打开的地图 Manifest。", false);
-        var result = await _datasetRegistry.UnregisterAsync(id ?? DatasetSelectedId);
+        var targetId = DatasetSelectedId;
+        if (string.IsNullOrWhiteSpace(targetId)) return DatasetFailed("请先选择要解除注册的数据集。", false);
+        var target = targetId!;
+        var removedIndex = _datasetItems.ToList().FindIndex(item => item.Id == target);
+        var result = await _datasetRegistry.UnregisterAsync(target);
         if (!result.Succeeded) return DatasetFailed(result.Message, false);
         _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
         FooterMessage = "数据集已解除注册，文件未删除。";
-        LogDatasetOutcome(true, "解除注册", id ?? DatasetSelectedId, "", "");
+        LogDatasetOutcome(true, "解除注册", target, "", "");
         await RefreshDatasetProjectionAsync();
+        DatasetSelectedId = NextDatasetId(removedIndex);
         RaiseMapDocumentChanged();
         return true;
+    }
+
+    string? NextDatasetId(int removedIndex)
+    {
+        if (_datasetItems.Count == 0) return null;
+        var index = Math.Min(Math.Max(removedIndex, 0), _datasetItems.Count - 1);
+        return _datasetItems[index].Id;
     }
 
     bool DatasetFailed(string message, bool create = true)
     {
         FooterMessage = message;
-        LogDatasetOutcome(false, create ? "创建" : "解除注册", DatasetSelectedId, DatasetCreateType, message);
+        LogDatasetOutcome(false, create ? "创建" : "解除注册", DatasetSelectedId ?? "", DatasetCreateType, message);
         RaiseMapDocumentChanged();
         return false;
     }

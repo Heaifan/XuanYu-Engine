@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.26.14-fix
+MAP-DOC-A-R2-F3 Dataset Selection + Layer Projection Sync（2026-08-11 17:08:16）：补齐 Dataset 单一选择合同，并将右侧“图层”接入 Dataset 投影。
+- 根因：Dataset 列表只有展示投影，没有可点击的 `SelectedDatasetId`；重开后解除注册没有目标，失败反馈又复用了新建表单 type。
+- 变化：左侧 Dataset 行与右侧 Dataset-backed Layer 行共用 `SelectedDatasetId`；创建后自动选中新项；解除注册无选择时禁用并 fail-closed，成功后按下一项优先迁移；右侧不引入 Layer schema、持久化、显隐、锁定、拖拽或排序。
+- 验证：Dataset F3 focused `6/6 PASS`，Dataset F1/F2/F3 focused `15/15 PASS`；Solution Build `0 Warning / 0 Error`；Core.Tests `339/339`、WarCore.Tests `22/22`、World.Tests `1221/1221`；ARCH-A、5+100、版本一致性、`git diff --check` PASS。
+- 遗留：F3-M01～M09 与 R2-M06+ 真机验收待用户执行，状态为 `READY FOR USER RE-ACCEPTANCE`，不得宣布 CLOSED。
+
 ## v0.2.26.13-fix
 MAP-DOC-A-R2-F2 Dataset List State Sync + UI Refinement（2026-08-11 16:23:23）：修复 Dataset 创建成功后列表不更新，收紧 Dataset 页面展示并移除手填 ID。
 - 根因：UI 投影原地改写同一个 `List`，ItemsControl 可能继续持有旧 ItemsSource；内部 type 直接投影到 UI；创建命令仍依赖手填 ID。

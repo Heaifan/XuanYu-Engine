@@ -3,9 +3,9 @@ using Avalonia.Interactivity;
 
 namespace XuanYu.Editor.UI;
 
-public partial class DatasetPanel : UserControl
+public partial class DatasetLayerPanel : UserControl
 {
-    public DatasetPanel() => InitializeComponent();
+    public DatasetLayerPanel() => InitializeComponent();
 
     void DatasetRow_Click(object? sender, RoutedEventArgs e)
     {

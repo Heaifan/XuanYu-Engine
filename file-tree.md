@@ -396,6 +396,8 @@
 │  │  ├─ LayerPanel.axaml.cs
 │  │  ├─ DatasetPanel.axaml
 │  │  ├─ DatasetPanel.axaml.cs
+│  │  ├─ DatasetLayerPanel.axaml
+│  │  ├─ DatasetLayerPanel.axaml.cs
 │  │  ├─ MapEditorPanel.axaml
 │  │  ├─ MapEditorPanel.axaml.cs
 │  │  ├─ MapIdDisplayFormat.cs
@@ -505,6 +507,7 @@
 │  │  │  ├─ UiVm.MapDataset.Logging.cs
 │  │  │  ├─ UiVm.MapDataset.Routing.cs
 │  │  │  ├─ UiVm.MapDataset.cs
+│  │  │  ├─ UiVm.MapDataset.Selection.cs
 │  │  │  ├─ MapDatasetTypePresentation.cs
 │  │  │  ├─ UiVm.MapDiagnostics.Format.cs
 │  │  │  ├─ UiVm.MapDiagnostics.cs
@@ -1161,6 +1164,8 @@
 │  │        ├─ MAP-DOC-A-R2-F1-root-cause.md
 │  │        ├─ MAP-DOC-A-R2-F2-acceptance.md
 │  │        ├─ MAP-DOC-A-R2-F2-root-cause.md
+│  │        ├─ MAP-DOC-A-R2-F3-acceptance.md
+│  │        ├─ MAP-DOC-A-R2-F3-root-cause.md
 │  │        ├─ MAP-DOC-A-R2-plan.md
 │  │        └─ MAP-DOC-A-R1-plan.md
 │  └─ ui/
@@ -1387,7 +1392,7 @@
 - `XuanYu.Editor.UI/NativeHostSurfaceContract.cs` — VK3-A：把现有 NativeHost 生命周期快照映射为渲染层交接句柄。
 - `XuanYu.Editor.UI/RelayCommand.cs` — sealed class RelayCommand
 - `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml` — github.com/avaloniaui"
-- `XuanYu.Editor.UI/Right/EditorLayerDock.axaml` — 编辑模式右侧通用图层 Dock：标题、空状态、折叠与 LayerPanel 宿主。
+- `XuanYu.Editor.UI/Right/EditorLayerDock.axaml` — MAP-DOC-A-R2-F3：编辑模式右侧 Dock，按地图/区域模式承载 Dataset-backed Layer 或正式 Layer Panel。
 - `XuanYu.Editor.UI/Right/EditorLayerDock.axaml.cs` — 通用图层 Dock 的展开/折叠 UI 状态。
 - `XuanYu.Editor.UI/Right/EditorRightTabs.axaml` — 检查器/调试页签的复用宿主，供管理模式与编辑模式上下分栏。
 - `XuanYu.Editor.UI/Right/EditorRightTabs.axaml.cs` — 复用页签宿主的 TopTabStripController 接线。
@@ -1396,8 +1401,10 @@
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/LayerPanel.States.axaml` — 图层行选中、可见与锁定状态的最终渲染样式。
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml.cs` — MAP-A-R2-D4：图层面板（左侧"图层"页签内容，纯绑定；无 code-behind 逻辑）。
-- `XuanYu.Editor.UI/Right/DatasetPanel.axaml` — MAP-DOC-A-R2-F2：Dataset 空态、中文类型选择、自动 ID 列表与解除注册入口。
-- `XuanYu.Editor.UI/Right/DatasetPanel.axaml.cs` — MAP-DOC-A-R2-C4：Dataset 页面纯初始化 code-behind。
+- `XuanYu.Editor.UI/Right/DatasetPanel.axaml` — MAP-DOC-A-R2-F3：Dataset 空态、中文类型、可选中列表与按选择解除注册入口。
+- `XuanYu.Editor.UI/Right/DatasetPanel.axaml.cs` — MAP-DOC-A-R2-F3：Dataset 行点击转发到唯一 SelectedDatasetId 选择状态。
+- `XuanYu.Editor.UI/Right/DatasetLayerPanel.axaml` — MAP-DOC-A-R2-F3：右侧 Dataset-backed Layer Projection 列表与选中态。
+- `XuanYu.Editor.UI/Right/DatasetLayerPanel.axaml.cs` — MAP-DOC-A-R2-F3：右侧投影行点击转发 code-behind。
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/MapEditorPanel.axaml.cs` — MAP-A-R1-D5-A：地图编辑器面板（二级页签宿主：地图/图层/环境，每页独立滚动）。
 - `XuanYu.Editor.UI/Right/MapIdDisplayFormat.cs` — D4：MapId 显示压缩纯逻辑（>18 字符「前 8+…+后 6」）。
@@ -1492,9 +1499,10 @@
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayTriangulation.cs` — F1-V1：Ear Clipping 凹多边形三角化。
 - `XuanYu.Editor.UI/Vm/Map/MapRenderSnapshotProjection.cs` — MAP-A-R2-D3/D4：MapDefinition → MapRenderSnapshot 纯投影（渲染唯一输入）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.cs` — MAP-A-R2-D3-F1：地图面板命令真实路由（UiVm.RunCommand → 地图命令）。
-- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.cs` — MAP-DOC-A-R2-C4：Dataset Registry 列表、空态和状态文字投影。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.cs` — MAP-DOC-A-R2-F3：Dataset Registry 列表、空态、状态与投影通知。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Selection.cs` — MAP-DOC-A-R2-F3：SelectedDatasetId 单一选择合同及 Dataset-backed Layer 投影。
 - `XuanYu.Editor.UI/Vm/Map/MapDatasetTypePresentation.cs` — MAP-DOC-A-R2-F2：六类 Dataset 内部 type 到中文 UI 展示值的映射。
-- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Commands.cs` — MAP-DOC-A-R2-C4：Dataset 创建/解除注册 UI 命令与 Manifest dirty 接线。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Commands.cs` — MAP-DOC-A-R2-F3：创建自动选中、按选择解除注册与选择迁移。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Logging.cs` — MAP-DOC-A-R2-F1：Dataset Create/Register 最终成功/失败用户可见日志。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Routing.cs` — MAP-DOC-A-R2-C4：Dataset 新建/解除注册命令的独立路由分部。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.Format.cs` — MAP-A-R2-D3-F2：地图日志显示映射（纯函数，内部枚举/错误码保持英文）。
@@ -1897,6 +1905,7 @@
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetContractTests.cs` — MAP-DOC-A-R2-C4：Dataset 页面合同、创建/列表/解除注册与物理文件保留测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF1Tests.cs` — MAP-DOC-A-R2-F1：Create 命令、Manifest/文件/Registry/UI 四层一致性与重开恢复测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF2Tests.cs` — MAP-DOC-A-R2-F2：列表刷新、空态、中文展示、失败不增行与重开多 Dataset 测试。
+- `XuanYu.World.Tests/Map/Editing/UiMapDatasetF3Tests.cs` — MAP-DOC-A-R2-F3：单一选择、自动选中、按选择解除注册、迁移与重开投影测试。
 - `XuanYu.World.Tests/Map/MapBoundsTests.cs` — MAP-A-R2-D1：有限地图边界合同（中心原点、闭区间、尺寸变化同步）。
 - `XuanYu.World.Tests/Map/MapCoordinateValidationTests.cs` — MAP-A-R1-D2：坐标合同 / 图层引用 / schema / 名称校验。
 - `XuanYu.World.Tests/Map/MapDefaultMapTests.cs` — MAP-A-R2-D1-F1：默认地图工厂合同（完整聚合 + DTO 默认值一致）。
@@ -2145,6 +2154,8 @@
 - `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md` — OVL-R0～R3 比例尺架构整改计划与状态。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F2-acceptance.md` — R2-F2 Dataset 列表同步、自动 ID 与中文展示的真机 IPO 验收模板。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F2-root-cause.md` — R2-F2 创建成功后 UI 列表不更新的取证、根因、修复与门禁证据。
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F3-acceptance.md` — R2-F3 Dataset/Layer 双向选择与解除注册的真机 IPO 模板。
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F3-root-cause.md` — R2-F3 Dataset 无选择态、解除注册错误目标与 Layer Projection 的根因及修复证据。
 - `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg` — Viewport Overlay / Scale Indicator 浅色路线图。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）

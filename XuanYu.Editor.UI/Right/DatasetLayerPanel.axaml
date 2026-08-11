@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.DatasetLayerPanel"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <Style Selector="Button.datasetLayerRow"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="4,5"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style>
+    <Style Selector="Border.datasetLayerSelection"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Accent}"/><Setter Property="BorderThickness" Value="2,0,0,0"/></Style>
+  </UserControl.Styles>
+  <Grid RowDefinitions="Auto,*" Margin="0,4,0,0">
+    <TextBlock Grid.Row="0" Text="{Binding DatasetLayerEmptyState}" Classes="uiMultiline" TextWrapping="Wrap" IsVisible="{Binding IsDatasetEmpty}"/>
+    <ItemsControl Grid.Row="1" ItemsSource="{Binding DatasetLayerItems}" IsVisible="{Binding !IsDatasetEmpty}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Button Classes="datasetLayerRow" Click="DatasetRow_Click">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+              <Border Classes="datasetLayerSelection" Grid.ColumnSpan="2" IsVisible="{Binding IsSelected}"/>
+              <StackPanel Spacing="1" ZIndex="1">
+                <TextBlock Text="{Binding Type}" Classes="uiValue"/>
+                <TextBlock Text="{Binding Id}" Classes="uiMultiline"/>
+              </StackPanel>
+              <TextBlock Grid.Column="1" Text="{Binding Status}" Classes="uiValue" ZIndex="1"/>
+            </Grid>
+          </Button>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </Grid>
+</UserControl>

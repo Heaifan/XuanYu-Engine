@@ -53,6 +53,8 @@
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F1-root-cause.md`：R2-F1 Create/Register 取证矩阵、根因与修复证据
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F2-root-cause.md`：R2-F2 列表状态同步、中文展示与自动 ID 取证矩阵
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F2-acceptance.md`：R2-F2 真机 IPO 验收模板与 R2-M02 补验路径
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F3-root-cause.md`：R2-F3 Dataset 选择态与右侧 Layer Projection 取证矩阵
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F3-acceptance.md`：R2-F3 Dataset/Layer 双向选择与解除注册真机 IPO 模板
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

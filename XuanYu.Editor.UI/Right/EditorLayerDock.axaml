@@ -16,11 +16,14 @@
       </Grid>
     </Border>
     <Grid x:Name="LayerContent" Grid.Row="1">
-      <local:LayerPanel IsVisible="{Binding HasCurrentLayerItems}"/>
-      <StackPanel IsVisible="{Binding !HasCurrentLayerItems}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="240" Spacing="6">
-        <TextBlock Text="{Binding CurrentLayerEmptyTitle}" Classes="layerDockEmptyTitle" TextAlignment="Center"/>
-        <TextBlock Text="{Binding CurrentLayerEmptyMessage}" Classes="uiMultiline" TextAlignment="Center" TextWrapping="Wrap"/>
-      </StackPanel>
+      <local:DatasetLayerPanel IsVisible="{Binding IsMapEditMode}"/>
+      <Grid IsVisible="{Binding IsRegionEditMode}">
+        <local:LayerPanel IsVisible="{Binding HasCurrentLayerItems}"/>
+        <StackPanel IsVisible="{Binding !HasCurrentLayerItems}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="240" Spacing="6">
+          <TextBlock Text="{Binding CurrentLayerEmptyTitle}" Classes="layerDockEmptyTitle" TextAlignment="Center"/>
+          <TextBlock Text="{Binding CurrentLayerEmptyMessage}" Classes="uiMultiline" TextAlignment="Center" TextWrapping="Wrap"/>
+        </StackPanel>
+      </Grid>
     </Grid>
   </Grid>
 </UserControl>

@@ -6,6 +6,10 @@ public sealed class UiMapDatasetContractTests : IDisposable
 {
     static readonly string DatasetPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "DatasetPanel.axaml"));
+    static readonly string LayerDock = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
+        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "EditorLayerDock.axaml"));
+    static readonly string DatasetLayerPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
+        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "DatasetLayerPanel.axaml"));
     static readonly string EditorPanel = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
     readonly string _directory = Path.Combine(Path.GetTempPath(), $"xuanyu-ui-dataset-{Guid.NewGuid():N}");
@@ -22,8 +26,12 @@ public sealed class UiMapDatasetContractTests : IDisposable
         Assert.Contains("{Binding Display}", DatasetPanel);
         Assert.DoesNotContain("DatasetCreateId", DatasetPanel);
         Assert.DoesNotContain("Dataset ID", DatasetPanel);
+        Assert.Contains("CanUnregisterDataset", DatasetPanel);
         Assert.Contains("解除注册数据集", DatasetPanel);
         Assert.Contains("local:DatasetPanel", EditorPanel);
+        Assert.Contains("DatasetLayerPanel", LayerDock);
+        Assert.Contains("DatasetLayerItems", DatasetLayerPanel);
+        Assert.Contains("DatasetRow_Click", DatasetLayerPanel);
     }
 
     [Fact]
@@ -37,8 +45,10 @@ public sealed class UiMapDatasetContractTests : IDisposable
         Assert.True(await vm.CreateDatasetAsync());
         Assert.Single(vm.DatasetItems);
         Assert.Equal("正常", vm.DatasetItems[0].Status);
-        var datasetPath = Path.Combine(_directory, "data", $"{vm.DatasetItems[0].Id}.json");
-        Assert.True(await vm.UnregisterDatasetAsync(vm.DatasetItems[0].Id));
+        var id = vm.DatasetItems[0].Id;
+        var datasetPath = Path.Combine(_directory, "data", $"{id}.json");
+        vm.SelectDataset(id);
+        Assert.True(await vm.UnregisterDatasetAsync());
         Assert.Empty(vm.DatasetItems);
         Assert.True(File.Exists(datasetPath));
     }

@@ -3,6 +3,10 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.DatasetPanel"
              x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <Style Selector="Button.datasetRow"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="4,3"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style>
+    <Style Selector="Border.datasetSelection"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Accent}"/><Setter Property="BorderThickness" Value="2,0,0,0"/></Style>
+  </UserControl.Styles>
   <StackPanel Spacing="8" Margin="0,6,0,0">
     <TextBlock Text="数据集" Classes="uiSection"/>
     <TextBlock Text="{Binding DatasetEmptyState}" Classes="uiMultiline" TextWrapping="Wrap"
@@ -14,13 +18,16 @@
     <ItemsControl ItemsSource="{Binding DatasetItems}">
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6" Margin="0,2">
-            <StackPanel Spacing="1">
-              <TextBlock Text="{Binding Type}" Classes="uiValue"/>
-              <TextBlock Text="{Binding Id}" Classes="uiMultiline" ToolTip.Tip="{Binding Source}"/>
-            </StackPanel>
-            <TextBlock Grid.Column="1" Text="{Binding Status}" Classes="uiValue"/>
-          </Grid>
+          <Button Classes="datasetRow" Click="DatasetRow_Click">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+              <Border Classes="datasetSelection" Grid.ColumnSpan="2" IsVisible="{Binding IsSelected}"/>
+              <StackPanel Spacing="1" ZIndex="1">
+                <TextBlock Text="{Binding Type}" Classes="uiValue"/>
+                <TextBlock Text="{Binding Id}" Classes="uiMultiline" ToolTip.Tip="{Binding Source}"/>
+              </StackPanel>
+              <TextBlock Grid.Column="1" Text="{Binding Status}" Classes="uiValue" ZIndex="1"/>
+            </Grid>
+          </Button>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>
@@ -36,7 +43,7 @@
       <Button Content="新建数据集" Command="{Binding RunCommand}" CommandParameter="新建数据集"
               AutomationProperties.Name="新建数据集"/>
       <Button Grid.Column="1" Content="解除注册" Command="{Binding RunCommand}" CommandParameter="解除注册数据集"
-              AutomationProperties.Name="解除注册数据集"/>
+              IsEnabled="{Binding CanUnregisterDataset}" AutomationProperties.Name="解除注册数据集"/>
     </Grid>
   </StackPanel>
 </UserControl>
