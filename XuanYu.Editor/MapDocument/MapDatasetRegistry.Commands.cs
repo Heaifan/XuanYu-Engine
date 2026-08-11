@@ -1,0 +1,78 @@
+using System.Collections.Immutable;
+
+namespace XuanYu.Editor.MapDocument;
+
+public sealed partial class MapDatasetRegistry
+{
+    public async Task<MapDocumentResult<MapDatasetDescriptor>> CreateAsync(string id, string type)
+    {
+        var descriptor = new MapDatasetDescriptor(id, type, $"data/{id}.json");
+        var candidate = PrepareCandidate(descriptor);
+        if (!candidate.Succeeded || candidate.Value is null) return Fail< MapDatasetDescriptor>(candidate);
+        if (!MapDatasetPathPolicy.TryResolve(MapRoot, descriptor.Source, out var datasetPath))
+            return Fail<MapDatasetDescriptor>("InvalidDatasetSource", "Dataset source 不安全。", "Validate");
+        if (File.Exists(datasetPath))
+            return Fail<MapDatasetDescriptor>("SourceCollision", "Dataset source 文件已存在，拒绝覆盖。", "Validate");
+        var committed = await CommitCreateAsync(candidate.Value, descriptor, datasetPath);
+        if (!committed.Succeeded) return Fail<MapDatasetDescriptor>(committed);
+        CurrentManifest = candidate.Value;
+        return MapDocumentResult<MapDatasetDescriptor>.Ok(descriptor);
+    }
+
+    public async Task<MapDocumentResult<MapDatasetDescriptor>> RegisterAsync(
+        MapDatasetDescriptor descriptor)
+    {
+        var candidate = PrepareCandidate(descriptor);
+        if (!candidate.Succeeded || candidate.Value is null) return Fail< MapDatasetDescriptor>(candidate);
+        if (!MapDatasetPathPolicy.TryResolve(MapRoot, descriptor.Source, out var path))
+            return Fail<MapDatasetDescriptor>("InvalidDatasetSource", "Dataset source 不安全。", "Validate");
+        var loaded = await _datasetStorage.LoadAsync(path, descriptor);
+        if (loaded.Status != MapDatasetStatus.Normal)
+            return Fail<MapDatasetDescriptor>(loaded.ErrorCode, loaded.Message, "Read");
+        var saved = await _manifestStorage.SaveAsync(MapPath, candidate.Value);
+        if (!saved.Succeeded) return Fail<MapDatasetDescriptor>(saved);
+        CurrentManifest = candidate.Value;
+        return MapDocumentResult<MapDatasetDescriptor>.Ok(descriptor);
+    }
+
+    public async Task<MapDocumentResult<string>> UnregisterAsync(string id)
+    {
+        var descriptor = CurrentManifest.Datasets.FirstOrDefault(
+            item => string.Equals(item.Id, id, StringComparison.OrdinalIgnoreCase));
+        if (descriptor is null) return MapDocumentResult<string>.Fail("NotFound", "Dataset 未注册。", "Validate");
+        var candidate = CurrentManifest with
+        {
+            Datasets = CurrentManifest.Datasets.Where(item => item != descriptor).ToImmutableArray()
+        };
+        var valid = MapManifestValidator.Validate(candidate);
+        if (!valid.Succeeded) return MapDocumentResult<string>.Fail(valid.ErrorCode, valid.Message, valid.Stage, valid.Detail);
+        var saved = await _manifestStorage.SaveAsync(MapPath, candidate);
+        if (!saved.Succeeded) return saved;
+        CurrentManifest = candidate;
+        return MapDocumentResult<string>.Ok(id);
+    }
+
+    MapDocumentResult<MapManifest> PrepareCandidate(MapDatasetDescriptor descriptor)
+    {
+        var candidate = CurrentManifest with
+        {
+            Datasets = CurrentManifest.Datasets.Append(descriptor).ToImmutableArray()
+        };
+        var valid = MapManifestValidator.Validate(candidate);
+        return valid.Succeeded
+            ? valid
+            : MapDocumentResult<MapManifest>.Fail(valid.ErrorCode, valid.Message, valid.Stage, valid.Detail);
+    }
+
+    static MapDocumentResult<T> Fail<T>(MapDocumentResult<MapManifest> result) =>
+        MapDocumentResult<T>.Fail(result.ErrorCode, result.Message, result.Stage, result.Detail);
+
+    static MapDocumentResult<T> Fail<T>(MapDatasetLoadResult result, string stage = "") =>
+        MapDocumentResult<T>.Fail(result.ErrorCode, result.Message, stage);
+
+    static MapDocumentResult<T> Fail<T>(MapDocumentResult<string> result) =>
+        MapDocumentResult<T>.Fail(result.ErrorCode, result.Message, result.Stage, result.Detail);
+
+    static MapDocumentResult<T> Fail<T>(string code, string message, string stage) =>
+        MapDocumentResult<T>.Fail(code, message, stage);
+}

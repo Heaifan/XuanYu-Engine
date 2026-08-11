@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.10-rz
+MAP-DOC-A-R2-C3 Dataset Registry 生命周期（2026-08-11）：完成 Create/Register/Resolve/Enumerate/FindById/Unregister 与跨文件创建事务，支持同 type 多 Dataset 和单文件故障隔离。
+- 变化：注册表通过 Manifest Descriptor 驱动文件解析；创建事务先准备两个临时文件，提交失败清理新增文件并恢复 Manifest；解除注册不物理删除 Dataset 文件。
+- 验证：C3 focused `8/8 PASS`；覆盖创建、已有文件注册、查询、同 type 多项、缺失/损坏状态、重复与失败前置拒绝。
+- 遗留：C4 UI、最终完整门禁、R1-F1/R2 真机验收仍未完成；R2 不得标记 CLOSED。
+
 ## v0.2.26.9-rz
 MAP-DOC-A-R2-C2 Dataset Document/Storage（2026-08-11）：完成 `xuanyu-map-dataset` v0.1.0 严格五字段文档、空 features 约束和 Normal/Missing/Invalid 隔离加载。
 - 变化：新增 Dataset 文档序列化、校验、原子保存与 Descriptor 身份匹配；不引入 Geometry、Feature 或 properties 语义。

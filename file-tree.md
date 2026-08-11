@@ -255,6 +255,10 @@
 │  │  ├─ MapDatasetDocumentSerializer.cs
 │  │  ├─ MapDatasetDocumentValidator.cs
 │  │  ├─ MapDatasetPathPolicy.cs
+│  │  ├─ MapDatasetRegistry.Commands.cs
+│  │  ├─ MapDatasetRegistry.Query.cs
+│  │  ├─ MapDatasetRegistry.Transaction.cs
+│  │  ├─ MapDatasetRegistry.cs
 │  │  ├─ MapDatasetStorageService.cs
 │  │  ├─ MapManifest.cs
 │  │  ├─ MapManifestJson.cs
@@ -908,6 +912,8 @@
 │  │  ├─ MapDatasetContractTests.cs
 │  │  ├─ MapDatasetDocumentTests.cs
 │  │  ├─ MapDatasetStorageContractTests.cs
+│  │  ├─ MapDatasetRegistryFailureTests.cs
+│  │  ├─ MapDatasetRegistryLifecycleTests.cs
 │  │  ├─ MapManifestValidationTests.cs
 │  │  ├─ MapEnvironmentValidationTests.cs
 │  │  ├─ MapIdTests.cs
@@ -1591,6 +1597,10 @@
 - `XuanYu.Editor/MapDocument/MapDatasetDocumentValidator.cs` — MAP-DOC-A-R2-C2：Dataset 身份、type 与空 features 校验。
 - `XuanYu.Editor/MapDocument/MapDatasetPathPolicy.cs` — MAP-DOC-A-R2-C1：Dataset source 的 map-root-relative `data/` 安全路径策略。
 - `XuanYu.Editor/MapDocument/MapDatasetStorageService.cs` — MAP-DOC-A-R2-C2：Dataset 原子保存与 Normal/Missing/Invalid 隔离加载。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.cs` — MAP-DOC-A-R2-C3：Manifest-backed Dataset Registry 状态与 map 根路径。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.Commands.cs` — MAP-DOC-A-R2-C3：Create/Register/Unregister 生命周期命令。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.Query.cs` — MAP-DOC-A-R2-C3：Resolve/Enumerate/FindById 查询与单项状态投影。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.Transaction.cs` — MAP-DOC-A-R2-C3：Dataset 创建的双文件临时写入、提交与恢复。
 - `XuanYu.Editor/MapDocument/MapEnvironmentDefinition.cs` — MAP-A-R1-D2：环境定义。D2 只保存与校验，不渲染。
 - `XuanYu.Editor/MapDocument/MapJsonMapper.cs` — MAP-A-R1-D2：MapDocument ↔ MapDocumentJson 双向映射。
 - `XuanYu.Editor/MapDocument/MapJsonSerializer.cs` — MAP-A-R1-D2：.xymap 严格 JSON 读写。字段大小写敏感、未知字段拒绝、确定性输出、UTF-8。
@@ -1874,6 +1884,8 @@
 - `XuanYu.World.Tests/Map/MapDatasetContractTests.cs` — MAP-DOC-A-R2-C1：Dataset type、ID、source 与唯一性合同测试。
 - `XuanYu.World.Tests/Map/MapDatasetDocumentTests.cs` — MAP-DOC-A-R2-C2：Dataset 文档 schema、round-trip 与空 features 合同测试。
 - `XuanYu.World.Tests/Map/MapDatasetStorageContractTests.cs` — MAP-DOC-A-R2-C2：Dataset 存储状态、身份匹配与失败隔离测试。
+- `XuanYu.World.Tests/Map/MapDatasetRegistryFailureTests.cs` — MAP-DOC-A-R2-C3：注册前置失败与跨文件无污染测试。
+- `XuanYu.World.Tests/Map/MapDatasetRegistryLifecycleTests.cs` — MAP-DOC-A-R2-C3：Dataset Registry 生命周期与状态查询测试。
 - `XuanYu.World.Tests/Map/MapManifestValidationTests.cs` — MAP-DOC-A-R1：Manifest format、version、ID、坐标系与容器校验。
 - `XuanYu.World.Tests/Map/MapDocumentOwnerTests.cs` — MAP-A-R1-D2：当前地图状态所有者（New/Load/Modify/Save/Unload 基础状态）。
 - `XuanYu.World.Tests/Map/MapEnvironmentValidationTests.cs` — MAP-A-R1-D2：环境定义与参数校验。
