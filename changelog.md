@@ -22,6 +22,7 @@
 MAP-DOC-A-R3-F2 UI 收口（2026-08-11 21:25:24）：功能验收通过后暂不 Closeout；重排现有 Dataset/Layer 编辑器 UI，等待专项真机验收。
 - 变化：Dataset 行固定 Name 主信息、`Type · ID` 单行辅助信息和右侧状态；Layer 行改用既有 Drag Handle、Visible/Hidden、Locked/Unlocked StreamGeometry 图标，并统一 28 DIP 操作按钮。
 - 选择：`DatasetSelectedId` 继续作为唯一选择源，Dataset 列表、Layer 与最小 Inspector 投影统一消费；检查器显示名称、类型、ID、状态、可见和锁定。
+- 交付物：本轮状态图见 `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-F2-ui-closeout.svg`，XML 已校验。
 - 验证：AXAML XML、UI 项目快速构建与完整 Solution Build 均为 `0 Warning / 0 Error`；Core `339/339`、World `1233/1233`、WarCore `22/22` PASS；ARCH-A、5+100、版本一致性与 `git diff --check` PASS。
 - 遗留：等待 `MAP-DOC-A-R3-F2-acceptance.md` 的 UI-M01～UI-R01 真机验收；未进入 MAP-DATA-A，未创建 Tag、Release、Merge、Rebase 或 Force Push。
 
