@@ -48,6 +48,8 @@
 - `docs/milestones/current/MAP-DOC-A/`：MAP-DOC-A-R1 Map Content Navigation、Manifest 合同与真机验收材料
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-carryover.md`：R1 M07 身份同步失败事实、F1 修复合同与待补验记录
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-plan.md`：R2 Dataset Registry 分段合同、范围与验收边界
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md`：R1-F1 Manifest ID 同步与复制布局真机 IPO 清单
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-acceptance.md`：R2 Dataset Registry 真机 IPO 清单与未 CLOSED 边界
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

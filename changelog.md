@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.11-rz
+MAP-DOC-A-R2-C4 Dataset UI 与验收材料（2026-08-11）：数据集页正式接入空态、新建、Type/ID/Status 列表和解除注册；补齐 R1-F1 与 R2 中文 IPO 真机清单。
+- 变化：新增独立 `DatasetPanel`，创建/解除注册经 UiVm 路由到 Registry；缺失/无效状态以单项列表状态展示。
+- 验证：C4 focused `7/7 PASS`；完整解决方案 build `0 Warning / 0 Error`；Core.Tests `339/339`、WarCore.Tests `22/22`、World.Tests `1202/1202`；ARCH-A、5+100、版本一致性、`git diff --check` PASS。
+- 遗留：R1-F1 M01～M04 与 R2 M01～M07 真机验收待用户执行；R2 仅 `READY FOR USER ACCEPTANCE`，未宣布 CLOSED。
+
 ## v0.2.26.10-rz
 MAP-DOC-A-R2-C3 Dataset Registry 生命周期（2026-08-11）：完成 Create/Register/Resolve/Enumerate/FindById/Unregister 与跨文件创建事务，支持同 type 多 Dataset 和单文件故障隔离。
 - 变化：注册表通过 Manifest Descriptor 驱动文件解析；创建事务先准备两个临时文件，提交失败清理新增文件并恢复 Manifest；解除注册不物理删除 Dataset 文件。

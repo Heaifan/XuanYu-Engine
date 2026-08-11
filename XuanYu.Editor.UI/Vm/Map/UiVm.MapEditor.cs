@@ -86,6 +86,8 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(MapManifestCoordinateSystemText));
         OnPropertyChanged(nameof(DatasetCount));
         OnPropertyChanged(nameof(DatasetEmptyState));
+        OnPropertyChanged(nameof(DatasetItems));
+        OnPropertyChanged(nameof(IsDatasetEmpty));
     }
     void FailEdit(string message)
     {

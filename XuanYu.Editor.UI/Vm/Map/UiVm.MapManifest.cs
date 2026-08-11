@@ -20,13 +20,16 @@ public sealed partial class UiVm
 
     public string DatasetEmptyState => DatasetCount == 0
         ? "当前无数据集"
-        : $"当前有 {DatasetCount} 个数据集（只读）";
+        : $"当前有 {DatasetCount} 个数据集";
 
     void InitializeMapManifest() => _mapManifestOwner.SetBaseline(
         MapManifest.FromMap(MapSession.CurrentMap));
 
-    void ResetMapManifestFromCurrentMap() => _mapManifestOwner.New(
-        MapManifest.FromMap(MapSession.CurrentMap));
+    void ResetMapManifestFromCurrentMap()
+    {
+        _mapManifestOwner.New(MapManifest.FromMap(MapSession.CurrentMap));
+        ResetDatasetProjection();
+    }
 
     public async Task<bool> OpenMapManifestAsync(string path)
     {
@@ -39,6 +42,8 @@ public sealed partial class UiVm
             return false;
         }
         _mapManifestOwner.Load(path, result.Value);
+        _datasetRegistry = new MapDatasetRegistry(path, result.Value);
+        await RefreshDatasetProjectionAsync();
         FooterMessage = "地图 Manifest 已打开。";
         RaiseMapDocumentChanged();
         return true;
@@ -55,6 +60,8 @@ public sealed partial class UiVm
             return false;
         }
         _mapManifestOwner.Save(result.Value);
+        _datasetRegistry = new MapDatasetRegistry(result.Value, CurrentMapManifest);
+        await RefreshDatasetProjectionAsync();
         FooterMessage = "地图 Manifest 已保存。";
         RaiseMapDocumentChanged();
         return true;

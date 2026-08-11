@@ -12,7 +12,7 @@
 | C1 | Descriptor、六类 type、ID/source/唯一性合同 | COMPLETE，commit `13237be` |
 | C2 | `xuanyu-map-dataset` v0.1.0、空 features、Normal/Missing/Invalid | COMPLETE，commit `9d4dc26` |
 | C3 | Create/Register/Resolve/Enumerate/FindById/Unregister 与跨文件事务 | COMPLETE，当前提交 |
-| C4 | Dataset 页面、空态、新建、列表、解除注册 | PENDING |
+| C4 | Dataset 页面、空态、新建、列表、解除注册 | COMPLETE，当前提交 |
 
 ## C1 已冻结合同
 
@@ -36,3 +36,10 @@ R2 全部自动门禁通过后仅标记 `READY FOR USER ACCEPTANCE`。真机验�
 - Create/Register/Resolve/Enumerate/FindById/Unregister 已形成最小生命周期；同一 type 可有多个 Dataset。
 - Create 的 Dataset 文件与 Manifest 候选写入同目录临时文件，提交失败会清理新文件并尝试恢复原 Manifest；Unregister 不删除物理 Dataset 文件。
 - C3 focused `8/8 PASS`；C4 仍需提供 Dataset 页面入口和 UI 状态投影。
+
+## C4 验证与停止线
+
+- Dataset 页面已接入空态、新建 Dataset、Type/ID/Status 列表和解除注册；操作经 UiVm → Registry，不改造 LayerPanel。
+- C4 focused `7/7 PASS`；R1-F1 与 R2 真机 IPO 分别见 `MAP-DOC-A-R1-F1-acceptance.md`、`MAP-DOC-A-R2-acceptance.md`。
+- 最终自动门禁：解决方案 build `0W0E`；Core.Tests `339/339`、WarCore.Tests `22/22`、World.Tests `1202/1202`；ARCH-A、5+100、版本一致性、`git diff --check` PASS。
+- C0～C4 自动门禁完成后，R2 只允许标记 `READY FOR USER ACCEPTANCE`，等待用户真机验收，不启动下一阶段。

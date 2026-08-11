@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.DatasetPanel"
+             x:DataType="local:UiVm">
+  <StackPanel Spacing="8" Margin="0,6,0,0">
+    <TextBlock Text="数据集" Classes="uiSection"/>
+    <TextBlock Text="{Binding DatasetEmptyState}" Classes="uiMultiline" TextWrapping="Wrap"
+               IsVisible="{Binding IsDatasetEmpty}"/>
+    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+      <TextBlock Text="类型" Classes="uiLabel"/>
+      <TextBlock Grid.Column="1" Text="ID" Classes="uiLabel"/>
+      <TextBlock Grid.Column="2" Text="状态" Classes="uiLabel"/>
+    </Grid>
+    <ItemsControl ItemsSource="{Binding DatasetItems}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6" Margin="0,2">
+            <TextBlock Text="{Binding Type}" Classes="uiValue"/>
+            <TextBlock Grid.Column="1" Text="{Binding Id}" Classes="uiValue" ToolTip.Tip="{Binding Source}"/>
+            <TextBlock Grid.Column="2" Text="{Binding Status}" Classes="uiValue"/>
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <TextBlock Text="新建数据集" Classes="uiLabel"/>
+    <Grid ColumnDefinitions="*,*" ColumnSpacing="6">
+      <ComboBox ItemsSource="{Binding DatasetTypeOptions}" SelectedItem="{Binding DatasetCreateType}"/>
+      <TextBox Grid.Column="1" Text="{Binding DatasetCreateId}" PlaceholderText="Dataset ID"/>
+    </Grid>
+    <Grid ColumnDefinitions="*,*" ColumnSpacing="6">
+      <Button Content="新建数据集" Command="{Binding RunCommand}" CommandParameter="新建数据集"
+              AutomationProperties.Name="新建数据集"/>
+      <Button Grid.Column="1" Content="解除注册" Command="{Binding RunCommand}" CommandParameter="解除注册数据集"
+              AutomationProperties.Name="解除注册数据集"/>
+    </Grid>
+  </StackPanel>
+</UserControl>

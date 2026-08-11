@@ -7,6 +7,7 @@ public sealed partial class UiVm
 {
     public bool TryRouteMapCommand(string name)
     {
+        if (TryRouteDatasetCommand(name)) return true;
         if (name == "新建地图" || name == "加载地图")
         {
             LogMapCommandReceived(name);

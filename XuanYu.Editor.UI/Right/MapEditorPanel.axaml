@@ -26,11 +26,8 @@
       </ScrollViewer>
     </TabItem>
     <TabItem Classes="layerSubTab" Header="数据集">
-      <StackPanel Spacing="8" Margin="0,6,0,0">
-        <TextBlock Text="数据集" Classes="uiSection"/>
-        <TextBlock Text="{Binding DatasetEmptyState}" Classes="uiMultiline" TextWrapping="Wrap"/>
-        <TextBlock Text="数据集注册与编辑将在 MAP-DOC-A-R2 接入。" Classes="muted" TextWrapping="Wrap"/>
-      </StackPanel>
+      <!-- DatasetEmptyState 由 DatasetPanel 投影；数据集页不改造图层栏。 -->
+      <local:DatasetPanel/>
     </TabItem>
   </TabControl>
 </UserControl>
