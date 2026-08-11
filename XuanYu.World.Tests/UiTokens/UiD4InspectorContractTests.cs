@@ -10,7 +10,7 @@ public sealed class UiD4InspectorContractTests
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
 
     static readonly string Right = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "Right.axaml"));
+        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
 
     [Fact]
     public void Inspector_fonts_reference_formal_tokens()

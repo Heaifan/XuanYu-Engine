@@ -37,5 +37,6 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(IsEditMode)); OnPropertyChanged(nameof(IsMapEditMode));
         OnPropertyChanged(nameof(IsRegionEditMode)); OnPropertyChanged(nameof(CurrentEditorModeText));
         OnPropertyChanged(nameof(IsMapEditorMode));
+        RaiseLayerContextBindings();
     }
 }

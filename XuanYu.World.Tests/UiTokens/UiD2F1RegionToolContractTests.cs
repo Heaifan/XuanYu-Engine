@@ -6,28 +6,19 @@ public sealed class UiD2F1RegionToolContractTests
         AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", path));
 
     [Fact]
-    public void Region_tool_is_owned_by_map_editor_not_top_navigation()
+    public void Region_drawing_is_not_exposed_by_map_editor()
     {
-        var top = Read("Top/Top.axaml");
         var map = Read("Right/MapPagePanel.axaml");
-        Assert.DoesNotContain("CommandParameter=\"区域绘制\"", top);
-        Assert.Contains("x:Name=\"RegionDrawingTool\"", map);
-        Assert.Contains("Text=\"地图工具\"", map);
+        Assert.DoesNotContain("区域绘制", map);
+        Assert.DoesNotContain("RegionDrawing", map);
+        Assert.DoesNotContain("Draft", map);
     }
 
     [Fact]
-    public void Region_tool_selected_states_keep_primary_foreground()
+    public void Region_drawing_is_not_exposed_by_map_navigation()
     {
-        var map = Read("Right/MapPagePanel.axaml");
-        Assert.Contains("ToggleButton.mapTool:checked:pointerover", map);
-        Assert.Contains("ToggleButton.mapTool:pointerover TextBlock.mapToolLabel", map);
-        Assert.Contains("ToggleButton.mapTool:checked TextBlock.mapToolLabel", map);
-        Assert.Contains("ToggleButton.mapTool:checked:pointerover TextBlock.mapToolLabel", map);
-        Assert.Contains("Color.Text.Primary", map);
-        Assert.Contains("Color.Hover.Bg", map);
-        Assert.Contains("Color.Selection.Bg", map);
-        Assert.Contains("Color.Border.Strong", map);
-        Assert.Contains("HorizontalContentAlignment=\"Center\"", map);
-        Assert.Contains("VerticalContentAlignment=\"Center\"", map);
+        var editor = Read("Right/MapEditorPanel.axaml");
+        Assert.DoesNotContain("RegionDrawing", editor);
+        Assert.DoesNotContain("区域顶点", editor);
     }
 }

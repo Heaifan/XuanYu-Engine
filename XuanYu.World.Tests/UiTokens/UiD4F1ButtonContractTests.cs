@@ -16,7 +16,7 @@ public sealed class UiD4F1ButtonContractTests
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapFormPanel.axaml"));
 
     static readonly string Right = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
-        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "Right.axaml"));
+        "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
 
     [Fact]
     public void Unified_button_style_provides_text_contract()

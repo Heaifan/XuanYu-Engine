@@ -7,7 +7,7 @@ public sealed class UiD4F1TextOverflowContractTests
 {
     static readonly string Ui = Read("Design/UiStyles.D4F1.axaml"); // D4-F1 纠偏：公共样式独立文件
     static readonly string Inspector = Read("Right/InspectorPanel.axaml");
-    static readonly string Right = Read("Right/Right.axaml");
+    static readonly string Right = Read("Right/EditorRightTabs.axaml");
     static readonly string MapPage = Read("Right/MapPagePanel.axaml");
     static readonly string MapForm = Read("Right/MapFormPanel.axaml");
     static readonly string LayerPanel = Read("Right/LayerPanel.axaml");

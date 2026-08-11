@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using XuanYu.Editor.Workspace;
 using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -17,6 +18,8 @@ public sealed class LayerPanelRuntimeLayoutTests
         var widths = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
+            vm.ToggleEditorMode();
+            vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
             var panel = new LayerPanel { DataContext = vm };
             var window = host.Show(panel);
             var list = panel.FindControl<ListBox>("LayerList")!;
@@ -35,6 +38,8 @@ public sealed class LayerPanelRuntimeLayoutTests
         var widths = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
+            vm.ToggleEditorMode();
+            vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
             var panel = new LayerPanel { DataContext = vm };
             var window = host.Show(panel);
             var list = panel.FindControl<ListBox>("LayerList")!;

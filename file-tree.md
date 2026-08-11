@@ -236,6 +236,9 @@
 │  │  ├─ EditorCameraFraming.MapOrthographic.cs
 │  │  ├─ EditorCameraFraming.cs
 │  │  └─ OrthographicViewFactory.cs
+│  ├─ Layering/
+│  │  ├─ EditorLayerItem.cs
+│  │  └─ IEditorLayerProvider.cs
 │  ├─ MapDocument/
 │  │  ├─ MapDocument.cs
 │  │  ├─ MapDocumentAggregateBridge.cs
@@ -363,6 +366,10 @@
 │  ├─ NativeHostSurfaceContract.cs
 │  ├─ RelayCommand.cs
 │  ├─ Right/
+│  │  ├─ EditorLayerDock.axaml
+│  │  ├─ EditorLayerDock.axaml.cs
+│  │  ├─ EditorRightTabs.axaml
+│  │  ├─ EditorRightTabs.axaml.cs
 │  │  ├─ LayerInspectorPanel.axaml
 │  │  ├─ LayerInspectorPanel.axaml.cs
 │  │  ├─ LayerPanel.DragDrop.cs
@@ -440,6 +447,9 @@
 │  │  │  ├─ UiVm.Inspector.cs
 │  │  │  ├─ UiVm.InspectorInput.Parse.cs
 │  │  │  └─ UiVm.InspectorInput.cs
+│  │  ├─ Layer/
+│  │  │  ├─ EditorLayerProviderAdapter.cs
+│  │  │  └─ UiVm.LayerContext.cs
 │  │  ├─ Logging/
 │  │  │  ├─ DebugText.cs
 │  │  │  ├─ EditorDisplayText.cs
@@ -1197,6 +1207,8 @@
 - `XuanYu.Core.Tests/Spatial/SpatialBoundsTests.cs` — sealed class SpatialBoundsTests
 - `XuanYu.Core.Tests/Spatial/SpatialTestData.cs` — （职责待补）
 - `XuanYu.Core.Tests/XuanYu.Core.Tests.csproj` — （职责待补）
+- `XuanYu.Editor/Layering/EditorLayerItem.cs` — 通用编辑图层项目与无领域语义的命令结果。
+- `XuanYu.Editor/Layering/IEditorLayerProvider.cs` — 编辑模式图层提供器通用合同：读取、选择、组织与状态操作。
 - `XuanYu.Core/.gitkeep` — （职责待补）
 - `XuanYu.Core/Diagnostics/CoreSelfTest.cs` — static class CoreSelfTest
 - `XuanYu.Core/Gizmo/Common/ScreenPoint.cs` — （职责待补）
@@ -1325,6 +1337,10 @@
 - `XuanYu.Editor.UI/NativeHostSurfaceContract.cs` — VK3-A：把现有 NativeHost 生命周期快照映射为渲染层交接句柄。
 - `XuanYu.Editor.UI/RelayCommand.cs` — sealed class RelayCommand
 - `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml` — github.com/avaloniaui"
+- `XuanYu.Editor.UI/Right/EditorLayerDock.axaml` — 编辑模式右侧通用图层 Dock：标题、空状态、折叠与 LayerPanel 宿主。
+- `XuanYu.Editor.UI/Right/EditorLayerDock.axaml.cs` — 通用图层 Dock 的展开/折叠 UI 状态。
+- `XuanYu.Editor.UI/Right/EditorRightTabs.axaml` — 检查器/调试页签的复用宿主，供管理模式与编辑模式上下分栏。
+- `XuanYu.Editor.UI/Right/EditorRightTabs.axaml.cs` — 复用页签宿主的 TopTabStripController 接线。
 - `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml.cs` — MAP-A-R2-D4：图层检查器（名称 Enter/失焦提交；开关/按钮走绑定，无额外逻辑）。
 - `XuanYu.Editor.UI/Right/LayerPanel.DragDrop.cs` — MAP-A-R2-D4-F3：区域图层拖动（code-behind 只处理指针/Drop；手柄按下 ≥4 DIP 启动；仅区域行接受；一次交给 UiVm）。
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml` — github.com/avaloniaui"
@@ -1398,6 +1414,8 @@
 - `XuanYu.Editor.UI/Vm/Inspector/InspectorFieldRow.cs` — D4：检查器字段行结构（Label/Value/IsGroupHeader，替代字符串拼接）
 - `XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorInput.Parse.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Inspector/UiVm.InspectorInput.cs` — sealed partial class UiVm
+- `XuanYu.Editor.UI/Vm/Layer/EditorLayerProviderAdapter.cs` — 将当前 UiVm Region 图层会话适配为通用图层提供器。
+- `XuanYu.Editor.UI/Vm/Layer/UiVm.LayerContext.cs` — 编辑模式当前图层提供器、Map 空状态与 Region 可见项目绑定。
 - `XuanYu.Editor.UI/Vm/Logging/DebugText.cs` — static class DebugText
 - `XuanYu.Editor.UI/Vm/Logging/EditorDisplayText.cs` — static class EditorDisplayText
 - `XuanYu.Editor.UI/Vm/Logging/EditorLogBuffer.cs` — sealed class EditorLogBuffer
@@ -1915,6 +1933,7 @@
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeTestHost.cs` — Headless Window、布局和 Visual 树查询辅助。
 - `XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeLayoutTests.cs` — LayerPanel 冷启动与增层布局运行时门禁。
 - `XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeStateTests.cs` — LayerPanel 选中、可见和锁定状态运行时门禁。
+- `XuanYu.World.Tests/UiRuntime/LayerARuntimeTests.cs` — LAYER-A 管理/编辑 Dock 可见性与 Workspace provider 运行时合同。
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeRiskTests.cs` — Top/Foot Fluent 状态覆盖风险运行时门禁。
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeCollection.cs` — Headless UI 测试串行集合定义。
 - `XuanYu.World.Tests/UiRuntime/UiTestAppBuilder.cs` — 正式 Editor.UI App 的 Headless AppBuilder 配置。
@@ -1948,6 +1967,7 @@
 - `XuanYu.World.Tests/UiTokens/UiD4F1ButtonContractTests.cs` — D4-F1（纠偏）：uiTextButton 真实接线（地图 7+调试 4）+ Grid *,* 跨列 + 2×2 等宽网格
 - `XuanYu.World.Tests/UiTokens/UiD4F1TextOverflowContractTests.cs` — D4-F1：展示型文本默认（NoWrap+Ellipsis+MaxLines1）+ 完整值 Tooltip + 多行专用类
 - `XuanYu.World.Tests/UiTokens/UiD4F1TypographyContractTests.cs` — D4-F1：公共语义样式 Token / 无裸 FontSize / 无局部 FontFamily / Manifest 112 Frozen
+- `XuanYu.World.Tests/UiTokens/LayerAUiCompositionTests.cs` — LAYER-A Map 空状态、Region 过滤、Inspector 联动与右侧 Dock 组合合同。
 - `XuanYu.World.Tests/UiTokens/UiD4MapEditorContractTests.cs` — D4：地图页结构合同（72 列摘要/MapId 不换行+复制/96 列表单/紧凑模式/单滚动/按钮组）
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionInvariantTests.cs` — sealed class WorldPartitionInvariantTests
 - `XuanYu.World.Tests/WorldPartition/WorldPartitionMigrationTests.Activity.cs` — sealed partial class WorldPartitionMigrationTests

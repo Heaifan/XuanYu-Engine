@@ -18,11 +18,13 @@ public sealed partial class UiVm
         if (IsEditMode) CancelActiveInput("切换编辑工作区");
         var transition = _workspaceManager.Switch(target);
         if (!transition.Changed) return;
+        ClearLayerSelection();
         if (IsEditMode) { SelectTool("选择", logTool: false); LeftTabIndex = IsMapWorkspace ? 2 : 3; }
         OnPropertyChanged(nameof(CurrentWorkspace));
         OnPropertyChanged(nameof(CurrentWorkspaceDisplayName));
         OnPropertyChanged(nameof(IsMapWorkspace));
         OnPropertyChanged(nameof(IsRegionWorkspace));
+        RaiseLayerContextBindings();
         RaiseModeBindings();
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
             $"编辑目标已切换为：{CurrentWorkspaceDisplayName}", "Manage 只改变目标；Edit 保留上下文后切换工作区。");

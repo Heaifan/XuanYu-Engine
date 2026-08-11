@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using XuanYu.Editor.Workspace;
 using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -20,6 +21,8 @@ public sealed class LayerPanelRuntimeStateTests
         var color = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
+            vm.ToggleEditorMode();
+            vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
             vm.AddLayer();
             var panel = new LayerPanel { DataContext = vm };
             var window = host.Show(panel);
@@ -43,6 +46,8 @@ public sealed class LayerPanelRuntimeStateTests
         var color = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
+            vm.ToggleEditorMode();
+            vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
             vm.AddLayer();
             var panel = new LayerPanel { DataContext = vm };
             host.Show(panel);

@@ -37,7 +37,7 @@ public sealed class EditorModeUiCompositionTests
     public void Project_and_inspector_remain_global_shell_panels()
     {
         Assert.Contains("Header=\"项目\"", Read("XuanYu.Editor.UI", "Left", "Left.axaml"));
-        Assert.Contains("Header=\"检查器\"", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));
+        Assert.Contains("Header=\"检查器\"", Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml"));
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public sealed class EditorModeUiCompositionTests
     public void Region_context_is_placeholder_and_old_right_map_tab_is_retired()
     {
         var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
-        var right = Read("XuanYu.Editor.UI", "Right", "Right.axaml");
+        var right = Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml");
         Assert.Contains("REGION-A 接入后显示区域列表", left);
         Assert.DoesNotContain("Header=\"地图编辑器\"", right);
     }

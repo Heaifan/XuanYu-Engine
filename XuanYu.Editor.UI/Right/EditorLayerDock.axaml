@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.EditorLayerDock"
+             x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <Style Selector="TextBlock.layerDockTitle"><Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/><Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+    <Style Selector="Border.layerDockHeader"><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/><Setter Property="BorderThickness" Value="0,1,0,0"/><Setter Property="Padding" Value="0,6"/></Style>
+    <Style Selector="TextBlock.layerDockEmptyTitle"><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+  </UserControl.Styles>
+  <Grid RowDefinitions="Auto,*">
+    <Border Classes="layerDockHeader">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Text="{Binding CurrentLayerEmptyTitle}" Classes="layerDockTitle" VerticalAlignment="Center"/>
+        <Button x:Name="CollapseButton" Grid.Column="1" Content="收起" Click="CollapseButton_Click" Classes="uiTextButton" Padding="8,2" MinHeight="24"/>
+      </Grid>
+    </Border>
+    <Grid x:Name="LayerContent" Grid.Row="1">
+      <local:LayerPanel IsVisible="{Binding HasCurrentLayerItems}"/>
+      <StackPanel IsVisible="{Binding !HasCurrentLayerItems}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="240" Spacing="6">
+        <TextBlock Text="{Binding CurrentLayerEmptyTitle}" Classes="layerDockEmptyTitle" TextAlignment="Center"/>
+        <TextBlock Text="{Binding CurrentLayerEmptyMessage}" Classes="uiMultiline" TextAlignment="Center" TextWrapping="Wrap"/>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</UserControl>

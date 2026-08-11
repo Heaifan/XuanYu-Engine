@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.EditorRightTabs"
+             x:DataType="local:UiVm">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Icons/EditorIcons.axaml"/>
+        <ResourceInclude Source="avares://XuanYu.Editor.UI/Right/TopTabStripTemplate.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="TabControl.sideTabs"><Setter Property="Template" Value="{StaticResource TopTabStripTemplate}"/></Style>
+    <Style Selector="Border.debugSeparator"><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/><Setter Property="BorderThickness" Value="0,0,0,1"/><Setter Property="Margin" Value="0,2,0,6"/></Style>
+    <Style Selector="Grid.debugRow"><Setter Property="MinHeight" Value="26"/><Setter Property="Margin" Value="0,1"/></Style>
+    <Style Selector="ItemsControl.debugList"><Setter Property="Margin" Value="0"/></Style>
+  </UserControl.Styles>
+  <TabControl x:Name="SideTabs" Classes="sideTabs" SelectedIndex="{Binding RightTabIndex, Mode=TwoWay}">
+    <TabItem Classes="sideTab" Header="检查器"><local:InspectorPanel/></TabItem>
+    <TabItem Classes="sideTab" Header="调试">
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="10" Margin="0,6,0,0">
+          <StackPanel Spacing="4"><TextBlock Text="当前上下文" Classes="uiSection"/><Border Classes="debugSeparator"/><ItemsControl Classes="debugList" ItemsSource="{Binding DebugContextItems}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="local:InspectorFieldRow"><Grid Classes="debugRow" ColumnDefinitions="96,*" ColumnSpacing="8"><TextBlock Text="{Binding Label}" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding Value}" Classes="uiValue" ToolTip.Tip="{Binding Value}"/></Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel>
+          <StackPanel Spacing="4"><TextBlock Text="当前对象" Classes="uiSection"/><Border Classes="debugSeparator"/><ItemsControl Classes="debugList" ItemsSource="{Binding DebugObjectItems}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="local:InspectorFieldRow"><Grid Classes="debugRow" ColumnDefinitions="96,*" ColumnSpacing="8"><TextBlock Text="{Binding Label}" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding Value}" Classes="uiValue" ToolTip.Tip="{Binding Value}"/></Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel>
+          <StackPanel Spacing="6"><TextBlock Text="交互事务" Classes="uiSection"/><Border Classes="debugSeparator"/><Grid ColumnDefinitions="96,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="4"><TextBlock Text="阶段" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding InteractionPhase}" Classes="uiValue" ToolTip.Tip="{Binding InteractionPhase}"/><TextBlock Grid.Row="1" Text="Owner" Classes="uiLabel"/><TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding InteractionOwner}" Classes="uiValue" ToolTip.Tip="{Binding InteractionOwner}"/><TextBlock Grid.Row="2" Text="Preview" Classes="uiLabel"/><TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding InteractionPreview}" Classes="uiValue" ToolTip.Tip="{Binding InteractionPreview}"/></Grid><UniformGrid Columns="4" ColumnSpacing="6" RowSpacing="6"><Button Classes="uiTextButton" Content="开始" Command="{Binding InteractionCommand}" CommandParameter="Begin"/><Button Classes="uiTextButton" Content="预览" Command="{Binding InteractionCommand}" CommandParameter="Preview"/><Button Classes="uiTextButton" Content="提交" Command="{Binding InteractionCommand}" CommandParameter="Commit"/><Button Classes="uiTextButton" Content="取消" Command="{Binding InteractionCommand}" CommandParameter="Cancel"/></UniformGrid></StackPanel>
+          <StackPanel Spacing="4"><TextBlock Text="输入状态" Classes="uiSection"/><Border Classes="debugSeparator"/><ItemsControl Classes="debugList" ItemsSource="{Binding DebugInputItems}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="local:InspectorFieldRow"><Grid Classes="debugRow" ColumnDefinitions="96,*" ColumnSpacing="8"><TextBlock Text="{Binding Label}" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding Value}" Classes="uiValue" ToolTip.Tip="{Binding Value}"/></Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel>
+        </StackPanel>
+      </ScrollViewer>
+    </TabItem>
+  </TabControl>
+</UserControl>

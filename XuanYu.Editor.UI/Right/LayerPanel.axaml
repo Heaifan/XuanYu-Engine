@@ -37,8 +37,8 @@
       <Button Classes="layerTool" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}" AutomationProperties.Name="删除图层"/>
     </UniformGrid>
     <TextBlock Grid.Row="1" Classes="layerHint" Text="添加至少 2 个用户图层后可拖拽排序" IsVisible="{Binding IsLayerReorderHintVisible}" Margin="0,0,0,4"/>
-    <!-- F3：整页滚动由外层 ScrollViewer 接管；拖动事件见 LayerPanel.DragDrop.cs -->
-    <ListBox Grid.Row="2" x:Name="LayerList" Classes="layerList" ItemsSource="{Binding LayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
+    <!-- LAYER-A-R1：通用宿主只消费当前 Provider 的可见项目；拖动事件见 LayerPanel.DragDrop.cs -->
+    <ListBox Grid.Row="2" x:Name="LayerList" Classes="layerList" ItemsSource="{Binding CurrentLayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
              Background="Transparent" BorderThickness="0" Margin="0,2,0,0" HorizontalAlignment="Stretch">
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="local:MapLayerRowViewModel">

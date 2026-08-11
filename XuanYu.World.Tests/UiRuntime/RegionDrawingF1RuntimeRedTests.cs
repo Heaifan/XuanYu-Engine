@@ -15,50 +15,19 @@ public sealed class RegionDrawingF1RuntimeRedTests
     public RegionDrawingF1RuntimeRedTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Region_drawing_belongs_to_map_editor_workspace()
+    public void Region_drawing_is_not_rendered_as_a_map_editor_tool()
     {
-        using var host = new UiRuntimeTestHost(_fixture);
-        var found = host.Run(() =>
-        {
-            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
-            var left = new Left { DataContext = vm };
-            host.Show(left, 420, 720);
-            UiRuntimeTestHost.Descendants<TabItem>(left).First(x => (string?)x.Header == "地图").IsSelected = true;
-            left.UpdateLayout();
-            var tool = UiRuntimeTestHost.Descendants<ToggleButton>(left)
-                .First(x => x.Classes.Contains("mapTool"));
-            return tool.GetVisualAncestors().OfType<MapEditorPanel>().Any();
-        });
-
-        Assert.True(found);
+        var map = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapPagePanel.axaml"));
+        Assert.DoesNotContain("mapTool", map);
+        Assert.DoesNotContain("区域绘制", map);
     }
 
     [Fact]
-    public void Region_drawing_runtime_text_uses_dark_foreground_in_normal_and_selected_states()
+    public void Region_edit_has_no_drawing_tool_or_draft_surface()
     {
-        using var host = new UiRuntimeTestHost(_fixture);
-        var color = host.Run(() =>
-        {
-            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
-            var left = new Left { DataContext = vm };
-            host.Show(left, 420, 720);
-            UiRuntimeTestHost.Descendants<TabItem>(left).First(x => (string?)x.Header == "地图").IsSelected = true;
-            left.UpdateLayout();
-            left.UpdateLayout();
-            var toggle = UiRuntimeTestHost.Descendants<ToggleButton>(left)
-                .First(x => x.Classes.Contains("mapTool"));
-            var normal = UiRuntimeTestHost.Descendants<TextBlock>(toggle)
-                .Single(x => x.Classes.Contains("mapToolLabel"));
-            var normalColor = (normal.Foreground as SolidColorBrush)?.Color;
-            vm.SelectToolCommand.Execute("区域绘制");
-            left.UpdateLayout();
-            var selectedColor = (normal.Foreground as SolidColorBrush)?.Color;
-            return (normalColor, selectedColor, toggle.IsChecked);
-        });
-
-        Assert.Equal(Color.Parse("#243744"), color.normalColor);
-        Assert.Equal(Color.Parse("#243744"), color.selectedColor);
-        Assert.True(color.IsChecked);
+        var editor = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
+        Assert.DoesNotContain("RegionDrawing", editor);
+        Assert.DoesNotContain("Draft", editor);
     }
 
     [Fact]

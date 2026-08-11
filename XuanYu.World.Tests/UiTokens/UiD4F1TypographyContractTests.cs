@@ -14,7 +14,7 @@ public sealed class UiD4F1TypographyContractTests
         "Ui.axaml",
         "Design/UiStyles.D4F1.axaml",
         "Right/InspectorPanel.axaml",
-        "Right/Right.axaml",
+        "Right/EditorRightTabs.axaml",
         "Right/MapPagePanel.axaml",
         "Right/MapEditorPanel.axaml",
         "Right/LayerPanel.axaml",

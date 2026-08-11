@@ -8,20 +8,11 @@
     <Style Selector="TabItem.layerSubTab"><Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/><Setter Property="MinHeight" Value="{StaticResource Control.Height.Emphasized}"/><Setter Property="Padding" Value="10,4"/><Setter Property="Margin" Value="0,0,4,0"/><Setter Property="CornerRadius" Value="{StaticResource Radius.Standard}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
     <Style Selector="TabItem.layerSubTab:selected"><Setter Property="Foreground" Value="{StaticResource Color.Accent}"/><Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Accent}"/><Setter Property="BorderThickness" Value="0,0,0,2"/></Style>
   </UserControl.Styles>
-  <!-- F1：地图编辑器内部二级导航（地图 / 图层 / 环境）；每页独立滚动，内容不穿透固定标题 -->
+  <!-- LAYER-A-R1：地图专业导航只保留地图与环境；通用图层栏由右侧编辑 Dock 承载。 -->
   <TabControl Margin="0,4,0,0">
     <TabItem Classes="layerSubTab" Header="地图">
       <ScrollViewer VerticalScrollBarVisibility="Auto">
         <local:MapPagePanel/>
-      </ScrollViewer>
-    </TabItem>
-    <TabItem Classes="layerSubTab" Header="图层">
-      <!-- F1：图层列表与图层属性同页；页面统一滚动（列表在上、属性在下） -->
-      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Spacing="8" Margin="0,6,0,0" HorizontalAlignment="Stretch">
-          <local:LayerPanel HorizontalAlignment="Stretch"/>
-          <local:LayerInspectorPanel IsVisible="{Binding HasLayerSelection}"/>
-        </StackPanel>
       </ScrollViewer>
     </TabItem>
     <TabItem Classes="layerSubTab" Header="环境">

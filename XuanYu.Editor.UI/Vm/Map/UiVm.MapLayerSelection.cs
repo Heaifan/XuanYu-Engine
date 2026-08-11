@@ -34,6 +34,14 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(LayerItems));
         OnPropertyChanged(nameof(SelectedLayer));
         OnLayerSelectionChanged();
+        RaiseLayerContextBindings();
+    }
+
+    public void ClearLayerSelection()
+    {
+        if (_selectedLayerId is null) return;
+        _selectedLayerId = null;
+        OnLayerSelectionChanged();
     }
 
     void OnLayerSelectionChanged()
@@ -54,5 +62,6 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(LayerInspectorIsSystem));
         OnPropertyChanged(nameof(LayerInspectorVisible));
         OnPropertyChanged(nameof(LayerInspectorLocked));
+        OnPropertyChanged(nameof(HasCurrentLayerSelection));
     }
 }
