@@ -1,5 +1,68 @@
 # Architecture 架构知识
 
+## K-ARCH-002 产品模式持续膨胀时先建立 Workspace 边界
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E1
+**标签**：Editor、Workspace、Scope、Migration、Ownership
+**适用范围**：一个编辑器工具同时承担多个独立产品模式、面板上下文或输入/渲染流程时。
+
+**首次确认**：2026-08-11（UTC+08:00）
+**版本**：`v0.2.25.33-fix`（MAP-A 战略收口基线）
+**Commit**：待本轮收口提交补证
+**来源**：`MAP-A-R3-D2-F1-CLOSEOUT`、`R3-backlog.md`、MAP-A → EDITOR-A 单轮过渡计划。
+
+### 问题
+
+Map Editor 同时承载地图上下文、图层、Region Tool、Pointer、Picking、Draft、Render、Commit 与 History 时，产品模式的边界会被工具栏入口掩盖；失败发生后，局部修补很难判断应修改输入、领域、渲染还是产品归属。
+
+### 根因
+
+功能按“继续向一个工具追加入口”组织，而不是先明确 Workspace 身份、上下文插槽和切换时谁拥有临时工具状态；Region Drawing 的未验收路径因此与 Map Editor 的既有职责长期耦合。
+
+### 工程规则
+
+当一个工具持续吸收独立产品模式时，应先建立最小 Workspace Contract：Workspace Identity、布局上下文身份、唯一 Current Workspace Owner、Enter/Leave/Switch 与上下文保留不变量。稳定的 Domain、Camera、Picking 和 Renderer 合同优先迁移复用；Workspace 不得复制它们的权威状态。
+
+### 禁止做法
+
+- 仅靠继续增加 Toolbar/Panel 开关来表示独立产品模式；
+- 为切换 Workspace 新建第二份 World、Camera 或 Selection 权威状态；
+- 因产品归属调整而重写已验证的 Renderer、Picking 或 Domain 合同；
+- 把旧路径的真机 FAIL 改写为新路径已通过。
+
+### 正确做法
+
+1. 先冻结旧路径的真实验收状态和迁移目标；
+2. 建立纯 Editor 层的 Workspace 身份、定义和唯一 Manager；
+3. 将临时 Tool 状态在切换边界结束，World/Camera/兼容 Selection 继续由既有 Owner 持有；
+4. 先用合同测试证明切换不变量，再单独实施可见 Workspace UI 或 Region 能力。
+
+### 真实历史示例
+
+2026-08-11，`MAP-A-R3-D2-F1` 保留 `FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`。用户批准旧 Region Drawing 产品路径以 `SUPERSEDED · NOT ACCEPTED` 终止并迁移到 `REGION-A`，同时要求同一 Transition Round 建立 `EDITOR-A-R1 Workspace Contract`，而非继续在 Map Editor 内修补 Region UI。
+
+### 未来应用示例
+
+当 Road Editor 或 Terrain Editor 需要独立 Toolbar、左右面板和主内容时，先注册独立 Workspace，并复用 World、Camera、Selection 和 Render Snapshot；不要向 Map Editor 添加更多条件分支或复制状态。
+
+### 验证方法
+
+- Workspace Manager 的默认、双向切换和重复切换回归；
+- Current Workspace 只有一个 Owner；
+- Workspace 层不依赖 Vulkan，且不保存 World/Camera 的第二份可写状态；
+- 可见 UI 阶段另行进行真实窗口/输入验收。
+
+### 适用边界
+
+只有单一产品模式内的微小命令或面板显示变化，不应为了形式引入 Workspace。Workspace Identity 不是持久化 Schema，也不替代 Domain 的事实所有权。
+
+**关联 Lesson**：L-ARCH-001
+**关联 Knowledge**：K-VAL-002、K-INP-001、K-REN-001、K-REN-002
+
+---
+
 ## K-SPA-001 大地图 Screen↔World CPU 链必须使用双精度并做往返验证
 
 **状态**：Active

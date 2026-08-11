@@ -1,9 +1,11 @@
 # MAP-A-R3-D2-F1-CLOSEOUT
 
-**状态**：OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN
+**状态**：SUPERSEDED · NOT ACCEPTED · HISTORICAL 5 ITEMS REMAIN
 **基线**：`feat/MAP-A-R3` / `66a8b84`
 **自动门禁**：2026-08-11 00:03:14（UTC+08:00）完整 Build 0W0E、Core 335/335、World 1115/1115、WarCore 22/22、ARCH-A、5+100、SPIR-V 与 diff-check PASS
-**关闭条件**：下列 F1-M01～F1-M15 全部由用户真机确认 PASS。
+**原关闭条件**：下列 F1-M01～F1-M15 全部由用户真机确认 PASS。该条件未达成，故 F1 不得改写为 PASS 或 CLOSED。
+
+**战略终止裁定**：2026-08-11，用户批准 MAP-A → EDITOR-A 同轮过渡。旧 Region Drawing 产品路径不再继续修补；F1 以非成功终态保留，迁移目标为 `REGION-A`。已验证的 Domain、Picking、Camera、`RenderVectorOverlay`、Depth Policy、Ear Clipping、动态 Buffer 与 latest-state-wins 合同继续保留并由后续 Workspace 复用，不因战略终止而删除或重写。
 
 ## 真机 IPO 验收
 
@@ -49,4 +51,4 @@
 
 ## 自动回归结论
 
-F1 的自动门禁已全部通过；该结论不替代上表 15 项真机 IPO。当前唯一关闭阻塞是用户对 F1-M01～F1-M15 的逐项 FINAL 裁定。
+F1 的自动门禁已全部通过；该结论不替代上表 15 项真机 IPO。历史上未完成的验收项保持 FAIL/PENDING；本文件的战略终止不把它们伪造成通过，后续仅能在 `REGION-A` 的新合同与验收中重新处理。

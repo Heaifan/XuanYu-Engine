@@ -18,6 +18,12 @@
 
 ---
 
+## MAP-A-STRATEGIC-CLOSEOUT
+MAP-A → EDITOR-A Transition Round 阶段 A（2026-08-11）：保留 `MAP-A-R3-D2-F1 = FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN` 的真实事实，将旧 Region Drawing 产品路径战略终止为 `SUPERSEDED · NOT ACCEPTED`，迁移目标 `REGION-A`；不会把旧 F1 改写为 PASS 或 CLOSED。
+- 变化：新增战略收口与知识审计记录；新增 K-ARCH-002、L-ARCH-001 与 `REGION-A-MIG-001` Backlog；Map/Region Domain、Picking、Camera、Vector Overlay、Depth Policy、Ear Clipping、动态 Buffer 和 latest-state-wins 保留为后续 Workspace 的共享复用合同。
+- 验证：Solution Build 0 Warning / 0 Error；Core.Tests 339/339、World.Tests 1115/1115、WarCore.Tests 22/22 PASS；ARCH-A、5+100、宪法 2.2 标题/版本字段、产品版本一致性与 `git diff --check` PASS。本条不会停在 MAP-A，推送后同轮创建 `feat/EDITOR-A-workspace` 并实现 R1。
+- Hash：待本阶段收口提交补证。
+
 ## GOV-2026-08-11-MKRG-01
 里程碑知识沉淀门禁治理修订（2026-08-11 09:56:10 +08:00）：按当前主宪法实际最高条款顺延新增第八十六条，明确每个正式 Milestone 在 `CLOSED` 前必须完成 `Milestone Knowledge Review`；建立 `KNOWLEDGE`、`LESSON`、`CHANGELOG_ONLY`、`BACKLOG`、`REJECTED`、`CONSTITUTION_CANDIDATE` 六类筛选、证据、去重、禁止自动升格和关闭顺序。
 - 变化：同步 `docs/dev-rules.md`、知识库 README，新增 MAP-A-CLOSE 的 C1～C4 修订计划和 AC-U07～AC-U10，更新 MAP-A backlog、docs 索引与 file-tree；不修改产品代码，不执行 MAP-A 产品/架构收口。

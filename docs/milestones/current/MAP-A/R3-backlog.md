@@ -2,11 +2,14 @@
 
 GRID-RW-1：Reference Grid 正式路径已改为全局 `ReferenceGridFrameState`（100m 起步、10~140 DIP 回滞、相机 Step 吸附）驱动的 GPU procedural 世界线；每轴 513 条、总计 2052 顶点，Vulkan `LineList` 管线。旧 Fullscreen/Fragment-local LOD/band-pass 路径与其错误测试已删除。
 
-`MAP-A-CLOSE` 收口计划已单独登记于 [MAP-A-CLOSE-plan.md](MAP-A-CLOSE-plan.md)，新增 C3 里程碑知识沉淀审计，并将原全量门禁顺延为 C4。本计划修订不改变当前 R3/F1 状态，不解锁 D3 或 F2。
+`MAP-A → EDITOR-A` 单轮过渡计划已登记于 [MAP-A-CLOSE-plan.md](MAP-A-CLOSE-plan.md)。MAP-A 战略收口、知识审计和 EDITOR-A-R1 Workspace Contract 属于同一个 Transition Round；本轮不启动旧 D3、F2 或 Region Drawing 新实现。
 
 R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结目标和范围。
 
 ## 当前裁定
+
+- **战略终止（2026-08-11）**：`MAP-A-R3-D2-F1 = SUPERSEDED · NOT ACCEPTED · HISTORICAL 5 ITEMS REMAIN`。F1-M03～M06、M15 的 FAIL/PENDING 事实不改写为 PASS；旧 Region Drawing 产品路径迁移目标为 `REGION-A`。Map/Region Domain、Picking、Camera、`RenderVectorOverlay`、Depth Policy、Ear Clipping、动态 Buffer 与 latest-state-wins 保留为共享基础设施，禁止为新 Workspace 重写。
+- **Transition Backlog**：`REGION-A-MIG-001` — 将旧 Region Drawing 的未验收产品行为迁移到独立 Region Workspace 后重新定义范围、自动合同与真机 IPO；本轮不实现。阻断条件：不得把旧 F1 失败项直接宣称为新 Workspace 已通过。
 
 - F1-FAR-RECOVERY-01：日志另确认 FarPlane 历史极值粘滞；Far 必须按当前距离回落，编辑器相机工作上限为 1,000km。此轮不引入 Camera-relative Rendering，保留 SAFE，并等待原 IPO 真机复验。
 
@@ -34,7 +37,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 - MAP-A-R3-D2-F1-CLOSEOUT：RW-2A/RW-2B 真机 PASS 已记录；RW-2C/RW-2D 降级为 `DEFERRED · NON-BLOCKING VISUAL IMPROVEMENT`。F1 FINAL 仅在 15/15 真机 IPO PASS 与完整 0W0E 门禁后 CLOSED；A03～A06 仍待恢复原始验收合同，D3 继续禁止启动。
 - F1 FINAL：10/15 PASS；M03/M04/M05/M15 为极远 `Vector3d` 相机进入 float ViewProjection 后的精度退化和不可逆 VP 崩溃，执行 `F1-FAR-SAFE-01` 先确保 Metric/投影失败安全及可读的 double 诊断；M06（四点 Region 闭合/图层删除）明确拆分为后续 `F1-REGION-CLOSE-01`，不得混修。F1 保持 `OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`。
 - GRID-RW-1-CORR2（2026-08-10）：用户真机审计 FAIL 后冻结四组修复——Step 保守尺度 max(X,Y)、Dedicated Empty-input Line 管线 + 负 Depth Bias、Major/Minor（10:1，α 0.10/0.18）、连续远距/掠射 Fade（禁 band-pass/local LOD/discard）；新增各向异性门禁（2/30、30/2）。完成条件：用户逐项代码审计 PASS（FrameState → anisotropy → Pipeline → Shader → Depth → Major/Minor → Fade → Tests → SPIR-V → 门禁）后才进入真机；真机仍明显摩尔纹则 STOP，转 Screen-space Ribbon Triangle + Analytical AA（FrameState/Step/Anchor 保留）。
-- D3：禁止启动；F2：不创建。
+- D3：战略终止，不在旧 MAP-A 路线上启动；F2：不创建。
 
 ## Viewport Overlay / Scale Indicator 架构整改
 
@@ -48,7 +51,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 
 - 唯一数据链：`ScaleIndicatorMetric → UiVm → RenderProjection → ScaleIndicatorOverlay → Vulkan`。
 - 唯一布局：视口左下角 16 DIP；Visual Rect 由 `ViewportOverlayLayoutResolver` 生成。
-- 自动门禁不替代用户真机验收；当前 F1 继续 OPEN。
+- 自动门禁不替代用户真机验收；F1 已战略终止为 `SUPERSEDED · NOT ACCEPTED`，其未验收事实迁移到 `REGION-A-MIG-001`，不再阻塞 EDITOR-A-R1 Workspace Contract。
 
 ## MAP-A-R3-D2-F1-C2：正式收口
 

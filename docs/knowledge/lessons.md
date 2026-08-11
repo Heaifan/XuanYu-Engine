@@ -2,6 +2,59 @@
 
 > 教训记录“为什么会沿着错误前提持续投入”，并定义何时必须停止局部修补、回到共同依赖与承载架构审查。
 
+## L-ARCH-001 跨越完整交互链的产品切片必须先拆清 Workspace 边界
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E1
+**标签**：Workspace、Input、Picking、Draft、Render、Commit、History、Scope
+**确认时间**：2026-08-11（UTC+08:00）
+**来源 Milestone**：MAP-A-R3-D2-F1 / MAP-A → EDITOR-A Transition Round
+
+### Symptom（现象）
+
+Region Drawing 同时跨 Pointer、Picking、MapPoint、Draft、Vector Overlay、Commit 和 History；真机验收既暴露 Gizmo/Region 输入竞争，也暴露 Region 的视觉稳定性和四点闭合行为失败。自动回归能覆盖局部合同，却不能把旧产品路径判为真机通过。
+
+### Impact（影响）
+
+修复被拆成输入仲裁、Depth Policy、Metric/Scale、Far Projection 等多轮，定位时容易把共享 Camera/Grid/Overlay 问题误归为 Region Tool；继续在 Map Editor 内叠加入口会扩大产品与调试范围。
+
+### Wrong Paths（错误路径）
+
+- 把一次跨完整数据链的失败当成单一 Region UI 缺陷；
+- 用自动测试或局部 PASS 推导旧 F1 可以 CLOSED；
+- 继续修补旧 Map Editor Region Drawing，再决定是否需要独立 Workspace；
+- 将未验证的视觉机制解释写成已确认根因。
+
+### Root Cause（最终根因）
+
+已确认的是产品模式、输入链和渲染链在同一工具中耦合，导致故障边界不清。对于个别视觉现象的 GPU 机制解释仍须按事故记录区分已确认事实与高置信解释，不能补造确定性证据。
+
+### Resolution（解决方式）
+
+保留旧 F1 的失败记录，冻结为 `SUPERSEDED · NOT ACCEPTED` 并迁移到 `REGION-A`；在同一 Transition Round 先建立纯 Editor 的 Workspace Contract，再让后续 Region Workspace 复用已验证的 Domain、Camera、Picking 与 Vector Overlay 合同。
+
+### Verification（如何证明）
+
+- `R3-F1-closeout.md` 保留 F1-M03～M06、M15 的 FAIL/PENDING；
+- `R3-backlog.md` 登记 `REGION-A-MIG-001`；
+- EDITOR-A-R1 自动测试覆盖 Workspace 唯一 Owner、双向/重复切换、默认 Select 和无第二份 World/Camera 状态；
+- 可见 Workspace UI 与 Region 功能另行执行真机 IPO。
+
+### Prevention（以后如何避免）
+
+复杂交互先沿数据链拆分：输入仲裁、Picking、Draft、渲染、Commit/History 和产品 Workspace 边界分别冻结合同与验收；当一个工具开始承担独立产品模式时，先审查 Workspace 归属。
+
+### Reusable Rule（可复用原则）
+
+跨 Input + Picking + Draft + Render + Commit + History 的能力，不应在没有 Workspace/所有权边界的情况下作为一个“顺手追加的工具功能”交付。
+
+### Promotion（提升建议）
+
+提升为 `K-ARCH-002`。不提出新的宪法条款：第八十六条已经覆盖证据、审计、Backlog 和禁止自动升格要求。
+
+---
+
 ## L-REN-002 双精度回退必须发生在第一次降精度之前
 
 **状态**：Active
