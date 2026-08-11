@@ -41,4 +41,4 @@ R3 新增 `EditorModeManagerTests`（4 项）、`EditorModeUiTests`（7 项）�
 
 - Solution Build：0 Warning / 0 Error；Core.Tests：339/339 PASS；World.Tests：1154/1154 PASS；WarCore.Tests：22/22 PASS。
 - 聚焦 R1/R2/R3 Workspace/Mode：39/39 PASS；ARCH-A、5+100、四处 `v0.2.26.2-rz` 一致性、三个 EDITOR-A SVG XML 与 `git diff --check`：PASS。
-- 实现提交：`17aa91be1624b96beb2f97d24a6c199c0733a269`（`feat(editor): add manage edit mode shell`）。推送与远端等值核验将在本轮结束时补入真实 Hash。自动门禁不替代本报告第 4 节的用户真机 IPO。`_tmp_blind_rows/` 为既有未跟踪目录，本轮未读取、未修改、未纳入提交。
+- 实现提交：`17aa91be1624b96beb2f97d24a6c199c0733a269`（`feat(editor): add manage edit mode shell`）；门禁证据提交：`14de0cff3800374d2f75a9edfa2ad6cb5ae4aa79`。本轮推送后 `origin/feat/EDITOR-A-workspace` 指向当前提交，ahead/behind 为 `0/0`。自动门禁不替代本报告第 4 节的用户真机 IPO。`_tmp_blind_rows/` 为既有未跟踪目录，本轮未读取、未修改、未纳入提交。
