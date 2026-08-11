@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.9-rz
+MAP-DOC-A-R2-C2 Dataset Document/Storage（2026-08-11）：完成 `xuanyu-map-dataset` v0.1.0 严格五字段文档、空 features 约束和 Normal/Missing/Invalid 隔离加载。
+- 变化：新增 Dataset 文档序列化、校验、原子保存与 Descriptor 身份匹配；不引入 Geometry、Feature 或 properties 语义。
+- 验证：C2 focused `10/10 PASS`；保存/读取、缺失、损坏、未知字段、非空 features、身份不匹配和失败不覆盖旧文件均覆盖。
+- 遗留：C3 Registry 生命周期与跨文件事务、C4 UI 与真机验收仍未完成；R2 不得标记 CLOSED。
+
 ## v0.2.26.8-rz
 MAP-DOC-A-R2-C1 Dataset Registry 合同（2026-08-11）：完成 typed Dataset Descriptor 与六类 type 白名单，收紧 Dataset ID、大小写不敏感唯一性和 map-root-relative `data/` source 安全规则。
 - 变化：Manifest `datasets` 从无语义 JSON 占位数组切换为 `id/type/source` Descriptor；既有 `assets` 空容器保持不变。

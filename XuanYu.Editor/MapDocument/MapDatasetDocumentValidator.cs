@@ -1,0 +1,30 @@
+using System.Text.RegularExpressions;
+
+namespace XuanYu.Editor.MapDocument;
+
+public static partial class MapDatasetDocumentValidator
+{
+    static readonly Regex IdPattern = BuildIdPattern();
+
+    public static MapDocumentResult<MapDatasetDocument> Validate(MapDatasetDocument? document)
+    {
+        if (document is null) return Fail("MissingDocument", "Dataset 文档为空。", "document");
+        if (document.Format != MapDatasetDocument.CurrentFormat)
+            return Fail("InvalidFormat", "Dataset format 不受支持。", "format");
+        if (document.Version != MapDatasetDocument.CurrentVersion)
+            return Fail("UnsupportedVersion", "Dataset version 不受支持。", "version");
+        if (!IdPattern.IsMatch(document.Id))
+            return Fail("InvalidId", "Dataset ID 不符合稳定标识规则。", "id");
+        if (!MapDatasetTypes.IsKnown(document.Type))
+            return Fail("InvalidType", "Dataset type 不在允许的六类之内。", "type");
+        if (document.Features.IsDefault || !document.Features.IsEmpty)
+            return Fail("InvalidFeatures", "当前版本 Dataset features 必须为空数组。", "features");
+        return MapDocumentResult<MapDatasetDocument>.Ok(document);
+    }
+
+    [GeneratedRegex("^[a-z0-9][a-z0-9_-]{0,127}$", RegexOptions.CultureInvariant)]
+    private static partial Regex BuildIdPattern();
+
+    static MapDocumentResult<MapDatasetDocument> Fail(string code, string message, string detail) =>
+        MapDocumentResult<MapDatasetDocument>.Fail(code, message, "Validate", detail);
+}
