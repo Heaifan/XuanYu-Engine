@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Text.Json;
 using XuanYu.Editor.MapDocument;
 
 namespace XuanYu.World.Tests.Map;
@@ -43,13 +42,11 @@ public sealed class MapManifestValidationTests
     [Fact]
     public void Container_items_are_preserved_without_registry_semantics()
     {
-        using var doc = JsonDocument.Parse("{\"id\":\"future\"}");
         var manifest = Valid() with
         {
-            Datasets = ImmutableArray.Create(doc.RootElement.Clone()),
-            Assets = ImmutableArray.Create(doc.RootElement.Clone())
+            Datasets = ImmutableArray.Create(new MapDatasetDescriptor("future", "region", "data/future.json"))
         };
         Assert.True(MapManifestValidator.Validate(manifest).Succeeded);
-        Assert.Equal("future", manifest.Datasets[0].GetProperty("id").GetString());
+        Assert.Equal("future", manifest.Datasets[0].Id);
     }
 }

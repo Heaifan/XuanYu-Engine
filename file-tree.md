@@ -249,6 +249,8 @@
 │  │  ├─ MapEnvironmentDefinition.cs
 │  │  ├─ MapJsonMapper.cs
 │  │  ├─ MapJsonSerializer.cs
+│  │  ├─ MapDatasetDescriptor.cs
+│  │  ├─ MapDatasetPathPolicy.cs
 │  │  ├─ MapManifest.cs
 │  │  ├─ MapManifestJson.cs
 │  │  ├─ MapManifestMapper.cs
@@ -898,6 +900,7 @@
 │  │  ├─ MapManifestCreationTests.cs
 │  │  ├─ MapManifestSerializationTests.cs
 │  │  ├─ MapManifestStorageTests.cs
+│  │  ├─ MapDatasetContractTests.cs
 │  │  ├─ MapManifestValidationTests.cs
 │  │  ├─ MapEnvironmentValidationTests.cs
 │  │  ├─ MapIdTests.cs
@@ -1574,6 +1577,8 @@
 - `XuanYu.Editor/MapDocument/MapDocumentOwner.cs` — MAP-A-R1-D2：当前地图状态所有者（最小状态机）。
 - `XuanYu.Editor/MapDocument/MapDocumentResult.cs` — MAP-A-R1-D2：地图操作结构化结果（对齐 SceneDocumentResult 模式，语义独立）。
 - `XuanYu.Editor/MapDocument/MapDocumentValidator.cs` — MAP-A-R1-D2：地图文档 DTO（.xymap v1）严格校验。领域合法性（尺寸范围）单一事实源在 World.MapDefinitionValidator。
+- `XuanYu.Editor/MapDocument/MapDatasetDescriptor.cs` — MAP-DOC-A-R2-C1：Dataset Descriptor 与六类允许 type 常量。
+- `XuanYu.Editor/MapDocument/MapDatasetPathPolicy.cs` — MAP-DOC-A-R2-C1：Dataset source 的 map-root-relative `data/` 安全路径策略。
 - `XuanYu.Editor/MapDocument/MapEnvironmentDefinition.cs` — MAP-A-R1-D2：环境定义。D2 只保存与校验，不渲染。
 - `XuanYu.Editor/MapDocument/MapJsonMapper.cs` — MAP-A-R1-D2：MapDocument ↔ MapDocumentJson 双向映射。
 - `XuanYu.Editor/MapDocument/MapJsonSerializer.cs` — MAP-A-R1-D2：.xymap 严格 JSON 读写。字段大小写敏感、未知字段拒绝、确定性输出、UTF-8。
@@ -1854,6 +1859,7 @@
 - `XuanYu.World.Tests/Map/MapManifestCreationTests.cs` — MAP-DOC-A-R1：Manifest 最小创建合同与当前地图身份投影。
 - `XuanYu.World.Tests/Map/MapManifestSerializationTests.cs` — MAP-DOC-A-R1：Manifest JSON 键名、严格性与 Round-trip 合同。
 - `XuanYu.World.Tests/Map/MapManifestStorageTests.cs` — MAP-DOC-A-R1：map.json 原子保存、读取与失败安全合同。
+- `XuanYu.World.Tests/Map/MapDatasetContractTests.cs` — MAP-DOC-A-R2-C1：Dataset type、ID、source 与唯一性合同测试。
 - `XuanYu.World.Tests/Map/MapManifestValidationTests.cs` — MAP-DOC-A-R1：Manifest format、version、ID、坐标系与容器校验。
 - `XuanYu.World.Tests/Map/MapDocumentOwnerTests.cs` — MAP-A-R1-D2：当前地图状态所有者（New/Load/Modify/Save/Unload 基础状态）。
 - `XuanYu.World.Tests/Map/MapEnvironmentValidationTests.cs` — MAP-A-R1-D2：环境定义与参数校验。

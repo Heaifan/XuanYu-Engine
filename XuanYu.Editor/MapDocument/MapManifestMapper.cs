@@ -13,7 +13,8 @@ internal static class MapManifestMapper
         new MapManifestCoordinateSystemJson(
             manifest.CoordinateSystem.Type,
             manifest.CoordinateSystem.Unit),
-        manifest.Datasets,
+        manifest.Datasets.Select(dataset => new MapDatasetDescriptorJson(
+            dataset.Id, dataset.Type, dataset.Source)).ToArray(),
         manifest.Assets);
 
     public static MapManifest ToManifest(MapManifestJson json) => new(
@@ -24,6 +25,7 @@ internal static class MapManifestMapper
         new MapManifestCoordinateSystem(
             json.CoordinateSystem?.Type ?? "",
             json.CoordinateSystem?.Unit ?? ""),
-        json.Datasets?.ToImmutableArray() ?? default,
+        json.Datasets?.Select(dataset => new MapDatasetDescriptor(
+            dataset.Id ?? "", dataset.Type ?? "", dataset.Source ?? "")).ToImmutableArray() ?? default,
         json.Assets?.ToImmutableArray() ?? default);
 }

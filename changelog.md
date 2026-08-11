@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.8-rz
+MAP-DOC-A-R2-C1 Dataset Registry 合同（2026-08-11）：完成 typed Dataset Descriptor 与六类 type 白名单，收紧 Dataset ID、大小写不敏感唯一性和 map-root-relative `data/` source 安全规则。
+- 变化：Manifest `datasets` 从无语义 JSON 占位数组切换为 `id/type/source` Descriptor；既有 `assets` 空容器保持不变。
+- 验证：C1 focused `14/14 PASS`；`MapDatasetContractTests` 覆盖六类、重复 ID、非法 type、路径穿越和根目录约束。
+- 遗留：C2 文档文件与状态加载、C3 生命周期、C4 UI 与真机验收仍未完成；R2 不得标记 CLOSED。
+
 ## v0.2.26.7-fix
 MAP-DOC-A-R1-F1 Manifest Identity UI 修复（2026-08-11 14:58:21）：承接 R1 M07 已记录的真实失败，不改写历史，修复 Manifest ID 派生显示未即时刷新的通知链与默认宽度复制按钮裁切问题。
 - 变化：Manifest 切换时同步通知 `MapIdText` 与 `MapIdDisplay`；Text、Tooltip、Copy 继续统一消费当前 Manifest ID。

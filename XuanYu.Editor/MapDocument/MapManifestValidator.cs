@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace XuanYu.Editor.MapDocument;
 
-// MAP-DOC-A-R1：Manifest 严格校验；Dataset/Asset 项目内容留给后续轮次。
+// MAP-DOC-A-R2-C1：Manifest Dataset Descriptor 合同校验。
 public static partial class MapManifestValidator
 {
     static readonly Regex IdPattern = BuildIdPattern();
@@ -28,10 +28,22 @@ public static partial class MapManifestValidator
             return Fail("InvalidDatasets", "datasets 必须是数组。", "datasets");
         if (manifest.Assets.IsDefault)
             return Fail("InvalidAssets", "assets 必须是数组。", "assets");
+        var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var dataset in manifest.Datasets)
+        {
+            if (!IdPattern.IsMatch(dataset.Id) || dataset.Id.Contains('.'))
+                return Fail("InvalidDatasetId", "Dataset ID 必须是小写字母、数字、短横线或下划线。", "datasets.id");
+            if (!MapDatasetTypes.IsKnown(dataset.Type))
+                return Fail("InvalidDatasetType", "Dataset type 不在允许的六类之内。", "datasets.type");
+            if (!MapDatasetPathPolicy.IsSafeSource(dataset.Source))
+                return Fail("InvalidDatasetSource", "Dataset source 必须是 map 根目录下 data/ 内的安全相对路径。", "datasets.source");
+            if (!ids.Add(dataset.Id))
+                return Fail("DuplicateDatasetId", "Dataset ID 必须大小写不敏感唯一。", "datasets.id");
+        }
         return MapDocumentResult<MapManifest>.Ok(manifest);
     }
 
-    [GeneratedRegex("^[a-z0-9][a-z0-9._-]{0,127}$", RegexOptions.CultureInvariant)]
+    [GeneratedRegex("^[a-z0-9][a-z0-9_-]{0,127}$", RegexOptions.CultureInvariant)]
     private static partial Regex BuildIdPattern();
 
     static MapDocumentResult<MapManifest> Fail(string code, string message, string detail) =>

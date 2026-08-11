@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace XuanYu.Editor.MapDocument;
@@ -10,8 +9,15 @@ internal sealed record MapManifestJson(
     [property: JsonPropertyName("id"), JsonPropertyOrder(2)] string? Id,
     [property: JsonPropertyName("name"), JsonPropertyOrder(3)] string? Name,
     [property: JsonPropertyName("coordinate_system"), JsonPropertyOrder(4)] MapManifestCoordinateSystemJson? CoordinateSystem,
-    [property: JsonPropertyName("datasets"), JsonPropertyOrder(5)] IReadOnlyList<JsonElement>? Datasets,
-    [property: JsonPropertyName("assets"), JsonPropertyOrder(6)] IReadOnlyList<JsonElement>? Assets);
+    [property: JsonPropertyName("datasets"), JsonPropertyOrder(5)]
+    IReadOnlyList<MapDatasetDescriptorJson>? Datasets,
+    [property: JsonPropertyName("assets"), JsonPropertyOrder(6)]
+    IReadOnlyList<System.Text.Json.JsonElement>? Assets);
+
+internal sealed record MapDatasetDescriptorJson(
+    [property: JsonPropertyName("id"), JsonPropertyOrder(0)] string? Id,
+    [property: JsonPropertyName("type"), JsonPropertyOrder(1)] string? Type,
+    [property: JsonPropertyName("source"), JsonPropertyOrder(2)] string? Source);
 
 internal sealed record MapManifestCoordinateSystemJson(
     [property: JsonPropertyName("type"), JsonPropertyOrder(0)] string? Type,
