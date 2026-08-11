@@ -23,8 +23,8 @@ MAP-DOC-A-R1 Map Content Navigation + Map Manifest（2026-08-11 14:09:18）：�
 - 变化：地图二级导航冻结为“地图基础 / 地图环境 / 数据集”；地图基础显示 Manifest ID 与坐标系；数据集只显示空态，不提前实现 Registry；地图环境不扩展 R1 Schema。
 - 变化：新增 `MapManifest`、严格 snake_case JSON DTO/Serializer/Validator、`MapManifestStorageService` 原子保存与候选读取、`MapManifestOwner`；窗口文件选择器接通 `map.json` 打开/保存。
 - 测试：新增创建、校验、序列化、UTF-8、Round-trip、未知字段/错误容器、失败安全与导航专项；保留旧 `.xymap` 场景引用链不变。
-- 验证：Solution Build 0 Warning / 0 Error；Core.Tests 339/339、World.Tests 1175/1175、WarCore.Tests 22/22；MAP-DOC-A-R1 相关聚焦 57/57；ARCH-A、5+100、版本一致性、`git diff --check` 待本条落库前复核。
-- Hash：实现提交见本轮远端 HEAD；状态：`READY FOR USER ACCEPTANCE`，等待 MAP-DOC-A-R1-M01～M08，未宣布 CLOSED。
+- 验证：Solution Build 0 Warning / 0 Error；Core.Tests 339/339、World.Tests 1175/1175、WarCore.Tests 22/22；MAP-DOC-A-R1 相关聚焦 57/57；ARCH-A、5+100、版本一致性、`git diff --check` PASS。
+- Hash：`9001042`（实现提交）；状态：`READY FOR USER ACCEPTANCE`，等待 MAP-DOC-A-R1-M01～M08，未宣布 CLOSED。
 
 ## v0.2.26.5-rz
 LAYER-A-R1 通用图层栏与编辑职责分离（2026-08-11 13:40:02）：建立编辑模式通用图层 Dock，迁移真实 Region Layer，清理 Map 图层与 Region Drawing 串线。
