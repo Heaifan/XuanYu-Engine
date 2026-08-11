@@ -33,6 +33,20 @@ public sealed class UiMapDatasetF3ContractTests
     }
 
     [Fact]
+    public void Dataset_rows_center_text_and_reserve_a_64_dip_status_area()
+    {
+        var dataset = Read("XuanYu.Editor.UI", "Right", "DatasetPanel.axaml");
+        var layer = Read("XuanYu.Editor.UI", "Right", "DatasetLayerPanel.axaml");
+        Assert.All([dataset, layer], panel =>
+        {
+            Assert.Contains("HorizontalAlignment\" Value=\"Center", panel);
+            Assert.Contains("VerticalAlignment\" Value=\"Center", panel);
+            Assert.Contains("TextAlignment\" Value=\"Center", panel);
+            Assert.Contains("MinWidth\" Value=\"{StaticResource Size.Width.64}", panel);
+        });
+    }
+
+    [Fact]
     public void Dataset_selection_hides_map_form_and_names_dataset_inspector()
     {
         var panel = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");

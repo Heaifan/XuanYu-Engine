@@ -1177,6 +1177,7 @@
 │  │        ├─ MAP-DOC-A-R3-F2-ui-closeout.svg
 │  │        ├─ MAP-DOC-A-R3-F3-acceptance.md
 │  │        ├─ MAP-DOC-A-R3-F3-ui-spec-rework.svg
+│  │        ├─ MAP-DOC-A-R3-F4-acceptance.md
 │  │        └─ MAP-DOC-A-R3-plan.md
 │  │        └─ MAP-DOC-A-R1-plan.md
 │  └─ ui/
@@ -2186,6 +2187,7 @@
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-F2-ui-closeout.svg` — R3-F2 UI 收口、真机验收与 Closeout 顺序状态图。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-F3-acceptance.md` — R3-F3 UI Spec 合规重做真机 IPO 验收清单。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-F3-ui-spec-rework.svg` — R3-F3 列表、图层和检查器职责边界状态图。
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-F4-acceptance.md` — R3-F4 Dataset/Layer 文字对齐真机 IPO 验收清单。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-plan.md` — Dataset Layer Editing 的冻结范围与验收边界。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）

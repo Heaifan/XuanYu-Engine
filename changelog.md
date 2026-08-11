@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.20-fix
+MAP-DOC-A-R3-F4 Dataset/Layer 文字居中（2026-08-11 22:53:02）：修复 `c019701` 未实际写入的四个 Dataset 行文字对齐 Setter；仅收紧列表呈现，不修改 UI Token、Schema、Registry、Region、Renderer 或保存协议。
+- 变化：`datasetName`、`datasetStatus`、`datasetLayerName`、`datasetLayerStatus` 均水平与垂直居中；两个 Status 保留 64 DIP 最小状态区；Dataset/Layer 行高继续分别为 28/32 DIP。
+- 验证：F4 静态合同 `4/4 PASS`、AXAML XML 与版本四处一致；完整解决方案 Build `0 Warning / 0 Error`；Core `339/339`、World `1238/1238`、WarCore `22/22` PASS；ARCH-A 与 `git diff --check` PASS。首次 Gate 曾被运行中的编辑器锁定，关闭后重跑通过。
+- 遗留：等待 `MAP-DOC-A-R3-F4-acceptance.md` 的 F4-M01～F4-M03 真机验收；未进入 MAP-DATA-A，R3 不得宣布 CLOSED。
+
 ## v0.2.26.19-fix
 MAP-DOC-A-R3-F3 UI Spec Compliance Rework（2026-08-11 22:00:35）：用户真机裁定 R3-F2 为 FAIL，R3 保持 OPEN；按 UI Spec 的 28/32 DIP 单行合同重做 Dataset/Layer，并修正 Dataset Inspector 优先级。
 - 变化：Dataset 仅显示 Name + Status；Layer 仅显示 Drag / Name / Status / Visible / Lock，并复用正式 `LayerPanel.States.axaml` 开关；选中 Dataset 时隐藏 MapFormPanel，显示六项 Dataset 属性及“数据集属性”。
