@@ -2,6 +2,8 @@
 
 GRID-RW-1：Reference Grid 正式路径已改为全局 `ReferenceGridFrameState`（100m 起步、10~140 DIP 回滞、相机 Step 吸附）驱动的 GPU procedural 世界线；每轴 513 条、总计 2052 顶点，Vulkan `LineList` 管线。旧 Fullscreen/Fragment-local LOD/band-pass 路径与其错误测试已删除。
 
+`MAP-A-CLOSE` 收口计划已单独登记于 [MAP-A-CLOSE-plan.md](MAP-A-CLOSE-plan.md)，新增 C3 里程碑知识沉淀审计，并将原全量门禁顺延为 C4。本计划修订不改变当前 R3/F1 状态，不解锁 D3 或 F2。
+
 R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结目标和范围。
 
 ## 当前裁定

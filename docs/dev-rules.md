@@ -266,3 +266,19 @@ dotnet build-server shutdown
 - **验收前禁启后续**：自动测试通过 ≠ 功能 CLOSED；当前轮需真机验收的，未获用户明确真机通过不得关闭阶段、不得规划下一阶段。宪法案例：**WORLD-B-R4 真机未过前禁止启动 F5**。
 - **速度与真实并重**：严格治理不可沦为无限审计或无限对账；不跳过真实门禁、不伪造结果、不扩围、不延迟已具备条件的落库、不以“继续核对”无限拖延。
 - **落库即等待**：commit+push 且远端复核通过后，进入等待验收状态，不得主动开始下一阶段、不得在未验收前启动后续功能（如 F5）、不得顺手扩展/重构/补账历史文档。
+
+---
+
+## 18. 里程碑知识沉淀门禁（GOV-KNOWLEDGE-R1）
+
+正式 Milestone 在 `CLOSED` 前必须完成一次 `Milestone Knowledge Review`。执行顺序固定为：
+
+```text
+功能实现 → 自动验证 → 用户验收 → 知识沉淀审计
+→ Knowledge / Lessons / Backlog 分类落库 → 最终门禁
+→ Commit + Push → 远端 HEAD 复核 → CLOSED
+```
+
+审计必须先读取该 Milestone 的 changelog、Commit、计划、验收记录、失败/返工记录、架构决策、测试证据和最终实现，再输出候选表。每项只能分类为：`KNOWLEDGE`、`LESSON`、`CHANGELOG_ONLY`、`BACKLOG`、`REJECTED` 或 `CONSTITUTION_CANDIDATE`。分类前先搜索现有知识，重复根因更新原条目；未经证据支持的猜想、一次性 workaround 和纯历史材料不得入库。
+
+`CONSTITUTION_CANDIDATE` 只能报告给用户或宪法维护 AI 审批，执行 AI 不得自动升格。审计阶段发现当前阻塞缺陷要重新打开任务，未来能力登记 Backlog；不得借复盘顺手改产品代码、重构、加依赖或改 Schema。审计未完成时，Milestone 只能保持 `READY FOR CLOSEOUT` 或等价状态。

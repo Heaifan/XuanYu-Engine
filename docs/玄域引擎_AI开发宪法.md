@@ -1,8 +1,8 @@
-# 玄域引擎 AI 开发宪法 2.1
+# 玄域引擎 AI 开发宪法 2.2
 
 **版本：** 2.1
 **制定日期：** 2026-08-03
-**修订日期：** 2026-08-10
+**修订日期：** 2026-08-11
 **维护者：** 用户指定的宪法维护 AI——ChatGPT
 **生效条件：** 经用户批准，并提交至玄域引擎仓库后正式生效
 **适用范围：** 玄域引擎、《兵无常势》及基于玄域引擎开展的代码、测试、文档、审计、规划、验收与 Git 操作
@@ -1701,6 +1701,96 @@ Applicable Knowledge:
 重大知识治理变更由用户最终裁定。
 
 ---
+
+## 第八十六条　里程碑知识沉淀门禁
+
+每一个正式 Milestone 在满足功能、自动验证和必要用户验收要求之后、正式宣布 `CLOSED` 之前，必须完成一次 `Milestone Knowledge Review`（里程碑知识沉淀审计）。该审计是 Milestone 生命周期的关闭条件，不是可选的 changelog 总结，也不是每个小 Round 都要单独创建的低价值报告。
+
+### 1. 审计必须回答的问题
+
+审计必须基于当前仓库和可核验历史回答：
+
+1. 哪些工程知识可以跨任务复用；
+2. 出现过哪些错误、事故、错误假设或无效方案；
+3. 最终根因和解决证据是什么；
+4. 哪些架构原则获得了真实工程证据；
+5. 哪些调试、验证和真机验收方法值得复用；
+6. 哪些做法应列为反模式；
+7. 哪些 workaround 只是临时措施，不能推广；
+8. 哪些技术债应进入正式 Backlog；
+9. 是否存在可以提出、但尚未批准升格的宪法候选。
+
+审计输入至少包括该 Milestone 的 changelog、可核验 Commit、开发计划、架构决策、验收记录、失败/未验收项、返工记录、相关测试和最终保留实现。材料不能支持的结论不得写成确定性长期知识。
+
+### 2. 候选分类是强制步骤
+
+每个候选经验在落库前必须使用且只能使用以下一种分类：
+
+```text
+KNOWLEDGE
+LESSON
+CHANGELOG_ONLY
+BACKLOG
+REJECTED
+CONSTITUTION_CANDIDATE
+```
+
+分类含义如下：
+
+* `KNOWLEDGE`：已由真实工程实践验证、未来多个任务可复用的稳定知识，进入现有扁平知识库；
+* `LESSON`：有明确现象、影响、错误路径、根因、解决方式、验证和预防措施的事故/教训，进入现有 Lessons 或 Incidents 记录；
+* `CHANGELOG_ONLY`：只说明本 Milestone 发生过什么，不具备跨任务复用价值，只保留在 changelog 或阶段历史；
+* `BACKLOG`：问题真实存在但不属于当前收口范围，进入现有 Milestone Backlog、架构债务或其他正式待办事实源；
+* `REJECTED`：一次性现象、未经验证的猜想、已被事实推翻的结论或无复用价值的材料，不得进入长期知识库；
+* `CONSTITUTION_CANDIDATE`：跨 Milestone 稳定、证据充分且违反后会造成严重质量、架构、数据、Git/发布或系统性返工风险的候选规则，单独报告，不得自动写入宪法。
+
+`CHANGELOG_ONLY`、`BACKLOG`、`REJECTED` 和 `CONSTITUTION_CANDIDATE` 不得伪装成 `KNOWLEDGE` 或 `LESSON`。新候选若与现有知识相同，必须更新已有条目；若新证据推翻旧知识，必须更新或废弃旧条目并保留原因。
+
+### 3. 证据与条目最低要求
+
+进入长期知识库的条目必须尽量包含：来源 Milestone、现象、上下文、根因、最终方案、验证证据、适用范围和不适用范围；并遵守第七十七条的 ID、证据等级、历史示例、未来应用示例和绝对日期要求。
+
+`LESSON` 至少包含以下字段：
+
+```text
+Title / Source Milestone / Symptom / Impact / Wrong Paths
+Root Cause / Resolution / Verification / Prevention
+Reusable Rule / Promotion
+```
+
+未经验证的猜测、感觉、一次性 workaround、纯版本历史、纯文件列表和纯功能描述不得写成确定性长期知识。
+
+### 4. 禁止自动升格宪法
+
+任何 AI 只能提出 `CONSTITUTION_CANDIDATE`，不得自动将经验升级为宪法硬规则。候选必须先给出证据、适用范围和不采用的风险，等待用户或用户指定的宪法维护 AI 明确批准后，才允许修改宪法正文。一次修复成功本身不足以支持宪法升格。
+
+### 5. Milestone 关闭顺序
+
+正式 Milestone 的固定关闭链为：
+
+```text
+Implementation
+↓
+Automated Validation
+↓
+User Acceptance
+↓
+Milestone Knowledge Review
+↓
+Knowledge / Lessons / Backlog Update
+↓
+Closeout Gates
+↓
+Commit + Push
+↓
+Remote HEAD Verify
+↓
+CLOSED
+```
+
+`Milestone Knowledge Review = NOT DONE` 或知识分类/落库结果未明确时，Milestone 只能保持 `READY FOR CLOSEOUT` 或等价状态，不得标记 `CLOSED`。自动测试通过不能替代涉及 Viewport、Input、渲染、窗口生命周期、视觉布局或真实操作的用户验收。
+
+知识审计发现当前 Milestone 的阻塞缺陷时，重新打开相应任务；发现未来能力时登记 `BACKLOG`。禁止在复盘阶段顺手修功能、重构、增加依赖、改变 Schema 或扩大当前 Milestone。
 
 # 第十七章　最终原则
 

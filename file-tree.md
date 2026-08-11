@@ -1060,6 +1060,7 @@
 │  ├─ milestones/
 │  │  └─ current/
 │  │     └─ MAP-A/
+│  │        ├─ MAP-A-CLOSE-plan.md
 │  │        ├─ R3-C2-closure.md
 │  │        ├─ R3-F1-closeout.md
 │  │        ├─ R3-backlog.md

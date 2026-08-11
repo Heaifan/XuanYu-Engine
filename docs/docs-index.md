@@ -34,6 +34,7 @@
 - `docs/milestones/current/MAP-A/`：MAP-A 地图合同与当前轮验收材料
 - `docs/milestones/current/MAP-A/R3-backlog.md`：R2 关闭后的 MAP-A-R3 候选方向与冻结前约束
 - `docs/milestones/current/MAP-A/R3-F1-closeout.md`：F1 FINAL 15 项真机 IPO 收口清单
+- `docs/milestones/current/MAP-A/MAP-A-CLOSE-plan.md`：MAP-A-CLOSE 的 C1～C4 收口计划与里程碑知识沉淀门禁
 - `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md`：OVL-R0～R3 比例尺架构整改开发计划
 - `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg`：Viewport Overlay / Scale Indicator 浅色路线图
 
