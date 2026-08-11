@@ -1,6 +1,6 @@
 # MAP-DOC-A-R2-F4 · 未保存地图工作存储真机验收
 
-状态：`READY FOR USER RE-ACCEPTANCE`，不是 `CLOSED`。
+状态：`PASS · 2026-08-11`。用户真机确认未保存创建、连续创建、双侧同步和解除注册；R2 已由 `MAP-DOC-A-R2-closeout.md` 收口。
 
 | 序号 | 路径 | 输入 I | 过程 P | 输出 O |
 |---|---|---|---|---|

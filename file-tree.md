@@ -1171,7 +1171,9 @@
 │  │        ├─ MAP-DOC-A-R2-F3-root-cause.md
 │  │        ├─ MAP-DOC-A-R2-F4-acceptance.md
 │  │        ├─ MAP-DOC-A-R2-F4-root-cause.md
+│  │        ├─ MAP-DOC-A-R2-closeout.md
 │  │        ├─ MAP-DOC-A-R2-plan.md
+│  │        └─ MAP-DOC-A-R3-plan.md
 │  │        └─ MAP-DOC-A-R1-plan.md
 │  └─ ui/
 │     ├─ 玄域引擎_UI真机基线清单.md
@@ -2167,6 +2169,8 @@
 - `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg` — Viewport Overlay / Scale Indicator 浅色路线图。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F4-acceptance.md` — F4 未保存地图真机 IPO 验收清单。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F4-root-cause.md` — F4 工作存储根因与修复边界。
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-closeout.md` — R2 真机验收后的关闭结论。
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-plan.md` — Dataset Layer Editing 的冻结范围与验收边界。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪

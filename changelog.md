@@ -18,6 +18,11 @@
 
 ---
 
+## MAP-DOC-A-R2-CLOSEOUT
+MAP-DOC-A-R2（2026-08-11）：用户真机确认 F4 核心路径成立——未保存地图可连续创建 Dataset，左右 Dataset Projection 与选择同步，解除注册后两侧同步移除，窗口仍显示未命名场景。
+- 结论：R2 的 Create、自动 ID、中文 Type、Selection、Unregister、Working Storage 与首次保存 Promotion 闭环完成，状态为 `CLOSED`。
+- 遗留：Dataset-backed Layer 的满宽行、显隐、锁定、拖拽排序和状态持久化不再塞入 R2，移交 `MAP-DOC-A-R3`；未将其伪称为 R2 已完成能力。
+
 ## v0.2.26.15-fix
 MAP-DOC-A-R2-F4 未保存地图工作存储（2026-08-11）：新建地图首次创建 Dataset 时惰性建立内部 Working Manifest，用户无需先保存正式 `map.json`。
 - 变化：正式路径与工作路径严格分离；Dataset 继续使用现有 Registry 事务和相对 `data/<id>.json`；首次正式保存只提升仍注册的 Dataset，目标碰撞、源文件缺失或 IO 失败 fail-closed，Working 数据保持完整。
