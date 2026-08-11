@@ -71,11 +71,6 @@
                   ResizeDirection="Rows"
                   ResizeBehavior="PreviousAndNext"/>
 
-    <Border Grid.Row="3" Classes="panel" Padding="8,2" MinHeight="32" MaxHeight="420">
-      <Grid RowDefinitions="Auto,*" RowSpacing="6">
-        <local:BottomDockHost/>
-        <local:Foot Grid.Row="1"/>
-      </Grid>
-    </Border>
+    <Border Grid.Row="3" Classes="panel" Padding="8,2" MinHeight="32" MaxHeight="420"><local:Foot/></Border>
   </Grid>
 </UserControl>

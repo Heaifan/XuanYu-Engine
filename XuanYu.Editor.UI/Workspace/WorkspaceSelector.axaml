@@ -3,12 +3,27 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.WorkspaceSelector"
              x:DataType="local:UiVm">
-  <Menu>
-    <MenuItem Header="{Binding WorkspaceSelectorHeader}">
-      <MenuItem Header="{Binding MapWorkspaceOptionText}" ToggleType="Radio" IsChecked="{Binding IsMapWorkspace, Mode=OneWay}"
-                Command="{Binding SwitchWorkspaceCommand}" CommandParameter="MapEditor"/>
-      <MenuItem Header="{Binding RegionWorkspaceOptionText}" ToggleType="Radio" IsChecked="{Binding IsRegionWorkspace, Mode=OneWay}"
-                Command="{Binding SwitchWorkspaceCommand}" CommandParameter="RegionEditor"/>
-    </MenuItem>
-  </Menu>
+  <UserControl.Resources><ResourceDictionary><ResourceDictionary.MergedDictionaries><ResourceInclude Source="avares://XuanYu.Editor.UI/Icons/EditorIcons.axaml"/></ResourceDictionary.MergedDictionaries></ResourceDictionary></UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Button.modeSurface"><Setter Property="Height" Value="28"/><Setter Property="Padding" Value="10,3"/><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="6"/><Setter Property="FontSize" Value="13"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+    <Style Selector="Button.modeSurface:pointerover"><Setter Property="Background" Value="{StaticResource Color.Hover.Bg}"/></Style>
+    <Style Selector="Border.modeSplit"><Setter Property="Height" Value="28"/><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="6"/></Style>
+    <Style Selector="Button.modeSplitMain"><Setter Property="Padding" Value="10,3"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="FontSize" Value="13"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
+    <Style Selector="MenuItem.modeChevron"><Setter Property="Width" Value="28"/><Setter Property="Height" Value="28"/><Setter Property="Padding" Value="6"/><Setter Property="Background" Value="Transparent"/></Style>
+  </UserControl.Styles>
+  <Grid>
+    <Button Classes="modeSurface" IsVisible="{Binding IsManageMode}" Content="管理模式" DoubleTapped="ModeSurface_DoubleTapped" ToolTip.Tip="双击或按 Tab 进入编辑模式"/>
+    <Border Classes="modeSplit" IsVisible="{Binding IsEditMode}">
+      <Grid ColumnDefinitions="*,28">
+        <Button Classes="modeSplitMain" Content="{Binding CurrentEditorModeText}" DoubleTapped="ModeSurface_DoubleTapped" ToolTip.Tip="双击或按 Tab 返回管理模式"/>
+        <Menu Grid.Column="1">
+          <MenuItem Classes="modeChevron" ToolTip.Tip="切换编辑器">
+            <MenuItem.Header><Path Data="{StaticResource ChevronDownIcon}" Width="16" Height="16" Stroke="{StaticResource Color.Text.Primary}" StrokeThickness="1.5"/></MenuItem.Header>
+            <MenuItem Header="地图编辑" ToggleType="Radio" IsChecked="{Binding IsMapWorkspace, Mode=OneWay}" Command="{Binding SwitchWorkspaceCommand}" CommandParameter="MapEditor"/>
+            <MenuItem Header="区域编辑" ToggleType="Radio" IsChecked="{Binding IsRegionWorkspace, Mode=OneWay}" Command="{Binding SwitchWorkspaceCommand}" CommandParameter="RegionEditor"/>
+          </MenuItem>
+        </Menu>
+      </Grid>
+    </Border>
+  </Grid>
 </UserControl>

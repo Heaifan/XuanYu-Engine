@@ -12,7 +12,7 @@ public sealed class EditorModeUiTests
     {
         var vm = Create();
         Assert.True(vm.IsManageMode); Assert.Equal(EditorWorkspaceId.MapEditor, vm.CurrentWorkspace.Id);
-        Assert.Equal("编辑目标：地图", vm.WorkspaceSelectorHeader);
+        Assert.Equal("管理模式", vm.CurrentEditorModeText);
     }
 
     [Fact]
@@ -20,7 +20,7 @@ public sealed class EditorModeUiTests
     {
         var vm = Create();
         Assert.True(vm.ToggleEditorMode()); Assert.True(vm.IsMapEditMode);
-        Assert.Equal("地图编辑", vm.CurrentModeDisplayName);
+        Assert.Equal("地图编辑", vm.CurrentEditorModeText);
         Assert.True(vm.ToggleEditorMode()); Assert.True(vm.IsManageMode);
     }
 
@@ -29,7 +29,7 @@ public sealed class EditorModeUiTests
     {
         var vm = Create(); vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
         vm.ToggleEditorMode();
-        Assert.True(vm.IsRegionEditMode); Assert.Equal("区域编辑", vm.CurrentModeDisplayName);
+        Assert.True(vm.IsRegionEditMode); Assert.Equal("区域编辑", vm.CurrentEditorModeText);
         Assert.Equal(3, vm.LeftTabIndex);
     }
 
@@ -65,6 +65,16 @@ public sealed class EditorModeUiTests
         var vm = Create(); vm.SelectToolCommand.Execute("区域绘制");
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor); vm.ToggleEditorMode();
         Assert.False(vm.IsRegionDrawingTool); Assert.False(vm.IsRegionDrawingDraftActive);
+    }
+
+    [Fact]
+    public void Edit_workspace_switch_stays_edit_and_same_target_is_no_op()
+    {
+        var vm = Create(); vm.ToggleEditorMode();
+        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
+        Assert.True(vm.IsRegionEditMode); Assert.True(vm.IsSelectTool);
+        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
+        Assert.True(vm.IsRegionEditMode); Assert.Equal("区域编辑", vm.CurrentEditorModeText);
     }
 
     static UiVm Create() => new(null, () => true);

@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.3-rz
+EDITOR-A-R3-F1 Shell Compact & Unified Mode Selector（2026-08-11 12:14:39）：基于 R3 M01～M04 用户部分通过，删除重复底部资源浏览器，收敛为唯一 Log；Manage 顶部只显示“管理模式”。
+- 变化：双击“管理模式”与 Tab 共用 `ToggleEditorMode()`；Edit 时同一位置变为“地图编辑/区域编辑 + Chevron”，菜单以 Radio 项直接在 Map/Region 间切换。单击 Mode NO-OP，Esc 仍只取消操作；GLB 导入继续由“文件 → 导入 GLB”承载。
+- 边界：不修改 Render、Picking、Camera、MapEditing 或日志系统；World、SceneStateOwner、MapSession、Camera、Selection、Project、唯一 Main/VulkanViewport 保持同一实例。R3-F1 仍等待用户真机 IPO，不得 CLOSED。
+- 验证：Solution Build 0W0E；Core 339/339、World 1156/1156、WarCore 22/22、R1/R2/R3/F1 聚焦 41/41；ARCH-A、5+100、版本/SVG XML 与 diff 检查 PASS。AXAML 26→25（-1），仅因删除重复 BottomDockHost。Hash、远端核验和 F1 IPO 见 `EDITOR-A-R3-F1-shell-compact.md`。
+
 ## v0.2.26.2-rz
 EDITOR-A-R3 Manage / Edit Mode 与默认 Shell（2026-08-11）：将 EDITOR-A-R2 的 Workspace 顶层原型重定为底层编辑目标；新增 Manage/Edit Mode，启动默认管理模式、编辑目标为地图，Tab 只负责 Mode 切换。
 - 变化：纯 Editor `EditorModeManager` 持有 Manage/Edit；Map/Region Workspace 保留并仅在 Edit Mode 生效。Project、Inspector、唯一 Main/VulkanViewport、资源浏览器与日志成为常驻 Shell；底部资源页复用已有“导入 GLB”文件选择/导入链，右侧旧“地图编辑器”顶层 Tab 退役。Map Context 进入左侧地图 Tab 与 Inspector；Region 保持 REGION-A 前的占位，不启用 Drawing/Draft。

@@ -535,9 +535,6 @@
 │  │  ├─ UiVm.NativeHostLifecycle.cs
 │  │  ├─ UiVm.NotificationLifetime.cs
 │  │  └─ UiVm.cs
-│  ├─ Shell/
-│  │  ├─ BottomDockHost.axaml
-│  │  └─ BottomDockHost.axaml.cs
 │  ├─ Workspace/
 │  │  ├─ WorkspaceSelector.axaml
 │  │  └─ WorkspaceSelector.axaml.cs
@@ -1091,6 +1088,7 @@
 │  │     ├─ EDITOR-A/
 │  │     │  ├─ EDITOR-A-R1-workspace-contract.md
 │  │     │  ├─ EDITOR-A-R2-workspace-switch.md
+│  │     │  ├─ EDITOR-A-R3-F1-shell-compact.md
 │  │     │  ├─ EDITOR-A-R3-mode-shell.md
 │  │     │  ├─ editor-a-r1-workspace-contract.svg
 │  │     │  ├─ editor-a-r2-workspace-switch.svg
@@ -1468,17 +1466,15 @@
 - `XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionPointer.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Transform/UiVm.Tool.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Transform/UiVm.ViewportAssist.cs` — sealed partial class UiVm
-- `XuanYu.Editor.UI/Vm/Mode/UiVm.Mode.cs` — Manage/Edit Mode 的 UiVm 桥接、输入取消与上下文保留。
+- `XuanYu.Editor.UI/Vm/Mode/UiVm.Mode.cs` — Manage/Edit Mode 的 UiVm 桥接、统一显示文字、输入取消与上下文保留。
 - `XuanYu.Editor.UI/Vm/Workspace/UiVm.Workspace.cs` — 编辑目标与活动 Workspace 切换桥接。
 - `XuanYu.Editor.UI/Vm/Tree/EditorTreeNode.cs` — sealed class EditorTreeNode
 - `XuanYu.Editor.UI/Vm/Tree/TreeGuideBuilder.cs` — static class TreeGuideBuilder
 - `XuanYu.Editor.UI/Vm/Tree/UiVm.TreeCommands.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/UiVm.cs` — sealed partial class UiVm
-- `XuanYu.Editor.UI/Shell/BottomDockHost.axaml` — 资源与日志双 Tab 底部 Shell，复用导入 GLB 命令。
-- `XuanYu.Editor.UI/Shell/BottomDockHost.axaml.cs` — 底部 Shell 控件初始化。
-- `XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml` — Manage 编辑目标与 Edit Workspace 的标准 Menu 选择器。
-- `XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml.cs` — Workspace 选择器初始化。
+- `XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml` — Manage 的唯一 Mode 控件，以及 Edit 的 Map/Region Chevron 菜单。
+- `XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml.cs` — Mode 主区域的双击路由；状态仍由 UiVm 管理。
 - `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs` — D4：UiWin 错误/警告弹窗实现。复用 UiWin.UnsavedDialog 的窗口构建风格，
 - `XuanYu.Editor.UI/Win/UiWin.EntityShortcuts.cs` — partial class UiWin
 - `XuanYu.Editor.UI/Win/UiWin.MapCommands.cs` — MAP-A-R2-D3-F1：UiWin 地图命令仅保留快捷键可达的窗口无关命令（新建/聚焦）。
@@ -2084,9 +2080,10 @@
 - `XuanYu.World.Tests/Workspace/EditorWorkspaceUiCompositionTests.cs` — EDITOR-A-R1/R2 基础：唯一 Main/Viewport 与 Workspace 组合源码合同。
 - `XuanYu.World.Tests/Workspace/EditorWorkspaceUiTests.cs` — EDITOR-A-R1/R2 基础：UiVm 工作区切换、状态保留、NO-OP 与无 Draft 回归。
 - `XuanYu.World.Tests/Mode/EditorModeManagerTests.cs` — Manage/Edit Mode 纯合同测试。
-- `XuanYu.World.Tests/Mode/EditorModeUiCompositionTests.cs` — Mode、Shell、资源浏览器和唯一 Viewport 组合合同。
-- `XuanYu.World.Tests/Mode/EditorModeUiTests.cs` — Mode 切换、Esc/Tab、状态保留与 Region 隔离回归。
-- `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — UI AXAML 扫描范围与受控债务基线守卫（EDITOR-A-R3 更新可见文件数）。
+- `XuanYu.World.Tests/Mode/EditorModeUiCompositionTests.cs` — R3-F1 紧凑 Shell、统一 Mode 控件、GLB 菜单与唯一 Viewport 组合合同。
+- `XuanYu.World.Tests/Mode/EditorModeUiTests.cs` — Mode/Workspace 直接切换、Esc/Tab、状态保留与 Region 隔离回归。
+- `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — UI AXAML 扫描范围与受控债务基线守卫（EDITOR-A-R3-F1 更新可见文件数）。
+- `docs/milestones/current/EDITOR-A/EDITOR-A-R3-F1-shell-compact.md` — R3-F1 紧凑 Shell、自动门禁与最终用户 IPO 记录。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

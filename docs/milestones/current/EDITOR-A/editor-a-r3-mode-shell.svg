@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
-  <title id="title">EDITOR-A-R3 Manage Edit Mode and Shell</title>
-  <desc id="desc">常驻编辑器 Shell 包含项目、检查器、资源、日志和唯一视口；Manage 与 Edit Mode 决定 Workspace 是否生效。</desc>
+  <title id="title">EDITOR-A-R3-F1 Compact Shell and Unified Mode Selector</title>
+  <desc id="desc">常驻编辑器 Shell 包含项目、检查器、日志和唯一视口；Manage 是唯一控件，Edit 显示 Workspace Chevron。</desc>
   <rect width="1200" height="650" fill="#f8fbff"/>
   <g font-family="Microsoft YaHei, Segoe UI, sans-serif">
-    <text x="55" y="62" fill="#18324d" font-size="34" font-weight="700">EDITOR-A-R3 · Manage / Edit Mode &amp; Shell</text>
-    <text x="55" y="100" fill="#52677f" font-size="18">Shell 常驻；Mode 决定管理或编辑；Workspace 只决定 Edit Target。</text>
+    <text x="55" y="62" fill="#18324d" font-size="34" font-weight="700">EDITOR-A-R3-F1 · Compact Shell &amp; Unified Mode Selector</text>
+    <text x="55" y="100" fill="#52677f" font-size="18">Manage 只有一个控件；Edit 通过 Chevron 直接切换 Workspace。</text>
     <rect x="55" y="130" width="1090" height="430" rx="20" fill="#ffffff" stroke="#b7c7d8" stroke-width="2"/>
     <rect x="85" y="160" width="1030" height="52" rx="10" fill="#edf5ff" stroke="#8bbce8"/>
     <text x="112" y="193" fill="#245782" font-size="21" font-weight="700">文件 · 添加 · 新建 · 打开 · 保存 · 撤销 · 重做</text>
     <rect x="85" y="224" width="1030" height="48" rx="10" fill="#edf9f2" stroke="#74bf98"/>
-    <text x="110" y="255" fill="#185c40" font-size="20" font-weight="700">管理模式 / 地图编辑 / 区域编辑 · 编辑目标：地图 · Tab 切换</text>
+    <text x="110" y="255" fill="#185c40" font-size="20" font-weight="700">管理模式　↔　地图编辑 / 区域编辑　⌄</text>
     <rect x="85" y="287" width="240" height="205" rx="12" fill="#fbfdff" stroke="#b7c7d8"/>
     <text x="118" y="335" fill="#253f59" font-size="23" font-weight="700">项目 / 层级 / Context</text>
     <text x="118" y="376" fill="#5a6e82" font-size="17">Project Manager 常驻</text><text x="118" y="410" fill="#5a6e82" font-size="17">Map / Region 仅 Edit 生效</text>
@@ -21,7 +21,7 @@
     <text x="840" y="335" fill="#253f59" font-size="23" font-weight="700">Inspector / Debug</text>
     <text x="840" y="376" fill="#5a6e82" font-size="17">全局 Inspector 常驻</text><text x="840" y="410" fill="#5a6e82" font-size="17">Map / Region Context 派生</text>
     <rect x="85" y="506" width="1030" height="35" rx="8" fill="#eef4fb" stroke="#b7c7d8"/>
-    <text x="108" y="530" fill="#415b73" font-size="17">资源浏览器：模型 · 材质 · 纹理 · 地图 / 其他 · 导入 GLB　　　日志 / 状态</text>
+    <text x="108" y="530" fill="#415b73" font-size="17">日志 / 状态（默认折叠；展开后显示筛选、列表与详情）</text>
     <text x="160" y="610" fill="#52677f" font-size="18">Esc = Cancel current operation　　Tab = Manage ↔ Edit　　World / Camera / Selection / Assets Preserve</text>
   </g>
 </svg>

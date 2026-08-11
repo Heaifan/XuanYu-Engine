@@ -36,6 +36,7 @@
 - `docs/milestones/current/EDITOR-A/EDITOR-A-R2-workspace-switch.md`：EDITOR-A-R2 可见 Workspace 切换、组合不变量、门禁与真机 IPO
 - `docs/milestones/current/EDITOR-A/editor-a-r2-workspace-switch.svg`：EDITOR-A-R2 选择器、左右上下文宿主与唯一 Viewport 的浅色结构图
 - `docs/milestones/current/EDITOR-A/EDITOR-A-R3-mode-shell.md`：EDITOR-A-R3 Manage/Edit Mode、默认 Shell、门禁与真机 IPO
+- `docs/milestones/current/EDITOR-A/EDITOR-A-R3-F1-shell-compact.md`：EDITOR-A-R3-F1 紧凑 Shell、统一 Mode 控件、门禁与最终真机 IPO
 - `docs/milestones/current/EDITOR-A/editor-a-r3-mode-shell.svg`：EDITOR-A-R3 Mode、Edit Workspace 和常驻 Shell 的浅色结构图
 - `docs/milestones/current/MAP-A/`：MAP-A 地图合同与当前轮验收材料
 - `docs/milestones/current/MAP-A/R3-backlog.md`：R2 关闭后的 MAP-A-R3 候选方向与冻结前约束
