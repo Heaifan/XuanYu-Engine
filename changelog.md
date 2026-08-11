@@ -23,6 +23,7 @@ EDITOR-A-R3 Manage / Edit Mode 与默认 Shell（2026-08-11）：将 EDITOR-A-R2
 - 变化：纯 Editor `EditorModeManager` 持有 Manage/Edit；Map/Region Workspace 保留并仅在 Edit Mode 生效。Project、Inspector、唯一 Main/VulkanViewport、资源浏览器与日志成为常驻 Shell；底部资源页复用已有“导入 GLB”文件选择/导入链，右侧旧“地图编辑器”顶层 Tab 退役。Map Context 进入左侧地图 Tab 与 Inspector；Region 保持 REGION-A 前的占位，不启用 Drawing/Draft。
 - 边界：Esc 继续只取消操作，Tab 在非 TextBox 焦点下切换 Manage/Edit；模式和编辑目标切换均保留 World、SceneStateOwner、MapSession、Camera、Selection、Assets、Project 与唯一 Viewport。R2 的单视口、NO-OP、状态保留和 Region 隔离成果保留，但其产品层级标记为 `USER ACCEPTANCE FAILED · SUPERSEDED BY R3 MODE MODEL`。
 - 验证：Solution Build 0W0E；Core 339/339、World 1154/1154、WarCore 22/22、R1/R2/R3 聚焦 39/39；ARCH-A、5+100、版本/SVG XML、远端核验与 R3 中文 IPO 见 `EDITOR-A-R3-mode-shell.md`。自动门禁不替代用户对默认启动、导入、Tab、Esc/Tab 分工、连续切换和最小窗口的真机验收。
+- Hash：`17aa91be1624b96beb2f97d24a6c199c0733a269`（实现）；门禁证据归档提交与推送/远端等值核验将在本轮完成后记录。
 
 ## v0.2.26.1-rz
 EDITOR-A-R2 Workspace Switch UI（2026-08-11 10:53:38 +08:00）：在 `feat/EDITOR-A-workspace` 的 R1 纯合同上，交付可见的 Workspace Selector 和 Map/Region 上下文切换；不重建唯一 Main/VulkanViewport，不启动 REGION-A 或旧 MAP-A F1 路径。
