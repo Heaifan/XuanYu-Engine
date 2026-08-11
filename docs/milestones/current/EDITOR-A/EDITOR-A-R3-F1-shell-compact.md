@@ -35,4 +35,4 @@ R1/R2/R3/F1 聚焦回归当前为 41/41 PASS，覆盖：底部资源浏览器退
 
 - Solution Build：0 Warning / 0 Error；Core.Tests：339/339 PASS；World.Tests：1156/1156 PASS；WarCore.Tests：22/22 PASS；R1/R2/R3/F1 聚焦：41/41 PASS。
 - ARCH-A、5+100、四处 `v0.2.26.3-rz` 一致性、三个 EDITOR-A SVG XML 与 `git diff --check`：PASS。受控 AXAML 扫描事实由 26 变为 25（-1），原因是删除重复 `BottomDockHost.axaml`。
-- 提交、推送与远端等值将在本轮结束时以真实 Hash 回填。自动门禁不代替上表真机验收；通过前不得 CLOSED。`_tmp_blind_rows/` 是既有未跟踪目录，本轮不读取、不修改、不提交。
+- 实现提交：`fc0e8f7f124344e1034d49604e26c4e4adfc0de6`（`fix(editor): compact R3 mode shell`）。本证据记录与实现提交将在同轮推送；推送后 `origin/feat/EDITOR-A-workspace` 指向当前 HEAD，ahead/behind 为 `0/0`。自动门禁不代替上表真机验收；通过前不得 CLOSED。`_tmp_blind_rows/` 是既有未跟踪目录，本轮不读取、不修改、不提交。
