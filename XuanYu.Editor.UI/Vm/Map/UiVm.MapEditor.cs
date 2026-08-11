@@ -78,6 +78,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(MapName));
         OnPropertyChanged(nameof(MapPath));
         OnPropertyChanged(nameof(MapIdText));
+        OnPropertyChanged(nameof(MapIdDisplay));
         OnPropertyChanged(nameof(MapSizeText));
         OnPropertyChanged(nameof(MapStatusText));
         OnPropertyChanged(nameof(CurrentMapManifest));

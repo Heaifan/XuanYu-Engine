@@ -37,11 +37,11 @@
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
         <TextBlock Text="ID" Classes="uiLabel"/>
-        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
-          <TextBlock Text="{Binding MapIdDisplay}" Classes="uiValue" TextWrapping="NoWrap"
+        <Grid Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="6">
+          <TextBlock Text="{Binding MapIdDisplay}" Classes="uiValue" HorizontalAlignment="Stretch" TextWrapping="NoWrap"
                      TextTrimming="CharacterEllipsis" MaxLines="1" ToolTip.Tip="{Binding MapIdText}"/>
-          <Button Classes="copyBtn" Content="复制" Click="CopyMapId_Click" ToolTip.Tip="复制完整 MapId" AutomationProperties.Name="复制完整 MapId"/>
-        </StackPanel>
+          <Button Grid.Column="1" Classes="copyBtn" Content="复制" Click="CopyMapId_Click" ToolTip.Tip="复制完整 MapId" AutomationProperties.Name="复制完整 MapId"/>
+        </Grid>
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
         <TextBlock Text="坐标系" Classes="uiLabel"/>

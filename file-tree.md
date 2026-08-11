@@ -886,6 +886,7 @@
 │  │  │  ├─ UiMapLayerPanelTests.Behavior.cs
 │  │  │  ├─ UiMapLayerPanelTests.cs
 │  │  │  ├─ UiMapLayoutContractTests.cs
+│  │  │  ├─ UiMapManifestIdentityTests.cs
 │  │  │  └─ UiMapManifestNavigationTests.cs
 │  │  ├─ MapBoundsTests.cs
 │  │  ├─ MapCoordinateValidationTests.cs
@@ -1130,6 +1131,7 @@
 │  │        └─ viewport-overlay-roadmap.svg
 │  │     └─ MAP-DOC-A/
 │  │        ├─ MAP-DOC-A-R1-acceptance.md
+│  │        ├─ MAP-DOC-A-R1-F1-carryover.md
 │  │        └─ MAP-DOC-A-R1-plan.md
 │  └─ ui/
 │     ├─ 玄域引擎_UI真机基线清单.md
@@ -1842,6 +1844,7 @@
 - `XuanYu.World.Tests/Map/Editing/UiMapLayerPanelTests.cs` — MAP-A-R2-D4：图层面板 ViewModel——默认列表/添加/按钮状态/系统层只读/重命名（真实命令链）。
 - `XuanYu.World.Tests/Map/Editing/UiMapLayoutContractTests.cs` — MAP-A-R2-D4-F1：图层 UI 归位合同——左侧仅项目/层级，图层管理迁入右侧地图编辑器二级页。
 - `XuanYu.World.Tests/Map/Editing/UiMapManifestNavigationTests.cs` — MAP-DOC-A-R1：地图基础、地图环境、数据集导航与 R2 空态边界。
+- `XuanYu.World.Tests/Map/Editing/UiMapManifestIdentityTests.cs` — MAP-DOC-A-R1-F1：Manifest ID 即时刷新、Save/Save As 稳定性与 ID 行复制按钮布局。
 - `XuanYu.World.Tests/Map/MapBoundsTests.cs` — MAP-A-R2-D1：有限地图边界合同（中心原点、闭区间、尺寸变化同步）。
 - `XuanYu.World.Tests/Map/MapCoordinateValidationTests.cs` — MAP-A-R1-D2：坐标合同 / 图层引用 / schema / 名称校验。
 - `XuanYu.World.Tests/Map/MapDefaultMapTests.cs` — MAP-A-R2-D1-F1：默认地图工厂合同（完整聚合 + DTO 默认值一致）。

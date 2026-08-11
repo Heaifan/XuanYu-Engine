@@ -46,6 +46,7 @@
 - `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md`：OVL-R0～R3 比例尺架构整改开发计划
 - `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg`：Viewport Overlay / Scale Indicator 浅色路线图
 - `docs/milestones/current/MAP-DOC-A/`：MAP-DOC-A-R1 Map Content Navigation、Manifest 合同与真机验收材料
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-carryover.md`：R1 M07 身份同步失败事实、F1 修复合同与待补验记录
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

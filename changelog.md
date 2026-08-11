@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.26.7-fix
+MAP-DOC-A-R1-F1 Manifest Identity UI 修复（2026-08-11 14:58:21）：承接 R1 M07 已记录的真实失败，不改写历史，修复 Manifest ID 派生显示未即时刷新的通知链与默认宽度复制按钮裁切问题。
+- 变化：Manifest 切换时同步通知 `MapIdText` 与 `MapIdDisplay`；Text、Tooltip、Copy 继续统一消费当前 Manifest ID。
+- 变化：ID 行改为值列 `*`、复制按钮列 `Auto`；ID 可省略显示，复制按钮与完整 Tooltip 保持可达。
+- 验证：R1-F1 focused `3/3 PASS`；具体记录见 `MAP-DOC-A-R1-F1-carryover.md`。
+- 状态：C0 已完成，准备提交推送；R1 M08 与 R1-F1 真机补验仍待用户执行。
+
 ## v0.2.26.6-rz
 MAP-DOC-A-R1 Map Content Navigation + Map Manifest（2026-08-11 14:09:18）：正式从 LAYER-A 远端基线切入 `feat/MAP-DOC-A`，收口地图工作区内容导航并建立 `map.json` Manifest 生命周期。
 - 变化：地图二级导航冻结为“地图基础 / 地图环境 / 数据集”；地图基础显示 Manifest ID 与坐标系；数据集只显示空态，不提前实现 Registry；地图环境不扩展 R1 Schema。
