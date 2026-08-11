@@ -21,8 +21,8 @@
 ## GOV-2026-08-11-MKRG-01
 里程碑知识沉淀门禁治理修订（2026-08-11 09:56:10 +08:00）：按当前主宪法实际最高条款顺延新增第八十六条，明确每个正式 Milestone 在 `CLOSED` 前必须完成 `Milestone Knowledge Review`；建立 `KNOWLEDGE`、`LESSON`、`CHANGELOG_ONLY`、`BACKLOG`、`REJECTED`、`CONSTITUTION_CANDIDATE` 六类筛选、证据、去重、禁止自动升格和关闭顺序。
 - 变化：同步 `docs/dev-rules.md`、知识库 README，新增 MAP-A-CLOSE 的 C1～C4 修订计划和 AC-U07～AC-U10，更新 MAP-A backlog、docs 索引与 file-tree；不修改产品代码，不执行 MAP-A 产品/架构收口。
-- 验证：待本轮文档门禁执行；当前 `MAP-A-R3-D2-F1` 仍保持 `OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`。
-- Hash：本轮提交记录确认。
+- 验证：`git diff --check`、`scripts/arch-a-guard.ps1`、治理文档引用/条款编号/产品代码范围检查 PASS；本轮未运行产品 Build/Test；当前 `MAP-A-R3-D2-F1` 仍保持 `OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`。
+- Hash：`7109d7b`（治理条款、执行手册、知识库说明与 MAP-A-CLOSE 计划）。
 
 ## v0.2.25.33-fix
 MAP-A-R3-D2-F1 F1-FAR-RECOVERY-01（2026-08-11 01:07:31 +08:00）：真机日志确认 FarPlane 会保留极远 Dolly 的历史最大值，返回正常距离后仍维持病态 Near/Far 比；本轮将 Far 改为每次仅由当前距离计算，并给编辑器相机设定 1,000km 工作上限。
