@@ -49,6 +49,6 @@ Region Workspace 仅开放选择、聚焦、查看全部、平移、环绕与环
 - ARCH-A、5+100、四处 `v0.2.26.1-rz` 一致性、两个 EDITOR-A SVG XML 与 `git diff --check`：PASS；
 - 首次 World 全量门禁仅因扫描范围计数尚为 24 而报 24≠27；经确认新增 Selector/LeftHost/RightHost 三个 AXAML 均在扫描范围内，将基线更新为 27 后重建重跑 1136/1136 PASS。
 
-提交、推送与远端 tip 核验会在本轮紧随这些门禁完成。`_tmp_blind_rows/` 为本轮开始前已存在的未跟踪目录，未读取、未修改、未纳入提交。
+实现提交、证据提交、推送与远端 tip 核验已在本轮完成；`_tmp_blind_rows/` 为本轮开始前已存在的未跟踪目录，未读取、未修改、未纳入提交。
 
-核心实现与门禁材料 Commit：`c7b1ca8`。
+核心实现与门禁材料 Commit：`c7b1ca8`；首个证据 Commit：`26db31f`。推送后以本轮最终 tip 复核 `HEAD == origin/feat/EDITOR-A-workspace` 且 Ahead/Behind = 0/0。
