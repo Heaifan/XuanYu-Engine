@@ -10,6 +10,7 @@ R2 已关闭。本文件登记 R3 当前裁定与候选方向；每轮先冻结�
 
 - **战略终止（2026-08-11）**：`MAP-A-R3-D2-F1 = SUPERSEDED · NOT ACCEPTED · HISTORICAL 5 ITEMS REMAIN`。F1-M03～M06、M15 的 FAIL/PENDING 事实不改写为 PASS；旧 Region Drawing 产品路径迁移目标为 `REGION-A`。Map/Region Domain、Picking、Camera、`RenderVectorOverlay`、Depth Policy、Ear Clipping、动态 Buffer 与 latest-state-wins 保留为共享基础设施，禁止为新 Workspace 重写。
 - **Transition Backlog**：`REGION-A-MIG-001` — 将旧 Region Drawing 的未验收产品行为迁移到独立 Region Workspace 后重新定义范围、自动合同与真机 IPO；本轮不实现。阻断条件：不得把旧 F1 失败项直接宣称为新 Workspace 已通过。
+- **Transition Branch**：MAP-A 收口远端 `3dd091f` 已创建 `feat/EDITOR-A-workspace`；EDITOR-A-R1 Workspace Contract 已实现并完成自动门禁，仍不兑现 `REGION-A-MIG-001`。
 
 - F1-FAR-RECOVERY-01：日志另确认 FarPlane 历史极值粘滞；Far 必须按当前距离回落，编辑器相机工作上限为 1,000km。此轮不引入 Camera-relative Rendering，保留 SAFE，并等待原 IPO 真机复验。
 

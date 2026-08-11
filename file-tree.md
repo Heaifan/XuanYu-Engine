@@ -283,6 +283,13 @@
 │  │  ├─ TransformSession.Rotate.cs
 │  │  ├─ TransformSession.Scale.cs
 │  │  └─ TransformSession.cs
+│  ├─ Workspace/
+│  │  ├─ EditorWorkspaceDefinition.cs
+│  │  ├─ EditorWorkspaceDefinitions.cs
+│  │  ├─ EditorWorkspaceId.cs
+│  │  ├─ EditorWorkspaceManager.cs
+│  │  ├─ EditorWorkspaceTool.cs
+│  │  └─ EditorWorkspaceTransition.cs
 │  └─ XuanYu.Editor.csproj
 ├─ XuanYu.Editor.App/
 │  ├─ EditorCompositionRoot.cs
@@ -892,6 +899,8 @@
 │  │  ├─ MapEditSessionThreadTests.cs
 │  │  ├─ MapEditSessionValidationTests.cs
 │  │  └─ MapRenderSnapshotProjectionTests.cs
+│  ├─ Workspace/
+│  │  └─ EditorWorkspaceManagerTests.cs
 │  ├─ Render/
 │  │  ├─ WorldGridIndependenceContractTests.cs
 │  │  ├─ VulkanPresentLoopContractTests.cs
@@ -1059,6 +1068,8 @@
 │  │  └─ ui.md
 │  ├─ milestones/
 │  │  └─ current/
+│  │     ├─ EDITOR-A/
+│  │     │  └─ EDITOR-A-R1-workspace-contract.md
 │  │     └─ MAP-A/
 │  │        ├─ MAP-A-CLOSE-plan.md
 │  │        ├─ MAP-A-strategic-closeout.md

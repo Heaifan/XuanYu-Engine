@@ -31,6 +31,7 @@
 
 ## 当前阶段（milestones/current/）
 
+- `docs/milestones/current/EDITOR-A/EDITOR-A-R1-workspace-contract.md`：EDITOR-A-R1 的纯 Editor Workspace Contract、范围和验收证据
 - `docs/milestones/current/MAP-A/`：MAP-A 地图合同与当前轮验收材料
 - `docs/milestones/current/MAP-A/R3-backlog.md`：R2 关闭后的 MAP-A-R3 候选方向与冻结前约束
 - `docs/milestones/current/MAP-A/R3-F1-closeout.md`：F1 FINAL 15 项真机 IPO 收口清单

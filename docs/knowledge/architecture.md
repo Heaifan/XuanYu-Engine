@@ -11,6 +11,7 @@
 **首次确认**：2026-08-11（UTC+08:00）
 **版本**：`v0.2.25.33-fix`（MAP-A 战略收口基线）
 **Commit**：`6724079`
+**最近验证**：`v0.2.26.0-rz` / EDITOR-A-R1 Workspace Contract（本轮收口 Commit 待补证）
 **来源**：`MAP-A-R3-D2-F1-CLOSEOUT`、`R3-backlog.md`、MAP-A → EDITOR-A 单轮过渡计划。
 
 ### 问题

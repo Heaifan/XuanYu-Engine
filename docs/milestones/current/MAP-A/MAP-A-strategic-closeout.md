@@ -1,12 +1,13 @@
 # MAP-A 战略收口与 EDITOR-A 迁移裁定
 
-**状态**：IMPLEMENTED · AUTOMATED GATES PASS · MAP-A REMOTE CLOSEOUT PENDING
+**状态**：IMPLEMENTED · AUTOMATED GATES PASS · MAP-A REMOTE VERIFIED
 
 **范围**：本文件只记录 MAP-A 的战略收口、知识沉淀审计和向 EDITOR-A 的迁移边界；不实现 Region Drawing、Workspace UI、Schema、Renderer 或 Picking 修改。
 
 ## 1. Fresh Baseline
 
 - 收口计划基线：`feat/MAP-A-R3` / `1da9902`；
+- MAP-A 收口远端 tip：`feat/MAP-A-R3` / `3dd091f`（local == remote，Ahead/Behind = 0/0）；
 - 当前旧路径：`MAP-A-R3-D2-F1 = FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`；
 - 既有未跟踪 `_tmp_blind_rows/`：本轮不触碰；
 - 生效治理：宪法 2.2 第八十六条、`dev-rules.md` 第 18 节；
@@ -50,7 +51,7 @@ Migration Target: REGION-A
 
 ## 5. 过渡约束
 
-MAP-A 自动门禁、Commit、Push 和远端 HEAD 复核完成后，同一 Transition Round 立即从该远端 tip 创建 `feat/EDITOR-A-workspace`。该动作不等于 F1 通过；`EDITOR-A-R1` 只允许 Workspace Identity、Definition、Manager、切换不变量和自动回归，禁止 Region Drawing、Workspace UI、Renderer/Picking 重写和 Schema。
+MAP-A 自动门禁、Commit、Push 和远端 HEAD 复核已完成；同一 Transition Round 已从 `3dd091f` 创建 `feat/EDITOR-A-workspace`。该动作不等于 F1 通过；`EDITOR-A-R1` 只允许 Workspace Identity、Definition、Manager、切换不变量和自动回归，禁止 Region Drawing、Workspace UI、Renderer/Picking 重写和 Schema。
 
 ## 6. 禁止项确认
 
