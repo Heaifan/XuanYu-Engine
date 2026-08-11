@@ -283,6 +283,10 @@
 │  │  ├─ TransformSession.Rotate.cs
 │  │  ├─ TransformSession.Scale.cs
 │  │  └─ TransformSession.cs
+│  ├─ Mode/
+│  │  ├─ EditorModeId.cs
+│  │  ├─ EditorModeManager.cs
+│  │  └─ EditorModeTransition.cs
 │  ├─ Workspace/
 │  │  ├─ EditorWorkspaceDefinition.cs
 │  │  ├─ EditorWorkspaceDefinitions.cs
@@ -522,6 +526,8 @@
 │  │  │  └─ UiVm.ViewportAssist.cs
 │  │  ├─ Workspace/
 │  │  │  └─ UiVm.Workspace.cs
+│  │  ├─ Mode/
+│  │  │  └─ UiVm.Mode.cs
 │  │  ├─ Tree/
 │  │  │  ├─ EditorTreeNode.cs
 │  │  │  ├─ TreeGuideBuilder.cs
@@ -529,11 +535,10 @@
 │  │  ├─ UiVm.NativeHostLifecycle.cs
 │  │  ├─ UiVm.NotificationLifetime.cs
 │  │  └─ UiVm.cs
+│  ├─ Shell/
+│  │  ├─ BottomDockHost.axaml
+│  │  └─ BottomDockHost.axaml.cs
 │  ├─ Workspace/
-│  │  ├─ WorkspaceLeftHost.axaml
-│  │  ├─ WorkspaceLeftHost.axaml.cs
-│  │  ├─ WorkspaceRightHost.axaml
-│  │  ├─ WorkspaceRightHost.axaml.cs
 │  │  ├─ WorkspaceSelector.axaml
 │  │  └─ WorkspaceSelector.axaml.cs
 │  ├─ Win/
@@ -912,6 +917,10 @@
 │  │  ├─ EditorWorkspaceManagerTests.cs
 │  │  ├─ EditorWorkspaceUiCompositionTests.cs
 │  │  └─ EditorWorkspaceUiTests.cs
+│  ├─ Mode/
+│  │  ├─ EditorModeManagerTests.cs
+│  │  ├─ EditorModeUiCompositionTests.cs
+│  │  └─ EditorModeUiTests.cs
 │  ├─ Render/
 │  │  ├─ WorldGridIndependenceContractTests.cs
 │  │  ├─ VulkanPresentLoopContractTests.cs
@@ -1081,7 +1090,11 @@
 │  │  └─ current/
 │  │     ├─ EDITOR-A/
 │  │     │  ├─ EDITOR-A-R1-workspace-contract.md
-│  │     │  └─ editor-a-r1-workspace-contract.svg
+│  │     │  ├─ EDITOR-A-R2-workspace-switch.md
+│  │     │  ├─ EDITOR-A-R3-mode-shell.md
+│  │     │  ├─ editor-a-r1-workspace-contract.svg
+│  │     │  ├─ editor-a-r2-workspace-switch.svg
+│  │     │  └─ editor-a-r3-mode-shell.svg
 │  │     └─ MAP-A/
 │  │        ├─ MAP-A-CLOSE-plan.md
 │  │        ├─ MAP-A-strategic-closeout.md
@@ -1338,9 +1351,9 @@
 - `XuanYu.Editor.UI/Right/TopTabStripController.Hint.cs` — D3：首次溢出一次性提示（用户环境持久化 %APPDATA%\XuanYuEngine\ui-once.json）
 - `XuanYu.Editor.UI/Right/TopTabStripController.Visible.cs` — D3：箭头/渐隐状态刷新与当前页签自动可见
 - `XuanYu.Editor.UI/Right/TopTabStripTemplate.axaml` — D3：顶层页签单行溢出宿主模板（ScrollViewer 单行/箭头/渐隐/全部页签/提示 Popup）
-- `XuanYu.Editor.UI/Root/UiRoot.axaml` — EDITOR-A-R2：只创建唯一 Main，以 Workspace Left/Right Host 切换上下文。
+- `XuanYu.Editor.UI/Root/UiRoot.axaml` — 全局 Shell 布局，承载唯一 Main、常驻左右栏、资源底栏和日志。
 - `XuanYu.Editor.UI/Root/UiRoot.axaml.cs` — Row1 主工作区最低高度（与 axaml MinHeight 一致）
-- `XuanYu.Editor.UI/Top/Top.axaml` — EDITOR-A-R2：第二行起始嵌入 Workspace Selector，并按 Workspace 隐藏地图专属工具。
+- `XuanYu.Editor.UI/Top/Top.axaml` — 顶部命令、Manage/Edit Mode、编辑目标与上下文工具栏。
 - `XuanYu.Editor.UI/Top/Top.States.axaml` — 顶部工具 ToggleButton 状态的模板 Presenter 样式覆盖。
 - `XuanYu.Editor.UI/Top/Top.axaml.cs` — partial class Top
 - `XuanYu.Editor.UI/TreeGuide.cs` — sealed class TreeGuide
@@ -1455,17 +1468,16 @@
 - `XuanYu.Editor.UI/Vm/Transform/UiVm.InteractionPointer.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Transform/UiVm.Tool.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Transform/UiVm.ViewportAssist.cs` — sealed partial class UiVm
-- `XuanYu.Editor.UI/Vm/Workspace/UiVm.Workspace.cs` — EDITOR-A-R2：UiVm 的唯一 Workspace Manager 桥接、NO-OP 与切换不变量执行。
+- `XuanYu.Editor.UI/Vm/Mode/UiVm.Mode.cs` — Manage/Edit Mode 的 UiVm 桥接、输入取消与上下文保留。
+- `XuanYu.Editor.UI/Vm/Workspace/UiVm.Workspace.cs` — 编辑目标与活动 Workspace 切换桥接。
 - `XuanYu.Editor.UI/Vm/Tree/EditorTreeNode.cs` — sealed class EditorTreeNode
 - `XuanYu.Editor.UI/Vm/Tree/TreeGuideBuilder.cs` — static class TreeGuideBuilder
 - `XuanYu.Editor.UI/Vm/Tree/UiVm.TreeCommands.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/UiVm.NativeHostLifecycle.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/UiVm.cs` — sealed partial class UiVm
-- `XuanYu.Editor.UI/Workspace/WorkspaceLeftHost.axaml` — EDITOR-A-R2：Map Left 或冻结 Region 左侧占位上下文宿主。
-- `XuanYu.Editor.UI/Workspace/WorkspaceLeftHost.axaml.cs` — Workspace 左侧宿主初始化。
-- `XuanYu.Editor.UI/Workspace/WorkspaceRightHost.axaml` — EDITOR-A-R2：Map Right 或冻结 Region 属性占位上下文宿主。
-- `XuanYu.Editor.UI/Workspace/WorkspaceRightHost.axaml.cs` — Workspace 右侧宿主初始化。
-- `XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml` — EDITOR-A-R2：标准 Menu 工作区选择器与单选状态绑定。
+- `XuanYu.Editor.UI/Shell/BottomDockHost.axaml` — 资源与日志双 Tab 底部 Shell，复用导入 GLB 命令。
+- `XuanYu.Editor.UI/Shell/BottomDockHost.axaml.cs` — 底部 Shell 控件初始化。
+- `XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml` — Manage 编辑目标与 Edit Workspace 的标准 Menu 选择器。
 - `XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml.cs` — Workspace 选择器初始化。
 - `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs` — D4：UiWin 错误/警告弹窗实现。复用 UiWin.UnsavedDialog 的窗口构建风格，
 - `XuanYu.Editor.UI/Win/UiWin.EntityShortcuts.cs` — partial class UiWin
@@ -1541,6 +1553,9 @@
 - `XuanYu.Editor/MapEditing/MapEditSession.Layers.cs` — MAP-A-R2-D4：图层内容修改命令（走 CommitMapChange：单历史节点、失败零污染）。
 - `XuanYu.Editor/MapEditing/MapEditSession.Selection.cs` — MAP-A-R2-D2：选择状态。只保存稳定 ID；选择不产生 Dirty、不写入历史。
 - `XuanYu.Editor/MapEditing/MapEditSession.cs` — MAP-A-R2-D2：地图编辑会话（唯一状态权威）。
+- `XuanYu.Editor/Mode/EditorModeId.cs` — 编辑器顶层模式标识：管理或编辑。
+- `XuanYu.Editor/Mode/EditorModeManager.cs` — Manage/Edit Mode 的纯状态 Owner，不持有 Workspace 或渲染状态。
+- `XuanYu.Editor/Mode/EditorModeTransition.cs` — Mode 转换不可变结果与状态保留合同。
 - `XuanYu.Editor/MapEditing/MapHistoryEntry.cs` — MAP-A-R2-D2：地图历史条目（不可变快照）。MapDefinition 与 ImmutableArray
 - `XuanYu.Editor/MapEditing/MapSelection.cs` — MAP-A-R2-D2：地图选择状态。只保存稳定 ID，不保存 UI 控件/列表下标/中文名。
 - `XuanYu.Editor/MapEditing/MapSelectionKind.cs` — MAP-A-R2-D2：地图选择类型（未选择/地图/图层/区域）。
@@ -2066,9 +2081,12 @@
 - `XuanYu.World.Tests/UiTokens/UiD6DpiContractTests.cs` — D6：DPI/缩放与 DIP 阈值合同测试。
 - `XuanYu.World.Tests/UiTokens/UiD6LogPerformanceTests.cs` — D6：日志 500 条尾窗与重复项压缩合同测试。
 - `XuanYu.World.Tests/UiTokens/UiD6MotionContractTests.cs` — D6：减少动画偏好与默认短反馈合同测试。
-- `XuanYu.World.Tests/Workspace/EditorWorkspaceUiCompositionTests.cs` — EDITOR-A-R2：唯一 Main/Viewport 与 Workspace Host 组合源码合同。
-- `XuanYu.World.Tests/Workspace/EditorWorkspaceUiTests.cs` — EDITOR-A-R2：UiVm 工作区切换、状态保留、NO-OP 与无 Draft 回归。
-- `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — UI AXAML 扫描范围与受控债务基线守卫（EDITOR-A-R2 更新可见文件数）。
+- `XuanYu.World.Tests/Workspace/EditorWorkspaceUiCompositionTests.cs` — EDITOR-A-R1/R2 基础：唯一 Main/Viewport 与 Workspace 组合源码合同。
+- `XuanYu.World.Tests/Workspace/EditorWorkspaceUiTests.cs` — EDITOR-A-R1/R2 基础：UiVm 工作区切换、状态保留、NO-OP 与无 Draft 回归。
+- `XuanYu.World.Tests/Mode/EditorModeManagerTests.cs` — Manage/Edit Mode 纯合同测试。
+- `XuanYu.World.Tests/Mode/EditorModeUiCompositionTests.cs` — Mode、Shell、资源浏览器和唯一 Viewport 组合合同。
+- `XuanYu.World.Tests/Mode/EditorModeUiTests.cs` — Mode 切换、Esc/Tab、状态保留与 Region 隔离回归。
+- `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — UI AXAML 扫描范围与受控债务基线守卫（EDITOR-A-R3 更新可见文件数）。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

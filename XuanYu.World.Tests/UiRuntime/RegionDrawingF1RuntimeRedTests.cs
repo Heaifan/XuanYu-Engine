@@ -20,13 +20,13 @@ public sealed class RegionDrawingF1RuntimeRedTests
         using var host = new UiRuntimeTestHost(_fixture);
         var found = host.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false);
-            var right = new Right { DataContext = vm };
-            host.Show(right, 420, 720);
-            UiRuntimeTestHost.Descendants<TabItem>(right).Single(x => (string?)x.Header == "地图编辑器").IsSelected = true;
-            right.UpdateLayout();
-            var tool = UiRuntimeTestHost.Descendants<ToggleButton>(right)
-                .Single(x => x.Classes.Contains("mapTool"));
+            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
+            var left = new Left { DataContext = vm };
+            host.Show(left, 420, 720);
+            UiRuntimeTestHost.Descendants<TabItem>(left).First(x => (string?)x.Header == "地图").IsSelected = true;
+            left.UpdateLayout();
+            var tool = UiRuntimeTestHost.Descendants<ToggleButton>(left)
+                .First(x => x.Classes.Contains("mapTool"));
             return tool.GetVisualAncestors().OfType<MapEditorPanel>().Any();
         });
 
@@ -39,19 +39,19 @@ public sealed class RegionDrawingF1RuntimeRedTests
         using var host = new UiRuntimeTestHost(_fixture);
         var color = host.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false);
-            var right = new Right { DataContext = vm };
-            host.Show(right, 420, 720);
-            UiRuntimeTestHost.Descendants<TabItem>(right).Single(x => (string?)x.Header == "地图编辑器").IsSelected = true;
-            right.UpdateLayout();
-            right.UpdateLayout();
-            var toggle = UiRuntimeTestHost.Descendants<ToggleButton>(right)
-                .Single(x => x.Classes.Contains("mapTool"));
+            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
+            var left = new Left { DataContext = vm };
+            host.Show(left, 420, 720);
+            UiRuntimeTestHost.Descendants<TabItem>(left).First(x => (string?)x.Header == "地图").IsSelected = true;
+            left.UpdateLayout();
+            left.UpdateLayout();
+            var toggle = UiRuntimeTestHost.Descendants<ToggleButton>(left)
+                .First(x => x.Classes.Contains("mapTool"));
             var normal = UiRuntimeTestHost.Descendants<TextBlock>(toggle)
                 .Single(x => x.Classes.Contains("mapToolLabel"));
             var normalColor = (normal.Foreground as SolidColorBrush)?.Color;
             vm.SelectToolCommand.Execute("区域绘制");
-            right.UpdateLayout();
+            left.UpdateLayout();
             var selectedColor = (normal.Foreground as SolidColorBrush)?.Color;
             return (normalColor, selectedColor, toggle.IsChecked);
         });

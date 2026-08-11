@@ -13,7 +13,7 @@ static class CameraC2MapFramingTestsHelpers
     public static UiVm MapVm(bool seedInitialScene = true)
     {
         var vm = new UiVm(null, () => true, seedInitialScene);
-        vm.RightTabIndex = 1;
+        vm.ToggleEditorMode();
         vm.UpdateViewportFrame(800, 600);
         return vm;
     }

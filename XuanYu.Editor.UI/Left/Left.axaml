@@ -85,5 +85,14 @@
           </DataTemplate></ListBox.ItemTemplate>
       </ListBox>
     </TabItem>
+    <TabItem Classes="leftTab" Header="地图" IsVisible="{Binding IsMapEditMode}">
+      <local:MapEditorPanel/>
+    </TabItem>
+    <TabItem Classes="leftTab" Header="区域" IsVisible="{Binding IsRegionEditMode}">
+      <StackPanel Spacing="10" Margin="2,8">
+        <TextBlock Text="区域" Classes="uiSection"/>
+        <TextBlock Text="REGION-A 接入后显示区域列表" Classes="uiMultiline" TextWrapping="Wrap"/>
+      </StackPanel>
+    </TabItem>
   </TabControl>
 </UserControl>

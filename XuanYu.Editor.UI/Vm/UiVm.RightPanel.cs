@@ -15,5 +15,5 @@ public sealed partial class UiVm
         }
     }
 
-    public bool IsMapEditorMode => RightTabIndex == 1;
+    public bool IsMapEditorMode => IsMapEditMode;
 }

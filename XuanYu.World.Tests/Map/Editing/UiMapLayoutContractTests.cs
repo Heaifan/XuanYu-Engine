@@ -2,8 +2,7 @@ using System.IO;
 
 namespace XuanYu.World.Tests.Map.Editing;
 
-// MAP-A-R2-D4-F1：图层 UI 归位合同——左侧仅项目/层级，图层管理迁入右侧地图编辑器二级页。
-// 源码合同测试（只读仓库 axaml），防止图层模块回到错误的全局导航层级。
+// EDITOR-A-R3：Map Context 只在 Edit Mode 的左侧出现；Inspector 与 Shell 保持全局。
 public sealed class UiMapLayoutContractTests
 {
     static readonly string Left = File.ReadAllText(Path.Combine(AppContext.BaseDirectory,
@@ -19,11 +18,11 @@ public sealed class UiMapLayoutContractTests
         "..", "..", "..", "..", "XuanYu.Editor.UI", "Top", "Top.axaml"));
 
     [Fact]
-    public void Left_keeps_only_project_and_hierarchy_tabs()
+    public void Left_keeps_global_tabs_and_edit_context_tab()
     {
         Assert.Contains("Header=\"项目\"", Left);
         Assert.Contains("Header=\"层级\"", Left);
-        Assert.DoesNotContain("Header=\"图层\"", Left);
+        Assert.Contains("Header=\"地图\"", Left);
         Assert.DoesNotContain("LayerPanel", Left);
     }
 
@@ -58,12 +57,12 @@ public sealed class UiMapLayoutContractTests
         Assert.Contains("<MenuItem Header=\"立方体\" Command=\"{Binding RunCommand}\" CommandParameter=\"添加立方体\"/>", Top);
     }
 
-    // F2：右侧顶层仅 检查器 / 地图编辑器 / 调试。
+    // EDITOR-A-R3：右侧顶层仅保留全局检查器与调试，地图 Context 不再替换整块右栏。
     [Fact]
-    public void Right_keeps_only_three_top_tabs()
+    public void Right_keeps_only_global_top_tabs()
     {
         Assert.Contains("Header=\"检查器\"", Right);
-        Assert.Contains("Header=\"地图编辑器\"", Right);
+        Assert.DoesNotContain("Header=\"地图编辑器\"", Right);
         Assert.Contains("Header=\"调试\"", Right);
         Assert.DoesNotContain("Header=\"偏好\"", Right);
         Assert.DoesNotContain("Header=\"模式\"", Right);

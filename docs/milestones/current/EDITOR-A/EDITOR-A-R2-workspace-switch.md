@@ -1,6 +1,6 @@
 # EDITOR-A-R2 · Workspace Switch UI
 
-**状态**：IMPLEMENTED · AUTOMATED GATES PASS · READY FOR USER ACCEPTANCE
+**状态**：IMPLEMENTED · AUTOMATED GATES PASS · USER ACCEPTANCE FAILED · SUPERSEDED BY R3 MODE MODEL
 
 **分支**：`feat/EDITOR-A-workspace`
 
@@ -39,7 +39,7 @@ Region Workspace 仅开放选择、聚焦、查看全部、平移、环绕与环
 | EA-R2-05 | 视口状态 | 先选择对象、移动相机、切到区域再切回 | 观察对象/视角/导航 Gizmo | Selection 与相机位置/朝向保持；Main/Viewport 不重建。 |
 | EA-R2-06 | 区域边界 | 在 Region Workspace 操作工具栏和左右区 | 检查可见项 | 不出现 Region Drawing、草稿、虚假区域列表或属性编辑。 |
 
-用户真机验收尚未执行；自动门禁不能替代上述 IPO，也不能把本轮标为 CLOSED。
+用户裁定 R2 的产品层级不正确：Workspace 不应替代整个编辑器 Shell。其单视口、状态保留、NO-OP 与 Region 隔离能力保留并迁入 R3；本轮不再继续 R2-F1，也不能标为 CLOSED。
 
 ## 5. 门禁证据
 

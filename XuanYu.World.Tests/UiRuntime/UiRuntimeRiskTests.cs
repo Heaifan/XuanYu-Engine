@@ -19,7 +19,7 @@ public sealed class UiRuntimeRiskTests
         using var host = new UiRuntimeTestHost(_fixture);
         var color = host.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false);
+            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
             var top = new Top { DataContext = vm };
             host.Show(top, 1200, 180);
             var toggle = UiRuntimeTestHost.Descendants<ToggleButton>(top)

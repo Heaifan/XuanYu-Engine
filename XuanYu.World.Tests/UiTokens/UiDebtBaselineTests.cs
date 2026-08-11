@@ -57,6 +57,6 @@ public sealed class UiDebtBaselineTests
             .Select(f => Path.GetRelativePath(RepoRoot, f).Replace('\\', '/'));
         Assert.DoesNotContain(files, f => f.Contains("XuanYu.Render") || f.Contains("/Design/"));
         Assert.Contains(files, f => f.EndsWith("Ui.axaml"));
-        Assert.Equal(27, files.Count()); // 既有 24 + EDITOR-A-R2 的 Selector / LeftHost / RightHost 三个可见 Workspace AXAML。
+        Assert.Equal(26, files.Count()); // R2 27 - 两个 Workspace Host + R3 BottomDockHost。
     }
 }

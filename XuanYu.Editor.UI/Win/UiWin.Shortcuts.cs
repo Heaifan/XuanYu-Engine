@@ -1,4 +1,5 @@
 using Avalonia.Input;
+using Avalonia.Controls;
 
 namespace XuanYu.Editor.UI;
 
@@ -6,6 +7,8 @@ public partial class UiWin
 {
     async void Window_KeyDown(object? sender, KeyEventArgs e)
     {
+        if (e.Key == Key.Tab && TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is not TextBox)
+        { (DataContext as UiVm)?.ToggleEditorMode(); e.Handled = true; return; }
         if (HandleEntityShortcut(e)) return;
         if (e.Key == Key.C && e.KeyModifiers.HasFlag(KeyModifiers.Control)
             && DataContext is UiVm { IsLogOpen: true, HasSelectedEntries: true } copyVm)

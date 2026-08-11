@@ -42,6 +42,7 @@ public sealed class EditorWorkspaceUiTests
     public void Changed_workspace_switch_returns_to_select_tool()
     {
         var vm = Create();
+        vm.ToggleEditorMode();
         vm.SelectToolCommand.Execute("移动");
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
         Assert.Equal("选择", vm.ActiveTool); Assert.True(vm.IsSelectTool);
@@ -76,6 +77,7 @@ public sealed class EditorWorkspaceUiTests
         var vm = Create();
         vm.SelectToolCommand.Execute("区域绘制");
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
+        vm.ToggleEditorMode();
         Assert.False(vm.IsRegionDrawingTool); Assert.False(vm.IsRegionDrawingDraftActive);
         Assert.Equal(0, vm.RegionDrawingDraftVertexCount);
     }

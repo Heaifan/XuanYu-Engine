@@ -83,6 +83,6 @@ public sealed class UiTopTabStripContractTests
         Assert.Contains("x:Name=\"SideTabs\"", right);
         var headers = Regex.Matches(right, "<TabItem[^>]*Header=\"([^\"]+)\"")
             .Select(m => m.Groups[1].Value).ToArray();
-        Assert.Equal(["检查器", "地图编辑器", "调试"], headers);           // 只含真实页签，无空白功能页签
+        Assert.Equal(["检查器", "调试"], headers); // Map Context 已由 EDITOR-A-R3 迁入左侧与 Inspector。
     }
 }

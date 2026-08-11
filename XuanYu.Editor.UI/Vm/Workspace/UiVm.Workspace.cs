@@ -15,16 +15,17 @@ public sealed partial class UiVm
     void SwitchWorkspace(object? value)
     {
         if (!TryWorkspaceId(value, out var target) || CurrentWorkspace.Id == target) return;
-        CancelActiveInput("切换工作区");
+        if (IsEditMode) CancelActiveInput("切换编辑工作区");
         var transition = _workspaceManager.Switch(target);
         if (!transition.Changed) return;
-        SelectTool("选择", logTool: false);
+        if (IsEditMode) { SelectTool("选择", logTool: false); LeftTabIndex = IsMapWorkspace ? 2 : 3; }
         OnPropertyChanged(nameof(CurrentWorkspace));
         OnPropertyChanged(nameof(CurrentWorkspaceDisplayName));
         OnPropertyChanged(nameof(IsMapWorkspace));
         OnPropertyChanged(nameof(IsRegionWorkspace));
+        RaiseModeBindings();
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
-            $"工作区已切换为：{CurrentWorkspaceDisplayName}", "保留 World、Camera、Selection 与唯一 Main Viewport。");
+            $"编辑目标已切换为：{CurrentWorkspaceDisplayName}", "Manage 只改变目标；Edit 保留上下文后切换工作区。");
         RefreshLogBindings();
         OnPropertyChanged(nameof(LogSummary));
     }

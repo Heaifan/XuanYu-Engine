@@ -21,6 +21,16 @@
       </StackPanel>
     </Grid>
 
+    <StackPanel IsVisible="{Binding IsMapEditMode}" Spacing="6">
+      <local:MapFormPanel/>
+    </StackPanel>
+
+    <StackPanel IsVisible="{Binding IsRegionEditMode}" Spacing="6">
+      <TextBlock Text="区域属性" Classes="uiSection"/>
+      <TextBlock Text="当前未选择区域" Classes="uiValue"/>
+      <TextBlock Text="REGION-A 接入后显示正式属性" Classes="uiLabel" TextWrapping="Wrap"/>
+    </StackPanel>
+
     <!-- 基础信息分组：全宽标题 + 分隔线 + 只读键值行（ReadonlyKeyValueRow：标签 80 + 值 *，始终单行） -->
     <StackPanel IsVisible="{Binding HasSelection}" Spacing="4">
       <TextBlock Text="基础信息" Classes="uiSection"/>

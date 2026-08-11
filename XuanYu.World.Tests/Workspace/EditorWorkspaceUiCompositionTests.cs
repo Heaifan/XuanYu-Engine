@@ -9,12 +9,13 @@ public sealed class EditorWorkspaceUiCompositionTests
     static string Read(params string[] path) => File.ReadAllText(Path.Combine([Root, .. path]));
 
     [Fact]
-    public void Ui_root_keeps_exactly_one_main_and_uses_workspace_hosts()
+    public void Ui_root_keeps_exactly_one_main_and_global_shell_panels()
     {
         var axaml = Read("XuanYu.Editor.UI", "Root", "UiRoot.axaml");
         Assert.Equal(1, Count(axaml, "<local:Main"));
-        Assert.Contains("<local:WorkspaceLeftHost", axaml);
-        Assert.Contains("<local:WorkspaceRightHost", axaml);
+        Assert.Contains("<local:Left", axaml);
+        Assert.Contains("<local:Right", axaml);
+        Assert.DoesNotContain("WorkspaceLeftHost", axaml);
     }
 
     [Fact]
@@ -25,27 +26,26 @@ public sealed class EditorWorkspaceUiCompositionTests
     }
 
     [Fact]
-    public void Workspace_hosts_do_not_contain_main_or_viewport()
+    public void Workspace_selector_does_not_contain_main_or_viewport()
     {
-        var left = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceLeftHost.axaml");
-        var right = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceRightHost.axaml");
-        Assert.DoesNotContain("<local:Main", left + right);
-        Assert.DoesNotContain("VulkanViewport", left + right);
+        var selector = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml");
+        Assert.DoesNotContain("<local:Main", selector);
+        Assert.DoesNotContain("VulkanViewport", selector);
     }
 
     [Fact]
-    public void Map_context_remains_accessible_through_existing_left_and_right()
+    public void Map_context_remains_accessible_through_existing_left_and_inspector()
     {
-        Assert.Contains("<local:Left", Read("XuanYu.Editor.UI", "Workspace", "WorkspaceLeftHost.axaml"));
-        Assert.Contains("<local:Right", Read("XuanYu.Editor.UI", "Workspace", "WorkspaceRightHost.axaml"));
+        Assert.Contains("Header=\"地图\"", Read("XuanYu.Editor.UI", "Left", "Left.axaml"));
+        Assert.Contains("<local:MapFormPanel", Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
     }
 
     [Fact]
     public void Region_context_contains_only_declared_placeholders()
     {
-        var left = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceLeftHost.axaml");
-        var right = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceRightHost.axaml");
-        Assert.Contains("区域列表将在 REGION-A 接入", left);
+        var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
+        var right = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
+        Assert.Contains("REGION-A 接入后显示区域列表", left);
         Assert.Contains("REGION-A 接入后显示正式属性", right);
         Assert.DoesNotContain("RegionDrawing", left + right);
     }
@@ -55,7 +55,7 @@ public sealed class EditorWorkspaceUiCompositionTests
     {
         var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
         Assert.Contains("<local:WorkspaceSelector", top);
-        Assert.Contains("IsVisible=\"{Binding IsMapWorkspace}\"", top);
+        Assert.Contains("IsVisible=\"{Binding IsMapEditMode}\"", top);
         Assert.Contains("CommandParameter=\"RegionEditor\"", Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml"));
     }
 

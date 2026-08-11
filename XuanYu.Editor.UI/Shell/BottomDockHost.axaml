@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.BottomDockHost"
+             x:DataType="local:UiVm">
+  <TabControl MaxHeight="150" SelectedIndex="0">
+    <TabItem Header="资源">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto" ColumnSpacing="10" Margin="2,6">
+        <TextBlock Text="资源浏览器" Classes="uiSection" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Text="模型" Classes="uiLabel" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="2" Text="材质" Classes="uiLabel" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="3" Text="纹理" Classes="uiLabel" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="4" Text="地图 / 其他" Classes="uiLabel" VerticalAlignment="Center"/>
+        <Button Grid.Column="6" Classes="uiTextButton" Content="导入 GLB" Command="{Binding RunCommand}"
+                CommandParameter="导入 GLB" AutomationProperties.Name="导入 GLB"/>
+      </Grid>
+    </TabItem>
+    <TabItem Header="日志">
+      <Grid ColumnDefinitions="*,Auto" Margin="2,6">
+        <TextBlock Text="日志与状态位于下方；可展开查看筛选、详情和错误。" Classes="uiLabel" VerticalAlignment="Center"/>
+        <Button Grid.Column="1" Classes="uiTextButton" Content="展开日志" Command="{Binding ToggleLogCommand}"/>
+      </Grid>
+    </TabItem>
+  </TabControl>
+</UserControl>
