@@ -1,6 +1,6 @@
 # EDITOR-A-R1 · Workspace Contract
 
-**状态**：IMPLEMENTED · AUTOMATED GATES PASS · PUSH PENDING
+**状态**：IMPLEMENTED · AUTOMATED GATES PASS · READY FOR USER ACCEPTANCE
 
 **分支**：`feat/EDITOR-A-workspace`（从已验证的 MAP-A 收口 tip `3dd091f` 创建）
 
@@ -49,4 +49,19 @@ R1 只建立纯 `XuanYu.Editor` 的 Workspace 身份、不可变定义、唯一 
 - World.Tests：1123/1123 PASS（含 EDITOR-A-R1 8/8）；
 - WarCore.Tests：22/22 PASS；
 - ARCH-A、5+100、宪法 2.2 版本字段、四处 `v0.2.26.0-rz` 一致性与 `git diff --check`：PASS；
-- Commit / Push / Remote HEAD：待本轮 EDITOR-A 收口提交补证。
+- 核心代码 Commit：`4cabf42`；Push / Remote HEAD 在本轮最终证据提交后核验。
+
+## 7. 用户验收证据 IPO
+
+本轮没有可见 Workspace UI；以下为用户对代码、状态与 Git 事实的核验，不把它伪装为 Viewport/Pointer 真机验收。
+
+| 序号 | 路径 | 输入 I | 过程 P | 输出 O |
+|---|---|---|---|---|
+| EA-R1-01 | 文档 → MAP-A 战略收口 | 收口报告 | 核对 F1 状态 | 仍为非成功终态，未被改写为 PASS。 |
+| EA-R1-02 | 文档 → Knowledge / Lessons / Backlog | 审计记录 | 核对分类 | K-ARCH-002、L-ARCH-001、REGION-A-MIG-001 与 Rejected 均可追溯。 |
+| EA-R1-03 | Git → 当前分支 | `git branch --show-current` | 核对开发线 | 输出 `feat/EDITOR-A-workspace`。 |
+| EA-R1-04 | 编辑器 → Workspace Contract | `EditorWorkspaceManager` | 读取定义 | Map Editor 与 Region Editor 均存在，默认 Tool 为 Select。 |
+| EA-R1-05 | 自动测试 → Workspace | `EditorWorkspaceManagerTests` | 执行聚焦或全量 World.Tests | Map↔Region 双向与重复切换合同通过。 |
+| EA-R1-06 | 代码 → Workspace Transition | 切换结果 | 核对标志 | 临时 Tool 结束，World/Camera/Selection 均声明保留。 |
+| EA-R1-07 | 架构 → Editor 依赖 | ARCH-A / 回归 | 检查引用 | Workspace 不持有 World/Camera 且 Editor 无 Vulkan 引用。 |
+| EA-R1-08 | Git → 本地/远端 | HEAD 与远端 tip | 推送后核对 | Local HEAD == Remote HEAD，Ahead/Behind = 0/0。 |
