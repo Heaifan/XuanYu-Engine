@@ -47,15 +47,19 @@ public sealed class UiMapDatasetF1Tests : IDisposable
     }
 
     [Fact]
-    public async Task F1_A07_scene_path_is_not_a_manifest_path()
+    public async Task F4_A01_to_A05_unsaved_map_creates_dataset_in_working_storage()
     {
         var vm = new UiVm(null, () => true, seedInitialScene: false);
-        vm.MapSession.MarkSaved(System.IO.Path.Combine(_root, "scene.xymap"));
         vm.DatasetCreateType = "road";
-        Assert.False(await vm.CreateDatasetAsync());
-        Assert.Contains("先保存地图 Manifest", vm.FooterMessage);
-        Assert.Empty(vm.DatasetItems);
-        Assert.False(Directory.Exists(System.IO.Path.Combine(_root, "data")));
+        Assert.True(await vm.CreateDatasetAsync());
+        var item = Assert.Single(vm.DatasetItems);
+        Assert.Equal("", vm.CurrentMapManifestPath);
+        Assert.Equal($"data/{item.Id}.json", vm.CurrentMapManifest.Datasets[0].Source);
+        Assert.DoesNotContain(Path.GetTempPath(), item.Source, StringComparison.OrdinalIgnoreCase);
+        var path = Path.Combine(_root, "formal", "map.json");
+        Assert.True(await vm.SaveMapManifestAsync(path));
+        Assert.Equal(path, vm.CurrentMapManifestPath);
+        Assert.True(File.Exists(Path.Combine(_root, "formal", "data", $"{item.Id}.json")));
     }
 
     [Fact]

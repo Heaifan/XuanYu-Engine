@@ -6,15 +6,21 @@ public sealed partial class UiVm
 {
     async Task<bool> EnsureDatasetRegistryAsync()
     {
-        if (string.IsNullOrWhiteSpace(CurrentMapManifestPath))
-            return false;
-        _datasetRegistry ??= new MapDatasetRegistry(CurrentMapManifestPath, CurrentMapManifest);
+        if (_datasetRegistry is not null) return true;
+        var path = CurrentMapManifestPath;
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            var working = await _mapWorkingStorage.EnsureAsync(CurrentMapManifest);
+            if (!working.Succeeded || working.Value is null) return false;
+            path = working.Value;
+        }
+        _datasetRegistry = new MapDatasetRegistry(path, CurrentMapManifest);
         return true;
     }
 
     public async Task<bool> CreateDatasetAsync()
     {
-        if (!await EnsureDatasetRegistryAsync()) return DatasetFailed("请先保存地图 Manifest，再创建数据集。");
+        if (!await EnsureDatasetRegistryAsync()) return DatasetFailed("无法初始化地图工作区，数据集未创建。");
         try
         {
             var result = await _datasetRegistry!.CreateAutoAsync(DatasetCreateType);

@@ -267,6 +267,8 @@
 │  │  ├─ MapManifestOwner.cs
 │  │  ├─ MapManifestSerializer.cs
 │  │  ├─ MapManifestStorageService.cs
+│  │  ├─ MapWorkingStorage.Promotion.cs
+│  │  └─ MapWorkingStorage.cs
 │  │  ├─ MapManifestValidator.cs
 │  │  └─ MapStorageService.cs
 │  ├─ MapEditing/
@@ -926,6 +928,7 @@
 │  │  ├─ MapDatasetRegistryFailureTests.cs
 │  │  ├─ MapDatasetRegistryLifecycleTests.cs
 │  │  ├─ MapManifestValidationTests.cs
+│  │  └─ MapWorkingStorageTests.cs
 │  │  ├─ MapEnvironmentValidationTests.cs
 │  │  ├─ MapIdTests.cs
 │  │  ├─ MapJsonRoundTripTests.cs
@@ -1166,6 +1169,8 @@
 │  │        ├─ MAP-DOC-A-R2-F2-root-cause.md
 │  │        ├─ MAP-DOC-A-R2-F3-acceptance.md
 │  │        ├─ MAP-DOC-A-R2-F3-root-cause.md
+│  │        ├─ MAP-DOC-A-R2-F4-acceptance.md
+│  │        ├─ MAP-DOC-A-R2-F4-root-cause.md
 │  │        ├─ MAP-DOC-A-R2-plan.md
 │  │        └─ MAP-DOC-A-R1-plan.md
 │  └─ ui/
@@ -1620,6 +1625,9 @@
 - `XuanYu.Editor/MapDocument/MapDocumentResult.cs` — MAP-A-R1-D2：地图操作结构化结果（对齐 SceneDocumentResult 模式，语义独立）。
 - `XuanYu.Editor/MapDocument/MapDocumentValidator.cs` — MAP-A-R1-D2：地图文档 DTO（.xymap v1）严格校验。领域合法性（尺寸范围）单一事实源在 World.MapDefinitionValidator。
 - `XuanYu.Editor/MapDocument/MapDatasetDescriptor.cs` — MAP-DOC-A-R2-C1：Dataset Descriptor 与六类允许 type 常量。
+- `XuanYu.Editor/MapDocument/MapWorkingStorage.cs` — 未保存地图的内部工作 Manifest 生命周期。
+- `XuanYu.Editor/MapDocument/MapWorkingStorage.Promotion.cs` — Working Dataset 到正式地图目录的提升事务。
+- `XuanYu.World.Tests/Map/MapWorkingStorageTests.cs` — 工作区创建、提升、孤儿排除和碰撞失败回归。
 - `XuanYu.Editor/MapDocument/MapDatasetDocument.cs` — MAP-DOC-A-R2-C2：`xuanyu-map-dataset` v0.1.0 文档、状态和空 features 领域模型。
 - `XuanYu.Editor/MapDocument/MapDatasetDocumentJson.cs` — MAP-DOC-A-R2-C2：Dataset 五字段严格 JSON DTO 与映射。
 - `XuanYu.Editor/MapDocument/MapDatasetDocumentSerializer.cs` — MAP-DOC-A-R2-C2：Dataset JSON 严格读写与未知字段拒绝。
@@ -2157,6 +2165,8 @@
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F3-acceptance.md` — R2-F3 Dataset/Layer 双向选择与解除注册的真机 IPO 模板。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F3-root-cause.md` — R2-F3 Dataset 无选择态、解除注册错误目标与 Layer Projection 的根因及修复证据。
 - `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg` — Viewport Overlay / Scale Indicator 浅色路线图。
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F4-acceptance.md` — F4 未保存地图真机 IPO 验收清单。
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F4-root-cause.md` — F4 工作存储根因与修复边界。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪

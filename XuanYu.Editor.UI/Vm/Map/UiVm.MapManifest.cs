@@ -7,6 +7,7 @@ public sealed partial class UiVm
 {
     readonly MapManifestStorageService _mapManifestStorage = new();
     readonly MapManifestOwner _mapManifestOwner = new();
+    readonly MapWorkingStorage _mapWorkingStorage = new();
 
     public MapManifest CurrentMapManifest => _mapManifestOwner.CurrentManifest
         ?? MapManifest.FromMap(MapSession.CurrentMap);
@@ -51,7 +52,9 @@ public sealed partial class UiVm
 
     public async Task<bool> SaveMapManifestAsync(string path)
     {
-        var result = await _mapManifestStorage.SaveAsync(path, CurrentMapManifest);
+        var result = _mapWorkingStorage.HasWorkspace
+            ? await _mapWorkingStorage.PromoteAsync(path, CurrentMapManifest)
+            : await _mapManifestStorage.SaveAsync(path, CurrentMapManifest);
         if (!result.Succeeded || result.Value is null)
         {
             _mapManifestOwner.MarkError(result.Message);

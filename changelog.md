@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.15-fix
+MAP-DOC-A-R2-F4 未保存地图工作存储（2026-08-11）：新建地图首次创建 Dataset 时惰性建立内部 Working Manifest，用户无需先保存正式 `map.json`。
+- 变化：正式路径与工作路径严格分离；Dataset 继续使用现有 Registry 事务和相对 `data/<id>.json`；首次正式保存只提升仍注册的 Dataset，目标碰撞、源文件缺失或 IO 失败 fail-closed，Working 数据保持完整。
+- 验证：F4 + F1/F2/F3 聚焦测试 `16/16 PASS`；完整解决方案 Build、全量测试和架构门禁结果以本轮最终 Gate 为准。
+- 遗留：待用户执行 F4-M01～M08 IPO；未获真机通过前保持 `READY FOR USER RE-ACCEPTANCE`，不得宣布 R2 CLOSED。
+
 ## v0.2.26.14-fix
 MAP-DOC-A-R2-F3 Dataset Selection + Layer Projection Sync（2026-08-11 17:08:16）：补齐 Dataset 单一选择合同，并将右侧“图层”接入 Dataset 投影。
 - 根因：Dataset 列表只有展示投影，没有可点击的 `SelectedDatasetId`；重开后解除注册没有目标，失败反馈又复用了新建表单 type。
