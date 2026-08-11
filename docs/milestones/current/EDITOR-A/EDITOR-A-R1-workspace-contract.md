@@ -6,6 +6,8 @@
 
 **版本**：`v0.2.26.0-rz`
 
+**架构图**：[editor-a-r1-workspace-contract.svg](editor-a-r1-workspace-contract.svg)
+
 ## 1. 目标与范围
 
 R1 只建立纯 `XuanYu.Editor` 的 Workspace 身份、不可变定义、唯一 Manager 和切换结果合同。已注册 Map Editor、Region Editor；Region Editor 仅为身份/插槽合同，不实现 Region Drawing。
@@ -49,6 +51,7 @@ R1 只建立纯 `XuanYu.Editor` 的 Workspace 身份、不可变定义、唯一 
 - World.Tests：1123/1123 PASS（含 EDITOR-A-R1 8/8）；
 - WarCore.Tests：22/22 PASS；
 - ARCH-A、5+100、宪法 2.2 版本字段、四处 `v0.2.26.0-rz` 一致性与 `git diff --check`：PASS；
+- `editor-a-r1-workspace-contract.svg`：XML 校验 PASS；
 - 核心代码 Commit：`4cabf42`；证据 Commit：`2b90a46`；本轮完成 Push 与 Remote HEAD 核验后进入用户验收。
 
 ## 7. 用户验收证据 IPO

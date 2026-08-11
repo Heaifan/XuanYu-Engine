@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">EDITOR-A-R1 Workspace Contract</title>
+  <desc id="desc">Map Editor 和 Region Editor 通过唯一 Workspace Manager 切换；World、Camera 和 Selection 保持既有所有者。</desc>
+  <rect width="1200" height="620" fill="#101828"/>
+  <text x="60" y="68" fill="#f8fafc" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="34" font-weight="700">EDITOR-A-R1 · Workspace Contract</text>
+  <text x="60" y="108" fill="#b8c4d6" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18">纯 Editor 合同：不创建 Workspace UI，不复制 World / Camera / Selection，不依赖 Vulkan。</text>
+  <g font-family="Microsoft YaHei, Segoe UI, sans-serif">
+    <rect x="70" y="190" width="275" height="170" rx="16" fill="#16324f" stroke="#55b7ff" stroke-width="2"/>
+    <text x="100" y="245" fill="#e8f5ff" font-size="27" font-weight="700">Map Editor</text>
+    <text x="100" y="285" fill="#b9daf5" font-size="18">默认 Workspace</text>
+    <text x="100" y="322" fill="#b9daf5" font-size="18">Default Tool: Select</text>
+    <rect x="855" y="190" width="275" height="170" rx="16" fill="#263454" stroke="#a6b8ff" stroke-width="2"/>
+    <text x="885" y="245" fill="#eef1ff" font-size="27" font-weight="700">Region Editor</text>
+    <text x="885" y="285" fill="#cbd5ff" font-size="18">身份 / 插槽合同</text>
+    <text x="885" y="322" fill="#cbd5ff" font-size="18">未实现 Region Drawing</text>
+    <rect x="430" y="165" width="340" height="220" rx="18" fill="#1e4d3d" stroke="#66d3a4" stroke-width="3"/>
+    <text x="474" y="226" fill="#ecfdf3" font-size="28" font-weight="700">Workspace Manager</text>
+    <text x="474" y="268" fill="#c4f1d8" font-size="18">唯一 Current Workspace Owner</text>
+    <text x="474" y="306" fill="#c4f1d8" font-size="18">Enter · Leave · Switch</text>
+    <text x="474" y="344" fill="#c4f1d8" font-size="18">Next Tool: Select</text>
+    <path d="M345 275 H430" stroke="#55b7ff" stroke-width="4" marker-end="url(#arrow)"/>
+    <path d="M770 275 H855" stroke="#a6b8ff" stroke-width="4" marker-end="url(#arrow)"/>
+    <rect x="165" y="465" width="870" height="95" rx="16" fill="#273142" stroke="#8ea0b8" stroke-width="2"/>
+    <text x="205" y="508" fill="#f1f5f9" font-size="22" font-weight="700">Transition invariants</text>
+    <text x="205" y="540" fill="#cbd5e1" font-size="18">结束临时 Tool 状态 · 保留既有 World / Camera / Selection Owner · 不创建第二份权威状态</text>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#dbeafe"/>
+    </marker>
+  </defs>
+</svg>

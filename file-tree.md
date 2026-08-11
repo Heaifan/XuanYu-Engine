@@ -1069,7 +1069,8 @@
 │  ├─ milestones/
 │  │  └─ current/
 │  │     ├─ EDITOR-A/
-│  │     │  └─ EDITOR-A-R1-workspace-contract.md
+│  │     │  ├─ EDITOR-A-R1-workspace-contract.md
+│  │     │  └─ editor-a-r1-workspace-contract.svg
 │  │     └─ MAP-A/
 │  │        ├─ MAP-A-CLOSE-plan.md
 │  │        ├─ MAP-A-strategic-closeout.md
