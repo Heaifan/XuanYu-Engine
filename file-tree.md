@@ -1104,6 +1104,8 @@
 │  │     │  ├─ editor-a-r1-workspace-contract.svg
 │  │     │  ├─ editor-a-r2-workspace-switch.svg
 │  │     │  └─ editor-a-r3-mode-shell.svg
+│  │     ├─ LAYER-A/
+│  │     │  └─ LAYER-A-R1-layer-shell.md
 │  │     └─ MAP-A/
 │  │        ├─ MAP-A-CLOSE-plan.md
 │  │        ├─ MAP-A-strategic-closeout.md
@@ -2106,6 +2108,7 @@
 - `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — UI AXAML 扫描范围与受控债务基线守卫（EDITOR-A-R3-F1 更新可见文件数）。
 - `docs/milestones/current/EDITOR-A/EDITOR-A-R3-F1-shell-compact.md` — R3-F1 紧凑 Shell、自动门禁与最终用户 IPO 记录。
 - `docs/milestones/current/EDITOR-A/EDITOR-A-R3-F1-closeout.md` — EDITOR-A-R3-F1 用户 P0 验收收口与 LAYER-A 转段记录。
+- `docs/milestones/current/LAYER-A/LAYER-A-R1-layer-shell.md` — LAYER-A-R1 通用图层栏实现、自动证据与 LA-R1-M01～M08 真机验收清单。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

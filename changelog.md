@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.5-rz
+LAYER-A-R1 通用图层栏与编辑职责分离（2026-08-11 13:40:02）：建立编辑模式通用图层 Dock，迁移真实 Region Layer，清理 Map 图层与 Region Drawing 串线。
+- 变化：新增 UI 无关 `IEditorLayerProvider`/`EditorLayerItem` 合同；管理模式隐藏图层栏，Map 编辑显示真实空状态，Region 编辑过滤 Region Layer；LayerInspectorPanel 迁入全局 Inspector；Map 旧图层二级页与区域绘制入口删除；Workspace 切换清理图层选择。
+- 验证：Editor.UI Build 0W0E；World.Tests fresh `1160/1160 PASS`；LAYER-A 聚焦组合/运行时合同 `4/4 PASS`；ARCH-A、5+100、`git diff --check` PASS。实现 Hash：`7255b85`；真机 LA-R1-M01～M08 待用户验收，阶段保持 `READY FOR USER ACCEPTANCE`。
+- 遗留：未修改 MapLayerKind、MapLayer、MapRegion、MapDefinition、Map JSON、Picking、Camera、Render；`_tmp_blind_rows/` 既有未跟踪目录未读取、未修改、未删除、未提交。
+
 ## v0.2.26.4-rz
 EDITOR-A-R3-F1 USER ACCEPTED closeout（2026-08-11 13:23:27）：记录用户批准的 P0 真机验收范围，EDITOR-A 正式收口并转入 LAYER-A-R1；该动作不计入新的开发轮。
 - 变化：新增 EDITOR-A closeout 记录，冻结 Manage/Edit Mode、Map/Region Workspace、项目/层级/检查器信息轴、共享 World/Camera/Selection、唯一 Main/VulkanViewport 与 Region Drawing 不恢复边界。
