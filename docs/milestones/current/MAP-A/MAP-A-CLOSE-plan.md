@@ -1,115 +1,99 @@
-# MAP-A-CLOSE · 修订后收口计划
+# MAP-A → EDITOR-A · 单轮过渡计划
 
-> 计划状态：OPEN · 仅完成收口流程修订，不执行 MAP-A 产品或架构收口。
+> 计划状态：OPEN · 用户已于 2026-08-11 明确裁定：本轮不得只做 MAP-A 收口，必须在同一个 Round 内实际进入 `EDITOR-A`。
 >
-> 当前事实：`MAP-A-R3-D2-F1` 仍为 `OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`；本计划不改变该状态，也不解锁 D3、F2 或其他后续产品工作。
+> 当前事实：`MAP-A-R3-D2-F1` 仍为 `OPEN · FINAL ACCEPTANCE FAILED · 5 ITEMS REMAIN`。该失败不得改写为 PASS；旧 Region Drawing 产品路径允许在战略收口中被冻结为非成功终态，并迁移到 REGION-A。
 >
-> 适用治理：`docs/玄域引擎_AI开发宪法.md` 第八十六条《里程碑知识沉淀门禁》、`docs/dev-rules.md` 第 18 节。
+> 本计划取代“MAP-A-CLOSE 完成后停止、等待下一轮再启动 EDITOR-A-R1”的旧节奏。收口和下一阶段 Bootstrap 现在属于同一个 Transition Round。
 
-## 一、TASK FREEZE
+## 一、单轮目标冻结
 
-| ID | 任务 | 初始状态 |
-|---|---|---|
-| T00 | Fresh Git / Governance 基线确认 | OPEN |
-| C1 | MAP-A 状态冻结 | OPEN |
-| C2 | MAP-A 架构收口文档 | OPEN |
-| C3 | MAP-A 知识沉淀审计 | LOCKED |
-| C4 | 全量门禁 + Git 收口 | LOCKED |
-| T05 | 收口报告与证据汇总 | LOCKED |
-| T06 | 用户收口验收 | LOCKED |
-| NEXT | `EDITOR-A-R1` | FORBIDDEN |
+本轮只允许三个大目标，不再继续向下拆成等待轮：
 
-本计划四个核心目标：
+1. **MAP-A 战略收口**：冻结真实状态、架构边界、知识与遗留项；
+2. **立即进入 EDITOR-A**：从收口后的远端 HEAD 创建并切换 `feat/EDITOR-A-workspace`；
+3. **完成 EDITOR-A-R1 最小 Workspace Contract**：提交第一批正式 Workspace 代码和测试，并执行完整门禁。
 
-1. `C1`：准确结束 MAP-A 当前状态；
-2. `C2`：冻结下一代架构方向和未决边界；
-3. `C3`：提炼 MAP-A 可复用知识与教训；
-4. `C4`：以正式门禁和 Git 证据完成收口。
-
-任何一项缺失，`MAP-A-CLOSE != CLOSED`。
-
-## 二、阶段顺序与禁止事项
+本轮结束时必须达到：
 
 ```text
-C1 状态冻结
-↓
-C2 架构收口文档
-↓
-C3 MAP-A 知识沉淀审计
-↓
-C4 最终门禁 + Git 收口
-↓
-T05 报告与证据汇总
-↓
-T06 用户收口验收
-↓
-MAP-A-CLOSE CLOSED
+MAP-A 已完成战略收口事实记录
++
+旧 F1 失败事实未被伪造成 PASS
++
+feat/EDITOR-A-workspace 已成为当前开发线
++
+EDITOR-A-R1 已有正式代码落库
++
+完整门禁通过
++
+Commit + Push + Remote HEAD Verify 完成
 ```
 
-本轮只修订治理和计划文档。不得借计划修订或知识复盘：
+只完成 MAP-A 文档收口、没有进入 EDITOR-A：**本轮失败。**
 
-- 修改产品代码、测试代码或 Vulkan 资产；
-- 顺手修复 F1、重构 Renderer、迁移 Region UI 或启动 D3；
-- 改变 Schema、数据格式、公共依赖或持久化合同；
-- 把自动测试结果写成真机验收结果；
-- 把未验证猜想写成长期 Knowledge；
-- 自动将 `CONSTITUTION_CANDIDATE` 升格为宪法。
+---
 
-## 三、C1 · MAP-A 状态冻结
+## 二、阶段 A · MAP-A 战略收口（同轮前半段）
 
-C1 必须以当前仓库事实为准，对账：
+### A1 · Fresh Baseline
 
-- `changelog.md`；
-- `docs/milestones/current/MAP-A/R3-backlog.md`；
-- `docs/milestones/current/MAP-A/R3-F1-closeout.md`；
-- 已推送 Commit 与远端 tip；
-- 自动门禁结果；
-- 用户真机 IPO 逐项结果；
-- 未验收项、失败项和明确阻塞项。
+执行前 fresh 确认：
 
-C1 的输出必须保留 `OPEN`、`READY FOR USER ACCEPTANCE`、`ACCEPTANCE FAILED` 等真实状态，不得以自动门禁通过替代用户验收。
+- 当前 Branch / HEAD / upstream；
+- ahead / behind；
+- worktree / staged / untracked / stash；
+- 当前版本；
+- 当前 MAP-A 状态；
+- 现有 Knowledge / Lessons / Backlog；
+- 当前生效治理文件。
 
-## 四、C2 · MAP-A 架构收口文档
+原有未跟踪 `_tmp_blind_rows/` 若确认属于既有本地残留，本轮继续不触碰，不得为了“干净”擅自删除。
 
-C2 只冻结已经有证据的归属和下一阶段边界，不实现下一阶段能力。至少记录：
+### A2 · 状态冻结
 
-- World、Shared Infrastructure、Workspace、Map Editor Tool 的职责边界；
-- Region、Draft、Pointer、Picking、Render、Commit、History 链的事实所有权；
-- 已验证的 Vector Overlay、Depth Policy、latest-state-wins、动态 Buffer 和 Metric 合同；
-- 旧 Region Drawing UI、Legacy UI、Region Editor Migration 等未完成迁移；
-- 当前不应推广的临时 workaround 和待审批的架构候选。
+必须保留真实历史：
 
-若证据不足，只记录为未决项或 `BACKLOG`，不制造确定性架构结论。
+```text
+MAP-A-R3-D2-F1
+FINAL ACCEPTANCE FAILED
+5 ITEMS REMAIN
+```
 
-## 五、C3 · MAP-A 知识沉淀审计
+禁止改写成：
 
-### 5.1 审计输入
+```text
+PASS
+ACCEPTED
+FUNCTIONALLY CLOSED
+```
 
-必须优先使用真实项目材料：MAP-A changelog、可核验 Commit、开发计划、验收记录、失败项、返工记录、架构决策、测试/门禁证据和最终保留实现。禁止凭 AI 记忆编写知识条目。
+旧 Region Drawing 路径在本轮可以冻结为类似：
 
-### 5.2 六类审计问题
+```text
+SUPERSEDED · NOT ACCEPTED
+Migration Target: REGION-A
+```
 
-| 类别 | 必须审计的内容 |
-|---|---|
-| Architecture Knowledge | World、Shared Infrastructure、Workspace、Map Editor Tool 的正确归属和越界证据 |
-| Rendering Knowledge | Vector Overlay、Stroke/Marker/Fill、Ear Clipping、动态 Buffer、latest-state-wins、Depth Policy |
-| Input / Picking | Pointer → Picking → MapPoint → Draft → Renderer → Commit → History 链路及拆分难点 |
-| UI / Acceptance | 自动测试通过与真实 UI 可用之间的差异，Viewport/Input/视觉行为的真机要求 |
-| Failed Approaches / Lessons | 失败方案、错误根因、连续返工、过大切片、假通过路径 |
-| Technical Debt / Migration | Legacy UI、未验收项、Workspace 迁移、Region Editor Migration 和后续阻塞项 |
+若仓库已有等价状态词，优先复用；核心语义必须同时满足：**非成功、终态、保留失败事实、有明确迁移目标。**
 
-### 5.3 候选分类表
+### A3 · 架构收口
 
-C3 必须先产出候选清单，再写入正式事实源。每行只能使用一种分类：
+只记录已经有证据支持的边界：
 
-| ID | 候选 | 类型 | 证据 | 决定 |
-|---|---|---|---|---|
-| K01 | 待基于 MAP-A 证据填写 | `KNOWLEDGE` / 其他 | 待审计 | LOCKED |
-| L01 | 待基于失败记录填写 | `LESSON` / 其他 | 待审计 | LOCKED |
-| B01 | 待基于债务与路线填写 | `BACKLOG` / 其他 | 待审计 | LOCKED |
-| X01 | 待基于证据不足项填写 | `REJECTED` / 其他 | 待审计 | LOCKED |
+- `MapRegion` / `MapRegionDraft` / `MapPoint` / Validator / History：保留；
+- Picking / World Viewport / Camera / RenderVectorOverlay：共享基础设施；
+- Stroke / Marker / Fill / Ear Clipping / 动态 Buffer / latest-state-wins：复用，不因新 Workspace 重写；
+- 旧 Map Editor Region Drawing UI：战略终止，作为 REGION-A Migration Source；
+- Project Browser / Debug：后续转 Editor Shell 全局能力；
+- Map Editor / Region Editor：后续作为独立 Workspace；
+- Map Document / Dataset / Asset：只冻结方向，本轮不实现 JSON。
 
-允许的类型只有：
+### A4 · Milestone Knowledge Review
+
+本轮必须完成第八十六条要求的 MAP-A 知识沉淀审计，但不得把它发展成独立开发项目。
+
+候选只允许：
 
 ```text
 KNOWLEDGE
@@ -120,53 +104,232 @@ REJECTED
 CONSTITUTION_CANDIDATE
 ```
 
-同一根因优先更新既有 `docs/knowledge/` 条目，不创建近义副本。`BACKLOG` 写入现有 MAP-A backlog 或正式债务事实源；不建立重复的 Backlog 目录。`CONSTITUTION_CANDIDATE` 单独报告，不自动修改宪法。
+重点审计：
 
-### 5.4 C3 最低输出
+- 为什么 Region Drawing 一次跨 Input / Picking / Draft / Render / Commit / History 会显著增加定位难度；
+- 自动测试 PASS 与 Viewport / Input / UI 真机可用之间的差异；
+- 已验证 Renderer / Domain 能力在产品架构变化后为什么应优先复用；
+- Map Editor Tool 职责膨胀暴露出的 Workspace 边界问题；
+- 失败方案、错误根因、临时 workaround 和未来迁移债务。
 
-C3 PASS 必须产生：
+知识条目必须基于真实仓库、Commit、验收和失败记录，不得凭 AI 记忆编造。
 
-- 候选知识清单和逐项分类结果；
-- 正式 Knowledge 更新；
-- 正式 Lessons / Incidents 更新；
-- Backlog 更新；
-- `REJECTED` 与 `CHANGELOG_ONLY` 判定；
-- Constitution Candidate 单独报告（若存在）；
-- 新增、更新、拒绝和候选数量统计。
+### A5 · MAP-A 收口自动门禁
 
-若没有条目通过筛选，必须证明审计已执行，并说明每项被拒绝或仅保留历史的原因，不能只写 `N/A`。
-
-## 六、C4 · 最终门禁与 Git 收口
-
-所有 Knowledge、Lessons、Backlog 和收口文档修改完成后，才能 fresh 执行最终门禁：
+MAP-A 收口文档、Knowledge、Lessons、Backlog 完成后 fresh 执行：
 
 ```text
-C1 → C2 → C3 → 最终 Diff
-→ Solution Build 0W0E
-→ Core.Tests / World.Tests / WarCore.Tests
-→ 专项测试（按实际范围）
-→ ARCH-A / 5+100 / 版本一致性 / diff-check
-→ Commit → Push → Remote HEAD Verify
+Solution Build: 0 Warning / 0 Error
+Core.Tests: all PASS
+World.Tests: all PASS
+WarCore.Tests: all PASS
+专项: 按实际范围
+ARCH-A: PASS
+5+100: PASS
+版本一致性: PASS
+git diff --check: PASS
 ```
 
-测试项目必须串行，解决方案只完整构建一次，测试使用 `--no-build --no-restore`。专项测试不得替代要求的全量测试；环境阻断必须按真实状态记录。
+门禁通过后 Commit + Push，并验证远端 HEAD。
 
-## 七、用户收口验收扩展
+**这里不停止、不等待下一轮。**
 
-在既有 AC-U01～AC-U06 之后增加：
+---
 
-| 编号 | 验收内容 | 结果 |
-|---|---|---|
-| AC-U07 | MAP-A 知识沉淀审计已执行 | 待验收 |
-| AC-U08 | Knowledge / Lessons / Backlog 分类合理 | 待验收 |
-| AC-U09 | 未验证猜想未写成长期知识 | 待验收 |
-| AC-U10 | Constitution Candidate 未被擅自升格 | 待验收 |
+## 三、阶段 B · 同轮切入 EDITOR-A
 
-只有既有真机验收、AC-U07～AC-U10、C3、C4 和 Git 证据全部满足，才允许报告：
+MAP-A 收口自动门禁和远端 HEAD 验证通过后，立即：
 
 ```text
-MAP-A-CLOSE CLOSED
-MAP-A CLOSED
+从刚刚验证的 MAP-A 收口远端 HEAD
+创建并切换：feat/EDITOR-A-workspace
 ```
 
-随后才允许评估 `EDITOR-A-R1`，且仍需遵守下一阶段单独的目标冻结和验收门禁。
+禁止：
+
+- rebase；
+- force push；
+- merge；
+- 删除旧 MAP-A 分支；
+- 为切分支创建额外 worktree；
+- 把未知本地修改带入新分支。
+
+用户已明确批准本次 Transition Round 跨越里程碑边界，因此**不得以“MAP-A 还需要另一个对话轮等待用户确认”为理由停下。**
+
+MAP-A 的旧失败项仍保持真实；这次跨阶段不是把旧 F1 变成 PASS，而是用户批准的 Strategic Closeout → New Milestone Bootstrap。
+
+---
+
+## 四、阶段 C · EDITOR-A-R1 · Workspace Contract
+
+本轮必须真正修改产品代码，不能只创建分支或计划文件。
+
+### C1 · 最小 Workspace Contract
+
+建立最小 Workspace 架构，具体类名可根据仓库现状调整，但职责必须清楚：
+
+```text
+Editor Workspace Identity
+Workspace Definition / Contract
+Workspace Manager / Owner
+```
+
+至少表达：
+
+```text
+WorkspaceId
+DisplayName
+Toolbar identity / slot
+Left panel identity / slot
+Main content identity / slot
+Right panel identity / slot
+Enter
+Leave
+Current Workspace
+Switch
+```
+
+第一批正式 Workspace 至少注册：
+
+```text
+Map Editor
+Region Editor
+```
+
+Region Editor 本轮只作为 Workspace 身份/占位合同存在，不实现 Region Drawing。
+
+### C2 · 切换不变量
+
+Workspace 切换合同必须冻结：
+
+```text
+1. 结束当前临时 Tool 状态
+2. 保留 World Context
+3. 保留 Camera Context
+4. 保留兼容 Selection
+5. 切换 Toolbar 上下文
+6. 切换 Left Panel 上下文
+7. 切换 Right Panel 上下文
+8. 新 Workspace 回到默认 Select Tool
+```
+
+R1 重点是合同和状态所有权，不要求完整视觉 UI。
+
+### C3 · 本轮必须证明的事情
+
+自动测试至少覆盖：
+
+- 默认 Workspace 为 Map Editor；
+- Map → Region 切换成功；
+- Region → Map 切换成功；
+- 重复切换不产生重复状态；
+- Current Workspace 只有一个权威所有者；
+- Workspace 切换不创建第二份 World / Camera 权威状态；
+- Region Workspace 默认 Tool 为 Select；
+- 未开始 Region Drawing；
+- Workspace 层不依赖 Vulkan 实现。
+
+### C4 · 明确禁止
+
+EDITOR-A-R1 本轮禁止：
+
+- 完整 Workspace 下拉 UI；
+- 左右面板正式重排；
+- 删除旧 MapEditorPanel；
+- Region Drawing 新实现；
+- map.json / Dataset Registry；
+- Renderer 重写；
+- Picking 重写；
+- Unit / Road / Terrain Editor。
+
+这些不是为了继续拆 Round，而是防止本轮再次膨胀成 UI + Input + Picking + Render 的大包。
+
+---
+
+## 五、阶段 D · 本轮最终门禁与 Git
+
+EDITOR-A-R1 最后一处代码/测试/文档修改完成后，重新 fresh 执行一次完整正式门禁：
+
+```text
+Solution Build: 0 Warning / 0 Error
+Core.Tests: all PASS
+World.Tests: all PASS
+WarCore.Tests: all PASS
+EDITOR-A-R1 focused tests: all PASS
+ARCH-A: PASS
+5+100: PASS
+版本一致性: PASS
+git diff --check: PASS
+```
+
+随后必须同轮：
+
+```text
+Commit
+Push
+Remote HEAD Verify
+```
+
+最终要求：
+
+```text
+Branch = feat/EDITOR-A-workspace
+Local HEAD == Remote HEAD
+Ahead = 0
+Behind = 0
+```
+
+若本地只有已知既有 `_tmp_blind_rows/` 未跟踪残留，必须继续明确标注其来源和“本轮未触碰”，不得伪报绝对 clean。
+
+---
+
+## 六、本轮完成状态
+
+### 工程执行完成时
+
+应报告：
+
+```text
+MAP-A Strategic Closeout: IMPLEMENTED
+EDITOR-A-R1 Workspace Contract: IMPLEMENTED
+Branch: feat/EDITOR-A-workspace
+READY FOR USER ACCEPTANCE
+```
+
+这时已经**实际进入 EDITOR-A 开发阶段**，不能再报告“下一步才进入 EDITOR-A”。
+
+### 用户验收对象
+
+用户验收集中到本轮末尾，不在 MAP-A 与 EDITOR-A 之间再插一个等待轮。
+
+必须验收：
+
+1. MAP-A 旧失败事实是否真实保留；
+2. Knowledge / Lessons / Backlog 分类是否合理；
+3. MAP-A → EDITOR-A 架构边界是否正确；
+4. 当前开发分支是否已经是 `feat/EDITOR-A-workspace`；
+5. Workspace Contract 是否真实落库；
+6. Map / Region Workspace 切换合同是否符合预期；
+7. World / Camera 没有复制第二份权威状态；
+8. GitHub 与本地 HEAD 是否一致。
+
+如果 Workspace R1 仅涉及纯合同、无可见 UI，本轮用户验收以状态、测试、架构与 Git 证据为主；真正的可见切换 UI 留到后续 Workspace UI 实现时真机验收。
+
+---
+
+## 七、最终项目状态目标
+
+```text
+MAP-A
+  └─ Strategic Closeout / Superseded legacy path
+          ↓
+同一个 Transition Round
+          ↓
+feat/EDITOR-A-workspace
+          ↓
+EDITOR-A-R1 Workspace Contract IMPLEMENTED
+          ↓
+READY FOR USER ACCEPTANCE
+```
+
+**硬要求：本轮不得停在“MAP-A-CLOSE 完成，EDITOR-A 尚未开始”。**
