@@ -17,7 +17,7 @@ public sealed partial class UiVm
         if (!await EnsureDatasetRegistryAsync()) return DatasetFailed("请先保存地图 Manifest，再创建数据集。");
         try
         {
-            var result = await _datasetRegistry!.CreateAsync(DatasetCreateId, DatasetCreateType);
+            var result = await _datasetRegistry!.CreateAutoAsync(DatasetCreateType);
             if (!result.Succeeded) return DatasetFailed(result.Message);
             _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);
             DatasetSelectedId = result.Value!.Id;
@@ -49,7 +49,7 @@ public sealed partial class UiVm
     bool DatasetFailed(string message, bool create = true)
     {
         FooterMessage = message;
-        LogDatasetOutcome(false, create ? "创建" : "解除注册", DatasetCreateId, DatasetCreateType, message);
+        LogDatasetOutcome(false, create ? "创建" : "解除注册", DatasetSelectedId, DatasetCreateType, message);
         RaiseMapDocumentChanged();
         return false;
     }

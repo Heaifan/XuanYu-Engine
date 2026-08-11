@@ -16,7 +16,7 @@ public sealed partial class UiVm
     public string MapManifestCoordinateSystemText =>
         $"{CurrentMapManifest.CoordinateSystem.Type} / {CurrentMapManifest.CoordinateSystem.Unit}";
 
-    public int DatasetCount => CurrentMapManifest.Datasets.Length;
+    public int DatasetCount => DatasetItems.Count;
 
     public string DatasetEmptyState => DatasetCount == 0
         ? "当前无数据集"

@@ -4,6 +4,16 @@ namespace XuanYu.Editor.MapDocument;
 
 public sealed partial class MapDatasetRegistry
 {
+    public async Task<MapDocumentResult<MapDatasetDescriptor>> CreateAutoAsync(
+        string type, Func<string>? suffixFactory = null)
+    {
+        var generated = MapDatasetIdGenerator.Generate(type, IsDatasetIdTaken, suffixFactory);
+        return generated.Succeeded
+            ? await CreateAsync(generated.Value!, type)
+            : MapDocumentResult<MapDatasetDescriptor>.Fail(
+                generated.ErrorCode, generated.Message, generated.Stage, generated.Detail);
+    }
+
     public async Task<MapDocumentResult<MapDatasetDescriptor>> CreateAsync(string id, string type)
     {
         var descriptor = new MapDatasetDescriptor(id, type, $"data/{id}.json");
@@ -66,6 +76,14 @@ public sealed partial class MapDatasetRegistry
         return valid.Succeeded
             ? valid
             : MapDocumentResult<MapManifest>.Fail(valid.ErrorCode, valid.Message, valid.Stage, valid.Detail);
+    }
+
+    bool IsDatasetIdTaken(string id)
+    {
+        if (CurrentManifest.Datasets.Any(item =>
+                string.Equals(item.Id, id, StringComparison.OrdinalIgnoreCase))) return true;
+        return MapDatasetPathPolicy.TryResolve(MapRoot, $"data/{id}.json", out var path) &&
+            (File.Exists(path) || Directory.Exists(path));
     }
 
     static MapDocumentResult<T> Fail<T>(MapDocumentResult<MapManifest> result) =>

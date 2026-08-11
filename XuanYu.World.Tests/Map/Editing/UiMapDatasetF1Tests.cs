@@ -13,7 +13,6 @@ public sealed class UiMapDatasetF1Tests : IDisposable
         var vm = new UiVm(null, () => true, seedInitialScene: false);
         var path = System.IO.Path.Combine(_root, "map.json");
         Assert.True(await vm.SaveMapManifestAsync(path));
-        vm.DatasetCreateId = "111";
         vm.DatasetCreateType = "road";
         return (vm, path);
     }
@@ -23,13 +22,15 @@ public sealed class UiMapDatasetF1Tests : IDisposable
     {
         var (vm, path) = await SavedVmAsync();
         Assert.True(await vm.CreateDatasetAsync());
-        var datasetPath = System.IO.Path.Combine(_root, "data", "111.json");
+        var id = vm.DatasetItems[0].Id;
+        Assert.Matches("^road-[0-9a-f]{6}$", id);
+        var datasetPath = System.IO.Path.Combine(_root, "data", $"{id}.json");
         Assert.True(File.Exists(datasetPath));
         var manifest = await new MapManifestStorageService().LoadAsync(path);
         Assert.Single(manifest.Value!.Datasets);
-        Assert.Equal("data/111.json", manifest.Value.Datasets[0].Source);
+        Assert.Equal($"data/{id}.json", manifest.Value.Datasets[0].Source);
         var registry = new MapDatasetRegistry(path, manifest.Value);
-        Assert.Equal(MapDatasetStatus.Normal, (await registry.FindByIdAsync("111"))!.Status);
+        Assert.Equal(MapDatasetStatus.Normal, (await registry.FindByIdAsync(id))!.Status);
         Assert.Single(vm.DatasetItems);
         Assert.Equal("正常", vm.DatasetItems[0].Status);
     }
@@ -41,7 +42,7 @@ public sealed class UiMapDatasetF1Tests : IDisposable
         vm.RunCommand.Execute("新建数据集");
         for (var i = 0; i < 30 && vm.DatasetItems.Count == 0; i++) await Task.Delay(10);
         Assert.Single(vm.DatasetItems);
-        Assert.Equal("111", vm.DatasetItems[0].Id);
+        Assert.Matches("^road-[0-9a-f]{6}$", vm.DatasetItems[0].Id);
         Assert.Contains("创建成功", vm.FooterMessage);
     }
 
@@ -50,7 +51,6 @@ public sealed class UiMapDatasetF1Tests : IDisposable
     {
         var vm = new UiVm(null, () => true, seedInitialScene: false);
         vm.MapSession.MarkSaved(System.IO.Path.Combine(_root, "scene.xymap"));
-        vm.DatasetCreateId = "111";
         vm.DatasetCreateType = "road";
         Assert.False(await vm.CreateDatasetAsync());
         Assert.Contains("先保存地图 Manifest", vm.FooterMessage);
@@ -59,14 +59,13 @@ public sealed class UiMapDatasetF1Tests : IDisposable
     }
 
     [Fact]
-    public async Task F1_A10_duplicate_id_is_rejected_and_A11_same_type_can_repeat()
+    public async Task F1_A10_A11_generated_ids_allow_same_type_to_repeat()
     {
         var (vm, _) = await SavedVmAsync();
         Assert.True(await vm.CreateDatasetAsync());
-        Assert.False(await vm.CreateDatasetAsync());
-        vm.DatasetCreateId = "112";
         Assert.True(await vm.CreateDatasetAsync());
         Assert.Equal(2, vm.DatasetItems.Count);
+        Assert.NotEqual(vm.DatasetItems[0].Id, vm.DatasetItems[1].Id);
     }
 
     [Fact]
@@ -74,7 +73,6 @@ public sealed class UiMapDatasetF1Tests : IDisposable
     {
         var (vm, path) = await SavedVmAsync();
         Assert.True(await vm.CreateDatasetAsync());
-        vm.DatasetCreateId = "112";
         Assert.True(await vm.CreateDatasetAsync());
         var reopened = new UiVm(null, () => true, seedInitialScene: false);
         Assert.True(await reopened.OpenMapManifestAsync(path));

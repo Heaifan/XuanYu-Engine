@@ -6,35 +6,47 @@ public sealed record MapDatasetRow(string Type, string Id, string Status, string
 
 public sealed partial class UiVm
 {
-    readonly List<MapDatasetRow> _datasetItems = [];
+    IReadOnlyList<MapDatasetRow> _datasetItems = [];
     MapDatasetRegistry? _datasetRegistry;
-    string _datasetCreateId = "";
     string _datasetCreateType = MapDatasetTypes.Region;
     string _datasetSelectedId = "";
 
-    public IReadOnlyList<string> DatasetTypeOptions => MapDatasetTypes.All;
+    public IReadOnlyList<MapDatasetTypeOption> DatasetTypeOptions => MapDatasetTypePresentation.Options;
     public IReadOnlyList<MapDatasetRow> DatasetItems => _datasetItems;
     public bool IsDatasetEmpty => _datasetItems.Count == 0;
-    public string DatasetCreateId { get => _datasetCreateId; set => Set(ref _datasetCreateId, value); }
-    public string DatasetCreateType { get => _datasetCreateType; set => Set(ref _datasetCreateType, value); }
+    public string DatasetCreateType
+    {
+        get => _datasetCreateType;
+        set
+        {
+            if (!MapDatasetTypes.IsKnown(value) || !Set(ref _datasetCreateType, value)) return;
+            OnPropertyChanged(nameof(DatasetCreateTypeOption));
+        }
+    }
+
+    public MapDatasetTypeOption DatasetCreateTypeOption
+    {
+        get => DatasetTypeOptions.First(option => option.Value == DatasetCreateType);
+        set { if (value is not null) DatasetCreateType = value.Value; }
+    }
+
     public string DatasetSelectedId { get => _datasetSelectedId; set => Set(ref _datasetSelectedId, value); }
 
     async Task RefreshDatasetProjectionAsync()
     {
-        _datasetItems.Clear();
-        if (_datasetRegistry is not null)
-        {
-            var entries = await _datasetRegistry.EnumerateAsync();
-            _datasetItems.AddRange(entries.Select(entry => new MapDatasetRow(
-                entry.Descriptor.Type, entry.Descriptor.Id, StatusText(entry.Status), entry.Descriptor.Source)));
-        }
+        var entries = _datasetRegistry is null
+            ? []
+            : await _datasetRegistry.EnumerateAsync();
+        _datasetItems = entries.Select(entry => new MapDatasetRow(
+            MapDatasetTypePresentation.Display(entry.Descriptor.Type), entry.Descriptor.Id,
+            StatusText(entry.Status), entry.Descriptor.Source)).ToArray();
         NotifyDatasetProjection();
     }
 
     void ResetDatasetProjection()
     {
         _datasetRegistry = null;
-        _datasetItems.Clear();
+        _datasetItems = [];
         NotifyDatasetProjection();
     }
 

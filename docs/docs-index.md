@@ -51,6 +51,8 @@
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md`：R1-F1 Manifest ID 同步与复制布局真机 IPO 清单
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-acceptance.md`：R2 Dataset Registry 真机 IPO 清单与未 CLOSED 边界
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F1-root-cause.md`：R2-F1 Create/Register 取证矩阵、根因与修复证据
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F2-root-cause.md`：R2-F2 列表状态同步、中文展示与自动 ID 取证矩阵
+- `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F2-acceptance.md`：R2-F2 真机 IPO 验收模板与 R2-M02 补验路径
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

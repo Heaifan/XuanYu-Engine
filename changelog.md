@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.26.13-fix
+MAP-DOC-A-R2-F2 Dataset List State Sync + UI Refinement（2026-08-11 16:23:23）：修复 Dataset 创建成功后列表不更新，收紧 Dataset 页面展示并移除手填 ID。
+- 根因：UI 投影原地改写同一个 `List`，ItemsControl 可能继续持有旧 ItemsSource；内部 type 直接投影到 UI；创建命令仍依赖手填 ID。
+- 变化：创建完成后发布新的列表快照；六类 type 在 UI 映射为区域、道路、城镇、资源、河流、地形区域；自动生成 `<type>-<6 位小写 hex>`，Registry 与源文件碰撞最多重试 16 次且拒绝覆盖；Dataset 行改为中文主类型、ID 副行、状态列。
+- 验证：F2 focused `17/17 PASS`；Solution Build `0 Warning / 0 Error`；Core.Tests `339/339`、WarCore.Tests `22/22`、World.Tests `1217/1217`；ARCH-A、5+100、版本一致性、`git diff --check` PASS。
+- 遗留：真机 F2-M01～M08 与 R2-M02 补验仍待用户执行，状态为 `READY FOR USER RE-ACCEPTANCE`，不得宣布 CLOSED。
+
 ## v0.2.26.12-fix
 MAP-DOC-A-R2-F1 Dataset Create/Register 真机链路修复（2026-08-11）：修复 Manifest 路径所有权混淆、Dataset Create 异步命令无最终结果反馈和双文件提交前校验缺口，暂停 M04～M07 等待重新验收。
 - 根因：`CurrentMapManifestPath` 原先回退到旧 `.xymap` 会话路径；按钮通过 fire-and-forget 调用 Create，失败不稳定可见；“命令收到”不是成功事实。

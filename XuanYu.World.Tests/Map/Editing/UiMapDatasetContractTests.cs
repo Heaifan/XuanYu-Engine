@@ -19,6 +19,9 @@ public sealed class UiMapDatasetContractTests : IDisposable
         Assert.Contains("{Binding Type}", DatasetPanel);
         Assert.Contains("{Binding Id}", DatasetPanel);
         Assert.Contains("{Binding Status}", DatasetPanel);
+        Assert.Contains("{Binding Display}", DatasetPanel);
+        Assert.DoesNotContain("DatasetCreateId", DatasetPanel);
+        Assert.DoesNotContain("Dataset ID", DatasetPanel);
         Assert.Contains("解除注册数据集", DatasetPanel);
         Assert.Contains("local:DatasetPanel", EditorPanel);
     }
@@ -30,13 +33,12 @@ public sealed class UiMapDatasetContractTests : IDisposable
         var vm = new UiVm(null, () => true, seedInitialScene: false);
         var mapPath = Path.Combine(_directory, "map.json");
         Assert.True(await vm.SaveMapManifestAsync(mapPath));
-        vm.DatasetCreateId = "roads";
         vm.DatasetCreateType = "road";
         Assert.True(await vm.CreateDatasetAsync());
         Assert.Single(vm.DatasetItems);
         Assert.Equal("正常", vm.DatasetItems[0].Status);
-        var datasetPath = Path.Combine(_directory, "data", "roads.json");
-        Assert.True(await vm.UnregisterDatasetAsync("roads"));
+        var datasetPath = Path.Combine(_directory, "data", $"{vm.DatasetItems[0].Id}.json");
+        Assert.True(await vm.UnregisterDatasetAsync(vm.DatasetItems[0].Id));
         Assert.Empty(vm.DatasetItems);
         Assert.True(File.Exists(datasetPath));
     }
