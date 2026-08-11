@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">EDITOR-A-R2 Workspace Switch UI</title>
+  <desc id="desc">工作区选择器切换地图和区域上下文，唯一 Main 与 VulkanViewport 始终保留。</desc>
+  <rect width="1200" height="620" fill="#f8fbff"/>
+  <g font-family="Microsoft YaHei, Segoe UI, sans-serif">
+    <text x="60" y="70" fill="#18324d" font-size="34" font-weight="700">EDITOR-A-R2 · Workspace Switch UI</text>
+    <text x="60" y="110" fill="#52677f" font-size="18">切换上下文，不重建 Main / VulkanViewport；World、Camera、Selection 保持既有 Owner。</text>
+    <rect x="75" y="165" width="1050" height="80" rx="14" fill="#ffffff" stroke="#b7c7d8" stroke-width="2"/>
+    <rect x="105" y="184" width="205" height="42" rx="8" fill="#eaf3ff" stroke="#79aee5"/>
+    <text x="128" y="212" fill="#245782" font-size="20" font-weight="700">地图编辑 / 区域编辑</text>
+    <text x="350" y="212" fill="#5a6e82" font-size="18">标准 Menu 选择器 · Map 初始选中 · 同目标 NO-OP</text>
+    <rect x="75" y="290" width="250" height="190" rx="16" fill="#ffffff" stroke="#73b6ef" stroke-width="2"/>
+    <text x="105" y="342" fill="#1e4d7a" font-size="26" font-weight="700">Workspace Left Host</text>
+    <text x="105" y="382" fill="#5c7086" font-size="18">地图：既有 Left</text>
+    <text x="105" y="418" fill="#5c7086" font-size="18">区域：最小占位上下文</text>
+    <rect x="390" y="275" width="420" height="220" rx="18" fill="#edf9f2" stroke="#53b889" stroke-width="3"/>
+    <text x="470" y="338" fill="#175c40" font-size="29" font-weight="700">唯一 Main</text>
+    <text x="455" y="382" fill="#3d725d" font-size="20">唯一 VulkanViewport</text>
+    <text x="437" y="425" fill="#3d725d" font-size="18">不移交、不重建、不复制状态</text>
+    <rect x="875" y="290" width="250" height="190" rx="16" fill="#ffffff" stroke="#9baee8" stroke-width="2"/>
+    <text x="898" y="342" fill="#3c4f84" font-size="25" font-weight="700">Workspace Right Host</text>
+    <text x="905" y="382" fill="#65738b" font-size="18">地图：既有 Right</text>
+    <text x="905" y="418" fill="#65738b" font-size="18">区域：属性占位上下文</text>
+    <path d="M325 385 H390 M810 385 H875" stroke="#5d8ebf" stroke-width="4" marker-end="url(#arrow)"/>
+    <rect x="195" y="535" width="810" height="45" rx="12" fill="#ffffff" stroke="#b7c7d8"/>
+    <text x="245" y="564" fill="#415b73" font-size="18">Changed: Cancel input → Switch Manager → Select tool → update bindings → one low-frequency log</text>
+  </g>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#5d8ebf"/></marker></defs>
+</svg>

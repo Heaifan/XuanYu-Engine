@@ -34,7 +34,7 @@
         <ColumnDefinition Width="340" MinWidth="300" MaxWidth="480"/>
       </Grid.ColumnDefinitions>
       <Border Classes="panel" Padding="14" MinWidth="220" MaxWidth="420">
-        <local:Left />
+        <local:WorkspaceLeftHost />
       </Border>
 
       <GridSplitter Grid.Column="1"
@@ -60,7 +60,7 @@
                     ResizeBehavior="PreviousAndNext"/>
 
       <Border Grid.Column="4" Classes="panel" Padding="8" MinWidth="300" MaxWidth="480">
-        <local:Right />
+        <local:WorkspaceRightHost />
       </Border>
     </Grid>
 

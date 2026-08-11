@@ -39,7 +39,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         SurfaceBridgeFactory = surfaceBridgeFactory;
         if (dialogService is not null) _dialogService = dialogService;
         RunCommand = new RelayCommand(name => Run(name?.ToString() ?? string.Empty));
-        SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty));
+        SelectToolCommand = new RelayCommand(name => SelectTool(name?.ToString() ?? string.Empty)); SwitchWorkspaceCommand = new RelayCommand(SwitchWorkspace);
         ToggleSnapCommand = new RelayCommand(_ => ToggleSnap());
         InteractionCommand = new RelayCommand(name => RunInteraction(name?.ToString() ?? string.Empty));
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
@@ -52,7 +52,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public event PropertyChangedEventHandler? PropertyChanged;
     public INativeHostSurfaceBridgeFactory? SurfaceBridgeFactory { get; }
     public ICommand RunCommand { get; }
-    public ICommand SelectToolCommand { get; }
+    public ICommand SelectToolCommand { get; } public ICommand SwitchWorkspaceCommand { get; }
     public ICommand ToggleSnapCommand { get; }
     public ICommand InteractionCommand { get; }
     public ICommand ToggleLogCommand { get; }

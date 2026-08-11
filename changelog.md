@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.1-rz
+EDITOR-A-R2 Workspace Switch UI（2026-08-11 10:53:38 +08:00）：在 `feat/EDITOR-A-workspace` 的 R1 纯合同上，交付可见的 Workspace Selector 和 Map/Region 上下文切换；不重建唯一 Main/VulkanViewport，不启动 REGION-A 或旧 MAP-A F1 路径。
+- 变化：`UiVm` 持有唯一 `EditorWorkspaceManager`；同目标切换为无副作用 NO-OP，变更时复用既有 `CancelActiveInput`、回到选择工具、更新绑定并记录一条工作区低频日志。地图 Workspace 保留既有 Left/Right 与 MapEditorPanel；区域 Workspace 只显示“区域/区域属性”冻结占位，不提供 Region Drawing、假数据或列表。
+- 回归：新增 13 项 UI/组合合同，连同 R1 共 21 项聚焦 Workspace 测试，锁定 Map↔Region、NO-OP、工具复位、Camera/MapSession/World Owner/Selection 保留、无 Draft、唯一 Main/Viewport、Host 隔离、Map 面板可达与 Region 占位边界。R1 架构图同步改为浅色，新增 R2 浅色结构图。
+- 验证：Solution Build 0 Warning / 0 Error；Core.Tests 339/339、World.Tests 1136/1136、WarCore.Tests 22/22 PASS；ARCH-A、5+100、四处版本、两份 EDITOR-A SVG XML 与 diff-check PASS。首次 World 测试发现 AXAML 扫描基线 24 未包含本轮 3 个 UI 文件；更新为真实值 27 后重建重跑通过。远端核验与用户真机 IPO 见 `EDITOR-A-R2-workspace-switch.md`；状态必须保持 `READY FOR USER ACCEPTANCE`，不能由自动测试改写为 CLOSED。
+
 ## v0.2.26.0-rz
 EDITOR-A-R1 Workspace Contract（2026-08-11）：从已验证的 MAP-A 战略收口远端 `3dd091f` 创建 `feat/EDITOR-A-workspace`，在纯 `XuanYu.Editor` 层建立 Map/Region Workspace 身份、定义、唯一 Manager 与无副作用切换合同。
 - 变化：切换结果要求结束临时 Tool、保留既有 World/Camera/兼容 Selection、回到 Select；新增 8 项聚焦回归与 Workspace Contract 架构图，锁定双向/重复切换、无 Region Drawing Tool、无 World/Camera 副本与无 Vulkan 引用。未实现 Workspace UI、Region Drawing、Renderer/Picking 重写或 Schema。

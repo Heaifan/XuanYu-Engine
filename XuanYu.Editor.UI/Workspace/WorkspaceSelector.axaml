@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.WorkspaceSelector"
+             x:DataType="local:UiVm">
+  <Menu>
+    <MenuItem Header="{Binding CurrentWorkspaceDisplayName}">
+      <MenuItem Header="地图编辑" ToggleType="Radio" IsChecked="{Binding IsMapWorkspace, Mode=OneWay}"
+                Command="{Binding SwitchWorkspaceCommand}" CommandParameter="MapEditor"/>
+      <MenuItem Header="区域编辑" ToggleType="Radio" IsChecked="{Binding IsRegionWorkspace, Mode=OneWay}"
+                Command="{Binding SwitchWorkspaceCommand}" CommandParameter="RegionEditor"/>
+    </MenuItem>
+  </Menu>
+</UserControl>

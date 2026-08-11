@@ -2,7 +2,7 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    void SelectTool(string name)
+    void SelectTool(string name, bool logTool = true)
     {
         if (!CanChangeToolNow(name)) return;
         var requestedTool = EditorToolText.FromText(name);
@@ -34,7 +34,7 @@ public sealed partial class UiVm
         PublishSceneRenderSnapshot();
         FooterMessage = $"当前工具：{ActiveTool}。视口等待输入。";
         FooterState = "状态：就绪";
-        LogTool(ActiveTool);
+        if (logTool) LogTool(ActiveTool);
         OnPropertyChanged(nameof(LogSummary));
     }
 
