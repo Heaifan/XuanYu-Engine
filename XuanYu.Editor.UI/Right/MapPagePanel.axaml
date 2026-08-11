@@ -36,12 +36,16 @@
         <TextBlock Grid.Column="1" Text="{Binding MapPathDisplay}" Classes="uiValue" ToolTip.Tip="{Binding MapPath}"/>
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
-        <TextBlock Text="MapId" Classes="uiLabel"/>
+        <TextBlock Text="ID" Classes="uiLabel"/>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
           <TextBlock Text="{Binding MapIdDisplay}" Classes="uiValue" TextWrapping="NoWrap"
                      TextTrimming="CharacterEllipsis" MaxLines="1" ToolTip.Tip="{Binding MapIdText}"/>
           <Button Classes="copyBtn" Content="复制" Click="CopyMapId_Click" ToolTip.Tip="复制完整 MapId" AutomationProperties.Name="复制完整 MapId"/>
         </StackPanel>
+      </Grid>
+      <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
+        <TextBlock Text="坐标系" Classes="uiLabel"/>
+        <TextBlock Grid.Column="1" Text="{Binding MapManifestCoordinateSystemText}" Classes="uiValue"/>
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
         <TextBlock Text="尺寸" Classes="uiLabel"/>
@@ -60,9 +64,9 @@
       <Button Classes="uiTextButton" HorizontalAlignment="Stretch" MinWidth="0" MinHeight="28" Content="新建地图"
               Command="{Binding RunCommand}" CommandParameter="新建地图" AutomationProperties.Name="新建地图"/>
       <Button Classes="uiTextButton" HorizontalAlignment="Stretch" MinWidth="0" MinHeight="28" Content="打开地图"
-              IsEnabled="False" ToolTip.Tip="地图持久化将在独立专项接入" AutomationProperties.Name="打开地图"/>
+              Command="{Binding RunCommand}" CommandParameter="打开地图" AutomationProperties.Name="打开地图"/>
       <Button Classes="uiTextButton" HorizontalAlignment="Stretch" MinWidth="0" MinHeight="28" Content="保存地图"
-              IsEnabled="False" ToolTip.Tip="地图持久化将在独立专项接入" AutomationProperties.Name="保存地图"/>
+              Command="{Binding RunCommand}" CommandParameter="保存地图" AutomationProperties.Name="保存地图"/>
       <Button Classes="uiTextButton" HorizontalAlignment="Stretch" MinWidth="0" MinHeight="28" Content="聚焦地图"
               Command="{Binding RunCommand}" CommandParameter="聚焦地图" AutomationProperties.Name="聚焦地图"/>
     </UniformGrid>

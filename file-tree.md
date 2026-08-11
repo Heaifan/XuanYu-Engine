@@ -249,6 +249,13 @@
 │  │  ├─ MapEnvironmentDefinition.cs
 │  │  ├─ MapJsonMapper.cs
 │  │  ├─ MapJsonSerializer.cs
+│  │  ├─ MapManifest.cs
+│  │  ├─ MapManifestJson.cs
+│  │  ├─ MapManifestMapper.cs
+│  │  ├─ MapManifestOwner.cs
+│  │  ├─ MapManifestSerializer.cs
+│  │  ├─ MapManifestStorageService.cs
+│  │  ├─ MapManifestValidator.cs
 │  │  └─ MapStorageService.cs
 │  ├─ MapEditing/
 │  │  ├─ MapEditEvents.cs
@@ -484,6 +491,7 @@
 │  │  │  ├─ UiVm.MapDiagnostics.cs
 │  │  │  ├─ UiVm.MapEditor.cs
 │  │  │  ├─ UiVm.MapEditor.Display.cs
+│  │  │  ├─ UiVm.MapManifest.cs
 │  │  ├─ UiVm.MapEditor.Validation.cs
 │  │  ├─ UiVm.MapEditor.Validation.Rules.cs
 │  │  ├─ UiVm.MapDanger.cs
@@ -877,7 +885,8 @@
 │  │  │  ├─ UiMapLayerLockLogTests.cs
 │  │  │  ├─ UiMapLayerPanelTests.Behavior.cs
 │  │  │  ├─ UiMapLayerPanelTests.cs
-│  │  │  └─ UiMapLayoutContractTests.cs
+│  │  │  ├─ UiMapLayoutContractTests.cs
+│  │  │  └─ UiMapManifestNavigationTests.cs
 │  │  ├─ MapBoundsTests.cs
 │  │  ├─ MapCoordinateValidationTests.cs
 │  │  ├─ MapDefaultMapTests.cs
@@ -885,6 +894,10 @@
 │  │  ├─ MapDocumentAggregateBridgeTests.cs
 │  │  ├─ MapDocumentOwnerChainTests.cs
 │  │  ├─ MapDocumentOwnerTests.cs
+│  │  ├─ MapManifestCreationTests.cs
+│  │  ├─ MapManifestSerializationTests.cs
+│  │  ├─ MapManifestStorageTests.cs
+│  │  ├─ MapManifestValidationTests.cs
 │  │  ├─ MapEnvironmentValidationTests.cs
 │  │  ├─ MapIdTests.cs
 │  │  ├─ MapJsonRoundTripTests.cs
@@ -1115,6 +1128,9 @@
 │  │        ├─ map-contract.md
 │  │        ├─ viewport-overlay-development-plan.md
 │  │        └─ viewport-overlay-roadmap.svg
+│  │     └─ MAP-DOC-A/
+│  │        ├─ MAP-DOC-A-R1-acceptance.md
+│  │        └─ MAP-DOC-A-R1-plan.md
 │  └─ ui/
 │     ├─ 玄域引擎_UI真机基线清单.md
 │     ├─ 玄域引擎_UI规范_1.0.md
@@ -1446,6 +1462,7 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.cs` — MAP-A-R2-D3-F2：地图命令低频诊断日志（复用既有日志总线，字段名/状态值全部中文显示）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.cs` — MAP-A-R2-D3：地图属性入口（唯一数据源 = MapSession；保存/打开按钮禁用防 v1 双权威，D6 恢复）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapEditor.Display.cs` — D4：MapIdDisplay（前 8…后 6 压缩）与 MapPathDisplay（空路径 —）显示层属性。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapManifest.cs` — MAP-DOC-A-R1：Map Workspace 的 Manifest 身份投影、Dataset 空态与 map.json 文件命令入口。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapHistory.cs` — MAP-A-R2-D3-A1 入口补接：地图撤销/重做（独立历史实例，不触碰场景实体历史）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDiagnostics.cs` — MAP-A-R2-D4/D4-F2：图层操作低频中文日志（复用既有日志总线）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapLayerDrag.cs` — MAP-A-R2-D4-F3：区域图层拖动排序（UI 层入口）。
@@ -1498,7 +1515,7 @@
 - `XuanYu.Editor.UI/Workspace/WorkspaceSelector.axaml.cs` — Mode 主区域的双击路由；状态仍由 UiVm 管理。
 - `XuanYu.Editor.UI/Win/UiWin.Dialogs.cs` — D4：UiWin 错误/警告弹窗实现。复用 UiWin.UnsavedDialog 的窗口构建风格，
 - `XuanYu.Editor.UI/Win/UiWin.EntityShortcuts.cs` — partial class UiWin
-- `XuanYu.Editor.UI/Win/UiWin.MapCommands.cs` — MAP-A-R2-D3-F1：UiWin 地图命令仅保留快捷键可达的窗口无关命令（新建/聚焦）。
+- `XuanYu.Editor.UI/Win/UiWin.MapCommands.cs` — MAP-DOC-A-R1：地图新建/聚焦与 map.json Manifest 打开/保存文件选择器。
 - `XuanYu.Editor.UI/Win/UiWin.SceneCommands.cs` — partial class UiWin
 - `XuanYu.Editor.UI/Win/UiWin.UnsavedDialog.cs` — partial class UiWin
 - `XuanYu.Editor.UI/Win/UiWin.axaml` — github.com/avaloniaui"
@@ -1824,12 +1841,17 @@
 - `XuanYu.World.Tests/Map/Editing/UiMapLayerPanelTests.Behavior.cs` — MAP-A-R2-D4：图层面板行为——显隐/锁定/删除/排序/活动图层/撤销重做（真实命令链）。
 - `XuanYu.World.Tests/Map/Editing/UiMapLayerPanelTests.cs` — MAP-A-R2-D4：图层面板 ViewModel——默认列表/添加/按钮状态/系统层只读/重命名（真实命令链）。
 - `XuanYu.World.Tests/Map/Editing/UiMapLayoutContractTests.cs` — MAP-A-R2-D4-F1：图层 UI 归位合同——左侧仅项目/层级，图层管理迁入右侧地图编辑器二级页。
+- `XuanYu.World.Tests/Map/Editing/UiMapManifestNavigationTests.cs` — MAP-DOC-A-R1：地图基础、地图环境、数据集导航与 R2 空态边界。
 - `XuanYu.World.Tests/Map/MapBoundsTests.cs` — MAP-A-R2-D1：有限地图边界合同（中心原点、闭区间、尺寸变化同步）。
 - `XuanYu.World.Tests/Map/MapCoordinateValidationTests.cs` — MAP-A-R1-D2：坐标合同 / 图层引用 / schema / 名称校验。
 - `XuanYu.World.Tests/Map/MapDefaultMapTests.cs` — MAP-A-R2-D1-F1：默认地图工厂合同（完整聚合 + DTO 默认值一致）。
 - `XuanYu.World.Tests/Map/MapDefinitionTests.cs` — MAP-A-R2-D1-F1：地图聚合验证（尺寸/坐标/地表/图层/区域组合入口）。
 - `XuanYu.World.Tests/Map/MapDocumentAggregateBridgeTests.cs` — MAP-A-R2-D3：.xymap v1 DTO → 领域聚合桥接（场景 mapReference 保活链）与端到端查询一致。
 - `XuanYu.World.Tests/Map/MapDocumentOwnerChainTests.cs` — MAP-A-R1-D2：状态链闭环与失败不污染。
+- `XuanYu.World.Tests/Map/MapManifestCreationTests.cs` — MAP-DOC-A-R1：Manifest 最小创建合同与当前地图身份投影。
+- `XuanYu.World.Tests/Map/MapManifestSerializationTests.cs` — MAP-DOC-A-R1：Manifest JSON 键名、严格性与 Round-trip 合同。
+- `XuanYu.World.Tests/Map/MapManifestStorageTests.cs` — MAP-DOC-A-R1：map.json 原子保存、读取与失败安全合同。
+- `XuanYu.World.Tests/Map/MapManifestValidationTests.cs` — MAP-DOC-A-R1：Manifest format、version、ID、坐标系与容器校验。
 - `XuanYu.World.Tests/Map/MapDocumentOwnerTests.cs` — MAP-A-R1-D2：当前地图状态所有者（New/Load/Modify/Save/Unload 基础状态）。
 - `XuanYu.World.Tests/Map/MapEnvironmentValidationTests.cs` — MAP-A-R1-D2：环境定义与参数校验。
 - `XuanYu.World.Tests/Map/MapIdTests.cs` — MAP-A-R1-D2：MapId 与地图合同校验（纯内存）。

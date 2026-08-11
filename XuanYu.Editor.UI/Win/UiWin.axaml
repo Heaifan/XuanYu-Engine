@@ -3,7 +3,7 @@
         xmlns:local="using:XuanYu.Editor.UI"
         x:Class="XuanYu.Editor.UI.UiWin"
         x:DataType="local:UiVm"
-        Title="玄域引擎编辑器 v0.2.26.5-rz"
+        Title="玄域引擎编辑器 v0.2.26.6-rz"
         Width="1360"
         Height="820"
         MinWidth="1024"

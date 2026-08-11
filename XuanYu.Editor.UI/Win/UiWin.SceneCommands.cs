@@ -29,7 +29,7 @@ public partial class UiWin
     async Task RunSceneCommand(string command)
     {
         if (DataContext is not UiVm vm) return;
-        if (command is "新建地图" or "聚焦地图")
+        if (command is "新建地图" or "打开地图" or "保存地图" or "聚焦地图")
         {
             if (command == "新建地图" && !await ConfirmNewMapUnsaved(vm)) return;
             await RunMapCommand(command);

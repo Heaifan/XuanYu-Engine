@@ -1,4 +1,5 @@
 using XuanYu.Core.Map;
+using XuanYu.Editor.MapDocument;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Render.Abstractions;
 using XuanYu.World.Map;
@@ -41,6 +42,10 @@ public sealed partial class UiVm
 
     void OnMapContentChanged(MapContentChangedEventArgs e)
     {
+        if (e.Reason == MapEditReason.NewMap)
+            ResetMapManifestFromCurrentMap();
+        else if (e.Reason == MapEditReason.Replace && _mapManifestOwner.CurrentPath is null)
+            _mapManifestOwner.SetBaseline(MapManifest.FromMap(e.CurrentMap));
         _mapRenderSnapshot = MapRenderSnapshotProjection.Project(e.CurrentMap, e.ChangeSequence);
         _mapWorld.Load(WorldMapState.From(e.CurrentMap));
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,

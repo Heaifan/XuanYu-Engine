@@ -3,12 +3,12 @@ using XuanYu.Editor.MapEditing;
 
 namespace XuanYu.Editor.UI;
 
-// MAP-A-R2-D3：地图属性入口（唯一数据源 = MapSession；保存/打开按钮禁用防 v1 双权威，D6 恢复）。
+// MAP-DOC-A-R1：地图基础入口（地图内容仍由 MapSession 权威，身份/容器投影自 MapManifest）。
 public sealed partial class UiVm
 {
-    public string MapName => MapSession.CurrentMap.DisplayName;
-    public string MapPath => MapSession.CurrentFilePath ?? "";
-    public string MapIdText => MapSession.CurrentMap.MapId.ToString();
+    public string MapName => CurrentMapManifest.Name;
+    public string MapPath => CurrentMapManifestPath;
+    public string MapIdText => CurrentMapManifest.Id;
     public string MapSizeText =>
         $"{MapSession.CurrentMap.SizeMeters.Width:0.####} × {MapSession.CurrentMap.SizeMeters.Depth:0.####} 米";
     public bool HasMap => true; // D2 会话语义：编辑器恒有当前地图（初始默认 10 km）。
@@ -21,6 +21,7 @@ public sealed partial class UiVm
             return;
         }
 
+        ResetMapManifestFromCurrentMap();
         SyncPropertyTexts();
         MapEditError = ""; FooterMessage = "地图已新建（未保存）。";
         RaiseMapDocumentChanged();
@@ -79,6 +80,11 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(MapIdText));
         OnPropertyChanged(nameof(MapSizeText));
         OnPropertyChanged(nameof(MapStatusText));
+        OnPropertyChanged(nameof(CurrentMapManifest));
+        OnPropertyChanged(nameof(MapManifestIdText));
+        OnPropertyChanged(nameof(MapManifestCoordinateSystemText));
+        OnPropertyChanged(nameof(DatasetCount));
+        OnPropertyChanged(nameof(DatasetEmptyState));
     }
     void FailEdit(string message)
     {

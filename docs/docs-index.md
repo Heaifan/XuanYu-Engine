@@ -45,6 +45,7 @@
 - `docs/milestones/current/MAP-A/MAP-A-CLOSE-plan.md`：MAP-A-CLOSE 的 C1～C4 收口计划与里程碑知识沉淀门禁
 - `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md`：OVL-R0～R3 比例尺架构整改开发计划
 - `docs/milestones/current/MAP-A/viewport-overlay-roadmap.svg`：Viewport Overlay / Scale Indicator 浅色路线图
+- `docs/milestones/current/MAP-DOC-A/`：MAP-DOC-A-R1 Map Content Navigation、Manifest 合同与真机验收材料
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

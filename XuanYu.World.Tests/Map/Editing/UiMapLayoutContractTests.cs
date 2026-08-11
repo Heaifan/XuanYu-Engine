@@ -27,10 +27,11 @@ public sealed class UiMapLayoutContractTests
     }
 
     [Fact]
-    public void Map_editor_has_three_second_level_tabs()
+    public void Map_editor_has_frozen_content_navigation_tabs()
     {
-        Assert.Contains("Header=\"地图\"", MapEditor);
-        Assert.Contains("Header=\"环境\"", MapEditor);
+        Assert.Contains("Header=\"地图基础\"", MapEditor);
+        Assert.Contains("Header=\"地图环境\"", MapEditor);
+        Assert.Contains("Header=\"数据集\"", MapEditor);
     }
 
     [Fact]
