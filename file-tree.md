@@ -1089,6 +1089,7 @@
 │  │     │  ├─ EDITOR-A-R1-workspace-contract.md
 │  │     │  ├─ EDITOR-A-R2-workspace-switch.md
 │  │     │  ├─ EDITOR-A-R3-F1-shell-compact.md
+│  │     │  ├─ EDITOR-A-R3-F1-closeout.md
 │  │     │  ├─ EDITOR-A-R3-mode-shell.md
 │  │     │  ├─ editor-a-r1-workspace-contract.svg
 │  │     │  ├─ editor-a-r2-workspace-switch.svg
@@ -2084,6 +2085,7 @@
 - `XuanYu.World.Tests/Mode/EditorModeUiTests.cs` — Mode/Workspace 直接切换、Esc/Tab、状态保留与 Region 隔离回归。
 - `XuanYu.World.Tests/UiTokens/UiDebtBaselineTests.cs` — UI AXAML 扫描范围与受控债务基线守卫（EDITOR-A-R3-F1 更新可见文件数）。
 - `docs/milestones/current/EDITOR-A/EDITOR-A-R3-F1-shell-compact.md` — R3-F1 紧凑 Shell、自动门禁与最终用户 IPO 记录。
+- `docs/milestones/current/EDITOR-A/EDITOR-A-R3-F1-closeout.md` — EDITOR-A-R3-F1 用户 P0 验收收口与 LAYER-A 转段记录。
 - `scripts/arch-a-guard-editor.ps1` — （职责待补）
 - `scripts/arch-a-guard-render.ps1` — （职责待补）
 - `scripts/arch-a-guard-warcore.ps1` — WarCore 子守卫（D4 修复：$failures 条件初始化避免清空主守卫失败列表；被源入时不提前 exit）

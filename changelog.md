@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.26.4-rz
+EDITOR-A-R3-F1 USER ACCEPTED closeout（2026-08-11 13:23:27）：记录用户批准的 P0 真机验收范围，EDITOR-A 正式收口并转入 LAYER-A-R1；该动作不计入新的开发轮。
+- 变化：新增 EDITOR-A closeout 记录，冻结 Manage/Edit Mode、Map/Region Workspace、项目/层级/检查器信息轴、共享 World/Camera/Selection、唯一 Main/VulkanViewport 与 Region Drawing 不恢复边界。
+- 验证：用户已确认 P0 acceptance scope；当前 `feat/EDITOR-A-workspace` @ `b1f18b1` 与远端一致，ahead/behind `0/0`。本条不把自动门禁冒充真机证据。
+- 遗留：`_tmp_blind_rows/` 既有未跟踪目录按要求未读取、未修改、未删除、未提交；LAYER-A-R1 下一步从该远端基线切出。
+
 ## v0.2.26.3-rz
 EDITOR-A-R3-F1 Shell Compact & Unified Mode Selector（2026-08-11 12:14:39）：基于 R3 M01～M04 用户部分通过，删除重复底部资源浏览器，收敛为唯一 Log；Manage 顶部只显示“管理模式”。
 - 变化：双击“管理模式”与 Tab 共用 `ToggleEditorMode()`；Edit 时同一位置变为“地图编辑/区域编辑 + Chevron”，菜单以 Radio 项直接在 Map/Region 间切换。单击 Mode NO-OP，Esc 仍只取消操作；GLB 导入继续由“文件 → 导入 GLB”承载。
