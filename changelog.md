@@ -18,6 +18,12 @@
 
 ---
 
+## MAP-DOC-A CLOSED
+MAP-DOC-A-R3 Closeout（2026-08-11 23:16:15）：用户真机验收裁决 R3-F4 PASS，F4-M01～F4-M03 全部通过；MAP-DOC-A 完成并关闭。
+- 交付：Dataset Registry、工作存储、Name/Selection、Dataset-backed Layer Projection、Visible/Lock/Drag、Inspector 与 28/32 DIP UI Spec 收口。
+- 验证：基线 `e8f7ba9` 已通过完整 Build 0W0E、Core 339/339、World 1238/1238、WarCore 22/22、ARCH-A 与 `git diff --check`；本次 Closeout 仅记录用户验收与状态。
+- 遗留：Region Dataset Feature、Runtime Binding 与 Save/Reload 内容闭环转入 MAP-DATA-A-R1；不再为 MAP-DOC-A 新开 F5。
+
 ## v0.2.26.20-fix
 MAP-DOC-A-R3-F4 Dataset/Layer 文字居中（2026-08-11 22:53:02）：修复 `c019701` 未实际写入的四个 Dataset 行文字对齐 Setter；仅收紧列表呈现，不修改 UI Token、Schema、Registry、Region、Renderer 或保存协议。
 - 变化：`datasetName`、`datasetStatus`、`datasetLayerName`、`datasetLayerStatus` 均水平与垂直居中；两个 Status 保留 64 DIP 最小状态区；Dataset/Layer 行高继续分别为 28/32 DIP。

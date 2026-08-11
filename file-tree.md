@@ -1138,6 +1138,11 @@
 │  │  ├─ rendering.md
 │  │  └─ ui.md
 │  ├─ milestones/
+│  │  ├─ closed/
+│  │  │  ├─ MAP-A/
+│  │  │  │  └─ R2-closeout.md
+│  │  │  └─ MAP-DOC-A/
+│  │  │     └─ R3-closeout.md
 │  │  └─ current/
 │  │     ├─ EDITOR-A/
 │  │     │  ├─ EDITOR-A-R1-workspace-contract.md
@@ -2172,6 +2177,7 @@
 - `docs/knowledge/lessons.md` — 类型化 Lesson、停止条件与错误前提复盘。
 - `docs/milestones/current/MAP-A/map-contract.md` — MAP-A 地图合同与当前轮验收材料
 - `docs/milestones/closed/MAP-A/R2-closeout.md` — MAP-A-R2 CLOSED 收口报告、交付能力盘点与关闭证据。
+- `docs/milestones/closed/MAP-DOC-A/R3-closeout.md` — MAP-DOC-A-R3 用户验收 PASS 与 CLOSED 收口记录。
 - `docs/milestones/current/MAP-A/R3-backlog.md` — MAP-A-R3 冻结前候选方向与范围约束。
 - `docs/milestones/current/MAP-A/R3-F1-closeout.md` — F1 FINAL 15 项真机 IPO 收口清单。
 - `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md` — OVL-R0～R3 比例尺架构整改计划与状态。
