@@ -13,7 +13,11 @@ public sealed partial class MapDatasetRegistry
             return Fail<MapDatasetDescriptor>("InvalidDatasetSource", "Dataset source 不安全。", "Validate");
         if (File.Exists(datasetPath))
             return Fail<MapDatasetDescriptor>("SourceCollision", "Dataset source 文件已存在，拒绝覆盖。", "Validate");
-        var committed = await CommitCreateAsync(candidate.Value, descriptor, datasetPath);
+        var document = MapDatasetDocument.CreateNew(descriptor);
+        var documentValid = MapDatasetDocumentValidator.Validate(document);
+        if (!documentValid.Succeeded)
+            return Fail<MapDatasetDescriptor>(documentValid.ErrorCode, documentValid.Message, "Validate");
+        var committed = await CommitCreateAsync(candidate.Value, document, datasetPath);
         if (!committed.Succeeded) return Fail<MapDatasetDescriptor>(committed);
         CurrentManifest = candidate.Value;
         return MapDocumentResult<MapDatasetDescriptor>.Ok(descriptor);

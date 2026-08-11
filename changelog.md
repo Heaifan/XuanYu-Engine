@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.26.12-fix
+MAP-DOC-A-R2-F1 Dataset Create/Register 真机链路修复（2026-08-11）：修复 Manifest 路径所有权混淆、Dataset Create 异步命令无最终结果反馈和双文件提交前校验缺口，暂停 M04～M07 等待重新验收。
+- 根因：`CurrentMapManifestPath` 原先回退到旧 `.xymap` 会话路径；按钮通过 fire-and-forget 调用 Create，失败不稳定可见；“命令收到”不是成功事实。
+- 变化：Create 只接受正式 `map.json` 路径；无路径明确拒绝；成功/失败写一条最终用户可见日志；Dataset Document 与 Manifest 均在提交前校验，失败回滚且成功后才 Publish/Refresh。
+- 验证：F1 focused `9/9 PASS`；Solution Build `0 Warning / 0 Error`；Core.Tests `339/339`、WarCore.Tests `22/22`、World.Tests `1209/1209`；ARCH-A、5+100、版本一致性、`git diff --check` PASS。
+- 遗留：真机状态为 `READY FOR USER RE-ACCEPTANCE`，不得宣布 CLOSED。
+
 ## v0.2.26.11-rz
 MAP-DOC-A-R2-C4 Dataset UI 与验收材料（2026-08-11）：数据集页正式接入空态、新建、Type/ID/Status 列表和解除注册；补齐 R1-F1 与 R2 中文 IPO 真机清单。
 - 变化：新增独立 `DatasetPanel`，创建/解除注册经 UiVm 路由到 Registry；缺失/无效状态以单项列表状态展示。

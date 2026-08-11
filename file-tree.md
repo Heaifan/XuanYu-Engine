@@ -501,6 +501,7 @@
 │  │  │  ├─ UiVm.RegionDrawing.cs
 │  │  │  ├─ UiVm.MapCommandRouting.cs
 │  │  │  ├─ UiVm.MapDataset.Commands.cs
+│  │  │  ├─ UiVm.MapDataset.Logging.cs
 │  │  │  ├─ UiVm.MapDataset.Routing.cs
 │  │  │  ├─ UiVm.MapDataset.cs
 │  │  │  ├─ UiVm.MapDiagnostics.Format.cs
@@ -1155,6 +1156,7 @@
 │  │        ├─ MAP-DOC-A-R1-F1-acceptance.md
 │  │        ├─ MAP-DOC-A-R1-F1-carryover.md
 │  │        ├─ MAP-DOC-A-R2-acceptance.md
+│  │        ├─ MAP-DOC-A-R2-F1-root-cause.md
 │  │        ├─ MAP-DOC-A-R2-plan.md
 │  │        └─ MAP-DOC-A-R1-plan.md
 │  └─ ui/
@@ -1488,6 +1490,7 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.cs` — MAP-A-R2-D3-F1：地图面板命令真实路由（UiVm.RunCommand → 地图命令）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.cs` — MAP-DOC-A-R2-C4：Dataset Registry 列表、空态和状态文字投影。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Commands.cs` — MAP-DOC-A-R2-C4：Dataset 创建/解除注册 UI 命令与 Manifest dirty 接线。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Logging.cs` — MAP-DOC-A-R2-F1：Dataset Create/Register 最终成功/失败用户可见日志。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Routing.cs` — MAP-DOC-A-R2-C4：Dataset 新建/解除注册命令的独立路由分部。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.Format.cs` — MAP-A-R2-D3-F2：地图日志显示映射（纯函数，内部枚举/错误码保持英文）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDiagnostics.cs` — MAP-A-R2-D3-F2：地图命令低频诊断日志（复用既有日志总线，字段名/状态值全部中文显示）。
@@ -1886,6 +1889,7 @@
 - `XuanYu.World.Tests/Map/Editing/UiMapManifestNavigationTests.cs` — MAP-DOC-A-R1：地图基础、地图环境、数据集导航与 R2 空态边界。
 - `XuanYu.World.Tests/Map/Editing/UiMapManifestIdentityTests.cs` — MAP-DOC-A-R1-F1：Manifest ID 即时刷新、Save/Save As 稳定性与 ID 行复制按钮布局。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetContractTests.cs` — MAP-DOC-A-R2-C4：Dataset 页面合同、创建/列表/解除注册与物理文件保留测试。
+- `XuanYu.World.Tests/Map/Editing/UiMapDatasetF1Tests.cs` — MAP-DOC-A-R2-F1：Create 命令、Manifest/文件/Registry/UI 四层一致性与重开恢复测试。
 - `XuanYu.World.Tests/Map/MapBoundsTests.cs` — MAP-A-R2-D1：有限地图边界合同（中心原点、闭区间、尺寸变化同步）。
 - `XuanYu.World.Tests/Map/MapCoordinateValidationTests.cs` — MAP-A-R1-D2：坐标合同 / 图层引用 / schema / 名称校验。
 - `XuanYu.World.Tests/Map/MapDefaultMapTests.cs` — MAP-A-R2-D1-F1：默认地图工厂合同（完整聚合 + DTO 默认值一致）。
@@ -1900,6 +1904,7 @@
 - `XuanYu.World.Tests/Map/MapDatasetStorageContractTests.cs` — MAP-DOC-A-R2-C2：Dataset 存储状态、身份匹配与失败隔离测试。
 - `XuanYu.World.Tests/Map/MapDatasetRegistryFailureTests.cs` — MAP-DOC-A-R2-C3：注册前置失败与跨文件无污染测试。
 - `XuanYu.World.Tests/Map/MapDatasetRegistryLifecycleTests.cs` — MAP-DOC-A-R2-C3：Dataset Registry 生命周期与状态查询测试。
+- `XuanYu.World.Tests/Map/MapDatasetRegistryF1FailureTests.cs` — MAP-DOC-A-R2-F1：Dataset 写失败、Manifest 提交失败与孤儿文件回滚测试。
 - `XuanYu.World.Tests/Map/MapManifestValidationTests.cs` — MAP-DOC-A-R1：Manifest format、version、ID、坐标系与容器校验。
 - `XuanYu.World.Tests/Map/MapDocumentOwnerTests.cs` — MAP-A-R1-D2：当前地图状态所有者（New/Load/Modify/Save/Unload 基础状态）。
 - `XuanYu.World.Tests/Map/MapEnvironmentValidationTests.cs` — MAP-A-R1-D2：环境定义与参数校验。

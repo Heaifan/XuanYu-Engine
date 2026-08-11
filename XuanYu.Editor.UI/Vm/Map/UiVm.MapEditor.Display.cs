@@ -3,9 +3,8 @@ namespace XuanYu.Editor.UI;
 // ARCH-UI-SPEC-R1-D4（补充裁决 §四）/D5：MapId 与路径的显示层属性（完整值不变）+ 表单错误状态。
 public sealed partial class UiVm
 {
-    public string CurrentMapManifestPath => _mapManifestOwner.CurrentPath
-        ?? MapSession.CurrentFilePath
-        ?? "";
+    // R2-F1：Dataset 只能使用正式 map.json Manifest 路径，不能把旧 .xymap 会话路径当作 MapRoot。
+    public string CurrentMapManifestPath => _mapManifestOwner.CurrentPath ?? "";
 
     public string MapIdDisplay => MapIdDisplayFormat.Format(MapIdText);
     public string MapPathDisplay => string.IsNullOrEmpty(MapPath) ? "—" : MapPath;
@@ -16,7 +15,8 @@ public sealed partial class UiVm
     {
         get
         {
-            var hasFilePath = !string.IsNullOrWhiteSpace(MapPath);
+            var hasFilePath = !string.IsNullOrWhiteSpace(MapPath) ||
+                !string.IsNullOrWhiteSpace(MapSession.CurrentFilePath);
             if (!hasFilePath)
                 return HasUnsavedMapChanges ? "未保存" : "未落盘";
             return HasUnsavedMapChanges ? "有未保存修改" : "已保存";

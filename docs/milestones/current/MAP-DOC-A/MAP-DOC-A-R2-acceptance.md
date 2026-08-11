@@ -1,6 +1,6 @@
 # MAP-DOC-A-R2 · Dataset Registry 真机验收
 
-状态：`READY FOR USER ACCEPTANCE`，不是 `CLOSED`。实现边界止于 Dataset Registry 与最小 Dataset 页面；Geometry、Feature 内容、properties、AI 编辑 API、Asset Reference、Layer/Renderer/Picking 重构均不在本轮。
+状态：`READY FOR USER RE-ACCEPTANCE`，不是 `CLOSED`。R2-F1 先复验 M02/M03，再继续 M04～M07；实现边界止于 Dataset Registry 与最小 Dataset 页面；Geometry、Feature 内容、properties、AI 编辑 API、Asset Reference、Layer/Renderer/Picking 重构均不在本轮。
 
 | 序号 | 路径 | 输入 | 过程 | 输出 / 判定 |
 |---|---|---|---|---|

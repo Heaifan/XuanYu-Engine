@@ -5,7 +5,7 @@ namespace XuanYu.Editor.MapDocument;
 public sealed partial class MapDatasetRegistry
 {
     async Task<MapDocumentResult<string>> CommitCreateAsync(
-        MapManifest candidate, MapDatasetDescriptor descriptor, string datasetPath)
+        MapManifest candidate, MapDatasetDocument document, string datasetPath)
     {
         var manifestTemp = Path.Combine(MapRoot, $".map.json.{Guid.NewGuid():N}.tmp");
         var datasetTemp = Path.Combine(Path.GetDirectoryName(datasetPath)!,
@@ -18,8 +18,7 @@ public sealed partial class MapDatasetRegistry
             if (File.Exists(MapPath)) originalManifest = await File.ReadAllBytesAsync(MapPath);
             await WriteTempAsync(manifestTemp, MapManifestSerializer.Serialize(candidate));
             Directory.CreateDirectory(Path.GetDirectoryName(datasetPath)!);
-            await WriteTempAsync(datasetTemp, MapDatasetDocumentSerializer.Serialize(
-                MapDatasetDocument.CreateNew(descriptor)));
+            await WriteTempAsync(datasetTemp, MapDatasetDocumentSerializer.Serialize(document));
             File.Move(datasetTemp, datasetPath, false);
             datasetMoved = true;
             File.Move(manifestTemp, MapPath, true);
