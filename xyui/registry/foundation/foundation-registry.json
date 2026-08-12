@@ -71,112 +71,112 @@
           "token_id": "XY.Principle.Priority.1",
           "value": "Correctness",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.Priority.2",
           "value": "SemanticClarity",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.Priority.3",
           "value": "EditingEfficiency",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.Priority.4",
           "value": "InformationDensity",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.Priority.5",
           "value": "VisualConsistency",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.Priority.6",
           "value": "Decoration",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.CompactVisual",
           "value": "Allowed",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.CompactHitTarget",
           "value": "Forbidden",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.CanvasPriority",
           "value": "Required",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.SemanticAmbiguity",
           "value": "Forbidden",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.DecorativeMotion",
           "value": "Forbidden",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.Cardification",
           "value": "Forbidden",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.MagicNumber",
           "value": "Forbidden",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.Recoverability",
           "value": "Required",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.EngineeringMapping",
           "value": "Required",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         },
         {
           "token_id": "XY.Principle.Acceptance",
           "value": "Required",
           "evidence_refs": [
-            "XYUI0-0.1@UI-CODE"
+            "XYUI0-0.1@L137-169"
           ]
         }
       ],

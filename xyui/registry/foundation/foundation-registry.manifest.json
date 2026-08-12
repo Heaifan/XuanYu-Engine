@@ -1,0 +1,14 @@
+{
+  "registry_id": "XYUI.Foundation",
+  "schema_version": "0.1.0",
+  "item_count": 44,
+  "source_id": "XYUI-SOURCE-000",
+  "source_sha256": "e564a4b4bffc518b5df3144ca5834995ce7abd6b649853f2fa845afa3658d0b6",
+  "registry_sha256": "33c2bd8b60de83ae679c193478427c98777f31fbe7abc7b755907a900b9ea046",
+  "identity_count": 44,
+  "relationship_count": 35,
+  "token_mapping_count": 6,
+  "status": "VALIDATED",
+  "validated_commit": "db425762",
+  "validation": "xyui/registry/foundation/validation-report.md"
+}
