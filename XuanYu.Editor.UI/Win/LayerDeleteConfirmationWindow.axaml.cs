@@ -9,17 +9,22 @@ public sealed partial class LayerDeleteConfirmationWindow : Window
 {
     bool _completed;
 
-    public LayerDeleteConfirmationWindow() : this("", "", "") { }
+    public LayerDeleteConfirmationWindow() : this("", "", "", "删除图层", "删除") { }
 
-    public LayerDeleteConfirmationWindow(string layerName, string layerType, string intent)
+    public LayerDeleteConfirmationWindow(string layerName, string layerType, string intent,
+        string title, string actionText)
     {
         InitializeComponent();
+        Title = title;
+        DialogTitle.Text = title;
+        ActionButton.Content = actionText;
         Message.Text = $"{intent}\n\n目标：{layerName}（{layerType}）";
         Opened += (_, _) => CancelButton.Focus();
     }
 
-    public static Task<bool> ShowAsync(Window owner, string layerName, string layerType, string intent) =>
-        new LayerDeleteConfirmationWindow(layerName, layerType, intent).ShowDialog<bool>(owner);
+    public static Task<bool> ShowAsync(Window owner, string layerName, string layerType,
+        string intent, string title, string actionText) =>
+        new LayerDeleteConfirmationWindow(layerName, layerType, intent, title, actionText).ShowDialog<bool>(owner);
 
     void Window_KeyDown(object? sender, KeyEventArgs e)
     {

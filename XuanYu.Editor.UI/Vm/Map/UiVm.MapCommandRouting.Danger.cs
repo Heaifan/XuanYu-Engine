@@ -13,7 +13,7 @@ public sealed partial class UiVm
                 RefreshLogBindings();
                 return true;
             }
-            RequestDangerousConfirmation("解除注册数据集");
+            RequestDangerousConfirmation("解除注册数据集", selected.LayerId);
             return true;
         }
         if (DangerousCommandConfirmRequested is null)

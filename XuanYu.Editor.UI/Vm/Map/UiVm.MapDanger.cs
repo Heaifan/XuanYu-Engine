@@ -44,8 +44,8 @@ public sealed partial class UiVm
     void ExecutePendingDangerous(string name, MapLayerId? layerId)
     {
         if (name == "删除图层" && layerId is { } id) DeleteLayer(id);
-        if (name == "解除注册数据集" && SelectedLayer is { } layer &&
-            TryGetDatasetIdForLayer(layer.LayerId, out var datasetId))
+        if (name == "解除注册数据集" && layerId is { } datasetLayerId &&
+            TryGetDatasetIdForLayer(datasetLayerId, out var datasetId))
             _ = UnregisterDatasetAsync(datasetId);
     }
 }
