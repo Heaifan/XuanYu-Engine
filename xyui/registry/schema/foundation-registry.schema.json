@@ -187,6 +187,10 @@
           "pattern": "^XY\\.[A-Za-z][A-Za-z0-9_.]+$",
           "description": "alias/maps_to/overrides/derived_from 时的目标 Token"
         },
+        "note": {
+          "type": "string",
+          "description": "规范化说明（如 SFD 语义裁定来源）"
+        },
         "evidence_refs": {
           "type": "array",
           "items": { "type": "string" }

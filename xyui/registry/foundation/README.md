@@ -1,8 +1,32 @@
 # XYUI Foundation Registry · Identity & Relationship Map
 
-> XYUI-A2-R2 产物。本轮建立 44 项的 Canonical Identity、层级与关系映射；**不录入完整 Registry 数据、不生成 Token**（属 A2-R3）。
+> XYUI-A2-R2 产物（A2-R3 完成 Canonical Registry 录入）。44 项 Identity、层级、关系映射 + 正式 `foundation-registry.json`。
 >
-> 状态：`READY FOR USER ACCEPTANCE`。
+> 状态：`XYUI-A2-R3 · READY FOR USER ACCEPTANCE`。
+
+## 0. 文件清单（R3 后）
+
+```text
+xyui/registry/foundation/
+├─ foundation-registry.json   ← 44 项 Canonical Machine Source（R3 新增，166 KB）
+├─ identity-map.json          ← Source ID ↔ Canonical ID（R2）
+├─ relationship-map.json      ← 35 关系 + 6 token 映射 + tuning（R2）
+└─ README.md                  ← 本说明
+```
+
+## 0.1 Engineering Mapping Coverage（R3 实测）
+
+```text
+TOKEN                    31 项
+POLICY                   10 项
+INTERACTION_CONTRACT      9 项
+COMPONENT_RULE            6 项
+STATE                     6 项
+ACCEPTANCE_RULE           5 项
+（44/44 项 mapping ≥1；mapping 空数组 = 0）
+```
+
+规则 93 条（每条均有 evidence_refs，orphan = 0）；Token 425+ 项。
 
 ## 1. 双身份模型（Source ID ≠ Canonical ID）
 
