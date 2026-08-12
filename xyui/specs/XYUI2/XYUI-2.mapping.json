@@ -25,8 +25,8 @@
  "components": [
   {
    "component_id": "XYUI-2-01",
-   "name": "Button / 按钮",
-   "title": "Button",
+   "name": "Button",
+   "title": "Button / 按钮",
    "ref_count": 14,
    "refs": [
     {
@@ -117,8 +117,8 @@
   },
   {
    "component_id": "XYUI-2-02",
-   "name": "Icon Button / 图标按钮",
-   "title": "Icon Button",
+   "name": "Icon Button",
+   "title": "Icon Button / 图标按钮",
    "ref_count": 18,
    "refs": [
     {
@@ -233,8 +233,8 @@
   },
   {
    "component_id": "XYUI-2-03",
-   "name": "Toggle Button / 切换按钮",
-   "title": "Toggle Button",
+   "name": "Toggle Button",
+   "title": "Toggle Button / 切换按钮",
    "ref_count": 14,
    "refs": [
     {
@@ -325,8 +325,8 @@
   },
   {
    "component_id": "XYUI-2-04",
-   "name": "Split Button / 分裂按钮",
-   "title": "Split Button",
+   "name": "Split Button",
+   "title": "Split Button / 分裂按钮",
    "ref_count": 14,
    "refs": [
     {
@@ -417,8 +417,8 @@
   },
   {
    "component_id": "XYUI-2-05",
-   "name": "DropDown Button / 下拉按钮",
-   "title": "DropDown Button",
+   "name": "DropDown Button",
+   "title": "DropDown Button / 下拉按钮",
    "ref_count": 14,
    "refs": [
     {
@@ -509,8 +509,8 @@
   },
   {
    "component_id": "XYUI-2-06",
-   "name": "Checkbox / 复选框",
-   "title": "Checkbox",
+   "name": "Checkbox",
+   "title": "Checkbox / 复选框",
    "ref_count": 12,
    "refs": [
     {
@@ -589,8 +589,8 @@
   },
   {
    "component_id": "XYUI-2-07",
-   "name": "Radio Button / 单选按钮",
-   "title": "Radio Button",
+   "name": "Radio Button",
+   "title": "Radio Button / 单选按钮",
    "ref_count": 12,
    "refs": [
     {
@@ -669,8 +669,8 @@
   },
   {
    "component_id": "XYUI-2-08",
-   "name": "Switch / 开关",
-   "title": "Switch",
+   "name": "Switch",
+   "title": "Switch / 开关",
    "ref_count": 15,
    "refs": [
     {
@@ -767,8 +767,8 @@
   },
   {
    "component_id": "XYUI-2-09",
-   "name": "Text Field / 文本输入框",
-   "title": "Text Field",
+   "name": "Text Field",
+   "title": "Text Field / 文本输入框",
    "ref_count": 16,
    "refs": [
     {
@@ -871,8 +871,8 @@
   },
   {
    "component_id": "XYUI-2-10",
-   "name": "Number Field / 数值输入框",
-   "title": "Number Field",
+   "name": "Number Field",
+   "title": "Number Field / 数值输入框",
    "ref_count": 11,
    "refs": [
     {
@@ -945,8 +945,8 @@
   },
   {
    "component_id": "XYUI-2-11",
-   "name": "Slider / 滑块",
-   "title": "Slider",
+   "name": "Slider",
+   "title": "Slider / 滑块",
    "ref_count": 10,
    "refs": [
     {
@@ -1013,8 +1013,8 @@
   },
   {
    "component_id": "XYUI-2-12",
-   "name": "ComboBox / 组合框",
-   "title": "ComboBox",
+   "name": "ComboBox",
+   "title": "ComboBox / 组合框",
    "ref_count": 12,
    "refs": [
     {
@@ -1093,8 +1093,8 @@
   },
   {
    "component_id": "XYUI-2-13",
-   "name": "Select / 选择框",
-   "title": "Select",
+   "name": "Select",
+   "title": "Select / 选择框",
    "ref_count": 12,
    "refs": [
     {
@@ -1173,8 +1173,8 @@
   },
   {
    "component_id": "XYUI-2-14",
-   "name": "Text Area / 多行文本框",
-   "title": "Text Area",
+   "name": "Text Area",
+   "title": "Text Area / 多行文本框",
    "ref_count": 13,
    "refs": [
     {
@@ -1259,8 +1259,8 @@
   },
   {
    "component_id": "XYUI-2-15",
-   "name": "Search Field / 搜索框",
-   "title": "Search Field",
+   "name": "Search Field",
+   "title": "Search Field / 搜索框",
    "ref_count": 14,
    "refs": [
     {
@@ -1351,8 +1351,8 @@
   },
   {
    "component_id": "XYUI-2-16",
-   "name": "Password Field / 密码输入框",
-   "title": "Password Field",
+   "name": "Password Field",
+   "title": "Password Field / 密码输入框",
    "ref_count": 10,
    "refs": [
     {
@@ -1419,8 +1419,8 @@
   },
   {
    "component_id": "XYUI-2-17",
-   "name": "Date Picker / 日期选择器",
-   "title": "Date Picker",
+   "name": "Date Picker",
+   "title": "Date Picker / 日期选择器",
    "ref_count": 11,
    "refs": [
     {
@@ -1493,8 +1493,8 @@
   },
   {
    "component_id": "XYUI-2-18",
-   "name": "Time Picker / 时间选择器",
-   "title": "Time Picker",
+   "name": "Time Picker",
+   "title": "Time Picker / 时间选择器",
    "ref_count": 10,
    "refs": [
     {
@@ -1561,8 +1561,8 @@
   },
   {
    "component_id": "XYUI-2-19",
-   "name": "Color Picker / 颜色选择器",
-   "title": "Color Picker",
+   "name": "Color Picker",
+   "title": "Color Picker / 颜色选择器",
    "ref_count": 12,
    "refs": [
     {
@@ -1641,8 +1641,8 @@
   },
   {
    "component_id": "XYUI-2-20",
-   "name": "Bool Property / 布尔属性控件",
-   "title": "Bool Property",
+   "name": "Bool Property",
+   "title": "Bool Property / 布尔属性控件",
    "ref_count": 5,
    "refs": [
     {
@@ -1679,8 +1679,8 @@
   },
   {
    "component_id": "XYUI-2-21",
-   "name": "Number Property / 数值属性行",
-   "title": "Number Property",
+   "name": "Number Property",
+   "title": "Number Property / 数值属性行",
    "ref_count": 10,
    "refs": [
     {
@@ -1747,8 +1747,8 @@
   },
   {
    "component_id": "XYUI-2-22",
-   "name": "Vector Property / 向量属性控件",
-   "title": "Vector Property",
+   "name": "Vector Property",
+   "title": "Vector Property / 向量属性控件",
    "ref_count": 10,
    "refs": [
     {
@@ -1815,8 +1815,8 @@
   },
   {
    "component_id": "XYUI-2-23",
-   "name": "Enum Property / 枚举属性控件",
-   "title": "Enum Property",
+   "name": "Enum Property",
+   "title": "Enum Property / 枚举属性控件",
    "ref_count": 6,
    "refs": [
     {
@@ -1859,8 +1859,8 @@
   },
   {
    "component_id": "XYUI-2-24",
-   "name": "Reference Property / 引用属性控件",
-   "title": "Reference Property",
+   "name": "Reference Property",
+   "title": "Reference Property / 引用属性控件",
    "ref_count": 16,
    "refs": [
     {
