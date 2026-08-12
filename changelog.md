@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.11-fix · R2-F1 RUN.BAT BUILD DISCIPLINE
+R2-F1（2026-08-13）：真机发现 run.bat 并行构建在 16GB 机器上偶发 OutOfMemoryException；A/B 诊断收口（C# 13 / C# 14 隔离构建与 run.bat 同条件全链冷构建均 PASS，非确定性编译器缺陷，仓库无大 switch 不触发 Roslyn #84529）。用户裁决把验证有效的串行构建方式固化进日常入口，统一 run.bat 与正式门禁的构建纪律。
+- 变化：`run.bat` build 调用补 `-m:1 -nr:false`（串行 + 禁 MSBuild 节点复用），与既有 `MSBUILDDISABLENODEREUSE=1`、`-p:UseSharedCompilation=false`、构建前 `dotnet build-server shutdown` 组成完整串行纪律；版本同步 v0.2.28.11-fix。
+- 范围：仅 run.bat 构建调用；未改 csproj / SDK / LangVersion / 业务代码 / 其他脚本；file-tree.md 无新增删除移动与职责变化，未改动。
+- 验证：run.bat fresh 实跑（restore → 串行构建 0W0E → 编辑器进程启动成功）；正式门禁 Solution 全量强制重编译 0 Warning/0 Error（28s）；Core.Tests 339/339、World.Tests 1315/1315、WarCore.Tests 22/22；ARCH-A（依赖边界 + 5+100 + 版本四处一致）PASS；`git diff --check` PASS。
+- Hash：本条所在提交。
+- 遗留：真机启动验收由用户执行；若 OOM 复发按诊断报告三件套（空闲内存 / 进程内存排序 / MSBuild 常驻节点）抓现场。
+
 ## v0.2.28.10-rz · MAP-DATA-A-R2-F3-B REGION VERTEX-TO-VERTEX SNAP
 MAP-DATA-A-R2-F3-B（2026-08-13）：把 F2 Region 顶点拖拽接入 F3-A 局部查询，进入吸附交互实现阶段。
 - 范围：屏幕空间 8px 进入、12px 释放；纯坐标对齐；不改 F3-A 索引、不新增历史/持久化/拓扑语义。
