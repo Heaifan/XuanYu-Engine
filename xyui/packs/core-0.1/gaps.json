@@ -1,40 +1,49 @@
 {
- "gaps_version": "0.1.0",
- "phase": "XYUI-PILOT",
- "pack_id": "XYUI-Core-0.1",
- "gaps": [
-  {
-   "gap_id": "XYUI1-GAP-001",
-   "type": "MISSING_TOKEN",
-   "scope": "Icon glyph registry",
-   "detail": "0.15 Icon Foundation 未定义 glyph 注册表；组件级 glyph 名（XY.Icon.Copy / InfoCircle / ErrorCircle / WarningTriangle）暂保留为 COMPONENT_SPECIFIC，待 Foundation 补充 glyph 体系",
-   "blocking": false
-  },
-  {
-   "gap_id": "XYUI2-GAP-001",
-   "type": "MISSING_TOKEN",
-   "scope": "XY.Size.Switch 复合 token 的子属性访问（Width/Height）",
-   "detail": "XYUI-2 08·Switch 引用 XY.Size.Switch.Width/Height；Foundation 0.8 只有复合 token XY.Size.Switch=34x18 DIP。已映射到复合 token；子属性拆分待 A3 定义",
-   "blocking": false
-  },
-  {
-   "gap_id": "XYUI2-GAP-002",
-   "type": "REQUIRES_DECISION",
-   "scope": "XY.TextArea.MaxHeight = SceneToken",
-   "detail": "TextArea 最大高度依赖场景/视口上下文；Foundation 未定义 SceneToken；不得猜测具体值",
-   "blocking": false
-  },
-  {
-   "gap_id": "XYUI2-GAP-003",
-   "type": "REQUIRES_DECISION",
-   "scope": "XY.BoolProperty.InspectorColumn = SharedPropertyColumnRule",
-   "detail": "Inspector 统一 Property 列宽规则未在 XYUI-0 Foundation 定义；BoolProperty/NumberProperty 等依赖此规则；待 Foundation 补充",
-   "blocking": false
-  },
-  {
-   "gap_id": "XYUI3_SOURCE_MISSING",
-   "type": "SOURCE_MISSING",
-   "blocking": true
+  "phase": "XYUI-PILOT",
+  "status": "READY_FOR_XYLAB_PILOT",
+  "total": 5,
+  "by_spec": {
+    "XYUI1": [
+      {
+        "gap_id": "XYUI1-GAP-001",
+        "type": "MISSING_TOKEN",
+        "scope": "Icon glyph registry",
+        "detail": "0.15 Icon Foundation 未定义 glyph 注册表；组件级 glyph 名（XY.Icon.Copy / InfoCircle / ErrorCircle / WarningTriangle）暂保留为 COMPONENT_SPECIFIC，待 Foundation 补充 glyph 体系",
+        "blocking": false
+      }
+    ],
+    "XYUI2": [
+      {
+        "gap_id": "XYUI2-GAP-001",
+        "type": "MISSING_TOKEN",
+        "scope": "XY.Size.Switch 复合 token 的子属性访问（Width/Height）",
+        "detail": "XYUI-2 08·Switch 引用 XY.Size.Switch.Width/Height；Foundation 0.8 只有复合 token XY.Size.Switch=34x18 DIP。已映射到复合 token；子属性拆分待 A3 定义",
+        "blocking": false
+      },
+      {
+        "gap_id": "XYUI2-GAP-002",
+        "type": "REQUIRES_DECISION",
+        "scope": "XY.TextArea.MaxHeight = SceneToken",
+        "detail": "TextArea 最大高度依赖场景/视口上下文；Foundation 未定义 SceneToken；不得猜测具体值",
+        "blocking": false
+      },
+      {
+        "gap_id": "XYUI2-GAP-003",
+        "type": "REQUIRES_DECISION",
+        "scope": "XY.BoolProperty.InspectorColumn = SharedPropertyColumnRule",
+        "detail": "Inspector 统一 Property 列宽规则未在 XYUI-0 Foundation 定义；BoolProperty/NumberProperty 等依赖此规则；待 Foundation 补充",
+        "blocking": false
+      }
+    ],
+    "XYUI3": [
+      {
+        "gap_id": "XYUI3-GAP-001",
+        "type": "MISSING_TOKEN",
+        "item": "COMPONENT_SPECIFIC_CONTRAST_FOREGROUND",
+        "detail": "Source 中少量强调底色上的高对比前景语义（NavigationRail Tooltip Text / CommandPalette Input / StepNode.Completed IconColor）。XYUI-0 当前没有独立 OnAccent / ContrastForeground Semantic Token。本版不伪造 Canonical Token，由后续 Token Source 阶段登记并裁决。",
+        "occurrences": 5,
+        "blocking": false
+      }
+    ]
   }
- ]
 }

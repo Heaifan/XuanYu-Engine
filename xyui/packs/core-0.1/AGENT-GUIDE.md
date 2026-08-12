@@ -40,7 +40,9 @@ ArbitraryOverride   禁止绕过 Foundation Token 的任意覆盖
 XYUI-0 Foundation     ✅ VALIDATED（44 项，426 token）
 XYUI-1 Text&Info      ✅ canonical（24 组件）
 XYUI-2 Controls       ✅ canonical（24 控件：Button/Input/Slider/Property 等）
-XYUI-3 Navigation     ❌ SOURCE_MISSING（Source 到位后整理）
+XYUI-3 Navigation     ✅ canonical（24 导航组件：MenuBar/Sidebar/DockTabs/TreeNavigation 等）
+
+Pack Status: READY_FOR_XYLAB_PILOT（0123 闭环）
 ```
 
 ## 6. 已知 GAP

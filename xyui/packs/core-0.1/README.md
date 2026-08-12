@@ -1,47 +1,45 @@
 # XYUI Core Pack 0.1
 
 > XYUI-PILOT 产物：供 XYLab Agent 消费的 Core Pack。
-> 状态：`PARTIAL_012_READY`（XYUI-0/1/2 就绪；XYUI-3 Source 待提供）。
+> 状态：**`READY_FOR_XYLAB_PILOT`**（XYUI-0/1/2/3 全部 CLOSED）。
 
 ## 内容
 
 ```text
 xyui/packs/core-0.1/
-├─ manifest.json     ← pack 元数据 + SHA/commit 固定依赖
-├─ AGENT-GUIDE.md    ← XYLab Agent 消费指南（强制先读）
+├─ manifest.json     ← pack 元数据 + 全部固定 SHA + git commit
+├─ AGENT-GUIDE.md    ← XYLab Agent 消费指南（强制流程）
 ├─ README.md         ← 本文件
-└─ gaps.json         ← 统一 GAP 注册（5 项）
+└─ gaps.json         ← 全 pack 已知缺口汇总（5 项，均非阻塞）
 ```
 
-## 已就绪规范
+## 四份规范
 
-| 层 | 状态 | 路径 |
-|---|---|---|
-| XYUI-0 Foundation Registry | VALIDATED（44 项） | `xyui/registry/foundation/foundation-registry.json` |
-| Canonical Token Architecture | A3-R2 CLOSED（426 条） | `xyui/tokens/architecture/token-canonical-map.json` |
-| XYUI-1 Text & Information | R1 reconciled（24 组件） | `xyui/specs/XYUI1/XYUI-1.canonical.md` |
-| XYUI-2 Buttons & Inputs | R2 reconciled（24 控件） | `xyui/specs/XYUI2/XYUI-2.canonical.md` |
+| Spec | 内容 | 状态 | 关键产物 |
+|---|---|---|---|
+| XYUI-0 | Foundation Registry（44 项）+ A3-R2 Token Architecture（426 条） | VALIDATED | `xyui/registry/foundation/` + `xyui/tokens/architecture/` |
+| XYUI-1 | Text & Information（24 组件） | CLOSED | `xyui/specs/XYUI1/` |
+| XYUI-2 | Controls（24 控件） | CLOSED | `xyui/specs/XYUI2/` |
+| XYUI-3 | Navigation（24 导航组件） | CLOSED | `xyui/specs/XYUI3/` |
 
-## 依赖固定方式
-
-- 不复制 Foundation Registry；引用 + SHA-256 固定（manifest 中）
-- pack 随 git commit 走版本（`c92a873e` 基线）
-
-## 缺失声明（不伪造）
-
-- `XYUI-3.md` 正式 Source 尚未提供 → `XYUI3_SOURCE_MISSING`（唯一阻塞项）
-- Source 由人类提供后执行 R3 reconciliation，0123 即完整闭环
-
-## 已知 GAP（5 项）
+## 已知缺口（5 项，均非阻塞）
 
 ```text
-XYUI1-GAP-001  Icon glyph registry 未建立（glyph 名暂用组件级常量）
-XYUI2-GAP-001  XY.Size.Switch 复合 token 子属性访问待 A3 定义
-XYUI2-GAP-002  TextArea.MaxHeight=SceneToken（依赖场景/视口上下文，待裁定）
-XYUI2-GAP-003  Inspector SharedPropertyColumnRule 未在 Foundation 定义
-XYUI3_SOURCE_MISSING（阻塞）
+XYUI1-GAP-001  Icon glyph registry（0.15 未定义）        MISSING_TOKEN
+XYUI2-GAP-001  XY.Size.Switch 子属性访问                  MISSING_TOKEN
+XYUI2-GAP-002  TextArea.MaxHeight=SceneToken              REQUIRES_DECISION
+XYUI2-GAP-003  Inspector SharedPropertyColumnRule         REQUIRES_DECISION
+XYUI3-GAP-001  ContrastForeground（OnAccent）未定义       MISSING_TOKEN（待后续 Token Source 裁决）
 ```
 
-## 本 pack 禁止
+## 禁止事项（对 XYLab Agent）
 
-A3-R3 Light/Dark、AXAML/C# 生成、XYUI-4+、XuanYu/XYLab 业务实现、修改 A2 Registry / A3-R2 Architecture。
+- 不进入 A3-R3、XYUI-4/5/6/7/8/9
+- 不修改 A2 Registry / A3-R2 Architecture
+- 不生成 AXAML / C#
+- 不得以 GAP 为由自行发明全局 Token——GAP 需后续正式裁决
+
+## 版本与提交
+
+- Pack 固定 commit：见 `manifest.json` → `git_commit`
+- 所有 SHA 固定在 manifest：source / canonical / registry / architecture 四类
