@@ -68,4 +68,24 @@ Road Polyline：Bootstrap / 绘制 / Draft Undo-Redo / Enter 完成 / Save-Reloa
 
 异常：
 
+### F1-M07 Dataset / Layer 回归
+
+结果：通过 / 不通过
+
+Rename / Unregister / Selection / Inspector / Order / 保存后重开：
+
+Eye / Lock 操作是否只改变状态、不改变 AuthoringMode：
+
+异常：
+
+### F1-M08 持久化与兼容
+
+结果：通过 / 不通过
+
+Region 0.2.0 与 Road 0.3.0 数据是否可保存、重开且身份不变：
+
+旧地图是否无需迁移即可打开：
+
+异常：
+
 总体：通过 / 不通过
