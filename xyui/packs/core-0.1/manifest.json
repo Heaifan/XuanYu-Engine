@@ -1,0 +1,75 @@
+{
+  "pack_id": "XYUI-Core-0.1",
+  "pack_version": "0.1.0",
+  "phase": "XYUI-PILOT",
+  "created_for": "XYLab Agent（明早消费）",
+  "status": "READY_WITH_MISSING_SOURCES",
+  "included_specs": {
+    "XYUI-0": {
+      "available": true,
+      "foundation_registry": "xyui/registry/foundation/foundation-registry.json",
+      "registry_status": "VALIDATED",
+      "registry_commit": "db425762",
+      "canonical_token_architecture": "xyui/tokens/architecture/token-canonical-map.json",
+      "architecture_commit": "2a75f92d",
+      "source": "xyui/source/XYUI0/XYUI-0.md",
+      "source_sha256": "e564a4b4bffc518b5df3144ca5834995ce7abd6b649853f2fa845afa3658d0b6"
+    },
+    "XYUI-1": {
+      "available": true,
+      "canonical_spec": "xyui/specs/XYUI1/XYUI-1.canonical.md",
+      "mapping": "xyui/specs/XYUI1/XYUI-1.mapping.json",
+      "gaps": "xyui/specs/XYUI1/XYUI-1.gaps.json",
+      "source": "xyui/source/XYUI1/XYUI-1.md",
+      "source_sha256": "9709a4fde7ec0e2211484f2fdd51a493ef7d472155f332c74bcd350ca0b0a462",
+      "reconciled_commit": "a2076df7"
+    },
+    "XYUI-2": {
+      "available": false,
+      "status": "XYUI2_SOURCE_MISSING",
+      "note": "XYUI-2.md 正式 Source 不存在；按任务规则不得根据聊天记忆/XYUI-1/行业惯例重建"
+    },
+    "XYUI-3": {
+      "available": false,
+      "status": "XYUI3_SOURCE_MISSING",
+      "note": "XYUI-3.md / 对应正式导出大纲不存在；不得伪造"
+    }
+  },
+  "foundation_registry_ref": "xyui/registry/foundation/foundation-registry.json",
+  "foundation_registry_sha256": "33c2bd8b60de83ae679c193478427c98777f31fbe7abc7b755907a900b9ea046",
+  "token_architecture_ref": "xyui/tokens/architecture/token-canonical-map.json",
+  "git_commit": "a2076df7",
+  "known_gaps": [
+    {
+      "gap_id": "XYUI1-GAP-001",
+      "type": "MISSING_TOKEN",
+      "scope": "Icon glyph registry（0.15 Icon Foundation 未定义 glyph 注册表）",
+      "blocking": false
+    },
+    {
+      "gap_id": "XYUI2_SOURCE_MISSING",
+      "type": "SOURCE_MISSING",
+      "blocking": true
+    },
+    {
+      "gap_id": "XYUI3_SOURCE_MISSING",
+      "type": "SOURCE_MISSING",
+      "blocking": true
+    }
+  ],
+  "agent_guide": "xyui/packs/core-0.1/AGENT-GUIDE.md",
+  "spec_paths": [
+    "xyui/registry/foundation/foundation-registry.json",
+    "xyui/tokens/architecture/token-canonical-map.json",
+    "xyui/tokens/architecture/token-architecture.json",
+    "xyui/specs/XYUI1/XYUI-1.canonical.md",
+    "xyui/specs/XYUI1/XYUI-1.mapping.json"
+  ],
+  "forbidden": [
+    "A3-R3 Light/Dark Token Source（本任务暂停）",
+    "Avalonia AXAML / C# 生成",
+    "XYUI-4/5/6/7/8/9",
+    "XuanYu / XYLab 业务实现",
+    "修改 A2 Registry / A3-R2 Canonical Architecture"
+  ]
+}
