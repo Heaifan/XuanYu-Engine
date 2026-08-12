@@ -1,0 +1,7251 @@
+{
+ "audit_version": "0.1.0",
+ "phase": "XYUI-A3-R1",
+ "source_of_truth": "xyui/registry/foundation/foundation-registry.json",
+ "occurrence_count": 426,
+ "distinct_token_ids": 418,
+ "occurrences": [
+  {
+   "token_id": "XY.Principle.Priority.1",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Correctness",
+   "unit": null,
+   "light": "Correctness",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.Priority.2",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "SemanticClarity",
+   "unit": null,
+   "light": "SemanticClarity",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.Priority.3",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "EditingEfficiency",
+   "unit": null,
+   "light": "EditingEfficiency",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.Priority.4",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "InformationDensity",
+   "unit": null,
+   "light": "InformationDensity",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.Priority.5",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "VisualConsistency",
+   "unit": null,
+   "light": "VisualConsistency",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.Priority.6",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Decoration",
+   "unit": null,
+   "light": "Decoration",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.CompactVisual",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Allowed",
+   "unit": null,
+   "light": "Allowed",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.CompactHitTarget",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.CanvasPriority",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.SemanticAmbiguity",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.DecorativeMotion",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.Cardification",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.MagicNumber",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.Recoverability",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.EngineeringMapping",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Principle.Acceptance",
+   "source_item_id": "XYUI0-0.1",
+   "canonical_foundation_id": "XYUI.Foundation.DesignPrinciples",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-principle",
+   "evidence_refs": [
+    "XYUI0-0.1@L137-169"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Width.None",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "0 DIP",
+   "unit": "DIP",
+   "light": "0 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Width.Default",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "1 DIP",
+   "unit": "DIP",
+   "light": "1 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Width.Strong",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "2 DIP",
+   "unit": "DIP",
+   "light": "2 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Width.Focus",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "2 DIP",
+   "unit": "DIP",
+   "light": "2 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Width.Selected",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "2 DIP",
+   "unit": "DIP",
+   "light": "2 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Style.Default",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Solid",
+   "unit": null,
+   "light": "Solid",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Container",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "composite_dimension_style",
+   "value": "0 DIP/UseDivider",
+   "unit": "DIP",
+   "light": "0 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Control",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "composite_dimension_style",
+   "value": "1 DIP/Solid",
+   "unit": "DIP",
+   "light": "1 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Strong",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "composite_dimension_style",
+   "value": "2 DIP/Solid",
+   "unit": "DIP",
+   "light": "2 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Focus",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "composite_dimension_style",
+   "value": "2 DIP/Solid",
+   "unit": "DIP",
+   "light": "2 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Selected",
+   "source_item_id": "XYUI0-0.10",
+   "canonical_foundation_id": "XYUI.Foundation.Border",
+   "engineering_type": "TOKEN",
+   "value_type": "composite_dimension_style",
+   "value": "2 DIP/Solid",
+   "unit": "DIP",
+   "light": "2 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.10@L1067-1094"
+   ]
+  },
+  {
+   "token_id": "XY.Divider.Header",
+   "source_item_id": "XYUI0-0.11",
+   "canonical_foundation_id": "XYUI.Foundation.Divider",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "0/1 DIP",
+   "unit": null,
+   "light": "0/1 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.11@L1114-1131"
+   ]
+  },
+  {
+   "token_id": "XY.Divider.Panel",
+   "source_item_id": "XYUI0-0.11",
+   "canonical_foundation_id": "XYUI.Foundation.Divider",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "0/1 DIP",
+   "unit": null,
+   "light": "0/1 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.11@L1114-1131"
+   ]
+  },
+  {
+   "token_id": "XY.Divider.Section",
+   "source_item_id": "XYUI0-0.11",
+   "canonical_foundation_id": "XYUI.Foundation.Divider",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "16/16/1 DIP",
+   "unit": null,
+   "light": "16/16/1 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.11@L1114-1131"
+   ]
+  },
+  {
+   "token_id": "XY.Divider.ListRow",
+   "source_item_id": "XYUI0-0.11",
+   "canonical_foundation_id": "XYUI.Foundation.Divider",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "16/16/1 DIP",
+   "unit": null,
+   "light": "16/16/1 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.11@L1114-1131"
+   ]
+  },
+  {
+   "token_id": "XY.Divider.VerticalSplit",
+   "source_item_id": "XYUI0-0.11",
+   "canonical_foundation_id": "XYUI.Foundation.Divider",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "0/1 DIP",
+   "unit": null,
+   "light": "0/1 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-border",
+   "evidence_refs": [
+    "XYUI0-0.11@L1114-1131"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.App",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.App",
+   "unit": null,
+   "light": "XY.Surface.App",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.Navigation",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.Panel",
+   "unit": null,
+   "light": "XY.Surface.Panel",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.Panel",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.Panel",
+   "unit": null,
+   "light": "XY.Surface.Panel",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.PanelSecondary",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.PanelAlt",
+   "unit": null,
+   "light": "XY.Surface.PanelAlt",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.Canvas",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.Canvas",
+   "unit": null,
+   "light": "XY.Surface.Canvas",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.Toolbar",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.Toolbar",
+   "unit": null,
+   "light": "XY.Surface.Toolbar",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.Input",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.Input",
+   "unit": null,
+   "light": "XY.Surface.Input",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.Overlay",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.Overlay",
+   "unit": null,
+   "light": "XY.Surface.Overlay",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.Selected",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Surface.Selected",
+   "unit": null,
+   "light": "XY.Surface.Selected",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.SurfaceRole.Raised.Policy",
+   "source_item_id": "XYUI0-0.12",
+   "canonical_foundation_id": "XYUI.Foundation.SurfaceRole",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "InteractiveLayerOnly",
+   "unit": null,
+   "light": "InteractiveLayerOnly",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-surface",
+   "evidence_refs": [
+    "XYUI0-0.12@L1155-1175"
+   ]
+  },
+  {
+   "token_id": "XY.Shadow.None",
+   "source_item_id": "XYUI0-0.13",
+   "canonical_foundation_id": "XYUI.Foundation.Shadow",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "None",
+   "unit": null,
+   "light": "None",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-shadow",
+   "evidence_refs": [
+    "XYUI0-0.13@L1194-1215"
+   ]
+  },
+  {
+   "token_id": "XY.Shadow.Tooltip",
+   "source_item_id": "XYUI0-0.13",
+   "canonical_foundation_id": "XYUI.Foundation.Shadow",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "0/3/10/0.12",
+   "unit": null,
+   "light": "0/3/10/0.12",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-shadow",
+   "evidence_refs": [
+    "XYUI0-0.13@L1194-1215"
+   ]
+  },
+  {
+   "token_id": "XY.Shadow.Popup",
+   "source_item_id": "XYUI0-0.13",
+   "canonical_foundation_id": "XYUI.Foundation.Shadow",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "0/6/18/0.14",
+   "unit": null,
+   "light": "0/6/18/0.14",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-shadow",
+   "evidence_refs": [
+    "XYUI0-0.13@L1194-1215"
+   ]
+  },
+  {
+   "token_id": "XY.Shadow.DragPreview",
+   "source_item_id": "XYUI0-0.13",
+   "canonical_foundation_id": "XYUI.Foundation.Shadow",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "0/6/18/0.14",
+   "unit": null,
+   "light": "0/6/18/0.14",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-shadow",
+   "evidence_refs": [
+    "XYUI0-0.13@L1194-1215"
+   ]
+  },
+  {
+   "token_id": "XY.Shadow.Panel",
+   "source_item_id": "XYUI0-0.13",
+   "canonical_foundation_id": "XYUI.Foundation.Shadow",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "None",
+   "unit": null,
+   "light": "None",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-shadow",
+   "evidence_refs": [
+    "XYUI0-0.13@L1194-1215"
+   ]
+  },
+  {
+   "token_id": "XY.Shadow.Control",
+   "source_item_id": "XYUI0-0.13",
+   "canonical_foundation_id": "XYUI.Foundation.Shadow",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "None",
+   "unit": null,
+   "light": "None",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-shadow",
+   "evidence_refs": [
+    "XYUI0-0.13@L1194-1215"
+   ]
+  },
+  {
+   "token_id": "XY.Opacity.Subtle",
+   "source_item_id": "XYUI0-0.14",
+   "canonical_foundation_id": "XYUI.Foundation.Opacity",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0.72",
+   "unit": null,
+   "light": "0.72",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-opacity",
+   "evidence_refs": [
+    "XYUI0-0.14@L1234-1246"
+   ]
+  },
+  {
+   "token_id": "XY.Opacity.Disabled",
+   "source_item_id": "XYUI0-0.14",
+   "canonical_foundation_id": "XYUI.Foundation.Opacity",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0.48",
+   "unit": null,
+   "light": "0.48",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-opacity",
+   "evidence_refs": [
+    "XYUI0-0.14@L1234-1246"
+   ]
+  },
+  {
+   "token_id": "XY.Opacity.DragGhost",
+   "source_item_id": "XYUI0-0.14",
+   "canonical_foundation_id": "XYUI.Foundation.Opacity",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0.68",
+   "unit": null,
+   "light": "0.68",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-opacity",
+   "evidence_refs": [
+    "XYUI0-0.14@L1234-1246"
+   ]
+  },
+  {
+   "token_id": "XY.Opacity.Backdrop",
+   "source_item_id": "XYUI0-0.14",
+   "canonical_foundation_id": "XYUI.Foundation.Opacity",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0.28",
+   "unit": null,
+   "light": "0.28",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-opacity",
+   "evidence_refs": [
+    "XYUI0-0.14@L1234-1246"
+   ]
+  },
+  {
+   "token_id": "XY.Opacity.Hidden",
+   "source_item_id": "XYUI0-0.14",
+   "canonical_foundation_id": "XYUI.Foundation.Opacity",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0.18",
+   "unit": null,
+   "light": "0.18",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-opacity",
+   "evidence_refs": [
+    "XYUI0-0.14@L1234-1246"
+   ]
+  },
+  {
+   "token_id": "XY.Opacity.Overlay",
+   "source_item_id": "XYUI0-0.14",
+   "canonical_foundation_id": "XYUI.Foundation.Opacity",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0.92",
+   "unit": null,
+   "light": "0.92",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-opacity",
+   "evidence_refs": [
+    "XYUI0-0.14@L1234-1246"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.Style.Default",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Outline",
+   "unit": null,
+   "light": "Outline",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.Style.Active",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Outline+LocalFill",
+   "unit": null,
+   "light": "Outline+LocalFill",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.Stroke",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "1.5 DIP",
+   "unit": "DIP",
+   "light": "1.5 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.LineCap",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Round",
+   "unit": null,
+   "light": "Round",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.LineJoin",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Round",
+   "unit": null,
+   "light": "Round",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.Size.S",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "14 DIP",
+   "unit": "DIP",
+   "light": "14 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.Size.M",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "16 DIP",
+   "unit": "DIP",
+   "light": "16 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.Size.L",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "20 DIP",
+   "unit": "DIP",
+   "light": "20 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.State.Active",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Accent.Strong",
+   "unit": null,
+   "light": "XY.Accent.Strong",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Icon.State.Disabled",
+   "source_item_id": "XYUI0-0.15",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Text.Disabled",
+   "unit": null,
+   "light": "XY.Text.Disabled",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-icon",
+   "evidence_refs": [
+    "XYUI0-0.15@L1268-1289"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.Top.Height",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "32 DIP",
+   "unit": "DIP",
+   "light": "32 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.Left.DefaultWidth",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "180 DIP",
+   "unit": "DIP",
+   "light": "180 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.Right.DefaultWidth",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "250 DIP",
+   "unit": "DIP",
+   "light": "250 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.Bottom.DefaultHeight",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "100 DIP",
+   "unit": "DIP",
+   "light": "100 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.Center",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "FillRemaining",
+   "unit": null,
+   "light": "FillRemaining",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.Left.Collapsible",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "True",
+   "unit": null,
+   "light": "True",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.Right.Collapsible",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "True",
+   "unit": null,
+   "light": "True",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.Bottom.Collapsible",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "True",
+   "unit": null,
+   "light": "True",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.FocusMode",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "CanvasPriority",
+   "unit": null,
+   "light": "CanvasPriority",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Layout.FocusMode.Hide",
+   "source_item_id": "XYUI0-0.16",
+   "canonical_foundation_id": "XYUI.Foundation.Layout",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left/Right/Bottom Allowed",
+   "unit": null,
+   "light": "Left/Right/Bottom Allowed",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-layout",
+   "evidence_refs": [
+    "XYUI0-0.16@L1311-1333"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Structure",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Semantic",
+   "unit": null,
+   "light": "Semantic",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Header",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Visible",
+   "unit": null,
+   "light": "Visible",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Toolbar",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Optional",
+   "unit": null,
+   "light": "Optional",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Content",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "FillRemaining",
+   "unit": null,
+   "light": "FillRemaining",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Section",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Title+Divider+Content",
+   "unit": null,
+   "light": "Title+Divider+Content",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Section.CardNesting",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Section.Density",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Compact",
+   "unit": null,
+   "light": "Compact",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Section.EmptySpace",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Minimize",
+   "unit": null,
+   "light": "Minimize",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Footer",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Optional",
+   "unit": null,
+   "light": "Optional",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Footer.Alignment",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Center",
+   "unit": null,
+   "light": "Center",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.TitleMeta.Layout",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Inline",
+   "unit": null,
+   "light": "Inline",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Padding",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "8 DIP",
+   "unit": "DIP",
+   "light": "8 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.Field.RowGap",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "4 DIP",
+   "unit": "DIP",
+   "light": "4 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Panel.SectionGap",
+   "source_item_id": "XYUI0-0.17",
+   "canonical_foundation_id": "XYUI.Foundation.Panel",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "8 DIP",
+   "unit": "DIP",
+   "light": "8 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-panel",
+   "evidence_refs": [
+    "XYUI0-0.17@L1381-1409"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.Text",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left",
+   "unit": null,
+   "light": "Left",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.Label",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left",
+   "unit": null,
+   "light": "Left",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.Value",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left",
+   "unit": null,
+   "light": "Left",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.Number",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left",
+   "unit": null,
+   "light": "Left",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.ID",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left",
+   "unit": null,
+   "light": "Left",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.Path",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left",
+   "unit": null,
+   "light": "Left",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.Status",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left",
+   "unit": null,
+   "light": "Left",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.SectionContent",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Left",
+   "unit": null,
+   "light": "Left",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.TitleMeta",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "InlineLeft",
+   "unit": null,
+   "light": "InlineLeft",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Alignment.FooterActions",
+   "source_item_id": "XYUI0-0.18",
+   "canonical_foundation_id": "XYUI.Foundation.Alignment",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Center",
+   "unit": null,
+   "light": "Center",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-alignment",
+   "evidence_refs": [
+    "XYUI0-0.18@L1439-1459"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Mode",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Auto|Compact|Comfortable",
+   "unit": null,
+   "light": "Auto|Compact|Comfortable",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Auto",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "GlobalDiscreteSwitch",
+   "unit": null,
+   "light": "GlobalDiscreteSwitch",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Auto.Scope",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "WholeUI",
+   "unit": null,
+   "light": "WholeUI",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Auto.Hysteresis",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Compact.TreeRow",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "28 DIP",
+   "unit": "DIP",
+   "light": "28 DIP",
+   "dark": null,
+   "relation": "maps_to",
+   "relation_target": "XY.Size.TreeRow",
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Compact.Toolbar",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "30 DIP",
+   "unit": "DIP",
+   "light": "30 DIP",
+   "dark": null,
+   "relation": "maps_to",
+   "relation_target": "XY.Size.Toolbar",
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Compact.Input",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "32 DIP",
+   "unit": "DIP",
+   "light": "32 DIP",
+   "dark": null,
+   "relation": "maps_to",
+   "relation_target": "XY.Size.Input",
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Compact.Gap",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "4 DIP",
+   "unit": "DIP",
+   "light": "4 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Compact.SectionGap",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "8 DIP",
+   "unit": "DIP",
+   "light": "8 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Comfortable.TreeRow",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "32 DIP",
+   "unit": "DIP",
+   "light": "32 DIP",
+   "dark": null,
+   "relation": "overrides",
+   "relation_target": "XY.Size.TreeRow",
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Comfortable.Toolbar",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "34 DIP",
+   "unit": "DIP",
+   "light": "34 DIP",
+   "dark": null,
+   "relation": "overrides",
+   "relation_target": "XY.Size.Toolbar",
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Comfortable.Input",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "36 DIP",
+   "unit": "DIP",
+   "light": "36 DIP",
+   "dark": null,
+   "relation": "overrides",
+   "relation_target": "XY.Size.Input",
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Comfortable.Gap",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "8 DIP",
+   "unit": "DIP",
+   "light": "8 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.Comfortable.SectionGap",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "16 DIP",
+   "unit": "DIP",
+   "light": "16 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.ManualLock",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Supported",
+   "unit": null,
+   "light": "Supported",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Density.MixedMode",
+   "source_item_id": "XYUI0-0.19",
+   "canonical_foundation_id": "XYUI.Foundation.Density",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-density",
+   "evidence_refs": [
+    "XYUI0-0.19@L1503-1536"
+   ]
+  },
+  {
+   "token_id": "XY.Color.App",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F1F4F6/#171E24",
+   "unit": null,
+   "light": "#F1F4F6",
+   "dark": "#171E24",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Panel",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F7F9FA/#1F2931",
+   "unit": null,
+   "light": "#F7F9FA",
+   "dark": "#1F2931",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Raised",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#FFFFFF/#26333D",
+   "unit": null,
+   "light": "#FFFFFF",
+   "dark": "#26333D",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Border",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#CFD8DE/#3D4C57",
+   "unit": null,
+   "light": "#CFD8DE",
+   "dark": "#3D4C57",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Primary",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#2B3A44/#DEE6EA",
+   "unit": null,
+   "light": "#2B3A44",
+   "dark": "#DEE6EA",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Secondary",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#647681/#B3BFC6",
+   "unit": null,
+   "light": "#647681",
+   "dark": "#B3BFC6",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Accent",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#3E6F9B/#78A5C9",
+   "unit": null,
+   "light": "#3E6F9B",
+   "dark": "#78A5C9",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Hover",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#E6EEF4/#2C3B47",
+   "unit": null,
+   "light": "#E6EEF4",
+   "dark": "#2C3B47",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Selected",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D8E7F2/#35536A",
+   "unit": null,
+   "light": "#D8E7F2",
+   "dark": "#35536A",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Success",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#4E7B66/#76A58A",
+   "unit": null,
+   "light": "#4E7B66",
+   "dark": "#76A58A",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Warning",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#A57634/#D0A05C",
+   "unit": null,
+   "light": "#A57634",
+   "dark": "#D0A05C",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Color.Error",
+   "source_item_id": "XYUI0-0.2-A",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#B34F58/#D4767D",
+   "unit": null,
+   "light": "#B34F58",
+   "dark": "#D4767D",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-A@L194-238"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Primary",
+   "source_item_id": "XYUI0-0.2-B",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#2B3A44/#DEE6EA",
+   "unit": null,
+   "light": "#2B3A44",
+   "dark": "#DEE6EA",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-B@L256-281"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Secondary",
+   "source_item_id": "XYUI0-0.2-B",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#647681/#B3BFC6",
+   "unit": null,
+   "light": "#647681",
+   "dark": "#B3BFC6",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-B@L256-281"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Tertiary",
+   "source_item_id": "XYUI0-0.2-B",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#7A8B95/#99A7B0",
+   "unit": null,
+   "light": "#7A8B95",
+   "dark": "#99A7B0",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-B@L256-281"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Placeholder",
+   "source_item_id": "XYUI0-0.2-B",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#909DA5/#82919B",
+   "unit": null,
+   "light": "#909DA5",
+   "dark": "#82919B",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-B@L256-281"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Disabled",
+   "source_item_id": "XYUI0-0.2-B",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#A8B2B8/#697983",
+   "unit": null,
+   "light": "#A8B2B8",
+   "dark": "#697983",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-B@L256-281"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Link",
+   "source_item_id": "XYUI0-0.2-B",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#4A789E/#82A9C5",
+   "unit": null,
+   "light": "#4A789E",
+   "dark": "#82A9C5",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-B@L256-281"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.App",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#EEF2F5/#151C22",
+   "unit": null,
+   "light": "#EEF2F5",
+   "dark": "#151C22",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.Panel",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F5F8FA/#1C252C",
+   "unit": null,
+   "light": "#F5F8FA",
+   "dark": "#1C252C",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.PanelAlt",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F9FBFC/#222E36",
+   "unit": null,
+   "light": "#F9FBFC",
+   "dark": "#222E36",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.Raised",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#FFFFFF/#2A3842",
+   "unit": null,
+   "light": "#FFFFFF",
+   "dark": "#2A3842",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.Canvas",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#E6ECEF/#182128",
+   "unit": null,
+   "light": "#E6ECEF",
+   "dark": "#182128",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.Toolbar",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F9FBFC/#222E36",
+   "unit": null,
+   "light": "#F9FBFC",
+   "dark": "#222E36",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.Input",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#FFFFFF/#2A3842",
+   "unit": null,
+   "light": "#FFFFFF",
+   "dark": "#2A3842",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.Overlay",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#FFFFFF/#31424D",
+   "unit": null,
+   "light": "#FFFFFF",
+   "dark": "#31424D",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.Selected",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D8E7F2/#35536A",
+   "unit": null,
+   "light": "#D8E7F2",
+   "dark": "#35536A",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Surface.BorderReference",
+   "source_item_id": "XYUI0-0.2-C",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Surface",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#C9D3DA/#40515C",
+   "unit": null,
+   "light": "#C9D3DA",
+   "dark": "#40515C",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-C@L305-339"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Subtle",
+   "source_item_id": "XYUI0-0.2-D",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D7E0E6/#303C45",
+   "unit": null,
+   "light": "#D7E0E6",
+   "dark": "#303C45",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-D@L359-381"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Default",
+   "source_item_id": "XYUI0-0.2-D",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#BFCBD3/#465966",
+   "unit": null,
+   "light": "#BFCBD3",
+   "dark": "#465966",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-D@L359-381"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Strong",
+   "source_item_id": "XYUI0-0.2-D",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#95A7B3/#687B88",
+   "unit": null,
+   "light": "#95A7B3",
+   "dark": "#687B88",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-D@L359-381"
+   ]
+  },
+  {
+   "token_id": "XY.Divider.Default",
+   "source_item_id": "XYUI0-0.2-D",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#CAD5DC/#3A4852",
+   "unit": null,
+   "light": "#CAD5DC",
+   "dark": "#3A4852",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-D@L359-381"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Focus",
+   "source_item_id": "XYUI0-0.2-D",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#5C8FB4/#699CC0",
+   "unit": null,
+   "light": "#5C8FB4",
+   "dark": "#699CC0",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-D@L359-381"
+   ]
+  },
+  {
+   "token_id": "XY.Border.Selected",
+   "source_item_id": "XYUI0-0.2-D",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#3E78A4/#80B1D5",
+   "unit": null,
+   "light": "#3E78A4",
+   "dark": "#80B1D5",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-D@L359-381"
+   ]
+  },
+  {
+   "token_id": "XY.Accent.Default",
+   "source_item_id": "XYUI0-0.2-E",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Accent",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#4A789E/#82A9C5",
+   "unit": null,
+   "light": "#4A789E",
+   "dark": "#82A9C5",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-E@L403-427"
+   ]
+  },
+  {
+   "token_id": "XY.Accent.Soft",
+   "source_item_id": "XYUI0-0.2-E",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Accent",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D8E7F2/#35536A",
+   "unit": null,
+   "light": "#D8E7F2",
+   "dark": "#35536A",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-E@L403-427"
+   ]
+  },
+  {
+   "token_id": "XY.Accent.Strong",
+   "source_item_id": "XYUI0-0.2-E",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Accent",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#356C99/#7FB0D5",
+   "unit": null,
+   "light": "#356C99",
+   "dark": "#7FB0D5",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-E@L403-427"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Link",
+   "source_item_id": "XYUI0-0.2-E",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Accent",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#4A789E/#82A9C5",
+   "unit": null,
+   "light": "#4A789E",
+   "dark": "#82A9C5",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-E@L403-427"
+   ]
+  },
+  {
+   "token_id": "XY.Tool.Active",
+   "source_item_id": "XYUI0-0.2-E",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Accent",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#356C99/#7FB0D5",
+   "unit": null,
+   "light": "#356C99",
+   "dark": "#7FB0D5",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-E@L403-427"
+   ]
+  },
+  {
+   "token_id": "XY.Button.Primary",
+   "source_item_id": "XYUI0-0.2-E",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Accent",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#356C99/#7FB0D5",
+   "unit": null,
+   "light": "#356C99",
+   "dark": "#7FB0D5",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-E@L403-427"
+   ]
+  },
+  {
+   "token_id": "XY.Tag.Accent",
+   "source_item_id": "XYUI0-0.2-E",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Accent",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D8E7F2/#35536A",
+   "unit": null,
+   "light": "#D8E7F2",
+   "dark": "#35536A",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-E@L403-427"
+   ]
+  },
+  {
+   "token_id": "XY.State.Hover",
+   "source_item_id": "XYUI0-0.2-F",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#E7EDF2/#2B3944",
+   "unit": null,
+   "light": "#E7EDF2",
+   "dark": "#2B3944",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-F@L451-479"
+   ]
+  },
+  {
+   "token_id": "XY.State.Pressed",
+   "source_item_id": "XYUI0-0.2-F",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D7E2EA/#344751",
+   "unit": null,
+   "light": "#D7E2EA",
+   "dark": "#344751",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-F@L451-479"
+   ]
+  },
+  {
+   "token_id": "XY.State.Selected",
+   "source_item_id": "XYUI0-0.2-F",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D8E7F2/#35536A",
+   "unit": null,
+   "light": "#D8E7F2",
+   "dark": "#35536A",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-F@L451-479"
+   ]
+  },
+  {
+   "token_id": "XY.State.Active",
+   "source_item_id": "XYUI0-0.2-F",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D0E1ED/#36566B",
+   "unit": null,
+   "light": "#D0E1ED",
+   "dark": "#36566B",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-F@L451-479"
+   ]
+  },
+  {
+   "token_id": "XY.State.Focus",
+   "source_item_id": "XYUI0-0.2-F",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#5C8FB4/#699CC0",
+   "unit": null,
+   "light": "#5C8FB4",
+   "dark": "#699CC0",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-F@L451-479"
+   ]
+  },
+  {
+   "token_id": "XY.State.Dragging",
+   "source_item_id": "XYUI0-0.2-F",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#E5E9EC/#303B43",
+   "unit": null,
+   "light": "#E5E9EC",
+   "dark": "#303B43",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-F@L451-479"
+   ]
+  },
+  {
+   "token_id": "XY.State.DropTarget.Background",
+   "source_item_id": "XYUI0-0.2-F",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D5ECE5/#2B4C42",
+   "unit": null,
+   "light": "#D5ECE5",
+   "dark": "#2B4C42",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-F@L451-479"
+   ]
+  },
+  {
+   "token_id": "XY.State.DropTarget.Border",
+   "source_item_id": "XYUI0-0.2-F",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#3F8B78/#79B39F",
+   "unit": null,
+   "light": "#3F8B78",
+   "dark": "#79B39F",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-F@L451-479"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Success.Text",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#4E7B66/#76A58A",
+   "unit": null,
+   "light": "#4E7B66",
+   "dark": "#76A58A",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Success.Border",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#80A58E/#5E856E",
+   "unit": null,
+   "light": "#80A58E",
+   "dark": "#5E856E",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Success.Background",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#E1EEE6/#263A2E",
+   "unit": null,
+   "light": "#E1EEE6",
+   "dark": "#263A2E",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Warning.Text",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#A57634/#D0A05C",
+   "unit": null,
+   "light": "#A57634",
+   "dark": "#D0A05C",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Warning.Border",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#C09B62/#8D6D45",
+   "unit": null,
+   "light": "#C09B62",
+   "dark": "#8D6D45",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Warning.Background",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F5ECDB/#3D3021",
+   "unit": null,
+   "light": "#F5ECDB",
+   "dark": "#3D3021",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Error.Text",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#B34F58/#D4767D",
+   "unit": null,
+   "light": "#B34F58",
+   "dark": "#D4767D",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Error.Border",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#CA8087/#92555B",
+   "unit": null,
+   "light": "#CA8087",
+   "dark": "#92555B",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Error.Background",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F8E4E6/#42282C",
+   "unit": null,
+   "light": "#F8E4E6",
+   "dark": "#42282C",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Info.Text",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#4C7597/#82AAC8",
+   "unit": null,
+   "light": "#4C7597",
+   "dark": "#82AAC8",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Info.Border",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#82A4BC/#5F7D93",
+   "unit": null,
+   "light": "#82A4BC",
+   "dark": "#5F7D93",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.Semantic.Info.Background",
+   "source_item_id": "XYUI0-0.2-G",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#E3EEF5/#273946",
+   "unit": null,
+   "light": "#E3EEF5",
+   "dark": "#273946",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-G@L502-548"
+   ]
+  },
+  {
+   "token_id": "XY.State.Disabled.Background",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F0F2F3/#20282E",
+   "unit": null,
+   "light": "#F0F2F3",
+   "dark": "#20282E",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.State.Disabled.Text",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#A8B2B8/#697983",
+   "unit": null,
+   "light": "#A8B2B8",
+   "dark": "#697983",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.State.Disabled.Border",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D8DEE2/#354149",
+   "unit": null,
+   "light": "#D8DEE2",
+   "dark": "#354149",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.State.ReadOnly.Background",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F7F9FA/#263139",
+   "unit": null,
+   "light": "#F7F9FA",
+   "dark": "#263139",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.State.ReadOnly.Text",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#647681/#B3BFC6",
+   "unit": null,
+   "light": "#647681",
+   "dark": "#B3BFC6",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.State.ReadOnly.Border",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#C5CFD6/#465660",
+   "unit": null,
+   "light": "#C5CFD6",
+   "dark": "#465660",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.State.Locked.Background",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#F3EEE5/#383126",
+   "unit": null,
+   "light": "#F3EEE5",
+   "dark": "#383126",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.State.Locked.Text",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#8A6A38/#D0AD72",
+   "unit": null,
+   "light": "#8A6A38",
+   "dark": "#D0AD72",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.State.Locked.Border",
+   "source_item_id": "XYUI0-0.2-H",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#BCA378/#856F4E",
+   "unit": null,
+   "light": "#BCA378",
+   "dark": "#856F4E",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-H@L567-598"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Grid.Minor",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D9E1E5/#26343C",
+   "unit": null,
+   "light": "#D9E1E5",
+   "dark": "#26343C",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Grid.Major",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#BECBD2/#3B4B55",
+   "unit": null,
+   "light": "#BECBD2",
+   "dark": "#3B4B55",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Guide",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#8EA5B2/#708894",
+   "unit": null,
+   "light": "#8EA5B2",
+   "dark": "#708894",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Selection",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#3979A7/#81B1D3",
+   "unit": null,
+   "light": "#3979A7",
+   "dark": "#81B1D3",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.MultiSelection",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#6A8EA8/#7596AC",
+   "unit": null,
+   "light": "#6A8EA8",
+   "dark": "#7596AC",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.BoundingBox",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#5C8097/#7899AE",
+   "unit": null,
+   "light": "#5C8097",
+   "dark": "#7899AE",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Vertex.Fill",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#FFF7F0/#3A302B",
+   "unit": null,
+   "light": "#FFF7F0",
+   "dark": "#3A302B",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Vertex.Border",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#B36A4B/#D18B6C",
+   "unit": null,
+   "light": "#B36A4B",
+   "dark": "#D18B6C",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Anchor",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#D66A3D/#E58963",
+   "unit": null,
+   "light": "#D66A3D",
+   "dark": "#E58963",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Handle",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#B78568/#C49C85",
+   "unit": null,
+   "light": "#B78568",
+   "dark": "#C49C85",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Snap",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#348873/#77B39F",
+   "unit": null,
+   "light": "#348873",
+   "dark": "#77B39F",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Dirty",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#A57634/#D0A05C",
+   "unit": null,
+   "light": "#A57634",
+   "dark": "#D0A05C",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Hidden",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#9DA8AE/#687780",
+   "unit": null,
+   "light": "#9DA8AE",
+   "dark": "#687780",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Axis.X",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#BE6262/#D17B7B",
+   "unit": null,
+   "light": "#BE6262",
+   "dark": "#D17B7B",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Axis.Y",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#67966E/#82B089",
+   "unit": null,
+   "light": "#67966E",
+   "dark": "#82B089",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.Editor.Axis.Z",
+   "source_item_id": "XYUI0-0.2-I",
+   "canonical_foundation_id": "XYUI.Foundation.ColorSystem.EditorColor",
+   "engineering_type": "TOKEN",
+   "value_type": "color_pair",
+   "value": "#557DB0/#7F9FC9",
+   "unit": null,
+   "light": "#557DB0",
+   "dark": "#7F9FC9",
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-color",
+   "evidence_refs": [
+    "XYUI0-0.2-I@L618-677"
+   ]
+  },
+  {
+   "token_id": "XY.State.ComposeMode",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Single",
+   "unit": null,
+   "light": "Single",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.Layering",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.Disabled.Priority",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Highest",
+   "unit": null,
+   "light": "Highest",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.Pressed.Priority",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "AboveHover",
+   "unit": null,
+   "light": "AboveHover",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.Hover.Priority",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "AboveSelected",
+   "unit": null,
+   "light": "AboveSelected",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.Selected",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "PersistentBaseState",
+   "unit": null,
+   "light": "PersistentBaseState",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.Dragging",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Independent",
+   "unit": null,
+   "light": "Independent",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.DropTarget",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Independent",
+   "unit": null,
+   "light": "Independent",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.ResizeOnChange",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.State.ColorSource",
+   "source_item_id": "XYUI0-0.20",
+   "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.State.*",
+   "unit": null,
+   "light": "XY.State.*",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-interaction",
+   "evidence_refs": [
+    "XYUI0-0.20@L1564-1584"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.DisplayMode",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "FocusVisible",
+   "unit": null,
+   "light": "FocusVisible",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.Keyboard",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Visible",
+   "unit": null,
+   "light": "Visible",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.Mouse.PersistentRing",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "False",
+   "unit": null,
+   "light": "False",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.Control.OutlineWidth",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "2 DIP",
+   "unit": "DIP",
+   "light": "2 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.Control.OutlineColor",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Border.Focus",
+   "unit": null,
+   "light": "XY.Border.Focus",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.Control.Resize",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.EditorArea",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Supported",
+   "unit": null,
+   "light": "Supported",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.Canvas",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "AreaOutline",
+   "unit": null,
+   "light": "AreaOutline",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.Panel",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "AreaFocus",
+   "unit": null,
+   "light": "AreaFocus",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.Focus.ShortcutScope",
+   "source_item_id": "XYUI0-0.21",
+   "canonical_foundation_id": "XYUI.Foundation.Focus",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "FocusedArea",
+   "unit": null,
+   "light": "FocusedArea",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-focus",
+   "evidence_refs": [
+    "XYUI0-0.21@L1612-1632"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.Mode",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Semantic",
+   "unit": null,
+   "light": "Semantic",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.VisualSizeIndependent",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "True",
+   "unit": null,
+   "light": "True",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.Icon.Min",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "28 DIP",
+   "unit": "DIP",
+   "light": "28 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.TreeRow",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "FullRow",
+   "unit": null,
+   "light": "FullRow",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.ListRow",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "FullRow",
+   "unit": null,
+   "light": "FullRow",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.Vertex",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "20 DIP",
+   "unit": "DIP",
+   "light": "20 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.Anchor",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "20 DIP",
+   "unit": "DIP",
+   "light": "20 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.Splitter",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "8 DIP",
+   "unit": "DIP",
+   "light": "8 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.DragHandle",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "24 DIP",
+   "unit": "DIP",
+   "light": "24 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.ResizeHandle",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "SemanticExpanded",
+   "unit": null,
+   "light": "SemanticExpanded",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.HitTarget.ChangeVisualSize",
+   "source_item_id": "XYUI0-0.22",
+   "canonical_foundation_id": "XYUI.Foundation.HitTarget",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-hit-target",
+   "evidence_refs": [
+    "XYUI0-0.22@L1657-1679"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Instant",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "duration",
+   "value": "0 ms",
+   "unit": "ms",
+   "light": "0 ms",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Fast",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "duration",
+   "value": "80 ms",
+   "unit": "ms",
+   "light": "80 ms",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Normal",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "duration",
+   "value": "140 ms",
+   "unit": "ms",
+   "light": "140 ms",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Slow",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "duration",
+   "value": "220 ms",
+   "unit": "ms",
+   "light": "220 ms",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Hover",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Fast",
+   "unit": null,
+   "light": "Fast",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Pressed",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Fast",
+   "unit": null,
+   "light": "Fast",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Popup",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Normal",
+   "unit": null,
+   "light": "Normal",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Tooltip",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Normal",
+   "unit": null,
+   "light": "Normal",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.SectionCollapse",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Slow",
+   "unit": null,
+   "light": "Slow",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.PanelCollapse",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Slow",
+   "unit": null,
+   "light": "Slow",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Dragging",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Instant",
+   "unit": null,
+   "light": "Instant",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.Snap",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Instant",
+   "unit": null,
+   "light": "Instant",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.Motion.MaskLatency",
+   "source_item_id": "XYUI0-0.23",
+   "canonical_foundation_id": "XYUI.Foundation.Motion",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-motion",
+   "evidence_refs": [
+    "XYUI0-0.23@L1710-1736"
+   ]
+  },
+  {
+   "token_id": "XY.ZIndex.Mode",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "ContextStack",
+   "unit": null,
+   "light": "ContextStack",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.ZIndex.DirectValue",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.Overlay.ContentHost",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "BaseContent",
+   "unit": null,
+   "light": "BaseContent",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.Overlay.OverlayHost",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "PopupAndOverlay",
+   "unit": null,
+   "light": "PopupAndOverlay",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.Overlay.DragHost",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "DragPreview",
+   "unit": null,
+   "light": "DragPreview",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.Overlay.ModalHost",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Modal",
+   "unit": null,
+   "light": "Modal",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.Overlay.TooltipHost",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Tooltip",
+   "unit": null,
+   "light": "Tooltip",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1792-1793"
+   ]
+  },
+  {
+   "token_id": "XY.Overlay.TooltipHost.Priority",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Topmost",
+   "unit": null,
+   "light": "Topmost",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1794-1795"
+   ]
+  },
+  {
+   "token_id": "XY.Overlay.ModalHost.Above",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Content|Overlay|Drag",
+   "unit": null,
+   "light": "Content|Overlay|Drag",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.Overlay.CrossHostOverride",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.ZIndex.MagicNumber",
+   "source_item_id": "XYUI0-0.24",
+   "canonical_foundation_id": "XYUI.Foundation.ZIndex",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-zindex",
+   "evidence_refs": [
+    "XYUI0-0.24@L1779-1801"
+   ]
+  },
+  {
+   "token_id": "XY.Scrollbar.DisplayMode",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "HoverReveal",
+   "unit": null,
+   "light": "HoverReveal",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scrollbar.Track",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Hidden",
+   "unit": null,
+   "light": "Hidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scrollbar.Thumb",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Subtle",
+   "unit": null,
+   "light": "Subtle",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scrollbar.Hover",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Emphasized",
+   "unit": null,
+   "light": "Emphasized",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scrollbar.Scrolling",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Emphasized",
+   "unit": null,
+   "light": "Emphasized",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scrollbar.Width",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "10 DIP",
+   "unit": "DIP",
+   "light": "10 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scroll.PanelIsolation",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "True",
+   "unit": null,
+   "light": "True",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scroll.PopupPriority",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "LocalFirst",
+   "unit": null,
+   "light": "LocalFirst",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scroll.Canvas",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Independent",
+   "unit": null,
+   "light": "Independent",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Scroll.LayoutShift",
+   "source_item_id": "XYUI0-0.25",
+   "canonical_foundation_id": "XYUI.Foundation.Scroll",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-scroll",
+   "evidence_refs": [
+    "XYUI0-0.25@L1824-1844"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.Entry",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Handle",
+   "unit": null,
+   "light": "Handle",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.Threshold",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "6 DIP",
+   "unit": "DIP",
+   "light": "6 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.Start",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "AfterThreshold",
+   "unit": null,
+   "light": "AfterThreshold",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.DropZone",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Before|Into|After",
+   "unit": null,
+   "light": "Before|Into|After",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.InvalidTarget",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "ImmediateReject",
+   "unit": null,
+   "light": "ImmediateReject",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.CancelKey",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Esc",
+   "unit": null,
+   "light": "Esc",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.CancelSideEffect",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.Preview",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "FollowPointer",
+   "unit": null,
+   "light": "FollowPointer",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Drag.Motion",
+   "source_item_id": "XYUI0-0.26",
+   "canonical_foundation_id": "XYUI.Foundation.DragDrop",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Instant",
+   "unit": null,
+   "light": "Instant",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dnd",
+   "evidence_refs": [
+    "XYUI0-0.26@L1872-1890"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Mode",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Semantic",
+   "unit": null,
+   "light": "Semantic",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Continuous",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "True",
+   "unit": null,
+   "light": "True",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Snap",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Enabled",
+   "unit": null,
+   "light": "Enabled",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.SnapPoints",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Compact|Default|Wide",
+   "unit": null,
+   "light": "Compact|Default|Wide",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.DoubleClick",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "RestoreDefault",
+   "unit": null,
+   "light": "RestoreDefault",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Left.Default",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "180 DIP",
+   "unit": "DIP",
+   "light": "180 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Right.Default",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "250 DIP",
+   "unit": "DIP",
+   "light": "250 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Bottom.Default",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "100 DIP",
+   "unit": "DIP",
+   "light": "100 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Left.Range",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Semantic",
+   "unit": null,
+   "light": "Semantic",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Right.Range",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Semantic",
+   "unit": null,
+   "light": "Semantic",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Bottom.Range",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Semantic",
+   "unit": null,
+   "light": "Semantic",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Collapse",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Supported",
+   "unit": null,
+   "light": "Supported",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Expand",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Supported",
+   "unit": null,
+   "light": "Supported",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Canvas",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "FillRemaining",
+   "unit": null,
+   "light": "FillRemaining",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Splitter.Visual",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "1 DIP",
+   "unit": "DIP",
+   "light": "1 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Resize.Splitter.HitTarget",
+   "source_item_id": "XYUI0-0.27",
+   "canonical_foundation_id": "XYUI.Foundation.ResizeSplitter",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "8 DIP",
+   "unit": "DIP",
+   "light": "8 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-resize",
+   "evidence_refs": [
+    "XYUI0-0.27@L1921-1953"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Select",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Arrow",
+   "unit": null,
+   "light": "Arrow",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Text",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "IBeam",
+   "unit": null,
+   "light": "IBeam",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Pan",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Hand",
+   "unit": null,
+   "light": "Hand",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Draw",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Crosshair",
+   "unit": null,
+   "light": "Crosshair",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Move",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Move",
+   "unit": null,
+   "light": "Move",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Resize.Horizontal",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "SizeWE",
+   "unit": null,
+   "light": "SizeWE",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Resize.Vertical",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "SizeNS",
+   "unit": null,
+   "light": "SizeNS",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Dragging",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Drag",
+   "unit": null,
+   "light": "Drag",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Copy",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Copy",
+   "unit": null,
+   "light": "Copy",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.Forbidden",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.SnapCandidate",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Snap",
+   "unit": null,
+   "light": "Snap",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Cursor.SwitchDelay",
+   "source_item_id": "XYUI0-0.28",
+   "canonical_foundation_id": "XYUI.Foundation.Cursor",
+   "engineering_type": "TOKEN",
+   "value_type": "duration",
+   "value": "0 ms",
+   "unit": "ms",
+   "light": "0 ms",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-cursor",
+   "evidence_refs": [
+    "XYUI0-0.28@L1984-2008"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.ContentMode",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Adaptive",
+   "unit": null,
+   "light": "Adaptive",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.ShortContent",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "SingleLine",
+   "unit": null,
+   "light": "SingleLine",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.LongContent",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "WrapOrTwoLevel",
+   "unit": null,
+   "light": "WrapOrTwoLevel",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.MaxWidth",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "280 DIP",
+   "unit": "DIP",
+   "light": "280 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.ShowDelay",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "duration",
+   "value": "400 ms",
+   "unit": "ms",
+   "light": "400 ms",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.ViewportAvoidance",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Enabled",
+   "unit": null,
+   "light": "Enabled",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.AutoFlip",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Enabled",
+   "unit": null,
+   "light": "Enabled",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.PointerCapture",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.InteractiveContent",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Tooltip.LongHelp",
+   "source_item_id": "XYUI0-0.29",
+   "canonical_foundation_id": "XYUI.Foundation.Tooltip",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "HelpOrInspector",
+   "unit": null,
+   "light": "HelpOrInspector",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-tooltip",
+   "evidence_refs": [
+    "XYUI0-0.29@L2034-2054"
+   ]
+  },
+  {
+   "token_id": "XY.Font.UI",
+   "source_item_id": "XYUI0-0.3-A",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontFamily",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Source Han Sans SC",
+   "unit": null,
+   "light": "Source Han Sans SC",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-A@L706-722"
+   ]
+  },
+  {
+   "token_id": "XY.Font.Default",
+   "source_item_id": "XYUI0-0.3-A",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontFamily",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Font.UI",
+   "unit": null,
+   "light": "XY.Font.UI",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-A@L706-722"
+   ]
+  },
+  {
+   "token_id": "XY.Font.Mono",
+   "source_item_id": "XYUI0-0.3-A",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontFamily",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Source Code Pro",
+   "unit": null,
+   "light": "Source Code Pro",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-A@L706-722"
+   ]
+  },
+  {
+   "token_id": "XY.Font.Technical",
+   "source_item_id": "XYUI0-0.3-A",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontFamily",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Font.Mono",
+   "unit": null,
+   "light": "XY.Font.Mono",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-A@L706-722"
+   ]
+  },
+  {
+   "token_id": "XY.Font.Fallback.CJK",
+   "source_item_id": "XYUI0-0.3-A",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontFamily",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Noto Sans CJK SC",
+   "unit": null,
+   "light": "Noto Sans CJK SC",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-A@L706-722"
+   ]
+  },
+  {
+   "token_id": "XY.Font.Fallback.Mono",
+   "source_item_id": "XYUI0-0.3-A",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontFamily",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Noto Sans Mono",
+   "unit": null,
+   "light": "Noto Sans Mono",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-A@L706-722"
+   ]
+  },
+  {
+   "token_id": "XY.Font.Policy.CommercialOnly",
+   "source_item_id": "XYUI0-0.3-A",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontFamily",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "True",
+   "unit": null,
+   "light": "True",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-A@L706-722"
+   ]
+  },
+  {
+   "token_id": "XY.Font.Policy.BundleLicense",
+   "source_item_id": "XYUI0-0.3-A",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontFamily",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-A@L706-722"
+   ]
+  },
+  {
+   "token_id": "XY.FontWeight.Regular",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "400",
+   "unit": null,
+   "light": "400",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.FontWeight.Medium",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "500",
+   "unit": null,
+   "light": "500",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.FontWeight.Semibold",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "600",
+   "unit": null,
+   "light": "600",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.FontWeight.Bold",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "700",
+   "unit": null,
+   "light": "700",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Body.FontWeight",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "400",
+   "unit": null,
+   "light": "400",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Label.FontWeight",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "500",
+   "unit": null,
+   "light": "500",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Section.FontWeight",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "600",
+   "unit": null,
+   "light": "600",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.Text.PanelTitle.FontWeight",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "600",
+   "unit": null,
+   "light": "600",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.Text.PageTitle.FontWeight",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "700",
+   "unit": null,
+   "light": "700",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.Button.Primary.FontWeight",
+   "source_item_id": "XYUI0-0.3-B",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontWeight",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "600",
+   "unit": null,
+   "light": "600",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-B@L745-765"
+   ]
+  },
+  {
+   "token_id": "XY.FontSize.Caption",
+   "source_item_id": "XYUI0-0.3-C",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontSize",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "12 DIP",
+   "unit": "DIP",
+   "light": "12 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-C@L789-805"
+   ]
+  },
+  {
+   "token_id": "XY.FontSize.Auxiliary",
+   "source_item_id": "XYUI0-0.3-C",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontSize",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "13 DIP",
+   "unit": "DIP",
+   "light": "13 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-C@L789-805"
+   ]
+  },
+  {
+   "token_id": "XY.FontSize.Body",
+   "source_item_id": "XYUI0-0.3-C",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontSize",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "14 DIP",
+   "unit": "DIP",
+   "light": "14 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-C@L789-805"
+   ]
+  },
+  {
+   "token_id": "XY.FontSize.Label",
+   "source_item_id": "XYUI0-0.3-C",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontSize",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "15 DIP",
+   "unit": "DIP",
+   "light": "15 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-C@L789-805"
+   ]
+  },
+  {
+   "token_id": "XY.FontSize.Section",
+   "source_item_id": "XYUI0-0.3-C",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontSize",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "17 DIP",
+   "unit": "DIP",
+   "light": "17 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-C@L789-805"
+   ]
+  },
+  {
+   "token_id": "XY.FontSize.PanelTitle",
+   "source_item_id": "XYUI0-0.3-C",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontSize",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "20 DIP",
+   "unit": "DIP",
+   "light": "20 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-C@L789-805"
+   ]
+  },
+  {
+   "token_id": "XY.FontSize.PageTitle",
+   "source_item_id": "XYUI0-0.3-C",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontSize",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "24 DIP",
+   "unit": "DIP",
+   "light": "24 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-C@L789-805"
+   ]
+  },
+  {
+   "token_id": "XY.FontSize.Mono",
+   "source_item_id": "XYUI0-0.3-C",
+   "canonical_foundation_id": "XYUI.Foundation.Typography.FontSize",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "13 DIP",
+   "unit": "DIP",
+   "light": "13 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.3-C@L789-805"
+   ]
+  },
+  {
+   "token_id": "XY.Naming.Primary",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "DisplayName",
+   "unit": null,
+   "light": "DisplayName",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Naming.DisplayLanguage",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Localized",
+   "unit": null,
+   "light": "Localized",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Naming.TechnicalId",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Secondary",
+   "unit": null,
+   "light": "Secondary",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Naming.TitleIdLayout",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Inline",
+   "unit": null,
+   "light": "Inline",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Command.Default",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "ShortAction",
+   "unit": null,
+   "light": "ShortAction",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Command.Ambiguous",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Verb+Object",
+   "unit": null,
+   "light": "Verb+Object",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Command.Dangerous",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Verb+Object",
+   "unit": null,
+   "light": "Verb+Object",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Status",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "ResultState",
+   "unit": null,
+   "light": "ResultState",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Error",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Action+FailureReason",
+   "unit": null,
+   "light": "Action+FailureReason",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Text.Error.NextStep",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "WhenUseful",
+   "unit": null,
+   "light": "WhenUseful",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Text.LongName",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Ellipsis",
+   "unit": null,
+   "light": "Ellipsis",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Text.LongName.FullValue",
+   "source_item_id": "XYUI0-0.30",
+   "canonical_foundation_id": "XYUI.Foundation.TextNaming",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "TooltipOrInspector",
+   "unit": null,
+   "light": "TooltipOrInspector",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-naming",
+   "evidence_refs": [
+    "XYUI0-0.30@L2092-2116"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.KeyboardReachable",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.TabOrder",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Predictable",
+   "unit": null,
+   "light": "Predictable",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.IconButton.Name",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.Role",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.Name",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.State",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.ColorOnlyState",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.StateRedundancy",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "2 Channels",
+   "unit": null,
+   "light": "2 Channels",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.ErrorText",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.Focus",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Focus.*",
+   "unit": null,
+   "light": "XY.Focus.*",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.Accessibility.HitTarget",
+   "source_item_id": "XYUI0-0.31",
+   "canonical_foundation_id": "XYUI.Foundation.Accessibility",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.HitTarget.*",
+   "unit": null,
+   "light": "XY.HitTarget.*",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-a11y",
+   "evidence_refs": [
+    "XYUI0-0.31@L2149-2171"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.Unit",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "DIP",
+   "unit": null,
+   "light": "DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.PhysicalPixelHardcode",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.PerMonitor",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Enabled",
+   "unit": null,
+   "light": "Enabled",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.LiveMonitorSwitch",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Enabled",
+   "unit": null,
+   "light": "Enabled",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.Scale.100",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Supported",
+   "unit": null,
+   "light": "Supported",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.Scale.125",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Supported",
+   "unit": null,
+   "light": "Supported",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.Scale.150",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Supported",
+   "unit": null,
+   "light": "Supported",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.Scale.200",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Supported",
+   "unit": null,
+   "light": "Supported",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.DensityCoupling",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.Icon",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Vector",
+   "unit": null,
+   "light": "Vector",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.DPI.BorderPixelAlignment",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Required",
+   "unit": null,
+   "light": "Required",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.Localization.Layout",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Elastic",
+   "unit": null,
+   "light": "Elastic",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.Localization.Overflow",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Expand|Ellipsis|Wrap",
+   "unit": null,
+   "light": "Expand|Ellipsis|Wrap",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.Localization.LayoutBreak",
+   "source_item_id": "XYUI0-0.32",
+   "canonical_foundation_id": "XYUI.Foundation.DpiLocalization",
+   "engineering_type": "TOKEN",
+   "value_type": "enum",
+   "value": "Forbidden",
+   "unit": null,
+   "light": "Forbidden",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-dpi",
+   "evidence_refs": [
+    "XYUI0-0.32@L2208-2236"
+   ]
+  },
+  {
+   "token_id": "XY.LineHeight.Caption",
+   "source_item_id": "XYUI0-0.4",
+   "canonical_foundation_id": "XYUI.Foundation.LineHeight",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "12/16",
+   "unit": null,
+   "light": "12/16",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.4@L827-851"
+   ]
+  },
+  {
+   "token_id": "XY.LineHeight.Auxiliary",
+   "source_item_id": "XYUI0-0.4",
+   "canonical_foundation_id": "XYUI.Foundation.LineHeight",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "13/18",
+   "unit": null,
+   "light": "13/18",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.4@L827-851"
+   ]
+  },
+  {
+   "token_id": "XY.LineHeight.Body",
+   "source_item_id": "XYUI0-0.4",
+   "canonical_foundation_id": "XYUI.Foundation.LineHeight",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "14/20",
+   "unit": null,
+   "light": "14/20",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.4@L827-851"
+   ]
+  },
+  {
+   "token_id": "XY.LineHeight.Label",
+   "source_item_id": "XYUI0-0.4",
+   "canonical_foundation_id": "XYUI.Foundation.LineHeight",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "15/20",
+   "unit": null,
+   "light": "15/20",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.4@L827-851"
+   ]
+  },
+  {
+   "token_id": "XY.LineHeight.Section",
+   "source_item_id": "XYUI0-0.4",
+   "canonical_foundation_id": "XYUI.Foundation.LineHeight",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "17/22",
+   "unit": null,
+   "light": "17/22",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.4@L827-851"
+   ]
+  },
+  {
+   "token_id": "XY.LineHeight.PanelTitle",
+   "source_item_id": "XYUI0-0.4",
+   "canonical_foundation_id": "XYUI.Foundation.LineHeight",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "20/26",
+   "unit": null,
+   "light": "20/26",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.4@L827-851"
+   ]
+  },
+  {
+   "token_id": "XY.LineHeight.PageTitle",
+   "source_item_id": "XYUI0-0.4",
+   "canonical_foundation_id": "XYUI.Foundation.LineHeight",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "24/30",
+   "unit": null,
+   "light": "24/30",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.4@L827-851"
+   ]
+  },
+  {
+   "token_id": "XY.LineHeight.Mono",
+   "source_item_id": "XYUI0-0.4",
+   "canonical_foundation_id": "XYUI.Foundation.LineHeight",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "13/20",
+   "unit": null,
+   "light": "13/20",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.4@L827-851"
+   ]
+  },
+  {
+   "token_id": "XY.LetterSpacing.Body",
+   "source_item_id": "XYUI0-0.5",
+   "canonical_foundation_id": "XYUI.Foundation.LetterSpacing",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0",
+   "unit": null,
+   "light": "0",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.5@L869-879"
+   ]
+  },
+  {
+   "token_id": "XY.LetterSpacing.Label",
+   "source_item_id": "XYUI0-0.5",
+   "canonical_foundation_id": "XYUI.Foundation.LetterSpacing",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "-0.10",
+   "unit": null,
+   "light": "-0.10",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.5@L869-879"
+   ]
+  },
+  {
+   "token_id": "XY.LetterSpacing.Title",
+   "source_item_id": "XYUI0-0.5",
+   "canonical_foundation_id": "XYUI.Foundation.LetterSpacing",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0",
+   "unit": null,
+   "light": "0",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.5@L869-879"
+   ]
+  },
+  {
+   "token_id": "XY.LetterSpacing.Caps",
+   "source_item_id": "XYUI0-0.5",
+   "canonical_foundation_id": "XYUI.Foundation.LetterSpacing",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "+0.40",
+   "unit": null,
+   "light": "+0.40",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.5@L869-879"
+   ]
+  },
+  {
+   "token_id": "XY.LetterSpacing.Mono",
+   "source_item_id": "XYUI0-0.5",
+   "canonical_foundation_id": "XYUI.Foundation.LetterSpacing",
+   "engineering_type": "TOKEN",
+   "value_type": "numeric",
+   "value": "0",
+   "unit": null,
+   "light": "0",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-typography",
+   "evidence_refs": [
+    "XYUI0-0.5@L869-879"
+   ]
+  },
+  {
+   "token_id": "XY.Space.1",
+   "source_item_id": "XYUI0-0.6",
+   "canonical_foundation_id": "XYUI.Foundation.Spacing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "4 DIP",
+   "unit": "DIP",
+   "light": "4 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.6@L902-918"
+   ]
+  },
+  {
+   "token_id": "XY.Space.2",
+   "source_item_id": "XYUI0-0.6",
+   "canonical_foundation_id": "XYUI.Foundation.Spacing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "8 DIP",
+   "unit": "DIP",
+   "light": "8 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.6@L902-918"
+   ]
+  },
+  {
+   "token_id": "XY.Space.3",
+   "source_item_id": "XYUI0-0.6",
+   "canonical_foundation_id": "XYUI.Foundation.Spacing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "12 DIP",
+   "unit": "DIP",
+   "light": "12 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.6@L902-918"
+   ]
+  },
+  {
+   "token_id": "XY.Space.4",
+   "source_item_id": "XYUI0-0.6",
+   "canonical_foundation_id": "XYUI.Foundation.Spacing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "16 DIP",
+   "unit": "DIP",
+   "light": "16 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.6@L902-918"
+   ]
+  },
+  {
+   "token_id": "XY.Space.6",
+   "source_item_id": "XYUI0-0.6",
+   "canonical_foundation_id": "XYUI.Foundation.Spacing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "24 DIP",
+   "unit": "DIP",
+   "light": "24 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.6@L902-918"
+   ]
+  },
+  {
+   "token_id": "XY.Space.8",
+   "source_item_id": "XYUI0-0.6",
+   "canonical_foundation_id": "XYUI.Foundation.Spacing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "32 DIP",
+   "unit": "DIP",
+   "light": "32 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.6@L902-918"
+   ]
+  },
+  {
+   "token_id": "XY.Space.10",
+   "source_item_id": "XYUI0-0.6",
+   "canonical_foundation_id": "XYUI.Foundation.Spacing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "40 DIP",
+   "unit": "DIP",
+   "light": "40 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.6@L902-918"
+   ]
+  },
+  {
+   "token_id": "XY.Space.12",
+   "source_item_id": "XYUI0-0.6",
+   "canonical_foundation_id": "XYUI.Foundation.Spacing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "48 DIP",
+   "unit": "DIP",
+   "light": "48 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.6@L902-918"
+   ]
+  },
+  {
+   "token_id": "XY.Indent.PerLevel",
+   "source_item_id": "XYUI0-0.7",
+   "canonical_foundation_id": "XYUI.Foundation.Indentation",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "16 DIP",
+   "unit": "DIP",
+   "light": "16 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.7@L937-945"
+   ]
+  },
+  {
+   "token_id": "XY.Indent.IconTextGap",
+   "source_item_id": "XYUI0-0.7",
+   "canonical_foundation_id": "XYUI.Foundation.Indentation",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "4 DIP",
+   "unit": "DIP",
+   "light": "4 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.7@L937-945"
+   ]
+  },
+  {
+   "token_id": "XY.Indent.TreeGuide",
+   "source_item_id": "XYUI0-0.7",
+   "canonical_foundation_id": "XYUI.Foundation.Indentation",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "16 DIP Step",
+   "unit": null,
+   "light": "16 DIP Step",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.7@L937-945"
+   ]
+  },
+  {
+   "token_id": "XY.Indent.Disclosure",
+   "source_item_id": "XYUI0-0.7",
+   "canonical_foundation_id": "XYUI.Foundation.Indentation",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "Follow XY.Indent.PerLevel",
+   "unit": null,
+   "light": "Follow XY.Indent.PerLevel",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-spacing",
+   "evidence_refs": [
+    "XYUI0-0.7@L937-945"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Control.XS",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "24 DIP",
+   "unit": "DIP",
+   "light": "24 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Control.S",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "28 DIP",
+   "unit": "DIP",
+   "light": "28 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Control.M",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "32 DIP",
+   "unit": "DIP",
+   "light": "32 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Control.L",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "36 DIP",
+   "unit": "DIP",
+   "light": "36 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.TreeRow",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "28 DIP",
+   "unit": "DIP",
+   "light": "28 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Toolbar",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "30 DIP",
+   "unit": "DIP",
+   "light": "30 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Input",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "32 DIP",
+   "unit": "DIP",
+   "light": "32 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Icon.S",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "14 DIP",
+   "unit": "DIP",
+   "light": "14 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Icon.M",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "16 DIP",
+   "unit": "DIP",
+   "light": "16 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Icon.L",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "20 DIP",
+   "unit": "DIP",
+   "light": "20 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Checkbox",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "16 DIP",
+   "unit": "DIP",
+   "light": "16 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Radio",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "16 DIP",
+   "unit": "DIP",
+   "light": "16 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Switch",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "34x18 DIP",
+   "unit": null,
+   "light": "34x18 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.Scrollbar",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "10 DIP",
+   "unit": "DIP",
+   "light": "10 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Size.DragHandle",
+   "source_item_id": "XYUI0-0.8",
+   "canonical_foundation_id": "XYUI.Foundation.Sizing",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "8 DIP",
+   "unit": "DIP",
+   "light": "8 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-sizing",
+   "evidence_refs": [
+    "XYUI0-0.8@L969-1000"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.None",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "0 DIP",
+   "unit": "DIP",
+   "light": "0 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Toolbar",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "2 DIP",
+   "unit": "DIP",
+   "light": "2 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Control",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "4 DIP",
+   "unit": "DIP",
+   "light": "4 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Input",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "4 DIP",
+   "unit": "DIP",
+   "light": "4 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Button",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "4 DIP",
+   "unit": "DIP",
+   "light": "4 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Popup",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "6 DIP",
+   "unit": "DIP",
+   "light": "6 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Panel",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "0 DIP",
+   "unit": "DIP",
+   "light": "0 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Row",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "0 DIP",
+   "unit": "DIP",
+   "light": "0 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Full",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "dimension",
+   "value": "999 DIP",
+   "unit": "DIP",
+   "light": "999 DIP",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Tag",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Radius.Full",
+   "unit": null,
+   "light": "XY.Radius.Full",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "token_id": "XY.Radius.Badge",
+   "source_item_id": "XYUI0-0.9",
+   "canonical_foundation_id": "XYUI.Foundation.Radius",
+   "engineering_type": "TOKEN",
+   "value_type": "enum_or_string",
+   "value": "XY.Radius.Full",
+   "unit": null,
+   "light": "XY.Radius.Full",
+   "dark": null,
+   "relation": null,
+   "relation_target": null,
+   "semantic_role": "foundation-radius",
+   "evidence_refs": [
+    "XYUI0-0.9@L1023-1045"
+   ]
+  }
+ ]
+}

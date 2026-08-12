@@ -220,7 +220,7 @@ HISTORICAL_ONLY     明确被否决的候选方案
 
 ## 5. XYUI-A2 · Foundation Registry
 
-> 状态：`XYUI-A2-R1 · CLOSED`；`XYUI-A2-R2 · CLOSED`；`XYUI-A2-R3 · CLOSED`（用户验收）；`XYUI-A2-R4 · READY FOR USER ACCEPTANCE`（26 项门禁全 PASS + Manifest + Closeout Report 生成；A3 Design Token System 待批准后解锁）。
+> 状态：`XYUI-A2 · CLOSED`（用户验收，44/44 VALIDATED）；`XYUI-A3-R1 · READY FOR USER ACCEPTANCE`（Token Namespace Audit：426 occurrences / 418 distinct / NTC 5 + IDENTICAL 3 + VALUE 0 + ALIAS 35 候选；A3-R2 Canonical Token Architecture 待批准后解锁）。
 
 只有经过 A1 人工批准的项目进入这里。目录与文件（**禁止一项规范五六个 JSON**）：
 
