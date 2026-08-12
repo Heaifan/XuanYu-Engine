@@ -19,12 +19,12 @@
 ---
 
 ## v0.2.28.2-fix · MAP-DATA-A-R2-F2 GEOMETRY VERTEX EDITING
-MAP-DATA-A-R2-F2 Geometry Vertex Editing（2026-08-12 16:00:00）：承接用户确认的 F1 真机通过，进入已完成 Region/Road 几何顶点编辑。
+MAP-DATA-A-R2-F2 Geometry Vertex Editing（2026-08-12 16:00:56）：承接用户确认的 F1 真机通过，进入已完成 Region/Road 几何顶点编辑。
 - 变化：点击已完成区域面或道路显示顶点控制柄；顶点拖动采用 Preview → Commit，释放提交一条 Map History，Esc 取消；区域/道路统一接入现有 MapSession、Render Overlay、Save/Reload 与 Ctrl+Z/Y。
 - 校验：区域候选继续执行多边形合法性校验；道路拒绝相邻重复节点；新增领域单历史、Undo/Redo、非法几何与屏幕空间命中自动测试。
 - 范围：不做吸附、磁性贴合、共享边界、拓扑联动、Schema 变化、Vulkan 重写或 Picking 全面重构。
-- 验证：快速 Editor.UI Build 0 Warning/0 Error；World.Tests 1274/1274；正式完整门禁结果以本条后续 Hash 记录为准。
-- Hash：<本轮实现提交>
+- 验证：Solution Build 0 Warning/0 Error；Core.Tests 339/339、World.Tests 1274/1274、WarCore.Tests 22/22；ARCH-A、AXAML XML、5+100、版本一致性与 `git diff --check` PASS。
+- Hash：`66bace3`（实现提交）。
 - 遗留：F2-M01～F2-M06 真机验收待用户执行；F3 禁止启动。
 
 ## v0.2.28.1-fix · MAP-DATA-A-R2-F1 REGIONAL AUTHORING HIERARCHY
