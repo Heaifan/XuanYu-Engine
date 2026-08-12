@@ -8,6 +8,8 @@ public sealed class UiD5DialogAndLogContractTests
 {
     static readonly string Win = Read("Win/UiWin.axaml");
     static readonly string Dialog = Read("Win/UiWin.DialogHost.cs");
+    static readonly string DialogInput = Read("Win/UiWin.DialogHost.Input.cs");
+    static readonly string Shortcuts = Read("Win/UiWin.Shortcuts.cs");
     static readonly string Unsaved = Read("Win/UiWin.UnsavedDialog.cs");
     static readonly string Foot = Read("Foot/Foot.axaml");
 
@@ -33,9 +35,12 @@ public sealed class UiD5DialogAndLogContractTests
     [Fact]
     public void Enter_triggers_default_and_escape_cancels()
     {
-        Assert.Contains("Key.Escape", Dialog);
-        Assert.Contains("Key.Enter", Dialog);
+        Assert.Contains("Key.Escape", DialogInput);
+        Assert.Contains("Key.Enter", DialogInput);
         Assert.Contains("_dialogDefault", Dialog);
+        Assert.Contains("TryHandleDialogKey(e)", Shortcuts);
+        Assert.Contains("if (TryHandleDialogKey(e))", Shortcuts);
+        Assert.Contains("_dialogTcs = null", Dialog);
     }
 
     [Fact]

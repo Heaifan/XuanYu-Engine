@@ -59,34 +59,14 @@ public partial class UiWin
 
     void CompleteDialog(string value)
     {
+        var tcs = _dialogTcs;
+        _dialogTcs = null;
         DialogOverlay.IsVisible = false;
         DialogCard.IsVisible = false;
-        _dialogTcs?.TrySetResult(value);
+        tcs?.TrySetResult(value);
         // D5 纠偏：关闭后焦点返回原操作控件
         Dispatcher.UIThread.Post(() => _focusBeforeDialog?.Focus());
     }
-    void DialogCard_KeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Tab)
-        {
-            // 焦点陷阱：Tab/Shift+Tab 只在弹窗按钮间循环，不离开弹窗
-            var focusables = DialogButtons.Children.OfType<Button>()
-                .Where(b => b.IsEnabled && b.IsVisible).ToArray();
-            if (focusables.Length == 0) return;
-            var current = CurrentFocus();
-            var index = DialogFocusTrap.NextIndex(focusables.Length,
-                Array.IndexOf(focusables, current),
-                e.KeyModifiers.HasFlag(KeyModifiers.Shift));
-            focusables[index].Focus();
-            e.Handled = true;
-            return;
-        }
-        if (e.Key == Key.Escape) { CompleteDialog("cancel"); e.Handled = true; return; }
-        if (e.Key != Key.Enter || _dialogDefault is null) return;
-        CompleteDialog((string)_dialogDefault.Content!); // Enter=默认按钮（非危险）
-        e.Handled = true;
-    }
-
     public Task<string> ShowMessage(string title, string message) =>
         ShowDialogCore(title, message, [("确定", false, "ok")], "ok");
 

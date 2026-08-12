@@ -13,9 +13,9 @@ public sealed class UiD5UnsavedDialogTests
     static string SceneCommands() => File.ReadAllText(Path.Combine(
         AppContext.BaseDirectory, "..", "..", "..", "..",
         "XuanYu.Editor.UI", "Win", "UiWin.SceneCommands.cs"));
-    static string DialogHost() => File.ReadAllText(Path.Combine(
+    static string DialogHostInput() => File.ReadAllText(Path.Combine(
         AppContext.BaseDirectory, "..", "..", "..", "..",
-        "XuanYu.Editor.UI", "Win", "UiWin.DialogHost.cs"));
+        "XuanYu.Editor.UI", "Win", "UiWin.DialogHost.Input.cs"));
 
     static string ConfirmNewMapMethod(string scene)
     {
@@ -73,14 +73,14 @@ public sealed class UiD5UnsavedDialogTests
     public void Enter_does_not_execute_dangerous_action()
     {
         // Enter 只触发默认按钮（取消）；危险按钮「不保存并新建」不由 Enter 触发
-        var host = DialogHost();
-        Assert.Contains("if (e.Key != Key.Enter || _dialogDefault is null) return;", host);
+        var host = DialogHostInput();
+        Assert.Contains("if (e.Key != Key.Enter || _dialogDefault is null) return false;", host);
         Assert.Contains("CompleteDialog((string)_dialogDefault.Content!)", host);
     }
 
     [Fact]
     public void Escape_equals_cancel()
     {
-        Assert.Contains("if (e.Key == Key.Escape) { CompleteDialog(\"cancel\"); e.Handled = true; return; }", DialogHost());
+        Assert.Contains("if (e.Key == Key.Escape) { CompleteDialog(\"cancel\"); return true; }", DialogHostInput());
     }
 }
