@@ -24,7 +24,7 @@ MAP-DATA-A-R2-F3-A（2026-08-13 01:07:12）：建立 Region 局部候选查询�
 - 生命周期：初始化、新建/替换、Runtime Projection、Create/Delete/Edit、Undo/Redo 均在状态事件发布前同步派生索引。
 - 边界：仅保存 `MapRegionId + AABB`；不生成 `EntityId`，不新增持久化字段，不回退全地图扫描，不修改 Snap 或 UI。
 - 验证：F3-A 针对性测试 12/12；Solution 0 Warning/0 Error；Core.Tests 339/339、World.Tests 1298/1298、WarCore.Tests 22/22；ARCH-A、5+100、版本四处一致与 `git diff --check` PASS。
-- 验收：无 UI 入口，不设真机 IPO；正式自动门禁已通过，状态进入 `READY FOR USER ACCEPTANCE`，待用户确认后关闭。
+- 验收：无 UI 入口，不设真机 IPO；纯内部基础设施由专项测试、完整正式门禁与代码审查自动验收，F3-A 已 `CLOSED`。
 - Hash：本条所在提交。
 - 遗留：Vertex/Edge Snap、精确几何与 PointerMove UI 反馈未实现，R2 保持 OPEN。
 

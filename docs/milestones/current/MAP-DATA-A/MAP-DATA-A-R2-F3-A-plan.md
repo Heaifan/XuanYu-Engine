@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-A · Region Local Spatial Query
 
-状态：`READY FOR USER ACCEPTANCE`；F2 已 CLOSED。本轮只建立 Region 局部候选查询基础设施，不实现 Snap 或 UI。
+状态：`CLOSED`（自动验收）；F2 已 CLOSED。本轮只建立 Region 局部候选查询基础设施，不实现 Snap 或 UI。
 
 ## 冻结目标
 
@@ -26,4 +26,4 @@ Map/Dataset/MapRegion 是几何、属性与持久化唯一真源；`RegionSpatia
 
 ## 收口边界
 
-本轮没有 UI 入口，依据服务层能力验收规则不设置真机 IPO；正式自动门禁通过后 F3-A 可独立 `CLOSED`。该结论不代表 Vertex/Edge Snap、精确几何、PointerMove 反馈或 UI 已实现，R2 继续保持 OPEN。
+本轮没有 UI 入口，依据服务层能力验收规则不设置真机 IPO；专项测试、完整正式门禁与代码审查已完成，F3-A 直接 `CLOSED`。该结论不代表 Vertex/Edge Snap、精确几何、PointerMove 反馈或 UI 已实现，R2 继续保持 OPEN。
