@@ -4,5 +4,6 @@ namespace XuanYu.Editor.Workspace;
 public enum EditorWorkspaceId
 {
     MapEditor,
-    RegionEditor
+    RegionEditor,
+    RoadEditor
 }

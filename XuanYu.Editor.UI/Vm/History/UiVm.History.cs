@@ -10,9 +10,10 @@ public sealed partial class UiVm
 
     void TryUndoFromCommand()
     {
-        if (IsRegionEditMode)
+        if (IsRegionEditMode || IsRoadEditMode)
         {
             if (IsRegionDrawingDraftActive) { UndoRegionDrawingVertex(); return; }
+            if (IsRoadDrawingDraftActive) { UndoRoadDrawingVertex(); return; }
             MapUndo(); return;
         }
         if (_editorState.InteractionSnapshot.Phase != EditorInteractionPhase.Idle)
@@ -39,9 +40,10 @@ public sealed partial class UiVm
 
     void TryRedoFromCommand()
     {
-        if (IsRegionEditMode)
+        if (IsRegionEditMode || IsRoadEditMode)
         {
             if (IsRegionDrawingDraftActive) { RedoRegionDrawingVertex(); return; }
+            if (IsRoadDrawingDraftActive) { RedoRoadDrawingVertex(); return; }
             MapRedo(); return;
         }
         if (_editorState.InteractionSnapshot.Phase != EditorInteractionPhase.Idle)

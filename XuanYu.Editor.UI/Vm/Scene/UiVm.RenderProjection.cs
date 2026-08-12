@@ -12,7 +12,7 @@ public sealed partial class UiVm
         if (_lastViewport is { } viewport && !ViewProjectionState.TryCreate(_camera, viewport, out _))
             return RenderProjectionResult.Fail("相机投影超出当前单精度渲染表示范围。");
         var transform = snapshot.RenderTransform;
-        var vectorOverlay = MapRegionRenderProjection.Build(MapSession.CurrentMap, _regionDrawing);
+        var vectorOverlay = MapRegionRenderProjection.Build(MapSession.CurrentMap, _regionDrawing, _roadDrawing);
         IReadOnlyList<RenderVectorOverlayResource> overlays =
             vectorOverlay.Primitives.Count == 0 ? [] : [vectorOverlay];
         return SceneRenderProjectionAdapter.TryCreate(

@@ -12,12 +12,21 @@ public sealed partial class UiVm
             FooterMessage = "请先选择一个正常且未锁定的区域数据集，并进入区域编辑。";
             return;
         }
+        if (requestedTool == EditorToolId.RoadDrawing && !CanStartRoadDrawing)
+        {
+            FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的道路数据集，并进入道路编辑。"; return;
+        }
         if (IsRegionDrawingTool && requestedTool != EditorToolId.RegionDrawing)
         {
             var hadDraft = _regionDrawing.IsActive;
             _regionDrawing.Cancel();
             RaiseRegionDrawingBindings();
             if (hadDraft) LogRegionDrawingCanceled();
+        }
+        if (IsRoadDrawingTool && requestedTool != EditorToolId.RoadDrawing)
+        {
+            var hadDraft = _roadDrawing.IsActive; _roadDrawing.Cancel(); RaiseRoadDrawingBindings();
+            if (hadDraft) LogRoadDrawingCanceled();
         }
         if (name is "框选")
         {
@@ -64,6 +73,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(IsMoveTool)); OnPropertyChanged(nameof(IsRotateTool));
         OnPropertyChanged(nameof(IsScaleTool)); OnPropertyChanged(nameof(IsSnapEnabled));
         OnPropertyChanged(nameof(IsRegionDrawingTool));
+        OnPropertyChanged(nameof(IsRoadDrawingTool));
         OnPropertyChanged(nameof(SnapMode));
     }
 }

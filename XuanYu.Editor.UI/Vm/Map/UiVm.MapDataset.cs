@@ -68,6 +68,7 @@ public sealed partial class UiVm
     {
         OnPropertyChanged(nameof(DatasetItems));
         OnPropertyChanged(nameof(RegionDatasetItems));
+        OnPropertyChanged(nameof(RoadDatasetItems));
         OnPropertyChanged(nameof(RegionDrawingTargetName));
         OnPropertyChanged(nameof(RegionDrawingTargetId));
         OnPropertyChanged(nameof(RegionDrawingTargetStatus));
@@ -78,6 +79,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(SelectedDataset));
         OnPropertyChanged(nameof(HasSelectedDataset));
         OnPropertyChanged(nameof(CanStartRegionDrawing));
+        OnPropertyChanged(nameof(CanStartRoadDrawing));
         OnPropertyChanged(nameof(CanDeleteLayer));
         OnPropertyChanged(nameof(CanUnregisterDataset));
         OnPropertyChanged(nameof(DatasetLayerEmptyState));

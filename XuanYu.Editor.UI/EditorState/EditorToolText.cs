@@ -10,6 +10,7 @@ public static class EditorToolText
         "旋转" => EditorToolId.Rotate,
         "缩放" => EditorToolId.Scale,
         "区域绘制" => EditorToolId.RegionDrawing,
+        "道路绘制" => EditorToolId.RoadDrawing,
         _ => throw new ArgumentException($"未知工具：{text}")
     };
 
@@ -21,6 +22,7 @@ public static class EditorToolText
         EditorToolId.Rotate => "旋转",
         EditorToolId.Scale => "缩放",
         EditorToolId.RegionDrawing => "区域绘制",
+        EditorToolId.RoadDrawing => "道路绘制",
         _ => throw new ArgumentOutOfRangeException(nameof(tool), tool, "未知工具")
     };
 }

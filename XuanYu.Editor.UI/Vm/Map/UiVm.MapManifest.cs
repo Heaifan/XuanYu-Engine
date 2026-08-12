@@ -43,9 +43,9 @@ public sealed partial class UiVm
             return false;
         }
         var registry = new MapDatasetRegistry(path, result.Value);
-        var documents = await registry.LoadRegionDocumentsAsync();
+        var documents = await registry.LoadFeatureDocumentsAsync();
         if (!documents.Succeeded || documents.Value is null) { FooterMessage = documents.Message; return false; }
-        var runtime = MapDatasetRegionBinding.Build(MapSession.CurrentMap, result.Value, documents.Value);
+        var runtime = MapDatasetFeatureBinding.Build(MapSession.CurrentMap, result.Value, documents.Value);
         if (!runtime.Succeeded || runtime.Value is null) { FooterMessage = runtime.Message; return false; }
         var replaced = MapSession.ReplaceCurrentMap(runtime.Value, true, path);
         if (!replaced.IsSuccess) { FooterMessage = replaced.Error!.Value.Message; return false; }
@@ -61,8 +61,8 @@ public sealed partial class UiVm
     {
         if (_datasetRegistry is not null)
         {
-            var regions = await _datasetRegistry.SaveRegionContentAsync(MapSession.CurrentMap);
-            if (!regions.Succeeded) { FooterMessage = regions.Message; return false; }
+            var features = await _datasetRegistry.SaveFeatureContentAsync(MapSession.CurrentMap);
+            if (!features.Succeeded) { FooterMessage = features.Message; return false; }
         }
         var result = _mapWorkingStorage.HasWorkspace
             ? await _mapWorkingStorage.PromoteAsync(path, CurrentMapManifest)

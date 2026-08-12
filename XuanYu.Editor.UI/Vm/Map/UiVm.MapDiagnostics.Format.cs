@@ -23,6 +23,7 @@ public sealed partial class UiVm
         MapEditReason.LayerVisibilityChanged => "图层可见性",
         MapEditReason.LayerLockChanged => "图层锁定",
         MapEditReason.RuntimeProjection => "数据集运行时投影",
+        MapEditReason.RoadCreated => "创建道路",
         _ => reason.ToString()
     };
 

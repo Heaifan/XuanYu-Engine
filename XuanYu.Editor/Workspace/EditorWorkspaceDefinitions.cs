@@ -21,13 +21,17 @@ public static class EditorWorkspaceDefinitions
         "region-editor-right",
         EditorWorkspaceTool.Select);
 
+    public static EditorWorkspaceDefinition RoadEditor { get; } = new(
+        EditorWorkspaceId.RoadEditor, "道路编辑", "road-editor-toolbar", "road-editor-left", "road-editor-main", "road-editor-right", EditorWorkspaceTool.Select);
+
     public static IReadOnlyList<EditorWorkspaceDefinition> All { get; } =
-        [MapEditor, RegionEditor];
+        [MapEditor, RegionEditor, RoadEditor];
 
     public static EditorWorkspaceDefinition Resolve(EditorWorkspaceId id) => id switch
     {
         EditorWorkspaceId.MapEditor => MapEditor,
         EditorWorkspaceId.RegionEditor => RegionEditor,
+        EditorWorkspaceId.RoadEditor => RoadEditor,
         _ => throw new ArgumentOutOfRangeException(nameof(id), id, "未知编辑器 Workspace。")
     };
 }

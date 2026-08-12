@@ -54,6 +54,7 @@ public sealed partial class UiVm
             ClearLayerSelection();
         var removedIndex = _datasetItems.ToList().FindIndex(item => item.Id == target);
         if (_regionDrawing.IsActive) CancelRegionDrawingFromEscape();
+        if (_roadDrawing.IsActive) CancelRoadDrawingFromEscape();
         var result = await _datasetRegistry.UnregisterAsync(target);
         if (!result.Succeeded) return DatasetFailed(result.Message, false);
         _mapManifestOwner.Modify(_datasetRegistry.CurrentManifest);

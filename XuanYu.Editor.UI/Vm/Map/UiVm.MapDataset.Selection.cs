@@ -13,6 +13,7 @@ public sealed partial class UiVm
         {
             if (value == _datasetSelectedId) return;
             if (_regionDrawing.IsActive) CancelRegionDrawingFromEscape();
+            if (_roadDrawing.IsActive) CancelRoadDrawingFromEscape();
             _datasetSelectedId = value;
             SetDatasetDrawingTarget(value);
             RefreshDatasetSelectionProjection();
@@ -76,6 +77,7 @@ public sealed partial class UiVm
     {
         OnPropertyChanged(nameof(DatasetItems));
         OnPropertyChanged(nameof(RegionDatasetItems));
+        OnPropertyChanged(nameof(RoadDatasetItems));
         OnPropertyChanged(nameof(RegionDrawingTargetName));
         OnPropertyChanged(nameof(RegionDrawingTargetId));
         OnPropertyChanged(nameof(RegionDrawingTargetStatus));
@@ -83,6 +85,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(SelectedDataset));
         OnPropertyChanged(nameof(HasSelectedDataset));
         OnPropertyChanged(nameof(CanStartRegionDrawing));
+        OnPropertyChanged(nameof(CanStartRoadDrawing));
         OnPropertyChanged(nameof(CanUnregisterDataset));
         OnPropertyChanged(nameof(InspectorSelectionTitle));
         OnPropertyChanged(nameof(InspectorSelectionSubtitle));

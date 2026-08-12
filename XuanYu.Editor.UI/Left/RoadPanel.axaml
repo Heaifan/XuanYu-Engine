@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" x:Class="XuanYu.Editor.UI.RoadPanel" x:DataType="local:UiVm">
+  <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Spacing="8" Margin="2,8">
+    <TextBlock Text="道路" Classes="uiSection"/><TextBlock Text="当前绘制目标" Classes="uiSection"/>
+    <TextBlock Text="{Binding RoadDrawingTargetName}" Classes="uiValue"/><TextBlock Text="{Binding RoadDrawingTargetId}" Classes="uiMultiline" TextWrapping="Wrap"/><TextBlock Text="{Binding RoadDrawingTargetStatus}" Classes="uiMultiline" TextWrapping="Wrap"/>
+    <Border Classes="groupSeparator"/><TextBlock Text="绘制" Classes="uiSection"/>
+    <Button Content="绘制道路" Click="RoadDrawing_Click" IsEnabled="{Binding CanRequestRoadDrawing}" AutomationProperties.Name="绘制道路"/>
+    <TextBlock Text="草稿" Classes="uiSection"/><Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="4"><TextBlock Text="节点" Classes="uiLabel"/><TextBlock Grid.Column="1" Text="{Binding RoadDrawingDraftPointCount}" Classes="uiValue"/><TextBlock Grid.Row="1" Text="状态" Classes="uiLabel"/><TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding RoadDrawingDraftStatus}" Classes="uiValue"/></Grid>
+    <UniformGrid Columns="2" ColumnSpacing="6" RowSpacing="6"><Button Content="撤销节点" Click="Undo_Click" IsEnabled="{Binding CanUndoRoadDrawingVertex}"/><Button Content="重做节点" Click="Redo_Click" IsEnabled="{Binding CanRedoRoadDrawingVertex}"/><Button Content="完成道路" Click="Complete_Click" IsEnabled="{Binding CanCompleteRoadDrawing}"/><Button Content="取消绘制" Click="Cancel_Click" IsEnabled="{Binding CanCancelRoadDrawing}"/></UniformGrid>
+    <Border Classes="groupSeparator"/><TextBlock Text="道路内容" Classes="uiSection"/><TextBlock Text="{Binding RoadContentCount}" Classes="uiValue"/>
+  </StackPanel></ScrollViewer>
+</UserControl>

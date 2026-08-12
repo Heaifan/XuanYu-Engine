@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.28.0-rz · MAP-DATA-A-R2 IMPLEMENTED
+MAP-DATA-A-R2 Road Dataset / Polyline（2026-08-12 15:10:00）：在 R1 Closeout 后完成 T2 Road Dataset + Polyline 数据合同与 T3 道路 Authoring → Render → Save/Reload 闭环。
+- 变化：Dataset `0.3.0` 支持 Road/Polyline；保留 `0.1.0` 与 `0.2.0` Region 读取兼容；新增稳定 Road ID、节点约束、Road 工作区、自动 Bootstrap、草稿节点撤销/重做、正式道路 Map History、可见/锁定/顺序投影和保存重载。
+- 验证：待本轮正式串行门禁完成后补录真实构建、测试、架构守卫与 Hash；R2 真机验收使用 `MAP-DATA-A-R2-acceptance.md`，未验收前保持 READY FOR USER ACCEPTANCE。
+- 范围：不包含 Road Graph、寻路、宽度/坡度、Feature Picking、已完成道路顶点编辑或 XYUI 全面改造。
+
 ## v0.2.27.3-fix · MAP-DATA-A-R1 CLOSED
 MAP-DATA-A-R1 Closeout（2026-08-12 14:03:30）：用户最终裁决 R1 真机验收整体 PASS，F1/F2/F3 全部 PASS；本轮仅同步验收状态、关闭记录与 XYUI Backlog，不修改生产代码。
 - 状态：`MAP-DATA-A-R1 CLOSED`；下一阶段正式进入 `MAP-DATA-A-R2 · Road Dataset / Polyline`。

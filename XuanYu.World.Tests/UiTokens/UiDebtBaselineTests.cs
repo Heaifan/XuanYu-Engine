@@ -57,6 +57,6 @@ public sealed class UiDebtBaselineTests
             .Select(f => Path.GetRelativePath(RepoRoot, f).Replace('\\', '/'));
         Assert.DoesNotContain(files, f => f.Contains("XuanYu.Render") || f.Contains("/Design/"));
         Assert.Contains(files, f => f.EndsWith("Ui.axaml"));
-        Assert.Equal(30, files.Count()); // R3 25 + LAYER-A 宿主/Dock + MAP-DOC-A Dataset/Dataset-backed Layer panels + Region 工具架。
+        Assert.Equal(31, files.Count()); // R3 25 + LAYER-A 宿主/Dock + MAP-DOC-A Dataset/Dataset-backed Layer panels + Region/Road 工具架。
     }
 }

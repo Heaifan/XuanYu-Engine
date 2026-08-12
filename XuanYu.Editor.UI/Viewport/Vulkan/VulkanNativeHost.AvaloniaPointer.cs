@@ -15,7 +15,7 @@ public sealed partial class VulkanNativeHost
         {
             e.Pointer.Capture(this); e.Handled = true; return;
         }
-        if (ReportRegionDrawing(vm, point.Position.X, point.Position.Y))
+        if (ReportDrawing(vm, point.Position.X, point.Position.Y))
         {
             e.Handled = true; return;
         }
@@ -32,7 +32,7 @@ public sealed partial class VulkanNativeHost
         var point = e.GetCurrentPoint(this);
         if (DataContext is UiVm vm && TryNavGizmoMove(vm, point.Position.X, point.Position.Y))
             e.Handled = true;
-        else if (DataContext is UiVm vm2 && PreviewRegionDrawing(vm2, point.Position.X, point.Position.Y))
+        else if (DataContext is UiVm vm2 && PreviewDrawing(vm2, point.Position.X, point.Position.Y))
             e.Handled = true;
         else if (DataContext is UiVm vm3 && vm3.PreviewViewportPointer(
             e.Pointer.Id, point.Position.X, point.Position.Y))

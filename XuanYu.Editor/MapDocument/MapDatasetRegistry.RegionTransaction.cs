@@ -6,8 +6,11 @@ namespace XuanYu.Editor.MapDocument;
 public sealed partial class MapDatasetRegistry
 {
     public async Task<MapDocumentResult<string>> SaveRegionContentAsync(MapDefinition map)
+        => await SaveFeatureContentAsync(map, regionOnly: true);
+
+    public async Task<MapDocumentResult<string>> SaveFeatureContentAsync(MapDefinition map, bool regionOnly = false)
     {
-        var candidates = BuildRegionSaveCandidates(map);
+        var candidates = regionOnly ? BuildRegionSaveCandidates(map) : BuildFeatureSaveCandidates(map);
         if (!candidates.Succeeded || candidates.Value is null)
             return MapDocumentResult<string>.Fail(candidates.ErrorCode, candidates.Message, candidates.Stage);
         foreach (var (_, document) in candidates.Value)
@@ -35,7 +38,7 @@ public sealed partial class MapDatasetRegistry
                 if (original is null) TryDelete(path);
                 else await File.WriteAllBytesAsync(path, original);
             }
-            return MapDocumentResult<string>.Fail("RegionSaveFailed", $"Region Dataset 保存失败：{ex.Message}", "Save", ex.Message);
+            return MapDocumentResult<string>.Fail(regionOnly ? "RegionSaveFailed" : "FeatureSaveFailed", $"Dataset 内容保存失败：{ex.Message}", "Save", ex.Message);
         }
         finally { foreach (var (temp, _) in temps) TryDelete(temp); }
     }

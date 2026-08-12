@@ -19,5 +19,6 @@ public enum MapEditReason
     LayerLockChanged = 13, // D4：修改图层锁定状态
     RegionCreated = 14, // R3-D1：正式创建区域
     RegionDeleted = 15, // R3-D1：正式删除区域
-    RuntimeProjection = 16 // MAP-DATA-A-R1：Dataset Manifest 的运行时图层投影
+    RuntimeProjection = 16, // MAP-DATA-A-R1：Dataset Manifest 的运行时图层投影
+    RoadCreated = 17
 }

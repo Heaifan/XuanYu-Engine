@@ -12,4 +12,5 @@ public sealed record MapDefinition(
     MapCoordinateSystem CoordinateSystem,
     MapSurfaceDefinition Surface,
     ImmutableArray<MapLayer> Layers,
-    ImmutableArray<MapRegion> Regions);
+    ImmutableArray<MapRegion> Regions,
+    ImmutableArray<MapRoad> Roads = default);

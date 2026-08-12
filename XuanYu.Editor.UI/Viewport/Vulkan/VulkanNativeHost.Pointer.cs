@@ -12,7 +12,7 @@ public sealed partial class VulkanNativeHost
         var y = message.PhysicalY / dpi;
         if (DataContext is not UiVm vm) return;
         var route = NativePointerRoutePolicy.Resolve(
-            message, _nativeCameraActive, vm.IsRegionDrawingTool && vm.IsRegionDrawingDraftActive,
+            message, _nativeCameraActive, (vm.IsRegionDrawingTool && vm.IsRegionDrawingDraftActive) || (vm.IsRoadDrawingTool && vm.IsRoadDrawingDraftActive),
             _navGizmoPressed);
         if (route == NativePointerRoute.MiddleDown)
             TryBeginNativeCamera(vm, NativePointerId, x, y, message.IsShiftDown);
@@ -23,14 +23,14 @@ public sealed partial class VulkanNativeHost
         }
         else if (route == NativePointerRoute.RegionPreview)
         {
-            PreviewRegionDrawing(vm, x, y);
+            PreviewDrawing(vm, x, y);
             return;
         }
         else if (route == NativePointerRoute.LeftDown)
         {
             // F3-F1：导航 Gizmo 优先（右上角区域）；否则进入变换 Gizmo / Picking。
             if (TryNavGizmoPress(vm, x, y)) return;
-            if (ReportRegionDrawing(vm, x, y)) { ReleaseExpectedCapture(); return; }
+            if (ReportDrawing(vm, x, y)) { ReleaseExpectedCapture(); return; }
             if (TryBeginGizmo(vm, NativePointerId, x, y)) { _nativeDragActive = true; return; }
             ReportPointerPicking(vm, x, y);
             ReleaseExpectedCapture();

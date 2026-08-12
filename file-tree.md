@@ -1437,6 +1437,8 @@
 - `XuanYu.Editor.UI/Left/Left.axaml.cs` — partial class Left
 - `XuanYu.Editor.UI/Left/RegionPanel.axaml` — MAP-DATA-A-R1-F3：Region Workspace 左侧工具架、当前 Dataset、Draft 状态和 Region 内容摘要。
 - `XuanYu.Editor.UI/Left/RegionPanel.axaml.cs` — MAP-DATA-A-R1-F3：Region 工具架按钮事件转发。
+- `XuanYu.Editor.UI/Left/RoadPanel.axaml` — MAP-DATA-A-R2：Road Workspace 左侧工具架与 Polyline 草稿状态。
+- `XuanYu.Editor.UI/Left/RoadPanel.axaml.cs` — MAP-DATA-A-R2：Road 工具架按钮事件转发。
 - `XuanYu.Editor.UI/Main/Main.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Main/Main.axaml.cs` — partial class Main
 - `XuanYu.Editor.UI/NativeHostResizeCoalescer.cs` — / <summary>
@@ -1550,6 +1552,14 @@
 - `XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.Rename.cs` — MAP-DATA-A-R1-F3：图层名称 inline rename 临时状态与可改名守卫。
 - `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为独立 Vector Overlay 资源。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs` — F1-V1/B1：构建共享 BaseHeightMeters 世界锚点的 Fill、屏幕空间 Stroke 与 Marker 几何。
+- `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Road.cs` — MAP-DATA-A-R2：构建 Road 正式内容与 Polyline 草稿矢量几何。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.RoadBootstrap.cs` — MAP-DATA-A-R2：道路 Dataset 自动创建、选择、锁定与无效状态拒绝。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.RoadPresentation.cs` — MAP-DATA-A-R2：道路 Dataset 目标与列表展示投影。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RoadDrawing.Commit.cs` — MAP-DATA-A-R2：道路草稿完成与正式 Map History 提交。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RoadDrawing.History.cs` — MAP-DATA-A-R2：道路草稿节点撤销/重做与工具栏状态。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RoadDrawing.Logging.cs` — MAP-DATA-A-R2：道路绘制低频中文日志。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RoadDrawing.cs` — MAP-DATA-A-R2：道路工作区指针绘制、Enter 完成与 Escape 取消。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RoadTool.cs` — MAP-DATA-A-R2：道路绘制工具状态桥接。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Finalize.cs` — Vector Overlay AABB 与稳定 revision 计算。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayTriangulation.cs` — F1-V1：Ear Clipping 凹多边形三角化。
 - `XuanYu.Editor.UI/Vm/Map/MapRenderSnapshotProjection.cs` — MAP-A-R2-D3/D4：MapDefinition → MapRenderSnapshot 纯投影（渲染唯一输入）。
@@ -1687,6 +1697,10 @@
 - `XuanYu.Editor/MapDocument/MapDatasetDocument.cs` — MAP-DOC-A-R2-C2：`xuanyu-map-dataset` v0.1.0 文档、状态和空 features 领域模型。
 - `XuanYu.Editor/MapDocument/MapDatasetLayerIdProjection.cs` — MAP-DATA-A-R1：DatasetId 到稳定 Region LayerId 的确定性映射。
 - `XuanYu.Editor/MapDocument/MapDatasetRegionBinding.cs` — MAP-DATA-A-R1：Region Dataset 文档 Hydration 到 MapDefinition Layer/Region。
+- `XuanYu.Editor/MapDocument/MapDatasetFeatureBinding.cs` — MAP-DATA-A-R2：Region/Road Dataset 文档 Hydration 到用户图层与内容集合。
+- `XuanYu.Editor/MapDocument/MapDatasetRegistry.FeatureQuery.cs` — MAP-DATA-A-R2：Feature Dataset 加载与 Region/Road 保存候选构建。
+- `XuanYu.Editor/MapDocument/MapRoadDatasetCodec.cs` — MAP-DATA-A-R2：Road Polyline JSON 编解码与约束校验。
+- `XuanYu.Editor/MapDocument/MapRoadDatasetFeature.cs` — MAP-DATA-A-R2：Road Dataset Feature 读取模型。
 - `XuanYu.Editor/MapDocument/MapDatasetRuntimeProjection.cs` — MAP-DATA-A-R1：Manifest Dataset Layer 状态到现有运行时地图的无磁盘投影。
 - `XuanYu.Editor/MapDocument/MapDatasetRegistry.RegionTransaction.cs` — MAP-DATA-A-R1：多 Region Dataset 的暂存、提交与失败恢复保存事务。
 - `XuanYu.Editor/MapDocument/MapRegionDatasetCodec.cs` — MAP-DATA-A-R1：严格 Region Feature JSON 与 MapRegion 的双向编码。
@@ -1712,6 +1726,8 @@
 - `XuanYu.Editor/MapEditing/MapEditReason.cs` — MAP-A-R2-D2/D3-A1/D4：地图编辑原因（内容变更事件携带）。
 - `XuanYu.Editor/MapEditing/MapEditSession.RuntimeProjection.cs` — MAP-DATA-A-R1：不进入 History 的 Dataset Runtime Layer 投影发布。
 - `XuanYu.Editor/MapEditing/MapEditSession.Regions.cs` — MAP-A-R3-D1：区域正式 Create/Delete 入口，复用地图候选校验、单历史条目与 Undo/Redo 快照恢复。
+- `XuanYu.Editor/MapEditing/MapEditSession.Roads.cs` — MAP-DATA-A-R2：道路正式 Create 入口，复用地图候选校验与历史快照。
+- `XuanYu.Editor/MapEditing/RoadDrawingState.cs` — MAP-DATA-A-R2：道路 Polyline 草稿节点与独立撤销/重做栈。
 - `XuanYu.Editor/MapEditing/MapEditSession.ActiveLayer.cs` — MAP-A-R2-D4：活动区域图层（会话临时状态：不进历史、不设 Dirty、不产生内容变更事件）。
 - `XuanYu.Editor/MapEditing/MapEditSession.Commands.cs` — MAP-A-R2-D2：地图基础属性编辑命令（D2 只实现地图级修改，图层/区域命令属 D4/D5）。
 - `XuanYu.Editor/MapEditing/MapEditSession.Commit.cs` — MAP-A-R2-D2：统一提交管线。所有地图内容修改必须经过本方法：
@@ -2174,6 +2190,11 @@
 - `XuanYu.World/Map/MapCoordinateContract.cs` — MapPoint 与世界 XY 的唯一直接映射合同。
 - `XuanYu.World/Map/MapDefaultDefinition.cs` — MAP-A-R2-D4：默认地图工厂。一次性创建完整地图聚合：
 - `XuanYu.World/Map/MapDefinition.cs` — MAP-A-R2-D1-F1：完整地图领域聚合（权威根）。只描述地图内容（纯净、不可变），
+- `XuanYu.World/Map/MapRoad.cs` — MAP-DATA-A-R2：正式道路领域模型。
+- `XuanYu.World/Map/MapRoadDraft.cs` — MAP-DATA-A-R2：未提交 Polyline 草稿模型。
+- `XuanYu.World/Map/MapRoadId.cs` — MAP-DATA-A-R2：32 位十六进制道路稳定标识。
+- `XuanYu.World/Map/MapRoadValidator.cs` — MAP-DATA-A-R2：道路节点、边界、图层引用与唯一 ID 校验。
+- `XuanYu.World.Tests/Map/MapRoadDatasetContractTests.cs` — MAP-DATA-A-R2：Polyline 编解码、版本兼容与领域边界测试。
 - `XuanYu.World/Map/MapDefinitionValidator.cs` — MAP-A-R2-D1-F1：地图聚合严格校验（领域权威层）。
 - `XuanYu.World/Map/MapGeometry.cs` — MAP-A-R1-D2：地图尺寸（米）。width 对应世界 X，depth 对应世界 Y，Z-Up 下高度沿 Z。
 - `XuanYu.World/Map/MapId.cs` — MAP-A-R2-D1/D1-F1：地图稳定唯一标识（领域权威层）。D1 合同冻结格式：32 位十六进制，无前缀。
@@ -2262,6 +2283,8 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F2-acceptance.md` — R1-F2 Polygon 与 Region Dataset 自动 Bootstrap 六项真机 IPO 验收模板。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F3-acceptance.md` — R1-F3 Region Authoring UX 六项真机 IPO 验收模板。
 - `docs/milestones/current/EDITOR-A/XYUI-backlog.md` — 非阻塞 XYUI/UI 债务登记，记录 RegionPanel Binding 文本显示异常。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — MAP-DATA-A-R2：Road Dataset/Polyline 冻结目标、兼容边界与明确不做项。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-acceptance.md` — MAP-DATA-A-R2：R2-M01～R2-M07 真机验收 IPO 清单。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪

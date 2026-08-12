@@ -18,7 +18,7 @@ public partial class UiWin
         if (e.Key == Key.Y && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         { (DataContext as UiVm)?.TryRedoFromShortcut(); e.Handled = true; return; }
         if (await HandleSceneShortcut(e)) return;
-        if (e.Key == Key.Enter && (DataContext as UiVm)?.CommitRegionDrawingFromEnter() == true)
+        if (e.Key == Key.Enter && (DataContext as UiVm)?.CommitDrawingFromEnter() == true)
         { e.Handled = true; return; }
         if (e.Key != Key.Escape) return;
         (DataContext as UiVm)?.CancelInteractionFromEscape(); e.Handled = true;

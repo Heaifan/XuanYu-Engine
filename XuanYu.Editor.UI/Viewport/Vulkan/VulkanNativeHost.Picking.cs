@@ -25,6 +25,12 @@ public sealed partial class VulkanNativeHost
     bool PreviewRegionDrawing(UiVm vm, double x, double y) =>
         vm.RegionDrawingPointerMoved(x, y, CaptureViewportState());
 
+    bool ReportDrawing(UiVm vm, double x, double y) =>
+        vm.IsRoadDrawingTool ? vm.RoadDrawingPointerPressed(x, y, CaptureViewportState()) : ReportRegionDrawing(vm, x, y);
+
+    bool PreviewDrawing(UiVm vm, double x, double y) =>
+        vm.IsRoadDrawingTool ? vm.RoadDrawingPointerMoved(x, y, CaptureViewportState()) : PreviewRegionDrawing(vm, x, y);
+
     ViewportState CaptureViewportState()
     {
         var width = Math.Max(1, (int)Math.Round(Bounds.Width));

@@ -18,7 +18,7 @@ public sealed partial class MapLayerRowViewModel : INotifyPropertyChanged
         _owner = owner;
         LayerId = layer.LayerId;
         Name = layer.DisplayName;
-        KindTagText = layer.Kind == MapLayerKind.Region ? "区域" : "系统";
+        KindTagText = layer.Kind == MapLayerKind.Region && owner.TryGetDatasetTypeForLayer(layer.LayerId, out var type) ? type : layer.Kind == MapLayerKind.Region ? "区域" : "系统";
         IsSystem = MapLayerRules.IsSystemLayer(layer.Kind);
         _isVisible = layer.IsVisible;
         _isLocked = layer.IsLocked;

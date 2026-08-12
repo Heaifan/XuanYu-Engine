@@ -26,6 +26,8 @@ public static class MapDefinitionValidator
         if (!layersResult.Succeeded) return layersResult;
         var regionsResult = MapRegionValidator.Validate(map.Regions, map.Layers, map.SizeMeters);
         if (!regionsResult.Succeeded) return regionsResult;
+        var roadsResult = MapRoadValidator.Validate(map.Roads, map.Layers, map.SizeMeters);
+        if (!roadsResult.Succeeded) return roadsResult;
         return MapValidationResult.Ok();
     }
 
