@@ -18,6 +18,15 @@
 
 ---
 
+## v0.2.28.6-fix · MAP-DATA-A-R2-F2-F2-F1 DATASET-BACKED DELETE ROUTING
+MAP-DATA-A-R2-F2-F2-F1（2026-08-12 22:00:00）：修复 Dataset-backed 图层“删除”绕过 Owned Window、回落主窗口 Overlay/DialogCard 的路由漏分支。
+- 根因：P1 Runtime Probe 记录 `REQUEST_RECEIVED name=解除注册数据集`；同一视觉按钮对 Dataset-backed 图层执行的是解除注册语义，未进入普通删除的独立确认窗。
+- 变化：普通删除与解除注册统一复用 Owned Confirmation Window，保留“删除图层”与“移除区域数据集”的领域文案；两条路径确认前捕获 LayerId，确认后按 ID 重解析。
+- 真机：用户已确认 Dataset-backed 解除注册确认窗可见；完整 F1 仍按更新后的 M01-A/M01-B～M08 清单验收，未 CLOSED。
+- 验证：Solution 0 Warning/0 Error；Core 339/339、World 1286/1286、WarCore 22/22、聚焦 7/7；ARCH-A、5+100、AXAML XML 与 `git diff --check` PASS。
+- Hash：`3d53de0`（功能收口）。
+- 知识沉淀：INC-2026-08-12-001、L-VAL-001、K-DATA-003，增补 K-NATIVE-001 与 K-VAL-002。
+
 ## v0.2.28.5-fix · MAP-DATA-A-R2-F2-F2-F1 VISIBLE DELETE DIALOG
 MAP-DATA-A-R2-F2-F2-F1 Visible Delete Dialog（2026-08-12 21:08:29）：将删除图层确认从主窗口内 Overlay/DialogCard 改为受 Editor 主窗口拥有的独立 Avalonia Window。
 - 根因：Dialog Active 与 Escape 取消均正常，DialogCard 的 Bounds 位于 `VulkanNativeHost : NativeControlHost` 覆盖范围；Native HWND airspace 压住 Avalonia Visual，故主 UI 被遮罩锁定而确认卡不可见、视口仍可输入。

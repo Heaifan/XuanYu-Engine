@@ -4,6 +4,30 @@
 > 事故库记录“发生了什么、为什么、最终如何收口”；可复用结论已提升到对应 `K-*` 条目。
 > 本文件只放具有明确工程复用价值的代表性事故，不追求把每个 Fix 都登记成事故。
 
+## INC-2026-08-12-001 删除图层确认被 Native HWND 覆盖并存在业务路由漏分支
+
+**发生日期**：2026-08-12（UTC+08:00）
+**来源 Milestone**：MAP-DATA-A-R2-F2-F2 / F2-F2-F1
+**最终功能收口 Commit**：`3d53de05c49c958cd1821303f8c6e302c2abe2ef`
+**影响**：点击图层“删除”后主 Avalonia UI 失去输入，而 Vulkan 视口仍可操作；确认界面不可见。
+
+### 已确认事实
+
+1. 主窗口 `DialogCard` 覆盖 `VulkanNativeHost : NativeControlHost` 的 Native HWND 时，Dialog 逻辑 Active、Esc 可取消，但 Native HWND airspace 使卡片不可见。
+2. 普通删除首先改为 Editor Owned Avalonia Window；随后真机仍失败。
+3. P1 Runtime Probe 的决定性证据是 `REQUEST_RECEIVED name=解除注册数据集`：Dataset-backed 图层并不进入普通“删除图层”分支，而是走旧 `ShowDanger()` Overlay/DialogCard。
+
+### 最终修复
+
+- 普通删除与 Dataset-backed 解除注册共用独立 Owned Confirmation Window；
+- 领域语义保持不同：普通 Layer 删除，Dataset 从当前地图解除注册且磁盘文件保留；
+- 两条路径在确认前捕获稳定 `LayerId`，确认后按 ID 重解析目标；
+- 一次性 Runtime Probe 在得到路由证据后删除，未进入正式提交。
+
+**经验提升**：K-NATIVE-001、K-VAL-002、K-DATA-003、L-VAL-001。
+
+---
+
 ## INC-2026-06-24-001 Editor Composition 初始化顺序导致启动崩溃
 
 **发生时间**：2026-06-24 11:45（changelog）

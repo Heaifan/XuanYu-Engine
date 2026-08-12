@@ -2,6 +2,38 @@
 
 > 教训记录“为什么会沿着错误前提持续投入”，并定义何时必须停止局部修补、回到共同依赖与承载架构审查。
 
+## L-VAL-001 修复存在但真机完全不变时先证明运行时实际路由
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：Runtime Probe、Routing、False Assumption、UI、Stop Condition
+**确认时间**：2026-08-12（UTC+08:00）
+**来源**：MAP-DATA-A-R2-F2-F2-F1 · INC-2026-08-12-001
+
+### 已确认事实
+
+Owned Delete Window 已实现且自动验证通过，但真机仍表现为旧 Overlay 不可见。一次性 Probe 只记录 `REQUEST_RECEIVED name=解除注册数据集`，后续 Window 生命周期无事件；最终确认 Dataset-backed 分支绕过了新实现。
+
+### 错误前提与停止条件
+
+错误前提是“同一删除按钮必然进入刚修好的删除代码”。当同一症状两次修复后仍不变，或新代码的可观察行为完全未出现，停止继续调参数，先证明入口、领域路由、具体分支和宿主。
+
+### 正确做法
+
+建立最小一次性探针：`UI Entry → Command → Domain Routing → Concrete Branch → Host → Lifecycle`。取得决定性证据后立即删除探针，再修真实分支。
+
+### 禁止做法
+
+- 第三次猜测 ZIndex、Topmost 或 Bounds；
+- 因类已经存在，就假定用户操作一定实例化它；
+- 将临时 Console Probe 留在正式产品日志。
+
+**关联 Incident**：INC-2026-08-12-001
+**关联 Knowledge**：K-VAL-001、K-VAL-002、K-NATIVE-001
+
+---
+
 ## L-ARCH-001 跨越完整交互链的产品切片必须先拆清 Workspace 边界
 
 **状态**：Active

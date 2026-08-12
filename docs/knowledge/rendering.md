@@ -259,3 +259,11 @@ WM_PAINT Count
 
 **关联 Incident**：INC-2026-08-10-004
 **关联 Knowledge**：K-VAL-001、K-VAL-002
+
+### 2026-08-12 追加：Avalonia Visual 覆盖 Native HWND 同样受 Airspace 限制
+
+逻辑 `ZIndex` 只排序 Avalonia Visual，不能可靠跨越 `NativeControlHost` 的真实 HWND。当确认框、菜单或关键提示必须覆盖 NativeHost 范围时，不得以主窗口 Overlay/Card 或提高 `Panel.ZIndex` 作为正式方案；优先真实 TopLevel / Owned Window，并以真机可见与输入验证。
+
+Layer Delete Confirmation 的 DialogCard 状态正常却被 Vulkan HWND 压住；最终采用 Editor Owned Avalonia Window，并修正 Dataset-backed 路由后真机显示成功。
+
+**关联 Incident**：INC-2026-08-12-001

@@ -1,5 +1,34 @@
 # Data 数据与资产知识
 
+## K-DATA-003 异步危险确认必须捕获稳定对象身份并在确认后重新验证
+
+**状态**：Active
+**优先级**：P0
+**证据等级**：E1
+**标签**：Async、Confirmation、Stable Identity、LayerId、TOCTOU、Dangerous Operation
+**适用范围**：删除、解除注册、覆盖、移动、重命名及所有“请求确认 → await → 修改对象”的操作。
+**首次确认**：2026-08-12（UTC+08:00）
+**来源**：MAP-DATA-A-R2-F2-F2-F1 · `3d53de05c49c958cd1821303f8c6e302c2abe2ef`
+
+### 问题与规则
+
+`await` 确认期间 UI Selection 可以变化，因此 `SelectedLayer` 不是执行目标的稳定身份。请求确认时立即捕获 `TargetId`；确认后按该 ID 重新验证对象和归属，再执行或明确拒绝。Cancel 不得修改领域状态。
+
+### 禁止做法
+
+- await 后重新读取 CurrentSelection 并删除；
+- 用“Modal 理论上禁止选择变化”代替身份安全；
+- 展示对象 A，却对当前对象 B 执行操作。
+
+### 验证方法
+
+覆盖确认后选择改变、目标消失、Cancel、Confirm、连续危险操作，以及展示 ID 与最终执行 ID 一致。
+
+**关联 Incident**：INC-2026-08-12-001
+**关联 Knowledge**：K-DATA-001、K-DATA-002
+
+---
+
 ## K-DATA-001 覆盖保存必须采用可回滚 Staging 事务
 
 **状态**：Active

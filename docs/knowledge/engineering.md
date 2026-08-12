@@ -148,6 +148,15 @@ L1 Static Contract
 **关联 Incident**：INC-2026-08-09-001、INC-2026-08-10-004
 **关联 Knowledge**：K-VAL-001、K-UI-001、K-NATIVE-001
 
+### 2026-08-12 追加：同一视觉入口必须覆盖真实业务路由分支
+
+同一按钮不代表同一运行路径。条件路由的验收矩阵必须按 `Visual Entry × Domain Branch × Runtime Host` 展开；普通 Layer 删除 PASS 不能推导 Dataset-backed 解除注册也使用同一确认窗口。若自动测试证明新实现存在、真机却毫无变化，先确认用户操作是否实际进入该实现。
+
+Runtime Probe 应只记录入口、路由、分支、宿主和生命周期等决定性状态；使命完成后删除，不进入正式产品日志。
+
+**关联 Incident**：INC-2026-08-12-001
+**关联 Lesson**：L-VAL-001
+
 ---
 
 ## K-GOV-001 历史唯一身份以 Commit Hash 为准

@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F2-F2-F1 · Visible Delete Dialog
 
-状态：READY FOR USER ACCEPTANCE；F2-F2 保持 USER ACCEPTANCE FAILED，F3 Snap 冻结。
+状态：READY FOR USER ACCEPTANCE；Dataset-backed 路由漏分支已修复并真机确认可见，F2-F2 保持 USER ACCEPTANCE FAILED，F3 Snap 冻结。
 
 ## T1 根因结论
 
@@ -8,7 +8,9 @@
 
 ## T2 最小修复
 
-只将“删除图层”改为 Editor Owner 的独立 Avalonia Window，使用 `ShowDialog(owner)` 管理模态关系。取消、Esc、Enter、关闭 X 统一返回 false；完成幂等。确认前不删除；确认后按打开前捕获的稳定 LayerId 重新验证并删除，随后由既有投影同步列表、当前图层、检查器与区域编辑上下文。
+普通“删除图层”和 Dataset-backed“解除注册数据集”都改为 Editor Owner 的独立 Avalonia Window，使用 `ShowDialog(owner)` 管理模态关系。两者保留不同标题、说明和确认按钮；解除注册明确保留磁盘 Dataset 文件。取消、Esc、Enter、关闭 X 统一返回 false；确认前捕获稳定 LayerId，确认后按 ID 重新验证并执行。
+
+P1 Probe 证明 Dataset-backed 分支曾绕过新窗口并回落旧 `ShowDanger()`；Probe 已删除。用户已真机确认该分支现在可见，剩余 F1 项仍须按验收表逐项执行。
 
 业务实现文件共 6 个，用户已批准这是独立 Window AXAML/code-behind 所必需的一次性例外。不得增加第 7 个业务文件，不得把其他 Dialog 迁移为 Window，不得回退为 Overlay + ZIndex 覆盖 NativeHost。
 
