@@ -1,6 +1,6 @@
 # MAP-DATA-A-R1 真机验收
 
-状态：`USER ACCEPTANCE FAILED → R1-F2 IMPLEMENTING`。F1 入口问题已进入修复后的 F2 链路；R1-M02～M07 继续暂停。本轮 F2 真机模板见 `MAP-DATA-A-R1-F2-acceptance.md`。
+状态：`USER ACCEPTANCE FAILED → R1-F3 IMPLEMENTING`。F2 几何与 Bootstrap 已进入 F3 区域工作区链路；R1-M02～M07 继续暂停。本轮 F3 真机模板见 `MAP-DATA-A-R1-F3-acceptance.md`。
 
 | 序号 | 路径 | 输入 I | 过程 P | 输出 O |
 |---|---|---|---|---|

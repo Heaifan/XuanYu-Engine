@@ -77,6 +77,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(DatasetItems));
         OnPropertyChanged(nameof(RegionDatasetItems));
         OnPropertyChanged(nameof(RegionDrawingTargetName));
+        OnPropertyChanged(nameof(RegionDrawingTargetId));
         OnPropertyChanged(nameof(RegionDrawingTargetStatus));
         OnPropertyChanged(nameof(DatasetLayerItems));
         OnPropertyChanged(nameof(SelectedDataset));

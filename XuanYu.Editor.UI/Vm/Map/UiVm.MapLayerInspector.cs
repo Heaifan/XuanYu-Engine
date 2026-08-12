@@ -50,14 +50,22 @@ public sealed partial class UiVm
     }
 
     // 提交检查器名称（Enter/失焦）：从输入框文本走会话命令，成功后列表/日志同步。
-    public void CommitLayerRename(string text)
+    public void CommitLayerRename(string text) => _ = CommitLayerRenameAsync(text);
+
+    public async Task<bool> CommitLayerRenameAsync(string text)
     {
-        if (SelectedLayer is not { } layer) return;
+        if (SelectedLayer is not { } layer) return false;
+        if (TryGetDatasetIdForLayer(layer.LayerId, out var datasetId))
+        {
+            SelectDataset(datasetId);
+            return await RenameSelectedDatasetAsync(text);
+        }
         var result = MapSession.RenameLayer(layer.LayerId, text);
-        if (!result.IsSuccess) { FailLayerEdit("图层重命名", result); return; }
+        if (!result.IsSuccess) { FailLayerEdit("图层重命名", result); return false; }
         var after = MapSession.CurrentMap.Layers.First(l => l.LayerId == layer.LayerId).DisplayName;
         LogLayer($"重命名图层：{layer.Name} → {after}");
         FooterMessage = $"图层已重命名：{after}。";
         LayerInspectorNameText = after;
+        return true;
     }
 }

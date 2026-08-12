@@ -56,7 +56,8 @@
             <Border Grid.Column="2" Classes="kindTagSystem" IsVisible="{Binding IsSystem}">
               <TextBlock Classes="kindTagSystemText" Text="系统"/>
             </Border>
-            <TextBlock Grid.Column="3" Classes="layerName" Text="{Binding Name}" ToolTip.Tip="{Binding Name}"/>
+            <TextBlock Grid.Column="3" Classes="layerName" Text="{Binding Name}" ToolTip.Tip="{Binding Name}" IsVisible="{Binding !IsRenaming}" DoubleTapped="LayerName_DoubleTapped"/>
+            <TextBox Grid.Column="3" Text="{Binding RenameText, Mode=TwoWay}" IsVisible="{Binding IsRenaming}" KeyDown="LayerRename_KeyDown" LostFocus="LayerRename_LostFocus"/>
             <ToggleButton Grid.Column="4" Classes="layerSwitch" IsChecked="{Binding IsVisible, Mode=TwoWay}" ToolTip.Tip="显示/隐藏" AutomationProperties.Name="显示或隐藏图层">
               <StackPanel>
                 <Path Classes="layerIcon" Data="{StaticResource VisibleIcon}" IsVisible="{Binding IsVisible}"/>

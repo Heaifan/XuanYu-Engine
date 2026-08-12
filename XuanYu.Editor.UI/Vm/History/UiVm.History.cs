@@ -10,6 +10,11 @@ public sealed partial class UiVm
 
     void TryUndoFromCommand()
     {
+        if (IsRegionEditMode)
+        {
+            if (IsRegionDrawingDraftActive) { UndoRegionDrawingVertex(); return; }
+            MapUndo(); return;
+        }
         if (_editorState.InteractionSnapshot.Phase != EditorInteractionPhase.Idle)
         {
             FooterMessage = "拖动中不执行撤销；请先取消或提交当前会话。";
@@ -34,6 +39,11 @@ public sealed partial class UiVm
 
     void TryRedoFromCommand()
     {
+        if (IsRegionEditMode)
+        {
+            if (IsRegionDrawingDraftActive) { RedoRegionDrawingVertex(); return; }
+            MapRedo(); return;
+        }
         if (_editorState.InteractionSnapshot.Phase != EditorInteractionPhase.Idle)
         {
             FooterMessage = "拖动中不执行重做；请先取消或提交当前会话。";

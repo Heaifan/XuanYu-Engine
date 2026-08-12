@@ -43,12 +43,15 @@ public sealed partial class UiVm
         }
     }
 
-    public async Task<bool> UnregisterDatasetAsync()
+    public async Task<bool> UnregisterDatasetAsync(string? requestedId = null)
     {
         if (_datasetRegistry is null) return DatasetFailed("当前没有已打开的地图 Manifest。", false);
-        var targetId = DatasetSelectedId;
+        var targetId = requestedId ?? DatasetSelectedId;
         if (string.IsNullOrWhiteSpace(targetId)) return DatasetFailed("请先选择要解除注册的数据集。", false);
         var target = targetId!;
+        if (TryGetDatasetIdForLayer(SelectedLayer?.LayerId ?? default, out var selectedLayerDatasetId) &&
+            string.Equals(selectedLayerDatasetId, target, StringComparison.OrdinalIgnoreCase))
+            ClearLayerSelection();
         var removedIndex = _datasetItems.ToList().FindIndex(item => item.Id == target);
         if (_regionDrawing.IsActive) CancelRegionDrawingFromEscape();
         var result = await _datasetRegistry.UnregisterAsync(target);

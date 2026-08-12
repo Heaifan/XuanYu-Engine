@@ -11,15 +11,15 @@ public partial class LayerInspectorPanel : UserControl
         InitializeComponent();
     }
 
-    void NameBox_LostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => CommitName();
+    async void NameBox_LostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => await CommitNameAsync();
 
     void NameBox_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Enter) CommitName();
+        if (e.Key == Key.Enter) { _ = CommitNameAsync(); e.Handled = true; }
     }
 
-    void CommitName()
+    async Task CommitNameAsync()
     {
-        if (DataContext is UiVm vm) vm.CommitLayerRename(vm.LayerInspectorNameText);
+        if (DataContext is UiVm vm) await vm.CommitLayerRenameAsync(vm.LayerInspectorNameText);
     }
 }

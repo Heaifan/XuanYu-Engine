@@ -16,6 +16,7 @@ public sealed partial class UiVm
         {
             var hadDraft = _regionDrawing.IsActive;
             _regionDrawing.Cancel();
+            RaiseRegionDrawingBindings();
             if (hadDraft) LogRegionDrawingCanceled();
         }
         if (name is "框选")

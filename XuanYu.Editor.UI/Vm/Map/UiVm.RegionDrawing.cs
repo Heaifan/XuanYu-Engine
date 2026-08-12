@@ -15,6 +15,9 @@ public sealed partial class UiVm
     public bool IsRegionDrawingDraftActive => _regionDrawing.IsActive;
     public bool IsRegionDrawingCloseCandidate => _regionDrawing.IsCloseCandidate;
     public int RegionDrawingDraftVertexCount => _regionDrawing.Draft?.Vertices.Length ?? 0;
+    public string RegionDrawingDraftStatus => !IsRegionDrawingDraftActive ? "尚未开始绘制"
+        : RegionDrawingDraftVertexCount < 3 ? "至少需要 3 个顶点" : "可以闭合";
+    public int RegionContentCount => MapSession.CurrentMap.Regions.Length;
 
     public bool RegionDrawingPointerPressed(double x, double y, ViewportState viewport)
     {
@@ -34,10 +37,12 @@ public sealed partial class UiVm
             if (layer is not { Kind: MapLayerKind.Region }) return true;
             _regionDrawing.Start(layer.LayerId, "未命名区域", MapRegionKind.Generic);
             LogRegionDrawingStarted();
+            RaiseRegionDrawingBindings();
         }
         if (_regionDrawing.IsCloseCandidate)
             return CloseRegionDraft();
         _regionDrawing.AddVertex(point);
+        RaiseRegionDrawingBindings();
         PublishSceneRenderSnapshot();
         return true;
     }
@@ -63,6 +68,7 @@ public sealed partial class UiVm
         }
         var distance = Math.Sqrt(Math.Pow(firstScreen.X - x, 2) + Math.Pow(firstScreen.Y - y, 2));
         _regionDrawing.UpdatePointer(point, distance <= ScaleGizmoScreenSize.CenterHitRadiusDip);
+        RaiseRegionDrawingBindings();
         PublishSceneRenderSnapshot();
         return true;
     }
@@ -71,6 +77,7 @@ public sealed partial class UiVm
     {
         if (!_regionDrawing.IsActive && !IsRegionDrawingTool) return false;
         _regionDrawing.Cancel();
+        RaiseRegionDrawingBindings();
         if (IsRegionDrawingTool) SelectTool("选择");
         FooterMessage = "已取消区域绘制";
         FooterState = "状态：就绪";

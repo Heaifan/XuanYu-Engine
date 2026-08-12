@@ -38,5 +38,8 @@ public sealed partial class UiVm
     void ExecutePendingDangerous(string name)
     {
         if (name == "删除图层") DeleteLayer();
+        if (name == "解除注册数据集" && SelectedLayer is { } layer &&
+            TryGetDatasetIdForLayer(layer.LayerId, out var id))
+            _ = UnregisterDatasetAsync(id);
     }
 }

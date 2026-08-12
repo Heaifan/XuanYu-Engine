@@ -19,9 +19,6 @@ public sealed partial class UiVm
     public IReadOnlyList<MapDatasetTypeOption> DatasetTypeOptions => MapDatasetTypePresentation.Options;
     public IReadOnlyList<MapDatasetRow> DatasetItems => _datasetItems;
     public IReadOnlyList<MapDatasetRow> RegionDatasetItems => _datasetItems.Where(item => item.Type == "区域").ToArray();
-    public string RegionDrawingTargetName => RegionDatasetItems.FirstOrDefault()?.Name ?? "当前没有区域数据集";
-    public string RegionDrawingTargetStatus => RegionDatasetItems.FirstOrDefault() is { } item
-        ? $"区域数据集 · {item.Status}" : "点击“绘制区域”将自动创建";
     public bool IsDatasetEmpty => _datasetItems.Count == 0;
     public string DatasetCreateType
     {
@@ -72,6 +69,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(DatasetItems));
         OnPropertyChanged(nameof(RegionDatasetItems));
         OnPropertyChanged(nameof(RegionDrawingTargetName));
+        OnPropertyChanged(nameof(RegionDrawingTargetId));
         OnPropertyChanged(nameof(RegionDrawingTargetStatus));
         OnPropertyChanged(nameof(DatasetLayerItems));
         OnPropertyChanged(nameof(IsDatasetEmpty));
@@ -80,6 +78,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(SelectedDataset));
         OnPropertyChanged(nameof(HasSelectedDataset));
         OnPropertyChanged(nameof(CanStartRegionDrawing));
+        OnPropertyChanged(nameof(CanDeleteLayer));
         OnPropertyChanged(nameof(CanUnregisterDataset));
         OnPropertyChanged(nameof(DatasetLayerEmptyState));
         OnPropertyChanged(nameof(InspectorSelectionTitle));

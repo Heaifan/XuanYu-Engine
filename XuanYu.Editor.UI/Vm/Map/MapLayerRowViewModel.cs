@@ -6,7 +6,7 @@ namespace XuanYu.Editor.UI;
 
 // MAP-A-R2-D4：图层行显示模型（面板行绑定；写操作转发会话命令，不直接持有领域状态）。
 // 名称/类型/系统标识为行创建时快照；显隐/锁定写回会话（成功由 ContentChanged 重建列表）。
-public sealed class MapLayerRowViewModel : INotifyPropertyChanged
+public sealed partial class MapLayerRowViewModel : INotifyPropertyChanged
 {
     readonly UiVm _owner;
     bool _isVisible;

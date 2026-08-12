@@ -19,7 +19,7 @@ public sealed partial class UiVm
             LogRegionDrawingError(FooterMessage);
             return true;
         }
-        _regionDrawing.Cancel(); FooterState = "状态：就绪"; FooterMessage = "区域已创建";
+        _regionDrawing.Cancel(); RaiseRegionDrawingBindings(); FooterState = "状态：就绪"; FooterMessage = "区域已创建";
         LogRegionDrawingCreated();
         PublishSceneRenderSnapshot(); return true;
     }

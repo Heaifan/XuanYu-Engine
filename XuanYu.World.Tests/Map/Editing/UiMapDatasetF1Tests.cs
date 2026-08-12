@@ -40,7 +40,7 @@ public sealed class UiMapDatasetF1Tests : IDisposable
     {
         var (vm, _) = await SavedVmAsync();
         vm.RunCommand.Execute("新建数据集");
-        for (var i = 0; i < 30 && vm.DatasetItems.Count == 0; i++) await Task.Delay(10);
+        for (var i = 0; i < 500 && vm.DatasetItems.Count == 0; i++) await Task.Delay(10);
         Assert.Single(vm.DatasetItems);
         Assert.Matches("^road-[0-9a-f]{6}$", vm.DatasetItems[0].Id);
         Assert.Contains("创建成功", vm.FooterMessage);

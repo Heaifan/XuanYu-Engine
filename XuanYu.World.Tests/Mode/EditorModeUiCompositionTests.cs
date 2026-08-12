@@ -51,10 +51,14 @@ public sealed class EditorModeUiCompositionTests
     public void Region_context_shows_the_current_drawing_target_and_old_right_map_tab_is_retired()
     {
         var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
+        var region = Read("XuanYu.Editor.UI", "Left", "RegionPanel.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml");
-        Assert.Contains("当前绘制目标", left);
-        Assert.Contains("RegionDrawingTargetName", left);
-        Assert.Contains("RegionDrawingTargetStatus", left);
+        Assert.Contains("RegionPanel", left);
+        Assert.Contains("当前绘制目标", region);
+        Assert.Contains("RegionDrawingTargetName", region);
+        Assert.Contains("RegionDrawingTargetStatus", region);
+        Assert.Contains("CanUndoRegionDrawingVertex", region);
+        Assert.DoesNotContain("Text=\"绘制区域\"", Read("XuanYu.Editor.UI", "Top", "Top.axaml"));
         Assert.DoesNotContain("Header=\"地图编辑器\"", right);
     }
 

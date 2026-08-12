@@ -18,6 +18,15 @@
 
 ---
 
+## v0.2.27.3-fix
+MAP-DATA-A-R1-F3 Region Authoring UX Consolidation（2026-08-12 12:21:37）：将区域专属工具、草稿状态和草稿历史收回 Region Workspace，并接通 Dataset-backed Layer 改名与安全移除，R1 保持 OPEN。
+- 变化：左侧新增 Region 工具架，提供当前 Dataset、绘制区域、草稿顶点状态、撤销/重做顶点、完成/取消绘制和区域数量；顶部移除区域专属绘制入口。Draft Undo/Redo 与 Ctrl+Z/Y 按“活动 Draft 优先、无 Draft 走 Map History”路由，完成区域仍只产生一个正式 Map History Entry。
+- 变化：Region Dataset Layer 双击名称进入 inline rename，名称经 `RenameDatasetAsync` 同步 Manifest、Runtime Layer、Dataset 面板和 Inspector；删除按钮对 Dataset-backed Region Layer 改为确认后解除注册，Dataset 文件保留。
+- 测试：Draft 历史、快捷键层级、Region 工具架、Layer 改名/移除与既有回归；World.Tests `1262/1262 PASS`，构建 `0 Warning / 0 Error`。
+- Hash：待本轮提交。
+- 范围：未做已完成 Region 顶点编辑、Picking、布尔运算、多选、Road 或 Feature Schema/Renderer 扩展。
+- 遗留：F3-M01～F3-M06 真机验收待用户执行；R1 未全量验收不得 CLOSED，不得启动 R2。
+
 ## v0.2.27.2-fix
 MAP-DATA-A-R1-F2 Polygon & Auto Bootstrap（2026-08-12 11:21:18）：修复 Region 多边形相交判定，并把“绘制区域”正式入口接入 Region Dataset 自动 Bootstrap，R1 保持 OPEN，等待 F2 真机验收。
 - 变化：`MapRegionIntersection` 改为严格异号判定；区域工具栏改为异步 Click 入口；新增 `BeginRegionDrawingAsync`、`CanRequestRegionDrawing`、Region Dataset 自动创建/选择/活动图层投影；锁定、无效和并发重复请求 fail-closed；区域左栏显示当前绘制目标。

@@ -13,9 +13,14 @@ public sealed partial class UiVm
     public bool CanReorderLayers => UserLayerCount > 1;
     public bool IsLayerReorderHintVisible => !CanReorderLayers;
 
-    public bool CanDeleteLayer =>
-        SelectedLayer is { } layer &&
-        MapLayerRules.CanRemove(MapSession.CurrentMap.Layers, layer.LayerId) is null;
+    public bool CanDeleteLayer => SelectedLayer is { } layer && CanDeleteLayerInternal(layer);
+
+    bool CanDeleteLayerInternal(MapLayerRowViewModel layer)
+    {
+        if (TryGetDatasetIdForLayer(layer.LayerId, out var id))
+            return _datasetItems.FirstOrDefault(item => item.Id == id) is { IsLocked: false };
+        return MapLayerRules.CanRemove(MapSession.CurrentMap.Layers, layer.LayerId) is null;
+    }
 
     bool CanMoveSelected(bool up)
     {

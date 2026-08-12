@@ -384,6 +384,8 @@
 │  │  ├─ InlineRenameActivation.cs
 │  │  ├─ Left.EntityCommands.cs
 │  │  ├─ Left.Styles.axaml
+│  │  ├─ RegionPanel.axaml
+│  │  ├─ RegionPanel.axaml.cs
 │  │  ├─ Left.axaml
 │  │  └─ Left.axaml.cs
 │  ├─ Main/
@@ -401,6 +403,7 @@
 │  │  ├─ LayerInspectorPanel.axaml
 │  │  ├─ LayerInspectorPanel.axaml.cs
 │  │  ├─ LayerPanel.DragDrop.cs
+│  │  ├─ LayerPanel.Rename.cs
 │  │  ├─ LayerPanel.axaml
 │  │  ├─ LayerPanel.axaml.cs
 │  │  ├─ DatasetPanel.axaml
@@ -502,6 +505,7 @@
 │  │  │  └─ UiVm.Logging.cs
 │  │  ├─ Map/
 │  │  │  ├─ MapLayerRowViewModel.cs
+│  │  │  ├─ MapLayerRowViewModel.Rename.cs
 │  │  │  ├─ MapRegionRenderProjection.cs
 │  │  │  ├─ MapRenderSnapshotProjection.cs
 │  │  │  ├─ MapVectorOverlayBuilder.Finalize.cs
@@ -511,10 +515,14 @@
 │  │  │  ├─ UiVm.RegionDrawing.Input.cs
 │  │  │  ├─ UiVm.RegionDrawing.Logging.cs
 │  │  │  ├─ UiVm.RegionDrawing.cs
+│  │  │  ├─ UiVm.RegionDrawing.DraftHistory.cs
 │  │  │  ├─ UiVm.MapCommandRouting.cs
+│  │  │  ├─ UiVm.MapCommandRouting.Danger.cs
 │  │  │  ├─ UiVm.MapDataset.Commands.cs
 │  │  │  ├─ UiVm.MapDataset.DrawingBootstrap.cs
 │  │  │  ├─ UiVm.MapDataset.DrawingTarget.cs
+│  │  │  ├─ UiVm.MapDataset.LayerBridge.cs
+│  │  │  ├─ UiVm.MapDataset.RegionPresentation.cs
 │  │  │  ├─ UiVm.MapDataset.Logging.cs
 │  │  │  ├─ UiVm.MapDataset.Routing.cs
 │  │  │  ├─ UiVm.MapDataset.cs
@@ -1205,7 +1213,8 @@
 │  │     └─ MAP-DATA-A/
 │  │        ├─ MAP-DATA-A-R1-acceptance.md
 │  │        ├─ MAP-DATA-A-R1-F1-acceptance.md
-│  │        └─ MAP-DATA-A-R1-F2-acceptance.md
+│  │        ├─ MAP-DATA-A-R1-F2-acceptance.md
+│  │        └─ MAP-DATA-A-R1-F3-acceptance.md
 │  └─ ui/
 │     ├─ 玄域引擎_UI真机基线清单.md
 │     ├─ 玄域引擎_UI规范_1.0.md
@@ -1423,6 +1432,8 @@
 - `XuanYu.Editor.UI/Left/Left.Styles.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Left/Left.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Left/Left.axaml.cs` — partial class Left
+- `XuanYu.Editor.UI/Left/RegionPanel.axaml` — MAP-DATA-A-R1-F3：Region Workspace 左侧工具架、当前 Dataset、Draft 状态和 Region 内容摘要。
+- `XuanYu.Editor.UI/Left/RegionPanel.axaml.cs` — MAP-DATA-A-R1-F3：Region 工具架按钮事件转发。
 - `XuanYu.Editor.UI/Main/Main.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Main/Main.axaml.cs` — partial class Main
 - `XuanYu.Editor.UI/NativeHostResizeCoalescer.cs` — / <summary>
@@ -1436,6 +1447,7 @@
 - `XuanYu.Editor.UI/Right/EditorRightTabs.axaml.cs` — 复用页签宿主的 TopTabStripController 接线。
 - `XuanYu.Editor.UI/Right/LayerInspectorPanel.axaml.cs` — MAP-A-R2-D4：图层检查器（名称 Enter/失焦提交；开关/按钮走绑定，无额外逻辑）。
 - `XuanYu.Editor.UI/Right/LayerPanel.DragDrop.cs` — MAP-A-R2-D4-F3：区域图层拖动（code-behind 只处理指针/Drop；手柄按下 ≥4 DIP 启动；仅区域行接受；一次交给 UiVm）。
+- `XuanYu.Editor.UI/Right/LayerPanel.Rename.cs` — MAP-DATA-A-R1-F3：区域图层双击 inline rename 的 Enter/Esc/失焦提交路由。
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Right/LayerPanel.States.axaml` — 图层行选中、可见与锁定状态的最终渲染样式。
 - `XuanYu.Editor.UI/Right/LayerPanel.axaml.cs` — MAP-A-R2-D4：图层面板（左侧"图层"页签内容，纯绑定；无 code-behind 逻辑）。
@@ -1532,6 +1544,7 @@
 - `XuanYu.Editor.UI/Vm/Logging/UiText.cs` — static class UiText
 - `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.cs` — MAP-A-R2-D4：图层行显示模型（面板行绑定；写操作转发会话命令，不直接持有领域状态）。
+- `XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.Rename.cs` — MAP-DATA-A-R1-F3：图层名称 inline rename 临时状态与可改名守卫。
 - `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为独立 Vector Overlay 资源。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs` — F1-V1/B1：构建共享 BaseHeightMeters 世界锚点的 Fill、屏幕空间 Stroke 与 Marker 几何。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Finalize.cs` — Vector Overlay AABB 与稳定 revision 计算。
@@ -1542,6 +1555,9 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Selection.cs` — MAP-DOC-A-R2-F3：SelectedDatasetId 单一选择合同及 Dataset-backed Layer 投影。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingTarget.cs` — MAP-DATA-A-R1-F1：Region Drawing 可用性守卫、Dataset 绘制目标与草稿取消保护。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingBootstrap.cs` — MAP-DATA-A-R1-F2：Region Drawing 异步入口、Region Dataset 自动创建、选择投影、锁定/无效拒绝与并发防重入。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.LayerBridge.cs` — MAP-DATA-A-R1-F3：Dataset-backed Region Layer 与 DatasetId 的单一映射桥接。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.RegionPresentation.cs` — MAP-DATA-A-R1-F3：Region Workspace 当前 Dataset 展示字段。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.DraftHistory.cs` — MAP-DATA-A-R1-F3：Draft 顶点撤销/重做、完成/取消命令和状态通知。
 - `XuanYu.Editor.UI/Vm/Map/MapDatasetTypePresentation.cs` — MAP-DOC-A-R2-F2：六类 Dataset 内部 type 到中文 UI 展示值的映射。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Commands.cs` — MAP-DOC-A-R2-F3：创建自动选中、按选择解除注册与选择迁移。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Logging.cs` — MAP-DOC-A-R2-F1：Dataset Create/Register 最终成功/失败用户可见日志。
@@ -1966,6 +1982,7 @@
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionToolInvalidTests.cs` — MAP-DATA-A-R1-F2：无效非区域与损坏 Region Dataset 的工具启用拒绝回归。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionBootstrapTests.cs` — MAP-DATA-A-R1-F2：Region Dataset 自动创建、双击防重复与锁定拒绝回归。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionBootstrapPersistenceTests.cs` — MAP-DATA-A-R1-F2：自动创建 Dataset、四点 Region 保存与重载回归。
+- `XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionLayerF3Tests.cs` — MAP-DATA-A-R1-F3：Dataset-backed Region Layer 改名同步与解除注册保留文件回归。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetLayerR3Tests.cs` — Dataset Layer 显隐、锁定、顺序、选择稳定和保存重开测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF1AcceptanceTests.cs` — Dataset Name、左侧满宽和拖拽投影稳定性回归测试。
 - `XuanYu.World.Tests/Map/MapDatasetLayerStateTests.cs` — Dataset Layer 旧 Manifest 兼容、状态校验、Promotion 与底层锁定保护测试。
@@ -2098,6 +2115,7 @@
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeRiskTests.cs` — Top/Foot Fluent 状态覆盖风险运行时门禁。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1ActivationRuntimeTests.cs` — MAP-DATA-A-R1-F1/F2：Headless Top“绘制区域”真实 Click 路径与首个 Draft 顶点运行时门禁。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF2PolygonTests.cs` — MAP-DATA-A-R1-F2：真实四点地面命中、Draft 闭合与四顶点 Region 运行时门禁。
+- `XuanYu.World.Tests/MapEditing/RegionDrawingF3HistoryTests.cs` — MAP-DATA-A-R1-F3：Draft 顶点撤销/重做、分支清空与快捷键历史层级回归。
 - `XuanYu.World.Tests/RegionDrawingTestVm.cs` — Region Drawing 回归测试的合法 Dataset/Workspace 上下文构造辅助。
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeCollection.cs` — Headless UI 测试串行集合定义。
 - `XuanYu.World.Tests/UiRuntime/UiTestAppBuilder.cs` — 正式 Editor.UI App 的 Headless AppBuilder 配置。
@@ -2238,6 +2256,7 @@
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-plan.md` — Dataset Layer Editing 的冻结范围与验收边界。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F1-acceptance.md` — R1-F1 Region Drawing Tool Activation 三项真机 IPO 验收模板。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F2-acceptance.md` — R1-F2 Polygon 与 Region Dataset 自动 Bootstrap 六项真机 IPO 验收模板。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F3-acceptance.md` — R1-F3 Region Authoring UX 六项真机 IPO 验收模板。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪

@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             x:Class="XuanYu.Editor.UI.RegionPanel"
+             x:DataType="local:UiVm">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="8" Margin="2,8">
+      <TextBlock Text="区域" Classes="uiSection"/>
+      <TextBlock Text="当前绘制目标" Classes="uiSection"/>
+      <TextBlock Text="{Binding RegionDrawingTargetName}" Classes="uiValue"/>
+      <TextBlock Text="{Binding RegionDrawingTargetId}" Classes="uiMultiline" TextWrapping="Wrap"/>
+      <TextBlock Text="{Binding RegionDrawingTargetStatus}" Classes="uiMultiline" TextWrapping="Wrap"/>
+      <Border Classes="groupSeparator"/>
+      <TextBlock Text="绘制" Classes="uiSection"/>
+      <Button Content="绘制区域" Click="RegionDrawing_Click" IsEnabled="{Binding CanRequestRegionDrawing}" AutomationProperties.Name="绘制区域"/>
+      <TextBlock Text="草稿" Classes="uiSection"/>
+      <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="4">
+        <TextBlock Text="顶点" Classes="uiLabel"/>
+        <TextBlock Grid.Column="1" Text="{Binding RegionDrawingDraftVertexCount}" Classes="uiValue"/>
+        <TextBlock Grid.Row="1" Text="状态" Classes="uiLabel"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding RegionDrawingDraftStatus}" Classes="uiValue"/>
+      </Grid>
+      <UniformGrid Columns="2" ColumnSpacing="6" RowSpacing="6">
+        <Button Content="撤销顶点" Click="UndoRegionDrawingVertex_Click" IsEnabled="{Binding CanUndoRegionDrawingVertex}"/>
+        <Button Content="重做顶点" Click="RedoRegionDrawingVertex_Click" IsEnabled="{Binding CanRedoRegionDrawingVertex}"/>
+        <Button Content="完成区域" Click="CompleteRegionDrawing_Click" IsEnabled="{Binding CanCompleteRegionDrawing}"/>
+        <Button Content="取消绘制" Click="CancelRegionDrawing_Click" IsEnabled="{Binding CanCancelRegionDrawing}"/>
+      </UniformGrid>
+      <Border Classes="groupSeparator"/>
+      <TextBlock Text="区域内容" Classes="uiSection"/>
+      <TextBlock Text="已有区域：{Binding RegionContentCount}" Classes="uiValue"/>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

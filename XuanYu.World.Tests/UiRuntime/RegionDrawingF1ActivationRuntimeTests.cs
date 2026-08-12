@@ -17,7 +17,7 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
     public RegionDrawingF1ActivationRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public async Task Real_top_click_enters_region_drawing_and_creates_draft_vertex()
+    public async Task Real_left_click_enters_region_drawing_and_creates_draft_vertex()
     {
         Directory.CreateDirectory(_root);
         var vm = new UiVm(null, () => true, seedInitialScene: false);
@@ -34,12 +34,12 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
         Assert.Equal("选择", vm.ActiveTool);
 
         using var host = new UiRuntimeTestHost(_fixture);
-        Top top = null!;
+        Left left = null!;
         var enabled = host.Run(() =>
         {
-            top = new Top { DataContext = vm };
-            host.Show(top, 1200, 180);
-            var button = UiRuntimeTestHost.Descendants<ToggleButton>(top).Single(item =>
+            left = new Left { DataContext = vm };
+            host.Show(left, 360, 620);
+            var button = UiRuntimeTestHost.Descendants<Button>(left).Single(item =>
                 UiRuntimeTestHost.Descendants<TextBlock>(item).Any(text => text.Text == "绘制区域"));
             var state = button.IsVisible && button.IsEnabled;
             button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
@@ -50,17 +50,17 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
         for (var i = 0; i < 20 && !host.Run(() => vm.IsRegionDrawingTool); i++) await Task.Delay(25);
         var result = host.Run(() =>
         {
-            top.UpdateLayout();
-            var button = UiRuntimeTestHost.Descendants<ToggleButton>(top).Single(item =>
+            left.UpdateLayout();
+            var button = UiRuntimeTestHost.Descendants<Button>(left).Single(item =>
                 UiRuntimeTestHost.Descendants<TextBlock>(item).Any(text => text.Text == "绘制区域"));
             var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
             var hit = FindHit(vm, viewport);
             var handled = vm.RegionDrawingPointerPressed(hit.X, hit.Y, viewport);
-            return (vm.IsRegionDrawingTool, button.IsChecked, handled, vm.RegionDrawingDraftVertexCount);
+            return (vm.IsRegionDrawingTool, button.IsEnabled, handled, vm.RegionDrawingDraftVertexCount);
         });
 
         Assert.True(result.IsRegionDrawingTool);
-        Assert.True(result.IsChecked);
+        Assert.True(result.IsEnabled);
         Assert.True(result.handled);
         Assert.Equal(1, result.RegionDrawingDraftVertexCount);
     }
