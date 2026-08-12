@@ -58,6 +58,7 @@
 - `docs/milestones/current/MAP-DATA-A/`：当前 Region/Road 数据创作计划、修复与验收材料
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md`：R2 总体目标、当前状态与功能边界
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-A-plan.md`：Region 局部派生空间查询合同、规模门禁与自动收口边界
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-plan.md`：Region 顶点到顶点吸附范围、数据流与真机验收边界
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

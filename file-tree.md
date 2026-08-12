@@ -1,6 +1,6 @@
 # 玄域引擎文件树（按当前正式工作树重建）
 
-> 由正式开发工作树的 `git ls-files` 与本轮 F3-A 预提交文件清单重建；每个文件一行职责。
+> 由正式开发工作树的 `git ls-files` 与本轮预提交文件清单重建；每个文件一行职责。
 
 - `.gitattributes` — 项目资源或工程文件。
 - `.gitignore` — 项目资源或工程文件。
@@ -71,7 +71,8 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety.svg` — 架构或界面结构矢量图。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety-plan.md` — 项目治理、设计、里程碑或知识文档。
-- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-A-plan.md` — Region 局部空间查询合同、自动门禁与收口边界。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-A-plan.md` — 项目治理、设计、里程碑或知识文档。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-plan.md` — Region 顶点到顶点吸附范围、数据流与验收边界。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
@@ -661,6 +662,10 @@
 - `XuanYu.Editor/MapEditing/RegionSpatialQueryWalker.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.Editor/MapEditing/RegionSpatialTreeBalancer.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.Editor/MapEditing/RegionSpatialTreeEditor.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
+- `XuanYu.Editor/MapEditing/RegionVertexSnapResolver.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
+- `XuanYu.Editor/MapEditing/RegionVertexSnapResult.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
+- `XuanYu.Editor/MapEditing/RegionVertexSnapSettings.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
+- `XuanYu.Editor/MapEditing/RegionVertexSnapState.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
 - `XuanYu.Editor/MapEditing/RoadDrawingState.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/Mode/EditorModeId.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/Mode/EditorModeManager.cs` — C# 类型、服务或测试实现。
@@ -1001,6 +1006,11 @@
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexLifecycleTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexScaleTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
+- `XuanYu.World.Tests/MapEditing/RegionVertexSnapIntegrationContractTests.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
+- `XuanYu.World.Tests/MapEditing/RegionVertexSnapResolverBoundaryTests.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
+- `XuanYu.World.Tests/MapEditing/RegionVertexSnapResolverTests.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
+- `XuanYu.World.Tests/MapEditing/RegionVertexSnapScaleTests.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
+- `XuanYu.World.Tests/MapEditing/RegionVertexSnapStateTests.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
 - `XuanYu.World.Tests/Mode/EditorModeManagerTests.cs` — C# 类型、服务或测试实现。
 - `XuanYu.World.Tests/Mode/EditorModeUiCompositionTests.cs` — C# 类型、服务或测试实现。
 - `XuanYu.World.Tests/Mode/EditorModeUiTests.cs` — C# 类型、服务或测试实现。

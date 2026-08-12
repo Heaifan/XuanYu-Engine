@@ -12,6 +12,7 @@ public sealed partial class UiVm
         var points = GeometryPoints(selection);
         _selectedMapGeometry = selection;
         _mapGeometryDrag = new(selection, index, points);
+        _regionVertexSnap.Clear();
         _mapGeometryPreview = new(selection, points);
         FooterState = "状态：捕获中"; FooterMessage = "顶点拖动预览中。释放鼠标提交，按 Esc 取消。";
         RaiseMapGeometryBindings(); PublishSceneRenderSnapshot(); return true;
@@ -67,6 +68,18 @@ public sealed partial class UiVm
 
     static MapRoadId MapRoadIdFrom(MapGeometrySelection selection) =>
         MapRoadId.TryParse(selection.FeatureId, out var id) ? id : default;
+
+    MapPoint ResolveRegionVertexSnap(MapGeometrySelection selection, MapPoint raw,
+        double x, double y, XuanYu.Core.Space.ViewportState viewport)
+    {
+        if (!MapRegionId.TryParse(selection.FeatureId, out var sourceId)) return raw;
+        var projection = XuanYu.Core.Space.ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
+        var result = RegionVertexSnapResolver.Resolve(sourceId, raw, x, y, MapSession.CurrentMap, projection,
+            _regionVertexSnap, MapSession.QueryLocalRegions,
+            id => MapSession.TryGetRegion(id, out var region) ? region : null,
+            RegionVertexSnapSettings.Default);
+        return result.ResolvedPoint;
+    }
 }
 
 readonly record struct MapGeometryDrag(

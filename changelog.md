@@ -18,6 +18,12 @@
 
 ---
 
+## v0.2.28.10-rz · MAP-DATA-A-R2-F3-B REGION VERTEX-TO-VERTEX SNAP
+MAP-DATA-A-R2-F3-B（2026-08-13）：把 F2 Region 顶点拖拽接入 F3-A 局部查询，进入吸附交互实现阶段。
+- 范围：屏幕空间 8px 进入、12px 释放；纯坐标对齐；不改 F3-A 索引、不新增历史/持久化/拓扑语义。
+- 状态：`IMPLEMENTED · PRE-GATE PASS`；专项门禁当前 16/16（快速编译模式），完整正式门禁尚未执行。
+- 遗留：fresh 完整门禁与真机吸附手感验收待完成；Edge Snap、Road Snap 与拓扑能力不在本轮。
+
 ## v0.2.28.9-rz · MAP-DATA-A-R2-F3-A REGION LOCAL SPATIAL QUERY
 MAP-DATA-A-R2-F3-A（2026-08-13 01:07:12）：建立 Region 局部候选查询基础设施；本轮没有 UI 入口，不实现 Snap。
 - 变化：新增经有限值/顺序校验的 Region Bounds、平衡动态 AABB 树与 `MapEditSession.QueryLocalRegions`；每个 Region 单叶归属，内部节点只保存联合 Bounds 与高度。

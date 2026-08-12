@@ -76,7 +76,8 @@ public sealed class RegionSpatialIndexTests
         var index = string.Join('\n', Directory.GetFiles(root, "RegionSpatial*.cs").Select(File.ReadAllText));
         var session = File.ReadAllText(Path.Combine(root, "MapEditSession.RegionSpatialIndex.cs"));
         Assert.DoesNotContain("EntityId", index + session, StringComparison.Ordinal);
-        Assert.DoesNotContain("_currentMap.Regions", session, StringComparison.Ordinal);
+        Assert.DoesNotContain("_currentMap.Regions", index, StringComparison.Ordinal);
+        Assert.Contains("TryGetRegion", session, StringComparison.Ordinal);
         Assert.Contains("return _regionSpatialIndex.Query(bounds);", session, StringComparison.Ordinal);
     }
 

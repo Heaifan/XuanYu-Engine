@@ -9,6 +9,12 @@ public sealed partial class MapEditSession
 
     internal int IndexedRegionCount => _regionSpatialIndex.Count;
 
+    public bool TryGetRegion(MapRegionId regionId, out MapRegion region)
+    {
+        region = _currentMap.Regions.FirstOrDefault(item => item.RegionId == regionId)!;
+        return region is not null;
+    }
+
     public ImmutableArray<MapRegionId> QueryLocalRegions(RegionSpatialBounds bounds)
     {
         if (!GuardWriteThread()) throw new InvalidOperationException("区域局部查询必须在编辑写线程执行。");
