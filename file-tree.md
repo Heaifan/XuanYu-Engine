@@ -2405,3 +2405,8 @@
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1ResizeTests.cs` — F1 Resize Runtime：视口尺寸变化后区域绘制输入继续命中并累积 Draft 顶点。
 - `XuanYu.World.Tests/UiRuntime/RegionDrawingF1RenderContractTests.cs` — F1 渲染合同：首点 Draft primitive 合法且通过 Vulkan 资源校验。
 - `XuanYu.World.Tests/UiTokens/UiD2F1RegionToolContractTests.cs` — D2-F1 静态 UI 归属与 Selected/Selected+Hover 样式契约。
+- `XuanYu.Editor.UI/Win/LayerDeleteConfirmationWindow.axaml` — 图层删除的独立可见确认窗口视图。
+- `XuanYu.Editor.UI/Win/LayerDeleteConfirmationWindow.axaml.cs` — 删除确认窗口的 Owner 模态结果、键盘取消与幂等完成行为。
+- `XuanYu.World.Tests/UiTokens/UiLayerDeleteDialogContractTests.cs` — 独立删除确认窗口、Owner 模态与安全默认值源码合同。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-F2-F1-visible-delete-dialog.md` — Native HWND airspace 根因、最小修复和范围冻结记录。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-F2-F1-acceptance.md` — Visible Delete Dialog 中文 IPO 真机验收清单。

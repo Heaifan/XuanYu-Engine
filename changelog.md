@@ -18,6 +18,15 @@
 
 ---
 
+## v0.2.28.5-fix · MAP-DATA-A-R2-F2-F2-F1 VISIBLE DELETE DIALOG
+MAP-DATA-A-R2-F2-F2-F1 Visible Delete Dialog（2026-08-12 21:08:29）：将删除图层确认从主窗口内 Overlay/DialogCard 改为受 Editor 主窗口拥有的独立 Avalonia Window。
+- 根因：Dialog Active 与 Escape 取消均正常，DialogCard 的 Bounds 位于 `VulkanNativeHost : NativeControlHost` 覆盖范围；Native HWND airspace 压住 Avalonia Visual，故主 UI 被遮罩锁定而确认卡不可见、视口仍可输入。
+- 变化：删除确认以 `ShowDialog(owner)` 展示，默认焦点为“取消”；Esc、Enter、关闭 X 均取消，只有鼠标“删除”才确认。删除前保存 LayerId，确认后按该稳定 ID 重新验证并执行，避免等待期间选择变化误删。
+- 边界：经用户批准，业务实现为不可再拆的 6 文件最小闭环；不修改 Vulkan、Swapchain、Picking、Schema、Undo/Redo 总架构或通用 Dialog 系统。禁止回退为 Overlay + ZIndex 覆盖 NativeHost。
+- 验证：最终完整门禁结果见本轮文档提交；实现阶段聚焦测试 6/6、World.Tests 1285/1285 PASS。
+- Hash：`154a62f`（实现提交）。
+- 遗留：F1-M01～M08 真机验收待用户执行；状态为 READY FOR USER ACCEPTANCE，原 M10 与 F3 保持冻结。
+
 ## v0.2.28.4-fix · MAP-DATA-A-R2-F2-F2 LAYER DELETE UI LOCK RECOVERY
 MAP-DATA-A-R2-F2-F2 Layer Delete UI Lock Recovery（2026-08-12 18:00:00）：承接用户确认的 M01～M09 PASS 与 M10 BLOCKED，修复删除图层后窗口内确认遮罩无法通过 Esc/Enter 完成的问题。
 - 根因：`Window_KeyDown` Tunnel 先于 `DialogCard_KeyDown`，Escape/Enter 被普通编辑快捷键消费，`CompleteDialog()` 未执行；窗口内遮罩持续存在，而原生 Vulkan 子窗口仍可接收视口输入。
