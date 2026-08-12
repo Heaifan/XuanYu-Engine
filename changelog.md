@@ -18,13 +18,22 @@
 
 ---
 
+## v0.2.28.2-fix · MAP-DATA-A-R2-F2 GEOMETRY VERTEX EDITING
+MAP-DATA-A-R2-F2 Geometry Vertex Editing（2026-08-12 16:00:00）：承接用户确认的 F1 真机通过，进入已完成 Region/Road 几何顶点编辑。
+- 变化：点击已完成区域面或道路显示顶点控制柄；顶点拖动采用 Preview → Commit，释放提交一条 Map History，Esc 取消；区域/道路统一接入现有 MapSession、Render Overlay、Save/Reload 与 Ctrl+Z/Y。
+- 校验：区域候选继续执行多边形合法性校验；道路拒绝相邻重复节点；新增领域单历史、Undo/Redo、非法几何与屏幕空间命中自动测试。
+- 范围：不做吸附、磁性贴合、共享边界、拓扑联动、Schema 变化、Vulkan 重写或 Picking 全面重构。
+- 验证：快速 Editor.UI Build 0 Warning/0 Error；World.Tests 1274/1274；正式完整门禁结果以本条后续 Hash 记录为准。
+- Hash：<本轮实现提交>
+- 遗留：F2-M01～F2-M06 真机验收待用户执行；F3 禁止启动。
+
 ## v0.2.28.1-fix · MAP-DATA-A-R2-F1 REGIONAL AUTHORING HIERARCHY
 MAP-DATA-A-R2-F1 Regional Authoring Hierarchy（2026-08-12 15:12:17）：撤回 RoadEditor 顶层 Workspace，将 Road 收口为 RegionEditor 内的 RegionAuthoringMode.Road，保留既有 Region/Road Dataset 与绘制闭环。
 - 变化：Workspace 仅保留 MapEditor/RegionEditor；新增 RegionalAuthoringPanel、区域面/道路子模式选择、Dataset/Layer 选择同步、统一 Region/Road Layer Stack；模式切换取消活动 Draft 并回到“选择”，Eye/Lock 不切换模式。
 - 兼容：Dataset/Manifest/Feature JSON、Dataset 0.3.0 Road、Region 0.2.0、MapRoad、MapRegion、Vulkan Renderer 与 Save/Reload 合同不变；未发现 RoadEditor 持久化入口。
 - 验证：Solution Build 0 Warning/0 Error；Core.Tests 339/339、World.Tests 1270/1270、WarCore.Tests 22/22；专项 RegionAuthoringHierarchy 5/5；AXAML XML、5+100、版本一致性、ARCH-A 与 `git diff --check` PASS。
 - Hash：`e4409db`。
-- 遗留：F1-M01～F1-M06 真机验收待用户执行；R2 保持 OPEN/READY FOR USER ACCEPTANCE，R3 禁止启动。
+- 遗留：用户已于 2026-08-12 裁定 F1-M01～F1-M08 真机验收通过；F1 CLOSED，进入 R2-F2 顶点编辑，F3 仍禁止启动。
 
 ## v0.2.28.0-rz · MAP-DATA-A-R2 IMPLEMENTED
 MAP-DATA-A-R2 Road Dataset / Polyline（2026-08-12 15:10:00）：在 R1 Closeout 后完成 T2 Road Dataset + Polyline 数据合同与 T3 道路 Authoring → Render → Save/Reload 闭环。

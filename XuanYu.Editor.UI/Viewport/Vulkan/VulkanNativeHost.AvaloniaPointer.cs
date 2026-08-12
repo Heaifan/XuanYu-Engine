@@ -19,6 +19,11 @@ public sealed partial class VulkanNativeHost
         {
             e.Handled = true; return;
         }
+        if (vm.TryBeginMapGeometryPointer(point.Position.X, point.Position.Y, CaptureViewportState()))
+        {
+            if (vm.IsMapGeometryDragActive) e.Pointer.Capture(this);
+            e.Handled = true; return;
+        }
         if (TryBeginGizmo(vm, e.Pointer.Id, point.Position.X, point.Position.Y))
         {
             e.Pointer.Capture(this); e.Handled = true; return;
@@ -34,6 +39,8 @@ public sealed partial class VulkanNativeHost
             e.Handled = true;
         else if (DataContext is UiVm vm2 && PreviewDrawing(vm2, point.Position.X, point.Position.Y))
             e.Handled = true;
+        else if (DataContext is UiVm vm4 && vm4.IsMapGeometryDragActive && vm4.PreviewMapGeometryPointer(
+            point.Position.X, point.Position.Y, CaptureViewportState())) e.Handled = true;
         else if (DataContext is UiVm vm3 && vm3.PreviewViewportPointer(
             e.Pointer.Id, point.Position.X, point.Position.Y))
             e.Handled = true;
@@ -50,6 +57,8 @@ public sealed partial class VulkanNativeHost
         else if (DataContext is UiVm vm2 && vm2.CommitViewportPointer(
             e.Pointer.Id, point.Position.X, point.Position.Y))
             ReleaseAvaloniaCapture(e);
+        else if (DataContext is UiVm vm3 && vm3.IsMapGeometryDragActive && vm3.CommitMapGeometryPointer(
+            point.Position.X, point.Position.Y, CaptureViewportState())) ReleaseAvaloniaCapture(e);
         else if (DataContext is UiVm cameraVm && cameraVm.EndCameraNavigation(e.Pointer.Id))
             ReleaseAvaloniaCapture(e);
     }
@@ -59,6 +68,7 @@ public sealed partial class VulkanNativeHost
         if (DataContext is UiVm vm)
         {
             CancelNavGizmo(vm);
+            vm.CancelMapGeometryPointer("PointerCaptureLost");
             vm.CancelInteractionFromNativePointer("PointerCaptureLost");
         }
         base.OnPointerCaptureLost(e);

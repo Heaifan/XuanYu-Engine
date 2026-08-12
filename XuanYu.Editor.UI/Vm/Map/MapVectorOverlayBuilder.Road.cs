@@ -4,10 +4,11 @@ namespace XuanYu.Editor.UI;
 
 sealed partial class MapVectorOverlayBuilder
 {
-    public void AddRoad(MapRoad road)
+    public void AddRoad(MapRoad road, bool selected, IReadOnlyList<MapPoint>? preview)
     {
-        AddStroke(road.Points, false, new(.18, .72, .52, .90), 2.2, 0);
-        foreach (var point in road.Points) AddMarker(point, 4.0);
+        var points = preview ?? road.Points;
+        AddStroke(points, false, selected ? new(.98, .75, .12, .98) : new(.18, .72, .52, .90), selected ? 3.0 : 2.2, 0);
+        foreach (var point in points) AddMarker(point, selected ? 6.5 : 4.0);
     }
 
     public void AddRoadDraft(MapRoadDraft draft, MapPoint? cursor)

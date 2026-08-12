@@ -12,10 +12,12 @@ sealed partial class MapVectorOverlayBuilder(double height)
     readonly List<uint> _indices = [];
     readonly List<RenderVectorOverlayPrimitive> _primitives = [];
 
-    public void AddRegion(MapRegion region)
+    public void AddRegion(MapRegion region, bool selected, IReadOnlyList<MapPoint>? preview)
     {
-        AddFill(region.Vertices, new(.20, .55, .90, .20));
-        AddStroke(region.Vertices, true, new(.12, .38, .70, .80), 1.5, 0);
+        var points = preview ?? region.Vertices;
+        AddFill(points, new(.20, .55, .90, .20));
+        AddStroke(points, true, selected ? new(.98, .75, .12, .98) : new(.12, .38, .70, .80), selected ? 2.4 : 1.5, 0);
+        if (selected) foreach (var point in points) AddMarker(point, 6.5);
     }
 
     public void AddDraft(MapRegionDraft draft, MapPoint? cursor, bool close)

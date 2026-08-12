@@ -4,6 +4,7 @@ public sealed partial class VulkanNativeHost
 {
     const long NativePointerId = 1;
     bool _nativeDragActive;
+    bool _mapGeometryDragActive;
     bool _expectedCaptureRelease;
     void OnNativePointerMessage(NativePointerMessage message)
     {
@@ -31,6 +32,12 @@ public sealed partial class VulkanNativeHost
             // F3-F1：导航 Gizmo 优先（右上角区域）；否则进入变换 Gizmo / Picking。
             if (TryNavGizmoPress(vm, x, y)) return;
             if (ReportDrawing(vm, x, y)) { ReleaseExpectedCapture(); return; }
+            if (vm.TryBeginMapGeometryPointer(x, y, CaptureViewportState()))
+            {
+                _mapGeometryDragActive = vm.IsMapGeometryDragActive;
+                if (_mapGeometryDragActive) return;
+                ReleaseExpectedCapture(); return;
+            }
             if (TryBeginGizmo(vm, NativePointerId, x, y)) { _nativeDragActive = true; return; }
             ReportPointerPicking(vm, x, y);
             ReleaseExpectedCapture();
@@ -38,11 +45,17 @@ public sealed partial class VulkanNativeHost
         else if (route == NativePointerRoute.LeftPreview)
         {
             if (TryNavGizmoMove(vm, x, y)) return;
+            if (_mapGeometryDragActive) { vm.PreviewMapGeometryPointer(x, y, CaptureViewportState()); return; }
             PreviewNativePointer(vm, x, y);
         }
         else if (route == NativePointerRoute.LeftUp)
         {
             if (TryNavGizmoRelease(vm, x, y)) return;
+            if (_mapGeometryDragActive)
+            {
+                vm.CommitMapGeometryPointer(x, y, CaptureViewportState());
+                _mapGeometryDragActive = false; ReleaseExpectedCapture(); return;
+            }
             CommitNativePointer(vm, x, y);
         }
         else if (route == NativePointerRoute.MiddleUp) EndNativeCamera(vm);
@@ -60,24 +73,6 @@ public sealed partial class VulkanNativeHost
         if (!_nativeDragActive) return;
         vm.CommitViewportPointer(NativePointerId, x, y);
         _nativeDragActive = false;
-        ReleaseExpectedCapture();
-    }
-    void HandleNativeCaptureChanged(UiVm vm, NativePointerMessage message)
-    {
-        if ((!_nativeDragActive && !_nativeCameraActive) || _expectedCaptureRelease || message.CaptureTarget == _hwnd) return;
-        CancelNativeInput(vm, "PointerCaptureLost");
-    }
-    void CancelNativeInput(UiVm vm, string reason)
-    {
-        CancelNavGizmo(vm);
-        CancelNativePointer(vm, reason);
-        CancelNativeCamera(vm, reason);
-    }
-    void CancelNativePointer(UiVm vm, string reason)
-    {
-        if (!_nativeDragActive) return;
-        _nativeDragActive = false;
-        vm.CancelInteractionFromNativePointer(reason);
         ReleaseExpectedCapture();
     }
     void ReleaseExpectedCapture()

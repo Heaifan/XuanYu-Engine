@@ -280,6 +280,7 @@
 │  ├─ MapEditing/
 │  │  ├─ MapEditEvents.cs
 │  │  ├─ MapEditReason.cs
+│  │  ├─ MapEditSession.Geometry.cs
 │  │  ├─ MapEditSession.Regions.cs
 │  │  ├─ MapEditSession.RuntimeProjection.cs
 │  │  ├─ MapEditSession.ActiveLayer.cs
@@ -291,6 +292,8 @@
 │  │  ├─ MapEditSession.Selection.cs
 │  │  ├─ MapEditSession.cs
 │  │  ├─ MapHistoryEntry.cs
+│  │  ├─ MapGeometryEditTypes.cs
+│  │  ├─ MapGeometryHitTester.cs
 │  │  ├─ MapSelection.cs
 │  │  └─ MapSelectionKind.cs
 │  ├─ SceneDocument/
@@ -457,6 +460,7 @@
 │  │     ├─ VulkanNativeHost.NavGizmo.cs
 │  │     ├─ VulkanNativeHost.Picking.cs
 │  │     ├─ VulkanNativeHost.Pointer.cs
+│  │     ├─ VulkanNativeHost.Pointer.Cancel.cs
 │  │     ├─ NativePointerRoutePolicy.cs
 │  │     ├─ VulkanNativeHost.cs
 │  │     ├─ VulkanViewport.axaml
@@ -513,6 +517,8 @@
 │  │  │  ├─ MapRenderSnapshotProjection.cs
 │  │  │  ├─ MapVectorOverlayBuilder.Finalize.cs
 │  │  │  ├─ MapVectorOverlayBuilder.cs
+│  │  │  ├─ UiVm.MapGeometryEditing.Helpers.cs
+│  │  │  ├─ UiVm.MapGeometryEditing.cs
 │  │  │  ├─ MapVectorOverlayTriangulation.cs
 │  │  │  ├─ UiVm.RegionDrawing.Commit.cs
 │  │  │  ├─ UiVm.RegionDrawing.Input.cs
@@ -982,6 +988,8 @@
 │  │  ├─ WorldMapStateOwnerTests.cs
 │  │  └─ WorldMapStateTests.cs
 │  ├─ MapEditing/
+│  │  ├─ MapGeometryHitTesterTests.cs
+│  │  ├─ MapEditSessionGeometryTests.cs
 │  │  ├─ MapEditSessionCommandTests.cs
 │  │  ├─ MapPickingRoundTripTests.cs
 │  │  ├─ MapEditSessionRegionTests.cs
@@ -1559,6 +1567,9 @@
 - `XuanYu.Editor.UI/Vm/Map/MapLayerRowViewModel.Rename.cs` — MAP-DATA-A-R1-F3：图层名称 inline rename 临时状态与可改名守卫。
 - `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为独立 Vector Overlay 资源。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.cs` — F1-V1/B1：构建共享 BaseHeightMeters 世界锚点的 Fill、屏幕空间 Stroke 与 Marker 几何。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.cs` — MAP-DATA-A-R2-F2：地图 feature 选择、顶点拖动 Preview/Commit/Cancel 与反馈。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.Helpers.cs` — MAP-DATA-A-R2-F2：选择几何显示、稳定 ID 解析与内容变化同步。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.Cancel.cs` — MAP-DATA-A-R2-F2：Native Pointer 捕获丢失、Esc/窗口取消与地图几何预览清理。
 - `XuanYu.Editor.UI/Vm/Map/MapVectorOverlayBuilder.Road.cs` — MAP-DATA-A-R2：构建 Road 正式内容与 Polyline 草稿矢量几何。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.RoadBootstrap.cs` — MAP-DATA-A-R2：道路 Dataset 自动创建、选择、锁定与无效状态拒绝。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.RoadPresentation.cs` — MAP-DATA-A-R2：道路 Dataset 目标与列表展示投影。
@@ -1733,6 +1744,9 @@
 - `XuanYu.Editor/MapDocument/MapStorageService.cs` — MAP-A-R1-D2：地图文件存储。候选加载 + 同目录临时文件原子保存，不直接替换任何状态。
 - `XuanYu.Editor/MapEditing/MapEditEvents.cs` — MAP-A-R2-D2：地图编辑低频事件参数（禁止记录鼠标移动/Hover/每帧渲染）。
 - `XuanYu.Editor/MapEditing/MapEditReason.cs` — MAP-A-R2-D2/D3-A1/D4：地图编辑原因（内容变更事件携带）。
+- `XuanYu.Editor/MapEditing/MapEditSession.Geometry.cs` — MAP-DATA-A-R2-F2：区域顶点与道路节点的候选提交、领域校验和单历史入口。
+- `XuanYu.Editor/MapEditing/MapGeometryEditTypes.cs` — MAP-DATA-A-R2-F2：地图几何选择、预览和命中结果的无 UI 类型。
+- `XuanYu.Editor/MapEditing/MapGeometryHitTester.cs` — MAP-DATA-A-R2-F2：屏幕空间区域面、道路线段与顶点命中。
 - `XuanYu.Editor/MapEditing/MapEditSession.RuntimeProjection.cs` — MAP-DATA-A-R1：不进入 History 的 Dataset Runtime Layer 投影发布。
 - `XuanYu.Editor/MapEditing/MapEditSession.Regions.cs` — MAP-A-R3-D1：区域正式 Create/Delete 入口，复用地图候选校验、单历史条目与 Undo/Redo 快照恢复。
 - `XuanYu.Editor/MapEditing/MapEditSession.Roads.cs` — MAP-DATA-A-R2：道路正式 Create 入口，复用地图候选校验与历史快照。
@@ -2059,6 +2073,8 @@
 - `XuanYu.World.Tests/Map/WorldMapStateTests.cs` — MAP-A-R1-D3：World 地图状态——有限边界（闭区间）与高度查询。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCommandTests.cs` — MAP-A-R2-D2：地图基础编辑命令（改名/尺寸/基础高度/No-op/非法输入）。
 - `XuanYu.World.Tests/MapEditing/MapPickingRoundTripTests.cs` — MAP-A-R3-D2-F1 Metric/Picking：100m、10km、10,000km 与多 DPI/斜视下 Screen → Pick → World → Screen 误差不超过 1 DIP。
+- `XuanYu.World.Tests/MapEditing/MapGeometryHitTesterTests.cs` — MAP-DATA-A-R2-F2：区域面与顶点的屏幕空间命中回归。
+- `XuanYu.World.Tests/MapEditing/MapEditSessionGeometryTests.cs` — MAP-DATA-A-R2-F2：几何单历史、Undo/Redo 与非法区域/道路节点拒绝回归。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionRegionTests.cs` — MAP-A-R3-D1：Region Create/Delete 单历史条目及相同 ID Undo/Redo 合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionCreationTests.cs` — MAP-A-R2-D2：默认会话与根状态合同。
 - `XuanYu.World.Tests/MapEditing/MapEditSessionDirtyTests.cs` — MAP-A-R2-D2：Saved/Dirty 合同（Dirty 随 Undo/Redo 回到保存点）。
@@ -2295,6 +2311,8 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — MAP-DATA-A-R2：Regional Content Authoring、Road Dataset/Polyline 冻结目标与兼容边界。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F1-plan.md` — MAP-DATA-A-R2-F1：RegionalAuthoringHierarchy 三项冻结 TODO、长期结构与禁止项。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F1-acceptance.md` — MAP-DATA-A-R2-F1：顶层 Workspace、子模式、统一图层与 Region/Road 回归真机 IPO 模板。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-plan.md` — MAP-DATA-A-R2-F2：Geometry Vertex Editing 冻结目标、边界与自动证据要求。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-acceptance.md` — MAP-DATA-A-R2-F2：区域/道路顶点编辑、取消、校验、Undo/Redo 与 Save/Reload 真机 IPO。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-acceptance.md` — MAP-DATA-A-R2：区域编辑内 Road Dataset/Polyline 真机验收 IPO 清单。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）

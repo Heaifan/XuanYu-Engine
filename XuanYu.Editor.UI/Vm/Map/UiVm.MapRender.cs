@@ -42,6 +42,7 @@ public sealed partial class UiVm
 
     void OnMapContentChanged(MapContentChangedEventArgs e)
     {
+        RefreshMapGeometryDisplay();
         OnPropertyChanged(nameof(RegionContentCount));
         OnPropertyChanged(nameof(RoadContentCount));
         if (e.Reason is MapEditReason.Undo or MapEditReason.Redo && _datasetRegistry is not null)

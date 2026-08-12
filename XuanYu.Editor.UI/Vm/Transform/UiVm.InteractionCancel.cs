@@ -4,6 +4,7 @@ public sealed partial class UiVm
 {
     public void CancelInteractionFromEscape()
     {
+        if (CancelMapGeometryPointer("Escape")) return;
         if (CancelRegionDrawingFromEscape()) return;
         if (CancelRoadDrawingFromEscape()) return;
         if (_editorState.InteractionSnapshot.HasCapture) CancelInteraction("Escape");

@@ -24,6 +24,8 @@ public sealed partial class UiVm
         MapEditReason.LayerLockChanged => "图层锁定",
         MapEditReason.RuntimeProjection => "数据集运行时投影",
         MapEditReason.RoadCreated => "创建道路",
+        MapEditReason.RegionGeometryEdited => "编辑区域几何",
+        MapEditReason.RoadGeometryEdited => "编辑道路几何",
         _ => reason.ToString()
     };
 
@@ -49,6 +51,9 @@ public sealed partial class UiVm
         "LayerMoveRejected" => "调整顺序被拒绝",
         "InvalidLayerName" => "图层名称无效",
         "NotRegionLayer" => "非区域图层",
+        "AdjacentDuplicateRoadPoint" => "道路相邻节点不得重复",
+        "SelfIntersectingRegion" => "区域边界不能自相交",
+        "ZeroAreaRegion" => "区域面积不能为零",
         _ => code
     };
 
