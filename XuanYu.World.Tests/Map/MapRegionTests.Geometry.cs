@@ -6,6 +6,33 @@ namespace XuanYu.World.Tests.Map;
 public sealed partial class MapRegionTests
 {
     [Fact]
+    public void Irregular_quadrilateral_passes()
+    {
+        var layers = Layers();
+        var result = MapRegionValidator.Validate(
+            ImmutableArray.Create(Region(layers[2].LayerId, Points((0, 0), (240, 30), (180, 210), (-40, 130)))), layers, Map10km);
+        Assert.True(result.Succeeded);
+    }
+
+    [Fact]
+    public void Irregular_pentagon_passes()
+    {
+        var layers = Layers();
+        var result = MapRegionValidator.Validate(
+            ImmutableArray.Create(Region(layers[2].LayerId, Points((0, 0), (180, -30), (260, 120), (90, 240), (-80, 120)))), layers, Map10km);
+        Assert.True(result.Succeeded);
+    }
+
+    [Fact]
+    public void Simple_concave_polygon_passes()
+    {
+        var layers = Layers();
+        var result = MapRegionValidator.Validate(
+            ImmutableArray.Create(Region(layers[2].LayerId, Points((0, 0), (240, 0), (240, 220), (130, 100), (0, 220)))), layers, Map10km);
+        Assert.True(result.Succeeded);
+    }
+
+    [Fact]
     public void Bow_tie_region_rejected()
     {
         var layers = Layers();

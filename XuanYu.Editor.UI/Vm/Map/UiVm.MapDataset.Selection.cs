@@ -75,6 +75,9 @@ public sealed partial class UiVm
     void NotifyDatasetSelection()
     {
         OnPropertyChanged(nameof(DatasetItems));
+        OnPropertyChanged(nameof(RegionDatasetItems));
+        OnPropertyChanged(nameof(RegionDrawingTargetName));
+        OnPropertyChanged(nameof(RegionDrawingTargetStatus));
         OnPropertyChanged(nameof(DatasetLayerItems));
         OnPropertyChanged(nameof(SelectedDataset));
         OnPropertyChanged(nameof(HasSelectedDataset));

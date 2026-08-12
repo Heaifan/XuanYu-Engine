@@ -32,6 +32,26 @@ public sealed class UiMapDatasetRegionToolInvalidTests : IDisposable
         Assert.False(reopened.IsRegionDrawingTool);
     }
 
+    [Fact]
+    public async Task Invalid_region_dataset_is_rejected_without_creating_another()
+    {
+        Directory.CreateDirectory(_root);
+        var path = Path.Combine(_root, "map.json");
+        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        Assert.True(await vm.SaveMapManifestAsync(path));
+        vm.DatasetCreateType = "region";
+        Assert.True(await vm.CreateDatasetAsync());
+        var id = vm.DatasetSelectedId!;
+        Assert.True(await vm.SaveMapManifestAsync(path));
+        await File.WriteAllTextAsync(Path.Combine(_root, "data", $"{id}.json"), "{}");
+
+        vm.ToggleEditorMode();
+        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
+        Assert.False(await vm.BeginRegionDrawingAsync());
+        Assert.Single(vm.RegionDatasetItems);
+        Assert.Contains("无效", vm.FooterMessage);
+    }
+
     public void Dispose()
     {
         try { if (Directory.Exists(_root)) Directory.Delete(_root, true); }

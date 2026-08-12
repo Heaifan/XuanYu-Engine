@@ -48,11 +48,13 @@ public sealed class EditorModeUiCompositionTests
     }
 
     [Fact]
-    public void Region_context_is_placeholder_and_old_right_map_tab_is_retired()
+    public void Region_context_shows_the_current_drawing_target_and_old_right_map_tab_is_retired()
     {
         var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml");
-        Assert.Contains("REGION-A 接入后显示区域列表", left);
+        Assert.Contains("当前绘制目标", left);
+        Assert.Contains("RegionDrawingTargetName", left);
+        Assert.Contains("RegionDrawingTargetStatus", left);
         Assert.DoesNotContain("Header=\"地图编辑器\"", right);
     }
 

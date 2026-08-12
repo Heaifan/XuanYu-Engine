@@ -41,13 +41,14 @@ public sealed class EditorWorkspaceUiCompositionTests
     }
 
     [Fact]
-    public void Region_context_contains_only_declared_placeholders()
+    public void Region_context_contains_the_drawing_target_and_declared_inspector_placeholder()
     {
         var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
-        Assert.Contains("REGION-A 接入后显示区域列表", left);
+        Assert.Contains("当前绘制目标", left);
+        Assert.Contains("RegionDrawingTargetName", left);
+        Assert.Contains("RegionDrawingTargetStatus", left);
         Assert.Contains("REGION-A 接入后显示正式属性", right);
-        Assert.DoesNotContain("RegionDrawing", left + right);
     }
 
     [Fact]

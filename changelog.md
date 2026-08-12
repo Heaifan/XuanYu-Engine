@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.27.2-fix
+MAP-DATA-A-R1-F2 Polygon & Auto Bootstrap（2026-08-12 11:21:18）：修复 Region 多边形相交判定，并把“绘制区域”正式入口接入 Region Dataset 自动 Bootstrap，R1 保持 OPEN，等待 F2 真机验收。
+- 变化：`MapRegionIntersection` 改为严格异号判定；区域工具栏改为异步 Click 入口；新增 `BeginRegionDrawingAsync`、`CanRequestRegionDrawing`、Region Dataset 自动创建/选择/活动图层投影；锁定、无效和并发重复请求 fail-closed；区域左栏显示当前绘制目标。
+- 测试：新增不规则四边形、五边形、简单凹多边形、真实四点闭合、自动创建、双击防重复、锁定/无效拒绝与 Save/Reload 回归；World.Tests `1259/1259 PASS`，构建 `0 Warning / 0 Error`。
+- Hash：待本轮提交。
+- 范围：未扩展 Region Feature Schema、Hydration 之外的 Dataset 类型、Renderer、R2 Road 或新的 Workspace/Layer 所有权。
+- 遗留：F2-M01～F2-M06 真机验收待用户执行；R1 未全量验收不得 CLOSED，不得启动 R2。
+
 ## v0.2.27.1-fix
 MAP-DATA-A-R1-F1 Region Drawing Tool Activation（2026-08-12 10:20:26）：修复 Region Drawing 没有真实 UI 激活入口的问题，R1 保持 OPEN，等待 F1 真机验收。
 - 变化：区域编辑工具栏新增“绘制区域” ToggleButton，复用 `RegionIcon`；新增 `CanStartRegionDrawing`，仅正常、未锁定的区域数据集且处于区域编辑时可用；`SelectTool` 对非法 RegionDrawing 请求 fail-closed。

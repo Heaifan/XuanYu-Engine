@@ -10,10 +10,9 @@ public sealed class UiD2F1RegionToolActivationContractTests
     {
         var top = ReadTop();
         Assert.Contains("IsVisible=\"{Binding IsRegionEditMode}\"", top);
-        Assert.Contains("IsEnabled=\"{Binding CanStartRegionDrawing}\"", top);
+        Assert.Contains("IsEnabled=\"{Binding CanRequestRegionDrawing}\"", top);
         Assert.Contains("IsChecked=\"{Binding IsRegionDrawingTool, Mode=OneWay}\"", top);
-        Assert.Contains("Command=\"{Binding SelectToolCommand}\"", top);
-        Assert.Contains("CommandParameter=\"区域绘制\"", top);
+        Assert.Contains("Click=\"RegionDrawing_Click\"", top);
         Assert.Contains("Data=\"{StaticResource RegionIcon}\"", top);
         Assert.Contains("Text=\"绘制区域\"", top);
     }

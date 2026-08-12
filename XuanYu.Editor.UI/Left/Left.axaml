@@ -91,7 +91,9 @@
     <TabItem Classes="leftTab" Header="区域" IsVisible="{Binding IsRegionEditMode}">
       <StackPanel Spacing="10" Margin="2,8">
         <TextBlock Text="区域" Classes="uiSection"/>
-        <TextBlock Text="REGION-A 接入后显示区域列表" Classes="uiMultiline" TextWrapping="Wrap"/>
+        <TextBlock Text="当前绘制目标" Classes="uiSection"/>
+        <TextBlock Text="{Binding RegionDrawingTargetName}" Classes="uiValue"/>
+        <TextBlock Text="{Binding RegionDrawingTargetStatus}" Classes="uiMultiline" TextWrapping="Wrap"/>
       </StackPanel>
     </TabItem>
   </TabControl>

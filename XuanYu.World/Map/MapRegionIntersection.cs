@@ -32,8 +32,11 @@ internal static class MapRegionIntersection
         if (abD == 0 && OnSegment(a, b, d)) return true;
         if (cdA == 0 && OnSegment(c, d, a)) return true;
         if (cdB == 0 && OnSegment(c, d, b)) return true;
-        return abC != abD && cdA != cdB;
+        return OppositeSigns(abC, abD) && OppositeSigns(cdA, cdB);
     }
+
+    static bool OppositeSigns(double first, double second) =>
+        (first > 0 && second < 0) || (first < 0 && second > 0);
 
     static double Orientation(MapPoint a, MapPoint b, MapPoint c) =>
         (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
