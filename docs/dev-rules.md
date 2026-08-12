@@ -180,7 +180,8 @@
 - 新增类型先判定归属层（Core / World / Editor / Render.Abstractions），禁止默认塞进 `XuanYu.Core`。
 - `XuanYu.Core` 禁止新增 World / Scene / Viewport / Picking / Gizmo / Camera / History / Transform Session 类型。
 - `EntityId` 禁止加入 Generation / Revision；实体身份术语只用 `EntityId`，不用 `EntityKey`。
-- 空间索引唯一权威：禁止在 `GlobalWorld → SpatialIndexOwner → WorldQuery` 之外新增第二套空间查询索引。
+- 同一事实域的空间索引必须保持唯一权威：GlobalWorld 实体查询只能走 `GlobalWorld → SpatialIndexOwner → WorldQuery`。
+- 尚未注册为 World Entity 的 Map Authoring 几何可在 Editor 域维护独立派生索引，但只能保存原生 Map ID + Bounds，不得生成 `EntityId`、持久化为第二真源或回退全量扫描。
 - `SceneRenderSnapshot` 等 Snapshot 是派生表现边界 DTO，不得携带 Editor 相机创建后门；相机只能由 Editor/View 以 `CameraState` 传入。
 - 归属迁移按 `ARCH-WORLD-R0 → R5` 序列执行（`docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.md`），每轮 build 0W0E + 全量测试 + arch-a-guard 通过后 commit；禁止一轮全搬、禁止跨轮夹带。
 - R1 完成前禁止在 Core 继续扩张 World 概念新类型；确需新增必须先在 `docs/milestones/closed/ARCH-WORLD/arch-world-layer-attribution.md` 归属总表登记裁定。
@@ -282,3 +283,25 @@ dotnet build-server shutdown
 审计必须先读取该 Milestone 的 changelog、Commit、计划、验收记录、失败/返工记录、架构决策、测试证据和最终实现，再输出候选表。每项只能分类为：`KNOWLEDGE`、`LESSON`、`CHANGELOG_ONLY`、`BACKLOG`、`REJECTED` 或 `CONSTITUTION_CANDIDATE`。分类前先搜索现有知识，重复根因更新原条目；未经证据支持的猜想、一次性 workaround 和纯历史材料不得入库。
 
 `CONSTITUTION_CANDIDATE` 只能报告给用户或宪法维护 AI 审批，执行 AI 不得自动升格。审计阶段发现当前阻塞缺陷要重新打开任务，未来能力登记 Backlog；不得借复盘顺手改产品代码、重构、加依赖或改 Schema。审计未完成时，Milestone 只能保持 `READY FOR CLOSEOUT` 或等价状态。
+
+---
+
+## 19. 多 Agent 开发通道（DEV-FIRST）
+
+### 19.1 正式开发通道
+
+- 正式功能、架构、数据、测试和共享元数据使用当前里程碑分支；该分支必须有 upstream。
+- 每轮完成真实门禁后必须 Commit + Push，GitHub 是跨设备接续和正式项目事实源。
+- `changelog.md`、版本源、`docs-index.md` 与 `file-tree.md` 的正式开发需要优先于未推送 UI 实验。
+
+### 19.2 本地 UI 通道
+
+- UI 实验默认使用独立 worktree 与 `local/<任务>` 分支；不设 upstream，禁止 Push。
+- UI Agent 可以本地保存和本地 Commit，但不得把本地 Commit 放在正式开发分支上。
+- UI 分支落后或冲突时，以最新正式远端 HEAD 为基线重新适配；不得要求正式开发等待未推送 UI 修改。
+
+### 19.3 冲突与暂存
+
+- 冲突优先级固定为：正式功能代码 > 正式架构/数据模型 > 正式测试 > 正式共享元数据 > XYUI 本地实现 > UI 实验稿。
+- 正式开发 Agent 必须显式暂存本轮文件，并用 `git diff --cached` 复核；不得用 `git add -A` 混入 UI 修改。
+- 同一工作区偶遇 UI 修改时应保留其源码，不主动删除；共享文件按正式开发需要落库，UI 后续在独立 worktree 适配。

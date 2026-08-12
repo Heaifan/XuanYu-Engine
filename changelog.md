@@ -18,6 +18,15 @@
 
 ---
 
+## v0.2.28.8-rz · DEV-FIRST MULTI-AGENT CHANNELS
+DEV-FIRST（2026-08-13 00:33:13）：正式开发使用有 upstream 的里程碑分支并 Commit + Push；UI 实验默认进入无 upstream、禁止 Push 的 `local/<任务>` 独立 worktree。
+- 优先级：正式功能、架构/数据、测试与共享元数据优先于 XYUI 本地实现和 UI 实验稿；UI 后续基于最新远端正式 HEAD 适配。
+- 安全性：正式开发显式暂存并复核 cached diff；禁止把 UI 本地 Commit 放在正式分支后被后续 Push 间接发布。
+- 架构澄清：GlobalWorld 实体索引继续保持唯一权威；未注册 World Entity 的 Map Authoring 几何可使用仅含原生 Map ID + Bounds 的 Editor 派生索引。
+- 验证：文档引用、版本四处一致、ARCH-A 与 `git diff --cached --check` 以本提交前实际结果为准；未修改产品代码。
+- Hash：本条所在治理提交。
+- 遗留：既有远端 `feat/XYUI-A` 不在本轮删除；本地 XYUI worktree 按新规则改为 local-only。
+
 ## v0.2.28.7-rz · MAP-DATA-A-R2-F2 CLOSED
 MAP-DATA-A-R2-F2 Geometry Vertex Editing Closeout（2026-08-12 23:22:05）：用户完成 C01～C07 真机验收并全部 PASS；本轮仅同步关闭结论，不修改功能实现。
 - 状态：`MAP-DATA-A-R2-F2`、`MAP-DATA-A-R2-F2-F2` 与 `MAP-DATA-A-R2-F2-F2-F1` 均为 `CLOSED`；正式解除 F3 Snap 冻结。
