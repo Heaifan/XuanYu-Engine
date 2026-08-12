@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.27.3-fix · MAP-DATA-A-R1 CLOSED
+MAP-DATA-A-R1 Closeout（2026-08-12 14:03:30）：用户最终裁决 R1 真机验收整体 PASS，F1/F2/F3 全部 PASS；本轮仅同步验收状态、关闭记录与 XYUI Backlog，不修改生产代码。
+- 状态：`MAP-DATA-A-R1 CLOSED`；下一阶段正式进入 `MAP-DATA-A-R2 · Road Dataset / Polyline`。
+- 已知 UI 债务：RegionPanel“已有区域”Binding 文本显示异常，登记至 XYUI/UI Backlog，不阻塞 DATA-A，不创建 F4。
+- 验证：沿用 R1 功能基线 `82f05a46552e99a537126cd6c616a1d098bff835` 的完整自动门禁；本轮变更仅为文档/状态同步。
+- 遗留：R2 冻结为 T1 R1 Closeout、T2 Road Dataset + Polyline 数据合同、T3 Road Authoring → Render → Save/Reload 完整闭环。
+
 ## v0.2.27.3-fix
 MAP-DATA-A-R1-F3 Region Authoring UX Consolidation（2026-08-12 12:21:37）：将区域专属工具、草稿状态和草稿历史收回 Region Workspace，并接通 Dataset-backed Layer 改名与安全移除，R1 保持 OPEN。
 - 变化：左侧新增 Region 工具架，提供当前 Dataset、绘制区域、草稿顶点状态、撤销/重做顶点、完成/取消绘制和区域数量；顶部移除区域专属绘制入口。Draft Undo/Redo 与 Ctrl+Z/Y 按“活动 Draft 优先、无 Draft 走 Map History”路由，完成区域仍只产生一个正式 Map History Entry。

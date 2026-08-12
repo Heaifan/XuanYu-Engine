@@ -1,6 +1,6 @@
 # MAP-DATA-A-R1-F3 · Region Authoring UX 真机验收
 
-状态：`READY FOR USER ACCEPTANCE`。自动测试不替代人工验收；F3 六项全部 PASS 后继续 R1-M02～R1-M07，R1 保持 OPEN。
+状态：`USER ACCEPTANCE PASS`。用户于 2026-08-12 确认 F3 六项 PASS；F3 作为 R1 Closeout 的历史验收分项归档。
 
 | 序号 | 路径 | 输入 I | 过程 P | 输出 O |
 |---|---|---|---|---|
@@ -11,4 +11,4 @@
 | F3-M05 | 区域编辑 → 右下图层列表 | Dataset-backed Region Layer | 双击图层名称，输入“广东”，按 Enter、Esc、失去焦点分别验证 | Enter/失焦提交并同步 Dataset/Layer/Inspector；Esc 放弃；名称权威仍为 Dataset Name。 |
 | F3-M06 | 区域编辑 → 右下图层列表 → 删除 | 选中未锁定 Region Dataset Layer | 点击删除并确认 | 从当前地图解除注册区域图层；对应 Dataset 文件保留；锁定图层删除按钮不可用；取消确认不改变任何内容。 |
 
-验收结论：用户填写 `PASS / FAIL`。F3 未全部 PASS 前，不得标记 R1 CLOSED；R1 全量通过前不得启动 R2。
+验收结论：`PASS`。Region Authoring UX、Draft History、Dataset-backed Layer 改名与解除注册验收通过。

@@ -1166,6 +1166,8 @@
 │  │  ├─ closed/
 │  │  │  ├─ MAP-A/
 │  │  │  │  └─ R2-closeout.md
+│  │  │  ├─ MAP-DATA-A/
+│  │  │  │  └─ R1-closeout.md
 │  │  │  └─ MAP-DOC-A/
 │  │  │     └─ R3-closeout.md
 │  │  └─ current/
@@ -1175,6 +1177,7 @@
 │  │     │  ├─ EDITOR-A-R3-F1-shell-compact.md
 │  │     │  ├─ EDITOR-A-R3-F1-closeout.md
 │  │     │  ├─ EDITOR-A-R3-mode-shell.md
+│  │     │  └─ XYUI-backlog.md
 │  │     │  ├─ editor-a-r1-workspace-contract.svg
 │  │     │  ├─ editor-a-r2-workspace-switch.svg
 │  │     │  └─ editor-a-r3-mode-shell.svg
@@ -2237,6 +2240,7 @@
 - `docs/milestones/current/MAP-A/map-contract.md` — MAP-A 地图合同与当前轮验收材料
 - `docs/milestones/closed/MAP-A/R2-closeout.md` — MAP-A-R2 CLOSED 收口报告、交付能力盘点与关闭证据。
 - `docs/milestones/closed/MAP-DOC-A/R3-closeout.md` — MAP-DOC-A-R3 用户验收 PASS 与 CLOSED 收口记录。
+- `docs/milestones/closed/MAP-DATA-A/R1-closeout.md` — MAP-DATA-A-R1 用户验收 PASS、已知 UI 债务与 R2 交接收口记录。
 - `docs/milestones/current/MAP-A/R3-backlog.md` — MAP-A-R3 冻结前候选方向与范围约束。
 - `docs/milestones/current/MAP-A/R3-F1-closeout.md` — F1 FINAL 15 项真机 IPO 收口清单。
 - `docs/milestones/current/MAP-A/viewport-overlay-development-plan.md` — OVL-R0～R3 比例尺架构整改计划与状态。
@@ -2257,6 +2261,7 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F1-acceptance.md` — R1-F1 Region Drawing Tool Activation 三项真机 IPO 验收模板。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F2-acceptance.md` — R1-F2 Polygon 与 Region Dataset 自动 Bootstrap 六项真机 IPO 验收模板。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F3-acceptance.md` — R1-F3 Region Authoring UX 六项真机 IPO 验收模板。
+- `docs/milestones/current/EDITOR-A/XYUI-backlog.md` — 非阻塞 XYUI/UI 债务登记，记录 RegionPanel Binding 文本显示异常。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪

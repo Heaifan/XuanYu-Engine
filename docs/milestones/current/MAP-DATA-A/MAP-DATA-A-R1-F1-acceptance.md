@@ -1,6 +1,6 @@
 # MAP-DATA-A-R1-F1 · Region Drawing Tool Activation 真机验收
 
-状态：`READY FOR USER ACCEPTANCE`。F1 仅修复真实工具入口与激活守卫；自动测试不替代人工验收。F1 三项全部 PASS 后，从原 R1-M02 继续验收。
+状态：`USER ACCEPTANCE PASS`。用户于 2026-08-12 确认 F1 三项 PASS；F1 作为 R1 Closeout 的历史验收分项归档。
 
 注：R1-F3 已将区域专属入口从顶部迁移到左侧 Region Workspace 工具架；本文件保留 F1 历史验收模板，当前入口、草稿状态与子工具以 `MAP-DATA-A-R1-F3-acceptance.md` 为准。
 
@@ -10,4 +10,4 @@
 | F1-M02 | 区域编辑 → 顶部工具栏 → 绘制区域 → 视口 | 已通过 F1-M01 | 点击“绘制区域”，再点击地面，连续点击三点并闭合 | 按钮选中；右下显示“工具：区域绘制”；首击产生一个 Draft 点；后续点击显示边；三点后可闭合。 |
 | F1-M03 | 区域编辑 → 数据集图层 / 顶部工具栏 | 锁定 Dataset、切换 Dataset、返回地图编辑 | 分别观察按钮、Draft 与工具状态 | 锁定后按钮不可用；切换 Dataset 取消 Draft；离开区域编辑退出区域绘制。 |
 
-验收结论：用户填写 `PASS / FAIL`。F1 未全部 PASS 前，R1 保持 OPEN，不得启动 R2；F1 PASS 后继续原 `MAP-DATA-A-R1-acceptance.md` 的 R1-M02～R1-M07，并在 R1 全量通过后才可 Closeout。
+验收结论：`PASS`。F1 真机验收通过，入口迁移后的当前 Region 工作区细节以 F3 记录为准。

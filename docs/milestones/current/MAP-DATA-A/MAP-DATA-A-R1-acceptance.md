@@ -1,6 +1,6 @@
 # MAP-DATA-A-R1 真机验收
 
-状态：`USER ACCEPTANCE FAILED → R1-F3 IMPLEMENTING`。F2 几何与 Bootstrap 已进入 F3 区域工作区链路；R1-M02～M07 继续暂停。本轮 F3 真机模板见 `MAP-DATA-A-R1-F3-acceptance.md`。
+状态：`USER ACCEPTANCE PASS`。用户于 2026-08-12 明确裁决 MAP-DATA-A-R1 真机验收整体 PASS；F1、F2、F3 均 PASS。当前 UI 细节不构成阻塞，已登记至 XYUI/UI Backlog；R1 Closeout 见 `docs/milestones/closed/MAP-DATA-A/R1-closeout.md`。
 
 | 序号 | 路径 | 输入 I | 过程 P | 输出 O |
 |---|---|---|---|---|
@@ -12,4 +12,4 @@
 | R1-M06 | 区域编辑 → 工具栏 | 在 A 新建 Region | 撤销，再重做；同时观察 Dataset 图层状态 | Region 内容按 Undo/Redo 恢复；Dataset 可见、锁定、顺序不被 History 改写。 |
 | R1-M07 | 地图编辑 → 数据集图层 | A、B 各修改后保存 | 制造或观察保存失败提示（不得覆盖有效旧文件） | 保存失败不应留下“一份新、一份旧”的 Region Dataset；修复条件后重开仍为上一稳定状态。 |
 
-验收结论：由用户填写 `PASS / FAIL`；未获得全部 PASS 前，MAP-DATA-A-R1 不得标记 CLOSED，也不得启动 R2。
+验收结论：`PASS`。用户最终裁决覆盖 R1 原始功能验收；已知 UI 债务不阻塞 DATA-A，转入 XYUI/UI Backlog。MAP-DATA-A-R1 已 CLOSED，下一阶段为 MAP-DATA-A-R2 Road Dataset / Polyline。

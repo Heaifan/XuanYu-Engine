@@ -1,6 +1,6 @@
 # MAP-DATA-A-R1-F2 · Polygon & Auto Bootstrap 真机验收
 
-状态：`READY FOR USER ACCEPTANCE`。自动测试不替代人工验收；F2 六项全部 PASS 后继续 R1-M02～R1-M07，R1 保持 OPEN。
+状态：`USER ACCEPTANCE PASS`。用户于 2026-08-12 确认 F2 六项 PASS；F2 作为 R1 Closeout 的历史验收分项归档。
 
 | 序号 | 路径 | 输入 I | 过程 P | 输出 O |
 |---|---|---|---|---|
@@ -11,4 +11,4 @@
 | F2-M05 | 区域编辑 → 顶部工具栏 → 绘制区域 | 无区域 Dataset，快速连续点击两次 | 连续触发“绘制区域” | 只创建一个 Region Dataset；Bootstrap 完成后仅保留一个正式绘制目标。 |
 | F2-M06 | 地图保存 → 重新打开 | F2-M01 自动创建 Dataset，并完成四点 Region | 保存 `map.json`，关闭后重新打开 | Dataset、RegionId、四个顶点及归属全部恢复；R1 仍显示为 OPEN，未启动 R2。 |
 
-验收结论：用户填写 `PASS / FAIL`。F2 未全部 PASS 前，不得标记 R1 CLOSED；R1 全量通过前不得启动 R2。
+验收结论：`PASS`。F2 Polygon、Bootstrap、Save/Reload 验收通过。
