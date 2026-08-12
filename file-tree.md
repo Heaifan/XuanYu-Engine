@@ -529,6 +529,7 @@
 │  │  │  ├─ UiVm.MapDataset.Logging.cs
 │  │  │  ├─ UiVm.MapDataset.Routing.cs
 │  │  │  ├─ UiVm.MapDataset.cs
+│  │  │  ├─ MapDatasetRow.cs
 │  │  │  ├─ UiVm.MapDataset.Selection.cs
 │  │  │  ├─ MapDatasetTypePresentation.cs
 │  │  │  ├─ UiVm.MapDiagnostics.Format.cs
@@ -1571,6 +1572,7 @@
 - `XuanYu.Editor.UI/Vm/Map/MapRenderSnapshotProjection.cs` — MAP-A-R2-D3/D4：MapDefinition → MapRenderSnapshot 纯投影（渲染唯一输入）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.cs` — MAP-A-R2-D3-F1：地图面板命令真实路由（UiVm.RunCommand → 地图命令）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.cs` — MAP-DOC-A-R2-F3：Dataset Registry 列表、空态、状态与投影通知。
+- `XuanYu.Editor.UI/Vm/Map/MapDatasetRow.cs` — Dataset Layer/Inspector 投影使用的 Dataset 行快照与中文类型显示映射。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Selection.cs` — MAP-DOC-A-R2-F3：SelectedDatasetId 单一选择合同及 Dataset-backed Layer 投影。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingTarget.cs` — MAP-DATA-A-R1-F1：Region Drawing 可用性守卫、Dataset 绘制目标与草稿取消保护。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingBootstrap.cs` — MAP-DATA-A-R1-F2：Region Drawing 异步入口、Region Dataset 自动创建、选择投影、锁定/无效拒绝与并发防重入。
