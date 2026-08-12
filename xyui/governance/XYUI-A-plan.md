@@ -137,6 +137,8 @@ A0-R1-10  停止，不进入 XYUI0 整理，等待门禁满足
 
 ## 4. XYUI-A1 · XYUI0 Foundation Intake
 
+> 状态：`XYUI-A1-R1-F1 · READY FOR USER ACCEPTANCE`（A1-R1 已完成 Source Intake + Evidence Mapping；F1 按人工复核修正分类：0.13/0.3-A/0.24 = SOURCE_FORMATTING_DEFECT ×3，0.29 恢复 CLEAR，0.2-A↔0.2-C 改 TOKEN_LAYER_OVERLAP ×2；Source SHA 未变。R2 待批准后解锁。）
+
 **本轮输入**：只允许 XYUI0 XMind / XYUI0 大纲（XMind = 人类原始证据；Outline = 辅助机器解析）。**禁止读取 XYUI1/2 反推、补全 XYUI0；禁止查玄域现有 UI、行业规范、Material Design、Bootstrap、Avalonia 默认视觉、其他设计系统、Agent 自身设计经验补答案。**
 
 ### A1-R1 · Source Intake + Evidence Mapping（当前轮）

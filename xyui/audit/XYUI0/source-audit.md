@@ -1,34 +1,45 @@
 # XYUI0 Source Audit
 
-> XYUI-A1-R1 · Source Intake + Evidence Mapping 审计稿（给人审）
+> XYUI-A1-R1-F1 · Source Intake + Evidence Mapping 审计稿（F1 分类修正版，给人审）
 >
 > - 源文件：`xyui/source/XYUI0/XYUI-0.md`（不可变 Evidence Source）
-> - SHA-256：`e564a4b4bffc518b5df3144ca5834995ce7abd6b649853f2fa845afa3658d0b6`
+> - SHA-256：`e564a4b4bffc518b5df3144ca5834995ce7abd6b649853f2fa845afa3658d0b6`（F1 后未变）
 > - source_id：`XYUI-SOURCE-000` · source_type：xmind-markdown-export
-> - 导入时间：2026-08-13T00:30:00+08:00
-> - 状态：`READY FOR USER AUDIT`（本稿只建 Evidence Chain，不产生正式 APPROVED）
+> - 状态：`READY FOR USER ACCEPTANCE`（本稿只建 Evidence Chain，不产生正式 APPROVED）
+> - F1 修正依据：用户人工复核裁定（2026-08-13）
 
-## 一、统计
+## 一、统计（F1 修正后）
 
 | 指标 | 数值 |
 |---|---|
 | 总项数（一级 32 + 子节 12） | 44 |
-| CLEAR（证据链完整清晰） | 42 |
-| AMBIGUOUS（有选择但表述模糊/层级歧义） | 2 |
-| MISSING（未找到最终选择） | 0 |
-| 潜在冲突（同一语义两处定义数值不同） | 2 项（0.2-A ↔ 0.2-C） |
-| possible_relation（跨节引用关系待 R2 裁决） | 见各项 |
+| CLEAR（设计语义可确定） | **44** |
+| DESIGN_AMBIGUOUS | **0** |
+| MISSING | 0 |
+| SOURCE_FORMATTING_DEFECT（Source 层级异常，非设计未定） | **3** |
+| TOKEN_LAYER_OVERLAP（Token 分层重叠，非 CONFLICT） | **2** |
+| FORMAL APPROVED / TOKEN GENERATED | 0 / 0 |
 
-## 二、潜在冲突登记（R1 只记录不裁决）
+> Formatting Defect ≠ 设计没定；两者不得混入同一分类。
 
-| 位置 | 冲突 | 证据行 |
-|---|---|---|
-| XYUI0-0.2-A vs XYUI0-0.2-C | `XY.Color.App=#F1F4F6` vs `XY.Surface.App=#EEF2F5`（同一语义「应用背景」两处定义数值不同） | L194-197 vs L305-307 |
-| XYUI0-0.2-A vs XYUI0-0.2-C | `XY.Color.Panel=#F7F9FA` vs `XY.Surface.Panel=#F5F8FA`（同一语义「面板背景」两处定义数值不同） | L198-200 vs L308-310 |
+## 二、SOURCE_FORMATTING_DEFECT 登记（3 处，Source 原文不修改）
 
-> R2 将根据顺序、明确覆盖语句、最终确认判断为 OVERRIDE 或 CONFLICT；R1 不合并、不修改。
+| ID | 位置 | 原文异常 | 语义裁定 |
+|---|---|---|---|
+| XYUI-SFD-001 | 0.13 L1212-1215 | `XY.Shadow.Control` 12 空格缩进嵌在 `XY.Shadow.Panel`(8 空格) 之下 | Panel 与 Control 语义同级（均 Value=None） |
+| XYUI-SFD-002 | 0.3-A L709-712 | `XY.Font.Mono` 12 空格缩进嵌在 `XY.Font.Default`(8 空格) 之下 | Mono 为独立 Font Token（FontFamily=Source Code Pro），与 UI/Default/Technical 同级 |
+| XYUI-SFD-003 | 0.24 L1792-1793 | `Role = Tooltip` 与 `XY.Overlay.TooltipHost` 同级(8 空格)，未缩进为子级（对比 ModalHost Role 为 12 空格） | 语义关系：`XY.Overlay.TooltipHost` → `Role = Tooltip` |
 
-## 三、逐项审计
+## 三、TOKEN_LAYER_OVERLAP 登记（2 处，非 CONFLICT）
+
+| ID | 重叠对 | 分层说明 | 处置 |
+|---|---|---|---|
+| XYUI-TLO-001 | `XY.Color.App=#F1F4F6` ↔ `XY.Surface.App=#EEF2F5` | 0.2-A 基础色彩母版 vs 0.2-C Semantic Surface；0.12 明确 `XY.SurfaceRole.App → XY.Surface.App` 为实际消费 | R1 不改名/不删/不合并；A2 Registry/Token 定 canonical mapping |
+| XYUI-TLO-002 | `XY.Color.Panel=#F7F9FA` ↔ `XY.Surface.Panel=#F5F8FA` | 同上（Panel 语义） | 同上 |
+
+> 实际代码调用路径：`Panel → XY.SurfaceRole.Panel → XY.Surface.Panel`，而非 `XY.Color.Panel`。
+
+## 四、逐项审计
 
 ### XYUI0-0.1 · Design Principles｜设计原则
 
@@ -61,9 +72,9 @@
   - `SELECT` LL180 — 方案名称：冷灰湖蓝 / Cool Gray Lake Blue
   - `COMMENT` LL182-193 — 结构特征：冷灰基础+湖蓝 Accent、浅色高明度冷灰白、深色深蓝灰非纯黑、主色低饱和、状态色低饱和绿/金褐/红、Light/Dark 同一套语义 Token、禁控件硬编码颜色
   - `COMMENT` LL194-238 — UI代码 12 组双主题色：App/Panel/Raised/Border/Text.Primary/Text.Secondary/Accent/Hover/Selected/Su…
-- 备注：潜在冲突：0.2-A XY.Color.App=#F1F4F6 vs 0.2-C XY.Surface.App=#EEF2F5；XY.Color.Panel=#F7F9FA vs 0.2-C XY.Surface.Panel=#F5F8FA（同一语义两处定义数值不同）
+- **TOKEN_LAYER_OVERLAP**：XYUI-TLO-001（XY.Color.App/#F1F4F6 ↔ XY.Surface.App/#EEF2F5）→ 0.2-A 为基础色彩母版(Base Palette)，0.2-C 为 Semantic Surface；0.12 已明确 XY.SurfaceRole.* →…
+- 备注：TOKEN_LAYER_OVERLAP（非 CONFLICT）：职责分层不同（色彩母版 vs Semantic Surface），由 0.12 SurfaceRole 决定实际消费；R1 忠实记录，A2 处理。
 - possible_relation：XYUI0-0.2-C, XYUI0-0.2-G
-- **potential_conflict = true（见第二节）**
 
 ### XYUI0-0.2-B · Text Color｜文字颜色层级
 
@@ -85,9 +96,9 @@
   - `SELECT` LL290 — 方案名称：清晰四层 / Clear Four-Level Surface
   - `COMMENT` LL292-304 — 结构特征：App 最低/Panel 普通工具区/PanelAlt 轻微抬升/Raised 输入框与属性块/Overlay 浮层/Canvas 与工具面板明显区分/明度逐层抬升/不依…
   - `COMMENT` LL305-339 — UI代码十档双主题：App/Panel/PanelAlt/Raised/Canvas/Toolbar/Input/Overlay/Selected/BorderReference
-- 备注：潜在冲突：App/Panel 色值与 0.2-A 不同（见 0.2-A note）
+- **TOKEN_LAYER_OVERLAP**：XYUI-TLO-002（XY.Color.Panel/#F7F9FA ↔ XY.Surface.Panel/#F5F8FA）→ 0.2-A 为基础色彩母版(Base Palette)，0.2-C 为 Semantic Surface；0.12 已明确 XY.SurfaceRole.* →…
+- 备注：TOKEN_LAYER_OVERLAP（非 CONFLICT）：职责分层不同（色彩母版 vs Semantic Surface），由 0.12 SurfaceRole 决定实际消费；R1 忠实记录，A2 处理。
 - possible_relation：XYUI0-0.2-A, XYUI0-0.12
-- **potential_conflict = true（见第二节）**
 
 ### XYUI0-0.2-D · Border / Divider｜边框与分割线
 
@@ -173,7 +184,8 @@
   - `SELECT` LL696-697 — 方案名称：思源黑体 + Source Code Pro
   - `COMMENT` LL698-705 — 结构特征：中文与普通 UI 统一思源黑体/英文普通界面随 UI Sans 用思源黑体西文字形/ID 路径坐标数值技术数据用 Source Code Pro/满足可商用字体准入/随包…
   - `COMMENT` LL706-722 — UI代码：UI=Source Han Sans SC、Default=UI、Mono=Source Code Pro、Technical=Mono、Fallback.CJK=Not…
-- 备注：原文 L709-712 XY.Font.Default 下嵌套 XY.Font.Mono（12 空格缩进），语义上 Mono 应为同级独立定义（FontFamily 值明确）；层级显示歧义不影响取值，已记录。
+- **SOURCE_FORMATTING_DEFECT**：XYUI-SFD-002（原文缩进异常：XY.Font.Mono 以 12 空格缩进出现在 XY.Font.Default(8 空格) 之下）→ 语义裁定：XY.Font.Mono 为独立 Font Token（FontFamily=Source Code Pro），与 UI/Default/Technical 同级
+- 备注：SOURCE_FORMATTING_DEFECT（XYUI-SFD-002）：XY.Font.Mono 应视为独立 Token，语义同级；层级显示歧义不影响取值。Source 原文不修改。
 
 ### XYUI0-0.3-B · Font Weight｜字重体系
 
@@ -297,12 +309,13 @@
 
 - 位置：L1176-1215 · 类型：foundation-shadow
 - 最终选择语句：轻量层级 / Lightweight Elevation
-- 判断：**AMBIGUOUS**
+- 判断：**CLEAR**
 - Evidence：
   - `SELECT` LL1183-1184 — 方案名称：轻量层级 / Lightweight Elevation
   - `COMMENT` LL1185-1193 — 结构特征：普通 Panel/Button/Input 不使用阴影/Tooltip 轻阴影/Popup Menu 中轻阴影/Drag Preview 略强/阴影只表达 Z 轴脱离关系…
   - `COMMENT` LL1194-1215 — UI代码：None、Tooltip(0,3,10,0.12)、Popup(0,6,18,0.14)、DragPreview(0,6,18,0.14)、Panel=None、Cont…
-- 备注：原文 L1212-1215 缩进歧义：XY.Shadow.Control 以 12 空格缩进出现在 XY.Shadow.Panel(8 空格) 之下，Panel 与 Control 的同级/子级关系不明确；值本身明确（均 None）。层级关系留待 R2 裁决。
+- **SOURCE_FORMATTING_DEFECT**：XYUI-SFD-001（原文缩进异常：XY.Shadow.Control 以 12 空格缩进出现在 XY.Shadow.Panel(8 空格) 之下）→ 语义裁定：XY.Shadow.Panel 与 XY.Shadow.Control 语义上为同级 Token（均 Value=None）
+- 备注：SOURCE_FORMATTING_DEFECT（XYUI-SFD-001）：层级表达异常，非设计未定；语义同级已由人工裁定。Source 原文不修改。
 
 ### XYUI0-0.14 · Opacity｜透明度系统
 
@@ -422,7 +435,8 @@
   - `COMMENT` LL1749-1769 — 结构特征：普通组件原则上不直接填写具体 ZIndex/浮层统一由专用 Host 管理/避免 999 9999 魔法数字/Host 体系：Content→Overlay Host（D…
   - `COMMENT` LL1770-1778 — 临时说明：Tooltip 位于普通应用浮层体系最高层/各 Host 内部允许局部排序/局部排序不得跨越 Host 语义边界/普通业务组件不得绕过 Host 强行提高 ZIndex/…
   - `COMMENT` LL1779-1801 — UI代码：Mode=ContextStack、DirectValue=Forbidden、ContentHost=BaseContent、OverlayHost=PopupAndO…
-- 备注：原文含「临时说明」块（L1770-1778）：Tooltip 位于浮层体系最高层、Host 内局部排序不得跨越语义边界、业务组件不得绕过 Host 提高 ZIndex、浮层必须进入正式 Host。该块标题为临时说明，内容与 UI 代码一致（TooltipHost.Priority=Topmost），是否全部正式化留待 R2 确认。
+- **SOURCE_FORMATTING_DEFECT**：XYUI-SFD-003（原文缩进异常：Role = Tooltip 与 XY.Overlay.TooltipHost 同级(8 空格)，未缩进为其子级（对比 ModalHost 的 Role 为 12 空格））→ 语义裁定：语义关系为 XY.Overlay.TooltipHost → Role = Tooltip
+- 备注：SOURCE_FORMATTING_DEFECT（XYUI-SFD-003）：Role=Tooltip 应归属 TooltipHost 子级；语义关系已由人工裁定。Source 原文不修改。
 - possible_relation：XYUI0-0.12, XYUI0-0.13
 
 ### XYUI0-0.25 · Scroll｜滚动规则
@@ -471,12 +485,12 @@
 
 - 位置：L2009-2054 · 类型：foundation-tooltip
 - 最终选择语句：自适应内容 Tooltip / Adaptive Content Tooltip
-- 判断：**AMBIGUOUS**
+- 判断：**CLEAR**
 - Evidence：
   - `SELECT` LL2017-2018 — 方案名称：自适应内容 Tooltip / Adaptive Content Tooltip
   - `COMMENT` LL2019-2033 — 结构特征：短内容单行/较长自动换行/较多允许双层结构/MaxWidth 受限默认 280 DIP/首次 Hover 延迟约 400ms/靠边缘自动调整方向（可左右上下翻转）优先避免…
   - `COMMENT` LL2034-2054 — UI代码：ContentMode=Adaptive、ShortContent=SingleLine、LongContent=WrapOrTwoLevel、MaxWidth=280、…
-- 备注：ShowDelay 原文为「首次 Hover 延迟约 400 ms」（L2025），带约量词，精确值未定；MaxWidth=280 DIP 明确。留待 R2 裁决是否冻结 400ms。
+- 备注：人工裁定（A1-R1-F1）：叙述『约 400 ms』属人类描述语气；正式工程值由 XY.Tooltip.ShowDelay=400 ms 冻结，不得进入 UNRESOLVED。
 
 ### XYUI0-0.30 · Text & Naming｜文本与命名规范
 
@@ -510,10 +524,9 @@
   - `COMMENT` LL2208-2236 — UI代码：Unit=DIP、PhysicalPixelHardcode=Forbidden、PerMonitor=Enabled、LiveMonitorSwitch=Enabled…
 - possible_relation：XYUI0-0.19
 
-## 四、R1 边界声明
+## 五、R1 边界声明
 
 - 本稿未产生任何正式 APPROVED 状态（五态分类属 A1-R2）。
 - 本稿未产生任何 Token 输出。
 - 本稿未读取 XYUI1/2、玄域现有 UI、行业规范或任何外部设计系统。
-- 所有字段原文缺失处按 NOT_PRESENT 处理（本稿每项均有方案名称与 UI 代码，无缺字段项）。
-- Evidence 均可通过行号反查 `xyui/source/XYUI0/XYUI-0.md` 原文。
+- Evidence 均可通过行号反查 `xyui/source/XYUI0/XYUI-0.md` 原文；Source SHA 与原始文件一致。
