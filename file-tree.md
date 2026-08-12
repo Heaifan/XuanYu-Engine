@@ -1509,6 +1509,7 @@
 - `XuanYu.Editor.UI/Viewport/Vulkan/NativePointerMessage.cs` — （职责待补）
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaCamera.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.AvaloniaPointer.cs` — STAB-1：Avalonia 指针路径先交给 Navigation Gizmo，再进入 Region/Picking，并捕获/释放手势。
+- `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Pointer.cs` — MAP-DATA-A-R2-F2：Native Region PointerMove 安全路由与顶点交互优先级入口。
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Bridge.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.CameraPointer.cs` — sealed partial class VulkanNativeHost
 - `XuanYu.Editor.UI/Viewport/Vulkan/VulkanNativeHost.Dpi.cs` — sealed partial class VulkanNativeHost
@@ -2313,6 +2314,9 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F1-acceptance.md` — MAP-DATA-A-R2-F1：顶层 Workspace、子模式、统一图层与 Region/Road 回归真机 IPO 模板。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-plan.md` — MAP-DATA-A-R2-F2：Geometry Vertex Editing 冻结目标、边界与自动证据要求。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-acceptance.md` — MAP-DATA-A-R2-F2：区域/道路顶点编辑、取消、校验、Undo/Redo 与 Save/Reload 真机 IPO。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety-plan.md` — MAP-DATA-A-R2-F2：Region Pointer Safety 根因、冻结目标与输入优先级。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety-acceptance.md` — MAP-DATA-A-R2-F2：空 Draft、顶点抢占、Cancel、模式切换与 CRASH-REPRO-01 真机 IPO。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety.svg` — MAP-DATA-A-R2-F2：Region Pointer Safety 输入优先级逻辑图。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-acceptance.md` — MAP-DATA-A-R2：区域编辑内 Road Dataset/Polyline 真机验收 IPO 清单。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
@@ -2375,6 +2379,7 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Input.cs` — 区域绘制视口边界判断与地图表面拾取。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.Logging.cs` — 区域绘制开始、成功、取消与错误的低频中文日志。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.RegionDrawing.cs` — 区域绘制地面命中、Draft 顶点与失败安全预览输入。
+- `XuanYu.World.Tests/UiRuntime/RegionPointerSafetyF2Tests.cs` — MAP-DATA-A-R2-F2：CRASH-REPRO-01、空 Draft、首锚点 Preview、顶点优先与模式往返安全回归。
 - `XuanYu.Editor.UI/Win/UiWin.Shortcuts.cs` — 窗口快捷键路由，包含区域绘制 Enter 闭合与 Esc 取消入口。
 - `XuanYu.Editor.UI/Vm/Map/MapRegionRenderProjection.cs` — 将正式区域和绘制草稿投影为静态模型渲染资源。
 - `XuanYu.Render.Vulkan/Render/StaticModels/VulkanClearFrameOwner.DrawRegionModel.cs` — 复用静态模型管线绘制地图区域资源。

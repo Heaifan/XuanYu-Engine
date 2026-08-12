@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：F2 实现中；F1 已按用户裁决 CLOSED（2026-08-12）。
+状态：R2-F2 Region Pointer Safety 实现中；F1 USER ACCEPTANCE FAILED，R2 尚未 CLOSED。
 
 ## 冻结目标
 
@@ -14,7 +14,11 @@
 Road Dataset 与 Polyline 数据闭环保留；顶层 Workspace 仅有 MapEditor/RegionEditor，Road 作为 RegionEditor 内的 `RegionAuthoringMode.Road`。
 Region 与 Road Dataset、Manifest、Feature JSON、Render 和 Save/Reload 合同不变。
 
-## R2-F2 几何顶点编辑
+## R2-F2 当前修复轮：Region Pointer Safety
+
+本轮只处理 Region Tool 空 Draft PointerMove 闪退，以及已有顶点交互被 Region Preview 抢占；修复完成并通过真机验收后，回到 R2-F1 剩余验收链。既有几何顶点编辑代码保持，不扩展道路、Vulkan、Schema、持久化或 Layer 范围。
+
+## R2-F2 几何顶点编辑基线
 
 点击已完成区域面或道路选中 feature 后显示顶点控制柄；拖动单个顶点先更新预览，释放鼠标才通过 `MapEditSession` 提交一条历史。区域继续执行多边形合法性校验，道路拒绝相邻重复节点；不引入吸附、共享边界或拓扑联动。
 

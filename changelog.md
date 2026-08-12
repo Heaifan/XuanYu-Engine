@@ -18,6 +18,15 @@
 
 ---
 
+## v0.2.28.3-fix · MAP-DATA-A-R2-F2 REGION POINTER SAFETY
+MAP-DATA-A-R2-F2 Region Pointer Safety（2026-08-12 17:21:40）：根据用户真机回归发现的 Region Tool 闪退与输入抢占，建立极窄修复轮。
+- 变化：Region Tool 在空 Draft 或零 Anchor 时 PointerMove 显式 NO-OP；已有顶点 PointerDown/Drag 优先于 Region Preview；取消和模式往返清理保持安全。
+- 根因：`RegionDrawingPointerMoved()` 在 `Draft != null` 且 `Vertices.Length == 0` 时读取 `Vertices[0]`；Native/Avalonia 绘制入口先于已有顶点交互入口。
+- 范围：仅修改 5 个业务输入/区域交互文件与对应测试；不修改 Schema、Save/Load、Layer、Vulkan、相机或 Picking 数学。
+- 验证：Editor.UI 快速构建 0 Warning/0 Error；F2 聚焦测试 15/15；正式完整门禁结果以本条后续 Hash 记录为准。
+- Hash：`25fe5f0`（实现提交）。
+- 遗留：F2-M01～F2-M10 真机验收待用户执行；F1 保持 USER ACCEPTANCE FAILED，R2 不得 CLOSED。
+
 ## v0.2.28.2-fix · MAP-DATA-A-R2-F2 GEOMETRY VERTEX EDITING
 MAP-DATA-A-R2-F2 Geometry Vertex Editing（2026-08-12 16:00:56）：承接用户确认的 F1 真机通过，进入已完成 Region/Road 几何顶点编辑。
 - 变化：点击已完成区域面或道路显示顶点控制柄；顶点拖动采用 Preview → Commit，释放提交一条 Map History，Esc 取消；区域/道路统一接入现有 MapSession、Render Overlay、Save/Reload 与 Ctrl+Z/Y。
@@ -33,7 +42,7 @@ MAP-DATA-A-R2-F1 Regional Authoring Hierarchy（2026-08-12 15:12:17）：撤回 
 - 兼容：Dataset/Manifest/Feature JSON、Dataset 0.3.0 Road、Region 0.2.0、MapRoad、MapRegion、Vulkan Renderer 与 Save/Reload 合同不变；未发现 RoadEditor 持久化入口。
 - 验证：Solution Build 0 Warning/0 Error；Core.Tests 339/339、World.Tests 1270/1270、WarCore.Tests 22/22；专项 RegionAuthoringHierarchy 5/5；AXAML XML、5+100、版本一致性、ARCH-A 与 `git diff --check` PASS。
 - Hash：`e4409db`。
-- 遗留：用户已于 2026-08-12 裁定 F1-M01～F1-M08 真机验收通过；F1 CLOSED，进入 R2-F2 顶点编辑，F3 仍禁止启动。
+- 遗留：后续真机回归发现 Region Pointer Safety 问题；F1 改为 USER ACCEPTANCE FAILED，转入 v0.2.28.3-fix 修复轮，F3 仍禁止启动。
 
 ## v0.2.28.0-rz · MAP-DATA-A-R2 IMPLEMENTED
 MAP-DATA-A-R2 Road Dataset / Polyline（2026-08-12 15:10:00）：在 R1 Closeout 后完成 T2 Road Dataset + Polyline 数据合同与 T3 道路 Authoring → Render → Save/Reload 闭环。
