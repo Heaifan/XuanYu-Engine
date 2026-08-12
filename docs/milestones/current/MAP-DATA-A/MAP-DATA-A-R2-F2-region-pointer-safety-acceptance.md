@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F2 · Region Pointer Safety 真机验收
 
-基线：`<F2 HEAD>`；版本：`<VERSION>`；状态：READY FOR USER ACCEPTANCE。
+基线：`8f796ff`；最新用户裁定：M01～M09 PASS，M10 BLOCKED；状态：转入 `MAP-DATA-A-R2-F2-F2 · Layer Delete UI Lock Recovery`。
 
 ## F2-M01 空 Draft 移动
 

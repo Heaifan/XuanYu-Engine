@@ -611,6 +611,7 @@
 │  ├─ Win/
 │  │  ├─ UiWin.Accessibility.cs
 │  │  ├─ UiWin.Dialogs.cs
+│  │  ├─ UiWin.DialogHost.Input.cs
 │  │  ├─ UiWin.EntityShortcuts.cs
 │  │  ├─ UiWin.MapCommands.cs
 │  │  ├─ UiWin.SceneCommands.cs
@@ -2316,6 +2317,8 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-acceptance.md` — MAP-DATA-A-R2-F2：区域/道路顶点编辑、取消、校验、Undo/Redo 与 Save/Reload 真机 IPO。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety-plan.md` — MAP-DATA-A-R2-F2：Region Pointer Safety 根因、冻结目标与输入优先级。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety-acceptance.md` — MAP-DATA-A-R2-F2：空 Draft、顶点抢占、Cancel、模式切换与 CRASH-REPRO-01 真机 IPO。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-F2-layer-delete-ui-lock-recovery-plan.md` — MAP-DATA-A-R2-F2-F2：删除图层 UI 锁死根因、冻结目标与边界。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-F2-layer-delete-ui-lock-recovery-acceptance.md` — MAP-DATA-A-R2-F2-F2：删除取消/确认/拒绝、选中图层同步与后续操作真机 IPO。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety.svg` — MAP-DATA-A-R2-F2：Region Pointer Safety 输入优先级逻辑图。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-acceptance.md` — MAP-DATA-A-R2：区域编辑内 Road Dataset/Polyline 真机验收 IPO 清单。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
@@ -2329,11 +2332,13 @@
 - `XuanYu.Editor.UI/Vm/UiVm.Notification.cs` — D5：四级通知状态机（Info/Success/Warning/Error，单条覆盖不刷屏，纯逻辑）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDanger.cs` — D5：危险操作确认流（DangerousCommandConfirmRequested 事件 + ConfirmDangerousCommand，未注入处理器保持直接执行）。
 - `XuanYu.Editor.UI/Win/UiWin.DialogHost.cs` — D5：弹窗宿主（ShowMessage/ShowConfirm/ShowDanger；危险按钮非默认焦点，Enter=默认/非危险，Escape=取消）+ 危险操作确认接线。
+- `XuanYu.Editor.UI/Win/UiWin.DialogHost.Input.cs` — MAP-DATA-A-R2-F2-F2：主窗口 Tunnel 阶段的 Dialog Tab/Escape/Enter 优先级与完成处理。
 - `XuanYu.Editor.UI/Foot/NotificationBar.axaml` — D5：四级通知条（图标+单行省略+完整 Tooltip）。
 - `XuanYu.Editor.UI/Foot/NotificationBar.axaml.cs` — D5：通知条 code-behind（纯绑定，无逻辑）。
 - `XuanYu.World.Tests/UiTokens/UiD5ButtonContractTests.cs` — D5：按钮居中/状态/Token 迁移合同。
 - `XuanYu.World.Tests/UiTokens/UiD5DangerFlowTests.cs` — D5：危险确认流（注入/未注入/确认执行/忽略）+ 接线断言。
 - `XuanYu.World.Tests/UiTokens/UiD5DialogAndLogContractTests.cs` — D5：弹窗宿主结构 + 日志空状态/回到底部合同。
+- `XuanYu.World.Tests/Map/Editing/UiMapLayerDeleteLockRecoveryTests.cs` — MAP-DATA-A-R2-F2-F2：删除图层取消/确认/拒绝后的 UI 锁恢复与后续编辑回归。
 - `XuanYu.World.Tests/UiTokens/UiD5FormContractTests.cs` — D5：表单状态/错误非仅颜色合同。
 - `XuanYu.World.Tests/UiTokens/UiD5NotificationTests.cs` — D5：通知状态机测试。
 - `XuanYu.Editor.UI/Vm/Logging/UiVm.Logging.State.cs` — D5 纠偏：日志空态互斥（ShowInitialLogEmpty/ShowNoFilterResults）。

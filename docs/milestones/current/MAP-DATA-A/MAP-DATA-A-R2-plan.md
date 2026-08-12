@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：R2-F2 Region Pointer Safety 实现中；F1 USER ACCEPTANCE FAILED，R2 尚未 CLOSED。
+状态：R2-F2-F2 Layer Delete UI Lock Recovery 实现完成，等待真机复验；F1 USER ACCEPTANCE FAILED，R2 尚未 CLOSED。
 
 ## 冻结目标
 

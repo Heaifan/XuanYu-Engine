@@ -18,6 +18,15 @@
 
 ---
 
+## v0.2.28.4-fix · MAP-DATA-A-R2-F2-F2 LAYER DELETE UI LOCK RECOVERY
+MAP-DATA-A-R2-F2-F2 Layer Delete UI Lock Recovery（2026-08-12 18:00:00）：承接用户确认的 M01～M09 PASS 与 M10 BLOCKED，修复删除图层后窗口内确认遮罩无法通过 Esc/Enter 完成的问题。
+- 根因：`Window_KeyDown` Tunnel 先于 `DialogCard_KeyDown`，Escape/Enter 被普通编辑快捷键消费，`CompleteDialog()` 未执行；窗口内遮罩持续存在，而原生 Vulkan 子窗口仍可接收视口输入。
+- 变化：活动 Dialog 在 Window Tunnel 阶段优先处理 Tab/Escape/Enter；完成 Dialog 时先清空 TCS，避免旧任务/重复确认残留；删除取消、确认、拒绝及后续操作回归已覆盖。
+- 范围：不修改 Vulkan、Swapchain、Fence、Picking、Schema、Save/Load 或 Layer 业务规则。
+- 验证：World.Tests 聚焦删除/弹窗回归 23/23；正式完整门禁结果以本条后续 Hash 记录为准。
+- Hash：`bee32fe`（实现提交）。
+- 遗留：F2-F2-M01～M06 真机复验待用户执行；原 M10 保持 BLOCKED；F2/F3 不得 CLOSED/启动。
+
 ## v0.2.28.3-fix · MAP-DATA-A-R2-F2 REGION POINTER SAFETY
 MAP-DATA-A-R2-F2 Region Pointer Safety（2026-08-12 17:21:40）：根据用户真机回归发现的 Region Tool 闪退与输入抢占，建立极窄修复轮。
 - 变化：Region Tool 在空 Draft 或零 Anchor 时 PointerMove 显式 NO-OP；已有顶点 PointerDown/Drag 优先于 Region Preview；取消和模式往返清理保持安全。
