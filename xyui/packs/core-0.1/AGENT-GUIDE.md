@@ -39,7 +39,7 @@ ArbitraryOverride   禁止绕过 Foundation Token 的任意覆盖
 ```text
 XYUI-0 Foundation     ✅ VALIDATED（44 项，426 token）
 XYUI-1 Text&Info      ✅ canonical（24 组件）
-XYUI-2 Controls       ❌ SOURCE_MISSING（Source 到位后整理）
+XYUI-2 Controls       ✅ canonical（24 控件：Button/Input/Slider/Property 等）
 XYUI-3 Navigation     ❌ SOURCE_MISSING（Source 到位后整理）
 ```
 
@@ -47,7 +47,10 @@ XYUI-3 Navigation     ❌ SOURCE_MISSING（Source 到位后整理）
 
 ```text
 XYUI1-GAP-001  Icon glyph registry 未建立（glyph 名暂用组件级常量，如 InfoCircle）
-XYUI2_SOURCE_MISSING / XYUI3_SOURCE_MISSING  → 阻塞项，等人类提供 Source
+XYUI2-GAP-001  XY.Size.Switch 复合 token 子属性访问待 A3 定义
+XYUI2-GAP-002  TextArea.MaxHeight=SceneToken（待裁定）
+XYUI2-GAP-003  Inspector SharedPropertyColumnRule 未在 Foundation 定义
+XYUI3_SOURCE_MISSING  → 阻塞项，等人类提供 Source
 ```
 
 ## 7. 版本与溯源

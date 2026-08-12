@@ -3,7 +3,7 @@
   "pack_version": "0.1.0",
   "phase": "XYUI-PILOT",
   "created_for": "XYLab Agent（明早消费）",
-  "status": "READY_WITH_MISSING_SOURCES",
+  "status": "PARTIAL_012_READY",
   "included_specs": {
     "XYUI-0": {
       "available": true,
@@ -25,9 +25,13 @@
       "reconciled_commit": "a2076df7"
     },
     "XYUI-2": {
-      "available": false,
-      "status": "XYUI2_SOURCE_MISSING",
-      "note": "XYUI-2.md 正式 Source 不存在；按任务规则不得根据聊天记忆/XYUI-1/行业惯例重建"
+      "available": true,
+      "canonical_spec": "xyui/specs/XYUI2/XYUI-2.canonical.md",
+      "mapping": "xyui/specs/XYUI2/XYUI-2.mapping.json",
+      "gaps": "xyui/specs/XYUI2/XYUI-2.gaps.json",
+      "source": "xyui/source/XYUI2/XYUI-2.md",
+      "source_sha256": "fa1b393f52d429d23c258294531df5d0cd02b0eea621f12ab70395989c6fe86d",
+      "reconciled_commit": "a4af91dc"
     },
     "XYUI-3": {
       "available": false,
@@ -38,7 +42,7 @@
   "foundation_registry_ref": "xyui/registry/foundation/foundation-registry.json",
   "foundation_registry_sha256": "33c2bd8b60de83ae679c193478427c98777f31fbe7abc7b755907a900b9ea046",
   "token_architecture_ref": "xyui/tokens/architecture/token-canonical-map.json",
-  "git_commit": "a2076df7",
+  "git_commit": "c92a873e",
   "known_gaps": [
     {
       "gap_id": "XYUI1-GAP-001",
@@ -47,14 +51,27 @@
       "blocking": false
     },
     {
-      "gap_id": "XYUI2_SOURCE_MISSING",
+      "gap_id": "XYUI3_SOURCE_MISSING",
       "type": "SOURCE_MISSING",
       "blocking": true
     },
     {
-      "gap_id": "XYUI3_SOURCE_MISSING",
-      "type": "SOURCE_MISSING",
-      "blocking": true
+      "gap_id": "XYUI2-GAP-001",
+      "type": "MISSING_TOKEN",
+      "scope": "XY.Size.Switch 子属性访问",
+      "blocking": false
+    },
+    {
+      "gap_id": "XYUI2-GAP-002",
+      "type": "REQUIRES_DECISION",
+      "scope": "TextArea.MaxHeight=SceneToken",
+      "blocking": false
+    },
+    {
+      "gap_id": "XYUI2-GAP-003",
+      "type": "REQUIRES_DECISION",
+      "scope": "Inspector SharedPropertyColumnRule",
+      "blocking": false
     }
   ],
   "agent_guide": "xyui/packs/core-0.1/AGENT-GUIDE.md",
@@ -63,7 +80,9 @@
     "xyui/tokens/architecture/token-canonical-map.json",
     "xyui/tokens/architecture/token-architecture.json",
     "xyui/specs/XYUI1/XYUI-1.canonical.md",
-    "xyui/specs/XYUI1/XYUI-1.mapping.json"
+    "xyui/specs/XYUI1/XYUI-1.mapping.json",
+    "xyui/specs/XYUI2/XYUI-2.canonical.md",
+    "xyui/specs/XYUI2/XYUI-2.mapping.json"
   ],
   "forbidden": [
     "A3-R3 Light/Dark Token Source（本任务暂停）",
