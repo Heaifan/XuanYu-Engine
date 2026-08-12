@@ -10,6 +10,7 @@ public sealed partial class MapEditSession
         if (!GuardWriteThread()) return Fail("NotOnWriteThread", "更新运行时图层必须在编辑写线程执行。");
         if (MapDefinitionValidator.Validate(candidate) is { Succeeded: false } validation)
             return Fail("InvalidMap", validation.Message);
+        RebuildRegionSpatialIndex(candidate);
         _currentMap = candidate;
         _changeSequence++;
         NormalizeSelection();

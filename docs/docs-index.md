@@ -55,6 +55,9 @@
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F2-acceptance.md`：R2-F2 真机 IPO 验收模板与 R2-M02 补验路径
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F3-root-cause.md`：R2-F3 Dataset 选择态与右侧 Layer Projection 取证矩阵
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R2-F3-acceptance.md`：R2-F3 Dataset/Layer 双向选择与解除注册真机 IPO 模板
+- `docs/milestones/current/MAP-DATA-A/`：当前 Region/Road 数据创作计划、修复与验收材料
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md`：R2 总体目标、当前状态与功能边界
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-A-plan.md`：Region 局部派生空间查询合同、规模门禁与自动收口边界
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

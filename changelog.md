@@ -18,6 +18,16 @@
 
 ---
 
+## v0.2.28.9-rz · MAP-DATA-A-R2-F3-A REGION LOCAL SPATIAL QUERY
+MAP-DATA-A-R2-F3-A（2026-08-13 01:07:12）：建立 Region 局部候选查询基础设施；本轮没有 UI 入口，不实现 Snap。
+- 变化：新增经有限值/顺序校验的 Region Bounds、平衡动态 AABB 树与 `MapEditSession.QueryLocalRegions`；每个 Region 单叶归属，内部节点只保存联合 Bounds 与高度。
+- 生命周期：初始化、新建/替换、Runtime Projection、Create/Delete/Edit、Undo/Redo 均在状态事件发布前同步派生索引。
+- 边界：仅保存 `MapRegionId + AABB`；不生成 `EntityId`，不新增持久化字段，不回退全地图扫描，不修改 Snap 或 UI。
+- 验证：F3-A 针对性测试 12/12；Solution 0 Warning/0 Error；Core.Tests 339/339、World.Tests 1298/1298、WarCore.Tests 22/22；ARCH-A、5+100、版本四处一致与 `git diff --check` PASS。
+- 验收：无 UI 入口，不设真机 IPO；正式自动门禁已通过，状态进入 `READY FOR USER ACCEPTANCE`，待用户确认后关闭。
+- Hash：本条所在提交。
+- 遗留：Vertex/Edge Snap、精确几何与 PointerMove UI 反馈未实现，R2 保持 OPEN。
+
 ## v0.2.28.8-rz · DEV-FIRST MULTI-AGENT CHANNELS
 DEV-FIRST（2026-08-13 00:33:13）：正式开发使用有 upstream 的里程碑分支并 Commit + Push；UI 实验默认进入无 upstream、禁止 Push 的 `local/<任务>` 独立 worktree。
 - 优先级：正式功能、架构/数据、测试与共享元数据优先于 XYUI 本地实现和 UI 实验稿；UI 后续基于最新远端正式 HEAD 适配。

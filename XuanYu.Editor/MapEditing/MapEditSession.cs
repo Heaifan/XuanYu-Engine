@@ -23,6 +23,7 @@ public sealed partial class MapEditSession
         _currentMap = initialMap ?? MapDefaultDefinition.CreateDefault();
         _isWriteThread = isWriteThread ?? (() => true);
         _activeRegionLayerId = FirstRegionLayerId(_currentMap);
+        RebuildRegionSpatialIndex();
     }
 
     public MapDefinition CurrentMap => _currentMap;

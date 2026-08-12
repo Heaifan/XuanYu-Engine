@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：R2-F2、R2-F2-F2、R2-F2-F2-F1 均已 `CLOSED`；下一步仅允许调查 R2-F3 Geometry Snapping 的既有 Spatial Query 可复用性，R2 尚未 CLOSED。
+状态：R2-F2、R2-F2-F2、R2-F2-F2-F1 均已 `CLOSED`；R2-F3-A Region Local Spatial Query 已实现并等待自动门禁，完整 Geometry Snapping 尚未实现，R2 保持 OPEN。
 
 ## 冻结目标
 
@@ -21,6 +21,10 @@ Region 与 Road Dataset、Manifest、Feature JSON、Render 和 Save/Reload 合�
 ## R2-F2 几何顶点编辑基线
 
 点击已完成区域面或道路选中 feature 后显示顶点控制柄；拖动单个顶点先更新预览，释放鼠标才通过 `MapEditSession` 提交一条历史。区域继续执行多边形合法性校验，道路拒绝相邻重复节点；不引入吸附、共享边界或拓扑联动。
+
+## R2-F3-A Region 局部查询基础设施
+
+Editor 域以 MapRegion 为唯一真源，维护只含原生 `MapRegionId + Bounds` 的可重建平衡动态 AABB 树；索引已接入初始化、新建/替换、Runtime Projection、Create/Delete/Edit 与 Undo/Redo。该基础设施不引入 `EntityId` 或持久化字段，也不代表 Snap、精确几何或 UI 已完成。
 
 ## 明确不做
 

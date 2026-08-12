@@ -8,12 +8,16 @@ namespace XuanYu.Editor.MapEditing;
 // 失败不产生任何状态变化（候选/历史/Dirty/选择/ChangeSequence 全部不变）。
 public sealed partial class MapEditSession
 {
-    EngineResult CommitMapChange(Func<MapDefinition, MapDefinition> mutation, MapEditReason reason)
+    EngineResult CommitMapChange(
+        Func<MapDefinition, MapDefinition> mutation,
+        MapEditReason reason,
+        Action<MapDefinition>? synchronizeDerivedState = null)
     {
         var candidate = mutation(_currentMap);
         if (candidate == _currentMap) return Ok(); // No-op：成功但无状态变化
         var validation = MapDefinitionValidator.Validate(candidate);
         if (!validation.Succeeded) return MapValidationFailure(validation);
+        synchronizeDerivedState?.Invoke(candidate);
         _history.PushEntry(new MapHistoryEntry(_currentMap, candidate, reason));
         ApplyMapContent(candidate, reason);
         return Ok();

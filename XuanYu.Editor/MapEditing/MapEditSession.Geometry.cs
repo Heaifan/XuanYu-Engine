@@ -15,7 +15,8 @@ public sealed partial class MapEditSession
             return Fail("RegionLayerLocked", "区域所属图层已锁定。");
         return CommitMapChange(
             map => map with { Regions = map.Regions.Replace(region, region with { Vertices = vertices }) },
-            MapEditReason.RegionGeometryEdited);
+            MapEditReason.RegionGeometryEdited,
+            map => UpsertRegionSpatialIndex(map, regionId));
     }
 
     public EngineResult EditRoadPoints(MapRoadId roadId, ImmutableArray<MapPoint> points)

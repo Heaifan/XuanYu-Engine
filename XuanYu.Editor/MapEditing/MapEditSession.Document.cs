@@ -12,7 +12,9 @@ public sealed partial class MapEditSession
     {
         if (!GuardWriteThread()) return Fail("NotOnWriteThread", "新建地图必须在编辑写线程执行。");
         _history.Clear();
-        _currentMap = MapDefaultDefinition.CreateDefault();
+        var replacement = MapDefaultDefinition.CreateDefault();
+        RebuildRegionSpatialIndex(replacement);
+        _currentMap = replacement;
         _currentPath = null;
         _savedStateId = null;
         _changeSequence++;
@@ -32,6 +34,7 @@ public sealed partial class MapEditSession
         if (MapDefinitionValidator.Validate(candidate) is { Succeeded: false } validation)
             return Fail("InvalidMap", validation.Message);
         _history.Clear();
+        RebuildRegionSpatialIndex(candidate);
         _currentMap = candidate;
         _currentPath = markSaved ? path : null;
         _savedStateId = markSaved ? CurrentStateId : null;

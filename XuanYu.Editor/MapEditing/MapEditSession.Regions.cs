@@ -18,7 +18,9 @@ public sealed partial class MapEditSession
         var layer = MapLayerRules.Find(_currentMap.Layers, region.LayerId);
         if (layer?.IsLocked == true) return Fail("RegionLayerLocked", "区域所属图层已锁定。");
         return CommitMapChange(
-            map => map with { Regions = map.Regions.Add(region) }, MapEditReason.RegionCreated);
+            map => map with { Regions = map.Regions.Add(region) },
+            MapEditReason.RegionCreated,
+            map => UpsertRegionSpatialIndex(map, region.RegionId));
     }
 
     public EngineResult DeleteRegion(MapRegionId regionId)
@@ -29,6 +31,8 @@ public sealed partial class MapEditSession
         var layer = MapLayerRules.Find(_currentMap.Layers, region.LayerId);
         if (layer?.IsLocked == true) return Fail("RegionLayerLocked", "区域所属图层已锁定。");
         return CommitMapChange(
-            map => map with { Regions = map.Regions.Remove(region) }, MapEditReason.RegionDeleted);
+            map => map with { Regions = map.Regions.Remove(region) },
+            MapEditReason.RegionDeleted,
+            _ => RemoveRegionSpatialIndex(regionId));
     }
 }
