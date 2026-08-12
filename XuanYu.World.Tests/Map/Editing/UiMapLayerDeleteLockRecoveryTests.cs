@@ -50,5 +50,20 @@ public sealed class UiMapLayerDeleteLockRecoveryTests
         Assert.Equal(4, vm.LayerItems.Count);
     }
 
+    [Fact]
+    public void Confirm_delete_uses_layer_id_captured_before_the_dialog()
+    {
+        var vm = NewVm();
+        vm.RunCommand.Execute("添加图层");
+        var target = vm.SelectedLayer!;
+        vm.DangerousCommandConfirmRequested += _ => { };
+        vm.RunCommand.Execute("删除图层");
+        vm.SelectedLayer = vm.LayerItems.First(row => row.LayerId != target.LayerId);
+
+        vm.ConfirmDangerousCommand("删除图层");
+
+        Assert.DoesNotContain(vm.LayerItems, row => row.LayerId == target.LayerId);
+    }
+
     static UiVm NewVm() => new(null, () => true);
 }

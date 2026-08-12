@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="XuanYu.Editor.UI.LayerDeleteConfirmationWindow"
+        Title="删除图层" Width="420" Height="210"
+        CanResize="False" ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        KeyDown="Window_KeyDown">
+  <Border Padding="22">
+    <StackPanel Spacing="12">
+      <TextBlock Text="删除图层" FontSize="18" FontWeight="SemiBold"/>
+      <TextBlock x:Name="Message" TextWrapping="Wrap"/>
+      <TextBlock Text="此操作不可撤销。" TextWrapping="Wrap"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+        <Button x:Name="CancelButton" Content="取消" Click="Cancel_Click"/>
+        <Button Content="删除" Click="Delete_Click" Classes="uiDanger"/>
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</Window>

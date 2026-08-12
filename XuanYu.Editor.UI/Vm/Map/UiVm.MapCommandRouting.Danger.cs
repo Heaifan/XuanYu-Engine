@@ -23,7 +23,8 @@ public sealed partial class UiVm
             RefreshLogBindings();
             return true;
         }
-        RequestDangerousConfirmation("删除图层");
+        if (SelectedLayer is { } layer)
+            RequestDangerousConfirmation("删除图层", layer.LayerId);
         return true;
     }
 }

@@ -45,7 +45,14 @@ public sealed partial class UiVm
     public void DeleteLayer()
     {
         if (SelectedLayer is not { } layer) return;
-        var result = MapSession.RemoveLayer(layer.LayerId);
+        DeleteLayer(layer.LayerId);
+    }
+
+    void DeleteLayer(MapLayerId layerId)
+    {
+        var layer = _layerItems.FirstOrDefault(item => item.LayerId == layerId);
+        if (layer is null) { MapEditError = "要删除的图层已不存在。"; return; }
+        var result = MapSession.RemoveLayer(layerId);
         if (!result.IsSuccess) { FailLayerEdit("图层删除", result); return; }
         LogLayer($"删除图层：{layer.Name}");
         FooterMessage = $"已删除图层：{layer.Name}。";
