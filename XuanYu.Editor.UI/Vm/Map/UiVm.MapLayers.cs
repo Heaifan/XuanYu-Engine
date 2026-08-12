@@ -1,9 +1,7 @@
 using XuanYu.Core.Results;
 using XuanYu.Editor.MapEditing;
 using XuanYu.World.Map;
-
 namespace XuanYu.Editor.UI;
-
 // MAP-A-R2-D4：图层列表与工具栏命令入口（唯一数据源 = MapSession.CurrentMap）。
 public sealed partial class UiVm
 {
@@ -11,7 +9,6 @@ public sealed partial class UiVm
     MapLayerId? _selectedLayerId;
 
     public IReadOnlyList<MapLayerRowViewModel> LayerItems => _layerItems;
-
     public MapLayerRowViewModel? SelectedLayer
     {
         get => _layerItems.FirstOrDefault(l => l.LayerId == _selectedLayerId);
@@ -27,7 +24,6 @@ public sealed partial class UiVm
     }
 
     public bool HasLayerSelection => SelectedLayer is not null;
-
     public void AddLayer()
     {
         var result = MapSession.AddRegionLayer();
@@ -44,11 +40,10 @@ public sealed partial class UiVm
 
     public void DeleteLayer()
     {
-        if (SelectedLayer is not { } layer) return;
-        DeleteLayer(layer.LayerId);
+        if (SelectedLayer is { } layer) DeleteLayer(layer.LayerId);
     }
 
-    void DeleteLayer(MapLayerId layerId)
+    public void DeleteLayer(MapLayerId layerId)
     {
         var layer = _layerItems.FirstOrDefault(item => item.LayerId == layerId);
         if (layer is null) { MapEditError = "要删除的图层已不存在。"; return; }
