@@ -6,12 +6,13 @@ public sealed partial class UiVm
 {
     public bool CanStartRegionDrawing =>
         IsRegionEditMode &&
-        SelectedDataset is { Type: "区域", Status: "正常", IsLocked: false };
+        IsRegionSurfaceAuthoringMode &&
+        SelectedDataset is { Type: "region", Status: "正常", IsLocked: false };
 
     void SetDatasetDrawingTarget(string? id)
     {
         var dataset = _datasetItems.FirstOrDefault(item => item.Id == id);
-        if (dataset is null || dataset.Type is not ("区域" or "道路") || dataset.Status != "正常" || dataset.IsLocked)
+        if (dataset is null || dataset.Type is not ("region" or "road") || dataset.Status != "正常" || dataset.IsLocked)
         {
             if (_regionDrawing.IsActive) CancelRegionDrawingFromEscape();
             if (_roadDrawing.IsActive) CancelRoadDrawingFromEscape();

@@ -11,7 +11,6 @@ public sealed partial class UiVm
     public string CurrentWorkspaceDisplayName => CurrentWorkspace.DisplayName;
     public bool IsMapWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.MapEditor;
     public bool IsRegionWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.RegionEditor;
-    public bool IsRoadWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.RoadEditor;
 
     void SwitchWorkspace(object? value)
     {
@@ -20,12 +19,12 @@ public sealed partial class UiVm
         var transition = _workspaceManager.Switch(target);
         if (!transition.Changed) return;
         ClearLayerSelection();
-        if (IsEditMode) { SelectTool("选择", logTool: false); LeftTabIndex = IsMapWorkspace ? 2 : IsRegionWorkspace ? 3 : 4; }
+        if (IsRegionWorkspace) SyncRegionAuthoringModeFromDatasetSelection();
+        if (IsEditMode) { SelectTool("选择", logTool: false); LeftTabIndex = IsMapWorkspace ? 2 : 3; }
         OnPropertyChanged(nameof(CurrentWorkspace));
         OnPropertyChanged(nameof(CurrentWorkspaceDisplayName));
         OnPropertyChanged(nameof(IsMapWorkspace));
         OnPropertyChanged(nameof(IsRegionWorkspace));
-        OnPropertyChanged(nameof(IsRoadWorkspace));
         RaiseLayerContextBindings();
         RaiseModeBindings();
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,

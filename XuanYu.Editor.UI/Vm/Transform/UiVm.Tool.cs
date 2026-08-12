@@ -14,7 +14,7 @@ public sealed partial class UiVm
         }
         if (requestedTool == EditorToolId.RoadDrawing && !CanStartRoadDrawing)
         {
-            FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的道路数据集，并进入道路编辑。"; return;
+            FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的道路数据集，并进入区域编辑 → 道路。"; return;
         }
         if (IsRegionDrawingTool && requestedTool != EditorToolId.RegionDrawing)
         {

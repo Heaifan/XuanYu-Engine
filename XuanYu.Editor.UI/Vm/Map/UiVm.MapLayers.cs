@@ -20,6 +20,8 @@ public sealed partial class UiVm
             var id = value?.LayerId;
             if (_selectedLayerId == id) return;
             _selectedLayerId = id;
+            if (IsRegionEditMode && value is not null && TryGetDatasetIdForLayer(value.LayerId, out var datasetId))
+                DatasetSelectedId = datasetId;
             OnLayerSelectionChanged();
         }
     }

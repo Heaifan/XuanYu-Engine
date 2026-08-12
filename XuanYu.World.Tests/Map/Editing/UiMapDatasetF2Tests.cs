@@ -22,14 +22,15 @@ public sealed class UiMapDatasetF2Tests : IDisposable
         Assert.True(await vm.CreateDatasetAsync());
         Assert.False(vm.IsDatasetEmpty);
         Assert.Contains("1", vm.DatasetEmptyState);
-        Assert.Equal("道路", vm.DatasetItems[0].Type);
+        Assert.Equal("road", vm.DatasetItems[0].Type);
+        Assert.Equal("道路", vm.DatasetItems[0].TypeDisplay);
         Assert.Matches("^road-[0-9a-f]{6}$", vm.DatasetItems[0].Id);
     }
 
     [Fact]
     public void F2_type_presentation_maps_all_six_without_changing_domain_values()
     {
-        var expected = new[] { "区域", "道路", "城镇", "资源", "河流", "地形区域" };
+        var expected = new[] { "区域面", "道路", "城镇", "资源", "河流", "地形区域" };
         Assert.Equal(expected, MapDatasetTypePresentation.Options.Select(item => item.Display));
         Assert.Equal("road", MapDatasetTypePresentation.Options[1].Value);
     }
@@ -55,7 +56,7 @@ public sealed class UiMapDatasetF2Tests : IDisposable
         var reopened = new UiVm(null, () => true, seedInitialScene: false);
         Assert.True(await reopened.OpenMapManifestAsync(Path.Combine(_root, "map.json")));
         Assert.Equal(2, reopened.DatasetItems.Count);
-        Assert.All(reopened.DatasetItems, item => Assert.Equal("道路", item.Type));
+        Assert.All(reopened.DatasetItems, item => Assert.Equal("road", item.Type));
     }
 
     public void Dispose()

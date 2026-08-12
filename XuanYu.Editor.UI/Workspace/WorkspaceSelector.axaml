@@ -21,7 +21,6 @@
             <MenuItem.Header><Path Data="{StaticResource ChevronDownIcon}" Width="16" Height="16" Stroke="{StaticResource Color.Text.Primary}" StrokeThickness="1.5"/></MenuItem.Header>
             <MenuItem Header="地图编辑" ToggleType="Radio" IsChecked="{Binding IsMapWorkspace, Mode=OneWay}" Command="{Binding SwitchWorkspaceCommand}" CommandParameter="MapEditor"/>
             <MenuItem Header="区域编辑" ToggleType="Radio" IsChecked="{Binding IsRegionWorkspace, Mode=OneWay}" Command="{Binding SwitchWorkspaceCommand}" CommandParameter="RegionEditor"/>
-            <MenuItem Header="道路编辑" ToggleType="Radio" IsChecked="{Binding IsRoadWorkspace, Mode=OneWay}" Command="{Binding SwitchWorkspaceCommand}" CommandParameter="RoadEditor"/>
           </MenuItem>
         </Menu>
       </Grid>

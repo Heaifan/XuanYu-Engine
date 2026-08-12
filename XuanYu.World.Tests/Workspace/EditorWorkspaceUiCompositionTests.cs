@@ -31,6 +31,8 @@ public sealed class EditorWorkspaceUiCompositionTests
         var selector = Read("XuanYu.Editor.UI", "Workspace", "WorkspaceSelector.axaml");
         Assert.DoesNotContain("<local:Main", selector);
         Assert.DoesNotContain("VulkanViewport", selector);
+        Assert.DoesNotContain("道路编辑", selector);
+        Assert.DoesNotContain("RoadEditor", selector);
     }
 
     [Fact]
@@ -46,7 +48,8 @@ public sealed class EditorWorkspaceUiCompositionTests
         var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
         var region = Read("XuanYu.Editor.UI", "Left", "RegionPanel.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
-        Assert.Contains("RegionPanel", left);
+        Assert.Contains("RegionalAuthoringPanel", left);
+        Assert.Contains("RegionPanel", Read("XuanYu.Editor.UI", "Left", "RegionalAuthoringPanel.axaml"));
         Assert.Contains("当前绘制目标", region);
         Assert.Contains("RegionDrawingTargetName", region);
         Assert.Contains("RegionDrawingTargetStatus", region);

@@ -2,7 +2,7 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    MapDatasetRow? RegionDrawingTarget => SelectedDataset is { Type: "区域" } selected
+    MapDatasetRow? RegionDrawingTarget => SelectedDataset is { Type: "region" } selected
         ? selected : RegionDatasetItems.FirstOrDefault();
 
     public string RegionDrawingTargetName => RegionDrawingTarget?.Name ?? "当前没有区域数据集";

@@ -41,7 +41,7 @@ public sealed class LayerAUiCompositionTests
         Assert.Empty(vm.CurrentLayerProvider!.Items);
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
         Assert.NotEmpty(vm.CurrentLayerProvider!.Items);
-        Assert.All(vm.CurrentLayerProvider.Items, item => Assert.Equal("区域", item.Kind));
+        Assert.All(vm.CurrentLayerProvider.Items, item => Assert.Equal("区域面", item.Kind));
         Assert.DoesNotContain(vm.CurrentLayerProvider.Items, item => item.Name is "地面" or "边界");
         Assert.NotEmpty(vm.CurrentLayerItems);
         vm.SelectedLayer = vm.CurrentLayerItems[0];

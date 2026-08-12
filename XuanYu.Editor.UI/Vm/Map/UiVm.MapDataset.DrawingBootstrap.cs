@@ -7,7 +7,7 @@ public sealed partial class UiVm
     bool _isRegionDrawingBootstrapBusy;
 
     public bool IsRegionDrawingBootstrapBusy => _isRegionDrawingBootstrapBusy;
-    public bool CanRequestRegionDrawing => IsRegionEditMode && !IsRegionDrawingBootstrapBusy;
+    public bool CanRequestRegionDrawing => IsRegionEditMode && IsRegionSurfaceAuthoringMode && !IsRegionDrawingBootstrapBusy;
 
     public async Task<bool> BeginRegionDrawingAsync()
     {
@@ -35,13 +35,13 @@ public sealed partial class UiVm
     async Task<MapDatasetRow?> EnsureRegionDrawingTargetAsync()
     {
         var selected = SelectedDataset;
-        if (selected is not null && selected.Type != "区域")
+        if (selected is not null && selected.Type != "region")
         {
-            if (_datasetItems.All(item => item.Type != "区域")) return await AutoCreateRegionDatasetAsync();
+            if (_datasetItems.All(item => item.Type != "region")) return await AutoCreateRegionDatasetAsync();
             return RejectRegionDrawing("请先选择一个区域数据集。");
         }
 
-        var regions = _datasetItems.Where(item => item.Type == "区域").ToArray();
+        var regions = _datasetItems.Where(item => item.Type == "region").ToArray();
         var target = selected ?? regions.FirstOrDefault();
         if (target is null) return await AutoCreateRegionDatasetAsync();
         if (target.IsLocked) return RejectRegionDrawing("当前区域数据集已锁定，无法绘制。请解锁当前数据集。");

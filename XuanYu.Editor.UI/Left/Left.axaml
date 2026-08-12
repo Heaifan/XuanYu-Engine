@@ -89,10 +89,7 @@
       <local:MapEditorPanel/>
     </TabItem>
     <TabItem Classes="leftTab" Header="区域" IsVisible="{Binding IsRegionEditMode}">
-      <local:RegionPanel/>
-    </TabItem>
-    <TabItem Classes="leftTab" Header="道路" IsVisible="{Binding IsRoadEditMode}">
-      <local:RoadPanel/>
+      <local:RegionalAuthoringPanel/>
     </TabItem>
   </TabControl>
 </UserControl>

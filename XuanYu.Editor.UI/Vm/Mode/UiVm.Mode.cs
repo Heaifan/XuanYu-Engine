@@ -14,7 +14,6 @@ public sealed partial class UiVm
     public bool IsEditMode => CurrentMode == EditorModeId.Edit;
     public bool IsMapEditMode => IsEditMode && IsMapWorkspace;
     public bool IsRegionEditMode => IsEditMode && IsRegionWorkspace;
-    public bool IsRoadEditMode => IsEditMode && IsRoadWorkspace;
     public string CurrentEditorModeText => IsManageMode ? "管理模式" : CurrentWorkspaceDisplayName;
 
     public bool ToggleEditorMode()
@@ -25,7 +24,7 @@ public sealed partial class UiVm
         var transition = _modeManager.Toggle();
         if (!transition.Changed) return false;
         SelectTool("选择", logTool: false);
-        LeftTabIndex = IsManageMode ? 0 : IsMapWorkspace ? 2 : IsRegionWorkspace ? 3 : 4;
+        LeftTabIndex = IsManageMode ? 0 : IsMapWorkspace ? 2 : 3;
         RaiseModeBindings();
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,
             $"已切换为：{CurrentEditorModeText}", "保留 World、Camera、Selection、Assets 与唯一 Main Viewport。");
@@ -38,7 +37,9 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(CurrentMode)); OnPropertyChanged(nameof(IsManageMode));
         OnPropertyChanged(nameof(IsEditMode)); OnPropertyChanged(nameof(IsMapEditMode));
         OnPropertyChanged(nameof(IsRegionEditMode)); OnPropertyChanged(nameof(CurrentEditorModeText));
-        OnPropertyChanged(nameof(IsRoadEditMode));
+        OnPropertyChanged(nameof(CurrentRegionAuthoringMode));
+        OnPropertyChanged(nameof(IsRegionSurfaceAuthoringMode));
+        OnPropertyChanged(nameof(IsRoadAuthoringMode));
         OnPropertyChanged(nameof(CanStartRegionDrawing));
         OnPropertyChanged(nameof(CanRequestRegionDrawing));
         OnPropertyChanged(nameof(CanRequestRoadDrawing));

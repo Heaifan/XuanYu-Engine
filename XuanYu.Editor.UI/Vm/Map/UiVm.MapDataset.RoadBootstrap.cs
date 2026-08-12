@@ -6,8 +6,8 @@ public sealed partial class UiVm
 {
     bool _isRoadDrawingBootstrapBusy;
     public bool IsRoadDrawingBootstrapBusy => _isRoadDrawingBootstrapBusy;
-    public bool CanRequestRoadDrawing => IsRoadEditMode && !_isRoadDrawingBootstrapBusy;
-    public bool CanStartRoadDrawing => IsRoadEditMode && SelectedDataset is { Type: "道路", Status: "正常", IsLocked: false };
+    public bool CanRequestRoadDrawing => IsRegionEditMode && IsRoadAuthoringMode && !_isRoadDrawingBootstrapBusy;
+    public bool CanStartRoadDrawing => IsRegionEditMode && IsRoadAuthoringMode && SelectedDataset is { Type: "road", Status: "正常", IsLocked: false };
     public async Task<bool> BeginRoadDrawingAsync()
     {
         if (!CanRequestRoadDrawing) return false;
@@ -23,7 +23,7 @@ public sealed partial class UiVm
     async Task<MapDatasetRow?> EnsureRoadTargetAsync()
     {
         var selected = SelectedDataset;
-        if (selected is not null && selected.Type != "道路")
+        if (selected is not null && selected.Type != "road")
             return RoadDatasetItems.Count == 0 ? await AutoCreateRoadDatasetAsync() : RejectRoad("请先选择一个道路数据集。");
         var target = selected ?? RoadDatasetItems.FirstOrDefault();
         if (target is null) return await AutoCreateRoadDatasetAsync();

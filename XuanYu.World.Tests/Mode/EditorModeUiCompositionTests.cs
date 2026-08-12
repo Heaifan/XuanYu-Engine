@@ -53,7 +53,8 @@ public sealed class EditorModeUiCompositionTests
         var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
         var region = Read("XuanYu.Editor.UI", "Left", "RegionPanel.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml");
-        Assert.Contains("RegionPanel", left);
+        Assert.Contains("RegionalAuthoringPanel", left);
+        Assert.Contains("RegionPanel", Read("XuanYu.Editor.UI", "Left", "RegionalAuthoringPanel.axaml"));
         Assert.Contains("当前绘制目标", region);
         Assert.Contains("RegionDrawingTargetName", region);
         Assert.Contains("RegionDrawingTargetStatus", region);

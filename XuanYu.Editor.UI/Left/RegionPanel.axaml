@@ -5,7 +5,7 @@
              x:DataType="local:UiVm">
   <ScrollViewer VerticalScrollBarVisibility="Auto">
     <StackPanel Spacing="8" Margin="2,8">
-      <TextBlock Text="区域" Classes="uiSection"/>
+      <TextBlock Text="区域面" Classes="uiSection"/>
       <TextBlock Text="当前绘制目标" Classes="uiSection"/>
       <TextBlock Text="{Binding RegionDrawingTargetName}" Classes="uiValue"/>
       <TextBlock Text="{Binding RegionDrawingTargetId}" Classes="uiMultiline" TextWrapping="Wrap"/>

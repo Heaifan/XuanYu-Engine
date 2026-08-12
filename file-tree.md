@@ -324,6 +324,7 @@
 │  │  ├─ EditorWorkspaceId.cs
 │  │  ├─ EditorWorkspaceManager.cs
 │  │  ├─ EditorWorkspaceTool.cs
+│  │  ├─ RegionAuthoringMode.cs
 │  │  └─ EditorWorkspaceTransition.cs
 │  └─ XuanYu.Editor.csproj
 ├─ XuanYu.Editor.App/
@@ -384,6 +385,8 @@
 │  │  ├─ InlineRenameActivation.cs
 │  │  ├─ Left.EntityCommands.cs
 │  │  ├─ Left.Styles.axaml
+│  │  ├─ RegionalAuthoringPanel.axaml
+│  │  ├─ RegionalAuthoringPanel.axaml.cs
 │  │  ├─ RegionPanel.axaml
 │  │  ├─ RegionPanel.axaml.cs
 │  │  ├─ Left.axaml
@@ -584,6 +587,7 @@
 │  │  │  ├─ UiVm.Tool.cs
 │  │  │  └─ UiVm.ViewportAssist.cs
 │  │  ├─ Workspace/
+│  │  │  ├─ UiVm.RegionAuthoring.cs
 │  │  │  └─ UiVm.Workspace.cs
 │  │  ├─ Mode/
 │  │  │  └─ UiVm.Mode.cs
@@ -1435,9 +1439,11 @@
 - `XuanYu.Editor.UI/Left/Left.Styles.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Left/Left.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Left/Left.axaml.cs` — partial class Left
-- `XuanYu.Editor.UI/Left/RegionPanel.axaml` — MAP-DATA-A-R1-F3：Region Workspace 左侧工具架、当前 Dataset、Draft 状态和 Region 内容摘要。
+- `XuanYu.Editor.UI/Left/RegionalAuthoringPanel.axaml` — R2-F1：RegionEditor 内 RegionSurface/Road 二级模式选择与内容宿主。
+- `XuanYu.Editor.UI/Left/RegionalAuthoringPanel.axaml.cs` — R2-F1：RegionalAuthoringPanel 控件初始化。
+- `XuanYu.Editor.UI/Left/RegionPanel.axaml` — MAP-DATA-A-R1-F3：区域面工具架、当前 Dataset、Draft 状态和 Region 内容摘要。
 - `XuanYu.Editor.UI/Left/RegionPanel.axaml.cs` — MAP-DATA-A-R1-F3：Region 工具架按钮事件转发。
-- `XuanYu.Editor.UI/Left/RoadPanel.axaml` — MAP-DATA-A-R2：Road Workspace 左侧工具架与 Polyline 草稿状态。
+- `XuanYu.Editor.UI/Left/RoadPanel.axaml` — MAP-DATA-A-R2/R2-F1：RegionEditor 道路子模式工具架与 Polyline 草稿状态。
 - `XuanYu.Editor.UI/Left/RoadPanel.axaml.cs` — MAP-DATA-A-R2：Road 工具架按钮事件转发。
 - `XuanYu.Editor.UI/Main/Main.axaml` — github.com/avaloniaui"
 - `XuanYu.Editor.UI/Main/Main.axaml.cs` — partial class Main
@@ -1622,6 +1628,7 @@
 - `XuanYu.Editor.UI/Vm/Transform/UiVm.Tool.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Transform/UiVm.ViewportAssist.cs` — sealed partial class UiVm
 - `XuanYu.Editor.UI/Vm/Mode/UiVm.Mode.cs` — Manage/Edit Mode 的 UiVm 桥接、统一显示文字、输入取消与上下文保留。
+- `XuanYu.Editor.UI/Vm/Workspace/UiVm.RegionAuthoring.cs` — R2-F1：RegionAuthoringMode 状态、子模式切换、Draft 取消与 Dataset 目标同步。
 - `XuanYu.Editor.UI/Vm/Workspace/UiVm.Workspace.cs` — 编辑目标与活动 Workspace 切换桥接。
 - `XuanYu.Editor.UI/Vm/Tree/EditorTreeNode.cs` — sealed class EditorTreeNode
 - `XuanYu.Editor.UI/Vm/Tree/TreeGuideBuilder.cs` — static class TreeGuideBuilder
@@ -2283,8 +2290,10 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F2-acceptance.md` — R1-F2 Polygon 与 Region Dataset 自动 Bootstrap 六项真机 IPO 验收模板。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F3-acceptance.md` — R1-F3 Region Authoring UX 六项真机 IPO 验收模板。
 - `docs/milestones/current/EDITOR-A/XYUI-backlog.md` — 非阻塞 XYUI/UI 债务登记，记录 RegionPanel Binding 文本显示异常。
-- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — MAP-DATA-A-R2：Road Dataset/Polyline 冻结目标、兼容边界与明确不做项。
-- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-acceptance.md` — MAP-DATA-A-R2：R2-M01～R2-M07 真机验收 IPO 清单。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — MAP-DATA-A-R2：Regional Content Authoring、Road Dataset/Polyline 冻结目标与兼容边界。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F1-plan.md` — MAP-DATA-A-R2-F1：RegionalAuthoringHierarchy 三项冻结 TODO、长期结构与禁止项。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F1-acceptance.md` — MAP-DATA-A-R2-F1：顶层 Workspace、子模式、统一图层与 Region/Road 回归真机 IPO 模板。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-acceptance.md` — MAP-DATA-A-R2：区域编辑内 Road Dataset/Polyline 真机验收 IPO 清单。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪
@@ -2326,6 +2335,7 @@
 - `XuanYu.World.Tests/UiTokens/UiD6LogPerformanceTests.cs` — D6：日志 500 条尾窗与重复项压缩合同测试。
 - `XuanYu.World.Tests/UiTokens/UiD6MotionContractTests.cs` — D6：减少动画偏好与默认短反馈合同测试。
 - `XuanYu.World.Tests/Workspace/EditorWorkspaceUiCompositionTests.cs` — EDITOR-A-R1/R2 基础：唯一 Main/Viewport 与 Workspace 组合源码合同。
+- `XuanYu.World.Tests/Workspace/RegionAuthoringHierarchyTests.cs` — R2-F1：顶层 Workspace、默认子模式、Road 目标与 Layer/Mode 同步合同。
 - `XuanYu.World.Tests/Workspace/EditorWorkspaceUiTests.cs` — EDITOR-A-R1/R2 基础：UiVm 工作区切换、状态保留、NO-OP 与无 Draft 回归。
 - `XuanYu.World.Tests/Mode/EditorModeManagerTests.cs` — Manage/Edit Mode 纯合同测试。
 - `XuanYu.World.Tests/Mode/EditorModeUiCompositionTests.cs` — R3-F1 紧凑 Shell、统一 Mode 控件、GLB 菜单与唯一 Viewport 组合合同。

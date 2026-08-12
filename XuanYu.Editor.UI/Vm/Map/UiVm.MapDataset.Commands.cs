@@ -30,7 +30,9 @@ public sealed partial class UiVm
             if (!runtime.Succeeded || runtime.Value is null) return DatasetFailed(runtime.Message);
             var applied = MapSession.ApplyRuntimeLayerProjection(runtime.Value);
             if (!applied.IsSuccess) return DatasetFailed(applied.Error!.Value.Message);
-            DatasetSelectedId = result.Value!.Id;
+            _authoringModeTargetSync = true;
+            try { DatasetSelectedId = result.Value!.Id; }
+            finally { _authoringModeTargetSync = false; }
             FooterMessage = $"数据集创建成功：{result.Value.Id}（{result.Value.Type}）";
             LogDatasetOutcome(true, "创建", result.Value.Id, result.Value.Type, "");
             await RefreshDatasetProjectionAsync();

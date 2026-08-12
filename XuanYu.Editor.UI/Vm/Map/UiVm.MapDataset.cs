@@ -7,7 +7,8 @@ public sealed record MapDatasetRow(string Name, string Type, string Id, string S
 {
     public string VisibilityActionText => IsVisible ? "隐藏" : "显示";
     public string LockActionText => IsLocked ? "解锁" : "锁定";
-    public string TypeIdText => $"{Type} · {Id}";
+    public string TypeDisplay => MapDatasetTypePresentation.Display(Type);
+    public string TypeIdText => $"{TypeDisplay} · {Id}";
 }
 
 public sealed partial class UiVm
@@ -18,7 +19,7 @@ public sealed partial class UiVm
 
     public IReadOnlyList<MapDatasetTypeOption> DatasetTypeOptions => MapDatasetTypePresentation.Options;
     public IReadOnlyList<MapDatasetRow> DatasetItems => _datasetItems;
-    public IReadOnlyList<MapDatasetRow> RegionDatasetItems => _datasetItems.Where(item => item.Type == "区域").ToArray();
+    public IReadOnlyList<MapDatasetRow> RegionDatasetItems => _datasetItems.Where(item => item.Type == "region").ToArray();
     public bool IsDatasetEmpty => _datasetItems.Count == 0;
     public string DatasetCreateType
     {
@@ -43,7 +44,7 @@ public sealed partial class UiVm
             : await _datasetRegistry.EnumerateAsync();
         _datasetItems = entries.Select(entry => new MapDatasetRow(
             entry.Descriptor.Name ?? MapDatasetTypePresentation.Display(entry.Descriptor.Type),
-            MapDatasetTypePresentation.Display(entry.Descriptor.Type), entry.Descriptor.Id,
+            entry.Descriptor.Type, entry.Descriptor.Id,
             StatusText(entry.Status), entry.Descriptor.Source,
             string.Equals(entry.Descriptor.Id, _datasetSelectedId, StringComparison.OrdinalIgnoreCase),
             State(entry.Descriptor.Id).IsVisible, State(entry.Descriptor.Id).IsLocked, State(entry.Descriptor.Id).Order))

@@ -19,7 +19,7 @@ public static class MapDatasetTypes
 
     public static string DisplayName(string type) => type switch
     {
-        Region => "区域", Road => "道路", Settlement => "城镇",
+        Region => "区域面", Road => "道路", Settlement => "城镇",
         Resource => "资源", River => "河流", TerrainArea => "地形区域", _ => type
     };
 }

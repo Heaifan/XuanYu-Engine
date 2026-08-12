@@ -46,7 +46,7 @@ public sealed class UiD4LayerContractTests
         Assert.Contains("Layer.Kind.Region.Text", Panel);
         Assert.Contains("Layer.Kind.System.Bg", Panel);
         Assert.Contains("Layer.Kind.System.Text", Panel);
-        Assert.Contains("Text=\"区域\"", Panel);   // 文字区分（三重之一）
+        Assert.Contains("Text=\"{Binding KindTagText}\"", Panel);   // 文字区分（三重之一）
         Assert.Contains("Text=\"系统\"", Panel);
     }
 

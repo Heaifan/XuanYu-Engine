@@ -7,13 +7,13 @@ public sealed partial class UiVm
 {
     public bool TryGetDatasetTypeForLayer(MapLayerId layerId, out string type)
     {
-        if (TryGetDatasetIdForLayer(layerId, out var id) && _datasetItems.FirstOrDefault(item => item.Id == id) is { } row) { type = row.Type; return true; }
+        if (TryGetDatasetIdForLayer(layerId, out var id) && _datasetItems.FirstOrDefault(item => item.Id == id) is { } row) { type = MapDatasetTypePresentation.Display(row.Type); return true; }
         type = ""; return false;
     }
     public bool TryGetDatasetIdForLayer(MapLayerId layerId, out string datasetId)
     {
         var row = _datasetItems.FirstOrDefault(item =>
-            item.Type is "区域" or "道路" && MapDatasetLayerIdProjection.Project(item.Id) == layerId);
+            item.Type is "region" or "road" && MapDatasetLayerIdProjection.Project(item.Id) == layerId);
         datasetId = row?.Id ?? "";
         return row is not null;
     }

@@ -24,13 +24,6 @@
           <TextBlock Text="{Binding CurrentLayerEmptyMessage}" Classes="uiMultiline" TextAlignment="Center" TextWrapping="Wrap"/>
         </StackPanel>
       </Grid>
-      <Grid IsVisible="{Binding IsRoadEditMode}">
-        <local:LayerPanel IsVisible="{Binding HasCurrentLayerItems}"/>
-        <StackPanel IsVisible="{Binding !HasCurrentLayerItems}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="240" Spacing="6">
-          <TextBlock Text="{Binding CurrentLayerEmptyTitle}" Classes="layerDockEmptyTitle" TextAlignment="Center"/>
-          <TextBlock Text="{Binding CurrentLayerEmptyMessage}" Classes="uiMultiline" TextAlignment="Center" TextWrapping="Wrap"/>
-        </StackPanel>
-      </Grid>
     </Grid>
   </Grid>
 </UserControl>

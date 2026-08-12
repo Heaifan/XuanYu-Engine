@@ -51,7 +51,7 @@
               <Path Classes="dragHandleIcon" Data="{StaticResource DragHandleIcon}"/>
             </Border>
             <Border Grid.Column="2" Classes="kindTagRegion" IsVisible="{Binding IsRegion}">
-              <TextBlock Classes="kindTagRegionText" Text="区域"/>
+              <TextBlock Classes="kindTagRegionText" Text="{Binding KindTagText}"/>
             </Border>
             <Border Grid.Column="2" Classes="kindTagSystem" IsVisible="{Binding IsSystem}">
               <TextBlock Classes="kindTagSystemText" Text="系统"/>

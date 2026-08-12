@@ -18,6 +18,7 @@ public sealed partial class UiVm
             SetDatasetDrawingTarget(value);
             RefreshDatasetSelectionProjection();
             DatasetNameText = SelectedDataset?.Name ?? "";
+            if (IsRegionEditMode && !_authoringModeTargetSync) SyncRegionAuthoringModeFromDatasetSelection();
         }
     }
 

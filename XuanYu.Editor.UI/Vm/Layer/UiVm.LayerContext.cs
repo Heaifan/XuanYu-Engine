@@ -7,11 +7,11 @@ public sealed partial class UiVm
     IEditorLayerProvider? _mapLayerProvider;
     IEditorLayerProvider? _regionLayerProvider;
 
-    public IEditorLayerProvider? CurrentLayerProvider => IsRegionEditMode || IsRoadEditMode
+    public IEditorLayerProvider? CurrentLayerProvider => IsRegionEditMode
         ? _regionLayerProvider ??= new EditorLayerProviderAdapter(this, true)
         : IsMapEditMode ? _mapLayerProvider ??= new EditorLayerProviderAdapter(this, false) : null;
 
-    public IReadOnlyList<MapLayerRowViewModel> CurrentLayerItems => IsRegionEditMode || IsRoadEditMode
+    public IReadOnlyList<MapLayerRowViewModel> CurrentLayerItems => IsRegionEditMode
         ? _layerItems.Where(item => item.IsRegion).ToArray() : Array.Empty<MapLayerRowViewModel>();
 
     public bool HasCurrentLayerItems => CurrentLayerItems.Count > 0;
