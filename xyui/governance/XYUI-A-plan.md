@@ -220,6 +220,8 @@ HISTORICAL_ONLY     明确被否决的候选方案
 
 ## 5. XYUI-A2 · Foundation Registry
 
+> 状态：`XYUI-A2-R1 · READY FOR USER ACCEPTANCE`（Schema + README + 3 示例已定义并验证；44 项正式录入属 A2-R3；alias 方向裁定属 A2-R2。A2-R2 待批准后解锁。）
+
 只有经过 A1 人工批准的项目进入这里。目录与文件（**禁止一项规范五六个 JSON**）：
 
 ```text

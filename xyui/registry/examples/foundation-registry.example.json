@@ -1,0 +1,174 @@
+{
+  "registry_version": "0.1.0",
+  "items": [
+    {
+      "id": "XYUI.Foundation.Density",
+      "source": {
+        "source_id": "XYUI-SOURCE-000",
+        "item_id": "XYUI0-0.19",
+        "decision_id": "XYUI0-0.19",
+        "decision_status": "CONFIRMED_APPROVED",
+        "source_quality": "CLEAR",
+        "evidence_refs": [
+          "XYUI0-0.19@L1470-1471",
+          "XYUI0-0.19@L1472-1490",
+          "XYUI0-0.19@L1491-1502",
+          "XYUI0-0.19@L1503-1536"
+        ]
+      },
+      "category": "foundation-density",
+      "status": "ACTIVE",
+      "engineering_mapping": [
+        { "type": "TOKEN", "note": "Compact/Comfortable 两档尺寸与间距 Token" },
+        { "type": "INTERACTION_CONTRACT", "note": "Auto 全局离散切换、手动锁定、禁混用、迟滞机制" }
+      ],
+      "rules": [
+        {
+          "rule_id": "DENSITY-MODE",
+          "text": "默认 Auto；Auto 按可用窗口空间选择整套密度；禁止同一界面部分 Compact 部分 Comfortable",
+          "evidence_refs": ["XYUI0-0.19@L1476-1478"]
+        },
+        {
+          "rule_id": "DENSITY-LOCK",
+          "text": "用户可手动锁定 Compact 或 Comfortable；锁定后禁止 Auto 自动切换",
+          "evidence_refs": ["XYUI0-0.19@L1479-1481"]
+        },
+        {
+          "rule_id": "DENSITY-SWITCH-SCOPE",
+          "text": "切换只改变尺寸与间距，不改变颜色、字体家族、语义结构、控件功能",
+          "evidence_refs": ["XYUI0-0.19@L1484-1488"]
+        }
+      ],
+      "tokens": [
+        { "token_id": "XY.Density.Compact.TreeRow", "value": "28 DIP", "evidence_refs": ["XYUI0-0.19@L1491-1492"] },
+        { "token_id": "XY.Density.Compact.Toolbar", "value": "30 DIP", "evidence_refs": ["XYUI0-0.19@L1493"] },
+        { "token_id": "XY.Density.Compact.Input", "value": "32 DIP", "evidence_refs": ["XYUI0-0.19@L1494"] },
+        { "token_id": "XY.Density.Compact.Gap", "value": "4 DIP", "evidence_refs": ["XYUI0-0.19@L1495"] },
+        { "token_id": "XY.Density.Compact.SectionGap", "value": "8 DIP", "evidence_refs": ["XYUI0-0.19@L1496"] },
+        { "token_id": "XY.Density.Comfortable.TreeRow", "value": "32 DIP", "evidence_refs": ["XYUI0-0.19@L1498"] },
+        { "token_id": "XY.Density.Comfortable.Toolbar", "value": "34 DIP", "evidence_refs": ["XYUI0-0.19@L1499"] },
+        { "token_id": "XY.Density.Comfortable.Input", "value": "36 DIP", "evidence_refs": ["XYUI0-0.19@L1500"] },
+        { "token_id": "XY.Density.Comfortable.Gap", "value": "8 DIP", "evidence_refs": ["XYUI0-0.19@L1501"] },
+        { "token_id": "XY.Density.Comfortable.SectionGap", "value": "16 DIP", "evidence_refs": ["XYUI0-0.19@L1502"] }
+      ],
+      "relationships": [
+        {
+          "type": "related_to",
+          "target": "XYUI.Foundation.Sizing",
+          "status": "PROPOSED",
+          "evidence_refs": ["XYUI0-0.8@L959-1000"],
+          "note": "Compact 档与 0.8 尺寸一致（28/30/32）；alias 方向待 A2-R2 裁定（倾向 XY.Size.* 为 Base Source）"
+        }
+      ],
+      "implementation": {
+        "mapping": [],
+        "tuning_required": [
+          {
+            "parameter": "XY.Density.Auto.EnterThreshold",
+            "status": "IMPLEMENTATION_TUNING_REQUIRED",
+            "note": "进入 Compact/Comfortable 的窗口尺寸阈值；实现调优参数，进入代码前必须 Token/Config 冻结，禁止 C# 随手写魔法数",
+            "evidence_refs": ["XYUI0-0.19@L1489-1490"]
+          },
+          {
+            "parameter": "XY.Density.Auto.ExitThreshold",
+            "status": "IMPLEMENTATION_TUNING_REQUIRED",
+            "note": "退出阈值（迟滞）；同上，须 Token 化",
+            "evidence_refs": ["XYUI0-0.19@L1489-1490"]
+          }
+        ]
+      },
+      "acceptance": [
+        {
+          "rule_id": "DENSITY-ACC-01",
+          "text": "拖动窗口跨越阈值时密度整组切换且不闪切（迟滞生效）",
+          "evidence_refs": ["XYUI0-0.19@L1489-1490"]
+        }
+      ]
+    },
+    {
+      "id": "XYUI.Foundation.Shadow",
+      "source": {
+        "source_id": "XYUI-SOURCE-000",
+        "item_id": "XYUI0-0.13",
+        "decision_id": "XYUI0-0.13",
+        "decision_status": "CONFIRMED_APPROVED",
+        "source_quality": "SOURCE_FORMATTING_DEFECT",
+        "source_defect_ref": ["XYUI-SFD-001"],
+        "evidence_refs": [
+          "XYUI0-0.13@L1183-1184",
+          "XYUI0-0.13@L1185-1193",
+          "XYUI0-0.13@L1194-1215"
+        ]
+      },
+      "category": "foundation-shadow",
+      "status": "ACTIVE",
+      "engineering_mapping": [
+        { "type": "TOKEN", "note": "四级阴影参数 Token（Tooltip/Popup/DragPreview/None）" }
+      ],
+      "rules": [
+        {
+          "rule_id": "SHADOW-SCOPE",
+          "text": "普通 Panel/Button/Input 不使用阴影；阴影只表达 Z 轴脱离关系，结构层级由 Surface/Divider/Border 负责",
+          "evidence_refs": ["XYUI0-0.13@L1186-1193"]
+        }
+      ],
+      "tokens": [
+        { "token_id": "XY.Shadow.Tooltip", "value": "0,3,10,0.12", "evidence_refs": ["XYUI0-0.13@L1197-1201"] },
+        { "token_id": "XY.Shadow.Popup", "value": "0,6,18,0.14", "evidence_refs": ["XYUI0-0.13@L1202-1206"] },
+        { "token_id": "XY.Shadow.DragPreview", "value": "0,6,18,0.14", "evidence_refs": ["XYUI0-0.13@L1207-1211"] },
+        { "token_id": "XY.Shadow.Panel", "value": "None", "evidence_refs": ["XYUI0-0.13@L1212-1213"] },
+        { "token_id": "XY.Shadow.Control", "value": "None", "evidence_refs": ["XYUI0-0.13@L1214-1215"] }
+      ],
+      "relationships": [],
+      "implementation": { "mapping": [], "tuning_required": [] },
+      "acceptance": []
+    },
+    {
+      "id": "XYUI.Foundation.DesignPrinciples",
+      "source": {
+        "source_id": "XYUI-SOURCE-000",
+        "item_id": "XYUI0-0.1",
+        "decision_id": "XYUI0-0.1",
+        "decision_status": "CONFIRMED_APPROVED",
+        "source_quality": "CLEAR",
+        "evidence_refs": [
+          "XYUI0-0.1@L18-19",
+          "XYUI0-0.1@L20-66",
+          "XYUI0-0.1@L97-117"
+        ]
+      },
+      "category": "foundation-principle",
+      "status": "ACTIVE",
+      "engineering_mapping": [
+        { "type": "POLICY", "note": "治理性规则：优先级、强制等级、禁止项（P8 要求原则必须映射工程对象）" }
+      ],
+      "rules": [
+        {
+          "rule_id": "PRINCIPLE-PRIORITY",
+          "text": "冲突时高优先级覆盖低优先级：操作正确性 > 语义清晰 > 编辑效率 > 信息密度 > 视觉一致 > 装饰性",
+          "evidence_refs": ["XYUI0-0.1@L67-84"]
+        },
+        {
+          "rule_id": "PRINCIPLE-FORBID-MAGIC",
+          "text": "禁止随意硬编码未经 Token 化的数值（Magic Number Forbidden）",
+          "evidence_refs": ["XYUI0-0.1@L104-105"]
+        },
+        {
+          "rule_id": "PRINCIPLE-FORBID-CARD",
+          "text": "禁止无意义 Card 套 Card（Cardification Forbidden）",
+          "evidence_refs": ["XYUI0-0.1@L98-99"]
+        }
+      ],
+      "tokens": [],
+      "relationships": [],
+      "implementation": { "mapping": [], "tuning_required": [] },
+      "acceptance": [
+        {
+          "rule_id": "PRINCIPLE-ACC-01",
+          "text": "所有正式规范必须能映射到至少一种工程对象（Token/Component/State/Interaction Contract/Acceptance Rule）",
+          "evidence_refs": ["XYUI0-0.1@L59-66"]
+        }
+      ]
+    }
+  ]
+}
