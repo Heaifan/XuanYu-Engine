@@ -2,6 +2,7 @@ using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
 using XuanYu.Render.Vulkan.Render.VectorOverlay;
+using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -10,7 +11,7 @@ public sealed class RegionDrawingF1RenderContractTests
     [Fact]
     public void R17_first_hit_draft_has_no_empty_primitive_and_passes_vulkan_validator()
     {
-        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        var vm = RegionDrawingTestVm.Create();
         vm.SelectToolCommand.Execute("区域绘制");
         var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
         var projection = ViewProjectionState.Create(vm.RenderSnapshot.Camera!.Value, viewport);

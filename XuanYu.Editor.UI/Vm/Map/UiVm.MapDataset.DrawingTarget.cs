@@ -4,6 +4,10 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
+    public bool CanStartRegionDrawing =>
+        IsRegionEditMode &&
+        SelectedDataset is { Type: "区域", Status: "正常", IsLocked: false };
+
     void SetDatasetDrawingTarget(string? id)
     {
         var dataset = _datasetItems.FirstOrDefault(item => item.Id == id);

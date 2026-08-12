@@ -2,6 +2,7 @@ using System.Reflection;
 using XuanYu.Editor.Mode;
 using XuanYu.Editor.UI;
 using XuanYu.Editor.Workspace;
+using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.Mode;
 
@@ -62,8 +63,8 @@ public sealed class EditorModeUiTests
     [Fact]
     public void Region_edit_cancels_region_drawing_and_draft()
     {
-        var vm = Create(); vm.SelectToolCommand.Execute("区域绘制");
-        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor); vm.ToggleEditorMode();
+        var vm = RegionDrawingTestVm.Create(); vm.SelectToolCommand.Execute("区域绘制");
+        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.MapEditor);
         Assert.False(vm.IsRegionDrawingTool); Assert.False(vm.IsRegionDrawingDraftActive);
     }
 

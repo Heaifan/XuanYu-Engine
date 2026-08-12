@@ -1,6 +1,7 @@
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
+using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -9,7 +10,7 @@ public sealed class RegionDrawingF1ResizeTests
     [Fact]
     public void R16_resize_keeps_region_drawing_input_alive()
     {
-        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        var vm = RegionDrawingTestVm.Create();
         vm.SelectToolCommand.Execute("区域绘制");
         var firstViewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
         var secondViewport = new ViewportState(0, 0, 1200, 800, 1200, 800, 1, 2);

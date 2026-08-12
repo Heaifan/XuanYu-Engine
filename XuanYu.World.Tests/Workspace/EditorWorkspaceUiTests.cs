@@ -1,6 +1,7 @@
 using System.Reflection;
 using XuanYu.Editor.UI;
 using XuanYu.Editor.Workspace;
+using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.Workspace;
 
@@ -74,10 +75,9 @@ public sealed class EditorWorkspaceUiTests
     [Fact]
     public void Region_workspace_does_not_activate_region_drawing_or_draft()
     {
-        var vm = Create();
+        var vm = RegionDrawingTestVm.Create();
         vm.SelectToolCommand.Execute("区域绘制");
-        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
-        vm.ToggleEditorMode();
+        vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.MapEditor);
         Assert.False(vm.IsRegionDrawingTool); Assert.False(vm.IsRegionDrawingDraftActive);
         Assert.Equal(0, vm.RegionDrawingDraftVertexCount);
     }

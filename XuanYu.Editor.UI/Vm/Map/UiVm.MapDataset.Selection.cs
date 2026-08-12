@@ -78,6 +78,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(DatasetLayerItems));
         OnPropertyChanged(nameof(SelectedDataset));
         OnPropertyChanged(nameof(HasSelectedDataset));
+        OnPropertyChanged(nameof(CanStartRegionDrawing));
         OnPropertyChanged(nameof(CanUnregisterDataset));
         OnPropertyChanged(nameof(InspectorSelectionTitle));
         OnPropertyChanged(nameof(InspectorSelectionSubtitle));

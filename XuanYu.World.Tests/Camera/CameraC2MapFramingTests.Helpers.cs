@@ -3,6 +3,7 @@ using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
 using XuanYu.World.Map;
+using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.World;
 
@@ -20,7 +21,8 @@ static class CameraC2MapFramingTestsHelpers
 
     public static (UiVm Vm, MapPoint[] Points) DraftVm(int count)
     {
-        var vm = MapVm(false);
+        var vm = RegionDrawingTestVm.Create();
+        vm.UpdateViewportFrame(800, 600);
         vm.SelectToolCommand.Execute("区域绘制");
         var projection = ViewProjectionState.Create(vm.RenderSnapshot.CameraState, Viewport);
         var points = new List<MapPoint>();

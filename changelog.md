@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.27.1-fix
+MAP-DATA-A-R1-F1 Region Drawing Tool Activation（2026-08-12 10:20:26）：修复 Region Drawing 没有真实 UI 激活入口的问题，R1 保持 OPEN，等待 F1 真机验收。
+- 变化：区域编辑工具栏新增“绘制区域” ToggleButton，复用 `RegionIcon`；新增 `CanStartRegionDrawing`，仅正常、未锁定的区域数据集且处于区域编辑时可用；`SelectTool` 对非法 RegionDrawing 请求 fail-closed。
+- 测试：补充 Top.axaml UI 合同、Headless 真实按钮路径、模式/Workspace/锁定/非区域/无效 Dataset 拒绝及 Draft 首点测试；针对性 F1 回归 `46/46 PASS`，World.Tests 构建 `0 Warning / 0 Error`。
+- 范围：未修改 Region Feature Schema、Dataset 0.2.0、Hydration、Save Transaction、Renderer、MapRegion、LayerId Projection 或 R2 Road 能力。
+- 遗留：等待 `MAP-DATA-A-R1-F1-acceptance.md` 的 F1-M01～F1-M03 真机验收；通过后从原 R1-M02 继续，R1 全量通过前不得 CLOSED，不得启动 R2。
+
 ## v0.2.27.0-rz
 MAP-DATA-A-R1 Region Dataset Binding（2026-08-11 23:47:31）：完成 Region Dataset 从 `map.json` 到运行时绘制、保存与重载的闭环，进入 `READY FOR USER ACCEPTANCE`。
 - 变化：Region Dataset 严格支持 0.1.0 空文件兼容与 0.2.0 Feature；DatasetId 确定性投影 Runtime LayerId；选择、锁定、解除注册取消草稿；Rename/Visible/Lock/Drag 只更新 Runtime Projection；父 Layer Visible 与 Dataset Order 控制 Region Overlay。

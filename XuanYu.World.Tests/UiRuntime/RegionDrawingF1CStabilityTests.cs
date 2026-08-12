@@ -3,6 +3,7 @@ using XuanYu.Core.Math;
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
+using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -74,7 +75,7 @@ public sealed class RegionDrawingF1CStabilityTests
 
     static UiVm DraftVm()
     {
-        var vm = new UiVm(null, () => true, seedInitialScene: false);
+        var vm = RegionDrawingTestVm.Create();
         vm.SelectToolCommand.Execute("区域绘制");
         var projection = ViewProjectionState.Create(vm.RenderSnapshot.Camera!.Value, Viewport);
         var hit = Enumerable.Range(0, 17).SelectMany(ix => Enumerable.Range(0, 13)

@@ -1,6 +1,6 @@
 # MAP-DATA-A-R1 真机验收
 
-状态：`READY FOR USER ACCEPTANCE`。本表是本轮唯一真机验收模板；自动测试不替代人工验收。
+状态：`USER ACCEPTANCE FAILED → R1-F1 IMPLEMENTING`。R1-M02 因 Region Drawing 没有真实 UI 激活路径失败；M03～M07 暂停。本轮 F1 真机模板见 `MAP-DATA-A-R1-F1-acceptance.md`。
 
 | 序号 | 路径 | 输入 I | 过程 P | 输出 O |
 |---|---|---|---|---|

@@ -70,7 +70,7 @@ public sealed class CameraC2MapFramingTests
 
         for (var i = 0; i < 3; i++)
         {
-            setup.Vm.RunCommand.Execute("查看全部");
+            setup.Vm.FocusMap();
             CameraC2MapFramingTestsHelpers.AssertMapCornersVisible(setup.Vm);
             mapFrames.Add(setup.Vm.RenderSnapshot.CameraState);
             setup.Vm.RunCommand.Execute("聚焦");

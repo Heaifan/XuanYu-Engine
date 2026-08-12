@@ -1,7 +1,7 @@
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
-
+using XuanYu.World.Tests;
 namespace XuanYu.World.Tests.UiRuntime;
 
 public sealed class RegionDrawingF1FullRuntimeTests
@@ -83,7 +83,7 @@ public sealed class RegionDrawingF1FullRuntimeTests
     }
 
     static UiVm CreateVm()
-    { var vm = new UiVm(null, () => true, seedInitialScene: false); vm.SelectToolCommand.Execute("区域绘制"); return vm; }
+    { var vm = RegionDrawingTestVm.Create(); vm.SelectToolCommand.Execute("区域绘制"); return vm; }
 
     static (double X, double Y) FindHit(UiVm vm, ViewportState viewport)
     { return FindHits(vm, viewport, 1)[0]; }

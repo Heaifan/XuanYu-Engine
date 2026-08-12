@@ -920,6 +920,8 @@
 │  │  │  ├─ UiMapLayoutContractTests.cs
 │  │  │  ├─ UiMapManifestIdentityTests.cs
 │  │  │  ├─ UiMapDatasetRegionRuntimeTests.cs
+│  │  │  ├─ UiMapDatasetRegionToolActivationTests.cs
+│  │  │  ├─ UiMapDatasetRegionToolInvalidTests.cs
 │  │  │  └─ UiMapManifestNavigationTests.cs
 │  │  ├─ MapBoundsTests.cs
 │  │  ├─ MapCoordinateValidationTests.cs
@@ -1060,6 +1062,7 @@
 │  ├─ UiTokens/
 │  │  ├─ UiCsColorRulesTests.cs
 │  │  ├─ UiDebtBaseline.Colors.Axaml1.cs
+│  │  ├─ UiD2F1RegionToolActivationContractTests.cs
 │  │  ├─ UiDebtBaseline.Colors.Axaml2.cs
 │  │  ├─ UiDebtBaseline.Colors.Cs.cs
 │  │  ├─ UiDebtBaseline.Typography.cs
@@ -1532,7 +1535,7 @@
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapCommandRouting.cs` — MAP-A-R2-D3-F1：地图面板命令真实路由（UiVm.RunCommand → 地图命令）。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.cs` — MAP-DOC-A-R2-F3：Dataset Registry 列表、空态、状态与投影通知。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Selection.cs` — MAP-DOC-A-R2-F3：SelectedDatasetId 单一选择合同及 Dataset-backed Layer 投影。
-- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingTarget.cs` — MAP-DATA-A-R1：Dataset 选择到 Region Runtime Layer 绘制目标与草稿取消保护。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.DrawingTarget.cs` — MAP-DATA-A-R1-F1：Region Drawing 可用性守卫、Dataset 绘制目标与草稿取消保护。
 - `XuanYu.Editor.UI/Vm/Map/MapDatasetTypePresentation.cs` — MAP-DOC-A-R2-F2：六类 Dataset 内部 type 到中文 UI 展示值的映射。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Commands.cs` — MAP-DOC-A-R2-F3：创建自动选中、按选择解除注册与选择迁移。
 - `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.Logging.cs` — MAP-DOC-A-R2-F1：Dataset Create/Register 最终成功/失败用户可见日志。
@@ -1953,6 +1956,8 @@
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF2Tests.cs` — MAP-DOC-A-R2-F2：列表刷新、空态、中文展示、失败不增行与重开多 Dataset 测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF3Tests.cs` — MAP-DOC-A-R2-F3：单一选择、自动选中、按选择解除注册、迁移与重开投影测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionRuntimeTests.cs` — MAP-DATA-A-R1：选择绘制目标、草稿安全、History 隔离与 Save/Reload 端到端回归。
+- `XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionToolActivationTests.cs` — MAP-DATA-A-R1-F1：Region Drawing 工具模式、Dataset 合法性与离开 Workspace 取消回归。
+- `XuanYu.World.Tests/Map/Editing/UiMapDatasetRegionToolInvalidTests.cs` — MAP-DATA-A-R1-F1：无效非区域 Dataset 的工具启用拒绝回归。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetLayerR3Tests.cs` — Dataset Layer 显隐、锁定、顺序、选择稳定和保存重开测试。
 - `XuanYu.World.Tests/Map/Editing/UiMapDatasetF1AcceptanceTests.cs` — Dataset Name、左侧满宽和拖拽投影稳定性回归测试。
 - `XuanYu.World.Tests/Map/MapDatasetLayerStateTests.cs` — Dataset Layer 旧 Manifest 兼容、状态校验、Promotion 与底层锁定保护测试。
@@ -2076,12 +2081,15 @@
 - `XuanYu.World.Tests/Tree/UiTreeGuideTests.cs` — sealed class UiTreeGuideTests
 - `XuanYu.World.Tests/Tree/UiTreeToggleTests.cs` — sealed class UiTreeToggleTests
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml1.cs` — 旧 UI 债务基线（AXAML 色值 1/2，D2 自动生成）
+- `XuanYu.World.Tests/UiTokens/UiD2F1RegionToolActivationContractTests.cs` — MAP-DATA-A-R1-F1：Top 区域绘制按钮可发现性与绑定合同。
 - `XuanYu.World.Tests/UiRuntime/UiHeadlessFixture.cs` — 可复用 Avalonia Headless 会话与 UI 线程调度夹具。
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeTestHost.cs` — Headless Window、布局和 Visual 树查询辅助。
 - `XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeLayoutTests.cs` — LayerPanel 冷启动与增层布局运行时门禁。
 - `XuanYu.World.Tests/UiRuntime/LayerPanelRuntimeStateTests.cs` — LayerPanel 选中、可见和锁定状态运行时门禁。
 - `XuanYu.World.Tests/UiRuntime/LayerARuntimeTests.cs` — LAYER-A 管理/编辑 Dock 可见性与 Workspace provider 运行时合同。
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeRiskTests.cs` — Top/Foot Fluent 状态覆盖风险运行时门禁。
+- `XuanYu.World.Tests/UiRuntime/RegionDrawingF1ActivationRuntimeTests.cs` — MAP-DATA-A-R1-F1：Headless Top“绘制区域”真实命令路径与首个 Draft 顶点运行时门禁。
+- `XuanYu.World.Tests/RegionDrawingTestVm.cs` — Region Drawing 回归测试的合法 Dataset/Workspace 上下文构造辅助。
 - `XuanYu.World.Tests/UiRuntime/UiRuntimeCollection.cs` — Headless UI 测试串行集合定义。
 - `XuanYu.World.Tests/UiRuntime/UiTestAppBuilder.cs` — 正式 Editor.UI App 的 Headless AppBuilder 配置。
 - `XuanYu.World.Tests/UiTokens/UiDebtBaseline.Colors.Axaml2.cs` — 旧 UI 债务基线（AXAML 色值 2/2，D2 自动生成）
@@ -2219,6 +2227,7 @@
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-F3-ui-spec-rework.svg` — R3-F3 列表、图层和检查器职责边界状态图。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-F4-acceptance.md` — R3-F4 Dataset/Layer 文字对齐真机 IPO 验收清单。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R3-plan.md` — Dataset Layer Editing 的冻结范围与验收边界。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R1-F1-acceptance.md` — R1-F1 Region Drawing Tool Activation 三项真机 IPO 验收模板。
 - `docs/ui/玄域引擎_UI真机基线清单.md` — UI 真机验收共用 IPO 清单与 D0 基线登记（ARCH-UI-SPEC-R1）
 - `docs/ui/玄域引擎_UI规范_1.0.md` — UI 规范 1.0 正式规范（唯一 UI 规范事实源，UI Spec 1.0，D1 冻结）
 - `docs/ui/玄域引擎_旧UI审计矩阵.md` — 旧 UI 全量审计矩阵：违规 71 项 W01~W71 与结构性缺口 G01~G08 及清零追踪

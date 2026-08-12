@@ -6,6 +6,12 @@ public sealed partial class UiVm
     {
         if (!CanChangeToolNow(name)) return;
         var requestedTool = EditorToolText.FromText(name);
+        if (requestedTool == EditorToolId.RegionDrawing && !CanStartRegionDrawing)
+        {
+            FooterState = "状态：不可用";
+            FooterMessage = "请先选择一个正常且未锁定的区域数据集，并进入区域编辑。";
+            return;
+        }
         if (IsRegionDrawingTool && requestedTool != EditorToolId.RegionDrawing)
         {
             var hadDraft = _regionDrawing.IsActive;

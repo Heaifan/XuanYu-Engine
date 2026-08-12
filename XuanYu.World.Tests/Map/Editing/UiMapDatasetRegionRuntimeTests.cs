@@ -55,7 +55,9 @@ public sealed class UiMapDatasetRegionRuntimeTests : IDisposable
         Assert.True(await vm.CreateDatasetAsync());
         var second = vm.DatasetSelectedId!;
         var hit = FindHit(vm);
-        vm.SelectDataset(first); vm.SelectToolCommand.Execute("区域绘制");
+        vm.ToggleEditorMode(); vm.SelectDataset(first);
+        vm.SwitchWorkspaceCommand.Execute(XuanYu.Editor.Workspace.EditorWorkspaceId.RegionEditor);
+        vm.SelectToolCommand.Execute("区域绘制");
         Assert.True(vm.RegionDrawingPointerPressed(hit.X, hit.Y, Viewport));
         Assert.True(vm.IsRegionDrawingDraftActive);
         vm.SelectDataset(second);

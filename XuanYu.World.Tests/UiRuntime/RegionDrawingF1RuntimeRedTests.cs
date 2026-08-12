@@ -5,6 +5,7 @@ using Avalonia.VisualTree;
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.Editor.UI;
+using XuanYu.World.Tests;
 
 namespace XuanYu.World.Tests.UiRuntime;
 
@@ -33,9 +34,9 @@ public sealed class RegionDrawingF1RuntimeRedTests
     [Fact]
     public void Real_region_tool_input_creates_first_draft_vertex()
     {
+        var vm = RegionDrawingTestVm.Create();
         var result = _fixture.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false);
             vm.SelectToolCommand.Execute("区域绘制");
             var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
             var projection = ViewProjectionState.Create(vm.RenderSnapshot.Camera!.Value, viewport);
