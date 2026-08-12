@@ -205,8 +205,8 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["canonical", "alias", "maps_to", "overrides", "derived_from", "related_to"],
-          "description": "Item 级关系；本轮不得正式裁定所有关系（A2-R2/R3 处理）"
+          "enum": ["canonical", "alias", "maps_to", "overrides", "derived_from", "related_to", "child_of"],
+          "description": "Item 级关系；child_of 表达父子层级（单向，反向由查询计算）；本轮不得正式裁定所有关系（A2-R2/R3 处理）"
         },
         "target": {
           "type": "string",

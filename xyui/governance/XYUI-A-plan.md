@@ -220,7 +220,7 @@ HISTORICAL_ONLY     明确被否决的候选方案
 
 ## 5. XYUI-A2 · Foundation Registry
 
-> 状态：`XYUI-A2-R1 · READY FOR USER ACCEPTANCE`（Schema + README + 3 示例已定义并验证；44 项正式录入属 A2-R3；alias 方向裁定属 A2-R2。A2-R2 待批准后解锁。）
+> 状态：`XYUI-A2-R1 · CLOSED`（用户验收）；`XYUI-A2-R2 · READY FOR USER ACCEPTANCE`（Identity 44/44 + 层级 child_of 12 条 + 核心关系裁定 5 组 + token 级 0.8↔0.19 映射 6 条 + tuning registry；A2-R3 待批准后录入 44 项）。
 
 只有经过 A1 人工批准的项目进入这里。目录与文件（**禁止一项规范五六个 JSON**）：
 

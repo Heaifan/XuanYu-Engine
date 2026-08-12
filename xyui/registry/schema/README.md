@@ -1,8 +1,19 @@
 # XYUI Foundation Registry Schema
 
-> XYUI-A2-R1 产物。本文件说明 `foundation-registry.schema.json` 的设计意图、使用规则与验证策略。
+> XYUI-A2-R1 产物（A2-R2 增补关系类型与 dialect 声明）。本文件说明 `foundation-registry.schema.json` 的设计意图、使用规则与验证策略。
 >
 > 状态：`READY FOR USER ACCEPTANCE`。本轮只定义结构，不录入 44 项（属 A2-R3）。
+
+## 0. JSON Schema Dialect（A2-R2 冻结）
+
+```text
+XYUI Foundation Registry Schema
+Dialect = JSON Schema Draft 7
+```
+
+- 声明依据：`foundation-registry.schema.json` 顶部 `"$schema": "http://json-schema.org/draft-07/schema#"`。
+- 验证器必须固定使用 Draft 7（Python `jsonschema.Draft7Validator`），**禁止** Schema 写 Draft 2020-12 语法而验证器用 Draft7Validator 的错配。
+- 若未来需要升级 dialect，必须先单独登记（治理轮），不得顺手改写。
 
 ## 1. 三层职责（不可混用）
 
