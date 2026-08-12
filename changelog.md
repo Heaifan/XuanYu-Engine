@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.7-rz · MAP-DATA-A-R2-F2 CLOSED
+MAP-DATA-A-R2-F2 Geometry Vertex Editing Closeout（2026-08-12 23:22:05）：用户完成 C01～C07 真机验收并全部 PASS；本轮仅同步关闭结论，不修改功能实现。
+- 状态：`MAP-DATA-A-R2-F2`、`MAP-DATA-A-R2-F2-F2` 与 `MAP-DATA-A-R2-F2-F2-F1` 均为 `CLOSED`；正式解除 F3 Snap 冻结。
+- 验收：F2 已验证 Region/Road 选择、控制柄、顶点拖动、Esc/非法几何拒绝、Undo/Redo 和 Save/Reload；删除确认链 C01～C07 全 PASS。
+- 验证：本次为真机结论与文档收口；功能自动门禁沿用各实现提交的已记录通过结果，提交后执行 `git diff --check`。
+- Hash：本收口提交（`HEAD`）。
+- 遗留：仅启动 `MAP-DATA-A-R2-F3 · Geometry Snapping` 的 Spatial Index 可复用性调查；不得在未确认局部查询接口前实现或以全地图扫描替代。
+
 ## v0.2.28.6-fix · MAP-DATA-A-R2-F2-F2-F1 DATASET-BACKED DELETE ROUTING
 MAP-DATA-A-R2-F2-F2-F1（2026-08-12 22:00:00）：修复 Dataset-backed 图层“删除”绕过 Owned Window、回落主窗口 Overlay/DialogCard 的路由漏分支。
 - 根因：P1 Runtime Probe 记录 `REQUEST_RECEIVED name=解除注册数据集`；同一视觉按钮对 Dataset-backed 图层执行的是解除注册语义，未进入普通删除的独立确认窗。

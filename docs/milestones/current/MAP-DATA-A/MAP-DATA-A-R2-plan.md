@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：R2-F2-F2 USER ACCEPTANCE FAILED；F2-F2-F1 Visible Delete Dialog 已实现并等待真机验收，R2 尚未 CLOSED。
+状态：R2-F2、R2-F2-F2、R2-F2-F2-F1 均已 `CLOSED`；下一步仅允许调查 R2-F3 Geometry Snapping 的既有 Spatial Query 可复用性，R2 尚未 CLOSED。
 
 ## 冻结目标
 

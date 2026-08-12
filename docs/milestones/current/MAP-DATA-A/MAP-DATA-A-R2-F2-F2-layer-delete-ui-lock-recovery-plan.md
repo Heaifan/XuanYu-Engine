@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F2-F2 · Layer Delete UI Lock Recovery
 
-状态：USER ACCEPTANCE FAILED；由 F2-F2-F1 Visible Delete Dialog 修复，F2 尚未 CLOSED；F3 Snap 继续冻结。
+状态：`CLOSED`；由 F2-F2-F1 Visible Delete Dialog 修复后，用户已裁定 C01～C07 全 PASS；F3 Snap 已解除冻结。
 
 ## 当前裁定
 

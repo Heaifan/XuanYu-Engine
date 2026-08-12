@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F2-F2-F1 · Visible Delete Dialog
 
-状态：READY FOR USER ACCEPTANCE；Dataset-backed 路由漏分支已修复并真机确认可见，F2-F2 保持 USER ACCEPTANCE FAILED，F3 Snap 冻结。
+状态：`CLOSED`；Dataset-backed 路由漏分支已修复，用户裁定 C01～C07 全 PASS；F3 Snap 已解除冻结。
 
 ## T1 根因结论
 

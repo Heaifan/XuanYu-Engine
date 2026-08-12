@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F2 · Geometry Vertex Editing
 
-状态：实现中；F2 真机验收尚未开始；F3 吸附禁止启动。
+状态：`CLOSED`；用户已完成 C01～C07 真机验收并全部 PASS；F3 吸附已解除冻结。
 
 ## 冻结目标
 
