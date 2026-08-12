@@ -1,0 +1,2242 @@
+- 0.1 · Design Principles｜设计原则
+    - 定位
+        - XYUI 是面向复杂桌面编辑器的 UI 设计系统
+    - 核心特征
+        - 浅色优先
+        - 紧凑
+        - 高信息密度
+        - 强语义
+        - 工程可执行
+        - 可验证
+    - XYUI 不追求
+        - 营销式视觉
+        - 卡片化堆叠
+        - 大面积装饰性留白
+        - 过度圆角
+        - 无语义动画
+        - 纯视觉炫技
+    - 方案名称
+        - 设计宪法 / Design Constitution
+    - 核心原则
+        - P1 · 编辑任务优先于装饰
+            - UI 的首要目标是帮助用户完成编辑任务
+            - 装饰不得妨碍操作、信息读取或效率
+        - P2 · 语义辨识优先于形式统一
+            - 不同职责必须可以被快速区分
+            - 不得为了视觉统一，把不同操作做成相同表达
+        - P3 · 高信息密度，不牺牲可操作性
+            - 减少无意义留白
+            - 减少重复信息
+            - 空间优先留给真实工作内容
+            - 视觉尺寸可以紧凑
+            - Hit Target 不得因此缩水
+        - P4 · 视觉克制，不隐藏有价值的信息
+            - 删除视觉噪音
+            - 不隐藏调试、状态、ID 等有实际价值的信息
+            - 信息通过主次层级组织，而不是简单删除
+        - P5 · Canvas / 工作内容优先
+            - 工作内容区域优先获得可用空间
+            - Panel / Toolbar / Chrome 不得无意义侵占 Canvas
+            - 可折叠区域应在需要时让出空间
+        - P6 · 状态明确、即时、可预测
+            - Hover
+            - Pressed
+            - Selected
+            - Focus
+            - Dragging
+            - Snap
+            - Error
+            - Locked
+            - 等状态必须清晰
+            - 状态变化应即时反馈
+            - 同一种操作必须保持一致行为
+        - P7 · 自适应必须离散、稳定、可恢复
+            - 禁止不可预测的连续随机变化
+            - Density 使用明确模式切换
+            - Resize 必须具备合理范围
+            - 布局必须存在恢复 Default 的路径
+            - DPI 不得偷偷改变 Density
+        - P8 · 所有规范必须工程可执行、可验证
+            - 原则必须最终映射到至少一种工程对象
+                - Token
+                - Component
+                - State
+                - Interaction Contract
+                - Acceptance Rule
+                - 无法落地和验证的原则不得作为正式规范
+    - 决策优先级
+        - Priority.1
+            - 操作正确性
+        - Priority.2
+            - 语义清晰
+        - Priority.3
+            - 编辑效率
+        - Priority.4
+            - 信息密度
+        - Priority.5
+            - 视觉一致
+        - Priority.6
+            - 装饰性
+        - 冲突规则
+            - 高优先级原则覆盖低优先级原则
+            - 禁止为了装饰牺牲正确性
+            - 禁止为了形式统一牺牲语义辨识
+            - 禁止为了紧凑牺牲交互热区
+    - 强制等级
+        - MUST
+            - 强制执行
+            - 不满足即视为 XYUI 规范违规
+        - SHOULD
+            - 默认应执行
+            - 仅在存在明确工程理由时允许偏离
+        - MAY
+            - 可选能力
+            - 不影响基础一致性
+        - FORBIDDEN
+            - 明确禁止
+    - 禁止项
+        - Cardification
+            - 禁止无意义 Card 套 Card
+        - Decoration First
+            - 禁止装饰优先于功能
+        - Color Only State
+            - 禁止仅靠颜色表达关键状态
+        - Magic Number
+            - 禁止随意硬编码未经 Token 化的数值
+        - Random Spacing
+            - 禁止随机使用间距尺寸
+        - Semantic Ambiguity
+            - 禁止同一视觉表达承担互相冲突的语义
+        - Hidden Useful Information
+            - 禁止为了所谓“极简”隐藏必要技术信息
+        - Unrecoverable Layout
+            - 禁止产生无法恢复的布局状态
+        - Decorative Motion
+            - 禁止无任务意义的动画
+        - Arbitrary Override
+            - 禁止业务组件绕过 Foundation Token 随意覆盖基础规范
+    - 默认底线
+        - Accessibility
+            - 属于默认能力
+            - 不是额外模式
+        - DPI
+            - 不得破坏既有结构与 Density
+        - Localization
+            - 不得因为语言变化破坏核心布局
+    - 工程落地
+        - Token
+            - 用于颜色、尺寸、间距、动效等基础变量
+        - Component
+            - 用于组件结构与变体
+        - State
+            - 用于交互与状态表达
+        - Interaction Contract
+            - 用于 Drag / Resize / Focus / Scroll 等行为约束
+        - Acceptance Rule
+            - 用于最终验收
+    - UI代码
+        - XY.Principle.Priority.1
+            - Value = Correctness
+        - XY.Principle.Priority.2
+            - Value = SemanticClarity
+        - XY.Principle.Priority.3
+            - Value = EditingEfficiency
+        - XY.Principle.Priority.4
+            - Value = InformationDensity
+        - XY.Principle.Priority.5
+            - Value = VisualConsistency
+        - XY.Principle.Priority.6
+            - Value = Decoration
+        - XY.Principle.CompactVisual
+            - Value = Allowed
+        - XY.Principle.CompactHitTarget
+            - Value = Forbidden
+        - XY.Principle.CanvasPriority
+            - Value = Required
+        - XY.Principle.SemanticAmbiguity
+            - Value = Forbidden
+        - XY.Principle.DecorativeMotion
+            - Value = Forbidden
+        - XY.Principle.Cardification
+            - Value = Forbidden
+        - XY.Principle.MagicNumber
+            - Value = Forbidden
+        - XY.Principle.Recoverability
+            - Value = Required
+        - XY.Principle.EngineeringMapping
+            - Value = Required
+        - XY.Principle.Acceptance
+            - Value = Required
+-  0.2 · Color System | 色彩系统
+    - 0.2-A · Color System｜核心色彩方向
+        - 使用场景
+            - XYUI 全局基础配色母版
+            - 应用背景
+            - 面板背景
+            - 浮层背景
+            - 边框
+            - 主文字
+            - 次级文字
+            - Accent 强调色
+            - Hover
+            - Selected
+            - Success
+            - Warning
+            - Error
+            - Light Theme
+            - Dark Theme
+            - 后续所有 XYUI 控件颜色均从本色彩系统派生
+        - 方案名称
+            - 冷灰湖蓝 / Cool Gray Lake Blue
+        - 结构特征
+            - 冷灰作为整体基础
+            - 湖蓝作为主要 Accent
+            - 浅色主题以高明度冷灰白为主
+            - 深色主题采用深蓝灰而非纯黑
+            - 主色低饱和
+            - 强调色保持专业编辑器辨识度
+            - 状态色采用低饱和绿 / 金褐 / 红色
+            - Light / Dark 使用同一套语义 Token
+            - 禁止控件直接硬编码独立颜色
+        - UI代码
+            - XY.Color.App
+                - Light = #F1F4F6
+                - Dark = #171E24
+            - XY.Color.Panel
+                - Light = #F7F9FA
+                - Dark = #1F2931
+            - XY.Color.Raised
+                - Light = #FFFFFF
+                - Dark = #26333D
+            - XY.Color.Border
+                - Light = #CFD8DE
+                - Dark = #3D4C57
+            - XY.Text.Primary
+                - Light = #2B3A44
+                - Dark = #DEE6EA
+            - XY.Text.Secondary
+                - Light = #647681
+                - Dark = #B3BFC6
+            - XY.Color.Accent
+                - Light = #3E6F9B
+                - Dark = #78A5C9
+            - XY.Color.Hover
+                - Light = #E6EEF4
+                - Dark = #2C3B47
+            - XY.Color.Selected
+                - Light = #D8E7F2
+                - Dark = #35536A
+            - XY.Color.Success
+                - Light = #4E7B66
+                - Dark = #76A58A
+            - XY.Color.Warning
+                - Light = #A57634
+                - Dark = #D0A05C
+            - XY.Color.Error
+                - Light = #B34F58
+                - Dark = #D4767D
+        
+    - 0.2-B · Text Color｜文字颜色层级
+        - 使用场景
+        - 链接文本
+        - Disabled
+        - Placeholder
+        - ID
+        - 元数据
+        - 次级说明
+        - Tree / Layer / Dataset
+        - Inspector 属性内容
+        - 面板正文
+        - 普通正文
+        - 方案名称
+            - 柔和层级 / Soft Hierarchy
+        - 结构特征
+            - Primary 保证正文清晰
+            - Secondary 明显弱于正文但保持足够可读性
+            - Tertiary 用于 ID、元数据等低优先级信息
+            - Placeholder 比 Tertiary 进一步弱化
+            - Disabled 最低视觉优先级
+            - Link 使用低饱和湖蓝
+            - 整体层级差异较柔和
+            - 避免编辑器大量灰色小字产生过强“脏乱感”
+        - UI代码
+            - XY.Text.Primary
+                - Light = #2B3A44
+                - Dark = #DEE6EA
+            - XY.Text.Secondary
+                - Light = #647681
+                - Dark = #B3BFC6
+            - XY.Text.Tertiary
+                - Light = #7A8B95
+                - Dark = #99A7B0
+            - XY.Text.Placeholder
+                - Light = #909DA5
+                - Dark = #82919B
+            - XY.Text.Disabled
+                - Light = #A8B2B8
+                - Dark = #697983
+            - XY.Text.Link
+                - Light = #4A789E
+                - Dark = #82A9C5
+        
+    - 0.2-C · Surface｜背景层级
+        - 使用场景
+            - 应用主背景
+            - 左右侧工具面板
+            - Inspector
+            - Dataset / Layer 面板
+            - Toolbar
+            - 中央 Viewport / 工作区
+            - 属性分组
+            - 输入区域
+            - Popup / Menu / Tooltip / 浮层
+            - Modal 与其他悬浮内容
+            - 方案名称
+            - 清晰四层 / Clear Four-Level Surface
+        - 结构特征
+            - App 作为最低一级全局背景
+            - Panel 作为普通工具区域背景
+            - Panel Alt 用于需要轻微抬升的面板内部区域
+            - Raised 用于输入框、属性块、悬浮区域等高一级表面
+            - Overlay 独立于普通 Raised，用于 Popup、Popover、Tooltip 等浮层
+            - Canvas / Viewport 与工具面板保持明显区分
+            - Light Theme 通过明度逐层抬升
+            - Dark Theme 通过深蓝灰逐层抬升
+            - 不依赖大量阴影制造层级
+            - 优先通过 Surface 明度差 + Border 建立结构
+            - 禁止不同面板自行创建无语义背景色
+        - UI代码
+            - XY.Surface.App
+                - Light = #EEF2F5
+                - Dark = #151C22
+            - XY.Surface.Panel
+                - Light = #F5F8FA
+                - Dark = #1C252C
+            - XY.Surface.PanelAlt
+                - Light = #F9FBFC
+                - Dark = #222E36
+            - XY.Surface.Raised
+                - Light = #FFFFFF
+                - Dark = #2A3842
+            - XY.Surface.Canvas
+                - Light = #E6ECEF
+                - Dark = #182128
+            - XY.Surface.Toolbar
+                - Light = #F9FBFC
+                - Dark = #222E36
+            - XY.Surface.Input
+                - Light = #FFFFFF
+                - Dark = #2A3842
+            - XY.Surface.Overlay
+                - Light = #FFFFFF
+                - Dark = #31424D
+            - XY.Surface.Selected
+                - Light = #D8E7F2
+                - Dark = #35536A
+            - XY.Surface.BorderReference
+                - Light = #C9D3DA
+                - Dark = #40515C
+        
+    - 0.2-D · Border / Divider｜边框与分割线
+        - 使用场景
+            - Panel 外框
+            - Inspector 外框
+            - 输入框边框
+            - Section 分割线
+            - Toolbar 分割线
+            - Tree 引导线
+            - Selected 边界
+            - Focus Ring
+            - Overlay / Popup 边界
+        - 方案名称
+            - 编辑器强边界 / Strong Editor Border
+        - 结构特征
+            - 普通边框清晰可见
+            - Strong 边界明显强于 Default
+            - Selected 边界独立于普通边框
+            - Focus Ring 与 Selected 边界分离
+            - Section 分割线清楚但不喧宾夺主
+            - 适合专业编辑器
+            - 结构辨识度高
+            - 输入区、面板区、画布区边界更明确
+        - UI代码
+            - XY.Border.Subtle
+                - Light = #D7E0E6
+                - Dark = #303C45
+            - XY.Border.Default
+                - Light = #BFCBD3
+                - Dark = #465966
+            - XY.Border.Strong
+                - Light = #95A7B3
+                - Dark = #687B88
+            - XY.Divider.Default
+                - Light = #CAD5DC
+                - Dark = #3A4852
+            - XY.Border.Focus
+                - Light = #5C8FB4
+                - Dark = #699CC0
+            - XY.Border.Selected
+                - Light = #3E78A4
+                - Dark = #80B1D5
+        
+    - 0.2-E · Accent｜强调色层级
+        - 使用场景
+            - 主按钮
+            - 当前激活工具
+            - 当前选中标签
+            - Selected 状态中的强调内容
+            - 链接文本
+            - 轻量标签
+            - 高价值操作
+            - 当前模式 / 当前工具提示
+        - 方案名称
+            - 均衡双层强调 / Balanced Dual-Level Accent
+        - 结构特征
+            - Accent 作为默认强调色
+            - AccentSoft 用于浅色选中背景、标签背景、轻量激活状态
+            - AccentStrong 用于主按钮、当前工具、较高优先级动作
+            - Link 与基础 Accent 保持一致
+            - 工具激活使用 AccentStrong
+            - 主按钮使用 AccentStrong
+            - 避免所有可交互元素都大面积使用蓝色
+            - 普通信息不使用 Accent
+            - 强调层级控制在“Soft / Default / Strong”三级以内
+            - Light / Dark 保持同一语义映射
+        - UI代码
+            - XY.Accent.Default
+                - Light = #4A789E
+                - Dark = #82A9C5
+            - XY.Accent.Soft
+                - Light = #D8E7F2
+                - Dark = #35536A
+            - XY.Accent.Strong
+                - Light = #356C99
+                - Dark = #7FB0D5
+            - XY.Text.Link
+                - Light = #4A789E
+                - Dark = #82A9C5
+            - XY.Tool.Active
+                - Light = #356C99
+                - Dark = #7FB0D5
+            - XY.Button.Primary
+                - Light = #356C99
+                - Dark = #7FB0D5
+            - XY.Tag.Accent
+                - Light = #D8E7F2
+                - Dark = #35536A
+        
+    - 0.2-F · Interaction States｜交互状态色
+        - 使用场景
+            - Tree / Layer / Dataset 行状态
+            - 按钮状态
+            - 工具按钮状态
+            - Tab 状态
+            - 菜单项状态
+            - Inspector 可交互项状态
+            - 顶点编辑状态
+            - 拖拽状态
+            - Drop Target 状态
+            - 吸附候选状态
+            - Focus 状态
+        - 方案名称
+            - 编辑器语义状态 / Semantic Editor States
+        - 结构特征
+            - 普通交互状态继续使用蓝灰系
+            - Hover 与 Pressed 形成连续层级
+            - Selected 作为稳定选中态，必须明显区别于 Hover
+            - Active 用于当前工具、当前激活项
+            - Focus 单独使用清晰边界色，不与 Selected 混用
+            - Dragging 使用独立中性过渡色
+            - Drop Target / Snap Candidate 单独使用青绿色语义
+            - 顶点编辑中 Default / Hover / Selected / Snap 候选必须一眼区分
+            - 适合区域编辑、道路编辑、顶点拖动、相邻边点自动吸附
+            - 语义优先，避免所有状态都只用同一种蓝色硬顶
+        - UI代码
+            - XY.State.Hover
+                - Light = #E7EDF2
+                - Dark = #2B3944
+            - XY.State.Pressed
+                - Light = #D7E2EA
+                - Dark = #344751
+            - XY.State.Selected
+                - Light = #D8E7F2
+                - Dark = #35536A
+            - XY.State.Active
+                - Light = #D0E1ED
+                - Dark = #36566B
+            - XY.State.Focus
+                - Light = #5C8FB4
+                - Dark = #699CC0
+            - XY.State.Dragging
+                - Light = #E5E9EC
+                - Dark = #303B43
+            - XY.State.DropTarget.Background
+                - Light = #D5ECE5
+                - Dark = #2B4C42
+            - XY.State.DropTarget.Border
+                - Light = #3F8B78
+                - Dark = #79B39F
+        
+    - 0.2-G · Semantic Colors｜语义色
+        - 使用场景
+            - 保存成功
+            - 操作完成
+            - 数据校验通过
+            - 邻接未闭合
+            - 参数异常
+            - 几何无效
+            - 构建失败
+            - 数据损坏
+            - 普通信息提示
+            - 吸附启用提示
+            - Inspector 状态反馈
+            - Toast / Banner / Inline Message
+            - Compact Status Tag
+        - 方案名称
+            - 均衡语义 / Balanced Semantic Colors
+        - 结构特征
+            - Success 使用低饱和绿色
+            - Warning 使用偏金褐色
+            - Error 使用克制红色
+            - Info 使用冷蓝色
+            - 每类语义色统一包含 Text / Border / Background
+            - 背景只承担轻量提示，不使用高饱和大面积色块
+            - 文字承担主要状态辨识
+            - Border 辅助强化状态边界
+            - Error 明显高于普通信息，但避免荧光红
+            - Warning 保持可见但避免大面积明黄
+            - Info 与 Accent 同属冷色系，但饱和度和使用语义不同
+            - Light / Dark Theme 保持同一语义映射
+            - 不允许只依赖颜色表达重要错误，后续组件仍需结合图标或文字
+        - UI代码
+            - XY.Semantic.Success.Text
+                - Light = #4E7B66
+                - Dark = #76A58A
+            - XY.Semantic.Success.Border
+                - Light = #80A58E
+                - Dark = #5E856E
+            - XY.Semantic.Success.Background
+                - Light = #E1EEE6
+                - Dark = #263A2E
+            - XY.Semantic.Warning.Text
+                - Light = #A57634
+                - Dark = #D0A05C
+            - XY.Semantic.Warning.Border
+                - Light = #C09B62
+                - Dark = #8D6D45
+            - XY.Semantic.Warning.Background
+                - Light = #F5ECDB
+                - Dark = #3D3021
+            - XY.Semantic.Error.Text
+                - Light = #B34F58
+                - Dark = #D4767D
+            - XY.Semantic.Error.Border
+                - Light = #CA8087
+                - Dark = #92555B
+            - XY.Semantic.Error.Background
+                - Light = #F8E4E6
+                - Dark = #42282C
+            - XY.Semantic.Info.Text
+                - Light = #4C7597
+                - Dark = #82AAC8
+            - XY.Semantic.Info.Border
+                - Light = #82A4BC
+                - Dark = #5F7D93
+            - XY.Semantic.Info.Background
+                - Light = #E3EEF5
+                - Dark = #273946
+        
+    - 0.2-H · Disabled / ReadOnly / Locked｜禁用、只读、锁定
+        - 使用场景
+            - 禁用按钮
+            - 当前不可执行的菜单项
+            - 不满足条件的操作
+            - 只读 ID
+            - 只读系统字段
+            - 可复制但不可编辑的信息
+            - 被用户主动锁定的对象
+            - 锁定区域 / 道路 / 图层
+            - Inspector 锁定状态
+        - 方案名称
+            - 锁定强调 / Emphasized Locked State
+        - 结构特征
+            - Disabled 明显弱化，表达“当前不可操作”
+            - ReadOnly 保持正常可读性，不做成“坏掉”的灰色
+            - Locked 使用独立暖金褐色
+            - Locked 明显区别于 Disabled / ReadOnly
+            - 锁定状态应同时配合锁图标或状态文字
+            - Locked 暖色只表达“主动锁定”，不等同于 Warning
+            - Warning 使用前面定稿的语义警告色体系，Locked 不调用 Warning Token
+        - UI代码
+            - XY.State.Disabled.Background
+                - Light = #F0F2F3
+                - Dark = #20282E
+            - XY.State.Disabled.Text
+                - Light = #A8B2B8
+                - Dark = #697983
+            - XY.State.Disabled.Border
+                - Light = #D8DEE2
+                - Dark = #354149
+            - XY.State.ReadOnly.Background
+                - Light = #F7F9FA
+                - Dark = #263139
+            - XY.State.ReadOnly.Text
+                - Light = #647681
+                - Dark = #B3BFC6
+            - XY.State.ReadOnly.Border
+                - Light = #C5CFD6
+                - Dark = #465660
+            - XY.State.Locked.Background
+                - Light = #F3EEE5
+                - Dark = #383126
+            - XY.State.Locked.Text
+                - Light = #8A6A38
+                - Dark = #D0AD72
+            - XY.State.Locked.Border
+                - Light = #BCA378
+                - Dark = #856F4E
+        
+    - 0.2-I · Editor Colors｜编辑器专用颜色
+        - 使用场景
+            - Selection
+            - Multi Selection
+            - Bounding Box
+            - Grid Minor / Major
+            - Guide
+            - Vertex
+            - Anchor
+            - Handle
+            - Snap Candidate
+            - Dirty
+            - Hidden
+            - X / Y / Z 轴
+            - 区域编辑
+            - 道路编辑
+            - 顶点拖动
+            - 相邻顶点自动吸附
+        - 方案名称
+            - 地图编辑语义 / Map Editing Semantics
+        - 结构特征
+            - Selection 继续使用蓝色体系
+            - 普通顶点使用暖色边界
+            - 当前 Anchor 使用更明确的暖橙色
+            - Handle 使用低饱和暖褐
+            - Snap Candidate 单独使用青绿色
+            - Dirty 使用金褐色
+            - Grid 保持低存在感
+            - X / Y / Z 保留红 / 绿 / 蓝传统语义，但降低饱和度
+            - 地图编辑中 Selection / Vertex / Snap 三类语义互不混淆
+        - UI代码
+            - XY.Editor.Grid.Minor
+                - Light = #D9E1E5
+                - Dark = #26343C
+            - XY.Editor.Grid.Major
+                - Light = #BECBD2
+                - Dark = #3B4B55
+            - XY.Editor.Guide
+                - Light = #8EA5B2
+                - Dark = #708894
+            - XY.Editor.Selection
+                - Light = #3979A7
+                - Dark = #81B1D3
+            - XY.Editor.MultiSelection
+                - Light = #6A8EA8
+                - Dark = #7596AC
+            - XY.Editor.BoundingBox
+                - Light = #5C8097
+                - Dark = #7899AE
+            - XY.Editor.Vertex.Fill
+                - Light = #FFF7F0
+                - Dark = #3A302B
+            - XY.Editor.Vertex.Border
+                - Light = #B36A4B
+                - Dark = #D18B6C
+            - XY.Editor.Anchor
+                - Light = #D66A3D
+                - Dark = #E58963
+            - XY.Editor.Handle
+                - Light = #B78568
+                - Dark = #C49C85
+            - XY.Editor.Snap
+                - Light = #348873
+                - Dark = #77B39F
+            - XY.Editor.Dirty
+                - Light = #A57634
+                - Dark = #D0A05C
+            - XY.Editor.Hidden
+                - Light = #9DA8AE
+                - Dark = #687780
+            - XY.Editor.Axis.X
+                - Light = #BE6262
+                - Dark = #D17B7B
+            - XY.Editor.Axis.Y
+                - Light = #67966E
+                - Dark = #82B089
+            - XY.Editor.Axis.Z
+                - Light = #557DB0
+                - Dark = #7F9FC9
+- 0.3 · Typography | 字体系统
+    - 0.3-A · Font Family｜字体家族
+        - 使用场景
+            - XYUI 全局中文界面
+            - 普通正文
+            - 菜单
+            - Toolbar
+            - Tree / Layer / Dataset
+            - Inspector
+            - 按钮
+            - 标签
+            - 标题
+            - ID
+            - 文件路径
+            - 坐标
+            - 参数数值
+            - 技术数据
+            - 日志中的结构化数据
+        - 方案名称
+            - 思源黑体 + Source Code Pro
+        - 结构特征
+            - 中文与普通 UI 统一使用思源黑体
+            - 英文普通界面随 UI Sans 一并使用思源黑体西文字形
+            - ID / 路径 / 坐标 / 数值 / 技术数据使用 Source Code Pro
+            - 正文与技术数据形成明确字体语义
+            - 字体必须满足 XYUI 可商用字体准入规则
+            - 正式产品随包分发时保留字体 License 与 Copyright 文件
+            - 不允许控件自行指定其他字体
+        - UI代码
+            - XY.Font.UI
+                - FontFamily = Source Han Sans SC
+            - XY.Font.Default
+                - FontFamily = XY.Font.UI
+                - XY.Font.Mono
+                    - FontFamily = Source Code Pro
+            - XY.Font.Technical
+                - FontFamily = XY.Font.Mono
+            - XY.Font.Fallback.CJK
+                - FontFamily = Noto Sans CJK SC
+            - XY.Font.Fallback.Mono
+                - FontFamily = Noto Sans Mono
+            - XY.Font.Policy.CommercialOnly
+                - Value = True
+            - XY.Font.Policy.BundleLicense
+                - Value = Required
+        
+    - 0.3-B · Font Weight｜字重体系
+        - 使用场景
+            - 普通正文
+            - 字段值
+            - 字段标签
+            - Section 标题
+            - Panel 标题
+            - 页面标题
+            - 主按钮
+            - Toolbar
+            - Inspector
+            - Tree / Dataset / Layer
+        - 方案名称
+            - 均衡四档 / Balanced Four-Level Weight
+        - 结构特征
+            - 400 用于正文与普通字段值
+            - 500 用于字段标签
+            - 600 用于 Section / Panel / Button
+            - 700 仅用于页面级或最高层级标题
+            - 不依赖字号单独制造层级
+            - 避免大量 700 导致界面过重
+        - UI代码
+            - XY.FontWeight.Regular
+                - Value = 400
+            - XY.FontWeight.Medium
+                - Value = 500
+            - XY.FontWeight.Semibold
+                - Value = 600
+            - XY.FontWeight.Bold
+                - Value = 700
+            - XY.Text.Body.FontWeight
+                - Value = 400
+            - XY.Text.Label.FontWeight
+                - Value = 500
+            - XY.Text.Section.FontWeight
+                - Value = 600
+            - XY.Text.PanelTitle.FontWeight
+                - Value = 600
+            - XY.Text.PageTitle.FontWeight
+                - Value = 700
+            - XY.Button.Primary.FontWeight
+                - Value = 600
+        
+    - 0.3-C · Font Size｜字号等级
+        - 使用场景
+            - 页面标题
+            - Panel 标题
+            - Section 标题
+            - 字段标签
+            - 普通正文
+            - 辅助说明
+            - Caption / 元数据
+            - ID / 路径 / 坐标 / 数值
+        - 方案名称
+            - 舒适可读 / Comfortable Readability
+        - 结构特征
+            - 普通正文使用 14 DIP
+            - 字段标签提升到 15 DIP
+            - Section 使用 17 DIP
+            - Panel 标题使用 20 DIP
+            - 页面标题使用 24 DIP
+            - Caption 不低于 12 DIP
+            - 技术数据使用 13 DIP 等宽字体
+            - 优先保证长时间阅读舒适度
+            - 接受一定程度的信息密度下降
+        - UI代码
+            - XY.FontSize.Caption
+                - Value = 12 DIP
+            - XY.FontSize.Auxiliary
+                - Value = 13 DIP
+            - XY.FontSize.Body
+                - Value = 14 DIP
+            - XY.FontSize.Label
+                - Value = 15 DIP
+            - XY.FontSize.Section
+                - Value = 17 DIP
+            - XY.FontSize.PanelTitle
+                - Value = 20 DIP
+            - XY.FontSize.PageTitle
+                - Value = 24 DIP
+            - XY.FontSize.Mono
+                - Value = 13 DIP
+- 0.4 · Line Height｜行高
+    - 使用场景
+        - 普通正文
+        - Inspector 属性文字
+        - Tree / Layer / Dataset
+        - 字段标签
+        - 辅助说明
+        - Section 标题
+        - Panel 标题
+        - 页面标题
+        - ID / 路径 / 坐标等技术文本
+    - 方案名称
+        - 紧凑行高 / Compact Line Height
+    - 结构特征
+        - 正文采用 14 / 20
+        - 保留一定阅读空间，但不做舒展型排版
+        - 属性面板保持较高信息密度
+        - Caption / Auxiliary 更紧凑
+        - 标题随字号适当增加行高
+        - 行高不等于控件高度
+        - Button / Input / Tree Row 高度后续在 Sizing 中另定
+    - UI代码
+        - XY.LineHeight.Caption
+            - FontSize = 12 DIP
+            - LineHeight = 16 DIP
+        - XY.LineHeight.Auxiliary
+            - FontSize = 13 DIP
+            - LineHeight = 18 DIP
+        - XY.LineHeight.Body
+            - FontSize = 14 DIP
+            - LineHeight = 20 DIP
+        - XY.LineHeight.Label
+            - FontSize = 15 DIP
+            - LineHeight = 20 DIP
+        - XY.LineHeight.Section
+            - FontSize = 17 DIP
+            - LineHeight = 22 DIP
+        - XY.LineHeight.PanelTitle
+            - FontSize = 20 DIP
+            - LineHeight = 26 DIP
+        - XY.LineHeight.PageTitle
+            - FontSize = 24 DIP
+            - LineHeight = 30 DIP
+        - XY.LineHeight.Mono
+            - FontSize = 13 DIP
+            - LineHeight = 20 DIP
+- 0.5 · Letter Spacing｜字间距
+    - 使用场景
+        - 普通正文
+        - 字段标签
+        - 标题
+        - 英文全大写标签
+        - ID / 路径 / 坐标 / 技术文本
+    - 方案名称
+        - 语义字距 / Semantic Letter Spacing
+    - 结构特征
+        - 中文正文保持默认字距
+        - Label 轻微收紧
+        - Title 保持默认
+        - CAPS 英文轻微扩展
+        - Mono 技术文本保持字体原生字距
+        - 只在有明确语义价值的地方调整 Tracking
+        - 避免中文正文大幅拉宽导致界面松散
+    - UI代码
+        - XY.LetterSpacing.Body
+            - Value = 0
+        - XY.LetterSpacing.Label
+            - Value = -0.10
+        - XY.LetterSpacing.Title
+            - Value = 0
+        - XY.LetterSpacing.Caps
+            - Value = +0.40
+        - XY.LetterSpacing.Mono
+            - Value = 0
+- 0.6 · Spacing｜间距系统
+    - 使用场景
+        - Panel Padding
+        - Toolbar 项间距
+        - Button 间距
+        - 字段之间 Gap
+        - 图标与文字间距
+        - Section 间距
+        - Group 间距
+        - Inspector 内部布局
+        - Tree / Layer / Dataset
+    - 方案名称
+        - 4 基数紧凑 / Compact 4-Base Spacing
+    - 结构特征
+        - 以 4 DIP 为主要基础单位
+        - Token 数量较少
+        - 便于开发记忆和统一调用
+        - 高频编辑器区域保持紧凑
+        - 小间距使用 4 / 8
+        - 中型控件和 Panel 使用 12 / 16
+        - Section 和大分组使用 24+
+        - 避免随意出现 5 / 7 / 11 / 13 DIP 等零散间距
+    - UI代码
+        - XY.Space.1
+            - Value = 4 DIP
+        - XY.Space.2
+            - Value = 8 DIP
+        - XY.Space.3
+            - Value = 12 DIP
+        - XY.Space.4
+            - Value = 16 DIP
+        - XY.Space.6
+            - Value = 24 DIP
+        - XY.Space.8
+            - Value = 32 DIP
+        - XY.Space.10
+            - Value = 40 DIP
+        - XY.Space.12
+            - Value = 48 DIP
+- 0.7 · Indentation｜缩进系统
+    - 使用场景
+        - Tree
+        - Hierarchy
+        - Layer
+        - Dataset
+        - Inspector 嵌套分组
+        - 折叠 Section
+        - 多级对象结构
+    - 方案名称
+        - 16 DIP 紧凑缩进 / Compact 16 DIP Indentation
+    - 结构特征
+        - 每深入一级固定增加 16 DIP
+        - 适合复杂层级与高信息密度
+        - 到三级、四级后仍能保留足够横向空间
+        - Tree Guide 与 Disclosure 位置统一
+        - 图标与文字使用固定小间距
+        - 避免不同 Tree 自行定义缩进距离
+    - UI代码
+        - XY.Indent.PerLevel
+            - Value = 16 DIP
+        - XY.Indent.IconTextGap
+            - Value = 4 DIP
+        - XY.Indent.TreeGuide
+            - Value = 16 DIP Step
+        - XY.Indent.Disclosure
+            - Value = Follow XY.Indent.PerLevel
+- 0.8 · Sizing｜基础尺寸系统
+    - 使用场景
+        - Button
+        - Input
+        - Toolbar
+        - Tree Row
+        - Layer / Dataset Row
+        - Checkbox
+        - Radio
+        - Switch
+        - Scrollbar
+        - Drag Handle
+        - Icon
+    - 方案名称
+        - 紧凑尺寸 / Compact Sizing
+    - 结构特征
+        - 高频编辑器控件整体偏紧凑
+        - Tree Row 保持较高信息密度
+        - Toolbar 不做过高
+        - Input 与中型控件统一在 32 DIP 左右
+        - 常规图标以 16 DIP 为主
+        - Checkbox / Radio 使用 16 DIP
+        - Scrollbar 与 Drag Handle 保持细窄
+    - UI代码
+        - XY.Size.Control.XS
+            - Value = 24 DIP
+        - XY.Size.Control.S
+            - Value = 28 DIP
+        - XY.Size.Control.M
+            - Value = 32 DIP
+        - XY.Size.Control.L
+            - Value = 36 DIP
+        - XY.Size.TreeRow
+            - Value = 28 DIP
+        - XY.Size.Toolbar
+            - Value = 30 DIP
+        - XY.Size.Input
+            - Value = 32 DIP
+        - XY.Size.Icon.S
+            - Value = 14 DIP
+        - XY.Size.Icon.M
+            - Value = 16 DIP
+        - XY.Size.Icon.L
+            - Value = 20 DIP
+        - XY.Size.Checkbox
+            - Value = 16 DIP
+        - XY.Size.Radio
+            - Value = 16 DIP
+        - XY.Size.Switch
+            - Width = 34 DIP
+            - Height = 18 DIP
+        - XY.Size.Scrollbar
+            - Value = 10 DIP
+        - XY.Size.DragHandle
+            - Value = 8 DIP
+- 0.9 · Radius｜圆角系统
+    - 使用场景
+        - Panel
+        - Toolbar
+        - Input
+        - Button
+        - Popup
+        - Tree / List Row
+        - Tag
+        - Badge
+        - 状态胶囊
+    - 方案名称
+        - 语义圆角 / Semantic Radius
+    - 结构特征
+        - 圆角用于表达组件角色，不用于单纯制造“现代感”
+        - Panel 保持方正
+        - Tree / Row 默认不做圆角卡片
+        - Toolbar 仅做极轻圆角
+        - Input / Button 使用轻微圆角
+        - Popup 比普通控件稍圆
+        - Tag / Badge 可使用 Full Radius
+        - 避免整个编辑器卡片化
+    - UI代码
+        - XY.Radius.None
+            - Value = 0 DIP
+        - XY.Radius.Toolbar
+            - Value = 2 DIP
+        - XY.Radius.Control
+            - Value = 4 DIP
+        - XY.Radius.Input
+            - Value = 4 DIP
+        - XY.Radius.Button
+            - Value = 4 DIP
+        - XY.Radius.Popup
+            - Value = 6 DIP
+        - XY.Radius.Panel
+            - Value = 0 DIP
+        - XY.Radius.Row
+            - Value = 0 DIP
+        - XY.Radius.Full
+            - Value = 999 DIP
+        - XY.Radius.Tag
+            - Value = XY.Radius.Full
+        - XY.Radius.Badge
+            - Value = XY.Radius.Full
+- 0.10 · Border｜边框系统
+    - 使用场景
+        - Panel / Container
+        - Input
+        - Button
+        - Toolbar
+        - Tree / List
+        - 关键结构区域
+        - Focus
+        - Selected
+    - 方案名称
+        - 语义边框 / Semantic Border
+    - 结构特征
+        - Container / Panel 不默认套完整外框
+        - Panel 之间主要依赖 Divider 分区
+        - Input / Button / Control 使用 1 DIP 完整边框
+        - 关键结构允许使用 2 DIP Strong Border
+        - Focus 使用独立 2 DIP Outline
+        - Selected 使用独立 2 DIP Outline
+        - 普通结构边框、焦点态、选中态不共用同一语义
+        - 颜色继续沿用 0.2-D，不在本项重复定义
+    - UI代码
+        - XY.Border.Width.None
+            - Value = 0 DIP
+        - XY.Border.Width.Default
+            - Value = 1 DIP
+        - XY.Border.Width.Strong
+            - Value = 2 DIP
+        - XY.Border.Width.Focus
+            - Value = 2 DIP
+        - XY.Border.Width.Selected
+            - Value = 2 DIP
+        - XY.Border.Style.Default
+            - Value = Solid
+        - XY.Border.Container
+            - Width = 0 DIP
+            - Structure = Use Divider
+        - XY.Border.Control
+            - Width = 1 DIP
+            - Style = Solid
+        - XY.Border.Strong
+            - Width = 2 DIP
+            - Style = Solid
+        - XY.Border.Focus
+            - Width = 2 DIP
+            - Style = Solid
+        - XY.Border.Selected
+            - Width = 2 DIP
+            - Style = Solid
+- 0.11 · Divider｜分割线规则
+    - 使用场景
+        - Toolbar / Header
+        - Panel 一级分区
+        - Inspector Section
+        - Tree / List Row
+        - 左右面板 Split
+    - 方案名称
+        - 分层语义分割 / Hierarchical Semantic Divider
+    - 结构特征
+        - Header 使用全幅 Divider
+        - Panel 一级边界使用全幅 Divider
+        - Inspector Section 使用左右 16 DIP 内缩 Divider
+        - Tree / List Row 使用左右 16 DIP 内缩 Divider
+        - 垂直 Panel Split 使用全高 Divider
+        - 大结构强调完整分割
+        - 小结构使用内容对齐分割
+        - 颜色沿用 0.2-D
+        - 厚度沿用 0.10
+    - UI代码
+        - XY.Divider.Header
+            - Inset = 0 DIP
+            - Width = 1 DIP
+        - XY.Divider.Panel
+            - Inset = 0 DIP
+            - Width = 1 DIP
+        - XY.Divider.Section
+            - InsetLeft = 16 DIP
+            - InsetRight = 16 DIP
+            - Width = 1 DIP
+        - XY.Divider.ListRow
+            - InsetLeft = 16 DIP
+            - InsetRight = 16 DIP
+            - Width = 1 DIP
+        - XY.Divider.VerticalSplit
+            - Inset = 0 DIP
+            - Width = 1 DIP
+- 0.12 · Surface｜表面层级规则
+    - 使用场景
+        - App 根背景
+        - Navigation / 普通 Panel
+        - Inspector / 次级 Panel
+        - Canvas
+        - Toolbar
+        - Input
+        - Popup / Tooltip / Menu
+        - Selected 状态
+    - 方案名称
+        - 编辑器语义 Surface / Semantic Editor Surface
+    - 结构特征
+        - App 是最底层背景
+        - Navigation / 普通 Panel 使用 Panel Surface
+        - Inspector / 次级面板使用 PanelAlt
+        - Canvas 独立使用 Canvas Surface
+        - Input 使用 Input / Raised Surface
+        - Popup / Tooltip / Menu 使用 Overlay
+        - Selected 使用 Selected Surface
+        - Raised 只表示真正更高的交互层级
+        - 禁止把 Raised 当作“重要卡片背景”滥用
+        - 避免编辑器卡片化
+    - UI代码
+        - XY.SurfaceRole.App
+            - Surface = XY.Surface.App
+        - XY.SurfaceRole.Navigation
+            - Surface = XY.Surface.Panel
+        - XY.SurfaceRole.Panel
+            - Surface = XY.Surface.Panel
+        - XY.SurfaceRole.PanelSecondary
+            - Surface = XY.Surface.PanelAlt
+        - XY.SurfaceRole.Canvas
+            - Surface = XY.Surface.Canvas
+        - XY.SurfaceRole.Toolbar
+            - Surface = XY.Surface.Toolbar
+        - XY.SurfaceRole.Input
+            - Surface = XY.Surface.Input
+        - XY.SurfaceRole.Overlay
+            - Surface = XY.Surface.Overlay
+        - XY.SurfaceRole.Selected
+            - Surface = XY.Surface.Selected
+        - XY.SurfaceRole.Raised.Policy
+            - Value = InteractiveLayerOnly
+- 0.13 · Shadow｜阴影系统
+    - 使用场景
+        - Tooltip
+        - Popup
+        - Menu
+        - Drag Preview
+        - 临时浮层
+    - 方案名称
+        - 轻量层级 / Lightweight Elevation
+    - 结构特征
+        - 普通 Panel 不使用阴影
+        - 普通 Button / Input 不使用阴影
+        - Tooltip 使用轻阴影
+        - Popup / Menu 使用中轻阴影
+        - Drag Preview 使用略强阴影
+        - 阴影只表达 Z 轴脱离关系
+        - 不使用 Shadow 承担普通结构分区
+        - 结构层级继续由 Surface / Divider / Border 负责
+    - UI代码
+        - XY.Shadow.None
+            - Value = None
+        - XY.Shadow.Tooltip
+            - OffsetX = 0
+            - OffsetY = 3 DIP
+            - Blur = 10 DIP
+            - Opacity = 0.12
+        - XY.Shadow.Popup
+            - OffsetX = 0
+            - OffsetY = 6 DIP
+            - Blur = 18 DIP
+            - Opacity = 0.14
+        - XY.Shadow.DragPreview
+            - OffsetX = 0
+            - OffsetY = 6 DIP
+            - Blur = 18 DIP
+            - Opacity = 0.14
+        - XY.Shadow.Panel
+            - Value = None
+            - XY.Shadow.Control
+            - Value = None
+- 0.14 · Opacity｜透明度系统
+    - 使用场景
+        - Subtle 辅助信息
+        - Disabled
+        - Drag Ghost
+        - Modal Backdrop
+        - Hidden Object
+        - Overlay
+    - 方案名称
+        - 克制透明度 / Restrained Opacity
+    - 结构特征
+        - 普通控件优先使用实色 Token
+        - 透明度主要服务弱化、遮罩和临时状态
+        - Disabled 明显弱化但仍可辨认
+        - Drag Ghost 保留足够可见度
+        - Modal Backdrop 使用较轻遮罩
+        - Hidden Object 只保留轻微残影
+        - Hover / Selected / Error 不依赖透明度表达
+    - UI代码
+        - XY.Opacity.Subtle
+            - Value = 0.72
+        - XY.Opacity.Disabled
+            - Value = 0.48
+        - XY.Opacity.DragGhost
+            - Value = 0.68
+        - XY.Opacity.Backdrop
+            - Value = 0.28
+        - XY.Opacity.Hidden
+            - Value = 0.18
+        - XY.Opacity.Overlay
+            - Value = 0.92
+- 0.15 · Icon｜图标系统
+    - 使用场景
+        - Toolbar
+        - Tree / Hierarchy
+        - Dataset / Layer
+        - Inspector 操作
+        - Copy / Lock
+        - Region / Road / Select
+        - Active / Selected / Disabled 状态
+    - 方案名称
+        - 语义混合 / Semantic Hybrid Icon
+    - 结构特征
+        - 默认状态以 Outline 为主
+        - Active / Selected 状态允许局部填充
+        - Active 状态使用 Accent 色
+        - 普通状态保持轻量
+        - Disabled 使用弱化色
+        - 允许通过端点、节点、局部填充强化工具语义
+        - 图标尺寸沿用 0.8 已定的 14 / 16 / 20 DIP
+        - 默认 Stroke 为 1.5 DIP
+        - Round Cap / Round Join
+    - UI代码
+        - XY.Icon.Style.Default
+            - Value = Outline
+        - XY.Icon.Style.Active
+            - Value = Outline + LocalFill
+        - XY.Icon.Stroke
+            - Value = 1.5 DIP
+        - XY.Icon.LineCap
+            - Value = Round
+        - XY.Icon.LineJoin
+            - Value = Round
+        - XY.Icon.Size.S
+            - Value = 14 DIP
+        - XY.Icon.Size.M
+            - Value = 16 DIP
+        - XY.Icon.Size.L
+            - Value = 20 DIP
+        - XY.Icon.State.Active
+            - Color = XY.Accent.Strong
+            - Fill = Local Semantic Fill
+        - XY.Icon.State.Disabled
+            - Color = XY.Text.Disabled
+- 0.16 · Layout｜整体布局骨架
+    - 使用场景
+        - 玄域主编辑器
+        - 地图编辑器
+        - 场景编辑
+        - 数据集编辑
+        - Inspector 工作区
+        - 日志 / 输出区
+    - 方案名称
+        - 中央画布优先 + 可切换布局
+    - 结构特征
+        - 默认仍采用 Left / Canvas / Right / Bottom 四区结构
+        - 中央 Canvas 优先获得更多空间
+        - 左导航默认较窄
+        - 右 Inspector 保持基础可用宽度
+        - Bottom 日志区进一步压缩
+        - Left / Right / Bottom 均允许独立隐藏
+        - 支持 Canvas 专注模式
+        - 专注模式不改变编辑器结构，只临时收起辅助区域
+        - Canvas 始终占据剩余可用空间
+        - 不在本阶段引入自由 Docking
+    - UI代码
+        - XY.Layout.Top.Height
+            - Value = 32 DIP
+        - XY.Layout.Left.DefaultWidth
+            - Value = 180 DIP
+        - XY.Layout.Right.DefaultWidth
+            - Value = 250 DIP
+        - XY.Layout.Bottom.DefaultHeight
+            - Value = 100 DIP
+        - XY.Layout.Center
+            - Size = FillRemaining
+        - XY.Layout.Left.Collapsible
+            - Value = True
+        - XY.Layout.Right.Collapsible
+            - Value = True
+        - XY.Layout.Bottom.Collapsible
+            - Value = True
+        - XY.Layout.FocusMode
+            - Value = CanvasPriority
+        - XY.Layout.FocusMode.Hide
+            - Left = Allowed
+            - Right = Allowed
+            - Bottom = Allowed
+- 0.17 · Panel｜面板结构
+    - 使用场景
+        - Navigation Panel
+        - Inspector Panel
+        - Dataset Panel
+        - Layer Panel
+        - Tool Panel
+        - Output / Log Panel
+        - 需要显式确认的编辑面板
+    - 方案名称
+        - 语义面板 / Semantic Panel
+    - 结构特征
+        - Panel 不采用一种固定结构覆盖所有场景
+        - 统一定义 Header / Toolbar / Content / Section / Footer 五种结构部件
+        - 不同 Panel 根据职责组合部件
+        - Navigation Panel
+        - Header
+        - Content
+        - Inspector Panel
+        - Header
+        - Content
+        - Section
+        - Footer 可选
+        - Dataset / Layer / Tool Panel
+        - Header
+        - Toolbar
+        - Content
+        - 需要显式确认的编辑面板
+        - Header
+        - Content
+        - Section 可选
+        - Footer
+        - Header 默认保留
+        - Toolbar 仅在存在高频操作时使用
+        - Content 始终作为主要内容区
+        - Section 使用“标题 + Divider + 内容”
+        - Section 禁止再次套 Card
+        - Section 之间尽量减少无意义空白
+        - Section 内尽量使用有效信息填满
+        - Footer 不是所有 Panel 强制存在
+        - Footer 出现时操作按钮组居中
+        - 标题与辅助 ID 优先并列显示
+    - 示例
+        - 道路 road-ffcb76
+        - 避免标题一行、ID 再单独占一行造成纵向浪费
+        - Panel 内部整体采用高密度布局
+        - 普通 Inspector 不默认要求显式保存
+    - UI代码
+        - XY.Panel.Structure
+            - Value = Semantic
+        - XY.Panel.Header
+            - Default = Visible
+        - XY.Panel.Toolbar
+            - Default = Optional
+        - XY.Panel.Content
+            - Size = FillRemaining
+        - XY.Panel.Section
+            - Structure = Title + Divider + Content
+        - XY.Panel.Section.CardNesting
+            - Value = Forbidden
+        - XY.Panel.Section.Density
+            - Value = Compact
+        - XY.Panel.Section.EmptySpace
+            - Value = Minimize
+        - XY.Panel.Footer
+            - Default = Optional
+        - XY.Panel.Footer.Alignment
+            - Value = Center
+        - XY.Panel.TitleMeta.Layout
+            - Value = Inline
+        - XY.Panel.Padding
+            - Value = 8 DIP
+        - XY.Panel.Field.RowGap
+            - Value = 4 DIP
+        - XY.Panel.SectionGap
+            - Value = 8 DIP
+- 0.18 · Alignment｜对齐规则
+    - 使用场景
+        - Inspector 字段
+        - Label / Value
+        - 文本值
+        - 数值
+        - ID
+        - 文件路径
+        - 状态文字
+        - Section 内容
+        - Panel 标题与辅助信息
+        - Footer 操作
+    - 方案名称
+        - 统一左对齐 / Unified Left Alignment
+    - 结构特征
+        - 普通 Label 左对齐
+        - Value 左对齐
+        - 数字默认左对齐
+        - ID 左对齐
+        - Path 左对齐
+        - 状态文字默认左对齐
+        - 不因为数值类型自动切换为右对齐
+        - 同一属性区域形成稳定的左侧阅读基线
+        - 标题与辅助 ID 可以同行
+    - 示例
+        - 道路 road-ffcb76
+        - Footer 是特殊操作区
+        - Footer 按钮组继续居中，不受正文左对齐规则影响
+        - 优先追求规则简单和视觉稳定
+    - UI代码
+        - XY.Alignment.Text
+            - Value = Left
+        - XY.Alignment.Label
+            - Value = Left
+        - XY.Alignment.Value
+            - Value = Left
+        - XY.Alignment.Number
+            - Value = Left
+        - XY.Alignment.ID
+            - Value = Left
+        - XY.Alignment.Path
+            - Value = Left
+        - XY.Alignment.Status
+            - Value = Left
+        - XY.Alignment.SectionContent
+            - Value = Left
+        - XY.Alignment.TitleMeta
+            - Value = InlineLeft
+        - XY.Alignment.FooterActions
+            - Value = Center
+- 0.19 · Density｜密度策略
+    - 使用场景
+        - 全局编辑器 UI
+        - Toolbar
+        - Tree / Hierarchy
+        - Inspector
+        - Dataset / Layer
+        - Button / Input
+        - Dialog
+        - Popup
+    - 方案名称
+        - Auto + 手动锁定 / Adaptive Density with Manual Lock
+    - 结构特征
+        - XYUI 正式提供两套完整密度
+        - Compact
+        - Comfortable
+        - 默认模式为 Auto
+        - Auto 根据可用窗口空间自动选择整套密度
+        - 不允许同一界面部分 Compact、部分 Comfortable
+        - 用户可以手动锁定 Compact
+        - 用户可以手动锁定 Comfortable
+        - 手动锁定后禁止 Auto 自动切换
+        - Density 切换采用离散 Token
+        - 禁止连续缩放产生零散尺寸
+        - 切换只改变尺寸与间距
+        - 不改变颜色
+        - 不改变字体家族
+        - 不改变语义结构
+        - 不改变控件功能
+        - Auto 切换必须具有迟滞机制
+        - 避免拖动窗口时 Compact / Comfortable 来回闪切
+    - Compact
+        - Tree Row = 28 DIP
+        - Toolbar = 30 DIP
+        - Input = 32 DIP
+        - Base Gap = 4 DIP
+        - Section Gap = 8 DIP
+    - Comfortable
+        - Tree Row = 32 DIP
+        - Toolbar = 34 DIP
+        - Input = 36 DIP
+        - Base Gap = 8 DIP
+        - Section Gap = 16 DIP
+    - UI代码
+        - XY.Density.Mode
+            - Default = Auto
+            - Allowed = Auto | Compact | Comfortable
+        - XY.Density.Auto
+            - Strategy = GlobalDiscreteSwitch
+        - XY.Density.Auto.Scope
+            - Value = WholeUI
+        - XY.Density.Auto.Hysteresis
+            - Value = Required
+        - XY.Density.Compact.TreeRow
+            - Value = 28 DIP
+        - XY.Density.Compact.Toolbar
+            - Value = 30 DIP
+        - XY.Density.Compact.Input
+            - Value = 32 DIP
+        - XY.Density.Compact.Gap
+            - Value = 4 DIP
+        - XY.Density.Compact.SectionGap
+            - Value = 8 DIP
+        - XY.Density.Comfortable.TreeRow
+            - Value = 32 DIP
+        - XY.Density.Comfortable.Toolbar
+            - Value = 34 DIP
+        - XY.Density.Comfortable.Input
+            - Value = 36 DIP
+        - XY.Density.Comfortable.Gap
+            - Value = 8 DIP
+        - XY.Density.Comfortable.SectionGap
+            - Value = 16 DIP
+        - XY.Density.ManualLock
+            - Value = Supported
+        - XY.Density.MixedMode
+            - Value = Forbidden
+- 0.20 · Interaction State｜交互状态规则
+    - 使用场景
+        - Button
+        - Input
+        - Tree / List Row
+        - Toolbar Tool
+        - Selected Item
+        - Dragging
+        - DropTarget
+        - Disabled
+        - Hover
+        - Pressed
+    - 方案名称
+        - 单状态覆盖 / Single State Override
+    - 结构特征
+        - 同一控件同一时刻只展示一个最终视觉状态
+        - 不进行多层背景状态叠加
+        - 高优先级状态覆盖低优先级状态
+        - Disabled 优先级最高
+        - Pressed 优先于 Hover
+        - Hover 优先于普通 Selected 表现
+        - Dragging / DropTarget 使用自身独立状态
+        - Focus 不在本项处理
+        - Focus 由 0.21 单独定义
+        - 状态切换不得改变控件尺寸
+        - 状态切换不得导致布局跳动
+        - 状态颜色沿用 0.2-F
+    - UI代码
+        - XY.State.ComposeMode
+            - Value = Single
+        - XY.State.Layering
+            - Value = Forbidden
+        - XY.State.Disabled.Priority
+            - Value = Highest
+        - XY.State.Pressed.Priority
+            - Value = AboveHover
+        - XY.State.Hover.Priority
+            - Value = AboveSelected
+        - XY.State.Selected
+            - Value = PersistentBaseState
+        - XY.State.Dragging
+            - Value = Independent
+        - XY.State.DropTarget
+            - Value = Independent
+        - XY.State.ResizeOnChange
+            - Value = Forbidden
+        - XY.State.ColorSource
+            - Value = XY.State.*
+- 0.21 · Focus｜焦点规则
+    - 使用场景
+        - Button
+        - Input
+        - Tree / List
+        - Toolbar
+        - Canvas
+        - Inspector
+        - Panel
+        - 键盘 Tab 导航
+        - 快捷键作用域
+    - 方案名称
+        - Focus Visible + 编辑器双层 Focus
+    - 结构特征
+        - 键盘导航时明确显示 Focus
+        - 鼠标点击普通控件后默认不持续显示 Focus Ring
+        - 减少鼠标操作产生的大量蓝色焦点框
+        - Button / Input / Tree 等普通控件使用独立 Focus Outline
+        - Focus Outline 不参与 0.20 的背景状态覆盖
+        - Selected / Hover 等状态仍按 0.20 处理
+        - Canvas / Panel 等编辑区域支持区域级 Focus
+        - 当前拥有键盘快捷键输入权的编辑区域必须可识别
+        - Canvas 获得 Focus 时显示整个 Canvas 的区域边界
+        - Tree / Inspector 获得区域焦点时使用对应区域反馈
+        - Focus 不改变控件尺寸
+        - Focus 不推动布局
+        - Focus 颜色沿用 XY.Border.Focus
+    - UI代码
+        - XY.Focus.DisplayMode
+            - Value = FocusVisible
+        - XY.Focus.Keyboard
+            - Value = Visible
+        - XY.Focus.Mouse
+            - PersistentRing = False
+        - XY.Focus.Control.OutlineWidth
+            - Value = 2 DIP
+        - XY.Focus.Control.OutlineColor
+            - Value = XY.Border.Focus
+        - XY.Focus.Control.Resize
+            - Value = Forbidden
+        - XY.Focus.EditorArea
+            - Value = Supported
+        - XY.Focus.Canvas
+            - Mode = AreaOutline
+        - XY.Focus.Panel
+            - Mode = AreaFocus
+        - XY.Focus.ShortcutScope
+            - Value = FocusedArea
+- 0.22 · Hit Target｜点击 / 抓取热区
+    - 使用场景
+        - Icon Button
+        - Tree / List Row
+        - Vertex
+        - Anchor
+        - Drag Handle
+        - Splitter
+        - Resize Handle
+        - Toolbar Tool
+    - 方案名称
+        - 语义热区 / Semantic Hit Target
+    - 结构特征
+        - 视觉尺寸与实际 Hit Target 分离
+        - 小控件允许拥有更大的隐形点击热区
+        - 扩大 Hit Target 不改变视觉尺寸
+        - 不破坏紧凑 UI
+        - Icon 使用扩展热区
+        - Tree / List 默认整行可点击
+        - Vertex / Anchor 使用独立扩大热区
+        - Splitter 视觉可以极细，但抓取热区必须明显更宽
+        - Drag Handle 使用扩大抓取区域
+        - 不同交互对象根据语义使用不同 Hit Target
+        - 禁止所有小目标机械使用同一个热区尺寸
+    - UI代码
+        - XY.HitTarget.Mode
+            - Value = Semantic
+        - XY.HitTarget.VisualSizeIndependent
+            - Value = True
+        - XY.HitTarget.Icon.Min
+            - Value = 28 DIP
+        - XY.HitTarget.TreeRow
+            - Value = FullRow
+        - XY.HitTarget.ListRow
+            - Value = FullRow
+        - XY.HitTarget.Vertex
+            - Value = 20 DIP
+        - XY.HitTarget.Anchor
+            - Value = 20 DIP
+        - XY.HitTarget.Splitter
+            - Value = 8 DIP
+        - XY.HitTarget.DragHandle
+            - Value = 24 DIP
+        - XY.HitTarget.ResizeHandle
+            - Value = SemanticExpanded
+        - XY.HitTarget.ChangeVisualSize
+            - Value = Forbidden
+- 0.23 · Motion｜动效规则
+    - 使用场景
+        - Hover
+        - Pressed
+        - Popup
+        - Tooltip
+        - Section Collapse
+        - Panel 展开 / 收起
+        - Dragging
+        - Snap
+        - DropTarget
+    - 方案名称
+        - 语义动画 / Semantic Motion
+    - 结构特征
+        - 不使用装饰性动画
+        - 不允许动画拖慢编辑操作
+        - 不同交互职责使用不同 Motion Token
+        - Hover / Pressed
+            - 使用 Fast
+        - Popup / Tooltip
+            - 使用 Normal
+        - Section / Panel Collapse
+            - 使用 Slow
+        - Dragging / Snap
+        - 使用 Instant
+        - Dragging 必须实时跟手
+        - Snap 必须即时反馈
+        - Motion 不允许改变最终布局结果
+        - 禁止使用动画掩盖实际响应延迟
+        - 高频编辑操作优先响应速度
+    - UI代码
+        - XY.Motion.Instant
+            - Duration = 0 ms
+        - XY.Motion.Fast
+            - Duration = 80 ms
+        - XY.Motion.Normal
+            - Duration = 140 ms
+        - XY.Motion.Slow
+            - Duration = 220 ms
+        - XY.Motion.Hover
+            - Token = XY.Motion.Fast
+        - XY.Motion.Pressed
+            - Token = XY.Motion.Fast
+        - XY.Motion.Popup
+            - Token = XY.Motion.Normal
+        - XY.Motion.Tooltip
+            - Token = XY.Motion.Normal
+        - XY.Motion.SectionCollapse
+            - Token = XY.Motion.Slow
+        - XY.Motion.PanelCollapse
+            - Token = XY.Motion.Slow
+        - XY.Motion.Dragging
+            - Token = XY.Motion.Instant
+        - XY.Motion.Snap
+            - Token = XY.Motion.Instant
+        - XY.Motion.MaskLatency
+            - Value = Forbidden
+- 0.24 · Z-Index｜层级与叠放顺序
+    - 使用场景
+        - Canvas Overlay
+        - Dropdown
+        - Popup
+        - Drag Preview
+        - Modal
+        - Tooltip
+        - 临时浮层
+        - 编辑器局部 Overlay
+    - 方案名称
+        - 上下文堆栈 / Context Stack
+    - 结构特征
+        - 普通组件原则上不直接填写具体 ZIndex
+        - 浮层统一由专用 Host 管理
+        - 避免不同组件和 Agent 随意使用 999 / 9999 等魔法数字
+        - Content
+        - 普通 UI 与编辑器内容
+        - Overlay Host
+        - Dropdown
+        - Popup
+        - Canvas Overlay
+        - 临时浮层
+        - Drag Host
+        - Drag Preview
+        - Drag Ghost
+        - 拖拽过程视觉反馈
+        - Modal Host
+        - Modal
+        - Modal Backdrop
+        - 必须覆盖普通编辑工作区
+        - Tooltip Host
+        - Tooltip
+    - 临时说明
+        - 位于普通应用浮层体系最高层
+        - 各 Host 内部允许局部排序
+        - 局部排序不得跨越 Host 的语义边界
+        - 普通业务组件不得绕过 Host 强行提高 ZIndex
+        - Tooltip / Modal / Drag 等浮层必须进入正式 Host
+        - Z-Index 只负责叠放顺序
+        - Surface 规则继续由 0.12 管理
+        - Shadow 规则继续由 0.13 管理
+    - UI代码
+        - XY.ZIndex.Mode
+            - Value = ContextStack
+        - XY.ZIndex.DirectValue
+            - Default = Forbidden
+        - XY.Overlay.ContentHost
+            - Role = BaseContent
+        - XY.Overlay.OverlayHost
+            - Role = PopupAndOverlay
+        - XY.Overlay.DragHost
+            - Role = DragPreview
+        - XY.Overlay.ModalHost
+            - Role = Modal
+        - XY.Overlay.TooltipHost
+        - Role = Tooltip
+        - XY.Overlay.TooltipHost.Priority
+            - Value = Topmost
+        - XY.Overlay.ModalHost.Above
+            - Value = Content | Overlay | Drag
+        - XY.Overlay.CrossHostOverride
+            - Value = Forbidden
+        - XY.ZIndex.MagicNumber
+            - Value = Forbidden
+- 0.25 · Scroll｜滚动规则
+    - 使用场景
+        - Tree
+        - Inspector
+        - Dataset / Layer
+        - Log / Output
+        - Popup
+        - 长列表
+        - 长文本
+    - 方案名称
+        - 悬停显现 / Hover-Reveal Scrollbar
+    - 结构特征
+        - Scrollbar 平时弱化显示
+        - Track 默认隐藏
+        - 鼠标进入滚动区域后 Scrollbar 增强显示
+        - 用户开始滚动时 Scrollbar 增强显示
+        - 滚动停止并离开区域后重新弱化
+        - Tree / Inspector / Log 各自独立滚动
+        - Popup 内滚动优先由 Popup 自己消费
+        - Canvas Wheel 不走普通 Scroll 逻辑
+        - 滚动条视觉宽度继续沿用 0.8
+        - 不因为隐藏 Track 改变内容布局宽度
+    - UI代码
+        - XY.Scrollbar.DisplayMode
+            - Value = HoverReveal
+        - XY.Scrollbar.Track
+            - Default = Hidden
+        - XY.Scrollbar.Thumb
+            - Default = Subtle
+        - XY.Scrollbar.Hover
+            - Value = Emphasized
+        - XY.Scrollbar.Scrolling
+            - Value = Emphasized
+        - XY.Scrollbar.Width
+            - Value = 10 DIP
+        - XY.Scroll.PanelIsolation
+            - Value = True
+        - XY.Scroll.PopupPriority
+            - Value = LocalFirst
+        - XY.Scroll.Canvas
+            - Value = Independent
+        - XY.Scroll.LayoutShift
+            - Value = Forbidden
+- 0.26 · Drag & Drop｜拖放规则
+    - 使用场景
+        - Tree
+        - Layer
+        - Dataset
+        - Asset
+        - 列表重排
+        - 父子层级移动
+    - 方案名称
+        - Drag Handle + Semantic Drop Zone + Drag Threshold
+    - 结构特征
+        - Drag Handle 作为正式拖拽入口
+        - 普通文本区域继续负责点击 / 选择 / 编辑
+        - Pointer Down 后不立即进入 Drag
+        - 只有移动超过阈值后才进入 Drag Start
+        - 默认 Drag Threshold = 6 DIP
+        - Dragging 状态必须即时跟手
+        - Drop Target 必须明确区分
+        - Before
+        - Into
+        - After
+        - 非法目标必须立即显示拒绝
+        - 禁止拖入自身
+        - 禁止拖入自身子级
+        - Esc 取消拖拽
+        - Drop Cancel 不得产生副作用
+        - Drag Preview 不得遮挡关键目标信息
+    - UI代码
+        - XY.Drag.Entry
+            - Value = Handle
+        - XY.Drag.Threshold
+            - Value = 6 DIP
+        - XY.Drag.Start
+            - Value = AfterThreshold
+        - XY.Drag.DropZone
+            - Allowed = Before | Into | After
+        - XY.Drag.InvalidTarget
+            - Value = ImmediateReject
+        - XY.Drag.CancelKey
+            - Value = Esc
+        - XY.Drag.CancelSideEffect
+            - Value = Forbidden
+        - XY.Drag.Preview
+            - Value = FollowPointer
+        - XY.Drag.Motion
+            - Value = Instant
+- 0.27 · Resize / Splitter｜面板缩放与分隔条
+    - 使用场景
+        - Left Navigation
+        - Right Inspector
+        - Bottom Log / Output
+        - Splitter
+        - Panel Collapse / Expand
+    - 方案名称
+        - 语义缩放 + 关键宽度吸附 + 双击复位
+    - 结构特征
+        - Left / Right / Bottom 分别拥有独立尺寸约束
+        - 不允许所有 Panel 共用同一 Min / Default / Max
+        - Splitter 支持连续拖动
+        - 靠近关键尺寸时允许自动吸附
+        - 关键尺寸至少包含
+        - Compact
+        - Default
+        - Wide
+        - 用户仍可停留在其他合法尺寸
+        - 双击 Splitter 恢复对应区域 Default
+        - 支持 Panel 折叠 / 展开
+        - Panel 折叠后 Canvas 自动 FillRemaining
+        - Panel 展开后恢复最近有效尺寸或 Default
+        - Splitter Visual 可保持极细
+        - Splitter Hit Target 沿用 0.22，至少 8 DIP
+        - 禁止一次误拖后难以恢复合理布局
+        - 0.16 已定默认布局尺寸保持不变
+        - Left = 180 DIP
+        - Right = 250 DIP
+        - Bottom = 100 DIP
+    - UI代码
+        - XY.Resize.Mode
+            - Value = Semantic
+        - XY.Resize.Continuous
+            - Value = True
+        - XY.Resize.Snap
+            - Value = Enabled
+        - XY.Resize.SnapPoints
+            - Allowed = Compact | Default | Wide
+        - XY.Resize.DoubleClick
+            - Action = RestoreDefault
+        - XY.Resize.Left.Default
+            - Value = 180 DIP
+        - XY.Resize.Right.Default
+            - Value = 250 DIP
+        - XY.Resize.Bottom.Default
+            - Value = 100 DIP
+        - XY.Resize.Left.Range
+            - Value = Semantic
+        - XY.Resize.Right.Range
+            - Value = Semantic
+        - XY.Resize.Bottom.Range
+            - Value = Semantic
+        - XY.Resize.Collapse
+            - Value = Supported
+        - XY.Resize.Expand
+            - Value = Supported
+        - XY.Resize.Canvas
+            - Value = FillRemaining
+        - XY.Resize.Splitter.Visual
+            - Value = 1 DIP
+        - XY.Resize.Splitter.HitTarget
+            - Value = 8 DIP
+- 0.28 · Cursor｜鼠标指针语义
+    - 使用场景
+        - Select
+        - Text
+        - Pan
+        - Draw
+        - Move
+        - Resize
+        - Dragging
+        - Copy
+        - Forbidden
+        - Snap Candidate
+    - 方案名称
+        - 状态语义指针 / Semantic State Cursor
+    - 结构特征
+        - Cursor 用于预告“下一次操作会发生什么”
+        - 标准输入场景继续沿用系统基础 Cursor
+        - Select 使用标准 Arrow
+        - Text 使用标准 I-Beam
+        - Resize 使用标准 Resize Cursor
+        - Pan 使用 Hand
+        - Draw 使用 Crosshair
+        - Move 使用 Move Cursor
+        - Dragging 可进入拖拽状态 Cursor
+        - Copy 可显示 Copy 语义
+        - Forbidden 必须立即显示禁止状态
+        - Snap Candidate 可显示瞬时 Snap 语义
+        - Cursor 状态切换必须即时
+        - 同一种操作必须始终使用同一种 Cursor
+        - 禁止为了装饰设计无语义 Cursor
+    - UI代码
+        - XY.Cursor.Select
+            - Value = Arrow
+        - XY.Cursor.Text
+            - Value = IBeam
+        - XY.Cursor.Pan
+            - Value = Hand
+        - XY.Cursor.Draw
+            - Value = Crosshair
+        - XY.Cursor.Move
+            - Value = Move
+        - XY.Cursor.Resize.Horizontal
+            - Value = SizeWE
+        - XY.Cursor.Resize.Vertical
+            - Value = SizeNS
+        - XY.Cursor.Dragging
+            - Value = Drag
+        - XY.Cursor.Copy
+            - Value = Copy
+        - XY.Cursor.Forbidden
+            - Value = Forbidden
+        - XY.Cursor.SnapCandidate
+            - Value = Snap
+        - XY.Cursor.SwitchDelay
+            - Value = 0 ms
+- 0.29 · Tooltip｜轻量提示规则
+    - 使用场景
+        - Toolbar Tool
+        - Icon Button
+        - 缩写字段
+        - 被省略的文本
+        - 快捷键提示
+        - 简短状态说明
+    - 方案名称
+        - 自适应内容 Tooltip / Adaptive Content Tooltip
+    - 结构特征
+        - 短内容优先单行显示
+        - 较长内容允许自动换行
+        - 内容较多时允许双层结构
+        - Tooltip 最大宽度受限
+        - 默认 MaxWidth = 280 DIP
+        - 首次 Hover 延迟约 400 ms
+        - 靠近窗口边缘时自动调整显示方向
+        - 优先避免超出 Viewport
+        - 可向左 / 上 / 下自动翻转
+        - Tooltip 不抢 Pointer
+        - Tooltip 不阻塞当前操作
+        - 超长说明不得继续塞进 Tooltip
+        - 复杂帮助内容应进入 Help / Inspector
+        - Tooltip 继续保持紧凑 Padding 和行距
+    - UI代码
+        - XY.Tooltip.ContentMode
+            - Value = Adaptive
+        - XY.Tooltip.ShortContent
+            - Layout = SingleLine
+        - XY.Tooltip.LongContent
+            - Layout = WrapOrTwoLevel
+        - XY.Tooltip.MaxWidth
+            - Value = 280 DIP
+        - XY.Tooltip.ShowDelay
+            - Value = 400 ms
+        - XY.Tooltip.ViewportAvoidance
+            - Value = Enabled
+        - XY.Tooltip.AutoFlip
+            - Value = Enabled
+        - XY.Tooltip.PointerCapture
+            - Value = Forbidden
+        - XY.Tooltip.InteractiveContent
+            - Default = Forbidden
+        - XY.Tooltip.LongHelp
+            - Redirect = HelpOrInspector
+- 0.30 · Text & Naming｜文本与命名规范
+    - 使用场景
+        - 对象名称
+        - Dataset / Layer
+        - Toolbar
+        - Button
+        - Status
+        - Error
+        - 提示文本
+        - 技术 ID
+        - 长名称
+    - 方案名称
+        - 编辑器双层命名 / Editor Dual-Layer Naming
+    - 结构特征
+        - 主界面优先中文 Display Name
+        - 技术 ID / Key 作为次级信息
+        - 中文名称与技术 ID 允许同行显示
+    - 示例
+        - 道路主干线 road-ffcb76
+        - 禁止直接把技术 Key 当主界面名称
+        - 普通、上下文明确的 Button 使用短动作
+            - 删除
+            - 保存
+            - 重算
+        - 存在歧义或危险性的操作写完整对象
+            - 删除道路
+            - 删除数据集
+        - Status 使用结果态
+            - 已保存
+            - 已锁定
+            - 已隐藏
+        - Error 优先包含
+            - 执行动作
+            - 失败原因
+            - 必要时的下一步
+        - 长名称允许 Ellipsis
+        - 完整名称由 Tooltip / Inspector 提供
+    - UI代码
+        - XY.Naming.Primary
+            - Value = DisplayName
+        - XY.Naming.DisplayLanguage
+            - Value = Localized
+        - XY.Naming.TechnicalId
+            - Role = Secondary
+        - XY.Naming.TitleIdLayout
+            - Value = Inline
+        - XY.Text.Command.Default
+            - Style = ShortAction
+        - XY.Text.Command.Ambiguous
+            - Style = Verb + Object
+        - XY.Text.Command.Dangerous
+            - Style = Verb + Object
+        - XY.Text.Status
+            - Style = ResultState
+        - XY.Text.Error
+            - Style = Action + FailureReason
+        - XY.Text.Error.NextStep
+            - Value = WhenUseful
+        - XY.Text.LongName
+            - Overflow = Ellipsis
+        - XY.Text.LongName.FullValue
+            - Source = TooltipOrInspector
+- 0.31 · Accessibility｜可访问性
+    - 使用场景
+        - Keyboard Navigation
+        - Toolbar
+        - Button
+        - Tree / List
+        - Panel
+        - Canvas
+        - Error / Warning / Status
+        - Icon Button
+        - Screen Reader / UI Automation
+    - 方案名称
+        - 语义可访问性 / Semantic Accessibility
+    - 结构特征
+        - 高频功能必须可通过键盘访问
+        - Tab / Shift+Tab 顺序必须稳定且可预测
+        - Focus 视觉规则沿用 0.21
+        - 图标按钮必须具备 Accessible Name
+        - 控件应暴露
+            - Role
+            - Name
+            - State
+        - Disabled / Selected / Focused 等状态应可被辅助技术识别
+        - Error 必须包含文字原因
+        - Warning / Error / Success 禁止只靠颜色表达
+        - 状态优先采用至少两种表达
+            - 颜色
+            - 图标
+            - 文字
+        - Hit Target 继续沿用 0.22
+        - 不额外创建“可访问性专用大尺寸 UI”
+        - 默认界面继续保持现有紧凑风格
+    - UI代码
+        - XY.Accessibility.KeyboardReachable
+            - Value = Required
+        - XY.Accessibility.TabOrder
+            - Value = Predictable
+        - XY.Accessibility.IconButton.Name
+            - Value = Required
+        - XY.Accessibility.Role
+            - Value = Required
+        - XY.Accessibility.Name
+            - Value = Required
+        - XY.Accessibility.State
+            - Value = Required
+        - XY.Accessibility.ColorOnlyState
+            - Value = Forbidden
+        - XY.Accessibility.StateRedundancy
+            - Minimum = 2 Channels
+        - XY.Accessibility.ErrorText
+            - Value = Required
+        - XY.Accessibility.Focus
+            - Source = XY.Focus.*
+        - XY.Accessibility.HitTarget
+            - Source = XY.HitTarget.*
+- 0.32 · Localization / DPI｜本地化与 DPI
+    - 使用场景
+        - Windows DPI Scaling
+        - 多显示器
+        - 100% / 125% / 150% / 200% 缩放
+        - 中英文长度变化
+        - Vector Icon
+        - Panel / Toolbar / Input / Popup
+        - 方案名称
+            - Per-Monitor DPI 自适应
+        - 结构特征
+            - 所有 UI 几何尺寸统一使用 DIP
+            - 禁止业务 UI 直接依赖物理像素尺寸
+            - 支持常见 DPI
+                - 100%
+                - 125%
+                - 150%
+                - 200%
+            - 窗口跨显示器移动时实时响应 DPI 变化
+            - 不要求关闭 / 重启编辑器才能重新缩放
+            - DPI 变化不得改变 UI 的语义结构
+            - DPI 变化不得偷偷切换 Compact / Comfortable
+            - Density 与 DPI 完全分离
+            - 0.19 Density
+                - 决定紧凑 / 舒适布局
+            - 0.32 DPI
+                - 决定逻辑 DIP 到物理像素的映射
+            - Icon 优先使用 Vector / DPI-aware Asset
+            - 避免不同 DPI 下图标模糊
+            - Border / Divider 应注意像素对齐
+            - 文本布局不得依赖固定中文字数
+            - 本地化文字变长时允许
+                - 合理扩展
+                - Ellipsis
+                - 必要时 Wrap
+            - 不允许由于语言变长直接挤坏核心布局
+    - UI代码
+        - XY.DPI.Unit
+            - Value = DIP
+        - XY.DPI.PhysicalPixelHardcode
+            - Value = Forbidden
+        - XY.DPI.PerMonitor
+            - Value = Enabled
+        - XY.DPI.LiveMonitorSwitch
+            - Value = Enabled
+        - XY.DPI.Scale.100
+            - Value = Supported
+        - XY.DPI.Scale.125
+            - Value = Supported
+        - XY.DPI.Scale.150
+            - Value = Supported
+        - XY.DPI.Scale.200
+            - Value = Supported
+        - XY.DPI.DensityCoupling
+            - Value = Forbidden
+        - XY.DPI.Icon
+            - Preferred = Vector
+        - XY.DPI.BorderPixelAlignment
+            - Value = Required
+        - XY.Localization.Layout
+            - Value = Elastic
+        - XY.Localization.Overflow
+            - Allowed = Expand | Ellipsis | Wrap
+        - XY.Localization.LayoutBreak
+            - Value = Forbidden
+
+
+
+
+
+

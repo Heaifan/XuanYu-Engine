@@ -92,7 +92,16 @@ Allowed root: xyui/**
 
 禁止 Agent 自行升级/新增依赖：升级 Avalonia、CommunityToolkit、ReactiveUI、Icon Library、Storybook 类依赖、Tailwind、npm 工具等一律禁止（除非后续专门批准）。优先**尽量靠现有技术栈实现**。禁止修改主 Solution、禁止新增第三方依赖。
 
-### 2.8 Decision Packet 同步机制
+### 2.8 门禁分级（纯文档/JSON 轮不抢全量 Build）
+
+若 XYUI 本轮仅修改 `.md` / `.json` / `.svg` / `yaml` / 纯 `xyui/**` 非项目文件，且满足：未修改 `.sln`/`.slnx`、未修改 `.csproj`、未进入 `src/`、未建立主工程 ProjectReference、未修改玄域代码——则：
+
+- **不要求 XuanYu.Engine 全量 Build**，不运行 Core / World / WarCore / MAP-DATA 测试（避免与开发 Agent 抢占 MSBuild、内存与磁盘资源；「不影响开发线原则」优先于「形式完整的全量门禁」）。
+- 只需：文件格式验证、Schema 验证（存在时）、链接/引用验证、changed-path gate、`git diff --check`、Git remote consistency。
+
+未来 XYUI 开始有真正 `.cs`/`.axaml` 独立代码时，再构建 **XYUI 自己的项目**；只有到 `XYUI-B` 正式接入玄域后，才重新要求玄域 Solution 完整 0W0E。
+
+### 2.9 Decision Packet 同步机制
 
 聊天里每定稿一项，形成最小 Decision Packet（Decision ID / 模块 / 方案 / 状态 / 主要参数 / 交互 / 特殊说明），由 UI Agent 正式转入 Registry。流程：
 
@@ -128,24 +137,60 @@ A0-R1-10  停止，不进入 XYUI0 整理，等待门禁满足
 
 ## 4. XYUI-A1 · XYUI0 Foundation Intake
 
-**本轮输入**：只允许 XYUI0 XMind / XYUI0 大纲（XMind = 人类原始证据；Outline = 辅助机器解析）。**禁止读取 XYUI1/2 反推、补全 XYUI0。**
+**本轮输入**：只允许 XYUI0 XMind / XYUI0 大纲（XMind = 人类原始证据；Outline = 辅助机器解析）。**禁止读取 XYUI1/2 反推、补全 XYUI0；禁止查玄域现有 UI、行业规范、Material Design、Bootstrap、Avalonia 默认视觉、其他设计系统、Agent 自身设计经验补答案。**
 
-### A1-R1 · 文档 Intake
+### A1-R1 · Source Intake + Evidence Mapping（当前轮）
 
-先不建立大量 JSON。列出 XYUI0 全部 Foundation 项及层级（0.1 / 0.2 / 0.3 … 0.xx），逐项记录：编号、名称、用途、最终选择方案、是否明确批准、是否存在组合方案、是否存在后续修订、是否存在参数、是否存在 UI Code、是否存在交互规则、是否存在响应式规则、是否存在冲突。
+**不抢跑正式裁决。** 唯一目标：准确、可追溯地读取 XYUI-0.md，证明正确理解了设计资料。
 
-### 修订优先级（Decision History）
-
-讨论常是「方案3 → 下一轮改成 3+4 → 再补充 Footer 居中 → 再补充不要留太多空白」。Agent 必须解析**最终裁定链**，不得只读首次选择；后出现的明确修订覆盖早期方案。示例：
+1. **冻结 Source**：`XYUI-0.md` 原样保存为不可变 Evidence Source（`xyui/source/XYUI0/XYUI-0.md`），禁止改写/格式化/合并/删减/纠错/统一术语；记录 `source_id` / 原始文件名 / SHA-256 / 导入时间 / source_type。
+2. **重建真实目录树**：识别全部结构项（0.1 / 0.2 / … / 0.N，含 0.2-A~I 等子节）。每项提取：ID、名称、类型、用途、候选方案、最终选择语句、后续修订、UI 参数、UI 代码、响应式要求、交互要求、例外规则、备注；原文没有的字段写 `NOT_PRESENT`，不得补全。
+3. **Evidence Ledger（Decision Chain）**：不只看首次方案选择，必须记录完整链：初始选择 → 修订 → 组合 → 覆盖 → 确认。Evidence 类型仅允许：
 
 ```text
-0.17
-Initial:  方案4
-Revision: Footer 居中
-Revision: Section 减少无意义空白
-Revision: 道路信息允许并列
-Final:    APPROVED
+SELECT   选择方案
+MODIFY   修订参数
+COMBINE  组合方案
+OVERRIDE 覆盖先前选择
+CONFIRM  确认 / 进入下一项
+REJECT   否决
+COMMENT  补充说明
 ```
+
+4. **保留 Source Location**（硬要求）：每条 Evidence 记录 `source_file` / `section` / `heading` / `line-range`，可反查原始证据。
+5. **本轮判断只允许三态**（≠ 正式五态）：
+
+```text
+CLEAR      证据链完整清晰
+AMBIGUOUS  有选择但后续表述模糊
+MISSING    未找到最终选择
+```
+
+`CLEAR ≠ CONFIRMED_APPROVED`；正式五态分类（CONFIRMED_APPROVED / PROBABLE_APPROVED / UNRESOLVED / CONFLICT / HISTORICAL_ONLY）留到 A1-R2。
+6. **重复项 / 矛盾项不处理**：同一主题出现多处 → 分别记录 + `possible_relation`，等待 R2 判断覆盖；出现矛盾数值（如 Radius 4 vs 3）→ 两条 Evidence 都记 + `potential_conflict = true`，R2 再判定 OVERRIDE 或 CONFLICT。禁止擅自合并、禁止修改。
+7. **输出仅三个核心文件**（+ 治理计划必要小幅更新）：
+
+```text
+xyui/source/XYUI0/XYUI-0.md       不可变证据源
+xyui/audit/XYUI0/source-audit.md  给人审（逐项 Evidence + 判断 + 统计）
+xyui/audit/XYUI0/evidence-index.json  给机器用
+```
+
+禁止创建 `registry/` `tokens/` `components/` `gallery/`。
+
+### A1-R1 门禁（G1~G10）
+
+```text
+G1  Source SHA 可重复            G2  Source 原文未修改
+G3  所有一级/二级项目都有记录     G4  Evidence 都能反查 Source
+G5  不存在正式 APPROVED 输出      G6  不存在 Token 输出
+G7  不存在 XYUI1/2 来源           G8  changed paths ⊆ xyui/**
+G9  无 XuanYu 业务代码变化        G10 Git remote 一致（Ahead/Behind = 0/0）
+```
+
+资源隔离：本轮仅 Markdown + JSON，**不运行玄域全量 Build / Core / World / WarCore / MAP-DATA 测试**；仅轻量检查（JSON parse、Source hash、source-reference integrity、duplicate ID、changed-path check、git diff --check、git status）。
+
+完成状态：`XYUI-A1-R1 · READY FOR USER AUDIT`，**必须 STOP，不得自动进入 A1-R2**。
 
 ### A1-R2 · 分类五种状态
 
