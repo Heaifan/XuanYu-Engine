@@ -22,7 +22,7 @@
 MAP-DATA-A-R1-F2 Polygon & Auto Bootstrap（2026-08-12 11:21:18）：修复 Region 多边形相交判定，并把“绘制区域”正式入口接入 Region Dataset 自动 Bootstrap，R1 保持 OPEN，等待 F2 真机验收。
 - 变化：`MapRegionIntersection` 改为严格异号判定；区域工具栏改为异步 Click 入口；新增 `BeginRegionDrawingAsync`、`CanRequestRegionDrawing`、Region Dataset 自动创建/选择/活动图层投影；锁定、无效和并发重复请求 fail-closed；区域左栏显示当前绘制目标。
 - 测试：新增不规则四边形、五边形、简单凹多边形、真实四点闭合、自动创建、双击防重复、锁定/无效拒绝与 Save/Reload 回归；World.Tests `1259/1259 PASS`，构建 `0 Warning / 0 Error`。
-- Hash：待本轮提交。
+- Hash：`9207a2f7b77409932d9ad1a2a51ba1baf03cb8d7`。
 - 范围：未扩展 Region Feature Schema、Hydration 之外的 Dataset 类型、Renderer、R2 Road 或新的 Workspace/Layer 所有权。
 - 遗留：F2-M01～F2-M06 真机验收待用户执行；R1 未全量验收不得 CLOSED，不得启动 R2。
 
