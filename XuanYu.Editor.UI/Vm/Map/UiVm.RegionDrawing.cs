@@ -55,9 +55,13 @@ public sealed partial class UiVm
 
     public bool RegionDrawingPointerMoved(double x, double y, ViewportState viewport)
     {
+        if (IsMapGeometryDragActive)
+            return PreviewMapGeometryPointer(x, y, viewport);
+        if (TryMapGeometryVertexHover(x, y, viewport)) return true;
         if (!IsRegionDrawingTool || !_regionDrawing.IsActive ||
             !TryPickRegionPoint(x, y, viewport, out var point)) return false;
-        var first = _regionDrawing.Draft!.Vertices[0];
+        if (_regionDrawing.Draft is not { Vertices.IsDefaultOrEmpty: false } draft) return false;
+        var first = draft.Vertices[0];
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
         if (!projection.TryProjectWorldPoint(new(
                 first.X, first.Y, MapSession.CurrentMap.Surface.BaseHeightMeters), out var firstScreen))

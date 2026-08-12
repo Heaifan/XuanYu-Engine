@@ -6,6 +6,41 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
+    public bool TryBeginMapGeometryVertexPointer(double x, double y, XuanYu.Core.Space.ViewportState viewport)
+    {
+        if (!IsRegionEditMode || !IsRegionDrawingTool || !TryMapGeometryVertexHit(x, y, viewport, out var selection, out var index)) return false;
+        var points = GeometryPoints(selection);
+        _selectedMapGeometry = selection;
+        _mapGeometryDrag = new(selection, index, points);
+        _mapGeometryPreview = new(selection, points);
+        FooterState = "状态：捕获中"; FooterMessage = "顶点拖动预览中。释放鼠标提交，按 Esc 取消。";
+        RaiseMapGeometryBindings(); PublishSceneRenderSnapshot(); return true;
+    }
+
+    bool TryMapGeometryVertexHover(double x, double y, XuanYu.Core.Space.ViewportState viewport)
+    {
+        if (!IsRegionEditMode || !IsRegionDrawingTool || IsMapGeometryDragActive) return false;
+        if (!TryMapGeometryVertexHit(x, y, viewport, out var selection, out _)) return false;
+        if (_selectedMapGeometry == selection) return true;
+        _selectedMapGeometry = selection; _mapGeometryPreview = DisplayGeometry();
+        RaiseMapGeometryBindings(); PublishSceneRenderSnapshot(); return true;
+    }
+
+    bool TryMapGeometryVertexHit(double x, double y, XuanYu.Core.Space.ViewportState viewport,
+        out MapGeometrySelection selection, out int index)
+    {
+        var projection = XuanYu.Core.Space.ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
+        var map = MapSession.CurrentMap; var height = map.Surface.BaseHeightMeters;
+        if (_selectedMapGeometry is { } selected && MapGeometryHitTester.TryHitVertex(
+                map, selected, projection, x, y, 10, height, out index)) { selection = selected; return true; }
+        foreach (var region in map.Regions)
+        {
+            selection = new(MapGeometryFeatureKind.Region, region.RegionId.ToString());
+            if (MapGeometryHitTester.TryHitVertex(map, selection, projection, x, y, 10, height, out index)) return true;
+        }
+        selection = default; index = -1; return false;
+    }
+
     MapGeometryPreview? DisplayGeometry() => _selectedMapGeometry is { } selection
         ? new(selection, GeometryPoints(selection)) : null;
 
