@@ -1,7 +1,7 @@
 # XYUI Core Pack 0.1
 
 > XYUI-PILOT 产物：供 XYLab Agent 消费的 Core Pack。
-> 状态：**`READY_FOR_XYLAB_PILOT`**（XYUI-0/1/2/3 全部 CLOSED）。
+> 状态：**`READY_FOR_XYLAB_PILOT`**（XYUI-0/1/2/3 全部 CLOSED；XYUI-4 canonical 完成，待用户验收）。
 
 ## 内容
 
@@ -13,16 +13,17 @@ xyui/packs/core-0.1/
 └─ gaps.json         ← 全 pack 已知缺口汇总（5 项，均非阻塞）
 ```
 
-## 四份规范
+## 五份规范
 
 | Spec | 内容 | 状态 | 关键产物 |
 |---|---|---|---|
-| XYUI-0 | Foundation Registry（44 项）+ A3-R2 Token Architecture（426 条） | VALIDATED | `xyui/registry/foundation/` + `xyui/tokens/architecture/` |
+| XYUI-0 | Foundation Registry（44 项）+ A3-R2 Token Architecture（426 条） | VALIDATED（AMEND-A/B） | `xyui/registry/foundation/` + `xyui/tokens/architecture/` |
 | XYUI-1 | Text & Information（24 组件） | CLOSED | `xyui/specs/XYUI1/` |
 | XYUI-2 | Controls（24 控件） | CLOSED | `xyui/specs/XYUI2/` |
 | XYUI-3 | Navigation（24 导航组件） | CLOSED | `xyui/specs/XYUI3/` |
+| XYUI-4 | Selection & Feedback（20 项） | CANONICAL_COMPLETE（待用户验收） | `xyui/specs/XYUI4/` |
 
-## 已知缺口（5 项，均非阻塞）
+## 已知缺口（9 项，均非阻塞）
 
 ```text
 XYUI1-GAP-001  Icon glyph registry（0.15 未定义）        MISSING_TOKEN
@@ -30,11 +31,15 @@ XYUI2-GAP-001  XY.Size.Switch 子属性访问                  MISSING_TOKEN
 XYUI2-GAP-002  TextArea.MaxHeight=SceneToken              REQUIRES_DECISION
 XYUI2-GAP-003  Inspector SharedPropertyColumnRule         REQUIRES_DECISION
 XYUI3-GAP-001  ContrastForeground（OnAccent）未定义       MISSING_TOKEN（待后续 Token Source 裁决）
+XYUI4-GAP-001  CONTRAST_SEPARATION_FOREGROUND（4.09）     MISSING_TOKEN
+XYUI4-GAP-002  FOCUS_RING_OFFSET（4.04）                  MISSING_TOKEN
+XYUI4-GAP-003  MARQUEE_LASSO_FILL_OPACITY（4.07/4.08）    REQUIRES_DECISION
+XYUI4-GAP-004  CONDITIONAL_DROP_SEMANTIC（4.12）          MISSING_TOKEN
 ```
 
 ## 禁止事项（对 XYLab Agent）
 
-- 不进入 A3-R3、XYUI-4/5/6/7/8/9
+- 不进入 A3-R3、XYUI-5/6/7/8/9
 - 不修改 A2 Registry / A3-R2 Architecture
 - 不生成 AXAML / C#
 - 不得以 GAP 为由自行发明全局 Token——GAP 需后续正式裁决
