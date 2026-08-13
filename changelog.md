@@ -5,7 +5,7 @@
 - 目标：修复 R2 视觉验收失败，确认 XYUI Theme 真正命中控件实例并重排 Gallery 验收布局。
 - 变化：将 Controls 样式选择器改为明确的 XYUI wrapper 类型选择器；补齐 NumberField 继承命中；新增运行时计算属性契约；Gallery 改为固定列宽的 Buttons / Inputs / Selection / Density 对比卡片，避免文本重叠与大面积空白。
 - 验证：代表性控件运行时 Background/Border/Padding/MinHeight 契约 PASS；Visible Smoke PASS；XYUI Tests 4/4 PASS；正式全量门禁待收口。
-- Hash：待提交。
+- Hash：`fac49e07`。
 - 状态：R2-F2 READY FOR USER VISUAL ACCEPTANCE；R2 未 CLOSED，R3 继续阻塞。
 
 ## R2-F1 · Gallery Visible Runtime Regression · 2026-08-13 23:18:00
