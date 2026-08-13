@@ -6,7 +6,7 @@
 - 根因：Gallery 未加载 Fluent 原生主题，且原生 ToggleSwitch 模板在 Avalonia 12.0.4 中缺失 `PART_MovingKnobs`，窗口在首次布局时崩溃；进程存活不代表窗口可见。
 - 变化：Gallery 加载 FluentTheme；XYToggleSwitch 改为基于 ToggleButton 的 Styled Wrapper；新增 `gallery-visible-smoke.ps1`，检查进程窗口句柄、标题和响应状态。
 - 验证：Visible Smoke PASS（窗口句柄非零、标题正确、响应正常）；XYUI Runtime/Controls 测试 4/4 PASS；FluentTheme 与 XYToggleSwitch 模板链路已覆盖。
-- Hash：待提交。
+- Hash：`c817a444`。
 - 状态：R2-F1 READY FOR USER VISIBLE-WINDOW ACCEPTANCE；R2 未 CLOSED，R3 继续阻塞。
 
 ## R2 · Controls Core · 2026-08-13 22:51:51
