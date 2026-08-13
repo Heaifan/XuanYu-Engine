@@ -34,7 +34,11 @@
 
 ## D2 · Road Vertex Drag
 
-状态：`NEXT`。以 D1/D1-F1 docs-only 收口提交为基线启动；负责 Preview → Release → Dataset Commit、Esc 取消、Undo/Redo 与现有 Road 几何校验。
+状态：`IMPLEMENTED · AUTOMATED GATES PASS · READY FOR USER ACCEPTANCE`。实现基线：本轮提交；以 D1/D1-F1 收口提交 `f2c8ed3` 为功能基线。
+
+已实现：Road 起点/中间点/终点自由拖动；PointerDown → Preview → PointerReleased → Dataset Commit；Esc 取消；一次拖动一条 History；Undo/Redo；保持 Polyline 开放性、顶点数量/顺序及 Road/Dataset/Layer 身份。
+
+自动验证：D2 专项 5/5；完整正式门禁以本轮提交结果为准。真机验收见 `MAP-DATA-A-R2-F3-D2-acceptance.md`。
 
 ## D3 · Road Snap
 

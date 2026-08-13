@@ -65,6 +65,7 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D-plan.md`：Road Vertex Editing D1/D2/D3 冻结范围与阶段边界
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-acceptance.md`：Road Vertex Selection 真机 IPO 验收模板与门禁证据
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-F1-acceptance.md`：Road Draw → Select 状态切换定向复验清单
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D2-acceptance.md`：Road Vertex Drag 真机 IPO 验收清单
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

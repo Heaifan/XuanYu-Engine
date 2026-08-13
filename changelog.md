@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.19-rz · MAP-DATA-A-R2-F3-D2 ROAD VERTEX DRAG
+MAP-DATA-A-R2-F3-D2（2026-08-13 13:36:10）：以 D1/D1-F1 收口基线 `f2c8ed3` 为基础，实现 Road 已有顶点自由拖动；本轮不实现任何 Road Snap、节点增删或拓扑能力。
+- 变化：Road Select 模式接入既有 `MapGeometryDrag` 管线；支持起点/中间点/终点 PointerDown、Preview、PointerReleased 提交、Esc 取消、Undo/Redo；Preview 不写 Dataset，释放后单次提交一条 History；保持开放 Polyline、顶点顺序及 Road/Layer 身份。
+- 验证：D2 专项 5/5；Core.Tests 339/339；World.Tests 1361/1361；WarCore.Tests 22/22；Solution 串行 Build 0 Warning/0 Error；ARCH-A PASS；`git diff --check` PASS；版本四处一致。
+- 状态：D2 `IMPLEMENTED · AUTOMATED GATES PASS · READY FOR USER ACCEPTANCE`；D3、Road Snap、Topology Weld `NOT STARTED`。
+- 遗留：等待用户按 `MAP-DATA-A-R2-F3-D2-acceptance.md` 执行起点/中间点/终点、Esc、Undo/Redo、连续编辑、锁定/隐藏、Save/Reload 真机验收；验收通过后才可 CLOSED。
+- Hash：本条所在提交。
+
 ## v0.2.28.18-rz · MAP-DATA-A-R2-F3-D1 DOCS-ONLY CLOSEOUT
 MAP-DATA-A-R2-F3-D1-F1（2026-08-13 13:25:43）：用户已完成 D1-F1 真机复验并明确通过；本轮仅收口 D1/D1-F1 文档，不修改功能代码。
 - 变化：记录实现基线 `4329376` 的用户真机复验 PASS；F3-D1-F1 与 F3-D1 正式标记 `CLOSED`；F3-D2 改为 `NEXT`。

@@ -8,9 +8,12 @@ public sealed partial class UiVm
 {
     public bool TryBeginMapGeometryVertexPointer(double x, double y, XuanYu.Core.Space.ViewportState viewport)
     {
-        if (!IsRegionEditMode || !IsRegionDrawingTool || !TryMapGeometryVertexHit(x, y, viewport, out var selection, out var index)) return false;
+        var canDrag = IsRegionDrawingTool || (IsRoadAuthoringMode && IsSelectTool);
+        if (!IsRegionEditMode || !canDrag || IsRoadDrawingDraftActive ||
+            !TryMapGeometryVertexHit(x, y, viewport, out var selection, out var index)) return false;
         var points = GeometryPoints(selection);
         _selectedMapGeometry = selection;
+        _selectedMapGeometryVertexIndex = index;
         _mapGeometryDrag = new(selection, index, points);
         _regionVertexSnap.Clear();
         _mapGeometryPreview = new(selection, points);
