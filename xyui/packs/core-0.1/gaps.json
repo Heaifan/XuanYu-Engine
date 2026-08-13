@@ -1,7 +1,7 @@
 {
   "phase": "XYUI-PILOT",
   "status": "READY_FOR_XYLAB_PILOT",
-  "total": 10,
+  "total": 11,
   "by_spec": {
     "XYUI1": [
       {
@@ -82,6 +82,16 @@
         "item": "SORT_INDICATOR_SEMANTIC",
         "detail": "排序方向指示符（↑↓ 作为 Secondary Direction Indicator 的语义与 glyph）无 Foundation 专用 Semantic Token；排序主表达强制为字段 + 方向语义文字；与 XYUI1-GAP-001（glyph registry）同家族；由后续 Token Source 阶段登记并裁决",
         "occurrences": 4,
+        "blocking": false
+      }
+    ],
+    "XYUI8": [
+      {
+        "gap_id": "XYUI8-GAP-001",
+        "type": "MISSING_TOKEN",
+        "item": "CHART_SERIES_PALETTE",
+        "detail": "多系列图表 Series 色板与 Heatmap 低→高顺序色阶在 Foundation 均未定义（无 categorical palette / quantitative ramp）。Source 要求「颜色必须有明确高低语义、浅低深高、需要图例说明」，但 XYUI-0 仅有单一 Accent/Semantic 状态色。不伪造 Canonical 色值，由后续 Token Source 阶段登记并裁决；与 XYUI1-GAP-001 同家族",
+        "occurrences": 2,
         "blocking": false
       }
     ]

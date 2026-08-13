@@ -50,13 +50,19 @@ XYUI-5 Layout         ✅ CLOSED 20/20（Stack/Grid/Wrap/Dock/ScrollArea/SplitPa
                         LayoutPersistence/VirtualizedLayout/CanvasLayout/ViewportContainer/
                         PortalHost/MasonryLayout/LayoutDiagnostics/LayoutCompositionRules；
                         0 GAP；A 类冲突 0；第二真值 0）
-XYUI-6 Data&Coll      ✅ canonical 20/20（List/Table/DataGrid/PropertyGrid/Hierarchy/ItemView/
+XYUI-6 Data&Coll      ✅ CLOSED 20/20（List/Table/DataGrid/PropertyGrid/Hierarchy/ItemView/
                         AssetGrid/CollectionHeader/CollectionToolbar/Column/Row/Cell/Sorting/
                         Filtering/Grouping/ExpandableRow/InlineEditing/BulkOperations/
                         CollectionState/VirtualizedCollection；
                         1 项 GAP 见 gaps.json；A 类冲突 0；第二真值 0；Broken Ref 0）
+XYUI-8 Visualization  ✅ canonical 16/16（VisualizationContainer/Metric/MetricGroup/ProgressRange/
+                        Sparkline/LineChart/AreaChart/BarChart/DistributionChart/ScatterPlot/
+                        Heatmap/Timeline/Gauge/Legend/ChartInspector/VisualizationInteraction；
+                        交互合同 = Direct Manipulation + Compact Interaction Bar + Responsive Interaction，
+                        Contextual Interaction 仅低频辅助；移动端禁依赖 Hover；
+                        1 项 GAP 见 gaps.json；A 类冲突 0；第二真值 0；Broken Ref 0）
 
-Pack Status: READY_FOR_XYLAB_PILOT（0~5 全部 CLOSED + 6 canonical 完成待验收）
+Pack Status: READY_FOR_XYLAB_PILOT（0~6 全部 CLOSED + 8 canonical 完成待验收）
 ```
 
 ## 6. 已知 GAP
@@ -72,6 +78,7 @@ XYUI4-GAP-002  FOCUS_RING_OFFSET（4.04）
 XYUI4-GAP-003  MARQUEE_LASSO_FILL_OPACITY（4.07/4.08，需裁定）
 XYUI4-GAP-004  CONDITIONAL_DROP_SEMANTIC（4.12）
 XYUI6-GAP-001  SORT_INDICATOR_SEMANTIC（排序方向指示符；与 XYUI1-GAP-001 同家族）
+XYUI8-GAP-001  CHART_SERIES_PALETTE（Series 色板 + Heatmap 低→高色阶；与 XYUI1-GAP-001 同家族）
 ```
 
 ## 7. 版本与溯源

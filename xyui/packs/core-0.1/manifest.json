@@ -79,7 +79,7 @@
     },
     "XYUI-6": {
       "available": true,
-      "status": "CANONICAL_COMPLETE",
+      "status": "CLOSED",
       "canonical_spec": "xyui/specs/XYUI6/XYUI-6.canonical.md",
       "mapping": "xyui/specs/XYUI6/XYUI-6.mapping.json",
       "gaps": "xyui/specs/XYUI6/XYUI-6.gaps.json",
@@ -88,6 +88,18 @@
       "source_sha256": "15dcf491e7d2512994e2c140b1ea4a526b58aec21f70935d5faeef8f8e92e358",
       "canonical_sha256": "0b54ccd49cf0e53b54b6142244d0d9e65ed452b4b28b3a1dcb8b6c4364beb7f4",
       "reconciled_commit": "f7925236"
+    },
+    "XYUI-8": {
+      "available": true,
+      "status": "CANONICAL_COMPLETE",
+      "canonical_spec": "xyui/specs/XYUI8/XYUI-8.canonical.md",
+      "mapping": "xyui/specs/XYUI8/XYUI-8.mapping.json",
+      "gaps": "xyui/specs/XYUI8/XYUI-8.gaps.json",
+      "source": "xyui/source/XYUI8/XYUI-8.md",
+      "source_bytes": 115343,
+      "source_sha256": "303f8108d9631a6b9ecec26947eb35cc1124d940ff866df94478839aee3bbc1a",
+      "canonical_sha256": "1ba06da9c4bdde83d0c9051b4ec521272a738d3ff8365d611f7f53d6b9020ac6",
+      "reconciled_commit": "926cebc6"
     }
   },
   "foundation_registry_ref": "xyui/registry/foundation/foundation-registry.json",
@@ -155,6 +167,12 @@
       "type": "MISSING_TOKEN",
       "scope": "SORT_INDICATOR_SEMANTIC（排序方向指示符 ↑↓ 辅助指示语义无 Foundation Token；与 XYUI1-GAP-001 glyph registry 同家族）",
       "blocking": false
+    },
+    {
+      "gap_id": "XYUI8-GAP-001",
+      "type": "MISSING_TOKEN",
+      "scope": "CHART_SERIES_PALETTE（多系列图表 Series 色板 + Heatmap 低→高色阶；与 XYUI1-GAP-001 同家族）",
+      "blocking": false
     }
   ],
   "agent_guide": "xyui/packs/core-0.1/AGENT-GUIDE.md",
@@ -176,12 +194,15 @@
     "xyui/specs/XYUI5/XYUI-5.gaps.json",
     "xyui/specs/XYUI6/XYUI-6.canonical.md",
     "xyui/specs/XYUI6/XYUI-6.mapping.json",
-    "xyui/specs/XYUI6/XYUI-6.gaps.json"
+    "xyui/specs/XYUI6/XYUI-6.gaps.json",
+    "xyui/specs/XYUI8/XYUI-8.canonical.md",
+    "xyui/specs/XYUI8/XYUI-8.mapping.json",
+    "xyui/specs/XYUI8/XYUI-8.gaps.json"
   ],
   "forbidden": [
     "A3-R3 Light/Dark Token Source（本任务暂停）",
     "Avalonia AXAML / C# 生成",
-    "XYUI-7/8/9",
+    "XYUI-7/9",
     "XuanYu / XYLab 业务实现",
     "修改 A2 Registry / A3-R2 Canonical Architecture"
   ]

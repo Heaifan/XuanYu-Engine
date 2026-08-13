@@ -1,7 +1,7 @@
 # XYUI Core Pack 0.1
 
 > XYUI-PILOT 产物：供 XYLab Agent 消费的 Core Pack。
-> 状态：**`READY_FOR_XYLAB_PILOT`**（XYUI-0/1/2/3/4/5 全部 CLOSED；XYUI-6 canonical 完成，待用户验收）。
+> 状态：**`READY_FOR_XYLAB_PILOT`**（XYUI-0/1/2/3/4/5/6 全部 CLOSED；XYUI-8 canonical 完成，待用户验收）。
 
 ## 内容
 
@@ -23,9 +23,10 @@ xyui/packs/core-0.1/
 | XYUI-3 | Navigation（24 导航组件） | CLOSED | `xyui/specs/XYUI3/` |
 | XYUI-4 | Selection & Feedback（20 项） | CLOSED | `xyui/specs/XYUI4/` |
 | XYUI-5 | Layout & Containers（20 项） | CLOSED | `xyui/specs/XYUI5/` |
-| XYUI-6 | Data & Collections（20 项） | CANONICAL_COMPLETE（待用户验收） | `xyui/specs/XYUI6/` |
+| XYUI-6 | Data & Collections（20 项） | CLOSED | `xyui/specs/XYUI6/` |
+| XYUI-8 | Visualization（16 项） | CANONICAL_COMPLETE（待用户验收） | `xyui/specs/XYUI8/` |
 
-## 已知缺口（10 项，均非阻塞）
+## 已知缺口（11 项，均非阻塞）
 
 ```text
 XYUI1-GAP-001  Icon glyph registry（0.15 未定义）        MISSING_TOKEN
@@ -38,11 +39,12 @@ XYUI4-GAP-002  FOCUS_RING_OFFSET（4.04）                  MISSING_TOKEN
 XYUI4-GAP-003  MARQUEE_LASSO_FILL_OPACITY（4.07/4.08）    REQUIRES_DECISION
 XYUI4-GAP-004  CONDITIONAL_DROP_SEMANTIC（4.12）          MISSING_TOKEN
 XYUI6-GAP-001  SORT_INDICATOR_SEMANTIC（排序方向指示符）   MISSING_TOKEN（与 XYUI1-GAP-001 同家族）
+XYUI8-GAP-001  CHART_SERIES_PALETTE（Series 色板+Heatmap 色阶） MISSING_TOKEN（与 XYUI1-GAP-001 同家族）
 ```
 
 ## 禁止事项（对 XYLab Agent）
 
-- 不进入 A3-R3、XYUI-7/8/9
+- 不进入 A3-R3、XYUI-7/9
 - 不修改 A2 Registry / A3-R2 Architecture
 - 不生成 AXAML / C#
 - 不得以 GAP 为由自行发明全局 Token——GAP 需后续正式裁决
