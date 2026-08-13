@@ -1,7 +1,7 @@
 {
   "mapping_version": "0.1.0",
-  "phase": "XYUI-PILOT-R4-R1",
-  "scope": "4.01~4.05（R2~R4 批次续补）",
+  "phase": "XYUI-PILOT-R4-FAST-CLOSE",
+  "scope": "4.01~4.20 FULL",
   "source": {
     "path": "xyui/source/XYUI4/XYUI-4.md",
     "bytes": 155526,
@@ -17,11 +17,13 @@
     "Focus = XY.Focus.Control.*；XYUI-4 只定义 Presentation Variant（C-A3）",
     "Momentary Active 不作为 canonical state → Pressed / Dragging / XY.Resize.*（C-A2）",
     "Persistent Active = 语义族，引用 XYUI-2 ToggleButton ON 语义（C-A2）",
-    "Drag Entry = XY.Drag.Entry（Handle|DirectTarget，AMEND-B）",
-    "Motion = XY.Motion.*（Fast 80ms / Normal 140ms / Instant 0ms）；无任意 ms magic number",
+    "Drag 生命周期归 Foundation；Entry = XY.Drag.Entry（Handle|DirectTarget，AMEND-B）；4.11 只做 Presentation（C-A4）",
+    "Motion = XY.Motion.*；无任意 ms magic number",
     "Border = XY.Border.Color.* / XY.Border.Width.*；Shadow = XY.Shadow.*",
-    "Text = XY.Text.Primary / Secondary；Font = XY.Font.UI + XY.FontSize.* / XY.FontWeight.*",
-    "LayoutShift = XY.State.ResizeOnChange（Forbidden）"
+    "Text = XY.Text.*；Font = XY.Font.UI + XY.FontSize.* / XY.FontWeight.*",
+    "Semantic = XY.Semantic.{Success,Info,Warning,Error}.*",
+    "LayoutShift = XY.State.ResizeOnChange（Forbidden）",
+    "组件独有参数 = COMPONENT_SPECIFIC（不得伪装 Foundation 默认值）"
   ],
   "components": [
     {
@@ -31,37 +33,37 @@
       "ref_count": 10,
       "refs": [
         {
-          "property": "Surface Background（原稿 #E8F0F3/#EEF4F6 收敛）",
+          "property": "Surface Background",
           "value": "XY.State.Color.Hover",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Border Color（原稿 #7EA8B9）",
+          "property": "Border Color",
           "value": "XY.State.Color.Hover",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Border Width（原稿 1px）",
+          "property": "Border Width",
           "value": "XY.Border.Width.Default",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Outline Color（原稿 #326F8A）",
+          "property": "Outline Color",
           "value": "XY.Color.Accent",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Outline Width（原稿 1.5px）",
+          "property": "Outline Width",
           "value": "1.5 DIP",
           "kind": "COMPONENT_SPECIFIC"
         },
         {
-          "property": "Text Color（原稿 #243744，文字原则上不变）",
+          "property": "Text Color",
           "value": "XY.Text.Primary",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Transition（原稿 80ms–120ms）",
+          "property": "Transition",
           "value": "XY.Motion.Fast",
           "kind": "CANONICAL_REF"
         },
@@ -71,7 +73,7 @@
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "LayoutShift（原稿 0）",
+          "property": "LayoutShift",
           "value": "XY.State.ResizeOnChange",
           "kind": "CANONICAL_REF"
         },
@@ -89,42 +91,42 @@
       "ref_count": 11,
       "refs": [
         {
-          "property": "Background（原稿 #DCEAF0/#E2EDF1 收敛）",
+          "property": "Background",
           "value": "XY.State.Color.Selected",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Text（原稿 #244E60）",
+          "property": "Text",
           "value": "XY.Text.Primary",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Accent（原稿 #326F8A）",
+          "property": "Accent",
           "value": "XY.Color.Accent",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Edge Width（原稿 3px–4px）",
+          "property": "Edge Width",
           "value": "3–4 DIP",
           "kind": "COMPONENT_SPECIFIC"
         },
         {
-          "property": "Border（原稿 #7EA8B9）",
+          "property": "Border",
           "value": "XY.Border.Color.Selected",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Border Width（原稿 1px–2px）",
+          "property": "Border Width",
           "value": "XY.Border.Width.Selected",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Canvas Fill / Outline（原稿 #326F8A 低透明）",
+          "property": "Canvas Fill / Outline",
           "value": "XY.Editor.Selection",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Canvas OutlineWidth（原稿 2px）",
+          "property": "Canvas OutlineWidth",
           "value": "2 DIP",
           "kind": "COMPONENT_SPECIFIC"
         },
@@ -139,7 +141,7 @@
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "单选规则（Selection Scope 单 Primary）",
+          "property": "单选规则",
           "value": "本项定义；4.05 继承",
           "kind": "NAMESPACE_REF"
         }
@@ -152,17 +154,17 @@
       "ref_count": 10,
       "refs": [
         {
-          "property": "Persistent Background/Border（原稿 #CBDDE5/#7EA8B9）",
+          "property": "Persistent Background/Border",
           "value": "XY.State.Color.Active",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Persistent Text（原稿 #244E60）",
+          "property": "Persistent Text",
           "value": "XY.Text.Primary",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Pressed Background/Border（原稿 #C3D7E0/#698F9F）",
+          "property": "Pressed Background/Border",
           "value": "XY.State.Color.Pressed",
           "kind": "CANONICAL_REF"
         },
@@ -210,32 +212,32 @@
       "ref_count": 10,
       "refs": [
         {
-          "property": "Ring Color（原稿 #326F8A）",
+          "property": "Ring Color",
           "value": "XY.Focus.Control.OutlineColor",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Ring Width（原稿 2px，与 Foundation 一致）",
+          "property": "Ring Width",
           "value": "XY.Focus.Control.OutlineWidth（2 DIP）",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Ring Offset（原稿 2px–3px）",
+          "property": "Ring Offset",
           "value": "GAP:XYUI4-GAP-002",
           "kind": "GAP"
         },
         {
-          "property": "Input Border Color（原稿 #326F8A）",
+          "property": "Input Border Color",
           "value": "XY.Border.Color.Focus",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Input Border Width（原稿 1.5px–2px）",
+          "property": "Input Border Width",
           "value": "1.5–2 DIP",
           "kind": "COMPONENT_SPECIFIC"
         },
         {
-          "property": "Dual Ring Outer/Inner（原稿 #AFC7D1/#326F8A）",
+          "property": "Dual Ring Outer/Inner",
           "value": "XY.Focus.Control.OutlineColor / XY.Border.Color.Focus",
           "kind": "CANONICAL_REF"
         },
@@ -255,7 +257,7 @@
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "C-A3 裁定落实（Presentation Variant）",
+          "property": "C-A3 裁定落实",
           "value": "Dual Ring / Canvas Halo / Input Border Focus 仅场景变体",
           "kind": "NAMESPACE_REF"
         }
@@ -268,27 +270,27 @@
       "ref_count": 10,
       "refs": [
         {
-          "property": "Primary Background（原稿 #DCEAF0）",
+          "property": "Primary Background",
           "value": "XY.State.Color.Selected",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Primary Text（原稿 #244E60）",
+          "property": "Primary Text",
           "value": "XY.Text.Primary",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Primary Border / Edge（原稿 #326F8A）",
+          "property": "Primary Border / Edge",
           "value": "XY.Editor.Selection",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Secondary Background/Border（原稿 #EAF1F4/#7EA8B9）",
+          "property": "Secondary Background/Border",
           "value": "XY.Editor.MultiSelection",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "Secondary Text（原稿 #435A67）",
+          "property": "Secondary Text",
           "value": "XY.Text.Primary",
           "kind": "CANONICAL_REF"
         },
@@ -298,12 +300,12 @@
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "GroupBounds（原稿 #7EA8B9）",
+          "property": "GroupBounds",
           "value": "XY.Editor.MultiSelection",
           "kind": "CANONICAL_REF"
         },
         {
-          "property": "GroupBounds Width / Style（原稿 1px–1.5px）",
+          "property": "GroupBounds Width / Style",
           "value": "1–1.5 DIP / Solid|Dash",
           "kind": "COMPONENT_SPECIFIC"
         },
@@ -318,13 +320,1088 @@
           "kind": "NAMESPACE_REF"
         }
       ]
+    },
+    {
+      "component_id": "XYUI-4-4.06",
+      "name": "SelectionGroup",
+      "title": "SelectionGroup / 选择组",
+      "ref_count": 12,
+      "refs": [
+        {
+          "property": "Container Border",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Container BorderWidth",
+          "value": "1.5–2 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Container Fill",
+          "value": "Transparent",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Header Background",
+          "value": "XY.State.Color.Selected",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Header Text",
+          "value": "XY.Text.Primary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Header Border / Context Border/Background",
+          "value": "XY.Editor.MultiSelection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Member Primary",
+          "value": "XY.MultiSelection.Primary.*（4.05）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Member Secondary",
+          "value": "XY.MultiSelection.Secondary.*（4.05）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Group + Active 清理（C-A2）",
+          "value": "整体操作 → Dragging；成员操作 → Pressed / Dragging",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Group + Focus",
+          "value": "4.04 Selection Context Focus",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "整体 Transform",
+          "value": "4.10 BoundingBox / 4.11 DragFeedback",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.07",
+      "name": "MarqueeSelection",
+      "title": "MarqueeSelection / 框选",
+      "ref_count": 12,
+      "refs": [
+        {
+          "property": "Border Color",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Border Width",
+          "value": "1–1.5 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Fill Color",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Fill Opacity",
+          "value": "GAP:XYUI4-GAP-003（原稿 0.05–0.10）",
+          "kind": "GAP"
+        },
+        {
+          "property": "Outline Fill",
+          "value": "Transparent",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Crossing Border",
+          "value": "XY.Editor.MultiSelection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Crossing BorderStyle",
+          "value": "Dashed",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Candidate Background/Border",
+          "value": "XY.Editor.MultiSelection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Candidate CanvasFillOpacity",
+          "value": "GAP:XYUI4-GAP-003（原稿 0.08–0.12）",
+          "kind": "GAP"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Momentary Active 清理（C-A2）",
+          "value": "拖拽生命周期 REF Foundation Pointer / Drag 合同",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Primary 规则",
+          "value": "继承 4.05 MultiSelection",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.08",
+      "name": "LassoSelection",
+      "title": "LassoSelection / 套索选择",
+      "ref_count": 12,
+      "refs": [
+        {
+          "property": "Border Color",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Border Width",
+          "value": "1–1.5 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Fill Color",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Fill Opacity",
+          "value": "GAP:XYUI4-GAP-003（原稿 0.05–0.08）",
+          "kind": "GAP"
+        },
+        {
+          "property": "Candidate Background/Border",
+          "value": "XY.Editor.MultiSelection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Candidate FillOpacity",
+          "value": "GAP:XYUI4-GAP-003（原稿 0.08–0.12）",
+          "kind": "GAP"
+        },
+        {
+          "property": "StartPoint Size",
+          "value": "4–6 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Smoothing DefaultMouse/Pen",
+          "value": "Low / Off|Low",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Momentary Active 清理（C-A2）",
+          "value": "绘制生命周期 REF Foundation Pointer / Drag 合同",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Soft Fill 统一",
+          "value": "继承 4.07 Soft Fill Selection Language",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "结果继承",
+          "value": "4.05 MultiSelection（Primary / Secondary）",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.09",
+      "name": "SelectionOutline",
+      "title": "SelectionOutline / 选择轮廓",
+      "ref_count": 7,
+      "refs": [
+        {
+          "property": "Separation Color",
+          "value": "GAP:XYUI4-GAP-001（原稿 #F8FAFB）",
+          "kind": "GAP"
+        },
+        {
+          "property": "Separation Width",
+          "value": "4–6 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Accent Color",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Accent Width",
+          "value": "2–3 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Region Fill",
+          "value": "保持对象原始 Fill",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Glow",
+          "value": "XY.Shadow.None（禁 Glow / Blur）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.10",
+      "name": "BoundingBox",
+      "title": "BoundingBox / 包围框",
+      "ref_count": 14,
+      "refs": [
+        {
+          "property": "Border Color",
+          "value": "XY.Editor.BoundingBox",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Border Width",
+          "value": "1–1.5 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Handle Background（Resize/Rotate/Pivot）",
+          "value": "XY.Editor.Handle",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Handle Border / Pivot Center",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Handle Size",
+          "value": "6–8 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Handle HitSize",
+          "value": "XY.HitTarget.ResizeHandle（SemanticExpanded，≥12–16 DIP）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Fill",
+          "value": "Transparent",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Resize 合同",
+          "value": "XY.Resize.*（Mode=Semantic / Continuous / Snap）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Momentary Active 清理（C-A2）",
+          "value": "拖动 Handle → Pressed / Dragging",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Handle Hover",
+          "value": "4.01 Handle Hover",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Handle Focus",
+          "value": "4.04 Selection Context Focus",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Group Bounds",
+          "value": "不替代成员 Selected 语义（4.02/4.05/4.06）",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.11",
+      "name": "DragFeedback",
+      "title": "DragFeedback / 拖拽反馈（Presentation Layer）",
+      "ref_count": 12,
+      "refs": [
+        {
+          "property": "Source Opacity",
+          "value": "XY.Opacity.DragGhost（原稿 0.40–0.65）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Source Border",
+          "value": "XY.State.Color.Dragging",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Source BorderStyle",
+          "value": "Dashed 可选",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Preview Background",
+          "value": "XY.State.Color.Selected",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Preview Border",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Preview Opacity",
+          "value": "XY.Opacity.DragGhost（原稿 0.75–0.95）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Preview Text",
+          "value": "XY.Text.Primary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Origin Border",
+          "value": "XY.State.Color.Dragging",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Origin Opacity",
+          "value": "低（组件级）",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.DragPreview",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "C-A4 裁定落实",
+          "value": "Drag 生命周期 REF Foundation（Start/Threshold/Cancel/Commit）；Entry = Handle|DirectTarget（AMEND-B）",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.12",
+      "name": "DropIndicator",
+      "title": "DropIndicator / 放置指示",
+      "ref_count": 10,
+      "refs": [
+        {
+          "property": "Target Border",
+          "value": "XY.State.Color.DropTarget.Border",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Target BorderWidth",
+          "value": "1.5–2 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Valid Border / Text",
+          "value": "XY.Semantic.Success.Border / .Text",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Invalid Border / Text",
+          "value": "XY.Semantic.Error.Border / .Text",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Conditional Border",
+          "value": "GAP:XYUI4-GAP-004（Foundation 无 Conditional Drop 专用 Semantic Token）",
+          "kind": "GAP"
+        },
+        {
+          "property": "Container Tint",
+          "value": "Optional；极低透明度",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Invalid 行为",
+          "value": "XY.Drag.InvalidTarget（ImmediateReject）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "颜色双通道",
+          "value": "XY.Accessibility.ColorOnlyState（禁止只靠颜色）",
+          "kind": "CANONICAL_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.13",
+      "name": "InsertionIndicator",
+      "title": "InsertionIndicator / 插入位置指示",
+      "ref_count": 12,
+      "refs": [
+        {
+          "property": "Anchor / Line Color",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Anchor Size",
+          "value": "6–8 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Line Width",
+          "value": "2–2.5 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Gap Background/Border",
+          "value": "XY.Editor.MultiSelection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Gap BorderStyle",
+          "value": "Dashed",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Gap Text",
+          "value": "XY.Text.Secondary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Animation",
+          "value": "XY.Motion.Fast",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "仅 Gap Preview 允许",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "StabilityZone / Hysteresis",
+          "value": "组件参数（阈值/滞回由实现定义）",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "术语统一",
+          "value": "原稿 Child → Foundation Into（XY.Drag.DropZone = Before|Into|After）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Tree Indent",
+          "value": "XY.Indent.PerLevel（16 DIP）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "非法位置",
+          "value": "4.12 Invalid Semantic",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.14",
+      "name": "LoadingIndicator",
+      "title": "LoadingIndicator / 加载指示",
+      "ref_count": 12,
+      "refs": [
+        {
+          "property": "Indicator Color",
+          "value": "XY.Color.Accent",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Indicator Track",
+          "value": "XY.Accent.Soft",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Text Color",
+          "value": "XY.Text.Secondary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Background",
+          "value": "Transparent",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Border",
+          "value": "XY.Border.Width.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Compact/Standard/Large Size",
+          "value": "12–14 / 14–18 / 20–24 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "ShortTaskThreshold",
+          "value": "由实现规范统一",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Failure 转移",
+          "value": "4.19 InlineFeedback",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "可量化长任务",
+          "value": "升级 4.16 ProgressBar / 4.17 ProgressRing",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Button Async",
+          "value": "XYUI-2 Button 业务规则（无 Loading 状态冲突）",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.15",
+      "name": "Spinner",
+      "title": "Spinner / 旋转加载",
+      "ref_count": 15,
+      "refs": [
+        {
+          "property": "Track Color",
+          "value": "XY.Accent.Soft",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Arc Color",
+          "value": "XY.Color.Accent",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Compact/Standard/Large Size",
+          "value": "12–14 / 14–18 / 20–24 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Compact/Standard/Large StrokeWidth",
+          "value": "1.5–2 / 2–2.5 / 2.5–3 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "StrokeCap",
+          "value": "Round",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Center",
+          "value": "Transparent",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Glow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "RotationDuration",
+          "value": "800–1200 ms",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "语义",
+          "value": "Indeterminate（4.14 的活动图形）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Failure 转移",
+          "value": "4.19 InlineFeedback",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Progress 切换",
+          "value": "4.16 / 4.17（Determinate）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Reduced Motion",
+          "value": "低运动替代 + 非运动语义保留",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Spinner 默认不可 Focus",
+          "value": "4.04 Focus 规则",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.16",
+      "name": "ProgressBar",
+      "title": "ProgressBar / 进度条",
+      "ref_count": 12,
+      "refs": [
+        {
+          "property": "Track Color",
+          "value": "XY.Accent.Soft",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Fill Color",
+          "value": "XY.Color.Accent",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Text Primary / Secondary",
+          "value": "XY.Text.Primary / XY.Text.Secondary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Compact/Standard/Emphasis Height",
+          "value": "3–5 / 6–8 / 8–10 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "CornerRadius",
+          "value": "XY.Radius.Full",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Transition",
+          "value": "XY.Motion.Fast",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Glow / Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "真实进度规则",
+          "value": "禁伪造百分比（Foundational Rule）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Failure 转移",
+          "value": "4.19 InlineFeedback",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Pause / Cancel",
+          "value": "独立 Action，不属于 ProgressBar 本体",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Spinner 分工",
+          "value": "4.15（Indeterminate）",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.17",
+      "name": "ProgressRing",
+      "title": "ProgressRing / 环形进度",
+      "ref_count": 14,
+      "refs": [
+        {
+          "property": "Track Color",
+          "value": "XY.Accent.Soft",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Arc Color",
+          "value": "XY.Color.Accent",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Text Primary / Secondary",
+          "value": "XY.Text.Primary / XY.Text.Secondary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Compact/Standard/Large Size",
+          "value": "32–40 / 48–64 / 72–96 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Compact/Standard/Large StrokeWidth",
+          "value": "3–4 / 5–7 / 7–9 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "StrokeCap",
+          "value": "Round",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "StartAngle",
+          "value": "-90deg（12 点方向）",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Glow / Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "语义",
+          "value": "Determinate（Arc Length = 真实 Progress）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Spinner 分工",
+          "value": "4.15（Indeterminate，禁止混淆）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Failure 转移",
+          "value": "4.19 InlineFeedback",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Reduced Motion",
+          "value": "Arc Length 表达不变，减少 Value Transition",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "真实进度规则",
+          "value": "禁伪造百分比",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.18",
+      "name": "Skeleton",
+      "title": "Skeleton / 骨架占位",
+      "ref_count": 11,
+      "refs": [
+        {
+          "property": "Primary/Secondary/Strong/Container Background",
+          "value": "COMPONENT_SPECIFIC（低对比中性色；实现期映射 Foundation Surface 家族，不建立第二颜色真值）",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Border",
+          "value": "XY.Border.Color.Subtle",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "TextRadius / MediaRadius",
+          "value": "4–6 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Animation",
+          "value": "None by Default",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Shimmer",
+          "value": "Disabled by Default",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "Minimize（首要目标：Layout Preservation）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Transition",
+          "value": "XY.Motion.Fast（0–100 ms Crossfade）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Failure 转移",
+          "value": "4.19 InlineFeedback",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Empty 转移",
+          "value": "4.20 EmptyState",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Activity 补充",
+          "value": "4.14 LoadingIndicator（不内建动画）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "虚拟化",
+          "value": "只创建可见 Skeleton Row",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.19",
+      "name": "InlineFeedback",
+      "title": "InlineFeedback / 行内反馈（Composition Pattern）",
+      "ref_count": 17,
+      "refs": [
+        {
+          "property": "Success Border / Text",
+          "value": "XY.Semantic.Success.Border / .Text",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Info Border / Text",
+          "value": "XY.Semantic.Info.Border / .Text",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Warning Border / Text",
+          "value": "XY.Semantic.Warning.Border / .Text",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Error Border / Text",
+          "value": "XY.Semantic.Error.Border / .Text",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Border Width",
+          "value": "1.5–2 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Message FontSize",
+          "value": "XY.FontSize.Caption",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Message Gap",
+          "value": "XY.Space.4",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Icon Size",
+          "value": "12–16 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Message Component（COMPOSE）",
+          "value": "XYUI-1 ErrorText / WarningText / HelpText",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Icon Component（COMPOSE）",
+          "value": "XYUI-1 IconLabel / StatusDot / StatusBadge",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Focus 组合",
+          "value": "4.04 Selection Context Focus",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Loading 组合",
+          "value": "4.14 LoadingIndicator",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "颜色双通道",
+          "value": "XY.Accessibility.ColorOnlyState（Border+Icon+Text）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Validation Timing / Debounce / Async / Lifecycle",
+          "value": "XYUI-4 独有职责（COMPOSITION 保留）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "C-B1 裁定",
+          "value": "不重定义 XYUI-1 第二套 Error/Warning Text 组件",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "全局升级禁令",
+          "value": "局部字段问题禁升级无上下文全局 Toast",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.20",
+      "name": "EmptyState",
+      "title": "EmptyState / 空状态（Composition Pattern）",
+      "ref_count": 16,
+      "refs": [
+        {
+          "property": "Title Component（COMPOSE）",
+          "value": "XYUI-1 EmptyText",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Title Color",
+          "value": "XY.Text.Primary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Title FontSize",
+          "value": "XY.FontSize.Label",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Description Color",
+          "value": "XY.Text.Secondary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Description FontSize",
+          "value": "XY.FontSize.Caption",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Background",
+          "value": "Transparent（继承父容器）",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Border",
+          "value": "XY.Border.Width.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Illustration",
+          "value": "None by Default",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "PrimaryAction Component（COMPOSE）",
+          "value": "XYUI-2 Button",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "PrimaryAction Count",
+          "value": "0–1",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "TitleDescription Gap / Action Gap",
+          "value": "XY.Space.8 / XY.Space.12",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Compact/Standard Padding",
+          "value": "12–16 / 20–32 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Loading 分离",
+          "value": "4.14 / 4.18（Loading 期间不得提前显示 Empty）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Error 分离",
+          "value": "4.19（Error 不得伪装 Empty）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "C-B2 裁定",
+          "value": "XYUI-1 EmptyText Primitive → XYUI-4 EmptyState Pattern",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
     }
   ],
   "gaps": [
     {
+      "gap_id": "XYUI4-GAP-001",
+      "type": "MISSING_TOKEN",
+      "scope": "XY.SelectionOutline.Separation.Color（4.09）"
+    },
+    {
       "gap_id": "XYUI4-GAP-002",
       "type": "MISSING_TOKEN",
       "scope": "XY.SelectionFocus.Ring.Offset（4.04）"
+    },
+    {
+      "gap_id": "XYUI4-GAP-003",
+      "type": "REQUIRES_DECISION",
+      "scope": "XY.Marquee.Fill.Opacity / XY.Lasso.Fill.Opacity / Candidate FillOpacity（4.07 / 4.08）"
+    },
+    {
+      "gap_id": "XYUI4-GAP-004",
+      "type": "MISSING_TOKEN",
+      "scope": "XY.DropIndicator.Conditional.Border（4.12）"
     }
   ]
 }
