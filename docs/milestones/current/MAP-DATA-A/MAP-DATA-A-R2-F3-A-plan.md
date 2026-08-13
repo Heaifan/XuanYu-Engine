@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-A · Region Local Spatial Query
 
-状态：`CLOSED`（自动验收）；F2 已 CLOSED。本轮只建立 Region 局部候选查询基础设施，不实现 Snap 或 UI。
+状态：`CLOSED`；本文件为历史阶段计划，R2 已整体 CLOSED。F3-A 只建立 Region 局部候选查询基础设施，后续通用 Snap 已在 F3-E 完成。
 
 ## 冻结目标
 

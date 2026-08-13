@@ -1,5 +1,7 @@
 # MAP-DATA-A-R2-F3-E1 · E2 Decision
 
+> 历史决策快照：E2～E5 已合并为 F3-E 一轮实现并 CLOSED；本文保留原始范围决策，当前计划见 `MAP-DATA-A-R2-F3-E-plan.md`。
+
 ## E2 可以抽什么
 
 1. 保留 `MapGeometryDrag` 的 Source Feature、VertexIndex、OriginalGeometry 语义，抽出最小 Begin/Preview/Commit/Cancel 生命周期协调器。

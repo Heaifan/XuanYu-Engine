@@ -86,6 +86,9 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-contract.md` — E1 Geometry Capability Contract 定义。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-mapping-gap-report.md` — E1 Region/Road 映射、数据链与 Gap Report。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-E2-decision.md` — E1 对 E2 的抽取范围与禁止越界决策。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R3-point-feature-foundation.md` — Point / Map Marker 下一阶段范围与边界。
+- `docs/milestones/closed/MAP-DATA-A/MAP-DATA-A-R2-closeout.md` — R2 Geometry Editing Foundation 收口、证据与最终边界。
+- `docs/knowledge/decisions/map-data-r2-closeout-and-point-foundation.md` — R2 收口与 Point Consumer 下一阶段决策。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md` — 项目治理、设计、里程碑或知识文档。

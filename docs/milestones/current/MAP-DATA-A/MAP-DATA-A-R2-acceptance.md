@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 真机验收清单
 
-状态：READY FOR USER ACCEPTANCE。自动门禁通过不等于真机 CLOSED。
+状态：`CLOSED`。R2 最终真机收口见 `MAP-DATA-A-R2-closeout.md`；F3-E M01～M10 已由用户确认 PASS。
 
 | 编号 | 路径 | 输入 | 过程 | 输出 |
 |---|---|---|---|---|

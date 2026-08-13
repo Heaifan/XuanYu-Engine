@@ -18,6 +18,15 @@
 
 ---
 
+## v0.2.28.23-rz · MAP-DATA-A-R2 CLOSEOUT
+MAP-DATA-A-R2-CLOSEOUT（2026-08-13 15:18:55）：用户确认 F3-E M01～M10 全部 PASS；以功能基线 `6a3d5b8` 为依据完成 R2 Geometry Editing Foundation docs-only 收口。
+- 变化：F3-E Generic Geometry Editing & Snap 正式 `CLOSED`；R2 全部能力汇总并正式 `CLOSED`；旧 F3-F 拆分路线清理。
+- 边界：Topology Weld、Shared Node、自动路口、交点、自动切分、节点增删与 Gameplay 业务移入 Future/Backlog，不作为 R2 遗留缺陷。
+- 知识：新增 R2 Closeout 与 Point Foundation 决策；新增 `MAP-DATA-A-R3 · Point Feature Foundation` 计划，Map Marker 为 Point 首个 Consumer。
+- 验证：复用 `6a3d5b8` 的 Solution 0W/0E、Core 339/339、World 1365/1365、WarCore 22/22、ARCH-A、5+100、AXAML/XML、四处版本一致与 `git diff --check` 证据；本轮 docs-only，不重复完整功能测试。
+- 状态：`MAP-DATA-A-R2 CLOSED`；下一开发任务为 `MAP-DATA-A-R3 · Point Feature Foundation`，尚未开始实现。
+- Hash：本条所在提交。
+
 ## v0.2.28.22-rz · MAP-DATA-A-R2-F3-E GENERIC GEOMETRY EDITING & SNAP
 MAP-DATA-A-R2-F3-E（2026-08-13 14:54:24）：以 `d0bc0df` 为基线，一次性实现通用几何编辑生命周期、局部候选索引、Vertex/Segment Snap 仲裁，以及 Region/Road 集成。
 - 变化：新增 Point/Polyline/Polygon capability model、Feature Adapter、GeometrySpatialIndex 与通用 Snap Pipeline；Road 支持吸附 Region Vertex/Segment 与其他 Road Vertex/Segment；保留 Map-level History。

@@ -33,11 +33,12 @@
 | K-ASSET-002 | Knowledge | Data | 确定性资源创建失败必须按 Key+Revision 负缓存 | P1 | E2 | v0.2.21.23-fix · 2026-08-02 12:45:00 · a9c1ec6 | Active |
 | K-PERF-001 | Knowledge | Performance | Preview 高频路径与 Commit 重路径必须分离 | P0 | E2 | v0.1.8.7-fix · 2026-06-25 00:18 · 26f2006 | Active |
 | K-GEO-001 | Knowledge | Architecture | 可编辑几何能力契约与 Snap/Topology 边界 | P0 | E1 | MAP-DATA-A-R2-F3-E1 · 2026-08-13 · 本轮提交 | Active |
+| K-GEO-002 | Decision | Architecture | R2 收口并以 Point Consumer 作为下一验证形态 | P0 | R2 | MAP-DATA-A-R2-CLOSEOUT · 2026-08-13 · 6a3d5b8 | Active |
 
 ## 分类文件
 
 - `engineering.md`：K-VAL-001、K-VAL-002、K-GOV-001、K-GOV-002
-- `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001
+- `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002、K-GEO-001；R2 Closeout / Point Foundation 见 K-GEO-002
 - `rendering.md`：K-REN-001、K-REN-002、K-REN-003、K-REN-004、K-NATIVE-001
 - `input.md`：K-INP-001、K-INP-002
 - `ui.md`：K-UI-001

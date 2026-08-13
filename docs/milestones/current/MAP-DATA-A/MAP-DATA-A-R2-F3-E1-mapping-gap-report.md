@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-E1 · Region/Road Mapping & Gap Report
 
-状态：`CLOSED`（只读调查；不移动代码、不改变交互）。基线：`5822bb3`。
+状态：`CLOSED`（历史只读调查；Road Generic Snap 缺口已由 F3-E 实现并通过真机验收）。基线：`5822bb3`。
 
 ## Capability Mapping
 

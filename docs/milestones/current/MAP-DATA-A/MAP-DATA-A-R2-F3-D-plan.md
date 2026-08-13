@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-D · Road Vertex Editing
 
-状态：`CLOSED`；D1、D1-F1、D2 均已完成真机验收；后续转入 F3-E 通用几何编辑与吸附框架。
+状态：`CLOSED`；D1、D1-F1、D2 均已完成真机验收；原 E3/E4/E5 与 F3-F 拆分已由 F3-E 综合实现取代。当前权威状态见 `MAP-DATA-A-R2-closeout.md`。
 
 ## D1 · Road Vertex Selection
 

@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-E · Generic Geometry Editing & Snap
 
-状态：`IMPLEMENTED · AUTOMATED GATES PASS · READY FOR USER ACCEPTANCE`。E1 契约已纳入本任务；本轮一次性完成通用编辑、局部候选、吸附仲裁与 Region/Road 集成。全阶段不引入 Topology Weld。
+状态：`CLOSED`。E1 契约已纳入本任务；本轮一次性完成通用编辑、局部候选、吸附仲裁与 Region/Road 集成，并通过 M01～M10 真机验收。全阶段不引入 Topology Weld。
 
 ## 默认能力契约
 
@@ -24,4 +24,4 @@
 
 ## 综合验收
 
-不再单独创建 F3-F；本文件的 F3-E 综合验收一次覆盖 Region/Road。正式产物：`MAP-DATA-A-R2-F3-E-acceptance.md`。通过后 `F3-E CLOSED`，再评估 R2 下一阶段。
+不再单独创建 F3-F；本文件的 F3-E 综合验收一次覆盖 Region/Road。正式产物：`MAP-DATA-A-R2-F3-E-acceptance.md`。F3-E 已 CLOSED；R2 以 `MAP-DATA-A-R2-closeout.md` 收口，下一开发任务为 R3 Point Feature Foundation。

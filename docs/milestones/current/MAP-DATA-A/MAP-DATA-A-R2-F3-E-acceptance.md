@@ -1,6 +1,8 @@
 # MAP-DATA-A-R2-F3-E · Generic Geometry Editing & Snap Integration 验收
 
-状态：`IMPLEMENTED · AUTOMATED GATES PASS · READY FOR USER ACCEPTANCE`。
+状态：`USER ACCEPTANCE PASS · CLOSED`。
+
+用户真机验收：M01～M10 全部 PASS。用户确认道路顶点能够稳定贴合区域边界/顶点，跨 Feature 通用吸附链成立；最终验证对象为 `6a3d5b8`。
 
 | 编号 | 路径 | 输入/过程 | 预期输出 |
 |---|---|---|---|
@@ -15,4 +17,4 @@
 | M09 | 地图保存/重载 | 保存后重新打开 | 几何、Feature/Dataset/Layer 身份保持 |
 | M10 | 大量 Region + Road | 反复拖动顶点 | 无明显卡顿；PointerMove 使用局部候选，不退化全量扫描 |
 
-自动证据：Generic focused `26/26`；完整正式门禁在本任务全部实现后一次执行。通过 M01～M10 后才标记 `F3-E CLOSED`。
+自动证据：Generic focused `24/24`；正式门禁：Solution 0W/0E、Core.Tests 339/339、World.Tests 1365/1365、WarCore.Tests 22/22、ARCH-A PASS、AXAML/XML PASS、版本四处一致、`git diff --check` PASS。用户真机 M01～M10 全部 PASS，F3-E 正式 `CLOSED`。
