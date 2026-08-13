@@ -41,17 +41,22 @@ XYUI-0 Foundation     ✅ VALIDATED（44 项，426 token；AMEND-A/B 状态组�
 XYUI-1 Text&Info      ✅ canonical（24 组件）
 XYUI-2 Controls       ✅ canonical（24 控件：Button/Input/Slider/Property 等）
 XYUI-3 Navigation     ✅ canonical（24 导航组件：MenuBar/Sidebar/DockTabs/TreeNavigation 等）
-XYUI-4 Selection      ✅ canonical 20/20（Hover/Selected/Active/Focus/MultiSelection/Group/
+XYUI-4 Selection      ✅ CLOSED 20/20（Hover/Selected/Active/Focus/MultiSelection/Group/
                         Marquee/Lasso/Outline/BoundingBox/DragFeedback/Drop/Insertion/
                         Loading/Spinner/ProgressBar/Ring/Skeleton/InlineFeedback/EmptyState；
                         4 项 GAP 见 gaps.json；A 类冲突 0；第二真值 0）
-XYUI-5 Layout         ✅ canonical 20/20（Stack/Grid/Wrap/Dock/ScrollArea/SplitPane/OverlayLayout/
+XYUI-5 Layout         ✅ CLOSED 20/20（Stack/Grid/Wrap/Dock/ScrollArea/SplitPane/OverlayLayout/
                         AspectContainer/AnchorLayout/StickyRegion/AdaptiveLayout/WorkspaceLayout/
                         LayoutPersistence/VirtualizedLayout/CanvasLayout/ViewportContainer/
                         PortalHost/MasonryLayout/LayoutDiagnostics/LayoutCompositionRules；
                         0 GAP；A 类冲突 0；第二真值 0）
+XYUI-6 Data&Coll      ✅ canonical 20/20（List/Table/DataGrid/PropertyGrid/Hierarchy/ItemView/
+                        AssetGrid/CollectionHeader/CollectionToolbar/Column/Row/Cell/Sorting/
+                        Filtering/Grouping/ExpandableRow/InlineEditing/BulkOperations/
+                        CollectionState/VirtualizedCollection；
+                        1 项 GAP 见 gaps.json；A 类冲突 0；第二真值 0；Broken Ref 0）
 
-Pack Status: READY_FOR_XYLAB_PILOT（0123 闭环 + 4/5 canonical 完成待验收）
+Pack Status: READY_FOR_XYLAB_PILOT（0~5 全部 CLOSED + 6 canonical 完成待验收）
 ```
 
 ## 6. 已知 GAP
@@ -61,10 +66,12 @@ XYUI1-GAP-001  Icon glyph registry 未建立（glyph 名暂用组件级常量，
 XYUI2-GAP-001  XY.Size.Switch 复合 token 子属性访问待 A3 定义
 XYUI2-GAP-002  TextArea.MaxHeight=SceneToken（待裁定）
 XYUI2-GAP-003  Inspector SharedPropertyColumnRule 未在 Foundation 定义
+XYUI3-GAP-001  ContrastForeground（OnAccent）未定义（待后续 Token Source 裁决）
 XYUI4-GAP-001  CONTRAST_SEPARATION_FOREGROUND（4.09，与 XYUI3-GAP-001 同家族）
 XYUI4-GAP-002  FOCUS_RING_OFFSET（4.04）
 XYUI4-GAP-003  MARQUEE_LASSO_FILL_OPACITY（4.07/4.08，需裁定）
 XYUI4-GAP-004  CONDITIONAL_DROP_SEMANTIC（4.12）
+XYUI6-GAP-001  SORT_INDICATOR_SEMANTIC（排序方向指示符；与 XYUI1-GAP-001 同家族）
 ```
 
 ## 7. 版本与溯源

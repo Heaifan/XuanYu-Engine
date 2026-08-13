@@ -26,7 +26,7 @@
       "source": "xyui/source/XYUI1/XYUI-1.md",
       "source_bytes": 36412,
       "source_sha256": "9709a4fde7ec0e2211484f2fdd51a493ef7d472155f332c74bcd350ca0b0a462",
-      "canonical_sha256": "9ec395e6a542ac3a30ae25fc947a0c1b61c99d875cc93f8868767a524bb2c206",
+      "canonical_sha256": "ef623537a5017478b25bc40394f376c8f7872d2626f4bccd5ea4286eba029e0f",
       "reconciled_commit": "a2076df7"
     },
     "XYUI-2": {
@@ -38,7 +38,7 @@
       "source": "xyui/source/XYUI2/XYUI-2.md",
       "source_bytes": 51858,
       "source_sha256": "fa1b393f52d429d23c258294531df5d0cd02b0eea621f12ab70395989c6fe86d",
-      "canonical_sha256": "ca4b046c137b8cec54a50e6fcc8210806ef9f3742bed5ed8450d9611a49e6883",
+      "canonical_sha256": "1a51c0b1a1e913b9fbe6417df1c174e6e4ef11165a41291b56d983b6a0a069cf",
       "reconciled_commit": "c92a873e"
     },
     "XYUI-3": {
@@ -50,12 +50,12 @@
       "source": "xyui/source/XYUI3/XYUI-3.md",
       "source_bytes": 338481,
       "source_sha256": "4c91ba6aaf182969d5b466c631c3e584f0dbc6b31548d8ee5103e187e8957f1d",
-      "canonical_sha256": "bb8a0ce843bcc6cad608b44ad5f6e3049b92743c371b85bc679126548ef5c252",
+      "canonical_sha256": "46ba1abd090279a21c68c16af9ce653124bd1d1cf8b553fc11f140da46a83925",
       "reconciled_commit": "ae79ebea"
     },
     "XYUI-4": {
       "available": true,
-      "status": "CANONICAL_COMPLETE",
+      "status": "CLOSED",
       "canonical_spec": "xyui/specs/XYUI4/XYUI-4.canonical.md",
       "mapping": "xyui/specs/XYUI4/XYUI-4.mapping.json",
       "gaps": "xyui/specs/XYUI4/XYUI-4.gaps.json",
@@ -67,15 +67,27 @@
     },
     "XYUI-5": {
       "available": true,
-      "status": "CANONICAL_COMPLETE",
+      "status": "CLOSED",
       "canonical_spec": "xyui/specs/XYUI5/XYUI-5.canonical.md",
       "mapping": "xyui/specs/XYUI5/XYUI-5.mapping.json",
       "gaps": "xyui/specs/XYUI5/XYUI-5.gaps.json",
       "source": "xyui/source/XYUI5/XYUI-5.md",
       "source_bytes": 252543,
       "source_sha256": "45734e3f4d305e173983f09d6348405d81ec5c97ff8cabe68bb77c641434c523",
-      "canonical_sha256": "f54ae93b30074fd3cae3971bf4d80efe4296f7cfcbcffd054767e18fed54c1b8",
+      "canonical_sha256": "c38c5081897388315db843a8933ef532cc35e83c053e353b1f98ecf911e60143",
       "reconciled_commit": "9345728"
+    },
+    "XYUI-6": {
+      "available": true,
+      "status": "CANONICAL_COMPLETE",
+      "canonical_spec": "xyui/specs/XYUI6/XYUI-6.canonical.md",
+      "mapping": "xyui/specs/XYUI6/XYUI-6.mapping.json",
+      "gaps": "xyui/specs/XYUI6/XYUI-6.gaps.json",
+      "source": "xyui/source/XYUI6/XYUI-6.md",
+      "source_bytes": 161709,
+      "source_sha256": "15dcf491e7d2512994e2c140b1ea4a526b58aec21f70935d5faeef8f8e92e358",
+      "canonical_sha256": "1d229b052ec1143cbccc71b38820aa53286bc9e3d7060132543d28b3dd543e6e",
+      "reconciled_commit": "f7925236"
     }
   },
   "foundation_registry_ref": "xyui/registry/foundation/foundation-registry.json",
@@ -137,6 +149,12 @@
       "type": "MISSING_TOKEN",
       "scope": "CONDITIONAL_DROP_SEMANTIC（4.12）",
       "blocking": false
+    },
+    {
+      "gap_id": "XYUI6-GAP-001",
+      "type": "MISSING_TOKEN",
+      "scope": "SORT_INDICATOR_SEMANTIC（排序方向指示符 ↑↓ 辅助指示语义无 Foundation Token；与 XYUI1-GAP-001 glyph registry 同家族）",
+      "blocking": false
     }
   ],
   "agent_guide": "xyui/packs/core-0.1/AGENT-GUIDE.md",
@@ -155,12 +173,15 @@
     "xyui/specs/XYUI4/XYUI-4.gaps.json",
     "xyui/specs/XYUI5/XYUI-5.canonical.md",
     "xyui/specs/XYUI5/XYUI-5.mapping.json",
-    "xyui/specs/XYUI5/XYUI-5.gaps.json"
+    "xyui/specs/XYUI5/XYUI-5.gaps.json",
+    "xyui/specs/XYUI6/XYUI-6.canonical.md",
+    "xyui/specs/XYUI6/XYUI-6.mapping.json",
+    "xyui/specs/XYUI6/XYUI-6.gaps.json"
   ],
   "forbidden": [
     "A3-R3 Light/Dark Token Source（本任务暂停）",
     "Avalonia AXAML / C# 生成",
-    "XYUI-6/7/8/9",
+    "XYUI-7/8/9",
     "XuanYu / XYLab 业务实现",
     "修改 A2 Registry / A3-R2 Canonical Architecture"
   ]

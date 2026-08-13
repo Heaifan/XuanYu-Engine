@@ -1,7 +1,7 @@
 {
   "phase": "XYUI-PILOT",
   "status": "READY_FOR_XYLAB_PILOT",
-  "total": 5,
+  "total": 10,
   "by_spec": {
     "XYUI1": [
       {
@@ -42,6 +42,46 @@
         "item": "COMPONENT_SPECIFIC_CONTRAST_FOREGROUND",
         "detail": "Source 中少量强调底色上的高对比前景语义（NavigationRail Tooltip Text / CommandPalette Input / StepNode.Completed IconColor）。XYUI-0 当前没有独立 OnAccent / ContrastForeground Semantic Token。本版不伪造 Canonical Token，由后续 Token Source 阶段登记并裁决。",
         "occurrences": 5,
+        "blocking": false
+      }
+    ],
+    "XYUI4": [
+      {
+        "gap_id": "XYUI4-GAP-001",
+        "type": "MISSING_TOKEN",
+        "scope": "CONTRAST_SEPARATION_FOREGROUND",
+        "detail": "4.09 SelectionOutline 的 Separation Stroke（浅色分离描边）。Foundation 无 Contrast/SeparationForeground Token；与 XYUI3-GAP-001 同家族；由后续 Token Source 阶段登记并裁决",
+        "blocking": false
+      },
+      {
+        "gap_id": "XYUI4-GAP-002",
+        "type": "MISSING_TOKEN",
+        "scope": "FOCUS_RING_OFFSET",
+        "detail": "4.04 Focus in Selection Context 的 Outer Ring Offset（原稿 2–3 DIP）。Foundation Focus 无 Offset Token",
+        "blocking": false
+      },
+      {
+        "gap_id": "XYUI4-GAP-003",
+        "type": "REQUIRES_DECISION",
+        "scope": "MARQUEE_LASSO_FILL_OPACITY",
+        "detail": "4.07/4.08 Marquee/Lasso 的极低透明 Accent Fill（原稿 0.05–0.12）。Foundation XY.Opacity.* 六档无对应低透明 Accent Fill 档位",
+        "blocking": false
+      },
+      {
+        "gap_id": "XYUI4-GAP-004",
+        "type": "MISSING_TOKEN",
+        "scope": "CONDITIONAL_DROP_SEMANTIC",
+        "detail": "4.12 DropIndicator 的 Conditional Drop（需要转换/引用/替换/确认的放置）无 Foundation 专用 Semantic Token",
+        "blocking": false
+      }
+    ],
+    "XYUI6": [
+      {
+        "gap_id": "XYUI6-GAP-001",
+        "type": "MISSING_TOKEN",
+        "item": "SORT_INDICATOR_SEMANTIC",
+        "detail": "排序方向指示符（↑↓ 作为 Secondary Direction Indicator 的语义与 glyph）无 Foundation 专用 Semantic Token；排序主表达强制为字段 + 方向语义文字；与 XYUI1-GAP-001（glyph registry）同家族；由后续 Token Source 阶段登记并裁决",
+        "occurrences": 4,
         "blocking": false
       }
     ]
