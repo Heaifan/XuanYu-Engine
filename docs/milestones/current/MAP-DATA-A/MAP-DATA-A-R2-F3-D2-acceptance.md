@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-D2 · Road Vertex Drag 真机验收
 
-状态：`IMPLEMENTED · AUTOMATED GATES PASS · READY FOR USER ACCEPTANCE`。实现基线：本轮 D2 提交；前置收口基线：`f2c8ed3`。
+状态：`CLOSED`；用户真机验收：`PASS`；实现基线：`5a07aba`；前置收口基线：`f2c8ed3`。
 
 | 序号 | 路径 | 输入 | 过程 | 输出 |
 |---|---|---|---|---|
@@ -13,4 +13,10 @@
 | D2-M07 | 区域编辑 → 道路 | 隐藏或锁定 Road | 尝试点击并拖动顶点 | 不进入拖动、不写 Dataset、不产生 History |
 | D2-M08 | 区域编辑 → 道路 → 保存/重载 | 已提交的 Road 顶点编辑 | 保存后重载地图 | 几何、顶点数量/顺序、Road ID、Dataset/Layer 归属保持 |
 
-自动证据：D2 专项 5/5；完整正式门禁通过后补录。自动测试不替代本清单的真机结论；通过后才可将 F3-D2 标记 `CLOSED`。
+自动证据：D2 专项 5/5；Core 339/339；World 1361/1361；WarCore 22/22；Solution Build 0 Warning / 0 Error；ARCH-A PASS；版本四处一致；`git diff --check` PASS。
+
+## 用户真机结论
+
+- D2-M01～D2-M08：`PASS`。
+- 结论：起点、中间点、终点均可拖动；Preview/Release、Esc、Undo/Redo、连续编辑、锁定/隐藏与 Save/Reload 行为通过。
+- `F3-D2 CLOSED`。后续不启动旧的 Road Snap 独立路线，转入 `F3-E Generic Geometry Editing & Snap`。

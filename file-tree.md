@@ -80,6 +80,8 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-acceptance.md` — Road Vertex Selection 真机 IPO 验收模板与门禁证据。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-F1-acceptance.md` — Road Draw → Select 状态切换定向复验清单。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D2-acceptance.md` — Road Vertex Drag 真机 IPO 验收清单。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E-plan.md` — 通用几何编辑与吸附框架路线及 E1～E5 拆分。
+- `docs/knowledge/decisions/generic-geometry-editing-contract.md` — 通用几何编辑、吸附、局部查询与拓扑边界决策。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md` — 项目治理、设计、里程碑或知识文档。

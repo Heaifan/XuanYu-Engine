@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query、R2-F3-B Region Vertex-to-Vertex Snap、R2-F3-C Region Vertex-to-Edge Snap、R2-F3-D1 Road Vertex Selection 与 D1-F1 Draw → Select Fix 均已 `CLOSED`；R2-F3-D2 Road Vertex Drag 已实现并等待真机验收，Road Snap `NOT STARTED`，R2 保持 OPEN。
+状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query、R2-F3-B Region Vertex-to-Vertex Snap、R2-F3-C Region Vertex-to-Edge Snap、R2-F3-D1 Road Vertex Selection、D1-F1 Draw → Select Fix 与 R2-F3-D2 Road Vertex Drag 均已 `CLOSED`；R2-F3-E Generic Geometry Editing & Snap 为 `NEXT`，F3-F Cross-Geometry Acceptance `NOT STARTED`，Topology Weld `NOT STARTED`，R2 保持 OPEN。
 
 ## 冻结目标
 

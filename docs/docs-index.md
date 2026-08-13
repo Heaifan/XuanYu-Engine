@@ -66,6 +66,7 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-acceptance.md`：Road Vertex Selection 真机 IPO 验收模板与门禁证据
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-F1-acceptance.md`：Road Draw → Select 状态切换定向复验清单
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D2-acceptance.md`：Road Vertex Drag 真机 IPO 验收清单
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E-plan.md`：通用几何编辑与吸附框架路线及 E1～E5 拆分
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

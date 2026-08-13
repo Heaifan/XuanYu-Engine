@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-D · Road Vertex Editing
 
-状态：`OPEN`；D1 与 D1-F1 已完成真机复验并 `CLOSED`，D2 为 `NEXT`，D3 尚未启动。
+状态：`CLOSED`；D1、D1-F1、D2 均已完成真机验收；后续转入 F3-E 通用几何编辑与吸附框架。
 
 ## D1 · Road Vertex Selection
 
@@ -34,12 +34,26 @@
 
 ## D2 · Road Vertex Drag
 
-状态：`IMPLEMENTED · AUTOMATED GATES PASS · READY FOR USER ACCEPTANCE`。实现基线：本轮提交；以 D1/D1-F1 收口提交 `f2c8ed3` 为功能基线。
+状态：`CLOSED`；用户真机验收：`PASS`。实现基线：`5a07aba`；前置 D1/D1-F1 收口基线：`f2c8ed3`。
 
 已实现：Road 起点/中间点/终点自由拖动；PointerDown → Preview → PointerReleased → Dataset Commit；Esc 取消；一次拖动一条 History；Undo/Redo；保持 Polyline 开放性、顶点数量/顺序及 Road/Dataset/Layer 身份。
 
-自动验证：D2 专项 5/5；完整正式门禁以本轮提交结果为准。真机验收见 `MAP-DATA-A-R2-F3-D2-acceptance.md`。
+自动验证：D2 专项 5/5；Core 339/339；World 1361/1361；WarCore 22/22；Solution Build 0W/0E；ARCH-A PASS。用户真机验收记录见 `MAP-DATA-A-R2-F3-D2-acceptance.md`。
 
-## D3 · Road Snap
+## F3-E · Generic Geometry Editing & Snap
 
-状态：`NOT STARTED`。仅在 D2 完成并通过验收后规划；不在 F3-D 偷渡 Region Snap 之外的新拓扑能力。
+状态：`NEXT`。不新增孤立的 Road Snap；先建立通用几何能力契约，再逐步收敛编辑生命周期、候选模型、吸附仲裁，最后由 Road 作为消费者验证。
+
+拆分：
+
+- E1：Geometry Capability Contract（Selectable / VertexEditable / Snappable / SnapTarget / GeometryKind），只做契约与 Region/Road 映射调查，不改交互。
+- E2：Generic Vertex Edit Lifecycle，统一 Begin/Preview/Commit/Cancel/History，保持 Region/Road 真机行为不变。
+- E3：Generic Snap Candidate，统一 Vertex/Segment 候选类型。
+- E4：Generic Snap Arbitration，统一 Vertex > Segment > Free、8px/12px、Target Lock、稳定决胜与 Source Feature 排除。
+- E5：Road Consumer，验证 Road 复用通用框架，不再开发 Road 专属 Solver。
+
+明确边界：Snap 只改变独立几何坐标，不建立共享拓扑；Topology Weld 继续独立且未启动。
+
+## F3-F · Cross-Geometry Acceptance
+
+状态：`NOT STARTED`。只验证 Region + Road 对通用编辑/吸附框架的复用结果，不新增第二套功能实现。

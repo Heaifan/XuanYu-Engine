@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.20-rz · MAP-DATA-A-R2-F3-D2 USER ACCEPTANCE CLOSEOUT
+MAP-DATA-A-R2-F3-D2（2026-08-13 14:09:46）：用户已明确 D2 真机验收通过；本轮仅收口 D2 并重规划后续通用几何能力，不修改功能代码。
+- 变化：F3-D2 正式标记 `CLOSED`；旧 Road Snap 路线取消；新增 `F3-E Generic Geometry Editing & Snap` 及 E1～E5 拆分；新增通用几何编辑契约 Knowledge。
+- 验证：沿用 D2 实现提交 `5a07aba` 的 Core 339/339、World 1361/1361、WarCore 22/22、Solution 0W0E、ARCH-A、版本四处与 diff-check 证据；本轮为 docs-only。
+- 状态：F3-D1、D1-F1、D2 `CLOSED`；F3-E `NEXT`；F3-F、Road Snap 独立路线与 Topology Weld `NOT STARTED`。
+- 遗留：下一轮只启动 E1 Capability Contract 调查与契约映射，不改交互；后续按 E2～E5 小步推进。
+- Hash：本条所在提交。
+
 ## v0.2.28.19-rz · MAP-DATA-A-R2-F3-D2 ROAD VERTEX DRAG
 MAP-DATA-A-R2-F3-D2（2026-08-13 13:36:10）：以 D1/D1-F1 收口基线 `f2c8ed3` 为基础，实现 Road 已有顶点自由拖动；本轮不实现任何 Road Snap、节点增删或拓扑能力。
 - 变化：Road Select 模式接入既有 `MapGeometryDrag` 管线；支持起点/中间点/终点 PointerDown、Preview、PointerReleased 提交、Esc 取消、Undo/Redo；Preview 不写 Dataset，释放后单次提交一条 History；保持开放 Polyline、顶点顺序及 Road/Layer 身份。
