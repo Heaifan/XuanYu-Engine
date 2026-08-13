@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.21-rz · MAP-DATA-A-R2-F3-E1 GEOMETRY CAPABILITY CONTRACT
+MAP-DATA-A-R2-F3-E1（2026-08-13 14:18:25）：基于 `5822bb3` 完成 Geometry Capability Contract、Region/Road 映射、Gap Report 与 E2 Decision；本轮不修改生产代码与交互。
+- 变化：定义 Point/Polyline/Polygon 与 Selectable/VertexEditable/Snappable/SnapTarget；确认 Geometry Source、Feature/Dataset Identity、Picking、Edit Lifecycle、History、Local Snap Candidate 来源；记录 Road 局部候选源缺口与 E2 边界。
+- 验证：只读调查；ARCH-A PASS；`git diff --check` PASS；版本四处一致；继承 D2 正式门禁 Core 339/339、World 1361/1361、WarCore 22/22、Solution 0W0E 证据；无生产代码变化，未重复运行功能门禁。
+- 状态：F3-E1 `CLOSED`；F3-E2 `NEXT`；E3/E4/E5 `BLOCKED`；F3-F 与 Topology Weld `NOT STARTED`。
+- 遗留：下一轮只允许启动 E2 Generic Vertex Edit Lifecycle；必须先保持 Region/Road 真机行为不变，再按 E2 Decision 小步抽取。
+- Hash：本条所在提交。
+
 ## v0.2.28.20-rz · MAP-DATA-A-R2-F3-D2 USER ACCEPTANCE CLOSEOUT
 MAP-DATA-A-R2-F3-D2（2026-08-13 14:09:46）：用户已明确 D2 真机验收通过；本轮仅收口 D2 并重规划后续通用几何能力，不修改功能代码。
 - 变化：F3-D2 正式标记 `CLOSED`；旧 Road Snap 路线取消；新增 `F3-E Generic Geometry Editing & Snap` 及 E1～E5 拆分；新增通用几何编辑契约 Knowledge。

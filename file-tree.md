@@ -82,6 +82,9 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D2-acceptance.md` — Road Vertex Drag 真机 IPO 验收清单。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E-plan.md` — 通用几何编辑与吸附框架路线及 E1～E5 拆分。
 - `docs/knowledge/decisions/generic-geometry-editing-contract.md` — 通用几何编辑、吸附、局部查询与拓扑边界决策。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-contract.md` — E1 Geometry Capability Contract 定义。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-mapping-gap-report.md` — E1 Region/Road 映射、数据链与 Gap Report。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-E2-decision.md` — E1 对 E2 的抽取范围与禁止越界决策。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md` — 项目治理、设计、里程碑或知识文档。

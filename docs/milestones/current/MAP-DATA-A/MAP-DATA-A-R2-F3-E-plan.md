@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-E · Generic Geometry Editing & Snap
 
-状态：`NEXT`。本阶段把 Region/Road 已经验证成功的可编辑几何行为提升为地图 Feature 默认契约；不新增孤立 Road Snap，不引入 Topology Weld。
+状态：`OPEN`；E1 已 `CLOSED`，E2 为 `NEXT`，E3/E4/E5 `BLOCKED`，等待后续小步启动。全阶段不新增孤立 Road Snap，不引入 Topology Weld。
 
 ## 默认能力契约
 
@@ -12,23 +12,23 @@
 
 ### E1 · Geometry Capability Contract
 
-只定义能力契约并调查 Region/Road 映射；暂不修改交互，不改变真机已通过行为。
+状态：`CLOSED`。产物：Capability Contract、Region/Road Mapping + Gap Report、E2 Decision。无生产代码变化。
 
 ### E2 · Generic Vertex Edit Lifecycle
 
-收敛 `Begin → Preview → Commit → Cancel → History` 共享机制；不同几何只提供顶点读取、顶点替换和合法性校验。
+状态：`NEXT`。收敛 `Begin → Preview → Commit → Cancel → History` 共享机制；不同几何只提供顶点读取、顶点替换和合法性校验。
 
 ### E3 · Generic Snap Candidate
 
-统一 `SnapVertexCandidate` 与 `SnapSegmentCandidate`；Source 与 Target 解耦，不创建 Region/Road/River 专属候选类型。
+状态：`BLOCKED`。依赖 E2 与 Road 局部候选源调查。
 
 ### E4 · Generic Snap Arbitration
 
-统一 Vertex > Segment > Free、Enter 8px、Release 12px、Target Lock、稳定 Tie Break 和 Source Feature Exclusion。候选必须来自局部空间查询，禁止 PointerMove 正式路径扫描全部 Feature。
+状态：`BLOCKED`。统一 Vertex > Segment > Free、Enter 8px、Release 12px、Target Lock、稳定 Tie Break 和 Source Feature Exclusion。候选必须来自局部空间查询，禁止 PointerMove 正式路径扫描全部 Feature。
 
 ### E5 · Road Consumer
 
-让 Road 作为首个通用框架消费者，验证 Road Vertex → Region/Road Vertex/Segment 的复用结果；不开发 Road 专属 Solver。
+状态：`BLOCKED`。让 Road 作为首个通用框架消费者，验证 Road Vertex → Region/Road Vertex/Segment 的复用结果；不开发 Road 专属 Solver。
 
 ## F3-F 边界
 

@@ -67,6 +67,9 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-F1-acceptance.md`：Road Draw → Select 状态切换定向复验清单
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D2-acceptance.md`：Road Vertex Drag 真机 IPO 验收清单
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E-plan.md`：通用几何编辑与吸附框架路线及 E1～E5 拆分
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-contract.md`：Geometry Capability Contract 定义
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-mapping-gap-report.md`：Region/Road 映射、数据链与 Gap Report
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-E2-decision.md`：E2 可抽取范围与禁止越界项
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 
