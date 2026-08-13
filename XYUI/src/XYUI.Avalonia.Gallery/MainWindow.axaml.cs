@@ -5,5 +5,8 @@ namespace XYUI.Avalonia.Gallery;
 
 public sealed partial class MainWindow : Window
 {
-    public MainWindow() => AvaloniaXamlLoader.Load(this);
+    public MainWindow()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
 }
