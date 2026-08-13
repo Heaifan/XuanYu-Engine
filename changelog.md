@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.15-rz · MAP-DATA-A-R2-F3-C REGION SNAP CLOSEOUT
+MAP-DATA-A-R2-F3-C（2026-08-13 11:07:40）：用户已完成 Region Snap 真机验收，本轮仅完成 F3-C 文档收口并冻结 F3-D Road Vertex Editing 入口；未修改功能代码。
+- 变化：F3-C3 真机验收记录为 PASS，F3-B Vertex Snap、F3-C1 Edge Snap Geometry、F3-C2 Drag Pipeline 与 Region Snap 总线正式 `CLOSED`；F3-D 标记为 `NEXT`，Road Snap 与 Topology Weld 继续未启动。
+- 验证：基线 `36ad9e5` 的 F3-C2 正式门禁证据保持有效；本轮为文档与版本标识同步，未改变运行时代码。
+- 状态：F3-C `CLOSED`；下一轮仅启动 `MAP-DATA-A-R2-F3-D1 · Road Vertex Selection`。
+- 遗留：D1 不包含 Road 拖动、Road Snap、拓扑焊接或新的 Road 数据源；验收记录见 `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-C3-acceptance.md`。
+- Hash：本条所在提交。
+
 ## v0.2.28.14-rz · MAP-DATA-A-R2-F3-C2 SNAP DRAG PIPELINE
 MAP-DATA-A-R2-F3-C2（2026-08-13 10:41:20）：在 F3-C1 CLOSED 后完成 Region Vertex-to-Edge Snap 拖拽管线接入；本轮不新增几何算法、不启动 F3-C3 真机验收、Road Snap 或 Topology Weld。
 - 变化：PointerMove 通过 F3-A 12px 局部 Region 查询，沿 Vertex > Edge > Free 仲裁；Edge 锁定 Segment 而非固定 Projection Point，12px 内沿边重投影，Vertex 8px 内可从 Edge 升级；Preview、Release、Dataset Commit、Esc、Undo/Redo 继续复用 F2 既有路径。

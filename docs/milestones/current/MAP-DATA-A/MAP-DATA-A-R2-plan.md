@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query、R2-F3-B Region Vertex-to-Vertex Snap 与 R2-F3-C1/C2 Region Vertex-to-Edge Snap 均已 `CLOSED`；R2-F3-C3 为 `NEXT`，完整 Geometry Snapping 尚未实现，R2 保持 OPEN。
+状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query、R2-F3-B Region Vertex-to-Vertex Snap 与 R2-F3-C Region Vertex-to-Edge Snap 均已 `CLOSED`；R2-F3-D Road Vertex Editing 为 `NEXT`，R2 保持 OPEN。
 
 ## 冻结目标
 

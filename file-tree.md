@@ -75,6 +75,8 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-acceptance.md` — Region 顶点吸附真机 IPO 验收清单与门禁证据。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-plan.md` — Region 顶点到顶点吸附范围、数据流与验收边界。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-C-plan.md` — Region 顶点到边吸附的 C1/C2/C3 冻结范围与阶段状态。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-C3-acceptance.md` — Region Snap 综合真机验收记录与 PASS 证据。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D-plan.md` — Road Vertex Editing D1/D2/D3 冻结范围与阶段边界。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md` — 项目治理、设计、里程碑或知识文档。

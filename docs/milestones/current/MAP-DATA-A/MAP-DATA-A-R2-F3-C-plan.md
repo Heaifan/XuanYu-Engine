@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-C · Region Vertex-to-Edge Snap
 
-状态：`OPEN`；F3-B 已 CLOSED；F3-C1 已 CLOSED；F3-C2 已 CLOSED，F3-C3 为 `NEXT`。
+状态：`CLOSED`；F3-B、F3-C1、F3-C2、F3-C3 均已完成，Region Snap 线正式关闭。
 
 ## 冻结目标
 
@@ -27,7 +27,7 @@
 
 ## C3 · Formal Gate + User Acceptance
 
-状态：`NEXT`。C3 仅负责综合门禁与真机体验验收准备；不在 C3 偷渡功能开发。Road Snap 与 Topology Weld 仍未启动。
+状态：`CLOSED`（用户真机验收，2026-08-13）。Vertex Snap、Edge Snap、Vertex → Edge、Edge → Vertex 与 Region stitching 均 PASS；验收记录见 `MAP-DATA-A-R2-F3-C3-acceptance.md`。Road Snap 与 Topology Weld 仍未启动。
 
 ## 明确不做
 
