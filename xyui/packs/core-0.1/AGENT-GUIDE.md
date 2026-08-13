@@ -55,14 +55,22 @@ XYUI-6 Data&Coll      ✅ CLOSED 20/20（List/Table/DataGrid/PropertyGrid/Hierar
                         Filtering/Grouping/ExpandableRow/InlineEditing/BulkOperations/
                         CollectionState/VirtualizedCollection；
                         1 项 GAP 见 gaps.json；A 类冲突 0；第二真值 0；Broken Ref 0）
-XYUI-8 Visualization  ✅ canonical 16/16（VisualizationContainer/Metric/MetricGroup/ProgressRange/
+XYUI-7 Overlay&Window  ✅ canonical 16/16（Dialog/Popover/Tooltip/ContextMenu/Toast/Drawer/Window/
+                        Docking&WindowManagement/Lightbox&FullscreenPreview/CommandPalette/
+                        NotificationCenter/ProgressOverlay&TaskMonitor/Spotlight&Coachmark/
+                        Drag&DropOverlay/FileDialog&ResourcePicker/OverlayStack&FocusManagement；
+                        关键裁定：菜单结构 REF XYUI-3 3.03、命令搜索 REF XYUI-3 3.18、
+                        布局拓扑 REF XYUI-5 5.12/5.04、Overlay 层级映射 Foundation 五 Host；
+                        1 项 GAP 见 gaps.json；A 类冲突 0；第二真值 0；Broken Ref 0；
+                        待用户验收）
+XYUI-8 Visualization  ✅ CLOSED 16/16（VisualizationContainer/Metric/MetricGroup/ProgressRange/
                         Sparkline/LineChart/AreaChart/BarChart/DistributionChart/ScatterPlot/
                         Heatmap/Timeline/Gauge/Legend/ChartInspector/VisualizationInteraction；
                         交互合同 = Direct Manipulation + Compact Interaction Bar + Responsive Interaction，
                         Contextual Interaction 仅低频辅助；移动端禁依赖 Hover；
                         1 项 GAP 见 gaps.json；A 类冲突 0；第二真值 0；Broken Ref 0）
 
-Pack Status: READY_FOR_XYLAB_PILOT（0~6 全部 CLOSED + 8 canonical 完成待验收）
+Pack Status: READY_FOR_XYLAB_PILOT（0~6 + 8 全部 CLOSED + 7 canonical 完成待验收）
 ```
 
 ## 6. 已知 GAP
@@ -78,6 +86,7 @@ XYUI4-GAP-002  FOCUS_RING_OFFSET（4.04）
 XYUI4-GAP-003  MARQUEE_LASSO_FILL_OPACITY（4.07/4.08，需裁定）
 XYUI4-GAP-004  CONDITIONAL_DROP_SEMANTIC（4.12）
 XYUI6-GAP-001  SORT_INDICATOR_SEMANTIC（排序方向指示符；与 XYUI1-GAP-001 同家族）
+XYUI7-GAP-001  WINDOW_CHROME_METRIC（Window chrome 尺寸档：标题栏高度/边框/Resize Handle 命中区；与 XYUI1-GAP-001/XYUI3-GAP-001 同家族）
 XYUI8-GAP-001  CHART_SERIES_PALETTE（Series 色板 + Heatmap 低→高色阶；与 XYUI1-GAP-001 同家族）
 ```
 

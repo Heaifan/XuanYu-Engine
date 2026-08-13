@@ -72,7 +72,7 @@
       "mapping": "xyui/specs/XYUI5/XYUI-5.mapping.json",
       "gaps": "xyui/specs/XYUI5/XYUI-5.gaps.json",
       "source": "xyui/source/XYUI5/XYUI-5.md",
-      "source_bytes": 252543,
+      "source_bytes": 252471,
       "source_sha256": "45734e3f4d305e173983f09d6348405d81ec5c97ff8cabe68bb77c641434c523",
       "canonical_sha256": "c38c5081897388315db843a8933ef532cc35e83c053e353b1f98ecf911e60143",
       "reconciled_commit": "9345728"
@@ -89,9 +89,21 @@
       "canonical_sha256": "0b54ccd49cf0e53b54b6142244d0d9e65ed452b4b28b3a1dcb8b6c4364beb7f4",
       "reconciled_commit": "f7925236"
     },
-    "XYUI-8": {
+    "XYUI-7": {
       "available": true,
       "status": "CANONICAL_COMPLETE",
+      "canonical_spec": "xyui/specs/XYUI7/XYUI-7.canonical.md",
+      "mapping": "xyui/specs/XYUI7/XYUI-7.mapping.json",
+      "gaps": "xyui/specs/XYUI7/XYUI-7.gaps.json",
+      "source": "xyui/source/XYUI7/XYUI-7.md",
+      "source_bytes": 141652,
+      "source_sha256": "8fb6be6cf096b248779cd2d7f79e49f32effd323d7b8f8f32d0c869c59e5040e",
+      "canonical_sha256": "03698f993a1098f9205ac4232705b8b63d0c44b7e4b161bad95863bf24e4c005",
+      "reconciled_commit": "e66b0cdf"
+    },
+    "XYUI-8": {
+      "available": true,
+      "status": "CLOSED",
       "canonical_spec": "xyui/specs/XYUI8/XYUI-8.canonical.md",
       "mapping": "xyui/specs/XYUI8/XYUI-8.mapping.json",
       "gaps": "xyui/specs/XYUI8/XYUI-8.gaps.json",
@@ -169,6 +181,12 @@
       "blocking": false
     },
     {
+      "gap_id": "XYUI7-GAP-001",
+      "type": "MISSING_TOKEN",
+      "scope": "WINDOW_CHROME_METRIC（Window chrome 尺寸档：标题栏高度/边框/Resize Handle 命中区；与 XYUI1-GAP-001/XYUI3-GAP-001 同属视觉体系缺口家族）",
+      "blocking": false
+    },
+    {
       "gap_id": "XYUI8-GAP-001",
       "type": "MISSING_TOKEN",
       "scope": "CHART_SERIES_PALETTE（多系列图表 Series 色板 + Heatmap 低→高色阶；与 XYUI1-GAP-001 同家族）",
@@ -195,6 +213,9 @@
     "xyui/specs/XYUI6/XYUI-6.canonical.md",
     "xyui/specs/XYUI6/XYUI-6.mapping.json",
     "xyui/specs/XYUI6/XYUI-6.gaps.json",
+    "xyui/specs/XYUI7/XYUI-7.canonical.md",
+    "xyui/specs/XYUI7/XYUI-7.mapping.json",
+    "xyui/specs/XYUI7/XYUI-7.gaps.json",
     "xyui/specs/XYUI8/XYUI-8.canonical.md",
     "xyui/specs/XYUI8/XYUI-8.mapping.json",
     "xyui/specs/XYUI8/XYUI-8.gaps.json"
@@ -202,7 +223,7 @@
   "forbidden": [
     "A3-R3 Light/Dark Token Source（本任务暂停）",
     "Avalonia AXAML / C# 生成",
-    "XYUI-7/9",
+    "XYUI-9（不在本包范围）",
     "XuanYu / XYLab 业务实现",
     "修改 A2 Registry / A3-R2 Canonical Architecture"
   ]

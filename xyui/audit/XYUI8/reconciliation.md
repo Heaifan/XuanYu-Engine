@@ -1,6 +1,6 @@
 # XYUI-8 Reconciliation & Closeout / 全量对账收口
 
-- 状态：`XYUI-8 · RECONCILED · READY FOR USER ACCEPTANCE`
+- 状态：`XYUI-8 · CLOSED（用户最终验收 2026-08-13；Pack/Manifest/README/AGENT-GUIDE 同步）`
 - 阶段：`XYUI-PILOT-R8 · FAST-CLOSE ONE ROUND`
 - Source：`xyui/source/XYUI8/XYUI-8.md`（IMMUTABLE，SHA `4a5a36cc…`，115,342 bytes，3,765 行）
 - Source provenance（如实声明）：本轮指令消息内附件全文落盘（桌面应用未将附件落盘到磁盘附件目录，无原始磁盘文件 SHA；用户重发附件后可做字节级 SHA 复核，无需重做管线）
@@ -123,8 +123,8 @@ XYUI-8 · Visualization
     A-CLASS 0
     SECOND TRUTH 0
     BROKEN REF 0
-    → READY FOR USER ACCEPTANCE
+    → CLOSED（用户最终验收 2026-08-13；XYUI-PILOT-R7 轮同步）
 ```
 
-唯一未 CLOSED 原因：`XYUI-A-plan.md` 明文规定该阶段须用户最终裁定才能 CLOSED（不得伪造用户验收）。
+CLOSED 依据：用户正式验收（「可以判定 XYUI-8 正式 CLOSED」）；Source 非原始附件字节锚定不阻塞 CLOSED（provenance 已记录，Source 保留为不可变证据；重发原文件只做 SHA 复核，不重跑 canonical 管线）。
 附：Blender 式工作区拆分/多视口内容不在本 Source；视口操作交互合同已按职责归 8-16（视图变换机制 REF XYUI-5 5.16），若未来出现工作区拆分布局，职责归 XYUI-5 WorkspaceLayout（5.12），不在可视化层重建。
