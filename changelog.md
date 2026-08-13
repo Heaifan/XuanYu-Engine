@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.17-rz · MAP-DATA-A-R2-F3-D1-F1 ROAD DRAW SELECT STATE FIX
+MAP-DATA-A-R2-F3-D1-F1（2026-08-13 12:13:40）：D1 真机验收发现完成道路后仍可进入新 Road 绘制；本轮仅修复 Road Draw → Select 状态切换，不启动 D2。
+- 变化：完成 Road 后清理 Draft、显式切回“选择”、自动选中新 Road 并显示全部顶点；Select + Road Authoring 下 PointerDown 只执行 Picking/清选，不创建新 Draft；第二条 Road 必须再次点击“绘制道路”。
+- 验证：F1 输入状态专项 6/6；Core.Tests 339/339；World.Tests 1356/1356；WarCore.Tests 22/22；Solution 串行 Build 0 Warning/0 Error；ARCH-A PASS；43 个 AXAML XML PASS；版本四处一致；`git diff --check` PASS。
+- 状态：D1 保持 `OPEN`；F1 为 `READY FOR USER RE-ACCEPTANCE`；D2 `BLOCKED`；Road Snap `NOT STARTED`。
+- 遗留：只需复验 Road 完成后退出绘制、自动选中、Select 空地不创建、再次显式绘制第二条 Road；验收模板见 `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-F1-acceptance.md`。
+- Hash：本条所在提交。
+
 ## v0.2.28.16-rz · MAP-DATA-A-R2-F3-D1 ROAD VERTEX SELECTION
 MAP-DATA-A-R2-F3-D1（2026-08-13 11:28:59）：在 F3-C Region Snap CLOSED 后完成 Road Vertex Selection 最小实现；本轮不启动 Road 拖动、Road Snap 或 Topology Weld。
 - 变化：Road 复用当前 Dataset-backed Polyline；可选中 Road 并投影全部 Dataset 顶点，点击顶点记录正确索引；切换 Road/Region 模式清理旧选择；隐藏或锁定 Road 不能进入选择/编辑路径；未新增 Road 数据源或保存合同。

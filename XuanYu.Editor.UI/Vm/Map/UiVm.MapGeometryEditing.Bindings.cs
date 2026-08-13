@@ -1,3 +1,5 @@
+using XuanYu.Editor.MapEditing;
+
 namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
@@ -13,5 +15,11 @@ public sealed partial class UiVm
     {
         OnPropertyChanged(nameof(SelectedMapGeometryText)); OnPropertyChanged(nameof(IsMapGeometryDragActive));
         OnPropertyChanged(nameof(SelectedMapGeometryVertexIndex));
+    }
+
+    void SelectMapGeometry(MapGeometrySelection selection)
+    {
+        _selectedMapGeometry = selection; _selectedMapGeometryVertexIndex = -1;
+        _mapGeometryPreview = DisplayGeometry(); RaiseMapGeometryBindings(); PublishSceneRenderSnapshot();
     }
 }

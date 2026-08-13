@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-D1 · Road Vertex Selection 真机验收
 
-状态：`PENDING USER ACCEPTANCE`；自动门禁基线：`本轮实现提交`；验收方式：用户真机验收。
+状态：`FAILED USER ACCEPTANCE`；失败日期：2026-08-13；自动门禁基线：`3078f07`；验收方式：用户真机验收。
 
 | 序号 | 路径 | 输入 | 过程 | 输出 |
 |---|---|---|---|---|
@@ -13,4 +13,4 @@
 | D1-M07 | 地图编辑 → 区域编辑 → 道路 | 锁定 Road | 尝试点击 Road 或其顶点 | 不可选中、不可进入顶点编辑状态 |
 | D1-M08 | 地图编辑 → 区域编辑 → 道路 | 已选 Road | 观察 PointerDown/Move/Up | 本轮只选择，不执行 Road 拖动或数据写回 |
 
-自动证据：D1 专项 8/8；Core 339/339；World 1350/1350；WarCore 22/22；Solution Build 0 Warning/0 Error；ARCH-A PASS。自动通过不等于 `CLOSED`，验收完成后再决定是否启动 D2。
+自动证据：D1 专项 8/8；Core 339/339；World 1350/1350；WarCore 22/22；Solution Build 0 Warning/0 Error；ARCH-A PASS。用户真机已判定 FAIL；D1-F1 定向复验通过前不得启动 D2。
