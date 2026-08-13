@@ -19,6 +19,8 @@ public sealed partial class VulkanNativeHost
         {
             e.Pointer.Capture(this); e.Handled = true; return;
         }
+        if (vm.TrySelectMapGeometryVertex(point.Position.X, point.Position.Y, CaptureViewportState()))
+        { e.Handled = true; return; }
         if (ReportDrawing(vm, point.Position.X, point.Position.Y))
         {
             e.Handled = true; return;

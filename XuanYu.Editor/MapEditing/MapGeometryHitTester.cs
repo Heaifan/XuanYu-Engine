@@ -9,7 +9,7 @@ public static class MapGeometryHitTester
         double x, double y, double height, out MapGeometryHit hit)
     {
         foreach (var road in map.Roads.IsDefault ? [] : map.Roads)
-            if (TryRoad(road, projection, x, y, height, out hit)) return true;
+            if (IsEditable(map, road) && TryRoad(road, projection, x, y, height, out hit)) return true;
         foreach (var region in map.Regions)
             if (TryRegion(region, projection, x, y, height, out hit)) return true;
         hit = default;
@@ -19,6 +19,9 @@ public static class MapGeometryHitTester
     public static bool TryHitVertex(MapDefinition map, MapGeometrySelection selection,
         ViewProjectionState projection, double x, double y, double radius, double height, out int index)
     {
+        if (selection.Kind == MapGeometryFeatureKind.Road &&
+            !map.Roads.Any(road => road.RoadId.ToString() == selection.FeatureId && IsEditable(map, road)))
+        { index = -1; return false; }
         var points = selection.Kind == MapGeometryFeatureKind.Region
             ? map.Regions.FirstOrDefault(r => r.RegionId.ToString() == selection.FeatureId)?.Vertices ?? []
             : map.Roads.FirstOrDefault(r => r.RoadId.ToString() == selection.FeatureId)?.Points ?? [];
@@ -55,6 +58,14 @@ public static class MapGeometryHitTester
         hit = new(new(MapGeometryFeatureKind.Region, region.RegionId.ToString()), -1, inside ? 0 : double.MaxValue);
         return inside;
     }
+
+    public static bool IsEditable(MapDefinition map, MapRoad road) => road.IsVisible && !road.IsLocked &&
+        MapLayerRules.Find(map.Layers, road.LayerId) is { IsVisible: true, IsLocked: false };
+
+    public static bool IsEditable(MapDefinition map, MapGeometrySelection selection) =>
+        selection.Kind == MapGeometryFeatureKind.Road &&
+        map.Roads.FirstOrDefault(road => road.RoadId.ToString() == selection.FeatureId) is { } road &&
+        IsEditable(map, road);
 
     static bool Inside(IEnumerable<(double X, double Y)> source, double x, double y)
     {

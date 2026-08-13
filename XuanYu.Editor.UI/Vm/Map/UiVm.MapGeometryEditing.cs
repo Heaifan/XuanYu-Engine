@@ -7,6 +7,7 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     MapGeometrySelection? _selectedMapGeometry;
+    int _selectedMapGeometryVertexIndex = -1;
     MapGeometryDrag? _mapGeometryDrag;
     MapGeometryPreview? _mapGeometryPreview;
     readonly RegionSnapState _regionVertexSnap = new();
@@ -15,13 +16,14 @@ public sealed partial class UiVm
     public string SelectedMapGeometryText => _selectedMapGeometry is not { } selection ? "未选择几何" :
         selection.Kind == MapGeometryFeatureKind.Region ? "已选择区域" : "已选择道路";
     public MapGeometryPreview? MapGeometryPreview => _mapGeometryPreview;
+    public int SelectedMapGeometryVertexIndex => _selectedMapGeometryVertexIndex;
 
     public bool TryBeginMapGeometryPointer(double x, double y, ViewportState viewport)
     {
         if (!IsRegionEditMode || !IsSelectTool || IsRegionDrawingDraftActive || IsRoadDrawingDraftActive ||
             !IsInsideViewport(x, y, viewport)) return false;
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        if (_selectedMapGeometry is { } selected && MapGeometryHitTester.TryHitVertex(
+        if (_selectedMapGeometry is { Kind: MapGeometryFeatureKind.Region } selected && MapGeometryHitTester.TryHitVertex(
                 MapSession.CurrentMap, selected, projection, x, y, 10, MapSession.CurrentMap.Surface.BaseHeightMeters, out var index))
         {
             var points = GeometryPoints(selected);
@@ -39,7 +41,13 @@ public sealed partial class UiVm
             ClearMapGeometrySelection();
             return false;
         }
+        if (IsRoadAuthoringMode && hit.Selection.Kind != MapGeometryFeatureKind.Road)
+        {
+            ClearMapGeometrySelection();
+            return false;
+        }
         _selectedMapGeometry = hit.Selection;
+        _selectedMapGeometryVertexIndex = -1;
         _mapGeometryPreview = new(hit.Selection, GeometryPoints(hit.Selection));
         RaiseMapGeometryBindings();
         PublishSceneRenderSnapshot();
@@ -87,14 +95,4 @@ public sealed partial class UiVm
         return true;
     }
 
-    void ClearMapGeometrySelection()
-    {
-        if (_selectedMapGeometry is null) return;
-        _selectedMapGeometry = null; RaiseMapGeometryBindings(); PublishSceneRenderSnapshot();
-    }
-
-    void RaiseMapGeometryBindings()
-    {
-        OnPropertyChanged(nameof(SelectedMapGeometryText)); OnPropertyChanged(nameof(IsMapGeometryDragActive));
-    }
 }

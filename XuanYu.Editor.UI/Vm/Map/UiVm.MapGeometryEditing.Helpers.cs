@@ -34,9 +34,13 @@ public sealed partial class UiVm
         var map = MapSession.CurrentMap; var height = map.Surface.BaseHeightMeters;
         if (_selectedMapGeometry is { } selected && MapGeometryHitTester.TryHitVertex(
                 map, selected, projection, x, y, 10, height, out index)) { selection = selected; return true; }
-        foreach (var region in map.Regions)
+        var features = IsRoadAuthoringMode
+            ? map.Roads.Where(road => MapGeometryHitTester.IsEditable(map, road))
+                .Select(road => new MapGeometrySelection(MapGeometryFeatureKind.Road, road.RoadId.ToString()))
+            : map.Regions.Select(region => new MapGeometrySelection(MapGeometryFeatureKind.Region, region.RegionId.ToString()));
+        foreach (var feature in features)
         {
-            selection = new(MapGeometryFeatureKind.Region, region.RegionId.ToString());
+            selection = feature;
             if (MapGeometryHitTester.TryHitVertex(map, selection, projection, x, y, 10, height, out index)) return true;
         }
         selection = default; index = -1; return false;
@@ -55,10 +59,12 @@ public sealed partial class UiVm
         if (_selectedMapGeometry is not { } selection) return;
         var exists = selection.Kind == MapGeometryFeatureKind.Region
             ? MapSession.CurrentMap.Regions.Any(r => r.RegionId.ToString() == selection.FeatureId)
-            : MapSession.CurrentMap.Roads.Any(r => r.RoadId.ToString() == selection.FeatureId);
+            : MapSession.CurrentMap.Roads.Any(r => r.RoadId.ToString() == selection.FeatureId) &&
+                MapGeometryHitTester.IsEditable(MapSession.CurrentMap, selection);
         if (!exists)
         {
-            _selectedMapGeometry = null; _mapGeometryPreview = null; RaiseMapGeometryBindings(); return;
+            _selectedMapGeometry = null; _selectedMapGeometryVertexIndex = -1; _mapGeometryPreview = null;
+            RaiseMapGeometryBindings(); return;
         }
         _mapGeometryPreview = DisplayGeometry();
     }

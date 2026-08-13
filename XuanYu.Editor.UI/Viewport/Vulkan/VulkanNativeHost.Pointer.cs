@@ -35,6 +35,7 @@ public sealed partial class VulkanNativeHost
             {
                 _mapGeometryDragActive = true; return;
             }
+            if (vm.TrySelectMapGeometryVertex(x, y, CaptureViewportState())) { ReleaseExpectedCapture(); return; }
             if (ReportDrawing(vm, x, y)) { ReleaseExpectedCapture(); return; }
             if (vm.TryBeginMapGeometryPointer(x, y, CaptureViewportState()))
             {

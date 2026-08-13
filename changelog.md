@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.16-rz · MAP-DATA-A-R2-F3-D1 ROAD VERTEX SELECTION
+MAP-DATA-A-R2-F3-D1（2026-08-13 11:28:59）：在 F3-C Region Snap CLOSED 后完成 Road Vertex Selection 最小实现；本轮不启动 Road 拖动、Road Snap 或 Topology Weld。
+- 变化：Road 复用当前 Dataset-backed Polyline；可选中 Road 并投影全部 Dataset 顶点，点击顶点记录正确索引；切换 Road/Region 模式清理旧选择；隐藏或锁定 Road 不能进入选择/编辑路径；未新增 Road 数据源或保存合同。
+- 验证：D1 专项 8/8；Core.Tests 339/339；World.Tests 1350/1350；WarCore.Tests 22/22；Solution 串行 Build 0 Warning/0 Error；ARCH-A PASS；43 个 AXAML XML PASS；版本四处一致；`git diff --check` PASS。
+- 状态：F3-D1 `READY FOR USER ACCEPTANCE`；D2 Road Vertex Drag、D3 Road Snap 均为 `NOT STARTED`。
+- 遗留：等待真机验收；未验收前不得启动 D2、Road Snap 或 Topology Weld。验收模板见 `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-acceptance.md`。
+- Hash：本条所在提交。
+
 ## v0.2.28.15-rz · MAP-DATA-A-R2-F3-C REGION SNAP CLOSEOUT
 MAP-DATA-A-R2-F3-C（2026-08-13 11:07:40）：用户已完成 Region Snap 真机验收，本轮仅完成 F3-C 文档收口并冻结 F3-D Road Vertex Editing 入口；未修改功能代码。
 - 变化：F3-C3 真机验收记录为 PASS，F3-B Vertex Snap、F3-C1 Edge Snap Geometry、F3-C2 Drag Pipeline 与 Region Snap 总线正式 `CLOSED`；F3-D 标记为 `NEXT`，Road Snap 与 Topology Weld 继续未启动。
