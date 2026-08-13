@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-D1-F1 · Road Draw → Select 定向复验
 
-状态：`PENDING USER RE-ACCEPTANCE`；自动门禁基线：`F1 实现提交`；本轮不验收 Road Drag/D2。
+状态：`CLOSED`；用户真机复验：`PASS`；实现基线：`4329376`；本轮不验收 Road Drag/D2。
 
 | 序号 | 路径 | 输入 | 过程 | 输出 |
 |---|---|---|---|---|
@@ -11,4 +11,10 @@
 | F1-M05 | 区域编辑 → 道路 → 选择 | 已完成 Road | 连续点击空地两次 | Road 数量不增加，仍不进入绘制态 |
 | F1-M06 | 区域编辑 → 道路 | 已完成 Road A | 再次明确点击“绘制道路”，完成 Road B | 仅此时创建第二条 Road，完成后再次回到选择 |
 
-自动证据：F1 专项 6/6；Core 339/339；World 1356/1356；WarCore 22/22；Solution Build 0 Warning / 0 Error；ARCH-A PASS。通过后 D1 才能重新评估关闭，D2 之前保持 BLOCKED。
+自动证据：F1 专项 6/6；Core 339/339；World 1356/1356；WarCore 22/22；Solution Build 0 Warning / 0 Error；ARCH-A PASS。
+
+## 用户真机复验结论
+
+- 复验范围：F1-M01～F1-M06。
+- 结论：`PASS`。完成 Road 后正确退出 Drawing、自动回到 Select、自动选中新 Road；Select 空地不创建新 Road；再次创建第二条 Road 必须重新点击“绘制道路”。
+- 结果：`F3-D1-F1 CLOSED`；同步关闭 `F3-D1`；`F3-D2 NEXT`。

@@ -1,10 +1,10 @@
 # MAP-DATA-A-R2-F3-D · Road Vertex Editing
 
-状态：`OPEN`；D1 真机验收 FAIL，F1 修复已通过自动门禁，当前等待 F1 定向真机复验。D2 为 `BLOCKED`，D3 尚未启动。
+状态：`OPEN`；D1 与 D1-F1 已完成真机复验并 `CLOSED`，D2 为 `NEXT`，D3 尚未启动。
 
 ## D1 · Road Vertex Selection
 
-状态：`OPEN`；原 D1 真机验收 FAIL，当前进入 `D1-F1 · Road Draw → Select State Fix`，等待定向复验。
+状态：`CLOSED`；原 D1 真机验收失败已由 D1-F1 修复并通过用户真机复验。
 
 冻结目标：复用当前 Dataset-backed Road/Polyline 数据源，完成 Road feature 选择与顶点选择状态投影，不新增 Road 数据模型、序列化字段或几何算法。
 
@@ -21,7 +21,7 @@
 
 ## D1-F1 · Road Draw → Select State Fix
 
-状态：`READY FOR USER RE-ACCEPTANCE`。
+状态：`CLOSED`；用户真机定向复验：`PASS`。实现基线：`4329376`。
 
 - 完成 Road 后清理 Draft，明确切回 `选择` 工具。
 - 新建 Road 使用明确 ID，自动成为当前选择并显示全部顶点。
@@ -34,7 +34,7 @@
 
 ## D2 · Road Vertex Drag
 
-状态：`BLOCKED`。仅在 D1-F1 定向真机复验通过后启动；负责 Preview → Release → Dataset Commit、Esc 取消、Undo/Redo 与现有 Road 几何校验。
+状态：`NEXT`。以 D1/D1-F1 docs-only 收口提交为基线启动；负责 Preview → Release → Dataset Commit、Esc 取消、Undo/Redo 与现有 Road 几何校验。
 
 ## D3 · Road Snap
 

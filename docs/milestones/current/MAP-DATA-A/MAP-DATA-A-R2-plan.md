@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query、R2-F3-B Region Vertex-to-Vertex Snap 与 R2-F3-C Region Vertex-to-Edge Snap 均已 `CLOSED`；R2-F3-D1 Road Vertex Selection 真机验收 FAIL，D1-F1 等待定向复验，D2 `BLOCKED`，Road Snap `NOT STARTED`，R2 保持 OPEN。
+状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query、R2-F3-B Region Vertex-to-Vertex Snap、R2-F3-C Region Vertex-to-Edge Snap、R2-F3-D1 Road Vertex Selection 与 D1-F1 Draw → Select Fix 均已 `CLOSED`；R2-F3-D2 Road Vertex Drag 为 `NEXT`，Road Snap `NOT STARTED`，R2 保持 OPEN。
 
 ## 冻结目标
 

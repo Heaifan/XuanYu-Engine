@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.18-rz · MAP-DATA-A-R2-F3-D1 DOCS-ONLY CLOSEOUT
+MAP-DATA-A-R2-F3-D1-F1（2026-08-13 13:25:43）：用户已完成 D1-F1 真机复验并明确通过；本轮仅收口 D1/D1-F1 文档，不修改功能代码。
+- 变化：记录实现基线 `4329376` 的用户真机复验 PASS；F3-D1-F1 与 F3-D1 正式标记 `CLOSED`；F3-D2 改为 `NEXT`。
+- 验证：文档一致性与 `git diff --check`；未运行功能门禁，因为本轮不修改代码。
+- 状态：F3-D1-F1 `CLOSED`；F3-D1 `CLOSED`；F3-D2 `NEXT`；Road Snap 与 Topology Weld `NOT STARTED`。
+- 遗留：下一轮以本收口提交为基线启动 `MAP-DATA-A-R2-F3-D2 · Road Vertex Drag`；严格限制为已有 Road 顶点自由拖动、Preview/Release/Dataset Commit、Esc、Undo/Redo。
+- Hash：本条所在提交。
+
 ## v0.2.28.17-rz · MAP-DATA-A-R2-F3-D1-F1 ROAD DRAW SELECT STATE FIX
 MAP-DATA-A-R2-F3-D1-F1（2026-08-13 12:13:40）：D1 真机验收发现完成道路后仍可进入新 Road 绘制；本轮仅修复 Road Draw → Select 状态切换，不启动 D2。
 - 变化：完成 Road 后清理 Draft、显式切回“选择”、自动选中新 Road 并显示全部顶点；Select + Road Authoring 下 PointerDown 只执行 Picking/清选，不创建新 Draft；第二条 Road 必须再次点击“绘制道路”。
