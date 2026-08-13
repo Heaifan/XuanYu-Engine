@@ -5,7 +5,7 @@
 - 目标：启动 XYUI.Avalonia Foundation + Gallery，不进入 R2 组件扩展。
 - 变化：新增可引用的 XYUI.Avalonia、Gallery、Tests 项目；落地 Light/Dark 主题入口、颜色/间距/圆角/控件高度 Token、Density/ThemeVariant 契约和 Foundation Gallery 页面。
 - 验证：Gallery 构建 0 警告/0 错误；XYUI Tests 2/2 PASS；`git diff --check` PASS。
-- Hash：待提交。
+- Hash：`bc70a0fe`。
 - 遗留：解决方案完整构建仍受既有依赖缓存/还原环境影响；Gallery 真机启动与截图待用户验收。
 
 ## 归档规则
