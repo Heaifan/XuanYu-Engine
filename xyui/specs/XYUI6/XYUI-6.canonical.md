@@ -1372,4 +1372,3 @@
         - 禁止建立 DataVirtualizationEngine 第二套布局基础设施（机制 REF 5.14）/ 状态绑定 Visual Index 或 Visual Row 实例
         - 禁止 Row Recycling 丢失 Selection/Expansion/Editing/Active Cell / 一条变化重建整个 Collection / 滚动时全集合 O(N) 扫描
         - 禁止新数据/动态高度/展开变化无故破坏当前阅读位置 / 伪造精确总量 / 缓存显示错误对象的旧缓存 / 局部数据失败清空整个虚拟集合
-

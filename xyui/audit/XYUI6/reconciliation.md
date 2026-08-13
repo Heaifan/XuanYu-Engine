@@ -132,4 +132,3 @@ XYUI-5 canonical_sha256  f54ae93b… → c38c5081…（旧 pin 与 blob/CRLF 均
 - 修正原则：manifest 固定的 SHA 一律以已提交 blob（`git show HEAD:<path> | sha256sum`）为真值，与工作区行尾无关（本机 autocrlf=true 检出为 CRLF）。
 - 同时补齐 pack `gaps.json` 缺失的 XYUI4 四项（total 5→10，与 manifest known_gaps 10 项对齐）；AGENT-GUIDE 补齐遗漏的 XYUI3-GAP-001。
 - registry / architecture / 全部 source SHA 与 blob 一致，无需修正。
-
