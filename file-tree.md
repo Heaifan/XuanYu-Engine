@@ -74,6 +74,7 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-A-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-acceptance.md` — Region 顶点吸附真机 IPO 验收清单与门禁证据。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-plan.md` — Region 顶点到顶点吸附范围、数据流与验收边界。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-C-plan.md` — Region 顶点到边吸附的 C1/C2/C3 冻结范围与阶段状态。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
@@ -656,6 +657,12 @@
 - `XuanYu.Editor/MapEditing/MapSelectionKind.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/MapEditing/MapSurfacePicker.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/MapEditing/RegionDrawingState.cs` — C# 类型、服务或测试实现。
+- `XuanYu.Editor/MapEditing/RegionEdgeSnapGeometry.cs` — Region 顶点到边吸附的纯几何投影与零长度边安全处理。
+- `XuanYu.Editor/MapEditing/RegionEdgeSnapRegion.cs` — Region 顶点到边吸附的候选区域几何容器。
+- `XuanYu.Editor/MapEditing/RegionEdgeSnapResolver.cs` — Region 顶点到边吸附的 Vertex 优先、Edge 决胜与自身排除算法。
+- `XuanYu.Editor/MapEditing/RegionEdgeSnapResult.cs` — Region 顶点到边吸附的纯算法结果合同。
+- `XuanYu.Editor/MapEditing/RegionEdgeSnapSettings.cs` — Region 顶点到边吸附的进入/释放半径合同。
+- `XuanYu.Editor/MapEditing/RegionEdgeSnapVertex.cs` — Region 顶点到边吸附的世界点与屏幕点候选。
 - `XuanYu.Editor/MapEditing/RegionSpatialBounds.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.Editor/MapEditing/RegionSpatialIndex.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.Editor/MapEditing/RegionSpatialNode.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
@@ -667,6 +674,7 @@
 - `XuanYu.Editor/MapEditing/RegionVertexSnapResult.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
 - `XuanYu.Editor/MapEditing/RegionVertexSnapSettings.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
 - `XuanYu.Editor/MapEditing/RegionVertexSnapState.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
+- `XuanYu.Editor/MapEditing/RegionSnapKind.cs` — Region 吸附结果的 None、Vertex、Edge 类型标识。
 - `XuanYu.Editor/MapEditing/RoadDrawingState.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/Mode/EditorModeId.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/Mode/EditorModeManager.cs` — C# 类型、服务或测试实现。
@@ -1004,6 +1012,8 @@
 - `XuanYu.World.Tests/MapEditing/MapSurfacePickerTests.cs` — C# 类型、服务或测试实现。
 - `XuanYu.World.Tests/MapEditing/RegionDrawingF3HistoryTests.cs` — C# 类型、服务或测试实现。
 - `XuanYu.World.Tests/MapEditing/RegionDrawingStateTests.cs` — C# 类型、服务或测试实现。
+- `XuanYu.World.Tests/MapEditing/RegionEdgeSnapGeometryTests.cs` — Region 顶点到边吸附的线段最近点几何测试。
+- `XuanYu.World.Tests/MapEditing/RegionEdgeSnapResolverTests.cs` — Region 顶点到边吸附的优先级、排除与稳定决胜测试。
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexLifecycleTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexScaleTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。

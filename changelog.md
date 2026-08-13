@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.13-rz · MAP-DATA-A-R2-F3-C1 EDGE SNAP GEOMETRY
+MAP-DATA-A-R2-F3-C1（2026-08-13）：在 F3-B CLOSED 后完成 Region Vertex-to-Edge Snap 纯几何阶段并通过正式门禁；本轮不接 UI、不接拖拽管线、不启动 C2/C3。
+- 变化：新增屏幕线段最近点、Segment Interior、Vertex 优先、Source Region 排除、稳定决胜和零长度边安全处理；继续复用 8 px 进入 / 12 px 释放合同。
+- 验证：C1 专项 10/10；Core.Tests 339/339；World.Tests 1325/1325；WarCore.Tests 22/22；Solution 串行 Build 0 Warning/0 Error；ARCH-A PASS；43 个 AXAML XML PASS；版本四处一致；`git diff --check` PASS。
+- 状态：F3-C1 `CLOSED`（自动门禁）；F3-C 保持 OPEN，C2 Drag Pipeline Integration 与 C3 Formal Gate + User Acceptance 均为 NOT STARTED。
+- 遗留：下一阶段才评估 C2 F2 Preview → Commit 接线；Edge → Edge、Road Snap、Shared Topology 与 Topology Weld 不在本轮。
+- Hash：本条所在提交。
+
 ## v0.2.28.12-rz · MAP-DATA-A-R2-F3-B FORMAL GATE + USER ACCEPTANCE
 MAP-DATA-A-R2-F3-B（2026-08-13）：F3-B Region Vertex-to-Vertex Snap 完成最终正式门禁并通过用户真机验收，状态正式 `CLOSED`。
 - 验证：Solution 串行 Build 0 Warning/0 Error；Core.Tests 339/339；World.Tests 1315/1315；WarCore.Tests 22/22；F3-B 专项 17/17；ARCH-A PASS；43 个 AXAML XML PASS；版本四处一致；`git diff --check` PASS。
