@@ -3,7 +3,7 @@
 - 阶段：`XYUI-PILOT-R8 · FAST-CLOSE · T2 Inventory`
 - 依据：`xyui/source/XYUI8/XYUI-8.md`（不可变证据源）
 - **原稿出处（如实声明）**：本轮指令消息内附件全文（`@file:.hermes/desktop-attachments/XYUI-8.md`）。桌面应用未将附件落盘到磁盘附件目录（目录中无 XYUI-8.md），故按消息内附件全文逐字落盘为冻结源。**无原始磁盘文件 SHA 可记录**；如需字节级复核，用户重发附件后可用原始文件 SHA 与本冻结 SHA 比对（无需重做本轮管线）。
-- 冻结 SHA-256：`303f8108d9631a6b9ecec26947eb35cc1124d940ff866df94478839aee3bbc1a`（3,766 行，115,343 bytes；转录落盘后仅清理 16 处行尾空白，语义零改动）
+- 冻结 SHA-256：`4a5a36cc2d6240a17bc3eddfd1468a556bef686901791dc86c33258021928661`（3,765 行，115,342 bytes；转录落盘后仅清理 16 处行尾空白，语义零改动）
 - 名称说明：路线图名称「XYUI-8 · Media & Visualization」，但 Source 实际内容仅 Visualization（图表/指标/交互），**无 Media（图像/音频/视频）组件**。以 Source 为唯一依据，本轮范围为 `XYUI-8 · Visualization`。
 - 上游：A2 Foundation Registry（VALIDATED + AMEND-A/B）+ XYUI-1/2/3/4/5/6 canonical
 
@@ -26,7 +26,7 @@
 | 8.13 | Gauge / 仪表与阈值指标 | 2895–3089 | ✅ |
 | 8.14 | Legend / 图例系统 | 3090–3239 | ✅ |
 | 8.15 | Chart Tooltip & Crosshair / 图表检查器 | 3240–3450 | ✅ |
-| 8.16 | Visualization Interaction / 可视化交互 | 3451–3766 | ✅ |
+| 8.16 | Visualization Interaction / 可视化交互 | 3451–3765 | ✅ |
 
 - 编号连续 8.01~8.16，无缺失、无重复：**16/16 清点完成**。
 

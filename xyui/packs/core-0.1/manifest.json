@@ -96,9 +96,9 @@
       "mapping": "xyui/specs/XYUI8/XYUI-8.mapping.json",
       "gaps": "xyui/specs/XYUI8/XYUI-8.gaps.json",
       "source": "xyui/source/XYUI8/XYUI-8.md",
-      "source_bytes": 115343,
-      "source_sha256": "303f8108d9631a6b9ecec26947eb35cc1124d940ff866df94478839aee3bbc1a",
-      "canonical_sha256": "1ba06da9c4bdde83d0c9051b4ec521272a738d3ff8365d611f7f53d6b9020ac6",
+      "source_bytes": 115342,
+      "source_sha256": "4a5a36cc2d6240a17bc3eddfd1468a556bef686901791dc86c33258021928661",
+      "canonical_sha256": "a6db65738641c1bed405c7f383f0287a6a4465c3cf047e6ab4cf82cace1fd683",
       "reconciled_commit": "926cebc6"
     }
   },

@@ -2,9 +2,9 @@
 
 - 状态：`XYUI-8 · RECONCILED · READY FOR USER ACCEPTANCE`
 - 阶段：`XYUI-PILOT-R8 · FAST-CLOSE ONE ROUND`
-- Source：`xyui/source/XYUI8/XYUI-8.md`（IMMUTABLE，SHA `303f8108…`，115,343 bytes，3,766 行）
+- Source：`xyui/source/XYUI8/XYUI-8.md`（IMMUTABLE，SHA `4a5a36cc…`，115,342 bytes，3,765 行）
 - Source provenance（如实声明）：本轮指令消息内附件全文落盘（桌面应用未将附件落盘到磁盘附件目录，无原始磁盘文件 SHA；用户重发附件后可做字节级 SHA 复核，无需重做管线）
-- Canonical：`xyui/specs/XYUI8/XYUI-8.canonical.md`（938 行，16/16）
+- Canonical：`xyui/specs/XYUI8/XYUI-8.canonical.md`（936 行，16/16）
 - 上游：Foundation Registry（VALIDATED + AMEND-A/B）+ XYUI-1/2/3/4/5/6 canonical
 
 ## 16/16 对账矩阵
@@ -32,7 +32,7 @@
 
 ```text
 Source accounted        16/16
-Canonical accounted     16/16（938 行）
+Canonical accounted     16/16（936 行）
 Mapping accounted       16/16（132 refs）
   CANONICAL_REF         23
   NAMESPACE_REF         27

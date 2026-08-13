@@ -4,8 +4,8 @@
   "scope": "8.01~8.16 FULL",
   "source": {
     "path": "xyui/source/XYUI8/XYUI-8.md",
-    "bytes": 115343,
-    "sha256": "303f8108d9631a6b9ecec26947eb35cc1124d940ff866df94478839aee3bbc1a",
+    "bytes": 115342,
+    "sha256": "4a5a36cc2d6240a17bc3eddfd1468a556bef686901791dc86c33258021928661",
     "note": "transcribed from message attachment (desktop app did not persist file to disk; no original-file SHA); trailing whitespace stripped 16 lines"
   },
   "canonical_basis": {
