@@ -18,11 +18,12 @@
 
 ---
 
-## v0.2.28.12-rz · MAP-DATA-A-R2-F3-B FORMAL GATE
-MAP-DATA-A-R2-F3-B（2026-08-13 09:42:36）：F3-B Region Vertex-to-Vertex Snap 完成最终正式门禁，状态进入 `READY FOR USER ACCEPTANCE`。
+## v0.2.28.12-rz · MAP-DATA-A-R2-F3-B FORMAL GATE + USER ACCEPTANCE
+MAP-DATA-A-R2-F3-B（2026-08-13）：F3-B Region Vertex-to-Vertex Snap 完成最终正式门禁并通过用户真机验收，状态正式 `CLOSED`。
 - 验证：Solution 串行 Build 0 Warning/0 Error；Core.Tests 339/339；World.Tests 1315/1315；WarCore.Tests 22/22；F3-B 专项 17/17；ARCH-A PASS；43 个 AXAML XML PASS；版本四处一致；`git diff --check` PASS。
 - 结果：本地与远端最终验证对象为 `b987abe`；无临时验证脚本，受保护的 `_tmp_blind_rows/` 未修改；未启动 Edge Snap、Road Snap 或 Topology Weld。
-- 遗留：F3-B 仅等待用户真机 IPO 验收，R2 保持 OPEN；验收清单见 `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-acceptance.md`。
+- 真机：M01～M10 全部 PASS；黄色 Region 顶点已成功与蓝色 Region 顶点对齐，吸附手感与稳定性符合预期。
+- 遗留：下一阶段为 `MAP-DATA-A-R2-F3-C · Region Vertex-to-Edge Snap`；Road Snap 与 Topology Weld 暂不启动，R2 保持 OPEN；验收记录见 `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-acceptance.md`。
 - Hash：本条所在提交。
 
 ## v0.2.28.11-fix · R2-F1 RUN.BAT BUILD DISCIPLINE

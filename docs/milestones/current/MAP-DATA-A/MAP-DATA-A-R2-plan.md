@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：R2-F2、R2-F2-F2、R2-F2-F2-F1 与 R2-F3-A Region Local Spatial Query 均已 `CLOSED`；R2-F3-B Region Vertex-to-Vertex Snap 已 `READY FOR USER ACCEPTANCE`，完整 Geometry Snapping 尚未实现，R2 保持 OPEN。
+状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query 与 R2-F3-B Region Vertex-to-Vertex Snap 均已 `CLOSED`；R2-F3-C Region Vertex-to-Edge Snap 为 `NEXT`，完整 Geometry Snapping 尚未实现，R2 保持 OPEN。
 
 ## 冻结目标
 
@@ -28,7 +28,7 @@ Editor 域以 MapRegion 为唯一真源，维护只含原生 `MapRegionId + Boun
 
 ## 明确不做
 
-Road Graph、寻路、宽度/坡度、吸附、共享边界/拓扑联动、XYUI 全面改造及其他非道路功能不属于 R2-F2。
+Road Graph、寻路、宽度/坡度、共享边界/拓扑联动、XYUI 全面改造及其他非道路功能不属于 R2 当前冻结范围。
 
 ## 兼容与边界
 
