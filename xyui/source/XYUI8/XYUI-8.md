@@ -1,0 +1,3766 @@
+- 8-01 · Visualization Container / 可视化容器
+    - 定位
+        - 所有图表、指标、监测图、热力图、时间轴、性能图的统一外壳
+        - 不是普通 Card
+        - 是 XYLab、玄域调试面板、未来游戏数据界面的可视化工作台容器
+    - 核心目标
+        - 统一图表容器结构
+        - 保证可视化区域尽量大
+        - 支持图表、指标、时间、日志、事件联动
+        - 让常用操作一层直达
+    - 主要使用场景
+        - XYLab 实验监测
+        - 战斗过程分析
+        - 疲劳、士气、补给、伤亡、攻击效率监控
+        - 性能监测
+        - 地图热力图与统计图
+        - 编辑器数据分析面板
+    - 最终采用方向
+        - 主方案采用 方案4 · 分层状态框
+        - 辅以方案1 的标准工作台结构
+        - 吸收方案2 的大画布优先思想
+        - 吸收方案3 的检查器联动能力
+        - 结论不是唯一单形态
+        - 而是统一规则下的容器布局体系
+    - 主方案
+        - 方案名称
+            - 分层状态框 / Layered Frame
+        - 结构
+            - 上层
+                - 实验上下文
+                - 对象名称
+                - 运行状态
+                - 当前锁定时间
+            - 中层
+                - 图表主体
+                - 高频操作
+                - 检查线
+                - 交叉准星
+                - 数据点高亮
+            - 下层
+                - 锁定快照状态带
+                - 关键指标
+                - 关键事件
+                - 查看日志
+                - 清除锁定
+        - 适合场景
+            - 实时模拟监测
+            - 边看图边锁时间
+            - 需要日志联动的实验工具
+            - 中高频分析界面
+        - 优点
+            - 图表宽度基本完整保留
+            - 信息结构清楚
+            - 锁定状态可直接落到底部状态带
+            - 适合实时工作流
+            - 不需要额外弹窗即可完成基础分析
+        - 风险
+            - 底部状态带容量有限
+            - 如果某时刻变量很多
+            - 仍需要可展开检查器
+    - 辅助规则来源
+        - 方案1 · 紧凑工作台框
+            - 用于沉淀标准型结构
+            - 可继承其标题栏、操作栏、指标带、底部状态栏逻辑
+            - 适合作为默认通用图表容器
+        - 方案2 · 极简画布框
+            - 用于沉淀大画布优先原则
+            - 适用于 Heatmap、Scatter、地图图层、超宽趋势图
+            - 强调工具收边、图表占满
+        - 方案3 · 检查器联动框
+            - 用于沉淀深度分析模式
+            - 适用于变量多、需要展开查看明细、需要查看关联事件时
+            - Inspector 应支持可收起
+    - 统一结构规则
+        - 容器必须包含
+            - 标题区
+            - 上下文信息区
+            - 主可视化区
+            - 操作区
+        - 容器建议包含
+            - 状态反馈
+            - 锁定时间信息
+            - 底部快照带或侧边检查器
+        - 容器禁止问题
+            - 为了装饰牺牲图表面积
+            - 操作分散到多层菜单
+            - 图表与指标各自孤立
+            - 锁定时间后没有联动反馈
+    - 标题区规范
+        - 应包含
+            - 图表名称
+            - 数据对象
+            - 实验或数据上下文
+        - 可包含
+            - 实时状态
+            - 标签
+            - 采样信息
+            - 时间范围
+        - 不应堆太多次要说明
+    - 操作区规范
+        - 高频操作应一层直达
+        - 典型操作包括
+            - 缩放全部
+            - 跟随实时
+            - 锁定时间
+            - 比较
+            - 导出
+            - 更多
+        - 高频操作优先露出
+        - 低频操作允许收进更多菜单
+    - 图表主区规范
+        - 必须是容器视觉主角
+        - 优先保证宽度和高度
+        - 应支持
+            - Crosshair
+            - Tooltip
+            - 时间锁定
+            - 数据点高亮
+            - Compare
+            - Range Select
+            - Zoom
+            - Pan
+        - 坐标、网格、辅助线必须弱化
+        - 不能压过数据本身
+    - 联动区规范
+        - 锁定时间后
+            - 指标同步更新
+            - 关键事件同步更新
+            - 日志允许定位
+        - 联动区可以有两种合法形态
+            - 底部状态带
+            - 侧边检查器
+        - 默认优先
+            - 底部状态带
+        - 扩展模式
+            - 侧边检查器
+    - 状态反馈规范
+        - 运行状态要清楚
+            - 实时运行
+            - 暂停
+            - 历史回放
+            - 离线数据
+        - 异常状态要清楚
+            - 数据缺失
+            - 连接断开
+            - 采样停止
+            - 超出阈值
+    - 布局变体
+        - Variant A
+            - 标准分层型
+            - 默认采用
+            - 对应方案4
+        - Variant B
+            - 紧凑工作台型
+            - 适合信息较多的标准仪表板
+            - 吸收方案1
+        - Variant C
+            - 大画布型
+            - 适合 Heatmap、Scatter、地图与复杂图
+            - 吸收方案2
+        - Variant D
+            - 分析检查器型
+            - 适合深度实验分析
+            - 吸收方案3
+    - 交互原则
+        - 图表不是静态展示物
+        - 而是实验工具
+        - 点击时间点后
+            - 图表锁定
+            - 指标更新
+            - 事件刷新
+            - 日志可定位
+        - 比较模式下
+            - 支持多对象并排
+            - 支持多时间段对比
+    - 视觉原则
+        - 浅底
+        - 清晰分层
+        - 低饱和蓝灰系
+        - 边框轻
+        - 少装饰
+        - 强调有效信息密度
+        - 避免大留白
+        - 避免像普通卡片系统
+    - UI代码
+        - Component
+            - VisualizationContainer
+        - Slots
+            - Header
+            - Context
+            - Toolbar
+            - Canvas
+            - SnapshotRail
+            - Inspector
+            - Footer
+        - Props
+            - title
+            - subtitle
+            - context
+            - status
+            - timeScope
+            - isLive
+            - isLocked
+            - lockedTime
+            - layoutVariant
+            - showSnapshotRail
+            - showInspector
+            - showToolbar
+            - showFooter
+        - Actions
+            - onZoomReset
+            - onFollowLive
+            - onLockTime
+            - onCompare
+            - onExport
+            - onOpenLogs
+            - onClearLock
+        - Variants
+            - layered
+            - workbench
+            - canvas
+            - inspector
+    - 与后续组件关系
+        - 承载 XYUI-8-02 Metric
+        - 承载 XYUI-8-03 Metric Group
+        - 承载 XYUI-8-05 Sparkline
+        - 承载 XYUI-8-06 Line Chart
+        - 承载 XYUI-8-11 Heatmap
+        - 承载 XYUI-8-12 Timeline
+        - 承载 XYUI-8-14 Legend
+        - 承载 XYUI-8-15 Chart Tooltip & Crosshair
+        - 承载 XYUI-8-16 Visualization Interaction
+
+- 8-02 · Metric / 指标值
+    - 定位
+        - 用于表达一个关键数据当前值的基础可视化组件
+        - 不是普通 Dashboard 大卡片
+        - 不是单纯放大数字
+        - 是可嵌入 XYLab、编辑器、Inspector、Visualization Container 的紧凑数据观察节点
+    - 核心目标
+        - 第一眼看清当前数值
+        - 快速判断当前状态
+        - 快速判断变化方向
+        - 支持与时间、图表、日志和事件联动
+        - 尽量减少空间占用
+    - 主要使用场景
+        - 疲劳
+        - 士气
+        - 补给
+        - 攻击效率
+        - 当前兵力
+        - 累计伤亡
+        - FPS
+        - CPU / GPU 占用
+        - Entity 数量
+        - 仿真延迟
+        - 实验参数结果
+    - 最终采用方向
+        - 方案4 · 联动快照指标块 为核心
+        - 方案1 · 主指标块 为主要辅助
+        - 整体尺寸缩小
+        - 默认采用 Small / Medium
+        - Large 仅允许用于真正重要的主指标
+    - 核心设计原则
+        - Metric 是数据节点
+        - 不是装饰卡片
+        - 数值优先
+        - 名称次之
+        - 变化和状态作为辅助
+        - 上下文按需显示
+        - 不为了视觉效果制造大面积留白
+    - 核心结构
+        - Label
+            - 指标名称
+        - Value
+            - 当前数值
+        - Unit
+            - 单位
+        - Delta
+            - 变化值
+            - 变化方向
+        - Status
+            - 正常
+            - 提醒
+            - 预警
+            - 危险
+        - Context
+            - 锁定时间
+            - 对象
+            - 数据源
+        - Interaction
+            - 点击查看详情
+            - 联动图表
+            - 联动日志
+            - 加入比较
+    - 主方案
+        - 方案4 · 联动快照指标块
+            - 核心思想
+                - Metric 不只是静态数值
+                - 而是当前锁定时间点的数据快照
+            - 典型流程
+                - 用户在图表锁定 18:42
+                - Metric 自动刷新到 18:42 数据
+                - 相关事件同步刷新
+                - 日志可以直接定位
+            - 适合
+                - XYLab 实验分析
+                - 战斗过程回放
+                - 性能时间点分析
+                - 多变量联动检查
+    - 辅助方案
+        - 方案1 · 主指标块
+            - 用于强调真正重要的单一指标
+            - 适合
+                - FPS
+                - 当前兵力
+                - 当前疲劳
+                - 当前实体数量
+                - 最大风险值
+            - 允许强化
+                - Value
+                - Status
+                - Delta
+            - 禁止做成巨大数字墙
+    - 尺寸规范
+        - Small
+            - 用途
+                - Inspector
+                - 列表
+                - 状态栏
+                - Snapshot Rail
+            - 建议宽度
+                - 120～180
+            - 建议高度
+                - 60～90
+            - 内容
+                - Label
+                - Value
+                - 可选 Delta
+        - Medium
+            - 默认规格
+            - 用途
+                - XYLab 指标区
+                - Visualization Container
+                - 概览面板
+            - 建议宽度
+                - 180～260
+            - 建议高度
+                - 100～140
+            - 内容
+                - Label
+                - Value
+                - Delta
+                - Status
+                - 可选 Context
+        - Large
+            - 特殊主指标规格
+            - 用途
+                - 关键战况
+                - 首页核心指标
+                - 重点性能指标
+            - 建议宽度
+                - 260～360
+            - 建议高度
+                - 160～220
+            - 限制
+                - 只能用于少量真正重要的数据
+                - 不能批量排列
+    - 信息层级
+        - 第一层
+            - Value
+        - 第二层
+            - Label
+        - 第三层
+            - Delta
+            - Status
+        - 第四层
+            - Context
+            - 辅助说明
+    - 变化显示
+        - 支持
+            - 增加
+            - 减少
+            - 持平
+            - 波动
+        - 表达方式
+            - 数值
+            - 方向符号
+            - 趋势短语
+        - 示例
+            - +12%
+            - -4%
+            - +1.8 / min
+            - 持续上升
+    - 状态显示
+        - Normal
+            - 正常
+        - Notice
+            - 注意
+        - Warning
+            - 预警
+        - Critical
+            - 危险
+        - 原则
+            - 状态不能只靠颜色表达
+            - 应同时具有文字或符号语义
+    - 时间联动
+        - 支持 Current
+            - 显示当前实时值
+        - 支持 Locked
+            - 显示锁定时间值
+        - 支持 Historical
+            - 显示历史数据
+        - 锁定状态必须明确表达时间上下文
+    - 交互
+        - 点击 Metric
+            - 允许打开详细信息
+            - 允许高亮对应图表曲线
+            - 允许定位日志
+        - Compare 模式
+            - 允许选中指标加入比较
+        - Hover
+            - 显示详细单位
+            - 显示原始值
+            - 显示采样时间
+    - 视觉原则
+        - 浅色背景
+        - 低饱和蓝灰
+        - 轻边框
+        - 紧凑布局
+        - 高信息密度
+        - 数字明显但不过度巨大
+        - 避免大量装饰图形
+    - 禁止设计
+        - 巨大 Dashboard 卡片
+        - 数字占据绝大部分屏幕
+        - 大面积渐变
+        - 大量状态颜色
+        - 汽车仪表盘式设计
+        - 为了高级感制造无意义留白
+        - 一个 Metric 塞入过多指标
+    - UI代码
+        - Component
+            - Metric
+        - Slots
+            - Label
+            - Value
+            - Unit
+            - Delta
+            - Status
+            - Context
+            - Accessory
+        - Props
+            - label
+            - value
+            - unit
+            - delta
+            - trend
+            - status
+            - size
+            - timestamp
+            - source
+            - isLive
+            - isLocked
+            - emphasis
+        - Size
+            - small
+            - medium
+            - large
+        - Emphasis
+            - normal
+            - primary
+        - State
+            - normal
+            - notice
+            - warning
+            - critical
+        - Actions
+            - onInspect
+            - onLocateChart
+            - onLocateLog
+            - onCompare
+    - 与其他组件关系
+        - 由 XYUI-8-03 Metric Group 组织多个 Metric
+        - 可嵌入 XYUI-8-01 Visualization Container
+        - 可结合 XYUI-8-05 Sparkline
+        - 可结合 XYUI-8-13 Gauge
+        - 可响应 XYUI-8-15 Chart Tooltip & Crosshair
+        - 可响应 XYUI-8-16 Visualization Interaction
+
+- 8-03 · Metric Group / 指标组
+    - 定位
+        - 用于统一组织多个 Metric 的组合型可视化组件
+        - 不是 Dashboard 卡片墙
+        - 不是简单 Grid 排列
+        - 核心任务是帮助用户快速扫读、比较和判断多个指标之间的关系
+    - 核心目标
+        - 让多个 Metric 保持清晰的信息层级
+        - 避免大量指标形成杂乱数字墙
+        - 支持时间点比较
+        - 支持对象比较
+        - 支持实验方案比较
+        - 支持主变量与辅助变量区分
+        - 保持紧凑高密度
+    - 主要使用场景
+        - XYLab 实验结果比较
+        - 战斗状态快照
+        - 时间 A 与时间 B 比较
+        - 第一军与第二军比较
+        - 参数方案 A 与参数方案 B 比较
+        - 算法性能比较
+        - Inspector 指标汇总
+        - Visualization Container Snapshot Rail
+    - 最终采用方向
+        - 方案4 · 联动比较组 为主方案
+        - 方案1 · 紧凑指标带 作为实时扫读辅助
+        - 方案2 · 紧凑矩阵组 作为中密度展示辅助
+        - 方案3 · 主次指标组 作为主变量实验辅助
+        - 形成统一核心规则 + 多种合法布局 Variant
+    - 主方案
+        - 方案4 · Linked Compare Group / 联动比较组
+            - 核心思想
+                - 一组 Metric 不只是同时显示
+                - 而是承担比较关系表达
+            - 基本结构
+                - Dimension / 指标名称
+                - Value A
+                - Value B
+                - Delta
+                - Status
+            - 典型比较
+                - 时间 A vs 时间 B
+                - 对象 A vs 对象 B
+                - 方案 A vs 方案 B
+                - 基线 vs 当前值
+                - 预期值 vs 实际值
+            - 示例
+                - 疲劳
+                    - 18:32
+                        - 51%
+                    - 18:42
+                        - 63%
+                    - 变化
+                        - +12%
+                - 士气
+                    - 18:32
+                        - 75%
+                    - 18:42
+                        - 71%
+                    - 变化
+                        - -4%
+                - 补给
+                    - 18:32
+                        - 58%
+                    - 18:42
+                        - 46%
+                    - 变化
+                        - -12%
+                - 攻击效率
+                    - 18:32
+                        - 0.91
+                    - 18:42
+                        - 0.82
+                    - 变化
+                        - -0.09
+    - 辅助方案
+        - 方案1 · Compact Metric Rail / 紧凑指标带
+            - 用途
+                - 实时扫读
+                - Snapshot Rail
+                - Visualization Container 底部
+            - 结构
+                - 多个 Metric 横向连续排列
+            - 优势
+                - 高度最低
+                - 扫读最快
+                - 不会明显压缩图表高度
+            - 限制
+                - 指标过多时需要优先级策略
+                - 允许横向滚动
+                - 允许折叠低优先级指标
+        - 方案2 · Dense Metric Matrix / 紧凑矩阵组
+            - 用途
+                - Inspector
+                - 实验概览
+                - 中等宽度面板
+            - 结构
+                - 2×N
+                - 3×N
+                - 自适应 Grid
+            - 优势
+                - 可容纳较多指标
+                - 比传统 Dashboard Card 更紧凑
+            - 限制
+                - 不能无限扩张
+                - 超过建议数量后应进入分组或滚动
+        - 方案3 · Priority Metric Group / 主次指标组
+            - 用途
+                - 存在明确主研究变量的实验
+            - 结构
+                - Primary Metric
+                - Secondary Metrics
+            - 示例
+                - 主变量
+                    - 疲劳
+                - 辅助变量
+                    - 士气
+                    - 补给
+                    - 攻击效率
+                    - 兵力
+                    - 伤亡
+            - 优势
+                - 让实验焦点第一眼明确
+                - 避免所有数字视觉权重相同
+    - 布局 Variant
+        - Compare
+            - 默认主 Variant
+            - 用于比较
+        - Rail
+            - 横向紧凑带
+            - 用于实时状态
+        - Matrix
+            - 紧凑矩阵
+            - 用于中密度指标
+        - Priority
+            - 主次结构
+            - 用于单一主变量实验
+    - 比较模式
+        - Time Compare
+            - 时间点 A vs 时间点 B
+        - Entity Compare
+            - 对象 A vs 对象 B
+        - Scenario Compare
+            - 方案 A vs 方案 B
+        - Baseline Compare
+            - Baseline vs Current
+        - Target Compare
+            - Target vs Actual
+    - 比较信息
+        - 必须支持
+            - Value A
+            - Value B
+        - 建议支持
+            - Delta
+            - Delta %
+            - Status
+        - 可选
+            - Trend
+            - Threshold
+            - Rank
+    - Delta 表达
+        - 数值变化
+            - +12
+            - -4
+        - 百分比变化
+            - +12%
+            - -4%
+        - 比率变化
+            - -0.09
+        - 状态变化
+            - 正常 → 预警
+        - 原则
+            - 不能只用颜色表达正负
+            - 必须同时提供数字或文字
+    - 指标层级
+        - Primary
+            - 当前实验核心指标
+        - Secondary
+            - 与核心指标直接相关
+        - Supporting
+            - 辅助判断
+        - 原则
+            - 不是所有 Metric 必须同等级
+    - 排序规则
+        - 优先按语义排序
+            - 实验重要性
+            - 风险程度
+            - 用户固定顺序
+        - 不建议仅通过视觉位置随机排列
+        - 用户自定义顺序应允许持久化
+    - 数量规则
+        - 少量
+            - 2～4 项
+            - 可采用 Rail 或 Compare
+        - 中量
+            - 5～12 项
+            - 可采用 Matrix / Compare
+        - 大量
+            - 超过 12 项
+            - 应分组
+            - 搜索
+            - 筛选
+            - 折叠
+            - 不应一次全部铺开
+    - 尺寸原则
+        - 继承 XYUI-8-02 Metric 的 Small / Medium 体系
+        - 默认采用紧凑尺寸
+        - Metric Group 不应主动放大子 Metric
+        - 主指标 Variant 允许单个主 Metric 稍大
+    - 时间联动
+        - 当 Visualization Container 锁定时间
+            - 整组 Metric 同步刷新
+        - Compare 模式
+            - 可同时锁定时间 A
+            - 可同时锁定时间 B
+        - 时间变化后
+            - Delta 自动重新计算
+    - 图表联动
+        - 点击某个指标
+            - 高亮对应曲线
+        - 点击 Value A
+            - 定位时间 A
+        - 点击 Value B
+            - 定位时间 B
+        - 点击 Delta
+            - 允许查看变化区间
+    - 日志联动
+        - 支持根据比较时间定位日志
+        - 支持查看变化期间关键事件
+        - 支持从异常指标直接跳转相关日志
+    - 交互原则
+        - 常用比较操作一层直达
+        - 不要求先进入二级详情页才能比较
+        - 允许快速交换 A / B
+        - 允许固定某一侧作为 Baseline
+        - 允许加入或移除指标
+    - 视觉原则
+        - 保持平面
+        - 低饱和
+        - 弱边框
+        - 紧凑间距
+        - 数字对齐
+        - 比较列对齐
+        - Delta 独立列
+        - 避免每个 Metric 都有独立厚重 Card
+    - 禁止设计
+        - 大量独立大卡片
+        - 所有指标视觉权重相同
+        - 依赖颜色判断比较结果
+        - 比较值左右位置不断变化
+        - 指标太多仍强行全部展开
+        - 为了装饰增加无意义空白
+    - UI代码
+        - Component
+            - MetricGroup
+        - Children
+            - Metric[]
+        - Slots
+            - Header
+            - Context
+            - MetricList
+            - ComparisonHeader
+            - Footer
+        - Props
+            - items
+            - variant
+            - primaryMetric
+            - compareA
+            - compareB
+            - showDelta
+            - showStatus
+            - maxVisible
+            - orientation
+            - density
+        - Variant
+            - compare
+            - rail
+            - matrix
+            - priority
+        - CompareMode
+            - time
+            - entity
+            - scenario
+            - baseline
+            - target
+        - Actions
+            - onMetricSelect
+            - onCompareAChange
+            - onCompareBChange
+            - onSwapCompare
+            - onSetBaseline
+            - onLocateChart
+            - onLocateLog
+    - 与其他组件关系
+        - 由 XYUI-8-02 Metric 构成
+        - 可嵌入 XYUI-8-01 Visualization Container
+        - 可与 XYUI-8-04 Progress & Range 组合
+        - 可结合 XYUI-8-05 Sparkline
+        - 可响应 XYUI-8-15 Chart Tooltip & Crosshair
+        - 可响应 XYUI-8-16 Visualization Interaction
+
+- 8-04 · Progress & Range / 进度与区间
+    - 定位
+        - 用于表达连续数值当前所在位置、目标范围、阈值范围和完成程度
+        - 不仅是传统 Progress Bar
+        - 重点服务 XYLab 实验调参、状态监测、阈值判断和方案比较
+    - 核心目标
+        - 快速判断当前值在哪里
+        - 快速判断是否落入目标区间
+        - 快速判断距离目标还有多少
+        - 必要时表达安全、预警、危险阈值
+        - 支持时间点和方案之间的数值比较
+    - 核心概念
+        - Progress
+            - 表达完成了多少
+            - 例如
+                - 地图导入 82%
+                - 数据处理 46%
+                - 实验运行 63%
+        - Range
+            - 表达当前值在连续范围中的位置
+            - 例如
+                - 疲劳 63%
+                - 攻击效率 0.82
+                - 仿真延迟 12 ms
+        - Target Band
+            - 表达理想目标范围
+            - 例如
+                - 攻击效率目标 0.85～0.95
+        - Threshold
+            - 表达安全、提醒、预警、危险等阈值
+    - 最终采用方向
+        - 方案3 · Target Band / 目标区间条 为主
+        - 方案1 · Compact Progress 作为基础完成度能力
+        - 方案2 · Threshold Range 作为阈值监测辅助
+        - 方案4 · Comparative Range 作为比较分析辅助
+        - 形成统一 Range 核心 + 多种语义 Variant
+    - 主方案
+        - 方案3 · Target Band / 目标区间条
+            - 核心思想
+                - 不是判断数值越大越好
+                - 而是判断当前值是否处在合理目标范围
+            - 适合
+                - 公式调参
+                - 攻击效率
+                - AI 参数
+                - 性能目标
+                - 平衡性测试
+                - 模拟参数校准
+                - 资源配置目标
+            - 基本结构
+                - Label
+                - Current Value
+                - Scale
+                - Target Band
+                - Current Marker
+                - Distance To Target
+                - Status Text
+            - 典型示例
+                - 攻击效率
+                    - 当前值
+                        - 0.82
+                    - 目标范围
+                        - 0.85～0.95
+                    - 状态
+                        - 低于目标下限
+                    - 差距
+                        - 距离目标还差 0.03
+            - 优势
+                - 特别适合 XYLab 调参
+                - 比普通 Progress 更准确表达实验语义
+                - 能够处理并非越大越好的指标
+    - 辅助方案
+        - 方案1 · Compact Progress / 紧凑进度条
+            - 用途
+                - 任务完成度
+                - 加载
+                - 导入
+                - 处理
+                - 后台任务
+            - 优势
+                - 结构简单
+                - 空间占用小
+                - 适合大量状态同时显示
+            - 限制
+                - 不能承担复杂阈值语义
+        - 方案2 · Threshold Range / 阈值区间条
+            - 用途
+                - 疲劳
+                - 补给
+                - 延迟
+                - 温度
+                - CPU
+                - GPU
+                - 内存
+                - 风险值
+            - 结构
+                - Current Marker
+                - Safe Band
+                - Warning Band
+                - Critical Band
+            - 重点
+                - 快速知道是否越线
+        - 方案4 · Comparative Range / 可比较区间条
+            - 用途
+                - 时间 A vs 时间 B
+                - 对象 A vs 对象 B
+                - 方案 A vs 方案 B
+            - 可同时表达
+                - Value A
+                - Value B
+                - Delta
+                - Threshold
+                - 是否越线
+    - Variant
+        - Progress
+            - 传统完成度
+        - Target
+            - 默认主 Variant
+            - 目标区间
+        - Threshold
+            - 阈值监测
+        - Compare
+            - 对比分析
+    - Target Band 规则
+        - 目标范围必须清楚可见
+        - 当前值必须有独立 Marker
+        - 必须能够判断
+            - 低于目标
+            - 处于目标
+            - 高于目标
+        - 建议显示
+            - 距离目标下限
+            - 距离目标上限
+        - 目标范围可来自
+            - 用户手动设置
+            - 实验预设
+            - 系统推荐
+            - 历史基线
+    - Threshold 规则
+        - 支持多段区间
+            - Normal
+            - Notice
+            - Warning
+            - Critical
+        - 阈值不能只使用颜色表达
+        - 需要文字
+            - 安全
+            - 预警
+            - 危险
+        - 阈值线应弱于 Current Marker
+    - Compare 规则
+        - 支持双值
+            - A
+            - B
+        - 支持显示
+            - Absolute Delta
+            - Percent Delta
+        - 支持共享同一阈值或目标区间
+        - 两个值必须使用稳定位置和清晰标识
+    - 方向
+        - Horizontal
+            - 默认
+            - 优先使用
+        - Vertical
+            - 仅在特殊空间布局使用
+    - 数值范围
+        - 可以是
+            - 0～100%
+            - 0～1
+            - 自定义最小值与最大值
+            - 物理量范围
+        - 必须明确处理
+            - 低于 Min
+            - 高于 Max
+            - 未知范围
+    - 标签
+        - 建议包含
+            - Label
+            - Current Value
+        - 可选
+            - Min
+            - Max
+            - Target
+            - Threshold
+            - Delta
+            - Status
+    - 交互
+        - Hover
+            - 查看精确值
+            - 查看范围说明
+        - Click
+            - 允许打开详细信息
+        - Drag
+            - 仅在组件承担参数编辑职责时允许
+            - 纯监测模式禁止拖动
+        - Compare
+            - 允许切换 A / B
+    - 实时状态
+        - Live
+            - Marker 随数据更新
+        - Locked
+            - Marker 固定在锁定时间值
+        - Historical
+            - 显示历史数据值
+    - 尺寸
+        - Compact
+            - 用于 Metric
+            - 用于 Inspector
+            - 用于列表
+        - Standard
+            - 用于 Visualization Container
+            - 用于调参面板
+        - Detailed
+            - 用于独立实验分析区域
+    - 视觉原则
+        - 保持平面
+        - 浅色背景
+        - 低饱和范围色
+        - Current Marker 清晰
+        - Target Band 明显但不抢数据主体
+        - 尽量减少装饰
+        - 范围本身是主要信息
+    - 禁止设计
+        - 无意义的彩虹渐变
+        - 类似汽车仪表盘的装饰效果
+        - 只靠颜色区分区间
+        - 目标区间和危险区间混淆
+        - Current Marker 不清楚
+        - 为了美观隐藏精确数值
+    - UI代码
+        - Component
+            - ProgressRange
+        - Slots
+            - Label
+            - Value
+            - Track
+            - TargetBand
+            - ThresholdBands
+            - Marker
+            - Delta
+            - Status
+        - Props
+            - value
+            - min
+            - max
+            - unit
+            - variant
+            - targetMin
+            - targetMax
+            - thresholds
+            - compareValue
+            - showValue
+            - showBounds
+            - showStatus
+            - isLive
+            - isLocked
+            - orientation
+            - density
+        - Variant
+            - progress
+            - target
+            - threshold
+            - compare
+        - Status
+            - belowTarget
+            - inTarget
+            - aboveTarget
+            - normal
+            - notice
+            - warning
+            - critical
+        - Actions
+            - onInspect
+            - onRangeSelect
+            - onCompare
+            - onValueChange
+    - 与其他组件关系
+        - 可嵌入 XYUI-8-02 Metric
+        - 可被 XYUI-8-03 Metric Group 使用
+        - 可嵌入 XYUI-8-01 Visualization Container
+        - 可与 XYUI-8-05 Sparkline 配合
+        - 可与 XYUI-8-13 Gauge 共享阈值语义
+        - 可响应 XYUI-8-16 Visualization Interaction
+
+- 8-05 · Sparkline / 微型趋势图
+    - 定位
+        - 用于以极小空间表达一个指标最近的变化趋势
+        - 不是完整图表
+        - 不是精确读数工具
+        - 是嵌入 Metric、Metric Group、列表、Inspector、日志检查器中的微型趋势表达
+    - 核心目标
+        - 快速判断趋势方向
+        - 快速判断是上升、下降、波动还是持平
+        - 必要时支持不同对象或方案的趋势比较
+        - 尽量不占用独立图表空间
+        - 保持控件小而紧凑
+    - 主要使用场景
+        - Metric 内联趋势
+        - Metric Group 辅助趋势
+        - Inspector 状态摘要
+        - 列表项趋势预览
+        - 实验结果简表
+        - 对象对比摘要
+        - 日志与检查器联动
+    - 最终采用方向
+        - 方案1 · Inline Sparkline / 内联趋势线 为主
+        - 方案4 · Compare Sparkline / 对比微趋势 为主
+        - 方案2 · Threshold Sparkline 作为阈值增强辅助
+        - 方案3 · Locked Sparkline 作为锁定时间联动辅助
+        - 整体尺寸缩小
+        - 默认以 Small / Embedded 形式出现
+    - 主方案一
+        - 方案1 · Inline Sparkline / 内联趋势线
+            - 核心思想
+                - 把趋势直接嵌入指标行内部
+            - 典型结构
+                - Label
+                - Value
+                - Sparkline
+                - Delta
+            - 适合
+                - 疲劳
+                - 士气
+                - 补给
+                - FPS
+                - CPU
+                - 内存
+                - 延迟
+            - 优点
+                - 最省空间
+                - 最容易和 Metric 融合
+                - 适合高密度界面
+            - 限制
+                - 不承担精确时间读数
+                - 不适合承载复杂交互
+    - 主方案二
+        - 方案4 · Compare Sparkline / 对比微趋势
+            - 核心思想
+                - 不仅比较最终值
+                - 更比较趋势形态
+            - 适合
+                - 方案 A / B
+                - 对象 A / B
+                - 时间段 A / B
+                - Baseline / Current
+            - 价值
+                - 即使最终值相同
+                - 也能看出增长节奏不同
+            - 适合场景
+                - 参数实验
+                - 算法比较
+                - 部队状态比较
+                - 性能方案比较
+    - 辅助方案
+        - 方案2 · Threshold Sparkline / 阈值趋势线
+            - 用途
+                - 在微趋势里附加阈值线
+            - 适合
+                - 疲劳
+                - 补给
+                - 延迟
+                - 温度
+                - 资源压力
+            - 作用
+                - 看趋势的同时知道有没有越线
+        - 方案3 · Locked Sparkline / 锁点微趋势
+            - 用途
+                - 响应主图锁定时间
+            - 作用
+                - 在锁定时间附近显示小范围趋势上下文
+            - 适合
+                - Snapshot Metric
+                - 检查器
+                - 日志联动
+    - 尺寸规范
+        - Embedded
+            - 默认规格
+            - 用于 Metric、列表、Inspector
+            - 高度应很低
+            - 宽度自适应父容器
+        - Compact
+            - 用于稍大的摘要面板
+            - 允许显示更清楚的折线形状
+        - Compare
+            - 用于方案或对象比较
+            - 允许双线或上下双轨
+        - 原则
+            - Sparkline 默认比 Metric 更从属
+            - 不能喧宾夺主
+    - 信息层级
+        - 第一层
+            - Value
+        - 第二层
+            - Sparkline 走势
+        - 第三层
+            - Delta
+            - Status
+        - 第四层
+            - Time Window
+            - Source
+    - 趋势语义
+        - 支持
+            - Up
+            - Down
+            - Flat
+            - Volatile
+        - 表达方式
+            - 折线形状
+            - Delta
+            - 方向符号
+            - 简短文案
+        - 原则
+            - 趋势语义不能只依赖颜色
+    - 时间窗口
+        - 默认是最近短时间窗口
+        - 典型可选
+            - 最近 5 min
+            - 最近 10 min
+            - 最近 30 min
+            - 最近 N 个采样点
+        - Locked 模式
+            - 窗口中心切换到锁定时间点
+    - Compare 规则
+        - 支持
+            - 双线重叠
+            - 上下双轨
+            - 同时间锁点
+        - 必须清楚区分
+            - A
+            - B
+        - 比较目标
+            - 走势形态
+            - 峰值
+            - 波动强度
+            - 转折点
+            - 最终值
+    - 阈值规则
+        - 在需要时允许显示阈值线
+        - 阈值线应弱于主趋势线
+        - 不可让 Sparkline 变成完整图表
+    - 交互
+        - Hover
+            - 显示精确值
+            - 显示时间窗口
+        - Click
+            - 允许跳转主图
+            - 允许打开详细图表
+        - Linked
+            - 允许被主 Line Chart 高亮或锁定驱动
+    - 视觉原则
+        - 极简
+        - 紧凑
+        - 低占位
+        - 线条清晰
+        - 不要厚边框
+        - 不要额外装饰背景
+        - 与 Metric 融合
+        - 默认不独立成大 Card
+    - 禁止设计
+        - 做成小型完整版折线图
+        - 为了美观加入大量坐标轴
+        - 为了装饰增加大面积留白
+        - 线条过粗
+        - 多条线混杂难辨
+        - 把 Sparkline 做成视觉主角
+    - UI代码
+        - Component
+            - Sparkline
+        - Props
+            - points
+            - variant
+            - timeWindow
+            - comparePoints
+            - showDelta
+            - showThreshold
+            - thresholds
+            - isLocked
+            - lockedIndex
+            - density
+            - size
+        - Variant
+            - inline
+            - compare
+            - threshold
+            - locked
+        - Size
+            - embedded
+            - compact
+        - Actions
+            - onInspect
+            - onOpenChart
+            - onLocateTime
+    - 与其他组件关系
+        - 可嵌入 XYUI-8-02 Metric
+        - 可嵌入 XYUI-8-03 Metric Group
+        - 可与 XYUI-8-04 Progress & Range 配合
+        - 可联动 XYUI-8-06 Line Chart
+        - 可响应 XYUI-8-15 Chart Tooltip & Crosshair
+        - 可响应 XYUI-8-16 Visualization Interaction
+
+- 8-06 · Line Chart / 折线图
+    - 定位
+        - 用于表达一个或多个连续变量随时间、序列或实验步骤变化的核心图表组件
+        - 是 XYLab 最重要的主分析图表之一
+        - 不是静态 Dashboard 装饰图
+        - 重点服务实验观察、时间锁定、变量比较、长时段分析
+    - 核心目标
+        - 清楚表达连续变化趋势
+        - 支持精确时间点检查
+        - 支持多个变量联动观察
+        - 支持实验方案 A/B 对比
+        - 支持长时间数据范围选择
+        - 与 Metric、日志、事件保持联动
+        - 保持紧凑，不做大屏 Dashboard 风格
+    - 主要使用场景
+        - 疲劳随时间变化
+        - 士气随时间变化
+        - 补给变化
+        - 伤亡变化
+        - FPS
+        - CPU / GPU
+        - 仿真延迟
+        - 单位数量变化
+        - 算法性能变化
+        - 实验参数结果
+    - 最终采用方向
+        - 方案1 · Compact Single Line 正式保留
+        - 方案2 · Compact Multi-Line 正式保留
+        - 方案3 · Compare Line Chart 正式保留
+        - 方案4 · Focus & Brush 正式保留
+        - 4 个方案作为合法 Variant
+        - 不设唯一主样式
+    - Variant A
+        - Compact Single Line / 紧凑单线图
+            - 用途
+                - 单变量观察
+                - 默认基础分析
+            - 适合
+                - 疲劳
+                - FPS
+                - 士气
+                - 延迟
+            - 结构
+                - Header
+                - Plot
+                - Crosshair
+                - Snapshot Rail
+            - 优势
+                - 最清晰
+                - 视觉噪声最低
+                - 适合精确观察一个变量
+    - Variant B
+        - Compact Multi-Line / 紧凑多线图
+            - 用途
+                - 多个关联变量同步观察
+            - 适合
+                - 疲劳 + 士气 + 补给
+                - CPU + GPU + 内存
+            - 核心
+                - 共享时间轴
+                - 同一 Crosshair
+                - 同一锁定时间
+            - 优势
+                - 容易观察变量间同步与反向关系
+            - 限制
+                - 曲线数量需要限制
+                - 不能无限叠线
+    - Variant C
+        - Compare Line Chart / 方案对比线图
+            - 用途
+                - 实验方案 A/B
+                - Baseline / Current
+                - 对象 A/B
+            - 重点
+                - 比较趋势形态
+                - 比较增长速度
+                - 比较峰值
+                - 比较转折点
+            - 支持
+                - 同时间轴
+                - 同量纲
+                - 锁定同一时间点
+                - Delta
+    - Variant D
+        - Focus & Brush / 主图 + 范围刷选
+            - 用途
+                - 长时间实验
+                - 大量采样点
+                - 需要频繁缩放时间窗口
+            - 结构
+                - Focus Plot
+                - Brush Overview
+            - 交互
+                - 拖动范围
+                - 缩放时间窗
+                - 移动窗口
+            - 优势
+                - 长时间数据导航效率高
+    - 布局原则
+        - 保持紧凑
+        - Header 高度尽量低
+        - 工具栏避免占据过多高度
+        - Plot 必须是视觉主体
+        - Snapshot Rail 仅在需要时出现
+        - Brush 仅在长时间数据模式出现
+    - 坐标轴
+        - X Axis
+            - 默认表示时间
+            - 也可表示
+                - 实验步骤
+                - 帧
+                - 采样序号
+        - Y Axis
+            - 表示指标值
+        - 轴标签应尽量简洁
+        - 不应堆积过多刻度
+    - Grid
+        - 弱化显示
+        - 只用于辅助读取
+        - 不能压过折线
+        - 允许关闭
+    - Series
+        - 单线模式
+            - 默认 1 条
+        - 多线模式
+            - 建议 2～4 条
+        - 超过推荐数量
+            - 应筛选
+            - 分组
+            - 隐藏部分 Series
+            - 不可无限叠加
+    - Legend
+        - 单线模式通常可省略
+        - 多线和 Compare 模式建议显示
+        - 应保持紧凑
+        - 允许点击隐藏 Series
+    - Crosshair
+        - 支持垂直时间线
+        - 可选水平值线
+        - 锁定时间后保持位置
+        - 所有 Series 同步读值
+    - Tooltip
+        - 显示
+            - 时间
+            - 当前 Series 值
+            - 可选 Delta
+            - 可选状态
+        - 多线模式
+            - 同一 Tooltip 显示所有 Series 当前值
+    - 时间锁定
+        - 点击数据点或 Crosshair
+            - 进入 Locked
+        - 锁定后
+            - Metric 同步
+            - Metric Group 同步
+            - Sparkline 同步
+            - 日志同步
+            - 事件同步
+    - Compare
+        - 支持
+            - 方案 A / B
+            - 对象 A / B
+            - Baseline / Current
+        - 比较时必须保证
+            - 同时间基准
+            - 同单位
+            - 清楚标识 Series
+        - 允许显示
+            - Delta
+            - Peak Difference
+            - End Difference
+    - Range Selection
+        - 支持
+            - 拖拽选择时间区间
+        - 可用于
+            - Zoom
+            - 统计
+            - 比较
+            - 导出局部数据
+    - Brush
+        - 只在长时间数据场景出现
+        - 默认高度较低
+        - 提供 Overview
+        - 主图显示 Brush 当前窗口
+    - 实时模式
+        - Follow Live
+            - 主图持续跟随最新数据
+        - 用户手动 Pan 后
+            - 允许暂停 Follow Live
+        - 恢复
+            - 一键回到 Live
+    - 性能原则
+        - 大数据量必须考虑降采样
+        - 不能简单绘制所有原始点
+        - 视口内优先
+        - 缩放后根据显示密度重新采样
+        - 避免 PointerMove 做全量数据扫描
+    - 视觉原则
+        - 线条清晰
+        - 背景浅
+        - Grid 弱
+        - 控件紧凑
+        - 少装饰
+        - 强调数据而不是容器
+        - 避免曲线颜色过多
+    - 禁止设计
+        - 巨大 Header
+        - 大量装饰性色块
+        - 过粗折线
+        - 过多 Series 同屏
+        - Grid 比数据更显眼
+        - Tooltip 遮挡大量曲线
+        - 为了展示全部数据牺牲可读性
+    - UI代码
+        - Component
+            - LineChart
+        - Slots
+            - Header
+            - Legend
+            - Plot
+            - Axes
+            - Grid
+            - Crosshair
+            - Tooltip
+            - SnapshotRail
+            - Brush
+        - Props
+            - series
+            - xDomain
+            - yDomain
+            - variant
+            - showGrid
+            - showLegend
+            - showCrosshair
+            - showTooltip
+            - showSnapshotRail
+            - showBrush
+            - followLive
+            - lockedTime
+            - rangeSelection
+        - Variant
+            - single
+            - multi
+            - compare
+            - focusBrush
+        - State
+            - live
+            - locked
+            - historical
+            - comparing
+        - Actions
+            - onPointInspect
+            - onTimeLock
+            - onRangeSelect
+            - onZoom
+            - onPan
+            - onFollowLive
+            - onSeriesToggle
+            - onCompare
+    - 与其他组件关系
+        - 由 XYUI-8-01 Visualization Container 承载
+        - 与 XYUI-8-02 Metric 联动
+        - 与 XYUI-8-03 Metric Group 联动
+        - 与 XYUI-8-05 Sparkline 联动
+        - 与 XYUI-8-14 Legend 配合
+        - 依赖 XYUI-8-15 Chart Tooltip & Crosshair
+        - 依赖 XYUI-8-16 Visualization Interaction
+
+- 8-07 · Area Chart / 面积趋势图
+    - 定位
+        - 用于表达连续变化中的累计量、总量、组成比例和区间范围
+        - 不是单纯“折线下方填色”
+        - 只有当面积本身具有语义时才使用
+        - 重点服务总量趋势、构成变化、范围带和实验比较
+    - 核心目标
+        - 表达累计量或总量的增长
+        - 表达组成部分随时间的变化
+        - 表达最小/最大/置信区间等范围信息
+        - 支持实验 A/B 比较
+        - 保持紧凑，适用于 XYLab 工具界面
+    - 主要使用场景
+        - 累计伤亡
+        - 累计资源消耗
+        - 累计任务量
+        - 网络流量累计
+        - 部队构成变化
+        - 资源来源构成
+        - 性能耗时构成
+        - 最小/最大区间
+        - P10～P90
+        - 置信区间
+        - 方案 A/B 累积量比较
+    - 最终采用方向
+        - 方案1 · Compact Area 正式保留
+        - 方案2 · Stacked Area 正式保留
+        - 方案3 · Range Area 正式保留
+        - 方案4 · Compare Area 正式保留
+        - 方案2 吸收方案4 的比较能力
+        - 形成可比较堆叠面积图增强 Variant
+        - 4 个方案共同构成合法 Area Chart 体系
+    - 关键语义分组
+        - 量面积
+            - 方案1
+            - 方案2
+            - 方案4
+            - 用于表达累计量、总量、构成、差异
+        - 区间面积
+            - 方案3
+            - 用于表达上下限、波动带、置信区间
+        - 原则
+            - 量面积与区间面积语义不同
+            - 实现和命名必须分开
+            - 不能混成一个模糊组件
+    - Variant A
+        - Compact Area / 单面积趋势
+            - 用途
+                - 累计量
+                - 总量趋势
+            - 适合
+                - 累计伤亡
+                - 累计资源消耗
+                - 累计任务量
+            - 优势
+                - 比折线更强调“总量积累”
+                - 比柱图更适合连续时间轴
+            - 限制
+                - 不适合表达离散类别排序
+    - Variant B
+        - Stacked Area / 堆叠面积图
+            - 用途
+                - 总量 + 构成比例变化
+            - 适合
+                - 伤亡构成
+                - 资源消耗构成
+                - CPU 时间构成
+                - 内存占用来源
+            - 核心
+                - 看总量怎么变
+                - 看各部分占比怎么变
+            - 增强方向
+                - 吸收 Compare Area 的能力
+                - 形成可比较堆叠面积图
+    - Variant C
+        - Range Area / 上下限带
+            - 用途
+                - 波动范围
+                - 最小/最大
+                - P10～P90
+                - 置信区间
+            - 核心
+                - 面积表示区间
+                - 中间线表示中位数或均值
+            - 优势
+                - 能够表达不确定性
+                - 避免单条 Line 掩盖波动幅度
+    - Variant D
+        - Compare Area / 对比面积图
+            - 用途
+                - 方案 A/B
+                - 对象 A/B
+                - Baseline / Current
+            - 核心
+                - 比较累计总量差异
+                - 比较差距从何时开始拉开
+            - 限制
+                - 需要控制重叠和遮挡
+    - 增强 Variant
+        - Comparable Stacked Area / 可比较堆叠面积图
+            - 来源
+                - 方案2 + 方案4
+            - 核心思想
+                - 同时表达
+                    - 总量
+                    - 构成
+                    - A/B 差异
+            - 适合
+                - 方案 A 与方案 B 的伤亡构成比较
+                - 方案 A 与方案 B 的资源消耗构成比较
+            - 实现建议
+                - 并排比较
+                - 分面比较
+                - 交互切换比较
+            - 不建议
+                - 多层重叠后继续叠 A/B，导致难读
+    - 面积语义规则
+        - 只有在面积本身有语义时才用
+        - 累计量
+            - 可以用单面积
+        - 构成量
+            - 可以用堆叠面积
+        - 区间范围
+            - 可以用范围带
+        - 如果只是想让图更饱满
+            - 禁止把 Line 强行改成 Area
+    - 时间轴
+        - 默认是连续时间
+        - 也可用于实验步骤或采样序列
+        - 长时间数据应支持缩放与范围刷选
+    - Series 数量规则
+        - 单面积
+            - 1 个主 Series
+        - 堆叠面积
+            - 建议 2～4 个构成部分
+        - 对比面积
+            - 建议 A/B 两组
+        - 超过推荐数量
+            - 必须分组
+            - 筛选
+            - 分页
+            - 禁止无限叠加
+    - Compare 规则
+        - 支持
+            - 方案 A / B
+            - 对象 A / B
+            - Baseline / Current
+        - 比较目标
+            - 最终总量差异
+            - 曲线斜率差异
+            - 差距起始时间
+            - 构成差异
+        - 显示方式
+            - Overlay
+            - Small Multiples
+            - Toggle
+            - Split View
+        - 优先建议
+            - 避免严重重叠遮挡
+            - 优先可读性
+    - Range Area 规则
+        - 面积带表示范围
+        - 中间线表示
+            - Median
+            - Mean
+            - Reference
+        - 应清楚标明
+            - 上界
+            - 下界
+            - 中心值
+        - 不能让用户误以为是累计量
+    - 交互
+        - Hover
+            - 显示当前时间点总量
+            - 显示构成详情
+            - 显示范围上/下界
+        - Click
+            - 锁定时间
+            - 同步 Metric
+            - 同步日志
+        - Compare
+            - 允许切换 A / B
+            - 允许查看构成差值
+    - 视觉原则
+        - 保持低饱和
+        - 面积填充轻
+        - 边界线清晰
+        - 避免过厚填色
+        - 避免大量透明重叠导致脏乱
+        - 优先保证数据层次清晰
+        - 控件整体保持紧凑
+    - 禁止设计
+        - 只因好看而使用面积
+        - 构成项太多仍强行堆叠
+        - 区间面积与累计面积混用
+        - 多组对比大量重叠难以辨认
+        - 填色过深遮挡信息
+        - 为了装饰增加无意义渐变
+    - UI代码
+        - Component
+            - AreaChart
+        - Slots
+            - Header
+            - Legend
+            - Plot
+            - Axes
+            - Grid
+            - Crosshair
+            - Tooltip
+            - SnapshotRail
+        - Props
+            - series
+            - variant
+            - xDomain
+            - yDomain
+            - showGrid
+            - showLegend
+            - showCrosshair
+            - showTooltip
+            - compareSeries
+            - rangeUpper
+            - rangeLower
+            - centerLine
+            - stackMode
+            - lockedTime
+        - Variant
+            - single
+            - stacked
+            - range
+            - compare
+            - comparableStacked
+        - Actions
+            - onPointInspect
+            - onTimeLock
+            - onSeriesToggle
+            - onCompare
+            - onOpenDetail
+    - 与其他组件关系
+        - 由 XYUI-8-01 Visualization Container 承载
+        - 与 XYUI-8-02 Metric 联动
+        - 与 XYUI-8-03 Metric Group 联动
+        - 与 XYUI-8-14 Legend 配合
+        - 依赖 XYUI-8-15 Chart Tooltip & Crosshair
+        - 依赖 XYUI-8-16 Visualization Interaction
+
+- 8-08 · Bar Chart / 柱状图
+    - 定位
+        - 用于表达离散对象之间的横向比较
+        - 重点不是连续时间变化
+        - 而是排序、分组比较、构成和偏差判断
+        - 是 XYLab 中最适合做离散比较的基础图表之一
+    - 核心目标
+        - 快速比较不同对象数值高低
+        - 快速完成排序判断
+        - 支持对象 A/B 比较
+        - 支持总量构成查看
+        - 支持相对目标或基线的偏差判断
+        - 保持紧凑，适合工具型界面
+    - 主要使用场景
+        - 各军疲劳排序
+        - 各区域资源值比较
+        - 各算法耗时比较
+        - 各方案评分比较
+        - 方案 A / B 指标对比
+        - 总伤亡构成
+        - 资源消耗构成
+        - 相对目标偏差
+        - 相对基线差异
+    - 最终采用方向
+        - 方案1 · Ranked Bar 正式保留
+        - 方案2 · Grouped Compare Bar 正式保留
+        - 方案3 · Stacked Composition Bar 正式保留
+        - 方案4 · Delta Bar 正式保留
+        - 4 个方案作为正式 Variant 全部保留
+    - Variant A
+        - Ranked Bar / 紧凑排序柱图
+            - 用途
+                - 按数值排序的横向比较
+            - 适合
+                - 各军疲劳
+                - 算法耗时
+                - 方案评分
+                - 资源储量
+            - 优势
+                - 最直接
+                - 最易读
+                - 最适合横向扫读
+            - 规则
+                - 默认按值排序
+                - 支持升序 / 降序切换
+    - Variant B
+        - Grouped Compare Bar / 分组比较柱图
+            - 用途
+                - 同一指标项下的 A/B 对比
+            - 适合
+                - 18:32 vs 18:42
+                - 方案 A vs B
+                - 对象 A vs B
+            - 核心
+                - 看同类项之间的差异
+            - 规则
+                - 每组柱数量要控制
+                - 建议 2～3 组
+                - 避免分组过多导致难读
+    - Variant C
+        - Stacked Composition Bar / 堆叠构成柱图
+            - 用途
+                - 表达总量和构成
+            - 适合
+                - 总伤亡构成
+                - 资源消耗构成
+                - CPU 时间构成
+            - 核心
+                - 看总量
+                - 看组成部分占比
+            - 规则
+                - 构成项数量需限制
+                - 建议 2～4 段
+    - Variant D
+        - Delta Bar / 偏差柱图
+            - 用途
+                - 表达相对目标或基线的正负偏差
+            - 适合
+                - 目标疲劳偏差
+                - 目标效率偏差
+                - 基线耗时偏差
+                - 参数偏离量
+            - 核心
+                - 不是比较原值
+                - 而是比较偏差
+            - 优势
+                - 实验工具意味最强
+                - 特别适合 XYLab
+    - 比较维度
+        - 排序
+            - 谁更高
+            - 谁更低
+            - 谁排第几
+        - 分组比较
+            - A vs B
+            - 前后时刻
+            - 对象对比
+        - 构成
+            - 总量由什么组成
+        - 偏差
+            - 相对目标
+            - 相对基线
+            - 相对期望
+    - 方向
+        - Horizontal
+            - 默认优先
+            - 更适合标签较长和排序判断
+        - Vertical
+            - 仅在标签短、空间合适时使用
+        - 原则
+            - XYLab 默认优先横向柱图
+    - 排序规则
+        - Ranked Bar 默认按值排序
+        - 允许
+            - 升序
+            - 降序
+            - 保持原始顺序
+        - 用户排序方式应可持久化
+    - 分组规则
+        - Group Compare 建议每组 2 个柱
+        - 最多建议 3 个柱
+        - 超过后应改用其他图表或切换视图
+        - 同组柱必须共享刻度和基准
+    - 构成规则
+        - Stacked Bar 中
+            - 总量重要
+            - 构成也重要
+        - 适合离散对象
+        - 如果是连续时间轴
+            - 优先考虑 Area Chart
+    - 偏差规则
+        - Delta Bar 必须有中心零线
+        - 支持
+            - 负偏差
+            - 正偏差
+        - 偏差不应只依赖颜色表达
+        - 需要明确显示数值
+    - 数量规则
+        - 对象较少
+            - 可完整显示
+        - 对象过多
+            - 应分页
+            - 搜索
+            - 筛选
+            - 滚动
+        - 不应强行在同一屏幕塞过多对象
+    - 标签规则
+        - 对象名称应清楚
+        - 数值应尽量靠近柱末端或固定位置显示
+        - 长标签应支持截断与 Tooltip
+    - 交互
+        - Hover
+            - 显示精确值
+            - 显示单位
+            - 显示附加信息
+        - Click
+            - 允许高亮对象
+            - 允许查看详情
+            - 允许联动其他图表
+        - Sort
+            - 允许一键切换排序方式
+        - Compare
+            - 允许切换比较基准
+    - 视觉原则
+        - 柱体清晰
+        - 间距紧凑
+        - 刻度适度
+        - 背景浅
+        - Grid 弱化
+        - 优先保证比较关系清楚
+        - 不要做成厚重 Dashboard 卡片
+    - 禁止设计
+        - 柱体过多导致难读
+        - 依赖颜色完成全部区分
+        - 排序场景不排序
+        - 分组过多
+        - 构成段过多
+        - 为了装饰加入无意义渐变或阴影
+    - UI代码
+        - Component
+            - BarChart
+        - Slots
+            - Header
+            - Legend
+            - Axes
+            - Grid
+            - BarLayer
+            - Tooltip
+            - Footer
+        - Props
+            - items
+            - variant
+            - sortMode
+            - compareValues
+            - stackValues
+            - deltaValues
+            - showGrid
+            - showLegend
+            - showValue
+            - density
+            - orientation
+        - Variant
+            - ranked
+            - groupedCompare
+            - stackedComposition
+            - delta
+        - Actions
+            - onSortChange
+            - onItemInspect
+            - onCompareChange
+            - onOpenDetail
+    - 与其他组件关系
+        - 由 XYUI-8-01 Visualization Container 承载
+        - 与 XYUI-8-02 Metric 联动
+        - 与 XYUI-8-03 Metric Group 联动
+        - 可与 XYUI-8-14 Legend 配合
+        - 可响应 XYUI-8-15 Tooltip
+        - 可响应 XYUI-8-16 Visualization Interaction
+
+- 8-09 · Distribution / 分布图
+    - 定位
+        - 用于表达一批样本值如何分布
+        - 重点不是时间变化
+        - 也不是简单高低排序
+        - 而是观察集中程度、离散程度、偏斜、长尾、多峰和分组差异
+    - 核心目标
+        - 看样本主要集中在哪些区间
+        - 看分布是否偏左或偏右
+        - 看是否有长尾
+        - 看是否多峰
+        - 看不同方案或对象的分布差异
+        - 支持紧凑摘要，适合工具界面
+    - 主要使用场景
+        - 疲劳值分布
+        - 伤害分布
+        - 攻击效率分布
+        - 性能耗时分布
+        - 帧时间分布
+        - 实验结果分布
+        - 方案 A / B 分布比较
+        - 多对象分布摘要
+        - 百分位稳定性观察
+    - 最终采用方向
+        - 方案2 · Compare Distribution / 对比分布图 为主方案
+        - 方案1 · Compact Histogram 作为基础分布能力
+        - 方案3 · Box Summary 作为多组摘要能力
+        - 方案4 · Percentile Band 作为紧凑摘要能力
+        - 形成以“比较”为核心的 Distribution 体系
+    - 主方案
+        - 方案2 · Compare Distribution / 对比分布图
+            - 核心思想
+                - 分布图不只是看单批样本
+                - 而是优先服务比较
+            - 适合
+                - 方案 A vs B
+                - 对象 A vs B
+                - 基线 vs 当前
+                - 两批实验结果
+            - 重点观察
+                - 均值差异
+                - 峰值位置差异
+                - 离散程度差异
+                - 尾部风险差异
+                - 是否一个更稳定
+            - 优势
+                - 比只看均值更真实
+                - 比只看最终结果更适合实验分析
+    - 辅助方案
+        - 方案1 · Compact Histogram / 紧凑直方图
+            - 用途
+                - 单批样本完整分布观察
+            - 适合
+                - 疲劳
+                - 伤害
+                - 延迟
+                - 帧时间
+            - 优势
+                - 最标准
+                - 最直观
+            - 限制
+                - 多组比较时效率一般
+        - 方案3 · Box Summary / 箱线分布摘要
+            - 用途
+                - 多组对象快速摘要比较
+            - 适合
+                - 多支部队
+                - 多方案
+                - 多区域
+            - 表达
+                - Min
+                - Q1
+                - Median
+                - Q3
+                - Max
+            - 优势
+                - 紧凑
+                - 适合一屏多组
+            - 限制
+                - 丢失分布细节
+        - 方案4 · Percentile Band / 百分位带
+            - 用途
+                - 超紧凑分布摘要
+            - 适合
+                - Inspector
+                - 结果摘要卡片
+                - 小面板
+            - 表达
+                - P10
+                - P25
+                - Median
+                - P75
+                - P90
+            - 优势
+                - 比 Histogram 更省空间
+            - 限制
+                - 无法展示多峰和局部形态
+    - 核心观察维度
+        - Center
+            - 均值
+            - 中位数
+        - Spread
+            - 离散程度
+            - 方差感知
+        - Shape
+            - 偏斜
+            - 峰值
+            - 多峰
+        - Tail
+            - 长尾
+            - 极端值
+        - Compare
+            - A/B 分布差异
+    - Variant
+        - histogram
+            - 完整分布
+        - compareHistogram
+            - 默认主 Variant
+            - 对比分布
+        - boxSummary
+            - 多组摘要
+        - percentileBand
+            - 紧凑摘要
+    - Histogram 规则
+        - Bin 数量不能过少
+        - 也不能过密
+        - 应根据样本数量和区间范围自动调整
+        - 必要时允许手动调整 Bin
+    - Compare 规则
+        - 比较对象应共享相同刻度
+        - 比较对象应共享相同 Bin 规则
+        - 不能让 A/B 分别采用不同区间切分
+        - 可用
+            - Overlay
+            - Side by Side
+            - Small Multiples
+        - 优先保证可读性
+    - Box Summary 规则
+        - 重点是快速比较多组的中心和离散
+        - 适合一屏展示多组
+        - 默认不承担完整形状展示
+    - Percentile 规则
+        - 适合表达稳定性和区间覆盖
+        - 适合摘要面板
+        - 不适合作为唯一分布分析图
+    - 统计标记
+        - 支持显示
+            - Mean
+            - Median
+            - P10
+            - P90
+            - Outlier
+        - 原则
+            - 统计标记要轻量
+            - 不要压过主分布
+    - 交互
+        - Hover
+            - 显示区间范围
+            - 显示样本数
+            - 显示比例
+        - Click
+            - 查看该区间详细样本
+            - 联动日志或对象列表
+        - Compare
+            - 切换 A/B
+            - 切换样本组
+    - 视觉原则
+        - 保持紧凑
+        - 背景浅
+        - Grid 弱化
+        - 主分布清楚
+        - 辅助标记轻量
+        - 对比时优先确保两组差异容易看出
+    - 禁止设计
+        - 只展示均值却叫分布图
+        - A/B 使用不同尺度
+        - Bin 切分不一致
+        - 摘要图强行替代完整分布图
+        - 为装饰加入过度填色
+    - UI代码
+        - Component
+            - DistributionChart
+        - Slots
+            - Header
+            - Legend
+            - Plot
+            - Axes
+            - Grid
+            - Tooltip
+            - Stats
+            - Footer
+        - Props
+            - data
+            - compareData
+            - variant
+            - binCount
+            - showMean
+            - showMedian
+            - showPercentiles
+            - showOutliers
+            - showLegend
+            - density
+        - Variant
+            - histogram
+            - compareHistogram
+            - boxSummary
+            - percentileBand
+        - Actions
+            - onBinInspect
+            - onCompareChange
+            - onOpenSamples
+            - onToggleStats
+    - 与其他组件关系
+        - 由 XYUI-8-01 Visualization Container 承载
+        - 可与 XYUI-8-02 Metric 联动
+        - 可与 XYUI-8-03 Metric Group 联动
+        - 可与 XYUI-8-14 Legend 配合
+        - 可响应 XYUI-8-15 Tooltip
+        - 可响应 XYUI-8-16 Visualization Interaction
+
+- 8-10 · Scatter Plot / 散点图
+    - 定位
+        - 用于分析两个变量之间的关系
+        - 用于发现不同方案、对象或样本群之间的聚类差异
+        - 用于风险象限判断和局部样本分析
+        - 不是默认高频图表
+        - 属于 XYLab 中按需调用的分析型组件
+    - 核心目标
+        - 判断两个变量是否存在关系
+        - 比较不同方案形成的样本点群
+        - 识别异常点和异常簇
+        - 按阈值进行象限分类
+        - 支持框选局部样本继续分析
+    - 使用原则
+        - Scatter Plot 不作为所有实验默认图表
+        - 只有当存在两个连续变量关系时使用
+        - 如果只是比较几个对象数值
+            - 优先 Plot 不作为所有实验默认图表
+        - 只有当存在两个连续 Bar Chart
+        - 如果只是观察时间趋势
+            - 优先 Line Chart
+        - 如果只是观察分布
+            - 优先 Distribution
+    - 最终采用方向
+        - 方案2 · Grouped Scatter 为默认主 Variant
+        - 方案3 · Quadrant Scatter 为阈值分析 Variant
+        - 方案4 · Selection Scatter 为深度分析 Variant
+        - 方案1 · Basic Scatter 不单独保留
+        - 方案1 的基础单组关系能力合并进方案2
+    - 默认 Variant
+        - Grouped Scatter / 分组对比散点图
+            - 核心
+                - 同时支持单组和多组样本
+            - 单组模式
+                - 等价于基础 Scatter
+            - 多组模式
+                - 方案 A / B / C
+                - 对象分组
+                - 不同实验批次
+            - 适合
+                - 疲劳 vs 攻击效率
+                - 补给 vs 战斗效率
+                - 延迟 vs Entity 数量
+                - 参数值 vs 实验结果
+            - 优势
+                - 基础能力和方案比较统一
+                - 避免多维护一个 Basic Variant
+    - 高级 Variant A
+        - Quadrant Scatter / 象限判断散点图
+            - 用途
+                - 风险判断
+                - 状态分类
+            - 结构
+                - X Threshold
+                - Y Threshold
+                - 4 个象限
+            - 示例
+                - 高补给 + 高效率
+                - 低补给 + 高效率
+                - 高补给 + 低效率
+                - 低补给 + 低效率
+            - 重点
+                - 快速定位风险象限
+            - 使用条件
+                - X / Y 都存在明确业务阈值时才使用
+    - 高级 Variant B
+        - Selection Scatter / 选区分析散点图
+            - 用途
+                - 框选局部样本
+                - 异常簇分析
+                - 局部统计
+            - 支持
+                - Rectangle Select
+                - Lasso Select
+                - Selected Count
+                - Selected Mean
+                - Selected Range
+            - 适合
+                - 大型实验样本
+                - 异常点排查
+                - 局部样本继续研究
+            - 使用条件
+                - 只有需要交互分析时开启
+    - 关系分析
+        - 支持观察
+            - Positive Correlation
+            - Negative Correlation
+            - No Clear Relation
+            - Cluster
+            - Outlier
+        - 可选
+            - Trend Line
+            - Regression Line
+        - 原则
+            - 不能自动把相关性解释成因果关系
+    - 分组规则
+        - 默认支持
+            - 1 组
+            - 2 组
+            - 3 组
+        - 建议最多
+            - 4 组
+        - 超过后
+            - 筛选
+            - 分面
+            - 隐藏部分组
+    - 点数量
+        - 少量
+            - 正常绘制
+        - 中量
+            - 降低 Point Size
+            - 降低透明度
+        - 大量
+            - 需要采样
+            - 密度聚合
+            - 避免直接绘制所有点
+    - 点视觉
+        - 默认使用小点
+        - 不做大 Bubble
+        - 颜色用于 Group
+        - 选中状态应有独立轮廓
+        - 异常点可有额外标记
+    - 轴
+        - X Axis
+            - 连续变量
+        - Y Axis
+            - 连续变量
+        - 必须标明
+            - Label
+            - Unit
+        - 避免无意义的双轴
+    - 象限规则
+        - 只有存在明确阈值时显示
+        - 象限背景应非常轻
+        - 阈值线比 Grid 明显
+        - 风险象限必须有文字语义
+        - 不能只靠颜色判断
+    - 选择交互
+        - Click
+            - 单点选择
+        - Rectangle Select
+            - 矩形框选
+        - Lasso
+            - 可选高级能力
+        - 选择后
+            - 显示样本数量
+            - 显示摘要统计
+            - 允许联动对象列表
+            - 允许联动日志
+    - Tooltip
+        - 显示
+            - X Value
+            - Y Value
+            - Object ID / Name
+            - Group
+            - 可选时间
+        - 大量数据时
+            - Tooltip 必须避免全量命中扫描
+    - 图表联动
+        - 选择样本后
+            - Metric Group 可显示选区摘要
+            - Distribution 可显示选中样本分布
+            - 日志可定位相关对象
+            - 地图可高亮相关对象
+    - 视觉原则
+        - 控件紧凑
+        - 点尺寸小
+        - Grid 弱
+        - 背景浅
+        - Group 色数量有限
+        - 分析结果比装饰重要
+    - 禁止设计
+        - 没有两个连续变量却强行使用 Scatter
+        - 点巨大遮挡
+        - 颜色组过多
+        - 大样本全部直接绘制
+        - 把相关性直接解释为因果关系
+        - 象限没有明确阈值仍强行划分
+    - UI代码
+        - Component
+            - ScatterPlot
+        - Slots
+            - Header
+            - Legend
+            - Plot
+            - Axes
+            - Grid
+            - PointLayer
+            - ThresholdLayer
+            - SelectionLayer
+            - Tooltip
+        - Props
+            - points
+            - groups
+            - variant
+            - xField
+            - yField
+            - xThreshold
+            - yThreshold
+            - showTrend
+            - showLegend
+            - selectionMode
+            - pointSize
+            - density
+        - Variant
+            - grouped
+            - quadrant
+            - selection
+        - SelectionMode
+            - none
+            - point
+            - rectangle
+            - lasso
+        - Actions
+            - onPointInspect
+            - onSelectionChange
+            - onGroupToggle
+            - onLocateObjects
+            - onOpenDistribution
+    - 与其他组件关系
+        - 由 XYUI-8-01 Visualization Container 承载
+        - 可与 XYUI-8-03 Metric Group 联动
+        - 可与 XYUI-8-09 Distribution 联动
+        - 可与 XYUI-8-14 Legend 配合
+        - 依赖 XYUI-8-15 Tooltip
+        - 依赖 XYUI-8-16 Visualization Interaction
+
+- 8-11 · Heatmap / 热力图
+    - 定位
+        - 用于通过颜色强弱表达二维矩阵、对象×时间、参数网格或空间网格中的数值分布
+        - 重点服务大量数据的整体扫读
+        - 帮助用户快速发现高值区、异常区、模式区和甜蜜区
+    - 核心目标
+        - 快速看出哪里高、哪里低
+        - 快速发现模式和异常
+        - 支持对象 × 时间的大量监测
+        - 支持参数实验网格结果观察
+        - 支持地图或空间网格热区表达
+        - 保持紧凑，适合实验工具和未来玄域场景
+    - 主要使用场景
+        - 对象 × 时间监测
+        - 多对象疲劳热力图
+        - 参数实验网格
+        - 公式调参甜蜜区观察
+        - 地图伤亡密度
+        - 资源密度
+        - 路径拥堵
+        - 性能热点
+        - 空间压力分布
+    - 最终采用方向
+        - 方案2 · Entity-Time Heatmap 为主
+        - 方案3 · Parameter Grid Heatmap 为主
+        - 方案4 · Spatial Heatmap 为主
+        - 方案1 · Time-Metric Heatmap 作为辅助 Variant
+    - 主方案一
+        - 方案2 · Entity-Time Heatmap / 对象 × 时间热力图
+            - 核心思想
+                - 纵轴看对象
+                - 横轴看时间
+                - 颜色看状态值
+            - 适合
+                - 各军疲劳
+                - 各单位士气
+                - 各模块负载
+            - 优势
+                - 大量对象时比多折线更容易扫读
+                - 适合找出“谁在什么时候异常”
+    - 主方案二
+        - 方案3 · Parameter Grid Heatmap / 参数网格热力图
+            - 核心思想
+                - 两个参数铺成二维网格
+                - 颜色表示实验结果
+            - 适合
+                - XYLab 参数实验
+                - 疲劳恢复速率 × 行军负荷
+                - 命中率 × 士气衰减
+                - 算法参数 × 性能结果
+            - 重点
+                - 快速找到高值区
+                - 找到甜蜜区
+                - 找到异常区
+            - 关键修正规则
+                - 推荐区域不能遮挡格子识读
+                - 默认禁止大面积半透明覆盖块
+                - 推荐区域应优先采用
+                    - 细描边
+                    - 四角括号
+                    - 外侧注释线
+                    - hover 高亮
+                - 推荐区是辅助提示
+                - 不能压过热力图本体
+    - 主方案三
+        - 方案4 · Spatial Heatmap / 空间密度热力图
+            - 核心思想
+                - 把热力分布叠加到地图、空间网格或战场区域上
+            - 适合
+                - 伤亡密度
+                - 战斗密度
+                - 单位密度
+                - 资源密度
+                - 路径拥堵
+                - 性能热点
+            - 价值
+                - 直接服务玄域地图和战场系统
+    - 辅助方案
+        - 方案1 · Time-Metric Heatmap / 时间 × 指标热力图
+            - 用途
+                - 多指标随时间的整体变化观察
+            - 适合
+                - 疲劳
+                - 士气
+                - 补给
+                - 效率
+                - 伤亡率
+            - 优势
+                - 能快速发现多个指标同时恶化的时间段
+    - Heatmap 类型
+        - Time-Metric
+            - 时间 × 指标
+        - Entity-Time
+            - 对象 × 时间
+        - Parameter-Grid
+            - 参数 × 参数
+        - Spatial
+            - 空间 / 地图网格
+    - 颜色规则
+        - 颜色必须有明确高低语义
+        - 浅色表示低
+        - 深色表示高
+        - 需要图例说明
+        - 不能只靠主观审美配色
+        - 相邻级别应容易区分
+    - 格子规则
+        - 格子数量过多时
+            - 需要缩放
+            - 抽样
+            - 分页
+            - 聚合
+        - 不能无条件展示海量单元导致难读
+    - 时间规则
+        - Entity-Time 和 Time-Metric
+            - 横轴默认是时间
+        - 需要支持锁定时间
+        - 锁定后应联动其他组件
+    - 参数网格规则
+        - 两个轴都应明确参数名和取值
+        - 结果值应支持 Tooltip 查看
+        - 推荐区只能辅助标注
+        - 不能覆盖格子本身
+        - 允许圈选一片区域作为候选方案区
+    - 空间热力规则
+        - 必须和地图坐标或空间网格系统结合
+        - 允许网格热图
+        - 允许区域热图
+        - 允许地块热图
+        - 不应只做模糊光斑装饰
+        - 应以可解释的网格或区域为主
+    - 交互
+        - Hover
+            - 查看格子精确值
+            - 查看对象 / 时间 / 参数 / 区域信息
+        - Click
+            - 锁定单元
+            - 联动 Metric
+            - 联动日志
+            - 联动地图或对象
+        - Select
+            - 允许框选区域
+            - 允许选中参数区
+    - 联动
+        - 锁定某时间列
+            - Line Chart 同步
+            - Metric Group 同步
+        - 选择某参数区
+            - 结果摘要同步
+            - 推荐参数列表同步
+        - 选择空间网格
+            - 地图详情同步
+            - 日志同步
+    - 视觉原则
+        - 整体紧凑
+        - 色块清楚
+        - 边界适度
+        - 图例清晰
+        - 辅助标注轻量
+        - 不能让标注比数据更显眼
+    - 禁止设计
+        - 推荐区域大块遮挡
+        - 颜色无明确语义
+        - 空间热图只做模糊装饰
+        - 对象过多仍强行全铺开
+        - 为了好看加入复杂渐变干扰识读
+    - UI代码
+        - Component
+            - Heatmap
+        - Slots
+            - Header
+            - Legend
+            - Grid
+            - Axes
+            - Tooltip
+            - SelectionOverlay
+            - Annotation
+        - Props
+            - data
+            - variant
+            - xLabels
+            - yLabels
+            - colorScale
+            - showLegend
+            - showTooltip
+            - lockedCell
+            - selectedRegion
+            - annotations
+        - Variant
+            - timeMetric
+            - entityTime
+            - parameterGrid
+            - spatial
+        - Actions
+            - onCellInspect
+            - onCellLock
+            - onRegionSelect
+            - onOpenDetail
+    - 与其他组件关系
+        - 由 XYUI-8-01 Visualization Container 承载
+        - 可与 XYUI-8-02 Metric 联动
+        - 可与 XYUI-8-03 Metric Group 联动
+        - 可与 XYUI-8-06 Line Chart 联动
+        - 可与 XYUI-8-12 Timeline 联动
+        - 依赖 XYUI-8-15 Tooltip
+        - 依赖 XYUI-8-16 Visualization Interaction
+
+- 8-12 · Timeline / 时间轴可视化
+    - 定位
+        - 用于按时间组织事件、阶段、状态变化和日志节点
+        - 不是普通项目管理 Timeline
+        - 重点服务 XYLab 实验回放、战斗过程分析、日志联动和时间锁定
+    - 核心目标
+        - 快速知道什么时候发生了什么
+        - 快速识别关键事件
+        - 支持锁定时间继续检查
+        - 支持日志联动
+        - 必要时表达多来源事件和持续区间
+        - 保持紧凑，不做大面积时间管理界面
+    - 主要使用场景
+        - 战斗过程回放
+        - 实验关键事件
+        - 疲劳阈值突破
+        - 补给异常
+        - 伤亡陡增
+        - 性能事件
+        - 日志摘要
+        - 状态持续区间
+        - 系统事件
+    - 最终采用方向
+        - 方案1 · Compact Event Timeline 为主
+        - 方案4 · Inspector Timeline 为主
+        - 方案2 · Lane Timeline 作为可选 Variant
+        - 方案3 · Interval Timeline 作为可选 Variant
+    - 主方案一
+        - Compact Event Timeline / 紧凑事件时间轴
+            - 核心思想
+                - 一根主时间线
+                - 只挂关键事件
+            - 适合
+                - 战斗摘要
+                - 实验事件摘要
+                - 日志浓缩
+            - 典型事件
+                - 接敌
+                - 疲劳越线
+                - 补给不足
+                - 伤亡陡增
+                - 效率下降
+                - 撤退
+            - 优势
+                - 最轻
+                - 最直观
+                - 占用高度低
+    - 主方案二
+        - Inspector Timeline / 检查器时间轴
+            - 核心思想
+                - Timeline 不只是展示
+                - 而是时间检查入口
+            - 结构
+                - Scrubber
+                - 当前锁定时间
+                - 当前事件
+                - 关联日志
+            - 典型流程
+                - 拖到 18:42
+                - 锁定时间
+                - 显示 18:42 当前事件
+                - 显示关联日志
+                - 联动 Metric / Line Chart
+            - 优势
+                - 非常适合 XYLab 调试和回放
+    - 可选 Variant A
+        - Lane Timeline / 泳道时间轴
+            - 用途
+                - 事件来源很多
+                - 事件密度高
+            - 典型泳道
+                - 战斗
+                - 补给
+                - 状态
+                - 系统
+            - 优势
+                - 避免所有事件堆在一条时间线上
+            - 启用条件
+                - 只有事件来源确实需要分组时使用
+    - 可选 Variant B
+        - Interval Timeline / 阶段区间时间轴
+            - 用途
+                - 表达持续状态
+                - 表达阶段
+            - 适合
+                - 接敌阶段
+                - 交火阶段
+                - 补给不足阶段
+                - 撤退阶段
+                - Buff / Debuff
+            - 重点
+                - 不仅看什么时候发生
+                - 还要看持续多久
+    - 事件类型
+        - Point Event
+            - 瞬时事件
+        - Interval Event
+            - 持续事件
+        - System Event
+            - 系统事件
+        - Alert Event
+            - 阈值或异常事件
+    - 事件优先级
+        - Primary
+            - 关键战斗 / 实验事件
+        - Secondary
+            - 辅助事件
+        - Background
+            - 低优先级系统事件
+        - 原则
+            - 默认 Timeline 不应把所有日志都显示出来
+            - 只显示有分析价值的事件
+    - 时间锁定
+        - 点击事件
+            - 锁定该事件时间
+        - 拖动 Scrubber
+            - 连续检查时间
+        - 锁定后
+            - Metric 同步
+            - Metric Group 同步
+            - Line Chart 同步
+            - Heatmap 同步
+            - 日志同步
+    - Scrubber
+        - 仅 Inspector Timeline 默认具备
+        - 支持
+            - 拖动
+            - 点击跳转
+            - 键盘微调
+        - 当前时间必须清晰显示
+    - 日志联动
+        - Timeline 不直接承担完整日志阅读
+        - 只展示关键关联日志
+        - 允许一键跳转完整日志
+        - 锁定时间后日志自动定位附近记录
+    - 事件密度
+        - 事件少
+            - 使用 Compact Timeline
+        - 事件多
+            - 使用 Lane Timeline
+            - 或聚合事件
+        - 不能把几十个事件标签同时铺开
+    - 聚合
+        - 同一短时间内大量同类事件
+            - 允许聚合
+        - 示例
+            - 伤亡事件 × 28
+            - 补给告警 × 12
+        - 点击聚合节点
+            - 展开详情
+    - 缩放
+        - 支持
+            - Zoom In
+            - Zoom Out
+            - Fit All
+        - 长时间数据
+            - 应支持 Range Select
+    - 视觉原则
+        - 时间轴细
+        - 节点小
+        - 标签紧凑
+        - 当前锁定时间明显
+        - 事件颜色低饱和
+        - 避免装饰型大节点
+    - 禁止设计
+        - 把所有日志都塞进时间轴
+        - 事件标签大面积重叠
+        - 节点尺寸过大
+        - 为了视觉效果做复杂轨道装饰
+        - 时间锁定后没有联动反馈
+    - UI代码
+        - Component
+            - Timeline
+        - Slots
+            - Header
+            - Axis
+            - Track
+            - EventLayer
+            - IntervalLayer
+            - Scrubber
+            - Inspector
+            - LogPreview
+        - Props
+            - events
+            - intervals
+            - variant
+            - currentTime
+            - lockedTime
+            - timeRange
+            - lanes
+            - showScrubber
+            - showInspector
+            - showLabels
+            - density
+        - Variant
+            - compact
+            - inspector
+            - lane
+            - interval
+        - State
+            - live
+            - locked
+            - historical
+        - Actions
+            - onEventInspect
+            - onTimeLock
+            - onScrub
+            - onRangeChange
+            - onOpenLog
+    - 与其他组件关系
+        - 由 XYUI-8-01 Visualization Container 承载
+        - 与 XYUI-8-02 Metric 联动
+        - 与 XYUI-8-03 Metric Group 联动
+        - 与 XYUI-8-06 Line Chart 联动
+        - 与 XYUI-8-11 Heatmap 联动
+        - 依赖 XYUI-8-15 Tooltip & Crosshair
+        - 依赖 XYUI-8-16 Visualization Interaction
+
+- 8-13 · Gauge / 仪表与阈值指标
+    - 定位
+        - 用于快速判断当前值与阈值、目标或基线之间的关系
+        - 不是汽车仪表盘式装饰组件
+        - 重点服务监测、调参、目标判断和偏差分析
+        - 默认保持小型、紧凑
+    - 核心目标
+        - 第一眼知道当前值在哪里
+        - 第一眼知道是否越过阈值
+        - 第一眼知道是否达到目标
+        - 第一眼知道偏离基线多少
+        - 尽量减少空间占用
+    - 主要使用场景
+        - 疲劳
+        - 补给
+        - 风险值
+        - CPU / GPU
+        - 内存压力
+        - 仿真延迟
+        - 攻击效率
+        - 实验目标
+        - 性能预算
+        - 参数偏差
+    - 最终采用方向
+        - 方案1 · Linear Threshold Gauge 正式保留
+        - 方案2 · Bullet Gauge 正式保留
+        - 方案4 · Deviation Gauge 正式保留
+        - 方案3 · Compact Arc Gauge 作为可选视觉 Variant
+    - 正式 Variant A
+        - Linear Threshold Gauge / 线性阈值仪表
+            - 用途
+                - 看阈值
+            - 适合
+                - 疲劳
+                - 补给
+                - 延迟
+                - 风险值
+                - 内存压力
+            - 结构
+                - Current Value
+                - Linear Track
+                - Threshold Bands
+                - Current Marker
+                - Status
+            - 优势
+                - 最紧凑
+                - 最适合高频监测
+                - 不会浪费横向空间
+    - 正式 Variant B
+        - Bullet Gauge / 目标子弹仪表
+            - 用途
+                - 实际值 vs 目标值
+                - 当前值 vs 基线值
+            - 适合
+                - 攻击效率
+                - 性能预算
+                - 实验目标
+            - 结构
+                - Actual
+                - Track
+                - Target Marker
+                - Delta
+            - 优势
+                - 比传统 Gauge 更适合实验调参
+                - 目标位置非常明确
+    - 正式 Variant C
+        - Deviation Gauge / 中心偏差仪表
+            - 用途
+                - 以目标或基线为中心判断正负偏差
+            - 适合
+                - 参数偏差
+                - 性能偏差
+                - 实验结果偏差
+            - 结构
+                - Negative Range
+                - Zero / Target
+                - Positive Range
+                - Current Marker
+            - 优势
+                - 非常适合 XYLab Compare
+                - 快速判断偏左还是偏右
+    - 可选 Variant
+        - Compact Arc Gauge / 紧凑弧形仪表
+            - 用途
+                - 少量关键状态
+                - 需要更强视觉辨识度时
+            - 限制
+                - 只使用半弧
+                - 不要完整圆盘
+                - 不要复杂刻度
+                - 不要渐变
+                - 不要大面积铺开
+            - 原则
+                - 不是默认 Gauge
+    - 阈值规则
+        - 支持
+            - Normal
+            - Notice
+            - Warning
+            - Critical
+        - 阈值必须有明确文字语义
+        - 不能只依赖颜色
+        - Current Marker 必须比区间更加明显
+    - 目标规则
+        - 支持
+            - Target Value
+            - Target Range
+            - Baseline
+        - 目标线应清楚但不压过当前值
+        - 应允许显示
+            - 距离目标差值
+            - 是否达到目标
+    - 偏差规则
+        - Zero / Baseline 位于中心
+        - 左侧表示负偏差
+        - 右侧表示正偏差
+        - 支持显示绝对偏差或百分比偏差
+        - 不能只靠方向判断
+        - 必须显示数值
+    - 尺寸
+        - Small
+            - 默认
+            - 用于 Metric / Inspector
+        - Medium
+            - 用于 Visualization Container
+        - Large
+            - 谨慎使用
+            - 仅用于少量关键指标
+        - 原则
+            - Gauge 整体优先小型化
+    - 交互
+        - Hover
+            - 显示精确值
+            - 显示阈值定义
+            - 显示目标信息
+        - Click
+            - 打开详情
+            - 联动趋势图
+        - Compare
+            - 允许切换 Baseline
+            - 允许显示 Delta
+    - 视觉原则
+        - 平面
+        - 紧凑
+        - 浅色背景
+        - 低饱和
+        - 阈值语义清楚
+        - 不追求“仪表盘科技感”
+    - 禁止设计
+        - 巨大圆形仪表盘
+        - 大量复杂刻度
+        - 汽车仪表盘装饰
+        - 彩虹渐变
+        - 同时铺大量 Arc Gauge
+        - 只靠颜色表达危险
+    - UI代码
+        - Component
+            - Gauge
+        - Slots
+            - Label
+            - Value
+            - Track
+            - Threshold
+            - Target
+            - Marker
+            - Delta
+            - Status
+        - Props
+            - value
+            - min
+            - max
+            - unit
+            - variant
+            - thresholds
+            - target
+            - baseline
+            - showDelta
+            - size
+            - status
+        - Variant
+            - threshold
+            - bullet
+            - deviation
+            - arc
+        - Actions
+            - onInspect
+            - onOpenTrend
+            - onBaselineChange
+    - 与其他组件关系
+        - 可嵌入 XYUI-8-02 Metric
+        - 可被 XYUI-8-03 Metric Group 使用
+        - 与 XYUI-8-04 Progress & Range 共享阈值语义
+        - 可由 XYUI-8-01 Visualization Container 承载
+        - 可响应 XYUI-8-15 Tooltip
+
+- 8-14 · Legend / 图例系统
+    - 定位
+        - 用于说明图表中的 Series、分类和数据对象
+        - 同时承担基础 Series 控制功能
+        - 不是独立的大型图例面板
+        - 默认保持紧凑并直接嵌入图表 Header
+    - 核心目标
+        - 让用户快速知道每条线或每组数据代表什么
+        - 允许一键隐藏或显示 Series
+        - 允许快速聚焦某个 Series
+        - 避免为了图例额外占据大量画布空间
+    - 主要使用场景
+        - Line Chart
+        - Area Chart
+        - Bar Chart Compare
+        - Distribution Compare
+        - Scatter Group
+        - 其他多 Series 图表
+    - 最终采用方向
+        - 只采用 Interactive Legend / 可交互图例
+        - 不再维护多套正式 Variant
+        - 简单场景自动退化为精简图例
+        - 复杂场景继续使用同一套交互逻辑
+    - 基本结构
+        - Series Marker
+        - Series Name
+        - 可选 Current Value
+        - Visible State
+        - Focus State
+    - 默认形态
+        - 嵌入图表 Header
+        - 横向排列
+        - 尽量不独立占据一整行
+        - 2～4 个 Series 时直接全部显示
+    - 基础状态
+        - Visible
+            - 正常显示
+        - Hidden
+            - 隐藏 Series
+            - Legend 项保留但弱化
+        - Focused
+            - 当前聚焦 Series
+            - 其他 Series 自动弱化
+        - Selected
+            - 用于多选比较
+    - 交互
+        - 单击
+            - 聚焦 Series
+        - 再次单击
+            - 恢复全部
+        - 隐藏操作
+            - 隐藏 / 显示 Series
+        - 多选
+            - 保留多个 Series 同时高亮
+        - 原则
+            - 高频操作必须直接完成
+            - 不要求进入二级菜单
+    - 聚焦模式
+        - 用户聚焦某个 Series 后
+            - 目标 Series 保持正常强调
+            - 其他 Series 自动降低视觉权重
+            - Tooltip 优先显示目标 Series
+        - 适合
+            - 多线趋势图
+            - 方案比较
+            - 复杂 Area Chart
+    - 数量规则
+        - 1 个 Series
+            - 通常可以隐藏 Legend
+        - 2～4 个 Series
+            - 默认直接横向显示
+        - 5～8 个 Series
+            - 允许紧凑换行或横向滚动
+        - 超过 8 个 Series
+            - 优先筛选或分组图表本身
+            - 不通过扩大 Legend 解决问题
+    - Current Value
+        - 可选显示当前数值
+        - 例如
+            - 疲劳 63%
+            - 士气 71%
+        - 只在实时或锁定时间场景使用
+        - 空间不足时自动隐藏数值
+    - 与时间锁定联动
+        - 图表锁定 18:42
+            - Legend 可显示 18:42 当前值
+        - 解除锁定
+            - 恢复实时值或隐藏数值
+    - 颜色规则
+        - Legend Marker 与 Series 使用相同视觉标识
+        - 不能仅靠颜色区分
+        - 必要时结合
+            - 线型
+            - 点型
+            - 标签
+    - 空间原则
+        - 默认优先占用 Header 剩余空间
+        - 不能明显压缩 Plot
+        - 空间不足时
+            - 优先隐藏 Current Value
+            - 其次允许滚动
+            - 不要主动增加巨大 Legend 区域
+    - 视觉原则
+        - 小型
+        - 紧凑
+        - 低占位
+        - 状态清楚
+        - 聚焦后差异明显
+        - 不使用厚重 Card
+    - 禁止设计
+        - 默认独立大侧栏
+        - 图例比图表更显眼
+        - 所有 Series 都需要进入二级菜单管理
+        - Series 过多仍无限扩张 Legend
+        - 只靠颜色识别
+    - UI代码
+        - Component
+            - Legend
+        - Slots
+            - LegendItem
+                - Marker
+                - Label
+                - Value
+        - Props
+            - items
+            - showValues
+            - focusedId
+            - hiddenIds
+            - selectedIds
+            - density
+            - wrap
+        - State
+            - visible
+            - hidden
+            - focused
+            - selected
+        - Actions
+            - onFocus
+            - onToggleVisible
+            - onSelect
+            - onResetFocus
+    - 与其他组件关系
+        - 被 XYUI-8-06 Line Chart 使用
+        - 被 XYUI-8-07 Area Chart 使用
+        - 被 XYUI-8-08 Bar Chart 使用
+        - 被 XYUI-8-09 Distribution 使用
+        - 被 XYUI-8-10 Scatter Plot 使用
+        - 与 XYUI-8-15 Chart Tooltip & Crosshair 联动
+        - 与 XYUI-8-16 Visualization Interaction 联动
+
+- 8-15 · Chart Tooltip & Crosshair / 图表检查器
+    - 定位
+        - 用于在图表中精确检查某个时间、位置或数据点
+        - 统一管理 Crosshair、Tooltip、时间锁定和边缘检查
+        - 不是单纯的悬浮提示框
+        - 是 XYLab 图表与 Metric、Timeline、日志联动的重要入口
+    - 核心目标
+        - 快速读取精确值
+        - 支持锁定某个时间点
+        - 锁定后保持分析上下文
+        - 信息较多时避免 Tooltip 遮挡图表
+        - 支持多个图表和日志同步
+    - 最终采用方向
+        - 方案2 · Locked Inspector 为主
+        - 方案4 · Edge Inspector 为主
+        - 方案1 · Hover Inspector 并入默认 Hover 状态
+        - 方案3 · Dual Compare Inspector 作为 Compare 模式
+        - 最终形成一套统一 Chart Inspector
+    - 默认交互流程
+        - Hover
+            - 出现 Crosshair
+            - 显示轻量 Tooltip
+        - Click
+            - 锁定当前时间或数据点
+            - 进入 Locked
+        - Locked
+            - Crosshair 保持
+            - Metric 同步
+            - Timeline 同步
+            - 日志同步
+        - 信息较多
+            - Tooltip 转为 Edge Inspector
+        - Compare
+            - 允许追加第二个锁定点
+            - 显示 A / B / Delta
+    - 主形态一
+        - Locked Inspector / 锁定检查器
+            - 用途
+                - 精确检查时间点
+                - 保持分析上下文
+            - 结构
+                - Crosshair
+                - Data Point Marker
+                - Time
+                - Series Values
+                - 可选 Key Event
+            - 优势
+                - 符合 XYLab 时间锁定工作流
+                - 点击后不会因为鼠标移动丢失状态
+    - 主形态二
+        - Edge Inspector / 边缘检查器
+            - 用途
+                - Series 较多
+                - 信息较多
+                - Tooltip 容易遮挡图形
+            - 结构
+                - Chart
+                - Crosshair
+                - Edge Inspector
+                    - Time
+                    - Values
+                    - Event
+                    - 可选 Log Preview
+            - 优势
+                - 读值位置稳定
+                - 不遮挡 Plot
+                - 适合持续拖动 Crosshair
+    - Hover 状态
+        - 来源
+            - 方案1
+        - 行为
+            - 未锁定时跟随指针
+            - 离开 Plot 后自动消失
+        - 内容
+            - Time / X Value
+            - 当前 Series Values
+        - 原则
+            - 内容保持轻量
+            - 不显示大量日志
+    - Compare 模式
+        - 来源
+            - 方案3
+        - 流程
+            - 锁定 A
+            - 进入 Compare
+            - 选择 B
+        - 显示
+            - A Time
+            - A Value
+            - B Time
+            - B Value
+            - Delta
+        - 原则
+            - Compare 是 Inspector 的模式
+            - 不是独立组件
+    - Crosshair
+        - 默认
+            - 垂直时间线
+        - 按需
+            - 水平值线
+        - 锁定后
+            - 视觉权重提高
+        - Hover 时
+            - 视觉较轻
+        - 不能遮挡主要数据
+    - Data Marker
+        - Crosshair 与 Series 交汇处显示 Marker
+        - 多 Series 时
+            - 每条当前可见 Series 可显示 Marker
+        - 隐藏 Series
+            - 不显示 Marker
+    - Tooltip 内容优先级
+        - 第一优先
+            - Time / X Value
+        - 第二优先
+            - Series Value
+        - 第三优先
+            - Delta
+            - Status
+        - 第四优先
+            - Key Event
+        - 原则
+            - 低优先信息不足空间时自动省略
+    - Edge Inspector 触发条件
+        - Series 较多
+        - Tooltip 内容过高
+        - Tooltip 会遮挡主要数据
+        - 用户主动固定检查器
+        - 小屏场景可转为底部检查区
+    - 时间锁定联动
+        - Chart Inspector 锁定 18:42
+            - Metric 更新到 18:42
+            - Metric Group 更新到 18:42
+            - Sparkline 显示附近趋势
+            - Timeline 定位 18:42
+            - 日志定位 18:42 附近事件
+            - 其他共享时间轴图表同步 Crosshair
+    - 解除锁定
+        - 点击空白区域
+        - 使用 Escape
+        - 使用解除锁定操作
+        - 恢复 Hover / Live 状态
+    - 触控原则
+        - 移动指针概念替换为拖动 Crosshair
+        - 点击或长按完成锁定
+        - Inspector 信息过多时优先使用边缘或底部区域
+        - 不能依赖 Hover 才能完成核心操作
+    - 性能原则
+        - PointerMove 不允许每帧全量扫描所有数据
+        - 应基于当前可见数据和索引定位最近点
+        - 大量 Series 时只计算当前可见 Series
+        - Tooltip 更新不能触发整个页面重绘
+    - 视觉原则
+        - Crosshair 细
+        - Tooltip 小
+        - 锁定状态清楚
+        - Edge Inspector 紧凑
+        - 避免大块浮层
+        - 数据图本身始终是视觉主体
+    - 禁止设计
+        - Tooltip 跟随鼠标大幅跳动
+        - 巨大 Tooltip 遮挡曲线
+        - 锁定后仍随指针乱跑
+        - 每个 Chart 实现不同锁定逻辑
+        - 移动端必须 Hover 才能使用
+        - Tooltip 塞入完整日志
+    - UI代码
+        - Component
+            - ChartInspector
+        - Slots
+            - Crosshair
+            - PointMarkers
+            - Tooltip
+            - EdgePanel
+            - EventPreview
+        - Props
+            - mode
+            - position
+            - lockedPosition
+            - seriesValues
+            - comparePosition
+            - showCrosshair
+            - showTooltip
+            - edgeMode
+            - events
+        - Mode
+            - hover
+            - locked
+            - compare
+        - Presentation
+            - floating
+            - edge
+            - bottom
+        - Actions
+            - onHover
+            - onLock
+            - onUnlock
+            - onCompare
+            - onLocateLog
+    - 与其他组件关系
+        - 与 XYUI-8-02 Metric 联动
+        - 与 XYUI-8-03 Metric Group 联动
+        - 与 XYUI-8-05 Sparkline 联动
+        - 服务 XYUI-8-06 Line Chart
+        - 服务 XYUI-8-07 Area Chart
+        - 服务 XYUI-8-09 Distribution
+        - 服务 XYUI-8-10 Scatter Plot
+        - 与 XYUI-8-12 Timeline 联动
+        - 与 XYUI-8-14 Legend 联动
+        - 由 XYUI-8-16 Visualization Interaction 统一控制交互规则
+
+- 8-16 · Visualization Interaction / 可视化交互
+    - 定位
+        - 统一定义 XYUI 数据可视化组件的交互合同
+        - 统一管理 Zoom、Pan、Lock、Compare、Range Select、Follow Live 等行为
+        - 同时覆盖桌面鼠标、键盘和移动触控
+        - 避免不同图表各自发明一套操作逻辑
+    - 核心目标
+        - 常用操作尽量直接作用于图表
+        - 高频状态一层直达
+        - 桌面和移动端保持相同交互语义
+        - 支持时间锁定和全局联动
+        - 支持实验 Compare
+        - 支持长时间数据浏览
+        - 保持工具界面紧凑
+    - 最终采用方向
+        - 方案1 · Direct Manipulation 为主
+        - 方案2 · Compact Interaction Bar 为主
+        - 方案4 · Responsive Interaction 为主
+        - 方案3 · Contextual Interaction 作为低频辅助
+        - 三种主方案共同组成同一套交互体系
+    - 主原则一
+        - Direct Manipulation / 直接操作
+            - 核心思想
+                - 能直接在图上操作就不要求先切工具模式
+            - 桌面默认
+                - Pointer Hover
+                    - 检查数据
+                - Click
+                    - 锁定
+                - Drag
+                    - Pan
+                - Wheel
+                    - Zoom
+                - Range Drag
+                    - 区间选择
+            - 优势
+                - 操作路径短
+                - 适合高频实验分析
+    - 主原则二
+        - Compact Interaction Bar / 紧凑交互条
+            - 核心思想
+                - 真正高频的模式和状态始终保持一层直达
+            - 默认动作
+                - Live
+                - Lock
+                - Compare
+                - Range
+                - Fit
+            - 更多低频动作
+                - 收入 More
+            - 原则
+                - 按钮尺寸紧凑
+                - 不能挤压 Plot
+                - 不做大型 Chart Toolbar
+    - 主原则三
+        - Responsive Interaction / 桌面与移动统一交互
+            - 核心思想
+                - 操作语义一致
+                - 输入方式按设备变化
+            - 桌面
+                - Hover
+                - Mouse Wheel
+                - Drag
+                - Click
+                - Keyboard Shortcut
+            - 移动
+                - Single Finger
+                - Two Finger Zoom
+                - Long Press
+                - Bottom Action Bar
+            - 原则
+                - 移动端不能依赖 Hover
+                - 触控目标适当放大
+                - 不能因为适配手机重新发明一套功能名称
+    - 辅助原则
+        - Contextual Interaction / 上下文交互
+            - 用途
+                - 低频操作
+                - 对象相关操作
+            - 示例
+                - 查看日志
+                - 查看对象
+                - 打开分布
+                - 局部分析
+            - 原则
+                - 不能拿上下文菜单替代高频操作
+                - 不能人为增加操作步骤
+    - 核心交互
+        - Inspect
+            - 检查当前位置数据
+        - Lock
+            - 固定当前时间或数据点
+        - Unlock
+            - 解除锁定
+        - Compare
+            - 增加第二个比较点或比较对象
+        - Pan
+            - 平移视图
+        - Zoom
+            - 缩放
+        - Range Select
+            - 选择数据区间
+        - Fit
+            - 适配当前全部数据
+        - Follow Live
+            - 跟随实时数据
+    - Inspect
+        - 桌面
+            - Hover
+        - 移动
+            - 拖动 Crosshair
+        - 输出
+            - Chart Inspector
+            - Tooltip
+            - 当前值
+    - Lock
+        - 桌面
+            - Click
+            - 可选快捷键 L
+        - 移动
+            - Tap
+            - 或 Long Press
+        - 锁定后
+            - Crosshair 保留
+            - Inspector 保留
+            - Metric 同步
+            - Timeline 同步
+            - Log 同步
+    - Compare
+        - 前提
+            - 已有第一个锁定对象
+        - 进入 Compare 后
+            - 选择第二个时间点或对象
+        - 输出
+            - A
+            - B
+            - Delta
+        - 退出 Compare
+            - 恢复单点 Locked
+    - Pan
+        - 桌面
+            - 拖动画布
+            - 可选 Space + Drag
+        - 移动
+            - 单指拖动画布
+        - 原则
+            - 不得和数据点编辑冲突
+    - Zoom
+        - 桌面
+            - Mouse Wheel
+            - Trackpad
+        - 移动
+            - Pinch
+        - 缩放中心
+            - 优先指针或双指中心位置
+        - 限制
+            - 避免无限缩放
+    - Range Select
+        - 用途
+            - 聚焦时间段
+            - 统计局部数据
+            - Compare
+            - Export
+        - 桌面
+            - 拖拽范围
+        - 移动
+            - 通过 Range 模式后拖动
+        - 原则
+            - 选区应轻量
+            - 不能大面积遮挡数据
+    - Fit
+        - 作用
+            - 恢复适合当前数据范围的视图
+        - 属于高频恢复操作
+        - 必须一层直达
+    - Follow Live
+        - 实时模式
+            - 自动跟随最新数据
+        - 用户主动 Pan / Zoom
+            - 暂停 Follow Live
+        - 恢复
+            - 一键回实时
+        - 状态必须明确
+    - 交互优先级
+        - Inspect
+            - 默认基础态
+        - Lock
+            - 高优先
+        - Compare
+            - 建立在 Lock 之上
+        - Range
+            - 明确进入范围操作后使用
+        - Context Actions
+            - 低优先
+    - 状态
+        - Idle
+        - Hover
+        - Locked
+        - Comparing
+        - RangeSelecting
+        - Panning
+        - Zooming
+        - FollowingLive
+    - 键盘
+        - Escape
+            - 取消当前操作
+            - 解除临时状态
+        - L
+            - 可选 Lock
+        - C
+            - 可选 Compare
+        - F
+            - 可选 Fit
+        - Space
+            - 可选临时 Pan
+        - 原则
+            - 快捷键是加速器
+            - 不能成为唯一操作方式
+    - 移动端
+        - 必须支持竖屏
+        - 必须支持横屏
+        - 小屏优先保留 Plot
+        - 高频操作使用底部紧凑动作条
+        - Inspector 信息较多时转到底部
+        - 双指负责 Zoom
+        - 核心行为不能依赖 Hover
+    - 响应式
+        - Desktop
+            - Header Interaction Bar
+            - Floating / Edge Inspector
+        - Tablet
+            - 紧凑 Header
+            - 必要时 Bottom Inspector
+        - Mobile Portrait
+            - Bottom Action Bar
+            - Bottom Inspector
+        - Mobile Landscape
+            - 尽量接近桌面布局
+    - 性能原则
+        - PointerMove 不进行全量数据扫描
+        - Zoom / Pan 不应触发无关区域重新计算
+        - 大数据根据当前 Viewport 降采样
+        - Crosshair 只检查当前可见 Series
+        - 交互更新尽量局部重绘
+    - 视觉反馈
+        - Hover
+            - 轻
+        - Locked
+            - 明显
+        - Comparing
+            - 明确显示 A / B
+        - Range
+            - 选区轻量填充
+        - Live
+            - 有明确状态
+        - Disabled
+            - 操作不可用时说明原因
+    - 安全原则
+        - 可视化浏览操作默认可立即执行
+        - 不可逆数据操作不属于 Visualization Interaction
+        - 危险操作交给对应确认机制处理
+    - 禁止设计
+        - 每个 Chart 使用不同手势
+        - 必须先进入工具模式才能做所有操作
+        - 常用操作藏在二级菜单
+        - 移动端照搬 Hover
+        - 按钮数量过多形成复杂 Toolbar
+        - Pan 与 Select 语义模糊
+        - 没有明确 Locked / Live 状态
+    - UI代码
+        - Component
+            - VisualizationInteraction
+        - Props
+            - mode
+            - deviceMode
+            - lockedPosition
+            - comparePosition
+            - selectedRange
+            - followLive
+            - zoomRange
+            - panOffset
+            - enabledActions
+        - Mode
+            - inspect
+            - locked
+            - compare
+            - range
+            - pan
+        - DeviceMode
+            - desktop
+            - tablet
+            - mobilePortrait
+            - mobileLandscape
+        - Actions
+            - onInspect
+            - onLock
+            - onUnlock
+            - onCompare
+            - onRangeSelect
+            - onPan
+            - onZoom
+            - onFit
+            - onFollowLive
+    - 与其他组件关系
+        - 统一控制 XYUI-8-01 Visualization Container
+        - 统一控制 XYUI-8-05 Sparkline
+        - 统一控制 XYUI-8-06 Line Chart
+        - 统一控制 XYUI-8-07 Area Chart
+        - 统一控制 XYUI-8-08 Bar Chart
+        - 统一控制 XYUI-8-09 Distribution
+        - 统一控制 XYUI-8-10 Scatter Plot
+        - 统一控制 XYUI-8-11 Heatmap
+        - 统一控制 XYUI-8-12 Timeline
+        - 统一控制 XYUI-8-14 Legend
+        - 统一控制 XYUI-8-15 Chart Inspector
+
