@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using XuanYu.Core.History;
 using XuanYu.Core.Results;
 using XuanYu.World.Map;
@@ -12,6 +13,7 @@ public sealed partial class MapEditSession
 {
     readonly EditorHistoryOwner _history = new();
     readonly Func<bool> _isWriteThread;
+    readonly GeometrySpatialIndex _geometrySpatialIndex = new();
     MapDefinition _currentMap;
     string? _currentPath;
     long? _savedStateId;
@@ -24,6 +26,7 @@ public sealed partial class MapEditSession
         _isWriteThread = isWriteThread ?? (() => true);
         _activeRegionLayerId = FirstRegionLayerId(_currentMap);
         RebuildRegionSpatialIndex();
+        _geometrySpatialIndex.Rebuild(_currentMap);
     }
 
     public MapDefinition CurrentMap => _currentMap;
@@ -62,6 +65,13 @@ public sealed partial class MapEditSession
     public event Action<MapDirtyChangedEventArgs>? DirtyChanged;
 
     public event Action<MapHistoryAvailabilityChangedEventArgs>? HistoryAvailabilityChanged;
+
+    public ImmutableArray<GeometryFeatureKey> QueryLocalGeometry(RegionSpatialBounds bounds)
+    {
+        if (!GuardWriteThread())
+            throw new InvalidOperationException("通用几何局部查询必须在 MapEditSession 写线程执行。");
+        return _geometrySpatialIndex.Query(bounds);
+    }
 
     static EngineResult Ok() => EngineResult.Success();
 

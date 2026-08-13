@@ -11,6 +11,7 @@ public sealed partial class MapEditSession
         if (MapDefinitionValidator.Validate(candidate) is { Succeeded: false } validation)
             return Fail("InvalidMap", validation.Message);
         RebuildRegionSpatialIndex(candidate);
+        _geometrySpatialIndex.Rebuild(candidate);
         _currentMap = candidate;
         _changeSequence++;
         NormalizeSelection();

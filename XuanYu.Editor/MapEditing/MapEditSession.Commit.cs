@@ -18,6 +18,7 @@ public sealed partial class MapEditSession
         var validation = MapDefinitionValidator.Validate(candidate);
         if (!validation.Succeeded) return MapValidationFailure(validation);
         synchronizeDerivedState?.Invoke(candidate);
+        _geometrySpatialIndex.Rebuild(candidate);
         _history.PushEntry(new MapHistoryEntry(_currentMap, candidate, reason));
         ApplyMapContent(candidate, reason);
         return Ok();

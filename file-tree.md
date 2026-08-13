@@ -80,7 +80,8 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-acceptance.md` — Road Vertex Selection 真机 IPO 验收模板与门禁证据。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D1-F1-acceptance.md` — Road Draw → Select 状态切换定向复验清单。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-D2-acceptance.md` — Road Vertex Drag 真机 IPO 验收清单。
-- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E-plan.md` — 通用几何编辑与吸附框架路线及 E1～E5 拆分。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E-plan.md` — 通用几何编辑、局部候选与吸附的一次性实现计划。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E-acceptance.md` — 通用几何编辑与吸附一次综合真机验收清单。
 - `docs/knowledge/decisions/generic-geometry-editing-contract.md` — 通用几何编辑、吸附、局部查询与拓扑边界决策。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-contract.md` — E1 Geometry Capability Contract 定义。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-mapping-gap-report.md` — E1 Region/Road 映射、数据链与 Gap Report。
@@ -662,6 +663,16 @@
 - `XuanYu.Editor/MapEditing/MapEditSession.Selection.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/MapEditing/MapGeometryEditTypes.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/MapEditing/MapGeometryHitTester.cs` — C# 类型、服务或测试实现。
+- `XuanYu.Editor/MapEditing/GeometryCapability.cs` — 通用几何类型与编辑/吸附能力标志。
+- `XuanYu.Editor/MapEditing/GeometryFeatureAdapter.cs` — 通用几何 Feature 适配器数据合同。
+- `XuanYu.Editor/MapEditing/GeometryFeatureAdapters.cs` — Region/Road 到通用几何能力的映射。
+- `XuanYu.Editor/MapEditing/GeometryFeatureKey.cs` — 通用几何 Feature 身份键。
+- `XuanYu.Editor/MapEditing/GeometrySnapArbitration.cs` — Vertex/Segment 候选仲裁与稳定决胜。
+- `XuanYu.Editor/MapEditing/GeometrySnapPipeline.cs` — 通用局部吸附解析与锁定流水线。
+- `XuanYu.Editor/MapEditing/GeometrySnapPolicy.cs` — 几何来源、目标与自身排除策略。
+- `XuanYu.Editor/MapEditing/GeometrySnapQuery.cs` — 通用 Vertex/Segment 候选构造。
+- `XuanYu.Editor/MapEditing/GeometrySnapTypes.cs` — 通用吸附结果、候选与运行时状态。
+- `XuanYu.Editor/MapEditing/GeometrySpatialIndex.cs` — Region/Road 通用局部空间索引。
 - `XuanYu.Editor/MapEditing/MapHistoryEntry.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/MapEditing/MapSelection.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/MapEditing/MapSelectionKind.cs` — C# 类型、服务或测试实现。
@@ -1028,6 +1039,8 @@
 - `XuanYu.World.Tests/MapEditing/RegionDrawingStateTests.cs` — C# 类型、服务或测试实现。
 - `XuanYu.World.Tests/MapEditing/RegionEdgeSnapGeometryTests.cs` — Region 顶点到边吸附的线段最近点几何测试。
 - `XuanYu.World.Tests/MapEditing/RegionEdgeSnapResolverTests.cs` — Region 顶点到边吸附的优先级、排除与稳定决胜测试。
+- `XuanYu.World.Tests/MapEditing/GenericGeometryCapabilityTests.cs` — 通用几何能力、身份策略与局部候选测试。
+- `XuanYu.World.Tests/UiRuntime/GenericRoadSnapIntegrationTests.cs` — Road 到 Region/Road Vertex/Segment 集成测试。
 - `XuanYu.World.Tests/MapEditing/RegionSnapPipelineContractTests.cs` — C2 现有提交路径、局部查询与无新增索引合同测试。
 - `XuanYu.World.Tests/MapEditing/RegionSnapPipelineLockTests.cs` — C2 Edge 锁定、迟滞、沿边重投影与 Vertex 升级测试。
 - `XuanYu.World.Tests/MapEditing/RegionSnapPipelineTestFixture.cs` — C2 吸附管线投影与地图测试夹具。

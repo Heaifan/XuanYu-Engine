@@ -12,6 +12,7 @@ public sealed partial class MapEditSession
         if (!_history.TryUndoAny(out var entry) || entry is not MapHistoryEntry mapEntry)
             return Fail("NoUndoAvailable", "没有可撤销的编辑历史。");
         RebuildRegionSpatialIndex(mapEntry.Before);
+        _geometrySpatialIndex.Rebuild(mapEntry.Before);
         ApplyMapContent(mapEntry.Before, MapEditReason.Undo);
         return Ok();
     }
@@ -22,6 +23,7 @@ public sealed partial class MapEditSession
         if (!_history.TryRedoAny(out var entry) || entry is not MapHistoryEntry mapEntry)
             return Fail("NoRedoAvailable", "没有可重做的编辑历史。");
         RebuildRegionSpatialIndex(mapEntry.After);
+        _geometrySpatialIndex.Rebuild(mapEntry.After);
         ApplyMapContent(mapEntry.After, MapEditReason.Redo);
         return Ok();
     }

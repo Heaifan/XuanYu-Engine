@@ -18,6 +18,15 @@
 
 ---
 
+## v0.2.28.22-rz · MAP-DATA-A-R2-F3-E GENERIC GEOMETRY EDITING & SNAP
+MAP-DATA-A-R2-F3-E（2026-08-13 14:54:24）：以 `d0bc0df` 为基线，一次性实现通用几何编辑生命周期、局部候选索引、Vertex/Segment Snap 仲裁，以及 Region/Road 集成。
+- 变化：新增 Point/Polyline/Polygon capability model、Feature Adapter、GeometrySpatialIndex 与通用 Snap Pipeline；Road 支持吸附 Region Vertex/Segment 与其他 Road Vertex/Segment；保留 Map-level History。
+- 边界：不引入 Topology Weld、共享节点/边、交点、自动切分、节点增删或 Schema 变化；PointerMove 只查询局部候选，不扫描全地图。
+- 验证：聚焦回归 24/24；Solution 串行 Build 0 Warning/0 Error；Core.Tests 339/339；World.Tests 1365/1365；WarCore.Tests 22/22；ARCH-A PASS；AXAML/XML PASS；版本四处一致；`git diff --check` PASS。
+- 状态：F3-E `IMPLEMENTED · AUTOMATED FOCUSED PASS · READY FOR USER ACCEPTANCE`；等待一次综合真机验收，未标记 `CLOSED`。
+- 遗留：等待 `MAP-DATA-A-R2-F3-E-acceptance.md` 的 M01～M10 真机验收；Topology Weld `NOT STARTED`。
+- Hash：本条所在提交。
+
 ## v0.2.28.21-rz · MAP-DATA-A-R2-F3-E1 GEOMETRY CAPABILITY CONTRACT
 MAP-DATA-A-R2-F3-E1（2026-08-13 14:18:25）：基于 `5822bb3` 完成 Geometry Capability Contract、Region/Road 映射、Gap Report 与 E2 Decision；本轮不修改生产代码与交互。
 - 变化：定义 Point/Polyline/Polygon 与 Selectable/VertexEditable/Snappable/SnapTarget；确认 Geometry Source、Feature/Dataset Identity、Picking、Edit Lifecycle、History、Local Snap Candidate 来源；记录 Road 局部候选源缺口与 E2 边界。

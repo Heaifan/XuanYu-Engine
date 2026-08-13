@@ -78,15 +78,16 @@ public sealed partial class UiVm
     static MapRoadId MapRoadIdFrom(MapGeometrySelection selection) =>
         MapRoadId.TryParse(selection.FeatureId, out var id) ? id : default;
 
-    MapPoint ResolveRegionVertexSnap(MapGeometrySelection selection, MapPoint raw,
+    MapPoint ResolveGenericGeometrySnap(MapGeometrySelection selection, MapPoint raw,
         double x, double y, XuanYu.Core.Space.ViewportState viewport)
     {
-        if (!MapRegionId.TryParse(selection.FeatureId, out var sourceId)) return raw;
         var projection = XuanYu.Core.Space.ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        var result = RegionSnapPipeline.Resolve(sourceId, raw, new(x, y), MapSession.CurrentMap, projection,
-            _regionVertexSnap, MapSession.QueryLocalRegions,
-            id => MapSession.TryGetRegion(id, out var region) ? region : null,
-            new RegionEdgeSnapSettings(8, 12));
+        var source = new GeometryFeatureKey(
+            selection.Kind == MapGeometryFeatureKind.Region ? GeometryFeatureKind.Region : GeometryFeatureKind.Road,
+            selection.FeatureId);
+        // Legacy RegionSnapPipeline.Resolve contract remains documented; runtime now uses the generic pipeline.
+        var result = GeometrySnapPipeline.Resolve(source, raw, new(x, y), MapSession.CurrentMap, projection,
+            _geometrySnap, MapSession.QueryLocalGeometry, new RegionEdgeSnapSettings(8, 12));
         return result.ResolvedPoint;
     }
 }

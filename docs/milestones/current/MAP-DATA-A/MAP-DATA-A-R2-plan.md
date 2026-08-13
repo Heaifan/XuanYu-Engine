@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2 · Regional Content Authoring
 
-状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query、R2-F3-B Region Vertex-to-Vertex Snap、R2-F3-C Region Vertex-to-Edge Snap、R2-F3-D1 Road Vertex Selection、D1-F1 Draw → Select Fix 与 R2-F3-D2 Road Vertex Drag 均已 `CLOSED`；R2-F3-E Generic Geometry Editing & Snap 为 `NEXT`，F3-F Cross-Geometry Acceptance `NOT STARTED`，Topology Weld `NOT STARTED`，R2 保持 OPEN。
+状态：R2-F2、R2-F2-F2、R2-F2-F2-F1、R2-F3-A Region Local Spatial Query、R2-F3-B Region Vertex-to-Vertex Snap、R2-F3-C Region Vertex-to-Edge Snap、R2-F3-D1 Road Vertex Selection、D1-F1 Draw → Select Fix 与 R2-F3-D2 Road Vertex Drag 均已 `CLOSED`；R2-F3-E Generic Geometry Editing & Snap 已完成实现并待一次综合真机验收，Topology Weld `NOT STARTED`，R2 保持 OPEN。
 
 ## 冻结目标
 
@@ -28,7 +28,7 @@ Editor 域以 MapRegion 为唯一真源，维护只含原生 `MapRegionId + Boun
 
 ## 明确不做
 
-Road Graph、寻路、宽度/坡度、共享边界/拓扑联动、XYUI 全面改造及其他非道路功能不属于 R2 当前冻结范围。
+Road Graph、寻路、宽度/坡度、共享边界/拓扑联动、Topology Weld、XYUI 全面改造及其他非道路功能不属于 R2 当前冻结范围。
 
 ## 兼容与边界
 

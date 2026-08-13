@@ -8,6 +8,7 @@ public sealed partial class UiVm
     {
         if (_selectedMapGeometry is null && _selectedMapGeometryVertexIndex < 0) return;
         _selectedMapGeometry = null; _selectedMapGeometryVertexIndex = -1; _mapGeometryPreview = null;
+        _geometrySnap.Clear();
         RaiseMapGeometryBindings(); PublishSceneRenderSnapshot();
     }
 

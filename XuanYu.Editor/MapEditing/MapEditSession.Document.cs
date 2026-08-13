@@ -14,6 +14,7 @@ public sealed partial class MapEditSession
         _history.Clear();
         var replacement = MapDefaultDefinition.CreateDefault();
         RebuildRegionSpatialIndex(replacement);
+        _geometrySpatialIndex.Rebuild(replacement);
         _currentMap = replacement;
         _currentPath = null;
         _savedStateId = null;
@@ -35,6 +36,7 @@ public sealed partial class MapEditSession
             return Fail("InvalidMap", validation.Message);
         _history.Clear();
         RebuildRegionSpatialIndex(candidate);
+        _geometrySpatialIndex.Rebuild(candidate);
         _currentMap = candidate;
         _currentPath = markSaved ? path : null;
         _savedStateId = markSaved ? CurrentStateId : null;
