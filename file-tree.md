@@ -1,5 +1,23 @@
 # 玄域引擎文件树（按当前正式工作树重建）
 
+- `XYUI/README.md` - XYUI 实现工作区说明。
+- `XYUI/src/XYUI.Avalonia/XYUI.Avalonia.csproj` - XYUI Foundation 可引用项目。
+- `XYUI/src/XYUI.Avalonia/README.md` - Avalonia 实现层使用说明。
+- `XYUI/src/XYUI.Avalonia/Foundation/XYDensity.cs` - XYUI 密度契约。
+- `XYUI/src/XYUI.Avalonia/Foundation/XYThemeResources.cs` - Light/Dark 主题资源工厂。
+- `XYUI/src/XYUI.Avalonia/Foundation/XYThemeVariant.cs` - XYUI 主题变体契约。
+- `XYUI/src/XYUI.Avalonia/Foundation/XYTokens.cs` - Foundation 颜色与尺寸 Token。
+- `XYUI/src/XYUI.Avalonia/Themes/XYUITheme.axaml` - XYUI 主题资源与基础样式。
+- `XYUI/src/XYUI.Avalonia/Themes/XYUITheme.cs` - XYUI Avalonia 主题入口。
+- `XYUI/src/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj` - Gallery 应用项目。
+- `XYUI/src/XYUI.Avalonia.Gallery/App.axaml` - Gallery 应用资源声明。
+- `XYUI/src/XYUI.Avalonia.Gallery/App.axaml.cs` - Gallery 生命周期入口。
+- `XYUI/src/XYUI.Avalonia.Gallery/MainWindow.axaml` - Foundation Gallery 页面。
+- `XYUI/src/XYUI.Avalonia.Gallery/MainWindow.axaml.cs` - Gallery 主窗口代码后置。
+- `XYUI/src/XYUI.Avalonia.Gallery/Program.cs` - Gallery 桌面启动入口。
+- `XYUI/tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj` - XYUI Foundation 测试项目。
+- `XYUI/tests/XYUI.Avalonia.Tests/FoundationTokenTests.cs` - Foundation Token 契约测试。
+
 > 由正式开发工作树的 `git ls-files` 与本轮预提交文件清单重建；每个文件一行职责。
 
 - `.gitattributes` — 项目资源或工程文件。

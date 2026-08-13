@@ -1,0 +1,29 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <Color x:Key="XY.Color.Surface">#F7F9FC</Color>
+    <Color x:Key="XY.Color.SurfaceRaised">#FFFFFF</Color>
+    <Color x:Key="XY.Color.Border">#D8E0EA</Color>
+    <Color x:Key="XY.Color.TextPrimary">#17212B</Color>
+    <Color x:Key="XY.Color.TextSecondary">#5B6875</Color>
+    <Color x:Key="XY.Color.Accent">#2563EB</Color>
+    <x:Double x:Key="XY.Space.1">4</x:Double>
+    <x:Double x:Key="XY.Space.2">8</x:Double>
+    <x:Double x:Key="XY.Space.3">12</x:Double>
+    <x:Double x:Key="XY.Space.4">16</x:Double>
+    <x:Double x:Key="XY.Radius.Small">4</x:Double>
+    <x:Double x:Key="XY.Radius.Medium">8</x:Double>
+    <x:Double x:Key="XY.Control.Height.Default">32</x:Double>
+  </Styles.Resources>
+  <Style Selector="TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource XY.Color.TextPrimary}" />
+    <Setter Property="FontFamily" Value="Inter" />
+  </Style>
+  <Style Selector="Border.xy-card">
+    <Setter Property="Background" Value="{DynamicResource XY.Color.SurfaceRaised}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Border}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource XY.Radius.Medium}" />
+    <Setter Property="Padding" Value="{DynamicResource XY.Space.4}" />
+  </Style>
+</Styles>
