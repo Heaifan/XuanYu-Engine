@@ -5,7 +5,7 @@
 - 目标：修复 Gallery 启动后立即退出，保持 R1 范围，不进入 R2。
 - 变化：修复 XYUITheme 的 Avalonia 资源类绑定与重复资源包含；修正 Radius/Thickness Token 类型；新增 Headless Gallery Runtime 契约测试。
 - 验证：`dotnet run --no-build` 进程保持运行；XYUI Runtime Tests 3/3 PASS；待执行正式全量门禁。
-- Hash：待提交。
+- Hash：`22f246f1`。
 - 遗留：等待用户重新执行相同命令进行窗口与 Foundation 页面真机验收。
 
 ## v0.1.0-alpha · XYUI-AVALONIA-R1 · 2026-08-13 22:27:18
