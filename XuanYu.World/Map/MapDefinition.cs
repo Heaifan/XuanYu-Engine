@@ -13,4 +13,5 @@ public sealed record MapDefinition(
     MapSurfaceDefinition Surface,
     ImmutableArray<MapLayer> Layers,
     ImmutableArray<MapRegion> Regions,
-    ImmutableArray<MapRoad> Roads = default);
+    ImmutableArray<MapRoad> Roads = default,
+    ImmutableArray<MapMarker> Markers = default);

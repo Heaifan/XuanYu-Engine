@@ -1,6 +1,6 @@
 # MAP-DATA-A-R3 · Point Feature Foundation
 
-状态：`NEXT · NOT STARTED`
+状态：`IMPLEMENTED · AUTOMATED FOCUSED PASS · READY FOR USER ACCEPTANCE`
 
 ## 目标
 
@@ -21,3 +21,5 @@
 ## 设计约束
 
 复用现有 Geometry Capability、Edit Lifecycle、Local Query、Snap 与 Map History；不另建 Point 专用拖动/历史体系，不改变现有 Schema 边界，先完成最小 Point 数据合同与一个真实 Consumer。
+
+正式实现基线：本轮提交；正式门禁结果与真机验收状态见 `MAP-DATA-A-R3-point-feature-foundation-acceptance.md`。

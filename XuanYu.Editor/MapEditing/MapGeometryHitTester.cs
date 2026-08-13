@@ -1,13 +1,14 @@
 using XuanYu.Core.Space;
 using XuanYu.World.Map;
-
 namespace XuanYu.Editor.MapEditing;
 
-public static class MapGeometryHitTester
+public static partial class MapGeometryHitTester
 {
     public static bool TryHitFeature(MapDefinition map, ViewProjectionState projection,
         double x, double y, double height, out MapGeometryHit hit)
     {
+        foreach (var marker in map.Markers.IsDefault ? [] : map.Markers)
+            if (TryMarker(map, marker, projection, x, y, height, out hit)) return true;
         foreach (var road in map.Roads.IsDefault ? [] : map.Roads)
             if (IsEditable(map, road) && TryRoad(road, projection, x, y, height, out hit)) return true;
         foreach (var region in map.Regions)
@@ -22,9 +23,13 @@ public static class MapGeometryHitTester
         if (selection.Kind == MapGeometryFeatureKind.Road &&
             !map.Roads.Any(road => road.RoadId.ToString() == selection.FeatureId && IsEditable(map, road)))
         { index = -1; return false; }
+        if (selection.Kind == MapGeometryFeatureKind.Marker && !IsEditable(map, selection))
+        { index = -1; return false; }
         var points = selection.Kind == MapGeometryFeatureKind.Region
             ? map.Regions.FirstOrDefault(r => r.RegionId.ToString() == selection.FeatureId)?.Vertices ?? []
-            : map.Roads.FirstOrDefault(r => r.RoadId.ToString() == selection.FeatureId)?.Points ?? [];
+            : selection.Kind == MapGeometryFeatureKind.Road
+            ? map.Roads.FirstOrDefault(r => r.RoadId.ToString() == selection.FeatureId)?.Points ?? []
+            : map.Markers.FirstOrDefault(r => r.MarkerId.ToString() == selection.FeatureId) is { } marker ? [marker.Position] : [];
         var nearest = -1; var distance = radius;
         for (var i = 0; i < points.Length; i++)
         {
@@ -62,10 +67,12 @@ public static class MapGeometryHitTester
     public static bool IsEditable(MapDefinition map, MapRoad road) => road.IsVisible && !road.IsLocked &&
         MapLayerRules.Find(map.Layers, road.LayerId) is { IsVisible: true, IsLocked: false };
 
-    public static bool IsEditable(MapDefinition map, MapGeometrySelection selection) =>
-        selection.Kind == MapGeometryFeatureKind.Road &&
-        map.Roads.FirstOrDefault(road => road.RoadId.ToString() == selection.FeatureId) is { } road &&
-        IsEditable(map, road);
+    public static bool IsEditable(MapDefinition map, MapGeometrySelection selection) => selection.Kind switch
+    {
+        MapGeometryFeatureKind.Road => map.Roads.FirstOrDefault(road => road.RoadId.ToString() == selection.FeatureId) is { } road && IsEditable(map, road),
+        MapGeometryFeatureKind.Marker => IsEditableMarker(map, selection),
+        _ => true
+    };
 
     static bool Inside(IEnumerable<(double X, double Y)> source, double x, double y)
     {

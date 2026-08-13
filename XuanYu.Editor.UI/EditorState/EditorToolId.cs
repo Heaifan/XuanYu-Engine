@@ -8,7 +8,8 @@ public enum EditorToolId
     Rotate,
     Scale,
     RegionDrawing,
-    RoadDrawing
+    RoadDrawing,
+    MarkerPlacement
 }
 
 public enum EditorToolCaptureState

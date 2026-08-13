@@ -73,6 +73,7 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-E2-decision.md`：E2 可抽取范围与禁止越界项
 - `docs/milestones/closed/MAP-DATA-A/MAP-DATA-A-R2-closeout.md`：R2 Geometry Editing Foundation 收口与最终边界
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R3-point-feature-foundation.md`：Point / Map Marker 下一阶段范围与边界
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R3-point-feature-foundation-acceptance.md`：Point / Map Marker 八项真机 IPO 验收清单
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

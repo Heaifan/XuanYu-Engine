@@ -30,4 +30,22 @@ public sealed partial class MapEditSession
             map => map with { Roads = map.Roads.Replace(road, road with { Points = points }) },
             MapEditReason.RoadGeometryEdited);
     }
+
+    public EngineResult CreateMarker(MapMarker marker)
+    {
+        if (!GuardWriteThread()) return Fail("NotOnWriteThread", "创建地图标记必须在编辑写线程执行。");
+        return CommitMapChange(map => map with { Markers = (map.Markers.IsDefault ? [] : map.Markers).Add(marker) }, MapEditReason.MarkerCreated);
+    }
+
+    public EngineResult EditMarkerPosition(MapMarkerId markerId, MapPoint position)
+    {
+        if (!GuardWriteThread()) return Fail("NotOnWriteThread", "编辑地图标记必须在编辑写线程执行。");
+        var marker = (MapSessionMarkers()).FirstOrDefault(item => item.MarkerId == markerId);
+        if (marker is null) return Fail("UnknownMarker", "地图标记不存在。");
+        if (MapLayerRules.Find(_currentMap.Layers, marker.LayerId)?.IsLocked == true)
+            return Fail("MarkerLayerLocked", "地图标记所属图层已锁定。");
+        return CommitMapChange(map => map with { Markers = map.Markers.Replace(marker, marker with { Position = position }) }, MapEditReason.MarkerGeometryEdited);
+    }
+
+    ImmutableArray<MapMarker> MapSessionMarkers() => _currentMap.Markers.IsDefault ? [] : _currentMap.Markers;
 }

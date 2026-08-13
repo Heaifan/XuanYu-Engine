@@ -22,5 +22,7 @@ public enum MapEditReason
     RuntimeProjection = 16, // MAP-DATA-A-R1：Dataset Manifest 的运行时图层投影
     RoadCreated = 17,
     RegionGeometryEdited = 18,
-    RoadGeometryEdited = 19
+    RoadGeometryEdited = 19,
+    MarkerCreated = 20,
+    MarkerGeometryEdited = 21
 }

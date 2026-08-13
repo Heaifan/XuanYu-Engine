@@ -25,6 +25,10 @@ public static class MapRegionRenderProjection
         foreach (var road in map.Roads.Where(road => road.IsVisible && layers.TryGetValue(road.LayerId, out var layer) && layer.IsVisible).OrderBy(road => layers[road.LayerId].Order))
             builder.AddRoad(road, geometry?.Selection == new MapGeometrySelection(MapGeometryFeatureKind.Road, road.RoadId.ToString()),
                 geometry?.Selection.FeatureId == road.RoadId.ToString() && geometry?.Selection.Kind == MapGeometryFeatureKind.Road ? geometry.Value.Points : null);
+        var markers = map.Markers.IsDefault ? Enumerable.Empty<MapMarker>() : map.Markers;
+        foreach (var marker in markers.Where(marker => marker.IsVisible && layers.TryGetValue(marker.LayerId, out var layer) && layer.IsVisible).OrderBy(marker => layers[marker.LayerId].Order))
+            builder.AddMapMarker(marker, geometry?.Selection == new MapGeometrySelection(MapGeometryFeatureKind.Marker, marker.MarkerId.ToString()),
+                geometry?.Selection.FeatureId == marker.MarkerId.ToString() && geometry?.Selection.Kind == MapGeometryFeatureKind.Marker ? geometry.Value.Points[0] : null);
         if (drawing.Draft is { } draft)
             builder.AddDraft(draft, drawing.Cursor, drawing.IsCloseCandidate);
         if (roads.Draft is { } roadDraft) builder.AddRoadDraft(roadDraft, roads.Cursor);

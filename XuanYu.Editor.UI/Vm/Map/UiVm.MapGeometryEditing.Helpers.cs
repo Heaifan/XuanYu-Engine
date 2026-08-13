@@ -8,7 +8,7 @@ public sealed partial class UiVm
 {
     public bool TryBeginMapGeometryVertexPointer(double x, double y, XuanYu.Core.Space.ViewportState viewport)
     {
-        var canDrag = IsRegionDrawingTool || (IsRoadAuthoringMode && IsSelectTool);
+        var canDrag = IsRegionDrawingTool || ((IsRoadAuthoringMode || IsMarkerAuthoringMode) && IsSelectTool);
         if (!IsRegionEditMode || !canDrag || IsRoadDrawingDraftActive ||
             !TryMapGeometryVertexHit(x, y, viewport, out var selection, out var index)) return false;
         var points = GeometryPoints(selection);
@@ -40,6 +40,9 @@ public sealed partial class UiVm
         var features = IsRoadAuthoringMode
             ? map.Roads.Where(road => MapGeometryHitTester.IsEditable(map, road))
                 .Select(road => new MapGeometrySelection(MapGeometryFeatureKind.Road, road.RoadId.ToString()))
+            : IsMarkerAuthoringMode
+            ? map.Markers.Where(marker => MapGeometryHitTester.IsEditable(map, new MapGeometrySelection(MapGeometryFeatureKind.Marker, marker.MarkerId.ToString())))
+                .Select(marker => new MapGeometrySelection(MapGeometryFeatureKind.Marker, marker.MarkerId.ToString()))
             : map.Regions.Select(region => new MapGeometrySelection(MapGeometryFeatureKind.Region, region.RegionId.ToString()));
         foreach (var feature in features)
         {
@@ -49,41 +52,12 @@ public sealed partial class UiVm
         selection = default; index = -1; return false;
     }
 
-    MapGeometryPreview? DisplayGeometry() => _selectedMapGeometry is { } selection
-        ? new(selection, GeometryPoints(selection)) : null;
-
-    ImmutableArray<MapPoint> GeometryPoints(MapGeometrySelection selection) =>
-        selection.Kind == MapGeometryFeatureKind.Region
-            ? MapSession.CurrentMap.Regions.First(r => r.RegionId.ToString() == selection.FeatureId).Vertices
-            : MapSession.CurrentMap.Roads.First(r => r.RoadId.ToString() == selection.FeatureId).Points;
-
-    void RefreshMapGeometryDisplay()
-    {
-        if (_selectedMapGeometry is not { } selection) return;
-        var exists = selection.Kind == MapGeometryFeatureKind.Region
-            ? MapSession.CurrentMap.Regions.Any(r => r.RegionId.ToString() == selection.FeatureId)
-            : MapSession.CurrentMap.Roads.Any(r => r.RoadId.ToString() == selection.FeatureId) &&
-                MapGeometryHitTester.IsEditable(MapSession.CurrentMap, selection);
-        if (!exists)
-        {
-            _selectedMapGeometry = null; _selectedMapGeometryVertexIndex = -1; _mapGeometryPreview = null;
-            RaiseMapGeometryBindings(); return;
-        }
-        _mapGeometryPreview = DisplayGeometry();
-    }
-
-    static MapRegionId MapRegionIdFrom(MapGeometrySelection selection) =>
-        MapRegionId.TryParse(selection.FeatureId, out var id) ? id : default;
-
-    static MapRoadId MapRoadIdFrom(MapGeometrySelection selection) =>
-        MapRoadId.TryParse(selection.FeatureId, out var id) ? id : default;
-
     MapPoint ResolveGenericGeometrySnap(MapGeometrySelection selection, MapPoint raw,
         double x, double y, XuanYu.Core.Space.ViewportState viewport)
     {
         var projection = XuanYu.Core.Space.ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
         var source = new GeometryFeatureKey(
-            selection.Kind == MapGeometryFeatureKind.Region ? GeometryFeatureKind.Region : GeometryFeatureKind.Road,
+            selection.Kind == MapGeometryFeatureKind.Region ? GeometryFeatureKind.Region : selection.Kind == MapGeometryFeatureKind.Road ? GeometryFeatureKind.Road : GeometryFeatureKind.Marker,
             selection.FeatureId);
         // Legacy RegionSnapPipeline.Resolve contract remains documented; runtime now uses the generic pipeline.
         var result = GeometrySnapPipeline.Resolve(source, raw, new(x, y), MapSession.CurrentMap, projection,

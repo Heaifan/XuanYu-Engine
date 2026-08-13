@@ -7,15 +7,15 @@ public static class MapDatasetRuntimeProjection
 {
     public static MapDocumentResult<MapDefinition> Apply(MapDefinition current, MapManifest manifest)
     {
-        var ids = manifest.Datasets.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road)
+        var ids = manifest.Datasets.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road or MapDatasetTypes.Marker)
             .Select(item => MapDatasetLayerIdProjection.Project(item.Id)).ToHashSet();
         if (ids.Count == 0) return MapDocumentResult<MapDefinition>.Ok(current);
         var legacy = current.Layers.Where(item => item.Kind == MapLayerKind.Region && !ids.Contains(item.LayerId)).ToArray();
-        if (legacy.Any(item => current.Regions.Any(region => region.LayerId == item.LayerId) || current.Roads.Any(road => road.LayerId == item.LayerId)))
+        if (legacy.Any(item => current.Regions.Any(region => region.LayerId == item.LayerId) || current.Roads.Any(road => road.LayerId == item.LayerId) || current.Markers.Any(marker => marker.LayerId == item.LayerId)))
             return MapDocumentResult<MapDefinition>.Fail("LegacyFeatureContentPresent", "旧用户图层含内容，拒绝静默替换。", "Project");
         var retained = current.Layers.Where(item => item.Kind != MapLayerKind.Region);
         var states = manifest.DatasetLayerStates.ToDictionary(item => item.DatasetId, StringComparer.OrdinalIgnoreCase);
-        var datasets = manifest.Datasets.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road)
+        var datasets = manifest.Datasets.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road or MapDatasetTypes.Marker)
             .OrderBy(item => states[item.Id].Order).ToArray();
         var layers = retained.Concat(datasets.Select((item, index) => new MapLayer(
             MapDatasetLayerIdProjection.Project(item.Id), item.Name ?? item.Id, 2 + datasets.Length - 1 - index,
@@ -33,7 +33,8 @@ public static class MapDatasetRuntimeProjection
         {
             Layers = current.Layers.Where(item => item.LayerId != layerId).ToImmutableArray(),
             Regions = current.Regions.Where(item => item.LayerId != layerId).ToImmutableArray(),
-            Roads = current.Roads.Where(item => item.LayerId != layerId).ToImmutableArray()
+            Roads = current.Roads.Where(item => item.LayerId != layerId).ToImmutableArray(),
+            Markers = current.Markers.Where(item => item.LayerId != layerId).ToImmutableArray()
         };
         return candidate.Layers.Any(item => item.Kind == MapLayerKind.Region)
             ? candidate : candidate with { Layers = candidate.Layers.Add(

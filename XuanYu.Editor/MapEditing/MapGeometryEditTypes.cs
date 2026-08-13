@@ -3,7 +3,7 @@ using XuanYu.World.Map;
 
 namespace XuanYu.Editor.MapEditing;
 
-public enum MapGeometryFeatureKind { Region, Road }
+public enum MapGeometryFeatureKind { Region, Road, Marker }
 
 public readonly record struct MapGeometrySelection(
     MapGeometryFeatureKind Kind, string FeatureId);

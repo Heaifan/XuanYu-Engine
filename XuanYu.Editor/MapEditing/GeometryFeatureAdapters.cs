@@ -20,6 +20,12 @@ public static class GeometryFeatureAdapters
             adapter = new(key, road.LayerId, GeometryKind.Polyline, RoadCapabilities(map, road), road.Points);
             return true;
         }
+        if (key.FeatureKind == GeometryFeatureKind.Marker &&
+            map.Markers.FirstOrDefault(item => item.MarkerId.ToString() == key.FeatureId) is { } marker)
+        {
+            adapter = new(key, marker.LayerId, GeometryKind.Point, MarkerCapabilities(map, marker), [marker.Position]);
+            return true;
+        }
         adapter = default;
         return false;
     }
@@ -31,6 +37,11 @@ public static class GeometryFeatureAdapters
 
     static GeometryCapabilities RoadCapabilities(MapDefinition map, MapRoad road) =>
         EditableLayer(map, road.LayerId)
+            ? GeometryCapabilities.Selectable | GeometryCapabilities.VertexEditable |
+              GeometryCapabilities.Snappable | GeometryCapabilities.SnapTarget : GeometryCapabilities.None;
+
+    static GeometryCapabilities MarkerCapabilities(MapDefinition map, MapMarker marker) =>
+        EditableLayer(map, marker.LayerId)
             ? GeometryCapabilities.Selectable | GeometryCapabilities.VertexEditable |
               GeometryCapabilities.Snappable | GeometryCapabilities.SnapTarget : GeometryCapabilities.None;
 

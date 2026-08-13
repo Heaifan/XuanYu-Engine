@@ -11,6 +11,7 @@ public static class EditorToolText
         "缩放" => EditorToolId.Scale,
         "区域绘制" => EditorToolId.RegionDrawing,
         "道路绘制" => EditorToolId.RoadDrawing,
+        "标记放置" => EditorToolId.MarkerPlacement,
         _ => throw new ArgumentException($"未知工具：{text}")
     };
 
@@ -23,6 +24,7 @@ public static class EditorToolText
         EditorToolId.Scale => "缩放",
         EditorToolId.RegionDrawing => "区域绘制",
         EditorToolId.RoadDrawing => "道路绘制",
+        EditorToolId.MarkerPlacement => "标记放置",
         _ => throw new ArgumentOutOfRangeException(nameof(tool), tool, "未知工具")
     };
 }

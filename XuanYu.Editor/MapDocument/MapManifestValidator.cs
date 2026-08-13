@@ -34,7 +34,7 @@ public static partial class MapManifestValidator
             if (!IdPattern.IsMatch(dataset.Id) || dataset.Id.Contains('.'))
                 return Fail("InvalidDatasetId", "Dataset ID 必须是小写字母、数字、短横线或下划线。", "datasets.id");
             if (!MapDatasetTypes.IsKnown(dataset.Type))
-                return Fail("InvalidDatasetType", "Dataset type 不在允许的六类之内。", "datasets.type");
+                return Fail("InvalidDatasetType", "Dataset type 不在允许的类型之内。", "datasets.type");
             if (dataset.Name is not null && string.IsNullOrWhiteSpace(dataset.Name))
                 return Fail("InvalidDatasetName", "Dataset 名称不能为空。", "datasets.name");
             if (!MapDatasetPathPolicy.IsSafeSource(dataset.Source))

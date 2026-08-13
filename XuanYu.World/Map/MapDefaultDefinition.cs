@@ -19,5 +19,6 @@ public static class MapDefaultDefinition
             new MapLayer(MapLayerId.New(), "区域 1", 2, MapLayerKind.Region)
         ],
         ImmutableArray<MapRegion>.Empty,
-        ImmutableArray<MapRoad>.Empty);
+        ImmutableArray<MapRoad>.Empty,
+        ImmutableArray<MapMarker>.Empty);
 }

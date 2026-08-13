@@ -15,6 +15,8 @@ internal sealed class GeometrySpatialIndex
         foreach (var region in map.Regions) Upsert(new(GeometryFeatureKind.Region, region.RegionId.ToString()), RegionSpatialBounds.From(region));
         foreach (var road in map.Roads.IsDefault ? [] : map.Roads)
             Upsert(new(GeometryFeatureKind.Road, road.RoadId.ToString()), Bounds(road.Points));
+        foreach (var marker in map.Markers.IsDefault ? [] : map.Markers)
+            Upsert(new(GeometryFeatureKind.Marker, marker.MarkerId.ToString()), new(marker.Position.X, marker.Position.Y, marker.Position.X, marker.Position.Y));
     }
 
     public void Upsert(GeometryFeatureKey key, RegionSpatialBounds bounds)

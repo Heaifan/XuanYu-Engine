@@ -82,11 +82,13 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(RegionDrawingTargetName));
         OnPropertyChanged(nameof(RegionDrawingTargetId));
         OnPropertyChanged(nameof(RegionDrawingTargetStatus));
+        OnPropertyChanged(nameof(MarkerPlacementTargetName)); OnPropertyChanged(nameof(MarkerPlacementTargetId));
         OnPropertyChanged(nameof(DatasetLayerItems));
         OnPropertyChanged(nameof(SelectedDataset));
         OnPropertyChanged(nameof(HasSelectedDataset));
         OnPropertyChanged(nameof(CanStartRegionDrawing));
         OnPropertyChanged(nameof(CanStartRoadDrawing));
+        OnPropertyChanged(nameof(CanRequestMarkerPlacement)); OnPropertyChanged(nameof(CanStartMarkerPlacement));
         OnPropertyChanged(nameof(CanUnregisterDataset));
         OnPropertyChanged(nameof(InspectorSelectionTitle));
         OnPropertyChanged(nameof(InspectorSelectionSubtitle));

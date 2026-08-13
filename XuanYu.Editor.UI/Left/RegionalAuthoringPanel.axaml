@@ -11,11 +11,14 @@
                       Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="区域面"/>
         <ToggleButton Content="道路" IsChecked="{Binding IsRoadAuthoringMode, Mode=OneWay}"
                       Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="道路"/>
+        <ToggleButton Content="地图标记" IsChecked="{Binding IsMarkerAuthoringMode, Mode=OneWay}"
+                      Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="地图标记"/>
       </UniformGrid>
     </StackPanel>
     <Grid Grid.Row="1">
       <local:RegionPanel IsVisible="{Binding IsRegionSurfaceAuthoringMode}"/>
       <local:RoadPanel IsVisible="{Binding IsRoadAuthoringMode}"/>
+      <local:MarkerPanel IsVisible="{Binding IsMarkerAuthoringMode}"/>
     </Grid>
   </Grid>
 </UserControl>

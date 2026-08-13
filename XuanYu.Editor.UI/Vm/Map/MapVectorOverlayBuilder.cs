@@ -20,6 +20,11 @@ sealed partial class MapVectorOverlayBuilder(double height)
         if (selected) foreach (var point in points) AddMarker(point, 6.5);
     }
 
+    public void AddMapMarker(MapMarker marker, bool selected, MapPoint? preview)
+    {
+        AddMarker(preview ?? marker.Position, selected ? 8.5 : 5.5, selected ? new(.98, .75, .12, .98) : new(.98, .30, .08, 1));
+    }
+
     public void AddDraft(MapRegionDraft draft, MapPoint? cursor, bool close)
     {
         var points = draft.Vertices.ToList();
@@ -67,13 +72,13 @@ sealed partial class MapVectorOverlayBuilder(double height)
         _indices.AddRange([q, q + 1, q + 2, q + 2, q + 4, q + 5]);
     }
 
-    void AddMarker(MapPoint point, double radius)
+    void AddMarker(MapPoint point, double radius, RenderStaticModelColor? color = null)
     {
         var q = (uint)_vertices.Count; var center = Vertex(point).Position;
         foreach (var offset in new[] { (-1d, -1d), (1d, -1d), (1d, 1d), (-1d, -1d), (1d, 1d), (-1d, 1d) })
             _vertices.Add(new(center, center, offset.Item1, offset.Item2));
         _indices.AddRange([q, q + 1, q + 2, q + 3, q + 4, q + 5]);
-        AddPrimitive(_indices.Count - 6, new(.98, .30, .08, 1),
+        AddPrimitive(_indices.Count - 6, color ?? new(.98, .30, .08, 1),
             RenderVectorOverlayPrimitiveKind.Marker, 0, radius);
     }
 

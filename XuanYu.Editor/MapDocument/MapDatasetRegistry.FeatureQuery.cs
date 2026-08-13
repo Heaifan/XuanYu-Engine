@@ -9,7 +9,7 @@ public sealed partial class MapDatasetRegistry
     public async Task<MapDocumentResult<IReadOnlyList<MapDatasetDocument>>> LoadFeatureDocumentsAsync()
     {
         var result = new List<MapDatasetDocument>();
-        foreach (var descriptor in CurrentManifest.Datasets.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road))
+        foreach (var descriptor in CurrentManifest.Datasets.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road or MapDatasetTypes.Marker))
         {
             if (!MapDatasetPathPolicy.TryResolve(MapRoot, descriptor.Source, out var path)) return Fail("InvalidDatasetSource", "Dataset source 不安全。", "Load");
             var loaded = await _datasetStorage.LoadAsync(path, descriptor);
@@ -21,13 +21,15 @@ public sealed partial class MapDatasetRegistry
     public MapDocumentResult<IReadOnlyList<(string Path, MapDatasetDocument Document)>> BuildFeatureSaveCandidates(MapDefinition map)
     {
         var result = new List<(string, MapDatasetDocument)>();
-        foreach (var descriptor in CurrentManifest.Datasets.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road))
+        foreach (var descriptor in CurrentManifest.Datasets.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road or MapDatasetTypes.Marker))
         {
             if (!MapDatasetPathPolicy.TryResolve(MapRoot, descriptor.Source, out var path)) return FailCandidates("InvalidDatasetSource", "Dataset source 不安全。");
             var layerId = MapDatasetLayerIdProjection.Project(descriptor.Id);
             var features = descriptor.Type == MapDatasetTypes.Region
                 ? map.Regions.Where(item => item.LayerId == layerId).Select(MapRegionDatasetCodec.Write).ToImmutableArray()
-                : map.Roads.Where(item => item.LayerId == layerId).Select(MapRoadDatasetCodec.Write).ToImmutableArray();
+                : descriptor.Type == MapDatasetTypes.Road
+                ? map.Roads.Where(item => item.LayerId == layerId).Select(MapRoadDatasetCodec.Write).ToImmutableArray()
+                : map.Markers.Where(item => item.LayerId == layerId).Select(MapMarkerDatasetCodec.Write).ToImmutableArray();
             var version = descriptor.Type == MapDatasetTypes.Region ? ExistingRegionVersion(path) : MapDatasetDocument.CurrentVersion;
             result.Add((path, new(MapDatasetDocument.CurrentFormat, version, descriptor.Id, descriptor.Type, features)));
         }

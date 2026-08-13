@@ -12,7 +12,7 @@ public sealed class MapDatasetContractTests
     };
 
     [Fact]
-    public void All_six_types_are_allowed_and_same_type_can_repeat()
+    public void All_dataset_types_are_allowed_and_same_type_can_repeat()
     {
         var descriptors = MapDatasetTypes.All.Select((type, index) =>
             new MapDatasetDescriptor($"dataset-{index}", type, $"data/dataset-{index}.json"));

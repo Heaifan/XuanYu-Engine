@@ -11,6 +11,7 @@ public sealed partial class UiVm
     public RegionAuthoringMode CurrentRegionAuthoringMode { get; private set; } = RegionAuthoringMode.RegionSurface;
     public bool IsRegionSurfaceAuthoringMode => CurrentRegionAuthoringMode == RegionAuthoringMode.RegionSurface;
     public bool IsRoadAuthoringMode => CurrentRegionAuthoringMode == RegionAuthoringMode.Road;
+    public bool IsMarkerAuthoringMode => CurrentRegionAuthoringMode == RegionAuthoringMode.Marker;
     public ICommand SelectRegionAuthoringModeCommand { get; private set; } = null!;
 
     void SelectRegionAuthoringModeCommandTarget(object? value) => SelectRegionAuthoringMode(value?.ToString());
@@ -24,8 +25,8 @@ public sealed partial class UiVm
     void SyncRegionAuthoringModeFromDatasetSelection()
     {
         if (!IsRegionWorkspace) return;
-        ApplyRegionAuthoringMode(SelectedDataset?.Type == MapDatasetTypes.Road
-            ? RegionAuthoringMode.Road : RegionAuthoringMode.RegionSurface);
+        ApplyRegionAuthoringMode(SelectedDataset?.Type == MapDatasetTypes.Road ? RegionAuthoringMode.Road
+            : SelectedDataset?.Type == MapDatasetTypes.Marker ? RegionAuthoringMode.Marker : RegionAuthoringMode.RegionSurface);
     }
 
     void ApplyRegionAuthoringMode(RegionAuthoringMode mode)
@@ -39,16 +40,17 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(CurrentRegionAuthoringMode));
         OnPropertyChanged(nameof(IsRegionSurfaceAuthoringMode));
         OnPropertyChanged(nameof(IsRoadAuthoringMode));
+        OnPropertyChanged(nameof(IsMarkerAuthoringMode));
         OnPropertyChanged(nameof(CanRequestRegionDrawing));
         OnPropertyChanged(nameof(CanRequestRoadDrawing));
         OnPropertyChanged(nameof(CanStartRegionDrawing));
-        OnPropertyChanged(nameof(CanStartRoadDrawing));
+        OnPropertyChanged(nameof(CanStartRoadDrawing)); OnPropertyChanged(nameof(CanStartMarkerPlacement));
         SelectAuthoringTarget(mode);
     }
 
     void SelectAuthoringTarget(RegionAuthoringMode mode)
     {
-        var type = mode == RegionAuthoringMode.Road ? MapDatasetTypes.Road : MapDatasetTypes.Region;
+        var type = mode == RegionAuthoringMode.Road ? MapDatasetTypes.Road : mode == RegionAuthoringMode.Marker ? MapDatasetTypes.Marker : MapDatasetTypes.Region;
         if (SelectedDataset?.Type == type) return;
         var target = _datasetItems.FirstOrDefault(item => item.Type == type && item.Status == "正常");
         if (target?.Id == DatasetSelectedId) return;
@@ -63,8 +65,9 @@ public sealed partial class UiVm
         {
             "区域面" => RegionAuthoringMode.RegionSurface,
             "道路" => RegionAuthoringMode.Road,
+            "地图标记" => RegionAuthoringMode.Marker,
             _ => default
         };
-        return value is "区域面" or "道路";
+        return value is "区域面" or "道路" or "地图标记";
     }
 }

@@ -1,0 +1,3 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" x:Class="XuanYu.Editor.UI.MarkerPanel" x:DataType="local:UiVm">
+  <StackPanel Spacing="8" Margin="2,8"><TextBlock Text="地图标记" Classes="uiSection"/><TextBlock Text="当前放置目标" Classes="uiSection"/><TextBlock Text="{Binding MarkerPlacementTargetName}" Classes="uiValue"/><TextBlock Text="{Binding MarkerPlacementTargetId}" Classes="uiMultiline" TextWrapping="Wrap"/><Button Content="放置地图标记" Click="MarkerPlacement_Click" IsEnabled="{Binding CanRequestMarkerPlacement}" AutomationProperties.Name="放置地图标记"/><TextBlock Text="点击视口地面完成一次放置，完成后自动回到选择。" Classes="uiMultiline" TextWrapping="Wrap"/></StackPanel>
+</UserControl>

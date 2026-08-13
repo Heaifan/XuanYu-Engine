@@ -87,8 +87,10 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-mapping-gap-report.md` — E1 Region/Road 映射、数据链与 Gap Report。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-E1-E2-decision.md` — E1 对 E2 的抽取范围与禁止越界决策。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R3-point-feature-foundation.md` — Point / Map Marker 下一阶段范围与边界。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R3-point-feature-foundation-acceptance.md` — Point / Map Marker 八项真机 IPO 验收清单。
 - `docs/milestones/closed/MAP-DATA-A/MAP-DATA-A-R2-closeout.md` — R2 Geometry Editing Foundation 收口、证据与最终边界。
 - `docs/knowledge/decisions/map-data-r2-closeout-and-point-foundation.md` — R2 收口与 Point Consumer 下一阶段决策。
+- `docs/knowledge/decisions/map-data-r3-point-consumer.md` — Point / Map Marker 通用几何 Consumer 决策。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-F1-acceptance.md` — 项目治理、设计、里程碑或知识文档。
@@ -676,6 +678,12 @@
 - `XuanYu.Editor/MapEditing/GeometrySnapQuery.cs` — 通用 Vertex/Segment 候选构造。
 - `XuanYu.Editor/MapEditing/GeometrySnapTypes.cs` — 通用吸附结果、候选与运行时状态。
 - `XuanYu.Editor/MapEditing/GeometrySpatialIndex.cs` — Region/Road 通用局部空间索引。
+- `XuanYu.Editor/MapEditing/MapGeometryHitTester.Marker.cs` — Map Marker 单点命中与可编辑性判断。
+- `XuanYu.Editor/MapDocument/MapMarkerDatasetCodec.cs` — Map Marker Dataset point Feature 序列化、读取与校验。
+- `XuanYu.Editor/MapDocument/MapMarkerDatasetFeature.cs` — Map Marker Dataset Feature 读取模型。
+- `XuanYu.World/Map/MapMarker.cs` — Map Marker Point 领域模型。
+- `XuanYu.World/Map/MapMarkerId.cs` — Map Marker 稳定 Feature ID。
+- `XuanYu.World/Map/MapMarkerValidator.cs` — Map Marker 坐标、身份与图层领域校验。
 - `XuanYu.Editor/MapEditing/MapHistoryEntry.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/MapEditing/MapSelection.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/MapEditing/MapSelectionKind.cs` — C# 类型、服务或测试实现。
@@ -1044,6 +1052,14 @@
 - `XuanYu.World.Tests/MapEditing/RegionEdgeSnapResolverTests.cs` — Region 顶点到边吸附的优先级、排除与稳定决胜测试。
 - `XuanYu.World.Tests/MapEditing/GenericGeometryCapabilityTests.cs` — 通用几何能力、身份策略与局部候选测试。
 - `XuanYu.World.Tests/UiRuntime/GenericRoadSnapIntegrationTests.cs` — Road 到 Region/Road Vertex/Segment 集成测试。
+- `XuanYu.World.Tests/MapEditing/PointFeatureFoundationTests.cs` — Point/Map Marker 能力、身份、Undo/Redo 与 Dataset codec 测试。
+- `XuanYu.World.Tests/UiRuntime/MapMarkerPlacementTests.cs` — Map Marker 放置、自动回选择与 Save/Reload 测试。
+- `XuanYu.World.Tests/UiRuntime/GenericMarkerSnapIntegrationTests.cs` — Marker 到 Region/Road/Marker 的通用吸附集成测试。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapDataset.MarkerBootstrap.cs` — 地图标记 Dataset 初始化与放置工具入口。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapMarkerPlacement.cs` — 地图标记地面放置与自动回选择。
+- `XuanYu.Editor.UI/Vm/Map/UiVm.MapGeometryEditing.Points.cs` — 通用几何点集合与身份解析。
+- `XuanYu.Editor.UI/Left/MarkerPanel.axaml` — 地图标记最小放置面板。
+- `XuanYu.Editor.UI/Left/MarkerPanel.axaml.cs` — 地图标记放置面板事件接线。
 - `XuanYu.World.Tests/MapEditing/RegionSnapPipelineContractTests.cs` — C2 现有提交路径、局部查询与无新增索引合同测试。
 - `XuanYu.World.Tests/MapEditing/RegionSnapPipelineLockTests.cs` — C2 Edge 锁定、迟滞、沿边重投影与 Vertex 升级测试。
 - `XuanYu.World.Tests/MapEditing/RegionSnapPipelineTestFixture.cs` — C2 吸附管线投影与地图测试夹具。

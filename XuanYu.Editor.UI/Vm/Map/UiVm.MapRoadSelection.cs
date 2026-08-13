@@ -7,10 +7,11 @@ public sealed partial class UiVm
 {
     public bool TrySelectMapGeometryVertex(double x, double y, ViewportState viewport)
     {
-        if (!IsRegionEditMode || !IsRoadAuthoringMode || !IsSelectTool ||
+        if (!IsRegionEditMode || (!IsRoadAuthoringMode && !IsMarkerAuthoringMode) || !IsSelectTool ||
             IsRoadDrawingDraftActive || !IsInsideViewport(x, y, viewport)) return false;
         if (!TryMapGeometryVertexHit(x, y, viewport, out var selection, out var index) ||
-            selection.Kind != MapGeometryFeatureKind.Road) return false;
+            (IsRoadAuthoringMode && selection.Kind != MapGeometryFeatureKind.Road) ||
+            (IsMarkerAuthoringMode && selection.Kind != MapGeometryFeatureKind.Marker)) return false;
         _selectedMapGeometry = selection;
         _selectedMapGeometryVertexIndex = index;
         _mapGeometryPreview = DisplayGeometry();

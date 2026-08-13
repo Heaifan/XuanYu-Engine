@@ -1,9 +1,7 @@
 using XuanYu.Core.Space;
 using XuanYu.Editor.MapEditing;
 using XuanYu.World.Map;
-
 namespace XuanYu.Editor.UI;
-
 public sealed partial class UiVm
 {
     MapGeometrySelection? _selectedMapGeometry;
@@ -12,10 +10,9 @@ public sealed partial class UiVm
     MapGeometryPreview? _mapGeometryPreview;
     readonly RegionSnapState _regionVertexSnap = new();
     readonly GeometrySnapState _geometrySnap = new();
-
     public bool IsMapGeometryDragActive => _mapGeometryDrag is not null;
     public string SelectedMapGeometryText => _selectedMapGeometry is not { } selection ? "未选择几何" :
-        selection.Kind == MapGeometryFeatureKind.Region ? "已选择区域" : "已选择道路";
+        selection.Kind switch { MapGeometryFeatureKind.Region => "已选择区域", MapGeometryFeatureKind.Road => "已选择道路", _ => "已选择地图标记" };
     public MapGeometryPreview? MapGeometryPreview => _mapGeometryPreview;
     public int SelectedMapGeometryVertexIndex => _selectedMapGeometryVertexIndex;
 
@@ -24,7 +21,7 @@ public sealed partial class UiVm
         if (!IsRegionEditMode || !IsSelectTool || IsRegionDrawingDraftActive || IsRoadDrawingDraftActive ||
             !IsInsideViewport(x, y, viewport)) return false;
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        if (_selectedMapGeometry is { Kind: MapGeometryFeatureKind.Region } selected && MapGeometryHitTester.TryHitVertex(
+        if (_selectedMapGeometry is { } selected && MapGeometryHitTester.TryHitVertex(
                 MapSession.CurrentMap, selected, projection, x, y, 10, MapSession.CurrentMap.Surface.BaseHeightMeters, out var index))
         {
             var points = GeometryPoints(selected);
@@ -43,7 +40,8 @@ public sealed partial class UiVm
             ClearMapGeometrySelection();
             return false;
         }
-        if (IsRoadAuthoringMode && hit.Selection.Kind != MapGeometryFeatureKind.Road)
+        if ((IsRoadAuthoringMode && hit.Selection.Kind != MapGeometryFeatureKind.Road) ||
+            (IsMarkerAuthoringMode && hit.Selection.Kind != MapGeometryFeatureKind.Marker))
         {
             ClearMapGeometrySelection();
             return false;
@@ -75,7 +73,9 @@ public sealed partial class UiVm
         var points = _mapGeometryPreview?.Points ?? drag.OriginalPoints;
         var result = drag.Selection.Kind == MapGeometryFeatureKind.Region
             ? MapSession.EditRegionVertices(MapRegionIdFrom(drag.Selection), points)
-            : MapSession.EditRoadPoints(MapRoadIdFrom(drag.Selection), points);
+            : drag.Selection.Kind == MapGeometryFeatureKind.Road
+            ? MapSession.EditRoadPoints(MapRoadIdFrom(drag.Selection), points)
+            : MapSession.EditMarkerPosition(MapMarkerIdFrom(drag.Selection), points[0]);
         _mapGeometryDrag = null;
         _regionVertexSnap.Clear();
         _geometrySnap.Clear();

@@ -16,7 +16,7 @@ public static partial class MapDatasetDocumentValidator
         if (!IdPattern.IsMatch(document.Id))
             return Fail("InvalidId", "Dataset ID 不符合稳定标识规则。", "id");
         if (!MapDatasetTypes.IsKnown(document.Type))
-            return Fail("InvalidType", "Dataset type 不在允许的六类之内。", "type");
+            return Fail("InvalidType", "Dataset type 不在允许的类型之内。", "type");
         if (document.Features.IsDefault)
             return Fail("InvalidFeatures", "Dataset features 必须是数组。", "features");
         if (document.Version == MapDatasetDocument.LegacyVersion && !document.Features.IsEmpty)
@@ -27,6 +27,8 @@ public static partial class MapDatasetDocumentValidator
                 ? MapRegionDatasetCodec.Validate(document.Type, document.Features)
                 : document.Type == MapDatasetTypes.Road
                 ? MapRoadDatasetCodec.Validate(document.Type, document.Features)
+                : document.Type == MapDatasetTypes.Marker
+                ? MapMarkerDatasetCodec.Validate(document.Type, document.Features)
                 : MapRegionDatasetCodec.Validate(document.Type, document.Features);
             if (!features.Succeeded) return features;
         }

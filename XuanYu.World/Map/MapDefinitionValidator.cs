@@ -28,6 +28,8 @@ public static class MapDefinitionValidator
         if (!regionsResult.Succeeded) return regionsResult;
         var roadsResult = MapRoadValidator.Validate(map.Roads, map.Layers, map.SizeMeters);
         if (!roadsResult.Succeeded) return roadsResult;
+        var markersResult = MapMarkerValidator.Validate(map.Markers.IsDefault ? [] : map.Markers, map.Layers, map.SizeMeters);
+        if (!markersResult.Succeeded) return markersResult;
         return MapValidationResult.Ok();
     }
 

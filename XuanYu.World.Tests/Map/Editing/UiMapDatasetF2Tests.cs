@@ -28,9 +28,9 @@ public sealed class UiMapDatasetF2Tests : IDisposable
     }
 
     [Fact]
-    public void F2_type_presentation_maps_all_six_without_changing_domain_values()
+    public void F2_type_presentation_maps_all_types_without_changing_domain_values()
     {
-        var expected = new[] { "区域面", "道路", "城镇", "资源", "河流", "地形区域" };
+        var expected = new[] { "区域面", "道路", "地图标记", "城镇", "资源", "河流", "地形区域" };
         Assert.Equal(expected, MapDatasetTypePresentation.Options.Select(item => item.Display));
         Assert.Equal("road", MapDatasetTypePresentation.Options[1].Value);
     }

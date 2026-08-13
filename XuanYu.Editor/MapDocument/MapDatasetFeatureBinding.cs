@@ -7,15 +7,15 @@ public static class MapDatasetFeatureBinding
 {
     public static MapDocumentResult<MapDefinition> Build(MapDefinition current, MapManifest manifest, IEnumerable<MapDatasetDocument> documents)
     {
-        var features = documents.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road).ToArray();
+        var features = documents.Where(item => item.Type is MapDatasetTypes.Region or MapDatasetTypes.Road or MapDatasetTypes.Marker).ToArray();
         if (features.Length == 0) return MapDocumentResult<MapDefinition>.Ok(current);
         var ids = features.Select(item => MapDatasetLayerIdProjection.Project(item.Id)).ToHashSet();
         var legacy = current.Layers.Where(layer => layer.Kind == MapLayerKind.Region && !ids.Contains(layer.LayerId)).ToArray();
-        if (legacy.Any(layer => current.Regions.Any(item => item.LayerId == layer.LayerId) || current.Roads.Any(item => item.LayerId == layer.LayerId))) return Fail("LegacyFeatureContentPresent", "旧用户图层含内容，拒绝静默替换。");
+        if (legacy.Any(layer => current.Regions.Any(item => item.LayerId == layer.LayerId) || current.Roads.Any(item => item.LayerId == layer.LayerId) || current.Markers.Any(item => item.LayerId == layer.LayerId))) return Fail("LegacyFeatureContentPresent", "旧用户图层含内容，拒绝静默替换。");
         var states = manifest.DatasetLayerStates.ToDictionary(item => item.DatasetId, StringComparer.OrdinalIgnoreCase);
         var ordered = features.OrderBy(item => states[item.Id].Order).ToArray();
         var layers = current.Layers.Where(layer => layer.Kind != MapLayerKind.Region).ToList();
-        var regions = ImmutableArray.CreateBuilder<MapRegion>(); var roads = ImmutableArray.CreateBuilder<MapRoad>();
+        var regions = ImmutableArray.CreateBuilder<MapRegion>(); var roads = ImmutableArray.CreateBuilder<MapRoad>(); var markers = ImmutableArray.CreateBuilder<MapMarker>();
         for (var index = 0; index < ordered.Length; index++)
         {
             var document = ordered[index]; var state = states[document.Id]; var layerId = MapDatasetLayerIdProjection.Project(document.Id);
@@ -27,14 +27,19 @@ public static class MapDatasetFeatureBinding
                     var read = MapRegionDatasetCodec.Read(raw); if (!read.Succeeded || read.Value is null) return Fail(read.ErrorCode, read.Message);
                     regions.Add(new(read.Value.RegionId, layerId, read.Value.Name, read.Value.Kind, read.Value.Points));
                 }
-                else
+                else if (document.Type == MapDatasetTypes.Road)
                 {
                     var read = MapRoadDatasetCodec.Read(raw); if (!read.Succeeded || read.Value is null) return Fail(read.ErrorCode, read.Message);
                     roads.Add(new(read.Value.RoadId, layerId, read.Value.Name, read.Value.Kind, read.Value.Points));
                 }
+                else
+                {
+                    var read = MapMarkerDatasetCodec.Read(raw); if (!read.Succeeded || read.Value is null) return Fail(read.ErrorCode, read.Message);
+                    markers.Add(new(read.Value.MarkerId, layerId, read.Value.Name, read.Value.Position));
+                }
             }
         }
-        var candidate = current with { Layers = layers.ToImmutableArray(), Regions = regions.ToImmutable(), Roads = roads.ToImmutable() };
+        var candidate = current with { Layers = layers.ToImmutableArray(), Regions = regions.ToImmutable(), Roads = roads.ToImmutable(), Markers = markers.ToImmutable() };
         var valid = MapDefinitionValidator.Validate(candidate);
         return valid.Succeeded ? MapDocumentResult<MapDefinition>.Ok(candidate) : Fail(valid.ErrorCode, valid.Message);
     }

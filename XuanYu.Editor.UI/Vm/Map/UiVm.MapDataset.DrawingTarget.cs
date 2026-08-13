@@ -12,7 +12,7 @@ public sealed partial class UiVm
     void SetDatasetDrawingTarget(string? id)
     {
         var dataset = _datasetItems.FirstOrDefault(item => item.Id == id);
-        if (dataset is null || dataset.Type is not ("region" or "road") || dataset.Status != "正常" || dataset.IsLocked)
+        if (dataset is null || dataset.Type is not ("region" or "road" or "marker") || dataset.Status != "正常" || dataset.IsLocked)
         {
             if (_regionDrawing.IsActive) CancelRegionDrawingFromEscape();
             if (_roadDrawing.IsActive) CancelRoadDrawingFromEscape();
