@@ -97,7 +97,7 @@
         },
         {
           "property": "DataGrid 边界",
-          "value": "XYUI-1 DataGrid（不重新实现）",
+          "value": "XYUI-6 6-03 Data Grid（正式数据组件；本项不重新实现）",
           "kind": "NAMESPACE_REF"
         },
         {
