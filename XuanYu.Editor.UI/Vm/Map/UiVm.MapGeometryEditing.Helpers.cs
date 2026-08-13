@@ -74,10 +74,10 @@ public sealed partial class UiVm
     {
         if (!MapRegionId.TryParse(selection.FeatureId, out var sourceId)) return raw;
         var projection = XuanYu.Core.Space.ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        var result = RegionVertexSnapResolver.Resolve(sourceId, raw, x, y, MapSession.CurrentMap, projection,
+        var result = RegionSnapPipeline.Resolve(sourceId, raw, new(x, y), MapSession.CurrentMap, projection,
             _regionVertexSnap, MapSession.QueryLocalRegions,
             id => MapSession.TryGetRegion(id, out var region) ? region : null,
-            RegionVertexSnapSettings.Default);
+            new RegionEdgeSnapSettings(8, 12));
         return result.ResolvedPoint;
     }
 }

@@ -663,6 +663,7 @@
 - `XuanYu.Editor/MapEditing/RegionEdgeSnapResult.cs` — Region 顶点到边吸附的纯算法结果合同。
 - `XuanYu.Editor/MapEditing/RegionEdgeSnapSettings.cs` — Region 顶点到边吸附的进入/释放半径合同。
 - `XuanYu.Editor/MapEditing/RegionEdgeSnapVertex.cs` — Region 顶点到边吸附的世界点与屏幕点候选。
+- `XuanYu.Editor/MapEditing/RegionEdgeSnapLockResolver.cs` — C2 Edge Segment 锁定、12px 释放与沿边重投影。
 - `XuanYu.Editor/MapEditing/RegionSpatialBounds.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.Editor/MapEditing/RegionSpatialIndex.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.Editor/MapEditing/RegionSpatialNode.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
@@ -675,6 +676,9 @@
 - `XuanYu.Editor/MapEditing/RegionVertexSnapSettings.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
 - `XuanYu.Editor/MapEditing/RegionVertexSnapState.cs` — Region 顶点吸附的纯解析器、运行时状态、接线合同或回归测试。
 - `XuanYu.Editor/MapEditing/RegionSnapKind.cs` — Region 吸附结果的 None、Vertex、Edge 类型标识。
+- `XuanYu.Editor/MapEditing/RegionSnapPipeline.cs` — C2 Region 吸附统一仲裁与 F3-A 局部查询接线。
+- `XuanYu.Editor/MapEditing/RegionSnapQuery.cs` — C2 12px 局部查询范围与候选 Region 投影构建。
+- `XuanYu.Editor/MapEditing/RegionSnapState.cs` — C2 None、Vertex、Edge 吸附目标锁定状态。
 - `XuanYu.Editor/MapEditing/RoadDrawingState.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/Mode/EditorModeId.cs` — C# 类型、服务或测试实现。
 - `XuanYu.Editor/Mode/EditorModeManager.cs` — C# 类型、服务或测试实现。
@@ -1014,6 +1018,11 @@
 - `XuanYu.World.Tests/MapEditing/RegionDrawingStateTests.cs` — C# 类型、服务或测试实现。
 - `XuanYu.World.Tests/MapEditing/RegionEdgeSnapGeometryTests.cs` — Region 顶点到边吸附的线段最近点几何测试。
 - `XuanYu.World.Tests/MapEditing/RegionEdgeSnapResolverTests.cs` — Region 顶点到边吸附的优先级、排除与稳定决胜测试。
+- `XuanYu.World.Tests/MapEditing/RegionSnapPipelineContractTests.cs` — C2 现有提交路径、局部查询与无新增索引合同测试。
+- `XuanYu.World.Tests/MapEditing/RegionSnapPipelineLockTests.cs` — C2 Edge 锁定、迟滞、沿边重投影与 Vertex 升级测试。
+- `XuanYu.World.Tests/MapEditing/RegionSnapPipelineTestFixture.cs` — C2 吸附管线投影与地图测试夹具。
+- `XuanYu.World.Tests/MapEditing/RegionSnapPipelineTests.cs` — C2 Vertex/Edge 优先级与局部查询测试。
+- `XuanYu.World.Tests/MapEditing/RegionSnapStateTests.cs` — C2 吸附状态目标类型与清理测试。
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexLifecycleTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexScaleTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。
 - `XuanYu.World.Tests/MapEditing/RegionSpatialIndexTests.cs` — Region 局部空间查询的平衡动态 AABB 树、生命周期接线或回归测试。

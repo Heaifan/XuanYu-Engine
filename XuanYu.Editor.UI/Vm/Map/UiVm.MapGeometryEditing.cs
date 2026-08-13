@@ -9,7 +9,7 @@ public sealed partial class UiVm
     MapGeometrySelection? _selectedMapGeometry;
     MapGeometryDrag? _mapGeometryDrag;
     MapGeometryPreview? _mapGeometryPreview;
-    readonly RegionVertexSnapState _regionVertexSnap = new();
+    readonly RegionSnapState _regionVertexSnap = new();
 
     public bool IsMapGeometryDragActive => _mapGeometryDrag is not null;
     public string SelectedMapGeometryText => _selectedMapGeometry is not { } selection ? "未选择几何" :

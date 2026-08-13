@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-C · Region Vertex-to-Edge Snap
 
-状态：`OPEN`；F3-B 已 CLOSED；F3-C1 已 CLOSED，C2/C3 未启动。
+状态：`OPEN`；F3-B 已 CLOSED；F3-C1 已 CLOSED；F3-C2 已 CLOSED，F3-C3 为 `NEXT`。
 
 ## 冻结目标
 
@@ -19,11 +19,15 @@
 
 ## C2 · Drag Pipeline Integration
 
-状态：`NOT STARTED`。C1 正式门禁通过后才允许接入 F2 Preview → Commit 管线，并明确 Free、VertexSnapped、EdgeSnapped 状态。
+状态：`CLOSED`（自动门禁）；F3-C2 无新增视觉反馈，沿用 F2 Preview → Release → Dataset Commit 链。
+
+接线：PointerMove 使用 F3-A 12px 局部 Region 查询；候选先由 C1 Resolver 执行 Vertex 优先，再执行 Edge；Edge 锁定 `TargetRegionId + TargetSegmentIndex`，在 12px 内沿同一 Segment 重投影，靠近 Vertex 8px 内允许升级。PointerReleased、Esc、Undo/Redo 均沿用既有几何路径，不新增 Snap History 或 Dataset 写入路径。
+
+自动测试：C2 专项 15/15；Core 339/339；World 1342/1342；WarCore 22/22；覆盖 Free→Vertex、Free→Edge、Segment 重投影、8/12px 迟滞、Edge→Vertex 升级、Vertex 保持、Source Region 排除、12px 查询范围、查询失败清理、状态清理与现有提交路径合同。
 
 ## C3 · Formal Gate + User Acceptance
 
-状态：`NOT STARTED`。C2 完成后才建立正式门禁与 8 项真机 IPO；C3 未开始前不得启动 Road Snap 或 Topology Weld。
+状态：`NEXT`。C3 仅负责综合门禁与真机体验验收准备；不在 C3 偷渡功能开发。Road Snap 与 Topology Weld 仍未启动。
 
 ## 明确不做
 

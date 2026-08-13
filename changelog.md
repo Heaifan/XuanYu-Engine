@@ -18,6 +18,14 @@
 
 ---
 
+## v0.2.28.14-rz · MAP-DATA-A-R2-F3-C2 SNAP DRAG PIPELINE
+MAP-DATA-A-R2-F3-C2（2026-08-13 10:41:20）：在 F3-C1 CLOSED 后完成 Region Vertex-to-Edge Snap 拖拽管线接入；本轮不新增几何算法、不启动 F3-C3 真机验收、Road Snap 或 Topology Weld。
+- 变化：PointerMove 通过 F3-A 12px 局部 Region 查询，沿 Vertex > Edge > Free 仲裁；Edge 锁定 Segment 而非固定 Projection Point，12px 内沿边重投影，Vertex 8px 内可从 Edge 升级；Preview、Release、Dataset Commit、Esc、Undo/Redo 继续复用 F2 既有路径。
+- 验证：C2 专项 15/15；Core.Tests 339/339；World.Tests 1342/1342；WarCore.Tests 22/22；Solution 串行 Build 0 Warning/0 Error；ARCH-A PASS；43 个 AXAML XML PASS；版本四处一致；`git diff --check` PASS。
+- 状态：F3-C2 `CLOSED`（自动门禁）；F3-C3 为 `NEXT`，只负责综合门禁与真机体验验收准备，不偷渡功能开发；R2 保持 OPEN。
+- 遗留：C3 真机验收前不得启动 Road Snap 或 Topology Weld。
+- Hash：本条所在提交。
+
 ## v0.2.28.13-rz · MAP-DATA-A-R2-F3-C1 EDGE SNAP GEOMETRY
 MAP-DATA-A-R2-F3-C1（2026-08-13）：在 F3-B CLOSED 后完成 Region Vertex-to-Edge Snap 纯几何阶段并通过正式门禁；本轮不接 UI、不接拖拽管线、不启动 C2/C3。
 - 变化：新增屏幕线段最近点、Segment Interior、Vertex 优先、Source Region 排除、稳定决胜和零长度边安全处理；继续复用 8 px 进入 / 12 px 释放合同。
