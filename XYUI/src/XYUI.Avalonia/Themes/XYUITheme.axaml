@@ -10,6 +10,9 @@
     <Color x:Key="XY.Color.TextSecondary">#5B6875</Color>
     <Color x:Key="XY.Color.Accent">#2563EB</Color>
     <Color x:Key="XY.Color.Error">#C0392B</Color>
+    <Color x:Key="XY.Color.Sidebar">#17212B</Color>
+    <Color x:Key="XY.Color.SidebarText">#B8C7D6</Color>
+    <Color x:Key="XY.Color.SidebarAccent">#73A7FF</Color>
     <x:Double x:Key="XY.Space.1">4</x:Double>
     <x:Double x:Key="XY.Space.2">8</x:Double>
     <x:Double x:Key="XY.Space.3">12</x:Double>

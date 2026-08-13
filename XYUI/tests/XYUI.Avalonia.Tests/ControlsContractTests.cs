@@ -20,4 +20,5 @@ public sealed class ControlsContractTests
         Assert.All(controls, control =>
             Assert.Contains(control.Classes, name => name.StartsWith("xy-")));
     }
+
 }

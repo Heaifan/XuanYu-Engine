@@ -33,6 +33,7 @@
 - `XYUI/tests/XYUI.Avalonia.Tests/FoundationTokenTests.cs` - Foundation Token 契约测试。
 - `XYUI/tests/XYUI.Avalonia.Tests/GalleryRuntimeTests.cs` - Gallery 主题与主窗口 Headless 启动契约测试。
 - `XYUI/tests/XYUI.Avalonia.Tests/ControlsContractTests.cs` - Controls Core 类型与样式类契约测试。
+- `XYUI/tests/XYUI.Avalonia.Tests/AssemblyInfo.cs` - XYUI Avalonia 测试程序集串行化配置。
 
 > 由正式开发工作树的 `git ls-files` 与本轮预提交文件清单重建；每个文件一行职责。
 
