@@ -1,0 +1,4566 @@
+- 7-01 · Dialog / 对话框
+    - 定位
+        - 用于需要用户明确确认后才能继续的短暂阻塞式交互
+        - 主要承担确认、取消、必要后果说明
+        - 不是普通信息展示容器
+        - 不是大型设置面板
+    - 最终采用方向
+        - 方案1 · Compact Confirm / 紧凑确认对话框
+        - 作为 Dialog 默认基线
+        - 核心特征
+            - 小
+            - 直接
+            - 信息密度高
+            - 低空白
+            - 操作路径短
+    - 核心原则
+        - 只在真正需要确认时出现
+        - 能直接执行并支持 Undo 的操作不应滥用 Dialog
+        - 正文只保留影响用户判断的信息
+        - 优先使用明确动作名称
+        - 不要用模糊的“是 / 否”承担复杂语义
+        - 主要操作始终一层直达
+    - 默认结构
+        - Title
+            - 一句话说明正在确认什么
+        - Message
+            - 一句到两句说明必要后果
+        - Actions
+            - Secondary Action
+                - 通常为取消
+            - Primary Action
+                - 直接使用动作名称
+                - 例如
+                    - 删除
+                    - 保存
+                    - 覆盖
+                    - 应用
+    - 尺寸
+        - 默认紧凑
+        - 宽度根据内容自适应
+        - 不追求大面积留白
+        - 正文较短时禁止人为扩大窗口
+        - 按钮区域保持紧凑
+    - 普通确认
+        - 示例
+            - 删除实验记录？
+        - 正文
+            - 说明将删除什么
+            - 说明必要关联影响
+        - 操作
+            - 取消
+            - 删除
+    - 危险操作
+        - 仍使用紧凑 Dialog 基线
+        - 增强内容
+            - 危险状态色
+            - 明确不可逆后果
+            - 影响对象数量
+            - 恢复能力
+        - 如果支持 Undo
+            - 应明确告诉用户
+        - 原则
+            - 危险性通过清晰后果表达
+            - 不能简单通过连续弹两次确认制造安全感
+    - 复杂决策
+        - 默认不强行塞入普通 Confirm Dialog
+        - 如果存在三个及以上真正不同的合法决策
+            - 可升级为专门 Decision Flow
+        - 不能使用
+            - 是
+            - 否
+            - 取消
+        - 来承担含义完全不同的三个结果
+    - 关闭方式
+        - 取消按钮
+        - Escape
+        - 是否允许点击遮罩关闭
+            - 普通低风险确认
+                - 可允许
+            - 危险操作
+                - 默认不依赖遮罩关闭
+        - 关闭后
+            - 不得产生副作用
+    - 键盘
+        - Escape
+            - 取消
+        - Enter
+            - 仅在主动作明确且安全时触发默认动作
+        - 危险操作
+            - 避免误按 Enter 直接执行
+    - 焦点
+        - 打开时焦点进入 Dialog
+        - 关闭后返回原触发控件
+        - Tab 焦点不得逃出模态区域
+        - 默认焦点根据风险确定
+            - 普通确认
+                - 可落在主操作
+            - 危险确认
+                - 优先取消或安全位置
+    - 遮罩
+        - 使用轻量遮罩
+        - 保持用户仍能辨认原始上下文
+        - 不能使用过黑遮罩制造压迫感
+        - 不能让 Dialog 与背景完全失去关系
+    - 视觉
+        - 浅色基线
+        - 清晰边框
+        - 轻阴影或层级差
+        - Title 明确但不过度放大
+        - Message 使用次级文字
+        - Primary Button 明确
+        - Secondary Button 弱化
+        - 危险动作使用危险语义色
+    - 响应式
+        - Desktop
+            - 居中紧凑 Dialog
+        - Tablet
+            - 保持居中
+            - 适度压缩边距
+        - Mobile Portrait
+            - 优先保留紧凑宽度
+            - 接近屏幕边缘时保留安全边距
+            - 按钮触控面积适当增加
+        - Mobile Landscape
+            - 接近桌面 Dialog
+        - 原则
+            - 移动端不因为屏幕小自动变成全屏页面
+    - 内容限制
+        - 适合
+            - 短确认
+            - 删除确认
+            - 覆盖确认
+            - 简单保存确认
+            - 离开未保存内容确认
+        - 不适合
+            - 大型表单
+            - 复杂属性编辑
+            - 长篇说明
+            - 长期驻留工具
+            - 大量选项
+    - 状态
+        - Default
+        - Focused
+        - Processing
+        - Danger
+        - Disabled
+        - Error
+    - Processing
+        - 提交后防止重复触发
+        - 主按钮可进入进行中状态
+        - 不得因为异步请求重复创建 Dialog
+        - 失败后保留必要上下文并说明错误
+    - 安全原则
+        - 普通浏览行为尽量不弹 Dialog
+        - 可逆操作优先 Undo
+        - 不可逆操作才加强确认
+        - 明确告诉用户对象和后果
+        - 禁止无意义二次确认
+    - 效率原则
+        - 一次确认能完成就不要两次
+        - 高频操作不应该被 Dialog 阻断
+        - 用户应该第一眼看到
+            - 确认对象
+            - 关键后果
+            - 主动作
+            - 取消入口
+    - 禁止设计
+        - 大面积空白
+        - 标题与正文重复同一句话
+        - 只有“确定 / 取消”但不说明确定什么
+        - 所有操作都弹确认
+        - 连续两层确认框
+        - 危险操作只靠红色但不解释后果
+        - 在 Dialog 中塞大型复杂表单
+        - 移动端直接改造成全屏页面
+    - UI代码
+        - Component
+            - Dialog
+        - Props
+            - open
+            - title
+            - message
+            - variant
+            - primaryAction
+            - secondaryAction
+            - dismissible
+            - loading
+        - Variant
+            - default
+            - danger
+        - Actions
+            - onConfirm
+            - onCancel
+            - onDismiss
+    - 与其他组件关系
+        - 触发器来自 XYUI-2 Buttons & Inputs
+        - 危险状态遵循 XYUI-4 Selection & Feedback
+        - 复杂表单优先交给 Panel / Window
+        - 短暂非阻塞信息优先使用 Popover
+        - 轻提示不应升级为 Dialog
+
+- 7-02 · Popover / 气泡浮层
+    - 定位
+        - 用于围绕当前对象提供短暂的就地信息与轻量操作
+        - 不阻塞主界面
+        - 不要求用户离开当前上下文
+        - 用于连接对象与其关键信息
+    - 最终采用方向
+        - 方案2 · Inspector Popover 为主
+        - 方案1 · Anchored Quick Setting 为辅助
+        - 方案4 · Responsive Popover 为辅助
+        - 方案3 · Quick Actions 不作为核心形态
+    - 核心原则
+        - 对象优先
+            - Popover 应明确属于哪个触发对象
+        - 就地优先
+            - 用户不需要跳转页面才能理解对象
+        - 紧凑优先
+            - 只显示当前判断真正需要的信息
+        - 非阻塞
+            - 主界面保持可见
+        - 高频功能不能全部藏入 Popover
+    - 主形态
+        - Inspector Popover
+            - 点击对象后在附近显示
+            - 提供关键摘要
+            - 提供必要状态
+            - 允许进入完整 Inspector
+        - 示例
+            - 地图道路
+                - 名称
+                - ID
+                - 类型
+                - 长度
+                - 查看详细属性
+            - 数据点
+                - 名称
+                - 时间
+                - 当前值
+                - 状态
+    - 辅助形态一
+        - Anchored Quick Setting
+            - 适合非常高频的小型设置
+            - 直接锚定在当前控制器附近
+        - 示例
+            - 运行速度
+                - ×0.5
+                - ×1
+                - ×2
+                - ×4
+            - Tick 间隔
+            - 显示模式
+            - 快速筛选
+        - 原则
+            - 操作立即生效时应明确反馈
+            - 不需要专门打开设置页面
+            - 复杂配置不得继续塞入 Popover
+    - 辅助形态二
+        - Responsive Popover
+            - Desktop
+                - 保持锚定 Popover
+            - Tablet
+                - 空间足够时保持锚定
+                - 空间不足时扩大可用区域
+            - Mobile Portrait
+                - 必要时转换为 Bottom Sheet
+            - Mobile Landscape
+                - 优先继续使用锚定浮层
+        - 原则
+            - 改变承载方式
+            - 不改变功能名称
+            - 不改变操作语义
+    - 锚点
+        - Popover 必须与触发对象建立清晰空间关系
+        - 优先位置
+            - Right
+            - Bottom
+            - Top
+            - Left
+        - 根据可用空间自动翻转
+        - 不得超出 Viewport
+        - 箭头仅作为辅助指向
+    - 打开方式
+        - Click
+            - 主要方式
+        - Keyboard
+            - Enter
+            - Space
+        - 移动端
+            - Tap
+        - 不得把 Hover 作为唯一打开方式
+    - 关闭方式
+        - 再次点击触发对象
+        - 点击外部
+        - Escape
+        - 执行完成后自动关闭
+            - 仅适用于一次性动作
+        - 复杂检查时可保持打开
+    - 内容层级
+        - Primary
+            - 对象名称
+            - 核心值
+            - 核心状态
+        - Secondary
+            - ID
+            - Type
+            - 辅助信息
+        - Optional Action
+            - 查看详细属性
+            - 打开 Inspector
+    - 对象检查
+        - 用于
+            - 地图实体
+            - 数据集
+            - 图表数据点
+            - 时间点
+            - 日志对象
+            - 资源项
+        - 原则
+            - Popover 只承担摘要
+            - 完整编辑进入对应 Inspector / Panel
+    - 快速设置
+        - 用于
+            - 少量选项
+            - 即时设置
+            - 布尔状态
+            - 小范围切换
+        - 不适合
+            - 大型表单
+            - 复杂树结构
+            - 多层导航
+            - 大量字段
+    - 动作菜单
+        - 允许存在低频 More Popover
+        - 但只作为辅助能力
+        - 适合
+            - 复制 ID
+            - 导出
+            - 解除注册
+            - 低频管理动作
+        - 禁止
+            - 把打开
+            - 编辑
+            - 运行
+            - 常用保存
+        - 等高频动作全部塞进 More
+    - 响应式
+        - Desktop
+            - Anchored Popover
+        - Tablet
+            - Anchored / Expanded Popover
+        - Mobile Portrait
+            - Bottom Sheet
+        - Mobile Landscape
+            - Anchored Popover 优先
+        - 触控目标适当放大
+        - 内容保持相同语义
+    - 尺寸
+        - 默认紧凑
+        - 宽度根据内容决定
+        - 不为了视觉效果制造大面积空白
+        - 信息过多时应升级为 Inspector
+        - 禁止无限纵向增长
+    - 滚动
+        - 短内容不滚动
+        - 内容超过最大高度
+            - 内部滚动
+        - 如果大量内容长期需要滚动
+            - 说明组件选择错误
+            - 应转 Panel / Inspector
+    - 键盘
+        - Escape
+            - 关闭
+        - Tab
+            - 仅在内部存在交互元素时进入
+        - Arrow Keys
+            - 可用于选项导航
+        - Enter
+            - 执行当前动作
+    - 状态
+        - Closed
+        - Opening
+        - Open
+        - Focused
+        - Loading
+        - Disabled
+        - Error
+    - Loading
+        - 允许显示局部加载状态
+        - Popover 不应因为加载整个页面而阻塞
+        - 失败时提供简短错误信息
+    - 视觉
+        - 浅色背景
+        - 轻量边框
+        - 轻阴影
+        - 高于普通内容层
+        - 对象名称优先突出
+        - 次要 Metadata 弱化
+        - 避免厚重卡片感
+    - 性能
+        - 打开时只查询当前对象必要数据
+        - 不能为了显示 Popover 扫描整个集合
+        - 地图对象检查应使用已存在命中结果
+        - 图表 Popover 应复用当前 Inspect 数据
+        - 关闭后释放不必要订阅
+    - 与 Inspector 的边界
+        - Popover
+            - 快速看
+            - 快速改
+            - 短暂
+        - Inspector
+            - 详细看
+            - 完整编辑
+            - 长期驻留
+        - 原则
+            - Popover 不能逐渐膨胀成一个缩小版 Inspector
+    - 与 Dialog 的边界
+        - Popover
+            - 非阻塞
+            - 可随时关闭
+        - Dialog
+            - 需要明确决策
+            - 阻塞后续流程
+        - 危险确认
+            - 不得仅使用 Popover 替代 Dialog
+    - 安全原则
+        - 普通查看不确认
+        - 即时可逆设置可直接执行
+        - 危险动作从 Popover 触发后
+            - 交给 Dialog / Undo 机制
+    - 禁止设计
+        - Popover 塞满复杂表单
+        - Popover 变成大型悬浮窗口
+        - 高频操作全部藏入 More
+        - 移动端硬挤桌面尺寸浮层
+        - 依赖 Hover 才能访问功能
+        - 多个 Popover 同时叠加
+        - Popover 内再无限嵌套 Popover
+        - 把完整 Inspector 塞进 Popover
+    - UI代码
+        - Component
+            - Popover
+        - Props
+            - open
+            - anchor
+            - placement
+            - content
+            - variant
+            - responsiveMode
+            - dismissible
+            - maxWidth
+            - maxHeight
+        - Variant
+            - inspector
+            - quickSetting
+            - actions
+        - ResponsiveMode
+            - anchored
+            - bottomSheet
+        - Actions
+            - onOpen
+            - onClose
+            - onAction
+            - onOpenInspector
+    - 与其他组件关系
+        - 对象摘要可连接 XYUI-5 Inspector
+        - 设置控件复用 XYUI-2 Inputs
+        - 状态表达遵循 XYUI-4 Feedback
+        - 移动端 Bottom Sheet 复用 XYUI-7 对应浮层规则
+        - 危险操作转交 XYUI-7-01 Dialog
+
+- 7-03 · Tooltip / 提示浮层
+    - 定位
+        - 用于提供短暂、轻量、非阻塞的信息提示
+        - 主要服务数据检查与即时解释
+        - 不承担复杂操作
+        - 不替代 Popover
+        - 不替代 Inspector
+    - 最终采用方向
+        - 方案2 · Data Tooltip 为主
+        - 方案4 · Responsive Hint 为辅助
+    - 核心目标
+        - 快速查看当前数据
+        - 不打断原有操作
+        - 桌面与移动保持相同信息语义
+        - 移动端不依赖 Hover
+        - 保持内容紧凑
+    - 主形态
+        - Data Tooltip
+            - 用于可视化数据检查
+            - 跟随当前 Inspect 位置
+            - 展示少量最重要的数据
+        - 示例
+            - 时间
+                - 12.40 s
+            - 疲劳度
+                - 63.2%
+            - 士气
+                - 78.4%
+            - 杀伤
+                - +24
+    - 与 Visualization Interaction 联动
+        - Inspect
+            - Tooltip 跟随当前检查位置
+        - Hover
+            - 桌面实时更新
+        - Crosshair
+            - Tooltip 与 Crosshair 同步
+        - Lock
+            - 锁定后由 Chart Inspector 承担长期信息
+        - 原则
+            - Tooltip 是瞬时检查
+            - Inspector 是锁定后的稳定检查
+    - 触发
+        - Desktop
+            - Hover
+            - Pointer Move
+        - Tablet
+            - Tap
+            - Drag Crosshair
+        - Mobile
+            - Tap
+            - Long Press
+            - Drag Crosshair
+        - 原则
+            - 移动端不依赖 Hover
+    - 桌面
+        - 指针进入有效数据区域
+            - 显示 Tooltip
+        - 移动指针
+            - 同步更新数据
+        - 离开有效区域
+            - 自动关闭
+        - 点击数据点
+            - 可进入 Lock
+    - 移动端
+        - 核心检查行为
+            - 触摸数据区域
+            - 拖动 Crosshair
+        - 需要解释功能时
+            - Long Press
+            - 或首次 Hint
+        - 原则
+            - 不能照搬桌面 Hover
+            - 不能要求用户猜图标
+            - 重要功能优先直接显示名称
+    - Responsive Hint
+        - 用途
+            - 解决移动端没有 Hover 的问题
+            - 帮助发现轻量辅助功能
+        - 触发方式
+            - Long Press
+            - 首次使用提示
+            - 显式帮助入口
+        - 原则
+            - 首次提示不能频繁重复打扰
+            - 核心功能不能只有 Hint 才能发现
+    - 内容层级
+        - Primary
+            - 当前时间
+            - 当前对象
+        - Data
+            - Metric Name
+            - Value
+            - Unit
+        - Optional
+            - 变化量
+            - 状态
+            - 极短操作提示
+    - 数据数量
+        - 默认只显示当前判断需要的数据
+        - 多 Series 时
+            - 仅显示当前可见或命中 Series
+        - 数据过多
+            - 升级到 Chart Inspector
+        - 禁止
+            - 一次列出大量无关指标
+    - 位置
+        - 优先靠近 Inspect Point
+        - 不得遮挡正在检查的数据点
+        - 根据 Viewport 自动翻转
+        - 保持与屏幕边缘安全距离
+        - Crosshair 附近空间不足时
+            - 移动到另一侧
+    - 跟随
+        - Pointer Move 时允许跟随
+        - 移动必须稳定
+        - 禁止 Tooltip 高频左右跳动
+        - 位置算法应避免边界抖动
+    - 延迟
+        - Data Tooltip
+            - 数据检查可近乎即时显示
+        - 辅助 Hint
+            - 允许轻微延迟
+        - 原则
+            - 不能因为 Tooltip 延迟影响数据分析效率
+    - 关闭
+        - Desktop
+            - Pointer Leave
+            - Escape
+        - Mobile
+            - Tap Outside
+            - 结束 Inspect
+            - Escape
+                - 如果存在物理键盘
+    - 交互能力
+        - Tooltip 默认不承担复杂交互
+        - 允许极轻操作暗示
+            - 例如
+                - 点击可锁定
+        - 真正可操作内容
+            - 升级为 Popover
+            - 或 Inspector
+    - 响应式
+        - Desktop
+            - Floating Data Tooltip
+        - Tablet
+            - Floating Tooltip
+            - 必要时固定边缘
+        - Mobile Portrait
+            - Crosshair + Floating Hint
+            - 空间不足时可固定到底部信息区
+        - Mobile Landscape
+            - 接近桌面 Data Tooltip
+    - 视觉
+        - 紧凑
+        - 高信息密度
+        - 低空白
+        - 清晰背景
+        - 轻边框
+        - 可使用轻阴影
+        - 数值比标签更突出
+        - 单位保持清晰
+    - 数据格式
+        - 数字格式统一
+        - 小数位按指标规则
+        - 单位不能丢失
+        - 百分比统一表达
+        - 时间格式统一
+        - Delta 明确正负
+    - 性能
+        - PointerMove 不扫描全部数据
+        - 仅检查当前可见 Series
+        - 复用 Visualization Inspect 结果
+        - Tooltip 本身不重新计算完整 Dataset
+        - 快速移动时避免产生大量布局对象
+        - 尽量局部更新文本和位置
+    - 可访问性
+        - 信息不能只通过颜色表达
+        - 桌面键盘需要有等价检查能力
+        - 移动端提供触控替代
+        - 核心信息不能永久依赖 Hover
+    - 错误与校验
+        - Tooltip 不作为主要错误反馈机制
+        - 错误状态必须直接可见
+        - 不能要求 Hover 才知道字段错误
+        - 必要解释交给对应 Feedback / Validation 机制
+    - 与 Popover 的边界
+        - Tooltip
+            - 瞬时信息
+            - 低交互
+            - 自动消失
+        - Popover
+            - 对象摘要
+            - 轻量操作
+            - 用户主动打开
+    - 与 Inspector 的边界
+        - Tooltip
+            - 快速检查当前位置
+        - Inspector
+            - 锁定
+            - 长期查看
+            - 多指标比较
+            - 完整对象信息
+    - 禁止设计
+        - 移动端照搬 Hover
+        - Tooltip 放大型表单
+        - Tooltip 内嵌复杂按钮
+        - 一次显示大量指标
+        - 遮挡当前数据点
+        - PointerMove 全量数据扫描
+        - 错误只能通过 Tooltip 查看
+        - 多个 Tooltip 同时堆叠
+        - Tooltip 频繁左右跳动
+    - UI代码
+        - Component
+            - Tooltip
+        - Props
+            - open
+            - anchor
+            - content
+            - position
+            - variant
+            - deviceMode
+            - followPointer
+            - delay
+        - Variant
+            - data
+            - hint
+        - DeviceMode
+            - desktop
+            - tablet
+            - mobilePortrait
+            - mobileLandscape
+        - Actions
+            - onShow
+            - onHide
+            - onInspect
+            - onLockRequest
+    - 与其他组件关系
+        - 数据检查接入 XYUI-8 Visualization Interaction
+        - 锁定信息交给 XYUI-8-15 Chart Inspector
+        - 对象操作升级为 XYUI-7-02 Popover
+        - 字段错误遵循 XYUI-4 Feedback
+
+- 7-04 · Context Menu / 上下文菜单
+    - 定位
+        - 用于围绕当前对象或当前位置提供上下文相关命令
+        - 主要服务桌面专业工具的快速操作
+        - 移动端通过 Long Press 提供等价入口
+        - 不能替代主界面的高频操作
+    - 最终采用方向
+        - 方案2 · Compact Command Menu 为主
+        - 方案1 · Object Context Menu 为辅助
+        - 方案4 · Responsive Context Menu 为辅助
+        - 方案3 · Smart Context Menu 仅用于强上下文场景
+    - 核心目标
+        - 高命令密度
+        - 短操作路径
+        - 清晰分组
+        - 快捷键可发现
+        - 对象相关
+        - 桌面和移动保持动作语义一致
+    - 主形态
+        - Compact Command Menu
+            - 命令纵向紧凑排列
+            - 快捷键右对齐
+            - 相关命令轻量分组
+            - 危险操作置于独立区域
+        - 适合
+            - 实验列表
+            - 资源列表
+            - 数据集
+            - 编辑器对象
+            - 文件与项目对象
+    - 对象上下文
+        - Context Menu 必须知道当前目标
+        - 示例
+            - 道路
+                - 编辑道路
+                - 查看属性
+                - 复制 ID
+                - 导出
+                - 删除
+            - 实验
+                - 立即运行
+                - 复制实验
+                - 重命名
+                - 导出
+                - 删除
+        - 原则
+            - 右键谁就服务谁
+            - 不能混入大量无关全局功能
+    - 高频操作
+        - 不能因为存在 Context Menu 就隐藏
+        - 高频操作仍应一层直达
+        - Context Menu 作为
+            - 快捷入口
+            - 补充入口
+            - 对象相关入口
+        - 不能成为唯一入口
+    - 命令结构
+        - Primary Commands
+            - 最相关的对象动作
+        - Secondary Commands
+            - 管理
+            - 复制
+            - 导出
+        - Destructive Commands
+            - 删除
+            - 解除注册
+            - 危险状态变更
+        - 原则
+            - 相关功能放在一起
+            - 分隔线少而明确
+    - 快捷键
+        - 桌面菜单可显示
+            - Ctrl
+            - Alt
+            - Shift
+            - F Keys
+            - 单键快捷键
+        - 显示位置
+            - 右对齐
+        - 原则
+            - 快捷键是效率加速器
+            - 不是唯一操作方式
+            - 名称和快捷键之间保持足够辨识度
+    - 动态上下文
+        - 允许根据当前对象状态变化
+        - 示例
+            - 已锁定时间点
+                - 设为比较点 B
+            - 未锁定时间点
+                - 锁定此时间点
+            - 地图对象
+                - 查看关联对象
+        - 限制
+            - 常用命令名称保持稳定
+            - 常用命令顺序尽量保持稳定
+            - 不能每次打开都重新排列
+            - 不能破坏肌肉记忆
+    - 强上下文能力
+        - 方案3仅在价值明显时启用
+        - 适合
+            - 图表时间点
+            - 地图命中对象
+            - 局部分析对象
+        - 示例
+            - 锁定此刻
+            - 设为比较点
+            - 查看此刻日志
+            - 打开局部分布
+        - 原则
+            - 上下文必须真正减少操作步骤
+            - 不能为了智能而智能
+    - 打开方式
+        - Desktop
+            - Right Click
+            - Keyboard Context Key
+            - 可选快捷键
+        - Mobile
+            - Long Press
+        - Tablet
+            - Long Press
+            - 外接鼠标时允许 Right Click
+    - 关闭方式
+        - 点击命令
+        - 点击菜单外
+        - Escape
+        - 打开另一个 Context Menu
+        - 原对象失效
+    - 位置
+        - 桌面
+            - 优先出现在 Pointer 附近
+        - 不能遮挡当前目标的关键区域
+        - 接近屏幕边缘时自动翻转
+        - 不得超出 Viewport
+        - 子菜单方向根据空间自动调整
+    - 移动端
+        - Long Press 触发
+        - 空间足够时
+            - 可使用浮动菜单
+        - Mobile Portrait
+            - 优先 Bottom Action Sheet
+        - 触控目标放大
+        - 动作名称保持与桌面一致
+        - 危险动作保持独立视觉区域
+    - 响应式
+        - Desktop
+            - Compact Context Menu
+        - Tablet
+            - Context Menu / Touch Menu
+        - Mobile Portrait
+            - Bottom Action Sheet
+        - Mobile Landscape
+            - 浮动 Context Menu 优先
+        - 原则
+            - 改变载体
+            - 不改变命令语义
+    - 尺寸
+        - 菜单宽度根据最长有效命令决定
+        - 保持紧凑
+        - 不制造大面积左右 Padding
+        - 项目高度适合快速扫视
+        - 移动端触控项目适当加高
+    - 视觉
+        - 浅色背景
+        - 轻边框
+        - 轻阴影
+        - 当前 Hover 项轻量高亮
+        - 快捷键使用次级文字
+        - 危险动作使用危险语义色
+        - Disabled 明确弱化
+        - 避免复杂图标装饰
+    - 图标
+        - 不是所有命令都必须有图标
+        - 仅在语义明显时使用
+        - 不能因为图标导致菜单宽度和视觉噪声增加
+        - 同组命令对齐规则统一
+    - 子菜单
+        - 允许存在
+        - 但深度严格控制
+        - 优先最多一层
+        - 如果出现多层嵌套
+            - 考虑升级为其他界面
+        - 高频操作不得藏入深层子菜单
+    - Disabled
+        - 不可用动作可以保留
+            - 用于稳定菜单位置
+        - 需要时说明不可用原因
+        - 禁止用户点击后才知道不能执行
+    - 危险操作
+        - Context Menu 可以触发危险操作
+        - 但不直接承担完整确认
+        - 根据风险
+            - 交给 Dialog
+            - 或 Undo Toast
+        - 例如
+            - 删除数据集…
+            - 删除道路…
+        - 省略号表示后续仍有流程
+    - 性能
+        - 打开菜单时只计算当前对象命令
+        - 不能全局扫描数据集生成菜单
+        - 命令 Enabled 状态应来自已有对象状态
+        - 动态上下文计算保持轻量
+    - 可访问性
+        - 键盘可打开
+        - Arrow Keys 可导航
+        - Enter 执行
+        - Escape 关闭
+        - 焦点关闭后回到原对象
+        - 功能不能只有右键入口
+    - 状态
+        - Closed
+        - Open
+        - Hover
+        - Focused
+        - Disabled
+        - Executing
+    - 安全原则
+        - 浏览与可逆命令可以立即执行
+        - 危险命令明确标识
+        - 不可逆操作进入确认机制
+        - 可逆危险操作优先提供 Undo
+    - 禁止设计
+        - 把所有高频命令都藏到右键
+        - 同一命令每次出现位置不同
+        - 菜单项目间距过大
+        - 大量无意义分隔线
+        - 为了“智能”频繁重排命令
+        - 移动端直接照搬右键
+        - Context Menu 无限嵌套
+        - 右键对象后出现大量无关全局命令
+        - 危险动作与普通动作混在一起
+    - UI代码
+        - Component
+            - ContextMenu
+        - Props
+            - open
+            - target
+            - position
+            - items
+            - groups
+            - deviceMode
+            - context
+        - Item
+            - id
+            - label
+            - icon
+            - shortcut
+            - disabled
+            - danger
+            - children
+        - DeviceMode
+            - desktop
+            - tablet
+            - mobilePortrait
+            - mobileLandscape
+        - Actions
+            - onOpen
+            - onClose
+            - onExecute
+    - 与其他组件关系
+        - 危险确认交给 XYUI-7-01 Dialog
+        - 对象摘要交给 XYUI-7-02 Popover
+        - 命令图标遵循 XYUI-2 Button / Icon Button
+        - 选择状态遵循 XYUI-4 Selection
+        - 移动端 Action Sheet 使用 XYUI-7 后续规则
+
+- 7-05 · Toast / Snackbar / 短暂反馈提示
+    - 定位
+        - 用于反馈刚刚发生的操作结果
+        - 不阻塞当前工作
+        - 不要求普通成功操作再次点击确认
+        - 统一管理 Success、Undo、Warning、Error 等短时反馈
+    - 最终采用方向
+        - 方案1 · Compact Success Toast
+            - 正式采用
+        - 方案2 · Undo Snackbar
+            - 正式采用
+        - 方案3 · Persistent Error Toast
+            - 正式采用
+        - 方案4 · Responsive Toast
+            - 正式采用
+        - 四种能力共同组成同一套反馈系统
+    - 核心原则
+        - 反馈严重程度决定持续时间和操作能力
+        - 成功信息尽量轻
+        - 可逆操作优先 Undo
+        - 错误不能自动消失得让用户来不及处理
+        - Toast 不抢夺主界面焦点
+        - Toast 不阻塞后续操作
+    - Success
+        - 适合
+            - 保存成功
+            - 复制成功
+            - 导出完成
+            - 普通设置应用成功
+        - 表现
+            - 紧凑
+            - 自动消失
+            - 不要求确认
+        - 示例
+            - 参数已保存
+                - 实验 #24
+            - 已复制数据集 ID
+            - 截图已导出
+    - 成功反馈原则
+        - 正文非常短
+        - 用户已经明确知道动作时
+            - 只说明结果
+        - 禁止
+            - 成功后再弹 Dialog
+            - 成功 Toast 带大量解释
+            - 所有小操作都连续刷 Toast
+    - Undo Snackbar
+        - 定位
+            - 用于已经执行但短时间可逆的操作
+        - 结构
+            - 操作结果
+            - 恢复期限
+            - Undo Action
+        - 示例
+            - roads 数据集已删除
+            - 10 秒后完成最终清理
+            - 撤销
+        - 原则
+            - 撤销必须一层直达
+            - 不能藏入 More
+            - 执行后立即出现
+            - 时间结束后状态明确结束
+    - Undo 优先原则
+        - 可逆操作优先
+            - 立即执行
+                - 反馈
+                    - Undo
+        - 而不是
+            - 确认
+                - 再确认
+                    - 执行
+        - 适合
+            - 移除列表项
+            - 移动对象
+            - 解除注册
+            - 删除可恢复对象
+            - 修改可恢复设置
+    - 不可逆操作
+        - 不能因为存在 Undo Snackbar 就假设所有操作可恢复
+        - 真正不可逆或高风险操作
+            - 仍交给 Dialog
+    - Persistent Error
+        - 定位
+            - 用于用户必须知道或可能需要立即处理的问题
+        - 不自动快速消失
+        - 必须说明
+            - 发生了什么
+            - 当前数据是否安全
+            - 下一步可以做什么
+        - 示例
+            - 结果保存失败
+            - 磁盘写入失败
+            - 运行结果仍保留在内存中
+            - 重试保存
+    - Error Actions
+        - 允许
+            - Retry
+            - Open Details
+            - Copy Error
+            - Close
+        - 主恢复操作保持一层直达
+        - 低频诊断信息可进入 Details
+    - Warning
+        - 介于 Success 与 Error 之间
+        - 根据是否需要用户处理决定持续时间
+        - 无需处理
+            - 可自动消失
+        - 需要处理
+            - 保持到用户确认或状态解除
+    - 持续时间
+        - Success
+            - 短
+        - Info
+            - 短
+        - Undo
+            - 根据 Undo Window
+        - Warning
+            - 按重要性决定
+        - Error
+            - 默认不自动快速关闭
+        - 原则
+            - 不能所有 Toast 使用同一个固定时长
+    - 位置
+        - Desktop
+            - 优先右下
+            - 或应用统一 Notification Corner
+        - Tablet
+            - 靠近安全边缘
+        - Mobile Portrait
+            - 底部优先
+            - 避开 Bottom Action Bar
+            - 避开系统 Safe Area
+        - Mobile Landscape
+            - 边缘区域
+            - 不得遮挡主要 Plot
+    - 堆叠
+        - Desktop
+            - 允许少量纵向堆叠
+        - Mobile
+            - 单条优先
+        - 大量反馈
+            - 聚合
+            - 或交给 Notification Center / Log
+        - 禁止
+            - Toast 无限向上堆积
+    - 重复消息
+        - 相同短时间消息允许合并
+        - 示例
+            - 连续保存
+                - 不需要出现十个“已保存”
+        - 可显示
+            - 重复次数
+            - 最新状态
+    - 布局
+        - 默认紧凑
+        - 内容横向优先
+        - 主文字突出
+        - 辅助状态弱化
+        - Action 靠近操作结果
+        - 不制造大面积 Padding
+    - 视觉
+        - Success
+            - 轻量成功状态
+            - 不使用大面积绿色
+        - Undo
+            - 可使用更稳定的高对比背景
+            - Action 明确
+        - Error
+            - 危险色作为语义强调
+            - 正文仍保持高可读性
+        - Warning
+            - 使用警告语义色
+        - 原则
+            - 状态色辅助表达
+            - 不能只靠颜色区分
+    - 关闭
+        - Success
+            - 自动关闭
+        - Undo
+            - 超时
+            - 或执行 Undo
+        - Error
+            - 手动关闭
+            - 或问题解决后关闭
+        - Escape
+            - 不应全局误关闭所有 Toast
+    - 焦点
+        - Toast 默认不抢焦点
+        - 如果包含 Action
+            - 键盘用户必须能够访问
+        - 关闭后
+            - 不能破坏原有工作焦点
+    - 交互
+        - 允许
+            - Undo
+            - Retry
+            - Open
+            - Close
+        - 禁止
+            - 复杂表单
+            - 多步骤任务
+            - 大量按钮
+    - 响应式
+        - Desktop
+            - Corner Toast Stack
+        - Tablet
+            - Edge Toast
+        - Mobile Portrait
+            - Bottom Snackbar
+        - Mobile Landscape
+            - Edge / Bottom Snackbar
+        - 原则
+            - 功能语义不改变
+            - 只调整位置
+                - 宽度
+                    - 触控目标
+    - 与日志关系
+        - Toast 是即时反馈
+        - Log 是长期记录
+        - 重要错误可以同时写入 Log
+        - Toast 消失不代表事件记录消失
+        - 大量后台事件不能全部 Toast 化
+    - 与通知中心关系
+        - 如果应用存在 Notification Center
+            - 重要 Toast 可留下历史记录
+        - 普通成功消息不一定需要持久保存
+    - 性能
+        - Toast 创建不能触发主界面重布局
+        - 大量事件需要合并
+        - 动画保持轻量
+        - 禁止因为通知数量导致主线程压力
+    - 安全原则
+        - 可逆操作优先 Undo
+        - 不可逆危险操作使用 Dialog
+        - Error 明确数据是否已经写入
+        - 不得显示虚假的成功状态
+        - 异步操作必须在真正完成后显示成功
+    - 禁止设计
+        - 成功操作弹确认框
+        - 错误 Toast 两秒自动消失
+        - 所有消息永久驻留
+        - Toast 无限堆叠
+        - 移动端遮挡底部操作栏
+        - 所有小动作都刷 Toast
+        - Undo 藏入二级菜单
+        - 错误只写“失败”却不说明对象
+        - 请求尚未成功就提前提示“保存成功”
+    - UI代码
+        - Component
+            - Toast
+            - Snackbar
+        - Props
+            - id
+            - variant
+            - title
+            - message
+            - duration
+            - action
+            - dismissible
+            - persistent
+            - deviceMode
+        - Variant
+            - success
+            - info
+            - undo
+            - warning
+            - error
+        - Actions
+            - onAction
+            - onUndo
+            - onRetry
+            - onDismiss
+    - 与其他组件关系
+        - 不可逆危险操作交给 XYUI-7-01 Dialog
+        - 错误详情可进入 Popover / Panel
+        - 长期事件进入 Log
+        - 反馈语义遵循 XYUI-4 Selection & Feedback
+
+- 7-06 · Drawer / Side Sheet / 抽屉与侧滑面板
+    - 定位
+        - 用于在保留主工作区上下文的同时提供中等复杂度内容
+        - 介于 Popover 与完整 Window 之间
+        - 适合持续编辑、临时任务和快速查看
+        - 桌面主要使用 Side Drawer
+        - 移动端主要使用 Bottom Sheet
+    - 最终采用方向
+        - 方案1 · Inspector Drawer 为核心
+        - 方案4 · Responsive Drawer 为核心
+        - 方案2 · Task Drawer 为正式变体
+        - 方案3 · Peek Drawer 为正式变体
+    - 核心原则
+        - 主内容必须尽量保持可见
+        - 不因为打开 Drawer 完全阻断主工作区
+        - 内容量超过 Popover 时再使用 Drawer
+        - 需要长期固定时升级为 Panel
+        - 桌面与移动端保持相同功能语义
+    - 主形态
+        - Inspector Drawer
+            - 用于对象持续检查与编辑
+            - 典型流程
+                - 选择对象
+                - Popover 快速检查
+                - 打开 Drawer
+                - 持续编辑
+            - 示例
+                - 道路属性
+                    - 名称
+                    - 类型
+                    - 长度
+                    - 速度限制
+                    - 应用修改
+    - Inspector Drawer 原则
+        - 主画布保持可见
+        - 对象改变时允许同步更新内容
+        - 编辑状态明确
+        - 修改结果明确
+        - 不得膨胀为整个应用的第二主界面
+    - 任务型变体
+        - Task Drawer
+            - 用于一次性中等复杂任务
+        - 示例
+            - 导出实验结果
+                - 格式
+                - 范围
+                - 包含内容
+                - 导出
+            - 批量设置
+            - 创建对象
+            - 导入数据
+        - 完成任务后
+            - 自动或主动关闭
+        - 原则
+            - 不用大型 Dialog 阻塞整个工作区
+            - 但也不长期占据空间
+    - 快速查看变体
+        - Peek Drawer
+            - 用于短暂查看辅助信息
+        - 示例
+            - 运行日志
+            - 对象列表
+            - 事件流
+            - 轻量诊断
+        - 特征
+            - 从屏幕边缘快速展开
+            - 关闭后恢复完整工作区
+        - 升级能力
+            - 需要长期观察时
+                - 固定为常驻 Panel
+    - 响应式
+        - Desktop
+            - Right Drawer 为默认
+            - 必要时允许 Left Drawer
+        - Tablet
+            - Side Drawer
+            - 空间不足时转 Bottom Sheet
+        - Mobile Portrait
+            - Bottom Sheet
+        - Mobile Landscape
+            - 根据空间选择 Side Sheet 或 Bottom Sheet
+        - 原则
+            - 改变承载方向
+            - 不改变功能名称
+            - 不改变字段语义
+            - 不改变操作结果
+    - 宽度
+        - Desktop
+            - 根据内容自适应
+            - 保持主工作区可用
+        - 禁止
+            - 默认占据屏幕一半以上
+            - 无内容却留下大量空白
+        - 复杂内容需要更大空间时
+            - 升级为 Panel / Window
+    - 高度
+        - Side Drawer
+            - 通常占可用工作区高度
+        - Bottom Sheet
+            - 根据内容与屏幕高度决定
+            - 允许多档高度
+        - 移动端
+            - 不得无必要直接铺满屏幕
+    - 层级
+        - 非模态 Drawer
+            - 主工作区仍可操作
+        - 任务型 Drawer
+            - 可以根据任务暂时限制部分冲突操作
+        - 原则
+            - 默认不使用全屏遮罩
+            - 需要阻塞决策时改用 Dialog
+    - 打开方式
+        - 对象操作
+            - 查看详细属性
+        - Toolbar Action
+        - Context Menu
+        - 边缘 Peek Handle
+        - 移动端 Action
+    - 关闭方式
+        - Close Button
+        - Escape
+        - 再次触发
+        - 任务完成
+        - 移动端下滑
+            - 仅在不会误丢数据时允许
+    - 未保存状态
+        - 存在未提交编辑时
+            - 不能无提示丢失修改
+        - 关闭策略
+            - 自动保存
+            - 保留草稿
+            - 必要时请求确认
+        - 根据具体数据合同决定
+    - 标题区
+        - Title
+        - Optional Object Identity
+        - Optional Pin
+        - Close
+        - 保持紧凑
+        - 禁止大型 Header
+    - Footer
+        - 仅任务或提交型 Drawer 需要
+        - 常用动作保持一层直达
+        - 示例
+            - 取消
+            - 应用
+            - 导出
+        - 按钮靠近内容
+        - 避免过大 Footer
+    - 滚动
+        - 标题和关键操作可保持稳定
+        - 内容区独立滚动
+        - 长内容不推动整个应用布局
+        - 移动端避免嵌套多层滚动
+    - Peek Handle
+        - 用于快速打开 Peek Drawer
+        - 必须足够明显但不能长期抢视觉
+        - 可显示
+            - 名称
+            - 未读数量
+            - 状态数量
+        - 禁止
+            - 边缘排列大量 Handle
+    - Pin / Promote
+        - 临时 Drawer 可以升级为常驻 Panel
+        - 适合
+            - 日志
+            - Inspector
+            - 监控列表
+        - 原则
+            - 升级后继续保持同一内容语义
+            - 不是重新打开一套不同组件
+    - 焦点
+        - 打开时
+            - 不一定强抢主画布焦点
+        - 开始编辑后
+            - 进入 Drawer 内容
+        - 关闭后
+            - 焦点返回原触发对象或工作区
+    - 键盘
+        - Escape
+            - 关闭临时 Drawer
+        - Tab
+            - 内部导航
+        - Ctrl + Enter
+            - 可用于明确提交类任务
+        - 快捷键不得成为唯一入口
+    - 视觉
+        - 浅色
+        - 轻边框
+        - 与主界面存在清晰层级
+        - 避免厚重阴影
+        - 保持高信息密度
+        - 内容距边缘适度紧凑
+        - 不追求大面积卡片式留白
+    - 状态
+        - Closed
+        - Opening
+        - Open
+        - Editing
+        - Loading
+        - Submitting
+        - Error
+        - Pinned
+    - 性能
+        - 打开时只加载当前需要的数据
+        - 对象切换时局部更新
+        - 不能因为 Drawer 打开重建整个主视图
+        - 主地图或 Plot 不应无关重绘
+        - 隐藏后释放无必要监听
+    - 与 Popover 的关系
+        - Popover
+            - 快速检查
+            - 少量内容
+        - Drawer
+            - 持续检查
+            - 中等复杂编辑
+        - 典型升级路径
+            - Popover
+                - 查看详细属性
+                    - Drawer
+    - 与 Panel 的关系
+        - Drawer
+            - 临时或按需
+        - Panel
+            - 长期常驻
+        - Peek Drawer
+            - 可升级为 Panel
+    - 与 Dialog 的关系
+        - Drawer
+            - 保持上下文
+            - 非阻塞为主
+        - Dialog
+            - 明确决策
+            - 阻塞为主
+    - 与 Window 的关系
+        - Drawer
+            - 附着主应用边缘
+        - Window
+            - 可独立移动
+            - 拥有自己的窗口生命周期
+    - 禁止设计
+        - 把 Drawer 做成大型全屏页面
+        - 桌面打开 Drawer 后主工作区完全不可用
+        - 手机硬塞超窄右侧 Drawer
+        - Popover 能解决的事情也开 Drawer
+        - 所有功能都塞入一个万能 Drawer
+        - 临时任务完成后仍永久占位
+        - 多层 Drawer 相互套娃
+        - Drawer 内再塞大型 Dialog 流程
+        - 无必要大面积 Padding
+    - UI代码
+        - Component
+            - Drawer
+            - SideSheet
+        - Props
+            - open
+            - side
+            - variant
+            - title
+            - content
+            - resizable
+            - pinned
+            - deviceMode
+            - dismissible
+        - Variant
+            - inspector
+            - task
+            - peek
+        - Side
+            - left
+            - right
+            - bottom
+        - Actions
+            - onOpen
+            - onClose
+            - onSubmit
+            - onPin
+            - onPromoteToPanel
+    - 与其他组件关系
+        - 快速对象摘要来自 XYUI-7-02 Popover
+        - 危险确认交给 XYUI-7-01 Dialog
+        - 状态反馈交给 XYUI-7-05 Toast
+        - 长期驻留内容升级为 XYUI Panel
+        - 移动端复用 Bottom Sheet 语义
+
+- 7-07 · Window / Floating Window / 独立与浮动窗口
+    - 定位
+        - 用于需要脱离原始布局独立存在的工具或内容
+        - 允许窗口拥有独立位置和生命周期
+        - 适用于桌面专业工具
+        - 移动端不强制复制自由多窗口体验
+    - 最终采用方向
+        - 方案1 · Floating Tool Window
+            - 可选能力
+        - 方案2 · Document Window
+            - 可选能力
+        - 方案3 · Pinned Monitor Window
+            - 可选能力
+        - 方案4 · Dockable Responsive Window
+            - 可选能力
+        - 根据项目场景按需启用
+    - 核心原则
+        - 只有真正需要脱离主布局的内容才升级为 Window
+        - 简单检查优先 Popover
+        - 持续侧边编辑优先 Drawer
+        - 长期固定区域优先 Panel
+        - 窗口不得为了“专业感”被滥用
+    - Floating Tool Window
+        - 用途
+            - 持续工具操作
+            - 边观察主内容边调整
+        - 示例
+            - 道路批量编辑
+            - 材质工具
+            - 运行参数工具
+            - 局部调试工具
+        - 能力
+            - Drag
+            - Resize
+            - Minimize
+            - Close
+            - Optional Dock
+    - Document Window
+        - 用途
+            - 拥有独立内容上下文的完整文档
+        - 示例
+            - 实验结果
+            - 地图预览
+            - 独立资源编辑
+            - 报告预览
+        - 能力
+            - 独立标题
+            - 独立生命周期
+            - Maximize
+            - Restore
+            - Close
+            - Optional Second Monitor
+    - Pinned Monitor Window
+        - 用途
+            - 长期观察少量关键指标
+        - 示例
+            - 实时监控
+            - 性能指标
+            - 运行状态
+            - 调试数值
+        - 能力
+            - Always On Top
+            - Compact Mode
+            - Move
+            - Close
+        - 原则
+            - 体积必须克制
+            - 不能长期遮挡主内容
+    - Dockable Window
+        - 用途
+            - 允许工具在 Floating 与 Panel 之间转换
+        - 典型流程
+            - Floating
+                - Drag To Edge
+                    - Dock Preview
+                        - Docked Panel
+            - Docked Panel
+                - Drag Out
+                    - Floating
+        - 原则
+            - 内容语义保持不变
+            - 只是承载形态变化
+    - 桌面
+        - 允许
+            - Move
+            - Resize
+            - Float
+            - Dock
+            - Maximize
+            - Minimize
+            - Second Monitor
+        - 根据项目能力启用
+    - 移动端
+        - 不提供自由桌面式浮窗作为默认交互
+        - 同一功能根据场景转换为
+            - Bottom Sheet
+            - Full View
+            - Drawer
+        - 原则
+            - 保留功能
+            - 不照搬桌面窗口管理
+    - 窗口标题栏
+        - 保持紧凑
+        - 包含
+            - Title
+            - Optional Status
+            - Window Actions
+        - Window Actions
+            - Minimize
+            - Maximize / Restore
+            - Pin
+            - Dock
+            - Close
+        - 按窗口类型显示必要能力
+    - 拖动
+        - 标题栏为主要拖动区域
+        - 拖动过程中保持位置反馈
+        - 不得产生明显延迟
+        - 不得因为拖动触发主内容大量重绘
+    - 缩放
+        - Resize Handle 保持清晰
+        - 设置合理 Min Width
+        - 设置合理 Min Height
+        - 不能缩小到内容完全不可用
+        - 内容根据窗口大小响应式调整
+    - 窗口层级
+        - Active Window
+            - 最高普通层级
+        - Pinned Window
+            - 高于普通窗口
+        - Modal Dialog
+            - 高于相关普通窗口
+        - Tooltip / Context Menu
+            - 遵循对应 Overlay 层级
+        - 禁止
+            - 任意组件无限提高 Z-Index
+    - 焦点
+        - 点击窗口
+            - 激活窗口
+        - 键盘输入
+            - 发送到 Active Window
+        - 关闭窗口
+            - 焦点返回合理上一上下文
+    - 多窗口
+        - 允许多个独立窗口
+        - 但需控制数量
+        - 相似窗口可考虑
+            - Tab Group
+            - Dock Group
+        - 禁止
+            - 打开几十个无法管理的小窗口
+    - 第二显示器
+        - 桌面项目可选支持
+        - 窗口允许拖出主显示器
+        - 适合
+            - 实时监控
+            - 日志
+            - Inspector
+            - 预览
+        - 显示器断开后
+            - 窗口必须恢复到可见屏幕区域
+    - 置顶
+        - 只用于确实需要持续观察的窗口
+        - 状态必须明确
+        - 用户可随时取消
+        - 不能默认所有工具窗口都置顶
+    - 关闭
+        - Close
+        - Alt + F4
+        - 应用级窗口管理
+        - 存在未保存内容时
+            - 遵循对应保存合同
+    - 状态
+        - Floating
+        - Docked
+        - Active
+        - Inactive
+        - Minimized
+        - Maximized
+        - Pinned
+        - Loading
+        - Error
+    - 视觉
+        - 浅色基线
+        - 标题栏紧凑
+        - 活动窗口层级明确
+        - 非活动窗口不过度变灰
+        - 阴影轻量
+        - 边框清晰
+        - 避免大型系统式厚标题栏
+    - 性能
+        - 移动窗口只更新必要布局
+        - Resize 使用增量布局
+        - 窗口遮挡不应导致后台内容无意义持续重绘
+        - 实时监控窗口按自身刷新频率更新
+    - 安全
+        - 普通窗口操作立即执行
+        - 关闭未保存内容时遵循数据安全策略
+        - 危险操作仍交给 Dialog / Undo
+    - 禁止设计
+        - 所有功能都弹独立 Window
+        - 大量小窗口铺满屏幕
+        - 窗口默认全部置顶
+        - 窗口无法拖回可见区域
+        - 第二显示器断开后窗口永久丢失
+        - 手机照搬桌面自由窗口
+        - Window 与 Panel 职责混乱
+        - Window 内继续套多层 Floating Window
+    - UI代码
+        - Component
+            - Window
+            - FloatingWindow
+        - Props
+            - open
+            - title
+            - variant
+            - position
+            - size
+            - minSize
+            - resizable
+            - movable
+            - pinned
+            - dockable
+            - windowState
+        - Variant
+            - tool
+            - document
+            - monitor
+        - WindowState
+            - floating
+            - docked
+            - minimized
+            - maximized
+            - pinned
+        - Actions
+            - onMove
+            - onResize
+            - onDock
+            - onUndock
+            - onPin
+            - onMinimize
+            - onMaximize
+            - onRestore
+            - onClose
+    - 与其他组件关系
+        - 轻量对象检查使用 XYUI-7-02 Popover
+        - 中等复杂编辑使用 XYUI-7-06 Drawer
+        - 危险关闭确认使用 XYUI-7-01 Dialog
+        - 操作反馈使用 XYUI-7-05 Toast
+        - 停靠行为由 XYUI-7-08 Docking & Window Management 统一管理
+
+- 7-08 · Docking & Window Management / 停靠与窗口管理
+    - 定位
+        - 统一管理桌面专业工具的工作区拆分、合并、调整、拆出与恢复
+        - 重点管理用户运行时主动重组工作区
+        - 不是静态页面 Layout
+        - 不是单纯 Floating Window
+        - 核心参考 Blender Area Model 的直接操作思想
+    - 核心目标
+        - 工作区可以直接拆
+        - 工作区可以直接并
+        - 任何区域可以切换内容类型
+        - 区域可以拆成独立窗口
+        - 独立窗口可以重新进入工作区
+        - 布局可以保存和恢复
+        - 整个过程尽量不要求进入专门布局模式
+    - 最终采用方向
+        - Blender-style Direct Area Manipulation 为核心
+        - Area Split 为核心
+        - Area Join 为核心
+        - Editor Switch 为核心
+        - Direct Resize 为核心
+        - Detach / Reattach 为正式能力
+        - Workspace Restore 为核心
+        - Dock Zones 降级为高级辅助能力
+        - Tab Group 作为可选辅助能力
+    - 核心原则一
+        - Direct Manipulation / 直接操作
+            - 能直接拖动完成就不要求先切换工具模式
+            - 拆分
+                - 直接从 Area Corner 拖动
+            - 合并
+                - 直接从 Area Corner 拖向相邻区域
+            - 调整
+                - 直接拖动区域分割线
+            - 拆出
+                - 直接将区域或工具拆成 Floating Window
+    - 核心原则二
+        - Area First / 区域优先
+            - Area 是工作区基础容器
+            - Area 本身不绑定唯一工具类型
+            - 同一个 Area 可以承载不同 Editor
+        - 示例
+            - 地图视图
+            - Inspector
+            - 运行日志
+            - 数据图表
+            - 数据集
+            - 资源浏览
+    - 核心原则三
+        - Content Semantic Stable / 内容语义稳定
+            - Area
+                - 只是承载位置
+            - Editor
+                - 决定内容类型
+            - Floating Window
+                - 只是另一种承载方式
+            - Docked Panel
+                - 只是另一种承载方式
+            - 切换承载方式不能改变功能语义
+    - Area Split
+        - 触发
+            - 从 Area Corner Drag
+        - 方向
+            - Horizontal Split
+            - Vertical Split
+        - 拖动过程中
+            - 显示 Split Preview
+            - 实时显示新 Area 范围
+        - 释放
+            - 立即完成拆分
+        - 原则
+            - 不要求进入 Split Mode
+            - 不要求先打开布局设置
+            - 用户拖到哪里就预览到哪里
+    - Split Preview
+        - 轻量
+        - 半透明
+        - 不能遮挡整个原始内容
+        - 实时跟随指针
+        - 明确显示
+            - 原 Area
+            - 新 Area
+    - Corner Handle
+        - 默认状态
+            - 极弱
+            - 不能长期抢视觉
+        - Hover
+            - 轻微增强
+            - 允许出现拆分提示
+        - 新用户可发现性
+            - 比 Blender 原始 Handle 略明确
+        - 原则
+            - 不能为了可发现性做成大型按钮
+    - Area Join
+        - 触发
+            - 从 Area Corner 拖向相邻 Area
+        - 拖动过程中
+            - 显示 Merge Preview
+        - Merge Preview 必须明确
+            - 谁保留
+            - 谁被合并
+        - 释放
+            - 执行合并
+    - Join Safety
+        - 合并仅影响布局
+        - 不能删除内容数据
+        - Area 被合并
+            - Editor 状态按项目合同处理
+        - 如果存在未提交编辑
+            - 必须保护编辑状态
+    - Resize
+        - 直接拖动 Area Border
+        - 无需进入 Resize Mode
+        - 实时调整
+        - 保持最小尺寸限制
+        - 达到 Min Size 后停止继续压缩
+    - Min Size
+        - 每种 Editor 可定义最低可用尺寸
+        - 不能缩小到内容无法识别
+        - 达到最低尺寸后
+            - 可建议 Collapse
+            - 或合并
+    - Editor Switch
+        - 任何 Area 都能改变 Editor Type
+        - 触发
+            - Editor Selector
+            - 快捷入口
+        - 示例
+            - Map
+            - Inspector
+            - Log
+            - Plot
+            - Dataset
+            - Resource Browser
+        - 原则
+            - 切换 Editor 不需要重新创建整个工作区
+    - Editor State
+        - 不同 Area 可保存自己的 Editor State
+        - 例如
+            - 地图缩放位置
+            - Inspector 当前对象
+            - Log 过滤条件
+            - Plot 当前缩放范围
+        - 恢复布局时
+            - 尽量恢复对应状态
+    - Detach
+        - 将 Area 或支持的 Editor 拆成 Floating Window
+        - 用途
+            - 第二显示器
+            - 持续监控
+            - 独立工具
+            - 独立预览
+        - 原则
+            - Detach 不复制业务对象
+            - 只是改变承载位置
+    - Reattach
+        - Floating Window 可以重新进入主工作区
+        - 可选择
+            - 成为独立 Area
+            - 进入已有 Dock Group
+            - 成为可选 Tab
+        - 原则
+            - 恢复后内容状态尽量不丢失
+    - Second Monitor
+        - 桌面项目可选支持
+        - 允许 Floating Window 拖到其他显示器
+        - 适合
+            - Log
+            - Monitor
+            - Inspector
+            - Preview
+            - Plot
+    - Display Change Safety
+        - 显示器断开
+            - 离屏窗口自动拉回
+        - 分辨率改变
+            - 重新限制窗口 Bounds
+        - DPI 改变
+            - 重新计算尺寸
+        - 原则
+            - 窗口永远不能永久丢失在不可见区域
+    - Workspace
+        - 工作区代表一套完整布局状态
+        - 可以保存
+            - Area Tree
+            - Split Ratio
+            - Editor Type
+            - Dock State
+            - Floating Window
+            - Window Bounds
+            - Display Assignment
+    - Workspace Preset
+        - 示例
+            - 地图编辑
+                - 地图主区
+                - Inspector 右侧
+                - Log 底部
+            - 数据分析
+                - Plot 主区
+                - Log 右侧
+                - Inspector 折叠
+            - 双屏调试
+                - 主编辑器显示器1
+                - 监控与日志显示器2
+    - Workspace Restore
+        - 应用重新打开
+            - 恢复上次工作区
+        - 用户切换 Preset
+            - 恢复对应布局
+        - 布局损坏
+            - 恢复默认工作区
+        - 显示器变化
+            - 执行安全恢复
+    - Auto Save
+        - 布局变化可以自动保存
+        - 不要求用户每移动一次都手动保存
+        - 重要命名工作区
+            - 允许显式保存
+    - Reset Workspace
+        - 必须存在
+        - 用途
+            - 布局拖乱
+            - 窗口离屏
+            - 配置损坏
+        - 动作
+            - 恢复默认工作区
+        - 原则
+            - 恢复布局不能删除业务数据
+    - Dock Zones
+        - 高级辅助能力
+        - 不作为主交互
+        - 仅在复杂停靠场景需要精确目标时出现
+        - 可能提供
+            - Left
+            - Right
+            - Top
+            - Bottom
+            - Center
+        - 原则
+            - 默认不长期显示
+            - 不能取代 Corner Split / Join
+    - Tab Group
+        - 可选能力
+        - 用于多个相似工具共享同一区域
+        - 示例
+            - Inspector
+            - Log
+            - Monitor
+        - 能力
+            - 合并为 Tab
+            - Tab Reorder
+            - Tab Drag Out
+        - 原则
+            - 不是所有 Area 都强制 Tab 化
+            - 不能让工作区退化成全是 Tabs
+    - 移动端
+        - 不复制桌面 Area Split / Join
+        - Mobile Portrait
+            - 使用固定响应式布局
+            - Drawer
+            - Bottom Sheet
+            - Full View
+        - Mobile Landscape
+            - 允许有限 Split View
+        - 原则
+            - 保留功能语义
+            - 不复制桌面复杂窗口管理
+    - Tablet
+        - 可以支持有限 Split
+        - 触控 Resize Handle 适当扩大
+        - 不要求精确 Corner Pixel 操作
+    - 键盘
+        - 可提供高级快捷命令
+            - Split
+            - Close Area
+            - Switch Editor
+            - Reset Workspace
+        - 原则
+            - 快捷键是加速器
+            - 不是唯一入口
+    - 视觉反馈
+        - Split Preview
+            - 轻量蓝灰
+        - Merge Preview
+            - 明确保留方向
+        - Resize
+            - 边界轻微增强
+        - Detach
+            - 显示 Floating Preview
+        - Dock Target
+            - 必要时高亮
+    - 动画
+        - 只做轻量过渡
+        - 不能为了动画延迟直接操作
+        - Split / Join 的几何反馈必须优先于装饰动画
+    - 性能
+        - Drag PointerMove 不触发无关业务计算
+        - Resize 只更新受影响区域
+        - Preview 不重建 Editor 内容
+        - 布局树变化后再执行必要 Layout Commit
+        - 大型 Plot / Map 在 Resize 时使用轻量重绘策略
+    - 数据安全
+        - 布局操作不能删除业务数据
+        - Join Area 不等于关闭文档
+        - Editor Switch 不等于删除对象
+        - 关闭存在未保存内容的 Window
+            - 遵循对应数据保存规则
+    - 禁止设计
+        - 拆分前必须进入布局模式
+        - 合并前必须打开布局设置
+        - 所有 Dock 操作依赖大型 Dock Zones
+        - 拖动时没有结果预览
+        - 合并时不知道谁会消失
+        - Area 内容类型被永久写死
+        - 拆出窗口后无法重新进入工作区
+        - 显示器断开后窗口永久丢失
+        - 工作区拖乱后没有 Reset
+        - 移动端照搬桌面多窗口
+        - 为了专业感制造大量复杂 Dock 图标
+    - UI代码
+        - Component
+            - Workspace
+            - Area
+            - AreaHandle
+            - DockPreview
+            - FloatingWindow
+        - AreaProps
+            - id
+            - editorType
+            - bounds
+            - minSize
+            - state
+        - WorkspaceProps
+            - layoutTree
+            - floatingWindows
+            - activeWorkspace
+            - displayLayout
+        - Actions
+            - onSplitArea
+            - onJoinArea
+            - onResizeArea
+            - onSwitchEditor
+            - onDetachArea
+            - onReattachArea
+            - onSaveWorkspace
+            - onRestoreWorkspace
+            - onResetWorkspace
+    - 与其他组件关系
+        - XYUI-5 Layout
+            - 负责静态布局规则
+        - XYUI-7-06 Drawer
+            - 负责临时附着式内容
+        - XYUI-7-07 Window
+            - 定义独立窗口能力
+        - XYUI-7-08
+            - 负责运行时工作区重组与窗口管理
+
+- 7-09 · Lightbox & Fullscreen Preview / 聚焦与全屏预览
+    - 定位
+        - 用于临时放大当前内容进行检查
+        - 介于普通嵌入内容与独立 Window 之间
+        - 不承担完整独立文档生命周期
+        - 适用于媒体、图表、地图、结果和视觉对比
+    - 最终采用方向
+        - 方案2 · Focus Preview 为核心
+        - 方案4 · Responsive Fullscreen Preview 为核心
+        - 方案1 · Media Lightbox 为可选能力
+        - 方案3 · Compare Lightbox 为可选能力
+    - 核心原则
+        - 优先复用原内容
+        - 放大不等于重新创建另一套 Viewer
+        - 原来的交互语义尽量保持
+        - 桌面保持上下文感
+        - 手机空间不足时直接全屏
+        - 关闭后回到原始位置和状态
+    - Focus Preview
+        - 定位
+            - 临时扩大当前组件
+        - 适合
+            - Plot
+            - Heatmap
+            - Map
+            - Timeline
+            - Preview
+            - Simulation Result
+        - 典型流程
+            - 当前嵌入内容
+                - Focus
+                    - 近全屏 Preview
+                        - Close
+                            - 返回原位置
+    - 交互继承
+        - 原组件支持的核心操作继续存在
+        - 例如 Visualization
+            - Inspect
+            - Lock
+            - Compare
+            - Pan
+            - Zoom
+            - Range
+            - Fit
+        - 原则
+            - 进入 Focus 不重新定义一套交互
+    - 状态继承
+        - 进入 Focus 前
+            - Zoom Range
+            - Locked Position
+            - Selected Range
+            - Current Object
+        - 进入 Focus 后
+            - 尽量继续保持
+        - 退出后
+            - 同步回原组件
+    - Media Lightbox
+        - 适合
+            - Image
+            - Reference Image
+            - Texture
+            - Screenshot
+            - Rendered Output
+        - 默认能力
+            - Fit
+            - 100%
+            - Zoom
+            - Pan
+            - Close
+        - 可选
+            - Metadata
+                - Resolution
+                - File Name
+                - File Size
+    - 媒体原则
+        - 图片区域尽量最大
+        - 工具控制保持紧凑
+        - 不要大型媒体 Toolbar
+        - 背景信息弱化但仍能辨认来源上下文
+    - Compare Lightbox
+        - 适合
+            - Before / After
+            - Source / Output
+            - A / B
+            - Map A / Map B
+            - Render Comparison
+        - 核心
+            - 两个视图同时存在
+            - 明确显示 A / B
+        - 可选同步
+            - Zoom
+            - Pan
+            - Cursor
+            - Crosshair
+    - Compare 原则
+        - 对比必须真正存在视觉核对价值
+        - 不能所有 Preview 默认分屏
+        - 同步交互默认保持一致
+        - 允许解除同步
+            - 仅在有实际需求时
+    - Responsive Fullscreen Preview
+        - Desktop
+            - 居中大型 Preview
+            - 或近全屏 Focus Layer
+        - Tablet
+            - 扩大 Preview
+            - 必要时全屏
+        - Mobile Portrait
+            - 全屏 Preview
+        - Mobile Landscape
+            - 全屏或近全屏
+    - 移动端
+        - Zoom
+            - Pinch
+        - Pan
+            - Single Finger Drag
+        - Close
+            - 明确关闭入口
+        - Controls
+            - 根据空间使用 Edge / Bottom Controls
+        - 原则
+            - 不硬缩桌面 Lightbox
+    - 打开方式
+        - Thumbnail Click
+        - Preview Action
+        - Focus Action
+        - Double Click
+            - 仅在场景明确时
+        - Keyboard Shortcut
+            - 作为加速器
+    - 关闭方式
+        - Close
+        - Escape
+        - 桌面低风险场景
+            - 可允许点击遮罩
+        - 移动端
+            - 明确 Close
+            - 可选 Back Gesture
+    - 焦点
+        - 打开后焦点进入 Preview
+        - 关闭后返回原内容
+        - 如果进入前存在 Locked Data
+            - 关闭后继续保持
+    - 遮罩
+        - Desktop
+            - 轻量背景弱化
+        - 不能使用过黑背景
+        - 保持原工作区可辨认
+        - Focus 内容必须明显成为第一视觉层
+    - Header
+        - 保持紧凑
+        - 可包含
+            - Title
+            - State
+            - Close
+        - 可选
+            - Fit
+            - Zoom
+            - Compare
+        - 不能形成大型 Header
+    - Controls
+        - 仅显示当前内容需要的操作
+        - 高频一层直达
+        - 低频进入 More
+        - 不因为进入 Preview 增加大量新按钮
+    - 尺寸
+        - Desktop
+            - 优先占据大部分可用区域
+            - 保留合理安全边距
+        - Mobile
+            - 可直接占满安全工作区
+    - 动画
+        - 允许轻量放大过渡
+        - 关闭允许轻量返回
+        - 动画不能延迟实际操作
+    - 性能
+        - 尽量复用原渲染资源
+        - 不能因为 Focus 默认重新加载全部数据
+        - 大型图表继续按 Viewport 降采样
+        - 图片按当前 Zoom 加载必要分辨率
+        - 关闭后释放临时高成本资源
+    - 加载
+        - 高分辨率媒体允许 Progressive Load
+        - 已有低分辨率内容先显示
+        - 加载过程中保持原始尺寸比例
+    - 错误
+        - 预览加载失败
+            - 明确说明对象
+            - 提供 Retry
+        - 不能让整个主界面进入错误状态
+    - 安全
+        - Preview 默认为只读或沿用原组件编辑权限
+        - 不能因为进入全屏突然开放危险编辑
+        - 危险操作继续交给对应确认机制
+    - 与 Window 的边界
+        - Preview
+            - 短暂
+            - 依赖原上下文
+            - 关闭后返回
+        - Window
+            - 独立
+            - 可长期存在
+            - 拥有独立窗口生命周期
+    - 与 Popover 的边界
+        - Popover
+            - 少量局部信息
+        - Preview
+            - 大尺寸内容检查
+    - 与 Visualization 的关系
+        - Focus Preview 直接复用 XYUI-8 Visualization Interaction
+        - 不能另建第二套 Chart Gesture
+    - 禁止设计
+        - 每次放大都创建新 Window
+        - Focus 后丢失原有 Zoom / Lock 状态
+        - 媒体工具栏占据大量空间
+        - 手机把桌面弹窗等比例缩小
+        - Compare 默认用于所有内容
+        - 关闭后找不到原内容位置
+        - Preview 内再无限弹 Preview
+    - UI代码
+        - Component
+            - Lightbox
+            - FocusPreview
+        - Props
+            - open
+            - content
+            - variant
+            - title
+            - deviceMode
+            - initialViewState
+            - compareTarget
+            - syncCompare
+        - Variant
+            - focus
+            - media
+            - compare
+        - Actions
+            - onOpen
+            - onClose
+            - onFit
+            - onZoom
+            - onPan
+            - onCompare
+            - onViewStateChange
+    - 与其他组件关系
+        - 可视化复用 XYUI-8 Visualization Interaction
+        - 独立长期内容升级 XYUI-7-07 Window
+        - 简单摘要使用 XYUI-7-02 Popover
+        - 操作结果使用 XYUI-7-05 Toast
+
+- 7-10 · Command Palette / 命令面板
+    - 定位
+        - 提供全局统一的命令搜索与快速执行入口
+        - 减少用户记忆菜单层级的成本
+        - 允许专业用户通过键盘快速完成操作
+        - 同时支持命令、对象和导航搜索
+    - 最终采用方向
+        - 方案1 · Action Search 为核心
+        - 方案2 · Unified Command Palette 为核心
+        - 方案4 · Responsive Command Palette 为响应式核心
+        - 方案3 · Context-aware Palette 为增强能力
+    - 核心目标
+        - 任何可执行命令都应该可以被搜索
+        - 命令名称保持稳定
+        - 搜索结果清晰分类
+        - 键盘可以完整操作
+        - 移动端保持同一命令语义
+        - 上下文只负责提高相关性
+    - 核心原则一
+        - Action First / 动作优先
+            - 用户输入自己想做的事情
+            - 不要求知道菜单路径
+            - 搜索结果直接提供可执行动作
+        - 示例
+            - 道路
+                - 创建道路
+                - 进入道路编辑
+                - 选择全部道路
+                - 导出道路数据
+    - 核心原则二
+        - Stable Command / 命令稳定
+            - 命令名称长期稳定
+            - 相同动作使用同一个正式名称
+            - 上下文变化不随意改名
+            - 快捷键变化不改变命令语义
+    - 核心原则三
+        - Unified Search / 统一搜索
+            - 允许搜索
+                - Command
+                - Object
+                - Navigation
+            - 但必须清晰分组
+            - 不能把不同类型结果混成一个无结构列表
+    - Action Search
+        - 主要用途
+            - 执行动作
+        - 输入
+            - 命令名称
+            - 关键词
+            - 同义词
+        - 输出
+            - Command Result
+        - 执行
+            - Enter
+            - Click / Tap
+    - Command Result
+        - 显示
+            - Command Name
+            - Optional Shortcut
+            - Optional Category
+        - 禁止
+            - 大型说明文字
+            - 复杂卡片
+    - Unified Command Palette
+        - Command
+            - 执行功能
+        - Object
+            - 打开对象
+        - Navigation
+            - 跳转页面或区域
+        - 示例
+            - 输入
+                - 疲劳
+            - Command
+                - 添加疲劳度到监控
+            - Object
+                - 疲劳度回归 #23
+            - Navigation
+                - 监控 → 疲劳度
+    - 结果分组
+        - Command
+        - Open
+        - Navigate
+        - Recent
+        - Optional
+            - Settings
+            - Files
+        - 原则
+            - 分类数量保持克制
+    - Context-aware
+        - 读取当前
+            - Selected Object
+            - Active Editor
+            - Current Dataset
+            - Current Experiment
+            - Current Mode
+        - 作用
+            - 提高相关命令排序
+            - 提供强上下文快捷命令
+        - 示例
+            - 选中道路 R-024
+                - 编辑道路属性
+                - 聚焦道路
+                - 复制道路 ID
+    - Context Safety
+        - 上下文只影响
+            - 排序
+            - 推荐
+            - 可用状态
+        - 不能频繁改变
+            - 正式命令名
+            - 核心命令结构
+            - 用户肌肉记忆
+    - 打开方式
+        - Desktop
+            - Global Shortcut
+            - Command Button
+        - 快捷键
+            - 允许项目定义
+            - 例如 F3
+            - Ctrl / Cmd + K
+        - 原则
+            - 不能只允许快捷键进入
+    - 搜索
+        - 实时过滤
+        - 支持模糊匹配
+        - 支持关键词匹配
+        - 允许中文名称
+        - 允许英文命令名
+        - 可选 Alias
+        - 结果按相关度排序
+    - 空搜索状态
+        - 显示
+            - Recent Commands
+            - Frequent Commands
+            - Context Commands
+        - 不能显示大量无关功能
+    - Recent
+        - 允许记录最近执行命令
+        - 提高重复操作效率
+        - 历史记录数量有限
+        - 用户可清除
+    - Favorites
+        - 可选能力
+        - 高频命令可以固定
+        - 不能取代主 Toolbar
+    - Keyboard
+        - Arrow Up
+            - 上一结果
+        - Arrow Down
+            - 下一结果
+        - Enter
+            - 执行
+        - Escape
+            - 关闭
+        - Tab
+            - 可用于类别或参数补全
+        - 原则
+            - 完整键盘操作
+    - 参数化命令
+        - 简单参数
+            - 允许执行后进入轻量第二步
+        - 复杂参数
+            - 打开对应 Drawer / Dialog
+        - 禁止
+            - 把大型表单塞进 Command Palette
+    - Disabled Command
+        - 可以显示
+        - 说明当前不可用
+        - 必要时提供原因
+        - 不能点击后才告诉用户失败
+    - 危险命令
+        - 允许被搜索
+        - 执行后仍遵循对应安全合同
+            - Dialog
+            - Undo
+        - Command Palette 不绕过安全机制
+    - 响应式
+        - Desktop
+            - Centered Compact Palette
+        - Tablet
+            - Centered / Expanded Palette
+        - Mobile Portrait
+            - Bottom Command Sheet
+        - Mobile Landscape
+            - Centered / Bottom Palette
+    - 移动端
+        - 输入框靠近键盘
+        - 键盘弹起后结果仍可查看
+        - 触控目标适当增加
+        - 命令名称保持和桌面一致
+        - 不能创建第二套移动命令体系
+    - 视觉
+        - 高信息密度
+        - 搜索框明显
+        - 结果行紧凑
+        - 当前选择结果明确
+        - Category 弱化
+        - Shortcut 右对齐
+        - 不做大型卡片列表
+    - 尺寸
+        - Desktop
+            - 中等宽度
+            - 最大高度受 Viewport 限制
+        - 内容过多
+            - 列表滚动
+        - 输入区域固定
+    - 性能
+        - 搜索必须即时响应
+        - 命令索引预先构建或增量维护
+        - 不能每次输入字符扫描整个业务模型
+        - Object Search 可使用已有索引
+        - 大对象集合限制首屏结果数量
+    - 命令注册
+        - 每个 Command 应定义
+            - id
+            - label
+            - keywords
+            - category
+            - shortcut
+            - availability
+            - action
+        - 可选
+            - aliases
+            - contextPriority
+    - 命令唯一性
+        - 正式 Command ID 唯一
+        - 不同入口可以引用同一命令
+        - Toolbar
+        - Context Menu
+        - Command Palette
+        - Shortcut
+        - 应尽量消费同一个 Command Contract
+    - 与 Toolbar 关系
+        - Toolbar
+            - 高频可见操作
+        - Command Palette
+            - 全局快速访问
+        - 不能因为存在 Command Palette 就隐藏所有 Toolbar
+    - 与 Context Menu 关系
+        - Context Menu
+            - 对象附近的上下文入口
+        - Command Palette
+            - 全局搜索入口
+        - 两者可以引用相同 Command
+    - 与 Navigation 关系
+        - 允许跳转
+        - 但不替代完整导航系统
+    - 安全原则
+        - Command Palette 不绕过权限
+        - 不绕过危险确认
+        - 不绕过当前 Mode 限制
+        - 不可用命令明确 Disabled
+    - 禁止设计
+        - 命令只能在 Palette 中找到
+        - 所有功能都依赖搜索
+        - Command / Object / Navigation 混在一起不分类
+        - 上下文频繁改变命令名称
+        - 搜索结果做成大型卡片
+        - 执行危险命令直接绕过确认
+        - 移动端另造一套命令名称
+        - 每次输入都全量扫描大型数据
+    - UI代码
+        - Component
+            - CommandPalette
+        - Props
+            - open
+            - query
+            - commands
+            - results
+            - context
+            - deviceMode
+            - recentCommands
+        - ResultType
+            - command
+            - object
+            - navigation
+        - Command
+            - id
+            - label
+            - keywords
+            - category
+            - shortcut
+            - disabled
+            - danger
+        - Actions
+            - onSearch
+            - onSelect
+            - onExecute
+            - onOpen
+            - onClose
+    - 与其他组件关系
+        - 命令可复用 XYUI-7-04 Context Menu 的 Command Contract
+        - 危险命令交给 XYUI-7-01 Dialog
+        - 执行反馈交给 XYUI-7-05 Toast
+        - 复杂参数任务交给 XYUI-7-06 Drawer
+
+- 7-11 · Notification Center / 通知中心
+    - 定位
+        - 用于保存值得用户长期知道或后续可能需要重新处理的通知
+        - 承接 Toast 消失后的重要事件
+        - 不是完整技术日志
+        - 不是所有后台事件的流水账
+    - 最终采用方向
+        - 方案1 · Compact Notification Drawer 为核心
+        - 方案3 · Actionable Notifications 为核心
+        - 方案2 · Workflow Grouping 为辅助
+        - 方案4 · Responsive Notification Center 为辅助
+    - 核心原则
+        - 重要事件才进入通知中心
+        - 通知必须可以追溯
+        - 未解决问题可以重新接回工作流
+        - 普通成功通知保持紧凑
+        - 通知数量多时按工作流组织
+        - 桌面和移动保持同一通知语义
+    - 与 Toast 的关系
+        - Toast
+            - 即时反馈
+            - 短暂出现
+        - Notification Center
+            - 历史记录
+            - 可重新查看
+            - 可重新处理
+        - 典型流程
+            - 操作完成
+                - Toast
+                    - Toast 消失
+                        - 重要事件保留在 Notification Center
+    - 进入通知中心的事件
+        - 适合
+            - 实验运行完成
+            - 后台 Build 完成
+            - 导出完成
+            - 自动保存失败
+            - 任务失败
+            - 需要用户处理的警告
+            - 重要后台状态变化
+        - 不适合
+            - Pointer Hover
+            - 普通选择变化
+            - 每一个 Tick
+            - 大量调试日志
+            - 频繁低价值状态变化
+    - Compact Notification Drawer
+        - Desktop 默认形态
+        - 从通知入口打开
+        - 保持主工作区可见
+        - 列表紧凑
+        - 不使用大型卡片
+        - 每条通知显示
+            - Title
+            - Optional Summary
+            - Time
+            - State
+            - Optional Action
+    - 通知入口
+        - 显示未读数量
+        - 数量较大时允许简化
+        - 例如
+            - 3
+            - 9+
+            - 99+
+        - 原则
+            - 不能形成高刺激红点体系
+            - 只表达工作状态
+    - Actionable Notification
+        - 用于尚未解决的问题
+        - 示例
+            - 结果保存失败
+                - 重试保存
+                - 查看详情
+            - 导出路径不可写
+                - 更换目录
+        - 原则
+            - 最重要恢复动作一层直达
+            - 不能把恢复入口藏到二级菜单
+    - Resolved State
+        - 问题解决后
+            - 通知可转为 Resolved
+        - 保留必要历史
+        - 不再持续显示为 Active Problem
+    - Unread
+        - 表示用户尚未查看
+        - Read
+            - 表示已经查看
+        - Read 不等于 Resolved
+        - 原则
+            - 阅读状态与问题状态必须分开
+    - 状态
+        - Unread
+        - Read
+        - ActionRequired
+        - Resolved
+        - Expired
+    - Workflow Grouping
+        - 通知多时按工作流或来源分组
+        - 示例
+            - World Build
+            - 数据编辑
+            - 实验运行
+            - 导出
+            - 自动保存
+        - 原则
+            - 用户第一眼看到是哪块系统发生事件
+            - 不只按 Success / Warning / Error 分类
+    - 时间组织
+        - 允许
+            - 刚刚
+            - 今天
+            - 更早
+        - 时间是辅助信息
+        - 不能让时间分组压过工作流语义
+    - 排序
+        - 未解决重要问题优先
+        - 最近通知优先
+        - 同工作流保持稳定顺序
+        - 避免“智能排序”导致通知不断跳动
+    - Actions
+        - 允许
+            - Open
+            - Retry
+            - Show Details
+            - Open Folder
+            - Resume Task
+            - Resolve
+        - 危险动作
+            - 仍交给对应安全机制
+    - 全部已读
+        - 允许
+        - 只修改 Read State
+        - 不能自动把 ActionRequired 标记成 Resolved
+    - 清除
+        - 允许清除普通历史
+        - 未解决问题默认不建议直接静默清除
+        - 可提供 Archive
+    - Archive
+        - 可选能力
+        - 用于隐藏已处理历史
+        - 不影响业务数据
+    - Notification Detail
+        - 简短通知
+            - 直接在列表阅读
+        - 复杂错误
+            - 打开详情
+        - 大量诊断信息
+            - 转 Log / Diagnostic Panel
+    - 与 Log 的边界
+        - Notification Center
+            - 高价值事件
+            - 用户级事件
+            - 可重新处理
+        - Log
+            - 技术事件
+            - 高频事件
+            - 详细诊断
+        - 原则
+            - Log 可以有成百上千条
+            - Notification Center 必须克制
+    - 响应式
+        - Desktop
+            - Right Notification Drawer
+        - Tablet
+            - Side Drawer / Full Height Sheet
+        - Mobile Portrait
+            - Full Notification View
+        - Mobile Landscape
+            - Side Sheet / Full View
+        - 原则
+            - 改变承载方式
+            - 不改变通知语义
+    - 移动端
+        - 通知列表独立完整显示
+        - Action 触控目标放大
+        - 避免超窄 Side Drawer
+        - 支持系统 Back 返回原上下文
+    - 视觉
+        - 高信息密度
+        - 浅色
+        - 轻边框
+        - 未读轻量强调
+        - Error 使用危险语义色
+        - ActionRequired 明确
+        - Resolved 弱化
+        - 避免社交产品式大型通知卡片
+    - 数量控制
+        - 普通成功事件可以聚合
+        - 重复通知允许合并
+        - 大量同源通知按工作流聚合
+        - 禁止无限增长
+    - 聚合
+        - 示例
+            - 连续 8 次 Build 完成
+                - 可以归入 World Build
+            - 连续多个导出完成
+                - 可合并显示
+        - 失败事件不应因聚合而被隐藏
+    - 性能
+        - 通知中心不保存全部技术日志
+        - 列表使用有限历史
+        - 大量历史可分页或虚拟化
+        - 未打开通知中心时不持续重绘
+    - 持久化
+        - 重要通知可跨会话保留
+        - 普通短期成功通知可根据项目决定是否持久化
+        - ActionRequired 默认应保持到解决或明确清除
+    - 安全
+        - 通知中的 Action 不绕过权限
+        - 危险操作仍需确认或 Undo
+        - 失败状态必须真实
+        - 不能后台任务未完成就提前生成完成通知
+    - 禁止设计
+        - 把所有 Log 都塞进通知中心
+        - 通知无限堆积
+        - 所有事件都弹 Toast 并留历史
+        - Read 等于 Resolved
+        - 失败通知无法重新处理
+        - 通知只有“失败”没有对象
+        - 每条通知都塞大量按钮
+        - 移动端硬塞窄侧栏
+        - 大量高刺激红色数字
+    - UI代码
+        - Component
+            - NotificationCenter
+        - Props
+            - open
+            - notifications
+            - unreadCount
+            - groupMode
+            - deviceMode
+        - Notification
+            - id
+            - title
+            - message
+            - variant
+            - state
+            - source
+            - timestamp
+            - actions
+        - State
+            - unread
+            - read
+            - actionRequired
+            - resolved
+            - expired
+        - Actions
+            - onOpen
+            - onMarkRead
+            - onMarkAllRead
+            - onAction
+            - onResolve
+            - onArchive
+            - onClear
+    - 与其他组件关系
+        - 即时反馈来自 XYUI-7-05 Toast
+        - 复杂错误详情进入对应 Panel / Log
+        - 后台任务与 XYUI-7-12 Task Monitor 联动
+        - 危险动作交给 XYUI-7-01 Dialog
+
+- 7-12 · Progress Overlay & Task Monitor / 进度浮层与任务监控
+    - 定位
+        - 统一管理长时间操作、后台任务和关键事务的进度反馈
+        - 区分普通后台任务与必须阻塞的关键事务
+        - 避免所有 Loading 都锁死整个界面
+    - 最终采用方向
+        - 方案1 · Non-blocking Progress Overlay 为核心
+        - 方案3 · Task Monitor 为核心
+        - 方案4 · Responsive Task Progress 为响应式核心
+        - 方案2 · Critical Transaction Overlay 为严格限定变体
+    - 核心原则
+        - 默认非阻塞
+        - 长时间不等于必须阻塞
+        - 用户必须知道当前正在做什么
+        - 有确定进度时显示真实进度
+        - 没有确定进度时说明当前阶段
+        - 取消能力必须说明取消结果
+        - 后台任务统一进入 Task Monitor
+    - Non-blocking Progress
+        - 适合
+            - 实验运行
+            - 数据分析
+            - 图片处理
+            - 导出
+            - 后台索引
+            - 缓存生成
+        - 特点
+            - 主界面继续可操作
+            - 任务状态保持可见
+            - 用户可以切换其他页面
+        - 示例
+            - 正在运行实验 #24
+            - 3420 / 5000 Tick
+            - 68%
+    - 进度内容
+        - Task Name
+        - Current Step
+        - Progress
+        - Optional Count
+        - Optional Remaining Work
+        - Optional Action
+    - 真实进度
+        - 优先显示
+            - 百分比
+            - 已完成数量 / 总数量
+            - 当前阶段
+        - 禁止
+            - 伪造精确百分比
+            - 任务明明不知道总量却一直显示 99%
+    - Indeterminate Progress
+        - 无法计算百分比时
+            - 显示当前阶段
+        - 例如
+            - 正在初始化 Vulkan
+            - 正在读取 Dataset Registry
+            - 正在准备实验
+        - 允许轻量 Activity Indicator
+        - 但不能只剩一个没有解释的转圈
+    - Background Continue
+        - 长任务允许后台继续
+        - 关闭临时进度卡不等于取消任务
+        - 任务继续进入 Task Monitor
+        - 完成后
+            - Toast
+            - 或 Notification Center
+    - Task Monitor
+        - 定位
+            - 统一管理多个后台任务
+        - 状态
+            - Queued
+            - Running
+            - Paused
+            - Cancelling
+            - Completed
+            - Failed
+        - 显示
+            - Task Name
+            - State
+            - Progress
+            - Current Step
+            - Optional Actions
+    - Task Queue
+        - 等待任务明确显示 Queued
+        - 必要时说明
+            - 正在等待哪个任务
+            - 依赖什么资源
+        - 禁止
+            - 任务看起来像卡死但其实只是在排队
+    - Task Actions
+        - 按任务能力提供
+            - Pause
+            - Resume
+            - Cancel
+            - Retry
+            - Open Result
+            - Show Details
+        - 不是所有任务都必须支持所有 Action
+    - Pause
+        - 仅任务本身支持安全暂停时提供
+        - 暂停后状态明确
+        - 允许 Resume
+    - Cancel
+        - 需要明确语义
+            - Cancel Immediately
+            - Cancel After Current Step
+            - Cancel And Rollback
+        - 不能只有模糊的“取消”
+    - Retry
+        - Failed Task 可提供
+        - 保留原任务必要上下文
+        - 不能要求用户重新填写所有输入
+    - Completed
+        - 完成后退出 Active Task 列表
+        - 可短暂保留
+        - 重要结果进入 Notification Center
+        - 普通结果使用 Toast
+    - Failed
+        - 不能自动消失
+        - 必须说明
+            - 失败对象
+            - 失败阶段
+            - 当前数据状态
+            - 恢复动作
+    - Critical Transaction Overlay
+        - 定位
+            - 只用于必须暂时限制冲突操作的关键事务
+        - 适合
+            - 提交地图文件
+            - 原子数据迁移
+            - 关键项目切换
+            - 不可安全并行的状态转换
+        - 不适合
+            - 普通实验运行
+            - 普通导出
+            - 普通加载
+    - Blocking 条件
+        - 继续操作会破坏事务一致性
+        - 继续操作会导致数据冲突
+        - 继续操作存在明确安全风险
+        - 无法通过局部 Disabled 解决
+        - 满足以上条件后才允许全局阻塞
+    - Blocking Progress 内容
+        - 明确任务标题
+        - 明确为什么当前受到限制
+        - 明确当前步骤
+        - 明确进度
+        - 如果可以取消
+            - 明确取消结果
+    - Rollback
+        - 事务支持回滚时
+            - 取消动作明确写为
+                - 取消并回滚
+        - 回滚本身也需要状态反馈
+        - 回滚失败
+            - 必须升级 Error
+    - 局部阻塞优先
+        - 如果只影响一个 Panel
+            - 只禁用对应 Panel
+        - 如果只影响一个对象
+            - 只锁对应对象
+        - 禁止
+            - 为了方便实现直接锁整个应用
+    - 响应式
+        - Desktop
+            - Corner Progress Card
+            - Task Monitor Drawer / Panel
+        - Tablet
+            - Edge Progress
+            - Task Sheet
+        - Mobile Portrait
+            - Bottom Task Progress
+        - Mobile Landscape
+            - Edge / Bottom Progress
+    - 移动端
+        - 任务卡避开
+            - Bottom Navigation
+            - Bottom Action Bar
+            - Safe Area
+        - 点击任务卡
+            - 展开完整 Task Monitor
+        - 长任务不默认霸占全屏
+    - 多任务
+        - 单任务
+            - 可使用 Compact Progress
+        - 多任务
+            - 进入统一 Task Monitor
+        - 禁止
+            - 每个后台任务各弹一个窗口
+    - 聚合
+        - 同一批任务可显示总体进度
+        - 同时允许展开单项
+        - 例如
+            - 导出 24 张图片
+                - 17 / 24
+    - 父子任务
+        - 复杂任务可有阶段
+        - 例如
+            - 导出地图
+                - 准备数据
+                - 生成几何
+                - 写入文件
+                - 校验
+        - 默认只突出当前阶段
+        - 不需要把内部几十个步骤全部暴露
+    - ETA
+        - 只有估算稳定时显示
+        - 不稳定时宁可不显示
+        - 禁止频繁跳动的虚假剩余时间
+    - 进度动画
+        - 平滑但不拖慢真实状态
+        - 进度值以真实任务状态为准
+        - 不能为了动画延迟显示完成
+    - 关闭应用
+        - 存在后台任务时
+            - 根据任务性质决定
+                - 允许后台终止
+                - 请求确认
+                - 阻止关闭
+        - 必须明确告诉用户任务影响
+    - 状态恢复
+        - 可恢复后台任务
+            - 重新打开应用后恢复状态
+        - 不可恢复任务
+            - 明确标记 Interrupted
+    - 通知联动
+        - Task Started
+            - 通常不需要 Toast
+        - Task Completed
+            - 重要任务进入 Notification Center
+        - Task Failed
+            - Toast + Notification Center
+        - 用户主动查看
+            - Task Monitor
+    - 视觉
+        - 高信息密度
+        - 进度条细而清晰
+        - 状态文字优先
+        - 避免巨大 Loading Spinner
+        - Running 使用正常强调
+        - Failed 使用危险语义
+        - Queued 使用弱化状态
+    - 焦点
+        - 非阻塞 Progress 不抢焦点
+        - Task Monitor 用户主动打开后才进入焦点
+        - Blocking Overlay 才允许建立 Modal Focus
+    - 性能
+        - 进度更新节流
+        - 不能每一个内部 Tick 都重绘整个 UI
+        - 主任务与 UI 更新频率解耦
+        - Task Monitor 只更新发生变化的任务
+    - 安全原则
+        - 任务真实完成后才能显示 Completed
+        - 取消不能伪装成成功
+        - 失败必须说明数据安全状态
+        - 关键事务取消需要明确 Rollback
+        - Blocking 必须有实际理由
+    - 禁止设计
+        - 长任务一律锁全屏
+        - 只有无限转圈没有文字
+        - 伪造进度百分比
+        - 任务失败自动消失
+        - 取消按钮不说明后果
+        - 每个任务单独弹窗口
+        - 手机任务卡遮挡主导航
+        - 任务已经失败却仍显示 Running
+        - 只因为实现简单就使用 Blocking Overlay
+    - UI代码
+        - Component
+            - ProgressOverlay
+            - TaskMonitor
+        - Task
+            - id
+            - title
+            - state
+            - progress
+            - currentStep
+            - canPause
+            - canCancel
+            - canRetry
+        - State
+            - queued
+            - running
+            - paused
+            - cancelling
+            - completed
+            - failed
+        - Variant
+            - nonBlocking
+            - transaction
+            - taskMonitor
+        - Actions
+            - onPause
+            - onResume
+            - onCancel
+            - onRetry
+            - onOpenResult
+            - onShowDetails
+    - 与其他组件关系
+        - 完成反馈进入 XYUI-7-05 Toast
+        - 重要历史进入 XYUI-7-11 Notification Center
+        - 关键取消确认可连接 XYUI-7-01 Dialog
+        - Task Monitor 可使用 XYUI-7-06 Drawer / Panel 承载
+
+- 7-13 · Spotlight & Coachmark / 聚焦引导与功能提示
+    - 定位
+        - 用于帮助用户第一次发现难以自然发现的重要能力
+        - 用于重大新功能首次出现时提供轻量说明
+        - 不是完整帮助系统
+        - 不是强制新手教程
+        - 不能替代清晰的 UI 设计
+    - 最终采用方向
+        - 方案1 · One-shot Coachmark 为主
+        - 方案4 · Responsive Coachmark 为响应式核心
+        - 方案2 · Spotlight 仅用于重大新能力
+        - 方案3 · Minimal Guided Tour 极少使用
+    - 核心原则
+        - UI 自解释优先
+        - 引导只补充难发现能力
+        - 默认一次性
+        - 允许跳过
+        - 允许不再提示
+        - 不能阻挡用户正常工作
+        - 不能因为功能很多就连续弹教程
+    - One-shot Coachmark
+        - 定位
+            - 默认引导形态
+        - 适合
+            - 难发现但非常有价值的直接操作
+            - 第一次使用特殊交互
+            - 新增但位置明确的功能
+        - 示例
+            - Area Corner Split
+                - 从角落拖动即可拆分区域
+            - 运行速度
+                - 点击即可快速切换倍率
+    - 触发条件
+        - 首次进入相关功能
+        - 首次 Hover 到隐藏能力附近
+        - 首次执行相关上下文操作
+        - 应用升级后首次出现重大能力
+        - 原则
+            - 必须与当前上下文有关
+            - 不能在用户完全不需要时提前教学
+    - 一次性原则
+        - 默认展示一次
+        - 用户点击
+            - 知道了
+                - 不再自动重复
+        - 允许
+            - 在 Help 中重新查看
+        - 禁止
+            - 每次打开应用重复提示
+    - Spotlight
+        - 定位
+            - 用于真正重要的新功能
+        - 表现
+            - 目标区域明确高亮
+            - 其他内容轻量弱化
+            - 简短说明
+            - 提供试用或跳过
+        - 示例
+            - Visualization Compare
+                - 先锁定 A
+                - 再选择 B
+                - 查看 Delta
+    - Spotlight 使用门槛
+        - 功能对现有工作流有明显变化
+        - 用户很可能不知道功能已经加入
+        - 功能值得主动打断一次注意力
+        - 不满足以上条件
+            - 使用普通 Coachmark
+                - 或完全不提示
+    - Spotlight 遮罩
+        - 必须轻
+        - 保留原界面辨识度
+        - 目标区域最清晰
+        - 禁止大面积深黑遮罩
+        - 禁止制造强烈压迫感
+    - Minimal Guided Tour
+        - 定位
+            - 极少使用的多步骤引导
+        - 适合
+            - 第一次完整使用一个真正复杂的新工作流
+        - 示例
+            - 第一次运行实验
+                - 1 设置参数
+                - 2 运行实验
+                - 3 查看结果
+    - 多步限制
+        - 步骤必须少
+        - 每一步只解释一个动作
+        - 始终允许
+            - 下一步
+            - 跳过全部
+            - 退出
+        - 原则
+            - 如果需要十几步
+                - 说明应该使用正式教程或文档
+    - 禁止强制教程
+        - 用户不需要完成 Tour 才能使用软件
+        - 禁止锁死主界面要求逐步点击
+        - 禁止在用户已有经验时重复展示
+    - 目标绑定
+        - Coachmark 必须绑定真实 UI Target
+        - 目标移动
+            - Coachmark 同步更新
+        - 目标消失
+            - Coachmark 自动关闭
+        - 不能漂浮在和目标无关的位置
+    - 位置
+        - Desktop
+            - 优先 Anchored Coachmark
+        - 根据 Viewport
+            - Top
+            - Bottom
+            - Left
+            - Right
+        - 自动翻转
+        - 不得遮住目标本身
+    - Responsive Coachmark
+        - Desktop
+            - Anchored Coachmark
+        - Tablet
+            - Anchored / Expanded Hint
+        - Mobile Portrait
+            - Bottom Coach Sheet
+        - Mobile Landscape
+            - Anchored Coachmark 优先
+        - 原则
+            - 目标语义不变
+            - 只改变说明承载方式
+    - 移动端
+        - 重要 Target 仍保持高亮
+        - 说明内容可转到底部
+        - 触控目标适当扩大
+        - 禁止要求 Hover
+        - 禁止小气泡遮满屏幕
+    - 内容
+        - Title
+            - 可选
+        - Message
+            - 核心说明
+        - Action
+            - 知道了
+            - 试试看
+            - 下一步
+        - Secondary Action
+            - 跳过
+            - 不再提示
+    - 文字原则
+        - 短
+        - 直接
+        - 告诉用户具体动作
+        - 优先
+            - 从角落拖动即可拆分
+        - 避免
+            - 这里是我们全新的高效工作区管理功能
+    - Interaction Hint
+        - 可直接说明
+            - Drag
+            - Long Press
+            - Pinch
+            - Shortcut
+        - 图标或手势说明仅作辅助
+    - Shortcut Hint
+        - 允许显示
+            - F3
+            - L
+            - C
+            - F
+        - 快捷键不是唯一入口
+    - 新功能标记
+        - 允许短期显示
+            - New
+            - 轻量 Dot
+        - 一旦用户了解
+            - 自动消除
+        - 禁止长期挂着 New
+    - 帮助恢复
+        - 已关闭 Coachmark
+            - 可以通过 Help 再次查看
+        - 复杂功能
+            - 跳转正式帮助文档
+        - Coachmark 自身不承担完整教程
+    - 用户偏好
+        - 可以保存
+            - 已看过
+            - 不再提示
+        - 应用升级时
+            - 仅重大变化允许重新触发
+    - 状态
+        - Hidden
+        - Eligible
+        - Visible
+        - Dismissed
+        - Completed
+        - Disabled
+    - 动画
+        - 轻量出现
+        - 目标高亮平滑
+        - 不使用大幅弹跳
+        - 不延迟实际操作
+    - 焦点
+        - 普通 Coachmark 默认不强抢焦点
+        - Spotlight 可限制焦点到当前说明范围
+        - 关闭后焦点返回原上下文
+    - 可访问性
+        - 不能只靠位置关系表达
+        - 内容可被辅助技术读取
+        - 键盘用户能够关闭
+        - Escape
+            - 关闭当前引导
+    - 性能
+        - 目标位置变化只更新 Overlay
+        - 不能触发整个应用重新布局
+        - 未显示时不持续执行定位计算
+    - 安全原则
+        - Coachmark 不直接执行危险操作
+        - 试试看仍遵循正常安全合同
+        - 不能绕过 Dialog / Undo
+    - 禁止设计
+        - 第一次启动连续十几个引导
+        - 每次打开应用重复提示
+        - 用户不能跳过
+        - 用 Coachmark 弥补看不懂的基础 UI
+        - 移动端照搬桌面 Hover Hint
+        - 深黑遮罩覆盖整个应用
+        - 目标已经消失但 Coachmark 仍浮着
+        - 新功能标记永久不消失
+        - 为了宣传普通小改动使用 Spotlight
+    - UI代码
+        - Component
+            - Coachmark
+            - Spotlight
+        - Props
+            - open
+            - target
+            - title
+            - message
+            - variant
+            - placement
+            - deviceMode
+            - once
+            - step
+            - totalSteps
+        - Variant
+            - coachmark
+            - spotlight
+            - tour
+        - Actions
+            - onDismiss
+            - onComplete
+            - onTry
+            - onNext
+            - onSkip
+            - onNeverShowAgain
+    - 与其他组件关系
+        - 目标控件来自对应 XYUI Component
+        - 响应式承载可复用 XYUI-7 Bottom Sheet
+        - 正式帮助内容交给 Help / Documentation
+        - 不能替代 XYUI-1 文本信息设计
+
+- 7-14 · Drag & Drop Overlay / 拖放覆盖层
+    - 定位
+        - 统一管理拖放过程中的有效目标、无效目标、放置结果预览和响应式输入方式
+        - 适用于资源拖入、文件导入、地图对象放置、Dataset 分配和 Compare 投放
+        - 重点不是“能不能拖”
+        - 重点是 Drop 前是否清楚知道结果
+    - 最终采用方向
+        - 方案1 · Direct Target Overlay 为核心
+        - 方案3 · Invalid Drop Feedback 为核心
+        - 方案4 · Responsive Drag & Placement 为响应式核心
+        - 方案2 · Multi-zone Drop Overlay 为多目标辅助能力
+    - 核心原则
+        - Drop Before Validate / Drop 前验证
+            - 拖动过程中实时判断目标是否合法
+        - Result Preview / 结果预览
+            - 合法目标必须说明松手后的结果
+        - Invalid Early / 提前拒绝
+            - 无效目标在 Drop 前明确反馈
+        - Input Semantic Stable / 输入变化但业务语义稳定
+            - 桌面 Drag
+            - 移动端 Placement
+            - 最终业务动作一致
+    - Direct Target Overlay
+        - 定位
+            - 默认拖放形态
+        - 适合
+            - 一个对象只有一个明确合法目标
+        - 示例
+            - 城镇标记
+                - 拖到地图
+                    - 松手创建城镇标记
+            - 资源
+                - 拖入资源槽
+                    - 松手绑定资源
+    - 合法目标
+        - 拖入目标范围后
+            - 目标区域轻量高亮
+            - 显示 Drop Intent
+        - Drop Intent
+            - 说明松手后的动作
+        - 示例
+            - 放到地图中
+            - 松手创建城镇标记
+            - 加入 Compare A
+            - 替换当前资源
+    - 目标高亮
+        - 整体区域轻量强调
+        - 不能只改变鼠标 Cursor
+        - 保持内容仍可辨认
+        - 避免高饱和大面积颜色
+        - 目标边界清晰
+    - Drag Preview
+        - 可以显示被拖对象摘要
+        - 内容
+            - Name
+            - Type
+            - Optional Count
+        - 保持紧凑
+        - 不能遮挡主要 Drop Target
+    - Pointer Offset
+        - Drag Preview 与指针保持适当偏移
+        - 避免指针压住精确落点
+        - 地图精确放置时
+            - 真实落点使用独立 Marker
+    - Multi-zone Drop Overlay
+        - 定位
+            - 一个拖入对象存在多个合法业务去向
+        - 示例
+            - result-024.json
+                - 作为新实验打开
+                - 加入 Compare A
+                - 导入数据集
+        - 表现
+            - 显示多个明确 Drop Zones
+            - 每个 Zone 说明结果
+    - Multi-zone 使用门槛
+        - 只有确实存在多个合理结果时使用
+        - 普通拖放不能默认铺满多个 Drop Zone
+        - 禁止
+            - 每拖一个对象就把整个界面切成很多区域
+    - Drop Zone
+        - 必须有明确名称
+        - 必须说明业务结果
+        - 目标面积合理
+        - 不同目标视觉层级一致
+        - 当前 Hover Zone 明确增强
+    - Invalid Drop Feedback
+        - 定位
+            - 拖动过程中阻止无效投放
+        - 显示
+            - 不能放到这里
+            - 拒绝原因
+            - Optional 合法去向
+        - 示例
+            - RoadDataset
+                - 拖到 RegionDataset Slot
+                    - 不能放到这里
+                    - 当前区域只接受 RegionDataset
+                    - 可放入 地图内容 → 道路
+    - Invalid 原则
+        - 不能只显示禁止 Cursor
+        - 不能等 Drop 后再弹错误
+        - 如果能给出合法目标
+            - 直接提示
+        - 错误信息保持简短
+    - 类型约束
+        - Drop Target 声明接受类型
+        - 示例
+            - RoadDataset
+            - RegionDataset
+            - ImageAsset
+            - ExperimentResult
+            - MapFeature
+        - 验证基于正式类型合同
+        - 不能依赖显示名称猜测
+    - 权限与状态约束
+        - 即使类型正确
+            - 还需判断
+                - 当前 Mode
+                - 权限
+                - 锁定状态
+                - 业务状态
+        - 不可用目标
+            - 提前 Disabled
+            - 并说明原因
+    - Drop Commit
+        - 松手只是提交意图
+        - 真正修改仍遵循业务 Transaction
+        - 失败时
+            - 必须明确反馈
+        - 不能因为视觉 Drop 成功就假设业务提交一定成功
+    - Undo
+        - 可逆 Drop
+            - 优先支持 Undo
+        - 示例
+            - 移动对象
+            - 重新分组
+            - 重新排序
+        - 反馈
+            - XYUI-7-05 Undo Snackbar
+    - 危险 Drop
+        - 如果 Drop 会覆盖重要数据
+            - 可以要求确认
+        - 例如
+            - 替换唯一资源
+            - 覆盖已有数据
+        - 仍遵循 Dialog 合同
+    - External File Drop
+        - 桌面允许从系统拖文件进入应用
+        - 进入应用窗口后
+            - 先判断文件类型
+            - 再显示合法 Drop Target
+        - 未知文件
+            - 提前拒绝
+        - 需要导入配置
+            - 进入 Import Flow
+    - 地图对象放置
+        - 资源拖入地图
+            - 目标地图高亮
+            - 显示 Placement Marker
+        - Marker 表示真实落点
+        - 地图移动过程中
+            - 落点随 Pointer 更新
+        - 不能因为地图 Overlay 重绘影响 Pointer 性能
+    - 列表重排
+        - 拖动列表项
+            - 显示 Insert Marker
+        - Insert Marker 比整块高亮更适合排序
+        - 明确
+            - 插入前
+            - 插入后
+        - 禁止
+            - 只靠列表项上下跳动猜测位置
+    - 跨容器移动
+        - 显示 Source
+        - 显示 Target
+        - 必要时说明
+            - Move
+            - Copy
+            - Link
+        - 不能让用户不知道是复制还是移动
+    - Modifier
+        - 桌面可选
+            - Ctrl / Option
+                - Copy
+            - Shift
+                - 特殊行为
+        - 必须同时有视觉提示
+        - 不能只靠用户记快捷键
+    - Responsive Drag & Placement
+        - Desktop
+            - Drag & Drop
+        - Tablet
+            - Drag
+            - 或 Placement Mode
+        - Mobile Portrait
+            - Placement Mode 优先
+        - Mobile Landscape
+            - 根据距离与空间选择
+                - Drag
+                - Placement
+    - Mobile Placement
+        - 典型流程
+            - 选择资源
+                - 放置
+                    - 进入 Placement
+                        - 移动地图
+                            - 点击目标位置
+                                - 确认
+        - 业务语义
+            - 与 Desktop Drop 一致
+    - 移动端原则
+        - 不强迫长距离精确拖动
+        - 不依赖 Hover
+        - 触控目标增大
+        - 允许取消 Placement
+        - 确认按钮明确
+    - Placement Mode
+        - 进入后
+            - 当前待放对象明确
+        - 地图保持可移动
+        - 目标位置明确
+        - 可取消
+        - 完成后自动退出或继续批量放置
+            - 由场景决定
+    - 批量放置
+        - 可选能力
+        - 明确显示
+            - 当前对象
+            - 已放数量
+            - 完成
+        - 不能让用户不知道是否还处于 Placement Mode
+    - 视觉
+        - Valid
+            - Accent / 低饱和蓝灰
+        - Invalid
+            - Danger 语义
+        - Pending
+            - 轻量 Preview
+        - Committed
+            - Toast / Selection Feedback
+        - 不能只靠颜色判断 Valid / Invalid
+    - 动画
+        - 轻量
+        - Drop Zone 出现迅速
+        - 不能延迟 Pointer
+        - Drop 成功可轻微吸附
+        - 禁止大型弹跳动画
+    - 性能
+        - PointerMove 只做轻量 Hit Test
+        - 不能每次 PointerMove 全量扫描大型业务集合
+        - 合法目标应预先计算或使用局部索引
+        - Overlay 更新与业务提交分离
+        - 真正 Commit 在 Drop 后执行
+    - 拖出窗口
+        - 拖到应用外
+            - 根据业务决定
+                - Cancel
+                - External Export
+        - 不能默认把业务对象丢失
+    - Accessibility
+        - Drag & Drop 必须有键盘替代
+        - 例如
+            - Move To
+            - Place
+            - Assign
+        - 不能让拖动成为唯一业务入口
+    - 失败恢复
+        - Drop Commit 失败
+            - 对象回到原状态
+            - 显示 Error
+        - 不能停留在视觉上已经成功但业务实际失败的状态
+    - 禁止设计
+        - Drop 后才第一次验证是否合法
+        - 只显示禁止鼠标不说明原因
+        - 合法目标没有结果说明
+        - 普通拖放满屏显示多个 Drop Zone
+        - 移动端强迫跨屏长拖
+        - 拖放是唯一业务入口
+        - Move / Copy 语义不明确
+        - Drop 成功动画先于真实 Commit
+        - PointerMove 全量扫描大型集合
+        - 拖放失败后对象停留在错误位置
+    - UI代码
+        - Component
+            - DragOverlay
+            - DropZone
+            - PlacementOverlay
+        - DragPayload
+            - id
+            - type
+            - label
+            - source
+            - data
+        - DropTarget
+            - id
+            - accepts
+            - intent
+            - disabled
+            - reason
+        - State
+            - idle
+            - dragging
+            - valid
+            - invalid
+            - committing
+            - completed
+            - failed
+        - Actions
+            - onDragStart
+            - onDragMove
+            - onDragEnd
+            - onDrop
+            - onCancel
+            - onPlace
+            - onCommit
+    - 与其他组件关系
+        - 提交成功反馈进入 XYUI-7-05 Toast
+        - 可逆操作使用 Undo Snackbar
+        - 危险覆盖交给 XYUI-7-01 Dialog
+        - 复杂导入交给 XYUI-7-15 File Dialog & Resource Picker
+
+- 7-15 · File Dialog & Resource Picker / 文件与资源选择器
+    - 定位
+        - 统一管理外部文件选择、项目内部资源选择和导入前确认
+        - 系统文件与项目资源必须区分
+        - 选择文件与真正写入项目必须区分
+        - 桌面与移动端保持同一资源语义
+    - 最终采用方向
+        - 方案1 · System File Picker Bridge
+            - 正式采用
+        - 方案2 · Project Resource Picker
+            - 正式采用
+        - 方案3 · Import Preview & Validation
+            - 正式采用
+        - 方案4 · Responsive Resource Picker
+            - 正式采用
+    - 核心原则
+        - 外部磁盘文件交给操作系统选择器
+        - 项目内部资源使用项目自己的资源语义
+        - UI 不暴露不必要的真实磁盘结构
+        - 文件选择成功不等于立即修改项目
+        - 真正导入前必须允许识别、校验和预览
+    - System File Picker Bridge
+        - 用途
+            - 打开外部文件
+            - 导入数据
+            - 选择导出目录
+            - 选择图片
+            - 选择模型
+        - XYUI 负责
+            - Allowed Types
+            - Initial Location
+            - Multi Select
+            - Picker Purpose
+            - Return Contract
+        - 操作系统负责
+            - 文件浏览
+            - 磁盘目录
+            - 权限
+            - 系统最近位置
+    - 系统 Picker 原则
+        - 不重复实现 Windows Explorer
+        - 不重复实现 macOS Finder
+        - 不在移动端模拟 Android / iOS 文件管理器
+        - 使用平台原生文件或照片 Provider
+    - File Filter
+        - 根据业务限制格式
+        - 示例
+            - JSON
+            - GeoJSON
+            - CSV
+            - PNG
+            - JPEG
+            - Project File
+        - 显示人类可理解的格式名称
+    - Initial Location
+        - 允许记住上次有效位置
+        - 允许项目指定推荐目录
+        - 位置失效时回退到安全默认位置
+    - Multi Select
+        - 仅业务支持批量导入时开启
+        - 选择数量可见
+        - 大量文件进入批量导入流程
+    - Project Resource Picker
+        - 定位
+            - 选择项目内部已经注册的业务资源
+        - 不是文件系统浏览器
+        - 示例
+            - RoadDataset
+            - RegionDataset
+            - Map
+            - Texture
+            - Experiment
+            - Simulation Result
+    - 资源显示
+        - Primary
+            - Name
+        - Secondary
+            - Type
+            - Count
+            - Status
+        - Optional
+            - ID
+            - Project Path
+        - 磁盘路径
+            - 默认不显示为主要信息
+    - 资源层级
+        - 使用项目业务结构
+        - 示例
+            - 地图
+                - 道路
+                    - roads-main
+                    - roads-test
+                - 区域
+            - 实验数据
+        - 不能直接等价为磁盘文件夹树
+    - 资源搜索
+        - 支持
+            - Name
+            - Type
+            - ID
+            - Tags
+        - 结果保持业务上下文
+        - 搜索不能退化成路径匹配器
+    - 类型约束
+        - Picker 声明 accepts
+        - 例如
+            - RoadDataset
+        - 只显示或优先显示可接受资源
+        - 不兼容资源
+            - 隐藏
+            - 或明确 Disabled
+    - 资源选择
+        - Single Select
+        - Multi Select
+            - 按业务需要
+        - 当前选中状态明确
+        - 双击可选快速确认
+            - 仅桌面场景
+    - 最近资源
+        - 可选
+        - 提高重复工作效率
+        - 不能代替项目完整结构
+    - Favorites
+        - 可选
+        - 高频资源允许固定
+        - 不改变正式资源身份
+    - Import Preview & Validation
+        - 定位
+            - 外部文件被选中之后
+            - 真正写入项目之前
+        - 流程
+            - Select File
+                - Parse / Detect
+                    - Preview
+                        - Validate
+                            - Confirm Import
+    - 识别结果
+        - 显示
+            - Detected Type
+            - Object Count
+            - Schema
+            - Coordinate System
+            - Resolution
+            - 其他重要元数据
+        - 根据资源类型选择
+    - 目标位置
+        - 明确显示将写入哪里
+        - 使用项目业务路径
+        - 示例
+            - 地图内容 / 道路 / roads-imported
+    - ID
+        - 默认自动分配
+        - 用户通常不手工填写内部 ID
+        - 导入预览可显示
+            - ID 将自动分配
+    - Schema Validation
+        - 导入前执行
+        - 结果
+            - Passed
+            - Warning
+            - Failed
+        - Failed 时
+            - 禁止 Commit
+            - 说明原因
+    - Warning
+        - 允许用户继续时必须说明影响
+        - 例如
+            - 字段缺失但可使用默认值
+        - 不能把 Warning 当 Error 阻断
+    - Import Commit
+        - 只有用户确认后才真正修改项目
+        - 提交过程遵循 Transaction
+        - 失败时回滚
+        - 成功后更新项目 Registry 与 UI
+    - Import Feedback
+        - 成功
+            - Toast
+        - 失败
+            - Error Feedback
+            - 必要时 Notification Center
+    - Duplicate Resource
+        - 检测重名或重复资源
+        - 允许
+            - Rename
+            - Replace
+            - Skip
+        - 危险 Replace
+            - 遵循安全合同
+    - 资源引用
+        - Picker 返回正式 Resource Identity
+        - 不能返回仅供显示的路径字符串作为唯一业务身份
+    - 路径显示
+        - 业务资源默认显示 Project Path
+        - 真实 File System Path
+            - 仅在诊断
+                - 导出
+                - 高级信息
+            - 场景显示
+    - 响应式
+        - Desktop
+            - Dialog
+                - Window
+                - 根据内容复杂度选择
+        - Tablet
+            - Expanded Picker
+        - Mobile Portrait
+            - Full-height Picker
+        - Mobile Landscape
+            - Large Sheet / Full View
+    - 移动端
+        - 项目资源
+            - 使用 XYUI Resource Picker
+        - 外部文件
+            - 调用系统 Provider
+        - 不自己模拟手机文件系统
+    - 搜索框
+        - 保持顶部可见
+        - 输入后即时过滤
+        - 移动端键盘弹出后列表仍可用
+    - 预览
+        - 资源支持预览时
+            - 可显示缩略预览
+        - 复杂预览
+            - 交给 XYUI-7-09 Focus Preview
+        - Picker 内不要塞完整编辑器
+    - 空状态
+        - 没有匹配资源
+            - 说明筛选条件
+            - 允许清除筛选
+        - 没有任何资源
+            - 提供合理创建 / 导入入口
+    - 权限
+        - 系统文件选择遵循平台权限
+        - 项目资源遵循项目权限
+        - 不可访问资源明确 Disabled
+    - 性能
+        - 项目资源使用索引
+        - 大型资源列表支持虚拟化
+        - 搜索不扫描完整磁盘
+        - 预览按需加载
+    - 安全原则
+        - 选择文件不直接修改项目
+        - 导入前校验
+        - 真正写入使用事务
+        - 失败允许回滚
+        - 外部路径不能直接成为内部身份
+        - 危险覆盖必须确认或可恢复
+    - 禁止设计
+        - 项目内部资源要求用户找真实 JSON 文件
+        - 自己重新实现完整系统文件管理器
+        - 选中文件立即写入项目
+        - 用户手工维护所有内部 ID
+        - 移动端模拟桌面文件浏览器
+        - Resource Picker 直接暴露大量磁盘路径
+        - 类型不兼容直到确认后才报错
+    - UI代码
+        - Component
+            - FilePickerBridge
+            - ResourcePicker
+            - ImportPreview
+        - FilePickerProps
+            - accept
+            - multiple
+            - initialLocation
+            - purpose
+        - ResourcePickerProps
+            - acceptTypes
+            - selectedIds
+            - search
+            - scope
+            - multiple
+        - ImportPreviewProps
+            - source
+            - detectedType
+            - target
+            - validation
+            - importOptions
+        - Actions
+            - onPick
+            - onSelectResource
+            - onPreview
+            - onValidate
+            - onImport
+            - onCancel
+    - 与其他组件关系
+        - 外部 Drag Import 与 XYUI-7-14 Drag & Drop Overlay 联动
+        - 复杂预览进入 XYUI-7-09 Focus Preview
+        - 导入进度交给 XYUI-7-12 Task Monitor
+        - 成功反馈进入 XYUI-7-05 Toast
+        - 重要失败进入 XYUI-7-11 Notification Center
+
+- 7-16 · Overlay Stack & Focus Management / 浮层层级与焦点管理
+    - 定位
+        - 统一管理所有 Overlay、Window、Drawer、Dialog 的视觉层级、焦点、父子关系、关闭顺序和渲染根
+        - 作为 XYUI-7 全部浮层与窗口组件的系统级底层合同
+        - 避免组件各自维护任意 Z-Index
+        - 避免焦点丢失
+        - 避免嵌套浮层关闭顺序混乱
+        - 避免 Overflow 裁切和移动端 Safe Area 冲突
+    - 最终采用方向
+        - 方案1 · Semantic Overlay Stack
+            - 正式采用
+        - 方案2 · Focus Trap & Restore
+            - 正式采用
+        - 方案3 · Nested Overlay Resolution
+            - 正式采用
+        - 方案4 · Overlay Root & Safe Area
+            - 正式采用
+        - 四项共同构成统一 Overlay Infrastructure
+    - 核心原则
+        - 层级由组件语义决定
+        - 不允许业务组件自由竞争 Z-Index
+        - Modal 必须管理焦点
+        - 关闭后焦点必须恢复
+        - 嵌套 Overlay 必须建立父子关系
+        - 关闭时只处理当前最上层有效 Overlay
+        - 所有浮层通过统一 OverlayRoot 渲染
+        - 移动端统一遵循 Safe Area
+    - Semantic Overlay Stack
+        - 定位
+            - 使用语义 Layer 代替任意 Z-Index 数字
+        - 基础层级
+            - L0 · App Content
+                - 主页面
+                - Map
+                - Plot
+                - 普通 Panel
+            - L1 · Window / Drawer
+                - Floating Window
+                - Drawer
+                - Side Sheet
+            - L2 · Local Overlay
+                - Popover
+                - Context Menu
+                - Tooltip
+                - Command Palette
+                - 局部 Picker
+            - L3 · Modal
+                - Dialog
+                - Confirm Dialog
+                - Modal Task
+            - L4 · Critical / System Overlay
+                - 关键事务 Overlay
+                - 真正系统级阻塞状态
+    - 层级原则
+        - 同类组件共享统一 Layer Token
+        - 不能通过临时增加数字解决遮挡问题
+        - 如果出现层级冲突
+            - 先检查语义归属
+            - 再检查 Overlay Parent
+        - 禁止
+            - z-index 9999
+            - z-index 99999
+            - 业务模块自定义无限层级
+    - 局部层级
+        - Popover 必须位于所属 Window / Drawer 上方
+        - Context Menu 必须位于当前交互上下文上方
+        - Tooltip 必须位于其 Target 所属 Overlay 上方
+        - 局部层级不能越过不相关的 Modal
+    - Modal Layer
+        - Modal Dialog 高于当前普通工作区
+        - Modal 只阻塞相关业务上下文
+        - 如果应用架构支持多独立 Window
+            - Modal 可以绑定 Owner Window
+        - 禁止
+            - 一个局部 Dialog 无意义阻塞整个多窗口应用
+    - Critical Layer
+        - 最高普通业务层级
+        - 只用于真正需要全局限制的状态
+        - 例如
+            - 不可安全并行的关键事务
+            - 系统连接断裂且应用无法继续
+        - 不能用于普通 Loading
+    - Toast Layer
+        - Toast 需要保持可见
+        - 但不能覆盖 Modal 的核心操作
+        - Modal 存在时
+            - 相关 Toast 可以位于 Modal 可见区域
+            - 或延后显示
+        - 危险提示不能依赖 Toast 抢最高层级
+    - Coachmark Layer
+        - 跟随 Target 所在 Context
+        - Spotlight 可以对当前上下文进行轻量弱化
+        - 不能覆盖更高等级的 Modal Dialog
+    - Overlay Parent
+        - 每个 Overlay 可以声明 Parent Overlay
+        - 示例
+            - Drawer
+                - Popover
+                    - Tooltip
+        - Parent 决定
+            - 局部 Z Order
+            - 关闭关系
+            - 焦点恢复目标
+    - Nested Overlay Resolution
+        - 嵌套 Overlay 必须形成明确 Overlay Tree
+        - 示例
+            - Drawer
+                - Popover
+                    - Context Menu
+                        - Tooltip
+        - 禁止
+            - 所有 Overlay 都作为互不相关的全局兄弟节点管理
+    - Esc Close Order
+        - 只处理当前最上层可关闭 Overlay
+        - 典型顺序
+            - Tooltip
+                - 如果 Tooltip 支持 Escape 关闭
+            - Context Menu
+            - Popover
+            - Drawer
+            - Window
+        - 原则
+            - 一次 Escape 只退一层
+            - 不能一次关闭整棵 Overlay Tree
+    - Outside Click
+        - 只作用于最上层支持 Outside Dismiss 的 Overlay
+        - 点击 Parent Overlay 内部
+            - 不能误关闭 Parent
+        - 点击 Child
+            - 不能被判断为点击 Parent 外部
+    - Pointer Event
+        - Overlay 必须正确处理 Hit Test
+        - 遮罩层
+            - 只在需要时消费 Pointer
+        - 非模态 Overlay
+            - 不得无意义阻止主工作区操作
+    - Focus Management
+        - 记录 Trigger Focus
+        - Overlay 打开
+            - 根据类型决定是否转移焦点
+        - Overlay 关闭
+            - 恢复到合理 Trigger 或上一上下文
+    - Focus Trigger Record
+        - 打开 Overlay 前记录
+            - Active Element
+            - Owner Window
+            - Parent Overlay
+        - 用于关闭后恢复
+    - Focus Trap
+        - 仅需要 Modal Focus 的组件启用
+        - 典型
+            - Dialog
+            - 关键事务 Modal
+        - Tab
+            - 在 Modal 内循环
+        - Shift + Tab
+            - 反向循环
+        - 不能跳到背后的页面
+    - Non-modal Focus
+        - Popover
+            - 根据内容决定是否主动获取焦点
+        - Tooltip
+            - 通常不获取焦点
+        - Toast
+            - 默认不获取焦点
+        - Drawer
+            - 打开不一定抢焦点
+            - 用户开始编辑时再进入
+    - Focus Restore
+        - Dialog 关闭
+            - 回到打开 Dialog 的控件
+        - Context Menu 关闭
+            - 回到原对象或工作区
+        - Command Palette 关闭
+            - 回到调用前上下文
+        - Drawer 关闭
+            - 回到原触发入口
+    - Trigger Disappeared
+        - 如果原 Trigger 已不存在
+            - 寻找最近合理 Focus Target
+        - 优先
+            - Parent Context
+            - Owner Window
+            - Main Workspace
+        - 禁止
+            - 焦点直接掉到 document body 或页面第一个按钮
+    - Initial Focus
+        - Dialog
+            - 根据内容选择安全初始焦点
+        - 危险 Dialog
+            - 默认不应把焦点直接放到危险 Primary Action
+        - Input Dialog
+            - 输入框可成为 Initial Focus
+    - Keyboard Scope
+        - Overlay 打开时
+            - 只激活当前合理快捷键作用域
+        - Modal 存在时
+            - 背后 Window 的冲突 Shortcut 暂停
+        - Global Shortcut
+            - 根据安全规则决定是否仍可用
+    - OverlayRoot
+        - 所有浮层进入统一渲染根
+        - 避免
+            - Parent Overflow Hidden
+            - Transform Stacking Context
+            - Clip
+            - 复杂嵌套 Z-Index
+        - OverlayRoot 管理
+            - Portal
+            - Layer
+            - Parent Relation
+            - Focus
+            - Dismiss
+    - Portal
+        - Popover
+        - Tooltip
+        - Context Menu
+        - Dialog
+        - Toast
+        - Command Palette
+        - Coachmark
+        - 按组件合同进入统一 Portal
+    - Position Anchor
+        - 虽然 Overlay 渲染到 Root
+        - 仍绑定原始 Target
+        - Target 移动
+            - Overlay 更新位置
+        - Target 消失
+            - Overlay 根据合同关闭
+    - Viewport Collision
+        - Overlay 不能超出 Viewport
+        - 支持
+            - Flip
+            - Shift
+            - Resize
+        - 优先保证内容可访问
+    - Window Boundary
+        - 桌面多窗口场景
+            - OverlayRoot 可以按 Native Window 分离
+        - Popover 不能错误跑到另一独立系统窗口
+        - 每个 Native Window 拥有自己的 Overlay Context
+    - Safe Area
+        - Mobile
+            - Top Safe Area
+            - Bottom Safe Area
+            - Left / Right Safe Area
+        - Overlay 不能被
+            - Notch
+            - Status Bar
+            - Home Indicator
+            - System Gesture Area
+        - 遮挡
+    - Bottom Overlay
+        - Bottom Sheet
+        - Snackbar
+        - Task Progress
+        - Command Sheet
+        - 必须统一协调底部空间
+        - 优先级
+            - System Safe Area
+                - Navigation
+                    - Active Sheet
+                        - Snackbar / Task Indicator
+        - 禁止组件互相覆盖
+    - Keyboard Insets
+        - 移动端软键盘出现
+            - 重新计算 Overlay 可用高度
+        - Input Dialog
+        - Command Palette
+        - Resource Picker
+        - 必须保持输入框和关键 Action 可见
+    - Responsive Overlay Root
+        - Desktop
+            - 自由 Anchored Overlay
+            - Window-aware Overlay
+        - Tablet
+            - Anchored + Sheet
+        - Mobile Portrait
+            - Sheet / Full View 优先
+        - Mobile Landscape
+            - 根据空间选择 Anchored / Sheet
+    - Backdrop
+        - 只有需要弱化背景或 Modal 时使用
+        - Popover
+            - 通常无 Backdrop
+        - Dialog
+            - 轻量 Backdrop
+        - Critical Modal
+            - 可适当加强
+        - 禁止
+            - 所有 Overlay 都带遮罩
+    - Backdrop Stack
+        - 多个嵌套 Modal 原则上避免
+        - 如果确实存在
+            - 只保留合理的视觉遮罩层
+        - 不能越叠越黑
+    - Scroll Lock
+        - Modal
+            - 根据平台限制背景 Scroll
+        - Popover
+            - 通常不锁主界面 Scroll
+        - 移动端 Sheet
+            - 区分 Sheet Scroll 与 Background Scroll
+    - Scroll Boundary
+        - Overlay 内部可滚动
+        - 滚动到边界时
+            - 避免无意传递到背景
+        - 根据平台使用 Overscroll Containment
+    - Pointer Capture
+        - Drag / Resize 等操作期间
+            - 允许临时 Pointer Capture
+        - 操作结束必须释放
+        - 不能因为 Overlay 关闭留下 Capture
+    - Unmount Safety
+        - Overlay 被销毁时
+            - 清理
+                - Focus Trap
+                - Pointer Capture
+                - Event Listener
+                - Scroll Lock
+                - Parent Relation
+    - Animation
+        - Layer 变化不能产生闪烁
+        - 关闭 Child 后 Parent 保持稳定
+        - Portal Mount 不应导致明显位置跳动
+        - 动画不改变真实 Layer Order
+    - Accessibility
+        - Dialog 使用正确 Modal 语义
+        - Tooltip 与 Target 建立说明关系
+        - Menu 使用菜单语义
+        - 焦点顺序可预测
+        - 屏幕阅读器不能继续访问被 Modal 隔离的背景区域
+    - 性能
+        - 统一 Overlay Manager
+        - 只监听当前 Active Overlay 所需事件
+        - Position Update 可使用事件驱动
+        - 禁止所有 Overlay 永久监听 PointerMove
+        - Overlay Tree 更新局部化
+    - Debug
+        - 开发模式可提供 Overlay Inspector
+        - 显示
+            - Overlay ID
+            - Type
+            - Layer
+            - Parent
+            - Focus Owner
+        - 用于快速排查层级问题
+        - 生产模式不显示
+    - Token
+        - OverlayLayer.App
+        - OverlayLayer.Window
+        - OverlayLayer.Local
+        - OverlayLayer.Modal
+        - OverlayLayer.Critical
+        - 业务组件只使用 Token
+        - 禁止直接硬编码任意 Z-Index
+    - 安全原则
+        - 高层级不能绕过业务安全机制
+        - Critical Layer 不能被普通组件滥用
+        - Modal Focus 不允许落到背景危险操作
+        - 关闭 Overlay 不得误执行底层点击
+    - 禁止设计
+        - z-index 999999
+        - 每个业务模块自定义层级数字
+        - Tooltip 被父容器 Overflow 裁掉
+        - Popover 出现在所属 Window 后面
+        - Esc 一次关闭全部浮层
+        - Dialog 关闭后焦点跑到页面顶部
+        - Modal 打开后 Tab 能进入背景
+        - 手机 Bottom Sheet 覆盖 Home Indicator
+        - 软键盘遮住输入框
+        - 多个 Backdrop 叠成黑屏
+        - Child Overlay 关闭导致 Parent 一起消失
+        - Target 已销毁但 Overlay 继续漂浮
+    - UI代码
+        - Component
+            - OverlayRoot
+            - OverlayManager
+            - FocusManager
+        - Overlay
+            - id
+            - type
+            - layer
+            - parentId
+            - ownerWindowId
+            - dismissible
+            - modal
+            - anchor
+        - Layer
+            - app
+            - window
+            - local
+            - modal
+            - critical
+        - Focus
+            - trigger
+            - initialFocus
+            - trapFocus
+            - restoreFocus
+        - Actions
+            - registerOverlay
+            - unregisterOverlay
+            - openOverlay
+            - closeOverlay
+            - closeTopmost
+            - restoreFocus
+            - updatePosition
+    - 与其他组件关系
+        - XYUI-7-01 Dialog
+            - 消费 Modal Layer 与 Focus Trap
+        - XYUI-7-02 Popover
+            - 消费 Local Layer 与 Anchor
+        - XYUI-7-03 Tooltip
+            - 消费 Local Child Overlay
+        - XYUI-7-04 Context Menu
+            - 消费 Local Layer 与 Topmost Dismiss
+        - XYUI-7-05 Toast
+            - 消费 Notification Overlay Layer
+        - XYUI-7-06 Drawer
+            - 作为 Overlay Parent / Window Layer
+        - XYUI-7-07 Window
+            - 提供 Owner Window Context
+        - XYUI-7-09 Focus Preview
+            - 消费 Focus Layer
+        - XYUI-7-10 Command Palette
+            - 消费统一 OverlayRoot
+        - XYUI-7-13 Coachmark
+            - 消费 Anchor 与 Spotlight Layer
+        - XYUI-7-15 Picker
+            - 消费 Dialog / Full View Overlay 合同
