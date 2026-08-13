@@ -1,7 +1,7 @@
 # XYUI Core Pack 0.1
 
 > XYUI-PILOT 产物：供 XYLab Agent 消费的 Core Pack。
-> 状态：**`READY_FOR_XYLAB_PILOT`**（XYUI-0/1/2/3 全部 CLOSED；XYUI-4 canonical 完成，待用户验收）。
+> 状态：**`READY_FOR_XYLAB_PILOT`**（XYUI-0/1/2/3 全部 CLOSED；XYUI-4/5 canonical 完成，待用户验收）。
 
 ## 内容
 
@@ -13,7 +13,7 @@ xyui/packs/core-0.1/
 └─ gaps.json         ← 全 pack 已知缺口汇总（5 项，均非阻塞）
 ```
 
-## 五份规范
+## 六份规范
 
 | Spec | 内容 | 状态 | 关键产物 |
 |---|---|---|---|
@@ -22,6 +22,7 @@ xyui/packs/core-0.1/
 | XYUI-2 | Controls（24 控件） | CLOSED | `xyui/specs/XYUI2/` |
 | XYUI-3 | Navigation（24 导航组件） | CLOSED | `xyui/specs/XYUI3/` |
 | XYUI-4 | Selection & Feedback（20 项） | CANONICAL_COMPLETE（待用户验收） | `xyui/specs/XYUI4/` |
+| XYUI-5 | Layout & Containers（20 项） | CANONICAL_COMPLETE（待用户验收） | `xyui/specs/XYUI5/` |
 
 ## 已知缺口（9 项，均非阻塞）
 

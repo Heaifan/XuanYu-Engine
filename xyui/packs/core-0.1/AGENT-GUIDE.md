@@ -45,8 +45,13 @@ XYUI-4 Selection      ✅ canonical 20/20（Hover/Selected/Active/Focus/MultiSel
                         Marquee/Lasso/Outline/BoundingBox/DragFeedback/Drop/Insertion/
                         Loading/Spinner/ProgressBar/Ring/Skeleton/InlineFeedback/EmptyState；
                         4 项 GAP 见 gaps.json；A 类冲突 0；第二真值 0）
+XYUI-5 Layout         ✅ canonical 20/20（Stack/Grid/Wrap/Dock/ScrollArea/SplitPane/OverlayLayout/
+                        AspectContainer/AnchorLayout/StickyRegion/AdaptiveLayout/WorkspaceLayout/
+                        LayoutPersistence/VirtualizedLayout/CanvasLayout/ViewportContainer/
+                        PortalHost/MasonryLayout/LayoutDiagnostics/LayoutCompositionRules；
+                        0 GAP；A 类冲突 0；第二真值 0）
 
-Pack Status: READY_FOR_XYLAB_PILOT（0123 闭环 + 4 canonical 完成待验收）
+Pack Status: READY_FOR_XYLAB_PILOT（0123 闭环 + 4/5 canonical 完成待验收）
 ```
 
 ## 6. 已知 GAP

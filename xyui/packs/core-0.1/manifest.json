@@ -64,6 +64,18 @@
       "source_sha256": "1d92ca14813ee9377b1a19a9736fdbc3c5226a95dc4ac0815bda50d2e7281bfe",
       "canonical_sha256": "17dcc6df73d7749c3c8ed31bbafdcd40227c9c29bf420e4c4c36137b42832ae9",
       "reconciled_commit": "3587ff0"
+    },
+    "XYUI-5": {
+      "available": true,
+      "status": "CANONICAL_COMPLETE",
+      "canonical_spec": "xyui/specs/XYUI5/XYUI-5.canonical.md",
+      "mapping": "xyui/specs/XYUI5/XYUI-5.mapping.json",
+      "gaps": "xyui/specs/XYUI5/XYUI-5.gaps.json",
+      "source": "xyui/source/XYUI5/XYUI-5.md",
+      "source_bytes": 252543,
+      "source_sha256": "45734e3f4d305e173983f09d6348405d81ec5c97ff8cabe68bb77c641434c523",
+      "canonical_sha256": "f54ae93b30074fd3cae3971bf4d80efe4296f7cfcbcffd054767e18fed54c1b8",
+      "reconciled_commit": "9345728"
     }
   },
   "foundation_registry_ref": "xyui/registry/foundation/foundation-registry.json",
@@ -140,12 +152,15 @@
     "xyui/specs/XYUI3/XYUI-3.mapping.json",
     "xyui/specs/XYUI4/XYUI-4.canonical.md",
     "xyui/specs/XYUI4/XYUI-4.mapping.json",
-    "xyui/specs/XYUI4/XYUI-4.gaps.json"
+    "xyui/specs/XYUI4/XYUI-4.gaps.json",
+    "xyui/specs/XYUI5/XYUI-5.canonical.md",
+    "xyui/specs/XYUI5/XYUI-5.mapping.json",
+    "xyui/specs/XYUI5/XYUI-5.gaps.json"
   ],
   "forbidden": [
     "A3-R3 Light/Dark Token Source（本任务暂停）",
     "Avalonia AXAML / C# 生成",
-    "XYUI-5/6/7/8/9",
+    "XYUI-6/7/8/9",
     "XuanYu / XYLab 业务实现",
     "修改 A2 Registry / A3-R2 Canonical Architecture"
   ]
