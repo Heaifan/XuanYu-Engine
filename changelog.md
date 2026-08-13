@@ -5,7 +5,7 @@
 - 目标：在 R1 CLOSED 基础上交付第一批 XYUI 控件与可视化状态/Density 对比。
 - 变化：新增 Button/IconButton/ToggleButton、TextField/NumberField、CheckBox/RadioButton/ToggleSwitch、ComboBox/Slider、Badge/Tag；新增 Normal/Hover/Pressed/Focus/Disabled/Selected/Error、Small/Default/Large 与 Compact/Default/Comfortable 样式；Gallery 改为 Controls Core 页面。
 - 验证：Gallery 实际进程烟测保持运行；XYUI Tests 4/4 PASS；目标项目构建 0 警告/0 错误；正式全量门禁待收口。
-- Hash：待提交。
+- Hash：`4c5d1162`。
 - 遗留：等待用户真机视觉验收，不进入 R3。
 
 ## R1-F1 · Gallery Runtime Bootstrap Fix · 2026-08-13 22:43:48
