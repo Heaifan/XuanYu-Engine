@@ -1,43 +1,67 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xy="using:XYUI.Avalonia.Controls"
         x:Class="XYUI.Avalonia.Gallery.MainWindow"
         Title="XYUI.Avalonia Gallery · 0.1.0-alpha"
-        Width="1100" Height="720" MinWidth="560" MinHeight="420">
-  <Grid ColumnDefinitions="220,*" RowDefinitions="Auto,*">
-    <Border Grid.RowSpan="2" Background="#17212B" Padding="16">
-      <StackPanel Spacing="8">
+        Width="1180" Height="820" MinWidth="700" MinHeight="520">
+  <Grid ColumnDefinitions="190,*">
+    <Border Background="{DynamicResource XY.Color.TextPrimary}" Padding="16">
+      <StackPanel Spacing="10">
         <TextBlock Text="XYUI.Avalonia" Foreground="White" FontSize="20" FontWeight="Bold" />
-        <TextBlock Text="Core Pack 0.1 · R1" Foreground="#B8C7D6" />
-        <TextBlock Text="Foundation" Foreground="#73A7FF" Margin="0,24,0,0" />
-        <TextBlock Text="Text" Foreground="#B8C7D6" />
+        <TextBlock Text="Core Pack 0.1 · R2" Foreground="#B8C7D6" />
+        <TextBlock Text="Controls" Foreground="#73A7FF" Margin="0,22,0,0" />
         <TextBlock Text="Buttons" Foreground="#B8C7D6" />
         <TextBlock Text="Inputs" Foreground="#B8C7D6" />
-        <TextBlock Text="Layout" Foreground="#B8C7D6" />
+        <TextBlock Text="Selection" Foreground="#B8C7D6" />
         <TextBlock Text="Feedback" Foreground="#B8C7D6" />
-        <TextBlock Text="Overlay" Foreground="#B8C7D6" />
+        <TextBlock Text="Density" Foreground="#B8C7D6" />
       </StackPanel>
     </Border>
-    <Border Grid.Column="1" Background="{DynamicResource XY.Color.Surface}" Padding="24">
-      <StackPanel Spacing="4">
-        <TextBlock Text="Foundation" FontSize="28" FontWeight="Bold" />
-        <TextBlock Text="颜色、文字、间距、圆角、边框、状态、Focus 与 Density" Foreground="{DynamicResource XY.Color.TextSecondary}" />
-      </StackPanel>
-    </Border>
-    <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="24">
-      <StackPanel Spacing="16">
+    <ScrollViewer Grid.Column="1" Padding="24">
+      <StackPanel Spacing="18">
+        <StackPanel Spacing="4">
+          <TextBlock Text="Controls Core" FontSize="28" FontWeight="Bold" />
+          <TextBlock Text="真实控件、状态、尺寸与 Density 对比" Foreground="{DynamicResource XY.Color.TextSecondary}" />
+        </StackPanel>
         <Border Classes="xy-card"><StackPanel Spacing="12">
-          <TextBlock Text="Color Tokens" FontSize="18" FontWeight="Bold" />
-          <WrapPanel ItemWidth="180" ItemHeight="72">
-            <Border Background="{DynamicResource XY.Color.SurfaceRaised}" BorderBrush="{DynamicResource XY.Color.Border}" BorderThickness="1" Padding="8"><TextBlock Text="Surface / Raised" /></Border>
-            <Border Background="{DynamicResource XY.Color.Accent}" Padding="8"><TextBlock Text="Accent" Foreground="White" /></Border>
-            <Border Background="{DynamicResource XY.Color.Border}" Padding="8"><TextBlock Text="Border" /></Border>
+          <TextBlock Text="Buttons · 状态" FontSize="18" FontWeight="Bold" />
+          <WrapPanel ItemWidth="120" ItemHeight="44">
+            <xy:XYButton Content="运行" Classes="size-small" />
+            <xy:XYButton Content="保存" Classes="variant-secondary" />
+            <xy:XYToggleButton Content="锁定" IsChecked="True" />
+            <xy:XYIconButton Content="＋" Classes="size-small" />
+            <xy:XYButton Content="禁用" IsEnabled="False" />
           </WrapPanel>
+          <TextBlock Text="悬停、按下、Focus、禁用和 Selected 状态可直接操作查看" Foreground="{DynamicResource XY.Color.TextSecondary}" />
         </StackPanel></Border>
-        <Border Classes="xy-card"><StackPanel Spacing="8">
-          <TextBlock Text="Typography &amp; Density" FontSize="18" FontWeight="Bold" />
-          <TextBlock Text="Default density · Pointer ready" />
-          <TextBlock Text="Compact     Default     Comfortable" Foreground="{DynamicResource XY.Color.TextSecondary}" />
-          <TextBlock Text="Focus token: Accent / 2px" Foreground="{DynamicResource XY.Color.Accent}" />
+        <Border Classes="xy-card"><StackPanel Spacing="12">
+          <TextBlock Text="Inputs · Focus / Error" FontSize="18" FontWeight="Bold" />
+          <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+            <StackPanel Spacing="6"><TextBlock Text="Default" /><xy:XYTextField PlaceholderText="输入内容" /></StackPanel>
+            <StackPanel Spacing="6"><TextBlock Text="Focus" /><xy:XYTextField Text="已聚焦内容" Classes="focus-demo" /></StackPanel>
+            <StackPanel Spacing="6"><TextBlock Text="Error" /><xy:XYNumberField Text="-1" Classes="error" /></StackPanel>
+          </Grid>
+          <TextBlock Text="数值必须大于 0" Foreground="{DynamicResource XY.Color.Error}" />
+        </StackPanel></Border>
+        <Border Classes="xy-card"><StackPanel Spacing="12">
+          <TextBlock Text="Selection · Core" FontSize="18" FontWeight="Bold" />
+          <WrapPanel ItemWidth="150" ItemHeight="38">
+            <xy:XYCheckBox Content="启用预览" IsChecked="True" />
+            <xy:XYRadioButton Content="方案 A" GroupName="plan" IsChecked="True" />
+            <xy:XYRadioButton Content="方案 B" GroupName="plan" />
+            <xy:XYToggleSwitch Content="自动保存" IsChecked="True" />
+            <xy:XYComboBox SelectedIndex="0"><ComboBoxItem Content="方案 A" /><ComboBoxItem Content="方案 B" /></xy:XYComboBox>
+          </WrapPanel>
+          <xy:XYSlider Minimum="0" Maximum="100" Value="62" />
+        </StackPanel></Border>
+        <Border Classes="xy-card"><StackPanel Spacing="12">
+          <TextBlock Text="Density · 真实尺寸对比" FontSize="18" FontWeight="Bold" />
+          <Grid ColumnDefinitions="*,*,*" ColumnSpacing="18">
+            <StackPanel Classes="density-compact" Spacing="6"><TextBlock Text="Compact" FontWeight="Bold" /><xy:XYButton Content="运行" Classes="size-small" /><xy:XYTextField PlaceholderText="Input" Classes="density-compact" /></StackPanel>
+            <StackPanel Spacing="6"><TextBlock Text="Default" FontWeight="Bold" /><xy:XYButton Content="运行" /><xy:XYTextField PlaceholderText="Input" /></StackPanel>
+            <StackPanel Classes="density-comfortable" Spacing="6"><TextBlock Text="Comfortable" FontWeight="Bold" /><xy:XYButton Content="运行" Classes="size-large" /><xy:XYTextField PlaceholderText="Input" Classes="density-comfortable" /></StackPanel>
+          </Grid>
+          <WrapPanel><xy:XYBadge Content="Accent" /><xy:XYTag Content="Token" /><xy:XYTag Content="R2" /></WrapPanel>
         </StackPanel></Border>
       </StackPanel>
     </ScrollViewer>

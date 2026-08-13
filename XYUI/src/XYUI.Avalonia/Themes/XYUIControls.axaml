@@ -1,0 +1,25 @@
+<Styles xmlns="https://github.com/avaloniaui">
+  <Style Selector="Button.xy-button">
+    <Setter Property="Background" Value="{DynamicResource XY.Color.Accent}" /><Setter Property="Foreground" Value="White" />
+    <Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Accent}" /><Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource XY.Radius.Small}" /><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Default}" />
+    <Setter Property="MinHeight" Value="{DynamicResource XY.Control.Height.Default}" /><Setter Property="FontSize" Value="{DynamicResource XY.FontSize.Control}" />
+  </Style>
+  <Style Selector="Button.xy-button:pointerover"><Setter Property="Opacity" Value="0.88" /></Style>
+  <Style Selector="Button.xy-button:pressed"><Setter Property="Opacity" Value="0.72" /></Style>
+  <Style Selector="Button.xy-button:focus"><Setter Property="BorderBrush" Value="{DynamicResource XY.Color.TextPrimary}" /><Setter Property="BorderThickness" Value="2" /></Style>
+  <Style Selector="Button.xy-button:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+  <Style Selector="Button.xy-button.size-small"><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Small}" /><Setter Property="MinHeight" Value="{DynamicResource XY.Control.Height.Small}" /></Style>
+  <Style Selector="Button.xy-button.size-large"><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Large}" /><Setter Property="MinHeight" Value="{DynamicResource XY.Control.Height.Large}" /></Style>
+  <Style Selector="Button.xy-button.variant-secondary"><Setter Property="Background" Value="{DynamicResource XY.Color.SurfaceRaised}" /><Setter Property="Foreground" Value="{DynamicResource XY.Color.TextPrimary}" /><Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Border}" /></Style>
+  <Style Selector="ToggleButton.xy-toggle-button"><Setter Property="Background" Value="{DynamicResource XY.Color.SurfaceRaised}" /><Setter Property="Foreground" Value="{DynamicResource XY.Color.TextPrimary}" /><Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Border}" /><Setter Property="BorderThickness" Value="1" /><Setter Property="CornerRadius" Value="{DynamicResource XY.Radius.Small}" /><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Default}" /></Style>
+  <Style Selector="ToggleButton.xy-toggle-button:checked"><Setter Property="Background" Value="{DynamicResource XY.Color.Accent}" /><Setter Property="Foreground" Value="White" /></Style>
+  <Style Selector="TextBox.xy-text-field"><Setter Property="Background" Value="{DynamicResource XY.Color.SurfaceRaised}" /><Setter Property="Foreground" Value="{DynamicResource XY.Color.TextPrimary}" /><Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Border}" /><Setter Property="BorderThickness" Value="1" /><Setter Property="CornerRadius" Value="{DynamicResource XY.Radius.Small}" /><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Default}" /><Setter Property="MinHeight" Value="{DynamicResource XY.Control.Height.Default}" /></Style>
+  <Style Selector="TextBox.xy-text-field:focus"><Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Accent}" /><Setter Property="BorderThickness" Value="2" /></Style>
+  <Style Selector="TextBox.xy-text-field.error"><Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Error}" /></Style>
+  <Style Selector="TextBox.xy-text-field.density-compact"><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Small}" /><Setter Property="MinHeight" Value="{DynamicResource XY.Control.Height.Small}" /></Style>
+  <Style Selector="TextBox.xy-text-field.density-comfortable"><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Large}" /><Setter Property="MinHeight" Value="{DynamicResource XY.Control.Height.Large}" /></Style>
+  <Style Selector="CheckBox.xy-check-box, RadioButton.xy-radio-button, ToggleSwitch.xy-toggle-switch, ComboBox.xy-combo-box, Slider.xy-slider"><Setter Property="FontSize" Value="{DynamicResource XY.FontSize.Control}" /></Style>
+  <Style Selector="ContentControl.xy-badge"><Setter Property="Background" Value="{DynamicResource XY.Color.Accent}" /><Setter Property="Foreground" Value="White" /><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Small}" /><Setter Property="CornerRadius" Value="{DynamicResource XY.Radius.Small}" /></Style>
+  <Style Selector="ContentControl.xy-tag"><Setter Property="Background" Value="{DynamicResource XY.Color.SurfaceRaised}" /><Setter Property="Foreground" Value="{DynamicResource XY.Color.TextSecondary}" /><Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Border}" /><Setter Property="BorderThickness" Value="1" /><Setter Property="Padding" Value="{DynamicResource XY.Padding.Control.Small}" /><Setter Property="CornerRadius" Value="{DynamicResource XY.Radius.Small}" /></Style>
+</Styles>

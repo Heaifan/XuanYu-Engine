@@ -8,7 +8,20 @@
 - `XYUI/src/XYUI.Avalonia/Foundation/XYThemeVariant.cs` - XYUI 主题变体契约。
 - `XYUI/src/XYUI.Avalonia/Foundation/XYTokens.cs` - Foundation 颜色与尺寸 Token。
 - `XYUI/src/XYUI.Avalonia/Themes/XYUITheme.axaml` - XYUI 主题资源与基础样式。
+- `XYUI/src/XYUI.Avalonia/Themes/XYUIControls.axaml` - Controls Core 状态、尺寸与 Density 样式。
 - `XYUI/src/XYUI.Avalonia/Themes/XYUITheme.cs` - XYUI Avalonia 主题入口。
+- `XYUI/src/XYUI.Avalonia/Controls/XYButton.cs` - XYUI 主按钮。
+- `XYUI/src/XYUI.Avalonia/Controls/XYIconButton.cs` - XYUI 图标按钮。
+- `XYUI/src/XYUI.Avalonia/Controls/XYToggleButton.cs` - XYUI 切换按钮。
+- `XYUI/src/XYUI.Avalonia/Controls/XYTextField.cs` - XYUI 文本输入框。
+- `XYUI/src/XYUI.Avalonia/Controls/XYNumberField.cs` - XYUI 数值输入框。
+- `XYUI/src/XYUI.Avalonia/Controls/XYCheckBox.cs` - XYUI 复选框。
+- `XYUI/src/XYUI.Avalonia/Controls/XYRadioButton.cs` - XYUI 单选框。
+- `XYUI/src/XYUI.Avalonia/Controls/XYToggleSwitch.cs` - XYUI 开关。
+- `XYUI/src/XYUI.Avalonia/Controls/XYComboBox.cs` - XYUI 下拉选择框。
+- `XYUI/src/XYUI.Avalonia/Controls/XYSlider.cs` - XYUI 滑杆。
+- `XYUI/src/XYUI.Avalonia/Controls/XYBadge.cs` - XYUI 徽标。
+- `XYUI/src/XYUI.Avalonia/Controls/XYTag.cs` - XYUI 标签。
 - `XYUI/src/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj` - Gallery 应用项目。
 - `XYUI/src/XYUI.Avalonia.Gallery/App.axaml` - Gallery 应用资源声明。
 - `XYUI/src/XYUI.Avalonia.Gallery/App.axaml.cs` - Gallery 生命周期入口。
@@ -18,6 +31,7 @@
 - `XYUI/tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj` - XYUI Foundation 测试项目。
 - `XYUI/tests/XYUI.Avalonia.Tests/FoundationTokenTests.cs` - Foundation Token 契约测试。
 - `XYUI/tests/XYUI.Avalonia.Tests/GalleryRuntimeTests.cs` - Gallery 主题与主窗口 Headless 启动契约测试。
+- `XYUI/tests/XYUI.Avalonia.Tests/ControlsContractTests.cs` - Controls Core 类型与样式类契约测试。
 
 > 由正式开发工作树的 `git ls-files` 与本轮预提交文件清单重建；每个文件一行职责。
 
