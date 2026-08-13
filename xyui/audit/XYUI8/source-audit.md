@@ -56,7 +56,7 @@
 - 全部 16 项为 `NEW`（XYUI-8 可视化语义层），与 1~6 大量组合，不重新拥有上游 Primitive。
 - 用户已定交互合同（写入 8-16 并全局生效）：`Direct Manipulation + Compact Interaction Bar + Responsive Interaction` 为主，`Contextual Interaction` 仅低频辅助。
 - 预判跨组件裁定点（进入 T4 对账）：8-04 vs XYUI-4 ProgressBar/ProgressRing；8-10 框选 vs XYUI-4 Marquee/Lasso；8-12 vs XYUI-3 Steps；8-15 vs XYUI-1 Tooltip；8-16 视口交互 vs XYUI-5 ViewportContainer；8-01 状态 vs 6-19；8-13 vs 8-04 阈值语义共享；Blender 式工作区内容不在本 Source（视口操作合同归 8-16，工作区布局若出现归 XYUI-5 WorkspaceLayout）。
-- 源缺陷登记：8-10「使用原则」段存在原文复制粘贴错乱（「优先 Plot 不作为所有实验默认图表」「只有当存在两个连续 Bar Chart」），按 A2 先例登记为 `SOURCE_FORMATTING_DEFECT`（SFD），Source 原文不动；意图明确（比较对象数值 → Bar Chart），canonical 按意图落并记录 defect ref。
+- 源缺陷登记：8-10「使用原则」段存在原文复制粘贴错乱（「优先 Plot 不作为所有实验默认图表」「只有当存在两个连续 Bar Chart」），按 A2 先例登记为 `SOURCE_FORMATTING_DEFECT`（SFD，登记 ID：`XYUI8-SFD-001`），Source 原文不动；意图明确（比较对象数值 → Bar Chart），canonical 按意图落并记录 defect ref。
 
 ## 状态
 
