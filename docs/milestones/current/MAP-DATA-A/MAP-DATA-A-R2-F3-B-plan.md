@@ -1,6 +1,6 @@
 # MAP-DATA-A-R2-F3-B · Region Vertex-to-Vertex Snap
 
-状态：`IMPLEMENTED · PRE-GATE PASS`；F3-A 已 CLOSED。本轮只把 F2 Region 顶点拖拽接入 F3-A 局部查询，不重写拖拽、不实现 Edge Snap 或 Road Snap。
+状态：`READY FOR USER ACCEPTANCE`；F3-A 已 CLOSED。本轮只把 F2 Region 顶点拖拽接入 F3-A 局部查询，不重写拖拽、不实现 Edge Snap 或 Road Snap。
 
 ## 冻结范围
 
@@ -17,7 +17,7 @@ Begin、End、Cancel 清理运行时 Snap State；F3-A 的生命周期和 AABB �
 
 ## 自动验证
 
-专项覆盖 16 项核心行为及 10,000 候选结构烟测：滞回、最近点、稳定决胜、当前区域排除、局部 bounds、查询失败、F2 接线、状态清理和候选工作集边界。F3-B 需要 fresh 完整门禁后进入 `READY FOR USER ACCEPTANCE`，不得提前 CLOSED。
+专项覆盖 17 项核心行为及 10,000 候选结构烟测：滞回、最近点、稳定决胜、当前区域排除、局部 bounds、查询失败、F2 接线、状态清理和候选工作集边界。2026-08-13 完整正式门禁全部通过，进入 `READY FOR USER ACCEPTANCE`，不得提前 CLOSED。
 
 ## 明确不做
 

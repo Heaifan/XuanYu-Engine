@@ -72,6 +72,7 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety-acceptance.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-region-pointer-safety-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-A-plan.md` — 项目治理、设计、里程碑或知识文档。
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-acceptance.md` — Region 顶点吸附真机 IPO 验收清单与门禁证据。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-plan.md` — Region 顶点到顶点吸附范围、数据流与验收边界。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md` — 项目治理、设计、里程碑或知识文档。
 - `docs/milestones/current/MAP-DOC-A/MAP-DOC-A-R1-acceptance.md` — 项目治理、设计、里程碑或知识文档。

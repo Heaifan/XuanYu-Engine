@@ -59,6 +59,7 @@
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-plan.md`：R2 总体目标、当前状态与功能边界
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-A-plan.md`：Region 局部派生空间查询合同、规模门禁与自动收口边界
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-plan.md`：Region 顶点到顶点吸附范围、数据流与真机验收边界
+- `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-acceptance.md`：Region 顶点吸附真机 IPO 验收清单与门禁证据
 
 ## UI 规范（docs/ui/，ARCH-UI-SPEC-R1 治理产物）
 

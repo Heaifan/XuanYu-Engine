@@ -18,6 +18,13 @@
 
 ---
 
+## v0.2.28.12-rz · MAP-DATA-A-R2-F3-B FORMAL GATE
+MAP-DATA-A-R2-F3-B（2026-08-13 09:42:36）：F3-B Region Vertex-to-Vertex Snap 完成最终正式门禁，状态进入 `READY FOR USER ACCEPTANCE`。
+- 验证：Solution 串行 Build 0 Warning/0 Error；Core.Tests 339/339；World.Tests 1315/1315；WarCore.Tests 22/22；F3-B 专项 17/17；ARCH-A PASS；43 个 AXAML XML PASS；版本四处一致；`git diff --check` PASS。
+- 结果：本地与远端最终验证对象为 `b987abe`；无临时验证脚本，受保护的 `_tmp_blind_rows/` 未修改；未启动 Edge Snap、Road Snap 或 Topology Weld。
+- 遗留：F3-B 仅等待用户真机 IPO 验收，R2 保持 OPEN；验收清单见 `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F3-B-acceptance.md`。
+- Hash：本条所在提交。
+
 ## v0.2.28.11-fix · R2-F1 RUN.BAT BUILD DISCIPLINE
 R2-F1（2026-08-13）：真机发现 run.bat 并行构建在 16GB 机器上偶发 OutOfMemoryException；A/B 诊断收口（C# 13 / C# 14 隔离构建与 run.bat 同条件全链冷构建均 PASS，非确定性编译器缺陷，仓库无大 switch 不触发 Roslyn #84529）。用户裁决把验证有效的串行构建方式固化进日常入口，统一 run.bat 与正式门禁的构建纪律。
 - 变化：`run.bat` build 调用补 `-m:1 -nr:false`（串行 + 禁 MSBuild 节点复用），与既有 `MSBUILDDISABLENODEREUSE=1`、`-p:UseSharedCompilation=false`、构建前 `dotnet build-server shutdown` 组成完整串行纪律；版本同步 v0.2.28.11-fix。
