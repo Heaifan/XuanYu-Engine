@@ -17,6 +17,7 @@
 - `XYUI/src/XYUI.Avalonia.Gallery/Program.cs` - Gallery 桌面启动入口。
 - `XYUI/tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj` - XYUI Foundation 测试项目。
 - `XYUI/tests/XYUI.Avalonia.Tests/FoundationTokenTests.cs` - Foundation Token 契约测试。
+- `XYUI/tests/XYUI.Avalonia.Tests/GalleryRuntimeTests.cs` - Gallery 主题与主窗口 Headless 启动契约测试。
 
 > 由正式开发工作树的 `git ls-files` 与本轮预提交文件清单重建；每个文件一行职责。
 

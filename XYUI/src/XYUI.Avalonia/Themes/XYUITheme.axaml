@@ -1,5 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:av="using:Avalonia"
+        x:Class="XYUI.Avalonia.Themes.XYUITheme">
   <Styles.Resources>
     <Color x:Key="XY.Color.Surface">#F7F9FC</Color>
     <Color x:Key="XY.Color.SurfaceRaised">#FFFFFF</Color>
@@ -11,8 +13,9 @@
     <x:Double x:Key="XY.Space.2">8</x:Double>
     <x:Double x:Key="XY.Space.3">12</x:Double>
     <x:Double x:Key="XY.Space.4">16</x:Double>
-    <x:Double x:Key="XY.Radius.Small">4</x:Double>
-    <x:Double x:Key="XY.Radius.Medium">8</x:Double>
+    <av:Thickness x:Key="XY.Padding.Card">16</av:Thickness>
+    <av:CornerRadius x:Key="XY.Radius.Small">4</av:CornerRadius>
+    <av:CornerRadius x:Key="XY.Radius.Medium">8</av:CornerRadius>
     <x:Double x:Key="XY.Control.Height.Default">32</x:Double>
   </Styles.Resources>
   <Style Selector="TextBlock">
@@ -24,6 +27,6 @@
     <Setter Property="BorderBrush" Value="{DynamicResource XY.Color.Border}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="{DynamicResource XY.Radius.Medium}" />
-    <Setter Property="Padding" Value="{DynamicResource XY.Space.4}" />
+    <Setter Property="Padding" Value="{DynamicResource XY.Padding.Card}" />
   </Style>
 </Styles>
