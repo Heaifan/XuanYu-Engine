@@ -1,0 +1,14 @@
+{
+  "phase": "XYUI-PILOT-R4-R1",
+  "gap_count": 1,
+  "gaps": [
+    {
+      "gap_id": "XYUI4-GAP-002",
+      "type": "MISSING_TOKEN",
+      "item": "FOCUS_RING_OFFSET",
+      "detail": "4.04 Focus in Selection Context 的 Outer Ring Offset（原稿 2–3 DIP）。Foundation Focus 无 Offset Token。本版不伪造 Canonical Token，由后续 Token Source 阶段登记并裁决。",
+      "occurrences": 1,
+      "blocking": false
+    }
+  ]
+}

@@ -1,0 +1,477 @@
+<!--
+  XYUI-4 canonical spec · XYUI-PILOT-R4 · R1 批次（4.01~4.05）
+  Source: xyui/source/XYUI4/XYUI-4.md (immutable Evidence)
+    bytes: 155526
+    SHA-256: 1d92ca14813ee9377b1a19a9736fdbc3c5226a95dc4ac0815bda50d2e7281bfe
+  Canonical basis: XYUI-0 Foundation Registry (VALIDATED, AMEND-A/B) + A3-R2 Canonical Token Architecture
+  规则: 组件语义保留；Foundation 重复值全部映射 canonical；#hex/px/旧字体/旧命名空间 = 0
+  Amendments: xyui/governance/amendments.md (AMEND-A State Composition / AMEND-B Drag Entry)
+  GAP 标注见 xyui/specs/XYUI4/XYUI-4.gaps.json
+-->
+# XYUI-4 · Selection & Feedback｜选择与反馈（Canonical）
+
+> XYUI-PILOT R4 产物（R1 批次：4.01~4.05）。基于 `xyui/source/XYUI4/XYUI-4.md`（SHA-256: 1d92ca14…）reconciliation。
+> 上位规则：A2 Foundation Registry（VALIDATED，AMEND-A/B）+ A3-R2 Canonical Token Architecture。
+> 本文件中的 `XY.*` 引用全部为 Canonical Token 引用（见 XYUI-4.mapping.json）。
+> 组件职责/结构/交互/变体 = 已定稿，保留原样；Foundation 视觉值 = 引用 XYUI-0，无第二套真值。
+> 本轮范围：4.01~4.05。4.06~4.20 于 R2~R4 批次补齐，R5 全量收口。
+
+- 整理依据
+    - 原始组件设计
+        - XYUI-4.md（4.01~4.05）
+    - 上位规范
+        - XYUI-0.md
+        - XYUI Foundation Registry（含 AMEND-A/B）
+        - A3-R2 Canonical Token Architecture
+    - 整理原则
+        - 保留 XYUI-4 已定稿的组件职责、状态模型、交互与 Variant
+        - 颜色、字体、圆角、边框、Surface、Focus、Hit Target、Motion、Drag、Density、DPI 等 Foundation 规则以上位规范为准
+        - Foundation 已有语义时禁止保留早期十六进制颜色作为第二真值
+        - 所有几何单位统一使用 DIP
+        - Momentary Active 不作为 canonical state；瞬时操作映射 Foundation Pressed / Dragging / Resize 合同
+        - Persistent Active 仅作为 Tool / Mode / Toggle 语义族，引用 XYUI-2 ToggleButton 既有语义
+        - Focus 基础合同归 Foundation；XYUI-4 只定义 Selection 场景 Presentation Variant
+        - 组件独有尺寸、结构参数与阈值可继续作为 Component-Specific Token，但不得成为新的 Foundation 默认值
+        - Light / Dark 由 Foundation Semantic Token 映射，不在组件规范重复硬编码主题色
+
+- Foundation Reconciliation
+    - State Composition（AMEND-A）
+        - ComposeMode = XY.State.ComposeMode（Single = 每视觉通道单一 Primary Owner，非单状态控件）
+        - Layering = XY.State.Layering（Forbidden = 禁同一 Primary Channel 多状态争抢）
+        - Render / Composition Priority = Hover > Selected
+        - Visual Salience / Semantic Ownership = Selected > Hover
+        - Selected = PersistentBaseState（持有主体 Fill / 主 Accent / 持久选中边界）
+        - Hover = 瞬时反馈（可叠加绘制，不得夺取 Selected 主体视觉通道）
+        - Focus = 独立通道（不参与背景状态覆盖链）
+        - Dragging / DropTarget = Independent
+        - Disabled 最高优先级；状态切换不得改变控件尺寸、不得布局跳动（ResizeOnChange = Forbidden）
+    - Typography
+        - UI Font = XY.Font.UI
+        - Font Size / Weight 优先引用 XY.FontSize.* / XY.FontWeight.*
+        - 正文文字默认 XY.Text.Primary；辅助语义 XY.Text.Secondary
+    - Focus
+        - 基础合同引用 XY.Focus.Control.OutlineWidth / XY.Focus.Control.OutlineColor
+        - Keyboard Focus Visible = Required；Focus 独立于 Hover / Selected
+        - XYUI-4 只定义 Selection 场景 Presentation Variant（Dual Ring / Canvas Halo / Input Border Focus）
+        - Focus Offset 无 Foundation Token → [GAP:XYUI4-GAP-002]，不得硬编码第二真值
+    - Drag
+        - 输入合同归 Foundation（Threshold = XY.Drag.Threshold；Cancel = XY.Drag.CancelKey）
+        - Entry = XY.Drag.Entry（Handle | DirectTarget，AMEND-B）
+        - XYUI-4 只负责 Presentation（4.11 批次）
+    - Resize
+        - 基础合同引用 XY.Resize.*（Mode=Semantic / Continuous / Snap）
+        - Handle 命中面积引用 XY.HitTarget.ResizeHandle（SemanticExpanded）
+    - Motion
+        - 颜色短过渡引用 XY.Motion.Fast；普通状态过渡 XY.Motion.Normal
+        - Canvas 高频 PointerMove 场景 XY.Motion.Instant
+        - Reduced Motion 必须保留
+    - Accessibility
+        - 状态不得只靠颜色表达（ColorOnlyState 禁止）
+        - Selected / Error / Warning 需要文字+颜色双通道
+- 已知待后续 Token 层补齐
+    - Contrast / SeparationForeground（4.09 批次使用；已登记于 xyui/audit/XYUI4/conflict-matrix.md）
+    - Focus Ring Offset [GAP:XYUI4-GAP-002]
+    - Marquee / Lasso FillOpacity（4.07 / 4.08 批次使用；已登记于 xyui/audit/XYUI4/conflict-matrix.md）
+
+- 4.01 · HoverState / 悬停状态
+    - 控件定位
+        - 类型
+            - State Pattern / 状态表现模式
+        - 层级
+            - 组合模式层（消费 Foundation Hover 状态与 Token）
+        - 主要用途
+            - 表达指针当前正在指向的可交互对象
+            - 建立操作发生之前的第一层即时反馈
+        - 权威关系
+            - Foundation 拥有 Hover 状态语义与 Hover Token
+            - 本项定义不同对象类型如何消费 Foundation Hover
+    - 核心定义
+        - Hover 表示“当前指针命中”
+        - Hover 不表示“已经选中”、不表示“正在执行”、不表示“拥有键盘焦点”
+        - Hover 不应造成大面积高频闪烁、不应改变布局尺寸、不应导致控件位移
+        - Hover 不应成为唯一的可交互性提示
+    - 最终方案
+        - Contextual Hover / 上下文悬停
+        - 采用统一 Hover Language；不同对象类型允许采用不同视觉表达
+        - 保留 Surface Reveal / Border Reveal / Canvas Outline Reveal
+        - 不采用独立 Accent Hint
+    - Hover Variants
+        - Surface Hover
+            - 普通控件、Tree、List、Menu、Toolbar、Navigation、高密度数据行
+            - 显示浅层 Surface；文字颜色原则上保持不变；不使用强 Accent 色块；不增加明显阴影
+        - Border Hover
+            - Input Field、Inspector Field、Card、Panel 内可交互区域、边界本身具有语义的对象
+            - Surface 基本保持稳定；Border 轻度强化；不得达到 Focus Ring 强度
+        - Outline Hover
+            - Canvas Object、Map Region、Road、Vector Shape、Scene Object、Geometry Element
+            - 强化对象自身几何轮廓；尽量不增加大面积 Fill；轮廓不得强于 Selected Outline
+        - Handle Hover
+            - Vertex、Anchor、Resize Handle、Transform Handle
+            - 允许轻度尺寸增强；允许 Border / Outline 强化；不得使用独立 Accent Tick 或 Accent Bar
+    - 对象映射
+        - Button / Menu Item / Tree Row / List Row / DataGrid Row / Toolbar Item → Surface Hover
+        - Inspector Field / Text Field / Card → Border Hover
+        - Canvas Region / Road / Vector Shape → Outline Hover
+        - Vertex Handle → Handle Hover
+    - 状态组合规则（AMEND-A）
+        - Hover + Selected
+            - Selected 持有主体视觉（主体 Fill / 主 Accent / 持久边界）
+            - Hover 只追加非常轻的二级变化（Render Priority 允许 Hover 叠加绘制，但不得夺取 Selected 主体视觉通道）
+            - 禁止选中对象在 Hover 时看起来像新的状态；Pointer 离开后立即恢复标准 Selected
+        - Hover + Active
+            - Active 优先；Hover 不额外制造第二套强反馈
+        - Hover + Focus
+            - Focus Ring 保持独立；Hover 可叠加轻 Surface 或 Border
+        - Hover + Disabled
+            - Disabled 优先；Disabled 默认不产生 Hover 反馈
+        - Hover + Dragging
+            - Dragging 优先；由 DragFeedback（4.11 批次）接管视觉
+    - 视觉强度
+        - Surface Hover 弱 / Border Hover 弱至中弱 / Outline Hover 中弱
+        - Selected 明显高于全部 Hover Variant（Visual Salience: Selected > Hover）
+    - Canonical Token
+        - XY.HoverState.Surface.Background
+            - Value = XY.State.Color.Hover
+            - 说明
+                - 原稿 #E8F0F3 / #EEF4F6 为同一语义的相邻变体，canonical 收敛为单一 Foundation Token
+                - 层次差异如需保留，作为组件级微调（tuning），不建立第二颜色真值
+        - XY.HoverState.Border.Color
+            - Value = XY.State.Color.Hover
+        - XY.HoverState.Border.Width
+            - Value = XY.Border.Width.Default（1 DIP）
+        - XY.HoverState.Outline.Color
+            - Value = XY.Color.Accent
+        - XY.HoverState.Outline.Width
+            - Type = COMPONENT_SPECIFIC（1.5 DIP）
+        - XY.HoverState.Text.Color
+            - Value = XY.Text.Primary（文字颜色原则上保持不变）
+        - XY.HoverState.Transition
+            - Value = XY.Motion.Fast（80 ms）
+        - XY.HoverState.Shadow
+            - Value = XY.Shadow.None
+        - XY.HoverState.LayoutShift
+            - Value = XY.State.ResizeOnChange（Forbidden）
+    - 禁止事项
+        - 禁止所有 Hover 统一变成明显蓝色块
+        - 禁止使用独立 Accent Bar 作为全局 Hover 母语言
+        - 禁止 Hover 比 Selected 更显眼（视觉显著性）
+        - 禁止 Hover 造成布局跳动 / 普通控件 Hover 大幅缩放
+        - 禁止 Disabled 对象伪装成可操作 Hover
+        - 禁止 Canvas Hover 使用大面积高饱和 Fill
+
+- 4.02 · SelectedState / 选中状态
+    - 控件定位
+        - 类型
+            - State Pattern / 状态表现模式
+        - 层级
+            - 组合模式层（消费 Foundation Selected 状态与 Token）
+        - 主要用途
+            - 表达对象已经被用户明确选择；鼠标移开后持续保留选择结果
+            - 建立 XYUI 全局 Selected Language / 选择语言
+    - 最终方案
+        - Filled Selection + Edge Anchored
+        - Filled Selection 为基础母语言；Edge Anchored 为增强型变体
+        - 不采用纯 Outline Selection 作为全局母规则；不要求所有对象统一显示 Accent Edge
+    - 核心定义
+        - Selected 表示明确且持久的选择结果
+        - Selected 必须明显强于 Hover（Visual Salience）
+        - Selected 不等同 Active / Focus / Checked
+        - Selected 状态在 Pointer 离开后继续保持；不依赖动画才能被识别
+        - 不得只依赖文字颜色变化或极细边框表达
+    - 基础语言
+        - Filled Selection
+            - 通过低饱和 Selected Surface 表达选择范围；文字允许轻度强化
+            - 可配合 Border / Outline；不能使用高饱和整块蓝色；不能压过内容本身
+    - 增强语言
+        - Edge Anchored Selection
+            - 在 Filled Selection 基础上增加稳定边缘锚点；适用于导航与层级列表
+            - Accent Edge 表示持续的当前选择；不用于普通 Hover；不应在所有组件中滥用
+    - 对象映射
+        - Tree Row / List Row / DataGrid Row / Asset Item / Resource Item / Inspector Object → Filled Selection
+        - Navigation Item / Side Navigation → Filled Selection + Edge Anchor
+        - Canvas Region → 轻 Selected Fill + Selected Outline
+        - Road → 必要时强化 Stroke，不强制大面积 Fill
+        - Entity → Selected Surface 或几何高亮，复杂对象允许后续 BoundingBox 补充
+    - 状态组合规则（AMEND-A）
+        - Selected + Hover
+            - Selected 保持主体视觉；Hover 只追加非常轻的二级变化
+            - 不得让选中对象在 Hover 时看起来像新的状态；Pointer 离开后立即恢复标准 Selected
+        - Selected + Focus
+            - Selected Surface 保持；Focus Ring 独立存在；不得用 Selected Surface 代替键盘 Focus
+        - Selected + Active
+            - Selected 身份继续存在；Active 可通过 Press / Drag / Edit Feedback 临时增强；操作结束后恢复 Selected
+        - Selected + Disabled
+            - 允许保留“曾选中”语义时必须降级视觉；不得表现成正常可交互 Selected
+    - 单选规则
+        - 同一 Selection Scope 默认只有一个 Primary Selected；新对象被选中时旧对象退出 Selected
+        - Selection Scope 由组件或编辑器上下文定义
+    - 多选规则
+        - 本项只定义单对象 Selected 母语言；MultiSelection 在 4.05 单独定义
+        - 多选必须继承本项的基本视觉语言
+    - 视觉强度
+        - Hover Surface 弱 / Selected Surface 中等 / Selected Edge 中等偏强
+        - Active Feedback 强于普通 Selected / Focus Ring 独立通道
+    - Canonical Token
+        - XY.SelectedState.Background
+            - Value = XY.State.Color.Selected
+        - XY.SelectedState.BackgroundStrong
+            - Value = XY.State.Color.Selected
+            - 说明
+                - 原稿 #DCEAF0 / #E2EDF1 为同一语义的相邻变体，canonical 收敛为单一 Foundation Token
+        - XY.SelectedState.Text
+            - Value = XY.Text.Primary
+        - XY.SelectedState.Accent
+            - Value = XY.Color.Accent
+        - XY.SelectedState.Edge.Width
+            - Type = COMPONENT_SPECIFIC（3–4 DIP）
+        - XY.SelectedState.Border
+            - Value = XY.Border.Color.Selected
+        - XY.SelectedState.Border.Width
+            - Value = XY.Border.Width.Selected（2 DIP）
+        - XY.SelectedState.Canvas.Fill
+            - Value = XY.Editor.Selection（低透明度 Accent Surface 表达，透明度为组件级微调）
+        - XY.SelectedState.Canvas.Outline
+            - Value = XY.Editor.Selection
+        - XY.SelectedState.Canvas.OutlineWidth
+            - Type = COMPONENT_SPECIFIC（2 DIP）
+        - XY.SelectedState.Shadow
+            - Value = XY.Shadow.None
+        - XY.SelectedState.LayoutShift
+            - Value = XY.State.ResizeOnChange（Forbidden）
+    - 禁止事项
+        - 禁止 Selected 只改变文字颜色 / Selected 与 Hover 使用完全相同强度
+        - 禁止所有选中对象统一增加 Accent Edge / 使用高饱和整块蓝色作为默认 Selected
+        - 禁止选中后发生布局位移 / Selected 取代 Focus Ring
+        - 禁止把临时 Active 状态永久留在 Selected / Canvas Selected 遮挡对象原始信息
+
+- 4.03 · ActiveState / 激活状态（Persistent Active 语义族）
+    - 控件定位
+        - 类型
+            - Semantic Family / 语义族（解释概念，非新 Foundation State）
+        - 层级
+            - 组合模式层（引用 XYUI-2 ToggleButton 等既有 Active 语义）
+        - 主要用途
+            - 解释“对象当前正在持续生效”的语义：当前 Tool / Mode / Toggle / Editing Context
+    - C3 裁定（C-A2）
+        - 不建立 Momentary Active canonical state
+        - 瞬时操作直接映射 Foundation 既有状态
+            - Pointer Down / Button Press → Pressed（XY.State.Color.Pressed）
+            - Drag / 拖动生命周期 → Dragging（XY.State.Dragging，独立状态）
+            - Resize / 尺寸调整 → XY.Resize.* 合同（XYUI.Foundation.ResizeSplitter）
+        - Persistent Active 保留为解释概念，不建立新的 Foundation State；canonical 来源指向既有组件语义
+    - 核心定义
+        - Active 不等于 Selected：Selected = 已经被选择；Active = 当前正在生效或正在被操作
+        - Persistent Active 可以跨越 Pointer 生命周期持续存在；操作结束后不得错误残留瞬时状态
+    - Persistent Active 语义族
+        - 语义范围
+            - 当前 Tool / 当前 Mode / 启用中的 Toggle Tool / 当前编辑上下文 / 持续生效的功能
+        - 上游语义来源
+            - XYUI-2 03 ToggleButton：ON 状态持续显示底部 Action Edge；ON 使用 Active / Selected 语义（XY.ToggleButton.Background.On = XY.State.Color.Active）
+            - XYUI-4 不重复定义该语义，只描述它在 Selection / Editing 场景中的应用模式
+        - 视觉
+            - 采用 Surface Deepen；Surface 强度高于普通 Hover
+            - 允许 Border 轻度强化；不依赖额外图标才能识别；不使用独立 Accent Tick 作为母规则
+    - 对象映射（Persistent Active）
+        - Toggle Button（启用状态）/ Tool Button（当前工具）/ Toolbar Mode（当前模式）
+        - Editor Mode（当前编辑模式）/ Navigation Context（当前正在生效的上下文）
+        - Canvas Tool（区域绘制 / 道路绘制 / 顶点编辑 / 其他持续工具）
+    - 瞬时操作映射表
+        - Button / Icon Button Pointer Down → Pressed
+        - Tree / List Item Drag → Dragging
+        - Canvas Object / Region / Vertex 直接操作 → Dragging（Direct Manipulation，AMEND-B）
+        - Resize Handle → XY.Resize.* 合同
+        - Splitter → XY.Resize.* 合同
+    - 状态生命周期
+        - Default → Hover（Pointer 命中）→ Pressed（Pointer Down）→ Pointer Up 退出 Pressed
+        - 如操作产生选择则保持 Selected
+        - Persistent Active 由工具 / 模式启用产生，直到明确切换或关闭
+    - 组合规则（AMEND-A）
+        - Selected + Active：Selected 表达身份；Active 表达正在操作；允许同时存在；Active 视觉在操作期间高于 Selected；Active 结束后恢复 Selected；不得因此丢失 Selected 身份
+        - Hover + Active：Active 优先；不叠加第二层明显 Hover
+        - Focus + Active：Focus Ring 独立存在；Active 不得替代 Focus
+        - Disabled + Active：Disabled 对象默认不可进入新的 Active；进入 Disabled 时必须正确结束临时操作状态
+        - Persistent Active + Hover：Persistent Active 保持主体；Hover 只能产生极弱变化；Pointer 离开后 Persistent Active 不消失
+        - Pressed / Dragging + Drag：Pointer Down 后可进入 Drag；DragFeedback 在 4.11 批次定义；状态层与操作反馈层分离
+    - 视觉强度
+        - Default 最低 / Hover 弱 / Selected 中 / Persistent Active 中至中强 / Pressed 操作期间明显 / Focus 独立可访问性通道
+    - Canonical Token
+        - XY.ActiveState.Persistent.Background
+            - Value = XY.State.Color.Active
+        - XY.ActiveState.Persistent.Border
+            - Value = XY.State.Color.Active
+        - XY.ActiveState.Persistent.Text
+            - Value = XY.Text.Primary
+        - XY.ActiveState.Pressed.Background
+            - Value = XY.State.Color.Pressed
+        - XY.ActiveState.Pressed.Border
+            - Value = XY.State.Color.Pressed
+        - XY.ActiveState.Pressed.Offset
+            - Value = 0（Pressed / Inset 表达，不位移）
+        - XY.ActiveState.Pressed.Scale
+            - Value = 1.0
+        - XY.ActiveState.Shadow
+            - Value = XY.Shadow.None
+        - XY.ActiveState.LayoutShift
+            - Value = XY.State.ResizeOnChange（Forbidden）
+        - 说明
+            - 原稿 Active.Persistent.*（#CBDDE5 / #7EA8B9 / #244E60）与 Active.Momentary.*（#C3D7E0 / #698F9F）全部收敛为 Foundation 状态 Token；Momentary 视觉语义由 Pressed 承载
+    - 禁止事项
+        - 禁止把 Selected 和 Active 当成同一个状态
+        - 禁止 Persistent Active 依赖 Pointer Hover / Pointer Up 后残留瞬时状态
+        - 禁止普通 Button Active 产生明显跳动 / 使用大幅缩放制造按压感
+        - 禁止所有 Active 统一增加 Accent 标记 / Active 取代 Focus Ring
+        - 禁止 Disabled 控件进入新的 Active
+        - 禁止为 Resize 等操作临时创造 Active 兜底状态（引用 XY.Resize.*）
+
+- 4.04 · Focus in Selection Context / 选择上下文中的焦点
+    - 控件定位
+        - 类型
+            - Presentation Variant / 场景表现变体
+        - 层级
+            - 组合模式层（消费 Foundation Focus 合同）
+        - 主要用途
+            - 定义 Focus 在 Selection / Canvas / 输入场景中的呈现方式
+        - 权威关系（C-A3 裁定）
+            - Foundation 独占：Focus 语义、基础 Focus Ring、核心 Focus Token、状态与优先级
+            - XYUI-4 只负责：Selection 场景的 Presentation Variant，不重新定义 Focus 基础规范
+    - 核心定义
+        - Focus 表示当前键盘输入目标；不等于 Hover / Selected / Active
+        - Focus 可以和 Selected / Active 同时存在；必须能够脱离鼠标独立存在
+        - Focus 不允许仅靠颜色深浅表达
+    - Focus 来源（继承 Foundation）
+        - Keyboard Focus：Tab / Shift+Tab / 方向键 / 程序化焦点移动
+        - Pointer Focus：点击输入控件或可聚焦组件后获得焦点
+        - Programmatic Focus：错误定位 / 自动进入编辑 / 快捷键跳转 / 对话框默认焦点
+        - 键盘导航时必须显示（FocusVisible）；鼠标点击后默认不持续显示 Ring（XY.Focus.Mouse.PersistentRing = False）
+    - 基础视觉（引用 Foundation，不重定义）
+        - Ring Width = XY.Focus.Control.OutlineWidth（2 DIP）
+        - Ring Color = XY.Focus.Control.OutlineColor
+        - Ring 不覆盖组件内部 Selected Surface、不覆盖组件原始 Border、保证与 Hover Border 区分
+    - Presentation Variant（XYUI-4 保留的增值，仅定位为场景变体）
+        - Dual Ring / 双环
+            - 结构：Inner Border 表达组件自身交互状态；Outer Ring 表达 Keyboard Focus
+            - 适用：高无障碍要求场景、Selected + Focus 容易混淆场景、复杂输入组件、高风险操作入口
+            - 不得所有控件默认使用双环；避免小尺寸 UI 过重
+        - Canvas Halo / 画布光晕
+            - Canvas Handle / Vertex 使用 Halo / Ring 表达 Focus
+            - 复杂 Canvas Object：Focus 优先落在当前可操作 Handle，不强制给整个巨大对象增加粗焦点框
+        - Input Border Focus / 输入控件边界强化
+            - Text Field / Number Field / Date Picker / Combo 内部 Border 强化，表示当前编辑入口
+            - 允许同时存在 Outer Ring
+    - 组合规则
+        - Focus + Selected：Selected 保持对象身份；Focus Ring 独立叠加；不得使用 Selected Surface 代替 Focus；不得因为 Focus 而移除 Selected
+        - Focus + Hover：Focus 保持主体识别；Hover 只允许弱辅助变化；不得出现两个同强度 Border 争抢
+        - Focus + Active：Active 表达当前操作；Focus 表达键盘目标；两者允许同时存在；Active 结束后 Focus 可以继续保留
+        - Focus + Disabled：Disabled 控件默认不可获得新的交互 Focus；程序化 Focus 必须避免停留在不可操作对象
+    - 视觉强度
+        - Hover Border 弱 / Selected Surface 中 / Focus Ring 中强且独立 / Active 根据操作状态变化
+    - Canonical Token
+        - XY.SelectionFocus.Ring.Color
+            - Value = XY.Focus.Control.OutlineColor
+        - XY.SelectionFocus.Ring.Width
+            - Value = XY.Focus.Control.OutlineWidth（2 DIP）
+        - XY.SelectionFocus.Ring.Offset
+            - Type = GAP → [GAP:XYUI4-GAP-002]（原稿 2–3 DIP；Foundation 无 Offset Token；禁止硬编码第二真值）
+        - XY.SelectionFocus.InputBorder.Color
+            - Value = XY.Border.Color.Focus
+        - XY.SelectionFocus.InputBorder.Width
+            - Type = COMPONENT_SPECIFIC（1.5–2 DIP）
+        - XY.SelectionFocus.Dual.OuterColor
+            - Value = XY.Focus.Control.OutlineColor
+        - XY.SelectionFocus.Dual.InnerColor
+            - Value = XY.Border.Color.Focus
+        - XY.SelectionFocus.Shadow
+            - Value = XY.Shadow.None
+        - XY.SelectionFocus.LayoutShift
+            - Value = XY.State.ResizeOnChange（Forbidden）
+    - 禁止事项
+        - 禁止 Focus 只改变文字颜色 / 用 Hover Border 直接充当 Focus / 用 Selected Surface 取代 Focus
+        - 禁止 Focus Ring 造成布局尺寸变化 / 所有小控件默认使用双环
+        - 禁止 Canvas 大对象强制套厚重外框 / 键盘导航时隐藏 Focus
+        - 禁止 Disabled 控件表现成正常可聚焦对象
+
+- 4.05 · MultiSelection / 多选状态
+    - 控件定位
+        - 类型
+            - Selection Pattern / 选择模式
+        - 层级
+            - 组合模式层（继承 4.02 SelectedState 母语言）
+        - 主要用途
+            - 表达多个对象同时处于 Selected 状态；支持追加 / 范围 / 框选 / 套索选择；支持批量编辑
+    - 最终方案
+        - Contextual MultiSelection；Primary + Secondary；Conditional Group Halo / Group Bounds
+        - 方案2定义 Primary / Secondary 层级；方案3作为整体操作时的条件型反馈；不采用 Uniform Multi 作为默认规则
+    - 核心原则
+        - 所有被选对象都必须保持明确 Selected 身份
+        - Primary Selection 默认唯一；Secondary Selection 可以有多个；同属一个 Selection Set
+        - 多选视觉继承 4.02 SelectedState；Primary 必须比 Secondary 更明确；Secondary 不得弱到近似 Hover
+        - 普通多选不默认持续显示大型 Group Bounds；Group Bounds 只在整体操作有实际意义时出现
+    - Primary Selection
+        - 定义：当前多选集合中的主要对象（通常是最后明确点击或指定的对象）
+        - 可能承担：Inspector 主对象 / Gizmo Anchor / Pivot 参考 / 对齐基准 / 属性差异比较基准
+        - 视觉：完整 Selected Surface；允许 Selected Edge Anchor；Canvas 使用更明确 Selected Outline；文字允许轻度强化
+    - Secondary Selection
+        - 定义：已选中但不是当前 Primary 的对象；继续属于有效 Selection Set
+        - 视觉：使用弱化 Selected Surface / Border / Outline；不得使用与 Hover 相同视觉；不得因弱化而失去已选识别度
+    - Primary 产生规则
+        - 单击一个对象 → 该对象成为 Primary
+        - Ctrl / Cmd + 单击未选对象 → 加入 Selection Set，新加入对象默认可成为 Primary
+        - Ctrl / Cmd + 单击已选对象 → 从 Selection Set 移除；若移除 Primary，由组件策略指定新的 Primary
+        - Shift 范围选择 → 保留明确的 Anchor / Primary 语义
+        - Marquee / Lasso → 产生 Selection Set（4.07 / 4.08 批次）；Primary 规则由编辑器上下文决定；允许使用最近活动对象作为 Primary
+    - Selection Set
+        - 包含：一个 Primary + 零个或多个 Secondary
+        - 空集合 = 无 Selected；单对象集合 = 退化为普通 Selected；多对象集合 = 进入 MultiSelection
+    - 场景规则
+        - Tree / List：Primary 完整 Filled Selection（允许 Edge Anchor）；Secondary 较弱 Filled Selection；Shift Range 连续选择；Ctrl / Cmd Toggle 非连续选择
+        - DataGrid：Row / Cell MultiSelection 使用 Selected Surface；Primary Cell 允许 Primary Border；Focus 仍由 4.04 独立表达；禁止把 Focus Cell 当成唯一 Selected Cell
+        - Asset Grid：Primary 较强 Border；Secondary 较弱 Surface / Border
+        - Canvas：Primary 完整 Selected Fill / Outline；Secondary 较弱 Fill / Outline；多个对象默认不持续显示整体大框
+    - Group Halo / Group Bounds
+        - 定位：条件型 MultiSelection Feedback，不是普通多选的常驻装饰
+        - 显示场景：Group Move / Scale / Rotate / Transform、整体对齐、整体 Bounding 操作
+        - 隐藏场景：仅查看多选结果、普通批量属性编辑、不需要整体几何范围的命令
+        - 表现：低干扰整体范围框；可使用虚线或轻实线；不得遮盖对象细节；不得覆盖个体 Selected 语言
+    - 组合规则（C-A2 已清理 Momentary Active 依赖）
+        - MultiSelection + Hover：Primary Hover 保持 Primary 视觉；Secondary Hover 保持 Selected 身份并允许轻度增强提示当前命中；未选对象 Hover 使用 4.01 HoverState
+        - MultiSelection + Focus：Focus 可位于 Primary 或 Secondary；采用独立 Focus Ring；不得因为 Focus 改变 Selection Set
+        - MultiSelection + Active：当前被直接操作对象进入 Pressed / Dragging（Foundation 状态）；整个 Selection Set 仍保持选中；整体 Transform 时 Selection Set 进入 Group Operation Context，Group Bounds 可显示
+        - MultiSelection + Disabled：不可操作对象是否允许进入 Selection Set 由具体组件语义决定；若允许被选中，必须表现 Disabled + Selected，不得伪装成正常可编辑对象
+    - Inspector 规则
+        - 单选：显示该对象属性
+        - 多选：允许显示 Selected Count / 共有属性 / Mixed Value / Primary 对象信息
+        - 具体 Inspector 交互由后续复杂组件规范定义
+    - 视觉强度
+        - Hover 弱 / Secondary Selected 中弱 / Primary Selected 中 / Group Bounds 中弱且结构化 / Active Transform 操作期间增强
+    - Canonical Token
+        - XY.MultiSelection.Primary.Background
+            - Value = XY.State.Color.Selected
+        - XY.MultiSelection.Primary.Text
+            - Value = XY.Text.Primary
+        - XY.MultiSelection.Primary.Border
+            - Value = XY.Editor.Selection
+        - XY.MultiSelection.Primary.Edge
+            - Value = XY.Editor.Selection
+        - XY.MultiSelection.Secondary.Background
+            - Value = XY.Editor.MultiSelection
+        - XY.MultiSelection.Secondary.Text
+            - Value = XY.Text.Primary
+        - XY.MultiSelection.Secondary.Border
+            - Value = XY.Editor.MultiSelection
+        - XY.MultiSelection.Canvas.PrimaryOutline
+            - Value = XY.Editor.Selection
+        - XY.MultiSelection.Canvas.SecondaryOutline
+            - Value = XY.Editor.MultiSelection
+        - XY.MultiSelection.GroupBounds
+            - Value = XY.Editor.MultiSelection
+        - XY.MultiSelection.GroupBounds.Width
+            - Type = COMPONENT_SPECIFIC（1–1.5 DIP）
+        - XY.MultiSelection.GroupBounds.Style
+            - Type = COMPONENT_SPECIFIC（Solid 或 Dash 由上下文决定）
+        - XY.MultiSelection.LayoutShift
+            - Value = XY.State.ResizeOnChange（Forbidden）
+    - 禁止事项
+        - 禁止所有多选对象完全相同而无法识别 Primary / Secondary 弱化到近似 Hover
+        - 禁止 Primary 使用与 Active 相同的瞬时视觉 / 普通多选默认常驻巨大 Group Bounds
+        - 禁止 Group Bounds 替代个体 Selected / 多选状态覆盖 Focus Ring
+        - 禁止点击 Secondary 时意外清空整个 Selection Set / 仅靠文字标记 Primary

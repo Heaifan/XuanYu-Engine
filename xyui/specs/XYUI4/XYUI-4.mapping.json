@@ -1,0 +1,330 @@
+{
+  "mapping_version": "0.1.0",
+  "phase": "XYUI-PILOT-R4-R1",
+  "scope": "4.01~4.05（R2~R4 批次续补）",
+  "source": {
+    "path": "xyui/source/XYUI4/XYUI-4.md",
+    "bytes": 155526,
+    "sha256": "1d92ca14813ee9377b1a19a9736fdbc3c5226a95dc4ac0815bda50d2e7281bfe"
+  },
+  "canonical_basis": {
+    "foundation_registry": "xyui/registry/foundation/foundation-registry.json (VALIDATED, AMEND-A/B)",
+    "token_architecture": "xyui/tokens/architecture/token-canonical-map.json (A3-R2)"
+  },
+  "global_rules_applied": [
+    "State Composition（AMEND-A）= 每视觉通道单一 Primary Owner；Render Priority Hover>Selected；Visual Salience Selected>Hover",
+    "State Color = XY.State.Color.*（原稿 #hex 全部收敛，0 第二真值）",
+    "Focus = XY.Focus.Control.*；XYUI-4 只定义 Presentation Variant（C-A3）",
+    "Momentary Active 不作为 canonical state → Pressed / Dragging / XY.Resize.*（C-A2）",
+    "Persistent Active = 语义族，引用 XYUI-2 ToggleButton ON 语义（C-A2）",
+    "Drag Entry = XY.Drag.Entry（Handle|DirectTarget，AMEND-B）",
+    "Motion = XY.Motion.*（Fast 80ms / Normal 140ms / Instant 0ms）；无任意 ms magic number",
+    "Border = XY.Border.Color.* / XY.Border.Width.*；Shadow = XY.Shadow.*",
+    "Text = XY.Text.Primary / Secondary；Font = XY.Font.UI + XY.FontSize.* / XY.FontWeight.*",
+    "LayoutShift = XY.State.ResizeOnChange（Forbidden）"
+  ],
+  "components": [
+    {
+      "component_id": "XYUI-4-4.01",
+      "name": "HoverState",
+      "title": "HoverState / 悬停状态",
+      "ref_count": 10,
+      "refs": [
+        {
+          "property": "Surface Background（原稿 #E8F0F3/#EEF4F6 收敛）",
+          "value": "XY.State.Color.Hover",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Border Color（原稿 #7EA8B9）",
+          "value": "XY.State.Color.Hover",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Border Width（原稿 1px）",
+          "value": "XY.Border.Width.Default",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Outline Color（原稿 #326F8A）",
+          "value": "XY.Color.Accent",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Outline Width（原稿 1.5px）",
+          "value": "1.5 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Text Color（原稿 #243744，文字原则上不变）",
+          "value": "XY.Text.Primary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Transition（原稿 80ms–120ms）",
+          "value": "XY.Motion.Fast",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift（原稿 0）",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "状态组合规则",
+          "value": "XY.State.ComposeMode / XY.State.Layering（AMEND-A）",
+          "kind": "CANONICAL_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.02",
+      "name": "SelectedState",
+      "title": "SelectedState / 选中状态",
+      "ref_count": 11,
+      "refs": [
+        {
+          "property": "Background（原稿 #DCEAF0/#E2EDF1 收敛）",
+          "value": "XY.State.Color.Selected",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Text（原稿 #244E60）",
+          "value": "XY.Text.Primary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Accent（原稿 #326F8A）",
+          "value": "XY.Color.Accent",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Edge Width（原稿 3px–4px）",
+          "value": "3–4 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Border（原稿 #7EA8B9）",
+          "value": "XY.Border.Color.Selected",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Border Width（原稿 1px–2px）",
+          "value": "XY.Border.Width.Selected",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Canvas Fill / Outline（原稿 #326F8A 低透明）",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Canvas OutlineWidth（原稿 2px）",
+          "value": "2 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "单选规则（Selection Scope 单 Primary）",
+          "value": "本项定义；4.05 继承",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.03",
+      "name": "ActiveState",
+      "title": "ActiveState / 激活状态（Persistent Active 语义族）",
+      "ref_count": 10,
+      "refs": [
+        {
+          "property": "Persistent Background/Border（原稿 #CBDDE5/#7EA8B9）",
+          "value": "XY.State.Color.Active",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Persistent Text（原稿 #244E60）",
+          "value": "XY.Text.Primary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Pressed Background/Border（原稿 #C3D7E0/#698F9F）",
+          "value": "XY.State.Color.Pressed",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Momentary Active 删除 → Pointer Down/Press",
+          "value": "Pressed（Foundation 状态）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Momentary Active 删除 → Drag",
+          "value": "XY.State.Dragging（Independent）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Momentary Active 删除 → Resize",
+          "value": "XY.Resize.*（Foundation ResizeSplitter 合同）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Persistent Active 语义族来源",
+          "value": "XYUI-2 03 ToggleButton（XY.ToggleButton.Background.On = XY.State.Color.Active）",
+          "kind": "NAMESPACE_REF"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift / Pressed.Offset / Scale",
+          "value": "XY.State.ResizeOnChange / 0 / 1.0",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "C-A2 裁定落实",
+          "value": "xyui/governance/amendments.md + conflict-matrix.md",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.04",
+      "name": "SelectionContextFocus",
+      "title": "Focus in Selection Context / 选择上下文中的焦点",
+      "ref_count": 10,
+      "refs": [
+        {
+          "property": "Ring Color（原稿 #326F8A）",
+          "value": "XY.Focus.Control.OutlineColor",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Ring Width（原稿 2px，与 Foundation 一致）",
+          "value": "XY.Focus.Control.OutlineWidth（2 DIP）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Ring Offset（原稿 2px–3px）",
+          "value": "GAP:XYUI4-GAP-002",
+          "kind": "GAP"
+        },
+        {
+          "property": "Input Border Color（原稿 #326F8A）",
+          "value": "XY.Border.Color.Focus",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Input Border Width（原稿 1.5px–2px）",
+          "value": "1.5–2 DIP",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "Dual Ring Outer/Inner（原稿 #AFC7D1/#326F8A）",
+          "value": "XY.Focus.Control.OutlineColor / XY.Border.Color.Focus",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "鼠标点击后 Ring 策略",
+          "value": "XY.Focus.Mouse.PersistentRing（False）",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Shadow",
+          "value": "XY.Shadow.None",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "C-A3 裁定落实（Presentation Variant）",
+          "value": "Dual Ring / Canvas Halo / Input Border Focus 仅场景变体",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    },
+    {
+      "component_id": "XYUI-4-4.05",
+      "name": "MultiSelection",
+      "title": "MultiSelection / 多选状态",
+      "ref_count": 10,
+      "refs": [
+        {
+          "property": "Primary Background（原稿 #DCEAF0）",
+          "value": "XY.State.Color.Selected",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Primary Text（原稿 #244E60）",
+          "value": "XY.Text.Primary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Primary Border / Edge（原稿 #326F8A）",
+          "value": "XY.Editor.Selection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Secondary Background/Border（原稿 #EAF1F4/#7EA8B9）",
+          "value": "XY.Editor.MultiSelection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Secondary Text（原稿 #435A67）",
+          "value": "XY.Text.Primary",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Canvas Primary/Secondary Outline",
+          "value": "XY.Editor.Selection / XY.Editor.MultiSelection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "GroupBounds（原稿 #7EA8B9）",
+          "value": "XY.Editor.MultiSelection",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "GroupBounds Width / Style（原稿 1px–1.5px）",
+          "value": "1–1.5 DIP / Solid|Dash",
+          "kind": "COMPONENT_SPECIFIC"
+        },
+        {
+          "property": "LayoutShift",
+          "value": "XY.State.ResizeOnChange",
+          "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "Momentary Active 依赖清理（C-A2）",
+          "value": "直接操作对象 → Pressed / Dragging；Group Transform → Group Operation Context",
+          "kind": "NAMESPACE_REF"
+        }
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "gap_id": "XYUI4-GAP-002",
+      "type": "MISSING_TOKEN",
+      "scope": "XY.SelectionFocus.Ring.Offset（4.04）"
+    }
+  ]
+}
