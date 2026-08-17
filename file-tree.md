@@ -2446,3 +2446,14 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/BrushRuntimeTests.cs` — 主题字典 key/类型/值/重复/缺失测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SecondTruthTests.cs` — 防回潮：未登记 hex 扫描 + AXAML 资源引用可解析。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/GallerySmokeTests.cs` — App 资源、窗口标题、色板覆盖 Headless 冒烟。
+- `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTypographyTokens.cs` — Typography token 权威常量表（字体/字号/字重/行高/字距，转录 token-canonical-map.json）。
+- `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTypography.cs` — Typography 基础资源字典构建（31 个 XY.Font*/XY.FontSize*/XY.FontWeight*/XY.LineHeight*/XY.LetterSpacing* 资源）。
+- `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTextStyles.cs` — 语义文本样式类（代码构建 9 角色 xyui-text-*/xyui-heading-*，颜色消费 R3-F1 Brush）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/TypographyCatalog.cs` — Typography 规范页数据（FontFamily/Size/LineHeight/Weight 分区）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/TypographyViewModel.cs` — Typography 规范页数据模型（x:DataType 编译绑定）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographyView.axaml` — Typography 规范页视图（token 表数据驱动 + 滚动）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographyView.axaml.cs` — Typography 规范页代码隐藏。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographySamplesView.axaml` — Typography 消费示例（Heading/Body/Label/Caption/Mono/信息等级/高密度对照）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographySamplesView.axaml.cs` — Typography 消费示例代码隐藏。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/TypographyTokenTests.cs` — Typography 常量与 token-canonical-map.json 逐条对照。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/TypographyRuntimeTests.cs` — Typography 资源/语义样式类在真实 TextBlock 上的应用测试。

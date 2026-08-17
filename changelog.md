@@ -18,13 +18,22 @@
 
 ---
 
+## XYUI.AVALONIA-R3-F2 · Typography Foundation
+XYUI.Avalonia 第二轮（2026-08-17 18:07:18）：把 XYUI Canonical Typography（字体/字号/字重/行高/字距/语义角色）落进 Avalonia Runtime，并通过 Gallery 真机验证。
+- 变化：T0 R3-F1 正式 `CLOSED`（用户验收 7/7 PASS，基线 `22325d6`）+ Gallery 消费示例页滚动基线修正（TabItem 外层统一 ScrollViewer，view 内部不再嵌套）；T1 从 registry/tokens/XYUI-1 canonical 提取 Typography 唯一真值（Font.UI=Source Han Sans SC / Font.Mono=Source Code Pro / Fallback.CJK / Fallback.Mono；字号 8 档 12~24 DIP；字重 4 档 400/500/600/700；行高 8 组成对；字距 5 档；9 语义角色 Text/Label/Caption/SectionTitle/Heading.PanelTitle/Heading.PageTitle/Link/CodeText/MonoText）；G1 `XyuiTypographyTokens` 常量表 + `XyuiTypography.CreateResources()`（31 个基础资源并入主题字典）；G2 `XyuiTextStyles.Create()` 代码构建 9 个语义样式类（`xyui-text-*` / `xyui-heading-*`，Setter 消费 R3-F1 Brush，禁止第二套颜色真值）；G3 Gallery 新增 Typography 规范页 + TypographySamplesView（真实 Heading/Body/Label/Caption/Mono/信息等级对照/Compact 高密度对照）+ 全部消费示例改用 Classes 语义类（0 手写 FontSize/FontFamily/FontWeight 字面量）。
+- 验证：XYUI.Avalonia Build 0W0E；XYUI.Avalonia.Tests 24/24（含 TypographyToken 对照 5 + TypographyRuntime 5）；Gallery Visible Smoke PASS（真实进程窗口标题正确）；玄域 Solution Build 0 错误；Core 339/339、World 1286/1286、WarCore 22/22；ARCH-A + 5+100 PASS（实现线最大 82 行）；git diff --check PASS。
+- 治理：Numeric 无独立 canonical 定义 → 不创造 Token，数值显示走 MonoText/CodeText（登记后续需求）；AXAML 编译绑定需具名 x:DataType（匿名类型不可用，引入 TypographyViewModel）；**Styles axaml 运行时加载在 Headless 下进程级崩溃 → 改代码构建（经验沉淀，详见 R3-F2 报告）**。
+- Hash：实现提交 `1265b35351278e8b53ab795e0acf457b3de4550c`。
+- 遗留：R3F2-M01~M08 真机验收待用户；字体随包分发与 License 策略（canonical Font.Policy：CommercialOnly=True / BundleLicense=Required，Source Han Sans SC 与 Source Code Pro 未随包）待 R3-Z 前处理；Dark 主题切换 UI 未做。
+
 ## XYUI.AVALONIA-R3-F1 · Color Foundation Bootstrap
 XYUI.Avalonia 第一个实现轮（2026-08-17 17:01:22）：把 XYUI Canonical 颜色体系以可消费、可测试、可运行、可视觉验收的形式落进 Avalonia。
 - 变化：T0 同步 feat/XYUI-A `1258117→173749b`（10 提交：XYUI-6/7/8 canonical + cross-audit + pack 更新；registry/tokens 未动，Foundation Ownership 不变）；G1 建立 `xyui/avalonia/` 三项目骨架（XYUI.Avalonia 库 + Gallery + Tests，独立 slnx，未改玄域主 slnx）；G2 实现 83 个唯一颜色 token 权威表（8 家族 partial，转录 token-canonical-map.json）+ XyuiTheme Light/Dark 双主题 ResourceDictionary（86 对 canonical 值全部成对，无伪造 Dark）；G3 Color Foundation Gallery（色板 Tab 数据驱动 8 家族 + 消费示例 Tab 全 DynamicResource）+ 13 项测试（Canonical 对照 / 主题字典 key 与类型 / 防回潮未登记 hex / AXAML 引用可解析 / Gallery Headless Smoke）。
 - 验证：XYUI.Avalonia Build 0W0E；XYUI.Avalonia.Tests 13/13；Gallery Visible Smoke PASS（真实进程启动、窗口标题正确）；玄域 Solution Build 0 错误；Core 339/339、World 1286/1286、WarCore 22/22；ARCH-A + 5+100 PASS；git diff --check PASS。
 - 治理：5+100（实现线最大文件 69 行）；Conflict Zero（changed paths ⊆ xyui/**）；玄域主 slnx 与玄域代码零改动；AXAML 全 DynamicResource 消费、零 raw hex。
 - Hash：实现提交 `3368656a68ac93b7b23d1497d24169b8c5ffd71c`。
-- 遗留：R3F1-M01~M07 真机验收待用户（IPO 清单见轮次报告）；Dark 主题切换 UI 未做（XyuiTheme.CreateDark + 测试已备，R3-F2 再议）；XYUI 规范线（xyui/source 等）未登记 file-tree 为既有事实，本轮仅登记 xyui/avalonia/**。
+- 状态：`CLOSED`（2026-08-17 用户真机验收 R3F1-M01~M07 7/7 PASS，基线 `22325d6`；Gallery「消费示例」页滚动基线修正移交 R3-F2 T0）。
+- 遗留：Dark 主题切换 UI 未做（XyuiTheme.CreateDark + 测试已备，R3-F2 再议）；XYUI 规范线（xyui/source 等）未登记 file-tree 为既有事实，本轮仅登记 xyui/avalonia/**。
 
 ## v0.2.28.7-rz · MAP-DATA-A-R2-F2 CLOSED
 MAP-DATA-A-R2-F2 Geometry Vertex Editing Closeout（2026-08-12 23:22:05）：用户完成 C01～C07 真机验收并全部 PASS；本轮仅同步关闭结论，不修改功能实现。
