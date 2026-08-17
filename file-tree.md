@@ -2410,3 +2410,39 @@
 - `XuanYu.World.Tests/UiTokens/UiLayerDeleteDialogContractTests.cs` — 独立删除确认窗口、Owner 模态与安全默认值源码合同。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-F2-F1-visible-delete-dialog.md` — Native HWND airspace 根因、最小修复和范围冻结记录。
 - `docs/milestones/current/MAP-DATA-A/MAP-DATA-A-R2-F2-F2-F1-acceptance.md` — Visible Delete Dialog 中文 IPO 真机验收清单。
+
+## xyui/avalonia · XYUI.Avalonia 实现线（R3-F1）
+
+- `xyui/avalonia/XYUI.Avalonia.slnx` — XYUI.Avalonia 独立解决方案（库/Gallery/Tests 三项目）。
+- `xyui/avalonia/src/XYUI.Avalonia/XYUI.Avalonia.csproj` — XYUI.Avalonia 库项目文件（Avalonia 12.0.4）。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorToken.cs` — Canonical 颜色 token 记录（id + Light/Dark 成对解析与 Color 转换）。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.cs` — 颜色 token 权威表聚合（83 唯一 id、BrushKey、TryFind）。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Core.cs` — XY.Color.* CorePalette 母版 10 色。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Text.cs` — XY.Text.* 文本色 6 色。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Surface.cs` — XY.Surface.* 十档背景层级。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Border.cs` — XY.Border.Color.* 与 XY.Divider.* 6 色。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Accent.cs` — XY.Accent.*/Tool/Button/Tag 6 色。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.State.cs` — XY.State.* 交互状态与 Disabled/ReadOnly/Locked 三态 17 色。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Semantic.cs` — XY.Semantic.* 语义四态三通道 12 色。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Editor.cs` — XY.Editor.* 编辑器专用 16 色。
+- `xyui/avalonia/src/XYUI.Avalonia/Theme/XyuiTheme.cs` — Light/Dark 双主题 ResourceDictionary 构建器（canonical 成对值）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj` — Gallery 可执行项目文件。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Program.cs` — Gallery 入口（平台检测启动）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml` — Gallery 应用样式根（FluentTheme）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml.cs` — 应用初始化：合并 Light 主题字典并挂主窗口。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml` — 主窗口：色板 Tab（数据驱动 8 家族）+ 消费示例 Tab。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml.cs` — 主窗口数据模型（具名 MainWindowModel，x:DataType 编译绑定）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/PaletteCatalog.cs` — 色板数据模型（家族分组 + swatch 项）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml` — 消费示例：Surface/Text/Border/Accent 的 DynamicResource 用法。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml.cs` — 消费示例视图代码隐藏。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml` — 消费示例：State/Semantic/Disabled 三态的 DynamicResource 用法。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml.cs` — 状态示例视图代码隐藏。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj` — 测试项目文件（xunit + Avalonia.Headless 12.0.4）。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiHeadlessFixture.cs` — Headless 会话夹具（独立 UI 线程 dispatch）。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiTestAppBuilder.cs` — Headless App 构建器（复用 Gallery App）。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiHeadlessCollection.cs` — Headless 串行 collection 定义（禁并行）。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/SkeletonTests.cs` — 骨架引用链与 BrushKey 命名测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/CanonicalAlignmentTests.cs` — token 表与 token-canonical-map.json 逐条对照。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/BrushRuntimeTests.cs` — 主题字典 key/类型/值/重复/缺失测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/SecondTruthTests.cs` — 防回潮：未登记 hex 扫描 + AXAML 资源引用可解析。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/GallerySmokeTests.cs` — App 资源、窗口标题、色板覆盖 Headless 冒烟。
