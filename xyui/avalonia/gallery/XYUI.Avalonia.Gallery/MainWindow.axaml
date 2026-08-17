@@ -4,7 +4,7 @@
         xmlns:g="using:XYUI.Avalonia.Gallery"
         x:Class="XYUI.Avalonia.Gallery.MainWindow"
         x:DataType="g:MainWindowModel"
-        Title="XYUI.Avalonia · Color Foundation Gallery"
+        Title="XYUI.Avalonia · Foundation Gallery"
         Width="1120" Height="760"
         Background="{DynamicResource XY.Brush.Surface.App}">
   <DockPanel Margin="20">
@@ -54,6 +54,17 @@
       </TabItem>
       <TabItem Header="Typography">
         <views:TypographyView />
+      </TabItem>
+      <TabItem Header="形状">
+        <views:ShapeView />
+      </TabItem>
+      <TabItem Header="静态组合">
+        <ScrollViewer>
+          <StackPanel>
+            <views:ShapeSamplesView />
+            <views:DensitySamplesView />
+          </StackPanel>
+        </ScrollViewer>
       </TabItem>
       <TabItem Header="消费示例">
         <ScrollViewer>

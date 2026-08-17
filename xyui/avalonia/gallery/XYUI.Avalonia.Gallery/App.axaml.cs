@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using XYUI.Avalonia.Spatial;
 using XYUI.Avalonia.Theme;
 using XYUI.Avalonia.Typography;
 
@@ -14,6 +15,7 @@ public partial class App : Application
     {
         Resources.MergedDictionaries.Add(XyuiTheme.CreateLight());
         Styles.Add(XyuiTextStyles.Create());
+        Styles.Add(XyuiShapeStyles.Create());
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();

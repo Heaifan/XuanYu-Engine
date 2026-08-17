@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Media;
 using XYUI.Avalonia.Foundation;
+using XYUI.Avalonia.Spatial;
 using XYUI.Avalonia.Typography;
 
 namespace XYUI.Avalonia.Theme;
@@ -24,6 +25,7 @@ public static class XyuiTheme
                 new SolidColorBrush(token.ToColor(dark));
         }
         Merge(dict, XyuiTypography.CreateResources());
+        Merge(dict, XyuiSpatial.CreateResources());
         return dict;
     }
 

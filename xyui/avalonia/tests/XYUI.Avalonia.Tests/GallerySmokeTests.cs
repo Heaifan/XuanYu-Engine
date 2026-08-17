@@ -34,7 +34,7 @@ public class GallerySmokeTests : IClassFixture<XyuiHeadlessFixture>
     public void MainWindow_Creates_With_Expected_Title() => _fx.Run(() =>
     {
         var win = new MainWindow();
-        Assert.Contains("Color Foundation", win.Title);
+        Assert.Contains("Foundation Gallery", win.Title);
     });
 
     [Fact]

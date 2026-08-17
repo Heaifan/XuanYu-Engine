@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.ShapeSamplesView">
+  <StackPanel Spacing="{DynamicResource XY.Space.3}">
+    <Border Classes="xyui-surface-panel">
+      <StackPanel Spacing="{DynamicResource XY.Space.2}">
+        <TextBlock Text="Panel 结构（方正、无完整外框、Padding 8）" Classes="xyui-text-section" />
+        <Border Background="{DynamicResource XY.Brush.Surface.App}" Padding="{DynamicResource XY.Panel.Padding}">
+          <TextBlock Text="内容区 —— Surface.App 内嵌于 Panel"
+                     Classes="xyui-text-body"
+                     Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        </Border>
+        <Border Background="{DynamicResource XY.Brush.Surface.Raised}"
+                Classes="xyui-border-default"
+                Padding="{DynamicResource XY.Panel.Padding}">
+          <TextBlock Text="Raised 区 —— Border.Default 1 DIP + Radius.Control"
+                     Classes="xyui-text-body" />
+        </Border>
+      </StackPanel>
+    </Border>
+    <Border Classes="xyui-surface-panel">
+      <StackPanel Spacing="{DynamicResource XY.Space.2}">
+        <TextBlock Text="Border 分层（Subtle / Default / Strong / Focus / Selected）"
+                   Classes="xyui-text-section" />
+        <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Panel.Padding}">
+          <TextBlock Text="Border.Subtle —— 弱分隔" Classes="xyui-text-body" />
+        </Border>
+        <Border Classes="xyui-border-default" Padding="{DynamicResource XY.Panel.Padding}">
+          <TextBlock Text="Border.Default —— 常规控件边框" Classes="xyui-text-body" />
+        </Border>
+        <Border Classes="xyui-border-strong" Padding="{DynamicResource XY.Panel.Padding}">
+          <TextBlock Text="Border.Strong —— 关键结构" Classes="xyui-text-body" />
+        </Border>
+        <Border Classes="xyui-border-focus" Padding="{DynamicResource XY.Panel.Padding}">
+          <TextBlock Text="Border.Focus —— 焦点 Outline" Classes="xyui-text-body" />
+        </Border>
+        <Border Classes="xyui-border-selected" Padding="{DynamicResource XY.Panel.Padding}">
+          <TextBlock Text="Border.Selected —— 选中 Outline" Classes="xyui-text-body" />
+        </Border>
+      </StackPanel>
+    </Border>
+    <Border Classes="xyui-surface-panel">
+      <StackPanel Spacing="{DynamicResource XY.Space.3}">
+        <TextBlock Text="Elevation（阴影只表达 Z 轴脱离，结构分区靠 Surface/Divider）"
+                   Classes="xyui-text-section" />
+        <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Space.3}">
+          <Border Classes="xyui-shadow-tooltip xyui-surface-raised" Width="180">
+            <TextBlock Text="Tooltip 轻阴影" Classes="xyui-text-body" />
+          </Border>
+          <Border Classes="xyui-shadow-popup xyui-surface-raised" Width="180">
+            <TextBlock Text="Popup 中轻阴影" Classes="xyui-text-body" />
+          </Border>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>
