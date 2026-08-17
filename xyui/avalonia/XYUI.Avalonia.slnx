@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/XYUI.Avalonia/XYUI.Avalonia.csproj" />
+  <Project Path="gallery/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj" />
+  <Project Path="tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj" />
+</Solution>

@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+        xmlns:g="using:XYUI.Avalonia.Gallery"
+        x:Class="XYUI.Avalonia.Gallery.MainWindow"
+        x:DataType="g:MainWindowModel"
+        Title="XYUI.Avalonia · Color Foundation Gallery"
+        Width="1120" Height="760"
+        Background="{DynamicResource XY.Brush.Surface.App}">
+  <DockPanel Margin="20">
+    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+      <TextBlock Text="XYUI Color Foundation"
+                 FontSize="22" FontWeight="SemiBold"
+                 Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+      <TextBlock Text="Canonical → Avalonia Color/Brush Runtime（83 tokens，Light/Dark 成对）"
+                 Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+    </StackPanel>
+    <TabControl>
+      <TabItem Header="色板">
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding Sections}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="g:PaletteSection">
+                <StackPanel Margin="0,0,0,16">
+                  <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold"
+                             Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+                  <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="g:PaletteItem">
+                        <Border Width="152" Margin="0,6,8,0" CornerRadius="4"
+                                BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}"
+                                BorderThickness="1">
+                          <StackPanel>
+                            <Border Height="36" Background="{Binding Brush}"
+                                    CornerRadius="3,3,0,0" />
+                            <StackPanel Margin="6,4">
+                              <TextBlock Text="{Binding TokenId}" FontSize="11"
+                                         Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+                              <TextBlock Text="{Binding Hex}" FontSize="10"
+                                         Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+                            </StackPanel>
+                          </StackPanel>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="消费示例">
+        <StackPanel>
+          <views:FoundationSamplesView />
+          <views:FoundationStatesView />
+        </StackPanel>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</Window>

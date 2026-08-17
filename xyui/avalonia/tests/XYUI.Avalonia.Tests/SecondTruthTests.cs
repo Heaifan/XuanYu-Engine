@@ -1,0 +1,52 @@
+using System.Text.RegularExpressions;
+using Avalonia.Controls;
+using XYUI.Avalonia.Foundation;
+using XYUI.Avalonia.Theme;
+
+namespace XYUI.Avalonia.Tests;
+
+// 防回潮：src + gallery 全部源码中禁止出现未经 Canonical 登记的颜色常量
+public class SecondTruthTests
+{
+    static readonly string AvaloniaRoot = Path.Combine(
+        AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..",
+        "avalonia");
+
+    static IEnumerable<string> SourceFiles() =>
+        Directory.EnumerateFiles(AvaloniaRoot, "*.*", SearchOption.AllDirectories)
+            .Where(f => f.EndsWith(".cs") || f.EndsWith(".axaml"))
+            .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
+                        && !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"));
+
+    [Fact]
+    public void No_Undeclared_Hex_Anywhere_In_Avalonia_Sources()
+    {
+        var canonicalHex = XyuiColorTokens.All
+            .SelectMany(t => new[] { t.LightHex, t.DarkHex })
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var hexRx = new Regex("#[0-9A-Fa-f]{6}\\b");
+        foreach (var file in SourceFiles())
+        {
+            foreach (Match m in hexRx.Matches(File.ReadAllText(file)))
+            {
+                Assert.True(canonicalHex.Contains(m.Value),
+                    $"未登记颜色 {m.Value} 出现在 {Path.GetRelativePath(AvaloniaRoot, file)}");
+            }
+        }
+    }
+
+    [Fact]
+    public void Every_Axaml_Brush_Reference_Resolves_In_Theme()
+    {
+        var themeKeys = XyuiTheme.CreateLight().Keys.Cast<string>().ToHashSet();
+        var refRx = new Regex(@"XY\.Brush\.[A-Za-z0-9.]+");
+        foreach (var file in SourceFiles().Where(f => f.EndsWith(".axaml")))
+        {
+            foreach (Match m in refRx.Matches(File.ReadAllText(file)))
+            {
+                Assert.True(themeKeys.Contains(m.Value),
+                    $"AXAML 引用了主题不存在的资源 {m.Value} ({Path.GetRelativePath(AvaloniaRoot, file)})");
+            }
+        }
+    }
+}
