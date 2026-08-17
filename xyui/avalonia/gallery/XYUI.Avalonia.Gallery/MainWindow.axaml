@@ -75,6 +75,11 @@
           </StackPanel>
         </ScrollViewer>
       </TabItem>
+      <TabItem Header="交互状态">
+        <ScrollViewer>
+          <views:InteractionStatesView />
+        </ScrollViewer>
+      </TabItem>
     </TabControl>
   </DockPanel>
 </Window>

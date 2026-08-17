@@ -1,7 +1,7 @@
 {
   "phase": "XYUI-PILOT",
   "status": "READY_FOR_XYLAB_PILOT",
-  "total": 12,
+  "total": 13,
   "by_spec": {
     "XYUI1": [
       {
@@ -102,6 +102,15 @@
         "item": "CHART_SERIES_PALETTE",
         "detail": "多系列图表 Series 色板与 Heatmap 低→高顺序色阶在 Foundation 均未定义（无 categorical palette / quantitative ramp）。Source 要求「颜色必须有明确高低语义、浅低深高、需要图例说明」，但 XYUI-0 仅有单一 Accent/Semantic 状态色。不伪造 Canonical 色值，由后续 Token Source 阶段登记并裁决；与 XYUI1-GAP-001 同家族",
         "occurrences": 2,
+        "blocking": false
+      }
+    ],
+    "XYUIR3F4": [
+      {
+        "gap_id": "XYUI-AVALONIA-GAP-R3F4-001",
+        "type": "MISSING_TOKEN",
+        "scope": "XY.State.Checked 交互状态令牌",
+        "detail": "R3-F4 Interaction State Foundation 需要 Checked（Toggle/Checkbox/Switch 逻辑值）状态色，但 foundation-registry.json 未定义 XY.State.Checked 任何令牌。F4 运行时复用 XY.Accent.Default 表达“开启”语义（Checked 不等于 Selected），不伪造 Canonical 色值；正式令牌待 Foundation 在 XY.State.* 家族补登。",
         "blocking": false
       }
     ]

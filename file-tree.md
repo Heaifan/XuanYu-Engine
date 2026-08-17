@@ -2426,11 +2426,14 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Semantic.cs` — XY.Semantic.* 语义四态三通道 12 色。
 - `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Editor.cs` — XY.Editor.* 编辑器专用 16 色。
 - `xyui/avalonia/src/XYUI.Avalonia/Theme/XyuiTheme.cs` — Light/Dark 双主题 ResourceDictionary 构建器（canonical 成对值）。
+- `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiInteractionState.cs` — 交互状态→Canonical 资源键唯一真值 + 原生伪类选择器工厂（:pointerover/:pressed/:disabled/:selected/:checked/:focus；无第二真值，Checked 复用 Accent）。
+- `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiInteractionStyles.cs` — 交互状态样式集（14 条）：base/selectable/hover/pressed/checkable/focus/disabled，优先级 Default<Selected<Hover<Pressed<Checked/Focus<Disabled。
+- `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiFocusStyles.cs` — 焦点边框环两条样式（xyui-focusable，与 Hover/Selected 视觉分离）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj` — Gallery 可执行项目文件。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Program.cs` — Gallery 入口（平台检测启动）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml` — Gallery 应用样式根（FluentTheme）。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml.cs` — 应用初始化：合并 Light 主题字典并挂主窗口。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml` — 主窗口：色板 Tab（数据驱动 8 家族）+ 消费示例 Tab。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml.cs` — 应用初始化：合并 Light 主题字典、挂主窗口，并加载 XyuiTextStyles/XyuiShapeStyles/**XyuiInteractionStyles**（F4 交互状态 Foundation）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml` — 主窗口：色板 Tab（数据驱动 8 家族）+ 消费示例 Tab + **交互状态 Tab（F4）**。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml.cs` — 主窗口数据模型（具名 MainWindowModel，x:DataType 编译绑定）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/PaletteCatalog.cs` — 色板数据模型（家族分组 + swatch 项）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml` — 消费示例：Surface/Text/Border/Accent 的 DynamicResource 用法。
@@ -2468,5 +2471,9 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeSamplesView.axaml.cs` — 静态组合示例代码隐藏。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/DensitySamplesView.axaml` — 高密度消费示例：Property Row/Compact List/Editor 属性区（含 M06 补做）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/DensitySamplesView.axaml.cs` — 高密度消费示例代码隐藏。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/InteractionStatesView.axaml` — F4 交互状态规范页（基础状态/焦点与选择/勾选状态/禁用状态/状态组合实验区/高密度编辑器示例，全中文，真实可操作控件）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/InteractionStatesView.axaml.cs` — F4 交互状态规范页代码隐藏（partial，InitializeComponent）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SpatialTokenTests.cs` — Spatial/Shape 常量与 token-canonical-map.json 逐条对照。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/ShapeRuntimeTests.cs` — Spatial 资源/语义形状类在真实 Border 上的应用测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionStateTests.cs` — F4 交互状态（A/B 类）：Canonical 资源键全解析、Checked 复用 Accent、样式集 14 条、Button/ToggleButton/ListBoxItem 真实状态应用（无第二真值）。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionCombinationTests.cs` — F4 状态组合（C 类）：Selected+Hover/Selected+Focus/Checked+Focus/Disabled 覆盖 Selected 的优先级稳定（仿真子类 PseudoClasses.Set）。

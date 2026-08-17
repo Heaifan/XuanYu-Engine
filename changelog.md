@@ -18,6 +18,18 @@
 
 ---
 
+## XYUI.AVALONIA-R3-F4 · Interaction State Foundation
+XYUI.Avalonia 第四轮（2026-08-17 21:35:00）：把 XYUI Canonical 交互状态（Hover/Pressed/Selected/Checked/Focus/Disabled）以可消费、可测试、可运行、可视觉验收的形式落进 Avalonia 原生状态机，并通过 Gallery 真机验证。
+- 授权：用户批准 R3-F2 / R3-F3「实现完成、用户验收待补」不再阻塞 R3-F4 开工；二者保持待验收，不伪造 CLOSED（本轮状态为 READY FOR USER ACCEPTANCE）。
+- G1 Canonical 审计：交互状态全部复用 R3-F1 Brush / R3-F2 Typography / R3-F3 Radius/Border/Spacing/Shadow 资源键，零新增 raw 色值/边框/圆角；Checked 无 canonical 状态令牌 → 登记 GAP `XYUI-AVALONIA-GAP-R3F4-001` 复用 `XY.Accent.Default`（禁止伪造色值）。
+- G2 运行时（消费 Avalonia 原生伪类 :pointerover/:pressed/:disabled/:selected/:checked/:focus，不手写 IsHovered/IsPressed）：`XyuiInteractionState` 唯一真值契约 + 选择器工厂；`XyuiInteractionStyles.Create()` 14 条样式（base 3 + selectable 3 + hover 1 + pressed 1 + checkable 1 + focus 2 + disabled 3），优先级 Default<Selected<Hover<Pressed<Checked/Focus<Disabled；`XyuiFocusStyles` 焦点边框环与 Hover/Selected 视觉分离。经 Gallery App 初始化链加载，无第二入口。
+- G3 Gallery + 测试：新增「交互状态」规范页（中文分节：基础状态/焦点与选择/勾选/禁用/状态组合实验/高密度编辑器示例，全部真实控件、真机可操作、展示状态组合）；测试 A 类 Canonical 映射（第二真值红线）+ B 类运行时七态真实控件验证 + C 类状态组合优先级（Hover/Selected/Focus/Checked 互不覆盖，Disabled 最高）。
+- 验证：XYUI.Avalonia Build 0W0E；XYUI.Avalonia.Tests **46/46**（33 基线 + 13 F4 新增）；Gallery Headless Smoke PASS；5+100 PASS（实现线最大 98 行）；git diff --check PASS；Dark 主题经 DynamicResource 双主题可用。
+- 治理：Focus≠Selected≠Hover 三态视觉可共存且互不覆盖（组合测试锁定）；Disabled=降级而非全灰（文本保持可读、区别于 Secondary Text）；Checked≠Selected（:checked 独立语义，复用 Accent）；第二真值扫描（SecondTruthTests）覆盖全量 .cs/.axaml 未登记 hex。
+- Hash：实现提交 `<impl-hash>`。
+- 状态：READY FOR USER ACCEPTANCE（R3-F2/F3 验收仍待用户；R3F4-M01~M08 见报告）。
+- 遗留：R3F4-M01~M08 真机验收待用户；Dark 主题切换 UI 未做；Gallery 既有交互字面量（如直接 Background 绑定）登记受控债务，新代码全部消费 xyui-* 类。
+
 ## XYUI.AVALONIA-R3-F3 · Spatial & Shape Foundation
 XYUI.Avalonia 第三轮（2026-08-17 18:28:52）：把 XYUI Canonical Spacing/Radius/Border/Elevation 落进 Avalonia Runtime，并通过 Gallery 假组件区验证空间关系。
 - 变化：T0 Gallery Baseline（窗口标题 `Color Foundation Gallery → Foundation Gallery`；R3-F2 M06 高密度 Typography 消费示例并入本轮 G3 假组件区）；T1 从 registry/tokens 提取真值（Spacing 8 档 4 DIP 基础单位 + Panel.Padding 8/Field.RowGap 4/SectionGap 8；Radius Panel/Row=0、Toolbar=2、Control/Input/Button=4、Popup=6、Full=999；Border 宽度 0/1/2/2/2 + Solid、Container 用 Divider 无完整外框；Elevation Tooltip 0,3,10,0.12 / Popup 0,6,18,0.14 / DragPreview，Panel/Control 无阴影）；G1 `XyuiSpatialTokens` + `XyuiSpatial.CreateResources()`（31 个资源：Space/Radius(CornerRadius)/BorderWidth(Thickness)/Shadow(BoxShadows)）；G2 `XyuiShapeStyles.Create()` 9 个语义形状类（xyui-border-*/xyui-surface-*/xyui-shadow-*）；G3 Gallery 新增「形状」规范页 + 「静态组合」假组件区（Panel 结构/Border 五档分层/Elevation 卡片 + Property Row/Compact List/高密度 Editor 消费区，补齐 R3-F2 M06）+ 9 项测试（SpatialToken 对照 4 + ShapeRuntime 5）。
