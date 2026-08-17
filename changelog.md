@@ -18,15 +18,22 @@
 
 ---
 
+## XYUI.AVALONIA-R3-F4-F1 · Audit Correction
+XYUI.Avalonia R3-F4 审计修正（2026-08-17 23:23:44）：收回 Interaction Foundation 的默认外观职责，纠正 Checked 语义与 Gallery 合规问题。
+- 变化：移除 Interaction Default Background/Foreground/CornerRadius 与 Global Checked 视觉映射；保留 `:checked` selector contract，由组件 Canonical 决定 ToggleButton / Checkbox / Switch 的最终视觉。
+- 变化：撤销 Core Pack 错误 GAP，`gaps.json` 恢复 `total = 12`；修复 Gallery 单一 Scroll ownership、Spatial Token、结构化高密度示例与准确文案。
+- 验证：XYUI.Avalonia Build 0W0E；XYUI.Avalonia.slnx Build 0E、55 个既有 xUnit analyzer warnings；XYUI.Avalonia.Tests 46/46；玄域主解决方案 Build 0W0E；Core.Tests 339/339、World.Tests 1286/1286、WarCore.Tests 22/22；ARCH-A、5+100、Core Pack JSON、F4 AXAML XML 与 `git diff --check` PASS；未声称用户真机 PASS。
+- 状态：READY FOR USER ACCEPTANCE；R3-F4-M01~M08 仍等待用户真机验收。
+
 ## XYUI.AVALONIA-R3-F4 · Interaction State Foundation
-XYUI.Avalonia 第四轮（2026-08-17 21:35:00）：把 XYUI Canonical 交互状态（Hover/Pressed/Selected/Checked/Focus/Disabled）以可消费、可测试、可运行、可视觉验收的形式落进 Avalonia 原生状态机，并通过 Gallery 真机验证。
+XYUI.Avalonia 第四轮（2026-08-17 21:35:00）：把 XYUI Canonical 交互状态（Hover/Pressed/Selected/Checked/Focus/Disabled）以可消费、可测试、可运行、可视觉验收的形式落进 Avalonia 原生状态机，并通过 Gallery Headless / 自动运行验证；真实视觉与交互仍等待 R3F4-M01~M08 用户真机验收。
 - 授权：用户批准 R3-F2 / R3-F3「实现完成、用户验收待补」不再阻塞 R3-F4 开工；二者保持待验收，不伪造 CLOSED（本轮状态为 READY FOR USER ACCEPTANCE）。
-- G1 Canonical 审计：交互状态全部复用 R3-F1 Brush / R3-F2 Typography / R3-F3 Radius/Border/Spacing/Shadow 资源键，零新增 raw 色值/边框/圆角；Checked 无 canonical 状态令牌 → 登记 GAP `XYUI-AVALONIA-GAP-R3F4-001` 复用 `XY.Accent.Default`（禁止伪造色值）。
-- G2 运行时（消费 Avalonia 原生伪类 :pointerover/:pressed/:disabled/:selected/:checked/:focus，不手写 IsHovered/IsPressed）：`XyuiInteractionState` 唯一真值契约 + 选择器工厂；`XyuiInteractionStyles.Create()` 14 条样式（base 3 + selectable 3 + hover 1 + pressed 1 + checkable 1 + focus 2 + disabled 3），优先级 Default<Selected<Hover<Pressed<Checked/Focus<Disabled；`XyuiFocusStyles` 焦点边框环与 Hover/Selected 视觉分离。经 Gallery App 初始化链加载，无第二入口。
+- G1 Canonical 审计：交互状态全部复用 R3-F1 Brush / R3-F2 Typography / R3-F3 Radius/Border/Spacing/Shadow 资源键，零新增 raw 色值/边框/圆角；Foundation 不定义 Checked 的全局单一视觉，组件 Canonical 分别决定 ToggleButton / Checkbox / Switch 的 On/Checked 映射。
+- G2 运行时（消费 Avalonia 原生伪类 :pointerover/:pressed/:disabled/:selected/:checked/:focus，不手写 IsHovered/IsPressed）：`XyuiInteractionState` 唯一真值契约 + 选择器工厂；`XyuiInteractionStyles.Create()` 只提供 Hover/Pressed/Selected/Focus/Disabled 状态视觉，Checked 只保留 selector contract。经 Gallery App 初始化链加载，无第二入口。
 - G3 Gallery + 测试：新增「交互状态」规范页（中文分节：基础状态/焦点与选择/勾选/禁用/状态组合实验/高密度编辑器示例，全部真实控件、真机可操作、展示状态组合）；测试 A 类 Canonical 映射（第二真值红线）+ B 类运行时七态真实控件验证 + C 类状态组合优先级（Hover/Selected/Focus/Checked 互不覆盖，Disabled 最高）。
 - 验证：XYUI.Avalonia Build 0W0E；XYUI.Avalonia.Tests **46/46**（33 基线 + 13 F4 新增）；Gallery Headless Smoke PASS；5+100 PASS（实现线最大 98 行）；git diff --check PASS；Dark 主题经 DynamicResource 双主题可用。
-- 治理：Focus≠Selected≠Hover 三态视觉可共存且互不覆盖（组合测试锁定）；Disabled=降级而非全灰（文本保持可读、区别于 Secondary Text）；Checked≠Selected（:checked 独立语义，复用 Accent）；第二真值扫描（SecondTruthTests）覆盖全量 .cs/.axaml 未登记 hex。
-- Hash：实现提交 `e0d52486e8e697d99af3ba83c556dc8f433d1bf4`。
+- 治理：Focus≠Selected≠Hover 三态视觉可共存且互不覆盖（组合测试锁定）；Disabled=降级而非全灰（文本保持可读、区别于 Secondary Text）；Checked≠Selected（:checked 独立 selector contract，不定义全局视觉）；第二真值扫描（SecondTruthTests）覆盖全量 .cs/.axaml 未登记 hex。
+- Hash：前一轮实现提交 `e0d52486e8e697d99af3ba83c556dc8f433d1bf4`；本轮提交 `674dc79083e1b63c4150f9594f753fd3cffeacfe`。
 - 状态：READY FOR USER ACCEPTANCE（R3-F2/F3 验收仍待用户；R3F4-M01~M08 见报告）。
 - 遗留：R3F4-M01~M08 真机验收待用户；Dark 主题切换 UI 未做；Gallery 既有交互字面量（如直接 Background 绑定）登记受控债务，新代码全部消费 xyui-* 类。
 

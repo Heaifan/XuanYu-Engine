@@ -2426,8 +2426,8 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Semantic.cs` — XY.Semantic.* 语义四态三通道 12 色。
 - `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Editor.cs` — XY.Editor.* 编辑器专用 16 色。
 - `xyui/avalonia/src/XYUI.Avalonia/Theme/XyuiTheme.cs` — Light/Dark 双主题 ResourceDictionary 构建器（canonical 成对值）。
-- `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiInteractionState.cs` — 交互状态→Canonical 资源键唯一真值 + 原生伪类选择器工厂（:pointerover/:pressed/:disabled/:selected/:checked/:focus；无第二真值，Checked 复用 Accent）。
-- `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiInteractionStyles.cs` — 交互状态样式集（14 条）：base/selectable/hover/pressed/checkable/focus/disabled，优先级 Default<Selected<Hover<Pressed<Checked/Focus<Disabled。
+- `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiInteractionState.cs` — 交互状态 selector contract 与 Canonical 资源键唯一真值（:pointerover/:pressed/:disabled/:selected/:checked/:focus；Checked 只提供 selector，不定义统一视觉）。
+- `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiInteractionStyles.cs` — 只负责 Hover/Pressed/Selected/Focus/Disabled 状态视觉，不负责 Component Default Appearance 或 Global Checked Visual Style。
 - `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiFocusStyles.cs` — 焦点边框环两条样式（xyui-focusable，与 Hover/Selected 视觉分离）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj` — Gallery 可执行项目文件。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Program.cs` — Gallery 入口（平台检测启动）。
@@ -2471,9 +2471,10 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeSamplesView.axaml.cs` — 静态组合示例代码隐藏。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/DensitySamplesView.axaml` — 高密度消费示例：Property Row/Compact List/Editor 属性区（含 M06 补做）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/DensitySamplesView.axaml.cs` — 高密度消费示例代码隐藏。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/InteractionStatesView.axaml` — F4 交互状态规范页（基础状态/焦点与选择/勾选状态/禁用状态/状态组合实验区/高密度编辑器示例，全中文，真实可操作控件）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/InteractionStatesView.axaml` — Token-compliant、单 Scroll ownership、结构化高密度状态示例。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/InteractionStatesView.axaml.cs` — F4 交互状态规范页代码隐藏（partial，InitializeComponent）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SpatialTokenTests.cs` — Spatial/Shape 常量与 token-canonical-map.json 逐条对照。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/ShapeRuntimeTests.cs` — Spatial 资源/语义形状类在真实 Border 上的应用测试。
-- `xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionStateTests.cs` — F4 交互状态（A/B 类）：Canonical 资源键全解析、Checked 复用 Accent、样式集 14 条、Button/ToggleButton/ListBoxItem 真实状态应用（无第二真值）。
-- `xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionCombinationTests.cs` — F4 状态组合（C 类）：Selected+Hover/Selected+Focus/Checked+Focus/Disabled 覆盖 Selected 的优先级稳定（仿真子类 PseudoClasses.Set）。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionStateTests.cs` — F4 交互状态 selector、Canonical 资源键、无默认/全局 Checked 外观与 Button/ListBoxItem 状态行为测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionCombinationTests.cs` — F4 Selected+Hover/Selected+Focus/Checked+Focus/Disabled 状态组合优先级测试（仿真子类 PseudoClasses.Set）。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryInteractionContractTests.cs` — F4 Gallery 单一 Scroll ownership、Spatial Token 与结构化高密度布局静态合同测试。

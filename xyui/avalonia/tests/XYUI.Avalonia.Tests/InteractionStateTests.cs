@@ -2,20 +2,20 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Styling;
 using XYUI.Avalonia.Foundation;
 using XYUI.Avalonia.Interaction;
 using XYUI.Avalonia.Theme;
 
 namespace XYUI.Avalonia.Tests;
 
-// A 类：Canonical 映射（第二真值红线）+ B 类：运行时样式（真实控件验证七态实际生效）
 [Collection("XyuiHeadless")]
 public class InteractionStateTests : IClassFixture<XyuiHeadlessFixture>
 {
     readonly XyuiHeadlessFixture _fx;
     public InteractionStateTests(XyuiHeadlessFixture fx) => _fx = fx;
 
-    // 模拟原生状态：控件自身写入伪类（Avalonia 原生 :pointerover / :pressed 由控件自身设置，测试子类等价模拟）
     class SimButton : Button { public void Sim(string p, bool v) => PseudoClasses.Set(p, v); }
 
     static void Load()
@@ -31,29 +31,32 @@ public class InteractionStateTests : IClassFixture<XyuiHeadlessFixture>
     static Color C(string id) { XyuiColorTokens.TryFind(id, out var t); return t.ToColor(false); }
     static Color Bg(TemplatedControl c) => ((SolidColorBrush)c.Background!).Color;
     static Color Bd(TemplatedControl c) => ((SolidColorBrush)c.BorderBrush!).Color;
+    static IEnumerable<Setter> Setters() => XyuiInteractionStyles.Create().OfType<Style>()
+        .SelectMany(style => style.Setters.OfType<Setter>());
+    static bool HasResource(string key) => Setters().Any(setter =>
+        Equals((setter.Value as DynamicResourceExtension)?.ResourceKey, key));
 
     [Fact] public void All_State_Keys_Resolve_In_Theme() => _fx.Run(() =>
     {
         Load();
         var theme = XyuiTheme.CreateLight();
-        var keys = new[] { XyuiInteractionState.DefaultBackground, XyuiInteractionState.DefaultForeground, XyuiInteractionState.ControlRadius,
-            XyuiInteractionState.HoverBrush, XyuiInteractionState.PressedBrush, XyuiInteractionState.SelectedBrush, XyuiInteractionState.FocusBorderBrush,
+        var keys = new[] { XyuiInteractionState.HoverBrush, XyuiInteractionState.PressedBrush, XyuiInteractionState.SelectedBrush, XyuiInteractionState.FocusBorderBrush,
             XyuiInteractionState.SelectedBorderBrush, XyuiInteractionState.DisabledBackground, XyuiInteractionState.DisabledText,
-            XyuiInteractionState.DisabledBorder, XyuiInteractionState.CheckedBrush, XyuiInteractionState.FocusWidth, XyuiInteractionState.SelectedWidth };
+            XyuiInteractionState.DisabledBorder, XyuiInteractionState.FocusWidth, XyuiInteractionState.SelectedWidth };
         foreach (var k in keys) Assert.True(theme.ContainsKey(k), $"交互状态键 {k} 未登记（第二真值风险）");
     });
-    [Fact] public void Checked_Reuses_Canonical_Accent() => _fx.Run(() =>
+    [Fact] public void Foundation_Leaves_Default_And_Checked_Appearance_To_Components() => _fx.Run(() =>
     {
-        Assert.Equal("XY.Brush.Accent.Default", XyuiInteractionState.CheckedBrush);
-        Assert.True(XyuiColorTokens.All.Any(t => XyuiColorTokens.BrushKey(t.TokenId) == XyuiInteractionState.CheckedBrush));
+        Assert.False(HasResource("XY.Brush.Surface.Panel"));
+        Assert.False(HasResource("XY.Brush.Text.Primary"));
+        Assert.False(HasResource("XY.Radius.Control"));
+        Assert.False(HasResource("XY.Brush.Accent.Default"));
+        Assert.NotNull(XyuiInteractionState.Checked);
     });
-    [Fact] public void Style_Collection_Has_Fourteen_Rules() => _fx.Run(() =>
-        Assert.Equal(14, XyuiInteractionStyles.Create().Count));
     [Fact] public void Button_Default_And_Hover() => _fx.Run(() =>
     {
         Load();
         var b = Show(new SimButton { Classes = { "xyui-interactive", "xyui-focusable" }, Content = "x" });
-        Assert.Equal(C("XY.Surface.Panel"), Bg(b));
         b.Sim(":pointerover", true); b.ApplyStyling();
         Assert.Equal(C("XY.State.Color.Hover"), Bg(b));
     });
@@ -80,12 +83,11 @@ public class InteractionStateTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal(C("XY.State.Disabled.Background"), Bg(b));
         Assert.Equal(C("XY.State.Disabled.Text"), ((SolidColorBrush)b.Foreground!).Color);
     });
-    [Fact] public void ToggleButton_Checked_Uses_Accent() => _fx.Run(() =>
+    [Fact] public void Checked_Selector_Is_Available_For_Component_Test_Mapping() => _fx.Run(() =>
     {
-        Load();
-        var t = Show(new ToggleButton { Classes = { "xyui-interactive", "xyui-focusable", "xyui-checkable" }, Content = "x" });
-        t.IsChecked = true; t.ApplyStyling();
-        Assert.Equal(C("XY.Accent.Default"), Bg(t));
+        var style = XyuiInteractionState.Build("test-checkable", XyuiInteractionState.Checked,
+            XyuiInteractionState.BackgroundProperty, XyuiInteractionState.HoverBrush);
+        Assert.NotNull(style);
     });
     [Fact] public void ListBoxItem_Selected_Ring_And_Background() => _fx.Run(() =>
     {

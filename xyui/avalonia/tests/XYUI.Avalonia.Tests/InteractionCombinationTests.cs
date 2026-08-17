@@ -8,7 +8,7 @@ using XYUI.Avalonia.Theme;
 
 namespace XYUI.Avalonia.Tests;
 
-// C 类：状态组合 —— 优先级稳定，Hover / Selected / Focus / Checked 互不覆盖
+// C 类：状态组合 —— 优先级稳定，Hover / Selected / Focus 互不覆盖
 [Collection("XyuiHeadless")]
 public class InteractionCombinationTests : IClassFixture<XyuiHeadlessFixture>
 {
@@ -53,14 +53,13 @@ public class InteractionCombinationTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal(C("XY.Border.Color.Focus"), Bd(i));       // 焦点环独立可见
     });
 
-    [Fact] public void Checked_Plus_Focus_Shows_Both() => _fx.Run(() =>
+    [Fact] public void Checked_Plus_Focus_Keeps_Focus_Ring() => _fx.Run(() =>
     {
         Load();
         var t = new ToggleButton { Classes = { "xyui-interactive", "xyui-focusable", "xyui-checkable" }, Content = "x" };
         var w = new Window { Content = t }; w.Show(); t.ApplyStyling();
         t.IsChecked = true; t.ApplyStyling();
         t.Focus(); t.ApplyStyling();
-        Assert.Equal(C("XY.Accent.Default"), Bg(t));           // Accent 保留
         Assert.Equal(C("XY.Border.Color.Focus"), Bd(t));       // 焦点环独立
     });
 

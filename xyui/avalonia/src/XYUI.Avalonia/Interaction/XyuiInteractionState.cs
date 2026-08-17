@@ -9,13 +9,9 @@ namespace XYUI.Avalonia.Interaction;
 
 // 交互状态 → Canonical 资源键唯一真值（第二真值红线）。
 // F4 不新增任何 raw 色值 / 边框宽度 / 圆角：全部消费 R3-F1/F3 已登记令牌。
-// Checked 无 canonical 状态令牌（GAP-R3F4-001），复用 Accent 表达“开启”语义，禁止伪造色值。
+// Checked 只提供 Avalonia 原生状态选择器；具体 On/Checked 视觉由组件 Canonical 决定。
 public static class XyuiInteractionState
 {
-    public const string DefaultBackground = "XY.Brush.Surface.Panel";
-    public const string DefaultForeground = "XY.Brush.Text.Primary";
-    public const string ControlRadius = "XY.Radius.Control";
-
     public const string HoverBrush = "XY.Brush.State.Color.Hover";
     public const string PressedBrush = "XY.Brush.State.Color.Pressed";
     public const string SelectedBrush = "XY.Brush.State.Color.Selected";
@@ -25,9 +21,6 @@ public static class XyuiInteractionState
     public const string DisabledBackground = "XY.Brush.State.Disabled.Background";
     public const string DisabledText = "XY.Brush.State.Disabled.Text";
     public const string DisabledBorder = "XY.Brush.State.Disabled.Border";
-
-    // Checked 无 canonical 状态令牌 → 复用 Accent 表达“开启”语义（GAP-R3F4-001）
-    public const string CheckedBrush = "XY.Brush.Accent.Default";
 
     public const string FocusWidth = "XY.Border.Width.Focus";
     public const string SelectedWidth = "XY.Border.Width.Selected";
