@@ -18,6 +18,14 @@
 
 ---
 
+## XYUI.AVALONIA-R3-F3 · Spatial & Shape Foundation
+XYUI.Avalonia 第三轮（2026-08-17 18:28:52）：把 XYUI Canonical Spacing/Radius/Border/Elevation 落进 Avalonia Runtime，并通过 Gallery 假组件区验证空间关系。
+- 变化：T0 Gallery Baseline（窗口标题 `Color Foundation Gallery → Foundation Gallery`；R3-F2 M06 高密度 Typography 消费示例并入本轮 G3 假组件区）；T1 从 registry/tokens 提取真值（Spacing 8 档 4 DIP 基础单位 + Panel.Padding 8/Field.RowGap 4/SectionGap 8；Radius Panel/Row=0、Toolbar=2、Control/Input/Button=4、Popup=6、Full=999；Border 宽度 0/1/2/2/2 + Solid、Container 用 Divider 无完整外框；Elevation Tooltip 0,3,10,0.12 / Popup 0,6,18,0.14 / DragPreview，Panel/Control 无阴影）；G1 `XyuiSpatialTokens` + `XyuiSpatial.CreateResources()`（31 个资源：Space/Radius(CornerRadius)/BorderWidth(Thickness)/Shadow(BoxShadows)）；G2 `XyuiShapeStyles.Create()` 9 个语义形状类（xyui-border-*/xyui-surface-*/xyui-shadow-*）；G3 Gallery 新增「形状」规范页 + 「静态组合」假组件区（Panel 结构/Border 五档分层/Elevation 卡片 + Property Row/Compact List/高密度 Editor 消费区，补齐 R3-F2 M06）+ 9 项测试（SpatialToken 对照 4 + ShapeRuntime 5）。
+- 验证：XYUI.Avalonia Build 0W0E；XYUI.Avalonia.Tests 33/33；Gallery Visible Smoke PASS（真实进程，新标题 `Foundation Gallery`）；玄域 Solution Build 0 错误；Core 339/339、World 1286/1286、WarCore 22/22；ARCH-A + 5+100 PASS（实现线最大 82 行）；git diff --check PASS。
+- 治理：Shadow 解析约定 "x/y/blur/alpha"（x=水平偏移 y=垂直偏移 blur=模糊 alpha=黑透明度，CSS rgba 输出）；R3-F2 的 Gallery 进程锁（PID 35780 旧版残留）按 P0 §20 授权关闭；既有 Gallery spacing 字面量（Margin/Padding 数字）登记受控债务，未做全文替换（新代码全部消费 XY.Space.* 资源）。
+- Hash：实现提交 `a83d92b88e1a09a48ae21dcc1131c212319847e3`。
+- 遗留：R3F3-M01~M08 真机验收待用户；字体随包分发（R3-Z 前）；Dark 主题切换 UI 未做；Gallery 既有 spacing 字面量债务。
+
 ## XYUI.AVALONIA-R3-F2 · Typography Foundation
 XYUI.Avalonia 第二轮（2026-08-17 18:07:18）：把 XYUI Canonical Typography（字体/字号/字重/行高/字距/语义角色）落进 Avalonia Runtime，并通过 Gallery 真机验证。
 - 变化：T0 R3-F1 正式 `CLOSED`（用户验收 7/7 PASS，基线 `22325d6`）+ Gallery 消费示例页滚动基线修正（TabItem 外层统一 ScrollViewer，view 内部不再嵌套）；T1 从 registry/tokens/XYUI-1 canonical 提取 Typography 唯一真值（Font.UI=Source Han Sans SC / Font.Mono=Source Code Pro / Fallback.CJK / Fallback.Mono；字号 8 档 12~24 DIP；字重 4 档 400/500/600/700；行高 8 组成对；字距 5 档；9 语义角色 Text/Label/Caption/SectionTitle/Heading.PanelTitle/Heading.PageTitle/Link/CodeText/MonoText）；G1 `XyuiTypographyTokens` 常量表 + `XyuiTypography.CreateResources()`（31 个基础资源并入主题字典）；G2 `XyuiTextStyles.Create()` 代码构建 9 个语义样式类（`xyui-text-*` / `xyui-heading-*`，Setter 消费 R3-F1 Brush，禁止第二套颜色真值）；G3 Gallery 新增 Typography 规范页 + TypographySamplesView（真实 Heading/Body/Label/Caption/Mono/信息等级对照/Compact 高密度对照）+ 全部消费示例改用 Classes 语义类（0 手写 FontSize/FontFamily/FontWeight 字面量）。

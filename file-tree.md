@@ -2457,3 +2457,16 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/TypographySamplesView.axaml.cs` — Typography 消费示例代码隐藏。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/TypographyTokenTests.cs` — Typography 常量与 token-canonical-map.json 逐条对照。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/TypographyRuntimeTests.cs` — Typography 资源/语义样式类在真实 TextBlock 上的应用测试。
+- `xyui/avalonia/src/XYUI.Avalonia/Spatial/XyuiSpatialTokens.cs` — Spatial/Shape token 权威常量表（Spacing/Radius/Border 宽度/Elevation，转录 token-canonical-map.json）。
+- `xyui/avalonia/src/XYUI.Avalonia/Spatial/XyuiSpatial.cs` — Spatial 基础资源字典构建（Space/Radius/BorderWidth/Shadow，含 BoxShadow 解析）。
+- `xyui/avalonia/src/XYUI.Avalonia/Spatial/XyuiShapeStyles.cs` — 语义形状样式类（代码构建 9 类 xyui-border-*/xyui-surface-*/xyui-shadow-*）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/ShapeCatalog.cs` — Shape 规范页数据（Spacing/Radius/Border/Elevation 分区）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/ShapeViewModel.cs` — Shape 规范页数据模型（x:DataType 编译绑定）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeView.axaml` — Shape 规范页视图（token 表数据驱动 + 滚动）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeView.axaml.cs` — Shape 规范页代码隐藏。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeSamplesView.axaml` — 静态组合示例：Panel 结构/Border 五档/Elevation 卡片。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/ShapeSamplesView.axaml.cs` — 静态组合示例代码隐藏。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/DensitySamplesView.axaml` — 高密度消费示例：Property Row/Compact List/Editor 属性区（含 M06 补做）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/DensitySamplesView.axaml.cs` — 高密度消费示例代码隐藏。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/SpatialTokenTests.cs` — Spatial/Shape 常量与 token-canonical-map.json 逐条对照。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/ShapeRuntimeTests.cs` — Spatial 资源/语义形状类在真实 Border 上的应用测试。
