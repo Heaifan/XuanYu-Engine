@@ -33,7 +33,7 @@ XYUI.Avalonia 第四轮（2026-08-17 21:35:00）：把 XYUI Canonical 交互状�
 - G3 Gallery + 测试：新增「交互状态」规范页（中文分节：基础状态/焦点与选择/勾选/禁用/状态组合实验/高密度编辑器示例，全部真实控件、真机可操作、展示状态组合）；测试 A 类 Canonical 映射（第二真值红线）+ B 类运行时七态真实控件验证 + C 类状态组合优先级（Hover/Selected/Focus/Checked 互不覆盖，Disabled 最高）。
 - 验证：XYUI.Avalonia Build 0W0E；XYUI.Avalonia.Tests **46/46**（33 基线 + 13 F4 新增）；Gallery Headless Smoke PASS；5+100 PASS（实现线最大 98 行）；git diff --check PASS；Dark 主题经 DynamicResource 双主题可用。
 - 治理：Focus≠Selected≠Hover 三态视觉可共存且互不覆盖（组合测试锁定）；Disabled=降级而非全灰（文本保持可读、区别于 Secondary Text）；Checked≠Selected（:checked 独立 selector contract，不定义全局视觉）；第二真值扫描（SecondTruthTests）覆盖全量 .cs/.axaml 未登记 hex。
-- Hash：前一轮实现提交 `e0d52486e8e697d99af3ba83c556dc8f433d1bf4`；本轮提交 `674dc79083e1b63c4150f9594f753fd3cffeacfe`。
+- Hash：前一轮实现提交 `e0d52486e8e697d99af3ba83c556dc8f433d1bf4`；本轮实现提交 `5f77e733df1743aed633ea5d8222d5321c361a89`。
 - 状态：READY FOR USER ACCEPTANCE（R3-F2/F3 验收仍待用户；R3F4-M01~M08 见报告）。
 - 遗留：R3F4-M01~M08 真机验收待用户；Dark 主题切换 UI 未做；Gallery 既有交互字面量（如直接 Background 绑定）登记受控债务，新代码全部消费 xyui-* 类。
 
