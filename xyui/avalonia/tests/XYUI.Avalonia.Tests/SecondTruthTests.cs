@@ -49,4 +49,17 @@ public class SecondTruthTests
             }
         }
     }
+
+    [Fact]
+    public void No_Inline_Typography_Literals_In_Gallery()
+    {
+        // 消费侧禁止手写 FontSize="12" / FontFamily="Consolas" / FontWeight="Bold"（定义文件除外）
+        var litRx = new Regex(@"FontSize\s*=\s*""\d|FontFamily\s*=\s*""[^{]|FontWeight\s*=\s*""[^{]");
+        foreach (var file in SourceFiles().Where(f => f.EndsWith(".axaml") && f.Contains("gallery")))
+        {
+            var m = litRx.Match(File.ReadAllText(file));
+            Assert.False(m.Success,
+                $"内联 Typography 字面量 {m.Value} 出现在 {Path.GetRelativePath(AvaloniaRoot, file)}");
+        }
+    }
 }

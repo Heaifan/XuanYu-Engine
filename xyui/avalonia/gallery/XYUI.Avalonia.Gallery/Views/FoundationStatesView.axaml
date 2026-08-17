@@ -1,12 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="XYUI.Avalonia.Gallery.Views.FoundationStatesView">
-  <ScrollViewer>
-    <StackPanel Spacing="12">
+  <StackPanel Spacing="12">
       <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
         <StackPanel Spacing="6">
-          <TextBlock Text="Interaction State" FontWeight="SemiBold"
-                     Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+          <TextBlock Text="Interaction State" Classes="xyui-text-section" />
           <Border Background="{DynamicResource XY.Brush.State.Color.Hover}" CornerRadius="4" Padding="10">
             <TextBlock Text="State.Hover" Foreground="{DynamicResource XY.Brush.Text.Primary}" />
           </Border>
@@ -23,8 +21,7 @@
       </Border>
       <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
         <StackPanel Spacing="6">
-          <TextBlock Text="Feedback 语义四态（文字 + 背景 + 边框）" FontWeight="SemiBold"
-                     Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+          <TextBlock Text="Feedback 语义四态（文字 + 背景 + 边框）" Classes="xyui-text-section" />
           <Border Background="{DynamicResource XY.Brush.Semantic.Success.Background}" CornerRadius="4" Padding="10"
                   BorderBrush="{DynamicResource XY.Brush.Semantic.Success.Border}" BorderThickness="1">
             <TextBlock Text="Success — 操作成功" Foreground="{DynamicResource XY.Brush.Semantic.Success.Text}" />
@@ -45,8 +42,7 @@
       </Border>
       <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
         <StackPanel Spacing="6">
-          <TextBlock Text="Disabled / ReadOnly / Locked 三态" FontWeight="SemiBold"
-                     Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+          <TextBlock Text="Disabled / ReadOnly / Locked 三态" Classes="xyui-text-section" />
           <Border Background="{DynamicResource XY.Brush.State.Disabled.Background}" CornerRadius="4" Padding="10"
                   BorderBrush="{DynamicResource XY.Brush.State.Disabled.Border}" BorderThickness="1">
             <TextBlock Text="Disabled" Foreground="{DynamicResource XY.Brush.State.Disabled.Text}" />
@@ -62,5 +58,4 @@
         </StackPanel>
       </Border>
     </StackPanel>
-  </ScrollViewer>
 </UserControl>

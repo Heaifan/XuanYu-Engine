@@ -16,9 +16,9 @@ public class BrushRuntimeTests : IClassFixture<XyuiHeadlessFixture>
     public void Light_Theme_Has_All_Brushes_No_Duplicates() => _fx.Run(() =>
     {
         var dict = XyuiTheme.CreateLight();
-        var keys = dict.Keys.Cast<string>().ToArray();
-        Assert.Equal(XyuiColorTokens.All.Count, keys.Length);
-        Assert.Equal(keys.Length, keys.Distinct().Count());
+        var brushKeys = dict.Keys.Cast<string>().Where(k => k.StartsWith("XY.Brush.")).ToArray();
+        Assert.Equal(XyuiColorTokens.All.Count, brushKeys.Length);
+        Assert.Equal(brushKeys.Length, brushKeys.Distinct().Count());
     });
 
     [Fact]

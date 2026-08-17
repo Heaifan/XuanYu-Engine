@@ -1,12 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="XYUI.Avalonia.Gallery.Views.FoundationSamplesView">
-  <ScrollViewer>
-    <StackPanel Spacing="12">
+  <StackPanel Spacing="12">
       <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
         <StackPanel Spacing="8">
-          <TextBlock Text="Surface 层级（逐层抬升，不依赖阴影）" FontWeight="SemiBold"
-                     Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+          <TextBlock Text="Surface 层级（逐层抬升，不依赖阴影）" Classes="xyui-text-section" />
           <Border Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="10">
             <TextBlock Text="Surface.App" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
           </Border>
@@ -21,8 +19,7 @@
       </Border>
       <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
         <StackPanel Spacing="4">
-          <TextBlock Text="Text 信息等级" FontWeight="SemiBold"
-                     Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+          <TextBlock Text="Text 信息等级" Classes="xyui-text-section" />
           <TextBlock Text="Primary — 主文本" Foreground="{DynamicResource XY.Brush.Text.Primary}" />
           <TextBlock Text="Secondary — 次级文本" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
           <TextBlock Text="Tertiary — 三级文本" Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
@@ -33,8 +30,7 @@
       </Border>
       <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
         <StackPanel Spacing="6">
-          <TextBlock Text="Border 三档 + Focus" FontWeight="SemiBold"
-                     Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+          <TextBlock Text="Border 三档 + Focus" Classes="xyui-text-section" />
           <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="10">
             <TextBlock Text="Border.Subtle" Foreground="{DynamicResource XY.Brush.Text.Primary}" />
           </Border>
@@ -51,8 +47,7 @@
       </Border>
       <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
         <StackPanel Spacing="6">
-          <TextBlock Text="Accent 三级（Soft/Default/Strong）" FontWeight="SemiBold"
-                     Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+          <TextBlock Text="Accent 三级（Soft/Default/Strong）" Classes="xyui-text-section" />
           <Border Background="{DynamicResource XY.Brush.Accent.Soft}" CornerRadius="4" Padding="10">
             <TextBlock Text="Accent.Soft" Foreground="{DynamicResource XY.Brush.Text.Primary}" />
           </Border>
@@ -65,5 +60,4 @@
         </StackPanel>
       </Border>
     </StackPanel>
-  </ScrollViewer>
 </UserControl>
