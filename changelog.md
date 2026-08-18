@@ -18,6 +18,12 @@
 
 ---
 
+## XYUI.AVALONIA-R5-F1-NAV · Foundation 导航接线（2026-08-18 20:32:57）
+修复 Gallery 左侧 Foundation 下的色彩、Typography、形状只是静态文字、无法切换页面的问题。
+- 变化：新增可选 Foundation 导航项；色彩加载 Palette 页面，字体与排版加载 Typography 页面，形状加载 Shape 页面；XYUI-1 文档导航与顶部主导航保持不变。
+- 验证：XYUI.Avalonia.Tests 59/59 PASS；新增 Foundation 导航切换回归覆盖；5+100 与 `git diff --check` 通过。
+- 状态：READY FOR USER ACCEPTANCE；等待用户重新验收 R5-F1，未 CLOSED，未启动 XYUI-2。
+
 ## XYUI.AVALONIA-R5-F1-HOTFIX · Preview 生命周期（2026-08-18 20:26:34）
 修复 R5-F1 Gallery 启动时 `XYIcon` 被重复挂载到两个 `ContentPresenter` 导致的 CLR 未处理异常（退出码 `0xE0434352`）。
 - 变化：XYUI-1 文档模型改为保存 Preview 工厂；单组件文档视图每次创建自己的真实 Control；主窗口不再构造已废弃的旧 Gallery 预览集合。

@@ -2436,6 +2436,9 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml` — XYUI-1 文档 Gallery 主窗口（固定左侧导航，不再以顶部 TabControl 作为主导航）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml.cs` — 主窗口数据模型（具名 MainWindowModel，x:DataType 编译绑定）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/PaletteCatalog.cs` — 色板数据模型（家族分组 + swatch 项）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/PaletteViewModel.cs` — Foundation 色彩页面的分组数据模型。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/PaletteView.axaml` — Foundation 色彩页面视图。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/PaletteView.axaml.cs` — Foundation 色彩页面代码隐藏与数据初始化。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml` — 消费示例：Surface/Text/Border/Accent 的 DynamicResource 用法。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml.cs` — 消费示例视图代码隐藏。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml` — 消费示例：State/Semantic/Disabled 三态的 DynamicResource 用法。

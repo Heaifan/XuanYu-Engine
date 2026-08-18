@@ -19,9 +19,16 @@
         <StackPanel Margin="12,16">
           <TextBlock Text="文档导航" Classes="xyui-heading-panel" Margin="8,0,8,14" />
           <TextBlock Text="Foundation" Classes="xyui-text-section" Margin="8,0,8,5" />
-          <TextBlock Text="色彩" Classes="xyui-text-caption" Margin="8,2" />
-          <TextBlock Text="Typography" Classes="xyui-text-caption" Margin="8,2" />
-          <TextBlock Text="形状" Classes="xyui-text-caption" Margin="8,2,8,14" />
+          <ListBox ItemsSource="{Binding FoundationItems}" SelectedItem="{Binding SelectedFoundation}" Margin="0,0,0,14">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="g:FoundationNavigationItem">
+                <StackPanel Spacing="1">
+                  <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
+                  <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
           <TextBlock Text="XYUI-1 · 文本与信息" Classes="xyui-text-section" Margin="8,0,8,5" />
           <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
             <ListBox.ItemTemplate>

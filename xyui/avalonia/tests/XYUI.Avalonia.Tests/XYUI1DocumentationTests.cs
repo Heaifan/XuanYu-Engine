@@ -38,4 +38,16 @@ public sealed class XYUI1DocumentationTests : IClassFixture<XyuiHeadlessFixture>
         Assert.IsType<XYUI1ComponentDocumentView>(model.SelectedDocument);
         Assert.Equal("XYHeading", model.SelectedItem.Document!.AvaloniaType);
     });
+
+    [Fact]
+    public void Foundation_navigation_selects_existing_foundation_views() => _fx.Run(() =>
+    {
+        var model = new XYUI1DocumentationViewModel();
+        model.SelectFoundation("palette");
+        Assert.IsType<PaletteView>(model.SelectedDocument);
+        model.SelectFoundation("typography");
+        Assert.IsType<TypographyView>(model.SelectedDocument);
+        model.SelectFoundation("shape");
+        Assert.IsType<ShapeView>(model.SelectedDocument);
+    });
 }

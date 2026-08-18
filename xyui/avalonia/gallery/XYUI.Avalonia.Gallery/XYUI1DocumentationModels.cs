@@ -20,3 +20,5 @@ public sealed record XYUI1ComponentDocument(
 
 public sealed record XYUI1NavigationItem(
     string Id, string ChineseName, string CanonicalName, XYUI1ComponentDocument? Document);
+
+public sealed record FoundationNavigationItem(string Id, string ChineseName, string CanonicalName);
