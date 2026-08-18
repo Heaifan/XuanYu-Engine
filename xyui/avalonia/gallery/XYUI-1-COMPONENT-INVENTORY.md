@@ -31,4 +31,4 @@ Source of truth：`xyui/specs/XYUI1/XYUI-1.mapping.json` + `XYUI-1.canonical.md`
 
 Foundation 与 Component 分离：Font/FontSize/FontWeight/LineHeight/LetterSpacing 是 Token；`XyuiTextStyles` 是 Style；上表 24 项才是 Component。
 
-Coverage：Canonical 24/24；Avalonia 24/24；Catalog 24/24；Gallery 24/24；Usage 24/24；Tests 24/24；READY 24/24（含已登记 Gap）；Gap 2 条。
+Coverage：Canonical 24/24；Avalonia 24/24；Catalog 24/24；Gallery 24/24；Usage 24/24；Tests 24/24；READY 22/24；GAP 2/24；Accounted 24/24。

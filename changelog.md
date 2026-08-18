@@ -24,7 +24,7 @@
 - 测试：新增 inventory、identity、creation、Gallery real-preview/API consistency 覆盖；`XYUI.Avalonia.Tests` 56/56 PASS；Light/Dark Theme 资源测试继续 PASS。
 - 运行时：Gallery 真实窗口启动 PASS；XYUI-1 页面、24/24 统计、中文 canonical 标题、真实 Preview、Usage、末项 XYUI-1-24 可见；无 `{Binding}` 字面量。
 - Gap：`XYUI1-GAP-001` glyph registry；`XYUI1-GAP-002` Avalonia 无 MiddleEllipsis 原生能力，已保留 API 并明确登记，不伪造完成。
-- 状态：READY FOR USER ACCEPTANCE；READY 24/24（含已登记 Gap），等待 M01～M08 真机验收，未启动 XYUI-2。
+- 状态：READY FOR USER ACCEPTANCE；READY 22/24、GAP 2/24、Accounted 24/24，等待 M01～M08 真机验收，未启动 XYUI-2。
 
 ## XYUI.AVALONIA-R3-F4-F1 · Audit Correction
 XYUI.Avalonia R3-F4 审计修正（2026-08-17 23:23:44）：收回 Interaction Foundation 的默认外观职责，纠正 Checked 语义与 Gallery 合规问题。
