@@ -18,6 +18,13 @@
 
 ---
 
+## XYUI.AVALONIA-R5-F1 · XYUI-1 Documentation Gallery（2026-08-18 19:34:44）
+本轮只修复 R5 真机验收暴露的 Gallery 信息架构问题：24 个组件从审计式平铺列表迁移为中文优先的文档导航与单组件文档页；不推进 R6，不启动 XYUI-2。
+- 变化：移除顶部 TabControl 作为主导航；新增 Foundation / XYUI-1 左侧导航、模块概览、24 个组件索引和可选中的单组件文档页。
+- 变化：每个组件页提供中文概览、适用场景、真实组件 Preview、基础用法、canonical 变体/状态（无则隐藏）、真实 API 属性表和下置 Design Token；保留 GAP-001/GAP-002，不伪造补齐。
+- 验证：XYUI.Avalonia.Tests 58/58 PASS；XYUI.Avalonia.slnx 构建 0 警告 0 错误；5+100、`git diff --check` 通过。Windows 截图捕获在本轮被中断，未据此宣称真机通过。
+- 状态：READY FOR USER ACCEPTANCE；R5-F1 等待用户重新执行 M01～M08，未 CLOSED，未启动 XYUI-2。
+
 ## XYUI.AVALONIA-R5 · XYUI-1 FULL IMPLEMENTATION（2026-08-18 15:00:00）
 本轮只推进 XYUI-1；canonical mapping 实际盘点为 24 个 Text & Information 组件，完成真实 Avalonia 类型、Catalog、独立 Gallery、Usage 与覆盖测试。
 - 变化：新增 `XYUI-1-01`～`XYUI-1-24` 稳定公共组件类型；组件样式消费既有 Typography/Color/Spatial 资源；`XYSelectableText` 使用 Avalonia 原生 `SelectableTextBlock`；Catalog 登记 Avalonia Type 与 Gallery 24/24；新增「XYUI-1 · 文本与信息」页面，Preview 全部由真实组件实例提供。

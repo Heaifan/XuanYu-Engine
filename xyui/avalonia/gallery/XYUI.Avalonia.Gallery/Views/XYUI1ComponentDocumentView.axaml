@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.XYUI1ComponentDocumentView"
+             x:DataType="g:XYUI1ComponentDocument">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="28" Spacing="12">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <TextBlock Text="{Binding Id}" Classes="xyui-text-code" />
+        <TextBlock Grid.Column="2" Text="{Binding AvaloniaType}" Classes="xyui-text-code" />
+      </Grid>
+      <TextBlock Text="{Binding ChineseName}" Classes="xyui-heading-page" />
+      <TextBlock Text="{Binding CanonicalDisplay}" Classes="xyui-text-code" />
+      <TextBlock Text="{Binding Overview}" Classes="xyui-text-body" TextWrapping="Wrap" />
+      <TextBlock Text="适用场景" Classes="xyui-text-section" />
+      <TextBlock Text="{Binding WhenToUse}" Classes="xyui-text-body" TextWrapping="Wrap" />
+      <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="24" CornerRadius="6" MinHeight="112">
+        <StackPanel Spacing="8">
+          <TextBlock Text="实时预览" Classes="xyui-text-caption" />
+          <ContentControl Content="{Binding Preview}" HorizontalContentAlignment="Left" />
+        </StackPanel>
+      </Border>
+      <TextBlock Text="基础用法" Classes="xyui-text-section" />
+      <ItemsControl ItemsSource="{Binding Usages}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="0,2" CornerRadius="4">
+              <TextBlock Text="{Binding}" Classes="xyui-text-code" TextWrapping="Wrap" />
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <StackPanel IsVisible="{Binding HasVariants}" Spacing="6">
+        <TextBlock Text="变体" Classes="xyui-text-section" />
+        <ItemsControl ItemsSource="{Binding Variants}">
+          <ItemsControl.ItemTemplate><DataTemplate x:DataType="g:XYUIDocVariant">
+            <Grid ColumnDefinitions="120,*,*" Margin="0,2"><TextBlock Text="{Binding Name}" Classes="xyui-text-code" /><TextBlock Grid.Column="1" Text="{Binding Description}" Classes="xyui-text-body" /><TextBlock Grid.Column="2" Text="{Binding Usage}" Classes="xyui-text-caption" /></Grid>
+          </DataTemplate></ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+      <StackPanel IsVisible="{Binding HasStates}" Spacing="6">
+        <TextBlock Text="状态" Classes="xyui-text-section" />
+        <ItemsControl ItemsSource="{Binding States}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="g:XYUIDocState"><Grid ColumnDefinitions="120,*" Margin="0,2"><TextBlock Text="{Binding Name}" Classes="xyui-text-code" /><TextBlock Grid.Column="1" Text="{Binding Description}" Classes="xyui-text-body" /></Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+      </StackPanel>
+      <TextBlock Text="API" Classes="xyui-text-section" />
+      <Grid ColumnDefinitions="140,190,120,*"><TextBlock Text="属性" Classes="xyui-text-label" /><TextBlock Grid.Column="1" Text="类型" Classes="xyui-text-label" /><TextBlock Grid.Column="2" Text="默认值" Classes="xyui-text-label" /><TextBlock Grid.Column="3" Text="说明" Classes="xyui-text-label" /></Grid>
+      <ItemsControl ItemsSource="{Binding Properties}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="g:XYUIDocProperty"><Grid ColumnDefinitions="140,190,120,*" Margin="0,2"><TextBlock Text="{Binding Name}" Classes="xyui-text-code" /><TextBlock Grid.Column="1" Text="{Binding Type}" Classes="xyui-text-code" /><TextBlock Grid.Column="2" Text="{Binding DefaultValue}" Classes="xyui-text-code" /><TextBlock Grid.Column="3" Text="{Binding Description}" Classes="xyui-text-body" /></Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+      <TextBlock Text="设计 Token" Classes="xyui-text-section" Margin="0,8,0,0" />
+      <ItemsControl ItemsSource="{Binding Tokens}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="g:XYUIDocToken"><Grid ColumnDefinitions="100,230,*" Margin="0,2"><TextBlock Text="{Binding Name}" Classes="xyui-text-label" /><TextBlock Grid.Column="1" Text="{Binding Value}" Classes="xyui-text-code" /><TextBlock Grid.Column="2" Text="{Binding Description}" Classes="xyui-text-caption" /></Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

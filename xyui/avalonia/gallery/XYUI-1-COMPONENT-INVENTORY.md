@@ -1,6 +1,6 @@
 # XYUI.AVALONIA-R5 · XYUI-1 Component Inventory
 
-Source of truth：`xyui/specs/XYUI1/XYUI-1.mapping.json` + `XYUI-1.canonical.md`。
+Source of truth：`xyui/specs/XYUI1/XYUI-1.mapping.json` + `XYUI-1.canonical.md`；Gallery 文档页由同一 Catalog 数据驱动。
 
 | ID | Canonical / 中文 | Avalonia Type | Catalog | Gallery | Usage | Test | Status |
 |---|---|---|---|---|---|---|---|
@@ -31,4 +31,4 @@ Source of truth：`xyui/specs/XYUI1/XYUI-1.mapping.json` + `XYUI-1.canonical.md`
 
 Foundation 与 Component 分离：Font/FontSize/FontWeight/LineHeight/LetterSpacing 是 Token；`XyuiTextStyles` 是 Style；上表 24 项才是 Component。
 
-Coverage：Canonical 24/24；Avalonia 24/24；Catalog 24/24；Gallery 24/24；Usage 24/24；Tests 24/24；READY 22/24；GAP 2/24；Accounted 24/24。
+Coverage：Canonical 24/24；Avalonia 24/24；Catalog 24/24；Gallery 24/24；Documentation 24/24；Usage 24/24；Tests 24/24（58/58 PASS）；READY 22/24；GAP 2/24；Accounted 24/24。

@@ -34,7 +34,7 @@ public class GallerySmokeTests : IClassFixture<XyuiHeadlessFixture>
     public void MainWindow_Creates_With_Expected_Title() => _fx.Run(() =>
     {
         var win = new MainWindow();
-        Assert.Contains("Foundation Gallery", win.Title);
+        Assert.Contains("XYUI-1 文档 Gallery", win.Title);
     });
 
     [Fact]

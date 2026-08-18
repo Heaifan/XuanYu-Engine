@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.XYUI1ModuleOverviewView"
+             x:DataType="g:XYUI1DocumentationViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="28" Spacing="12">
+      <TextBlock Text="XYUI-1 · 文本与信息" Classes="xyui-heading-page" />
+      <TextBlock Text="Text &amp; Information · 24 个 Avalonia 组件文档" Classes="xyui-text-code" />
+      <TextBlock Text="本模块集中管理编辑器中的文本层级、语义提示、状态表达和信息密度。先看组件索引，再进入单个组件文档。" Classes="xyui-text-body" TextWrapping="Wrap" />
+      <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="{DynamicResource XY.Panel.Padding}" CornerRadius="6">
+        <StackPanel Spacing="6">
+          <TextBlock Text="组件索引" Classes="xyui-text-section" />
+          <TextBlock Text="中文名称优先；英文名用于和 canonical 规范、Avalonia 类型对照。" Classes="xyui-text-caption" />
+          <ItemsControl ItemsSource="{Binding ComponentItems}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="g:XYUI1NavigationItem">
+                <Button Tag="{Binding Id}" Click="OnComponentClick" HorizontalContentAlignment="Stretch"
+                        Background="Transparent" BorderThickness="0" Padding="8,7">
+                  <Grid ColumnDefinitions="68,*,Auto">
+                    <TextBlock Text="{Binding Id}" Classes="xyui-text-code" />
+                    <TextBlock Grid.Column="1" Text="{Binding ChineseName}" Classes="xyui-text-label" />
+                    <TextBlock Grid.Column="2" Text="{Binding CanonicalName}" Classes="xyui-text-caption" />
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

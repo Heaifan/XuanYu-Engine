@@ -4,7 +4,7 @@
 
 `DESIGNED | CANONICAL | AVALONIA | GALLERY | DOCUMENTED | READY`
 
-XYUI-1 本轮冻结为 canonical mapping 中的 24 个组件，全部登记到 Avalonia/Catalog/Gallery/Usage/Tests：
+XYUI-1 本轮冻结为 canonical mapping 中的 24 个组件，全部登记到 Avalonia/Catalog/Gallery/Documentation/Usage/Tests：
 
 | Source Item ID | Canonical ID | Avalonia type | Gallery |
 |---|---|---|---|
@@ -14,9 +14,10 @@ XYUI-1 本轮冻结为 canonical mapping 中的 24 个组件，全部登记到 A
 | Avalonia | 24/24 | stable public type + identity | — |
 | Catalog | 24/24 | registry/mapping/spec driven | — |
 | Gallery | 24/24 | real control Preview | — |
+| Documentation | 24/24 | 中文优先文档页 + 左侧导航 + 模块索引 | — |
 | Usage | 24/24 | real type/property examples | — |
-| Tests | 24/24 | 56/56 PASS | — |
+| Tests | 24/24 | 58/58 PASS | — |
 
 Gap：`XYUI1-GAP-001` Icon glyph registry；`XYUI1-GAP-002` Avalonia TextBlock 没有 MiddleEllipsis 原生能力，`XYTruncatedText.Mode=Middle` 保留 API 但当前运行时降级为 canonical EndEllipsis，均不伪造为已解决。
 
-变体、状态、用途和 API 详情必须回到对应 canonical spec 查看；Gallery 不重复定义未经裁决的数值或语义。
+变体、状态、用途和 API 详情必须回到对应 canonical spec 查看；文档页只展示已登记且可由当前 Avalonia API 实例化的内容，不重复定义未经裁决的数值或语义。

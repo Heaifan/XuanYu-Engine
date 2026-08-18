@@ -4,93 +4,14 @@
         xmlns:g="using:XYUI.Avalonia.Gallery"
         x:Class="XYUI.Avalonia.Gallery.MainWindow"
         x:DataType="g:MainWindowModel"
-        Title="XYUI.Avalonia · Foundation Gallery · Component Catalog"
+        Title="XYUI.Avalonia · XYUI-1 文档 Gallery"
         Width="1120" Height="760"
         Background="{DynamicResource XY.Brush.Surface.App}">
   <DockPanel Margin="20">
     <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-      <TextBlock Text="XYUI Component Catalog &amp; Documented Gallery"
-                 Classes="xyui-heading-panel" />
-        <TextBlock Text="Canonical → Avalonia Runtime → Gallery（Foundation + XYUI-2 组件入口）"
-                 Classes="xyui-text-caption" />
+      <TextBlock Text="XYUI-1 · 文本与信息组件文档" Classes="xyui-heading-panel" />
+      <TextBlock Text="中文文档 / 实时预览 / 基础用法 / API / Design Token" Classes="xyui-text-caption" />
     </StackPanel>
-    <TabControl>
-      <TabItem Header="XYUI-1 · 文本与信息">
-        <views:XYUI1GalleryView />
-      </TabItem>
-      <TabItem Header="色板">
-        <ScrollViewer>
-          <ItemsControl ItemsSource="{Binding Sections}">
-            <ItemsControl.ItemTemplate>
-              <DataTemplate x:DataType="g:PaletteSection">
-                <StackPanel Margin="0,0,0,16">
-                  <TextBlock Text="{Binding Title}"
-                             Classes="xyui-text-section" />
-                  <ItemsControl ItemsSource="{Binding Items}">
-                    <ItemsControl.ItemsPanel>
-                      <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate x:DataType="g:PaletteItem">
-                        <Border Width="152" Margin="0,6,8,0" CornerRadius="4"
-                                BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}"
-                                BorderThickness="1">
-                          <StackPanel>
-                            <Border Height="36" Background="{Binding Brush}"
-                                    CornerRadius="3,3,0,0" />
-                            <StackPanel Margin="6,4">
-                              <TextBlock Text="{Binding TokenId}" FontSize="11"
-                                         Foreground="{DynamicResource XY.Brush.Text.Primary}" />
-                              <TextBlock Text="{Binding Hex}" FontSize="10"
-                                         Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
-                            </StackPanel>
-                          </StackPanel>
-                        </Border>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </StackPanel>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="Typography">
-        <views:TypographyView />
-      </TabItem>
-      <TabItem Header="形状">
-        <views:ShapeView />
-      </TabItem>
-      <TabItem Header="静态组合">
-        <ScrollViewer>
-          <StackPanel>
-            <views:ShapeSamplesView />
-            <views:DensitySamplesView />
-          </StackPanel>
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="消费示例">
-        <ScrollViewer>
-          <StackPanel>
-            <views:TypographySamplesView />
-            <views:FoundationSamplesView />
-            <views:FoundationStatesView />
-          </StackPanel>
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="交互状态">
-        <ScrollViewer>
-          <views:InteractionStatesView />
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="组件目录">
-        <views:CatalogView />
-      </TabItem>
-      <TabItem Header="组件示例">
-        <ScrollViewer>
-          <views:ComponentSamplesView />
-        </ScrollViewer>
-      </TabItem>
-    </TabControl>
+    <views:XYUI1DocumentationView />
   </DockPanel>
 </Window>

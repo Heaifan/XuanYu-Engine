@@ -19,11 +19,11 @@ public static class XYUI1GalleryCatalog
     static XYUI1GalleryItem Create(XyuiCatalogEntry entry)
     {
         var type = entry.AvaloniaType.Split('.').Last();
-        return new(entry.CanonicalId, entry.Name, entry.Title, Preview(entry.CanonicalId),
+        return new(entry.CanonicalId, entry.Name, entry.Title, CreatePreview(entry.CanonicalId),
             entry.Variants, entry.States, Usage(entry.CanonicalId, type), entry.ApiText, type);
     }
 
-    static Control Preview(string id) => id switch
+    public static Control CreatePreview(string id) => id switch
     {
         "XYUI-1-01" => new XYText { Text = "普通正文：地图数据说明" },
         "XYUI-1-02" => new XYLabel { Text = "字段名称" },

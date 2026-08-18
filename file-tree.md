@@ -2433,13 +2433,24 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Program.cs` — Gallery 入口（平台检测启动）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml` — Gallery 应用样式根（FluentTheme）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/App.axaml.cs` — 应用初始化：合并 Light 主题字典、挂主窗口，并加载 XyuiTextStyles/XyuiShapeStyles/**XyuiInteractionStyles**（F4 交互状态 Foundation）。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml` — 主窗口：色板 Tab（数据驱动 8 家族）+ 消费示例 Tab + **交互状态 Tab（F4）**。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml` — XYUI-1 文档 Gallery 主窗口（固定左侧导航，不再以顶部 TabControl 作为主导航）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/MainWindow.axaml.cs` — 主窗口数据模型（具名 MainWindowModel，x:DataType 编译绑定）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/PaletteCatalog.cs` — 色板数据模型（家族分组 + swatch 项）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml` — 消费示例：Surface/Text/Border/Accent 的 DynamicResource 用法。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml.cs` — 消费示例视图代码隐藏。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml` — 消费示例：State/Semantic/Disabled 三态的 DynamicResource 用法。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml.cs` — 状态示例视图代码隐藏。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationModels.cs` — XYUI-1 文档页的组件、变体、状态、API 与 Token 数据契约。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.cs` — 从 XYUI-1 Catalog 构建 24 个中文优先组件文档。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Content.cs` — 24 个组件的基础用法、变体和状态文案。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Api.cs` — 真实 Avalonia 属性与 Foundation Token 文档表。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.cs` — 左侧导航选择与模块/组件文档视图切换模型。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1DocumentationView.axaml` — Foundation 与 XYUI-1 左侧文档导航及主文档承载区。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1DocumentationView.axaml.cs` — 文档导航视图代码隐藏与模型初始化。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml` — XYUI-1 模块概览与 24 项紧凑组件索引。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml.cs` — 组件索引点击导航处理。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ComponentDocumentView.axaml` — 单组件中文文档模板（Preview/Usage/API/Token）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ComponentDocumentView.axaml.cs` — 单组件文档视图代码隐藏。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj` — 测试项目文件（xunit + Avalonia.Headless 12.0.4）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiHeadlessFixture.cs` — Headless 会话夹具（独立 UI 线程 dispatch）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiTestAppBuilder.cs` — Headless App 构建器（复用 Gallery App）。
@@ -2449,6 +2460,7 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/BrushRuntimeTests.cs` — 主题字典 key/类型/值/重复/缺失测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SecondTruthTests.cs` — 防回潮：未登记 hex 扫描 + AXAML 资源引用可解析。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/GallerySmokeTests.cs` — App 资源、窗口标题、色板覆盖 Headless 冒烟。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1DocumentationTests.cs` — XYUI-1 模块概览、24 页导航和真实文档数据覆盖测试。
 - `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTypographyTokens.cs` — Typography token 权威常量表（字体/字号/字重/行高/字距，转录 token-canonical-map.json）。
 - `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTypography.cs` — Typography 基础资源字典构建（31 个 XY.Font*/XY.FontSize*/XY.FontWeight*/XY.LineHeight*/XY.LetterSpacing* 资源）。
 - `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTextStyles.cs` — 语义文本样式类（代码构建 9 角色 xyui-text-*/xyui-heading-*，颜色消费 R3-F1 Brush）。

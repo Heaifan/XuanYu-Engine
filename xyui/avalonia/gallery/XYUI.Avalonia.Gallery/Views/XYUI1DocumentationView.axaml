@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.XYUI1DocumentationView"
+             x:DataType="g:XYUI1DocumentationViewModel">
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="Padding" Value="8,5" />
+      <Setter Property="Margin" Value="0,1" />
+    </Style>
+    <Style Selector="ListBoxItem:selected">
+      <Setter Property="Background" Value="{DynamicResource XY.Brush.Surface.Selected}" />
+    </Style>
+  </UserControl.Styles>
+  <Grid ColumnDefinitions="216,*">
+    <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.Panel}"
+            BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="0,0,1,0">
+      <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="12,16">
+          <TextBlock Text="文档导航" Classes="xyui-heading-panel" Margin="8,0,8,14" />
+          <TextBlock Text="Foundation" Classes="xyui-text-section" Margin="8,0,8,5" />
+          <TextBlock Text="色彩" Classes="xyui-text-caption" Margin="8,2" />
+          <TextBlock Text="Typography" Classes="xyui-text-caption" Margin="8,2" />
+          <TextBlock Text="形状" Classes="xyui-text-caption" Margin="8,2,8,14" />
+          <TextBlock Text="XYUI-1 · 文本与信息" Classes="xyui-text-section" Margin="8,0,8,5" />
+          <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="g:XYUI1NavigationItem">
+                <StackPanel Spacing="1">
+                  <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
+                  <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+    <ContentControl Grid.Column="1" Content="{Binding SelectedDocument}" />
+  </Grid>
+</UserControl>
