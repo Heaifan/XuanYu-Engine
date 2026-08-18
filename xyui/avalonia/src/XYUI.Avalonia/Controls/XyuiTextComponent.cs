@@ -32,9 +32,11 @@ public abstract class XyuiTextSurface : Border
     public string Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
     public abstract string CanonicalId { get; }
 
+    protected virtual string FormatText(string value) => value;
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == TextProperty) TextPresenter.Text = change.GetNewValue<string>();
+        if (change.Property == TextProperty) TextPresenter.Text = FormatText(change.GetNewValue<string>());
     }
 }

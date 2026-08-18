@@ -26,7 +26,10 @@ public static partial class XyuiComponentStyles
         var separator = new Style(x => x.OfType<XYSeparator>().Class("xyui-separator"));
         Brush(separator, Border.BackgroundProperty, "XY.Brush.Divider.Default"); separator.Setters.Add(new Setter(Border.HeightProperty, 1d)); styles.Add(separator);
         var tooltip = new Style(x => x.OfType<XYTooltip>().Class("xyui-tooltip"));
-        Brush(tooltip, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Overlay"); styles.Add(tooltip);
+        Brush(tooltip, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Overlay");
+        Brush(tooltip, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Subtle");
+        tooltip.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(2, 0, 0, 0)));
+        tooltip.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 4))); styles.Add(tooltip);
     }
 
     static void State(Styles styles, Type type, string cls, string brush)

@@ -44,7 +44,7 @@ public static class XYUI1GalleryCatalog
         "XYUI-1-17" => new XYWarningText { Text = "数据尚未保存。" },
         "XYUI-1-18" => new XYShortcutHint { Shortcut = "Ctrl + S" },
         "XYUI-1-19" => new XYTooltip { Content = new XYCaption { Text = "悬浮提示内容" } },
-        "XYUI-1-20" => new XYRichText { Text = "富文本中的普通内容" },
+        "XYUI-1-20" => new XYRichText { Text = "普通内容", StrongText = "重点信息", MonoText = "region-7ad21c" },
         "XYUI-1-21" => new XYSelectableText { Text = "可复制的对象 ID" },
         "XYUI-1-22" => new XYEmptyText { Text = "暂无区域数据" },
         "XYUI-1-23" => new XYSearchHighlight { Text = "命中：区域数据集" },

@@ -2497,6 +2497,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogSpecReader.cs` — 从 canonical spec 提取用途、变体、状态和场景文案。
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogTypeMap.cs` — Canonical ID 到稳定 Avalonia 类型名及 Gallery 覆盖映射。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiTextComponent.cs` — XYUI-1 文本组件共同基类与文本 surface 基类。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiMarkedTextComponent.cs` — XYUI-1 带语义标记文本组件的格式化基类。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYText.cs` — XYUI-1-01 普通文本组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYLabel.cs` — XYUI-1-02 字段名称组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYCaption.cs` — XYUI-1-03 辅助信息组件。
@@ -2529,5 +2530,6 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1GalleryView.axaml` — XYUI-1 独立模块 Gallery 页面与单一 Scroll 展示。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1GalleryView.axaml.cs` — XYUI-1 Gallery 页面代码隐藏。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1CoverageTests.cs` — XYUI-1 24 项 inventory、identity、creation、Catalog/Gallery/Usage 覆盖测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1FidelityTests.cs` — XYUI-1 R5 canonical 标记、Icon 尺寸/笔画、Rich/Selectable/截断契约回归测试。
 - `xyui/avalonia/gallery/XYUI-1-COMPONENT-INVENTORY.md` — XYUI-1 24 项组件矩阵与 Foundation/Component 边界记录。
 - `xyui/specs/XYUI1/XYUI-1.gaps.json` — XYUI-1 glyph registry 与 MiddleEllipsis 映射 Gap 登记。

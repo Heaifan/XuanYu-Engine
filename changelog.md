@@ -18,6 +18,13 @@
 
 ---
 
+## XYUI.AVALONIA-R5-F1-CANONICAL · XYUI-1 组件语义修复（2026-08-18 21:39:41）
+修复 R5 真机验收清单中 XYUI-1 的 17 项 canonical fidelity 问题；本轮仍只推进 XYUI-1，不进入 XYUI-2/R6。
+- 变化：补齐 Label/SectionTitle/CodeText 的层级与语义标记；修正 MonoText、Badge、StatusBadge、Icon/IconLabel 的结构、尺寸和笔画映射；补齐 Help/Error/Warning/Tooltip 的行内提示标记；实现 RichText、SelectableText、EmptyText、SearchHighlight 与 TruncatedText 的文档/API/运行时契约。
+- 变化：Gallery 继续保持中文优先、单组件真实 Preview、Usage/API/Token 证据；Middle 截断保留 GAP-002 诚实登记，Icon glyph registry 保留 GAP-001。
+- 验证：`XuanYu.Engine.slnx` 与 `XYUI.Avalonia.slnx` 完整 Build 均为 0 警告 0 错误；XYUI.Avalonia.Tests 62/62 PASS；XYUI.Avalonia Gallery 真实进程启动并保持运行，无新的 `.NET Runtime` / `Application Error` 事件；独立 5+100 与 `git diff --check` PASS。ARCH-A 总脚本因独立分支现有 `run.bat` 改造仍硬编码查找不存在的 `XuanYu.Editor.App`，未修改用户文件，登记为环境阻断。
+- 状态：READY FOR USER ACCEPTANCE；R5 未 CLOSED，未启动 XYUI-2。
+
 ## XYUI.AVALONIA-R5-F1-NAV · Foundation 导航接线（2026-08-18 20:32:57）
 修复 Gallery 左侧 Foundation 下的色彩、Typography、形状只是静态文字、无法切换页面的问题。
 - 变化：新增可选 Foundation 导航项；色彩加载 Palette 页面，字体与排版加载 Typography 页面，形状加载 Shape 页面；XYUI-1 文档导航与顶部主导航保持不变。

@@ -12,6 +12,7 @@ public sealed class XYStatusBadge : XyuiTextSurface
     public XYStatusBadge() : base("xyui-status-badge") => ApplyState(State);
     public override string CanonicalId => "XYUI-1-10";
     public XyuiStatusState State { get => GetValue(StateProperty); set { SetValue(StateProperty, value); ApplyState(value); } }
+    protected override string FormatText(string value) => $"●  {value}";
     void ApplyState(XyuiStatusState value)
     {
         foreach (var state in Enum.GetNames<XyuiStatusState>())

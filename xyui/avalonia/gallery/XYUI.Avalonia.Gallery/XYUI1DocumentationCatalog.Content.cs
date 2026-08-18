@@ -9,11 +9,12 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-09" => [$"<xy:{type} Text=\"草稿\" />", $"<xy:{type} Text=\"已选中\" Variant=\"Accent\" />"],
         "XYUI-1-10" => [$"<xy:{type} Text=\"已保存\" State=\"Success\" />", $"<xy:{type} Text=\"未同步\" State=\"Warning\" />"],
         "XYUI-1-11" => [$"<xy:{type} State=\"Info\" />", $"<xy:{type} State=\"Error\" />"],
-        "XYUI-1-12" => [$"<xy:{type} Glyph=\"◇\" />", $"<xy:{type} Glyph=\"◇\" Size=\"Large\" />"],
+        "XYUI-1-12" => [$"<xy:{type} Glyph=\"◇\" Size=\"Default\" />", $"<xy:{type} Glyph=\"◇\" Size=\"Large\" />"],
         "XYUI-1-13" => [$"<xy:{type} IconGlyph=\"◇\" Label=\"区域\" />"],
         "XYUI-1-14" => [$"<xy:{type} Variant=\"Section\" />", $"<xy:{type} Variant=\"VerticalSplit\" />"],
         "XYUI-1-18" => [$"<xy:{type} Shortcut=\"Ctrl + S\" />"],
         "XYUI-1-19" => [$"<xy:{type} Content=\"提示内容\" />"],
+        "XYUI-1-20" => [$"<xy:{type} Text=\"普通内容\" StrongText=\"重点信息\" MonoText=\"region-7ad21c\" />"],
         "XYUI-1-21" => [$"<xy:{type} Text=\"可复制 ID\" />", $"<xy:{type} Text=\"region-7ad21c\" Classes=\"xyui-mono-text\" />"],
         "XYUI-1-24" => [$"<xy:{type} Text=\"长对象名称\" Mode=\"End\" />", $"<xy:{type} Text=\"region-7ad21c\" Mode=\"Middle\" />"],
         _ => [$"<xy:{type} Text=\"示例内容\" />"]
@@ -24,6 +25,7 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-04" => [new("PanelTitle", "面板标题层级", "区域数据集"), new("PageTitle", "页面标题层级", "地图编辑")],
         "XYUI-1-09" => [new("Default", "普通标签", "草稿"), new("Accent", "强调标签", "已选中")],
         "XYUI-1-14" => [new("Section", "区块分割", "属性分组"), new("VerticalSplit", "垂直分割", "主区 / 侧栏")],
+        "XYUI-1-12" => [new("Tiny", "12 DIP / 1.0 DIP", "紧凑工具栏"), new("Small", "14 DIP / 1.25 DIP", "列表与内联"), new("Default", "16 DIP / 1.5 DIP", "默认图标"), new("Large", "20 DIP / 1.75 DIP", "强调入口")],
         "XYUI-1-21" => [new("Default", "普通可选择文本", "可复制 ID"), new("Technical", "技术值等宽风格", "region-7ad21c")],
         "XYUI-1-24" => [new("End", "末尾省略", "长对象名称..."), new("Middle", "中部省略", "region-...7ad21c")],
         _ => []
