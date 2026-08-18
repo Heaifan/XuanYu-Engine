@@ -1,20 +1,22 @@
-# XYUI-1～9 覆盖矩阵说明
+# XYUI.AVALONIA-R5 · XYUI-1 覆盖矩阵
 
 覆盖矩阵由 Gallery 运行时从 Registry/Mapping/Spec 读取，避免手工复制组件清单。矩阵字段为：
 
 `DESIGNED | CANONICAL | AVALONIA | GALLERY | DOCUMENTED | READY`
 
-当前已进入 Avalonia/Gallery 的真实 XYUI-2 条目：
+XYUI-1 本轮冻结为 canonical mapping 中的 24 个组件，全部登记到 Avalonia/Catalog/Gallery/Usage/Tests：
 
-| Source Item ID | Canonical ID | Avalonia type | Canonical 入口 |
+| Source Item ID | Canonical ID | Avalonia type | Gallery |
 |---|---|---|---|
-| XYUI-2-01 | XYUI-2-01 | `XYUI.Avalonia.Controls.XYButton` | `XY.Button` |
-| XYUI-2-02 | XYUI-2-02 | `XYUI.Avalonia.Controls.XYIconButton` | `XY.IconButton` |
-| XYUI-2-03 | XYUI-2-03 | `XYUI.Avalonia.Controls.XYToggleButton` | `XY.ToggleButton` |
-| XYUI-2-06 | XYUI-2-06 | `XYUI.Avalonia.Controls.XYCheckbox` | `XY.Checkbox` |
-| XYUI-2-09 | XYUI-2-09 | `XYUI.Avalonia.Controls.XYTextField` | `XY.TextField` |
+| XYUI-1-01～24 | XYUI-1-01～24 | `XYUI.Avalonia.Controls.XY*` 24/24 | `XYUI-1 · 文本与信息` |
 
-其余 XYUI-1～8 条目已纳入 Catalog 的设计、canonical 和文档层；没有对应的当前 Avalonia 类型就保持非 READY。
-XYUI-9 在当前仓库没有 source/spec/pack，矩阵唯一行明确为 `SOURCE NOT PRESENT IN CURRENT REPOSITORY`。
+| Canonical | 24/24 | mapping 24/24 | — |
+| Avalonia | 24/24 | stable public type + identity | — |
+| Catalog | 24/24 | registry/mapping/spec driven | — |
+| Gallery | 24/24 | real control Preview | — |
+| Usage | 24/24 | real type/property examples | — |
+| Tests | 24/24 | 56/56 PASS | — |
+
+Gap：`XYUI1-GAP-001` Icon glyph registry；`XYUI1-GAP-002` Avalonia TextBlock 没有 MiddleEllipsis 原生能力，`XYTruncatedText.Mode=Middle` 保留 API 但当前运行时降级为 canonical EndEllipsis，均不伪造为已解决。
 
 变体、状态、用途和 API 详情必须回到对应 canonical spec 查看；Gallery 不重复定义未经裁决的数值或语义。

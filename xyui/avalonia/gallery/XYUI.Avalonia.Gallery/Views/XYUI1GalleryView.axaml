@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.XYUI1GalleryView"
+             x:DataType="g:MainWindowModel">
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Background="{DynamicResource XY.Brush.Surface.Panel}"
+            Padding="{DynamicResource XY.Panel.Padding}" Margin="0,0,0,12">
+      <StackPanel>
+        <TextBlock Text="XYUI-1 · 文本与信息 / Text &amp; Information" Classes="xyui-heading-panel" />
+        <TextBlock Text="24 个 canonical 组件 · Avalonia 24/24 · Catalog 24/24 · Gallery 24/24 · Usage 24/24"
+                   Classes="xyui-text-caption" />
+      </StackPanel>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <ItemsControl ItemsSource="{Binding XYUI1Entries}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="g:XYUI1GalleryItem">
+            <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+                    BorderThickness="0,0,0,1" Padding="8,10">
+              <Grid ColumnDefinitions="82,*,240" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                <TextBlock Text="{Binding Id}" Classes="xyui-text-code" />
+                <StackPanel Grid.Column="1" Spacing="2">
+                  <TextBlock Text="{Binding Name}" Classes="xyui-text-label" />
+                  <TextBlock Text="{Binding Title}" Classes="xyui-text-caption" />
+                </StackPanel>
+                <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
+                        Padding="8,4" MinHeight="28" VerticalAlignment="Center">
+                  <ContentControl Content="{Binding Preview}" />
+                </Border>
+                <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Usage}"
+                           Classes="xyui-text-code" Margin="0,6,0,0" />
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                  <TextBlock Text="变体：" Classes="xyui-text-caption" />
+                  <TextBlock Text="{Binding Variants}" Classes="xyui-text-caption" />
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
+                  <TextBlock Text="状态：" Classes="xyui-text-caption" />
+                  <TextBlock Text="{Binding States}" Classes="xyui-text-caption" />
+                </StackPanel>
+                <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+                  <TextBlock Text="Canonical Dependencies：" Classes="xyui-text-caption" />
+                  <TextBlock Text="{Binding CanonicalDependencies}" Classes="xyui-text-caption" />
+                </StackPanel>
+                <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+                  <TextBlock Text="Avalonia Type：" Classes="xyui-text-code" />
+                  <TextBlock Text="{Binding AvaloniaType}" Classes="xyui-text-code" />
+                </StackPanel>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

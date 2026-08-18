@@ -11,10 +11,13 @@
     <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
       <TextBlock Text="XYUI Component Catalog &amp; Documented Gallery"
                  Classes="xyui-heading-panel" />
-      <TextBlock Text="Canonical → Avalonia Runtime → Gallery（Foundation + XYUI-2 组件入口）"
+        <TextBlock Text="Canonical → Avalonia Runtime → Gallery（Foundation + XYUI-2 组件入口）"
                  Classes="xyui-text-caption" />
     </StackPanel>
     <TabControl>
+      <TabItem Header="XYUI-1 · 文本与信息">
+        <views:XYUI1GalleryView />
+      </TabItem>
       <TabItem Header="色板">
         <ScrollViewer>
           <ItemsControl ItemsSource="{Binding Sections}">

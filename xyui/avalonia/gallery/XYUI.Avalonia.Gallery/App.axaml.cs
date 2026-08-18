@@ -20,6 +20,7 @@ public partial class App : Application
         Styles.Add(XyuiShapeStyles.Create());
         Styles.Add(XyuiInteractionStyles.Create());
         Styles.Add(XyuiControlStyles.Create());
+        Styles.Add(XyuiComponentStyles.Create());
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();

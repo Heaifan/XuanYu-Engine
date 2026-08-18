@@ -3,27 +3,6 @@ using System.Text.Json;
 namespace XYUI.Avalonia.Catalog;
 public static class XyuiCatalogSource
 {
-    static readonly IReadOnlyDictionary<string, string> AvaloniaTypes =
-        new Dictionary<string, string>(StringComparer.Ordinal)
-        {
-            ["XYUI-2-01"] = "XYUI.Avalonia.Controls.XYButton",
-            ["XYUI-2-02"] = "XYUI.Avalonia.Controls.XYIconButton",
-            ["XYUI-2-03"] = "XYUI.Avalonia.Controls.XYToggleButton",
-            ["XYUI-2-06"] = "XYUI.Avalonia.Controls.XYCheckbox",
-            ["XYUI-2-09"] = "XYUI.Avalonia.Controls.XYTextField",
-            ["XYUI0-0.2"] = "XYUI.Avalonia.Foundation.XyuiColorTokens",
-            ["XYUI0-0.3"] = "XYUI.Avalonia.Typography.XyuiTypography",
-            ["XYUI0-0.3-C"] = "XYUI.Avalonia.Typography.XyuiTypographyTokens",
-            ["XYUI0-0.6"] = "XYUI.Avalonia.Spatial.XyuiSpatialTokens",
-            ["XYUI0-0.9"] = "XYUI.Avalonia.Spatial.XyuiSpatialTokens",
-            ["XYUI0-0.20"] = "XYUI.Avalonia.Interaction.XyuiInteractionState",
-        };
-
-    static readonly IReadOnlySet<string> GalleryIds = new HashSet<string>(
-        new[] { "XYUI0-0.2", "XYUI0-0.3", "XYUI0-0.6", "XYUI0-0.9", "XYUI0-0.20",
-            "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-06", "XYUI-2-09" },
-        StringComparer.Ordinal);
-
     public static IReadOnlyList<XyuiCatalogEntry> Load()
     {
         var root = XyuiCatalogPaths.FindRepositoryRoot();
@@ -76,7 +55,7 @@ public static class XyuiCatalogSource
             var api = component.GetProperty("refs").EnumerateArray()
                 .Select(item => String(item, "property")).Distinct().Take(8).ToArray();
             var details = XyuiCatalogSpecReader.Read(specification, name);
-            entries.Add(Create(module, id, id, name, $"xyui/specs/XYUI{phase}/{module}.canonical.md",
+            entries.Add(Create(module, id, id, $"{name}｜{title}", $"xyui/specs/XYUI{phase}/{module}.canonical.md",
                 File.Exists(specification), api, details));
         }
     }
@@ -85,10 +64,10 @@ public static class XyuiCatalogSource
         string title, string specification, bool documented, IReadOnlyList<string>? api = null,
         XyuiCatalogDetails? details = null)
     {
-        var name = title.Split('|')[0].Trim().Split('/')[0].Trim();
-        var avalonia = AvaloniaTypes.TryGetValue(source, out var type);
-        var present = true;
-        var status = new XyuiCatalogStatus(true, true, avalonia, GalleryIds.Contains(source), documented);
+        var name = title.Split(new[] { '|', '｜' })[0].Trim().Split('/')[0].Trim();
+            var avalonia = XyuiCatalogTypeMap.Types.TryGetValue(source, out var type);
+            var present = true;
+        var status = new XyuiCatalogStatus(true, true, avalonia, XyuiCatalogTypeMap.GalleryIds.Contains(source), documented);
         return new(module, source, canonical, name, title, details?.Description ?? title,
             details?.Preview ?? "Foundation runtime", details?.Variants ?? "See canonical spec",
             details?.States ?? "See canonical spec", details?.Usage ?? "See canonical spec", specification,

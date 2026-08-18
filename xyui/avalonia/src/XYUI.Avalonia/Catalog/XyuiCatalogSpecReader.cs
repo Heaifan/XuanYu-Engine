@@ -19,14 +19,15 @@ internal static class XyuiCatalogSpecReader
     static string Block(string[] lines, int start, int end, string heading)
     {
         var marker = Array.FindIndex(lines, start, end - start, line => line.Trim() == $"- {heading}");
-        if (marker < 0) return "UNRESOLVED in canonical spec";
+        if (marker < 0) return "None defined";
         var values = new List<string>();
-        for (var i = marker + 1; i < end && !lines[i].StartsWith("    - "); i++)
+        for (var i = marker + 1; i < end; i++)
         {
+            if (!lines[i].StartsWith("    - ")) continue;
             var value = lines[i].Trim();
             if (value.StartsWith("- ")) values.Add(value[2..]);
         }
-        return values.Count == 0 ? "UNRESOLVED in canonical spec" : string.Join("；", values);
+        return values.Count == 0 ? "None defined" : string.Join("；", values);
     }
 }
 

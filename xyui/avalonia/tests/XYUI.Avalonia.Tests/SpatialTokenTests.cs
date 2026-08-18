@@ -24,48 +24,48 @@ public class SpatialTokenTests
     [Fact]
     public void Spacing_Matches_Canonical()
     {
-        Assert.Equal(Dim(MapValue("XY.Space.1")), XyuiSpatialTokens.Space1);
-        Assert.Equal(Dim(MapValue("XY.Space.2")), XyuiSpatialTokens.Space2);
-        Assert.Equal(Dim(MapValue("XY.Space.3")), XyuiSpatialTokens.Space3);
-        Assert.Equal(Dim(MapValue("XY.Space.4")), XyuiSpatialTokens.Space4);
-        Assert.Equal(Dim(MapValue("XY.Space.6")), XyuiSpatialTokens.Space6);
-        Assert.Equal(Dim(MapValue("XY.Space.8")), XyuiSpatialTokens.Space8);
-        Assert.Equal(Dim(MapValue("XY.Space.10")), XyuiSpatialTokens.Space10);
-        Assert.Equal(Dim(MapValue("XY.Space.12")), XyuiSpatialTokens.Space12);
-        Assert.Equal(Dim(MapValue("XY.Panel.Padding")), XyuiSpatialTokens.PanelPadding);
-        Assert.Equal(Dim(MapValue("XY.Panel.Field.RowGap")), XyuiSpatialTokens.FieldRowGap);
+        Assert.Equal(XyuiSpatialTokens.Space1, Dim(MapValue("XY.Space.1")));
+        Assert.Equal(XyuiSpatialTokens.Space2, Dim(MapValue("XY.Space.2")));
+        Assert.Equal(XyuiSpatialTokens.Space3, Dim(MapValue("XY.Space.3")));
+        Assert.Equal(XyuiSpatialTokens.Space4, Dim(MapValue("XY.Space.4")));
+        Assert.Equal(XyuiSpatialTokens.Space6, Dim(MapValue("XY.Space.6")));
+        Assert.Equal(XyuiSpatialTokens.Space8, Dim(MapValue("XY.Space.8")));
+        Assert.Equal(XyuiSpatialTokens.Space10, Dim(MapValue("XY.Space.10")));
+        Assert.Equal(XyuiSpatialTokens.Space12, Dim(MapValue("XY.Space.12")));
+        Assert.Equal(XyuiSpatialTokens.PanelPadding, Dim(MapValue("XY.Panel.Padding")));
+        Assert.Equal(XyuiSpatialTokens.FieldRowGap, Dim(MapValue("XY.Panel.Field.RowGap")));
     }
 
     [Fact]
     public void Radius_Matches_Canonical()
     {
-        Assert.Equal(Dim(MapValue("XY.Radius.None")), XyuiSpatialTokens.RadiusNone);
-        Assert.Equal(Dim(MapValue("XY.Radius.Toolbar")), XyuiSpatialTokens.RadiusToolbar);
-        Assert.Equal(Dim(MapValue("XY.Radius.Control")), XyuiSpatialTokens.RadiusControl);
-        Assert.Equal(Dim(MapValue("XY.Radius.Input")), XyuiSpatialTokens.RadiusInput);
-        Assert.Equal(Dim(MapValue("XY.Radius.Button")), XyuiSpatialTokens.RadiusButton);
-        Assert.Equal(Dim(MapValue("XY.Radius.Popup")), XyuiSpatialTokens.RadiusPopup);
-        Assert.Equal(Dim(MapValue("XY.Radius.Panel")), XyuiSpatialTokens.RadiusPanel);
-        Assert.Equal(Dim(MapValue("XY.Radius.Row")), XyuiSpatialTokens.RadiusRow);
-        Assert.Equal(Dim(MapValue("XY.Radius.Full")), XyuiSpatialTokens.RadiusFull);
+        Assert.Equal(XyuiSpatialTokens.RadiusNone, Dim(MapValue("XY.Radius.None")));
+        Assert.Equal(XyuiSpatialTokens.RadiusToolbar, Dim(MapValue("XY.Radius.Toolbar")));
+        Assert.Equal(XyuiSpatialTokens.RadiusControl, Dim(MapValue("XY.Radius.Control")));
+        Assert.Equal(XyuiSpatialTokens.RadiusInput, Dim(MapValue("XY.Radius.Input")));
+        Assert.Equal(XyuiSpatialTokens.RadiusButton, Dim(MapValue("XY.Radius.Button")));
+        Assert.Equal(XyuiSpatialTokens.RadiusPopup, Dim(MapValue("XY.Radius.Popup")));
+        Assert.Equal(XyuiSpatialTokens.RadiusPanel, Dim(MapValue("XY.Radius.Panel")));
+        Assert.Equal(XyuiSpatialTokens.RadiusRow, Dim(MapValue("XY.Radius.Row")));
+        Assert.Equal(XyuiSpatialTokens.RadiusFull, Dim(MapValue("XY.Radius.Full")));
     }
 
     [Fact]
     public void Border_Width_Matches_Canonical()
     {
-        Assert.Equal(Dim(MapValue("XY.Border.Width.None")), XyuiSpatialTokens.BorderWidthNone);
-        Assert.Equal(Dim(MapValue("XY.Border.Width.Default")), XyuiSpatialTokens.BorderWidthDefault);
-        Assert.Equal(Dim(MapValue("XY.Border.Width.Strong")), XyuiSpatialTokens.BorderWidthStrong);
-        Assert.Equal(Dim(MapValue("XY.Border.Width.Focus")), XyuiSpatialTokens.BorderWidthFocus);
-        Assert.Equal(Dim(MapValue("XY.Border.Width.Selected")), XyuiSpatialTokens.BorderWidthSelected);
+        Assert.Equal(XyuiSpatialTokens.BorderWidthNone, Dim(MapValue("XY.Border.Width.None")));
+        Assert.Equal(XyuiSpatialTokens.BorderWidthDefault, Dim(MapValue("XY.Border.Width.Default")));
+        Assert.Equal(XyuiSpatialTokens.BorderWidthStrong, Dim(MapValue("XY.Border.Width.Strong")));
+        Assert.Equal(XyuiSpatialTokens.BorderWidthFocus, Dim(MapValue("XY.Border.Width.Focus")));
+        Assert.Equal(XyuiSpatialTokens.BorderWidthSelected, Dim(MapValue("XY.Border.Width.Selected")));
     }
 
     [Fact]
     public void Shadow_Specs_Matches_Canonical()
     {
-        Assert.Equal(MapValue("XY.Shadow.Tooltip"), XyuiSpatialTokens.ShadowTooltip);
-        Assert.Equal(MapValue("XY.Shadow.Popup"), XyuiSpatialTokens.ShadowPopup);
-        Assert.Equal(MapValue("XY.Shadow.DragPreview"), XyuiSpatialTokens.ShadowDragPreview);
-        Assert.Equal("None", XyuiSpatialTokens.ShadowNone);
+        Assert.Equal(XyuiSpatialTokens.ShadowTooltip, MapValue("XY.Shadow.Tooltip"));
+        Assert.Equal(XyuiSpatialTokens.ShadowPopup, MapValue("XY.Shadow.Popup"));
+        Assert.Equal(XyuiSpatialTokens.ShadowDragPreview, MapValue("XY.Shadow.DragPreview"));
+        Assert.Equal(XyuiSpatialTokens.ShadowNone, "None");
     }
 }

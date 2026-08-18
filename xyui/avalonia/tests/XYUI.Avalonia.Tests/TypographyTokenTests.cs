@@ -28,10 +28,10 @@ public class TypographyTokenTests
     [Fact]
     public void Font_Family_Matches_Canonical()
     {
-        Assert.Equal(MapValue("XY.Font.UI"), XyuiTypographyTokens.FontUi);
-        Assert.Equal(MapValue("XY.Font.Mono"), XyuiTypographyTokens.FontMono);
-        Assert.Equal(MapValue("XY.Font.Fallback.CJK"), XyuiTypographyTokens.FontFallbackCjk);
-        Assert.Equal(MapValue("XY.Font.Fallback.Mono"), XyuiTypographyTokens.FontFallbackMono);
+        Assert.Equal(XyuiTypographyTokens.FontUi, MapValue("XY.Font.UI"));
+        Assert.Equal(XyuiTypographyTokens.FontMono, MapValue("XY.Font.Mono"));
+        Assert.Equal(XyuiTypographyTokens.FontFallbackCjk, MapValue("XY.Font.Fallback.CJK"));
+        Assert.Equal(XyuiTypographyTokens.FontFallbackMono, MapValue("XY.Font.Fallback.Mono"));
         Assert.Equal(XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontDefault);
         Assert.Equal(XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontTechnical);
     }
@@ -39,44 +39,44 @@ public class TypographyTokenTests
     [Fact]
     public void Font_Size_Matches_Canonical()
     {
-        Assert.Equal(Dim(MapValue("XY.FontSize.Caption")), XyuiTypographyTokens.FontSizeCaption);
-        Assert.Equal(Dim(MapValue("XY.FontSize.Auxiliary")), XyuiTypographyTokens.FontSizeAuxiliary);
-        Assert.Equal(Dim(MapValue("XY.FontSize.Body")), XyuiTypographyTokens.FontSizeBody);
-        Assert.Equal(Dim(MapValue("XY.FontSize.Label")), XyuiTypographyTokens.FontSizeLabel);
-        Assert.Equal(Dim(MapValue("XY.FontSize.Section")), XyuiTypographyTokens.FontSizeSection);
-        Assert.Equal(Dim(MapValue("XY.FontSize.PanelTitle")), XyuiTypographyTokens.FontSizePanelTitle);
-        Assert.Equal(Dim(MapValue("XY.FontSize.PageTitle")), XyuiTypographyTokens.FontSizePageTitle);
-        Assert.Equal(Dim(MapValue("XY.FontSize.Mono")), XyuiTypographyTokens.FontSizeMono);
+        Assert.Equal(XyuiTypographyTokens.FontSizeCaption, Dim(MapValue("XY.FontSize.Caption")));
+        Assert.Equal(XyuiTypographyTokens.FontSizeAuxiliary, Dim(MapValue("XY.FontSize.Auxiliary")));
+        Assert.Equal(XyuiTypographyTokens.FontSizeBody, Dim(MapValue("XY.FontSize.Body")));
+        Assert.Equal(XyuiTypographyTokens.FontSizeLabel, Dim(MapValue("XY.FontSize.Label")));
+        Assert.Equal(XyuiTypographyTokens.FontSizeSection, Dim(MapValue("XY.FontSize.Section")));
+        Assert.Equal(XyuiTypographyTokens.FontSizePanelTitle, Dim(MapValue("XY.FontSize.PanelTitle")));
+        Assert.Equal(XyuiTypographyTokens.FontSizePageTitle, Dim(MapValue("XY.FontSize.PageTitle")));
+        Assert.Equal(XyuiTypographyTokens.FontSizeMono, Dim(MapValue("XY.FontSize.Mono")));
     }
 
     [Fact]
     public void Font_Weight_Matches_Canonical()
     {
-        Assert.Equal(Num(MapValue("XY.FontWeight.Regular")), XyuiTypographyTokens.WeightRegular);
-        Assert.Equal(Num(MapValue("XY.FontWeight.Medium")), XyuiTypographyTokens.WeightMedium);
-        Assert.Equal(Num(MapValue("XY.FontWeight.Semibold")), XyuiTypographyTokens.WeightSemibold);
-        Assert.Equal(Num(MapValue("XY.FontWeight.Bold")), XyuiTypographyTokens.WeightBold);
+        Assert.Equal(XyuiTypographyTokens.WeightRegular, Num(MapValue("XY.FontWeight.Regular")));
+        Assert.Equal(XyuiTypographyTokens.WeightMedium, Num(MapValue("XY.FontWeight.Medium")));
+        Assert.Equal(XyuiTypographyTokens.WeightSemibold, Num(MapValue("XY.FontWeight.Semibold")));
+        Assert.Equal(XyuiTypographyTokens.WeightBold, Num(MapValue("XY.FontWeight.Bold")));
     }
 
     [Fact]
     public void Line_Height_Matches_Canonical()
     {
-        Assert.Equal(Line(MapValue("XY.LineHeight.Caption")), XyuiTypographyTokens.LineHeightCaption);
-        Assert.Equal(Line(MapValue("XY.LineHeight.Body")), XyuiTypographyTokens.LineHeightBody);
-        Assert.Equal(Line(MapValue("XY.LineHeight.Label")), XyuiTypographyTokens.LineHeightLabel);
-        Assert.Equal(Line(MapValue("XY.LineHeight.Section")), XyuiTypographyTokens.LineHeightSection);
-        Assert.Equal(Line(MapValue("XY.LineHeight.PanelTitle")), XyuiTypographyTokens.LineHeightPanelTitle);
-        Assert.Equal(Line(MapValue("XY.LineHeight.PageTitle")), XyuiTypographyTokens.LineHeightPageTitle);
-        Assert.Equal(Line(MapValue("XY.LineHeight.Mono")), XyuiTypographyTokens.LineHeightMono);
+        Assert.Equal(XyuiTypographyTokens.LineHeightCaption, Line(MapValue("XY.LineHeight.Caption")));
+        Assert.Equal(XyuiTypographyTokens.LineHeightBody, Line(MapValue("XY.LineHeight.Body")));
+        Assert.Equal(XyuiTypographyTokens.LineHeightLabel, Line(MapValue("XY.LineHeight.Label")));
+        Assert.Equal(XyuiTypographyTokens.LineHeightSection, Line(MapValue("XY.LineHeight.Section")));
+        Assert.Equal(XyuiTypographyTokens.LineHeightPanelTitle, Line(MapValue("XY.LineHeight.PanelTitle")));
+        Assert.Equal(XyuiTypographyTokens.LineHeightPageTitle, Line(MapValue("XY.LineHeight.PageTitle")));
+        Assert.Equal(XyuiTypographyTokens.LineHeightMono, Line(MapValue("XY.LineHeight.Mono")));
     }
 
     [Fact]
     public void Letter_Spacing_Matches_Canonical()
     {
-        Assert.Equal(Num(MapValue("XY.LetterSpacing.Body")), XyuiTypographyTokens.LetterSpacingBody);
-        Assert.Equal(Num(MapValue("XY.LetterSpacing.Label")), XyuiTypographyTokens.LetterSpacingLabel);
-        Assert.Equal(Num(MapValue("XY.LetterSpacing.Title")), XyuiTypographyTokens.LetterSpacingTitle);
-        Assert.Equal(Num(MapValue("XY.LetterSpacing.Caps")), XyuiTypographyTokens.LetterSpacingCaps);
-        Assert.Equal(Num(MapValue("XY.LetterSpacing.Mono")), XyuiTypographyTokens.LetterSpacingMono);
+        Assert.Equal(XyuiTypographyTokens.LetterSpacingBody, Num(MapValue("XY.LetterSpacing.Body")));
+        Assert.Equal(XyuiTypographyTokens.LetterSpacingLabel, Num(MapValue("XY.LetterSpacing.Label")));
+        Assert.Equal(XyuiTypographyTokens.LetterSpacingTitle, Num(MapValue("XY.LetterSpacing.Title")));
+        Assert.Equal(XyuiTypographyTokens.LetterSpacingCaps, Num(MapValue("XY.LetterSpacing.Caps")));
+        Assert.Equal(XyuiTypographyTokens.LetterSpacingMono, Num(MapValue("XY.LetterSpacing.Mono")));
     }
 }
