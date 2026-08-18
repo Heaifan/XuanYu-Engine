@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.VisualTree;
 using XYUI.Avalonia.Controls;
+using XYUI.Avalonia.Gallery;
 using XYUI.Avalonia.Vector;
 using VectorPath = Avalonia.Controls.Shapes.Path;
 
@@ -39,6 +40,31 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
         icon.Size = XyuiIconSize.Small; Assert.Equal(1.25d, icon.StrokeWidth);
         icon.Size = XyuiIconSize.Default; Assert.Equal(1.5d, icon.StrokeWidth);
         icon.Size = XyuiIconSize.Large; Assert.Equal(1.75d, icon.StrokeWidth);
+    });
+
+    [Fact]
+    public void Corner_marks_and_badge_shape_follow_precision_contract() => _fx.Run(() =>
+    {
+        var code = Mark(new XYCodeText { Text = "terrain/main-heightfield" }, "xyui-code-text-mark");
+        Assert.Equal(8, code.Width); Assert.Equal(8, code.Height); Assert.Equal(1, code.StrokeThickness); Assert.False(code.IsHitTestVisible);
+        Assert.Equal(6, Canvas.GetRight(code)); Assert.Equal(5, Canvas.GetBottom(code));
+        var search = Mark(new XYSearchHighlight { Text = "Main Terrain Layer" }, "xyui-search-highlight-mark");
+        Assert.Equal(8, search.Width); Assert.Equal(8, search.Height); Assert.Equal(1, search.StrokeThickness); Assert.False(search.IsHitTestVisible);
+        Assert.Equal(6, Canvas.GetRight(search)); Assert.Equal(5, Canvas.GetTop(search));
+        var badge = new XYBadge { Text = "草稿" }; var shape = Mark(badge, "xyui-badge-background-shape");
+        Assert.Equal(22, badge.Height); Assert.NotNull(shape.Data); Assert.Contains("xyui-badge-background-shape", shape.Classes);
+    });
+
+    [Fact]
+    public void Mono_preview_uses_shared_columns_and_row_rhythm() => _fx.Run(() =>
+    {
+        var grid = Assert.IsType<Grid>(XYUI1GalleryCatalog.CreatePreview("XYUI-1-08"));
+        Assert.Equal(3, grid.ColumnDefinitions.Count); Assert.Equal(4, grid.RowDefinitions.Count);
+        Assert.Equal(new GridLength(96), grid.ColumnDefinitions[0].Width); Assert.Equal(new GridLength(24), grid.ColumnDefinitions[1].Width);
+        Assert.All(grid.RowDefinitions, row => Assert.Equal(new GridLength(22), row.Height));
+        Assert.Equal(new[] { 0, 0, 0, 0 }, grid.Children.OfType<XYLabel>().Select(Grid.GetColumn));
+        Assert.Equal(new[] { 2, 2, 2, 2 }, grid.Children.OfType<XYMonoText>().Select(Grid.GetColumn));
+        Assert.Equal(new[] { 0, 1, 2, 3 }, grid.Children.OfType<XYMonoText>().Select(Grid.GetRow));
     });
 
     [Fact]

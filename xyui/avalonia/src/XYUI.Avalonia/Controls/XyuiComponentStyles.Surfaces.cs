@@ -14,7 +14,7 @@ public static partial class XyuiComponentStyles
     static void AddSurfaces(Styles styles)
     {
         TagSurface(styles);
-        Surface(styles, typeof(XYCodeText), "xyui-code-text", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Tertiary", "XY.Brush.Surface.PanelAlt");
+        Surface(styles, typeof(XYCodeText), "xyui-code-text", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Tertiary", "XY.Brush.Surface.PanelAlt", 32);
         Surface(styles, typeof(XYStatusBadge), "xyui-status-badge", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.Panel");
         Surface(styles, typeof(XYShortcutHint), "xyui-shortcut-hint", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.PanelAlt");
         Surface(styles, typeof(XYHelpText), "xyui-help-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 400, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.Panel");
@@ -42,16 +42,18 @@ public static partial class XyuiComponentStyles
     {
         var surface = new Style(x => x.OfType<XYBadge>().Class("xyui-badge"));
         surface.Setters.Add(new Setter(Border.BackgroundProperty, null)); surface.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(0)));
+        surface.Setters.Add(new Setter(Border.HeightProperty, 22d));
         surface.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(0))); styles.Add(surface);
-        styles.Add(Text(typeof(TextBlock), "xyui-badge-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
+        styles.Add(Text(typeof(TextBlock), "xyui-badge-text", XyuiTypographyTokens.FontUi, 11, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
     }
 
-    static void Surface(Styles styles, Type type, string cls, string family, double size, int weight, double line, string foreground, string background)
+    static void Surface(Styles styles, Type type, string cls, string family, double size, int weight, double line, string foreground, string background, double? height = null)
     {
         var parent = new Style(x => x.OfType(type).Class(cls));
         Brush(parent, Border.BackgroundProperty, background);
         parent.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(6, 2)));
         parent.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(4)));
+        if (height.HasValue) parent.Setters.Add(new Setter(Border.HeightProperty, height.Value));
         styles.Add(parent);
         styles.Add(Text(typeof(TextBlock), $"{cls}-text", family, size, weight, line, foreground));
     }

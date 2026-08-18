@@ -33,7 +33,7 @@ public static class XYUI1GalleryCatalog
         "XYUI-1-05" => new XYSectionTitle { Text = "属性分组" },
         "XYUI-1-06" => new XYLink { Content = "打开对象文档" },
         "XYUI-1-07" => new XYCodeText { Text = "terrain/main-heightfield" },
-        "XYUI-1-08" => new XYMonoText { Text = "X 坐标      142.583\nY 坐标      -26.410\nZ 坐标        0.000\nFrame         16.67 ms" },
+        "XYUI-1-08" => XYMonoPreviewFactory.Create(),
         "XYUI-1-09" => new XYBadge { Text = "草稿", Variant = XyuiBadgeVariant.Default },
         "XYUI-1-10" => new XYStatusBadge { Text = "已保存", State = XyuiStatusState.Success },
         "XYUI-1-11" => new XYStatusDot { State = XyuiStatusState.Info },

@@ -18,6 +18,13 @@
 
 ---
 
+## XYUI.AVALONIA-R5-F3 · Corner Mark / Badge / MonoText Precision（2026-08-18 22:54:39）
+R5-F2 继续未通过用户真机验收；本轮不泛化修改 XYUI-1，只精确收紧 CodeText、SearchHighlight、Badge 与 MonoText Preview。
+- 变化：CodeMark 与 SearchMark 统一为 8 DIP / Stroke 1.0 / HitTest disabled 的 Canvas Overlay，分别固定 RightBottom（6/5 DIP）与 RightTop（6/5 DIP），不参与正文测量；CodeText 固定 32 DIP 高度并保留右侧安全区。
+- 变化：Badge 使用单一完整 Left Pointer + Body Background Geometry，固定 22 DIP 高度、11 DIP 指针宽度、11 DIP/500 文字；MonoText Gallery Preview 改为 96 DIP Label / 24 DIP Gap / Value 三列、四行 22 DIP 共享 Grid，恢复 M-05A 数据。
+- 验证：结构测试补充角标尺寸/锚点/命中测试、Badge 背景 Geometry 测试和 MonoText 共享列测试；XYUI.Avalonia.Tests 64/64 PASS；`XuanYu.Engine.slnx` 与 `XYUI.Avalonia.slnx` Build 均为 0 警告 0 错误；Gallery 启动保持运行且无新的 `.NET Runtime` / `Application Error` 事件；5+100、视觉 glyph 扫描与 `git diff --check` PASS。ARCH-A 总脚本仍只被用户既有 `run.bat` 入口改造阻断。
+- 状态：R5 未 CLOSED；只等待用户真机验收 F3-M01～M04。
+
 ## XYUI.AVALONIA-R5-F2 · Vector Icon & Shape Fidelity（2026-08-18 22:23:28）
 修复 R5 真机验收中“用 Unicode/文字字符冒充 SVG 图标”的根因；本轮仍只推进 XYUI-1，不进入 XYUI-2。
 - 变化：新增 `XyuiVectorIcons` Registry，以 SVG-derived path data 创建 Avalonia `StreamGeometry`；Code、Info、Error、Warning、Search、Copy、Tag、StatusDot、Section、Empty 均通过真实 `Path` 消费，关闭 `XYUI1-GAP-001`。

@@ -2528,6 +2528,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiComponentStyles.Surfaces.cs` — Badge、Status、提示类 surface 样式映射。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiComponentStyles.Semantic.cs` — 状态圆点、分割线、Tooltip 等语义样式映射。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1GalleryCatalog.cs` — XYUI-1 24 项真实 Preview、Variants、Usage 与 Dependencies 数据源。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYMonoPreviewFactory.cs` — XYUI-1 M-05A MonoText 四行共享列 Preview 工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1GalleryView.axaml` — XYUI-1 独立模块 Gallery 页面与单一 Scroll 展示。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1GalleryView.axaml.cs` — XYUI-1 Gallery 页面代码隐藏。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1CoverageTests.cs` — XYUI-1 24 项 inventory、identity、creation、Catalog/Gallery/Usage 覆盖测试。

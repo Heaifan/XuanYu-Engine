@@ -32,13 +32,13 @@ public static partial class XyuiComponentStyles
         styles.Add(Text(typeof(XYSearchHighlight), "xyui-search-highlight", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(XYTruncatedText), "xyui-truncated-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         IconSize(styles, "tiny", 12, 1.0); IconSize(styles, "small", 14, 1.25); IconSize(styles, "medium", 16, 1.5); IconSize(styles, "large", 20, 1.75);
-        Mark(styles, "xyui-code-text-mark", "XY.Brush.Text.Tertiary", 14, false);
+        Mark(styles, "xyui-code-text-mark", "XY.Brush.Text.Tertiary", 8, false, 1.0);
         Mark(styles, "xyui-icon-label-mark", "XY.Brush.Text.Primary", 14, false);
         Mark(styles, "xyui-section-title-mark", "XY.Brush.Divider.Section", 14, true);
         Mark(styles, "xyui-help-text-mark", "XY.Brush.Semantic.Info.Text", 14, false);
         Mark(styles, "xyui-error-text-mark", "XY.Brush.Semantic.Error.Text", 14, false);
         Mark(styles, "xyui-warning-text-mark", "XY.Brush.Semantic.Warning.Text", 14, false);
-        Mark(styles, "xyui-search-highlight-mark", "XY.Brush.Text.Secondary", 12, false);
+        Mark(styles, "xyui-search-highlight-mark", "XY.Brush.Text.Secondary", 8, false, 1.0);
         Mark(styles, "xyui-empty-text-mark", "XY.Brush.Text.Tertiary", 12, false);
         Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Tertiary", 12, false);
     }
@@ -50,11 +50,11 @@ public static partial class XyuiComponentStyles
         style.Setters.Add(new Setter(VectorPath.StrokeThicknessProperty, stroke)); styles.Add(style);
     }
 
-    static void Mark(Styles styles, string cls, string brush, double size, bool fill)
+    static void Mark(Styles styles, string cls, string brush, double size, bool fill, double stroke = 1.5)
     {
         var style = new Style(x => x.OfType<VectorPath>().Class(cls));
         style.Setters.Add(new Setter(VectorPath.WidthProperty, size)); style.Setters.Add(new Setter(VectorPath.HeightProperty, size));
-        style.Setters.Add(new Setter(VectorPath.StrokeThicknessProperty, 1.5));
+        style.Setters.Add(new Setter(VectorPath.StrokeThicknessProperty, stroke));
         Brush(style, fill ? VectorPath.FillProperty : VectorPath.StrokeProperty, brush); styles.Add(style);
     }
 }

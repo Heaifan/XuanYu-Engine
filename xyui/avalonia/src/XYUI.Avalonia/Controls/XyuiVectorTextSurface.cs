@@ -41,13 +41,13 @@ public abstract class XyuiVectorTextSurface : XyuiTextSurface
             TextPresenter.Margin = new Thickness(6, 0, 0, 0);
             Grid.SetColumn(VectorMark, 0); Grid.SetColumn(TextPresenter, 1);
         }
-        else
+        else if (placement is XyuiVectorMarkPlacement.TopRight or XyuiVectorMarkPlacement.BottomRight)
         {
-            VectorMark.HorizontalAlignment = HAlign.Right;
-            VectorMark.VerticalAlignment = placement == XyuiVectorMarkPlacement.TopRight ? VAlign.Top : VAlign.Bottom;
-            VectorMark.Width = 14; VectorMark.Height = 14;
-            VectorMark.Margin = placement == XyuiVectorMarkPlacement.TopRight ? new Thickness(0, 2, 4, 0) : new Thickness(0, 0, 4, 2);
-            TextPresenter.Margin = placement == XyuiVectorMarkPlacement.TopRight ? new Thickness(0, 0, 18, 0) : new Thickness(0, 0, 18, 2);
+            var overlay = new Canvas { IsHitTestVisible = false, HorizontalAlignment = HAlign.Stretch, VerticalAlignment = VAlign.Stretch };
+            VectorMark.Width = 8; VectorMark.Height = 8; VectorMark.StrokeThickness = 1.0; VectorMark.IsHitTestVisible = false;
+            Canvas.SetRight(VectorMark, 6); TextPresenter.Margin = new Thickness(0, 0, 14, 0);
+            if (placement == XyuiVectorMarkPlacement.TopRight) Canvas.SetTop(VectorMark, 5); else Canvas.SetBottom(VectorMark, 5);
+            overlay.Children.Add(VectorMark); ContentGrid.Children.Add(TextPresenter); ContentGrid.Children.Add(overlay); Child = ContentGrid; return;
         }
         if (placement == XyuiVectorMarkPlacement.Background)
         {

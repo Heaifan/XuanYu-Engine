@@ -18,7 +18,7 @@ public static class XyuiVectorIcons
             [XyuiVectorIcon.Search] = "M10.5 4.5 C7.186 4.5 4.5 7.186 4.5 10.5 C4.5 13.814 7.186 16.5 10.5 16.5 C13.814 16.5 16.5 13.814 16.5 10.5 C16.5 7.186 13.814 4.5 10.5 4.5 Z M15 15 L21 21",
             [XyuiVectorIcon.Copy] = "M8 8 H20 V20 H8 Z M4 4 H16 V16 H4 Z",
             [XyuiVectorIcon.Code] = "M9 6 L3 12 L9 18 M15 6 L21 12 L15 18 M13 4 L11 20",
-            [XyuiVectorIcon.Tag] = "M0 0 H17 L24 11 L17 22 H0 Z",
+            [XyuiVectorIcon.Tag] = "M0 11 L11 0 H24 V22 H11 Z",
             [XyuiVectorIcon.StatusDot] = "M12 3 C16.971 3 21 7.029 21 12 C21 16.971 16.971 21 12 21 C7.029 21 3 16.971 3 12 C3 7.029 7.029 3 12 3 Z",
             [XyuiVectorIcon.Section] = "M3 2 H7 V22 H3 Z",
             [XyuiVectorIcon.Empty] = "M3 12 H21"
