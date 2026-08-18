@@ -1,11 +1,9 @@
-using Avalonia;
+using Avalonia.Controls;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYSelectableText : XyuiTextComponent
+public sealed class XYSelectableText : SelectableTextBlock
 {
-    public static readonly StyledProperty<bool> IsSelectableProperty = AvaloniaProperty.Register<XYSelectableText, bool>(nameof(IsSelectable), true);
-    public XYSelectableText() : base("xyui-selectable-text") { }
-    public override string CanonicalId => "XYUI-1-21";
-    public bool IsSelectable { get => GetValue(IsSelectableProperty); set => SetValue(IsSelectableProperty, value); }
+    public XYSelectableText() => Classes.Add("xyui-selectable-text");
+    public string CanonicalId => "XYUI-1-21";
 }

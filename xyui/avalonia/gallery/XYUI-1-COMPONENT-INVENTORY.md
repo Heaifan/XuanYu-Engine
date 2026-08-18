@@ -24,7 +24,7 @@ Source of truth：`xyui/specs/XYUI1/XYUI-1.mapping.json` + `XYUI-1.canonical.md`
 | 1.18 | ShortcutHint / 快捷键提示 | XYShortcutHint | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.19 | Tooltip / 悬浮提示 | XYTooltip | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.20 | RichText / 富文本 | XYRichText | ✓ | ✓ | ✓ | ✓ | READY |
-| 1.21 | SelectableText / 可选择文本 | XYSelectableText | ✓ | ✓ | ✓ | ✓ | READY |
+| 1.21 | SelectableText / 可选择文本 | XYSelectableText : SelectableTextBlock | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.22 | EmptyText / 空状态文本 | XYEmptyText | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.23 | SearchHighlight / 搜索高亮 | XYSearchHighlight | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.24 | TruncatedText / 截断文本 | XYTruncatedText | ✓ | ✓ | ✓ | ✓ | READY + GAP-002 |

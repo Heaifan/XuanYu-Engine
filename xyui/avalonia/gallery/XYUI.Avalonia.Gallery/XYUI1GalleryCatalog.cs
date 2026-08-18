@@ -64,7 +64,7 @@ public static class XYUI1GalleryCatalog
         "XYUI-1-14" => $"<c:{type} Variant=\"Section\" />",
         "XYUI-1-18" => $"<c:{type} Shortcut=\"Ctrl + S\" />",
         "XYUI-1-19" => $"<c:{type} Content=\"提示\" />",
-        "XYUI-1-21" => $"<c:{type} Text=\"可复制 ID\" IsSelectable=\"True\" />",
+        "XYUI-1-21" => $"<c:{type} Text=\"可复制 ID\" SelectionStart=\"0\" SelectionEnd=\"4\" />",
         "XYUI-1-24" => $"<c:{type} Text=\"长文本\" Mode=\"End\" />",
         _ => $"<c:{type} Text=\"示例内容\" />"
     };

@@ -2502,7 +2502,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYShortcutHint.cs` — XYUI-1-18 快捷键提示组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYTooltip.cs` — XYUI-1-19 悬浮提示组件入口。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYRichText.cs` — XYUI-1-20 富文本承载组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSelectableText.cs` — XYUI-1-21 可选择文本组件及 IsSelectable API。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSelectableText.cs` — XYUI-1-21 基于 Avalonia SelectableTextBlock 的可选择文本组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYEmptyText.cs` — XYUI-1-22 空状态文本组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSearchHighlight.cs` — XYUI-1-23 搜索高亮文本组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYTruncatedText.cs` — XYUI-1-24 截断文本组件及 End/Middle 模式 API。
