@@ -2,7 +2,7 @@
 
 > **落库信息**
 > - 来源：用户 2026-08-12 两轮裁定（XYUI-A0 治理原则 + 阶段规划收缩为 XYUI0 单块样板）。
-> - 状态：`正式计划`。A0 治理条款于本文档冻结；A1~A5 锁定待解锁；XYUI1/2、Components、Gallery、XuanYu Integration `⛔ NOT AUTHORIZED`。
+> - 状态：`正式计划 · R4 已获授权`。A0 治理条款继续有效；用户已授权进入 `XYUI.AVALONIA-R4 COMPONENT CATALOG & DOCUMENTED GALLERY`，本轮允许在 `xyui/avalonia/**` 建立真实 Avalonia 组件与 Gallery 文档入口。
 > - 落库前核查：主仓库无任何 XYUI-A0 落库物；`docs/milestones/current/EDITOR-A/XYUI-backlog.md` 仅登记 XYUI-001（RegionPanel Binding 文本显示异常，NON-BLOCKING BACKLOG）。**本文档是 XYUI 旁路线的第一个仓库事实源**（位于独立 XYUI worktree）。
 > - 关联：`docs/milestones/current/EDITOR-A/XYUI-backlog.md`（XYUI 债务登记，玄域主仓库）；`docs/ui/玄域引擎_UI规范_1.0.md`（现有 Editor UI 规范，与 XYUI 旁路线关系见 §10）。
 
@@ -14,8 +14,8 @@ XYUI 是与玄域主开发完全隔离的独立 UI 体系旁路线，直到用�
 |---|---|
 | XMind / 聊天 | 人类总览、设计审查、理解体系（设计输入，**不是事实源**） |
 | JSON Spec（`xyui/registry/` + `xyui/specs/`） | 机器读取、版本、验证（**唯一 Source of Truth**） |
-| AXAML / C# | 真实实现（本阶段禁止） |
-| Gallery | 人类真机验收（本阶段禁止） |
+| AXAML / C# | 真实实现（R4 起按用户授权推进） |
+| Gallery | 人类真机验收与组件文档入口（R4 起按用户授权推进） |
 | Guard | 自动治理 |
 
 Agent 不得靠搜索聊天记录重新猜测规范。
@@ -30,10 +30,12 @@ XYUI-A3  XYUI0 Token Draft                  Primitive + Semantic Token 草案
 XYUI-A4  XYUI0 Validation                   自我检查 + 门禁
 XYUI-A5  XYUI0 Foundation CLOSED            XYUI0 Foundation Package 收口
 ------------------------------------------
-🔒 XYUI1 / XYUI2 / Components / Gallery / XuanYu Integration（NOT AUTHORIZED）
+XYUI.AVALONIA-R4  Component Catalog & Documented Gallery（当前轮）
+------------------------------------------
+🔒 XuanYu Integration（仍 NOT AUTHORIZED）
 ```
 
-推进原则：**XYUI0 是第一块真实样板**，先把「Intake → 分类 → 审计 → Registry → Token → 验证」流程跑通；后续 XYUI1/2 复制同一流程。当前阶段禁止实现正式控件。
+推进原则：**JSON Registry/Spec 仍是唯一规范事实源**；R4 通过运行时读取真实映射建立 Catalog、覆盖矩阵与文档 Gallery。缺失 source 显式标记，不以 Avalonia 默认行为补齐。
 
 ## 2. XYUI-A0 · 治理条款（已冻结）
 

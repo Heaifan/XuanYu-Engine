@@ -4,14 +4,14 @@
         xmlns:g="using:XYUI.Avalonia.Gallery"
         x:Class="XYUI.Avalonia.Gallery.MainWindow"
         x:DataType="g:MainWindowModel"
-        Title="XYUI.Avalonia · Foundation Gallery"
+        Title="XYUI.Avalonia · Foundation Gallery · Component Catalog"
         Width="1120" Height="760"
         Background="{DynamicResource XY.Brush.Surface.App}">
   <DockPanel Margin="20">
     <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-      <TextBlock Text="XYUI Color &amp; Typography Foundation"
+      <TextBlock Text="XYUI Component Catalog &amp; Documented Gallery"
                  Classes="xyui-heading-panel" />
-      <TextBlock Text="Canonical → Avalonia Runtime（83 颜色 token + Typography 语义样式）"
+      <TextBlock Text="Canonical → Avalonia Runtime → Gallery（Foundation + XYUI-2 组件入口）"
                  Classes="xyui-text-caption" />
     </StackPanel>
     <TabControl>
@@ -78,6 +78,14 @@
       <TabItem Header="交互状态">
         <ScrollViewer>
           <views:InteractionStatesView />
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="组件目录">
+        <views:CatalogView />
+      </TabItem>
+      <TabItem Header="组件示例">
+        <ScrollViewer>
+          <views:ComponentSamplesView />
         </ScrollViewer>
       </TabItem>
     </TabControl>
