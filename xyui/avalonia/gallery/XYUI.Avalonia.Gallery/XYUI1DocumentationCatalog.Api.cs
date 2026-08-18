@@ -9,13 +9,13 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-09" => [P("Text", "string", "\"\""), P("Variant", "XyuiBadgeVariant", "Default")],
         "XYUI-1-10" => [P("Text", "string", "\"\""), P("State", "XyuiStatusState", "Neutral")],
         "XYUI-1-11" => [P("State", "XyuiStatusState", "Neutral")],
-        "XYUI-1-12" => [P("Glyph", "string", "•"), P("Size", "XyuiIconSize", "Medium"), P("StrokeWidth", "double", "1.5", "随尺寸变体联动")],
+        "XYUI-1-12" => [P("Icon", "XyuiVectorIcon", "Info", "来自 XYUI Vector Icon Registry"), P("Size", "XyuiIconSize", "Medium"), P("StrokeWidth", "double", "1.5", "随尺寸变体联动")],
         "XYUI-1-20" => [P("Text", "string", "\"\""), P("StrongText", "string", "\"\""), P("MonoText", "string", "\"\"")],
-        "XYUI-1-13" => [P("IconGlyph", "string", "•"), P("Label", "string", "\"\"")],
+        "XYUI-1-13" => [P("Icon", "XyuiVectorIcon", "Info", "来自 XYUI Vector Icon Registry"), P("Label", "string", "\"\"")],
         "XYUI-1-14" => [P("Variant", "XyuiSeparatorVariant", "Default")],
         "XYUI-1-18" => [P("Shortcut", "string", "\"\"")],
         "XYUI-1-19" => [P("Content", "object", "null", "提示内容")],
-        "XYUI-1-21" => [P("Text", "string", "\"\""), P("CopyGlyph", "string", "⧉", "Hover 时显示复制提示")],
+        "XYUI-1-21" => [P("Text", "string", "\"\""), P("CopyIcon", "XyuiVectorIcon", "Copy", "Hover 时显示矢量复制提示")],
         "XYUI-1-24" => [P("Text", "string", "\"\""), P("Mode", "XyuiTruncatedTextMode", "End")],
         _ => [P("Text", "string", "\"\"")]
     };

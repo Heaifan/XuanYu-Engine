@@ -1,8 +1,9 @@
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYSearchHighlight : XyuiMarkedTextComponent
+using XYUI.Avalonia.Vector;
+
+public sealed class XYSearchHighlight : XyuiVectorTextSurface
 {
-    public XYSearchHighlight() : base("xyui-search-highlight") { }
+    public XYSearchHighlight() : base("xyui-search-highlight", XyuiVectorIcon.Search, XyuiVectorMarkPlacement.TopRight) { }
     public override string CanonicalId => "XYUI-1-23";
-    protected override string FormatText(string value) => $"⌕  {value}";
 }

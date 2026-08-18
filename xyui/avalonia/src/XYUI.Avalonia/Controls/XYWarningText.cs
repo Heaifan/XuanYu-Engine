@@ -1,8 +1,9 @@
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYWarningText : XyuiTextSurface
+using XYUI.Avalonia.Vector;
+
+public sealed class XYWarningText : XyuiVectorTextSurface
 {
-    public XYWarningText() : base("xyui-warning-text") { }
+    public XYWarningText() : base("xyui-warning-text", XyuiVectorIcon.Warning, XyuiVectorMarkPlacement.Inline) { }
     public override string CanonicalId => "XYUI-1-17";
-    protected override string FormatText(string value) => $"△  {value}";
 }

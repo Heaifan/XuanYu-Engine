@@ -2497,19 +2497,20 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogSpecReader.cs` — 从 canonical spec 提取用途、变体、状态和场景文案。
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogTypeMap.cs` — Canonical ID 到稳定 Avalonia 类型名及 Gallery 覆盖映射。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiTextComponent.cs` — XYUI-1 文本组件共同基类与文本 surface 基类。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiMarkedTextComponent.cs` — XYUI-1 带语义标记文本组件的格式化基类。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiVectorTextSurface.cs` — XYUI-1 真实 Vector Geometry 文本 surface 与角标布局基类。
+- `xyui/avalonia/src/XYUI.Avalonia/Vector/XyuiVectorIcons.cs` — XYUI-1 Vector Icon Registry 与 StreamGeometry 资源。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYText.cs` — XYUI-1-01 普通文本组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYLabel.cs` — XYUI-1-02 字段名称组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYCaption.cs` — XYUI-1-03 辅助信息组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYHeading.cs` — XYUI-1-04 标题组件及 PanelTitle/PageTitle 变体。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSectionTitle.cs` — XYUI-1-05 区块标题组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYLink.cs` — XYUI-1-06 超链接组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYCodeText.cs` — XYUI-1-07 代码与 ID 组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYMonoText.cs` — XYUI-1-08 等宽数据组件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYCodeText.cs` — XYUI-1-07 代码与 ID 组件，使用右下 Vector Geometry 角标。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYMonoText.cs` — XYUI-1-08 纯等宽数据组件，无 surface 背景和边框。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYBadge.cs` — XYUI-1-09 标签组件及 Default/Accent 变体。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYStatusBadge.cs` — XYUI-1-10 状态标签及五种状态 API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYStatusDot.cs` — XYUI-1-11 状态圆点及五种状态 API。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIcon.cs` — XYUI-1-12 图标组件及 glyph/size API。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIcon.cs` — XYUI-1-12 Path Geometry 图标组件及 Registry/size/stroke API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIconLabel.cs` — XYUI-1-13 图标加文字组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYHelpText.cs` — XYUI-1-15 帮助说明组件。
@@ -2518,7 +2519,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYShortcutHint.cs` — XYUI-1-18 快捷键提示组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYTooltip.cs` — XYUI-1-19 悬浮提示组件入口。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYRichText.cs` — XYUI-1-20 富文本承载组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSelectableText.cs` — XYUI-1-21 基于 Avalonia SelectableTextBlock 的可选择文本组件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSelectableText.cs` — XYUI-1-21 包装 Avalonia SelectableTextBlock 并提供 Vector Copy 角标的可选择文本组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYEmptyText.cs` — XYUI-1-22 空状态文本组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSearchHighlight.cs` — XYUI-1-23 搜索高亮文本组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYTruncatedText.cs` — XYUI-1-24 截断文本组件及 End/Middle 模式 API。

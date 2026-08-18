@@ -1,8 +1,9 @@
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYEmptyText : XyuiMarkedTextComponent
+using XYUI.Avalonia.Vector;
+
+public sealed class XYEmptyText : XyuiVectorTextSurface
 {
-    public XYEmptyText() : base("xyui-empty-text") { }
+    public XYEmptyText() : base("xyui-empty-text", XyuiVectorIcon.Empty, XyuiVectorMarkPlacement.Inline) { }
     public override string CanonicalId => "XYUI-1-22";
-    protected override string FormatText(string value) => $"—  {value}  —";
 }

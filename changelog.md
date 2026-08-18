@@ -18,6 +18,14 @@
 
 ---
 
+## XYUI.AVALONIA-R5-F2 · Vector Icon & Shape Fidelity（2026-08-18 22:23:28）
+修复 R5 真机验收中“用 Unicode/文字字符冒充 SVG 图标”的根因；本轮仍只推进 XYUI-1，不进入 XYUI-2。
+- 变化：新增 `XyuiVectorIcons` Registry，以 SVG-derived path data 创建 Avalonia `StreamGeometry`；Code、Info、Error、Warning、Search、Copy、Tag、StatusDot、Section、Empty 均通过真实 `Path` 消费，关闭 `XYUI1-GAP-001`。
+- 变化：CodeText 改为正文等宽文本 + 右下独立 Code Geometry；MonoText 恢复 M-05A 纯等宽四行数据且无背景/边框；Badge 使用真实左指针 Tag Geometry；Icon/IconLabel/语义提示/SelectableText/SearchHighlight 均移除字符图标，Search 改为右上角 Geometry 角标。
+- 变化：补齐 Gallery/API/Usage/Token 文档和 Registry 回归断言；保留 `XYUI1-GAP-002`（Avalonia MiddleEllipsis 映射限制）。
+- 验证：`XuanYu.Engine.slnx` 与 `XYUI.Avalonia.slnx` Build 均为 0 警告 0 错误；XYUI.Avalonia.Tests 62/62 PASS；Gallery 真实进程启动并保持运行，无新的 `.NET Runtime` / `Application Error` 事件；5+100、XYUI-1 视觉 glyph 扫描与 `git diff --check` PASS。ARCH-A 总脚本仍只被用户既有 `run.bat` 改造阻断（守卫硬编码要求主编辑器启动路径），该文件未修改。
+- 状态：READY FOR USER ACCEPTANCE；R5 未 CLOSED，未启动 XYUI-2。
+
 ## XYUI.AVALONIA-R5-F1-CANONICAL · XYUI-1 组件语义修复（2026-08-18 21:39:41）
 修复 R5 真机验收清单中 XYUI-1 的 17 项 canonical fidelity 问题；本轮仍只推进 XYUI-1，不进入 XYUI-2/R6。
 - 变化：补齐 Label/SectionTitle/CodeText 的层级与语义标记；修正 MonoText、Badge、StatusBadge、Icon/IconLabel 的结构、尺寸和笔画映射；补齐 Help/Error/Warning/Tooltip 的行内提示标记；实现 RichText、SelectableText、EmptyText、SearchHighlight 与 TruncatedText 的文档/API/运行时契约。

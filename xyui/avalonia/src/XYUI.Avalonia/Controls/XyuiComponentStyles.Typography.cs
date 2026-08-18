@@ -1,7 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Styling;
 using XYUI.Avalonia.Typography;
+using VectorPath = Avalonia.Controls.Shapes.Path;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -21,19 +23,38 @@ public static partial class XyuiComponentStyles
         styles.Add(Text(typeof(TextBlock), "xyui-section-title-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeSection, 600, XyuiTypographyTokens.LineHeightSection, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(XYLink), "xyui-link", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 500, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Link"));
         styles.Add(Text(typeof(XYMonoText), "xyui-mono-text", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Secondary"));
-        styles.Add(Text(typeof(XYIcon), "xyui-icon", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Secondary"));
+        var icon = new Style(x => x.OfType<XYIcon>().Class("xyui-icon"));
+        Brush(icon, VectorPath.StrokeProperty, "XY.Brush.Text.Secondary"); icon.Setters.Add(new Setter(VectorPath.FillProperty, null)); styles.Add(icon);
         styles.Add(Text(typeof(XYIconLabel), "xyui-icon-label", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(XYRichText), "xyui-rich-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
-        styles.Add(Text(typeof(XYSelectableText), "xyui-selectable-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
+        styles.Add(Text(typeof(TextBlock), "xyui-selectable-text-content", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(XYEmptyText), "xyui-empty-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 400, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Tertiary"));
         styles.Add(Text(typeof(XYSearchHighlight), "xyui-search-highlight", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(XYTruncatedText), "xyui-truncated-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
-        IconSize(styles, "tiny", 12); IconSize(styles, "small", 14); IconSize(styles, "medium", 16); IconSize(styles, "large", 20);
+        IconSize(styles, "tiny", 12, 1.0); IconSize(styles, "small", 14, 1.25); IconSize(styles, "medium", 16, 1.5); IconSize(styles, "large", 20, 1.75);
+        Mark(styles, "xyui-code-text-mark", "XY.Brush.Text.Tertiary", 14, false);
+        Mark(styles, "xyui-icon-label-mark", "XY.Brush.Text.Primary", 14, false);
+        Mark(styles, "xyui-section-title-mark", "XY.Brush.Divider.Section", 14, true);
+        Mark(styles, "xyui-help-text-mark", "XY.Brush.Semantic.Info.Text", 14, false);
+        Mark(styles, "xyui-error-text-mark", "XY.Brush.Semantic.Error.Text", 14, false);
+        Mark(styles, "xyui-warning-text-mark", "XY.Brush.Semantic.Warning.Text", 14, false);
+        Mark(styles, "xyui-search-highlight-mark", "XY.Brush.Text.Secondary", 12, false);
+        Mark(styles, "xyui-empty-text-mark", "XY.Brush.Text.Tertiary", 12, false);
+        Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Tertiary", 12, false);
     }
 
-    static void IconSize(Styles styles, string name, double size)
+    static void IconSize(Styles styles, string name, double size, double stroke)
     {
         var style = new Style(x => x.OfType<XYIcon>().Class($"xyui-icon-{name}"));
-        style.Setters.Add(new Setter(TextBlock.FontSizeProperty, size)); styles.Add(style);
+        style.Setters.Add(new Setter(VectorPath.WidthProperty, size)); style.Setters.Add(new Setter(VectorPath.HeightProperty, size));
+        style.Setters.Add(new Setter(VectorPath.StrokeThicknessProperty, stroke)); styles.Add(style);
+    }
+
+    static void Mark(Styles styles, string cls, string brush, double size, bool fill)
+    {
+        var style = new Style(x => x.OfType<VectorPath>().Class(cls));
+        style.Setters.Add(new Setter(VectorPath.WidthProperty, size)); style.Setters.Add(new Setter(VectorPath.HeightProperty, size));
+        style.Setters.Add(new Setter(VectorPath.StrokeThicknessProperty, 1.5));
+        Brush(style, fill ? VectorPath.FillProperty : VectorPath.StrokeProperty, brush); styles.Add(style);
     }
 }

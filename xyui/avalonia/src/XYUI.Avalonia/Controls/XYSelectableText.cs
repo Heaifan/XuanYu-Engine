@@ -1,28 +1,41 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Input;
+using Avalonia.Media;
+using XYUI.Avalonia.Vector;
+using VectorPath = Avalonia.Controls.Shapes.Path;
+using HAlign = global::Avalonia.Layout.HorizontalAlignment;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYSelectableText : SelectableTextBlock
+public sealed class XYSelectableText : Border
 {
-    string _baseText = "";
-    bool _hovering;
+    readonly SelectableTextBlock _text = new();
+    readonly VectorPath _copyMark = new();
+    public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<XYSelectableText, string>(nameof(Text), "");
+
     public XYSelectableText()
     {
-        Classes.Add("xyui-selectable-text");
-        PointerEntered += (_, _) => SetHover(true);
-        PointerExited += (_, _) => SetHover(false);
+        Classes.Add("xyui-1-component"); Classes.Add("xyui-selectable-text");
+        _text.Classes.Add("xyui-selectable-text-content"); _copyMark.Classes.Add("xyui-selectable-copy-mark");
+        if (XyuiVectorIcons.IsPlatformReady) _copyMark.Data = XyuiVectorIcons.Create(XyuiVectorIcon.Copy);
+        AttachedToVisualTree += (_, _) => { if (_copyMark.Data is null) _copyMark.Data = XyuiVectorIcons.Create(XyuiVectorIcon.Copy); };
+        _copyMark.Width = 12; _copyMark.Height = 12;
+        _copyMark.HorizontalAlignment = HAlign.Right; _copyMark.IsVisible = false;
+        var grid = new Grid(); grid.Children.Add(_text); grid.Children.Add(_copyMark); Child = grid;
+        PointerEntered += (_, _) => _copyMark.IsVisible = true; PointerExited += (_, _) => _copyMark.IsVisible = false;
     }
+
     public string CanonicalId => "XYUI-1-21";
-    public string CopyGlyph => "⧉";
+    public string Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
+    public XyuiVectorIcon CopyIcon => XyuiVectorIcon.Copy;
+    public int SelectionStart { get => _text.SelectionStart; set => _text.SelectionStart = value; }
+    public int SelectionEnd { get => _text.SelectionEnd; set => _text.SelectionEnd = value; }
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == TextProperty && !_hovering) _baseText = change.GetNewValue<string>();
-    }
-    void SetHover(bool value)
-    {
-        _hovering = value; Text = value ? $"{_baseText}  {CopyGlyph}" : _baseText;
+        if (change.Property == TextProperty) _text.Text = change.GetNewValue<string>();
     }
 }

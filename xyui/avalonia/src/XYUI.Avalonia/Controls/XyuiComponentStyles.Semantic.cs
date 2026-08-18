@@ -1,8 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Styling;
+using VectorPath = Avalonia.Controls.Shapes.Path;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -23,6 +25,11 @@ public static partial class XyuiComponentStyles
         StateText(styles, "xyui-status-text-error", "XY.Brush.Semantic.Error.Text");
         StateText(styles, "xyui-status-text-info", "XY.Brush.Semantic.Info.Text");
         StateText(styles, "xyui-status-text-neutral", "XY.Brush.Text.Secondary");
+        StateMark(styles, "xyui-status-mark-success", "XY.Brush.Semantic.Success.Text");
+        StateMark(styles, "xyui-status-mark-warning", "XY.Brush.Semantic.Warning.Text");
+        StateMark(styles, "xyui-status-mark-error", "XY.Brush.Semantic.Error.Text");
+        StateMark(styles, "xyui-status-mark-info", "XY.Brush.Semantic.Info.Text");
+        StateMark(styles, "xyui-status-mark-neutral", "XY.Brush.Text.Secondary");
         var separator = new Style(x => x.OfType<XYSeparator>().Class("xyui-separator"));
         Brush(separator, Border.BackgroundProperty, "XY.Brush.Divider.Default"); separator.Setters.Add(new Setter(Border.HeightProperty, 1d)); styles.Add(separator);
         var tooltip = new Style(x => x.OfType<XYTooltip>().Class("xyui-tooltip"));
@@ -40,5 +47,10 @@ public static partial class XyuiComponentStyles
     static void StateText(Styles styles, string cls, string brush)
     {
         var style = new Style(x => x.OfType<TextBlock>().Class(cls)); Brush(style, TextBlock.ForegroundProperty, brush); styles.Add(style);
+    }
+
+    static void StateMark(Styles styles, string cls, string brush)
+    {
+        var style = new Style(x => x.OfType<VectorPath>().Class(cls)); Brush(style, VectorPath.FillProperty, brush); styles.Add(style);
     }
 }

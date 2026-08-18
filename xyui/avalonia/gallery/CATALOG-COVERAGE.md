@@ -18,7 +18,7 @@ XYUI-1 本轮冻结为 canonical mapping 中的 24 个组件，全部登记到 A
 | Usage | 24/24 | real type/property examples | — |
 | Tests | 24/24 | 62/62 PASS | — |
 
-Gap：`XYUI1-GAP-001` Icon glyph registry；`XYUI1-GAP-002` Avalonia TextBlock 没有 MiddleEllipsis 原生能力，`XYTruncatedText.Mode=Middle` 保留 API 但当前运行时降级为 canonical EndEllipsis，均不伪造为已解决。
+Gap：`XYUI1-GAP-002` Avalonia TextBlock 没有 MiddleEllipsis 原生能力，`XYTruncatedText.Mode=Middle` 保留 API 但当前运行时降级为 canonical EndEllipsis；Vector Icon Registry 已关闭 GAP-001。
 
 R5 fidelity：17 项用户验收问题已由真实组件实现、Gallery 文档/API/Usage 与回归测试共同覆盖；自动证据不替代用户真机验收。
 

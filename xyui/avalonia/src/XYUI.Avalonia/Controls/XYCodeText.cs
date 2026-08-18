@@ -1,8 +1,9 @@
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYCodeText : XyuiTextSurface
+using XYUI.Avalonia.Vector;
+
+public sealed class XYCodeText : XyuiVectorTextSurface
 {
-    public XYCodeText() : base("xyui-code-text") { }
+    public XYCodeText() : base("xyui-code-text", XyuiVectorIcon.Code, XyuiVectorMarkPlacement.BottomRight) { }
     public override string CanonicalId => "XYUI-1-07";
-    protected override string FormatText(string value) => $"</>  {value}";
 }

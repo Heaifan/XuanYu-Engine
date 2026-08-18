@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using XYUI.Avalonia.Catalog;
 using XYUI.Avalonia.Controls;
+using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Gallery;
 
@@ -31,13 +32,13 @@ public static class XYUI1GalleryCatalog
         "XYUI-1-04" => new XYHeading { Text = "区域数据集", Variant = XyuiHeadingVariant.PanelTitle },
         "XYUI-1-05" => new XYSectionTitle { Text = "属性分组" },
         "XYUI-1-06" => new XYLink { Content = "打开对象文档" },
-        "XYUI-1-07" => new XYCodeText { Text = "region-7ad21c" },
-        "XYUI-1-08" => new XYMonoText { Text = "X = 421.482   Y = 718.215" },
+        "XYUI-1-07" => new XYCodeText { Text = "terrain/main-heightfield" },
+        "XYUI-1-08" => new XYMonoText { Text = "X 坐标      142.583\nY 坐标      -26.410\nZ 坐标        0.000\nFrame         16.67 ms" },
         "XYUI-1-09" => new XYBadge { Text = "草稿", Variant = XyuiBadgeVariant.Default },
         "XYUI-1-10" => new XYStatusBadge { Text = "已保存", State = XyuiStatusState.Success },
         "XYUI-1-11" => new XYStatusDot { State = XyuiStatusState.Info },
-        "XYUI-1-12" => new XYIcon { Glyph = "◇", Size = XyuiIconSize.Medium },
-        "XYUI-1-13" => new XYIconLabel { IconGlyph = "◇", Label = "区域" },
+        "XYUI-1-12" => new XYIcon { Icon = XyuiVectorIcon.Code, Size = XyuiIconSize.Medium },
+        "XYUI-1-13" => new XYIconLabel { Icon = XyuiVectorIcon.Info, Label = "区域" },
         "XYUI-1-14" => new XYSeparator { Variant = XyuiSeparatorVariant.Section, Width = 240 },
         "XYUI-1-15" => new XYHelpText { Text = "填写后可在层级树中定位对象。" },
         "XYUI-1-16" => new XYErrorText { Text = "名称不能为空。" },
@@ -59,8 +60,8 @@ public static class XYUI1GalleryCatalog
         "XYUI-1-09" => $"<c:{type} Text=\"标签\" Variant=\"Accent\" />",
         "XYUI-1-10" => $"<c:{type} Text=\"已保存\" State=\"Success\" />",
         "XYUI-1-11" => $"<c:{type} State=\"Info\" />",
-        "XYUI-1-12" => $"<c:{type} Glyph=\"◇\" Size=\"Medium\" />",
-        "XYUI-1-13" => $"<c:{type} IconGlyph=\"◇\" Label=\"区域\" />",
+        "XYUI-1-12" => $"<c:{type} Icon=\"Code\" Size=\"Medium\" />",
+        "XYUI-1-13" => $"<c:{type} Icon=\"Info\" Label=\"区域\" />",
         "XYUI-1-14" => $"<c:{type} Variant=\"Section\" />",
         "XYUI-1-18" => $"<c:{type} Shortcut=\"Ctrl + S\" />",
         "XYUI-1-19" => $"<c:{type} Content=\"提示\" />",

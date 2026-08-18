@@ -6,6 +6,7 @@ using XYUI.Avalonia.Interaction;
 using XYUI.Avalonia.Spatial;
 using XYUI.Avalonia.Theme;
 using XYUI.Avalonia.Typography;
+using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Gallery;
 
@@ -16,6 +17,7 @@ public partial class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         Resources.MergedDictionaries.Add(XyuiTheme.CreateLight());
+        Resources.MergedDictionaries.Add(XyuiVectorIcons.CreateResources());
         Styles.Add(XyuiTextStyles.Create());
         Styles.Add(XyuiShapeStyles.Create());
         Styles.Add(XyuiInteractionStyles.Create());

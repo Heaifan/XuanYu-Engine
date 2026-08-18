@@ -1,0 +1,35 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
+
+namespace XYUI.Avalonia.Vector;
+
+public enum XyuiVectorIcon { Info, Error, Warning, Search, Copy, Code, Tag, StatusDot, Section, Empty }
+
+public static class XyuiVectorIcons
+{
+    public static bool IsPlatformReady => global::Avalonia.Application.Current is not null;
+    public static IReadOnlyDictionary<XyuiVectorIcon, string> PathData { get; } =
+        new Dictionary<XyuiVectorIcon, string>
+        {
+            [XyuiVectorIcon.Info] = "M12 3 C7.029 3 3 7.029 3 12 C3 16.971 7.029 21 12 21 C16.971 21 21 16.971 21 12 C21 7.029 16.971 3 12 3 Z M12 10 V17 M12 7 V8",
+            [XyuiVectorIcon.Error] = "M12 3 C7.029 3 3 7.029 3 12 C3 16.971 7.029 21 12 21 C16.971 21 21 16.971 21 12 C21 7.029 16.971 3 12 3 Z M9 9 L15 15 M15 9 L9 15",
+            [XyuiVectorIcon.Warning] = "M12 3 L22 20 H2 Z M12 9 V14 M12 17 V17.5",
+            [XyuiVectorIcon.Search] = "M10.5 4.5 C7.186 4.5 4.5 7.186 4.5 10.5 C4.5 13.814 7.186 16.5 10.5 16.5 C13.814 16.5 16.5 13.814 16.5 10.5 C16.5 7.186 13.814 4.5 10.5 4.5 Z M15 15 L21 21",
+            [XyuiVectorIcon.Copy] = "M8 8 H20 V20 H8 Z M4 4 H16 V16 H4 Z",
+            [XyuiVectorIcon.Code] = "M9 6 L3 12 L9 18 M15 6 L21 12 L15 18 M13 4 L11 20",
+            [XyuiVectorIcon.Tag] = "M0 0 H17 L24 11 L17 22 H0 Z",
+            [XyuiVectorIcon.StatusDot] = "M12 3 C16.971 3 21 7.029 21 12 C21 16.971 16.971 21 12 21 C7.029 21 3 16.971 3 12 C3 7.029 7.029 3 12 3 Z",
+            [XyuiVectorIcon.Section] = "M3 2 H7 V22 H3 Z",
+            [XyuiVectorIcon.Empty] = "M3 12 H21"
+        };
+
+    public static StreamGeometry Create(XyuiVectorIcon icon) => StreamGeometry.Parse(PathData[icon]);
+
+    public static ResourceDictionary CreateResources()
+    {
+        var resources = new ResourceDictionary();
+        foreach (var icon in PathData.Keys) resources[$"XY.Icon.{icon}"] = Create(icon);
+        return resources;
+    }
+}

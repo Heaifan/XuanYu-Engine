@@ -1,5 +1,9 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
+using Avalonia.VisualTree;
 using XYUI.Avalonia.Controls;
+using XYUI.Avalonia.Vector;
+using VectorPath = Avalonia.Controls.Shapes.Path;
 
 namespace XYUI.Avalonia.Tests;
 
@@ -10,17 +14,21 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
     public XYUI1FidelityTests(XyuiHeadlessFixture fx) => _fx = fx;
 
     [Fact]
-    public void Inline_components_expose_their_semantic_marks() => _fx.Run(() =>
+    public void XYUI1_uses_registered_vector_marks_instead_of_text_glyphs() => _fx.Run(() =>
     {
-        Assert.Contains("</>", ChildText(new XYCodeText { Text = "region-id" }));
-        Assert.Contains("▌", ChildText(new XYSectionTitle { Text = "属性分组" }));
-        Assert.Contains("◀", ChildText(new XYBadge { Text = "草稿" }));
-        Assert.Contains("●", ChildText(new XYStatusBadge { Text = "已保存" }));
-        Assert.Contains("ⓘ", ChildText(new XYHelpText { Text = "填写说明" }));
-        Assert.Contains("✕", ChildText(new XYErrorText { Text = "名称无效" }));
-        Assert.Contains("△", ChildText(new XYWarningText { Text = "尚未保存" }));
-        Assert.Contains("—", new XYEmptyText { Text = "暂无数据" }.Text);
-        Assert.Contains("⌕", new XYSearchHighlight { Text = "命中内容" }.Text);
+        Assert.Equal(10, XyuiVectorIcons.PathData.Count);
+        Assert.Equal(10, XyuiVectorIcons.CreateResources().Count);
+        Assert.All(XyuiVectorIcons.PathData.Keys, icon => Assert.NotNull(XyuiVectorIcons.Create(icon)));
+        Assert.NotNull(Mark(new XYCodeText { Text = "region-id" }, "xyui-code-text-mark").Data);
+        Assert.NotNull(Mark(new XYSectionTitle { Text = "属性分组" }, "xyui-section-title-mark").Data);
+        Assert.NotNull(Mark(new XYBadge { Text = "草稿" }, "xyui-badge-mark-default").Data);
+        Assert.NotNull(Mark(new XYStatusBadge { Text = "已保存", State = XyuiStatusState.Success }, "xyui-status-mark-success").Data);
+        Assert.NotNull(Mark(new XYHelpText { Text = "填写说明" }, "xyui-help-text-mark").Data);
+        Assert.NotNull(Mark(new XYErrorText { Text = "名称无效" }, "xyui-error-text-mark").Data);
+        Assert.NotNull(Mark(new XYWarningText { Text = "尚未保存" }, "xyui-warning-text-mark").Data);
+        Assert.NotNull(Mark(new XYEmptyText { Text = "暂无数据" }, "xyui-empty-text-mark").Data);
+        Assert.NotNull(Mark(new XYSearchHighlight { Text = "命中内容" }, "xyui-search-highlight-mark").Data);
+        Assert.NotNull(new XYIcon { Icon = XyuiVectorIcon.Code }.Data);
     });
 
     [Fact]
@@ -41,10 +49,11 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Null(new XYMonoText { Text = "X=1" }.Background);
         var selectable = new XYSelectableText { Text = "可复制" };
         Assert.Contains("xyui-selectable-text", selectable.Classes);
-        Assert.Equal("⧉", selectable.CopyGlyph);
+        Assert.Equal(XyuiVectorIcon.Copy, selectable.CopyIcon);
+        Assert.NotNull(Mark(selectable, "xyui-selectable-copy-mark").Data);
         var middle = new XYTruncatedText { Text = "region-7ad21c", Mode = XyuiTruncatedTextMode.Middle };
         Assert.Contains("xyui-truncated-middle", middle.Classes);
     });
 
-    static string ChildText(Border control) => ((TextBlock)control.Child!).Text ?? "";
+    static VectorPath Mark(Control control, string className) => control.GetVisualDescendants().OfType<VectorPath>().Single(x => x.Classes.Contains(className));
 }

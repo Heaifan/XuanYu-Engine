@@ -15,7 +15,7 @@ Source of truth：`xyui/specs/XYUI1/XYUI-1.mapping.json` + `XYUI-1.canonical.md`
 | 1.09 | Badge / 标签 | XYBadge | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.10 | StatusBadge / 状态标签 | XYStatusBadge | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.11 | StatusDot / 状态圆点 | XYStatusDot | ✓ | ✓ | ✓ | ✓ | READY |
-| 1.12 | Icon / 图标 | XYIcon | ✓ | ✓ | ✓ | ✓ | READY + GAP-001 |
+| 1.12 | Icon / 图标 | XYIcon | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.13 | IconLabel / 图标 + 文字 | XYIconLabel | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.14 | Separator / 分割线 | XYSeparator | ✓ | ✓ | ✓ | ✓ | READY |
 | 1.15 | HelpText / 帮助说明 | XYHelpText | ✓ | ✓ | ✓ | ✓ | READY |
@@ -31,6 +31,6 @@ Source of truth：`xyui/specs/XYUI1/XYUI-1.mapping.json` + `XYUI-1.canonical.md`
 
 Foundation 与 Component 分离：Font/FontSize/FontWeight/LineHeight/LetterSpacing 是 Token；`XyuiTextStyles` 是 Style；上表 24 项才是 Component。
 
-Coverage：Canonical 24/24；Avalonia 24/24；Catalog 24/24；Gallery 24/24；Documentation 24/24；Usage 24/24；Tests 24/24（62/62 PASS）；READY 22/24；GAP 2/24；Accounted 24/24。
+Coverage：Canonical 24/24；Avalonia 24/24；Catalog 24/24；Gallery 24/24；Documentation 24/24；Usage 24/24；Tests 24/24（62/62 PASS）；READY 23/24；GAP 1/24；Accounted 24/24。
 
 R5 fidelity：17 项 canonical 视觉语义问题已纳入组件实现、真实 Preview、Usage/API/Token 文档和回归测试；自动测试通过仍保持 READY FOR USER ACCEPTANCE，不宣称 CLOSED。
