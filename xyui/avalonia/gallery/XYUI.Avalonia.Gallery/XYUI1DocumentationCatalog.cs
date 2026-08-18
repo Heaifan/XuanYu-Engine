@@ -17,7 +17,7 @@ public static partial class XYUI1DocumentationCatalog
         var chineseName = entry.Title.Split('｜').Last();
         var details = Details(id, chineseName);
         return new(id, chineseName, entry.Name, details.Overview, details.WhenToUse,
-            XYUI1GalleryCatalog.CreatePreview(id), Usages(id, type), Variants(id),
+            () => XYUI1GalleryCatalog.CreatePreview(id), Usages(id, type), Variants(id),
             States(id), Properties(id), Tokens(id), type);
     }
 

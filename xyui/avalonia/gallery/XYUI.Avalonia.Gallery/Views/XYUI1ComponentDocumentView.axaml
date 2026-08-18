@@ -17,7 +17,7 @@
       <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="24" CornerRadius="6" MinHeight="112">
         <StackPanel Spacing="8">
           <TextBlock Text="实时预览" Classes="xyui-text-caption" />
-          <ContentControl Content="{Binding Preview}" HorizontalContentAlignment="Left" />
+          <ContentControl x:Name="PreviewHost" HorizontalContentAlignment="Left" />
         </StackPanel>
       </Border>
       <TextBlock Text="基础用法" Classes="xyui-text-section" />

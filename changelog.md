@@ -18,6 +18,12 @@
 
 ---
 
+## XYUI.AVALONIA-R5-F1-HOTFIX · Preview 生命周期（2026-08-18 20:26:34）
+修复 R5-F1 Gallery 启动时 `XYIcon` 被重复挂载到两个 `ContentPresenter` 导致的 CLR 未处理异常（退出码 `0xE0434352`）。
+- 变化：XYUI-1 文档模型改为保存 Preview 工厂；单组件文档视图每次创建自己的真实 Control；主窗口不再构造已废弃的旧 Gallery 预览集合。
+- 验证：XYUI.Avalonia.Tests 58/58 PASS；Gallery 启动进程保持运行且无新的 `.NET Runtime` / `Application Error` 事件；保留 GAP-001/GAP-002。
+- 状态：READY FOR USER ACCEPTANCE；等待用户重新执行 R5-F1 真机验收，未 CLOSED，未启动 XYUI-2。
+
 ## XYUI.AVALONIA-R5-F1 · XYUI-1 Documentation Gallery（2026-08-18 19:34:44）
 本轮只修复 R5 真机验收暴露的 Gallery 信息架构问题：24 个组件从审计式平铺列表迁移为中文优先的文档导航与单组件文档页；不推进 R6，不启动 XYUI-2。
 - 变化：移除顶部 TabControl 作为主导航；新增 Foundation / XYUI-1 左侧导航、模块概览、24 个组件索引和可选中的单组件文档页。

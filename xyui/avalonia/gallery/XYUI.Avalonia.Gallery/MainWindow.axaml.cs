@@ -15,6 +15,6 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = new MainWindowModel(
-            PaletteCatalog.BuildSections(dark: false), XyuiCatalogSource.Load(), XYUI1GalleryCatalog.Build());
+            PaletteCatalog.BuildSections(dark: false), XyuiCatalogSource.Load(), Array.Empty<XYUI1GalleryItem>());
     }
 }

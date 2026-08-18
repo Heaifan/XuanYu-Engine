@@ -20,7 +20,8 @@ public sealed class XYUI1DocumentationTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Null(model.Items[0].Document);
         Assert.All(model.Documents, document =>
         {
-            Assert.IsAssignableFrom<Control>(document.Preview);
+            Assert.IsAssignableFrom<Control>(document.PreviewFactory());
+            Assert.NotSame(document.PreviewFactory(), document.PreviewFactory());
             Assert.NotEmpty(document.ChineseName);
             Assert.NotEmpty(document.Overview);
             Assert.NotEmpty(document.Usages);

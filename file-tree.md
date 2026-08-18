@@ -2440,7 +2440,7 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationSamplesView.axaml.cs` — 消费示例视图代码隐藏。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml` — 消费示例：State/Semantic/Disabled 三态的 DynamicResource 用法。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/FoundationStatesView.axaml.cs` — 状态示例视图代码隐藏。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationModels.cs` — XYUI-1 文档页的组件、变体、状态、API 与 Token 数据契约。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationModels.cs` — XYUI-1 文档页的组件、变体、状态、API、Token 与 Preview 工厂数据契约。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.cs` — 从 XYUI-1 Catalog 构建 24 个中文优先组件文档。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Content.cs` — 24 个组件的基础用法、变体和状态文案。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Api.cs` — 真实 Avalonia 属性与 Foundation Token 文档表。
