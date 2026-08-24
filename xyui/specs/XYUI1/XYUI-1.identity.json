@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "components": [
+    {"id":"XYUI-1-01","canonical":"XY.Text","type":"XYText","title":"普通文本"},
+    {"id":"XYUI-1-02","canonical":"XY.Label","type":"XYLabel","title":"字段名称"},
+    {"id":"XYUI-1-03","canonical":"XY.Caption","type":"XYCaption","title":"辅助信息"},
+    {"id":"XYUI-1-04","canonical":"XY.Heading","type":"XYHeading","title":"标题"},
+    {"id":"XYUI-1-05","canonical":"XY.SectionTitle","type":"XYSectionTitle","title":"区块标题"},
+    {"id":"XYUI-1-06","canonical":"XY.Link","type":"XYLink","title":"超链接"},
+    {"id":"XYUI-1-07","canonical":"XY.CodeText","type":"XYCodeText","title":"代码文本"},
+    {"id":"XYUI-1-08","canonical":"XY.MonoText","type":"XYMonoText","title":"等宽文本"},
+    {"id":"XYUI-1-09","canonical":"XY.Badge","type":"XYBadge","title":"标签"},
+    {"id":"XYUI-1-10","canonical":"XY.StatusBadge","type":"XYStatusBadge","title":"状态标签"},
+    {"id":"XYUI-1-11","canonical":"XY.StatusDot","type":"XYStatusDot","title":"状态圆点"},
+    {"id":"XYUI-1-12","canonical":"XY.Icon","type":"XYIcon","title":"图标"},
+    {"id":"XYUI-1-13","canonical":"XY.IconLabel","type":"XYIconLabel","title":"图标标签"},
+    {"id":"XYUI-1-14","canonical":"XY.Separator","type":"XYSeparator","title":"分割线"},
+    {"id":"XYUI-1-15","canonical":"XY.HelpText","type":"XYHelpText","title":"帮助说明"},
+    {"id":"XYUI-1-16","canonical":"XY.ErrorText","type":"XYErrorText","title":"错误说明"},
+    {"id":"XYUI-1-17","canonical":"XY.WarningText","type":"XYWarningText","title":"警告说明"},
+    {"id":"XYUI-1-18","canonical":"XY.ShortcutHint","type":"XYShortcutHint","title":"快捷键提示"},
+    {"id":"XYUI-1-19","canonical":"XY.Tooltip","type":"XYTooltip","title":"悬浮提示"},
+    {"id":"XYUI-1-20","canonical":"XY.RichText","type":"XYRichText","title":"富文本"},
+    {"id":"XYUI-1-21","canonical":"XY.SelectableText","type":"XYSelectableText","title":"可选择文本"},
+    {"id":"XYUI-1-22","canonical":"XY.EmptyText","type":"XYEmptyText","title":"空状态文本"},
+    {"id":"XYUI-1-23","canonical":"XY.SearchHighlight","type":"XYSearchHighlight","title":"搜索高亮"},
+    {"id":"XYUI-1-24","canonical":"XY.TruncatedText","type":"XYTruncatedText","title":"截断文本"}
+  ]
+}

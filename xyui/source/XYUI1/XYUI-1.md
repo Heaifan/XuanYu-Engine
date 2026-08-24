@@ -320,8 +320,8 @@
         - Semantic Compact Badge
     - 设计特征
         - Badge 与 StatusBadge 严格分离
-        - 使用 Foundation Full Radius
-        - 避免装饰性异形轮廓
+        - 使用左侧指针 Tag Geometry，不使用圆角 Badge 轮廓
+        - SVG-derived Vector Geometry：Height 22 DIP，Pointer 11 DIP
         - 默认采用低存在感 Surface
         - Accent 变体可使用 Accent Soft，但不得用于普通信息滥强调
     - 变体
@@ -342,6 +342,10 @@
             - Value = XY.Surface.PanelAlt
         - XY.Badge.Default.Height
             - Value = XY.Size.Control.XS
+        - XY.Badge.Default.Pointer
+            - Value = 11 DIP Left Pointer
+        - XY.Badge.Default.Geometry
+            - Value = SVG-derived Vector Tag Geometry
         - XY.Badge.Default.Radius
             - Value = XY.Radius.Badge
         - XY.Badge.Default.Border
@@ -977,6 +981,10 @@
             - Value = None
         - XY.SearchHighlight.StatusColors
             - Value = Forbidden
+        - XY.SearchHighlight.SemanticMark
+            - Value = SVG-derived Vector Search Mark，8 DIP，Stroke 1.0 DIP，RightTop（Right 6 / Top 5 DIP）
+        - XY.SearchHighlight.MatchHighlight
+            - Value = 命中文本的 FontWeight / Foreground / Background；不与 SemanticMark 混用
 
 - 24 · TruncatedText｜截断文本
     - 用途

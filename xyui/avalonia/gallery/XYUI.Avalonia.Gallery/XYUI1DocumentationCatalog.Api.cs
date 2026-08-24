@@ -13,9 +13,9 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-20" => [P("Text", "string", "\"\""), P("StrongText", "string", "\"\""), P("MonoText", "string", "\"\"")],
         "XYUI-1-13" => [P("Icon", "XyuiVectorIcon", "Info", "来自 XYUI Vector Icon Registry"), P("Label", "string", "\"\"")],
         "XYUI-1-14" => [P("Variant", "XyuiSeparatorVariant", "Default")],
-        "XYUI-1-18" => [P("Shortcut", "string", "\"\"")],
-        "XYUI-1-19" => [P("Content", "object", "null", "提示内容")],
-        "XYUI-1-21" => [P("Text", "string", "\"\""), P("CopyIcon", "XyuiVectorIcon", "Copy", "Hover 时显示矢量复制提示")],
+        "XYUI-1-18" => [P("Shortcut", "string", "\"\""), P("CombinationMode", "XyuiShortcutCombinationMode", "SeparateKeycaps")],
+        "XYUI-1-19" => [P("Content", "object", "null", "提示内容"), P("MaxWidth", "double", "280"), P("ShowDelay", "int", "400"), P("ViewportAvoidance", "bool", "true"), P("AutoFlip", "bool", "true"), P("PointerCapture", "bool", "false"), P("InteractiveContent", "bool", "false")],
+        "XYUI-1-21" => [P("Text", "string", "\"\""), P("Variant", "XyuiSelectableTextVariant", "Default"), P("CopyIcon", "XyuiVectorIcon", "Copy", "Hover 时显示矢量复制提示")],
         "XYUI-1-24" => [P("Text", "string", "\"\""), P("Mode", "XyuiTruncatedTextMode", "End")],
         _ => [P("Text", "string", "\"\"")]
     };

@@ -11,6 +11,8 @@
       </Grid>
       <TextBlock Text="{Binding ChineseName}" Classes="xyui-heading-page" />
       <TextBlock Text="{Binding CanonicalDisplay}" Classes="xyui-text-code" />
+      <TextBlock Text="{Binding StatusText}" Classes="xyui-text-label" />
+      <TextBlock Text="{Binding KnownGap}" Classes="xyui-text-caption" TextWrapping="Wrap" />
       <TextBlock Text="{Binding Overview}" Classes="xyui-text-body" TextWrapping="Wrap" />
       <TextBlock Text="适用场景" Classes="xyui-text-section" />
       <TextBlock Text="{Binding WhenToUse}" Classes="xyui-text-body" TextWrapping="Wrap" />

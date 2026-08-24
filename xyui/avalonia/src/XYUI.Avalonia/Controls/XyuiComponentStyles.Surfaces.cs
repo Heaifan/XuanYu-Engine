@@ -16,7 +16,7 @@ public static partial class XyuiComponentStyles
         TagSurface(styles);
         Surface(styles, typeof(XYCodeText), "xyui-code-text", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Tertiary", "XY.Brush.Surface.PanelAlt", 32);
         Surface(styles, typeof(XYStatusBadge), "xyui-status-badge", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.Panel");
-        Surface(styles, typeof(XYShortcutHint), "xyui-shortcut-hint", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.PanelAlt");
+        ShortcutSurface(styles);
         Surface(styles, typeof(XYHelpText), "xyui-help-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 400, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.Panel");
         Surface(styles, typeof(XYErrorText), "xyui-error-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Semantic.Error.Text", "XY.Brush.Surface.Panel");
         Surface(styles, typeof(XYWarningText), "xyui-warning-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Semantic.Warning.Text", "XY.Brush.Surface.Panel");
@@ -28,6 +28,17 @@ public static partial class XyuiComponentStyles
         InlineSurface(styles, typeof(XYHelpText), "xyui-help-text");
         InlineSurface(styles, typeof(XYErrorText), "xyui-error-text");
         InlineSurface(styles, typeof(XYWarningText), "xyui-warning-text");
+    }
+
+    static void ShortcutSurface(Styles styles)
+    {
+        var parent = new Style(x => x.OfType<XYShortcutHint>().Class("xyui-shortcut-hint"));
+        Brush(parent, Border.BackgroundProperty, "XY.Brush.Surface.PanelAlt"); parent.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(0))); styles.Add(parent);
+        var key = new Style(x => x.OfType<Border>().Class("xyui-shortcut-keycap"));
+        Brush(key, Border.BackgroundProperty, "XY.Brush.Surface.PanelAlt"); Brush(key, Border.BorderBrushProperty, "XY.Brush.Border.Color.Subtle");
+        key.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(1))); key.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(4))); key.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(6, 2))); key.Setters.Add(new Setter(Border.HeightProperty, 22d)); styles.Add(key);
+        styles.Add(Text(typeof(TextBlock), "xyui-shortcut-keycap-text", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
+        styles.Add(Text(typeof(TextBlock), "xyui-shortcut-separator", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
     }
 
     static void InlineSurface(Styles styles, Type type, string cls)

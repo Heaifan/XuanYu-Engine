@@ -13,7 +13,10 @@ public sealed record XYUI1ComponentDocument(
     IReadOnlyList<XYUIDocState> States, IReadOnlyList<XYUIDocProperty> Properties,
     IReadOnlyList<XYUIDocToken> Tokens, string AvaloniaType)
 {
-    public string CanonicalDisplay => $"XY.{EnglishName} · {EnglishName}";
+    public string CanonicalDisplay => $"{CanonicalIdentity} · {EnglishName}";
+    public string CanonicalIdentity { get; init; } = "";
+    public string KnownGap { get; init; } = "";
+    public string StatusText => string.IsNullOrEmpty(KnownGap) ? "READY FOR VISUAL ACCEPTANCE" : "READY WITH GAP";
     public bool HasVariants => Variants.Count > 0;
     public bool HasStates => States.Count > 0;
 }

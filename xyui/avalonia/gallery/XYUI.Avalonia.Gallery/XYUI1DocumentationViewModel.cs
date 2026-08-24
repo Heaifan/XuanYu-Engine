@@ -7,6 +7,12 @@ namespace XYUI.Avalonia.Gallery;
 public sealed class XYUI1DocumentationViewModel : INotifyPropertyChanged
 {
     public IReadOnlyList<XYUI1ComponentDocument> Documents { get; } = XYUI1DocumentationCatalog.Build();
+    public int ImplementedCount => Documents.Count;
+    public int CanonicalAlignedCount => Documents.Count;
+    public int ReadyCount => Documents.Count(x => string.IsNullOrEmpty(x.KnownGap));
+    public int ReadyWithGapCount => Documents.Count(x => !string.IsNullOrEmpty(x.KnownGap));
+    public int GapCount => ReadyWithGapCount;
+    public int VisualAcceptedCount => 0;
     public IReadOnlyList<XYUI1NavigationItem> Items { get; }
     public IReadOnlyList<XYUI1NavigationItem> ComponentItems => Items.Skip(1).ToArray();
     public IReadOnlyList<FoundationNavigationItem> FoundationItems { get; } =

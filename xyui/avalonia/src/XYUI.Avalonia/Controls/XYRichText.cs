@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using XYUI.Avalonia.Typography;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -27,7 +28,7 @@ public sealed class XYRichText : XyuiTextComponent
         Inlines.Clear();
         if (!string.IsNullOrEmpty(_plainText)) Inlines.Add(new Run(_plainText));
         if (!string.IsNullOrEmpty(StrongText)) Inlines.Add(new Run($"  {StrongText}") { FontWeight = FontWeight.SemiBold });
-        if (!string.IsNullOrEmpty(MonoText)) Inlines.Add(new Run($"  {MonoText}") { FontFamily = new FontFamily("Cascadia Mono") });
+        if (!string.IsNullOrEmpty(MonoText)) Inlines.Add(new Run($"  {MonoText}") { FontFamily = new FontFamily(XyuiTypographyTokens.FontMono), FontSize = XyuiTypographyTokens.FontSizeMono });
         _rebuilding = false;
     }
 }

@@ -2462,6 +2462,7 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/CanonicalAlignmentTests.cs` — token 表与 token-canonical-map.json 逐条对照。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/BrushRuntimeTests.cs` — 主题字典 key/类型/值/重复/缺失测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SecondTruthTests.cs` — 防回潮：未登记 hex 扫描 + AXAML 资源引用可解析。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/R5F4FidelityTests.cs` — R5-F4 Typography、Mono、Variant、Keycap、Tooltip、Identity/GAP 回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/GallerySmokeTests.cs` — App 资源、窗口标题、色板覆盖 Headless 冒烟。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1DocumentationTests.cs` — XYUI-1 模块概览、24 页导航和真实文档数据覆盖测试。
 - `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTypographyTokens.cs` — Typography token 权威常量表（字体/字号/字重/行高/字距，转录 token-canonical-map.json）。
@@ -2494,6 +2495,8 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/InteractionCombinationTests.cs` — F4 Selected+Hover/Selected+Focus/Checked+Focus/Disabled 状态组合优先级测试（仿真子类 PseudoClasses.Set）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryInteractionContractTests.cs` — F4 Gallery 单一 Scroll ownership、Spatial Token 与结构化高密度布局静态合同测试。
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogSource.cs` — Registry/Mapping/Canonical Spec 驱动 Catalog，登记 XYUI-1 24 个组件。
+- `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogEntry.cs` — Catalog 条目及 READY/READY WITH GAP 状态文本。
+- `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogTruth.cs` — 从 XYUI-1 Identity/GAP JSON 读取 Gallery 真值。
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogSpecReader.cs` — 从 canonical spec 提取用途、变体、状态和场景文案。
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogTypeMap.cs` — Canonical ID 到稳定 Avalonia 类型名及 Gallery 覆盖映射。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiTextComponent.cs` — XYUI-1 文本组件共同基类与文本 surface 基类。
@@ -2535,3 +2538,5 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1FidelityTests.cs` — XYUI-1 R5 canonical 标记、Icon 尺寸/笔画、Rich/Selectable/截断契约回归测试。
 - `xyui/avalonia/gallery/XYUI-1-COMPONENT-INVENTORY.md` — XYUI-1 24 项组件矩阵与 Foundation/Component 边界记录。
 - `xyui/specs/XYUI1/XYUI-1.gaps.json` — XYUI-1 glyph registry 与 MiddleEllipsis 映射 Gap 登记。
+- `xyui/specs/XYUI1/XYUI-1.identity.json` — XYUI-1 24 项 Canonical Identity 到 Avalonia 类型的正式映射。
+- `xyui/audit/XYUI1/R5-F4-fidelity-matrix.md` — XYUI-1 01～24 全量 Fidelity Matrix 与审计结论。

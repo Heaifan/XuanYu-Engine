@@ -53,13 +53,24 @@ public class SecondTruthTests
     [Fact]
     public void No_Inline_Typography_Literals_In_Gallery()
     {
-        // 消费侧禁止手写 FontSize="12" / FontFamily="Consolas" / FontWeight="Bold"（定义文件除外）
+        // 消费侧禁止手写字号、字体族和字重字面量（定义文件除外）
         var litRx = new Regex(@"FontSize\s*=\s*""\d|FontFamily\s*=\s*""[^{]|FontWeight\s*=\s*""[^{]");
         foreach (var file in SourceFiles().Where(f => f.EndsWith(".axaml") && f.Contains("gallery")))
         {
             var m = litRx.Match(File.ReadAllText(file));
             Assert.False(m.Success,
                 $"内联 Typography 字面量 {m.Value} 出现在 {Path.GetRelativePath(AvaloniaRoot, file)}");
+        }
+    }
+
+    [Fact]
+    public void No_Hardcoded_FontFamily_Literals_Outside_Foundation()
+    {
+        var literalRx = new Regex(@"new\s+FontFamily\s*\(\s*\"[^\"]+\"|FontFamily\s*=\s*\"[^\"]+\"");
+        foreach (var file in SourceFiles())
+        {
+            var match = literalRx.Match(File.ReadAllText(file));
+            Assert.False(match.Success, $"未登记字体字面量 {match.Value} 出现在 {Path.GetRelativePath(AvaloniaRoot, file)}");
         }
     }
 }

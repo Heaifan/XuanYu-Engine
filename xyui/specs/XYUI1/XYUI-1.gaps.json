@@ -1,12 +1,37 @@
 {
- "gaps_version": "0.1.0",
- "phase": "XYUI-PILOT-R1",
+ "gaps_version": "0.2.0",
+ "phase": "XYUI.AVALONIA-R5-F4",
  "gaps": [
   {
    "gap_id": "XYUI1-GAP-002",
    "type": "AVALONIA_MAPPING_LIMIT",
    "scope": "TruncatedText middle ellipsis",
+   "component_ids": ["XYUI-1-24"],
    "detail": "Avalonia TextBlock 12.0.4 没有 MiddleEllipsis 原生 TextTrimming；XYTruncatedText.Mode=Middle 保留稳定 API，当前运行时使用 EndEllipsis，并登记为非伪造 Gap",
+   "blocking": false
+  },
+  {
+   "gap_id": "XYUI1-GAP-003",
+   "type": "CANONICAL_RUNTIME_LIMIT",
+   "scope": "RichText Link semantic run",
+   "component_ids": ["XYUI-1-20"],
+   "detail": "Canonical 要求 Link semantic；当前 XYRichText 只有普通、Strong、Mono 三种正式输入，Link run API 尚未落地，文档不得宣称完整支持",
+   "blocking": false
+  },
+  {
+   "gap_id": "XYUI1-GAP-004",
+   "type": "AVALONIA_ACCESSIBILITY_MAPPING",
+   "scope": "StatusBadge / StatusDot / ErrorText / WarningText / Icon / Tooltip / SelectableText",
+   "component_ids": ["XYUI-1-10", "XYUI-1-11", "XYUI-1-12", "XYUI-1-16", "XYUI-1-17", "XYUI-1-19", "XYUI-1-21"],
+   "detail": "Canonical Required 的 AccessibleName / AccessibleState / AccessibleText 尚未形成稳定的 Avalonia AutomationPeer 映射；保留功能并诚实登记 GAP",
+   "blocking": false
+  },
+  {
+   "gap_id": "XYUI1-GAP-005",
+   "type": "AVALONIA_TOOLTIP_BEHAVIOR_MAPPING",
+   "scope": "Tooltip viewport avoidance / auto flip / delay runtime",
+   "component_ids": ["XYUI-1-19"],
+   "detail": "XYTooltip 暴露并锁定 Canonical 参数，但尚未形成稳定的 Avalonia 原生 ToolTip/P​​opup 行为接管层；不能宣称完整 READY",
    "blocking": false
   }
  ]

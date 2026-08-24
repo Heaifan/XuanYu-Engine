@@ -32,11 +32,18 @@ public static partial class XyuiComponentStyles
         StateMark(styles, "xyui-status-mark-neutral", "XY.Brush.Text.Secondary");
         var separator = new Style(x => x.OfType<XYSeparator>().Class("xyui-separator"));
         Brush(separator, Border.BackgroundProperty, "XY.Brush.Divider.Default"); separator.Setters.Add(new Setter(Border.HeightProperty, 1d)); styles.Add(separator);
+        SeparatorVariant(styles, "header", 1, 0, 0); SeparatorVariant(styles, "panel", 1, 0, 0); SeparatorVariant(styles, "section", 1, 8, 8); SeparatorVariant(styles, "listrow", 1, 16, 16); SeparatorVariant(styles, "verticalsplit", 0, 0, 0);
         var tooltip = new Style(x => x.OfType<XYTooltip>().Class("xyui-tooltip"));
         Brush(tooltip, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Overlay");
         Brush(tooltip, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Subtle");
         tooltip.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(2, 0, 0, 0)));
         tooltip.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 4))); styles.Add(tooltip);
+    }
+
+    static void SeparatorVariant(Styles styles, string name, double height, double left, double right)
+    {
+        var style = new Style(x => x.OfType<XYSeparator>().Class($"xyui-separator-{name}"));
+        style.Setters.Add(new Setter(Border.HeightProperty, height == 0 ? double.NaN : height)); style.Setters.Add(new Setter(Border.WidthProperty, height == 0 ? 1d : double.NaN)); style.Setters.Add(new Setter(Border.MarginProperty, new Thickness(left, 0, right, 0))); styles.Add(style);
     }
 
     static void State(Styles styles, Type type, string cls, string brush)

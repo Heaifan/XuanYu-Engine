@@ -17,7 +17,9 @@ public sealed record XyuiCatalogEntry(
     XyuiCatalogStatus Status,
     bool SourcePresent)
 {
-    public string StateText => Status.Ready ? "READY" : Status.ToText();
+    public string CanonicalIdentity { get; init; } = "";
+    public string KnownGap { get; init; } = "";
+    public string StateText => !Status.Ready ? "NOT READY" : string.IsNullOrEmpty(KnownGap) ? "READY FOR VISUAL ACCEPTANCE" : "READY WITH GAP";
 
     public string AvaloniaText => !SourcePresent
         ? "SOURCE NOT PRESENT IN CURRENT REPOSITORY"

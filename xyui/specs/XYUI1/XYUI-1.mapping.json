@@ -3,7 +3,7 @@
  "phase": "XYUI-PILOT-R1",
  "source": {
   "path": "xyui/source/XYUI1/XYUI-1.md",
-  "sha256": "9709a4fde7ec0e2211484f2fdd51a493ef7d472155f332c74bcd350ca0b0a462"
+  "sha256": "d5fbf603df47ac1869bc4ef907ea276d5d039404c3c873e1aadf5d5e8dd7cd91"
  },
  "canonical_basis": {
   "foundation_registry": "xyui/registry/foundation/foundation-registry.json",
@@ -514,7 +514,7 @@
    "component_id": "XYUI-1-09",
    "name": "Badge",
    "title": "标签",
-   "ref_count": 11,
+   "ref_count": 12,
    "refs": [
     {
      "property": "XY.Badge.Default.FontFamily",
@@ -553,10 +553,16 @@
      "canonical_target": "XY.Size.Control.XS"
     },
     {
-     "property": "XY.Badge.Default.Radius",
-     "value": "XY.Radius.Badge",
-     "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Radius.Badge"
+     "property": "XY.Badge.Default.Pointer",
+     "value": "11 DIP Left Pointer",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.Badge.Default.Geometry",
+     "value": "SVG-derived Vector Tag Geometry",
+     "kind": "COMPONENT_SPECIFIC_GLYPH",
+     "canonical_target": null
     },
     {
      "property": "XY.Badge.Default.Border",
@@ -1664,7 +1670,7 @@
    "component_id": "XYUI-1-23",
    "name": "SearchHighlight",
    "title": "搜索高亮",
-   "ref_count": 6,
+   "ref_count": 8,
    "refs": [
     {
      "property": "XY.SearchHighlight.Default.TextStyle",
@@ -1699,6 +1705,18 @@
     {
      "property": "XY.SearchHighlight.StatusColors",
      "value": "Forbidden",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.SearchHighlight.SemanticMark",
+     "value": "SVG-derived Vector Search Mark",
+     "kind": "COMPONENT_SPECIFIC_GLYPH",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.SearchHighlight.SemanticMark.Geometry",
+     "value": "8 DIP / 1.0 DIP / RightTop / Right 6 / Top 5",
      "kind": "LITERAL",
      "canonical_target": null
     }

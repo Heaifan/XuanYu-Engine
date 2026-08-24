@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI.AVALONIA-R5-F4 · XYUI-1 Full Reconciliation（2026-08-24 21:51:27）
+
+- 目标：对 XYUI-1 24 个组件完成 Canonical、Mapping、Runtime、Gallery、Documentation、Tests 对齐；XYUI-2 保持冻结。
+- 变化：修正 Text/Label typography；RichText Mono 改用 Foundation Mono；新增 SelectableText Technical Variant、SeparateKeycaps ShortcutHint、Separator layout mapping、Tooltip contract properties；Canonical/Source/Mapping/GAP 同步；Gallery 改为显示正式 Identity、READY WITH GAP 和真实统计。
+- 验证：JSON 结构与 mapping ref_count 静态核对通过；`git diff --check` 通过；正式 dotnet 测试被环境阻断：当前 worktree 未发现 .NET SDK。
+- Hash：本条所在提交。
+- 状态：R5-F4 `READY FOR USER ACCEPTANCE`；保留 GAP-002/003/004/005；未标记 CLOSED，未启动 XYUI-2。
+
 ## 归档规则
 
 - 每个自然月执行一次 changelog 归档（宪法第五十三条《月度归档》）。

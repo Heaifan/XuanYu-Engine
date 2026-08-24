@@ -47,6 +47,8 @@ public static class XyuiCatalogSource
             return;
         }
         using var document = JsonDocument.Parse(File.ReadAllText(mapping));
+        var identity = XyuiCatalogTruth.ReadIdentity(directory, module);
+        var gaps = XyuiCatalogTruth.ReadGaps(directory, module);
         foreach (var component in document.RootElement.GetProperty("components").EnumerateArray())
         {
             var id = String(component, "component_id");
@@ -55,8 +57,10 @@ public static class XyuiCatalogSource
             var api = component.GetProperty("refs").EnumerateArray()
                 .Select(item => String(item, "property")).Distinct().Take(8).ToArray();
             var details = XyuiCatalogSpecReader.Read(specification, name);
-            entries.Add(Create(module, id, id, $"{name}｜{title}", $"xyui/specs/XYUI{phase}/{module}.canonical.md",
-                File.Exists(specification), api, details));
+            var entry = Create(module, id, id, $"{name}｜{title}", $"xyui/specs/XYUI{phase}/{module}.canonical.md",
+                File.Exists(specification), api, details);
+            entry = entry with { CanonicalIdentity = identity.TryGetValue(id, out var canonical) ? canonical : $"XY.{name}", KnownGap = gaps.TryGetValue(id, out var gap) ? gap : "" };
+            entries.Add(entry);
         }
     }
 

@@ -46,7 +46,7 @@ public static class XYUI1GalleryCatalog
         "XYUI-1-18" => new XYShortcutHint { Shortcut = "Ctrl + S" },
         "XYUI-1-19" => new XYTooltip { Content = new XYCaption { Text = "悬浮提示内容" } },
         "XYUI-1-20" => new XYRichText { Text = "普通内容", StrongText = "重点信息", MonoText = "region-7ad21c" },
-        "XYUI-1-21" => new XYSelectableText { Text = "可复制的对象 ID" },
+        "XYUI-1-21" => new XYSelectableText { Text = "region-7ad21c", Variant = XyuiSelectableTextVariant.Technical },
         "XYUI-1-22" => new XYEmptyText { Text = "暂无区域数据" },
         "XYUI-1-23" => new XYSearchHighlight { Text = "命中：区域数据集" },
         "XYUI-1-24" => new XYTruncatedText { Text = "这是一个在窄布局中使用末尾省略策略的长对象名称" },
@@ -65,7 +65,7 @@ public static class XYUI1GalleryCatalog
         "XYUI-1-14" => $"<c:{type} Variant=\"Section\" />",
         "XYUI-1-18" => $"<c:{type} Shortcut=\"Ctrl + S\" />",
         "XYUI-1-19" => $"<c:{type} Content=\"提示\" />",
-        "XYUI-1-21" => $"<c:{type} Text=\"可复制 ID\" SelectionStart=\"0\" SelectionEnd=\"4\" />",
+        "XYUI-1-21" => $"<c:{type} Text=\"region-7ad21c\" Variant=\"Technical\" SelectionStart=\"0\" SelectionEnd=\"4\" />",
         "XYUI-1-24" => $"<c:{type} Text=\"长文本\" Mode=\"End\" />",
         _ => $"<c:{type} Text=\"示例内容\" />"
     };

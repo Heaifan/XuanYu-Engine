@@ -18,7 +18,8 @@ public static partial class XYUI1DocumentationCatalog
         var details = Details(id, chineseName);
         return new(id, chineseName, entry.Name, details.Overview, details.WhenToUse,
             () => XYUI1GalleryCatalog.CreatePreview(id), Usages(id, type), Variants(id),
-            States(id), Properties(id), Tokens(id), type);
+            States(id), Properties(id), Tokens(id), type)
+        { CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap };
     }
 
     static (string Overview, string WhenToUse) Details(string id, string title) => id switch
@@ -41,8 +42,8 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-16" => ("错误说明直接指出需要修复的问题，并保持与语义色一致。", "用于校验失败、无效输入和不可完成的操作结果。"),
         "XYUI-1-17" => ("警告说明提示风险或未完成条件，但不等同于操作失败。", "用于未保存、潜在风险和需要确认的状态。"),
         "XYUI-1-18" => ("快捷键提示把可操作动作与其键盘组合紧凑地呈现。", "用于按钮旁、工具栏或命令说明中。"),
-        "XYUI-1-19" => ("悬浮提示承载短时、就地的补充说明，不替代页面内核心信息。", "用于图标按钮、截断文本和不便直接展开的辅助信息。"),
-        "XYUI-1-20" => ("富文本为正文提供受控的强调、等宽和链接语义。", "用于需要少量内联层次但不需要自由排版的说明。"),
+        "XYUI-1-19" => ("悬浮提示承载短时、就地的补充说明；行为参数已形成 API，但 Avalonia 浮层接管仍登记 GAP-005。", "用于图标按钮、截断文本和不便直接展开的辅助信息。"),
+        "XYUI-1-20" => ("富文本提供受控的强调与等宽语义；Link run API 尚未形成，登记 GAP-003。", "用于需要少量内联层次但不需要自由排版的说明。"),
         "XYUI-1-21" => ("可选择文本保留文本选择能力，适合复制对象值和诊断内容。", "用于用户需要复制或比对的文本；Technical 变体沿用等宽风格。"),
         "XYUI-1-22" => ("空状态文本在没有数据时给出明确且克制的反馈。", "用于空列表、无结果和首次使用的内容区域。"),
         "XYUI-1-23" => ("搜索高亮在右上角显示独立的 8 DIP Vector Search Mark，不参与正文排版。", "用于搜索结果、树节点和属性列表中的命中内容。"),

@@ -15,7 +15,7 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-18" => [$"<xy:{type} Shortcut=\"Ctrl + S\" />"],
         "XYUI-1-19" => [$"<xy:{type} Content=\"提示内容\" />"],
         "XYUI-1-20" => [$"<xy:{type} Text=\"普通内容\" StrongText=\"重点信息\" MonoText=\"region-7ad21c\" />"],
-        "XYUI-1-21" => [$"<xy:{type} Text=\"可复制 ID\" />", $"<xy:{type} Text=\"region-7ad21c\" Classes=\"xyui-mono-text\" />"],
+        "XYUI-1-21" => [$"<xy:{type} Text=\"可复制 ID\" Variant=\"Default\" />", $"<xy:{type} Text=\"region-7ad21c\" Variant=\"Technical\" />"],
         "XYUI-1-24" => [$"<xy:{type} Text=\"长对象名称\" Mode=\"End\" />", $"<xy:{type} Text=\"region-7ad21c\" Mode=\"Middle\" />"],
         _ => [$"<xy:{type} Text=\"示例内容\" />"]
     };
