@@ -3,7 +3,7 @@
  "phase": "XYUI-PILOT-R1",
  "source": {
   "path": "xyui/source/XYUI1/XYUI-1.md",
-  "sha256": "d5fbf603df47ac1869bc4ef907ea276d5d039404c3c873e1aadf5d5e8dd7cd91"
+  "sha256": "3d1a0a282d08b56582221c42f5b604d81d3c0f99bb16af8eef650413bac2dc88"
  },
  "canonical_basis": {
   "foundation_registry": "xyui/registry/foundation/foundation-registry.json",

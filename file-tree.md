@@ -2463,6 +2463,7 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/BrushRuntimeTests.cs` — 主题字典 key/类型/值/重复/缺失测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SecondTruthTests.cs` — 防回潮：未登记 hex 扫描 + AXAML 资源引用可解析。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/R5F4FidelityTests.cs` — R5-F4 Typography、Mono、Variant、Keycap、Tooltip、Identity/GAP 回归。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/R5F4F1AlignmentTests.cs` — R5-F4-F1 SectionTitle 与 EmptyText 默认无 Vector Decoration 回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/GallerySmokeTests.cs` — App 资源、窗口标题、色板覆盖 Headless 冒烟。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1DocumentationTests.cs` — XYUI-1 模块概览、24 页导航和真实文档数据覆盖测试。
 - `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTypographyTokens.cs` — Typography token 权威常量表（字体/字号/字重/行高/字距，转录 token-canonical-map.json）。

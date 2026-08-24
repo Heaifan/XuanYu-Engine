@@ -8,7 +8,7 @@
 |02|Label|对齐|对齐|XYLabel|Text|—|—|Medium 500|Primary|—|—|—|真实 Preview|有|R5F4|—|READY FOR VISUAL ACCEPTANCE|
 |03|Caption|对齐|对齐|XYCaption|Text|—|—|Caption|Secondary|—|—|—|真实 Preview|有|既有|—|READY FOR VISUAL ACCEPTANCE|
 |04|Heading|对齐|对齐|XYHeading|Text|Panel/Page|—|Semibold/Bold|Primary|—|—|—|真实 Preview|有|既有|—|READY FOR VISUAL ACCEPTANCE|
-|05|SectionTitle|对齐|对齐|XYSectionTitle|Text|—|—|Section|Primary|Divider|—|Vector mark|真实 Preview|有|既有|—|READY FOR VISUAL ACCEPTANCE|
+|05|SectionTitle|对齐|对齐|XYSectionTitle|Text|—|—|Section|Primary|Divider|—|无默认 Vector Mark|真实 Preview|有|R5-F4-F1|—|RECONCILIATION COMPLETE · BUILD BLOCKED|
 |06|Link|对齐|对齐|XYLink|Content|—|Native Button|Body Medium|Link|—|—|—|真实 Preview|有|既有|—|READY FOR VISUAL ACCEPTANCE|
 |07|CodeText|对齐|对齐|XYCodeText|Text|—|—|Mono|Tertiary|32 DIP|—|Code mark 8/1|真实 Preview|有|既有|—|READY FOR VISUAL ACCEPTANCE|
 |08|MonoText|对齐|对齐|XYMonoText|Text|—|—|Foundation Mono|Secondary|无 Surface|—|—|M-05A|有|既有|—|READY FOR VISUAL ACCEPTANCE|
@@ -25,8 +25,8 @@
 |19|Tooltip|部分|部分|XYTooltip|6 behavior props|—|Hover contract|Caption|Overlay|280 DIP|GAP|—|真实 Preview|有|GAP-004/005|READY WITH GAP|
 |20|RichText|部分|对齐|XYRichText|Text/Strong/Mono|—|—|Mono run fixed|Primary/Secondary|Inline|—|—|真实 Preview|有|GAP-003|READY WITH GAP|
 |21|SelectableText|对齐|对齐|XYSelectableText|Text/Variant|Default/Technical|Selection/Hover|Body/Mono|Primary|No surface|GAP|Copy vector|真实 Preview|有|GAP-004|READY WITH GAP|
-|22|EmptyText|对齐|对齐|XYEmptyText|Text|—|—|Caption|Tertiary|Inline mark|—|Vector|真实 Preview|有|—|READY FOR VISUAL ACCEPTANCE|
-|23|SearchHighlight|已回写|已回写|XYSearchHighlight|Text/Match/Mark|—|Match|Body Medium|Primary/Accent|8/1 RightTop|—|Search vector|真实 Preview|有|R5F4|READY FOR VISUAL ACCEPTANCE|
+|22|EmptyText|对齐|对齐|XYEmptyText|Text|—|—|Caption|Tertiary|None|—|无默认 Vector Decoration|真实 Preview|有|R5-F4-F1|—|RECONCILIATION COMPLETE · BUILD BLOCKED|
+|23|SearchHighlight|已回写|已回写|XYSearchHighlight|Text/Match/Mark|—|Match|Body Medium|Primary/Accent|8/1 RightTop|—|Search vector（仅搜索语义）|真实 Preview|有|R5-F4-F1|RECONCILIATION COMPLETE · BUILD BLOCKED|
 |24|TruncatedText|对齐|对齐|XYTruncatedText|Text/Mode|End/Middle|—|Body/Mono pending|Primary|End/Middle API|—|—|真实 Preview|有|GAP-002|READY WITH GAP|
 
 结论：24/24 已有真实类型、Gallery Preview、文档入口和测试基础；其中 11 个组件仍带有已登记 GAP 或待补 Accessibility/Tooltip/RichText Link 合同，全部等待用户真机验收，未宣称 CLOSED。

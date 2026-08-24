@@ -21,13 +21,11 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal(10, XyuiVectorIcons.CreateResources().Count);
         Assert.All(XyuiVectorIcons.PathData.Keys, icon => Assert.NotNull(XyuiVectorIcons.Create(icon)));
         Assert.NotNull(Mark(new XYCodeText { Text = "region-id" }, "xyui-code-text-mark").Data);
-        Assert.NotNull(Mark(new XYSectionTitle { Text = "属性分组" }, "xyui-section-title-mark").Data);
         Assert.NotNull(Mark(new XYBadge { Text = "草稿" }, "xyui-badge-mark-default").Data);
         Assert.NotNull(Mark(new XYStatusBadge { Text = "已保存", State = XyuiStatusState.Success }, "xyui-status-mark-success").Data);
         Assert.NotNull(Mark(new XYHelpText { Text = "填写说明" }, "xyui-help-text-mark").Data);
         Assert.NotNull(Mark(new XYErrorText { Text = "名称无效" }, "xyui-error-text-mark").Data);
         Assert.NotNull(Mark(new XYWarningText { Text = "尚未保存" }, "xyui-warning-text-mark").Data);
-        Assert.NotNull(Mark(new XYEmptyText { Text = "暂无数据" }, "xyui-empty-text-mark").Data);
         Assert.NotNull(Mark(new XYSearchHighlight { Text = "命中内容" }, "xyui-search-highlight-mark").Data);
         Assert.NotNull(new XYIcon { Icon = XyuiVectorIcon.Code }.Data);
     });

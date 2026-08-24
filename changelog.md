@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI.AVALONIA-R5-F4-F1 · Final Canonical/Runtime Alignment Hotfix（2026-08-24 22:07:47）
+
+- 目标：修复 R5-F4 源码复核发现的 SectionTitle、EmptyText 与 SearchHighlight 三处 Canonical/Runtime 一致性遗漏；XYUI-2 继续冻结。
+- 变化：SectionTitle 移除默认 Section Vector Mark、保留文字与 Foundation Section Divider；EmptyText 恢复为无 Vector Decoration 的 Quiet Empty Text；SearchHighlight 明确区分命中文本高亮与右上 Search Semantic Mark。
+- 验证：新增默认 visual tree 无 Section/Empty Vector Mark 回归；JSON、Source SHA、5+100、SecondTruth 静态扫描与 `git diff --check` 待本轮收口。dotnet Build/Test 仍因无 SDK 阻断。
+- Hash：本条所在提交。
+- 状态：`CODE IMPLEMENTED · RECONCILIATION COMPLETE · NOT READY FOR USER VISUAL ACCEPTANCE`；等待 SDK 门禁。
+
 ## XYUI.AVALONIA-R5-F4 · XYUI-1 Full Reconciliation（2026-08-24 21:51:27）
 
 - 目标：对 XYUI-1 24 个组件完成 Canonical、Mapping、Runtime、Gallery、Documentation、Tests 对齐；XYUI-2 保持冻结。

@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Media;
 using Avalonia.Styling;
 using XYUI.Avalonia.Typography;
 using VectorPath = Avalonia.Controls.Shapes.Path;
@@ -30,17 +31,17 @@ public static partial class XyuiComponentStyles
         styles.Add(Text(typeof(TextBlock), "xyui-selectable-text-content", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(TextBlock), "xyui-selectable-text-technical", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Secondary"));
         styles.Add(Text(typeof(XYEmptyText), "xyui-empty-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 400, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Tertiary"));
+        var empty = new Style(x => x.OfType<XYEmptyText>().Class("xyui-empty-text"));
+        empty.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Center)); styles.Add(empty);
         styles.Add(Text(typeof(XYSearchHighlight), "xyui-search-highlight", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(XYTruncatedText), "xyui-truncated-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         IconSize(styles, "tiny", 12, 1.0); IconSize(styles, "small", 14, 1.25); IconSize(styles, "medium", 16, 1.5); IconSize(styles, "large", 20, 1.75);
         Mark(styles, "xyui-code-text-mark", "XY.Brush.Text.Tertiary", 8, false, 1.0);
         Mark(styles, "xyui-icon-label-mark", "XY.Brush.Text.Primary", 14, false);
-        Mark(styles, "xyui-section-title-mark", "XY.Brush.Divider.Section", 14, true);
         Mark(styles, "xyui-help-text-mark", "XY.Brush.Semantic.Info.Text", 14, false);
         Mark(styles, "xyui-error-text-mark", "XY.Brush.Semantic.Error.Text", 14, false);
         Mark(styles, "xyui-warning-text-mark", "XY.Brush.Semantic.Warning.Text", 14, false);
         Mark(styles, "xyui-search-highlight-mark", "XY.Brush.Text.Secondary", 8, false, 1.0);
-        Mark(styles, "xyui-empty-text-mark", "XY.Brush.Text.Tertiary", 12, false);
         Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Tertiary", 12, false);
     }
 

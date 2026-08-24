@@ -1,9 +1,7 @@
 namespace XYUI.Avalonia.Controls;
 
-using XYUI.Avalonia.Vector;
-
-public sealed class XYSectionTitle : XyuiVectorTextSurface
+public sealed class XYSectionTitle : XyuiTextSurface
 {
-    public XYSectionTitle() : base("xyui-section-title", XyuiVectorIcon.Section, XyuiVectorMarkPlacement.Inline) { }
+    public XYSectionTitle() : base("xyui-section-title") { }
     public override string CanonicalId => "XYUI-1-05";
 }

@@ -1,9 +1,7 @@
 namespace XYUI.Avalonia.Controls;
 
-using XYUI.Avalonia.Vector;
-
-public sealed class XYEmptyText : XyuiVectorTextSurface
+public sealed class XYEmptyText : XyuiTextComponent
 {
-    public XYEmptyText() : base("xyui-empty-text", XyuiVectorIcon.Empty, XyuiVectorMarkPlacement.Inline) { }
+    public XYEmptyText() : base("xyui-empty-text") { }
     public override string CanonicalId => "XYUI-1-22";
 }
