@@ -4,7 +4,7 @@
         xmlns:g="using:XYUI.Avalonia.Gallery"
         x:Class="XYUI.Avalonia.Gallery.MainWindow"
         x:DataType="g:MainWindowModel"
-        Title="XYUI.Avalonia · XYUI-1 文档 Gallery"
+        Title="XYUI.Avalonia · 组件文档 Gallery"
         Width="1120" Height="760"
         Background="{DynamicResource XY.Brush.Surface.App}">
   <DockPanel Margin="20">
@@ -15,7 +15,7 @@
               BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
               BorderThickness="1" Click="OnThemeSwitchClick" />
       <StackPanel>
-        <TextBlock Text="XYUI-1 · 文本与信息组件文档" Classes="xyui-heading-panel" />
+        <TextBlock Text="XYUI 组件文档 · XYUI-1 已验收冻结 · XYUI-2 Batch 01 待人工审核" Classes="xyui-heading-panel" />
         <TextBlock x:Name="ThemeStateText" Text="Theme：Light" Classes="xyui-text-caption" />
       </StackPanel>
     </DockPanel>

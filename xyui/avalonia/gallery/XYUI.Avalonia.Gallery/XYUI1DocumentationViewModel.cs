@@ -4,7 +4,7 @@ using XYUI.Avalonia.Gallery.Views;
 
 namespace XYUI.Avalonia.Gallery;
 
-public sealed class XYUI1DocumentationViewModel : INotifyPropertyChanged
+public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
 {
     public IReadOnlyList<XYUI1ComponentDocument> Documents { get; } = XYUI1DocumentationCatalog.Build();
     public int ImplementedCount => Documents.Count;
@@ -59,12 +59,14 @@ public sealed class XYUI1DocumentationViewModel : INotifyPropertyChanged
         Items = new[] { new XYUI1NavigationItem("XYUI-1", "模块概览", "Text & Information", null) }.Concat(documents).ToArray();
         _selectedItem = Items[0];
         SelectedDocument = new XYUI1ModuleOverviewView { DataContext = this };
+        BootstrapXYUI2();
     }
 
     public void Select(string id)
     {
         var item = Items.FirstOrDefault(x => x.Id == id);
         if (item is not null) SelectedItem = item;
+        else if (XYUI2Items.Any(x => x.Id == id)) SelectXYUI2(id);
     }
 
     public void SelectFoundation(string id)

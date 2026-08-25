@@ -14,5 +14,22 @@ public class XYButton : Button
         set => SetValue(VariantProperty, value);
     }
 
-    public XYButton() => Classes.Add("xyui-button");
+    public XYButton()
+    {
+        Classes.Add("xyui-button");
+        SyncVariantClass();
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.Property == VariantProperty) SyncVariantClass();
+    }
+
+    void SyncVariantClass()
+    {
+        foreach (var variant in new[] { "primary", "secondary", "danger" })
+            Classes.Remove($"xyui-button-{variant}");
+        Classes.Add($"xyui-button-{Variant.ToString().ToLowerInvariant()}");
+    }
 }

@@ -30,7 +30,18 @@
             </ListBox.ItemTemplate>
           </ListBox>
           <TextBlock Text="XYUI-1 · 文本与信息" Classes="xyui-text-section" Margin="8,0,8,5" />
-          <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+          <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" Margin="0,0,0,14">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="g:XYUI1NavigationItem">
+                <StackPanel Spacing="1">
+                  <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
+                  <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <TextBlock Text="XYUI-2 · 按钮与输入（Batch 01）" Classes="xyui-text-section" Margin="8,0,8,5" />
+          <ListBox ItemsSource="{Binding XYUI2Items}" SelectedItem="{Binding SelectedXYUI2Item}">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="g:XYUI1NavigationItem">
                 <StackPanel Spacing="1">

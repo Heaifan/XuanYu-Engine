@@ -6,51 +6,15 @@ using Avalonia.Styling;
 
 namespace XYUI.Avalonia.Controls;
 
-public static class XyuiControlStyles
+public static partial class XyuiControlStyles
 {
     public static Styles Create()
     {
         var styles = new Styles();
-        AddButton(styles, "xyui-button", typeof(XYButton));
-        AddButton(styles, "xyui-icon-button", typeof(XYIconButton));
-        AddToggle(styles);
+        AddButtonFamily(styles);
         AddInput(styles);
         AddCheckBox(styles);
         return styles;
-    }
-
-    static void AddButton(Styles styles, string cls, Type type)
-    {
-        var selector = new Style(x => x.OfType(type).Class(cls));
-        Set(selector, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Raised");
-        Set(selector, TemplatedControl.ForegroundProperty, "XY.Brush.Text.Primary");
-        Set(selector, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Default");
-        selector.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1)));
-        selector.Setters.Add(new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(4)));
-        selector.Setters.Add(new Setter(Control.HeightProperty, 34d));
-        styles.Add(selector);
-        State(styles, type, cls, ":pointerover", TemplatedControl.BackgroundProperty, "XY.Brush.State.Color.Hover");
-        State(styles, type, cls, ":pressed", TemplatedControl.BackgroundProperty, "XY.Brush.State.Color.Pressed");
-        State(styles, type, cls, ":disabled", TemplatedControl.ForegroundProperty, "XY.Brush.State.Disabled.Text");
-        State(styles, type, cls, ":focus", TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Focus");
-    }
-
-    static void AddToggle(Styles styles)
-    {
-        var selector = new Style(x => x.OfType<XYToggleButton>().Class("xyui-toggle-button"));
-        Set(selector, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Raised");
-        Set(selector, TemplatedControl.ForegroundProperty, "XY.Brush.Text.Primary");
-        Set(selector, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Default");
-        selector.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1)));
-        selector.Setters.Add(new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(4)));
-        selector.Setters.Add(new Setter(Control.HeightProperty, 34d));
-        styles.Add(selector);
-        State(styles, typeof(XYToggleButton), "xyui-toggle-button", ":checked",
-            TemplatedControl.BackgroundProperty, "XY.Brush.State.Color.Active");
-        State(styles, typeof(XYToggleButton), "xyui-toggle-button", ":pointerover",
-            TemplatedControl.BackgroundProperty, "XY.Brush.State.Color.Hover");
-        State(styles, typeof(XYToggleButton), "xyui-toggle-button", ":focus",
-            TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Focus");
     }
 
     static void AddInput(Styles styles)

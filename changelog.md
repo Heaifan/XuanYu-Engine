@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI.AVALONIA-R6-F1 · XYUI-2 Batch 01 Button Family（2026-08-25 17:46:58）
+
+- 目标：XYUI-2 Batch 01（01 Button / 02 IconButton / 03 ToggleButton）完成 Canonical → Avalonia Runtime → Gallery 对齐，建立 Button Family Action Edge 视觉语法基线；XYUI-1 保持 FROZEN 未改动。
+- 变化：新增 XyuiActionEdge（内部实现构件）与 XyuiButtonChrome 共享模板；XYIconButton 回归 Command 语义——保留 Button 基类、新增 IsSelected StyledProperty 映射 ：selected（Selected≠Checked，点击不切换）；Secondary 按裁定采用既有 XY.Divider.Default 弱化 Edge；Disabled Edge 切 XY.State.Disabled.Border 随 Chrome 衰减；水平 Padding=Space3；XYButton Variant→class 同步。Gallery 新增 XYUI-2 导航区块、模块概览页（诚实统计 Canonical 24 / 实装 3）、Batch 01 三组件文档页与真实 Runtime 预览（含 Light/Dark 合同），默认落点 XYUI-2-01。
+- 验证：`XYUI.Avalonia.slnx` Build 0 Warning / 0 Error；`XYUI.Avalonia.Tests` 102/102 PASS（新增 8 项语义合同测试：Variant→class、Edge 存在性/弱化/语义/衰减、Ghost 默认透明、IsSelected 与 Click 解耦、ToggleButton Persistent Edge）；5+100 扫描无超限；`git diff --check` PASS。ARCH-A 总脚本仍被用户既有 `run.bat` 入口硬编码检查阻断（该文件为用户本地资产未修改），依赖边界与行数红线另行人工核验通过。
+- 治理：XyuiActionEdge/XyuiButtonChrome 为 implementation detail，不注册为新 XY.* 公开组件；未发明任何新 token；GAP-001/002/003 保持开放。真机 Light/Dark 视觉验收待用户执行。
+- Hash：本条所在提交。
+- 状态：XYUI-2 BATCH 01 `CANONICAL ALIGNED · RUNTIME ALIGNED · GALLERY READY · GATES GREEN · READY FOR USER VISUAL ACCEPTANCE`（未 USER_VISUAL_ACCEPTED）；Batch 02+ 未启动。
+
 ## XYUI.AVALONIA-R5-F4 · XYUI-1 Final Closeout（2026-08-25 15:36:46）
 
 - 目标：记录用户已完成 XYUI-1 全量人工视觉审核并正式通过；完成最终治理收口、冻结 XYUI-1，并只解除 XYUI-2 下一阶段冻结，本轮不开始 XYUI-2 实装。
