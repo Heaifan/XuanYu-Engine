@@ -12,7 +12,7 @@ internal static class XyuiCatalogTypeMap
         ["XYUI-1-13"] = "XYUI.Avalonia.Controls.XYIconLabel", ["XYUI-1-14"] = "XYUI.Avalonia.Controls.XYSeparator", ["XYUI-1-15"] = "XYUI.Avalonia.Controls.XYHelpText", ["XYUI-1-16"] = "XYUI.Avalonia.Controls.XYErrorText",
         ["XYUI-1-17"] = "XYUI.Avalonia.Controls.XYWarningText", ["XYUI-1-18"] = "XYUI.Avalonia.Controls.XYShortcutHint", ["XYUI-1-19"] = "XYUI.Avalonia.Controls.XYTooltip", ["XYUI-1-20"] = "XYUI.Avalonia.Controls.XYRichText",
         ["XYUI-1-21"] = "XYUI.Avalonia.Controls.XYSelectableText", ["XYUI-1-22"] = "XYUI.Avalonia.Controls.XYEmptyText", ["XYUI-1-23"] = "XYUI.Avalonia.Controls.XYSearchHighlight", ["XYUI-1-24"] = "XYUI.Avalonia.Controls.XYTruncatedText",
-        ["XYUI-2-01"] = "XYUI.Avalonia.Controls.XYButton", ["XYUI-2-02"] = "XYUI.Avalonia.Controls.XYIconButton", ["XYUI-2-03"] = "XYUI.Avalonia.Controls.XYToggleButton", ["XYUI-2-06"] = "XYUI.Avalonia.Controls.XYCheckbox", ["XYUI-2-09"] = "XYUI.Avalonia.Controls.XYTextField"
+        ["XYUI-2-01"] = "XYUI.Avalonia.Controls.XYButton", ["XYUI-2-02"] = "XYUI.Avalonia.Controls.XYIconButton", ["XYUI-2-03"] = "XYUI.Avalonia.Controls.XYToggleButton", ["XYUI-2-04"] = "XYUI.Avalonia.Controls.XYSplitButton", ["XYUI-2-06"] = "XYUI.Avalonia.Controls.XYCheckbox", ["XYUI-2-09"] = "XYUI.Avalonia.Controls.XYTextField"
     };
 
     public static readonly IReadOnlySet<string> GalleryIds = new HashSet<string>(Types.Keys, StringComparer.Ordinal);

@@ -3,54 +3,53 @@
              xmlns:g="using:XYUI.Avalonia.Gallery"
              x:Class="XYUI.Avalonia.Gallery.Views.XYUI1DocumentationView"
              x:DataType="g:XYUI1DocumentationViewModel">
-  <UserControl.Styles>
-    <Style Selector="ListBoxItem">
-      <Setter Property="Padding" Value="8,5" />
-      <Setter Property="Margin" Value="0,1" />
-    </Style>
-    <Style Selector="ListBoxItem:selected">
-      <Setter Property="Background" Value="{DynamicResource XY.Brush.Surface.Selected}" />
-    </Style>
-  </UserControl.Styles>
-  <Grid ColumnDefinitions="216,*">
-    <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.Panel}"
-            BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="0,0,1,0">
+  <UserControl.Resources>
+    <DataTemplate x:Key="NavItemTemplate" x:DataType="g:XYUI1NavigationItem">
+      <StackPanel Spacing="1">
+        <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
+        <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
+      </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="FoundationNavItemTemplate" x:DataType="g:FoundationNavigationItem">
+      <StackPanel Spacing="1">
+        <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
+        <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
+      </StackPanel>
+    </DataTemplate>
+  </UserControl.Resources>
+  <Grid ColumnDefinitions="228,*">
+    <Border Grid.Column="0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="0,0,1,0" Background="{DynamicResource XY.Brush.Surface.Panel}">
       <ScrollViewer HorizontalScrollBarVisibility="Disabled">
         <StackPanel Margin="12,16">
           <TextBlock Text="文档导航" Classes="xyui-heading-panel" Margin="8,0,8,14" />
           <TextBlock Text="Foundation" Classes="xyui-text-section" Margin="8,0,8,5" />
-          <ListBox ItemsSource="{Binding FoundationItems}" SelectedItem="{Binding SelectedFoundation}" Margin="0,0,0,14">
-            <ListBox.ItemTemplate>
-              <DataTemplate x:DataType="g:FoundationNavigationItem">
-                <StackPanel Spacing="1">
-                  <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
-                  <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
-                </StackPanel>
-              </DataTemplate>
-            </ListBox.ItemTemplate>
-          </ListBox>
-          <TextBlock Text="XYUI-1 · 文本与信息" Classes="xyui-text-section" Margin="8,0,8,5" />
-          <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" Margin="0,0,0,14">
-            <ListBox.ItemTemplate>
-              <DataTemplate x:DataType="g:XYUI1NavigationItem">
-                <StackPanel Spacing="1">
-                  <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
-                  <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
-                </StackPanel>
-              </DataTemplate>
-            </ListBox.ItemTemplate>
-          </ListBox>
-          <TextBlock Text="XYUI-2 · 按钮与输入（Batch 01）" Classes="xyui-text-section" Margin="8,0,8,5" />
-          <ListBox ItemsSource="{Binding XYUI2Items}" SelectedItem="{Binding SelectedXYUI2Item}">
-            <ListBox.ItemTemplate>
-              <DataTemplate x:DataType="g:XYUI1NavigationItem">
-                <StackPanel Spacing="1">
-                  <TextBlock Text="{Binding ChineseName}" Classes="xyui-text-label" />
-                  <TextBlock Text="{Binding CanonicalName}" Classes="xyui-text-code" />
-                </StackPanel>
-              </DataTemplate>
-            </ListBox.ItemTemplate>
-          </ListBox>
+          <ListBox Classes="nav-foundation" ItemsSource="{Binding FoundationItems}" SelectedItem="{Binding SelectedFoundation}" ItemTemplate="{StaticResource FoundationNavItemTemplate}" />
+          <Grid Classes="nav-section-header" Tapped="OnToggleXyui1">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="16" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Path Grid.Column="0" Classes="nav-chevron" Data="M4 2 L9 7 L4 12" x:CompileBindings="False" IsVisible="{Binding !IsXYUI1Expanded}" />
+            <Path Grid.Column="0" Classes="nav-chevron" Data="M2 4 L7 9 L12 4" x:CompileBindings="False" IsVisible="{Binding IsXYUI1Expanded}" />
+            <TextBlock Grid.Column="1" Text="XYUI-1 · 文本与信息" Classes="xyui-text-section" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2" Text="{Binding XYUI1CountText}" Classes="xyui-text-caption" VerticalAlignment="Center" />
+          </Grid>
+          <ListBox Classes="nav-tree" IsVisible="{Binding IsXYUI1Expanded}"
+                   ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" ItemTemplate="{StaticResource NavItemTemplate}" />
+          <Grid Classes="nav-section-header" Tapped="OnToggleXyui2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="16" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Path Grid.Column="0" Classes="nav-chevron" Data="M4 2 L9 7 L4 12" x:CompileBindings="False" IsVisible="{Binding !IsXYUI2Expanded}" />
+            <Path Grid.Column="0" Classes="nav-chevron" Data="M2 4 L7 9 L12 4" x:CompileBindings="False" IsVisible="{Binding IsXYUI2Expanded}" />
+            <TextBlock Grid.Column="1" Text="XYUI-2 · 按钮与输入" Classes="xyui-text-section" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2" Text="{Binding XYUI2CountText}" Classes="xyui-text-caption" VerticalAlignment="Center" />
+          </Grid>
+          <ListBox Classes="nav-tree" IsVisible="{Binding IsXYUI2Expanded}"
+                   ItemsSource="{Binding XYUI2Items}" SelectedItem="{Binding SelectedXYUI2Item}" ItemTemplate="{StaticResource NavItemTemplate}" />
         </StackPanel>
       </ScrollViewer>
     </Border>

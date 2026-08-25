@@ -4,7 +4,7 @@ using Avalonia.Media;
 
 namespace XYUI.Avalonia.Vector;
 
-public enum XyuiVectorIcon { Info, Error, Warning, Search, Copy, Code, Tag, StatusDot, Section, Empty }
+public enum XyuiVectorIcon { Info, Error, Warning, Search, Copy, Code, Tag, StatusDot, Section, Empty, ChevronDown }
 
 public static class XyuiVectorIcons
 {
@@ -21,7 +21,8 @@ public static class XyuiVectorIcons
             [XyuiVectorIcon.Tag] = "M0 11 L11 0 H24 V22 H11 Z",
             [XyuiVectorIcon.StatusDot] = "M12 3 C16.971 3 21 7.029 21 12 C21 16.971 16.971 21 12 21 C7.029 21 3 16.971 3 12 C3 7.029 7.029 3 12 3 Z",
             [XyuiVectorIcon.Section] = "M3 2 H7 V22 H3 Z",
-            [XyuiVectorIcon.Empty] = "M3 12 H21"
+            [XyuiVectorIcon.Empty] = "M3 12 H21",
+            [XyuiVectorIcon.ChevronDown] = "M6 9 L12 15 L18 9"
         };
 
     public static StreamGeometry Create(XyuiVectorIcon icon) => StreamGeometry.Parse(PathData[icon]);

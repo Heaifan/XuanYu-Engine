@@ -245,7 +245,7 @@
             - Value = 36 DIP
             - Type = COMPONENT_SPECIFIC
         - XY.SplitButton.Divider.Height
-            - Value = 18 DIP
+            - Value = 12 DIP（R2 / AMEND-C：原 18，软分区提示更短）
             - Type = COMPONENT_SPECIFIC
         - XY.SplitButton.Background.Default
             - Value = XY.Surface.Raised
@@ -257,7 +257,7 @@
             - Color = XY.Border.Color.Default
             - Width = XY.Border.Width.Default
         - XY.SplitButton.Divider.Color
-            - Value = XY.Divider.Default
+            - Value = XY.Border.Color.Subtle（R2 / AMEND-C：原 XY.Divider.Default，更淡的软分区提示）
         - XY.SplitButton.ActionEdge
             - Value = XY.Accent.Strong
         - XY.SplitButton.Text

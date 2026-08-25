@@ -3,5 +3,65 @@
              x:Class="XYUI.Avalonia.Gallery.App">
   <Application.Styles>
     <FluentTheme />
+
+    <!-- G0-R1 · 树形章节导航样式（非 Accordion 卡片） -->
+    <Style Selector="Grid.nav-section-header">
+      <Setter Property="Height" Value="32" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Margin" Value="0,6,0,0" />
+    </Style>
+    <Style Selector="Grid.nav-section-header:pointerover">
+      <Setter Property="Background" Value="{DynamicResource XY.Brush.Surface.PanelAlt}" />
+    </Style>
+    <Style Selector="Path.nav-chevron">
+      <Setter Property="Width" Value="11" />
+      <Setter Property="Height" Value="11" />
+      <Setter Property="Stretch" Value="Uniform" />
+      <Setter Property="Stroke" Value="{DynamicResource XY.Brush.Text.Secondary}" />
+      <Setter Property="StrokeThickness" Value="1.2" />
+      <Setter Property="Fill" Value="Transparent" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="Margin" Value="0,0,6,0" />
+    </Style>
+    <Style Selector="ListBox.nav-tree">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Margin" Value="0,0,0,8" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="ListBox.nav-tree > ListBoxItem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Padding" Value="18,4,8,4" />
+      <Setter Property="Margin" Value="0,1" />
+    </Style>
+    <Style Selector="ListBox.nav-tree > ListBoxItem:pointerover">
+      <Setter Property="Background" Value="{DynamicResource XY.Brush.Surface.PanelAlt}" />
+    </Style>
+    <Style Selector="ListBox.nav-tree > ListBoxItem:selected">
+      <Setter Property="Background" Value="{DynamicResource XY.Brush.Surface.PanelAlt}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource XY.Brush.Border.Color.Selected}" />
+      <Setter Property="BorderThickness" Value="3,0,0,0" />
+    </Style>
+    <Style Selector="ListBox.nav-foundation">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Margin" Value="0,0,0,14" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="ListBox.nav-foundation > ListBoxItem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Padding" Value="18,4,8,4" />
+      <Setter Property="Margin" Value="0,1" />
+    </Style>
+    <Style Selector="ListBox.nav-foundation > ListBoxItem:pointerover">
+      <Setter Property="Background" Value="{DynamicResource XY.Brush.Surface.PanelAlt}" />
+    </Style>
+    <Style Selector="ListBox.nav-foundation > ListBoxItem:selected">
+      <Setter Property="Background" Value="{DynamicResource XY.Brush.Surface.PanelAlt}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource XY.Brush.Border.Color.Selected}" />
+      <Setter Property="BorderThickness" Value="3,0,0,0" />
+    </Style>
   </Application.Styles>
 </Application>

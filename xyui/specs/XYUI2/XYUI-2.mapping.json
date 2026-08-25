@@ -349,7 +349,7 @@
     },
     {
      "property": "XY.SplitButton.Divider.Height",
-     "value": "18 DIP",
+     "value": "12 DIP",
      "kind": "LITERAL",
      "canonical_target": null
     },
@@ -373,9 +373,9 @@
     },
     {
      "property": "XY.SplitButton.Divider.Color",
-     "value": "XY.Divider.Default",
+     "value": "XY.Border.Color.Subtle",
      "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Divider.Default"
+     "canonical_target": "XY.Border.Color.Subtle"
     },
     {
      "property": "XY.SplitButton.ActionEdge",

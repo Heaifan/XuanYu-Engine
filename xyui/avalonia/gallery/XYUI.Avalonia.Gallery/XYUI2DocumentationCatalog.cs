@@ -10,7 +10,7 @@ public static class XYUI2DocumentationCatalog
 {
     public static readonly IReadOnlySet<string> BatchIds = new HashSet<string>
     {
-        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03"
+        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04"
     };
 
     public static IReadOnlyList<XYUI1ComponentDocument> Build() =>
@@ -26,8 +26,14 @@ public static class XYUI2DocumentationCatalog
             Usages(entry.SourceItemId, type), Names(entry.Variants).Select(x => new XYUIDocVariant(x, "", "")).ToArray(),
             Names(entry.States).Select(x => new XYUIDocState(x, "")).ToArray(),
             Array.Empty<XYUIDocProperty>(), Tokens(entry.SourceItemId), type)
-        { CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap };
+        {
+            CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap,
+            Acceptance = PendingAcceptance
+        };
     }
+
+    // Batch 01 尚未取得用户人工视觉验收，禁止显示 ACCEPTED。
+    public const string PendingAcceptance = "READY FOR USER VISUAL ACCEPTANCE";
 
     static string[] Names(string block) => block == "None defined" || block == "See canonical spec"
         ? []
@@ -38,6 +44,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-01" => [$"<c:{type} Content=\"新建\" />", "<c:XYButton Content=\"删除\" Variant=\"Danger\" />"],
         "XYUI-2-02" => [$"<c:{type} Icon=\"Search\" AutomationProperties.Name=\"搜索\" IsSelected=\"true\" />"],
         "XYUI-2-03" => [$"<c:{type} Content=\"网格吸附\" IsChecked=\"true\" />"],
+        "XYUI-2-04" => [$"<c:{type} Content=\"新建\" />", "<c:XYSplitButton Content=\"导入\" />"],
         _ => [$"<c:{type} />"]
     };
 

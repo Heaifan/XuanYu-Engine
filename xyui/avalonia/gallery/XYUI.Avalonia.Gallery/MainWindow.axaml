@@ -15,7 +15,7 @@
               BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
               BorderThickness="1" Click="OnThemeSwitchClick" />
       <StackPanel>
-        <TextBlock Text="XYUI 组件文档 · XYUI-1 已验收冻结 · XYUI-2 Batch 01 待人工审核" Classes="xyui-heading-panel" />
+        <TextBlock Text="XYUI 组件文档" Classes="xyui-heading-panel" />
         <TextBlock x:Name="ThemeStateText" Text="Theme：Light" Classes="xyui-text-caption" />
       </StackPanel>
     </DockPanel>

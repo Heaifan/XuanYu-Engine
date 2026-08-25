@@ -17,6 +17,14 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
     public IReadOnlyList<XYUI1NavigationItem> ComponentItems => Items.Skip(1).ToArray();
     public IReadOnlyList<FoundationNavigationItem> FoundationItems { get; } =
     [new("palette", "色彩", "Palette"), new("typography", "字体与排版", "Typography"), new("shape", "形状", "Shape")];
+
+    // G0-R1 · 树形章节（非 Accordion 卡片；仅改导航呈现）
+    bool _isX1;
+    public bool IsXYUI1Expanded { get => _isX1; set { if (_isX1 == value) return; _isX1 = value; PropertyChanged?.Invoke(this, new(nameof(IsXYUI1Expanded))); } }
+    bool _isX2 = true;
+    public bool IsXYUI2Expanded { get => _isX2; set { if (_isX2 == value) return; _isX2 = value; PropertyChanged?.Invoke(this, new(nameof(IsXYUI2Expanded))); } }
+    public string XYUI1CountText => "24/24";
+    public string XYUI2CountText => "3/24";
     XYUI1NavigationItem _selectedItem;
     FoundationNavigationItem? _selectedFoundation;
 

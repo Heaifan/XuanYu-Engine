@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "components": [
+    {"id":"XYUI-2-01","canonical":"XY.Button","type":"XYButton","title":"按钮"},
+    {"id":"XYUI-2-02","canonical":"XY.IconButton","type":"XYIconButton","title":"图标按钮"},
+    {"id":"XYUI-2-03","canonical":"XY.ToggleButton","type":"XYToggleButton","title":"开关按钮"},
+    {"id":"XYUI-2-04","canonical":"XY.SplitButton","type":"XYSplitButton","title":"分裂按钮"}
+  ]
+}

@@ -16,7 +16,9 @@ public sealed record XYUI1ComponentDocument(
     public string CanonicalDisplay => $"{CanonicalIdentity} · {EnglishName}";
     public string CanonicalIdentity { get; init; } = "";
     public string KnownGap { get; init; } = "";
-    public string StatusText => string.IsNullOrEmpty(KnownGap) ? "USER VISUAL ACCEPTED" : "USER VISUAL ACCEPTED · GAP RETAINED";
+    // 验收状态由目录注入：XYUI-1 已人工通过；XYUI-2 Batch 01 尚未人工通过，只能写"待验收"。
+    public string Acceptance { get; init; } = "USER VISUAL ACCEPTED";
+    public string StatusText => string.IsNullOrEmpty(KnownGap) ? Acceptance : $"{Acceptance} · GAP RETAINED";
     public bool HasVariants => Variants.Count > 0;
     public bool HasStates => States.Count > 0;
 }
