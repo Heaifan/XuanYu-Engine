@@ -164,31 +164,42 @@
         - 属性分组
         - Panel 内容分组
     - 方案名称
-        - Semantic Section Header
+        - S-05 · Soft Header + Left Mark
     - 设计特征
-        - 继承 Foundation Section 字号与字重
-        - Section 采用“标题 + Divider + 内容”结构
-        - 不再使用独立卡片式 Header 背景
-        - 不再使用装饰性 Left Mark 作为默认结构
-        - Section 之间减少无意义留白
-        - Divider 使用 Foundation Section Divider
+        - Inspector 内部区块标题使用 Soft Header 容器
+        - Header 高度 28 DIP，背景为 #EEF3F6，圆角 3 DIP
+        - 左侧 Left Mark 为 3 × 16 DIP，垂直居中
+        - 标题使用 14 / 600 / 18 DIP 与 #243744
+        - Border / Divider 均为 None
     - UI代码
         - XY.SectionTitle.Default.FontFamily
             - Value = XY.Font.UI
         - XY.SectionTitle.Default.FontSize
-            - Value = XY.FontSize.Section
+            - Value = 14 DIP
         - XY.SectionTitle.Default.FontWeight
-            - Value = XY.FontWeight.Semibold
+            - Value = 600
         - XY.SectionTitle.Default.LineHeight
-            - Value = XY.LineHeight.Section
+            - Value = 18 DIP
         - XY.SectionTitle.Default.Foreground
-            - Value = XY.Text.Primary
+            - Value = #243744
         - XY.SectionTitle.Default.Background
-            - Value = None
+            - Value = #EEF3F6
+        - XY.SectionTitle.Default.HeaderHeight
+            - Value = 28 DIP
+        - XY.SectionTitle.Default.CornerRadius
+            - Value = 3 DIP
+        - XY.SectionTitle.Default.LeftMarkWidth
+            - Value = 3 DIP
+        - XY.SectionTitle.Default.LeftMarkHeight
+            - Value = 16 DIP
+        - XY.SectionTitle.Default.LeftMarkColor
+            - Value = #526873
+        - XY.SectionTitle.Default.LeftMarkAlignment
+            - Value = Center
         - XY.SectionTitle.Default.Border
             - Value = None
         - XY.SectionTitle.Default.Divider
-            - Value = XY.Divider.Section
+            - Value = None
         - XY.SectionTitle.Default.CardNesting
             - Value = Forbidden
         - XY.SectionTitle.Default.SectionGap
@@ -272,7 +283,9 @@
         - XY.CodeText.CodeMark.Size
             - Value = 8 DIP
         - XY.CodeText.CodeMark.Foreground
-            - Value = XY.Text.Tertiary
+            - Value = XY.Icon.Mark
+        - XY.CodeText.CodeMark.StrokeWidth
+            - Value = 1.25 DIP
         - XY.CodeText.CodeMark.Alignment
             - Value = RightBottom
 
@@ -288,12 +301,26 @@
         - 调试数据
         - 参数数值
     - 方案名称
-        - Foundation Mono Data
+        - M-05A · Structured Mono Data
     - 设计特征
-        - 统一使用 Source Code Pro 语义字体 Token
+        - 三个语义内容列：Label | Value | Unit；两段共享间隔由 Grid 的 Token 化间隔列承载
+        - Label 使用 UI Font 左对齐，Value 使用 Mono Font 右对齐，Unit 使用 UI Font 左对齐
+        - 所有 Value 共享稳定右边界，所有 Unit 共享稳定起点
+        - Unit 可为空，但第三列始终保留
+        - 等宽数据不代表整行使用等宽字体；只有数值列承担稳定字符宽度
+        - 列间距只消费 XYUI Spacing Token，不使用空格、Tab 或字符串填充对齐
         - 不添加额外背景、边框和装饰
-        - 数据优先保持稳定字符宽度
     - UI代码
+        - XY.MonoText.Default.Structure
+            - Value = Label|Value|Unit
+        - XY.MonoText.Label.FontFamily
+            - Value = XY.Font.UI
+        - XY.MonoText.Label.FontWeight
+            - Value = XY.FontWeight.Semibold
+        - XY.MonoText.Label.Foreground
+            - Value = XY.Text.Secondary
+        - XY.MonoText.Label.Alignment
+            - Value = Left
         - XY.MonoText.Default.FontFamily
             - Value = XY.Font.Mono
         - XY.MonoText.Default.FontSize
@@ -306,6 +333,22 @@
             - Value = XY.LetterSpacing.Mono
         - XY.MonoText.Default.Foreground
             - Value = XY.Text.Secondary
+        - XY.MonoText.Default.Alignment
+            - Value = Right
+        - XY.MonoText.Unit.FontFamily
+            - Value = XY.Font.UI
+        - XY.MonoText.Unit.FontWeight
+            - Value = XY.FontWeight.Semibold
+        - XY.MonoText.Unit.Foreground
+            - Value = XY.Text.Secondary
+        - XY.MonoText.Unit.Alignment
+            - Value = Left
+        - XY.MonoText.Unit.Optional
+            - Value = True
+        - XY.MonoText.LabelValueGap
+            - Value = XY.Space.4 + XY.Space.1
+        - XY.MonoText.ValueUnitGap
+            - Value = XY.Space.2
         - XY.MonoText.Default.Background
             - Value = None
         - XY.MonoText.Default.Border
@@ -348,6 +391,10 @@
             - Value = XY.Surface.PanelAlt
         - XY.Badge.Default.Height
             - Value = XY.Size.Control.XS
+        - XY.Badge.Default.Width
+            - Value = Auto
+        - XY.Badge.Default.HorizontalAlignment
+            - Value = Left
         - XY.Badge.Default.Pointer
             - Value = 11 DIP Left Pointer
         - XY.Badge.Default.Geometry
@@ -914,9 +961,15 @@
         - XY.SelectableText.Hover.CopyIcon
             - Value = XY.Icon.Copy
         - XY.SelectableText.Hover.CopyIconSize
-            - Value = XY.Icon.Size.S
+            - Value = 8 DIP
+        - XY.SelectableText.Hover.CopyIconVisualSize
+            - Value = 8 DIP
+        - XY.SelectableText.Hover.CopyIconStroke
+            - Value = 1 DIP
         - XY.SelectableText.Hover.CopyIconForeground
-            - Value = XY.Text.Secondary
+            - Value = XY.Text.Disabled
+        - XY.SelectableText.Hover.CopyIconGap
+            - Value = XY.Space.2
         - XY.SelectableText.Default.Background
             - Value = None
         - XY.SelectableText.Default.Border
@@ -989,6 +1042,10 @@
             - Value = Forbidden
         - XY.SearchHighlight.SemanticMark
             - Value = SVG-derived Vector Search Mark，8 DIP，Stroke 1.0 DIP，RightTop（Right 6 / Top 5 DIP）
+        - XY.SearchHighlight.SemanticMark.Foreground
+            - Value = XY.Text.Disabled
+        - XY.SearchHighlight.SemanticMark.Gap
+            - Value = XY.Space.2
         - XY.SearchHighlight.MatchHighlight
             - Value = 命中文本的 FontWeight / Foreground / Background；不与 SemanticMark 混用
 

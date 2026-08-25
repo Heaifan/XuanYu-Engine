@@ -1,4 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Styling;
 using XYUI.Avalonia.Catalog;
 
 namespace XYUI.Avalonia.Gallery;
@@ -16,5 +19,30 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = new MainWindowModel(
             PaletteCatalog.BuildSections(dark: false), XyuiCatalogSource.Load(), Array.Empty<XYUI1GalleryItem>());
+        if (Program.InitialComponentId is { Length: > 0 } id &&
+            DocumentationView.DataContext is XYUI1DocumentationViewModel documentation)
+            documentation.Select(id);
+        if (Application.Current is { } app)
+        {
+            app.ActualThemeVariantChanged += OnActualThemeVariantChanged;
+            Closed += (_, _) => app.ActualThemeVariantChanged -= OnActualThemeVariantChanged;
+            UpdateThemeSwitch();
+        }
+    }
+
+    void OnActualThemeVariantChanged(object? sender, EventArgs e) => UpdateThemeSwitch();
+
+    void OnThemeSwitchClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current is not { } app) return;
+        app.RequestedThemeVariant = app.ActualThemeVariant == ThemeVariant.Dark
+            ? ThemeVariant.Light : ThemeVariant.Dark;
+    }
+
+    void UpdateThemeSwitch()
+    {
+        var dark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+        ThemeStateText.Text = dark ? "Theme：Dark" : "Theme：Light";
+        ThemeSwitchButton.Content = dark ? "切换 Light" : "切换 Dark";
     }
 }

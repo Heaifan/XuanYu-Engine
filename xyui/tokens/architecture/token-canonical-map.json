@@ -3,7 +3,7 @@
  "phase": "XYUI-A3-R2",
  "dialect": "JSON Schema Draft 7",
  "source_of_truth": "xyui/registry/foundation/foundation-registry.json",
- "entry_count": 426,
+ "entry_count": 427,
  "note": "legacy source token id → canonical token id。canonical_token_id=null 表示该 occurrence 为 Composite Rule，不作为 Scalar Token 导出。 Amendment A/B 2026-08-13: ComposeMode/Layering 解释修订见 governance/amendments.md；XY.Drag.Entry=Handle|DirectTarget。",
  "entries": [
   {
@@ -6820,6 +6820,22 @@
    "alias_target": null,
    "evidence_refs": [
     "XYUI0-0.9@L1023-1045"
+   ]
+  },
+  {
+   "source_token_id": "XY.Icon.Mark",
+   "source_item_id": "XYUI-A-Theme",
+   "canonical_foundation_id": "XYUI.Foundation.Icon",
+   "canonical_token_id": "XY.Icon.Mark",
+   "layer": "SEMANTIC",
+   "value_type": "color_pair",
+   "value": "#526873/#D2E0E6",
+   "owner": "XYUI.Foundation.Icon",
+   "disposition": "NEW_THEME_SEMANTIC",
+   "migration_reason": "跨组件 Code Mark 语义；独立于 Text Token，支持 Light/Dark Runtime",
+   "alias_target": null,
+   "evidence_refs": [
+    "XYUI-A-Theme@Gallery-Theme-Reconciliation"
    ]
   }
  ]

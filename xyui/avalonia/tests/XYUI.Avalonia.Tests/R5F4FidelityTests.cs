@@ -16,11 +16,11 @@ public sealed class R5F4FidelityTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void Text_and_label_use_primary_and_medium_contracts() => _fx.Run(() =>
     {
-        var app = Avalonia.Application.Current!; app.Resources.MergedDictionaries.Add(XyuiTheme.CreateLight()); app.Styles.Add(XyuiComponentStyles.Create());
+        var app = global::Avalonia.Application.Current!; app.Resources.MergedDictionaries.Add(XyuiTheme.CreateLight()); app.Styles.Add(XyuiComponentStyles.Create());
         var text = new XYText { Text = "正文" }; var label = new XYLabel { Text = "字段" }; var host = new StackPanel(); host.Children.Add(text); host.Children.Add(label); var window = new Window { Content = host }; window.Show(); text.ApplyStyling(); label.ApplyStyling();
         Assert.Equal("XYUI-1-01", text.CanonicalId); Assert.Equal("XYUI-1-02", label.CanonicalId);
         Assert.Equal("Source Han Sans SC", text.FontFamily.ToString()); Assert.Equal("Source Han Sans SC", label.FontFamily.ToString());
-        Assert.Equal(Avalonia.Media.FontWeight.Normal, text.FontWeight); Assert.Equal(Avalonia.Media.FontWeight.Medium, label.FontWeight);
+        Assert.Equal(global::Avalonia.Media.FontWeight.Normal, text.FontWeight); Assert.Equal(global::Avalonia.Media.FontWeight.Medium, label.FontWeight);
         Assert.Contains("xyui-text", text.Classes); Assert.Contains("xyui-label", label.Classes);
     });
 
@@ -65,7 +65,7 @@ public sealed class R5F4FidelityTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal(24, docs.Count);
         Assert.Equal("XY.Badge", docs.Single(x => x.Id == "XYUI-1-09").CanonicalIdentity);
         Assert.Equal("XYUI1-GAP-002", docs.Single(x => x.Id == "XYUI-1-24").KnownGap);
-        Assert.Equal("READY WITH GAP", docs.Single(x => x.Id == "XYUI-1-24").StatusText);
+        Assert.Equal("USER VISUAL ACCEPTED · GAP RETAINED", docs.Single(x => x.Id == "XYUI-1-24").StatusText);
     });
 
     [Fact]

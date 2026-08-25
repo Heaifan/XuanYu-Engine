@@ -3,9 +3,11 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Media;
+using XYUI.Avalonia.Spatial;
 using XYUI.Avalonia.Vector;
 using VectorPath = Avalonia.Controls.Shapes.Path;
 using HAlign = global::Avalonia.Layout.HorizontalAlignment;
+using VAlign = global::Avalonia.Layout.VerticalAlignment;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -13,6 +15,9 @@ public enum XyuiSelectableTextVariant { Default, Technical }
 
 public sealed class XYSelectableText : Border
 {
+    public const double CopyMarkSize = 8;
+    public const double CopyMarkVisualSize = 8;
+    public const double CopyMarkGap = XyuiSpatialTokens.Space2;
     readonly SelectableTextBlock _text = new();
     readonly VectorPath _copyMark = new();
     public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<XYSelectableText, string>(nameof(Text), "");
@@ -25,9 +30,16 @@ public sealed class XYSelectableText : Border
         _text.Classes.Add("xyui-selectable-text-content"); _copyMark.Classes.Add("xyui-selectable-copy-mark");
         if (XyuiVectorIcons.IsPlatformReady) _copyMark.Data = XyuiVectorIcons.Create(XyuiVectorIcon.Copy);
         AttachedToVisualTree += (_, _) => { if (_copyMark.Data is null) _copyMark.Data = XyuiVectorIcons.Create(XyuiVectorIcon.Copy); };
-        _copyMark.Width = 12; _copyMark.Height = 12;
-        _copyMark.HorizontalAlignment = HAlign.Right; _copyMark.IsVisible = false;
-        var grid = new Grid(); grid.Children.Add(_text); grid.Children.Add(_copyMark); Child = grid;
+        _copyMark.Width = CopyMarkVisualSize; _copyMark.Height = CopyMarkVisualSize;
+        _copyMark.Stretch = Stretch.Uniform;
+        _copyMark.HorizontalAlignment = HAlign.Left; _copyMark.VerticalAlignment = VAlign.Center;
+        _copyMark.IsHitTestVisible = false; _copyMark.IsVisible = false;
+        var grid = new Grid { HorizontalAlignment = HAlign.Left };
+        grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+        grid.ColumnDefinitions.Add(new ColumnDefinition(CopyMarkGap, GridUnitType.Pixel));
+        grid.ColumnDefinitions.Add(new ColumnDefinition(CopyMarkSize, GridUnitType.Pixel));
+        Grid.SetColumn(_text, 0); Grid.SetColumn(_copyMark, 2);
+        grid.Children.Add(_text); grid.Children.Add(_copyMark); Child = grid;
         PointerEntered += (_, _) => _copyMark.IsVisible = true; PointerExited += (_, _) => _copyMark.IsVisible = false;
     }
 

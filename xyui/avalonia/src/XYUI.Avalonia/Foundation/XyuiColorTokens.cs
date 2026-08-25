@@ -1,6 +1,6 @@
 namespace XYUI.Avalonia.Foundation;
 
-// XYUI-0 Foundation 颜色 token 权威表（83 个唯一 id，值转录自 token-canonical-map.json）
+// XYUI-0 Foundation 颜色 token 权威表（84 个唯一 id，值转录自 token-canonical-map.json）
 public static partial class XyuiColorTokens
 {
     private static IReadOnlyList<XyuiColorToken>? _all;
@@ -9,7 +9,7 @@ public static partial class XyuiColorTokens
 
     // 延迟构建：partial 静态字段跨文件初始化顺序不可控，首次访问时各家族数组已就绪
     private static XyuiColorToken[] BuildAll() =>
-        Core.Concat(Text).Concat(Surface).Concat(Border).Concat(Accent)
+        Core.Concat(Text).Concat(Icon).Concat(Surface).Concat(Border).Concat(Accent)
             .Concat(State).Concat(Semantic).Concat(Editor)
             .ToArray();
 

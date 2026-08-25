@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Interaction;
 using XYUI.Avalonia.Spatial;
@@ -16,7 +17,8 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        Resources.MergedDictionaries.Add(XyuiTheme.CreateLight());
+        RequestedThemeVariant = ThemeVariant.Light;
+        Resources.MergedDictionaries.Add(XyuiTheme.CreateThemeDictionaries());
         Resources.MergedDictionaries.Add(XyuiVectorIcons.CreateResources());
         Styles.Add(XyuiTextStyles.Create());
         Styles.Add(XyuiShapeStyles.Create());

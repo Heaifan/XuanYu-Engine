@@ -1,5 +1,15 @@
 # changelog
 
+## XYUI.AVALONIA-R5-F4 · XYUI-1 Final Closeout（2026-08-25 15:36:46）
+
+- 目标：记录用户已完成 XYUI-1 全量人工视觉审核并正式通过；完成最终治理收口、冻结 XYUI-1，并只解除 XYUI-2 下一阶段冻结，本轮不开始 XYUI-2 实装。
+- 变化：完成 SectionTitle S-05 reconciliation、CodeText 独立 Vector Code Mark、MonoText M-05A 结构化数据布局、Badge Auto Width Left Pointer Geometry、SelectableText 独立 Copy Mark/Selection、SearchHighlight 8 DIP Text→Icon gap 与浅灰辅助 Mark；Gallery 保持真实 Runtime、24/24 文档页和 Light / Dark 主题合同。
+- 人工验收：XYUI-1 `USER VISUAL ACCEPTED`；Canonical、Runtime、Gallery 与 Light / Dark 视觉已由用户最终裁定通过，后续默认 FROZEN，仅 Regression、实现 Bug 或真实项目证明 Canonical 缺陷时重开。
+- 验证：`XYUI.Avalonia.slnx` Build 0 Warning / 0 Error；`XYUI.Avalonia.Tests` 94/94 PASS；ARCH-A、5+100、Mapping JSON、Gallery Visible Runtime 与 `git diff --check` PASS。
+- 治理：`file-tree.md` 同步正式新增文件；`run.bat`、`xyui.bat` 继续作为用户本地资产排除在提交外。GAP-002 MiddleEllipsis、GAP-003 RichText Link、GAP-004 Accessibility Mapping、GAP-005 Tooltip Behavior Mapping 保持开放，不伪装为 CLOSED。
+- Hash：本条所在提交。
+- 状态：XYUI-1 `CANONICAL ALIGNED · RUNTIME ALIGNED · GALLERY ALIGNED · LIGHT / DARK READY · GATES GREEN · USER VISUAL ACCEPTED · FROZEN`；XYUI-2 `UNLOCKED FOR NEXT PHASE`。
+
 ## XYUI.AVALONIA-R5-F4-F1 · Final Canonical/Runtime Alignment Hotfix（2026-08-24 22:07:47）
 
 - 目标：修复 R5-F4 源码复核发现的 SectionTitle、EmptyText 与 SearchHighlight 三处 Canonical/Runtime 一致性遗漏；XYUI-2 继续冻结。

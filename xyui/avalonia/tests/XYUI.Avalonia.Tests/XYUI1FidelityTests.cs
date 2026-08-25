@@ -44,7 +44,7 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
     public void Corner_marks_and_badge_shape_follow_precision_contract() => _fx.Run(() =>
     {
         var code = Mark(new XYCodeText { Text = "terrain/main-heightfield" }, "xyui-code-text-mark");
-        Assert.Equal(8, code.Width); Assert.Equal(8, code.Height); Assert.Equal(1, code.StrokeThickness); Assert.False(code.IsHitTestVisible);
+        Assert.Equal(8, code.Width); Assert.Equal(8, code.Height); Assert.Equal(1.25, code.StrokeThickness); Assert.False(code.IsHitTestVisible);
         Assert.Equal(6, Canvas.GetRight(code)); Assert.Equal(5, Canvas.GetBottom(code));
         var search = Mark(new XYSearchHighlight { Text = "Main Terrain Layer" }, "xyui-search-highlight-mark");
         Assert.Equal(8, search.Width); Assert.Equal(8, search.Height); Assert.Equal(1, search.StrokeThickness); Assert.False(search.IsHitTestVisible);
@@ -56,13 +56,14 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void Mono_preview_uses_shared_columns_and_row_rhythm() => _fx.Run(() =>
     {
-        var grid = Assert.IsType<Grid>(XYUI1GalleryCatalog.CreatePreview("XYUI-1-08"));
-        Assert.Equal(3, grid.ColumnDefinitions.Count); Assert.Equal(4, grid.RowDefinitions.Count);
-        Assert.Equal(new GridLength(96), grid.ColumnDefinitions[0].Width); Assert.Equal(new GridLength(24), grid.ColumnDefinitions[1].Width);
-        Assert.All(grid.RowDefinitions, row => Assert.Equal(new GridLength(22), row.Height));
-        Assert.Equal(new[] { 0, 0, 0, 0 }, grid.Children.OfType<XYLabel>().Select(Grid.GetColumn));
-        Assert.Equal(new[] { 2, 2, 2, 2 }, grid.Children.OfType<XYMonoText>().Select(Grid.GetColumn));
-        Assert.Equal(new[] { 0, 1, 2, 3 }, grid.Children.OfType<XYMonoText>().Select(Grid.GetRow));
+        var grid = Assert.IsType<XYMonoText>(XYUI1GalleryCatalog.CreatePreview("XYUI-1-08"));
+        Assert.Equal(5, grid.ColumnDefinitions.Count); Assert.Equal(6, grid.RowDefinitions.Count);
+        Assert.Equal(new GridLength(XYMonoText.LabelValueGap), grid.ColumnDefinitions[1].Width);
+        Assert.Equal(new GridLength(XYMonoText.ValueUnitGap), grid.ColumnDefinitions[3].Width);
+        Assert.All(grid.RowDefinitions, row => Assert.Equal(GridLength.Auto, row.Height));
+        Assert.Equal(6, grid.Children.OfType<TextBlock>().Count(x => x.Classes.Contains("xyui-mono-data-label")));
+        Assert.Equal(6, grid.Children.OfType<TextBlock>().Count(x => x.Classes.Contains("xyui-mono-data-value")));
+        Assert.Equal(6, grid.Children.OfType<TextBlock>().Count(x => x.Classes.Contains("xyui-mono-data-unit")));
     });
 
     [Fact]
@@ -70,7 +71,7 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
     {
         var rich = new XYRichText { Text = "普通", StrongText = "重点", MonoText = "region-id" };
         Assert.True(rich.Inlines?.Count >= 3);
-        Assert.Null(new XYMonoText { Text = "X=1" }.Background);
+        Assert.Null(new XYMonoText().Background);
         var selectable = new XYSelectableText { Text = "可复制" };
         Assert.Contains("xyui-selectable-text", selectable.Classes);
         Assert.Equal(XyuiVectorIcon.Copy, selectable.CopyIcon);

@@ -9,6 +9,97 @@
 ├─ .gitignore
 ├─ AGENTS.md
 ├─ NuGet.Config
+├─ XuanYu.Core.Tests/
+│  ├─ Camera/
+│  │  ├─ CameraBasisTests.cs
+│  │  ├─ CameraFarRecoveryTests.cs
+│  │  ├─ CameraNavigationRollTests.cs
+│  │  ├─ CameraNavigationSequenceTests.cs
+│  │  ├─ CameraNavigationStressTests.cs
+│  │  ├─ CameraNavigationTests.cs
+│  │  ├─ CameraNavigationUiSequenceTests.Safety.cs
+│  │  ├─ CameraNavigationUiSequenceTests.cs
+│  │  ├─ CameraOrthographicNavigationTests.cs
+│  │  └─ FarProjectionSafetyTests.cs
+│  ├─ CoreSmokeTests.cs
+│  ├─ EditorTool/
+│  │  └─ EditorTransformCapturePolicyTests.cs
+│  ├─ Gizmo/
+│  │  ├─ MoveGizmoDragConstraintTests.cs
+│  │  ├─ MoveGizmoLayoutG1Tests.cs
+│  │  ├─ MoveGizmoLayoutPlaneTests.cs
+│  │  ├─ MoveGizmoLayoutTests.cs
+│  │  ├─ MoveGizmoLayoutVulkanTests.cs
+│  │  ├─ MoveGizmoScreenSizeTests.cs
+│  │  ├─ RotateGizmoLayoutTests.cs
+│  │  ├─ ScaleGizmoTests.Drag.cs
+│  │  ├─ ScaleGizmoTests.DragSafety.cs
+│  │  ├─ ScaleGizmoTests.Helpers.cs
+│  │  ├─ ScaleGizmoTests.R5R1.cs
+│  │  └─ ScaleGizmoTests.cs
+│  ├─ History/
+│  │  ├─ EditorHistoryOwnerTests.cs
+│  │  ├─ EditorHistoryRedoTests.cs
+│  │  ├─ TransformHistoryIntegrationTests.cs
+│  │  └─ TransformHistoryRedoIntegrationTests.cs
+│  ├─ Picking/
+│  │  └─ ViewportPickingServiceTests.cs
+│  ├─ Render/
+│  │  ├─ Camera/
+│  │  │  └─ StandardViewResolverTests.cs
+│  │  ├─ Diagnostics/
+│  │  │  └─ RenderLogNoiseContractTests.cs
+│  │  ├─ DrawPlan/
+│  │  │  ├─ CubeRenderDrawPlanTests.cs
+│  │  │  ├─ FrameExecutionPolicyTests.cs
+│  │  │  ├─ RenderDrawPlanTests.cs
+│  │  │  ├─ SceneRenderProjectionAdapterTests.Rotation.cs
+│  │  │  ├─ SceneRenderProjectionAdapterTests.Selection.cs
+│  │  │  ├─ SceneRenderProjectionAdapterTests.cs
+│  │  │  ├─ ViewportAssistDrawPlanTests.cs
+│  │  │  ├─ ViewportChromeContractTests.cs
+│  │  │  └─ ViewportScaleIndicatorContractTests.cs
+│  │  ├─ Grid/
+│  │  │  ├─ ReferenceGridDrawPlanTests.cs
+│  │  │  ├─ ReferenceGridFrameStateTests.cs
+│  │  │  ├─ ReferenceGridShaderContractTests.cs
+│  │  │  ├─ ScaleIndicatorMetricTests.cs
+│  │  │  └─ ViewportMetricScaleTests.cs
+│  │  ├─ LatestRenderProjectionQueueTests.cs
+│  │  ├─ Map/
+│  │  │  ├─ MapRegionDrawPlanTests.cs
+│  │  │  ├─ MapRenderDrawPlanTests.cs
+│  │  │  ├─ MapSurfaceGeometryTests.cs
+│  │  │  ├─ MapSurfaceLayerVisibilityTests.cs
+│  │  │  ├─ MapSurfaceResourceKeyTests.cs
+│  │  │  └─ MapSurfaceResourceUpdatePolicyTests.cs
+│  │  ├─ NavigationGizmo/
+│  │  │  ├─ NavigationGizmoDipContractTests.cs
+│  │  │  ├─ NavigationGizmoInputIsolationTests.cs
+│  │  │  ├─ NavigationGizmoLayoutTests.Facing.cs
+│  │  │  ├─ NavigationGizmoLayoutTests.cs
+│  │  │  └─ NavigationGizmoOverlayContractTests.cs
+│  │  ├─ Overlay/
+│  │  │  ├─ ScaleIndicatorGlyphLiteTests.cs
+│  │  │  └─ ViewportOverlayLayoutTests.cs
+│  │  └─ StaticModels/
+│  │     ├─ RegionModelTransformContractTests.cs
+│  │     ├─ StaticModelDepthRegressionTests.cs
+│  │     └─ StaticModelRenderContractTests.cs
+│  ├─ Space/
+│  │  ├─ CameraOrthographicTests.cs
+│  │  ├─ CameraStateTests.cs
+│  │  ├─ DefaultEditorCameraTests.cs
+│  │  ├─ SpaceAssert.cs
+│  │  ├─ ViewProjectionStateTests.cs
+│  │  ├─ ViewportStateTests.cs
+│  │  ├─ WorldRayFactoryTests.cs
+│  │  └─ WorldRayTests.cs
+│  ├─ Spatial/
+│  │  ├─ RayAabbIntersectionTests.cs
+│  │  ├─ SpatialBoundsTests.cs
+│  │  └─ SpatialTestData.cs
+│  └─ XuanYu.Core.Tests.csproj
 ├─ XuanYu.Core/
 │  ├─ .gitkeep
 │  ├─ Diagnostics/
@@ -73,8 +164,8 @@
 │  │  ├─ CameraState.cs
 │  │  ├─ DefaultEditorCamera.cs
 │  │  ├─ ProjectionMode.cs
-│  │  ├─ ViewProjectionState.cs
 │  │  ├─ ViewProjectionState.Projection.cs
+│  │  ├─ ViewProjectionState.cs
 │  │  ├─ ViewportState.cs
 │  │  ├─ WorldRay.cs
 │  │  └─ WorldRayFactory.cs
@@ -98,92 +189,329 @@
 │  │  ├─ PreviewTransform.cs
 │  │  └─ TransformStartSnapshot.cs
 │  └─ XuanYu.Core.csproj
-├─ XuanYu.Core.Tests/
-│  ├─ Camera/
-│  │  ├─ CameraBasisTests.cs
-│  │  ├─ CameraNavigationRollTests.cs
-│  │  ├─ CameraNavigationSequenceTests.cs
-│  │  ├─ CameraNavigationStressTests.cs
-│  │  ├─ CameraNavigationTests.cs
-│  │  ├─ CameraNavigationUiSequenceTests.Safety.cs
-│  │  ├─ CameraNavigationUiSequenceTests.cs
-│  │  └─ CameraOrthographicNavigationTests.cs
-│  ├─ CoreSmokeTests.cs
-│  ├─ EditorTool/
-│  │  └─ EditorTransformCapturePolicyTests.cs
-│  ├─ Gizmo/
-│  │  ├─ MoveGizmoDragConstraintTests.cs
-│  │  ├─ MoveGizmoLayoutG1Tests.cs
-│  │  ├─ MoveGizmoLayoutPlaneTests.cs
-│  │  ├─ MoveGizmoLayoutTests.cs
-│  │  ├─ MoveGizmoLayoutVulkanTests.cs
-│  │  ├─ MoveGizmoScreenSizeTests.cs
-│  │  ├─ RotateGizmoLayoutTests.cs
-│  │  ├─ ScaleGizmoTests.Drag.cs
-│  │  ├─ ScaleGizmoTests.DragSafety.cs
-│  │  ├─ ScaleGizmoTests.Helpers.cs
-│  │  ├─ ScaleGizmoTests.R5R1.cs
-│  │  └─ ScaleGizmoTests.cs
-│  ├─ History/
-│  │  ├─ EditorHistoryOwnerTests.cs
-│  │  ├─ EditorHistoryRedoTests.cs
-│  │  ├─ TransformHistoryIntegrationTests.cs
-│  │  └─ TransformHistoryRedoIntegrationTests.cs
-│  ├─ Picking/
-│  │  └─ ViewportPickingServiceTests.cs
-│  ├─ Render/
+├─ XuanYu.Editor.App/
+│  ├─ EditorCompositionRoot.cs
+│  ├─ Program.cs
+│  └─ XuanYu.Editor.App.csproj
+├─ XuanYu.Editor.UI/
+│  ├─ Accessibility/
+│  │  ├─ UiAutomationNamer.cs
+│  │  ├─ UiDpiContract.cs
+│  │  └─ UiMotionPreference.cs
+│  ├─ Bootstrap/
+│  │  ├─ App.axaml
+│  │  ├─ App.axaml.cs
+│  │  └─ Program.cs
+│  ├─ Design/
+│  │  ├─ UiStyles.D4F1.axaml
+│  │  ├─ UiStyles.D5.axaml
+│  │  ├─ UiTokenManifest.json
+│  │  ├─ UiTokens.Colors.Components.axaml
+│  │  ├─ UiTokens.Colors.Core.axaml
+│  │  ├─ UiTokens.Controls.axaml
+│  │  ├─ UiTokens.Fonts.axaml
+│  │  ├─ UiTokens.Icons.axaml
+│  │  ├─ UiTokens.Motion.axaml
+│  │  ├─ UiTokens.Spacing.axaml
+│  │  └─ UiTokens.axaml
+│  ├─ Dialogs/
+│  │  ├─ IEditorDialogService.cs
+│  │  └─ NullEditorDialogService.cs
+│  ├─ EditorState/
+│  │  ├─ EditorInteractionChangedResult.cs
+│  │  ├─ EditorInteractionCommand.cs
+│  │  ├─ EditorInteractionPointerSnapshot.cs
+│  │  ├─ EditorInteractionSnapshot.cs
+│  │  ├─ EditorSelectionCommand.cs
+│  │  ├─ EditorSelectionSnapshot.cs
+│  │  ├─ EditorStateChangedResult.cs
+│  │  ├─ EditorStateOwner.Interaction.cs
+│  │  ├─ EditorStateOwner.Tool.cs
+│  │  ├─ EditorStateOwner.cs
+│  │  ├─ EditorToolChangedResult.cs
+│  │  ├─ EditorToolCommand.cs
+│  │  ├─ EditorToolId.cs
+│  │  ├─ EditorToolSnapshot.cs
+│  │  ├─ EditorToolText.cs
+│  │  └─ EditorTransformCapturePolicy.cs
+│  ├─ Foot/
+│  │  ├─ Foot.States.axaml
+│  │  ├─ Foot.axaml
+│  │  ├─ Foot.axaml.cs
+│  │  ├─ LogAutoScrollPolicy.cs
+│  │  ├─ LogDetailPanel.axaml
+│  │  ├─ LogDetailPanel.axaml.cs
+│  │  ├─ LogListAutoScrollController.Follow.cs
+│  │  ├─ LogListAutoScrollController.Layout.cs
+│  │  ├─ LogListAutoScrollController.cs
+│  │  ├─ NotificationBar.axaml
+│  │  └─ NotificationBar.axaml.cs
+│  ├─ Icons/
+│  │  └─ EditorIcons.axaml
+│  ├─ Left/
+│  │  ├─ InlineRenameActivation.cs
+│  │  ├─ Left.EntityCommands.cs
+│  │  ├─ Left.Styles.axaml
+│  │  ├─ Left.axaml
+│  │  ├─ Left.axaml.cs
+│  │  ├─ RegionPanel.axaml
+│  │  ├─ RegionPanel.axaml.cs
+│  │  ├─ RegionalAuthoringPanel.axaml
+│  │  ├─ RegionalAuthoringPanel.axaml.cs
+│  │  ├─ RoadPanel.axaml
+│  │  └─ RoadPanel.axaml.cs
+│  ├─ Main/
+│  │  ├─ Main.axaml
+│  │  └─ Main.axaml.cs
+│  ├─ NativeHostResizeCoalescer.cs
+│  ├─ NativeHostResizeSnapshot.cs
+│  ├─ NativeHostSurfaceContract.cs
+│  ├─ RelayCommand.cs
+│  ├─ Right/
+│  │  ├─ DatasetLayerPanel.Drag.cs
+│  │  ├─ DatasetLayerPanel.axaml
+│  │  ├─ DatasetLayerPanel.axaml.cs
+│  │  ├─ DatasetPanel.axaml
+│  │  ├─ DatasetPanel.axaml.cs
+│  │  ├─ EditableFormLayoutModel.cs
+│  │  ├─ EditorLayerDock.axaml
+│  │  ├─ EditorLayerDock.axaml.cs
+│  │  ├─ EditorRightTabs.axaml
+│  │  ├─ EditorRightTabs.axaml.cs
+│  │  ├─ InspectorPanel.axaml
+│  │  ├─ InspectorPanel.axaml.cs
+│  │  ├─ LayerInspectorPanel.axaml
+│  │  ├─ LayerInspectorPanel.axaml.cs
+│  │  ├─ LayerPanel.DragDrop.cs
+│  │  ├─ LayerPanel.Rename.cs
+│  │  ├─ LayerPanel.States.axaml
+│  │  ├─ LayerPanel.axaml
+│  │  ├─ LayerPanel.axaml.cs
+│  │  ├─ MapEditorLayoutModel.cs
+│  │  ├─ MapEditorPanel.axaml
+│  │  ├─ MapEditorPanel.axaml.cs
+│  │  ├─ MapFormPanel.axaml
+│  │  ├─ MapFormPanel.axaml.cs
+│  │  ├─ MapIdDisplayFormat.cs
+│  │  ├─ MapPagePanel.axaml
+│  │  ├─ MapPagePanel.axaml.cs
+│  │  ├─ Right.axaml
+│  │  ├─ Right.axaml.cs
+│  │  ├─ TopTabStripController.AllTabs.cs
+│  │  ├─ TopTabStripController.Hint.cs
+│  │  ├─ TopTabStripController.Visible.cs
+│  │  ├─ TopTabStripController.cs
+│  │  ├─ TopTabStripModel.cs
+│  │  └─ TopTabStripTemplate.axaml
+│  ├─ Root/
+│  │  ├─ UiRoot.axaml
+│  │  └─ UiRoot.axaml.cs
+│  ├─ Top/
+│  │  ├─ Top.States.axaml
+│  │  ├─ Top.axaml
+│  │  └─ Top.axaml.cs
+│  ├─ TreeGuide.cs
+│  ├─ TreeGuideSegment.cs
+│  ├─ Ui.axaml
+│  ├─ Viewport/
+│  │  ├─ ViewNavigationGizmo.HitTest.cs
+│  │  ├─ ViewNavigationGizmo.Layout.cs
+│  │  └─ Vulkan/
+│  │     ├─ NativePointerMessage.cs
+│  │     ├─ NativePointerRoutePolicy.cs
+│  │     ├─ VulkanNativeHost.AvaloniaCamera.cs
+│  │     ├─ VulkanNativeHost.AvaloniaPointer.cs
+│  │     ├─ VulkanNativeHost.Bridge.cs
+│  │     ├─ VulkanNativeHost.CameraPointer.cs
+│  │     ├─ VulkanNativeHost.Dpi.cs
+│  │     ├─ VulkanNativeHost.Gizmo.cs
+│  │     ├─ VulkanNativeHost.LayoutSync.cs
+│  │     ├─ VulkanNativeHost.Log.cs
+│  │     ├─ VulkanNativeHost.NavGizmo.cs
+│  │     ├─ VulkanNativeHost.Picking.cs
+│  │     ├─ VulkanNativeHost.Pointer.Cancel.cs
+│  │     ├─ VulkanNativeHost.Pointer.cs
+│  │     ├─ VulkanNativeHost.cs
+│  │     ├─ VulkanViewport.axaml
+│  │     ├─ VulkanViewport.axaml.cs
+│  │     ├─ Win32ViewportHost.Input.cs
+│  │     └─ Win32ViewportHost.cs
+│  ├─ ViewportNativeHostRoute.cs
+│  ├─ Vm/
 │  │  ├─ Camera/
-│  │  │  └─ StandardViewResolverTests.cs
-│  │  ├─ Diagnostics/
-│  │  │  └─ RenderLogNoiseContractTests.cs
-│  │  ├─ DrawPlan/
-│  │  │  ├─ CubeRenderDrawPlanTests.cs
-│  │  │  ├─ FrameExecutionPolicyTests.cs
-│  │  │  ├─ RenderDrawPlanTests.cs
-│  │  │  ├─ SceneRenderProjectionAdapterTests.Rotation.cs
-│  │  │  ├─ SceneRenderProjectionAdapterTests.Selection.cs
-│  │  │  ├─ SceneRenderProjectionAdapterTests.cs
-│  │  │  ├─ ViewportAssistDrawPlanTests.cs
-│  │  │  ├─ ViewportChromeContractTests.cs
-│  │  │  └─ ViewportScaleIndicatorContractTests.cs
-│  │  ├─ Grid/
-│  │  │  ├─ ReferenceGridDrawPlanTests.cs
-│  │  │  ├─ ReferenceGridFrameStateTests.cs
-│  │  │  ├─ ScaleIndicatorMetricTests.cs
-│  │  │  ├─ ReferenceGridShaderContractTests.cs
-│  │  │  └─ ViewportMetricScaleTests.cs
-│  │  ├─ Overlay/
-│  │  │  ├─ ScaleIndicatorGlyphLiteTests.cs
-│  │  │  └─ ViewportOverlayLayoutTests.cs
+│  │  │  ├─ CameraSessionMode.cs
+│  │  │  ├─ CameraSessionSnapshot.cs
+│  │  │  ├─ StandardViewResolver.cs
+│  │  │  ├─ UiVm.Camera.Framing.Draft.cs
+│  │  │  ├─ UiVm.Camera.Framing.cs
+│  │  │  ├─ UiVm.Camera.cs
+│  │  │  ├─ UiVm.CameraDolly.cs
+│  │  │  ├─ UiVm.CameraNavigation.cs
+│  │  │  ├─ UiVm.FarProjectionDiagnostic.cs
+│  │  │  ├─ UiVm.ScaleIndicator.cs
+│  │  │  └─ UiVm.ViewGizmo.cs
+│  │  ├─ History/
+│  │  │  ├─ UiVm.EntityCommands.cs
+│  │  │  ├─ UiVm.History.Entities.cs
+│  │  │  └─ UiVm.History.cs
+│  │  ├─ Inspector/
+│  │  │  ├─ InspectorFieldRow.cs
+│  │  │  ├─ UiVm.Inspector.cs
+│  │  │  ├─ UiVm.InspectorInput.Parse.cs
+│  │  │  └─ UiVm.InspectorInput.cs
+│  │  ├─ Layer/
+│  │  │  ├─ EditorLayerProviderAdapter.cs
+│  │  │  └─ UiVm.LayerContext.cs
+│  │  ├─ Logging/
+│  │  │  ├─ DebugText.cs
+│  │  │  ├─ EditorDisplayText.cs
+│  │  │  ├─ EditorLogBuffer.cs
+│  │  │  ├─ EditorLogBus.cs
+│  │  │  ├─ EditorLogCategory.cs
+│  │  │  ├─ EditorLogClipboardText.cs
+│  │  │  ├─ EditorLogFilter.cs
+│  │  │  ├─ EditorLogFilterQuery.cs
+│  │  │  ├─ EditorLogLevel.cs
+│  │  │  ├─ EditorLogNoiseFilter.cs
+│  │  │  ├─ EditorLogRepeatKey.cs
+│  │  │  ├─ EditorLogSource.cs
+│  │  │  ├─ EditorLogSummary.cs
+│  │  │  ├─ LogEntry.cs
+│  │  │  ├─ SampleLogEntries.cs
+│  │  │  ├─ UiText.cs
+│  │  │  ├─ UiVm.Logging.Refresh.cs
+│  │  │  ├─ UiVm.Logging.State.cs
+│  │  │  └─ UiVm.Logging.cs
 │  │  ├─ Map/
-│  │  │  ├─ MapRenderDrawPlanTests.cs
-│  │  │  ├─ MapSurfaceGeometryTests.cs
-│  │  │  ├─ MapSurfaceLayerVisibilityTests.cs
-│  │  │  ├─ MapSurfaceResourceKeyTests.cs
-│  │  │  └─ MapSurfaceResourceUpdatePolicyTests.cs
-│  │  ├─ NavigationGizmo/
-│  │  │  ├─ NavigationGizmoLayoutTests.Facing.cs
-│  │  │  ├─ NavigationGizmoLayoutTests.cs
-│  │  │  ├─ NavigationGizmoOverlayContractTests.cs
-│  │  │  ├─ NavigationGizmoDipContractTests.cs
-│  │  │  └─ NavigationGizmoInputIsolationTests.cs
-│  │  └─ StaticModels/
-│  │     ├─ StaticModelDepthRegressionTests.cs
-│  │     └─ StaticModelRenderContractTests.cs
-│  ├─ Space/
-│  │  ├─ CameraOrthographicTests.cs
-│  │  ├─ CameraStateTests.cs
-│  │  ├─ DefaultEditorCameraTests.cs
-│  │  ├─ SpaceAssert.cs
-│  │  ├─ ViewProjectionStateTests.cs
-│  │  ├─ ViewportStateTests.cs
-│  │  ├─ WorldRayFactoryTests.cs
-│  │  └─ WorldRayTests.cs
-│  ├─ Spatial/
-│  │  ├─ RayAabbIntersectionTests.cs
-│  │  ├─ SpatialBoundsTests.cs
-│  │  └─ SpatialTestData.cs
-│  └─ XuanYu.Core.Tests.csproj
+│  │  │  ├─ MapDatasetRow.cs
+│  │  │  ├─ MapDatasetTypePresentation.cs
+│  │  │  ├─ MapLayerRowViewModel.Rename.cs
+│  │  │  ├─ MapLayerRowViewModel.cs
+│  │  │  ├─ MapRegionRenderProjection.cs
+│  │  │  ├─ MapRenderSnapshotProjection.cs
+│  │  │  ├─ MapVectorOverlayBuilder.Finalize.cs
+│  │  │  ├─ MapVectorOverlayBuilder.Road.cs
+│  │  │  ├─ MapVectorOverlayBuilder.cs
+│  │  │  ├─ MapVectorOverlayTriangulation.cs
+│  │  │  ├─ UiVm.MapCommandRouting.Danger.cs
+│  │  │  ├─ UiVm.MapCommandRouting.cs
+│  │  │  ├─ UiVm.MapDanger.cs
+│  │  │  ├─ UiVm.MapDataset.Commands.cs
+│  │  │  ├─ UiVm.MapDataset.DrawingBootstrap.cs
+│  │  │  ├─ UiVm.MapDataset.DrawingTarget.cs
+│  │  │  ├─ UiVm.MapDataset.Inspector.cs
+│  │  │  ├─ UiVm.MapDataset.LayerBridge.cs
+│  │  │  ├─ UiVm.MapDataset.Logging.cs
+│  │  │  ├─ UiVm.MapDataset.Name.cs
+│  │  │  ├─ UiVm.MapDataset.RegionPresentation.cs
+│  │  │  ├─ UiVm.MapDataset.RoadBootstrap.cs
+│  │  │  ├─ UiVm.MapDataset.RoadPresentation.cs
+│  │  │  ├─ UiVm.MapDataset.Routing.cs
+│  │  │  ├─ UiVm.MapDataset.Selection.cs
+│  │  │  ├─ UiVm.MapDataset.cs
+│  │  │  ├─ UiVm.MapDiagnostics.Format.cs
+│  │  │  ├─ UiVm.MapDiagnostics.cs
+│  │  │  ├─ UiVm.MapEditor.Display.cs
+│  │  │  ├─ UiVm.MapEditor.Validation.Rules.cs
+│  │  │  ├─ UiVm.MapEditor.Validation.cs
+│  │  │  ├─ UiVm.MapEditor.cs
+│  │  │  ├─ UiVm.MapGeometryEditing.Helpers.cs
+│  │  │  ├─ UiVm.MapGeometryEditing.cs
+│  │  │  ├─ UiVm.MapHistory.cs
+│  │  │  ├─ UiVm.MapLayerDiagnostics.cs
+│  │  │  ├─ UiVm.MapLayerDrag.cs
+│  │  │  ├─ UiVm.MapLayerInspector.cs
+│  │  │  ├─ UiVm.MapLayerSelection.cs
+│  │  │  ├─ UiVm.MapLayers.cs
+│  │  │  ├─ UiVm.MapManifest.cs
+│  │  │  ├─ UiVm.MapRender.cs
+│  │  │  ├─ UiVm.MapWorld.cs
+│  │  │  ├─ UiVm.RegionDrawing.Commit.cs
+│  │  │  ├─ UiVm.RegionDrawing.DraftHistory.cs
+│  │  │  ├─ UiVm.RegionDrawing.Input.cs
+│  │  │  ├─ UiVm.RegionDrawing.Logging.cs
+│  │  │  ├─ UiVm.RegionDrawing.cs
+│  │  │  ├─ UiVm.RoadDrawing.Commit.cs
+│  │  │  ├─ UiVm.RoadDrawing.History.cs
+│  │  │  ├─ UiVm.RoadDrawing.Logging.cs
+│  │  │  ├─ UiVm.RoadDrawing.cs
+│  │  │  └─ UiVm.RoadTool.cs
+│  │  ├─ Mode/
+│  │  │  └─ UiVm.Mode.cs
+│  │  ├─ Scene/
+│  │  │  ├─ D2StaticModelDemo.cs
+│  │  │  ├─ SceneHistoryEntry.cs
+│  │  │  ├─ SceneRenderProjectionAdapter.cs
+│  │  │  ├─ StaticModelRenderAdapter.cs
+│  │  │  ├─ UiVm.DocumentStatus.cs
+│  │  │  ├─ UiVm.RenderProjection.cs
+│  │  │  ├─ UiVm.Scene.cs
+│  │  │  ├─ UiVm.SceneDocument.New.cs
+│  │  │  ├─ UiVm.SceneDocument.cs
+│  │  │  ├─ UiVm.SceneDocumentLog.cs
+│  │  │  ├─ UiVm.SceneDocumentMapRef.cs
+│  │  │  ├─ UiVm.SceneDocumentSave.cs
+│  │  │  ├─ UiVm.StaticModelImport.cs
+│  │  │  └─ UiVm.WorldProjection.cs
+│  │  ├─ Selection/
+│  │  │  ├─ UiVm.Picking.cs
+│  │  │  ├─ UiVm.Selection.cs
+│  │  │  ├─ UiVm.SelectionProjection.cs
+│  │  │  ├─ UiVm.SelectionTrace.cs
+│  │  │  ├─ UiVm.SelectionValidity.cs
+│  │  │  ├─ UiVm.ViewportSelection.cs
+│  │  │  └─ ViewportPickingLogFormatter.cs
+│  │  ├─ Transform/
+│  │  │  ├─ Move/
+│  │  │  │  ├─ UiVm.MoveGizmo.cs
+│  │  │  │  ├─ UiVm.MoveGizmoLogging.cs
+│  │  │  │  └─ UiVm.MoveGizmoScreenSize.cs
+│  │  │  ├─ Rotate/
+│  │  │  │  └─ UiVm.RotateGizmo.cs
+│  │  │  ├─ Scale/
+│  │  │  │  └─ UiVm.ScaleGizmo.cs
+│  │  │  ├─ UiVm.InputGuards.cs
+│  │  │  ├─ UiVm.Interaction.cs
+│  │  │  ├─ UiVm.InteractionCancel.cs
+│  │  │  ├─ UiVm.InteractionPointer.cs
+│  │  │  ├─ UiVm.Tool.cs
+│  │  │  └─ UiVm.ViewportAssist.cs
+│  │  ├─ Tree/
+│  │  │  ├─ EditorTreeNode.cs
+│  │  │  ├─ TreeGuideBuilder.cs
+│  │  │  └─ UiVm.TreeCommands.cs
+│  │  ├─ UiVm.NativeHostLifecycle.cs
+│  │  ├─ UiVm.Notification.cs
+│  │  ├─ UiVm.NotificationLifetime.cs
+│  │  ├─ UiVm.RightPanel.cs
+│  │  ├─ UiVm.cs
+│  │  └─ Workspace/
+│  │     ├─ UiVm.RegionAuthoring.cs
+│  │     └─ UiVm.Workspace.cs
+│  ├─ Win/
+│  │  ├─ DialogFocusTrap.cs
+│  │  ├─ LayerDeleteConfirmationWindow.axaml
+│  │  ├─ LayerDeleteConfirmationWindow.axaml.cs
+│  │  ├─ UiWin.Accessibility.cs
+│  │  ├─ UiWin.DialogHost.Danger.cs
+│  │  ├─ UiWin.DialogHost.Input.cs
+│  │  ├─ UiWin.DialogHost.cs
+│  │  ├─ UiWin.Dialogs.cs
+│  │  ├─ UiWin.EntityShortcuts.cs
+│  │  ├─ UiWin.MapCommands.cs
+│  │  ├─ UiWin.SceneCommands.cs
+│  │  ├─ UiWin.Shortcuts.cs
+│  │  ├─ UiWin.UnsavedDialog.cs
+│  │  ├─ UiWin.axaml
+│  │  └─ UiWin.axaml.cs
+│  ├─ Workspace/
+│  │  ├─ WorkspaceSelector.axaml
+│  │  └─ WorkspaceSelector.axaml.cs
+│  ├─ XuanYu.Editor.UI.csproj
+│  └─ app.manifest
+├─ XuanYu.Editor.Win/
+│  ├─ MainForm.cs
+│  └─ XuanYu.Editor.Win.csproj
 ├─ XuanYu.Editor/
 │  ├─ Assets/
 │  │  ├─ Catalog/
@@ -229,17 +557,40 @@
 │  │  ├─ CameraBasis.cs
 │  │  ├─ CameraFarProjectionDiagnostic.cs
 │  │  ├─ CameraFrameResult.cs
+│  │  ├─ CameraNavigation.Far.cs
 │  │  ├─ CameraNavigation.Try.cs
 │  │  ├─ CameraNavigation.cs
-│  │  ├─ EditorCameraFraming.Orthographic.cs
 │  │  ├─ EditorCameraFraming.Draft.cs
 │  │  ├─ EditorCameraFraming.MapOrthographic.cs
+│  │  ├─ EditorCameraFraming.Orthographic.cs
 │  │  ├─ EditorCameraFraming.cs
 │  │  └─ OrthographicViewFactory.cs
 │  ├─ Layering/
 │  │  ├─ EditorLayerItem.cs
 │  │  └─ IEditorLayerProvider.cs
 │  ├─ MapDocument/
+│  │  ├─ DatasetLayerState.cs
+│  │  ├─ MapDatasetDescriptor.cs
+│  │  ├─ MapDatasetDocument.cs
+│  │  ├─ MapDatasetDocumentJson.cs
+│  │  ├─ MapDatasetDocumentSerializer.cs
+│  │  ├─ MapDatasetDocumentValidator.cs
+│  │  ├─ MapDatasetFeatureBinding.cs
+│  │  ├─ MapDatasetIdGenerator.cs
+│  │  ├─ MapDatasetLayerIdProjection.cs
+│  │  ├─ MapDatasetPathPolicy.cs
+│  │  ├─ MapDatasetRegionBinding.cs
+│  │  ├─ MapDatasetRegistry.Commands.cs
+│  │  ├─ MapDatasetRegistry.FeatureQuery.cs
+│  │  ├─ MapDatasetRegistry.LayerStates.cs
+│  │  ├─ MapDatasetRegistry.Query.cs
+│  │  ├─ MapDatasetRegistry.RegionTransaction.cs
+│  │  ├─ MapDatasetRegistry.Rename.cs
+│  │  ├─ MapDatasetRegistry.Transaction.cs
+│  │  ├─ MapDatasetRegistry.Unregister.cs
+│  │  ├─ MapDatasetRegistry.cs
+│  │  ├─ MapDatasetRuntimeProjection.cs
+│  │  ├─ MapDatasetStorageService.cs
 │  │  ├─ MapDocument.cs
 │  │  ├─ MapDocumentAggregateBridge.cs
 │  │  ├─ MapDocumentJson.cs
@@ -249,53 +600,47 @@
 │  │  ├─ MapEnvironmentDefinition.cs
 │  │  ├─ MapJsonMapper.cs
 │  │  ├─ MapJsonSerializer.cs
-│  │  ├─ MapDatasetDescriptor.cs
-│  │  ├─ MapDatasetDocument.cs
-│  │  ├─ MapDatasetDocumentJson.cs
-│  │  ├─ MapDatasetDocumentSerializer.cs
-│  │  ├─ MapDatasetDocumentValidator.cs
-│  │  ├─ MapDatasetPathPolicy.cs
-│  │  ├─ MapDatasetRegistry.Commands.cs
-│  │  ├─ MapDatasetIdGenerator.cs
-│  │  ├─ MapDatasetLayerIdProjection.cs
-│  │  ├─ MapDatasetRegionBinding.cs
-│  │  ├─ MapDatasetRegistry.Query.cs
-│  │  ├─ MapDatasetRegistry.RegionTransaction.cs
-│  │  ├─ MapDatasetRegistry.Transaction.cs
-│  │  ├─ MapDatasetRuntimeProjection.cs
-│  │  ├─ MapRegionDatasetCodec.cs
-│  │  ├─ MapRegionDatasetFeature.cs
-│  │  ├─ MapDatasetRegistry.cs
-│  │  ├─ MapDatasetStorageService.cs
 │  │  ├─ MapManifest.cs
 │  │  ├─ MapManifestJson.cs
 │  │  ├─ MapManifestMapper.cs
 │  │  ├─ MapManifestOwner.cs
 │  │  ├─ MapManifestSerializer.cs
 │  │  ├─ MapManifestStorageService.cs
+│  │  ├─ MapManifestValidator.cs
+│  │  ├─ MapRegionDatasetCodec.cs
+│  │  ├─ MapRegionDatasetFeature.cs
+│  │  ├─ MapRoadDatasetCodec.cs
+│  │  ├─ MapRoadDatasetFeature.cs
+│  │  ├─ MapStorageService.cs
 │  │  ├─ MapWorkingStorage.Promotion.cs
 │  │  └─ MapWorkingStorage.cs
-│  │  ├─ MapManifestValidator.cs
-│  │  └─ MapStorageService.cs
 │  ├─ MapEditing/
 │  │  ├─ MapEditEvents.cs
 │  │  ├─ MapEditReason.cs
-│  │  ├─ MapEditSession.Geometry.cs
-│  │  ├─ MapEditSession.Regions.cs
-│  │  ├─ MapEditSession.RuntimeProjection.cs
 │  │  ├─ MapEditSession.ActiveLayer.cs
 │  │  ├─ MapEditSession.Commands.cs
 │  │  ├─ MapEditSession.Commit.cs
 │  │  ├─ MapEditSession.Document.cs
+│  │  ├─ MapEditSession.Geometry.cs
 │  │  ├─ MapEditSession.History.cs
 │  │  ├─ MapEditSession.Layers.cs
+│  │  ├─ MapEditSession.Regions.cs
+│  │  ├─ MapEditSession.Roads.cs
+│  │  ├─ MapEditSession.RuntimeProjection.cs
 │  │  ├─ MapEditSession.Selection.cs
 │  │  ├─ MapEditSession.cs
-│  │  ├─ MapHistoryEntry.cs
 │  │  ├─ MapGeometryEditTypes.cs
 │  │  ├─ MapGeometryHitTester.cs
+│  │  ├─ MapHistoryEntry.cs
 │  │  ├─ MapSelection.cs
-│  │  └─ MapSelectionKind.cs
+│  │  ├─ MapSelectionKind.cs
+│  │  ├─ MapSurfacePicker.cs
+│  │  ├─ RegionDrawingState.cs
+│  │  └─ RoadDrawingState.cs
+│  ├─ Mode/
+│  │  ├─ EditorModeId.cs
+│  │  ├─ EditorModeManager.cs
+│  │  └─ EditorModeTransition.cs
 │  ├─ SceneDocument/
 │  │  ├─ MapReference.cs
 │  │  ├─ SceneDocumentAsset.cs
@@ -317,313 +662,15 @@
 │  │  ├─ TransformSession.Rotate.cs
 │  │  ├─ TransformSession.Scale.cs
 │  │  └─ TransformSession.cs
-│  ├─ Mode/
-│  │  ├─ EditorModeId.cs
-│  │  ├─ EditorModeManager.cs
-│  │  └─ EditorModeTransition.cs
 │  ├─ Workspace/
 │  │  ├─ EditorWorkspaceDefinition.cs
 │  │  ├─ EditorWorkspaceDefinitions.cs
 │  │  ├─ EditorWorkspaceId.cs
 │  │  ├─ EditorWorkspaceManager.cs
 │  │  ├─ EditorWorkspaceTool.cs
-│  │  ├─ RegionAuthoringMode.cs
-│  │  └─ EditorWorkspaceTransition.cs
+│  │  ├─ EditorWorkspaceTransition.cs
+│  │  └─ RegionAuthoringMode.cs
 │  └─ XuanYu.Editor.csproj
-├─ XuanYu.Editor.App/
-│  ├─ EditorCompositionRoot.cs
-│  ├─ Program.cs
-│  └─ XuanYu.Editor.App.csproj
-├─ XuanYu.Editor.UI/
-│  ├─ Accessibility/
-│  │  ├─ UiAutomationNamer.cs
-│  │  ├─ UiDpiContract.cs
-│  │  └─ UiMotionPreference.cs
-│  ├─ Bootstrap/
-│  │  ├─ App.axaml
-│  │  ├─ App.axaml.cs
-│  │  └─ Program.cs
-│  ├─ Design/
-│  │  ├─ UiTokens.Colors.Components.axaml
-│  │  ├─ UiTokens.Colors.Core.axaml
-│  │  ├─ UiTokens.Controls.axaml
-│  │  ├─ UiTokens.Fonts.axaml
-│  │  ├─ UiTokens.Icons.axaml
-│  │  ├─ UiTokens.Motion.axaml
-│  │  ├─ UiTokens.Spacing.axaml
-│  │  ├─ UiTokenManifest.json
-│  │  └─ UiTokens.axaml
-│  ├─ Dialogs/
-│  │  ├─ IEditorDialogService.cs
-│  │  └─ NullEditorDialogService.cs
-│  ├─ EditorState/
-│  │  ├─ EditorInteractionChangedResult.cs
-│  │  ├─ EditorInteractionCommand.cs
-│  │  ├─ EditorInteractionPointerSnapshot.cs
-│  │  ├─ EditorInteractionSnapshot.cs
-│  │  ├─ EditorSelectionCommand.cs
-│  │  ├─ EditorSelectionSnapshot.cs
-│  │  ├─ EditorStateChangedResult.cs
-│  │  ├─ EditorStateOwner.Interaction.cs
-│  │  ├─ EditorStateOwner.Tool.cs
-│  │  ├─ EditorStateOwner.cs
-│  │  ├─ EditorToolChangedResult.cs
-│  │  ├─ EditorToolCommand.cs
-│  │  ├─ EditorToolId.cs
-│  │  ├─ EditorToolSnapshot.cs
-│  │  ├─ EditorToolText.cs
-│  │  └─ EditorTransformCapturePolicy.cs
-│  ├─ Foot/
-│  │  ├─ Foot.axaml
-│  │  ├─ Foot.axaml.cs
-│  │  ├─ LogAutoScrollPolicy.cs
-│  │  ├─ LogDetailPanel.axaml
-│  │  ├─ LogDetailPanel.axaml.cs
-│  │  ├─ LogListAutoScrollController.Follow.cs
-│  │  ├─ LogListAutoScrollController.Layout.cs
-│  │  └─ LogListAutoScrollController.cs
-│  ├─ Icons/
-│  │  └─ EditorIcons.axaml
-│  ├─ Left/
-│  │  ├─ InlineRenameActivation.cs
-│  │  ├─ Left.EntityCommands.cs
-│  │  ├─ Left.Styles.axaml
-│  │  ├─ RegionalAuthoringPanel.axaml
-│  │  ├─ RegionalAuthoringPanel.axaml.cs
-│  │  ├─ RegionPanel.axaml
-│  │  ├─ RegionPanel.axaml.cs
-│  │  ├─ Left.axaml
-│  │  └─ Left.axaml.cs
-│  ├─ Main/
-│  │  ├─ Main.axaml
-│  │  └─ Main.axaml.cs
-│  ├─ NativeHostResizeCoalescer.cs
-│  ├─ NativeHostResizeSnapshot.cs
-│  ├─ NativeHostSurfaceContract.cs
-│  ├─ RelayCommand.cs
-│  ├─ Right/
-│  │  ├─ EditorLayerDock.axaml
-│  │  ├─ EditorLayerDock.axaml.cs
-│  │  ├─ EditorRightTabs.axaml
-│  │  ├─ EditorRightTabs.axaml.cs
-│  │  ├─ LayerInspectorPanel.axaml
-│  │  ├─ LayerInspectorPanel.axaml.cs
-│  │  ├─ LayerPanel.DragDrop.cs
-│  │  ├─ LayerPanel.Rename.cs
-│  │  ├─ LayerPanel.axaml
-│  │  ├─ LayerPanel.axaml.cs
-│  │  ├─ DatasetPanel.axaml
-│  │  ├─ DatasetPanel.axaml.cs
-│  │  ├─ DatasetLayerPanel.axaml
-│  │  ├─ DatasetLayerPanel.axaml.cs
-│  │  ├─ MapEditorPanel.axaml
-│  │  ├─ MapEditorPanel.axaml.cs
-│  │  ├─ MapIdDisplayFormat.cs
-│  │  ├─ MapPagePanel.axaml
-│  │  ├─ MapPagePanel.axaml.cs
-│  │  ├─ MapFormPanel.axaml
-│  │  ├─ MapFormPanel.axaml.cs
-│  │  ├─ EditableFormLayoutModel.cs
-│  │  ├─ MapEditorLayoutModel.cs
-│  │  ├─ InspectorPanel.axaml
-│  │  ├─ InspectorPanel.axaml.cs
-│  │  ├─ Right.axaml
-│  │  ├─ Right.axaml.cs
-│  │  ├─ TopTabStripController.AllTabs.cs
-│  │  ├─ TopTabStripController.Hint.cs
-│  │  ├─ TopTabStripController.Visible.cs
-│  │  ├─ TopTabStripController.cs
-│  │  ├─ TopTabStripModel.cs
-│  │  └─ TopTabStripTemplate.axaml
-│  ├─ Root/
-│  │  ├─ UiRoot.axaml
-│  │  └─ UiRoot.axaml.cs
-│  ├─ Top/
-│  │  ├─ Top.axaml
-│  │  └─ Top.axaml.cs
-│  ├─ TreeGuide.cs
-│  ├─ TreeGuideSegment.cs
-│  ├─ Ui.axaml
-│  ├─ Viewport/
-│  │  ├─ ViewNavigationGizmo.HitTest.cs
-│  │  ├─ ViewNavigationGizmo.Layout.cs
-│  │  └─ Vulkan/
-│  │     ├─ NativePointerMessage.cs
-│  │     ├─ VulkanNativeHost.AvaloniaCamera.cs
-│  │     ├─ VulkanNativeHost.AvaloniaPointer.cs
-│  │     ├─ VulkanNativeHost.Bridge.cs
-│  │     ├─ VulkanNativeHost.CameraPointer.cs
-│  │     ├─ VulkanNativeHost.Dpi.cs
-│  │     ├─ VulkanNativeHost.Gizmo.cs
-│  │     ├─ VulkanNativeHost.LayoutSync.cs
-│  │     ├─ VulkanNativeHost.Log.cs
-│  │     ├─ VulkanNativeHost.NavGizmo.cs
-│  │     ├─ VulkanNativeHost.Picking.cs
-│  │     ├─ VulkanNativeHost.Pointer.cs
-│  │     ├─ VulkanNativeHost.Pointer.Cancel.cs
-│  │     ├─ NativePointerRoutePolicy.cs
-│  │     ├─ VulkanNativeHost.cs
-│  │     ├─ VulkanViewport.axaml
-│  │     ├─ VulkanViewport.axaml.cs
-│  │     ├─ Win32ViewportHost.Input.cs
-│  │     └─ Win32ViewportHost.cs
-│  ├─ ViewportNativeHostRoute.cs
-│  ├─ Vm/
-│  │  ├─ Camera/
-│  │  │  ├─ CameraSessionMode.cs
-│  │  │  ├─ CameraSessionSnapshot.cs
-│  │  │  ├─ StandardViewResolver.cs
-│  │  │  ├─ UiVm.Camera.Framing.cs
-│  │  │  ├─ UiVm.Camera.Framing.Draft.cs
-│  │  │  ├─ UiVm.Camera.cs
-│  │  │  ├─ UiVm.CameraDolly.cs
-│  │  │  ├─ UiVm.FarProjectionDiagnostic.cs
-│  │  │  ├─ UiVm.CameraNavigation.cs
-│  │  │  ├─ UiVm.ScaleIndicator.cs
-│  │  │  └─ UiVm.ViewGizmo.cs
-│  │  ├─ History/
-│  │  │  ├─ UiVm.EntityCommands.cs
-│  │  │  ├─ UiVm.History.Entities.cs
-│  │  │  └─ UiVm.History.cs
-│  │  ├─ Inspector/
-│  │  │  ├─ UiVm.Inspector.cs
-│  │  │  ├─ UiVm.InspectorInput.Parse.cs
-│  │  │  └─ UiVm.InspectorInput.cs
-│  │  ├─ Layer/
-│  │  │  ├─ EditorLayerProviderAdapter.cs
-│  │  │  └─ UiVm.LayerContext.cs
-│  │  ├─ Logging/
-│  │  │  ├─ DebugText.cs
-│  │  │  ├─ EditorDisplayText.cs
-│  │  │  ├─ EditorLogBuffer.cs
-│  │  │  ├─ EditorLogBus.cs
-│  │  │  ├─ EditorLogCategory.cs
-│  │  │  ├─ EditorLogClipboardText.cs
-│  │  │  ├─ EditorLogFilter.cs
-│  │  │  ├─ EditorLogFilterQuery.cs
-│  │  │  ├─ EditorLogLevel.cs
-│  │  │  ├─ EditorLogNoiseFilter.cs
-│  │  │  ├─ EditorLogRepeatKey.cs
-│  │  │  ├─ EditorLogSource.cs
-│  │  │  ├─ EditorLogSummary.cs
-│  │  │  ├─ LogEntry.cs
-│  │  │  ├─ SampleLogEntries.cs
-│  │  │  ├─ UiText.cs
-│  │  │  └─ UiVm.Logging.cs
-│  │  ├─ Map/
-│  │  │  ├─ MapLayerRowViewModel.cs
-│  │  │  ├─ MapLayerRowViewModel.Rename.cs
-│  │  │  ├─ MapRegionRenderProjection.cs
-│  │  │  ├─ MapRenderSnapshotProjection.cs
-│  │  │  ├─ MapVectorOverlayBuilder.Finalize.cs
-│  │  │  ├─ MapVectorOverlayBuilder.cs
-│  │  │  ├─ UiVm.MapGeometryEditing.Helpers.cs
-│  │  │  ├─ UiVm.MapGeometryEditing.cs
-│  │  │  ├─ MapVectorOverlayTriangulation.cs
-│  │  │  ├─ UiVm.RegionDrawing.Commit.cs
-│  │  │  ├─ UiVm.RegionDrawing.Input.cs
-│  │  │  ├─ UiVm.RegionDrawing.Logging.cs
-│  │  │  ├─ UiVm.RegionDrawing.cs
-│  │  │  ├─ UiVm.RegionDrawing.DraftHistory.cs
-│  │  │  ├─ UiVm.MapCommandRouting.cs
-│  │  │  ├─ UiVm.MapCommandRouting.Danger.cs
-│  │  │  ├─ UiVm.MapDataset.Commands.cs
-│  │  │  ├─ UiVm.MapDataset.DrawingBootstrap.cs
-│  │  │  ├─ UiVm.MapDataset.DrawingTarget.cs
-│  │  │  ├─ UiVm.MapDataset.LayerBridge.cs
-│  │  │  ├─ UiVm.MapDataset.RegionPresentation.cs
-│  │  │  ├─ UiVm.MapDataset.Logging.cs
-│  │  │  ├─ UiVm.MapDataset.Routing.cs
-│  │  │  ├─ UiVm.MapDataset.cs
-│  │  │  ├─ MapDatasetRow.cs
-│  │  │  ├─ UiVm.MapDataset.Selection.cs
-│  │  │  ├─ MapDatasetTypePresentation.cs
-│  │  │  ├─ UiVm.MapDiagnostics.Format.cs
-│  │  │  ├─ UiVm.MapDiagnostics.cs
-│  │  │  ├─ UiVm.MapEditor.cs
-│  │  │  ├─ UiVm.MapEditor.Display.cs
-│  │  │  ├─ UiVm.MapManifest.cs
-│  │  ├─ UiVm.MapEditor.Validation.cs
-│  │  ├─ UiVm.MapEditor.Validation.Rules.cs
-│  │  ├─ UiVm.MapDanger.cs
-│  │  │  ├─ UiVm.MapHistory.cs
-│  │  │  ├─ UiVm.MapLayerDiagnostics.cs
-│  │  │  ├─ UiVm.MapLayerDrag.cs
-│  │  │  ├─ UiVm.MapLayerInspector.cs
-│  │  │  ├─ UiVm.MapLayerSelection.cs
-│  │  │  ├─ UiVm.MapLayers.cs
-│  │  │  ├─ UiVm.MapRender.cs
-│  │  │  └─ UiVm.MapWorld.cs
-│  │  ├─ UiVm.RightPanel.cs
-│  │  ├─ Scene/
-│  │  │  ├─ D2StaticModelDemo.cs
-│  │  │  ├─ SceneHistoryEntry.cs
-│  │  │  ├─ SceneRenderProjectionAdapter.cs
-│  │  │  ├─ StaticModelRenderAdapter.cs
-│  │  │  ├─ UiVm.DocumentStatus.cs
-│  │  │  ├─ UiVm.RenderProjection.cs
-│  │  │  ├─ UiVm.Scene.cs
-│  │  │  ├─ UiVm.SceneDocument.New.cs
-│  │  │  ├─ UiVm.SceneDocument.cs
-│  │  │  ├─ UiVm.SceneDocumentLog.cs
-│  │  │  ├─ UiVm.SceneDocumentMapRef.cs
-│  │  │  ├─ UiVm.SceneDocumentSave.cs
-│  │  │  ├─ UiVm.StaticModelImport.cs
-│  │  │  └─ UiVm.WorldProjection.cs
-│  │  ├─ Selection/
-│  │  │  ├─ UiVm.Picking.cs
-│  │  │  ├─ UiVm.Selection.cs
-│  │  │  ├─ UiVm.SelectionProjection.cs
-│  │  │  ├─ UiVm.SelectionTrace.cs
-│  │  │  ├─ UiVm.SelectionValidity.cs
-│  │  │  ├─ UiVm.ViewportSelection.cs
-│  │  │  └─ ViewportPickingLogFormatter.cs
-│  │  ├─ Transform/
-│  │  │  ├─ Move/
-│  │  │  │  ├─ UiVm.MoveGizmo.cs
-│  │  │  │  ├─ UiVm.MoveGizmoLogging.cs
-│  │  │  │  └─ UiVm.MoveGizmoScreenSize.cs
-│  │  │  ├─ Rotate/
-│  │  │  │  └─ UiVm.RotateGizmo.cs
-│  │  │  ├─ Scale/
-│  │  │  │  └─ UiVm.ScaleGizmo.cs
-│  │  │  ├─ UiVm.InputGuards.cs
-│  │  │  ├─ UiVm.Interaction.cs
-│  │  │  ├─ UiVm.InteractionCancel.cs
-│  │  │  ├─ UiVm.InteractionPointer.cs
-│  │  │  ├─ UiVm.Tool.cs
-│  │  │  └─ UiVm.ViewportAssist.cs
-│  │  ├─ Workspace/
-│  │  │  ├─ UiVm.RegionAuthoring.cs
-│  │  │  └─ UiVm.Workspace.cs
-│  │  ├─ Mode/
-│  │  │  └─ UiVm.Mode.cs
-│  │  ├─ Tree/
-│  │  │  ├─ EditorTreeNode.cs
-│  │  │  ├─ TreeGuideBuilder.cs
-│  │  │  └─ UiVm.TreeCommands.cs
-│  │  ├─ UiVm.NativeHostLifecycle.cs
-│  │  ├─ UiVm.NotificationLifetime.cs
-│  │  └─ UiVm.cs
-│  ├─ Workspace/
-│  │  ├─ WorkspaceSelector.axaml
-│  │  └─ WorkspaceSelector.axaml.cs
-│  ├─ Win/
-│  │  ├─ UiWin.Accessibility.cs
-│  │  ├─ UiWin.Dialogs.cs
-│  │  ├─ UiWin.DialogHost.Input.cs
-│  │  ├─ UiWin.EntityShortcuts.cs
-│  │  ├─ UiWin.MapCommands.cs
-│  │  ├─ UiWin.SceneCommands.cs
-│  │  ├─ UiWin.UnsavedDialog.cs
-│  │  ├─ UiWin.axaml
-│  │  ├─ UiWin.axaml.cs
-│  │  └─ UiWin.Shortcuts.cs
-│  ├─ XuanYu.Editor.UI.csproj
-│  └─ app.manifest
-├─ XuanYu.Editor.Win/
-│  ├─ MainForm.cs
-│  └─ XuanYu.Editor.Win.csproj
 ├─ XuanYu.Engine.slnx
 ├─ XuanYu.Render.Abstractions/
 │  ├─ EditorViewPlaneGridKind.cs
@@ -632,12 +679,12 @@
 │  ├─ INativeHostSurfaceBridge.cs
 │  ├─ INativeHostSurfaceBridgeFactory.cs
 │  ├─ IRenderProjectionSource.cs
+│  ├─ LatestRenderProjectionQueue.cs
 │  ├─ MapBoundsGeometry.cs
 │  ├─ MapRenderSnapshot.cs
 │  ├─ MapSurfaceGeometry.cs
 │  ├─ MapSurfaceResourceKey.cs
 │  ├─ MapSurfaceResourceUpdatePolicy.cs
-│  ├─ LatestRenderProjectionQueue.cs
 │  ├─ MapSurfaceResourceUpdateText.cs
 │  ├─ NativeHostHandleSnapshot.cs
 │  ├─ NativeHostLifecycleLogFormatter.cs
@@ -646,11 +693,7 @@
 │  ├─ NativeHostSurfaceHandle.cs
 │  ├─ ReferenceGridFrameState.cs
 │  ├─ ReferenceGridScale.cs
-│  ├─ ScaleIndicatorGlyphLite.cs
-│  ├─ ScaleIndicatorMetric.cs
-│  ├─ ScaleIndicatorOverlayProjection.cs
 │  ├─ RenderCameraProjection.cs
-│  ├─ ViewportMetricScale.cs
 │  ├─ RenderDrawPlan.Typed.cs
 │  ├─ RenderDrawPlan.cs
 │  ├─ RenderEntityProjection.cs
@@ -660,11 +703,16 @@
 │  ├─ RenderStaticModelKey.cs
 │  ├─ RenderStaticModelPrimitive.cs
 │  ├─ RenderStaticModelResource.cs
+│  ├─ RenderStaticModelTransform.cs
 │  ├─ RenderStaticModelVertex.cs
 │  ├─ RenderVectorOverlayKey.cs
 │  ├─ RenderVectorOverlayPrimitive.cs
 │  ├─ RenderVectorOverlayResource.cs
 │  ├─ RenderVectorOverlayVertex.cs
+│  ├─ ScaleIndicatorGlyphLite.cs
+│  ├─ ScaleIndicatorMetric.cs
+│  ├─ ScaleIndicatorOverlayProjection.cs
+│  ├─ ViewportMetricScale.cs
 │  ├─ ViewportOverlayAnchor.cs
 │  ├─ ViewportOverlayLayoutResolver.cs
 │  └─ XuanYu.Render.Abstractions.csproj
@@ -688,7 +736,6 @@
 │  │  ├─ ShaderBytecode.GridLineFrag.cs
 │  │  ├─ ShaderBytecode.GridLineVert.cs
 │  │  ├─ ShaderBytecode.GridVert.cs
-│  │  ├─ ShaderBytecode.WorldReferenceGridFrag.cs
 │  │  ├─ ShaderBytecode.NavGizmoFrag.cs
 │  │  ├─ ShaderBytecode.NavGizmoVert.cs
 │  │  ├─ ShaderBytecode.ScaleIndicatorFrag.cs
@@ -696,6 +743,7 @@
 │  │  ├─ ShaderBytecode.ViewPlaneGridFrag.cs
 │  │  ├─ ShaderBytecode.WorldAxesFrag.cs
 │  │  ├─ ShaderBytecode.WorldOriginFrag.cs
+│  │  ├─ ShaderBytecode.WorldReferenceGridFrag.cs
 │  │  ├─ VulkanGraphicsPipelineOwner.Depth.cs
 │  │  ├─ VulkanGraphicsPipelineOwner.Fullscreen.cs
 │  │  ├─ VulkanGraphicsPipelineOwner.Grid.cs
@@ -764,14 +812,14 @@
 │  ├─ Shaders/
 │  │  ├─ editor_nav_gizmo.frag
 │  │  ├─ editor_nav_gizmo.vert
-│  │  ├─ editor_scale_indicator.frag
+│  │  ├─ editor_reference_grid.vert
 │  │  ├─ editor_reference_grid_line.frag
 │  │  ├─ editor_reference_grid_line.vert
-│  │  ├─ editor_reference_grid.vert
-│  │  ├─ editor_world_reference_grid.frag
+│  │  ├─ editor_scale_indicator.frag
 │  │  ├─ editor_view_plane_grid.frag
 │  │  ├─ editor_world_axes.frag
 │  │  ├─ editor_world_origin.frag
+│  │  ├─ editor_world_reference_grid.frag
 │  │  ├─ scene.frag
 │  │  └─ scene.vert
 │  ├─ Swapchain/
@@ -800,6 +848,13 @@
 │  ├─ VulkanSurfaceOwner.cs
 │  ├─ VulkanSurfaceResult.cs
 │  └─ XuanYu.Render.Vulkan.csproj
+├─ XuanYu.WarCore.Tests/
+│  ├─ Identity/
+│  │  └─ MilitaryIdentityTests.cs
+│  ├─ State/
+│  │  └─ SoldierStateTests.cs
+│  ├─ WarCoreDependencyTests.cs
+│  └─ XuanYu.WarCore.Tests.csproj
 ├─ XuanYu.WarCore/
 │  ├─ Identity/
 │  │  ├─ FactionId.cs
@@ -810,73 +865,6 @@
 │  ├─ State/
 │  │  └─ SoldierState.cs
 │  └─ XuanYu.WarCore.csproj
-├─ XuanYu.WarCore.Tests/
-│  ├─ Identity/
-│  │  └─ MilitaryIdentityTests.cs
-│  ├─ State/
-│  │  └─ SoldierStateTests.cs
-│  ├─ WarCoreDependencyTests.cs
-│  └─ XuanYu.WarCore.Tests.csproj
-├─ XuanYu.World/
-│  ├─ EntityRegistry.Authoring.cs
-│  ├─ EntityRegistry.Replace.cs
-│  ├─ EntityRegistry.cs
-│  ├─ GlobalWorld.Authoring.cs
-│  ├─ GlobalWorld.Query.cs
-│  ├─ GlobalWorld.Snapshot.cs
-│  ├─ GlobalWorld.cs
-│  ├─ GridWorldPartitionStrategy.cs
-│  ├─ IWorldPartitionStrategy.cs
-│  ├─ Map/
-│  │  ├─ MapBounds.cs
-│  │  ├─ MapDefaultDefinition.cs
-│  │  ├─ MapDefinition.cs
-│  │  ├─ MapDefinitionValidator.cs
-│  │  ├─ MapGeometry.cs
-│  │  ├─ MapId.cs
-│  │  ├─ MapLayer.cs
-│  │  ├─ MapLayerId.cs
-│  │  ├─ MapLayerKind.cs
-│  │  ├─ MapLayerRules.cs
-│  │  ├─ MapLayerStack.cs
-│  │  ├─ MapLayerValidator.cs
-│  │  ├─ MapRegion.cs
-│  │  ├─ MapRegionIntersection.cs
-│  │  ├─ MapRegionDraft.cs
-│  │  ├─ MapRegionId.cs
-│  │  ├─ MapRegionKind.cs
-│  │  ├─ MapRegionValidator.cs
-│  │  ├─ MapSurfaceDefinition.cs
-│  │  ├─ MapValidationResult.cs
-│  │  ├─ WorldMapState.cs
-│  │  └─ WorldMapStateOwner.cs
-│  ├─ RegionKey.cs
-│  ├─ Scene/
-│  │  ├─ SceneSpatialBoundsProjection.cs
-│  │  ├─ SceneStateOwner.Lifecycle.cs
-│  │  ├─ SceneStateOwner.Seeding.cs
-│  │  ├─ SceneStateOwner.StaticModel.cs
-│  │  ├─ SceneStateOwner.Transform.cs
-│  │  ├─ SceneStateOwner.cs
-│  │  └─ SceneWorldProjection.cs
-│  ├─ Spatial/
-│  │  ├─ DynamicAabbTree.Insert.cs
-│  │  ├─ DynamicAabbTree.Node.cs
-│  │  ├─ DynamicAabbTree.Query.cs
-│  │  ├─ DynamicAabbTree.Refit.cs
-│  │  ├─ DynamicAabbTree.Remove.cs
-│  │  ├─ DynamicAabbTree.cs
-│  │  ├─ ISpatialIndex.cs
-│  │  ├─ SpatialIndexOwner.cs
-│  │  └─ SpatialRaycastResolver.cs
-│  ├─ WorldEntityActivity.cs
-│  ├─ WorldEntityName.cs
-│  ├─ WorldEntitySnapshot.cs
-│  ├─ WorldEntityType.cs
-│  ├─ WorldPartitionEntry.cs
-│  ├─ WorldPartitionMembership.cs
-│  ├─ WorldQuery.cs
-│  └─ XuanYu.World.csproj
 ├─ XuanYu.World.Tests/
 │  ├─ Assets/
 │  │  ├─ AssetContractTests.cs
@@ -905,14 +893,14 @@
 │  │  ├─ StaticModelUiTests.cs
 │  │  └─ StaticModelValidatorTests.cs
 │  ├─ Camera/
-│  │  ├─ CameraDocumentTests.cs
-│  │  ├─ CameraFramingOccupancyTests.cs
-│  │  ├─ CameraFramingTests.cs
 │  │  ├─ CameraC2DraftFramingTests.cs
 │  │  ├─ CameraC2MapFramingTests.Helpers.cs
 │  │  ├─ CameraC2MapFramingTests.cs
-│  │  ├─ CameraNavigationUiTests.cs
+│  │  ├─ CameraDocumentTests.cs
+│  │  ├─ CameraFramingOccupancyTests.cs
+│  │  ├─ CameraFramingTests.cs
 │  │  ├─ CameraNavigationUiTests.Focus.cs
+│  │  ├─ CameraNavigationUiTests.cs
 │  │  └─ UiViewGizmoTests.cs
 │  ├─ Logging/
 │  │  ├─ FootAxamlTailContractTests.cs
@@ -931,40 +919,45 @@
 │  │  │  ├─ UiLogSummaryPriorityTests.cs
 │  │  │  ├─ UiLogSummaryTimingTests.cs
 │  │  │  ├─ UiMapCommandRoutingTests.cs
+│  │  │  ├─ UiMapDatasetContractTests.cs
+│  │  │  ├─ UiMapDatasetF1AcceptanceTests.cs
+│  │  │  ├─ UiMapDatasetF1Tests.cs
+│  │  │  ├─ UiMapDatasetF2Tests.cs
+│  │  │  ├─ UiMapDatasetF3ContractTests.cs
+│  │  │  ├─ UiMapDatasetF3Tests.cs
+│  │  │  ├─ UiMapDatasetLayerR3Tests.cs
+│  │  │  ├─ UiMapDatasetRegionBootstrapPersistenceTests.cs
+│  │  │  ├─ UiMapDatasetRegionBootstrapTests.cs
+│  │  │  ├─ UiMapDatasetRegionLayerF3Tests.cs
+│  │  │  ├─ UiMapDatasetRegionRuntimeTests.cs
+│  │  │  ├─ UiMapDatasetRegionToolActivationTests.cs
+│  │  │  ├─ UiMapDatasetRegionToolInvalidTests.cs
 │  │  │  ├─ UiMapEditorTests.cs
 │  │  │  ├─ UiMapHistoryTests.cs
 │  │  │  ├─ UiMapInitialProjectionTests.cs
+│  │  │  ├─ UiMapLayerDeleteLockRecoveryTests.cs
 │  │  │  ├─ UiMapLayerDragTests.cs
 │  │  │  ├─ UiMapLayerLockLogTests.cs
 │  │  │  ├─ UiMapLayerPanelTests.Behavior.cs
 │  │  │  ├─ UiMapLayerPanelTests.cs
 │  │  │  ├─ UiMapLayoutContractTests.cs
 │  │  │  ├─ UiMapManifestIdentityTests.cs
-│  │  │  ├─ UiMapDatasetRegionRuntimeTests.cs
-│  │  │  ├─ UiMapDatasetRegionBootstrapPersistenceTests.cs
-│  │  │  ├─ UiMapDatasetRegionBootstrapTests.cs
-│  │  │  ├─ UiMapDatasetRegionToolActivationTests.cs
-│  │  │  ├─ UiMapDatasetRegionToolInvalidTests.cs
 │  │  │  └─ UiMapManifestNavigationTests.cs
 │  │  ├─ MapBoundsTests.cs
 │  │  ├─ MapCoordinateValidationTests.cs
+│  │  ├─ MapDatasetContractTests.cs
+│  │  ├─ MapDatasetDocumentTests.cs
+│  │  ├─ MapDatasetLayerStateTests.cs
+│  │  ├─ MapDatasetRegistryF1FailureTests.cs
+│  │  ├─ MapDatasetRegistryF2Tests.cs
+│  │  ├─ MapDatasetRegistryFailureTests.cs
+│  │  ├─ MapDatasetRegistryLifecycleTests.cs
+│  │  ├─ MapDatasetStorageContractTests.cs
 │  │  ├─ MapDefaultMapTests.cs
 │  │  ├─ MapDefinitionTests.cs
 │  │  ├─ MapDocumentAggregateBridgeTests.cs
 │  │  ├─ MapDocumentOwnerChainTests.cs
 │  │  ├─ MapDocumentOwnerTests.cs
-│  │  ├─ MapManifestCreationTests.cs
-│  │  ├─ MapManifestSerializationTests.cs
-│  │  ├─ MapManifestStorageTests.cs
-│  │  ├─ MapDatasetContractTests.cs
-│  │  ├─ MapDatasetDocumentTests.cs
-│  │  ├─ MapRegionDatasetContractTests.cs
-│  │  ├─ MapRegionDatasetRuntimeTests.cs
-│  │  ├─ MapDatasetStorageContractTests.cs
-│  │  ├─ MapDatasetRegistryFailureTests.cs
-│  │  ├─ MapDatasetRegistryLifecycleTests.cs
-│  │  ├─ MapManifestValidationTests.cs
-│  │  └─ MapWorkingStorageTests.cs
 │  │  ├─ MapEnvironmentValidationTests.cs
 │  │  ├─ MapIdTests.cs
 │  │  ├─ MapJsonRoundTripTests.cs
@@ -975,45 +968,54 @@
 │  │  ├─ MapLayerStackTests.cs
 │  │  ├─ MapLayerTests.Base.cs
 │  │  ├─ MapLayerTests.cs
+│  │  ├─ MapManifestCreationTests.cs
+│  │  ├─ MapManifestSerializationTests.cs
+│  │  ├─ MapManifestStorageTests.cs
+│  │  ├─ MapManifestValidationTests.cs
+│  │  ├─ MapRegionDatasetContractTests.cs
+│  │  ├─ MapRegionDatasetRuntimeTests.cs
 │  │  ├─ MapRegionDraftTests.cs
 │  │  ├─ MapRegionTests.Geometry.cs
 │  │  ├─ MapRegionTests.Helpers.cs
 │  │  ├─ MapRegionTests.Strictness.cs
 │  │  ├─ MapRegionTests.cs
+│  │  ├─ MapRoadDatasetContractTests.cs
 │  │  ├─ MapSizeValidationTests.cs
 │  │  ├─ MapStorageFailureTests.cs
 │  │  ├─ MapStorageTests.cs
 │  │  ├─ MapSurfaceSamplerTests.cs
 │  │  ├─ MapSurfaceValidationTests.cs
+│  │  ├─ MapWorkingStorageTests.cs
 │  │  ├─ SceneMapReferenceTests.cs
 │  │  ├─ WorldMapStateOwnerTests.cs
 │  │  └─ WorldMapStateTests.cs
 │  ├─ MapEditing/
-│  │  ├─ MapGeometryHitTesterTests.cs
-│  │  ├─ MapEditSessionGeometryTests.cs
+│  │  ├─ MapCoordinateContractTests.cs
 │  │  ├─ MapEditSessionCommandTests.cs
-│  │  ├─ MapPickingRoundTripTests.cs
-│  │  ├─ MapEditSessionRegionTests.cs
 │  │  ├─ MapEditSessionCreationTests.cs
 │  │  ├─ MapEditSessionDirtyTests.cs
+│  │  ├─ MapEditSessionGeometryTests.cs
 │  │  ├─ MapEditSessionHistoryTests.cs
 │  │  ├─ MapEditSessionMapPropertiesTests.cs
+│  │  ├─ MapEditSessionRegionTests.cs
 │  │  ├─ MapEditSessionSelectionTests.cs
 │  │  ├─ MapEditSessionThreadTests.cs
 │  │  ├─ MapEditSessionValidationTests.cs
-│  │  └─ MapRenderSnapshotProjectionTests.cs
-│  ├─ Workspace/
-│  │  ├─ EditorWorkspaceManagerTests.cs
-│  │  ├─ EditorWorkspaceUiCompositionTests.cs
-│  │  └─ EditorWorkspaceUiTests.cs
+│  │  ├─ MapGeometryHitTesterTests.cs
+│  │  ├─ MapPickingRoundTripTests.cs
+│  │  ├─ MapRenderSnapshotProjectionTests.cs
+│  │  ├─ MapSurfacePickerTests.cs
+│  │  ├─ RegionDrawingF3HistoryTests.cs
+│  │  └─ RegionDrawingStateTests.cs
 │  ├─ Mode/
 │  │  ├─ EditorModeManagerTests.cs
 │  │  ├─ EditorModeUiCompositionTests.cs
 │  │  └─ EditorModeUiTests.cs
+│  ├─ RegionDrawingTestVm.cs
 │  ├─ Render/
-│  │  ├─ WorldGridIndependenceContractTests.cs
 │  │  ├─ VulkanPresentLoopContractTests.cs
-│  │  └─ VulkanPresentModeSelectionTests.cs
+│  │  ├─ VulkanPresentModeSelectionTests.cs
+│  │  └─ WorldGridIndependenceContractTests.cs
 │  ├─ Scene/
 │  │  ├─ CommandSmokeTests.cs
 │  │  ├─ EditorEnvironmentTests.cs
@@ -1084,10 +1086,62 @@
 │  │  ├─ UiHierarchyConnectorTests.cs
 │  │  ├─ UiTreeGuideTests.cs
 │  │  └─ UiTreeToggleTests.cs
+│  ├─ UiRuntime/
+│  │  ├─ DatasetLayerPanelRuntimeLayoutTests.cs
+│  │  ├─ LayerARuntimeTests.cs
+│  │  ├─ LayerPanelRuntimeLayoutTests.cs
+│  │  ├─ LayerPanelRuntimeStateTests.cs
+│  │  ├─ MapVectorOverlayAnchorContractTests.cs
+│  │  ├─ MapVectorOverlayDepthPolicyTests.cs
+│  │  ├─ MapVectorOverlayV1Tests.cs
+│  │  ├─ RegionDrawingF1ActivationRuntimeTests.cs
+│  │  ├─ RegionDrawingF1BTests.cs
+│  │  ├─ RegionDrawingF1CStabilityTests.cs
+│  │  ├─ RegionDrawingF1FullRuntimeTests.cs
+│  │  ├─ RegionDrawingF1RenderContractTests.cs
+│  │  ├─ RegionDrawingF1ResizeTests.cs
+│  │  ├─ RegionDrawingF1RuntimeRedTests.cs
+│  │  ├─ RegionDrawingF2PolygonTests.cs
+│  │  ├─ RegionPointerSafetyF2Tests.cs
+│  │  ├─ ScaleIndicatorVisibilityRuntimeTests.cs
+│  │  ├─ UiHeadlessFixture.cs
+│  │  ├─ UiRuntimeCollection.cs
+│  │  ├─ UiRuntimeRiskTests.cs
+│  │  ├─ UiRuntimeTestHost.cs
+│  │  └─ UiTestAppBuilder.cs
 │  ├─ UiTokens/
+│  │  ├─ LayerAUiCompositionTests.cs
 │  │  ├─ UiCsColorRulesTests.cs
-│  │  ├─ UiDebtBaseline.Colors.Axaml1.cs
 │  │  ├─ UiD2F1RegionToolActivationContractTests.cs
+│  │  ├─ UiD2F1RegionToolContractTests.cs
+│  │  ├─ UiD3DebtClearedTests.cs
+│  │  ├─ UiD4DebtClearedTests.cs
+│  │  ├─ UiD4F1ButtonContractTests.cs
+│  │  ├─ UiD4F1LayoutModelTests.cs
+│  │  ├─ UiD4F1TextOverflowContractTests.cs
+│  │  ├─ UiD4F1TypographyContractTests.cs
+│  │  ├─ UiD4InspectorContractTests.cs
+│  │  ├─ UiD4LayerContractTests.cs
+│  │  ├─ UiD4LayoutModelTests.cs
+│  │  ├─ UiD4MapEditorContractTests.cs
+│  │  ├─ UiD5ButtonContractTests.cs
+│  │  ├─ UiD5CorrectionBehaviorTests.cs
+│  │  ├─ UiD5CorrectionNotifyTests.cs
+│  │  ├─ UiD5CorrectionStructureTests.cs
+│  │  ├─ UiD5DangerFlowTests.cs
+│  │  ├─ UiD5DialogAndLogContractTests.cs
+│  │  ├─ UiD5FormContractTests.cs
+│  │  ├─ UiD5InputValidationTests.cs
+│  │  ├─ UiD5MapStatusTests.cs
+│  │  ├─ UiD5NotificationTests.cs
+│  │  ├─ UiD5UnsavedDialogBehaviorTests.cs
+│  │  ├─ UiD5UnsavedDialogTests.cs
+│  │  ├─ UiD5UnsavedFlowTests.cs
+│  │  ├─ UiD6AccessibilityContractTests.cs
+│  │  ├─ UiD6DpiContractTests.cs
+│  │  ├─ UiD6LogPerformanceTests.cs
+│  │  ├─ UiD6MotionContractTests.cs
+│  │  ├─ UiDebtBaseline.Colors.Axaml1.cs
 │  │  ├─ UiDebtBaseline.Colors.Axaml2.cs
 │  │  ├─ UiDebtBaseline.Colors.Cs.cs
 │  │  ├─ UiDebtBaseline.Typography.cs
@@ -1095,10 +1149,8 @@
 │  │  ├─ UiDebtBaselineBypassF2Tests.cs
 │  │  ├─ UiDebtBaselineBypassTests.cs
 │  │  ├─ UiDebtBaselineTests.cs
-│  │  ├─ UiD6AccessibilityContractTests.cs
-│  │  ├─ UiD6DpiContractTests.cs
-│  │  ├─ UiD6LogPerformanceTests.cs
-│  │  ├─ UiD6MotionContractTests.cs
+│  │  ├─ UiF3LayerRowContractTests.cs
+│  │  ├─ UiLayerDeleteDialogContractTests.cs
 │  │  ├─ UiSourceContractAnalyzer.CsRules.cs
 │  │  ├─ UiSourceContractAnalyzer.Icon.cs
 │  │  ├─ UiSourceContractAnalyzer.Inline.cs
@@ -1106,34 +1158,18 @@
 │  │  ├─ UiSourceContractAnalyzer.cs
 │  │  ├─ UiSourceContractAnalyzerTests.cs
 │  │  ├─ UiSourceContractAnalyzerTokenRefTests.cs
-│  │  ├─ UiD3DebtClearedTests.cs
-│  │  ├─ UiD4DebtClearedTests.cs
-│  │  ├─ UiD4F1LayoutModelTests.cs
-│  │  ├─ UiD4F1TextOverflowContractTests.cs
-│  │  ├─ UiD4F1TypographyContractTests.cs
-│  │  ├─ UiD4InspectorContractTests.cs
-│  │  ├─ UiD4LayerContractTests.cs
-│  │  ├─ UiF3LayerRowContractTests.cs
-│  │  ├─ UiD4LayoutModelTests.cs
-│  │  ├─ UiD4MapEditorContractTests.cs
-│  │  ├─ UiD5ButtonContractTests.cs
-│  │  ├─ UiD5DangerFlowTests.cs
-│  │  ├─ UiD5DialogAndLogContractTests.cs
-│  │  ├─ UiD5FormContractTests.cs
-│  │  ├─ UiD5NotificationTests.cs
-│  │  ├─ UiD5CorrectionBehaviorTests.cs
-│  │  ├─ UiD5CorrectionNotifyTests.cs
-│  │  ├─ UiD5CorrectionStructureTests.cs
-│  │  ├─ UiD5InputValidationTests.cs
-│  │  ├─ UiD5UnsavedFlowTests.cs
-│  │  ├─ UiD5MapStatusTests.cs
-│  │  ├─ UiD5UnsavedDialogTests.cs
-│  │  ├─ UiD5UnsavedDialogBehaviorTests.cs
 │  │  ├─ UiTokenManifestGraphTests.cs
 │  │  ├─ UiTokenManifestTests.cs
 │  │  ├─ UiTopTabStripContractTests.cs
 │  │  ├─ UiTopTabStripModelHintAndListTests.cs
 │  │  └─ UiTopTabStripModelTests.cs
+│  ├─ Viewport/
+│  │  └─ NativePointerRoutePolicyTests.cs
+│  ├─ Workspace/
+│  │  ├─ EditorWorkspaceManagerTests.cs
+│  │  ├─ EditorWorkspaceUiCompositionTests.cs
+│  │  ├─ EditorWorkspaceUiTests.cs
+│  │  └─ RegionAuthoringHierarchyTests.cs
 │  ├─ WorldPartition/
 │  │  ├─ WorldPartitionInvariantTests.cs
 │  │  ├─ WorldPartitionMigrationTests.Activity.cs
@@ -1142,6 +1178,71 @@
 │  │  ├─ WorldPartitionTests.cs
 │  │  └─ WorldPartitionUiTests.cs
 │  └─ XuanYu.World.Tests.csproj
+├─ XuanYu.World/
+│  ├─ EntityRegistry.Authoring.cs
+│  ├─ EntityRegistry.Replace.cs
+│  ├─ EntityRegistry.cs
+│  ├─ GlobalWorld.Authoring.cs
+│  ├─ GlobalWorld.Query.cs
+│  ├─ GlobalWorld.Snapshot.cs
+│  ├─ GlobalWorld.cs
+│  ├─ GridWorldPartitionStrategy.cs
+│  ├─ IWorldPartitionStrategy.cs
+│  ├─ Map/
+│  │  ├─ MapBounds.cs
+│  │  ├─ MapCoordinateContract.cs
+│  │  ├─ MapDefaultDefinition.cs
+│  │  ├─ MapDefinition.cs
+│  │  ├─ MapDefinitionValidator.cs
+│  │  ├─ MapGeometry.cs
+│  │  ├─ MapId.cs
+│  │  ├─ MapLayer.cs
+│  │  ├─ MapLayerId.cs
+│  │  ├─ MapLayerKind.cs
+│  │  ├─ MapLayerRules.cs
+│  │  ├─ MapLayerStack.cs
+│  │  ├─ MapLayerValidator.cs
+│  │  ├─ MapRegion.cs
+│  │  ├─ MapRegionDraft.cs
+│  │  ├─ MapRegionId.cs
+│  │  ├─ MapRegionIntersection.cs
+│  │  ├─ MapRegionKind.cs
+│  │  ├─ MapRegionValidator.cs
+│  │  ├─ MapRoad.cs
+│  │  ├─ MapRoadDraft.cs
+│  │  ├─ MapRoadId.cs
+│  │  ├─ MapRoadValidator.cs
+│  │  ├─ MapSurfaceDefinition.cs
+│  │  ├─ MapValidationResult.cs
+│  │  ├─ WorldMapState.cs
+│  │  └─ WorldMapStateOwner.cs
+│  ├─ RegionKey.cs
+│  ├─ Scene/
+│  │  ├─ SceneSpatialBoundsProjection.cs
+│  │  ├─ SceneStateOwner.Lifecycle.cs
+│  │  ├─ SceneStateOwner.Seeding.cs
+│  │  ├─ SceneStateOwner.StaticModel.cs
+│  │  ├─ SceneStateOwner.Transform.cs
+│  │  ├─ SceneStateOwner.cs
+│  │  └─ SceneWorldProjection.cs
+│  ├─ Spatial/
+│  │  ├─ DynamicAabbTree.Insert.cs
+│  │  ├─ DynamicAabbTree.Node.cs
+│  │  ├─ DynamicAabbTree.Query.cs
+│  │  ├─ DynamicAabbTree.Refit.cs
+│  │  ├─ DynamicAabbTree.Remove.cs
+│  │  ├─ DynamicAabbTree.cs
+│  │  ├─ ISpatialIndex.cs
+│  │  ├─ SpatialIndexOwner.cs
+│  │  └─ SpatialRaycastResolver.cs
+│  ├─ WorldEntityActivity.cs
+│  ├─ WorldEntityName.cs
+│  ├─ WorldEntitySnapshot.cs
+│  ├─ WorldEntityType.cs
+│  ├─ WorldPartitionEntry.cs
+│  ├─ WorldPartitionMembership.cs
+│  ├─ WorldQuery.cs
+│  └─ XuanYu.World.csproj
 ├─ changelog.md
 ├─ docs/
 │  ├─ CODE_CONSTITUTION.md
@@ -1175,77 +1276,384 @@
 │  │  ├─ lessons.md
 │  │  ├─ performance.md
 │  │  ├─ rendering.md
-│  │  └─ ui.md
-│  ├─ milestones/
-│  │  ├─ closed/
-│  │  │  ├─ MAP-A/
-│  │  │  │  └─ R2-closeout.md
-│  │  │  ├─ MAP-DATA-A/
-│  │  │  │  └─ R1-closeout.md
-│  │  │  └─ MAP-DOC-A/
-│  │  │     └─ R3-closeout.md
-│  │  └─ current/
-│  │     ├─ EDITOR-A/
-│  │     │  ├─ EDITOR-A-R1-workspace-contract.md
-│  │     │  ├─ EDITOR-A-R2-workspace-switch.md
-│  │     │  ├─ EDITOR-A-R3-F1-shell-compact.md
-│  │     │  ├─ EDITOR-A-R3-F1-closeout.md
-│  │     │  ├─ EDITOR-A-R3-mode-shell.md
-│  │     │  └─ XYUI-backlog.md
-│  │     │  ├─ editor-a-r1-workspace-contract.svg
-│  │     │  ├─ editor-a-r2-workspace-switch.svg
-│  │     │  └─ editor-a-r3-mode-shell.svg
-│  │     ├─ LAYER-A/
-│  │     │  └─ LAYER-A-R1-layer-shell.md
-│  │     └─ MAP-A/
-│  │        ├─ MAP-A-CLOSE-plan.md
-│  │        ├─ MAP-A-strategic-closeout.md
-│  │        ├─ R3-C2-closure.md
-│  │        ├─ R3-F1-closeout.md
-│  │        ├─ R3-backlog.md
-│  │        ├─ map-contract.md
-│  │        ├─ viewport-overlay-development-plan.md
-│  │        └─ viewport-overlay-roadmap.svg
-│  │     └─ MAP-DOC-A/
-│  │        ├─ MAP-DOC-A-R1-acceptance.md
-│  │        ├─ MAP-DOC-A-R1-F1-acceptance.md
-│  │        ├─ MAP-DOC-A-R1-F1-carryover.md
-│  │        ├─ MAP-DOC-A-R2-acceptance.md
-│  │        ├─ MAP-DOC-A-R2-F1-root-cause.md
-│  │        ├─ MAP-DOC-A-R2-F2-acceptance.md
-│  │        ├─ MAP-DOC-A-R2-F2-root-cause.md
-│  │        ├─ MAP-DOC-A-R2-F3-acceptance.md
-│  │        ├─ MAP-DOC-A-R2-F3-root-cause.md
-│  │        ├─ MAP-DOC-A-R2-F4-acceptance.md
-│  │        ├─ MAP-DOC-A-R2-F4-root-cause.md
-│  │        ├─ MAP-DOC-A-R2-closeout.md
-│  │        ├─ MAP-DOC-A-R2-plan.md
-│  │        ├─ MAP-DOC-A-R3-F2-acceptance.md
-│  │        ├─ MAP-DOC-A-R3-F2-ui-closeout.svg
-│  │        ├─ MAP-DOC-A-R3-F3-acceptance.md
-│  │        ├─ MAP-DOC-A-R3-F3-ui-spec-rework.svg
-│  │        ├─ MAP-DOC-A-R3-F4-acceptance.md
-│  │        └─ MAP-DOC-A-R3-plan.md
-│  │        └─ MAP-DOC-A-R1-plan.md
-│  │     └─ MAP-DATA-A/
-│  │        ├─ MAP-DATA-A-R1-acceptance.md
-│  │        ├─ MAP-DATA-A-R1-F1-acceptance.md
-│  │        ├─ MAP-DATA-A-R1-F2-acceptance.md
-│  │        └─ MAP-DATA-A-R1-F3-acceptance.md
-│  └─ ui/
-│     ├─ 玄域引擎_UI真机基线清单.md
-│     ├─ 玄域引擎_UI规范_1.0.md
-│     └─ 玄域引擎_旧UI审计矩阵.md
+│  │  ├─ ui.md
+│  │  └─ ui/
+│  │     └─ viewport-ui-control-development-guide.md
+│  └─ milestones/
+│     ├─ closed/
+│     │  ├─ MAP-A/
+│     │  │  └─ R2-closeout.md
+│     │  ├─ MAP-DATA-A/
+│     │  │  └─ R1-closeout.md
+│     │  └─ MAP-DOC-A/
+│     │     └─ R3-closeout.md
+│     └─ current/
+│        ├─ EDITOR-A/
+│        │  ├─ EDITOR-A-R1-workspace-contract.md
+│        │  ├─ EDITOR-A-R2-workspace-switch.md
+│        │  ├─ EDITOR-A-R3-F1-closeout.md
+│        │  ├─ EDITOR-A-R3-F1-shell-compact.md
+│        │  ├─ EDITOR-A-R3-mode-shell.md
+│        │  ├─ XYUI-backlog.md
+│        │  ├─ editor-a-r1-workspace-contract.svg
+│        │  ├─ editor-a-r2-workspace-switch.svg
+│        │  └─ editor-a-r3-mode-shell.svg
+│        ├─ LAYER-A/
+│        │  └─ LAYER-A-R1-layer-shell.md
+│        ├─ MAP-A/
+│        │  ├─ MAP-A-CLOSE-plan.md
+│        │  ├─ MAP-A-strategic-closeout.md
+│        │  ├─ R3-C2-closure.md
+│        │  ├─ R3-F1-closeout.md
+│        │  ├─ R3-backlog.md
+│        │  ├─ map-contract.md
+│        │  ├─ viewport-overlay-development-plan.md
+│        │  └─ viewport-overlay-roadmap.svg
+│        ├─ MAP-DATA-A/
+│        │  ├─ MAP-DATA-A-R1-F1-acceptance.md
+│        │  ├─ MAP-DATA-A-R1-F2-acceptance.md
+│        │  ├─ MAP-DATA-A-R1-F3-acceptance.md
+│        │  ├─ MAP-DATA-A-R1-acceptance.md
+│        │  ├─ MAP-DATA-A-R2-F1-acceptance.md
+│        │  ├─ MAP-DATA-A-R2-F1-plan.md
+│        │  ├─ MAP-DATA-A-R2-F2-F2-F1-acceptance.md
+│        │  ├─ MAP-DATA-A-R2-F2-F2-F1-visible-delete-dialog.md
+│        │  ├─ MAP-DATA-A-R2-F2-F2-layer-delete-ui-lock-recovery-acceptance.md
+│        │  ├─ MAP-DATA-A-R2-F2-F2-layer-delete-ui-lock-recovery-plan.md
+│        │  ├─ MAP-DATA-A-R2-F2-acceptance.md
+│        │  ├─ MAP-DATA-A-R2-F2-plan.md
+│        │  ├─ MAP-DATA-A-R2-F2-region-pointer-safety-acceptance.md
+│        │  ├─ MAP-DATA-A-R2-F2-region-pointer-safety-plan.md
+│        │  ├─ MAP-DATA-A-R2-F2-region-pointer-safety.svg
+│        │  ├─ MAP-DATA-A-R2-acceptance.md
+│        │  └─ MAP-DATA-A-R2-plan.md
+│        └─ MAP-DOC-A/
+│           ├─ MAP-DOC-A-R1-F1-acceptance.md
+│           ├─ MAP-DOC-A-R1-F1-carryover.md
+│           ├─ MAP-DOC-A-R1-acceptance.md
+│           ├─ MAP-DOC-A-R1-plan.md
+│           ├─ MAP-DOC-A-R2-F1-root-cause.md
+│           ├─ MAP-DOC-A-R2-F2-acceptance.md
+│           ├─ MAP-DOC-A-R2-F2-root-cause.md
+│           ├─ MAP-DOC-A-R2-F3-acceptance.md
+│           ├─ MAP-DOC-A-R2-F3-root-cause.md
+│           ├─ MAP-DOC-A-R2-F4-acceptance.md
+│           ├─ MAP-DOC-A-R2-F4-root-cause.md
+│           ├─ MAP-DOC-A-R2-acceptance.md
+│           ├─ MAP-DOC-A-R2-closeout.md
+│           ├─ MAP-DOC-A-R2-plan.md
+│           ├─ MAP-DOC-A-R3-F2-acceptance.md
+│           ├─ MAP-DOC-A-R3-F2-ui-closeout.svg
+│           ├─ MAP-DOC-A-R3-F3-acceptance.md
+│           ├─ MAP-DOC-A-R3-F3-ui-spec-rework.svg
+│           ├─ MAP-DOC-A-R3-F4-acceptance.md
+│           ├─ MAP-DOC-A-R3-acceptance.md
+│           └─ MAP-DOC-A-R3-plan.md
+├─ "docs/
+│  ├─ governance/
+│  │  └─ \347\211\210\346\234\254\345\217\267\350\247\204\350\214\203\344\270\216\345\216\206\345\217\262\346\230\240\345\260\204.md"
+│  ├─ ui/
+│  │  ├─ ARCH-UI-SPEC-R1-D3_\344\270\273\347\252\227\345\217\243\345\244\226\345\243\263\344\270\216\351\241\266\345\261\202\351\241\265\347\255\276.svg"
+│  │  ├─ ARCH-UI-SPEC-R1-D4-F1_\345\215\225\350\241\214\345\261\236\346\200\247\350\241\214\344\277\256\345\244\215.svg"
+│  │  ├─ ARCH-UI-SPEC-R1-D4_\345\267\245\344\275\234\351\235\242\346\235\277\346\262\273\347\220\206.svg"
+│  │  ├─ ARCH-UI-SPEC-R1-D5_\346\216\247\344\273\266\347\212\266\346\200\201\344\270\216\345\274\271\347\252\227\351\200\232\347\237\245\346\262\273\347\220\206.svg"
+│  │  ├─ \347\216\204\345\237\237\345\274\225\346\223\216_UI\347\234\237\346\234\272\345\237\272\347\272\277\346\270\205\345\215\225.md"
+│  │  ├─ \347\216\204\345\237\237\345\274\225\346\223\216_UI\350\247\204\350\214\203_1.0.md"
+│  │  └─ \347\216\204\345\237\237\345\274\225\346\223\216_\346\227\247UI\345\256\241\350\256\241\347\237\251\351\230\265.md"
+│  └─ \347\216\204\345\237\237\345\274\225\346\223\216_AI\345\274\200\345\217\221\345\256\252\346\263\225.md"
 ├─ file-tree.md
 ├─ run.bat
 ├─ samples/
 │  └─ world-c-r1-ten-triangles.xyscene
-└─ scripts/
-   ├─ arch-a-guard-editor.ps1
-   ├─ arch-a-guard-render.ps1
-   ├─ arch-a-guard-warcore.ps1
-   ├─ arch-a-guard-world.ps1
-   └─ arch-a-guard.ps1
+├─ scripts/
+│  ├─ arch-a-guard-editor.ps1
+│  ├─ arch-a-guard-render.ps1
+│  ├─ arch-a-guard-warcore.ps1
+│  ├─ arch-a-guard-world.ps1
+│  ├─ arch-a-guard.ps1
+│  └─ generate-ui-tokens.py
+└─ xyui/
+   ├─ audit/
+   │  ├─ XYUI0/
+   │  │  ├─ decision-classification.json
+   │  │  ├─ decision-classification.md
+   │  │  ├─ evidence-index.json
+   │  │  └─ source-audit.md
+   │  ├─ XYUI1/
+   │  │  └─ R5-F4-fidelity-matrix.md
+   │  ├─ XYUI4/
+   │  │  ├─ conflict-matrix.md
+   │  │  ├─ reconciliation.md
+   │  │  └─ source-audit.md
+   │  ├─ XYUI5/
+   │  │  ├─ reconciliation.md
+   │  │  └─ source-audit.md
+   │  ├─ XYUI6/
+   │  │  ├─ reconciliation.md
+   │  │  └─ source-audit.md
+   │  ├─ XYUI7/
+   │  │  ├─ reconciliation.md
+   │  │  └─ source-audit.md
+   │  ├─ XYUI8/
+   │  │  ├─ reconciliation.md
+   │  │  └─ source-audit.md
+   │  └─ cross-audit.md
+   ├─ avalonia/
+   │  ├─ XYUI.Avalonia.slnx
+   │  ├─ gallery/
+   │  │  ├─ CATALOG-COVERAGE.md
+   │  │  ├─ README.md
+   │  │  ├─ XYUI-1-COMPONENT-INVENTORY.md
+   │  │  └─ XYUI.Avalonia.Gallery/
+   │  │     ├─ App.axaml
+   │  │     ├─ App.axaml.cs
+   │  │     ├─ MainWindow.axaml
+   │  │     ├─ MainWindow.axaml.cs
+   │  │     ├─ PaletteCatalog.cs
+   │  │     ├─ PaletteViewModel.cs
+   │  │     ├─ Program.cs
+   │  │     ├─ ShapeCatalog.cs
+   │  │     ├─ ShapeViewModel.cs
+   │  │     ├─ TypographyCatalog.cs
+   │  │     ├─ TypographyViewModel.cs
+   │  │     ├─ Views/
+   │  │     │  ├─ CatalogView.axaml
+   │  │     │  ├─ CatalogView.axaml.cs
+   │  │     │  ├─ ComponentSamplesView.axaml
+   │  │     │  ├─ ComponentSamplesView.axaml.cs
+   │  │     │  ├─ DensitySamplesView.axaml
+   │  │     │  ├─ DensitySamplesView.axaml.cs
+   │  │     │  ├─ FoundationSamplesView.axaml
+   │  │     │  ├─ FoundationSamplesView.axaml.cs
+   │  │     │  ├─ FoundationStatesView.axaml
+   │  │     │  ├─ FoundationStatesView.axaml.cs
+   │  │     │  ├─ InteractionStatesView.axaml
+   │  │     │  ├─ InteractionStatesView.axaml.cs
+   │  │     │  ├─ PaletteView.axaml
+   │  │     │  ├─ PaletteView.axaml.cs
+   │  │     │  ├─ ShapeSamplesView.axaml
+   │  │     │  ├─ ShapeSamplesView.axaml.cs
+   │  │     │  ├─ ShapeView.axaml
+   │  │     │  ├─ ShapeView.axaml.cs
+   │  │     │  ├─ TypographySamplesView.axaml
+   │  │     │  ├─ TypographySamplesView.axaml.cs
+   │  │     │  ├─ TypographyView.axaml
+   │  │     │  ├─ TypographyView.axaml.cs
+   │  │     │  ├─ XYUI1ComponentDocumentView.axaml
+   │  │     │  ├─ XYUI1ComponentDocumentView.axaml.cs
+   │  │     │  ├─ XYUI1DocumentationView.axaml
+   │  │     │  ├─ XYUI1DocumentationView.axaml.cs
+   │  │     │  ├─ XYUI1GalleryView.axaml
+   │  │     │  ├─ XYUI1GalleryView.axaml.cs
+   │  │     │  ├─ XYUI1ModuleOverviewView.axaml
+   │  │     │  └─ XYUI1ModuleOverviewView.axaml.cs
+   │  │     ├─ XYBadgePreviewFactory.cs
+   │  │     ├─ XYMonoPreviewFactory.cs
+   │  │     ├─ XYSelectableTextPreviewFactory.cs
+   │  │     ├─ XYUI.Avalonia.Gallery.csproj
+   │  │     ├─ XYUI1DocumentationCatalog.Api.cs
+   │  │     ├─ XYUI1DocumentationCatalog.Content.cs
+   │  │     ├─ XYUI1DocumentationCatalog.cs
+   │  │     ├─ XYUI1DocumentationModels.cs
+   │  │     ├─ XYUI1DocumentationViewModel.cs
+   │  │     └─ XYUI1GalleryCatalog.cs
+   │  ├─ src/
+   │  │  └─ XYUI.Avalonia/
+   │  │     ├─ Catalog/
+   │  │     │  ├─ XyuiCatalogEntry.cs
+   │  │     │  ├─ XyuiCatalogPaths.cs
+   │  │     │  ├─ XyuiCatalogSource.cs
+   │  │     │  ├─ XyuiCatalogSpecReader.cs
+   │  │     │  ├─ XyuiCatalogTruth.cs
+   │  │     │  └─ XyuiCatalogTypeMap.cs
+   │  │     ├─ Controls/
+   │  │     │  ├─ XYBadge.cs
+   │  │     │  ├─ XYButton.cs
+   │  │     │  ├─ XYCaption.cs
+   │  │     │  ├─ XYCheckbox.cs
+   │  │     │  ├─ XYCodeText.cs
+   │  │     │  ├─ XYEmptyText.cs
+   │  │     │  ├─ XYErrorText.cs
+   │  │     │  ├─ XYHeading.cs
+   │  │     │  ├─ XYHelpText.cs
+   │  │     │  ├─ XYIcon.cs
+   │  │     │  ├─ XYIconButton.cs
+   │  │     │  ├─ XYIconLabel.cs
+   │  │     │  ├─ XYLabel.cs
+   │  │     │  ├─ XYLink.cs
+   │  │     │  ├─ XYMonoDataRow.cs
+   │  │     │  ├─ XYMonoText.Layout.cs
+   │  │     │  ├─ XYMonoText.cs
+   │  │     │  ├─ XYRichText.cs
+   │  │     │  ├─ XYSearchHighlight.cs
+   │  │     │  ├─ XYSectionTitle.cs
+   │  │     │  ├─ XYSelectableText.cs
+   │  │     │  ├─ XYSeparator.cs
+   │  │     │  ├─ XYShortcutHint.cs
+   │  │     │  ├─ XYStatusBadge.cs
+   │  │     │  ├─ XYStatusDot.cs
+   │  │     │  ├─ XYText.cs
+   │  │     │  ├─ XYTextField.cs
+   │  │     │  ├─ XYToggleButton.cs
+   │  │     │  ├─ XYTooltip.cs
+   │  │     │  ├─ XYTruncatedText.cs
+   │  │     │  ├─ XYWarningText.cs
+   │  │     │  ├─ XyuiBadgeTagPath.cs
+   │  │     │  ├─ XyuiButtonVariant.cs
+   │  │     │  ├─ XyuiComponentStyles.Semantic.cs
+   │  │     │  ├─ XyuiComponentStyles.Surfaces.cs
+   │  │     │  ├─ XyuiComponentStyles.Typography.cs
+   │  │     │  ├─ XyuiComponentStyles.cs
+   │  │     │  ├─ XyuiControlStyles.cs
+   │  │     │  ├─ XyuiTextComponent.cs
+   │  │     │  └─ XyuiVectorTextSurface.cs
+   │  │     ├─ Foundation/
+   │  │     │  ├─ XyuiColorToken.cs
+   │  │     │  ├─ XyuiColorTokens.Accent.cs
+   │  │     │  ├─ XyuiColorTokens.Border.cs
+   │  │     │  ├─ XyuiColorTokens.Core.cs
+   │  │     │  ├─ XyuiColorTokens.Editor.cs
+   │  │     │  ├─ XyuiColorTokens.Icon.cs
+   │  │     │  ├─ XyuiColorTokens.Semantic.cs
+   │  │     │  ├─ XyuiColorTokens.State.cs
+   │  │     │  ├─ XyuiColorTokens.Surface.cs
+   │  │     │  ├─ XyuiColorTokens.Text.cs
+   │  │     │  └─ XyuiColorTokens.cs
+   │  │     ├─ Interaction/
+   │  │     │  ├─ XyuiFocusStyles.cs
+   │  │     │  ├─ XyuiInteractionState.cs
+   │  │     │  └─ XyuiInteractionStyles.cs
+   │  │     ├─ Spatial/
+   │  │     │  ├─ XyuiShapeStyles.cs
+   │  │     │  ├─ XyuiSpatial.cs
+   │  │     │  └─ XyuiSpatialTokens.cs
+   │  │     ├─ Theme/
+   │  │     │  ├─ XyuiSectionTitleResources.cs
+   │  │     │  └─ XyuiTheme.cs
+   │  │     ├─ Typography/
+   │  │     │  ├─ XyuiTextStyles.cs
+   │  │     │  ├─ XyuiTypography.cs
+   │  │     │  └─ XyuiTypographyTokens.cs
+   │  │     ├─ Vector/
+   │  │     │  └─ XyuiVectorIcons.cs
+   │  │     └─ XYUI.Avalonia.csproj
+   │  └─ tests/
+   │     └─ XYUI.Avalonia.Tests/
+   │        ├─ BadgeRuntimeTests.cs
+   │        ├─ BrushRuntimeTests.cs
+   │        ├─ CanonicalAlignmentTests.cs
+   │        ├─ CatalogSourceTests.cs
+   │        ├─ CodeTextRuntimeTests.cs
+   │        ├─ ControlSurfaceTests.cs
+   │        ├─ GalleryInteractionContractTests.cs
+   │        ├─ GallerySmokeTests.cs
+   │        ├─ GalleryThemeConstructionTests.cs
+   │        ├─ InteractionCombinationTests.cs
+   │        ├─ InteractionStateTests.cs
+   │        ├─ MonoTextResponsiveTests.cs
+   │        ├─ MonoTextRuntimeTests.cs
+   │        ├─ R5F4F1AlignmentTests.cs
+   │        ├─ R5F4FidelityTests.cs
+   │        ├─ SearchHighlightRuntimeTests.cs
+   │        ├─ SecondTruthTests.cs
+   │        ├─ SelectableTextRuntimeTests.cs
+   │        ├─ ShapeRuntimeTests.cs
+   │        ├─ SkeletonTests.cs
+   │        ├─ SpatialTokenTests.cs
+   │        ├─ ThemeRuntimeTests.cs
+   │        ├─ TypographyRuntimeTests.cs
+   │        ├─ TypographyTokenTests.cs
+   │        ├─ XYUI.Avalonia.Tests.csproj
+   │        ├─ XYUI1CoverageTests.cs
+   │        ├─ XYUI1DocumentationTests.cs
+   │        ├─ XYUI1FidelityTests.cs
+   │        ├─ XyuiHeadlessCollection.cs
+   │        ├─ XyuiHeadlessFixture.cs
+   │        └─ XyuiTestAppBuilder.cs
+   ├─ governance/
+   │  ├─ XYUI-A-plan.md
+   │  └─ amendments.md
+   ├─ packs/
+   │  └─ core-0.1/
+   │     ├─ AGENT-GUIDE.md
+   │     ├─ README.md
+   │     ├─ gaps.json
+   │     └─ manifest.json
+   ├─ registry/
+   │  ├─ examples/
+   │  │  └─ foundation-registry.example.json
+   │  ├─ foundation/
+   │  │  ├─ README.md
+   │  │  ├─ foundation-registry.json
+   │  │  ├─ foundation-registry.manifest.json
+   │  │  ├─ identity-map.json
+   │  │  ├─ relationship-map.json
+   │  │  └─ validation-report.md
+   │  └─ schema/
+   │     ├─ README.md
+   │     └─ foundation-registry.schema.json
+   ├─ source/
+   │  ├─ XYUI0/
+   │  │  └─ XYUI-0.md
+   │  ├─ XYUI1/
+   │  │  └─ XYUI-1.md
+   │  ├─ XYUI2/
+   │  │  └─ XYUI-2.md
+   │  ├─ XYUI3/
+   │  │  └─ XYUI-3.md
+   │  ├─ XYUI4/
+   │  │  └─ XYUI-4.md
+   │  ├─ XYUI5/
+   │  │  └─ XYUI-5.md
+   │  ├─ XYUI6/
+   │  │  └─ XYUI-6.md
+   │  ├─ XYUI7/
+   │  │  └─ XYUI-7.md
+   │  └─ XYUI8/
+   │     └─ XYUI-8.md
+   ├─ specs/
+   │  ├─ XYUI1/
+   │  │  ├─ XYUI-1.canonical.md
+   │  │  ├─ XYUI-1.gaps.json
+   │  │  ├─ XYUI-1.identity.json
+   │  │  └─ XYUI-1.mapping.json
+   │  ├─ XYUI2/
+   │  │  ├─ XYUI-2.canonical.md
+   │  │  ├─ XYUI-2.gaps.json
+   │  │  └─ XYUI-2.mapping.json
+   │  ├─ XYUI3/
+   │  │  ├─ XYUI-3.canonical.md
+   │  │  ├─ XYUI-3.gaps.json
+   │  │  └─ XYUI-3.mapping.json
+   │  ├─ XYUI4/
+   │  │  ├─ XYUI-4.canonical.md
+   │  │  ├─ XYUI-4.gaps.json
+   │  │  └─ XYUI-4.mapping.json
+   │  ├─ XYUI5/
+   │  │  ├─ XYUI-5.canonical.md
+   │  │  ├─ XYUI-5.gaps.json
+   │  │  └─ XYUI-5.mapping.json
+   │  ├─ XYUI6/
+   │  │  ├─ XYUI-6.canonical.md
+   │  │  ├─ XYUI-6.gaps.json
+   │  │  └─ XYUI-6.mapping.json
+   │  ├─ XYUI7/
+   │  │  ├─ XYUI-7.canonical.md
+   │  │  ├─ XYUI-7.gaps.json
+   │  │  └─ XYUI-7.mapping.json
+   │  └─ XYUI8/
+   │     ├─ XYUI-8.canonical.md
+   │     ├─ XYUI-8.gaps.json
+   │     └─ XYUI-8.mapping.json
+   └─ tokens/
+      ├─ architecture/
+      │  ├─ token-architecture.json
+      │  ├─ token-architecture.md
+      │  └─ token-canonical-map.json
+      └─ audit/
+         ├─ token-audit.md
+         ├─ token-collision-matrix.json
+         └─ token-occurrences.json
 ```
 
 ## 文件职责索引
@@ -2425,7 +2833,9 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.State.cs` — XY.State.* 交互状态与 Disabled/ReadOnly/Locked 三态 17 色。
 - `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Semantic.cs` — XY.Semantic.* 语义四态三通道 12 色。
 - `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Editor.cs` — XY.Editor.* 编辑器专用 16 色。
+- `xyui/avalonia/src/XYUI.Avalonia/Foundation/XyuiColorTokens.Icon.cs` — XYUI 图标与辅助标记的 Light/Dark 语义色 token。
 - `xyui/avalonia/src/XYUI.Avalonia/Theme/XyuiTheme.cs` — Light/Dark 双主题 ResourceDictionary 构建器（canonical 成对值）。
+- `xyui/avalonia/src/XYUI.Avalonia/Theme/XyuiSectionTitleResources.cs` — SectionTitle S-05 左侧短竖线与标题布局主题资源。
 - `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiInteractionState.cs` — 交互状态 selector contract 与 Canonical 资源键唯一真值（:pointerover/:pressed/:disabled/:selected/:checked/:focus；Checked 只提供 selector，不定义统一视觉）。
 - `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiInteractionStyles.cs` — 只负责 Hover/Pressed/Selected/Focus/Disabled 状态视觉，不负责 Component Default Appearance 或 Global Checked Visual Style。
 - `xyui/avalonia/src/XYUI.Avalonia/Interaction/XyuiFocusStyles.cs` — 焦点边框环两条样式（xyui-focusable，与 Hover/Selected 视觉分离）。
@@ -2448,6 +2858,8 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Content.cs` — 24 个组件的基础用法、变体和状态文案。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Api.cs` — 真实 Avalonia 属性与 Foundation Token 文档表。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.cs` — 左侧导航选择与模块/组件文档视图切换模型。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYBadgePreviewFactory.cs` — Badge Default/Accent 左指针标签的真实 Gallery Preview 工厂。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYSelectableTextPreviewFactory.cs` — SelectableText 默认/Technical 变体与独立 Copy Mark Preview 工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1DocumentationView.axaml` — Foundation 与 XYUI-1 左侧文档导航及主文档承载区。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1DocumentationView.axaml.cs` — 文档导航视图代码隐藏与模型初始化。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml` — XYUI-1 模块概览与 24 项紧凑组件索引。
@@ -2460,11 +2872,19 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XyuiHeadlessCollection.cs` — Headless 串行 collection 定义（禁并行）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SkeletonTests.cs` — 骨架引用链与 BrushKey 命名测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/CanonicalAlignmentTests.cs` — token 表与 token-canonical-map.json 逐条对照。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/BadgeRuntimeTests.cs` — Badge 高度、Auto 宽度、左对齐与左指针几何运行时回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/BrushRuntimeTests.cs` — 主题字典 key/类型/值/重复/缺失测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/CodeTextRuntimeTests.cs` — CodeText 正文与右下 Vector Code Mark 的独立颜色、尺寸和布局回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SecondTruthTests.cs` — 防回潮：未登记 hex 扫描 + AXAML 资源引用可解析。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/R5F4FidelityTests.cs` — R5-F4 Typography、Mono、Variant、Keycap、Tooltip、Identity/GAP 回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/R5F4F1AlignmentTests.cs` — R5-F4-F1 SectionTitle 与 EmptyText 默认无 Vector Decoration 回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/GallerySmokeTests.cs` — App 资源、窗口标题、色板覆盖 Headless 冒烟。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/GalleryThemeConstructionTests.cs` — Gallery Light/Dark 主题构造与切换资源一致性测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/MonoTextResponsiveTests.cs` — MonoText 共享 Label/Value/Unit 列在宽度变化下的稳定对齐回归。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/MonoTextRuntimeTests.cs` — MonoText 三列字体、字重、间距与对齐运行时合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/SearchHighlightRuntimeTests.cs` — SearchHighlight 高亮正文与 8 DIP 搜索标记间距、色调和几何回归。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/SelectableTextRuntimeTests.cs` — SelectableText 选择能力、Technical 字体及独立 Copy Mark 回归。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/ThemeRuntimeTests.cs` — XYUI 控件 Light/Dark 主题资源解析与运行时切换回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI1DocumentationTests.cs` — XYUI-1 模块概览、24 页导航和真实文档数据覆盖测试。
 - `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTypographyTokens.cs` — Typography token 权威常量表（字体/字号/字重/行高/字距，转录 token-canonical-map.json）。
 - `xyui/avalonia/src/XYUI.Avalonia/Typography/XyuiTypography.cs` — Typography 基础资源字典构建（31 个 XY.Font*/XY.FontSize*/XY.FontWeight*/XY.LineHeight*/XY.LetterSpacing* 资源）。
@@ -2510,8 +2930,11 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSectionTitle.cs` — XYUI-1-05 区块标题组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYLink.cs` — XYUI-1-06 超链接组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYCodeText.cs` — XYUI-1-07 代码与 ID 组件，使用右下 Vector Geometry 角标。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYMonoDataRow.cs` — MonoText 的 Label/Value/Unit 结构化数据行模型。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYMonoText.Layout.cs` — MonoText 共享三列布局、响应宽度与合法列间距实现。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYMonoText.cs` — XYUI-1-08 纯等宽数据组件，无 surface 背景和边框。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYBadge.cs` — XYUI-1-09 标签组件及 Default/Accent 变体。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiBadgeTagPath.cs` — Badge 单一背景的克制左指针 Tag 几何构建器。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYStatusBadge.cs` — XYUI-1-10 状态标签及五种状态 API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYStatusDot.cs` — XYUI-1-11 状态圆点及五种状态 API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIcon.cs` — XYUI-1-12 Path Geometry 图标组件及 Registry/size/stroke API。

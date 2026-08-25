@@ -42,6 +42,6 @@ public class GallerySmokeTests : IClassFixture<XyuiHeadlessFixture>
     {
         var sections = PaletteCatalog.BuildSections(dark: false);
         Assert.True(sections.Count >= 8, $"家族分区不足: {sections.Count}");
-        Assert.Equal(83, sections.Sum(s => s.Items.Count));
+        Assert.Equal(84, sections.Sum(s => s.Items.Count));
     });
 }

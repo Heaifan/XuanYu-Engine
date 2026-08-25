@@ -20,10 +20,10 @@ public static partial class XyuiComponentStyles
         Surface(styles, typeof(XYHelpText), "xyui-help-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 400, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.Panel");
         Surface(styles, typeof(XYErrorText), "xyui-error-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Semantic.Error.Text", "XY.Brush.Surface.Panel");
         Surface(styles, typeof(XYWarningText), "xyui-warning-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Semantic.Warning.Text", "XY.Brush.Surface.Panel");
-        var defaultTag = new Style(x => x.OfType<VectorPath>().Class("xyui-badge-mark-default"));
-        Brush(defaultTag, VectorPath.FillProperty, "XY.Brush.Surface.PanelAlt"); styles.Add(defaultTag);
-        var accentTag = new Style(x => x.OfType<VectorPath>().Class("xyui-badge-mark-accent"));
-        Brush(accentTag, VectorPath.FillProperty, "XY.Brush.Tag.Accent"); styles.Add(accentTag);
+        var defaultTag = new Style(x => x.OfType<XyuiBadgeTagPath>().Class("xyui-badge-mark-default"));
+        Brush(defaultTag, Shape.FillProperty, "XY.Brush.Surface.PanelAlt"); styles.Add(defaultTag);
+        var accentTag = new Style(x => x.OfType<XyuiBadgeTagPath>().Class("xyui-badge-mark-accent"));
+        Brush(accentTag, Shape.FillProperty, "XY.Brush.Tag.Accent"); styles.Add(accentTag);
         InlineSurface(styles, typeof(XYStatusBadge), "xyui-status-badge");
         InlineSurface(styles, typeof(XYHelpText), "xyui-help-text");
         InlineSurface(styles, typeof(XYErrorText), "xyui-error-text");
@@ -56,6 +56,7 @@ public static partial class XyuiComponentStyles
         surface.Setters.Add(new Setter(Border.HeightProperty, 22d));
         surface.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(0))); styles.Add(surface);
         styles.Add(Text(typeof(TextBlock), "xyui-badge-text", XyuiTypographyTokens.FontUi, 11, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
+        styles.Add(Text(typeof(TextBlock), "xyui-badge-text-accent", XyuiTypographyTokens.FontUi, 11, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Accent.Default"));
     }
 
     static void Surface(Styles styles, Type type, string cls, string family, double size, int weight, double line, string foreground, string background, double? height = null)

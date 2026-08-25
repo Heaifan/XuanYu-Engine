@@ -13,11 +13,15 @@ public enum XyuiVectorMarkPlacement { Inline, TopRight, BottomRight, Background 
 
 public abstract class XyuiVectorTextSurface : XyuiTextSurface
 {
-    protected readonly VectorPath VectorMark = new();
+    protected readonly VectorPath VectorMark;
     protected readonly Grid ContentGrid = new();
+    protected virtual double CornerMarkStrokeThickness => 1.0;
+    protected virtual double CornerMarkTextGap => 0;
 
-    protected XyuiVectorTextSurface(string className, XyuiVectorIcon icon, XyuiVectorMarkPlacement placement) : base(className)
+    protected XyuiVectorTextSurface(string className, XyuiVectorIcon icon,
+        XyuiVectorMarkPlacement placement, VectorPath? vectorMark = null) : base(className)
     {
+        VectorMark = vectorMark ?? new VectorPath();
         VectorMark.Classes.Add($"{className}-mark");
         SetIcon(icon);
         AttachedToVisualTree += (_, _) => SetIcon(icon);
@@ -44,8 +48,8 @@ public abstract class XyuiVectorTextSurface : XyuiTextSurface
         else if (placement is XyuiVectorMarkPlacement.TopRight or XyuiVectorMarkPlacement.BottomRight)
         {
             var overlay = new Canvas { IsHitTestVisible = false, HorizontalAlignment = HAlign.Stretch, VerticalAlignment = VAlign.Stretch };
-            VectorMark.Width = 8; VectorMark.Height = 8; VectorMark.StrokeThickness = 1.0; VectorMark.IsHitTestVisible = false;
-            Canvas.SetRight(VectorMark, 6); TextPresenter.Margin = new Thickness(0, 0, 14, 0);
+            VectorMark.Width = 8; VectorMark.Height = 8; VectorMark.StrokeThickness = CornerMarkStrokeThickness; VectorMark.IsHitTestVisible = false;
+            Canvas.SetRight(VectorMark, 6); TextPresenter.Margin = new Thickness(0, 0, 14 + CornerMarkTextGap, 0);
             if (placement == XyuiVectorMarkPlacement.TopRight) Canvas.SetTop(VectorMark, 5); else Canvas.SetBottom(VectorMark, 5);
             overlay.Children.Add(VectorMark); ContentGrid.Children.Add(TextPresenter); ContentGrid.Children.Add(overlay); Child = ContentGrid; return;
         }

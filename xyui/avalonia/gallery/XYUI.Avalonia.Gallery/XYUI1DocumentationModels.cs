@@ -16,7 +16,7 @@ public sealed record XYUI1ComponentDocument(
     public string CanonicalDisplay => $"{CanonicalIdentity} · {EnglishName}";
     public string CanonicalIdentity { get; init; } = "";
     public string KnownGap { get; init; } = "";
-    public string StatusText => string.IsNullOrEmpty(KnownGap) ? "READY FOR VISUAL ACCEPTANCE" : "READY WITH GAP";
+    public string StatusText => string.IsNullOrEmpty(KnownGap) ? "USER VISUAL ACCEPTED" : "USER VISUAL ACCEPTED · GAP RETAINED";
     public bool HasVariants => Variants.Count > 0;
     public bool HasStates => States.Count > 0;
 }

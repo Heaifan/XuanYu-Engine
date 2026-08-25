@@ -23,6 +23,7 @@ public class SecondTruthTests
     {
         var canonicalHex = XyuiColorTokens.All
             .SelectMany(t => new[] { t.LightHex, t.DarkHex })
+            .Concat(XyuiSectionTitleResources.CanonicalLightHexValues)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var hexRx = new Regex("#[0-9A-Fa-f]{6}\\b");
         foreach (var file in SourceFiles())
@@ -66,7 +67,7 @@ public class SecondTruthTests
     [Fact]
     public void No_Hardcoded_FontFamily_Literals_Outside_Foundation()
     {
-        var literalRx = new Regex(@"new\s+FontFamily\s*\(\s*\"[^\"]+\"|FontFamily\s*=\s*\"[^\"]+\"");
+        var literalRx = new Regex(@"new\s+FontFamily\s*\(\s*""[^""]+""|FontFamily\s*=\s*""[^""]+""");
         foreach (var file in SourceFiles())
         {
             var match = literalRx.Match(File.ReadAllText(file));

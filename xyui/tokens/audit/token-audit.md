@@ -123,6 +123,16 @@ xyui/tokens/audit/token-audit.md               ← 本报告
 
 ## 6. STOP 条件
 
+### XYUI.Avalonia Theme Reconciliation 增补
+
+Gallery 主题运行时新增一个跨组件 Semantic Token：
+
+```text
+XY.Icon.Mark = #526873/#D2E0E6
+```
+
+该 Token 专用于语义图标 / Code Mark，独立于 `XY.Text.*`；Foundation Runtime、Canonical Mapping、Avalonia Theme Dictionary、Gallery 和测试已同步消费。
+
 A3-R1 结束。**A3-R2（Canonical Token Architecture）** 将基于本报告处理：
 
 1. 5 组 NAMESPACE_TYPE_COLLISION 的拆分方案（如 `XY.Border.Color.*` / `XY.Border.Width.*` / `XY.StateColor.*`，**最终命名由你裁决**）

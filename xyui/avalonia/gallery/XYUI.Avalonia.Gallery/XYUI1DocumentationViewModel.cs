@@ -12,7 +12,7 @@ public sealed class XYUI1DocumentationViewModel : INotifyPropertyChanged
     public int ReadyCount => Documents.Count(x => string.IsNullOrEmpty(x.KnownGap));
     public int ReadyWithGapCount => Documents.Count(x => !string.IsNullOrEmpty(x.KnownGap));
     public int GapCount => ReadyWithGapCount;
-    public int VisualAcceptedCount => 0;
+    public int VisualAcceptedCount => Documents.Count;
     public IReadOnlyList<XYUI1NavigationItem> Items { get; }
     public IReadOnlyList<XYUI1NavigationItem> ComponentItems => Items.Skip(1).ToArray();
     public IReadOnlyList<FoundationNavigationItem> FoundationItems { get; } =

@@ -8,10 +8,17 @@
         Width="1120" Height="760"
         Background="{DynamicResource XY.Brush.Surface.App}">
   <DockPanel Margin="20">
-    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-      <TextBlock Text="XYUI-1 · 文本与信息组件文档" Classes="xyui-heading-panel" />
-      <TextBlock Text="中文文档 / 实时预览 / 基础用法 / API / Design Token" Classes="xyui-text-caption" />
-    </StackPanel>
-    <views:XYUI1DocumentationView />
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+      <Button x:Name="ThemeSwitchButton" DockPanel.Dock="Right" Content="切换 Dark"
+              Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
+              Foreground="{DynamicResource XY.Brush.Text.Primary}"
+              BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+              BorderThickness="1" Click="OnThemeSwitchClick" />
+      <StackPanel>
+        <TextBlock Text="XYUI-1 · 文本与信息组件文档" Classes="xyui-heading-panel" />
+        <TextBlock x:Name="ThemeStateText" Text="Theme：Light" Classes="xyui-text-caption" />
+      </StackPanel>
+    </DockPanel>
+    <views:XYUI1DocumentationView x:Name="DocumentationView" />
   </DockPanel>
 </Window>

@@ -6,10 +6,10 @@ namespace XYUI.Avalonia.Tests;
 public class SkeletonTests
 {
     [Fact]
-    public void TokenTable_Has_83_Unique_Tokens()
+    public void TokenTable_Has_84_Unique_Tokens()
     {
         var ids = XyuiColorTokens.All.Select(t => t.TokenId).Distinct().Count();
-        Assert.Equal(83, ids);
+        Assert.Equal(84, ids);
     }
 
     [Fact]

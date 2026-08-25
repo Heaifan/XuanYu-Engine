@@ -6,6 +6,7 @@ public static partial class XYUI1DocumentationCatalog
     {
         "XYUI-1-04" => [$"<xy:{type} Text=\"区域数据集\" />", $"<xy:{type} Text=\"地图编辑\" Variant=\"PageTitle\" />"],
         "XYUI-1-06" => [$"<xy:{type} Content=\"打开对象文档\" />"],
+        "XYUI-1-08" => [$"var data = new {type}();", "data.Rows.Add(new XYMonoDataRow(\"X 坐标\", \"142.583\", \"m\"));", "data.Rows.Add(new XYMonoDataRow(\"对象数\", \"1,284\"));"],
         "XYUI-1-09" => [$"<xy:{type} Text=\"草稿\" />", $"<xy:{type} Text=\"已选中\" Variant=\"Accent\" />"],
         "XYUI-1-10" => [$"<xy:{type} Text=\"已保存\" State=\"Success\" />", $"<xy:{type} Text=\"未同步\" State=\"Warning\" />"],
         "XYUI-1-11" => [$"<xy:{type} State=\"Info\" />", $"<xy:{type} State=\"Error\" />"],

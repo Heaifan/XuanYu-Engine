@@ -17,6 +17,12 @@
   }
  },
  "rulings": {
+  "theme_semantic_icon_mark": {
+   "token": "XY.Icon.Mark",
+   "value": "#526873/#D2E0E6",
+   "layer": "SEMANTIC",
+   "rule": "跨组件语义图标/标记颜色；不得退化为 Text Token 或组件专属颜色"
+  },
   "border_ntc": {
    "color_namespace": [
     "XY.Border.Color.Subtle",

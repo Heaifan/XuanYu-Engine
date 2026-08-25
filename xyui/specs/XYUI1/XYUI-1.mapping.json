@@ -236,7 +236,7 @@
    "component_id": "XYUI-1-05",
    "name": "SectionTitle",
    "title": "区块标题",
-   "ref_count": 10,
+   "ref_count": 16,
    "refs": [
     {
      "property": "XY.SectionTitle.Default.FontFamily",
@@ -244,47 +244,83 @@
      "kind": "CANONICAL_REF",
      "canonical_target": "XY.Font.UI"
     },
-    {
-     "property": "XY.SectionTitle.Default.FontSize",
-     "value": "XY.FontSize.Section",
-     "kind": "CANONICAL_REF",
-     "canonical_target": "XY.FontSize.Section"
-    },
-    {
-     "property": "XY.SectionTitle.Default.FontWeight",
-     "value": "XY.FontWeight.Semibold",
-     "kind": "CANONICAL_REF",
-     "canonical_target": "XY.FontWeight.Semibold"
-    },
-    {
-     "property": "XY.SectionTitle.Default.LineHeight",
-     "value": "XY.LineHeight.Section",
-     "kind": "CANONICAL_REF",
-     "canonical_target": "XY.LineHeight.Section"
-    },
-    {
-     "property": "XY.SectionTitle.Default.Foreground",
-     "value": "XY.Text.Primary",
-     "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Text.Primary"
-    },
-    {
-     "property": "XY.SectionTitle.Default.Background",
-     "value": "None",
+     {
+      "property": "XY.SectionTitle.Default.FontSize",
+      "value": "14 DIP",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.FontWeight",
+      "value": "600",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.LineHeight",
+      "value": "18 DIP",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.Foreground",
+      "value": "#243744",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.Background",
+      "value": "#EEF3F6",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.HeaderHeight",
+      "value": "28 DIP",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.CornerRadius",
+      "value": "3 DIP",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.LeftMarkWidth",
+      "value": "3 DIP",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.LeftMarkHeight",
+      "value": "16 DIP",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.LeftMarkColor",
+      "value": "#526873",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.LeftMarkAlignment",
+      "value": "Center",
+      "kind": "LITERAL",
+      "canonical_target": null
+     },
+     {
+      "property": "XY.SectionTitle.Default.Border",
+      "value": "None",
      "kind": "LITERAL",
      "canonical_target": null
     },
-    {
-     "property": "XY.SectionTitle.Default.Border",
-     "value": "None",
-     "kind": "LITERAL",
-     "canonical_target": null
-    },
-    {
-     "property": "XY.SectionTitle.Default.Divider",
-     "value": "XY.Divider.Section",
-     "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Divider.Section"
+     {
+      "property": "XY.SectionTitle.Default.Divider",
+      "value": "None",
+      "kind": "LITERAL",
+      "canonical_target": null
     },
     {
      "property": "XY.SectionTitle.Default.CardNesting",
@@ -360,7 +396,7 @@
    "component_id": "XYUI-1-07",
    "name": "CodeText",
    "title": "代码 / ID",
-   "ref_count": 14,
+   "ref_count": 15,
    "refs": [
     {
      "property": "XY.CodeText.Default.FontFamily",
@@ -436,9 +472,15 @@
     },
     {
      "property": "XY.CodeText.CodeMark.Foreground",
-     "value": "XY.Text.Tertiary",
+     "value": "XY.Icon.Mark",
      "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Text.Tertiary"
+     "canonical_target": "XY.Icon.Mark"
+    },
+    {
+     "property": "XY.CodeText.CodeMark.StrokeWidth",
+     "value": "1.25 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
     },
     {
      "property": "XY.CodeText.CodeMark.Alignment",
@@ -452,8 +494,38 @@
    "component_id": "XYUI-1-08",
    "name": "MonoText",
    "title": "等宽数据",
-   "ref_count": 9,
+   "ref_count": 22,
    "refs": [
+    {
+     "property": "XY.MonoText.Default.Structure",
+     "value": "Label|Value|Unit",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.MonoText.Label.FontFamily",
+     "value": "XY.Font.UI",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.Font.UI"
+    },
+    {
+     "property": "XY.MonoText.Label.FontWeight",
+     "value": "XY.FontWeight.Semibold",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.FontWeight.Semibold"
+    },
+    {
+     "property": "XY.MonoText.Label.Foreground",
+     "value": "XY.Text.Secondary",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.Text.Secondary"
+    },
+    {
+     "property": "XY.MonoText.Label.Alignment",
+     "value": "Left",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
     {
      "property": "XY.MonoText.Default.FontFamily",
      "value": "XY.Font.Mono",
@@ -491,6 +563,54 @@
      "canonical_target": "XY.Text.Secondary"
     },
     {
+     "property": "XY.MonoText.Default.Alignment",
+     "value": "Right",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.MonoText.Unit.FontFamily",
+     "value": "XY.Font.UI",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.Font.UI"
+    },
+    {
+     "property": "XY.MonoText.Unit.FontWeight",
+     "value": "XY.FontWeight.Semibold",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.FontWeight.Semibold"
+    },
+    {
+     "property": "XY.MonoText.Unit.Foreground",
+     "value": "XY.Text.Secondary",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.Text.Secondary"
+    },
+    {
+     "property": "XY.MonoText.Unit.Alignment",
+     "value": "Left",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.MonoText.Unit.Optional",
+     "value": "True",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.MonoText.LabelValueGap",
+     "value": "XY.Space.4 + XY.Space.1",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.MonoText.ValueUnitGap",
+     "value": "XY.Space.2",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.Space.2"
+    },
+    {
      "property": "XY.MonoText.Default.Background",
      "value": "None",
      "kind": "LITERAL",
@@ -514,7 +634,7 @@
    "component_id": "XYUI-1-09",
    "name": "Badge",
    "title": "标签",
-   "ref_count": 12,
+   "ref_count": 14,
    "refs": [
     {
      "property": "XY.Badge.Default.FontFamily",
@@ -551,6 +671,18 @@
      "value": "XY.Size.Control.XS",
      "kind": "CANONICAL_REF",
      "canonical_target": "XY.Size.Control.XS"
+    },
+    {
+     "property": "XY.Badge.Default.Width",
+     "value": "Auto",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.Badge.Default.HorizontalAlignment",
+     "value": "Left",
+     "kind": "LITERAL",
+     "canonical_target": null
     },
     {
      "property": "XY.Badge.Default.Pointer",
@@ -1546,7 +1678,7 @@
    "component_id": "XYUI-1-21",
    "name": "SelectableText",
    "title": "可选择文本",
-   "ref_count": 12,
+   "ref_count": 15,
    "refs": [
     {
      "property": "XY.SelectableText.Default.TextStyle",
@@ -1586,15 +1718,33 @@
     },
     {
      "property": "XY.SelectableText.Hover.CopyIconSize",
-     "value": "XY.Icon.Size.S",
-     "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Icon.Size.S"
+     "value": "8 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.SelectableText.Hover.CopyIconVisualSize",
+     "value": "8 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.SelectableText.Hover.CopyIconStroke",
+     "value": "1 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
     },
     {
      "property": "XY.SelectableText.Hover.CopyIconForeground",
-     "value": "XY.Text.Secondary",
+     "value": "XY.Text.Disabled",
      "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Text.Secondary"
+     "canonical_target": "XY.Text.Disabled"
+    },
+    {
+     "property": "XY.SelectableText.Hover.CopyIconGap",
+     "value": "XY.Space.2",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.Space.2"
     },
     {
      "property": "XY.SelectableText.Default.Background",
@@ -1670,7 +1820,7 @@
    "component_id": "XYUI-1-23",
    "name": "SearchHighlight",
    "title": "搜索高亮",
-   "ref_count": 8,
+   "ref_count": 10,
    "refs": [
     {
      "property": "XY.SearchHighlight.Default.TextStyle",
@@ -1719,6 +1869,18 @@
      "value": "8 DIP / 1.0 DIP / RightTop / Right 6 / Top 5",
      "kind": "LITERAL",
      "canonical_target": null
+    },
+    {
+     "property": "XY.SearchHighlight.SemanticMark.Foreground",
+     "value": "XY.Text.Disabled",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.Text.Disabled"
+    },
+    {
+     "property": "XY.SearchHighlight.SemanticMark.Gap",
+     "value": "XY.Space.2",
+     "kind": "CANONICAL_REF",
+     "canonical_target": "XY.Space.2"
     }
    ]
   },
