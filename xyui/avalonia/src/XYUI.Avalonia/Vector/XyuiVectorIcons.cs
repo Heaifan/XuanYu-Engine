@@ -8,6 +8,7 @@ public enum XyuiVectorIcon { Info, Error, Warning, Search, Copy, Code, Tag, Stat
 
 public static class XyuiVectorIcons
 {
+    public const double LogicalIconSize = 24d;
     public static bool IsPlatformReady => global::Avalonia.Application.Current is not null;
     public static IReadOnlyDictionary<XyuiVectorIcon, string> PathData { get; } =
         new Dictionary<XyuiVectorIcon, string>

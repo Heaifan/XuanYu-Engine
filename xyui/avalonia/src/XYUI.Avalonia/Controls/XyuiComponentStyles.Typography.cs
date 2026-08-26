@@ -32,7 +32,7 @@ public static partial class XyuiComponentStyles
         styles.Add(Text(typeof(TextBlock), "xyui-mono-data-value", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Secondary"));
         styles.Add(Text(typeof(TextBlock), "xyui-mono-data-unit", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 600, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
         var icon = new Style(x => x.OfType<XYIcon>().Class("xyui-icon"));
-        Brush(icon, VectorPath.StrokeProperty, "XY.Brush.Text.Secondary"); icon.Setters.Add(new Setter(VectorPath.FillProperty, null)); styles.Add(icon);
+        Brush(icon, XYIcon.StrokeProperty, "XY.Brush.Text.Secondary"); icon.Setters.Add(new Setter(XYIcon.FillProperty, null)); styles.Add(icon);
         IconButtonIconTint(styles, ":pointerover", "XY.Brush.Text.Primary");
         IconButtonIconTint(styles, ":selected", "XY.Brush.Accent.Strong");
         IconButtonIconTint(styles, ":disabled", "XY.Brush.State.Disabled.Text");
@@ -61,15 +61,15 @@ public static partial class XyuiComponentStyles
     static void IconSize(Styles styles, string name, double size, double stroke)
     {
         var style = new Style(x => x.OfType<XYIcon>().Class($"xyui-icon-{name}"));
-        style.Setters.Add(new Setter(VectorPath.WidthProperty, size)); style.Setters.Add(new Setter(VectorPath.HeightProperty, size));
-        style.Setters.Add(new Setter(VectorPath.StrokeThicknessProperty, stroke)); styles.Add(style);
+        style.Setters.Add(new Setter(Control.WidthProperty, size)); style.Setters.Add(new Setter(Control.HeightProperty, size));
+        style.Setters.Add(new Setter(XYIcon.StrokeThicknessProperty, stroke)); styles.Add(style);
     }
 
     // XYUI-2-02：IconButton 状态驱动内部矢量图标描边（Icon.Hover=Text.Primary / Icon.Selected=Accent.Strong / Disabled 衰减）。
     static void IconButtonIconTint(Styles styles, string state, string brush)
     {
-        var tint = new Style(x => x.OfType<XYIconButton>().Class(state).Descendant().OfType<VectorPath>().Class("xyui-icon"));
-        Brush(tint, VectorPath.StrokeProperty, brush); styles.Add(tint);
+        var tint = new Style(x => x.OfType<XYIconButton>().Class(state).Descendant().OfType<XYIcon>().Class("xyui-icon"));
+        Brush(tint, XYIcon.StrokeProperty, brush); styles.Add(tint);
     }
 
     static void Mark(Styles styles, string cls, string brush, double size, bool fill, double stroke = 1.5)

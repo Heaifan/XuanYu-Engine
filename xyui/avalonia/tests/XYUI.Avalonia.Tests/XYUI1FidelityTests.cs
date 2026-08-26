@@ -27,7 +27,7 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
         Assert.NotNull(Mark(new XYErrorText { Text = "名称无效" }, "xyui-error-text-mark").Data);
         Assert.NotNull(Mark(new XYWarningText { Text = "尚未保存" }, "xyui-warning-text-mark").Data);
         Assert.NotNull(Mark(new XYSearchHighlight { Text = "命中内容" }, "xyui-search-highlight-mark").Data);
-        Assert.NotNull(new XYIcon { Icon = XyuiVectorIcon.Code }.Data);
+        Assert.NotNull(new XYIcon { Icon = XyuiVectorIcon.Code }.IconGeometry);
     });
 
     [Fact]

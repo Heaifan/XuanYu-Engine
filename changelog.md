@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-VECTOR-01 · Vector Icon Logical Viewport Repair（2026-08-26 23:42:46）
+
+- 目标：修复 XYIcon 继承 Path 导致 Geometry Bounds 参与缩放的问题，并保留 XYUI-2-04 SplitButton 的现有修复。
+- 变化：XYIcon 迁移为 Control，统一 24×24 Logical Viewport；保留 Icon/Size/StrokeWidth/CanonicalId，并新增 Stroke、Fill、StrokeThickness、IconGeometry 兼容语义；StrokeWidth 真实映射到最终 Pen 厚度；SplitButton Chevron 继续使用原始 `M6 9 L12 15 L18 9`，无位置补偿。
+- 验证：XYUI.Avalonia.slnx Build 0 Warning / 0 Error；XYUI.Avalonia.Tests 128/128 PASS；ARCH-A/5+100 PASS；git diff --check PASS。Gallery 待重新启动后进行 Light/Dark 人工验收。
+- 遗留：XYUI-1 Vector Icon 消费者与 XYUI-2-04 Chevron 需用户完成 Gallery 真机视觉确认；Batch 02 未启动。
+- 状态：FOUNDATION BUG FIX IMPLEMENTED · READY FOR USER VISUAL ACCEPTANCE。
+
 ## XYUI.AVALONIA-R6-F1 · XYUI-2 Batch 01 Button Family（2026-08-25 17:46:58）
 
 - 目标：XYUI-2 Batch 01（01 Button / 02 IconButton / 03 ToggleButton）完成 Canonical → Avalonia Runtime → Gallery 对齐，建立 Button Family Action Edge 视觉语法基线；XYUI-1 保持 FROZEN 未改动。

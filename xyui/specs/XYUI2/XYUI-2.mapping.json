@@ -329,27 +329,27 @@
    "title": "Split Button / 分裂按钮",
    "ref_count": 14,
    "refs": [
+   {
+    "property": "XY.SplitButton.Height",
+    "value": "36 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+   {
+    "property": "XY.SplitButton.Radius",
+    "value": "3 DIP",
+    "kind": "LITERAL",
+    "canonical_target": null
+    },
     {
-     "property": "XY.SplitButton.Height",
+     "property": "XY.SplitButton.MenuZone.Width",
      "value": "34 DIP",
      "kind": "LITERAL",
      "canonical_target": null
     },
     {
-     "property": "XY.SplitButton.Radius",
-     "value": "XY.Radius.Button",
-     "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Radius.Button"
-    },
-    {
-     "property": "XY.SplitButton.MenuZone.Width",
-     "value": "36 DIP",
-     "kind": "LITERAL",
-     "canonical_target": null
-    },
-    {
      "property": "XY.SplitButton.Divider.Height",
-     "value": "12 DIP",
+     "value": "18 DIP",
      "kind": "LITERAL",
      "canonical_target": null
     },
@@ -378,10 +378,10 @@
      "canonical_target": "XY.Border.Color.Subtle"
     },
     {
-     "property": "XY.SplitButton.ActionEdge",
-     "value": "XY.Accent.Strong",
+     "property": "XY.SplitButton.MenuZone.Surface",
+     "value": "XY.Surface.PanelAlt",
      "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Accent.Strong"
+     "canonical_target": "XY.Surface.PanelAlt"
     },
     {
      "property": "XY.SplitButton.Text",

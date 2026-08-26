@@ -1,5 +1,4 @@
 using Avalonia;
-using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using XYUI.Avalonia.Controls;
@@ -7,7 +6,7 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Gallery;
 
-// XYUI-2 Batch 01 真实 Runtime 预览：每个组件展示 Default / 变体 / Selected(或 ON) / Disabled。
+// XYUI-2 真实 Runtime 预览：Batch 01 与 SplitButton 收口样例。
 public static class XYUI2GalleryCatalog
 {
     public static Control CreatePreview(string id) => id switch
@@ -15,7 +14,7 @@ public static class XYUI2GalleryCatalog
         "XYUI-2-01" => Host("XY.Button · Primary / Secondary / Danger / Disabled", Buttons()),
         "XYUI-2-02" => Host("XY.IconButton · Default Ghost / Hover(交互) / Selected / Disabled", IconButtons()),
         "XYUI-2-03" => Host("XY.ToggleButton · OFF / ON(Persistent Edge) / Disabled", Toggles()),
-        "XYUI-2-04" => Host("XY.SplitButton · Default / MainHover / MenuHover / Disabled（可悬停验证）", Splits()),
+        "XYUI-2-04" => Host("XY.SplitButton · Compact Icon Well / Default / Hover / Pressed / Disabled", Splits()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
 
@@ -70,14 +69,14 @@ public static class XYUI2GalleryCatalog
         new XYToggleButton { Content = "显示参考网格", IsEnabled = false },
     ];
 
-    // Split（R2 · Soft Partition）：四状态明确展示 Default / MainHover / MenuHover / Disabled。
-    // Hover 为交互态无法静态定格，每个 sample 下方用 caption 标注对应状态，由审核者实际悬停验证；
-    // 主区与菜单区各自独立 Hover：悬停按钮主体=MainHover，悬停右侧箭头=MenuHover。
+    // Hover/Pressed 为真实交互态；caption 指示审核者在对应区域操作。
     static Control[] Splits() =>
     [
         SplitCell("新建", "Default", false),
         SplitCell("导入", "MainHover · 悬停主区", false),
-        SplitCell("保存选项", "MenuHover · 悬停右侧箭头", false),
+        SplitCell("保存", "MenuHover · 悬停右侧图标槽", false),
+        SplitCell("运行", "Pressed Main · 按住主区", false),
+        SplitCell("更多", "Pressed Menu · 按住图标槽", false),
         SplitCell("发布", "Disabled", true),
     ];
 
@@ -90,14 +89,4 @@ public static class XYUI2GalleryCatalog
             new XYCaption { Text = caption },
         },
     };
-}
-
-internal static class XYIconButtonNamingExtensions
-{
-    // Canonical AccessibleName = Required：Ghost 图标按钮必须携带自动化名称。
-    public static XYIconButton Named(this XYIconButton button, string name)
-    {
-        AutomationProperties.SetName(button, name);
-        return button;
-    }
 }

@@ -222,24 +222,24 @@
         - 导入 + 导入格式
         - 保存 + 保存选项
     - 定稿方案
-        - 方案 2 · Soft Partition
+        - 方案 2 · Compact Icon Well
     - 设计特征
         - 整体保持单一 Button 轮廓
         - 右侧划分独立菜单点击区
         - 使用短 Divider 而非贯穿式竖线
-        - 保留底部 Action Edge
+        - 禁止 Default 永久底部 Action Edge
         - 主体和菜单区必须拥有独立 Hover / Pressed 状态
     - UI代码 / Design Token
         - XY.SplitButton.Height
-            - Value = 34 DIP
-            - Type = COMPONENT_SPECIFIC
-        - XY.SplitButton.Radius
-            - Value = XY.Radius.Button
-        - XY.SplitButton.MenuZone.Width
             - Value = 36 DIP
             - Type = COMPONENT_SPECIFIC
+        - XY.SplitButton.Radius
+            - Value = 3 DIP
+        - XY.SplitButton.MenuZone.Width
+            - Value = 34 DIP
+            - Type = COMPONENT_SPECIFIC
         - XY.SplitButton.Divider.Height
-            - Value = 18 DIP
+            - Value = 18 DIP（Divider 宽度 = 1 DIP）
             - Type = COMPONENT_SPECIFIC
         - XY.SplitButton.Background.Default
             - Value = XY.Surface.Raised
@@ -252,8 +252,8 @@
             - Width = XY.Border.Width.Default
         - XY.SplitButton.Divider.Color
             - Value = XY.Divider.Default
-        - XY.SplitButton.ActionEdge
-            - Value = XY.Accent.Strong
+        - XY.SplitButton.MenuZone.Surface
+            - Value = XY.Surface.PanelAlt
         - XY.SplitButton.Text
             - Value = XY.Text.Primary
         - XY.SplitButton.Focus

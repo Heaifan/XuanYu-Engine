@@ -9,7 +9,6 @@ using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Gallery;
 using XYUI.Avalonia.Gallery.Views;
 using XYUI.Avalonia.Typography;
-
 namespace XYUI.Avalonia.Tests;
 
 // XYUI-2 Batch 01 · R1 对齐合同：Gallery Foundation 导航模板、Batch 01 验收状态文本、
@@ -19,9 +18,7 @@ public sealed class XYUI2Batch01ReconcileTests : IClassFixture<XyuiHeadlessFixtu
 {
     readonly XyuiHeadlessFixture _fx;
     public XYUI2Batch01ReconcileTests(XyuiHeadlessFixture fx) => _fx = fx;
-
     static readonly FoundationNavigationItem Sample = new("palette", "色彩", "Palette");
-
     [Fact]
     public void Foundation_navigation_template_matches_foundation_item() => _fx.Run(() =>
     {
@@ -33,7 +30,6 @@ public sealed class XYUI2Batch01ReconcileTests : IClassFixture<XyuiHeadlessFixtu
         Assert.False(Assert.IsAssignableFrom<IDataTemplate>(component).Match(Sample),
             "组件导航模板不得匹配 Foundation 项，两类导航必须各自持有 DataTemplate");
     });
-
     [Fact]
     public void Foundation_navigation_renders_names_without_type_name_leak() => _fx.Run(() =>
     {
@@ -50,7 +46,6 @@ public sealed class XYUI2Batch01ReconcileTests : IClassFixture<XyuiHeadlessFixtu
         Assert.Contains("Palette", texts);
         window.Close();
     });
-
     [Fact]
     public void Batch01_pages_are_not_marked_user_visual_accepted() => _fx.Run(() =>
     {

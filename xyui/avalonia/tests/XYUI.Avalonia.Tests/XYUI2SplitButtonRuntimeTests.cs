@@ -1,26 +1,19 @@
-using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Headless;
 using Avalonia.Input;
-using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using XYUI.Avalonia.Controls;
-using XYUI.Avalonia.Spatial;
-using VectorPath = Avalonia.Controls.Shapes.Path;
-
 namespace XYUI.Avalonia.Tests;
 
-// XYUI-2-04 SplitButton（Soft Partition）运行时合同：
-// 单一 Chrome + Main/Menu 两个独立 Hit Zone + 短 Divider + 跨全宽共享 Action Edge。
+// XYUI-2-04 SplitButton（Compact Icon Well）运行时合同：
+// 单一 Chrome + Main/Menu 两个独立 Hit Zone + 固定图标槽 + 短 Divider。
 [Collection("XyuiHeadless")]
-public sealed class XYUI2SplitButtonRuntimeTests : IClassFixture<XyuiHeadlessFixture>
+public sealed partial class XYUI2SplitButtonRuntimeTests : IClassFixture<XyuiHeadlessFixture>
 {
     readonly XyuiHeadlessFixture _fx;
     public XYUI2SplitButtonRuntimeTests(XyuiHeadlessFixture fx) => _fx = fx;
-
     static Button Part(XYSplitButton split, string name) =>
         split.GetVisualDescendants().OfType<Button>().Single(b => b.Name == name);
 
@@ -44,8 +37,8 @@ public sealed class XYUI2SplitButtonRuntimeTests : IClassFixture<XyuiHeadlessFix
         var menu = Part(split, "PART_MenuZone");
         var divider = split.GetVisualDescendants().Single(c => c.Name == "PART_Divider");
         var grid = (Grid)split.GetVisualDescendants().Single(c => c.Name == "PART_Grid");
-        Assert.Equal(34d, split.Height);
-        Assert.Equal(XyuiSpatialTokens.RadiusButton, split.CornerRadius.TopLeft);
+        Assert.Equal(36d, split.Height);
+        Assert.Equal(3d, split.CornerRadius.TopLeft);
         Assert.Equal(XYSplitButton.MenuZoneWidth, grid.ColumnDefinitions[2].ActualWidth);
         Assert.Equal(grid.ColumnDefinitions[2].ActualWidth, menu.Bounds.Width, 3);
         Assert.Equal(XYSplitButton.DividerHeight, divider.Bounds.Height);
@@ -53,13 +46,12 @@ public sealed class XYUI2SplitButtonRuntimeTests : IClassFixture<XyuiHeadlessFix
         Assert.False(menu.Focusable, "Menu 区不独立抢焦点");
         window.Close();
     });
-
     [Fact]
     public void Main_and_menu_commands_fire_independently_without_cross_fire() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare();
-        var mainCmd = new CountingCommand();
-        var menuCmd = new CountingCommand();
+        var mainCmd = new SplitButtonCountingCommand();
+        var menuCmd = new SplitButtonCountingCommand();
         var split = new XYSplitButton
         {
             Content = "新建",
@@ -81,54 +73,28 @@ public sealed class XYUI2SplitButtonRuntimeTests : IClassFixture<XyuiHeadlessFix
     });
 
     [Fact]
-    public void Main_and_menu_hover_are_independent_zones() => _fx.Run(() =>
+    public void SplitButton_has_no_permanent_action_edge_and_disabled_zones_attenuate() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare();
-        var split = new XYSplitButton { Content = "新建" };
+        var split = new XYSplitButton { Content = "新建", IsEnabled = false };
         var window = XyuiBatchTestHost.Show(split);
-        var main = Part(split, "PART_MainZone");
+        Assert.DoesNotContain(split.GetVisualDescendants(), x => x is XyuiActionEdge);
         var menu = Part(split, "PART_MenuZone");
-        var chevron = menu.GetVisualDescendants().OfType<VectorPath>().Single(p => p.Classes.Contains("xyui-icon"));
-        var mainCp = main.GetVisualDescendants().OfType<ContentPresenter>().Single();
-        var menuCp = menu.GetVisualDescendants().OfType<ContentPresenter>().Single();
-
-        // MainHover：ONLY Main Zone 使用 Hover Surface；Menu Zone 与 Chevron 保持 Default。
-        XyuiBatchTestHost.Hover(window, main);
-        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Hover"), XyuiBatchTestHost.ColorOf(main.Background));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Hover"), XyuiBatchTestHost.ColorOf(mainCp.Background));
-        Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(menu.Background));
-        Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(menuCp.Background));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.Text.Secondary"), XyuiBatchTestHost.ColorOf(chevron.Stroke));
-
-        // MenuHover：ONLY Menu Zone 使用 Hover Surface；Main Zone 保持 Default；Chevron 独立 Accent。
-        XyuiBatchTestHost.Hover(window, menu);
-        Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(main.Background));
-        Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(mainCp.Background));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Hover"), XyuiBatchTestHost.ColorOf(menu.Background));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Hover"), XyuiBatchTestHost.ColorOf(menuCp.Background));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.Accent.Strong"), XyuiBatchTestHost.ColorOf(chevron.Stroke));
+        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Disabled.Background"), XyuiBatchTestHost.ColorOf(menu.Background));
         window.Close();
     });
 
     [Fact]
-    public void SplitButton_shares_single_action_edge_across_full_width() => _fx.Run(() =>
+    public void Enter_and_space_execute_only_the_primary_command() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare();
-        var split = new XYSplitButton { Content = "新建" };
+        var command = new SplitButtonCountingCommand();
+        var split = new XYSplitButton { Content = "新建", MainCommand = command };
         var window = XyuiBatchTestHost.Show(split);
-        var edge = XyuiBatchTestHost.Edge(split);
-        Assert.True(edge.IsVisible);
-        Assert.Equal(XyuiBatchTestHost.Token("XY.Accent.Strong"), XyuiBatchTestHost.ColorOf(edge.Background));
-        var inner = split.Bounds.Width - split.BorderThickness.Left - split.BorderThickness.Right;
-        Assert.Equal(inner, edge.Bounds.Width, 3);
+        split.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = Key.Enter });
+        split.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = Key.Space });
+        Assert.Equal(2, command.Executions);
         window.Close();
     });
 
-    sealed class CountingCommand : ICommand
-    {
-        public int Executions { get; private set; }
-        public bool CanExecute(object? parameter) => true;
-        public void Execute(object? parameter) => Executions++;
-        public event EventHandler? CanExecuteChanged { add { } remove { } }
-    }
 }
