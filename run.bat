@@ -21,24 +21,24 @@ rem PDB/DLL file locks (CS2012). Only target this editor and MSBuild servers;
 rem NEVER use "taskkill /IM dotnet.exe" (would kill unrelated .NET tasks).
 echo [0/3] Closing previous editor instance...
 taskkill /IM XuanYu.Editor.App.exe /T /F >nul 2>&1 || ver >nul
-dotnet build-server shutdown >nul 2>&1 || ver >nul
+"D:\MyApp\sdk-dotnet\dotnet.exe" build-server shutdown >nul 2>&1 || ver >nul
 %SystemRoot%\System32\timeout.exe /t 1 /nobreak >nul 2>&1 || ver >nul
 
 echo.
 echo [1/3] Restoring packages...
-call dotnet restore "%PROJECT%" --configfile ".\NuGet.Config" -nologo
+call "D:\MyApp\sdk-dotnet\dotnet.exe" restore "%PROJECT%" --configfile ".\NuGet.Config" -nologo
 if errorlevel 1 goto fail
 
 echo.
 echo [2/3] Building app...
 set "MSBUILDDISABLENODEREUSE=1"
-call dotnet build "%PROJECT%" --no-restore -nologo -clp:Summary=false -p:UseSharedCompilation=false
+call "D:\MyApp\sdk-dotnet\dotnet.exe" build "%PROJECT%" --no-restore -nologo -clp:Summary=false -p:UseSharedCompilation=false
 if errorlevel 1 goto fail
 
 echo.
 echo [3/3] Starting editor...
 echo.
-call dotnet run --project "%PROJECT%" --no-build
+call "D:\MyApp\sdk-dotnet\dotnet.exe" run --project "%PROJECT%" --no-build
 set "exitCode=%errorlevel%"
 
 if not "%exitCode%"=="0" goto failWithCode
