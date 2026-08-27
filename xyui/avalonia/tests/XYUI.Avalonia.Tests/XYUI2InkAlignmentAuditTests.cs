@@ -76,7 +76,7 @@ public sealed class XYUI2InkAlignmentAuditTests : IClassFixture<XyuiHeadlessFixt
                 var font = new Typeface(text.FontFamily, text.FontStyle, text.FontWeight);
                 var formatted = new FormattedText(text.Text ?? "", CultureInfo.CurrentUICulture,
                     FlowDirection.LeftToRight, font, text.FontSize, Brushes.Black);
-                var ink = formatted.BuildGeometry(new Point(0, 0)).Bounds;
+                var geometry = formatted.BuildGeometry(new Point(0, 0)); Assert.NotNull(geometry); var ink = geometry!.Bounds;
                 var at = node.TranslatePoint(new Point(0, 0), window)!.Value;
                 top = at.Y + ink.Top; bottom = at.Y + ink.Bottom; left = at.X + ink.Left;
             }
