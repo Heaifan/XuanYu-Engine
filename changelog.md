@@ -5,8 +5,9 @@
 - 目标：仅实现 XYUI-2-10 NumberField；XYUI-2-09、11～14 与 06～08 冻结。
 - 变化：按组件目录拆分 Value、Template、Keyboard、Scrub；提供统一 Value、Clamp、Suffix、Enter/Esc 事务、普通/Shift/Ctrl 步进、Hover/Focus Stepper 与 4 DIP Scrub；Gallery 默认落点切换到 10 并补齐真实样例与交互说明。
 - 验证：XYUI Build 0 warning / 0 error；XYUI Tests 165/165 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS；Gallery runtime smoke PASS。
-- Hash：待用户视觉验收后提交。
-- 遗留：UNCOMMITTED / UNPUSHED，等待 XYUI-2-10 真机视觉验收。
+- Hash：4002d868790c21a296bbb78e6ce3661ed0db4af7。
+- 验收：用户已完成 XYUI-2-10 Gallery 视觉验收并确认通过；本次 Stepper Visual Chrome 修复已纳入实现提交。
+- 遗留：`xyui.bat` 为本地启动资产，按仓库规则保留未跟踪、不纳入 Git。
 
 ## XYUI-2-09 · TextField Interaction Completion（2026-08-27 22:25:00）
 
