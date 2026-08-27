@@ -8,6 +8,7 @@
 - 对齐合同测试（XYUI2InkAlignmentAuditTests）：家族四类垂直失线 ≤0.01 DIP 且偏差 <0.45 DIP（拦截整像素错位复发）；文字左内距断言统一 12；Chevron 两槽居中偏差恒 0。删除此前的 OpticalBaselineTests（其断言对象已被证伪并移除）。
 - 验证：XYUI.Avalonia.slnx Build 0 Warning / 0 Error；XYUI.Avalonia.Tests 147/147 PASS（128 基线 + 05 组件 12 例 + 家族对齐合同 7 例）；ARCH-A（含 5+100，守卫按物理行计数复核）PASS；git diff --check PASS。引擎基线 339/22/1286 + Guard PASS 未回归。子代理协作：1 个写入型完成 mapping.json 修复（Single Writer）；4 个只读审计实例中 3 个静默失败由主 Agent 兜底完成同等核查。
 - 验收与收口：用户于 2026-08-27 16:53 前后经 Gallery 复验通过（含 Split 左距并入家族修正与全家族左对齐统一）；随后恢复 Gallery 默认落点为族内首项、本条目随收口提交入库。
+- 环境抢修与投递通道（2026-08-27 17:0x）：主仓库 .git/packed-refs 存在历史写坏（同名分支引用整行重复 + 行尾 `?` 污染 + 标签 peeled 行断裂），首次导致 refspec 歧义、次生解析致命错；处置=备份三份（.bak/.corrupt-20260827）后删除损坏文件并以 git pack-refs --all 自对象库再生，远程跟踪引用经一次 HTTPS fetch 全量重建（22 条）。SSH 通道维持 Host key verification failed（凭据未配置），投递改走一次性 HTTPS+Git Credential Manager 弹窗授权（origin 配置未改动）。验证：f84c5844 已达远端（4b679b51..f84c5844 fast-forward），远端 ls-remote 复核一致；提交内落点恢复代码补跑 Build 复验 0 Warning / 0 Error（首跑 1 条瞬时警告未再现）。
 - 遗留：ChevronTrackWidth=34 待用户裁定是否入 Canonical；mapping.json 其余组件另有 67 处同源截断仅登记未修；SSH fetch/push 通道待配置凭据（远端核对走匿名 HTTPS ls-remote）。
 - Hash：本条所在提交。
 - 状态：XYUI-2-05 `IMPLEMENTED · GATES GREEN · USER_VISUAL_ACCEPTED`。下一阶段：XYUI-2-06。
