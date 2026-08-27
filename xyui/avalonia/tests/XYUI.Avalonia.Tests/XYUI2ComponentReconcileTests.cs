@@ -17,7 +17,7 @@ public sealed class XYUI2ComponentReconcileTests : IClassFixture<XyuiHeadlessFix
     public void Component_pages_stay_pending_acceptance_with_canonical_identity()
     {
         var documents = XYUI2DocumentationCatalog.Build();
-        Assert.Equal(5, documents.Count);
+        Assert.Equal(8, documents.Count);
         Assert.All(documents, document => Assert.StartsWith(
             XYUI2DocumentationCatalog.PendingAcceptance, document.StatusText));
         var dropdown = documents.Single(x => x.Id == "XYUI-2-05");

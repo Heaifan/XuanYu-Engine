@@ -309,6 +309,9 @@
             - Value = XY.Surface.PanelAlt
         - XY.DropDownButton.ChevronTrack.Hover
             - Value = XY.State.Color.Hover
+        - XY.DropDownButton.ChevronTrack.Width
+            - Value = 34 DIP
+            - Type = COMPONENT_SPECIFIC
         - XY.DropDownButton.Border
             - Color = XY.Border.Color.Default
             - Width = XY.Border.Width.Default
@@ -342,10 +345,13 @@
         - 批量属性
         - 设置面板
     - 定稿方案
-        - 方案 1 · Clean Square
+        - 方案 2 · Precision Compact
     - 设计特征
         - 采用传统方形 Checkbox 语义
-        - 视觉尺寸使用 Foundation Checkbox Size
+        - BoxSize = 14 DIP
+        - IndicatorSlot = 18 × 22 DIP
+        - Control MinHeight = 22 DIP
+        - ContentGap = 7 DIP
         - 保留 2 DIP 小圆角作为组件专用几何
         - 选中使用 Selected Surface + Accent Glyph
         - Mixed 使用 Accent 横线
@@ -353,7 +359,19 @@
         - 视觉尺寸与实际 Hit Target 分离
     - UI代码 / Design Token
         - XY.Checkbox.Size
-            - Value = XY.Size.Checkbox
+            - Value = XY.Size.Checkbox = 14 DIP
+        - XY.Checkbox.IndicatorSlot.Width
+            - Value = 18 DIP
+        - XY.Checkbox.IndicatorSlot.Height
+            - Value = 22 DIP
+        - XY.Checkbox.ContentGap
+            - Value = 7 DIP
+        - XY.Checkbox.Check.Stroke
+            - Value = 1.25 DIP
+        - XY.Checkbox.Mixed.Width
+            - Value = 7 DIP
+        - XY.Checkbox.Mixed.Height
+            - Value = 1.25 DIP
         - XY.Checkbox.Radius
             - Value = 2 DIP
             - Type = COMPONENT_SPECIFIC
@@ -378,10 +396,11 @@
             - OutlineColor = XY.Focus.Control.OutlineColor
     - 状态
         - Unchecked
-        - Hover
-        - Checked
-        - CheckedHover
-        - Mixed
+         - UncheckedHover
+         - Checked
+         - CheckedHover
+         - Mixed
+         - MixedHover
         - Focus
         - Disabled
 

@@ -1,5 +1,32 @@
 # changelog
 
+## XYUI-2-06-PRECISION-COMPACT · Checkbox（2026-08-27 20:15:00）
+
+- 目标：仅按用户裁定的 Precision Compact 方案重做 XYUI-2-06；XYUI-2-07 与 XYUI-2-08 保持冻结。
+- 变化：Checkbox 改为 `18×22 DIP IndicatorSlot + 7 DIP Gap + Content` 三列 Grid；Box 改为 `14×14 DIP`，新增 `14×14 DIP GlyphHost`；Check 使用 `1.25 DIP` 圆角笔画，Mixed 使用 `7×1.25 DIP`；`XY.Size.Checkbox` 正式更新为 `14 DIP`；CheckedHover/MixedHover 保留 Selected 状态辨识。
+- 验证：定向 ChoiceControls 测试 3/3 PASS；XYUI Build 0 warning / 0 error；XYUI Tests 150/150 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS。
+- Gallery：待门禁完成后启动，默认停在 XYUI-2-06；不修改 XYUI-2-07 / 08。
+- Hash：待用户视觉验收后提交。
+- 遗留：工作树保持 UNCOMMITTED / UNPUSHED，等待 USER VISUAL ACCEPTANCE。
+
+## XYUI-2-06-07-VISUAL-REPAIR · Checkbox / Radio Button（2026-08-27 20:00:00）
+
+- 目标：仅修复 XYUI-2-06 Checkbox 与 XYUI-2-07 Radio Button 的确定性视觉/模板问题；XYUI-2-05 保持 CLOSED，XYUI-2-08 保持冻结。
+- 变化：Checkbox 勾选笔画调整为 1.5 DIP、圆角线帽/连接并收小 Glyph，Mixed 调整为 7×1.5 DIP；Radio Halo 改为独立 Ellipse，新增固定 22 DIP IndicatorHost，Dot 调整为 6×6 DIP；ChoiceControls 的 MarkState 改为显式 AvaloniaProperty，Radio Dot 使用 Shape.FillProperty。
+- 验证：XYUI Build 0 warning / 0 error；XYUI Tests 150/150 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS；ChoiceControls 定向测试 3/3 PASS。
+- Gallery：启动正式 Gallery，默认停在 XYUI-2-06，等待用户重新验收 06 → 07；本条不修改 Switch 实现或视觉。
+- Hash：待用户视觉验收后提交。
+- 遗留：工作树保持 UNCOMMITTED / UNPUSHED，等待 USER VISUAL ACCEPTANCE。
+
+## XYUI-2-BATCH02 · Checkbox / Radio Button / Switch（2026-08-27 19:31:08）
+
+- 目标：关闭 XYUI-2-05 Chevron Track 宽度 token debt，并完成 XYUI-2-06～08 的真实控件、状态、Gallery 页面与对账测试；视觉验收前保持未提交、未推送。
+- 变化：补正式 `XY.DropDownButton.ChevronTrack.Width=34 DIP` 组件 token 并改为资源消费；新增 Clean Square 三态 `XYCheckbox`、真实 `GroupName` 互斥的 Accent Halo `XYRadioButton`、基于 ToggleButton wrapper 的 Compact Track `XYSwitch`；接入 identity / TypeMap / Documentation / Gallery，默认落点为 XYUI-2-06；补充运行时、几何、token、目录与 Light/Dark 相关测试。
+- 验证：XYUI Build 0 warning / 0 error；XYUI Tests 150/150 PASS；Engine Build 0 warning / 0 error；Core 339/339、WarCore 22/22、World 1286/1286 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS。Engine 首次因跨机缺失 `obj/project.assets.json` 失败，按规则执行一次指定 SDK restore 后重建通过。
+- Gallery：已启动正式 Gallery，默认导航落点为 XYUI-2-06 Checkbox；等待用户依次进行 06 → 07 → 08 Light/Dark 视觉验收。
+- Hash：待用户视觉验收后提交。
+- 遗留：工作树保持 UNCOMMITTED / UNPUSHED；XYUI-2-05～08 尚未宣布 CLOSED，等待 USER VISUAL ACCEPTANCE。
+
 ## XYUI-2-BATCH02-F1 · XYUI-2-05 DropDownButton（2026-08-27 00:58:00）
 
 - 目标：实装 XYUI-2-05 · XYDropDownButton（方案 4 · Chevron Track），建立与 SplitButton 的语义分界，接入 Gallery 与三层测试。

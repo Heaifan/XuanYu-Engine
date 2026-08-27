@@ -1462,6 +1462,7 @@
    │  │     ├─ XYUI1GalleryCatalog.cs
    │  │     ├─ XYUI2DocumentationCatalog.cs
    │  │     ├─ XYUI2GalleryCatalog.cs
+    │  │     ├─ XYUI2GalleryCatalog.Choices.cs
     │  │     ├─ XYUI2GalleryCatalog.DropDown.cs
    │  │     └─ XYIconButtonNamingExtensions.cs
    │  ├─ src/
@@ -1474,58 +1475,13 @@
    │  │     │  ├─ XyuiCatalogTruth.cs
    │  │     │  └─ XyuiCatalogTypeMap.cs
    │  │     ├─ Controls/
-   │  │     │  ├─ XYBadge.cs
-   │  │     │  ├─ XYButton.cs
-   │  │     │  ├─ XYCaption.cs
-   │  │     │  ├─ XYCheckbox.cs
-   │  │     │  ├─ XYCodeText.cs
-   │  │     │  ├─ XYEmptyText.cs
-   │  │     │  ├─ XYErrorText.cs
-   │  │     │  ├─ XYHeading.cs
-   │  │     │  ├─ XYHelpText.cs
-   │  │     │  ├─ XYIcon.Rendering.cs
-   │  │     │  ├─ XYIcon.cs
-   │  │     │  ├─ XYIconButton.cs
-   │  │     │  ├─ XYIconLabel.cs
-    │  │     │  ├─ XYDropDownButton.Template.cs
-    │  │     │  ├─ XYDropDownButton.cs
-   │  │     │  ├─ XYSplitButton.Template.cs
-   │  │     │  ├─ XYSplitButton.cs
-   │  │     │  ├─ XYLabel.cs
-   │  │     │  ├─ XYLink.cs
-   │  │     │  ├─ XYMonoDataRow.cs
-   │  │     │  ├─ XYMonoText.Layout.cs
-   │  │     │  ├─ XYMonoText.cs
-   │  │     │  ├─ XYRichText.cs
-   │  │     │  ├─ XYSearchHighlight.cs
-   │  │     │  ├─ XYSectionTitle.cs
-   │  │     │  ├─ XYSelectableText.cs
-   │  │     │  ├─ XYSeparator.cs
-   │  │     │  ├─ XYShortcutHint.cs
-   │  │     │  ├─ XYStatusBadge.cs
-   │  │     │  ├─ XYStatusDot.cs
-   │  │     │  ├─ XYText.cs
-   │  │     │  ├─ XYTextField.cs
-   │  │     │  ├─ XYToggleButton.cs
-   │  │     │  ├─ XYTooltip.cs
-   │  │     │  ├─ XYTruncatedText.cs
-   │  │     │  ├─ XYWarningText.cs
-   │  │     │  ├─ XyuiActionEdge.cs
-   │  │     │  ├─ XyuiBadgeTagPath.cs
-   │  │     │  ├─ XyuiButtonChrome.cs
-   │  │     │  ├─ XyuiButtonVariant.cs
-   │  │     │  ├─ XyuiComponentStyles.Semantic.cs
-   │  │     │  ├─ XyuiComponentStyles.Surfaces.cs
-   │  │     │  ├─ XyuiComponentStyles.Typography.cs
-   │  │     │  ├─ XyuiComponentStyles.cs
-   │  │     │  ├─ XyuiControlStyles.ButtonFamily.cs
-    │  │     │  ├─ XyuiControlStyles.DropDownButton.cs
-   │  │     │  ├─ XyuiControlStyles.SplitButton.cs
-   │  │     │  ├─ XyuiControlStyles.Edges.cs
-   │  │     │  ├─ XyuiControlStyles.GhostAndToggle.cs
-   │  │     │  ├─ XyuiControlStyles.cs
-   │  │     │  ├─ XyuiTextComponent.cs
-   │  │     │  └─ XyuiVectorTextSurface.cs
+   │  │     │  ├─ XYUI1/
+   │  │     │  │  └─ XYUI1-01～24-ComponentName/（每个组件独立目录）
+   │  │     │  ├─ XYUI2/
+   │  │     │  │  └─ XYUI2-01～09-ComponentName/（每个组件独立目录）
+   │  │     │  ├─ XYUI1/_Shared/（XYUI-1 内部基类、样式与几何辅助）
+   │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、样式与 Token）
+   │  │     │  └─ README.md
    │  │     ├─ Foundation/
    │  │     │  ├─ XyuiColorToken.cs
    │  │     │  ├─ XyuiColorTokens.Accent.cs
@@ -2885,8 +2841,9 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Api.cs` — 真实 Avalonia 属性与 Foundation Token 文档表。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.cs` — 左侧导航选择与模块/组件文档视图切换模型。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI2.cs` — XYUI-2 区块导航、选中路由与默认落点（复用文档视图）。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.cs` — Batch 01 文档数据源（canonical spec + mapping token 直读）。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.cs` — Batch 01 与 SplitButton Compact Icon Well 真实 Runtime 预览工厂。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.cs` — XYUI-2 05～08 文档数据源（canonical spec + mapping token 直读）。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.cs` — Batch 01 与 SplitButton Compact Icon Well 真实 Runtime 预览工厂。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Choices.cs` — Checkbox、RadioButton、Switch 真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.DropDown.cs` — DropDownButton 导出/筛选/排序等真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYIconButtonNamingExtensions.cs` — IconButton Gallery 自动化名称扩展。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYBadgePreviewFactory.cs` — Badge Default/Accent 左指针标签的真实 Gallery Preview 工厂。
@@ -2913,7 +2870,8 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ComponentReconcileTests.cs` — 组件文档登记与 Gallery 预览最小样本对账（含 05 待验收锁）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonRuntimeTests.cs` — DropDownButton 单命中区结构与点击语义（含槽区无第二行为）回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonVisualStateTests.cs` — DropDownButton 五状态视觉合同（含 Chevron 衰减与聚焦环）。
-- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InkAlignmentAuditTests.cs` — 家族文字着墨等线与左对齐内距测量合同（BuildGeometry 实测）。
+ - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InkAlignmentAuditTests.cs` — 家族文字着墨等线与左对齐内距测量合同（BuildGeometry 实测）。
+ - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ChoiceControlsTests.cs` — Checkbox 三态、Radio 分组、Switch 几何与 Gallery 接线回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUIVectorViewportTests.cs` — XYIcon 24×24 logical viewport、尺寸与 Stroke 合同。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/SkeletonTests.cs` — 骨架引用链与 BrushKey 命名测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/CanonicalAlignmentTests.cs` — token 表与 token-canonical-map.json 逐条对照。
@@ -2965,37 +2923,44 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogTruth.cs` — 从 XYUI-1 Identity/GAP JSON 读取 Gallery 真值。
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogSpecReader.cs` — 从 canonical spec 提取用途、变体、状态和场景文案。
 - `xyui/avalonia/src/XYUI.Avalonia/Catalog/XyuiCatalogTypeMap.cs` — Canonical ID 到稳定 Avalonia 类型名及 Gallery 覆盖映射。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiTextComponent.cs` — XYUI-1 文本组件共同基类与文本 surface 基类。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiVectorTextSurface.cs` — XYUI-1 真实 Vector Geometry 文本 surface 与角标布局基类。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/_Shared/Base/XyuiTextComponent.cs` — XYUI-1 文本组件共同基类与文本 surface 基类。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/_Shared/Base/XyuiVectorTextSurface.cs` — XYUI-1 真实 Vector Geometry 文本 surface 与角标布局基类。
 - `xyui/avalonia/src/XYUI.Avalonia/Vector/XyuiVectorIcons.cs` — XYUI-1 Vector Icon Registry 与 StreamGeometry 资源。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYText.cs` — XYUI-1-01 普通文本组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYLabel.cs` — XYUI-1-02 字段名称组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYCaption.cs` — XYUI-1-03 辅助信息组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYHeading.cs` — XYUI-1-04 标题组件及 PanelTitle/PageTitle 变体。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSectionTitle.cs` — XYUI-1-05 区块标题组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYLink.cs` — XYUI-1-06 超链接组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYCodeText.cs` — XYUI-1-07 代码与 ID 组件，使用右下 Vector Geometry 角标。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYMonoDataRow.cs` — MonoText 的 Label/Value/Unit 结构化数据行模型。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYMonoText.Layout.cs` — MonoText 共享三列布局、响应宽度与合法列间距实现。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYMonoText.cs` — XYUI-1-08 纯等宽数据组件，无 surface 背景和边框。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-01-Text/XYText.cs` — XYUI-1-01 普通文本组件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-02-Label/XYLabel.cs` — XYUI-1-02 字段名称组件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-03-Caption/XYCaption.cs` — XYUI-1-03 辅助信息组件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-04-Heading/XYHeading.cs` — XYUI-1-04 标题组件及 PanelTitle/PageTitle 变体。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-05-SectionTitle/XYSectionTitle.cs` — XYUI-1-05 区块标题组件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-06-Link/XYLink.cs` — XYUI-1-06 超链接组件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-07-CodeText/XYCodeText.cs` — XYUI-1-07 代码与 ID 组件，使用右下 Vector Geometry 角标。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-08-MonoText/XYMonoDataRow.cs` — MonoText 的 Label/Value/Unit 结构化数据行模型。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-08-MonoText/XYMonoText.Layout.cs` — MonoText 共享三列布局、响应宽度与合法列间距实现。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-08-MonoText/XYMonoText.cs` — XYUI-1-08 纯等宽数据组件，无 surface 背景和边框。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYBadge.cs` — XYUI-1-09 标签组件及 Default/Accent 变体。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiBadgeTagPath.cs` — Badge 单一背景的克制左指针 Tag 几何构建器。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiActionEdge.cs` — Button 家族底部 Action Edge 元素（内部实现构件，非公开组件）。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiButtonChrome.cs` — Batch 01 三按钮共享 Chrome 模板（Border+内容+Edge 覆盖层）。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiControlStyles.ButtonFamily.cs` — Button 样式：变体 Edge 语言、Focus Ring、Disabled 衰减。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiControlStyles.DropDownButton.cs` — DropDownButton Chevron Track 样式与控件级状态映射。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiControlStyles.SplitButton.cs` — SplitButton Compact Icon Well 样式与状态映射。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiControlStyles.Edges.cs` — Action Edge 填色/显隐/Hover 抬升样式辅助。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiControlStyles.GhostAndToggle.cs` — IconButton Ghost Reveal 与 ToggleButton Persistent Edge 样式。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/ButtonFamily/XyuiActionEdge.cs` — Button 家族底部 Action Edge 元素（内部实现构件，非公开组件）。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/ButtonFamily/XyuiButtonChrome.cs` — Batch 01 三按钮共享 Chrome 模板（Border+内容+Edge 覆盖层）。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ButtonFamily.cs` — Button 样式：变体 Edge 语言、Focus Ring、Disabled 衰减。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.DropDownButton.cs` — DropDownButton Chevron Track 样式与控件级状态映射。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.SplitButton.cs` — SplitButton Compact Icon Well 样式与状态映射。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Edges.cs` — Action Edge 填色/显隐/Hover 抬升样式辅助。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.GhostAndToggle.cs` — IconButton Ghost Reveal 与 ToggleButton Persistent Edge 样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYStatusBadge.cs` — XYUI-1-10 状态标签及五种状态 API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYStatusDot.cs` — XYUI-1-11 状态圆点及五种状态 API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIcon.cs` — XYUI-1-12 24×24 Logical Viewport 图标控件公共 API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIcon.Rendering.cs` — XYIcon 逻辑视口缩放与最终 DIP Stroke 绘制。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIconLabel.cs` — XYUI-1-13 图标加文字组件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSplitButton.cs` — XYUI-2-04 SplitButton 命令与键盘语义。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYDropDownButton.Template.cs` — DropDownButton 双列模板：装饰槽不可命中、无 Divider。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYDropDownButton.cs` — XYUI-2-05 DropDownButton 唯一命中区命令与键盘语义。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSplitButton.Template.cs` — SplitButton 单 Chrome、主区、Divider 与 Icon Well 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-04-SplitButton/XYSplitButton.cs` — XYUI-2-04 SplitButton 命令与键盘语义。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-04-SplitButton/XYSplitButton.Template.cs` — SplitButton 单 Chrome、主区、Divider 与 Icon Well 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-05-DropDownButton/XYDropDownButton.Template.cs` — DropDownButton 双列模板：装饰槽不可命中、无 Divider。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-05-DropDownButton/XYDropDownButton.cs` — XYUI-2-05 DropDownButton 唯一命中区命令与键盘语义。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-06-Checkbox/XYCheckbox.Template.cs` — Checkbox 方形视觉盒、勾选符号与 Mixed 横线模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-07-RadioButton/XYRadioButton.cs` — XYUI-2-07 原生 RadioButton 组互斥控件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-07-RadioButton/XYRadioButton.Template.cs` — Radio Halo、圆环、中心点与标签模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.cs` — XYUI-2-08 ToggleButton wrapper 开关语义。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.Template.cs` — Compact Track + Thumb 固定尺寸模板。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件专用尺寸与 05 Chevron Track 资源。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs` — Checkbox、Radio、Switch 状态样式与 token 消费。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYHelpText.cs` — XYUI-1-15 帮助说明组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYErrorText.cs` — XYUI-1-16 错误说明组件。
@@ -3020,7 +2985,7 @@
 - `xyui/avalonia/gallery/XYUI-1-COMPONENT-INVENTORY.md` — XYUI-1 24 项组件矩阵与 Foundation/Component 边界记录。
 - `xyui/specs/XYUI1/XYUI-1.gaps.json` — XYUI-1 glyph registry 与 MiddleEllipsis 映射 Gap 登记。
 - `xyui/specs/XYUI1/XYUI-1.identity.json` — XYUI-1 24 项 Canonical Identity 到 Avalonia 类型的正式映射。
-- `xyui/specs/XYUI2/XYUI-2.identity.json` — XYUI-2 Canonical Identity 注册表（Batch 01/02 已含 Button/Icon/Toggle/Split/DropDown）。
-- `xyui/specs/XYUI2/XYUI-2.mapping.json` — XYUI-2 Canonical token 到 Avalonia 样式属性映射（含截断修复，余量欠账已登记）。
+ - `xyui/specs/XYUI2/XYUI-2.identity.json` — XYUI-2 Canonical Identity 注册表（含 Button/Icon/Toggle/Split/DropDown/Checkbox/Radio/Switch）。
+ - `xyui/specs/XYUI2/XYUI-2.mapping.json` — XYUI-2 Canonical token 到 Avalonia 样式属性映射（05～08 完整映射）。
 - `xyui/audit/XYUI1/R5-F4-fidelity-matrix.md` — XYUI-1 01～24 全量 Fidelity Matrix 与审计结论。
 

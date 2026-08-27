@@ -10,18 +10,7 @@
   "token_architecture": "xyui/tokens/architecture/token-canonical-map.json"
  },
  "renamed_mappings": [],
- "composite_mappings": [
-  {
-   "old": "XY.Size.Switch.Width",
-   "new": "XY.Size.Switch",
-   "note": "Foundation 中 Switch 为复合 token 34x18 DIP；子属性访问形态待 A3 定义（GAP-001）"
-  },
-  {
-   "old": "XY.Size.Switch.Height",
-   "new": "XY.Size.Switch",
-   "note": "同上"
-  }
- ],
+ "composite_mappings": [],
  "components": [
   {
    "component_id": "XYUI-2-01",
@@ -419,7 +408,7 @@
    "component_id": "XYUI-2-05",
    "name": "DropDown Button",
    "title": "DropDown Button / 下拉按钮",
-   "ref_count": 14,
+   "ref_count": 15,
    "refs": [
     {
      "property": "XY.DropDownButton.Height",
@@ -463,6 +452,12 @@
      "kind": "CANONICAL_REF",
      "canonical_target": "XY.State.Color.Hover"
     },
+   {
+    "property": "XY.DropDownButton.ChevronTrack.Width",
+    "value": "34 DIP",
+    "kind": "LITERAL",
+    "canonical_target": null
+   },
     {
      "property": "XY.DropDownButton.ActionEdge",
      "value": "XY.Accent.Strong",
@@ -511,13 +506,49 @@
    "component_id": "XYUI-2-06",
    "name": "Checkbox",
    "title": "Checkbox / 复选框",
-   "ref_count": 12,
+   "ref_count": 18,
    "refs": [
     {
      "property": "XY.Checkbox.Size",
      "value": "XY.Size.Checkbox",
      "kind": "CANONICAL_REF",
      "canonical_target": "XY.Size.Checkbox"
+    },
+    {
+     "property": "XY.Checkbox.IndicatorSlot.Width",
+     "value": "18 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.Checkbox.IndicatorSlot.Height",
+     "value": "22 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.Checkbox.ContentGap",
+     "value": "7 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.Checkbox.Check.Stroke",
+     "value": "1.25 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.Checkbox.Mixed.Width",
+     "value": "7 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
+    },
+    {
+     "property": "XY.Checkbox.Mixed.Height",
+     "value": "1.25 DIP",
+     "kind": "LITERAL",
+     "canonical_target": null
     },
     {
      "property": "XY.Checkbox.Radius",

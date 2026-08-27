@@ -13,7 +13,7 @@ public static partial class XyuiControlStyles
         var styles = new Styles();
         AddButtonFamily(styles);
         AddInput(styles);
-        AddCheckBox(styles);
+        AddChoiceControls(styles);
         return styles;
     }
 
@@ -28,18 +28,6 @@ public static partial class XyuiControlStyles
         selector.Setters.Add(new Setter(Control.HeightProperty, 34d));
         styles.Add(selector);
         State(styles, typeof(XYTextField), "xyui-text-field", ":focus",
-            TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Focus");
-    }
-
-    static void AddCheckBox(Styles styles)
-    {
-        var selector = new Style(x => x.OfType<XYCheckbox>().Class("xyui-checkbox"));
-        Set(selector, TemplatedControl.ForegroundProperty, "XY.Brush.Text.Primary");
-        Set(selector, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Default");
-        styles.Add(selector);
-        State(styles, typeof(XYCheckbox), "xyui-checkbox", ":checked",
-            TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Selected");
-        State(styles, typeof(XYCheckbox), "xyui-checkbox", ":focus",
             TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Focus");
     }
 

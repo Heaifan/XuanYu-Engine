@@ -57,7 +57,7 @@ public static partial class XyuiControlStyles
         var track = new Style(x => x.OfType<XYDropDownButton>().Class(cls).Descendant()
             .OfType<Border>().Class("xyui-ddb-track"));
         Set(track, Border.BackgroundProperty, "XY.Brush.Surface.PanelAlt");
-        track.Setters.Add(new Setter(Border.WidthProperty, XYDropDownButton.ChevronTrackWidth));
+        Set(track, Border.WidthProperty, "XY.DropDownButton.ChevronTrack.Width");
         styles.Add(track);
         StateTrack(styles, cls, ":pointerover", "XY.Brush.State.Color.Hover");
         StateTrack(styles, cls, ":pressed", "XY.Brush.State.Color.Pressed");

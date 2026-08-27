@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
 using XYUI.Avalonia.Foundation;
+using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Spatial;
 using XYUI.Avalonia.Typography;
 
@@ -35,6 +36,7 @@ public static class XyuiTheme
         }
         Merge(dict, XyuiTypography.CreateResources());
         Merge(dict, XyuiSpatial.CreateResources());
+        Merge(dict, XyuiComponentTokens.CreateResources());
         Merge(dict, XyuiSectionTitleResources.Create(dark));
         return dict;
     }

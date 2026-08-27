@@ -15,7 +15,7 @@ public partial class XYDropDownButton : ContentControl
 {
     // 视觉槽宽度：家族节奏实现常量；Canonical 05 仅定义 Height=34 DIP，
     // 未定义槽宽 token——按用户指示不新增 Component-Specific Token，验收后如有裁定再入 Canonical。
-    public const double ChevronTrackWidth = 34;
+    public const double ChevronTrackWidth = XyuiComponentTokens.DropDownButtonChevronTrackWidth;
 
     public XYDropDownButton()
     {

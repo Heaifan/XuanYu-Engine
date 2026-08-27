@@ -10,7 +10,7 @@ public static class XYUI2DocumentationCatalog
 {
     public static readonly IReadOnlySet<string> BatchIds = new HashSet<string>
     {
-        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05"
+        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08"
     };
 
     public static IReadOnlyList<XYUI1ComponentDocument> Build() =>
@@ -25,7 +25,7 @@ public static class XYUI2DocumentationCatalog
             () => XYUI2GalleryCatalog.CreatePreview(entry.SourceItemId),
             Usages(entry.SourceItemId, type), Names(entry.Variants).Select(x => new XYUIDocVariant(x, "", "")).ToArray(),
             Names(entry.States).Select(x => new XYUIDocState(x, "")).ToArray(),
-            Array.Empty<XYUIDocProperty>(), Tokens(entry.SourceItemId), type)
+            Properties(entry.SourceItemId), Tokens(entry.SourceItemId), type)
         {
             CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap,
             Acceptance = PendingAcceptance
@@ -47,6 +47,14 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-04" => [$"<c:{type} Content=\"新建\" />", "<c:XYSplitButton Content=\"导入\" />"],
         "XYUI-2-05" => [$"<c:{type} Content=\"导出\" />", $"<c:{type} Content=\"排序\" />"],
         _ => [$"<c:{type} />"]
+    };
+
+    static IReadOnlyList<XYUIDocProperty> Properties(string id) => id switch
+    {
+        "XYUI-2-06" => [new("IsChecked", "bool?", "false", "支持 Unchecked / Checked / Mixed"), new("IsThreeState", "bool", "false", "启用 Mixed 状态")],
+        "XYUI-2-07" => [new("GroupName", "string", "", "同组互斥"), new("IsChecked", "bool", "false", "当前选项")],
+        "XYUI-2-08" => [new("IsChecked", "bool", "false", "真实切换 Track / Thumb")],
+        _ => []
     };
 
     static IReadOnlyList<XYUIDocToken> Tokens(string id)

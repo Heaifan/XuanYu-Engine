@@ -19,6 +19,8 @@ public class ControlSurfaceTests
         Assert.Contains("xyui-icon-button", new XYIconButton().Classes);
         Assert.Contains("xyui-toggle-button", new XYToggleButton().Classes);
         Assert.Contains("xyui-checkbox", new XYCheckbox().Classes);
+        Assert.Contains("xyui-radio-button", new XYRadioButton().Classes);
+        Assert.Contains("xyui-switch", new XYSwitch().Classes);
         Assert.Contains("xyui-text-field", new XYTextField().Classes);
     }
 }

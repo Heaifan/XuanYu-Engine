@@ -3,13 +3,6 @@
  "phase": "XYUI-PILOT-R2",
  "gaps": [
   {
-   "gap_id": "XYUI2-GAP-001",
-   "type": "MISSING_TOKEN",
-   "scope": "XY.Size.Switch 复合 token 的子属性访问（Width/Height）",
-   "detail": "XYUI-2 08·Switch 引用 XY.Size.Switch.Width/Height；Foundation 0.8 只有复合 token XY.Size.Switch=34x18 DIP。已映射到复合 token；子属性拆分待 A3 定义",
-   "blocking": false
-  },
-  {
    "gap_id": "XYUI2-GAP-002",
    "type": "REQUIRES_DECISION",
    "scope": "XY.TextArea.MaxHeight = SceneToken",
