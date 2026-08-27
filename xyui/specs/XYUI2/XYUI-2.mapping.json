@@ -482,25 +482,25 @@
      "canonical_target": "XY.Text.Secondary"
     },
     {
-     "property": "….Color",
+     "property": "XY.DropDownButton.Border.Color",
      "value": "XY.Border.Color.Default",
      "kind": "CANONICAL_REF",
      "canonical_target": "XY.Border.Color.Default"
     },
     {
-     "property": "….Width",
+     "property": "XY.DropDownButton.Border.Width",
      "value": "XY.Border.Width.Default",
      "kind": "CANONICAL_REF",
      "canonical_target": "XY.Border.Width.Default"
     },
     {
-     "property": "….OutlineWidth",
+     "property": "XY.DropDownButton.Focus.OutlineWidth",
      "value": "XY.Focus.Control.OutlineWidth",
      "kind": "CANONICAL_REF",
      "canonical_target": "XY.Focus.Control.OutlineWidth"
     },
     {
-     "property": "….OutlineColor",
+     "property": "XY.DropDownButton.Focus.OutlineColor",
      "value": "XY.Focus.Control.OutlineColor",
      "kind": "CANONICAL_REF",
      "canonical_target": "XY.Focus.Control.OutlineColor"

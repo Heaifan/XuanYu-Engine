@@ -4,13 +4,13 @@ using XYUI.Avalonia.Catalog;
 
 namespace XYUI.Avalonia.Gallery;
 
-// XYUI-2 文档目录：Batch 01（Button / IconButton / ToggleButton）。
+// XYUI-2 文档目录：Batch 01 与 SplitButton / DropDownButton。
 // 描述/变体/状态取自 canonical spec reader；Token 表直接读 mapping.json（单一事实源）。
 public static class XYUI2DocumentationCatalog
 {
     public static readonly IReadOnlySet<string> BatchIds = new HashSet<string>
     {
-        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04"
+        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05"
     };
 
     public static IReadOnlyList<XYUI1ComponentDocument> Build() =>
@@ -45,6 +45,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-02" => [$"<c:{type} Icon=\"Search\" AutomationProperties.Name=\"搜索\" IsSelected=\"true\" />"],
         "XYUI-2-03" => [$"<c:{type} Content=\"网格吸附\" IsChecked=\"true\" />"],
         "XYUI-2-04" => [$"<c:{type} Content=\"新建\" />", "<c:XYSplitButton Content=\"导入\" />"],
+        "XYUI-2-05" => [$"<c:{type} Content=\"导出\" />", $"<c:{type} Content=\"排序\" />"],
         _ => [$"<c:{type} />"]
     };
 

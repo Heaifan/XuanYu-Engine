@@ -22,13 +22,15 @@ public static partial class XyuiControlStyles
         AddGhostIconButton(styles);
         AddActionToggleButton(styles);
         AddSplitButton(styles);
+        AddDropDownButton(styles);
     }
 
     // XYUI-2-01 Button（方案 4 · Action Edge）。
     static void AddActionButton(Styles styles)
     {
         var button = new Style(x => x.OfType<XYButton>().Class("xyui-button"));
-        button.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYButton>(HorizontalAlignment.Center)));
+        // 用户裁定：家族文字一律统一左对齐（图标 IconButton 除外，保持居中）。
+        button.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYButton>(HorizontalAlignment.Left)));
         Chrome(button);
         styles.Add(button);
         State(styles, typeof(XYButton), "xyui-button", ":pointerover", TemplatedControl.BackgroundProperty, "XY.Brush.State.Color.Hover");

@@ -29,7 +29,8 @@ public static partial class XyuiControlStyles
         split.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1)));
         split.Setters.Add(new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(3)));
         split.Setters.Add(new Setter(Control.HeightProperty, 36d));
-        split.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(16, 0)));
+        // 水平内距并入家族统一值 12（2026-08-27 实测裁定：原 16 造成一排按钮文字左缘错位）。
+        split.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(12, 0)));
         styles.Add(split);
         Zone(styles, "xyui-split-main");
         MenuZone(styles, "xyui-split-menu");

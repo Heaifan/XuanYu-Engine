@@ -6,8 +6,8 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Gallery;
 
-// XYUI-2 真实 Runtime 预览：Batch 01 与 SplitButton 收口样例。
-public static class XYUI2GalleryCatalog
+// XYUI-2 真实 Runtime 预览：Batch 01、SplitButton 与 DropDownButton 收口样例。
+public static partial class XYUI2GalleryCatalog
 {
     public static Control CreatePreview(string id) => id switch
     {
@@ -15,6 +15,7 @@ public static class XYUI2GalleryCatalog
         "XYUI-2-02" => Host("XY.IconButton · Default Ghost / Hover(交互) / Selected / Disabled", IconButtons()),
         "XYUI-2-03" => Host("XY.ToggleButton · OFF / ON(Persistent Edge) / Disabled", Toggles()),
         "XYUI-2-04" => Host("XY.SplitButton · Compact Icon Well / Default / Hover / Pressed / Disabled", Splits()),
+        "XYUI-2-05" => Host("XY.DropDownButton · Chevron Track / Default / Hover / Pressed / Disabled", DropDowns()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
 

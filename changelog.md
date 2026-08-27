@@ -1,5 +1,17 @@
 # changelog
 
+## XYUI-2-BATCH02-F1 · XYUI-2-05 DropDownButton（2026-08-27 00:58:00）
+
+- 目标：实装 XYUI-2-05 · XYDropDownButton（方案 4 · Chevron Track），建立与 SplitButton 的语义分界，接入 Gallery 与三层测试。
+- 变化：新增 XYDropDownButton（ContentControl）——整钮唯一命中区 PART_OpenZone 横跨两列（点击 Chevron 槽区域同样只触发 OpenCommand，无第二行为面）；PART_ChevronTrack 为不可命中装饰槽（宽 34 实现常量，Canonical 无该 token 已登记 GAP）；无 Divider；Action Edge 继承 Button 家族语言；控件级 :pointerover/:pressed 由模板接线驱动，ChevronBrush 由样式层按状态供值；Chevron 色维持 Text.Secondary、Disabled 随家族衰减。修复 mapping.json 05 区 4 处截断属性名（Border.Color/Width、Focus.OutlineWidth/OutlineColor）；identity.json 注册 05；CatalogTypeMap/Gallery/Documentation 四处接线（样式拆分独立 partial 文件防 5+100 超限）；Gallery 默认落点临时设为 05 作本轮验收入口。测试：新增 Runtime/VisualState/Reconcile 共 12 例（含点击槽区不得产生第二套行为的专项）；Batch01 文档计数与 Catalog 实装控件数随真实状态更新为 5/7。
+- 返工 ×2（2026-08-27 用户两轮裁决）：第一轮按"内容整体下移 1 DIP 光学补偿"实施后遭拒（太含糊）。遂改为实测路线：以 FormattedText.BuildGeometry 字形着墨盒对四类按钮逐像素量化，查明几何居中机器无失灵——文字着墨中心相对容器中心全家族一致偏上 0.37 DIP（字体行盒固有不对称），且 Avalonia 排列按整 DIP 栅格取整、亚像素补偿无可实现通道；Chevron 实测恒精确居中。真正的可见缺陷是水平项：SplitButton 主区左距 16 与家族 12 不一致造成一排按钮左缘错位——已并入家族统一值 12；同时落实文字一律左对齐（Button/Toggle/Split/DropDown 文字区 Left，纯图标 IconButton 保持居中）。无效的补偿常量与样式规则全部回收，不留死代码。
+- 对齐合同测试（XYUI2InkAlignmentAuditTests）：家族四类垂直失线 ≤0.01 DIP 且偏差 <0.45 DIP（拦截整像素错位复发）；文字左内距断言统一 12；Chevron 两槽居中偏差恒 0。删除此前的 OpticalBaselineTests（其断言对象已被证伪并移除）。
+- 验证：XYUI.Avalonia.slnx Build 0 Warning / 0 Error；XYUI.Avalonia.Tests 147/147 PASS（128 基线 + 05 组件 12 例 + 家族对齐合同 7 例）；ARCH-A（含 5+100，守卫按物理行计数复核）PASS；git diff --check PASS。引擎基线 339/22/1286 + Guard PASS 未回归。子代理协作：1 个写入型完成 mapping.json 修复（Single Writer）；4 个只读审计实例中 3 个静默失败由主 Agent 兜底完成同等核查。
+- 验收与收口：用户于 2026-08-27 16:53 前后经 Gallery 复验通过（含 Split 左距并入家族修正与全家族左对齐统一）；随后恢复 Gallery 默认落点为族内首项、本条目随收口提交入库。
+- 遗留：ChevronTrackWidth=34 待用户裁定是否入 Canonical；mapping.json 其余组件另有 67 处同源截断仅登记未修；SSH fetch/push 通道待配置凭据（远端核对走匿名 HTTPS ls-remote）。
+- Hash：本条所在提交。
+- 状态：XYUI-2-05 `IMPLEMENTED · GATES GREEN · USER_VISUAL_ACCEPTED`。下一阶段：XYUI-2-06。
+
 ## XYUI-VECTOR-01 · Vector Icon Logical Viewport Repair（2026-08-26 23:42:46）
 
 - 目标：修复 XYIcon 继承 Path 导致 Geometry Bounds 参与缩放的问题，并保留 XYUI-2-04 SplitButton 的现有修复。

@@ -45,7 +45,7 @@ public static partial class XyuiControlStyles
     static void AddActionToggleButton(Styles styles)
     {
         var toggle = new Style(x => x.OfType<XYToggleButton>().Class("xyui-toggle-button"));
-        toggle.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYToggleButton>(HorizontalAlignment.Center)));
+        toggle.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYToggleButton>(HorizontalAlignment.Left)));
         Chrome(toggle);
         styles.Add(toggle);
         State(styles, typeof(XYToggleButton), "xyui-toggle-button", ":checked", TemplatedControl.BackgroundProperty, "XY.Brush.State.Color.Active");

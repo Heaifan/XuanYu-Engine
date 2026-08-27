@@ -10,6 +10,8 @@ using Avalonia.Media;
 namespace XYUI.Avalonia.Controls;
 
 // Batch 01 共享 Chrome 模板：Border 背景/边框/圆角 + 居中内容 + 底部 Action Edge 覆盖层。
+// 垂直事实（2026-08-27 实测档案）：Avalonia 排列按整 DIP 栅格取整，字体行盒不对称残余
+// −0.37 DIP 全家族一致（XYUI2InkAlignmentAuditTests 锁定），亚像素补偿会被栅格吞掉——禁止再加。
 internal static class XyuiButtonChrome
 {
     internal static FuncControlTemplate<T> Create<T>(HorizontalAlignment horizontal) where T : Button =>
