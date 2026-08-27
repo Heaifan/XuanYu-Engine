@@ -2959,6 +2959,21 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-07-RadioButton/XYRadioButton.Template.cs` — Radio Halo、圆环、中心点与标签模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.cs` — XYUI-2-08 ToggleButton wrapper 开关语义。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.Template.cs` — Compact Track + Thumb 固定尺寸模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.cs` — XYUI-2-09 单行文本输入控件与 Placeholder/Error API。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.Template.cs` — XYUI-2-09 保留原生 TextPresenter 的文本输入模板与底部焦点装饰层。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.cs` — XYUI-2-10 统一 Value 的数字输入、步进、键盘与 Scrub 语义。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Value.cs` — XYUI-2-10 数值格式化、后缀解析、提交与回退。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Template.cs` — XYUI-2-10 文本呈现器与 Hover/Focus Stepper 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Keyboard.cs` — XYUI-2-10 普通、大步、小步键盘调整与 Enter/Esc。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Scrub.cs` — XYUI-2-10 阈值拖动、Pointer Capture 与 Scrub 提交。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-11-Slider/XYSlider.cs` — XYUI-2-11 真实 Slider 与 XYNumberField 共用 Value 的组合控件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.cs` — XYUI-2-12 可编辑 ComboBox 与候选过滤入口。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.cs` — XYUI-2-13 固定候选、不可编辑 Select 控件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.cs` — XYUI-2-14 多行 TextArea、Standard/Editor 模式与统计属性。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～14 输入族基础尺寸、Surface、Border 与状态样式。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Inputs.cs` — XYUI-2-09～14 各自独立 Gallery 预览样例。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InputControlsTests.cs` — TextField、NumberField、Slider、ComboBox、Select、TextArea 运行时合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2NumberFieldTests.cs` — XYUI-2-10 NumberField 数值、步进、Stepper、Scrub 与 Gallery 运行时测试。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件专用尺寸与 05 Chevron Track 资源。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs` — Checkbox、Radio、Switch 状态样式与 token 消费。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。

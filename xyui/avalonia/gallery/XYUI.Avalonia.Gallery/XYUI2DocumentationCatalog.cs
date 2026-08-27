@@ -4,13 +4,13 @@ using XYUI.Avalonia.Catalog;
 
 namespace XYUI.Avalonia.Gallery;
 
-// XYUI-2 文档目录：Batch 01 与 SplitButton / DropDownButton。
+// XYUI-2 文档目录：Button、Choice 与 Input 家族。
 // 描述/变体/状态取自 canonical spec reader；Token 表直接读 mapping.json（单一事实源）。
 public static class XYUI2DocumentationCatalog
 {
     public static readonly IReadOnlySet<string> BatchIds = new HashSet<string>
     {
-        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08"
+        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08", "XYUI-2-09", "XYUI-2-10", "XYUI-2-11", "XYUI-2-12", "XYUI-2-13", "XYUI-2-14"
     };
 
     public static IReadOnlyList<XYUI1ComponentDocument> Build() =>
@@ -46,6 +46,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-03" => [$"<c:{type} Content=\"网格吸附\" IsChecked=\"true\" />"],
         "XYUI-2-04" => [$"<c:{type} Content=\"新建\" />", "<c:XYSplitButton Content=\"导入\" />"],
         "XYUI-2-05" => [$"<c:{type} Content=\"导出\" />", $"<c:{type} Content=\"排序\" />"],
+        "XYUI-2-10" => ["<c:XYNumberField Value=\"125\" />", "<c:XYNumberField Value=\"72\" Suffix=\"%\" />"],
         _ => [$"<c:{type} />"]
     };
 
@@ -54,6 +55,12 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-06" => [new("IsChecked", "bool?", "false", "支持 Unchecked / Checked / Mixed"), new("IsThreeState", "bool", "false", "启用 Mixed 状态")],
         "XYUI-2-07" => [new("GroupName", "string", "", "同组互斥"), new("IsChecked", "bool", "false", "当前选项")],
         "XYUI-2-08" => [new("IsChecked", "bool", "false", "真实切换 Track / Thumb")],
+        "XYUI-2-09" => [new("Text", "string", "", "单行文本"), new("Placeholder", "string?", "null", "占位提示"), new("IsReadOnly", "bool", "false", "只读")],
+        "XYUI-2-10" => [new("Value", "double", "0", "统一数值真值"), new("Minimum", "double", "0", "下限"), new("Maximum", "double", "100", "上限"), new("Step", "double", "1", "普通步长"), new("LargeStep", "double", "10", "Shift 步长"), new("SmallStep", "double", "0.1", "Ctrl 步长"), new("Suffix", "string?", "null", "仅显示后缀"), new("DecimalPlaces", "int", "2", "显示小数位")],
+        "XYUI-2-11" => [new("Value", "double", "0", "与 NumberField 双向同步"), new("Minimum", "double", "0", "下限"), new("Maximum", "double", "100", "上限")],
+        "XYUI-2-12" => [new("ItemsSource", "IEnumerable", "[]", "可编辑候选"), new("SelectedItem", "object?", "null", "当前候选"), new("IsCustomValueAllowed", "bool", "false", "允许自定义值")],
+        "XYUI-2-13" => [new("ItemsSource", "IEnumerable", "[]", "固定候选"), new("SelectedItem", "object?", "null", "当前候选")],
+        "XYUI-2-14" => [new("Text", "string", "", "多行文本"), new("Mode", "XYTextAreaMode", "Standard", "Standard / Editor"), new("MinHeight", "double", "54", "最小高度"), new("MaxHeight", "double", "Auto", "场景上限")],
         _ => []
     };
 

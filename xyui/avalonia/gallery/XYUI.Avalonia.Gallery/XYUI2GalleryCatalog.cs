@@ -6,7 +6,6 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Gallery;
 
-// XYUI-2 真实 Runtime 预览：按钮家族、DropDownButton 与 06～08 选择控件样例。
 public static partial class XYUI2GalleryCatalog
 {
     public static Control CreatePreview(string id) => id switch
@@ -19,6 +18,12 @@ public static partial class XYUI2GalleryCatalog
         "XYUI-2-06" => Host("XY.Checkbox · Unchecked / Checked / Mixed / Disabled", Checkboxes()),
         "XYUI-2-07" => Host("XY.RadioButton · 渲染模式 / 坐标空间", RadioButtons()),
         "XYUI-2-08" => Host("XY.Switch · Compact Track / ON / OFF / Disabled", Switches()),
+        "XYUI-2-09" => Host("XY.TextField · Default / Placeholder / Focus / ReadOnly / Disabled / Error", TextFields()),
+        "XYUI-2-10" => Host("XY.NumberField · Stepper / Keyboard / Scrub", NumberFields()),
+        "XYUI-2-11" => Host("XY.Slider · 透明度 / 强度 / 时间倍率", Sliders()),
+        "XYUI-2-12" => Host("XY.ComboBox · 可编辑 / 可搜索候选", ComboBoxes()),
+        "XYUI-2-13" => Host("XY.Select · 固定候选 / 不可输入", Selects()),
+        "XYUI-2-14" => Host("XY.TextArea · Standard / Editor / AutoGrow", TextAreas()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
 
@@ -73,7 +78,6 @@ public static partial class XYUI2GalleryCatalog
         new XYToggleButton { Content = "显示参考网格", IsEnabled = false },
     ];
 
-    // Hover/Pressed 为真实交互态；caption 指示审核者在对应区域操作。
     static Control[] Splits() =>
     [
         SplitCell("新建", "Default", false),

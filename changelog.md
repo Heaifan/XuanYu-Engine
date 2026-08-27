@@ -1,5 +1,38 @@
 # changelog
 
+## XYUI-2-10 · NumberField Implementation（2026-08-27 23:00:00）
+
+- 目标：仅实现 XYUI-2-10 NumberField；XYUI-2-09、11～14 与 06～08 冻结。
+- 变化：按组件目录拆分 Value、Template、Keyboard、Scrub；提供统一 Value、Clamp、Suffix、Enter/Esc 事务、普通/Shift/Ctrl 步进、Hover/Focus Stepper 与 4 DIP Scrub；Gallery 默认落点切换到 10 并补齐真实样例与交互说明。
+- 验证：XYUI Build 0 warning / 0 error；XYUI Tests 165/165 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS；Gallery runtime smoke PASS。
+- Hash：待用户视觉验收后提交。
+- 遗留：UNCOMMITTED / UNPUSHED，等待 XYUI-2-10 真机视觉验收。
+
+## XYUI-2-09 · TextField Interaction Completion（2026-08-27 22:25:00）
+
+- 目标：仅补齐 TextField 首次聚焦全选与 Gallery 交互说明；10～14、06～08 继续冻结。
+- 变化：首次键盘/程序聚焦及未聚焦首次指针进入时全选非空文本；已聚焦再次点击交还原生 Caret 定位；ReadOnly 不自动全选；新增 09 Interaction 文档。
+- 验证：Build 0 warning / 0 error；XYUI Tests 158/158 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS；Gallery runtime 已启动。
+- Hash：待最终用户验收后提交。
+- 遗留：UNCOMMITTED / UNPUSHED，等待最终交互验收。
+
+## XYUI-2-09 · TextField Focus Edge Repair（2026-08-27 21:10:00）
+
+- 目标：仅修复 XYUI-2-09 TextField；XYUI-2-10～14 与 06～08 冻结。
+- 变化：复用 Avalonia 12.0.4 TextBox PlaceholderText 合同，保留原生 TextPresenter 编辑能力；新增 32 DIP / 3 DIP Radius 的 Focus Edge 外观、Accent Caret、Disabled 与 Error+Focus 状态，并补齐 6 个真实 Gallery 样例。
+- 验证：XYUI Build 0 warning / 0 error；XYUI Tests 156/156 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS；Gallery runtime smoke 待启动确认。
+- Hash：待用户视觉验收后提交。
+- 遗留：工作树保持 UNCOMMITTED / UNPUSHED，等待用户视觉验收。
+
+## XYUI-2-09-14 · Input Family（2026-08-27 20:45:00）
+
+- 目标：实现 XYUI-2-09 TextField、10 NumberField、11 Slider、12 Editable ComboBox、13 Fixed Select、14 TextArea，并按组件目录归档。
+- 变化：新增 09～14 独立控件目录、Identity/TypeMap、输入族基础样式与组件 Token；NumberField 提供统一 Value、Clamp、键盘步进与水平 Scrub；Slider 使用真实 XYNumberField；ComboBox 与 Select 保持可编辑/固定候选语义区分；TextArea 提供多行、Standard/Editor 模式及行数/字符数统计。
+- 验证：XYUI Build 0 warning / 0 error；XYUI Tests 155/155 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS。
+- Gallery：新增 09～14 独立预览，最终默认入口为 XYUI-2-09；等待用户按 09→14 视觉验收。
+- Hash：待用户视觉验收后提交。
+- 遗留：工作树保持 UNCOMMITTED / UNPUSHED，等待 USER VISUAL ACCEPTANCE。
+
 ## XYUI-2-06-PRECISION-COMPACT · Checkbox（2026-08-27 20:15:00）
 
 - 目标：仅按用户裁定的 Precision Compact 方案重做 XYUI-2-06；XYUI-2-07 与 XYUI-2-08 保持冻结。

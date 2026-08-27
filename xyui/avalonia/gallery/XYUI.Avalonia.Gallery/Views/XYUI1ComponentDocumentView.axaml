@@ -32,6 +32,14 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
+      <StackPanel IsVisible="{Binding HasInteractionGuide}" Spacing="6">
+        <TextBlock Text="交互 / Interaction" Classes="xyui-text-section" />
+        <TextBlock Text="首次点击：获得焦点并全选文本；再次点击：正常定位 Caret；Tab 进入：全选文本；直接输入：覆盖当前选中内容；Backspace / Delete：删除选区；Ctrl+A：全选；双击：选择单词；ReadOnly：仅选择 / 复制。" Classes="xyui-text-body" TextWrapping="Wrap" />
+      </StackPanel>
+      <StackPanel IsVisible="{Binding HasNumberFieldInteractionGuide}" Spacing="6">
+        <TextBlock Text="交互 / Interaction" Classes="xyui-text-section" />
+        <TextBlock Text="Hover / Focus 显示 Stepper；↑↓ 使用普通步长，Shift 使用大步长，Ctrl 使用小步长；Enter 提交，Esc 回退；在输入区域横向拖动超过 4 DIP 后进入 Scrub，松开提交，Esc 取消；数值始终限制在 Minimum / Maximum 内。" Classes="xyui-text-body" TextWrapping="Wrap" />
+      </StackPanel>
       <StackPanel IsVisible="{Binding HasVariants}" Spacing="6">
         <TextBlock Text="变体" Classes="xyui-text-section" />
         <ItemsControl ItemsSource="{Binding Variants}">

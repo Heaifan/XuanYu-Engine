@@ -21,6 +21,8 @@ public sealed record XYUI1ComponentDocument(
     public string StatusText => string.IsNullOrEmpty(KnownGap) ? Acceptance : $"{Acceptance} · GAP RETAINED";
     public bool HasVariants => Variants.Count > 0;
     public bool HasStates => States.Count > 0;
+    public bool HasInteractionGuide => Id == "XYUI-2-09";
+    public bool HasNumberFieldInteractionGuide => Id == "XYUI-2-10";
 }
 
 public sealed record XYUI1NavigationItem(

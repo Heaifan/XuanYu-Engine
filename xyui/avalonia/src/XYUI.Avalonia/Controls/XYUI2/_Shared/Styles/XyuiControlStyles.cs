@@ -12,23 +12,9 @@ public static partial class XyuiControlStyles
     {
         var styles = new Styles();
         AddButtonFamily(styles);
-        AddInput(styles);
+        AddInputFamily(styles);
         AddChoiceControls(styles);
         return styles;
-    }
-
-    static void AddInput(Styles styles)
-    {
-        var selector = new Style(x => x.OfType<XYTextField>().Class("xyui-text-field"));
-        Set(selector, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Input");
-        Set(selector, TemplatedControl.ForegroundProperty, "XY.Brush.Text.Primary");
-        Set(selector, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Default");
-        selector.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1)));
-        selector.Setters.Add(new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(4)));
-        selector.Setters.Add(new Setter(Control.HeightProperty, 34d));
-        styles.Add(selector);
-        State(styles, typeof(XYTextField), "xyui-text-field", ":focus",
-            TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Focus");
     }
 
     static void State(Styles styles, Type type, string cls, string state,

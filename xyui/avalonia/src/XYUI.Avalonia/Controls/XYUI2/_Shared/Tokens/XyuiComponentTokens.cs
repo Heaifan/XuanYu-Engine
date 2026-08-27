@@ -11,6 +11,10 @@ public static class XyuiComponentTokens
     public const double SwitchWidth = 34;
     public const double SwitchHeight = 18;
     public const double SwitchThumbSize = 14;
+    public const double InputHeight = 32;
+    public const double SelectHeight = 30;
+    public const double TextAreaMinHeight = 54;
+    public const double SliderTouchTargetMinHeight = 44;
 
     public static ResourceDictionary CreateResources() => new()
     {
@@ -24,5 +28,9 @@ public static class XyuiComponentTokens
         ["XY.Switch.Width"] = SwitchWidth,
         ["XY.Switch.Height"] = SwitchHeight,
         ["XY.Switch.ThumbSize"] = SwitchThumbSize,
+        ["XY.Input.Height"] = InputHeight,
+        ["XY.Select.Height"] = SelectHeight,
+        ["XY.TextArea.MinHeight"] = TextAreaMinHeight,
+        ["XY.Slider.TouchTarget.MinHeight"] = SliderTouchTargetMinHeight,
     };
 }

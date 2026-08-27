@@ -8,6 +8,12 @@
     {"id":"XYUI-2-05","canonical":"XY.DropDownButton","type":"XYDropDownButton","title":"下拉按钮"},
     {"id":"XYUI-2-06","canonical":"XY.Checkbox","type":"XYCheckbox","title":"复选框"},
     {"id":"XYUI-2-07","canonical":"XY.Radio","type":"XYRadioButton","title":"单选按钮"},
-    {"id":"XYUI-2-08","canonical":"XY.Switch","type":"XYSwitch","title":"开关"}
+    {"id":"XYUI-2-08","canonical":"XY.Switch","type":"XYSwitch","title":"开关"},
+    {"id":"XYUI-2-09","canonical":"XY.TextField","type":"XYTextField","title":"文本框"},
+    {"id":"XYUI-2-10","canonical":"XY.NumberField","type":"XYNumberField","title":"数字框"},
+    {"id":"XYUI-2-11","canonical":"XY.Slider","type":"XYSlider","title":"滑块"},
+    {"id":"XYUI-2-12","canonical":"XY.ComboBox","type":"XYComboBox","title":"组合框"},
+    {"id":"XYUI-2-13","canonical":"XY.Select","type":"XYSelect","title":"选择框"},
+    {"id":"XYUI-2-14","canonical":"XY.TextArea","type":"XYTextArea","title":"多行文本框"}
   ]
 }
