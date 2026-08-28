@@ -11,7 +11,7 @@ public static partial class XyuiControlStyles
 {
     static void AddInputFamily(Styles styles)
     {
-        TextField(styles); NumberField(styles); Slider(styles); ComboBox(styles); Select(styles); TextArea(styles);
+        TextField(styles); NumberField(styles); ComboBox(styles); Select(styles); TextArea(styles);
     }
 
     static void TextField(Styles styles)
@@ -33,10 +33,6 @@ public static partial class XyuiControlStyles
         focusEdge.Setters.Add(new Setter(Control.OpacityProperty, 1d)); styles.Add(focusEdge);
         var errorFocus = new Style(x => x.OfType<XYTextField>().Class("xyui-text-field").Class(":focus").Class(":error"));
         Set(errorFocus, TemplatedControl.BorderBrushProperty, "XY.Brush.Semantic.Error.Border"); styles.Add(errorFocus);
-    }
-    static void Slider(Styles styles)
-    {
-        var s = new Style(x => x.OfType<XYSlider>().Class("xyui-slider")); Set(s, Control.MinHeightProperty, "XY.Slider.TouchTarget.MinHeight"); styles.Add(s);
     }
     static void ComboBox(Styles styles) => Input(styles, typeof(XYComboBox), "xyui-combo-box", 32);
     static void Select(Styles styles) => Input(styles, typeof(XYSelect), "xyui-select", 30);

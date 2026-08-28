@@ -1,5 +1,23 @@
 # changelog
 
+## XYUI-2-11 · Slider Visual Fix（2026-08-28 23:49:14）
+
+- 目标：仅修复 XYUI-2-11 Slider 拖动重绘与 Integrated NumberField 数值/Suffix 布局瑕疵。
+- 变化：为 XYSliderTrack Value/区间/画刷属性增加 AffectsRender；Slider 内置 NumberField 宽度调整为 104 DIP；ValueHost 增加 ClipToBounds，Suffix 增加 24 DIP 右对齐宿主，Stepper 保持固定槽位避免布局跳动。
+- 验证：Avalonia 全量测试 171/171 PASS；解决方案 Build 0 warning / 0 error；ARCH-A（含 5+100）PASS；git diff --check PASS。
+- Hash：c6ffba19（XYUI-2-11 收口提交基线）。
+- 验收：等待用户再次确认拖动实时跟手，以及数值与 `%` 不重叠。
+- 遗留：工作树保持 UNCOMMITTED / UNPUSHED；`xyui.bat` 为本地启动资产，不纳入 Git。
+
+## XYUI-2-11 · Slider Integrated Value（2026-08-28 23:36:09）
+
+- 目标：仅实现 XYUI-2-11 Slider；09/10 与 12～14 保持冻结。
+- 变化：将 XYSlider 改为 Template 控件，提供单一 Value 真值、原生 Slider 键盘/拖动、真实 XYNumberField 精确输入/Stepper/Scrub；新增 4 DIP rail、14/16 DIP thumb、44 DIP 触控热区的正式 token/runtime 样式；Gallery 补齐透明度、光照强度、相机速度、时间倍率与交互说明。
+- 验证：相关测试 14/14 PASS；解决方案 Build 0 warning / 0 error；全部测试 1816/1816 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS。
+- Hash：待用户视觉验收后提交。
+- 验收：等待用户启动 Gallery 完成 XYUI-2-11 Light / Dark 视觉与实时交互验收。
+- 遗留：工作树保持 UNCOMMITTED / UNPUSHED；`xyui.bat` 为本地启动资产，不纳入 Git。
+
 ## XYUI-2-10 · NumberField Implementation（2026-08-27 23:00:00）
 
 - 目标：仅实现 XYUI-2-10 NumberField；XYUI-2-09、11～14 与 06～08 冻结。

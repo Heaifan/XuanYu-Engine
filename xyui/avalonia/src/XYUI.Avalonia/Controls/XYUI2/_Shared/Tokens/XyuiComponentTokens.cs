@@ -15,6 +15,9 @@ public static class XyuiComponentTokens
     public const double SelectHeight = 30;
     public const double TextAreaMinHeight = 54;
     public const double SliderTouchTargetMinHeight = 44;
+    public const double SliderRailHeight = 4;
+    public const double SliderThumbSize = 14;
+    public const double SliderThumbActiveSize = 16;
 
     public static ResourceDictionary CreateResources() => new()
     {
@@ -32,5 +35,8 @@ public static class XyuiComponentTokens
         ["XY.Select.Height"] = SelectHeight,
         ["XY.TextArea.MinHeight"] = TextAreaMinHeight,
         ["XY.Slider.TouchTarget.MinHeight"] = SliderTouchTargetMinHeight,
+        ["XY.Slider.Rail.Height"] = SliderRailHeight,
+        ["XY.Slider.Thumb.Size"] = SliderThumbSize,
+        ["XY.Slider.Thumb.ActiveSize"] = SliderThumbActiveSize,
     };
 }

@@ -57,7 +57,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-08" => [new("IsChecked", "bool", "false", "真实切换 Track / Thumb")],
         "XYUI-2-09" => [new("Text", "string", "", "单行文本"), new("Placeholder", "string?", "null", "占位提示"), new("IsReadOnly", "bool", "false", "只读")],
         "XYUI-2-10" => [new("Value", "double", "0", "统一数值真值"), new("Minimum", "double", "0", "下限"), new("Maximum", "double", "100", "上限"), new("Step", "double", "1", "普通步长"), new("LargeStep", "double", "10", "Shift 步长"), new("SmallStep", "double", "0.1", "Ctrl 步长"), new("Suffix", "string?", "null", "仅显示后缀"), new("DecimalPlaces", "int", "2", "显示小数位")],
-        "XYUI-2-11" => [new("Value", "double", "0", "与 NumberField 双向同步"), new("Minimum", "double", "0", "下限"), new("Maximum", "double", "100", "上限")],
+        "XYUI-2-11" => [new("Value", "double", "0", "Slider 与 NumberField 的唯一真值"), new("Minimum", "double", "0", "下限"), new("Maximum", "double", "100", "上限"), new("Step", "double", "1", "普通步长"), new("LargeStep", "double", "10", "Shift 步长"), new("SmallStep", "double", "0.1", "Ctrl 步长"), new("DecimalPlaces", "int", "2", "显示小数位"), new("Suffix", "string?", "null", "仅显示后缀"), new("IsNumberFieldVisible", "bool", "true", "显示精确输入")],
         "XYUI-2-12" => [new("ItemsSource", "IEnumerable", "[]", "可编辑候选"), new("SelectedItem", "object?", "null", "当前候选"), new("IsCustomValueAllowed", "bool", "false", "允许自定义值")],
         "XYUI-2-13" => [new("ItemsSource", "IEnumerable", "[]", "固定候选"), new("SelectedItem", "object?", "null", "当前候选")],
         "XYUI-2-14" => [new("Text", "string", "", "多行文本"), new("Mode", "XYTextAreaMode", "Standard", "Standard / Editor"), new("MinHeight", "double", "54", "最小高度"), new("MaxHeight", "double", "Auto", "场景上限")],

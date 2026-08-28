@@ -75,7 +75,7 @@ public sealed class XYUI2InputControlsTests : IClassFixture<XyuiHeadlessFixture>
     public void Slider_uses_real_number_field_and_shared_value() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var slider = new XYSlider { Value = 20 }; var window = XyuiBatchTestHost.Show(slider);
-        slider.Value = 60; Assert.Equal(60, slider.Value); Assert.Contains(slider.Children, x => x is XYNumberField); window.Close();
+        slider.Value = 60; Assert.Equal(60, slider.Value); Assert.Contains(slider.GetVisualDescendants(), x => x is XYNumberField); window.Close();
     });
     [Fact]
     public void Combo_is_editable_but_select_is_fixed() => _fx.Run(() =>
