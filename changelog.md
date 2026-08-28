@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI.Avalonia · Night Checkpoint（2026-08-29 00:25:00 +08:00）
+
+- 目标：记录 XYUI-2-11 收口与 XYUI-2-12 实现检查点；13 Select 与 14 TextArea 冻结。
+- 状态：09 CLOSED；10 CLOSED；11 CLOSED。12 功能已实现、核心交互基本工作，但用户视觉验收 REJECTED。
+- 已知缺陷：XYUI2-12-BUG-POPUP-001（切换离开 Gallery/应用失焦后 Popup 可能继续悬浮）OPEN，下一工作轮绝对优先修复。
+- 验证：Avalonia 全量测试 177/177 PASS；解决方案 Build 0 warning / 0 error；ARCH-A（含 5+100）PASS；git diff --check PASS；Gallery 可启动但带上述已知缺陷。
+- 决策：用户明确授权以 CHECKPOINT 提交并推送；12 不标记 CLOSED、FINAL 或 USER VISUAL ACCEPTED。
+- 遗留：`xyui.bat` 为本地启动资产，不纳入 Git；Popup 生命周期修复与 12 视觉债保留到下一工作轮。
+
 ## XYUI-2-11 · Slider Visual Fix（2026-08-28 23:49:14）
 
 - 目标：仅修复 XYUI-2-11 Slider 拖动重绘与 Integrated NumberField 数值/Suffix 布局瑕疵。

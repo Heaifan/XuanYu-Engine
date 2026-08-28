@@ -15,6 +15,7 @@ public static partial class XyuiControlStyles
         AddInputFamily(styles);
         Slider(styles);
         AddChoiceControls(styles);
+        ComboBox(styles);
         return styles;
     }
 

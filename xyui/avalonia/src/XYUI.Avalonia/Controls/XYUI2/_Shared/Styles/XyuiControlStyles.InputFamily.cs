@@ -11,7 +11,7 @@ public static partial class XyuiControlStyles
 {
     static void AddInputFamily(Styles styles)
     {
-        TextField(styles); NumberField(styles); ComboBox(styles); Select(styles); TextArea(styles);
+        TextField(styles); NumberField(styles); Select(styles); TextArea(styles);
     }
 
     static void TextField(Styles styles)
@@ -34,7 +34,6 @@ public static partial class XyuiControlStyles
         var errorFocus = new Style(x => x.OfType<XYTextField>().Class("xyui-text-field").Class(":focus").Class(":error"));
         Set(errorFocus, TemplatedControl.BorderBrushProperty, "XY.Brush.Semantic.Error.Border"); styles.Add(errorFocus);
     }
-    static void ComboBox(Styles styles) => Input(styles, typeof(XYComboBox), "xyui-combo-box", 32);
     static void Select(Styles styles) => Input(styles, typeof(XYSelect), "xyui-select", 30);
     static void TextArea(Styles styles) => Input(styles, typeof(XYTextArea), "xyui-text-area", 54);
 

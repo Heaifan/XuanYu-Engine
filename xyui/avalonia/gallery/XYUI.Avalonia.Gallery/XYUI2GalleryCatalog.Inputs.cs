@@ -28,7 +28,14 @@ public static partial class XYUI2GalleryCatalog
         SliderSample("时间倍率", new XYSlider { Width = 360, Value = 1, Minimum = 0, Maximum = 4, Step = .1, Suffix = "×" }),
         new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "交互 / Interaction" }, new TextBlock { Text = "Slider Drag → 连续粗调\nRail Click → 跳转值\nNumberField First Focus → Select All\nNumberField Typing → 精确输入\n↑ / ↓ → Step\nHorizontal Scrub → 连续精调\nShift / Ctrl → Large / Small Step" } } }];
     static Control SliderSample(string caption, XYSlider slider) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, slider } };
-    static Control[] ComboBoxes() => [new XYComboBox { Placeholder = "North...", ItemsSource = new[] { "Northern Region", "Northern Coast", "Northwest Hub" } }, new XYComboBox { SelectedIndex = 1, ItemsSource = new[] { "Steel", "Glass", "Wood" } }];
+    static Control[] ComboBoxes() => [
+        ComboSample("地区 · 可输入搜索", new XYComboBox { Width = 260, Text = "Northern Region", ItemsSource = new[] { "Northern Region", "Northern Coast", "Northern Highlands" } }),
+        ComboSample("搜索演示 · North|", new XYComboBox { Width = 260, Text = "North", ItemsSource = new[] { "Northern Region", "Northern Coast", "Northern Highlands" } }),
+        ComboSample("Placeholder", new XYComboBox { Width = 260, Placeholder = "选择地区", ItemsSource = new[] { "Northern Region", "Northern Coast", "Northern Highlands" } }),
+        ComboSample("材质 · 可编辑候选", new XYComboBox { Width = 260, Text = "Steel", ItemsSource = new[] { "Steel", "Stainless Steel", "Tool Steel" } }),
+        ComboSample("资源", new XYComboBox { Width = 260, Placeholder = "Texture", ItemsSource = new[] { "Texture", "Normal Texture", "Render Texture" } }),
+        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "交互 / Interaction" }, new TextBlock { Text = "First Focus → Select All\nTyping → Filter Candidates\nChevron → Open All\n↑ / ↓ → Navigate\nEnter → Select / Commit\nEsc → Close\nMouse Select → Select Item\nCustom Value → 按 IsCustomValueAllowed" } } }];
+    static Control ComboSample(string caption, XYComboBox combo) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, combo } };
     static Control[] Selects() => [new XYSelect { SelectedIndex = 0, ItemsSource = new[] { "实体", "线框", "材质预览" } }, new XYSelect { SelectedIndex = 1, ItemsSource = new[] { "世界", "局部" } }];
     static Control[] TextAreas() => [new XYTextArea { Text = "普通多行文本\n第二行内容", Mode = XYTextAreaMode.Standard }, new XYTextArea { Text = "编辑器内容\n第二行\n第三行", Mode = XYTextAreaMode.Editor }];
 }

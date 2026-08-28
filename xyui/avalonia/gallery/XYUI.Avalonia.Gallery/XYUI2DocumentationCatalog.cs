@@ -47,6 +47,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-04" => [$"<c:{type} Content=\"新建\" />", "<c:XYSplitButton Content=\"导入\" />"],
         "XYUI-2-05" => [$"<c:{type} Content=\"导出\" />", $"<c:{type} Content=\"排序\" />"],
         "XYUI-2-10" => ["<c:XYNumberField Value=\"125\" />", "<c:XYNumberField Value=\"72\" Suffix=\"%\" />"],
+        "XYUI-2-12" => [$"<c:{type} Placeholder=\"选择地区\" ItemsSource=\"候选集合\" />", $"<c:{type} Text=\"North\" IsCustomValueAllowed=\"false\" />"],
         _ => [$"<c:{type} />"]
     };
 

@@ -29,7 +29,7 @@ public sealed partial class XYUI1DocumentationViewModel
             .Select(x => new XYUI1NavigationItem(x.Id, x.ChineseName, x.EnglishName, x)).ToArray();
         var overview = new XYUI1NavigationItem("XYUI-2", "模块概览", "Buttons & Inputs", null);
         XYUI2Items = new[] { overview }.Concat(items).ToArray();
-        SelectedXYUI2Item = items.FirstOrDefault(x => x.Id == "XYUI-2-10") ?? items.FirstOrDefault();
+        SelectedXYUI2Item = items.FirstOrDefault(x => x.Id == "XYUI-2-12") ?? items.FirstOrDefault();
     }
 
     internal void SelectXYUI2(string id)
