@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-19/20 · ColorPicker 与 BoolProperty（2026-08-29 18:14:47 +08:00）
+
+- 目标：实现下一项 XYUI-2-19/20；2-17/2-18 保持已通过状态；不启动 XYUI-2-21。
+- 变化：新增真实 `XYColorPicker`，支持 RGB/RGBA、28×20 透明棋盘色块、颜色区域、色相/透明度滑条、HEX/R/G/B/A 字段、非法输入提示、Esc/轻量关闭/宿主生命周期收起；新增 `XYBoolProperty`，复用真实 `XYSwitch`，提供统一标签列和值列、行/开关/空格单次切换、只读与禁用阻断；Gallery、目录映射、中文名称、中文交互提示、Token 与回归测试同步到 20 项。
+- 验证：引擎解决方案 Build `0 Warning / 0 Error`；Avalonia 解决方案 Build `0 Warning / 0 Error`；Avalonia `236/236 PASS`；Core `339/339 PASS`；World `1286/1286 PASS`；WarCore `22/22 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。Gallery 已启动，但窗口被其他应用遮挡，未形成可采纳的真实视觉证据。
+- 状态：`XYUI-2-19 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`；`XYUI-2-20 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`；`XYUI-2-21 NOT STARTED`。不标记 `CLOSED` 或 `USER ACCEPTED`。
+- Hash：以本轮提交为准。
+- 遗留：请在 Gallery 中复验颜色色块/颜色值/箭头打开同一颜色面板、拖动颜色区域/色相/透明度、HEX 合法与非法输入、Esc/外部关闭、禁用；复验 BoolProperty 行点击与真实开关单次切换、空格、只读/禁用。`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-17/18 · 日期与时间分段调节 Popup 交互返工（2026-08-29 17:38:00 +08:00）
 
 - 目标：响应用户复验，保留 2-17/2-18 已通过 UI，补齐年/月/日与时/分/秒点击后的可见调节入口；不启动 XYUI-2-19。

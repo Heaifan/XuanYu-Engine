@@ -2,13 +2,11 @@ using System.Text.Json;
 using Avalonia.Controls;
 using XYUI.Avalonia.Catalog;
 namespace XYUI.Avalonia.Gallery;
-// XYUI-2 文档目录：Button、Choice 与 Input 家族。
-// 描述/变体/状态取自 canonical spec reader；Token 表直接读 mapping.json（单一事实源）。
 public static class XYUI2DocumentationCatalog
 {
     public static readonly IReadOnlySet<string> BatchIds = new HashSet<string>
     {
-        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08", "XYUI-2-09", "XYUI-2-10", "XYUI-2-11", "XYUI-2-12", "XYUI-2-13", "XYUI-2-14", "XYUI-2-15", "XYUI-2-16", "XYUI-2-17", "XYUI-2-18"
+        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08", "XYUI-2-09", "XYUI-2-10", "XYUI-2-11", "XYUI-2-12", "XYUI-2-13", "XYUI-2-14", "XYUI-2-15", "XYUI-2-16", "XYUI-2-17", "XYUI-2-18", "XYUI-2-19", "XYUI-2-20"
     };
     public static IReadOnlyList<XYUI1ComponentDocument> Build() =>
         XyuiCatalogSource.Load().Where(x => x.Module == "XYUI-2" && BatchIds.Contains(x.SourceItemId))
@@ -28,7 +26,6 @@ public static class XYUI2DocumentationCatalog
             Acceptance = PendingAcceptance
         };
     }
-    // Batch 01 尚未取得用户人工视觉验收，禁止显示 ACCEPTED。
     public const string PendingAcceptance = "READY FOR USER VISUAL ACCEPTANCE";
     static string[] Names(string block) => block == "None defined" || block == "See canonical spec"
         ? []
@@ -49,6 +46,8 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-16" => ["<c:XYPasswordField Placeholder=\"请输入访问密码\" />", "<c:XYPasswordField Password=\"部署密钥\" />"],
         "XYUI-2-17" => [$"<c:{type} SelectedDate=\"2026-08-12\" />", $"<c:{type} SelectedDate=\"2028-02-29\" />"],
         "XYUI-2-18" => [$"<c:{type} Time=\"14:30:25\" ShowSeconds=\"true\" />", $"<c:{type} Time=\"09:05:00\" ShowSeconds=\"false\" />"],
+        "XYUI-2-19" => [$"<c:{type} Color=\"#326F8A\" Mode=\"RGB\" />", $"<c:{type} Color=\"#326F8A8C\" Mode=\"RGBA\" />"],
+        "XYUI-2-20" => [$"<c:{type} Label=\"显示网格\" Value=\"true\" />", $"<c:{type} Label=\"只读状态\" Value=\"false\" IsReadOnly=\"true\" />"],
         _ => [$"<c:{type} />"]
     };
     static IReadOnlyList<XYUIDocProperty> Properties(string id) => id switch
@@ -66,6 +65,8 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-16" => [new("Password", "string", "", "密码文本别名"), new("Placeholder", "string?", "null", "占位提示"), new("IsRevealed", "bool", "false", "按住时临时显示")],
         "XYUI-2-17" => [new("SelectedDate", "DateOnly", "2026-08-12", "当前日期"), new("MinDate", "DateOnly?", "null", "可选最小日期"), new("MaxDate", "DateOnly?", "null", "可选最大日期"), new("DateChanged", "event", "—", "日期变化事件")],
         "XYUI-2-18" => [new("Time", "TimeOnly", "14:30:25", "当前时间"), new("ShowSeconds", "bool", "true", "显示秒分段"), new("TimeChanged", "event", "—", "时间变化事件")],
+        "XYUI-2-19" => [new("Color", "Color", "#326F8A", "颜色真值"), new("Mode", "XYColorPickerMode", "RGBA", "RGB / RGBA 显示模式"), new("IsOpen", "bool", "false", "颜色面板是否打开"), new("ColorChanged", "event", "—", "颜色变化事件")],
+        "XYUI-2-20" => [new("Label", "string", "属性", "属性名称"), new("Value", "bool", "false", "布尔真值"), new("IsReadOnly", "bool", "false", "只读状态"), new("ValueChanged", "event", "—", "值变化事件")],
         _ => []
     };
     static IReadOnlyList<XYUIDocToken> Tokens(string id)

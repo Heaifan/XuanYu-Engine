@@ -26,6 +26,8 @@ public static partial class XYUI2GalleryCatalog
         "XYUI-2-16" => Host("密码输入框 · 按住显示", PasswordFields()),
         "XYUI-2-17" => Host("日期选择器 · 分段编辑 / 日历面板", DatePickers()),
         "XYUI-2-18" => Host("时间选择器 · 分段编辑 / 横向微调", TimePickers()),
+        "XYUI-2-19" => Host("颜色选择器 · RGB / RGBA / 透明度", ColorPickers()),
+        "XYUI-2-20" => Host("布尔属性 · 属性行 / 开关复用", BoolProperties()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
     static StackPanel Host(string title, Control[] samples)
@@ -38,7 +40,6 @@ public static partial class XYUI2GalleryCatalog
         }
         return new StackPanel { Spacing = 8, Children = { new XYCaption { Text = title }, panel } };
     }
-
     static Control[] Buttons() =>
     [
         new XYButton { Content = "新建" },
@@ -46,7 +47,6 @@ public static partial class XYUI2GalleryCatalog
         new XYButton { Content = "删除", Variant = XyuiButtonVariant.Danger },
         new XYButton { Content = "保存", IsEnabled = false },
     ];
-
     static Control[] IconButtons()
     {
         var selected = GhostIcon(XyuiVectorIcon.Code, "查看代码");

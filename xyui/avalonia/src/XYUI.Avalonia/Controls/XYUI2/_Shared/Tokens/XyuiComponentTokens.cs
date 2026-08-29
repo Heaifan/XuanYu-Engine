@@ -20,6 +20,9 @@ public static class XyuiComponentTokens
     public const double SliderThumbActiveSize = 16;
     public const double ComboBoxChevronCellWidth = 32;
     public const double SelectChevronSurfaceWidth = 36;
+    public const double ColorPickerSwatchWidth = 28;
+    public const double ColorPickerSwatchHeight = 20;
+    public const double BoolPropertyRowHeight = 34;
 
     public static ResourceDictionary CreateResources() => new()
     {
@@ -42,5 +45,8 @@ public static class XyuiComponentTokens
         ["XY.Slider.Thumb.ActiveSize"] = SliderThumbActiveSize,
         ["XY.ComboBox.ChevronCell.Width"] = ComboBoxChevronCellWidth,
         ["XY.Select.ChevronSurface.Width"] = SelectChevronSurfaceWidth,
+        ["XY.ColorPicker.Swatch.Width"] = ColorPickerSwatchWidth,
+        ["XY.ColorPicker.Swatch.Height"] = ColorPickerSwatchHeight,
+        ["XY.BoolProperty.Row.Height"] = BoolPropertyRowHeight,
     };
 }

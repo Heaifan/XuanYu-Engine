@@ -2846,9 +2846,10 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Api.cs` — 真实 Avalonia 属性与 Foundation Token 文档表。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.cs` — 左侧导航选择与模块/组件文档视图切换模型。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI2.cs` — XYUI-2 区块导航、选中路由与默认落点（复用文档视图）。
- - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.cs` — XYUI-2 05～08 文档数据源（canonical spec + mapping token 直读）。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.cs` — XYUI-2-01～20 中文文档数据源（canonical spec + mapping token 直读）。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.cs` — Batch 01 与 SplitButton Compact Icon Well 真实 Runtime 预览工厂。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Choices.cs` — Checkbox、RadioButton、Switch 真实场景样例工厂。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.ColorBool.cs` — ColorPicker 与 BoolProperty 的中文真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.DropDown.cs` — DropDownButton 导出/筛选/排序等真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYIconButtonNamingExtensions.cs` — IconButton Gallery 自动化名称扩展。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYBadgePreviewFactory.cs` — Badge Default/Accent 左指针标签的真实 Gallery Preview 工厂。
@@ -2857,7 +2858,7 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1DocumentationView.axaml.cs` — 文档导航视图代码隐藏与模型初始化。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml` — XYUI-1 模块概览与 24 项紧凑组件索引。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml.cs` — 组件索引点击导航处理。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI2ModuleOverviewView.axaml` — XYUI-2 模块概览页（Canonical 24 / Batch 01 实装 3 诚实统计）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI2ModuleOverviewView.axaml` — XYUI-2 模块概览页（Canonical 24 / 当前已实装 16 项诚实统计）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI2ModuleOverviewView.axaml.cs` — XYUI-2 索引点击导航处理。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ComponentDocumentView.axaml` — 单组件中文文档模板（Preview/Usage/API/Token）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ComponentDocumentView.axaml.cs` — 单组件文档视图代码隐藏。
@@ -2873,6 +2874,8 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/CatalogSourceTests.cs` — Catalog 注册数量与类型映射源同步合同。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2Batch01ReconcileTests.cs` — Batch 01 文档/预览对账回归（计数与真实状态一致）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ComponentReconcileTests.cs` — 组件文档登记与 Gallery 预览最小样本对账（含 05 待验收锁）。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ColorPickerTests.cs` — XYUI-2-19 面板、透明度、HEX 合法/非法输入与 Gallery 回归测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2BoolPropertyTests.cs` — XYUI-2-20 真实 XYSwitch 复用、只读/禁用与 Gallery 回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonRuntimeTests.cs` — DropDownButton 单命中区结构与点击语义（含槽区无第二行为）回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonVisualStateTests.cs` — DropDownButton 五状态视觉合同（含 Chevron 衰减与聚焦环）。
  - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InkAlignmentAuditTests.cs` — 家族文字着墨等线与左对齐内距测量合同（BuildGeometry 实测）。
@@ -3005,6 +3008,15 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Keyboard.cs` — XYUI-2-18 分段导航、数字替换与当前分段循环调整键盘交互。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Scrub.cs` — XYUI-2-18 4 DIP 横向微调、Pointer Capture、释放与脱离清理。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Popup.cs` — XYUI-2-18 中文时间调节 Popup、时分秒增减、提交/取消与轻量关闭。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.cs` — XYUI-2-19 颜色真值、RGB/RGBA 模式、显示值与颜色变化事件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Template.cs` — XYUI-2-19 输入 Chrome、透明棋盘色块、箭头与颜色 Popup 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Color.cs` — XYUI-2-19 HSV/RGBA 转换与色相、饱和度、明度计算。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Popup.cs` — XYUI-2-19 颜色区域、色相/透明度滑条与 HEX/RGBA 字段面板构建。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Panel.cs` — XYUI-2-19 颜色区域渐变、拖动调节与面板值同步。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Input.cs` — XYUI-2-19 HEX 校验、R/G/B/A 数值提交与错误提示。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Lifecycle.cs` — XYUI-2-19 Popup 开关与脱离、停用、关闭生命周期清理。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/XYBoolProperty.cs` — XYUI-2-20 属性标签、布尔真值、只读与单次切换路由。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/XYBoolProperty.Template.cs` — XYUI-2-20 统一标签列、值列与真实 XYSwitch 模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～14 输入族基础尺寸、Surface、Border 与可选 Focus Border 状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Slider.cs` — XYUI-2-11 Slider 模板、Rail/Thumb token 与紧凑间距样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ComboBox.cs` — XYUI-2-12 ComboBox 输入 Chrome、Chevron、Focus、Error 与候选项样式。
@@ -3012,6 +3024,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.TextArea.cs` — XYUI-2-14 TextArea Root Chrome、Focus Edge、Editor Bar 与错误/禁用状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.SearchPassword.cs` — XYUI-2-15/16 搜索框、密码框 Chrome、图标、单元格、焦点与禁用样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.DateTime.cs` — XYUI-2-17/18 输入 Chrome、分段激活、日历面板、微调指示器与状态样式。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ColorBool.cs` — XYUI-2-19/20 输入面板、棋盘格、布尔属性行与复用开关样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件尺寸 token，含 Select 36 DIP Chevron Surface 宽度。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Inputs.cs` — XYUI-2-09～14 各自独立 Gallery 预览样例。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.SearchPassword.cs` — XYUI-2-15/16 搜索框与密码输入框中文状态、交互提示和真实控件样例。
