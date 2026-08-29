@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-24 · Tighten Compact Reference Sample（2026-08-29 23:59:00 +08:00）
+
+- 目标：仅收窄 Gallery 的“紧凑引用”示例边界框。
+- 原因：示例固定宽度为 280 DIP，明显大于 `Tank_004` 内容与操作按钮的实际需要。
+- 变化：将该示例宽度调整为 240 DIP；未修改引用控件通用布局。
+- 状态：`XYUI-2-24 COMPACT REFERENCE TIGHTENED`；等待用户视觉复验，不标记 CLOSED。
+- Hash：待本轮提交。
+- 遗留：需确认紧凑示例文字、标签图标和三个操作按钮均不发生裁切。
+
 ## XYUI-2-24 · Reference Field Border Restore（2026-08-29 23:58:00 +08:00）
 
 - 目标：仅恢复引用属性控件正常态的边界框。
