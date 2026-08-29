@@ -7,7 +7,7 @@
 - 变化：标签微调改用 `10^-DecimalPlaces`；两位小数按 `0.01`、三位小数按 `0.001` 调节；未修改 `XYNumberField` 本体或其他控件。
 - 验证：新增三位小数标签微调回归断言；完整门禁待执行。
 - 状态：`XYUI-2-21 DECIMAL SCRUB FIX IMPLEMENTED`；等待用户复核，不标记 CLOSED。
-- Hash：待本轮提交。
+- Hash：`c78992c0`。
 - 遗留：需复核标签拖动、键盘步进与右侧上下按钮的既有语义边界。
 
 ## XYUI-2-22 · Vector Axis Composite Visual Restore（2026-08-29 22:18:00 +08:00）
