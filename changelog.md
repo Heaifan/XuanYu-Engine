@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-18 · TimePicker 调节 Popup 交互返工（2026-08-29 17:15:56 +08:00）
+
+- 目标：响应用户对 2-18 的交互复验，只保留已通过 UI，补齐时钟图标与时/分/秒文本的可见调节入口；不启动 XYUI-2-19。
+- 变化：时钟图标改为可点击操作槽；点击时钟或任一时间分段打开中文“调整时间”面板；面板提供时/分/秒增减、完成、取消、Esc 与轻量关闭，取消恢复打开前值，正常关闭提交；现有数字分段编辑、4 DIP 横向微调、禁用与生命周期取消继续保留。新增 Popup 调节、恢复和入口回归测试。
+- 验证：引擎解决方案 Build `0 Warning / 0 Error`；Avalonia 解决方案 Build `0 Warning / 0 Error`；Avalonia `233/233 PASS`；Core `339/339 PASS`；World `1286/1286 PASS`；WarCore `22/22 PASS`；TimePicker 定向 `10/10 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。
+- 状态：`XYUI-2-18 UI ACCEPTED`；`INTERACTION REWORKED`；`AWAITING USER INTERACTION RE-REVIEW`；`XYUI-2-19 NOT STARTED`。不标记 `CLOSED` 或 `USER ACCEPTED`。
+- Hash：以本轮提交为准。
+- 遗留：Gallery 启动到 XYUI-2-18 浅色主题，等待用户复验时钟图标、时间文本、加减、完成、取消与拖动微调；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-17/18 · DatePicker 与 TimePicker 交互返工（2026-08-29 16:55:52 +08:00）
 
 - 目标：按 `XYUI-2-17-18-Interaction-Rework.md` 只修复日期选择器与时间选择器交互；保留用户已通过的 UI；不启动 XYUI-2-19。

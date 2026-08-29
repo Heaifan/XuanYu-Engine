@@ -17,12 +17,17 @@ public partial class XYTimePicker : TemplatedControl
     public event EventHandler? TimeChanged;
     internal readonly Dictionary<XYTimeSegment, Button> SegmentButtons = [];
     internal Button? SecondSeparatorPart { get; set; }
+    internal Button? ClockButtonPart { get; set; }
     internal XYIcon? ScrubIndicatorPart { get; set; }
+    internal Popup? TimePopupPart { get; set; }
+    internal Border? TimePopupSurfacePart { get; set; }
     internal XYTimeSegment ActiveSegment { get; private set; } = XYTimeSegment.Minute;
     internal bool IsScrubArmed { get; set; }
     internal bool IsScrubbing { get; set; }
     internal XYTimeSegment ScrubSegment { get; set; }
     internal bool IsSegmentEditing { get; private set; }
+    internal bool IsTimePopupOpen { get; private set; }
+    internal bool PointerActionPending { get; set; }
     internal string EditBuffer { get; private set; } = "";
     TimeOnly _editStartTime;
     public XYTimePicker() { Classes.Add("xyui-time-picker"); Focusable = true; AddHandler(InputElement.PointerMovedEvent, OnTimePointerMoved, RoutingStrategies.Bubble, true); AddHandler(InputElement.PointerReleasedEvent, OnTimePointerReleased, RoutingStrategies.Bubble, true); AddHandler(InputElement.PointerCaptureLostEvent, OnTimePointerCaptureLost, RoutingStrategies.Bubble, true); }
@@ -33,7 +38,7 @@ public partial class XYTimePicker : TemplatedControl
         base.OnPropertyChanged(change);
         if (change.Property == TimeProperty) { SyncTimeParts(); TimeChanged?.Invoke(this, EventArgs.Empty); }
         if (change.Property == ShowSecondsProperty) { if (!ShowSeconds && ActiveSegment == XYTimeSegment.Second) ActiveSegment = XYTimeSegment.Minute; SyncTimeParts(); }
-        if (change.Property == IsEnabledProperty && !IsEnabled) CancelScrub();
+        if (change.Property == IsEnabledProperty && !IsEnabled) { CancelScrub(); CloseTimePopupForLifecycle(); }
     }
     public void ActivateSegment(XYTimeSegment segment) { if (!IsEnabled || segment == XYTimeSegment.Second && !ShowSeconds) return; CommitSegmentEdit(); ActiveSegment = segment; BeginSegmentEdit(segment); SegmentButtons.GetValueOrDefault(segment)?.Focus(); }
     internal void BeginSegmentEdit(XYTimeSegment segment) { ActiveSegment = segment; _editStartTime = Time; EditBuffer = ""; IsSegmentEditing = true; Classes.Set("xyui-time-editing", true); SyncSegmentClasses(); }

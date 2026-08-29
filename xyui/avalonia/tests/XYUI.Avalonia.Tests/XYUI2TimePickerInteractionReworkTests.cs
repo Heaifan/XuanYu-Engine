@@ -2,7 +2,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using XYUI.Avalonia.Controls;
 
 namespace XYUI.Avalonia.Tests;
@@ -44,6 +46,25 @@ public sealed class XYUI2TimePickerInteractionReworkTests : IClassFixture<XyuiHe
         window.MouseDown(start, MouseButton.Left); window.MouseMove(new Point(start.X - 20, start.Y)); Dispatcher.UIThread.RunJobs(); Assert.True(picker.IsScrubbing); picker.IsEnabled = false; Assert.False(picker.IsScrubbing); Assert.Equal(30, picker.Time.Minute); window.Content = null; window.Close();
     });
 
+    [Fact]
+    public void TimePicker_clock_and_segment_open_chinese_adjustment_popup() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var picker = new XYTimePicker { Width = 220, Time = new TimeOnly(14, 30, 25) }; var window = XyuiBatchTestHost.Show(picker);
+        picker.ClockButtonPart!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.True(picker.IsTimePopupOpen); Assert.True(picker.TimePopupPart!.IsOpen); Assert.Contains(picker.TimePopupSurfacePart!.GetVisualDescendants().OfType<TextBlock>(), x => x.Text == "调整时间");
+        var plus = picker.TimePopupSurfacePart!.GetVisualDescendants().OfType<Button>().Single(x => x.Tag?.ToString() == "Minute-增加"); plus.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(31, picker.Time.Minute);
+        picker.TimePopupSurfacePart!.GetVisualDescendants().OfType<Button>().Single(x => x.Content?.ToString() == "完成").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.False(picker.IsTimePopupOpen);
+        Click(window, picker.SegmentButtons[XYTimeSegment.Hour]); Assert.True(picker.IsTimePopupOpen); window.Close();
+    });
+
+    [Fact]
+    public void TimePicker_popup_cancel_escape_and_light_dismiss_restore_or_commit() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var picker = new XYTimePicker { Width = 220, Time = new TimeOnly(14, 30, 25) }; var window = XyuiBatchTestHost.Show(picker); picker.OpenTimePopup(XYTimeSegment.Minute);
+        picker.TimePopupSurfacePart!.GetVisualDescendants().OfType<Button>().Single(x => x.Tag?.ToString() == "Minute-增加").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(31, picker.Time.Minute); picker.TimePopupSurfacePart!.GetVisualDescendants().OfType<Button>().Single(x => x.Content?.ToString() == "取消").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(30, picker.Time.Minute);
+        picker.OpenTimePopup(XYTimeSegment.Minute); Raise(picker, Key.Escape); Assert.False(picker.IsTimePopupOpen); picker.OpenTimePopup(XYTimeSegment.Minute); picker.TimePopupPart!.IsOpen = false; Dispatcher.UIThread.RunJobs(); Assert.False(picker.IsTimePopupOpen); window.Close();
+    });
+
     static void Click(Window window, Button button) { var point = button.TranslatePoint(new Point(8, 16), window)!.Value; window.MouseMove(point); window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); }
     static void Type(XYTimePicker picker, params Key[] keys) { foreach (var key in keys) { picker.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key }); Dispatcher.UIThread.RunJobs(); } }
+    static void Raise(XYTimePicker picker, Key key) { picker.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key }); Dispatcher.UIThread.RunJobs(); }
 }

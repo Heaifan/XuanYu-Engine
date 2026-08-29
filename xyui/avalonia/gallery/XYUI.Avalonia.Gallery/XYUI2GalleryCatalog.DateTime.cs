@@ -28,7 +28,7 @@ public static partial class XYUI2GalleryCatalog
         TimeSample("分钟分段激活", ActiveTime(XYTimeSegment.Minute)),
         TimeSample("秒分段激活", ActiveTime(XYTimeSegment.Second)),
         TimeSample("禁用", new XYTimePicker { Width = 220, Time = new TimeOnly(22, 10, 5), IsEnabled = false }),
-        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "交互提示" }, new TextBlock { Text = "点击时 / 分 / 秒 → 选择分段\n数字键 → 精确替换当前分段\n↑ / ↓ → 仅调整当前分段并循环\n← / → → 切换可见分段\n按住分段左右拖动 → 连续微调；右增左减\n秒分段隐藏时不占空间、不参与键盘切换\n禁用 → 结束微调并阻断交互" } } },
+        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "交互提示" }, new TextBlock { Text = "点击时钟图标或时 / 分 / 秒 → 打开调整时间面板\n调整面板可用加减按钮修改当前时间；完成保存，取消恢复\n数字键 → 精确替换当前分段\n↑ / ↓ → 仅调整当前分段并循环\n← / → → 切换可见分段\n按住分段左右拖动 → 连续微调；右增左减\n秒分段隐藏时不占空间、不参与键盘切换\n禁用 → 结束微调并阻断交互" } } },
     ];
 
     static Control DateSample(string caption, XYDatePicker picker) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, picker } };

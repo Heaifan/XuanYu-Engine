@@ -3003,6 +3003,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Template.cs` — XYUI-2-18 单根 Chrome、可隐藏秒分段与时钟/微调指示器模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Keyboard.cs` — XYUI-2-18 分段导航、数字替换与当前分段循环调整键盘交互。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Scrub.cs` — XYUI-2-18 4 DIP 横向微调、Pointer Capture、释放与脱离清理。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Popup.cs` — XYUI-2-18 中文时间调节 Popup、时分秒增减、提交/取消与轻量关闭。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～14 输入族基础尺寸、Surface、Border 与可选 Focus Border 状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Slider.cs` — XYUI-2-11 Slider 模板、Rail/Thumb token 与紧凑间距样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ComboBox.cs` — XYUI-2-12 ComboBox 输入 Chrome、Chevron、Focus、Error 与候选项样式。

@@ -9,7 +9,8 @@ public partial class XYTimePicker
         if (!IsEnabled) return;
         if (e.Key is Key.Left or Key.Right) { MoveSegment(e.Key == Key.Right ? 1 : -1); e.Handled = true; return; }
         if (e.Key is Key.Up or Key.Down) { CommitSegmentEdit(); SetSegment(ActiveSegment, GetSegmentValue() + (e.Key == Key.Up ? 1 : -1)); BeginSegmentEdit(ActiveSegment); e.Handled = true; return; }
-        if (e.Key == Key.Escape) { CancelSegmentEdit(); e.Handled = true; return; }
+        if (e.Key == Key.Enter) { CommitSegmentEdit(); if (!IsTimePopupOpen) OpenTimePopup(ActiveSegment); e.Handled = true; return; }
+        if (e.Key == Key.Escape) { if (IsTimePopupOpen) CancelTimePopup(); else CancelSegmentEdit(); e.Handled = true; return; }
         var digit = Digit(e.Key); if (digit < 0) return; InputDigit(digit); e.Handled = true;
     }
     int GetSegmentValue() => ActiveSegment switch { XYTimeSegment.Hour => Time.Hour, XYTimeSegment.Minute => Time.Minute, _ => Time.Second };
