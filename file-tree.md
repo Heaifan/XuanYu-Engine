@@ -2999,6 +2999,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.Template.cs` — XYUI-2-17 单根 Chrome、分段按钮、快捷步进与日历 Popup 模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.Keyboard.cs` — XYUI-2-17 分段导航、数字替换与上下调整键盘交互。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.Calendar.cs` — XYUI-2-17 本地日历网格、月份导航与 Popup 生命周期清理。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.Popup.cs` — XYUI-2-17 中文日期分段调节 Popup、年/月/日增减、提交/取消与轻量关闭。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.cs` — XYUI-2-18 时间真值、时分秒变体、分段状态与时间变化事件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Template.cs` — XYUI-2-18 单根 Chrome、可隐藏秒分段与时钟/微调指示器模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Keyboard.cs` — XYUI-2-18 分段导航、数字替换与当前分段循环调整键盘交互。

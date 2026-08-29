@@ -17,7 +17,7 @@ public static partial class XYUI2GalleryCatalog
         DateSample("月份边界", new XYDatePicker { Width = 300, SelectedDate = new DateOnly(2026, 12, 31) }),
         DateSample("闰日", new XYDatePicker { Width = 300, SelectedDate = new DateOnly(2028, 2, 29) }),
         DateSample("禁用", new XYDatePicker { Width = 300, SelectedDate = new DateOnly(2026, 8, 12), IsEnabled = false }),
-        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "交互提示" }, new TextBlock { Text = "点击年 / 月 / 日 → 选择分段\n数字键 → 精确替换当前分段\n↑ / ↓ → 调整当前分段\n← / → → 切换分段\n前一天 / 后一天 → 调整一天\n日历图标 → 打开面板；点击日期或 Esc → 关闭\n禁用 → 保留日期显示并阻断交互" } } },
+        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "交互提示" }, new TextBlock { Text = "点击年 / 月 / 日 → 打开对应调节面板\n调节面板可用加减按钮修改对应分段；完成保存，取消恢复\n数字键 → 精确替换当前分段\n↑ / ↓ → 调整当前分段\n← / → → 切换分段\n前一天 / 后一天 → 调整一天\n日历图标 → 打开日历面板；点击日期或 Esc → 关闭\n禁用 → 保留日期显示并阻断交互" } } },
     ];
 
     static Control[] TimePickers() =>

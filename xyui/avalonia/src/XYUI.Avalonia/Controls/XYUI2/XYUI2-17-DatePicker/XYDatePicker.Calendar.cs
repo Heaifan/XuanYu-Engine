@@ -14,9 +14,10 @@ namespace XYUI.Avalonia.Controls;
 public partial class XYDatePicker
 {
     IActivatableLifetime? _applicationLifetime; WindowBase? _hostWindow;
+    XYDateSegment? _pointerSegment;
     internal Border? CalendarSurfacePart { get; set; }
-    protected override void OnPointerPressed(PointerPressedEventArgs e) { base.OnPointerPressed(e); if (!IsEnabled) return; var point = e.GetPosition(this); if (point.X >= Bounds.Width - 32) { ToggleCalendar(); ArmPointerAction(e); } else if (point.X < 32) { ChangeDays(-1); ArmPointerAction(e); } else if (point.X >= Bounds.Width - 64) { ChangeDays(1); ArmPointerAction(e); } else foreach (var pair in SegmentButtons) if (In(point, pair.Value)) { ActivateSegment(pair.Key); ArmPointerAction(e); break; } }
-    protected override void OnPointerReleased(PointerReleasedEventArgs e) { base.OnPointerReleased(e); if (PointerActionPending) Dispatcher.UIThread.Post(() => PointerActionPending = false); }
+    protected override void OnPointerPressed(PointerPressedEventArgs e) { base.OnPointerPressed(e); if (!IsEnabled) return; _pointerSegment = null; var point = e.GetPosition(this); if (point.X >= Bounds.Width - 32) { ToggleCalendar(); ArmPointerAction(e); } else if (point.X < 32) { ChangeDays(-1); ArmPointerAction(e); } else if (point.X >= Bounds.Width - 64) { ChangeDays(1); ArmPointerAction(e); } else foreach (var pair in SegmentButtons) if (In(point, pair.Value)) { ActivateSegment(pair.Key); _pointerSegment = pair.Key; ArmPointerAction(e); break; } }
+    protected override void OnPointerReleased(PointerReleasedEventArgs e) { base.OnPointerReleased(e); if (PointerActionPending && _pointerSegment is { } segment) OpenDatePopup(segment); if (PointerActionPending) Dispatcher.UIThread.Post(() => { PointerActionPending = false; _pointerSegment = null; }); }
     internal bool ConsumePointerAction() { if (!PointerActionPending) return false; PointerActionPending = false; return true; }
     void ArmPointerAction(PointerEventArgs e) { PointerActionPending = true; e.Handled = true; }
     bool In(Point point, Control control) { var origin = control.TranslatePoint(new Point(0, 0), this); return origin is not null && new Rect(origin.Value, control.Bounds.Size).Contains(point); }

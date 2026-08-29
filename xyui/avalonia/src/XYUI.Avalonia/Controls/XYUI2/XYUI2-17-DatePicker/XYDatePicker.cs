@@ -18,6 +18,8 @@ public partial class XYDatePicker : TemplatedControl
     public event EventHandler? DateChanged;
     internal readonly Dictionary<XYDateSegment, Button> SegmentButtons = [];
     internal Popup? PopupPart { get; private set; }
+    internal Popup? DatePopupPart { get; set; }
+    internal Border? DatePopupSurfacePart { get; set; }
     internal ContentControl? CalendarContentPart { get; private set; }
     internal XYIcon? CalendarIconPart { get; private set; }
     internal Button? CalendarButtonPart { get; set; }
@@ -26,6 +28,7 @@ public partial class XYDatePicker : TemplatedControl
     internal XYDateSegment ActiveSegment { get; private set; } = XYDateSegment.Day;
     internal DateOnly CalendarMonth { get; set; }
     internal bool IsCalendarOpen { get; private set; }
+    internal bool IsDatePopupOpen { get; private set; }
     internal bool IsSegmentEditing { get; private set; }
     internal string EditBuffer { get; private set; } = "";
     internal bool PointerActionPending { get; set; }

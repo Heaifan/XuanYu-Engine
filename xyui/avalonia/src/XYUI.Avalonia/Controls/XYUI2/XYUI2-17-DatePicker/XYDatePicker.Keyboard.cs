@@ -9,8 +9,8 @@ public partial class XYDatePicker
         if (!IsEnabled) return;
         if (e.Key is Key.Left or Key.Right) { MoveSegment(e.Key == Key.Right ? 1 : -1); e.Handled = true; return; }
         if (e.Key is Key.Up or Key.Down) { AdjustSegment(e.Key == Key.Up ? 1 : -1); e.Handled = true; return; }
-        if (e.Key == Key.Enter) { CommitSegmentEdit(); ToggleCalendar(); e.Handled = true; return; }
-        if (e.Key == Key.Escape) { CancelSegmentEdit(); CloseCalendarForLifecycle(); e.Handled = true; return; }
+        if (e.Key == Key.Enter) { CommitSegmentEdit(); OpenDatePopup(ActiveSegment); e.Handled = true; return; }
+        if (e.Key == Key.Escape) { if (IsDatePopupOpen) CancelDatePopup(); else { CancelSegmentEdit(); CloseCalendarForLifecycle(); } e.Handled = true; return; }
         var digit = Digit(e.Key); if (digit < 0) return; InputDigit(digit); e.Handled = true;
     }
     void MoveSegment(int direction) { var order = SegmentOrder().ToArray(); var index = Array.IndexOf(order, ActiveSegment); ActivateSegment(order[(index + direction + order.Length) % order.Length]); }

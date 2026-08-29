@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-17/18 · 日期与时间分段调节 Popup 交互返工（2026-08-29 17:38:00 +08:00）
+
+- 目标：响应用户复验，保留 2-17/2-18 已通过 UI，补齐年/月/日与时/分/秒点击后的可见调节入口；不启动 XYUI-2-19。
+- 变化：点击日期的年、月、日分别打开中文“调整日期”面板，点击时间的时、分、秒分别打开中文“调整时间”面板；对应分段可用加减按钮调节，完成提交，取消/Esc 恢复打开前值，轻量关闭提交；补齐日期真实鼠标释放路径，原日历 Popup、键盘编辑、前后一天与横向微调继续保留。新增日期分段入口与调节回归测试。
+- 验证：引擎解决方案 Build `0 Warning / 0 Error`；Avalonia 解决方案 Build `0 Warning / 0 Error`；Avalonia `234/234 PASS`；Core `339/339 PASS`；World `1286/1286 PASS`；WarCore `22/22 PASS`；日期/时间定向 `11/11 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS；真实 Gallery 点击 `2026` 打开“调整日期”，点击 `08` 后月份 `+` 由 `08` 变为 `09`，浅色默认窗口已恢复。
+- 状态：`XYUI-2-17 UI ACCEPTED`；`INTERACTION REWORKED`；`AWAITING USER INTERACTION RE-REVIEW`；`XYUI-2-18 UI ACCEPTED`；`INTERACTION REWORKED`；`AWAITING USER INTERACTION RE-REVIEW`；`XYUI-2-19 NOT STARTED`。不标记 `CLOSED` 或 `USER ACCEPTED`。
+- Hash：以本轮提交为准。
+- 遗留：Gallery 启动到 2-17 或 2-18 浅色主题，等待用户复验日期年/月/日、时间时/分/秒、对应加减、完成、取消与既有拖动/日历交互；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-18 · TimePicker 调节 Popup 交互返工（2026-08-29 17:15:56 +08:00）
 
 - 目标：响应用户对 2-18 的交互复验，只保留已通过 UI，补齐时钟图标与时/分/秒文本的可见调节入口；不启动 XYUI-2-19。

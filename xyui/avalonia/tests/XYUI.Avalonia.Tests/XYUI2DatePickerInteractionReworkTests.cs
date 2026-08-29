@@ -35,16 +35,24 @@ public sealed class XYUI2DatePickerInteractionReworkTests : IClassFixture<XyuiHe
     public void DatePicker_segments_enter_edit_and_replace_values() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var picker = new XYDatePicker { SelectedDate = new DateOnly(2026, 8, 12) }; var window = XyuiBatchTestHost.Show(picker);
-        Click(window, picker.SegmentButtons[XYDateSegment.Year]); Assert.True(picker.IsSegmentEditing); Type(picker, Key.D2, Key.D0, Key.D2, Key.D7); Assert.Equal(2027, picker.SelectedDate.Year);
-        Click(window, picker.SegmentButtons[XYDateSegment.Month]); Type(picker, Key.D1, Key.D1); Assert.Equal(11, picker.SelectedDate.Month); Click(window, picker.SegmentButtons[XYDateSegment.Day]); Type(picker, Key.D2, Key.D5); Assert.Equal(25, picker.SelectedDate.Day); window.Close();
+        Click(window, picker.SegmentButtons[XYDateSegment.Year]); Assert.True(picker.IsSegmentEditing); Assert.True(picker.IsDatePopupOpen); picker.CancelDatePopup(); Type(picker, Key.D2, Key.D0, Key.D2, Key.D7); Assert.Equal(2027, picker.SelectedDate.Year);
+        Click(window, picker.SegmentButtons[XYDateSegment.Month]); Assert.True(picker.IsDatePopupOpen); picker.CancelDatePopup(); Type(picker, Key.D1, Key.D1); Assert.Equal(11, picker.SelectedDate.Month); Click(window, picker.SegmentButtons[XYDateSegment.Day]); Assert.True(picker.IsDatePopupOpen); picker.CancelDatePopup(); Type(picker, Key.D2, Key.D5); Assert.Equal(25, picker.SelectedDate.Day); window.Close();
     });
 
     [Fact]
     public void DatePicker_segment_commit_cancel_and_quick_steps_are_predictable() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var picker = new XYDatePicker { SelectedDate = new DateOnly(2026, 1, 31) }; var window = XyuiBatchTestHost.Show(picker);
-        Click(window, picker.SegmentButtons[XYDateSegment.Month]); Type(picker, Key.D0); Click(window, picker.SegmentButtons[XYDateSegment.Day]); Assert.Equal(new DateOnly(2026, 1, 31), picker.SelectedDate); Type(picker, Key.D2, Key.D8); Assert.Equal(28, picker.SelectedDate.Day); Raise(picker, Key.Escape); Assert.False(picker.IsSegmentEditing);
+        Click(window, picker.SegmentButtons[XYDateSegment.Month]); Assert.True(picker.IsDatePopupOpen); picker.CancelDatePopup(); Type(picker, Key.D0); Click(window, picker.SegmentButtons[XYDateSegment.Day]); Assert.True(picker.IsDatePopupOpen); picker.CancelDatePopup(); Assert.Equal(new DateOnly(2026, 1, 31), picker.SelectedDate); Type(picker, Key.D2, Key.D8); Assert.Equal(28, picker.SelectedDate.Day); Raise(picker, Key.Escape); Assert.False(picker.IsSegmentEditing);
         picker.PreviousPart!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(new DateOnly(2026, 1, 27), picker.SelectedDate); picker.NextPart!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(new DateOnly(2026, 1, 28), picker.SelectedDate); window.Close();
+    });
+
+    [Fact]
+    public void DatePicker_year_month_day_open_matching_adjustment_popup() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var picker = new XYDatePicker { SelectedDate = new DateOnly(2026, 8, 12) }; var window = XyuiBatchTestHost.Show(picker);
+        foreach (var segment in Enum.GetValues<XYDateSegment>()) { picker.SegmentButtons[segment].RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.True(picker.IsDatePopupOpen); var surface = picker.DatePopupSurfacePart!; Assert.Contains(surface.GetVisualDescendants().OfType<TextBlock>(), x => x.Text == "调整日期"); surface.GetVisualDescendants().OfType<Button>().Single(x => x.Tag?.ToString() == $"{segment}-增加").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.True(picker.SelectedDate >= new DateOnly(2026, 8, 12)); picker.CancelDatePopup(); }
+        Assert.Equal(new DateOnly(2026, 8, 12), picker.SelectedDate); window.Close();
     });
 
     static void Click(Window window, Button button) { var point = button.TranslatePoint(new Point(8, 16), window)!.Value; window.MouseMove(point); window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); }
