@@ -1,5 +1,12 @@
 # changelog
 
+## XYUI-2-21～24 · Closeout（2026-08-30 00:10:00 +08:00）
+
+- 验收：用户确认 XYUI2 全部通过，包含数值精度调节、向量自适应布局、枚举控件与引用属性控件。
+- 收尾：本轮 21～24 的 UI、交互与 Gallery 视觉问题均按用户复验结果收口，标记 `CLOSED` / `USER VISUAL ACCEPTED`。
+- 代码基线：`5c4c70e2`（紧凑引用框收窄后的实现）及其后续本记录提交，已推送 `origin/feat/XYUI-A`。
+- 遗留：无；`xyui.bat` 为本地未跟踪启动资产，继续不纳入 Git。
+
 ## XYUI-2-24 · Match Compact Reference Frame（2026-08-30 00:04:00 +08:00）
 
 - 目标：仅让 Gallery 的“紧凑引用”边界框贴合截图标注范围。
