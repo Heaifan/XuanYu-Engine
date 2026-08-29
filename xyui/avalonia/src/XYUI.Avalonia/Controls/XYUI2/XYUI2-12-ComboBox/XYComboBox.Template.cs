@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Interactivity;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
@@ -16,6 +17,7 @@ public partial class XYComboBox
     {
         var text = new XYTextField { Name = "PART_TextField", VerticalAlignment = VerticalAlignment.Stretch, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, BorderThickness = new Thickness(0), CornerRadius = new CornerRadius(0) };
         text.Classes.Add("xyui-combo-embedded");
+        text.PointerReleased += (_, _) => Dispatcher.UIThread.Post(text.SelectAll, DispatcherPriority.Input);
         var icon = new XYIcon { Icon = XyuiVectorIcon.ChevronDown, Size = XyuiIconSize.Small };
         var chevron = new Button { Name = "PART_Chevron", Width = 32, MinWidth = 32, MaxWidth = 32, HorizontalAlignment = HorizontalAlignment.Left, Content = icon, Focusable = false, Padding = new Thickness(0), BorderThickness = new Thickness(0) };
         var chevronCell = new Border { Name = "PART_ChevronCell", Width = 32, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch, Child = chevron };

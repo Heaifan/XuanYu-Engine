@@ -939,7 +939,8 @@
     - 设计特征
         - 保持只读，不伪装成输入框
         - 技术标识默认使用 Mono 变体
-        - Hover 时可出现复制图标
+        - Copy Mark 保留透明命中区，鼠标移动到图标上不消失
+        - 点击 Copy Mark 将当前文本复制为纯文本，随后 Ctrl+V 可直接粘贴
         - Copy Glyph 使用正式 Icon Token
         - Selection 使用 Selected Surface
     - 变体

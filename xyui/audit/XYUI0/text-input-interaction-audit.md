@@ -35,6 +35,7 @@ XYUI-1 的 24 个组件均为展示 / 信息文本，不是自由编辑入口。
 ## 当前实装复核
 
 - `XYTextField`、`XYNumberField`、`XYComboBox` 文本宿主与 `XYTextArea` 统一使用共享可编辑文本基类。
+- XYUI-1-21 `SelectableText` 保持 ReadOnly 选择语义，但 Copy Mark 使用独立透明命中区并复制纯文本；它不接入可编辑文本的全选替换规则。
 - `XYTextField` 获得编辑焦点后隐藏自定义占位层；`XYTextArea` 的 Placeholder 映射到 Avalonia 原生 TextBox PlaceholderText 合同。
 - ReadOnly 文本与 XYUI-1 `SelectableText` 保持只读选择 / 复制语义。
 - 自动测试覆盖 TextField 的焦点、鼠标激活、占位层，以及 TextArea 的共享全选合同；ComboBox 继续由 XYUI-2-12 专项测试覆盖。

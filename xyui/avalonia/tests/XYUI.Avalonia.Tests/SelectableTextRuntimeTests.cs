@@ -1,8 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Headless;
+using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Foundation;
@@ -26,14 +30,14 @@ public sealed class SelectableTextRuntimeTests : IClassFixture<XyuiHeadlessFixtu
         Prepare(); var control = new XYSelectableText { Text = "region-7ad21c", Variant = XyuiSelectableTextVariant.Technical };
         var window = new Window { Content = control }; window.Show();
         var grid = Assert.IsType<Grid>(control.Child); var text = Assert.Single(grid.Children.OfType<SelectableTextBlock>());
-        var mark = Assert.Single(grid.Children.OfType<VectorPath>());
+        var target = Assert.Single(grid.Children.OfType<Border>()); var mark = Assert.Single(control.GetVisualDescendants().OfType<VectorPath>());
         Assert.Equal(XyuiVectorIcon.Copy, control.CopyIcon); Assert.NotNull(mark.Data);
         Assert.Equal(8, mark.Width); Assert.Equal(8, mark.Height); Assert.Equal(1, mark.StrokeThickness);
         Assert.Equal(Stretch.Uniform, mark.Stretch);
-        Assert.False(mark.IsHitTestVisible); Assert.Equal(3, grid.ColumnDefinitions.Count);
+        Assert.False(mark.IsHitTestVisible); Assert.True(target.IsHitTestVisible); Assert.Equal(3, grid.ColumnDefinitions.Count);
         Assert.Equal(XYSelectableText.CopyMarkGap, grid.ColumnDefinitions[1].Width.Value);
-        Assert.Equal(XYSelectableText.CopyMarkSize, grid.ColumnDefinitions[2].Width.Value);
-        Assert.Equal(0, Grid.GetColumn(text)); Assert.Equal(2, Grid.GetColumn(mark)); window.Close();
+        Assert.Equal(20, grid.ColumnDefinitions[2].Width.Value);
+        Assert.Equal(0, Grid.GetColumn(text)); Assert.Equal(2, Grid.GetColumn(target)); window.Close();
     });
 
     [Fact]
@@ -46,6 +50,16 @@ public sealed class SelectableTextRuntimeTests : IClassFixture<XyuiHeadlessFixtu
         Assert.Equal(control.Text, text.SelectedText); Assert.True(text.CanCopy);
         Assert.DoesNotContain("Copy", text.SelectedText); Assert.DoesNotContain("□", text.SelectedText);
         window.Close();
+    });
+
+    [Fact]
+    public void Copy_target_stays_visible_under_pointer_and_writes_plain_text() => _fx.Run(() =>
+    {
+        Prepare(); var control = new XYSelectableText { Text = "region-7ad21c" }; var window = new Window { Width = 240, Content = control }; window.Show(); Dispatcher.UIThread.RunJobs();
+        var target = control.CopyMarkTarget; var hover = control.TranslatePoint(new Point(8, control.Bounds.Height / 2), window)!.Value;
+        window.MouseMove(hover); Dispatcher.UIThread.RunJobs(); var point = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), window)!.Value;
+        window.MouseMove(point); Dispatcher.UIThread.RunJobs(); Assert.True(target.IsVisible); window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left);
+        var text = TopLevel.GetTopLevel(control)?.Clipboard?.TryGetTextAsync().GetAwaiter().GetResult(); Assert.Equal(control.Text, text); window.Close();
     });
 
     [Fact]
