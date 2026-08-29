@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-17/18 · DatePicker 与 TimePicker（2026-08-29 16:16:22 +08:00）
+
+- 目标：按 `XYUI-2-17-18-DatePicker-TimePicker-Task.md` 实现日期选择器与时间选择器；2-15/2-16 已由用户通过，本轮不启动 2-19。
+- 变化：新增真实 `XYDatePicker` 与 `XYTimePicker`；日期支持本地化年/月/日分段、±1 日、边界、月份日历 Popup、闰日与生命周期收起；时间支持 HH:mm / HH:mm:ss、隐藏秒不占位、分段数字编辑、当前段循环调整和 4 DIP 横向 Scrub；补齐中文 Gallery、中文交互提示、目录注册、回归测试及 Calendar/Clock/Chevron/Scrub 矢量图标。
+- 验证：引擎解决方案与 Avalonia 解决方案 Build 均 `0 Warning / 0 Error`；2-17/2-18 定向 `8/8 PASS`；Avalonia 全量测试 `223/223 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。
+- 状态：`XYUI-2-17 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`；`XYUI-2-18 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`；`XYUI-2-19 NOT STARTED`。不标记 `CLOSED`、`FINAL` 或 `USER ACCEPTED`。
+- Hash：`439a739a`。
+- 遗留：Gallery 当前启动到 XYUI-2-17 Light，等待用户完成日期选择器视觉与交互验收；2-18 自动门禁已通过但待后续人工复验；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-15/16 · SearchField 与 PasswordField 返工（2026-08-29 15:27:07 +08:00）
 
 - 目标：响应 `XYUI-2-15-16-Rework-UI-Interaction.md` 的 UI 与交互不通过裁定，只返工搜索框与密码输入框；翻译、提示文本和 Gallery 示例保持中文；不启动 XYUI-2-17。
