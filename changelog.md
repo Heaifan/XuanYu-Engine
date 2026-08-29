@@ -1,5 +1,15 @@
 # changelog
 
+## XYUI-2-14 · TextArea Implementation（2026-08-29 12:46:39 +08:00）
+
+- 目标：在 XYUI-2-13 已 `CLOSED USER VISUAL ACCEPTED` 的前提下实现多行 TextArea；14 不标记 `CLOSED`，不启动 15。
+- 变化：新增 Standard/Editor 两种模式；Standard 从 54 DIP Auto Grow，达到 MaxHeight 后由内部 ScrollViewer 承载；Editor 增加 24 DIP Editor Bar，展示 Type、Lines、Chars、Modified；补齐 Placeholder、ReadOnly、Disabled、Error、真实长文本 Gallery 样例与 API 文档。
+- 交互：保留 TextBox AcceptsReturn 与默认键盘行为；首次编辑焦点全选，已聚焦再次点击恢复普通光标；LineCount 按空文本 1 行、尾部换行计额外行，CharacterCount 按真实字符数。
+- 验证：TextArea 定向测试 `7/7 PASS`；全量测试 `197/197 PASS`；全量 Build `0 Warning / 0 Error`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。
+- 状态：`XYUI-2-14 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL ACCEPTANCE`。Gallery 待启动并停留在 2-14 页面，Light / Dark 由用户视觉验收。
+- Hash：待本轮提交。
+- 遗留：等待用户在 Gallery 对 Standard、Auto Grow、MaxHeight + Scroll、ReadOnly、Disabled、Error、Editor Area 与 Light / Dark 主题进行人工验收；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-12 / XYUI-2-13 · Select Implementation（2026-08-29 12:16:28 +08:00）
 
 - 目标：按用户已确认的 XYUI-2-12 closeout 开始 XYUI-2-13 Select；保持 12 不重开、14 不启动。

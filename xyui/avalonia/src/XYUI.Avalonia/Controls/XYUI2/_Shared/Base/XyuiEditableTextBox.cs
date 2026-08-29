@@ -7,11 +7,15 @@ namespace XYUI.Avalonia.Controls;
 public abstract class XyuiEditableTextBox : TextBox
 {
     bool _selectAllOnPointerRelease;
+    bool _focusSelectAllPending;
+    protected virtual bool SelectAllOnPointerActivation => true;
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        _selectAllOnPointerRelease = !IsReadOnly && !string.IsNullOrEmpty(Text);
+        var wasFocused = IsFocused;
+        _selectAllOnPointerRelease = SelectAllOnPointerActivation && !IsReadOnly && !string.IsNullOrEmpty(Text);
         base.OnPointerPressed(e);
+        if (wasFocused) _focusSelectAllPending = false;
     }
 
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
@@ -29,7 +33,7 @@ public abstract class XyuiEditableTextBox : TextBox
         base.OnGotFocus(e);
         if (!IsReadOnly && !string.IsNullOrEmpty(Text))
         {
-            SelectAll(); Dispatcher.UIThread.Post(SelectAll, DispatcherPriority.Input);
+            _focusSelectAllPending = true; SelectAll(); Dispatcher.UIThread.Post(() => { if (_focusSelectAllPending) SelectAll(); _focusSelectAllPending = false; }, DispatcherPriority.Input);
         }
     }
 }

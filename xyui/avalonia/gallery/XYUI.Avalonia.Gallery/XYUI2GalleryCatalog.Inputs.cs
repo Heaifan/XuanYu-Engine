@@ -44,5 +44,16 @@ public static partial class XYUI2GalleryCatalog
         SelectSample("Long Value", new XYSelect { Width = 260, SelectedIndex = 0, ItemsSource = new[] { "Performance profile · Vulkan desktop quality" } }),
         new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "Theme / 主题" }, new TextBlock { Text = "Light / Dark follows the Gallery theme\nValue surface + Chevron surface · no divider\nClick either surface → Toggle Popup\nEnter / Space → Open · ↑ / ↓ → Navigate · Enter → Commit · Esc → Close" } } }];
     static Control SelectSample(string caption, XYSelect select) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, select } };
-    static Control[] TextAreas() => [new XYTextArea { Text = "普通多行文本\n第二行内容", Mode = XYTextAreaMode.Standard }, new XYTextArea { Text = "编辑器内容\n第二行\n第三行", Mode = XYTextAreaMode.Editor }];
+    static Control[] TextAreas() => [
+        TextAreaSample("Default · Notes", new XYTextArea { Width = 360, Text = "Deployment completed successfully.\nMonitor memory usage during the next run." }),
+        TextAreaSample("Placeholder", new XYTextArea { Width = 360, Placeholder = "Describe the issue..." }),
+        TextAreaSample("Multi-line / Auto Grow", new XYTextArea { Width = 360, Text = "First line\nSecond line\nThird line" }),
+        TextAreaSample("Max Height + Scroll", new XYTextArea { Width = 360, MaxHeight = 112, Text = "Connection timeout after 5000 ms.\nRetry operation or verify the target service.\nThe remaining diagnostic output continues inside the bounded editor." }),
+        TextAreaSample("ReadOnly", new XYTextArea { Width = 360, IsReadOnly = true, Text = "Read-only deployment notes.\nSelection remains available." }),
+        TextAreaSample("Disabled", new XYTextArea { Width = 360, IsEnabled = false, Text = "Disabled configuration details." }),
+        TextAreaSample("Error", new XYTextArea { Width = 360, IsError = true, Text = "Invalid JSON configuration." }),
+        TextAreaSample("Editor Area · JSON", new XYTextArea { Width = 360, Mode = XYTextAreaMode.Editor, EditorType = "JSON", MaxHeight = 150, Text = "{\n  \"mode\": \"balanced\",\n  \"iterations\": 120\n}" }),
+        TextAreaSample("Editor Area · Prompt", new XYTextArea { Width = 360, Mode = XYTextAreaMode.Editor, EditorType = "Prompt", Text = "Analyze the simulation output.\nIdentify the largest performance bottleneck.\nReturn the result as structured JSON." }),
+        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "Theme / 主题" }, new TextBlock { Text = "Light / Dark follows the Gallery theme\n54 DIP minimum · Auto Grow → MaxHeight → internal Scroll\nEditor Bar: Type · Lines · Chars · Modified" } } }];
+    static Control TextAreaSample(string caption, XYTextArea area) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, area } };
 }

@@ -11,7 +11,7 @@ public static partial class XyuiControlStyles
 {
     static void AddInputFamily(Styles styles)
     {
-        TextField(styles); NumberField(styles); TextArea(styles);
+        TextField(styles); NumberField(styles);
     }
 
     static void TextField(Styles styles)
@@ -36,8 +36,6 @@ public static partial class XyuiControlStyles
         var errorFocus = new Style(x => x.OfType<XYTextField>().Class("xyui-text-field").Class(":focus").Class(":error"));
         Set(errorFocus, TemplatedControl.BorderBrushProperty, "XY.Brush.Semantic.Error.Border"); styles.Add(errorFocus);
     }
-    static void TextArea(Styles styles) => Input(styles, typeof(XYTextArea), "xyui-text-area", 54);
-
     static Style Input(Styles styles, Type type, string cls, double height)
     {
         var s = new Style(x => x.OfType(type).Class(cls));

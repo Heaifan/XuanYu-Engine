@@ -17,6 +17,7 @@ public static partial class XyuiControlStyles
         AddChoiceControls(styles);
         ComboBox(styles);
         Select(styles);
+        TextArea(styles);
         return styles;
     }
 

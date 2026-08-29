@@ -2961,7 +2961,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.Template.cs` — Compact Track + Thumb 固定尺寸模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.cs` — XYUI-2-09 单行文本输入控件与 Placeholder/Error API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.Template.cs` — XYUI-2-09 保留原生 TextPresenter 的文本输入模板与底部焦点装饰层。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Base/XyuiEditableTextBox.cs` — XYUI-0 文本输入基础行为：可编辑文本激活全选与直接替换。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Base/XyuiEditableTextBox.cs` — XYUI-0 文本输入基础行为：首次编辑焦点全选、后续点击恢复普通光标与直接替换。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.cs` — XYUI-2-10 统一 Value 的数字输入、步进、键盘与 Scrub 语义。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Value.cs` — XYUI-2-10 数值格式化、后缀解析、提交与回退。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Template.cs` — XYUI-2-10 文本呈现器与 Hover/Focus Stepper 模板。
@@ -2981,11 +2981,13 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Popup.cs` — XYUI-2-13 Popup 打开/关闭、候选同步与 Placeholder 展示状态。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Keyboard.cs` — XYUI-2-13 Enter/Space/Up/Down/Esc 固定候选键盘交互。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Lifecycle.cs` — XYUI-2-13 宿主脱离、窗口关闭/失焦与应用停用时的 Popup 清理。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.cs` — XYUI-2-14 多行 TextArea、Standard/Editor 模式与统计属性。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～14 输入族基础尺寸、Surface、Border 与状态样式。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.cs` — XYUI-2-14 多行 TextArea、Auto Grow、Standard/Editor 模式与统计属性。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.Template.cs` — XYUI-2-14 TextPresenter、内部 ScrollViewer、Placeholder 与 24 DIP Editor Bar 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～13 输入族基础尺寸、Surface、Border 与状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Slider.cs` — XYUI-2-11 Slider 模板、Rail/Thumb token 与紧凑间距样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ComboBox.cs` — XYUI-2-12 ComboBox 输入 Chrome、Chevron、Focus、Error 与候选项样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Select.cs` — XYUI-2-13 Select Split Surface、状态、Focus Edge、Popup 与候选项样式。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.TextArea.cs` — XYUI-2-14 TextArea Root Chrome、Focus Edge、Editor Bar 与错误/禁用状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件尺寸 token，含 Select 36 DIP Chevron Surface 宽度。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Inputs.cs` — XYUI-2-09～14 各自独立 Gallery 预览样例。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InputControlsTests.cs` — TextField、NumberField、Slider、ComboBox、Select、TextArea 运行时合同测试。
@@ -2994,6 +2996,7 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SliderTests.cs` — XYUI-2-11 Slider 唯一 Value、部件、几何 token 与 Gallery 合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ComboBoxTests.cs` — XYUI-2-12 可编辑、过滤、展开、选择、键盘与 Custom Value 合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SelectTests.cs` — XYUI-2-13 Select 不可编辑、双区域点击、固定候选、键盘与 Popup 生命周期合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextAreaTests.cs` — XYUI-2-14 多行编辑、Auto Grow、内部滚动、状态、Editor Bar 与 Gallery 合同测试。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件专用尺寸与 05 Chevron Track 资源。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs` — Checkbox、Radio、Switch 状态样式与 token 消费。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。
