@@ -23,7 +23,7 @@ public static partial class XYUI2GalleryCatalog
         "XYUI-2-11" => Host("XY.Slider · 透明度 / 强度 / 时间倍率", Sliders()),
         "XYUI-2-12" => Host("XY.ComboBox · 可编辑 / 可搜索候选", ComboBoxes()),
         "XYUI-2-13" => Host("XY.Select · 固定候选 / 不可输入", Selects()),
-        "XYUI-2-14" => Host("XY.TextArea · Standard / Editor / AutoGrow", TextAreas()),
+        "XYUI-2-14" => Host("XY.TextArea · 标准 / 编辑 / 自动增长", TextAreas()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
 

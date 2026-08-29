@@ -15,7 +15,7 @@ public partial class XYTextArea : XyuiEditableTextBox
     public static readonly StyledProperty<XYTextAreaMode> ModeProperty = AvaloniaProperty.Register<XYTextArea, XYTextAreaMode>(nameof(Mode));
     public static readonly StyledProperty<string?> PlaceholderProperty = TextBox.PlaceholderTextProperty.AddOwner<XYTextArea>();
     public static readonly StyledProperty<bool> AutoGrowProperty = AvaloniaProperty.Register<XYTextArea, bool>(nameof(AutoGrow), true);
-    public static readonly StyledProperty<string> EditorTypeProperty = AvaloniaProperty.Register<XYTextArea, string>(nameof(EditorType), "TEXT");
+    public static readonly StyledProperty<string> EditorTypeProperty = AvaloniaProperty.Register<XYTextArea, string>(nameof(EditorType), "文本");
     public static readonly StyledProperty<bool> IsErrorProperty = AvaloniaProperty.Register<XYTextArea, bool>(nameof(IsError));
     public XYTextAreaMode Mode { get => GetValue(ModeProperty); set => SetValue(ModeProperty, value); }
     public string? Placeholder { get => GetValue(PlaceholderProperty); set => SetValue(PlaceholderProperty, value); }
@@ -45,5 +45,5 @@ public partial class XYTextArea : XyuiEditableTextBox
     internal void QueueLayout() { if (VisualRoot is null || _layoutQueued) return; _layoutQueued = true; Dispatcher.UIThread.Post(UpdateTextAreaLayout); }
     void UpdateTextAreaLayout() { _layoutQueued = false; UpdateEditorBar(); if (AutoGrow && TextPresenterPart is not null) GrowToContent(); }
     void GrowToContent() { var contentHeight = TextPresenterPart!.DesiredSize.Height + 16 + (Mode == XYTextAreaMode.Editor ? 24 : 0); var target = Math.Max(MinHeight, Math.Min(MaxHeight, contentHeight)); if (double.IsFinite(target) && Math.Abs(Height - target) > 0.5) Height = target; }
-    void UpdateEditorBar() { if (EditorBarPart is not null) EditorBarPart.IsVisible = Mode == XYTextAreaMode.Editor; if (EditorMetadataPart is not null) EditorMetadataPart.Text = $"{LineCount} lines · {CharacterCount} chars"; if (EditorModifiedPart is not null) EditorModifiedPart.IsVisible = false; }
+    void UpdateEditorBar() { if (EditorBarPart is not null) EditorBarPart.IsVisible = Mode == XYTextAreaMode.Editor; if (EditorMetadataPart is not null) EditorMetadataPart.Text = $"{LineCount} 行 · {CharacterCount} 字符"; if (EditorModifiedPart is not null) EditorModifiedPart.IsVisible = false; }
 }

@@ -49,7 +49,7 @@ public sealed class XYUI2TextAreaTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void TextArea_editor_bar_exposes_type_and_live_counts() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var area = new XYTextArea { Width = 280, Mode = XYTextAreaMode.Editor, EditorType = "JSON", Text = "{\n  \"mode\": \"balanced\"\n}" }; var window = XyuiBatchTestHost.Show(area); Assert.True(area.EditorBarPart!.IsVisible); Assert.Equal("JSON", area.GetVisualDescendants().Single(x => x.Name == "PART_EditorType").GetValue(TextBlock.TextProperty)); Assert.Equal($"3 lines · {area.CharacterCount} chars", area.EditorMetadataPart!.Text); window.Close();
+        XyuiBatchTestHost.Prepare(); var area = new XYTextArea { Width = 280, Mode = XYTextAreaMode.Editor, EditorType = "JSON", Text = "{\n  \"mode\": \"balanced\"\n}" }; var window = XyuiBatchTestHost.Show(area); Assert.True(area.EditorBarPart!.IsVisible); Assert.Equal("JSON", area.GetVisualDescendants().Single(x => x.Name == "PART_EditorType").GetValue(TextBlock.TextProperty)); Assert.Equal($"3 行 · {area.CharacterCount} 字符", area.EditorMetadataPart!.Text); window.Close();
     });
 
     [Fact]
