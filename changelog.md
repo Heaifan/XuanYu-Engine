@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-2-22 · Vector Axis Composite Visual Restore（2026-08-29 22:18:00 +08:00）
+
+- 目标：仅还原宽布局位置轴的参考视觉：每个轴由 25 DIP 轴徽标与真实 `XYNumberField` 组成统一外框。
+- 变化：22 的轴组合层承担输入背景、默认边框、圆角与裁切；真实字段仅在组合内透明无边框，未修改 `XYNumberField` 本体交互逻辑。
+- 状态：`XYUI-2-22 VISUAL RESTORE IMPLEMENTED`；等待用户视觉复验，不标记 CLOSED。
+- Hash：待本轮提交。
+- 遗留：需重点复核位置 XYZ 三组外框、轴徽标连续性及字段焦点/微调交互。
+
 ## XYUI-2-22 · Vector Property Layout Rework（2026-08-29 22:03:00 +08:00）
 
 - 目标：仅按返工任务书重做 XYUI-2-22 外层排版与 Gallery 展示，不修改 `XYNumberField` 本体及其他属性控件。

@@ -21,6 +21,7 @@ public static partial class XyuiControlStyles
     {
         PropertyRoot<XYVectorProperty>(styles, "xyui-vector-property", XYVectorProperty.CreateTemplate(), double.NaN);
         TemplateText<XYVectorProperty>(styles, "xyui-vector-property", "PART_Label");
+        var host = new Style(x => x.OfType<XYVectorProperty>().Class("xyui-vector-property").Template().Name("PART_Axes").Descendant().Class("xyui-vector-axis-host")); Set(host, Border.BackgroundProperty, "XY.Brush.Surface.Input"); Set(host, Border.BorderBrushProperty, "XY.Brush.Border.Default"); host.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(1))); host.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(6))); styles.Add(host);
         var cell = new Style(x => x.OfType<XYVectorProperty>().Class("xyui-vector-property").Template().Name("PART_Axes").Descendant().Class("xyui-vector-axis-cell")); Set(cell, Border.BackgroundProperty, "XY.Brush.Surface.PanelAlt"); styles.Add(cell);
     }
     static void EnumProperty(Styles styles)
