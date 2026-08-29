@@ -29,7 +29,7 @@ public static partial class XYUI2GalleryCatalog
         "XYUI-2-19" => Host("颜色选择器 · RGB / RGBA / 透明度", ColorPickers()),
         "XYUI-2-20" => Host("布尔属性 · 属性行 / 开关复用", BoolProperties()),
         "XYUI-2-21" => Host("数值属性行 · 标签微调 / 数值输入", NumberProperties()),
-        "XYUI-2-22" => Host("向量属性控件 · 自适应轴布局", VectorProperties()),
+        "XYUI-2-22" => HostVertical("向量属性控件 · 自适应轴布局", VectorProperties()),
         "XYUI-2-23" => Host("枚举属性控件 · 选择框复用", EnumProperties()),
         "XYUI-2-24" => Host("引用属性控件 · 身份 / 定位 / 浏览", ReferenceProperties()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
@@ -42,6 +42,12 @@ public static partial class XYUI2GalleryCatalog
             sample.Margin = new Thickness(0, 0, 8, 0);
             panel.Children.Add(sample);
         }
+        return new StackPanel { Spacing = 8, Children = { new XYCaption { Text = title }, panel } };
+    }
+    static StackPanel HostVertical(string title, Control[] samples)
+    {
+        var panel = new StackPanel { Orientation = Orientation.Vertical };
+        foreach (var sample in samples) { sample.Margin = new Thickness(0, 0, 0, 8); panel.Children.Add(sample); }
         return new StackPanel { Spacing = 8, Children = { new XYCaption { Text = title }, panel } };
     }
 }

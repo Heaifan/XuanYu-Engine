@@ -2879,6 +2879,7 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ColorPickerTests.cs` — XYUI-2-19 面板、透明度、HEX 合法/非法输入与 Gallery 回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2BoolPropertyTests.cs` — XYUI-2-20 真实 XYSwitch 复用、只读/禁用与 Gallery 回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2PropertyControlsTests.cs` — XYUI-2-21～24 真实子控件复用、值同步、响应式轴布局、选择与引用 Popup 回归测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2VectorPropertyLayoutTests.cs` — XYUI-2-22 Grid 等宽列、布局断点、Compact 回退、边界与值保持回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUICompositionReuseTests.cs` — XYUI-1/2 复合控件公开子控件复用与共享继承关系审计测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonRuntimeTests.cs` — DropDownButton 单命中区结构与点击语义（含槽区无第二行为）回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonVisualStateTests.cs` — DropDownButton 五状态视觉合同（含 Chevron 衰减与聚焦环）。

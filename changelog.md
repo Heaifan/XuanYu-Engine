@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-22 · Vector Property Layout Rework（2026-08-29 22:03:00 +08:00）
+
+- 目标：仅按返工任务书重做 XYUI-2-22 外层排版与 Gallery 展示，不修改 `XYNumberField` 本体及其他属性控件。
+- 变化：轴容器改为 Grid 等宽 `*` 列/行；Wide 同行、Medium 标签独占一行、Compact 轴纵向排列；Vector4 宽度不足时主动切 Compact；22 的 Gallery 示例改为纵向排列并压缩说明。
+- 验证：Vector 专项测试 `4/4 PASS`，属性控件测试 `6/6 PASS`；完整门禁待执行。
+- 状态：`XYUI-2-22 LAYOUT REWORKED`；等待 Gallery 人工视觉复验，不标记 CLOSED。
+- Hash：待本轮提交。
+- 遗留：启动 Gallery 停在 `XYUI-2-22 · Vector Property`，等待用户复验。
+
 ## XYUI-2-22 · Adaptive Vector Layout Correction（2026-08-29 21:45:36 +08:00）
 
 - 目标：仅修复 Vector Property 的中等宽度布局，使标签独占一行、XYZ 在完整可用宽度内稳定排列，窄宽度继续纵向排列。

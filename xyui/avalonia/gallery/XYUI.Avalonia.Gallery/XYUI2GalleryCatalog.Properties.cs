@@ -25,7 +25,7 @@ public static partial class XYUI2GalleryCatalog
         Sample("紧凑布局 · 尺寸", new XYVectorProperty { Width = 240, Label = "尺寸", Dimension = XYVectorDimension.Vector2, X = 128, Y = 64, Step = 1, DecimalPlaces = 0 }),
         Sample("四轴向量", new XYVectorProperty { Width = 620, Label = "方向与权重", Dimension = XYVectorDimension.Vector4, X = 1, Y = 0, Z = 0, W = 1 }),
         new XYVectorProperty { Width = 420, Label = "禁用的向量", Dimension = XYVectorDimension.Vector3, IsEnabled = false },
-        Hint("响应式与交互", "宽度 ≥ 520：标签与各轴同行；中等宽度：标签独占一行；窄宽度：各轴纵向排列\n每个轴都是真实 XYNumberField；编辑单轴只更新当前轴并保留其他轴\n响应式重排只改变排列，不改变数值、焦点、微调和校验语义"),
+        Hint("响应式与交互", "Wide → horizontal · Medium → label stacked · Compact → axes vertical\nAxes use real XYNumberField"),
     ];
 
     static Control[] EnumProperties() =>

@@ -32,7 +32,7 @@ public partial class XYVectorProperty : TemplatedControl
     public bool IsReadOnly { get => GetValue(IsReadOnlyProperty); set => SetValue(IsReadOnlyProperty, value); }
     public event EventHandler? ValueChanged;
     internal TextBlock? LabelPart { get; set; }
-    internal StackPanel? AxisPanelPart { get; set; }
+    internal Grid? AxisPanelPart { get; set; }
     internal List<XYNumberField> AxisFields { get; } = [];
     internal List<Border> AxisHosts { get; } = [];
     internal Grid? RowPart { get; set; }
