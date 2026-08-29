@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-15/16 · 搜索框与密码输入框（2026-08-29 14:57:50 +08:00）
+
+- 目标：按 `XYUI-2-15-16-SearchField-PasswordField-Task.md` 实现搜索框与密码输入框，完成中文名称、中文提示和 Light Gallery 检查；不启动 XYUI-2-17。
+- 变化：新增真实可编辑 `XYSearchField`，支持清除、35 DIP 筛选单元格、Enter 搜索、Esc 清空、筛选事件、状态类与首次聚焦全选；新增 `XYPasswordField`，支持默认遮罩、34 DIP 眼睛单元格、按住/按键临时显示、释放/失焦/捕获丢失/宿主停用强制遮罩和选区保持；补齐 Search/Eye/Clear/Filter 矢量图标、Gallery、文档目录与中文交互提示。
+- 验证：完整解决方案 Build `0 Warning / 0 Error`；新增 SearchField `4/4 PASS`、PasswordField `3/3 PASS`；全量测试 `211/211 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS；Gallery Light 主题实际检查通过，2-15/2-16 导航名称为“搜索框/密码输入框”。
+- 状态：`XYUI-2-15 AUTOMATED GATES PASS`；`XYUI-2-16 AUTOMATED GATES PASS`；等待用户人工视觉与交互验收；不标记 `CLOSED`，不启动 XYUI-2-17。
+- Hash：`ab9e7183`。
+- 遗留：用户需在 Gallery 检查清除/筛选及密码眼睛的按住、松开、失焦和禁用行为，并确认 Light / Dark 两主题；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2 · 组件显示名称中文化（2026-08-29 14:26:44 +08:00）
 
 - 目标：响应用户“名称都改成中文”，将 XYUI-2 Batch 01 侧栏与文档页的组件显示名称统一为 canonical mapping 中的中文标题；API 类型标识继续保留。

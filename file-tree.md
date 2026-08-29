@@ -1464,6 +1464,8 @@
    │  │     ├─ XYUI2GalleryCatalog.cs
     │  │     ├─ XYUI2GalleryCatalog.Choices.cs
     │  │     ├─ XYUI2GalleryCatalog.DropDown.cs
+    │  │     ├─ XYUI2GalleryCatalog.Inputs.cs
+    │  │     └─ XYUI2GalleryCatalog.SearchPassword.cs
    │  │     └─ XYIconButtonNamingExtensions.cs
    │  ├─ src/
    │  │  └─ XYUI.Avalonia/
@@ -1478,7 +1480,7 @@
    │  │     │  ├─ XYUI1/
    │  │     │  │  └─ XYUI1-01～24-ComponentName/（每个组件独立目录）
    │  │     │  ├─ XYUI2/
-   │  │     │  │  └─ XYUI2-01～09-ComponentName/（每个组件独立目录）
+     │  │     │  │  └─ XYUI2-01～16-ComponentName/（每个组件独立目录）
    │  │     │  ├─ XYUI1/_Shared/（XYUI-1 内部基类、样式与几何辅助）
    │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、输入基类、样式与 Token）
    │  │     │  └─ README.md
@@ -2983,13 +2985,22 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Lifecycle.cs` — XYUI-2-13 宿主脱离、窗口关闭/失焦与应用停用时的 Popup 清理。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.cs` — XYUI-2-14 多行 TextArea、Auto Grow、Standard/Editor 模式与统计属性。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.Template.cs` — XYUI-2-14 TextPresenter、内部 ScrollViewer、Placeholder 与 24 DIP Editor Bar 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/XYSearchField.cs` — XYUI-2-15 搜索文本、筛选态、搜索/筛选事件与清除状态。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/XYSearchField.Template.cs` — XYUI-2-15 搜索图标、真实文本编辑器、清除按钮与 35 DIP 筛选单元格模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/XYSearchField.Keyboard.cs` — XYUI-2-15 Enter 搜索与 Esc 清空键盘交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.cs` — XYUI-2-16 密码文本、遮罩呈现、占位提示与密码变更事件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.Template.cs` — XYUI-2-16 单一输入框与 34 DIP 眼睛按钮模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.Reveal.cs` — XYUI-2-16 按住显示、失去捕获/焦点/宿主生命周期时强制遮罩。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.Keyboard.cs` — XYUI-2-16 Enter/空格按键显示与抬键遮罩交互。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～14 输入族基础尺寸、Surface、Border 与可选 Focus Border 状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Slider.cs` — XYUI-2-11 Slider 模板、Rail/Thumb token 与紧凑间距样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ComboBox.cs` — XYUI-2-12 ComboBox 输入 Chrome、Chevron、Focus、Error 与候选项样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Select.cs` — XYUI-2-13 Select Split Surface、状态、Focus Edge、Popup 与候选项样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.TextArea.cs` — XYUI-2-14 TextArea Root Chrome、Focus Edge、Editor Bar 与错误/禁用状态样式。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.SearchPassword.cs` — XYUI-2-15/16 搜索框、密码框 Chrome、图标、单元格、焦点与禁用样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件尺寸 token，含 Select 36 DIP Chevron Surface 宽度。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Inputs.cs` — XYUI-2-09～14 各自独立 Gallery 预览样例。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.SearchPassword.cs` — XYUI-2-15/16 搜索框与密码输入框中文状态、交互提示和真实控件样例。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InputControlsTests.cs` — TextField、NumberField、Slider、ComboBox、Select、TextArea 运行时合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextInputInteractionTests.cs` — 可编辑文本宿主焦点/鼠标激活全选与占位层防重叠回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2NumberFieldTests.cs` — XYUI-2-10 NumberField 数值、步进、Stepper、Scrub 与 Gallery 运行时测试。
@@ -2998,6 +3009,8 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SelectTests.cs` — XYUI-2-13 Select 不可编辑、双区域点击、固定候选、键盘与 Popup 生命周期合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextAreaTests.cs` — XYUI-2-14 多行编辑、Auto Grow、内部滚动、状态、Editor Area 与 Gallery 合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextAreaFocusTests.cs` — XYUI-2-14 First Focus Session、指针/键盘全选、二次点击、重新聚焦与输入替换回归测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SearchFieldTests.cs` — XYUI-2-15 真实编辑、首次全选、搜索/筛选事件、清除与禁用合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2PasswordFieldTests.cs` — XYUI-2-16 遮罩、临时显示、选区保持、键盘显示与禁用合同测试。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件专用尺寸与 05 Chevron Track 资源。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs` — Checkbox、Radio、Switch 状态样式与 token 消费。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。
