@@ -7,7 +7,7 @@
 - 交互：保留 TextBox AcceptsReturn 与默认键盘行为；首次编辑焦点全选，已聚焦再次点击恢复普通光标；LineCount 按空文本 1 行、尾部换行计额外行，CharacterCount 按真实字符数。
 - 验证：TextArea 定向测试 `7/7 PASS`；全量测试 `197/197 PASS`；全量 Build `0 Warning / 0 Error`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。
 - 状态：`XYUI-2-14 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL ACCEPTANCE`。Gallery 待启动并停留在 2-14 页面，Light / Dark 由用户视觉验收。
-- Hash：待本轮提交。
+- Hash：`78ea1f99`。
 - 遗留：等待用户在 Gallery 对 Standard、Auto Grow、MaxHeight + Scroll、ReadOnly、Disabled、Error、Editor Area 与 Light / Dark 主题进行人工验收；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
 
 ## XYUI-2-12 / XYUI-2-13 · Select Implementation（2026-08-29 12:16:28 +08:00）
