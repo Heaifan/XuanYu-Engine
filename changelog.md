@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-15/16 · SearchField 与 PasswordField 返工（2026-08-29 15:27:07 +08:00）
+
+- 目标：响应 `XYUI-2-15-16-Rework-UI-Interaction.md` 的 UI 与交互不通过裁定，只返工搜索框与密码输入框；翻译、提示文本和 Gallery 示例保持中文；不启动 XYUI-2-17。
+- 变化：SearchField 新增 `FilterContent` / `IsFilterOpen` 真实筛选弹层 API，支持复选框内容、轻量关闭、Esc、卸载、宿主停用和窗口关闭；筛选激活态独立于弹层开关；清除仍保留焦点。筛选单元格改为整高 32 DIP 方形操作槽；PasswordField 文本区固定左 10 / 右 8 DIP 内边距，眼睛单元格改为整高 32 DIP 方形操作槽，并用路由事件 `handledEventsToo` 保证真实按住显示、抬起遮罩；更新 Eye 矢量图标、中文 Gallery、属性文档和 canonical/mapping 尺寸。
+- 验证：完整解决方案 Build `0 Warning / 0 Error`；SearchField/PasswordField 定向 `11/11 PASS`；全量测试 `215/215 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS；Gallery Light 实际检查了 2-15 真实筛选面板与 2-16 密码遮罩/眼睛槽视觉，最终需用户复核。
+- 状态：`XYUI-2-15 REWORKED`；`XYUI-2-16 REWORKED`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`；`XYUI-2-17 NOT STARTED`。不标记 `CLOSED`、`FINAL` 或 `USER ACCEPTED`。
+- Hash：`a92d6d9c`。
+- 遗留：用户需在 Gallery Light / Dark 下复核 2-15 筛选按钮、真实筛选内容、轻量关闭与清除保焦，以及 2-16 按住/松开、键盘、失焦、Alt+Tab、捕获丢失和禁用遮罩；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-15/16 · 搜索框与密码输入框（2026-08-29 14:57:50 +08:00）
 
 - 目标：按 `XYUI-2-15-16-SearchField-PasswordField-Task.md` 实现搜索框与密码输入框，完成中文名称、中文提示和 Light Gallery 检查；不启动 XYUI-2-17。
