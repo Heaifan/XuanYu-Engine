@@ -6,7 +6,7 @@
 - 变化：21/23 共用 `XYPropertyLayoutMetrics.ConfigureRow` 的统一标签列/间距/值列；22 按维度和可用宽度确定横向或纵向布局并继续真实复用 `XYNumberField`；`XYNumberField` 模板应用时主动同步文本；24 增加 Wide/Compact/Narrow 重排、辅助身份退化、动作按钮换行并保留 `XYIconButton` 默认触控尺寸；空引用状态自动闭合并避免空身份文本。
 - 测试：新增属性行列数、默认零值、Vector 确定性排列、Reference 空状态与窄屏动作布局断言；Avalonia `243/243 PASS`。
 - 状态：`XYUI-2-21～24 VISUAL CORRECTION IMPLEMENTED`；等待新的用户视觉与交互验收，不标记 `CLOSED` 或 `USER ACCEPTED`。
-- Hash：待本轮提交。
+- Hash：`8c32a6b6`。
 - 遗留：Gallery 需重新检查 21～24 的宽/中/窄布局、零值显示、Reference 状态与动作热区；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
 
 ## XYUI-2-21～24 · 属性控件收尾（2026-08-29 19:18:15 +08:00）
