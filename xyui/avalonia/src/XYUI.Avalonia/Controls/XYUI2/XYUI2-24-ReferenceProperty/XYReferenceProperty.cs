@@ -37,6 +37,9 @@ public partial class XYReferenceProperty : TemplatedControl
     internal Border? ReferenceFieldPart { get; set; }
     internal TextBlock? NamePart { get; set; }
     internal TextBlock? IdentityPart { get; set; }
+    internal Grid? ContentPart { get; set; }
+    internal Grid? RowPart { get; set; }
+    internal StackPanel? ActionsPart { get; set; }
     internal XYIconButton? LocatePart { get; set; }
     internal XYIconButton? BrowsePart { get; set; }
     internal XYIconButton? ClearPart { get; set; }
@@ -44,9 +47,12 @@ public partial class XYReferenceProperty : TemplatedControl
     internal bool Syncing { get; set; }
 
     public XYReferenceProperty() { Classes.Add("xyui-reference-property"); Focusable = true; }
+    protected override void OnSizeChanged(SizeChangedEventArgs e) { base.OnSizeChanged(e); UpdateLayoutMode(); }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == ReferenceProperty && Reference is null && ReferenceState != XYReferenceState.Empty) SetCurrentValue(ReferenceStateProperty, XYReferenceState.Empty);
+        if (change.Property == ReferenceStateProperty && ReferenceState == XYReferenceState.Resolved && Reference is null) SetCurrentValue(ReferenceStateProperty, XYReferenceState.Empty);
         if (change.Property == ReferencePickerContentProperty) AttachPicker();
         if (change.Property == LabelProperty || change.Property == ReferenceProperty || change.Property == ExpectedTypeProperty || change.Property == ReferenceStateProperty || change.Property == IsReadOnlyProperty || change.Property == IsEnabledProperty) SyncParts();
         if (change.Property == IsEnabledProperty && !IsEnabled) ClosePicker();
@@ -65,5 +71,5 @@ public partial class XYReferenceProperty : TemplatedControl
         if (LocatePart is not null) LocatePart.IsEnabled = IsEnabled && Reference is not null && ReferenceState == XYReferenceState.Resolved;
         if (BrowsePart is not null) BrowsePart.IsEnabled = IsEnabled && !IsReadOnly; if (ClearPart is not null) ClearPart.IsEnabled = IsEnabled && !IsReadOnly && Reference is not null;
     }
-    string IdentityText() => ReferenceState switch { XYReferenceState.Empty => "未设置引用", XYReferenceState.Missing => $"引用丢失 · {ReferenceType} · #{ReferenceId}", XYReferenceState.TypeMismatch => $"类型不匹配 · 需要 {ExpectedType ?? "指定类型"}", _ => $"{ReferenceType} · #{ReferenceId}" };
+    string IdentityText() => ReferenceState switch { XYReferenceState.Empty => "未设置引用", XYReferenceState.Missing => Reference is null ? "引用丢失" : $"引用丢失 · {ReferenceType} · #{ReferenceId}", XYReferenceState.TypeMismatch => $"类型不匹配 · 需要 {ExpectedType ?? "指定类型"}", _ => Reference is null ? "未设置引用" : $"{ReferenceType} · #{ReferenceId}" };
 }

@@ -31,9 +31,11 @@ public partial class XYNumberProperty : TemplatedControl
     internal Border? LabelPart { get; set; }
     internal TextBlock? LabelTextPart { get; set; }
     internal XYNumberField? ValueFieldPart { get; set; }
+    internal Grid? RowPart { get; set; }
     internal bool Syncing { get; set; }
 
     public XYNumberProperty() { Classes.Add("xyui-number-property"); Focusable = true; }
+    protected override void OnSizeChanged(SizeChangedEventArgs e) { base.OnSizeChanged(e); if (RowPart is not null && ValueFieldPart is not null) XYPropertyLayoutMetrics.ConfigureRow(RowPart, LabelPart!, ValueFieldPart, Bounds.Width); }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);

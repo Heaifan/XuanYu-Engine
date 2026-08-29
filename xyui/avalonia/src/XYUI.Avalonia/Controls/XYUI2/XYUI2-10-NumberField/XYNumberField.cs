@@ -43,7 +43,7 @@ public partial class XYNumberField : XYTextField
     protected override void OnPointerMoved(PointerEventArgs e) { base.OnPointerMoved(e); OnNumberPointerMoved(this, e); }
     protected override void OnPointerReleased(PointerReleasedEventArgs e) { base.OnPointerReleased(e); OnNumberPointerReleased(this, e); }
     protected override void OnGotFocus(FocusChangedEventArgs e) { _editStartValue = Value; SetStepperVisibility(true); base.OnGotFocus(e); }
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e) { base.OnApplyTemplate(e); _stepper = e.NameScope.Find<Control>("PART_StepperCell"); ValueHost = e.NameScope.Find<Control>("PART_ValueHost") ?? this.GetVisualDescendants().OfType<Control>().FirstOrDefault(x => x.Name == "PART_ValueHost"); SetStepperVisibility(IsFocused); }
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e) { base.OnApplyTemplate(e); _stepper = e.NameScope.Find<Control>("PART_StepperCell"); ValueHost = e.NameScope.Find<Control>("PART_ValueHost") ?? this.GetVisualDescendants().OfType<Control>().FirstOrDefault(x => x.Name == "PART_ValueHost"); SyncText(); SetStepperVisibility(IsFocused); }
     void SetStepperVisibility(bool visible)
     {
         _stepper ??= this.GetVisualDescendants().OfType<Control>().FirstOrDefault(x => x.Name == "PART_StepperCell");

@@ -13,7 +13,7 @@ public static partial class XyuiControlStyles
     static void PropertyControls(Styles styles) { NumberProperty(styles); VectorProperty(styles); EnumProperty(styles); ReferenceProperty(styles); }
     static void NumberProperty(Styles styles)
     {
-        var root = PropertyRoot<XYNumberProperty>(styles, "xyui-number-property", XYNumberProperty.CreateTemplate(), XYPropertyLayoutMetrics.RowHeight);
+        var root = PropertyRoot<XYNumberProperty>(styles, "xyui-number-property", XYNumberProperty.CreateTemplate(), double.NaN);
         var label = TemplateText<XYNumberProperty>(styles, "xyui-number-property", "PART_LabelText");
         var active = new Style(x => x.OfType<XYNumberProperty>().Class("xyui-number-property-scrubbing").Template().Name("PART_Label")); Set(active, Border.BackgroundProperty, "XY.Brush.State.Color.Hover"); styles.Add(active);
     }
@@ -25,7 +25,7 @@ public static partial class XyuiControlStyles
     }
     static void EnumProperty(Styles styles)
     {
-        PropertyRoot<XYEnumProperty>(styles, "xyui-enum-property", XYEnumProperty.CreateTemplate(), XYPropertyLayoutMetrics.RowHeight);
+        PropertyRoot<XYEnumProperty>(styles, "xyui-enum-property", XYEnumProperty.CreateTemplate(), double.NaN);
         TemplateText<XYEnumProperty>(styles, "xyui-enum-property", "PART_Label");
     }
     static void ReferenceProperty(Styles styles)

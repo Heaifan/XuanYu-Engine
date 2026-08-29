@@ -3021,6 +3021,19 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Lifecycle.cs` — XYUI-2-19 Popup 开关与脱离、停用、关闭生命周期清理。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/XYBoolProperty.cs` — XYUI-2-20 属性标签、布尔真值、只读与单次切换路由。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/XYBoolProperty.Template.cs` — XYUI-2-20 统一标签列、值列与真实 XYSwitch 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/XYNumberProperty.cs` — XYUI-2-21 数值属性值、范围、步长、只读与字段同步。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/XYNumberProperty.Scrub.cs` — XYUI-2-21 属性标签拖动微调交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/XYNumberProperty.Template.cs` — XYUI-2-21 统一属性行与真实 XYNumberField 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/XYVectorProperty.cs` — XYUI-2-22 Vector2/3/4 轴值、同步与真实 XYNumberField 集合。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/XYVectorProperty.Layout.cs` — XYUI-2-22 按维度和宽度确定性排列布局。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/XYVectorProperty.Template.cs` — XYUI-2-22 标签、轴容器与真实 XYNumberField 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-23-EnumProperty/XYEnumProperty.cs` — XYUI-2-23 枚举候选、选中项、只读与 XYSelect 同步。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-23-EnumProperty/XYEnumProperty.Template.cs` — XYUI-2-23 统一属性行与真实 XYSelect 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.cs` — XYUI-2-24 引用身份、状态不变量、类型校验与动作事件。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.Layout.cs` — XYUI-2-24 宽/紧凑/窄屏身份与动作重排。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.Template.cs` — XYUI-2-24 引用身份、操作按钮与 Popup 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.Popup.cs` — XYUI-2-24 引用选择 Popup、定位/浏览/清除与生命周期。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Property/XYPropertyLayoutMetrics.cs` — XYUI-2 属性控件共享标签列、间距与响应式行布局契约。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～14 输入族基础尺寸、Surface、Border 与可选 Focus Border 状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Slider.cs` — XYUI-2-11 Slider 模板、Rail/Thumb token 与紧凑间距样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ComboBox.cs` — XYUI-2-12 ComboBox 输入 Chrome、Chevron、Focus、Error 与候选项样式。

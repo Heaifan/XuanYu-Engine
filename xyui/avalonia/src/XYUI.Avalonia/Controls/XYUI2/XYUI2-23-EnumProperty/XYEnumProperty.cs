@@ -21,9 +21,11 @@ public partial class XYEnumProperty : TemplatedControl
     public event EventHandler? SelectionChanged;
     internal TextBlock? LabelPart { get; set; }
     internal XYSelect? SelectPart { get; set; }
+    internal Grid? RowPart { get; set; }
     internal bool Syncing { get; set; }
 
     public XYEnumProperty() { Classes.Add("xyui-enum-property"); Focusable = true; }
+    protected override void OnSizeChanged(SizeChangedEventArgs e) { base.OnSizeChanged(e); if (RowPart is not null && SelectPart is not null) XYPropertyLayoutMetrics.ConfigureRow(RowPart, LabelPart!, SelectPart, Bounds.Width); }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
