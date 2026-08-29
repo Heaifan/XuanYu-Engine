@@ -47,6 +47,6 @@ public partial class XYSelect
 
     void OnSurfacePressed(object? sender, PointerPressedEventArgs e) { if (!IsEnabled) return; PseudoClasses.Set(":pressed", true); Focus(); IsDropDownOpen = !IsDropDownOpen; e.Handled = true; }
     void OnSurfaceReleased(object? sender, PointerReleasedEventArgs e) => PseudoClasses.Set(":pressed", false);
-    void OnListSelectionChanged(object? sender, SelectionChangedEventArgs e) { if (IsKeyboardNavigating || ListPart?.SelectedItem is not object item) return; SelectedItem = item; IsDropDownOpen = false; }
+    void OnListSelectionChanged(object? sender, SelectionChangedEventArgs e) { if (IsKeyboardNavigating || ListPart?.SelectedItem is not object item) return; SelectedIndex = ListPart.SelectedIndex; SelectedItem = item; IsDropDownOpen = false; }
     void OnPopupClosed(object? sender, EventArgs e) => ClosePopupForLifecycle();
 }

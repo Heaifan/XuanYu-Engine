@@ -4,7 +4,7 @@ using Avalonia.Media;
 
 namespace XYUI.Avalonia.Vector;
 
-public enum XyuiVectorIcon { Info, Error, Warning, Search, Copy, Code, Tag, StatusDot, Section, Empty, ChevronDown, Clear, Filter, Eye, Calendar, Clock, ChevronLeft, ChevronRight, ScrubLeftRight }
+public enum XyuiVectorIcon { Info, Error, Warning, Search, Locate, Browse, Copy, Code, Tag, StatusDot, Section, Empty, ChevronDown, Clear, Filter, Eye, Calendar, Clock, ChevronLeft, ChevronRight, ScrubLeftRight }
 
 public static class XyuiVectorIcons
 {
@@ -17,6 +17,8 @@ public static class XyuiVectorIcons
             [XyuiVectorIcon.Error] = "M12 3 C7.029 3 3 7.029 3 12 C3 16.971 7.029 21 12 21 C16.971 21 21 16.971 21 12 C21 7.029 16.971 3 12 3 Z M9 9 L15 15 M15 9 L9 15",
             [XyuiVectorIcon.Warning] = "M12 3 L22 20 H2 Z M12 9 V14 M12 17 V17.5",
             [XyuiVectorIcon.Search] = "M10.5 4.5 C7.186 4.5 4.5 7.186 4.5 10.5 C4.5 13.814 7.186 16.5 10.5 16.5 C13.814 16.5 16.5 13.814 16.5 10.5 C16.5 7.186 13.814 4.5 10.5 4.5 Z M15 15 L21 21",
+            [XyuiVectorIcon.Locate] = "M12 3 V7 M12 17 V21 M3 12 H7 M17 12 H21 M12 7 C9.239 7 7 9.239 7 12 C7 14.761 9.239 17 12 17 C14.761 17 17 14.761 17 12 C17 9.239 14.761 7 12 7 Z",
+            [XyuiVectorIcon.Browse] = "M3 6 H9 L11 8 H21 V20 H3 Z M3 6 V4 H10 L12 6",
             [XyuiVectorIcon.Copy] = "M8 8 H20 V20 H8 Z M4 4 H16 V16 H4 Z",
             [XyuiVectorIcon.Code] = "M9 6 L3 12 L9 18 M15 6 L21 12 L15 18 M13 4 L11 20",
             [XyuiVectorIcon.Tag] = "M0 11 L11 0 H24 V22 H11 Z",

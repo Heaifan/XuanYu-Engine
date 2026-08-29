@@ -24,7 +24,7 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
     bool _isX2 = true;
     public bool IsXYUI2Expanded { get => _isX2; set { if (_isX2 == value) return; _isX2 = value; PropertyChanged?.Invoke(this, new(nameof(IsXYUI2Expanded))); } }
     public string XYUI1CountText => "24/24";
-    public string XYUI2CountText => "3/24";
+    public string XYUI2CountText => "24/24";
     XYUI1NavigationItem _selectedItem;
     FoundationNavigationItem? _selectedFoundation;
 

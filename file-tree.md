@@ -1465,8 +1465,9 @@
     │  │     ├─ XYUI2GalleryCatalog.Choices.cs
     │  │     ├─ XYUI2GalleryCatalog.DropDown.cs
     │  │     ├─ XYUI2GalleryCatalog.Inputs.cs
-    │  │     ├─ XYUI2GalleryCatalog.SearchPassword.cs
-    │  │     └─ XYUI2GalleryCatalog.DateTime.cs
+   │  │     ├─ XYUI2GalleryCatalog.SearchPassword.cs
+   │  │     └─ XYUI2GalleryCatalog.DateTime.cs
+   │  │     └─ XYUI2GalleryCatalog.Properties.cs
    │  │     └─ XYIconButtonNamingExtensions.cs
    │  ├─ src/
    │  │  └─ XYUI.Avalonia/
@@ -1481,9 +1482,9 @@
    │  │     │  ├─ XYUI1/
    │  │     │  │  └─ XYUI1-01～24-ComponentName/（每个组件独立目录）
    │  │     │  ├─ XYUI2/
-     │  │     │  │  └─ XYUI2-01～18-ComponentName/（每个组件独立目录）
+     │  │     │  │  └─ XYUI2-01～24-ComponentName/（每个组件独立目录）
    │  │     │  ├─ XYUI1/_Shared/（XYUI-1 内部基类、样式与几何辅助）
-   │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、输入基类、样式与 Token）
+   │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、输入基类、属性布局、样式与 Token）
    │  │     │  └─ README.md
    │  │     ├─ Foundation/
    │  │     │  ├─ XyuiColorToken.cs
@@ -2846,10 +2847,11 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Api.cs` — 真实 Avalonia 属性与 Foundation Token 文档表。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.cs` — 左侧导航选择与模块/组件文档视图切换模型。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI2.cs` — XYUI-2 区块导航、选中路由与默认落点（复用文档视图）。
- - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.cs` — XYUI-2-01～20 中文文档数据源（canonical spec + mapping token 直读）。
- - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.cs` — Batch 01 与 SplitButton Compact Icon Well 真实 Runtime 预览工厂。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.cs` — XYUI-2-01～24 中文文档数据源（canonical spec + mapping token 直读）。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.cs` — XYUI-2-01～24 真实 Runtime 预览工厂与属性控件路由。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Choices.cs` — Checkbox、RadioButton、Switch 真实场景样例工厂。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.ColorBool.cs` — ColorPicker 与 BoolProperty 的中文真实场景样例工厂。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Properties.cs` — Number、Vector、Enum、Reference Property 的中文真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.DropDown.cs` — DropDownButton 导出/筛选/排序等真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYIconButtonNamingExtensions.cs` — IconButton Gallery 自动化名称扩展。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYBadgePreviewFactory.cs` — Badge Default/Accent 左指针标签的真实 Gallery Preview 工厂。
@@ -2858,7 +2860,7 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1DocumentationView.axaml.cs` — 文档导航视图代码隐藏与模型初始化。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml` — XYUI-1 模块概览与 24 项紧凑组件索引。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ModuleOverviewView.axaml.cs` — 组件索引点击导航处理。
-- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI2ModuleOverviewView.axaml` — XYUI-2 模块概览页（Canonical 24 / 当前已实装 16 项诚实统计）。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI2ModuleOverviewView.axaml` — XYUI-2 模块概览页（Canonical 24 / 当前已实装 20 项诚实统计）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI2ModuleOverviewView.axaml.cs` — XYUI-2 索引点击导航处理。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ComponentDocumentView.axaml` — 单组件中文文档模板（Preview/Usage/API/Token）。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/Views/XYUI1ComponentDocumentView.axaml.cs` — 单组件文档视图代码隐藏。
@@ -2876,6 +2878,7 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ComponentReconcileTests.cs` — 组件文档登记与 Gallery 预览最小样本对账（含 05 待验收锁）。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ColorPickerTests.cs` — XYUI-2-19 面板、透明度、HEX 合法/非法输入与 Gallery 回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2BoolPropertyTests.cs` — XYUI-2-20 真实 XYSwitch 复用、只读/禁用与 Gallery 回归测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2PropertyControlsTests.cs` — XYUI-2-21～24 真实子控件复用、值同步、响应式轴布局、选择与引用 Popup 回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUICompositionReuseTests.cs` — XYUI-1/2 复合控件公开子控件复用与共享继承关系审计测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonRuntimeTests.cs` — DropDownButton 单命中区结构与点击语义（含槽区无第二行为）回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DropDownButtonVisualStateTests.cs` — DropDownButton 五状态视觉合同（含 Chevron 衰减与聚焦环）。

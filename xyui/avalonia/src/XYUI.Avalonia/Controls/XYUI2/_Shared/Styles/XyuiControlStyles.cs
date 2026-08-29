@@ -21,6 +21,7 @@ public static partial class XyuiControlStyles
         TextArea(styles);
         DatePicker(styles); TimePicker(styles);
         ColorPicker(styles); BoolProperty(styles);
+        PropertyControls(styles);
         return styles;
     }
 

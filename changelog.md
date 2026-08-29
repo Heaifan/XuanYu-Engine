@@ -1,5 +1,15 @@
 # changelog
 
+## XYUI-2-21～24 · 属性控件收尾（2026-08-29 19:18:15 +08:00）
+
+- 目标：实现 Number Property、Vector Property、Enum Property、Reference Property，完成 XYUI-2 01～24 的运行时登记、Gallery 预览与中文提示；复合控件中的同功能子控件遵循既有 XYUI 复用原则。
+- 变化：21 真实复用 `XYNumberField`，支持属性名拖动微调、精确输入、步长/范围/单位、只读与禁用；22 的 Vector2/3/4 每个轴真实复用 `XYNumberField`，按宽/中/窄尺寸响应式排列并保持单轴更新；23 真实复用 `XYSelect`，同步候选、索引、键盘与 Popup 生命周期；24 提供 Name/Type/ID、Empty/Missing/TypeMismatch 状态、真实 `XYIconButton` 定位/浏览/清除、候选 Popup、Esc/轻量关闭、生命周期收起与类型校验；所有新增 Gallery 名称、提示、候选项均为中文。
+- 变化：新增 XYUI-2-21～24 identity/type/catalog 映射、属性样例与统一属性样式；修复 `XYSelect` 候选选择时索引与值不同步；补齐 21～24 真实子控件复用与交互回归测试。既有复合控件同功能子控件复用原则已记录在知识库 `K-UI-002`，本轮继续按该原则实施。
+- 验证：引擎解决方案 Build `0 Warning / 0 Error`；Avalonia 解决方案 Build `0 Warning / 0 Error`；Avalonia `242/242 PASS`；Core `339/339 PASS`；World `1286/1286 PASS`；WarCore `22/22 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。
+- 状态：`XYUI-2-21 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`；`XYUI-2-22 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`；`XYUI-2-23 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`；`XYUI-2-24 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL + INTERACTION ACCEPTANCE`。不将自动测试等同于 `CLOSED` 或 `USER ACCEPTED`。
+- Hash：以本轮提交为准。
+- 遗留：请在 Gallery 逐项复核 21～24 的 Light/Dark UI、标签拖动微调、Vector2/3/4 响应式排列、Enum Popup/键盘、Reference 定位/浏览/清除/状态与 Esc/外部关闭；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-1/2 · 同功能子控件复用原则与全量审计（2026-08-29 18:40:31 +08:00）
 
 - 目标：响应复合控件子控件一致性要求，检查目前 XYUI-1 全部 24 项与 XYUI-2 全部 20 项；保持已通过视觉与交互范围，不启动 XYUI-2-21。

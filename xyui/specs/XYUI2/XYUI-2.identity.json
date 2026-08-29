@@ -14,6 +14,10 @@
     {"id":"XYUI-2-11","canonical":"XY.Slider","type":"XYSlider","title":"滑块"},
     {"id":"XYUI-2-12","canonical":"XY.ComboBox","type":"XYComboBox","title":"组合框"},
     {"id":"XYUI-2-13","canonical":"XY.Select","type":"XYSelect","title":"选择框"},
-    {"id":"XYUI-2-14","canonical":"XY.TextArea","type":"XYTextArea","title":"多行文本框"}
+    {"id":"XYUI-2-14","canonical":"XY.TextArea","type":"XYTextArea","title":"多行文本框"},
+    {"id":"XYUI-2-21","canonical":"XY.NumberProperty","type":"XYNumberProperty","title":"数值属性行"},
+    {"id":"XYUI-2-22","canonical":"XY.VectorProperty","type":"XYVectorProperty","title":"向量属性控件"},
+    {"id":"XYUI-2-23","canonical":"XY.EnumProperty","type":"XYEnumProperty","title":"枚举属性控件"},
+    {"id":"XYUI-2-24","canonical":"XY.ReferenceProperty","type":"XYReferenceProperty","title":"引用属性控件"}
   ]
 }

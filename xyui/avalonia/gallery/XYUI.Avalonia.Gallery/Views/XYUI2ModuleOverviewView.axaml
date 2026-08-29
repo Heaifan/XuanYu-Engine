@@ -6,10 +6,10 @@
   <ScrollViewer HorizontalScrollBarVisibility="Disabled">
     <StackPanel Margin="28" Spacing="12">
       <TextBlock Text="XYUI-2 · Buttons &amp; Inputs" Classes="xyui-heading-page" />
-      <TextBlock Text="按钮与输入 · Canonical 24 个组件 · XYUI-2 已实装 16 个" Classes="xyui-text-code" />
+      <TextBlock Text="按钮与输入 · Canonical 24 个组件 · XYUI-2 已实装 20 个" Classes="xyui-text-code" />
       <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="16">
         <TextBlock Text="Canonical" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="24" Classes="xyui-text-code" />
-        <TextBlock Grid.Column="2" Text="XYUI-2 Implemented" Classes="xyui-text-caption" /><TextBlock Grid.Column="3" Text="16" Classes="xyui-text-code" />
+        <TextBlock Grid.Column="2" Text="XYUI-2 Implemented" Classes="xyui-text-caption" /><TextBlock Grid.Column="3" Text="20" Classes="xyui-text-code" />
         <TextBlock Grid.Column="4" Text="Status" Classes="xyui-text-caption" /><TextBlock Grid.Column="5" Text="READY FOR USER VISUAL ACCEPTANCE" Classes="xyui-text-code" />
       </Grid>
       <TextBlock Text="本阶段建立 Button Family 的 Action Edge 视觉语法（Primary=Accent / Secondary=Divider 弱化 / Danger=Error；Disabled 随 Chrome 衰减），供后续 Split / DropDown 继承。XYUI-1 保持冻结。" Classes="xyui-text-body" TextWrapping="Wrap" />

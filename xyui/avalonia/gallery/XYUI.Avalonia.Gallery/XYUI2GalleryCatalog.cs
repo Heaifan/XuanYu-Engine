@@ -28,6 +28,10 @@ public static partial class XYUI2GalleryCatalog
         "XYUI-2-18" => Host("时间选择器 · 分段编辑 / 横向微调", TimePickers()),
         "XYUI-2-19" => Host("颜色选择器 · RGB / RGBA / 透明度", ColorPickers()),
         "XYUI-2-20" => Host("布尔属性 · 属性行 / 开关复用", BoolProperties()),
+        "XYUI-2-21" => Host("数值属性行 · 标签微调 / 数值输入", NumberProperties()),
+        "XYUI-2-22" => Host("向量属性控件 · 自适应轴布局", VectorProperties()),
+        "XYUI-2-23" => Host("枚举属性控件 · 选择框复用", EnumProperties()),
+        "XYUI-2-24" => Host("引用属性控件 · 身份 / 定位 / 浏览", ReferenceProperties()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
     static StackPanel Host(string title, Control[] samples)
@@ -40,61 +44,4 @@ public static partial class XYUI2GalleryCatalog
         }
         return new StackPanel { Spacing = 8, Children = { new XYCaption { Text = title }, panel } };
     }
-    static Control[] Buttons() =>
-    [
-        new XYButton { Content = "新建" },
-        new XYButton { Content = "取消", Variant = XyuiButtonVariant.Secondary },
-        new XYButton { Content = "删除", Variant = XyuiButtonVariant.Danger },
-        new XYButton { Content = "保存", IsEnabled = false },
-    ];
-    static Control[] IconButtons()
-    {
-        var selected = GhostIcon(XyuiVectorIcon.Code, "查看代码");
-        selected.IsSelected = true;
-        return
-        [
-            GhostIcon(XyuiVectorIcon.Search, "搜索"),
-            GhostIcon(XyuiVectorIcon.Copy, "复制"),
-            selected,
-            DisabledIcon(XyuiVectorIcon.Info),
-        ];
-    }
-
-    static XYIconButton GhostIcon(XyuiVectorIcon icon, string name) => new XYIconButton
-    {
-        Content = new XYIcon { Icon = icon, Size = XyuiIconSize.Medium },
-    }.Named(name);
-
-    static XYIconButton DisabledIcon(XyuiVectorIcon icon) => new XYIconButton
-    {
-        Content = new XYIcon { Icon = icon, Size = XyuiIconSize.Medium },
-        IsEnabled = false,
-    }.Named("信息（禁用）");
-
-    static Control[] Toggles() =>
-    [
-        new XYToggleButton { Content = "网格吸附" },
-        new XYToggleButton { Content = "正交模式", IsChecked = true },
-        new XYToggleButton { Content = "显示参考网格", IsEnabled = false },
-    ];
-
-    static Control[] Splits() =>
-    [
-        SplitCell("新建", "Default", false),
-        SplitCell("导入", "MainHover · 悬停主区", false),
-        SplitCell("保存", "MenuHover · 悬停右侧图标槽", false),
-        SplitCell("运行", "Pressed Main · 按住主区", false),
-        SplitCell("更多", "Pressed Menu · 按住图标槽", false),
-        SplitCell("发布", "Disabled", true),
-    ];
-
-    static Control SplitCell(string content, string caption, bool disabled) => new StackPanel
-    {
-        Spacing = 4,
-        Children =
-        {
-            new XYSplitButton { Content = content, IsEnabled = !disabled },
-            new XYCaption { Text = caption },
-        },
-    };
 }

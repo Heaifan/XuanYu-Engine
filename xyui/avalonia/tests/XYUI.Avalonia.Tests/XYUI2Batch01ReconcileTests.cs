@@ -50,7 +50,7 @@ public sealed class XYUI2Batch01ReconcileTests : IClassFixture<XyuiHeadlessFixtu
     public void Batch01_pages_are_not_marked_user_visual_accepted() => _fx.Run(() =>
     {
         var documents = XYUI2DocumentationCatalog.Build();
-        Assert.Equal(20, documents.Count);
+        Assert.Equal(24, documents.Count);
         Assert.All(documents, document =>
         {
             Assert.StartsWith(XYUI2DocumentationCatalog.PendingAcceptance, document.StatusText);
