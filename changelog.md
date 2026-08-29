@@ -1,5 +1,16 @@
 # changelog
 
+## XYUI-2-12 / XYUI-2-13 · Select Implementation（2026-08-29 12:16:28 +08:00）
+
+- 目标：按用户已确认的 XYUI-2-12 closeout 开始 XYUI-2-13 Select；保持 12 不重开、14 不启动。
+- XYUI-2-12：`CLOSED`；`USER VISUAL ACCEPTED`；`INTERACTION ACCEPTED`；`XYUI2-12-BUG-POPUP-001` `FIXED`、`REGRESSION COVERED`、`USER VERIFIED`（依据本轮接管裁定）。
+- 变化：新增独立 `XYSelect` 固定候选控件，复用 ComboBox 的选择模型但不复用可编辑文本宿主；提供 Split Surface（值面 + 36 DIP Chevron 面、无 Divider）、Root Chrome、Focus/Open 底部边、Placeholder、Disabled、Light/Dark token 样式；统一 Open/Close Popup 生命周期，覆盖 LightDismiss、Esc、Detached、Host/Application deactivation 与 Window closed；Gallery 增加 Language、Quality、Status、Preset 和长值真实样例。
+- 测试：新增 XYUI-2-13 永久回归 6 项，覆盖不可编辑、值面/箭头面入口、选择提交/关闭、Placeholder/Disabled、键盘 Enter/Space/Up/Down/Esc、LightDismiss 与 Detached。
+- 验证：Select 定向测试 `6/6 PASS`；当前全量基线 `183/183 PASS`；最近全量 Build `0 Warning / 0 Error`；ARCH-A（含 5+100）PASS；`git diff --check` PASS（最终门禁待本轮实现完成后重跑）。
+- 状态：`XYUI-2-13 FUNCTION IMPLEMENTED`；`AUTOMATED GATES PASS`；`AWAITING USER VISUAL ACCEPTANCE`。Gallery 当前先展示 Light，等待用户视觉复验；不标记 `CLOSED`，不启动 XYUI-2-14。
+- Hash：待本轮提交。
+- 遗留：用户需在 Gallery 对 `XYUI-2-13 · Select` 执行 Light 视觉与交互验收，必要时再切 Dark；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-1-21 / XYUI-2-12 · Copy Mark and Combo Activation Repair（2026-08-29 11:54:22 +08:00）
 
 - 目标：修复 XYUI1-21 Copy Mark 移入后消失且不可复制的问题，并修复 XYUI2-12 两个 ComboBox 文本宿主点击后光标落在左端的问题。

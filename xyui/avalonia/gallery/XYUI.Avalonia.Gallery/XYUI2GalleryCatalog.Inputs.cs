@@ -36,6 +36,13 @@ public static partial class XYUI2GalleryCatalog
         ComboSample("资源", new XYComboBox { Width = 260, Placeholder = "Texture", ItemsSource = new[] { "Texture", "Normal Texture", "Render Texture" } }),
         new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "交互 / Interaction" }, new TextBlock { Text = "First Focus → Select All\nTyping → Filter Candidates\nChevron → Open All\n↑ / ↓ → Navigate\nEnter → Select / Commit\nEsc → Close\nMouse Select → Select Item\nCustom Value → 按 IsCustomValueAllowed" } } }];
     static Control ComboSample(string caption, XYComboBox combo) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, combo } };
-    static Control[] Selects() => [new XYSelect { SelectedIndex = 0, ItemsSource = new[] { "实体", "线框", "材质预览" } }, new XYSelect { SelectedIndex = 1, ItemsSource = new[] { "世界", "局部" } }];
+    static Control[] Selects() => [
+        SelectSample("Default · Language", new XYSelect { Width = 260, SelectedIndex = 0, ItemsSource = new[] { "English", "简体中文", "日本語" } }),
+        SelectSample("Open · Quality", new XYSelect { Width = 260, SelectedIndex = 2, IsDropDownOpen = true, ItemsSource = new[] { "Low", "Medium", "High", "Ultra" } }),
+        SelectSample("Placeholder", new XYSelect { Width = 260, Placeholder = "Select status", ItemsSource = new[] { "Active", "Paused", "Archived" } }),
+        SelectSample("Disabled", new XYSelect { Width = 260, SelectedIndex = 1, IsEnabled = false, ItemsSource = new[] { "Performance", "Balanced", "Quality" } }),
+        SelectSample("Long Value", new XYSelect { Width = 260, SelectedIndex = 0, ItemsSource = new[] { "Performance profile · Vulkan desktop quality" } }),
+        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "Theme / 主题" }, new TextBlock { Text = "Light / Dark follows the Gallery theme\nValue surface + Chevron surface · no divider\nClick either surface → Toggle Popup\nEnter / Space → Open · ↑ / ↓ → Navigate · Enter → Commit · Esc → Close" } } }];
+    static Control SelectSample(string caption, XYSelect select) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, select } };
     static Control[] TextAreas() => [new XYTextArea { Text = "普通多行文本\n第二行内容", Mode = XYTextAreaMode.Standard }, new XYTextArea { Text = "编辑器内容\n第二行\n第三行", Mode = XYTextAreaMode.Editor }];
 }

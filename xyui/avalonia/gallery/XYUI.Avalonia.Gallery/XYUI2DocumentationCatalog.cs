@@ -48,6 +48,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-05" => [$"<c:{type} Content=\"导出\" />", $"<c:{type} Content=\"排序\" />"],
         "XYUI-2-10" => ["<c:XYNumberField Value=\"125\" />", "<c:XYNumberField Value=\"72\" Suffix=\"%\" />"],
         "XYUI-2-12" => [$"<c:{type} Placeholder=\"选择地区\" ItemsSource=\"候选集合\" />", $"<c:{type} Text=\"North\" IsCustomValueAllowed=\"false\" />"],
+        "XYUI-2-13" => [$"<c:{type} Placeholder=\"Select status\" ItemsSource=\"Active|Paused|Archived\" />", $"<c:{type} SelectedIndex=\"1\" ItemsSource=\"Performance|Balanced|Quality\" />"],
         _ => [$"<c:{type} />"]
     };
 
@@ -60,7 +61,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-10" => [new("Value", "double", "0", "统一数值真值"), new("Minimum", "double", "0", "下限"), new("Maximum", "double", "100", "上限"), new("Step", "double", "1", "普通步长"), new("LargeStep", "double", "10", "Shift 步长"), new("SmallStep", "double", "0.1", "Ctrl 步长"), new("Suffix", "string?", "null", "仅显示后缀"), new("DecimalPlaces", "int", "2", "显示小数位")],
         "XYUI-2-11" => [new("Value", "double", "0", "Slider 与 NumberField 的唯一真值"), new("Minimum", "double", "0", "下限"), new("Maximum", "double", "100", "上限"), new("Step", "double", "1", "普通步长"), new("LargeStep", "double", "10", "Shift 步长"), new("SmallStep", "double", "0.1", "Ctrl 步长"), new("DecimalPlaces", "int", "2", "显示小数位"), new("Suffix", "string?", "null", "仅显示后缀"), new("IsNumberFieldVisible", "bool", "true", "显示精确输入")],
         "XYUI-2-12" => [new("ItemsSource", "IEnumerable", "[]", "可编辑候选"), new("SelectedItem", "object?", "null", "当前候选"), new("IsCustomValueAllowed", "bool", "false", "允许自定义值")],
-        "XYUI-2-13" => [new("ItemsSource", "IEnumerable", "[]", "固定候选"), new("SelectedItem", "object?", "null", "当前候选")],
+        "XYUI-2-13" => [new("ItemsSource", "IEnumerable", "[]", "固定候选"), new("SelectedIndex", "int", "-1", "当前候选索引"), new("SelectedItem", "object?", "null", "当前候选"), new("Placeholder", "string?", "null", "未选择时的提示")],
         "XYUI-2-14" => [new("Text", "string", "", "多行文本"), new("Mode", "XYTextAreaMode", "Standard", "Standard / Editor"), new("MinHeight", "double", "54", "最小高度"), new("MaxHeight", "double", "Auto", "场景上限")],
         _ => []
     };

@@ -19,6 +19,7 @@ public static class XyuiComponentTokens
     public const double SliderThumbSize = 14;
     public const double SliderThumbActiveSize = 16;
     public const double ComboBoxChevronCellWidth = 32;
+    public const double SelectChevronSurfaceWidth = 36;
 
     public static ResourceDictionary CreateResources() => new()
     {
@@ -40,5 +41,6 @@ public static class XyuiComponentTokens
         ["XY.Slider.Thumb.Size"] = SliderThumbSize,
         ["XY.Slider.Thumb.ActiveSize"] = SliderThumbActiveSize,
         ["XY.ComboBox.ChevronCell.Width"] = ComboBoxChevronCellWidth,
+        ["XY.Select.ChevronSurface.Width"] = SelectChevronSurfaceWidth,
     };
 }
