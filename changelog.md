@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-22 · Vector Axis Contrast and Overflow Fix（2026-08-29 23:42:00 +08:00）
+
+- 目标：仅修复 Vector 轴框对比度过低与 Vector4 字段文字裁切。
+- 原因：22 外框引用了错误的边框资源名；横排断点按 96 DIP 估算，未计入真实 `XYNumberField` 的后缀区、步进区与内边距。
+- 变化：改用现有 `XY.Brush.Border.Color.Default`；22 横排最小轴宽提高为 128 DIP，宽度不足的 Vector4 主动切换 Compact；未修改 `XYNumberField` 本体。
+- 状态：`XYUI-2-22 VECTOR CONTRAST / OVERFLOW FIX IMPLEMENTED`；等待用户视觉复验，不标记 CLOSED。
+- Hash：待本轮提交。
+- 遗留：需复核 XYZ 外框颜色、Vector4 Compact 回退及所有轴值无裁切。
+
 ## XYUI-2-10 · Precision Step Unification（2026-08-29 23:04:00 +08:00）
 
 - 目标：仅修复基础 `XYNumberField` 的精度调节粒度，使显示小数位与真实调节步长一致。

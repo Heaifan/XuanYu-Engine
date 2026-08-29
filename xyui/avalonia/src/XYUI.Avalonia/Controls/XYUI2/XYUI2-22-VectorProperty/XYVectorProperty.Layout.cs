@@ -18,7 +18,7 @@ public partial class XYVectorProperty
         ConfigureAxisGrid(dimension, compact);
     }
 
-    static double RequiredAxisWidth(int dimension) => dimension * 96 + (dimension - 1) * 6;
+    static double RequiredAxisWidth(int dimension) => dimension * 128 + (dimension - 1) * 6;
 
     void ConfigureAxisGrid(int dimension, bool compact)
     {

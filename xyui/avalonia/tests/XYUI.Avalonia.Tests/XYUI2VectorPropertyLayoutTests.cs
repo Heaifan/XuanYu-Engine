@@ -32,7 +32,7 @@ public sealed class XYUI2VectorPropertyLayoutTests : IClassFixture<XyuiHeadlessF
     {
         XyuiBatchTestHost.Prepare(); var p = Show(280, XYVectorDimension.Vector3);
         Assert.Equal(3, p.AxisPanelPart!.RowDefinitions.Count); Assert.Empty(p.AxisPanelPart.ColumnDefinitions); AssertNoOverflow(p);
-        var four = Show(400, XYVectorDimension.Vector4); Assert.Equal(4, four.AxisPanelPart!.RowDefinitions.Count); AssertNoOverflow(four);
+        var four = Show(620, XYVectorDimension.Vector4); Assert.Equal(4, four.AxisPanelPart!.RowDefinitions.Count); AssertNoOverflow(four);
     });
 
     [Fact]
