@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -59,6 +60,7 @@ public sealed class XYUI2PropertyControlsTests : IClassFixture<XyuiHeadlessFixtu
     public void Reference_property_uses_icon_actions_and_picker_lifecycle() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var list = new ListBox { ItemsSource = new[] { new XYReferenceValue("实体二", "Entity", "E2") } }; var p = new XYReferenceProperty { Reference = new("实体一", "Entity", "E1"), ReferenceState = XYReferenceState.Resolved, ExpectedType = "Entity", ReferencePickerContent = list }; var w = XyuiBatchTestHost.Show(p);
+        Assert.Equal(new Thickness(1), p.ReferenceFieldPart!.BorderThickness); Assert.NotNull(p.ReferenceFieldPart.BorderBrush);
         Assert.Equal(3, p.GetVisualDescendants().OfType<XYIconButton>().Count()); var located = 0; p.LocateRequested += (_, _) => located++; p.LocatePart!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(1, located);
         p.BrowsePart!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.True(p.IsPickerOpen); list.SelectedIndex = 0; Dispatcher.UIThread.RunJobs(); Assert.Equal("E2", p.ReferenceId); Assert.False(p.IsPickerOpen);
         Assert.False(p.TryAssignReference(new("道路", "Dataset", "D1"))); Assert.Equal("E2", p.ReferenceId); p.ClearReference(); Assert.Equal(XYReferenceState.Empty, p.ReferenceState); w.Close();
