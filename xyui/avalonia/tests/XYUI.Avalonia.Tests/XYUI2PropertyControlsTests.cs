@@ -23,6 +23,13 @@ public sealed class XYUI2PropertyControlsTests : IClassFixture<XyuiHeadlessFixtu
     });
 
     [Fact]
+    public void Number_property_label_scrub_follows_decimal_places() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var p = new XYNumberProperty { Value = 15, Step = .1, DecimalPlaces = 3 }; Assert.Equal(15.002, XYNumberProperty.CalculateScrubValue(p.Value, 8, p.DecimalPlaces));
+        Assert.Equal(15.001, XYNumberProperty.CalculateScrubValue(p.Value, 4.1, p.DecimalPlaces));
+    });
+
+    [Fact]
     public void Vector_property_reuses_number_fields_and_preserves_other_axes() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var p = new XYVectorProperty { Width = 620, Dimension = XYVectorDimension.Vector3, X = 1, Y = 0, Z = 0 }; var w = XyuiBatchTestHost.Show(p);

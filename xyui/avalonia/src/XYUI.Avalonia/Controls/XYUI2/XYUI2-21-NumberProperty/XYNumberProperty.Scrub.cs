@@ -21,9 +21,10 @@ public partial class XYNumberProperty
         var delta = e.GetPosition(LabelPart).X - _scrubStartX;
         if (Math.Abs(delta) < ScrubDipPerStep) return;
         e.Pointer.Capture(LabelPart); Classes.Set("xyui-number-property-scrubbing", true);
-        ValueFieldPart.Value = _scrubStartValue + Math.Round(delta / ScrubDipPerStep) * ValueFieldPart.Step; e.Handled = true;
+        ValueFieldPart.Value = CalculateScrubValue(_scrubStartValue, delta, DecimalPlaces); e.Handled = true;
     }
     internal void OnLabelReleased(object? sender, PointerReleasedEventArgs e) { if (_scrubPointer != e.Pointer) return; e.Pointer.Capture(null); ClearScrub(); }
     internal void OnLabelCaptureLost(object? sender, PointerCaptureLostEventArgs e) => ClearScrub();
     void ClearScrub() { _scrubPointer = null; _scrubArmed = false; Classes.Set("xyui-number-property-scrubbing", false); }
+    internal static double CalculateScrubValue(double startValue, double delta, int decimalPlaces) => startValue + Math.Round(delta / ScrubDipPerStep) * Math.Pow(10, -Math.Max(0, decimalPlaces));
 }

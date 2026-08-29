@@ -1,5 +1,15 @@
 # changelog
 
+## XYUI-2-21 · Decimal-Precision Scrub Fix（2026-08-29 22:36:00 +08:00）
+
+- 目标：仅修复数值属性行标签微调的步进，使微调精度跟随 `DecimalPlaces`。
+- 原因：旧算法固定使用 `ValueFieldPart.Step`，例如 `Step=0.1` 时即使显示三位小数，拖动仍只能按 0.1 变化。
+- 变化：标签微调改用 `10^-DecimalPlaces`；两位小数按 `0.01`、三位小数按 `0.001` 调节；未修改 `XYNumberField` 本体或其他控件。
+- 验证：新增三位小数标签微调回归断言；完整门禁待执行。
+- 状态：`XYUI-2-21 DECIMAL SCRUB FIX IMPLEMENTED`；等待用户复核，不标记 CLOSED。
+- Hash：待本轮提交。
+- 遗留：需复核标签拖动、键盘步进与右侧上下按钮的既有语义边界。
+
 ## XYUI-2-22 · Vector Axis Composite Visual Restore（2026-08-29 22:18:00 +08:00）
 
 - 目标：仅还原宽布局位置轴的参考视觉：每个轴由 25 DIP 轴徽标与真实 `XYNumberField` 组成统一外框。
