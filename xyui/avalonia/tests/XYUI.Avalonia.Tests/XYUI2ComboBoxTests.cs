@@ -56,5 +56,13 @@ public sealed class XYUI2ComboBoxTests : IClassFixture<XyuiHeadlessFixture>
         var customCombo = new XYComboBox { ItemsSource = Items, IsCustomValueAllowed = true }; var second = XyuiBatchTestHost.Show(customCombo); customCombo.TextFieldPart!.Text = "Unknown"; Raise(customCombo, Key.Enter); Assert.False(customCombo.IsError); Assert.Null(customCombo.SelectedItem); Assert.Equal("Unknown", customCombo.Text); second.Close();
     });
 
+    [Fact]
+    public void ComboBox_closes_popup_when_gallery_host_detaches() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var combo = new XYComboBox { ItemsSource = Items }; var window = XyuiBatchTestHost.Show(combo); combo.IsDropDownOpen = true;
+        Assert.True(combo.PopupPart!.IsOpen); window.Content = null;
+        Assert.False(combo.IsDropDownOpen); Assert.False(combo.PopupPart.IsOpen); Assert.False(combo.PopupPart.IsVisible); window.Close();
+    });
+
     static void Raise(XYComboBox combo, Key key) => combo.TextFieldPart!.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key });
 }

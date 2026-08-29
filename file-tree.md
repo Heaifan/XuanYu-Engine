@@ -2973,6 +2973,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.Template.cs` — XYUI-2-12 文本宿主、Chevron、Popup 与候选列表模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.Filter.cs` — XYUI-2-12 候选快照、大小写不敏感 Contains 过滤与 Popup 状态。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.Keyboard.cs` — XYUI-2-12 Down/Up/Enter/Esc 键盘导航与文本提交。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.Lifecycle.cs` — XYUI-2-12 宿主脱离、窗口失焦与应用停用时的 Popup 生命周期清理。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI2.cs` — XYUI-2 文档导航与当前组件默认入口选择。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.cs` — XYUI-2-13 固定候选、不可编辑 Select 控件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.cs` — XYUI-2-14 多行 TextArea、Standard/Editor 模式与统计属性。
