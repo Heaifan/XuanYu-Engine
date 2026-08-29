@@ -20,7 +20,7 @@ public static class XYUI2DocumentationCatalog
     static XYUI1ComponentDocument Create(XyuiCatalogEntry entry)
     {
         var type = entry.AvaloniaType.Split('.').Last();
-        var name = entry.SourceItemId == "XYUI-2-14" ? "文本区域" : entry.Name;
+        var name = ChineseName(entry);
         return new(entry.SourceItemId, name, type, entry.Description,
             entry.Usage == "See canonical spec" ? entry.States : entry.Usage,
             () => XYUI2GalleryCatalog.CreatePreview(entry.SourceItemId),
@@ -40,6 +40,7 @@ public static class XYUI2DocumentationCatalog
         ? []
         : block.Split('；', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
+    static string ChineseName(XyuiCatalogEntry entry) => entry.Title.Split('｜').Last().Split('/').Last().Trim();
     static string[] Usages(string id, string type) => id switch
     {
         "XYUI-2-01" => [$"<c:{type} Content=\"新建\" />", "<c:XYButton Content=\"删除\" Variant=\"Danger\" />"],

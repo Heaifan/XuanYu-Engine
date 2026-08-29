@@ -24,6 +24,7 @@ public sealed class XYUI2ComponentReconcileTests : IClassFixture<XyuiHeadlessFix
         Assert.Equal("XY.DropDownButton · XYDropDownButton", dropdown.CanonicalDisplay);
         Assert.All(dropdown.Usages, usage => Assert.Contains("XYDropDownButton", usage));
         Assert.Contains(dropdown.Tokens, token => token.Name == "XY.DropDownButton.Height");
+        Assert.Equal(["按钮", "图标按钮", "切换按钮", "分裂按钮", "下拉按钮", "复选框", "单选按钮", "开关", "文本输入框", "数值输入框", "滑块", "组合框", "选择框", "多行文本框"], documents.Select(x => x.ChineseName));
     }
 
     [Fact]
@@ -32,7 +33,7 @@ public sealed class XYUI2ComponentReconcileTests : IClassFixture<XyuiHeadlessFix
         var split = XYUI2DocumentationCatalog.Build().Single(x => x.Id == "XYUI-2-04");
         var dropdown = XYUI2DocumentationCatalog.Build().Single(x => x.Id == "XYUI-2-05");
         Assert.NotEqual(split.CanonicalIdentity, dropdown.CanonicalIdentity);
-        Assert.Equal("DropDown Button", dropdown.ChineseName);
+        Assert.Equal("下拉按钮", dropdown.ChineseName);
         Assert.Equal("XYDropDownButton", dropdown.EnglishName);
     }
 
