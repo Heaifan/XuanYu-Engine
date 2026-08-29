@@ -5,7 +5,7 @@
 - 目标：修复 ComboBox / TextField 输入时旧文本或占位文本造成的重叠感，并统一可编辑文本激活时的全选替换行为；XYUI-2-13 保持冻结。
 - 变化：新增 XYUI-0 · 0.33 文本输入基础合同；可编辑 TextField、NumberField、Slider 内嵌字段、ComboBox 文本宿主与 TextArea 共享激活全选；TextField 编辑焦点立即隐藏占位层；补齐 XYUI-1/2 文本入口审计。
 - 验证：XYUI.Avalonia 定向测试 3/3 PASS；全量测试 182/182 PASS；Build 0 warning / 0 error；ARCH-A（含 5+100）PASS；git diff --check PASS。
-- Hash：`2d19fd94`。
+- Hash：`f48198bc`（实现提交）。
 - 遗留：等待用户完成 Gallery Light / Dark 主题下的输入替换、默认全选、Popup 与 IME 视觉复验；不宣告 USER VISUAL ACCEPTED；`xyui.bat` 为本地启动资产，不纳入 Git。
 
 ## XYUI-2-12 · Outside Dismiss Interaction Repair（2026-08-29 11:25:34 +08:00）
