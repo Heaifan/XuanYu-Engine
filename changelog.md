@@ -6,7 +6,7 @@
 - 原因：240 DIP 仍然为内容保留了过多空白，未达到目标紧凑宽度。
 - 变化：将该示例宽度调整为 128 DIP，覆盖名称、标签图标和三枚操作按钮的最小可用区域。
 - 状态：`XYUI-2-24 COMPACT REFERENCE FRAME MATCHED`；等待用户视觉复验，不标记 CLOSED。
-- Hash：待本轮提交。
+- Hash：`c5942ffd`（已推送 `origin/feat/XYUI-A`）。
 - 遗留：需确认 `Tank_004` 及操作按钮无裁切。
 
 ## XYUI-2-24 · Tighten Compact Reference Sample（2026-08-29 23:59:00 +08:00）
