@@ -19,6 +19,7 @@ public static partial class XyuiControlStyles
         ComboBox(styles);
         Select(styles);
         TextArea(styles);
+        DatePicker(styles); TimePicker(styles);
         return styles;
     }
 

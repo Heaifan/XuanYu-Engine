@@ -17,8 +17,8 @@ public sealed class XYUI1FidelityTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void XYUI1_uses_registered_vector_marks_instead_of_text_glyphs() => _fx.Run(() =>
     {
-        Assert.Equal(14, XyuiVectorIcons.PathData.Count);
-        Assert.Equal(14, XyuiVectorIcons.CreateResources().Count);
+        Assert.Equal(19, XyuiVectorIcons.PathData.Count);
+        Assert.Equal(19, XyuiVectorIcons.CreateResources().Count);
         Assert.All(XyuiVectorIcons.PathData.Keys, icon => Assert.NotNull(XyuiVectorIcons.Create(icon)));
         Assert.NotNull(Mark(new XYCodeText { Text = "region-id" }, "xyui-code-text-mark").Data);
         Assert.NotNull(Mark(new XYBadge { Text = "草稿" }, "xyui-badge-mark-default").Data);

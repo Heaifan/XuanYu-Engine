@@ -8,7 +8,7 @@ public static class XYUI2DocumentationCatalog
 {
     public static readonly IReadOnlySet<string> BatchIds = new HashSet<string>
     {
-        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08", "XYUI-2-09", "XYUI-2-10", "XYUI-2-11", "XYUI-2-12", "XYUI-2-13", "XYUI-2-14", "XYUI-2-15", "XYUI-2-16"
+        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08", "XYUI-2-09", "XYUI-2-10", "XYUI-2-11", "XYUI-2-12", "XYUI-2-13", "XYUI-2-14", "XYUI-2-15", "XYUI-2-16", "XYUI-2-17", "XYUI-2-18"
     };
     public static IReadOnlyList<XYUI1ComponentDocument> Build() =>
         XyuiCatalogSource.Load().Where(x => x.Module == "XYUI-2" && BatchIds.Contains(x.SourceItemId))
@@ -28,14 +28,11 @@ public static class XYUI2DocumentationCatalog
             Acceptance = PendingAcceptance
         };
     }
-
     // Batch 01 尚未取得用户人工视觉验收，禁止显示 ACCEPTED。
     public const string PendingAcceptance = "READY FOR USER VISUAL ACCEPTANCE";
-
     static string[] Names(string block) => block == "None defined" || block == "See canonical spec"
         ? []
         : block.Split('；', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
     static string ChineseName(XyuiCatalogEntry entry) => entry.Title.Split('｜').Last().Split('/').Last().Trim();
     static string[] Usages(string id, string type) => id switch
     {
@@ -50,9 +47,10 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-14" => ["<c:XYTextArea Placeholder=\"请描述问题……\" />", "<c:XYTextArea Mode=\"Editor\" EditorType=\"JSON\" MaxHeight=\"150\" />"],
         "XYUI-2-15" => ["<c:XYSearchField Placeholder=\"搜索地图、区域或资源\" />", "<c:XYSearchField Text=\"北部区域\" FilterActive=\"true\" />"],
         "XYUI-2-16" => ["<c:XYPasswordField Placeholder=\"请输入访问密码\" />", "<c:XYPasswordField Password=\"部署密钥\" />"],
+        "XYUI-2-17" => [$"<c:{type} SelectedDate=\"2026-08-12\" />", $"<c:{type} SelectedDate=\"2028-02-29\" />"],
+        "XYUI-2-18" => [$"<c:{type} Time=\"14:30:25\" ShowSeconds=\"true\" />", $"<c:{type} Time=\"09:05:00\" ShowSeconds=\"false\" />"],
         _ => [$"<c:{type} />"]
     };
-
     static IReadOnlyList<XYUIDocProperty> Properties(string id) => id switch
     {
         "XYUI-2-06" => [new("IsChecked", "bool?", "false", "支持 Unchecked / Checked / Mixed"), new("IsThreeState", "bool", "false", "启用 Mixed 状态")],
@@ -66,9 +64,10 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-14" => [new("Text", "string", "", "多行文本"), new("Placeholder", "string?", "null", "占位提示"), new("Mode", "XYTextAreaMode", "Standard", "标准 / 编辑模式"), new("AutoGrow", "bool", "true", "内容驱动增长"), new("MinHeight", "double", "54", "最小高度"), new("MaxHeight", "double", "Auto", "达到后内部滚动"), new("EditorType", "string", "文本", "编辑标题栏类型"), new("IsError", "bool", "false", "错误边框状态")],
         "XYUI-2-15" => [new("Text", "string", "", "搜索文本"), new("Placeholder", "string?", "null", "占位提示"), new("FilterContent", "Control?", "null", "真实筛选面板内容"), new("IsFilterOpen", "bool", "false", "筛选面板是否打开"), new("FilterActive", "bool", "false", "独立的筛选激活态"), new("IsSearching", "bool", "false", "搜索进行中"), new("IsNoResult", "bool", "false", "无结果态")],
         "XYUI-2-16" => [new("Password", "string", "", "密码文本别名"), new("Placeholder", "string?", "null", "占位提示"), new("IsRevealed", "bool", "false", "按住时临时显示")],
+        "XYUI-2-17" => [new("SelectedDate", "DateOnly", "2026-08-12", "当前日期"), new("MinDate", "DateOnly?", "null", "可选最小日期"), new("MaxDate", "DateOnly?", "null", "可选最大日期"), new("DateChanged", "event", "—", "日期变化事件")],
+        "XYUI-2-18" => [new("Time", "TimeOnly", "14:30:25", "当前时间"), new("ShowSeconds", "bool", "true", "显示秒分段"), new("TimeChanged", "event", "—", "时间变化事件")],
         _ => []
     };
-
     static IReadOnlyList<XYUIDocToken> Tokens(string id)
     {
         var root = FindRepositoryRoot();

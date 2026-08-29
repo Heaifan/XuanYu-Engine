@@ -34,7 +34,7 @@ public class CatalogSourceTests
         var entries = XyuiCatalogSource.Load(FindRoot());
         var controls = entries.Where(x => x.Module == "XYUI-2" && x.Status.Avalonia).ToArray();
 
-        Assert.Equal(16, controls.Length);
+        Assert.Equal(18, controls.Length);
         Assert.All(controls, x => Assert.Contains("XYUI.Avalonia.Controls", x.AvaloniaType));
         Assert.All(controls, x => Assert.True(x.Status.Gallery));
     }

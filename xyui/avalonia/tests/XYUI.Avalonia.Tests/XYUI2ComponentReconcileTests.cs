@@ -17,14 +17,14 @@ public sealed class XYUI2ComponentReconcileTests : IClassFixture<XyuiHeadlessFix
     public void Component_pages_stay_pending_acceptance_with_canonical_identity()
     {
         var documents = XYUI2DocumentationCatalog.Build();
-        Assert.Equal(16, documents.Count);
+        Assert.Equal(18, documents.Count);
         Assert.All(documents, document => Assert.StartsWith(
             XYUI2DocumentationCatalog.PendingAcceptance, document.StatusText));
         var dropdown = documents.Single(x => x.Id == "XYUI-2-05");
         Assert.Equal("XY.DropDownButton · XYDropDownButton", dropdown.CanonicalDisplay);
         Assert.All(dropdown.Usages, usage => Assert.Contains("XYDropDownButton", usage));
         Assert.Contains(dropdown.Tokens, token => token.Name == "XY.DropDownButton.Height");
-        Assert.Equal(["按钮", "图标按钮", "切换按钮", "分裂按钮", "下拉按钮", "复选框", "单选按钮", "开关", "文本输入框", "数值输入框", "滑块", "组合框", "选择框", "多行文本框", "搜索框", "密码输入框"], documents.Select(x => x.ChineseName));
+        Assert.Equal(["按钮", "图标按钮", "切换按钮", "分裂按钮", "下拉按钮", "复选框", "单选按钮", "开关", "文本输入框", "数值输入框", "滑块", "组合框", "选择框", "多行文本框", "搜索框", "密码输入框", "日期选择器", "时间选择器"], documents.Select(x => x.ChineseName));
     }
 
     [Fact]

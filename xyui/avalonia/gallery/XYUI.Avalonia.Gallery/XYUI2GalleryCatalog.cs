@@ -24,9 +24,10 @@ public static partial class XYUI2GalleryCatalog
         "XYUI-2-14" => Host("XY.TextArea · 标准 / 编辑 / 自动增长", TextAreas()),
         "XYUI-2-15" => Host("搜索框 · 清除 / 筛选", SearchFields()),
         "XYUI-2-16" => Host("密码输入框 · 按住显示", PasswordFields()),
+        "XYUI-2-17" => Host("日期选择器 · 分段编辑 / 日历面板", DatePickers()),
+        "XYUI-2-18" => Host("时间选择器 · 分段编辑 / 横向微调", TimePickers()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
-
     static StackPanel Host(string title, Control[] samples)
     {
         var panel = new WrapPanel { Orientation = Orientation.Horizontal };
@@ -35,7 +36,6 @@ public static partial class XYUI2GalleryCatalog
             sample.Margin = new Thickness(0, 0, 8, 0);
             panel.Children.Add(sample);
         }
-
         return new StackPanel { Spacing = 8, Children = { new XYCaption { Text = title }, panel } };
     }
 
