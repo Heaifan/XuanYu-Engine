@@ -1,5 +1,21 @@
 # changelog
 
+## XYUI-2-12 · Text Input Interaction Repair（2026-08-29 11:39:33 +08:00）
+
+- 目标：修复 ComboBox / TextField 输入时旧文本或占位文本造成的重叠感，并统一可编辑文本激活时的全选替换行为；XYUI-2-13 保持冻结。
+- 变化：新增 XYUI-0 · 0.33 文本输入基础合同；可编辑 TextField、NumberField、Slider 内嵌字段、ComboBox 文本宿主与 TextArea 共享激活全选；TextField 编辑焦点立即隐藏占位层；补齐 XYUI-1/2 文本入口审计。
+- 验证：XYUI.Avalonia 定向测试 3/3 PASS；全量测试 182/182 PASS；Build 0 warning / 0 error；ARCH-A（含 5+100）PASS；git diff --check PASS。
+- Hash：`2d19fd94`。
+- 遗留：等待用户完成 Gallery Light / Dark 主题下的输入替换、默认全选、Popup 与 IME 视觉复验；不宣告 USER VISUAL ACCEPTED；`xyui.bat` 为本地启动资产，不纳入 Git。
+
+## XYUI-2-12 · Outside Dismiss Interaction Repair（2026-08-29 11:25:34 +08:00）
+
+- 目标：补齐 ComboBox 未选择候选时点击选项框外区域的收起行为，并修复关闭后临时高亮残留；XYUI-2-13 保持冻结。
+- 变化：Popup 启用 Avalonia Light Dismiss；Popup 关闭时同步清除 Open/Chevron 状态与 ListBox 临时选择，支持再次正常打开。
+- 验证：XYUI.Avalonia Build 0 warning / 0 error；XYUI2-12 定向测试 8/8 PASS；全量测试 179/179 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS。
+- Hash：待用户完成人工交互复验后提交。
+- 遗留：等待用户确认 Light/Dark 下的外部点击收起、Popup 重开与现有视觉状态；`xyui.bat` 为本地启动资产，不纳入 Git。
+
 ## XYUI-2-12 · Popup Lifecycle Repair（2026-08-29 10:57:03 +08:00）
 
 - 目标：修复 XYUI2-12 Editable Combo 离开 Gallery/宿主窗口失焦后 Popup 可能继续悬浮的生命周期缺陷；13 Select 与 14 TextArea 保持冻结。

@@ -1,12 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 
 namespace XYUI.Avalonia.Controls;
 
-public partial class XYTextField : TextBox
+public partial class XYTextField : XyuiEditableTextBox
 {
-    bool _selectAllOnPointerRelease;
     public static readonly StyledProperty<string?> PlaceholderProperty =
         TextBox.PlaceholderTextProperty.AddOwner<XYTextField>();
     public static readonly StyledProperty<bool> IsErrorProperty =
@@ -22,21 +20,4 @@ public partial class XYTextField : TextBox
         if (change.Property == IsErrorProperty) PseudoClasses.Set(":error", change.GetNewValue<bool>());
     }
 
-    protected override void OnPointerPressed(PointerPressedEventArgs e)
-    {
-        _selectAllOnPointerRelease = !IsKeyboardFocusWithin && !IsReadOnly && !string.IsNullOrEmpty(Text);
-        base.OnPointerPressed(e);
-    }
-
-    protected override void OnPointerReleased(PointerReleasedEventArgs e)
-    {
-        base.OnPointerReleased(e);
-        if (_selectAllOnPointerRelease) { _selectAllOnPointerRelease = false; SelectAll(); }
-    }
-
-    protected override void OnGotFocus(FocusChangedEventArgs e)
-    {
-        base.OnGotFocus(e);
-        if (!IsReadOnly && !_selectAllOnPointerRelease && !string.IsNullOrEmpty(Text)) SelectAll();
-    }
 }

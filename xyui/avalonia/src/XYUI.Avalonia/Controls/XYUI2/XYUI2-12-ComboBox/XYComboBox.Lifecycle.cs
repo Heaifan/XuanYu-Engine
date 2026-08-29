@@ -36,6 +36,7 @@ public partial class XYComboBox
     {
         _isDropDownOpen = false; ShowingAllItems = false; Classes.Set("xyui-combo-open", false);
         if (ChevronPart?.Content is XYIcon icon) icon.RenderTransform = null;
+        if (ListPart is not null && ListPart.SelectedIndex >= 0) { IsKeyboardSelecting = true; ListPart.SelectedIndex = -1; IsKeyboardSelecting = false; }
         if (PopupPart is null) return;
         PopupPart.IsOpen = false; PopupPart.IsVisible = false; PopupPart.Height = 0;
     }

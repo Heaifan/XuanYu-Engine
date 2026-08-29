@@ -22,7 +22,7 @@ public partial class XYComboBox
         var content = new Grid { ColumnDefinitions = new ColumnDefinitions { new ColumnDefinition(1, GridUnitType.Star), new ColumnDefinition(32, GridUnitType.Pixel) }, Children = { text, chevronCell } }; Grid.SetColumn(chevronCell, 1);
         var border = new Border { Name = "PART_Chrome", Child = content }; border[!Border.BackgroundProperty] = control[!TemplatedControl.BackgroundProperty]; border[!Border.BorderBrushProperty] = control[!TemplatedControl.BorderBrushProperty]; border[!Border.BorderThicknessProperty] = control[!TemplatedControl.BorderThicknessProperty]; border[!Border.CornerRadiusProperty] = control[!TemplatedControl.CornerRadiusProperty];
         var edge = new Border { Name = "PART_FocusEdge", Height = 3, VerticalAlignment = VerticalAlignment.Bottom, IsHitTestVisible = false };
-        var list = new ListBox { Name = "PART_List", MinHeight = 28, MaxHeight = 240 }; var popupSurface = new Border { Name = "PART_PopupSurface", Child = list }; var popup = new Popup { Name = "PART_Popup", Height = 0, IsVisible = false, Placement = PlacementMode.Bottom, IsLightDismissEnabled = false, Child = popupSurface };
+        var list = new ListBox { Name = "PART_List", MinHeight = 28, MaxHeight = 240 }; var popupSurface = new Border { Name = "PART_PopupSurface", Child = list }; var popup = new Popup { Name = "PART_Popup", Height = 0, IsVisible = false, Placement = PlacementMode.Bottom, IsLightDismissEnabled = true, Child = popupSurface };
         scope?.Register("PART_TextField", text); scope?.Register("PART_Chevron", chevron); scope?.Register("PART_ChevronCell", chevronCell); scope?.Register("PART_Chrome", border); scope?.Register("PART_FocusEdge", edge); scope?.Register("PART_List", list); scope?.Register("PART_PopupSurface", popupSurface); scope?.Register("PART_Popup", popup);
         return new Grid { Children = { border, edge, popup } };
     });
@@ -31,14 +31,16 @@ public partial class XYComboBox
     {
         if (TextFieldPart is not null) { TextFieldPart.PropertyChanged -= OnTextFieldChanged; TextFieldPart.KeyDown -= OnTextKeyDown; }
         if (ListPart is not null) ListPart.SelectionChanged -= OnListSelectionChanged;
+        if (PopupPart is not null) PopupPart.Closed -= OnPopupClosed;
         base.OnApplyTemplate(e); TextFieldPart = e.NameScope.Find<XYTextField>("PART_TextField"); ChevronPart = e.NameScope.Find<Button>("PART_Chevron"); PopupPart = e.NameScope.Find<Popup>("PART_Popup"); ListPart = e.NameScope.Find<ListBox>("PART_List");
         if (TextFieldPart is null || ChevronPart is null || PopupPart is null || ListPart is null) return;
-        TextFieldPart.PropertyChanged += OnTextFieldChanged; TextFieldPart.KeyDown += OnTextKeyDown; ChevronPart.Click += OnChevronClick; ListPart.SelectionChanged += OnListSelectionChanged; TextFieldPart.Placeholder = Placeholder; SyncText(); RefreshItems(false); if (IsDropDownOpen) OpenPopup();
+        TextFieldPart.PropertyChanged += OnTextFieldChanged; TextFieldPart.KeyDown += OnTextKeyDown; ChevronPart.Click += OnChevronClick; ListPart.SelectionChanged += OnListSelectionChanged; PopupPart.Closed += OnPopupClosed; TextFieldPart.Placeholder = Placeholder; SyncText(); RefreshItems(false); if (IsDropDownOpen) OpenPopup();
     }
 
     void OnTextFieldChanged(object? sender, AvaloniaPropertyChangedEventArgs e) { if (e.Property == TextBox.TextProperty && !SyncingText) { Text = TextFieldPart!.Text; RefreshItems(true); } }
     void OnTextKeyDown(object? sender, KeyEventArgs e) => OnComboKeyDown(e);
     void OnChevronClick(object? sender, RoutedEventArgs e) => ToggleDropDown();
+    void OnPopupClosed(object? sender, EventArgs e) => ClosePopupForLifecycle();
     void OnListSelectionChanged(object? sender, SelectionChangedEventArgs e) { if (!IsKeyboardSelecting && ListPart?.SelectedItem is object item) SelectItem(item); }
     void SyncText() { if (TextFieldPart is not null && TextFieldPart.Text != Text) { SyncingText = true; TextFieldPart.Text = Text; SyncingText = false; } }
     internal void ToggleDropDown() { if (IsDropDownOpen && ShowingAllItems) IsDropDownOpen = false; else { ShowingAllItems = true; RefreshItems(false); IsDropDownOpen = true; } }

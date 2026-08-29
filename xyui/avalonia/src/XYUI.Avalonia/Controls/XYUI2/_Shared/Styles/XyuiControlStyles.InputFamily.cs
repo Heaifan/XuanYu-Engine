@@ -31,6 +31,8 @@ public static partial class XyuiControlStyles
         edge.Setters.Add(new Setter(Control.OpacityProperty, 0d)); edge.Setters.Add(new Setter(Border.BackgroundProperty, new DynamicResourceExtension("XY.Brush.Accent.Strong"))); styles.Add(edge);
         var focusEdge = new Style(x => x.OfType<XYTextField>().Class("xyui-text-field").Class(":focus").Template().Name("PART_FocusEdge"));
         focusEdge.Setters.Add(new Setter(Control.OpacityProperty, 1d)); styles.Add(focusEdge);
+        var focusPlaceholder = new Style(x => x.OfType<XYTextField>().Class("xyui-text-field").Class(":focus").Template().Name("PART_Placeholder"));
+        focusPlaceholder.Setters.Add(new Setter(Control.IsVisibleProperty, false)); styles.Add(focusPlaceholder);
         var errorFocus = new Style(x => x.OfType<XYTextField>().Class("xyui-text-field").Class(":focus").Class(":error"));
         Set(errorFocus, TemplatedControl.BorderBrushProperty, "XY.Brush.Semantic.Error.Border"); styles.Add(errorFocus);
     }

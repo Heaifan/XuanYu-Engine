@@ -1480,7 +1480,7 @@
    │  │     │  ├─ XYUI2/
    │  │     │  │  └─ XYUI2-01～09-ComponentName/（每个组件独立目录）
    │  │     │  ├─ XYUI1/_Shared/（XYUI-1 内部基类、样式与几何辅助）
-   │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、样式与 Token）
+   │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、输入基类、样式与 Token）
    │  │     │  └─ README.md
    │  │     ├─ Foundation/
    │  │     │  ├─ XyuiColorToken.cs
@@ -2961,6 +2961,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.Template.cs` — Compact Track + Thumb 固定尺寸模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.cs` — XYUI-2-09 单行文本输入控件与 Placeholder/Error API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.Template.cs` — XYUI-2-09 保留原生 TextPresenter 的文本输入模板与底部焦点装饰层。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Base/XyuiEditableTextBox.cs` — XYUI-0 文本输入基础行为：可编辑文本激活全选与直接替换。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.cs` — XYUI-2-10 统一 Value 的数字输入、步进、键盘与 Scrub 语义。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Value.cs` — XYUI-2-10 数值格式化、后缀解析、提交与回退。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Template.cs` — XYUI-2-10 文本呈现器与 Hover/Focus Stepper 模板。
@@ -2982,6 +2983,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ComboBox.cs` — XYUI-2-12 ComboBox 输入 Chrome、Chevron、Focus、Error 与候选项样式。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Inputs.cs` — XYUI-2-09～14 各自独立 Gallery 预览样例。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2InputControlsTests.cs` — TextField、NumberField、Slider、ComboBox、Select、TextArea 运行时合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextInputInteractionTests.cs` — 可编辑文本宿主焦点/鼠标激活全选与占位层防重叠回归。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2NumberFieldTests.cs` — XYUI-2-10 NumberField 数值、步进、Stepper、Scrub 与 Gallery 运行时测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SliderTests.cs` — XYUI-2-11 Slider 唯一 Value、部件、几何 token 与 Gallery 合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ComboBoxTests.cs` — XYUI-2-12 可编辑、过滤、展开、选择、键盘与 Custom Value 合同测试。
@@ -3014,4 +3016,4 @@
  - `xyui/specs/XYUI2/XYUI-2.identity.json` — XYUI-2 Canonical Identity 注册表（含 Button/Icon/Toggle/Split/DropDown/Checkbox/Radio/Switch）。
  - `xyui/specs/XYUI2/XYUI-2.mapping.json` — XYUI-2 Canonical token 到 Avalonia 样式属性映射（05～08 完整映射）。
 - `xyui/audit/XYUI1/R5-F4-fidelity-matrix.md` — XYUI-1 01～24 全量 Fidelity Matrix 与审计结论。
-
+- `xyui/audit/XYUI0/text-input-interaction-audit.md` — XYUI-1/2 全量文本入口审计与 XYUI-0 · 0.33 接入矩阵。

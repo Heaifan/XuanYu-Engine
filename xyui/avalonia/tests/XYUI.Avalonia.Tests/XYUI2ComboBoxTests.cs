@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Input;
+using Avalonia.Threading;
 using XYUI.Avalonia.Controls;
 
 namespace XYUI.Avalonia.Tests;
@@ -62,6 +64,15 @@ public sealed class XYUI2ComboBoxTests : IClassFixture<XyuiHeadlessFixture>
         XyuiBatchTestHost.Prepare(); var combo = new XYComboBox { ItemsSource = Items }; var window = XyuiBatchTestHost.Show(combo); combo.IsDropDownOpen = true;
         Assert.True(combo.PopupPart!.IsOpen); window.Content = null;
         Assert.False(combo.IsDropDownOpen); Assert.False(combo.PopupPart.IsOpen); Assert.False(combo.PopupPart.IsVisible); window.Close();
+    });
+
+    [Fact]
+    public void ComboBox_light_dismisses_popup_and_can_reopen() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var combo = new XYComboBox { ItemsSource = Items }; var window = XyuiBatchTestHost.Show(combo); combo.IsDropDownOpen = true;
+        Assert.True(combo.PopupPart!.IsOpen); window.MouseDown(new Point(430, 180), MouseButton.Left); Dispatcher.UIThread.RunJobs();
+        Assert.False(combo.IsDropDownOpen); Assert.False(combo.PopupPart.IsOpen); Assert.Equal(-1, combo.ListPart!.SelectedIndex);
+        combo.ToggleDropDown(); Assert.True(combo.IsDropDownOpen); Assert.True(combo.PopupPart.IsOpen); window.Close();
     });
 
     static void Raise(XYComboBox combo, Key key) => combo.TextFieldPart!.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key });

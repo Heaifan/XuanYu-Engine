@@ -6,10 +6,10 @@ namespace XYUI.Avalonia.Controls;
 
 public enum XYTextAreaMode { Standard, Editor }
 
-public class XYTextArea : TextBox
+public class XYTextArea : XyuiEditableTextBox
 {
     public static readonly StyledProperty<XYTextAreaMode> ModeProperty = AvaloniaProperty.Register<XYTextArea, XYTextAreaMode>(nameof(Mode));
-    public static readonly StyledProperty<string?> PlaceholderProperty = AvaloniaProperty.Register<XYTextArea, string?>(nameof(Placeholder));
+    public static readonly StyledProperty<string?> PlaceholderProperty = TextBox.PlaceholderTextProperty.AddOwner<XYTextArea>();
     public XYTextAreaMode Mode { get => GetValue(ModeProperty); set => SetValue(ModeProperty, value); }
     public string? Placeholder { get => GetValue(PlaceholderProperty); set => SetValue(PlaceholderProperty, value); }
     public int LineCount => string.IsNullOrEmpty(Text) ? 1 : Text!.Split('\n').Length;

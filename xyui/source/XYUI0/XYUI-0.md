@@ -2235,6 +2235,27 @@
         - XY.Localization.LayoutBreak
             - Value = Forbidden
 
+- 0.33 · Text Input Interaction｜文本输入交互
+    - 适用范围
+        - 所有可编辑单行 / 多行文本输入框
+        - ComboBox、NumberField、Slider 等控件内嵌的可编辑文本宿主
+    - 基础行为
+        - 用户首次聚焦或点击激活非空可编辑文本时，默认全选当前文本
+        - 已聚焦文本再次点击时仍默认全选，保证直接输入即可替换旧值
+        - 键盘输入应原子替换已选文本，不得与旧文本叠加
+        - 编辑焦点建立后立即隐藏占位文本，输入法预编辑文本不得与占位文本重叠
+        - Tab 聚焦、程序聚焦与鼠标激活遵循同一全选规则
+    - 边界
+        - ReadOnly、Disabled、不可编辑的选择控件不进入本文本编辑行为
+        - SelectableText 仅负责只读选择与复制，不伪装为编辑输入框
+        - 全选不改变控件尺寸、布局、Focus、Popup 或候选项状态
+    - UI代码 / 交互契约
+        - XY.TextInput.SelectionOnActivation
+            - Value = SelectAll
+        - XY.TextInput.ReplaceOnInput
+            - Value = Required
+        - XY.TextInput.PlaceholderDuringComposition
+            - Value = Hidden
 
 
 

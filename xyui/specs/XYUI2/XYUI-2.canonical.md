@@ -532,6 +532,7 @@
         - Focus 不改变控件尺寸与布局
         - Focus 使用独立 Outline，不参与 Hover / Selected 背景覆盖
         - 输入 Surface 使用 Foundation Input Surface
+        - 可编辑文本宿主继承 XYUI-0 · 0.33：激活非空文本默认全选，输入直接替换；编辑焦点建立后占位文本立即隐藏
     - UI代码 / Design Token
         - XY.TextField.Height
             - Value = XY.Size.Input
@@ -736,6 +737,7 @@
         - Open / Focus 使用 Foundation Focus Outline
         - 当前值区域保持安静
         - 与 DropDown Button 的命令语义明确区分
+        - 可编辑 ComboBox 的文本宿主继承 XYUI-0 · 0.33：点击文本默认全选，输入不与旧值或占位文本重叠
     - UI代码 / Design Token
         - XY.ComboBox.Height
             - Value = XY.Size.Input
@@ -846,6 +848,7 @@
         - 复杂文本模式显示顶部 Editor Bar
         - Editor Bar 可显示格式、行数、字符数、状态
         - Focus 使用 Foundation Focus Outline
+        - 文本编辑继承 XYUI-0 · 0.33：已有文本激活时默认全选，输入法预编辑不与占位文本重叠
     - UI代码 / Design Token
         - XY.TextArea.MinHeight
             - Value = 54 DIP
