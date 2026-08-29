@@ -41,7 +41,7 @@ public static partial class XYUI2GalleryCatalog
     {
         var resolved = ReferenceSample("实体引用", new("Infantry_023", "Entity", "E023"), "Entity");
         var dataset = ReferenceSample("数据集引用", new("道路数据", "Dataset", "Road-01"), "Dataset");
-        return [resolved, dataset, ReferenceSample("空引用", null, "Entity"), ReferenceSample("丢失引用", new("Infantry_031", "Entity", "E031"), "Entity", XYReferenceState.Missing), ReferenceSample("类型不匹配", new("道路数据", "Dataset", "Road-01"), "Entity", XYReferenceState.TypeMismatch), ReferenceSample("紧凑引用", new("Tank_004", "Entity", "E004"), "Entity", XYReferenceState.Resolved, 240), Hint("交互提示", "定位 → 触发真实 LocateRequested 并显示反馈；浏览 → 打开真实引用选择 Popup\n单击候选 → 更新引用并关闭；点击外部或 Esc → 关闭；清除 → Empty\nEmpty、引用丢失、类型不匹配使用不同文字语义；拖入不兼容类型时保留原引用")];
+        return [resolved, dataset, ReferenceSample("空引用", null, "Entity"), ReferenceSample("丢失引用", new("Infantry_031", "Entity", "E031"), "Entity", XYReferenceState.Missing), ReferenceSample("类型不匹配", new("道路数据", "Dataset", "Road-01"), "Entity", XYReferenceState.TypeMismatch), ReferenceSample("紧凑引用", new("Tank_004", "Entity", "E004"), "Entity", XYReferenceState.Resolved, 128), Hint("交互提示", "定位 → 触发真实 LocateRequested 并显示反馈；浏览 → 打开真实引用选择 Popup\n单击候选 → 更新引用并关闭；点击外部或 Esc → 关闭；清除 → Empty\nEmpty、引用丢失、类型不匹配使用不同文字语义；拖入不兼容类型时保留原引用")];
     }
 
     static Control ReferenceSample(string caption, XYReferenceValue? value, string expected, XYReferenceState state = XYReferenceState.Resolved, double width = 520)
