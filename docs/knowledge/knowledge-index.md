@@ -1,7 +1,7 @@
 # 玄域引擎知识索引
 
 > 索引整理时间：2026-08-11 00:03（UTC+08:00）
-> 状态：V3 正式入库，共 22 条 Knowledge、4 条 Lesson。
+> 状态：V3 正式入库，共 23 条 Knowledge、4 条 Lesson。
 > 使用方法：AI 接到任务后先按标签/分类定位相关 ID，再读取对应主题文件全文；不要默认把全部知识无差别塞入实现上下文。
 
 | ID | 类型 | 分类 | 标题 | 优先级 | 证据 | 首次关键证据 | 状态 |
@@ -26,6 +26,7 @@
 | K-INP-001 | Knowledge | Input | 同一 Pointer 手势必须只有一个实时 Owner | P0 | E2 | v0.2.25.9-fix · 2026-08-10 11:48:28 · d621755 | Active |
 | K-INP-002 | Knowledge | Input | Win32 Mouse Capture 必须统一管理完整释放生命周期 | P0 | E2 | v0.1.8.10-fix · 2026-06-26 · 8d6e7fd | Active |
 | K-UI-001 | Knowledge | UI | 冷启动错位/操作后恢复优先检查 Measure/Arrange 与命中热区 | P0 | E2 | v0.2.24.49-fix → .50-fix · 2026-08-09 · 60fd339 收口 | Active |
+| K-UI-002 | Knowledge | UI | 同功能 XYUI 子控件必须复用现有 XYUI 控件合同 | P1 | E2 | XYUI-2-19/20 复用审计 · 2026-08-29 | Active |
 | K-DATA-001 | Knowledge | Data | 覆盖保存必须采用可回滚 Staging 事务 | P0 | E3 | v0.2.21.24-rz · 2026-08-02 14:10:00 · e089325 | Active |
 | K-DATA-002 | Knowledge | Data | Load 必须 Candidate→Commit，结构失败与资源失败分级 | P0 | E3 | v0.2.21.25-rz · 2026-08-02 15:30:00 · cafe400 | Active |
 | K-DATA-003 | Knowledge | Data | 异步危险确认必须捕获稳定对象身份并在确认后重新验证 | P0 | E1 | MAP-DATA-A-R2-F2-F2-F1 · 2026-08-12 · 3d53de0 | Active |
@@ -39,7 +40,7 @@
 - `architecture.md`：K-SPA-001、K-SPA-002、K-ARCH-001、K-ARCH-002
 - `rendering.md`：K-REN-001、K-REN-002、K-REN-003、K-REN-004、K-NATIVE-001
 - `input.md`：K-INP-001、K-INP-002
-- `ui.md`：K-UI-001
+- `ui.md`：K-UI-001、K-UI-002
 - `data.md`：K-DATA-001、K-DATA-002、K-DATA-003、K-ASSET-001、K-ASSET-002
 - `performance.md`：K-PERF-001
 - `incidents.md`：上述知识的代表性事故记录与映射

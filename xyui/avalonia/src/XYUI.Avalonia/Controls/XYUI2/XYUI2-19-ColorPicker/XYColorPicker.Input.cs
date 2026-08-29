@@ -1,5 +1,4 @@
 using Avalonia.Media;
-using Avalonia.Controls;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -13,7 +12,7 @@ public partial class XYColorPicker
         color = Color.FromArgb(alpha, (byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb); return true;
     }
     internal void OnHexCommitted() { if (TryParseHex(HexField?.Text, out var color)) { ErrorPart!.IsVisible = false; SetColor(color); } else ErrorPart!.IsVisible = true; }
-    void CommitByte(TextBox? field, char channel)
+    void CommitByte(XYNumberField? field, char channel)
     {
         if (!byte.TryParse(field?.Text, out var value)) return; var color = channel switch { 'R' => Color.FromArgb(Color.A, value, Color.G, Color.B), 'G' => Color.FromArgb(Color.A, Color.R, value, Color.B), 'B' => Color.FromArgb(Color.A, Color.R, Color.G, value), _ => Color.FromArgb(value, Color.R, Color.G, Color.B) }; SetColor(color);
     }

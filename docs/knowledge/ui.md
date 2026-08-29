@@ -72,3 +72,31 @@ Measure constraint
 
 **关联 Incident**：INC-2026-08-09-001
 **关联 Knowledge**：K-VAL-002
+
+## K-UI-002 同功能 XYUI 子控件必须复用现有 XYUI 控件合同
+
+**状态**：Active
+**优先级**：P1
+**证据等级**：E2
+**标签**：Avalonia、XYUI-1、XYUI-2、Composition、Reuse、Inheritance、Source of Truth
+**适用范围**：所有复合 XYUI 控件、Popup 面板、编辑器属性面板及 Gallery 示例。
+
+**首次确认**：2026-08-29 18:40:31（UTC+08:00）
+**来源**：`changelog.md` · XYUI-2-19/20 复用审计
+
+### 工程原则
+
+复合控件内部若出现与现有 XYUI 控件功能相同的子控件，必须直接实例化并复用该公开 XYUI 控件，使 UI、状态、键盘、Pointer、Scrub、焦点和错误提示继承同一份控件合同。允许复用，不允许在复合控件内重新实现一套等价的原生 Avalonia 控件交互。
+
+标准复用关系包括：`XYNumberField : XYTextField`；滑块功能使用 `XYSlider`；文本输入使用 `XYTextField`；布尔属性使用 `XYSwitch`。`XYSlider` 内部的原生 `Slider` 与 `XYNumberField` 是它自己的实现细节，复合控件不应绕过 `XYSlider` 直接创建原生滑块。
+
+### 本轮 XYUI-1/2 审计结论
+
+- XYUI-1 全部 24 项已检查。文本类使用 `XyuiTextComponent`、`XyuiTextSurface`、`XyuiVectorTextSurface` 等共享基类；`SelectableTextBlock`、快捷键帽、状态点和分割线属于专用视觉/选择原语，没有发现可替换为现有 XYUI 公共控件的同功能子控件。
+- XYUI-2 已检查全部 20 项。`XYComboBox` 复用 `XYTextField`；`XYNumberField` 继承 `XYTextField`；`XYTextArea`、`XYSearchField`、`XYPasswordField` 复用共享可编辑文本基类；`XYBoolProperty` 复用 `XYSwitch`；`XYColorPicker` 的色相/透明度使用 `XYSlider`，HEX 使用 `XYTextField`，R/G/B/A 使用 `XYNumberField`。
+- `XYSplitButton`、`XYDropDownButton`、`XYSearchField`、`XYPasswordField` 的清除/筛选/眼睛/菜单等 Button 是专用操作槽，不是完整的同功能 `XYButton`；`XYDatePicker`、`XYTimePicker` 的日期/时间分段和日历/时钟按钮是专用值编辑入口。这些属于有记录的低层例外，不得借“复用”改变其事件 Owner 或重复触发语义。
+- Checkbox、Radio、Switch 以及 XYUI-1 的 Border/TextBlock/Ellipse 等仅承担外观原语；只有存在同功能公共 XYUI 控件时才要求替换。
+
+### 门禁
+
+新增 `XYUICompositionReuseTests`，锁定公开复合控件的真实子控件类型与 XYUI-1 文本共享基类；ColorPicker 测试继续验证 HEX、透明度和颜色变化。后续新增复合控件必须在测试中列出复用子控件与专用槽例外，并通过 Avalonia.Headless 运行时检查。

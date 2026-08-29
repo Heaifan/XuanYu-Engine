@@ -1,5 +1,16 @@
 # changelog
 
+## XYUI-1/2 · 同功能子控件复用原则与全量审计（2026-08-29 18:40:31 +08:00）
+
+- 目标：响应复合控件子控件一致性要求，检查目前 XYUI-1 全部 24 项与 XYUI-2 全部 20 项；保持已通过视觉与交互范围，不启动 XYUI-2-21。
+- 原则：复合 XYUI 控件中凡与现有 XYUI 控件功能相同的子控件，必须直接复用公开 XYUI 控件及其 UI/交互合同；允许复用，不允许重新创建等价的原生 Avalonia 控件。专用操作槽、日期/时间分段和视觉原语只有在不代表完整同功能 XYUI 控件时才保留为例外。
+- 变化：`XYColorPicker` 的色相/透明度改用 `XYSlider`，HEX 改用 `XYTextField`，R/G/B/A 改用 `XYNumberField`；`XYNumberField : XYTextField`、`XYComboBox → XYTextField`、`XYBoolProperty → XYSwitch` 等既有关系纳入审计合同；新增 `XYUICompositionReuseTests` 锁定真实子控件类型与 XYUI-1 文本共享基类；知识库新增 `K-UI-002`。
+- 审计：XYUI-1 24/24 已检查，无同功能复合控件违规；XYUI-2 20/20 已检查，已区分公共 XYUI 子控件、专用操作槽与视觉原语例外。
+- 验证：引擎解决方案 Build `0 Warning / 0 Error`；Avalonia 解决方案 Build `0 Warning / 0 Error`；Avalonia `238/238 PASS`；Core `339/339 PASS`；World `1286/1286 PASS`；WarCore `22/22 PASS`；复用/ColorPicker/BoolProperty 定向测试 `4/4 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。
+- 状态：复用规则已写入 changelog 与知识库；代码与全量自动门禁已完成，提交并推送后等待用户对 ColorPicker 复用后的 UI/交互做最终复验；不将自动测试等同于新的用户视觉验收。
+- Hash：以本轮提交为准。
+- 遗留：用户可在 Gallery 复核 XYUI-2-19 的滑块、HEX、R/G/B/A 的 UI 与交互是否与 XYUI-2-09/10/11 一致；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-19/20 · ColorPicker 与 BoolProperty（2026-08-29 18:14:47 +08:00）
 
 - 目标：实现下一项 XYUI-2-19/20；2-17/2-18 保持已通过状态；不启动 XYUI-2-21。
