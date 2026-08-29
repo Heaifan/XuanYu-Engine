@@ -26,6 +26,12 @@ public partial class XYDatePicker : TemplatedControl
     internal XYDateSegment ActiveSegment { get; private set; } = XYDateSegment.Day;
     internal DateOnly CalendarMonth { get; set; }
     internal bool IsCalendarOpen { get; private set; }
+    internal bool IsSegmentEditing { get; private set; }
+    internal string EditBuffer { get; private set; } = "";
+    internal bool PointerActionPending { get; set; }
+    internal bool PopupPointerActionPending { get; set; }
+    internal bool PopupSyntheticClick { get; set; }
+    DateOnly _editStartDate;
     public XYDatePicker() { Classes.Add("xyui-date-picker"); Focusable = true; CalendarMonth = new DateOnly(2026, 8, 1); }
     protected override void OnKeyDown(KeyEventArgs e) { OnDateKeyDown(e); if (!e.Handled) base.OnKeyDown(e); }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -35,7 +41,11 @@ public partial class XYDatePicker : TemplatedControl
         if (change.Property == MinDateProperty || change.Property == MaxDateProperty) SelectedDate = SelectedDate;
         if (change.Property == IsEnabledProperty && !IsEnabled) CloseCalendarForLifecycle();
     }
-    public void ActivateSegment(XYDateSegment segment) { if (!IsEnabled) return; ActiveSegment = segment; SyncSegmentClasses(); SegmentButtons.GetValueOrDefault(segment)?.Focus(); }
+    public void ActivateSegment(XYDateSegment segment) { if (!IsEnabled) return; CommitSegmentEdit(); ActiveSegment = segment; BeginSegmentEdit(segment); SegmentButtons.GetValueOrDefault(segment)?.Focus(); }
+    internal void BeginSegmentEdit(XYDateSegment segment) { ActiveSegment = segment; _editStartDate = SelectedDate; EditBuffer = ""; IsSegmentEditing = true; Classes.Set("xyui-date-editing", true); SyncSegmentClasses(); }
+    internal void CommitSegmentEdit() { if (!IsSegmentEditing) return; if (EditBuffer.Length == SegmentWidth() && int.TryParse(EditBuffer, out var value) && TryBuild(value, out var date)) SelectedDate = date; IsSegmentEditing = false; EditBuffer = ""; Classes.Set("xyui-date-editing", false); SyncSegmentClasses(); }
+    internal void CancelSegmentEdit() { if (!IsSegmentEditing) return; SelectedDate = _editStartDate; IsSegmentEditing = false; EditBuffer = ""; Classes.Set("xyui-date-editing", false); SyncSegmentClasses(); }
+    internal int SegmentWidth() => ActiveSegment == XYDateSegment.Year ? 4 : 2;
     internal void ChangeDays(int days) => SelectedDate = SelectedDate.AddDays(days);
     internal void SyncSegmentClasses() { foreach (var segment in Enum.GetValues<XYDateSegment>()) Classes.Set($"xyui-date-{segment.ToString().ToLowerInvariant()}-active", ActiveSegment == segment); }
     internal DateOnly Clamp(DateOnly date) => MinDate is { } min && date < min ? min : MaxDate is { } max && date > max ? max : date;

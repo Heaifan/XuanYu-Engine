@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-17/18 · DatePicker 与 TimePicker 交互返工（2026-08-29 16:55:52 +08:00）
+
+- 目标：按 `XYUI-2-17-18-Interaction-Rework.md` 只修复日期选择器与时间选择器交互；保留用户已通过的 UI；不启动 XYUI-2-19。
+- 变化：DatePicker 改为单一根输入路径，日历图标单击保持 Popup，日期选择、Esc、轻量关闭与 Popup Closed 同步；年/月/日建立提交/取消编辑会话并保证合法日期。TimePicker 建立时/分/秒双位编辑会话，支持 Enter、方向键、Esc、可见分段导航与 4 DIP 横向 Scrub；Scrub 在捕获丢失、禁用、脱离视觉树、宿主停用或关闭时恢复并取消。补齐 8 项交互回归测试。
+- 验证：引擎解决方案 Build `0 Warning / 0 Error`；Avalonia 解决方案 Build `0 Warning / 0 Error`；Avalonia `231/231 PASS`；Core `339/339 PASS`；World `1286/1286 PASS`；WarCore `22/22 PASS`；定向 DatePicker/TimePicker `16/16 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。
+- 状态：`XYUI-2-17 UI ACCEPTED`；`INTERACTION REWORKED`；`AWAITING USER INTERACTION RE-REVIEW`；`XYUI-2-18 UI ACCEPTED`；`INTERACTION REWORKED`；`AWAITING USER INTERACTION RE-REVIEW`；`XYUI-2-19 NOT STARTED`。不标记 `CLOSED` 或 `USER ACCEPTED`。
+- Hash：以本轮提交为准。
+- 遗留：Gallery 启动到 XYUI-2-17 浅色主题，等待用户完成日期选择器交互复验；2-18 等用户随后复验；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-17/18 · DatePicker 与 TimePicker（2026-08-29 16:16:22 +08:00）
 
 - 目标：按 `XYUI-2-17-18-DatePicker-TimePicker-Task.md` 实现日期选择器与时间选择器；2-15/2-16 已由用户通过，本轮不启动 2-19。

@@ -3025,7 +3025,9 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SearchFieldTests.cs` — XYUI-2-15 真实编辑、首次全选、筛选弹层、清除保焦与禁用合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2PasswordFieldTests.cs` — XYUI-2-16 遮罩、方形眼睛槽、内边距、指针/键盘临时显示、选区保持与禁用合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DatePickerTests.cs` — XYUI-2-17 分段、快捷步进、日历选择、边界、生命周期与 Gallery 合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DatePickerInteractionReworkTests.cs` — XYUI-2-17 日历单击保持、分段编辑提交/取消、轻量关闭与快捷步进交互回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TimePickerTests.cs` — XYUI-2-18 时分秒变体、隐藏秒、循环键盘、真实 Scrub 与 Gallery 合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TimePickerInteractionReworkTests.cs` — XYUI-2-18 分段替换、点击阈值、方向 Scrub、释放提交与取消生命周期回归测试。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件专用尺寸与 05 Chevron Track 资源。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs` — Checkbox、Radio、Switch 状态样式与 token 消费。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。
