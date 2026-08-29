@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-22 · Adaptive Vector Layout Correction（2026-08-29 21:45:36 +08:00）
+
+- 目标：仅修复 Vector Property 的中等宽度布局，使标签独占一行、XYZ 在完整可用宽度内稳定排列，窄宽度继续纵向排列。
+- 变化：`XYVectorProperty` 在非 Wide 模式使用明确的标签/轴双行布局，按当前维度计算轴宿主宽度，继续真实复用 `XYNumberField`；未修改其他属性控件、公共 Token 或交互语义。
+- 验证：Avalonia 属性控件测试 `244/244 PASS`；新增中等宽度标签独占行与轴宽度回归断言。
+- 状态：`XYUI-2-22 VISUAL CORRECTION IMPLEMENTED`；等待用户按图二重新进行人工视觉验收。
+- Hash：待本轮提交。
+- 遗留：Gallery 需重点复核宽布局同行、中等宽度自动换行意图、窄布局纵向排列及所有字段无裁切。
+
 ## XYUI-2-21～24 · Inspector Layout Correction（2026-08-29 21:31:18 +08:00）
 
 - 目标：修复人工验收发现的属性行布局、Vector 默认零值初始化、Reference 响应式与状态不变量问题；不改变 21～24 的既有复用方向。

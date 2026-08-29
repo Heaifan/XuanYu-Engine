@@ -32,6 +32,14 @@ public sealed class XYUI2PropertyControlsTests : IClassFixture<XyuiHeadlessFixtu
     });
 
     [Fact]
+    public void Vector_property_stacks_label_before_axes_when_width_is_not_wide() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var p = new XYVectorProperty { Width = 420, Dimension = XYVectorDimension.Vector3 }; var w = XyuiBatchTestHost.Show(p);
+        Assert.Single(p.RowPart!.ColumnDefinitions); Assert.True(p.RowPart.RowDefinitions.Count == 2); Assert.Equal(1, Grid.GetRow(p.AxisPanelPart!));
+        Assert.All(p.AxisHosts.Take(3), host => Assert.True(host.Bounds.Width > 0)); w.Close();
+    });
+
+    [Fact]
     public void Enum_property_reuses_select_and_syncs_selection() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var p = new XYEnumProperty { Label = "模式", ItemsSource = new[] { "实体", "线框", "点" }, SelectedIndex = 0 }; var w = XyuiBatchTestHost.Show(p);
