@@ -5,7 +5,7 @@
 - 目标：修复 XYUI2-12 Editable Combo 离开 Gallery/宿主窗口失焦后 Popup 可能继续悬浮的生命周期缺陷；13 Select 与 14 TextArea 保持冻结。
 - 变化：XYComboBox 在宿主脱离视觉树、窗口关闭、窗口失焦和应用停用时统一关闭 Popup，清除展开状态、Chevron 旋转和 Popup 尺寸/可见性；新增宿主脱离回归测试。
 - 验证：XYUI.Avalonia Build 0 warning / 0 error；XYUI2-12 定向测试 7/7 PASS；全量测试 178/178 PASS；ARCH-A（含 5+100）PASS；git diff --check PASS。
-- Hash：待本次提交后回填。
+- Hash：实现提交 `a0befe80`。
 - 遗留：XYUI-2-12 仍待用户完成 Gallery Light / Dark 视觉复验；`xyui.bat` 为本地启动资产，不纳入 Git。
 
 ## XYUI.Avalonia · Night Checkpoint（2026-08-29 00:25:00 +08:00）
