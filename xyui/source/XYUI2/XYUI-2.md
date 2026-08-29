@@ -897,7 +897,7 @@
             - Color = XY.Border.Color.Default
             - Width = XY.Border.Width.Default
         - XY.SearchField.FilterCell.Width
-            - Value = 35 DIP
+            - Value = 32 DIP
             - Type = COMPONENT_SPECIFIC
         - XY.SearchField.FilterCell.Default
             - Value = XY.Surface.PanelAlt
@@ -951,7 +951,7 @@
         - XY.PasswordField.Radius
             - Value = XY.Radius.Input
         - XY.PasswordField.RevealCell.Width
-            - Value = 34 DIP
+            - Value = 32 DIP
             - Type = COMPONENT_SPECIFIC
         - XY.PasswordField.Background
             - Value = XY.Surface.Input

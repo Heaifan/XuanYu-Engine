@@ -26,7 +26,7 @@ public static class XyuiVectorIcons
             [XyuiVectorIcon.ChevronDown] = "M6 9 L12 15 L18 9",
             [XyuiVectorIcon.Clear] = "M5 5 L19 19 M19 5 L5 19",
             [XyuiVectorIcon.Filter] = "M3 5 H21 L14 13 V19 L10 21 V13 Z",
-            [XyuiVectorIcon.Eye] = "M2 12 C5 6 19 6 22 12 C19 18 5 18 2 12 Z M9 12 C9 10.343 10.343 9 12 9 C13.657 9 15 10.343 15 12 C15 13.657 13.657 15 12 15 C10.343 15 9 13.657 9 12 Z"
+            [XyuiVectorIcon.Eye] = "M2.5 12 C5.2 7.5 8.6 5.5 12 5.5 C15.4 5.5 18.8 7.5 21.5 12 C18.8 16.5 15.4 18.5 12 18.5 C8.6 18.5 5.2 16.5 2.5 12 Z M9.2 12 C9.2 10.45 10.45 9.2 12 9.2 C13.55 9.2 14.8 10.45 14.8 12 C14.8 13.55 13.55 14.8 12 14.8 C10.45 14.8 9.2 13.55 9.2 12 Z"
         };
 
     public static StreamGeometry Create(XyuiVectorIcon icon) => StreamGeometry.Parse(PathData[icon]);

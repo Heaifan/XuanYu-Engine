@@ -14,6 +14,7 @@ public partial class XYPasswordField : XyuiEditableTextBox
     public bool IsRevealed { get; private set; }
     public event EventHandler<RoutedEventArgs>? PasswordChanged;
     internal TextPresenter? PasswordPresenterPart { get; private set; }
+    internal Border? TextPaddingPart { get; private set; }
     internal Button? RevealPart { get; private set; }
 
     public XYPasswordField() { Classes.Add("xyui-password-field"); PasswordChar = '●'; TextChanged += OnPasswordTextChanged; }

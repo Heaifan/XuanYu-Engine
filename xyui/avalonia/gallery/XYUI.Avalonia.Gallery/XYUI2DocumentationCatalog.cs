@@ -64,7 +64,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-12" => [new("ItemsSource", "IEnumerable", "[]", "可编辑候选"), new("SelectedItem", "object?", "null", "当前候选"), new("IsCustomValueAllowed", "bool", "false", "允许自定义值")],
         "XYUI-2-13" => [new("ItemsSource", "IEnumerable", "[]", "固定候选"), new("SelectedIndex", "int", "-1", "当前候选索引"), new("SelectedItem", "object?", "null", "当前候选"), new("Placeholder", "string?", "null", "未选择时的提示")],
         "XYUI-2-14" => [new("Text", "string", "", "多行文本"), new("Placeholder", "string?", "null", "占位提示"), new("Mode", "XYTextAreaMode", "Standard", "标准 / 编辑模式"), new("AutoGrow", "bool", "true", "内容驱动增长"), new("MinHeight", "double", "54", "最小高度"), new("MaxHeight", "double", "Auto", "达到后内部滚动"), new("EditorType", "string", "文本", "编辑标题栏类型"), new("IsError", "bool", "false", "错误边框状态")],
-        "XYUI-2-15" => [new("Text", "string", "", "搜索文本"), new("Placeholder", "string?", "null", "占位提示"), new("FilterActive", "bool", "false", "筛选按钮激活态"), new("IsSearching", "bool", "false", "搜索进行中"), new("IsNoResult", "bool", "false", "无结果态")],
+        "XYUI-2-15" => [new("Text", "string", "", "搜索文本"), new("Placeholder", "string?", "null", "占位提示"), new("FilterContent", "Control?", "null", "真实筛选面板内容"), new("IsFilterOpen", "bool", "false", "筛选面板是否打开"), new("FilterActive", "bool", "false", "独立的筛选激活态"), new("IsSearching", "bool", "false", "搜索进行中"), new("IsNoResult", "bool", "false", "无结果态")],
         "XYUI-2-16" => [new("Password", "string", "", "密码文本别名"), new("Placeholder", "string?", "null", "占位提示"), new("IsRevealed", "bool", "false", "按住时临时显示")],
         _ => []
     };

@@ -1314,7 +1314,7 @@
     },
     {
      "property": "XY.SearchField.FilterCell.Width",
-     "value": "35 DIP",
+     "value": "32 DIP",
      "kind": "LITERAL",
      "canonical_target": null
     },
@@ -1400,7 +1400,7 @@
     },
     {
      "property": "XY.PasswordField.RevealCell.Width",
-     "value": "34 DIP",
+     "value": "32 DIP",
      "kind": "LITERAL",
      "canonical_target": null
     },
