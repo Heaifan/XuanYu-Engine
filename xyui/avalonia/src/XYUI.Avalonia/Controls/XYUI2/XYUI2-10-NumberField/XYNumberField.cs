@@ -25,6 +25,7 @@ public partial class XYNumberField : XYTextField
     public double SmallStep { get => GetValue(SmallStepProperty); set => SetValue(SmallStepProperty, value); }
     public string? Suffix { get => GetValue(SuffixProperty); set => SetValue(SuffixProperty, value); }
     public int DecimalPlaces { get => GetValue(DecimalPlacesProperty); set => SetValue(DecimalPlacesProperty, Math.Max(0, value)); }
+    internal double PrecisionStep => Math.Pow(10, -DecimalPlaces);
     public bool IsScrubEnabled { get => GetValue(IsScrubEnabledProperty); set => SetValue(IsScrubEnabledProperty, value); }
     internal bool IsScrubbing { get; set; }
     internal bool IsScrubArmed { get; set; }

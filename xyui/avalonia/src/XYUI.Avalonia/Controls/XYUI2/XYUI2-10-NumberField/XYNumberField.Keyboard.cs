@@ -6,7 +6,7 @@ public partial class XYNumberField
 {
     void OnNumberKeyDown(object? sender, KeyEventArgs e)
     {
-        var amount = (e.KeyModifiers & KeyModifiers.Shift) != 0 ? LargeStep : (e.KeyModifiers & KeyModifiers.Control) != 0 ? SmallStep : Step;
+        var amount = (e.KeyModifiers & KeyModifiers.Shift) != 0 ? LargeStep : (e.KeyModifiers & KeyModifiers.Control) != 0 ? SmallStep : PrecisionStep;
         if (e.Key == Key.Up) { Adjust(amount); e.Handled = true; }
         else if (e.Key == Key.Down) { Adjust(-amount); e.Handled = true; }
         else if (e.Key == Key.Enter) { CommitText(); e.Handled = true; }

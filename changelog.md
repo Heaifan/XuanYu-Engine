@@ -1,5 +1,15 @@
 # changelog
 
+## XYUI-2-10 · Precision Step Unification（2026-08-29 23:04:00 +08:00）
+
+- 目标：仅修复基础 `XYNumberField` 的精度调节粒度，使显示小数位与真实调节步长一致。
+- 原因：横向 Scrub、上下按钮和普通 `↑/↓` 直接使用独立 `Step`，`DecimalPlaces` 过去只参与格式化显示。
+- 变化：基础字段统一计算 `PrecisionStep = 10^-DecimalPlaces`；横向 Scrub、上下按钮和普通键盘调节使用该值，Shift/ Ctrl 继续使用显式 `LargeStep / SmallStep`；未修改 21 外壳、22 或其他控件。
+- 验证：新增/更新基础字段精度步长回归断言；完整门禁待执行。
+- 状态：`XYUI-2-10 PRECISION STEP FIX IMPLEMENTED`；等待用户复核，不标记 CLOSED。
+- Hash：待本轮提交。
+- 遗留：需复核 21 真实字段的拖动、按钮和普通键盘均按显示精度变化。
+
 ## XYUI-2-21 · Decimal-Precision Scrub Fix（2026-08-29 22:36:00 +08:00）
 
 - 目标：仅修复数值属性行标签微调的步进，使微调精度跟随 `DecimalPlaces`。

@@ -24,7 +24,7 @@ public partial class XYNumberField
         var delta = e.GetPosition(this).X - _scrubStartX;
         if (!IsScrubbing && Math.Abs(delta) < ScrubDipPerStep) return;
         if (!IsScrubbing) BeginScrub(e.Pointer);
-        Value = ScrubStartValue + Math.Round(delta / ScrubDipPerStep) * Step; e.Handled = true;
+        Value = ScrubStartValue + Math.Round(delta / ScrubDipPerStep) * PrecisionStep; e.Handled = true;
     }
 
     void OnNumberPointerReleased(object? sender, PointerReleasedEventArgs e)
