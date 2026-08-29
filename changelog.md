@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-2-14 · TextArea 中文化（2026-08-29 14:09:53 +08:00）
+
+- 目标：在用户确认 XYUI-2-14 UI 与交互过关后，将 Gallery 与控件编辑栏中的可见标签、示例内容、占位提示、帮助文本和行数字符数统一为中文；XYUI-2-15 不启动。
+- 变化：Gallery 分组、状态、诊断文本、Editor Area 标题栏说明与 JSON 示例完成中文化；默认编辑类型改为“文本”，编辑栏元数据改为“行 / 字符”，文档示例与属性说明同步更新。
+- 验证：TextArea 定向测试 `14/14 PASS`；全量测试 `204/204 PASS`；全量 Build `0 Warning / 0 Error`；ARCH-A（含 5+100）PASS；`git diff --check` PASS。
+- 状态：用户已确认 `UI ACCEPTED` 与 `INTERACTION ACCEPTED`；本轮 `CHINESE COPY IMPLEMENTED`，等待中文文本最终视觉复核；不启动 XYUI-2-15。
+- Hash：`de1e3485`。
+- 遗留：用户需确认中文文案在 Light / Dark 两主题下的最终显示密度与语义；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
+
 ## XYUI-2-14 · TextArea Rework（2026-08-29 13:59:14 +08:00）
 
 - 目标：响应 `XYUI-2-14 USER VISUAL REJECTED / INTERACTION REJECTED`，重做 Editor Area 结构与 First Focus Session；XYUI-2-13 保持 `CLOSED USER VISUAL ACCEPTED`，XYUI-2-15 不启动。
