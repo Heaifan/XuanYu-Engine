@@ -7,7 +7,7 @@
 - 变化：共享可编辑文本宿主改为首次焦点会话一次全选、失焦重置、已聚焦点击正常 Caret；Editor Header 左侧 Type、右侧 `lines · chars`，Body 独立内边距与 Surface，Focus Edge 只显示底部 Accent；Gallery 重排为 Standard/States/Editor Area 分区并增加宽版真实内容。
 - 验证：TextArea 定向回归 `14/14 PASS`；共享文本交互回归 `3/3 PASS`；全量测试 `204/204 PASS`；全量 Build `0 Warning / 0 Error`；ARCH-A（含 5+100）PASS；`git diff --check` PASS；Gallery 已在 Light / Dark 主题加载并回到 Light，页面显示 Header / Body / Focus Edge 结构。
 - 状态：`XYUI-2-14 REWORKED`；`USER RE-REVIEW REQUIRED`。不标记 `CLOSED`，等待用户重新人工视觉与交互验收。
-- Hash：待本轮提交。
+- Hash：`35f26262`。
 - 遗留：用户需测试已有多行文本首次点击全选、保持焦点再次点击定位 Caret、失焦重进再次全选、输入替换全文，并检查 Light / Dark 下 Header 与 Body 层级；`xyui.bat` 继续作为本地启动资产，不纳入 Git。
 
 ## XYUI-2-14 · TextArea Implementation（2026-08-29 12:46:39 +08:00）
