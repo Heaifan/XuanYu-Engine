@@ -13,6 +13,7 @@ public static partial class XyuiControlStyles
         var styles = new Styles();
         AddButtonFamily(styles);
         AddInputFamily(styles);
+        SearchField(styles); PasswordField(styles);
         Slider(styles);
         AddChoiceControls(styles);
         ComboBox(styles);

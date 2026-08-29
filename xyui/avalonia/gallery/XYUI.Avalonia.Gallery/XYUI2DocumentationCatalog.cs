@@ -1,22 +1,18 @@
 using System.Text.Json;
 using Avalonia.Controls;
 using XYUI.Avalonia.Catalog;
-
 namespace XYUI.Avalonia.Gallery;
-
 // XYUI-2 文档目录：Button、Choice 与 Input 家族。
 // 描述/变体/状态取自 canonical spec reader；Token 表直接读 mapping.json（单一事实源）。
 public static class XYUI2DocumentationCatalog
 {
     public static readonly IReadOnlySet<string> BatchIds = new HashSet<string>
     {
-        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08", "XYUI-2-09", "XYUI-2-10", "XYUI-2-11", "XYUI-2-12", "XYUI-2-13", "XYUI-2-14"
+        "XYUI-2-01", "XYUI-2-02", "XYUI-2-03", "XYUI-2-04", "XYUI-2-05", "XYUI-2-06", "XYUI-2-07", "XYUI-2-08", "XYUI-2-09", "XYUI-2-10", "XYUI-2-11", "XYUI-2-12", "XYUI-2-13", "XYUI-2-14", "XYUI-2-15", "XYUI-2-16"
     };
-
     public static IReadOnlyList<XYUI1ComponentDocument> Build() =>
         XyuiCatalogSource.Load().Where(x => x.Module == "XYUI-2" && BatchIds.Contains(x.SourceItemId))
             .Select(Create).ToArray();
-
     static XYUI1ComponentDocument Create(XyuiCatalogEntry entry)
     {
         var type = entry.AvaloniaType.Split('.').Last();
@@ -52,6 +48,8 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-12" => [$"<c:{type} Placeholder=\"选择地区\" ItemsSource=\"候选集合\" />", $"<c:{type} Text=\"North\" IsCustomValueAllowed=\"false\" />"],
         "XYUI-2-13" => [$"<c:{type} Placeholder=\"Select status\" ItemsSource=\"Active|Paused|Archived\" />", $"<c:{type} SelectedIndex=\"1\" ItemsSource=\"Performance|Balanced|Quality\" />"],
         "XYUI-2-14" => ["<c:XYTextArea Placeholder=\"请描述问题……\" />", "<c:XYTextArea Mode=\"Editor\" EditorType=\"JSON\" MaxHeight=\"150\" />"],
+        "XYUI-2-15" => ["<c:XYSearchField Placeholder=\"搜索地图、区域或资源\" />", "<c:XYSearchField Text=\"北部区域\" FilterActive=\"true\" />"],
+        "XYUI-2-16" => ["<c:XYPasswordField Placeholder=\"请输入访问密码\" />", "<c:XYPasswordField Password=\"部署密钥\" />"],
         _ => [$"<c:{type} />"]
     };
 
@@ -66,6 +64,8 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-12" => [new("ItemsSource", "IEnumerable", "[]", "可编辑候选"), new("SelectedItem", "object?", "null", "当前候选"), new("IsCustomValueAllowed", "bool", "false", "允许自定义值")],
         "XYUI-2-13" => [new("ItemsSource", "IEnumerable", "[]", "固定候选"), new("SelectedIndex", "int", "-1", "当前候选索引"), new("SelectedItem", "object?", "null", "当前候选"), new("Placeholder", "string?", "null", "未选择时的提示")],
         "XYUI-2-14" => [new("Text", "string", "", "多行文本"), new("Placeholder", "string?", "null", "占位提示"), new("Mode", "XYTextAreaMode", "Standard", "标准 / 编辑模式"), new("AutoGrow", "bool", "true", "内容驱动增长"), new("MinHeight", "double", "54", "最小高度"), new("MaxHeight", "double", "Auto", "达到后内部滚动"), new("EditorType", "string", "文本", "编辑标题栏类型"), new("IsError", "bool", "false", "错误边框状态")],
+        "XYUI-2-15" => [new("Text", "string", "", "搜索文本"), new("Placeholder", "string?", "null", "占位提示"), new("FilterActive", "bool", "false", "筛选按钮激活态"), new("IsSearching", "bool", "false", "搜索进行中"), new("IsNoResult", "bool", "false", "无结果态")],
+        "XYUI-2-16" => [new("Password", "string", "", "密码文本别名"), new("Placeholder", "string?", "null", "占位提示"), new("IsRevealed", "bool", "false", "按住时临时显示")],
         _ => []
     };
 

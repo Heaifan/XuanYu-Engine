@@ -3,9 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Vector;
-
 namespace XYUI.Avalonia.Gallery;
-
 public static partial class XYUI2GalleryCatalog
 {
     public static Control CreatePreview(string id) => id switch
@@ -24,6 +22,8 @@ public static partial class XYUI2GalleryCatalog
         "XYUI-2-12" => Host("XY.ComboBox · 可编辑 / 可搜索候选", ComboBoxes()),
         "XYUI-2-13" => Host("XY.Select · 固定候选 / 不可输入", Selects()),
         "XYUI-2-14" => Host("XY.TextArea · 标准 / 编辑 / 自动增长", TextAreas()),
+        "XYUI-2-15" => Host("XY.SearchField · 搜索框 / 清除 / 筛选", SearchFields()),
+        "XYUI-2-16" => Host("XY.PasswordField · 密码输入 / 按住显示", PasswordFields()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
 
