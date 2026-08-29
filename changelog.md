@@ -5,7 +5,7 @@
 - 目标：修复 XYUI1-21 Copy Mark 移入后消失且不可复制的问题，并修复 XYUI2-12 两个 ComboBox 文本宿主点击后光标落在左端的问题。
 - 变化：Copy Mark 改为稳定的透明 20 DIP 命中区，点击通过顶层剪贴板复制纯文本；ComboBox 在原生鼠标处理完成后再次全选文本；同步 XYUI-1 Canonical 与文本交互审计。
 - 验证：Copy Mark / ComboBox / 文本交互定向测试 15/15 PASS；Build 0 warning / 0 error；旧 Gallery 锁定导致的一次构建失败已关闭进程后重跑通过。
-- Hash：待提交。
+- Hash：`d87428fc`（实现提交）。
 - 遗留：等待用户在 Gallery 中人工复验 XYUI1-21 鼠标移入 Copy Mark、点击后 Ctrl+V，以及 XYUI2-12 两个字段默认全选；不宣告 USER VISUAL ACCEPTED。
 
 ## XYUI-2-12 · Text Input Interaction Repair（2026-08-29 11:39:33 +08:00）
