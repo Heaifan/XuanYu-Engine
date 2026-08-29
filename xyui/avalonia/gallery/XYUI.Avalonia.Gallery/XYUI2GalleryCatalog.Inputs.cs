@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using XYUI.Avalonia.Controls;
 
 namespace XYUI.Avalonia.Gallery;
@@ -45,15 +47,10 @@ public static partial class XYUI2GalleryCatalog
         new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "Theme / 主题" }, new TextBlock { Text = "Light / Dark follows the Gallery theme\nValue surface + Chevron surface · no divider\nClick either surface → Toggle Popup\nEnter / Space → Open · ↑ / ↓ → Navigate · Enter → Commit · Esc → Close" } } }];
     static Control SelectSample(string caption, XYSelect select) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, select } };
     static Control[] TextAreas() => [
-        TextAreaSample("Default · Notes", new XYTextArea { Width = 360, Text = "Deployment completed successfully.\nMonitor memory usage during the next run." }),
-        TextAreaSample("Placeholder", new XYTextArea { Width = 360, Placeholder = "Describe the issue..." }),
-        TextAreaSample("Multi-line / Auto Grow", new XYTextArea { Width = 360, Text = "First line\nSecond line\nThird line" }),
-        TextAreaSample("Max Height + Scroll", new XYTextArea { Width = 360, MaxHeight = 112, Text = "Connection timeout after 5000 ms.\nRetry operation or verify the target service.\nThe remaining diagnostic output continues inside the bounded editor." }),
-        TextAreaSample("ReadOnly", new XYTextArea { Width = 360, IsReadOnly = true, Text = "Read-only deployment notes.\nSelection remains available." }),
-        TextAreaSample("Disabled", new XYTextArea { Width = 360, IsEnabled = false, Text = "Disabled configuration details." }),
-        TextAreaSample("Error", new XYTextArea { Width = 360, IsError = true, Text = "Invalid JSON configuration." }),
-        TextAreaSample("Editor Area · JSON", new XYTextArea { Width = 360, Mode = XYTextAreaMode.Editor, EditorType = "JSON", MaxHeight = 150, Text = "{\n  \"mode\": \"balanced\",\n  \"iterations\": 120\n}" }),
-        TextAreaSample("Editor Area · Prompt", new XYTextArea { Width = 360, Mode = XYTextAreaMode.Editor, EditorType = "Prompt", Text = "Analyze the simulation output.\nIdentify the largest performance bottleneck.\nReturn the result as structured JSON." }),
-        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "Theme / 主题" }, new TextBlock { Text = "Light / Dark follows the Gallery theme\n54 DIP minimum · Auto Grow → MaxHeight → internal Scroll\nEditor Bar: Type · Lines · Chars · Modified" } } }];
+        TextAreaSection("STANDARD · AUTO GROW", TextAreaSample("One / Two Lines", new XYTextArea { Width = 340, Text = "Deployment completed." }), TextAreaSample("Three / Four Lines", new XYTextArea { Width = 340, Text = "First line\nSecond line\nThird line\nFourth line" }), TextAreaSample("Long Content · MaxHeight + Scroll", new XYTextArea { Width = 700, MaxHeight = 112, Text = "Connection timeout after 5000 ms.\nRetry operation or verify the target service.\nThe remaining diagnostic output continues inside the bounded editor.\nInspect the service log before retrying." })),
+        TextAreaSection("STANDARD · STATES", TextAreaSample("Placeholder", new XYTextArea { Width = 340, Placeholder = "Describe the issue..." }), TextAreaSample("ReadOnly", new XYTextArea { Width = 340, IsReadOnly = true, Text = "Read-only deployment notes.\nSelection remains available." }), TextAreaSample("Disabled", new XYTextArea { Width = 340, IsEnabled = false, Text = "Disabled configuration details." }), TextAreaSample("Error", new XYTextArea { Width = 340, IsError = true, Text = "Invalid configuration details." })),
+        TextAreaSection("EDITOR AREA · HEADER / BODY / FOCUS EDGE", TextAreaSample("TEXT · 地图数据描述", new XYTextArea { Width = 700, Mode = XYTextAreaMode.Editor, EditorType = "TEXT", Text = "地图数据描述：\n用于记录当前区域的说明。\n编辑后保存到当前地图文档。" }), TextAreaSample("JSON / PROMPT", new XYTextArea { Width = 700, Mode = XYTextAreaMode.Editor, EditorType = "JSON", MaxHeight = 150, Text = "{\n  \"mode\": \"balanced\",\n  \"iterations\": 120\n}" })),
+        new StackPanel { Width = 700, Spacing = 4, Children = { new XYCaption { Text = "THEME / 主题" }, new TextBlock { Text = "Light / Dark · Header Surface 与 Body 保持层级差\n首次 Focus → Select All · 再次点击 → 正常 Caret\nEditor Header：Type（左）· lines · chars（右）" } } }];
+    static Control TextAreaSection(string title, params Control[] samples) { var wrap = new WrapPanel { Orientation = Orientation.Horizontal }; foreach (var sample in samples) { sample.Margin = new Thickness(0, 0, 12, 10); wrap.Children.Add(sample); } return new StackPanel { Width = 720, Spacing = 6, Children = { new XYCaption { Text = title }, wrap } }; }
     static Control TextAreaSample(string caption, XYTextArea area) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, area } };
 }

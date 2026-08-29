@@ -6,26 +6,14 @@ namespace XYUI.Avalonia.Controls;
 
 public abstract class XyuiEditableTextBox : TextBox
 {
-    bool _selectAllOnPointerRelease;
-    bool _focusSelectAllPending;
-    protected virtual bool SelectAllOnPointerActivation => true;
+    bool _focusSessionActive;
+    bool _pointerPressActive;
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        var wasFocused = IsFocused;
-        _selectAllOnPointerRelease = SelectAllOnPointerActivation && !IsReadOnly && !string.IsNullOrEmpty(Text);
+        var wasFocused = IsFocused; _pointerPressActive = true;
         base.OnPointerPressed(e);
-        if (wasFocused) _focusSelectAllPending = false;
-    }
-
-    protected override void OnPointerReleased(PointerReleasedEventArgs e)
-    {
-        base.OnPointerReleased(e);
-        if (_selectAllOnPointerRelease)
-        {
-            _selectAllOnPointerRelease = false; SelectAll();
-            Dispatcher.UIThread.Post(SelectAll, DispatcherPriority.Input);
-        }
+        _pointerPressActive = false; if (wasFocused) _focusSessionActive = false;
     }
 
     protected override void OnGotFocus(FocusChangedEventArgs e)
@@ -33,7 +21,10 @@ public abstract class XyuiEditableTextBox : TextBox
         base.OnGotFocus(e);
         if (!IsReadOnly && !string.IsNullOrEmpty(Text))
         {
-            _focusSelectAllPending = true; SelectAll(); Dispatcher.UIThread.Post(() => { if (_focusSelectAllPending) SelectAll(); _focusSelectAllPending = false; }, DispatcherPriority.Input);
+            _focusSessionActive = true; SelectAll(); Dispatcher.UIThread.Post(CompleteFocusSession, DispatcherPriority.Input);
         }
     }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e) { base.OnLostFocus(e); _focusSessionActive = false; }
+    void CompleteFocusSession() { if (_focusSessionActive && IsFocused && !_pointerPressActive && !IsReadOnly && !string.IsNullOrEmpty(Text) && (SelectionStart != 0 || SelectionEnd != Text.Length)) SelectAll(); _focusSessionActive = false; }
 }

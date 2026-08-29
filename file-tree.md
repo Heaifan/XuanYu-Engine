@@ -2983,7 +2983,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Lifecycle.cs` — XYUI-2-13 宿主脱离、窗口关闭/失焦与应用停用时的 Popup 清理。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.cs` — XYUI-2-14 多行 TextArea、Auto Grow、Standard/Editor 模式与统计属性。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.Template.cs` — XYUI-2-14 TextPresenter、内部 ScrollViewer、Placeholder 与 24 DIP Editor Bar 模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～13 输入族基础尺寸、Surface、Border 与状态样式。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～14 输入族基础尺寸、Surface、Border 与可选 Focus Border 状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Slider.cs` — XYUI-2-11 Slider 模板、Rail/Thumb token 与紧凑间距样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ComboBox.cs` — XYUI-2-12 ComboBox 输入 Chrome、Chevron、Focus、Error 与候选项样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Select.cs` — XYUI-2-13 Select Split Surface、状态、Focus Edge、Popup 与候选项样式。
@@ -2996,7 +2996,8 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SliderTests.cs` — XYUI-2-11 Slider 唯一 Value、部件、几何 token 与 Gallery 合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2ComboBoxTests.cs` — XYUI-2-12 可编辑、过滤、展开、选择、键盘与 Custom Value 合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2SelectTests.cs` — XYUI-2-13 Select 不可编辑、双区域点击、固定候选、键盘与 Popup 生命周期合同测试。
-- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextAreaTests.cs` — XYUI-2-14 多行编辑、Auto Grow、内部滚动、状态、Editor Bar 与 Gallery 合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextAreaTests.cs` — XYUI-2-14 多行编辑、Auto Grow、内部滚动、状态、Editor Area 与 Gallery 合同测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TextAreaFocusTests.cs` — XYUI-2-14 First Focus Session、指针/键盘全选、二次点击、重新聚焦与输入替换回归测试。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件专用尺寸与 05 Chevron Track 资源。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs` — Checkbox、Radio、Switch 状态样式与 token 消费。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。

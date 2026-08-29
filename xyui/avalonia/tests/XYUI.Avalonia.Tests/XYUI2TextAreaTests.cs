@@ -25,7 +25,7 @@ public sealed class XYUI2TextAreaTests : IClassFixture<XyuiHeadlessFixture>
     public void TextArea_first_focus_selects_all_but_second_click_places_caret() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var area = new XYTextArea { Width = 240, Text = "First line\nSecond line" }; var window = XyuiBatchTestHost.Show(area); area.Focus(); Assert.Equal(0, area.SelectionStart); Assert.Equal(area.Text?.Length, area.SelectionEnd);
-        var point = area.TranslatePoint(new Point(10, 10), window)!.Value; window.MouseMove(point); window.MouseDown(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); Assert.Equal(area.SelectionStart, area.SelectionEnd); Assert.False(area.SelectionStart == 0 && area.SelectionEnd == area.Text?.Length); window.Close();
+        var point = area.TextPresenterPart!.TranslatePoint(new Point(10, 10), window)!.Value; window.MouseMove(point); window.MouseDown(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); Assert.Equal(area.SelectionStart, area.SelectionEnd); Assert.False(area.SelectionStart == 0 && area.SelectionEnd == area.Text?.Length); window.Close();
     });
 
     [Fact]
@@ -49,7 +49,7 @@ public sealed class XYUI2TextAreaTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void TextArea_editor_bar_exposes_type_and_live_counts() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var area = new XYTextArea { Width = 280, Mode = XYTextAreaMode.Editor, EditorType = "JSON", Text = "{\n  \"mode\": \"balanced\"\n}" }; var window = XyuiBatchTestHost.Show(area); Assert.True(area.EditorBarPart!.IsVisible); Assert.Equal("JSON", area.GetVisualDescendants().Single(x => x.Name == "PART_EditorType").GetValue(TextBlock.TextProperty)); Assert.Equal("Lines: 3", area.LineCountPart!.Text); Assert.Equal($"Chars: {area.CharacterCount}", area.CharacterCountPart!.Text); window.Close();
+        XyuiBatchTestHost.Prepare(); var area = new XYTextArea { Width = 280, Mode = XYTextAreaMode.Editor, EditorType = "JSON", Text = "{\n  \"mode\": \"balanced\"\n}" }; var window = XyuiBatchTestHost.Show(area); Assert.True(area.EditorBarPart!.IsVisible); Assert.Equal("JSON", area.GetVisualDescendants().Single(x => x.Name == "PART_EditorType").GetValue(TextBlock.TextProperty)); Assert.Equal($"3 lines · {area.CharacterCount} chars", area.EditorMetadataPart!.Text); window.Close();
     });
 
     [Fact]

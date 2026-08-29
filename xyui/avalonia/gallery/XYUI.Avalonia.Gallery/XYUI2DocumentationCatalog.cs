@@ -63,7 +63,7 @@ public static class XYUI2DocumentationCatalog
         "XYUI-2-11" => [new("Value", "double", "0", "Slider 与 NumberField 的唯一真值"), new("Minimum", "double", "0", "下限"), new("Maximum", "double", "100", "上限"), new("Step", "double", "1", "普通步长"), new("LargeStep", "double", "10", "Shift 步长"), new("SmallStep", "double", "0.1", "Ctrl 步长"), new("DecimalPlaces", "int", "2", "显示小数位"), new("Suffix", "string?", "null", "仅显示后缀"), new("IsNumberFieldVisible", "bool", "true", "显示精确输入")],
         "XYUI-2-12" => [new("ItemsSource", "IEnumerable", "[]", "可编辑候选"), new("SelectedItem", "object?", "null", "当前候选"), new("IsCustomValueAllowed", "bool", "false", "允许自定义值")],
         "XYUI-2-13" => [new("ItemsSource", "IEnumerable", "[]", "固定候选"), new("SelectedIndex", "int", "-1", "当前候选索引"), new("SelectedItem", "object?", "null", "当前候选"), new("Placeholder", "string?", "null", "未选择时的提示")],
-        "XYUI-2-14" => [new("Text", "string", "", "多行文本"), new("Placeholder", "string?", "null", "占位提示"), new("Mode", "XYTextAreaMode", "Standard", "Standard / Editor"), new("AutoGrow", "bool", "true", "内容驱动增长"), new("MinHeight", "double", "54", "最小高度"), new("MaxHeight", "double", "Auto", "达到后内部滚动"), new("EditorType", "string", "Plain Text", "Editor Bar 类型"), new("IsError", "bool", "false", "错误边框状态")],
+        "XYUI-2-14" => [new("Text", "string", "", "多行文本"), new("Placeholder", "string?", "null", "占位提示"), new("Mode", "XYTextAreaMode", "Standard", "Standard / Editor"), new("AutoGrow", "bool", "true", "内容驱动增长"), new("MinHeight", "double", "54", "最小高度"), new("MaxHeight", "double", "Auto", "达到后内部滚动"), new("EditorType", "string", "TEXT", "Editor Header 类型"), new("IsError", "bool", "false", "错误边框状态")],
         _ => []
     };
 

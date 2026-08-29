@@ -24,8 +24,8 @@ public sealed class XYUI2TextInputInteractionTests : IClassFixture<XyuiHeadlessF
         Assert.Equal(0, field.SelectionStart); Assert.Equal(field.Text?.Length, field.SelectionEnd);
         var placeholder = field.GetVisualDescendants().OfType<TextBlock>().Single(x => x.Name == "PART_Placeholder");
         Assert.False(placeholder.IsVisible);
-        window.MouseDown(new Point(90, 16), MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(new Point(90, 16), MouseButton.Left); Dispatcher.UIThread.RunJobs();
-        Assert.Equal(0, field.SelectionStart); Assert.Equal(field.Text?.Length, field.SelectionEnd); window.Close();
+        var point = field.TranslatePoint(new Point(90, 16), window)!.Value; window.MouseDown(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(point, MouseButton.Left); Dispatcher.UIThread.RunJobs();
+        Assert.Equal(field.SelectionStart, field.SelectionEnd); Assert.NotEqual(field.Text?.Length, field.SelectionEnd); window.Close();
     });
 
     [Fact]
