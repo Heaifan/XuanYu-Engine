@@ -6,7 +6,7 @@ public sealed partial class XYNavigationMenu
     void OnSelected(object? sender, EventArgs e)
     {
         if (sender is not XYNavigationItem selected) return;
-        SelectedId = selected.Id;
+        if (_state is not null) _state.Select(selected.Id); else SelectedId = selected.Id;
         foreach (var item in Groups.SelectMany(x => x.Items)) item.IsSelected = ReferenceEquals(item, selected);
         SelectionChanged?.Invoke(this, selected);
     }

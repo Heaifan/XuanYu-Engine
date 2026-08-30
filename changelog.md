@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-3-06～08 · 组合架构与状态闭环修复（2026-08-30 23:56:50 +08:00）
+
+- 目标：逐条落实 Sidebar、NavigationRail、Tabs 审查意见，修复视觉组合、状态归属和事件路径。
+- 变化：引入共享 `XYNavigationState`；Sidebar 支持真实 212/54 DIP 切换、Expand、Footer 和上下文项；Rail 使用 Popup 锚定当前项并按 ID 映射 Context、保持单选；Tabs 由 `XYTabs` 独占选中状态，关闭不抢选、自动接替邻项、允许全关，Close Slot 固定、Accent 跨列、补 Divider/Active/Hover/Focus/Pressed/Disabled 状态并改用 Vector Icon。
+- 结构：3.05～3.08 源码继续按 `UI` / `Interaction` 分目录；Gallery Rail 改为真实按项 Context 映射。
+- 验证：Gallery Build 通过（0 警告、0 错误）；测试项目 Build 通过（0 警告、0 错误）；`XYUI.Avalonia.Tests` 291/291 通过；ARCH-A 与 `git diff --check` 待提交前执行。
+- 状态：暂停 3.09，等待用户重新人工验收 3.06 → 3.07 → 3.08。
+- Hash：待本轮提交。
+
 ## XYUI-3-05～08 · Gallery 标题与目录结构同步（2026-08-30 23:43:30 +08:00）
 
 - 目标：补齐 XYUI3-05～08 Gallery 侧栏的英文组件名，并按 UI / Interaction 分离源码目录。

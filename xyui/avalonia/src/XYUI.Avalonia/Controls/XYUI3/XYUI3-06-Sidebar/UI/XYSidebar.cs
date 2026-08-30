@@ -7,27 +7,34 @@ namespace XYUI.Avalonia.Controls;
 public sealed partial class XYSidebar : Border
 {
     public static readonly StyledProperty<bool> IsCollapsedProperty = AvaloniaProperty.Register<XYSidebar, bool>(nameof(IsCollapsed));
-    public IReadOnlyList<XYNavigationItem> PrimaryItems { get; set; } = [];
-    public IReadOnlyList<XYNavigationItem> ContextItems { get; set; } = [];
-    public bool IsCollapsed { get => GetValue(IsCollapsedProperty); set => SetValue(IsCollapsedProperty, value); }
+    IReadOnlyList<XYNavigationItem> _primaryItems = [];
+    IReadOnlyList<XYNavigationItem> _contextItems = [];
+    XYNavigationState? _state;
     readonly Grid _panel = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,*,Auto") };
-    public XYSidebar() { Classes.Add("xyui-sidebar"); Child = _panel; }
+    public IReadOnlyList<XYNavigationItem> PrimaryItems { get => _primaryItems; set { _primaryItems = value; _state = null; Build(); } }
+    public IReadOnlyList<XYNavigationItem> ContextItems { get => _contextItems; set { _contextItems = value; Build(); } }
+    public IReadOnlyDictionary<string, IReadOnlyList<XYNavigationEntry>> ContextByNavigationId { get; set; } = new Dictionary<string, IReadOnlyList<XYNavigationEntry>>();
+    public XYNavigationState NavigationState { get => _state ??= CreateState(); set { _state = value; Build(); } }
+    public bool IsCollapsed { get => GetValue(IsCollapsedProperty); set => SetValue(IsCollapsedProperty, value); }
+    public event EventHandler? FooterInvoked;
+    public XYSidebar() { Classes.Add("xyui-sidebar"); Child = _panel; Build(); }
     public void Build()
     {
-        _panel.Children.Clear();
-        if (IsCollapsed) { _panel.Children.Add(new XYNavigationRail(PrimaryItems.Select(Clone).ToArray())); return; }
-        var collapse = new Button { Content = "‹", Classes = { "xyui-sidebar-collapse" } }; collapse.Click += (_, _) => IsCollapsed = true;
-        Add(new Border { Classes = { "xyui-sidebar-header" }, Child = new Grid { Children = { new TextBlock { Text = "玄域", Classes = { "xyui-sidebar-title" } }, collapse } } }, 0);
-        Add(new XYNavigationMenu(XYNavigationMenu.Group("", PrimaryItems.ToArray())), 1);
-        if (ContextItems.Count > 0) Add(Context(), 2);
-        Add(new XYSidebarFooter(), 4);
+        Classes.Set("xyui-sidebar-collapsed", IsCollapsed); _panel.Children.Clear();
+        if (IsCollapsed) { var rail = new XYNavigationRail(NavigationState, ContextMap(), Footer(), true); rail.ExpandRequested += (_, _) => IsCollapsed = false; Add(rail, 0); return; }
+        var expand = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.ChevronLeft, Size = XyuiIconSize.Small }, Classes = { "xyui-sidebar-collapse" } }; expand.Click += (_, _) => IsCollapsed = true;
+        Add(new Border { Classes = { "xyui-sidebar-header" }, Child = new Grid { Children = { new TextBlock { Text = "玄域", Classes = { "xyui-sidebar-title" } }, expand } } }, 0);
+        Add(new XYNavigationMenu(NavigationState), 1); if (ContextItems.Count > 0) Add(Context(), 2); Add(new XYSidebarFooter(() => FooterInvoked?.Invoke(this, EventArgs.Empty)), 4);
     }
     void Add(Control control, int row) { _panel.Children.Add(control); Grid.SetRow(control, row); }
-    Control Context() => new StackPanel { Classes = { "xyui-sidebar-context" }, Children =
-    { new TextBlock { Text = "地图内容", Classes = { "xyui-sidebar-context-label" } }, new XYNavigationMenu(XYNavigationMenu.Group("", ContextItems.ToArray())) } };
+    XYNavigationState CreateState() => new(_primaryItems.Select(x => new XYNavigationEntry(x.Id, x.Label, x.Icon)), _primaryItems.FirstOrDefault(x => x.IsSelected)?.Id);
+    IReadOnlyDictionary<string, IReadOnlyList<XYNavigationEntry>> ContextMap() => ContextByNavigationId.Count > 0 ? ContextByNavigationId : new Dictionary<string, IReadOnlyList<XYNavigationEntry>> { ["*"] = _contextItems.Select(x => new XYNavigationEntry(x.Id, x.Label, x.Icon)).ToArray() };
+    XYNavigationEntry Footer() => new("settings", "设置", XyuiVectorIcon.Section);
+    Control Context() { var panel = new StackPanel { Classes = { "xyui-sidebar-context" } }; panel.Children.Add(new TextBlock { Text = "地图内容", Classes = { "xyui-sidebar-context-label" } }); var items = new StackPanel(); foreach (var item in _contextItems) items.Children.Add(ContextButton(item)); panel.Children.Add(items); return panel; }
+    static Control ContextButton(XYNavigationItem item) => new Button { Content = new TextBlock { Text = item.Label, Classes = { "xyui-sidebar-context-item" } }, Classes = { "xyui-sidebar-context-button" } };
 }
 
-sealed class XYSidebarFooter : Border
+sealed class XYSidebarFooter : Button
 {
-    public XYSidebarFooter() { Classes.Add("xyui-sidebar-footer"); Child = new TextBlock { Text = "设置", Classes = { "xyui-sidebar-footer-label" } }; }
+    public XYSidebarFooter(Action? invoked) { Classes.Add("xyui-sidebar-footer"); Content = new TextBlock { Text = "设置", Classes = { "xyui-sidebar-footer-label" } }; if (invoked is not null) Click += (_, _) => invoked(); }
 }

@@ -2874,6 +2874,7 @@
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-05-NavigationMenu/UI/XYNavigationMenuStyles.cs` — XYUI-3-05 导航菜单 Compact V2 样式。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-05-NavigationMenu/Interaction/XYNavigationMenu.Interaction.cs` — XYUI-3-05 选择协调交互。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-05-NavigationMenu/Interaction/XYNavigationItem.Interaction.cs` — XYUI-3-05 导航项点击交互。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Models/XYNavigationState.cs` — XYUI-3-05～07 共享导航条目与选中状态模型。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/UI/XYSidebar.cs` — XYUI-3-06 展开/折叠侧边容器视觉结构。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/UI/XYUI3SidebarStyles.cs` — XYUI-3-06 Sidebar 与 XYUI-3-07 Rail 的 Compact V2 样式。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/Interaction/XYSidebar.Interaction.cs` — XYUI-3-06 折叠状态交互。
@@ -2882,7 +2883,8 @@
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/UI/XYTab.cs` — XYUI-3-08 单个页签视觉结构。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/UI/XYTabs.cs` — XYUI-3-08 页签组视觉容器。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/Interaction/XYTab.Interaction.cs` — XYUI-3-08 单个页签选择与关闭交互。
- - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/Interaction/XYTabs.Interaction.cs` — XYUI-3-08 页签组关闭与选择协调。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/Interaction/XYTabs.Selection.cs` — XYUI-3-08 页签组关闭与选择协调。
+ - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3CompactInteractionTests.cs` — XYUI-3-06～08 共享状态、折叠恢复与页签关闭回归测试。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.DropDown.cs` — DropDownButton 导出/筛选/排序等真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYIconButtonNamingExtensions.cs` — IconButton Gallery 自动化名称扩展。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYBadgePreviewFactory.cs` — Badge Default/Accent 左指针标签的真实 Gallery Preview 工厂。
