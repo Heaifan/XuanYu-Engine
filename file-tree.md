@@ -1489,16 +1489,12 @@
    │  │     │  ├─ XYUI1/_Shared/（XYUI-1 内部基类、样式与几何辅助）
    │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、输入基类、属性布局、样式与 Token）
    │  │     ├─ XYUI3/（XYUI-3 Batch 01 菜单家族视觉控件）
-   │  │     │  ├─ XYContextMenu.cs
-   │  │     │  ├─ XYMenu.cs
-   │  │     │  ├─ XYMenuBar.cs
-   │  │     │  ├─ XYMenuBarItem.cs
-   │  │     │  ├─ XYMenuItem.cs
-   │  │     │  ├─ XYMenuItem.Visual.cs
-   │  │     │  ├─ XYMenuItemModel.cs
-   │  │     │  ├─ XYSubMenu.cs
-   │  │     │  └─ XYSubMenuConnector.cs
-   │  │     │  └─ README.md
+   │  │     │  ├─ _Shared/Models/XYMenuItemModel.cs（菜单项模型）
+   │  │     │  ├─ _Shared/Styles/XyuiComponentStyles.XYUI3.cs（XYUI-3 共享语义样式）
+   │  │     │  ├─ XYUI3-01-MenuBar/（MenuBar 样式与交互分离）
+   │  │     │  ├─ XYUI3-02-Menu/（Menu 样式与交互分离）
+   │  │     │  ├─ XYUI3-03-ContextMenu/（ContextMenu 样式与交互分离）
+   │  │     │  └─ XYUI3-04-SubMenu/（SubMenu 样式与交互分离）
    │  │     ├─ Foundation/
    │  │     │  ├─ XyuiColorToken.cs
    │  │     │  ├─ XyuiColorTokens.Accent.cs
@@ -2961,7 +2957,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-06-Link/XYLink.cs` — XYUI-1-06 超链接组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-07-CodeText/XYCodeText.cs` — XYUI-1-07 代码与 ID 组件，使用右下 Vector Geometry 角标。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-08-MonoText/XYMonoDataRow.cs` — MonoText 的 Label/Value/Unit 结构化数据行模型。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-08-MonoText/XYMonoText.Layout.cs` — MonoText 共享三列布局、响应宽度与合法列间距实现。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-08-MonoText/Styles/XYMonoText.Layout.cs` — MonoText 共享三列布局、响应宽度与合法列间距实现。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-08-MonoText/XYMonoText.cs` — XYUI-1-08 纯等宽数据组件，无 surface 背景和边框。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYBadge.cs` — XYUI-1-09 标签组件及 Default/Accent 变体。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XyuiBadgeTagPath.cs` — Badge 单一背景的克制左指针 Tag 几何构建器。
@@ -2975,79 +2971,79 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYStatusBadge.cs` — XYUI-1-10 状态标签及五种状态 API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYStatusDot.cs` — XYUI-1-11 状态圆点及五种状态 API。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIcon.cs` — XYUI-1-12 24×24 Logical Viewport 图标控件公共 API。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIcon.Rendering.cs` — XYIcon 逻辑视口缩放与最终 DIP Stroke 绘制。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI1/XYUI1-12-Icon/Styles/XYIcon.Rendering.cs` — XYIcon 逻辑视口缩放与最终 DIP Stroke 绘制。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYIconLabel.cs` — XYUI-1-13 图标加文字组件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-04-SplitButton/XYSplitButton.cs` — XYUI-2-04 SplitButton 命令与键盘语义。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-04-SplitButton/XYSplitButton.Template.cs` — SplitButton 单 Chrome、主区、Divider 与 Icon Well 模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-05-DropDownButton/XYDropDownButton.Template.cs` — DropDownButton 双列模板：装饰槽不可命中、无 Divider。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-04-SplitButton/Styles/XYSplitButton.Template.cs` — SplitButton 单 Chrome、主区、Divider 与 Icon Well 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-05-DropDownButton/Styles/XYDropDownButton.Template.cs` — DropDownButton 双列模板：装饰槽不可命中、无 Divider。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-05-DropDownButton/XYDropDownButton.cs` — XYUI-2-05 DropDownButton 唯一命中区命令与键盘语义。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-06-Checkbox/XYCheckbox.Template.cs` — Checkbox 方形视觉盒、勾选符号与 Mixed 横线模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-06-Checkbox/Styles/XYCheckbox.Template.cs` — Checkbox 方形视觉盒、勾选符号与 Mixed 横线模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-07-RadioButton/XYRadioButton.cs` — XYUI-2-07 原生 RadioButton 组互斥控件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-07-RadioButton/XYRadioButton.Template.cs` — Radio Halo、圆环、中心点与标签模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-07-RadioButton/Styles/XYRadioButton.Template.cs` — Radio Halo、圆环、中心点与标签模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.cs` — XYUI-2-08 ToggleButton wrapper 开关语义。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/XYSwitch.Template.cs` — Compact Track + Thumb 固定尺寸模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-08-Switch/Styles/XYSwitch.Template.cs` — Compact Track + Thumb 固定尺寸模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.cs` — XYUI-2-09 单行文本输入控件与 Placeholder/Error API。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/XYTextField.Template.cs` — XYUI-2-09 保留原生 TextPresenter 的文本输入模板与底部焦点装饰层。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-09-TextField/Styles/XYTextField.Template.cs` — XYUI-2-09 保留原生 TextPresenter 的文本输入模板与底部焦点装饰层。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Base/XyuiEditableTextBox.cs` — XYUI-0 文本输入基础行为：首次编辑焦点全选、后续点击恢复普通光标与直接替换。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.cs` — XYUI-2-10 统一 Value 的数字输入、步进、键盘与 Scrub 语义。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Value.cs` — XYUI-2-10 数值格式化、后缀解析、提交与回退。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Template.cs` — XYUI-2-10 文本呈现器与 Hover/Focus Stepper 模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Keyboard.cs` — XYUI-2-10 普通、大步、小步键盘调整与 Enter/Esc。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/XYNumberField.Scrub.cs` — XYUI-2-10 阈值拖动、Pointer Capture 与 Scrub 提交。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/Interaction/XYNumberField.Value.cs` — XYUI-2-10 数值格式化、后缀解析、提交与回退。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/Styles/XYNumberField.Template.cs` — XYUI-2-10 文本呈现器与 Hover/Focus Stepper 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/Interaction/XYNumberField.Keyboard.cs` — XYUI-2-10 普通、大步、小步键盘调整与 Enter/Esc。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-10-NumberField/Interaction/XYNumberField.Scrub.cs` — XYUI-2-10 阈值拖动、Pointer Capture 与 Scrub 提交。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-11-Slider/XYSlider.cs` — XYUI-2-11 真实 Slider 与 XYNumberField 共用 Value 的组合控件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-11-Slider/XYSlider.Template.cs` — XYUI-2-11 Slider 模板、部件绑定与唯一 Value 同步。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-11-Slider/Styles/XYSlider.Template.cs` — XYUI-2-11 Slider 模板、部件绑定与唯一 Value 同步。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-11-Slider/XYSliderTrack.cs` — XYUI-2-11 4 DIP 轨道与 14/16 DIP Thumb 的视觉绘制。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.cs` — XYUI-2-12 可编辑候选选择器公共 API 与运行时部件状态。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.Template.cs` — XYUI-2-12 文本宿主、Chevron、Popup 与候选列表模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.Filter.cs` — XYUI-2-12 候选快照、大小写不敏感 Contains 过滤与 Popup 状态。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.Keyboard.cs` — XYUI-2-12 Down/Up/Enter/Esc 键盘导航与文本提交。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/XYComboBox.Lifecycle.cs` — XYUI-2-12 宿主脱离、窗口失焦与应用停用时的 Popup 生命周期清理。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/Styles/XYComboBox.Template.cs` — XYUI-2-12 文本宿主、Chevron、Popup 与候选列表模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/Interaction/XYComboBox.Filter.cs` — XYUI-2-12 候选快照、大小写不敏感 Contains 过滤与 Popup 状态。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/Interaction/XYComboBox.Keyboard.cs` — XYUI-2-12 Down/Up/Enter/Esc 键盘导航与文本提交。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-12-ComboBox/Interaction/XYComboBox.Lifecycle.cs` — XYUI-2-12 宿主脱离、窗口失焦与应用停用时的 Popup 生命周期清理。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI2.cs` — XYUI-2 文档导航与当前组件默认入口选择。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.cs` — XYUI-2-13 固定候选、不可编辑 Select 控件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Template.cs` — XYUI-2-13 值面、无分割线 Chevron 面、Root Chrome 与 Popup 模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Popup.cs` — XYUI-2-13 Popup 打开/关闭、候选同步与 Placeholder 展示状态。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Keyboard.cs` — XYUI-2-13 Enter/Space/Up/Down/Esc 固定候选键盘交互。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/XYSelect.Lifecycle.cs` — XYUI-2-13 宿主脱离、窗口关闭/失焦与应用停用时的 Popup 清理。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/Styles/XYSelect.Template.cs` — XYUI-2-13 值面、无分割线 Chevron 面、Root Chrome 与 Popup 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/Interaction/XYSelect.Popup.cs` — XYUI-2-13 Popup 打开/关闭、候选同步与 Placeholder 展示状态。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/Interaction/XYSelect.Keyboard.cs` — XYUI-2-13 Enter/Space/Up/Down/Esc 固定候选键盘交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-13-Select/Interaction/XYSelect.Lifecycle.cs` — XYUI-2-13 宿主脱离、窗口关闭/失焦与应用停用时的 Popup 清理。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.cs` — XYUI-2-14 多行 TextArea、Auto Grow、Standard/Editor 模式与统计属性。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/XYTextArea.Template.cs` — XYUI-2-14 TextPresenter、内部 ScrollViewer、Placeholder 与 24 DIP Editor Bar 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-14-TextArea/Styles/XYTextArea.Template.cs` — XYUI-2-14 TextPresenter、内部 ScrollViewer、Placeholder 与 24 DIP Editor Bar 模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/XYSearchField.cs` — XYUI-2-15 搜索文本、筛选态、搜索/筛选事件与清除状态。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/XYSearchField.Template.cs` — XYUI-2-15 搜索图标、真实文本编辑器、清除按钮、32 DIP 筛选单元格与筛选弹层模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/XYSearchField.Keyboard.cs` — XYUI-2-15 Enter 搜索与 Esc 清空键盘交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/Styles/XYSearchField.Template.cs` — XYUI-2-15 搜索图标、真实文本编辑器、清除按钮、32 DIP 筛选单元格与筛选弹层模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-15-SearchField/Interaction/XYSearchField.Keyboard.cs` — XYUI-2-15 Enter 搜索与 Esc 清空键盘交互。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.cs` — XYUI-2-16 密码文本、遮罩呈现、占位提示与密码变更事件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.Template.cs` — XYUI-2-16 带 10/8 DIP 文本内边距与 32 DIP 眼睛按钮的输入框模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.Reveal.cs` — XYUI-2-16 按住显示、失去捕获/焦点/宿主生命周期时强制遮罩。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/XYPasswordField.Keyboard.cs` — XYUI-2-16 Enter/空格按键显示与抬键遮罩交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/Styles/XYPasswordField.Template.cs` — XYUI-2-16 带 10/8 DIP 文本内边距与 32 DIP 眼睛按钮的输入框模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/Interaction/XYPasswordField.Reveal.cs` — XYUI-2-16 按住显示、失去捕获/焦点/宿主生命周期时强制遮罩。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-16-PasswordField/Interaction/XYPasswordField.Keyboard.cs` — XYUI-2-16 Enter/空格按键显示与抬键遮罩交互。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.cs` — XYUI-2-17 日期真值、边界、分段状态与日期变化事件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.Template.cs` — XYUI-2-17 单根 Chrome、分段按钮、快捷步进与日历 Popup 模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.Keyboard.cs` — XYUI-2-17 分段导航、数字替换与上下调整键盘交互。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.Calendar.cs` — XYUI-2-17 本地日历网格、月份导航与 Popup 生命周期清理。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/XYDatePicker.Popup.cs` — XYUI-2-17 中文日期分段调节 Popup、年/月/日增减、提交/取消与轻量关闭。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/Styles/XYDatePicker.Template.cs` — XYUI-2-17 单根 Chrome、分段按钮、快捷步进与日历 Popup 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/Interaction/XYDatePicker.Keyboard.cs` — XYUI-2-17 分段导航、数字替换与上下调整键盘交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/Interaction/XYDatePicker.Calendar.cs` — XYUI-2-17 本地日历网格、月份导航与 Popup 生命周期清理。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-17-DatePicker/Interaction/XYDatePicker.Popup.cs` — XYUI-2-17 中文日期分段调节 Popup、年/月/日增减、提交/取消与轻量关闭。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.cs` — XYUI-2-18 时间真值、时分秒变体、分段状态与时间变化事件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Template.cs` — XYUI-2-18 单根 Chrome、可隐藏秒分段与时钟/微调指示器模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Keyboard.cs` — XYUI-2-18 分段导航、数字替换与当前分段循环调整键盘交互。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Scrub.cs` — XYUI-2-18 4 DIP 横向微调、Pointer Capture、释放与脱离清理。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/XYTimePicker.Popup.cs` — XYUI-2-18 中文时间调节 Popup、时分秒增减、提交/取消与轻量关闭。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/Styles/XYTimePicker.Template.cs` — XYUI-2-18 单根 Chrome、可隐藏秒分段与时钟/微调指示器模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/Interaction/XYTimePicker.Keyboard.cs` — XYUI-2-18 分段导航、数字替换与当前分段循环调整键盘交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/Interaction/XYTimePicker.Scrub.cs` — XYUI-2-18 4 DIP 横向微调、Pointer Capture、释放与脱离清理。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-18-TimePicker/Interaction/XYTimePicker.Popup.cs` — XYUI-2-18 中文时间调节 Popup、时分秒增减、提交/取消与轻量关闭。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.cs` — XYUI-2-19 颜色真值、RGB/RGBA 模式、显示值与颜色变化事件。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Template.cs` — XYUI-2-19 输入 Chrome、透明棋盘色块、箭头与颜色 Popup 模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Color.cs` — XYUI-2-19 HSV/RGBA 转换与色相、饱和度、明度计算。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Popup.cs` — XYUI-2-19 颜色区域、色相/透明度滑条与 HEX/RGBA 字段面板构建。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Panel.cs` — XYUI-2-19 颜色区域渐变、拖动调节与面板值同步。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Input.cs` — XYUI-2-19 HEX 校验、R/G/B/A 数值提交与错误提示。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/XYColorPicker.Lifecycle.cs` — XYUI-2-19 Popup 开关与脱离、停用、关闭生命周期清理。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Styles/XYColorPicker.Template.cs` — XYUI-2-19 输入 Chrome、透明棋盘色块、箭头与颜色 Popup 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Color.cs` — XYUI-2-19 HSV/RGBA 转换与色相、饱和度、明度计算。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Popup.cs` — XYUI-2-19 颜色区域、色相/透明度滑条与 HEX/RGBA 字段面板构建。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Panel.cs` — XYUI-2-19 颜色区域渐变、拖动调节与面板值同步。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Input.cs` — XYUI-2-19 HEX 校验、R/G/B/A 数值提交与错误提示。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-19-ColorPicker/Interaction/XYColorPicker.Lifecycle.cs` — XYUI-2-19 Popup 开关与脱离、停用、关闭生命周期清理。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/XYBoolProperty.cs` — XYUI-2-20 属性标签、布尔真值、只读与单次切换路由。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/XYBoolProperty.Template.cs` — XYUI-2-20 统一标签列、值列与真实 XYSwitch 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-20-BoolProperty/Styles/XYBoolProperty.Template.cs` — XYUI-2-20 统一标签列、值列与真实 XYSwitch 模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/XYNumberProperty.cs` — XYUI-2-21 数值属性值、范围、步长、只读与字段同步。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/XYNumberProperty.Scrub.cs` — XYUI-2-21 属性标签拖动微调交互。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/XYNumberProperty.Template.cs` — XYUI-2-21 统一属性行与真实 XYNumberField 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/Interaction/XYNumberProperty.Scrub.cs` — XYUI-2-21 属性标签拖动微调交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-21-NumberProperty/Styles/XYNumberProperty.Template.cs` — XYUI-2-21 统一属性行与真实 XYNumberField 模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/XYVectorProperty.cs` — XYUI-2-22 Vector2/3/4 轴值、同步与真实 XYNumberField 集合。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/XYVectorProperty.Layout.cs` — XYUI-2-22 按维度和宽度确定性排列布局。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/XYVectorProperty.Template.cs` — XYUI-2-22 标签、轴容器与真实 XYNumberField 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-22-VectorProperty/Styles/XYVectorProperty.Template.cs` — XYUI-2-22 标签、轴容器与真实 XYNumberField 模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-23-EnumProperty/XYEnumProperty.cs` — XYUI-2-23 枚举候选、选中项、只读与 XYSelect 同步。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-23-EnumProperty/XYEnumProperty.Template.cs` — XYUI-2-23 统一属性行与真实 XYSelect 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-23-EnumProperty/Styles/XYEnumProperty.Template.cs` — XYUI-2-23 统一属性行与真实 XYSelect 模板。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.cs` — XYUI-2-24 引用身份、状态不变量、类型校验与动作事件。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.Layout.cs` — XYUI-2-24 宽/紧凑/窄屏身份与动作重排。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.Template.cs` — XYUI-2-24 引用身份、操作按钮与 Popup 模板。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/XYReferenceProperty.Popup.cs` — XYUI-2-24 引用选择 Popup、定位/浏览/清除与生命周期。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/Styles/XYReferenceProperty.Template.cs` — XYUI-2-24 引用身份、操作按钮与 Popup 模板。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/XYUI2-24-ReferenceProperty/Interaction/XYReferenceProperty.Popup.cs` — XYUI-2-24 引用选择 Popup、定位/浏览/清除与生命周期。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Property/XYPropertyLayoutMetrics.cs` — XYUI-2 属性控件共享标签列、间距与响应式行布局契约。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.InputFamily.cs` — XYUI-2-09～14 输入族基础尺寸、Surface、Border 与可选 Focus Border 状态样式。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.Slider.cs` — XYUI-2-11 Slider 模板、Rail/Thumb token 与紧凑间距样式。
@@ -3075,6 +3071,27 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DatePickerInteractionReworkTests.cs` — XYUI-2-17 日历单击保持、分段编辑提交/取消、轻量关闭与快捷步进交互回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TimePickerTests.cs` — XYUI-2-18 时分秒变体、隐藏秒、循环键盘、真实 Scrub 与 Gallery 合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TimePickerInteractionReworkTests.cs` — XYUI-2-18 分段替换、点击阈值、方向 Scrub、释放提交与取消生命周期回归测试。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Models/XYMenuItemModel.cs` — XYUI-3 菜单项勾选/单选模型。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Styles/XyuiComponentStyles.XYUI3.cs` — XYUI-3 菜单家族语义样式与文本垂直居中规则。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/XYMenuBar.cs` — XYUI-3-3.01 顶层菜单栏布局容器。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/XYMenuBarItem.cs` — XYUI-3-3.01 菜单栏项状态 API。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Styles/XYMenuBarItem.Style.cs` — MenuBarItem 文本、活动指示线与垂直居中视觉构建。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Interaction/XYMenuBar.Interaction.cs` — MenuBar Popup、顶层切换、键盘与外部点击交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Interaction/XYMenuBarItem.Interaction.cs` — MenuBarItem 指针/键盘激活交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/XYMenu.cs` — XYUI-3-3.02 菜单容器、项绑定与嵌入模式。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/XYMenuItem.cs` — XYUI-3 共享菜单项属性与视觉刷新。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Styles/XYMenuItem.Visual.cs` — 菜单项勾选、单选、快捷键与 Chevron 视觉构建。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Interaction/XYMenu.Interaction.cs` — 菜单打开、焦点导航、Enter/Esc 与关闭交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Interaction/XYMenuItem.Interaction.cs` — 菜单项指针、键盘、命令与子菜单触发交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/XYContextMenu.cs` — XYUI-3-3.03 上下文菜单头部与共享菜单承载。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/Styles/XYContextMenu.Style.cs` — ContextMenu 头部文本垂直居中视觉构建。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/Interaction/XYContextMenu.Interaction.cs` — 右键目标、Pointer Popup、轻量关闭与 Esc 交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/XYSubMenu.cs` — XYUI-3-3.04 父子菜单镜像布局容器。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/Styles/XYSubMenuConnector.cs` — 子菜单连接线与锚点视觉。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/Interaction/XYSubMenu.Interaction.cs` — 子菜单触发、打开、关闭与方向键交互。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.cs` — XYUI-3 Batch 01 四页真实控件 Preview 与右键目标样例。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3StructureTests.cs` — XYUI-3 菜单家族结构、复用与 Gallery 登记测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3InteractionTests.cs` — XYUI-3 命令、焦点、Popup、子菜单键盘与关闭交互测试。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件专用尺寸与 05 Chevron Track 资源。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs` — Checkbox、Radio、Switch 状态样式与 token 消费。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。

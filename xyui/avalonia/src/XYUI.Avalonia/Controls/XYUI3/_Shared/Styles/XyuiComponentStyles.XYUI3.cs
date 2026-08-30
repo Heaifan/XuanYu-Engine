@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Styling;
@@ -54,11 +55,12 @@ public static partial class XyuiComponentStyles
         TextStyle(styles, "xyui-menu-label", XyuiTypographyTokens.FontSizeAuxiliary, XyuiTypographyTokens.WeightRegular, "XY.Brush.Text.Primary"); TextStyle(styles, "xyui-menu-shortcut", XyuiTypographyTokens.FontSizeCaption, XyuiTypographyTokens.WeightRegular, "XY.Brush.Text.Secondary");
         var icon = new Style(x => x.OfType<XYIcon>().Class("xyui-menu-icon")); icon.Setters.Add(new Setter(Control.WidthProperty, 14d)); icon.Setters.Add(new Setter(Control.HeightProperty, 14d)); Brush(icon, XYIcon.StrokeProperty, "XY.Brush.Text.Secondary"); styles.Add(icon);
         var chevron = new Style(x => x.OfType<XYIcon>().Class("xyui-menu-chevron")); Brush(chevron, XYIcon.StrokeProperty, "XY.Brush.Text.Secondary"); styles.Add(chevron);
-        var check = new Style(x => x.OfType<global::Avalonia.Controls.Shapes.Path>().Class("xyui-menu-check")); Brush(check, Shape.StrokeProperty, "XY.Brush.Accent.Default"); check.Setters.Add(new Setter(Shape.StrokeThicknessProperty, 2d)); check.Setters.Add(new Setter(Control.WidthProperty, 14d)); check.Setters.Add(new Setter(Control.HeightProperty, 14d)); styles.Add(check);
+        var check = new Style(x => x.OfType<Grid>().Class("xyui-menu-check")); check.Setters.Add(new Setter(Control.WidthProperty, 14d)); check.Setters.Add(new Setter(Control.HeightProperty, 14d)); styles.Add(check);
+        var checkLine = new Style(x => x.OfType<Line>().Class("xyui-menu-check-line")); Brush(checkLine, Shape.StrokeProperty, "XY.Brush.Accent.Default"); checkLine.Setters.Add(new Setter(Shape.StrokeThicknessProperty, 2d)); styles.Add(checkLine);
         var radio = new Style(x => x.OfType<Grid>().Class("xyui-menu-radio")); radio.Setters.Add(new Setter(Control.WidthProperty, 16d)); radio.Setters.Add(new Setter(Control.HeightProperty, 16d)); styles.Add(radio);
         var circle = new Style(x => x.OfType<Ellipse>().Class("xyui-menu-radio-ring")); Brush(circle, Shape.StrokeProperty, "XY.Brush.Accent.Default"); circle.Setters.Add(new Setter(Shape.StrokeThicknessProperty, 1.5d)); styles.Add(circle);
         var radioDot = new Style(x => x.OfType<Ellipse>().Class("xyui-menu-radio-dot")); Brush(radioDot, Shape.FillProperty, "XY.Brush.Accent.Default"); styles.Add(radioDot);
     }
     static void TextStyle(Styles styles, string cls, double size, int weight, string brush)
-    { var style = new Style(x => x.OfType<TextBlock>().Class(cls)); style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(XyuiTypographyTokens.FontUi))); style.Setters.Add(new Setter(TextBlock.FontSizeProperty, size)); style.Setters.Add(new Setter(TextBlock.FontWeightProperty, weight switch { 500 => FontWeight.Medium, 600 => FontWeight.SemiBold, _ => FontWeight.Normal })); Brush(style, TextBlock.ForegroundProperty, brush); styles.Add(style); }
+    { var style = new Style(x => x.OfType<TextBlock>().Class(cls)); style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(XyuiTypographyTokens.FontUi))); style.Setters.Add(new Setter(TextBlock.FontSizeProperty, size)); style.Setters.Add(new Setter(TextBlock.FontWeightProperty, weight switch { 500 => FontWeight.Medium, 600 => FontWeight.SemiBold, _ => FontWeight.Normal })); style.Setters.Add(new Setter(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center)); Brush(style, TextBlock.ForegroundProperty, brush); styles.Add(style); }
 }

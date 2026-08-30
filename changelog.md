@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.9-rz · XYUI-3 Batch 01 · 交互实现与 XYUI1～3 分层整理（2026-08-30 10:26:00 +08:00）
+
+- 目标：完成 3.01～3.04 的真实菜单交互；所有菜单文字垂直居中；建立各组件 `Styles` / `Interaction` 文件边界。
+- 变化：MenuBar 支持点击、Enter/Down、Left/Right、Esc、Popup 与顶层切换；Menu 支持命令、Enter/Space、Up/Down、Esc 与禁用项跳过；ContextMenu 支持目标右键、Pointer Popup、Esc；SubMenu 支持父项触发、Right 打开、Left/Esc 收起；勾选标记改用原生 Line 组合，避免未初始化渲染平台崩溃。
+- 变化：XYUI-3 按 3.01～3.04 建立组件目录；XYUI-2 模板进入各组件 `Styles`，键盘/Popup/拖动/生命周期 partial 进入 `Interaction`；XYUI-1 布局/渲染 partial 进入对应 `Styles`。
+- 验证：测试项目构建 `0 Warning / 0 Error`；全量测试 `264/264 PASS`；新交互测试 `4/4 PASS`；待重新执行解决方案正式构建、ARCH-A 与 `git diff --check`。
+- 状态：`XYUI-3-3.01`～`XYUI-3-3.04` `UI IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE`；未标记 `CLOSED` 或 `USER VISUAL ACCEPTED`。`XYUI-3-3.05 NOT STARTED`。
+- 版本：`v0.2.28.9-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+- Hash：待本轮提交；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+
 ## XYUI-3 Batch 01 · UI-only 3.01～3.04（2026-08-30 09:45:00 +08:00）
 
 - 目标：实现 `MenuBar`、`Menu`、`ContextMenu`、`SubMenu` 的 SVG 几何对齐视觉、Light/Dark 语义资源、Gallery 页面与 UI 结构测试。

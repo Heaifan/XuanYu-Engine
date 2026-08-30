@@ -6,7 +6,7 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYMenuItem : Border
+public sealed partial class XYMenuItem : Border
 {
     bool _building;
     public static readonly StyledProperty<string> LabelProperty = AvaloniaProperty.Register<XYMenuItem, string>(nameof(Label), "");
@@ -25,7 +25,7 @@ public sealed class XYMenuItem : Border
     public bool IsDestructive { get => GetValue(IsDestructiveProperty); set => SetValue(IsDestructiveProperty, value); }
     public bool IsHovered { get => GetValue(IsHoveredProperty); set => SetValue(IsHoveredProperty, value); }
     public bool HasSubMenu { get => GetValue(HasSubMenuProperty); set => SetValue(HasSubMenuProperty, value); }
-    public XYMenuItem() { Classes.Add("xyui-menu-item"); Build(); }
+    public XYMenuItem() { Classes.Add("xyui-menu-item"); Build(); InitializeInteraction(); }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) { base.OnPropertyChanged(change); if (!_building && change.Property != IsEnabledProperty && change.Property != ChildProperty) Build(); }
     void Build() { _building = true; UpdateClasses(); Child = new XYMenuItemVisual(this); _building = false; }
     void UpdateClasses() { Set("xyui-menu-hover", IsHovered); Set("xyui-menu-danger", IsDestructive); Set("xyui-menu-checked", IsChecked); }
