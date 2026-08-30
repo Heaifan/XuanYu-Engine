@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-05～08 · Gallery 标题与目录结构同步（2026-08-30 23:43:30 +08:00）
+
+- 目标：补齐 XYUI3-05～08 Gallery 侧栏的英文组件名，并按 UI / Interaction 分离源码目录。
+- 变化：增加 `XYNavigationMenu`、`XYSidebar`、`XYNavigationRail`、`XYTabs` 英文名回退；3.05～3.08 源码归档至各自 `UI` 与 `Interaction` 目录，交互拆为 partial 文件。
+- 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，无法执行 Build/Test。
+- 状态：等待用户确认 Gallery 侧栏标题与源码目录。
+- Hash：待本轮提交。
+
 ## XYUI-3-06 · 修复 Sidebar 折叠运行时崩溃（2026-08-30 23:35:41 +08:00）
 
 - 原因：展开态 `XYNavigationMenu` 中的导航控件被直接重新挂载到折叠态 `XYNavigationRail`，违反 Avalonia 单一逻辑父级约束，触发未处理 CLR 异常。

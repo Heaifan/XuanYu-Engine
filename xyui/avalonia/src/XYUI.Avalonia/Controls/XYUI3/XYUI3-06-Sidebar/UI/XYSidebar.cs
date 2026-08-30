@@ -4,7 +4,7 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYSidebar : Border
+public sealed partial class XYSidebar : Border
 {
     public static readonly StyledProperty<bool> IsCollapsedProperty = AvaloniaProperty.Register<XYSidebar, bool>(nameof(IsCollapsed));
     public IReadOnlyList<XYNavigationItem> PrimaryItems { get; set; } = [];
@@ -12,7 +12,6 @@ public sealed class XYSidebar : Border
     public bool IsCollapsed { get => GetValue(IsCollapsedProperty); set => SetValue(IsCollapsedProperty, value); }
     readonly Grid _panel = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,*,Auto") };
     public XYSidebar() { Classes.Add("xyui-sidebar"); Child = _panel; }
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) { base.OnPropertyChanged(change); if (change.Property == IsCollapsedProperty) Build(); }
     public void Build()
     {
         _panel.Children.Clear();
@@ -24,7 +23,6 @@ public sealed class XYSidebar : Border
         Add(new XYSidebarFooter(), 4);
     }
     void Add(Control control, int row) { _panel.Children.Add(control); Grid.SetRow(control, row); }
-    static XYNavigationItem Clone(XYNavigationItem item) => new() { Id = item.Id, Label = item.Label, Icon = item.Icon, IsSelected = item.IsSelected };
     Control Context() => new StackPanel { Classes = { "xyui-sidebar-context" }, Children =
     { new TextBlock { Text = "地图内容", Classes = { "xyui-sidebar-context-label" } }, new XYNavigationMenu(XYNavigationMenu.Group("", ContextItems.ToArray())) } };
 }

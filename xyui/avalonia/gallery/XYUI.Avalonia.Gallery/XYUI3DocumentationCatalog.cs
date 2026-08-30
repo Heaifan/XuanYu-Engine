@@ -9,13 +9,18 @@ public static class XYUI3DocumentationCatalog
     public static IReadOnlyList<XYUI1ComponentDocument> Build() => XyuiCatalogSource.Load().Where(x => BatchIds.Contains(x.SourceItemId)).Select(Create).ToArray();
     static XYUI1ComponentDocument Create(XyuiCatalogEntry entry)
     {
-        var type = entry.AvaloniaType.Split('.').Last(); var details = Details(entry.SourceItemId);
+        var type = entry.AvaloniaType.Split('.').Last(); if (string.IsNullOrWhiteSpace(type)) type = ComponentName(entry.SourceItemId); var details = Details(entry.SourceItemId);
         var acceptance = entry.SourceItemId == "XYUI-3-3.04" ? "UI CLOSED · USER VISUAL ACCEPTED · HIERARCHY LOGIC REWORKED · AWAITING USER INTERACTION VERIFICATION" : "UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE";
         return new(entry.SourceItemId, entry.Title.Split('/').Last().Trim(), type, details.Overview, details.WhenToUse,
             () => XYUI3GalleryCatalog.CreatePreview(entry.SourceItemId), details.Usages, details.Variants, details.States,
             [], entry.ApiRefs.Select(x => new XYUIDocToken(x, "Canonical", "Foundation token reference")).ToArray(), type)
         { CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap, Acceptance = acceptance };
     }
+    static string ComponentName(string id) => id switch
+    {
+        "XYUI-3-3.05" => "XYNavigationMenu", "XYUI-3-3.06" => "XYSidebar",
+        "XYUI-3-3.07" => "XYNavigationRail", "XYUI-3-3.08" => "XYTabs", _ => ""
+    };
     static (string Overview, string WhenToUse, string[] Usages, XYUIDocVariant[] Variants, XYUIDocState[] States) Details(string id) => id switch
     {
         "XYUI-3-3.01" => ("文字主导的桌面一级菜单栏，以轻 Hover 与底部 Accent 状态线建立导航层级。", "用于编辑器窗口顶部的文件、编辑、视图、窗口、帮助导航；点击或 Enter/Down 打开菜单，Left/Right 切换项，Esc 关闭。", ["<c:XYMenuBar>文件 / 编辑 / 视图 / 窗口 / 帮助</c:XYMenuBar>"], [new("底部状态线型", "低干扰菜单栏", "Light / Dark")], [new("Default", "纯文字"), new("Hover", "浅色背景"), new("Active", "Accent 文字与底线")]),

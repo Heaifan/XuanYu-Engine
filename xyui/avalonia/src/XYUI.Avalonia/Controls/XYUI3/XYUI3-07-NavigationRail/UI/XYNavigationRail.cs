@@ -2,7 +2,7 @@ using Avalonia.Controls;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYNavigationRail : Border
+public sealed partial class XYNavigationRail : Border
 {
     readonly StackPanel _panel = new() { Spacing = 4 };
     readonly XYSubMenu _contextFlyout;
@@ -23,6 +23,4 @@ public sealed class XYNavigationRail : Border
         Child = new Grid { ColumnDefinitions = new ColumnDefinitions("54,*"), Children = { _panel, _contextFlyout } }; Grid.SetColumn(_contextFlyout, 1);
     }
     public XYNavigationRail(params XYNavigationItem[] items) : this((IReadOnlyList<XYNavigationItem>)items) { }
-    void Attach(XYNavigationItem item) { item.Classes.Add("xyui-rail-item"); item.Selected += OnSelected; _panel.Children.Add(item); }
-    void OnSelected(object? sender, EventArgs e) { if (ContextItems.Count > 0) _contextFlyout.Open(); }
 }

@@ -4,7 +4,7 @@ using Avalonia.Layout;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYTab : Border
+public sealed partial class XYTab : Border
 {
     bool _pointerHooked;
     public static readonly StyledProperty<string> LabelProperty = AvaloniaProperty.Register<XYTab, string>(nameof(Label), "");
@@ -23,7 +23,7 @@ public sealed class XYTab : Border
     {
         Classes.Set("xyui-tab-selected", IsSelected);
         var close = new Button { Content = "×", Classes = { "xyui-tab-close" }, IsVisible = IsClosable && IsSelected };
-        close.Click += (_, _) => CloseRequested?.Invoke(this, EventArgs.Empty);
+        close.Click += (_, _) => RequestClose();
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto") };
         grid.Children.Add(new TextBlock { Text = Label, Classes = { "xyui-tab-label" } });
         grid.Children.Add(new Border { Classes = { "xyui-tab-modified" }, IsVisible = IsModified, [Grid.ColumnProperty] = 1 });
@@ -31,6 +31,6 @@ public sealed class XYTab : Border
         Grid.SetColumn(close, 2);
         grid.Children.Add(new Border { Classes = { "xyui-tab-accent" }, IsVisible = IsSelected });
         Child = grid;
-        if (!_pointerHooked) { PointerPressed += (_, _) => { IsSelected = true; Selected?.Invoke(this, EventArgs.Empty); }; _pointerHooked = true; }
+        if (!_pointerHooked) { PointerPressed += (_, _) => Select(); _pointerHooked = true; }
     }
 }
