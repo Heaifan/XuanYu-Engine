@@ -36,6 +36,18 @@ function Get-TrackedHandwrittenFiles {
     @($tracked) + @($untracked) | Where-Object { $_ -match '\.(cs|axaml|js)$' -and (Test-Path $_) } | ForEach-Object { Get-Item -LiteralPath $_ }
 }
 
+# Avalonia 命名空间解析回归检查：在 XYUI.Avalonia.* 命名空间内，Avalonia.Layout 必须从全局根解析。
+# 否则 C# 会尝试解析为 XYUI.Avalonia.Layout，导致 CS0234。
+foreach ($file in Get-SourceFiles "xyui/avalonia") {
+    $lineNumber = 0
+    foreach ($line in [System.IO.File]::ReadAllLines($file.FullName)) {
+        $lineNumber++
+        if ($line -match '(?<!global::)Avalonia\.Layout\.' -and $line -notmatch '^\s*using\s+Avalonia\.Layout') {
+            Add-Failure "Avalonia.Layout must use global:: prefix: $($file.FullName):$lineNumber"
+        }
+    }
+}
+
 # 5+100 行数统计（SHR-2026-08-D2）：逻辑物理行数。
 # 空白行计入；无末尾换行时最后一行仍计入；CRLF/LF/CR 均正确识别；中文 UTF-8 正确。
 # 禁止改回 Get-Content | Measure-Object -Line：PS 5.1 实测行数失真（109 行数成 96），导致门禁漏检。

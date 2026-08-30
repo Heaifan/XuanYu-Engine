@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-06～08 · Avalonia.Layout 根因修复（2026-08-30 23:13:49 +08:00）
+
+- 原因：`XYUI.Avalonia.Controls` 命名空间中的未限定 `Avalonia.Layout` 被 C# 相对解析为 `XYUI.Avalonia.Layout`，导致 Sidebar 样式持续触发 CS0234。
+- 变化：修正 Sidebar Tab Accent 的全局命名空间引用；ARCH-A 增加 `Avalonia.Layout` 全仓回归检查，阻止同类错误再次进入提交。
+- 验证：ARCH-A（含 5+100）通过，`git diff --check` 通过；当前环境无 .NET SDK，Build/Test 无法执行。
+- 状态：等待用户重新运行 `xyui` 验证 Gallery。
+- Hash：待本轮提交。
+
 ## XYUI-3-06～08 · Compact V2 视觉返工（2026-08-30 23:08:34 +08:00）
 
 - 目标：按用户提供的三张实际 Gallery 截图重新对照 Compact V2 SVG，修复 Sidebar、NavigationRail、Tabs 的明显视觉不合格项。
