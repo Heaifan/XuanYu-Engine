@@ -16,7 +16,7 @@ public sealed partial class XYMenuBar : Border
     {
         var grid = new Grid { RowDefinitions = new RowDefinitions("Auto,1") };
         var items = new StackPanel { Orientation = Orientation.Horizontal, Classes = { "xyui-menu-bar-items" } };
-        foreach (var item in Items) { item.Activated -= OnItemActivated; item.Activated += OnItemActivated; items.Children.Add(item); }
+        foreach (var item in Items) { item.Activated -= OnItemActivated; item.Activated += OnItemActivated; item.PointerEntered -= OnItemPointerEntered; item.PointerEntered += OnItemPointerEntered; items.Children.Add(item); }
         grid.Children.Add(items); var divider = new XYSeparator { Variant = XyuiSeparatorVariant.Header };
         grid.Children.Add(divider); Grid.SetRow(divider, 1); Child = grid;
     }

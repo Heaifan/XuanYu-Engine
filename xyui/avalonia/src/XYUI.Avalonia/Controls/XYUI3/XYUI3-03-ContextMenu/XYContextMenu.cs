@@ -14,8 +14,8 @@ public sealed partial class XYContextMenu : Border
     XYMenu _menu = new() { IsEmbedded = true };
     public string ContextType { get => GetValue(ContextTypeProperty); set => SetValue(ContextTypeProperty, value); }
     public string ContextName { get => GetValue(ContextNameProperty); set => SetValue(ContextNameProperty, value); }
-    public XYMenu Menu { get => _menu; set { _menu = value; _menu.IsEmbedded = true; Build(); } }
-    public XYContextMenu() { Classes.Add("xyui-context-menu"); Child = _host; _host.Children.Add(_surface); Build(); }
+    public XYMenu Menu { get => _menu; set { _menu.Closed -= OnMenuClosed; _menu = value; _menu.IsEmbedded = true; _menu.Closed += OnMenuClosed; Build(); } }
+    public XYContextMenu() { Classes.Add("xyui-context-menu"); Child = _host; _host.Children.Add(_surface); _menu.Closed += OnMenuClosed; Build(); }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) { base.OnPropertyChanged(change); if (!_building && change.Property != ChildProperty) Build(); }
     void Build()
     {

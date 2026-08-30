@@ -6,7 +6,7 @@ public sealed partial class XYMenu
 {
     public void Open()
     {
-        IsOpen = true; FocusedIndex = FirstEnabled();
+        ClearSelection(); IsOpen = true; FocusedIndex = FirstEnabled();
         if (FocusedIndex >= 0 && Items[FocusedIndex] is XYMenuItem item) item.Focus();
     }
     public void Close()

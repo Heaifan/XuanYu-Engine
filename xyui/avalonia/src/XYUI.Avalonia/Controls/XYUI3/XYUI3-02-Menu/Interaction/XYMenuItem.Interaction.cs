@@ -12,7 +12,7 @@ public sealed partial class XYMenuItem
     void InitializeInteraction()
     {
         Focusable = true; PointerEntered += (_, _) => IsHovered = true; PointerExited += (_, _) => IsHovered = false;
-        PointerReleased += OnPointerReleased; KeyDown += OnKeyDown;
+        PointerPressed += OnPointerPressed; KeyDown += OnKeyDown;
     }
     public bool Activate()
     {
@@ -26,6 +26,6 @@ public sealed partial class XYMenuItem
         return true;
     }
     internal void ClearInteractionState() { IsSelected = false; IsSubMenuOpen = false; }
-    void OnPointerReleased(object? sender, PointerReleasedEventArgs e) { if (e.InitialPressMouseButton == MouseButton.Left) { Activate(); e.Handled = true; } }
+    void OnPointerPressed(object? sender, PointerPressedEventArgs e) { if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) { Activate(); e.Handled = true; } }
     void OnKeyDown(object? sender, KeyEventArgs e) { if (e.Key is Key.Enter or Key.Space) { Activate(); e.Handled = true; } }
 }
