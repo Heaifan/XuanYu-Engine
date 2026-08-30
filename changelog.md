@@ -8,7 +8,7 @@
 - 验证：MenuBar 样式断言（1 DIP 边框、5 DIP 内边距）通过；正式解决方案构建 `0 Warning / 0 Error`；全量测试 `267/267 PASS`；ARCH-A 与 `git diff --check` PASS。
 - 状态：`XYUI-3-3.01`～`XYUI-3-3.04` 仍为 `UI IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE`；未标记 `CLOSED` 或 `USER VISUAL ACCEPTED`。
 - 版本：`v0.2.28.12-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
-- Hash：待本轮提交；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+- Hash：`e275d3fa`；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
 
 ## v0.2.28.11-rz · XYUI-3 Batch 01 · 菜单交互时序统一修复（2026-08-30 11:12:07 +08:00）
 
