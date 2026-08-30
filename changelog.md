@@ -6,7 +6,7 @@
 - 变化：修正 Sidebar Tab Accent 的全局命名空间引用；ARCH-A 增加 `Avalonia.Layout` 全仓回归检查，阻止同类错误再次进入提交。
 - 验证：ARCH-A（含 5+100）通过，`git diff --check` 通过；当前环境无 .NET SDK，Build/Test 无法执行。
 - 状态：等待用户重新运行 `xyui` 验证 Gallery。
-- Hash：待本轮提交。
+- Hash：`7b0796db`；已推送 `origin/feat/XYUI-A`。
 
 ## XYUI-3-06～08 · Compact V2 视觉返工（2026-08-30 23:08:34 +08:00）
 
