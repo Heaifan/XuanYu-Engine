@@ -7,7 +7,7 @@
 - 验证：解决方案构建 `0 Warning / 0 Error`；全量测试 `260/260 PASS`；XYUI-3 结构测试 `11/11 PASS`；ARCH-A（含 5+100）PASS；`git diff --check` PASS；Gallery 进程启动烟测保持运行并正常退出。
 - 状态：`XYUI-3-01`～`XYUI-3-04` `UI IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE`；`XYUI-3-05 NOT STARTED`。自动门禁不等同于人工视觉验收。
 - 版本：`v0.2.28.8-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
-- Hash：待本轮提交后补记；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+- Hash：实现提交 `1c9ead1d`；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
 
 ## XYUI-2-21～24 · Closeout（2026-08-30 00:10:00 +08:00）
 
