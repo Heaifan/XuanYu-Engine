@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-08 · 修复 Tabs 语法错误（2026-08-30 23:31:15 +08:00）
+
+- 原因：`XYTab.Build()` 上一轮压缩为单行对象初始化时，`Grid.Children` 集合初始化缺少闭合括号，导致 CS1003/CS1513。
+- 变化：改为逐步构建 Grid，保留无边框关闭按钮和关闭事件；`xyui.bat` 已核对，启动与错误返回逻辑正常，无需修改。
+- 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，无法执行实际 Build/Test。
+- 状态：等待用户重新运行 `xyui`。
+- Hash：待本轮提交。
+
 ## XYUI-3-05～08 · 交互闭环（2026-08-30 23:29:08 +08:00）
 
 - 目标：按 Compact V2 参考图补齐 NavigationMenu、Sidebar、NavigationRail、Tabs 的真实交互，并保持 Gallery 侧栏风格一致。
