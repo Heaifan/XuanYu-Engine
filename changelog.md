@@ -6,7 +6,7 @@
 - 变化：选中背景统一使用 `Accent.Soft`、选中图标使用 `Text.Primary`；Tabs 关闭槽固定扩大到 28 DIP，使用 PointerPressed Tunnel 立即关闭并保留键盘路径。
 - 验证：Gallery Build 通过（0 警告、0 错误）；测试项目 Build 通过（0 警告、0 错误）；`XYUI.Avalonia.Tests` 291/291 通过；ARCH-A 与 `git diff --check` 通过。
 - 状态：等待用户双主题人工验收 3.05 → 3.06 → 3.07 → 3.08。
-- Hash：待本轮提交后回填。
+- Hash：`67e094d5`；已推送 `origin/feat/XYUI-A`。
 
 ## XYUI-3-06～08 · 二次验收修订（2026-08-31 00:28:35 +08:00）
 
