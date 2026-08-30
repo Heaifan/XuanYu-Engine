@@ -32,7 +32,7 @@ public sealed partial class XYTab : Border
         Grid.SetColumn(close, 2);
         var divider = new Border { Classes = { "xyui-tab-divider" }, Height = 22, Width = 1, VerticalAlignment = VerticalAlignment.Center };
         grid.Children.Add(divider); Grid.SetColumn(divider, 3);
-        var accent = new Border { Classes = { "xyui-tab-accent" }, IsVisible = IsSelected };
+        var accent = new Border { Classes = { "xyui-tab-accent" }, IsVisible = IsSelected, IsHitTestVisible = false };
         grid.Children.Add(accent); Grid.SetColumnSpan(accent, 4);
         Child = grid;
         if (!_pointerHooked) { PointerPressed += OnPointerPressed; _pointerHooked = true; }
