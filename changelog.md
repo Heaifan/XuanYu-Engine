@@ -6,7 +6,7 @@
 - 变化：改为 `using Avalonia.Layout` + `Orientation.Horizontal`，并改用 `Colors.Transparent`；不改变视觉与交互语义。
 - 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，Build/Test 无法执行。
 - 状态：等待用户重新构建 Gallery。
-- Hash：待本轮提交。
+- Hash：`2adad3ff`；已推送 `origin/feat/XYUI-A`。
 
 ## XYUI-3-06～08 · Navigation Compact V2（2026-08-30 22:53:05 +08:00）
 
