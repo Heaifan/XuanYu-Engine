@@ -6,7 +6,7 @@
 - 变化：改为直接 Setter 设置 Padding，并显式注册 `:pointerover` 样式；未改变 3.05 视觉尺寸与交互语义。
 - 验证：ARCH-A（含 5+100）通过，`git diff --check` 通过；本机 Build/Test 仍受无 .NET SDK 环境阻断。
 - 状态：等待用户重新构建并进行 Light Theme 视觉审核。
-- Hash：待本轮提交。
+- Hash：`49fc1733`；已推送 `origin/feat/XYUI-A`。
 
 ## XYUI-3-05 · NavigationMenu Compact V2（2026-08-30 22:02:49 +08:00）
 
