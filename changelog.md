@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-06 · 修复 Sidebar 折叠运行时崩溃（2026-08-30 23:35:41 +08:00）
+
+- 原因：展开态 `XYNavigationMenu` 中的导航控件被直接重新挂载到折叠态 `XYNavigationRail`，违反 Avalonia 单一逻辑父级约束，触发未处理 CLR 异常。
+- 变化：折叠构建 Rail 时为一级导航创建独立副本，避免跨容器复用控件。
+- 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；本地环境无 .NET SDK，未执行 Gallery 运行验证。
+- 状态：等待用户重新点击 Sidebar 折叠按钮验收。
+- Hash：待本轮提交。
+
 ## XYUI-3-06～08 · 编译错误修复（2026-08-30 23:33:10 +08:00）
 
 - 原因：`XYTab` 使用了不适用的 `is not` 属性模式；Sidebar 样式缺少 Layout 命名空间；Rail 属性名与 Avalonia `Control.ContextFlyout` 冲突。

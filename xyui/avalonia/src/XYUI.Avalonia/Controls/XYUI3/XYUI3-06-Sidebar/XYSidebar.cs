@@ -16,7 +16,7 @@ public sealed class XYSidebar : Border
     public void Build()
     {
         _panel.Children.Clear();
-        if (IsCollapsed) { _panel.Children.Add(new XYNavigationRail(PrimaryItems)); return; }
+        if (IsCollapsed) { _panel.Children.Add(new XYNavigationRail(PrimaryItems.Select(Clone).ToArray())); return; }
         var collapse = new Button { Content = "‹", Classes = { "xyui-sidebar-collapse" } }; collapse.Click += (_, _) => IsCollapsed = true;
         Add(new Border { Classes = { "xyui-sidebar-header" }, Child = new Grid { Children = { new TextBlock { Text = "玄域", Classes = { "xyui-sidebar-title" } }, collapse } } }, 0);
         Add(new XYNavigationMenu(XYNavigationMenu.Group("", PrimaryItems.ToArray())), 1);
@@ -24,6 +24,7 @@ public sealed class XYSidebar : Border
         Add(new XYSidebarFooter(), 4);
     }
     void Add(Control control, int row) { _panel.Children.Add(control); Grid.SetRow(control, row); }
+    static XYNavigationItem Clone(XYNavigationItem item) => new() { Id = item.Id, Label = item.Label, Icon = item.Icon, IsSelected = item.IsSelected };
     Control Context() => new StackPanel { Classes = { "xyui-sidebar-context" }, Children =
     { new TextBlock { Text = "地图内容", Classes = { "xyui-sidebar-context-label" } }, new XYNavigationMenu(XYNavigationMenu.Group("", ContextItems.ToArray())) } };
 }
