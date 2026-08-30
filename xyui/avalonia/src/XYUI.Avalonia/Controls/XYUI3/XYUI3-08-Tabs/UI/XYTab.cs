@@ -1,5 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using XYUI.Avalonia.Vector;
 
@@ -24,8 +26,8 @@ public sealed partial class XYTab : Border
     {
         Classes.Set("xyui-tab-selected", IsSelected);
         var close = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Clear, Size = XyuiIconSize.Tiny }, Classes = { "xyui-tab-close" }, IsHitTestVisible = IsClosable && IsSelected, Opacity = IsClosable && IsSelected ? 1 : 0 };
-        close.Click += (_, _) => RequestClose();
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,18,Auto") };
+        close.AddHandler(InputElement.PointerPressedEvent, OnClosePointerPressed, RoutingStrategies.Tunnel); close.KeyDown += OnCloseKeyDown;
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,28,Auto") };
         grid.Children.Add(new TextBlock { Text = Label, Classes = { "xyui-tab-label" } });
         grid.Children.Add(new Border { Classes = { "xyui-tab-modified" }, IsVisible = IsModified, [Grid.ColumnProperty] = 1 });
         grid.Children.Add(close);
