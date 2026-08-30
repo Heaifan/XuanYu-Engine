@@ -31,7 +31,7 @@ public sealed partial class XYNavigationRail : Border
         foreach (var entry in _state.Entries) AddItem(entry);
         if (_footer is not null) { _panel.Children.Add(new XYSeparator { Classes = { "xyui-rail-footer-separator" } }); AddItem(_footer); }
     }
-    void AddItem(XYNavigationEntry entry) { var item = new XYNavigationItem { Id = entry.Id, Label = entry.Label, Icon = entry.Icon, IsSelected = entry.Id == _state.SelectedId }; item.Classes.Add("xyui-rail-item"); item.Selected += OnSelected; _itemViews[entry.Id] = item; _panel.Children.Add(item); }
+    void AddItem(XYNavigationEntry entry) { var item = new XYNavigationItem { Id = entry.Id, Label = entry.Label, Icon = entry.Icon, IsSelected = entry.Id == _state.SelectedId, IsIconOnly = true }; item.Classes.Add("xyui-rail-item"); item.Selected += OnSelected; _itemViews[entry.Id] = item; _panel.Children.Add(item); }
     static XYNavigationState CreateState(IEnumerable<XYNavigationItem> items) => new(items.Select(x => new XYNavigationEntry(x.Id, x.Label, x.Icon)), items.FirstOrDefault(x => x.IsSelected)?.Id);
     void SyncSelection(object? sender, EventArgs e) { foreach (var item in _itemViews.Values) item.IsSelected = item.Id == _state.SelectedId; }
 }

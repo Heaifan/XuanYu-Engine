@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-06～08 · 二次验收修订（2026-08-31 00:28:35 +08:00）
+
+- 目标：按最新人工验收重新修订 Sidebar、NavigationRail 与 Tabs 的视觉和交互路径。
+- 变化：Sidebar 上下文项补齐矢量图标；Rail 增加独立 icon-only 居中呈现；Rail Context Popup 恢复复用已定稿 `XYSubMenu` / `XYMenu`；Tabs 在左键按下阶段由父 Tab 识别关闭入口并立即请求关闭，保留按钮 Click 兜底。
+- 验证：Gallery Build 通过（0 警告、0 错误）；测试项目 Build 通过（0 警告、0 错误）；`XYUI.Avalonia.Tests` 291/291 通过；ARCH-A 与 `git diff --check` 通过。
+- 状态：等待用户重新人工验收 3.06 → 3.07 → 3.08。
+- Hash：待本轮提交后回填。
+
 ## XYUI-3-06～08 · 组合架构与状态闭环修复（2026-08-30 23:56:50 +08:00）
 
 - 目标：逐条落实 Sidebar、NavigationRail、Tabs 审查意见，修复视觉组合、状态归属和事件路径。

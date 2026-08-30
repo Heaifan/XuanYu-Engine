@@ -23,7 +23,7 @@ public sealed partial class XYTab : Border
     void Build()
     {
         Classes.Set("xyui-tab-selected", IsSelected);
-        var close = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Clear, Size = XyuiIconSize.Small }, Classes = { "xyui-tab-close" }, IsHitTestVisible = IsClosable && IsSelected, Opacity = IsClosable && IsSelected ? 1 : 0 };
+        var close = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Clear, Size = XyuiIconSize.Tiny }, Classes = { "xyui-tab-close" }, IsHitTestVisible = IsClosable && IsSelected, Opacity = IsClosable && IsSelected ? 1 : 0 };
         close.Click += (_, _) => RequestClose();
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,18,Auto") };
         grid.Children.Add(new TextBlock { Text = Label, Classes = { "xyui-tab-label" } });

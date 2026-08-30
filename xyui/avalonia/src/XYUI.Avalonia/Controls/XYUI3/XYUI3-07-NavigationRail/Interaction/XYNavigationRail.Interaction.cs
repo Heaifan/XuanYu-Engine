@@ -16,9 +16,10 @@ public sealed partial class XYNavigationRail
         CloseContext(); var entries = _contextMap.TryGetValue(anchor.Id, out var mapped) ? mapped : _contextMap.GetValueOrDefault("*") ?? [];
         if (entries.Count == 0) return;
         var parent = new XYMenu(new XYMenuItem { Label = anchor.Label, HasSubMenu = true });
-        var child = new XYMenu(entries.Select(x => new XYMenuItem { Label = x.Label }).ToArray());
+        var child = new XYMenu(entries.Select((entry, index) => new XYMenuItem { Label = entry.Label, IsHovered = index == 0 }).ToArray()) { MinWidth = 218 };
         _contextFlyout = new XYSubMenu { ParentMenu = parent, ChildMenu = child, ShowParentMenu = false }; _contextFlyout.Close();
-        _popup = new Popup { PlacementTarget = anchor, Placement = PlacementMode.Right, IsLightDismissEnabled = true, Child = _contextFlyout }; _popup.Closed += OnPopupClosed; _popup.IsOpen = true; _contextFlyout.Open();
+        _popup = new Popup { PlacementTarget = anchor, Placement = PlacementMode.Right, VerticalOffset = -24, IsLightDismissEnabled = true, Child = _contextFlyout };
+        _popup.Closed += OnPopupClosed; _popup.IsOpen = true; child.ApplyOverlayStyling(); _contextFlyout.Open();
     }
     void OnPopupClosed(object? sender, EventArgs e) => CloseContext();
     void CloseContext()
