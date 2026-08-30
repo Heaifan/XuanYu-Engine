@@ -8,7 +8,7 @@
 - 验证：测试项目构建 `0 Warning / 0 Error`；正式解决方案构建 `0 Warning / 0 Error`；全量测试 `267/267 PASS`；新增真实 Headless 按下时序、右键打开与外层关闭回归；ARCH-A 与 `git diff --check` PASS。
 - 状态：`XYUI-3-3.01`～`XYUI-3-3.04` 仍为 `UI IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE`；未标记 `CLOSED` 或 `USER VISUAL ACCEPTED`。
 - 版本：`v0.2.28.11-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
-- Hash：待本轮提交；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+- Hash：`93d75f7d`；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
 
 ## v0.2.28.10-rz · XYUI-3 Batch 01 · 菜单选中交互修复（2026-08-30 10:51:00 +08:00）
 
