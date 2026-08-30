@@ -6,7 +6,7 @@
 - 变化：改为属性引用比较，补充 `Avalonia.Layout`，将 Rail 暴露属性改名为 `NavigationContextFlyout`。
 - 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，无法执行实际 Build/Test。
 - 状态：等待用户重新运行 `xyui`。
-- Hash：待本轮提交。
+- Hash：`8d7c7cfe`；已推送 `origin/feat/XYUI-A`。
 
 ## XYUI-3-08 · 修复 Tabs 语法错误（2026-08-30 23:31:15 +08:00）
 
