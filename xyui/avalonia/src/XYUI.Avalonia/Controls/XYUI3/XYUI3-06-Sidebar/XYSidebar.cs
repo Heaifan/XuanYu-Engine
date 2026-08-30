@@ -17,14 +17,15 @@ public sealed class XYSidebar : Border
     {
         _panel.Children.Clear();
         if (IsCollapsed) { _panel.Children.Add(new XYNavigationRail(PrimaryItems)); return; }
-        Add(new Border { Classes = { "xyui-sidebar-header" }, Child = new TextBlock { Text = "玄域", Classes = { "xyui-sidebar-title" } } }, 0);
+        var collapse = new Button { Content = "‹", Classes = { "xyui-sidebar-collapse" } }; collapse.Click += (_, _) => IsCollapsed = true;
+        Add(new Border { Classes = { "xyui-sidebar-header" }, Child = new Grid { Children = { new TextBlock { Text = "玄域", Classes = { "xyui-sidebar-title" } }, collapse } } }, 0);
         Add(new XYNavigationMenu(XYNavigationMenu.Group("", PrimaryItems.ToArray())), 1);
         if (ContextItems.Count > 0) Add(Context(), 2);
         Add(new XYSidebarFooter(), 4);
     }
     void Add(Control control, int row) { _panel.Children.Add(control); Grid.SetRow(control, row); }
     Control Context() => new StackPanel { Classes = { "xyui-sidebar-context" }, Children =
-    { new TextBlock { Text = "地图内容", Classes = { "xyui-sidebar-context-label" } }, new Border { Child = new TextBlock { Text = "地图基础", Classes = { "xyui-sidebar-context-item" } } }, new TextBlock { Text = "地图环境", Classes = { "xyui-sidebar-context-item" } }, new TextBlock { Text = "数据集", Classes = { "xyui-sidebar-context-item" } }, new TextBlock { Text = "区域与道路", Classes = { "xyui-sidebar-context-item" } } } };
+    { new TextBlock { Text = "地图内容", Classes = { "xyui-sidebar-context-label" } }, new XYNavigationMenu(XYNavigationMenu.Group("", ContextItems.ToArray())) } };
 }
 
 sealed class XYSidebarFooter : Border

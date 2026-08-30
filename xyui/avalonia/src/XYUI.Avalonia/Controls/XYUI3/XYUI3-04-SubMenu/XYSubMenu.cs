@@ -14,6 +14,7 @@ public sealed partial class XYSubMenu : Border
     public bool EffectiveVisible => IsOpen && (_parentSubMenu?.EffectiveVisible ?? true);
     public XYSubMenuConnector Connector => _connector;
     public bool OpenLeft { get => _openLeft; set { _openLeft = value; Build(); } }
+    public bool ShowParentMenu { get; set; } = true;
     public event EventHandler? Opened;
     public event EventHandler? Closed;
     public XYSubMenu() { Classes.Add("xyui-sub-menu"); Child = _grid; Build(); InitializeInteraction(); AttachTriggers(); }

@@ -27,8 +27,8 @@ public sealed partial class XYSubMenu
     void SyncVisibility()
     {
         var visible = EffectiveVisible; _child.IsVisible = visible; _connector.IsVisible = visible && ParentMenu.IsVisible && _child.IsVisible;
-        _grid.ColumnDefinitions[0].Width = OpenLeft && !visible ? new GridLength(0) : new GridLength(270);
-        _grid.ColumnDefinitions[1].Width = visible ? new GridLength(40) : new GridLength(0);
+        _grid.ColumnDefinitions[0].Width = !ShowParentMenu || OpenLeft && !visible ? new GridLength(0) : new GridLength(270);
+        _grid.ColumnDefinitions[1].Width = visible && ShowParentMenu ? new GridLength(40) : new GridLength(0);
         _grid.ColumnDefinitions[2].Width = !OpenLeft && !visible ? new GridLength(0) : new GridLength(260);
         foreach (var child in _children) child.SyncVisibility();
     }

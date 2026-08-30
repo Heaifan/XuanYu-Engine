@@ -39,7 +39,7 @@ public static class XYUI3GalleryCatalog
         XYNavigationMenu.Group("工具", new XYNavigationItem { Id = "scripts", Label = "脚本", Icon = XyuiVectorIcon.Code }, new XYNavigationItem { Id = "debug", Label = "调试", Icon = XyuiVectorIcon.Search }),
         XYNavigationMenu.Group("", new XYNavigationItem { Id = "settings", Label = "设置", Icon = XyuiVectorIcon.Section })) { Width = 246, SelectedId = "map" };
     static Control SidebarPreview() { var sidebar = new XYSidebar { PrimaryItems = Primary(), ContextItems = Context() }; sidebar.Build(); return sidebar; }
-    static Control RailPreview() => new XYNavigationRail(Primary().ToArray()) { Width = 54 };
+    static Control RailPreview() => new XYNavigationRail(Primary().ToArray(), Context().ToArray()) { Width = 354 };
     static Control TabsPreview() => new XYTabs(new XYTab { Label = "地图基础" }, new XYTab { Label = "地图环境", IsSelected = true }, new XYTab { Label = "数据集", IsModified = true }, new XYTab { Label = "区域编辑" });
     static IReadOnlyList<XYNavigationItem> Primary() => [new() { Id = "map", Label = "地图", Icon = XyuiVectorIcon.Locate, IsSelected = true }, new() { Id = "environment", Label = "环境", Icon = XyuiVectorIcon.Eye }, new() { Id = "data", Label = "数据", Icon = XyuiVectorIcon.Code }];
     static IReadOnlyList<XYNavigationItem> Context() => [new() { Id = "base", Label = "地图基础", Icon = XyuiVectorIcon.Section }, new() { Id = "world", Label = "地图环境", Icon = XyuiVectorIcon.Section }, new() { Id = "dataset", Label = "数据集", Icon = XyuiVectorIcon.Section }];

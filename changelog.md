@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-05～08 · 交互闭环（2026-08-30 23:29:08 +08:00）
+
+- 目标：按 Compact V2 参考图补齐 NavigationMenu、Sidebar、NavigationRail、Tabs 的真实交互，并保持 Gallery 侧栏风格一致。
+- 变化：Sidebar 增加无边框折叠按钮并切换为 54 DIP Rail；Rail 点击一级图标打开复用 XYSubMenu 的上下文菜单；Tabs 的无边框 `×` 支持单个关闭和全部关闭；Sidebar 上下文项改为复用 NavigationMenu。
+- 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，Build/Test 无法执行。
+- 状态：等待用户在本机 Gallery 点击验收 3.05～3.08。
+- Hash：待本轮提交。
+
 ## XYUI-3-06～08 · Avalonia.Layout 根因修复（2026-08-30 23:13:49 +08:00）
 
 - 原因：`XYUI.Avalonia.Controls` 命名空间中的未限定 `Avalonia.Layout` 被 C# 相对解析为 `XYUI.Avalonia.Layout`，导致 Sidebar 样式持续触发 CS0234。
