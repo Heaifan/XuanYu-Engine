@@ -9,7 +9,7 @@
 - 验证：SubMenu 层级专项测试 `19/19 PASS`；全量测试 `286/286 PASS`；正式解决方案构建与 Gallery 构建均为 `0 Warning / 0 Error`；ARCH-A、5+100、`git diff --check` PASS。
 - 状态：`XYUI-3-04 UI CLOSED / USER VISUAL ACCEPTED`；层级逻辑 `REWORKED / AWAITING USER INTERACTION VERIFICATION`；未重新打开视觉验收。
 - 版本：`v0.2.28.13-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
-- Hash：待本轮提交；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+- Hash：`4a2064fd`；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
 
 ## v0.2.28.12-rz · XYUI-3 Batch 01 · MenuBar 复用 3.02 样式修复（2026-08-30 12:00:12 +08:00）
 
