@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-3-06～08 · Navigation Compact V2（2026-08-30 22:53:05 +08:00）
+
+- 目标：补齐参考文档要求的 Sidebar、NavigationRail、Tabs；3.05 保持已通过实现，不提前实现 3.09 TabBar。
+- 变化：新增 Sidebar 展开/折叠结构、54 DIP NavigationRail、34 DIP Tabs/底部 Accent Line/Modified Dot；Gallery 与目录登记扩展至 XYUI-3 3.01～3.08，补齐 3.06～3.08 结构回归。
+- 验证：ARCH-A（含 5+100）通过，`git diff --check` 通过；Avalonia Build 仍受当前环境无 .NET SDK 阻断（真实返回 `No .NET SDKs were found`），测试未执行。
+- 状态：`XYUI-3-05～08 IMPLEMENTED`；等待用户 Light/Dark 视觉与交互审核；未启动 3.09。
+- Hash：待本轮提交。
+- 遗留：需真机复核 Sidebar 展开/折叠、Rail 一级导航、Tabs 选中/修改/关闭视觉，以及 Compact V2 几何。
+
 ## XYUI-3-05 · NavigationMenu 编译修复（2026-08-30 22:47:06 +08:00）
 
 - 原因：Compact V2 样式文件将 `Thickness` 误传给仅接受资源键的辅助方法，并误用了不存在的六参数 `State` 重载。

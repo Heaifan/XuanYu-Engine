@@ -30,6 +30,12 @@ public static class XyuiComponentTokens
     public const double NavigationMenuIconGap = 8;
     public const double NavigationMenuAccentBarWidth = 3;
     public const double NavigationMenuItemRadius = 3;
+    public const double SidebarWidth = 212;
+    public const double SidebarHeaderHeight = 38;
+    public const double NavigationRailWidth = 54;
+    public const double NavigationRailItemHeight = 40;
+    public const double TabHeight = 34;
+    public const double TabPaddingX = 10;
 
     public static ResourceDictionary CreateResources() => new()
     {
@@ -62,5 +68,11 @@ public static class XyuiComponentTokens
         ["XY.NavigationMenu.IconGap"] = NavigationMenuIconGap,
         ["XY.NavigationMenu.AccentBar.Width"] = NavigationMenuAccentBarWidth,
         ["XY.NavigationMenu.Item.Radius"] = NavigationMenuItemRadius,
+        ["XY.Sidebar.Width"] = SidebarWidth,
+        ["XY.Sidebar.Header.Height"] = SidebarHeaderHeight,
+        ["XY.NavigationRail.Width"] = NavigationRailWidth,
+        ["XY.NavigationRail.Item.Height"] = NavigationRailItemHeight,
+        ["XY.Tab.Height"] = TabHeight,
+        ["XY.Tab.PaddingX"] = TabPaddingX,
     };
 }

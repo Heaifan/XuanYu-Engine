@@ -2869,6 +2869,11 @@
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Properties.cs` — Number、Vector、Enum、Reference Property 的中文真实场景样例工厂。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.cs` — XYUI-3-01～05 中文文档数据源与验收状态。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.cs` — XYUI-3-01～05 真实 Runtime 预览工厂。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.cs` — XYUI-3-01～08 真实 Runtime 预览工厂。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/XYSidebar.cs` — XYUI-3-06 展开/折叠侧边容器。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-07-NavigationRail/XYNavigationRail.cs` — XYUI-3-07 紧凑一级导航轨。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/XYTab.cs` — XYUI-3-08 单个页签状态模型与视觉结构。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/XYTabs.cs` — XYUI-3-08 页签组选择协调器。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.DropDown.cs` — DropDownButton 导出/筛选/排序等真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYIconButtonNamingExtensions.cs` — IconButton Gallery 自动化名称扩展。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYBadgePreviewFactory.cs` — Badge Default/Accent 左指针标签的真实 Gallery Preview 工厂。

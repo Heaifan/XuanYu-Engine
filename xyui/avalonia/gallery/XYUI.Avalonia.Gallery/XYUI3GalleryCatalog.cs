@@ -11,7 +11,7 @@ public static class XYUI3GalleryCatalog
     public static Control CreatePreview(string id) => id switch
     {
         "XYUI-3-3.01" => MenuBarPreview(), "XYUI-3-3.02" => MenuPreview(),
-        "XYUI-3-3.03" => ContextPreview(), "XYUI-3-3.04" => SubMenuPreview(), "XYUI-3-3.05" => NavigationMenuPreview(),
+        "XYUI-3-3.03" => ContextPreview(), "XYUI-3-3.04" => SubMenuPreview(), "XYUI-3-3.05" => NavigationMenuPreview(), "XYUI-3-3.06" => SidebarPreview(), "XYUI-3-3.07" => RailPreview(), "XYUI-3-3.08" => TabsPreview(),
         _ => new TextBlock { Text = "未注册组件" }
     };
     static Control MenuBarPreview()
@@ -38,6 +38,11 @@ public static class XYUI3GalleryCatalog
             new XYNavigationItem { Id = "environment", Label = "环境", Icon = XyuiVectorIcon.Eye }, new XYNavigationItem { Id = "data", Label = "数据", Icon = XyuiVectorIcon.Code }, new XYNavigationItem { Id = "resources", Label = "资源", Icon = XyuiVectorIcon.Browse }),
         XYNavigationMenu.Group("工具", new XYNavigationItem { Id = "scripts", Label = "脚本", Icon = XyuiVectorIcon.Code }, new XYNavigationItem { Id = "debug", Label = "调试", Icon = XyuiVectorIcon.Search }),
         XYNavigationMenu.Group("", new XYNavigationItem { Id = "settings", Label = "设置", Icon = XyuiVectorIcon.Section })) { Width = 246, SelectedId = "map" };
+    static Control SidebarPreview() { var sidebar = new XYSidebar { PrimaryItems = Primary(), ContextItems = Context() }; sidebar.Build(); return sidebar; }
+    static Control RailPreview() => new XYNavigationRail(Primary().ToArray()) { Width = 54 };
+    static Control TabsPreview() => new XYTabs(new XYTab { Label = "地图基础" }, new XYTab { Label = "地图环境", IsSelected = true }, new XYTab { Label = "数据集", IsModified = true }, new XYTab { Label = "区域编辑" });
+    static IReadOnlyList<XYNavigationItem> Primary() => [new() { Id = "map", Label = "地图", Icon = XyuiVectorIcon.Locate, IsSelected = true }, new() { Id = "environment", Label = "环境", Icon = XyuiVectorIcon.Eye }, new() { Id = "data", Label = "数据", Icon = XyuiVectorIcon.Code }];
+    static IReadOnlyList<XYNavigationItem> Context() => [new() { Id = "base", Label = "地图基础", Icon = XyuiVectorIcon.Section }, new() { Id = "world", Label = "地图环境", Icon = XyuiVectorIcon.Section }, new() { Id = "dataset", Label = "数据集", Icon = XyuiVectorIcon.Section }];
     static Control SubMenuPreview() => new StackPanel { Spacing = 12, Children = { new XYSubMenu { ParentMenu = Parent(), ChildMenu = Child() }, new XYCaption { Text = "Open Left · 静态镜像 Variant" }, new XYSubMenu { OpenLeft = true, ParentMenu = Parent(), ChildMenu = Child() }, new XYSubMenuHierarchyDebugPreview() } };
     static XYMenu Parent() => new(Item("打开"), Item("保存"), Item("导出", hover: true, submenu: true), XYMenu.Separator(), Item("关闭"));
     static XYMenu Child() => new(Item("导出地图数据"), Item("导出图片"), Item("导出配置"), XYMenu.Separator(), Item("高级导出", submenu: true));

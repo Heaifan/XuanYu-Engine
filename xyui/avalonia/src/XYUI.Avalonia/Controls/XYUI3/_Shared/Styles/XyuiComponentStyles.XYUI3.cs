@@ -13,7 +13,7 @@ public static partial class XyuiComponentStyles
 {
     static void AddXYUI3(Styles styles)
     {
-        MenuBar(styles); Menu(styles); ContextMenu(styles); SubMenu(styles); MenuText(styles); NavigationMenu(styles);
+        MenuBar(styles); Menu(styles); ContextMenu(styles); SubMenu(styles); MenuText(styles); NavigationMenu(styles); SidebarRailTabs(styles);
     }
     static void MenuBar(Styles styles)
     {
