@@ -7,7 +7,7 @@
 - 结构：3.05～3.08 源码继续按 `UI` / `Interaction` 分目录；Gallery Rail 改为真实按项 Context 映射。
 - 验证：Gallery Build 通过（0 警告、0 错误）；测试项目 Build 通过（0 警告、0 错误）；`XYUI.Avalonia.Tests` 291/291 通过；ARCH-A 与 `git diff --check` 待提交前执行。
 - 状态：暂停 3.09，等待用户重新人工验收 3.06 → 3.07 → 3.08。
-- Hash：待本轮提交。
+- Hash：`8ca376fc`；已推送 `origin/feat/XYUI-A`。
 
 ## XYUI-3-05～08 · Gallery 标题与目录结构同步（2026-08-30 23:43:30 +08:00）
 
