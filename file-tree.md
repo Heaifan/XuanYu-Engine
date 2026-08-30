@@ -1458,9 +1458,12 @@
    │  │     ├─ XYUI1DocumentationCatalog.cs
    │  │     ├─ XYUI1DocumentationModels.cs
    │  │     ├─ XYUI1DocumentationViewModel.XYUI2.cs
+   │  │     ├─ XYUI1DocumentationViewModel.XYUI3.cs
    │  │     ├─ XYUI1DocumentationViewModel.cs
    │  │     ├─ XYUI1GalleryCatalog.cs
    │  │     ├─ XYUI2DocumentationCatalog.cs
+   │  │     ├─ XYUI3DocumentationCatalog.cs
+   │  │     ├─ XYUI3GalleryCatalog.cs
    │  │     ├─ XYUI2GalleryCatalog.cs
     │  │     ├─ XYUI2GalleryCatalog.Choices.cs
     │  │     ├─ XYUI2GalleryCatalog.DropDown.cs
@@ -1485,6 +1488,16 @@
      │  │     │  │  └─ XYUI2-01～24-ComponentName/（每个组件独立目录）
    │  │     │  ├─ XYUI1/_Shared/（XYUI-1 内部基类、样式与几何辅助）
    │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、输入基类、属性布局、样式与 Token）
+   │  │     ├─ XYUI3/（XYUI-3 Batch 01 菜单家族视觉控件）
+   │  │     │  ├─ XYContextMenu.cs
+   │  │     │  ├─ XYMenu.cs
+   │  │     │  ├─ XYMenuBar.cs
+   │  │     │  ├─ XYMenuBarItem.cs
+   │  │     │  ├─ XYMenuItem.cs
+   │  │     │  ├─ XYMenuItem.Visual.cs
+   │  │     │  ├─ XYMenuItemModel.cs
+   │  │     │  ├─ XYSubMenu.cs
+   │  │     │  └─ XYSubMenuConnector.cs
    │  │     │  └─ README.md
    │  │     ├─ Foundation/
    │  │     │  ├─ XyuiColorToken.cs
@@ -1527,6 +1540,7 @@
    │        ├─ GalleryInteractionContractTests.cs
    │        ├─ GallerySmokeTests.cs
    │        ├─ GalleryThemeConstructionTests.cs
+   │        ├─ XYUI3StructureTests.cs
    │        ├─ InteractionCombinationTests.cs
    │        ├─ InteractionStateTests.cs
    │        ├─ MonoTextResponsiveTests.cs

@@ -23,4 +23,9 @@ public partial class XYUI1DocumentationView : UserControl
         if (DataContext is XYUI1DocumentationViewModel vm)
             vm.IsXYUI2Expanded = !vm.IsXYUI2Expanded;
     }
+
+    private void OnToggleXyui3(object? sender, TappedEventArgs e)
+    {
+        if (DataContext is XYUI1DocumentationViewModel vm) vm.IsXYUI3Expanded = !vm.IsXYUI3Expanded;
+    }
 }

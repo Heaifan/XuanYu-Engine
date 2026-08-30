@@ -16,6 +16,7 @@ public static partial class XyuiComponentStyles
         AddTypography(styles);
         AddSurfaces(styles);
         AddSemantic(styles);
+        AddXYUI3(styles);
         return styles;
     }
 
