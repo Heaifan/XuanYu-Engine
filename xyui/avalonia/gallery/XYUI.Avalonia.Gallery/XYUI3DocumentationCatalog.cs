@@ -10,10 +10,11 @@ public static class XYUI3DocumentationCatalog
     static XYUI1ComponentDocument Create(XyuiCatalogEntry entry)
     {
         var type = entry.AvaloniaType.Split('.').Last(); var details = Details(entry.SourceItemId);
+        var acceptance = entry.SourceItemId == "XYUI-3-3.04" ? "UI CLOSED · USER VISUAL ACCEPTED · HIERARCHY LOGIC REWORKED · AWAITING USER INTERACTION VERIFICATION" : "UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE";
         return new(entry.SourceItemId, entry.Title.Split('/').Last().Trim(), type, details.Overview, details.WhenToUse,
             () => XYUI3GalleryCatalog.CreatePreview(entry.SourceItemId), details.Usages, details.Variants, details.States,
             [], entry.ApiRefs.Select(x => new XYUIDocToken(x, "Canonical", "Foundation token reference")).ToArray(), type)
-        { CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap, Acceptance = "UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE" };
+        { CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap, Acceptance = acceptance };
     }
     static (string Overview, string WhenToUse, string[] Usages, XYUIDocVariant[] Variants, XYUIDocState[] States) Details(string id) => id switch
     {

@@ -33,7 +33,7 @@ public static class XYUI3GalleryCatalog
         context.AttachTo(target);
         return new StackPanel { Spacing = 8, Children = { target, context } };
     }
-    static Control SubMenuPreview() => new StackPanel { Spacing = 12, Children = { new XYSubMenu { ParentMenu = Parent(), ChildMenu = Child() }, new XYCaption { Text = "Open Left · 静态镜像 Variant" }, new XYSubMenu { OpenLeft = true, ParentMenu = Parent(), ChildMenu = Child() } } };
+    static Control SubMenuPreview() => new StackPanel { Spacing = 12, Children = { new XYSubMenu { ParentMenu = Parent(), ChildMenu = Child() }, new XYCaption { Text = "Open Left · 静态镜像 Variant" }, new XYSubMenu { OpenLeft = true, ParentMenu = Parent(), ChildMenu = Child() }, new XYSubMenuHierarchyDebugPreview() } };
     static XYMenu Parent() => new(Item("打开"), Item("保存"), Item("导出", hover: true, submenu: true), XYMenu.Separator(), Item("关闭"));
     static XYMenu Child() => new(Item("导出地图数据"), Item("导出图片"), Item("导出配置"), XYMenu.Separator(), Item("高级导出", submenu: true));
     static XYMenuItem Item(string label, string shortcut = "", bool enabled = true, bool checkedItem = false,

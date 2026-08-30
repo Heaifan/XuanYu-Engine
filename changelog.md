@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.28.13-rz · XYUI-3-04 · SubMenu 层级生命周期修复（2026-08-30 12:44:17 +08:00）
+
+- 目标：修复 SubMenu 子节点越过父节点存活、连接线悬空、兄弟分支并存的问题。
+- 根因报告：旧模型使用独立 `IsOpen`、`IsVisible` 和固定三列；新模型将 `ParentSubMenu`、`ChildSubMenus`、`EffectiveVisible` 和 `XYMenu.SubMenus` 作为层级数据结构，后代生命周期受祖先约束。
+- 变化：关闭任一级递归关闭 descendants；打开 child 前校验父级有效可见；同一父级的 sibling branch 互斥；连接线由相邻有效可见状态控制；关闭分支时折叠隐藏的连接列，OpenLeft 与 OpenRight 共用同一套生命周期逻辑。
+- Gallery Runtime：新增父/子/孙三级调试预览和打开/关闭操作；真实 Gallery 使用 `--component=XYUI-3-3.04` 启动探针响应正常，随后已关闭探针进程。
+- 验证：SubMenu 层级专项测试 `19/19 PASS`；全量测试 `286/286 PASS`；正式解决方案构建与 Gallery 构建均为 `0 Warning / 0 Error`；ARCH-A、5+100、`git diff --check` PASS。
+- 状态：`XYUI-3-04 UI CLOSED / USER VISUAL ACCEPTED`；层级逻辑 `REWORKED / AWAITING USER INTERACTION VERIFICATION`；未重新打开视觉验收。
+- 版本：`v0.2.28.13-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+- Hash：待本轮提交；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+
 ## v0.2.28.12-rz · XYUI-3 Batch 01 · MenuBar 复用 3.02 样式修复（2026-08-30 12:00:12 +08:00）
 
 - 目标：修复 MenuBar 下拉菜单“对象是 XYMenu、外观却不是 3.02”的 Popup 样式断链。

@@ -1464,6 +1464,7 @@
    │  │     ├─ XYUI2DocumentationCatalog.cs
    │  │     ├─ XYUI3DocumentationCatalog.cs
    │  │     ├─ XYUI3GalleryCatalog.cs
+   │  │     ├─ XYSubMenuHierarchyDebugPreview.cs
    │  │     ├─ XYUI2GalleryCatalog.cs
     │  │     ├─ XYUI2GalleryCatalog.Choices.cs
     │  │     ├─ XYUI2GalleryCatalog.DropDown.cs
@@ -1536,6 +1537,7 @@
    │        ├─ GalleryInteractionContractTests.cs
    │        ├─ GallerySmokeTests.cs
    │        ├─ GalleryThemeConstructionTests.cs
+   │        ├─ XYSubMenuHierarchyTests.cs
    │        ├─ XYUI3StructureTests.cs
    │        ├─ InteractionCombinationTests.cs
    │        ├─ InteractionStateTests.cs
@@ -3078,7 +3080,7 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Styles/XYMenuBarItem.Style.cs` — MenuBarItem 文本、活动指示线与垂直居中视觉构建。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Interaction/XYMenuBar.Interaction.cs` — MenuBar Popup、顶层切换、键盘与外部点击交互。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-01-MenuBar/Interaction/XYMenuBarItem.Interaction.cs` — MenuBarItem 指针/键盘激活交互。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/XYMenu.cs` — XYUI-3-3.02 菜单容器、项绑定与嵌入模式。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/XYMenu.cs` — XYUI-3-3.02 菜单容器、项绑定、嵌入模式与 SubMenu 注册。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/XYMenuItem.cs` — XYUI-3 共享菜单项属性与视觉刷新。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Styles/XYMenuItem.Visual.cs` — 菜单项勾选、单选、快捷键与 Chevron 视觉构建。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-02-Menu/Interaction/XYMenu.Interaction.cs` — 菜单打开、焦点导航、Enter/Esc 与关闭交互。
@@ -3086,12 +3088,14 @@
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/XYContextMenu.cs` — XYUI-3-3.03 上下文菜单头部与共享菜单承载。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/Styles/XYContextMenu.Style.cs` — ContextMenu 头部文本垂直居中视觉构建。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-03-ContextMenu/Interaction/XYContextMenu.Interaction.cs` — 右键目标、Pointer Popup、轻量关闭与 Esc 交互。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/XYSubMenu.cs` — XYUI-3-3.04 父子菜单镜像布局容器。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/XYSubMenu.cs` — XYUI-3-3.04 父子菜单镜像布局与层级关系容器。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/Styles/XYSubMenuConnector.cs` — 子菜单连接线与锚点视觉。
-- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/Interaction/XYSubMenu.Interaction.cs` — 子菜单触发、打开、关闭与方向键交互。
+- `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-04-SubMenu/Interaction/XYSubMenu.Interaction.cs` — 子菜单层级可见性、递归关闭、兄弟互斥、连接列与方向键交互。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.cs` — XYUI-3 Batch 01 四页真实控件 Preview 与右键目标样例。
+- `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYSubMenuHierarchyDebugPreview.cs` — XYUI-3-3.04 父/子/孙层级生命周期运行调试预览。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3StructureTests.cs` — XYUI-3 菜单家族结构、复用与 Gallery 登记测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3InteractionTests.cs` — XYUI-3 命令、焦点、Popup、子菜单键盘与关闭交互测试。
+- `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYSubMenuHierarchyTests.cs` — XYUI-3-3.04 三级层级、递归关闭、连接线、兄弟互斥与 Gallery 运行测试。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Tokens/XyuiComponentTokens.cs` — XYUI-2 组件专用尺寸与 05 Chevron Track 资源。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI2/_Shared/Styles/XyuiControlStyles.ChoiceControls.cs` — Checkbox、Radio、Switch 状态样式与 token 消费。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYSeparator.cs` — XYUI-1-14 分割线及布局变体。
