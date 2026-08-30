@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-06～08 · Build 修复（2026-08-30 23:05:00 +08:00）
+
+- 原因：Tabs 使用了错误的相对 `Avalonia.Layout` 命名空间；Sidebar 样式误用 `Color.Transparent`。
+- 变化：改为 `using Avalonia.Layout` + `Orientation.Horizontal`，并改用 `Colors.Transparent`；不改变视觉与交互语义。
+- 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，Build/Test 无法执行。
+- 状态：等待用户重新构建 Gallery。
+- Hash：待本轮提交。
+
 ## XYUI-3-06～08 · Navigation Compact V2（2026-08-30 22:53:05 +08:00）
 
 - 目标：补齐参考文档要求的 Sidebar、NavigationRail、Tabs；3.05 保持已通过实现，不提前实现 3.09 TabBar。

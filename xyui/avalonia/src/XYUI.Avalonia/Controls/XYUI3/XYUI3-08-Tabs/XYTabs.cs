@@ -1,10 +1,11 @@
 using Avalonia.Controls;
+using Avalonia.Layout;
 
 namespace XYUI.Avalonia.Controls;
 
 public sealed class XYTabs : Border
 {
-    readonly StackPanel _panel = new() { Orientation = Avalonia.Layout.Orientation.Horizontal };
+    readonly StackPanel _panel = new() { Orientation = Orientation.Horizontal };
     public IReadOnlyList<XYTab> Items { get; set; } = [];
     public XYTabs() { Classes.Add("xyui-tabs"); Child = _panel; }
     public XYTabs(params XYTab[] items) : this() { Items = items; Build(); }
