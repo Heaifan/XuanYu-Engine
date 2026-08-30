@@ -6,7 +6,7 @@
 - 变化：增加 `XYNavigationMenu`、`XYSidebar`、`XYNavigationRail`、`XYTabs` 英文名回退；3.05～3.08 源码归档至各自 `UI` 与 `Interaction` 目录，交互拆为 partial 文件。
 - 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，无法执行 Build/Test。
 - 状态：等待用户确认 Gallery 侧栏标题与源码目录。
-- Hash：待本轮提交。
+- Hash：`0bbdc9ae`；已推送 `origin/feat/XYUI-A`。
 
 ## XYUI-3-06 · 修复 Sidebar 折叠运行时崩溃（2026-08-30 23:35:41 +08:00）
 
