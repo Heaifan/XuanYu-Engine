@@ -190,7 +190,7 @@
 - 原因：正常态引用了错误的 `XY.Brush.Border.Default` 资源名，异常态红框因此比正常态明显。
 - 变化：改用现有 `XY.Brush.Border.Color.Default`，并增加正常态边框回归断言。
 - 状态：`XYUI-2-24 REFERENCE BORDER RESTORED`；等待用户视觉复验，不标记 CLOSED。
-- Hash：待本轮提交。
+- Hash：`6dc15435`；已推送 `origin/feat/XYUI-A`。
 - 遗留：需复核已解析、空引用、丢失引用和类型不匹配四种状态的边框对比度。
 
 ## XYUI-2-22 · Vector Axis Contrast and Overflow Fix（2026-08-29 23:42:00 +08:00）
