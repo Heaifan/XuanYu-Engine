@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.12-rz · XYUI-3 Batch 01 · MenuBar 复用 3.02 样式修复（2026-08-30 12:00:12 +08:00）
+
+- 目标：修复 MenuBar 下拉菜单“对象是 XYMenu、外观却不是 3.02”的 Popup 样式断链。
+- 根因：Avalonia Popup 使用独立视觉树，应用级 `XyuiComponentStyles` 不会自动落到脱离主树的 XYMenu；因此菜单栏下拉出现无边框、无内边距的旧式外观。
+- 变化：XYMenu 增加一次性 Popup 样式宿主，MenuBar 与 ContextMenu 打开时对同一个 XYMenu 应用既有 XYUI 组件样式及子项样式；不新增第二套菜单视觉。
+- 验证：MenuBar 样式断言（1 DIP 边框、5 DIP 内边距）通过；正式解决方案构建 `0 Warning / 0 Error`；全量测试 `267/267 PASS`；ARCH-A 与 `git diff --check` PASS。
+- 状态：`XYUI-3-3.01`～`XYUI-3-3.04` 仍为 `UI IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE`；未标记 `CLOSED` 或 `USER VISUAL ACCEPTED`。
+- 版本：`v0.2.28.12-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+- Hash：待本轮提交；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+
 ## v0.2.28.11-rz · XYUI-3 Batch 01 · 菜单交互时序统一修复（2026-08-30 11:12:07 +08:00）
 
 - 目标：消除 ContextMenu、MenuBar、MenuItem 的交互慢半拍，并确认 MenuBar 菜单统一使用 XYUI3-02 `XYMenu`。

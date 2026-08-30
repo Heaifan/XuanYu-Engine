@@ -7,6 +7,7 @@ public sealed partial class XYMenu : Border
 {
     IReadOnlyList<Control> _items = [];
     bool _embedded;
+    bool _overlayStylesApplied;
     public bool IsOpen { get; private set; }
     public int FocusedIndex { get; private set; } = -1;
     public event EventHandler? Closed;
@@ -19,6 +20,7 @@ public sealed partial class XYMenu : Border
     void Build() { var panel = new StackPanel { Classes = { "xyui-menu-items" } }; foreach (var item in Items) { if (item is XYMenuItem menuItem) Attach(menuItem); panel.Children.Add(item); } Child = panel; ApplyMode(); }
     public XYMenuItem? SelectedItem => Items.OfType<XYMenuItem>().FirstOrDefault(x => x.IsSelected);
     public void ClearSelection() { foreach (var item in Items.OfType<XYMenuItem>()) item.ClearInteractionState(); }
+    internal void ApplyOverlayStyling() { if (!_overlayStylesApplied) { Styles.Add(XyuiComponentStyles.Create()); _overlayStylesApplied = true; } ApplyStyling(); foreach (var item in Items) item.ApplyStyling(); }
     void Attach(XYMenuItem item) { item.SelectionRequested -= OnSelectionRequested; item.SelectionRequested += OnSelectionRequested; item.Invoked -= OnItemInvoked; item.Invoked += OnItemInvoked; item.SubMenuRequested -= OnSubMenuRequested; item.SubMenuRequested += OnSubMenuRequested; }
     void OnSelectionRequested(object? sender, EventArgs e) { if (sender is XYMenuItem item) { foreach (var other in Items.OfType<XYMenuItem>().Where(x => !ReferenceEquals(x, item))) other.ClearInteractionState(); item.IsSelected = true; } }
     void OnItemInvoked(object? sender, EventArgs e) { var wasOpen = IsOpen; Close(); if (!wasOpen) Closed?.Invoke(this, EventArgs.Empty); }

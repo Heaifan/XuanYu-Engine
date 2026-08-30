@@ -51,7 +51,7 @@ public sealed class XYUI3InteractionTests : IClassFixture<XyuiHeadlessFixture>
     [Fact] public void MenuBar_activation_tracks_one_open_menu() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var first = new XYMenuBarItem { Label = "文件", Menu = new XYMenu() }; var second = new XYMenuBarItem { Label = "编辑", Menu = new XYMenu() }; var bar = new XYMenuBar(first, second);
-        var window = XyuiBatchTestHost.Show(bar); var point = first.TranslatePoint(new Point(20, first.Bounds.Height / 2), window)!.Value; window.MouseMove(point); window.MouseDown(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); Assert.Same(first.Menu, bar.OpenMenu); window.MouseUp(point, MouseButton.Left); first.Menu!.Close(); Assert.Null(bar.OpenMenu); Assert.False(first.IsActive); bar.Open(second); Assert.Same(second.Menu, bar.OpenMenu); Assert.False(first.IsActive); Assert.True(second.IsActive); bar.Close(); Assert.Null(bar.OpenMenu); window.Close();
+        var window = XyuiBatchTestHost.Show(bar); var point = first.TranslatePoint(new Point(20, first.Bounds.Height / 2), window)!.Value; window.MouseMove(point); window.MouseDown(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); Assert.Same(first.Menu, bar.OpenMenu); Assert.IsType<XYMenu>(bar.OpenMenu); Assert.Equal(new Thickness(1), first.Menu!.BorderThickness); Assert.Equal(new Thickness(5), first.Menu.Padding); window.MouseUp(point, MouseButton.Left); first.Menu.Close(); Assert.Null(bar.OpenMenu); Assert.False(first.IsActive); bar.Open(second); Assert.Same(second.Menu, bar.OpenMenu); Assert.False(first.IsActive); Assert.True(second.IsActive); bar.Close(); Assert.Null(bar.OpenMenu); window.Close();
     });
 
     [Fact] public void SubMenu_trigger_opens_and_escape_closes() => _fx.Run(() =>

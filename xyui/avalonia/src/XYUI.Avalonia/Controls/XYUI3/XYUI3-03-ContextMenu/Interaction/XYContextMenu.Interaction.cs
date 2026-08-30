@@ -17,7 +17,7 @@ public sealed partial class XYContextMenu
     public void Open(Control target)
     {
         if (!IsEnabled) return; Close(); Menu.ClearSelection(); _host.Children.Remove(_surface); _popup = new Popup { PlacementTarget = target, Placement = PlacementMode.Pointer, IsLightDismissEnabled = true, Child = _surface };
-        _popup.Closed += OnPopupClosed; IsOpen = true; _popup.IsOpen = true; Menu.Open(); Opened?.Invoke(this, EventArgs.Empty);
+        _popup.Closed += OnPopupClosed; IsOpen = true; _popup.IsOpen = true; Menu.ApplyOverlayStyling(); Menu.Open(); Opened?.Invoke(this, EventArgs.Empty);
     }
     public void Close()
     {

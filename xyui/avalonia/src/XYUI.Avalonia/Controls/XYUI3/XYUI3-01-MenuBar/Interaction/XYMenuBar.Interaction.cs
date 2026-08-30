@@ -18,7 +18,7 @@ public sealed partial class XYMenuBar
     public void Open(XYMenuBarItem item)
     {
         Close(); item.IsActive = true; OpenMenuId = item.Label; OpenMenu = item.Menu; if (OpenMenu is null) return;
-        _subscribedMenu = OpenMenu; _subscribedMenu.Closed += OnOpenMenuClosed; _popup = new Popup { PlacementTarget = item, Placement = PlacementMode.Bottom, IsLightDismissEnabled = true, Child = OpenMenu }; _popupClosed = (_, _) => Close(); _popup.Closed += _popupClosed; _popup.IsOpen = true; OpenMenu.Open();
+        _subscribedMenu = OpenMenu; _subscribedMenu.Closed += OnOpenMenuClosed; _popup = new Popup { PlacementTarget = item, Placement = PlacementMode.Bottom, IsLightDismissEnabled = true, Child = OpenMenu }; _popupClosed = (_, _) => Close(); _popup.Closed += _popupClosed; _popup.IsOpen = true; OpenMenu.ApplyOverlayStyling(); OpenMenu.Open();
     }
     public void Close()
     {
