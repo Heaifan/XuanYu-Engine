@@ -8,7 +8,7 @@
 - 验证：测试项目构建 `0 Warning / 0 Error`；正式解决方案构建 `0 Warning / 0 Error`；全量测试 `266/266 PASS`；ARCH-A 与 `git diff --check` PASS。
 - 状态：`XYUI-3-3.01`～`XYUI-3-3.04` 仍为 `UI IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE`；未标记 `CLOSED` 或 `USER VISUAL ACCEPTED`。
 - 版本：`v0.2.28.10-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
-- Hash：待本轮提交；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+- Hash：`45a46f7f`；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
 
 ## v0.2.28.9-rz · XYUI-3 Batch 01 · 交互实现与 XYUI1～3 分层整理（2026-08-30 10:26:00 +08:00）
 
