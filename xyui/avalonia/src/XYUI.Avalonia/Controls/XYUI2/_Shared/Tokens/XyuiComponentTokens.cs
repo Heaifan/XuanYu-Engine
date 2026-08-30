@@ -23,6 +23,13 @@ public static class XyuiComponentTokens
     public const double ColorPickerSwatchWidth = 28;
     public const double ColorPickerSwatchHeight = 20;
     public const double BoolPropertyRowHeight = 34;
+    public const double NavigationMenuItemHeight = 32;
+    public const double NavigationMenuGroupLabelHeight = 20;
+    public const double NavigationMenuIconSize = 14;
+    public const double NavigationMenuPaddingX = 10;
+    public const double NavigationMenuIconGap = 8;
+    public const double NavigationMenuAccentBarWidth = 3;
+    public const double NavigationMenuItemRadius = 3;
 
     public static ResourceDictionary CreateResources() => new()
     {
@@ -48,5 +55,12 @@ public static class XyuiComponentTokens
         ["XY.ColorPicker.Swatch.Width"] = ColorPickerSwatchWidth,
         ["XY.ColorPicker.Swatch.Height"] = ColorPickerSwatchHeight,
         ["XY.BoolProperty.Row.Height"] = BoolPropertyRowHeight,
+        ["XY.NavigationMenu.Item.Height"] = NavigationMenuItemHeight,
+        ["XY.NavigationMenu.GroupLabel.Height"] = NavigationMenuGroupLabelHeight,
+        ["XY.NavigationMenu.Icon.Size"] = NavigationMenuIconSize,
+        ["XY.NavigationMenu.Item.PaddingX"] = NavigationMenuPaddingX,
+        ["XY.NavigationMenu.IconGap"] = NavigationMenuIconGap,
+        ["XY.NavigationMenu.AccentBar.Width"] = NavigationMenuAccentBarWidth,
+        ["XY.NavigationMenu.Item.Radius"] = NavigationMenuItemRadius,
     };
 }

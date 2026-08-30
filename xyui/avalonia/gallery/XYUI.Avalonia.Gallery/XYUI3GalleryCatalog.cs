@@ -11,7 +11,7 @@ public static class XYUI3GalleryCatalog
     public static Control CreatePreview(string id) => id switch
     {
         "XYUI-3-3.01" => MenuBarPreview(), "XYUI-3-3.02" => MenuPreview(),
-        "XYUI-3-3.03" => ContextPreview(), "XYUI-3-3.04" => SubMenuPreview(),
+        "XYUI-3-3.03" => ContextPreview(), "XYUI-3-3.04" => SubMenuPreview(), "XYUI-3-3.05" => NavigationMenuPreview(),
         _ => new TextBlock { Text = "未注册组件" }
     };
     static Control MenuBarPreview()
@@ -33,6 +33,11 @@ public static class XYUI3GalleryCatalog
         context.AttachTo(target);
         return new StackPanel { Spacing = 8, Children = { target, context } };
     }
+    static Control NavigationMenuPreview() => new XYNavigationMenu(
+        XYNavigationMenu.Group("工作区", new XYNavigationItem { Id = "map", Label = "地图", Icon = XyuiVectorIcon.Locate, IsSelected = true },
+            new XYNavigationItem { Id = "environment", Label = "环境", Icon = XyuiVectorIcon.Eye }, new XYNavigationItem { Id = "data", Label = "数据", Icon = XyuiVectorIcon.Code }, new XYNavigationItem { Id = "resources", Label = "资源", Icon = XyuiVectorIcon.Browse }),
+        XYNavigationMenu.Group("工具", new XYNavigationItem { Id = "scripts", Label = "脚本", Icon = XyuiVectorIcon.Code }, new XYNavigationItem { Id = "debug", Label = "调试", Icon = XyuiVectorIcon.Search }),
+        XYNavigationMenu.Group("", new XYNavigationItem { Id = "settings", Label = "设置", Icon = XyuiVectorIcon.Section })) { Width = 246, SelectedId = "map" };
     static Control SubMenuPreview() => new StackPanel { Spacing = 12, Children = { new XYSubMenu { ParentMenu = Parent(), ChildMenu = Child() }, new XYCaption { Text = "Open Left · 静态镜像 Variant" }, new XYSubMenu { OpenLeft = true, ParentMenu = Parent(), ChildMenu = Child() }, new XYSubMenuHierarchyDebugPreview() } };
     static XYMenu Parent() => new(Item("打开"), Item("保存"), Item("导出", hover: true, submenu: true), XYMenu.Separator(), Item("关闭"));
     static XYMenu Child() => new(Item("导出地图数据"), Item("导出图片"), Item("导出配置"), XYMenu.Separator(), Item("高级导出", submenu: true));

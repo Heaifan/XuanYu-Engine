@@ -1,5 +1,14 @@
 # changelog
 
+## XYUI-3-05 · NavigationMenu Compact V2（2026-08-30 22:02:49 +08:00）
+
+- 目标：按 `XYUI-3-05-08-Compact-V2-SVG-Reference.md` 实现第一站 `NavigationMenu`，只收紧 3.05，不提前实现 3.06～3.08。
+- 变化：新增真实 `XYNavigationMenu` 与 `XYNavigationItem`；导航项 32 DIP、分组标题 20 DIP、图标 14 DIP、水平间距 8 DIP、选中左侧 3 DIP Accent Bar；Gallery 追加 3.05 Light Theme 预览。
+- 验证：AXAML XML 解析通过；5+100 静态行数检查通过；`git diff --check` 通过。Avalonia Build 受环境阻断，当前无 .NET SDK（真实返回 `No .NET SDKs were found`）。
+- 状态：`XYUI-3-05 IMPLEMENTED`；等待用户 Light Theme 视觉审核；3.06～3.08 未启动。
+- Hash：待本轮提交。
+- 遗留：需真机确认选中态、图标可读性、分组间距与中文标签是否贴合 Compact V2 参考；通过前不启动后续组件。
+
 ## v0.2.28.13-rz · XYUI-3-04 · SubMenu 层级生命周期修复（2026-08-30 12:44:17 +08:00）
 
 - 目标：修复 SubMenu 子节点越过父节点存活、连接线悬空、兄弟分支并存的问题。

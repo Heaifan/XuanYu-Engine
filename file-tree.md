@@ -1487,6 +1487,8 @@
    │  │     │  │  └─ XYUI1-01～24-ComponentName/（每个组件独立目录）
    │  │     │  ├─ XYUI2/
      │  │     │  │  └─ XYUI2-01～24-ComponentName/（每个组件独立目录）
+   │  │     │  ├─ XYUI3/
+   │  │     │  │  └─ XYUI3-05-NavigationMenu/（XYUI-3-05 导航菜单实现）
    │  │     │  ├─ XYUI1/_Shared/（XYUI-1 内部基类、样式与几何辅助）
    │  │     │  └─ XYUI2/_Shared/（XYUI-2 内部按钮族、输入基类、属性布局、样式与 Token）
    │  │     ├─ XYUI3/（XYUI-3 Batch 01 菜单家族视觉控件）
@@ -2859,11 +2861,14 @@
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationCatalog.Api.cs` — 真实 Avalonia 属性与 Foundation Token 文档表。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.cs` — 左侧导航选择与模块/组件文档视图切换模型。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI2.cs` — XYUI-2 区块导航、选中路由与默认落点（复用文档视图）。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI1DocumentationViewModel.XYUI3.cs` — XYUI-3 区块导航、选中路由与默认落点。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2DocumentationCatalog.cs` — XYUI-2-01～24 中文文档数据源（canonical spec + mapping token 直读）。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.cs` — XYUI-2-01～24 真实 Runtime 预览工厂与属性控件路由。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Choices.cs` — Checkbox、RadioButton、Switch 真实场景样例工厂。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.ColorBool.cs` — ColorPicker 与 BoolProperty 的中文真实场景样例工厂。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.Properties.cs` — Number、Vector、Enum、Reference Property 的中文真实场景样例工厂。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3DocumentationCatalog.cs` — XYUI-3-01～05 中文文档数据源与验收状态。
+ - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.cs` — XYUI-3-01～05 真实 Runtime 预览工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI2GalleryCatalog.DropDown.cs` — DropDownButton 导出/筛选/排序等真实场景样例工厂。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYIconButtonNamingExtensions.cs` — IconButton Gallery 自动化名称扩展。
 - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYBadgePreviewFactory.cs` — Badge Default/Accent 左指针标签的真实 Gallery Preview 工厂。
@@ -3072,6 +3077,7 @@
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DatePickerTests.cs` — XYUI-2-17 分段、快捷步进、日历选择、边界、生命周期与 Gallery 合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2DatePickerInteractionReworkTests.cs` — XYUI-2-17 日历单击保持、分段编辑提交/取消、轻量关闭与快捷步进交互回归测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TimePickerTests.cs` — XYUI-2-18 时分秒变体、隐藏秒、循环键盘、真实 Scrub 与 Gallery 合同测试。
+ - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI3StructureTests.cs` — XYUI-3 结构、Gallery 登记与 Compact V2 尺寸合同测试。
 - `xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI2TimePickerInteractionReworkTests.cs` — XYUI-2-18 分段替换、点击阈值、方向 Scrub、释放提交与取消生命周期回归测试。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Models/XYMenuItemModel.cs` — XYUI-3 菜单项勾选/单选模型。
 - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/_Shared/Styles/XyuiComponentStyles.XYUI3.cs` — XYUI-3 菜单家族语义样式与文本垂直居中规则。
