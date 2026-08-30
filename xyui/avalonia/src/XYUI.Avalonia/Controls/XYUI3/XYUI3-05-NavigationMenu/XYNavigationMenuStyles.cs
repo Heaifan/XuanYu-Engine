@@ -11,9 +11,9 @@ public static partial class XyuiComponentStyles
 {
     static void NavigationMenu(Styles styles)
     {
-        var menu = new Style(x => x.OfType<XYNavigationMenu>().Class("xyui-navigation-menu")); Set(menu, Border.BackgroundProperty, "XY.Brush.Surface.Panel"); Set(menu, Border.PaddingProperty, new Thickness(10)); styles.Add(menu);
+        var menu = new Style(x => x.OfType<XYNavigationMenu>().Class("xyui-navigation-menu")); Set(menu, Border.BackgroundProperty, "XY.Brush.Surface.Panel"); menu.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(10))); styles.Add(menu);
         var item = new Style(x => x.OfType<XYNavigationItem>().Class("xyui-navigation-item")); item.Setters.Add(new Setter(Border.HeightProperty, XyuiComponentTokens.NavigationMenuItemHeight)); item.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(XyuiComponentTokens.NavigationMenuPaddingX, 0))); item.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(XyuiComponentTokens.NavigationMenuItemRadius))); item.Setters.Add(new Setter(Border.BackgroundProperty, Brushes.Transparent)); styles.Add(item);
-        State(styles, typeof(XYNavigationItem), "xyui-navigation-item", ":pointerover", Border.BackgroundProperty, "XY.Brush.State.Color.Hover");
+        var hover = new Style(x => x.OfType<XYNavigationItem>().Class("xyui-navigation-item").Class(":pointerover")); Set(hover, Border.BackgroundProperty, "XY.Brush.State.Color.Hover"); styles.Add(hover);
         var selected = new Style(x => x.OfType<XYNavigationItem>().Class("xyui-navigation-selected")); Set(selected, Border.BackgroundProperty, "XY.Brush.Surface.Selected"); styles.Add(selected);
         var accent = new Style(x => x.OfType<Border>().Class("xyui-navigation-accent")); Set(accent, Border.BackgroundProperty, "XY.Brush.Accent.Default"); accent.Setters.Add(new Setter(Visual.IsVisibleProperty, false)); styles.Add(accent);
         var shown = new Style(x => x.OfType<XYNavigationItem>().Class("xyui-navigation-selected").Descendant().OfType<Border>().Class("xyui-navigation-accent")); shown.Setters.Add(new Setter(Visual.IsVisibleProperty, true)); styles.Add(shown);

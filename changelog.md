@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-05 · NavigationMenu 编译修复（2026-08-30 22:47:06 +08:00）
+
+- 原因：Compact V2 样式文件将 `Thickness` 误传给仅接受资源键的辅助方法，并误用了不存在的六参数 `State` 重载。
+- 变化：改为直接 Setter 设置 Padding，并显式注册 `:pointerover` 样式；未改变 3.05 视觉尺寸与交互语义。
+- 验证：ARCH-A（含 5+100）通过，`git diff --check` 通过；本机 Build/Test 仍受无 .NET SDK 环境阻断。
+- 状态：等待用户重新构建并进行 Light Theme 视觉审核。
+- Hash：待本轮提交。
+
 ## XYUI-3-05 · NavigationMenu Compact V2（2026-08-30 22:02:49 +08:00）
 
 - 目标：按 `XYUI-3-05-08-Compact-V2-SVG-Reference.md` 实现第一站 `NavigationMenu`，只收紧 3.05，不提前实现 3.06～3.08。
