@@ -7,7 +7,7 @@ public sealed partial class XYSubMenu : Border
 {
     XYMenu _parent = new(); XYMenu _child = new(); readonly Grid _grid = new(); bool _openLeft;
     public XYMenu ParentMenu { get => _parent; set { DetachTriggers(); _parent = value; Build(); AttachTriggers(); } }
-    public XYMenu ChildMenu { get => _child; set { _child = value; Build(); } }
+    public XYMenu ChildMenu { get => _child; set { DetachChild(); _child = value; Build(); AttachChild(); } }
     public bool IsOpen { get; private set; } = true;
     public bool OpenLeft { get => _openLeft; set { _openLeft = value; Build(); } }
     public event EventHandler? Opened;
@@ -22,6 +22,10 @@ public sealed partial class XYSubMenu : Border
         else { grid.Children.Add(_parent); grid.Children.Add(connector); grid.Children.Add(_child); Grid.SetColumn(connector, 1); Grid.SetColumn(_child, 2); }
         Child = grid;
     }
-    void AttachTriggers() { foreach (var item in ParentMenu.Items.OfType<XYMenuItem>()) { item.SubMenuRequested -= OnTriggerRequested; item.SubMenuRequested += OnTriggerRequested; } }
-    void DetachTriggers() { foreach (var item in ParentMenu.Items.OfType<XYMenuItem>()) item.SubMenuRequested -= OnTriggerRequested; }
+    void AttachTriggers() { foreach (var item in ParentMenu.Items.OfType<XYMenuItem>()) { item.SubMenuRequested -= OnTriggerRequested; item.SubMenuRequested += OnTriggerRequested; } ParentMenu.Closed -= OnParentClosed; ParentMenu.Closed += OnParentClosed; }
+    void DetachTriggers() { foreach (var item in ParentMenu.Items.OfType<XYMenuItem>()) item.SubMenuRequested -= OnTriggerRequested; ParentMenu.Closed -= OnParentClosed; }
+    void AttachChild() { foreach (var item in ChildMenu.Items.OfType<XYMenuItem>()) { item.Invoked -= OnChildInvoked; item.Invoked += OnChildInvoked; } }
+    void DetachChild() { foreach (var item in ChildMenu.Items.OfType<XYMenuItem>()) item.Invoked -= OnChildInvoked; }
+    void OnChildInvoked(object? sender, EventArgs e) => Close();
+    void OnParentClosed(object? sender, EventArgs e) => Close();
 }

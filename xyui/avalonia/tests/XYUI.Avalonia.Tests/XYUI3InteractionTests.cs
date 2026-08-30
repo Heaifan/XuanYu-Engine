@@ -9,11 +9,24 @@ public sealed class XYUI3InteractionTests : IClassFixture<XyuiHeadlessFixture>
     readonly XyuiHeadlessFixture _fx;
     public XYUI3InteractionTests(XyuiHeadlessFixture fx) => _fx = fx;
 
-    [Fact] public void MenuItem_activate_invokes_command_and_event() => _fx.Run(() =>
+    [Fact] public void MenuItem_selects_first_then_invokes_and_clears_on_second_click() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var calls = 0; var item = new XYMenuItem { Command = () => calls++ }; var events = 0;
-        item.Invoked += (_, _) => events++; Assert.True(item.Activate()); Assert.Equal(1, calls); Assert.Equal(1, events);
+        item.Invoked += (_, _) => events++; Assert.True(item.Activate()); Assert.True(item.IsSelected); Assert.Equal(0, calls); Assert.Equal(0, events);
+        Assert.True(item.Activate()); Assert.False(item.IsSelected); Assert.Equal(1, calls); Assert.Equal(1, events);
         item.IsEnabled = false; Assert.False(item.Activate()); Assert.Equal(1, calls);
+    });
+
+    [Fact] public void Menu_selection_is_single_and_close_clears_it() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var first = new XYMenuItem(); var second = new XYMenuItem(); var menu = new XYMenu(first, second);
+        first.Activate(); Assert.Same(first, menu.SelectedItem); second.Activate(); Assert.Same(second, menu.SelectedItem); Assert.False(first.IsSelected); menu.Close(); Assert.Null(menu.SelectedItem);
+    });
+
+    [Fact] public void ContextMenu_selection_executes_on_second_click_and_clears_outside() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var calls = 0; var item = new XYMenuItem { Command = () => calls++ }; var context = new XYContextMenu { Menu = new XYMenu(item) };
+        item.Activate(); Assert.True(item.IsSelected); Assert.Equal(0, calls); item.Activate(); Assert.False(item.IsSelected); Assert.Equal(1, calls); item.Activate(); context.Close(); Assert.False(item.IsSelected);
     });
 
     [Fact] public void Menu_open_focuses_first_enabled_and_escape_closes() => _fx.Run(() =>
@@ -31,6 +44,6 @@ public sealed class XYUI3InteractionTests : IClassFixture<XyuiHeadlessFixture>
     [Fact] public void SubMenu_trigger_opens_and_escape_closes() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var trigger = new XYMenuItem { HasSubMenu = true }; var submenu = new XYSubMenu { ParentMenu = new XYMenu(trigger), ChildMenu = new XYMenu() };
-        submenu.Close(); trigger.Activate(); Assert.True(submenu.IsOpen); submenu.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = Key.Escape }); Assert.False(submenu.IsOpen);
+        submenu.Close(); trigger.Activate(); Assert.True(trigger.IsSelected); Assert.True(submenu.IsOpen); trigger.Activate(); Assert.False(trigger.IsSelected); Assert.False(submenu.IsOpen);
     });
 }

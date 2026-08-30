@@ -14,6 +14,7 @@ public sealed partial class XYMenuItem : Border
     public static readonly StyledProperty<XyuiVectorIcon?> IconProperty = AvaloniaProperty.Register<XYMenuItem, XyuiVectorIcon?>(nameof(Icon));
     public static readonly StyledProperty<XyuiMenuCheckKind> CheckKindProperty = AvaloniaProperty.Register<XYMenuItem, XyuiMenuCheckKind>(nameof(CheckKind));
     public static readonly StyledProperty<bool> IsCheckedProperty = AvaloniaProperty.Register<XYMenuItem, bool>(nameof(IsChecked));
+    public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<XYMenuItem, bool>(nameof(IsSelected));
     public static readonly StyledProperty<bool> IsDestructiveProperty = AvaloniaProperty.Register<XYMenuItem, bool>(nameof(IsDestructive));
     public static readonly StyledProperty<bool> IsHoveredProperty = AvaloniaProperty.Register<XYMenuItem, bool>(nameof(IsHovered));
     public static readonly StyledProperty<bool> HasSubMenuProperty = AvaloniaProperty.Register<XYMenuItem, bool>(nameof(HasSubMenu));
@@ -22,12 +23,13 @@ public sealed partial class XYMenuItem : Border
     public XyuiVectorIcon? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
     public XyuiMenuCheckKind CheckKind { get => GetValue(CheckKindProperty); set => SetValue(CheckKindProperty, value); }
     public bool IsChecked { get => GetValue(IsCheckedProperty); set => SetValue(IsCheckedProperty, value); }
+    public bool IsSelected { get => GetValue(IsSelectedProperty); set => SetValue(IsSelectedProperty, value); }
     public bool IsDestructive { get => GetValue(IsDestructiveProperty); set => SetValue(IsDestructiveProperty, value); }
     public bool IsHovered { get => GetValue(IsHoveredProperty); set => SetValue(IsHoveredProperty, value); }
     public bool HasSubMenu { get => GetValue(HasSubMenuProperty); set => SetValue(HasSubMenuProperty, value); }
-    public XYMenuItem() { Classes.Add("xyui-menu-item"); Build(); InitializeInteraction(); }
+    public XYMenuItem() { Classes.Add("xyui-menu-item"); FocusAdorner = null; Build(); InitializeInteraction(); }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) { base.OnPropertyChanged(change); if (!_building && change.Property != IsEnabledProperty && change.Property != ChildProperty) Build(); }
     void Build() { _building = true; UpdateClasses(); Child = new XYMenuItemVisual(this); _building = false; }
-    void UpdateClasses() { Set("xyui-menu-hover", IsHovered); Set("xyui-menu-danger", IsDestructive); Set("xyui-menu-checked", IsChecked); }
+    void UpdateClasses() { Set("xyui-menu-hover", IsHovered); Set("xyui-menu-danger", IsDestructive); Set("xyui-menu-checked", IsChecked); Set("xyui-menu-selected", IsSelected); }
     void Set(string name, bool value) { if (value && !Classes.Contains(name)) Classes.Add(name); if (!value) Classes.Remove(name); }
 }

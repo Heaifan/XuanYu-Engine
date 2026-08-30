@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.10-rz · XYUI-3 Batch 01 · 菜单选中交互修复（2026-08-30 10:51:00 +08:00）
+
+- 目标：修复 Menu、ContextMenu、SubMenu 的选中状态、二次点击执行与外部点击收起，并恢复弹出菜单的原有视觉边界。
+- 变化：新增独立临时 `IsSelected` 状态；`IsChecked` 仅负责勾选/单选标记；同一菜单只保留一个选中项；首次点击高亮，第二次点击执行命令并清除选中；ContextMenu 外部收起与 SubMenu 父子收起同步清除状态。
+- 变化：复用现有 XYUI 菜单语义资源和布局样式，关闭 Avalonia 默认焦点装饰，避免弹出菜单出现黑色粗框；所有菜单文字保持垂直居中。
+- 验证：测试项目构建 `0 Warning / 0 Error`；正式解决方案构建 `0 Warning / 0 Error`；全量测试 `266/266 PASS`；ARCH-A 与 `git diff --check` PASS。
+- 状态：`XYUI-3-3.01`～`XYUI-3-3.04` 仍为 `UI IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE`；未标记 `CLOSED` 或 `USER VISUAL ACCEPTED`。
+- 版本：`v0.2.28.10-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+- Hash：待本轮提交；`xyui.bat` 继续为本地未跟踪启动资产，不纳入 Git。
+
 ## v0.2.28.9-rz · XYUI-3 Batch 01 · 交互实现与 XYUI1～3 分层整理（2026-08-30 10:26:00 +08:00）
 
 - 目标：完成 3.01～3.04 的真实菜单交互；所有菜单文字垂直居中；建立各组件 `Styles` / `Interaction` 文件边界。

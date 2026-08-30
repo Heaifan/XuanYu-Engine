@@ -11,7 +11,7 @@ public sealed partial class XYMenu
     }
     public void Close()
     {
-        if (!IsOpen) return; IsOpen = false; FocusedIndex = -1; Closed?.Invoke(this, EventArgs.Empty);
+        if (!IsOpen && SelectedItem is null) return; IsOpen = false; FocusedIndex = -1; ClearSelection(); Closed?.Invoke(this, EventArgs.Empty);
     }
     protected override void OnKeyDown(KeyEventArgs e)
     {
