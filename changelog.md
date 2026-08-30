@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-06～08 · Compact V2 视觉返工（2026-08-30 23:08:34 +08:00）
+
+- 目标：按用户提供的三张实际 Gallery 截图重新对照 Compact V2 SVG，修复 Sidebar、NavigationRail、Tabs 的明显视觉不合格项。
+- 变化：Rail 隐藏文字并居中图标；Tabs 增加 3 DIP 底部 Accent、选中关闭槽与 Modified Dot；Sidebar 改为 212 DIP 展开、38 DIP Header、28 DIP Context Item、底部 Footer。
+- 验证：ARCH-A（含 5+100）通过，`git diff --check` 通过；Build/Test 仍受当前环境无 .NET SDK 阻断。
+- 状态：等待用户重新截图验收；Context Flyout 打开态因截图未覆盖，暂未扩展。
+- Hash：待本轮提交。
+
 ## XYUI-3-06～08 · Build 修复（2026-08-30 23:05:00 +08:00）
 
 - 原因：Tabs 使用了错误的相对 `Avalonia.Layout` 命名空间；Sidebar 样式误用 `Color.Transparent`。

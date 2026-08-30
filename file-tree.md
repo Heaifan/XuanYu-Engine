@@ -2871,6 +2871,7 @@
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.cs` — XYUI-3-01～05 真实 Runtime 预览工厂。
  - `xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI3GalleryCatalog.cs` — XYUI-3-01～08 真实 Runtime 预览工厂。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/XYSidebar.cs` — XYUI-3-06 展开/折叠侧边容器。
+ - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-06-Sidebar/XYUI3SidebarStyles.cs` — XYUI-3-06 Sidebar 与 XYUI-3-07 Rail 的 Compact V2 样式。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-07-NavigationRail/XYNavigationRail.cs` — XYUI-3-07 紧凑一级导航轨。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/XYTab.cs` — XYUI-3-08 单个页签状态模型与视觉结构。
  - `xyui/avalonia/src/XYUI.Avalonia/Controls/XYUI3/XYUI3-08-Tabs/XYTabs.cs` — XYUI-3-08 页签组选择协调器。
