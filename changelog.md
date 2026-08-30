@@ -1,5 +1,13 @@
 # changelog
 
+## XYUI-3-06～08 · 编译错误修复（2026-08-30 23:33:10 +08:00）
+
+- 原因：`XYTab` 使用了不适用的 `is not` 属性模式；Sidebar 样式缺少 Layout 命名空间；Rail 属性名与 Avalonia `Control.ContextFlyout` 冲突。
+- 变化：改为属性引用比较，补充 `Avalonia.Layout`，将 Rail 暴露属性改名为 `NavigationContextFlyout`。
+- 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，无法执行实际 Build/Test。
+- 状态：等待用户重新运行 `xyui`。
+- Hash：待本轮提交。
+
 ## XYUI-3-08 · 修复 Tabs 语法错误（2026-08-30 23:31:15 +08:00）
 
 - 原因：`XYTab.Build()` 上一轮压缩为单行对象初始化时，`Grid.Children` 集合初始化缺少闭合括号，导致 CS1003/CS1513。

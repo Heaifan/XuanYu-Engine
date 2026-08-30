@@ -8,7 +8,7 @@ public sealed class XYNavigationRail : Border
     readonly XYSubMenu _contextFlyout;
     public IReadOnlyList<XYNavigationItem> Items { get; }
     public IReadOnlyList<XYNavigationItem> ContextItems { get; }
-    public XYSubMenu ContextFlyout => _contextFlyout;
+    public XYSubMenu NavigationContextFlyout => _contextFlyout;
     public XYNavigationRail(IReadOnlyList<XYNavigationItem> items)
     {
         Items = items; ContextItems = []; Classes.Add("xyui-navigation-rail"); Child = _panel;
