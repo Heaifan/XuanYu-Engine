@@ -6,7 +6,7 @@
 - 变化：Sidebar 增加无边框折叠按钮并切换为 54 DIP Rail；Rail 点击一级图标打开复用 XYSubMenu 的上下文菜单；Tabs 的无边框 `×` 支持单个关闭和全部关闭；Sidebar 上下文项改为复用 NavigationMenu。
 - 验证：ARCH-A（含 5+100）和 `git diff --check` 通过；当前环境无 .NET SDK，Build/Test 无法执行。
 - 状态：等待用户在本机 Gallery 点击验收 3.05～3.08。
-- Hash：待本轮提交。
+- Hash：`cc387ac4`；已推送 `origin/feat/XYUI-A`。
 
 ## XYUI-3-06～08 · Avalonia.Layout 根因修复（2026-08-30 23:13:49 +08:00）
 
