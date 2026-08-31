@@ -4,7 +4,9 @@ public sealed partial class XYTabs
 {
     void OnSelected(object? sender, EventArgs e) { if (sender is XYTab tab) SetSelected(tab); }
     void OnCloseRequested(object? sender, EventArgs e) { if (sender is XYTab tab) Close(tab); }
-    void SetSelected(XYTab tab) { if (!_items.Contains(tab)) return; foreach (var item in _items) item.IsSelected = ReferenceEquals(item, tab); }
+    public XYTab? SelectedItem => _items.FirstOrDefault(x => x.IsSelected);
+    public void Select(XYTab tab) { if (!_items.Contains(tab)) return; foreach (var item in _items) item.IsSelected = ReferenceEquals(item, tab); }
+    void SetSelected(XYTab tab) => Select(tab);
     public void Close(XYTab tab)
     {
         var index = _items.IndexOf(tab); if (index < 0) return;

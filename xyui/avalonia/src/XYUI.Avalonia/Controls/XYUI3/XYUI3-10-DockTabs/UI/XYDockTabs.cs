@@ -3,15 +3,22 @@ using Avalonia.Layout;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYDockTabs : Border
+public sealed partial class XYDockTabs : Border
 {
-    public IReadOnlyList<XYDockTab> Items { get; }
+    readonly List<XYDockTab> _items = [];
+    readonly StackPanel _panel = new() { Orientation = Orientation.Horizontal };
+    public IReadOnlyList<XYDockTab> Items => _items;
 
     public XYDockTabs(params XYDockTab[] items)
     {
-        Classes.Add("xyui-dock-tabs"); Items = items;
-        Child = new StackPanel { Orientation = Orientation.Horizontal, Children = { } };
-        var panel = (StackPanel)Child;
-        foreach (var item in items) panel.Children.Add(item);
+        Classes.Add("xyui-dock-tabs"); _items.AddRange(items); Child = _panel;
+        if (_items.Count > 0 && !_items.Any(x => x.Tab.IsSelected)) _items[0].Tab.IsSelected = true;
+        Build();
+    }
+
+    void Build()
+    {
+        _panel.Children.Clear();
+        foreach (var item in _items) { Attach(item); _panel.Children.Add(item); }
     }
 }

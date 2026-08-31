@@ -5,7 +5,7 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYBreadcrumbItem : Border
+public sealed partial class XYBreadcrumbItem : Border
 {
     public static readonly StyledProperty<string> LabelProperty = AvaloniaProperty.Register<XYBreadcrumbItem, string>(nameof(Label), "");
     public static readonly StyledProperty<bool> IsCurrentProperty = AvaloniaProperty.Register<XYBreadcrumbItem, bool>(nameof(IsCurrent));
@@ -16,7 +16,7 @@ public sealed class XYBreadcrumbItem : Border
     public bool IsCollapsed { get => GetValue(IsCollapsedProperty); set => SetValue(IsCollapsedProperty, value); }
     public bool HasDropdown { get => GetValue(HasDropdownProperty); set => SetValue(HasDropdownProperty, value); }
 
-    public XYBreadcrumbItem() { Classes.Add("xyui-breadcrumb-item"); Build(); }
+    public XYBreadcrumbItem() { Classes.Add("xyui-breadcrumb-item"); Focusable = true; Build(); InitializeInteraction(); }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     { base.OnPropertyChanged(change); if (change.Property != ChildProperty) Build(); }

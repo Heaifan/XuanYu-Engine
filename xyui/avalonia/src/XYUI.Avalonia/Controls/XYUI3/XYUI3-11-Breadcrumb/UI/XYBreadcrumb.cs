@@ -4,7 +4,7 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYBreadcrumb : Border
+public sealed partial class XYBreadcrumb : Border
 {
     public IReadOnlyList<XYBreadcrumbItem> Items { get; }
 
@@ -21,7 +21,7 @@ public sealed class XYBreadcrumb : Border
                 Classes = { "xyui-breadcrumb-separator" },
                 Margin = new global::Avalonia.Thickness(4, 0)
             });
-            panel.Children.Add(items[index]);
+            Attach(items[index]); panel.Children.Add(items[index]);
         }
         Child = panel;
     }

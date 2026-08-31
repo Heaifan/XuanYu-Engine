@@ -4,7 +4,7 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
 
-public sealed class XYTreeNode : Border
+public sealed partial class XYTreeNode : Border
 {
     string _label = "";
     int _depth;
@@ -21,7 +21,7 @@ public sealed class XYTreeNode : Border
     public bool IsExpanded { get => _expanded; set { _expanded = value; Build(); } }
     public XyuiVectorIcon Icon { get => _icon; set { _icon = value; Build(); } }
 
-    public XYTreeNode() { Classes.Add("xyui-tree-node"); Build(); }
+    public XYTreeNode() { Classes.Add("xyui-tree-node"); Focusable = true; Build(); InitializeInteraction(); }
 
     void Build()
     {
