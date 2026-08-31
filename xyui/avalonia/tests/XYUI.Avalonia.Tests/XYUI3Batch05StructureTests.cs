@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Gallery;
+using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Tests;
 
@@ -12,7 +13,12 @@ public sealed class XYUI3Batch05StructureTests : IClassFixture<XyuiHeadlessFixtu
 
     [Fact] public void CommandBar_is_compact_and_executes_once() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var bar = Assert.IsType<XYCommandBar>(XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.17")); var count = 0; bar.CommandExecuted += (_, _) => count++; bar.Items[0].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); bar.MoreButton.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.Equal(1, count); Assert.True(bar.MorePopup.IsOpen);
+        XyuiBatchTestHost.Prepare(); var host = XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.17"); var bar = Assert.IsType<XYCommandBar>(host.GetVisualDescendants().First()); var count = 0; bar.CommandExecuted += (_, _) => count++; bar.Items[0].RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); bar.MoreButton.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.Equal(1, count); Assert.True(bar.MorePopup.IsOpen); Assert.Equal(34, bar.Height); Assert.Equal(XYCommandRole.Primary, bar.Items[0].Role); Assert.Equal(XyuiVectorIcon.Add, bar.Items[0].Icon);
+    });
+
+    [Fact] public void CommandBar_many_commands_do_not_overlap() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var bar = new XYCommandBar(Enumerable.Range(1, 8).Select(i => new XYCommandItem($"命令{i}")).ToArray()); Assert.Equal(8, bar.Child!.GetVisualDescendants().OfType<XYCommandItem>().Count()); Assert.DoesNotContain(bar.Child.GetVisualDescendants().OfType<Canvas>());
     });
 
     [Fact] public void CommandPalette_filters_real_commands() => _fx.Run(() =>

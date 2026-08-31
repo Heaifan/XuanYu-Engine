@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.34-rz · XYUI-3-17 · CommandBar 定稿返工（2026-08-31 20:36:00 +08:00）
+
+- 目标：只修复 XYUI-3-17 CommandBar；XYUI-3-18～20 源文件保持不动。
+- 变化：CommandBar 压至 34 DIP；命令改为自然横向布局；新增显式 Normal/Primary/Danger 角色、Add 矢量图标、Contextual 变体、动态反馈、禁用保存和完整 More 菜单。
+- 验证：`git diff --check`、ARCH-A 通过；新增多命令不重叠结构测试；本环境无 .NET SDK，Build/Test 未执行。
+- 状态：XYUI-3-17 UI REWORKED · INTERACTION REWORKED · 等待用户视觉与交互验收；不启动 18～20 后续修改。
+- 版本：`v0.2.28.34-rz` 已同步到四处版本文件。
+- Hash：待提交。
+
 ## v0.2.28.33-rz · XYUI-3-17～20 · 交互审查返工（2026-08-31 20:24:00 +08:00）
 
 - 目标：落实 17～20 审查意见，修复状态同步、自然布局、选中反馈和 Popup 生命周期问题。
