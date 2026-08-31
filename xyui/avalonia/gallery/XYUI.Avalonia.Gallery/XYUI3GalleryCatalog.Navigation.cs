@@ -50,13 +50,16 @@ public static partial class XYUI3GalleryCatalog
     static Control ToolGroupPreview() => new XYToolbar(new XYToolGroup(new XYToolbarTool { Label = "选择" }, new XYToolbarTool { Label = "移动", IsSelected = true }, new XYToolbarTool { Label = "旋转" }, new XYToolbarTool { Label = "缩放" }), new XYSeparator { Variant = XyuiSeparatorVariant.VerticalSplit, Height = 24 }, new XYToolGroup(new XYToolbarTool { Label = "区域" }, new XYToolbarTool { Label = "道路" }), new XYToolGroup(new XYToolbarTool { Label = "移动", IsSelected = true }) { IsCollapsed = true }) { Width = 740 };
     static Control CommandBarPreview()
     {
-        var feedback = new TextBlock { Text = "Last Command: —", Classes = { "xyui-command-feedback" } };
+        var feedback = new TextBlock { Text = "Last Action · —", Classes = { "xyui-command-feedback" } };
         var bar = new XYCommandBar(new XYCommandItem("新建", "new", XYCommandRole.Primary, XyuiVectorIcon.Add), new XYCommandItem("导入", "import"), new XYCommandItem("保存", "save") { IsEnabled = false }, new XYCommandItem("验证", "validate"), new XYCommandItem("刷新", "refresh"), new XYCommandItem("删除", "delete", XYCommandRole.Danger));
-        bar.CommandExecuted += (_, item) => feedback.Text = $"Last Command · {item.CommandId}"; bar.MoreMenu.Items = [Item("另存为"), Item("导出"), Item("复制链接"), XYMenu.Separator(), Item("高级操作")]; bar.RefreshMore();
+        bar.CommandExecuted += (_, item) => feedback.Text = $"Last Action · {item.CommandId}";
+        var saveAs = ActionItem("另存为", "save-as", feedback); var export = ActionItem("导出", "export", feedback); var copyLink = ActionItem("复制链接", "copy-link", feedback); var advanced = ActionItem("高级操作", "advanced", feedback);
+        bar.MoreMenu.Items = [saveAs, export, copyLink, XYMenu.Separator(), advanced]; bar.RefreshMore();
         var contextual = new XYCommandBar(XYCommandBarVariant.Contextual, "roads", new XYCommandItem("编辑", "edit"), new XYCommandItem("复制", "copy"), new XYCommandItem("验证", "validate"), new XYCommandItem("删除", "delete", XYCommandRole.Danger));
-        contextual.RefreshMore();
+        contextual.CommandExecuted += (_, item) => feedback.Text = $"Last Action · context.{item.CommandId}"; contextual.RefreshMore();
         return new StackPanel { Spacing = 8, Children = { bar, feedback, contextual } };
     }
+    static XYMenuItem ActionItem(string label, string id, TextBlock feedback) { var item = Item(label); item.SelectionRequested += (_, _) => feedback.Text = $"Last Action · {id}"; return item; }
     static Control CommandPalettePreview() => new XYCommandPalette(new XYPaletteCommand("创建道路", "地图"), new XYPaletteCommand("验证道路"), new XYPaletteCommand("打开道路数据集"), new XYPaletteCommand("进入道路工具")) { Width = 650, Height = 360 };
     static Control BackForwardPreview() { var nav = new XYBackForwardNavigation(); nav.Navigate("roads / 道路编辑"); nav.Navigate("广东省"); return nav; }
     static Control WorkspacePreview() { var switcher = new XYWorkspaceSwitcher("地图编辑", "地图编辑", "数据编辑", "战争实验", "调试分析"); switcher.Open(); return switcher; }

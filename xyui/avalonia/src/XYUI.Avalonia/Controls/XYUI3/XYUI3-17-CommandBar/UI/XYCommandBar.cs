@@ -19,10 +19,10 @@ public sealed class XYCommandItem : XYButton
     public event EventHandler? ExecuteRequested;
     public XYCommandItem(string label, string? commandId = null, XYCommandRole role = XYCommandRole.Normal, XyuiVectorIcon? icon = null)
     {
-        CommandId = commandId ?? label; Role = role; Icon = icon; Variant = role switch { XYCommandRole.Primary => XyuiButtonVariant.Primary, XYCommandRole.Danger => XyuiButtonVariant.Danger, _ => XyuiButtonVariant.Secondary }; Content = Visual(label); Classes.Add("xyui-command-item"); Classes.Add(role == XYCommandRole.Primary ? "xyui-command-primary" : role == XYCommandRole.Danger ? "xyui-command-danger" : "xyui-command-normal");
+        CommandId = commandId ?? label; Role = role; Icon = icon; Variant = role switch { XYCommandRole.Primary => XyuiButtonVariant.Primary, XYCommandRole.Danger => XyuiButtonVariant.Danger, _ => XyuiButtonVariant.Secondary }; VerticalAlignment = VerticalAlignment.Center; Content = Visual(label); Classes.Add("xyui-command-item"); Classes.Add(role == XYCommandRole.Primary ? "xyui-command-primary" : role == XYCommandRole.Danger ? "xyui-command-danger" : "xyui-command-normal");
         Click += (_, _) => { if (IsEnabled) ExecuteRequested?.Invoke(this, EventArgs.Empty); };
     }
-    Control Visual(string label) => Icon is { } icon ? new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5, Children = { new XYIcon { Icon = icon, Size = XyuiIconSize.Small }, new TextBlock { Text = label } } } : new TextBlock { Text = label };
+    Control Visual(string label) => Icon is { } icon ? new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5, VerticalAlignment = VerticalAlignment.Center, Children = { new XYIcon { Icon = icon, Size = XyuiIconSize.Small, VerticalAlignment = VerticalAlignment.Center }, new TextBlock { Text = label, Classes = { "xyui-command-label" }, VerticalAlignment = VerticalAlignment.Center } } } : new TextBlock { Text = label, Classes = { "xyui-command-label" }, VerticalAlignment = VerticalAlignment.Center };
 }
 
 public sealed class XYCommandBar : Border
@@ -40,12 +40,12 @@ public sealed class XYCommandBar : Border
     public XYCommandBar(params XYCommandItem[] items) : this(XYCommandBarVariant.Standard, "", items) { }
     public XYCommandBar(XYCommandBarVariant variant, string contextIdentity, params XYCommandItem[] items)
     {
-        Items = items; Variant = variant; ContextIdentity = contextIdentity; Height = 34; HorizontalAlignment = HorizontalAlignment.Stretch; Classes.Add("xyui-command-bar"); MoreButton = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.MoreHorizontal, Size = XyuiIconSize.Small }, Classes = { "xyui-command-more" } };
+        Items = items; Variant = variant; ContextIdentity = contextIdentity; Height = 34; HorizontalAlignment = HorizontalAlignment.Stretch; Classes.Add("xyui-command-bar"); MoreButton = new XYIconButton { VerticalAlignment = VerticalAlignment.Center, Content = new XYIcon { Icon = XyuiVectorIcon.MoreHorizontal, Size = XyuiIconSize.Small, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center }, Classes = { "xyui-command-more" } };
         foreach (var item in Items) Attach(item); MoreButton.Click += (_, _) => ToggleMore(); MoreButton.KeyDown += OnMoreKeyDown; _popup.Closed += (_, _) => CloseMore(); MoreMenu.Closed += (_, _) => CloseMore(); _popup.Child = MoreMenu; Child = Build(); RefreshMore();
     }
     Control Build()
     {
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto") }; var commands = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, Margin = new Thickness(4, 3, 0, 3) };
+        var grid = new Grid { Height = 28, VerticalAlignment = VerticalAlignment.Center, ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto") }; var commands = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, Height = 28, VerticalAlignment = VerticalAlignment.Center };
         if (Variant == XYCommandBarVariant.Contextual) { commands.Children.Add(new TextBlock { Text = "已选择 ·", VerticalAlignment = VerticalAlignment.Center, Classes = { "xyui-command-context" } }); commands.Children.Add(new TextBlock { Text = ContextIdentity, VerticalAlignment = VerticalAlignment.Center, Classes = { "xyui-command-context-name" } }); commands.Children.Add(new Border { Width = 1, Height = 20, Classes = { "xyui-command-divider" } }); }
         foreach (var item in Items) { if (item.Role == XYCommandRole.Danger) commands.Children.Add(new Border { Width = 1, Height = 20, Classes = { "xyui-command-divider" } }); item.Height = 28; commands.Children.Add(item); }
         grid.Children.Add(commands); Grid.SetColumn(MoreButton, 2); MoreButton.Width = 28; MoreButton.Height = 28; grid.Children.Add(MoreButton); return new Border { Classes = { "xyui-command-bar-surface" }, Child = grid };

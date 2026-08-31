@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.39-rz · XYUI-3-17 · CommandBar 垂直对齐与反馈收口（2026-09-01 10:06:00 +08:00）
+
+- 目标：只修复 XYUI-3-17 的统一中心线与 Gallery 交互反馈，XYUI-3-18～20 保持不动。
+- 变化：统一 28 DIP CommandRow、命令标签/图标/Context/Divider/More 的 VerticalAlignment.Center；Standard、Contextual、More 操作统一反馈为 `Last Action`；Contextual 命令反馈增加 `context.` 前缀。
+- 验证：`git diff --check`、ARCH-A 通过；本环境无 .NET SDK，Build/Test 未执行。
+- 状态：XYUI-3-17 等待人工视觉与交互验收；不启动 XYUI-3-18。
+- 版本：`v0.2.28.39-rz` 已同步到四处版本文件。
+- Hash：待提交。
+
 ## v0.2.28.38-rz · XYUI-3-17 · Layout 引用编译修复（2026-09-01 09:42:00 +08:00）
 
 - 原因：17 专属样式使用 `VerticalAlignment`，但缺少 `Avalonia.Layout` 引用，触发两处 CS0103。
