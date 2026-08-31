@@ -23,7 +23,13 @@ public sealed partial class XYTab : Border
     public event EventHandler? SelectionRequested;
     public event EventHandler? CloseRequested;
     public XYTab() { Classes.Add("xyui-tab"); Build(); }
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change) { base.OnPropertyChanged(change); if (change.Property != ChildProperty) Build(); }
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (ReferenceEquals(change.Property, LabelProperty) || ReferenceEquals(change.Property, IsSelectedProperty) ||
+            ReferenceEquals(change.Property, IsModifiedProperty) || ReferenceEquals(change.Property, IsClosableProperty) ||
+            ReferenceEquals(change.Property, ShowSelectedAccentProperty)) Build();
+    }
     void Build()
     {
         Classes.Set("xyui-tab-selected", IsSelected);
