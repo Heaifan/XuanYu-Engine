@@ -5,13 +5,13 @@ namespace XYUI.Avalonia.Gallery;
 
 public static class XYUI3DocumentationCatalog
 {
-    static readonly IReadOnlySet<string> BatchIds = new HashSet<string> { "XYUI-3-3.01", "XYUI-3-3.02", "XYUI-3-3.03", "XYUI-3-3.04", "XYUI-3-3.05", "XYUI-3-3.06", "XYUI-3-3.07", "XYUI-3-3.08", "XYUI-3-3.09", "XYUI-3-3.10", "XYUI-3-3.11", "XYUI-3-3.12", "XYUI-3-3.13", "XYUI-3-3.14", "XYUI-3-3.15", "XYUI-3-3.16" };
+    static readonly IReadOnlySet<string> BatchIds = new HashSet<string> { "XYUI-3-3.01", "XYUI-3-3.02", "XYUI-3-3.03", "XYUI-3-3.04", "XYUI-3-3.05", "XYUI-3-3.06", "XYUI-3-3.07", "XYUI-3-3.08", "XYUI-3-3.09", "XYUI-3-3.10", "XYUI-3-3.11", "XYUI-3-3.12", "XYUI-3-3.13", "XYUI-3-3.14", "XYUI-3-3.15", "XYUI-3-3.16", "XYUI-3-3.17", "XYUI-3-3.18", "XYUI-3-3.19", "XYUI-3-3.20" };
     public static IReadOnlyList<XYUI1ComponentDocument> Build() => XyuiCatalogSource.Load().Where(x => BatchIds.Contains(x.SourceItemId)).Select(Create).ToArray();
     static XYUI1ComponentDocument Create(XyuiCatalogEntry entry)
     {
         var type = entry.AvaloniaType.Split('.').Last(); if (string.IsNullOrWhiteSpace(type)) type = ComponentName(entry.SourceItemId); var details = Details(entry.SourceItemId);
         var acceptance = entry.SourceItemId == "XYUI-3-3.04" ? "UI CLOSED · USER VISUAL ACCEPTED · HIERARCHY LOGIC REWORKED · AWAITING USER INTERACTION VERIFICATION" :
-            entry.SourceItemId is "XYUI-3-3.09" or "XYUI-3-3.10" or "XYUI-3-3.11" or "XYUI-3-3.12" ? "UI + INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE" : "UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE";
+            entry.SourceItemId is "XYUI-3-3.09" or "XYUI-3-3.10" or "XYUI-3-3.11" or "XYUI-3-3.12" or "XYUI-3-3.17" or "XYUI-3-3.18" or "XYUI-3-3.19" or "XYUI-3-3.20" ? "UI + INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE" : "UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE";
         return new(entry.SourceItemId, entry.Title.Split('/').Last().Trim(), type, details.Overview, details.WhenToUse,
             () => XYUI3GalleryCatalog.CreatePreview(entry.SourceItemId), details.Usages, details.Variants, details.States,
             [], entry.ApiRefs.Select(x => new XYUIDocToken(x, "Canonical", "Foundation token reference")).ToArray(), type)
@@ -20,7 +20,7 @@ public static class XYUI3DocumentationCatalog
     static string ComponentName(string id) => id switch
     {
         "XYUI-3-3.05" => "XYNavigationMenu", "XYUI-3-3.06" => "XYSidebar",
-        "XYUI-3-3.07" => "XYNavigationRail", "XYUI-3-3.08" => "XYTabs", "XYUI-3-3.09" => "XYTabBar", "XYUI-3-3.10" => "XYDockTabs", "XYUI-3-3.11" => "XYBreadcrumb", "XYUI-3-3.12" => "XYTreeNavigation", "XYUI-3-3.13" => "XYPagination", "XYUI-3-3.14" => "XYSteps", "XYUI-3-3.15" => "XYToolbar", "XYUI-3-3.16" => "XYToolGroup", _ => ""
+        "XYUI-3-3.07" => "XYNavigationRail", "XYUI-3-3.08" => "XYTabs", "XYUI-3-3.09" => "XYTabBar", "XYUI-3-3.10" => "XYDockTabs", "XYUI-3-3.11" => "XYBreadcrumb", "XYUI-3-3.12" => "XYTreeNavigation", "XYUI-3-3.13" => "XYPagination", "XYUI-3-3.14" => "XYSteps", "XYUI-3-3.15" => "XYToolbar", "XYUI-3-3.16" => "XYToolGroup", "XYUI-3-3.17" => "XYCommandBar", "XYUI-3-3.18" => "XYCommandPalette", "XYUI-3-3.19" => "XYBackForwardNavigation", "XYUI-3-3.20" => "XYWorkspaceSwitcher", _ => ""
     };
     static (string Overview, string WhenToUse, string[] Usages, XYUIDocVariant[] Variants, XYUIDocState[] States) Details(string id) => id switch
     {
@@ -39,6 +39,10 @@ public static class XYUI3DocumentationCatalog
         "XYUI-3-3.14" => ("用完成、当前、待执行状态表达连续流程的横向或纵向步骤导航。", "用于创建项目、导入资源和配置流程；同一状态数据可切换 Orientation。", ["<c:XYSteps />"], [new("Adaptive", "Horizontal / Vertical", "Light / Dark")], [new("Completed", "Vector status"), new("Current", "Inner indicator"), new("Pending", "Subtle border")]),
         "XYUI-3-3.15" => ("极简连续的编辑器工具栏，直接复用 XYIconButton 等基础动作控件。", "用于选择、移动、旋转、缩放及区域工具的紧凑排列。", ["<c:XYToolbar />"], [new("Compact Toolbar", "38 DIP", "Light / Dark")], [new("Active", "Selected Surface + Accent"), new("Hover", "浅色背景")]),
         "XYUI-3-3.16" => ("Toolbar 内部的工具组，提供分隔、浅 Hover 区域和静态折叠触发器。", "用于将变换工具与区域工具保持同一 Toolbar 层级；不承担 Flyout 生命周期。", ["<c:XYToolGroup />"], [new("Separator Group", "4 DIP Padding", "Light / Dark")], [new("Collapsed", "Trigger 保留 Active 语义"), new("Hover", "浅层组背景")]),
+        "XYUI-3-3.17" => ("紧凑的一次性页面或对象命令栏。", "用于新建、导入、保存、验证和删除等命令。", ["<c:XYCommandBar />"], [new("Compact V2", "34 DIP Bar / 28 DIP Command", "Light / Dark")], [new("Primary", "强调主命令"), new("More", "XYMenu Popup")]),
+        "XYUI-3-3.18" => ("紧凑快速命令搜索面板。", "用于过滤、键盘选择并执行全局命令。", ["<c:XYCommandPalette />"], [new("Compact V2", "440 DIP / 34 DIP Search", "Light / Dark")], [new("Recent", "空输入显示命令"), new("Selected", "键盘选中")]),
+        "XYUI-3-3.19" => ("紧凑的前进后退导航历史。", "用于页面、对象和工作区位置之间的导航。", ["<c:XYBackForwardNavigation />"], [new("Compact V2", "34 DIP Bar / 28 DIP Action", "Light / Dark")], [new("Disabled", "无可用历史")]),
+        "XYUI-3-3.20" => ("顶栏级紧凑工作区切换器。", "用于切换地图编辑、数据编辑、战争实验和调试工作区。", ["<c:XYWorkspaceSwitcher />"], [new("Compact V2", "34 DIP Trigger / 32 DIP Item", "Light / Dark")], [new("Selected", "当前工作区"), new("Popup", "同宽下拉")]),
         _ => ("层级连接型子菜单，使用统一菜单面板和可复用菜单行。", "用于导出、主题、布局等需要二级命令的层级入口；激活父项或 Right 打开，Left/Esc 收起。", ["<c:XYSubMenu ParentMenu=\"XYMenu\" ChildMenu=\"XYMenu\" />"], [new("Open Right", "右侧连接", "默认"), new("Open Left", "左侧镜像", "静态 Variant")], [new("Active Trigger", "父项保持强调"), new("Connector", "40 DIP 连接线与锚点")])
     };
 }

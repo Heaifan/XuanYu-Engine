@@ -12,7 +12,7 @@ public static partial class XYUI3GalleryCatalog
     {
         "XYUI-3-3.01" => MenuBarPreview(), "XYUI-3-3.02" => MenuPreview(),
         "XYUI-3-3.03" => ContextPreview(), "XYUI-3-3.04" => SubMenuPreview(), "XYUI-3-3.05" => NavigationMenuPreview(), "XYUI-3-3.06" => SidebarPreview(), "XYUI-3-3.07" => RailPreview(), "XYUI-3-3.08" => TabsPreview(),
-        "XYUI-3-3.09" => TabBarPreview(), "XYUI-3-3.10" => DockTabsPreview(), "XYUI-3-3.11" => BreadcrumbPreview(), "XYUI-3-3.12" => TreeNavigationPreview(), "XYUI-3-3.13" => PaginationPreview(), "XYUI-3-3.14" => StepsPreview(), "XYUI-3-3.15" => ToolbarPreview(), "XYUI-3-3.16" => ToolGroupPreview(),
+        "XYUI-3-3.09" => TabBarPreview(), "XYUI-3-3.10" => DockTabsPreview(), "XYUI-3-3.11" => BreadcrumbPreview(), "XYUI-3-3.12" => TreeNavigationPreview(), "XYUI-3-3.13" => PaginationPreview(), "XYUI-3-3.14" => StepsPreview(), "XYUI-3-3.15" => ToolbarPreview(), "XYUI-3-3.16" => ToolGroupPreview(), "XYUI-3-3.17" => CommandBarPreview(), "XYUI-3-3.18" => CommandPalettePreview(), "XYUI-3-3.19" => BackForwardPreview(), "XYUI-3-3.20" => WorkspacePreview(),
         _ => new TextBlock { Text = "未注册组件" }
     };
     static Control MenuBarPreview()

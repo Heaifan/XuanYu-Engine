@@ -1716,6 +1716,7 @@
    │  │     │     │  │  └─ XYNavigationState.cs  # 实现对应模块的 C# 职责。
    │  │     │     │  ├─ Styles/  # 集中控件视觉构建与语义样式。
    │  │     │     │  │  ├─ XyuiComponentStyles.Batch04.cs  # 定义分页、步骤、工具栏与工具组语义样式。
+   │  │     │     │  │  ├─ XyuiComponentStyles.Batch05.cs  # 定义命令栏、命令面板、历史导航与工作区紧凑样式。
    │  │     │     │  │  └─ XyuiComponentStyles.XYUI3.cs  # 实现对应模块的 C# 职责。
    │  │     │     │  └─ Tokens/  # 集中共享尺寸与语义常量。
    │  │     │     │     └─ XyuiCompactNavigationTokens.cs  # 集中保存紧凑导航组件的几何常量。
@@ -1815,6 +1816,14 @@
    │  │     │  └─ XYToolbarTool.cs  # 以 XYIconButton 承载工具语义。
    │  │     ├─ XYUI3-16-ToolGroup/UI/  # 实现 Toolbar 内工具组与静态折叠。
    │  │     │  └─ XYToolGroup.cs  # 提供组间距、Hover 区域和折叠触发器。
+   │  │     ├─ XYUI3-17-CommandBar/UI/  # 实现紧凑一次性命令栏与 More 菜单。
+   │  │     │  └─ XYCommandBar.cs  # 提供主命令、命令项和真实 XYMenu Popup。
+   │  │     ├─ XYUI3-18-CommandPalette/UI/  # 实现紧凑搜索命令面板。
+   │  │     │  └─ XYCommandPalette.cs  # 提供过滤、键盘选择和命令执行反馈。
+   │  │     ├─ XYUI3-19-BackForwardNavigation/UI/  # 实现独立导航历史。
+   │  │     │  └─ XYBackForwardNavigation.cs  # 提供前进、后退和 Forward 截断。
+   │  │     └─ XYUI3-20-WorkspaceSwitcher/UI/  # 实现紧凑工作区切换器。
+   │  │        └─ XYWorkspaceSwitcher.cs  # 提供工作区 Trigger、同宽 Popup 与选择事件。
    │  │     ├─ Foundation/  # 组织该模块下的正式文件。
    │  │     │  ├─ XyuiColorToken.cs  # Canonical 颜色 token 记录（id + Light/Dark 成对解析与 Color 转换）。
    │  │     │  ├─ XyuiColorTokens.Accent.cs  # XY.Accent.*/Tool/Button/Tag 6 色。
@@ -1911,6 +1920,7 @@
    │  │     ├─ XYUI3CompactInteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3CompactNavigationInteractionTests.cs  # 验证紧凑导航新增页签、Popup 菜单与焦点/选择分离。
    │  │     ├─ XYUI3Batch04StructureTests.cs  # 验证分页、步骤、工具栏与工具组结构复用。
+   │  │     ├─ XYUI3Batch05StructureTests.cs  # 验证 17～20 紧凑控件与核心交互。
    │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航复用、单底边、垂直居中及交互状态机。
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。
