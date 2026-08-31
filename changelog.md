@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.28-rz · XYUI-3-14 · Steps 纵向 Marker 错轴修复（2026-08-31 19:44:13 +08:00）
+
+- 目标：修复上轮 SVG 坐标重构后纵向 Marker 与连接线横向错轴的问题。
+- 根因：节点切换到纵向布局时未重新应用状态布局，Marker 保留横向 `Margin=0`，实际中心落在 `X≈16`，连接线仍位于 `X=42`。
+- 变化：`SetVertical` 完成内部布局重建后立即重新应用状态；横向 Marker 行固定为 72 DIP，使所有 Marker 中心落在 `Y=36`。
+- 验证：ARCH-A 通过；`git diff --check` 通过；Build/Test 受当前环境无 .NET SDK 阻断，未宣称通过。
+- 状态：XYUI-3-14 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；不启动 XYUI-3-15。
+- 版本：`v0.2.28.28-rz` 已同步到四处版本文件。
+- Hash：`b41ac9a9`；待推送 `origin/feat/XYUI-A`。
+
 ## v0.2.28.27-rz · XYUI-3-14 · Steps SVG 坐标关系重构（2026-08-31 19:36:03 +08:00）
 
 - 目标：按用户提供的 Horizontal / Vertical SVG 参考修正步骤导航组件，不启动 XYUI-3-15。
