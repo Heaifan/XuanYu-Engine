@@ -7,7 +7,7 @@
 - 验证：`git diff --check`、ARCH-A 通过；补充 Escape/Context 替换与 17 多命令结构测试；本环境无 .NET SDK，Build/Test 未执行。
 - 状态：XYUI-3-17 UI REWORKED · INTERACTION REWORKED · 等待人工验收；不启动 XYUI-3-18。
 - 版本：`v0.2.28.35-rz` 已同步到四处版本文件。
-- Hash：待提交。
+- Hash：`4f396dc3`。
 
 ## v0.2.28.34-rz · XYUI-3-17 · CommandBar 定稿返工（2026-08-31 20:36:00 +08:00）
 
