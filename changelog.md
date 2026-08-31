@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.18-rz · XYUI-3-10 · DockTab 拖拽热区体验修订（2026-08-31 13:08:00 +08:00）
+
+- 目标：修复停靠页签只能抓住小图标、拖拽手感生硬的问题。
+- 变化：新增 28 DIP 透明 Grip 热区，图标仅负责显示并让出命中；保留 6 DIP 拖拽阈值与 Escape/捕获丢失取消，点击和拖动分离。
+- 验证：解决方案构建 0 Warning/0 Error；XYUI.Avalonia.Tests 302/302、Core 339/339、WarCore 22/22、World 1286/1286；ARCH-A guard、5+100 与 `git diff --check` PASS。
+- 状态：3.10 READY FOR USER INTERACTION ACCEPTANCE；3.09、3.11、3.12 保持既有验收状态。
+- 版本：`v0.2.28.18-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+
 ## v0.2.28.17-rz · XYUI-3-09～12 · 真实交互闭环修订（2026-08-31 12:32:00 +08:00）
 
 - 目标：按交接说明重做 3.09～3.12，消除重复 Accent、补齐滚动/Popup/拖拽/焦点状态闭环。

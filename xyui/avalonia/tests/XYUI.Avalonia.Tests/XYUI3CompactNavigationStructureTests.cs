@@ -24,7 +24,7 @@ public sealed class XYUI3CompactNavigationStructureTests : IClassFixture<XyuiHea
     [Fact] public void DockTab_reuses_XYTab() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var dock = Assert.IsType<XYDockTabs>(XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.10"));
-        Assert.All(dock.Items, item => Assert.IsType<XYTab>(item.Tab)); Assert.All(dock.Items, item => Assert.Contains(item.Tab, item.GetVisualDescendants().OfType<XYTab>()));
+        Assert.All(dock.Items, item => Assert.IsType<XYTab>(item.Tab)); Assert.All(dock.Items, item => Assert.Contains(item.Tab, item.GetVisualDescendants().OfType<XYTab>())); Assert.All(dock.Items, item => { Assert.Equal(XyuiCompactNavigationTokens.DockGripHitWidth, item.GripHitArea.Width); Assert.False(item.Grip.IsHitTestVisible); });
     });
 
     [Fact] public void Breadcrumb_uses_vectors_and_current_collapsed_states() => _fx.Run(() =>

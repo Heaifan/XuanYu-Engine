@@ -16,20 +16,20 @@ public sealed partial class XYDockTab
 
     void InitializeInteraction()
     {
-        _grip.Cursor = new Cursor(StandardCursorType.SizeWestEast);
-        _grip.PointerPressed += OnGripPressed; _grip.PointerMoved += OnGripMoved;
-        _grip.PointerReleased += OnGripReleased; _grip.PointerCaptureLost += OnGripCaptureLost; KeyDown += OnKeyDown;
+        _grip.IsHitTestVisible = false; _gripHitArea.Cursor = new Cursor(StandardCursorType.SizeWestEast);
+        _gripHitArea.PointerPressed += OnGripPressed; _gripHitArea.PointerMoved += OnGripMoved;
+        _gripHitArea.PointerReleased += OnGripReleased; _gripHitArea.PointerCaptureLost += OnGripCaptureLost; KeyDown += OnKeyDown;
     }
 
     void OnGripPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!e.GetCurrentPoint(_grip).Properties.IsLeftButtonPressed) return;
-        _start = e.GetPosition(this); _dragging = false; e.Pointer.Capture(_grip); e.Handled = true;
+        if (!e.GetCurrentPoint(_gripHitArea).Properties.IsLeftButtonPressed) return;
+        _start = e.GetPosition(this); _dragging = false; e.Pointer.Capture(_gripHitArea); e.Handled = true;
     }
 
     void OnGripMoved(object? sender, PointerEventArgs e)
     {
-        if (!_dragging && e.Pointer.Captured != _grip) return;
+        if (!_dragging && e.Pointer.Captured != _gripHitArea) return;
         var delta = e.GetPosition(this) - _start; if (!_dragging && Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y) < XyuiCompactNavigationTokens.DragThreshold) return;
         if (!_dragging) { _dragging = true; Classes.Set("xyui-dock-tab-dragging", true); DragStarted?.Invoke(this, EventArgs.Empty); }
         var owner = this.FindAncestorOfType<XYDockTabs>(); if (owner is not null) DragMoved?.Invoke(this, e.GetPosition(owner).X); e.Handled = true;
@@ -37,7 +37,7 @@ public sealed partial class XYDockTab
 
     void OnGripReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (e.Pointer.Captured != _grip) return;
+        if (e.Pointer.Captured != _gripHitArea) return;
         var owner = this.FindAncestorOfType<XYDockTabs>();
         if (_dragging && owner is not null) DropRequested?.Invoke(this, e.GetPosition(owner).X);
         ResetDrag(e.Pointer); e.Handled = true;

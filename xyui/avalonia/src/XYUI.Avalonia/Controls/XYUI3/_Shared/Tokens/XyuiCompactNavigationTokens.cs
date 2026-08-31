@@ -8,6 +8,7 @@ public static class XyuiCompactNavigationTokens
     public const double TabBarNewWidth = 50;
     public const double DockTabHeight = 38;
     public const double DockGripWidth = 20;
+    public const double DockGripHitWidth = 28;
     public const double BreadcrumbHeight = 34;
     public const double BreadcrumbItemHeight = 26;
     public const double BreadcrumbCollapsedWidth = 32;

@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Media;
 using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
@@ -8,8 +9,10 @@ namespace XYUI.Avalonia.Controls;
 public sealed partial class XYDockTab : Border
 {
     XYIcon _grip = null!;
+    Border _gripHitArea = null!;
     public XYTab Tab { get; }
     public XYIcon Grip => _grip;
+    public Border GripHitArea => _gripHitArea;
 
     public XYDockTab(XYTab tab)
     {
@@ -32,8 +35,9 @@ public sealed partial class XYDockTab : Border
         };
         var indicator = new Border { Classes = { "xyui-dock-drop-indicator" }, IsVisible = false, IsHitTestVisible = false, Width = 2, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Stretch };
         var divider = new XYSeparator { Variant = XyuiSeparatorVariant.VerticalSplit, Classes = { "xyui-dock-divider" } };
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("20,*,Auto") };
-        Add(grid, _grip, 0); Add(grid, Tab, 1); Add(grid, divider, 2);
+        _gripHitArea = new Border { Width = XyuiCompactNavigationTokens.DockGripHitWidth, Background = Brushes.Transparent, Child = _grip, Classes = { "xyui-dock-grip-hit-area" } };
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions($"{XyuiCompactNavigationTokens.DockGripHitWidth},*,Auto") };
+        Add(grid, _gripHitArea, 0); Add(grid, Tab, 1); Add(grid, divider, 2);
         grid.Children.Add(indicator); Grid.SetColumnSpan(indicator, 3); return grid;
     }
 

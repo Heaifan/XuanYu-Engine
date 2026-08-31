@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Layout;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -26,6 +27,7 @@ public static partial class XyuiComponentStyles
         var inner = new Style(x => x.OfType<XYTab>().Class("xyui-dock-tab-inner")); inner.Setters.Add(new Setter(Border.BackgroundProperty, Brushes.Transparent)); inner.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(0))); styles.Add(inner);
         var innerDivider = new Style(x => x.OfType<XYTab>().Class("xyui-dock-tab-inner").Descendant().OfType<Border>().Class("xyui-tab-divider")); innerDivider.Setters.Add(new Setter(Visual.IsVisibleProperty, false)); styles.Add(innerDivider);
         var grip = new Style(x => x.OfType<XYIcon>().Class("xyui-dock-grip")); grip.Setters.Add(new Setter(Control.WidthProperty, 12d)); grip.Setters.Add(new Setter(Control.HeightProperty, 12d)); Brush(grip, XYIcon.StrokeProperty, "XY.Brush.Text.Tertiary"); styles.Add(grip);
+        var gripArea = new Style(x => x.OfType<Border>().Class("xyui-dock-grip-hit-area")); gripArea.Setters.Add(new Setter(Border.HorizontalAlignmentProperty, HorizontalAlignment.Left)); styles.Add(gripArea);
         var gripHover = new Style(x => x.OfType<XYDockTab>().Class(":pointerover").Descendant().OfType<XYIcon>().Class("xyui-dock-grip")); Brush(gripHover, XYIcon.StrokeProperty, "XY.Brush.Text.Secondary"); styles.Add(gripHover);
         var dragging = new Style(x => x.OfType<XYDockTab>().Class("xyui-dock-tab-dragging")); dragging.Setters.Add(new Setter(Border.OpacityProperty, 0.65)); styles.Add(dragging);
         var indicator = new Style(x => x.OfType<Border>().Class("xyui-dock-drop-indicator")); Brush(indicator, Border.BackgroundProperty, "XY.Brush.Accent.Default"); styles.Add(indicator);
