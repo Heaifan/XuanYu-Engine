@@ -4,7 +4,7 @@ using Avalonia.Media;
 
 namespace XYUI.Avalonia.Vector;
 
-public enum XyuiVectorIcon { Info, Error, Warning, Search, Locate, Browse, Copy, Code, Tag, StatusDot, Section, Empty, ChevronDown, Clear, Filter, Eye, Calendar, Clock, ChevronLeft, ChevronRight, ScrubLeftRight, MoreHorizontal, Add, DragGrip }
+public enum XyuiVectorIcon { Info, Error, Warning, Search, Locate, Browse, Copy, Code, Tag, StatusDot, Check, Section, Empty, ChevronDown, Clear, Filter, Eye, Calendar, Clock, ChevronLeft, ChevronRight, ScrubLeftRight, MoreHorizontal, Add, DragGrip }
 
 public static class XyuiVectorIcons
 {
@@ -23,6 +23,7 @@ public static class XyuiVectorIcons
             [XyuiVectorIcon.Code] = "M9 6 L3 12 L9 18 M15 6 L21 12 L15 18 M13 4 L11 20",
             [XyuiVectorIcon.Tag] = "M0 11 L11 0 H24 V22 H11 Z",
             [XyuiVectorIcon.StatusDot] = "M12 3 C16.971 3 21 7.029 21 12 C21 16.971 16.971 21 12 21 C7.029 21 3 16.971 3 12 C3 7.029 7.029 3 12 3 Z",
+            [XyuiVectorIcon.Check] = "M4 12 L9 17 L20 6",
             [XyuiVectorIcon.Section] = "M3 2 H7 V22 H3 Z",
             [XyuiVectorIcon.Empty] = "M3 12 H21",
             [XyuiVectorIcon.ChevronDown] = "M6 9 L12 15 L18 9",

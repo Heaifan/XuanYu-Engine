@@ -25,7 +25,7 @@ public sealed class XYUI3Batch04StructureTests : IClassFixture<XyuiHeadlessFixtu
 
     [Fact] public void Steps_node_state_is_mutable_and_connector_is_owned_by_steps() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var node = new XYStepNode("数据配置", XYStepState.Current); node.State = XYStepState.Completed; Assert.Equal(XYStepState.Completed, node.State); var steps = new XYSteps(node, new XYStepNode("验证", XYStepState.Pending)); Assert.Contains(steps.GetVisualDescendants().OfType<Border>(), x => x.Classes.Contains("xyui-step-connector"));
+        XyuiBatchTestHost.Prepare(); var node = new XYStepNode("数据配置", XYStepState.Current); Assert.Contains(node.GetVisualDescendants().OfType<Border>(), x => x.Classes.Contains("xyui-step-inner-dot")); node.State = XYStepState.Completed; Assert.Equal(XYStepState.Completed, node.State); Assert.Contains(node.GetVisualDescendants().OfType<XYIcon>(), x => x.Icon == XYUI.Avalonia.Vector.XyuiVectorIcon.Check); var steps = new XYSteps(node, new XYStepNode("验证", XYStepState.Pending)); Assert.Contains(steps.GetVisualDescendants().OfType<Border>(), x => x.Classes.Contains("xyui-step-connector"));
     });
 
     [Fact] public void Pagination_footer_reuses_pagination_and_select() => _fx.Run(() =>

@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.21-rz · XYUI-3-14 · Steps SVG 几何与状态归属修订（2026-08-31 14:36:00 +08:00）
+
+- 目标：按最新 Steps SVG 只修正 3.14，保持 3.13、3.15、3.16 冻结。
+- 变化：Marker 统一为圆形；Completed 使用 Check，Current 使用外环与内点，Pending 使用空心圆；连接线区分完成/未完成；Vertical 节点改为 Marker 与 Label 同行；状态改为可变。
+- 验证：Batch04 专项 6/6；UI 项目构建 0 Warning/0 Error；完整门禁结果见本轮记录。
+- 状态：XYUI-3-14 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；不启动 3.17。
+- 版本：`v0.2.28.21-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+
 ## v0.2.28.20-rz · XYUI-3-13～16 · Batch04 返工闭环（2026-08-31 14:02:00 +08:00）
 
 - 目标：按复核结论返工 3.13～3.16 的真实状态与交互，不再停留在静态骨架。

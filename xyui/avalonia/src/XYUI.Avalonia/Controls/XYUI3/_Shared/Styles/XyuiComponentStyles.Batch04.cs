@@ -16,6 +16,7 @@ public static partial class XyuiComponentStyles
         var done = new Style(x => x.OfType<Border>().Class("xyui-step-completed")); Brush(done, Border.BackgroundProperty, "XY.Brush.Accent.Default"); styles.Add(done);
         var active = new Style(x => x.OfType<Border>().Class("xyui-step-current")); Brush(active, Border.BackgroundProperty, "XY.Brush.Surface.Selected"); Brush(active, Border.BorderBrushProperty, "XY.Brush.Accent.Default"); active.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(2))); styles.Add(active);
         var pending = new Style(x => x.OfType<Border>().Class("xyui-step-pending")); Brush(pending, Border.BorderBrushProperty, "XY.Brush.Border.Color.Subtle"); styles.Add(pending);
+        var innerDot = new Style(x => x.OfType<Border>().Class("xyui-step-inner-dot")); Brush(innerDot, Border.BackgroundProperty, "XY.Brush.Accent.Default"); styles.Add(innerDot);
         var connectorDone = new Style(x => x.OfType<Border>().Class("xyui-step-connector-completed")); Brush(connectorDone, Border.BackgroundProperty, "XY.Brush.Accent.Default"); styles.Add(connectorDone);
         var connectorPending = new Style(x => x.OfType<Border>().Class("xyui-step-connector-pending")); Brush(connectorPending, Border.BackgroundProperty, "XY.Brush.Border.Color.Subtle"); styles.Add(connectorPending);
         var toolbar = new Style(x => x.OfType<XYToolbar>().Class("xyui-toolbar")); Brush(toolbar, Border.BackgroundProperty, "XY.Brush.Surface.Toolbar"); toolbar.Setters.Add(new Setter(Border.HeightProperty, 38d)); styles.Add(toolbar);

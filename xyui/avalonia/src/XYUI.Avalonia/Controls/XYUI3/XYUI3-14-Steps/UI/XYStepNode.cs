@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Media;
 using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
@@ -21,8 +22,9 @@ public sealed class XYStepNode : Border
     void Build()
     {
         Classes.Set("xyui-step-disabled", !CanNavigate);
-        var icon = State == XYStepState.Completed ? XyuiVectorIcon.StatusDot : State == XYStepState.Warning ? XyuiVectorIcon.Warning : State == XYStepState.Error ? XyuiVectorIcon.Error : XyuiVectorIcon.StatusDot;
-        var dot = new Border { Width = State == XYStepState.Current ? 26 : 24, Height = State == XYStepState.Current ? 26 : 24, Child = new XYIcon { Icon = icon, Size = XyuiIconSize.Tiny, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center } };
+        XyuiVectorIcon? icon = State == XYStepState.Completed ? XyuiVectorIcon.Check : State == XYStepState.Warning ? XyuiVectorIcon.Warning : State == XYStepState.Error ? XyuiVectorIcon.Error : null;
+        var marker = icon is { } glyph ? (Control)new XYIcon { Icon = glyph, Stroke = Brushes.White, Size = XyuiIconSize.Tiny, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center } : State == XYStepState.Current ? new Border { Width = 8, Height = 8, CornerRadius = new CornerRadius(8), Classes = { "xyui-step-inner-dot" } } : new Border();
+        var dot = new Border { Width = State == XYStepState.Current ? 26 : 24, Height = State == XYStepState.Current ? 26 : 24, Child = marker };
         dot.Classes.Set("xyui-step-completed", State == XYStepState.Completed); dot.Classes.Set("xyui-step-current", State == XYStepState.Current); dot.Classes.Set("xyui-step-pending", State == XYStepState.Pending); dot.Classes.Set("xyui-step-warning", State == XYStepState.Warning); dot.Classes.Set("xyui-step-error", State == XYStepState.Error);
         var panel = new StackPanel { Orientation = IsVertical ? Orientation.Horizontal : Orientation.Vertical, Spacing = 8, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center }; panel.Children.Add(dot); panel.Children.Add(new TextBlock { Text = Label, VerticalAlignment = VerticalAlignment.Center }); Child = panel;
     }
