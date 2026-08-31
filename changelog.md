@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.36-rz · XYUI-3-17 · Danger 样式编译修复（2026-09-01 09:12:00 +08:00）
+
+- 原因：`Brush` 辅助方法要求资源 token 字符串，Danger 背景误传 `Brushes.Transparent`，触发 CS1503。
+- 变化：改用 `Setter(Button.BackgroundProperty, Brushes.Transparent)`，保留 Danger 文本资源映射。
+- 验证：静态类型修复完成；本环境无 .NET SDK，未执行 Build/Test。
+- 状态：等待用户重新运行 Gallery Build；XYUI-3-18～20 不变。
+- 版本：`v0.2.28.36-rz` 已同步到四处版本文件。
+- Hash：待提交。
+
 ## v0.2.28.35-rz · XYUI-3-17 · CommandBar 视觉与生命周期收口（2026-08-31 20:48:00 +08:00）
 
 - 目标：只收口 XYUI-3-17，XYUI-3-18～20 源文件保持不动。
