@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.16-rz · XYUI-3-10 · DockTab 真实单底边修订（2026-08-31 12:18:00 +08:00）
+
+- 目标：修复上一轮未真正隐藏的 3.10 内层选中底边；根因是 `ShowSelectedAccent=false` 变更后 `XYTab` 未重建其本地视觉树。
+- 变化：`XYTab` 在 Label、Selected、Modified、Closable、ShowSelectedAccent 变化时重建视觉；DockTab 关闭内层 Accent 后只保留外层唯一 Accent，继续保持文本垂直居中。
+- 验证：聚焦 `XYUI3CompactNavigationStructureTests` 8/8、全量 `XYUI.Avalonia.Tests` 299/299 通过；新增断言直接确认 Dock 内层 `xyui-tab-accent` 无可见实例。
+- 状态：`XYUI-3-09～12 UI + INTERACTION IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE / AWAITING USER INTERACTION ACCEPTANCE`；本轮仍不宣布 CLOSED。
+- 文档：本轮无新增、删除、改名或移动文件，`file-tree.md` 无需更新。
+- 版本：`v0.2.28.16-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+- Hash：实现修订提交 `e060d061`；治理对账由本条目所在提交承载。
+
 ## v0.2.28.15-rz · XYUI-3-09～12 · 视觉修订与交互解冻（2026-08-31 12:00:19 +08:00）
 
 - 目标：按用户真机截图修复 3.09 / 3.10 的双底边与文字垂直偏移，并在 3.09～3.12 既定组件边界内开始真实交互，不扩张到 Dock Engine、业务路由、虚拟化或拖放系统。
