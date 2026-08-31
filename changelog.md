@@ -7,7 +7,7 @@
 - 验证：`git diff --check`、ARCH-A 通过；新增多命令不重叠结构测试；本环境无 .NET SDK，Build/Test 未执行。
 - 状态：XYUI-3-17 UI REWORKED · INTERACTION REWORKED · 等待用户视觉与交互验收；不启动 18～20 后续修改。
 - 版本：`v0.2.28.34-rz` 已同步到四处版本文件。
-- Hash：待提交。
+- Hash：`35f9b9ee`。
 
 ## v0.2.28.33-rz · XYUI-3-17～20 · 交互审查返工（2026-08-31 20:24:00 +08:00）
 
