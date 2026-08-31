@@ -34,7 +34,7 @@ public sealed class XYSteps : Border
     void BuildVertical()
     {
         _cells.ColumnDefinitions.Add(new ColumnDefinition(26, GridUnitType.Pixel)); _cells.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star));
-        for (var i = 0; i < Items.Count; i++) { _cells.RowDefinitions.Add(new RowDefinition(70, GridUnitType.Pixel)); Items[i].SetVertical(true); Grid.SetRow(Items[i], i); Grid.SetColumnSpan(Items[i], 2); Items[i].HorizontalAlignment = HorizontalAlignment.Stretch; _cells.Children.Add(Items[i]); }
+        for (var i = 0; i < Items.Count; i++) { _cells.RowDefinitions.Add(new RowDefinition(70, GridUnitType.Pixel)); Items[i].SetVertical(true); Grid.SetRow(Items[i], i); Grid.SetColumn(Items[i], 0); Grid.SetColumnSpan(Items[i], 2); Items[i].HorizontalAlignment = HorizontalAlignment.Stretch; _cells.Children.Add(Items[i]); }
         for (var i = 0; i + 1 < Items.Count; i++) _connectors.Add(AddConnector());
     }
     Border AddConnector()
