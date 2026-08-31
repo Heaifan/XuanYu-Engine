@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.38-rz · XYUI-3-17 · Layout 引用编译修复（2026-09-01 09:42:00 +08:00）
+
+- 原因：17 专属样式使用 `VerticalAlignment`，但缺少 `Avalonia.Layout` 引用，触发两处 CS0103。
+- 变化：补齐 `using Avalonia.Layout`；XYUI-3-18～20 保持不动。
+- 验证：静态引用修复完成；本环境无 .NET SDK，未执行 Build/Test。
+- 状态：等待用户重新运行 Gallery Build。
+- 版本：`v0.2.28.38-rz` 已同步到四处版本文件。
+- Hash：待提交。
+
 ## v0.2.28.37-rz · XYUI-3-17 · CommandBar Divider 与 More Surface 收口（2026-09-01 09:28:00 +08:00）
 
 - 目标：只修复 XYUI-3-17 最后一轮视觉收口，XYUI-3-18～20 保持不动。
