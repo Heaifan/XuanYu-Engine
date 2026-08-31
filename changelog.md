@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.32-rz · XYUI-3-19 · BackForward Avalonia 命名空间修复（2026-08-31 20:12:10 +08:00）
+
+- 原因：`Avalonia.Thickness` 在 `XYUI.Avalonia.Controls` 命名空间下被相对解析为 `XYUI.Avalonia.Thickness`，导致 CS0234 两处编译错误。
+- 变化：改用 `global::Avalonia.Thickness`，消除 BackForwardNavigation 的类型解析歧义。
+- 验证：ARCH-A 通过；`git diff --check` 通过；用户此前 Build 失败证据对应的两处错误已修复，本环境未重新 Build。
+- 状态：等待用户重新运行 Gallery Build 验证；不启动 XYUI-3-21。
+- 版本：`v0.2.28.32-rz` 已同步到四处版本文件。
+- Hash：待提交；待推送 `origin/feat/XYUI-A`。
+
 ## v0.2.28.31-rz · XYUI-3-17～20 · SVG 结构视觉重构（2026-08-31 20:08:32 +08:00）
 
 - 目标：严格按用户提供的四份 SVG 重构 17～20 的展示几何，不再使用松散 StackPanel 近似布局。
