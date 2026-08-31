@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.37-rz · XYUI-3-17 · CommandBar Divider 与 More Surface 收口（2026-09-01 09:28:00 +08:00）
+
+- 目标：只修复 XYUI-3-17 最后一轮视觉收口，XYUI-3-18～20 保持不动。
+- 变化：为 Standard/Contextual Divider 增加真实 Subtle 边框样式；More 恢复 28×28、Radius 3 的轻量 PanelAlt Surface；Gallery 反馈固定为 11 DIP Regular Secondary。
+- 验证：`git diff --check`、ARCH-A 通过；本环境无 .NET SDK，Build/Test 未执行。
+- 状态：XYUI-3-17 UI REWORKED · 等待用户重新复验 5 项交互；不启动 XYUI-3-18。
+- 版本：`v0.2.28.37-rz` 已同步到四处版本文件。
+- Hash：待提交。
+
 ## v0.2.28.36-rz · XYUI-3-17 · Danger 样式编译修复（2026-09-01 09:12:00 +08:00）
 
 - 原因：`Brush` 辅助方法要求资源 token 字符串，Danger 背景误传 `Brushes.Transparent`，触发 CS1503。
