@@ -33,10 +33,11 @@ public sealed class XYStepNode : Border
         }
         else
         {
-            _layout.RowDefinitions.Add(new RowDefinition(68, GridUnitType.Pixel)); _layout.RowDefinitions.Add(new RowDefinition(44, GridUnitType.Pixel));
+            _layout.RowDefinitions.Add(new RowDefinition(72, GridUnitType.Pixel)); _layout.RowDefinitions.Add(new RowDefinition(40, GridUnitType.Pixel));
             Marker.Margin = new Thickness(0); Marker.HorizontalAlignment = HorizontalAlignment.Center; Marker.VerticalAlignment = VerticalAlignment.Center; _label.HorizontalAlignment = HorizontalAlignment.Center; _label.Margin = new Thickness(0, -4, 0, 0); Grid.SetRow(Marker, 0); Grid.SetRow(_label, 1);
         }
         _layout.Children.Add(Marker); _layout.Children.Add(_label);
+        ApplyState();
     }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e) { base.OnPropertyChanged(e); if (e.Property == StateProperty || e.Property == CanNavigateProperty) ApplyState(); }
     void ApplyState()
