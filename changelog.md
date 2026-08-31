@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.27-rz · XYUI-3-14 · Steps SVG 坐标关系重构（2026-08-31 19:36:03 +08:00）
+
+- 目标：按用户提供的 Horizontal / Vertical SVG 参考修正步骤导航组件，不启动 XYUI-3-15。
+- 变化：改用独立 Canvas 布置节点与轨道；横向采用参考中心点和圆边连接线，纵向固定 Marker 中心轴 `X=42`、独立文本列和 SVG 步距；连接线改为圆角端点，节点标签不再参与轨道几何。
+- 验证：ARCH-A 通过；`git diff --check` 通过；Build/Test 受当前环境无 .NET SDK 阻断，未宣称通过。
+- 状态：XYUI-3-14 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；真机验收待用户确认。
+- 版本：`v0.2.28.27-rz` 已同步到四处版本文件。
+- Hash：`70a0f043`；待推送 `origin/feat/XYUI-A`。
+
 ## v0.2.28.26-rz · XYUI-3-14 · Steps 纵向列索引根因修复（2026-08-31 16:35:00 +08:00）
 
 - 目标：修复截图中纵向 Marker 从第一行到后续行横向漂移。
