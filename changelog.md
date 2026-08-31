@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.31-rz · XYUI-3-17～20 · SVG 结构视觉重构（2026-08-31 20:08:32 +08:00）
+
+- 目标：严格按用户提供的四份 SVG 重构 17～20 的展示几何，不再使用松散 StackPanel 近似布局。
+- 变化：CommandBar 固定 660×58 画布坐标；CommandPalette 补齐 650×360 搜索、结果和详情双栏；BackForward 补齐 500×60 位置文本区；Workspace Gallery 默认打开 224 DIP 同宽 Popup。
+- 验证：ARCH-A 通过；`git diff --check` 通过；Build/Test 受当前环境无 .NET SDK 阻断，未宣称通过。
+- 状态：XYUI-3-17～20 UI + INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE；不启动 XYUI-3-21。
+- 版本：`v0.2.28.31-rz` 已同步到四处版本文件。
+- Hash：待提交；待推送 `origin/feat/XYUI-A`。
+
 ## v0.2.28.30-rz · XYUI-3-17～20 · Compact V2 首版实现（2026-08-31 20:00:28 +08:00）
 
 - 目标：按附件 Compact V2 规格实现 XYUI-3-17～20，并保留核心交互；完成后停在 XYUI-3-20 等待验收。
