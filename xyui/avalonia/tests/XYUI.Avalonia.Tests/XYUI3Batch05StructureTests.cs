@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Gallery;
 using XYUI.Avalonia.Vector;
@@ -19,6 +20,11 @@ public sealed class XYUI3Batch05StructureTests : IClassFixture<XyuiHeadlessFixtu
     [Fact] public void CommandBar_many_commands_do_not_overlap() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var bar = new XYCommandBar(Enumerable.Range(1, 8).Select(i => new XYCommandItem($"命令{i}")).ToArray()); Assert.Equal(8, bar.Child!.GetVisualDescendants().OfType<XYCommandItem>().Count()); Assert.DoesNotContain(bar.Child.GetVisualDescendants().OfType<Canvas>());
+    });
+
+    [Fact] public void CommandBar_more_escape_closes_and_context_replaces_commands() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var bar = new XYCommandBar(new XYCommandItem("编辑")) { }; bar.MoreMenu.Items = [new XYMenuItem { Label = "导出" }]; bar.RefreshMore(); bar.MoreButton.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.True(bar.MorePopup.IsOpen); bar.MoreButton.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = Key.Escape }); Assert.False(bar.MorePopup.IsOpen); var contextual = new XYCommandBar(XYCommandBarVariant.Contextual, "roads", new XYCommandItem("编辑")); contextual.UpdateContext("cities", new XYCommandItem("复制")); Assert.Equal("cities", contextual.ContextIdentity); Assert.Equal("复制", contextual.Items.Single().Content is TextBlock text ? text.Text : "");
     });
 
     [Fact] public void CommandPalette_filters_real_commands() => _fx.Run(() =>

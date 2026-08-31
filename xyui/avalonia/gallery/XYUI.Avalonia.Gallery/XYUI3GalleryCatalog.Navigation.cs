@@ -52,8 +52,9 @@ public static partial class XYUI3GalleryCatalog
     {
         var feedback = new TextBlock { Text = "Last Command: —", Classes = { "xyui-command-feedback" } };
         var bar = new XYCommandBar(new XYCommandItem("新建", "new", XYCommandRole.Primary, XyuiVectorIcon.Add), new XYCommandItem("导入", "import"), new XYCommandItem("保存", "save") { IsEnabled = false }, new XYCommandItem("验证", "validate"), new XYCommandItem("刷新", "refresh"), new XYCommandItem("删除", "delete", XYCommandRole.Danger));
-        bar.CommandExecuted += (_, item) => feedback.Text = $"Last Command: {item.CommandId}"; bar.MoreMenu.Items = [Item("另存为"), Item("导出"), Item("复制链接"), XYMenu.Separator(), Item("高级操作")];
+        bar.CommandExecuted += (_, item) => feedback.Text = $"Last Command · {item.CommandId}"; bar.MoreMenu.Items = [Item("另存为"), Item("导出"), Item("复制链接"), XYMenu.Separator(), Item("高级操作")]; bar.RefreshMore();
         var contextual = new XYCommandBar(XYCommandBarVariant.Contextual, "roads", new XYCommandItem("编辑", "edit"), new XYCommandItem("复制", "copy"), new XYCommandItem("验证", "validate"), new XYCommandItem("删除", "delete", XYCommandRole.Danger));
+        contextual.RefreshMore();
         return new StackPanel { Spacing = 8, Children = { bar, feedback, contextual } };
     }
     static Control CommandPalettePreview() => new XYCommandPalette(new XYPaletteCommand("创建道路", "地图"), new XYPaletteCommand("验证道路"), new XYPaletteCommand("打开道路数据集"), new XYPaletteCommand("进入道路工具")) { Width = 650, Height = 360 };

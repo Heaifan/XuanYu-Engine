@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.35-rz · XYUI-3-17 · CommandBar 视觉与生命周期收口（2026-08-31 20:48:00 +08:00）
+
+- 目标：只收口 XYUI-3-17，XYUI-3-18～20 源文件保持不动。
+- 变化：恢复 Primary Accent.Soft 与 Add 图标、Danger 文本语义；真实消费 Surface 样式；空 More 自动隐藏；Contextual 支持同步替换身份与命令；补 Esc、Deactivate、Outside、Detach 关闭路径；反馈降为辅助 Caption。
+- 验证：`git diff --check`、ARCH-A 通过；补充 Escape/Context 替换与 17 多命令结构测试；本环境无 .NET SDK，Build/Test 未执行。
+- 状态：XYUI-3-17 UI REWORKED · INTERACTION REWORKED · 等待人工验收；不启动 XYUI-3-18。
+- 版本：`v0.2.28.35-rz` 已同步到四处版本文件。
+- Hash：待提交。
+
 ## v0.2.28.34-rz · XYUI-3-17 · CommandBar 定稿返工（2026-08-31 20:36:00 +08:00）
 
 - 目标：只修复 XYUI-3-17 CommandBar；XYUI-3-18～20 源文件保持不动。
