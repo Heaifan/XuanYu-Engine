@@ -1,0 +1,585 @@
+{
+ "audit_version": "0.1.0",
+ "phase": "XYUI-A3-R1",
+ "summary": {
+  "occurrences": 426,
+  "distinct_token_ids": 418,
+  "collisions_total": 8,
+  "IDENTICAL_REDECLARATION": 3,
+  "NAMESPACE_TYPE_COLLISION": 5,
+  "VALUE_COLLISION": 0,
+  "SEMANTIC_OVERLAP": 0,
+  "ALIAS_CANDIDATE_GROUPS": 35
+ },
+ "collisions": [
+  {
+   "token_id": "XY.Border.Focus",
+   "classification": "NAMESPACE_TYPE_COLLISION",
+   "occurrence_count": 2,
+   "note": "同 ID 多 value_type: ['color_pair', 'composite_dimension_style']",
+   "occurrences": [
+    {
+     "canonical_foundation_id": "XYUI.Foundation.Border",
+     "value_type": "composite_dimension_style",
+     "value": "2 DIP/Solid"
+    },
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+     "value_type": "color_pair",
+     "value": "#5C8FB4/#699CC0"
+    }
+   ]
+  },
+  {
+   "token_id": "XY.Border.Selected",
+   "classification": "NAMESPACE_TYPE_COLLISION",
+   "occurrence_count": 2,
+   "note": "同 ID 多 value_type: ['color_pair', 'composite_dimension_style']",
+   "occurrences": [
+    {
+     "canonical_foundation_id": "XYUI.Foundation.Border",
+     "value_type": "composite_dimension_style",
+     "value": "2 DIP/Solid"
+    },
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+     "value_type": "color_pair",
+     "value": "#3E78A4/#80B1D5"
+    }
+   ]
+  },
+  {
+   "token_id": "XY.Border.Strong",
+   "classification": "NAMESPACE_TYPE_COLLISION",
+   "occurrence_count": 2,
+   "note": "同 ID 多 value_type: ['color_pair', 'composite_dimension_style']",
+   "occurrences": [
+    {
+     "canonical_foundation_id": "XYUI.Foundation.Border",
+     "value_type": "composite_dimension_style",
+     "value": "2 DIP/Solid"
+    },
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+     "value_type": "color_pair",
+     "value": "#95A7B3/#687B88"
+    }
+   ]
+  },
+  {
+   "token_id": "XY.State.Dragging",
+   "classification": "NAMESPACE_TYPE_COLLISION",
+   "occurrence_count": 2,
+   "note": "同 ID 多 value_type: ['color_pair', 'enum_or_string']",
+   "occurrences": [
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+     "value_type": "color_pair",
+     "value": "#E5E9EC/#303B43"
+    },
+    {
+     "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+     "value_type": "enum_or_string",
+     "value": "Independent"
+    }
+   ]
+  },
+  {
+   "token_id": "XY.State.Selected",
+   "classification": "NAMESPACE_TYPE_COLLISION",
+   "occurrence_count": 2,
+   "note": "同 ID 多 value_type: ['color_pair', 'enum_or_string']",
+   "occurrences": [
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+     "value_type": "color_pair",
+     "value": "#D8E7F2/#35536A"
+    },
+    {
+     "canonical_foundation_id": "XYUI.Foundation.InteractionState",
+     "value_type": "enum_or_string",
+     "value": "PersistentBaseState"
+    }
+   ]
+  },
+  {
+   "token_id": "XY.Text.Link",
+   "classification": "IDENTICAL_REDECLARATION",
+   "occurrence_count": 2,
+   "note": "同 ID 同类型同值",
+   "occurrences": [
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+     "value_type": "color_pair",
+     "value": "#4A789E/#82A9C5"
+    },
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.Accent",
+     "value_type": "color_pair",
+     "value": "#4A789E/#82A9C5"
+    }
+   ]
+  },
+  {
+   "token_id": "XY.Text.Primary",
+   "classification": "IDENTICAL_REDECLARATION",
+   "occurrence_count": 2,
+   "note": "同 ID 同类型同值",
+   "occurrences": [
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+     "value_type": "color_pair",
+     "value": "#2B3A44/#DEE6EA"
+    },
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+     "value_type": "color_pair",
+     "value": "#2B3A44/#DEE6EA"
+    }
+   ]
+  },
+  {
+   "token_id": "XY.Text.Secondary",
+   "classification": "IDENTICAL_REDECLARATION",
+   "occurrence_count": 2,
+   "note": "同 ID 同类型同值",
+   "occurrences": [
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.CorePalette",
+     "value_type": "color_pair",
+     "value": "#647681/#B3BFC6"
+    },
+    {
+     "canonical_foundation_id": "XYUI.Foundation.ColorSystem.TextColor",
+     "value_type": "color_pair",
+     "value": "#647681/#B3BFC6"
+    }
+   ]
+  }
+ ],
+ "alias_candidates": [
+  {
+   "value_key": [
+    "0 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Border.Width.None",
+    "XY.Radius.None",
+    "XY.Radius.Panel",
+    "XY.Radius.Row"
+   ]
+  },
+  {
+   "value_key": [
+    "1 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Border.Width.Default",
+    "XY.Resize.Splitter.Visual"
+   ]
+  },
+  {
+   "value_key": [
+    "2 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Border.Width.Focus",
+    "XY.Border.Width.Selected",
+    "XY.Border.Width.Strong",
+    "XY.Focus.Control.OutlineWidth",
+    "XY.Radius.Toolbar"
+   ]
+  },
+  {
+   "value_key": [
+    "14 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.FontSize.Body",
+    "XY.Icon.Size.S",
+    "XY.Size.Icon.S"
+   ]
+  },
+  {
+   "value_key": [
+    "16 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Density.Comfortable.SectionGap",
+    "XY.Icon.Size.M",
+    "XY.Indent.PerLevel",
+    "XY.Size.Checkbox",
+    "XY.Size.Icon.M",
+    "XY.Size.Radio",
+    "XY.Space.4"
+   ]
+  },
+  {
+   "value_key": [
+    "20 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.FontSize.PanelTitle",
+    "XY.HitTarget.Anchor",
+    "XY.HitTarget.Vertex",
+    "XY.Icon.Size.L",
+    "XY.Size.Icon.L"
+   ]
+  },
+  {
+   "value_key": [
+    "32 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Layout.Top.Height",
+    "XY.Size.Control.M",
+    "XY.Size.Input",
+    "XY.Space.8"
+   ]
+  },
+  {
+   "value_key": [
+    "180 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Layout.Left.DefaultWidth",
+    "XY.Resize.Left.Default"
+   ]
+  },
+  {
+   "value_key": [
+    "250 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Layout.Right.DefaultWidth",
+    "XY.Resize.Right.Default"
+   ]
+  },
+  {
+   "value_key": [
+    "100 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Layout.Bottom.DefaultHeight",
+    "XY.Resize.Bottom.Default"
+   ]
+  },
+  {
+   "value_key": [
+    "8 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Density.Comfortable.Gap",
+    "XY.Density.Compact.SectionGap",
+    "XY.HitTarget.Splitter",
+    "XY.Panel.Padding",
+    "XY.Panel.SectionGap",
+    "XY.Resize.Splitter.HitTarget",
+    "XY.Size.DragHandle",
+    "XY.Space.2"
+   ]
+  },
+  {
+   "value_key": [
+    "4 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Density.Compact.Gap",
+    "XY.Indent.IconTextGap",
+    "XY.Panel.Field.RowGap",
+    "XY.Radius.Button",
+    "XY.Radius.Control",
+    "XY.Radius.Input",
+    "XY.Space.1"
+   ]
+  },
+  {
+   "value_key": [
+    "#647681",
+    "#B3BFC6",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.State.ReadOnly.Text",
+    "XY.Text.Secondary"
+   ]
+  },
+  {
+   "value_key": [
+    "#D8E7F2",
+    "#35536A",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Accent.Soft",
+    "XY.Color.Selected",
+    "XY.State.Selected",
+    "XY.Surface.Selected",
+    "XY.Tag.Accent"
+   ]
+  },
+  {
+   "value_key": [
+    "#4E7B66",
+    "#76A58A",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Color.Success",
+    "XY.Semantic.Success.Text"
+   ]
+  },
+  {
+   "value_key": [
+    "#A57634",
+    "#D0A05C",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Color.Warning",
+    "XY.Editor.Dirty",
+    "XY.Semantic.Warning.Text"
+   ]
+  },
+  {
+   "value_key": [
+    "#B34F58",
+    "#D4767D",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Color.Error",
+    "XY.Semantic.Error.Text"
+   ]
+  },
+  {
+   "value_key": [
+    "#A8B2B8",
+    "#697983",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.State.Disabled.Text",
+    "XY.Text.Disabled"
+   ]
+  },
+  {
+   "value_key": [
+    "#4A789E",
+    "#82A9C5",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Accent.Default",
+    "XY.Text.Link"
+   ]
+  },
+  {
+   "value_key": [
+    "#F9FBFC",
+    "#222E36",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Surface.PanelAlt",
+    "XY.Surface.Toolbar"
+   ]
+  },
+  {
+   "value_key": [
+    "#FFFFFF",
+    "#2A3842",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Surface.Input",
+    "XY.Surface.Raised"
+   ]
+  },
+  {
+   "value_key": [
+    "#5C8FB4",
+    "#699CC0",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Border.Focus",
+    "XY.State.Focus"
+   ]
+  },
+  {
+   "value_key": [
+    "#356C99",
+    "#7FB0D5",
+    "color_pair"
+   ],
+   "token_ids": [
+    "XY.Accent.Strong",
+    "XY.Button.Primary",
+    "XY.Tool.Active"
+   ]
+  },
+  {
+   "value_key": [
+    "28 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.HitTarget.Icon.Min",
+    "XY.Size.Control.S",
+    "XY.Size.TreeRow"
+   ]
+  },
+  {
+   "value_key": [
+    "24 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.FontSize.PageTitle",
+    "XY.HitTarget.DragHandle",
+    "XY.Size.Control.XS",
+    "XY.Space.6"
+   ]
+  },
+  {
+   "value_key": [
+    "0 ms",
+    null,
+    "duration"
+   ],
+   "token_ids": [
+    "XY.Cursor.SwitchDelay",
+    "XY.Motion.Instant"
+   ]
+  },
+  {
+   "value_key": [
+    "10 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Scrollbar.Width",
+    "XY.Size.Scrollbar"
+   ]
+  },
+  {
+   "value_key": [
+    "6 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.Drag.Threshold",
+    "XY.Radius.Popup"
+   ]
+  },
+  {
+   "value_key": [
+    "400",
+    null,
+    "numeric"
+   ],
+   "token_ids": [
+    "XY.FontWeight.Regular",
+    "XY.Text.Body.FontWeight"
+   ]
+  },
+  {
+   "value_key": [
+    "500",
+    null,
+    "numeric"
+   ],
+   "token_ids": [
+    "XY.FontWeight.Medium",
+    "XY.Text.Label.FontWeight"
+   ]
+  },
+  {
+   "value_key": [
+    "600",
+    null,
+    "numeric"
+   ],
+   "token_ids": [
+    "XY.Button.Primary.FontWeight",
+    "XY.FontWeight.Semibold",
+    "XY.Text.PanelTitle.FontWeight",
+    "XY.Text.Section.FontWeight"
+   ]
+  },
+  {
+   "value_key": [
+    "700",
+    null,
+    "numeric"
+   ],
+   "token_ids": [
+    "XY.FontWeight.Bold",
+    "XY.Text.PageTitle.FontWeight"
+   ]
+  },
+  {
+   "value_key": [
+    "12 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.FontSize.Caption",
+    "XY.Space.3"
+   ]
+  },
+  {
+   "value_key": [
+    "13 DIP",
+    null,
+    "dimension"
+   ],
+   "token_ids": [
+    "XY.FontSize.Auxiliary",
+    "XY.FontSize.Mono"
+   ]
+  },
+  {
+   "value_key": [
+    "0",
+    null,
+    "numeric"
+   ],
+   "token_ids": [
+    "XY.LetterSpacing.Body",
+    "XY.LetterSpacing.Mono",
+    "XY.LetterSpacing.Title"
+   ]
+  }
+ ]
+}

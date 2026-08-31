@@ -1,0 +1,572 @@
+{
+  "meta": {
+    "phase": "XYUI-A1-R2",
+    "based_on": [
+      "xyui/source/XYUI0/XYUI-0.md (immutable, sha256=e564a4b4...)",
+      "xyui/audit/XYUI0/evidence-index.json"
+    ],
+    "classification_rule": "CONFIRMED_APPROVED=设计意图明确+最终方案明确+工程表达明确+无未解决设计冲突；SFD/TLO 与 Decision Status 正交；PROBABLE 不得自动升级；不得为凑 44/44 倒推",
+    "summary": {
+      "CONFIRMED_APPROVED": 44
+    }
+  },
+  "items": [
+    {
+      "item_id": "XYUI0-0.1",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.1@L18-19",
+        "XYUI0-0.1@L20-66",
+        "XYUI0-0.1@L67-84",
+        "XYUI0-0.1@L97-117"
+      ],
+      "reason": "P1~P8 原则、Priority.1~6 冲突规则、MUST/SHOULD/MAY/FORBIDDEN 等级、10 条禁止项、16 条 UI 代码全部明确；无未解决冲突"
+    },
+    {
+      "item_id": "XYUI0-0.10",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.10@L1056-1057",
+        "XYUI0-0.10@L1058-1066",
+        "XYUI0-0.10@L1067-1094"
+      ],
+      "reason": "方案「语义边框」+宽度 0/1/2/2/2 与 Style Solid 明确；颜色引用 0.2-D 不重复定义"
+    },
+    {
+      "item_id": "XYUI0-0.11",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.11@L1102-1103",
+        "XYUI0-0.11@L1104-1113",
+        "XYUI0-0.11@L1114-1131"
+      ],
+      "reason": "方案「分层语义分割」+Header/Panel/Section/ListRow/VerticalSplit 五类 Inset/Width 明确；引用 0.2-D 颜色与 0.10 厚度"
+    },
+    {
+      "item_id": "XYUI0-0.12",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.12@L1142-1143",
+        "XYUI0-0.12@L1144-1154",
+        "XYUI0-0.12@L1155-1175"
+      ],
+      "reason": "方案「编辑器语义 Surface」+10 项 SurfaceRole 映射明确；Raised.Policy=InteractiveLayerOnly 明确；0.12 即 TLO 的消费层裁决依据"
+    },
+    {
+      "item_id": "XYUI0-0.13",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "SOURCE_FORMATTING_DEFECT",
+      "relationships": [
+        "XYUI-SFD-001"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.13@L1183-1184",
+        "XYUI0-0.13@L1185-1193",
+        "XYUI0-0.13@L1194-1215"
+      ],
+      "reason": "方案「轻量层级」+Tooltip/Popup/DragPreview 阴影参数与 Panel/Control=None 明确；SFD-001 仅 XY.Shadow.Control 缩进层级异常，语义同级已裁定（均 None），不影响设计裁决"
+    },
+    {
+      "item_id": "XYUI0-0.14",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.14@L1224-1225",
+        "XYUI0-0.14@L1226-1233",
+        "XYUI0-0.14@L1234-1246"
+      ],
+      "reason": "方案「克制透明度」+6 档 Opacity 值明确（0.72/0.48/0.68/0.28/0.18/0.92）"
+    },
+    {
+      "item_id": "XYUI0-0.15",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.15@L1256-1257",
+        "XYUI0-0.15@L1258-1267",
+        "XYUI0-0.15@L1268-1289"
+      ],
+      "reason": "方案「语义混合」+Outline/LocalFill/Stroke 1.5/Round 及尺寸引用 0.8 全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.16",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.16@L1298-1299",
+        "XYUI0-0.16@L1300-1310",
+        "XYUI0-0.16@L1311-1333"
+      ],
+      "reason": "方案「中央画布优先+可切换布局」+四区默认尺寸与 Collapsible/FocusMode 全部明确；「不在本阶段引入自由 Docking」边界明确"
+    },
+    {
+      "item_id": "XYUI0-0.17",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.17@L1343-1344",
+        "XYUI0-0.17@L1345-1375",
+        "XYUI0-0.17@L1376-1380",
+        "XYUI0-0.17@L1381-1409"
+      ],
+      "reason": "方案「语义面板」+五部件组合规则/Footer 居中/Section 禁套 Card/标题 ID 并列全部明确，14 项 UI 代码完整"
+    },
+    {
+      "item_id": "XYUI0-0.18",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.18@L1422-1423",
+        "XYUI0-0.18@L1424-1433",
+        "XYUI0-0.18@L1434-1438",
+        "XYUI0-0.18@L1439-1459"
+      ],
+      "reason": "方案「统一左对齐」+10 项对齐规则明确；Footer 按钮组居中为例外且明确"
+    },
+    {
+      "item_id": "XYUI0-0.19",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [
+        "XYUI0-0.8"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.19@L1470-1471",
+        "XYUI0-0.19@L1472-1490",
+        "XYUI0-0.19@L1491-1502",
+        "XYUI0-0.19@L1503-1536"
+      ],
+      "reason": "方案「Auto+手动锁定」+Compact/Comfortable 两档参数与 Auto 迟滞/全局离散切换/禁混用规则全部明确；Hysteresis=Required 为工程要求（具体阈值属实现参数，不阻塞设计裁决）"
+    },
+    {
+      "item_id": "XYUI0-0.2",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [
+        "XYUI0-0.2-A",
+        "XYUI0-0.2-B",
+        "XYUI0-0.2-C",
+        "XYUI0-0.2-D",
+        "XYUI0-0.2-E",
+        "XYUI0-0.2-F",
+        "XYUI0-0.2-G",
+        "XYUI0-0.2-H",
+        "XYUI0-0.2-I"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.2@L170"
+      ],
+      "reason": "容器节：仅组织 9 个子节，无独立设计决策；子节全部确认，容器本身无悬而未决内容"
+    },
+    {
+      "item_id": "XYUI0-0.2-A",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [
+        "XYUI-TLO-001"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.2-A@L180",
+        "XYUI0-0.2-A@L182-193",
+        "XYUI0-0.2-A@L194-238"
+      ],
+      "reason": "方案「冷灰湖蓝」+12 组 Light/Dark 色值全部明确；与 0.2-C 的数值差异属 TOKEN_LAYER_OVERLAP（色彩母版层 vs Semantic Surface 层），0.12 SurfaceRole 已定消费路径，非设计冲突"
+    },
+    {
+      "item_id": "XYUI0-0.2-B",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.2-B@L247",
+        "XYUI0-0.2-B@L249-255",
+        "XYUI0-0.2-B@L256-281"
+      ],
+      "reason": "方案「柔和层级」+Primary/Secondary/Tertiary/Placeholder/Disabled/Link 六档双主题色值全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.2-C",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [
+        "XYUI-TLO-002"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.2-C@L290",
+        "XYUI0-0.2-C@L292-304",
+        "XYUI0-0.2-C@L305-339"
+      ],
+      "reason": "方案「清晰四层」+10 档 Surface 双主题色值全部明确；与 0.2-A 的差异属 TOKEN_LAYER_OVERLAP（0.12 SurfaceRole 为实际消费层），非设计冲突"
+    },
+    {
+      "item_id": "XYUI0-0.2-D",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.2-D@L348",
+        "XYUI0-0.2-D@L350-358",
+        "XYUI0-0.2-D@L359-381"
+      ],
+      "reason": "方案「编辑器强边界」+Subtle/Default/Strong/Divider/Focus/Selected 六档双主题色值全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.2-E",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.2-E@L390",
+        "XYUI0-0.2-E@L392-402",
+        "XYUI0-0.2-E@L403-427"
+      ],
+      "reason": "方案「均衡双层强调」+Default/Soft/Strong 三级+Link/Tool/Button/Tag 映射全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.2-F",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.2-F@L436",
+        "XYUI0-0.2-F@L438-450",
+        "XYUI0-0.2-F@L451-479"
+      ],
+      "reason": "方案「编辑器语义状态」+8 项交互状态双主题色值全部明确（含 DropTarget/Snap 青绿语义）"
+    },
+    {
+      "item_id": "XYUI0-0.2-G",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.2-G@L488",
+        "XYUI0-0.2-G@L490-501",
+        "XYUI0-0.2-G@L502-548"
+      ],
+      "reason": "方案「均衡语义」+Success/Warning/Error/Info 四类×Text/Border/Background 双主题色值全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.2-H",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.2-H@L557",
+        "XYUI0-0.2-H@L559-566",
+        "XYUI0-0.2-H@L567-598"
+      ],
+      "reason": "方案「锁定强调」+Disabled/ReadOnly/Locked 三类×Background/Text/Border 双主题色值全部明确；Locked 与 Warning 分离规则明确"
+    },
+    {
+      "item_id": "XYUI0-0.2-I",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.2-I@L607",
+        "XYUI0-0.2-I@L609-617",
+        "XYUI0-0.2-I@L618-677"
+      ],
+      "reason": "方案「地图编辑语义」+16 项编辑器专用色双主题色值全部明确（Selection/Vertex/Snap 三类互不混淆）"
+    },
+    {
+      "item_id": "XYUI0-0.20",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.20@L1549-1550",
+        "XYUI0-0.20@L1551-1563",
+        "XYUI0-0.20@L1564-1584"
+      ],
+      "reason": "方案「单状态覆盖」+状态优先级链（Disabled>Pressed>Hover>Selected）与 Focus 移交 0.21 全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.21",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.21@L1596-1597",
+        "XYUI0-0.21@L1598-1611",
+        "XYUI0-0.21@L1612-1632"
+      ],
+      "reason": "方案「Focus Visible+编辑器双层 Focus」+键盘/鼠标差异/Outline 2 DIP/区域级 Focus 全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.22",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.22@L1643-1644",
+        "XYUI0-0.22@L1645-1656",
+        "XYUI0-0.22@L1657-1679"
+      ],
+      "reason": "方案「语义热区」+Icon 28/Vertex 20/Anchor 20/Splitter 8/DragHandle 24 等热区值全部明确；视觉尺寸与热区分离规则明确"
+    },
+    {
+      "item_id": "XYUI0-0.23",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.23@L1691-1692",
+        "XYUI0-0.23@L1693-1709",
+        "XYUI0-0.23@L1710-1736"
+      ],
+      "reason": "方案「语义动画」+Instant 0/Fast 80/Normal 140/Slow 220 ms 及职责映射全部明确；MaskLatency=Forbidden 明确"
+    },
+    {
+      "item_id": "XYUI0-0.24",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "SOURCE_FORMATTING_DEFECT",
+      "relationships": [
+        "XYUI-SFD-003"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.24@L1747-1748",
+        "XYUI0-0.24@L1749-1769",
+        "XYUI0-0.24@L1770-1778",
+        "XYUI0-0.24@L1779-1801"
+      ],
+      "reason": "方案「上下文堆栈」+Content/Overlay/Drag/Modal/Tooltip 五 Host 体系与优先规则全部明确（TooltipHost.Priority=Topmost、ModalHost.Above=Content|Overlay|Drag）；「临时说明」块内容与 UI 代码一致，属正式规则；SFD-003 仅 Role=Tooltip 缩进异常，不影响裁决"
+    },
+    {
+      "item_id": "XYUI0-0.25",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.25@L1811-1812",
+        "XYUI0-0.25@L1813-1823",
+        "XYUI0-0.25@L1824-1844"
+      ],
+      "reason": "方案「悬停显现」+DisplayMode/Track/Thumb/Hover/Scrolling 状态与 Width 10 全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.26",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.26@L1853-1854",
+        "XYUI0-0.26@L1855-1871",
+        "XYUI0-0.26@L1872-1890"
+      ],
+      "reason": "方案「Drag Handle+Semantic Drop Zone+Threshold」+Threshold 6 DIP/Before/Into/After/Esc 取消/禁拖入自身全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.27",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.27@L1898-1899",
+        "XYUI0-0.27@L1900-1920",
+        "XYUI0-0.27@L1921-1953"
+      ],
+      "reason": "方案「语义缩放+关键宽度吸附+双击复位」+SnapPoints Compact/Default/Wide、双击恢复、默认 180/250/100 全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.28",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.28@L1966-1967",
+        "XYUI0-0.28@L1968-1983",
+        "XYUI0-0.28@L1984-2008"
+      ],
+      "reason": "方案「状态语义指针」+12 项 Cursor 映射与 SwitchDelay=0ms 全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.29",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.29@L2017-2018",
+        "XYUI0-0.29@L2019-2033",
+        "XYUI0-0.29@L2034-2054"
+      ],
+      "reason": "方案「自适应内容」+MaxWidth 280/ShowDelay 400ms（F1 裁定：叙述『约』属语气，工程值以 XY.Tooltip.ShowDelay=400 ms 冻结）/ViewportAvoidance/AutoFlip 全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.3",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [
+        "XYUI0-0.3-A",
+        "XYUI0-0.3-B",
+        "XYUI0-0.3-C"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.3@L678"
+      ],
+      "reason": "容器节：仅组织 3 个子节，无独立设计决策；子节全部确认"
+    },
+    {
+      "item_id": "XYUI0-0.3-A",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "SOURCE_FORMATTING_DEFECT",
+      "relationships": [
+        "XYUI-SFD-002"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.3-A@L696-697",
+        "XYUI0-0.3-A@L698-705",
+        "XYUI0-0.3-A@L706-722"
+      ],
+      "reason": "方案「思源黑体+Source Code Pro」语义明确：中文/UI 用思源黑体，技术数据用 Source Code Pro；XY.Font.Mono 为独立 Token（FontFamily=Source Code Pro）已由语义与取值共同确定；SFD-002 仅缩进层级异常，不影响设计裁决"
+    },
+    {
+      "item_id": "XYUI0-0.3-B",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.3-B@L736-737",
+        "XYUI0-0.3-B@L738-744",
+        "XYUI0-0.3-B@L745-765"
+      ],
+      "reason": "方案「均衡四档」+400/500/600/700 字重及六类应用映射全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.3-C",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.3-C@L777-778",
+        "XYUI0-0.3-C@L779-788",
+        "XYUI0-0.3-C@L789-805"
+      ],
+      "reason": "方案「舒适可读」+Caption~PageTitle 八档字号全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.30",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.30@L2066-2067",
+        "XYUI0-0.30@L2068-2091",
+        "XYUI0-0.30@L2092-2116"
+      ],
+      "reason": "方案「编辑器双层命名」+DisplayName/TechnicalId/短动作/Verb+Object/ResultState/Error 结构全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.31",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.31@L2128-2129",
+        "XYUI0-0.31@L2130-2148",
+        "XYUI0-0.31@L2149-2171"
+      ],
+      "reason": "方案「语义可访问性」+键盘可达/Tab 可预测/Role-Name-State/双通道状态表达全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.32",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.32@L2180-2181",
+        "XYUI0-0.32@L2182-2207",
+        "XYUI0-0.32@L2208-2236"
+      ],
+      "reason": "方案「Per-Monitor DPI 自适应」+DIP 单位/四档缩放/PerMonitor/实时切换/Density 分离全部明确"
+    },
+    {
+      "item_id": "XYUI0-0.4",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.4@L817-818",
+        "XYUI0-0.4@L819-826",
+        "XYUI0-0.4@L827-851"
+      ],
+      "reason": "方案「紧凑行高」+8 组 FontSize/LineHeight 明确；「行高不等于控件高度」边界明确"
+    },
+    {
+      "item_id": "XYUI0-0.5",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.5@L859-860",
+        "XYUI0-0.5@L861-868",
+        "XYUI0-0.5@L869-879"
+      ],
+      "reason": "方案「语义字距」+5 项 Tracking 值明确（Body 0/Label -0.10/Title 0/Caps +0.40/Mono 0）"
+    },
+    {
+      "item_id": "XYUI0-0.6",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.6@L891-892",
+        "XYUI0-0.6@L893-901",
+        "XYUI0-0.6@L902-918"
+      ],
+      "reason": "方案「4 基数紧凑」+8 档间距值明确（4~48 DIP）；禁止零散间距规则明确"
+    },
+    {
+      "item_id": "XYUI0-0.7",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.7@L928-929",
+        "XYUI0-0.7@L930-936",
+        "XYUI0-0.7@L937-945"
+      ],
+      "reason": "方案「16 DIP 紧凑缩进」+PerLevel 16/IconTextGap 4/TreeGuide 16 明确"
+    },
+    {
+      "item_id": "XYUI0-0.8",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [
+        "XYUI0-0.19"
+      ],
+      "evidence_refs": [
+        "XYUI0-0.8@L959-960",
+        "XYUI0-0.8@L961-968",
+        "XYUI0-0.8@L969-1000"
+      ],
+      "reason": "方案「紧凑尺寸」+15 项控件尺寸明确；与 0.19 Compact 档数值一致（28/30/32）为可能关系而非冲突；0.8 是否即 Compact 档的关系问题由 R1 possible_relation 记录，不影响本项自身裁决"
+    },
+    {
+      "item_id": "XYUI0-0.9",
+      "decision_status": "CONFIRMED_APPROVED",
+      "source_quality": "CLEAR",
+      "relationships": [],
+      "evidence_refs": [
+        "XYUI0-0.9@L1012-1013",
+        "XYUI0-0.9@L1014-1022",
+        "XYUI0-0.9@L1023-1045"
+      ],
+      "reason": "方案「语义圆角」+11 项圆角值明确（None 0/Toolbar 2/Control 4/Input 4/Button 4/Popup 6/Panel 0/Row 0/Full 999）"
+    }
+  ]
+}

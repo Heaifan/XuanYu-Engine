@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+        xmlns:g="using:XYUI.Avalonia.Gallery"
+        x:Class="XYUI.Avalonia.Gallery.MainWindow"
+        x:DataType="g:MainWindowModel"
+        Title="XYUI.Avalonia · 组件文档 Gallery"
+        Width="1120" Height="760"
+        Background="{DynamicResource XY.Brush.Surface.App}">
+  <DockPanel Margin="20">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+      <Button x:Name="ThemeSwitchButton" DockPanel.Dock="Right" Content="切换 Dark"
+              Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
+              Foreground="{DynamicResource XY.Brush.Text.Primary}"
+              BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+              BorderThickness="1" Click="OnThemeSwitchClick" />
+      <StackPanel>
+        <TextBlock Text="XYUI 组件文档" Classes="xyui-heading-panel" />
+        <TextBlock x:Name="ThemeStateText" Text="Theme：Light" Classes="xyui-text-caption" />
+      </StackPanel>
+    </DockPanel>
+    <views:XYUI1DocumentationView x:Name="DocumentationView" />
+  </DockPanel>
+</Window>

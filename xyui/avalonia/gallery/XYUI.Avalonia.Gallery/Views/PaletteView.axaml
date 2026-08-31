@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.PaletteView"
+             x:DataType="g:PaletteViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <ItemsControl ItemsSource="{Binding Sections}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="g:PaletteSection">
+          <StackPanel Margin="0,0,0,16">
+            <TextBlock Text="{Binding Title}" Classes="xyui-text-section" />
+            <ItemsControl ItemsSource="{Binding Items}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate><DataTemplate x:DataType="g:PaletteItem">
+                <Border Width="152" Margin="0,6,8,0" CornerRadius="4" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1">
+                  <StackPanel><Border Height="36" Background="{Binding Brush}" CornerRadius="3,3,0,0" /><StackPanel Margin="6,4"><TextBlock Text="{Binding TokenId}" FontSize="11" /><TextBlock Text="{Binding Hex}" FontSize="10" /></StackPanel></StackPanel>
+                </Border>
+              </DataTemplate></ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,2159 @@
+{
+  "meta": {
+    "phase": "XYUI-A1-R1",
+    "source_id": "XYUI-SOURCE-000",
+    "source_file": "XYUI-0.md",
+    "source_type": "xmind-markdown-export",
+    "sha256": "e564a4b4bffc518b5df3144ca5834995ce7abd6b649853f2fa845afa3658d0b6",
+    "imported_at": "2026-08-13T00:30:00+08:00",
+    "immutable": true,
+    "intake_rule": "R1 只建立 Evidence Chain；正式五态分类留待 A1-R2",
+    "classification_summary": {
+      "total_items": 44,
+      "CLEAR": 44,
+      "DESIGN_AMBIGUOUS": 0,
+      "MISSING": 0,
+      "SOURCE_FORMATTING_DEFECT": 3,
+      "TOKEN_LAYER_OVERLAP": 2,
+      "FORMAL_APPROVED": 0,
+      "TOKEN_GENERATED": 0
+    },
+    "f1_fix": {
+      "round": "XYUI-A1-R1-F1",
+      "date": "2026-08-13",
+      "changes": [
+        "0.13: 分类为 SOURCE_FORMATTING_DEFECT（XYUI-SFD-001），非设计 AMBIGUOUS",
+        "0.29: AMBIGUOUS → CLEAR（XY.Tooltip.ShowDelay=400 ms 正式冻结）",
+        "0.3-A: 新增 SOURCE_FORMATTING_DEFECT（XYUI-SFD-002，Font.Mono 嵌套）",
+        "0.24: 新增 SOURCE_FORMATTING_DEFECT（XYUI-SFD-003，Role=Tooltip 缩进）",
+        "0.2-A/0.2-C: CONFLICT → TOKEN_LAYER_OVERLAP（XYUI-TLO-001/002）"
+      ],
+      "source_sha_unchanged": "e564a4b4bffc518b5df3144ca5834995ce7abd6b649853f2fa845afa3658d0b6"
+    }
+  },
+  "items": [
+    {
+      "item_id": "XYUI0-0.1",
+      "title": "Design Principles｜设计原则",
+      "type": "foundation-principle",
+      "location": {
+        "section": "0.1",
+        "line_range": "1-169"
+      },
+      "final_selection": "设计宪法 / Design Constitution",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L18-19",
+          "content": "方案名称：设计宪法 / Design Constitution"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L20-66",
+          "content": "核心原则 P1~P8（编辑任务优先/语义辨识优先/高信息密度/视觉克制/Canvas 优先/状态明确即时可预测/自适应离散稳定可恢复/工程可执行可验证）"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L67-84",
+          "content": "决策优先级 Priority.1~6 + 冲突规则（高优先级覆盖低优先级；禁为装饰牺牲正确性；禁为形式统一牺牲语义辨识；禁为紧凑牺牲热区）"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L85-96",
+          "content": "强制等级 MUST/SHOULD/MAY/FORBIDDEN"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L97-117",
+          "content": "禁止项 10 条（Cardification/DecorationFirst/ColorOnlyState/MagicNumber/RandomSpacing/SemanticAmbiguity/HiddenUsefulInfo/UnrecoverableLayout/DecorativeMotion/ArbitraryOverride）"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L118-136",
+          "content": "默认底线（Accessibility 默认能力/DPI 不破坏结构/Localization 不破坏布局）+ 工程落地五对象"
+        }
+      ],
+      "ui_code": [
+        "XY.Principle.Priority.1=Correctness",
+        "XY.Principle.Priority.2=SemanticClarity",
+        "XY.Principle.Priority.3=EditingEfficiency",
+        "XY.Principle.Priority.4=InformationDensity",
+        "XY.Principle.Priority.5=VisualConsistency",
+        "XY.Principle.Priority.6=Decoration",
+        "XY.Principle.CompactVisual=Allowed",
+        "XY.Principle.CompactHitTarget=Forbidden",
+        "XY.Principle.CanvasPriority=Required",
+        "XY.Principle.SemanticAmbiguity=Forbidden",
+        "XY.Principle.DecorativeMotion=Forbidden",
+        "XY.Principle.Cardification=Forbidden",
+        "XY.Principle.MagicNumber=Forbidden",
+        "XY.Principle.Recoverability=Required",
+        "XY.Principle.EngineeringMapping=Required",
+        "XY.Principle.Acceptance=Required"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.2",
+      "title": "Color System｜色彩系统（总纲）",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2",
+        "line_range": "170-677"
+      },
+      "final_selection": "见子节 0.2-A~I",
+      "evidence": [
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L170",
+          "content": "总节，含 9 子节：0.2-A 核心色彩方向 / B 文字颜色层级 / C 背景层级 / D 边框与分割线 / E 强调色层级 / F 交互状态色 / G 语义色 / H 禁用只读锁定 / I 编辑器专用颜色"
+        }
+      ],
+      "ui_code": [],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-A",
+        "XYUI0-0.2-B",
+        "XYUI0-0.2-C",
+        "XYUI0-0.2-D",
+        "XYUI0-0.2-E",
+        "XYUI0-0.2-F",
+        "XYUI0-0.2-G",
+        "XYUI0-0.2-H",
+        "XYUI0-0.2-I"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.2-A",
+      "title": "Color System｜核心色彩方向",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-A",
+        "line_range": "171-238"
+      },
+      "final_selection": "冷灰湖蓝 / Cool Gray Lake Blue",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L180",
+          "content": "方案名称：冷灰湖蓝 / Cool Gray Lake Blue"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L182-193",
+          "content": "结构特征：冷灰基础+湖蓝 Accent、浅色高明度冷灰白、深色深蓝灰非纯黑、主色低饱和、状态色低饱和绿/金褐/红、Light/Dark 同一套语义 Token、禁控件硬编码颜色"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L194-238",
+          "content": "UI代码 12 组双主题色：App/Panel/Raised/Border/Text.Primary/Text.Secondary/Accent/Hover/Selected/Success/Warning/Error"
+        }
+      ],
+      "ui_code": [
+        "XY.Color.App=#F1F4F6/#171E24",
+        "XY.Color.Panel=#F7F9FA/#1F2931",
+        "XY.Color.Raised=#FFFFFF/#26333D",
+        "XY.Color.Border=#CFD8DE/#3D4C57",
+        "XY.Text.Primary=#2B3A44/#DEE6EA",
+        "XY.Text.Secondary=#647681/#B3BFC6",
+        "XY.Color.Accent=#3E6F9B/#78A5C9",
+        "XY.Color.Hover=#E6EEF4/#2C3B47",
+        "XY.Color.Selected=#D8E7F2/#35536A",
+        "XY.Color.Success=#4E7B66/#76A58A",
+        "XY.Color.Warning=#A57634/#D0A05C",
+        "XY.Color.Error=#B34F58/#D4767D"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-C",
+        "XYUI0-0.2-G"
+      ],
+      "potential_conflict": false,
+      "note": "TOKEN_LAYER_OVERLAP（非 CONFLICT）：职责分层不同（色彩母版 vs Semantic Surface），由 0.12 SurfaceRole 决定实际消费；R1 忠实记录，A2 处理。",
+      "token_layer_overlap": {
+        "overlap_id": "XYUI-TLO-001",
+        "sections": [
+          "XYUI0-0.2-A",
+          "XYUI0-0.2-C"
+        ],
+        "pair": [
+          "XY.Color.App/#F1F4F6",
+          "XY.Surface.App/#EEF2F5"
+        ],
+        "classification": "TOKEN_LAYER_OVERLAP",
+        "reason": "0.2-A 为基础色彩母版(Base Palette)，0.2-C 为 Semantic Surface；0.12 已明确 XY.SurfaceRole.* → XY.Surface.* 为组件实际消费语义。两套值职责不同可并存。",
+        "action": "R1 不改名/不删除/不合并；A2 Registry/Token 阶段再决定 canonical mapping"
+      }
+    },
+    {
+      "item_id": "XYUI0-0.2-B",
+      "title": "Text Color｜文字颜色层级",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-B",
+        "line_range": "239-281"
+      },
+      "final_selection": "柔和层级 / Soft Hierarchy",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L247",
+          "content": "方案名称：柔和层级 / Soft Hierarchy"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L249-255",
+          "content": "结构特征：Primary 正文清晰/Secondary 弱于正文可读/Tertiary 用于 ID 元数据/Placeholder 再弱化/Disabled 最低/Link 低饱和湖蓝/层级差异柔和避免脏乱感"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L256-281",
+          "content": "UI代码六档双主题：Primary/Secondary/Tertiary/Placeholder/Disabled/Link"
+        }
+      ],
+      "ui_code": [
+        "XY.Text.Primary=#2B3A44/#DEE6EA",
+        "XY.Text.Secondary=#647681/#B3BFC6",
+        "XY.Text.Tertiary=#7A8B95/#99A7B0",
+        "XY.Text.Placeholder=#909DA5/#82919B",
+        "XY.Text.Disabled=#A8B2B8/#697983",
+        "XY.Text.Link=#4A789E/#82A9C5"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-A",
+        "XYUI0-0.2-E"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.2-C",
+      "title": "Surface｜背景层级",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-C",
+        "line_range": "282-339"
+      },
+      "final_selection": "清晰四层 / Clear Four-Level Surface",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L290",
+          "content": "方案名称：清晰四层 / Clear Four-Level Surface"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L292-304",
+          "content": "结构特征：App 最低/Panel 普通工具区/PanelAlt 轻微抬升/Raised 输入框与属性块/Overlay 浮层/Canvas 与工具面板明显区分/明度逐层抬升/不依赖阴影/禁面板自建无语义背景色"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L305-339",
+          "content": "UI代码十档双主题：App/Panel/PanelAlt/Raised/Canvas/Toolbar/Input/Overlay/Selected/BorderReference"
+        }
+      ],
+      "ui_code": [
+        "XY.Surface.App=#EEF2F5/#151C22",
+        "XY.Surface.Panel=#F5F8FA/#1C252C",
+        "XY.Surface.PanelAlt=#F9FBFC/#222E36",
+        "XY.Surface.Raised=#FFFFFF/#2A3842",
+        "XY.Surface.Canvas=#E6ECEF/#182128",
+        "XY.Surface.Toolbar=#F9FBFC/#222E36",
+        "XY.Surface.Input=#FFFFFF/#2A3842",
+        "XY.Surface.Overlay=#FFFFFF/#31424D",
+        "XY.Surface.Selected=#D8E7F2/#35536A",
+        "XY.Surface.BorderReference=#C9D3DA/#40515C"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-A",
+        "XYUI0-0.12"
+      ],
+      "potential_conflict": false,
+      "note": "TOKEN_LAYER_OVERLAP（非 CONFLICT）：职责分层不同（色彩母版 vs Semantic Surface），由 0.12 SurfaceRole 决定实际消费；R1 忠实记录，A2 处理。",
+      "token_layer_overlap": {
+        "overlap_id": "XYUI-TLO-002",
+        "sections": [
+          "XYUI0-0.2-A",
+          "XYUI0-0.2-C"
+        ],
+        "pair": [
+          "XY.Color.Panel/#F7F9FA",
+          "XY.Surface.Panel/#F5F8FA"
+        ],
+        "classification": "TOKEN_LAYER_OVERLAP",
+        "reason": "0.2-A 为基础色彩母版(Base Palette)，0.2-C 为 Semantic Surface；0.12 已明确 XY.SurfaceRole.* → XY.Surface.* 为组件实际消费语义。两套值职责不同可并存。",
+        "action": "R1 不改名/不删除/不合并；A2 Registry/Token 阶段再决定 canonical mapping"
+      }
+    },
+    {
+      "item_id": "XYUI0-0.2-D",
+      "title": "Border / Divider｜边框与分割线",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-D",
+        "line_range": "340-381"
+      },
+      "final_selection": "编辑器强边界 / Strong Editor Border",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L348",
+          "content": "方案名称：编辑器强边界 / Strong Editor Border"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L350-358",
+          "content": "结构特征：普通边框清晰/Strong 强于 Default/Selected 边界独立/Focus Ring 与 Selected 分离/Section 分割线清楚不喧宾夺主/输入区面板区画布区边界明确"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L359-381",
+          "content": "UI代码六档双主题：Subtle/Default/Strong/Divider.Default/Focus/Selected"
+        }
+      ],
+      "ui_code": [
+        "XY.Border.Subtle=#D7E0E6/#303C45",
+        "XY.Border.Default=#BFCBD3/#465966",
+        "XY.Border.Strong=#95A7B3/#687B88",
+        "XY.Divider.Default=#CAD5DC/#3A4852",
+        "XY.Border.Focus=#5C8FB4/#699CC0",
+        "XY.Border.Selected=#3E78A4/#80B1D5"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.10",
+        "XYUI0-0.11"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.2-E",
+      "title": "Accent｜强调色层级",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-E",
+        "line_range": "382-427"
+      },
+      "final_selection": "均衡双层强调 / Balanced Dual-Level Accent",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L390",
+          "content": "方案名称：均衡双层强调 / Balanced Dual-Level Accent"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L392-402",
+          "content": "结构特征：Accent 默认强调/AccentSoft 浅色选中与标签背景/AccentStrong 主按钮与当前工具/Link 与 Accent 一致/避免大面积蓝色/强调层级 Soft/Default/Strong 三级以内"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L403-427",
+          "content": "UI代码七项双主题：Default/Soft/Strong/Link/Tool.Active/Button.Primary/Tag.Accent"
+        }
+      ],
+      "ui_code": [
+        "XY.Accent.Default=#4A789E/#82A9C5",
+        "XY.Accent.Soft=#D8E7F2/#35536A",
+        "XY.Accent.Strong=#356C99/#7FB0D5",
+        "XY.Text.Link=#4A789E/#82A9C5",
+        "XY.Tool.Active=#356C99/#7FB0D5",
+        "XY.Button.Primary=#356C99/#7FB0D5",
+        "XY.Tag.Accent=#D8E7F2/#35536A"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-B",
+        "XYUI0-0.2-F"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.2-F",
+      "title": "Interaction States｜交互状态色",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-F",
+        "line_range": "428-479"
+      },
+      "final_selection": "编辑器语义状态 / Semantic Editor States",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L436",
+          "content": "方案名称：编辑器语义状态 / Semantic Editor States"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L438-450",
+          "content": "结构特征：普通交互蓝灰系/Hover 与 Pressed 连续层级/Selected 明显区别于 Hover/Active 当前工具/Focus 独立边界色不与 Selected 混用/Dragging 独立中性过渡色/Drop Target 与 Snap Candidate 青绿色/顶点编辑 Default/Hover/Selected/Snap 一眼区分"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L451-479",
+          "content": "UI代码八项双主题：Hover/Pressed/Selected/Active/Focus/Dragging/DropTarget.Background/DropTarget.Border"
+        }
+      ],
+      "ui_code": [
+        "XY.State.Hover=#E7EDF2/#2B3944",
+        "XY.State.Pressed=#D7E2EA/#344751",
+        "XY.State.Selected=#D8E7F2/#35536A",
+        "XY.State.Active=#D0E1ED/#36566B",
+        "XY.State.Focus=#5C8FB4/#699CC0",
+        "XY.State.Dragging=#E5E9EC/#303B43",
+        "XY.State.DropTarget.Background=#D5ECE5/#2B4C42",
+        "XY.State.DropTarget.Border=#3F8B78/#79B39F"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-D",
+        "XYUI0-0.20"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.2-G",
+      "title": "Semantic Colors｜语义色",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-G",
+        "line_range": "480-548"
+      },
+      "final_selection": "均衡语义 / Balanced Semantic Colors",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L488",
+          "content": "方案名称：均衡语义 / Balanced Semantic Colors"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L490-501",
+          "content": "结构特征：Success 低饱和绿/Warning 金褐/Error 克制红/Info 冷蓝/每类含 Text/Border/Background/文字承担主要辨识/背景轻量提示/Error 避免荧光红/禁止只靠颜色表达重要错误（需结合图标或文字）"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L502-548",
+          "content": "UI代码四类 × Text/Border/Background × 双主题"
+        }
+      ],
+      "ui_code": [
+        "XY.Semantic.Success.Text=#4E7B66/#76A58A",
+        "XY.Semantic.Success.Border=#80A58E/#5E856E",
+        "XY.Semantic.Success.Background=#E1EEE6/#263A2E",
+        "XY.Semantic.Warning.Text=#A57634/#D0A05C",
+        "XY.Semantic.Warning.Border=#C09B62/#8D6D45",
+        "XY.Semantic.Warning.Background=#F5ECDB/#3D3021",
+        "XY.Semantic.Error.Text=#B34F58/#D4767D",
+        "XY.Semantic.Error.Border=#CA8087/#92555B",
+        "XY.Semantic.Error.Background=#F8E4E6/#42282C",
+        "XY.Semantic.Info.Text=#4C7597/#82AAC8",
+        "XY.Semantic.Info.Border=#82A4BC/#5F7D93",
+        "XY.Semantic.Info.Background=#E3EEF5/#273946"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-A",
+        "XYUI0-0.2-H"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.2-H",
+      "title": "Disabled / ReadOnly / Locked｜禁用、只读、锁定",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-H",
+        "line_range": "549-598"
+      },
+      "final_selection": "锁定强调 / Emphasized Locked State",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L557",
+          "content": "方案名称：锁定强调 / Emphasized Locked State"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L559-566",
+          "content": "结构特征：Disabled 明显弱化/ReadOnly 保持正常可读性不做坏掉灰色/Locked 独立暖金褐明显区别于前两者/锁定同时配合锁图标或状态文字/Locked 暖色不等于 Warning（不调用 Warning Token）"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L567-598",
+          "content": "UI代码三类 × Background/Text/Border × 双主题"
+        }
+      ],
+      "ui_code": [
+        "XY.State.Disabled.Background=#F0F2F3/#20282E",
+        "XY.State.Disabled.Text=#A8B2B8/#697983",
+        "XY.State.Disabled.Border=#D8DEE2/#354149",
+        "XY.State.ReadOnly.Background=#F7F9FA/#263139",
+        "XY.State.ReadOnly.Text=#647681/#B3BFC6",
+        "XY.State.ReadOnly.Border=#C5CFD6/#465660",
+        "XY.State.Locked.Background=#F3EEE5/#383126",
+        "XY.State.Locked.Text=#8A6A38/#D0AD72",
+        "XY.State.Locked.Border=#BCA378/#856F4E"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-G",
+        "XYUI0-0.20"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.2-I",
+      "title": "Editor Colors｜编辑器专用颜色",
+      "type": "foundation-color",
+      "location": {
+        "section": "0.2-I",
+        "line_range": "599-677"
+      },
+      "final_selection": "地图编辑语义 / Map Editing Semantics",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L607",
+          "content": "方案名称：地图编辑语义 / Map Editing Semantics"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L609-617",
+          "content": "结构特征：Selection 蓝色体系/普通顶点暖色边界/Anchor 暖橙/Handle 低饱和暖褐/Snap Candidate 青绿/Dirty 金褐/Grid 低存在感/XYZ 轴红绿蓝降低饱和度/Selection/Vertex/Snap 三类互不混淆"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L618-677",
+          "content": "UI代码十六项双主题：Grid.Minor/Major、Guide、Selection、MultiSelection、BoundingBox、Vertex.Fill/Border、Anchor、Handle、Snap、Dirty、Hidden、Axis.X/Y/Z"
+        }
+      ],
+      "ui_code": [
+        "XY.Editor.Grid.Minor=#D9E1E5/#26343C",
+        "XY.Editor.Grid.Major=#BECBD2/#3B4B55",
+        "XY.Editor.Guide=#8EA5B2/#708894",
+        "XY.Editor.Selection=#3979A7/#81B1D3",
+        "XY.Editor.MultiSelection=#6A8EA8/#7596AC",
+        "XY.Editor.BoundingBox=#5C8097/#7899AE",
+        "XY.Editor.Vertex.Fill=#FFF7F0/#3A302B",
+        "XY.Editor.Vertex.Border=#B36A4B/#D18B6C",
+        "XY.Editor.Anchor=#D66A3D/#E58963",
+        "XY.Editor.Handle=#B78568/#C49C85",
+        "XY.Editor.Snap=#348873/#77B39F",
+        "XY.Editor.Dirty=#A57634/#D0A05C",
+        "XY.Editor.Hidden=#9DA8AE/#687780",
+        "XY.Editor.Axis.X=#BE6262/#D17B7B",
+        "XY.Editor.Axis.Y=#67966E/#82B089",
+        "XY.Editor.Axis.Z=#557DB0/#7F9FC9"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-F",
+        "XYUI0-0.2-G"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.3",
+      "title": "Typography｜字体系统（总纲）",
+      "type": "foundation-typography",
+      "location": {
+        "section": "0.3",
+        "line_range": "678-805"
+      },
+      "final_selection": "见子节 0.3-A~C",
+      "evidence": [
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L678",
+          "content": "总节，含 3 子节：0.3-A Font Family / B Font Weight / C Font Size"
+        }
+      ],
+      "ui_code": [],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.3-A",
+        "XYUI0-0.3-B",
+        "XYUI0-0.3-C"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.3-A",
+      "title": "Font Family｜字体家族",
+      "type": "foundation-typography",
+      "location": {
+        "section": "0.3-A",
+        "line_range": "679-722"
+      },
+      "final_selection": "思源黑体 + Source Code Pro",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L696-697",
+          "content": "方案名称：思源黑体 + Source Code Pro"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L698-705",
+          "content": "结构特征：中文与普通 UI 统一思源黑体/英文普通界面随 UI Sans 用思源黑体西文字形/ID 路径坐标数值技术数据用 Source Code Pro/满足可商用字体准入/随包保留 License 与 Copyright/不允许控件自行指定其他字体"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L706-722",
+          "content": "UI代码：UI=Source Han Sans SC、Default=UI、Mono=Source Code Pro、Technical=Mono、Fallback.CJK=Noto Sans CJK SC、Fallback.Mono=Noto Sans Mono、Policy.CommercialOnly=True、Policy.BundleLicense=Required"
+        }
+      ],
+      "ui_code": [
+        "XY.Font.UI=Source Han Sans SC",
+        "XY.Font.Default=XY.Font.UI",
+        "XY.Font.Mono=Source Code Pro",
+        "XY.Font.Technical=XY.Font.Mono",
+        "XY.Font.Fallback.CJK=Noto Sans CJK SC",
+        "XY.Font.Fallback.Mono=Noto Sans Mono",
+        "XY.Font.Policy.CommercialOnly=True",
+        "XY.Font.Policy.BundleLicense=Required"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false,
+      "note": "SOURCE_FORMATTING_DEFECT（XYUI-SFD-002）：XY.Font.Mono 应视为独立 Token，语义同级；层级显示歧义不影响取值。Source 原文不修改。",
+      "source_formatting_defect": {
+        "defect_id": "XYUI-SFD-002",
+        "section": "0.3-A",
+        "location": "L709-712",
+        "description": "原文缩进异常：XY.Font.Mono 以 12 空格缩进出现在 XY.Font.Default(8 空格) 之下",
+        "semantic_resolution": "XY.Font.Mono 为独立 Font Token（FontFamily=Source Code Pro），与 UI/Default/Technical 同级",
+        "source_immutable": true
+      }
+    },
+    {
+      "item_id": "XYUI0-0.3-B",
+      "title": "Font Weight｜字重体系",
+      "type": "foundation-typography",
+      "location": {
+        "section": "0.3-B",
+        "line_range": "724-765"
+      },
+      "final_selection": "均衡四档 / Balanced Four-Level Weight",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L736-737",
+          "content": "方案名称：均衡四档 / Balanced Four-Level Weight"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L738-744",
+          "content": "结构特征：400 正文与字段值/500 字段标签/600 Section Panel Button/700 仅页面级或最高标题/不依赖字号单独制造层级/避免大量 700 过重"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L745-765",
+          "content": "UI代码：Regular=400/Medium=500/Semibold=600/Bold=700 + Body=400/Label=500/Section=600/PanelTitle=600/PageTitle=700/Button.Primary=600"
+        }
+      ],
+      "ui_code": [
+        "XY.FontWeight.Regular=400",
+        "XY.FontWeight.Medium=500",
+        "XY.FontWeight.Semibold=600",
+        "XY.FontWeight.Bold=700",
+        "XY.Text.Body.FontWeight=400",
+        "XY.Text.Label.FontWeight=500",
+        "XY.Text.Section.FontWeight=600",
+        "XY.Text.PanelTitle.FontWeight=600",
+        "XY.Text.PageTitle.FontWeight=700",
+        "XY.Button.Primary.FontWeight=600"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.3-C"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.3-C",
+      "title": "Font Size｜字号等级",
+      "type": "foundation-typography",
+      "location": {
+        "section": "0.3-C",
+        "line_range": "767-805"
+      },
+      "final_selection": "舒适可读 / Comfortable Readability",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L777-778",
+          "content": "方案名称：舒适可读 / Comfortable Readability"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L779-788",
+          "content": "结构特征：正文 14 DIP/字段标签 15/Section 17/Panel 标题 20/页面标题 24/Caption 不低于 12/技术数据 13 等宽/优先长时间阅读舒适度/接受一定程度信息密度下降"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L789-805",
+          "content": "UI代码：Caption=12/Auxiliary=13/Body=14/Label=15/Section=17/PanelTitle=20/PageTitle=24/Mono=13"
+        }
+      ],
+      "ui_code": [
+        "XY.FontSize.Caption=12 DIP",
+        "XY.FontSize.Auxiliary=13 DIP",
+        "XY.FontSize.Body=14 DIP",
+        "XY.FontSize.Label=15 DIP",
+        "XY.FontSize.Section=17 DIP",
+        "XY.FontSize.PanelTitle=20 DIP",
+        "XY.FontSize.PageTitle=24 DIP",
+        "XY.FontSize.Mono=13 DIP"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.4",
+        "XYUI0-0.3-B"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.4",
+      "title": "Line Height｜行高",
+      "type": "foundation-typography",
+      "location": {
+        "section": "0.4",
+        "line_range": "806-851"
+      },
+      "final_selection": "紧凑行高 / Compact Line Height",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L817-818",
+          "content": "方案名称：紧凑行高 / Compact Line Height"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L819-826",
+          "content": "结构特征：正文 14/20、保留阅读空间但不舒展、属性面板高密度、Caption/Auxiliary 更紧凑、标题随字号增加、行高不等于控件高度（Button/Input/Tree Row 高度在 Sizing 另定）"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L827-851",
+          "content": "UI代码：Caption 12/16、Auxiliary 13/18、Body 14/20、Label 15/20、Section 17/22、PanelTitle 20/26、PageTitle 24/30、Mono 13/20"
+        }
+      ],
+      "ui_code": [
+        "XY.LineHeight.Caption=12/16",
+        "XY.LineHeight.Auxiliary=13/18",
+        "XY.LineHeight.Body=14/20",
+        "XY.LineHeight.Label=15/20",
+        "XY.LineHeight.Section=17/22",
+        "XY.LineHeight.PanelTitle=20/26",
+        "XY.LineHeight.PageTitle=24/30",
+        "XY.LineHeight.Mono=13/20"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.3-C"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.5",
+      "title": "Letter Spacing｜字间距",
+      "type": "foundation-typography",
+      "location": {
+        "section": "0.5",
+        "line_range": "852-879"
+      },
+      "final_selection": "语义字距 / Semantic Letter Spacing",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L859-860",
+          "content": "方案名称：语义字距 / Semantic Letter Spacing"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L861-868",
+          "content": "结构特征：中文正文默认字距/Label 轻微收紧/Title 默认/CAPS 英文轻微扩展/Mono 原生字距/只在有明确语义价值处调整/避免中文正文大幅拉宽"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L869-879",
+          "content": "UI代码：Body=0、Label=-0.10、Title=0、Caps=+0.40、Mono=0"
+        }
+      ],
+      "ui_code": [
+        "XY.LetterSpacing.Body=0",
+        "XY.LetterSpacing.Label=-0.10",
+        "XY.LetterSpacing.Title=0",
+        "XY.LetterSpacing.Caps=+0.40",
+        "XY.LetterSpacing.Mono=0"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.6",
+      "title": "Spacing｜间距系统",
+      "type": "foundation-spacing",
+      "location": {
+        "section": "0.6",
+        "line_range": "880-918"
+      },
+      "final_selection": "4 基数紧凑 / Compact 4-Base Spacing",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L891-892",
+          "content": "方案名称：4 基数紧凑 / Compact 4-Base Spacing"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L893-901",
+          "content": "结构特征：以 4 DIP 为主要基础单位/Token 数量较少/高频编辑器区域紧凑/小间距 4/8/中型控件与 Panel 12/16/Section 与大分组 24+/避免 5/7/11/13 等零散间距"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L902-918",
+          "content": "UI代码八档：Space.1~12 = 4/8/12/16/24/32/40/48 DIP"
+        }
+      ],
+      "ui_code": [
+        "XY.Space.1=4 DIP",
+        "XY.Space.2=8 DIP",
+        "XY.Space.3=12 DIP",
+        "XY.Space.4=16 DIP",
+        "XY.Space.6=24 DIP",
+        "XY.Space.8=32 DIP",
+        "XY.Space.10=40 DIP",
+        "XY.Space.12=48 DIP"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.7",
+      "title": "Indentation｜缩进系统",
+      "type": "foundation-spacing",
+      "location": {
+        "section": "0.7",
+        "line_range": "919-945"
+      },
+      "final_selection": "16 DIP 紧凑缩进 / Compact 16 DIP Indentation",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L928-929",
+          "content": "方案名称：16 DIP 紧凑缩进 / Compact 16 DIP Indentation"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L930-936",
+          "content": "结构特征：每深入一级固定增加 16 DIP/适合复杂层级高密度/三四级仍保留横向空间/Tree Guide 与 Disclosure 位置统一/图标文字固定小间距/避免不同 Tree 自定义缩进"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L937-945",
+          "content": "UI代码：PerLevel=16、IconTextGap=4、TreeGuide=16 Step、Disclosure=Follow PerLevel"
+        }
+      ],
+      "ui_code": [
+        "XY.Indent.PerLevel=16 DIP",
+        "XY.Indent.IconTextGap=4 DIP",
+        "XY.Indent.TreeGuide=16 DIP Step",
+        "XY.Indent.Disclosure=Follow XY.Indent.PerLevel"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.8",
+      "title": "Sizing｜基础尺寸系统",
+      "type": "foundation-sizing",
+      "location": {
+        "section": "0.8",
+        "line_range": "946-1000"
+      },
+      "final_selection": "紧凑尺寸 / Compact Sizing",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L959-960",
+          "content": "方案名称：紧凑尺寸 / Compact Sizing"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L961-968",
+          "content": "结构特征：高频编辑器控件整体紧凑/Tree Row 高密度/Toolbar 不过高/Input 与中型控件统一 32 DIP 左右/常规图标 16 DIP/Checkbox Radio 16 DIP/Scrollbar 与 Drag Handle 细窄"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L969-1000",
+          "content": "UI代码：Control XS/S/M/L=24/28/32/36、TreeRow=28、Toolbar=30、Input=32、Icon S/M/L=14/16/20、Checkbox=16、Radio=16、Switch=34x18、Scrollbar=10、DragHandle=8"
+        }
+      ],
+      "ui_code": [
+        "XY.Size.Control.XS=24 DIP",
+        "XY.Size.Control.S=28 DIP",
+        "XY.Size.Control.M=32 DIP",
+        "XY.Size.Control.L=36 DIP",
+        "XY.Size.TreeRow=28 DIP",
+        "XY.Size.Toolbar=30 DIP",
+        "XY.Size.Input=32 DIP",
+        "XY.Size.Icon.S=14 DIP",
+        "XY.Size.Icon.M=16 DIP",
+        "XY.Size.Icon.L=20 DIP",
+        "XY.Size.Checkbox=16 DIP",
+        "XY.Size.Radio=16 DIP",
+        "XY.Size.Switch=34x18 DIP",
+        "XY.Size.Scrollbar=10 DIP",
+        "XY.Size.DragHandle=8 DIP"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.19"
+      ],
+      "potential_conflict": false,
+      "note": "与 0.19 关系：0.8 尺寸与 0.19 Compact 档一致（TreeRow 28/Toolbar 30/Input 32），0.19 额外定义 Comfortable 档（32/34/36）；原文未明示 0.8 即 Compact 档，关系留待 R2 裁决。"
+    },
+    {
+      "item_id": "XYUI0-0.9",
+      "title": "Radius｜圆角系统",
+      "type": "foundation-radius",
+      "location": {
+        "section": "0.9",
+        "line_range": "1001-1045"
+      },
+      "final_selection": "语义圆角 / Semantic Radius",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1012-1013",
+          "content": "方案名称：语义圆角 / Semantic Radius"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1014-1022",
+          "content": "结构特征：圆角表达组件角色非现代感/Panel 方正/Tree Row 不做圆角卡片/Toolbar 极轻圆角/Input Button 轻微圆角/Popup 稍圆/Tag Badge 可 Full/避免整个编辑器卡片化"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1023-1045",
+          "content": "UI代码：None=0、Toolbar=2、Control=4、Input=4、Button=4、Popup=6、Panel=0、Row=0、Full=999、Tag=Full、Badge=Full"
+        }
+      ],
+      "ui_code": [
+        "XY.Radius.None=0 DIP",
+        "XY.Radius.Toolbar=2 DIP",
+        "XY.Radius.Control=4 DIP",
+        "XY.Radius.Input=4 DIP",
+        "XY.Radius.Button=4 DIP",
+        "XY.Radius.Popup=6 DIP",
+        "XY.Radius.Panel=0 DIP",
+        "XY.Radius.Row=0 DIP",
+        "XY.Radius.Full=999 DIP",
+        "XY.Radius.Tag=XY.Radius.Full",
+        "XY.Radius.Badge=XY.Radius.Full"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.10",
+      "title": "Border｜边框系统",
+      "type": "foundation-border",
+      "location": {
+        "section": "0.10",
+        "line_range": "1046-1094"
+      },
+      "final_selection": "语义边框 / Semantic Border",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1056-1057",
+          "content": "方案名称：语义边框 / Semantic Border"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1058-1066",
+          "content": "结构特征：Container/Panel 不默认完整外框/Panel 之间依赖 Divider/Input Button Control 1 DIP 完整边框/关键结构 2 DIP Strong/Focus 独立 2 DIP Outline/Selected 独立 2 DIP/普通结构边框焦点态选中态不共用语义/颜色沿用 0.2-D 不重复定义"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1067-1094",
+          "content": "UI代码：Width None/Default/Strong/Focus/Selected=0/1/2/2/2、Style=Solid、Container=0+UseDivider、Control=1+Solid、Strong=2+Solid、Focus=2+Solid、Selected=2+Solid"
+        }
+      ],
+      "ui_code": [
+        "XY.Border.Width.None=0 DIP",
+        "XY.Border.Width.Default=1 DIP",
+        "XY.Border.Width.Strong=2 DIP",
+        "XY.Border.Width.Focus=2 DIP",
+        "XY.Border.Width.Selected=2 DIP",
+        "XY.Border.Style.Default=Solid",
+        "XY.Border.Container=0 DIP/UseDivider",
+        "XY.Border.Control=1 DIP/Solid",
+        "XY.Border.Strong=2 DIP/Solid",
+        "XY.Border.Focus=2 DIP/Solid",
+        "XY.Border.Selected=2 DIP/Solid"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-D",
+        "XYUI0-0.11"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.11",
+      "title": "Divider｜分割线规则",
+      "type": "foundation-border",
+      "location": {
+        "section": "0.11",
+        "line_range": "1095-1131"
+      },
+      "final_selection": "分层语义分割 / Hierarchical Semantic Divider",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1102-1103",
+          "content": "方案名称：分层语义分割 / Hierarchical Semantic Divider"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1104-1113",
+          "content": "结构特征：Header 全幅/Inspector Section 左右 16 DIP 内缩/Tree List Row 左右 16 DIP 内缩/垂直 Panel Split 全高/大结构完整分割小结构内容对齐/颜色沿用 0.2-D/厚度沿用 0.10"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1114-1131",
+          "content": "UI代码：Header=0/1、Panel=0/1、Section=16/16/1、ListRow=16/16/1、VerticalSplit=0/1"
+        }
+      ],
+      "ui_code": [
+        "XY.Divider.Header=0/1 DIP",
+        "XY.Divider.Panel=0/1 DIP",
+        "XY.Divider.Section=16/16/1 DIP",
+        "XY.Divider.ListRow=16/16/1 DIP",
+        "XY.Divider.VerticalSplit=0/1 DIP"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-D",
+        "XYUI0-0.10"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.12",
+      "title": "Surface｜表面层级规则",
+      "type": "foundation-surface",
+      "location": {
+        "section": "0.12",
+        "line_range": "1132-1175"
+      },
+      "final_selection": "编辑器语义 Surface / Semantic Editor Surface",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1142-1143",
+          "content": "方案名称：编辑器语义 Surface / Semantic Editor Surface"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1144-1154",
+          "content": "结构特征：App 最底层/Navigation 与普通 Panel 用 Panel/Inspector 次级用 PanelAlt/Canvas 独立/Input 用 Input 或 Raised/Popup Tooltip Menu 用 Overlay/Selected 用 Selected/Raised 只表示真正更高交互层级/禁止把 Raised 当重要卡片背景滥用"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1155-1175",
+          "content": "UI代码：SurfaceRole 十项映射 + Raised.Policy=InteractiveLayerOnly"
+        }
+      ],
+      "ui_code": [
+        "XY.SurfaceRole.App=XY.Surface.App",
+        "XY.SurfaceRole.Navigation=XY.Surface.Panel",
+        "XY.SurfaceRole.Panel=XY.Surface.Panel",
+        "XY.SurfaceRole.PanelSecondary=XY.Surface.PanelAlt",
+        "XY.SurfaceRole.Canvas=XY.Surface.Canvas",
+        "XY.SurfaceRole.Toolbar=XY.Surface.Toolbar",
+        "XY.SurfaceRole.Input=XY.Surface.Input",
+        "XY.SurfaceRole.Overlay=XY.Surface.Overlay",
+        "XY.SurfaceRole.Selected=XY.Surface.Selected",
+        "XY.SurfaceRole.Raised.Policy=InteractiveLayerOnly"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-C"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.13",
+      "title": "Shadow｜阴影系统",
+      "type": "foundation-shadow",
+      "location": {
+        "section": "0.13",
+        "line_range": "1176-1215"
+      },
+      "final_selection": "轻量层级 / Lightweight Elevation",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1183-1184",
+          "content": "方案名称：轻量层级 / Lightweight Elevation"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1185-1193",
+          "content": "结构特征：普通 Panel/Button/Input 不使用阴影/Tooltip 轻阴影/Popup Menu 中轻阴影/Drag Preview 略强/阴影只表达 Z 轴脱离关系/不使用 Shadow 承担结构分区/结构层级由 Surface/Divider/Border 负责"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1194-1215",
+          "content": "UI代码：None、Tooltip(0,3,10,0.12)、Popup(0,6,18,0.14)、DragPreview(0,6,18,0.14)、Panel=None、Control=None"
+        }
+      ],
+      "ui_code": [
+        "XY.Shadow.None=None",
+        "XY.Shadow.Tooltip=0/3/10/0.12",
+        "XY.Shadow.Popup=0/6/18/0.14",
+        "XY.Shadow.DragPreview=0/6/18/0.14",
+        "XY.Shadow.Panel=None",
+        "XY.Shadow.Control=None"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false,
+      "note": "SOURCE_FORMATTING_DEFECT（XYUI-SFD-001）：层级表达异常，非设计未定；语义同级已由人工裁定。Source 原文不修改。",
+      "source_formatting_defect": {
+        "defect_id": "XYUI-SFD-001",
+        "section": "0.13",
+        "location": "L1212-1215",
+        "description": "原文缩进异常：XY.Shadow.Control 以 12 空格缩进出现在 XY.Shadow.Panel(8 空格) 之下",
+        "semantic_resolution": "XY.Shadow.Panel 与 XY.Shadow.Control 语义上为同级 Token（均 Value=None）",
+        "source_immutable": true
+      }
+    },
+    {
+      "item_id": "XYUI0-0.14",
+      "title": "Opacity｜透明度系统",
+      "type": "foundation-opacity",
+      "location": {
+        "section": "0.14",
+        "line_range": "1216-1246"
+      },
+      "final_selection": "克制透明度 / Restrained Opacity",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1224-1225",
+          "content": "方案名称：克制透明度 / Restrained Opacity"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1226-1233",
+          "content": "结构特征：普通控件优先实色 Token/透明度服务弱化遮罩临时状态/Disabled 明显弱化仍可辨认/Drag Ghost 足够可见/Modal Backdrop 较轻遮罩/Hidden 轻微残影/Hover Selected Error 不依赖透明度表达"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1234-1246",
+          "content": "UI代码六档：Subtle=0.72/Disabled=0.48/DragGhost=0.68/Backdrop=0.28/Hidden=0.18/Overlay=0.92"
+        }
+      ],
+      "ui_code": [
+        "XY.Opacity.Subtle=0.72",
+        "XY.Opacity.Disabled=0.48",
+        "XY.Opacity.DragGhost=0.68",
+        "XY.Opacity.Backdrop=0.28",
+        "XY.Opacity.Hidden=0.18",
+        "XY.Opacity.Overlay=0.92"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.15",
+      "title": "Icon｜图标系统",
+      "type": "foundation-icon",
+      "location": {
+        "section": "0.15",
+        "line_range": "1247-1289"
+      },
+      "final_selection": "语义混合 / Semantic Hybrid Icon",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1256-1257",
+          "content": "方案名称：语义混合 / Semantic Hybrid Icon"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1258-1267",
+          "content": "结构特征：默认 Outline 为主/Active Selected 允许局部填充/Active 用 Accent 色/普通轻量/Disabled 弱化色/尺寸沿用 0.8（14/16/20）/默认 Stroke 1.5 DIP/Round Cap Round Join"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1268-1289",
+          "content": "UI代码：Style.Default=Outline、Style.Active=Outline+LocalFill、Stroke=1.5、LineCap/Join=Round、Size S/M/L=14/16/20、State.Active=Accent.Strong+LocalFill、State.Disabled=Text.Disabled"
+        }
+      ],
+      "ui_code": [
+        "XY.Icon.Style.Default=Outline",
+        "XY.Icon.Style.Active=Outline+LocalFill",
+        "XY.Icon.Stroke=1.5 DIP",
+        "XY.Icon.LineCap=Round",
+        "XY.Icon.LineJoin=Round",
+        "XY.Icon.Size.S=14 DIP",
+        "XY.Icon.Size.M=16 DIP",
+        "XY.Icon.Size.L=20 DIP",
+        "XY.Icon.State.Active=XY.Accent.Strong",
+        "XY.Icon.State.Disabled=XY.Text.Disabled"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.8"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.16",
+      "title": "Layout｜整体布局骨架",
+      "type": "foundation-layout",
+      "location": {
+        "section": "0.16",
+        "line_range": "1290-1333"
+      },
+      "final_selection": "中央画布优先 + 可切换布局",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1298-1299",
+          "content": "方案名称：中央画布优先 + 可切换布局"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1300-1310",
+          "content": "结构特征：默认 Left/Canvas/Right/Bottom 四区/中央 Canvas 优先/左导航较窄/右 Inspector 基础可用宽度/Bottom 日志区压缩/三区均可独立隐藏/Canvas 专注模式（不改变结构只临时收起辅助区）/不在本阶段引入自由 Docking"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1311-1333",
+          "content": "UI代码：Top.Height=32、Left.DefaultWidth=180、Right.DefaultWidth=250、Bottom.DefaultHeight=100、Center=FillRemaining、Collapsible=True×3、FocusMode=CanvasPriority、Hide Left/Right/Bottom=Allowed"
+        }
+      ],
+      "ui_code": [
+        "XY.Layout.Top.Height=32 DIP",
+        "XY.Layout.Left.DefaultWidth=180 DIP",
+        "XY.Layout.Right.DefaultWidth=250 DIP",
+        "XY.Layout.Bottom.DefaultHeight=100 DIP",
+        "XY.Layout.Center=FillRemaining",
+        "XY.Layout.Left.Collapsible=True",
+        "XY.Layout.Right.Collapsible=True",
+        "XY.Layout.Bottom.Collapsible=True",
+        "XY.Layout.FocusMode=CanvasPriority",
+        "XY.Layout.FocusMode.Hide=Left/Right/Bottom Allowed"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.27"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.17",
+      "title": "Panel｜面板结构",
+      "type": "foundation-panel",
+      "location": {
+        "section": "0.17",
+        "line_range": "1334-1409"
+      },
+      "final_selection": "语义面板 / Semantic Panel",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1343-1344",
+          "content": "方案名称：语义面板 / Semantic Panel"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1345-1375",
+          "content": "结构特征：Panel 不采用固定结构/五种结构部件 Header Toolbar Content Section Footer/不同 Panel 按职责组合（Navigation=Header+Content；Inspector=Header+Content+Section+Footer 可选；Dataset/Layer/Tool=Header+Toolbar+Content；显式确认面板=Header+Content+Section 可选+Footer）/Header 默认保留/Toolbar 仅高频操作/Content 始终主区/Section=标题+Divider+内容/禁止 Section 套 Card/Section 之间尽量减少无意义空白/Section 内有效信息填满/Footer 非强制/Footer 操作按钮组居中/标题与辅助 ID 优先并列显示"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1376-1380",
+          "content": "示例：道路 road-ffcb76；避免标题一行 ID 再占一行；高密度布局；普通 Inspector 不默认要求显式保存"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1381-1409",
+          "content": "UI代码：Structure=Semantic、Header=Visible、Toolbar=Optional、Content=FillRemaining、Section=Title+Divider+Content、Section.CardNesting=Forbidden、Section.Density=Compact、Section.EmptySpace=Minimize、Footer=Optional、Footer.Alignment=Center、TitleMeta.Layout=Inline、Padding=8、Field.RowGap=4、SectionGap=8"
+        }
+      ],
+      "ui_code": [
+        "XY.Panel.Structure=Semantic",
+        "XY.Panel.Header=Visible",
+        "XY.Panel.Toolbar=Optional",
+        "XY.Panel.Content=FillRemaining",
+        "XY.Panel.Section=Title+Divider+Content",
+        "XY.Panel.Section.CardNesting=Forbidden",
+        "XY.Panel.Section.Density=Compact",
+        "XY.Panel.Section.EmptySpace=Minimize",
+        "XY.Panel.Footer=Optional",
+        "XY.Panel.Footer.Alignment=Center",
+        "XY.Panel.TitleMeta.Layout=Inline",
+        "XY.Panel.Padding=8 DIP",
+        "XY.Panel.Field.RowGap=4 DIP",
+        "XY.Panel.SectionGap=8 DIP"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.18",
+      "title": "Alignment｜对齐规则",
+      "type": "foundation-alignment",
+      "location": {
+        "section": "0.18",
+        "line_range": "1410-1459"
+      },
+      "final_selection": "统一左对齐 / Unified Left Alignment",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1422-1423",
+          "content": "方案名称：统一左对齐 / Unified Left Alignment"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1424-1433",
+          "content": "结构特征：Label/Value/数字/ID/Path/状态文字默认左对齐/不因数值类型自动右对齐/稳定左侧阅读基线/标题与辅助 ID 可同行"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1434-1438",
+          "content": "示例：道路 road-ffcb76；Footer 为特殊操作区，按钮组居中不受正文左对齐影响"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1439-1459",
+          "content": "UI代码：Text/Label/Value/Number/ID/Path/Status/SectionContent=Left、TitleMeta=InlineLeft、FooterActions=Center"
+        }
+      ],
+      "ui_code": [
+        "XY.Alignment.Text=Left",
+        "XY.Alignment.Label=Left",
+        "XY.Alignment.Value=Left",
+        "XY.Alignment.Number=Left",
+        "XY.Alignment.ID=Left",
+        "XY.Alignment.Path=Left",
+        "XY.Alignment.Status=Left",
+        "XY.Alignment.SectionContent=Left",
+        "XY.Alignment.TitleMeta=InlineLeft",
+        "XY.Alignment.FooterActions=Center"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.19",
+      "title": "Density｜密度策略",
+      "type": "foundation-density",
+      "location": {
+        "section": "0.19",
+        "line_range": "1460-1536"
+      },
+      "final_selection": "Auto + 手动锁定 / Adaptive Density with Manual Lock",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1470-1471",
+          "content": "方案名称：Auto + 手动锁定 / Adaptive Density with Manual Lock"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1472-1490",
+          "content": "结构特征：两套完整密度 Compact/Comfortable/默认 Auto/Auto 按可用空间整组切换/禁同一界面混用/可手动锁定任一档/锁定后禁 Auto 切换/离散 Token 禁连续缩放/切换只改尺寸间距不改颜色字体家族语义结构功能/Auto 切换必须迟滞避免闪切"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1491-1502",
+          "content": "两档参数：Compact=TreeRow 28/Toolbar 30/Input 32/BaseGap 4/SectionGap 8；Comfortable=32/34/36/8/16"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1503-1536",
+          "content": "UI代码：Mode=Auto(Allowed Auto|Compact|Comfortable)、Auto.Strategy=GlobalDiscreteSwitch、Auto.Scope=WholeUI、Auto.Hysteresis=Required、Compact/Comfortable 五参数、ManualLock=Supported、MixedMode=Forbidden"
+        }
+      ],
+      "ui_code": [
+        "XY.Density.Mode=Auto|Compact|Comfortable",
+        "XY.Density.Auto=GlobalDiscreteSwitch",
+        "XY.Density.Auto.Scope=WholeUI",
+        "XY.Density.Auto.Hysteresis=Required",
+        "XY.Density.Compact.TreeRow=28 DIP",
+        "XY.Density.Compact.Toolbar=30 DIP",
+        "XY.Density.Compact.Input=32 DIP",
+        "XY.Density.Compact.Gap=4 DIP",
+        "XY.Density.Compact.SectionGap=8 DIP",
+        "XY.Density.Comfortable.TreeRow=32 DIP",
+        "XY.Density.Comfortable.Toolbar=34 DIP",
+        "XY.Density.Comfortable.Input=36 DIP",
+        "XY.Density.Comfortable.Gap=8 DIP",
+        "XY.Density.Comfortable.SectionGap=16 DIP",
+        "XY.Density.ManualLock=Supported",
+        "XY.Density.MixedMode=Forbidden"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.8"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.20",
+      "title": "Interaction State｜交互状态规则",
+      "type": "foundation-interaction",
+      "location": {
+        "section": "0.20",
+        "line_range": "1537-1584"
+      },
+      "final_selection": "单状态覆盖 / Single State Override",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1549-1550",
+          "content": "方案名称：单状态覆盖 / Single State Override"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1551-1563",
+          "content": "结构特征：同一控件同一时刻只展示一个最终视觉状态/禁多层背景叠加/高优先级覆盖低优先级/Disabled 最高/Pressed 优先于 Hover/Hover 优先于普通 Selected/Dragging 与 DropTarget 独立状态/Focus 不在本项处理（0.21 单独定义）/状态切换不得改变控件尺寸不得布局跳动/状态颜色沿用 0.2-F"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1564-1584",
+          "content": "UI代码：ComposeMode=Single、Layering=Forbidden、Disabled.Priority=Highest、Pressed.Priority=AboveHover、Hover.Priority=AboveSelected、Selected=PersistentBaseState、Dragging/DropTarget=Independent、ResizeOnChange=Forbidden、ColorSource=XY.State.*"
+        }
+      ],
+      "ui_code": [
+        "XY.State.ComposeMode=Single",
+        "XY.State.Layering=Forbidden",
+        "XY.State.Disabled.Priority=Highest",
+        "XY.State.Pressed.Priority=AboveHover",
+        "XY.State.Hover.Priority=AboveSelected",
+        "XY.State.Selected=PersistentBaseState",
+        "XY.State.Dragging=Independent",
+        "XY.State.DropTarget=Independent",
+        "XY.State.ResizeOnChange=Forbidden",
+        "XY.State.ColorSource=XY.State.*"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.2-F",
+        "XYUI0-0.21"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.21",
+      "title": "Focus｜焦点规则",
+      "type": "foundation-focus",
+      "location": {
+        "section": "0.21",
+        "line_range": "1585-1632"
+      },
+      "final_selection": "Focus Visible + 编辑器双层 Focus",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1596-1597",
+          "content": "方案名称：Focus Visible + 编辑器双层 Focus"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1598-1611",
+          "content": "结构特征：键盘导航明确显示 Focus/鼠标点击普通控件后默认不持续显示 Focus Ring/减少蓝色焦点框/普通控件独立 Focus Outline/Focus Outline 不参与 0.20 背景状态覆盖/Canvas Panel 支持区域级 Focus/当前拥有快捷键输入权的编辑区域必须可识别/Canvas Focus 显示整个区域边界/Focus 不改变尺寸不推动布局/Focus 颜色沿用 XY.Border.Focus"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1612-1632",
+          "content": "UI代码：DisplayMode=FocusVisible、Keyboard=Visible、Mouse.PersistentRing=False、Control.OutlineWidth=2、Control.OutlineColor=XY.Border.Focus、Control.Resize=Forbidden、EditorArea=Supported、Canvas=AreaOutline、Panel=AreaFocus、ShortcutScope=FocusedArea"
+        }
+      ],
+      "ui_code": [
+        "XY.Focus.DisplayMode=FocusVisible",
+        "XY.Focus.Keyboard=Visible",
+        "XY.Focus.Mouse.PersistentRing=False",
+        "XY.Focus.Control.OutlineWidth=2 DIP",
+        "XY.Focus.Control.OutlineColor=XY.Border.Focus",
+        "XY.Focus.Control.Resize=Forbidden",
+        "XY.Focus.EditorArea=Supported",
+        "XY.Focus.Canvas=AreaOutline",
+        "XY.Focus.Panel=AreaFocus",
+        "XY.Focus.ShortcutScope=FocusedArea"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.20",
+        "XYUI0-0.2-D"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.22",
+      "title": "Hit Target｜点击 / 抓取热区",
+      "type": "foundation-hit-target",
+      "location": {
+        "section": "0.22",
+        "line_range": "1633-1679"
+      },
+      "final_selection": "语义热区 / Semantic Hit Target",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1643-1644",
+          "content": "方案名称：语义热区 / Semantic Hit Target"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1645-1656",
+          "content": "结构特征：视觉尺寸与 Hit Target 分离/小控件允许更大隐形热区/扩大热区不改变视觉尺寸/Icon 扩展热区/Tree List 默认整行可点击/Vertex Anchor 独立扩大热区/Splitter 视觉极细但抓取区更宽/Drag Handle 扩大/不同交互对象按语义用不同热区/禁止所有小目标机械使用同一热区"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1657-1679",
+          "content": "UI代码：Mode=Semantic、VisualSizeIndependent=True、Icon.Min=28、TreeRow/ListRow=FullRow、Vertex/Anchor=20、Splitter=8、DragHandle=24、ResizeHandle=SemanticExpanded、ChangeVisualSize=Forbidden"
+        }
+      ],
+      "ui_code": [
+        "XY.HitTarget.Mode=Semantic",
+        "XY.HitTarget.VisualSizeIndependent=True",
+        "XY.HitTarget.Icon.Min=28 DIP",
+        "XY.HitTarget.TreeRow=FullRow",
+        "XY.HitTarget.ListRow=FullRow",
+        "XY.HitTarget.Vertex=20 DIP",
+        "XY.HitTarget.Anchor=20 DIP",
+        "XY.HitTarget.Splitter=8 DIP",
+        "XY.HitTarget.DragHandle=24 DIP",
+        "XY.HitTarget.ResizeHandle=SemanticExpanded",
+        "XY.HitTarget.ChangeVisualSize=Forbidden"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.23",
+      "title": "Motion｜动效规则",
+      "type": "foundation-motion",
+      "location": {
+        "section": "0.23",
+        "line_range": "1680-1736"
+      },
+      "final_selection": "语义动画 / Semantic Motion",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1691-1692",
+          "content": "方案名称：语义动画 / Semantic Motion"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1693-1709",
+          "content": "结构特征：不使用装饰性动画/不允许动画拖慢编辑操作/不同交互职责不同 Motion Token/Hover Pressed=Fast/Popup Tooltip=Normal/Section Panel Collapse=Slow/Dragging Snap=Instant/Dragging 实时跟手/Snap 即时反馈/Motion 不允许改变最终布局结果/禁止用动画掩盖响应延迟/高频编辑操作优先响应速度"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1710-1736",
+          "content": "UI代码：Instant=0ms、Fast=80ms、Normal=140ms、Slow=220ms + Hover/Pressed→Fast、Popup/Tooltip→Normal、SectionCollapse/PanelCollapse→Slow、Dragging/Snap→Instant、MaskLatency=Forbidden"
+        }
+      ],
+      "ui_code": [
+        "XY.Motion.Instant=0 ms",
+        "XY.Motion.Fast=80 ms",
+        "XY.Motion.Normal=140 ms",
+        "XY.Motion.Slow=220 ms",
+        "XY.Motion.Hover=Fast",
+        "XY.Motion.Pressed=Fast",
+        "XY.Motion.Popup=Normal",
+        "XY.Motion.Tooltip=Normal",
+        "XY.Motion.SectionCollapse=Slow",
+        "XY.Motion.PanelCollapse=Slow",
+        "XY.Motion.Dragging=Instant",
+        "XY.Motion.Snap=Instant",
+        "XY.Motion.MaskLatency=Forbidden"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.24",
+      "title": "Z-Index｜层级与叠放顺序",
+      "type": "foundation-zindex",
+      "location": {
+        "section": "0.24",
+        "line_range": "1737-1801"
+      },
+      "final_selection": "上下文堆栈 / Context Stack",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1747-1748",
+          "content": "方案名称：上下文堆栈 / Context Stack"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1749-1769",
+          "content": "结构特征：普通组件原则上不直接填写具体 ZIndex/浮层统一由专用 Host 管理/避免 999 9999 魔法数字/Host 体系：Content→Overlay Host（Dropdown Popup Canvas Overlay 临时浮层）→Drag Host（Preview Ghost）→Modal Host（Modal+Backdrop 必须覆盖普通编辑工作区）→Tooltip Host"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1770-1778",
+          "content": "临时说明：Tooltip 位于普通应用浮层体系最高层/各 Host 内部允许局部排序/局部排序不得跨越 Host 语义边界/普通业务组件不得绕过 Host 强行提高 ZIndex/Tooltip Modal Drag 必须进入正式 Host/Z-Index 只负责叠放顺序/Surface 由 0.12 管理/Shadow 由 0.13 管理"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1779-1801",
+          "content": "UI代码：Mode=ContextStack、DirectValue=Forbidden、ContentHost=BaseContent、OverlayHost=PopupAndOverlay、DragHost=DragPreview、ModalHost=Modal、TooltipHost=Tooltip+Priority Topmost、ModalHost.Above=Content|Overlay|Drag、CrossHostOverride=Forbidden、MagicNumber=Forbidden"
+        }
+      ],
+      "ui_code": [
+        "XY.ZIndex.Mode=ContextStack",
+        "XY.ZIndex.DirectValue=Forbidden",
+        "XY.Overlay.ContentHost=BaseContent",
+        "XY.Overlay.OverlayHost=PopupAndOverlay",
+        "XY.Overlay.DragHost=DragPreview",
+        "XY.Overlay.ModalHost=Modal",
+        "XY.Overlay.TooltipHost=Tooltip/Topmost",
+        "XY.Overlay.ModalHost.Above=Content|Overlay|Drag",
+        "XY.Overlay.CrossHostOverride=Forbidden",
+        "XY.ZIndex.MagicNumber=Forbidden"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.12",
+        "XYUI0-0.13"
+      ],
+      "potential_conflict": false,
+      "note": "SOURCE_FORMATTING_DEFECT（XYUI-SFD-003）：Role=Tooltip 应归属 TooltipHost 子级；语义关系已由人工裁定。Source 原文不修改。",
+      "source_formatting_defect": {
+        "defect_id": "XYUI-SFD-003",
+        "section": "0.24",
+        "location": "L1792-1793",
+        "description": "原文缩进异常：Role = Tooltip 与 XY.Overlay.TooltipHost 同级(8 空格)，未缩进为其子级（对比 ModalHost 的 Role 为 12 空格）",
+        "semantic_resolution": "语义关系为 XY.Overlay.TooltipHost → Role = Tooltip",
+        "source_immutable": true
+      }
+    },
+    {
+      "item_id": "XYUI0-0.25",
+      "title": "Scroll｜滚动规则",
+      "type": "foundation-scroll",
+      "location": {
+        "section": "0.25",
+        "line_range": "1802-1844"
+      },
+      "final_selection": "悬停显现 / Hover-Reveal Scrollbar",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1811-1812",
+          "content": "方案名称：悬停显现 / Hover-Reveal Scrollbar"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1813-1823",
+          "content": "结构特征：Scrollbar 平时弱化/Track 默认隐藏/鼠标进入或滚动时增强/停止离开后重新弱化/Tree Inspector Log 各自独立滚动/Popup 内滚动优先自己消费/Canvas Wheel 不走普通 Scroll/视觉宽度沿用 0.8/不因隐藏 Track 改变布局宽度"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1824-1844",
+          "content": "UI代码：DisplayMode=HoverReveal、Track=Hidden、Thumb=Subtle、Hover/Scrolling=Emphasized、Width=10、PanelIsolation=True、PopupPriority=LocalFirst、Canvas=Independent、LayoutShift=Forbidden"
+        }
+      ],
+      "ui_code": [
+        "XY.Scrollbar.DisplayMode=HoverReveal",
+        "XY.Scrollbar.Track=Hidden",
+        "XY.Scrollbar.Thumb=Subtle",
+        "XY.Scrollbar.Hover=Emphasized",
+        "XY.Scrollbar.Scrolling=Emphasized",
+        "XY.Scrollbar.Width=10 DIP",
+        "XY.Scroll.PanelIsolation=True",
+        "XY.Scroll.PopupPriority=LocalFirst",
+        "XY.Scroll.Canvas=Independent",
+        "XY.Scroll.LayoutShift=Forbidden"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.8"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.26",
+      "title": "Drag & Drop｜拖放规则",
+      "type": "foundation-dnd",
+      "location": {
+        "section": "0.26",
+        "line_range": "1845-1890"
+      },
+      "final_selection": "Drag Handle + Semantic Drop Zone + Drag Threshold",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1853-1854",
+          "content": "方案名称：Drag Handle + Semantic Drop Zone + Drag Threshold"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1855-1871",
+          "content": "结构特征：Drag Handle 正式拖拽入口/普通文本区域负责点击选择编辑/Pointer Down 不立即进入 Drag/移动超过阈值才 Drag Start/默认阈值 6 DIP/Dragging 实时跟手/Drop Target 明确区分 Before Into After/非法目标立即拒绝/禁止拖入自身与自身子级/Esc 取消/Drop Cancel 无副作用/Drag Preview 不遮挡关键目标信息"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1872-1890",
+          "content": "UI代码：Entry=Handle、Threshold=6、Start=AfterThreshold、DropZone=Before|Into|After、InvalidTarget=ImmediateReject、CancelKey=Esc、CancelSideEffect=Forbidden、Preview=FollowPointer、Motion=Instant"
+        }
+      ],
+      "ui_code": [
+        "XY.Drag.Entry=Handle",
+        "XY.Drag.Threshold=6 DIP",
+        "XY.Drag.Start=AfterThreshold",
+        "XY.Drag.DropZone=Before|Into|After",
+        "XY.Drag.InvalidTarget=ImmediateReject",
+        "XY.Drag.CancelKey=Esc",
+        "XY.Drag.CancelSideEffect=Forbidden",
+        "XY.Drag.Preview=FollowPointer",
+        "XY.Drag.Motion=Instant"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.27",
+      "title": "Resize / Splitter｜面板缩放与分隔条",
+      "type": "foundation-resize",
+      "location": {
+        "section": "0.27",
+        "line_range": "1891-1953"
+      },
+      "final_selection": "语义缩放 + 关键宽度吸附 + 双击复位",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1898-1899",
+          "content": "方案名称：语义缩放 + 关键宽度吸附 + 双击复位"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1900-1920",
+          "content": "结构特征：Left/Right/Bottom 独立尺寸约束/禁共用同一 Min Default Max/Splitter 连续拖动/靠近关键尺寸自动吸附（Compact/Default/Wide）/用户可停留其他合法尺寸/双击恢复 Default/支持折叠展开/折叠后 Canvas FillRemaining/展开恢复最近有效尺寸或 Default/Splitter Visual 极细/Hit Target 沿用 0.22 至少 8 DIP/禁误拖后难以恢复/0.16 已定默认布局尺寸保持不变（Left 180/Right 250/Bottom 100）"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1921-1953",
+          "content": "UI代码：Mode=Semantic、Continuous=True、Snap=Enabled、SnapPoints=Compact|Default|Wide、DoubleClick=RestoreDefault、Left/Right/Bottom.Default=180/250/100、Range=Semantic×3、Collapse/Expand=Supported、Canvas=FillRemaining、Splitter.Visual=1、Splitter.HitTarget=8"
+        }
+      ],
+      "ui_code": [
+        "XY.Resize.Mode=Semantic",
+        "XY.Resize.Continuous=True",
+        "XY.Resize.Snap=Enabled",
+        "XY.Resize.SnapPoints=Compact|Default|Wide",
+        "XY.Resize.DoubleClick=RestoreDefault",
+        "XY.Resize.Left.Default=180 DIP",
+        "XY.Resize.Right.Default=250 DIP",
+        "XY.Resize.Bottom.Default=100 DIP",
+        "XY.Resize.Left.Range=Semantic",
+        "XY.Resize.Right.Range=Semantic",
+        "XY.Resize.Bottom.Range=Semantic",
+        "XY.Resize.Collapse=Supported",
+        "XY.Resize.Expand=Supported",
+        "XY.Resize.Canvas=FillRemaining",
+        "XY.Resize.Splitter.Visual=1 DIP",
+        "XY.Resize.Splitter.HitTarget=8 DIP"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.16",
+        "XYUI0-0.22"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.28",
+      "title": "Cursor｜鼠标指针语义",
+      "type": "foundation-cursor",
+      "location": {
+        "section": "0.28",
+        "line_range": "1954-2008"
+      },
+      "final_selection": "状态语义指针 / Semantic State Cursor",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L1966-1967",
+          "content": "方案名称：状态语义指针 / Semantic State Cursor"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1968-1983",
+          "content": "结构特征：Cursor 预告下一次操作/标准输入沿用系统基础 Cursor/Select=Arrow/Text=IBeam/Resize=标准/Pan=Hand/Draw=Crosshair/Move=Move/Dragging 可进入拖拽状态/Copy 可显示/Forbidden 立即显示/Snap Candidate 瞬时语义/切换即时/同操作同 Cursor/禁无语义 Cursor"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L1984-2008",
+          "content": "UI代码：Select=Arrow、Text=IBeam、Pan=Hand、Draw=Crosshair、Move=Move、Resize.H=SizeWE、Resize.V=SizeNS、Dragging=Drag、Copy=Copy、Forbidden=Forbidden、SnapCandidate=Snap、SwitchDelay=0ms"
+        }
+      ],
+      "ui_code": [
+        "XY.Cursor.Select=Arrow",
+        "XY.Cursor.Text=IBeam",
+        "XY.Cursor.Pan=Hand",
+        "XY.Cursor.Draw=Crosshair",
+        "XY.Cursor.Move=Move",
+        "XY.Cursor.Resize.Horizontal=SizeWE",
+        "XY.Cursor.Resize.Vertical=SizeNS",
+        "XY.Cursor.Dragging=Drag",
+        "XY.Cursor.Copy=Copy",
+        "XY.Cursor.Forbidden=Forbidden",
+        "XY.Cursor.SnapCandidate=Snap",
+        "XY.Cursor.SwitchDelay=0 ms"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.29",
+      "title": "Tooltip｜轻量提示规则",
+      "type": "foundation-tooltip",
+      "location": {
+        "section": "0.29",
+        "line_range": "2009-2054"
+      },
+      "final_selection": "自适应内容 Tooltip / Adaptive Content Tooltip",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L2017-2018",
+          "content": "方案名称：自适应内容 Tooltip / Adaptive Content Tooltip"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L2019-2033",
+          "content": "结构特征：短内容单行/较长自动换行/较多允许双层结构/MaxWidth 受限默认 280 DIP/首次 Hover 延迟约 400ms/靠边缘自动调整方向（可左右上下翻转）优先避免超出 Viewport/Tooltip 不抢 Pointer 不阻塞操作/超长说明不得继续塞进 Tooltip（复杂帮助进 Help/Inspector）/紧凑 Padding 行距"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L2034-2054",
+          "content": "UI代码：ContentMode=Adaptive、ShortContent=SingleLine、LongContent=WrapOrTwoLevel、MaxWidth=280、ShowDelay=400ms、ViewportAvoidance=Enabled、AutoFlip=Enabled、PointerCapture=Forbidden、InteractiveContent=Forbidden、LongHelp=HelpOrInspector"
+        }
+      ],
+      "ui_code": [
+        "XY.Tooltip.ContentMode=Adaptive",
+        "XY.Tooltip.ShortContent=SingleLine",
+        "XY.Tooltip.LongContent=WrapOrTwoLevel",
+        "XY.Tooltip.MaxWidth=280 DIP",
+        "XY.Tooltip.ShowDelay=400 ms",
+        "XY.Tooltip.ViewportAvoidance=Enabled",
+        "XY.Tooltip.AutoFlip=Enabled",
+        "XY.Tooltip.PointerCapture=Forbidden",
+        "XY.Tooltip.InteractiveContent=Forbidden",
+        "XY.Tooltip.LongHelp=HelpOrInspector"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false,
+      "note": "人工裁定（A1-R1-F1）：叙述『约 400 ms』属人类描述语气；正式工程值由 XY.Tooltip.ShowDelay=400 ms 冻结，不得进入 UNRESOLVED。"
+    },
+    {
+      "item_id": "XYUI0-0.30",
+      "title": "Text & Naming｜文本与命名规范",
+      "type": "foundation-naming",
+      "location": {
+        "section": "0.30",
+        "line_range": "2055-2116"
+      },
+      "final_selection": "编辑器双层命名 / Editor Dual-Layer Naming",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L2066-2067",
+          "content": "方案名称：编辑器双层命名 / Editor Dual-Layer Naming"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L2068-2091",
+          "content": "结构特征：主界面优先中文 Display Name/技术 ID Key 次级/中文与 ID 允许同行/示例：道路主干线 road-ffcb76/禁把技术 Key 当主界面名称/上下文明确 Button 用短动作（删除 保存 重算）/歧义或危险操作写完整对象（删除道路 删除数据集）/Status 用结果态（已保存 已锁定 已隐藏）/Error 包含执行动作+失败原因+必要时下一步/长名称允许 Ellipsis/完整名称由 Tooltip/Inspector 提供"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L2092-2116",
+          "content": "UI代码：Primary=DisplayName、DisplayLanguage=Localized、TechnicalId=Secondary、TitleIdLayout=Inline、Command.Default=ShortAction、Command.Ambiguous/Dangerous=Verb+Object、Status=ResultState、Error=Action+FailureReason、Error.NextStep=WhenUseful、LongName=Ellipsis、LongName.FullValue=TooltipOrInspector"
+        }
+      ],
+      "ui_code": [
+        "XY.Naming.Primary=DisplayName",
+        "XY.Naming.DisplayLanguage=Localized",
+        "XY.Naming.TechnicalId=Secondary",
+        "XY.Naming.TitleIdLayout=Inline",
+        "XY.Text.Command.Default=ShortAction",
+        "XY.Text.Command.Ambiguous=Verb+Object",
+        "XY.Text.Command.Dangerous=Verb+Object",
+        "XY.Text.Status=ResultState",
+        "XY.Text.Error=Action+FailureReason",
+        "XY.Text.Error.NextStep=WhenUseful",
+        "XY.Text.LongName=Ellipsis",
+        "XY.Text.LongName.FullValue=TooltipOrInspector"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.31",
+      "title": "Accessibility｜可访问性",
+      "type": "foundation-a11y",
+      "location": {
+        "section": "0.31",
+        "line_range": "2117-2171"
+      },
+      "final_selection": "语义可访问性 / Semantic Accessibility",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L2128-2129",
+          "content": "方案名称：语义可访问性 / Semantic Accessibility"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L2130-2148",
+          "content": "结构特征：高频功能必须键盘可达/Tab 顺序稳定可预测/Focus 视觉沿用 0.21/图标按钮必须具备 Accessible Name/控件暴露 Role Name State/Disabled Selected Focused 可被辅助技术识别/Error 必须包含文字原因/Warning Error Success 禁止只靠颜色表达/状态至少两种表达（颜色 图标 文字）/Hit Target 沿用 0.22/不额外创建可访问性专用大尺寸 UI/默认保持紧凑风格"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L2149-2171",
+          "content": "UI代码：KeyboardReachable=Required、TabOrder=Predictable、IconButton.Name=Required、Role/Name/State=Required、ColorOnlyState=Forbidden、StateRedundancy.Minimum=2Channels、ErrorText=Required、Focus=XY.Focus.*、HitTarget=XY.HitTarget.*"
+        }
+      ],
+      "ui_code": [
+        "XY.Accessibility.KeyboardReachable=Required",
+        "XY.Accessibility.TabOrder=Predictable",
+        "XY.Accessibility.IconButton.Name=Required",
+        "XY.Accessibility.Role=Required",
+        "XY.Accessibility.Name=Required",
+        "XY.Accessibility.State=Required",
+        "XY.Accessibility.ColorOnlyState=Forbidden",
+        "XY.Accessibility.StateRedundancy=2 Channels",
+        "XY.Accessibility.ErrorText=Required",
+        "XY.Accessibility.Focus=XY.Focus.*",
+        "XY.Accessibility.HitTarget=XY.HitTarget.*"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.21",
+        "XYUI0-0.22"
+      ],
+      "potential_conflict": false
+    },
+    {
+      "item_id": "XYUI0-0.32",
+      "title": "Localization / DPI｜本地化与 DPI",
+      "type": "foundation-dpi",
+      "location": {
+        "section": "0.32",
+        "line_range": "2172-2236"
+      },
+      "final_selection": "Per-Monitor DPI 自适应",
+      "evidence": [
+        {
+          "type": "SELECT",
+          "source": "XYUI-0.md",
+          "location": "L2180-2181",
+          "content": "方案名称：Per-Monitor DPI 自适应"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L2182-2207",
+          "content": "结构特征：所有几何尺寸统一 DIP/禁业务 UI 依赖物理像素/支持 100/125/150/200%/跨显示器实时响应/不要求重启/DPI 变化不得改变语义结构/不得偷偷切换 Compact Comfortable/Density 与 DPI 完全分离（0.19 决定紧凑舒适布局，0.32 决定 DIP 到物理像素映射）/Icon 优先 Vector/避免 DPI 下模糊/Border Divider 注意像素对齐/文本布局不依赖固定中文字数/本地化变长允许合理扩展 Ellipsis 必要时 Wrap/不允许语言变长挤坏核心布局"
+        },
+        {
+          "type": "COMMENT",
+          "source": "XYUI-0.md",
+          "location": "L2208-2236",
+          "content": "UI代码：Unit=DIP、PhysicalPixelHardcode=Forbidden、PerMonitor=Enabled、LiveMonitorSwitch=Enabled、Scale.100/125/150/200=Supported、DensityCoupling=Forbidden、Icon=Vector、BorderPixelAlignment=Required、Localization.Layout=Elastic、Overflow=Expand|Ellipsis|Wrap、LayoutBreak=Forbidden"
+        }
+      ],
+      "ui_code": [
+        "XY.DPI.Unit=DIP",
+        "XY.DPI.PhysicalPixelHardcode=Forbidden",
+        "XY.DPI.PerMonitor=Enabled",
+        "XY.DPI.LiveMonitorSwitch=Enabled",
+        "XY.DPI.Scale.100=Supported",
+        "XY.DPI.Scale.125=Supported",
+        "XY.DPI.Scale.150=Supported",
+        "XY.DPI.Scale.200=Supported",
+        "XY.DPI.DensityCoupling=Forbidden",
+        "XY.DPI.Icon=Vector",
+        "XY.DPI.BorderPixelAlignment=Required",
+        "XY.Localization.Layout=Elastic",
+        "XY.Localization.Overflow=Expand|Ellipsis|Wrap",
+        "XY.Localization.LayoutBreak=Forbidden"
+      ],
+      "evidence_confidence": "CLEAR",
+      "possible_relation": [
+        "XYUI0-0.19"
+      ],
+      "potential_conflict": false
+    }
+  ]
+}

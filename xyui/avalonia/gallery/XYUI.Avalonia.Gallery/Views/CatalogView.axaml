@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             xmlns:c="using:XYUI.Avalonia.Catalog"
+             x:Class="XYUI.Avalonia.Gallery.Views.CatalogView"
+             x:DataType="g:MainWindowModel">
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Background="{DynamicResource XY.Brush.Surface.Panel}"
+            Padding="{DynamicResource XY.Panel.Padding}" Margin="0,0,0,12">
+      <StackPanel>
+        <TextBlock Text="Canonical Component Catalog" Classes="xyui-text-section" />
+        <TextBlock Text="Registry / Mapping / Spec → Avalonia Type → Gallery / Documentation" Classes="xyui-text-caption" />
+      </StackPanel>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <ItemsControl ItemsSource="{Binding CatalogEntries}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="c:XyuiCatalogEntry">
+            <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+                    BorderThickness="0,0,0,1" Padding="0,8">
+              <Grid ColumnDefinitions="92,112,180,*,220" RowDefinitions="Auto,Auto,Auto,Auto">
+                <TextBlock Grid.RowSpan="2" Text="{Binding Module}" Classes="xyui-text-label" />
+                <TextBlock Grid.Column="1" Text="{Binding SourceItemId}" Classes="xyui-text-code" />
+                <TextBlock Grid.Column="2" Text="{Binding Title}" Classes="xyui-text-label" />
+                <TextBlock Grid.Column="3" Text="{Binding AvaloniaText}" Classes="xyui-text-caption" />
+                <TextBlock Grid.Column="4" Text="{Binding StateText}" Classes="xyui-text-caption" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4"
+                           Text="{Binding CanonicalId}" Classes="xyui-text-code" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Description}" Classes="xyui-text-caption" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Preview}" Classes="xyui-text-caption" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Usage}" Classes="xyui-text-caption" />
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Variants}" Classes="xyui-text-caption" />
+                <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding States}" Classes="xyui-text-caption" />
+                <TextBlock Grid.Row="3" Grid.Column="4" Text="{Binding ApiText}" Classes="xyui-text-code" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

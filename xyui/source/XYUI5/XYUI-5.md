@@ -1,0 +1,7840 @@
+- 5.01 · Stack / 堆叠布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Spacing Token
+                - 拥有 Density
+                - 拥有 DIP 单位规则
+                - 拥有基础 Alignment / Layout 原则
+                - 未拥有独立 Stack Layout Component
+            - XYUI-1
+                - 无 Stack 所有权
+            - XYUI-2
+                - 无 Stack 所有权
+            - XYUI-3
+                - 无 Stack 所有权
+            - XYUI-4
+                - 无 Stack Layout 所有权
+        - This Item Inherits
+            - XYUI-0 Spacing Token
+            - XYUI-0 Density
+            - XYUI-0 DIP
+            - XYUI-0 Accessibility
+            - XYUI-0 Layout 基础原则
+        - This Item Owns
+            - 单轴排列
+            - Direction
+            - Gap 消费方式
+            - Cross-Axis Alignment
+            - Main-Axis Distribution
+            - Child Auto / Fill
+        - This Item Must Not Redefine
+            - Spacing Token 数值
+            - Density Token
+            - 颜色
+            - Surface
+            - Border
+            - Shadow
+            - Focus
+            - 交互状态
+            - 响应式 Breakpoint
+        - Result
+            - NEW + EXTENSION
+            - 允许正式进入 XYUI-5
+    - 用途
+        - 沿单一轴线连续排列一组 Child
+        - 作为 XYUI 最基础的一维布局机制
+        - 适用于 Vertical Content Flow
+        - 适用于 Horizontal Action Flow
+        - 适用于 Inspector 内部线性内容
+        - 适用于表单
+        - 适用于 Dialog
+        - 适用于 Toolbar 内部基础排列
+        - 适用于 Header
+        - 适用于局部内容组合
+    - 最终方案
+        - Pure Axis Stack
+        - Semantic Gap Stack
+        - Distribution Stack
+        - 采用方案1+2+3
+        - 不采用 Adaptive Orientation 作为 Stack 自身职责
+    - 核心原则
+        - Stack 只负责一维布局
+        - Stack 本身不可见
+        - Stack 不拥有视觉容器身份
+        - Stack 不负责二维轨道
+        - Stack 不负责自动换行
+        - Stack 不负责滚动
+        - Stack 不负责响应式 Breakpoint
+        - Stack 不负责视觉分组
+        - Stack 不建立独立 Spacing Token
+        - Stack Gap 必须消费 XYUI-0 Foundation Spacing
+        - Stack 不扩展成完整 Flexbox
+    - 基础结构
+        - Stack
+            - Children
+    - Direction
+        - Vertical
+            - Child 沿垂直主轴连续排列
+        - Horizontal
+            - Child 沿水平主轴连续排列
+        - 原则
+            - Direction 必须显式或由组件 Variant 明确决定
+            - Stack 不根据当前宽度自行猜测 Direction
+    - Vertical Stack
+        - 适用
+            - Inspector Property Group
+            - Settings
+            - Dialog Content
+            - Form
+            - Section Content
+            - Message List
+        - Main Axis
+            - Vertical
+        - Cross Axis
+            - Horizontal
+    - Horizontal Stack
+        - 适用
+            - Action Group
+            - Header
+            - Toolbar Group
+            - Label + Value
+            - Inline Status
+        - Main Axis
+            - Horizontal
+        - Cross Axis
+            - Vertical
+    - Gap
+        - 用途
+            - 控制相邻 Child 之间的标准距离
+        - 来源
+            - 必须引用 XYUI-0 Spacing Token
+        - 允许语义级别
+            - None
+            - XS
+            - S
+            - M
+            - L
+            - XL
+        - 注意
+            - 本项不重新定义这些 Token 的具体 DIP 数值
+            - 具体值由 XYUI-0 Canonical Foundation 提供
+        - 原则
+            - 兄弟 Child 间距优先由 Stack Gap 统一控制
+            - 避免 Child 自己携带重复 Margin
+    - Gap 场景建议
+        - Compact Tool Flow
+            - 优先较小 Foundation Spacing
+        - Standard Editor Flow
+            - 优先标准 Foundation Spacing
+        - Loose Content Group
+            - 优先较大 Foundation Spacing
+        - 具体映射
+            - 由上层组件与 Density Context 决定
+            - 不得在 Stack 内重新定义 Density → Gap 自动表
+    - Alignment
+        - 定义
+            - 控制 Child 在 Cross Axis 上的位置
+        - Start
+        - Center
+        - End
+        - Stretch
+        - 原则
+            - 输入型内容通常允许 Stretch
+            - 固有尺寸图标与按钮通常保持 Auto
+            - 不得为了视觉居中破坏内容语义对齐
+    - Main-Axis Distribution
+        - Start
+            - 从主轴起点连续排列
+        - Center
+            - 整体居中
+        - End
+            - 整体靠主轴末端
+        - SpaceBetween
+            - 将剩余空间放在 Child 之间
+        - 默认
+            - Start
+        - 原则
+            - 只保留高频且明确的 Distribution
+            - 不继续增加 SpaceAround
+            - 不继续增加 SpaceEvenly
+            - 不建立复杂 Flex Distribution
+    - Start
+        - 适用
+            - 绝大多数内容布局
+        - 特点
+            - 稳定
+            - 可预测
+    - Center
+        - 适用
+            - 明确居中的紧凑内容
+        - 禁止
+            - 因为容器很宽就随意居中普通表单
+    - End
+        - 适用
+            - 右侧操作
+            - 末端状态
+        - 禁止
+            - 用 End 解决本应由 Fill 解决的结构关系
+    - SpaceBetween
+        - 适用
+            - Title + Actions
+            - Primary Area + Secondary Area
+        - 原则
+            - 只有存在明确“两端关系”时使用
+        - 禁止
+            - 普通按钮组为了铺满整行使用 SpaceBetween
+    - Child SizeMode
+        - Auto
+            - 由 Child 固有尺寸与自身约束决定
+        - Fill
+            - 承担父 Stack 剩余主轴空间
+        - 原则
+            - 默认 Auto
+            - Fill 必须显式
+            - 不得所有 Child 默认平均 Fill
+    - Auto Child
+        - 适用
+            - Button
+            - Icon
+            - Label
+            - Status
+            - Action
+        - 行为
+            - 只占所需空间
+    - Fill Child
+        - 适用
+            - Header Title Area
+            - Main Content Area
+            - Field
+            - 需要承担剩余空间的区域
+        - 行为
+            - 获取主轴剩余空间
+        - 原则
+            - 明确谁承担剩余空间
+    - 多个 Fill
+        - 允许
+            - 仅在规则明确的简单场景
+        - 不建议
+            - 复杂比例分配
+        - 禁止
+            - 在 Stack 中继续引入完整 FlexGrow 权重系统
+        - 复杂比例
+            - 交由 Grid / SplitPane 等更合适布局机制
+    - Stack + Margin
+        - Stack Gap
+            - 兄弟元素之间的标准距离
+        - Child Margin
+            - 只允许特殊局部偏移
+        - 禁止
+            - Gap 与相同方向 Margin 重复叠加
+            - 大量使用 Margin 修补布局
+    - Stack + Padding
+        - Stack
+            - 默认不拥有视觉容器 Padding
+        - Padding
+            - 由实际父级容器或 Composition Context 提供
+        - 原因
+            - 避免 Stack 同时承担布局与视觉容器职责
+    - Stack + Surface
+        - Surface
+            - 属于 Foundation / 对应容器层
+        - Stack
+            - 仅负责其中的排列
+        - 结构示例
+            - Surface
+                - Stack
+    - Stack + Panel
+        - Panel
+            - 由已有上位规范负责身份与结构
+        - Stack
+            - 只负责 Panel 内部线性排列
+        - 不得
+            - 让 Stack 重新定义 Panel Padding / Header / Border
+    - Stack + Grid
+        - Stack
+            - 一维关系
+        - Grid
+            - 二维轨道关系
+        - 原则
+            - 具有跨行列对齐需求时使用 Grid
+            - 不要连续嵌套大量 Horizontal Stack 模拟 Grid
+    - Stack + Wrap
+        - Stack
+            - 不换行
+        - Wrap
+            - 空间不足自动流式换行
+        - 禁止
+            - Horizontal Stack 偷偷变 Wrap
+    - Stack + Scroll
+        - Stack
+            - 只负责内容排列
+        - ScrollArea
+            - 负责 Overflow 与 Scroll
+        - 组合
+            - ScrollArea
+                - Stack
+    - Stack + Spacer
+        - 优先
+            - Fill
+            - SpaceBetween
+        - Spacer
+            - 只负责明确的固定或弹性间隔需求
+        - 禁止
+            - 大量 Spacer 作为布局补丁
+    - 嵌套
+        - 允许
+            - Vertical Stack 内嵌 Horizontal Stack
+            - Horizontal Stack 内嵌 Vertical Stack
+        - 典型
+            - Vertical Stack
+                - Property Row
+                    - Horizontal Stack
+        - 原则
+            - 保持嵌套语义清晰
+            - 能用 Grid 明确表达时不要继续深层嵌套 Stack
+    - Density
+        - Stack 不定义新的 Density
+        - Stack 消费上层 Density Context
+        - Gap Token 的选择
+            - 由组件 Variant / Composition Rule 决定
+        - 禁止
+            - Stack 自行监听 Density 后隐式修改大量内部布局
+    - Responsive
+        - Stack 自身不拥有 Breakpoint
+        - Stack 自身不根据宽度自动换 Direction
+        - 响应式方向切换
+            - 归后续 AdaptiveLayout
+        - AdaptiveLayout 可以输出
+            - Direction = Horizontal
+            - Direction = Vertical
+        - Stack 只执行最终明确 Direction
+    - 视觉规则
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - Glow
+            - None
+        - CornerRadius
+            - None
+        - Stack 本身不可见
+    - State
+        - Stack 本身无
+            - Hover
+            - Selected
+            - Active
+            - Focus
+            - Disabled
+        - 这些状态属于 Child
+    - Accessibility
+        - Stack 默认不进入 Focus Flow
+        - Stack 不改变 Child 的逻辑顺序
+        - 视觉排列顺序应与逻辑顺序一致
+        - 不得仅为视觉布局改变 Keyboard Navigation 顺序
+    - UI代码
+        - Stack.Direction
+            - Vertical | Horizontal
+        - Stack.Gap
+            - XY.Spacing.*
+        - Stack.Align
+            - Start | Center | End | Stretch
+        - Stack.Distribution
+            - Start | Center | End | SpaceBetween
+        - Stack.Child.SizeMode
+            - Auto | Fill
+        - Stack.Background
+            - None
+        - Stack.Border
+            - None
+        - Stack.Shadow
+            - None
+        - Stack.Wrap
+            - False
+        - Stack.Scroll
+            - False
+        - Stack.ResponsiveDirection
+            - Not Owned
+        - Stack.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止 Stack 建立自己的 Spacing Token 数值
+        - 禁止 Stack 自带 Background
+        - 禁止 Stack 自带 Border
+        - 禁止 Stack 自带 Shadow
+        - 禁止 Stack 自带 Scroll
+        - 禁止 Stack 自动 Wrap
+        - 禁止 Stack 自己实现 Breakpoint
+        - 禁止 Stack 自动猜测 Direction
+        - 禁止大量 Child Margin 替代 Gap
+        - 禁止 Gap 与重复 Margin 双倍叠加
+        - 禁止用多层 Stack 模拟复杂 Grid
+        - 禁止把 Stack 扩展成完整 Flexbox
+        - 禁止增加复杂 Grow / Shrink / Order 系统
+
+- 5.02 · Grid / 网格布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Spacing Token
+                - 拥有 Alignment
+                - 拥有 Density
+                - 拥有 DIP
+                - 拥有部分通用 Layout 原则
+                - 未拥有独立通用 Grid Layout Component
+            - XYUI-1
+                - DataGrid 属于数据展示与编辑组件
+                - 不拥有通用 Grid Layout
+            - XYUI-2
+                - 无 Grid Layout 所有权
+            - XYUI-3
+                - 无 Grid Layout 所有权
+            - XYUI-4
+                - Skeleton 等内容引用过 Grid / DataGrid 结构
+                - 不拥有通用 Grid Layout
+        - This Item Inherits
+            - XYUI-0 Spacing
+            - XYUI-0 Alignment
+            - XYUI-0 Density
+            - XYUI-0 DIP
+            - XYUI-0 Accessibility
+        - This Item Owns
+            - 二维轨道布局
+            - Rows
+            - Columns
+            - Row / Column Position
+            - 基础 RowSpan / ColumnSpan
+            - Track Sizing
+                - Auto
+                - Fixed
+                - Fill
+                - MinMax
+            - Cell Alignment
+        - This Item Must Not Redefine
+            - DataGrid Component
+            - Inspector Component
+            - Spacing Token 数值
+            - Breakpoint System
+            - Surface
+            - Border
+            - Selection
+            - Focus
+        - Result
+            - NEW
+    - 用途
+        - 建立二维 Row × Column 布局关系
+        - 保证多个 Row 之间共享稳定 Column Alignment
+        - 适用于 Inspector 属性布局
+        - 适用于 Settings Form
+        - 适用于参数矩阵
+        - 适用于复杂工具配置区域
+        - 适用于 Label + Field + Action
+        - 适用于具有明确二维关系的内容
+    - 最终方案
+        - Explicit Track Grid
+        - Semantic Track Sizing
+        - 采用方案1+2
+        - 基础 Span 能力随 Explicit Track Grid 保留
+        - 不采用 Span-Aware Grid 作为独立强化体系
+        - 不在本项定义 Responsive Breakpoint
+    - 核心原则
+        - Grid 负责二维轨道关系
+        - Grid 自身不可见
+        - Grid 不承担数据组件语义
+        - Grid 不等于 DataGrid
+        - Grid 不等于 Table
+        - Grid 不等于 Inspector
+        - 轨道关系必须可预测
+        - 主要内容优先使用 Fill
+        - 固有尺寸内容优先 Auto
+        - 长期稳定尺寸才使用 Fixed
+        - 需要上下限约束时使用 MinMax
+        - 不得大量硬编码随机 Column Width
+        - 不得通过大量嵌套 Stack 模拟明确二维关系
+    - 基础结构
+        - Grid
+            - Rows
+            - Row Track
+        - Columns
+            - Column Track
+        - Children
+            - Row
+            - Column
+            - Optional RowSpan
+            - Optional ColumnSpan
+    - Row
+        - 表示垂直方向轨道
+        - 可以使用
+            - Auto
+            - Fixed
+            - Fill
+            - MinMax
+        - 默认倾向
+            - 内容型 Row 使用 Auto
+            - 主内容区域必要时使用 Fill
+    - Column
+        - 表示水平方向轨道
+        - 可以使用
+            - Auto
+            - Fixed
+            - Fill
+            - MinMax
+        - 典型
+            - Label Column
+            - Field Column
+            - Action Column
+    - Track Sizing
+        - Auto
+            - 根据该 Track 内内容的固有尺寸决定
+        - Fixed
+            - 使用明确尺寸
+        - Fill
+            - 占用可分配剩余空间
+        - MinMax
+            - 在最小值与最大值之间弹性变化
+    - Auto
+        - 适用
+            - Label
+            - Icon
+            - Status
+            - Action
+            - 短内容
+        - 原则
+            - 只占必要空间
+            - 不得无意义扩张
+    - Fixed
+        - 适用
+            - 长期统一的标准列
+            - 序号
+            - 固定图标栏
+            - 明确规范化 Label Column
+        - 原则
+            - 固定尺寸必须来自正式 Layout Rule 或 Component Rule
+            - 不得每个页面随意定义不同宽度
+    - Fill
+        - 适用
+            - 主要 Field
+            - 主要 Editor
+            - 主要 Content
+        - 原则
+            - 优先由真正需要空间的主内容承担剩余宽度
+            - 不得辅助信息无脑 Fill
+    - MinMax
+        - 用途
+            - 保证最低可用尺寸
+            - 同时允许适度扩展
+        - 结构
+            - Min
+                - 最低可用尺寸
+            - Max
+                - 最高合理尺寸
+        - 原则
+            - Min 必须保证可操作性
+            - Max 用于避免内容无限拉长
+            - 具体数值由使用 Grid 的组件规范决定
+    - 典型二列 Grid
+        - Column 1
+            - Label
+            - Auto 或正式 Fixed
+        - Column 2
+            - Field
+            - Fill
+        - 适用
+            - Inspector
+            - Settings
+            - Property Editor
+    - 典型三列 Grid
+        - Column 1
+            - Label
+            - Auto 或 Fixed
+        - Column 2
+            - Editor
+            - Fill
+        - Column 3
+            - Action
+            - Auto
+        - 示例
+            - 名称
+                - Text Field
+                - Reset
+    - Cell Position
+        - Row
+            - 明确 Child 位于哪个 Row
+        - Column
+            - 明确 Child 位于哪个 Column
+        - 原则
+            - 逻辑位置必须清晰
+            - 不得依赖添加顺序产生不可见的复杂自动定位
+    - RowSpan
+        - 基础能力
+        - 默认
+            - 1
+        - 用途
+            - 少量需要跨多个 Row 的内容
+        - 原则
+            - 谨慎使用
+            - 不是主要布局手段
+    - ColumnSpan
+        - 基础能力
+        - 默认
+            - 1
+        - 用途
+            - Description
+            - Preview
+            - Section Message
+            - 需要占据完整宽度的内容
+        - 原则
+            - 允许少量结构性跨列
+            - 不得用大量 Span 拼装自由画布
+    - Span 限制
+        - 基础 Span 保留
+        - 不建立复杂 Span Pattern Library
+        - 不鼓励深度 RowSpan
+        - 不鼓励大量交叉 Span
+        - 如果布局需要大量 Span 才成立
+            - 重新审视是否应该拆为多个 Grid / Stack / Section
+    - RowGap
+        - 引用 XYUI-0 Spacing Token
+        - 不在本项重新建立数值
+    - ColumnGap
+        - 引用 XYUI-0 Spacing Token
+        - 不在本项重新建立数值
+    - 允许
+        - RowGap 与 ColumnGap 使用不同 Foundation Spacing Level
+    - 禁止
+        - Grid 建立第二套 Spacing Token
+        - Child 使用大量 Margin 代替 Grid Gap
+    - Cell Alignment
+        - Horizontal
+            - Start
+            - Center
+            - End
+            - Stretch
+        - Vertical
+            - Start
+            - Center
+            - End
+            - Stretch
+        - 原则
+            - Input / Field 通常允许 Stretch
+            - Icon / Action 通常保持 Auto
+            - 文本对齐应服从信息语义
+    - Stretch
+        - 用途
+            - 让 Child 填充当前 Cell 可用空间
+        - 注意
+            - Stretch 不等于 Track Fill
+        - 区别
+            - Track Fill
+                - 决定轨道如何占父容器空间
+            - Child Stretch
+                - 决定 Child 如何占当前 Cell
+    - Grid + Stack
+        - Grid
+            - 负责二维大结构
+        - Stack
+            - 负责单个 Cell 内部一维排列
+        - 典型
+            - Grid Cell
+                - Vertical Stack
+                    - Title
+                    - Description
+        - 原则
+            - 职责分层
+    - Grid + DataGrid
+        - Grid Layout
+            - 纯布局器
+        - DataGrid
+            - 正式数据组件
+            - 拥有 Row / Cell / Header / Selection / Sorting 等语义
+        - 禁止
+            - 使用通用 Grid 重新实现 DataGrid 组件规范
+    - Grid + Inspector
+        - Grid
+            - 提供 Label / Field / Action 对齐能力
+        - Inspector
+            - 拥有属性编辑业务结构
+        - Grid 不重新定义
+            - Inspector Label Style
+            - Field Style
+            - Section Style
+    - Grid + Surface
+        - Surface
+            - 负责视觉承载
+        - Grid
+            - 负责内部二维排列
+    - Grid + Scroll
+        - Grid
+            - 不拥有 Scroll
+        - ScrollArea
+            - 负责 Overflow
+        - 典型
+            - ScrollArea
+                - Grid
+    - Grid + Wrap
+        - Grid
+            - 强调轨道对齐
+        - Wrap
+            - 强调自然流换行
+        - 选择规则
+            - 需要稳定列关系
+                - Grid
+            - 只需要顺序流动
+                - Wrap
+    - Grid + AdaptiveLayout
+        - Grid 核心
+            - 不拥有 Breakpoint
+            - 不自行判断 Wide / Medium / Narrow
+        - AdaptiveLayout
+            - 后续负责根据空间选择 Grid Variant
+        - Grid 可以被上层切换
+            - Column Definition
+            - Track Count
+            - Span Strategy
+        - 但触发条件
+            - 不属于 Grid 本项
+    - Density
+        - Grid 不建立 Density
+        - 继承上层 XYUI-0 Density Context
+        - RowGap / ColumnGap
+            - 使用对应 Foundation Spacing
+        - 组件高度
+            - 由具体组件规范决定
+    - 视觉规则
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - Glow
+            - None
+        - CornerRadius
+            - None
+        - 正式 UI 不显示 Track Guide
+        - 设计调试模式可以可视化 Track
+    - State
+        - Grid 本体无
+            - Hover
+            - Selected
+            - Active
+            - Focus
+            - Disabled
+        - 状态属于 Child
+    - Accessibility
+        - Grid 默认不进入 Focus Flow
+        - 不得为了视觉布局改变逻辑阅读顺序
+        - Keyboard Navigation Order 应遵循组件语义
+        - 二维视觉布局不自动等于二维键盘导航
+    - UI代码
+        - Grid.Rows
+            - Track[]
+        - Grid.Columns
+            - Track[]
+        - Grid.Track.Auto
+            - Auto
+        - Grid.Track.Fixed
+            - Explicit Size
+        - Grid.Track.Fill
+            - Fill
+        - Grid.Track.MinMax
+            - MinMax
+        - Grid.Child.Row
+            - 0+
+        - Grid.Child.Column
+            - 0+
+        - Grid.Child.RowSpan
+            - 1+ Optional
+        - Grid.Child.ColumnSpan
+            - 1+ Optional
+        - Grid.RowGap
+            - XY.Spacing.*
+        - Grid.ColumnGap
+            - XY.Spacing.*
+        - Grid.HorizontalAlignment
+            - Start | Center | End | Stretch
+        - Grid.VerticalAlignment
+            - Start | Center | End | Stretch
+        - Grid.Background
+            - None
+        - Grid.Border
+            - None
+        - Grid.Scroll
+            - False
+        - Grid.ResponsiveBreakpoint
+            - Not Owned
+        - Grid.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止 Grid 重新定义 DataGrid
+        - 禁止 Grid 重新定义 Inspector
+        - 禁止 Grid 建立自己的 Spacing Token
+        - 禁止大量随机 Fixed Column Width
+        - 禁止所有 Track 无脑 Fixed
+        - 禁止所有 Track 无脑 Fill
+        - 禁止大量 RowSpan / ColumnSpan 制作自由画布
+        - 禁止用大量嵌套 Stack 代替应该使用的 Grid
+        - 禁止 Grid 自带 Background
+        - 禁止 Grid 自带 Border
+        - 禁止 Grid 自带 Scroll
+        - 禁止 Grid 自己拥有 Breakpoint System
+
+- 5.03 · Wrap / 流式换行布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Spacing Token
+                - 拥有 Alignment 基础规则
+                - 拥有 DIP
+                - 拥有 Density
+                - 未拥有独立 Wrap Layout Component
+            - XYUI-1
+                - 无 Wrap 所有权
+            - XYUI-2
+                - Button / Chip 等组件可以成为 Wrap Child
+                - 但不拥有 Wrap Layout
+            - XYUI-3
+                - 无 Wrap 所有权
+            - XYUI-4
+                - 无 Wrap Layout 所有权
+        - This Item Inherits
+            - XYUI-0 Spacing
+            - XYUI-0 DIP
+            - XYUI-0 Density
+            - XYUI-0 Accessibility
+            - Child 自身 Min / Max Size Constraint
+        - This Item Owns
+            - Horizontal Natural Flow
+            - 自动换行
+            - ItemGap
+            - LineGap
+            - 逻辑顺序保持
+        - This Item Must Not Redefine
+            - Chip
+            - Tag
+            - Button
+            - Grid Track
+            - Size Constraint
+            - Breakpoint
+            - Surface
+            - 交互状态
+        - Result
+            - NEW + EXTENSION
+    - 用途
+        - 排列数量不固定的自然尺寸 Child
+        - 当前行空间不足时自动换入下一行
+        - 适用于 Tag
+        - 适用于 Chip
+        - 适用于 Filter
+        - 适用于快速筛选条件
+        - 适用于小型状态项
+        - 适用于属性标签
+        - 适用于可变数量的小型操作项
+        - 适用于不要求轨道对齐的流式内容
+    - 最终方案
+        - Natural Flow Wrap
+        - Semantic Gap Wrap
+        - 采用方案1+2
+        - 自然流为 Wrap 核心
+        - 间距统一消费 Foundation Spacing
+        - 不建立复杂 Distribution
+        - 不拥有 Child Size Constraint
+    - 核心原则
+        - Wrap 是流式布局
+        - Wrap 不建立二维轨道
+        - Wrap 不平均拉伸 Child
+        - Wrap 默认保持 Child 自然尺寸
+        - Wrap 保持逻辑数据顺序
+        - 空间不足才换行
+        - 不得为了填满一行改变 Item 间距规则
+        - 不得为了视觉平衡重新排列数据顺序
+        - 不得自动压缩 Child 到不可操作尺寸
+    - 基础结构
+        - Wrap
+            - Children
+    - Flow Direction
+        - Canonical
+            - Horizontal
+        - 规则
+            - 从逻辑起始边向逻辑末端排列
+            - 空间不足后进入下一行
+        - 注意
+            - RTL 等方向性由平台 / Localization 基础规则处理
+            - 不得在 Wrap 中硬编码 Left-to-Right 作为唯一语义
+    - Item
+        - 默认尺寸
+            - Natural / Auto
+        - Wrap 不修改
+            - Child 内部 Padding
+            - Child Component Size
+            - Child MinSize
+            - Child MaxSize
+        - Wrap 只负责
+            - 位置
+            - 换行
+            - 兄弟间距
+    - Natural Flow
+        - 当前 Item 可完整放入当前行
+            - 继续当前行
+        - 当前 Item 无法完整放入当前行
+            - 整体进入下一行
+        - 禁止
+            - 拆分一个 UI Child 到两行
+            - 为了塞下 Item 强行压缩其宽度
+    - Order
+        - 必须保持数据逻辑顺序
+        - Resize 前后
+            - Item 的相对逻辑顺序不变
+        - 换行只改变
+            - Visual Line
+        - 不得改变
+            - Data Order
+            - Focus Order
+            - Selection Identity
+    - ItemGap
+        - 定义
+            - 同一行相邻 Child 之间的间距
+        - 来源
+            - XYUI-0 Spacing Token
+        - 允许
+            - None
+            - XS
+            - S
+            - M
+            - L
+            - XL
+        - 注意
+            - 具体 DIP 数值不归 Wrap 定义
+    - LineGap
+        - 定义
+            - 相邻 Wrap Line 之间的间距
+        - 来源
+            - XYUI-0 Spacing Token
+        - 允许
+            - None
+            - XS
+            - S
+            - M
+            - L
+            - XL
+        - 允许
+            - LineGap 与 ItemGap 不同
+        - 原因
+            - 横向 Item 关系与纵向 Line 关系可能需要不同视觉节奏
+    - Spacing 原则
+        - 兄弟 Item 间距
+            - 由 ItemGap 统一管理
+        - 相邻 Line 间距
+            - 由 LineGap 统一管理
+        - Child Margin
+            - 仅允许特殊局部需求
+        - 禁止
+            - Item 自己重复 Margin 制造兄弟间距
+            - 随机 5 / 7 / 9 / 11 DIP 扩散
+            - Wrap 建立第二套 Spacing Token
+    - 默认排列
+        - Line Alignment
+            - Start
+        - Item Growth
+            - None
+        - Item Distribution
+            - Natural
+        - 原则
+            - Wrap 默认不进行剩余空间再分配
+    - 不采用复杂 Distribution
+        - 不提供
+            - SpaceBetween
+            - SpaceAround
+            - SpaceEvenly
+        - 原因
+            - 最后一行 Item 数量经常不同
+            - 剩余空间分配容易导致行间视觉节奏不一致
+        - 需要两端排列
+            - 使用 Stack Distribution
+        - 需要均匀轨道
+            - 使用 Grid
+    - Wrap + Stack
+        - Wrap
+            - 空间不足自动换行
+        - Stack
+            - 永不自动换行
+        - 选择规则
+            - 明确固定单轴关系
+                - Stack
+            - 数量或宽度不确定且允许自然换行
+                - Wrap
+    - Wrap + Grid
+        - Wrap
+            - 无固定 Track
+            - Item 保持 Natural Size
+        - Grid
+            - 具有明确二维 Track
+            - 强调列对齐
+        - 选择规则
+            - 需要共享 Column Alignment
+                - Grid
+            - 只需要自然流动
+                - Wrap
+    - Wrap + Chip
+        - Chip
+            - 负责自身视觉和交互
+        - Wrap
+            - 负责排列
+            - 负责换行
+            - 负责兄弟间距
+        - 不得
+            - Wrap 重新定义 Chip 高度 / Radius / Selected
+    - Wrap + Tag
+        - Tag
+            - 负责内容与语义
+        - Wrap
+            - 负责自然排列
+        - 超长 Tag
+            - 由 Tag 自身 MaxSize / Text Overflow Rule 处理
+    - Wrap + Button
+        - 允许
+            - 自然尺寸的小型动作集合
+        - 不建议
+            - 主要 Primary Action 区
+            - 固定 Toolbar
+        - 这些场景优先
+            - Stack / Toolbar 正式组件
+    - Wrap + Card
+        - 默认不推荐
+        - 原因
+            - Card 通常更需要稳定 Track 与 Min Width
+        - 规则 Card Layout
+            - 优先 Grid
+        - 只有 Card 本身确实按自然尺寸流动时
+            - 才考虑 Wrap
+    - Wrap + ScrollArea
+        - Wrap
+            - 不拥有 Scroll
+        - 内容整体超出可视区域
+            - 外层 ScrollArea 负责
+        - 组合
+            - ScrollArea
+                - Wrap
+    - Resize
+        - 容器变窄
+            - Item 自然换入后续 Line
+        - 容器变宽
+            - Item 自然回流到前一 Line
+        - 必须保持
+            - Data Order
+            - Selection
+            - Focus Identity
+        - 不得
+            - Resize 后重新随机排序
+    - Child Constraint
+        - Wrap 尊重
+            - MinInlineSize
+            - MaxInlineSize
+            - MinBlockSize
+            - MaxBlockSize
+        - 这些约束
+            - 不由 Wrap 创建
+            - 来自 Child 或通用 Constraint 系统
+        - 如果单个 Child 比容器还宽
+            - 交给 Child Overflow / Constraint Rule 处理
+            - Wrap 不负责强制缩小
+    - Density
+        - Wrap 不定义 Density
+        - 继承上层 Density Context
+        - ItemGap / LineGap
+            - 选择对应 Foundation Spacing
+        - 不得
+            - Wrap 自己维护 Compact / Standard / Comfortable 数值表
+    - State
+        - Wrap 本体无
+            - Hover
+            - Selected
+            - Active
+            - Focus
+            - Disabled
+        - State 属于 Child
+        - Reflow 后
+            - Child State 必须保持
+    - Focus
+        - Wrap 默认不可 Focus
+        - Child 保持正常 Focus Flow
+        - Focus 顺序
+            - 遵循逻辑 Child 顺序
+        - 不得
+            - 根据视觉换行位置重新改变逻辑 Tab 顺序
+    - Selection
+        - Selection 属于 Child
+        - 换行与回流
+            - 不得改变 Selection Set
+    - Animation
+        - 默认
+            - None
+        - Layout Reflow
+            - 优先即时
+        - 如上层 Motion Pattern 允许
+            - 可提供极轻位置过渡
+        - 但
+            - 不得因为 Wrap 自身产生复杂弹跳 / Spring
+    - 视觉规则
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - Glow
+            - None
+        - CornerRadius
+            - None
+        - Wrap 本身不可见
+    - UI代码
+        - Wrap.Direction
+            - Horizontal Flow
+        - Wrap.ItemSize
+            - Natural
+        - Wrap.ItemGap
+            - XY.Spacing.*
+        - Wrap.LineGap
+            - XY.Spacing.*
+        - Wrap.LineAlignment
+            - Start
+        - Wrap.Distribution
+            - Natural
+        - Wrap.ItemGrow
+            - False
+        - Wrap.Wrap
+            - True
+        - Wrap.Scroll
+            - False
+        - Wrap.Background
+            - None
+        - Wrap.Border
+            - None
+        - Wrap.ChildConstraint
+            - Inherited
+        - Wrap.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止 Wrap 建立自己的 Spacing Token
+        - 禁止 Wrap 自动平均拉伸 Item
+        - 禁止 Wrap 默认 SpaceBetween
+        - 禁止为了视觉平衡重新排序 Child
+        - 禁止空间不足时压缩 Child 到不可操作尺寸
+        - 禁止 Wrap 重新定义 Child Min / Max
+        - 禁止 Wrap 替代 Grid
+        - 禁止 Wrap 做强列对齐表单
+        - 禁止 Wrap 自带 Background
+        - 禁止 Wrap 自带 Border
+        - 禁止 Wrap 自带 Scroll
+        - 禁止 Reflow 改变 Selection
+        - 禁止 Reflow 改变逻辑 Focus Order
+
+- 5.04 · Dock / 停靠布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Panel 基础结构
+                - 拥有尺寸与 Constraint 基础规则
+                - 拥有 Drag 基础合同
+                - 未拥有完整 Dock Workspace System
+            - XYUI-1
+                - 无 Dock 所有权
+            - XYUI-2
+                - 无 Dock 所有权
+            - XYUI-3
+                - 拥有正式 Tab Component
+            - XYUI-4
+                - 拥有 DragFeedback
+                - 拥有 DropIndicator
+                - 拥有 InsertionIndicator
+        - This Item Inherits
+            - XYUI-0 Panel
+            - XYUI-0 Size / Constraint
+            - XYUI-3 Tab
+            - XYUI-4 DragFeedback
+            - XYUI-4 DropIndicator
+        - This Item Owns
+            - Dock Zone
+            - Dock Assignment
+            - Center Fill
+            - 空间竞争规则
+            - Dock Group
+            - 运行时 Dock Tree 重构
+            - Layout Persistence Contract
+        - This Item Must Not Redefine
+            - Panel Visual
+            - Panel Header
+            - Tab Visual
+            - Tab Selection
+            - Drag Threshold
+            - Drag Preview 基础语言
+            - Drop Valid / Invalid Semantic
+            - Splitter Visual
+        - Result
+            - NEW + COMPOSITION
+    - 用途
+        - 建立专业编辑器工作区停靠结构
+        - 管理 Panel 在 Workspace 中的空间位置
+        - 支持主工作区与辅助工具区并存
+        - 支持多个 Panel 共用 Dock Zone
+        - 支持用户重新组织工作区
+        - 支持布局保存与恢复
+        - 适用于 Editor
+        - 适用于 IDE
+        - 适用于 XYLAB
+        - 适用于复杂桌面工具
+    - 最终方案
+        - Five-Zone Dock
+        - Protected Center Dock
+        - Tabbed Dock Group
+        - Reconfigurable Dock
+        - 方案1+2+3+4全部采用
+        - 四项组成同一完整 Dock System
+    - 能力层级
+        - Base
+            - Five-Zone Dock
+        - Space Policy
+            - Protected Center
+        - Group
+            - Tabbed Dock Group
+        - Advanced
+            - Reconfigurable Dock
+    - 核心原则
+        - Dock 负责 Workspace 空间组织
+        - Panel 负责功能区域身份
+        - Tab 负责同区 Panel 切换
+        - Drag / Drop 负责重构操作反馈
+        - Splitter 负责实际 Resize Handle
+        - Center 默认承担剩余空间
+        - 辅助区域不得无限挤压 Center
+        - Dock 变化不得清除业务 Selection
+        - Dock 变化不得无意义重置 Panel 状态
+        - 用户重构必须具有可预测结果
+    - Dock Zone
+        - Top
+        - Bottom
+        - Left
+        - Right
+        - Center
+    - Top
+        - 位于 Workspace 顶部
+        - 可承载
+            - 可停靠工具区域
+            - 特殊上下文工具
+        - 注意
+            - App Menu / Global AppBar 不自动等于 Top Dock
+    - Bottom
+        - 位于 Workspace 底部
+        - 常见内容
+            - Console
+            - Log
+            - Output
+            - Timeline
+            - Diagnostics
+    - Left
+        - 位于 Workspace 左侧
+        - 常见内容
+            - Hierarchy
+            - Map Content
+            - Project Navigation
+            - Tree
+            - Assets
+    - Right
+        - 位于 Workspace 右侧
+        - 常见内容
+            - Inspector
+            - Properties
+            - History
+            - Tool Settings
+    - Center
+        - 主工作区
+        - 承担剩余空间
+        - 常见内容
+            - Viewport
+            - Document
+            - Editor Canvas
+            - Scene
+            - Main Workspace
+    - Center Fill
+        - Center.SizeMode
+            - Fill
+        - 原则
+            - 四周 Dock 占据受约束空间
+            - 剩余区域交给 Center
+        - 禁止
+            - 给 Center 使用随意固定宽高
+    - Protected Center
+        - 目的
+            - 保证主工作区最低可用性
+        - Center
+            - 拥有明确 MinWidth
+            - 拥有明确 MinHeight
+        - 辅助 Dock
+            - 在空间竞争时优先让出空间
+        - 禁止
+            - Viewport 被压成无意义细缝
+    - 空间竞争
+        - 建议顺序
+            - 先压缩允许压缩的 Bottom
+            - 再压缩 Side Dock
+            - 最后触及 Center MinSize
+        - 具体优先级
+            - 可以由 Workspace Variant 决定
+        - 原则
+            - 不是所有区域平均缩放
+    - MinSize
+        - 每个 Dock Zone
+            - 可以具有 MinWidth / MinHeight
+        - 低于 MinSize
+            - 不得继续硬压
+        - 可选择
+            - 折叠
+            - 隐藏
+            - 切换窄布局
+    - MaxSize
+        - 辅助 Dock 可以设置 MaxWidth / MaxHeight
+        - 目的
+            - 避免 Inspector / Navigation 无限扩大
+        - Center
+            - 通常不设严格 Max
+    - Resizable
+        - Dock 本身只声明区域可调整
+        - 实际交互
+            - 复用后续 XYUI Splitter / ResizablePane
+        - 不得
+            - Dock 创建第二套 Resize Handle
+    - Tabbed Dock Group
+        - 用途
+            - 多个 Panel 共用一个 Dock Zone
+        - 结构
+            - DockGroup
+                - XYUI-3 Tab Strip
+                - Active Panel
+                - Inactive Panels
+        - 示例
+            - Right Dock
+                - Inspector
+                - History
+                - Tool Settings
+    - Tab Ownership
+        - Dock 只决定
+            - 哪些 Panel 属于同一 Group
+        - XYUI-3 Tab 决定
+            - Selected
+            - Hover
+            - Focus
+            - Close
+            - Keyboard Navigation
+            - Tab Visual
+        - 禁止
+            - 创建 DockTab 独立组件体系
+    - Active Panel
+        - 同一 Dock Group
+            - 默认一个 Active Panel Content
+        - Inactive Panel
+            - 保持状态
+            - 不参与当前内容显示
+    - Tab Merge
+        - 定义
+            - Panel 被拖入现有 Dock Group
+        - 结果
+            - 成为该 Group 的一个 Tab
+        - 反馈
+            - 复用 XYUI-4 DropIndicator
+        - 禁止
+            - 没有明确 Merge Preview
+    - Reconfigurable Dock
+        - 支持
+            - Panel Re-Dock
+            - Tab Merge
+            - Dock Split
+            - Detach
+            - Layout Save
+            - Layout Restore
+    - Dock Drag
+        - 来源
+            - 正式 Panel 可拖动区域
+        - 基础 Drag Contract
+            - 继承 XYUI-0
+        - 视觉反馈
+            - 继承 XYUI-4 DragFeedback
+        - 不得
+            - 点击 Panel 内任意内容都开始 Dock Drag
+    - Dock Preview
+        - 用途
+            - 预告释放 Pointer 后的最终布局
+        - 允许表达
+            - Left
+            - Right
+            - Top
+            - Bottom
+            - Center
+            - Tab Merge
+            - Split
+        - 必须
+            - Preview 与最终结果一致
+    - Drop Target
+        - 合法目标
+            - 使用 XYUI-4 DropIndicator
+        - 非法目标
+            - 使用 XYUI-4 Invalid Drop
+        - 释放到非法区域
+            - 不修改 Dock Tree
+    - Dock Split
+        - 用途
+            - 在已有区域形成新的空间分割
+        - 实际几何结构
+            - 由 SplitPane 提供
+        - 实际拖动边界
+            - 由 Splitter 提供
+        - Dock 负责
+            - 创建 / 修改布局树关系
+    - Detach
+        - 可选高级能力
+        - Desktop
+            - 可以支持 Floating Window
+        - Web / Mobile
+            - 不强制支持
+        - Floating 内容
+            - 仍使用正式 Panel
+        - 不得
+            - 为 Floating Panel 创造独立视觉语言
+    - Dock Tree
+        - 表示当前 Workspace 的布局关系
+        - 可以包含
+            - Dock Zone
+            - Split Node
+            - Tabbed Group
+            - Panel Reference
+        - 原则
+            - 布局结构必须可序列化
+            - 布局结构必须可验证
+    - Layout Persistence Contract
+        - Dock 声明需要持久化
+        - 应保存
+            - Zone
+            - Group
+            - Panel Assignment
+            - Active Panel
+            - Split Structure
+            - Size State
+            - Collapsed / Visible State
+        - 具体 Serialization Schema
+            - 由后续 Layout Persistence 专项统一定义
+        - 禁止
+            - Dock 在本项提前建立第二套 Persistence Schema
+    - Restore
+        - 应用重新打开
+            - 恢复最后有效布局
+        - 恢复失败
+            - 回退 Default Layout
+        - 不得
+            - Panel 消失
+            - 区域尺寸为零
+            - Floating Window 永久落在不可访问屏幕区域
+    - Missing Panel
+        - 旧布局引用已删除 Panel
+            - 忽略该节点并安全修复 Layout
+        - 不得
+            - 导致整个 Workspace Restore 失败
+    - New Panel
+        - 新版本新增 Panel
+            - 旧布局中不存在
+        - 处理
+            - 按照其 Default Dock Rule 放置
+    - Default Layout
+        - 首次启动
+        - Restore 失败
+        - 用户 Reset Layout
+        - 均使用正式默认布局
+        - 典型
+            - Left
+                - Navigation
+            - Center
+                - Viewport
+            - Right
+                - Inspector
+            - Bottom
+                - Log
+    - Reset Layout
+        - 恢复 Default Layout
+        - 只影响
+            - 布局状态
+        - 不得影响
+            - 项目数据
+            - 业务数据
+            - Selection 数据
+    - Dock + Panel
+        - Panel
+            - 身份
+            - Header
+            - Content
+        - Dock
+            - 位置
+            - Group
+            - 空间关系
+    - Dock + Tab
+        - 复用 XYUI-3
+        - Dock 不重新定义 Tab
+    - Dock + Drag
+        - 复用 XYUI-0 Drag Contract
+        - 复用 XYUI-4 DragFeedback
+    - Dock + Drop
+        - 复用 XYUI-4 DropIndicator
+    - Dock + SplitPane
+        - Dock
+            - 定义布局树语义
+        - SplitPane
+            - 定义几何分割
+    - Dock + Splitter
+        - Dock
+            - 声明区域可 Resize
+        - Splitter
+            - 提供 Drag Resize 交互
+    - Dock + Selection
+        - 布局调整不改变业务 Selection
+    - Dock + Focus
+        - 移动 Panel 后尽可能保持当前逻辑 Focus
+        - 如原 Focus 无法保留
+            - 选择该 Panel 内合理的 Focus Target
+        - 不得
+            - 无意义跳到 Workspace 起点
+    - Dock + Responsive
+        - Desktop
+            - 允许完整 Dock System
+        - 窄屏
+            - 可以减少同时可见 Dock
+        - Mobile
+            - 允许映射为 Drawer / Sheet / Single Region
+        - 几何适配
+            - 后续 AdaptiveLayout 负责
+    - 视觉规则
+        - Dock 本体
+            - 不可见
+        - 区域分隔
+            - 交给 Divider / Splitter
+        - Dock Preview
+            - 引用 XYUI-4 Drop Feedback Token
+        - Shadow
+            - 不由 Dock 定义
+        - 颜色
+            - 不由 Dock 定义
+    - State
+        - Dock 本身不建立新的
+            - Hover
+            - Selected
+            - Focus
+            - Dragging
+            - DropTarget
+        - 全部继承前序 State System
+    - UI代码
+        - Dock.Zone
+            - Top | Bottom | Left | Right | Center
+        - Dock.Center.SizeMode
+            - Fill
+        - Dock.MinWidth
+            - Constraint
+        - Dock.MinHeight
+            - Constraint
+        - Dock.MaxWidth
+            - Optional Constraint
+        - Dock.MaxHeight
+            - Optional Constraint
+        - Dock.Group
+            - PanelReference[]
+        - Dock.Group.TabSystem
+            - XYUI-3 Tab
+        - Dock.Reconfigurable
+            - Optional Capability
+        - Dock.DragContract
+            - XYUI-0
+        - Dock.DragFeedback
+            - XYUI-4
+        - Dock.DropFeedback
+            - XYUI-4
+        - Dock.SplitSystem
+            - XYUI SplitPane
+        - Dock.ResizeSystem
+            - XYUI Splitter
+        - Dock.Persistence
+            - Required for Reconfigurable Mode
+        - Dock.PersistenceSchema
+            - Not Owned Here
+        - Dock.Background
+            - None
+        - Dock.Border
+            - None
+    - 禁止事项
+        - 禁止 Dock 重新设计 Panel
+        - 禁止创建 DockTab 第二体系
+        - 禁止创建 DockDrag 第二体系
+        - 禁止创建 DockDrop 第二体系
+        - 禁止创建 DockSplitter 第二体系
+        - 禁止辅助 Panel 无限挤压 Center
+        - 禁止所有 Zone 平均缩放
+        - 禁止非法 Drop 修改布局
+        - 禁止 Preview 与最终结果不一致
+        - 禁止 Dock 重构导致业务 Selection 丢失
+        - 禁止布局恢复失败导致 Workspace 不可用
+        - 禁止把 Persistence Schema 分散定义在多个布局组件
+
+- 5.05 · ScrollArea / 滚动区域
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 已经拥有 Scrollbar 基础视觉
+                - 已经拥有 Hover-Reveal / Auto-Hide 显隐规则
+                - 已经拥有 Track / Thumb 基础规则
+                - 已经规定 Scrollbar 显隐不得造成 Layout Shift
+                - 已经拥有基础 Pointer / Motion / Accessibility 规则
+            - XYUI-1
+                - 无 ScrollArea 容器所有权
+            - XYUI-2
+                - 无 ScrollArea 容器所有权
+            - XYUI-3
+                - 部分组件可以拥有 Scroll Position State
+                - 不拥有通用 ScrollArea
+            - XYUI-4
+                - 无 ScrollArea 容器所有权
+        - This Item Inherits
+            - XYUI-0 Scrollbar
+            - XYUI-0 Motion
+            - XYUI-0 Input
+            - XYUI-0 Accessibility
+            - XYUI-0 DIP
+        - This Item Owns
+            - Scroll Viewport
+            - Scrollable Content
+            - Axis Policy
+            - Scroll Position Policy
+            - Scroll Anchoring
+            - Nested Scroll Arbitration
+        - This Item Must Not Redefine
+            - Scrollbar 外观
+            - Scrollbar Hover-Reveal
+            - Scrollbar Track
+            - Scrollbar Thumb
+            - Scrollbar Token
+            - Panel Header
+            - 内容组件
+        - Result
+            - NEW + EXTENSION
+    - 用途
+        - 为超出可视范围的内容提供正式滚动容器
+        - 明确哪些区域滚动
+        - 明确哪些区域保持固定
+        - 管理 Vertical / Horizontal 滚动能力
+        - 管理内容变化后的 Scroll Position
+        - 管理动态内容追加
+        - 管理嵌套滚动输入
+        - 适用于 Inspector
+        - 适用于 Tree
+        - 适用于 List
+        - 适用于 Log
+        - 适用于 Output
+        - 适用于大型 Settings
+        - 适用于 Timeline
+        - 适用于大型数据视图
+    - 最终方案
+        - Explicit Scroll Viewport
+        - Axis Policy ScrollArea
+        - Anchored Scroll Position
+        - Nested Scroll Arbitration
+        - 方案1+2+3+4全部采用
+    - 核心原则
+        - ScrollArea 必须明确滚动边界
+        - ScrollArea 不应无脑包住整个 Panel
+        - Header 是否滚动由结构决定
+        - Scrollbar Visual 不属于本项
+        - Scroll Position 变化必须具有明确策略
+        - 内容更新不等于自动 Reset Scroll
+        - 一个 Scroll Input 在同一时刻只有一个主要消费者
+        - 嵌套滚动不得同时移动多个区域
+        - 横向滚动必须有明确内容语义
+    - 基础结构
+        - ScrollArea
+            - Viewport
+                - Content
+    - Viewport
+        - 定义
+            - 当前可见窗口
+        - 职责
+            - 裁剪超出可视范围的 Content
+            - 接收 Scroll Position
+            - 提供 Scroll Bounds
+        - 不拥有
+            - 业务内容
+            - Panel Identity
+            - Header
+    - Content
+        - 可以是
+            - Stack
+            - Grid
+            - Wrap
+            - Tree
+            - List
+            - Inspector Content
+            - Log Content
+            - Canvas Content
+        - 原则
+            - Content 负责自身布局
+            - ScrollArea 只负责可视窗口与滚动
+    - Explicit Scroll Boundary
+        - 推荐
+            - Panel
+                - Header
+                - ScrollArea
+                    - Content
+        - 结果
+            - Header 固定
+            - Content 滚动
+        - 允许
+            - 如果产品语义确实要求整体滚动
+                - 外层 ScrollArea 可以包含完整内容结构
+        - 禁止
+            - 没有考虑就把 Header / Toolbar / Footer 一起卷走
+    - Axis Policy
+        - Vertical
+            - 只允许垂直滚动
+        - Horizontal
+            - 只允许水平滚动
+        - Both
+            - 允许双轴滚动
+        - None
+            - 明确禁用滚动
+    - Vertical
+        - 默认推荐场景
+            - Inspector
+            - Tree
+            - List
+            - Settings
+            - Log
+            - Document Flow
+        - 原则
+            - 普通工具型内容优先 Vertical
+    - Horizontal
+        - 适用
+            - Timeline
+            - 大型横向数据结构
+            - 明确具有横向空间语义的内容
+        - 禁止
+            - 因为一段文字过长就给普通 Inspector 开 Horizontal Scroll
+    - Both
+        - 适用
+            - Large Canvas
+            - Timeline + Tracks
+            - Large Data View
+            - 二维超大内容
+        - 原则
+            - 必须确认双轴滚动不会与 Zoom / Pan 等 Canvas 交互冲突
+    - None
+        - 用途
+            - 明确禁止当前区域滚动
+        - 不等于
+            - 隐藏 Scrollbar 但内容仍可滚
+    - Overflow
+        - Content 未超过 Viewport
+            - 不需要滚动
+        - Content 超过允许轴
+            - 进入滚动
+        - Content 超过禁止轴
+            - 由 Child Overflow / Layout Rule 处理
+        - 不得
+            - 偷偷开启未声明的滚动轴
+    - Scrollbar
+        - 完全继承
+            - XYUI-0 Scroll / Scrollbar
+        - 不重新定义
+            - DisplayMode
+            - Track
+            - Thumb
+            - Hover
+            - Scrolling
+            - AutoHide
+        - 原则
+            - ScrollArea 只声明滚动能力
+            - Foundation 决定滚动条表现
+    - Scroll Position Policy
+        - Preserve
+        - Reset
+        - FollowEnd
+        - AnchorItem
+    - Preserve
+        - 定义
+            - 内容更新后尽可能保持当前阅读位置
+        - 适用
+            - Inspector
+            - Tree
+            - List
+            - Document
+            - 普通数据刷新
+        - 默认建议
+            - 大多数普通 ScrollArea
+    - Reset
+        - 定义
+            - 状态变化后回到逻辑起点
+        - 适用
+            - 切换完全不同数据源
+            - 打开新的独立内容
+            - 明确重新初始化 View
+        - 禁止
+            - 普通 Refresh 无脑 Reset
+    - FollowEnd
+        - 定义
+            - 用户位于内容末端时持续跟随新内容
+        - 适用
+            - Console
+            - Log
+            - Output
+            - Streaming Data
+        - 规则
+            - 用户当前仍处于末端
+                - 新内容到达后继续跟随
+            - 用户主动向上查看历史
+                - 暂停自动跟随
+            - 用户重新回到底部
+                - 可以重新进入 FollowEnd
+        - 禁止
+            - 用户正在阅读历史时强行拖回底部
+    - AnchorItem
+        - 定义
+            - 以逻辑 Item 为位置锚点
+        - 适用
+            - Tree
+            - Virtual List
+            - Dynamic List
+            - 大量 Item 插入 / 删除场景
+        - 规则
+            - 内容变化后尽可能保持 Anchor Item 在相近视觉位置
+        - 优势
+            - 避免上方 Item 插入后阅读位置突然漂移
+    - Scroll Anchor
+        - 优先使用
+            - Stable Item Identity
+        - 其次
+            - Logical Offset
+        - 不得只依赖
+            - 容易因内容变化失真的绝对 Pixel Offset
+    - Content Append
+        - 普通 List
+            - Preserve
+        - Log
+            - FollowEnd
+        - Streaming Panel
+            - 根据用户是否位于 End 决定
+    - Content Insert Above
+        - 如果使用 AnchorItem
+            - 保持当前 Anchor 稳定
+        - 不得
+            - 上方插入内容后用户视图无缘无故跳动
+    - Content Remove
+        - Anchor 仍存在
+            - 继续保持
+        - Anchor 被删除
+            - 选择最近合理 Neighbor Anchor
+        - 无可恢复 Anchor
+            - 回退合法 Scroll Position
+    - Resize
+        - Viewport 尺寸变化
+            - 尽量保持当前上下文
+        - Scroll Offset 超过新 Max
+            - Clamp 到合法范围
+        - 不得
+            - Resize 就 Reset 到 Start
+    - Selection Reveal
+        - 外部命令要求选中某对象
+            - 允许 ScrollIntoView
+        - 原则
+            - 只有明确导航行为才主动改变 Scroll Position
+        - 禁止
+            - 普通 Selection State 更新就强行滚动
+    - Focus Reveal
+        - Keyboard Focus 移动到视口外 Child
+            - 允许最小必要 ScrollIntoView
+        - 原则
+            - 只滚到足以看见 Focus Target
+            - 避免每次 Focus 都强制居中
+    - Nested Scroll
+        - 结构
+            - Parent ScrollArea
+                - Child
+                    - Inner ScrollArea
+        - 允许
+            - 只有确实存在独立滚动语义时嵌套
+        - 不建议
+            - 无意义多层滚动容器
+    - Nested Scroll Arbitration
+        - Pointer 位于 Inner ScrollArea
+            - Inner 在当前方向仍可滚
+                - Inner 消费
+            - Inner 已达当前方向边界
+                - 允许 Handoff 给 Parent
+        - 原则
+            - 单一主要消费者
+            - 稳定边界移交
+    - Scroll Handoff
+        - 触发
+            - Inner 已经到达对应边界
+            - 用户继续同方向滚动
+        - 结果
+            - 后续滚动可以由 Parent 接管
+        - 不得
+            - 一个 Wheel Delta 同时明显移动 Inner 与 Parent
+    - Wheel
+        - 按照 Nested Arbitration 处理
+        - 滚动方向
+            - 映射到声明 Axis
+    - Trackpad
+        - 支持连续细粒度输入
+        - Handoff 必须避免边界抖动
+        - 可以使用轻度稳定阈值
+        - 不得产生明显粘滞
+    - Touch
+        - 支持直接 Scroll Gesture
+        - Nested Arbitration 与 Pointer Wheel 共享语义
+        - 动量滚动
+            - 不得导致多个容器同时获得惯性
+    - Keyboard Scroll
+        - PageUp / PageDown
+        - Home / End
+        - Arrow Key
+        - 具体键盘行为由当前 Focus Context 决定
+        - 不得
+            - 无 Focus Context 时随机滚动多个区域
+    - Overscroll
+        - 默认工具型 Desktop UI
+            - 克制
+        - 禁止
+            - 强烈弹性 Bounce
+            - 明显娱乐化 Overscroll
+        - 平台需要时
+            - 可以使用平台适配 Variant
+    - ScrollArea + Stack
+        - ScrollArea
+            - 负责 Viewport
+        - Stack
+            - 负责一维内容排列
+    - ScrollArea + Grid
+        - ScrollArea
+            - 负责 Overflow
+        - Grid
+            - 负责二维轨道
+    - ScrollArea + Wrap
+        - Wrap
+            - 先完成自然 Reflow
+        - 如果整体 Block Direction 仍超出 Viewport
+            - ScrollArea 再负责滚动
+    - ScrollArea + Panel
+        - Panel
+            - 负责 Header / Content Identity
+        - ScrollArea
+            - 通常放在 Panel Content Region
+        - 不重新定义 Panel
+    - ScrollArea + Virtualization
+        - 大型 Tree / List
+            - 允许配合 Virtualization
+        - Scroll Position
+            - 优先使用 Stable Item Anchor
+        - 不得
+            - 虚拟化导致 Scroll Position 无法稳定恢复
+    - ScrollArea + Loading
+        - 加载中
+            - 可保留当前 Scroll Position
+        - 数据替换
+            - 按 Position Policy 处理
+        - 禁止
+            - Loading 出现后自动 Reset
+    - ScrollArea + EmptyState
+        - 内容最终为空
+            - Scroll Position 归合法起点
+            - 显示 XYUI-4 EmptyState
+    - ScrollArea + Focus
+        - ScrollArea 本体默认不作为普通内容 Focus Target
+        - 可作为区域级 Focus Context
+            - 具体继承 Foundation Focus 规则
+        - Child Focus 保持正常
+    - Accessibility
+        - Keyboard Scroll 必须可用
+        - Focused Child 必须可被滚动到可见范围
+        - Scrollbar 自动隐藏不能成为判断“这里可滚”的唯一渠道
+        - 不得依赖 Pointer Hover 才能进行滚动
+    - State
+        - ScrollArea 不建立新的 Hover / Selected / Active 状态体系
+        - Scrolling
+            - 属于 Foundation Scroll 状态
+        - Focused Area
+            - 引用 Foundation Focus
+    - 视觉规则
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - Scrollbar
+            - XYUI-0
+    - UI代码
+        - ScrollArea.Axis
+            - Vertical | Horizontal | Both | None
+        - ScrollArea.Viewport
+            - Required
+        - ScrollArea.Content
+            - Single Layout Root
+        - ScrollArea.PositionPolicy
+            - Preserve | Reset | FollowEnd | AnchorItem
+        - ScrollArea.Anchor
+            - Optional StableIdentity
+        - ScrollArea.NestedPolicy
+            - InnerFirstThenParent
+        - ScrollArea.Handoff
+            - AtBoundary
+        - ScrollArea.Scrollbar
+            - XYUI-0 Canonical
+        - ScrollArea.Background
+            - None
+        - ScrollArea.Border
+            - None
+        - ScrollArea.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止重新设计 Scrollbar
+        - 禁止重新选择 AutoHide / Reserved
+        - 禁止 Scrollbar 显隐改变布局
+        - 禁止普通 Inspector 无理由开启 Horizontal Scroll
+        - 禁止 Refresh 默认 ScrollToTop
+        - 禁止 Log 用户查看历史时强制 FollowEnd
+        - 禁止嵌套 ScrollArea 同时移动
+        - 禁止 Focus Target 在视口外却无法 Reveal
+        - 禁止 Resize 后无条件 Reset Scroll
+        - 禁止因为 Loading 清除 Scroll Position
+        - 禁止 ScrollArea 自带 Surface / Border
+
+- 5.06 · SplitPane / 分栏面板
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Resize 基础合同
+                - 拥有 Splitter
+                - 拥有 Splitter HitTarget
+                - 拥有 Resize Cursor
+                - 拥有 Drag Resize
+                - 拥有 Snap
+                - 拥有 DoubleClick Restore
+                - 拥有 Collapse / Expand
+                - 拥有基础 Size Constraint
+                - 未拥有完整 SplitPane Layout Component
+            - XYUI-1
+                - Separator 属于视觉分隔组件
+                - 不拥有 SplitPane
+            - XYUI-2
+                - 无 SplitPane 所有权
+            - XYUI-3
+                - ViewSwitcher 可以切换 Split View
+                - 不拥有 Split View 几何结构
+            - XYUI-4
+                - 不拥有 SplitPane
+        - This Item Inherits
+            - XYUI-0 Resize Contract
+            - XYUI-0 Splitter
+            - XYUI-0 HitTarget
+            - XYUI-0 Cursor
+            - XYUI-0 Size Constraint
+            - XYUI-0 DIP
+        - This Item Owns
+            - Binary Pane Structure
+            - Split Orientation
+            - Recursive Split Tree
+            - Pane Size Allocation
+            - Fixed / Fill / Ratio
+            - Constraint Conflict Resolution
+        - This Item Must Not Redefine
+            - Splitter Visual
+            - Splitter Width
+            - Splitter HitTarget
+            - Resize Cursor
+            - Resize Threshold
+            - Snap
+            - DoubleClick Restore
+            - Collapse / Expand Interaction
+            - Panel Visual
+        - Result
+            - NEW + COMPOSITION
+    - 用途
+        - 将一个可用区域分割为两个独立 Pane
+        - 支持水平分栏
+        - 支持垂直分栏
+        - 支持复杂编辑器递归分割
+        - 支持不同 Pane 空间分配模型
+        - 支持 Pane Min / Max Constraint
+        - 支持空间不足时稳定解析
+        - 适用于 Workspace
+        - 适用于 Viewport + Inspector
+        - 适用于 Tree + Content
+        - 适用于 Viewport + Log
+        - 适用于双文档比较
+        - 适用于多视图编辑
+    - 最终方案
+        - Binary SplitPane
+        - Recursive Split Tree
+        - Semantic Pane Sizing
+        - Primary-Pane Constraint Resolution
+        - 方案1+2+3+4全部采用
+    - 核心原则
+        - 一个 SplitPane 只执行一次二分
+        - 复杂布局通过递归 SplitPane 构成
+        - SplitPane 负责布局结构
+        - Splitter 负责 Resize Interaction
+        - Pane 负责承载实际内容
+        - SplitPane 本身不拥有 Panel 视觉
+        - SplitPane 本身不拥有 Divider 视觉体系
+        - SplitPane 不重新定义 Resize Contract
+        - Pane Constraint 必须在拖动前后始终成立
+        - 不得出现负尺寸 Pane
+        - 不得出现不可恢复的零尺寸 Pane
+    - 基础结构
+        - SplitPane
+            - First Pane
+            - Content
+            - Splitter
+                - 引用 XYUI-0
+            - Second Pane
+                - Content
+    - Binary Split
+        - First Pane
+        - Second Pane
+        - 两个 Pane 之间
+            - 恰好一个正式 Splitter
+        - 原则
+            - 一个 SplitPane 不直接管理三个或更多兄弟 Pane
+    - Orientation
+        - Horizontal Split
+            - 两个 Pane 上下排列
+            - Splitter 水平延伸
+            - 拖动改变 Height Allocation
+        - Vertical Split
+            - 两个 Pane 左右排列
+            - Splitter 垂直延伸
+            - 拖动改变 Width Allocation
+        - 命名原则
+            - Orientation 必须以分割关系明确解释
+            - 实现层需保持统一命名
+    - Recursive Split Tree
+        - 定义
+            - 任一 Pane 可以再次承载 SplitPane
+        - 结构
+            - SplitNode
+                - First
+                    - Pane 或 SplitNode
+                - Second
+                    - Pane 或 SplitNode
+        - 示例
+            - Root Split
+                - Left
+                    - Hierarchy
+                - Right
+                    - Split
+                        - Top
+                            - Viewport
+                        - Bottom
+                            - Log
+    - Split Tree 原则
+        - 复杂布局必须能够表示为稳定树结构
+        - 不得使用大量绝对坐标模拟 Split
+        - 每个 SplitNode 只负责自身二分关系
+        - 父节点不得直接修改孙节点内部 Allocation
+        - 递归结构必须可验证
+        - 递归结构必须可序列化
+    - Pane
+        - 可以承载
+            - Panel
+            - Viewport
+            - Document
+            - ScrollArea
+            - 其他 Layout
+            - 另一个 SplitPane
+        - Pane 自身
+            - 不自动拥有背景
+            - 不自动拥有 Border
+            - 不自动拥有 Header
+    - Pane Sizing Model
+        - Fixed
+        - Fill
+        - Ratio
+    - Fixed
+        - 定义
+            - Pane 使用明确目标尺寸
+        - 适用
+            - Inspector
+            - Navigation
+            - Tool Pane
+            - 具有稳定规范宽度的辅助区
+        - 约束
+            - 仍必须服从 Min / Max
+        - 禁止
+            - 随页面随机硬编码大量不同 Fixed Size
+    - Fill
+        - 定义
+            - 承担当前 Split 剩余空间
+        - 适用
+            - Viewport
+            - Document
+            - Main Editor
+            - Main Canvas
+        - 典型
+            - Secondary Pane = Fixed
+            - Primary Pane = Fill
+    - Ratio
+        - 定义
+            - First / Second 根据比例分配可用空间
+        - 示例
+            - 0.35 / 0.65
+            - 0.50 / 0.50
+        - 适用
+            - 双文档比较
+            - 双 Viewport
+            - 两个同等级工作区域
+        - 原则
+            - Ratio 表达空间关系
+            - 不是新的百分比视觉组件
+    - Size Allocation
+        - 计算时必须扣除
+            - Splitter 占用
+            - 必要 Container Padding
+        - 然后再分配给
+            - First Pane
+            - Second Pane
+    - Fixed + Fill
+        - 典型专业编辑器模式
+        - 辅助 Pane
+            - Fixed
+        - 主 Pane
+            - Fill
+        - Resize 后
+            - Fixed Pane 可以根据用户拖动更新目标 Size
+            - Fill Pane 继续承担剩余空间
+    - Ratio + Ratio
+        - 两个 Pane 同等级时使用
+        - Ratio 总量
+            - 归一化为有效比例
+        - 拖动 Splitter
+            - 更新 Ratio
+        - Resize Container
+            - 保持比例关系
+            - 同时服从 Min / Max
+    - Fixed + Fixed
+        - 默认不推荐
+        - 原因
+            - 容器空间变化后容易产生未分配或冲突空间
+        - 如必须使用
+            - 必须明确剩余空间 Policy
+    - Fill + Fill
+        - 可退化为 Ratio
+        - 默认
+            - 1 : 1
+        - 建议
+            - 正式使用 Ratio 表达
+    - Constraint
+        - MinSize
+            - 来自 Pane / Content / Foundation Constraint
+        - MaxSize
+            - 来自 Pane / Content / Foundation Constraint
+        - SplitPane
+            - 只负责解析
+            - 不重新定义 Constraint Token
+    - Constraint Resolution
+        - 正常空间
+            - 满足 First Min / Max
+            - 满足 Second Min / Max
+            - 按照 Sizing Model 分配
+        - 空间不足
+            - 进入 Conflict Resolution
+    - Primary Pane
+        - 定义
+            - 当前 Split 中优先保证可用性的 Pane
+        - 典型
+            - Viewport
+            - Document
+            - Main Editor
+        - 不是
+            - Selected
+            - Focused
+            - Active
+        - 只是
+            - Layout Priority
+    - Secondary Pane
+        - 定义
+            - 空间冲突时优先让出空间的 Pane
+        - 典型
+            - Inspector
+            - Tree
+            - Log
+            - Auxiliary Tool
+    - Constraint Conflict Resolution
+        - 第一步
+            - 按正常 Allocation 尝试满足双方 Constraint
+        - 第二步
+            - Secondary 向其允许的最小尺寸收缩
+        - 第三步
+            - 保护 Primary 最低可用尺寸
+        - 第四步
+            - 如果仍无法满足
+                - 请求上层 AdaptiveLayout 处理
+        - 可能的 Adaptive 结果
+            - Collapse Secondary
+            - Hide Secondary
+            - Tab Merge
+            - Switch Layout Variant
+            - Single Pane
+        - 原则
+            - SplitPane 自己不偷偷突破正式 MinSize
+    - Constraint Conflict 禁止
+        - 禁止双方同时被压到低于 MinSize
+        - 禁止 Primary 无规则被挤成细缝
+        - 禁止静默丢弃 Secondary Pane
+        - 禁止布局进入不可恢复状态
+    - Resize
+        - 用户拖动
+            - 正式使用 XYUI-0 Splitter
+        - Pointer Capture
+            - 继承 Foundation
+        - Cursor
+            - 继承 Foundation
+        - HitTarget
+            - 继承 Foundation
+        - Continuous Drag
+            - 继承 Foundation
+        - Snap
+            - 继承 Foundation
+        - DoubleClick Restore
+            - 继承 Foundation
+    - Resize Preview
+        - 默认
+            - 实时更新 Pane Allocation
+        - 如内容渲染成本极高
+            - 允许实现层使用轻量 Preview
+        - 但最终交互合同
+            - 不得重新建立第二套 Resize Feedback
+    - Collapse
+        - 是否允许
+            - 由 Pane / Workspace 语义决定
+        - 实际交互
+            - 继承 XYUI-0 Resize / Splitter
+        - Collapse 后
+            - 剩余 Pane 获得可用空间
+    - Expand
+        - 恢复
+            - 上一个合法 Pane Size
+        - 不得
+            - 恢复成零尺寸
+            - 恢复到当前窗口无法容纳的非法尺寸
+    - Restore Previous Size
+        - 优先恢复最近合法 Size
+        - 若原 Size 已不合法
+            - Clamp 至当前有效 Constraint
+    - Container Resize
+        - 窗口变大
+            - 按照 Sizing Model 重新分配
+        - 窗口变小
+            - 先应用 Constraint
+            - 必要时进入 Conflict Resolution
+        - 不得
+            - 无条件重置用户设置的 Split Position
+    - Split Position
+        - Fixed 模式
+            - 可以保存目标 Size
+        - Ratio 模式
+            - 可以保存 Ratio
+        - 恢复时
+            - 重新验证当前 Min / Max
+    - SplitPane + Dock
+        - Dock
+            - 定义 Panel / Zone / Group 的空间组织
+        - SplitPane
+            - 定义实际二分几何结构
+        - 组合
+            - Dock Tree 可以包含 SplitNode
+        - 禁止
+            - Dock 再发明一套 Split Geometry
+    - SplitPane + Panel
+        - Panel
+            - 负责功能身份
+        - SplitPane
+            - 负责 Panel 之间的空间关系
+    - SplitPane + ScrollArea
+        - Pane 内内容超出
+            - 由 ScrollArea 处理
+        - SplitPane
+            - 不得自动给 Pane 开 Scroll
+    - SplitPane + Stack
+        - Pane 内可以使用 Stack
+        - 二者职责独立
+    - SplitPane + Grid
+        - Pane 内可以使用 Grid
+        - Grid 不负责 Pane Resize
+    - SplitPane + Tab
+        - 某个 Pane 可以承载 Tabbed Group
+        - Tab 视觉与交互引用 XYUI-3
+    - SplitPane + AdaptiveLayout
+        - 正常情况
+            - SplitPane 自己解析尺寸
+        - 无法满足双方最低约束
+            - 通知 / 交给 AdaptiveLayout
+        - AdaptiveLayout 可以切换
+            - Split → Tabs
+            - Split → Single Pane
+            - Side Pane → Drawer
+    - SplitPane + Focus
+        - Resize 不应清除 Pane 内业务 Focus
+        - Focused Pane 被 Collapse
+            - Focus 转移到合理可见目标
+        - Expand
+            - 不强制抢回旧 Focus
+    - SplitPane + Selection
+        - Resize 不影响 Selection
+        - Pane Collapse 不删除 Selection 数据
+        - 如果 Selected Object 当前不可见
+            - 保持业务状态
+            - 由产品语义决定是否 Reveal
+    - Persistence
+        - SplitPane 需要可保存
+            - Orientation
+            - Sizing Mode
+            - Fixed Size
+            - Ratio
+            - Collapsed State
+        - 具体 Schema
+            - 不在本项定义
+            - 交给后续 Layout Persistence
+    - Accessibility
+        - Splitter Keyboard Resize
+            - 继承 XYUI-0
+        - Pane 内容逻辑顺序
+            - 不得因视觉 Split 任意改变
+        - Collapse / Expand
+            - 必须有可访问状态
+    - 视觉规则
+        - SplitPane Background
+            - None
+        - SplitPane Border
+            - None
+        - SplitPane Shadow
+            - None
+        - Splitter
+            - XYUI-0 Canonical
+        - Pane Surface
+            - 由 Pane Content / Panel 决定
+    - State
+        - SplitPane 本体不建立
+            - Hover
+            - Selected
+            - Focus
+            - Dragging
+        - Splitter State
+            - 引用 XYUI-0
+    - UI代码
+        - SplitPane.Orientation
+            - Horizontal | Vertical
+        - SplitPane.First
+            - Pane | SplitPane
+        - SplitPane.Second
+            - Pane | SplitPane
+        - SplitPane.Splitter
+            - XYUI-0 Splitter
+        - SplitPane.First.SizeMode
+            - Fixed | Fill | Ratio
+        - SplitPane.Second.SizeMode
+            - Fixed | Fill | Ratio
+        - SplitPane.First.Size
+            - Optional
+        - SplitPane.Second.Size
+            - Optional
+        - SplitPane.First.Ratio
+            - Optional
+        - SplitPane.Second.Ratio
+            - Optional
+        - SplitPane.PrimaryPane
+            - First | Second | None
+        - SplitPane.Constraint
+            - Inherited
+        - SplitPane.ConflictResolution
+            - ProtectPrimaryThenAdaptive
+        - SplitPane.Persistence
+            - Required when user-adjustable
+        - SplitPane.Background
+            - None
+        - SplitPane.Border
+            - None
+        - SplitPane.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止 SplitPane 重新定义 Splitter
+        - 禁止 SplitPane 重新定义 Resize HitTarget
+        - 禁止 SplitPane 重新定义 Snap
+        - 禁止一个 SplitPane 直接维护大量平级 Pane
+        - 禁止复杂布局依赖绝对坐标
+        - 禁止 Constraint 冲突时突破 MinSize
+        - 禁止 Resize 清除业务 Selection
+        - 禁止 Resize 无意义重置 Focus
+        - 禁止 Container Resize 重置用户 Split Position
+        - 禁止 Pane 自动拥有 Scroll
+        - 禁止 Pane 自动拥有 Surface / Border
+        - 禁止 Split Tree 无法序列化或验证
+
+- 5.07 · OverlayLayout / 叠层布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有基础 Alignment
+                - 拥有 HitTarget
+                - 拥有 Focus / Input 基础合同
+                - 拥有 Overlay Surface 等基础视觉 Token
+                - 未拥有通用 Overlay Layout
+            - XYUI-1
+                - Tooltip 等组件可能通过 Overlay 呈现
+                - 不拥有 Overlay Layout
+            - XYUI-2
+                - 无 Overlay Layout 所有权
+            - XYUI-3
+                - Menu / Popup 等组件可能使用 Overlay Host
+                - 不拥有通用 Overlay Layout
+            - XYUI-4
+                - SelectionOutline
+                - BoundingBox
+                - DragFeedback
+                - DropIndicator
+                - Marquee
+                - Lasso
+                - 均可能作为 Overlay Child
+                - 但不拥有 Layer Composition
+        - This Item Inherits
+            - XYUI-0 Alignment
+            - XYUI-0 Spacing
+            - XYUI-0 HitTarget
+            - XYUI-0 Focus
+            - XYUI-0 Input Contract
+            - XYUI-0 DIP
+            - XYUI-4 Feedback Components
+        - This Item Owns
+            - Layer Composition
+            - Z Order
+            - Overlay Placement
+            - Hit-Test Routing
+            - Semantic Overlay Planes
+        - This Item Must Not Redefine
+            - Tooltip
+            - Menu
+            - Popup
+            - Dialog
+            - SelectionOutline
+            - BoundingBox
+            - DragFeedback
+            - DropIndicator
+            - Focus Visual
+            - Modal Visual
+        - Result
+            - NEW + COMPOSITION
+    - 用途
+        - 在同一 Layout Region 中叠加多个视觉与交互层
+        - 支持 Viewport Overlay
+        - 支持 Canvas Overlay
+        - 支持地图编辑反馈
+        - 支持 Selection Overlay
+        - 支持 Gizmo / Handle
+        - 支持 Drag / Drop Feedback
+        - 支持 HUD
+        - 支持临时状态层
+        - 避免依赖任意绝对 Z-Index
+    - 最终方案
+        - Layer Stack Overlay
+        - Aligned Overlay Slots
+        - Hit-Test Aware Overlay
+        - Semantic Overlay Planes
+        - 方案1+2+3+4全部采用
+    - 核心原则
+        - OverlayLayout 负责叠层关系
+        - OverlayLayout 不负责 Child 自身视觉
+        - 视觉层级与输入层级必须分离
+        - Z Order 高不等于一定拦截 Pointer
+        - Overlay Child 应优先使用语义 Placement
+        - 禁止普通业务组件任意争抢超大 Z-Index
+        - Overlay 不得无意义改变 Base Layout 尺寸
+        - Overlay 出现和消失默认不引起 Base Layout Reflow
+    - 基础结构
+        - OverlayLayout
+            - Base
+            - 主要内容
+            - Overlay Children
+                - 一个或多个
+    - Base
+        - 定义
+            - 叠层系统的基础内容平面
+        - 典型
+            - Viewport
+            - Map
+            - Image
+            - Scene
+            - Canvas
+            - Document Preview
+        - 行为
+            - 正常参与 Host Layout
+    - Overlay Child
+        - 定义
+            - 绘制于 Base 上层的内容
+        - 可以是
+            - SelectionOutline
+            - BoundingBox
+            - Gizmo
+            - Handle
+            - Snap Feedback
+            - HUD
+            - Temporary Tool UI
+            - Status Indicator
+        - 默认
+            - 不改变 Base Measure / Arrange 结果
+    - Layer Stack
+        - Base
+            - 最低基础层
+        - Overlay
+            - 按照正式 Plane / Order 依次叠加
+        - 原则
+            - 绘制顺序必须确定
+            - 不得依赖组件创建时间碰巧决定层级
+    - Z Order
+        - 优先
+            - 使用 Semantic Plane
+        - 同一 Plane 内
+            - 允许 Stable Local Order
+        - 禁止
+            - 业务组件任意写 9999 / 99999 等全局 Z 值
+            - 不同模块私自创造层级体系
+    - Placement
+        - Fill
+        - TopStart
+        - TopCenter
+        - TopEnd
+        - CenterStart
+        - Center
+        - CenterEnd
+        - BottomStart
+        - BottomCenter
+        - BottomEnd
+    - Fill
+        - 用途
+            - Selection Layer
+            - Marquee Layer
+            - Lasso Layer
+            - 全 Viewport Feedback
+        - 行为
+            - Overlay Child 与 Host 可用区域一致
+    - TopStart
+        - 适用
+            - 工具状态
+            - 模式状态
+            - 轻量 HUD
+    - TopEnd
+        - 适用
+            - View Controls
+            - Viewport Actions
+            - Navigation Controls
+    - BottomStart
+        - 适用
+            - Coordinate
+            - Scale
+            - Map Status
+    - BottomEnd
+        - 适用
+            - 辅助状态
+            - 紧凑工具
+    - Center
+        - 适用
+            - 中央临时状态
+            - 局部 Loading
+            - 明确 Center Overlay
+        - 禁止
+            - 普通工具 UI 无意义长期占据中央
+    - Inset
+        - Placement 边缘距离
+            - 引用 XYUI-0 Spacing Token
+        - 不建立
+            - Overlay 自己的第二套 Padding Token
+    - Absolute Position
+        - 默认不推荐作为普通 Overlay Placement
+        - 允许
+            - 真正依赖场景坐标的 Canvas Element
+            - Gizmo
+            - Vertex
+            - Anchor
+            - Selection Geometry
+        - 这种坐标
+            - 由具体 Canvas / Geometry System 提供
+        - 禁止
+            - 普通 HUD 用硬编码 X / Y 定位
+    - Hit-Test Mode
+        - Auto
+        - Capture
+        - PassThrough
+    - Auto
+        - 默认根据 Child 自身交互能力处理
+        - 交互控件
+            - 可以正常命中
+        - 纯装饰
+            - 可以忽略输入
+    - Capture
+        - 定义
+            - Overlay Child 可以成为 Pointer Target
+        - 适用
+            - Resize Handle
+            - Transform Handle
+            - Gizmo
+            - Viewport Action
+            - 可点击 HUD
+        - 原则
+            - Hit Area 继续继承 Foundation HitTarget
+    - PassThrough
+        - 定义
+            - Child 可见
+            - 但不拦截底层 Pointer Hit
+        - 适用
+            - SelectionOutline
+            - 装饰边框
+            - 非交互辅助线
+            - 部分 Snap Guide
+            - Visual Feedback
+        - 优势
+            - 避免 Overlay 挡住真正 Canvas Object
+    - Z Order 与 Hit Test
+        - 必须独立
+        - 示例
+            - SelectionOutline
+                - Z 高
+                - HitTest PassThrough
+            - Gizmo Handle
+                - Z 更高
+                - HitTest Capture
+        - 禁止
+            - 因为在视觉顶部就默认 Consume 所有 Pointer
+    - Semantic Overlay Planes
+        - Base
+        - Decoration
+        - Selection
+        - Interaction
+        - Feedback
+        - Transient
+    - Base Plane
+        - 用途
+            - 主内容
+        - 示例
+            - Map
+            - Scene
+            - Document
+    - Decoration Plane
+        - 用途
+            - 非交互辅助视觉
+        - 示例
+            - Grid
+            - Guide
+            - Reference Line
+            - 辅助背景
+        - 默认 HitTest
+            - PassThrough
+    - Selection Plane
+        - 用途
+            - 表达 Selection
+        - 示例
+            - SelectionOutline
+            - Marquee
+            - Lasso Candidate
+        - 视觉定义
+            - 继续归 XYUI-4
+        - 默认
+            - 大部分 PassThrough
+    - Interaction Plane
+        - 用途
+            - 当前可以直接操作的控制层
+        - 示例
+            - BoundingBox Handle
+            - Resize Handle
+            - Transform Gizmo
+            - Pivot
+        - 通常
+            - Capture
+    - Feedback Plane
+        - 用途
+            - 即时操作反馈
+        - 示例
+            - Drag Preview
+            - Drop Indicator
+            - Insertion Indicator
+            - Snap Feedback
+        - 视觉定义
+            - 引用 XYUI-4
+    - Transient Plane
+        - 用途
+            - 短生命周期高层内容
+        - 具体组件
+            - 仍由对应组件规范决定
+        - 注意
+            - Transient 不等于可以无限覆盖一切
+    - Plane Priority
+        - Base
+            - 最低
+        - Decoration
+            - 高于 Base
+        - Selection
+            - 高于 Decoration
+        - Interaction
+            - 高于 Selection
+        - Feedback
+            - 高于 Interaction
+        - Transient
+            - 位于局部 Overlay System 高层
+        - 具体全应用 Modal / Window 层级
+            - 不在本项重新定义
+    - 同 Plane Ordering
+        - 保持 Stable
+        - 可以由
+            - Child Logical Order
+            - Explicit Local Order
+        - 禁止
+            - 依赖随机创建顺序
+    - Overlay + SelectionOutline
+        - SelectionOutline
+            - 放入 Selection Plane
+        - 视觉
+            - 引用 XYUI-4
+        - HitTest
+            - 通常 PassThrough
+    - Overlay + BoundingBox
+        - BoundingBox Geometry
+            - Interaction Plane
+        - Handle
+            - Capture
+        - 非交互辅助边框
+            - 可 PassThrough
+    - Overlay + DragFeedback
+        - 放入 Feedback Plane
+        - Drag Preview
+            - 不得遮住必要 Drop Target
+        - 具体反馈
+            - 引用 XYUI-4
+    - Overlay + DropIndicator
+        - Feedback Plane
+        - 不得改变目标原布局
+    - Overlay + Marquee / Lasso
+        - Selection Plane 或 Feedback Plane
+            - 依据生命周期语义
+        - Path / Fill
+            - PassThrough
+    - Overlay + HUD
+        - 使用 Aligned Placement
+        - 避免硬编码 XY
+        - 可交互 HUD
+            - Capture
+        - 纯状态 HUD
+            - 根据实际语义 Auto / PassThrough
+    - Overlay + ScrollArea
+        - 默认 Overlay 与 Scroll Viewport 的关系必须明确
+        - 随内容滚动的 Overlay
+            - 放入 Scroll Content Coordinate Space
+        - 固定于 Viewport 的 HUD
+            - 放在 ScrollArea 外部 Overlay
+        - 禁止
+            - 本应固定的 HUD 跟随内容滚走
+    - Overlay + SplitPane
+        - 每个 Pane 可以拥有独立 Overlay Host
+        - 不得
+            - 一个局部 Overlay 无理由覆盖其他 Pane
+    - Overlay + Dock
+        - 每个 Dock Region 可以包含自己的 Overlay Host
+        - Dock Preview
+            - 可以使用 Workspace 级 Overlay Host
+    - Clip
+        - 局部 Overlay
+            - 默认遵守 Host Bounds
+        - 需要越界
+            - 必须由上层 Overlay / Popup / Window 系统明确允许
+        - 禁止
+            - 局部 Child 无规则越过整个 Workspace
+    - Focus
+        - 纯视觉 Overlay
+            - 不得进入 Focus Flow
+        - 交互 Overlay Child
+            - 按照正式组件规则 Focus
+        - Overlay 出现
+            - 不得无理由抢夺 Focus
+        - 需要 Focus Trap 的组件
+            - 由 Dialog / Modal 等所有者定义
+    - Accessibility
+        - 纯视觉 Layer 不进入 Accessibility Tree 或仅作为装饰
+        - 交互 Overlay 必须有正式可访问语义
+        - PassThrough 元素不得创建假的可操作节点
+        - Z Order 不得破坏逻辑 Navigation Order
+    - Performance
+        - Overlay 更新只更新必要 Layer
+        - PointerMove 高频 Feedback
+            - 避免重建整个 Overlay Tree
+        - Selection / Gizmo
+            - 优先复用 Geometry / Buffer
+        - 不可见 Overlay
+            - 不持续进行无意义动画与布局
+    - State
+        - OverlayLayout 本体无
+            - Hover
+            - Selected
+            - Focus
+            - Active
+        - 状态属于 Overlay Child
+    - 视觉规则
+        - OverlayLayout Background
+            - None
+        - OverlayLayout Border
+            - None
+        - OverlayLayout Shadow
+            - None
+        - Overlay Plane
+            - 无默认 Surface
+        - 视觉全部来自实际 Child
+    - UI代码
+        - OverlayLayout.Base
+            - Required
+        - OverlayLayout.Children
+            - 0+
+        - OverlayLayout.Placement
+            - Fill
+            - TopStart
+            - TopCenter
+            - TopEnd
+            - CenterStart
+            - Center
+            - CenterEnd
+            - BottomStart
+            - BottomCenter
+            - BottomEnd
+        - OverlayLayout.Inset
+            - XY.Spacing.*
+        - OverlayLayout.HitTest
+            - Auto | Capture | PassThrough
+        - OverlayLayout.Plane
+            - Base | Decoration | Selection | Interaction | Feedback | Transient
+        - OverlayLayout.LocalOrder
+            - Optional
+        - OverlayLayout.Clip
+            - HostBounds by Default
+        - OverlayLayout.Background
+            - None
+        - OverlayLayout.Border
+            - None
+        - OverlayLayout.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止业务组件任意使用超大 Z-Index
+        - 禁止视觉在上就默认拦截全部 Pointer
+        - 禁止纯 SelectionOutline 阻塞底层对象 Hit Test
+        - 禁止普通 HUD 使用大量硬编码 XY
+        - 禁止 Overlay Child 改变 Base Layout Size
+        - 禁止 OverlayLayout 重新定义 Selection / Drag / Drop 视觉
+        - 禁止局部 Overlay 无规则越过其他 Workspace Region
+        - 禁止 Overlay 出现就无理由抢夺 Focus
+        - 禁止各模块创建自己的 Overlay Plane 命名体系
+
+- 5.08 · AspectContainer / 比例容器
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Size Constraint
+                - 拥有 Min / Max
+                - 拥有 Alignment
+                - 拥有 DIP
+                - 未拥有 Aspect Ratio Layout
+            - XYUI-1
+                - Image / Media 等内容可以消费 Aspect
+                - 不拥有比例布局求解
+            - XYUI-2
+                - 无 AspectContainer 所有权
+            - XYUI-3
+                - 无 AspectContainer 所有权
+            - XYUI-4
+                - Skeleton Media Placeholder 要求保持最终 Aspect Ratio
+                - 但不拥有 AspectContainer
+        - This Item Inherits
+            - XYUI-0 Size Constraint
+            - XYUI-0 Min / Max
+            - XYUI-0 Alignment
+            - XYUI-0 DIP
+        - This Item Owns
+            - Aspect Ratio Constraint
+            - Dimension Driver
+            - Aspect Size Resolution
+            - Contain / Cover Content Policy
+            - Aspect Content Alignment
+        - This Item Must Not Redefine
+            - Image Component
+            - Media Component
+            - Min / Max Token
+            - Alignment Token
+            - Overflow System
+            - Breakpoint System
+        - Result
+            - NEW + EXTENSION
+    - 用途
+        - 保持内容或容器稳定宽高比
+        - 解决一个尺寸变化时另一尺寸如何推导
+        - 适用于 Image Preview
+        - 适用于 Video Preview
+        - 适用于 Camera Preview
+        - 适用于 Thumbnail
+        - 适用于 Asset Preview
+        - 适用于 Mini Viewport
+        - 适用于 Map Preview
+        - 适用于固定比例媒体区域
+    - 最终方案
+        - Dimension-Driven Aspect 为主
+        - Strict Aspect Fit 保留
+        - Aspect Fit Modes 保留
+        - Letterbox Alignment 保留
+        - 方案3为核心尺寸求解模型
+        - 方案1定义比例不变量
+        - 方案2定义内容适配策略
+        - 方案4消费 Foundation Alignment
+    - 核心原则
+        - Dimension Driver 必须明确
+        - 不能同时让 Width 与 Height 都作为无约束独立变量
+        - Aspect Ratio 在正常模式下不得被拉伸破坏
+        - Min / Max Constraint 高于理想比例尺寸
+        - 尺寸冲突必须有确定 Resolution
+        - Contain 与 Cover 必须明确区分
+        - Alignment 不建立第二套 Token
+        - AspectContainer 不负责内容自身渲染
+    - 基础结构
+        - AspectContainer
+            - Child
+    - Aspect Ratio
+        - 表示
+            - Width : Height
+        - 示例
+            - 16 : 9
+            - 4 : 3
+            - 1 : 1
+            - 3 : 2
+        - 原则
+            - 必须为有效正值
+            - 不得为 0
+            - 不得为负值
+    - Strict Aspect
+        - 默认
+            - 保持目标 Aspect Ratio
+        - 禁止
+            - 为填满 Host 任意拉伸 Child
+        - 如果约束无法同时满足
+            - 进入 Constraint Resolution
+    - Dimension Driver
+        - WidthDriven
+        - HeightDriven
+        - Auto
+    - WidthDriven
+        - Width 为主尺寸
+        - Height 根据 Aspect 自动求解
+        - 公式语义
+            - Height = Width / Aspect
+        - 适用
+            - 响应式横向容器
+            - Thumbnail Grid
+            - 宽度由父级决定的 Preview
+    - HeightDriven
+        - Height 为主尺寸
+        - Width 根据 Aspect 自动求解
+        - 公式语义
+            - Width = Height × Aspect
+        - 适用
+            - Toolbar Preview
+            - 固定高度媒体区域
+            - 横向紧凑资源项
+    - Auto
+        - 根据父级给出的有效约束判断主尺寸
+        - 必须有确定规则
+        - 优先使用
+            - 存在明确有限约束的一维
+        - 两维都有限
+            - 在可用矩形内选择最大合法 Aspect Size
+        - 两维都无限
+            - 回退 Child Desired Size 或正式 Default Size
+        - 禁止
+            - 不同平台各自随意猜测 Driver
+    - 尺寸求解顺序
+        - Step 1
+            - 读取 Aspect Ratio
+        - Step 2
+            - 确定 Dimension Driver
+        - Step 3
+            - 根据主尺寸求解另一维
+        - Step 4
+            - 应用 Min / Max Constraint
+        - Step 5
+            - 如果约束导致理想值非法
+                - 重新求解最大合法 Aspect Size
+        - Step 6
+            - 安排 Child Content
+    - Constraint
+        - 来源
+            - XYUI-0 / Child / Parent
+        - 包括
+            - MinWidth
+            - MaxWidth
+            - MinHeight
+            - MaxHeight
+        - AspectContainer
+            - 只负责同时满足 Constraint 与 Aspect
+            - 不重新定义 Constraint Token
+    - Constraint Resolution
+        - 理想尺寸合法
+            - 直接采用
+        - 宽度超 Max
+            - Clamp Width
+            - 重新推导 Height
+        - 高度超 Max
+            - Clamp Height
+            - 重新推导 Width
+        - 低于 Min
+            - 尝试从另一维重新求解
+        - 无法同时满足 Aspect 与强制 Constraint
+            - Constraint 优先
+            - 必须由实现明确记录 Constraint Conflict
+        - 不得
+            - 静默生成负尺寸
+            - 无限 Measure Loop
+    - Fit Policy
+        - Contain
+        - Cover
+    - Contain
+        - 目标
+            - 完整内容全部可见
+        - 允许
+            - 产生 Letterbox Empty Space
+        - 不允许
+            - 裁切主要内容
+        - 适用
+            - Asset Preview
+            - Image Inspection
+            - Camera Frame Review
+            - 需要查看完整内容的区域
+    - Cover
+        - 目标
+            - 完整覆盖 Content Box
+        - 允许
+            - 超出部分裁切
+        - 适用
+            - Thumbnail
+            - Card Media
+            - 强调铺满的 Preview
+        - 原则
+            - 裁切必须来自内容呈现策略
+            - 不得修改真实资源数据
+    - Stretch
+        - 不作为 AspectContainer 标准 Fit Mode
+        - 原因
+            - Stretch 会破坏比例
+        - 如果业务确实需要拉伸
+            - 应使用普通 Container / Image Stretch Policy
+            - 而不是 AspectContainer
+    - Content Alignment
+        - 只在存在剩余空间时具有意义
+        - 引用 XYUI-0 Alignment
+        - Horizontal
+            - Start
+            - Center
+            - End
+        - Vertical
+            - Start
+            - Center
+            - End
+    - 默认 Alignment
+        - Horizontal
+            - Center
+        - Vertical
+            - Center
+        - 适用
+            - 绝大多数媒体预览
+    - 特殊 Alignment
+        - Center + Bottom
+            - 适合需要主体靠底的内容
+        - Center + Top
+            - 适合顶部身份更重要的 Preview
+        - 规则
+            - 必须由具体组件场景指定
+            - 不得由 AspectContainer 猜测主体位置
+    - Letterbox
+        - 定义
+            - Contain 后剩余的 Host 空间
+        - Background
+            - 由父容器 / Media Component 决定
+        - AspectContainer
+            - 不重新定义 Letterbox Color
+    - AspectContainer + Grid
+        - Grid
+            - 决定 Cell Size
+        - AspectContainer
+            - 在 Cell Constraint 内求解比例
+    - AspectContainer + Stack
+        - Stack
+            - 决定排列
+        - AspectContainer
+            - 决定自身宽高关系
+    - AspectContainer + Wrap
+        - Wrap
+            - 按 AspectContainer 最终 Desired Size 排列
+        - AspectContainer
+            - 不因 Wrap 自动破坏比例
+    - AspectContainer + ScrollArea
+        - 比例内容超过 Viewport
+            - 是否滚动由 ScrollArea 决定
+        - AspectContainer
+            - 不拥有 Scroll
+    - AspectContainer + Skeleton
+        - Skeleton Media Placeholder
+            - 应复用同一 Aspect Ratio
+        - 目的
+            - 真实内容出现后避免 Layout Shift
+    - AspectContainer + Responsive
+        - Dimension Driver 可以由上层 Layout Variant 指定
+        - 例如
+            - Desktop
+                - WidthDriven
+            - Compact Tool Row
+                - HeightDriven
+        - Breakpoint
+            - 不属于本项
+    - Resize
+        - Host Resize
+            - 重新计算合法 Aspect Size
+        - 必须保持
+            - Aspect
+            - Alignment
+            - Content Identity
+        - 不得
+            - Resize 产生持续尺寸抖动
+    - State
+        - AspectContainer 本体无
+            - Hover
+            - Selected
+            - Active
+            - Focus
+            - Disabled
+        - State 属于 Child
+    - Accessibility
+        - AspectContainer 默认不进入 Focus Flow
+        - 不得因为裁切导致关键交互控件不可访问
+        - 交互内容使用 Cover 时
+            - 必须确认重要交互区域不会被不可达地裁掉
+    - 视觉规则
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - CornerRadius
+            - None
+        - 具体 Media Visual
+            - 由 Child / Parent Component 决定
+    - UI代码
+        - AspectContainer.Ratio
+            - Positive Number
+        - AspectContainer.Driver
+            - WidthDriven | HeightDriven | Auto
+        - AspectContainer.Fit
+            - Contain | Cover
+        - AspectContainer.HorizontalAlignment
+            - XYUI-0 Alignment
+        - AspectContainer.VerticalAlignment
+            - XYUI-0 Alignment
+        - AspectContainer.MinWidth
+            - Inherited Constraint
+        - AspectContainer.MaxWidth
+            - Inherited Constraint
+        - AspectContainer.MinHeight
+            - Inherited Constraint
+        - AspectContainer.MaxHeight
+            - Inherited Constraint
+        - AspectContainer.Stretch
+            - Forbidden by Default
+        - AspectContainer.Background
+            - None
+        - AspectContainer.Border
+            - None
+        - AspectContainer.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止 Width 与 Height 同时无规则强制
+        - 禁止为填满区域随意破坏 Aspect
+        - 禁止重新定义 Min / Max Token
+        - 禁止重新定义 Alignment Token
+        - 禁止把 Contain 和 Cover 混成模糊 AutoFit
+        - 禁止 Cover 修改真实资源 Geometry
+        - 禁止普通 AspectContainer 默认提供 Stretch
+        - 禁止 Letterbox 硬编码独立背景色
+        - 禁止 Resize 造成 Measure / Arrange 循环
+        - 禁止 AspectContainer 自带 Scroll
+
+- 5.09 · AnchorLayout / 锚定布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Alignment
+                - 拥有 Spacing
+                - 拥有 Size Constraint
+                - 拥有 DIP
+                - 未拥有 Anchor Constraint Layout
+            - XYUI-5.07 OverlayLayout
+                - 拥有 Overlay Placement
+                - TopStart
+                - TopEnd
+                - BottomStart
+                - BottomEnd
+                - 但只负责 Overlay Child Placement
+            - XYUI-5.08 AspectContainer
+                - 拥有 Aspect Size Resolution
+                - 不拥有 Edge Constraint
+        - This Item Inherits
+            - XYUI-0 Alignment
+            - XYUI-0 Spacing
+            - XYUI-0 Size Constraint
+            - XYUI-0 DIP
+        - This Item Owns
+            - Edge Constraint
+            - Anchor + Size Resolution
+            - Anchor Reference Space
+            - Safe Area Anchor
+            - Proportional Anchor
+        - This Item Must Not Redefine
+            - Overlay Placement
+            - Alignment Token
+            - Min / Max Token
+            - Breakpoint
+            - Canvas Coordinate System
+        - Result
+            - NEW
+    - 用途
+        - 让 Child 与 Parent 边缘建立持续几何约束
+        - 在 Parent Resize 时保持明确位置关系
+        - 解决 Left / Right / Width 等变量之间的尺寸求解
+        - 支持 Safe Area
+        - 支持跨分辨率 HUD
+        - 支持游戏 UI
+        - 支持 Viewport 辅助控件
+        - 支持工具型固定边缘内容
+    - 最终方案
+        - Edge + Size Resolution 为主
+        - Edge Constraint Anchor 保留
+        - Safe-Area Anchor 保留
+        - Proportional Anchor 保留
+        - 方案2作为 AnchorLayout 核心求解规则
+        - 方案1负责基础边缘约束
+        - 方案3负责参考空间
+        - 方案4作为高级跨分辨率能力
+    - 核心原则
+        - Anchor 的核心不是左上右下位置枚举
+        - Anchor 的核心是持续 Constraint
+        - 同一轴必须明确哪些量是输入
+        - 其余尺寸必须由 Resolver 推导
+        - 禁止形成不可预测的过约束
+        - Anchor 不替代 Stack
+        - Anchor 不替代 Grid
+        - Anchor 不替代 OverlayLayout
+        - 普通编辑器布局优先使用正常 Flow Layout
+        - 只有确实需要边缘约束时才使用 AnchorLayout
+    - 基础结构
+        - AnchorLayout
+            - Children
+                - Anchor Constraint
+                - Size Constraint
+    - Horizontal Constraint
+        - Left
+        - Right
+        - Width
+    - Vertical Constraint
+        - Top
+        - Bottom
+        - Height
+    - 核心求解模型
+        - 每个轴最多需要两个独立约束量
+        - 第三个量应被推导
+        - Horizontal
+            - Left + Right
+                - Width Derived
+            - Left + Width
+                - Right Derived
+            - Right + Width
+                - Left Derived
+        - Vertical
+            - Top + Bottom
+                - Height Derived
+            - Top + Height
+                - Bottom Derived
+            - Bottom + Height
+                - Top Derived
+    - Left + Right
+        - Child 左右同时锚定
+        - Width
+            - 由 Parent 可用宽度推导
+        - Parent Resize
+            - Child Width 跟随变化
+        - 适用
+            - 工具条背景区域
+            - 底部状态区域
+            - 需要保持左右 Inset 的内容
+    - Top + Bottom
+        - Child 上下同时锚定
+        - Height
+            - 由 Parent 可用高度推导
+        - 适用
+            - 侧边辅助区域
+            - 垂直覆盖层
+    - Left + Width
+        - 保持 Width
+        - 保持 Left Offset
+        - Right
+            - 自动变化
+        - 适用
+            - 固定宽度左侧 HUD
+    - Right + Width
+        - 保持 Width
+        - 保持 Right Offset
+        - Left
+            - 自动变化
+        - 适用
+            - 右侧工具
+            - 右上控制组
+    - Top + Height
+        - 保持 Top
+        - 保持 Height
+        - Bottom
+            - 自动变化
+    - Bottom + Height
+        - 保持 Bottom
+        - 保持 Height
+        - Top
+            - 自动变化
+    - Over-Constraint
+        - 示例
+            - Left
+            - Right
+            - Width
+            - 三者同时强制
+        - 处理
+            - 不得让三者同时成为独立输入
+            - 必须根据 Canonical Resolver 决定 Derived Value
+    - Canonical Priority
+        - 双 Edge Anchor
+            - 优先表达 Stretch Constraint
+            - 对应 Size Derived
+        - 单 Edge + Explicit Size
+            - 保持 Explicit Size
+            - 另一 Edge Derived
+        - Explicit Size
+            - 仍必须服从 Foundation Min / Max
+    - Under-Constraint
+        - 示例
+            - 只有 Width
+            - 没有 Left / Right / Alignment
+        - 处理
+            - 使用 Foundation Alignment 进行位置解析
+        - 禁止
+            - 实现自行随机选择位置
+    - Edge Constraint
+        - Left
+        - Right
+        - Top
+        - Bottom
+        - Offset
+            - 引用 XYUI-0 Spacing 或明确 Layout Value
+        - 原则
+            - Offset 是几何约束
+            - 不创建 Anchor 专属视觉 Token
+    - Anchor Reference Space
+        - HostBounds
+        - SafeArea
+        - ContentBounds
+    - HostBounds
+        - 参考整个 Host Layout Bounds
+        - 适用
+            - 普通桌面容器
+    - SafeArea
+        - 参考平台安全区域
+        - 适用
+            - Mobile
+            - Fullscreen
+            - Notch Device
+            - Game HUD
+            - 系统 UI 遮挡区域
+        - 原则
+            - Child 不直接贴到不可用物理边缘
+    - ContentBounds
+        - 参考 Host 的正式 Content Region
+        - 适用
+            - 存在 Header
+            - Toolbar
+            - Internal Padding
+            - Reserved Region
+        - 优势
+            - 避免 Child 与父级非内容区域发生覆盖
+    - Safe Area Fallback
+        - 平台不存在特殊 Safe Area
+            - SafeArea 可退化为 Host / Content Safe Bounds
+        - 不得
+            - 因为平台不支持就产生不同布局语义
+    - Proportional Anchor
+        - 定位
+            - 高级能力
+            - 主要服务游戏 HUD / Canvas UI
+        - AnchorX
+            - 0–1
+        - AnchorY
+            - 0–1
+        - 典型
+            - 0 / 0
+                - Start / Start
+            - 0.5 / 0.5
+                - Center
+            - 1 / 1
+                - End / End
+    - Proportional Anchor + Offset
+        - 比例 Anchor
+            - 决定参考点
+        - Offset
+            - 决定相对参考点的局部位移
+        - 适用
+            - 跨分辨率 HUD
+            - Scene Overlay
+            - Game UI
+    - Proportional Anchor 原则
+        - 默认不作为普通桌面表单布局手段
+        - 普通工具 UI
+            - 优先 Edge Constraint / Stack / Grid
+        - 游戏 HUD
+            - 可以大量使用
+    - Anchor + Alignment
+        - Alignment
+            - 继续引用 XYUI-0
+        - 没有完整 Edge Constraint 时
+            - Alignment 可以参与位置求解
+        - 不得
+            - 建立 AnchorAlign.Center 等第二套 Alignment
+    - Anchor + OverlayLayout
+        - OverlayLayout
+            - 决定 Layer / Plane / HitTest
+        - AnchorLayout
+            - 决定 Child 相对 Host 的几何 Constraint
+        - 可以组合
+            - Overlay Child
+                - Anchor Constraint
+        - 但
+            - 普通 TopEnd HUD 只需要 Overlay Placement 时
+                - 不要额外引入 AnchorLayout
+    - Anchor + AspectContainer
+        - AspectContainer
+            - 决定 Width / Height 比例关系
+        - AnchorLayout
+            - 决定位置与边缘约束
+        - 必须避免
+            - Aspect Ratio
+            - Left + Right
+            - Top + Bottom
+            - 同时产生完全刚性的矛盾约束
+        - 冲突
+            - 通过明确 Size Resolution 处理
+    - Anchor + Min / Max
+        - Anchor 求解出的尺寸
+            - 必须继续经过 Foundation Constraint
+        - 低于 Min
+            - 进入 Constraint Resolution
+        - 高于 Max
+            - 进入 Constraint Resolution
+        - 不得
+            - Anchor 为满足边缘距离突破正式 Min / Max
+    - Parent Resize
+        - 重新计算
+            - Edge Derived Size
+            - Position
+            - Proportional Anchor Point
+        - 必须保持
+            - Constraint Identity
+        - 不得
+            - Resize 后把 Anchor 关系转成绝对坐标
+    - Child Resize
+        - Explicit Size Child
+            - 重新推导自由 Edge
+        - Dual Edge Child
+            - 尺寸仍由 Edge Constraint 决定
+        - 不得
+            - 修改 Derived Size 后破坏 Anchor Contract
+    - Density
+        - AnchorLayout 不拥有 Density
+        - Offset
+            - 可以消费 Foundation Spacing
+        - 不得
+            - Compact / Standard / Comfortable 各自建立 Anchor 数值体系
+    - Focus
+        - AnchorLayout 本体不可 Focus
+        - Child 保持原 Focus 语义
+        - Parent Resize
+            - 不得改变 Focus Identity
+    - Selection
+        - Anchor Layout Changes
+            - 不得改变业务 Selection
+    - Accessibility
+        - 视觉位置变化不得改变逻辑阅读顺序
+        - Safe Area 必须避免关键交互被系统区域遮挡
+        - Proportional Anchor 不得导致 Interactive Child 移出可访问范围
+    - 视觉规则
+        - AnchorLayout Background
+            - None
+        - AnchorLayout Border
+            - None
+        - AnchorLayout Shadow
+            - None
+        - Anchor Guide
+            - 只允许设计 / Debug 模式显示
+        - 正式 UI
+            - Anchor Constraint 不可见
+    - UI代码
+        - Anchor.Left
+            - Optional Constraint
+        - Anchor.Right
+            - Optional Constraint
+        - Anchor.Top
+            - Optional Constraint
+        - Anchor.Bottom
+            - Optional Constraint
+        - Anchor.Width
+            - Optional Explicit Size
+        - Anchor.Height
+            - Optional Explicit Size
+        - Anchor.Reference
+            - HostBounds | SafeArea | ContentBounds
+        - Anchor.X
+            - 0–1 Optional
+        - Anchor.Y
+            - 0–1 Optional
+        - Anchor.OffsetX
+            - Optional
+        - Anchor.OffsetY
+            - Optional
+        - Anchor.HorizontalResolution
+            - Deterministic
+        - Anchor.VerticalResolution
+            - Deterministic
+        - Anchor.Constraint
+            - XYUI-0 Foundation
+        - Anchor.Alignment
+            - XYUI-0 Alignment
+        - Anchor.Unit
+            - DIP via XYUI-0
+        - Anchor.Background
+            - None
+        - Anchor.Border
+            - None
+    - 禁止事项
+        - 禁止 Left + Right + Width 三者同时无规则强制
+        - 禁止 Top + Bottom + Height 三者同时无规则强制
+        - 禁止实现自行决定谁覆盖谁
+        - 禁止用 AnchorLayout 代替普通 Stack
+        - 禁止用 AnchorLayout 代替 Grid
+        - 禁止简单 TopEnd Overlay 重复套 Anchor
+        - 禁止重新定义 Alignment
+        - 禁止重新定义 Min / Max
+        - 禁止普通桌面 UI 大量依赖比例 Anchor
+        - 禁止 Resize 后丢失原 Anchor Contract
+        - 禁止 Anchor Child 落入系统不可用区域
+
+- 5.10 · StickyRegion / 滚动吸附区域
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Scroll 基础规则
+                - 拥有 Surface / Spacing 基础规则
+                - 未拥有 Sticky Layout
+            - XYUI-5.05 ScrollArea
+                - 拥有 Viewport
+                - 拥有 Scroll Position
+                - 拥有 Nested Scroll
+                - 不拥有 Sticky Child
+            - XYUI-0 Panel
+                - 拥有固定结构 Header
+                - 但固定 Header 不等于 Scroll Content Sticky Region
+        - This Item Inherits
+            - XYUI-0 Spacing
+            - XYUI-0 Surface
+            - XYUI-0 DIP
+            - XYUI-5.05 ScrollArea
+        - This Item Owns
+            - Sticky Activation
+            - Sticky Edge
+            - Push-Off Transition
+            - Sticky Scope
+            - Release Boundary
+        - This Item Must Not Redefine
+            - Panel Header
+            - Section Header Visual
+            - Scrollbar
+            - Scroll Position
+            - Overlay Plane
+        - Result
+            - NEW + EXTENSION
+    - 用途
+        - 让 Scroll Content 中的重要分组标题在到达边缘后暂时保持可见
+        - 帮助用户持续识别当前内容所属 Section
+        - 适用于 Inspector Section
+        - 适用于 Data Group Header
+        - 适用于 Asset Group
+        - 适用于长 Settings 页面
+        - 适用于 Timeline Group
+        - 适用于分组 List
+        - 类似会自动切换对象的 Excel 冻结首行
+    - 最终方案
+        - Single-Edge Sticky
+        - Push-Off Sticky
+        - Bounded Sticky
+        - 采用方案1+3+4
+        - Multi-Level Sticky Stack 不进入 Core
+        - 未来确有需求时作为扩展能力
+    - 核心原则
+        - Sticky Child 原本属于正常 Scroll Flow
+        - 只有到达指定边缘后才进入 Sticky 状态
+        - Sticky 不等于永久 Fixed
+        - 下一个同级 Sticky 到来时推走当前 Sticky
+        - Sticky 不得越过自己的逻辑 Scope
+        - Sticky 不重新定义 Header Visual
+        - Sticky 不改变 Scroll Position
+    - 基础生命周期
+        - Normal
+            - 正常参与 Scroll Flow
+        - Approaching
+            - 逐渐接近 Sticky Edge
+        - Stuck
+            - 到达 Edge 后保持位置
+        - PushOff
+            - 下一同级 Sticky 到来
+            - 当前 Sticky 被推出
+        - Released
+            - 离开自身 Scope
+    - Sticky Edge
+        - Top
+            - Core 推荐
+        - Bottom
+            - 允许特殊场景
+        - 默认
+            - Top
+    - Top Sticky
+        - Child 未到达顶部
+            - 正常滚动
+        - Child 到达顶部
+            - 保持在 Viewport Top
+        - 直到
+            - 下一同级 Sticky Push-Off
+            - 自身 Scope 结束
+    - Bottom Sticky
+        - 允许
+            - 确有底部持续上下文需求的场景
+        - 不建议
+            - 普通 Inspector / List 默认使用
+    - Push-Off
+        - 当前 Sticky
+            - 保持在 Edge
+        - 下一同级 Sticky 接近
+            - 逐渐占用当前 Sticky 所需空间
+        - 当前 Sticky
+            - 被自然推出 Viewport
+        - 下一 Sticky
+            - 接管 Sticky Edge
+        - 原则
+            - 两个同级 Header 不叠在一起
+            - 切换必须连续
+    - Sticky Scope
+        - 每个 Sticky Region 必须属于明确逻辑 Scope
+        - 示例
+            - Geometry Section
+                - Geometry Header
+                - Geometry Content
+                - Geometry Boundary
+        - Sticky Header
+            - 只能在该 Scope 有效
+    - Release Boundary
+        - 到达 Scope End
+            - 当前 Sticky 必须释放
+        - 不得
+            - Geometry Header 继续粘在 Render Section 上方
+    - Same-Level Rule
+        - Push-Off 默认发生在同级 Sticky 之间
+        - 例如
+            - Geometry
+            - Render
+            - Physics
+        - 它们互相替换
+    - Multi-Level Sticky
+        - Core
+            - 不提供自动多层 Stack
+        - 原因
+            - 复杂度高
+            - 容易占据过多 Viewport
+            - 大多数 Inspector 只需要一个当前 Section Header
+        - 未来扩展
+            - 只有 Toolbar + Section + Subsection 确有同时 Sticky 需求时加入
+    - Sticky + Fixed Header
+        - 允许同时存在
+        - 结构
+            - Panel
+                - Fixed Header
+                - ScrollArea
+                    - Sticky Section Header
+                    - Content
+        - Sticky Edge
+            - 相对于 Scroll Viewport
+            - 而不是覆盖 Panel Fixed Header
+    - Sticky + ScrollArea
+        - ScrollArea
+            - 负责滚动
+        - StickyRegion
+            - 监听自己相对 Viewport 的位置
+            - 决定 Normal / Stuck / Released
+        - 不得
+            - Sticky 自己修改 Scroll Offset
+    - Sticky + Section
+        - Section
+            - 负责标题和内容结构
+        - StickyRegion
+            - 只给 Section Header 增加滚动吸附行为
+        - 不得
+            - 创建 StickySection 第二套 Section Component
+    - Sticky + DataGrid
+        - Column Header 永久固定
+            - 更接近 Fixed Header
+        - Group Header 随滚动吸顶
+            - 适合 StickyRegion
+        - 二者应明确区分
+    - Sticky + Excel 类比
+        - Excel Freeze Row
+            - 通常从一开始固定指定 Row
+        - StickyRegion
+            - 根据 Scroll Position 动态决定当前吸附对象
+        - 共同点
+            - 滚动时保持重要上下文可见
+    - Resize
+        - Viewport Resize
+            - 重新计算 Sticky Boundary
+        - 不得
+            - 改变逻辑 Scope
+            - 改变 Scroll Position
+    - Content Update
+        - 当前 Sticky Item 仍存在
+            - 保持 Sticky Identity
+        - 当前 Sticky Item 被删除
+            - 选择当前 Scroll Position 下新的合法 Sticky
+        - 不得
+            - 因为数据刷新闪回第一个 Section
+    - Focus
+        - Sticky 激活不得抢夺 Focus
+        - Sticky Header 内原本存在交互控件
+            - 保持其正式 Focus 语义
+    - Selection
+        - Sticky 状态变化不修改 Selection
+    - Accessibility
+        - Sticky Header 在 Accessibility Tree 中仍保持同一逻辑节点
+        - 不得因为 Normal → Stuck 创建重复可访问节点
+        - Screen Reader 顺序保持内容逻辑顺序
+    - 视觉规则
+        - StickyRegion 本身不拥有 Background
+        - StickyRegion 本身不拥有 Border
+        - Section Header Visual
+            - 继续引用正式 Section/Header 规范
+        - 必要的层级显示
+            - 消费现有 Surface / Border Token
+            - 不得建立 Sticky 专属视觉语言
+    - UI代码
+        - StickyRegion.Edge
+            - Top | Bottom
+        - StickyRegion.Mode
+            - Normal | Stuck | PushOff | Released
+        - StickyRegion.Scope
+            - Required
+        - StickyRegion.ReleaseBoundary
+            - ScopeEnd
+        - StickyRegion.PushOff
+            - SameLevel
+        - StickyRegion.MultiLevelStack
+            - Not Core
+        - StickyRegion.ScrollHost
+            - XYUI-5 ScrollArea
+        - StickyRegion.Visual
+            - Inherited
+        - StickyRegion.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止把 Sticky 当成永久 Fixed Header
+        - 禁止 Sticky 修改 Scroll Position
+        - 禁止 Sticky Header 越过自身 Scope
+        - 禁止下一个 Header 直接覆盖当前 Header
+        - 禁止 Normal 与 Stuck 创建两份逻辑节点
+        - 禁止 Sticky 激活抢夺 Focus
+        - 禁止 Sticky 状态变化清除 Selection
+        - 禁止建立 StickyHeader 第二套视觉组件
+        - 禁止 Core 默认启用多级 Sticky Stack
+
+- 5.11 · AdaptiveLayout / 自适应布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Density
+                - 拥有 Size Constraint
+                - 拥有 Min / Max
+                - 拥有 DIP
+                - 拥有基础 Input / Device Context
+                - 未拥有完整 Adaptive Layout Orchestrator
+            - XYUI-5.01 Stack
+                - 可以接收不同 Direction
+                - 不负责决定何时切换
+            - XYUI-5.02 Grid
+                - 可以接收不同 Track Definition
+                - 不拥有 Breakpoint
+            - XYUI-5.04 Dock
+                - 支持不同 Workspace 结构
+                - 不拥有 Adaptive Trigger
+            - XYUI-5.06 SplitPane
+                - Constraint 无法满足时可以请求 AdaptiveLayout
+            - XYUI-5.09 AnchorLayout
+                - 不拥有 Breakpoint
+        - This Item Inherits
+            - XYUI-0 Size Constraint
+            - XYUI-0 Density
+            - XYUI-0 Input Context
+            - XYUI-0 DIP
+            - 所有 XYUI-5 Layout Primitive
+        - This Item Owns
+            - Container-Based Adaptation
+            - Constraint-Based Adaptation
+            - Layout Variant Selection
+            - Adaptive Trigger
+            - Stable Variant Transition
+        - This Item Must Not Redefine
+            - Stack
+            - Grid
+            - Dock
+            - SplitPane
+            - Density System
+            - Min / Max
+            - 组件内部视觉
+        - Result
+            - NEW + ORCHESTRATION
+    - 用途
+        - 根据组件实际可用空间选择最合适的布局形式
+        - 根据真实 Constraint 判断当前布局是否仍然可用
+        - 支持可自由调整尺寸的编辑器 Panel
+        - 支持 Desktop
+        - 支持 Tablet
+        - 支持 Mobile
+        - 支持 Dock Resize
+        - 支持 SplitPane Resize
+        - 支持响应式 Inspector
+        - 支持响应式 Settings
+        - 支持响应式 Workspace
+    - 最终方案
+        - Container-Driven Adaptation 为核心
+        - Constraint-Driven Adaptation 为核心
+        - Named Layout Variants 保留
+        - Stable Variant Transition 保留
+        - 方案2+3为主要决策模型
+        - 方案1负责定义合法布局集合
+        - 方案4负责稳定 Variant 切换
+    - 核心原则
+        - 优先观察组件自己的 Container
+        - 不应只观察整个 Screen
+        - 真实 Constraint 优先于拍脑袋 Breakpoint
+        - AdaptiveLayout 不亲自排列 Child
+        - AdaptiveLayout 只选择当前应使用的 Layout Variant
+        - 具体排列继续交给 Stack / Grid / Dock / SplitPane 等
+        - 每个 Variant 必须本身是合法布局
+        - 不得通过不断缩小控件维持一个已经不可用的 Variant
+        - 不得在临界尺寸附近反复切换 Variant
+    - Container-Driven Adaptation
+        - Primary Trigger Context
+            - 当前组件 AvailableWidth
+            - 当前组件 AvailableHeight
+        - 不是
+            - 只读取 Monitor Resolution
+            - 只读取 Window Resolution
+        - 典型
+            - 4K Monitor
+                - Inspector Width = 240 DIP
+                    - 仍应进入 Narrow
+            - 普通 Monitor
+                - Main View Width = 900 DIP
+                    - 仍可以使用 Wide
+    - Container Query 思维
+        - 每个自适应组件
+            - 根据自身 Layout Bounds 判断
+        - 优势
+            - 同一窗口中的不同 Panel 可以同时处于不同 Variant
+        - 例如
+            - Viewport
+                - Wide
+            - Inspector
+                - Narrow
+            - Hierarchy
+                - Compact
+    - Constraint-Driven Adaptation
+        - 当前 Variant
+            - 先进行正常 Measure
+        - 如果满足全部 Required Constraint
+            - 保持当前 Variant
+        - 如果无法满足
+            - 尝试下一级合法 Variant
+        - 如果仍无法满足
+            - 继续寻找更紧凑 Variant
+        - 直到
+            - 找到合法布局
+            - 或进入正式 Failure / Fallback Policy
+    - Constraint 来源
+        - Child MinWidth
+        - Child MinHeight
+        - Required Gap
+        - Required HitTarget
+        - Text Minimum Usability
+        - Pane Minimum Usability
+        - Aspect Constraint
+        - 正式 Component Constraint
+        - 全部消费已有规范
+    - 典型判断
+        - Wide Property Grid
+            - Label Min
+            - Gap
+            - Field Min
+            - Action Min
+        - 可用 Width 足够
+            - 保持 Grid
+        - 可用 Width 不足
+            - 切换 Compact
+        - Compact 仍不足
+            - 切换 Vertical Stack
+    - Named Layout Variants
+        - 用途
+            - 定义组件允许存在的合法布局形式
+        - 推荐语义
+            - Wide
+            - Compact
+            - Narrow
+        - 可以根据具体组件使用其他语义 Variant
+        - 但
+            - 不得每个组件私自发明十几个类似名称
+    - Wide
+        - 空间充足
+        - 可以使用
+            - 多 Column
+            - 并排 Controls
+            - Expanded Auxiliary Information
+    - Compact
+        - 空间受限
+        - 仍保持主要结构
+        - 可以
+            - 减少辅助区域
+            - 收紧 Track
+            - 改变部分排列
+        - 不得
+            - 破坏 HitTarget
+            - 把文字压到不可读
+    - Narrow
+        - 空间明显受限
+        - 可以
+            - Horizontal → Vertical
+            - Grid → Stack
+            - Split → Single Region
+            - Side Actions → Secondary Row
+        - 重点
+            - 改变布局关系
+            - 而不是无止境缩小内容
+    - Variant 定义原则
+        - Variant 表示布局方案
+        - 不等于视觉 Theme
+        - 不等于 Density
+        - 不等于 Device Type
+        - 一个手机也可能使用 Wide Container
+        - 一个桌面窄 Panel 也可能使用 Narrow Variant
+    - Variant Order
+        - 组件可以声明
+            - Wide
+                - FallbackTo Compact
+            - Compact
+                - FallbackTo Narrow
+            - Narrow
+                - Final
+        - 顺序必须明确
+        - 不得形成循环
+            - Wide → Compact → Wide
+    - Constraint First
+        - 如果当前 Variant Constraint 仍然合法
+            - 原则上保持
+        - 仅仅因为宽度稍有变化
+            - 不需要立即切换
+        - 优势
+            - 减少不必要的 Layout Churn
+    - Optional Threshold
+        - 允许作为性能优化或设计 Guard
+        - 但
+            - Threshold 不能替代真实 Constraint
+        - 规则
+            - Breakpoint 可以帮助快速选 Candidate
+            - 最终仍需要验证 Variant 是否合法
+    - Stable Variant Transition
+        - 目的
+            - 避免边界来回抖动
+        - 可采用
+            - Hysteresis
+            - Stable Threshold
+            - Constraint Margin
+    - Hysteresis
+        - 进入较紧凑 Variant
+            - 需要达到 Enter Condition
+        - 返回更宽松 Variant
+            - 需要达到更高的 Exit Condition
+        - 示例语义
+            - 进入 Narrow
+                - 当前布局已无法满足
+            - 退出 Narrow
+                - 空间恢复到足以稳定承载 Compact
+        - 不得
+            - 刚刚多出 1 DIP 就立刻切回
+    - Stable Selection
+        - 当前 Variant 仍合法
+            - 优先保持
+        - 更宽松 Variant 只有在明显稳定可用时
+            - 才允许恢复
+        - 目的
+            - 防止 Resize 过程中的高频切换
+    - Resize
+        - Container Resize
+            - 重新评估 Constraint
+        - 不是每个 PointerMove
+            - 都必须产生 Variant Change
+        - Variant 不变
+            - 正常 Layout Resize
+        - Variant 需要改变
+            - 执行一次明确切换
+    - Stack Integration
+        - Wide
+            - Direction = Horizontal
+        - Narrow
+            - Direction = Vertical
+        - 决定何时切换
+            - AdaptiveLayout
+        - Stack
+            - 只执行最终 Direction
+    - Grid Integration
+        - Wide
+            - 多 Track
+        - Compact
+            - 更少 Track
+        - Narrow
+            - Stack 或单列 Grid
+        - Grid
+            - 不拥有 Trigger
+    - Wrap Integration
+        - Wrap 本身已经自然 Reflow
+        - 通常不需要 AdaptiveLayout
+        - 只有 Layout Pattern 本身需要改变时
+            - 才使用 Adaptive Variant
+    - Dock Integration
+        - Wide Workspace
+            - Left + Center + Right + Bottom
+        - Compact Workspace
+            - 减少同时打开区域
+        - Narrow Workspace
+            - Side Dock 可以映射到 Tab / Drawer / Single Region
+        - 触发
+            - AdaptiveLayout
+    - SplitPane Integration
+        - 正常
+            - SplitPane 自行满足双方 Constraint
+        - 无法满足双方 Min
+            - 请求 AdaptiveLayout
+        - AdaptiveLayout 可以选择
+            - Split → Tab
+            - Split → Single Pane
+            - Collapse Secondary
+    - AspectContainer Integration
+        - 不同 Variant
+            - 可以选择不同 Driver
+        - 例如
+            - Wide
+                - WidthDriven
+            - Compact Row
+                - HeightDriven
+    - AnchorLayout Integration
+        - 不同 Variant
+            - 可以使用不同 Anchor Constraint
+        - Breakpoint / Trigger
+            - 仍归 AdaptiveLayout
+    - ScrollArea Integration
+        - 切换 Variant 后
+            - 尽量保持 Scroll Position
+        - 不得
+            - 每次 Variant Change ScrollToTop
+    - Focus
+        - Variant Change
+            - 尽量保持同一逻辑 Focus Target
+        - 如果目标仍存在
+            - 不得丢失 Focus
+        - 如果目标在新 Variant 不可见
+            - 转移到合理的可见替代目标
+    - Selection
+        - Variant Change
+            - 不得修改业务 Selection
+        - 同一 Item 改变布局位置
+            - 仍保持同一 Identity
+    - State Preservation
+        - 必须尽量保留
+            - Selection
+            - Focus
+            - Expanded / Collapsed
+            - Scroll Position
+            - Input Value
+            - Editing State
+        - Variant 只是布局变化
+            - 不是组件重建语义
+    - Performance
+        - 优先
+            - 复用现有 Child
+            - 改变 Layout Definition
+        - 避免
+            - 每次 Resize 大量 Destroy / Recreate
+        - Constraint Check
+            - 应保持轻量
+        - 防止
+            - Measure → Variant → Measure → Variant 无限循环
+    - Variant Loop Guard
+        - 同一 Layout Pass
+            - Variant 选择必须最终收敛
+        - 不得
+            - Variant A 导致 B
+            - B 又立即导致 A
+        - 必要时
+            - 使用 Stable Previous Variant
+            - Hysteresis
+            - Iteration Guard
+    - Density
+        - AdaptiveLayout 不重新定义 Density
+        - Compact Layout Variant
+            - 不等于 Compact Density
+        - 二者可以独立组合
+        - 例如
+            - Narrow Layout
+            - Comfortable Density
+        - 这是合法的
+    - Device
+        - Device Type
+            - 可以作为辅助 Context
+        - 但不应成为唯一 Adaptive Trigger
+        - 例如
+            - Touch Device
+                - 可能影响交互 Variant
+            - Container Width
+                - 仍决定实际布局能否成立
+    - Accessibility
+        - Variant 切换不得改变内容语义
+        - 逻辑 Reading Order 必须稳定
+        - 不得因为 Narrow Layout 隐藏必要功能且没有替代入口
+        - HitTarget 不得因为空间不足低于正式最小要求
+    - 视觉规则
+        - AdaptiveLayout 本身不可见
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - Variant Change
+            - 默认无需夸张 Transition Animation
+    - UI代码
+        - AdaptiveLayout.Context
+            - ContainerBounds
+        - AdaptiveLayout.Trigger
+            - Container + Constraint
+        - AdaptiveLayout.Variants
+            - Named Variant[]
+        - AdaptiveLayout.DefaultVariant
+            - Component Defined
+        - AdaptiveLayout.FallbackOrder
+            - Ordered
+        - AdaptiveLayout.ConstraintCheck
+            - Required
+        - AdaptiveLayout.Stability
+            - Hysteresis
+        - AdaptiveLayout.ScreenBreakpoint
+            - Secondary Context Only
+        - AdaptiveLayout.Density
+            - Not Owned
+        - AdaptiveLayout.Background
+            - None
+        - AdaptiveLayout.Border
+            - None
+        - AdaptiveLayout.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止只看整个显示器宽度决定所有组件布局
+        - 禁止 Desktop 永远等于 Wide
+        - 禁止 Mobile 永远等于 Narrow
+        - 禁止每个组件自行散落大量魔法 Breakpoint
+        - 禁止空间不足时无限缩小 Child
+        - 禁止突破正式 Min / HitTarget
+        - 禁止 Variant Change 清除 Selection
+        - 禁止 Variant Change 默认 ScrollToTop
+        - 禁止 Variant Change 无意义重建业务状态
+        - 禁止 Wide / Compact 在边界反复震荡
+        - 禁止 AdaptiveLayout 自己重新实现 Stack / Grid / Dock
+
+- 5.12 · WorkspaceLayout / 工作区布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 App 基础结构
+                - 拥有 Panel
+                - 拥有 Toolbar
+                - 拥有 Surface
+                - 拥有基础 Layout Token
+                - 未拥有完整 Workspace Role System
+            - XYUI-5.04 Dock
+                - 拥有 Dock Zone
+                - 拥有 Dock Group
+                - 拥有 Dock Tree
+                - 拥有 Panel 当前停靠位置
+            - XYUI-5.06 SplitPane
+                - 拥有实际二分几何结构
+            - XYUI-5.11 AdaptiveLayout
+                - 拥有 Layout Variant Selection
+                - 拥有 Adaptive Trigger
+        - This Item Inherits
+            - XYUI-0 App / Panel / Toolbar
+            - XYUI-5 Dock
+            - XYUI-5 SplitPane
+            - XYUI-5 AdaptiveLayout
+            - XYUI-0 DIP
+        - This Item Owns
+            - Workspace Functional Role
+            - Workspace Region Contract
+            - Primary Work Semantics
+            - Canonical Workspace Slots
+            - Workspace Mode Composition
+        - This Item Must Not Redefine
+            - Dock Geometry
+            - Split Geometry
+            - Panel Visual
+            - Toolbar Visual
+            - Adaptive Trigger
+            - Surface Token
+        - Result
+            - NEW + COMPOSITION
+    - 用途
+        - 定义整个应用工作区由哪些功能角色组成
+        - 让 Workspace 结构脱离固定左栏 / 右栏命名
+        - 建立不同 XYUI 产品之间共享的 Workspace 语言
+        - 支持编辑器
+        - 支持实验工具
+        - 支持生产力工具
+        - 支持复杂桌面应用
+        - 支持不同 Workspace Mode
+        - 支持响应式重新组合
+    - 最终方案
+        - Role-Based Workspace 为主
+        - Primary-Work First 作为核心辅助原则
+        - Workspace Slot Contract 作为标准角色集合
+        - Workspace Mode Composition 作为高级组合能力
+        - 方案1为核心语义模型
+        - 方案2保护主任务
+        - 方案3统一跨产品 Slot 命名
+        - 方案4允许同一产品切换工作模式
+    - 核心原则
+        - Workspace 首先表达功能角色
+        - Workspace 不首先表达物理位置
+        - Navigation 不等于 Left
+        - Inspector 不等于 Right
+        - Utility 不等于 Bottom
+        - PrimaryWork 不等于 Center 的死绑定
+        - 具体物理位置交给 Dock / SplitPane
+        - 具体响应式变化交给 AdaptiveLayout
+        - 同一角色可以在不同 Layout Variant 中改变呈现方式
+        - 角色身份不得因为位置变化而改变
+    - Canonical Workspace Roles
+        - GlobalCommand
+        - PrimaryNavigation
+        - PrimaryWork
+        - Inspector
+        - Utility
+        - Status
+        - Transient
+    - GlobalCommand
+        - 职责
+            - 应用级命令入口
+            - 全局模式
+            - 全局工具
+        - 典型
+            - Main Toolbar
+            - Command Bar
+            - Global Search
+        - 不是
+            - 局部 Panel Toolbar
+    - PrimaryNavigation
+        - 职责
+            - 定位主要对象与内容
+        - 典型
+            - Hierarchy
+            - Map Content Navigation
+            - Project Tree
+            - Asset Navigation
+        - 原则
+            - 帮助用户决定“当前在看什么”
+    - PrimaryWork
+        - 职责
+            - 承担当前应用最主要任务
+        - 典型
+            - Viewport
+            - Document Editor
+            - Canvas
+            - Experiment Result
+            - Meeting Main Area
+        - 原则
+            - 每个 Workspace 必须明确 PrimaryWork
+            - 可以包含多个同等级 Document / View
+            - 但必须存在清晰主工作语义
+    - Inspector
+        - 职责
+            - 查看与编辑当前上下文对象的属性
+        - 典型
+            - Properties
+            - Inspector
+            - Details
+            - Tool Settings
+        - 依赖
+            - 通常响应当前 Selection / Context
+    - Utility
+        - 职责
+            - 辅助主任务但不是主要操作面的区域
+        - 典型
+            - Log
+            - Console
+            - Output
+            - History
+            - Diagnostics
+            - Timeline Auxiliary
+    - Status
+        - 职责
+            - 提供低干扰持续状态
+        - 典型
+            - StatusBar
+            - Connection
+            - Coordinate
+            - Build State
+            - Performance Summary
+        - 原则
+            - 不承担主要操作
+    - Transient
+        - 职责
+            - 临时工作区域
+        - 典型
+            - Temporary Tool
+            - Search Result
+            - Quick Compare
+            - Ephemeral Preview
+        - 原则
+            - 生命周期可以短
+            - 但仍必须属于正式 Workspace Composition
+    - Role-Based Workspace
+        - 定义顺序
+            - 先确认 Region Role
+            - 再确认当前 Presentation
+            - 再确认当前 Geometry
+        - 示例
+            - PrimaryNavigation
+                - Desktop
+                    - Dock Left
+                - Narrow
+                    - Drawer
+            - Inspector
+                - Desktop
+                    - Dock Right
+                - Narrow
+                    - Sheet
+        - 角色
+            - 始终不变
+    - Role vs Position
+        - 禁止
+            - LeftPanel 作为长期业务身份
+            - RightPanel 作为长期业务身份
+            - BottomPanel 作为长期业务身份
+        - 推荐
+            - NavigationRegion
+            - InspectorRegion
+            - UtilityRegion
+        - 原因
+            - 位置可能随模式与设备改变
+            - 职责通常更加稳定
+    - Primary-Work First
+        - PrimaryWork
+            - 拥有最高业务空间优先级
+        - Auxiliary Regions
+            - 服务于 PrimaryWork
+        - 空间不足
+            - 辅助区优先进入紧凑 / Collapse / Alternative Presentation
+        - 不得
+            - 为了保留所有辅助区域把 PrimaryWork 压缩到不可用
+    - PrimaryWork 与 Dock Protected Center
+        - Workspace PrimaryWork
+            - 产品语义
+        - Dock Protected Center
+            - 几何策略
+        - 通常组合
+            - PrimaryWork 映射到受保护 Center
+        - 但不是强绑定
+            - 其他 Workspace Variant 可以重新映射
+    - Workspace Slot Contract
+        - 目的
+            - 统一跨项目 Workspace 角色命名
+        - Slot
+            - 可以为空
+            - 可以单实例
+            - 可以承载 Group
+        - 不是所有应用
+            - 都必须使用所有 Slot
+    - Optional Slots
+        - GlobalCommand
+            - Optional
+        - PrimaryNavigation
+            - Optional
+        - Inspector
+            - Optional
+        - Utility
+            - Optional
+        - Status
+            - Optional
+        - Transient
+            - Optional
+        - PrimaryWork
+            - Required
+    - Slot Content
+        - 可以是
+            - Panel
+            - DockGroup
+            - SplitPane
+            - Document Host
+            - Viewport
+            - Composite Layout
+        - Slot 本身
+            - 不定义 Child Visual
+    - Slot Identity
+        - 必须稳定
+        - Layout Move
+            - 不改变 Slot Identity
+        - Mode Change
+            - 不改变 Slot Role
+        - Persistence
+            - 应保存 Region / Panel 与 Slot 的关系
+    - Workspace Composition
+        - Desktop Example
+            - GlobalCommand
+                - Main Toolbar
+            - PrimaryNavigation
+                - Map Content
+            - PrimaryWork
+                - Viewport
+            - Inspector
+                - Properties
+            - Utility
+                - Log
+            - Status
+                - StatusBar
+    - Workspace Mode
+        - 定义
+            - 同一应用内针对不同主要任务的 Workspace Composition Variant
+        - 示例
+            - Edit
+            - Debug
+            - Preview
+            - Review
+            - Presentation
+    - Workspace Mode Composition
+        - Mode 可以改变
+            - Slot Visibility
+            - Slot Priority
+            - Dock Assignment
+            - Split Structure
+            - Active Group
+        - Mode 不应改变
+            - Component Identity
+            - Data Identity
+            - Role Meaning
+            - Design Language
+    - Edit Mode
+        - 典型
+            - Navigation Visible
+            - PrimaryWork Standard
+            - Inspector Visible
+            - Utility Available
+    - Preview Mode
+        - 典型
+            - PrimaryWork Expanded
+            - Navigation Reduced
+            - Inspector Reduced
+            - Utility Reduced
+        - 目的
+            - 把空间集中到查看结果
+    - Debug Mode
+        - 典型
+            - PrimaryWork
+            - Diagnostics
+            - Log
+            - State Inspector
+        - 允许
+            - Utility 权重临时提升
+        - 仍保持
+            - PrimaryWork 语义
+    - Mode vs Adaptive Variant
+        - Workspace Mode
+            - 由用户任务 / 产品状态决定
+        - Adaptive Variant
+            - 由空间 Constraint 决定
+        - 两者可以组合
+        - 示例
+            - Edit Mode
+                - Wide
+                - Compact
+                - Narrow
+        - 禁止
+            - 把 Mobile 当成 Workspace Mode
+            - 把 Narrow 当成业务 Mode
+    - Workspace + Dock
+        - Workspace
+            - 决定 Region Role
+        - Dock
+            - 决定当前 Region Position
+        - 例如
+            - Inspector Role
+                - 映射到 Right Dock
+        - 不得
+            - Dock Zone 名称代替 Role Identity
+    - Workspace + SplitPane
+        - Workspace
+            - 决定哪些 Region 需要同时存在
+        - SplitPane
+            - 决定它们实际如何分割空间
+    - Workspace + AdaptiveLayout
+        - Workspace
+            - 声明可用 Composition Variant
+        - AdaptiveLayout
+            - 根据 Container / Constraint 选择当前 Variant
+    - Workspace + OverlayLayout
+        - Transient Overlay
+            - 不自动等于 Transient Workspace Slot
+        - OverlayLayout
+            - 负责局部叠层
+        - Workspace Transient
+            - 负责应用级临时功能区域角色
+    - Workspace + ScrollArea
+        - 每个 Region
+            - 自行决定内容是否滚动
+        - Workspace 本身
+            - 默认不作为一个巨大的整体 ScrollArea
+    - Focus
+        - Workspace Region
+            - 可以形成 Focus Context
+        - Mode Change
+            - 优先保持 PrimaryWork Focus
+        - Region Hidden
+            - Focus 转移到合理可见 Region
+        - 不得
+            - 重新组合后随机跳到应用起点
+    - Selection
+        - Workspace Layout / Mode Change
+            - 不得修改业务 Selection
+        - Inspector Hidden
+            - Selection 仍然存在
+        - 重新打开
+            - 继续展示当前 Context
+    - State Preservation
+        - Workspace Recomposition 应尽量保留
+            - Selection
+            - Focus
+            - Scroll Position
+            - Expanded State
+            - Panel State
+            - Document State
+    - Persistence
+        - 需要保存
+            - 当前 Workspace Mode
+            - Region Composition
+            - Slot Mapping
+            - 用户自定义 Layout
+        - 具体 Schema
+            - 交给后续 Layout Persistence
+    - Accessibility
+        - Region Role 应具有明确可访问 Landmark 语义
+        - PrimaryWork 应易于快速到达
+        - Workspace Mode Change 不得丢失必要功能入口
+        - 隐藏辅助 Slot 时必须存在可恢复方式
+    - Performance
+        - 切换 Workspace Mode
+            - 优先复用现有 Region / Panel
+        - 不建议
+            - 整个 Workspace Destroy / Recreate
+        - 不可见 Auxiliary Region
+            - 可暂停不必要更新
+        - 但
+            - 不得破坏业务状态
+    - 视觉规则
+        - WorkspaceLayout Background
+            - 不额外定义
+        - Region Surface
+            - 引用已有 Surface / Panel
+        - Region Border
+            - 由实际 Composition 决定
+        - Workspace Role
+            - 本身不可见
+    - UI代码
+        - Workspace.Role
+            - GlobalCommand
+            - PrimaryNavigation
+            - PrimaryWork
+            - Inspector
+            - Utility
+            - Status
+            - Transient
+        - Workspace.PrimaryWork
+            - Required
+        - Workspace.Slot
+            - Optional except PrimaryWork
+        - Workspace.Mode
+            - ProductDefined
+        - Workspace.Composition
+            - Role → Presentation Mapping
+        - Workspace.Dock
+            - XYUI-5 Dock
+        - Workspace.Split
+            - XYUI-5 SplitPane
+        - Workspace.Adaptive
+            - XYUI-5 AdaptiveLayout
+        - Workspace.Persistence
+            - Required for Customizable Workspace
+        - Workspace.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止用 LeftPanel / RightPanel 作为长期业务角色
+        - 禁止 WorkspaceLayout 重新定义 Dock
+        - 禁止 WorkspaceLayout 重新定义 SplitPane
+        - 禁止 WorkspaceLayout 重新定义 Adaptive Trigger
+        - 禁止辅助 Region 无限挤压 PrimaryWork
+        - 禁止 Mode Change 清除业务 Selection
+        - 禁止 Mode Change 无意义重建所有 Panel
+        - 禁止把 Narrow / Wide 当成 Workspace Mode
+        - 禁止把 Desktop / Mobile 直接当成 Workspace Role
+        - 禁止每个 XYUI 产品重新创造一套完全不同 Workspace 区域命名
+
+- 5.13 · LayoutPersistence / 布局持久化
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有基础 State / Identity 原则
+                - 未拥有完整 Workspace Layout Persistence
+            - XYUI-5.04 Dock
+                - 声明 Dock Tree 需要持久化
+                - 不拥有总 Persistence Schema
+            - XYUI-5.06 SplitPane
+                - 声明 Orientation / Size / Ratio 需要保存
+                - 不拥有总 Persistence System
+            - XYUI-5.12 WorkspaceLayout
+                - 声明 Workspace Mode / Slot Mapping 需要保存
+                - 不拥有 Persistence Schema
+        - This Item Inherits
+            - Dock Tree
+            - Split Tree
+            - Workspace Role
+            - Panel Identity
+            - Size Constraint
+        - This Item Owns
+            - Stable Layout Identity
+            - Structural Layout Snapshot
+            - Save / Restore Contract
+            - Validation
+            - Automatic Repair
+            - Schema Version
+            - Migration
+            - Fallback
+        - This Item Must Not Redefine
+            - Dock
+            - SplitPane
+            - Workspace Role
+            - Component Business State
+            - Project Document Format
+        - Result
+            - NEW + ORCHESTRATION
+    - 用途
+        - 记住用户调整后的工作区布局
+        - 下次启动恢复用户工作环境
+        - 保存 Dock 位置
+        - 保存 Split 比例
+        - 保存 Panel 尺寸
+        - 保存 Tab Group
+        - 保存 Active Panel
+        - 保存 Workspace Mode
+        - 支持软件升级后的布局迁移
+        - 支持显示器变化后的布局修复
+    - 最终方案
+        - Identity-Based Restore 为主
+        - Structural Layout Snapshot 保留
+        - Validate + Repair Restore 保留
+        - Versioned Layout Migration 保留
+        - 方案2是核心基础
+        - 方案1负责保存结构
+        - 方案3负责保证恢复后仍合法
+        - 方案4负责长期版本兼容
+    - 核心原则
+        - Stable Identity First
+        - 位置不是身份
+        - Child Index 不是身份
+        - Dock Zone 不是身份
+        - Panel 必须拥有稳定 Layout ID
+        - Region 必须拥有稳定 Layout ID
+        - 保存布局关系而不是屏幕截图
+        - Restore 前必须 Validate
+        - 非法 Layout 必须 Repair
+        - 无法修复才回退 Default Layout
+        - Layout State 与业务数据严格分离
+    - Stable Layout Identity
+        - 每个可持久化对象
+            - 必须拥有 Stable ID
+        - 例如
+            - Inspector
+                - inspector.properties
+            - Map Navigation
+                - navigation.map-content
+            - Log
+                - utility.log
+            - History
+                - history.main
+        - Stable ID
+            - 跨启动稳定
+            - 跨位置稳定
+            - 跨 Tab 顺序稳定
+            - 尽可能跨版本稳定
+    - 禁止 Identity
+        - Child[0]
+        - RightPane[2]
+        - ThirdTab
+        - VisualTreeIndex
+        - Runtime Object Address
+        - 随机 Session ID
+    - Identity Resolution
+        - 读取 Layout Snapshot
+        - 获得 Stable ID
+        - 查询当前应用注册的 Region / Panel
+        - 找到
+            - 恢复 Layout State
+        - 找不到
+            - 进入 Missing Item Repair
+    - Structural Layout Snapshot
+        - 保存
+            - Workspace Mode
+            - Workspace Slot Mapping
+            - Dock Tree
+            - Split Tree
+            - Dock Groups
+            - Panel References
+            - Active Panel
+            - Visibility
+            - Collapsed State
+            - Size State
+            - Ratio State
+            - Floating State
+        - 不保存
+            - 像素截图
+            - 业务 Document 内容
+            - Map 数据
+            - 用户输入数据
+    - 布局数据与业务数据
+        - Layout State
+            - Inspector Width
+            - Log Height
+            - Panel Dock Position
+            - Tab Group
+        - Business State
+            - Map Geometry
+            - Dataset
+            - Entity
+            - Project Data
+        - 必须分离
+    - Save
+        - 触发
+            - 正常应用退出
+            - 正式 Layout Change Commit
+            - Workspace Mode Change
+            - 必要的自动保存点
+        - 保存前
+            - 只保存合法 Layout State
+        - 禁止
+            - 把临时 Drag Preview 当正式 Layout 保存
+    - Restore
+        - 顺序
+            - Load
+            - Migrate if Required
+            - Resolve Stable Identity
+            - Validate
+            - Repair
+            - Apply
+        - 不得
+            - Load 后直接无验证 Apply
+    - Validate
+        - 检查
+            - Schema Version
+            - Node Type
+            - Stable ID
+            - Dock Tree
+            - Split Tree
+            - Size
+            - Ratio
+            - Constraint
+            - Screen Bounds
+            - Workspace Slot
+        - 目标
+            - 确保恢复结果能够正常操作
+    - Repair
+        - Missing Panel
+            - 删除失效引用
+            - 修复父级 Group / Tree
+        - Invalid Split Ratio
+            - Clamp / Normalize
+        - Invalid Size
+            - Clamp 到当前 Constraint
+        - Zero Size
+            - 恢复合法最小尺寸或默认尺寸
+        - Offscreen Floating Window
+            - 移动回当前可见工作区
+        - Broken Split Node
+            - 删除失效分支
+            - 提升仍有效 Child
+        - Empty Group
+            - 安全移除
+        - Invalid Active Panel
+            - 选择合法 Fallback Panel
+    - Repair 原则
+        - 优先保留用户有效布局
+        - 只修复失效部分
+        - 不得一个 Panel 坏掉就全部 Reset
+        - 不得忠实恢复明显非法状态
+    - Default Layout
+        - 使用条件
+            - 首次启动
+            - 无 Snapshot
+            - Snapshot 完全损坏
+            - Migration 不可完成
+            - Repair 仍无法获得合法 Workspace
+        - Default Layout
+            - 必须始终可用
+    - Schema Version
+        - 每份持久化 Layout
+            - 必须包含 Schema Version
+        - 目的
+            - 识别旧结构
+            - 执行确定 Migration
+    - Migration
+        - 可以处理
+            - Panel ID Rename
+            - 旧 Node Type 转换
+            - Sizing Model 转换
+            - 新增默认 Slot
+            - 旧 Dock Tree 标准化
+        - 原则
+            - 逐版本转换
+            - 结果必须再次 Validate
+    - ID Rename Migration
+        - 旧
+            - map.inspector
+        - 新
+            - inspector.map-properties
+        - Migration
+            - 建立正式 Mapping
+        - 不得
+            - 靠 Label 文本猜 Panel Identity
+    - New Panel
+        - 旧 Layout 中不存在
+        - 处理
+            - 按照 Default Workspace Rule 放置
+        - 不得
+            - 因为旧 Snapshot 没记录就永久隐藏新功能
+    - Removed Panel
+        - 旧 Snapshot 存在
+        - 当前应用不存在
+        - 处理
+            - Missing Panel Repair
+    - Monitor Change
+        - 双屏保存
+            - 单屏恢复
+        - Floating Window 超出当前 WorkArea
+            - 自动移动到可访问范围
+        - 不得
+            - 让 Window 永久消失在不可见屏幕
+    - Constraint Change
+        - 新版本 MinWidth 增大
+        - 旧 Snapshot Width 太小
+            - Clamp 到新 Constraint
+        - 不得
+            - 为了忠实旧 Snapshot 破坏当前设计规范
+    - Dock Persistence
+        - 保存
+            - Zone
+            - Group
+            - Panel Membership
+            - Active Tab
+        - Panel Identity
+            - 使用 Stable ID
+    - SplitPane Persistence
+        - 保存
+            - Orientation
+            - Sizing Mode
+            - Fixed Size
+            - Ratio
+            - Collapsed State
+        - 恢复
+            - 必须重新经过当前 Constraint
+    - Workspace Persistence
+        - 保存
+            - Workspace Mode
+            - Role → Presentation Mapping
+            - 用户自定义 Composition
+        - 不得
+            - 把 Role Identity 替换成 Left / Right 等位置身份
+    - AdaptiveLayout Relationship
+        - 旧 Snapshot 保存的是用户布局意图
+        - 当前启动空间可能不同
+        - 恢复后
+            - AdaptiveLayout 重新选择合法 Variant
+        - 不得
+            - 强制恢复旧机器上的 Wide Variant
+    - Scroll Position
+        - 可以由具体组件独立持久化
+        - 不属于 LayoutPersistence Core 必需字段
+        - 如保存
+            - 必须使用对应组件正式 Identity
+    - Focus
+        - 默认不强制持久化精确 Focus
+        - 启动恢复后
+            - 选择合理 Focus Target
+        - 不得
+            - 恢复到已经不存在的控件
+    - Selection
+        - 业务 Selection
+            - 不属于 LayoutPersistence
+        - 不得
+            - 通过 Layout Snapshot 保存业务对象 Selection
+    - Failure Handling
+        - Migration Failure
+            - 保留旧 Snapshot 用于诊断
+            - 使用 Default Layout
+        - Repair Failure
+            - 使用 Default Layout
+        - 不得
+            - 因为 UI Layout 文件损坏阻止应用启动
+    - Performance
+        - Snapshot
+            - 应保持轻量
+        - Restore
+            - 不依赖完整 UI 已经构造完成才识别 Identity
+        - 避免
+            - 频繁大量写盘
+            - PointerMove Resize 每一帧写 Snapshot
+        - 推荐
+            - Layout Commit / Debounced Save
+    - Privacy / Portability
+        - 布局文件只保存 UI 布局所需数据
+        - 不得无理由保存业务内容
+        - 跨设备同步时
+            - 仍必须 Validate 当前设备 Constraint
+    - UI代码
+        - LayoutPersistence.Identity
+            - Stable String ID
+        - LayoutPersistence.SchemaVersion
+            - Required
+        - LayoutPersistence.WorkspaceMode
+            - Optional
+        - LayoutPersistence.DockTree
+            - Optional
+        - LayoutPersistence.SplitTree
+            - Optional
+        - LayoutPersistence.PanelReferences
+            - Stable ID[]
+        - LayoutPersistence.SizeState
+            - Optional
+        - LayoutPersistence.Validate
+            - Required
+        - LayoutPersistence.Repair
+            - Required
+        - LayoutPersistence.Migrate
+            - Versioned
+        - LayoutPersistence.Fallback
+            - DefaultLayout
+    - 禁止事项
+        - 禁止使用 Child Index 作为持久化身份
+        - 禁止使用显示文本作为唯一 Identity
+        - 禁止保存像素截图代替 Layout Structure
+        - 禁止把 Layout State 与 Project Data 混在一起
+        - 禁止 Restore 不经过 Validate
+        - 禁止一个 Panel 失效就 Reset 整个 Workspace
+        - 禁止恢复 Offscreen Window
+        - 禁止忽略当前 Min / Max Constraint
+        - 禁止版本升级默认全部清除用户布局
+        - 禁止 Layout 文件损坏导致应用无法启动
+
+- 5.14 · VirtualizedLayout / 虚拟化布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-3 TreeNavigation
+                - 已经要求大型 Tree 支持 Virtualization
+                - 已经要求只创建可见 Node UI
+                - 已经禁止节点规模增长后出现 O(N) 每帧 Layout / HitTest
+                - 但未拥有通用 Virtualization Infrastructure
+            - XYUI-5.05 ScrollArea
+                - 拥有 Scroll Viewport
+                - 拥有 Scroll Position
+                - 拥有 AnchorItem
+                - 不拥有 Visual Realization
+            - XYUI-4
+                - 拥有 Selection / Focus 等状态语义
+                - 不拥有虚拟化
+        - This Item Inherits
+            - XYUI-5 ScrollArea
+            - Stable Item Identity
+            - XYUI-4 Selection
+            - XYUI-0 Focus
+            - 各 Collection Component Row / Cell Visual
+        - This Item Owns
+            - Hierarchical Virtualization
+            - Visible Logical Sequence
+            - Viewport Windowing
+            - Realization Range
+            - Overscan
+            - Visual Recycling
+            - Variable Size Measurement
+            - Size Cache
+            - Scroll Anchor Coordination
+        - This Item Must Not Redefine
+            - TreeNavigation
+            - Tree Row Visual
+            - List Row
+            - DataGrid Row
+            - Selection
+            - Focus
+            - Scrollbar
+            - 业务数据结构
+        - Result
+            - NEW SHARED INFRASTRUCTURE + UPSTREAM REQUIREMENT CONSOLIDATION
+    - 用途
+        - 承载大型 Tree
+        - 承载大型 List
+        - 承载大型 Log
+        - 承载大型 Asset Browser
+        - 承载大型 Search Result
+        - 承载大量 Collection Item
+        - 避免数据规模与 UI Visual 数量线性绑定
+        - 支持十万级乃至更高逻辑数据量
+    - 最终方案
+        - Hierarchical Virtualization 为主
+        - Viewport Windowing 作为基础
+        - Identity-Preserving Recycling 作为基础
+        - Variable-Size Virtualization 作为高级辅助
+        - 方案4负责大型 Tree 主模型
+        - 方案1负责可视窗口
+        - 方案2负责 Visual 生命周期
+        - 方案3负责不等高 Item
+    - 核心原则
+        - Data Item 数量不等于 Visual 数量
+        - 只 Realize 当前 Viewport 附近必要 Item
+        - Collapsed Tree Branch 不进入逻辑可见集合
+        - Visual 可以回收
+        - Item Identity 绝不能跟随 Visual 回收
+        - Selection 必须绑定 Stable Item ID
+        - Focus 必须绑定 Stable Item Identity
+        - Expanded State 必须绑定 Stable Item ID
+        - 虚拟化不得改变业务数据顺序
+        - 虚拟化不得改变用户观察到的逻辑行为
+        - 大型 Collection 不允许每帧 O(N) Layout / HitTest
+    - Hierarchical Virtualization
+        - 主应用
+            - Tree
+            - Hierarchy
+            - Map Content
+            - Entity Browser
+            - Scene Tree
+        - 处理流程
+            - Full Hierarchical Data
+                - ↓
+            - Expanded / Collapsed State
+                - ↓
+            - Visible Logical Sequence
+                - ↓
+            - Viewport Window
+                - ↓
+            - Realized Visual Rows
+    - Full Hierarchical Data
+        - 可以非常大
+        - 可以包含
+            - Root
+            - Branch
+            - Child
+            - Grandchild
+        - 不要求
+            - 所有节点创建 UI
+            - 所有节点参与 Layout
+    - Expanded State
+        - Collapsed Node
+            - 自身仍可进入 Visible Logical Sequence
+            - Descendants 不进入
+        - Expanded Node
+            - 其可见 Child 才进入逻辑序列
+        - 原则
+            - 先解决逻辑可见性
+            - 再解决物理 Viewport 可见性
+    - Visible Logical Sequence
+        - 定义
+            - 当前展开状态下用户理论上可以滚动看到的节点序列
+        - 不等于
+            - 当前屏幕真正显示的节点
+        - 作用
+            - 连接 Tree Model 与 Viewport Windowing
+    - Viewport Windowing
+        - 依据
+            - Scroll Position
+            - Viewport Size
+            - Item Size Information
+        - 计算
+            - Visible Range
+            - Overscan Before
+            - Overscan After
+        - 只 Realize
+            - 必要范围
+    - Overscan
+        - 定义
+            - Viewport 前后少量预实现区域
+        - 目的
+            - 高速滚动时减少明显空白
+            - 避免刚进入 Viewport 才开始创建导致闪烁
+        - 原则
+            - 保持小范围
+            - 不把 Overscan 扩大成伪全量渲染
+    - Realization Range
+        - 包含
+            - Visible Items
+            - Small Overscan
+        - 不包含
+            - 远离 Viewport 的大量 Item
+    - Visual Recycling
+        - 允许
+            - Row Visual 离开 Realization Range 后进入 Pool
+            - 后续重新绑定其他 Item
+        - 优势
+            - 减少频繁 Allocate / Destroy
+            - 降低 GC 压力
+            - 降低 Visual Tree Churn
+    - Visual 与 Item Identity
+        - Visual
+            - 临时表现载体
+        - Item
+            - 稳定业务身份
+        - 必须严格分离
+    - Rebind
+        - Visual 被重新绑定前
+            - 清理旧 Item 临时 Visual State
+        - 然后
+            - 绑定新 Stable Item ID
+            - 读取新 Item 当前正式 State
+        - 禁止
+            - 旧 Hover 泄漏
+            - 旧 Selection 泄漏
+            - 旧 Expanded 泄漏
+            - 旧 Error Visual 泄漏
+    - Selection
+        - 绑定
+            - Stable Item ID
+        - 不绑定
+            - Row Visual Instance
+        - Visual Realize
+            - 根据 Selection Set 投影 Selected State
+        - Visual Recycle
+            - 不得修改 Selection Set
+    - Focus
+        - Focus Item Identity
+            - 必须独立于 Visual 生命周期
+        - Focused Item 离开 Viewport
+            - 由 Collection Component / Scroll Navigation Policy 决定 Reveal 或 Focus 转移
+        - 不得
+            - Visual 回收导致 Focus 随机跳到新绑定 Item
+    - Expanded State
+        - Tree Expanded / Collapsed
+            - 绑定 Node ID
+        - 不得
+            - 绑定 TreeRow 实例
+    - Editing State
+        - 如果 Item 正在 Inline Edit
+            - 必须有明确 Virtualization Policy
+        - 优先
+            - 保持 Item Realized
+            - 或正式 Commit / Cancel 后才允许回收
+        - 禁止
+            - 正在编辑时 Row 被回收并把 Editor 带到另一 Item
+    - Variable-Size Virtualization
+        - 定位
+            - 辅助高级能力
+        - 支持
+            - 普通 Row
+            - Expanded Row
+            - Multiline Row
+            - Error Detail
+            - 不同高度 Item
+    - Estimated Size
+        - 未测量 Item
+            - 使用合理 Estimate
+        - 目的
+            - 允许计算远端逻辑 Offset
+    - Measured Size
+        - Item 实际 Realize 后
+            - 获得真实尺寸
+        - 缓存
+            - Stable Item ID → Measured Size
+    - Size Cache
+        - 必须绑定
+            - Stable Item Identity
+        - 失效条件
+            - Item Content 明确改变
+            - Density 改变
+            - 影响尺寸的 Layout Variant 改变
+        - 不得
+            - 无变化时每帧重新测量所有 Item
+    - Size Correction
+        - Estimated 与 Measured 不一致
+            - 更新后续逻辑位置
+        - 必须
+            - 配合 Scroll Anchor
+            - 避免用户当前观察位置明显跳动
+    - Scroll Anchor
+        - 优先
+            - 当前 Viewport 中稳定 Item Identity
+        - 尺寸修正时
+            - 保持 Anchor Item 视觉位置尽量稳定
+        - 引用
+            - XYUI-5.05 ScrollArea AnchorItem
+    - Tree Expand
+        - 用户展开 Node
+            - 更新 Visible Logical Sequence
+        - 只 Realize
+            - 新进入 Viewport / Overscan 的节点
+        - 禁止
+            - 展开一个拥有 20,000 Descendant 的 Branch 就立刻创建 20,000 Row UI
+    - Tree Collapse
+        - Descendants
+            - 立即从 Visible Logical Sequence 移除
+        - 已 Realized Descendant
+            - 退出 Realization
+            - 进入回收流程
+        - Selection
+            - 不因 Collapse 自动删除
+            - 具体隐藏 Selection 语义由 TreeNavigation 决定
+    - Scroll
+        - ScrollArea
+            - 拥有 Scroll Position
+        - VirtualizedLayout
+            - 根据 Position 决定 Realization
+        - 不得
+            - VirtualizedLayout 创建第二套 Scroll System
+    - ScrollToItem
+        - 通过 Stable Item ID 查找逻辑位置
+        - 必要时
+            - 展开祖先路径
+            - 由调用组件决定
+        - 随后
+            - ScrollArea Reveal
+    - Insert Item
+        - 插入 Viewport 上方
+            - 配合 AnchorItem 保持阅读位置
+        - 插入远处
+            - 不得触发全量 UI 更新
+    - Remove Item
+        - 被删除 Item 已 Realized
+            - 回收 Visual
+        - 未 Realized
+            - 只更新逻辑数据 / Index
+        - 如果删除 Anchor
+            - 选择最近合法 Anchor
+    - Move Item
+        - Tree Reparent / Reorder
+            - 更新逻辑 Visible Sequence
+        - Selection
+            - 继续跟随 Stable Item ID
+        - 不得
+            - 因为 Index 改变丢失 State
+    - Filtering
+        - Filter
+            - 生成新的 Visible Logical Sequence
+        - 不要求
+            - 为被过滤 Item 创建 Visual
+        - Filter Clear
+            - 根据 Stable ID 恢复必要 State
+    - Sorting
+        - 改变 Logical Order
+        - 不得改变
+            - Item Identity
+            - Selection Identity
+            - 业务 State
+    - TreeNavigation Integration
+        - XYUI-3 TreeNavigation
+            - 拥有 Tree Interaction / Row Visual / Expand / Selection Presentation
+        - XYUI-5 VirtualizedLayout
+            - 拥有大型 Tree Realization Infrastructure
+        - TreeNavigation.Requires
+            - VirtualizedLayout for Large Data
+    - List Integration
+        - List
+            - 可以消费 Viewport Windowing
+            - 可以消费 Recycling
+        - 不要求
+            - 使用 Hierarchical Stage
+    - DataGrid Integration
+        - DataGrid
+            - 可以消费 Row Virtualization
+        - Column / Cell Visual
+            - 仍归 DataGrid
+        - 横向 Column Virtualization
+            - 未来如需要可扩展
+            - 不在本项 Core 强制
+    - Log Integration
+        - 大量 Log Row
+            - 使用 Windowing
+        - FollowEnd
+            - 由 ScrollArea Position Policy 负责
+        - Variable Height
+            - 需要多行日志时使用方案3能力
+    - Asset Browser Integration
+        - 大型 Asset Collection
+            - 可消费 VirtualizedLayout
+        - Grid / Thumbnail Virtualization
+            - 可以作为后续具体 Collection Layout 扩展
+    - Density
+        - Density 改变
+            - 可能改变 Item Size
+        - 需要
+            - 失效受影响 Size Cache
+            - 重新计算 Realization
+        - 不得
+            - 丢失 Scroll Context
+    - AdaptiveLayout
+        - Layout Variant 改变
+            - 如果影响 Item Size
+                - 更新 Size Cache
+        - Item Identity
+            - 保持
+        - Selection
+            - 保持
+    - Accessibility
+        - 未 Realized Item
+            - 不要求创建大量不可见 Accessibility Visual Node
+        - 但
+            - Collection 必须正确报告逻辑总量 / Position 等必要语义
+        - Keyboard Navigation
+            - 可以移动到尚未 Realized Item
+            - 随后触发 Reveal / Realize
+    - Performance
+        - 核心目标
+            - UI Visual 数量与当前 Viewport 相关
+            - 而不是与数据总量直接相关
+        - 禁止
+            - 每帧 Flatten 整棵十万节点 Tree
+            - 每帧 Measure 全部 Item
+            - 每帧 HitTest 全数据
+            - Collapsed Branch 创建隐藏 Visual
+        - 数据结构
+            - 应支持高效 Index / Visible Range 查询
+    - State
+        - VirtualizedLayout 本身不可见
+        - 无独立
+            - Hover
+            - Selected
+            - Active
+            - Focus
+        - 全部由实际 Item Component 投影
+    - 视觉规则
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - Overscan
+            - 用户不可感知
+        - Recycling
+            - 用户不可感知
+    - UI代码
+        - VirtualizedLayout.Mode
+            - Hierarchical | Linear
+        - VirtualizedLayout.Identity
+            - Stable Item ID
+        - VirtualizedLayout.LogicalSequence
+            - Visible Items
+        - VirtualizedLayout.Realization
+            - Viewport + Overscan
+        - VirtualizedLayout.Recycling
+            - Enabled
+        - VirtualizedLayout.ItemSize
+            - Fixed | Variable
+        - VirtualizedLayout.EstimatedSize
+            - Optional
+        - VirtualizedLayout.SizeCache
+            - StableID → Size
+        - VirtualizedLayout.ScrollHost
+            - XYUI-5 ScrollArea
+        - VirtualizedLayout.ScrollAnchor
+            - Stable Item ID
+        - VirtualizedLayout.TreeExpansion
+            - Identity Based
+        - VirtualizedLayout.Selection
+            - External Stable State
+        - VirtualizedLayout.Background
+            - None
+        - VirtualizedLayout.Border
+            - None
+        - VirtualizedLayout.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止大型 Tree 一次创建全部 Node UI
+        - 禁止 Collapsed Branch 创建大量隐藏 Row
+        - 禁止 Selection 绑定 Row Visual Instance
+        - 禁止 Expanded State 绑定 Visual Instance
+        - 禁止 Recycling 泄漏旧 Item State
+        - 禁止正在编辑的 Row 无规则回收
+        - 禁止 Variable Size 修正造成明显 Scroll 跳动
+        - 禁止每帧 O(N) 全量 Layout
+        - 禁止 VirtualizedLayout 重新定义 TreeNavigation
+        - 禁止 VirtualizedLayout 创建第二套 Scrollbar
+
+- 5.15 · CanvasLayout / 自由坐标布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 DIP
+                - 拥有 Input / Drag 基础合同
+                - 未拥有通用二维自由坐标 Layout
+            - XYUI-5.07 OverlayLayout
+                - 拥有 Z Order
+                - 拥有 Overlay Plane
+                - 不拥有二维逻辑 Position
+            - XYUI-5.09 AnchorLayout
+                - 拥有 Parent Edge Constraint
+                - 不拥有自由坐标空间
+            - XYUI-4
+                - 拥有 BoundingBox
+                - 拥有 Selection
+                - 拥有 Drag Feedback
+                - 不拥有 Canvas Layout
+        - This Item Inherits
+            - XYUI-0 DIP
+            - XYUI-0 Input
+            - XYUI-0 Drag Contract
+            - XYUI-4 Selection
+            - XYUI-4 BoundingBox
+            - XYUI-4 Gizmo / Feedback
+            - XYUI-5 OverlayLayout where needed
+        - This Item Owns
+            - 2D Logical Coordinate Space
+            - Coordinate Origin
+            - Axis Direction
+            - Child Logical Position
+            - Layout Position vs Transient Visual Transform
+            - Canvas Bounds / Extent
+        - This Item Must Not Redefine
+            - World Coordinate
+            - Scene Transform
+            - Selection Visual
+            - Gizmo Visual
+            - Drag Contract
+            - Overlay Plane
+            - Pan / Zoom Navigation Component
+        - Result
+            - NEW
+    - 用途
+        - 自由放置二维 UI Child
+        - 支持 Node Graph
+        - 支持 UI Designer
+        - 支持 HUD Designer
+        - 支持 Blueprint 类编辑器
+        - 支持 Timeline 自由对象
+        - 支持二维编辑器工具
+        - 支持地图编辑辅助 UI
+        - 支持固定画布与无界画布
+    - 最终方案
+        - Explicit Coordinate Origin 为主
+        - Absolute Logical Position 保留
+        - Layout Position vs Visual Transform 保留
+        - Bounded / Unbounded Canvas 保留
+        - 方案2定义所有坐标语义的基础
+        - 方案1负责 Child 正式逻辑位置
+        - 方案3负责交互期间临时位移
+        - 方案4负责 Canvas Extent
+    - 核心原则
+        - 先定义 Coordinate Space
+        - 再解释 Position
+        - 所有 Canvas 必须明确 Origin
+        - 所有 Canvas 必须明确 Axis Direction
+        - 不得让不同模块自行猜测 0,0
+        - Layout Position 是正式状态
+        - Visual Transform 可以是临时交互状态
+        - CanvasLayout 不自动执行 Stack / Grid Reflow
+        - CanvasLayout 不等于游戏 World Coordinate
+        - CanvasLayout 不拥有 Camera / Pan / Zoom 交互
+    - Coordinate Space
+        - 包含
+            - Origin
+            - X Axis Direction
+            - Y Axis Direction
+            - Logical Unit
+        - 必须明确声明
+            - 不得隐式依赖平台默认
+    - Coordinate Origin
+        - TopStart
+        - Center
+        - Custom
+    - TopStart Origin
+        - 典型
+            - UI Designer
+            - 2D Document
+            - 普通绝对布局编辑器
+        - 语义
+            - Host TopStart = 0,0
+        - 默认轴
+            - X 向 End 增长
+            - Y 向 Bottom 增长
+    - Center Origin
+        - 典型
+            - Node Graph
+            - HUD Authoring
+            - 图形编辑工具
+        - 语义
+            - Canvas Center = 0,0
+        - 允许
+            - 负坐标
+            - 正坐标
+    - Custom Origin
+        - 用于
+            - 特殊设计工具
+            - 外部坐标映射
+        - 必须
+            - 有明确稳定参考定义
+        - 不得
+            - 每帧随内容随机变化
+    - Axis Direction
+        - X
+            - Start → End
+            - 或明确自定义逻辑方向
+        - Y
+            - Top → Bottom
+            - 或明确数学 / 工具坐标方向
+        - 如果不是 XYUI 默认方向
+            - 必须显式声明
+    - 逻辑单位
+        - UI Canvas 默认
+            - DIP
+        - 特殊工具
+            - 可以拥有 Logical Unit
+        - 但
+            - 必须提供 Logical → DIP View Mapping
+        - 不得
+            - 把 World Meter 直接冒充 UI DIP
+    - Absolute Logical Position
+        - Child
+            - 拥有 X
+            - 拥有 Y
+        - Position
+            - 表示相对于 Canvas Coordinate Space 的正式位置
+        - Parent Resize
+            - 默认不自动 Reflow
+        - 适用
+            - Node
+            - HUD Element
+            - Designer Element
+            - 自由注释
+    - Position
+        - X
+            - Logical Coordinate
+        - Y
+            - Logical Coordinate
+        - 不得
+            - 通过 Margin 模拟 Canvas Position
+    - Child Size
+        - 仍然遵守
+            - Child Desired Size
+            - Foundation Min / Max Constraint
+        - CanvasLayout
+            - 不重新定义 Size Token
+    - Layout Position
+        - 正式提交状态
+        - 可
+            - 持久化
+            - Undo / Redo
+            - 序列化
+        - 示例
+            - Node.Position = 300,200
+    - Visual Transform
+        - 定位
+            - 临时表现状态
+        - 适用
+            - Dragging
+            - Preview Move
+            - Transition Preview
+        - 示例
+            - Committed Position
+                - 300,200
+            - Drag Delta
+                - 26,12
+            - Visual Position
+                - 326,212
+    - Drag Commit
+        - Pointer Move
+            - 优先更新 Transient Transform
+        - Drop
+            - 计算最终 Logical Position
+            - 提交 Layout Position
+            - 清除 Transient Transform
+    - Drag Cancel
+        - 清除 Transient Transform
+        - 保留原 Committed Position
+        - 不得
+            - 留下半提交 Position
+    - Layout Position vs Transform 原则
+        - 正式数据与交互预览分离
+        - 避免每次 PointerMove 都改变复杂持久化状态
+        - 不得
+            - 把临时 Drag Delta 写成永久 Layout State
+    - Bounded Canvas
+        - 定义
+            - 拥有正式 Logical Bounds
+        - 示例
+            - 1920 × 1080 HUD
+            - A4 Design Surface
+            - 固定尺寸 UI Design
+        - Child
+            - 原则上位于正式设计区域
+        - 越界策略
+            - 由具体工具声明
+            - Clamp
+            - Allow Overflow
+            - Warn
+        - 不得
+            - CanvasLayout 自己替业务决定数据是否允许越界
+    - Unbounded Canvas
+        - 定义
+            - 逻辑空间不以固定设计矩形作为硬边界
+        - 适用
+            - Node Graph
+            - Mind Map
+            - 大型关系图
+        - 支持
+            - 正坐标
+            - 负坐标
+            - 远距离逻辑位置
+    - Dynamic Extent
+        - Unbounded Canvas
+            - 可以根据内容计算当前 Logical Extent
+        - 用途
+            - 导航
+            - Overview
+            - Scroll / View Mapping
+        - 不代表
+            - 创建一个真实无限尺寸 Visual
+    - Canvas + OverlayLayout
+        - CanvasLayout
+            - 负责对象几何位置
+        - OverlayLayout
+            - 负责 Selection / Gizmo / Feedback Z Plane
+        - 典型
+            - Base
+                - Canvas Objects
+            - Selection Plane
+                - SelectionOutline
+            - Interaction Plane
+                - Gizmo
+    - Canvas + Selection
+        - Selection
+            - 继续由 XYUI-4 管理
+        - CanvasLayout
+            - 仅提供目标几何位置
+    - Canvas + BoundingBox
+        - BoundingBox
+            - 根据 Selected Object Bounds 投影
+        - 视觉
+            - 继续属于 XYUI-4
+    - Canvas + AnchorLayout
+        - Canvas Position
+            - 表示逻辑坐标
+        - Anchor
+            - 表示与 Host Edge 的持续约束
+        - 一般不应混用在同一个 Child
+        - 确实需要
+            - 必须明确哪个是最终 Geometry Owner
+    - Canvas + AspectContainer
+        - Canvas Child
+            - 可以是 AspectContainer
+        - Canvas
+            - 决定 Position
+        - AspectContainer
+            - 决定 Size Relationship
+    - Canvas + AdaptiveLayout
+        - 普通 Canvas 内容
+            - 不因为 Host Resize 自动重新排布
+        - UI Designer
+            - 可以编辑不同 Adaptive Variant
+        - Variant Trigger
+            - 仍归 AdaptiveLayout
+    - Canvas + ScrollArea
+        - Bounded Large Canvas
+            - 可以放入 ScrollArea
+        - Unbounded Canvas
+            - 通常更适合专用 View Navigation
+        - ScrollArea
+            - 不等于 Canvas Camera
+    - Pan / Zoom
+        - 不属于 CanvasLayout Core
+        - 原因
+            - 它是 View Navigation / Coordinate Transform 交互
+        - CanvasLayout
+            - 只提供稳定 Logical Coordinate
+        - 后续 ViewportContainer 可以消费 CanvasLayout
+    - Snapping
+        - 不属于 CanvasLayout 基础 Position Contract
+        - 具体 Designer
+            - 可以将 Snap 结果转成最终 Logical Position
+        - Snap Feedback
+            - 继续引用 XYUI-4
+    - Grid Guide
+        - 属于 Canvas Decoration
+        - 不是 CanvasLayout 必须 Visual
+        - 可以通过 Overlay Decoration Plane 实现
+    - Resize Child
+        - Size 改变
+            - 默认不改变 Anchor / Position
+        - Origin / Pivot
+            - 由具体编辑对象合同决定
+        - CanvasLayout
+            - 不自行猜 Pivot
+    - Coordinate Conversion
+        - Logical → View
+        - View → Logical
+        - 必须
+            - 确定
+            - 可逆到合理精度
+        - Pointer Editing
+            - 先把 View Pointer 转换到 Logical Coordinate
+    - Precision
+        - UI 一般场景
+            - 足够稳定的浮点精度
+        - 超大 Unbounded Canvas
+            - 实现应避免远坐标导致明显抖动
+        - 不得
+            - 把高精度 World Coordinate 责任强塞给 CanvasLayout
+    - Focus
+        - CanvasLayout 本体不抢 Focus
+        - Child
+            - 按照自身语义 Focus
+        - Drag
+            - 遵守 Foundation Pointer Capture / Cancel
+    - Selection
+        - Position 改变
+            - 不得改变 Selection Identity
+    - Accessibility
+        - 视觉二维位置不得代替逻辑 Reading Order
+        - Keyboard Navigation
+            - 由具体 Canvas Component 定义
+        - 纯 Decoration
+            - 不进入 Focus Flow
+    - Performance
+        - Position Change
+            - 只更新必要 Child / Overlay
+        - 大型 Canvas
+            - 需要具体产品配合 Spatial Index / Virtualization
+        - 不得
+            - 每次移动一个 Child 全量重建所有对象
+    - State
+        - CanvasLayout 本体无
+            - Hover
+            - Selected
+            - Active
+            - Focus
+        - State 属于 Child / Editor
+    - 视觉规则
+        - CanvasLayout Background
+            - None
+        - CanvasLayout Border
+            - None
+        - CanvasLayout Grid
+            - None by Default
+        - CanvasLayout Origin Marker
+            - 仅 Authoring / Debug 模式可视
+    - UI代码
+        - CanvasLayout.Origin
+            - TopStart | Center | Custom
+        - CanvasLayout.AxisX
+            - Declared
+        - CanvasLayout.AxisY
+            - Declared
+        - CanvasLayout.Unit
+            - DIP by Default
+        - CanvasLayout.ChildX
+            - Logical Coordinate
+        - CanvasLayout.ChildY
+            - Logical Coordinate
+        - CanvasLayout.Position
+            - Committed
+        - CanvasLayout.VisualTransform
+            - Transient
+        - CanvasLayout.Extent
+            - Bounded | Unbounded
+        - CanvasLayout.Bounds
+            - Required when Bounded
+        - CanvasLayout.Background
+            - None
+        - CanvasLayout.Border
+            - None
+    - 禁止事项
+        - 禁止不同 Canvas 各自隐式定义 0,0
+        - 禁止坐标轴方向不声明
+        - 禁止使用 Margin 模拟自由坐标 Position
+        - 禁止把 World Coordinate 与 UI Canvas Coordinate 混成一个系统
+        - 禁止 Drag Preview 无规则直接污染正式 Layout State
+        - 禁止 Cancel 后留下临时 Position
+        - 禁止 CanvasLayout 重定义 Selection / Gizmo
+        - 禁止 CanvasLayout 自带另一套 Overlay Z System
+        - 禁止 CanvasLayout 强行拥有 Pan / Zoom 交互
+- 5.16 · ViewportContainer / 视口容器
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-5.15 CanvasLayout
+                - 拥有 Logical Coordinate
+                - 拥有 Child Logical Position
+                - 明确不拥有 Pan / Zoom
+            - XYUI-5.05 ScrollArea
+                - 拥有 Scroll Position
+                - 拥有一维 / 常规内容滚动
+                - 不拥有二维 View Transform
+            - XYUI-5.07 OverlayLayout
+                - 拥有 Viewport Overlay Plane
+                - 不拥有 View Transform
+            - XYUI-0
+                - 拥有 Pointer / Gesture 基础合同
+                - 未拥有通用二维 Viewport Navigation
+        - This Item Inherits
+            - XYUI-0 Input / Gesture
+            - XYUI-5 CanvasLayout
+            - XYUI-5 OverlayLayout
+            - XYUI-0 DIP
+        - This Item Owns
+            - View Transform
+            - Pan
+            - Zoom
+            - Cursor-Anchored Zoom
+            - Logical ↔ View Coordinate Conversion
+            - Fit / Frame
+            - Zoom Range
+        - This Item Must Not Redefine
+            - Canvas Child Position
+            - World Camera
+            - Render Camera
+            - Selection
+            - Gizmo
+            - Scrollbar
+            - Minimap Component
+        - Result
+            - NEW + COMPOSITION
+    - 用途
+        - 查看比当前屏幕更大的二维内容
+        - 支持地图编辑器
+        - 支持 Node Graph
+        - 支持 UI Designer
+        - 支持 HUD Designer
+        - 支持图片查看器
+        - 支持大型二维图表
+        - 支持 Timeline / Graph View
+        - 支持自由平移与缩放
+    - 最终方案
+        - Cursor-Anchored Zoom 为主
+        - Pan + Zoom View 保留
+        - Fit / Frame Commands 保留
+        - Zoom Range + Semantic Limits 保留
+        - 方案2决定缩放核心手感
+        - 方案1提供基本 View Navigation
+        - 方案3提供快速找回内容能力
+        - 方案4提供工程边界
+    - 核心原则
+        - Viewport 改变的是观察方式
+        - 不得改变 Canvas Object 正式 Logical Position
+        - Zoom 默认应围绕用户当前关注位置
+        - Pointer Zoom 必须尽量保持 Pointer 下 Logical Point 稳定
+        - Pan / Zoom State 与业务数据分离
+        - 用户必须能够快速找回全部内容或选中对象
+        - 任何 Viewport 必须拥有合理 Zoom Range
+        - ViewportContainer 不等于 3D Render Camera
+    - View State
+        - PanX
+        - PanY
+        - Zoom
+        - 表示
+            - 当前如何把 Logical Coordinate 映射到 View Coordinate
+    - Pan
+        - 作用
+            - 移动观察区域
+        - 不改变
+            - Canvas Object Logical Position
+        - 实际例子
+            - 玄域地图
+                - 广州仍在原地图坐标
+                - 用户向东 Pan 后看到东莞 / 深圳
+    - Zoom
+        - 作用
+            - 改变当前观察倍率
+        - 不改变
+            - Canvas Geometry
+            - Item Identity
+            - 业务 Position
+    - Cursor-Anchored Zoom
+        - 核心模型
+            - Pointer View Position
+                - 转换为 Logical Point
+            - 改变 Zoom
+            - 重新计算 Pan
+            - 让同一 Logical Point 尽量回到原 Pointer View Position
+        - 实际例子
+            - 鼠标指着深圳
+            - 100% → 200%
+            - 深圳仍然尽量位于鼠标下
+        - 目标
+            - 用户产生“指哪放大哪”的直接操控感
+    - Zoom Anchor
+        - Primary
+            - Pointer
+        - Optional
+            - View Center
+            - Selection
+            - Explicit Logical Point
+        - 默认交互
+            - Pointer Zoom 优先 Pointer Anchor
+    - Pan Input
+        - 具体鼠标键 / 手势映射
+            - 由 Input Mapping / 产品规范决定
+        - ViewportContainer
+            - 只定义 Pan 语义
+        - 不得
+            - 重新定义全局 Input Key Contract
+    - Fit All
+        - 计算全部相关内容 Logical Bounds
+        - 选择合理 Pan / Zoom
+        - 使内容进入 Viewport
+        - 保留适当 View Padding
+        - 实际例子
+            - Node Graph 拖远后找不到节点
+            - Fit All
+                - 重新显示全部 Node
+    - Fit Selection
+        - 读取当前 Selection Bounds
+        - 调整 View
+        - 让 Selection 合理占据 Viewport
+        - 实际例子
+            - 玄域选择“广州城”
+            - Fit Selection
+                - 地图自动定位广州城
+    - Frame Item
+        - 输入
+            - Stable Item Identity / Bounds
+        - 行为
+            - 把指定对象带入主要视野
+        - 不要求
+            - 对象必须已经被 Selected
+    - Reset View
+        - 恢复组件定义的 Default View
+        - 例如
+            - Default Pan
+            - Default Zoom
+    - Actual Size
+        - 适用于有明确 1:1 语义的 Viewport
+        - 例如
+            - Image Viewer
+                - 100%
+            - UI Designer
+                - Design Scale 100%
+        - Node Graph 等无真实像素语义工具
+            - 可以不提供
+    - Zoom Range
+        - 每种 Viewport 必须声明
+            - MinZoom
+            - MaxZoom
+            - DefaultZoom
+        - 具体数值
+            - 由 Viewport 类型决定
+        - 不建立
+            - 所有产品强制完全相同的倍率
+    - Zoom Range 实例
+        - Node Graph
+            - 可以使用适合节点可读性的范围
+        - Image Viewer
+            - 允许更高放大倍率
+        - HUD Designer
+            - 围绕设计工作需要决定
+        - 原则
+            - 数值必须有实际可用意义
+    - Zoom Clamp
+        - 低于 MinZoom
+            - Clamp
+        - 高于 MaxZoom
+            - Clamp
+        - 不得
+            - 继续累积不可见的越界 Zoom State
+    - Zoom Step
+        - 应表现为平滑、可预测的倍率变化
+        - 触控板
+            - 支持连续缩放语义
+        - 滚轮
+            - 可以映射为离散或连续倍率
+        - 不得
+            - 每级倍率突变过大导致迷失上下文
+    - Coordinate Conversion
+        - LogicalToView
+        - ViewToLogical
+        - 必须使用同一 View Transform
+        - 必须达到合理可逆精度
+        - 实际例子
+            - Pointer 点击地图
+                - View Position
+                    - 转换成 Map UI Logical Position
+    - Canvas Integration
+        - CanvasLayout
+            - 保存 Child Logical Position
+        - ViewportContainer
+            - 保存 View Transform
+        - 例如
+            - Node A
+                - Canvas = 100,200
+            - Viewport Zoom 改为 200%
+                - Node A 仍然 = 100,200
+    - Overlay Integration
+        - OverlayLayout
+            - 负责 HUD / Selection / Gizmo Layer
+        - 需要跟随 Canvas Zoom 的 Overlay
+            - 使用 Logical → View Mapping
+        - 固定屏幕 HUD
+            - 保持 View Coordinate
+    - Selection Integration
+        - Selection Identity
+            - 不因 Pan / Zoom 改变
+        - Fit Selection
+            - 读取 Selection Bounds
+            - 不重新定义 Selection
+    - ScrollArea Difference
+        - ScrollArea
+            - 适合 Inspector / Document / List 等常规内容
+        - ViewportContainer
+            - 适合二维大画布
+            - 支持 Pan X
+            - 支持 Pan Y
+            - 支持 Zoom
+        - 不得
+            - 把所有二维编辑器都强行做成普通 ScrollArea
+    - Bounded Canvas
+        - Viewport 可以查看
+            - 固定设计边界
+        - Fit All
+            - 可以选择 Canvas Bounds 或 Content Bounds
+        - 由具体工具明确
+    - Unbounded Canvas
+        - View State
+            - 可以访问负 Logical Coordinate
+            - 可以访问远距离内容
+        - 不得
+            - 创建真正无限大小的 UI Visual
+    - Resize
+        - Viewport Size 改变
+            - 不得修改 Canvas Logical Position
+        - 可以
+            - 保留当前 View Center
+            - 保留当前 Anchor
+        - 具体策略
+            - 由 Viewport 类型声明
+    - State Preservation
+        - Layout Variant Change
+            - 尽量保持 View Context
+        - Workspace Recomposition
+            - 尽量保留 Pan / Zoom
+        - 不得
+            - 每次 Panel Resize 自动 Reset View
+    - Focus
+        - Pan / Zoom 不应抢夺不相关 Focus
+        - Canvas 已 Focus
+            - View Navigation 可以继续作用
+        - 具体 Keyboard Navigation
+            - 由产品定义
+    - Accessibility
+        - Zoom 不改变业务语义
+        - Fit / Frame Command 应具有可访问名称
+        - 不能仅依赖鼠标滚轮才能操作 View
+        - 需要提供等价命令入口
+    - Performance
+        - Pan / Zoom
+            - 优先改变统一 View Transform
+        - 不得
+            - 为每个 PointerMove 重写全部业务 Position
+        - 大量 Canvas Object
+            - 配合 Culling / Spatial Index / Virtualization
+        - Overlay
+            - 只更新受 View Transform 影响部分
+    - 视觉规则
+        - ViewportContainer 本身
+            - 不强制 Background
+            - 不强制 Border
+            - 不强制 Shadow
+        - View Controls
+            - 如果存在
+                - 使用正式 Button / Input / Overlay 组件
+        - Zoom Indicator
+            - 使用 XYUI 正式文本 / 控件
+    - UI代码
+        - Viewport.PanX
+            - View State
+        - Viewport.PanY
+            - View State
+        - Viewport.Zoom
+            - View State
+        - Viewport.ZoomAnchor
+            - Pointer by Default
+        - Viewport.MinZoom
+            - Required
+        - Viewport.MaxZoom
+            - Required
+        - Viewport.DefaultZoom
+            - Required
+        - Viewport.FitAll
+            - Command
+        - Viewport.FitSelection
+            - Command where applicable
+        - Viewport.FrameItem
+            - Command where applicable
+        - Viewport.ResetView
+            - Command
+        - Viewport.ActualSize
+            - Optional
+        - Viewport.LogicalToView
+            - Required
+        - Viewport.ViewToLogical
+            - Required
+        - Viewport.Canvas
+            - XYUI-5 CanvasLayout Compatible
+        - Viewport.Overlay
+            - XYUI-5 OverlayLayout Compatible
+        - Viewport.Unit
+            - DIP View Space
+    - 禁止事项
+        - 禁止 Zoom 修改 Canvas Object 正式 Position
+        - 禁止默认缩放导致 Pointer 下目标明显逃离
+        - 禁止 Viewport 使用无限 Zoom Range
+        - 禁止 Panel Resize 默认 Reset View
+        - 禁止重新实现 Selection
+        - 禁止重新实现 Overlay Z System
+        - 禁止把 UI ViewportContainer 与 3D Render Camera 混成一个组件
+        - 禁止只提供鼠标操作而无等价命令入口
+
+- 5.17 · PortalHost / 跨层承载容器
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Overlay Surface
+                - 拥有 Focus / Input 基础合同
+                - 未拥有跨 Layout Tree Portal Infrastructure
+            - XYUI-1
+                - Tooltip 等组件可能需要跨层呈现
+                - 不拥有 Portal Host
+            - XYUI-2
+                - Select / Combo / DatePicker 等可能需要 Popup
+                - 不应建立自己的 Portal System
+            - XYUI-3
+                - Menu / Popup 等可能需要跨层呈现
+                - 不拥有通用 Portal Infrastructure
+            - XYUI-5.07 OverlayLayout
+                - 局部 Overlay 默认遵守 Host Bounds
+                - 明确跨局部边界内容应交给更高层承载系统
+        - This Item Inherits
+            - XYUI-0 Overlay Surface
+            - XYUI-0 Focus / Input Contract
+            - XYUI-5 OverlayLayout
+            - 具体 Tooltip / Menu / Popup / Dialog Component
+        - This Item Owns
+            - Escape Clipping
+            - Cross-Layer Hosting
+            - Source Anchor Mapping
+            - Portal Coordinate Conversion
+            - Viewport Collision Resolution
+            - Portal Scope
+            - Lifetime Attachment
+        - This Item Must Not Redefine
+            - Menu Visual
+            - Tooltip Visual
+            - ComboBox Visual
+            - Dialog Visual
+            - Focus Trap
+            - Modal Semantics
+            - Selection
+            - Button
+        - Result
+            - NEW SHARED INFRASTRUCTURE
+    - 用途
+        - 让 Popup 跨出局部 Panel / ScrollArea 裁剪区域
+        - 让跨层 Popup 始终保持与来源控件的逻辑关系
+        - 支持 Select Dropdown
+        - 支持 Context Menu
+        - 支持 Tooltip
+        - 支持 DatePicker Popup
+        - 支持 Color Picker Popup
+        - 支持 Floating Picker
+        - 支持临时菜单
+    - 最终方案
+        - Escape Clipping 为核心
+        - Anchor-to-Source 为核心
+        - Collision-Aware Placement 保留
+        - Portal Scope 保留
+        - 方案1解决跨出父级裁剪
+        - 方案2保证跨层后仍跟随来源
+        - 方案3负责屏幕边缘避让
+        - 方案4负责应用级层级纪律
+    - 核心原则
+        - Logical Owner 与 Visual Host 可以不同
+        - Popup 可以在更高层绘制
+        - 但逻辑上仍属于 Source Component
+        - 跨层不等于脱离组件生命周期
+        - 跨层不等于任意全局 Z-Index
+        - Portal 不拥有 Popup 自身视觉
+        - Portal 不重新定义 Focus / Modal 语义
+    - Escape Clipping
+        - 典型问题
+            - Inspector 位于 ScrollArea
+            - Select Dropdown 高度超过 Panel 剩余空间
+            - 普通 Child 会被 Clip
+        - Portal 处理
+            - Popup 从局部 Visual Tree 提升到更高 PortalHost
+            - 不再受原 Panel Clip Bounds 限制
+        - 逻辑关系
+            - 仍属于原 Select / Menu / Tooltip
+    - Visual Host
+        - 可以是
+            - Workspace Portal
+            - Window Portal
+            - 明确更高 Scope Host
+        - 不得
+            - 业务组件自行创建无限高 Global Host
+    - Logical Owner
+        - 仍然是
+            - Select
+            - Menu Trigger
+            - Tooltip Source
+            - Picker Trigger
+        - Owner Dispose / Close
+            - Portal Content 必须同步关闭
+    - Anchor-to-Source
+        - Portal Content 必须保存 Source Reference
+        - Source 提供
+            - Current Bounds
+            - Anchor Point
+            - Preferred Placement
+        - PortalHost
+            - 将 Source Bounds 转换到 Portal Coordinate Space
+            - 计算 Popup Position
+    - Source Move
+        - 原因
+            - Panel Resize
+            - Dock Move
+            - Window Move
+            - Scroll
+            - Adaptive Layout Change
+        - 行为
+            - 重新计算 Popup Position
+        - 不得
+            - Popup 停留在旧绝对屏幕坐标
+    - Source Scroll
+        - Source 在 ScrollArea 内移动
+            - Popup 应同步跟随
+        - Source 完全离开有效 Viewport
+            - 由具体 Popup Policy 决定 Close / Hide / Reposition
+        - 不得
+            - Popup 与已经看不到的 Trigger 无限制脱离
+    - Preferred Placement
+        - 由具体 Popup Component 声明
+        - 例如
+            - BottomStart
+            - BottomEnd
+            - TopStart
+            - TopEnd
+        - PortalHost
+            - 负责尝试实现
+        - 不得
+            - PortalHost 重新定义 Menu / Tooltip 各自默认 Placement
+    - Collision-Aware Placement
+        - 辅助能力
+        - 流程
+            - Try Preferred Placement
+            - 检查当前可见 WorkArea
+            - 空间足够
+                - 使用 Preferred
+            - 空间不足
+                - 尝试 Flip
+            - 仍不足
+                - 尝试 Shift
+            - 仍无法完整容纳
+                - 使用具体组件允许的 Size / Scroll Fallback
+    - Flip
+        - 例如
+            - BottomEnd 空间不足
+                - 尝试 TopEnd
+            - Right 空间不足
+                - 尝试 Left
+    - Shift
+        - Popup 轻微越界
+            - 将其移回当前可见 WorkArea
+        - 不得
+            - 为 Shift 让 Popup 与 Source 完全失去视觉关联
+    - WorkArea
+        - 优先考虑
+            - 当前 Window 可用区域
+            - 当前 Screen WorkArea
+            - 正式 Safe Area
+        - 不得
+            - 只假设单显示器固定 1920×1080
+    - Portal Scope
+        - 辅助治理能力
+        - 目的
+            - 跨局部区域
+            - 但不进入无限制全局覆盖
+        - 典型
+            - Local Overlay
+            - Workspace Portal
+            - Window Portal
+            - Modal Scope
+        - 具体层级
+            - 由应用 Shell / Modal System 合同决定
+    - Portal 与 Modal
+        - 普通 Inspector Dropdown
+            - 可以跨 Inspector
+        - 但
+            - 不应无理由覆盖 Window Modal
+        - Modal Popup
+            - 应属于对应 Modal Scope
+    - Portal 与 OverlayLayout
+        - OverlayLayout
+            - 负责 Host 内局部叠层
+        - PortalHost
+            - 负责跨出 Host Layout / Clip Boundary
+        - 原则
+            - 能在局部 Overlay 解决
+                - 不必 Portal
+            - 需要跨边界
+                - 才提升到 Portal
+    - Portal 与 ScrollArea
+        - ScrollArea
+            - 继续拥有 Scroll / Clip
+        - Popup
+            - 通过 Portal 逃离局部 Clip
+        - Source
+            - 仍受 ScrollArea 正常布局
+    - Portal 与 Dock
+        - Dock Panel 移动
+            - Portal Source Mapping 必须刷新
+        - 不得
+            - Dock 后 Popup 留在原 Panel 位置
+    - Portal 与 AdaptiveLayout
+        - Layout Variant Change
+            - 重新读取 Source Bounds
+            - 重新定位
+        - Source 不再存在
+            - 关闭对应 Portal Content
+    - Portal Lifetime
+        - Open
+            - 绑定 Source
+            - 创建 Portal Entry
+        - Update
+            - 同步 Source Bounds
+        - Close
+            - 移除 Portal Entry
+        - Source Destroy
+            - 自动 Close
+    - Input
+        - Portal Visual 虽位于高层
+            - 仍必须进入正式 Hit Test
+        - 点击 Popup
+            - 由 Popup Component 处理
+        - 点击外部关闭
+            - 由具体 Popup / Menu Interaction Contract 定义
+        - PortalHost
+            - 不创建第二套 OutsideClick 语义
+    - Focus
+        - Portal 本身不自动抢 Focus
+        - Combo / Menu / Dialog
+            - 按照自身 Focus Contract 工作
+        - Portal 只负责承载
+    - Accessibility
+        - Portal 不应打断 Logical Ownership
+        - Screen Reader 应能理解 Popup 与 Source 的关系
+        - 不得因为 Visual Tree 提升导致内容失去可访问关系
+    - Performance
+        - 只为打开的 Portal Content 建立 Entry
+        - Source Bounds 未变化
+            - 不重复无意义定位
+        - Scroll / Resize 高频更新
+            - 应使用轻量 Position Update
+        - 不得
+            - 每次 PointerMove 重建整个 Popup Tree
+    - 视觉规则
+        - PortalHost 本身不可见
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - Popup Visual
+            - 继续使用对应组件规范
+    - UI代码
+        - PortalHost.Source
+            - Required
+        - PortalHost.VisualHost
+            - Scoped Host
+        - PortalHost.AnchorBounds
+            - Source Bounds
+        - PortalHost.PreferredPlacement
+            - Component Defined
+        - PortalHost.Collision
+            - Flip + Shift Supported
+        - PortalHost.Scope
+            - Workspace | Window | Modal Context
+        - PortalHost.Lifetime
+            - Attached to Source
+        - PortalHost.Background
+            - None
+        - PortalHost.Border
+            - None
+        - PortalHost.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止 Select / Menu / Tooltip 各自建立不同 Portal System
+        - 禁止需要越界的 Popup 继续作为普通 Clip Child 硬画
+        - 禁止 Portal 后丢失 Source Identity
+        - 禁止 Source 移动而 Popup 留在旧坐标
+        - 禁止业务组件使用 999999 类 Z-Index 解决裁剪
+        - 禁止普通 Popup 无理由覆盖 Modal Scope
+        - 禁止 PortalHost 重新定义 Menu / Tooltip / Dialog Visual
+        - 禁止 Source 已销毁而 Portal Content 继续存活
+
+- 5.18 · MasonryLayout / 瀑布流布局
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-5.02 Grid
+                - 拥有规则二维 Track Layout
+                - 适合严格行列对齐
+                - 不拥有不同高度 Item 的紧凑填充
+            - XYUI-5.03 Wrap
+                - 拥有自然 Flow 与换行
+                - 保持行式排列
+                - 不负责跨行填补空洞
+            - XYUI-5.11 AdaptiveLayout
+                - 拥有 Container / Constraint Adaptive Trigger
+                - 不拥有 Masonry Column Packing
+            - XYUI-5.14 VirtualizedLayout
+                - 拥有 Viewport Windowing
+                - 拥有 Recycling
+                - 不拥有 Masonry Placement
+        - This Item Inherits
+            - XYUI-0 Spacing
+            - XYUI-0 Size Constraint
+            - XYUI-5 AdaptiveLayout
+            - XYUI-5 VirtualizedLayout
+            - Stable Item Identity
+        - This Item Owns
+            - Stable Logical Order
+            - Adaptive Column Resolution
+            - Variable-Height Column Packing
+            - Masonry Placement
+            - Masonry Virtualization Integration
+        - This Item Must Not Redefine
+            - Grid
+            - Wrap
+            - Asset Card
+            - Thumbnail Visual
+            - Selection
+            - Adaptive Trigger
+            - Virtualization Engine
+        - Result
+            - NEW
+    - 用途
+        - 排列不同高度或不同宽高比的 Collection Item
+        - 减少规则 Grid 中大量无意义空白
+        - 支持 Asset Browser
+        - 支持 Image Browser
+        - 支持 Reference Browser
+        - 支持 Media Gallery
+        - 支持不同尺寸 Preview Collection
+        - 支持大规模资源列表
+    - 最终方案
+        - Stable Logical Order 为主
+        - Adaptive Column Width 为主
+        - Shortest-Column Packing 保留
+        - Virtualized Masonry 保留
+        - 方案2保证逻辑与操作稳定
+        - 方案3负责容器宽度变化
+        - 方案1在合法规则内提高空间利用率
+        - 方案4负责大型 Collection 性能
+    - 核心原则
+        - 视觉位置可以错落
+        - 逻辑 Item Order 必须稳定
+        - Selection Order 不根据视觉 Column 重排
+        - Keyboard Navigation 不得因为 Packing 产生随机顺序
+        - Column Count 应根据自身 Container 决定
+        - 不得只根据整个 Screen Width 决定
+        - Item 不应为了增加列数被无限压缩
+        - Shortest-Column Packing 不得修改数据源顺序
+        - 大量 Item 必须能够接入 VirtualizedLayout
+    - Stable Logical Order
+        - 来源
+            - Data Source Order
+            - Sort Result
+            - Filter Result
+        - 保持
+            - Item Identity
+            - Keyboard Sequence
+            - Shift Selection Range
+            - Accessibility Reading Order
+        - 不根据
+            - Visual Column
+            - Y Position
+            - Shortest Column Placement
+            - 当前 Visual Tree Order
+    - 实际例子
+        - Data Order
+            - 1 城镇
+            - 2 道路
+            - 3 人物
+            - 4 地形
+            - 5 Logo
+        - 视觉 Masonry
+            - Column 1
+                - 1 城镇
+                - 4 地形
+            - Column 2
+                - 2 道路
+                - 5 Logo
+            - Column 3
+                - 3 人物
+        - 逻辑 Navigation
+            - 1 → 2 → 3 → 4 → 5
+        - 禁止
+            - 1 → 4 → 2 → 5 → 3
+    - Selection
+        - Single Selection
+            - 绑定 Stable Item ID
+        - Shift Range Selection
+            - 依据 Logical Order
+        - Marquee / Spatial Selection
+            - 可以依据当前 Visual Geometry
+            - 但最终 Selection Set 仍绑定 Stable ID
+        - 不得
+            - 因为 Masonry Reflow 改变已选 Item Identity
+    - Keyboard Navigation
+        - Logical Next / Previous
+            - 优先遵循 Collection Logical Order
+        - Arrow Spatial Navigation
+            - 具体 Collection 可以提供二维 Neighbor Policy
+        - 但
+            - 不得用 Column Packing 顺序替代数据顺序
+    - Accessibility
+        - Reading Order
+            - 遵循 Logical Order
+        - 不得
+            - 因为卡片视觉高低不同而产生无意义朗读顺序
+    - Adaptive Column Width
+        - 核心输入
+            - Container AvailableWidth
+            - PreferredItemWidth
+            - MinItemWidth
+            - ColumnGap
+        - 输出
+            - ColumnCount
+            - ResolvedColumnWidth
+    - Column Resolution
+        - 空间足够
+            - 增加 Column
+        - 空间减少
+            - 减少 Column
+        - 目标
+            - 尽量接近 PreferredItemWidth
+            - 不得低于正式 MinItemWidth
+    - 实际例子
+        - Asset Browser Width = 260 DIP
+            - 2 Columns
+        - Asset Browser Width = 520 DIP
+            - 4 Columns
+        - Asset Browser Width = 900 DIP
+            - 更多 Columns
+        - 具体列数
+            - 由当前 Container + Constraint 求解
+            - 不是固定设备表
+    - Container Driven
+        - 4K Monitor
+            - 如果 Asset Panel 只有 280 DIP
+                - 仍然只使用少量 Columns
+        - 普通显示器
+            - 如果 Asset Browser 独占 900 DIP
+                - 仍然可以使用更多 Columns
+        - 引用
+            - XYUI-5.11 AdaptiveLayout 思路
+    - PreferredItemWidth
+        - 表示
+            - 资源卡片理想宽度
+        - 不是
+            - 绝对不可改变宽度
+        - 在 Constraint 合法范围
+            - 允许轻微调整以填满 Container
+    - MinItemWidth
+        - 低于该值
+            - 减少 Column Count
+        - 不得
+            - 继续压缩 Thumbnail / Text 到不可用
+    - ColumnGap
+        - 引用
+            - XYUI-0 Spacing
+        - 不得
+            - 建立 Masonry 专属随机 Gap 系统
+    - Shortest-Column Packing
+        - 定位
+            - 辅助 Packing 能力
+        - 算法语义
+            - 按 Logical Order 依次处理 Item
+            - 每个 Item 放入当前累计高度最低的合法 Column
+            - 更新该 Column Height
+            - 继续下一个 Item
+        - 重点
+            - 处理顺序不改变
+            - 只改变 Visual Placement
+    - Tie Break
+        - 多个 Column 同高
+            - 优先选择 Logical Start 方向的 Column
+        - 目的
+            - 保证结果确定
+        - 不得
+            - 同一组数据每次打开得到不同 Packing
+    - Item Height
+        - 可以来自
+            - Thumbnail Aspect
+            - Content Desired Size
+            - AspectContainer
+            - 正式 Card Constraint
+        - 不得
+            - Masonry 任意拉伸内容比例
+    - AspectContainer Integration
+        - Thumbnail
+            - 可以使用原始 Aspect
+        - Masonry
+            - 根据 Resolved ColumnWidth 获得 Item Width
+        - AspectContainer
+            - 求出对应内容 Height
+        - 然后
+            - Masonry 进行 Column Packing
+    - Grid Difference
+        - Grid
+            - 强调 Track Alignment
+            - 同行通常共享结构
+        - Masonry
+            - 强调 Variable Height Packing
+            - 不同 Column 可以错落
+        - 结构化表格 / Property Editor
+            - 优先 Grid
+        - Visual Asset Gallery
+            - 可以使用 Masonry
+    - Wrap Difference
+        - Wrap
+            - 按行换行
+            - 下一行从统一基线开始
+        - Masonry
+            - 各 Column 独立向下累积
+            - 可以填补前面较短 Column
+    - AdaptiveLayout Integration
+        - Masonry
+            - 声明 Column Constraint
+        - AdaptiveLayout
+            - 提供当前 Container Context
+        - 不得
+            - Masonry 自己建立另一套 Screen Breakpoint System
+    - Virtualized Masonry
+        - 定位
+            - 辅助性能能力
+        - 适用
+            - 数千 / 数万 Asset
+            - 大型 Media Collection
+        - 组合
+            - Masonry 维护 Item Placement / Extent Metadata
+            - VirtualizedLayout 根据 Viewport 决定 Realization
+    - Virtualization
+        - 当前 Viewport 附近
+            - Realize Thumbnail Visual
+        - 远离 Viewport
+            - 只保留必要 Layout Metadata
+            - 不创建完整 Visual
+        - Overscan
+            - 使用 VirtualizedLayout 正式规则
+    - Visual Recycling
+        - 可以复用 Asset Card Visual
+        - Selection / Hover / Loading 等状态
+            - 必须重新根据 Stable Item ID 投影
+        - 不得
+            - Visual Recycling 泄漏上一 Asset 状态
+    - Variable Item Size
+        - 可以使用 VirtualizedLayout Variable Size 支撑
+        - 需要
+            - 稳定 Size Cache
+            - Scroll Anchor
+        - 不得
+            - 缩略图加载完成后让用户当前位置大幅跳动
+    - Image Loading
+        - 未加载真实 Aspect
+            - 使用 Metadata Aspect 或合理 Placeholder
+        - 加载完成
+            - 如果 Aspect 已知则保持稳定
+        - 目标
+            - 减少 Masonry 大范围重新排布
+    - Insert
+        - 新 Item 插入 Logical Order
+            - 重新计算受影响 Placement
+        - 不得
+            - 修改其他 Item Identity
+    - Delete
+        - 删除 Item
+            - 后续 Item 可以重新 Packing
+        - Selection
+            - 其他 Item 保持
+    - Sort
+        - Sort 改变 Logical Order
+            - 重新 Packing
+        - 属于正常行为
+    - Filter
+        - Filtered Logical Sequence
+            - 重新 Packing
+        - 隐藏 Item
+            - 不占 Masonry Geometry
+    - Resize
+        - Container Width 改变
+            - 重新求解 ColumnCount
+        - ColumnCount 未改变
+            - 只调整 ResolvedColumnWidth / Placement
+        - ColumnCount 改变
+            - 重新 Packing
+        - Selection / Focus
+            - 不得丢失
+    - Focus
+        - Reflow 后
+            - Focused Item Identity 保持
+        - 不得
+            - 因为 Item 换 Column 导致 Focus 丢失
+    - Scroll
+        - Resize / Reflow
+            - 尽量使用 Stable Item Anchor 保持当前浏览位置
+        - 不得
+            - Column Count 改变就 ScrollToTop
+    - Performance
+        - Column Packing
+            - 应为确定且可增量优化的过程
+        - 大型 Collection
+            - 必须允许 Virtualization
+        - 禁止
+            - 每帧无变化时重新 Packing 全部 Item
+            - 每帧 Measure 全部 Thumbnail
+    - State
+        - MasonryLayout 本身不可见
+        - 无独立
+            - Hover
+            - Selected
+            - Focus
+            - Active
+        - 状态属于 Asset Card / Item Component
+    - 视觉规则
+        - Background
+            - None
+        - Border
+            - None
+        - Shadow
+            - None
+        - Column
+            - 不可见
+        - Gap
+            - 消费 XYUI-0 Spacing
+    - UI代码
+        - Masonry.LogicalOrder
+            - Stable
+        - Masonry.Packing
+            - ShortestColumn
+        - Masonry.ColumnMode
+            - Adaptive
+        - Masonry.PreferredItemWidth
+            - Required
+        - Masonry.MinItemWidth
+            - Required
+        - Masonry.ColumnGap
+            - XYUI-0 Spacing
+        - Masonry.RowGap
+            - XYUI-0 Spacing
+        - Masonry.ColumnCount
+            - Resolved from Container
+        - Masonry.Virtualization
+            - XYUI-5 VirtualizedLayout Compatible
+        - Masonry.ItemIdentity
+            - Stable ID
+        - Masonry.Background
+            - None
+        - Masonry.Border
+            - None
+        - Masonry.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止为了 Packing 修改 Data Source Order
+        - 禁止 Shift Selection 使用视觉 Column Order
+        - 禁止 Screen Reader 使用随机 Masonry Placement Order
+        - 禁止 Panel 变窄时无限压缩 Thumbnail
+        - 禁止 Masonry 建立第二套 Adaptive Breakpoint
+        - 禁止同高 Column 随机选择造成每次布局不同
+        - 禁止数万 Item 全量创建 Visual
+        - 禁止 Reflow 清除 Selection / Focus
+        - 禁止 Column Count 改变就自动 ScrollToTop
+
+- 5.19 · LayoutDiagnostics / 布局诊断
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有正式 Layout Token
+                - 拥有 Spacing
+                - 拥有 Size Constraint
+                - 未拥有统一 Layout Diagnostics
+            - XYUI-5
+                - 已经拥有 Stack
+                - 已经拥有 Grid
+                - 已经拥有 Wrap
+                - 已经拥有 Dock
+                - 已经拥有 ScrollArea
+                - 已经拥有 SplitPane
+                - 已经拥有 OverlayLayout
+                - 已经拥有 AspectContainer
+                - 已经拥有 AnchorLayout
+                - 已经拥有 StickyRegion
+                - 已经拥有 AdaptiveLayout
+                - 已经拥有 WorkspaceLayout
+                - 已经拥有 LayoutPersistence
+                - 已经拥有 VirtualizedLayout
+                - 已经拥有 CanvasLayout
+                - 已经拥有 ViewportContainer
+                - 已经拥有 PortalHost
+                - 已经拥有 MasonryLayout
+                - 但缺少统一解释最终 Layout Result 的调试层
+        - This Item Inherits
+            - 所有 XYUI Layout Metadata
+            - XYUI-5 OverlayLayout
+            - XYUI-0 Debug / Development Context
+        - This Item Owns
+            - Bounds Inspection
+            - Spacing Inspection
+            - Constraint Trace
+            - Adaptive Decision Trace
+            - Virtualization Telemetry
+            - Clip / Layout Ownership Diagnosis
+        - This Item Must Not Redefine
+            - 实际 Layout Algorithm
+            - Selection Visual
+            - Production UI Visual
+            - Business Logging
+            - Profiler
+        - Result
+            - NEW DEVELOPMENT INFRASTRUCTURE
+    - 用途
+        - 解释最终布局为什么变成当前结果
+        - 快速定位异常空白
+        - 快速定位尺寸约束来源
+        - 快速定位 Adaptive Variant 切换原因
+        - 快速确认 Virtualization 是否真正生效
+        - 辅助 XYUI 开发
+        - 辅助组件实现验收
+        - 辅助复杂编辑器 UI 排障
+    - 最终方案
+        - Bounds & Spacing Inspector 为核心
+        - Constraint Trace 为核心
+        - Adaptive Decision Inspector 为辅助
+        - Runtime Layout Telemetry 为辅助
+        - 方案1解决空白与尺寸来源
+        - 方案2解决 Constraint Ownership
+        - 方案3解决 Adaptive 黑盒问题
+        - 方案4解决大型 Collection 性能黑盒问题
+    - 核心原则
+        - 诊断结果必须可解释
+        - 不得只报告最终数值
+        - 应尽量同时报告数值来源
+        - 应明确最终 Geometry Owner
+        - 应明确 Constraint Owner
+        - 应明确 Adaptive Decision Reason
+        - Debug Overlay 不得改变被诊断 Layout
+        - Debug Mode 不得进入正式 Production UI
+        - 诊断工具不能成为第二套布局系统
+    - Bounds Inspector
+        - 显示
+            - Outer Bounds
+            - Content Bounds
+            - Child Bounds
+            - Clip Bounds
+        - 单位
+            - DIP
+        - 实际用途
+            - 判断某个控件实际占据多少空间
+            - 判断视觉尺寸与 Layout Bounds 是否一致
+    - Spacing Inspector
+        - 显示
+            - Padding
+            - Gap
+            - Margin where formally supported
+        - 同时显示
+            - Value
+            - Token Source
+            - Owner
+        - 实际例子
+            - Inspector 两个字段之间出现 16 DIP 空白
+            - Diagnostics
+                - Gap = 16 DIP
+                - Owner = Stack
+                - Source = XY.Spacing.*
+    - Spacing Ownership
+        - 必须能够区分
+            - Parent Gap
+            - Parent Padding
+            - Child Margin
+            - Component Internal Spacing
+        - 目的
+            - 避免开发人员在错误层级修改数值
+    - Constraint Trace
+        - 输入
+            - Requested Size
+        - 输出
+            - Resolved Size
+            - Blocking Constraint
+            - Constraint Owner
+            - Constraint Value
+    - 实际例子
+        - Inspector 请求 Width = 220
+        - 最终 Width = 240
+        - Diagnostics
+            - Requested
+                - 220
+            - Resolved
+                - 240
+            - Blocked By
+                - MinWidth
+            - Owner
+                - PropertyEditor
+            - Value
+                - 240 DIP
+    - Constraint Chain
+        - 必要时允许显示
+            - Parent Constraint
+                - Child Constraint
+                    - Resolved Constraint
+        - 目的
+            - 找到真正决定最终尺寸的节点
+        - 不得
+            - 只显示最外层结果
+    - Constraint Conflict
+        - 存在冲突时
+            - 明确标记 Conflict
+        - 例如
+            - Parent MaxWidth = 220
+            - Child MinWidth = 240
+        - Diagnostics
+            - 必须指出两条冲突约束
+        - 不得
+            - 静默显示一个神秘最终值
+    - SplitPane Diagnostics
+        - 可以显示
+            - Requested Split Position
+            - Resolved Split Position
+            - First Pane Min
+            - Second Pane Min
+            - Primary Pane
+            - Blocked Reason
+        - 实际用途
+            - 回答为什么 Splitter 已经拖不动
+    - Grid Diagnostics
+        - 可以显示
+            - Track Definition
+            - Resolved Track Size
+            - Row / Column
+            - Span
+            - Gap
+        - 实际用途
+            - 回答为什么某 Column 特别宽
+    - Stack Diagnostics
+        - 可以显示
+            - Direction
+            - Gap
+            - Main Distribution
+            - Cross Alignment
+            - Child Auto / Fill
+    - Overlay Diagnostics
+        - 可以显示
+            - Plane
+            - LocalOrder
+            - Placement
+            - HitTest Mode
+            - Clip Host
+        - 实际用途
+            - 回答为什么某 Overlay 在上面却点不到
+            - 回答为什么某 Overlay 被裁切
+    - Portal Diagnostics
+        - 可以显示
+            - Logical Owner
+            - Visual Host
+            - Source Bounds
+            - Preferred Placement
+            - Resolved Placement
+            - Flip / Shift Reason
+        - 实际用途
+            - 回答 Dropdown 为什么弹到当前位置
+    - Adaptive Decision Inspector
+        - 显示
+            - Current Variant
+            - Previous Variant
+            - Available Container Size
+            - Failed Constraint
+            - Fallback Variant
+            - Hysteresis State
+    - 实际例子
+        - Property Editor
+            - Available = 264 DIP
+            - Compact Requires = 286 DIP
+            - Current Variant = Narrow
+            - Reason = Compact Constraint Failed
+    - Adaptive Trace
+        - 应明确
+            - 是 Container Trigger
+            - 还是 Constraint Failure
+            - 还是 Stability / Hysteresis 保持当前 Variant
+        - 不得
+            - 只显示 Narrow 而不说明原因
+    - Runtime Layout Telemetry
+        - 定位
+            - 专项性能诊断
+        - 适用
+            - Virtualized Tree
+            - Virtualized List
+            - Asset Browser
+            - Masonry
+    - Virtualization Telemetry
+        - 显示
+            - Total Items
+            - Logical Visible Items
+            - Viewport Visible Items
+            - Realized Visuals
+            - Overscan
+            - Recycled Visual Count where useful
+    - 实际例子
+        - Entity Total
+            - 127438
+        - Logical Visible
+            - 42813
+        - Viewport Rows
+            - 31
+        - Realized Visual
+            - 47
+        - Overscan
+            - 16
+        - Result
+            - Virtualization OK
+    - Virtualization Warning
+        - 如果
+            - Viewport Visible = 31
+            - Realized Visual = 42813
+        - 应明确警告
+            - Virtualization Not Effective
+    - Masonry Diagnostics
+        - 可以显示
+            - Column Count
+            - Resolved Column Width
+            - Item Placement
+            - Logical Order
+            - Realized Card Count
+    - Canvas Diagnostics
+        - 可以显示
+            - Origin
+            - Axis Direction
+            - Logical Position
+            - View Position
+            - Transient Transform
+        - 实际用途
+            - 排查坐标转换错误
+    - Viewport Diagnostics
+        - 可以显示
+            - Pan
+            - Zoom
+            - Zoom Anchor
+            - Logical Point under Pointer
+        - 实际用途
+            - 排查指针缩放目标漂移
+    - Clip Diagnostics
+        - 显示
+            - Clip Owner
+            - Clip Bounds
+            - 被裁 Child
+        - 实际用途
+            - 快速判断 Popup / Overlay 为什么被切掉
+    - Ownership Trace
+        - 核心问题
+            - 这个 Geometry 到底是谁负责的
+        - 可能 Owner
+            - Stack
+            - Grid
+            - SplitPane
+            - AnchorLayout
+            - CanvasLayout
+            - AspectContainer
+        - 目的
+            - 发现重复 Layout Ownership
+    - Debug Overlay
+        - 通过 XYUI-5 OverlayLayout 呈现
+        - 默认
+            - PassThrough
+        - 不得
+            - 阻塞真实 UI Pointer
+            - 改变 Focus
+            - 改变 Layout Measure
+    - Selection for Diagnostics
+        - 允许开发模式
+            - Pointer Hover 选中 Visual
+            - 点击锁定当前 Layout Node
+        - 但
+            - 不得与业务 Selection 混用
+        - 建议
+            - 使用 Debug Target Identity
+    - Debug Labels
+        - 优先
+            - 短文本
+            - 数值
+            - Owner
+            - Source
+        - 避免
+            - 大量遮住原 UI 的长日志
+    - Development Only
+        - 默认只在
+            - Development
+            - Debug
+            - Designer Inspection
+        - 正式 Release UI
+            - 默认关闭
+    - Performance
+        - Diagnostics Disabled
+            - 应接近零额外成本
+        - Diagnostics Enabled
+            - 只采集当前需要的 Metadata
+        - 不得
+            - 为了诊断每帧全量扫描整个 Visual Tree
+    - Logging
+        - 可以按需输出 Snapshot
+        - 但
+            - LayoutDiagnostics 不是 Business Log System
+        - 不得
+            - 默认产生大量噪声日志
+    - Accessibility
+        - Debug Overlay
+            - 默认不进入 Production Accessibility Tree
+        - 不得
+            - 影响正式控件 Reading Order
+    - 视觉规则
+        - Debug Bounds
+            - 使用低干扰线框
+        - 不同信息
+            - 允许通过线型 / Label 区分
+        - 禁止
+            - 大面积半透明色块遮住真实 UI
+            - 荧光高饱和调试风格长期覆盖界面
+        - 原则
+            - 清晰
+            - 紧凑
+            - 可读
+    - UI代码
+        - LayoutDiagnostics.Enabled
+            - Development Only
+        - LayoutDiagnostics.Target
+            - Layout Node
+        - LayoutDiagnostics.Bounds
+            - Optional Overlay
+        - LayoutDiagnostics.Spacing
+            - Padding | Gap | Margin
+        - LayoutDiagnostics.ConstraintTrace
+            - Requested | Resolved | Owner | Source
+        - LayoutDiagnostics.AdaptiveTrace
+            - Variant | Reason | Requirement
+        - LayoutDiagnostics.VirtualizationTelemetry
+            - Item Counts | Realized Counts | Overscan
+        - LayoutDiagnostics.ClipTrace
+            - Owner | Bounds
+        - LayoutDiagnostics.OwnershipTrace
+            - Geometry Owner
+        - LayoutDiagnostics.HitTest
+            - PassThrough by Default
+        - LayoutDiagnostics.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止 Debug Overlay 改变真实 Layout
+        - 禁止 Debug Overlay 吃掉正常 Pointer
+        - 禁止只告诉最终尺寸而不告诉来源
+        - 禁止 Constraint Conflict 静默处理
+        - 禁止 Adaptive Variant 成为不可解释黑盒
+        - 禁止大型 Collection 性能只靠肉眼判断
+        - 禁止 Diagnostics 默认产生高频噪声日志
+        - 禁止 Diagnostics 进入正式 Production Visual Language
+
+- 5.20 · LayoutCompositionRules / 布局组合规则
+    - Ownership Check
+        - Existing Upstream Rule
+            - XYUI-0
+                - 拥有 Foundation
+                - 拥有 Spacing Token
+                - 拥有 Alignment
+                - 拥有 Size Constraint
+                - 拥有基础 Layout 原则
+                - 没有 XYUI-5 全布局组件选择与组合治理
+            - XYUI-5.01 ~ 5.19
+                - 已经分别定义各 Layout Component 自身职责
+                - 但没有统一跨组件 Composition Contract
+        - This Item Inherits
+            - XYUI-0 Foundation
+            - XYUI-5 全部 Layout Components
+        - This Item Owns
+            - Layout Selection Guidance
+            - Single Geometry Owner Rule
+            - Spacing Ownership Rule
+            - Composition Boundary
+            - Nesting Governance
+            - Layout Complexity Guard
+            - Layout Performance Governance
+        - This Item Must Not Redefine
+            - 任何具体 Layout Component
+            - Foundation Token
+            - Component Visual
+            - Business Component
+        - Result
+            - NEW GOVERNANCE LAYER
+    - 用途
+        - 统一规定不同 Layout Component 应该在什么场景使用
+        - 防止多个 Layout 同时争夺同一 Geometry
+        - 防止 Padding / Gap / Margin 层层叠加
+        - 防止无职责 Layout Wrapper
+        - 降低 AI / Agent 自动生成 UI 时的布局随机性
+        - 建立 XYUI 长期可维护的 Layout Composition Contract
+    - 最终方案
+        - Layout Decision Map 为核心
+        - Single Geometry Owner 为核心
+        - Spacing Ownership 为核心
+        - Complexity & Performance Guard 为强制工程守卫
+        - 方案1解决“应该选哪个 Layout”
+        - 方案2解决“最终位置和尺寸谁说了算”
+        - 方案3解决“这段空白谁负责”
+        - 方案4解决“组合是否已经过度复杂”
+    - 核心原则
+        - 优先选择语义最直接的 Layout Primitive
+        - 一个 Geometry Dimension 只能拥有一个 Primary Owner
+        - Spacing 必须具有明确 Owner
+        - Layout Wrapper 必须拥有独立职责
+        - 不得因为某 Layout 能实现就随意使用
+        - 不得为了视觉微调不断叠加 Container
+        - Composition 应保持可解释
+        - Composition 应保持确定性
+        - Composition 应保持可诊断
+        - 布局复杂度应与实际需求匹配
+    - Layout Decision Map
+        - Stack
+            - 适用
+                - 一维顺序排列
+                - 纵向属性列表
+                - 横向工具项
+                - Section 顺序排列
+            - 实际例子
+                - 玄域 Inspector Sections
+                - 设置页面字段组
+        - Grid
+            - 适用
+                - 明确二维 Track
+                - Label + Field 对齐
+                - 固定行列关系
+                - 结构化属性编辑
+            - 实际例子
+                - Inspector Property Grid
+                - 坐标 X / Y / Z 输入区
+        - Wrap
+            - 适用
+                - 自然 Flow
+                - 空间不足自动换行
+            - 实际例子
+                - Tags
+                - Filter Chips
+                - 小型工具项集合
+        - Dock
+            - 适用
+                - 应用级 Panel Dock Topology
+                - 可重新停靠工具工作区
+            - 实际例子
+                - 玄域 Viewport / Inspector / Hierarchy / Log
+        - ScrollArea
+            - 适用
+                - 内容超过局部 Viewport
+                - 普通滚动内容
+            - 实际例子
+                - Inspector
+                - Document
+                - List
+        - SplitPane
+            - 适用
+                - 两个区域共享空间
+                - 用户可以调整比例
+            - 实际例子
+                - Viewport + Inspector
+                - Editor + Preview
+        - OverlayLayout
+            - 适用
+                - 叠层
+                - Selection
+                - Gizmo
+                - Feedback
+                - Decoration
+            - 实际例子
+                - Viewport Selection Outline
+                - Snap Feedback
+        - AspectContainer
+            - 适用
+                - 保持 Width / Height Ratio
+            - 实际例子
+                - Thumbnail
+                - Preview
+                - Video / Image Area
+        - AnchorLayout
+            - 适用
+                - Child 与 Host Edge 建立持续约束
+            - 实际例子
+                - HUD Corner Element
+                - 固定边缘工具
+        - StickyRegion
+            - 适用
+                - Scroll 中达到边缘后保持
+            - 实际例子
+                - Inspector Section Header
+        - AdaptiveLayout
+            - 适用
+                - 根据 Container Constraint 切换 Layout Variant
+            - 实际例子
+                - 宽 Inspector Horizontal Fields
+                - 窄 Inspector Vertical Fields
+        - WorkspaceLayout
+            - 适用
+                - 应用级功能 Region Role
+            - 实际例子
+                - PrimaryWork
+                - Navigation
+                - Inspector
+                - Utility
+        - VirtualizedLayout
+            - 适用
+                - 大量 List / Tree / Collection
+                - 只创建 Viewport 附近 UI
+            - 实际例子
+                - 十万级 Entity Hierarchy
+        - CanvasLayout
+            - 适用
+                - 自由二维 Logical Position
+            - 实际例子
+                - Node Graph
+                - HUD Designer
+        - ViewportContainer
+            - 适用
+                - 观察大型二维 Canvas
+                - Pan / Zoom
+            - 实际例子
+                - 地图编辑器
+                - Node Graph
+        - PortalHost
+            - 适用
+                - Popup 需要跨出 Parent Clip
+            - 实际例子
+                - Inspector Dropdown
+                - Context Menu
+        - MasonryLayout
+            - 适用
+                - 不同高度资源卡片紧凑排列
+            - 实际例子
+                - Asset Browser
+    - Layout Selection Principle
+        - 能够用 Stack 清楚表达
+            - 不要使用 Grid
+        - 能够用 Grid 清楚表达
+            - 不要使用 Canvas
+        - 能够使用正常 Flow
+            - 不要使用 Absolute Position
+        - 能够使用 Local Overlay
+            - 不要使用 Portal
+        - 只有跨 Clip Boundary
+            - 才提升到 Portal
+        - 只有真正二维自由坐标
+            - 才使用 CanvasLayout
+        - 只有大量 Collection
+            - 才开启 Virtualization
+    - Single Geometry Owner
+        - 定义
+            - 同一 Child 的同一 Geometry Dimension
+                - 只能存在一个 Primary Layout Owner
+        - Geometry Dimension
+            - Horizontal Position
+            - Vertical Position
+            - Width
+            - Height
+            - Z Plane
+        - 可以由不同组件分别拥有不同 Dimension
+    - 正确实例
+        - Node Editor
+            - CanvasLayout
+                - 负责 X / Y Position
+            - AspectContainer
+                - 负责 Preview Width / Height Ratio
+            - OverlayLayout
+                - 负责 Selection Z Plane
+        - 职责
+            - 互不重叠
+    - 错误实例
+        - 同一 Child
+            - Grid.Column
+            - Anchor.Left
+            - Canvas.X
+        - 结果
+            - 三个系统同时试图决定 Horizontal Position
+        - 禁止
+            - 这种重复 Geometry Ownership
+    - Geometry Owner Resolution
+        - 设计阶段
+            - 必须能回答
+                - 谁负责 X
+                - 谁负责 Y
+                - 谁负责 Width
+                - 谁负责 Height
+                - 谁负责 Z
+        - 如果无法回答
+            - Composition 不合格
+    - Parent vs Child
+        - Parent Layout
+            - 通常拥有 Child Placement
+        - Child
+            - 拥有自身 Desired Size / Constraint
+        - 特殊 Layout
+            - 按照各自正式 Contract
+        - 不得
+            - Parent 和 Child 同时通过非正式技巧争夺 Position
+    - Canvas + Aspect
+        - Canvas
+            - Position Owner
+        - AspectContainer
+            - Size Relationship Owner
+        - 允许
+            - 职责正交
+    - Canvas + Anchor
+        - 通常
+            - 不应同时拥有同一 Position
+        - 确需组合
+            - 必须明确最终 Geometry Owner
+    - Grid + Stack
+        - 允许
+            - Grid Cell 内使用 Stack 排列 Cell Content
+        - Grid
+            - 拥有 Cell Placement
+        - Stack
+            - 拥有 Cell 内部 Children Flow
+        - 不冲突
+    - Dock + SplitPane
+        - Dock
+            - 拥有 Workspace Topology
+        - SplitPane
+            - 拥有某个 Split Node 的实际分割
+        - 允许组合
+    - Workspace + Dock
+        - Workspace
+            - 拥有 Role
+        - Dock
+            - 拥有 Presentation Position
+        - 不得
+            - 把 Role 与 Position 混成一个 Owner
+    - Spacing Ownership
+        - 原则
+            - 每一段视觉空间必须能够指出 Owner
+        - 主要类型
+            - Container Padding
+            - Sibling Gap
+            - Component Internal Spacing
+            - Section Spacing
+            - Track Gap
+    - Container Padding
+        - 负责
+            - 容器内容与边界之间的空间
+        - 典型 Owner
+            - Panel Content
+            - 正式 Container
+        - 不得
+            - 内部每一层 Layout 都重新补一圈 Padding
+    - Sibling Gap
+        - 负责
+            - 同一 Parent 下 Sibling 之间间距
+        - 典型 Owner
+            - Stack Gap
+            - Grid RowGap / ColumnGap
+            - Wrap ItemGap
+            - Masonry Gap
+        - 优先
+            - 使用 Parent Gap
+        - 避免
+            - 每个 Child 各写 Margin 模拟 Sibling Gap
+    - Section Spacing
+        - 由正式 Section Structure 决定
+        - 不得
+            - Section 外再叠加随机 Margin
+    - 实际错误
+        - Panel Padding = 12
+        - Stack Padding = 12
+        - Section Margin = 12
+        - Grid Padding = 8
+        - 结果
+            - Content 实际离 Panel 边缘约 44 DIP
+        - 问题
+            - 重复 Spacing Ownership
+    - 正确结构
+        - Panel
+            - 拥有 Outer Content Padding
+        - Stack
+            - 拥有 Section Gap
+        - Section
+            - 拥有内部 Title / Divider / Content Structure
+        - Grid
+            - 拥有 Track Gap
+    - Spacing Token
+        - 全部消费 XYUI-0 Spacing
+        - 不得
+            - 每个 Layout 创建自己的随意间距体系
+    - No Double Spacing
+        - 如果 Parent 已提供 Gap
+            - Child 默认不得再通过 Margin 添加等价间距
+        - 如果 Container 已提供 Padding
+            - 内部 Wrapper 不应为了同一目的再添加 Padding
+    - Composition Boundary
+        - 每一层 Layout
+            - 必须有明确独立责任
+        - 合法责任例如
+            - Scroll
+            - Flow
+            - Track Alignment
+            - Split
+            - Overlay
+            - Coordinate Space
+            - Aspect
+            - Adaptive Orchestration
+        - 不合法责任
+            - 只是为了“多套一层”
+            - 只是为了添加 4 DIP Padding
+            - 只是因为模板习惯
+    - Nesting Governance
+        - 允许多层 Layout
+            - 只要每层都有独立职责
+        - 不得使用固定最大 Nesting 数量作为唯一规则
+        - 重点
+            - 职责密度
+            - 可解释性
+            - Measure / Arrange 成本
+    - 推荐实例
+        - 玄域 Inspector
+            - Panel
+                - ScrollArea
+                    - Stack
+                        - Section
+                            - Grid
+        - 职责
+            - Panel
+                - 区域容器
+            - ScrollArea
+                - 滚动
+            - Stack
+                - Section Flow
+            - Section
+                - 语义分区
+            - Grid
+                - Label / Field Alignment
+    - 禁止 Layout Onion
+        - 典型
+            - Panel
+                - Grid
+                    - Stack
+                        - Grid
+                            - AnchorLayout
+                                - Stack
+                                    - CanvasLayout
+                                        - Grid
+                                            - Stack
+        - 如果多数层没有独立责任
+            - 必须简化
+    - Redundant Wrapper
+        - 典型
+            - 1 × 1 Grid 只承载一个 Child
+            - 单 Child Stack 没有 Gap / Alignment 责任
+            - Container 只为了增加重复 Padding
+        - 处理
+            - 删除
+            - 或明确其正式责任
+    - Performance Guard
+        - Layout 变更
+            - 只 Invalidates 必要范围
+        - 避免
+            - 单个 Child 改变导致全 Workspace Measure
+        - 大型 Collection
+            - 使用 VirtualizedLayout
+        - 大型 Canvas
+            - 使用 Culling / Spatial Infrastructure
+        - 不得
+            - 通过大量隐藏 Visual 代替正式 Layout State
+    - Measure / Arrange
+        - Layout 层级越深
+            - 可能增加 Measure / Arrange 成本
+        - 因此
+            - 无职责 Wrapper 必须删除
+        - 但
+            - 不得为了减少层数破坏语义边界
+    - Hidden vs Removed
+        - 需要长期不参与布局
+            - 使用正式 Visibility / Composition Rule
+        - 不得
+            - 创建巨大 Offscreen Layout 模拟隐藏
+    - Scroll Composition
+        - 默认
+            - 一个区域拥有明确主要 Scroll Owner
+        - Nested Scroll
+            - 只在真实嵌套滚动需求下使用
+            - 遵守 ScrollArea Nested Arbitration
+        - 禁止
+            - 无意义 ScrollArea 套 ScrollArea
+    - Adaptive Composition
+        - AdaptiveLayout
+            - 只决定 Variant
+        - 具体 Variant
+            - 继续使用 Stack / Grid / Dock 等实际 Layout
+        - 禁止
+            - AdaptiveLayout 自己演变成万能 Layout
+    - Overlay Composition
+        - OverlayLayout
+            - 只负责层
+        - 普通 Child Geometry
+            - 仍归实际 Layout
+        - 禁止
+            - 为了把元素移动 5 DIP 就使用 Overlay
+    - Portal Composition
+        - 默认
+            - 局部 Popup 先尝试正常 Overlay
+        - 只有
+            - 必须跨 Clip / Layout Boundary
+        - 才
+            - PortalHost
+    - Virtualization Composition
+        - VirtualizedLayout
+            - 不定义 Row Visual
+        - List / Tree / Masonry
+            - 拥有实际 Item Layout
+        - Virtualization
+            - 只决定哪些 Item 被 Realize
+    - Layout Diagnostics Requirement
+        - 复杂 Composition
+            - 应能通过 5.19 LayoutDiagnostics 解释
+        - 必须能够回答
+            - 当前 Geometry Owner
+            - Spacing Owner
+            - Constraint Owner
+            - Adaptive Decision
+        - 如果无法解释
+            - 说明 Composition 需要重新检查
+    - AI / Agent Development Rule
+        - 生成 XYUI UI 前
+            - 先确定 Layout Primitive
+        - 必须列出
+            - Primary Geometry Owner
+            - Spacing Owner
+        - 不得
+            - 为了快速对齐使用随机 Margin / Absolute Position
+        - 不得
+            - 在已有 Layout Primitive 上重新发明类似组件
+        - 优先
+            - 组合现有 XYUI Layout Contract
+    - Layout Review Checklist
+        - 这个场景最直接的 Layout 是什么
+        - 是否存在重复 Geometry Owner
+        - 每段 Padding / Gap 是否有明确 Owner
+        - 是否存在无职责 Wrapper
+        - 是否存在重复 Scroll Owner
+        - 是否存在无意义 Absolute Position
+        - 是否需要 Virtualization
+        - 是否需要 AdaptiveLayout
+        - 是否能被 LayoutDiagnostics 清楚解释
+    - Accessibility
+        - 视觉 Layout Composition
+            - 不得破坏 Logical Reading Order
+        - Absolute / Masonry / Overlay
+            - 尤其需要保证 Logical Order 独立
+        - 不得
+            - 根据 Visual Z / Column / X/Y 自动推断所有可访问顺序
+    - 视觉规则
+        - LayoutCompositionRules
+            - 不可见
+        - 无
+            - Background
+            - Border
+            - Shadow
+        - 只作为
+            - Governance Contract
+    - UI代码
+        - LayoutComposition.Selection
+            - Use Smallest Semantic Primitive
+        - LayoutComposition.GeometryOwner
+            - Single Primary Owner per Dimension
+        - LayoutComposition.SpacingOwner
+            - Explicit
+        - LayoutComposition.Wrapper
+            - Requires Independent Responsibility
+        - LayoutComposition.Nesting
+            - Responsibility Driven
+        - LayoutComposition.Performance
+            - Avoid Redundant Measure / Arrange
+        - LayoutComposition.Diagnostics
+            - Must Be Explainable
+        - LayoutComposition.Unit
+            - DIP via XYUI-0
+    - 禁止事项
+        - 禁止因为多个 Layout 都能实现就随机选择
+        - 禁止 Grid / Anchor / Canvas 同时争夺同一 Position
+        - 禁止 Parent 与 Child 同时无规则决定同一 Geometry
+        - 禁止层层重复 Padding
+        - 禁止用 Child Margin 模拟已有 Parent Gap
+        - 禁止无职责 Layout Wrapper
+        - 禁止大量 1 × 1 Grid 作为无意义包装
+        - 禁止为了微调位置滥用 Canvas / Anchor / Overlay
+        - 禁止无意义 ScrollArea 嵌套
+        - 禁止大型 Collection 不做 Virtualization
+        - 禁止无法解释 Geometry Owner 的复杂布局
+        - 禁止 AI / Agent 自行创造与现有 XYUI Layout 重叠的第二套规则

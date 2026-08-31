@@ -1,0 +1,376 @@
+{
+  "map_version": "0.1.0",
+  "dialect": "JSON Schema Draft 7",
+  "note": "单向规范形式：child_of 只存子→父，反向由查询计算；A 与 B 不双边手写。A3 不得生成两个独立硬值源。",
+  "relationships": [
+    {
+      "from": "XYUI.Foundation.ColorSystem.CorePalette",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 1/9（0.2-A）",
+      "evidence_refs": [
+        "XYUI0-0.2-A@L171-238"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.TextColor",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 2/9（0.2-B）",
+      "evidence_refs": [
+        "XYUI0-0.2-B@L239-281"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.Surface",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 3/9（0.2-C）",
+      "evidence_refs": [
+        "XYUI0-0.2-C@L282-339"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.BorderDivider",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 4/9（0.2-D）",
+      "evidence_refs": [
+        "XYUI0-0.2-D@L340-381"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.Accent",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 5/9（0.2-E）",
+      "evidence_refs": [
+        "XYUI0-0.2-E@L382-427"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 6/9（0.2-F）",
+      "evidence_refs": [
+        "XYUI0-0.2-F@L428-479"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.SemanticColor",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 7/9（0.2-G）",
+      "evidence_refs": [
+        "XYUI0-0.2-G@L480-548"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 8/9（0.2-H）",
+      "evidence_refs": [
+        "XYUI0-0.2-H@L549-598"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.EditorColor",
+      "type": "child_of",
+      "target": "XYUI.Foundation.ColorSystem",
+      "status": "CONFIRMED",
+      "note": "0.2 子节 9/9（0.2-I）",
+      "evidence_refs": [
+        "XYUI0-0.2-I@L599-677"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.Typography.FontFamily",
+      "type": "child_of",
+      "target": "XYUI.Foundation.Typography",
+      "status": "CONFIRMED",
+      "note": "0.3 子节 1/3（0.3-A）",
+      "evidence_refs": [
+        "XYUI0-0.3-A@L679-722"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.Typography.FontWeight",
+      "type": "child_of",
+      "target": "XYUI.Foundation.Typography",
+      "status": "CONFIRMED",
+      "note": "0.3 子节 2/3（0.3-B）",
+      "evidence_refs": [
+        "XYUI0-0.3-B@L724-765"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.Typography.FontSize",
+      "type": "child_of",
+      "target": "XYUI.Foundation.Typography",
+      "status": "CONFIRMED",
+      "note": "0.3 子节 3/3（0.3-C）",
+      "evidence_refs": [
+        "XYUI0-0.3-C@L767-805"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.Density",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Sizing",
+      "status": "CONFIRMED",
+      "note": "Density 与 Sizing 的架构关系：XY.Size.* 为 Base Sizing Token；Compact 档 maps_to Base；Comfortable 档为 override 语义。防双真值漂移。",
+      "evidence_refs": [
+        "XYUI0-0.8@L959-1000",
+        "XYUI0-0.19@L1491-1536"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.CorePalette",
+      "type": "related_to",
+      "target": "XYUI.Foundation.ColorSystem.Surface",
+      "status": "CONFIRMED",
+      "note": "Base Palette 层（0.2-A CorePalette）→ Semantic Surface 层（0.2-C）；TOKEN_LAYER_OVERLAP 分层共存，保留 TLO-001/002 provenance",
+      "evidence_refs": [
+        "XYUI0-0.2-A@L194-238",
+        "XYUI0-0.2-C@L305-339"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.SurfaceRole",
+      "type": "maps_to",
+      "target": "XYUI.Foundation.ColorSystem.Surface",
+      "status": "CONFIRMED",
+      "note": "SurfaceRole（Consumption/Role Mapping 层）→ XY.Surface.*（Semantic 层）；组件实际消费路径：Panel → SurfaceRole.Panel → Surface.Panel",
+      "evidence_refs": [
+        "XYUI0-0.12@L1155-1175"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.InteractionState",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Focus",
+      "status": "CONFIRMED",
+      "note": "InteractionState 与 Focus 保持独立 Foundation；Focus Outline 不参与 0.20 背景状态覆盖链（原文 L1559-1560 明确），不得 child_of",
+      "evidence_refs": [
+        "XYUI0-0.20@L1559-1560",
+        "XYUI0-0.21@L1603"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.Sizing",
+      "type": "related_to",
+      "target": "XYUI.Foundation.HitTarget",
+      "status": "CONFIRMED",
+      "note": "Visual Size 与 Hit Target 独立语义（VisualSizeIndependent=True 保持）；Icon 视觉 16 DIP ≠ 热区 28 DIP，不得合并",
+      "evidence_refs": [
+        "XYUI0-0.22@L1646-1648"
+      ]
+    },
+    {
+      "from": "XYUI.Foundation.Typography.FontSize",
+      "type": "related_to",
+      "target": "XYUI.Foundation.LineHeight",
+      "status": "PROPOSED",
+      "note": "FontSize 与 LineHeight 配对使用",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.BorderDivider",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Border",
+      "status": "PROPOSED",
+      "note": "Border 色值层与宽度层引用",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.BorderDivider",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Divider",
+      "status": "PROPOSED",
+      "note": "Border 色值层与 Divider 引用",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.Border",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Divider",
+      "status": "PROPOSED",
+      "note": "Border 宽度与 Divider 厚度沿用",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.Icon",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Sizing",
+      "status": "PROPOSED",
+      "note": "Icon 尺寸沿用 Sizing（14/16/20）",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.Layout",
+      "type": "related_to",
+      "target": "XYUI.Foundation.ResizeSplitter",
+      "status": "PROPOSED",
+      "note": "Layout 默认尺寸被 Resize 引用（180/250/100）",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.Scroll",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Sizing",
+      "status": "PROPOSED",
+      "note": "Scrollbar 宽度沿用 Sizing 10 DIP",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ResizeSplitter",
+      "type": "related_to",
+      "target": "XYUI.Foundation.HitTarget",
+      "status": "PROPOSED",
+      "note": "Splitter Hit Target 沿用 0.22 ≥8 DIP",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.Accessibility",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Focus",
+      "status": "PROPOSED",
+      "note": "A11y Focus 视觉沿用 0.21",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.Accessibility",
+      "type": "related_to",
+      "target": "XYUI.Foundation.HitTarget",
+      "status": "PROPOSED",
+      "note": "A11y Hit Target 沿用 0.22",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.DpiLocalization",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Density",
+      "status": "PROPOSED",
+      "note": "DPI 与 Density 完全分离（禁止耦合）",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+      "type": "related_to",
+      "target": "XYUI.Foundation.InteractionState",
+      "status": "PROPOSED",
+      "note": "状态色层与状态规则层引用",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.TextColor",
+      "type": "related_to",
+      "target": "XYUI.Foundation.ColorSystem.Accent",
+      "status": "PROPOSED",
+      "note": "TextColor.Link 与 Accent 同值（#4A789E）",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.Accent",
+      "type": "related_to",
+      "target": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+      "status": "PROPOSED",
+      "note": "AccentSoft 与 Selected 同值（#D8E7F2）",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ZIndex",
+      "type": "related_to",
+      "target": "XYUI.Foundation.SurfaceRole",
+      "status": "PROPOSED",
+      "note": "Z-Index 引用 Surface 规则",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ZIndex",
+      "type": "related_to",
+      "target": "XYUI.Foundation.Shadow",
+      "status": "PROPOSED",
+      "note": "Z-Index 引用 Shadow 规则",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+      "type": "related_to",
+      "target": "XYUI.Foundation.InteractionState",
+      "status": "PROPOSED",
+      "note": "Locked/Disabled 状态色与状态规则引用",
+      "evidence_refs": []
+    },
+    {
+      "from": "XYUI.Foundation.ColorSystem.SemanticColor",
+      "type": "related_to",
+      "target": "XYUI.Foundation.ColorSystem.CorePalette",
+      "status": "PROPOSED",
+      "note": "Semantic 色 Text 值与 CorePalette 同值",
+      "evidence_refs": []
+    }
+  ],
+  "token_mappings": [
+    {
+      "token": "XY.Density.Compact.TreeRow",
+      "relation": "maps_to",
+      "target_token": "XY.Size.TreeRow",
+      "status": "CONFIRMED"
+    },
+    {
+      "token": "XY.Density.Compact.Toolbar",
+      "relation": "maps_to",
+      "target_token": "XY.Size.Toolbar",
+      "status": "CONFIRMED"
+    },
+    {
+      "token": "XY.Density.Compact.Input",
+      "relation": "maps_to",
+      "target_token": "XY.Size.Input",
+      "status": "CONFIRMED"
+    },
+    {
+      "token": "XY.Density.Comfortable.TreeRow",
+      "relation": "overrides",
+      "target_token": "XY.Size.TreeRow",
+      "status": "CONFIRMED"
+    },
+    {
+      "token": "XY.Density.Comfortable.Toolbar",
+      "relation": "overrides",
+      "target_token": "XY.Size.Toolbar",
+      "status": "CONFIRMED"
+    },
+    {
+      "token": "XY.Density.Comfortable.Input",
+      "relation": "overrides",
+      "target_token": "XY.Size.Input",
+      "status": "CONFIRMED"
+    }
+  ],
+  "implementation_tuning_registry": [
+    {
+      "owner": "XYUI.Foundation.Density",
+      "parameter": "XY.Density.Auto.EnterThreshold",
+      "status": "IMPLEMENTATION_TUNING_REQUIRED",
+      "note": "进入 Compact/Comfortable 的窗口尺寸阈值；进入代码前必须 Token/Config 冻结，禁止 C# 随手写魔法数"
+    },
+    {
+      "owner": "XYUI.Foundation.Density",
+      "parameter": "XY.Density.Auto.ExitThreshold",
+      "status": "IMPLEMENTATION_TUNING_REQUIRED",
+      "note": "退出阈值（迟滞）；同上"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.TypographySamplesView">
+  <StackPanel Spacing="12">
+    <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
+      <StackPanel Spacing="6">
+        <TextBlock Text="Heading 层级" Classes="xyui-text-section" />
+        <TextBlock Text="玄域地图编辑器" Classes="xyui-heading-page" />
+        <TextBlock Text="区域数据集" Classes="xyui-heading-panel" />
+        <TextBlock Text="道路属性" Classes="xyui-text-section" />
+      </StackPanel>
+    </Border>
+    <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
+      <StackPanel Spacing="6">
+        <TextBlock Text="Body 正文" Classes="xyui-text-section" />
+        <TextBlock Text="当前选择：广东区域" Classes="xyui-text-body" />
+        <TextBlock Text="数据集包含 18 个区域与 42 条道路。"
+                   Classes="xyui-text-body" />
+        <TextBlock Text="说明文字以正文为基准，保持长时间阅读舒适度。"
+                   Classes="xyui-text-caption" />
+      </StackPanel>
+    </Border>
+    <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
+      <StackPanel Spacing="6">
+        <TextBlock Text="Label / Caption" Classes="xyui-text-section" />
+        <TextBlock Text="名称" Classes="xyui-text-label" />
+        <TextBlock Text="区域类型" Classes="xyui-text-label" />
+        <TextBlock Text="最后修改时间" Classes="xyui-text-label" />
+        <TextBlock Text="已保存 · 2 分钟前" Classes="xyui-text-caption" />
+      </StackPanel>
+    </Border>
+    <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
+      <StackPanel Spacing="6">
+        <TextBlock Text="Mono / 技术文本" Classes="xyui-text-section" />
+        <TextBlock Text="region-7ad21c" Classes="xyui-text-code" />
+        <TextBlock Text="X = 421.482    Y = 718.215"
+                   Classes="xyui-text-mono" />
+        <TextBlock Text="damage = kinetic_energy * hit_factor"
+                   Classes="xyui-text-mono" />
+      </StackPanel>
+    </Border>
+    <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
+      <StackPanel Spacing="4">
+        <TextBlock Text="信息等级对照（复用 R3-F1 文字色）"
+                   Classes="xyui-text-section" />
+        <TextBlock Text="Primary — 主文本" Classes="xyui-text-body" />
+        <TextBlock Text="Secondary — 次级文本"
+                   Classes="xyui-text-body"
+                   Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        <TextBlock Text="Tertiary — 三级文本"
+                   Classes="xyui-text-body"
+                   Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
+        <TextBlock Text="Placeholder — 占位符"
+                   Classes="xyui-text-body"
+                   Foreground="{DynamicResource XY.Brush.Text.Placeholder}" />
+        <TextBlock Text="Disabled — 禁用文本"
+                   Classes="xyui-text-body"
+                   Foreground="{DynamicResource XY.Brush.Text.Disabled}" />
+        <TextBlock Text="Link — 链接" Classes="xyui-text-link" />
+      </StackPanel>
+    </Border>
+    <Border Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="6" Padding="12">
+      <StackPanel Spacing="6">
+        <TextBlock Text="Compact UI Density（高密度 Editor 场景）"
+                   Classes="xyui-text-section" />
+        <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="区域名称" Classes="xyui-text-label" />
+          <TextBlock Grid.Row="0" Grid.Column="2" Text="广东" Classes="xyui-text-body" />
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="区域类型" Classes="xyui-text-label" />
+          <TextBlock Grid.Row="1" Grid.Column="2" Text="Region" Classes="xyui-text-body" />
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="顶点数量" Classes="xyui-text-label" />
+          <TextBlock Grid.Row="2" Grid.Column="2" Text="28" Classes="xyui-text-mono" />
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="面积" Classes="xyui-text-label" />
+          <TextBlock Grid.Row="3" Grid.Column="2" Text="12,482 km²" Classes="xyui-text-mono" />
+          <TextBlock Grid.Row="4" Grid.Column="0" Text="状态" Classes="xyui-text-label" />
+          <TextBlock Grid.Row="4" Grid.Column="2" Text="已保存" Classes="xyui-text-body" />
+        </Grid>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

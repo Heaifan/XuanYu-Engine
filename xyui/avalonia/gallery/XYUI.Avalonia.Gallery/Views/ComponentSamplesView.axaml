@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.ComponentSamplesView">
+  <StackPanel Spacing="12">
+    <TextBlock Text="XYUI-2 · Buttons &amp; Inputs" Classes="xyui-heading-panel" />
+    <TextBlock Text="真实 Avalonia 类型、Canonical 变体与原生状态入口" Classes="xyui-text-caption" />
+    <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="{DynamicResource XY.Panel.Padding}">
+      <StackPanel Spacing="8">
+        <TextBlock Text="XY.Button / XY.IconButton / XY.ToggleButton" Classes="xyui-text-section" />
+        <WrapPanel>
+          <c:XYButton Margin="0,0,8,0" Content="Primary" Variant="Primary" ToolTip.Tip="XY.Button.Primary" />
+          <c:XYButton Margin="0,0,8,0" Content="Secondary" Variant="Secondary" ToolTip.Tip="XY.Button.Secondary" />
+          <c:XYButton Margin="0,0,8,0" Content="Danger" Variant="Danger" ToolTip.Tip="XY.Button.Danger" />
+          <c:XYIconButton Margin="0,0,8,0" Content="＋" AutomationProperties.Name="创建" ToolTip.Tip="XY.IconButton" />
+          <c:XYToggleButton Content="网格吸附" IsChecked="True" ToolTip.Tip="XY.ToggleButton" />
+        </WrapPanel>
+      </StackPanel>
+    </Border>
+    <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="{DynamicResource XY.Panel.Padding}">
+      <StackPanel Spacing="8">
+        <TextBlock Text="XY.Checkbox / XY.TextField" Classes="xyui-text-section" />
+        <c:XYCheckbox Content="显示网格" IsChecked="True" />
+        <c:XYTextField PlaceholderText="输入对象名称" Text="示例对象" ToolTip.Tip="XY.TextField" />
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

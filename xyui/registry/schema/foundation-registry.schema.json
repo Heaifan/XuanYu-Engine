@@ -1,0 +1,285 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://xuanyu.local/xyui/foundation-registry.schema.json",
+  "title": "XYUI Foundation Canonical Registry Schema",
+  "description": "XYUI-A2-R1：XYUI Foundation Registry 的机器结构定义。用于把 44 项 CONFIRMED_APPROVED Foundation Decisions 表达为 Canonical Machine Source of Truth。本 Schema 只定义结构；44 项正式录入属 A2-R3。",
+  "type": "object",
+  "required": ["registry_version", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "registry_version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/foundation_item" }
+    }
+  },
+  "definitions": {
+    "foundation_item": {
+      "type": "object",
+      "required": ["id", "source", "category", "status", "engineering_mapping"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^XYUI\\.Foundation\\.[A-Za-z][A-Za-z0-9.]+$",
+          "description": "Canonical ID，例如 XYUI.Foundation.Density"
+        },
+        "source": { "$ref": "#/definitions/provenance" },
+        "category": {
+          "type": "string",
+          "enum": [
+            "foundation-principle",
+            "foundation-color",
+            "foundation-typography",
+            "foundation-spacing",
+            "foundation-sizing",
+            "foundation-radius",
+            "foundation-border",
+            "foundation-surface",
+            "foundation-shadow",
+            "foundation-opacity",
+            "foundation-icon",
+            "foundation-layout",
+            "foundation-panel",
+            "foundation-alignment",
+            "foundation-density",
+            "foundation-interaction",
+            "foundation-focus",
+            "foundation-hit-target",
+            "foundation-motion",
+            "foundation-zindex",
+            "foundation-scroll",
+            "foundation-dnd",
+            "foundation-resize",
+            "foundation-cursor",
+            "foundation-tooltip",
+            "foundation-naming",
+            "foundation-a11y",
+            "foundation-dpi"
+          ],
+          "description": "与 R1 Evidence type 一致的分类体系"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["ACTIVE", "DEPRECATED", "SUPERSEDED"],
+          "description": "Registry 生命周期状态；与 decision_status（来源裁决）正交"
+        },
+        "engineering_mapping": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/engineering_mapping" }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["rule_id", "text"],
+            "additionalProperties": false,
+            "properties": {
+              "rule_id": { "type": "string" },
+              "text": { "type": "string" },
+              "evidence_refs": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "反查 R1 Evidence（XYUI0-x@L行号）"
+              }
+            }
+          }
+        },
+        "tokens": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/token_entry" }
+        },
+        "relationships": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/relationship" }
+        },
+        "implementation": { "$ref": "#/definitions/implementation" },
+        "acceptance": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/acceptance_rule" }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source_id", "item_id", "decision_id", "decision_status", "evidence_refs"],
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "const": "XYUI-SOURCE-000",
+          "description": "Immutable Design Evidence Source"
+        },
+        "item_id": {
+          "type": "string",
+          "pattern": "^XYUI0-0\\.[0-9]+(-[A-I])?$",
+          "description": "XYUI0 规范项编号（含 0.2-A~I 子节）"
+        },
+        "decision_id": {
+          "type": "string",
+          "description": "A1-R2 Decision Classification 的条目引用（同 item_id）"
+        },
+        "decision_status": {
+          "type": "string",
+          "enum": ["CONFIRMED_APPROVED", "PROBABLE_APPROVED", "UNRESOLVED", "CONFLICT", "HISTORICAL_ONLY"],
+          "description": "A1-R2 五态；与 registry status、source_quality 正交"
+        },
+        "source_quality": {
+          "type": "string",
+          "enum": ["CLEAR", "SOURCE_FORMATTING_DEFECT"],
+          "description": "Source 文件质量标记；SFD ≠ UNRESOLVED"
+        },
+        "source_defect_ref": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^XYUI-SFD-\\d{3}$" },
+          "description": "指向 R1 的 SOURCE_FORMATTING_DEFECT 登记（如 XYUI-SFD-001）"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "每条 Canonical 内容必须可反查 R1 Evidence（XYUI0-x@L行号）"
+        }
+      }
+    },
+    "engineering_mapping": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["TOKEN", "COMPONENT_RULE", "STATE", "INTERACTION_CONTRACT", "ACCEPTANCE_RULE", "POLICY"],
+          "description": "0.1 P8 的工程对象映射 + POLICY（治理规则）"
+        },
+        "note": {
+          "type": "string",
+          "description": "该映射在本项中承担的职责说明"
+        }
+      }
+    },
+    "token_entry": {
+      "type": "object",
+      "required": ["token_id", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "token_id": {
+          "type": "string",
+          "pattern": "^XY\\.[A-Za-z][A-Za-z0-9_.]+$",
+          "description": "如 XY.Density.Compact.TreeRow"
+        },
+        "value": {
+          "type": ["string", "number"],
+          "description": "如 \"28 DIP\" / \"#F1F4F6\" / 0.48"
+        },
+        "relation": {
+          "type": "string",
+          "enum": ["canonical", "alias", "maps_to", "overrides", "derived_from"],
+          "description": "Token 间关系。alias/maps_to 指目标 token_id 为本值的 Canonical Source（防双真值漂移）"
+        },
+        "relation_target": {
+          "type": "string",
+          "pattern": "^XY\\.[A-Za-z][A-Za-z0-9_.]+$",
+          "description": "alias/maps_to/overrides/derived_from 时的目标 Token"
+        },
+        "note": {
+          "type": "string",
+          "description": "规范化说明（如 SFD 语义裁定来源）"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "if": {
+        "properties": { "relation": { "enum": ["alias", "maps_to", "overrides", "derived_from"] } },
+        "required": ["relation"]
+      },
+      "then": { "required": ["relation_target"] }
+    },
+    "relationship": {
+      "type": "object",
+      "required": ["type", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["canonical", "alias", "maps_to", "overrides", "derived_from", "related_to", "child_of"],
+          "description": "Item 级关系；child_of 表达父子层级（单向，反向由查询计算）；本轮不得正式裁定所有关系（A2-R2/R3 处理）"
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^XYUI\\.Foundation\\.[A-Za-z][A-Za-z0-9.]+$"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PROPOSED", "CONFIRMED"],
+          "default": "PROPOSED",
+          "description": "PROPOSED=本轮仅记录候选关系；CONFIRMED=已裁定（A2-R2 后）"
+        },
+        "note": {
+          "type": "string",
+          "description": "关系说明（如 alias 方向待裁定的提示）"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "required": ["mapping", "tuning_required"],
+      "additionalProperties": false,
+      "properties": {
+        "mapping": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "工程落点（如 Avalonia Theme / XAML Resource / C# static class），A2-R4 前可为空"
+        },
+        "tuning_required": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["parameter", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "parameter": {
+                "type": "string",
+                "description": "如 XY.Density.Auto.EnterThreshold"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["IMPLEMENTATION_TUNING_REQUIRED", "RESOLVED"],
+                "description": "设计机制已 APPROVED 但实现参数需调优；不得因此把 Decision 改 UNRESOLVED"
+              },
+              "note": { "type": "string" },
+              "evidence_refs": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "acceptance_rule": {
+      "type": "object",
+      "required": ["rule_id", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": { "type": "string" },
+        "text": { "type": "string" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "registry_id": "XYUI.Foundation",
+  "schema_version": "0.1.0",
+  "item_count": 44,
+  "source_id": "XYUI-SOURCE-000",
+  "source_sha256": "e564a4b4bffc518b5df3144ca5834995ce7abd6b649853f2fa845afa3658d0b6",
+  "registry_sha256": "748a0ffaf885a7b3ba1d090257301fc2496eca05b88e9778579d42af7d828a71",
+  "identity_count": 44,
+  "relationship_count": 35,
+  "token_mapping_count": 6,
+  "status": "VALIDATED (AMENDED A/B 2026-08-13)",
+  "validated_commit": "db425762",
+  "validation": "xyui/registry/foundation/validation-report.md",
+  "amendments": [
+    {
+      "amendment_id": "AMEND-A",
+      "date": "2026-08-13",
+      "approved_by": "user",
+      "scope": "XYUI.Foundation.InteractionState",
+      "semantics": "ComposeMode=Single 解释为每视觉通道单一 Primary Owner；Layering=Forbidden 限制为禁同一 Primary Channel 多状态争抢；允许 Selected/Hover/Focus/Dragging 跨通道合法组合；Render Priority: Hover>Selected；Visual Salience: Selected>Hover",
+      "source_doc": "xyui/governance/amendments.md"
+    },
+    {
+      "amendment_id": "AMEND-B",
+      "date": "2026-08-13",
+      "approved_by": "user",
+      "scope": "XYUI.Foundation.DragDrop",
+      "semantics": "Drag Entry 由 Handle 扩展为 Handle|DirectTarget；DirectTarget 仅在组件声明 DirectManipulation=Allowed 时成立，不等于 Anywhere Drag",
+      "source_doc": "xyui/governance/amendments.md"
+    }
+  ]
+}

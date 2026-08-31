@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.InteractionStatesView">
+  <StackPanel Spacing="{DynamicResource XY.Space.4}" Margin="{DynamicResource XY.Panel.Padding}">
+
+      <Border Classes="xyui-surface-panel" Padding="{DynamicResource XY.Panel.Padding}">
+        <StackPanel Spacing="{DynamicResource XY.Panel.SectionGap}">
+          <TextBlock Text="基础状态（悬停 / 按下 / 焦点）" Classes="xyui-text-section" />
+          <Button Content="默认按钮" Classes="xyui-interactive xyui-focusable" />
+          <TextBlock Text="移动指针到按钮观察悬停底色，按下观察按下底色，用 Tab 键观察焦点环" Classes="xyui-text-caption" />
+        </StackPanel>
+      </Border>
+
+      <Border Classes="xyui-surface-panel" Padding="{DynamicResource XY.Panel.Padding}">
+        <StackPanel Spacing="{DynamicResource XY.Panel.SectionGap}">
+          <TextBlock Text="焦点与选择" Classes="xyui-text-section" />
+          <TextBox Text="可聚焦输入框" Classes="xyui-interactive xyui-focusable" />
+          <ListBox SelectionMode="Single">
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable" Content="图层 A" />
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable" Content="区域数据集" />
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable" Content="道路主干线" />
+          </ListBox>
+          <TextBlock Text="点击列表项选择，Tab 后方向键移动焦点；选中状态保留背景；获得焦点时使用 Focus 边框；焦点退出后恢复 Selected 边框。" Classes="xyui-text-caption" />
+        </StackPanel>
+      </Border>
+
+      <Border Classes="xyui-surface-panel" Padding="{DynamicResource XY.Panel.Padding}">
+        <StackPanel Spacing="{DynamicResource XY.Panel.SectionGap}">
+          <TextBlock Text="勾选状态（Checked 不等于 Selected）" Classes="xyui-text-section" />
+          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Space.2}">
+            <ToggleButton Content="可见" Classes="xyui-interactive xyui-focusable xyui-checkable" />
+            <ToggleButton Content="锁定" Classes="xyui-interactive xyui-focusable xyui-checkable" />
+          </StackPanel>
+          <TextBlock Text="此处仅验证 :checked 状态能够正常触发。ToggleButton / Checkbox / Switch 的最终 Checked/On 视觉由各自组件 Canonical 决定。" Classes="xyui-text-caption" />
+        </StackPanel>
+      </Border>
+
+      <Border Classes="xyui-surface-panel" Padding="{DynamicResource XY.Panel.Padding}">
+        <StackPanel Spacing="{DynamicResource XY.Panel.SectionGap}">
+          <TextBlock Text="禁用状态（降级而非灰掉）" Classes="xyui-text-section" />
+          <Button Content="已禁用按钮" Classes="xyui-interactive xyui-focusable" IsEnabled="False" />
+          <TextBox Text="已禁用输入" Classes="xyui-interactive xyui-focusable" IsEnabled="False" />
+          <TextBlock Text="文字仍可阅读，不可交互语义明确，不与 Secondary Text 混淆" Classes="xyui-text-caption" />
+        </StackPanel>
+      </Border>
+
+      <Border Classes="xyui-surface-panel" Padding="{DynamicResource XY.Panel.Padding}">
+        <StackPanel Spacing="{DynamicResource XY.Panel.SectionGap}">
+          <TextBlock Text="状态组合实验区" Classes="xyui-text-section" />
+          <TextBlock Text="选中项悬停 → 悬停底色 + Selected 边框；获得焦点 → Selected 背景 + Focus 边框；焦点退出后恢复 Selected 边框。" Classes="xyui-text-caption" />
+          <ListBox SelectionMode="Multiple">
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable" Content="已选择 + 悬停" IsSelected="True" />
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable" Content="已选择 + 焦点" IsSelected="True" />
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable" Content="普通项" />
+          </ListBox>
+          <ToggleButton Content="已勾选 + 焦点" IsChecked="True" Classes="xyui-interactive xyui-focusable xyui-checkable" />
+        </StackPanel>
+      </Border>
+
+      <Border Classes="xyui-surface-panel" Padding="{DynamicResource XY.Panel.Padding}">
+        <StackPanel Spacing="{DynamicResource XY.Panel.Field.RowGap}">
+          <TextBlock Text="高密度编辑器示例" Classes="xyui-text-section" />
+          <ListBox SelectionMode="Single">
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="图层 A" Classes="xyui-text-body" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{DynamicResource XY.Space.2}">
+                  <TextBlock Text="可见" Classes="xyui-text-caption" />
+                  <TextBlock Text="锁定" Classes="xyui-text-caption" />
+                </StackPanel>
+              </Grid>
+            </ListBoxItem>
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="区域数据集" Classes="xyui-text-body" />
+                <TextBlock Grid.Column="1" Text="已保存" Classes="xyui-text-caption" />
+              </Grid>
+            </ListBoxItem>
+            <ListBoxItem Classes="xyui-interactive xyui-focusable xyui-selectable">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="道路主干线" Classes="xyui-text-body" />
+                <TextBlock Grid.Column="1" Text="已选择" Classes="xyui-text-caption" />
+              </Grid>
+            </ListBoxItem>
+          </ListBox>
+          <TextBlock Text="以上为玄域编辑器未来高密度列表行的交互状态预览" Classes="xyui-text-caption" />
+        </StackPanel>
+      </Border>
+
+  </StackPanel>
+</UserControl>

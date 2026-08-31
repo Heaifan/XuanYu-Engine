@@ -1,0 +1,453 @@
+{
+  "map_version": "0.1.0",
+  "dialect": "JSON Schema Draft 7",
+  "note": "Source Item ID（XYUI0-x）与 Canonical ID（XYUI.Foundation.*）双身份并存；Display Name 可变，Canonical ID 稳定不变",
+  "items": [
+    {
+      "source_item_id": "XYUI0-0.1",
+      "canonical_id": "XYUI.Foundation.DesignPrinciples",
+      "display_name": "Design Principles｜设计原则",
+      "category": "foundation-principle",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.10",
+      "canonical_id": "XYUI.Foundation.Border",
+      "display_name": "Border｜边框系统",
+      "category": "foundation-border",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.11",
+      "canonical_id": "XYUI.Foundation.Divider",
+      "display_name": "Divider｜分割线规则",
+      "category": "foundation-border",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.12",
+      "canonical_id": "XYUI.Foundation.SurfaceRole",
+      "display_name": "Surface｜表面层级规则",
+      "category": "foundation-surface",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.13",
+      "canonical_id": "XYUI.Foundation.Shadow",
+      "display_name": "Shadow｜阴影系统",
+      "category": "foundation-shadow",
+      "source_quality": "SOURCE_FORMATTING_DEFECT",
+      "source_defect_ref": [
+        "XYUI-SFD-001"
+      ],
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.14",
+      "canonical_id": "XYUI.Foundation.Opacity",
+      "display_name": "Opacity｜透明度系统",
+      "category": "foundation-opacity",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.15",
+      "canonical_id": "XYUI.Foundation.Icon",
+      "display_name": "Icon｜图标系统",
+      "category": "foundation-icon",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.16",
+      "canonical_id": "XYUI.Foundation.Layout",
+      "display_name": "Layout｜整体布局骨架",
+      "category": "foundation-layout",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.17",
+      "canonical_id": "XYUI.Foundation.Panel",
+      "display_name": "Panel｜面板结构",
+      "category": "foundation-panel",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.18",
+      "canonical_id": "XYUI.Foundation.Alignment",
+      "display_name": "Alignment｜对齐规则",
+      "category": "foundation-alignment",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.19",
+      "canonical_id": "XYUI.Foundation.Density",
+      "display_name": "Density｜密度策略",
+      "category": "foundation-density",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2",
+      "canonical_id": "XYUI.Foundation.ColorSystem",
+      "display_name": "Color System｜色彩系统（总纲）",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-A",
+      "canonical_id": "XYUI.Foundation.ColorSystem.CorePalette",
+      "display_name": "Color System｜核心色彩方向",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-B",
+      "canonical_id": "XYUI.Foundation.ColorSystem.TextColor",
+      "display_name": "Text Color｜文字颜色层级",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-C",
+      "canonical_id": "XYUI.Foundation.ColorSystem.Surface",
+      "display_name": "Surface｜背景层级",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-D",
+      "canonical_id": "XYUI.Foundation.ColorSystem.BorderDivider",
+      "display_name": "Border / Divider｜边框与分割线",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-E",
+      "canonical_id": "XYUI.Foundation.ColorSystem.Accent",
+      "display_name": "Accent｜强调色层级",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-F",
+      "canonical_id": "XYUI.Foundation.ColorSystem.InteractionStateColor",
+      "display_name": "Interaction States｜交互状态色",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-G",
+      "canonical_id": "XYUI.Foundation.ColorSystem.SemanticColor",
+      "display_name": "Semantic Colors｜语义色",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-H",
+      "canonical_id": "XYUI.Foundation.ColorSystem.DisabledReadOnlyLocked",
+      "display_name": "Disabled / ReadOnly / Locked｜禁用、只读、锁定",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.2-I",
+      "canonical_id": "XYUI.Foundation.ColorSystem.EditorColor",
+      "display_name": "Editor Colors｜编辑器专用颜色",
+      "category": "foundation-color",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.20",
+      "canonical_id": "XYUI.Foundation.InteractionState",
+      "display_name": "Interaction State｜交互状态规则",
+      "category": "foundation-interaction",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.21",
+      "canonical_id": "XYUI.Foundation.Focus",
+      "display_name": "Focus｜焦点规则",
+      "category": "foundation-focus",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.22",
+      "canonical_id": "XYUI.Foundation.HitTarget",
+      "display_name": "Hit Target｜点击 / 抓取热区",
+      "category": "foundation-hit-target",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.23",
+      "canonical_id": "XYUI.Foundation.Motion",
+      "display_name": "Motion｜动效规则",
+      "category": "foundation-motion",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.24",
+      "canonical_id": "XYUI.Foundation.ZIndex",
+      "display_name": "Z-Index｜层级与叠放顺序",
+      "category": "foundation-zindex",
+      "source_quality": "SOURCE_FORMATTING_DEFECT",
+      "source_defect_ref": [
+        "XYUI-SFD-003"
+      ],
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.25",
+      "canonical_id": "XYUI.Foundation.Scroll",
+      "display_name": "Scroll｜滚动规则",
+      "category": "foundation-scroll",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.26",
+      "canonical_id": "XYUI.Foundation.DragDrop",
+      "display_name": "Drag & Drop｜拖放规则",
+      "category": "foundation-dnd",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.27",
+      "canonical_id": "XYUI.Foundation.ResizeSplitter",
+      "display_name": "Resize / Splitter｜面板缩放与分隔条",
+      "category": "foundation-resize",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.28",
+      "canonical_id": "XYUI.Foundation.Cursor",
+      "display_name": "Cursor｜鼠标指针语义",
+      "category": "foundation-cursor",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.29",
+      "canonical_id": "XYUI.Foundation.Tooltip",
+      "display_name": "Tooltip｜轻量提示规则",
+      "category": "foundation-tooltip",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.3",
+      "canonical_id": "XYUI.Foundation.Typography",
+      "display_name": "Typography｜字体系统（总纲）",
+      "category": "foundation-typography",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.3-A",
+      "canonical_id": "XYUI.Foundation.Typography.FontFamily",
+      "display_name": "Font Family｜字体家族",
+      "category": "foundation-typography",
+      "source_quality": "SOURCE_FORMATTING_DEFECT",
+      "source_defect_ref": [
+        "XYUI-SFD-002"
+      ],
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.3-B",
+      "canonical_id": "XYUI.Foundation.Typography.FontWeight",
+      "display_name": "Font Weight｜字重体系",
+      "category": "foundation-typography",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.3-C",
+      "canonical_id": "XYUI.Foundation.Typography.FontSize",
+      "display_name": "Font Size｜字号等级",
+      "category": "foundation-typography",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.30",
+      "canonical_id": "XYUI.Foundation.TextNaming",
+      "display_name": "Text & Naming｜文本与命名规范",
+      "category": "foundation-naming",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.31",
+      "canonical_id": "XYUI.Foundation.Accessibility",
+      "display_name": "Accessibility｜可访问性",
+      "category": "foundation-a11y",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.32",
+      "canonical_id": "XYUI.Foundation.DpiLocalization",
+      "display_name": "Localization / DPI｜本地化与 DPI",
+      "category": "foundation-dpi",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.4",
+      "canonical_id": "XYUI.Foundation.LineHeight",
+      "display_name": "Line Height｜行高",
+      "category": "foundation-typography",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.5",
+      "canonical_id": "XYUI.Foundation.LetterSpacing",
+      "display_name": "Letter Spacing｜字间距",
+      "category": "foundation-typography",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.6",
+      "canonical_id": "XYUI.Foundation.Spacing",
+      "display_name": "Spacing｜间距系统",
+      "category": "foundation-spacing",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.7",
+      "canonical_id": "XYUI.Foundation.Indentation",
+      "display_name": "Indentation｜缩进系统",
+      "category": "foundation-spacing",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.8",
+      "canonical_id": "XYUI.Foundation.Sizing",
+      "display_name": "Sizing｜基础尺寸系统",
+      "category": "foundation-sizing",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    },
+    {
+      "source_item_id": "XYUI0-0.9",
+      "canonical_id": "XYUI.Foundation.Radius",
+      "display_name": "Radius｜圆角系统",
+      "category": "foundation-radius",
+      "source_quality": "CLEAR",
+      "source_defect_ref": null,
+      "decision_status": "CONFIRMED_APPROVED",
+      "decision_ref": "xyui/audit/XYUI0/decision-classification.json"
+    }
+  ]
+}

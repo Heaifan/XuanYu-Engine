@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:XYUI.Avalonia.Gallery"
+             x:Class="XYUI.Avalonia.Gallery.Views.ShapeView"
+             x:DataType="g:ShapeViewModel">
+  <ScrollViewer>
+    <ItemsControl ItemsSource="{Binding Sections}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="g:ShapeSection">
+          <StackPanel Margin="0,0,0,16">
+            <TextBlock Text="{Binding Title}" Classes="xyui-text-section" />
+            <ItemsControl ItemsSource="{Binding Items}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate><StackPanel /></ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="g:ShapeItem">
+                  <Border Margin="0,4,0,0" Classes="xyui-border-subtle">
+                    <Grid ColumnDefinitions="Auto,Auto,*" Margin="10,6">
+                      <TextBlock Text="{Binding TokenId}" Grid.Column="0" Classes="xyui-text-code"
+                                 Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
+                      <TextBlock Text="{Binding Value}" Grid.Column="1" Margin="16,0,0,0"
+                                 Classes="xyui-text-code"
+                                 Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+                      <TextBlock Text="{Binding Note}" Grid.Column="2" Margin="16,0,0,0"
+                                 Classes="xyui-text-body"
+                                 Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </ScrollViewer>
+</UserControl>
