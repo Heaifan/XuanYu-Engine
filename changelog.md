@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.28.15-rz · XYUI-3-09～12 · 视觉修订与交互解冻（2026-08-31 12:00:19 +08:00）
+
+- 目标：按用户真机截图修复 3.09 / 3.10 的双底边与文字垂直偏移，并在 3.09～3.12 既定组件边界内开始真实交互，不扩张到 Dock Engine、业务路由、虚拟化或拖放系统。
+- 视觉：3.09 取消页签栏外框的重复底边，页签内容按 37 DIP 填满并垂直居中；3.10 由 `XYDockTab` 独占 Selected Accent，内层真实 `XYTab` 明确关闭自己的 Accent，彻底消除双线，同时保持文本垂直居中。
+- 交互：TabBar 支持前后按钮、滚轮横向滚动、Overflow Popup 选页和 New 请求；DockTabs 支持选择、关闭与 Grip 同栏拖动排序；Breadcrumb 支持鼠标/Enter/Space 导航和 Dropdown 请求；TreeNavigation 支持展开收起、单选与 Up/Down/Left/Right 键盘导航。
+- 复用与边界：继续复用 `XYTabs` / `XYTab` / `XYMenu` / `XYMenuItem` / `XYIcon` / `XYSeparator`；未创建第二套页签、菜单、图标或树模型；Breadcrumb 自动中间折叠、Dock Engine、Tree 虚拟化与跨树拖放仍不在本轮范围。
+- 验证：解决方案构建 0 警告、0 错误；XYUI 项目构建 0 警告、0 错误；聚焦测试 8/8、`XYUI.Avalonia.Tests` 299/299、`XuanYu.Core.Tests` 339/339、`XuanYu.WarCore.Tests` 22/22、`XuanYu.World.Tests` 1286/1286 通过；ARCH-A、WarCore Guard、5+100 与 `git diff --check` 通过；运行中 Gallery 锁定 Debug 输出，因此正式验证使用不受锁影响的 `Codex` 配置与隔离解决方案输出，未中断用户窗口。
+- 状态：`UI + INTERACTION IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE / AWAITING USER INTERACTION ACCEPTANCE`；自动门禁不替代真机验收，未宣布 CLOSED。
+- 版本：`v0.2.28.15-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+- Hash：实现提交 `ca9e65c8`；治理对账由本条目所在提交承载。
+
 ## v0.2.28.14-rz · XYUI-3-09～12 · Compact Navigation UI（2026-08-31 11:29:36 +08:00）
 
 - 目标：按用户提供的四份 SVG 参考完成 TabBar、DockTabs、Breadcrumb、TreeNavigation 的 UI-first 实现，并保持 Light / Dark 语义资源一致。

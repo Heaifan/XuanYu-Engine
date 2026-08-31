@@ -1773,21 +1773,32 @@
    │  │     │     │     ├─ XYTab.cs  # 实现对应模块的 C# 职责。
    │  │     │     │     └─ XYTabs.cs  # 实现对应模块的 C# 职责。
    │  │     │     ├─ XYUI3-09-TabBar/  # 组织该模块下的正式文件。
+   │  │     │     │  ├─ Interaction/  # 集中页签栏滚动、溢出与新增请求交互。
+   │  │     │     │  │  └─ XYTabBar.Interaction.cs  # 实现按钮和滚轮滚动、溢出选页及新增请求。
    │  │     │     │  └─ UI/  # 组织该模块下的正式文件。
-   │  │     │     │     ├─ XYTabBar.cs  # 组合真实页签视口与固定页签栏操作槽。
-   │  │     │     │     └─ XYTabBarStyles.cs  # 定义页签栏与停靠页签的语义样式。
+   │  │     │     │     ├─ XYTabBar.cs  # 组合真实页签视口、溢出 Popup 与固定操作槽。
+   │  │     │     │     └─ XYTabBarStyles.cs  # 定义单底边页签栏与停靠页签语义样式。
    │  │     │     ├─ XYUI3-10-DockTabs/  # 组织该模块下的正式文件。
+   │  │     │     │  ├─ Interaction/  # 集中停靠页签选择、关闭与同栏排序交互。
+   │  │     │     │  │  ├─ XYDockTab.Drag.cs  # 将 Drag Grip 指针释放位置转换为排序请求。
+   │  │     │     │  │  └─ XYDockTabs.Interaction.cs  # 管理单选、关闭、排序及对应事件。
    │  │     │     │  └─ UI/  # 组织该模块下的正式文件。
-   │  │     │     │     ├─ XYDockTab.cs  # 为真实页签组合停靠握柄、分隔线与选中强调。
-   │  │     │     │     └─ XYDockTabs.cs  # 承载一组紧凑停靠页签。
+   │  │     │     │     ├─ XYDockTab.cs  # 为真实页签组合停靠握柄、分隔线与唯一选中强调。
+   │  │     │     │     └─ XYDockTabs.cs  # 承载并重建可排序的紧凑停靠页签集合。
    │  │     │     ├─ XYUI3-11-Breadcrumb/  # 组织该模块下的正式文件。
+   │  │     │     │  ├─ Interaction/  # 集中路径导航和下拉请求交互。
+   │  │     │     │  │  ├─ XYBreadcrumb.Interaction.cs  # 管理 Current 单选与 Dropdown 请求转发。
+   │  │     │     │  │  └─ XYBreadcrumbItem.Interaction.cs  # 提供鼠标及 Enter/Space 调用入口。
    │  │     │     │  └─ UI/  # 组织该模块下的正式文件。
    │  │     │     │     ├─ XYBreadcrumb.cs  # 组合文字路径项与矢量层级分隔符。
    │  │     │     │     ├─ XYBreadcrumbItem.cs  # 表达普通、折叠与当前位置路径项视觉。
    │  │     │     │     └─ XYBreadcrumbTreeStyles.cs  # 定义面包屑与树形导航的紧凑语义样式。
    │  │     │     └─ XYUI3-12-TreeNavigation/  # 组织该模块下的正式文件。
+   │  │     │        ├─ Interaction/  # 集中树节点展开、选择与键盘导航交互。
+   │  │     │        │  ├─ XYTreeNavigation.Interaction.cs  # 管理单选及方向键父子和同级导航。
+   │  │     │        │  └─ XYTreeNode.Interaction.cs  # 提供 Chevron、行点击及键盘请求入口。
    │  │     │        └─ UI/  # 组织该模块下的正式文件。
-   │  │     │           ├─ XYTreeNavigation.cs  # 承载紧凑树形导航节点集合。
+   │  │     │           ├─ XYTreeNavigation.cs  # 按展开状态投影紧凑树形导航可见节点。
    │  │     │           └─ XYTreeNode.cs  # 绘制树节点、矢量图标与默认或活动祖先 Guide。
    │  │     ├─ Foundation/  # 组织该模块下的正式文件。
    │  │     │  ├─ XyuiColorToken.cs  # Canonical 颜色 token 记录（id + Light/Dark 成对解析与 Color 转换）。
@@ -1883,7 +1894,7 @@
    │  │     ├─ XYUI2TimePickerTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2VectorPropertyLayoutTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3CompactInteractionTests.cs  # 实现对应模块的 C# 职责。
-   │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航的真实复用、矢量、层级与选中语义。
+   │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航复用、单底边、垂直居中及交互状态机。
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XyuiBatchTestHost.cs  # 实现对应模块的 C# 职责。
