@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.24-rz · XYUI-3-14 · Steps SVG 坐标重构（2026-08-31 15:45:00 +08:00）
+
+- 目标：严格对齐附件 SVG 的 Marker、Connector 与 Label 坐标关系。
+- 变化：横向 Marker 使用 32/34/30 DIP 圆形规格并共用 Y 轴；纵向固定 58 DIP 标记列、动态补偿半径使所有中心 X=42，文本置于第二列；纵向步距固定 70 DIP。
+- 验证：待本轮测试完成；真机视觉验收待用户确认。
+- 状态：XYUI-3-14 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；不启动 3.17。
+- 版本：`v0.2.28.24-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+
 ## v0.2.28.23-rz · XYUI-3-14 · Steps 纵向标记列重修（2026-08-31 15:25:00 +08:00）
 
 - 目标：修复纵向节点整行居中导致 Marker 随文本长度漂移的问题。
