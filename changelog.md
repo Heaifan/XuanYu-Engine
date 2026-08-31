@@ -7,7 +7,7 @@
 - 验证：静态引用修复完成；本环境无 .NET SDK，未执行 Build/Test。
 - 状态：等待用户重新运行 Gallery Build。
 - 版本：`v0.2.28.38-rz` 已同步到四处版本文件。
-- Hash：待提交。
+- Hash：`70e5948f`。
 
 ## v0.2.28.37-rz · XYUI-3-17 · CommandBar Divider 与 More Surface 收口（2026-09-01 09:28:00 +08:00）
 
