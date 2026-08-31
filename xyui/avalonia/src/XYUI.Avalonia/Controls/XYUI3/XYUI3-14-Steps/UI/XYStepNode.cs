@@ -22,7 +22,13 @@ public sealed class XYStepNode : Border
         _panel.HorizontalAlignment = HorizontalAlignment.Center; _panel.VerticalAlignment = VerticalAlignment.Center; _panel.Spacing = 8;
         _panel.Children.Add(Marker); _panel.Children.Add(_label); Child = _panel; PointerPressed += (_, _) => { if (CanNavigate) NavigationRequested?.Invoke(this, EventArgs.Empty); }; ApplyState();
     }
-    internal void SetVertical(bool vertical) => _panel.Orientation = vertical ? Orientation.Horizontal : Orientation.Vertical;
+    internal void SetVertical(bool vertical)
+    {
+        _panel.Orientation = vertical ? Orientation.Horizontal : Orientation.Vertical;
+        _panel.HorizontalAlignment = vertical ? HorizontalAlignment.Stretch : HorizontalAlignment.Center;
+        Marker.HorizontalAlignment = vertical ? HorizontalAlignment.Left : HorizontalAlignment.Center;
+        _label.HorizontalAlignment = vertical ? HorizontalAlignment.Left : HorizontalAlignment.Center;
+    }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e) { base.OnPropertyChanged(e); if (e.Property == StateProperty || e.Property == CanNavigateProperty) ApplyState(); }
     void ApplyState()
     {

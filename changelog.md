@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.23-rz · XYUI-3-14 · Steps 纵向标记列重修（2026-08-31 15:25:00 +08:00）
+
+- 目标：修复纵向节点整行居中导致 Marker 随文本长度漂移的问题。
+- 变化：纵向节点改为固定左侧标记位与独立文本位，文本垂直居中；纵向行高改为内容自适应，连接线继续绑定 Marker 几何。
+- 验证：待本轮测试完成；真机视觉验收待用户确认。
+- 状态：XYUI-3-14 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；不启动 3.17。
+- 版本：`v0.2.28.23-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+
 ## v0.2.28.22-rz · XYUI-3-14 · Steps 轨道布局重构（2026-08-31 15:10:00 +08:00）
 
 - 目标：修复横向连接线漂移、纵向标记列不齐和自适应反复重建造成的布局问题。
