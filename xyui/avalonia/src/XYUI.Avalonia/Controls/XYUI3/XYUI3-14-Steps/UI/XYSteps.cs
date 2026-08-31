@@ -28,7 +28,7 @@ public sealed class XYSteps : Border
     }
     void BuildHorizontal()
     {
-        for (var i = 0; i < Items.Count; i++) { _cells.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star)); Items[i].SetVertical(false); Grid.SetColumn(Items[i], i); Items[i].HorizontalAlignment = HorizontalAlignment.Center; _cells.Children.Add(Items[i]); }
+        for (var i = 0; i < Items.Count; i++) { _cells.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star)); Items[i].SetVertical(false); Grid.SetColumn(Items[i], i); Items[i].HorizontalAlignment = HorizontalAlignment.Stretch; _cells.Children.Add(Items[i]); }
         for (var i = 0; i + 1 < Items.Count; i++) _connectors.Add(AddConnector());
     }
     void BuildVertical()

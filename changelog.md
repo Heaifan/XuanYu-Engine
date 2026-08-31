@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.25-rz · XYUI-3-14 · Steps Gallery 坐标复核（2026-08-31 16:10:00 +08:00）
+
+- 目标：修复 Gallery 中横向标签挤连、纵向标签居中漂移及预览宽度不足。
+- 变化：横向节点填充等分列并固定 Gallery 宽度 760；纵向标签恢复左对齐并加 SVG 对应 16 DIP 间距，预览宽度 300。
+- 验证：待本轮测试完成；真机视觉验收待用户确认。
+- 状态：XYUI-3-14 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；不启动 3.17。
+- 版本：`v0.2.28.25-rz` 已同步到四处版本文件。
+
 ## v0.2.28.24-rz · XYUI-3-14 · Steps SVG 坐标重构（2026-08-31 15:45:00 +08:00）
 
 - 目标：严格对齐附件 SVG 的 Marker、Connector 与 Label 坐标关系。
