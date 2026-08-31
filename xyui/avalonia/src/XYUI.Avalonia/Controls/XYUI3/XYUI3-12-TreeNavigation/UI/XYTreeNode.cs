@@ -10,6 +10,7 @@ public sealed partial class XYTreeNode : Border
     int _depth;
     int _activeGuideDepth;
     bool _selected;
+    bool _focused;
     bool _hasChildren;
     bool _expanded;
     XyuiVectorIcon _icon = XyuiVectorIcon.Section;
@@ -17,6 +18,7 @@ public sealed partial class XYTreeNode : Border
     public int Depth { get => _depth; set { _depth = Math.Max(0, value); Build(); } }
     public int ActiveGuideDepth { get => _activeGuideDepth; set { _activeGuideDepth = Math.Max(0, value); Build(); } }
     public bool IsSelected { get => _selected; set { _selected = value; Build(); } }
+    public bool IsFocusedNode { get => _focused; set { _focused = value; Build(); } }
     public bool HasChildren { get => _hasChildren; set { _hasChildren = value; Build(); } }
     public bool IsExpanded { get => _expanded; set { _expanded = value; Build(); } }
     public XyuiVectorIcon Icon { get => _icon; set { _icon = value; Build(); } }
@@ -25,7 +27,7 @@ public sealed partial class XYTreeNode : Border
 
     void Build()
     {
-        Classes.Set("xyui-tree-selected", IsSelected);
+        Classes.Set("xyui-tree-selected", IsSelected); Classes.Set("xyui-tree-focused", IsFocusedNode);
         var outer = new Grid { ColumnDefinitions = new ColumnDefinitions($"{Depth * XyuiCompactNavigationTokens.TreeIndent},*") };
         var guides = Guides(); outer.Children.Add(guides);
         var surface = Surface(); outer.Children.Add(surface); Grid.SetColumn(surface, 1);

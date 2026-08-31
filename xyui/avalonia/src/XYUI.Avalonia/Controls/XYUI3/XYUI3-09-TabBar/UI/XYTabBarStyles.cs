@@ -27,7 +27,8 @@ public static partial class XyuiComponentStyles
         var innerDivider = new Style(x => x.OfType<XYTab>().Class("xyui-dock-tab-inner").Descendant().OfType<Border>().Class("xyui-tab-divider")); innerDivider.Setters.Add(new Setter(Visual.IsVisibleProperty, false)); styles.Add(innerDivider);
         var grip = new Style(x => x.OfType<XYIcon>().Class("xyui-dock-grip")); grip.Setters.Add(new Setter(Control.WidthProperty, 12d)); grip.Setters.Add(new Setter(Control.HeightProperty, 12d)); Brush(grip, XYIcon.StrokeProperty, "XY.Brush.Text.Tertiary"); styles.Add(grip);
         var gripHover = new Style(x => x.OfType<XYDockTab>().Class(":pointerover").Descendant().OfType<XYIcon>().Class("xyui-dock-grip")); Brush(gripHover, XYIcon.StrokeProperty, "XY.Brush.Text.Secondary"); styles.Add(gripHover);
-        var accent = new Style(x => x.OfType<Border>().Class("xyui-dock-accent")); Brush(accent, Border.BackgroundProperty, "XY.Brush.Accent.Default"); accent.Setters.Add(new Setter(Border.HeightProperty, 3d)); styles.Add(accent);
+        var dragging = new Style(x => x.OfType<XYDockTab>().Class("xyui-dock-tab-dragging")); dragging.Setters.Add(new Setter(Border.OpacityProperty, 0.65)); styles.Add(dragging);
+        var indicator = new Style(x => x.OfType<Border>().Class("xyui-dock-drop-indicator")); Brush(indicator, Border.BackgroundProperty, "XY.Brush.Accent.Default"); styles.Add(indicator);
         var divider = new Style(x => x.OfType<XYSeparator>().Class("xyui-dock-divider")); divider.Setters.Add(new Setter(Border.MarginProperty, new Thickness(0, 7))); styles.Add(divider);
     }
 }

@@ -19,6 +19,9 @@ public sealed partial class XYTabBar
         _viewport.ScrollChanged += (_, _) => RefreshScrollState();
         LayoutUpdated += (_, _) => RefreshScrollState();
         Tabs.TabClosed += (_, _) => { CloseOverflow(); RefreshScrollState(); };
+        Tabs.SelectionChanged += (_, tab) => EnsureVisible(tab);
+        AttachedToVisualTree += (_, _) => RefreshScrollState();
+        DetachedFromVisualTree += (_, _) => CloseOverflow();
     }
 
     public void ScrollBy(double delta)
@@ -28,10 +31,20 @@ public sealed partial class XYTabBar
         RefreshScrollState();
     }
 
+    public void EnsureVisible(XYTab tab)
+    {
+        if (!Tabs.Items.Contains(tab)) return;
+        tab.BringIntoView();
+        var left = tab.Bounds.Left; var right = tab.Bounds.Right;
+        if (left < _viewport.Offset.X) ScrollBy(left - _viewport.Offset.X - 8);
+        else if (right > _viewport.Offset.X + _viewport.Viewport.Width) ScrollBy(right - (_viewport.Offset.X + _viewport.Viewport.Width) + 8);
+    }
+
     void OnWheel(object? sender, PointerWheelEventArgs e)
     {
-        if (Math.Abs(e.Delta.Y) < double.Epsilon) return;
-        ScrollBy(-e.Delta.Y * ScrollStep); e.Handled = true;
+        var delta = Math.Abs(e.Delta.X) > double.Epsilon ? e.Delta.X : e.Delta.Y;
+        if (Math.Abs(delta) < double.Epsilon) return;
+        ScrollBy(-delta * ScrollStep); e.Handled = true;
     }
 
     void ToggleOverflow()
@@ -46,7 +59,7 @@ public sealed partial class XYTabBar
     XYMenuItem TabMenuItem(XYTab tab)
     {
         var item = new XYMenuItem { Label = tab.Label, IsChecked = tab.IsSelected, CheckKind = XyuiMenuCheckKind.Radio };
-        item.SelectionRequested += (_, _) => { Tabs.Select(tab); tab.BringIntoView(); CloseOverflow(); };
+        item.SelectionRequested += (_, _) => { Tabs.Select(tab); EnsureVisible(tab); CloseOverflow(); };
         return item;
     }
 

@@ -15,6 +15,8 @@ public sealed partial class XYBreadcrumbItem : Border
     public bool IsCurrent { get => GetValue(IsCurrentProperty); set => SetValue(IsCurrentProperty, value); }
     public bool IsCollapsed { get => GetValue(IsCollapsedProperty); set => SetValue(IsCollapsedProperty, value); }
     public bool HasDropdown { get => GetValue(HasDropdownProperty); set => SetValue(HasDropdownProperty, value); }
+    public IReadOnlyList<string> DropdownOptions { get; set; } = [];
+    public IReadOnlyList<string> HiddenPathOptions { get; set; } = [];
 
     public XYBreadcrumbItem() { Classes.Add("xyui-breadcrumb-item"); Focusable = true; Build(); InitializeInteraction(); }
 
@@ -31,7 +33,7 @@ public sealed partial class XYBreadcrumbItem : Border
             return;
         }
         var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
-        panel.Children.Add(new TextBlock { Text = Label, Classes = { "xyui-breadcrumb-label" } });
+            panel.Children.Add(new TextBlock { Text = Label, Classes = { "xyui-breadcrumb-label" }, VerticalAlignment = VerticalAlignment.Center });
         if (HasDropdown) panel.Children.Add(new XYIcon { Icon = XyuiVectorIcon.ChevronDown, Size = XyuiIconSize.Tiny, Classes = { "xyui-breadcrumb-dropdown" } });
         Child = panel;
     }

@@ -1894,6 +1894,7 @@
    │  │     ├─ XYUI2TimePickerTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2VectorPropertyLayoutTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3CompactInteractionTests.cs  # 实现对应模块的 C# 职责。
+   │  │     ├─ XYUI3CompactNavigationInteractionTests.cs  # 验证紧凑导航新增页签、Popup 菜单与焦点/选择分离。
    │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航复用、单底边、垂直居中及交互状态机。
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。

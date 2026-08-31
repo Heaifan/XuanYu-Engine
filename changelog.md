@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.17-rz · XYUI-3-09～12 · 真实交互闭环修订（2026-08-31 12:32:00 +08:00）
+
+- 目标：按交接说明重做 3.09～3.12，消除重复 Accent、补齐滚动/Popup/拖拽/焦点状态闭环。
+- 变化：TabBar Gallery 改为 12 页签并支持新增选中定位；DockTabs 仅由内层 XYTab 持有 Accent，Grip 拖拽具备阈值、指示、释放与取消；Breadcrumb 接入 XYMenu Popup；TreeNavigation 分离 FocusedNode/SelectedNode，祖先 guide 由选中节点推导。
+- 验证：解决方案构建 0 Warning/0 Error；XYUI.Avalonia.Tests 302/302、Core 339/339、WarCore 22/22、World 1286/1286；ARCH-A guard、5+100 与 `git diff --check` PASS。
+- 状态：XYUI-3-09～12 READY FOR USER VISUAL/INTERACTION ACCEPTANCE；不宣布 CLOSED，不启动 3.13～16。
+- 版本：`v0.2.28.17-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+
 ## v0.2.28.16-rz · XYUI-3-10 · DockTab 真实单底边修订（2026-08-31 12:18:00 +08:00）
 
 - 目标：修复上一轮未真正隐藏的 3.10 内层选中底边；根因是 `ShowSelectedAccent=false` 变更后 `XYTab` 未重建其本地视觉树。

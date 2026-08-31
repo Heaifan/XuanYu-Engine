@@ -10,6 +10,7 @@ public sealed partial class XYDockTabs
         item.Tab.SelectionRequested -= OnSelectionRequested; item.Tab.SelectionRequested += OnSelectionRequested;
         item.Tab.CloseRequested -= OnCloseRequested; item.Tab.CloseRequested += OnCloseRequested;
         item.DropRequested -= OnDropRequested; item.DropRequested += OnDropRequested;
+        item.DragMoved -= OnDragMoved; item.DragMoved += OnDragMoved; item.DragCanceled -= OnDragCanceled; item.DragCanceled += OnDragCanceled;
     }
 
     void OnSelectionRequested(object? sender, EventArgs e)
@@ -27,8 +28,22 @@ public sealed partial class XYDockTabs
         var target = _items.Count - 1; var edge = 0d;
         for (var index = 0; index < _items.Count; index++)
         { edge += _items[index].Bounds.Width; if (x < edge) { target = index; break; } }
-        Move(item, target);
+        ClearIndicators(); Move(item, target);
     }
+
+    void OnDragMoved(object? sender, double x)
+    {
+        if (sender is not XYDockTab item) return;
+        var target = HitTarget(x, out var after); ClearIndicators(); if (target is not null && !ReferenceEquals(item, target)) target.SetDropIndicator(true, after);
+    }
+    void OnDragCanceled(object? sender, EventArgs e) => ClearIndicators();
+    XYDockTab? HitTarget(double x, out bool after)
+    {
+        after = false; var edge = 0d;
+        foreach (var item in _items) { var midpoint = edge + item.Bounds.Width / 2; if (x <= edge + item.Bounds.Width) { after = x > midpoint; return item; } edge += item.Bounds.Width; }
+        return _items.LastOrDefault();
+    }
+    void ClearIndicators() { foreach (var item in _items) item.SetDropIndicator(false); }
 
     public void Select(XYTab tab)
     {
@@ -52,5 +67,5 @@ public sealed partial class XYDockTabs
     }
 
     void Detach(XYDockTab item)
-    { item.Tab.SelectionRequested -= OnSelectionRequested; item.Tab.CloseRequested -= OnCloseRequested; item.DropRequested -= OnDropRequested; }
+    { item.Tab.SelectionRequested -= OnSelectionRequested; item.Tab.CloseRequested -= OnCloseRequested; item.DropRequested -= OnDropRequested; item.DragMoved -= OnDragMoved; item.DragCanceled -= OnDragCanceled; }
 }

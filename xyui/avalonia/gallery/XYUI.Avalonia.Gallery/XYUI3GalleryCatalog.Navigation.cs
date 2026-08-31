@@ -7,12 +7,15 @@ namespace XYUI.Avalonia.Gallery;
 
 public static partial class XYUI3GalleryCatalog
 {
-    static Control TabBarPreview() => new XYTabBar(
-        new XYTab { Label = "地图基础", IsClosable = false },
-        new XYTab { Label = "地图环境", IsSelected = true },
-        new XYTab { Label = "数据集", IsModified = true, IsClosable = false },
-        new XYTab { Label = "Region.cs", IsClosable = false },
-        new XYTab { Label = "World.cs", IsClosable = false }) { Width = 736 };
+    static Control TabBarPreview()
+    {
+        var labels = new[] { "地图基础", "地图环境", "数据集", "Region.cs", "World.cs", "Scene.cs", "Camera.cs", "Light.cs", "材质", "纹理", "脚本", "日志" };
+        var tabs = labels.Select((label, index) => new XYTab { Label = label, IsSelected = index == 1, IsModified = index == 2, IsClosable = index is > 1 and < 11 }).ToArray();
+        var bar = new XYTabBar(tabs) { Width = 520 };
+        var serial = labels.Length;
+        bar.NewRequested += (_, _) => { var tab = new XYTab { Label = $"新页签-{++serial}", IsClosable = true }; bar.Tabs.Add(tab, true); bar.EnsureVisible(tab); };
+        return bar;
+    }
 
     static Control DockTabsPreview() => new XYDockTabs(
         Dock("Hierarchy"), Dock("Inspector", selected: true),
@@ -24,9 +27,9 @@ public static partial class XYUI3GalleryCatalog
     static Control BreadcrumbPreview() => new XYBreadcrumb(
         new XYBreadcrumbItem { Label = "玄域项目" },
         new XYBreadcrumbItem { Label = "地图" },
-        new XYBreadcrumbItem { IsCollapsed = true },
+        new XYBreadcrumbItem { IsCollapsed = true, HiddenPathOptions = ["中国", "华南"] },
         new XYBreadcrumbItem { Label = "行政区" },
-        new XYBreadcrumbItem { Label = "广东省", IsCurrent = true, HasDropdown = true }) { Width = 696 };
+        new XYBreadcrumbItem { Label = "广东省", IsCurrent = true, HasDropdown = true, DropdownOptions = ["广东省", "广西", "福建", "湖南"] }) { Width = 696 };
 
     static Control TreeNavigationPreview() => new XYTreeNavigation(
         Node("玄域项目", 0, XyuiVectorIcon.Section, children: true, expanded: true),

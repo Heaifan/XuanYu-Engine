@@ -24,5 +24,6 @@ public sealed partial class XYTreeNavigation : Border
             hiddenBelow = -1; _panel.Children.Add(item);
             if (item.HasChildren && !item.IsExpanded) hiddenBelow = item.Depth;
         }
+        var initial = SelectedNode ?? VisibleItems.FirstOrDefault(); if (FocusedNode is null && initial is not null) Focus(initial);
     }
 }

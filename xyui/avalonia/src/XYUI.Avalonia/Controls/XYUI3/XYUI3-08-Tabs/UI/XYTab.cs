@@ -37,7 +37,7 @@ public sealed partial class XYTab : Border
         close.AddHandler(InputElement.PointerPressedEvent, OnClosePointerPressed, RoutingStrategies.Tunnel); close.KeyDown += OnCloseKeyDown;
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,28,Auto") };
         grid.Children.Add(new TextBlock { Text = Label, Classes = { "xyui-tab-label" }, VerticalAlignment = VerticalAlignment.Center });
-        grid.Children.Add(new Border { Classes = { "xyui-tab-modified" }, IsVisible = IsModified, [Grid.ColumnProperty] = 1 });
+        grid.Children.Add(new Border { Classes = { "xyui-tab-modified" }, IsVisible = IsModified, VerticalAlignment = VerticalAlignment.Center, [Grid.ColumnProperty] = 1 });
         grid.Children.Add(close);
         Grid.SetColumn(close, 2);
         var divider = new Border { Classes = { "xyui-tab-divider" }, Height = 22, Width = 1, VerticalAlignment = VerticalAlignment.Center };

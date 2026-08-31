@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using XYUI.Avalonia.Vector;
 
@@ -7,6 +8,7 @@ namespace XYUI.Avalonia.Controls;
 public sealed partial class XYBreadcrumb : Border
 {
     public IReadOnlyList<XYBreadcrumbItem> Items { get; }
+    public Popup DropdownPopup { get; } = new() { Placement = PlacementMode.Bottom, IsLightDismissEnabled = true };
 
     public XYBreadcrumb(params XYBreadcrumbItem[] items)
     {
@@ -23,6 +25,8 @@ public sealed partial class XYBreadcrumb : Border
             });
             Attach(items[index]); panel.Children.Add(items[index]);
         }
+        panel.Children.Add(DropdownPopup);
         Child = panel;
+        DetachedFromVisualTree += (_, _) => DropdownPopup.IsOpen = false;
     }
 }

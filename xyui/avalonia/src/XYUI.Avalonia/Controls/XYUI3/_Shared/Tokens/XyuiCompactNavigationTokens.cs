@@ -16,4 +16,5 @@ public static class XyuiCompactNavigationTokens
     public const double TreeIconSize = 14;
     public const double TreeGuideWidth = 1;
     public const double TreeActiveGuideWidth = 1.5;
+    public const double DragThreshold = 6;
 }

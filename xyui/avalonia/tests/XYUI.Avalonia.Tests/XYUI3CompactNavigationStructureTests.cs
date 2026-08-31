@@ -18,7 +18,7 @@ public sealed class XYUI3CompactNavigationStructureTests : IClassFixture<XyuiHea
     [Fact] public void TabBar_contains_real_XYTabs() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var bar = Assert.IsType<XYTabBar>(XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.09"));
-        Assert.IsType<XYTabs>(bar.Tabs); Assert.Equal(5, bar.Tabs.Items.Count); Assert.All(bar.Tabs.Items, item => Assert.IsType<XYTab>(item));
+        Assert.IsType<XYTabs>(bar.Tabs); Assert.Equal(12, bar.Tabs.Items.Count); Assert.All(bar.Tabs.Items, item => Assert.IsType<XYTab>(item));
     });
 
     [Fact] public void DockTab_reuses_XYTab() => _fx.Run(() =>
@@ -55,9 +55,9 @@ public sealed class XYUI3CompactNavigationStructureTests : IClassFixture<XyuiHea
     [Fact] public void DockTabs_have_one_accent_and_manage_selection_close_order() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var dock = Assert.IsType<XYDockTabs>(XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.10")); var window = XyuiBatchTestHost.Show(dock);
-        Assert.All(dock.Items, item => Assert.False(item.Tab.ShowSelectedAccent));
-        Assert.DoesNotContain(dock.GetVisualDescendants().OfType<Border>(), x => x.Classes.Contains("xyui-tab-accent") && x.IsVisible);
-        Assert.Single(dock.GetVisualDescendants().OfType<Border>(), x => x.Classes.Contains("xyui-dock-accent") && x.IsVisible);
+        Assert.All(dock.Items, item => Assert.True(item.Tab.ShowSelectedAccent));
+        Assert.Single(dock.GetVisualDescendants().OfType<Border>(), x => x.Classes.Contains("xyui-tab-accent") && x.IsVisible);
+        Assert.DoesNotContain(dock.GetVisualDescendants().OfType<Border>(), x => x.Classes.Contains("xyui-dock-accent"));
         var first = dock.Items[0]; dock.Select(first.Tab); Assert.True(first.Tab.IsSelected); var last = dock.Items[^1]; dock.Move(last, 0); Assert.Same(last, dock.Items[0]);
         dock.Close(last); Assert.DoesNotContain(last, dock.Items); window.Close();
     });
@@ -74,6 +74,6 @@ public sealed class XYUI3CompactNavigationStructureTests : IClassFixture<XyuiHea
     {
         XyuiBatchTestHost.Prepare(); var tree = Assert.IsType<XYTreeNavigation>(XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.12"));
         var root = tree.Items[0]; Assert.True(tree.VisibleItems.Count > 1); root.ToggleExpansion(); Assert.Single(tree.VisibleItems);
-        root.ToggleExpansion(); var target = tree.Items[1]; tree.Select(target); Assert.Same(target, tree.Items.Single(x => x.IsSelected));
+        root.ToggleExpansion(); var target = tree.Items[1]; tree.Focus(target); Assert.Same(target, tree.FocusedNode); Assert.NotSame(target, tree.SelectedNode); tree.Select(target); Assert.Same(target, tree.SelectedNode);
     });
 }
