@@ -7,7 +7,7 @@
 - 验证：ARCH-A 通过；`git diff --check` 通过；Build/Test 受当前环境无 .NET SDK 阻断，未宣称通过。
 - 状态：XYUI-3-17～20 UI + INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE；不启动 XYUI-3-21。
 - 版本：`v0.2.28.30-rz` 已同步到四处版本文件。
-- Hash：待提交；待推送 `origin/feat/XYUI-A`。
+- Hash：`78945f2e`；待推送 `origin/feat/XYUI-A`。
 
 ## v0.2.28.29-rz · XYUI-3-14 · Steps Pending 空心圆修复（2026-08-31 19:47:59 +08:00）
 
