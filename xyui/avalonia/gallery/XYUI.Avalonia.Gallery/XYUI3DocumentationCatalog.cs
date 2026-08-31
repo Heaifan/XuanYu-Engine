@@ -5,7 +5,7 @@ namespace XYUI.Avalonia.Gallery;
 
 public static class XYUI3DocumentationCatalog
 {
-    static readonly IReadOnlySet<string> BatchIds = new HashSet<string> { "XYUI-3-3.01", "XYUI-3-3.02", "XYUI-3-3.03", "XYUI-3-3.04", "XYUI-3-3.05", "XYUI-3-3.06", "XYUI-3-3.07", "XYUI-3-3.08", "XYUI-3-3.09", "XYUI-3-3.10", "XYUI-3-3.11", "XYUI-3-3.12" };
+    static readonly IReadOnlySet<string> BatchIds = new HashSet<string> { "XYUI-3-3.01", "XYUI-3-3.02", "XYUI-3-3.03", "XYUI-3-3.04", "XYUI-3-3.05", "XYUI-3-3.06", "XYUI-3-3.07", "XYUI-3-3.08", "XYUI-3-3.09", "XYUI-3-3.10", "XYUI-3-3.11", "XYUI-3-3.12", "XYUI-3-3.13", "XYUI-3-3.14", "XYUI-3-3.15", "XYUI-3-3.16" };
     public static IReadOnlyList<XYUI1ComponentDocument> Build() => XyuiCatalogSource.Load().Where(x => BatchIds.Contains(x.SourceItemId)).Select(Create).ToArray();
     static XYUI1ComponentDocument Create(XyuiCatalogEntry entry)
     {
@@ -20,7 +20,7 @@ public static class XYUI3DocumentationCatalog
     static string ComponentName(string id) => id switch
     {
         "XYUI-3-3.05" => "XYNavigationMenu", "XYUI-3-3.06" => "XYSidebar",
-        "XYUI-3-3.07" => "XYNavigationRail", "XYUI-3-3.08" => "XYTabs", "XYUI-3-3.09" => "XYTabBar", "XYUI-3-3.10" => "XYDockTabs", "XYUI-3-3.11" => "XYBreadcrumb", "XYUI-3-3.12" => "XYTreeNavigation", _ => ""
+        "XYUI-3-3.07" => "XYNavigationRail", "XYUI-3-3.08" => "XYTabs", "XYUI-3-3.09" => "XYTabBar", "XYUI-3-3.10" => "XYDockTabs", "XYUI-3-3.11" => "XYBreadcrumb", "XYUI-3-3.12" => "XYTreeNavigation", "XYUI-3-3.13" => "XYPagination", "XYUI-3-3.14" => "XYSteps", "XYUI-3-3.15" => "XYToolbar", "XYUI-3-3.16" => "XYToolGroup", _ => ""
     };
     static (string Overview, string WhenToUse, string[] Usages, XYUIDocVariant[] Variants, XYUIDocState[] States) Details(string id) => id switch
     {
@@ -35,6 +35,10 @@ public static class XYUI3DocumentationCatalog
         "XYUI-3-3.10" => ("在真实 XYTab 左侧增加轻量 Drag Grip 的停靠页签视觉。", "用于 Hierarchy、Inspector、Console、Assets 等编辑器面板；支持选择、关闭与同栏拖动排序，不包含 Dock Engine。", ["<c:XYDockTabs />"], [new("Reorderable", "38 DIP DockTab", "Light / Dark")], [new("Selected", "Raised Surface + Single Accent"), new("Modified", "沿用 XYTab")]),
         "XYUI-3-3.11" => ("纯文字紧凑路径，以矢量 Chevron、轻 Hover、中间折叠和当前项强调表达层级。", "用于玄域项目、地图、数据集、资源等层级路径；支持鼠标与键盘调用、当前位置切换和折叠或下拉请求事件。", ["<c:XYBreadcrumb />"], [new("Compact Text Trail", "34 DIP / 26 DIP Item", "Light / Dark")], [new("Collapsed", "Dropdown Request"), new("Current", "Semibold Active Text")]),
         "XYUI-3-3.12" => ("弱默认 Guide 与强化 Selected Ancestor Chain 共同组成的紧凑树导航。", "用于项目、Hierarchy、Dataset 和资源树；支持展开收起、单选和方向键导航，虚拟化与拖放留给后续专门能力。", ["<c:XYTreeNavigation />"], [new("Compact Guided Tree", "28 DIP Row / 16 DIP Indent", "Light / Dark")], [new("Selected", "Accent Bar + Selected Surface"), new("Expanded", "Visible descendant state")]),
+        "XYUI-3-3.13" => ("邻近页快速跳转与紧凑数据 Footer 组合的分页导航。", "用于资源搜索、日志历史和数据记录；支持前后页、邻近页、跳页输入与每页数量展示。", ["<c:XYPagination />", "<c:XYPaginationFooter />"], [new("Compact Neighbor", "34 DIP", "Light / Dark")], [new("Current", "Selected Surface + Accent"), new("Disabled", "边界按钮禁用")]),
+        "XYUI-3-3.14" => ("用完成、当前、待执行状态表达连续流程的横向或纵向步骤导航。", "用于创建项目、导入资源和配置流程；同一状态数据可切换 Orientation。", ["<c:XYSteps />"], [new("Adaptive", "Horizontal / Vertical", "Light / Dark")], [new("Completed", "Vector status"), new("Current", "Inner indicator"), new("Pending", "Subtle border")]),
+        "XYUI-3-3.15" => ("极简连续的编辑器工具栏，直接复用 XYIconButton 等基础动作控件。", "用于选择、移动、旋转、缩放及区域工具的紧凑排列。", ["<c:XYToolbar />"], [new("Compact Toolbar", "38 DIP", "Light / Dark")], [new("Active", "Selected Surface + Accent"), new("Hover", "浅色背景")]),
+        "XYUI-3-3.16" => ("Toolbar 内部的工具组，提供分隔、浅 Hover 区域和静态折叠触发器。", "用于将变换工具与区域工具保持同一 Toolbar 层级；不承担 Flyout 生命周期。", ["<c:XYToolGroup />"], [new("Separator Group", "4 DIP Padding", "Light / Dark")], [new("Collapsed", "Trigger 保留 Active 语义"), new("Hover", "浅层组背景")]),
         _ => ("层级连接型子菜单，使用统一菜单面板和可复用菜单行。", "用于导出、主题、布局等需要二级命令的层级入口；激活父项或 Right 打开，Left/Esc 收起。", ["<c:XYSubMenu ParentMenu=\"XYMenu\" ChildMenu=\"XYMenu\" />"], [new("Open Right", "右侧连接", "默认"), new("Open Left", "左侧镜像", "静态 Variant")], [new("Active Trigger", "父项保持强调"), new("Connector", "40 DIP 连接线与锚点")])
     };
 }

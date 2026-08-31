@@ -1715,6 +1715,7 @@
    │  │     │     │  │  ├─ XYMenuItemModel.cs  # 实现对应模块的 C# 职责。
    │  │     │     │  │  └─ XYNavigationState.cs  # 实现对应模块的 C# 职责。
    │  │     │     │  ├─ Styles/  # 集中控件视觉构建与语义样式。
+   │  │     │     │  │  ├─ XyuiComponentStyles.Batch04.cs  # 定义分页、步骤、工具栏与工具组语义样式。
    │  │     │     │  │  └─ XyuiComponentStyles.XYUI3.cs  # 实现对应模块的 C# 职责。
    │  │     │     │  └─ Tokens/  # 集中共享尺寸与语义常量。
    │  │     │     │     └─ XyuiCompactNavigationTokens.cs  # 集中保存紧凑导航组件的几何常量。
@@ -1800,6 +1801,20 @@
    │  │     │        └─ UI/  # 组织该模块下的正式文件。
    │  │     │           ├─ XYTreeNavigation.cs  # 按展开状态投影紧凑树形导航可见节点。
    │  │     │           └─ XYTreeNode.cs  # 绘制树节点、矢量图标与默认或活动祖先 Guide。
+   │  │     ├─ XYUI3-13-Pagination/  # 组织紧凑分页与数据 Footer。
+   │  │     │  ├─ Interaction/XYPagination.Navigation.cs  # 管理页码跳转事件。
+   │  │     │  └─ UI/  # 实现分页视觉与真实输入复用。
+   │  │     │     ├─ XYPagination.cs  # 邻近页、前后页与 Jump 输入分页控件。
+   │  │     │     └─ XYPaginationFooter.cs  # 复用分页与 Select 的数据 Footer。
+   │  │     ├─ XYUI3-14-Steps/  # 组织横向与纵向步骤导航。
+   │  │     │  └─ UI/  # 实现步骤状态节点与连接线。
+   │  │     │     ├─ XYStepNode.cs  # 表达 Completed、Current、Pending 等步骤状态。
+   │  │     │     └─ XYSteps.cs  # 以 Orientation 自适应排列步骤节点。
+   │  │     ├─ XYUI3-15-Toolbar/UI/  # 实现连续紧凑工具栏与基础工具复用。
+   │  │     │  ├─ XYToolbar.cs  # 排列 Toolbar 工具。
+   │  │     │  └─ XYToolbarTool.cs  # 以 XYIconButton 承载工具语义。
+   │  │     ├─ XYUI3-16-ToolGroup/UI/  # 实现 Toolbar 内工具组与静态折叠。
+   │  │     │  └─ XYToolGroup.cs  # 提供组间距、Hover 区域和折叠触发器。
    │  │     ├─ Foundation/  # 组织该模块下的正式文件。
    │  │     │  ├─ XyuiColorToken.cs  # Canonical 颜色 token 记录（id + Light/Dark 成对解析与 Color 转换）。
    │  │     │  ├─ XyuiColorTokens.Accent.cs  # XY.Accent.*/Tool/Button/Tag 6 色。
@@ -1895,6 +1910,7 @@
    │  │     ├─ XYUI2VectorPropertyLayoutTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3CompactInteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3CompactNavigationInteractionTests.cs  # 验证紧凑导航新增页签、Popup 菜单与焦点/选择分离。
+   │  │     ├─ XYUI3Batch04StructureTests.cs  # 验证分页、步骤、工具栏与工具组结构复用。
    │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航复用、单底边、垂直居中及交互状态机。
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。

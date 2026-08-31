@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.19-rz · XYUI-3-13～16 · UI 批次首版（2026-08-31 13:28:00 +08:00）
+
+- 目标：按 canonical 与 SVG 参考直接实现 Pagination、Steps、Toolbar、ToolGroup UI。
+- 变化：新增邻近页/Jump/数据 Footer，Steps 横纵向同一状态模型，Toolbar 复用 XYIconButton，ToolGroup 提供分隔与静态折叠触发器；补齐 Gallery 与结构测试。
+- 边界：未实现真实请求、Wizard、Command Routing、Responsive Engine、Overflow/Flyout 生命周期与业务 Binding。
+- 验证：Gallery/Tests 构建 0 Warning/0 Error；XYUI.Avalonia.Tests 306/306、Core 339/339、WarCore 22/22、World 1286/1286；ARCH-A guard、5+100 与 `git diff --check` PASS。
+- 状态：XYUI-3-13～16 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；3.17 NOT STARTED。
+- 版本：`v0.2.28.19-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+
 ## v0.2.28.18-rz · XYUI-3-10 · DockTab 拖拽热区体验修订（2026-08-31 13:08:00 +08:00）
 
 - 目标：修复停靠页签只能抓住小图标、拖拽手感生硬的问题。
