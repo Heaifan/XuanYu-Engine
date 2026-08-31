@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.29-rz · XYUI-3-14 · Steps Pending 空心圆修复（2026-08-31 19:47:59 +08:00）
+
+- 目标：修复 Pending 步骤在 Light/Dark 主题中不显示空心圆的问题。
+- 根因：`xyui-step-pending` 仅设置了 `BorderBrush`，未设置 `BorderThickness`，Border 没有可见轮廓。
+- 变化：Pending Marker 使用面板背景、Subtle 边框和 `1.5 DIP` 边框厚度，保持 SVG 要求的空心圆视觉。
+- 验证：ARCH-A 通过；`git diff --check` 通过；Build/Test 受当前环境无 .NET SDK 阻断，未宣称通过。
+- 状态：XYUI-3-14 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；不启动 XYUI-3-15。
+- 版本：`v0.2.28.29-rz` 已同步到四处版本文件。
+- Hash：`8346d8d1`；待推送 `origin/feat/XYUI-A`。
+
 ## v0.2.28.28-rz · XYUI-3-14 · Steps 纵向 Marker 错轴修复（2026-08-31 19:44:13 +08:00）
 
 - 目标：修复上轮 SVG 坐标重构后纵向 Marker 与连接线横向错轴的问题。
