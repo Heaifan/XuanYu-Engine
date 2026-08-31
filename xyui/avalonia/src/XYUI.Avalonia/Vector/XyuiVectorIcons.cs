@@ -4,7 +4,7 @@ using Avalonia.Media;
 
 namespace XYUI.Avalonia.Vector;
 
-public enum XyuiVectorIcon { Info, Error, Warning, Search, Locate, Browse, Copy, Code, Tag, StatusDot, Section, Empty, ChevronDown, Clear, Filter, Eye, Calendar, Clock, ChevronLeft, ChevronRight, ScrubLeftRight }
+public enum XyuiVectorIcon { Info, Error, Warning, Search, Locate, Browse, Copy, Code, Tag, StatusDot, Section, Empty, ChevronDown, Clear, Filter, Eye, Calendar, Clock, ChevronLeft, ChevronRight, ScrubLeftRight, MoreHorizontal, Add, DragGrip }
 
 public static class XyuiVectorIcons
 {
@@ -33,7 +33,10 @@ public static class XyuiVectorIcons
             [XyuiVectorIcon.Clock] = "M12 3 C7.029 3 3 7.029 3 12 C3 16.971 7.029 21 12 21 C16.971 21 21 16.971 21 12 C21 7.029 16.971 3 12 3 Z M12 7 V12 L16 15",
             [XyuiVectorIcon.ChevronLeft] = "M15 6 L9 12 L15 18",
             [XyuiVectorIcon.ChevronRight] = "M9 6 L15 12 L9 18",
-            [XyuiVectorIcon.ScrubLeftRight] = "M8 7 L3 12 L8 17 M16 7 L21 12 L16 17 M4 12 H20"
+            [XyuiVectorIcon.ScrubLeftRight] = "M8 7 L3 12 L8 17 M16 7 L21 12 L16 17 M4 12 H20",
+            [XyuiVectorIcon.MoreHorizontal] = "M5 10.5 A1.5 1.5 0 1 0 5 13.5 A1.5 1.5 0 1 0 5 10.5 M12 10.5 A1.5 1.5 0 1 0 12 13.5 A1.5 1.5 0 1 0 12 10.5 M19 10.5 A1.5 1.5 0 1 0 19 13.5 A1.5 1.5 0 1 0 19 10.5",
+            [XyuiVectorIcon.Add] = "M12 5 V19 M5 12 H19",
+            [XyuiVectorIcon.DragGrip] = "M8 7 A1 1 0 1 0 8 9 A1 1 0 1 0 8 7 M16 7 A1 1 0 1 0 16 9 A1 1 0 1 0 16 7 M8 15 A1 1 0 1 0 8 17 A1 1 0 1 0 8 15 M16 15 A1 1 0 1 0 16 17 A1 1 0 1 0 16 15"
         };
 
     public static StreamGeometry Create(XyuiVectorIcon icon) => StreamGeometry.Parse(PathData[icon]);

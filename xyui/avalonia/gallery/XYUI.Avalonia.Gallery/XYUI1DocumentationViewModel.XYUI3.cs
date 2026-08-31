@@ -3,7 +3,7 @@ namespace XYUI.Avalonia.Gallery;
 public sealed partial class XYUI1DocumentationViewModel
 {
     public IReadOnlyList<XYUI1NavigationItem> XYUI3Items { get; private set; } = [];
-    public string XYUI3CountText => "8/8";
+    public string XYUI3CountText => "12/12";
     bool _isX3 = true;
     public bool IsXYUI3Expanded { get => _isX3; set { if (_isX3 == value) return; _isX3 = value; PropertyChanged?.Invoke(this, new(nameof(IsXYUI3Expanded))); } }
     XYUI1NavigationItem? _selectedXYUI3;

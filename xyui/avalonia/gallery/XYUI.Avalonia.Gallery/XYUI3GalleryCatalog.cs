@@ -6,12 +6,13 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Gallery;
 
-public static class XYUI3GalleryCatalog
+public static partial class XYUI3GalleryCatalog
 {
     public static Control CreatePreview(string id) => id switch
     {
         "XYUI-3-3.01" => MenuBarPreview(), "XYUI-3-3.02" => MenuPreview(),
         "XYUI-3-3.03" => ContextPreview(), "XYUI-3-3.04" => SubMenuPreview(), "XYUI-3-3.05" => NavigationMenuPreview(), "XYUI-3-3.06" => SidebarPreview(), "XYUI-3-3.07" => RailPreview(), "XYUI-3-3.08" => TabsPreview(),
+        "XYUI-3-3.09" => TabBarPreview(), "XYUI-3-3.10" => DockTabsPreview(), "XYUI-3-3.11" => BreadcrumbPreview(), "XYUI-3-3.12" => TreeNavigationPreview(),
         _ => new TextBlock { Text = "未注册组件" }
     };
     static Control MenuBarPreview()

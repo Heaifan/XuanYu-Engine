@@ -5,7 +5,7 @@ namespace XYUI.Avalonia.Gallery;
 
 public static class XYUI3DocumentationCatalog
 {
-    static readonly IReadOnlySet<string> BatchIds = new HashSet<string> { "XYUI-3-3.01", "XYUI-3-3.02", "XYUI-3-3.03", "XYUI-3-3.04", "XYUI-3-3.05", "XYUI-3-3.06", "XYUI-3-3.07", "XYUI-3-3.08" };
+    static readonly IReadOnlySet<string> BatchIds = new HashSet<string> { "XYUI-3-3.01", "XYUI-3-3.02", "XYUI-3-3.03", "XYUI-3-3.04", "XYUI-3-3.05", "XYUI-3-3.06", "XYUI-3-3.07", "XYUI-3-3.08", "XYUI-3-3.09", "XYUI-3-3.10", "XYUI-3-3.11", "XYUI-3-3.12" };
     public static IReadOnlyList<XYUI1ComponentDocument> Build() => XyuiCatalogSource.Load().Where(x => BatchIds.Contains(x.SourceItemId)).Select(Create).ToArray();
     static XYUI1ComponentDocument Create(XyuiCatalogEntry entry)
     {
@@ -19,7 +19,7 @@ public static class XYUI3DocumentationCatalog
     static string ComponentName(string id) => id switch
     {
         "XYUI-3-3.05" => "XYNavigationMenu", "XYUI-3-3.06" => "XYSidebar",
-        "XYUI-3-3.07" => "XYNavigationRail", "XYUI-3-3.08" => "XYTabs", _ => ""
+        "XYUI-3-3.07" => "XYNavigationRail", "XYUI-3-3.08" => "XYTabs", "XYUI-3-3.09" => "XYTabBar", "XYUI-3-3.10" => "XYDockTabs", "XYUI-3-3.11" => "XYBreadcrumb", "XYUI-3-3.12" => "XYTreeNavigation", _ => ""
     };
     static (string Overview, string WhenToUse, string[] Usages, XYUIDocVariant[] Variants, XYUIDocState[] States) Details(string id) => id switch
     {
@@ -30,6 +30,10 @@ public static class XYUI3DocumentationCatalog
         "XYUI-3-3.06" => ("承载一级导航与当前模块上下文的可折叠侧边容器。", "用于编辑器长期驻留的主侧栏；折叠后保留一级导航并转换为 NavigationRail。", ["<c:XYSidebar PrimaryItems=\"...\" ContextItems=\"...\" />"], [new("Compact V2", "212 DIP 展开 / 54 DIP Rail", "Light / Dark")], [new("Expanded", "Header + 主导航 + 上下文"), new("Collapsed", "转换为 Rail")]),
         "XYUI-3-3.07" => ("以窄型常驻图标轨承载一级导航，并为上下文内容保留按需恢复的入口。", "用于空间不足或用户主动折叠 Sidebar 的编辑器布局。", ["<c:XYNavigationRail Items=\"...\" />"], [new("Compact V2", "54 DIP Rail / 40 DIP Item", "Light / Dark")], [new("Selected", "浅蓝背景 + Accent Bar"), new("Context", "按需 Flyout")]),
         "XYUI-3-3.08" => ("用轻分隔、轻背景与底部 Accent Line 表达平级内容页的当前状态。", "用于地图基础、地图环境、数据集和区域编辑等同一区域的页面切换；不承担 TabBar 的溢出与排序管理。", ["<c:XYTabs Items=\"...\" />"], [new("Compact V2", "34 DIP Tab / 10 DIP PaddingX", "Light / Dark")], [new("Selected", "底部 3 DIP Accent Line"), new("Modified", "3 DIP 圆点"), new("Closable", "弱化关闭入口")]),
+        "XYUI-3-3.09" => ("真实 XYTabs 视口与固定 Previous、Next、Overflow、New 操作槽组成的紧凑页签栏。", "用于文档和编辑页面的多页签入口；本轮展示 UI 与固定操作区，不实现完整溢出生命周期。", ["<c:XYTabBar />"], [new("Compact SVG", "38 DIP Bar / 32 DIP Arrow", "Light / Dark")], [new("Selected", "沿用 XYTab"), new("Modified", "沿用 XYTab")]),
+        "XYUI-3-3.10" => ("在真实 XYTab 左侧增加轻量 Drag Grip 的停靠页签视觉。", "用于 Hierarchy、Inspector、Console、Assets 等编辑器面板；本轮 Grip 仅表达可拖拽视觉。", ["<c:XYDockTabs />"], [new("Grip visual", "38 DIP DockTab", "Light / Dark")], [new("Selected", "Raised Surface + Accent"), new("Modified", "沿用 XYTab")]),
+        "XYUI-3-3.11" => ("纯文字紧凑路径，以矢量 Chevron、轻 Hover、中间折叠和当前项强调表达层级。", "用于玄域项目、地图、数据集、资源等层级路径；本轮不实现下拉与中间折叠算法。", ["<c:XYBreadcrumb />"], [new("Compact Text Trail", "34 DIP / 26 DIP Item", "Light / Dark")], [new("Collapsed", "32 DIP Ellipsis"), new("Current", "Semibold Active Text")]),
+        "XYUI-3-3.12" => ("弱默认 Guide 与强化 Selected Ancestor Chain 共同组成的紧凑树导航。", "用于项目、Hierarchy、Dataset 和资源树；本轮实现视觉层级，不实现展开状态机、虚拟化与拖放。", ["<c:XYTreeNavigation />"], [new("Compact Guided Tree", "28 DIP Row / 16 DIP Indent", "Light / Dark")], [new("Selected", "Accent Bar + Selected Surface"), new("Active Ancestor", "1.5 DIP Guide")]),
         _ => ("层级连接型子菜单，使用统一菜单面板和可复用菜单行。", "用于导出、主题、布局等需要二级命令的层级入口；激活父项或 Right 打开，Left/Esc 收起。", ["<c:XYSubMenu ParentMenu=\"XYMenu\" ChildMenu=\"XYMenu\" />"], [new("Open Right", "右侧连接", "默认"), new("Open Left", "左侧镜像", "静态 Variant")], [new("Active Trigger", "父项保持强调"), new("Connector", "40 DIP 连接线与锚点")])
     };
 }
