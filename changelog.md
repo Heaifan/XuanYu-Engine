@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.33-rz · XYUI-3-17～20 · 交互审查返工（2026-08-31 20:24:00 +08:00）
+
+- 目标：落实 17～20 审查意见，修复状态同步、自然布局、选中反馈和 Popup 生命周期问题。
+- 变化：19 使用持久化位置文本并补真实分隔线；20 引入稳定 `Id/Label`、共享状态和选中勾选；17 改为自然横向命令布局并复用 `XYButton`；18 增加 Recent、Scope 解析、键盘选中态和动态详情。
+- 验证：`git diff --check` 通过；手写 UI 文件均不超过 100 行；本环境无 .NET SDK，Build/Test 未执行。
+- 状态：等待用户重新运行 Gallery 进行真机/视觉验收；不启动 XYUI-3-21。
+- 版本：`v0.2.28.33-rz` 已同步到四处版本文件。
+- Hash：待提交。
+
 ## v0.2.28.32-rz · XYUI-3-19 · BackForward Avalonia 命名空间修复（2026-08-31 20:12:10 +08:00）
 
 - 原因：`Avalonia.Thickness` 在 `XYUI.Avalonia.Controls` 命名空间下被相对解析为 `XYUI.Avalonia.Thickness`，导致 CS0234 两处编译错误。
