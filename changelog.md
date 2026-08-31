@@ -7,7 +7,7 @@
 - 验证：`git diff --check`、ARCH-A 通过；本环境无 .NET SDK，Build/Test 未执行。
 - 状态：XYUI-3-17 UI REWORKED · 等待用户重新复验 5 项交互；不启动 XYUI-3-18。
 - 版本：`v0.2.28.37-rz` 已同步到四处版本文件。
-- Hash：待提交。
+- Hash：`38660683`。
 
 ## v0.2.28.36-rz · XYUI-3-17 · Danger 样式编译修复（2026-09-01 09:12:00 +08:00）
 
