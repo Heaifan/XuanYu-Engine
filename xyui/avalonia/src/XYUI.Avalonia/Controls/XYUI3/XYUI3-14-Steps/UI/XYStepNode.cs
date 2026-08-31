@@ -29,12 +29,12 @@ public sealed class XYStepNode : Border
         if (vertical)
         {
             _layout.ColumnDefinitions.Add(new ColumnDefinition(58, GridUnitType.Pixel)); _layout.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star));
-            Marker.HorizontalAlignment = HorizontalAlignment.Left; _label.HorizontalAlignment = HorizontalAlignment.Left; _label.Margin = new Thickness(16, 0, 0, 0); Grid.SetColumn(Marker, 0); Grid.SetColumn(_label, 1);
+            Marker.HorizontalAlignment = HorizontalAlignment.Left; Marker.VerticalAlignment = VerticalAlignment.Center; _label.HorizontalAlignment = HorizontalAlignment.Left; _label.Margin = new Thickness(16, 0, 0, 0); Grid.SetColumn(Marker, 0); Grid.SetColumn(_label, 1);
         }
         else
         {
             _layout.RowDefinitions.Add(new RowDefinition(68, GridUnitType.Pixel)); _layout.RowDefinitions.Add(new RowDefinition(44, GridUnitType.Pixel));
-            Marker.Margin = new Thickness(0, 2, 0, 0); Marker.HorizontalAlignment = HorizontalAlignment.Center; _label.HorizontalAlignment = HorizontalAlignment.Center; _label.Margin = new Thickness(0); Grid.SetRow(Marker, 0); Grid.SetRow(_label, 1);
+            Marker.Margin = new Thickness(0); Marker.HorizontalAlignment = HorizontalAlignment.Center; Marker.VerticalAlignment = VerticalAlignment.Center; _label.HorizontalAlignment = HorizontalAlignment.Center; _label.Margin = new Thickness(0, -4, 0, 0); Grid.SetRow(Marker, 0); Grid.SetRow(_label, 1);
         }
         _layout.Children.Add(Marker); _layout.Children.Add(_label);
     }
