@@ -14,7 +14,11 @@ public sealed class App : Application
     public App(INativeHostSurfaceBridgeFactory surfaceBridgeFactory) =>
         _surfaceBridgeFactory = surfaceBridgeFactory;
 
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+        this.Styles.Add(XYUI.Avalonia.Theme.XYUIBootstrap.Create());
+    }
 
     public override void OnFrameworkInitializationCompleted()
     {

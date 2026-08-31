@@ -11,7 +11,7 @@
   <Project Path="XuanYu.Editor.Win/XuanYu.Editor.Win.csproj" />
   <Project Path="XuanYu.Render.Abstractions/XuanYu.Render.Abstractions.csproj" />
   <Project Path="XuanYu.Render.Vulkan/XuanYu.Render.Vulkan.csproj" />
-  <Project Path="XYUI/src/XYUI.Avalonia/XYUI.Avalonia.csproj" />
-  <Project Path="XYUI/src/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj" />
-  <Project Path="XYUI/tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj" />
+  <Project Path="xyui/avalonia/src/XYUI.Avalonia/XYUI.Avalonia.csproj" />
+  <Project Path="xyui/avalonia/gallery/XYUI.Avalonia.Gallery/XYUI.Avalonia.Gallery.csproj" />
+  <Project Path="xyui/avalonia/tests/XYUI.Avalonia.Tests/XYUI.Avalonia.Tests.csproj" />
 </Solution>

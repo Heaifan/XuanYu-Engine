@@ -6,6 +6,9 @@
       <ResourceDictionary.MergedDictionaries>
         <ResourceInclude Source="avares://XuanYu.Editor.UI/Design/UiTokens.axaml"/>
       </ResourceDictionary.MergedDictionaries>
+      <!-- ARCH-UI-SPEC-R1: XYUI Font Fallback for Integration Environment -->
+      <FontFamily x:Key="XY.Font.UI">Source Han Sans SC, Microsoft YaHei UI, Noto Sans CJK SC</FontFamily>
+      <FontFamily x:Key="XY.Font.Default">Source Han Sans SC, Microsoft YaHei UI, Noto Sans CJK SC</FontFamily>
     </ResourceDictionary>
   </Styles.Resources>
   <!-- ARCH-UI-SPEC-R1-D4-F1（纠偏）：公共语义样式独立文件，只在此聚合一次 -->
@@ -87,9 +90,6 @@
     <Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/>
     <Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/>
     <Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/>
-  </Style>
-  <Style Selector="TextBlock.muted">
-    <Setter Property="Foreground" Value="#758197"/>
   </Style>
   <Style Selector="TextBlock.caption">
     <Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/>

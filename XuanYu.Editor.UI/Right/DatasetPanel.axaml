@@ -1,16 +1,17 @@
 <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
              xmlns:local="using:XuanYu.Editor.UI" x:Class="XuanYu.Editor.UI.DatasetPanel" x:DataType="local:UiVm">
   <UserControl.Styles>
-    <Style Selector="Button.datasetRow"><Setter Property="Height" Value="{StaticResource Control.Height.Standard}"/><Setter Property="MinHeight" Value="{StaticResource Control.Height.Standard}"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="8,0"/><Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style>
-    <Style Selector="Border.datasetSelection"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="BorderBrush" Value="{StaticResource Color.Accent}"/><Setter Property="BorderThickness" Value="2,0,0,0"/></Style>
-    <Style Selector="TextBlock.datasetName"><Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/><Setter Property="FontWeight" Value="{StaticResource Font.Weight.SemiBold}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/><Setter Property="TextWrapping" Value="NoWrap"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="MaxLines" Value="1"/><Setter Property="HorizontalAlignment" Value="Center"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="TextAlignment" Value="Center"/></Style>
-    <Style Selector="TextBlock.datasetStatus"><Setter Property="FontSize" Value="{StaticResource Font.Small.Size}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/><Setter Property="MinWidth" Value="{StaticResource Size.Width.64}"/><Setter Property="HorizontalAlignment" Value="Center"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="TextAlignment" Value="Center"/></Style>
+    <Style Selector="Button.datasetRow"><Setter Property="Height" Value="34"/><Setter Property="MinHeight" Value="34"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="8,0"/><Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style>
+    <Style Selector="Border.datasetSelection"><Setter Property="Background" Value="{DynamicResource XY.Brush.Interaction.Selected}"/><Setter Property="BorderBrush" Value="{DynamicResource XY.Brush.Accent.Strong}"/><Setter Property="BorderThickness" Value="2,0,0,0"/></Style>
+    <Style Selector="TextBlock.datasetName"><Setter Property="FontSize" Value="14"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="{DynamicResource XY.Brush.Text.Primary}"/><Setter Property="TextWrapping" Value="NoWrap"/><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="MaxLines" Value="1"/><Setter Property="HorizontalAlignment" Value="Center"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="TextAlignment" Value="Center"/></Style>
+    <Style Selector="TextBlock.datasetStatus"><Setter Property="FontSize" Value="12"/><Setter Property="Foreground" Value="{DynamicResource XY.Brush.Text.Secondary}"/><Setter Property="MinWidth" Value="64"/><Setter Property="HorizontalAlignment" Value="Center"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="TextAlignment" Value="Center"/></Style>
   </UserControl.Styles>
   <StackPanel Spacing="8" Margin="0,6,0,0">
-    <TextBlock Text="数据集" Classes="uiSection"/>
-    <TextBlock Text="{Binding DatasetEmptyState}" Classes="uiMultiline" IsVisible="{Binding IsDatasetEmpty}"/>
+    <xy:XYSectionTitle Text="数据集" />
+    <xy:XYEmptyText Text="{Binding DatasetEmptyState}" IsVisible="{Binding IsDatasetEmpty}"/>
     <ListBox x:Name="DatasetList" ItemsSource="{Binding DatasetItems}" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0">
-      <ListBox.Styles><Style Selector="ListBoxItem"><Setter Property="Height" Value="{StaticResource Control.Height.Standard}"/><Setter Property="MinHeight" Value="{StaticResource Control.Height.Standard}"/><Setter Property="Margin" Value="0"/><Setter Property="Padding" Value="0"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style></ListBox.Styles>
+      <ListBox.Styles><Style Selector="ListBoxItem"><Setter Property="Height" Value="34"/><Setter Property="MinHeight" Value="34"/><Setter Property="Margin" Value="0"/><Setter Property="Padding" Value="0"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style></ListBox.Styles>
       <ListBox.ItemTemplate><DataTemplate><Button Classes="datasetRow" Click="DatasetRow_Click" ToolTip.Tip="{Binding TypeIdText}">
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8"><Border Grid.ColumnSpan="2" Classes="datasetSelection" IsVisible="{Binding IsSelected}"/>
           <TextBlock Text="{Binding Name}" Classes="datasetName" ToolTip.Tip="{Binding Name}" ZIndex="1"/>
@@ -18,17 +19,19 @@
         </Grid>
       </Button></DataTemplate></ListBox.ItemTemplate>
     </ListBox>
-    <TextBlock Text="名称" Classes="uiLabel" Margin="0,4,0,0"/>
-    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8"><TextBox Text="{Binding DatasetNameText, Mode=TwoWay}" IsEnabled="{Binding HasSelectedDataset}"/>
-      <Button Grid.Column="1" Classes="uiTextButton" Content="应用名称" Click="ApplyName_Click" IsEnabled="{Binding HasSelectedDataset}" HorizontalAlignment="Right"/>
+    <xy:XYLabel Text="名称" Margin="0,4,0,0"/>
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+      <xy:XYTextField Text="{Binding DatasetNameText, Mode=TwoWay}" IsEnabled="{Binding HasSelectedDataset}"/>
+      <xy:XYButton Grid.Column="1" Classes="xyui-button xyui-button-primary" Content="应用名称" Click="ApplyName_Click" IsEnabled="{Binding HasSelectedDataset}" HorizontalAlignment="Right"/>
     </Grid>
-    <TextBlock Text="新建数据集" Classes="uiSection" Margin="0,8,0,0"/>
-    <TextBlock Text="类型" Classes="uiLabel"/>
-    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8"><ComboBox ItemsSource="{Binding DatasetTypeOptions}" SelectedItem="{Binding DatasetCreateTypeOption}"><ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding Display}"/></DataTemplate></ComboBox.ItemTemplate></ComboBox>
-      <Button Grid.Column="1" Classes="uiTextButton" Content="新建数据集" Command="{Binding RunCommand}" CommandParameter="新建数据集" AutomationProperties.Name="新建数据集" HorizontalAlignment="Right"/>
+    <xy:XYSectionTitle Text="新建数据集" Margin="0,8,0,0"/>
+    <xy:XYLabel Text="类型" />
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+      <xy:XYSelect ItemsSource="{Binding DatasetTypeOptions}" SelectedItem="{Binding DatasetCreateTypeOption}"><xy:XYSelect.ItemTemplate><DataTemplate><TextBlock Text="{Binding Display}"/></DataTemplate></xy:XYSelect.ItemTemplate></xy:XYSelect>
+      <xy:XYButton Grid.Column="1" Classes="xyui-button xyui-button-primary" Content="新建数据集" Command="{Binding RunCommand}" CommandParameter="新建数据集" AutomationProperties.Name="新建数据集" HorizontalAlignment="Right"/>
     </Grid>
-    <Border BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="0,1,0,0" Margin="0,8,0,0"/>
-    <TextBlock Text="危险操作" Classes="uiLabel"/>
-    <Button Classes="uiDanger" Content="解除注册" Command="{Binding RunCommand}" CommandParameter="解除注册数据集" IsEnabled="{Binding CanUnregisterDataset}" AutomationProperties.Name="解除注册数据集" HorizontalAlignment="Left"/>
+    <xy:XYSeparator Margin="0,8,0,0"/>
+    <xy:XYLabel Text="危险操作" />
+    <xy:XYButton Classes="xyui-button xyui-button-danger" Content="解除注册" Command="{Binding RunCommand}" CommandParameter="解除注册数据集" IsEnabled="{Binding CanUnregisterDataset}" AutomationProperties.Name="解除注册数据集" HorizontalAlignment="Left"/>
   </StackPanel>
 </UserControl>
