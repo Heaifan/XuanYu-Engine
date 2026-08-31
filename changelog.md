@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.22-rz · XYUI-3-14 · Steps 轨道布局重构（2026-08-31 15:10:00 +08:00）
+
+- 目标：修复横向连接线漂移、纵向标记列不齐和自适应反复重建造成的布局问题。
+- 变化：节点树稳定复用；横向使用等分列，纵向固定标记列；连接线独立轨道并按 Marker 实际几何自动更新；状态变化只更新 Marker 样式。
+- 验证：XYUI.Avalonia.Tests 309/309；`git diff --check` 待提交前复核；真机视觉验收待用户确认。
+- 状态：XYUI-3-14 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；不启动 3.17。
+- 版本：`v0.2.28.22-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+
 ## v0.2.28.21-rz · XYUI-3-14 · Steps SVG 几何与状态归属修订（2026-08-31 14:36:00 +08:00）
 
 - 目标：按最新 Steps SVG 只修正 3.14，保持 3.13、3.15、3.16 冻结。
