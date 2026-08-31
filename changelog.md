@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.20-rz · XYUI-3-13～16 · Batch04 返工闭环（2026-08-31 14:02:00 +08:00）
+
+- 目标：按复核结论返工 3.13～3.16 的真实状态与交互，不再停留在静态骨架。
+- 变化：Pagination 修复页码不变量、非法 Jump、PageSize 重算、Footer 弹性列与 Current Accent；Steps 将状态归属到节点圆点并补连接线、可变状态、纵向布局与自适应入口；Toolbar 增加紧凑标签策略与 Active owner；ToolGroup 增加 Separator、Hover、可恢复折叠和 Active 图标保持。
+- 验证：Batch04 专项 6/6；XYUI.Avalonia.Tests 309/309、Core 339/339、WarCore 22/22、World 1286/1286；解决方案 0 Warning/0 Error、5+100 行检查（本轮新增文件）与 `git diff --check` PASS。ARCH-A 全量扫描被仓库既有未跟踪 `XYUIProbeTests.cs`（149 行）阻断，未修改该用户本地文件。
+- 状态：XYUI-3-13～16 UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE；3.17 NOT STARTED。
+- 版本：`v0.2.28.20-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+
 ## v0.2.28.19-rz · XYUI-3-13～16 · UI 批次首版（2026-08-31 13:28:00 +08:00）
 
 - 目标：按 canonical 与 SVG 参考直接实现 Pagination、Steps、Toolbar、ToolGroup UI。

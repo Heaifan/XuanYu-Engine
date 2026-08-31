@@ -4,7 +4,8 @@ public sealed partial class XYPagination
 {
     public void GoTo(int page)
     {
-        var next = Math.Clamp(page, 1, Math.Max(1, TotalPages));
+        if (page < 1 || page > TotalPages) { InvalidPageRequested?.Invoke(this, page); return; }
+        var next = page;
         if (next == CurrentPage) return;
         CurrentPage = next; PageChanged?.Invoke(this, next);
     }

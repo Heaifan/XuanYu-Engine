@@ -18,8 +18,9 @@ public sealed partial class XYPagination : Border
     public XYIconButton PreviousButton { get; private set; } = null!;
     public XYIconButton NextButton { get; private set; } = null!;
     public event EventHandler<int>? PageChanged;
+    public event EventHandler<int>? InvalidPageRequested;
     public XYPagination() { Classes.Add("xyui-pagination"); Build(); }
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e) { base.OnPropertyChanged(e); if (e.Property is var p && (p == CurrentPageProperty || p == TotalPagesProperty || p == TotalItemsProperty)) Build(); }
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e) { base.OnPropertyChanged(e); if (e.Property == TotalPagesProperty && CurrentPage > TotalPages) SetValue(CurrentPageProperty, TotalPages); if (e.Property is var p && (p == CurrentPageProperty || p == TotalPagesProperty || p == TotalItemsProperty)) Build(); }
     void Build()
     {
         PreviousButton = Action(XyuiVectorIcon.ChevronLeft); NextButton = Action(XyuiVectorIcon.ChevronRight);
