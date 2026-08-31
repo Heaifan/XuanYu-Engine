@@ -1,5 +1,16 @@
 # changelog
 
+## v0.2.28.14-rz · XYUI-3-09～12 · Compact Navigation UI（2026-08-31 11:29:36 +08:00）
+
+- 目标：按用户提供的四份 SVG 参考完成 TabBar、DockTabs、Breadcrumb、TreeNavigation 的 UI-first 实现，并保持 Light / Dark 语义资源一致。
+- 变化：TabBar 以真实 `XYTabs` / `XYTab` 组成视口并加入固定 Previous、Next、Overflow、New 矢量操作槽；DockTab 组合真实 `XYTab`、`XYSeparator` 与 Drag Grip；Breadcrumb 提供 34/26 DIP 紧凑文字路径、矢量 Chevron、Current 与 Collapsed 状态；TreeNavigation 提供 28 DIP Row、16 DIP Indent、弱默认 Guide、1.5 DIP Active Ancestor Guide 和 Selected Accent。
+- 复用：新增 MoreHorizontal、Add、DragGrip 到既有 `XyuiVectorIcons`；未复制 Tab、Icon、IconButton 或 Divider 实现，未引入第二套主题与依赖。
+- Gallery：XYUI-3 目录扩展为 12/12，09～12 每页均使用真实公开控件 Preview；四页进程烟测均保持运行且无早退。
+- 验证：相关项目构建与正式解决方案构建均为 0 警告、0 错误；聚焦结构测试 17/17、全量 `XYUI.Avalonia.Tests` 295/295 通过；ARCH-A、5+100、`git diff --check` 通过。
+- 状态：`XYUI-3-09～12 UI IMPLEMENTED / AWAITING USER VISUAL ACCEPTANCE`；未实现 Tab 滚动/溢出生命周期、Dock Engine、Breadcrumb 折叠算法、Tree 展开状态机/虚拟化/键盘/拖放。
+- 版本：`v0.2.28.14-rz` 已同步到 `changelog.md`、`run.bat`、`UiWin.axaml`、`UiVm.SceneDocument.cs`。
+- Hash：实现提交 `cbc261f6`；治理对账由本条目所在提交承载。
+
 ## XYUI-3-05～08 · 双主题对比度与关闭命中修订（2026-08-31 00:41:07 +08:00）
 
 - 目标：消除 3.05/3.06/3.07 双主题选中态图标与背景的低区分度，并修复 3.08 关闭入口难点击及延迟嫌疑。
