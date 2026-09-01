@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.50-rz · XYUI-3-21 · Dropdown 与 Primary+More 最终收口（2026-09-01 13:05:00 +08:00）
+
+- 目标：只收口 XYUI-3-21；保持 Segmented 已通过状态，冻结 XYUI-3-22、3-23、3-24。
+- 变化：Dropdown 使用独立 Grid Trigger 并统一 Stretch/Width/Popup；Primary+More 增加 Divider 与 30 DIP hit target；补齐优先级排序、Dropdown 当前勾选、Reject 终态和 scoped Selected Icon；Gallery 仅保留三行 21 变体。
+- 验证：XYUI.Avalonia.Tests 351/351；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A WarCore guard 通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-21 UI REWORKED · INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.50-rz` 已同步到四处版本文件。
+
 ## v0.2.28.49-rz · XYUI-3-21 · ViewSwitcher 视觉与交互返工（2026-09-01 12:18:00 +08:00）
 
 - 目标：只修 XYUI-3-21；冻结 XYUI-3-22、3-23、3-24。

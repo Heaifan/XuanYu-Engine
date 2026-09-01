@@ -12,7 +12,8 @@ public static partial class XYUI3GalleryCatalog
     {
         var views = new[] { View("canvas", "画布", XyuiVectorIcon.Locate, 3), View("table", "表格", XyuiVectorIcon.Section, 2), View("preview", "预览", XyuiVectorIcon.Eye, 1), View("logs", "日志", XyuiVectorIcon.Code, -1) };
         var state = new XYViewState(views, "canvas"); var segmented = new XYViewSwitcher(state); var dropdown = new XYViewSwitcher(state, XYViewSwitcherVariant.Dropdown); var more = new XYViewSwitcher(state, XYViewSwitcherVariant.PrimaryMore);
-        return new StackPanel { Spacing = 10, Children = { segmented, dropdown, more, new XYCaption { Text = "共享 XYViewState · request → commit" } } };
+        foreach (var switcher in new[] { segmented, dropdown, more }) switcher.ViewChangeRequested += (_, request) => request.Accept();
+        return new StackPanel { Spacing = 10, Children = { segmented, dropdown, more } };
     }
     static Control TocPreview()
     {
