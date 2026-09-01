@@ -1830,8 +1830,11 @@
    │  │     │  └─ XYBackForwardNavigation.Lifecycle.cs  # 提供失活与卸载时关闭历史弹层。
    │  │     ├─ XYUI3-19-BackForwardNavigation/UI/  # 实现独立导航历史。
    │  │     │  └─ XYBackForwardNavigation.cs  # 提供 34 DIP Surface、前进、后退和 Forward 截断。
+   │  │     ├─ XYUI3-20-WorkspaceSwitcher/Interaction/  # 组织工作区选择、请求提交与 Popup 生命周期。
+   │  │     │  ├─ XYWorkspaceSwitcher.Interaction.cs  # 提供同宽菜单、键盘选择、管理入口与请求后提交。
+   │  │     │  └─ XYWorkspaceSwitcher.Lifecycle.cs  # 提供失活、关闭与卸载时关闭工作区弹层。
    │  │     └─ XYUI3-20-WorkspaceSwitcher/UI/  # 实现紧凑工作区切换器。
-   │  │        └─ XYWorkspaceSwitcher.cs  # 提供工作区 Trigger、同宽 Popup 与选择事件。
+   │  │        └─ XYWorkspaceSwitcher.cs  # 定义 XYButton Trigger、共享 State 与工作区模型。
    │  │     ├─ Foundation/  # 组织该模块下的正式文件。
    │  │     │  ├─ XyuiColorToken.cs  # Canonical 颜色 token 记录（id + Light/Dark 成对解析与 Color 转换）。
    │  │     │  ├─ XyuiColorTokens.Accent.cs  # XY.Accent.*/Tool/Button/Tag 6 色。
@@ -1931,6 +1934,7 @@
    │  │     ├─ XYUI3Batch05StructureTests.cs  # 验证 17～20 紧凑控件与核心交互。
    │  │     ├─ XYUI3BackForwardNavigationTests.cs  # 验证 19 的紧凑结构、历史跳转与 Popup 生命周期。
    │  │     ├─ XYUI3CommandPaletteTests.cs  # 验证 18 的整行结果、详情、Scope、Recent 与 Popup 执行。
+   │  │     ├─ XYUI3WorkspaceSwitcherTests.cs  # 验证 20 的同宽菜单、整行项、共享 State、请求提交与生命周期。
    │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航复用、单底边、垂直居中及交互状态机。
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。

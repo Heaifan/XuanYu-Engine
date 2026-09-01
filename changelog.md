@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.46-rz · XYUI-3-20 · WorkspaceSwitcher 正式复用与交互返工（2026-09-01 10:59:57 +08:00）
+
+- 目标：只修 XYUI-3-20；XYUI-3-17、18、19 保持不动。
+- 变化：Trigger 改为 Stretch 版 `XYButton`，Popup 改为同宽 `XYMenu`，工作区项改为整行 `XYMenuItem` 并右对齐勾选；补回分隔线与“管理工作区...”；支持外部共享 `XYWorkspaceState`、独立 Id/Label、请求接受后提交、键盘导航及失活/关闭/卸载收口。
+- 验证：XYUI3WorkspaceSwitcherTests 6/6；XYUI3Batch05StructureTests 6/6；XYUI 全量 333/333；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A 的 WarCore 守卫通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-20 等待用户视觉与交互验收；不启动后续阶段。
+- 版本：`v0.2.28.46-rz` 已同步到四处版本文件；`file-tree.md` 已补充 20 的 Interaction 文件与专项测试职责。
+- Hash：`0031da82`。
+
 ## v0.2.28.45-rz · XYUI-3-19 · BackForwardNavigation 宽度与菜单图标修复（2026-09-01 10:41:19 +08:00）
 
 - 目标：只修 XYUI-3-19 的 34 DIP 控件宽度塌缩与历史菜单视觉问题；XYUI-3-17、18、20 保持不动。
