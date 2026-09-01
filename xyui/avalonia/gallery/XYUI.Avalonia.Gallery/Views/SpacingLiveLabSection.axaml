@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:l="using:XYUI.Avalonia.Layout"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingLiveLabSection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <TextBlock Text="② Live Spacing Lab" Classes="xyui-text-section" />
+      <TextBlock Text="空白就是主角：标尺直接落在真实控件之间，而不是单独写一张说明表。" Classes="xyui-text-caption" />
+
+      <!-- Top Row: Toolbar & Form -->
+      <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+        <!-- 1. Toolbar Lab -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="0,0,4,0" CornerRadius="4">
+          <StackPanel Spacing="6">
+            <TextBlock Text="Toolbar · Compact" Classes="xyui-text-caption" />
+            <l:XYToolbar>
+              <l:XYToolGroup>
+                <c:XYButton Content="New" Variant="Secondary" />
+                <c:XYButton Content="Save" Variant="Secondary" />
+              </l:XYToolGroup>
+              <l:XYToolGroup>
+                <c:XYButton Content="Undo" Variant="Secondary" />
+                <c:XYButton Content="Redo" Variant="Secondary" />
+              </l:XYToolGroup>
+            </l:XYToolbar>
+            <!-- Measurement labels -->
+            <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,2,0,0">
+              <TextBlock Text="2 DIP · XY.Gap.ToolItem" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+              <TextBlock Text="6 DIP · XY.Gap.ToolGroup" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Form Lab -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="4,0,0,0" CornerRadius="4">
+          <StackPanel Spacing="6">
+            <TextBlock Text="Form · Compact" Classes="xyui-text-caption" />
+            <l:XYFieldGroup>
+              <Grid ColumnDefinitions="50,*">
+                <c:XYLabel Text="Name" VerticalAlignment="Center" />
+                <TextBox Grid.Column="1" Text="Player_Main_Actor" />
+              </Grid>
+              <Grid ColumnDefinitions="50,*">
+                <c:XYLabel Text="Type" VerticalAlignment="Center" />
+                <TextBox Grid.Column="1" Text="Character_Pawn" />
+              </Grid>
+            </l:XYFieldGroup>
+            <TextBlock Text="6 DIP · XY.Gap.Field" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" HorizontalAlignment="Right" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Bottom: Panel / Section Lab -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" CornerRadius="4" Margin="0,4,0,0">
+        <StackPanel Spacing="6">
+          <TextBlock Text="Panel / Section · Compact" Classes="xyui-text-caption" />
+          <l:XYPanel Background="{DynamicResource XY.Brush.Surface.Panel}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}">
+            <l:XYSectionGroup>
+              <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Padding="10,6" CornerRadius="2">
+                <TextBlock Text="Section 1 (主区块)" Classes="xyui-text-caption" />
+              </Border>
+              <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Padding="10,6" CornerRadius="2">
+                <TextBlock Text="Section 2 (次区块，由 XYSectionGroup 自动分隔)" Classes="xyui-text-caption" />
+              </Border>
+            </l:XYSectionGroup>
+          </l:XYPanel>
+          <StackPanel Orientation="Horizontal" Spacing="32">
+            <TextBlock Text="12 DIP · XY.Padding.Panel" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="12 DIP · XY.Gap.Section" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>
