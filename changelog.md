@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.49-rz · XYUI-3-21 · ViewSwitcher 视觉与交互返工（2026-09-01 12:18:00 +08:00）
+
+- 目标：只修 XYUI-3-21；冻结 XYUI-3-22、3-23、3-24。
+- 变化：ViewSwitcher 改为单一外层 Surface；Segment 调整为 30 DIP、14 DIP 图标、4 DIP 间距；补充 Accent.Soft/3 DIP 底边、More Active、Dropdown 当前勾选、真实 PlacementTarget 与完整 Popup 生命周期；request 必须显式 Accept 后才 Commit，菜单直接绑定 View.Id。
+- 验证：XYUI3ViewSwitcherTests 与全量 XYUI.Avalonia.Tests 346/346；完整解决方案构建与其余测试待正式门禁执行；用户视觉/交互验收尚未完成。
+- 状态：XYUI-3-21 UI + INTERACTION REWORKED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.49-rz` 已同步到四处版本文件。
+
 ## v0.2.28.48-rz · XYUI-3-21~24 · 最终导航组件执行（2026-09-01 11:45:00 +08:00）
 
 - 目标：执行开发计划中的 XYUI-3-21 ViewSwitcher、3-22 TableOfContents、3-23 BottomNavigation、3-24 NavigationDrawer。
