@@ -28,4 +28,23 @@ public static class XyuiDensity
             ["XY.Density.Comfortable.SectionGap"] = 16d,
         };
     }
+
+    public static bool TryGetMetrics(XyuiDensityMode mode, out XyuiDensityMetrics metrics)
+    {
+        if (mode == XyuiDensityMode.Touch)
+        {
+            metrics = default;
+            return false;
+        }
+
+        metrics = mode == XyuiDensityMode.Compact
+            ? new(XyuiSizeTokens.ControlS, XyuiSizeTokens.Toolbar, XyuiSizeTokens.Input,
+                XyuiSizeTokens.IconM, XyuiSpatialTokens.FieldRowGap, XyuiSpatialTokens.PanelPadding)
+            : new(32d, 34d, 36d, XyuiSizeTokens.IconM, 8d, XyuiSpatialTokens.PanelPadding);
+        return true;
+    }
 }
+
+public readonly record struct XyuiDensityMetrics(
+    double ControlSize, double ToolbarSize, double InputSize, double IconSize,
+    double Gap, double Padding);

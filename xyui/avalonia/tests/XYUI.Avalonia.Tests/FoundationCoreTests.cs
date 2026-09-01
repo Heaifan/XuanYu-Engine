@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using XYUI.Avalonia.Density;
 using XYUI.Avalonia.Foundation;
 using XYUI.Avalonia.Layout;
@@ -35,5 +36,39 @@ public sealed class FoundationCoreTests
         Assert.True(contract.ComponentOwnsPadding);
         Assert.True(contract.ParentOwnsSiblingGap);
         Assert.False(contract.MarginIsSiblingLayoutTool);
+    }
+
+    [Fact]
+    public void DensityScope_Inherits_And_Allows_Local_Override()
+    {
+        var parent = new Panel();
+        var child = new Border();
+        parent.Children.Add(child);
+        XyuiDensityScope.SetMode(parent, XyuiDensityMode.Compact);
+
+        Assert.Equal(XyuiDensityMode.Compact, XyuiDensityScope.GetMode(child));
+        XyuiDensityScope.SetMode(child, XyuiDensityMode.Comfortable);
+        Assert.Equal(XyuiDensityMode.Comfortable, XyuiDensityScope.GetMode(child));
+    }
+
+    [Fact]
+    public void DensityScope_Maps_Consumable_Metrics_And_Rejects_Touch()
+    {
+        Assert.True(XyuiDensity.TryGetMetrics(XyuiDensityMode.Compact, out var compact));
+        Assert.Equal(XyuiSizeTokens.ControlS, compact.ControlSize);
+        Assert.Equal(XyuiSpatialTokens.FieldRowGap, compact.Gap);
+        Assert.True(XyuiDensity.TryGetMetrics(XyuiDensityMode.Comfortable, out var comfortable));
+        Assert.NotEqual(compact.ControlSize, comfortable.ControlSize);
+        Assert.False(XyuiDensity.TryGetMetrics(XyuiDensityMode.Touch, out _));
+    }
+
+    [Fact]
+    public void DensityScope_Separates_Mode_From_Policy()
+    {
+        var control = new Border();
+        XyuiDensityScope.SetMode(control, XyuiDensityMode.Compact);
+        XyuiDensityScope.SetPolicy(control, XyuiDensityPolicy.ManualLock);
+        Assert.Equal(XyuiDensityMode.Compact, XyuiDensityScope.GetMode(control));
+        Assert.Equal(XyuiDensityPolicy.ManualLock, XyuiDensityScope.GetPolicy(control));
     }
 }
