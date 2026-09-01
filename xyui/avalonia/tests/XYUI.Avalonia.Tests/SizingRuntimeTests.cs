@@ -42,4 +42,42 @@ public sealed class SizingRuntimeTests
         XyuiSizingScope.SetSizeRole(button, XyuiSizeRole.Touch);
         Assert.Equal(44d, button.Height);
     }
+
+    [Fact]
+    public void SizeRole_Propagates_Through_Real_Toolbar_And_ToolGroup()
+    {
+        var icon = new XYIconButton();
+        var tool = new XYButton { Content = "工具" };
+        var group = new XYToolGroup(tool, icon);
+        var toolbar = new XYToolbar(group);
+        var root = new Panel { Children = { toolbar } };
+        XyuiSizingScope.SetSizeRole(root, XyuiSizeRole.Comfortable);
+        Assert.Equal(36d, toolbar.Height);
+        Assert.Equal(36d, group.Height);
+        Assert.Equal(36d, tool.Height);
+        Assert.Equal(36d, icon.Height);
+        Assert.Equal(36d, icon.Width);
+    }
+
+    [Fact]
+    public void Select_Preserves_Legacy_Default_Until_Explicit_Default_Role()
+    {
+        var select = new XYSelect { ItemsSource = new[] { "一", "二" } };
+        Assert.True(double.IsNaN(select.Height));
+        XyuiSizingScope.SetSizeRole(select, XyuiSizeRole.Default);
+        Assert.Equal(32d, select.Height);
+    }
+
+    [Fact]
+    public void SizeRole_Geometry_Matches_The_Frozen_Contract()
+    {
+        var expected = new[] { (28d, 14d, 28d), (32d, 16d, 32d), (36d, 20d, 36d), (44d, 24d, 44d) };
+        foreach (var (role, value) in Enum.GetValues<XyuiSizeRole>().Zip(expected))
+        {
+            var metrics = XyuiSizingScope.GetMetrics(role);
+            Assert.Equal(value.Item1, metrics.ControlHeight);
+            Assert.Equal(value.Item2, metrics.IconSize);
+            Assert.Equal(value.Item3, metrics.MinimumHitTarget);
+        }
+    }
 }

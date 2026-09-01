@@ -17,7 +17,11 @@ public sealed class XyuiSizingScope
             "SizeRole", XyuiSizeRole.Default, inherits: true);
 
     public static XyuiSizeRole GetSizeRole(Control element) => element.GetValue(SizeRoleProperty);
-    public static void SetSizeRole(Control element, XyuiSizeRole value) => element.SetValue(SizeRoleProperty, value);
+    public static void SetSizeRole(Control element, XyuiSizeRole value)
+    {
+        element.SetValue(SizeRoleProperty, value);
+        Apply(element, element is XYIconButton);
+    }
 
     public static void Attach(Control element, bool iconOnly = false)
     {
