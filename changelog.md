@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.43-rz · XYUI-3-18 · CommandPalette 结构与交互返工（2026-09-01 10:01:01 +08:00）
+
+- 目标：按当前裁定重做 XYUI-3-18 CommandPalette 的真实布局、数据模型、搜索 Scope 与 Popup 生命周期；XYUI-3-17、19、20 保持不动。
+- 变化：结果项改为整行 `XYCommandPaletteItem`；双栏改为 Grid 行列布局并支持滚动；命令模型补齐 Id/Type/Category/Description/Shortcut/Keywords/IsEnabled；Recent、Scope 菜单、Hover 详情、上下键、Enter 执行关闭、Esc 与窗口/应用失活关闭均接入；Gallery 改为外部显示 Last Executed。
+- 验证：XYUI.Avalonia 与测试项目构建 0 Warning / 0 Error；`XYUI3Batch05StructureTests` 6/6；`XYUI3CommandPaletteTests` 5/5；`git diff --check` 通过；ARCH-A 的 WarCore 守卫通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-18 等待用户视觉与交互验收；不启动 XYUI-3-19。
+- 版本：`v0.2.28.43-rz` 已同步到四处版本文件；`file-tree.md` 已补充新增文件职责。
+- Hash：`860a1a16`。
+
 ## v0.2.28.42-rz · XYUI-3-17 · More 菜单接入 XYUI3-02（2026-09-01 09:39:05 +08:00）
 
 - 目标：让 3.17 CommandBar 的 More 子项按 XYUI-3-02 Menu/菜单真实呈现与交互；XYUI-3-18～20 保持不动。

@@ -1818,8 +1818,13 @@
    │  │     │  └─ XYToolGroup.cs  # 提供组间距、Hover 区域和折叠触发器。
    │  │     ├─ XYUI3-17-CommandBar/UI/  # 实现紧凑一次性命令栏与 More 菜单。
    │  │     │  └─ XYCommandBar.cs  # 提供主命令、命令项和真实 XYMenu Popup。
+   │  │     ├─ XYUI3-18-CommandPalette/Interaction/  # 组织命令面板搜索、Scope 与 Popup 生命周期。
+   │  │     │  ├─ XYCommandPalette.Interaction.cs  # 提供过滤、Recent、Scope、键盘与执行关闭。
+   │  │     │  └─ XYCommandPalette.Lifecycle.cs  # 提供打开、关闭、焦点恢复和失活收口。
    │  │     ├─ XYUI3-18-CommandPalette/UI/  # 实现紧凑搜索命令面板。
-   │  │     │  └─ XYCommandPalette.cs  # 提供过滤、键盘选择和命令执行反馈。
+   │  │     │  ├─ XYCommandPalette.cs  # 定义命令模型、公共状态和面板宿主。
+   │  │     │  ├─ XYCommandPalette.Layout.cs  # 构造搜索、结果、分隔线和详情的 Grid 布局。
+   │  │     │  └─ XYCommandPaletteItem.cs  # 提供整行 Stretch 的结果项交互。
    │  │     ├─ XYUI3-19-BackForwardNavigation/UI/  # 实现独立导航历史。
    │  │     │  └─ XYBackForwardNavigation.cs  # 提供前进、后退和 Forward 截断。
    │  │     └─ XYUI3-20-WorkspaceSwitcher/UI/  # 实现紧凑工作区切换器。
@@ -1921,6 +1926,7 @@
    │  │     ├─ XYUI3CompactNavigationInteractionTests.cs  # 验证紧凑导航新增页签、Popup 菜单与焦点/选择分离。
    │  │     ├─ XYUI3Batch04StructureTests.cs  # 验证分页、步骤、工具栏与工具组结构复用。
    │  │     ├─ XYUI3Batch05StructureTests.cs  # 验证 17～20 紧凑控件与核心交互。
+   │  │     └─ XYUI3CommandPaletteTests.cs  # 验证 18 的整行结果、详情、Scope、Recent 与 Popup 执行。
    │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航复用、单底边、垂直居中及交互状态机。
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。
