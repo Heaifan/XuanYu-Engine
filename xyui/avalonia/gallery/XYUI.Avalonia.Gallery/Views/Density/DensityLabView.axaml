@@ -1,45 +1,72 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:XYUI.Avalonia.Controls"
-             x:Class="XYUI.Avalonia.Gallery.Views.Density.DensityLabView">
-  <Border Classes="xyui-surface-panel" Padding="14">
-    <StackPanel Spacing="12">
+             xmlns:xy="using:XYUI.Avalonia"
+             x:Class="XYUI.Avalonia.Gallery.Views.Density.DensityLabView"
+             xy:XY.Size="Default">
+  <Border Classes="xyui-surface-panel" Padding="14" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1.5" CornerRadius="8">
+    <StackPanel Spacing="10">
+      <!-- Header -->
       <Grid ColumnDefinitions="*,Auto">
         <StackPanel Grid.Column="0" Spacing="2">
-          <TextBlock Text="② 实时信息密度实验室" Classes="xyui-text-section" />
-          <TextBlock x:Name="ScopeStatusText" Text="当前：XYDensity.Default · 固定 XY.Size=Default（32 DIP 控件自身高度）" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="② 实时信息密度实验室" Classes="xyui-text-section" FontSize="17" />
+          <TextBlock Text="同一个工作台 · 同一个 Size · 只切换 Density" Classes="xyui-text-caption" />
         </StackPanel>
-        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
-          <c:XYButton x:Name="BtnCompact" Content="紧凑 Compact" Variant="Secondary" Click="OnCompactClick" />
-          <c:XYButton x:Name="BtnDefault" Content="默认 Default" Variant="Primary" Click="OnDefaultClick" />
-          <c:XYButton x:Name="BtnComfortable" Content="舒适 Comfortable" Variant="Secondary" Click="OnComfortableClick" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <TextBlock Text="信息密度" Classes="xyui-text-label" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <c:XYButton x:Name="BtnCompact" Content="紧凑" Variant="Primary" Click="OnCompactClick" />
+          <c:XYButton x:Name="BtnDefault" Content="默认" Variant="Secondary" Click="OnDefaultClick" />
+          <c:XYButton x:Name="BtnComfortable" Content="舒适" Variant="Secondary" Click="OnComfortableClick" />
         </StackPanel>
       </Grid>
-      <Border Background="{DynamicResource XY.Brush.Surface.Toolbar}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
-              BorderThickness="1" CornerRadius="4" Padding="8,4">
-        <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
-          <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
-            <c:XYIconButton ToolTip.Tip="选择工具"><c:XYIcon Icon="Search" Size="Small" /></c:XYIconButton>
-            <c:XYIconButton ToolTip.Tip="定位工具"><c:XYIcon Icon="Locate" Size="Small" /></c:XYIconButton>
-            <c:XYIconButton ToolTip.Tip="更多操作"><c:XYIcon Icon="MoreHorizontal" Size="Small" /></c:XYIconButton>
-            <c:XYSeparator Height="20" Margin="4,0" />
+
+      <!-- Main Workbench Grid: Left 72%, Right 28% -->
+      <Grid ColumnDefinitions="*,260" Margin="0,4,0,0">
+        <!-- Left: Workbench -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,10,0">
+          <StackPanel Spacing="8">
+            <!-- Real XYToolbar Host -->
+            <Panel x:Name="ToolbarHost" />
+
+            <!-- Column Header for Compact/Default -->
+            <Border x:Name="ColHeaderBorder" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4" CornerRadius="3">
+              <Grid ColumnDefinitions="160,110,*,90">
+                <TextBlock Grid.Column="0" Text="名称 / 标识" Classes="xyui-text-caption" FontWeight="Bold" />
+                <TextBlock Grid.Column="1" Text="状态" Classes="xyui-text-caption" FontWeight="Bold" />
+                <TextBlock Grid.Column="2" Text="摘要说明" Classes="xyui-text-caption" FontWeight="Bold" />
+                <TextBlock Grid.Column="3" Text="操作" Classes="xyui-text-caption" FontWeight="Bold" HorizontalAlignment="Right" />
+              </Grid>
+            </Border>
+
+            <!-- Items within Fixed Viewport Height -->
+            <ScrollViewer Height="252" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+              <StackPanel x:Name="WorkbenchItemsPanel" Spacing="4" />
+            </ScrollViewer>
           </StackPanel>
-          <c:XYTextField Grid.Column="1" Margin="8,0" Placeholder="在当前视口中过滤实体与属性..." />
-          <c:XYButton Grid.Column="2" Content="新建实体" Variant="Primary" />
-        </Grid>
-      </Border>
-      <Border x:Name="WorkbenchContainer" Background="{DynamicResource XY.Brush.Surface.App}"
-              BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="10">
-        <StackPanel x:Name="WorkbenchItemsPanel" Spacing="6" />
-      </Border>
-      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
-              BorderThickness="1" CornerRadius="4" Padding="10">
-        <StackPanel Spacing="3">
-          <TextBlock Text="真实 API 代码消费示例" Classes="xyui-text-label" />
-          <TextBlock Text="&lt;StackPanel xy:XY.Size=&quot;Default&quot; xy:XY.Density=&quot;Compact&quot;&gt; ... &lt;/StackPanel&gt;" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-          <TextBlock Text="// C#: XY.SetDensity(panel, XYDensity.Compact); XY.SetSize(panel, XYSize.Default);" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
-        </StackPanel>
-      </Border>
+        </Border>
+
+        <!-- Right: Result Panel -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="6" Padding="12">
+          <StackPanel Spacing="6">
+            <TextBlock Text="当前结果" Classes="xyui-text-section" FontSize="14" />
+            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+              <TextBlock Grid.Column="0" Text="当前密度" Classes="xyui-text-caption" />
+              <TextBlock Grid.Column="1" x:Name="ResultDensityText" Text="紧凑" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            </Grid>
+            <c:XYSeparator Margin="0,2" />
+            <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="同屏信息单元" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" x:Name="ResultItemsCountText" Text="4 (全可见)" Classes="xyui-text-label" FontWeight="Bold" /></Grid>
+            <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="二级信息" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" x:Name="ResultSecondaryText" Text="同行收敛" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Grid>
+            <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="元数据" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" x:Name="ResultMetaText" Text="极简" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Grid>
+            <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="辅助操作" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" x:Name="ResultActionsText" Text="图标优先" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Grid>
+            <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="文本换行" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" x:Name="ResultWrapText" Text="0" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Grid>
+            <c:XYSeparator Margin="0,2" />
+            <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="控件尺寸" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="32 DIP" Classes="xyui-text-label" FontWeight="Bold" /></Grid>
+            <Border Background="{DynamicResource XY.Brush.Accent.Soft}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" CornerRadius="4" Padding="6,4" Margin="0,4,0,0">
+              <TextBlock Text="XY.Size 始终保持 Default" Classes="xyui-text-code" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" HorizontalAlignment="Center" />
+            </Border>
+          </StackPanel>
+        </Border>
+      </Grid>
     </StackPanel>
   </Border>
 </UserControl>

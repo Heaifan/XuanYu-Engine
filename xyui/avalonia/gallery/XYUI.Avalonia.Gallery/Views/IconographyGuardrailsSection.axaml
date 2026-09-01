@@ -1,0 +1,26 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.IconographyGuardrailsSection">
+  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
+    <StackPanel Spacing="6">
+      <TextBlock Text="④ 推荐写法与禁止护栏" Classes="xyui-text-section" FontSize="15" />
+      <Grid ColumnDefinitions="280,*">
+        <!-- 推荐入口 -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Accent.Soft}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,12,0">
+          <StackPanel Spacing="2">
+            <TextBlock Text="统一入口" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="XYIcon + Vector Icon Registry 唯一真值" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          </StackPanel>
+        </Border>
+
+        <!-- 禁止项 -->
+        <Grid Grid.Column="1" ColumnDefinitions="*,*,*,*" VerticalAlignment="Center">
+          <TextBlock Grid.Column="0" Text="× Unicode 假字符" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          <TextBlock Grid.Column="1" Text="× 业务 Path 自绘" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          <TextBlock Grid.Column="2" Text="× PNG 位图假图标" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          <TextBlock Grid.Column="3" Text="× Margin 垫偏移" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+        </Grid>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

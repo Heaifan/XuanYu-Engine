@@ -1,9 +1,13 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:density="using:XYUI.Avalonia.Gallery.Views.Density"
              x:Class="XYUI.Avalonia.Gallery.Views.DensitySamplesView">
   <ScrollViewer HorizontalScrollBarVisibility="Disabled">
     <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <StackPanel Spacing="3">
+        <TextBlock Text="XYUI-0.05 · 信息密度" Classes="xyui-heading-panel" FontSize="22" />
+        <TextBlock Text="固定控件尺寸，只改变同一视口中的信息组织密度" Classes="xyui-text-caption" />
+      </StackPanel>
       <density:DensityCoreRulesView />
       <density:DensityLabView />
       <density:DensityMatrixView />

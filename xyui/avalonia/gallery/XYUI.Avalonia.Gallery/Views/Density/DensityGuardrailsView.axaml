@@ -1,54 +1,29 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:c="using:XYUI.Avalonia.Controls"
              x:Class="XYUI.Avalonia.Gallery.Views.Density.DensityGuardrailsView">
-  <Border Classes="xyui-surface-panel" Padding="14">
-    <StackPanel Spacing="10">
-      <TextBlock Text="④ 推荐原则与禁止护栏" Classes="xyui-text-section" />
-      <Border Background="{DynamicResource XY.Brush.Accent.Soft}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}"
-              BorderThickness="1" CornerRadius="4" Padding="10,8">
-        <StackPanel Spacing="2">
-          <TextBlock Text="核心推荐原则" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-          <TextBlock Text="“提高有效信息量，不是单纯压缩像素。” 始终通过信息层级重组、次级信息合理折叠与语义密度提升吞吐量。" Classes="xyui-text-body" />
-        </StackPanel>
-      </Border>
-      <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
-        <Border Grid.Row="0" Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="8,6">
+  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
+    <StackPanel Spacing="8">
+      <TextBlock Text="④ 推荐原则与禁止护栏" Classes="xyui-text-section" FontSize="15" />
+      <Grid ColumnDefinitions="360,*">
+        <!-- 推荐 -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Accent.Soft}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,12,0">
           <StackPanel Spacing="2">
-            <TextBlock Text="❌ 禁止 1 · 缩小 FontSize" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-            <TextBlock Text="禁止为了紧凑缩小字号。文本层级必须使用规范 Token（Body/Label/Caption），保障可读性。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+            <TextBlock Text="推荐" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="提高有效信息量，不是单纯压缩像素。" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
           </StackPanel>
         </Border>
-        <Border Grid.Row="0" Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="8,6">
-          <StackPanel Spacing="2">
-            <TextBlock Text="❌ 禁止 2 · 缩小 Hit Target" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-            <TextBlock Text="禁止为了多放两行缩小最小点击热区。按钮与输入框自身高度与交互区域保持 Default 统一基准。" Classes="xyui-text-caption" TextWrapping="Wrap" />
-          </StackPanel>
-        </Border>
-        <Border Grid.Row="1" Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="8,6">
-          <StackPanel Spacing="2">
-            <TextBlock Text="❌ 禁止 3 · Height 魔法数字" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-            <TextBlock Text="禁止通过 Height/MaxHeight 硬编码强制压缩控件。应由 Density 统一排布间隙与行结构。" Classes="xyui-text-caption" TextWrapping="Wrap" />
-          </StackPanel>
-        </Border>
-        <Border Grid.Row="1" Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="8,6">
-          <StackPanel Spacing="2">
-            <TextBlock Text="❌ 禁止 4 · 隐藏关键状态" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-            <TextBlock Text="禁止为了“视觉极简”隐藏错误、警告、未保存等关键状态。紧凑档位必须保留状态指示点/徽标。" Classes="xyui-text-caption" TextWrapping="Wrap" />
-          </StackPanel>
-        </Border>
-        <Border Grid.Row="2" Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="8,6">
-          <StackPanel Spacing="2">
-            <TextBlock Text="❌ 禁止 5 · 全压单行不可扫描" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-            <TextBlock Text="禁止把无关联的全部信息无节制压在单行导致信息过载。必须保留清晰的视觉主次与锚点。" Classes="xyui-text-caption" TextWrapping="Wrap" />
-          </StackPanel>
-        </Border>
-        <Border Grid.Row="2" Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="8,6">
-          <StackPanel Spacing="2">
-            <TextBlock Text="❌ 禁止 6 · 过度舒适巨量滚动" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-            <TextBlock Text="禁止在 Inspector/高频属性面板滥用过大留白，避免专业高频操作陷入巨量滚动的低效困境。" Classes="xyui-text-caption" TextWrapping="Wrap" />
-          </StackPanel>
-        </Border>
+
+        <!-- 6 个禁止 -->
+        <Grid Grid.Column="1" ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="4" VerticalAlignment="Center">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="× 不缩小字号" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="× 不缩小命中区" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="× 不写 Height 魔法数字" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="× 不隐藏关键状态" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+
+          <TextBlock Grid.Row="0" Grid.Column="2" Text="× 不强压全部单行" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          <TextBlock Grid.Row="1" Grid.Column="2" Text="× 不制造巨量滚动" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+        </Grid>
       </Grid>
     </StackPanel>
   </Border>

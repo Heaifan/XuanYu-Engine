@@ -1,0 +1,57 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.IconographyUsageSection">
+  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
+    <StackPanel Spacing="8">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0" Text="③ 真实组件消费" Classes="xyui-text-section" FontSize="15" />
+        <TextBlock Grid.Column="1" Text="同一 Registry 标识 · 默认继承 XY.Size" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+      </Grid>
+
+      <Grid ColumnDefinitions="Auto,Auto,*" Margin="0,2,0,0">
+        <!-- 1. Pure Icon: XYIconButton -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" CornerRadius="4" Margin="0,0,8,0">
+          <StackPanel Spacing="6" HorizontalAlignment="Center">
+            <TextBlock Text="XYIconButton (纯图标+无障碍)" Classes="xyui-text-caption" FontWeight="Bold" />
+            <c:XYIconButton ToolTip.Tip="搜索实体 (无障碍提示)">
+              <c:XYIcon Icon="Search" />
+            </c:XYIconButton>
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Icon + Text: XYButton -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" CornerRadius="4" Margin="0,0,8,0">
+          <StackPanel Spacing="6" HorizontalAlignment="Center">
+            <TextBlock Text="XYButton (图文组合)" Classes="xyui-text-caption" FontWeight="Bold" />
+            <c:XYButton Variant="Secondary">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <c:XYIcon Icon="Search" />
+                <TextBlock Text="搜索" VerticalAlignment="Center" />
+              </StackPanel>
+            </c:XYButton>
+          </StackPanel>
+        </Border>
+
+        <!-- 3. Toolbar Group: XYToolbar -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" CornerRadius="4">
+          <StackPanel Spacing="6">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" Text="XYToolbar (工具条动作组)" Classes="xyui-text-caption" FontWeight="Bold" />
+              <TextBlock Grid.Column="1" Text="同一 Registry 共享" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+            </Grid>
+            <Panel x:Name="ToolbarHost" VerticalAlignment="Center" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Canonical Usage Note -->
+      <Border Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="8,4" Margin="0,2,0,0">
+        <Grid ColumnDefinitions="*,*">
+          <TextBlock Grid.Column="0" Text="&lt;!-- 默认跟随容器：&lt;xy:XYIcon Icon=&quot;Search&quot; /&gt; --&gt;" Classes="xyui-text-code" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Column="1" Text="&lt;!-- 局部按需覆盖：&lt;xy:XYIcon Icon=&quot;Search&quot; Size=&quot;Compact&quot; /&gt; --&gt;" Classes="xyui-text-code" FontSize="11" Foreground="{DynamicResource XY.Brush.Text.Secondary}" HorizontalAlignment="Right" />
+        </Grid>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

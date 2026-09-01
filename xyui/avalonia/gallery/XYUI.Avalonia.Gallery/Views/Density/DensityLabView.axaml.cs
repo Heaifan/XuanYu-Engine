@@ -1,8 +1,9 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using XYUI.Avalonia;
 using XYUI.Avalonia.Controls;
-using XYUI.Avalonia.Density;
+using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Gallery.Views.Density;
 
@@ -11,39 +12,44 @@ public partial class DensityLabView : UserControl
     public DensityLabView()
     {
         InitializeComponent();
-        ApplyDensity(XyuiDensity.Default);
+        BuildToolbar();
+        ApplyDensity(XYDensity.Compact);
     }
 
-    void OnCompactClick(object? sender, RoutedEventArgs e) => ApplyDensity(XyuiDensity.Compact);
-    void OnDefaultClick(object? sender, RoutedEventArgs e) => ApplyDensity(XyuiDensity.Default);
-    void OnComfortableClick(object? sender, RoutedEventArgs e) => ApplyDensity(XyuiDensity.Comfortable);
-
-    void ApplyDensity(XyuiDensity density)
+    void BuildToolbar()
     {
-        XyuiDensityScope.SetDensity(WorkbenchContainer, density);
-        BtnCompact.Variant = density == XyuiDensity.Compact ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
-        BtnDefault.Variant = density == XyuiDensity.Default ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
-        BtnComfortable.Variant = density == XyuiDensity.Comfortable ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
-        ScopeStatusText.Text = $"当前：XYDensity.{density} · 固定 XY.Size=Default（32 DIP 控件自身高度）";
+        ToolbarHost.Children.Add(new XYToolbar(
+            new XYToolGroup(
+                new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Search, Size = XyuiIconSize.Small } },
+                new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Locate, Size = XyuiIconSize.Small } },
+                new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.MoreHorizontal, Size = XyuiIconSize.Small } }),
+            new XYSeparator { Height = 18, Margin = new Thickness(4, 0) },
+            new XYTextField { Width = 380, Placeholder = "在当前视口中过滤实体与属性…" },
+            new XYButton { Content = "新建实体", Variant = XyuiButtonVariant.Primary }));
+    }
+
+    void OnCompactClick(object? sender, RoutedEventArgs e) => ApplyDensity(XYDensity.Compact);
+    void OnDefaultClick(object? sender, RoutedEventArgs e) => ApplyDensity(XYDensity.Default);
+    void OnComfortableClick(object? sender, RoutedEventArgs e) => ApplyDensity(XYDensity.Comfortable);
+
+    void ApplyDensity(XYDensity density)
+    {
+        XY.SetDensity(this, density);
+        BtnCompact.Variant = density == XYDensity.Compact ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
+        BtnDefault.Variant = density == XYDensity.Default ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
+        BtnComfortable.Variant = density == XYDensity.Comfortable ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
+        UpdateResultPanel(density);
         RebuildItems(density);
     }
 
-    void RebuildItems(XyuiDensity density)
+    void UpdateResultPanel(XYDensity density)
     {
-        WorkbenchItemsPanel.Children.Clear();
-        var metrics = XyuiDensityMetrics.For(density);
-        WorkbenchItemsPanel.Spacing = metrics.RowGap;
-        WorkbenchContainer.Padding = new Thickness(metrics.PanelPadding);
-
-        var data = new (string Title, string Code, string Type, string Status, string Desc)[]
-        {
-            ("华南主干管网", "reg-001", "区域", "已保存", "涵盖 18 个顶点与 12,482 km² 核心管辖范围，最近修改于 18:07。"),
-            ("滨海快速道路", "rd-102", "道路", "同步中", "连接主干线与 42 个沿线采集子站，实时吞吐量 8,420 unit/s。"),
-            ("管制枢纽节点", "sec-801", "管制", "已锁定", "安全等级 Alpha-1，包含 6 处防空识别区与独立备用电源。"),
-            ("太阳能采集阵", "res-305", "采集", "运行中", "12 组高倍率光伏矩阵，当前输出效率 98.4%，状态稳定。")
-        };
-
-        foreach (var item in data)
-            WorkbenchItemsPanel.Children.Add(CreateRow(item.Title, item.Code, item.Type, item.Status, item.Desc, density));
+        ResultDensityText.Text = density switch { XYDensity.Compact => "紧凑", XYDensity.Default => "默认", _ => "舒适" };
+        ResultItemsCountText.Text = density switch { XYDensity.Compact => "4 (全可见)", XYDensity.Default => "3 (可滚动)", _ => "2 (可滚动)" };
+        ResultSecondaryText.Text = density switch { XYDensity.Compact => "同行收敛", XYDensity.Default => "次级独立行", _ => "完整多行展开" };
+        ResultMetaText.Text = density switch { XYDensity.Compact => "极简", XYDensity.Default => "徽标 + 次级", _ => "完整键值对" };
+        ResultActionsText.Text = density switch { XYDensity.Compact => "图标优先", XYDensity.Default => "图标 + 提示", _ => "完整文字" };
+        ResultWrapText.Text = density switch { XYDensity.Compact => "0", XYDensity.Default => "1", _ => "多行" };
+        ColHeaderBorder.IsVisible = density != XYDensity.Comfortable;
     }
 }
