@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.58-rz · XYUI-3-22 · Compact Popup 菜单风格收口（2026-09-01 15:12:08 +08:00）
+
+- 目标：只修 XYUI-3-22 Compact Popup；Desktop Hierarchical、XYUI-3-21、XYUI-3-23、XYUI-3-24 保持冻结。
+- 变化：Popup 行改为菜单式 32 DIP 高度；当前项使用整行 Selected Surface 与右侧正式 `XYIcon(Check)`；Popup 隐藏 Desktop 专用左 Accent，保留 ParentId 层级与连续 Guide。
+- 排查：确认 Gallery 仅保留一个最新 3-22 进程；图3为 Codex 页面旧对话截图，不属于 Gallery 渲染。
+- 验证：XYUI.Avalonia.Tests 361/361；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A WarCore guard 通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-22 UI REWORKED · INTERACTION IMPLEMENTED · AWAITING USER VISUAL/INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.58-rz` 已同步到四处版本文件。
+
 ## v0.2.28.57-rz · XYUI-3-22 · Popup Ownership 与共享层级 Renderer（2026-09-01 15:03:35 +08:00）
 
 - 目标：只修 XYUI-3-22 Compact Popup；Desktop Hierarchical、XYUI-3-21、XYUI-3-23、XYUI-3-24 保持冻结。
