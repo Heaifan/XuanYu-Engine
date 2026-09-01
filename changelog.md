@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.54-rz · XYUI-3-22 · TOC 专用视觉模板与 Popup 层级（2026-09-01 14:21:36 +08:00）
+
+- 目标：只修 XYUI-3-22；XYUI-3-21 保持冻结，XYUI-3-23、3-24 不动。
+- 变化：TOC 行改用专用 `XYTocItem` 模板，保留输入行为但移除通用 Button Chrome/Action Edge；补齐 Hover、Pressed、Focus、Disabled 与 Current 左 Accent；Compact Popup 改为 ParentId 分组、连续 Guide、右侧 Check。
+- 验证：XYUI.Avalonia.Tests 361/361；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A WarCore guard 通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-22 UI REWORKED · INTERACTION IMPLEMENTED · AWAITING USER VISUAL/INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.54-rz` 已同步到四处版本文件。
+
 ## v0.2.28.53-rz · XYUI-3-22 · TableOfContents 运行溯源与层级收口（2026-09-01 14:06:56 +08:00）
 
 - 目标：只修 XYUI-3-22；XYUI-3-21 保持冻结，XYUI-3-23、3-24 不动。
