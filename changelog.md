@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.52-rz · XYUI-3-22 · TableOfContents 视觉与交互返工（2026-09-01 13:40:59 +08:00）
+
+- 目标：只修 XYUI-3-22；XYUI-3-21 保持通过并冻结，XYUI-3-23、3-24 不动。
+- 变化：桌面目录改为 Surface + Header + 文本优先层级项，派生 Parent Active、二级缩进、Guide 与 Current 左 Accent；Compact 改为“本页目录 + 当前路径 + Chevron”并保持 Popup 同宽；补齐 request→accept→commit、Reject 终态、重复提交保护、真实锚点与生命周期。
+- 验证：XYUI.Avalonia.Tests 351/351；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A WarCore guard 通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-22 UI REWORKED · INTERACTION REWORKED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.52-rz` 已同步到四处版本文件。
+
 ## v0.2.28.51-rz · XYUI-3-21 · Dropdown Chevron 与 More Divider 最终修复（2026-09-01 14:02:00 +08:00）
 
 - 目标：只收口 XYUI-3-21；保持 Segmented 通过状态，冻结 XYUI-3-22、3-23、3-24。
