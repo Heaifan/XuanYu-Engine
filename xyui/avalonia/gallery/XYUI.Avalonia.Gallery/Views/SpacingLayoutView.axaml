@@ -1,20 +1,25 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:c="using:XYUI.Avalonia.Controls"
              xmlns:views="using:XYUI.Avalonia.Gallery.Views"
              x:Class="XYUI.Avalonia.Gallery.Views.SpacingLayoutView">
-  <ScrollViewer>
-    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
-      <StackPanel Spacing="4">
-        <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="间距与排版 / Spacing &amp; Layout" Classes="xyui-heading-panel" />
-          <c:XYStatusBadge Text="已锁定 · 0.03" State="Success" VerticalAlignment="Center" />
-        </StackPanel>
-        <TextBlock Text="业务层优先写“语义容器”，而不是自己决定 Margin / Padding / Spacing 数值。" Classes="xyui-text-caption" />
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 标题 -->
+      <StackPanel Spacing="3">
+        <TextBlock Text="XYUI-0.03 · 间距与排版" Classes="xyui-heading-panel" FontSize="22" />
+        <TextBlock Text="业务层优先选择语义容器，不自行决定 Margin / Padding / Gap 数值" Classes="xyui-text-caption" />
       </StackPanel>
+
+      <!-- ① 核心规则 -->
       <views:SpacingCoreRulesSection />
+
+      <!-- ② 实时空间实验室 (HERO) -->
       <views:SpacingLiveLabSection />
+
+      <!-- ③ 同一布局 · 三种空间密度 -->
       <views:SpacingDensityCompareSection />
+
+      <!-- ④ 推荐写法 · 高级用法 · 禁止写法 -->
       <views:SpacingCodePatternsSection />
     </StackPanel>
   </ScrollViewer>
