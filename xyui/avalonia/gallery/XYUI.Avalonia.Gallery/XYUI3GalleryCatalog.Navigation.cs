@@ -74,5 +74,11 @@ public static partial class XYUI3GalleryCatalog
         return new StackPanel { Spacing = 8, Children = { palette, feedback } };
     }
     static Control BackForwardPreview() { var nav = new XYBackForwardNavigation(); nav.Navigate("roads / 道路编辑"); nav.Navigate("广东省"); return nav; }
-    static Control WorkspacePreview() { var switcher = new XYWorkspaceSwitcher("地图编辑", "地图编辑", "数据编辑", "战争实验", "调试分析"); switcher.Open(); return switcher; }
+    static Control WorkspacePreview()
+    {
+        var items = new[] { new XYWorkspaceItem("map-edit", "地图编辑"), new XYWorkspaceItem("data-edit", "数据编辑"), new XYWorkspaceItem("war-lab", "战争实验"), new XYWorkspaceItem("debug-analysis", "调试分析") };
+        var switcher = new XYWorkspaceSwitcher(new XYWorkspaceState("map-edit"), items); var feedback = new TextBlock { Text = "Last Action · —", Classes = { "xyui-command-feedback" } };
+        switcher.WorkspaceChangeRequested += (_, request) => request.Accept(); switcher.WorkspaceChanged += (_, id) => feedback.Text = $"Last Action · {id}"; switcher.ManageRequested += (_, _) => feedback.Text = "Last Action · manage-workspaces"; switcher.Open();
+        return new StackPanel { Spacing = 8, Children = { switcher, feedback } };
+    }
 }

@@ -40,6 +40,6 @@ public sealed class XYUI3Batch05StructureTests : IClassFixture<XyuiHeadlessFixtu
 
     [Fact] public void Workspace_switcher_shares_selection_state() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var switcher = Assert.IsType<XYWorkspaceSwitcher>(XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.20")); switcher.SelectWorkspace("数据编辑"); Assert.Equal("数据编辑", switcher.CurrentWorkspace);
+        XyuiBatchTestHost.Prepare(); var switcher = XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.20").GetVisualDescendants().OfType<XYWorkspaceSwitcher>().Single(); switcher.SelectWorkspace("data-edit"); Assert.Equal("数据编辑", switcher.CurrentWorkspace);
     });
 }
