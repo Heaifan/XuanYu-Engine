@@ -5348,6 +5348,27 @@
           "evidence_refs": ["XYUI0-C1.5@L1-42"]
         },
         {
+          "token_id": "XY.Gap.ToolItem",
+          "value": "XY.Space.1",
+          "relation": "alias",
+          "relation_target": "XY.Space.1",
+          "evidence_refs": ["XYUI0-C3@L2300-2306"]
+        },
+        {
+          "token_id": "XY.Gap.ToolGroup",
+          "value": "XY.Space.2",
+          "relation": "alias",
+          "relation_target": "XY.Space.2",
+          "evidence_refs": ["XYUI0-C3@L2300-2306"]
+        },
+        {
+          "token_id": "XY.Gap.Separator",
+          "value": "XY.Space.2",
+          "relation": "alias",
+          "relation_target": "XY.Space.2",
+          "evidence_refs": ["XYUI0-C3@L2300-2306"]
+        },
+        {
           "token_id": "XY.Padding.Panel",
           "value": "XY.Panel.Padding",
           "relation": "alias",

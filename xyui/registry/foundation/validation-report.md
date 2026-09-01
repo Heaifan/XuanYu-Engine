@@ -154,3 +154,10 @@ Foundation Registry（Canonical Machine Source of Truth，VALIDATED）
 - 组合规则：组件拥有 Padding，父级拥有 sibling Gap，Margin 不是常规 sibling layout 工具。
 
 当前工作树验证结果：Registry schema validation PASS；Runtime Foundation tests PASS（369/369）；指定 SDK build PASS（0 warning / 0 error）；Architecture / 5+100 guard PASS；`git diff --check` PASS。C1.5 未实现 Density Scope、Metric Gate、Gallery 或 XYUI-1～3 大规模 Retrofit。
+
+## 15. C3 Foundation Governance Delta（工作树验证补充）
+
+- 新增 `XY.Gap.ToolItem`、`XY.Gap.ToolGroup`、`XY.Gap.Separator`，分别 alias `XY.Space.1`、`XY.Space.2`、`XY.Space.2`。
+- `XYUI METRIC-GATE` 输出 `TOKENIZED`、`ALLOWED EXCEPTION`、`UNJUSTIFIED MAGIC NUMBER` 三类；Geometry / Canvas / Animation / 算法参数及带 Canonical 证据的组件专属尺寸可声明例外。
+- 七类 Layout Recipe 均提供 `XyuiCompositionMetrics`；Touch 无可消费映射。
+- 当前 XYUI-1～3 计量属性赋值现状：254 行，作为既有债务报告，不作为本轮失败条件。
