@@ -44,6 +44,8 @@ public sealed class FoundationGovernanceTests
         Assert.Equal(XyuiMetricClassification.AllowedException, geometry[0].Classification);
         var approvedSemantic = XyuiMetricGate.Analyze("Spacing=2 // XY.Gap.ToolItem");
         Assert.Equal(XyuiMetricClassification.Tokenized, approvedSemantic[0].Classification);
+        var businessOverride = XyuiMetricGate.Analyze("<XYToolGroup Spacing=\"7\" />");
+        Assert.Equal(XyuiMetricClassification.UnjustifiedMagicNumber, businessOverride[0].Classification);
     }
 
     [Fact]
@@ -57,6 +59,30 @@ public sealed class FoundationGovernanceTests
         Assert.Equal(6d, touch["XY.Gap.ToolItem"]);
         Assert.Equal(20d, touch["XY.Padding.Panel"]);
         Assert.False(XyuiDensity.TryGetMetrics(XyuiDensityMode.Touch, out _));
+    }
+
+    [Fact]
+    public void SemanticContainers_Consume_Density_Gaps_And_Padding()
+    {
+        var root = new Panel();
+        var tools = new XYToolGroup();
+        var toolbar = new XYToolbar();
+        root.Children.Add(tools);
+        root.Children.Add(toolbar);
+        XyuiDensityScope.SetMode(root, XyuiDensityMode.Compact);
+        Assert.Equal(global::Avalonia.Layout.Orientation.Horizontal, tools.Orientation);
+        Assert.Equal(2d, tools.Spacing);
+        Assert.Equal(6d, toolbar.Spacing);
+
+        var fields = new XYFieldGroup();
+        var sections = new XYSectionGroup();
+        var panel = new XYPanel();
+        XyuiDensityScope.SetMode(fields, XyuiDensityMode.Touch);
+        XyuiDensityScope.SetMode(sections, XyuiDensityMode.Touch);
+        XyuiDensityScope.SetMode(panel, XyuiDensityMode.Touch);
+        Assert.Equal(12d, fields.Spacing);
+        Assert.Equal(20d, sections.Spacing);
+        Assert.Equal(20d, panel.Padding.Top);
     }
 
     [Fact]
