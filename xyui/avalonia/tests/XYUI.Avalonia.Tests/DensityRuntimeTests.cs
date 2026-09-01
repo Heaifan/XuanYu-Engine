@@ -23,7 +23,7 @@ public sealed class DensityRuntimeTests
         var panel = new StackPanel();
         XY.SetDensity(panel, density);
         Assert.Equal(density, XY.GetDensity(panel));
-        Assert.Equal(XyuiDensityMetrics.For(density), XyuiDensityScope.GetMetrics(panel));
+        Assert.Equal(XyuiDensityMetrics.For(density), XyuiDensityMetrics.For(XY.GetDensity(panel)));
     }
 
     [Fact]

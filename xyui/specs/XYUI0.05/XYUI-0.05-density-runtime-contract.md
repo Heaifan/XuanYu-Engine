@@ -17,7 +17,7 @@ XY.SetDensity(panel, XYDensity.Compact);
 var density = XY.GetDensity(control);
 ```
 
-合法档位只有 `Compact`、`Default`、`Comfortable`。本轮不引入 `Touch`。旧 `XyuiDensityScope` 仅作为内部兼容入口，新的外部消费统一使用 `XY.Density`。
+合法档位只有 `Compact`、`Default`、`Comfortable`。本轮不引入 `Touch`。新的外部消费统一使用 `XY.Density`。
 
 ## 语义表
 
