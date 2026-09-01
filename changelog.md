@@ -4,7 +4,7 @@
 
 - 目标：建立可继承、可复用的信息密度语义，保持 Density / Spacing / Sizing 职责分离。
 - 变化：新增 `XyuiDensityScope.Density` 附加属性与 `Compact` / `Default` / `Comfortable` 三档；通过既有 Spacing 组合提供行间距、区块间距和面板内边距策略；不新增 Touch、不修改控件尺寸、字体、图标、命中区或宽度。
-- 验证：Density 专项测试 7/7；针对性 Build 0 警告 0 错误；正式门禁待执行。
+- 验证：Density 专项测试 7/7；XYUI.Avalonia.Tests 373/373；解决方案 Build 0 警告 0 错误；ARCH-A 与 `git diff --check` 通过。提交后外部未跟踪 Gallery Density 文件引入 5 个编译错误，未纳入本轮。
 - 状态：XYUI-0.05 Runtime 已实现，等待正式门禁与用户真机验收；不启动 Gallery 主视觉改造。
 - 版本：`v0.2.28.63-rz` 已同步到四处版本文件。
 - Hash：`7d3b135e`。
