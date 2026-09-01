@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.45-rz · XYUI-3-19 · BackForwardNavigation 宽度与菜单图标修复（2026-09-01 10:41:19 +08:00）
+
+- 目标：只修 XYUI-3-19 的 34 DIP 控件宽度塌缩与历史菜单视觉问题；XYUI-3-17、18、20 保持不动。
+- 变化：Location 增加 130 DIP 最小宽度、240 DIP 最大宽度及 8 DIP 两侧间距，保持 Action 28 DIP、Divider 20 DIP 与两行位置文本裁剪；历史直达项移除 ChevronRight 子菜单箭头。
+- 验证：XYUI3BackForwardNavigationTests 7/7；XYUI3Batch05StructureTests 6/6；XYUI 全量 327/327；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A 的 WarCore 守卫通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-19 等待用户视觉与交互验收；不启动 XYUI-3-20。
+- 版本：`v0.2.28.45-rz` 已同步到四处版本文件；`file-tree.md` 无结构变化，无需更新。
+- Hash：`27d5522a`。
+
 ## v0.2.28.44-rz · XYUI-3-19 · BackForwardNavigation 紧凑结构与历史跳转（2026-09-01 10:20:56 +08:00）
 
 - 目标：只修 XYUI-3-19，保留 `_history + _index`、Forward branch 截断和 LocationChanged 状态模型；XYUI-3-17、18、20 保持不动。
