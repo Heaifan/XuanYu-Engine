@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.VisualTree;
 using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
@@ -13,14 +14,21 @@ public enum XYCommandBarVariant { Standard, Contextual }
 
 public sealed class XYCommandItem : XYButton
 {
+    public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<XYCommandItem, bool>(nameof(IsSelected));
     public string CommandId { get; }
     public XYCommandRole Role { get; }
     public XyuiVectorIcon? Icon { get; }
+    public bool IsSelected { get => GetValue(IsSelectedProperty); set => SetValue(IsSelectedProperty, value); }
     public event EventHandler? ExecuteRequested;
     public XYCommandItem(string label, string? commandId = null, XYCommandRole role = XYCommandRole.Normal, XyuiVectorIcon? icon = null)
     {
         CommandId = commandId ?? label; Role = role; Icon = icon; Variant = role switch { XYCommandRole.Primary => XyuiButtonVariant.Primary, XYCommandRole.Danger => XyuiButtonVariant.Danger, _ => XyuiButtonVariant.Secondary }; VerticalAlignment = VerticalAlignment.Center; Content = Visual(label); Classes.Add("xyui-command-item"); Classes.Add(role == XYCommandRole.Primary ? "xyui-command-primary" : role == XYCommandRole.Danger ? "xyui-command-danger" : "xyui-command-normal");
         Click += (_, _) => { if (IsEnabled) ExecuteRequested?.Invoke(this, EventArgs.Empty); };
+    }
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.Property == IsSelectedProperty) Classes.Set("xyui-command-selected", e.GetNewValue<bool>());
     }
     Control Visual(string label) => Icon is { } icon ? new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5, VerticalAlignment = VerticalAlignment.Center, Children = { new XYIcon { Icon = icon, Size = XyuiIconSize.Small, VerticalAlignment = VerticalAlignment.Center }, new TextBlock { Text = label, Classes = { "xyui-command-label" }, VerticalAlignment = VerticalAlignment.Center } } } : new TextBlock { Text = label, Classes = { "xyui-command-label" }, VerticalAlignment = VerticalAlignment.Center };
 }
@@ -36,6 +44,7 @@ public sealed class XYCommandBar : Border
     public XYIconButton MoreButton { get; }
     public XYCommandBarVariant Variant { get; private set; }
     public string ContextIdentity { get; private set; } = "";
+    public XYCommandItem? SelectedItem { get; private set; }
     public event EventHandler<XYCommandItem>? CommandExecuted;
     public XYCommandBar(params XYCommandItem[] items) : this(XYCommandBarVariant.Standard, "", items) { }
     public XYCommandBar(XYCommandBarVariant variant, string contextIdentity, params XYCommandItem[] items)
@@ -53,10 +62,10 @@ public sealed class XYCommandBar : Border
     void ToggleMore() { if (_popup.IsOpen) CloseMore(); else { _popup.PlacementTarget = MoreButton; _popup.IsOpen = true; } }
     public void CloseMore() { if (_popup.IsOpen) _popup.IsOpen = false; }
     public void RefreshMore() => MoreButton.IsVisible = MoreMenu.Items.Any();
-    public void UpdateContext(string identity, params XYCommandItem[] commands) { ContextIdentity = identity; foreach (var item in Items) Detach(item); Items = commands; foreach (var item in Items) Attach(item); if (Variant == XYCommandBarVariant.Contextual) Child = Build(); }
+    public void UpdateContext(string identity, params XYCommandItem[] commands) { ContextIdentity = identity; SelectedItem = null; foreach (var item in Items) Detach(item); Items = commands; foreach (var item in Items) Attach(item); if (Variant == XYCommandBarVariant.Contextual) { if (MoreButton.GetVisualParent() is Panel parent) parent.Children.Remove(MoreButton); Child = null; Child = Build(); } }
     void Attach(XYCommandItem item) => item.ExecuteRequested += OnItemExecuted;
     void Detach(XYCommandItem item) => item.ExecuteRequested -= OnItemExecuted;
-    void OnItemExecuted(object? sender, EventArgs e) { if (sender is XYCommandItem item) CommandExecuted?.Invoke(this, item); }
+    void OnItemExecuted(object? sender, EventArgs e) { if (sender is not XYCommandItem item) return; foreach (var candidate in Items) candidate.IsSelected = ReferenceEquals(candidate, item); SelectedItem = item; CommandExecuted?.Invoke(this, item); }
     void OnMoreKeyDown(object? sender, KeyEventArgs e) { if (e.Key == Key.Escape) { CloseMore(); e.Handled = true; } }
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e) { base.OnAttachedToVisualTree(e); _applicationLifetime = Application.Current?.ApplicationLifetime as IActivatableLifetime; if (_applicationLifetime is not null) _applicationLifetime.Deactivated += OnDeactivated; _hostWindow = e.RootVisual as WindowBase; if (_hostWindow is not null) _hostWindow.Deactivated += OnDeactivated; }
     void OnDeactivated(object? sender, EventArgs e) => CloseMore();
