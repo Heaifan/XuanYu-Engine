@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.55-rz · XYUI-3-22 · Compact Popup 专用承载与正式 Check（2026-09-01 14:35:25 +08:00）
+
+- 目标：只修 XYUI-3-22 Compact Popup；桌面 Hierarchical、XYUI-3-21、XYUI-3-23、XYUI-3-24 保持冻结。
+- 变化：Popup 改用独立 `xyui-toc-popup-panel`，不再混合塞入 `XYMenu.Items`；保留 ParentId 分组与连续 Guide，恢复 Current Selected Surface、左 3 DIP Accent；Unicode Check 替换为正式 `XYIcon(Check)` 并固定右列；TOC 行继续使用专用模板，移除通用 Button Chrome。
+- 验证：XYUI.Avalonia.Tests 361/361；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A WarCore guard 通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-22 UI REWORKED · INTERACTION IMPLEMENTED · AWAITING USER VISUAL/INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.55-rz` 已同步到四处版本文件。
+
 ## v0.2.28.54-rz · XYUI-3-22 · TOC 专用视觉模板与 Popup 层级（2026-09-01 14:21:36 +08:00）
 
 - 目标：只修 XYUI-3-22；XYUI-3-21 保持冻结，XYUI-3-23、3-24 不动。
