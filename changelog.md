@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.62-rz · XYUI-3-23 · Bottom Navigation 基础用法与完整 API 文档（2026-09-01 16:24:05 +08:00）
+
+- 目标：只完善 XYUI-3-23 Gallery 文档；XYUI-3-21、XYUI-3-22、XYUI-3-24 保持冻结。
+- 变化：将“基础用法”从 `<c:XYBottomNavigation />` 占位标签改为可复制的 C# 配置示例，覆盖目的地、Badge、IsEnabled、共享状态、Primary Action、安全区、请求 Accept/Reject、状态提交和事件接线。
+- API：新增 3-23 属性与事件表，列出 `XYBottomNavigationItem`、`XYBottomNavigation`、`XYBottomNavigationRequest`、`XYNavigationState` 的公开属性、构造函数、方法和事件。
+- 验证：Gallery 项目构建 0 Warning / 0 Error；完整解决方案构建、测试、ARCH-A 与 `git diff --check` 将在提交前执行。
+- 状态：XYUI-3-23 文档增强 · AWAITING USER VISUAL/INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.62-rz` 已同步到四处版本文件。
+
 ## v0.2.28.61-rz · XYUI-3-23 · Bottom Navigation Equal Slots 与 Primary Action（2026-09-01 16:15:08 +08:00）
 
 - 目标：只修 XYUI-3-23；XYUI-3-21、XYUI-3-22、XYUI-3-24 保持冻结。

@@ -1472,6 +1472,7 @@
    │  │     ├─ XYUI2GalleryCatalog.Properties.cs  # Number、Vector、Enum、Reference Property 的中文真实场景样例工厂。
    │  │     ├─ XYUI2GalleryCatalog.SearchPassword.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3DocumentationCatalog.cs  # 实现对应模块的 C# 职责。
+   │  │     ├─ XYUI3DocumentationCatalog.Api.cs  # 提供 XYUI-3-23 基础用法与完整 API 文档。
    │  │     ├─ XYUI3GalleryCatalog.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3GalleryCatalog.Navigation.cs  # 提供紧凑导航四组件的真实 Gallery Preview。
    │  │     └─ XYUI3GalleryCatalog.Final.cs  # 提供 XYUI-3-21~24 最终导航组件真实预览。

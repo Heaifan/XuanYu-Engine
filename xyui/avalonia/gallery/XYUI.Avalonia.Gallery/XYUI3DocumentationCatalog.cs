@@ -3,7 +3,7 @@ using XYUI.Avalonia.Controls;
 
 namespace XYUI.Avalonia.Gallery;
 
-public static class XYUI3DocumentationCatalog
+public static partial class XYUI3DocumentationCatalog
 {
     static readonly IReadOnlySet<string> BatchIds = new HashSet<string> { "XYUI-3-3.01", "XYUI-3-3.02", "XYUI-3-3.03", "XYUI-3-3.04", "XYUI-3-3.05", "XYUI-3-3.06", "XYUI-3-3.07", "XYUI-3-3.08", "XYUI-3-3.09", "XYUI-3-3.10", "XYUI-3-3.11", "XYUI-3-3.12", "XYUI-3-3.13", "XYUI-3-3.14", "XYUI-3-3.15", "XYUI-3-3.16", "XYUI-3-3.17", "XYUI-3-3.18", "XYUI-3-3.19", "XYUI-3-3.20", "XYUI-3-3.21", "XYUI-3-3.22", "XYUI-3-3.23", "XYUI-3-3.24" };
     public static IReadOnlyList<XYUI1ComponentDocument> Build() => XyuiCatalogSource.Load().Where(x => BatchIds.Contains(x.SourceItemId)).Select(Create).ToArray();
@@ -14,7 +14,7 @@ public static class XYUI3DocumentationCatalog
             entry.SourceItemId is "XYUI-3-3.09" or "XYUI-3-3.10" or "XYUI-3-3.11" or "XYUI-3-3.12" or "XYUI-3-3.17" or "XYUI-3-3.18" or "XYUI-3-3.19" or "XYUI-3-3.20" ? "UI + INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE" : "UI IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE";
         return new(entry.SourceItemId, entry.Title.Split('/').Last().Trim(), type, details.Overview, details.WhenToUse,
             () => XYUI3GalleryCatalog.CreatePreview(entry.SourceItemId), details.Usages, details.Variants, details.States,
-            [], entry.ApiRefs.Select(x => new XYUIDocToken(x, "Canonical", "Foundation token reference")).ToArray(), type)
+            Properties(entry.SourceItemId), entry.ApiRefs.Select(x => new XYUIDocToken(x, "Canonical", "Foundation token reference")).ToArray(), type)
         { CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap, Acceptance = acceptance };
     }
     static string ComponentName(string id) => id switch
@@ -45,8 +45,48 @@ public static class XYUI3DocumentationCatalog
         "XYUI-3-3.20" => ("顶栏级紧凑工作区切换器。", "用于切换地图编辑、数据编辑、战争实验和调试工作区。", ["<c:XYWorkspaceSwitcher />"], [new("Compact V2", "34 DIP Trigger / 32 DIP Item", "Light / Dark")], [new("Selected", "当前工作区"), new("Popup", "同宽下拉")]),
         "XYUI-3-3.21" => ("共享 XYViewState 的视图切换器，支持分段、下拉和 Primary + More。", "用于同一页面内的主视图切换；所有变体共享 request→commit 状态。", ["<c:XYViewSwitcher />"], [new("Segmented", "36 DIP / 30 DIP Item", "Light / Dark"), new("Dropdown", "XYMenu Popup", "Light / Dark")], [new("Current", "当前视图"), new("Disabled", "不可用视图")]),
         "XYUI-3-3.22" => ("限深两级的章节目录导航，不承担 Tree 或 ScrollSpy。", "用于文档和长页章节跳转，层级状态由 XYTableOfContentsState 共享。", ["<c:XYTableOfContents />"], [new("Hierarchical", "Level 1 + Level 2", "Light / Dark"), new("Compact", "XYMenu Popup", "Light / Dark")], [new("Current", "当前章节"), new("Parent", "当前父章节")]),
-        "XYUI-3-3.23" => ("移动端等宽目的地导航，Primary Action 与目的地状态分离。", "用于窄屏编辑器或预览壳的一级目的地切换；底部安全区由宿主提供。", ["<c:XYBottomNavigation />"], [new("Equal Slots", "64 DIP Bar", "Light / Dark")], [new("Selected", "目的地选中"), new("Badge", "复用状态提示")]),
+        "XYUI-3-3.23" => ("移动端等宽目的地导航，Primary Action 与目的地状态分离。", "用于窄屏编辑器或预览壳的一级目的地切换；底部安全区由宿主提供。", BottomNavigationUsage(), [new("Equal Slots", "64 DIP Bar", "Light / Dark")], [new("Selected", "目的地选中"), new("Badge", "复用状态提示")]),
         "XYUI-3-3.24" => ("响应式导航抽屉，复用 Sidebar、NavigationMenu、SearchField 的真实能力。", "用于窄屏临时导航、上下文抽屉和边缘 Peek；具备遮罩、Esc、失焦和卸载关闭生命周期。", ["<c:XYNavigationDrawer />"], [new("Full Sidebar", "280 DIP", "Light / Dark"), new("Context", "Adaptive Drawer", "Light / Dark")], [new("Open", "Overlay + Backdrop"), new("Closed", "焦点恢复")]),
         _ => ("层级连接型子菜单，使用统一菜单面板和可复用菜单行。", "用于导出、主题、布局等需要二级命令的层级入口；激活父项或 Right 打开，Left/Esc 收起。", ["<c:XYSubMenu ParentMenu=\"XYMenu\" ChildMenu=\"XYMenu\" />"], [new("Open Right", "右侧连接", "默认"), new("Open Left", "左侧镜像", "静态 Variant")], [new("Active Trigger", "父项保持强调"), new("Connector", "40 DIP 连接线与锚点")])
     };
+
+    static string[] BottomNavigationUsage() => ["""
+// C#：在宿主 View / ViewModel 中创建并配置完整的底部导航。
+using XYUI.Avalonia.Controls;
+using XYUI.Avalonia.Vector;
+using System.Linq;
+
+var items = new[]
+{
+    new XYBottomNavigationItem("map", "地图", XyuiVectorIcon.Locate, Badge: null, IsEnabled: true),
+    new XYBottomNavigationItem("data", "数据", XyuiVectorIcon.Code, Badge: "2"),
+    new XYBottomNavigationItem("logs", "日志", XyuiVectorIcon.Section, Badge: "3"),
+    new XYBottomNavigationItem("mine", "我的", XyuiVectorIcon.Info)
+};
+var state = new XYNavigationState(
+    items.Select(x => new XYNavigationEntry(x.Id, x.Label, x.Icon)), selectedId: "map");
+var primary = new XYButton
+{
+    Content = new XYIcon { Icon = XyuiVectorIcon.Add, Size = XyuiIconSize.Small },
+    Variant = XyuiButtonVariant.Primary
+};
+var navigation = new XYBottomNavigation(state, items, primary) { SafeAreaBottom = 0 };
+
+bool CanOpenLogs() => true;       // 替换为宿主权限 / 数据就绪判断
+void ShowView(string id) { }      // 将内容区切换到 id
+void CreateDocument() { }         // 执行宿主的新建流程
+
+navigation.DestinationRequested += (_, request) =>
+{
+    if (request.Destination.Id == "logs" && !CanOpenLogs()) { request.Reject(); return; }
+    request.Accept();
+};
+navigation.DestinationChanged += (_, id) => ShowView(id);
+navigation.PrimaryActionRequested += (_, _) => CreateDocument();
+
+navigation.SelectDestination("data");       // 触发请求，Accept 后提交
+navigation.CommitDestination("map");        // 已确认时直接提交
+var current = navigation.CurrentDestinationId; // 读取当前 Id
+var allItems = navigation.Items;                // 读取目的地与 Badge
+"""];
 }
