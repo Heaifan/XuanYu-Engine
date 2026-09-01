@@ -1,40 +1,39 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:c="using:XYUI.Avalonia.Controls"
              x:Class="XYUI.Avalonia.Gallery.Views.SizingCoreRulesSection">
-  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}" Background="{DynamicResource XY.Brush.Surface.Panel}">
-    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-      <TextBlock Text="① 核心规则" Classes="xyui-text-section" />
-      <Grid ColumnDefinitions="*,*,*,*" Margin="0,4,0,0">
-        <!-- 1. 高度系统化 -->
-        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="0,0,3,0" CornerRadius="4">
-          <StackPanel Spacing="4">
-            <TextBlock Text="高度系统化" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="主高度严格遵循 28 / 32 / 36 / 44 四档标准阶梯。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
+    <StackPanel Spacing="6">
+      <TextBlock Text="① 核心规则" Classes="xyui-text-section" FontSize="15" />
+      <Grid ColumnDefinitions="*,*,*,*" Margin="0,2,0,0">
+        <!-- 1. 高度体系 -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="0,0,4,0" CornerRadius="4">
+          <StackPanel Spacing="2">
+            <TextBlock Text="高度体系" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="28 / 32 / 36 / 44 DIP" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
 
-        <!-- 2. 宽度内容驱动 -->
-        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="3,0,3,0" CornerRadius="4">
-          <StackPanel Spacing="4">
-            <TextBlock Text="宽度内容驱动" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="按钮由文本内容撑开，输入框由布局拉伸，禁写死宽度。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+        <!-- 2. 宽度 -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="2,0,2,0" CornerRadius="4">
+          <StackPanel Spacing="2">
+            <TextBlock Text="宽度" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="内容驱动" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
 
-        <!-- 3. 图标尺寸分离 -->
-        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="3,0,3,0" CornerRadius="4">
-          <StackPanel Spacing="4">
-            <TextBlock Text="图标尺寸独立" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="图标维持 14 / 16 / 20 / 24 独立阶梯，不随控件粗暴等比拉伸。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+        <!-- 3. 图标 -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="2,0,2,0" CornerRadius="4">
+          <StackPanel Spacing="2">
+            <TextBlock Text="图标" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="14 / 16 / 20 / 24" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
 
-        <!-- 4. 触控命中独立 -->
-        <Border Grid.Column="3" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="3,0,0,0" CornerRadius="4">
-          <StackPanel Spacing="4">
-            <TextBlock Text="触控命中独立" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Status.Success}" />
-            <TextBlock Text="触控档位提供 44 DIP 最小命中区域，保障可靠交互。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+        <!-- 4. 命中区 -->
+        <Border Grid.Column="3" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="4,0,0,0" CornerRadius="4">
+          <StackPanel Spacing="2">
+            <TextBlock Text="命中区" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="独立语义" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
       </Grid>
