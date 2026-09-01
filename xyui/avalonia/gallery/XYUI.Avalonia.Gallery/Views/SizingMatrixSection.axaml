@@ -6,7 +6,7 @@
   <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
     <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
       <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
-        <TextBlock Text="② 真实组件尺寸矩阵 (Component Family Matrix)" Classes="xyui-text-section" />
+        <TextBlock Text="② 真实组件尺寸矩阵" Classes="xyui-text-section" />
         <Border Background="{DynamicResource XY.Brush.Accent.Soft}" Padding="6,2" CornerRadius="2">
           <TextBlock Text="方案 C · 真实 XY.Size 继承驱动" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
         </Border>
@@ -53,16 +53,16 @@
         <!-- Row 3: XYIconButton -->
         <TextBlock Grid.Row="3" Grid.Column="0" Text="XYIconButton&#x0a;(工具操作)" Classes="xyui-text-label" VerticalAlignment="Center" Margin="0,6" />
         <Panel Grid.Row="3" Grid.Column="1" xy:XY.Size="Compact" HorizontalAlignment="Center" VerticalAlignment="Center">
-          <c:XYIconButton><c:XYIcon Icon="Code" Size="Small" /></c:XYIconButton>
+          <c:XYIconButton><c:XYIcon Icon="Code" /></c:XYIconButton>
         </Panel>
         <Border Grid.Row="3" Grid.Column="2" xy:XY.Size="Default" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="4" CornerRadius="3" HorizontalAlignment="Center">
-          <c:XYIconButton><c:XYIcon Icon="Check" Size="Medium" /></c:XYIconButton>
+          <c:XYIconButton><c:XYIcon Icon="Check" /></c:XYIconButton>
         </Border>
         <Panel Grid.Row="3" Grid.Column="3" xy:XY.Size="Comfortable" HorizontalAlignment="Center" VerticalAlignment="Center">
-          <c:XYIconButton><c:XYIcon Icon="Info" Size="Large" /></c:XYIconButton>
+          <c:XYIconButton><c:XYIcon Icon="Info" /></c:XYIconButton>
         </Panel>
         <Panel Grid.Row="3" Grid.Column="4" xy:XY.Size="Touch" HorizontalAlignment="Center" VerticalAlignment="Center">
-          <c:XYIconButton><c:XYIcon Icon="Code" Size="Large" /></c:XYIconButton>
+          <c:XYIconButton><c:XYIcon Icon="Code" /></c:XYIconButton>
         </Panel>
 
         <!-- Row 4: XYToolbar + XYToolGroup + XYIconButton + XYButton -->

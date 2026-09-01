@@ -4,7 +4,7 @@
              x:Class="XYUI.Avalonia.Gallery.Views.SizingCoreRulesSection">
   <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}" Background="{DynamicResource XY.Brush.Surface.Panel}">
     <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-      <TextBlock Text="① 尺寸四大核心法则" Classes="xyui-text-section" />
+      <TextBlock Text="① 核心规则" Classes="xyui-text-section" />
       <Grid ColumnDefinitions="*,*,*,*" Margin="0,4,0,0">
         <!-- 1. 高度系统化 -->
         <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="0,0,3,0" CornerRadius="4">
@@ -26,7 +26,7 @@
         <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="3,0,3,0" CornerRadius="4">
           <StackPanel Spacing="4">
             <TextBlock Text="图标尺寸独立" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="图标维持 14 / 16 / 20 独立阶梯，不随控件粗暴等比拉伸。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+            <TextBlock Text="图标维持 14 / 16 / 20 / 24 独立阶梯，不随控件粗暴等比拉伸。" Classes="xyui-text-caption" TextWrapping="Wrap" />
           </StackPanel>
         </Border>
 
