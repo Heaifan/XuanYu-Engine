@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.56-rz · XYUI-3-22 · Gallery Compact 内嵌层级目录（2026-09-01 14:51:59 +08:00）
+
+- 目标：只修 XYUI-3-22 Gallery 组合；Desktop Hierarchical、XYUI-3-21、XYUI-3-23、XYUI-3-24 保持冻结。
+- 变化：Compact Gallery 示例自动打开自身专用 TOC Popup，直接展示与上方一致的 ParentId 层级、连续 Guide、Current Surface、左 Accent 与右侧正式 Check；保留触发器点击与关闭生命周期。
+- 验证：XYUI.Avalonia.Tests 361/361；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A WarCore guard 通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-22 UI REWORKED · INTERACTION IMPLEMENTED · AWAITING USER VISUAL/INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.56-rz` 已同步到四处版本文件。
+
 ## v0.2.28.55-rz · XYUI-3-22 · Compact Popup 专用承载与正式 Check（2026-09-01 14:35:25 +08:00）
 
 - 目标：只修 XYUI-3-22 Compact Popup；桌面 Hierarchical、XYUI-3-21、XYUI-3-23、XYUI-3-24 保持冻结。
