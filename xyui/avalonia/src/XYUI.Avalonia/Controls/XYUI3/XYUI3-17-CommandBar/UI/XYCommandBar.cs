@@ -59,7 +59,7 @@ public sealed class XYCommandBar : Border
         foreach (var item in Items) { if (item.Role == XYCommandRole.Danger) commands.Children.Add(new Border { Width = 1, Height = 20, Classes = { "xyui-command-divider" } }); item.Height = 28; commands.Children.Add(item); }
         grid.Children.Add(commands); Grid.SetColumn(MoreButton, 2); MoreButton.Width = 28; MoreButton.Height = 28; grid.Children.Add(MoreButton); return new Border { Classes = { "xyui-command-bar-surface" }, Child = grid };
     }
-    void ToggleMore() { if (_popup.IsOpen) CloseMore(); else { _popup.PlacementTarget = MoreButton; _popup.IsOpen = true; } }
+    void ToggleMore() { if (_popup.IsOpen) CloseMore(); else { _popup.PlacementTarget = MoreButton; _popup.IsOpen = true; MoreMenu.ApplyOverlayStyling(); MoreMenu.Open(); } }
     public void CloseMore() { if (_popup.IsOpen) _popup.IsOpen = false; }
     public void RefreshMore() => MoreButton.IsVisible = MoreMenu.Items.Any();
     public void UpdateContext(string identity, params XYCommandItem[] commands) { ContextIdentity = identity; SelectedItem = null; foreach (var item in Items) Detach(item); Items = commands; foreach (var item in Items) Attach(item); if (Variant == XYCommandBarVariant.Contextual) { if (MoreButton.GetVisualParent() is Panel parent) parent.Children.Remove(MoreButton); Child = null; Child = Build(); } }
