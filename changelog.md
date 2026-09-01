@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.41-rz · XYUI-3-17 · CommandBar 高亮、保存与垂直对齐返工（2026-09-01 09:32:42 +08:00）
+
+- 目标：修复截图反馈的双高亮、保存按钮无响应和 Contextual 行文字未稳定垂直居中问题；XYUI-3-18～20 保持不动。
+- 变化：Primary 默认回到工具栏中性底色，只有点击命令进入 Emphasis；Gallery 保存命令恢复可用；按钮模板绑定水平/垂直内容对齐，17 命令与 Context 文本统一 28 DIP 行盒；保留单一 `SelectedItem` 与 Context 重建清理。
+- 验证：XYUI.Avalonia 解决方案构建 0 Warning / 0 Error；`XYUI3Batch05StructureTests` 6/6；Gallery 实际显示 3.17，点击反馈更新为 `Last Action`；`git diff --check` 通过；ARCH-A 的 WarCore 守卫通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-17 等待用户视觉与交互验收；不启动 XYUI-3-18。
+- 版本：`v0.2.28.41-rz` 已同步到四处版本文件；`file-tree.md` 无结构变化，无需更新。
+- Hash：`f1061375`。
+
 ## v0.2.28.40-rz · XYUI-3-17 · CommandBar 点击选中反馈（2026-09-01 09:23:14 +08:00）
 
 - 目标：为 XYUI-3-17 命令栏补齐“点击哪个按钮，哪个按钮保持变色”的真实交互；XYUI-3-18～20 保持不动。
