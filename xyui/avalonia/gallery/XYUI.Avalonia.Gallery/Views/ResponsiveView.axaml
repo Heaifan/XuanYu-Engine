@@ -1,0 +1,12 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.ResponsiveView">
+  <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+    <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+      <TextBlock Text="响应式体系 (Responsive Foundation)" Classes="xyui-heading-panel" />
+      <c:XYStatusBadge Text="草稿 / 预览" State="Warning" VerticalAlignment="Center" />
+    </StackPanel>
+    <TextBlock Text="响应式断点与自适应布局规则处于草稿与规范定义阶段。" Classes="xyui-text-body" />
+  </StackPanel>
+</UserControl>

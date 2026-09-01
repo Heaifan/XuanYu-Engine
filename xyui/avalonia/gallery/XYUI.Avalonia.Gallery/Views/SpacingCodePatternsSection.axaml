@@ -1,0 +1,38 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingCodePatternsSection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <TextBlock Text="④ 推荐写法 · 高级用法 · 禁止写法" Classes="xyui-text-section" />
+      <Grid ColumnDefinitions="*,*,*" Margin="0,4,0,0">
+        <!-- 1. Recommended -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="0,0,4,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="推荐写法 (Recommended)" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="&lt;xy:XYToolbar&gt;&#x0a;  &lt;xy:XYToolGroup&gt;...&lt;/xy:XYToolGroup&gt;&#x0a;&lt;/xy:XYToolbar&gt;" Classes="xyui-text-code" FontSize="11" />
+            <TextBlock Text="优先消费语义容器，由容器统一管理子元素间距。" Classes="xyui-text-caption" />
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Advanced -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="2,0,2,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="高级用法 (Advanced)" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="&lt;StackPanel&#x0a;  Spacing=&quot;{DynamicResource XY.Gap.ToolItem}&quot;&gt;&#x0a;  ...&lt;/StackPanel&gt;" Classes="xyui-text-code" FontSize="11" />
+            <TextBlock Text="自定义容器直接绑定原子 Gap / Padding Token。" Classes="xyui-text-caption" />
+          </StackPanel>
+        </Border>
+
+        <!-- 3. Forbidden -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="4,0,0,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="禁止写法 (Forbidden)" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Status.Danger}" />
+            <TextBlock Text="&lt;XYButton Margin=&quot;0,0,7,0&quot; /&gt;" Classes="xyui-text-code" FontSize="11" />
+            <TextBlock Text="严禁手写魔法数值，严禁用 Margin 模拟兄弟间距。" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

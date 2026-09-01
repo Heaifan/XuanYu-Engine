@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Density;
+using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Gallery.Views.Density;
 
@@ -19,10 +20,10 @@ public partial class DensityLabView
             Grid.SetColumn(codeText, 1); grid.Children.Add(codeText);
             var badge = new XYStatusBadge { Text = $"{type} · {status}", Margin = new(0, 0, 8, 0), VerticalAlignment = VerticalAlignment.Center };
             Grid.SetColumn(badge, 2); grid.Children.Add(badge);
-            var btnEdit = new XYIconButton { Content = "✎", Margin = new(0, 0, 4, 0) };
+            var btnEdit = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Code, Size = XyuiIconSize.Small }, Margin = new(0, 0, 4, 0) };
             ToolTip.SetTip(btnEdit, "快速编辑");
             Grid.SetColumn(btnEdit, 3); grid.Children.Add(btnEdit);
-            var btnLoc = new XYIconButton { Content = "⊙" };
+            var btnLoc = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Locate, Size = XyuiIconSize.Small } };
             ToolTip.SetTip(btnLoc, "定位视口");
             Grid.SetColumn(btnLoc, 4); grid.Children.Add(btnLoc);
             border.Child = grid;

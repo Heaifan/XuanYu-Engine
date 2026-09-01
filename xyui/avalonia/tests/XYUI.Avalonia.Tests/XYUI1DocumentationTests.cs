@@ -49,9 +49,25 @@ public sealed class XYUI1DocumentationTests : IClassFixture<XyuiHeadlessFixture>
         Assert.IsType<PaletteView>(model.SelectedDocument);
         model.SelectFoundation("typography");
         Assert.IsType<TypographyView>(model.SelectedDocument);
-        model.SelectFoundation("shape");
-        Assert.IsType<ShapeView>(model.SelectedDocument);
+        model.SelectFoundation("spacing_layout");
+        Assert.IsType<SpacingLayoutView>(model.SelectedDocument);
+        model.SelectFoundation("sizing");
+        Assert.IsType<SizingView>(model.SelectedDocument);
         model.SelectFoundation("density");
         Assert.IsType<DensitySamplesView>(model.SelectedDocument);
+        model.SelectFoundation("iconography");
+        Assert.IsType<IconographyView>(model.SelectedDocument);
+        model.SelectFoundation("shape");
+        Assert.IsType<ShapeView>(model.SelectedDocument);
+        model.SelectFoundation("surface");
+        Assert.IsType<SurfaceView>(model.SelectedDocument);
+        model.SelectFoundation("states");
+        Assert.IsType<StatesView>(model.SelectedDocument);
+        model.SelectFoundation("responsive");
+        Assert.IsType<ResponsiveView>(model.SelectedDocument);
+        model.SelectFoundation("accessibility");
+        Assert.IsType<AccessibilityView>(model.SelectedDocument);
+        model.SelectFoundation("layout_recipes");
+        Assert.IsType<LayoutRecipesView>(model.SelectedDocument);
     });
 }

@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.SizingView">
+  <ScrollViewer>
+    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <!-- Title & Subtitle in Chinese -->
+      <StackPanel Spacing="4">
+        <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="尺寸体系 / Sizing" Classes="xyui-heading-panel" />
+          <c:XYStatusBadge Text="已锁定 · 0.04" State="Success" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="统一控件高度、图标尺寸、命中区域与内容驱动宽度。" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <!-- ① 尺寸四大核心法则 -->
+      <views:SizingCoreRulesSection />
+
+      <!-- ② 真实组件尺寸矩阵 (方案 C · 紧凑/默认/舒适/触控) -->
+      <views:SizingMatrixSection />
+
+      <!-- ③ 尺寸解剖三层结构 (图标 / 视觉 / 命中区) -->
+      <views:SizingAnatomySection />
+
+      <!-- ④ 推荐写法 · 高级用法 · 禁止写法 -->
+      <views:SizingCodePatternsSection />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

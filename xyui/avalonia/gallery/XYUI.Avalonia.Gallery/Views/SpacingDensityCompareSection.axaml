@@ -1,0 +1,65 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingDensityCompareSection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <TextBlock Text="③ 同一布局 · Density 自动改变空间" Classes="xyui-text-section" />
+      <TextBlock Text="XAML 结构不变，只切换 Density；间距与内边距自动按语义映射。" Classes="xyui-text-caption" />
+
+      <Grid ColumnDefinitions="*,*,*" Margin="0,4,0,0">
+        <!-- 1. Compact Column -->
+        <Border Grid.Column="0" xy:XY.Density="Compact" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="0,0,4,0" CornerRadius="4">
+          <StackPanel Spacing="6">
+            <TextBlock Text="紧凑 (Compact) · 2 / 6 / 12" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <Border Classes="xyui-toolbar" Padding="2">
+              <StackPanel Orientation="Horizontal" Spacing="4">
+                <c:XYButton Content="A1" Variant="Primary" />
+                <c:XYButton Content="A2" Variant="Secondary" />
+                <c:XYButton Content="B1" Variant="Secondary" />
+              </StackPanel>
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="6" CornerRadius="3">
+              <TextBlock Text="紧凑面板内容" Classes="xyui-text-caption" />
+            </Border>
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Default Column -->
+        <Border Grid.Column="1" xy:XY.Density="Default" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="2,0,2,0" CornerRadius="4">
+          <StackPanel Spacing="8">
+            <TextBlock Text="默认 (Default) · 4 / 8 / 16" Classes="xyui-text-caption" FontWeight="Bold" />
+            <Border Classes="xyui-toolbar" Padding="4">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <c:XYButton Content="A1" Variant="Primary" />
+                <c:XYButton Content="A2" Variant="Secondary" />
+                <c:XYButton Content="B1" Variant="Secondary" />
+              </StackPanel>
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="8" CornerRadius="3">
+              <TextBlock Text="默认面板内容" Classes="xyui-text-caption" />
+            </Border>
+          </StackPanel>
+        </Border>
+
+        <!-- 3. Comfortable Column -->
+        <Border Grid.Column="2" xy:XY.Density="Comfortable" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="4,0,0,0" CornerRadius="4">
+          <StackPanel Spacing="10">
+            <TextBlock Text="舒适 (Comfortable) · 6 / 12 / 20" Classes="xyui-text-caption" FontWeight="Bold" />
+            <Border Classes="xyui-toolbar" Padding="6">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <c:XYButton Content="A1" Variant="Primary" />
+                <c:XYButton Content="A2" Variant="Secondary" />
+                <c:XYButton Content="B1" Variant="Secondary" />
+              </StackPanel>
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="10" CornerRadius="3">
+              <TextBlock Text="舒适面板内容" Classes="xyui-text-caption" />
+            </Border>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

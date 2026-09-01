@@ -24,7 +24,7 @@ public partial class DensityLabView : UserControl
         BtnCompact.Variant = density == XyuiDensity.Compact ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
         BtnDefault.Variant = density == XyuiDensity.Default ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
         BtnComfortable.Variant = density == XyuiDensity.Comfortable ? XyuiButtonVariant.Primary : XyuiButtonVariant.Secondary;
-        ScopeStatusText.Text = $"当前：XyuiDensity.{density} · 固定 SizeRole=Default（32 DIP 控件自身高度）";
+        ScopeStatusText.Text = $"当前：XYDensity.{density} · 固定 XY.Size=Default（32 DIP 控件自身高度）";
         RebuildItems(density);
     }
 

@@ -1,0 +1,53 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.StatesView">
+  <ScrollViewer>
+    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="交互状态体系 (States Foundation)" Classes="xyui-heading-panel" />
+        <c:XYStatusBadge Text="草稿 / 预览" State="Warning" VerticalAlignment="Center" />
+      </StackPanel>
+
+      <!-- 1. 按钮与操作状态 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="1. 控件基础状态 (Rest, Hover, Pressed, Focus, Disabled)" Classes="xyui-text-section" />
+          <WrapPanel>
+            <StackPanel Spacing="{DynamicResource XY.Gap.Field}" Margin="0,4,16,4" Width="130">
+              <TextBlock Text="常态 (Rest)" Classes="xyui-text-caption" />
+              <c:XYButton Content="Primary" Variant="Primary" />
+              <c:XYButton Content="Secondary" Variant="Secondary" />
+            </StackPanel>
+
+            <StackPanel Spacing="{DynamicResource XY.Gap.Field}" Margin="0,4,16,4" Width="130">
+              <TextBlock Text="焦点 (Focus Outline)" Classes="xyui-text-caption" />
+              <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Focus}" BorderThickness="{DynamicResource XY.Border.Width.Focus}" CornerRadius="{DynamicResource XY.Radius.Control}">
+                <c:XYButton Content="Focused" Variant="Primary" />
+              </Border>
+            </StackPanel>
+
+            <StackPanel Spacing="{DynamicResource XY.Gap.Field}" Margin="0,4,16,4" Width="130">
+              <TextBlock Text="禁用 (Disabled)" Classes="xyui-text-caption" />
+              <c:XYButton Content="Disabled" Variant="Primary" IsEnabled="False" />
+              <c:XYButton Content="Disabled" Variant="Secondary" IsEnabled="False" />
+            </StackPanel>
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. 状态指示与标签状态 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="2. 业务状态语义 (Status Semantic States)" Classes="xyui-text-section" />
+          <WrapPanel>
+            <c:XYStatusBadge Text="就绪 (Success)" State="Success" Margin="0,4,8,4" />
+            <c:XYStatusBadge Text="警告 (Warning)" State="Warning" Margin="0,4,8,4" />
+            <c:XYStatusBadge Text="失败 (Error)" State="Error" Margin="0,4,8,4" />
+            <c:XYStatusBadge Text="信息 (Info)" State="Info" Margin="0,4,8,4" />
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

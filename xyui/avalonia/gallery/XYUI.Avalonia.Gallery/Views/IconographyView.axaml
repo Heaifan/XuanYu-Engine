@@ -1,0 +1,67 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.IconographyView">
+  <ScrollViewer>
+    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="图标体系 (Iconography Foundation)" Classes="xyui-heading-panel" />
+        <c:XYStatusBadge Text="草稿 / 预览" State="Warning" VerticalAlignment="Center" />
+      </StackPanel>
+
+      <!-- 尺寸阶梯 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="1. 规范尺寸与描边 (Sizes: 14 / 16 / 20 DIP)" Classes="xyui-text-section" />
+          <Grid ColumnDefinitions="140,80,*" RowDefinitions="Auto,Auto,Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="XY.Icon.Size.S" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="14 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+              <c:XYIcon Icon="Code" Size="Small" />
+              <c:XYIcon Icon="Info" Size="Small" />
+              <c:XYIcon Icon="Check" Size="Small" />
+              <TextBlock Text="小型 Small (14)" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="XY.Icon.Size.M" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="16 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+              <c:XYIcon Icon="Code" Size="Medium" />
+              <c:XYIcon Icon="Info" Size="Medium" />
+              <c:XYIcon Icon="Check" Size="Medium" />
+              <TextBlock Text="中型 Medium (16 · 默认)" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="XY.Icon.Size.L" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="20 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+              <c:XYIcon Icon="Code" Size="Large" />
+              <c:XYIcon Icon="Info" Size="Large" />
+              <c:XYIcon Icon="Check" Size="Large" />
+              <TextBlock Text="大型 Large (20)" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 组合与对齐对比 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="2. 图标文字组合与对齐 (Icon + Text Composition)" Classes="xyui-text-section" />
+          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.IconText}">
+            <c:XYIcon Icon="Info" Size="Medium" />
+            <TextBlock Text="XY.Gap.IconText (4 DIP) 对齐正文" Classes="xyui-text-body" VerticalAlignment="Center" />
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+            <c:XYIconButton><c:XYIcon Icon="Add" Size="Small" /></c:XYIconButton>
+            <TextBlock Text="XYIconButton (纯图标操作按钮)" Classes="xyui-text-caption" VerticalAlignment="Center" />
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.IconText}">
+            <c:XYStatusDot State="Success" />
+            <TextBlock Text="状态指示圆点与标签组合" Classes="xyui-text-caption" VerticalAlignment="Center" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

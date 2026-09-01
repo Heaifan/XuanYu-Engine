@@ -1,0 +1,21 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingLayoutView">
+  <ScrollViewer>
+    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <StackPanel Spacing="4">
+        <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="间距与排版 / Spacing &amp; Layout" Classes="xyui-heading-panel" />
+          <c:XYStatusBadge Text="已锁定 · 0.03" State="Success" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="业务层优先写“语义容器”，而不是自己决定 Margin / Padding / Spacing 数值。" Classes="xyui-text-caption" />
+      </StackPanel>
+      <views:SpacingCoreRulesSection />
+      <views:SpacingLiveLabSection />
+      <views:SpacingDensityCompareSection />
+      <views:SpacingCodePatternsSection />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

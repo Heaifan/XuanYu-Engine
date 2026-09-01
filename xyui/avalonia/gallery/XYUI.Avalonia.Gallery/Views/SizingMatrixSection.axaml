@@ -1,0 +1,77 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
+             x:Class="XYUI.Avalonia.Gallery.Views.SizingMatrixSection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="② 真实组件尺寸矩阵 (Component Family Matrix)" Classes="xyui-text-section" />
+        <Border Background="{DynamicResource XY.Brush.Accent.Soft}" Padding="6,2" CornerRadius="2">
+          <TextBlock Text="方案 C · 真实 XY.Size 继承驱动" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        </Border>
+      </StackPanel>
+      <Grid ColumnDefinitions="110,*,1.1*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" Margin="0,4,0,0">
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="组件家族" Classes="xyui-text-caption" FontWeight="Bold" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="紧凑 (28 DIP)" Classes="xyui-text-caption" FontWeight="Bold" HorizontalAlignment="Center" />
+        <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource XY.Brush.Accent.Soft}" Padding="6,3" CornerRadius="3" HorizontalAlignment="Center">
+          <TextBlock Text="默认 · 32 DIP (推荐)" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        </Border>
+        <TextBlock Grid.Row="0" Grid.Column="3" Text="舒适 (36 DIP)" Classes="xyui-text-caption" FontWeight="Bold" HorizontalAlignment="Center" />
+        <TextBlock Grid.Row="0" Grid.Column="4" Text="触控 (44 DIP)" Classes="xyui-text-caption" FontWeight="Bold" HorizontalAlignment="Center" />
+
+        <!-- Row 1: XYButton -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="XYButton&#x0a;(操作按钮)" Classes="xyui-text-label" VerticalAlignment="Center" Margin="0,6" />
+        <Panel Grid.Row="1" Grid.Column="1" xy:XY.Size="Compact" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <c:XYButton Content="应用" Variant="Secondary" />
+        </Panel>
+        <Border Grid.Row="1" Grid.Column="2" xy:XY.Size="Default" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="4" CornerRadius="3" HorizontalAlignment="Center">
+          <c:XYButton Content="保存工程" Variant="Primary" />
+        </Border>
+        <Panel Grid.Row="1" Grid.Column="3" xy:XY.Size="Comfortable" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <c:XYButton Content="导出资源" Variant="Secondary" />
+        </Panel>
+        <Panel Grid.Row="1" Grid.Column="4" xy:XY.Size="Touch" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <c:XYButton Content="立即提交" Variant="Secondary" />
+        </Panel>
+
+        <!-- Row 2: XYTextField -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="XYTextField&#x0a;(可编辑输入)" Classes="xyui-text-label" VerticalAlignment="Center" Margin="0,6" />
+        <Panel Grid.Row="2" Grid.Column="1" xy:XY.Size="Compact" Margin="4,0" VerticalAlignment="Center">
+          <c:XYTextField Text="搜索图层…" />
+        </Panel>
+        <Border Grid.Row="2" Grid.Column="2" xy:XY.Size="Default" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="4" CornerRadius="3" VerticalAlignment="Center">
+          <c:XYTextField Text="Main_Camera" />
+        </Border>
+        <Panel Grid.Row="2" Grid.Column="3" xy:XY.Size="Comfortable" Margin="4,0" VerticalAlignment="Center">
+          <c:XYTextField Text="Material_01" />
+        </Panel>
+        <Panel Grid.Row="2" Grid.Column="4" xy:XY.Size="Touch" Margin="4,0" VerticalAlignment="Center">
+          <c:XYTextField Text="100 %" />
+        </Panel>
+
+        <!-- Row 3: XYIconButton -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="XYIconButton&#x0a;(工具操作)" Classes="xyui-text-label" VerticalAlignment="Center" Margin="0,6" />
+        <Panel Grid.Row="3" Grid.Column="1" xy:XY.Size="Compact" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <c:XYIconButton><c:XYIcon Icon="Code" Size="Small" /></c:XYIconButton>
+        </Panel>
+        <Border Grid.Row="3" Grid.Column="2" xy:XY.Size="Default" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="4" CornerRadius="3" HorizontalAlignment="Center">
+          <c:XYIconButton><c:XYIcon Icon="Check" Size="Medium" /></c:XYIconButton>
+        </Border>
+        <Panel Grid.Row="3" Grid.Column="3" xy:XY.Size="Comfortable" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <c:XYIconButton><c:XYIcon Icon="Info" Size="Large" /></c:XYIconButton>
+        </Panel>
+        <Panel Grid.Row="3" Grid.Column="4" xy:XY.Size="Touch" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <c:XYIconButton><c:XYIcon Icon="Code" Size="Large" /></c:XYIconButton>
+        </Panel>
+
+        <!-- Row 4: XYToolbar + XYToolGroup + XYIconButton + XYButton -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="XYToolbar&#x0a;(复合工具栏)" Classes="xyui-text-label" VerticalAlignment="Center" Margin="0,6" />
+        <Panel Grid.Row="4" Grid.Column="1" x:Name="ToolbarCompactHost" xy:XY.Size="Compact" Margin="2,0" VerticalAlignment="Center" />
+        <Border Grid.Row="4" Grid.Column="2" x:Name="ToolbarDefaultHost" xy:XY.Size="Default" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="2" Margin="2,0" VerticalAlignment="Center" />
+        <Panel Grid.Row="4" Grid.Column="3" x:Name="ToolbarComfortableHost" xy:XY.Size="Comfortable" Margin="2,0" VerticalAlignment="Center" />
+        <Panel Grid.Row="4" Grid.Column="4" x:Name="ToolbarTouchHost" xy:XY.Size="Touch" Margin="2,0" VerticalAlignment="Center" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

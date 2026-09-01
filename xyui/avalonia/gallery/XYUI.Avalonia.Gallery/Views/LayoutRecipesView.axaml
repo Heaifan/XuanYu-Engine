@@ -1,0 +1,75 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.LayoutRecipesView">
+  <ScrollViewer>
+    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="组合模板 (Layout Recipes)" Classes="xyui-heading-panel" />
+        <c:XYStatusBadge Text="草稿模板" State="Warning" VerticalAlignment="Center" />
+      </StackPanel>
+
+      <!-- 1. Toolbar Recipe -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="1. 工具栏组合 (Toolbar Recipe)" Classes="xyui-text-section" />
+          <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Height="{DynamicResource XY.Size.Toolbar}" Padding="4,2">
+            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
+              <c:XYIconButton AutomationProperties.Name="新建"><c:XYIcon Icon="Add" Size="Small" /></c:XYIconButton>
+              <c:XYIconButton AutomationProperties.Name="检查"><c:XYIcon Icon="Check" Size="Small" /></c:XYIconButton>
+              <c:XYSeparator Width="12" />
+              <c:XYButton Content="撤销" Variant="Secondary" />
+              <c:XYButton Content="重做" Variant="Secondary" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. Form & Inspector / Property Grid Recipe -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="2. 表单与属性检视器 (Form / Inspector / Property Grid Recipe)" Classes="xyui-text-section" />
+          <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="{DynamicResource XY.Padding.Panel}">
+            <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+              <c:XYSectionTitle Text="实体基础属性 (Transform)" />
+              <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto,Auto" Margin="0,2">
+                <c:XYLabel Grid.Row="0" Grid.Column="0" Text="实体名称" VerticalAlignment="Center" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="Player_Spawn_01" Height="28" Margin="0,2" />
+
+                <c:XYLabel Grid.Row="1" Grid.Column="0" Text="世界坐标 (X,Y)" VerticalAlignment="Center" />
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}" Margin="0,2">
+                  <TextBox Text="1024.0" Width="80" Height="28" />
+                  <TextBox Text="2048.0" Width="80" Height="28" />
+                </StackPanel>
+
+                <c:XYLabel Grid.Row="2" Grid.Column="0" Text="状态" VerticalAlignment="Center" />
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}" Margin="0,2">
+                  <c:XYStatusBadge Text="已加载" State="Success" />
+                  <c:XYHelpText Text="空间索引权威状态已同步" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 3. Popup / Dialog / Menu Recipe -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="3. 弹窗与对话框组合 (Popup / Dialog Recipe)" Classes="xyui-text-section" />
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BoxShadow="{DynamicResource XY.Shadow.Popup}"
+                  CornerRadius="{DynamicResource XY.Radius.Popup}" Padding="{DynamicResource XY.Padding.Panel}" Width="360" HorizontalAlignment="Left">
+            <StackPanel Spacing="{DynamicResource XY.Gap.Section}">
+              <c:XYHeading Text="确认保存场景修改？" Variant="PanelTitle" />
+              <c:XYText Text="当前未保存的世界实体改动将写入磁盘。此操作不可逆。" />
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="{DynamicResource XY.Gap.Field}">
+                <c:XYButton Content="取消" Variant="Secondary" />
+                <c:XYButton Content="确认保存" Variant="Primary" />
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

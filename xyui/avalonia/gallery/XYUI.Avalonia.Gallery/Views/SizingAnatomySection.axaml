@@ -1,0 +1,51 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
+             x:Class="XYUI.Avalonia.Gallery.Views.SizingAnatomySection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <TextBlock Text="③ 尺寸解剖三层结构 (Sizing Anatomy)" Classes="xyui-text-section" />
+      <Grid ColumnDefinitions="*,*,*" Margin="0,4,0,0">
+        <!-- 1. 图标层 -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="0,0,3,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="1. 图标尺寸 (Icon)" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="14 / 16 / 20 / 24 DIP 独立阶梯渲染，不随控件无脑等比拉伸。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+            <Border Height="36" Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="3" Margin="0,4,0,0">
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+                <c:XYIcon Icon="Code" Size="Small" />
+                <c:XYIcon Icon="Check" Size="Medium" />
+                <c:XYIcon Icon="Info" Size="Large" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Border>
+
+        <!-- 2. 视觉边框层 -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="3,0,3,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="2. 视觉控件 (Visual)" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="28 / 32 / 36 / 44 DIP 视觉可见高度，由背景与边框统一决定。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+            <Border Height="36" Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="3" Margin="0,4,0,0" xy:XY.Size="Default">
+              <c:XYButton Content="32 DIP 视觉标准高度" Variant="Secondary" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+          </StackPanel>
+        </Border>
+
+        <!-- 3. 命中目标层 -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="3,0,0,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="3. 命中区域 (Hit Target)" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Status.Success}" />
+            <TextBlock Text="28 / 32 / 36 / 44 DIP 最小感应区，无障碍触控不破坏紧凑桌面排版。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+            <Border Height="36" Background="{DynamicResource XY.Brush.Surface.Panel}" CornerRadius="3" Margin="0,4,0,0">
+              <Border BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}" Padding="4,2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="⇥ 44 DIP 触控最小感应区 ⇤" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+              </Border>
+            </Border>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

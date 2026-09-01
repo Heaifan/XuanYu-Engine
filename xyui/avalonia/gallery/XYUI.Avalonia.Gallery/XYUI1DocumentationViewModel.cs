@@ -15,9 +15,6 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
     public int VisualAcceptedCount => Documents.Count;
     public IReadOnlyList<XYUI1NavigationItem> Items { get; }
     public IReadOnlyList<XYUI1NavigationItem> ComponentItems => Items.Skip(1).ToArray();
-    public IReadOnlyList<FoundationNavigationItem> FoundationItems { get; } =
-    [new("palette", "色彩", "Palette"), new("typography", "字体与排版", "Typography"), new("shape", "形状", "Shape"), new("density", "信息密度", "Density")];
-
     // G0-R1 · 树形章节（非 Accordion 卡片；仅改导航呈现）
     bool _isX1;
     public bool IsXYUI1Expanded { get => _isX1; set { if (_isX1 == value) return; _isX1 = value; PropertyChanged?.Invoke(this, new(nameof(IsXYUI1Expanded))); } }
@@ -77,19 +74,4 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
         else if (XYUI2Items.Any(x => x.Id == id)) SelectXYUI2(id);
         else if (XYUI3Items.Any(x => x.Id == id)) SelectXYUI3(id);
     }
-
-    public void SelectFoundation(string id)
-    {
-        var item = FoundationItems.FirstOrDefault(x => x.Id == id);
-        if (item is not null) SelectedFoundation = item;
-    }
-
-    static Control CreateFoundationView(string id) => id switch
-    {
-        "palette" => new PaletteView(),
-        "typography" => new TypographyView(),
-        "shape" => new ShapeView(),
-        "density" => new DensitySamplesView(),
-        _ => new XYUI1ModuleOverviewView()
-    };
 }
