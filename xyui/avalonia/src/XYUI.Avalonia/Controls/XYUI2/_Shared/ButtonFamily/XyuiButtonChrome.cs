@@ -31,6 +31,8 @@ internal static class XyuiButtonChrome
             };
             presenter[!ContentPresenter.PaddingProperty] = control[!TemplatedControl.PaddingProperty];
             presenter[!ContentPresenter.ContentProperty] = control[!Button.ContentProperty];
+            presenter[!ContentPresenter.HorizontalContentAlignmentProperty] = control[!Button.HorizontalContentAlignmentProperty];
+            presenter[!ContentPresenter.VerticalContentAlignmentProperty] = control[!Button.VerticalContentAlignmentProperty];
             presenter[!TextElement.ForegroundProperty] = control[!TemplatedControl.ForegroundProperty];
             var grid = new Grid();
             grid.Children.Add(presenter);

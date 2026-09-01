@@ -51,7 +51,7 @@ public static partial class XYUI3GalleryCatalog
     static Control CommandBarPreview()
     {
         var feedback = new TextBlock { Text = "Last Action · —", Classes = { "xyui-command-feedback" } };
-        var bar = new XYCommandBar(new XYCommandItem("新建", "new", XYCommandRole.Primary, XyuiVectorIcon.Add), new XYCommandItem("导入", "import"), new XYCommandItem("保存", "save") { IsEnabled = false }, new XYCommandItem("验证", "validate"), new XYCommandItem("刷新", "refresh"), new XYCommandItem("删除", "delete", XYCommandRole.Danger));
+        var bar = new XYCommandBar(new XYCommandItem("新建", "new", XYCommandRole.Primary, XyuiVectorIcon.Add), new XYCommandItem("导入", "import"), new XYCommandItem("保存", "save"), new XYCommandItem("验证", "validate"), new XYCommandItem("刷新", "refresh"), new XYCommandItem("删除", "delete", XYCommandRole.Danger));
         bar.CommandExecuted += (_, item) => feedback.Text = $"Last Action · {item.CommandId}";
         var saveAs = ActionItem("另存为", "save-as", feedback); var export = ActionItem("导出", "export", feedback); var copyLink = ActionItem("复制链接", "copy-link", feedback); var advanced = ActionItem("高级操作", "advanced", feedback);
         bar.MoreMenu.Items = [saveAs, export, copyLink, XYMenu.Separator(), advanced]; bar.RefreshMore();

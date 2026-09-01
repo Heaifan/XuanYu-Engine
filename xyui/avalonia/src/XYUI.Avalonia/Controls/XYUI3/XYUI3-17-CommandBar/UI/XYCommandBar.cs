@@ -22,7 +22,7 @@ public sealed class XYCommandItem : XYButton
     public event EventHandler? ExecuteRequested;
     public XYCommandItem(string label, string? commandId = null, XYCommandRole role = XYCommandRole.Normal, XyuiVectorIcon? icon = null)
     {
-        CommandId = commandId ?? label; Role = role; Icon = icon; Variant = role switch { XYCommandRole.Primary => XyuiButtonVariant.Primary, XYCommandRole.Danger => XyuiButtonVariant.Danger, _ => XyuiButtonVariant.Secondary }; VerticalAlignment = VerticalAlignment.Center; Content = Visual(label); Classes.Add("xyui-command-item"); Classes.Add(role == XYCommandRole.Primary ? "xyui-command-primary" : role == XYCommandRole.Danger ? "xyui-command-danger" : "xyui-command-normal");
+        CommandId = commandId ?? label; Role = role; Icon = icon; Variant = role switch { XYCommandRole.Primary => XyuiButtonVariant.Primary, XYCommandRole.Danger => XyuiButtonVariant.Danger, _ => XyuiButtonVariant.Secondary }; VerticalAlignment = VerticalAlignment.Center; HorizontalContentAlignment = HorizontalAlignment.Left; VerticalContentAlignment = VerticalAlignment.Center; Content = Visual(label); Classes.Add("xyui-command-item"); Classes.Add(role == XYCommandRole.Primary ? "xyui-command-primary" : role == XYCommandRole.Danger ? "xyui-command-danger" : "xyui-command-normal");
         Click += (_, _) => { if (IsEnabled) ExecuteRequested?.Invoke(this, EventArgs.Empty); };
     }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
