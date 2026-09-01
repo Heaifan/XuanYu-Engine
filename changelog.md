@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.63-rz · XYUI-0.05 · Density Runtime（2026-09-01 22:34:12 +08:00）
+
+- 目标：建立可继承、可复用的信息密度语义，保持 Density / Spacing / Sizing 职责分离。
+- 变化：新增 `XyuiDensityScope.Density` 附加属性与 `Compact` / `Default` / `Comfortable` 三档；通过既有 Spacing 组合提供行间距、区块间距和面板内边距策略；不新增 Touch、不修改控件尺寸、字体、图标、命中区或宽度。
+- 验证：Density 专项测试 7/7；针对性 Build 0 警告 0 错误；正式门禁待执行。
+- 状态：XYUI-0.05 Runtime 已实现，等待正式门禁与用户真机验收；不启动 Gallery 主视觉改造。
+- 版本：`v0.2.28.63-rz` 已同步到四处版本文件。
+- Hash：`7d3b135e`。
+
 ## v0.2.28.62-rz · XYUI-3-23 · Bottom Navigation 基础用法与完整 API 文档（2026-09-01 16:24:05 +08:00）
 
 - 目标：只完善 XYUI-3-23 Gallery 文档；XYUI-3-21、XYUI-3-22、XYUI-3-24 保持冻结。

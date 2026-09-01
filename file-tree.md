@@ -1862,6 +1862,9 @@
    │  │     │  ├─ XyuiFocusStyles.cs  # 焦点边框环两条样式（xyui-focusable，与 Hover/Selected 视觉分离）。
    │  │     │  ├─ XyuiInteractionState.cs  # 交互状态 selector contract 与 Canonical 资源键唯一真值（:pointerover/:pressed/:disabled/:selected/:checked/:focus；Checked 只提供 selector，不定义统一视觉）。
    │  │     │  └─ XyuiInteractionStyles.cs  # 只负责 Hover/Pressed/Selected/Focus/Disabled 状态视觉，不负责 Component Default Appearance 或 Global Checked Visual Style。
+   │  │     ├─ Density/  # 信息组织密度 Runtime 与继承范围。
+   │  │     │  ├─ XyuiDensity.cs  # Compact/Default/Comfortable 档位与既有 Spacing 组合指标。
+   │  │     │  └─ XyuiDensityScope.cs  # 可继承 Density AttachedProperty 与子树查询入口。
    │  │     ├─ Spatial/  # 组织该模块下的正式文件。
    │  │     │  ├─ XyuiShapeStyles.cs  # 语义形状样式类（代码构建 9 类 xyui-border-*/xyui-surface-*/xyui-shadow-*）。
    │  │     │  ├─ XyuiSpatial.cs  # Spatial 基础资源字典构建（Space/Radius/BorderWidth/Shadow，含 BoxShadow 解析）。
@@ -1878,6 +1881,7 @@
    │  │     └─ XYUI.Avalonia.csproj  # XYUI.Avalonia 库项目文件（Avalonia 12.0.4）。
    │  ├─ tests/  # 集中对应模块的自动化测试。
    │  │  └─ XYUI.Avalonia.Tests/  # 组织该模块下的正式文件。
+   │  │     ├─ DensityRuntimeTests.cs  # Density 默认值、继承、覆盖、档位与 Spacing 组合合同。
    │  │     ├─ BadgeRuntimeTests.cs  # Badge 高度、Auto 宽度、左对齐与左指针几何运行时回归。
    │  │     ├─ BrushRuntimeTests.cs  # 主题字典 key/类型/值/重复/缺失测试。
    │  │     ├─ CanonicalAlignmentTests.cs  # token 表与 token-canonical-map.json 逐条对照。
@@ -2024,6 +2028,8 @@
    │  │  ├─ XYUI-5.canonical.md  # 保存对应 XYUI 规范的规范化数据与映射。
    │  │  ├─ XYUI-5.gaps.json  # 保存对应 XYUI 规范的规范化数据与映射。
    │  │  └─ XYUI-5.mapping.json  # 保存对应 XYUI 规范的规范化数据与映射。
+   │  ├─ XYUI0.05/  # XYUI-0.05 Density Runtime API 合同。
+   │  │  └─ XYUI-0.05-density-runtime-contract.md  # Density / Spacing / Sizing 边界与三档继承 API。
    │  ├─ XYUI6/  # 组织该模块下的正式文件。
    │  │  ├─ XYUI-6.canonical.md  # 保存对应 XYUI 规范的规范化数据与映射。
    │  │  ├─ XYUI-6.gaps.json  # 保存对应 XYUI 规范的规范化数据与映射。
