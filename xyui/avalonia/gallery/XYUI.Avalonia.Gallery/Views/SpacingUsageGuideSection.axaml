@@ -17,7 +17,7 @@
             </StackPanel>
             <TextBlock Text="业务层优先使用语义容器，免去手工绑定 Token：" Classes="xyui-text-caption" />
             <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="6" CornerRadius="3">
-              <TextBlock Text="&lt;xy:XYToolGroup&gt;&#x0a;  &lt;xy:XYIconButton /&gt;&#x0a;  &lt;xy:XYIconButton /&gt;&#x0a;&lt;/xy:XYToolGroup&gt;&#x0a;&#x0a;&lt;xy:XYFieldGroup&gt; ... &lt;/xy:XYFieldGroup&gt;&#x0a;&lt;xy:XYPanel&gt; ... &lt;/xy:XYPanel&gt;"
+              <TextBlock Text="&lt;xy:XYToolbar&gt;&#x0a;  &lt;xy:XYToolGroup&gt;&#x0a;    &lt;xy:XYIconButton /&gt;&#x0a;  &lt;/xy:XYToolGroup&gt;&#x0a;&lt;/xy:XYToolbar&gt;&#x0a;&lt;xy:XYFieldGroup&gt; ... &lt;/xy:XYFieldGroup&gt;&#x0a;&lt;xy:XYPanel&gt; ... &lt;/xy:XYPanel&gt;"
                          Classes="xyui-text-code" FontSize="11" />
             </Border>
           </StackPanel>
