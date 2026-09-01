@@ -1,8 +1,66 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
              x:Class="XYUI.Avalonia.Gallery.Views.DensityView">
-  <StackPanel>
-    <TextBlock Text="DensityView (Shell)" Classes="xyui-heading-panel" />
-    <TextBlock Text="TODO(Codex): Semantic Tokens not yet frozen." Classes="xyui-text-body" />
-  </StackPanel>
+  <ScrollViewer>
+    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <TextBlock Text="信息密度体系 (Density Foundation)" Classes="xyui-heading-panel" />
+
+      <!-- 1. Compact 模式对比 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="1. 紧凑模式 (Compact - 玄域 Editor 默认目标)" Classes="xyui-text-section" />
+          <Grid ColumnDefinitions="140,80,*" RowDefinitions="Auto,Auto,Auto" Margin="0,4,0,0">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="TreeRow Height" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="28 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <Border Grid.Row="0" Grid.Column="2" Height="28" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="6,0" Margin="0,2">
+              <TextBlock Text="📁 紧凑层级节点 (28 DIP)" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </Border>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Toolbar Height" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="30 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <Border Grid.Row="1" Grid.Column="2" Height="30" Width="140" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Margin="0,2">
+              <TextBlock Text="紧凑工具条 (30 DIP)" Classes="xyui-text-caption" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Input Height" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="32 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <TextBox Grid.Row="2" Grid.Column="2" Height="32" Width="160" HorizontalAlignment="Left" Text="紧凑输入框 (32 DIP)" Margin="0,2" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. Comfortable 模式对比 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="2. 舒适模式 (Comfortable)" Classes="xyui-text-section" />
+          <Grid ColumnDefinitions="140,80,*" RowDefinitions="Auto,Auto,Auto" Margin="0,4,0,0">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="TreeRow Height" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="32 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <Border Grid.Row="0" Grid.Column="2" Height="32" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,0" Margin="0,2">
+              <TextBlock Text="📁 舒适层级节点 (32 DIP)" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </Border>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Toolbar Height" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="34 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <Border Grid.Row="1" Grid.Column="2" Height="34" Width="140" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Margin="0,2">
+              <TextBlock Text="舒适工具条 (34 DIP)" Classes="xyui-text-caption" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Input Height" Classes="xyui-text-code" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="36 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            <TextBox Grid.Row="2" Grid.Column="2" Height="36" Width="160" HorizontalAlignment="Left" Text="舒适输入框 (36 DIP)" Margin="0,2" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 3. Touch 模式声明 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="3. 触控模式 (Touch - Declared / Not Yet Consumable)" Classes="xyui-text-section" />
+          <TextBlock Text="Touch 档位在契约中已声明枚举 (XyuiDensityMode.Touch)，但当前阶段尚未提供消费样式。遵循真实性原则，此处不伪造触控展示。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>

@@ -1,8 +1,73 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:v="using:XYUI.Avalonia.Vector"
              x:Class="XYUI.Avalonia.Gallery.Views.SpacingLayoutView">
-  <StackPanel>
-    <TextBlock Text="SpacingLayoutView (Shell)" Classes="xyui-heading-panel" />
-    <TextBlock Text="TODO(Codex): Semantic Tokens not yet frozen." Classes="xyui-text-body" />
-  </StackPanel>
+  <ScrollViewer>
+    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <TextBlock Text="间距体系 (Spacing &amp; Layout)" Classes="xyui-heading-panel" />
+
+      <!-- 1. Primitive Space 阶梯对比 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="1. 基础空间阶梯 (Primitive Space)" Classes="xyui-text-section" />
+          <Grid ColumnDefinitions="140,80,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="XY.Space.1" Classes="xyui-text-code" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="2 DIP" Classes="xyui-text-caption" />
+            <Border Grid.Row="0" Grid.Column="2" Height="8" Width="2" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="XY.Space.2" Classes="xyui-text-code" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="4 DIP" Classes="xyui-text-caption" />
+            <Border Grid.Row="1" Grid.Column="2" Height="8" Width="4" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="XY.Space.3" Classes="xyui-text-code" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="6 DIP" Classes="xyui-text-caption" />
+            <Border Grid.Row="2" Grid.Column="2" Height="8" Width="6" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="XY.Space.4" Classes="xyui-text-code" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="8 DIP" Classes="xyui-text-caption" />
+            <Border Grid.Row="3" Grid.Column="2" Height="8" Width="8" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" />
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="XY.Space.6" Classes="xyui-text-code" />
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="12 DIP" Classes="xyui-text-caption" />
+            <Border Grid.Row="4" Grid.Column="2" Height="8" Width="12" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" />
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="XY.Space.8" Classes="xyui-text-code" />
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="16 DIP" Classes="xyui-text-caption" />
+            <Border Grid.Row="5" Grid.Column="2" Height="8" Width="16" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" />
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="XY.Space.10" Classes="xyui-text-code" />
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="24 DIP" Classes="xyui-text-caption" />
+            <Border Grid.Row="6" Grid.Column="2" Height="8" Width="24" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" />
+
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="XY.Space.12" Classes="xyui-text-code" />
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="32 DIP" Classes="xyui-text-caption" />
+            <Border Grid.Row="7" Grid.Column="2" Height="8" Width="32" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. 语义化间距示例 (Semantic Gap & Padding) -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="2. 语义组合规则 (Semantic Gap / Padding)" Classes="xyui-text-section" />
+          
+          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.IconText}">
+            <c:XYIcon Icon="Info" Size="Medium" />
+            <TextBlock Text="XY.Gap.IconText (6 DIP): 图标与文本对齐间距" Classes="xyui-text-body" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+            <c:XYButton Content="操作 A" Variant="Primary" />
+            <c:XYButton Content="操作 B" Variant="Secondary" />
+            <TextBlock Text="XY.Gap.Field (6 DIP): 同行控件间距" Classes="xyui-text-caption" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="{DynamicResource XY.Padding.Panel}">
+            <TextBlock Text="XY.Padding.Panel (12 DIP): 容器内部内边距（Component owns Padding）" Classes="xyui-text-caption" />
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>

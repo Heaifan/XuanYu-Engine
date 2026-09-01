@@ -4,35 +4,76 @@
              x:Class="XYUI.Avalonia.Gallery.Views.ShapeView"
              x:DataType="g:ShapeViewModel">
   <ScrollViewer>
-    <ItemsControl ItemsSource="{Binding Sections}">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="g:ShapeSection">
-          <StackPanel Margin="0,0,0,16">
-            <TextBlock Text="{Binding Title}" Classes="xyui-text-section" />
-            <ItemsControl ItemsSource="{Binding Items}">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate><StackPanel /></ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-              <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="g:ShapeItem">
-                  <Border Margin="0,4,0,0" Classes="xyui-border-subtle">
-                    <Grid ColumnDefinitions="Auto,Auto,*" Margin="10,6">
-                      <TextBlock Text="{Binding TokenId}" Grid.Column="0" Classes="xyui-text-code"
-                                 Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
-                      <TextBlock Text="{Binding Value}" Grid.Column="1" Margin="16,0,0,0"
-                                 Classes="xyui-text-code"
-                                 Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
-                      <TextBlock Text="{Binding Note}" Grid.Column="2" Margin="16,0,0,0"
-                                 Classes="xyui-text-body"
-                                 Foreground="{DynamicResource XY.Brush.Text.Primary}" />
-                    </Grid>
-                  </Border>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </StackPanel>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <TextBlock Text="圆角、边框与分割线 (Radius, Border &amp; Separator)" Classes="xyui-heading-panel" />
+
+      <!-- 1. 边框对比 (Border Tokens) -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="1. 边框层级 (Border Width &amp; Style)" Classes="xyui-text-section" />
+          <WrapPanel>
+            <Border Width="120" Height="48" Margin="0,4,8,4" Background="{DynamicResource XY.Brush.Surface.Raised}"
+                    BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="{DynamicResource XY.Border.Width.None}">
+              <TextBlock Text="None (0 DIP)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" />
+            </Border>
+            <Border Width="120" Height="48" Margin="0,4,8,4" Background="{DynamicResource XY.Brush.Surface.Raised}"
+                    BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}" CornerRadius="{DynamicResource XY.Radius.Control}">
+              <TextBlock Text="Default (1 DIP)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" />
+            </Border>
+            <Border Width="120" Height="48" Margin="0,4,8,4" Background="{DynamicResource XY.Brush.Surface.Raised}"
+                    BorderBrush="{DynamicResource XY.Brush.Border.Color.Strong}" BorderThickness="{DynamicResource XY.Border.Width.Strong}" CornerRadius="{DynamicResource XY.Radius.Control}">
+              <TextBlock Text="Strong (2 DIP)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" />
+            </Border>
+            <Border Width="120" Height="48" Margin="0,4,8,4" Background="{DynamicResource XY.Brush.Surface.Raised}"
+                    BorderBrush="{DynamicResource XY.Brush.Border.Color.Focus}" BorderThickness="{DynamicResource XY.Border.Width.Focus}" CornerRadius="{DynamicResource XY.Radius.Control}">
+              <TextBlock Text="Focus (2 DIP)" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" />
+            </Border>
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. 分割线体系 (Separator vs Border) -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="2. 分割线与防双边条 (Separator Hierarchy: 避免双重描边)" Classes="xyui-text-section" />
+          
+          <Border BorderBrush="{DynamicResource XY.Brush.Divider.Default}" BorderThickness="{DynamicResource XY.Separator.Header}" Padding="0,4">
+            <TextBlock Text="Header Separator: 顶部分割 (XY.Separator.Header)" Classes="xyui-text-caption" />
+          </Border>
+
+          <Border BorderBrush="{DynamicResource XY.Brush.Divider.Default}" BorderThickness="{DynamicResource XY.Separator.Section}" Padding="0,4">
+            <TextBlock Text="Section Separator: 区块分割 (XY.Separator.Section)" Classes="xyui-text-caption" />
+          </Border>
+
+          <Border BorderBrush="{DynamicResource XY.Brush.Divider.Default}" BorderThickness="{DynamicResource XY.Separator.ListRow}" Padding="0,4">
+            <TextBlock Text="ListRow Separator: 列表行间分割 (XY.Separator.ListRow)" Classes="xyui-text-caption" />
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 3. 原有规范表展示 -->
+      <ItemsControl ItemsSource="{Binding Sections}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="g:ShapeSection">
+            <StackPanel Margin="0,0,0,16">
+              <TextBlock Text="{Binding Title}" Classes="xyui-text-section" />
+              <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="g:ShapeItem">
+                    <Border Margin="0,4,0,0" Classes="xyui-border-subtle">
+                      <Grid ColumnDefinitions="160,80,*" Margin="10,6">
+                        <TextBlock Text="{Binding TokenId}" Grid.Column="0" Classes="xyui-text-code" />
+                        <TextBlock Text="{Binding Value}" Grid.Column="1" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+                        <TextBlock Text="{Binding Note}" Grid.Column="2" Classes="xyui-text-body" />
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
   </ScrollViewer>
 </UserControl>

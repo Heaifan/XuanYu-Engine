@@ -15,24 +15,7 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
     public int VisualAcceptedCount => Documents.Count;
     public IReadOnlyList<XYUI1NavigationItem> Items { get; }
     public IReadOnlyList<XYUI1NavigationItem> ComponentItems => Items.Skip(1).ToArray();
-    public IReadOnlyList<FoundationNavigationItem> FoundationItems { get; } =
-    [
-        new("palette", "色彩", "Palette"),
-        new("typography", "字体与排版", "Typography"),
-        new("spacing_layout", "间距与排版", "Spacing & Layout"),
-        new("sizing", "尺寸控制", "Sizing"),
-        new("density", "信息密度", "Density"),
-        new("iconography", "图标体系", "Iconography"),
-        new("radius_border_separator", "圆角/边框/分割线", "Radius / Border / Separator"),
-        new("shape", "形状", "Shape"),
-        new("surface", "表面层级", "Surface"),
-        new("states", "交互状态", "States"),
-        new("responsive", "响应式", "Responsive"),
-        new("accessibility", "无障碍", "Accessibility"),
-        new("layout_recipes", "组合模板", "Layout Recipes")
-    ];
 
-    // G0-R1 · 树形章节（非 Accordion 卡片；仅改导航呈现）
     bool _isX1;
     public bool IsXYUI1Expanded { get => _isX1; set { if (_isX1 == value) return; _isX1 = value; PropertyChanged?.Invoke(this, new(nameof(IsXYUI1Expanded))); } }
     bool _isX2 = true;
@@ -91,32 +74,4 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
         else if (XYUI2Items.Any(x => x.Id == id)) SelectXYUI2(id);
         else if (XYUI3Items.Any(x => x.Id == id)) SelectXYUI3(id);
     }
-
-    public void SelectFoundation(string id)
-    {
-        var targetId = id switch
-        {
-            "color" => "palette",
-            _ => id
-        };
-        var item = FoundationItems.FirstOrDefault(x => x.Id == targetId || x.Id == id);
-        if (item is not null) SelectedFoundation = item;
-    }
-
-    static Control CreateFoundationView(string id) => id switch
-    {
-        "palette" or "color" => new PaletteView(),
-        "typography" => new TypographyView(),
-        "spacing_layout" => new SpacingLayoutView(),
-        "sizing" => new SizingView(),
-        "density" => new DensityView(),
-        "iconography" => new IconographyView(),
-        "radius_border_separator" or "shape" => new ShapeView(),
-        "surface" => new SurfaceView(),
-        "states" => new StatesView(),
-        "responsive" => new ResponsiveView(),
-        "accessibility" => new AccessibilityView(),
-        "layout_recipes" => new LayoutRecipesView(),
-        _ => new XYUI1ModuleOverviewView()
-    };
 }
