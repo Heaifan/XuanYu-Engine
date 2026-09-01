@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using XYUI.Avalonia.Density;
+using XYUI.Avalonia.Foundation;
 
 namespace XYUI.Avalonia.Spatial;
 
@@ -41,7 +43,14 @@ public static class XyuiSpatial
         d["XY.Shadow.Tooltip"] = ParseShadow(XyuiSpatialTokens.ShadowTooltip);
         d["XY.Shadow.Popup"] = ParseShadow(XyuiSpatialTokens.ShadowPopup);
         d["XY.Shadow.DragPreview"] = ParseShadow(XyuiSpatialTokens.ShadowDragPreview);
+        Merge(d, XyuiSemanticTokens.CreateResources());
+        Merge(d, XyuiDensity.CreateResources());
         return d;
+    }
+
+    static void Merge(ResourceDictionary target, ResourceDictionary source)
+    {
+        foreach (var key in source.Keys.Cast<string>()) target[key] = source[key];
     }
 
     // 解析 canonical "x/y/blur/alpha"（黑色阴影；x=水平偏移 y=垂直偏移 blur=模糊 alpha=透明度）

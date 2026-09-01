@@ -2257,6 +2257,46 @@
         - XY.TextInput.PlaceholderDuringComposition
             - Value = Hidden
 
+- C1.5 · Foundation Runtime Interface Freeze｜基础运行时接口冻结
+    - 范围
+        - 本节冻结 Runtime 对外消费名称，不改变既有设计数值
+        - Runtime 语义别名必须映射至本文件已有 Canonical Token
+        - Touch 仅声明模式，不提供未裁决尺寸，不得被消费
+    - Semantic Token Manifest
+        - XY.Gap.None = 0 DIP（运行时零间距）
+        - XY.Gap.Base = XY.Space.1（0.6）
+        - XY.Gap.Field = XY.Panel.Field.RowGap（0.17）
+        - XY.Gap.IconText = XY.Indent.IconTextGap（0.7）
+        - XY.Gap.Section = XY.Panel.SectionGap（0.17）
+        - XY.Padding.Panel = XY.Panel.Padding（0.17）
+        - XY.Size.Control.XS/S/M/L = 24/28/32/36 DIP（0.8）
+        - XY.Size.TreeRow/Toolbar/Input = 28/30/32 DIP（0.8）
+        - XY.Size.Icon.S/M/L = 14/16/20 DIP（0.8、0.15）
+        - XY.Size.Checkbox/Radio = 16/16 DIP（0.8）
+        - XY.Size.Switch = 34x18 DIP（0.8）
+        - XY.Size.Switch.Width/Height = XY.Size.Switch 的 Runtime 投影
+        - XY.Size.Scrollbar/DragHandle = 10/8 DIP（0.8）
+        - XY.Icon.Style.Default/Active = Outline/Outline+LocalFill（0.15）
+        - XY.Icon.Stroke = 1.5 DIP；LineCap/LineJoin = Round/Round（0.15）
+        - XY.Icon.Size.S/M/L = XY.Size.Icon.S/M/L（0.15 → 0.8）
+        - XY.Border.Width.None/Default/Strong/Focus/Selected = 0/1/2/2/2 DIP（0.10）
+        - XY.Border.Style.Default = Solid；Container = 0 DIP + UseDivider（0.10）
+        - XY.Separator.Header/Panel = XY.Divider.Header/Panel（0.11）
+        - XY.Separator.Section/ListRow = XY.Divider.Section/ListRow（0.11）
+        - XY.Separator.VerticalSplit = XY.Divider.VerticalSplit（0.11）
+    - Density Contract
+        - Mode = Compact | Comfortable | Touch
+        - Policy = Auto | ManualLock | Hysteresis
+        - Compact 使用 0.19 已裁决参数并映射 0.8 Base Sizing
+        - Comfortable 使用 0.19 已裁决覆盖参数
+        - Touch 当前仅声明，不可消费
+        - Mode 与 Policy 是独立维度；Auto / ManualLock / Hysteresis 不是 Mode
+    - Layout Recipe Contract
+        - Toolbar、Form、Inspector、Menu、Popup、Dialog、PropertyGrid
+        - Component owns Padding
+        - Parent owns sibling Gap
+        - Margin 不是常规 sibling layout 工具
+
 
 
 

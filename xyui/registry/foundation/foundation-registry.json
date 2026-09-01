@@ -402,6 +402,41 @@
           "evidence_refs": [
             "XYUI0-0.11@L1114-1131"
           ]
+        },
+        {
+          "token_id": "XY.Separator.Header",
+          "value": "XY.Divider.Header",
+          "relation": "alias",
+          "relation_target": "XY.Divider.Header",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Separator.Panel",
+          "value": "XY.Divider.Panel",
+          "relation": "alias",
+          "relation_target": "XY.Divider.Panel",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Separator.Section",
+          "value": "XY.Divider.Section",
+          "relation": "alias",
+          "relation_target": "XY.Divider.Section",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Separator.ListRow",
+          "value": "XY.Divider.ListRow",
+          "relation": "alias",
+          "relation_target": "XY.Divider.ListRow",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Separator.VerticalSplit",
+          "value": "XY.Divider.VerticalSplit",
+          "relation": "alias",
+          "relation_target": "XY.Divider.VerticalSplit",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
         }
       ],
       "relationships": [],
@@ -964,6 +999,41 @@
           "evidence_refs": [
             "XYUI0-0.16@L1311-1333"
           ]
+        },
+        {
+          "token_id": "XY.Layout.Recipe.Toolbar",
+          "value": "ComponentPadding+ParentSiblingGap;MarginForbidden",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Layout.Recipe.Form",
+          "value": "ComponentPadding+ParentSiblingGap;MarginForbidden",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Layout.Recipe.Inspector",
+          "value": "ComponentPadding+ParentSiblingGap;MarginForbidden",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Layout.Recipe.Menu",
+          "value": "ComponentPadding+ParentSiblingGap;MarginForbidden",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Layout.Recipe.Popup",
+          "value": "ComponentPadding+ParentSiblingGap;MarginForbidden",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Layout.Recipe.Dialog",
+          "value": "ComponentPadding+ParentSiblingGap;MarginForbidden",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Layout.Recipe.PropertyGrid",
+          "value": "ComponentPadding+ParentSiblingGap;MarginForbidden",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
         }
       ],
       "relationships": [
@@ -1319,10 +1389,22 @@
       "tokens": [
         {
           "token_id": "XY.Density.Mode",
-          "value": "Auto|Compact|Comfortable",
+          "value": "Auto|Compact|Comfortable|Touch",
           "evidence_refs": [
-            "XYUI0-0.19@L1503-1536"
+            "XYUI0-0.19@L1503-1536",
+            "XYUI0-C1.5@L1-42"
           ]
+        },
+        {
+          "token_id": "XY.Density.Policy",
+          "value": "Auto|ManualLock|Hysteresis",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Density.Touch",
+          "value": "DECLARED_NOT_CONSUMABLE",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"],
+          "note": "模式已声明，尺寸尚无裁决，不导出可消费数值。"
         },
         {
           "token_id": "XY.Density.Auto",
@@ -5230,6 +5312,47 @@
           "evidence_refs": [
             "XYUI0-0.6@L902-918"
           ]
+        },
+        {
+          "token_id": "XY.Gap.None",
+          "value": "0 DIP",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"],
+          "note": "Runtime zero-gap semantic token。"
+        },
+        {
+          "token_id": "XY.Gap.Base",
+          "value": "XY.Space.1",
+          "relation": "alias",
+          "relation_target": "XY.Space.1",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Gap.Field",
+          "value": "XY.Panel.Field.RowGap",
+          "relation": "alias",
+          "relation_target": "XY.Panel.Field.RowGap",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Gap.IconText",
+          "value": "XY.Indent.IconTextGap",
+          "relation": "alias",
+          "relation_target": "XY.Indent.IconTextGap",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Gap.Section",
+          "value": "XY.Panel.SectionGap",
+          "relation": "alias",
+          "relation_target": "XY.Panel.SectionGap",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Padding.Panel",
+          "value": "XY.Panel.Padding",
+          "relation": "alias",
+          "relation_target": "XY.Panel.Padding",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
         }
       ],
       "relationships": [],
@@ -5445,6 +5568,20 @@
           "evidence_refs": [
             "XYUI0-0.8@L969-1000"
           ]
+        },
+        {
+          "token_id": "XY.Size.Switch.Width",
+          "value": "34 DIP",
+          "relation": "derived_from",
+          "relation_target": "XY.Size.Switch",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
+        },
+        {
+          "token_id": "XY.Size.Switch.Height",
+          "value": "18 DIP",
+          "relation": "derived_from",
+          "relation_target": "XY.Size.Switch",
+          "evidence_refs": ["XYUI0-C1.5@L1-42"]
         },
         {
           "token_id": "XY.Size.Scrollbar",

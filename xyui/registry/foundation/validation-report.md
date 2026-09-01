@@ -140,3 +140,17 @@ Foundation Registry（Canonical Machine Source of Truth，VALIDATED）
 ## 13. 本轮禁止核对
 
 未生成 Token Export / AXAML / C# / Theme；未实现组件/Gallery；未读取 XYUI1/2；未修改 XuanYu；未修改设计参数；未重命名 Canonical ID；未修改 Source/Audit 历史证据。
+
+## 14. C1.5 Foundation Runtime Interface Freeze（工作树验证补充）
+
+本补充对应当前独立工作树的未提交接口冻结。Canonical Source 仍为 `xyui/source/XYUI0/XYUI-0.md`；Registry 保持 44 个 Item，并由当前 Registry 增补 22 个 Foundation Runtime 接口条目，合计 448 个 token 条目。
+
+冻结内容：
+
+- Semantic namespace：`XY.Gap.*`、`XY.Padding.*`、`XY.Size.*`、`XY.Icon.*`、`XY.Border.*`、`XY.Separator.*`。
+- Density Mode：`Compact`、`Comfortable`、`Touch`。
+- Density Policy：`Auto`、`ManualLock`、`Hysteresis`。`Touch` 仅声明，不导出可消费尺寸。
+- Layout Recipe Contract：`Toolbar`、`Form`、`Inspector`、`Menu`、`Popup`、`Dialog`、`PropertyGrid`。
+- 组合规则：组件拥有 Padding，父级拥有 sibling Gap，Margin 不是常规 sibling layout 工具。
+
+当前工作树验证结果：Registry schema validation PASS；Runtime Foundation tests PASS（369/369）；指定 SDK build PASS（0 warning / 0 error）；Architecture / 5+100 guard PASS；`git diff --check` PASS。C1.5 未实现 Density Scope、Metric Gate、Gallery 或 XYUI-1～3 大规模 Retrofit。
