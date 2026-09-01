@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingAntiPatternSection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <TextBlock Text="⑩ 禁止写法与排版阶梯 (Anti-pattern vs Architecture)" Classes="xyui-text-section" />
+      <Grid ColumnDefinitions="*,*,*" Margin="0,4,0,0">
+        <!-- 1. Forbidden -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="0,0,4,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="❌ 严禁：Magic Margin" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Status.Danger}" />
+            <TextBlock Text="&lt;!-- ❌ 手写魔法数字 --&gt;&#x0a;&lt;XYButton Margin=&quot;0,0,7,0&quot; /&gt;&#x0a;&lt;XYButton Margin=&quot;4,2,6,8&quot; /&gt;" Classes="xyui-text-code" FontSize="11" />
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Recommended Primary -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="2,0,2,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="✅ 首选：语义容器" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Status.Success}" />
+            <TextBlock Text="&lt;!-- ✅ 业务层首选容器 --&gt;&#x0a;&lt;xy:XYToolGroup&gt;&#x0a;  &lt;xy:XYButton /&gt;&#x0a;&lt;/xy:XYToolGroup&gt;" Classes="xyui-text-code" FontSize="11" />
+          </StackPanel>
+        </Border>
+
+        <!-- 3. Advanced Semantic Token -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="4,0,0,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="✅ 其次：Semantic Token" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="&lt;!-- ✅ 高级排版按需消费 --&gt;&#x0a;&lt;StackPanel Orientation=&quot;...&quot;&#x0a;  Spacing=&quot;{DynamicResource&#x0a;    XY.Gap.ToolItem}&quot;&gt;" Classes="xyui-text-code" FontSize="11" />
+          </StackPanel>
+        </Border>
+      </Grid>
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,6" CornerRadius="4" Margin="0,4,0,0">
+        <TextBlock Text="架构原则：越靠近业务，语法越精简 (语义容器)；越靠近底层，控制力越细致 (Semantic Token)；严禁绕过规范自创数值。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

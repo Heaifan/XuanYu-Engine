@@ -6,22 +6,32 @@
              x:DataType="views:SpacingMetricsViewModel">
   <ScrollViewer>
     <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
+      <!-- 页面顶部标头 -->
       <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
-        <TextBlock Text="间距与排版体系 (Spacing &amp; Layout · 0.03 Locked)" Classes="xyui-heading-panel" />
+        <TextBlock Text="间距与排版视觉规范 (Spacing &amp; Layout Visual Spec)" Classes="xyui-heading-panel" />
         <c:XYStatusBadge Text="LOCKED" State="Success" VerticalAlignment="Center" />
       </StackPanel>
 
-      <!-- ① 这是什么 / 解决什么问题 & ② 基本用法 XAML 代码 -->
-      <views:SpacingIntroSection />
+      <!-- ① 三条核心规则 -->
+      <views:SpacingCoreRulesSection />
 
-      <!-- ③ Toolbar 示例 / ④ Form 示例 / ⑤ Panel 示例 (真实控件) -->
-      <views:SpacingSamplesSection />
+      <!-- ② 大型视觉间距示意 (测量线 / 箭头 / DIP 标尺) -->
+      <views:SpacingMeasurementVisualSection />
 
-      <!-- ⑥ Density 对比 / ⑦ Semantic Token 完整映射表 -->
-      <views:SpacingDensityTableSection />
+      <!-- ③ Compact / Comfortable / Touch 真实对比 -->
+      <views:SpacingDensityComparisonSection />
 
-      <!-- ⑧ 禁止写法与排版原则 -->
-      <views:SpacingAntiPatternsSection />
+      <!-- ④ 推荐基本用法 & ⑤ 高级 Token 用法 -->
+      <views:SpacingUsageGuideSection />
+
+      <!-- ⑥ Toolbar / ⑦ Form / ⑧ Panel 真实组件示例 -->
+      <views:SpacingRealSamplesSection />
+
+      <!-- ⑨ Semantic Token 完整参考表 -->
+      <views:SpacingTokenReferenceSection />
+
+      <!-- ⑩ Anti-pattern 禁止写法与排版阶梯 -->
+      <views:SpacingAntiPatternSection />
     </StackPanel>
   </ScrollViewer>
 </UserControl>

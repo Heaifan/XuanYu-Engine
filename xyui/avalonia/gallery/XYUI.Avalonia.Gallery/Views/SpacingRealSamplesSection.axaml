@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingRealSamplesSection">
+  <StackPanel Spacing="{DynamicResource XY.Gap.Section}">
+    <!-- 1. Toolbar 真实分组样例 (含真实 XYIcon / XYIconButton) -->
+    <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+      <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="⑥ 真实 Toolbar 示例 (ToolGroup A 与 B，组内 ToolItem / 组间 ToolGroup)" Classes="xyui-text-section" />
+        <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Height="{DynamicResource XY.Size.Toolbar}" Padding="4,2">
+          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolGroup}">
+            <!-- ToolGroup A: New / Save (Real XYIconButton + XYIcon) -->
+            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
+              <c:XYIconButton AutomationProperties.Name="新建">
+                <c:XYIcon Icon="Code" Size="Medium" />
+              </c:XYIconButton>
+              <c:XYIconButton AutomationProperties.Name="保存">
+                <c:XYIcon Icon="Check" Size="Medium" />
+              </c:XYIconButton>
+            </StackPanel>
+
+            <c:XYSeparator Width="8" />
+
+            <!-- ToolGroup B: Undo / Redo -->
+            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
+              <c:XYButton Content="撤销" Variant="Secondary" />
+              <c:XYButton Content="重做" Variant="Secondary" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <!-- 2. Form 真实字段行样例 -->
+    <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+      <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="⑦ 真实 Form 示例 (三行字段：Field Gap 垂直排列 + IconText 对齐)" Classes="xyui-text-section" />
+        <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="{DynamicResource XY.Padding.Panel}">
+          <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+            <!-- Row 1 -->
+            <Grid ColumnDefinitions="100,*">
+              <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.IconText}" VerticalAlignment="Center">
+                <c:XYIcon Icon="Info" Size="Small" />
+                <c:XYLabel Text="实体名称" />
+              </StackPanel>
+              <TextBox Grid.Column="1" Text="Player_Main_Actor" Height="26" />
+            </Grid>
+            <!-- Row 2 -->
+            <Grid ColumnDefinitions="100,*">
+              <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.IconText}" VerticalAlignment="Center">
+                <c:XYIcon Icon="Code" Size="Small" />
+                <c:XYLabel Text="世界坐标" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+                <TextBox Text="1024.0" Width="80" Height="26" />
+                <TextBox Text="2048.0" Width="80" Height="26" />
+              </StackPanel>
+            </Grid>
+            <!-- Row 3 -->
+            <Grid ColumnDefinitions="100,*">
+              <c:XYLabel Text="生命周期" VerticalAlignment="Center" />
+              <c:XYStatusBadge Grid.Column="1" Text="Active / Ready" State="Success" HorizontalAlignment="Left" />
+            </Grid>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <!-- 3. Panel 真实双区块样例 -->
+    <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+      <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="⑧ 真实 Panel 示例 (Panel Padding 容器内边距 + Section Gap 区块间距)" Classes="xyui-text-section" />
+        <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="{DynamicResource XY.Padding.Panel}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1">
+          <StackPanel Spacing="{DynamicResource XY.Gap.Section}">
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Padding="{DynamicResource XY.Padding.Panel}">
+              <TextBlock Text="Section 1 (主渲染参数区)" Classes="xyui-text-caption" />
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Padding="{DynamicResource XY.Padding.Panel}">
+              <TextBlock Text="Section 2 (扩展材质参数区，通过 XY.Gap.Section 隔开)" Classes="xyui-text-caption" />
+            </Border>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

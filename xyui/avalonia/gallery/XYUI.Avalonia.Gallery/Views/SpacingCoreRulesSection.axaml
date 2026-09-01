@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingCoreRulesSection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}" Background="{DynamicResource XY.Brush.Surface.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <TextBlock Text="① 三大核心排版法则 (The 3 Core Rules)" Classes="xyui-text-section" />
+      <Grid ColumnDefinitions="*,*,*" Margin="0,4,0,0">
+        <!-- Rule 1: Padding -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="0,0,4,0" CornerRadius="4" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1">
+          <StackPanel Spacing="4">
+            <TextBlock Text="1. Padding" Classes="xyui-heading-panel" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="→ 管内部空间" Classes="xyui-text-label" />
+            <TextBlock Text="由组件或容器自身拥有 (XY.Padding.Panel)，绝不向外挤压兄弟。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+
+        <!-- Rule 2: Gap -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="2,0,2,0" CornerRadius="4" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1">
+          <StackPanel Spacing="4">
+            <TextBlock Text="2. Gap" Classes="xyui-heading-panel" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="→ 管兄弟元素之间" Classes="xyui-text-label" />
+            <TextBlock Text="由父级容器统一度量 (XY.Gap.*)，子元素严禁手写 Margin 决定间距。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+
+        <!-- Rule 3: Margin -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10" Margin="4,0,0,0" CornerRadius="4" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1">
+          <StackPanel Spacing="4">
+            <TextBlock Text="3. Margin" Classes="xyui-heading-panel" Foreground="{DynamicResource XY.Brush.Status.Danger}" />
+            <TextBlock Text="→ 只用于特殊外部关系" Classes="xyui-text-label" />
+            <TextBlock Text="仅限脱离常规流的特殊外部定位微调，绝不作为常规排版工具。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

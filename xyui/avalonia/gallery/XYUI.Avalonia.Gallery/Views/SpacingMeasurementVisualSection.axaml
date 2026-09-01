@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingMeasurementVisualSection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="② 大型视觉间距示意区 (Visual Measurement Architecture)" Classes="xyui-text-section" />
+        <Border Background="{DynamicResource XY.Brush.Accent.Soft}" Padding="6,2" CornerRadius="2">
+          <TextBlock Text="Compact 基准度量" Classes="xyui-text-code" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        </Border>
+      </StackPanel>
+
+      <!-- 1. ToolItem & ToolGroup 测量线 -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" CornerRadius="4">
+        <StackPanel Spacing="4">
+          <TextBlock Text="Toolbar 组内与组间标尺：" Classes="xyui-text-caption" />
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <!-- Item 1 -->
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Padding="8,4">
+              <TextBlock Text="Item A1" Classes="xyui-text-caption" />
+            </Border>
+            <!-- 2 DIP Gap Marker -->
+            <StackPanel Width="2" Height="20" Background="{DynamicResource XY.Brush.Accent.Default}" Margin="0,0,0,0" ToolTip.Tip="XY.Gap.ToolItem: 2 DIP" />
+            <!-- Item 2 -->
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Padding="8,4">
+              <TextBlock Text="Item A2" Classes="xyui-text-caption" />
+            </Border>
+            
+            <!-- ToolGroup Arrow Marker -->
+            <StackPanel Orientation="Horizontal" Margin="6,0" VerticalAlignment="Center">
+              <TextBlock Text="←── 6 DIP (XY.Gap.ToolGroup) ──→" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Item 3 -->
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Padding="8,4">
+              <TextBlock Text="Group B1" Classes="xyui-text-caption" />
+            </Border>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. IconText & Field & Section & Padding 测量线 -->
+      <Grid ColumnDefinitions="*,*" Margin="0,2,0,0">
+        <!-- IconText & Field -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="0,0,4,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="IconText (4 DIP) 与 Field (6 DIP) 标尺：" Classes="xyui-text-caption" />
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2">
+              <c:XYIcon Icon="Info" Size="Medium" />
+              <TextBlock Text="← 4 DIP (XY.Gap.IconText) →" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" VerticalAlignment="Center" Margin="4,0" />
+              <TextBlock Text="字段标题" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+            <Border Height="1" Background="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="0,2" />
+            <TextBlock Text="↕ 6 DIP (XY.Gap.Field 垂直字段间距)" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" HorizontalAlignment="Center" />
+            <TextBox Text="输入框内容" Height="26" />
+          </StackPanel>
+        </Border>
+
+        <!-- Section Gap & Panel Padding -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="4,0,0,0" CornerRadius="4">
+          <StackPanel Spacing="4">
+            <TextBlock Text="Panel Padding (12 DIP) 与 Section (12 DIP) 标尺：" Classes="xyui-text-caption" />
+            <Border BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" Padding="12" Background="{DynamicResource XY.Brush.Surface.Panel}">
+              <StackPanel Spacing="12">
+                <TextBlock Text="⇥ 12 DIP Panel Padding ⇤ Section 1" Classes="xyui-text-caption" />
+                <Border Height="1" Background="{DynamicResource XY.Brush.Accent.Default}" ToolTip.Tip="XY.Gap.Section: 12 DIP" />
+                <TextBlock Text="↕ 12 DIP (XY.Gap.Section) ── Section 2" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

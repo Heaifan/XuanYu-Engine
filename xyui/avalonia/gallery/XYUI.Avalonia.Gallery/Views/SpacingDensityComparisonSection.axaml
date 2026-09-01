@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:d="using:XYUI.Avalonia.Density"
+             x:Class="XYUI.Avalonia.Gallery.Views.SpacingDensityComparisonSection">
+  <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+    <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+      <TextBlock Text="③ Density 档位三列横向对比 (XAML 结构相同，空间按档位自适应)" Classes="xyui-text-section" />
+      <TextBlock Text="Touch 档位说明：Spacing/Padding Approved · Sizing NOT APPROVED" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+      
+      <Grid ColumnDefinitions="*,*,*" Margin="0,4,0,0">
+        <!-- 1. Compact Column -->
+        <Border Grid.Column="0" d:XyuiDensityScope.Mode="Compact" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="0,0,4,0" CornerRadius="4">
+          <StackPanel Spacing="{DynamicResource XY.Gap.Section}">
+            <TextBlock Text="Compact (2 / 6 / 12 DIP)" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolGroup}">
+              <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
+                <c:XYButton Content="A1" Variant="Primary" />
+                <c:XYButton Content="A2" Variant="Secondary" />
+              </StackPanel>
+              <c:XYButton Content="B1" Variant="Secondary" />
+            </StackPanel>
+            <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+              <TextBlock Text="表单输入行" Classes="xyui-text-caption" />
+              <TextBox Text="Value 1" Height="26" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Comfortable Column -->
+        <Border Grid.Column="1" d:XyuiDensityScope.Mode="Comfortable" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="2,0,2,0" CornerRadius="4">
+          <StackPanel Spacing="{DynamicResource XY.Gap.Section}">
+            <TextBlock Text="Comfortable (4 / 8 / 16 DIP)" Classes="xyui-text-label" />
+            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolGroup}">
+              <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
+                <c:XYButton Content="A1" Variant="Primary" />
+                <c:XYButton Content="A2" Variant="Secondary" />
+              </StackPanel>
+              <c:XYButton Content="B1" Variant="Secondary" />
+            </StackPanel>
+            <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+              <TextBlock Text="表单输入行" Classes="xyui-text-caption" />
+              <TextBox Text="Value 1" Height="26" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- 3. Touch Column -->
+        <Border Grid.Column="2" d:XyuiDensityScope.Mode="Touch" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8" Margin="4,0,0,0" CornerRadius="4">
+          <StackPanel Spacing="{DynamicResource XY.Gap.Section}">
+            <TextBlock Text="Touch (6 / 12 / 20 DIP)" Classes="xyui-text-label" />
+            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolGroup}">
+              <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
+                <c:XYButton Content="A1" Variant="Primary" />
+                <c:XYButton Content="A2" Variant="Secondary" />
+              </StackPanel>
+              <c:XYButton Content="B1" Variant="Secondary" />
+            </StackPanel>
+            <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+              <TextBlock Text="表单输入行" Classes="xyui-text-caption" />
+              <TextBox Text="Value 1" Height="26" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>
