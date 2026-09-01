@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using XYUI.Avalonia.Foundation;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -19,7 +20,7 @@ public partial class XYSelect : ComboBox
     internal ListBox? ListPart { get; private set; }
     internal bool IsKeyboardNavigating { get; set; }
     bool _isDropDownOpen;
-    public XYSelect() { Classes.Add("xyui-select"); IsEditable = false; Focusable = true; SelectionChanged += OnSelectionChanged; }
+    public XYSelect() { Classes.Add("xyui-select"); XyuiSizingScope.Attach(this); IsEditable = false; Focusable = true; SelectionChanged += OnSelectionChanged; }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
