@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.47-rz · XYUI Gallery 导航计数与最新落点修复（2026-09-01 11:06:55 +08:00）
+
+- 目标：修正 XYUI-3 侧边栏仍显示 `12/12`，并让 `xyui` 启动入口定位到最新编辑内容。
+- 变化：XYUI-3 计数改为根据当前 20 项清单动态显示 `20/20`；默认文档落点跟随清单末项 `XYUI-3-3.20`；本地 `xyui.bat` 启动参数改为 `XYUI-3-3.20`。
+- 验证：XYUI3GalleryNavigationTests 1/1；XYUI 全量 334/334；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A 的 WarCore 守卫通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：侧边栏导航修复等待用户视觉复核；当前 Gallery 定位 3.20。
+- 版本：`v0.2.28.47-rz` 已同步到四处版本文件；`file-tree.md` 已补充导航回归测试职责。
+- Hash：`5c945293`。
+
 ## v0.2.28.46-rz · XYUI-3-20 · WorkspaceSwitcher 正式复用与交互返工（2026-09-01 10:59:57 +08:00）
 
 - 目标：只修 XYUI-3-20；XYUI-3-17、18、19 保持不动。
