@@ -1,85 +1,30 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
              x:Class="XYUI.Avalonia.Gallery.Views.SizingView">
   <ScrollViewer>
     <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
-      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
-        <TextBlock Text="尺寸体系 (Sizing Foundation)" Classes="xyui-heading-panel" />
-        <c:XYStatusBadge Text="DRAFT / PROVISIONAL" State="Warning" VerticalAlignment="Center" />
+      <!-- Title & Subtitle in Chinese -->
+      <StackPanel Spacing="4">
+        <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="尺寸体系 / Sizing" Classes="xyui-heading-panel" />
+          <c:XYStatusBadge Text="PROVISIONAL · 0.04" State="Warning" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="统一控件高度、图标尺寸、命中区域与内容驱动宽度。" Classes="xyui-text-caption" />
       </StackPanel>
 
-      <!-- 控件阶梯尺寸 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
-        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="1. 基础控件高度阶梯 (Control Heights)" Classes="xyui-text-section" />
-          <Grid ColumnDefinitions="140,80,*" RowDefinitions="Auto,Auto,Auto,Auto" Margin="0,4,0,0">
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="XY.Size.Control.XS" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="24 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <Border Grid.Row="0" Grid.Column="2" Height="24" Width="100" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Margin="0,2">
-              <TextBlock Text="XS (24)" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            </Border>
+      <!-- ① 尺寸四大核心法则 -->
+      <views:SizingCoreRulesSection />
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="XY.Size.Control.S" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="28 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <Border Grid.Row="1" Grid.Column="2" Height="28" Width="100" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Margin="0,2">
-              <TextBlock Text="S (28)" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            </Border>
+      <!-- ② 真实组件尺寸矩阵 (方案 C · 紧凑/默认/舒适/触控) -->
+      <views:SizingMatrixSection />
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="XY.Size.Control.M" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="32 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <Border Grid.Row="2" Grid.Column="2" Height="32" Width="100" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Margin="0,2">
-              <TextBlock Text="M (32)" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            </Border>
+      <!-- ③ 尺寸解剖三层结构 (图标 / 视觉 / 命中区) -->
+      <views:SizingAnatomySection />
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="XY.Size.Control.L" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="36 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <Border Grid.Row="3" Grid.Column="2" Height="36" Width="100" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Margin="0,2">
-              <TextBlock Text="L (36)" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            </Border>
-          </Grid>
-        </StackPanel>
-      </Border>
-
-      <!-- 专用场景与小部件尺寸 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
-        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="2. 场景与部件尺寸 (Specific Component Sizing)" Classes="xyui-text-section" />
-          <Grid ColumnDefinitions="140,80,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" Margin="0,4,0,0">
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="XY.Size.TreeRow" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="28 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <Border Grid.Row="0" Grid.Column="2" Height="28" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="6,0" Margin="0,2">
-              <TextBlock Text="📁 场景根节点 (TreeRow: 28)" Classes="xyui-text-body" VerticalAlignment="Center" />
-            </Border>
-
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="XY.Size.Toolbar" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="30 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <Border Grid.Row="1" Grid.Column="2" Height="30" Width="140" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="4" Margin="0,2">
-              <TextBlock Text="工具栏按钮槽 (30)" Classes="xyui-text-caption" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            </Border>
-
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="XY.Size.Input" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="32 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <TextBox Grid.Row="2" Grid.Column="2" Height="32" Width="160" HorizontalAlignment="Left" Text="输入框示例" Margin="0,2" />
-
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="XY.Size.Checkbox" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="16 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <CheckBox Grid.Row="3" Grid.Column="2" Content="复选框 (16x16)" IsChecked="True" Margin="0,2" />
-
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="XY.Size.Switch" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="34×18 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <ToggleSwitch Grid.Row="4" Grid.Column="2" OnContent="开" OffContent="关" IsChecked="True" Margin="0,2" />
-
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="XY.Size.Scrollbar" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="10 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <Border Grid.Row="5" Grid.Column="2" Width="10" Height="32" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Accent.Default}" CornerRadius="5" Margin="0,2" />
-
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="XY.Size.DragHandle" Classes="xyui-text-code" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="8 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
-            <Border Grid.Row="6" Grid.Column="2" Width="8" Height="24" HorizontalAlignment="Left" Background="{DynamicResource XY.Brush.Border.Color.Strong}" CornerRadius="2" Margin="0,2" />
-          </Grid>
-        </StackPanel>
-      </Border>
+      <!-- ④ 推荐写法 · 高级用法 · 禁止写法 -->
+      <views:SizingCodePatternsSection />
     </StackPanel>
   </ScrollViewer>
 </UserControl>
