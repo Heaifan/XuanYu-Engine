@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.ResponsiveView">
+  <StackPanel>
+    <TextBlock Text="ResponsiveView (Shell)" Classes="xyui-heading-panel" />
+    <TextBlock Text="TODO(Codex): Semantic Tokens not yet frozen." Classes="xyui-text-body" />
+  </StackPanel>
+</UserControl>

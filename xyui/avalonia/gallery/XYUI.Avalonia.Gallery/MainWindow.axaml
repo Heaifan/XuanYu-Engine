@@ -9,14 +9,32 @@
         Background="{DynamicResource XY.Brush.Surface.App}">
   <DockPanel Margin="20">
     <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-      <Button x:Name="ThemeSwitchButton" DockPanel.Dock="Right" Content="切换 Dark"
-              Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
-              Foreground="{DynamicResource XY.Brush.Text.Primary}"
-              BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
-              BorderThickness="1" Click="OnThemeSwitchClick" />
+      <!-- TODO(Codex): Need semantic token for test bar Spacing -->
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8">
+        <Button x:Name="ThemeSwitchButton" Content="切换 Dark"
+                Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
+                Foreground="{DynamicResource XY.Brush.Text.Primary}"
+                BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+                BorderThickness="1" Click="OnThemeSwitchClick" />
+        <Button x:Name="DensitySwitchButton" Content="Density: TODO"
+                Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
+                Foreground="{DynamicResource XY.Brush.Text.Primary}"
+                BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+                BorderThickness="1" />
+        <Button x:Name="ZoomSwitchButton" Content="Zoom: 100%"
+                Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
+                Foreground="{DynamicResource XY.Brush.Text.Primary}"
+                BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+                BorderThickness="1" />
+        <Button x:Name="MetricsDebugButton" Content="Metrics Debug"
+                Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
+                Foreground="{DynamicResource XY.Brush.Text.Primary}"
+                BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+                BorderThickness="1" />
+      </StackPanel>
       <StackPanel>
         <TextBlock Text="XYUI 组件文档" Classes="xyui-heading-panel" />
-        <TextBlock x:Name="ThemeStateText" Text="Theme：Light" Classes="xyui-text-caption" />
+        <TextBlock x:Name="ThemeStateText" Text="Theme：Light (Test Bar Active)" Classes="xyui-text-caption" />
       </StackPanel>
     </DockPanel>
     <views:XYUI1DocumentationView x:Name="DocumentationView" />
