@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.40-rz · XYUI-3-17 · CommandBar 点击选中反馈（2026-09-01 09:23:14 +08:00）
+
+- 目标：为 XYUI-3-17 命令栏补齐“点击哪个按钮，哪个按钮保持变色”的真实交互；XYUI-3-18～20 保持不动。
+- 变化：`XYCommandItem` 增加持久 `IsSelected`；`XYCommandBar` 统一维护唯一选中项，切换 Context 时清空旧选择；选中态消费 `XY.Surface.Selected`、Selected Border 与 `XY.Accent.Strong`；修复 Context 重建时 `MoreButton` 重复挂载。
+- 验证：XYUI.Avalonia 解决方案构建 0 Warning / 0 Error；`XYUI3Batch05StructureTests` 6/6；`git diff --check` 通过；ARCH-A 的 WarCore 守卫通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-17 等待人工视觉与交互验收；不启动 XYUI-3-18。
+- 版本：`v0.2.28.40-rz` 已同步到四处版本文件；`file-tree.md` 无结构变化，无需更新。
+- Hash：`c983b0ff`。
+
 ## v0.2.28.39-rz · XYUI-3-17 · CommandBar 垂直对齐与反馈收口（2026-09-01 10:06:00 +08:00）
 
 - 目标：只修复 XYUI-3-17 的统一中心线与 Gallery 交互反馈，XYUI-3-18～20 保持不动。
