@@ -15,6 +15,8 @@ public sealed record MainWindowModel(
 
 public partial class MainWindow : Window
 {
+    bool _isMetricsDebugActive;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -48,6 +50,13 @@ public partial class MainWindow : Window
         var next = current == XyuiDensityMode.Compact ? XyuiDensityMode.Comfortable : XyuiDensityMode.Compact;
         XyuiDensityScope.SetMode(this, next);
         UpdateDensitySwitch();
+    }
+
+    void OnMetricsDebugClick(object? sender, RoutedEventArgs e)
+    {
+        _isMetricsDebugActive = !_isMetricsDebugActive;
+        MetricsDebugButton.Content = _isMetricsDebugActive ? "Metrics: [ON]" : "Metrics Debug";
+        MetricsDebugBanner.IsVisible = _isMetricsDebugActive;
     }
 
     void UpdateThemeSwitch()

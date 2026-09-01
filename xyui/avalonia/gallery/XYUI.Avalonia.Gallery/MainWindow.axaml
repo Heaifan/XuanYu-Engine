@@ -29,13 +29,23 @@
                 Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
                 Foreground="{DynamicResource XY.Brush.Text.Primary}"
                 BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
-                BorderThickness="1" />
+                BorderThickness="1" Click="OnMetricsDebugClick" />
       </StackPanel>
       <StackPanel>
         <TextBlock Text="XYUI 组件文档" Classes="xyui-heading-panel" />
         <TextBlock x:Name="ThemeStateText" Text="Theme：Light (Test Bar Active)" Classes="xyui-text-caption" />
       </StackPanel>
     </DockPanel>
+
+    <!-- Metrics Debug v1 Overlay Banner -->
+    <Border x:Name="MetricsDebugBanner" DockPanel.Dock="Top" Background="{DynamicResource XY.Brush.Accent.Soft}"
+            BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" Padding="8,4" Margin="0,0,0,8" IsVisible="False">
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="📐 METRICS DEBUG v1 ON:" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Accent.Strong}" VerticalAlignment="Center" />
+        <TextBlock Text="Control_H: 24/28/32/36 | TreeRow: 28 | Toolbar: 30 | Padding: 8 | Gap: 4 | Icon: 14/16/20 | Border: 1" Classes="xyui-text-caption" VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
     <views:XYUI1DocumentationView x:Name="DocumentationView" />
   </DockPanel>
 </Window>
