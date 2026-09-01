@@ -4,14 +4,17 @@
              x:Class="XYUI.Avalonia.Gallery.Views.LayoutRecipesView">
   <ScrollViewer>
     <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
-      <TextBlock Text="组合模板 (Layout Recipes)" Classes="xyui-heading-panel" />
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="组合模板 (Layout Recipes)" Classes="xyui-heading-panel" />
+        <c:XYStatusBadge Text="PROVISIONAL RECIPES" State="Warning" VerticalAlignment="Center" />
+      </StackPanel>
 
       <!-- 1. Toolbar Recipe -->
       <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
         <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
           <TextBlock Text="1. 工具栏组合 (Toolbar Recipe)" Classes="xyui-text-section" />
           <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Height="{DynamicResource XY.Size.Toolbar}" Padding="4,2">
-            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
               <c:XYIconButton Content="＋" AutomationProperties.Name="新建" />
               <c:XYIconButton Content="💾" AutomationProperties.Name="保存" />
               <c:XYSeparator Width="12" />

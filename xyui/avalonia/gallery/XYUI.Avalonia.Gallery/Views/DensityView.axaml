@@ -5,12 +5,15 @@
              x:Class="XYUI.Avalonia.Gallery.Views.DensityView">
   <ScrollViewer>
     <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
-      <TextBlock Text="信息密度体系 (Density Foundation &amp; Runtime Scope)" Classes="xyui-heading-panel" />
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="信息密度体系 (Density Foundation &amp; Runtime Scope)" Classes="xyui-heading-panel" />
+        <c:XYStatusBadge Text="PROVISIONAL SIZES" State="Warning" VerticalAlignment="Center" />
+      </StackPanel>
 
       <!-- 1. 动态 Scope 交互测试区 -->
       <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}" Background="{DynamicResource XY.Brush.Surface.PanelAlt}">
         <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="1. 动态 Runtime Scope 测试区 (XyuiDensityScope)" Classes="xyui-text-section" />
+          <TextBlock Text="1. 动态 Runtime Scope 测试区 (XyuiDensityScope: Spacing Locked)" Classes="xyui-text-section" />
           <TextBlock x:Name="ScopeStatusText" Text="当前 Scope 模式: Compact" Classes="xyui-text-code" />
           <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
             <Button Content="切换当前区域 Density (Compact ↔ Comfortable)" Click="OnToggleLocalDensityClick"

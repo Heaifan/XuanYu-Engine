@@ -4,7 +4,10 @@
              x:Class="XYUI.Avalonia.Gallery.Views.StatesView">
   <ScrollViewer>
     <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
-      <TextBlock Text="交互状态体系 (States Foundation)" Classes="xyui-heading-panel" />
+      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+        <TextBlock Text="交互状态体系 (States Foundation)" Classes="xyui-heading-panel" />
+        <c:XYStatusBadge Text="DRAFT / PROVISIONAL" State="Warning" VerticalAlignment="Center" />
+      </StackPanel>
 
       <!-- 1. 按钮与操作状态 -->
       <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
