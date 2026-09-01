@@ -20,7 +20,7 @@
               </c:XYIconButton>
             </l:XYToolGroup>
 
-            <c:XYSeparator Width="8" />
+            <c:XYSeparator />
 
             <!-- ToolGroup B: Undo / Redo -->
             <l:XYToolGroup>
@@ -44,18 +44,18 @@
                 <c:XYIcon Icon="Info" Size="Small" />
                 <c:XYLabel Text="实体名称" />
               </StackPanel>
-              <TextBox Grid.Column="1" Text="Player_Main_Actor" Height="26" />
+              <TextBox Grid.Column="1" Text="Player_Main_Actor" />
             </Grid>
-            <!-- Row 2 -->
+            <!-- Row 2: 坐标字段由 Field 间距语义承担，不滥用 XYToolGroup -->
             <Grid ColumnDefinitions="100,*">
               <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.IconText}" VerticalAlignment="Center">
                 <c:XYIcon Icon="Code" Size="Small" />
                 <c:XYLabel Text="世界坐标" />
               </StackPanel>
-              <l:XYToolGroup Grid.Column="1">
-                <TextBox Text="1024.0" Width="80" Height="26" />
-                <TextBox Text="2048.0" Width="80" Height="26" />
-              </l:XYToolGroup>
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+                <TextBox Text="1024.0" />
+                <TextBox Text="2048.0" />
+              </StackPanel>
             </Grid>
             <!-- Row 3 -->
             <Grid ColumnDefinitions="100,*">
@@ -71,7 +71,7 @@
     <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
       <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
         <TextBlock Text="⑧ 真实 XYPanel &amp; XYSectionGroup 示例" Classes="xyui-text-section" />
-        <l:XYPanel Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1">
+        <l:XYPanel Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}">
           <l:XYSectionGroup>
             <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Padding="{DynamicResource XY.Padding.Panel}">
               <TextBlock Text="Section 1 (主渲染参数区)" Classes="xyui-text-caption" />

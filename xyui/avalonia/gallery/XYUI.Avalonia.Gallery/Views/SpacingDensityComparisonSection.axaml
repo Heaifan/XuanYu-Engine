@@ -23,7 +23,7 @@
             </l:XYToolbar>
             <l:XYFieldGroup>
               <TextBlock Text="表单输入行" Classes="xyui-text-caption" />
-              <TextBox Text="Value 1" Height="26" />
+              <TextBox Text="Value 1" />
             </l:XYFieldGroup>
           </l:XYSectionGroup>
         </Border>
@@ -41,7 +41,7 @@
             </l:XYToolbar>
             <l:XYFieldGroup>
               <TextBlock Text="表单输入行" Classes="xyui-text-caption" />
-              <TextBox Text="Value 1" Height="26" />
+              <TextBox Text="Value 1" />
             </l:XYFieldGroup>
           </l:XYSectionGroup>
         </Border>
@@ -59,7 +59,7 @@
             </l:XYToolbar>
             <l:XYFieldGroup>
               <TextBlock Text="表单输入行" Classes="xyui-text-caption" />
-              <TextBox Text="Value 1" Height="26" />
+              <TextBox Text="Value 1" />
             </l:XYFieldGroup>
           </l:XYSectionGroup>
         </Border>

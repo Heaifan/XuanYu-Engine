@@ -17,13 +17,13 @@
           <TextBlock Text="Toolbar 组内与组间标尺：" Classes="xyui-text-caption" />
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <!-- Item 1 -->
-            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Padding="8,4">
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}" Padding="8,4">
               <TextBlock Text="Item A1" Classes="xyui-text-caption" />
             </Border>
             <!-- 2 DIP Gap Marker -->
             <StackPanel Width="2" Height="20" Background="{DynamicResource XY.Brush.Accent.Default}" Margin="0,0,0,0" ToolTip.Tip="XY.Gap.ToolItem: 2 DIP" />
             <!-- Item 2 -->
-            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Padding="8,4">
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}" Padding="8,4">
               <TextBlock Text="Item A2" Classes="xyui-text-caption" />
             </Border>
             
@@ -33,7 +33,7 @@
             </StackPanel>
 
             <!-- Item 3 -->
-            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Padding="8,4">
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}" Padding="8,4">
               <TextBlock Text="Group B1" Classes="xyui-text-caption" />
             </Border>
           </StackPanel>
@@ -53,7 +53,7 @@
             </StackPanel>
             <Border Height="1" Background="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="0,2" />
             <TextBlock Text="↕ 6 DIP (XY.Gap.Field 垂直字段间距)" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" HorizontalAlignment="Center" />
-            <TextBox Text="输入框内容" Height="26" />
+            <TextBox Text="输入框内容" />
           </StackPanel>
         </Border>
 
@@ -61,7 +61,7 @@
         <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="4,0,0,0" CornerRadius="4">
           <StackPanel Spacing="4">
             <TextBlock Text="Panel Padding (12 DIP) 与 Section (12 DIP) 标尺：" Classes="xyui-text-caption" />
-            <Border BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" Padding="12" Background="{DynamicResource XY.Brush.Surface.Panel}">
+            <Border BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}" Padding="12" Background="{DynamicResource XY.Brush.Surface.Panel}">
               <StackPanel Spacing="12">
                 <TextBlock Text="⇥ 12 DIP Panel Padding ⇤ Section 1" Classes="xyui-text-caption" />
                 <Border Height="1" Background="{DynamicResource XY.Brush.Accent.Default}" ToolTip.Tip="XY.Gap.Section: 12 DIP" />
