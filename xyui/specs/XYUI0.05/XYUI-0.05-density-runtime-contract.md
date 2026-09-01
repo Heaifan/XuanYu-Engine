@@ -7,18 +7,17 @@
 ## Runtime API
 
 ```csharp
-XyuiDensityScope.Density
+XY.Density
 ```
 
 该 AttachedProperty 继承于 Avalonia `Control` 树，默认值为 `Default`。子控件可局部覆盖；覆盖只影响该子树，不影响兄弟节点。
 
 ```csharp
-XyuiDensityScope.SetDensity(panel, XyuiDensity.Compact);
-var density = XyuiDensityScope.GetDensity(control);
-var metrics = XyuiDensityScope.GetMetrics(control);
+XY.SetDensity(panel, XYDensity.Compact);
+var density = XY.GetDensity(control);
 ```
 
-合法档位只有 `Compact`、`Default`、`Comfortable`。本轮不引入 `Touch`。
+合法档位只有 `Compact`、`Default`、`Comfortable`。本轮不引入 `Touch`。旧 `XyuiDensityScope` 仅作为内部兼容入口，新的外部消费统一使用 `XY.Density`。
 
 ## 语义表
 
@@ -32,4 +31,4 @@ var metrics = XyuiDensityScope.GetMetrics(control);
 
 ## 边界
 
-Density 不修改 `Control.Height`、`Width`、`FontSize`、图标尺寸或命中区，不隐藏关键状态，也不携带 `SizeRole`。因此 `Density = Compact` 与 `SizeRole = Default` 可以同时成立；本仓库当前尚无 0.04 `SizeRole` Runtime，Density 不补造它。
+Density 不修改 `Control.Height`、`Width`、`FontSize`、图标尺寸或命中区，不隐藏关键状态，也不携带 `XY.Size`。因此 `XY.Size = Default` 与 `XY.Density = Compact` 可以同时成立。

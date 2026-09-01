@@ -1,4 +1,5 @@
 using XYUI.Avalonia.Spatial;
+using XYUI.Avalonia;
 
 namespace XYUI.Avalonia.Density;
 
@@ -14,6 +15,8 @@ public readonly record struct XyuiDensityMetrics(
     double SectionGap,
     double PanelPadding)
 {
+    public static XyuiDensityMetrics For(XYDensity density) => For((XyuiDensity)density);
+
     public static XyuiDensityMetrics For(XyuiDensity density) => density switch
     {
         XyuiDensity.Compact => new(XyuiSpatialTokens.FieldRowGap,
