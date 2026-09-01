@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.59-rz · XYUI-3-22 · Popup 独立视觉树样式注入（2026-09-01 15:23:39 +08:00）
+
+- 目标：只修 XYUI-3-22 Compact Popup；Desktop Hierarchical、XYUI-3-21、XYUI-3-23、XYUI-3-24 保持冻结。
+- 根因：Popup 独立 visual root 不继承 Gallery 主树样式，导致源码中的菜单样式未呈现。
+- 变化：Popup 面板、层级 Guide、菜单行、选中 Surface、文字与正式 Check 改为直接绑定主题 token；保留专用面板与共享层级 Renderer。
+- 运行态：最新 DLL 经 Gallery 实例验证，`数据集` 显示整行 Selected Surface 与右侧 Check，面板边框/内边距生效。
+- 验证：XYUI.Avalonia.Tests 361/361；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A WarCore guard 通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-22 UI REWORKED · INTERACTION IMPLEMENTED · AWAITING USER VISUAL/INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.59-rz` 已同步到四处版本文件。
+
 ## v0.2.28.58-rz · XYUI-3-22 · Compact Popup 菜单风格收口（2026-09-01 15:12:08 +08:00）
 
 - 目标：只修 XYUI-3-22 Compact Popup；Desktop Hierarchical、XYUI-3-21、XYUI-3-23、XYUI-3-24 保持冻结。
