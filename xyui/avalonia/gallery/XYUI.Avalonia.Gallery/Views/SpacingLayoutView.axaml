@@ -1,83 +1,27 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:XYUI.Avalonia.Controls"
-             xmlns:d="using:XYUI.Avalonia.Density"
              xmlns:views="using:XYUI.Avalonia.Gallery.Views"
              x:Class="XYUI.Avalonia.Gallery.Views.SpacingLayoutView"
              x:DataType="views:SpacingMetricsViewModel">
   <ScrollViewer>
     <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
       <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
-        <TextBlock Text="间距体系 (Spacing &amp; Layout · 0.03 Locked)" Classes="xyui-heading-panel" />
+        <TextBlock Text="间距与排版体系 (Spacing &amp; Layout · 0.03 Locked)" Classes="xyui-heading-panel" />
         <c:XYStatusBadge Text="LOCKED" State="Success" VerticalAlignment="Center" />
       </StackPanel>
 
-      <!-- 1. 六大语义 Token 与三档 Density 差异对比（从 Runtime 消费） -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
-        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="1. 语义 Token 密度差异 (Compact / Comfortable / Touch)" Classes="xyui-text-section" />
-          <Grid ColumnDefinitions="120,70,80,90,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Semantic Token" Classes="xyui-text-caption" />
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="Token 名" Classes="xyui-text-caption" />
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="Compact" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Grid.Row="0" Grid.Column="3" Text="Comfortable" Classes="xyui-text-caption" />
-            <TextBlock Grid.Row="0" Grid.Column="4" Text="Touch (Spacing Only · Sizing NOT APPROVED)" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
+      <!-- ① 这是什么 / 解决什么问题 & ② 基本用法 XAML 代码 -->
+      <views:SpacingIntroSection />
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="ToolItem Gap" Classes="xyui-text-body" />
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="XY.Gap.ToolItem" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CompactToolItem, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding ComfortableToolItem, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding TouchToolItem, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
+      <!-- ③ Toolbar 示例 / ④ Form 示例 / ⑤ Panel 示例 (真实控件) -->
+      <views:SpacingSamplesSection />
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="ToolGroup Gap" Classes="xyui-text-body" />
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="XY.Gap.ToolGroup" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding CompactToolGroup, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding ComfortableToolGroup, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding TouchToolGroup, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
+      <!-- ⑥ Density 对比 / ⑦ Semantic Token 完整映射表 -->
+      <views:SpacingDensityTableSection />
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="IconText Gap" Classes="xyui-text-body" />
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="XY.Gap.IconText" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding CompactIconText, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding ComfortableIconText, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="3" Grid.Column="4" Text="{Binding TouchIconText, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Field Gap" Classes="xyui-text-body" />
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="XY.Gap.Field" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding CompactField, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="4" Grid.Column="3" Text="{Binding ComfortableField, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="4" Grid.Column="4" Text="{Binding TouchField, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="Section Gap" Classes="xyui-text-body" />
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="XY.Gap.Section" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding CompactSection, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="5" Grid.Column="3" Text="{Binding ComfortableSection, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="5" Grid.Column="4" Text="{Binding TouchSection, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Panel Padding" Classes="xyui-text-body" />
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="XY.Padding.Panel" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding CompactPadding, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="6" Grid.Column="3" Text="{Binding ComfortablePadding, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-            <TextBlock Grid.Row="6" Grid.Column="4" Text="{Binding TouchPadding, StringFormat='{}{0} DIP'}" Classes="xyui-text-code" />
-          </Grid>
-        </StackPanel>
-      </Border>
-
-      <!-- 2. 真实组合展示 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
-        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="2. 工具栏组合样例 (Toolbar Composition: ToolItem / ToolGroup)" Classes="xyui-text-section" />
-          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolGroup}">
-            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
-              <c:XYButton Content="工具项 A1" Variant="Primary" />
-              <c:XYButton Content="工具项 A2" Variant="Secondary" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.ToolItem}">
-              <c:XYButton Content="工具组 B1" Variant="Secondary" />
-              <c:XYButton Content="工具组 B2" Variant="Secondary" />
-            </StackPanel>
-          </StackPanel>
-        </StackPanel>
-      </Border>
+      <!-- ⑧ 禁止写法与排版原则 -->
+      <views:SpacingAntiPatternsSection />
     </StackPanel>
   </ScrollViewer>
 </UserControl>
