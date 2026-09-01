@@ -2304,6 +2304,16 @@
     - Metric Gate 分类：TOKENIZED / ALLOWED EXCEPTION / UNJUSTIFIED MAGIC NUMBER
     - 例外：Geometry / Canvas / Animation / 算法参数 / 具备 Canonical 证据的组件专属尺寸
 
+- C-0.03 · Final Density Semantic Mapping
+    - ToolItem：Compact 2 / Comfortable 4 / Touch 6 DIP
+    - ToolGroup：Compact 6 / Comfortable 8 / Touch 12 DIP
+    - IconText：Compact 4 / Comfortable 4 / Touch 6 DIP
+    - Field：Compact 6 / Comfortable 8 / Touch 12 DIP
+    - Section：Compact 12 / Comfortable 16 / Touch 20 DIP
+    - Panel Padding：Compact 12 / Comfortable 16 / Touch 20 DIP
+    - 以上为 Semantic Canonical Value；不新增 Primitive 刻度
+    - Touch 本轮仅开放 Spacing/Padding，Touch Sizing 仍不可消费
+
 
 
 

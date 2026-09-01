@@ -42,6 +42,21 @@ public sealed class FoundationGovernanceTests
         Assert.Equal(XyuiMetricClassification.UnjustifiedMagicNumber, findings[1].Classification);
         var geometry = XyuiMetricGate.Analyze("Height=7", "Editor/Geometry/Path.cs");
         Assert.Equal(XyuiMetricClassification.AllowedException, geometry[0].Classification);
+        var approvedSemantic = XyuiMetricGate.Analyze("Spacing=2 // XY.Gap.ToolItem");
+        Assert.Equal(XyuiMetricClassification.Tokenized, approvedSemantic[0].Classification);
+    }
+
+    [Fact]
+    public void DensitySemanticMapping_Changes_And_Opens_Touch_SpacingOnly()
+    {
+        var compact = XyuiDensity.CreateResolvedSemanticResources(XyuiDensityMode.Compact);
+        var comfortable = XyuiDensity.CreateResolvedSemanticResources(XyuiDensityMode.Comfortable);
+        var touch = XyuiDensity.CreateResolvedSemanticResources(XyuiDensityMode.Touch);
+        Assert.Equal(2d, compact["XY.Gap.ToolItem"]);
+        Assert.Equal(4d, comfortable["XY.Gap.ToolItem"]);
+        Assert.Equal(6d, touch["XY.Gap.ToolItem"]);
+        Assert.Equal(20d, touch["XY.Padding.Panel"]);
+        Assert.False(XyuiDensity.TryGetMetrics(XyuiDensityMode.Touch, out _));
     }
 
     [Fact]
@@ -51,7 +66,7 @@ public sealed class FoundationGovernanceTests
         {
             Assert.True(XyuiLayoutContracts.TryMetrics(recipe, XyuiDensityMode.Compact, out var metrics));
             Assert.Equal(recipe, metrics.Recipe);
-            Assert.Equal(XyuiSpatialTokens.FieldRowGap, metrics.Gap);
+            Assert.Equal(6d, metrics.Gap);
         }
         Assert.False(XyuiLayoutContracts.TryMetrics(XyuiLayoutRecipe.Toolbar, XyuiDensityMode.Touch, out _));
     }

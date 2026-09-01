@@ -21,4 +21,10 @@ public sealed class XyuiDensityScope
 
     public static bool TryGetMetrics(Control element, out XyuiDensityMetrics metrics) =>
         XyuiDensity.TryGetMetrics(GetMode(element), out metrics);
+
+    public static bool TryGetSemanticMetrics(Control element, out XyuiDensitySemanticMetrics metrics) =>
+        XyuiDensity.TryGetSemanticMetrics(GetMode(element), out metrics);
+
+    public static ResourceDictionary CreateSemanticResources(Control element) =>
+        XyuiDensity.CreateResolvedSemanticResources(GetMode(element));
 }
