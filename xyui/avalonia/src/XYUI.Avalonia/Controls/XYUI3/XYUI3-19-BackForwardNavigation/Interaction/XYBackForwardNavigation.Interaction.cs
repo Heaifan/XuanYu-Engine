@@ -13,7 +13,7 @@ public sealed partial class XYBackForwardNavigation
         CloseHistory(); var indexes = back ? Enumerable.Range(0, _index).Reverse().ToArray() : Enumerable.Range(_index + 1, Math.Max(0, _history.Count - _index - 1)).ToArray(); if (indexes.Length == 0) return;
         var menu = back ? BackHistoryMenu : ForwardHistoryMenu; menu.Items = indexes.Select(i => HistoryItem(i, _history[i], menu)).Cast<Control>().ToArray(); var popup = back ? BackHistoryPopup : ForwardHistoryPopup; popup.Child = menu; popup.PlacementTarget = back ? BackButton : ForwardButton; popup.IsOpen = true; menu.ApplyOverlayStyling(); menu.Open();
     }
-    XYMenuItem HistoryItem(int index, string label, XYMenu menu) { var item = new XYMenuItem { Label = label, Icon = XyuiVectorIcon.ChevronRight }; item.SelectionRequested += (_, _) => { JumpTo(index); menu.Close(); }; return item; }
+    XYMenuItem HistoryItem(int index, string label, XYMenu menu) { var item = new XYMenuItem { Label = label }; item.SelectionRequested += (_, _) => { JumpTo(index); menu.Close(); }; return item; }
     void JumpTo(int index) { if (index < 0 || index >= _history.Count) return; _index = index; Sync(); LocationChanged?.Invoke(this, CurrentLocation!); CloseHistory(); }
     public void CloseHistory() { BackHistoryPopup.IsOpen = false; ForwardHistoryPopup.IsOpen = false; BackHistoryMenu.Close(); ForwardHistoryMenu.Close(); }
     protected override void OnKeyDown(KeyEventArgs e)
