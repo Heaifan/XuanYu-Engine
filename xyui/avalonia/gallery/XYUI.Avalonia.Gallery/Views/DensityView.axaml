@@ -1,15 +1,34 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:d="using:XYUI.Avalonia.Density"
              x:Class="XYUI.Avalonia.Gallery.Views.DensityView">
   <ScrollViewer>
     <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
-      <TextBlock Text="信息密度体系 (Density Foundation)" Classes="xyui-heading-panel" />
+      <TextBlock Text="信息密度体系 (Density Foundation &amp; Runtime Scope)" Classes="xyui-heading-panel" />
 
-      <!-- 1. Compact 模式对比 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+      <!-- 1. 动态 Scope 交互测试区 -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}" Background="{DynamicResource XY.Brush.Surface.PanelAlt}">
         <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="1. 紧凑模式 (Compact - 玄域 Editor 默认目标)" Classes="xyui-text-section" />
+          <TextBlock Text="1. 动态 Runtime Scope 测试区 (XyuiDensityScope)" Classes="xyui-text-section" />
+          <TextBlock x:Name="ScopeStatusText" Text="当前 Scope 模式: Compact" Classes="xyui-text-code" />
+          <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
+            <Button Content="切换当前区域 Density (Compact ↔ Comfortable)" Click="OnToggleLocalDensityClick"
+                    Padding="10,4" Background="{DynamicResource XY.Brush.Surface.Raised}" BorderThickness="1" />
+          </StackPanel>
+          <Border x:Name="DynamicScopeContainer" Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}" Margin="0,4,0,0">
+            <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+              <TextBlock Text="📁 Scope 内层级树项" Classes="xyui-text-caption" />
+              <TextBox Text="Scope 内输入框" Width="200" HorizontalAlignment="Left" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. 静态对比：Compact 模式 (XyuiDensityScope.Mode=Compact) -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}" d:XyuiDensityScope.Mode="Compact">
+        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
+          <TextBlock Text="2. 紧凑模式 (Compact - 玄域 Editor 默认目标)" Classes="xyui-text-section" />
           <Grid ColumnDefinitions="140,80,*" RowDefinitions="Auto,Auto,Auto" Margin="0,4,0,0">
             <TextBlock Grid.Row="0" Grid.Column="0" Text="TreeRow Height" Classes="xyui-text-code" VerticalAlignment="Center" />
             <TextBlock Grid.Row="0" Grid.Column="1" Text="28 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
@@ -30,10 +49,10 @@
         </StackPanel>
       </Border>
 
-      <!-- 2. Comfortable 模式对比 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
+      <!-- 3. 静态对比：Comfortable 模式 (XyuiDensityScope.Mode=Comfortable) -->
+      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}" d:XyuiDensityScope.Mode="Comfortable">
         <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="2. 舒适模式 (Comfortable)" Classes="xyui-text-section" />
+          <TextBlock Text="3. 舒适模式 (Comfortable)" Classes="xyui-text-section" />
           <Grid ColumnDefinitions="140,80,*" RowDefinitions="Auto,Auto,Auto" Margin="0,4,0,0">
             <TextBlock Grid.Row="0" Grid.Column="0" Text="TreeRow Height" Classes="xyui-text-code" VerticalAlignment="Center" />
             <TextBlock Grid.Row="0" Grid.Column="1" Text="32 DIP" Classes="xyui-text-caption" VerticalAlignment="Center" />
@@ -54,10 +73,10 @@
         </StackPanel>
       </Border>
 
-      <!-- 3. Touch 模式声明 -->
+      <!-- 4. Touch 模式声明 -->
       <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
         <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="3. 触控模式 (Touch - Declared / Not Yet Consumable)" Classes="xyui-text-section" />
+          <TextBlock Text="4. 触控模式 (Touch - Declared / Not Consumable)" Classes="xyui-text-section" />
           <TextBlock Text="Touch 档位在契约中已声明枚举 (XyuiDensityMode.Touch)，但当前阶段尚未提供消费样式。遵循真实性原则，此处不伪造触控展示。" Classes="xyui-text-caption" TextWrapping="Wrap" />
         </StackPanel>
       </Border>

@@ -9,17 +9,17 @@
         Background="{DynamicResource XY.Brush.Surface.App}">
   <DockPanel Margin="20">
     <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="{DynamicResource XY.Space.4}">
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
         <Button x:Name="ThemeSwitchButton" Content="切换 Dark"
                 Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
                 Foreground="{DynamicResource XY.Brush.Text.Primary}"
                 BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
                 BorderThickness="1" Click="OnThemeSwitchClick" />
-        <Button x:Name="DensitySwitchButton" Content="Density: TODO"
+        <Button x:Name="DensitySwitchButton" Content="Density: Compact"
                 Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
                 Foreground="{DynamicResource XY.Brush.Text.Primary}"
                 BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
-                BorderThickness="1" />
+                BorderThickness="1" Click="OnDensitySwitchClick" />
         <Button x:Name="ZoomSwitchButton" Content="Zoom: 100%"
                 Padding="10,4" Background="{DynamicResource XY.Brush.Surface.PanelAlt}"
                 Foreground="{DynamicResource XY.Brush.Text.Primary}"

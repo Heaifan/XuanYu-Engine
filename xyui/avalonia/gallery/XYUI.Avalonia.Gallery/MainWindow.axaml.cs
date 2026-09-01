@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
 using XYUI.Avalonia.Catalog;
+using XYUI.Avalonia.Density;
 
 namespace XYUI.Avalonia.Gallery;
 
@@ -17,6 +18,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        XyuiDensityScope.SetMode(this, XyuiDensityMode.Compact);
         DataContext = new MainWindowModel(
             PaletteCatalog.BuildSections(dark: false), XyuiCatalogSource.Load(), Array.Empty<XYUI1GalleryItem>());
         if (Program.InitialComponentId is { Length: > 0 } id &&
@@ -27,6 +29,7 @@ public partial class MainWindow : Window
             app.ActualThemeVariantChanged += OnActualThemeVariantChanged;
             Closed += (_, _) => app.ActualThemeVariantChanged -= OnActualThemeVariantChanged;
             UpdateThemeSwitch();
+            UpdateDensitySwitch();
         }
     }
 
@@ -39,10 +42,24 @@ public partial class MainWindow : Window
             ? ThemeVariant.Light : ThemeVariant.Dark;
     }
 
+    void OnDensitySwitchClick(object? sender, RoutedEventArgs e)
+    {
+        var current = XyuiDensityScope.GetMode(this);
+        var next = current == XyuiDensityMode.Compact ? XyuiDensityMode.Comfortable : XyuiDensityMode.Compact;
+        XyuiDensityScope.SetMode(this, next);
+        UpdateDensitySwitch();
+    }
+
     void UpdateThemeSwitch()
     {
         var dark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
         ThemeStateText.Text = dark ? "Theme：Dark" : "Theme：Light";
         ThemeSwitchButton.Content = dark ? "切换 Light" : "切换 Dark";
+    }
+
+    void UpdateDensitySwitch()
+    {
+        var mode = XyuiDensityScope.GetMode(this);
+        DensitySwitchButton.Content = $"Density: {mode}";
     }
 }
