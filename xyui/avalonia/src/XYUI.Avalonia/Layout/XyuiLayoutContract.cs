@@ -22,18 +22,22 @@ public static class XyuiLayoutContracts
     public static bool TryMetrics(XyuiLayoutRecipe recipe, XyuiDensityMode mode,
         out XyuiCompositionMetrics metrics)
     {
-        if (!XyuiDensity.TryGetMetrics(mode, out var density))
+        if (!XyuiDensity.TryGetMetrics(mode, out var density) ||
+            !XyuiDensity.TryGetSemanticMetrics(mode, out var semantic))
         {
             metrics = default;
             return false;
         }
 
         metrics = new(recipe, density.ControlSize, density.ToolbarSize, density.InputSize,
-            density.IconSize, density.Gap, density.Padding);
+            density.IconSize, semantic.FieldGap, semantic.PanelPadding,
+            semantic.ToolItemGap, semantic.ToolGroupGap, semantic.IconTextGap,
+            semantic.SectionGap);
         return true;
     }
 }
 
 public readonly record struct XyuiCompositionMetrics(
     XyuiLayoutRecipe Recipe, double ControlSize, double ToolbarSize, double InputSize,
-    double IconSize, double Gap, double Padding);
+    double IconSize, double Gap, double Padding, double ToolItemGap,
+    double ToolGroupGap, double IconTextGap, double SectionGap);

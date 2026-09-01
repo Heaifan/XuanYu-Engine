@@ -23,18 +23,22 @@ public static class XyuiMetricGate
             {
                 var value = match.Groups["value"].Success
                     ? match.Groups["value"].Value : match.Groups["value2"].Value.Trim();
-                var classification = Classify(lines[index], value, filePath);
+                var classification = Classify(match.Groups["metric"].Value, lines[index], value, filePath);
                 findings.Add(new(match.Groups["metric"].Value, value, classification, index + 1));
             }
         }
         return findings;
     }
 
-    static XyuiMetricClassification Classify(string line, string value, string path)
+    static XyuiMetricClassification Classify(string metric, string line, string value, string path)
     {
         if (value.Contains("XY.", StringComparison.Ordinal) ||
             value.Contains("Xyui", StringComparison.Ordinal) ||
-            value.Contains("DynamicResource", StringComparison.Ordinal))
+            value.Contains("DynamicResource", StringComparison.Ordinal) ||
+            (Regex.IsMatch(value, @"^\d+(?:\.\d+)?(?:,\d+(?:\.\d+)?)*$") &&
+             ((metric is "Spacing" or "Padding") &&
+              (line.Contains("XY.Gap", StringComparison.Ordinal) ||
+               line.Contains("XY.Padding", StringComparison.Ordinal)))))
             return XyuiMetricClassification.Tokenized;
         if (line.Contains("xyui:allowed-exception", StringComparison.OrdinalIgnoreCase) ||
             line.Contains("canonical:", StringComparison.OrdinalIgnoreCase) ||
