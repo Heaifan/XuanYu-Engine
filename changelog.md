@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.44-rz · XYUI-3-19 · BackForwardNavigation 紧凑结构与历史跳转（2026-09-01 10:20:56 +08:00）
+
+- 目标：只修 XYUI-3-19，保留 `_history + _index`、Forward branch 截断和 LocationChanged 状态模型；XYUI-3-17、18、20 保持不动。
+- 变化：让 34 DIP Surface 成为真实父容器，Action 收紧为 28 DIP 并统一中心线；空历史显示 `—`；新增 Back/Forward 历史 `XYMenu` 跳转、Esc/失活/Detach 关闭和 Alt+Left/Alt+Right。
+- 验证：XYUI3BackForwardNavigationTests 6/6；XYUI3Batch05StructureTests 6/6；解决方案与测试项目构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A 的 WarCore 守卫通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-19 等待用户视觉与交互验收；不启动 XYUI-3-20。
+- 版本：`v0.2.28.44-rz` 已同步到四处版本文件；`file-tree.md` 已补充新增文件职责。
+- Hash：`2790e146`。
+
 ## v0.2.28.43-rz · XYUI-3-18 · CommandPalette 结构与交互返工（2026-09-01 10:01:01 +08:00）
 
 - 目标：按当前裁定重做 XYUI-3-18 CommandPalette 的真实布局、数据模型、搜索 Scope 与 Popup 生命周期；XYUI-3-17、19、20 保持不动。

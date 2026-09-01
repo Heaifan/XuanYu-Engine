@@ -1825,8 +1825,11 @@
    │  │     │  ├─ XYCommandPalette.cs  # 定义命令模型、公共状态和面板宿主。
    │  │     │  ├─ XYCommandPalette.Layout.cs  # 构造搜索、结果、分隔线和详情的 Grid 布局。
    │  │     │  └─ XYCommandPaletteItem.cs  # 提供整行 Stretch 的结果项交互。
+   │  │     ├─ XYUI3-19-BackForwardNavigation/Interaction/  # 组织历史菜单、快捷键与生命周期收口。
+   │  │     │  ├─ XYBackForwardNavigation.Interaction.cs  # 提供历史菜单跳转与 Alt 快捷键。
+   │  │     │  └─ XYBackForwardNavigation.Lifecycle.cs  # 提供失活与卸载时关闭历史弹层。
    │  │     ├─ XYUI3-19-BackForwardNavigation/UI/  # 实现独立导航历史。
-   │  │     │  └─ XYBackForwardNavigation.cs  # 提供前进、后退和 Forward 截断。
+   │  │     │  └─ XYBackForwardNavigation.cs  # 提供 34 DIP Surface、前进、后退和 Forward 截断。
    │  │     └─ XYUI3-20-WorkspaceSwitcher/UI/  # 实现紧凑工作区切换器。
    │  │        └─ XYWorkspaceSwitcher.cs  # 提供工作区 Trigger、同宽 Popup 与选择事件。
    │  │     ├─ Foundation/  # 组织该模块下的正式文件。
@@ -1926,7 +1929,8 @@
    │  │     ├─ XYUI3CompactNavigationInteractionTests.cs  # 验证紧凑导航新增页签、Popup 菜单与焦点/选择分离。
    │  │     ├─ XYUI3Batch04StructureTests.cs  # 验证分页、步骤、工具栏与工具组结构复用。
    │  │     ├─ XYUI3Batch05StructureTests.cs  # 验证 17～20 紧凑控件与核心交互。
-   │  │     └─ XYUI3CommandPaletteTests.cs  # 验证 18 的整行结果、详情、Scope、Recent 与 Popup 执行。
+   │  │     ├─ XYUI3BackForwardNavigationTests.cs  # 验证 19 的紧凑结构、历史跳转与 Popup 生命周期。
+   │  │     ├─ XYUI3CommandPaletteTests.cs  # 验证 18 的整行结果、详情、Scope、Recent 与 Popup 执行。
    │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航复用、单底边、垂直居中及交互状态机。
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。
