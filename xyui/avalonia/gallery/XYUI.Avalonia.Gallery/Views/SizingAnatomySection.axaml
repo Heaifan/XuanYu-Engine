@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:XYUI.Avalonia.Controls"
              xmlns:xy="using:XYUI.Avalonia"
-             xmlns:xy="using:XYUI.Avalonia"
              x:Class="XYUI.Avalonia.Gallery.Views.SizingAnatomySection">
   <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
     <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
