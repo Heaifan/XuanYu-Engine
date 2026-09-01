@@ -9,6 +9,7 @@
 - 验证：XYUI.Avalonia.Tests 374/374；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；ARCH-A 架构守卫通过；5+100 行限通过；`git diff --check` 通过。
 - 状态：XYUI-0.05 GALLERY LANE COMPLETE · AWAITING USER VISUAL ACCEPTANCE。
 - 版本：`v0.2.28.64-rz` 已同步到四处版本文件。
+- Hash：`ba8c5b1c`。
 
 ## v0.2.28.63-rz · XYUI-0.05 · Density Runtime（2026-09-01 22:34:12 +08:00）
 
