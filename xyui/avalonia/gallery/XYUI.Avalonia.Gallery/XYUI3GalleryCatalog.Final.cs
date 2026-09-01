@@ -23,15 +23,16 @@ public static partial class XYUI3GalleryCatalog
     }
     static Control BottomNavigationPreview()
     {
-        var state = new XYNavigationState([new("home", "首页", XyuiVectorIcon.Locate), new("map", "地图", XyuiVectorIcon.Section), new("data", "数据", XyuiVectorIcon.Code)], "map");
-        var primary = new XYButton { Content = new XYIcon { Icon = XyuiVectorIcon.Add, Size = XyuiIconSize.Small }, Variant = XyuiButtonVariant.Primary };
-        var nav = new XYBottomNavigation(state, [new("home", "首页", XyuiVectorIcon.Locate), new("map", "地图", XyuiVectorIcon.Section), new("data", "数据", XyuiVectorIcon.Code, "3")], primary);
-        return new StackPanel { Spacing = 8, Children = { nav, new XYCaption { Text = "等宽目的地 · Primary Action 独立" } } };
+        var items = new[] { new XYBottomNavigationItem("map", "地图", XyuiVectorIcon.Locate), new XYBottomNavigationItem("data", "数据", XyuiVectorIcon.Code), new XYBottomNavigationItem("experiment", "实验", XyuiVectorIcon.Clear), new XYBottomNavigationItem("logs", "日志", XyuiVectorIcon.Section, "1"), new XYBottomNavigationItem("mine", "我的", XyuiVectorIcon.Info) };
+        var standardState = new XYNavigationState(items.Select(i => new XYNavigationEntry(i.Id, i.Label, i.Icon)), "map"); var standard = new XYBottomNavigation(standardState, items) { Width = 544 };
+        var primaryState = new XYNavigationState(items.Where(i => i.Id != "experiment").Select(i => new XYNavigationEntry(i.Id, i.Label, i.Icon)), "map"); var primary = new XYButton { Content = new XYIcon { Icon = XyuiVectorIcon.Add, Size = XyuiIconSize.Small }, Variant = XyuiButtonVariant.Primary }; var primaryNav = new XYBottomNavigation(primaryState, items.Where(i => i.Id != "experiment").ToArray(), primary) { Width = 544 };
+        foreach (var nav in new[] { standard, primaryNav }) nav.DestinationRequested += (_, request) => request.Accept();
+        return new StackPanel { Spacing = 8, Children = { standard, primaryNav, new XYCaption { Text = "等宽目的地 · 图标在上 · Primary Action 独立" } } };
     }
     static Control NavigationDrawerPreview()
     {
         var state = new XYNavigationState([new("map", "地图", XyuiVectorIcon.Locate), new("data", "数据", XyuiVectorIcon.Code), new("settings", "设置", XyuiVectorIcon.Section)], "map");
-        var drawer = new XYNavigationDrawer(state); drawer.Open();
+        var drawer = new XYNavigationDrawer(state); drawer.AttachedToVisualTree += (_, _) => drawer.Open();
         return new StackPanel { Spacing = 8, Children = { drawer, new XYCaption { Text = "Full Sidebar · Backdrop / Esc / LightDismiss" } } };
     }
 }

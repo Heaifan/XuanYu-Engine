@@ -85,8 +85,10 @@ public static partial class XyuiComponentStyles
         var tocMenuPressed = new Style(x => x.OfType<XYTocItem>().Class("xyui-toc-menu-item").Class(":pressed")); Brush(tocMenuPressed, Button.BackgroundProperty, "XY.Brush.State.Color.Pressed"); styles.Add(tocMenuPressed);
         var tocMenuChild = new Style(x => x.OfType<XYTocItem>().Class("xyui-toc-menu-child")); tocMenuChild.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(0))); styles.Add(tocMenuChild);
         var tocMenuCheck = new Style(x => x.OfType<XYIcon>().Class("xyui-toc-menu-check")); Brush(tocMenuCheck, XYIcon.StrokeProperty, "XY.Brush.Accent.Strong"); tocMenuCheck.Setters.Add(new Setter(Control.WidthProperty, 14d)); tocMenuCheck.Setters.Add(new Setter(Control.HeightProperty, 14d)); styles.Add(tocMenuCheck);
-        var bottom = new Style(x => x.OfType<XYBottomNavigation>().Class("xyui-bottom-navigation")); Brush(bottom, Border.BackgroundProperty, "XY.Brush.Surface.Panel"); bottom.Setters.Add(new Setter(Border.HeightProperty, 64d)); styles.Add(bottom);
         var drawer = new Style(x => x.OfType<XYNavigationDrawer>().Class("xyui-navigation-drawer")); drawer.Setters.Add(new Setter(Border.MinWidthProperty, 44d)); styles.Add(drawer);
         var drawerBackdrop = new Style(x => x.OfType<Border>().Class("xyui-navigation-drawer-backdrop")); Brush(drawerBackdrop, Border.BackgroundProperty, "XY.Brush.Surface.Overlay"); styles.Add(drawerBackdrop);
+        var drawerSurface = new Style(x => x.OfType<Border>().Class("xyui-navigation-drawer-surface")); Brush(drawerSurface, Border.BackgroundProperty, "XY.Brush.Surface.Panel"); Brush(drawerSurface, Border.BorderBrushProperty, "XY.Brush.Border.Color.Subtle"); drawerSurface.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(0))); styles.Add(drawerSurface);
+        TextStyle(styles, "xyui-navigation-drawer-kicker", 10.5, 400, "XY.Brush.Text.Secondary"); TextStyle(styles, "xyui-navigation-drawer-title", 13.5, 600, "XY.Brush.Text.Primary");
+        var drawerFooter = new Style(x => x.OfType<XYButton>().Class("xyui-navigation-drawer-footer")); drawerFooter.Setters.Add(new Setter(Button.HeightProperty, 32d)); drawerFooter.Setters.Add(new Setter(Button.HorizontalContentAlignmentProperty, HorizontalAlignment.Left)); styles.Add(drawerFooter);
     }
 }

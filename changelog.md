@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.61-rz · XYUI-3-23 · Bottom Navigation Equal Slots 与 Primary Action（2026-09-01 16:15:08 +08:00）
+
+- 目标：只修 XYUI-3-23；XYUI-3-21、XYUI-3-22、XYUI-3-24 保持冻结。
+- 变化：重做为 66 DIP 横向 Bottom Navigation Surface；目的地使用等宽槽位、Icon 上 Label 下；Badge 复用 `XYStatusDot` 叠加；Primary Action 独立居中抬高，不进入目的地状态。
+- 交互：目的地请求必须 `Accept()` 才提交；重复点击当前目的地不触发请求；拒绝请求保持当前目的地；Primary Action 只触发 `PrimaryActionRequested`。
+- Gallery：补齐 Standard 五项与 Primary Action 组合示例，图标、选中态、Badge 与中心动作均可直接验收。
+- 验证：XYUI.Avalonia.Tests 367/367；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；`git diff --check` 通过；ARCH-A WarCore guard 通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-23 UI REWORKED · INTERACTION IMPLEMENTED · AWAITING USER VISUAL/INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.61-rz` 已同步到四处版本文件。
+
 ## v0.2.28.60-rz · XYUI-3-22 · TOC Popup 选择交互闭环（2026-09-01 15:42:12 +08:00）
 
 - 目标：只修 XYUI-3-22 交互；Desktop Hierarchical、XYUI-3-21、XYUI-3-23、XYUI-3-24 保持冻结。

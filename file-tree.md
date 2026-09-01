@@ -1718,6 +1718,7 @@
    │  │     │     │  ├─ Styles/  # 集中控件视觉构建与语义样式。
    │  │     │     │  │  ├─ XyuiComponentStyles.Batch04.cs  # 定义分页、步骤、工具栏与工具组语义样式。
    │  │     │     │  │  ├─ XyuiComponentStyles.Batch05.cs  # 定义命令栏、命令面板、历史导航与工作区紧凑样式。
+   │  │     │     │  │  ├─ XyuiComponentStyles.BottomNavigation.cs  # 定义移动端底部导航的等宽槽位与主动作视觉样式。
    │  │     │     │  │  └─ XyuiComponentStyles.XYUI3.cs  # 实现对应模块的 C# 职责。
    │  │     │     │  └─ Tokens/  # 集中共享尺寸与语义常量。
    │  │     │     │     └─ XyuiCompactNavigationTokens.cs  # 集中保存紧凑导航组件的几何常量。
