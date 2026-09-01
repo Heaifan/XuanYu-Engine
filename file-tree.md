@@ -1,4 +1,4 @@
-# 玄域引擎文件树（自动重建）
+﻿# 玄域引擎文件树（自动重建）
 
 > 由 `git ls-files` 全量重建；每个目录和 tracked 文件仅保留一句当前职责。
 
@@ -1417,8 +1417,18 @@
    │  │     │  ├─ CatalogView.axaml.cs  # 提供 Gallery 对应页面、数据或运行时预览。
    │  │     │  ├─ ComponentSamplesView.axaml  # 提供 Gallery 对应页面、数据或运行时预览。
    │  │     │  ├─ ComponentSamplesView.axaml.cs  # 提供 Gallery 对应页面、数据或运行时预览。
-   │  │     │  ├─ DensitySamplesView.axaml  # 高密度消费示例：Property Row/Compact List/Editor 属性区（含 M06 补做）。
-   │  │     │  ├─ DensitySamplesView.axaml.cs  # 高密度消费示例代码隐藏。
+   │  │     │  ├─ Density/  # 信息密度 Gallery 页面子视图与实验室。
+   │  │     │  │  ├─ DensityCoreRulesView.axaml  # 核心规则与第一屏 3 秒规则视图。
+   │  │     │  │  ├─ DensityCoreRulesView.axaml.cs  # 核心规则视图代码隐藏。
+   │  │     │  │  ├─ DensityGuardrailsView.axaml  # 推荐原则与 6 大禁止护栏视图。
+   │  │     │  │  ├─ DensityGuardrailsView.axaml.cs  # 推荐与护栏代码隐藏。
+   │  │     │  │  ├─ DensityLabView.axaml  # 实时信息密度实验室主界面。
+   │  │     │  │  ├─ DensityLabView.axaml.cs  # 实验室切换与作用域处理。
+   │  │     │  │  ├─ DensityLabView.Rows.cs  # 实验室工作台真实数据行构建。
+   │  │     │  │  ├─ DensityMatrixView.axaml  # 信息层级压缩矩阵表格视图。
+   │  │     │  │  └─ DensityMatrixView.axaml.cs  # 层级矩阵视图代码隐藏。
+   │  │     │  ├─ DensitySamplesView.axaml  # 信息密度主页面（4 大区聚合与滚动呈现）。
+   │  │     │  ├─ DensitySamplesView.axaml.cs  # 信息密度主页面代码隐藏。
    │  │     │  ├─ FoundationSamplesView.axaml  # 消费示例：Surface/Text/Border/Accent 的 DynamicResource 用法。
    │  │     │  ├─ FoundationSamplesView.axaml.cs  # 消费示例视图代码隐藏。
    │  │     │  ├─ FoundationStatesView.axaml  # 消费示例：State/Semantic/Disabled 三态的 DynamicResource 用法。

@@ -51,5 +51,7 @@ public sealed class XYUI1DocumentationTests : IClassFixture<XyuiHeadlessFixture>
         Assert.IsType<TypographyView>(model.SelectedDocument);
         model.SelectFoundation("shape");
         Assert.IsType<ShapeView>(model.SelectedDocument);
+        model.SelectFoundation("density");
+        Assert.IsType<DensitySamplesView>(model.SelectedDocument);
     });
 }

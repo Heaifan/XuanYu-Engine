@@ -1,64 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:density="using:XYUI.Avalonia.Gallery.Views.Density"
              x:Class="XYUI.Avalonia.Gallery.Views.DensitySamplesView">
-  <StackPanel Spacing="{DynamicResource XY.Space.3}">
-    <Border Classes="xyui-surface-panel">
-      <StackPanel Spacing="{DynamicResource XY.Space.2}">
-        <TextBlock Text="Property Row（字段行，RowGap 4 高密度）" Classes="xyui-text-section" />
-        <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-              RowSpacing="{DynamicResource XY.Panel.Field.RowGap}">
-          <TextBlock Grid.Row="0" Grid.Column="0" Text="区域名称" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="0" Grid.Column="2" Text="广东" Classes="xyui-text-body" />
-          <TextBlock Grid.Row="1" Grid.Column="0" Text="区域类型" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="1" Grid.Column="2" Text="Region" Classes="xyui-text-body" />
-          <TextBlock Grid.Row="2" Grid.Column="0" Text="顶点数量" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="2" Grid.Column="2" Text="28" Classes="xyui-text-mono" />
-          <TextBlock Grid.Row="3" Grid.Column="0" Text="面积" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="3" Grid.Column="2" Text="12,482 km²" Classes="xyui-text-mono" />
-          <TextBlock Grid.Row="4" Grid.Column="0" Text="状态" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="4" Grid.Column="2" Text="已保存" Classes="xyui-text-body" />
-        </Grid>
-      </StackPanel>
-    </Border>
-    <Border Classes="xyui-surface-panel">
-      <StackPanel Spacing="{DynamicResource XY.Space.2}">
-        <TextBlock Text="Compact List（紧凑列表，行间零空隙）" Classes="xyui-text-section" />
-        <Border Classes="xyui-border-subtle">
-          <StackPanel>
-            <TextBlock Text="道路主干线" Classes="xyui-text-body" Margin="10,6" />
-            <Border Height="1" Background="{DynamicResource XY.Brush.Divider.Default}" />
-            <TextBlock Text="区域边界线" Classes="xyui-text-body" Margin="10,6" />
-            <Border Height="1" Background="{DynamicResource XY.Brush.Divider.Default}" />
-            <TextBlock Text="军事管制区" Classes="xyui-text-body" Margin="10,6" />
-            <Border Height="1" Background="{DynamicResource XY.Brush.Divider.Default}" />
-            <TextBlock Text="资源采集点" Classes="xyui-text-body" Margin="10,6" />
-          </StackPanel>
-        </Border>
-      </StackPanel>
-    </Border>
-    <Border Classes="xyui-surface-panel">
-      <StackPanel Spacing="{DynamicResource XY.Space.2}">
-        <TextBlock Text="高密度 Editor 消费（Typography + Spacing 组合）" Classes="xyui-text-section" />
-        <Grid ColumnDefinitions="Auto,16,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-              RowSpacing="{DynamicResource XY.Panel.Field.RowGap}">
-          <TextBlock Grid.Row="0" Grid.Column="0" Text="数据集 ID" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="0" Grid.Column="2" Text="ds-7ad21c-9f3e" Classes="xyui-text-code" />
-          <TextBlock Grid.Row="1" Grid.Column="0" Text="名称" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="1" Grid.Column="2" Text="华南区域数据集" Classes="xyui-text-body" />
-          <TextBlock Grid.Row="2" Grid.Column="0" Text="区域数" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="2" Grid.Column="2" Text="18" Classes="xyui-text-mono" />
-          <TextBlock Grid.Row="3" Grid.Column="0" Text="道路数" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="3" Grid.Column="2" Text="42" Classes="xyui-text-mono" />
-          <TextBlock Grid.Row="4" Grid.Column="0" Text="覆盖面积" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="4" Grid.Column="2" Text="12,482 km²" Classes="xyui-text-mono" />
-          <TextBlock Grid.Row="5" Grid.Column="0" Text="中心坐标" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="5" Grid.Column="2" Text="X = 421.482  Y = 718.215" Classes="xyui-text-mono" />
-          <TextBlock Grid.Row="6" Grid.Column="0" Text="修改时间" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="6" Grid.Column="2" Text="2026-08-17 18:07" Classes="xyui-text-mono" />
-          <TextBlock Grid.Row="7" Grid.Column="0" Text="状态" Classes="xyui-text-label" />
-          <TextBlock Grid.Row="7" Grid.Column="2" Text="已保存" Classes="xyui-text-body" />
-        </Grid>
-      </StackPanel>
-    </Border>
-  </StackPanel>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <density:DensityCoreRulesView />
+      <density:DensityLabView />
+      <density:DensityMatrixView />
+      <density:DensityGuardrailsView />
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>

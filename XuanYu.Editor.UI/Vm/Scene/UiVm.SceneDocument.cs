@@ -16,10 +16,9 @@ public sealed partial class UiVm
     public event Action<string>? FileCommandRequested;
     public bool IsSceneDirty => _documentSession.IsDirty(_historyOwner.CurrentRevision);
     public string CurrentScenePath => _documentSession.CurrentPath ?? "";
-    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.28.63-rz - {DocumentTitle}";
+    public string DocumentWindowTitle => $"玄域引擎编辑器 v0.2.28.64-rz - {DocumentTitle}";
     public string DocumentTitle => $"{DocumentFileName}{(IsSceneDirty ? "（未保存）" : "")}";
-    public string DocumentFileName =>
-        string.IsNullOrWhiteSpace(CurrentScenePath) ? "未命名场景" : Path.GetFileName(CurrentScenePath);
+    public string DocumentFileName => string.IsNullOrWhiteSpace(CurrentScenePath) ? "未命名场景" : Path.GetFileName(CurrentScenePath);
 
     public async Task<bool> OpenSceneAsync(string path)
     {
@@ -35,40 +34,38 @@ public sealed partial class UiVm
                 FooterMessage = candidate.Message; FooterState = "状态：加载失败";
                 LogSceneLoadFailure(path, candidate);
                 RaiseDocumentChanged();
-                // D5（纠偏）：失败状态提供重试入口（Retryable）；重试重新加载同一路径，取消则停止
-                var retry = await _dialogService.ShowRetryAsync("打开场景失败",
-                    "无法打开所选场景。\n场景文件内容无效或版本不受支持。是否重试？");
+                var retry = await _dialogService.ShowRetryAsync("打开场景失败", "无法打开所选场景。\n场景文件内容无效或版本不受支持。是否重试？");
                 if (!retry) return false;
                 LogSceneRetry(path);
-                continue; // 重试：重新走加载流程
+                continue;
             }
 
-        var value = candidate.Value;
-        LogSceneLoadStage("ReplaceWorld");
-        CancelActiveInput("打开场景");
-        _sceneState.ReplaceEntities(value.Entities);
-        _staticModelCatalog.ReplaceAll(value.Bindings, value.Models);
-        _staticModelResources.Clear();
-        foreach (var (assetId, model) in value.Models)
-        {
-            _staticModelResources[assetId] = StaticModelRenderAdapter.ToRenderResource(
-                model, new RenderStaticModelKey(assetId.Value), (int)_staticModelCatalog.Revision);
-        }
+            var value = candidate.Value;
+            LogSceneLoadStage("ReplaceWorld");
+            CancelActiveInput("打开场景");
+            _sceneState.ReplaceEntities(value.Entities);
+            _staticModelCatalog.ReplaceAll(value.Bindings, value.Models);
+            _staticModelResources.Clear();
+            foreach (var (assetId, model) in value.Models)
+            {
+                _staticModelResources[assetId] = StaticModelRenderAdapter.ToRenderResource(
+                    model, new RenderStaticModelKey(assetId.Value), (int)_staticModelCatalog.Revision);
+            }
 
-        ResetCameraForSceneReplacement(value.Entities.Count > 0);
-        _historyOwner.Clear();
-        _documentSession.MarkLoaded(path, value.Snapshot);
-        ApplySelectionCommand(new ClearEditorSelectionCommand(), "打开场景");
-        await ResolveMapReferenceAsync(value.Snapshot, path);
-        if (string.IsNullOrEmpty(MapReferenceError))
-            FooterMessage = value.HasUnavailableAssets ? "场景已打开，部分资源不可用。" : "场景已打开。";
-        LogSceneLoadSuccess(path, value.Entities.Count);
-        SetSceneBusy(false);
-        RaiseDocumentChanged();
-        ShowTemporaryDocumentStatus("状态：场景加载成功");
-        RefreshWorldProjectionBindings();
-        if (value.HasUnavailableAssets) await ShowAssetSummaryAsync(value);
-        return true;
+            ResetCameraForSceneReplacement(value.Entities.Count > 0);
+            _historyOwner.Clear();
+            _documentSession.MarkLoaded(path, value.Snapshot);
+            ApplySelectionCommand(new ClearEditorSelectionCommand(), "打开场景");
+            await ResolveMapReferenceAsync(value.Snapshot, path);
+            if (string.IsNullOrEmpty(MapReferenceError))
+                FooterMessage = value.HasUnavailableAssets ? "场景已打开，部分资源不可用。" : "场景已打开。";
+            LogSceneLoadSuccess(path, value.Entities.Count);
+            SetSceneBusy(false);
+            RaiseDocumentChanged();
+            ShowTemporaryDocumentStatus("状态：场景加载成功");
+            RefreshWorldProjectionBindings();
+            if (value.HasUnavailableAssets) await ShowAssetSummaryAsync(value);
+            return true;
         }
     }
 

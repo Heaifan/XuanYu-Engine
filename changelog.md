@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.64-rz · XYUI-0.05 · Density Gallery Lane（2026-09-01 22:40:00 +08:00）
+
+- 目标：实装 XYUI-0.05 信息密度 Gallery 页面，覆盖主方案 B（实时信息密度实验室）、辅助方案 C（信息层级压缩矩阵）与方案 D（密度护栏）。
+- 第一屏：第一屏 3 秒规则明确展示“固定控件尺寸，只改变信息组织密度”，标注 `Density = Compact` 与 `SizeRole = Default`；正交对比 Density / Spacing / Sizing 核心定义并提供 7 大 Agent 可学习性规则。
+- 实验室：实装方案 B 真实工作台，聚合 `XYToolbar`、`XYToolGroup`、`XYIconButton`、`XYTextField`、`XYButton`、`XYStatusBadge` 等真实控件；支持紧凑 (Compact)、默认 (Default)、舒适 (Comfortable) 三档动态切换；控件自身尺寸固定在 32 DIP，切实改变同屏可见行数、次级信息同行/分行、元数据标签与操作按钮呈现；展示真实 `XyuiDensityScope` API。
+- 矩阵与护栏：提供 5 行（一级/二级/元数据/辅助操作/长说明）× 3 列（紧凑/默认/舒适）层级压缩矩阵；落地 6 大禁止反例与“提高有效信息量，不是单纯压缩像素”核心推荐原则。
+- 验证：XYUI.Avalonia.Tests 374/374；Core 339/339；WarCore 22/22；World 1286/1286；解决方案构建 0 Warning / 0 Error；ARCH-A 架构守卫通过；5+100 行限通过；`git diff --check` 通过。
+- 状态：XYUI-0.05 GALLERY LANE COMPLETE · AWAITING USER VISUAL ACCEPTANCE。
+- 版本：`v0.2.28.64-rz` 已同步到四处版本文件。
+
 ## v0.2.28.63-rz · XYUI-0.05 · Density Runtime（2026-09-01 22:34:12 +08:00）
 
 - 目标：建立可继承、可复用的信息密度语义，保持 Density / Spacing / Sizing 职责分离。

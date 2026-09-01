@@ -16,7 +16,7 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
     public IReadOnlyList<XYUI1NavigationItem> Items { get; }
     public IReadOnlyList<XYUI1NavigationItem> ComponentItems => Items.Skip(1).ToArray();
     public IReadOnlyList<FoundationNavigationItem> FoundationItems { get; } =
-    [new("palette", "色彩", "Palette"), new("typography", "字体与排版", "Typography"), new("shape", "形状", "Shape")];
+    [new("palette", "色彩", "Palette"), new("typography", "字体与排版", "Typography"), new("shape", "形状", "Shape"), new("density", "信息密度", "Density")];
 
     // G0-R1 · 树形章节（非 Accordion 卡片；仅改导航呈现）
     bool _isX1;
@@ -89,6 +89,7 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
         "palette" => new PaletteView(),
         "typography" => new TypographyView(),
         "shape" => new ShapeView(),
+        "density" => new DensitySamplesView(),
         _ => new XYUI1ModuleOverviewView()
     };
 }

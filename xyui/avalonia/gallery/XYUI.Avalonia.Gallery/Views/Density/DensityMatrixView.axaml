@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.Density.DensityMatrixView">
+  <Border Classes="xyui-surface-panel" Padding="14">
+    <StackPanel Spacing="10">
+      <TextBlock Text="③ 信息层级压缩矩阵" Classes="xyui-text-section" />
+      <TextBlock Text="不同密度档位下，各级信息的组织策略与降级呈现规则：" Classes="xyui-text-caption" />
+      <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4">
+        <Grid ColumnDefinitions="110,*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+          <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,6">
+            <TextBlock Text="信息层级" Classes="xyui-text-label" />
+          </Border>
+          <Border Grid.Row="0" Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,6">
+            <TextBlock Text="紧凑 Compact" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          </Border>
+          <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,6">
+            <TextBlock Text="默认 Default" Classes="xyui-text-label" />
+          </Border>
+          <Border Grid.Row="0" Grid.Column="3" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,6">
+            <TextBlock Text="舒适 Comfortable" Classes="xyui-text-label" />
+          </Border>
+          <Border Grid.Row="1" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="一级信息" Classes="xyui-text-label" />
+          </Border>
+          <Border Grid.Row="1" Grid.Column="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="始终显示，与主操作紧密同行" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="1" Grid.Column="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="始终显示，标准标题排布" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="1" Grid.Column="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="始终显示，带层级强调标题" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="2" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="二级信息" Classes="xyui-text-label" />
+          </Border>
+          <Border Grid.Row="2" Grid.Column="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="同行显示 / 截断收敛" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="2" Grid.Column="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="次级独立行标准呈现" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="2" Grid.Column="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="完整换行多字段展开" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="3" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="元数据" Classes="xyui-text-label" />
+          </Border>
+          <Border Grid.Row="3" Grid.Column="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="极简标签 / 短代码 / 状态圆点" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="3" Grid.Column="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="状态徽标 + 次级文本" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="3" Grid.Column="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="完整键值对说明 + 状态徽标" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="4" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="辅助操作" Classes="xyui-text-label" />
+          </Border>
+          <Border Grid.Row="4" Grid.Column="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="纯图标优先（快捷动作）" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="4" Grid.Column="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="图标 + 悬浮提示 / 简短按钮" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="4" Grid.Column="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="图标 + 完整文本操作按钮" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="5" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="长说明" Classes="xyui-text-label" />
+          </Border>
+          <Border Grid.Row="5" Grid.Column="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="折叠隐藏 / ToolTip 气泡查看" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="5" Grid.Column="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="单行省略 / 截断指示" Classes="xyui-text-body" />
+          </Border>
+          <Border Grid.Row="5" Grid.Column="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,6">
+            <TextBlock Text="完整多行文本自由展开阅读" Classes="xyui-text-body" />
+          </Border>
+        </Grid>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

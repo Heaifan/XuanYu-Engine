@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.Density.DensityLabView">
+  <Border Classes="xyui-surface-panel" Padding="14">
+    <StackPanel Spacing="12">
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Grid.Column="0" Spacing="2">
+          <TextBlock Text="② 实时信息密度实验室" Classes="xyui-text-section" />
+          <TextBlock x:Name="ScopeStatusText" Text="当前：XyuiDensity.Default · 固定 SizeRole=Default（32 DIP 控件自身高度）" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+          <c:XYButton x:Name="BtnCompact" Content="紧凑 Compact" Variant="Secondary" Click="OnCompactClick" />
+          <c:XYButton x:Name="BtnDefault" Content="默认 Default" Variant="Primary" Click="OnDefaultClick" />
+          <c:XYButton x:Name="BtnComfortable" Content="舒适 Comfortable" Variant="Secondary" Click="OnComfortableClick" />
+        </StackPanel>
+      </Grid>
+      <Border Background="{DynamicResource XY.Brush.Surface.Toolbar}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+              BorderThickness="1" CornerRadius="4" Padding="8,4">
+        <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+          <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
+            <c:XYIconButton Content="🔍" ToolTip.Tip="选择工具" />
+            <c:XYIconButton Content="✥" ToolTip.Tip="移动工具" />
+            <c:XYIconButton Content="↻" ToolTip.Tip="旋转工具" />
+            <c:XYSeparator Height="20" Margin="4,0" />
+          </StackPanel>
+          <c:XYTextField Grid.Column="1" Margin="8,0" Placeholder="在当前视口中过滤实体与属性..." />
+          <c:XYButton Grid.Column="2" Content="新建实体" Variant="Primary" />
+        </Grid>
+      </Border>
+      <Border x:Name="WorkbenchContainer" Background="{DynamicResource XY.Brush.Surface.App}"
+              BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="10">
+        <StackPanel x:Name="WorkbenchItemsPanel" Spacing="6" />
+      </Border>
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
+              BorderThickness="1" CornerRadius="4" Padding="10">
+        <StackPanel Spacing="3">
+          <TextBlock Text="真实 API 代码消费示例" Classes="xyui-text-label" />
+          <TextBlock Text="&lt;StackPanel xy:XyuiDensityScope.Density=&quot;Compact&quot;&gt; ... &lt;/StackPanel&gt;" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="// C#: XyuiDensityScope.SetDensity(panel, XyuiDensity.Compact);" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

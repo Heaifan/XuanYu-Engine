@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.Density.DensityCoreRulesView">
+  <Border Classes="xyui-surface-panel" Padding="14">
+    <StackPanel Spacing="10">
+      <Border Background="{DynamicResource XY.Brush.Accent.Soft}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}"
+              BorderThickness="1" CornerRadius="4" Padding="12,10">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel Grid.Column="0" Spacing="4">
+            <TextBlock Text="① 核心规则 · 第一屏基准" Classes="xyui-text-section" />
+            <TextBlock Text="固定控件尺寸，只改变信息组织密度。" Classes="xyui-heading-panel" Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+            <TextBlock Text="Density 控制同一个视口里放多少有效信息，但不会把控件本身变小。" Classes="xyui-text-body" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}"
+                    BorderThickness="1" CornerRadius="3" Padding="8,4">
+              <TextBlock Text="Density = Compact" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}"
+                    BorderThickness="1" CornerRadius="3" Padding="8,4">
+              <TextBlock Text="SizeRole = Default" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+            </Border>
+          </StackPanel>
+        </Grid>
+      </Border>
+      <Grid ColumnDefinitions="*,*,*" Margin="0,2,0,0">
+        <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="10">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Density · 信息密度" Classes="xyui-text-label" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="同一视口中组织的信息量与结构深度。决定同屏行数、同行/分行、元数据表达与辅助操作。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Margin="2,0,2,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="10">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Spacing · 空间关系" Classes="xyui-text-label" />
+            <TextBlock Text="元素之间的物理空间距离。由 4 DIP 基础单位（4/8/12/16/24/32/40/48）Token 构成原子间距。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="2" Margin="4,0,0,0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="10">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Sizing · 控件尺寸" Classes="xyui-text-label" />
+            <TextBlock Text="控件自身的物理高宽与点击热区（如 32 DIP 默认高度）。严禁通过缩尺寸混充 Density。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+      </Grid>
+      <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="10">
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+          <StackPanel Grid.Row="0" Grid.Column="0" Spacing="1" Margin="0,0,8,0">
+            <TextBlock Text="Q1 怎么选档位？" Classes="xyui-text-label" />
+            <TextBlock Text="高频紧凑工作台/属性区选 Compact；常规视图选 Default；宽屏详细阅读/审计选 Comfortable。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+          <StackPanel Grid.Row="0" Grid.Column="1" Spacing="1" Margin="8,0,0,0">
+            <TextBlock Text="Q2 作用域继承与覆盖？" Classes="xyui-text-label" />
+            <TextBlock Text="通过 XyuiDensityScope.Density 附加属性层级向下继承；子容器可随时单独设置以局部覆盖。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+          <StackPanel Grid.Row="1" Grid.Column="0" Spacing="1" Margin="0,0,8,0">
+            <TextBlock Text="Q3 何时禁止压缩？" Classes="xyui-text-label" />
+            <TextBlock Text="严禁为了紧凑缩小字号、缩小点击热区、隐藏错误/警告关键状态或挤成不可扫描乱码。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+          <StackPanel Grid.Row="1" Grid.Column="1" Spacing="1" Margin="8,0,0,0">
+            <TextBlock Text="Q4 与 DPI 关系？" Classes="xyui-text-label" />
+            <TextBlock Text="Density 决定布局信息组织结构；DPI 决定物理像素映射。两者严格正交分离。" Classes="xyui-text-caption" TextWrapping="Wrap" />
+          </StackPanel>
+        </Grid>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>
