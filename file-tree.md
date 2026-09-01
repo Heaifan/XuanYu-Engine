@@ -1473,7 +1473,8 @@
    │  │     ├─ XYUI2GalleryCatalog.SearchPassword.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3DocumentationCatalog.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3GalleryCatalog.cs  # 实现对应模块的 C# 职责。
-   │  │     └─ XYUI3GalleryCatalog.Navigation.cs  # 提供紧凑导航四组件的真实 Gallery Preview。
+   │  │     ├─ XYUI3GalleryCatalog.Navigation.cs  # 提供紧凑导航四组件的真实 Gallery Preview。
+   │  │     └─ XYUI3GalleryCatalog.Final.cs  # 提供 XYUI-3-21~24 最终导航组件真实预览。
    │  ├─ src/  # 组织该模块下的正式文件。
    │  │  └─ XYUI.Avalonia/  # 组织该模块下的正式文件。
    │  │     ├─ Catalog/  # 组织该模块下的正式文件。
@@ -1835,6 +1836,14 @@
    │  │     │  └─ XYWorkspaceSwitcher.Lifecycle.cs  # 提供失活、关闭与卸载时关闭工作区弹层。
    │  │     └─ XYUI3-20-WorkspaceSwitcher/UI/  # 实现紧凑工作区切换器。
    │  │        └─ XYWorkspaceSwitcher.cs  # 定义 XYButton Trigger、共享 State 与工作区模型。
+   │  │     ├─ XYUI3-21-ViewSwitcher/  # 实现共享视图状态与三种切换变体。
+   │  │     │  └─ XYViewSwitcher.cs  # 提供 Segmented、Dropdown、Primary+More 与 request→commit。
+   │  │     ├─ XYUI3-22-TableOfContents/  # 实现限深两级章节目录。
+   │  │     │  └─ XYTableOfContents.cs  # 提供层级/紧凑变体与共享章节状态。
+   │  │     ├─ XYUI3-23-BottomNavigation/  # 实现移动端底部目的地导航。
+   │  │     │  └─ XYBottomNavigation.cs  # 提供等宽目的地槽与独立 Primary Action。
+   │  │     └─ XYUI3-24-NavigationDrawer/  # 实现响应式临时导航抽屉。
+   │  │        └─ XYNavigationDrawer.cs  # 提供共享导航状态、遮罩、Esc 与卸载关闭。
    │  │     ├─ Foundation/  # 组织该模块下的正式文件。
    │  │     │  ├─ XyuiColorToken.cs  # Canonical 颜色 token 记录（id + Light/Dark 成对解析与 Color 转换）。
    │  │     │  ├─ XyuiColorTokens.Accent.cs  # XY.Accent.*/Tool/Button/Tag 6 色。
@@ -1936,6 +1945,7 @@
    │  │     ├─ XYUI3CommandPaletteTests.cs  # 验证 18 的整行结果、详情、Scope、Recent 与 Popup 执行。
    │  │     ├─ XYUI3GalleryNavigationTests.cs  # 验证 XYUI-3 计数与最新组件默认落点。
    │  │     ├─ XYUI3WorkspaceSwitcherTests.cs  # 验证 20 的同宽菜单、整行项、共享 State、请求提交与生命周期。
+   │  │     ├─ XYUI3FinalNavigationTests.cs  # 验证 21~24 状态提交、层级限制、主操作隔离、抽屉生命周期与 Gallery。
    │  │     ├─ XYUI3CompactNavigationStructureTests.cs  # 验证紧凑导航复用、单底边、垂直居中及交互状态机。
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。

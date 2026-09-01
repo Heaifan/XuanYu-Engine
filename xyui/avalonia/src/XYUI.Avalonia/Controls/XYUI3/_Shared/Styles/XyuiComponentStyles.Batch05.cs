@@ -48,5 +48,13 @@ public static partial class XyuiComponentStyles
         var workspaceItem = new Style(x => x.OfType<XYMenuItem>().Class("xyui-workspace-item")); workspaceItem.Setters.Add(new Setter(Border.HeightProperty, 32d)); workspaceItem.Setters.Add(new Setter(Border.HorizontalAlignmentProperty, HorizontalAlignment.Stretch)); workspaceItem.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(10, 0))); styles.Add(workspaceItem);
         var workspaceCheck = new Style(x => x.OfType<XYMenuItem>().Class("xyui-workspace-item").Descendant().OfType<Line>().Class("xyui-menu-check-line")); Brush(workspaceCheck, Shape.StrokeProperty, "XY.Brush.Accent.Strong"); styles.Add(workspaceCheck);
         var workspaceManage = new Style(x => x.OfType<XYMenuItem>().Class("xyui-workspace-manage")); workspaceManage.Setters.Add(new Setter(Border.BackgroundProperty, Brushes.Transparent)); styles.Add(workspaceManage);
+        var viewSwitcher = new Style(x => x.OfType<XYViewSwitcher>().Class("xyui-view-switcher")); viewSwitcher.Setters.Add(new Setter(Border.HeightProperty, 36d)); styles.Add(viewSwitcher);
+        var viewSegment = new Style(x => x.OfType<XYButton>().Class("xyui-view-segment")); viewSegment.Setters.Add(new Setter(Button.HeightProperty, 36d)); viewSegment.Setters.Add(new Setter(Button.PaddingProperty, new Thickness(10, 0))); styles.Add(viewSegment);
+        var viewSelected = new Style(x => x.OfType<XYButton>().Class("xyui-view-selected")); Brush(viewSelected, Button.BackgroundProperty, "XY.Brush.Surface.Selected"); Brush(viewSelected, Button.ForegroundProperty, "XY.Brush.Accent.Strong"); styles.Add(viewSelected);
+        var toc = new Style(x => x.OfType<XYTableOfContents>().Class("xyui-table-of-contents")); toc.Setters.Add(new Setter(Border.MinWidthProperty, 180d)); styles.Add(toc);
+        var tocChild = new Style(x => x.OfType<XYMenuItem>().Class("xyui-toc-child")); tocChild.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(24, 0, 8, 0))); styles.Add(tocChild);
+        var bottom = new Style(x => x.OfType<XYBottomNavigation>().Class("xyui-bottom-navigation")); Brush(bottom, Border.BackgroundProperty, "XY.Brush.Surface.Panel"); bottom.Setters.Add(new Setter(Border.HeightProperty, 64d)); styles.Add(bottom);
+        var drawer = new Style(x => x.OfType<XYNavigationDrawer>().Class("xyui-navigation-drawer")); drawer.Setters.Add(new Setter(Border.MinWidthProperty, 44d)); styles.Add(drawer);
+        var drawerBackdrop = new Style(x => x.OfType<Border>().Class("xyui-navigation-drawer-backdrop")); Brush(drawerBackdrop, Border.BackgroundProperty, "XY.Brush.Surface.Overlay"); styles.Add(drawerBackdrop);
     }
 }

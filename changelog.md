@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.48-rz · XYUI-3-21~24 · 最终导航组件执行（2026-09-01 11:45:00 +08:00）
+
+- 目标：执行开发计划中的 XYUI-3-21 ViewSwitcher、3-22 TableOfContents、3-23 BottomNavigation、3-24 NavigationDrawer。
+- 变化：新增四个真实 Avalonia 控件与共享状态、request→commit 事件模型、Popup/遮罩生命周期；接入 XYUI-3 Gallery、24 项目录和类型映射；新增 5 项针对性测试。
+- 验证：XYUI.Avalonia.Tests 339/339；Avalonia 与 Gallery 项目构建 0 Warning / 0 Error；完整解决方案门禁待执行；用户视觉/交互验收尚未完成。
+- 状态：XYUI-3-21~24 UI + INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE。
+- 版本：`v0.2.28.48-rz` 已同步到四处版本文件；`file-tree.md` 待本轮重建。
+
 ## v0.2.28.47-rz · XYUI Gallery 导航计数与最新落点修复（2026-09-01 11:06:55 +08:00）
 
 - 目标：修正 XYUI-3 侧边栏仍显示 `12/12`，并让 `xyui` 启动入口定位到最新编辑内容。
