@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.42-rz · XYUI-3-17 · More 菜单接入 XYUI3-02（2026-09-01 09:39:05 +08:00）
+
+- 目标：让 3.17 CommandBar 的 More 子项按 XYUI-3-02 Menu/菜单真实呈现与交互；XYUI-3-18～20 保持不动。
+- 变化：打开 More 弹层时应用 XYUI3-02 菜单样式并调用 `XYMenu.Open()`；More 子项继续由 `XYMenuItem` 承载，横向一次性命令保留规范要求的 Button。
+- 验证：XYUI.Avalonia 解决方案构建 0 Warning / 0 Error；`XYUI3Batch05StructureTests` 6/6；`git diff --check` 通过；ARCH-A 的 WarCore 守卫通过，5+100 仍被既有未跟踪 149 行 `XYUIProbeTests.cs` 阻断。
+- 状态：XYUI-3-17 等待用户视觉与交互验收；不启动 XYUI-3-18。
+- 版本：`v0.2.28.42-rz` 已同步到四处版本文件；`file-tree.md` 无结构变化，无需更新。
+- Hash：`6f27b245`。
+
 ## v0.2.28.41-rz · XYUI-3-17 · CommandBar 高亮、保存与垂直对齐返工（2026-09-01 09:32:42 +08:00）
 
 - 目标：修复截图反馈的双高亮、保存按钮无响应和 Contextual 行文字未稳定垂直居中问题；XYUI-3-18～20 保持不动。
