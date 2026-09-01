@@ -60,7 +60,19 @@ public static partial class XYUI3GalleryCatalog
         return new StackPanel { Spacing = 8, Children = { bar, feedback, contextual } };
     }
     static XYMenuItem ActionItem(string label, string id, TextBlock feedback) { var item = Item(label); item.SelectionRequested += (_, _) => feedback.Text = $"Last Action · {id}"; return item; }
-    static Control CommandPalettePreview() => new XYCommandPalette(new XYPaletteCommand("创建道路", "地图"), new XYPaletteCommand("验证道路"), new XYPaletteCommand("打开道路数据集"), new XYPaletteCommand("进入道路工具")) { Width = 650, Height = 360 };
+    static Control CommandPalettePreview()
+    {
+        var commands = new[]
+        {
+            new XYPaletteCommand("create-road", "创建道路", XYPaletteCommandType.Command, "地图", "创建一条新的道路。", "Ctrl+N", ["创建", "道路"]),
+            new XYPaletteCommand("validate-road", "验证道路", XYPaletteCommandType.Command, "地图", "验证当前道路数据。", "Ctrl+V", ["验证", "道路"]),
+            new XYPaletteCommand("open-road-dataset", "打开道路数据集", XYPaletteCommandType.Navigation, "数据集", "打开道路数据集。", "Ctrl+O", ["打开", "道路", "数据集"]),
+            new XYPaletteCommand("road-tool", "进入道路工具", XYPaletteCommandType.Object, "道路", "进入道路编辑工具。", "Ctrl+E", ["道路", "工具"])
+        };
+        var palette = new XYCommandPalette(commands, [commands[0], commands[2], commands[3]]) { Width = 610 };
+        var feedback = new TextBlock { Text = "Last Executed · —", Classes = { "xyui-command-feedback" } }; palette.ExecuteRequested += (_, item) => feedback.Text = $"Last Executed · {item.Id}";
+        return new StackPanel { Spacing = 8, Children = { palette, feedback } };
+    }
     static Control BackForwardPreview() { var nav = new XYBackForwardNavigation(); nav.Navigate("roads / 道路编辑"); nav.Navigate("广东省"); return nav; }
     static Control WorkspacePreview() { var switcher = new XYWorkspaceSwitcher("地图编辑", "地图编辑", "数据编辑", "战争实验", "调试分析"); switcher.Open(); return switcher; }
 }

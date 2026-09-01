@@ -15,7 +15,7 @@ public sealed class XYUI3Batch05StructureTests : IClassFixture<XyuiHeadlessFixtu
 
     [Fact] public void CommandBar_is_compact_and_executes_once() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var host = XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.17"); var bar = Assert.IsType<XYCommandBar>(host.GetVisualDescendants().First()); var count = 0; bar.CommandExecuted += (_, _) => count++; var first = bar.Items[0]; Assert.True(bar.Items[2].IsEnabled); first.RaiseEvent(new global::Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.Equal(1, count); Assert.True(first.IsSelected); Assert.Same(first, bar.SelectedItem); Assert.Contains("xyui-command-selected", first.Classes); var second = bar.Items[1]; second.RaiseEvent(new global::Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.False(first.IsSelected); Assert.True(second.IsSelected); Assert.Same(second, bar.SelectedItem); bar.MoreButton.RaiseEvent(new global::Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.True(bar.MorePopup.IsOpen); Assert.NotEmpty(bar.MoreMenu.Styles); Assert.All(bar.MoreMenu.Items, item => Assert.IsType<XYMenuItem>(item)); Assert.Equal(34, bar.Height); Assert.Equal(XYCommandRole.Primary, first.Role); Assert.Equal(XyuiVectorIcon.Add, first.Icon);
+        XyuiBatchTestHost.Prepare(); var host = XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.17"); var bar = Assert.IsType<XYCommandBar>(host.GetVisualDescendants().First()); var count = 0; bar.CommandExecuted += (_, _) => count++; var first = bar.Items[0]; Assert.True(bar.Items[2].IsEnabled); first.RaiseEvent(new global::Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.Equal(1, count); Assert.True(first.IsSelected); Assert.Same(first, bar.SelectedItem); Assert.Contains("xyui-command-selected", first.Classes); var second = bar.Items[1]; second.RaiseEvent(new global::Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.False(first.IsSelected); Assert.True(second.IsSelected); Assert.Same(second, bar.SelectedItem); bar.MoreButton.RaiseEvent(new global::Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent)); Assert.True(bar.MorePopup.IsOpen); Assert.NotEmpty(bar.MoreMenu.Styles); Assert.All(bar.MoreMenu.Items.Where(item => item is XYMenuItem), item => Assert.IsType<XYMenuItem>(item)); Assert.Equal(34, bar.Height); Assert.Equal(XYCommandRole.Primary, first.Role); Assert.Equal(XyuiVectorIcon.Add, first.Icon);
     });
 
     [Fact] public void CommandBar_many_commands_do_not_overlap() => _fx.Run(() =>
@@ -30,7 +30,7 @@ public sealed class XYUI3Batch05StructureTests : IClassFixture<XyuiHeadlessFixtu
 
     [Fact] public void CommandPalette_filters_real_commands() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var palette = Assert.IsType<XYCommandPalette>(XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.18")); palette.SearchBox.Text = "道路"; Assert.NotEmpty(palette.FilteredCommands); Assert.All(palette.FilteredCommands, x => Assert.Contains("道路", x.Label));
+        XyuiBatchTestHost.Prepare(); var host = XYUI3GalleryCatalog.CreatePreview("XYUI-3-3.18"); var palette = Assert.IsType<XYCommandPalette>(host.GetVisualDescendants().First(x => x is XYCommandPalette)); palette.SearchBox.Text = "道路"; Assert.NotEmpty(palette.FilteredCommands); Assert.All(palette.FilteredCommands, x => Assert.Contains("道路", x.Label));
     });
 
     [Fact] public void BackForward_truncates_forward_history() => _fx.Run(() =>
