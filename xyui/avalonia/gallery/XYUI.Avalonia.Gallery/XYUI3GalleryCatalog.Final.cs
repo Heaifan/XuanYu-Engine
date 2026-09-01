@@ -18,7 +18,7 @@ public static partial class XYUI3GalleryCatalog
     static Control TocPreview()
     {
         var sections = new[] { new XYTocSection("intro", "概览", 1), new XYTocSection("setup", "配置", 1), new XYTocSection("map", "地图编辑", 2, "setup"), new XYTocSection("data", "数据集", 2, "setup"), new XYTocSection("api", "API", 1) };
-        var state = new XYTableOfContentsState(sections, "data"); var hierarchy = new XYTableOfContents(state); var compact = new XYTableOfContents(state, XYTableOfContentsVariant.Compact); compact.AttachedToVisualTree += (_, _) => compact.OpenPopup();
+        var state = new XYTableOfContentsState(sections, "data"); var hierarchy = new XYTableOfContents(state); var compact = new XYTableOfContents(state, XYTableOfContentsVariant.Compact); hierarchy.SectionRequested += (_, request) => request.Accept(); compact.SectionRequested += (_, request) => request.Accept(); compact.AttachedToVisualTree += (_, _) => compact.OpenPopup();
         return new StackPanel { Spacing = 10, Children = { hierarchy, compact } };
     }
     static Control BottomNavigationPreview()
