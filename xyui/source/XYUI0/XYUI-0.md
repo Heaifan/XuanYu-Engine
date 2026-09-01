@@ -2297,6 +2297,13 @@
         - Parent owns sibling Gap
         - Margin 不是常规 sibling layout 工具
 
+- C3 · Foundation Governance Runtime Delta
+    - XY.Gap.ToolItem = XY.Space.1（Toolbar 工具项间距）
+    - XY.Gap.ToolGroup = XY.Space.2（Toolbar 工具组间距）
+    - XY.Gap.Separator = XY.Space.2（Toolbar 分隔区域间距）
+    - Metric Gate 分类：TOKENIZED / ALLOWED EXCEPTION / UNJUSTIFIED MAGIC NUMBER
+    - 例外：Geometry / Canvas / Animation / 算法参数 / 具备 Canonical 证据的组件专属尺寸
+
 
 
 
