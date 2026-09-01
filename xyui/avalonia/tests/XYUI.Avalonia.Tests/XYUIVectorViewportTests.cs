@@ -42,7 +42,7 @@ public sealed class XYUIVectorViewportTests : IClassFixture<XyuiHeadlessFixture>
     {
         XyuiBatchTestHost.Prepare();
         var expected = new[] { (XyuiIconSize.Tiny, 12d, 1d), (XyuiIconSize.Small, 14d, 1.25d),
-            (XyuiIconSize.Medium, 16d, 1.5d), (XyuiIconSize.Large, 20d, 1.75d) };
+            (XyuiIconSize.Medium, 16d, 1.5d), (XyuiIconSize.Large, 20d, 1.75d), (XyuiIconSize.Touch, 24d, 2d) };
         foreach (var item in expected)
         {
             var icon = Show(XyuiVectorIcon.ChevronDown, item.Item1);

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.IconographyOpticalSection">
+  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+    <StackPanel Spacing="8">
+      <TextBlock Text="③ 光学对齐实验室" Classes="xyui-text-section" FontSize="15" />
+      <TextBlock Text="数学中心 → Registry Metrics → 当前无需 Optical Offset" Classes="xyui-text-caption" />
+      <WrapPanel x:Name="Optical" Orientation="Horizontal" />
+    </StackPanel>
+  </Border>
+</UserControl>

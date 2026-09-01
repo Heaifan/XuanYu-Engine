@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.IconographySpecSection">
+  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+    <StackPanel Spacing="8">
+      <TextBlock Text="② 图标规格阶梯" Classes="xyui-text-section" FontSize="15" />
+      <TextBlock Text="同一 Canonical Icon · 真实 XYIcon · Logical Viewport 24 DIP" Classes="xyui-text-caption" />
+      <WrapPanel x:Name="Ladder" Orientation="Horizontal" />
+    </StackPanel>
+  </Border>
+</UserControl>

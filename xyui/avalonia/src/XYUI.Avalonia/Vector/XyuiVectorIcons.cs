@@ -42,6 +42,9 @@ public static class XyuiVectorIcons
 
     public static StreamGeometry Create(XyuiVectorIcon icon) => StreamGeometry.Parse(PathData[icon]);
 
+    public static XyuiVectorIconMetrics GetMetrics(XyuiVectorIcon icon) =>
+        new(LogicalIconSize, Create(icon).Bounds, new global::Avalonia.Vector(0, 0));
+
     public static ResourceDictionary CreateResources()
     {
         var resources = new ResourceDictionary();

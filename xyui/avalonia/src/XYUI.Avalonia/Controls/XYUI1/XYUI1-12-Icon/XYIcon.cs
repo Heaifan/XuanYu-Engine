@@ -5,7 +5,11 @@ using XYUI.Avalonia.Vector;
 
 namespace XYUI.Avalonia.Controls;
 
-public enum XyuiIconSize { Tiny, Small, Medium, Default = Medium, Large }
+public enum XyuiIconSize
+{
+    Tiny, Small, Medium, Default = Medium, Large,
+    Compact = Small, Comfortable = Large, Touch,
+}
 
 public sealed partial class XYIcon : Control
 {
@@ -17,7 +21,7 @@ public sealed partial class XYIcon : Control
     public static readonly StyledProperty<double> StrokeThicknessProperty = AvaloniaProperty.Register<XYIcon, double>(nameof(StrokeThickness), 1.5d);
     public static readonly StyledProperty<Stretch> StretchProperty = AvaloniaProperty.Register<XYIcon, Stretch>(nameof(Stretch), Stretch.Uniform);
 
-    public XYIcon() { Classes.Add("xyui-1-component"); Classes.Add("xyui-icon"); Stretch = Stretch.Uniform; AttachedToVisualTree += (_, _) => ApplyIcon(Icon); ApplyIcon(Icon); ApplySize(Size); }
+    public XYIcon() { Classes.Add("xyui-1-component"); Classes.Add("xyui-icon"); Stretch = Stretch.Uniform; AttachedToVisualTree += (_, _) => { ApplyIcon(Icon); ApplyInheritedSize(); }; ApplyIcon(Icon); ApplyInheritedSize(); }
     public string CanonicalId => "XYUI-1-12";
     public XyuiVectorIcon Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
     public XyuiIconSize Size { get => GetValue(SizeProperty); set { SetValue(SizeProperty, value); ApplySize(value); } }
@@ -32,6 +36,7 @@ public sealed partial class XYIcon : Control
         base.OnPropertyChanged(change);
         if (change.Property == IconProperty) ApplyIcon(change.GetNewValue<XyuiVectorIcon>());
         if (change.Property == StrokeWidthProperty) StrokeThickness = change.GetNewValue<double>();
+        if (change.Property == global::XYUI.Avalonia.XY.SizeProperty) ApplyInheritedSize();
     }
     void ApplyIcon(XyuiVectorIcon value)
     {
@@ -41,7 +46,7 @@ public sealed partial class XYIcon : Control
     void ApplySize(XyuiIconSize value)
     {
         foreach (var name in new[] { "tiny", "small", "medium", "large" }) Classes.Remove($"xyui-icon-{name}");
-        var size = value == XyuiIconSize.Tiny ? ("tiny", 1d) : value == XyuiIconSize.Small ? ("small", 1.25d) : value == XyuiIconSize.Large ? ("large", 1.75d) : ("medium", 1.5d);
+        var size = value == XyuiIconSize.Tiny ? ("tiny", 1d) : value == XyuiIconSize.Small ? ("small", 1.25d) : value == XyuiIconSize.Large ? ("large", 1.75d) : value == XyuiIconSize.Touch ? ("touch", 2d) : ("medium", 1.5d);
         Classes.Add($"xyui-icon-{size.Item1}"); SetValue(StrokeWidthProperty, size.Item2);
     }
 }
