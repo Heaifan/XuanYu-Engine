@@ -1,3 +1,6 @@
+using Avalonia;
+using Avalonia.Controls;
+
 namespace XYUI.Avalonia.Gallery;
 
 public sealed partial class XYUI1DocumentationViewModel
@@ -14,14 +17,14 @@ public sealed partial class XYUI1DocumentationViewModel
         {
             if (value == _selectedXYUI3) return;
             _selectedXYUI3 = value; _selectedItem = null!; _selectedXYUI2 = null;
-            if (value?.Document is not null) SelectedDocument = new Views.XYUI1ComponentDocumentView { DataContext = value.Document };
+            if (value?.Document is not null)
+                SelectedDocument = Application.Current is not null ? new Views.XYUI1ComponentDocumentView { DataContext = value.Document } : new Control();
             PropertyChanged?.Invoke(this, new(nameof(SelectedXYUI3Item))); PropertyChanged?.Invoke(this, new(nameof(SelectedDocument)));
         }
     }
     internal void BootstrapXYUI3()
     {
         XYUI3Items = XYUI3DocumentationCatalog.Build().Select(x => new XYUI1NavigationItem(x.Id, x.ChineseName, x.EnglishName, x)).ToArray();
-        // 默认落点跟随当前 XYUI-3 清单末项，保证启动后定位到最新编辑内容。
         SelectedXYUI3Item = XYUI3Items.LastOrDefault();
     }
     internal void SelectXYUI3(string id)

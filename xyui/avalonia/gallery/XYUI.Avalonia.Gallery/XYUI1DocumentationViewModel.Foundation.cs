@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using XYUI.Avalonia.Gallery.Views;
 
@@ -29,20 +30,24 @@ public sealed partial class XYUI1DocumentationViewModel
         if (item is not null) SelectedFoundation = item;
     }
 
-    static Control CreateFoundationView(string id) => id switch
+    static Control CreateFoundationView(string id)
     {
-        "palette" or "color" => new PaletteView(),
-        "typography" => new TypographyView(),
-        "spacing_layout" => new SpacingLayoutView(),
-        "sizing" => new SizingView(),
-        "density" => new DensityView(),
-        "iconography" => new IconographyView(),
-        "radius_border_separator" or "shape" => new ShapeView(),
-        "surface" => new SurfaceView(),
-        "states" => new StatesView(),
-        "responsive" => new ResponsiveView(),
-        "accessibility" => new AccessibilityView(),
-        "layout_recipes" => new LayoutRecipesView(),
-        _ => new XYUI1ModuleOverviewView()
-    };
+        if (Application.Current is null) return new Control();
+        return id switch
+        {
+            "palette" or "color" => new PaletteView(),
+            "typography" => new TypographyView(),
+            "spacing_layout" => new SpacingLayoutView(),
+            "sizing" => new SizingView(),
+            "density" => new DensityView(),
+            "iconography" => new IconographyView(),
+            "radius_border_separator" or "shape" => new ShapeView(),
+            "surface" => new SurfaceView(),
+            "states" => new StatesView(),
+            "responsive" => new ResponsiveView(),
+            "accessibility" => new AccessibilityView(),
+            "layout_recipes" => new LayoutRecipesView(),
+            _ => new XYUI1ModuleOverviewView()
+        };
+    }
 }

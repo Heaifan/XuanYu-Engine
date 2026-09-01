@@ -1,3 +1,6 @@
+using Avalonia;
+using Avalonia.Controls;
+
 namespace XYUI.Avalonia.Gallery;
 
 // XYUI-2 区块：Batch 01 导航、选中路由与默认落点（复用既有文档视图与记录类型）。
@@ -15,8 +18,8 @@ public sealed partial class XYUI1DocumentationViewModel
             _selectedXYUI2 = value;
             _selectedItem = null!;
             SelectedDocument = value?.Document is null
-                ? new Views.XYUI2ModuleOverviewView { DataContext = this }
-                : new Views.XYUI1ComponentDocumentView { DataContext = value.Document };
+                ? (Application.Current is not null ? new Views.XYUI2ModuleOverviewView { DataContext = this } : new Control())
+                : (Application.Current is not null ? new Views.XYUI1ComponentDocumentView { DataContext = value.Document } : new Control());
             PropertyChanged?.Invoke(this, new(nameof(SelectedXYUI2Item)));
             PropertyChanged?.Invoke(this, new(nameof(SelectedItem)));
             PropertyChanged?.Invoke(this, new(nameof(SelectedDocument)));

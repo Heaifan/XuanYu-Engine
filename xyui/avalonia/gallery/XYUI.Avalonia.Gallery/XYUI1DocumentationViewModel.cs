@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Avalonia;
 using Avalonia.Controls;
 using XYUI.Avalonia.Gallery.Views;
 
@@ -34,8 +35,8 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
             _selectedItem = value;
             _selectedFoundation = null;
             SelectedDocument = value.Document is null
-                ? new XYUI1ModuleOverviewView { DataContext = this }
-                : new XYUI1ComponentDocumentView { DataContext = value.Document };
+                ? (Application.Current is not null ? new XYUI1ModuleOverviewView { DataContext = this } : new Control())
+                : (Application.Current is not null ? new XYUI1ComponentDocumentView { DataContext = value.Document } : new Control());
             PropertyChanged?.Invoke(this, new(nameof(SelectedItem)));
             PropertyChanged?.Invoke(this, new(nameof(SelectedFoundation)));
             PropertyChanged?.Invoke(this, new(nameof(SelectedDocument)));
@@ -63,7 +64,7 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
         var documents = Documents.Select(x => new XYUI1NavigationItem(x.Id, x.ChineseName, x.EnglishName, x)).ToArray();
         Items = new[] { new XYUI1NavigationItem("XYUI-1", "模块概览", "Text & Information", null) }.Concat(documents).ToArray();
         _selectedItem = Items[0];
-        SelectedDocument = new XYUI1ModuleOverviewView { DataContext = this };
+        SelectedDocument = Application.Current is not null ? new XYUI1ModuleOverviewView { DataContext = this } : new Control();
         BootstrapXYUI2(); BootstrapXYUI3();
     }
 
