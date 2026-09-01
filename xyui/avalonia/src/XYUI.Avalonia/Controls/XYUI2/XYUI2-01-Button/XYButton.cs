@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using XYUI.Avalonia.Foundation;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -17,6 +18,7 @@ public class XYButton : Button
     public XYButton()
     {
         Classes.Add("xyui-button");
+        XyuiSizingScope.Attach(this);
         SyncVariantClass();
     }
 

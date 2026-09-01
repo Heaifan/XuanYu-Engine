@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using XYUI.Avalonia.Foundation;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -16,7 +17,7 @@ public class XYIconButton : Button
         set => SetValue(IsSelectedProperty, value);
     }
 
-    public XYIconButton() => Classes.Add("xyui-icon-button");
+    public XYIconButton() { Classes.Add("xyui-icon-button"); XyuiSizingScope.Attach(this, iconOnly: true); }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
     {

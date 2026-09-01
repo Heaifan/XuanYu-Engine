@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using XYUI.Avalonia.Vector;
+using XYUI.Avalonia.Foundation;
 
 namespace XYUI.Avalonia.Controls;
 
@@ -18,7 +19,7 @@ public sealed class XYToolbarTool : ContentControl
     public bool ShowLabel { get => _showLabel; internal set { if (_showLabel == value) return; _showLabel = value; Sync(); } }
     public event EventHandler? SelectionRequested;
     public XYIconButton Button { get; }
-    public XYToolbarTool() { Classes.Add("xyui-toolbar-tool"); Button = new XYIconButton(); Button.Click += (_, _) => SelectionRequested?.Invoke(this, EventArgs.Empty); Content = Button; Sync(); }
+    public XYToolbarTool() { Classes.Add("xyui-toolbar-tool"); XyuiSizingScope.Attach(this); Button = new XYIconButton(); Button.Click += (_, _) => SelectionRequested?.Invoke(this, EventArgs.Empty); Content = Button; Sync(); }
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e) { base.OnPropertyChanged(e); if (e.Property is var p && (p == LabelProperty || p == IconProperty || p == IsSelectedProperty)) Sync(); }
     void Sync() { Button.IsSelected = IsSelected; Button.Content = Icon is { } i ? (Control)(ShowLabel ? new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { new XYIcon { Icon = i, Size = XyuiIconSize.Small }, new TextBlock { Text = Label, VerticalAlignment = VerticalAlignment.Center } } } : new XYIcon { Icon = i, Size = XyuiIconSize.Small }) : new TextBlock { Text = Label }; }
 }
