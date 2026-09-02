@@ -1,31 +1,31 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="XYUI.Avalonia.Gallery.Views.SizingAnatomySection">
   <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
     <StackPanel Spacing="8">
-      <TextBlock Text="③ 尺寸解剖" Classes="xyui-text-section" FontSize="15" />
+      <TextBlock Text="③ 尺寸解剖 (Width / HitTarget / IconSize 均为 XY.Size 派生结果)" Classes="xyui-text-section" FontSize="15" />
       <Grid ColumnDefinitions="*,*,*" Margin="0,2,0,0">
         <!-- 1. 图标尺寸 -->
         <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="0,0,6,0" CornerRadius="4">
           <StackPanel Spacing="2">
-            <TextBlock Text="图标尺寸" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="独立阶梯" Classes="xyui-text-caption" />
+            <TextBlock Text="图标尺寸 [Derived]" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="14 / 16 / 20 / 24 DIP 派生结果" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
 
         <!-- 2. 视觉控件 -->
         <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="3,0,3,0" CornerRadius="4">
           <StackPanel Spacing="2">
-            <TextBlock Text="视觉控件" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="28 / 32 / 36 / 44" Classes="xyui-text-caption" />
+            <TextBlock Text="视觉控件 [Consumer]" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="28 / 32 / 36 / 44 (xy:XY.Size 统一控制)" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
 
         <!-- 3. 命中区域 -->
         <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="6,0,0,0" CornerRadius="4">
           <StackPanel Spacing="2">
-            <TextBlock Text="命中区域" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="独立于视觉尺寸管理" Classes="xyui-text-caption" />
+            <TextBlock Text="命中区域 [Auto]" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="控件模板内聚，无需业务干预" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
       </Grid>

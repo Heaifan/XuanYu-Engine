@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.RadiusBorderSeparatorView">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 标题 -->
+      <StackPanel Spacing="3">
+        <TextBlock Text="XYUI-0.07 · 圆角 / 边框 / 分割线" Classes="xyui-heading-panel" FontSize="22" />
+        <TextBlock Text="Consumer 只表达组件意图，几何规则由 XYUI 自动封装" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <!-- ① 核心规则 -->
+      <views:RadiusBorderCoreRulesSection />
+
+      <!-- ② 几何语法 -->
+      <views:RadiusBorderSpecSection />
+
+      <!-- ③ 封装写法与实际效果 -->
+      <views:RadiusBorderUsageSection />
+
+      <!-- ④ 推荐写法 · Author 用法 · 禁止写法 -->
+      <views:RadiusBorderGuardrailsSection />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

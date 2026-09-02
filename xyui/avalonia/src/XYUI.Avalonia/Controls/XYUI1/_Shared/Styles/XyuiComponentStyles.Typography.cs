@@ -48,7 +48,7 @@ public static partial class XyuiComponentStyles
         empty.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Center)); styles.Add(empty);
         styles.Add(Text(typeof(XYSearchHighlight), "xyui-search-highlight", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(XYTruncatedText), "xyui-truncated-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
-        IconSize(styles, "tiny", 12, 1.0); IconSize(styles, "small", 14, 1.25); IconSize(styles, "medium", 16, 1.5); IconSize(styles, "large", 20, 1.75); IconSize(styles, "touch", 24, 2.0);
+        IconSize(styles, "tiny", XyuiIconSizeMetrics.For(XyuiIconSize.Tiny)); IconSize(styles, "small", XyuiIconSizeMetrics.For(XyuiIconSize.Small)); IconSize(styles, "medium", XyuiIconSizeMetrics.For(XyuiIconSize.Medium)); IconSize(styles, "large", XyuiIconSizeMetrics.For(XyuiIconSize.Large)); IconSize(styles, "touch", XyuiIconSizeMetrics.For(XyuiIconSize.Touch));
         Mark(styles, "xyui-code-text-mark", "XY.Brush.Icon.Mark", 8, false, 1.25);
         Mark(styles, "xyui-icon-label-mark", "XY.Brush.Text.Primary", 14, false);
         Mark(styles, "xyui-help-text-mark", "XY.Brush.Semantic.Info.Text", 14, false);
@@ -58,11 +58,11 @@ public static partial class XyuiComponentStyles
         Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
     }
 
-    static void IconSize(Styles styles, string name, double size, double stroke)
+    static void IconSize(Styles styles, string name, XyuiIconSizeMetrics metrics)
     {
         var style = new Style(x => x.OfType<XYIcon>().Class($"xyui-icon-{name}"));
-        style.Setters.Add(new Setter(Control.WidthProperty, size)); style.Setters.Add(new Setter(Control.HeightProperty, size));
-        style.Setters.Add(new Setter(XYIcon.StrokeThicknessProperty, stroke)); styles.Add(style);
+        style.Setters.Add(new Setter(Control.WidthProperty, metrics.SizeDip)); style.Setters.Add(new Setter(Control.HeightProperty, metrics.SizeDip));
+        style.Setters.Add(new Setter(XYIcon.StrokeThicknessProperty, metrics.StrokeWidth)); styles.Add(style);
     }
 
     // XYUI-2-02：IconButton 状态驱动内部矢量图标描边（Icon.Hover=Text.Primary / Icon.Selected=Accent.Strong / Disabled 衰减）。

@@ -1,41 +1,84 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
              xmlns:g="using:XYUI.Avalonia.Gallery"
              x:Class="XYUI.Avalonia.Gallery.Views.TypographyView"
              x:DataType="g:TypographyViewModel">
-  <ScrollViewer>
-    <ItemsControl ItemsSource="{Binding Sections}">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="g:TypographySection">
-          <StackPanel Margin="0,0,0,16">
-            <TextBlock Text="{Binding Title}" Classes="xyui-text-section" />
-            <ItemsControl ItemsSource="{Binding Items}">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate><StackPanel /></ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-              <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="g:TypographyItem">
-                  <Border Margin="0,4,0,0" CornerRadius="4"
-                          BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}"
-                          BorderThickness="1">
-                    <Grid ColumnDefinitions="Auto,Auto,*,Auto" Margin="10,6">
-                      <TextBlock Text="{Binding TokenId}" Grid.Column="0"
-                                 Classes="xyui-text-code"
-                                 Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
-                      <TextBlock Text="{Binding Value}" Grid.Column="1" Margin="16,0,0,0"
-                                 Classes="xyui-text-code"
-                                 Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
-                      <TextBlock Text="{Binding Sample}" Grid.Column="3" Margin="16,0,0,0"
-                                 FontSize="{Binding SampleSize}"
-                                 Foreground="{DynamicResource XY.Brush.Text.Primary}" />
-                    </Grid>
-                  </Border>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="16" Margin="0,0,12,16">
+      <!-- 页面头部 -->
+      <StackPanel Spacing="3">
+        <TextBlock Text="XYUI-0.02 · 字体与排版" Classes="xyui-heading-panel" FontSize="22" />
+        <TextBlock Text="使用 xy:XY.Typography 与 xy:XY.Font 统一样式，或使用 XYHeading / XYCaption 快捷组件" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <!-- 1. Copy-First: 怎么写 & 实际效果 -->
+      <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+        <StackPanel Spacing="10">
+          <TextBlock Text="① 怎么写 · XYUI 排版与字体 Facade" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+          <Grid ColumnDefinitions="1.25*,Auto,*" Margin="0,2,0,0">
+            <!-- XAML Code -->
+            <StackPanel Grid.Column="0" Spacing="6" VerticalAlignment="Center">
+              <TextBlock Text="&lt;!-- 排版角色显式指定 --&gt;&#x0a;&lt;c:XYText Text=&quot;普通正文&quot; xy:XY.Typography=&quot;XY.Type.Body&quot; /&gt;&#x0a;&lt;c:XYText Text=&quot;辅助说明&quot; xy:XY.Typography=&quot;XY.Type.Caption&quot; /&gt;&#x0a;&lt;!-- 字体族切换与自由组合 --&gt;&#x0a;&lt;c:XYText Text=&quot;TECH_STATUS: 0x07AF&quot; xy:XY.Font=&quot;XY.Font.Mono&quot; /&gt;&#x0a;&lt;c:XYText Text=&quot;BUILD 404/404&quot; xy:XY.Font=&quot;XY.Font.Mono&quot; xy:XY.Typography=&quot;XY.Type.Caption&quot; /&gt;&#x0a;&lt;!-- 快捷标题组件 --&gt;&#x0a;&lt;c:XYHeading Text=&quot;地图编辑&quot; Variant=&quot;PageTitle&quot; /&gt;" Classes="xyui-text-code" FontSize="11" />
+            </StackPanel>
+            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="12,0" />
+            <!-- Live Effects -->
+            <StackPanel Grid.Column="2" Spacing="6" VerticalAlignment="Center">
+              <TextBlock Text="实际排版效果" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+              <c:XYText Text="普通正文" xy:XY.Typography="XY.Type.Body" />
+              <c:XYText Text="辅助说明" xy:XY.Typography="XY.Type.Caption" />
+              <c:XYText Text="TECH_STATUS: 0x07AF" xy:XY.Font="XY.Font.Mono" />
+              <c:XYText Text="BUILD 404/404" xy:XY.Font="XY.Font.Mono" xy:XY.Typography="XY.Type.Caption" />
+              <c:XYHeading Text="地图编辑" Variant="PageTitle" />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. 分层心智规则 -->
+      <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
+        <Grid ColumnDefinitions="*,*,*">
+          <StackPanel Grid.Column="0" Spacing="2" Margin="0,0,6,0">
+            <TextBlock Text="xy:XY.Typography" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="封装字号、行高与字重" Classes="xyui-text-caption" />
           </StackPanel>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+          <StackPanel Grid.Column="1" Spacing="2" Margin="3,0,3,0">
+            <TextBlock Text="xy:XY.Font" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="独立切换 UI / Mono 字体族" Classes="xyui-text-caption" />
+          </StackPanel>
+          <StackPanel Grid.Column="2" Spacing="2" Margin="6,0,0,0">
+            <TextBlock Text="快捷组件" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="XYHeading / XYCaption 预设快捷语义" Classes="xyui-text-caption" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- 3. Canonical Scale Items (后置) -->
+      <StackPanel Spacing="8">
+        <TextBlock Text="[Reference] 排版阶梯与角色参考 (Section/Auxiliary/Mono 等底层阶梯)" Classes="xyui-text-section" FontSize="15" />
+        <ItemsControl ItemsSource="{Binding Sections}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="g:TypographySection">
+              <StackPanel Margin="0,0,0,16">
+                <TextBlock Text="{Binding Title}" Classes="xyui-text-caption" FontWeight="Bold" Margin="0,0,0,4" />
+                <ItemsControl ItemsSource="{Binding Items}">
+                  <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate><DataTemplate x:DataType="g:TypographyItem">
+                    <Border Margin="0,4,0,0" CornerRadius="4" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1">
+                      <Grid ColumnDefinitions="Auto,Auto,*,Auto" Margin="10,6">
+                        <TextBlock Text="{Binding TokenId}" Grid.Column="0" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
+                        <TextBlock Text="{Binding Value}" Grid.Column="1" Margin="16,0,0,0" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+                        <TextBlock Text="{Binding Sample}" Grid.Column="3" Margin="16,0,0,0" FontSize="{Binding SampleSize}" Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+                      </Grid>
+                    </Border>
+                  </DataTemplate></ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </StackPanel>
   </ScrollViewer>
 </UserControl>

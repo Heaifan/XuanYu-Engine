@@ -1,28 +1,33 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:c="using:XYUI.Avalonia.Controls"
              x:Class="XYUI.Avalonia.Gallery.Views.IconographyCoreRulesSection">
-  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
-    <StackPanel Spacing="6">
-      <Grid ColumnDefinitions="*,Auto">
-        <TextBlock Grid.Column="0" Text="① 核心规则" Classes="xyui-text-section" FontSize="15" />
-        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Accent.Soft}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" CornerRadius="4" Padding="8,2">
-          <TextBlock Text="统一尺寸、视觉重量、Viewport 与光学居中" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-        </Border>
-      </Grid>
+  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <TextBlock Text="① 核心规则" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
       <Grid ColumnDefinitions="*,*,*" Margin="0,2,0,0">
-        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6">
-          <TextBlock Text="图标尺寸" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-          <TextBlock Text="14 / 16 / 20 / 24 DIP" Classes="xyui-text-caption" />
-        </StackPanel>
-        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
-          <TextBlock Text="图标真值" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-          <TextBlock Text="XYIcon + Vector Icon Registry" Classes="xyui-text-caption" />
-        </StackPanel>
-        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6">
-          <TextBlock Text="复用原则" Classes="xyui-text-label" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-          <TextBlock Text="组件消费，不自行重画" Classes="xyui-text-caption" />
-        </StackPanel>
+        <!-- 1. 图标尺寸 -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" Margin="0,0,6,0" CornerRadius="4">
+          <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+            <TextBlock Text="图标尺寸" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="14 / 16 / 20 / 24 DIP" Classes="xyui-text-caption" />
+          </StackPanel>
+        </Border>
+
+        <!-- 2. 单一真值 -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" Margin="3,0,3,0" CornerRadius="4">
+          <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+            <TextBlock Text="单一真值" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="XYIcon + Canonical Icon Registry" Classes="xyui-text-caption" />
+          </StackPanel>
+        </Border>
+
+        <!-- 3. 复用原则 -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" Margin="6,0,0,0" CornerRadius="4">
+          <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+            <TextBlock Text="复用原则" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="组件消费 Registry，不自行重画" Classes="xyui-text-caption" />
+          </StackPanel>
+        </Border>
       </Grid>
     </StackPanel>
   </Border>

@@ -28,6 +28,20 @@ public partial class MainWindow : Window
             Closed += (_, _) => app.ActualThemeVariantChanged -= OnActualThemeVariantChanged;
             UpdateThemeSwitch();
         }
+        if (Program.ScreenshotPath is { Length: > 0 } shotPath)
+        {
+            Width = 1450; Height = 1024;
+            Opened += async (_, _) =>
+            {
+                Console.WriteLine($"[Gallery] Window opened, rendering screenshot to {shotPath}...");
+                await System.Threading.Tasks.Task.Delay(800);
+                var rtb = new global::Avalonia.Media.Imaging.RenderTargetBitmap(new PixelSize(1450, 1024), new global::Avalonia.Vector(96, 96));
+                rtb.Render(this);
+                rtb.Save(shotPath);
+                Console.WriteLine($"[Gallery] Screenshot saved, length = {new System.IO.FileInfo(shotPath).Length}");
+                (global::Avalonia.Application.Current?.ApplicationLifetime as global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime)?.Shutdown();
+            };
+        }
     }
 
     void OnActualThemeVariantChanged(object? sender, EventArgs e) => UpdateThemeSwitch();

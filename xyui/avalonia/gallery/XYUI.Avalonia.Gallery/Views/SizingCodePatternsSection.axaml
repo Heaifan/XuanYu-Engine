@@ -1,14 +1,54 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
              x:Class="XYUI.Avalonia.Gallery.Views.SizingCodePatternsSection">
-  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
-    <StackPanel Spacing="6">
-      <TextBlock Text="④ 推荐写法 · 高级用法 · 禁止写法" Classes="xyui-text-section" FontSize="15" />
+  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <TextBlock Text="④ 推荐写法 · 高级用法 · 禁止写法" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
       <Grid ColumnDefinitions="*,*,*" Margin="0,2,0,0">
-        <TextBlock Grid.Column="0" Text="✓ xy:XY.Size=&quot;Default&quot;" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-        <TextBlock Grid.Column="1" Text="高级：局部 Size Override" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
-        <TextBlock Grid.Column="2" Text="× Height=&quot;31&quot; · × Width=&quot;87&quot;" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+        <!-- 1. Consumer -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="0,0,6,0">
+          <StackPanel Spacing="3">
+            <TextBlock Text="✓ Consumer" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="容器声明 xy:XY.Size，子级全量自动继承" Classes="xyui-text-caption" />
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Author -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="3,0,3,0">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Author / 局部" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="仅极少数特定控件按需局部 Override" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Border>
+
+        <!-- 3. 禁止 -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="6,0,0,0">
+          <StackPanel Spacing="3">
+            <TextBlock Text="× 禁止" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+            <TextBlock Text="Height=&quot;31&quot; · Width=&quot;87&quot; 魔法数字" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          </StackPanel>
+        </Border>
       </Grid>
+
+      <!-- Consumer Scope: Code + Live Effect -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" CornerRadius="5" Margin="0,2,0,0">
+        <Grid ColumnDefinitions="1.2*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="Consumer Scope 作用域写法 [xy:XY.Size]" Classes="xyui-text-caption" FontWeight="Bold" />
+            <TextBlock Text="&lt;!-- 四档尺寸 Facade: Compact / Default / Comfortable / Touch --&gt;&#x0a;&lt;StackPanel xy:XY.Size=&quot;Compact&quot;&gt;&#x0a;  &lt;c:XYButton Content=&quot;保存&quot; /&gt;&#x0a;  &lt;c:XYTextField /&gt;&#x0a;&lt;/StackPanel&gt;" Classes="xyui-text-code" FontSize="11" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="12,0" />
+          <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="实际继承效果 [Auto] (Compact 28 DIP)" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <StackPanel xy:XY.Size="Compact" Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+              <c:XYButton Content="保存" Variant="Primary" />
+              <c:XYTextField Text="Auto Sized" Width="130" />
+            </StackPanel>
+          </StackPanel>
+        </Grid>
+      </Border>
     </StackPanel>
   </Border>
 </UserControl>

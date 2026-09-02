@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.RadiusBorderSpecSection">
+  <Border Classes="xyui-surface-panel" Padding="16,12" CornerRadius="6">
+    <StackPanel Spacing="8">
+      <StackPanel Spacing="2">
+        <TextBlock Text="② 几何语法" Classes="xyui-text-section" FontSize="17" FontWeight="Bold" />
+        <TextBlock Text="几何规则存在于 XYUI 内部；业务组件通常无需直接填写数值" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <Grid ColumnDefinitions="*,*,1.15*" Margin="0,2,0,0">
+        <!-- 1. Radius · 组件角色 -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="5" Padding="12,8" Margin="0,0,5,0">
+          <StackPanel Spacing="4">
+            <TextBlock Text="Radius · 组件角色 [Auto/Role]" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <Grid ColumnDefinitions="*,Auto" Margin="0,1"><TextBlock Grid.Column="0" Text="Panel" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="0 DIP" Classes="xyui-text-code" FontWeight="Bold" /></Grid>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,1"><TextBlock Grid.Column="0" Text="XYToolbar" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="0 DIP" Classes="xyui-text-code" FontWeight="Bold" /></Grid>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,1"><TextBlock Grid.Column="0" Text="XYButton" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="4 DIP" Classes="xyui-text-code" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Grid>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,1"><TextBlock Grid.Column="0" Text="XYIconButton" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="4 DIP" Classes="xyui-text-code" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Grid>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,1"><TextBlock Grid.Column="0" Text="XYTextField" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="4 DIP" Classes="xyui-text-code" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Grid>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,1"><TextBlock Grid.Column="0" Text="Raised Surface" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="4 DIP" Classes="xyui-text-code" FontWeight="Bold" /></Grid>
+            <TextBlock Text="注：圆角基于组件角色 (Role-based)，非全局通配" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Border · 边界强度 -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="5" Padding="12,8" Margin="3,0,3,0">
+          <StackPanel Spacing="6">
+            <TextBlock Text="Border · 边界强度 [Author/Role]" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,3" CornerRadius="4">
+              <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="Subtle (弱分隔)" Classes="xyui-text-caption" /><TextBlock Grid.Column="1" Text="1 DIP" Classes="xyui-text-code" /></Grid>
+            </Border>
+            <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,3" CornerRadius="4">
+              <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="Default (标准外框)" Classes="xyui-text-caption" FontWeight="Bold" /><TextBlock Grid.Column="1" Text="1 DIP" Classes="xyui-text-code" FontWeight="Bold" /></Grid>
+            </Border>
+            <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Strong}" BorderThickness="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,3" CornerRadius="4">
+              <Grid ColumnDefinitions="*,Auto"><TextBlock Grid.Column="0" Text="Strong (强调边界)" Classes="xyui-text-caption" FontWeight="Bold" /><TextBlock Grid.Column="1" Text="2 DIP" Classes="xyui-text-code" FontWeight="Bold" /></Grid>
+            </Border>
+            <TextBlock Text="Subtle 与 Default 同为 1 DIP；视觉强度由 Brush 与语义共同决定" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Border>
+
+        <!-- 3. Separator · 真实六 Variant -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="5" Padding="12,8" Margin="5,0,0,0">
+          <StackPanel Spacing="5">
+            <TextBlock Text="Separator · 六 Variant [Consumer]" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="5" ColumnSpacing="8">
+              <StackPanel Grid.Row="0" Grid.Column="0" Spacing="2"><TextBlock Text="Variant=&quot;Default&quot;" Classes="xyui-text-code" FontSize="10" /><c:XYSeparator Variant="Default" /></StackPanel>
+              <StackPanel Grid.Row="0" Grid.Column="1" Spacing="2"><TextBlock Text="Variant=&quot;Header&quot;" Classes="xyui-text-code" FontSize="10" /><c:XYSeparator Variant="Header" /></StackPanel>
+              <StackPanel Grid.Row="1" Grid.Column="0" Spacing="2"><TextBlock Text="Variant=&quot;Panel&quot;" Classes="xyui-text-code" FontSize="10" /><c:XYSeparator Variant="Panel" /></StackPanel>
+              <StackPanel Grid.Row="1" Grid.Column="1" Spacing="2"><TextBlock Text="Variant=&quot;Section&quot;" Classes="xyui-text-code" FontSize="10" /><c:XYSeparator Variant="Section" /></StackPanel>
+              <StackPanel Grid.Row="2" Grid.Column="0" Spacing="2"><TextBlock Text="Variant=&quot;ListRow&quot;" Classes="xyui-text-code" FontSize="10" /><c:XYSeparator Variant="ListRow" /></StackPanel>
+              <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                <TextBlock Text="Variant=&quot;VerticalSplit&quot;" Classes="xyui-text-code" FontSize="10" VerticalAlignment="Center" />
+                <c:XYSeparator Variant="VerticalSplit" Height="14" VerticalAlignment="Center" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Text="XYToolGroup 可按结构需要创建 VerticalSplit" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

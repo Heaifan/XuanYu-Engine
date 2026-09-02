@@ -73,5 +73,6 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
         if (item is not null) SelectedItem = item;
         else if (XYUI2Items.Any(x => x.Id == id)) SelectXYUI2(id);
         else if (XYUI3Items.Any(x => x.Id == id)) SelectXYUI3(id);
+        else if (FoundationItems.Any(x => x.Id == id)) SelectFoundation(id);
     }
 }

@@ -1,6 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Layout;
-using Avalonia.Media;
 using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Vector;
 
@@ -11,18 +9,24 @@ public partial class IconographySpecSection : UserControl
     public IconographySpecSection()
     {
         InitializeComponent();
-        foreach (var item in Items()) Ladder.Children.Add(Card(item.Label, item.Role, item.Size));
-    }
 
-    static IEnumerable<(string Label, string Role, XyuiIconSize Size)> Items() =>
-        [("14 DIP", "Compact", XyuiIconSize.Compact), ("16 DIP", "默认推荐", XyuiIconSize.Default),
-         ("20 DIP", "Comfortable", XyuiIconSize.Comfortable), ("24 DIP", "Touch", XyuiIconSize.Touch)];
+        var compact = XyuiIconSizeMetrics.For(XyuiIconSize.Compact);
+        TxtCompactSize.Text = $"{compact.SizeDip:0} DIP · Compact";
+        TxtCompactStroke.Text = $"Stroke {compact.StrokeWidth:0.00} DIP";
 
-    static Control Card(string label, string role, XyuiIconSize size)
-    {
-        var icon = new XYIcon { Icon = XyuiVectorIcon.Search, Size = size, HorizontalAlignment = HorizontalAlignment.Center };
-        var metrics = XyuiVectorIcons.GetMetrics(XyuiVectorIcon.Search);
-        var text = new TextBlock { Text = $"{label} · {role}\n实际 Icon Size：{label}\nLogical Viewport：{metrics.LogicalViewport} DIP\nGeometry Bounds：{metrics.GeometryBounds.Width:0.#}×{metrics.GeometryBounds.Height:0.#}\nStroke：{icon.StrokeWidth:0.##} DIP", Classes = { "xyui-text-caption" }, TextAlignment = TextAlignment.Center };
-        return new Border { Width = 150, Margin = new global::Avalonia.Thickness(0, 0, 8, 0), Padding = new global::Avalonia.Thickness(8), Classes = { "xyui-border-subtle" }, Child = new StackPanel { Spacing = 6, Children = { icon, text } } };
+        var def = XyuiIconSizeMetrics.For(XyuiIconSize.Default);
+        TxtDefaultSize.Text = $"{def.SizeDip:0} DIP · Default";
+        TxtDefaultStroke.Text = $"Stroke {def.StrokeWidth:0.00} DIP";
+
+        var comf = XyuiIconSizeMetrics.For(XyuiIconSize.Comfortable);
+        TxtComfortableSize.Text = $"{comf.SizeDip:0} DIP · Comfortable";
+        TxtComfortableStroke.Text = $"Stroke {comf.StrokeWidth:0.00} DIP";
+
+        var touch = XyuiIconSizeMetrics.For(XyuiIconSize.Touch);
+        TxtTouchSize.Text = $"{touch.SizeDip:0} DIP · Touch";
+        TxtTouchStroke.Text = $"Stroke {touch.StrokeWidth:0.00} DIP";
+
+        var search = XyuiVectorIcons.GetMetrics(XyuiVectorIcon.Search);
+        TxtSharedMetrics.Text = $"Canonical Search · Logical Viewport {search.LogicalViewport:0} DIP · Geometry Bounds {search.GeometryBounds.Width:0.#} DIP";
     }
 }

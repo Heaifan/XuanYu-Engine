@@ -1,31 +1,31 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="XYUI.Avalonia.Gallery.Views.SpacingCoreRulesSection">
   <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
     <StackPanel Spacing="6">
-      <TextBlock Text="① 核心规则" Classes="xyui-text-section" FontSize="15" />
+      <TextBlock Text="① 核心规则 (Padding / Gap / Margin 分工明确，由对应 Facade 属性覆盖)" Classes="xyui-text-section" FontSize="15" />
       <Grid ColumnDefinitions="*,*,*" Margin="0,2,0,0">
         <!-- 1. Padding -->
         <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="0,0,6,0" CornerRadius="4">
           <StackPanel Spacing="2">
-            <TextBlock Text="Padding · 内边距" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="容器内部空间" Classes="xyui-text-caption" />
+            <TextBlock Text="xy:XY.Padding" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="容器内部空间 (如 XY.Panel.Padding)" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
 
         <!-- 2. Gap -->
         <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="3,0,3,0" CornerRadius="4">
           <StackPanel Spacing="2">
-            <TextBlock Text="Gap · 间隙" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="同级元素之间的关系" Classes="xyui-text-caption" />
+            <TextBlock Text="xy:XY.Gap" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="流式同级元素间隙 (如 XY.Space.3)" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
 
         <!-- 3. Margin -->
         <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="10,8" Margin="6,0,0,0" CornerRadius="4">
           <StackPanel Spacing="2">
-            <TextBlock Text="Margin · 外边距" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="只处理外部特殊关系" Classes="xyui-text-caption" />
+            <TextBlock Text="xy:XY.Margin" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="外部特殊布局关系 (如 XY.Space.2)" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
       </Grid>

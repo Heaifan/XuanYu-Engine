@@ -1,13 +1,49 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
              x:Class="XYUI.Avalonia.Gallery.Views.SpacingCodePatternsSection">
-  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
-    <StackPanel Spacing="6">
-      <TextBlock Text="④ 推荐写法 · 高级用法 · 禁止写法" Classes="xyui-text-section" FontSize="15" />
-      <Grid ColumnDefinitions="*,*,*" Margin="0,2,0,0">
-        <TextBlock Grid.Column="0" Text="推荐：XYToolbar / XYToolGroup" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-        <TextBlock Grid.Column="1" Text="高级：绑定既有 Gap / Padding Token" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
-        <TextBlock Grid.Column="2" Text="× 手写魔法 Margin / Gap" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <TextBlock Text="④ 怎么写 · XYUI 间距与布局 Facade (纯正 XAML)" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+
+      <!-- Facade Code & Live Effect -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" CornerRadius="5">
+        <Grid ColumnDefinitions="1.25*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="5" VerticalAlignment="Center">
+            <TextBlock Text="Padding + Gap + Margin 完整组合写法" Classes="xyui-text-caption" FontWeight="Bold" />
+            <TextBlock Text="&lt;Border xy:XY.Padding=&quot;XY.Panel.Padding&quot;&gt;&#x0a;  &lt;StackPanel xy:XY.Gap=&quot;XY.Space.3&quot;&gt;&#x0a;    &lt;c:XYHeading Text=&quot;实体属性&quot; /&gt;&#x0a;    &lt;c:XYTextField Placeholder=&quot;名称&quot; /&gt;&#x0a;    &lt;c:XYButton Content=&quot;保存&quot; xy:XY.Margin=&quot;XY.Space.2&quot; /&gt;&#x0a;  &lt;/StackPanel&gt;&#x0a;&lt;/Border&gt;" Classes="xyui-text-code" FontSize="11" />
+            <TextBlock Text="注：xy:XY.Gap 统一支持 StackPanel 流式间距，无需手写 DIP" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="12,0" />
+          <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="实际渲染效果" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <!-- Live demo of Border with Padding + StackPanel with Gap + Button with Margin -->
+            <Border xy:XY.Padding="XY.Panel.Padding" xy:XY.Surface="XY.Surface.App">
+              <StackPanel xy:XY.Gap="XY.Space.3">
+                <c:XYHeading Text="实体属性" />
+                <c:XYTextField Text="Player_Main" />
+                <c:XYButton Content="保存" Variant="Primary" xy:XY.Margin="XY.Space.2" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- Rules & Guardrails -->
+      <Grid ColumnDefinitions="*,*,*">
+        <StackPanel Grid.Column="0" Spacing="2" Margin="0,0,6,0">
+          <TextBlock Text="xy:XY.Padding" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="容器安全内边距 (如 XY.Panel.Padding)" Classes="xyui-text-caption" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="2" Margin="3,0,3,0">
+          <TextBlock Text="xy:XY.Gap" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="同级子项流式间距 (如 XY.Space.3)" Classes="xyui-text-caption" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Spacing="2" Margin="6,0,0,0">
+          <TextBlock Text="xy:XY.Margin" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="特殊外边距关系 (如 XY.Space.2)" Classes="xyui-text-caption" />
+        </StackPanel>
       </Grid>
     </StackPanel>
   </Border>

@@ -41,7 +41,7 @@ public static partial class XyuiControlStyles
         var s = new Style(x => x.OfType(type).Class(cls));
         Set(s, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Input"); Set(s, TemplatedControl.ForegroundProperty, "XY.Brush.Text.Primary");
         Set(s, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Default"); s.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1)));
-        s.Setters.Add(new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(3))); s.Setters.Add(new Setter(Control.HeightProperty, height)); styles.Add(s);
+        Set(s, TemplatedControl.CornerRadiusProperty, "XY.Radius.Input"); s.Setters.Add(new Setter(Control.HeightProperty, height)); styles.Add(s);
         if (focusBorder) State(styles, type, cls, ":focus", TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Focus");
         State(styles, type, cls, ":error", TemplatedControl.BorderBrushProperty, "XY.Brush.Semantic.Error.Border");
         State(styles, type, cls, ":readonly", TemplatedControl.BackgroundProperty, "XY.Brush.Surface.PanelAlt");

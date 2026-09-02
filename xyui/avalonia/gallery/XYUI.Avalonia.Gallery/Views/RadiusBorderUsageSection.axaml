@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
+             x:Class="XYUI.Avalonia.Gallery.Views.RadiusBorderUsageSection">
+  <Border Classes="xyui-surface-panel" Padding="18,14" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="③ 怎么写 · XYUI 几何与分割线 Facade" Classes="xyui-text-section" FontSize="17" FontWeight="Bold" />
+        <TextBlock Text="使用 xy:XY.Radius 与 xy:XY.Border 统一几何属性，或使用标准 XYSeparator Variant" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <!-- Column Headers -->
+      <Grid ColumnDefinitions="1.1*,Auto,*" Margin="0,2,0,0">
+        <TextBlock Grid.Column="0" Text="Consumer 写法" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        <TextBlock Grid.Column="2" Text="实际效果" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+      </Grid>
+
+      <StackPanel Spacing="8">
+        <!-- Row 1: Facade Radius -->
+        <Grid ColumnDefinitions="1.1*,Auto,*">
+          <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="5" Padding="12,6">
+            <TextBlock Text="&lt;Border xy:XY.Radius=&quot;XY.Radius.Input&quot; /&gt;" Classes="xyui-text-code" FontSize="11" />
+          </Border>
+          <Rectangle Grid.Column="1" Width="1" Fill="Transparent" Margin="8,0" />
+          <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="5" Padding="12,6">
+            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+              <Border xy:XY.Radius="XY.Radius.Input" xy:XY.Border="XY.Border.Default" xy:XY.Surface="XY.Surface.Panel" Width="70" Height="26" />
+              <TextBlock Text="Radius.Input (4 DIP)" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <!-- Row 2: Facade Border -->
+        <Grid ColumnDefinitions="1.1*,Auto,*">
+          <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="5" Padding="12,6">
+            <TextBlock Text="&lt;Border xy:XY.Border=&quot;XY.Border.Subtle&quot; /&gt;&#x0a;&lt;Border xy:XY.Border=&quot;XY.Border.Strong&quot; /&gt;" Classes="xyui-text-code" FontSize="11" />
+          </Border>
+          <Rectangle Grid.Column="1" Width="1" Fill="Transparent" Margin="8,0" />
+          <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="5" Padding="12,6">
+            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+              <Border xy:XY.Border="XY.Border.Subtle" xy:XY.Surface="XY.Surface.Panel" Width="60" Height="26"><TextBlock Text="Subtle" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
+              <Border xy:XY.Border="XY.Border.Strong" xy:XY.Surface="XY.Surface.Panel" Width="60" Height="26"><TextBlock Text="Strong" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <!-- Row 3: Separator -->
+        <Grid ColumnDefinitions="1.1*,Auto,*">
+          <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="5" Padding="12,6">
+            <TextBlock Text="&lt;c:XYSeparator Variant=&quot;Section&quot; /&gt;" Classes="xyui-text-code" FontSize="11" />
+          </Border>
+          <Rectangle Grid.Column="1" Width="1" Fill="Transparent" Margin="8,0" />
+          <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="5" Padding="12,6">
+            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+              <c:XYSeparator Variant="Section" Width="140" VerticalAlignment="Center" />
+              <TextBlock Text="标准 Section 分割线" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

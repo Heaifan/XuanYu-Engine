@@ -46,7 +46,7 @@ public sealed partial class XYIcon : Control
     void ApplySize(XyuiIconSize value)
     {
         foreach (var name in new[] { "tiny", "small", "medium", "large" }) Classes.Remove($"xyui-icon-{name}");
-        var size = value == XyuiIconSize.Tiny ? ("tiny", 1d) : value == XyuiIconSize.Small ? ("small", 1.25d) : value == XyuiIconSize.Large ? ("large", 1.75d) : value == XyuiIconSize.Touch ? ("touch", 2d) : ("medium", 1.5d);
-        Classes.Add($"xyui-icon-{size.Item1}"); SetValue(StrokeWidthProperty, size.Item2);
+        var className = value switch { XyuiIconSize.Tiny => "tiny", XyuiIconSize.Small => "small", XyuiIconSize.Large => "large", XyuiIconSize.Touch => "touch", _ => "medium" };
+        Classes.Add($"xyui-icon-{className}"); SetValue(StrokeWidthProperty, XyuiIconSizeMetrics.For(value).StrokeWidth);
     }
 }

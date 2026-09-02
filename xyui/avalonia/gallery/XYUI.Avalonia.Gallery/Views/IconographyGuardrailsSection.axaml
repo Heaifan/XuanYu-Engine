@@ -1,25 +1,46 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
              x:Class="XYUI.Avalonia.Gallery.Views.IconographyGuardrailsSection">
-  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
-    <StackPanel Spacing="6">
-      <TextBlock Text="④ 推荐写法与禁止护栏" Classes="xyui-text-section" FontSize="15" />
-      <Grid ColumnDefinitions="280,*">
-        <!-- 推荐入口 -->
-        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Accent.Soft}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,12,0">
-          <StackPanel Spacing="2">
-            <TextBlock Text="统一入口" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="XYIcon + Vector Icon Registry 唯一真值" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-          </StackPanel>
-        </Border>
+  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <TextBlock Text="④ 怎么写 · XYUI 图标与 Facade 组合" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
 
-        <!-- 禁止项 -->
-        <Grid Grid.Column="1" ColumnDefinitions="*,*,*,*" VerticalAlignment="Center">
-          <TextBlock Grid.Column="0" Text="× Unicode 假字符" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-          <TextBlock Grid.Column="1" Text="× 业务 Path 自绘" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-          <TextBlock Grid.Column="2" Text="× PNG 位图假图标" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-          <TextBlock Grid.Column="3" Text="× Margin 垫偏移" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+      <!-- Facade Code & Live Effect -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" CornerRadius="5">
+        <Grid ColumnDefinitions="1.2*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="Icon + Size + Foreground 自由组合" Classes="xyui-text-caption" FontWeight="Bold" />
+            <TextBlock Text="&lt;c:XYIcon Icon=&quot;Search&quot; /&gt;&#x0a;&lt;c:XYIcon Icon=&quot;Search&quot; xy:XY.Size=&quot;Compact&quot; /&gt;&#x0a;&lt;c:XYIcon Icon=&quot;Search&quot; xy:XY.Foreground=&quot;XY.Icon.Mark&quot; /&gt;&#x0a;&lt;c:XYIcon Icon=&quot;Search&quot; xy:XY.Size=&quot;Comfortable&quot;&#x0a;         xy:XY.Foreground=&quot;XY.Icon.Mark&quot; /&gt;" Classes="xyui-text-code" FontSize="11" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="12,0" />
+          <StackPanel Grid.Column="2" Spacing="6" VerticalAlignment="Center">
+            <TextBlock Text="实际渲染效果" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <StackPanel Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
+              <c:XYIcon Icon="Search" />
+              <c:XYIcon Icon="Search" xy:XY.Size="Compact" />
+              <c:XYIcon Icon="Search" xy:XY.Foreground="XY.Icon.Mark" />
+              <c:XYIcon Icon="Search" xy:XY.Size="Comfortable" xy:XY.Foreground="XY.Icon.Mark" />
+            </StackPanel>
+          </StackPanel>
         </Grid>
+      </Border>
+
+      <!-- Guardrails -->
+      <Grid ColumnDefinitions="*,*,*">
+        <StackPanel Grid.Column="0" Spacing="2" Margin="0,0,6,0">
+          <TextBlock Text="控件语义组合" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="XYIconButton.Icon 与 XYButton.Icon" Classes="xyui-text-caption" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="2" Margin="3,0,3,0">
+          <TextBlock Text="Author / 诊断" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="Viewport 24 DIP / Bounds / Optical" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Spacing="2" Margin="6,0,0,0">
+          <TextBlock Text="× 禁止" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          <TextBlock Text="复制原始 Geometry / 随机尺寸" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+        </StackPanel>
       </Grid>
     </StackPanel>
   </Border>

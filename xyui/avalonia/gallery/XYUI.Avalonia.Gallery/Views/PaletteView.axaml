@@ -1,25 +1,84 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
              xmlns:g="using:XYUI.Avalonia.Gallery"
              x:Class="XYUI.Avalonia.Gallery.Views.PaletteView"
              x:DataType="g:PaletteViewModel">
   <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-    <ItemsControl ItemsSource="{Binding Sections}">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="g:PaletteSection">
-          <StackPanel Margin="0,0,0,16">
-            <TextBlock Text="{Binding Title}" Classes="xyui-text-section" />
-            <ItemsControl ItemsSource="{Binding Items}">
-              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
-              <ItemsControl.ItemTemplate><DataTemplate x:DataType="g:PaletteItem">
-                <Border Width="152" Margin="0,6,8,0" CornerRadius="4" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1">
-                  <StackPanel><Border Height="36" Background="{Binding Brush}" CornerRadius="3,3,0,0" /><StackPanel Margin="6,4"><TextBlock Text="{Binding TokenId}" FontSize="11" /><TextBlock Text="{Binding Hex}" FontSize="10" /></StackPanel></StackPanel>
+    <StackPanel Spacing="16" Margin="0,0,12,16">
+      <!-- 页面头部 -->
+      <StackPanel Spacing="3">
+        <TextBlock Text="XYUI-0.01 · 色彩" Classes="xyui-heading-panel" FontSize="22" />
+        <TextBlock Text="优先消费 xy:XY.Foreground / xy:XY.Surface 与控件 Variant，底层色板仅作参考" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <!-- 1. Copy-First: 怎么写 & 实际效果 -->
+      <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+        <StackPanel Spacing="10">
+          <TextBlock Text="① 怎么写 · XYUI 色彩 Facade" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+          <Grid ColumnDefinitions="1.2*,Auto,*" Margin="0,2,0,0">
+            <!-- XAML Code -->
+            <StackPanel Grid.Column="0" Spacing="6" VerticalAlignment="Center">
+              <TextBlock Text="&lt;!-- 前景与文字色彩覆盖 --&gt;&#x0a;&lt;c:XYText Text=&quot;查看详情&quot; xy:XY.Foreground=&quot;XY.Text.Link&quot; /&gt;&#x0a;&lt;c:XYCaption Text=&quot;辅助说明&quot; xy:XY.Foreground=&quot;XY.Text.Secondary&quot; /&gt;&#x0a;&lt;c:XYIcon Icon=&quot;Search&quot; xy:XY.Foreground=&quot;XY.Icon.Mark&quot; /&gt;&#x0a;&lt;!-- 语义表面与按钮 Variant --&gt;&#x0a;&lt;Border xy:XY.Surface=&quot;XY.Surface.Panel&quot;&gt;...&lt;/Border&gt;&#x0a;&lt;c:XYButton Content=&quot;保存&quot; Variant=&quot;Primary&quot; /&gt;" Classes="xyui-text-code" FontSize="11" />
+            </StackPanel>
+            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="12,0" />
+            <!-- Live Effects -->
+            <StackPanel Grid.Column="2" Spacing="8" VerticalAlignment="Center">
+              <TextBlock Text="实际渲染效果" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+              <c:XYText Text="查看详情" xy:XY.Foreground="XY.Text.Link" />
+              <c:XYCaption Text="辅助说明" xy:XY.Foreground="XY.Text.Secondary" />
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <c:XYIcon Icon="Search" xy:XY.Foreground="XY.Icon.Mark" />
+                <Border xy:XY.Surface="XY.Surface.Panel">
+                  <TextBlock Text="Panel Surface" Classes="xyui-text-caption" Margin="8,4" />
                 </Border>
-              </DataTemplate></ItemsControl.ItemTemplate>
-            </ItemsControl>
+                <c:XYButton Content="保存" Variant="Primary" />
+              </StackPanel>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. 分层心智规则 -->
+      <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
+        <Grid ColumnDefinitions="*,*,*">
+          <StackPanel Grid.Column="0" Spacing="2" Margin="0,0,6,0">
+            <TextBlock Text="Foreground / Surface" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="跨控件 Foundation 覆盖属性" Classes="xyui-text-caption" />
           </StackPanel>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+          <StackPanel Grid.Column="1" Spacing="2" Margin="3,0,3,0">
+            <TextBlock Text="Variant" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="整套组件内聚语义外观" Classes="xyui-text-caption" />
+          </StackPanel>
+          <StackPanel Grid.Column="2" Spacing="2" Margin="6,0,0,0">
+            <TextBlock Text="禁止原生笔刷" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+            <TextBlock Text="禁在 XAML 手写 DynamicResource" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- 3. Canonical Reference Swatches (后置) -->
+      <StackPanel Spacing="8">
+        <TextBlock Text="[Reference] 底层色板参考 (供底层查阅，业务统一使用 xy:XY.Foreground / xy:XY.Surface)" Classes="xyui-text-section" FontSize="15" />
+        <ItemsControl ItemsSource="{Binding Sections}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="g:PaletteSection">
+              <StackPanel Margin="0,0,0,16">
+                <TextBlock Text="{Binding Title}" Classes="xyui-text-caption" FontWeight="Bold" Margin="0,0,0,4" />
+                <ItemsControl ItemsSource="{Binding Items}">
+                  <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate><DataTemplate x:DataType="g:PaletteItem">
+                    <Border Width="152" Margin="0,4,8,0" CornerRadius="4" BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="1">
+                      <StackPanel><Border Height="32" Background="{Binding Brush}" CornerRadius="3,3,0,0" /><StackPanel Margin="6,4"><TextBlock Text="{Binding TokenId}" FontSize="10" /><TextBlock Text="{Binding Hex}" FontSize="9" Foreground="{DynamicResource XY.Brush.Text.Secondary}" /></StackPanel></StackPanel>
+                    </Border>
+                  </DataTemplate></ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </StackPanel>
   </ScrollViewer>
 </UserControl>

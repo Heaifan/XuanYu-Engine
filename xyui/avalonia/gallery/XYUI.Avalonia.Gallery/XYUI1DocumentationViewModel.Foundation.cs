@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using XYUI.Avalonia.Gallery.Views;
 
@@ -25,7 +25,7 @@ public sealed partial class XYUI1DocumentationViewModel
 
     public void SelectFoundation(string id)
     {
-        var targetId = id switch { "color" => "palette", _ => id };
+        var targetId = id switch { "color" => "palette", "spacing" => "spacing_layout", _ => id };
         var item = FoundationItems.FirstOrDefault(x => x.Id == targetId || x.Id == id);
         if (item is not null) SelectedFoundation = item;
     }
@@ -37,11 +37,12 @@ public sealed partial class XYUI1DocumentationViewModel
         {
             "palette" or "color" => new PaletteView(),
             "typography" => new TypographyView(),
-            "spacing_layout" => new SpacingLayoutView(),
+            "spacing_layout" or "spacing" => new SpacingLayoutView(),
             "sizing" => new SizingView(),
             "density" => new DensitySamplesView(),
             "iconography" => new IconographyView(),
-            "radius_border_separator" or "shape" => new ShapeView(),
+            "radius_border_separator" => new RadiusBorderSeparatorView(),
+            "shape" => new ShapeView(),
             "surface" => new SurfaceView(),
             "states" => new StatesView(),
             "responsive" => new ResponsiveView(),

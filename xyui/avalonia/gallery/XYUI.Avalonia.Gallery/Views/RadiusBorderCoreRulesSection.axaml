@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.RadiusBorderCoreRulesSection">
+  <Border Classes="xyui-surface-panel" Padding="18,14" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <TextBlock Text="① 核心规则" Classes="xyui-text-section" FontSize="17" FontWeight="Bold" />
+      <Grid ColumnDefinitions="*,*,*" Margin="0,2,0,0">
+        <!-- 1. Radius -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="14,10" Margin="0,0,6,0">
+          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <TextBlock Text="Radius" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="跟随组件角色，不随机赋值" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Border>
+
+        <!-- 2. Border -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="14,10" Margin="3,0,3,0">
+          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <TextBlock Text="Border" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="建立必要边界，不承担装饰" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Border>
+
+        <!-- 3. Separator -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="4" Padding="14,10" Margin="6,0,0,0">
+          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <TextBlock Text="Separator" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="负责分组，不把页面网格化" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

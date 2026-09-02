@@ -1,11 +1,58 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
              x:Class="XYUI.Avalonia.Gallery.Views.IconographyOpticalSection">
-  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
-    <StackPanel Spacing="8">
-      <TextBlock Text="③ 光学对齐实验室" Classes="xyui-text-section" FontSize="15" />
-      <TextBlock Text="数学中心 → Registry Metrics → 当前无需 Optical Offset" Classes="xyui-text-caption" />
-      <WrapPanel x:Name="Optical" Orientation="Horizontal" />
-    </StackPanel>
-  </Border>
+  <Grid ColumnDefinitions="*,*,*,*">
+    <!-- 1. ChevronRight -->
+    <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="8,6" Margin="0,0,6,0">
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Border Width="29" Height="29" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="2">
+          <c:XYIcon Icon="ChevronRight" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <StackPanel Spacing="1" VerticalAlignment="Center">
+          <TextBlock Text="ChevronRight" Classes="xyui-text-caption" FontWeight="SemiBold" />
+          <TextBlock x:Name="TxtChevronStatus" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <!-- 2. Eye -->
+    <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="8,6" Margin="3,0,3,0">
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Border Width="29" Height="29" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="2">
+          <c:XYIcon Icon="Eye" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <StackPanel Spacing="1" VerticalAlignment="Center">
+          <TextBlock Text="Eye" Classes="xyui-text-caption" FontWeight="SemiBold" />
+          <TextBlock x:Name="TxtEyeStatus" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <!-- 3. Locate -->
+    <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="8,6" Margin="3,0,3,0">
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Border Width="29" Height="29" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="2">
+          <c:XYIcon Icon="Locate" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <StackPanel Spacing="1" VerticalAlignment="Center">
+          <TextBlock Text="Locate" Classes="xyui-text-caption" FontWeight="SemiBold" />
+          <TextBlock x:Name="TxtLocateStatus" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <!-- 4. Code -->
+    <Border Grid.Column="3" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="8,6" Margin="6,0,0,0">
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Border Width="29" Height="29" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="2">
+          <c:XYIcon Icon="Code" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <StackPanel Spacing="1" VerticalAlignment="Center">
+          <TextBlock Text="Code" Classes="xyui-text-caption" FontWeight="SemiBold" />
+          <TextBlock x:Name="TxtCodeStatus" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Grid>
 </UserControl>

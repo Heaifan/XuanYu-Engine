@@ -17,7 +17,7 @@ public sealed class XYCommandItem : XYButton
     public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<XYCommandItem, bool>(nameof(IsSelected));
     public string CommandId { get; }
     public XYCommandRole Role { get; }
-    public XyuiVectorIcon? Icon { get; }
+    public new XyuiVectorIcon? Icon { get; }
     public bool IsSelected { get => GetValue(IsSelectedProperty); set => SetValue(IsSelectedProperty, value); }
     public event EventHandler? ExecuteRequested;
     public XYCommandItem(string label, string? commandId = null, XYCommandRole role = XYCommandRole.Normal, XyuiVectorIcon? icon = null)

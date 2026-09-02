@@ -1,11 +1,67 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
              x:Class="XYUI.Avalonia.Gallery.Views.IconographySpecSection">
   <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
-    <StackPanel Spacing="8">
-      <TextBlock Text="② 图标规格阶梯" Classes="xyui-text-section" FontSize="15" />
-      <TextBlock Text="同一 Canonical Icon · 真实 XYIcon · Logical Viewport 24 DIP" Classes="xyui-text-caption" />
-      <WrapPanel x:Name="Ladder" Orientation="Horizontal" />
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="② 图标规格阶梯 (xy:XY.Size 控制 · 派生 14/16/20/24 DIP)" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+        <TextBlock Text="同一个 Canonical Search · 四档尺寸 [Consumer] · Viewport/Stroke 归属 [Diagnostic/Auto]" Classes="xyui-text-caption" />
+      </StackPanel>
+
+      <Grid ColumnDefinitions="*,*,*,*">
+        <!-- Compact 14 -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+          <StackPanel Spacing="6" HorizontalAlignment="Center">
+            <Border Width="68" Height="48" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="3">
+              <c:XYIcon Icon="Search" Size="Compact" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock x:Name="TxtCompactSize" Classes="xyui-text-body" FontWeight="Bold" HorizontalAlignment="Center" />
+            <TextBlock x:Name="TxtCompactStroke" Classes="xyui-text-caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+
+        <!-- Default 16 -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1.5" CornerRadius="6" Padding="12,8,12,12" Margin="3,0,3,0">
+          <StackPanel Spacing="4" HorizontalAlignment="Center">
+            <Border Background="{DynamicResource XY.Brush.Accent.Soft}" CornerRadius="3" Padding="8,2" HorizontalAlignment="Center">
+              <TextBlock Text="默认 · 推荐基线" Classes="xyui-text-caption" FontWeight="SemiBold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            </Border>
+            <Border Width="68" Height="40" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="3">
+              <c:XYIcon Icon="Search" Size="Default" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock x:Name="TxtDefaultSize" Classes="xyui-text-body" FontWeight="Bold" HorizontalAlignment="Center" />
+            <TextBlock x:Name="TxtDefaultStroke" Classes="xyui-text-caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+
+        <!-- Comfortable 20 -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="3,0,3,0">
+          <StackPanel Spacing="6" HorizontalAlignment="Center">
+            <Border Width="68" Height="48" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="3">
+              <c:XYIcon Icon="Search" Size="Comfortable" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock x:Name="TxtComfortableSize" Classes="xyui-text-body" FontWeight="Bold" HorizontalAlignment="Center" />
+            <TextBlock x:Name="TxtComfortableStroke" Classes="xyui-text-caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+
+        <!-- Touch 24 -->
+        <Border Grid.Column="3" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+          <StackPanel Spacing="6" HorizontalAlignment="Center">
+            <Border Width="68" Height="48" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="3">
+              <c:XYIcon Icon="Search" Size="Touch" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock x:Name="TxtTouchSize" Classes="xyui-text-body" FontWeight="Bold" HorizontalAlignment="Center" />
+            <TextBlock x:Name="TxtTouchStroke" Classes="xyui-text-caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- Shared metrics -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" CornerRadius="3" Padding="8,4" HorizontalAlignment="Stretch">
+        <TextBlock x:Name="TxtSharedMetrics" Classes="xyui-text-caption" HorizontalAlignment="Center" />
+      </Border>
     </StackPanel>
   </Border>
 </UserControl>

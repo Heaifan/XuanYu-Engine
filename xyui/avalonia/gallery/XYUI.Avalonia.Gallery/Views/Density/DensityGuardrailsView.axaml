@@ -1,30 +1,55 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
              x:Class="XYUI.Avalonia.Gallery.Views.Density.DensityGuardrailsView">
-  <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
-    <StackPanel Spacing="8">
-      <TextBlock Text="④ 推荐原则与禁止护栏" Classes="xyui-text-section" FontSize="15" />
-      <Grid ColumnDefinitions="360,*">
-        <!-- 推荐 -->
-        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Accent.Soft}" BorderBrush="{DynamicResource XY.Brush.Accent.Default}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,12,0">
-          <StackPanel Spacing="2">
-            <TextBlock Text="推荐" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
-            <TextBlock Text="提高有效信息量，不是单纯压缩像素。" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+  <Border Classes="xyui-surface-panel" Padding="14,12" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <TextBlock Text="④ 推荐写法 · 高级用法 · 禁止写法" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+      <Grid ColumnDefinitions="*,*,*" Margin="0,2,0,0">
+        <!-- 1. Consumer -->
+        <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="0,0,6,0">
+          <StackPanel Spacing="3">
+            <TextBlock Text="✓ Consumer" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="Size 控制自身尺寸 · Density 控制空间组织" Classes="xyui-text-caption" />
           </StackPanel>
         </Border>
 
-        <!-- 6 个禁止 -->
-        <Grid Grid.Column="1" ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="4" VerticalAlignment="Center">
-          <TextBlock Grid.Row="0" Grid.Column="0" Text="× 不缩小字号" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-          <TextBlock Grid.Row="1" Grid.Column="0" Text="× 不缩小命中区" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+        <!-- 2. Author -->
+        <Border Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="3,0,3,0">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Author / 高级" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="针对大型树/表自定义多字段收敛布局" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Border>
 
-          <TextBlock Grid.Row="0" Grid.Column="1" Text="× 不写 Height 魔法数字" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-          <TextBlock Grid.Row="1" Grid.Column="1" Text="× 不隐藏关键状态" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-
-          <TextBlock Grid.Row="0" Grid.Column="2" Text="× 不强压全部单行" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-          <TextBlock Grid.Row="1" Grid.Column="2" Text="× 不制造巨量滚动" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
-        </Grid>
+        <!-- 3. 禁止 -->
+        <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.App}" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="6,0,0,0">
+          <StackPanel Spacing="3">
+            <TextBlock Text="× 禁止" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+            <TextBlock Text="缩小字号或裁剪点击热区来伪造密度" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+          </StackPanel>
+        </Border>
       </Grid>
+
+      <!-- Consumer Combination: Code + Live Effect -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" CornerRadius="5" Margin="0,2,0,0">
+        <Grid ColumnDefinitions="1.2*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="Consumer 组合心智写法 [Consumer]" Classes="xyui-text-caption" FontWeight="Bold" />
+            <TextBlock Text="&lt;StackPanel xy:XY.Size=&quot;Default&quot;&#x0a;            xy:XY.Density=&quot;Compact&quot;&gt;&#x0a;  &lt;c:XYButton Content=&quot;编辑&quot; /&gt;&#x0a;  &lt;TextBlock Text=&quot;同屏信息翻倍，控件不缩水&quot; /&gt;&#x0a;&lt;/StackPanel&gt;" Classes="xyui-text-code" FontSize="11" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="12,0" />
+          <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="实际正交效果 [Auto] (Size=32 DIP, Density=Compact)" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <StackPanel xy:XY.Size="Default" xy:XY.Density="Compact" Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+              <c:XYButton Content="编辑" Variant="Secondary" />
+              <TextBlock Text="同屏信息翻倍，控件不缩水" Classes="xyui-text-caption" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Text="注：当前 Compact 与 Default 共享视觉基线" Classes="xyui-text-code" FontSize="10" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+          </StackPanel>
+        </Grid>
+      </Border>
     </StackPanel>
   </Border>
 </UserControl>

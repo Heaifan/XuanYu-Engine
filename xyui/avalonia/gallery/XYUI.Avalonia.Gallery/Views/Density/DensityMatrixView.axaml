@@ -1,31 +1,31 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="XYUI.Avalonia.Gallery.Views.Density.DensityMatrixView">
   <Border Classes="xyui-surface-panel" Padding="14,10" CornerRadius="6">
     <StackPanel Spacing="6">
-      <TextBlock Text="③ 信息层级压缩矩阵" Classes="xyui-text-section" FontSize="15" />
+      <TextBlock Text="③ 信息层级压缩矩阵 (注：信息层级为 [Behavior Result] 行为效果，非 API 属性)" Classes="xyui-text-section" FontSize="15" />
       <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="1" CornerRadius="4">
-        <Grid ColumnDefinitions="110,*,*,*" RowDefinitions="Auto,Auto,Auto,Auto">
+        <Grid ColumnDefinitions="120,*,*,*" RowDefinitions="Auto,Auto,Auto,Auto">
           <!-- Header -->
-          <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4"><TextBlock Text="信息层级" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
-          <Border Grid.Row="0" Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4"><TextBlock Text="紧凑" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Border>
-          <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4"><TextBlock Text="默认" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
-          <Border Grid.Row="0" Grid.Column="3" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4"><TextBlock Text="舒适" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
+          <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4"><TextBlock Text="信息层级 [Behavior]" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
+          <Border Grid.Row="0" Grid.Column="1" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4"><TextBlock Text="紧凑 (Compact)" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /></Border>
+          <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4"><TextBlock Text="默认 (Default)" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
+          <Border Grid.Row="0" Grid.Column="3" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="8,4"><TextBlock Text="舒适 (Comfortable)" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
 
           <!-- Row 1: 一级信息 -->
-          <Border Grid.Row="1" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="一级信息" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
+          <Border Grid.Row="1" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="一级信息 [Behavior]" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
           <Border Grid.Row="1" Grid.Column="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="始终显示 · 紧密同行" Classes="xyui-text-caption" /></Border>
           <Border Grid.Row="1" Grid.Column="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="标准标题排布" Classes="xyui-text-caption" /></Border>
           <Border Grid.Row="1" Grid.Column="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="完整标题强调" Classes="xyui-text-caption" /></Border>
 
           <!-- Row 2: 二级信息 -->
-          <Border Grid.Row="2" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="二级信息" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
+          <Border Grid.Row="2" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="二级信息 [Behavior]" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
           <Border Grid.Row="2" Grid.Column="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="同行压缩 / 截断" Classes="xyui-text-caption" /></Border>
           <Border Grid.Row="2" Grid.Column="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="次级独立行" Classes="xyui-text-caption" /></Border>
           <Border Grid.Row="2" Grid.Column="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="完整多字段展开" Classes="xyui-text-caption" /></Border>
 
           <!-- Row 3: 辅助操作 -->
-          <Border Grid.Row="3" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="辅助操作" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
+          <Border Grid.Row="3" Grid.Column="0" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="辅助操作 [Behavior]" Classes="xyui-text-caption" FontWeight="Bold" /></Border>
           <Border Grid.Row="3" Grid.Column="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="图标优先" Classes="xyui-text-caption" /></Border>
           <Border Grid.Row="3" Grid.Column="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="图标 + 提示" Classes="xyui-text-caption" /></Border>
           <Border Grid.Row="3" Grid.Column="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" Padding="8,4"><TextBlock Text="图标 + 完整文字" Classes="xyui-text-caption" /></Border>

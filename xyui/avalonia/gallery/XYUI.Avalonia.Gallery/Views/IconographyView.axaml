@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:views="using:XYUI.Avalonia.Gallery.Views"
              x:Class="XYUI.Avalonia.Gallery.Views.IconographyView">
@@ -13,16 +13,13 @@
       <!-- ① 核心规则 -->
       <views:IconographyCoreRulesSection />
 
-      <!-- ② 图标规格阶梯 (Codex Section) -->
+      <!-- ② 图标规格阶梯 -->
       <views:IconographySpecSection />
 
-      <!-- ③ 真实消费 + 光学对齐 (左: Usage, 右: Optical) -->
-      <Grid ColumnDefinitions="1.6*,*">
-        <views:IconographyUsageSection Grid.Column="0" Margin="0,0,8,0" />
-        <views:IconographyOpticalSection Grid.Column="1" />
-      </Grid>
+      <!-- ③ 真实组件与光学验证 -->
+      <views:IconographyUsageSection />
 
-      <!-- ④ 推荐写法 + 禁止护栏 -->
+      <!-- ④ 推荐写法 · 高级用法 · 禁止写法 -->
       <views:IconographyGuardrailsSection />
     </StackPanel>
   </ScrollViewer>

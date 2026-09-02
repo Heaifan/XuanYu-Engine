@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:xy="using:XYUI.Avalonia"
+             x:Class="XYUI.Avalonia.Gallery.Views.RadiusBorderGuardrailsSection">
+  <Border Classes="xyui-surface-panel" Padding="18,14" CornerRadius="6">
+    <StackPanel Spacing="10">
+      <TextBlock Text="④ 综合实验 · Foundation Facade 自由组合" Classes="xyui-text-section" FontSize="17" FontWeight="Bold" />
+
+      <!-- G9 Combo Experiment -->
+      <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" CornerRadius="5">
+        <Grid ColumnDefinitions="1.25*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="Foundation 全能力一体化写法" Classes="xyui-text-caption" FontWeight="Bold" />
+            <TextBlock Text="&lt;Border xy:XY.Surface=&quot;XY.Surface.Panel&quot;&#x0a;        xy:XY.Padding=&quot;XY.Panel.Padding&quot;&#x0a;        xy:XY.Radius=&quot;XY.Radius.Panel&quot;&#x0a;        xy:XY.Border=&quot;XY.Border.Default&quot;&gt;&#x0a;  &lt;StackPanel xy:XY.Gap=&quot;XY.Space.3&quot;&#x0a;              xy:XY.Size=&quot;Default&quot;&#x0a;              xy:XY.Density=&quot;Compact&quot;&gt;&#x0a;    &lt;c:XYText Text=&quot;技术状态&quot;&#x0a;              xy:XY.Foreground=&quot;XY.Text.Primary&quot;&#x0a;              xy:XY.Font=&quot;XY.Font.Mono&quot;&#x0a;              xy:XY.Typography=&quot;XY.Type.Body&quot; /&gt;&#x0a;  &lt;/StackPanel&gt;&#x0a;&lt;/Border&gt;" Classes="xyui-text-code" FontSize="10" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="12,0" />
+          <StackPanel Grid.Column="2" Spacing="6" VerticalAlignment="Center">
+            <TextBlock Text="实际正交组合渲染效果" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <Border xy:XY.Surface="XY.Surface.Panel"
+                    xy:XY.Padding="XY.Panel.Padding"
+                    xy:XY.Radius="XY.Radius.Panel"
+                    xy:XY.Border="XY.Border.Default">
+              <StackPanel xy:XY.Gap="XY.Space.3" xy:XY.Size="Default" xy:XY.Density="Compact">
+                <c:XYText Text="技术状态: 0x07AF"
+                          xy:XY.Foreground="XY.Text.Primary"
+                          xy:XY.Font="XY.Font.Mono"
+                          xy:XY.Typography="XY.Type.Body" />
+                <c:XYButton Content="保存配置" Variant="Primary" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- Guardrails -->
+      <Grid ColumnDefinitions="*,*,*">
+        <TextBlock Grid.Column="0" Text="✓ 全套 xy:XY.* 属性正交可组合" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        <TextBlock Grid.Column="1" Text="• 控件默认内聚规范，显式覆盖自由" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+        <TextBlock Grid.Column="2" Text="× 严禁手写原生 Thickness/Brush" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.State.Danger.Text}" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

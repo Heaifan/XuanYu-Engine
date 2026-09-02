@@ -11,7 +11,7 @@ public enum XYDensity
     Comfortable,
 }
 
-public sealed class XY
+public sealed partial class XY
 {
     private XY() { }
 

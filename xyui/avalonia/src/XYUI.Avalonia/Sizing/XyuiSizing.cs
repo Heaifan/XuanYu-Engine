@@ -15,9 +15,9 @@ public readonly record struct XyuiSizingMetrics(double ControlHeight, double Ico
 
     public static XyuiSizingMetrics For(XYSize size) => size switch
     {
-        XYSize.Compact => new(28, 14),
-        XYSize.Comfortable => new(36, 20),
-        XYSize.Touch => new(44, 24),
-        _ => new(32, 16),
+        XYSize.Compact => new(28, XyuiIconSizeMetrics.For(XyuiIconSize.Compact).SizeDip),
+        XYSize.Comfortable => new(36, XyuiIconSizeMetrics.For(XyuiIconSize.Comfortable).SizeDip),
+        XYSize.Touch => new(44, XyuiIconSizeMetrics.For(XyuiIconSize.Touch).SizeDip),
+        _ => new(32, XyuiIconSizeMetrics.For(XyuiIconSize.Default).SizeDip),
     };
 }
