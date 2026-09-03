@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.28.69-rz · XYUI-0-08 Shape Runtime 合同与 Gallery 开发者文档实现（2026-09-03 16:53:00 +08:00）
+
+- 目标：将 XYUI-0-08 Shape 实施为完整的开发者文档，基于 Codex Runtime 合同建立几何形态语义开发者心智，严格遵循 5+100 架构红线与双 Agent 规范。
+- 变化：
+  - 规范与测试：新增 `XYUI-0.08-shape-runtime-contract.md` 与 `XYUI08ShapeContractTests`；确认矩形/圆角/边框/表面使用现有 Avalonia Border 与 `XY.*` Facade，圆/椭圆/自定义 Path 保持组件内部所有权；Capsule/Pill 仅保留现有 `XY.Radius.Full`，不新增 `XY.Shape` 全局 API。
+  - Gallery 页面：落地 `ShapeView.axaml` 与 `ShapeView.axaml.cs` 四段式结构，包含 Header（开发中 · 0.08）、Quick Start 三列心智。
+  - Gallery 模块：新增 `ShapeCoreRulesSection.axaml`/`.cs`（01·核心规则）、`ShapeMatrixSection.axaml`/`.cs`（02·Shape 主矩阵 5 类卡片与 3 类场景决策）、`ShapeCompositionSection.axaml`/`.cs`（03·四通道正交关系与决策矩阵表）、`ShapeCodePatternsSection.axaml`/`.cs`（04·真实可复制 XAML、高级与禁止写法）。
+  - 所有手写 `.axaml` 与 `.cs` 文件严格 ≤ 100 行，通过 5+100 架构守卫。
+- 验证：根解决方案与 `XYUI.Avalonia.slnx` 均 Build `0 Warning / 0 Error`；`XYUI.Avalonia.Tests` 全部 `414/414` 通过，其中 XYUI-0-08 定向测试 `3/3`；`scripts/arch-a-guard.ps1` 架构守卫与 5+100 通过；`git diff --check` 通过。
+- 状态：`XYUI-0-08 SHAPE / RUNTIME CONTRACT & GALLERY DEVELOPER DOCUMENTATION IMPLEMENTED / REAL RUNTIME CONSUMED / FORMAL GATES PASS / AWAITING USER VISUAL ACCEPTANCE`；未声明 `USER VISUAL ACCEPTED` 或 `FINAL CLOSEOUT`。
+- 版本：`v0.2.28.69-rz` 同步到四处版本文件。
+- Hash：合同 `E1B27FCEA0427796A38B9CDE37BDD82709AEDB2CC57C5C0D077AC34318432D6B`；测试 `34DAC38F7F4AF80548B0554809C088CBFB7CB42720E3D600829A502D22327EA9`；`ShapeView.axaml` `7BD69C3C42BC3B48CF4E869DC697AAA8B1D6F874F9B8C5EC5F5856C07621D3D1`；`ShapeMatrixSection.axaml` `A24B682BB520757E63927BCBC2B050FFE725D83CC4B3CC11D079CC70F634FE51`。
+- 遗留：等待用户人工真机验收；验收后状态标签由 `开发中 · 0.08` 锁定为 `已锁定 · 0.08`。
+
 ## v0.2.28.68-rz · XYUI-0-10 编号纠正与 Runtime 真值交接（2026-09-03 13:51:31 +08:00）
 
 - 目标：纠正 States 的旧编号为正式编号 `XYUI-0-10`，输出基于真实源码的 Runtime/Public API 真值，并交接 Gemini。

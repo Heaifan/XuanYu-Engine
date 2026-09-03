@@ -1918,6 +1918,7 @@
    │  │     ├─ SecondTruthTests.cs  # 防回潮：未登记 hex 扫描 + AXAML 资源引用可解析。
    │  │     ├─ SelectableTextRuntimeTests.cs  # SelectableText 选择能力、Technical 字体及独立 Copy Mark 回归。
    │  │     ├─ ShapeRuntimeTests.cs  # Spatial 资源/语义形状类在真实 Border 上的应用测试。
+   │  │     ├─ XYUI08ShapeContractTests.cs  # XYUI-0-08 Shape 三通道组合、轮廓与尺寸稳定性合同测试。
    │  │     ├─ SkeletonTests.cs  # 骨架引用链与 BrushKey 命名测试。
    │  │     ├─ SpatialTokenTests.cs  # Spatial/Shape 常量与 token-canonical-map.json 逐条对照。
    │  │     ├─ SplitButtonCountingCommand.cs  # 验证对应模块的自动化行为与回归合同。
@@ -2046,6 +2047,8 @@
    │  │  └─ XYUI-5.mapping.json  # 保存对应 XYUI 规范的规范化数据与映射。
     │  ├─ XYUI0.05/  # XYUI-0.05 Density Runtime API 合同。
     │  │  └─ XYUI-0.05-density-runtime-contract.md  # Density / Spacing / Sizing 边界与三档继承 API。
+    │  ├─ XYUI0.08/  # XYUI-0.08 Shape Runtime 合同。
+    │  │  └─ XYUI-0.08-shape-runtime-contract.md  # Shape 几何边界、组合规则、真实入口与无通用 API 决策。
     │  ├─ XYUI0.10/  # XYUI-0.10 States Runtime/Public API 真值合同。
     │  │  └─ XYUI-0.10-runtime-contract.md  # 编号纠正、Public API 真值、测试数量口径与 Gemini 交接。
    │  ├─ XYUI6/  # 组织该模块下的正式文件。
