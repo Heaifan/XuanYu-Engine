@@ -1,38 +1,52 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:g="using:XYUI.Avalonia.Gallery"
-             x:Class="XYUI.Avalonia.Gallery.Views.ShapeView"
-             x:DataType="g:ShapeViewModel">
-  <ScrollViewer>
-    <ItemsControl ItemsSource="{Binding Sections}">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="g:ShapeSection">
-          <StackPanel Margin="0,0,0,16">
-            <TextBlock Text="{Binding Title}" Classes="xyui-text-section" />
-            <ItemsControl ItemsSource="{Binding Items}">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate><StackPanel /></ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-              <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="g:ShapeItem">
-                  <Border Margin="0,4,0,0" Classes="xyui-border-subtle">
-                    <Grid ColumnDefinitions="Auto,Auto,*" Margin="10,6">
-                      <TextBlock Text="{Binding TokenId}" Grid.Column="0" Classes="xyui-text-code"
-                                 Foreground="{DynamicResource XY.Brush.Text.Tertiary}" />
-                      <TextBlock Text="{Binding Value}" Grid.Column="1" Margin="16,0,0,0"
-                                 Classes="xyui-text-code"
-                                 Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
-                      <TextBlock Text="{Binding Note}" Grid.Column="2" Margin="16,0,0,0"
-                                 Classes="xyui-text-body"
-                                 Foreground="{DynamicResource XY.Brush.Text.Primary}" />
-                    </Grid>
-                  </Border>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.ShapeView">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 头部：标题与 Badge -->
+      <StackPanel Spacing="6">
+        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+          <TextBlock Text="形状 / Shape" Classes="xyui-heading-page" FontSize="22" FontWeight="Bold" />
+          <Border Background="#EEF4F6" BorderBrush="#D7E3E8" BorderThickness="1" CornerRadius="6" Padding="8,3" VerticalAlignment="Center">
+            <TextBlock Text="方案 A · 0.08" FontWeight="Bold" FontSize="11" Foreground="#4E7183" />
+          </Border>
+        </StackPanel>
+        <TextBlock Text="Shape 用来表达“几何形态语义”；Radius 负责转角，Surface 负责承载面。当前统一 Consumer API 待封装，先建立开发者心智。"
+                   Classes="xyui-text-caption" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <!-- Quick Start 三列横幅 -->
+      <Border Background="#F8FAFB" BorderBrush="#E0E8EC" BorderThickness="1" CornerRadius="8" Padding="14,10">
+        <Grid ColumnDefinitions="*,Auto,*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="2">
+            <TextBlock Text="Shape = 几何形态语义" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="先确定轮廓类型，再决定 Radius / Border / Surface" Classes="xyui-text-caption" FontSize="11" />
           </StackPanel>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+          <Rectangle Grid.Column="1" Width="1" Fill="#E2E9EC" Margin="10,0" />
+          <StackPanel Grid.Column="2" Spacing="2">
+            <TextBlock Text="当前写法" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="优先复用 XY.Radius / XY.Surface / XY.Size，不伪造全局 Shape API" Classes="xyui-text-caption" FontSize="11" />
+          </StackPanel>
+          <Rectangle Grid.Column="3" Width="1" Fill="#E2E9EC" Margin="10,0" />
+          <StackPanel Grid.Column="4" Spacing="2">
+            <TextBlock Text="不要做什么" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="不要在业务页或 Gallery 再发明第二套 Shape 规则" Classes="xyui-text-caption" FontSize="11" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- 01 · 核心规则 -->
+      <views:ShapeCoreRulesSection />
+
+      <!-- 02 · Shape 主矩阵 / 使用场景 -->
+      <views:ShapeMatrixSection />
+
+      <!-- 03 · Shape × Radius × Border × Surface -->
+      <views:ShapeCompositionSection />
+
+      <!-- 04 · 怎么使用 / 高级 / 禁止 -->
+      <views:ShapeCodePatternsSection />
+    </StackPanel>
   </ScrollViewer>
 </UserControl>

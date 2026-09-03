@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xy="using:XYUI.Avalonia"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.ShapeMatrixSection">
+  <Border Classes="xyui-surface-panel xyui-border-default" CornerRadius="10" Padding="14,10">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="02 · Shape 主矩阵 / 使用场景 (Shape Matrix)" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+        <TextBlock Text="同一套轻量内容，在不同 Shape 心智下的适配方式并不相同。这里重点不是“谁更好看”，而是“谁更适合什么内容”。" Classes="xyui-text-caption" />
+      </StackPanel>
+      <Grid ColumnDefinitions="*,*,*,*,*">
+        <!-- 矩形 -->
+        <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="8">
+          <StackPanel Spacing="6" VerticalAlignment="Center">
+            <TextBlock Text="矩形 / Rectangle" FontWeight="Bold" FontSize="12" />
+            <TextBlock Text="适合：表单、列表项、代码区" Classes="xyui-text-caption" FontSize="10" />
+            <Border xy:XY.Radius="XY.Radius.Input" xy:XY.Border="XY.Border.Default" Background="{DynamicResource XY.Brush.Surface.App}" Height="44" Padding="6,4">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <Ellipse Width="10" Height="10" Fill="{DynamicResource XY.Brush.Accent.Default}" />
+                <StackPanel VerticalAlignment="Center">
+                  <TextBlock Text="构建结果" FontSize="11" FontWeight="Bold" />
+                  <TextBlock Text="多信息承载稳定" Classes="xyui-text-caption" FontSize="9" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+            <Border Classes="xyui-surface-subtle" CornerRadius="4" Padding="4,2" HorizontalAlignment="Center"><TextBlock Text="内容密度高" Classes="xyui-text-caption" FontSize="10" /></Border>
+          </StackPanel>
+        </Border>
+        <!-- 柔角矩形 -->
+        <Border Grid.Column="1" Margin="2,0,2,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="8">
+          <StackPanel Spacing="6" VerticalAlignment="Center">
+            <TextBlock Text="柔角矩形 / Soft Rect" FontWeight="Bold" FontSize="12" />
+            <TextBlock Text="适合：默认卡片、一般控件" Classes="xyui-text-caption" FontSize="10" />
+            <Border xy:XY.Radius="XY.Radius.Panel" xy:XY.Border="XY.Border.Default" Background="{DynamicResource XY.Brush.Surface.App}" Height="44" Padding="6,4">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <Ellipse Width="10" Height="10" Fill="{DynamicResource XY.Brush.Accent.Default}" />
+                <StackPanel VerticalAlignment="Center">
+                  <TextBlock Text="工作台卡片" FontSize="11" FontWeight="Bold" />
+                  <TextBlock Text="默认感受更柔和" Classes="xyui-text-caption" FontSize="9" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+            <Border Classes="xyui-surface-subtle" CornerRadius="8" Padding="4,2" HorizontalAlignment="Center"><TextBlock Text="最常见基础形态" Classes="xyui-text-caption" FontSize="10" /></Border>
+          </StackPanel>
+        </Border>
+        <!-- 胶囊 -->
+        <Border Grid.Column="2" Margin="2,0,2,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="8">
+          <StackPanel Spacing="6" VerticalAlignment="Center">
+            <TextBlock Text="胶囊 / Capsule" FontWeight="Bold" FontSize="12" />
+            <TextBlock Text="适合：标签、筛选、轻操作" Classes="xyui-text-caption" FontSize="10" />
+            <Border xy:XY.Radius="XY.Radius.Full" xy:XY.Border="XY.Border.Default" Background="{DynamicResource XY.Brush.Surface.App}" Height="44" Padding="10,4" HorizontalAlignment="Center">
+              <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <Ellipse Width="8" Height="8" Fill="{DynamicResource XY.Brush.Accent.Default}" />
+                <TextBlock Text="筛选条件" FontSize="11" FontWeight="Bold" VerticalAlignment="Center" />
+              </StackPanel>
+            </Border>
+            <Border Classes="xyui-surface-subtle" CornerRadius="8" Padding="4,2" HorizontalAlignment="Center"><TextBlock Text="强调轻量、短文本" Classes="xyui-text-caption" FontSize="10" /></Border>
+          </StackPanel>
+        </Border>
+        <!-- 圆形 -->
+        <Border Grid.Column="3" Margin="2,0,2,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="8">
+          <StackPanel Spacing="6" VerticalAlignment="Center">
+            <TextBlock Text="圆形 / Circle" FontWeight="Bold" FontSize="12" />
+            <TextBlock Text="适合：头像、计数、图标按钮" Classes="xyui-text-caption" FontSize="10" />
+            <Border Width="44" Height="44" CornerRadius="22" xy:XY.Border="XY.Border.Default" Background="{DynamicResource XY.Brush.Surface.App}" HorizontalAlignment="Center">
+              <Ellipse Width="12" Height="12" Fill="{DynamicResource XY.Brush.Accent.Subtle}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <Border Classes="xyui-surface-subtle" CornerRadius="4" Padding="4,2" HorizontalAlignment="Center"><TextBlock Text="不适合承载长文本" Classes="xyui-text-caption" FontSize="10" /></Border>
+          </StackPanel>
+        </Border>
+        <!-- 自定义 -->
+        <Border Grid.Column="4" Margin="4,0,0,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="8">
+          <StackPanel Spacing="6" VerticalAlignment="Center">
+            <TextBlock Text="自定义 Geometry" FontWeight="Bold" FontSize="12" />
+            <TextBlock Text="谨慎：仅在确有必要时封装" Classes="xyui-text-caption" FontSize="10" />
+            <Border Height="44" HorizontalAlignment="Center" VerticalAlignment="Center">
+              <Path Data="M 15,25 C 15,10 25,0 35,0 C 45,0 55,10 55,25 C 55,40 35,50 35,50 C 35,50 15,40 15,25 Z" Fill="{DynamicResource XY.Brush.Surface.App}" Stroke="{DynamicResource XY.Brush.Border.Color.Default}" StrokeThickness="1" Width="36" Height="36" Stretch="Uniform" />
+            </Border>
+            <Border Classes="xyui-surface-subtle" CornerRadius="4" Padding="4,2" HorizontalAlignment="Center"><TextBlock Text="不要业务侧泛滥使用" Classes="xyui-text-caption" FontSize="10" /></Border>
+          </StackPanel>
+        </Border>
+      </Grid>
+      <!-- 场景判断引用 -->
+      <views:ShapeScenariosSection />
+    </StackPanel>
+  </Border>
+</UserControl>

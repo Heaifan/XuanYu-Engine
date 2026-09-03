@@ -1,5 +1,21 @@
 # changelog
 
+## v0.2.28.70-rz · XYUI-0.08 · Shape Gallery 四段式重构与 Codex 真实封装接入（2026-09-03 19:46:00 +08:00）
+
+- 目标：按照 1440x1560 SVG 视觉稿完整实装 XYUI-0.08 Shape 形状 Gallery 页面，采用 Codex 已封装的底层 Attached Property / 样式类规范，严格遵守 5+100 行限与双 Agent 规范。
+- 变化：
+  - 重构 `ShapeView.axaml`/`.cs`：转为纯 UserControl 驱动的四段式文档页面结构，整合页面 Header（`形状 / Shape`、`方案 A · 0.08` 胶囊徽章、形态说明）与 Quick Start 三列核心心智横幅。
+  - 新增 `ShapeCoreRulesSection.axaml`/`.cs`：落地 01 · 核心规则（A·Shape ≠ Radius、B·Shape ≠ Surface、C·同内容不同形态、D·不制造第二真值）4 列卡片。
+  - 新增 `ShapeMatrixSection.axaml`/`.cs`：落地 02 · Shape 主矩阵 5 类基础几何形态卡片（矩形、柔角矩形、胶囊、圆形、自定义 Geometry），采用真实 Codex 封装的 `xy:XY.Radius` / `xy:XY.Border` 属性及展示。
+  - 新增 `ShapeScenariosSection.axaml`/`.cs`：拆解落地 3 类场景决策卡片（大内容承载、短标签/过滤条件、图标/计数/点状语义），解决复合卡片单文件超 100 行问题。
+  - 新增 `ShapeCompositionSection.axaml`/`.cs`：落地 03 · Shape × Radius × Border × Surface 四通道正交卡片与推荐决策矩阵表。
+  - 新增 `ShapeCodePatternsSection.axaml`/`.cs`：落地 04 · 怎么使用（真实 Codex Attached 语法）、高级（普通开发者/组件作者分工）与禁止反例三列卡片。
+  - 架构与治理：同步更新 `file-tree.md` 中新增的 5 组视图与代码隐藏文件；清理工作树残留临时草稿；四处版本号同步至 `v0.2.28.70-rz`。
+- 验证：`xyui/avalonia/XYUI.Avalonia.slnx` 串行构建 0 警告 0 错误；`XYUI.Avalonia.Tests` 测试套件 414/414 全部通过；`scripts/arch-a-guard.ps1` 架构守卫与 5+100 行限全部通过（所有手写 .axaml/.cs ≤ 100 行）；`git diff --check` 通过。
+- 状态：`PRESENTATION IMPLEMENTED / REAL RUNTIME CONSUMED / FORMAL GATES PASS / READY FOR USER VISUAL REVIEW`；未声明 `USER VISUAL ACCEPTED` 或 `FINAL CLOSEOUT`。
+- 版本：`v0.2.28.70-rz` 已同步到四处版本文件。
+- Hash：`7880d6c8`。
+
 ## v0.2.28.69-rz · XYUI-0-08 Shape Runtime 合同与 Gallery 开发者文档实现（2026-09-03 16:53:00 +08:00）
 
 - 目标：将 XYUI-0-08 Shape 实施为完整的开发者文档，基于 Codex Runtime 合同建立几何形态语义开发者心智，严格遵循 5+100 架构红线与双 Agent 规范。

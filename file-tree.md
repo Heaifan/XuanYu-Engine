@@ -1,4 +1,4 @@
-﻿# 玄域引擎文件树（自动重建）
+# 玄域引擎文件树（自动重建）
 
 > 由 `git ls-files` 全量重建；每个目录和 tracked 文件仅保留一句当前职责。
 
@@ -1440,10 +1440,20 @@
    │  │     │  ├─ InteractionStatesView.axaml.cs  # 提供 Gallery 对应页面、数据或运行时预览。
    │  │     │  ├─ PaletteView.axaml  # Foundation 色彩页面视图。
    │  │     │  ├─ PaletteView.axaml.cs  # Foundation 色彩页面代码隐藏与数据初始化。
+   │  │     │  ├─ ShapeCodePatternsSection.axaml  # Shape 规范使用写法/高级建议/禁止反例视图。
+   │  │     │  ├─ ShapeCodePatternsSection.axaml.cs  # Shape 规范使用代码隐藏。
+   │  │     │  ├─ ShapeCompositionSection.axaml  # Shape 与 Radius/Border/Surface 四通道正交矩阵视图。
+   │  │     │  ├─ ShapeCompositionSection.axaml.cs  # Shape 正交矩阵视图代码隐藏。
+   │  │     │  ├─ ShapeCoreRulesSection.axaml  # Shape 四大核心规则卡片视图。
+   │  │     │  ├─ ShapeCoreRulesSection.axaml.cs  # Shape 四大核心规则代码隐藏。
+   │  │     │  ├─ ShapeMatrixSection.axaml  # Shape 五大基础几何形态卡片矩阵视图。
+   │  │     │  ├─ ShapeMatrixSection.axaml.cs  # Shape 基础几何形态卡片代码隐藏。
    │  │     │  ├─ ShapeSamplesView.axaml  # 静态组合示例：Panel 结构/Border 五档/Elevation 卡片。
    │  │     │  ├─ ShapeSamplesView.axaml.cs  # 静态组合示例代码隐藏。
-   │  │     │  ├─ ShapeView.axaml  # Shape 规范页视图（token 表数据驱动 + 滚动）。
-   │  │     │  ├─ ShapeView.axaml.cs  # Shape 规范页代码隐藏。
+   │  │     │  ├─ ShapeScenariosSection.axaml  # Shape 场景决策判断卡片视图。
+   │  │     │  ├─ ShapeScenariosSection.axaml.cs  # Shape 场景决策判断代码隐藏。
+   │  │     │  ├─ ShapeView.axaml  # Shape 规范页主视图（四段式：核心规则/主矩阵/四通道正交/代码与守卫）。
+   │  │     │  ├─ ShapeView.axaml.cs  # Shape 规范页主代码隐藏。
    │  │     │  ├─ TypographySamplesView.axaml  # Typography 消费示例（Heading/Body/Label/Caption/Mono/信息等级/高密度对照）。
    │  │     │  ├─ TypographySamplesView.axaml.cs  # Typography 消费示例代码隐藏。
    │  │     │  ├─ TypographyView.axaml  # Typography 规范页视图（token 表数据驱动 + 滚动）。

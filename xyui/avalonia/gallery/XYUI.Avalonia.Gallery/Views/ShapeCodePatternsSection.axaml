@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xy="using:XYUI.Avalonia"
+             x:Class="XYUI.Avalonia.Gallery.Views.ShapeCodePatternsSection">
+  <StackPanel Spacing="8">
+    <TextBlock Text="04 · 怎么使用 / 高级 / 禁止" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+    <Grid ColumnDefinitions="1.4*,0.75*,0.85*">
+      <!-- 怎么使用 (左列) -->
+      <Border Grid.Column="0" Margin="0,0,6,0" Background="#F7FBF8" BorderBrush="#BFD8C8" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="怎么使用 (How to Use · 当前真实心智)" FontWeight="Bold" FontSize="13" Foreground="#406858" />
+          <!-- 示例 1 -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;Border xy:XY.Surface=&quot;XY.Surface.Raised&quot; xy:XY.Radius=&quot;XY.Radius.Panel&quot; /&gt;" Classes="xyui-text-code" FontSize="10" />
+              <TextBlock Text="→ 柔角卡片：先确定内容承载需要，再用 Radius 微调边角。" Foreground="#557060" FontSize="10" />
+            </StackPanel>
+          </Border>
+          <!-- 示例 2 -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;Border xy:XY.Surface=&quot;XY.Surface.Subtle&quot; xy:XY.Radius=&quot;XY.Radius.Full&quot; /&gt;" Classes="xyui-text-code" FontSize="10" />
+              <TextBlock Text="→ 胶囊标签：适合短文本；当前优先使用 Full Radius + 轻 Surface 组合表达。" Foreground="#557060" FontSize="10" />
+            </StackPanel>
+          </Border>
+          <!-- 提示 -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <TextBlock Text="当前统一 xy:XY.Shape Consumer API：待封装。没有冻结前，不要自行发明全局写法。" Foreground="#557060" FontSize="10" />
+          </Border>
+        </StackPanel>
+      </Border>
+      <!-- 高级 (中列) -->
+      <Border Grid.Column="1" Margin="3,0,3,0" Background="#F5F8FB" BorderBrush="#CFDCE4" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="高级 (Advanced)" FontWeight="Bold" FontSize="13" Foreground="#365D75" />
+          <TextBlock Text="[普通开发者]" FontWeight="Bold" FontSize="11" Foreground="#365D75" />
+          <TextBlock Text="按内容选择形态，不直接造 Geometry。" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Text="[组件作者]" FontWeight="Bold" FontSize="11" Foreground="#365D75" Margin="0,4,0,0" />
+          <TextBlock Text="统一处理 Clip / HitTest / Shape 组合。" Classes="xyui-text-body" FontSize="10" />
+        </StackPanel>
+      </Border>
+      <!-- 禁止 (右列) -->
+      <Border Grid.Column="2" Margin="6,0,0,0" Background="#FFF7F7" BorderBrush="#E3BFC1" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="4">
+          <TextBlock Text="禁止 (Forbidden)" FontWeight="Bold" FontSize="13" Foreground="#A34E55" />
+          <TextBlock Text="× 用超大 Radius 到处冒充 Shape 体系" Foreground="#8F5F63" FontSize="10" />
+          <TextBlock Text="× 在业务页自行发明 xy:XY.Shape" Foreground="#8F5F63" FontSize="10" />
+          <TextBlock Text="× 用 Gallery-only Clip 当成 Canonical 规则" Foreground="#8F5F63" FontSize="10" />
+          <TextBlock Text="× 把 Surface 变化误当作 Shape 变化" Foreground="#8F5F63" FontSize="10" />
+          <TextBlock Text="× 把 Border 强弱当作几何语义" Foreground="#8F5F63" FontSize="10" />
+          <TextBlock Text="× 把长文本、复杂操作强塞进圆形" Foreground="#8F5F63" FontSize="10" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </StackPanel>
+</UserControl>
