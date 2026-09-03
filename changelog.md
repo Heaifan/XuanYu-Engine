@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.71-rz · XYUI-0-09 · Surface Runtime Contract（2026-09-03 20:11:05 +08:00）
+
+- 目标：将既有 Surface Token 与 `xy:XY.Surface` Facade 收口为可复用、可测试的 Foundation Runtime Contract。
+- 变化：Surface Facade 现在只接受 `XyuiColorTokens.Surface` 的 10 个 Canonical 成员，并启用父级继承与子级本地 Override；补充 Surface 与 Border/Radius 的正交边界、Raised 与 Popup/Tooltip 生命周期边界及 Light/Dark Token 来源 Spec。
+- 测试：新增 Surface Canonical 边界、继承、Override、Light/Dark 与非法 Token 拒绝验证；修正 Avalonia 不可变画刷的接口类型断言。
+- 验证：XYUI.Avalonia 解决方案 Build `0 Warning / 0 Error`；XYUI.Avalonia.Tests `416/416`；Surface 定向测试 `5/5`；ARCH-A 通过；5+100 通过；`git diff --check` 通过；本轮不执行真机验证。
+- 状态：`XYUI-0-09 SURFACE RUNTIME CONTRACT IMPLEMENTED / VERIFIED / TARGETED TESTS PASS / READY FOR GEMINI GALLERY IMPLEMENTATION`；未声明 `USER VISUAL ACCEPTED` 或 `FINAL CLOSEOUT`。
+- 版本：`v0.2.28.71-rz` 同步到四处版本文件。
+
 ## v0.2.28.70-rz · XYUI-0.08 · Shape Gallery 四段式重构与 Codex 真实封装接入（2026-09-03 19:46:00 +08:00）
 
 - 目标：按照 1440x1560 SVG 视觉稿完整实装 XYUI-0.08 Shape 形状 Gallery 页面，采用 Codex 已封装的底层 Attached Property / 样式类规范，严格遵守 5+100 行限与双 Agent 规范。

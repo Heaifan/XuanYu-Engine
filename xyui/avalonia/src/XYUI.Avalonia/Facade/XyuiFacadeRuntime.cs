@@ -30,7 +30,7 @@ internal static class XyuiFacadeRuntime
     internal static void Surface(AvaloniaObject target, string? name)
     {
         XyuiFacadeConflictDiagnostics.Check(target);
-        if (name is null || !XyuiFacadeResolver.TryColor(name, out _)) return;
+        if (name is null || !XyuiFacadeResolver.TrySurface(name, out _)) return;
         var brush = Brush(name);
         if (target is global::Avalonia.Controls.Border border) border.Background = brush;
         else if (target is TemplatedControl templated) templated.Background = brush;

@@ -17,6 +17,13 @@ internal static class XyuiFacadeResolver
         return valid;
     }
 
+    internal static bool TrySurface(string name, out string key)
+    {
+        var valid = XyuiColorTokens.Surface.Any(token => token.TokenId == name);
+        key = valid ? XyuiColorTokens.BrushKey(name) : "";
+        return valid;
+    }
+
     internal static bool TryFont(string name, out FontFamily value)
     {
         value = name switch

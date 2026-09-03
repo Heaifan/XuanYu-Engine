@@ -66,6 +66,7 @@
 
 ## XYUI Runtime 合同
 
+- `xyui/specs/XYUI0.09/XYUI-0.09-surface-runtime-contract.md`：Surface Runtime 定义、Canonical 成员、Facade、继承覆盖与 Popup/Tooltip 边界。
 - `xyui/specs/XYUI0.10/XYUI-0.10-runtime-contract.md`：States Runtime/Public API 真值、编号纠正、测试数量口径与 Gemini 交接事实。
 
 ## 架构文档（architecture/）

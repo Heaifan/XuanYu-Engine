@@ -9,7 +9,7 @@ public sealed partial class XY
     public static readonly AttachedProperty<string?> ForegroundProperty =
         AvaloniaProperty.RegisterAttached<XY, AvaloniaObject, string?>("Foreground", null, inherits: true);
     public static readonly AttachedProperty<string?> SurfaceProperty =
-        AvaloniaProperty.RegisterAttached<XY, AvaloniaObject, string?>("Surface");
+        AvaloniaProperty.RegisterAttached<XY, AvaloniaObject, string?>("Surface", inherits: true);
     public static void SetForeground(AvaloniaObject target, string? value) => target.SetValue(ForegroundProperty, value);
     public static string? GetForeground(AvaloniaObject target) => target.GetValue(ForegroundProperty);
     public static void SetSurface(AvaloniaObject target, string? value) => target.SetValue(SurfaceProperty, value);

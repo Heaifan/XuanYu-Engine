@@ -2059,6 +2059,8 @@
     │  │  └─ XYUI-0.05-density-runtime-contract.md  # Density / Spacing / Sizing 边界与三档继承 API。
     │  ├─ XYUI0.08/  # XYUI-0.08 Shape Runtime 合同。
     │  │  └─ XYUI-0.08-shape-runtime-contract.md  # Shape 几何边界、组合规则、真实入口与无通用 API 决策。
+    │  ├─ XYUI0.09/  # XYUI-0.09 Surface Runtime 合同。
+    │  │  └─ XYUI-0.09-surface-runtime-contract.md  # Surface 语义、Canonical 成员、Facade 继承覆盖与浮层边界。
     │  ├─ XYUI0.10/  # XYUI-0.10 States Runtime/Public API 真值合同。
     │  │  └─ XYUI-0.10-runtime-contract.md  # 编号纠正、Public API 真值、测试数量口径与 Gemini 交接。
    │  ├─ XYUI6/  # 组织该模块下的正式文件。

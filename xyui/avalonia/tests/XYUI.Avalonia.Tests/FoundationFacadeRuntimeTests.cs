@@ -29,7 +29,6 @@ public sealed class FoundationFacadeRuntimeTests : IClassFixture<XyuiHeadlessFix
         Assert.NotEqual(Brushes.Transparent, text.Foreground);
         window.Close();
     });
-
     [Fact]
     public void Geometry_and_spacing_facades_write_native_properties()
         => _fx.Run(() =>
@@ -61,4 +60,41 @@ public sealed class FoundationFacadeRuntimeTests : IClassFixture<XyuiHeadlessFix
         Assert.Equal(XyuiSpatialTokens.Space3, panel.Spacing);
         window.Close();
     });
+
+    [Fact]
+    public void Surface_facade_accepts_only_canonical_surface_tokens()
+        => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare();
+        var border = new Border { Background = Brushes.Red };
+        XY.SetSurface(border, "XY.Surface.PanelAlt");
+        var rejected = new Border { Background = Brushes.Red };
+        XY.SetSurface(rejected, "XY.Text.Primary");
+        var window = XyuiBatchTestHost.Show(new StackPanel { Children = { border, rejected } });
+        Assert.Equal(Token("XY.Surface.PanelAlt"), ColorOf(border.Background));
+        Assert.Equal(Colors.Red, ColorOf(rejected.Background));
+        window.Close();
+    });
+
+    [Fact]
+    public void Surface_facade_inherits_and_allows_local_override()
+        => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare();
+        var parent = new Border();
+        var inherited = new Border();
+        var overridden = new Border();
+        parent.Child = new StackPanel { Children = { inherited, overridden } };
+        XY.SetSurface(parent, "XY.Surface.Panel");
+        XY.SetSurface(overridden, "XY.Surface.Raised");
+        var window = XyuiBatchTestHost.Show(parent);
+        Assert.Equal("XY.Surface.Panel", XY.GetSurface(inherited));
+        Assert.Equal("XY.Surface.Raised", XY.GetSurface(overridden));
+        Assert.Equal(Token("XY.Surface.Panel"), ColorOf(inherited.Background));
+        Assert.Equal(Token("XY.Surface.Raised"), ColorOf(overridden.Background));
+        window.Close();
+    });
+
+    static Color Token(string id) => XyuiColorTokens.All.Single(x => x.TokenId == id).ToColor(false);
+    static Color ColorOf(IBrush? brush) => Assert.IsAssignableFrom<ISolidColorBrush>(brush).Color;
 }
