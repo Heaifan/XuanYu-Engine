@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.66-rz · XYUI Gallery 启动器 SDK 路径回退修复（2026-09-03 12:37:03 +08:00）
+
+- 目标：修复 `xyui` 在 D 盘 SDK 不存在时直接报“找不到路径”的启动失败。
+- 变化：`xyui.bat` 依次探测 `D:\MyApp\sdk-dotnet\dotnet.exe`、`E:\MyApp\sdk-dotnet\dotnet.exe`、系统 SDK 和 `PATH`；增加 Gallery 项目存在性检查、实际 SDK 输出和错误码回传。
+- 验证：当前机器 D 盘路径不存在，E 盘 SDK `10.0.400` 与 Gallery 项目存在；四处版本一致性通过，`git diff --check` 通过；未修改 Runtime、Gallery 页面或测试逻辑。
+- 状态：XYUI Gallery 启动路径修复完成 · 等待用户重新执行 `xyui` 验证窗口启动。
+- 版本：`v0.2.28.66-rz` 已同步到四处版本文件。
+- Hash：`xyui.bat` 文件 SHA-256 `C002ACE8B9B0B825A8C246477D21628DB552FA66C2B8AD86B79A3F491FD33ABE`。
+
 ## v0.2.28.65-rz · XYUI 双 Agent 开发规范入库与越权监督入口（2026-09-03 12:26:30 +08:00）
 
 - 目标：将用户提供的 `XYUI_Codex_Gemini双Agent开发与代码封装规范_v1.0` 纳入仓库，并建立 Codex/Gemini 所有权与越权即时报告入口。
