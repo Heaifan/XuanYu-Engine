@@ -1873,8 +1873,10 @@
    │  │     │  └─ XyuiColorTokens.Text.cs  # XY.Text.* 文本色 6 色。
    │  │     ├─ Interaction/  # 集中控件交互与生命周期职责。
    │  │     │  ├─ XyuiFocusStyles.cs  # 焦点边框环两条样式（xyui-focusable，与 Hover/Selected 视觉分离）。
-   │  │     │  ├─ XyuiInteractionState.cs  # 交互状态 selector contract 与 Canonical 资源键唯一真值（:pointerover/:pressed/:disabled/:selected/:checked/:focus；Checked 只提供 selector，不定义统一视觉）。
-   │  │     │  └─ XyuiInteractionStyles.cs  # 只负责 Hover/Pressed/Selected/Focus/Disabled 状态视觉，不负责 Component Default Appearance 或 Global Checked Visual Style。
+    │  │     │  ├─ XyuiInteractionState.cs  # 交互状态 selector、canonical token 与资源键唯一真值。
+    │  │     │  ├─ XyuiInteractionStyles.cs  # Foundation 状态类样式与 Hover/Pressed/Selected/Focus/Disabled 解析顺序。
+    │  │     │  ├─ XyuiStateResolver.cs  # States Foundation 的单通道视觉解析与独立 Focus/Selection 输出。
+    │  │     │  └─ XyuiStateSnapshot.cs  # 可共存交互事实、独立 FocusVisible 与 Semantic 状态模型。
    │  │     ├─ Density/  # 信息组织密度 Runtime 与继承范围。
    │  │     │  ├─ XyuiDensity.cs  # Compact/Default/Comfortable 档位与既有 Spacing 组合指标。
    │  │     │  └─ XyuiDensityScope.cs  # 可继承 Density AttachedProperty 与子树查询入口。
@@ -1906,6 +1908,7 @@
    │  │     ├─ GalleryThemeConstructionTests.cs  # Gallery Light/Dark 主题构造与切换资源一致性测试。
    │  │     ├─ InteractionCombinationTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ InteractionStateTests.cs  # 验证对应模块的自动化行为与回归合同。
+   │  │     ├─ XYUI08StateResolverTests.cs  # XYUI-0-08 状态共存、单通道解析、焦点与语义分离合同。
    │  │     ├─ MonoTextResponsiveTests.cs  # MonoText 共享 Label/Value/Unit 列在宽度变化下的稳定对齐回归。
    │  │     ├─ MonoTextRuntimeTests.cs  # MonoText 三列字体、字重、间距与对齐运行时合同测试。
    │  │     ├─ NavigationCollapseTests.cs  # 验证对应模块的自动化行为与回归合同。
@@ -2041,8 +2044,10 @@
    │  │  ├─ XYUI-5.canonical.md  # 保存对应 XYUI 规范的规范化数据与映射。
    │  │  ├─ XYUI-5.gaps.json  # 保存对应 XYUI 规范的规范化数据与映射。
    │  │  └─ XYUI-5.mapping.json  # 保存对应 XYUI 规范的规范化数据与映射。
-   │  ├─ XYUI0.05/  # XYUI-0.05 Density Runtime API 合同。
-   │  │  └─ XYUI-0.05-density-runtime-contract.md  # Density / Spacing / Sizing 边界与三档继承 API。
+    │  ├─ XYUI0.05/  # XYUI-0.05 Density Runtime API 合同。
+    │  │  └─ XYUI-0.05-density-runtime-contract.md  # Density / Spacing / Sizing 边界与三档继承 API。
+    │  ├─ XYUI0.08/  # XYUI-0.08 States Foundation Runtime API 合同。
+    │  │  └─ XYUI-0.08-runtime-contract.md  # 状态事实、单通道解析、canonical token 与 Gemini 交接真值。
    │  ├─ XYUI6/  # 组织该模块下的正式文件。
    │  │  ├─ XYUI-6.canonical.md  # 保存对应 XYUI 规范的规范化数据与映射。
    │  │  ├─ XYUI-6.gaps.json  # 保存对应 XYUI 规范的规范化数据与映射。

@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.67-rz · XYUI-0-08 States Foundation Runtime 合同（2026-09-03 13:20:47 +08:00）
+
+- 目标：建立 XYUI-0-08 的单一 States Foundation Runtime 合同，允许语义事实共存并按视觉通道单次解析。
+- 变化：新增 `XyuiInteractionFacts`、`XyuiStateSnapshot`、`XyuiStateResolver`；补齐 Active/Dragging/DropTarget/ReadOnly/Locked 通用样式类；新增 Runtime truth table 与 Gemini 交接文档；不修改 Gallery。
+- 验证：Resolver targeted tests 7/7 通过；现有 InteractionState/Combination 代表性状态测试 12/12 通过；完整解决方案 Build 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1286/1286、XYUI.Avalonia 412/412 全部通过；`git diff --check` 通过；ARCH-A 的 WarCore 部分通过，但被既有未跟踪 `XYUIProbeTests.cs`（149 行）拦截。
+- 状态：`XYUI-0-08 STATES FOUNDATION RUNTIME CONTRACT IMPLEMENTED / TARGETED TESTS PASS / FULL BUILD PASS / ARCH-A BLOCKED BY PRE-EXISTING LOCAL FILE`；等待 Gemini Gallery 实现与用户人工验收，未声明 `USER VISUAL ACCEPTED` 或 `FINAL CLOSED`。
+- 版本：`v0.2.28.67-rz` 已同步到四处版本文件。
+- Hash：`XyuiStateSnapshot.cs` SHA-256 `6444B0750D1492360B943DDDCE7CEFCCC6830AED4415AC48922C506350037C3E`；`XyuiStateResolver.cs` SHA-256 `E93C131112EC5E131E1C6A824B076E38D317FC19407861DC5D2CB13D05FBA3C9`。
+- 遗留：正式门禁必须使用可用 .NET SDK；当前机器 `D:\MyApp\sdk-dotnet\dotnet.exe` 不存在，使用等价的 `E:\MyApp\sdk-dotnet\dotnet.exe`（10.0.400）执行。
+
 ## v0.2.28.66-rz · XYUI Gallery 启动器 SDK 路径回退修复（2026-09-03 12:37:03 +08:00）
 
 - 目标：修复 `xyui` 在 D 盘 SDK 不存在时直接报“找不到路径”的启动失败。

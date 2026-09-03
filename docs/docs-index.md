@@ -64,6 +64,10 @@
 - `docs/ui/玄域引擎_UI真机基线清单.md`：真机验收共用 IPO 清单与 D0 基线
 - 讨论初稿决策原文：`docs/governance/ui-spec.md`（**历史讨论决策记录，不再作为实施合同**；正式规则以 UI 规范 1.0 为准）
 
+## XYUI Runtime 合同
+
+- `xyui/specs/XYUI0.08/XYUI-0.08-runtime-contract.md`：States Foundation Runtime API、单通道解析真值表与 Gemini 交接事实。
+
 ## 架构文档（architecture/）
 
 - `docs/architecture/ENGINE_ARCHITECTURE.md`：引擎总体架构
