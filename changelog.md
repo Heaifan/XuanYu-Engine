@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.73-rz · XYUI-0.11 · AdaptiveLayout Container-first Runtime MVP（2026-09-03 22:42:21 +08:00）
+
+- 目标：实现基于自身可用容器宽度的最小 AdaptiveLayout Runtime，并为 Gemini Gallery 提供真实可编译 API。
+- 变化：新增 `AdaptiveLayout`、`MinItemWidth`、`MaxColumns`；复用 `XY.Gap`；按 `Clamp(1..MaxColumns, floor((availableWidth + gap) / (MinItemWidth + gap)))` 计算列数并进行稳定行式 Reflow。
+- 边界：不引入设备类型、全局 Breakpoint、Variant/Priority/隐藏策略，也不修改 `XY.Size`、`XY.Density` 或 Typography。
+- 验证：`XuanYu.Engine.slnx` 与 `XYUI.Avalonia.slnx` 构建均为 0 警告 0 错误；`XYUI.Avalonia.Tests` 420/420；AdaptiveLayout 定向测试 4/4；ARCH-A 与 `git diff --check` 通过。
+- 状态：Runtime Contract Implemented / Copyable Code Package Ready / Ready for Gemini Gallery 第二阶段替换；未声明 Gallery 完成或 Final Closeout。
+- 版本：`v0.2.28.73-rz` 同步到四处版本文件。
+
 ## v0.2.28.72-rz · XYUI-0.09 · Surface Gallery 浮层解耦与开发者文档收口（2026-09-03 21:10:00 +08:00）
 
 - 目标：根据用户审查反馈完成 XYUI-0.09 Surface 表面层级 Gallery 开发者文档的最终收口，彻底厘清普通承载流与浮层生命周期的视觉边界，修复文本截断并建立 10 项 Canonical Surface 完整心智。

@@ -1520,8 +1520,9 @@
    │  │     │  ├─ XyuiCatalogSpecReader.cs  # 从 canonical spec 提取用途、变体、状态和场景文案。
    │  │     │  ├─ XyuiCatalogTruth.cs  # 实现对应模块的 C# 职责。
    │  │     │  └─ XyuiCatalogTypeMap.cs  # Canonical ID 到稳定 Avalonia 类型名及 Gallery 覆盖映射。
-   │  │     ├─ Controls/  # 集中公开 XYUI 控件实现。
-   │  │     │  ├─ README.md  # 实现对应 XYUI 控件的视觉、状态或交互职责。
+    │  │     ├─ Controls/  # 集中公开 XYUI 控件实现。
+    │  │     │  ├─ README.md  # 实现对应 XYUI 控件的视觉、状态或交互职责。
+    │  │     │  ├─ AdaptiveLayout.cs  # 根据自身可用宽度将直接子项重排为一至多列。
    │  │     │  ├─ XYUI1/  # 组织该模块下的正式文件。
    │  │     │  │  ├─ _Shared/  # 组织该模块下的正式文件。
    │  │     │  │  │  ├─ Base/  # 组织该模块下的正式文件。
@@ -1917,7 +1918,8 @@
    │  │     │  └─ XyuiVectorIcons.cs  # 实现对应模块的 C# 职责。
    │  │     └─ XYUI.Avalonia.csproj  # XYUI.Avalonia 库项目文件（Avalonia 12.0.4）。
    │  ├─ tests/  # 集中对应模块的自动化测试。
-   │  │  └─ XYUI.Avalonia.Tests/  # 组织该模块下的正式文件。
+    │  │  └─ XYUI.Avalonia.Tests/  # 组织该模块下的正式文件。
+    │  │     ├─ AdaptiveLayoutRuntimeTests.cs  # AdaptiveLayout 容器列数、Gap 与 Size/Density 正交合同。
    │  │     ├─ DensityRuntimeTests.cs  # Density 默认值、继承、覆盖、档位与 Spacing 组合合同。
    │  │     ├─ BadgeRuntimeTests.cs  # Badge 高度、Auto 宽度、左对齐与左指针几何运行时回归。
    │  │     ├─ BrushRuntimeTests.cs  # 主题字典 key/类型/值/重复/缺失测试。
@@ -2075,6 +2077,8 @@
     │  │  └─ XYUI-0.09-surface-runtime-contract.md  # Surface 语义、Canonical 成员、Facade 继承覆盖与浮层边界。
     │  ├─ XYUI0.10/  # XYUI-0.10 States Runtime/Public API 真值合同。
     │  │  └─ XYUI-0.10-runtime-contract.md  # 编号纠正、Public API 真值、测试数量口径与 Gemini 交接。
+    │  ├─ XYUI0.11/  # XYUI-0.11 AdaptiveLayout Container-first Runtime 合同。
+    │  │  └─ XYUI-0.11-responsive-runtime-contract.md  # 容器宽度列数计算、Reflow、正交边界与限制。
    │  ├─ XYUI6/  # 组织该模块下的正式文件。
    │  │  ├─ XYUI-6.canonical.md  # 保存对应 XYUI 规范的规范化数据与映射。
    │  │  ├─ XYUI-6.gaps.json  # 保存对应 XYUI 规范的规范化数据与映射。

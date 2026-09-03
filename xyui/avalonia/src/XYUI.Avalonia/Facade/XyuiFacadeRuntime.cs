@@ -69,9 +69,9 @@ internal static class XyuiFacadeRuntime
         XyuiFacadeConflictDiagnostics.Check(target);
         if (name is null || !XyuiFacadeResolver.TrySpace(name, out var value)) return;
         if (target is StackPanel panel) panel.Spacing = value;
-        else Unsupported("Gap", target, "StackPanel");
+        else if (target is AdaptiveLayout adaptive) adaptive.SetResolvedGap(value);
+        else Unsupported("Gap", target, "StackPanel, AdaptiveLayout");
     }
-
     internal static void Margin(AvaloniaObject target, string? name)
     {
         XyuiFacadeConflictDiagnostics.Check(target);
