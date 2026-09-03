@@ -1,53 +1,52 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
              x:Class="XYUI.Avalonia.Gallery.Views.StatesView">
-  <ScrollViewer>
-    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
-      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
-        <TextBlock Text="交互状态体系 (States Foundation)" Classes="xyui-heading-panel" />
-        <c:XYStatusBadge Text="草稿 / 预览" State="Warning" VerticalAlignment="Center" />
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 头部：标题与 Badge -->
+      <StackPanel Spacing="6">
+        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+          <TextBlock Text="交互状态 / States" Classes="xyui-heading-page" FontSize="22" FontWeight="Bold" />
+          <Border Background="#F6F1E7" BorderBrush="#E6D8BA" BorderThickness="1" CornerRadius="6" Padding="8,3" VerticalAlignment="Center">
+            <TextBlock Text="已锁定 · 0.10" FontWeight="Bold" FontSize="11" Foreground="#806A3A" />
+          </Border>
+        </StackPanel>
+        <TextBlock Text="大多数交互状态由 XYUI Runtime 自动管理；业务代码只设置组件语义属性；Resolver 负责统一生成最终视觉；Focus 通过独立通道表达。"
+                   Classes="xyui-text-caption" TextWrapping="Wrap" />
       </StackPanel>
 
-      <!-- 1. 按钮与操作状态 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
-        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="1. 控件基础状态 (Rest, Hover, Pressed, Focus, Disabled)" Classes="xyui-text-section" />
-          <WrapPanel>
-            <StackPanel Spacing="{DynamicResource XY.Gap.Field}" Margin="0,4,16,4" Width="130">
-              <TextBlock Text="常态 (Rest)" Classes="xyui-text-caption" />
-              <c:XYButton Content="Primary" Variant="Primary" />
-              <c:XYButton Content="Secondary" Variant="Secondary" />
-            </StackPanel>
-
-            <StackPanel Spacing="{DynamicResource XY.Gap.Field}" Margin="0,4,16,4" Width="130">
-              <TextBlock Text="焦点 (Focus Outline)" Classes="xyui-text-caption" />
-              <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Focus}" BorderThickness="{DynamicResource XY.Border.Width.Focus}" CornerRadius="{DynamicResource XY.Radius.Control}">
-                <c:XYButton Content="Focused" Variant="Primary" />
-              </Border>
-            </StackPanel>
-
-            <StackPanel Spacing="{DynamicResource XY.Gap.Field}" Margin="0,4,16,4" Width="130">
-              <TextBlock Text="禁用 (Disabled)" Classes="xyui-text-caption" />
-              <c:XYButton Content="Disabled" Variant="Primary" IsEnabled="False" />
-              <c:XYButton Content="Disabled" Variant="Secondary" IsEnabled="False" />
-            </StackPanel>
-          </WrapPanel>
-        </StackPanel>
+      <!-- Developer Quick Start 三列横幅 -->
+      <Border Background="#F8FAFB" BorderBrush="#E0E8EC" BorderThickness="1" CornerRadius="8" Padding="14,10">
+        <Grid ColumnDefinitions="*,Auto,*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="2">
+            <TextBlock Text="Hover / Pressed / Focus" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="Runtime 自动处理，无需业务代码编写" Classes="xyui-text-caption" FontSize="11" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="#E2E9EC" Margin="10,0" />
+          <StackPanel Grid.Column="2" Spacing="2">
+            <TextBlock Text="Disabled / Selected / ReadOnly / Locked" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="通过真实组件属性或组件语义声明" Classes="xyui-text-caption" FontSize="11" />
+          </StackPanel>
+          <Rectangle Grid.Column="3" Width="1" Fill="#E2E9EC" Margin="10,0" />
+          <StackPanel Grid.Column="4" Spacing="2">
+            <TextBlock Text="State Resolver" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="Runtime 实现机制，普通业务代码不直接调用" Classes="xyui-text-caption" FontSize="11" />
+          </StackPanel>
+        </Grid>
       </Border>
 
-      <!-- 2. 状态指示与标签状态 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
-        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="2. 业务状态语义 (Status Semantic States)" Classes="xyui-text-section" />
-          <WrapPanel>
-            <c:XYStatusBadge Text="就绪 (Success)" State="Success" Margin="0,4,8,4" />
-            <c:XYStatusBadge Text="警告 (Warning)" State="Warning" Margin="0,4,8,4" />
-            <c:XYStatusBadge Text="失败 (Error)" State="Error" Margin="0,4,8,4" />
-            <c:XYStatusBadge Text="信息 (Info)" State="Info" Margin="0,4,8,4" />
-          </WrapPanel>
-        </StackPanel>
-      </Border>
+      <!-- 01 · 核心规则 -->
+      <views:StatesCoreRulesSection />
+
+      <!-- 02 · 实时状态实验室 -->
+      <views:StatesLiveLabSection />
+
+      <!-- 03 · 状态来源与解析 -->
+      <views:StatesResolutionSection />
+
+      <!-- 04 · 怎么使用 / 高级 / 禁止 -->
+      <views:StatesCodePatternsSection />
     </StackPanel>
   </ScrollViewer>
 </UserControl>

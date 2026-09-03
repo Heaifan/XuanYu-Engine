@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.StatesResolutionSection">
+  <Border Classes="xyui-surface-panel xyui-border-default" CornerRadius="10" Padding="14,10">
+    <StackPanel Spacing="10">
+      <TextBlock Text="03 · 状态来源与解析 (State Source &amp; Resolution)" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+      <!-- State Source Map -->
+      <StackPanel Spacing="4">
+        <TextBlock Text="State Source Map" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        <Border Classes="xyui-border-default" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="6" Padding="8,6">
+          <Grid ColumnDefinitions="1.2*,1.2*,1.6*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="State 状态" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="谁产生 (Source)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="开发者通常写什么 (Developer Input)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Hover / Pressed / Focus" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Runtime Pointer / Focus" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="不写（运行时自动检测并响应）" Margin="0,4,0,0" Foreground="#4E7C61" FontSize="10" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Disabled / ReadOnly" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="Consumer 显式设置" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="IsEnabled=&quot;False&quot; / IsReadOnly=&quot;True&quot;" Margin="0,4,0,0" Classes="xyui-text-code" FontSize="10" />
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Selected" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="Component / Selection" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="3" Grid.Column="2" Text="IsChecked=&quot;True&quot; 或组件专用 IsSelected" Margin="0,4,0,0" Classes="xyui-text-code" FontSize="10" />
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Active / Dragging" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="Component / Lifecycle" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="4" Grid.Column="2" Text="组件内部状态；无统一 Consumer API" Margin="0,4,0,0" Foreground="#9C7D3E" FontSize="10" />
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="DropTarget" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="Drag Lifecycle" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="5" Grid.Column="2" Text="NO GENERAL CONSUMER API" Margin="0,4,0,0" Foreground="#9C7D3E" FontSize="10" />
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Locked" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="Component Semantic" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+            <TextBlock Grid.Row="6" Grid.Column="2" Text="NO GENERAL CONSUMER API" Margin="0,4,0,0" Foreground="#9C7D3E" FontSize="10" />
+          </Grid>
+        </Border>
+      </StackPanel>
+      <!-- Resolution Pipeline -->
+      <StackPanel Spacing="4">
+        <TextBlock Text="Resolution Pipeline" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        <Grid ColumnDefinitions="*,Auto,*,Auto,*,Auto,*">
+          <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6" Height="40">
+            <StackPanel VerticalAlignment="Center"><TextBlock Text="Semantic Facts" FontWeight="Bold" FontSize="10" HorizontalAlignment="Center" /><TextBlock Text="Selected + Hover" Classes="xyui-text-caption" FontSize="8" HorizontalAlignment="Center" /></StackPanel>
+          </Border>
+          <TextBlock Grid.Column="1" Text="→" FontSize="14" Foreground="{DynamicResource XY.Brush.Accent.Strong}" VerticalAlignment="Center" Margin="4,0" />
+          <Border Grid.Column="2" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6" Height="40">
+            <StackPanel VerticalAlignment="Center"><TextBlock Text="State Resolver" FontWeight="Bold" FontSize="10" HorizontalAlignment="Center" /><TextBlock Text="Runtime 内部机制" Classes="xyui-text-caption" FontSize="8" HorizontalAlignment="Center" /></StackPanel>
+          </Border>
+          <TextBlock Grid.Column="3" Text="→" FontSize="14" Foreground="{DynamicResource XY.Brush.Accent.Strong}" VerticalAlignment="Center" Margin="4,0" />
+          <Border Grid.Column="4" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6" Height="40">
+            <StackPanel VerticalAlignment="Center"><TextBlock Text="Resolved Visual" FontWeight="Bold" FontSize="10" HorizontalAlignment="Center" /><TextBlock Text="Bg / Border / Fg" Classes="xyui-text-caption" FontSize="8" HorizontalAlignment="Center" /></StackPanel>
+          </Border>
+          <TextBlock Grid.Column="5" Text="+" FontSize="14" Foreground="{DynamicResource XY.Brush.Accent.Strong}" VerticalAlignment="Center" Margin="4,0" />
+          <Border Grid.Column="6" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6" Height="40">
+            <StackPanel VerticalAlignment="Center"><TextBlock Text="Focus Channel" FontWeight="Bold" FontSize="10" HorizontalAlignment="Center" /><TextBlock Text="独立 Outline 环" Classes="xyui-text-caption" FontSize="8" HorizontalAlignment="Center" /></StackPanel>
+          </Border>
+        </Grid>
+      </StackPanel>
+      <!-- Resolution Matrix -->
+      <Border Classes="xyui-border-default" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="6" Padding="8,6">
+        <Grid ColumnDefinitions="1.2*,1.2*,1.2*,1.2*,1.2*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="Facts 组合" FontWeight="Bold" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="Background" FontWeight="Bold" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" Text="Border" FontWeight="Bold" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="3" Text="Focus Channel" FontWeight="Bold" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="4" Text="Identity" FontWeight="Bold" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="Pressed + Hover" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="Pressed（按压优先）" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="1" Grid.Column="2" Text="Pressed" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="1" Grid.Column="3" Text="—" Margin="0,4,0,0" Classes="xyui-text-caption" FontSize="10" />
+          <TextBlock Grid.Row="1" Grid.Column="4" Text="—" Margin="0,4,0,0" Classes="xyui-text-caption" FontSize="10" />
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="Selected + Hover" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="2" Grid.Column="1" Text="Selected" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="2" Grid.Column="2" Text="Selected" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="2" Grid.Column="3" Text="—" Margin="0,4,0,0" Classes="xyui-text-caption" FontSize="10" />
+          <TextBlock Grid.Row="2" Grid.Column="4" Text="Selected identity retained" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="Selected + Focus" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="3" Grid.Column="1" Text="Selected" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="3" Grid.Column="2" Text="Selected" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="3" Grid.Column="3" Text="Focus Outline" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="3" Grid.Column="4" Text="Selected 保留" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="4" Grid.Column="0" Text="Disabled + Hover" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="4" Grid.Column="1" Text="Disabled" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="4" Grid.Column="2" Text="Disabled" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" />
+          <TextBlock Grid.Row="4" Grid.Column="3" Text="—" Margin="0,4,0,0" Classes="xyui-text-caption" FontSize="10" />
+          <TextBlock Grid.Row="4" Grid.Column="4" Text="Disabled priority" Margin="0,4,0,0" Classes="xyui-text-body" FontSize="10" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        </Grid>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

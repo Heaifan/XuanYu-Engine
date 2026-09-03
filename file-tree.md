@@ -1440,6 +1440,16 @@
    │  │     │  ├─ InteractionStatesView.axaml.cs  # 提供 Gallery 对应页面、数据或运行时预览。
    │  │     │  ├─ PaletteView.axaml  # Foundation 色彩页面视图。
    │  │     │  ├─ PaletteView.axaml.cs  # Foundation 色彩页面代码隐藏与数据初始化。
+   │  │     │  ├─ ResponsiveCodePatternsSection.axaml  # Responsive 真实可复制代码/算法与规范视图。
+   │  │     │  ├─ ResponsiveCodePatternsSection.axaml.cs  # Responsive 代码规范代码隐藏。
+   │  │     │  ├─ ResponsiveCoreRulesSection.axaml  # Responsive 四大核心规则卡片视图。
+   │  │     │  ├─ ResponsiveCoreRulesSection.axaml.cs  # Responsive 四大核心规则代码隐藏。
+   │  │     │  ├─ ResponsiveDecisionMatrixSection.axaml  # Responsive 宽度决策矩阵视图。
+   │  │     │  ├─ ResponsiveDecisionMatrixSection.axaml.cs  # Responsive 决策矩阵代码隐藏。
+   │  │     │  ├─ ResponsiveLiveLabSection.axaml  # Responsive 真实 AdaptiveLayout 容器重排实验室视图。
+   │  │     │  ├─ ResponsiveLiveLabSection.axaml.cs  # Responsive 重排实验室代码隐藏。
+   │  │     │  ├─ ResponsiveView.axaml  # Responsive 响应式规范页主视图（四段式结构）。
+   │  │     │  ├─ ResponsiveView.axaml.cs  # Responsive 响应式规范页代码隐藏。
    │  │     │  ├─ ShapeCodePatternsSection.axaml  # Shape 规范使用写法/高级建议/禁止反例视图。
    │  │     │  ├─ ShapeCodePatternsSection.axaml.cs  # Shape 规范使用代码隐藏。
    │  │     │  ├─ ShapeCompositionSection.axaml  # Shape 与 Radius/Border/Surface 四通道正交矩阵视图。
@@ -1466,6 +1476,16 @@
    │  │     │  ├─ SurfaceScenariosSection.axaml.cs  # Surface 场景决策判断代码隐藏。
    │  │     │  ├─ SurfaceView.axaml  # Surface 表面层级规范页主视图（四段式结构）。
    │  │     │  ├─ SurfaceView.axaml.cs  # Surface 表面层级规范页代码隐藏。
+   │  │     │  ├─ StatesCodePatternsSection.axaml  # States 规范使用写法/高级建议/禁止反例视图。
+   │  │     │  ├─ StatesCodePatternsSection.axaml.cs  # States 规范使用代码隐藏。
+   │  │     │  ├─ StatesCoreRulesSection.axaml  # States 四大核心规则卡片视图。
+   │  │     │  ├─ StatesCoreRulesSection.axaml.cs  # States 四大核心规则代码隐藏。
+   │  │     │  ├─ StatesLiveLabSection.axaml  # States 实时操作/可用性/持续身份实验室视图。
+   │  │     │  ├─ StatesLiveLabSection.axaml.cs  # States 实时实验室代码隐藏。
+   │  │     │  ├─ StatesResolutionSection.axaml  # States 状态来源 Source Map 与单解析矩阵视图。
+   │  │     │  ├─ StatesResolutionSection.axaml.cs  # States 状态来源与解析代码隐藏。
+   │  │     │  ├─ StatesView.axaml  # States 交互状态规范页主视图（四段式结构）。
+   │  │     │  ├─ StatesView.axaml.cs  # States 交互状态规范页代码隐藏。
    │  │     │  ├─ TypographySamplesView.axaml  # Typography 消费示例（Heading/Body/Label/Caption/Mono/信息等级/高密度对照）。
    │  │     │  ├─ TypographySamplesView.axaml.cs  # Typography 消费示例代码隐藏。
    │  │     │  ├─ TypographyView.axaml  # Typography 规范页视图（token 表数据驱动 + 滚动）。

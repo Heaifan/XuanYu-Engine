@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.28.74-rz · XYUI-0-10 & XYUI-0-11 · States 与 Responsive 双里程碑联合封版（2026-09-03 23:20:00 +08:00）
+
+- 目标：完成 XYUI-0-10 States 交互状态与 XYUI-0-11 Responsive 响应式双里程碑的最终联合收口与真机验收封版（FINAL CLOSEOUT）。
+- 变化：
+  - XYUI-0-10 States：落实 3 项定点修正（Source Map 拆分、Matrix 决策补全、ReadOnly 语义说明）；徽章正式更新为 `已锁定 · 0.10`；通过用户真机交互验收。
+  - XYUI-0-11 Responsive：完成第二阶段全量真实替换与定点补丁，全量消费真实 `c:AdaptiveLayout` 控件；02 实验区重构为纵向排列的 1040/720/420 独立约束容器，完全消除界面重叠；03 修正 Gap 文案；04 补全 AdaptiveLayout+XY.Size 组合与统一 Density 声明；徽章正式更新为 `已锁定 · 0.11`；通过用户真机视觉与开发者文档验收。
+  - 架构与文档：在 `file-tree.md` 中完整登记 States* 与 Responsive* 视图文件职责；四处版本号一致同步至 `v0.2.28.74-rz`。
+  - 既有记录：登记 `XYUI08ShapeContractTests Cleanup NullReferenceException` 为 `PRE-EXISTING NON-BLOCKING TEST CLEANUP ISSUE`。
+- 验证：`XuanYu.Engine.slnx` 与 `XYUI.Avalonia.slnx` 串行构建均 0 警告 0 错误；`XYUI.Avalonia.Tests` 测试套件 420/420 全数通过；`scripts/arch-a-guard.ps1` 架构守卫通过；`git diff --check` 通过；真机客户端启动正常。
+- 状态：`XYUI-0-10 & XYUI-0-11 FINAL CLOSEOUT / USER VISUAL ACCEPTED`。
+- 版本：`v0.2.28.74-rz` 已同步到四处版本文件。
+
 ## v0.2.28.73-rz · XYUI-0.11 · AdaptiveLayout Container-first Runtime MVP（2026-09-03 22:42:21 +08:00）
 
 - 目标：实现基于自身可用容器宽度的最小 AdaptiveLayout Runtime，并为 Gemini Gallery 提供真实可编译 API。

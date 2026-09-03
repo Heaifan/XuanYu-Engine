@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.StatesCodePatternsSection">
+  <StackPanel Spacing="8">
+    <TextBlock Text="04 · 怎么使用 / 高级 / 禁止" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+    <Grid ColumnDefinitions="1.3*,1*,1*">
+      <!-- 怎么使用 (左列) -->
+      <Border Grid.Column="0" Margin="0,0,6,0" Background="#F7FBF8" BorderBrush="#BFD8C8" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="怎么使用 · 真实 XAML" FontWeight="Bold" FontSize="13" Foreground="#406858" />
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;xy:XYButton Content=&quot;保存&quot; /&gt;" Classes="xyui-text-code" FontSize="10" TextWrapping="Wrap" />
+              <TextBlock Text="→ Hover / Pressed / Focus 由 Runtime 自动响应。" Foreground="#557060" FontSize="10" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;xy:XYButton Content=&quot;禁止&quot; IsEnabled=&quot;False&quot; /&gt;" Classes="xyui-text-code" FontSize="10" TextWrapping="Wrap" />
+              <TextBlock Text="→ Disabled 由 IsEnabled 控制。" Foreground="#557060" FontSize="10" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;xy:XYToggleButton Content=&quot;吸附&quot; IsChecked=&quot;True&quot; /&gt;" Classes="xyui-text-code" FontSize="10" TextWrapping="Wrap" />
+              <TextBlock Text="→ Selected 由 Checked / Selection 语义产生。" Foreground="#557060" FontSize="10" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+            <StackPanel Spacing="2">
+              <TextBlock Text="&lt;xy:XYTextField Text=&quot;只读内容&quot; IsReadOnly=&quot;True&quot; /&gt;" Classes="xyui-text-code" FontSize="10" TextWrapping="Wrap" />
+              <TextBlock Text="→ ReadOnly 由 IsReadOnly 控制。" Foreground="#557060" FontSize="10" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+      <!-- 高级 (中列) -->
+      <Border Grid.Column="1" Margin="3,0,3,0" Background="#F5F8FB" BorderBrush="#CFDCE4" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="高级 (Advanced)" FontWeight="Bold" FontSize="13" Foreground="#365D75" />
+          <TextBlock Text="[业务开发者]" FontWeight="Bold" FontSize="11" Foreground="#365D75" />
+          <TextBlock Text="只设置组件语义属性，依赖自然交互生成状态，不直接调用 Resolver。" Classes="xyui-text-body" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="[组件作者]" FontWeight="Bold" FontSize="11" Foreground="#365D75" Margin="0,4,0,0" />
+          <TextBlock Text="遵循 Facts 共存模型，保持单通道单一真值，Focus 使用独立轮廓。" Classes="xyui-text-body" FontSize="10" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+      <!-- 禁止 (右列) -->
+      <Border Grid.Column="2" Margin="6,0,0,0" Background="#FFF7F7" BorderBrush="#E3BFC1" BorderThickness="1" CornerRadius="8" Padding="12,10">
+        <StackPanel Spacing="3">
+          <TextBlock Text="禁止 (Forbidden)" FontWeight="Bold" FontSize="13" Foreground="#A34E55" />
+          <TextBlock Text="× 手工 Border 模拟 Focus" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 手写 Background 模拟 Hover" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 多状态 Background 无规则叠层" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 用 Height / Padding 制造状态" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 把 Locked 当作 Warning" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 业务代码直接调用 Resolver" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 把业务状态徽章当交互状态" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </StackPanel>
+</UserControl>

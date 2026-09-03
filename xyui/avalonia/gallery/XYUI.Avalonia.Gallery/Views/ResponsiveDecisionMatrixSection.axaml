@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.ResponsiveDecisionMatrixSection">
+  <Border Classes="xyui-surface-panel xyui-border-default" CornerRadius="10" Padding="14,10">
+    <StackPanel Spacing="6">
+      <TextBlock Text="03 · 决策矩阵：宽度变化时，到底改什么？" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+      <Border Classes="xyui-border-default" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="6" Padding="8,6">
+        <Grid ColumnDefinitions="1.1*,1.4*,1.2*,1.1*" RowDefinitions="Auto,Auto,Auto,Auto">
+          <!-- 表头 -->
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="空间变化" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="优先行为（Runtime 驱动）" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" Text="保持不变" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="3" Text="上层组合/未来策略" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <!-- 行 1 -->
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="稍微变窄" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="空间仍足够时保持当前列数" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="1" Grid.Column="2" Text="Size / 字体等级" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="1" Grid.Column="3" Text="不要直接隐藏" Margin="0,6,0,0" Foreground="{DynamicResource XY.Brush.System.Danger}" FontSize="11" />
+          <!-- 行 2 -->
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="明显变窄" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="2" Grid.Column="1" Text="3 列 → 2 列自动 Reflow" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="2" Grid.Column="2" Text="主信息 / 主操作" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="2" Grid.Column="3" Text="次级区域折叠（上层组合）" Margin="0,6,0,0" Classes="xyui-text-caption" FontSize="11" />
+          <!-- 行 3 -->
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="极窄" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="3" Grid.Column="1" Text="收敛为 1 列 Stack" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="3" Grid.Column="2" Text="可读性 / 点击可达性" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="3" Grid.Column="3" Text="抽屉/滚动/More（上层策略）" Margin="0,6,0,0" Classes="xyui-text-caption" FontSize="11" />
+        </Grid>
+      </Border>
+      <TextBlock Text="* XY.Gap 保持自己的 Canonical 间距值，并参与 AdaptiveLayout 列数计算，Runtime 不会自动缩小 Gap。" Classes="xyui-text-caption" FontSize="10" Foreground="#6C818C" Margin="2,2,0,0" />
+    </StackPanel>
+  </Border>
+</UserControl>

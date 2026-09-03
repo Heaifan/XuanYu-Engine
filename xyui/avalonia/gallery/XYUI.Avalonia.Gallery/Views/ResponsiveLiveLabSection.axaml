@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xy="using:XYUI.Avalonia"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.ResponsiveLiveLabSection">
+  <Border Classes="xyui-surface-panel xyui-border-default" CornerRadius="10" Padding="14,10">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="02 · Reflow Lab / 真实 AdaptiveLayout 容器驱动" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+        <TextBlock Text="同一组内容在 1040 / 720 / 420 容器宽度下，由真实 AdaptiveLayout 自动计算列数（3列 → 2列 → 1列），无任何手工伪布局。" Classes="xyui-text-caption" />
+      </StackPanel>
+      <!-- Wide · 1040 容器：纵向第 1 排 -->
+      <StackPanel Spacing="3">
+        <TextBlock Text="Wide · 1040 容器宽度（自动解析 3 列并排）" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        <Border Classes="xyui-border-default" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="8" Padding="10" Width="1040" HorizontalAlignment="Left">
+          <c:AdaptiveLayout MinItemWidth="280" MaxColumns="3" xy:XY.Gap="XY.Space.2">
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="10,6">
+              <StackPanel Spacing="2"><TextBlock Text="主内容区" FontWeight="Bold" FontSize="11" /><TextBlock Text="标题 + 摘要 + 主操作" Classes="xyui-text-caption" FontSize="10" /></StackPanel>
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="10,6">
+              <StackPanel Spacing="2"><TextBlock Text="辅助信息" FontWeight="Bold" FontSize="11" /><TextBlock Text="状态 / 说明 / 次要操作" Classes="xyui-text-caption" FontSize="10" /></StackPanel>
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="10,6">
+              <StackPanel Spacing="2"><TextBlock Text="工具区" FontWeight="Bold" FontSize="11" /><TextBlock Text="筛选 / 排序 / 更多" Classes="xyui-text-caption" FontSize="10" /></StackPanel>
+            </Border>
+          </c:AdaptiveLayout>
+        </Border>
+      </StackPanel>
+      <!-- Medium · 720 容器：纵向第 2 排 -->
+      <StackPanel Spacing="3">
+        <TextBlock Text="Medium · 720 容器宽度（自动重排为 2 列，第 3 卡片自然折行）" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        <Border Classes="xyui-border-default" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="8" Padding="8" Width="720" HorizontalAlignment="Left">
+          <c:AdaptiveLayout MinItemWidth="280" MaxColumns="3" xy:XY.Gap="XY.Space.2">
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+              <StackPanel Spacing="2"><TextBlock Text="主内容区" FontWeight="Bold" FontSize="11" /><TextBlock Text="主信息保持优先" Classes="xyui-text-caption" FontSize="10" /></StackPanel>
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+              <StackPanel Spacing="2"><TextBlock Text="辅助信息" FontWeight="Bold" FontSize="11" /><TextBlock Text="次级区域自然排布" Classes="xyui-text-caption" FontSize="10" /></StackPanel>
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+              <StackPanel Spacing="2"><TextBlock Text="工具区" FontWeight="Bold" FontSize="11" /><TextBlock Text="自动折入下一行" Classes="xyui-text-caption" FontSize="10" /></StackPanel>
+            </Border>
+          </c:AdaptiveLayout>
+        </Border>
+      </StackPanel>
+      <!-- Narrow · 420 容器：纵向第 3 排 -->
+      <StackPanel Spacing="3">
+        <TextBlock Text="Narrow · 420 容器宽度（自动收缩为 1 列单列垂直 Stack）" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+        <Border Classes="xyui-border-default" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="8" Padding="8" Width="420" HorizontalAlignment="Left">
+          <c:AdaptiveLayout MinItemWidth="280" MaxColumns="3" xy:XY.Gap="XY.Space.2">
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+              <TextBlock Text="主内容区（单列垂直 Stack）" FontWeight="Bold" FontSize="11" />
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+              <TextBlock Text="辅助信息（自动垂直下移）" Classes="xyui-text-caption" FontSize="10" />
+            </Border>
+            <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8,4">
+              <TextBlock Text="工具区（单列底部排列）" Classes="xyui-text-caption" FontSize="10" />
+            </Border>
+          </c:AdaptiveLayout>
+        </Border>
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

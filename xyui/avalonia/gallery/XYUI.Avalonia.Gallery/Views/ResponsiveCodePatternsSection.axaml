@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.ResponsiveCodePatternsSection">
+  <StackPanel Spacing="8">
+    <TextBlock Text="04 · 怎么使用 / 高级 / 禁止" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+    <Grid ColumnDefinitions="1.35*,1*,1*">
+      <!-- 怎么使用 (左列：真实逐行声明 XAML) -->
+      <Border Grid.Column="0" Margin="0,0,6,0" Background="#F7FBF8" BorderBrush="#BFD8C8" BorderThickness="1" CornerRadius="8" Padding="12,8">
+        <StackPanel Spacing="5">
+          <TextBlock Text="怎么使用 · 真实 XAML（逐行独立声明）" FontWeight="Bold" FontSize="12" Foreground="#406858" />
+          <!-- 示例 1: 最小用法 -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6,2">
+            <StackPanel Spacing="1">
+              <TextBlock Text="&lt;c:AdaptiveLayout" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    MinItemWidth=&quot;280&quot;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    MaxColumns=&quot;3&quot;&gt;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    &lt;Border /&gt; &lt;Border /&gt; &lt;Border /&gt;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="&lt;/c:AdaptiveLayout&gt;" Classes="xyui-text-code" FontSize="9" />
+            </StackPanel>
+          </Border>
+          <!-- 示例 2: Responsive + Gap -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6,2">
+            <StackPanel Spacing="1">
+              <TextBlock Text="&lt;c:AdaptiveLayout" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    MinItemWidth=&quot;280&quot;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    MaxColumns=&quot;3&quot;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    xy:XY.Gap=&quot;XY.Space.2&quot;&gt;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="&lt;/c:AdaptiveLayout&gt;" Classes="xyui-text-code" FontSize="9" />
+            </StackPanel>
+          </Border>
+          <!-- 示例 3: Responsive + XY.Size 真实组合 -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6,2">
+            <StackPanel Spacing="1">
+              <TextBlock Text="&lt;c:AdaptiveLayout MinItemWidth=&quot;280&quot; MaxColumns=&quot;3&quot;&gt;" Classes="xyui-text-code" FontSize="8.5" />
+              <TextBlock Text="    &lt;c:XYButton xy:XY.Size=&quot;Comfortable&quot; Content=&quot;保存&quot; /&gt;" Classes="xyui-text-code" FontSize="8.5" />
+              <TextBlock Text="    &lt;c:XYButton xy:XY.Size=&quot;Comfortable&quot; Content=&quot;预览&quot; /&gt;" Classes="xyui-text-code" FontSize="8.5" />
+              <TextBlock Text="&lt;/c:AdaptiveLayout&gt;" Classes="xyui-text-code" FontSize="8.5" />
+              <TextBlock Text="→ AdaptiveLayout 只改变列数；XY.Size 始终保持 Comfortable。" Foreground="#557060" FontSize="8.5" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <!-- 示例 4: Responsive + XY.Density 统一声明 -->
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6,2">
+            <StackPanel Spacing="1">
+              <TextBlock Text="&lt;c:AdaptiveLayout" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    MinItemWidth=&quot;280&quot;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    MaxColumns=&quot;3&quot;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="    xy:XY.Density=&quot;Compact&quot;&gt;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="&lt;/c:AdaptiveLayout&gt;" Classes="xyui-text-code" FontSize="9" />
+              <TextBlock Text="→ Responsive 不修改 Density；XY.Density 独立保持 Compact。" Foreground="#557060" FontSize="8.5" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+      <!-- 高级 (中列：算法与组件作者职责) -->
+      <Border Grid.Column="1" Margin="3,0,3,0" Background="#F5F8FB" BorderBrush="#CFDCE4" BorderThickness="1" CornerRadius="8" Padding="12,8">
+        <StackPanel Spacing="4">
+          <TextBlock Text="高级 (Advanced) · 核心算法" FontWeight="Bold" FontSize="12" Foreground="#365D75" />
+          <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="6,4">
+            <StackPanel Spacing="1">
+              <TextBlock Text="Column Count =" FontWeight="Bold" FontSize="9" Foreground="#365D75" />
+              <TextBlock Text="Clamp(1, MaxColumns, floor((availableWidth+gap)/(MinItemWidth+gap)))" Classes="xyui-text-code" FontSize="8" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <TextBlock Text="MinItemWidth = 单个区域正常工作的最小宽度（非全局 Breakpoint）。" Classes="xyui-text-body" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="[组件作者]" FontWeight="Bold" FontSize="11" Foreground="#365D75" Margin="0,2,0,0" />
+          <TextBlock Text="聚焦 Measure / Arrange 容器真值，保障 Resize 稳定性，避免布局振荡 (Oscillation)。" Classes="xyui-text-body" FontSize="10" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+      <!-- 禁止 (右列) -->
+      <Border Grid.Column="2" Margin="6,0,0,0" Background="#FFF7F7" BorderBrush="#E3BFC1" BorderThickness="1" CornerRadius="8" Padding="12,8">
+        <StackPanel Spacing="3">
+          <TextBlock Text="禁止 (Forbidden)" FontWeight="Bold" FontSize="12" Foreground="#A34E55" />
+          <TextBlock Text="× if (Window.Width &lt; 768)" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 自己猜 768 / 1024 / 1280" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 维护三套独立设备 UI" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× Narrow 时偷偷改 XY.Size" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× Narrow 时偷偷改 XY.Density" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 无限缩小字体 / 触控目标" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+          <TextBlock Text="× 业务页面自造 Width trigger" Foreground="#8F5F63" FontSize="10" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </StackPanel>
+</UserControl>

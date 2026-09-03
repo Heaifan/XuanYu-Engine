@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.ResponsiveCoreRulesSection">
+  <StackPanel Spacing="8">
+    <TextBlock Text="01 · 核心规则" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+    <Grid ColumnDefinitions="*,*,*,*">
+      <Border Grid.Column="0" Margin="0,0,6,0" Classes="xyui-surface-subtle xyui-border-default" CornerRadius="8" Padding="14,10">
+        <StackPanel Spacing="4">
+          <TextBlock Text="A · 容器优先" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="组件根据自己真正获得的空间适配，不把 Window.Width 当唯一事实源。" Classes="xyui-text-body" TextWrapping="Wrap" FontSize="12" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Column="1" Margin="3,0,3,0" Classes="xyui-surface-subtle xyui-border-default" CornerRadius="8" Padding="14,10">
+        <StackPanel Spacing="4">
+          <TextBlock Text="B · 先重排，再隐藏" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="优先 Wrap / Stack / Move，最后才考虑隐藏次要内容。" Classes="xyui-text-body" TextWrapping="Wrap" FontSize="12" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Column="2" Margin="3,0,3,0" Classes="xyui-surface-subtle xyui-border-default" CornerRadius="8" Padding="14,10">
+        <StackPanel Spacing="4">
+          <TextBlock Text="C · 不缩坏语义" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="按钮、字体、触控目标不能只为塞进窄空间而无限缩小。" Classes="xyui-text-body" TextWrapping="Wrap" FontSize="12" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Column="3" Margin="6,0,0,0" Classes="xyui-surface-subtle xyui-border-default" CornerRadius="8" Padding="14,10">
+        <StackPanel Spacing="4">
+          <TextBlock Text="D · 不制造设备分支" Classes="xyui-text-caption" FontWeight="Bold" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Text="不要维护 Desktop / Tablet / Mobile 三份独立布局真值。" Classes="xyui-text-body" TextWrapping="Wrap" FontSize="12" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </StackPanel>
+</UserControl>

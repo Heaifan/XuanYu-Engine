@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:XYUI.Avalonia.Controls"
+             x:Class="XYUI.Avalonia.Gallery.Views.StatesLiveLabSection">
+  <Border Classes="xyui-surface-panel xyui-border-default" CornerRadius="10" Padding="14,10">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="02 · 实时状态实验室 (Live State Lab)" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+        <TextBlock Text="真正的交互状态来自运行时与组件语义，不靠手写“伪 Hover / 伪 Focus”。本区用于建立新开发者的直接心智。" Classes="xyui-text-caption" />
+      </StackPanel>
+      <Grid ColumnDefinitions="1.2*,Auto,1.2*">
+        <!-- 左列：操作状态与可用性 -->
+        <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,10,0">
+          <TextBlock Text="Action State（操作状态）" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <WrapPanel>
+            <StackPanel Margin="0,0,8,4" Spacing="2">
+              <TextBlock Text="Rest · 自动" Classes="xyui-text-caption" FontSize="10" />
+              <c:XYButton Content="常态" Variant="Secondary" Width="80" Height="30" />
+            </StackPanel>
+            <StackPanel Margin="0,0,8,4" Spacing="2">
+              <TextBlock Text="Hover · 自动" Classes="xyui-text-caption" FontSize="10" />
+              <c:XYButton Content="悬停测试" Variant="Secondary" Width="80" Height="30" />
+            </StackPanel>
+            <StackPanel Margin="0,0,8,4" Spacing="2">
+              <TextBlock Text="Pressed · 自动" Classes="xyui-text-caption" FontSize="10" />
+              <c:XYButton Content="按压测试" Variant="Secondary" Width="80" Height="30" />
+            </StackPanel>
+            <StackPanel Margin="0,0,0,4" Spacing="2">
+              <TextBlock Text="Disabled · 显式" Classes="xyui-text-caption" FontSize="10" />
+              <c:XYButton Content="禁用按钮" Variant="Secondary" IsEnabled="False" Width="80" Height="30" />
+            </StackPanel>
+          </WrapPanel>
+          <TextBlock Text="Availability（可用性 / 显式语义）" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource XY.Brush.Accent.Strong}" Margin="0,4,0,0" />
+          <Grid ColumnDefinitions="*,*,*">
+            <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.App}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+              <StackPanel Spacing="2">
+                <TextBlock Text="Disabled · 显式" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
+                <TextBlock Text="IsEnabled=&quot;False&quot;" Classes="xyui-text-code" FontSize="9" />
+              </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Margin="2,0,2,0" Background="{DynamicResource XY.Brush.Surface.App}" Classes="xyui-border-default" CornerRadius="6" Padding="8,6">
+              <StackPanel Spacing="2">
+                <TextBlock Text="ReadOnly · 显式" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Text.Primary}" />
+                <TextBlock Text="IsReadOnly=&quot;True&quot;" Classes="xyui-text-code" FontSize="9" />
+              </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Margin="4,0,0,0" Background="#FCF7EE" BorderBrush="#DCC48F" BorderThickness="1" CornerRadius="6" Padding="8,6">
+              <StackPanel Spacing="2">
+                <TextBlock Text="Locked · 组件语义" FontWeight="Bold" FontSize="11" Foreground="#8C6C2F" />
+                <TextBlock Text="NO GENERAL API" FontSize="9" Foreground="#9C7D3E" />
+              </StackPanel>
+            </Border>
+          </Grid>
+        </StackPanel>
+        <!-- 分隔线 -->
+        <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource XY.Brush.Border.Color.Subtle}" Margin="0,4" />
+        <!-- 右列：持续身份与语义状态区分 -->
+        <StackPanel Grid.Column="2" Spacing="8" Margin="10,0,0,0">
+          <TextBlock Text="Persistent Identity（持续身份）" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <WrapPanel>
+            <StackPanel Margin="0,0,8,4" Spacing="2">
+              <TextBlock Text="Selected · 显式 / 组件" Classes="xyui-text-caption" FontSize="10" />
+              <c:XYToggleButton Content="已选择" IsChecked="True" Width="86" Height="30" />
+            </StackPanel>
+            <StackPanel Margin="0,0,8,4" Spacing="2">
+              <TextBlock Text="Selected + Hover" Classes="xyui-text-caption" FontSize="10" />
+              <c:XYToggleButton Content="悬停保持身份" IsChecked="True" Width="96" Height="30" />
+            </StackPanel>
+            <StackPanel Margin="0,0,0,4" Spacing="2">
+              <TextBlock Text="Selected + Focus" Classes="xyui-text-caption" FontSize="10" />
+              <Border BorderBrush="{DynamicResource XY.Brush.Border.Color.Focus}" BorderThickness="2" CornerRadius="6" Padding="1">
+                <c:XYToggleButton Content="独立 Focus 环" IsChecked="True" Width="92" Height="28" />
+              </Border>
+            </StackPanel>
+          </WrapPanel>
+          <TextBlock Text="Semantic Status ≠ Interaction State" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource XY.Brush.Accent.Strong}" Margin="0,4,0,0" />
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <c:XYStatusBadge Text="Success" State="Success" />
+            <c:XYStatusBadge Text="Info" State="Info" />
+            <c:XYStatusBadge Text="Warning" State="Warning" />
+            <c:XYStatusBadge Text="Error" State="Error" />
+          </StackPanel>
+          <TextBlock Text="状态标签表达业务语义，不等于按钮交互状态；Warning 绝非按钮交互状态。" Classes="xyui-text-caption" FontSize="10" TextWrapping="Wrap" />
+        </StackPanel>
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>
