@@ -29,7 +29,10 @@
 │  │  ├─ diagnostic-safety.md  # 诊断日志与 UI 调度安全规范
 │  │  ├─ NAMING_RULES.md  # 命名与品牌规范
 │  │  ├─ naming-XuanYu-Engine.md  # 玄域引擎命名与品牌规范
-│  │  └─ ui-spec.md  # 记录对应主题的当前规范、计划或审计事实。
+│  │  ├─ ui-spec.md  # 记录对应主题的当前规范、计划或审计事实。
+│  │  └─ xyui/  # XYUI 双 Agent 开发规范与越权监督入口。
+│  │     ├─ README.md  # XYUI 双 Agent 规范优先级、所有权与交叉监督流程。
+│  │     └─ XYUI_Codex_Gemini双Agent开发与代码封装规范_v1.0.md  # 用户提供的 XYUI 双 Agent Current Working Standard 原文。
 │  ├─ knowledge/  # 集中正式工程知识与事故经验。
 │  │  ├─ architecture.md  # 记录对应工程知识的当前有效内容。
 │  │  ├─ data.md  # 记录对应工程知识的当前有效内容。

@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.65-rz · XYUI 双 Agent 开发规范入库与越权监督入口（2026-09-03 12:26:30 +08:00）
+
+- 目标：将用户提供的 `XYUI_Codex_Gemini双Agent开发与代码封装规范_v1.0` 纳入仓库，并建立 Codex/Gemini 所有权与越权即时报告入口。
+- 变化：原文原样保存至 `docs/governance/xyui/`；新增 README 明确与宪法、`AGENTS.md`、`docs/dev-rules.md` 的优先级关系、双方默认所有权、交叉审计字段、STOP 条件和 Technical/Presentation/User Acceptance 证据边界。
+- 验证：附件与仓库副本 SHA-256 一致；原文 1857 行、26882 字节；`docs-index.md`、`file-tree.md` 与四处版本号同步；未修改 Runtime、Gallery 或测试逻辑。
+- 状态：XYUI 双 Agent Current Working Standard STORED · CROSS-AGENT SUPERVISION ACTIVE · 用户最终冻结权保留。
+- 版本：`v0.2.28.65-rz` 已同步到四处版本文件。
+- Hash：规范原文 SHA-256 `31FA7827975FF7444B9A7DA44BEE5954B7D6ECAE719253A1AD4862408B3F6843`。
+
 ## v0.2.28.64-rz · XYUI-0.05 · Density Gallery Lane（2026-09-01 22:40:00 +08:00）
 
 - 目标：实装 XYUI-0.05 信息密度 Gallery 页面，覆盖主方案 B（实时信息密度实验室）、辅助方案 C（信息层级压缩矩阵）与方案 D（密度护栏）。
