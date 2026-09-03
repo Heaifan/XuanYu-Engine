@@ -1908,7 +1908,7 @@
    │  │     ├─ GalleryThemeConstructionTests.cs  # Gallery Light/Dark 主题构造与切换资源一致性测试。
    │  │     ├─ InteractionCombinationTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ InteractionStateTests.cs  # 验证对应模块的自动化行为与回归合同。
-   │  │     ├─ XYUI08StateResolverTests.cs  # XYUI-0-08 状态共存、单通道解析、焦点与语义分离合同。
+   │  │     ├─ XYUI10StateResolverTests.cs  # XYUI-0-10 状态共存、单通道解析、焦点与语义分离合同。
    │  │     ├─ MonoTextResponsiveTests.cs  # MonoText 共享 Label/Value/Unit 列在宽度变化下的稳定对齐回归。
    │  │     ├─ MonoTextRuntimeTests.cs  # MonoText 三列字体、字重、间距与对齐运行时合同测试。
    │  │     ├─ NavigationCollapseTests.cs  # 验证对应模块的自动化行为与回归合同。
@@ -2046,8 +2046,8 @@
    │  │  └─ XYUI-5.mapping.json  # 保存对应 XYUI 规范的规范化数据与映射。
     │  ├─ XYUI0.05/  # XYUI-0.05 Density Runtime API 合同。
     │  │  └─ XYUI-0.05-density-runtime-contract.md  # Density / Spacing / Sizing 边界与三档继承 API。
-    │  ├─ XYUI0.08/  # XYUI-0.08 States Foundation Runtime API 合同。
-    │  │  └─ XYUI-0.08-runtime-contract.md  # 状态事实、单通道解析、canonical token 与 Gemini 交接真值。
+    │  ├─ XYUI0.10/  # XYUI-0.10 States Runtime/Public API 真值合同。
+    │  │  └─ XYUI-0.10-runtime-contract.md  # 编号纠正、Public API 真值、测试数量口径与 Gemini 交接。
    │  ├─ XYUI6/  # 组织该模块下的正式文件。
    │  │  ├─ XYUI-6.canonical.md  # 保存对应 XYUI 规范的规范化数据与映射。
    │  │  ├─ XYUI-6.gaps.json  # 保存对应 XYUI 规范的规范化数据与映射。

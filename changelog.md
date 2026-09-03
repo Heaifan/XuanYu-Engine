@@ -1,11 +1,21 @@
 # changelog
 
-## v0.2.28.67-rz · XYUI-0-08 States Foundation Runtime 合同（2026-09-03 13:20:47 +08:00）
+## v0.2.28.68-rz · XYUI-0-10 编号纠正与 Runtime 真值交接（2026-09-03 13:51:31 +08:00）
 
-- 目标：建立 XYUI-0-08 的单一 States Foundation Runtime 合同，允许语义事实共存并按视觉通道单次解析。
+- 目标：纠正 States 的旧编号为正式编号 `XYUI-0-10`，输出基于真实源码的 Runtime/Public API 真值，并交接 Gemini。
+- 变化：迁移旧 States Runtime 合同目录到 `xyui/specs/XYUI0.10/`；测试文件改名为 `XYUI10StateResolverTests.cs`；明确 Resolver 当前源码为 `public` 但普通 Consumer 不应直接调用；补齐 Focus、Selected、ReadOnly、Locked、Active、Dragging、DropTarget 与测试数量口径。
+- 验证：当前 XYUI.Avalonia canonical command Discovered/Passed `412/412`；`367/367` 已确认是 2026-09-01 更早 revision 的历史结果；完整解决方案 Build 0 Warning/0 Error；Core `339/339`、WarCore `22/22`、World `1286/1286`；`git diff --check` 通过；ARCH-A 明确被既有未跟踪 `XYUIProbeTests.cs`（149 行）阻断。
+- 状态：`XYUI-0-10 STATES / NUMBERING CORRECTED / RUNTIME TRUTH TABLE CONFIRMED / TEST COUNT RECONCILED / READY FOR GEMINI DEVELOPER-DOC GALLERY UPDATE`；未声明 `USER VISUAL ACCEPTED` 或 `FINAL CLOSED`。
+- 版本：`v0.2.28.68-rz` 同步到四处版本文件。
+- Hash：`XYUI-0.10-runtime-contract.md` SHA-256 `4743E64B53F09B5D90548557B3A99DD9F82F0427C219FE9A35D247E2114F5789`；`XYUI10StateResolverTests.cs` SHA-256 `03DECDA94CF7441073D61D9EF639DFF0D7FD9A86946C5C06A08EFF8B7D4FFF2E`。
+- 遗留：`StatesView.axaml` 仍有 Gemini 范围内的“已锁定 · 0.08”标签，已上报由 Gemini 修正；本机 D 盘 SDK 不存在，使用 `E:\MyApp\sdk-dotnet\dotnet.exe`（10.0.400）。
+
+## v0.2.28.67-rz · XYUI-0-10 States Foundation Runtime 合同（2026-09-03 13:20:47 +08:00）
+
+- 目标：建立 XYUI-0-10 的单一 States Foundation Runtime 合同，允许语义事实共存并按视觉通道单次解析。
 - 变化：新增 `XyuiInteractionFacts`、`XyuiStateSnapshot`、`XyuiStateResolver`；补齐 Active/Dragging/DropTarget/ReadOnly/Locked 通用样式类；新增 Runtime truth table 与 Gemini 交接文档；不修改 Gallery。
 - 验证：Resolver targeted tests 7/7 通过；现有 InteractionState/Combination 代表性状态测试 12/12 通过；完整解决方案 Build 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1286/1286、XYUI.Avalonia 412/412 全部通过；`git diff --check` 通过；ARCH-A 的 WarCore 部分通过，但被既有未跟踪 `XYUIProbeTests.cs`（149 行）拦截。
-- 状态：`XYUI-0-08 STATES FOUNDATION RUNTIME CONTRACT IMPLEMENTED / TARGETED TESTS PASS / FULL BUILD PASS / ARCH-A BLOCKED BY PRE-EXISTING LOCAL FILE`；等待 Gemini Gallery 实现与用户人工验收，未声明 `USER VISUAL ACCEPTED` 或 `FINAL CLOSED`。
+- 状态：`XYUI-0-10 STATES FOUNDATION RUNTIME CONTRACT IMPLEMENTED / TARGETED TESTS PASS / FULL BUILD PASS / ARCH-A BLOCKED BY PRE-EXISTING LOCAL FILE`；等待 Gemini Gallery 实现与用户人工验收，未声明 `USER VISUAL ACCEPTED` 或 `FINAL CLOSED`。
 - 版本：`v0.2.28.67-rz` 已同步到四处版本文件。
 - Hash：`XyuiStateSnapshot.cs` SHA-256 `6444B0750D1492360B943DDDCE7CEFCCC6830AED4415AC48922C506350037C3E`；`XyuiStateResolver.cs` SHA-256 `E93C131112EC5E131E1C6A824B076E38D317FC19407861DC5D2CB13D05FBA3C9`。
 - 遗留：正式门禁必须使用可用 .NET SDK；当前机器 `D:\MyApp\sdk-dotnet\dotnet.exe` 不存在，使用等价的 `E:\MyApp\sdk-dotnet\dotnet.exe`（10.0.400）执行。

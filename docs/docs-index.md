@@ -66,7 +66,7 @@
 
 ## XYUI Runtime 合同
 
-- `xyui/specs/XYUI0.08/XYUI-0.08-runtime-contract.md`：States Foundation Runtime API、单通道解析真值表与 Gemini 交接事实。
+- `xyui/specs/XYUI0.10/XYUI-0.10-runtime-contract.md`：States Runtime/Public API 真值、编号纠正、测试数量口径与 Gemini 交接事实。
 
 ## 架构文档（architecture/）
 

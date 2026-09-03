@@ -4,7 +4,7 @@ using XYUI.Avalonia.Interaction;
 
 namespace XYUI.Avalonia.Tests;
 
-public sealed class XYUI08StateResolverTests
+public sealed class XYUI10StateResolverTests
 {
     [Fact]
     public void Semantic_facts_can_coexist_and_resolve_once_per_channel()
