@@ -1,5 +1,19 @@
 # changelog
 
+## v0.2.28.72-rz · XYUI-0.09 · Surface Gallery 浮层解耦与开发者文档收口（2026-09-03 21:10:00 +08:00）
+
+- 目标：根据用户审查反馈完成 XYUI-0.09 Surface 表面层级 Gallery 开发者文档的最终收口，彻底厘清普通承载流与浮层生命周期的视觉边界，修复文本截断并建立 10 项 Canonical Surface 完整心智。
+- 变化：
+  - 主图浮层解耦（`SurfaceMapSection.axaml`）：将 Popup / Tooltip 从普通承载流 Panel 内部彻底剥离，作为独立的 `浮层生命周期 · Overlay Layer` 并列展示，直观建立“Raised = 流内局部抬升，Popup/Tooltip = 脱离普通布局生命周期”的核心心智。
+  - 文本截断修复（`SurfaceCodePatternsSection.axaml`）：优化 Advanced 卡片布局宽度与 TextWrapping 换行，确保普通业务开发者与组件作者分工规则在各窗口尺寸下完整可读。
+  - 10 项 Canonical 语义提示：在 Quick Start 与代码速查区明确提示系统底层共有 10 项 Canonical Surface（App、Panel、PanelAlt、Raised、Canvas、Toolbar、Input、Overlay、Selected、BorderReference），主图重点解析 6 项常用层级，消除新人心智盲区。
+  - 真实 XAML 语法核实：确认当前真实 Public API 为 `xy:XY.Surface="XY.Surface.Panel"` 等完整 Token 格式，并在使用说明中准确引导。
+  - 架构与文件树：同步 `file-tree.md` 中新增的 6 组 Surface 视图文件；四处版本号同步至 `v0.2.28.72-rz`。
+- 验证：`XYUI.Avalonia.slnx` 串行构建 0 警告 0 错误；`XYUI.Avalonia.Tests` 测试套件全部通过；`scripts/arch-a-guard.ps1` 架构守卫与 5+100 行限通过；`git diff --check` 通过。
+- 状态：`XYUI-0-09 SURFACE / GALLERY DEVELOPER DOCUMENTATION IMPLEMENTED / REAL RUNTIME CONSUMED / AWAITING USER VISUAL + DEVELOPER-USABILITY ACCEPTANCE`；未声明 `USER VISUAL ACCEPTED` 或 `FINAL CLOSEOUT`。
+- 版本：`v0.2.28.72-rz` 已同步到四处版本文件。
+- Hash：`ee41844c`。
+
 ## v0.2.28.71-rz · XYUI-0-09 · Surface Runtime Contract（2026-09-03 20:11:05 +08:00）
 
 - 目标：将既有 Surface Token 与 `xy:XY.Surface` Facade 收口为可复用、可测试的 Foundation Runtime Contract。

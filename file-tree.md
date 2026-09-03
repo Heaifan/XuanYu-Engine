@@ -1454,6 +1454,18 @@
    │  │     │  ├─ ShapeScenariosSection.axaml.cs  # Shape 场景决策判断代码隐藏。
    │  │     │  ├─ ShapeView.axaml  # Shape 规范页主视图（四段式：核心规则/主矩阵/四通道正交/代码与守卫）。
    │  │     │  ├─ ShapeView.axaml.cs  # Shape 规范页主代码隐藏。
+   │  │     │  ├─ SurfaceCodePatternsSection.axaml  # Surface 规范使用写法/高级建议/禁止反例视图。
+   │  │     │  ├─ SurfaceCodePatternsSection.axaml.cs  # Surface 规范使用代码隐藏。
+   │  │     │  ├─ SurfaceCompositionSection.axaml  # Surface 与 Border/Radius/Popup 四通道正交矩阵视图。
+   │  │     │  ├─ SurfaceCompositionSection.axaml.cs  # Surface 正交矩阵视图代码隐藏。
+   │  │     │  ├─ SurfaceCoreRulesSection.axaml  # Surface 四大核心规则卡片视图。
+   │  │     │  ├─ SurfaceCoreRulesSection.axaml.cs  # Surface 四大核心规则代码隐藏。
+   │  │     │  ├─ SurfaceMapSection.axaml  # Surface 承载层级地图（工作区与浮层分离）主视觉视图。
+   │  │     │  ├─ SurfaceMapSection.axaml.cs  # Surface 承载层级地图代码隐藏。
+   │  │     │  ├─ SurfaceScenariosSection.axaml  # Surface 场景决策判断卡片视图。
+   │  │     │  ├─ SurfaceScenariosSection.axaml.cs  # Surface 场景决策判断代码隐藏。
+   │  │     │  ├─ SurfaceView.axaml  # Surface 表面层级规范页主视图（四段式结构）。
+   │  │     │  ├─ SurfaceView.axaml.cs  # Surface 表面层级规范页代码隐藏。
    │  │     │  ├─ TypographySamplesView.axaml  # Typography 消费示例（Heading/Body/Label/Caption/Mono/信息等级/高密度对照）。
    │  │     │  ├─ TypographySamplesView.axaml.cs  # Typography 消费示例代码隐藏。
    │  │     │  ├─ TypographyView.axaml  # Typography 规范页视图（token 表数据驱动 + 滚动）。

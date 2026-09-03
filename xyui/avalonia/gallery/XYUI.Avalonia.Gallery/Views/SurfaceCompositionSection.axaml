@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XYUI.Avalonia.Gallery.Views.SurfaceCompositionSection">
+  <Border Classes="xyui-surface-panel xyui-border-default" CornerRadius="10" Padding="14,10">
+    <StackPanel Spacing="10">
+      <TextBlock Text="03 · Surface × Border × Radius × Popup 关系" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+      <Grid ColumnDefinitions="*,*,*,*">
+        <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="10">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Surface" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="回答：内容在哪一层？" Classes="xyui-text-body" FontSize="11" />
+            <TextBlock Text="App / Panel / Raised / Popup..." Classes="xyui-text-caption" FontSize="10" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Margin="2,0,2,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="10">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Border" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="回答：边界需要多明确？" Classes="xyui-text-body" FontSize="11" />
+            <TextBlock Text="Subtle / Default / Strong / Focus..." Classes="xyui-text-caption" FontSize="10" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="2" Margin="2,0,2,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="10">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Radius" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="回答：转角需要多柔和？" Classes="xyui-text-body" FontSize="11" />
+            <TextBlock Text="Small / Medium / Large / Full..." Classes="xyui-text-caption" FontSize="10" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="3" Margin="4,0,0,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="8" Padding="10">
+          <StackPanel Spacing="3">
+            <TextBlock Text="Popup / Tooltip" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="回答：是否脱离普通生命周期？" Classes="xyui-text-body" FontSize="11" />
+            <TextBlock Text="浮层语义不是“更高一点的普通面板”。" Classes="xyui-text-caption" FontSize="10" />
+          </StackPanel>
+        </Border>
+      </Grid>
+      <!-- 决策矩阵表 -->
+      <Border Classes="xyui-border-default" Background="{DynamicResource XY.Brush.Surface.App}" CornerRadius="8" Padding="10">
+        <Grid ColumnDefinitions="1.2*,1.1*,1.4*,1.6*" RowDefinitions="Auto,Auto,Auto,Auto">
+          <!-- Header -->
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="开发目标" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="优先语义" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" Text="辅助组合" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <TextBlock Grid.Row="0" Grid.Column="3" Text="不要误用" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <!-- Row 1 -->
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="做一个次级工作区" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="PanelAlt" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="1" Grid.Column="2" Text="Border + Radius" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="1" Grid.Column="3" Text="不要直接选 Raised" Margin="0,6,0,0" Foreground="{DynamicResource XY.Brush.System.Danger}" FontSize="11" />
+          <!-- Row 2 -->
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="做一个普通卡片" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="2" Grid.Column="1" Text="Raised" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="2" Grid.Column="2" Text="Border.Default + Radius" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="2" Grid.Column="3" Text="不要拿 Raised 当全屏底色" Margin="0,6,0,0" Foreground="{DynamicResource XY.Brush.System.Danger}" FontSize="11" />
+          <!-- Row 3 -->
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="做一个菜单浮层" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="3" Grid.Column="1" Text="Popup" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="3" Grid.Column="2" Text="Border / Radius 按规范组合" Margin="0,6,0,0" Classes="xyui-text-body" FontSize="11" />
+          <TextBlock Grid.Row="3" Grid.Column="3" Text="不要 Raised + 手工阴影冒充 Popup" Margin="0,6,0,0" Foreground="{DynamicResource XY.Brush.System.Danger}" FontSize="11" />
+        </Grid>
+      </Border>
+    </StackPanel>
+  </Border>
+</UserControl>

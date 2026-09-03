@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
+             x:Class="XYUI.Avalonia.Gallery.Views.SurfaceMapSection">
+  <Border Classes="xyui-surface-panel xyui-border-default" CornerRadius="10" Padding="14,12">
+    <StackPanel Spacing="10">
+      <StackPanel Spacing="2">
+        <TextBlock Text="02 · Surface 层级地图 / 使用场景" Classes="xyui-text-section" FontSize="16" FontWeight="Bold" />
+        <TextBlock Text="同一组内容放在不同 Surface 上，表达的是“承载关系变化”，不是单纯颜色深浅变化。" Classes="xyui-text-caption" />
+      </StackPanel>
+      <!-- 主视觉：层级地图（Popup/Tooltip 悬于 Panel 外部） -->
+      <Border Background="{DynamicResource XY.Brush.Surface.App}" Classes="xyui-border-default" CornerRadius="10" Padding="12">
+        <StackPanel Spacing="8">
+          <TextBlock Text="Surface.App · 最底层应用画布" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+          <!-- 水平分栏：左为普通承载流 Panel，右为脱离普通流的浮层 Overlay -->
+          <Grid ColumnDefinitions="1.4*,1*">
+            <!-- 左：普通承载流 Panel -->
+            <Border Grid.Column="0" Margin="0,0,8,0" Background="{DynamicResource XY.Brush.Surface.Panel}" Classes="xyui-border-subtle" CornerRadius="8" Padding="10">
+              <StackPanel Spacing="6">
+                <TextBlock Text="Surface.Panel · 主工作区（普通承载流）" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+                <Grid ColumnDefinitions="*,*">
+                  <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Classes="xyui-border-subtle" CornerRadius="6" Padding="8" Height="52">
+                    <StackPanel VerticalAlignment="Center">
+                      <TextBlock Text="Surface.PanelAlt" FontWeight="Bold" FontSize="11" />
+                      <TextBlock Text="次级侧栏 / 工具条底色" Classes="xyui-text-caption" FontSize="9" />
+                    </StackPanel>
+                  </Border>
+                  <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default" CornerRadius="6" Padding="8" Height="52">
+                    <StackPanel VerticalAlignment="Center">
+                      <TextBlock Text="Surface.Raised" FontWeight="Bold" FontSize="11" />
+                      <TextBlock Text="局部卡片（在流内抬升）" Classes="xyui-text-caption" FontSize="9" />
+                    </StackPanel>
+                  </Border>
+                </Grid>
+              </StackPanel>
+            </Border>
+            <!-- 右：浮层生命周期 Overlay Layer（脱离普通流） -->
+            <Border Grid.Column="1" Margin="4,0,0,0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Strong}" BorderThickness="1" CornerRadius="8" Padding="10" Background="{DynamicResource XY.Brush.Surface.PanelAlt}">
+              <StackPanel Spacing="6">
+                <TextBlock Text="浮层生命周期 · Overlay Layer（脱离普通流）" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+                <Grid ColumnDefinitions="1.1*,0.9*">
+                  <Border Grid.Column="0" Margin="0,0,4,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default xyui-shadow-popup" CornerRadius="6" Padding="6" Height="52">
+                    <StackPanel VerticalAlignment="Center">
+                      <TextBlock Text="Popup" FontWeight="Bold" FontSize="11" />
+                      <TextBlock Text="菜单 / 弹层（浮层）" Classes="xyui-text-caption" FontSize="9" />
+                    </StackPanel>
+                  </Border>
+                  <Border Grid.Column="1" Margin="4,0,0,0" Background="{DynamicResource XY.Brush.Surface.Raised}" Classes="xyui-border-default xyui-shadow-tooltip" CornerRadius="6" Padding="6" Height="52">
+                    <StackPanel VerticalAlignment="Center">
+                      <TextBlock Text="Tooltip" FontWeight="Bold" FontSize="11" />
+                      <TextBlock Text="提示浮层" Classes="xyui-text-caption" FontSize="9" />
+                    </StackPanel>
+                  </Border>
+                </Grid>
+              </StackPanel>
+            </Border>
+          </Grid>
+        </StackPanel>
+      </Border>
+      <!-- 下方场景判断 -->
+      <views:SurfaceScenariosSection />
+    </StackPanel>
+  </Border>
+</UserControl>

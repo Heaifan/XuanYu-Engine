@@ -1,54 +1,52 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:c="using:XYUI.Avalonia.Controls"
+             xmlns:views="using:XYUI.Avalonia.Gallery.Views"
              x:Class="XYUI.Avalonia.Gallery.Views.SurfaceView">
-  <ScrollViewer>
-    <StackPanel Margin="{DynamicResource XY.Padding.Panel}" Spacing="{DynamicResource XY.Gap.Section}">
-      <StackPanel Orientation="Horizontal" Spacing="{DynamicResource XY.Gap.Field}">
-        <TextBlock Text="表面与层级体系 (Surface Foundation)" Classes="xyui-heading-panel" />
-        <c:XYStatusBadge Text="草稿 / 预览" State="Warning" VerticalAlignment="Center" />
-      </StackPanel>
-
-      <!-- 1. 基础表面层级 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
-        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="1. 表面层级体系 (Surface Elevation &amp; Contrast)" Classes="xyui-text-section" />
-          <Border Background="{DynamicResource XY.Brush.Surface.App}" Padding="{DynamicResource XY.Padding.Panel}" Margin="0,2">
-            <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-              <TextBlock Text="Surface.App (最底层画板)" Classes="xyui-text-caption" />
-              <Border Background="{DynamicResource XY.Brush.Surface.Panel}" Padding="{DynamicResource XY.Padding.Panel}" Margin="0,2">
-                <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-                  <TextBlock Text="Surface.Panel (工作区面板)" Classes="xyui-text-caption" />
-                  <Border Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="{DynamicResource XY.Padding.Panel}" Margin="0,2">
-                    <TextBlock Text="Surface.PanelAlt (次级侧栏/工具条底色)" Classes="xyui-text-caption" />
-                  </Border>
-                  <Border Background="{DynamicResource XY.Brush.Surface.Raised}" Padding="{DynamicResource XY.Padding.Panel}"
-                          BorderBrush="{DynamicResource XY.Brush.Border.Color.Default}" BorderThickness="{DynamicResource XY.Border.Width.Default}" Margin="0,2">
-                    <TextBlock Text="Surface.Raised (卡片/浮起元素底色)" Classes="xyui-text-caption" />
-                  </Border>
-                </StackPanel>
-              </Border>
-            </StackPanel>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="{DynamicResource XY.Space.3}" Margin="0,0,12,16">
+      <!-- 头部：标题与 Badge -->
+      <StackPanel Spacing="6">
+        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+          <TextBlock Text="表面层级 / Surface" Classes="xyui-heading-page" FontSize="22" FontWeight="Bold" />
+          <Border Background="#F6F1E7" BorderBrush="#E6D8BA" BorderThickness="1" CornerRadius="6" Padding="8,3" VerticalAlignment="Center">
+            <TextBlock Text="开发中 · 0.09" FontWeight="Bold" FontSize="11" Foreground="#806A3A" />
           </Border>
         </StackPanel>
+        <TextBlock Text="Surface 用来表达“内容承载层级”，不是随意换背景色；先判断内容处于哪一层，再决定 Border / Radius / Shadow 等辅助视觉。"
+                   Classes="xyui-text-caption" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <!-- Developer Quick Start 三列横幅 -->
+      <Border Background="#F8FAFB" BorderBrush="#E0E8EC" BorderThickness="1" CornerRadius="8" Padding="14,10">
+        <Grid ColumnDefinitions="*,Auto,*,Auto,*">
+          <StackPanel Grid.Column="0" Spacing="2">
+            <TextBlock Text="先问：内容在哪一层？" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="App → Panel → PanelAlt / Raised → 浮层 Overlay" Classes="xyui-text-caption" FontSize="11" />
+          </StackPanel>
+          <Rectangle Grid.Column="1" Width="1" Fill="#E2E9EC" Margin="10,0" />
+          <StackPanel Grid.Column="2" Spacing="2">
+            <TextBlock Text="Surface ≠ Shape / Border" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="Surface 决定承载层级；Shape/Radius/Border 负责轮廓与边界" Classes="xyui-text-caption" FontSize="11" />
+          </StackPanel>
+          <Rectangle Grid.Column="3" Width="1" Fill="#E2E9EC" Margin="10,0" />
+          <StackPanel Grid.Column="4" Spacing="2">
+            <TextBlock Text="Canonical 共 10 项语义" FontWeight="Bold" FontSize="12" Foreground="#355364" />
+            <TextBlock Text="主图重点讲 6 个常用层级；真实 Attached 声明 xy:XY.Surface" Classes="xyui-text-caption" FontSize="11" />
+          </StackPanel>
+        </Grid>
       </Border>
 
-      <!-- 2. 浮层与阴影层级 -->
-      <Border Classes="xyui-border-subtle" Padding="{DynamicResource XY.Padding.Panel}">
-        <StackPanel Spacing="{DynamicResource XY.Gap.Field}">
-          <TextBlock Text="2. 浮层表面 (Popup / Tooltip Surface)" Classes="xyui-text-section" />
-          <WrapPanel>
-            <Border Background="{DynamicResource XY.Brush.Surface.Popup}" BoxShadow="{DynamicResource XY.Shadow.Popup}"
-                    Padding="{DynamicResource XY.Padding.Panel}" CornerRadius="{DynamicResource XY.Radius.Popup}" Width="160" Margin="0,4,12,4">
-              <TextBlock Text="Surface.Popup 浮层" Classes="xyui-text-caption" HorizontalAlignment="Center" />
-            </Border>
-            <Border Background="{DynamicResource XY.Brush.Surface.Tooltip}" BoxShadow="{DynamicResource XY.Shadow.Tooltip}"
-                    Padding="8,4" CornerRadius="{DynamicResource XY.Radius.Control}" Width="160" Margin="0,4,12,4">
-              <TextBlock Text="Surface.Tooltip 提示" Classes="xyui-text-caption" HorizontalAlignment="Center" />
-            </Border>
-          </WrapPanel>
-        </StackPanel>
-      </Border>
+      <!-- 01 · 核心规则 -->
+      <views:SurfaceCoreRulesSection />
+
+      <!-- 02 · Surface 层级地图 / 使用场景 -->
+      <views:SurfaceMapSection />
+
+      <!-- 03 · Surface × Border × Radius × Popup 关系 -->
+      <views:SurfaceCompositionSection />
+
+      <!-- 04 · 怎么使用 / 高级 / 禁止 -->
+      <views:SurfaceCodePatternsSection />
     </StackPanel>
   </ScrollViewer>
 </UserControl>
