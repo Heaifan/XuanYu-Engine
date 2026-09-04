@@ -4,6 +4,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Styling;
 using XYUI.Avalonia.Theme;
+using XYUI.Avalonia.Interaction;
 using XYUI.Avalonia.Typography;
 using VectorPath = Avalonia.Controls.Shapes.Path;
 
@@ -28,6 +29,7 @@ public static partial class XyuiComponentStyles
         Brush(mark, Border.BackgroundProperty, XyuiSectionTitleResources.LeftMarkKey); styles.Add(mark);
         styles.Add(Text(typeof(TextBlock), "xyui-section-title-text", XyuiTypographyTokens.FontUi, 14, 600, 18, XyuiSectionTitleResources.TextKey));
         styles.Add(Text(typeof(XYLink), "xyui-link", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 500, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Link"));
+        LinkStates(styles);
         styles.Add(Text(typeof(TextBlock), "xyui-mono-data-label", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeMono, 600, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Secondary"));
         styles.Add(Text(typeof(TextBlock), "xyui-mono-data-value", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Secondary"));
         styles.Add(Text(typeof(TextBlock), "xyui-mono-data-unit", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 600, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
@@ -56,6 +58,18 @@ public static partial class XyuiComponentStyles
         Mark(styles, "xyui-warning-text-mark", "XY.Brush.Semantic.Warning.Text", 14, false);
         Mark(styles, "xyui-search-highlight-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
         Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
+    }
+
+    static void LinkStates(Styles styles)
+    {
+        var baseStyle = new Style(x => x.OfType<XYLink>().Class("xyui-link"));
+        baseStyle.Setters.Add(new Setter(Button.BackgroundProperty, Brushes.Transparent));
+        baseStyle.Setters.Add(new Setter(Button.BorderBrushProperty, Brushes.Transparent));
+        baseStyle.Setters.Add(new Setter(Button.BorderThicknessProperty, new Thickness(0)));
+        styles.Add(baseStyle);
+        styles.Add(XyuiInteractionState.Build("xyui-link", XyuiInteractionState.Hover, Button.ForegroundProperty, "XY.Brush.Accent.Strong"));
+        styles.Add(XyuiInteractionState.Build("xyui-link", XyuiInteractionState.Pressed, Button.ForegroundProperty, "XY.Brush.Accent.Strong"));
+        styles.Add(XyuiInteractionState.Build("xyui-link", XyuiInteractionState.Disabled, Button.ForegroundProperty, "XY.Brush.State.Disabled.Text"));
     }
 
     static void IconSize(Styles styles, string name, XyuiIconSizeMetrics metrics)

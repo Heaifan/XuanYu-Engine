@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.75-rz · XYUI-1-01～06 · Text Runtime Foundation 对齐（2026-09-04 23:16:46 +08:00）
+
+- 目标：完成 Text、Label、Caption、Heading、SectionTitle、Link 的最小 Runtime 对齐与真实行为测试。
+- 变化：XYLink 接入统一组件身份、Focus 语义及 Hover/Pressed/Disabled Foundation 状态资源；确认 SectionTitle 保持既有批准的 14/18 排版合同；新增 01～06 Runtime 测试。
+- 验证：定向测试 `3/3 PASS`；`git diff --check PASS`；正式解决方案 Build、全套测试与架构守卫待继续执行。
+- 状态：Runtime 定向验证通过，等待正式门禁与用户视觉验收；Gallery/Developer Documentation 未在本轮修改。
+- 版本：`v0.2.28.75-rz` 已同步到四处版本文件。
+
 ## v0.2.28.74-rz · XYUI-0-10 & XYUI-0-11 · States 与 Responsive 双里程碑联合封版（2026-09-03 23:20:00 +08:00）
 
 - 目标：完成 XYUI-0-10 States 交互状态与 XYUI-0-11 Responsive 响应式双里程碑的最终联合收口与真机验收封版（FINAL CLOSEOUT）。

@@ -1973,6 +1973,7 @@
    │  │     ├─ XYUI.Avalonia.Tests.csproj  # 测试项目文件（xunit + Avalonia.Headless 12.0.4）。
    │  │     ├─ XYUI1CoverageTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI1DocumentationTests.cs  # 实现对应模块的 C# 职责。
+   │  │     ├─ XYUI1TextRuntimeTests.cs  # 验证 XYUI-1 01～06 文本控件 Runtime 与 Link 状态契约。
    │  │     ├─ XYUI1FidelityTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ XYUI2Batch01ReconcileTests.cs  # Batch 01 文档/预览对账回归（计数与真实状态一致）。
    │  │     ├─ XYUI2BoolPropertyTests.cs  # 实现对应模块的 C# 职责。
