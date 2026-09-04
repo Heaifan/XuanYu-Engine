@@ -7,6 +7,10 @@ public sealed record XYUIDocVariant(string Name, string Description, string Usag
 public sealed record XYUIDocState(string Name, string Description);
 public sealed record XYUIDocToken(string Name, string Value, string Description);
 
+public sealed record XYUIDocRule(string Title, string Content);
+public sealed record XYUIDocFoundationItem(string Concept, string FoundationToken, string Description);
+public sealed record XYUIDocGuideItem(string Category, string Description);
+
 public sealed record XYUI1ComponentDocument(
     string Id, string ChineseName, string EnglishName, string Overview, string WhenToUse,
     Func<Control> PreviewFactory, IReadOnlyList<string> Usages, IReadOnlyList<XYUIDocVariant> Variants,
@@ -16,6 +20,8 @@ public sealed record XYUI1ComponentDocument(
     public string CanonicalDisplay => $"{CanonicalIdentity} · {EnglishName}";
     public string CanonicalIdentity { get; init; } = "";
     public string KnownGap { get; init; } = "";
+    public string Category { get; init; } = "Canonical Stable · Typography / Text";
+    public string QuickStartXaml { get; init; } = "";
     // 验收状态由目录注入：XYUI-1 已人工通过；XYUI-2 Batch 01 尚未人工通过，只能写"待验收"。
     public string Acceptance { get; init; } = "USER VISUAL ACCEPTED";
     public string StatusText => string.IsNullOrEmpty(KnownGap) ? Acceptance : $"{Acceptance} · GAP RETAINED";
@@ -23,6 +29,14 @@ public sealed record XYUI1ComponentDocument(
     public bool HasStates => States.Count > 0;
     public bool HasInteractionGuide => Id == "XYUI-2-09";
     public bool HasNumberFieldInteractionGuide => Id == "XYUI-2-10";
+    public IReadOnlyList<XYUIDocRule> CoreRules { get; init; } = [];
+    public IReadOnlyList<XYUIDocFoundationItem> FoundationMappings { get; init; } = [];
+    public IReadOnlyList<XYUIDocGuideItem> HowToUse { get; init; } = [];
+    public Func<Control>? LiveExamplesFactory { get; init; }
+    public bool HasCoreRules => CoreRules.Count > 0;
+    public bool HasFoundationMappings => FoundationMappings.Count > 0;
+    public bool HasHowToUse => HowToUse.Count > 0;
+    public bool HasLiveExamples => LiveExamplesFactory != null;
 }
 
 public sealed record XYUI1NavigationItem(

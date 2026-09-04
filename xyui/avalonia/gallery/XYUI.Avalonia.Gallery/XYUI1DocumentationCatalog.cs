@@ -18,9 +18,29 @@ public static partial class XYUI1DocumentationCatalog
         var details = Details(id, chineseName);
         return new(id, chineseName, entry.Name, details.Overview, details.WhenToUse,
             () => XYUI1GalleryCatalog.CreatePreview(id), Usages(id, type), Variants(id),
-            States(id), Properties(id), Tokens(id), type)
-        { CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap };
+            Phase1AStates(id), Properties(id), Tokens(id), type)
+        {
+            CanonicalIdentity = entry.CanonicalIdentity,
+            KnownGap = entry.KnownGap,
+            Category = CategoryOf(id),
+            QuickStartXaml = QuickStart(id, type),
+            CoreRules = CoreRules(id),
+            FoundationMappings = FoundationMappings(id),
+            HowToUse = HowToUse(id),
+            LiveExamplesFactory = () => XYUI1LiveExamplesFactory.Create(id)
+        };
     }
+
+    static string CategoryOf(string id) => id switch
+    {
+        "XYUI-1-01" => "Canonical Stable · Typography / Text",
+        "XYUI-1-02" => "Canonical Stable · Form / Property Key",
+        "XYUI-1-03" => "Canonical Stable · Auxiliary / Secondary",
+        "XYUI-1-04" => "Canonical Stable · Structure / Heading",
+        "XYUI-1-05" => "Canonical Stable · Inspector / Group Header",
+        "XYUI-1-06" => "Canonical Stable · Navigation / Interactive Link",
+        _ => "Canonical Stable · Typography / Text"
+    };
 
     static (string Overview, string WhenToUse) Details(string id, string title) => id switch
     {

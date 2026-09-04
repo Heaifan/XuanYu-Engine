@@ -14,8 +14,13 @@ public partial class XYUI1ComponentDocumentView : UserControl
     void OnDataContextChanged(object? sender, EventArgs e)
     {
         if (DataContext is not XYUI1ComponentDocument document) return;
-        var preview = document.PreviewFactory();
         PreviewHost.HorizontalContentAlignment = HorizontalAlignment.Left;
-        PreviewHost.Content = preview;
+        PreviewHost.Content = document.PreviewFactory();
+        var liveHost = this.FindControl<ContentControl>("LiveExamplesHost");
+        if (liveHost != null && document.LiveExamplesFactory != null)
+        {
+            liveHost.HorizontalContentAlignment = HorizontalAlignment.Left;
+            liveHost.Content = document.LiveExamplesFactory();
+        }
     }
 }

@@ -23,7 +23,8 @@ public static partial class XYUI1DocumentationCatalog
 
     static IReadOnlyList<XYUIDocToken> Tokens(string id) => id switch
     {
-        "XYUI-1-05" => [T("方案", "S-05 · Soft Header + Left Mark"), T("字号 / 行高", "14 / 18 DIP"), T("背景", "#EEF3F6"), T("Left Mark", "3 × 16 DIP / #526873"), T("前景", "#243744"), T("圆角", "3 DIP")],
+        "XYUI-1-05" => [T("方案", "S-05 · Soft Header + Left Mark"), T("字号 / 行高", "14 / 18 DIP"), T("背景", "XY.Surface.Panel"), T("Left Mark", "3 × 16 DIP / XY.Accent.Strong"), T("前景", "XY.Text.Primary"), T("圆角", "XY.Radius.None")],
+        "XYUI-1-06" => [T("链接前景", "XY.Text.Link"), T("悬浮/按下", "XY.Accent.Strong"), T("禁用", "XY.Text.Disabled"), T("焦点外框", "xyui-focusable")],
         "XYUI-1-04" => [T("字体", "XY.Font.UI"), T("层级", "XY.FontSize.PanelTitle / PageTitle")],
         "XYUI-1-07" => [T("正文", "XY.Text.Tertiary"), T("Code Mark", "XY.Icon.Mark"), T("尺寸 / Stroke", "8 / 1.25 DIP"), T("字号", "XY.FontSize.Mono")],
         "XYUI-1-08" => [T("方案", "M-05A · Structured Mono Data"), T("列宽", "Label Auto / Value Auto / Unit Auto"), T("Label", "完整显示 / UI Semibold / Left"), T("Value", "XY.Font.Mono / Regular / Right"), T("Unit", "UI Semibold / Left"), T("列间距", "XY.Space.4 + XY.Space.1 / XY.Space.2（20 / 8 DIP）")],

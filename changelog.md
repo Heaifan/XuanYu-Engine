@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.28.76-rz · XYUI-1-01～06 · Gallery 与开发者文档标准化（2026-09-04 23:55:00 +08:00）
+
+- 目标：落实 Phase 1A 01～06（Text, Label, Caption, Heading, SectionTitle, Link）统一 Gallery Developer Documentation 模板与真实业务场景 Live Examples。
+- 变化：
+  - 固定文档模板：建立包含 Header、Developer Quick Start、01 Core Rules、02 Variants / Anatomy、03 Foundation & States、04 How To Use、Live Examples 的标准化架构。
+  - 信息模型扩充：扩展 `XYUI1ComponentDocument` 支持规则卡片、Foundation 映射与使用指南（Recommended / Advanced / Don't）。
+  - Live Examples：为 01～06 编写真实业务场景示例（正文阅读流与 Foreground 覆盖、表单 Key-Value、时间戳与单位辅助说明、Page/Panel 标题搭配、S-05 Left Mark 分组、Link 全状态交互矩阵）。
+  - 清除硬编码：将 SectionTitle Token 中的裸 HEX 色值彻底替换为 Foundation 语义 Token，补全 Link 状态与 Token 映射。
+- 验证：解决方案全量构建 0 警告 0 错误；测试套件 2070/2070 全数通过（XYUI.Avalonia.Tests 423/423 PASS）；ARCH-A 架构守卫 PASS；5+100 行硬门禁 PASS；git diff --check PASS。
+- 状态：Gemini Gallery 与文档就绪，等待用户真机视觉验收。
+- 版本：`v0.2.28.76-rz` 已同步到四处版本文件。
+
 ## v0.2.28.75-rz · XYUI-1-01～06 · Text Runtime Foundation 对齐（2026-09-04 23:16:46 +08:00）
 
 - 目标：完成 Text、Label、Caption、Heading、SectionTitle、Link 的最小 Runtime 对齐与真实行为测试。

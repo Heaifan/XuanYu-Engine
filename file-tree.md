@@ -1508,12 +1508,16 @@
    │  │     ├─ XYUI.Avalonia.Gallery.csproj  # Gallery 可执行项目文件。
    │  │     ├─ XYUI1DocumentationCatalog.Api.cs  # 真实 Avalonia 属性与 Foundation Token 文档表。
    │  │     ├─ XYUI1DocumentationCatalog.Content.cs  # 24 个组件的基础用法、变体和状态文案。
+   │  │     ├─ XYUI1DocumentationCatalog.Phase1A.Content.cs  # 提供 Phase 1A 01～06 的 QuickStart、CoreRules 与 HowToUse 文案。
+   │  │     ├─ XYUI1DocumentationCatalog.Phase1A.Foundation.cs  # 提供 Phase 1A 01～06 的 Foundation Token 映射与状态合同说明。
    │  │     ├─ XYUI1DocumentationCatalog.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI1DocumentationModels.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI1DocumentationViewModel.cs  # 左侧导航选择与模块/组件文档视图切换模型。
    │  │     ├─ XYUI1DocumentationViewModel.XYUI2.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI1DocumentationViewModel.XYUI3.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI1GalleryCatalog.cs  # 实现对应模块的 C# 职责。
+   │  │     ├─ XYUI1LiveExamplesFactory.cs  # 提供 Phase 1A 01～03（Text/Label/Caption）真实业务场景 Live Examples 工厂。
+   │  │     ├─ XYUI1LiveExamplesFactory.TitlesAndLink.cs  # 提供 Phase 1A 04～06（Heading/SectionTitle/Link）真实业务场景 Live Examples 工厂。
    │  │     ├─ XYUI2DocumentationCatalog.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2DocumentationCatalog.Properties.cs  # 提供 Gallery 对应页面、数据或运行时预览。
    │  │     ├─ XYUI2DocumentationCatalog.Usages.cs  # 提供 Gallery 对应页面、数据或运行时预览。
