@@ -13,17 +13,24 @@ public static partial class XYUI2DocumentationCatalog
             .Select(Create).ToArray();
     static XYUI1ComponentDocument Create(XyuiCatalogEntry entry)
     {
+        var id = entry.SourceItemId;
         var type = entry.AvaloniaType.Split('.').Last();
         var name = ChineseName(entry);
-        return new(entry.SourceItemId, name, type, entry.Description,
+        var variants = Phase2AVariants(id) is { Count: > 0 } p2v ? p2v : Names(entry.Variants).Select(x => new XYUIDocVariant(x, "", "")).ToArray();
+        var states = Phase2AStates(id) is { Count: > 0 } p2s ? p2s : Names(entry.States).Select(x => new XYUIDocState(x, "")).ToArray();
+        var props = Phase2AProperties(id) is { Count: > 0 } p2p ? p2p : Properties(id);
+        return new(id, name, type, entry.Description,
             entry.Usage == "See canonical spec" ? entry.States : entry.Usage,
-            () => XYUI2GalleryCatalog.CreatePreview(entry.SourceItemId),
-            Usages(entry.SourceItemId, type), Names(entry.Variants).Select(x => new XYUIDocVariant(x, "", "")).ToArray(),
-            Names(entry.States).Select(x => new XYUIDocState(x, "")).ToArray(),
-            Properties(entry.SourceItemId), Tokens(entry.SourceItemId), type)
+            () => XYUI2GalleryCatalog.CreatePreview(id),
+            Usages(id, type), variants, states, props, Tokens(id), type)
         {
             CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap,
-            Acceptance = PendingAcceptance
+            Acceptance = PendingAcceptance,
+            QuickStartXaml = Phase2AQuickStart(id),
+            CoreRules = Phase2ACoreRules(id),
+            FoundationMappings = Phase2AFoundationMappings(id),
+            HowToUse = Phase2AHowToUse(id),
+            LiveExamplesFactory = XYUI2LiveExamplesFactory.Create(id) is { } ex ? () => ex : null
         };
     }
     public const string PendingAcceptance = "READY FOR USER VISUAL ACCEPTANCE";

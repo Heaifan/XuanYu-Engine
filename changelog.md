@@ -1,5 +1,20 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2A (01～06) Runtime 契约加固与 Gallery 文档/示例闭环（2026-09-05 20:41:00 +08:00）
+
+- 目标：落实 XYUI-2-01～06（Button、IconButton、ToggleButton、SplitButton、DropDownButton、Checkbox）的 Runtime 契约加固、边界约束落实、5+100 行代码治理，并建立 XYUI-1 风格的开发者文档与真实业务场景 Live Examples。
+- 变化：
+  - 约束 A (DropDownButton)：明确单一命令区契约，严禁伪装为 Popup 所有者，Trigger ≠ Popup owner；Enter/Space 触发 OpenCommand。
+  - 约束 B (SplitButton)：明确双命令区隔离（Main zone → MainCommand, Menu zone → MenuCommand），不额外虚构菜单所有权；Enter/Space 默认触发 MainCommand。
+  - 约束 C (IconButton)：审计并落实无障碍要求，纯图标必须提供 AutomationProperties.Name 或 ToolTip.Tip；保持 Selected ≠ Checked 外部驱动语义。
+  - 约束 D (Checkbox)：确认三态流转（Checked / Unchecked / Indeterminate）与禁用态锁定。
+  - 开发者文档：创建 Phase 2A 系列文档模型（QuickStart、01 CoreRules、02 Variants/Anatomy、03 Foundation/States、04 HowToUse），完整回答五件事，补齐 01～05 缺失的属性表格。
+  - 业务实装：创建 XYUI2LiveExamplesFactory，为 01～06 编写主次操作排版、视口模式工具栏、视图模式持久开关、资产烘焙与工程发布、下拉格式选择、图层树状多选等真实场景，所有示例均消费真实运行时控件。
+  - 新增契约测试：编写 XYUI2Phase2AContractTests，新增 4 个契约测试实例，全量通过。
+- 验证：解决方案构建 0 警告 0 错误；测试套件 2105/2105 全数通过（XYUI.Avalonia.Tests 458/458 PASS；Core 339/339；WarCore 22/22；World 1286/1286）；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS；Gallery 成功启动。
+- 状态：`XYUI-2 · Phase 2A (01～06) IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING`。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
+
 ## v0.2.28.77-rz · XYUI-1-19～24 · Phase 1D Gallery 与实机视觉验收 Closeout（2026-09-05 18:35:00 +08:00）
 
 - 目标：完成 XYUI-1-19～24（Tooltip、RichText、SelectableText、EmptyText、SearchHighlight、TruncatedText）Gallery 开发者文档与业务场景实装，通过 Light/Dark 实机验收并完成 Phase 1D 最终收口。
