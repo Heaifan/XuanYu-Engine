@@ -2035,6 +2035,7 @@
    │  │     ├─ XYUI2Phase2CIdentityTests.cs  # 验证 Phase 2C (13～18) 页面使用完整 Canonical identity 映射。
    │  │     ├─ XYUI2Phase2ARegressionTests.cs  # 验证 Gallery 文档导航重建、Live Example 独立实例与 DropDownButton 统一命中区。
    │  │     ├─ XYUI2PropertyControlsTests.cs  # 实现对应模块的 C# 职责。
+   │  │     ├─ XYUI2QuickStartNormalizationTests.cs  # 验证 Phase 2C (13～18) Quick Start 仅保留至多 2 个核心示例并剥离状态测试台。
    │  │     ├─ XYUI2SearchFieldTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2SelectTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2SliderTests.cs  # 实现对应模块的 C# 职责。

@@ -52,7 +52,7 @@ public sealed class XYUI2TimePickerTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void TimePicker_gallery_has_real_variants_and_disabled_sample() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-18"); var pickers = preview.GetVisualDescendants().OfType<XYTimePicker>().ToArray(); Assert.True(pickers.Length >= 6); Assert.Contains(pickers, x => !x.ShowSeconds); Assert.Contains(pickers, x => !x.IsEnabled); preview.ApplyStyling();
+        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-18"); var pickers = preview.GetVisualDescendants().OfType<XYTimePicker>().ToArray(); Assert.Equal(2, pickers.Length); Assert.Contains(pickers, x => !x.ShowSeconds); Assert.Contains(pickers, x => x.ShowSeconds); preview.ApplyStyling();
     });
 
     static void Raise(XYTimePicker picker, Key key) { picker.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key }); Dispatcher.UIThread.RunJobs(); }

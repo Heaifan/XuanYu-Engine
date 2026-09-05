@@ -39,7 +39,7 @@ public sealed class XYUI2DatePickerTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void DatePicker_gallery_has_required_real_dates_and_disabled_sample() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-17"); var pickers = preview.GetVisualDescendants().OfType<XYDatePicker>().ToArray(); Assert.True(pickers.Length >= 9); Assert.Contains(pickers, x => x.SelectedDate == new DateOnly(2028, 2, 29)); Assert.Contains(pickers, x => !x.IsEnabled); preview.ApplyStyling();
+        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-17"); var pickers = preview.GetVisualDescendants().OfType<XYDatePicker>().ToArray(); Assert.Equal(2, pickers.Length); Assert.Contains(pickers, x => x.SelectedDate == new DateOnly(2026, 9, 5)); preview.ApplyStyling();
     });
 
     static void Raise(XYDatePicker picker, Key key) { picker.RaiseEvent(new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key }); Dispatcher.UIThread.RunJobs(); }

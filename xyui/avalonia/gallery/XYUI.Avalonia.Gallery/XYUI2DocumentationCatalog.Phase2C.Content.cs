@@ -4,11 +4,11 @@ public static partial class XYUI2DocumentationCatalog
 {
     static string Phase2CQuickStart(string id) => id switch
     {
-        "XYUI-2-13" => "<xy:XYSelect ItemsSource=\"{Binding Languages}\" SelectedIndex=\"0\" Placeholder=\"选择语言\" />",
-        "XYUI-2-14" => "<xy:XYTextArea Mode=\"Editor\" EditorType=\"JSON\" Text=\"{\n  \"\"mode\"\": \"\"balanced\"\"\n}\" />",
-        "XYUI-2-15" => "<xy:XYSearchField Placeholder=\"搜索资产与场景...\" SearchRequested=\"OnSearch\" />",
-        "XYUI-2-16" => "<xy:XYPasswordField Placeholder=\"请输入密码\" Password=\"{Binding AuthToken}\" />",
-        "XYUI-2-17" => "<xy:XYDatePicker SelectedDate=\"{Binding ReleaseDate}\" MinDate=\"2026-01-01\" />",
+        "XYUI-2-13" => "<xy:XYSelect ItemsSource=\"{Binding Languages}\" SelectedItem=\"{Binding Language}\" />",
+        "XYUI-2-14" => "<!-- Standard -->\n<xy:XYTextArea Text=\"{Binding Description}\" />\n<!-- Editor -->\n<xy:XYTextArea Mode=\"Editor\" EditorType=\"JSON\" Text=\"{Binding ConfigJson}\" />",
+        "XYUI-2-15" => "<xy:XYSearchField Placeholder=\"搜索资产与场景...\" Text=\"{Binding SearchQuery}\" />",
+        "XYUI-2-16" => "<xy:XYPasswordField Password=\"{Binding Password}\" />",
+        "XYUI-2-17" => "<xy:XYDatePicker SelectedDate=\"{Binding ReleaseDate}\" />",
         "XYUI-2-18" => "<xy:XYTimePicker Time=\"{Binding ScheduledTime}\" ShowSeconds=\"True\" />",
         _ => ""
     };

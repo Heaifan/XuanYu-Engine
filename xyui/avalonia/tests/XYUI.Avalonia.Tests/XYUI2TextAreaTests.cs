@@ -55,6 +55,6 @@ public sealed class XYUI2TextAreaTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void TextArea_gallery_has_real_standard_and_editor_examples() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-14"); Assert.True(preview.GetVisualDescendants().OfType<XYTextArea>().Count() >= 8); Assert.Contains(preview.GetVisualDescendants().OfType<XYTextArea>(), x => x.Mode == XYTextAreaMode.Editor && x.EditorType == "JSON");
+        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-14"); Assert.Equal(2, preview.GetVisualDescendants().OfType<XYTextArea>().Count()); Assert.Contains(preview.GetVisualDescendants().OfType<XYTextArea>(), x => x.Mode == XYTextAreaMode.Editor && x.EditorType == "JSON");
     });
 }

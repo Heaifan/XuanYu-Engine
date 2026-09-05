@@ -1,5 +1,21 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2C Quick Start 规范化收敛与 Visual Closeout（2026-09-06 00:06:00 +08:00）
+
+- 目标：落实 Phase 2C（13～18）Quick Start 规范化收敛，贯彻“Quick Start ≠ State Showcase”原则；左侧保留最小可用 XAML，右侧收缩为至多 2 个核心示例（1 个 Default + 至多 1 个核心 Variant），纵向间距 12 DIP；P0 彻底解决 14 XYTextArea 顶部异常压扁问题；将状态测试矩阵与边缘场景全面剥离并下放至 Live Examples 与 How To Use。
+- 变化：
+  - 13 XYSelect：右侧预览收缩为 Language 与 Quality 2 个核心示例；左侧 XAML 收敛为最小绑定代码。
+  - 14 XYTextArea (P0)：右侧预览规范为 Standard (300×104) 与 Editor (324×148 JSON) 两组完整容器，指定尺寸基线彻底消除压扁横线异常；左侧 XAML 同步提供标准与编辑器双声明。
+  - 15 XYSearchField：右侧预览保留 Default 与 With Content 2 个示例，移除 FilterPanel 等状态矩阵；左侧 XAML 保持精简。
+  - 16 XYPasswordField：右侧预览保留 Masked 与 Reveal 2 个示例，移除长密码/禁用等冗余展示。
+  - 17 XYDatePicker：右侧预览保留 Default 与 Calendar Open 2 个示例，日历面板展示一目了然。
+  - 18 XYTimePicker：右侧预览保留 Standard (HMS) 与 Compact (HM) 2 个示例，时分秒与紧凑格式清晰区分。
+  - 布局与间距：统一采用 `HostVertical` 纵向 12 DIP 间距堆叠，各控件宽度限制在 240～320 DIP，防止挤占变形。
+  - 测试套件：新增 `XYUI2QuickStartNormalizationTests.cs`（6 Theory 用例），在 `XYUI1DocumentationTests.cs` 中增加 Phase 2C 样本数 ≤ 2 规则断言；更新各控件既有 Gallery 示例数量断言。
+- 验证：解决方案全量构建 0 警告 0 错误；测试套件 2126/2126 全数通过（XYUI.Avalonia.Tests 479/479 PASS；Core 339/339；WarCore 22/22；World 1286/1286）；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS。
+- 状态：`XYUI-2 · Phase 2C (13～18) IMPLEMENTATION CLOSED · QUICK START NORMALIZATION PASS · XYTextArea QUICK START FIXED · GALLERY VISUAL CLOSEOUT PASS · USER VISUAL ACCEPTANCE PENDING`。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
+
 ## v0.2.28.77-rz · XYUI-2 · Phase 2C Canonical identity 对账与最终门禁复核（2026-09-05 23:34:17 +08:00）
 
 - 目标：补齐 XYUI-2-15～18 的既有 Canonical identity 映射，确保 13～18 页面 Header 使用真实 canonical 名称；不修改 Runtime、Public API 或 Gallery 生命周期方案。

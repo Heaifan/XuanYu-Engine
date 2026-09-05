@@ -63,7 +63,7 @@ public sealed class XYUI2SelectTests : IClassFixture<XyuiHeadlessFixture>
     public void Select_gallery_has_real_fixed_candidate_examples() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-13");
-        Assert.Equal(5, preview.GetVisualDescendants().OfType<XYSelect>().Count()); Assert.Contains(preview.GetVisualDescendants().OfType<XYSelect>(), x => x.Placeholder == "Select status");
+        Assert.Equal(2, preview.GetVisualDescendants().OfType<XYSelect>().Count()); Assert.Contains(preview.GetVisualDescendants().OfType<XYSelect>(), x => x.SelectedIndex == 0);
     });
 
     static void Click(Window window, XYSelect select, double x) { var point = select.TranslatePoint(new Point(x, select.Bounds.Height / 2), window)!.Value; window.MouseDown(point, MouseButton.Left); window.MouseUp(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); }

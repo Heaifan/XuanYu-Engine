@@ -19,7 +19,7 @@ public sealed class XYUI2PasswordFieldTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void PasswordField_masks_text_and_keeps_placeholder_and_gallery_samples() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-16"); Assert.True(preview.GetVisualDescendants().OfType<XYPasswordField>().Count() >= 5); var field = new XYPasswordField { Width = 360, Password = "部署密钥" }; var window = XyuiBatchTestHost.Show(field);
+        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-16"); Assert.Equal(2, preview.GetVisualDescendants().OfType<XYPasswordField>().Count()); var field = new XYPasswordField { Width = 360, Password = "部署密钥" }; var window = XyuiBatchTestHost.Show(field);
         Assert.False(field.IsRevealed); Assert.Equal("●●●●", field.PasswordPresenterPart!.Text); Assert.Equal(10, field.TextPaddingPart!.Padding.Left); Assert.Equal(8, field.TextPaddingPart.Padding.Right); Assert.Equal(32, field.RevealPart!.Bounds.Width); Assert.Equal(32, field.RevealPart.Bounds.Height); window.Close();
     });
 

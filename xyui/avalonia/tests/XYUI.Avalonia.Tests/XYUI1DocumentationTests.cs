@@ -56,32 +56,33 @@ public sealed class XYUI1DocumentationTests : IClassFixture<XyuiHeadlessFixture>
     });
 
     [Fact]
+    public void Phase2C_quick_start_preview_count_is_at_most_two() => _fx.Run(() =>
+    {
+        var ids = new[] { "XYUI-2-13", "XYUI-2-14", "XYUI-2-15", "XYUI-2-16", "XYUI-2-17", "XYUI-2-18" };
+        Assert.All(ids, id =>
+        {
+            var document = XYUI2DocumentationCatalog.Build().Single(x => x.Id == id);
+            var preview = document.PreviewFactory();
+            Assert.InRange(preview.GetVisualDescendants().Count(x => x is XYSelect or XYTextArea or XYSearchField or XYPasswordField or XYDatePicker or XYTimePicker), 1, 2);
+        });
+    });
+
+    [Fact]
     public void Foundation_navigation_selects_existing_foundation_views() => _fx.Run(() =>
     {
         var model = new XYUI1DocumentationViewModel();
-        model.SelectFoundation("palette");
-        Assert.IsType<PaletteView>(model.SelectedDocument);
-        model.SelectFoundation("typography");
-        Assert.IsType<TypographyView>(model.SelectedDocument);
-        model.SelectFoundation("spacing_layout");
-        Assert.IsType<SpacingLayoutView>(model.SelectedDocument);
-        model.SelectFoundation("sizing");
-        Assert.IsType<SizingView>(model.SelectedDocument);
-        model.SelectFoundation("density");
-        Assert.IsType<DensitySamplesView>(model.SelectedDocument);
-        model.SelectFoundation("iconography");
-        Assert.IsType<IconographyView>(model.SelectedDocument);
-        model.SelectFoundation("shape");
-        Assert.IsType<ShapeView>(model.SelectedDocument);
-        model.SelectFoundation("surface");
-        Assert.IsType<SurfaceView>(model.SelectedDocument);
-        model.SelectFoundation("states");
-        Assert.IsType<StatesView>(model.SelectedDocument);
-        model.SelectFoundation("responsive");
-        Assert.IsType<ResponsiveView>(model.SelectedDocument);
-        model.SelectFoundation("accessibility");
-        Assert.IsType<AccessibilityView>(model.SelectedDocument);
-        model.SelectFoundation("layout_recipes");
-        Assert.IsType<LayoutRecipesView>(model.SelectedDocument);
+        AssertFoundation<PaletteView>(model, "palette");
+        AssertFoundation<TypographyView>(model, "typography");
+        AssertFoundation<SpacingLayoutView>(model, "spacing_layout");
+        AssertFoundation<SizingView>(model, "sizing");
+        AssertFoundation<DensitySamplesView>(model, "density");
+        AssertFoundation<IconographyView>(model, "iconography");
+        AssertFoundation<ShapeView>(model, "shape");
+        AssertFoundation<SurfaceView>(model, "surface");
+        AssertFoundation<StatesView>(model, "states");
+        AssertFoundation<ResponsiveView>(model, "responsive");
+        AssertFoundation<AccessibilityView>(model, "accessibility");
+        AssertFoundation<LayoutRecipesView>(model, "layout_recipes");
     });
+    static void AssertFoundation<T>(XYUI1DocumentationViewModel model, string key) { model.SelectFoundation(key); Assert.IsType<T>(model.SelectedDocument); }
 }

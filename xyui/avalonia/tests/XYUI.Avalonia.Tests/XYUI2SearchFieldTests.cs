@@ -19,7 +19,7 @@ public sealed class XYUI2SearchFieldTests : IClassFixture<XyuiHeadlessFixture>
     [Fact]
     public void SearchField_has_real_editor_square_filter_and_chinese_gallery() => _fx.Run(() =>
     {
-        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-15"); var fields = preview.GetVisualDescendants().OfType<XYSearchField>().ToArray(); Assert.True(fields.Length >= 7);
+        XyuiBatchTestHost.Prepare(); var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-15"); var fields = preview.GetVisualDescendants().OfType<XYSearchField>().ToArray(); Assert.Equal(2, fields.Length);
         var field = new XYSearchField { Width = 360, Text = "区域" }; var window = XyuiBatchTestHost.Show(field);
         Assert.IsType<Button>(field.ClearActionPart); Assert.IsType<Button>(field.FilterPart); Assert.Equal(32, field.FilterPart!.Bounds.Width); Assert.Equal(32, field.FilterPart.Bounds.Height); field.Text = "区域"; Dispatcher.UIThread.RunJobs(); Assert.True(field.ClearActionPart!.IsVisible); window.Close();
     });
