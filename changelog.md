@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-1-14～18 · Phase 1C Runtime 修正与测试补齐（2026-09-05 15:19:21 +08:00）
+
+- 目标：完成 Separator、HelpText、ErrorText、WarningText、ShortcutHint 的 Runtime/Foundation 收口；Gallery、`XuanYu.Editor.UI`、XYUI-1-19+ 与 XYUI-2+ 保持冻结。
+- 变化：
+  - 14 Separator 保留既有 `XyuiSeparatorVariant` API，按 Header/Panel/Section/ListRow/VerticalSplit 使用 canonical Divider 厚度、方向与 Space2/Space4 inset。
+  - 15～17 保持 `XyuiVectorTextSurface` 共享基类，标记继续使用 Vector Registry Path；文本与标记分别消费既定语义 token，并统一补齐 `XY.State.Disabled.Text` 禁用态覆盖；GAP-004 保持，无新增 AccessibleText API。
+  - 18 ShortcutHint 保持 `SeparateKeycaps` 合同，间距、键帽几何、Control XS 高度与禁用态背景/边框/文本改用 Foundation/语义资源。
+  - 新增 11 个 Runtime 测试实例，覆盖 14～18 的结构、几何、主题、语义与禁用态；同步 `file-tree.md`。
+- 验证：解决方案构建 0 警告 0 错误；XYUI.Avalonia.Tests 445/445；Core 339/339；WarCore 22/22；World 1286/1286；合计 2092/2092 通过，0 失败 0 跳过；`scripts/arch-a-guard.ps1` PASS；5+100 行门禁 PASS；`git diff --check` PASS。
+- 提交：`0020c233`（`feat(xyui): complete Phase 1C runtime contracts`），已推送 `origin/feat/XYUI-A`。
+- 状态：Phase 1C Runtime 自动门禁完成，等待用户对 14～18 进行真实 Gallery/真机视觉与交互验收；不宣告 `USER VISUAL ACCEPTED`。
+- 版本：沿用 `v0.2.28.77-rz`；本轮未修改 `run.bat`、`xyui.bat`、Gallery 或 Editor。
+
 ## v0.2.28.77-rz · XYUI-1-07～13 · Phase 1B Runtime Owner 收口（2026-09-05 13:11:25 +08:00）
 
 - 目标：完成 Codex Runtime Owner 范围内的 CodeText、MonoText、Badge、StatusBadge、StatusDot、Icon、IconLabel 运行时与 Foundation 对齐；Gallery、Developer Documentation、`XuanYu.Editor.UI` 与 XYUI-2+ 保持冻结。
