@@ -13,23 +13,30 @@ public static partial class XyuiComponentStyles
     static void AddSemantic(Styles styles)
     {
         var dot = new Style(x => x.OfType<XYStatusDot>().Class("xyui-status-dot"));
-        dot.Setters.Add(new Setter(Border.WidthProperty, 8d)); dot.Setters.Add(new Setter(Border.HeightProperty, 8d));
-        dot.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(4))); styles.Add(dot);
-        State(styles, typeof(XYStatusDot), "xyui-status-dot-success", "XY.Brush.Semantic.Success.Text");
-        State(styles, typeof(XYStatusDot), "xyui-status-dot-warning", "XY.Brush.Semantic.Warning.Text");
-        State(styles, typeof(XYStatusDot), "xyui-status-dot-error", "XY.Brush.Semantic.Error.Text");
-        State(styles, typeof(XYStatusDot), "xyui-status-dot-info", "XY.Brush.Semantic.Info.Text");
-        State(styles, typeof(XYStatusDot), "xyui-status-dot-neutral", "XY.Brush.Text.Tertiary");
-        StateText(styles, "xyui-status-text-success", "XY.Brush.Semantic.Success.Text");
-        StateText(styles, "xyui-status-text-warning", "XY.Brush.Semantic.Warning.Text");
-        StateText(styles, "xyui-status-text-error", "XY.Brush.Semantic.Error.Text");
-        StateText(styles, "xyui-status-text-info", "XY.Brush.Semantic.Info.Text");
-        StateText(styles, "xyui-status-text-neutral", "XY.Brush.Text.Secondary");
-        StateMark(styles, "xyui-status-mark-success", "XY.Brush.Semantic.Success.Text");
-        StateMark(styles, "xyui-status-mark-warning", "XY.Brush.Semantic.Warning.Text");
-        StateMark(styles, "xyui-status-mark-error", "XY.Brush.Semantic.Error.Text");
-        StateMark(styles, "xyui-status-mark-info", "XY.Brush.Semantic.Info.Text");
-        StateMark(styles, "xyui-status-mark-neutral", "XY.Brush.Text.Secondary");
+        dot.Setters.Add(new Setter(Border.WidthProperty, XYStatusDot.Diameter)); dot.Setters.Add(new Setter(Border.HeightProperty, XYStatusDot.Diameter));
+        dot.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(XYStatusDot.Diameter / 2))); styles.Add(dot);
+        foreach (var state in Enum.GetValues<XyuiStatusState>())
+        {
+            var name = state.ToString().ToLowerInvariant();
+            State(styles, typeof(XYStatusDot), $"xyui-status-dot-{name}", XyuiStatusStateTokens.Indicator(state));
+            StateText(styles, $"xyui-status-text-{name}", XyuiStatusStateTokens.Foreground(state));
+            StateMark(styles, $"xyui-status-mark-{name}", XyuiStatusStateTokens.Foreground(state));
+        }
+        var dotDisabled = new Style(x => x.OfType<XYStatusDot>().Class("xyui-status-dot").Class(":disabled"));
+        Brush(dotDisabled, Border.BackgroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(dotDisabled);
+        var badgeDisabled = new Style(x => x.OfType<XYStatusBadge>().Class("xyui-status-badge").Class(":disabled"));
+        badgeDisabled.Setters.Add(new Setter(Border.BackgroundProperty, null)); styles.Add(badgeDisabled);
+        var badgeTextDisabled = new Style(x => x.OfType<XYStatusBadge>().Class("xyui-status-badge").Class(":disabled").Descendant().OfType<TextBlock>());
+        Brush(badgeTextDisabled, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(badgeTextDisabled);
+        var badgeMarkDisabled = new Style(x => x.OfType<XYStatusBadge>().Class("xyui-status-badge").Class(":disabled").Descendant().OfType<VectorPath>());
+        Brush(badgeMarkDisabled, VectorPath.StrokeProperty, "XY.Brush.State.Disabled.Text"); Brush(badgeMarkDisabled, VectorPath.FillProperty, "XY.Brush.State.Disabled.Text"); styles.Add(badgeMarkDisabled);
+        DisabledText(styles, "xyui-code-text-text"); DisabledText(styles, "xyui-mono-data-label");
+        DisabledText(styles, "xyui-mono-data-value"); DisabledText(styles, "xyui-mono-data-unit");
+        DisabledText(styles, "xyui-icon-label-text");
+        var iconLabelTextDisabled = new Style(x => x.OfType<XYIconLabel>().Class("xyui-icon-label").Class(":disabled").Descendant().OfType<TextBlock>().Class("xyui-icon-label-text"));
+        Brush(iconLabelTextDisabled, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(iconLabelTextDisabled);
+        var iconLabelIconDisabled = new Style(x => x.OfType<XYIconLabel>().Class("xyui-icon-label").Class(":disabled").Descendant().OfType<XYIcon>().Class("xyui-icon-label-icon"));
+        Brush(iconLabelIconDisabled, XYIcon.StrokeProperty, "XY.Brush.State.Disabled.Text"); styles.Add(iconLabelIconDisabled);
         var separator = new Style(x => x.OfType<XYSeparator>().Class("xyui-separator"));
         Brush(separator, Border.BackgroundProperty, "XY.Brush.Divider.Default"); separator.Setters.Add(new Setter(Border.HeightProperty, 1d)); styles.Add(separator);
         SeparatorVariant(styles, "header", 1, 0, 0); SeparatorVariant(styles, "panel", 1, 0, 0); SeparatorVariant(styles, "section", 1, 8, 8); SeparatorVariant(styles, "listrow", 1, 16, 16); SeparatorVariant(styles, "verticalsplit", 0, 0, 0);

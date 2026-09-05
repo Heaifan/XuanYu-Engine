@@ -45,4 +45,12 @@ public sealed class IconRuntimeTests : IClassFixture<XyuiHeadlessFixture>
         Assert.False(metrics.HasOpticalCorrection); Assert.Equal(12, metrics.GeometryBounds.Center.X);
         Assert.Throws<KeyNotFoundException>(() => XyuiVectorIcons.Create((XyuiVectorIcon)999));
     });
+
+    [Fact]
+    public void Disabled_icon_uses_disabled_stroke_token() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var icon = new XYIcon { Icon = XyuiVectorIcon.Search, IsEnabled = false };
+        var window = XyuiBatchTestHost.Show(icon);
+        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Disabled.Text"), XyuiBatchTestHost.ColorOf(icon.Stroke)); window.Close();
+    });
 }

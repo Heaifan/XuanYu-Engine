@@ -1554,11 +1554,12 @@
    │  │     │  │  │  │  └─ XyuiVectorTextSurface.cs  # 实现对应模块的 C# 职责。
    │  │     │  │  │  ├─ Geometry/  # 组织该模块下的正式文件。
    │  │     │  │  │  │  └─ XyuiBadgeTagPath.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
-   │  │     │  │  │  └─ Styles/  # 集中控件视觉构建与语义样式。
+   │  │     │  │  │  ├─ Styles/  # 集中控件视觉构建与语义样式。
    │  │     │  │  │     ├─ XyuiComponentStyles.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
-   │  │     │  │  │     ├─ XyuiComponentStyles.Semantic.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
-   │  │     │  │  │     ├─ XyuiComponentStyles.Surfaces.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
-   │  │     │  │  │     └─ XyuiComponentStyles.Typography.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
+   │  │     │  │  │     ├─ XyuiComponentStyles.Semantic.cs  # 定义状态点、状态徽章及禁用态语义样式。
+   │  │     │  │  │     ├─ XyuiComponentStyles.Surfaces.cs  # 定义 CodeText/Badge 的 Foundation 表面几何与间距。
+   │  │     │  │  │     └─ XyuiComponentStyles.Typography.cs  # 定义 XYUI-1 文本、图标和标记的排版样式。
+   │  │     │  │  │  └─ XyuiStatusStateTokens.cs  # 集中 StatusBadge/StatusDot 的五态与禁用态语义资源映射。
    │  │     │  │  ├─ XYUI1-01-Text/  # 组织该模块下的正式文件。
    │  │     │  │  │  └─ XYText.cs  # 实现对应模块的 C# 职责。
    │  │     │  │  ├─ XYUI1-02-Label/  # 组织该模块下的正式文件。
@@ -1581,15 +1582,15 @@
    │  │     │  │  ├─ XYUI1-09-Badge/  # 组织该模块下的正式文件。
    │  │     │  │  │  └─ XYBadge.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
    │  │     │  │  ├─ XYUI1-10-StatusBadge/  # 组织该模块下的正式文件。
-   │  │     │  │  │  └─ XYStatusBadge.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
+   │  │     │  │  │  └─ XYStatusBadge.cs  # 定义五态状态徽章及 8 DIP 标记几何。
    │  │     │  │  ├─ XYUI1-11-StatusDot/  # 组织该模块下的正式文件。
-   │  │     │  │  │  └─ XYStatusDot.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
+   │  │     │  │  │  └─ XYStatusDot.cs  # 定义五态状态点及 8 DIP 圆形几何。
    │  │     │  │  ├─ XYUI1-12-Icon/  # 组织该模块下的正式文件。
    │  │     │  │  │  ├─ Styles/  # 集中控件视觉构建与语义样式。
    │  │     │  │  │  │  └─ XYIcon.Rendering.cs  # XYIcon 逻辑视口缩放与最终 DIP Stroke 绘制。
    │  │     │  │  │  └─ XYIcon.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
    │  │     │  │  ├─ XYUI1-13-IconLabel/  # 组织该模块下的正式文件。
-   │  │     │  │  │  └─ XYIconLabel.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
+   │  │     │  │  │  └─ XYIconLabel.cs  # 复用公开 XYIcon 与文本呈现器并保持 Space1/垂直居中。
    │  │     │  │  ├─ XYUI1-14-Separator/  # 组织该模块下的正式文件。
    │  │     │  │  │  └─ XYSeparator.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
    │  │     │  │  ├─ XYUI1-15-HelpText/  # 组织该模块下的正式文件。
@@ -1949,7 +1950,7 @@
    │  │     ├─ BrushRuntimeTests.cs  # 主题字典 key/类型/值/重复/缺失测试。
    │  │     ├─ CanonicalAlignmentTests.cs  # token 表与 token-canonical-map.json 逐条对照。
    │  │     ├─ CatalogSourceTests.cs  # Catalog 注册数量与类型映射源同步合同。
-   │  │     ├─ CodeTextRuntimeTests.cs  # CodeText 正文与右下 Vector Code Mark 的独立颜色、尺寸和布局回归。
+   │  │     ├─ CodeTextRuntimeTests.cs  # CodeText 正文、右下 Vector Code Mark 与禁用态资源回归。
    │  │     ├─ ControlSurfaceTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ GalleryInteractionContractTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ GallerySmokeTests.cs  # App 资源、窗口标题、色板覆盖 Headless 冒烟。
@@ -1958,7 +1959,7 @@
    │  │     ├─ InteractionStateTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ XYUI10StateResolverTests.cs  # XYUI-0-10 状态共存、单通道解析、焦点与语义分离合同。
    │  │     ├─ MonoTextResponsiveTests.cs  # MonoText 共享 Label/Value/Unit 列在宽度变化下的稳定对齐回归。
-   │  │     ├─ MonoTextRuntimeTests.cs  # MonoText 三列字体、字重、间距与对齐运行时合同测试。
+   │  │     ├─ MonoTextRuntimeTests.cs  # MonoText 三列字体、字重、间距、对齐与禁用态合同测试。
    │  │     ├─ NavigationCollapseTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ R5F4F1AlignmentTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ R5F4FidelityTests.cs  # 验证对应模块的自动化行为与回归合同。
@@ -2024,10 +2025,11 @@
    │  │     ├─ XYUI3InteractionTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI3StructureTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XyuiBatchTestHost.cs  # 实现对应模块的 C# 职责。
-   │  │     ├─ XYUICompositionReuseTests.cs  # 实现对应模块的 C# 职责。
+   │  │     ├─ XYUICompositionReuseTests.cs  # 验证 XYIconLabel 等组件复用公开 XYUI 控件而非重复绘制。
    │  │     ├─ XyuiHeadlessCollection.cs  # Headless 串行 collection 定义（禁并行）。
    │  │     ├─ XyuiHeadlessFixture.cs  # Headless 会话夹具（独立 UI 线程 dispatch）。
    │  │     ├─ XyuiTestAppBuilder.cs  # Headless App 构建器（复用 Gallery App）。
+   │  │     ├─ StatusAndIconLabelRuntimeTests.cs  # StatusBadge/StatusDot 五态语义与 IconLabel 复用、对齐、禁用态回归。
    │  │     └─ XYUIVectorViewportTests.cs  # XYIcon 24×24 logical viewport、尺寸与 Stroke 合同。
    │  └─ XYUI.Avalonia.slnx  # XYUI.Avalonia 独立解决方案（库/Gallery/Tests 三项目）。
    ├─ governance/  # 组织该模块下的正式文件。

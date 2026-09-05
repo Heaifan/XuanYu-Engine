@@ -5,6 +5,8 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Styling;
 using XYUI.Avalonia.Typography;
+using XYUI.Avalonia.Sizing;
+using XYUI.Avalonia;
 using VectorPath = Avalonia.Controls.Shapes.Path;
 
 namespace XYUI.Avalonia.Controls;
@@ -14,7 +16,7 @@ public static partial class XyuiComponentStyles
     static void AddSurfaces(Styles styles)
     {
         TagSurface(styles);
-        Surface(styles, typeof(XYCodeText), "xyui-code-text", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Tertiary", "XY.Brush.Surface.PanelAlt", 32);
+        Surface(styles, typeof(XYCodeText), "xyui-code-text", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Tertiary", "XY.Brush.Surface.PanelAlt", XyuiSizingMetrics.For(XYSize.Default).ControlHeight);
         Surface(styles, typeof(XYStatusBadge), "xyui-status-badge", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.Panel");
         ShortcutSurface(styles);
         Surface(styles, typeof(XYHelpText), "xyui-help-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 400, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary", "XY.Brush.Surface.Panel");
@@ -55,8 +57,8 @@ public static partial class XyuiComponentStyles
         surface.Setters.Add(new Setter(Border.BackgroundProperty, null)); surface.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(0)));
         surface.Setters.Add(new Setter(Border.HeightProperty, 22d));
         surface.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(0))); styles.Add(surface);
-        styles.Add(Text(typeof(TextBlock), "xyui-badge-text", XyuiTypographyTokens.FontUi, 11, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
-        styles.Add(Text(typeof(TextBlock), "xyui-badge-text-accent", XyuiTypographyTokens.FontUi, 11, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Accent.Default"));
+        styles.Add(Text(typeof(TextBlock), "xyui-badge-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
+        styles.Add(Text(typeof(TextBlock), "xyui-badge-text-accent", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Accent.Default"));
     }
 
     static void Surface(Styles styles, Type type, string cls, string family, double size, int weight, double line, string foreground, string background, double? height = null)

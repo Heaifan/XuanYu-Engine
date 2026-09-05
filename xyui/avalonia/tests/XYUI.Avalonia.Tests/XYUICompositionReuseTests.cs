@@ -36,6 +36,6 @@ public sealed class XYUICompositionReuseTests : IClassFixture<XyuiHeadlessFixtur
         Assert.True(typeof(XYTextField).IsAssignableFrom(typeof(XYNumberField)));
         Assert.True(typeof(XyuiTextComponent).IsAssignableFrom(typeof(XYText)));
         Assert.True(typeof(XyuiTextSurface).IsAssignableFrom(typeof(XYSectionTitle)));
-        Assert.True(typeof(XyuiVectorTextSurface).IsAssignableFrom(typeof(XYIconLabel)));
+        Assert.True(typeof(XyuiTextSurface).IsAssignableFrom(typeof(XYIconLabel)));
     }
 }

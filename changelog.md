@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-1-07～13 · Phase 1B Runtime Owner 收口（2026-09-05 13:11:25 +08:00）
+
+- 目标：完成 Codex Runtime Owner 范围内的 CodeText、MonoText、Badge、StatusBadge、StatusDot、Icon、IconLabel 运行时与 Foundation 对齐；Gallery、Developer Documentation、`XuanYu.Editor.UI` 与 XYUI-2+ 保持冻结。
+- 变化：
+  - 07 CodeText、08 MonoText 补齐禁用态文本资源，并保持既有文本/标记几何与三列对齐合同。
+  - 10 StatusBadge、11 StatusDot 共用 `XyuiStatusStateTokens`，覆盖 Success、Warning、Error、Info、Neutral 五态及禁用态；Badge/StatusDot 几何统一为 8 DIP。
+  - 12 Icon 增加独立禁用描边回归；13 IconLabel 改为复用公开 `XYIcon` 与文本呈现器，固定 Small 图标、Space1 间距和垂直居中，不重复绘制 Path。
+  - Foundation 样式改用 `XyuiSizingMetrics` 与 `XyuiTypographyTokens`，补齐本轮 Runtime 控件的禁用态资源覆盖。
+- 验证：解决方案构建 0 警告 0 错误；XYUI.Avalonia.Tests 构建 0 警告 0 错误；Core 339、WarCore 22、World 1286、XYUI 433，共 2080/2080 测试通过；`scripts/arch-a-guard.ps1` PASS；5+100 行硬门禁 PASS；`git diff --check` PASS。
+- 状态：Phase 1B Runtime Owner 完成并已推送，等待 Gemini 提供 Light + Dark Gallery 截图及用户视觉/交互验收；不宣告 `USER VISUAL ACCEPTED`。
+- 版本：沿用 `v0.2.28.77-rz`；本轮未修改 `run.bat`、`XuanYu.Editor.UI` 或 Gallery 文件，四处版本源保持既有一致性。
+
 ## v0.2.28.77-rz · XYUI-1-01～06 · Phase 1A Review 治理与结构闭环（2026-09-05 12:18:00 +08:00）
 
 - 目标：落实 Phase 1A（01～06）审查意见：治理状态修正、补齐 02 Anatomy 消除跳号、统一 Live Examples 外围语法，并对 SectionTitle 固有几何与 Link 文本导航交互状态完成工程核验与样式加固。

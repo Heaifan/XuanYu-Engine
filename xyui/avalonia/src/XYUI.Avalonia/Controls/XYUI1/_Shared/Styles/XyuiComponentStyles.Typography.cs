@@ -35,10 +35,15 @@ public static partial class XyuiComponentStyles
         styles.Add(Text(typeof(TextBlock), "xyui-mono-data-unit", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 600, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
         var icon = new Style(x => x.OfType<XYIcon>().Class("xyui-icon"));
         Brush(icon, XYIcon.StrokeProperty, "XY.Brush.Text.Secondary"); icon.Setters.Add(new Setter(XYIcon.FillProperty, null)); styles.Add(icon);
+        var iconDisabled = new Style(x => x.OfType<XYIcon>().Class("xyui-icon").Class(":disabled"));
+        Brush(iconDisabled, XYIcon.StrokeProperty, "XY.Brush.State.Disabled.Text"); styles.Add(iconDisabled);
         IconButtonIconTint(styles, ":pointerover", "XY.Brush.Text.Primary");
         IconButtonIconTint(styles, ":selected", "XY.Brush.Accent.Strong");
         IconButtonIconTint(styles, ":disabled", "XY.Brush.State.Disabled.Text");
         styles.Add(Text(typeof(XYIconLabel), "xyui-icon-label", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
+        styles.Add(Text(typeof(TextBlock), "xyui-icon-label-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
+        var iconLabelIcon = new Style(x => x.OfType<XYIcon>().Class("xyui-icon-label-icon"));
+        Brush(iconLabelIcon, XYIcon.StrokeProperty, "XY.Brush.Text.Secondary"); styles.Add(iconLabelIcon);
         styles.Add(Text(typeof(XYRichText), "xyui-rich-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(SelectableTextBlock), "xyui-selectable-text-content", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeBody, 400, XyuiTypographyTokens.LineHeightBody, "XY.Brush.Text.Primary"));
         styles.Add(Text(typeof(SelectableTextBlock), "xyui-selectable-text-technical", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeMono, 400, XyuiTypographyTokens.LineHeightMono, "XY.Brush.Text.Secondary"));
@@ -58,6 +63,7 @@ public static partial class XyuiComponentStyles
         Mark(styles, "xyui-warning-text-mark", "XY.Brush.Semantic.Warning.Text", 14, false);
         Mark(styles, "xyui-search-highlight-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
         Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
+
     }
 
 
@@ -82,5 +88,11 @@ public static partial class XyuiComponentStyles
         style.Setters.Add(new Setter(VectorPath.WidthProperty, size)); style.Setters.Add(new Setter(VectorPath.HeightProperty, size));
         style.Setters.Add(new Setter(VectorPath.StrokeThicknessProperty, stroke));
         Brush(style, fill ? VectorPath.FillProperty : VectorPath.StrokeProperty, brush); styles.Add(style);
+    }
+
+    static void DisabledText(Styles styles, string textClass)
+    {
+        var style = new Style(x => x.OfType<TextBlock>().Class(textClass).Class(":disabled"));
+        Brush(style, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(style);
     }
 }

@@ -44,4 +44,15 @@ public sealed class CodeTextRuntimeTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal(8, mark.Width); Assert.Equal(8, mark.Height);
         Assert.Equal(6, Canvas.GetRight(mark)); Assert.Equal(5, Canvas.GetBottom(mark));
     });
+
+    [Fact]
+    public void CodeText_disabled_uses_disabled_text_token() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare();
+        var code = new XYCodeText { Text = "World.RegionKey", IsEnabled = false };
+        var win = XyuiBatchTestHost.Show(code);
+        var text = code.GetVisualDescendants().OfType<TextBlock>().Single(x => x.Classes.Contains("xyui-code-text-text"));
+        Assert.Equal(XyuiColorTokens.All.Single(x => x.TokenId == "XY.State.Disabled.Text").ToColor(false),
+            Assert.IsType<SolidColorBrush>(text.Foreground).Color); win.Close();
+    });
 }

@@ -74,6 +74,18 @@ public sealed class MonoTextRuntimeTests : IClassFixture<XyuiHeadlessFixture>
         Assert.All(Cells(mono, "value"), x => Assert.Equal(TextAlignment.Right, x.TextAlignment)); window.Close();
     });
 
+    [Fact]
+    public void Disabled_rows_use_disabled_text_token_without_changing_alignment() => _fx.Run(() =>
+    {
+        Prepare(); var mono = Preview(); mono.IsEnabled = false; var window = Show(mono);
+        var disabled = Token("XY.State.Disabled.Text", false);
+        Assert.All(Cells(mono, "label").Concat(Cells(mono, "value")).Concat(Cells(mono, "unit")), cell =>
+        {
+            Assert.Equal(disabled, ColorOf(cell.Foreground)); Assert.Equal(VerticalAlignment.Center, cell.VerticalAlignment);
+        });
+        Assert.All(Cells(mono, "value"), x => Assert.Equal(TextAlignment.Right, x.TextAlignment)); window.Close();
+    });
+
     static XYMonoText Preview() => Assert.IsType<XYMonoText>(XYUI1GalleryCatalog.CreatePreview("XYUI-1-08"));
     static TextBlock[] Cells(XYMonoText mono, string role) => mono.Children.OfType<TextBlock>().Where(x => x.Classes.Contains($"xyui-mono-data-{role}")).ToArray();
     static Window Show(XYMonoText mono) { var window = new Window { Width = 420, Height = 260, Content = mono }; window.Show(); return window; }
