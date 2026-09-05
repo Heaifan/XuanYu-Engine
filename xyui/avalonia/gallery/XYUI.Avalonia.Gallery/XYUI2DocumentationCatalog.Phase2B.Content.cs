@@ -4,7 +4,7 @@ public static partial class XYUI2DocumentationCatalog
 {
     static string Phase2BQuickStart(string id) => id switch
     {
-        "XYUI-2-07" => "<xy:XYRadioButton GroupName=\"render\" Content=\"实时预览\" IsChecked=\"True\" />\n<xy:XYRadioButton GroupName=\"render\" Content=\"最终质量\" />",
+        "XYUI-2-07" => "<!-- 组 1: 渲染模式 -->\n<xy:XYRadioButton GroupName=\"render\" Content=\"实体\" IsChecked=\"True\" />\n<xy:XYRadioButton GroupName=\"render\" Content=\"线框\" />\n<!-- 组 2: 坐标空间 -->\n<xy:XYRadioButton GroupName=\"space\" Content=\"世界\" IsChecked=\"True\" />\n<xy:XYRadioButton GroupName=\"space\" Content=\"局部\" />",
         "XYUI-2-08" => "<xy:XYSwitch Content=\"自动保存工程\" IsChecked=\"{Binding AutoSave}\" />",
         "XYUI-2-09" => "<xy:XYTextField Text=\"{Binding ProjectName}\" Placeholder=\"请输入项目名称\" />",
         "XYUI-2-10" => "<xy:XYNumberField Value=\"{Binding Scale}\" Minimum=\"0.1\" Maximum=\"10.0\" Step=\"0.1\" Suffix=\"x\" />",

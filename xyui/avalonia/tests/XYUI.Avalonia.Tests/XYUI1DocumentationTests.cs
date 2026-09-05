@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.VisualTree;
+using XYUI.Avalonia.Controls;
 using XYUI.Avalonia.Gallery;
 using XYUI.Avalonia.Gallery.Views;
 
@@ -39,6 +41,17 @@ public sealed class XYUI1DocumentationTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal("标题", model.SelectedItem.ChineseName);
         Assert.IsType<XYUI1ComponentDocumentView>(model.SelectedDocument);
         Assert.Equal("XYHeading", model.SelectedItem.Document!.AvaloniaType);
+    });
+
+    [Fact]
+    public void XYUI2_documentation_has_category_and_separated_radio_groups() => _fx.Run(() =>
+    {
+        var model = new XYUI1DocumentationViewModel();
+        Assert.All(model.XYUI2Items.Skip(1), item => Assert.Equal("Canonical Stable · Buttons / Inputs", item.Document!.Category));
+        Assert.All(model.XYUI2Items.Skip(1).SelectMany(x => x.Document!.HowToUse), guide => Assert.NotEqual("", guide.Category));
+        var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-07");
+        var groups = preview.GetVisualDescendants().OfType<XYRadioButton>().GroupBy(x => x.GroupName).ToArray();
+        Assert.Equal(2, groups.Length); Assert.Equal(new[] { 3, 2 }, groups.Select(x => x.Count()).OrderByDescending(x => x));
     });
 
     [Fact]

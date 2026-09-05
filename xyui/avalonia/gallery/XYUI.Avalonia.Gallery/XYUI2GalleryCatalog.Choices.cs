@@ -13,11 +13,8 @@ public static partial class XYUI2GalleryCatalog
 
     static Control[] RadioButtons() =>
     [
-        new XYRadioButton { Content = "实体", GroupName = "render", IsChecked = true },
-        new XYRadioButton { Content = "线框", GroupName = "render" },
-        new XYRadioButton { Content = "材质预览", GroupName = "render" },
-        new XYRadioButton { Content = "世界", GroupName = "space", IsChecked = true },
-        new XYRadioButton { Content = "局部", GroupName = "space" },
+        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "渲染模式" }, new XYRadioButton { Content = "实体", GroupName = "render", IsChecked = true }, new XYRadioButton { Content = "线框", GroupName = "render" }, new XYRadioButton { Content = "材质预览", GroupName = "render" } } },
+        new StackPanel { Spacing = 4, Children = { new XYCaption { Text = "坐标空间" }, new XYRadioButton { Content = "世界", GroupName = "space", IsChecked = true }, new XYRadioButton { Content = "局部", GroupName = "space" } } },
     ];
 
     static Control[] Switches() =>

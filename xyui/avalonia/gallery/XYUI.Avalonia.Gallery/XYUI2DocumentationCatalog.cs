@@ -32,6 +32,7 @@ public static partial class XYUI2DocumentationCatalog
             Usages(id, type), variants, states, props, Tokens(id), type)
         {
             CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap,
+            Category = "Canonical Stable · Buttons / Inputs",
             Acceptance = PendingAcceptance,
             QuickStartXaml = Phase2AQuickStart(id) is { Length: > 0 } q2a ? q2a : Phase2BQuickStart(id),
             CoreRules = Phase2ACoreRules(id) is { Count: > 0 } r2a ? r2a : Phase2BCoreRules(id),

@@ -76,7 +76,7 @@
           <TextBlock Text="04 HOW TO USE" Classes="xyui-text-section" FontWeight="Bold" />
           <ItemsControl ItemsSource="{Binding HowToUse}">
             <ItemsControl.ItemTemplate><DataTemplate x:DataType="g:XYUIDocGuideItem">
-              <Grid ColumnDefinitions="120,*" Margin="0,3"><TextBlock Text="{Binding Category}" Classes="xyui-text-label" FontWeight="SemiBold" /><TextBlock Grid.Column="1" Text="{Binding Description}" Classes="xyui-text-body" TextWrapping="Wrap" /></Grid>
+              <Grid ColumnDefinitions="Auto,12,*" Margin="0,3"><TextBlock Text="{Binding Category}" Classes="xyui-text-label" FontWeight="SemiBold" /><TextBlock Grid.Column="2" Text="{Binding Description}" Classes="xyui-text-body" TextWrapping="Wrap" /></Grid>
             </DataTemplate></ItemsControl.ItemTemplate>
           </ItemsControl>
         </StackPanel>

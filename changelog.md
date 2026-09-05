@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2B 视觉收口与文档布局加固（2026-09-05 23:03:00 +08:00）
+
+- 目标：完成 XYUI-2-07～12 Phase 2B 最终视觉与文档收口（Visual Closeout），不改动 Runtime 逻辑，不推进 13～18。
+- 变化：
+  - A. How To Use 双语标题：优化 `XYUI1ComponentDocumentView.axaml` 中 HowToUse 网格列宽为 `Auto,12,*`，解决固定 120 DIP 导致的双语长标题截断与压字问题。
+  - B. 头部分类修复：`XYUI2DocumentationCatalog.cs` 明确覆盖默认值，设为 `Canonical Stable · Buttons / Inputs`（XYUI-1 继续保持 Typography / Text 不受影响）。
+  - C. RadioButton 分组视觉区隔：`XYUI2GalleryCatalog.Choices.cs` 将单选按钮预览样本重构为两组独立带标题容器（“渲染模式”与“坐标空间”），同步更新 QuickStartXaml，消除同预览多 Checked 的混淆。
+  - D. 伪类状态审计：`XYUI2DocumentationCatalog.Phase2B.Foundation.cs` 移除概念状态前的冒号（如 `Unchecked`, `Off (Unchecked)`, `ReadOnly`, `Open (.xyui-combo-open)`），保留真实 Runtime 伪类（`:checked`, `:pointerover`, `:disabled`, `:focus`, `:error`）。
+  - 新增测试：在 `XYUI1DocumentationTests.cs` 中增加分类注入与 RadioButton 分组独立性的回归测试。
+- 验证：解决方案全量构建 0 警告 0 错误；测试套件 2115/2115 全数通过（XYUI.Avalonia.Tests 468/468 PASS；Core 339/339；WarCore 22/22；World 1286/1286）；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS。
+- 状态：XYUI-2 · Phase 2B (07～12) IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
+
 ## v0.2.28.77-rz · XYUI-2 · Phase 2B 交互契约修正与最终门禁（2026-09-05 22:42:16 +08:00）
 
 - 目标：在已集成的 XYUI-2 Phase 2B（07～12）基础上，依据源码与 Canonical 收紧编辑、数值、滑块和组合框交互，不回改 01～06。

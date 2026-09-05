@@ -46,20 +46,20 @@ public static partial class XYUI2DocumentationCatalog
     static IReadOnlyList<XYUIDocState> Phase2BStates(string id) => id switch
     {
         "XYUI-2-07" => [
-            new(":unchecked", "未勾选态，空心环"),
+            new("Unchecked", "未勾选态，空心环"),
             new(":checked", "勾选态，呈现强色中心点"),
             new(":pointerover", "悬停态，外圈显露光晕"),
             new(":disabled", "禁用态，状态锁定不可交互")
         ],
         "XYUI-2-08" => [
-            new(":unchecked (Off)", "关闭态，滑块居左"),
+            new("Off (Unchecked)", "关闭态，滑块居左"),
             new(":checked (On)", "开启态，滑块居右且轨道高亮"),
             new(":disabled", "禁用态，阻断点击")
         ],
         "XYUI-2-09" => [
             new("Default", "默认常态，呈现微弱边框"),
             new(":focus", "获得焦点态，底部强调线显露"),
-            new(":readonly", "只读态，只读光标与选择能力"),
+            new("ReadOnly", "只读态，只读光标与选择能力"),
             new(":error", "错误态，红边警示")
         ],
         "XYUI-2-10" => [
@@ -76,7 +76,7 @@ public static partial class XYUI2DocumentationCatalog
         ],
         "XYUI-2-12" => [
             new("Closed", "收起常态；当前无公开 :closed 伪类"),
-            new(":open", "下拉 Popup 展开态"),
+            new("Open (.xyui-combo-open)", "下拉 Popup 展开态；通过类名切换"),
             new("Filtering (internal)", "即时过滤筛选候选项中；当前无公开 :filtering 伪类"),
             new(":error", "输入无效且不允许自定义值")
         ],
