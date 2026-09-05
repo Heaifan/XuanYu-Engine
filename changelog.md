@@ -6,7 +6,7 @@
 - 变化：
   - 约束 A (DropDownButton)：明确单一命令区契约，严禁伪装为 Popup 所有者，Trigger ≠ Popup owner；Enter/Space 触发 OpenCommand。
   - 约束 B (SplitButton)：明确双命令区隔离（Main zone → MainCommand, Menu zone → MenuCommand），不额外虚构菜单所有权；Enter/Space 默认触发 MainCommand。
-  - 约束 C (IconButton)：审计并落实无障碍要求，纯图标必须提供 AutomationProperties.Name 或 ToolTip.Tip；保持 Selected ≠ Checked 外部驱动语义。
+  - 约束 C (IconButton)：审计并落实无障碍要求，纯图标必须提供 AutomationProperties.Name，ToolTip.Tip 仅作补充；保持 Selected ≠ Checked 外部驱动语义。
   - 约束 D (Checkbox)：确认三态流转（Checked / Unchecked / Indeterminate）与禁用态锁定。
   - 开发者文档：创建 Phase 2A 系列文档模型（QuickStart、01 CoreRules、02 Variants/Anatomy、03 Foundation/States、04 HowToUse），完整回答五件事，补齐 01～05 缺失的属性表格。
   - 业务实装：创建 XYUI2LiveExamplesFactory，为 01～06 编写主次操作排版、视口模式工具栏、视图模式持久开关、资产烘焙与工程发布、下拉格式选择、图层树状多选等真实场景，所有示例均消费真实运行时控件。
