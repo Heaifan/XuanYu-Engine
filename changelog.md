@@ -10,6 +10,7 @@
   - Phase 2A 文档移除不存在的 `:normal`、`:ghost`、`:unchecked`、`:main-hover`、`:menu-hover`、`:ddb-off` 伪类写法，仅保留真实 Runtime 伪类。
   - 新增 Gallery 正向/反向/快速连续/Light-Dark 导航回归。
 - 验证：指定 SDK 根/UI 解决方案构建均 0 警告 0 错误；测试 2108/2108 全通过（UI 461/461；Core 339/339；WarCore 22/22；World 1286/1286）；真实 Gallery 01→08→01 导航未崩溃；ARCH-A PASS；5+100 PASS；git diff --check PASS。
+- 提交：`95c87830`。
 - 状态：`XYUI-2 · Phase 2A IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING`；不得推进 07～12。
 - 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
 
