@@ -1665,7 +1665,7 @@
    │  │     │  │  │  └─ XYSplitButton.cs  # 实现对应模块的 C# 职责。
    │  │     │  │  ├─ XYUI2-05-DropDownButton/  # 组织该模块下的正式文件。
    │  │     │  │  │  ├─ Styles/  # 集中控件视觉构建与语义样式。
-   │  │     │  │  │  │  └─ XYDropDownButton.Template.cs  # DropDownButton 双列模板：装饰槽不可命中、无 Divider。
+   │  │     │  │  │  │  └─ XYDropDownButton.Template.cs  # DropDownButton 内容第 0 列、固定 28 DIP Chevron 第 1 列与全宽 Action Edge 模板。
    │  │     │  │  │  └─ XYDropDownButton.cs  # 实现对应模块的 C# 职责。
    │  │     │  │  ├─ XYUI2-06-Checkbox/  # 组织该模块下的正式文件。
    │  │     │  │  │  ├─ Styles/  # 集中控件视觉构建与语义样式。
@@ -2007,6 +2007,7 @@
    │  │     ├─ XYUI2DatePickerInteractionReworkTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2DatePickerTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2DropDownButtonRuntimeTests.cs  # DropDownButton 单命中区结构与点击语义（含槽区无第二行为）回归。
+   │  │     ├─ XYUI2DropDownButtonLayoutTests.cs  # DropDownButton 内容列与固定 Chevron Track 不重叠布局回归。
    │  │     ├─ XYUI2DropDownButtonVisualStateTests.cs  # DropDownButton 五状态视觉合同（含 Chevron 衰减与聚焦环）。
    │  │     ├─ XYUI2GhostToggleRuntimeTests.cs  # IconButton Selected≠Checked 解耦与 ToggleButton Persistent Edge 合同。
    │  │     ├─ XYUI2GhostToggleVisualStateTests.cs  # IconButton 与 ToggleButton 视觉状态回归。

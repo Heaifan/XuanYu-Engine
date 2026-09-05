@@ -1,5 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -30,12 +32,21 @@ public partial class XYDropDownButton
             HorizontalContentAlignment = HorizontalAlignment.Left, VerticalContentAlignment = VerticalAlignment.Center };
         Grid.SetColumnSpan(zone, 2);
         zone.Classes.Add("xyui-ddb-zone");
-        zone[!ContentControl.ContentProperty] = control[!ContentControl.ContentProperty];
         zone[!Button.CommandProperty] = control[!OpenCommandProperty];
         zone[!Button.CommandParameterProperty] = control[!OpenCommandParameterProperty];
-        zone[!TemplatedControl.ForegroundProperty] = control[!TemplatedControl.ForegroundProperty];
-        zone[!TemplatedControl.PaddingProperty] = control[!TemplatedControl.PaddingProperty];
         grid.Children.Add(zone); scope?.Register("PART_OpenZone", zone);
+
+        // 内容必须只测量和排列在第 0 列；命中层仍横跨两列，但不再承载 ContentPresenter。
+        var content = new ContentPresenter { Name = "PART_ContentPresenter", IsHitTestVisible = false,
+            HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Center };
+        content[!ContentPresenter.PaddingProperty] = control[!TemplatedControl.PaddingProperty];
+        content[!ContentPresenter.ContentProperty] = control[!ContentControl.ContentProperty];
+        content[!ContentPresenter.ContentTemplateProperty] = control[!ContentControl.ContentTemplateProperty];
+        content[!ContentPresenter.HorizontalContentAlignmentProperty] = control[!ContentControl.HorizontalContentAlignmentProperty];
+        content[!ContentPresenter.VerticalContentAlignmentProperty] = control[!ContentControl.VerticalContentAlignmentProperty];
+        content[!TextElement.ForegroundProperty] = control[!TemplatedControl.ForegroundProperty];
+        Grid.SetColumn(content, 0);
+        grid.Children.Add(content); scope?.Register("PART_ContentPresenter", content);
 
         // 装饰槽叠于命中区之上且不可命中；chevron 颜色完全交给样式层
         //（Text.Secondary 基线 / Disabled 衰减），避免本地绑定压制样式优先级。

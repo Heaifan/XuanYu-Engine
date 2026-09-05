@@ -31,11 +31,11 @@ public static partial class XYUI2LiveExamplesFactory
     {
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 12 };
         var status = new XYCaption { Text = "外部宿主等待 OpenCommand……" };
-        var ddbExport = new XYDropDownButton { Width = 120, Content = "导出格式：ASTC" };
+        var ddbExport = new XYDropDownButton { MinWidth = 156, Content = "导出格式：ASTC" };
         ddbExport.OpenCommand = new XYUI2GalleryCommand(() => status.Text = "OpenCommand：外部宿主可在此打开导出格式菜单");
-        var ddbFilter = new XYDropDownButton { Width = 120, Content = "筛选：仅修改" };
+        var ddbFilter = new XYDropDownButton { MinWidth = 156, Content = "筛选：仅修改" };
         ddbFilter.OpenCommand = new XYUI2GalleryCommand(() => status.Text = "OpenCommand：外部宿主可在此打开筛选菜单");
-        var ddbDisabled = new XYDropDownButton { Width = 120, Content = "配置：Release", IsEnabled = false };
+        var ddbDisabled = new XYDropDownButton { MinWidth = 156, Content = "配置：Release", IsEnabled = false };
         row.Children.Add(ddbExport); row.Children.Add(ddbFilter); row.Children.Add(ddbDisabled);
 
         var note = new XYCaption { Text = "规范验证：整钮为单一点击区（无分割线），Chevron 槽纯装饰。Trigger ≠ Popup owner。" };
