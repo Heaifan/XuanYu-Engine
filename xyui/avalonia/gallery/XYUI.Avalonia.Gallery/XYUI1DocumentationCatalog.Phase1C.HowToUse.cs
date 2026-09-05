@@ -29,6 +29,6 @@ public static partial class XYUI1DocumentationCatalog
             new("Advanced", "单键 (F2)、双键 (Ctrl+S)、三键 (Ctrl+Shift+P) 均有良好视觉呈现。"),
             new("Don't", "不要当作交互按钮使用；不要手动拼接方括号或手写样式。")
         ],
-        _ => []
+        _ => Phase1DHowToUse(id)
     };
 }

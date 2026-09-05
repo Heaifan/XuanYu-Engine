@@ -36,6 +36,6 @@ public static partial class XYUI1DocumentationCatalog
             new("Keycap Surface", "22 DIP 高度 / PanelAlt 浅底色 / Subtle 边框", "Keycap container"),
             new("Typography", "Caption Mono 等宽字体族群", "Mono typography")
         ],
-        _ => []
+        _ => Phase1DAnatomy(id)
     };
 }

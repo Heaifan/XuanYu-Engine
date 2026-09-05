@@ -36,7 +36,7 @@ public static partial class XYUI1DocumentationCatalog
             new("排版字阶", "xy:XY.Font.Mono", "Caption 等宽键帽字符族群"),
             new("禁用联动", "XY.Brush.State.Disabled.*", "Disabled 背景、边框与文字统一灰阶降级")
         ],
-        _ => []
+        _ => Phase1DFoundationMappings(id)
     };
 
     static IReadOnlyList<XYUIDocState> Phase1CStates(string id) => id switch
@@ -61,6 +61,6 @@ public static partial class XYUI1DocumentationCatalog
             new("Normal", "常态：PanelAlt 底色 + Subtle 边框 + Mono 文本"),
             new("Disabled", "禁用：IsEnabled=False，底色/边框/文字统一为 Disabled 灰阶")
         ],
-        _ => []
+        _ => Phase1DStates(id)
     };
 }

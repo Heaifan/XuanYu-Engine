@@ -44,12 +44,12 @@ public static class XYUI1GalleryCatalog
         "XYUI-1-16" => new XYErrorText { Text = "路径不存在" },
         "XYUI-1-17" => new XYWarningText { Text = "资源尚未保存" },
         "XYUI-1-18" => new XYShortcutHint { Shortcut = "Ctrl+Shift+S" },
-        "XYUI-1-19" => new XYTooltip { Content = new XYCaption { Text = "悬浮提示内容" } },
-        "XYUI-1-20" => new XYRichText { Text = "普通内容", StrongText = "重点信息", MonoText = "region-7ad21c" },
+        "XYUI-1-19" => new XYTooltip { Content = new XYCaption { Text = "在当前工程中检索 (Ctrl+F)" } },
+        "XYUI-1-20" => new XYRichText { Text = "着色器编译完成：", StrongText = "18 个着色器", MonoText = "pipeline_04 · 2.4s" },
         "XYUI-1-21" => XYSelectableTextPreviewFactory.Create(),
-        "XYUI-1-22" => new XYEmptyText { Text = "暂无区域数据" },
-        "XYUI-1-23" => new XYSearchHighlight { Text = "命中：区域数据集" },
-        "XYUI-1-24" => new XYTruncatedText { Text = "这是一个在窄布局中使用末尾省略策略的长对象名称" },
+        "XYUI-1-22" => new XYEmptyText { Text = "未找到符合条件的着色器资源" },
+        "XYUI-1-23" => new XYSearchHighlight { Text = "World_terrain_chunk_loader" },
+        "XYUI-1-24" => new XYTruncatedText { Text = "Textures/Environment/Atmosphere/skybox_hdr_v3.dds", Mode = XyuiTruncatedTextMode.End },
         _ => new TextBlock { Text = "未注册组件" }
     };
 

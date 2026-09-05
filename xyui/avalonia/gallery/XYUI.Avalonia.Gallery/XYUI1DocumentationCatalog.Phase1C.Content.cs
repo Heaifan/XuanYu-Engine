@@ -9,7 +9,7 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-16" => "<xy:XYErrorText Text=\"路径不存在\" />",
         "XYUI-1-17" => "<xy:XYWarningText Text=\"资源尚未保存\" />",
         "XYUI-1-18" => "<xy:XYShortcutHint Shortcut=\"Ctrl+Shift+S\" CombinationMode=\"SeparateKeycaps\" />",
-        _ => ""
+        _ => Phase1DQuickStart(id, type)
     };
 
     static IReadOnlyList<XYUIDocRule> Phase1CCoreRules(string id) => id switch
@@ -46,6 +46,6 @@ public static partial class XYUI1DocumentationCatalog
             new("禁用场景", "不要当作可点击的 Button 使用（此为提示标记）；禁止发明 Inline/Compact 等伪模式。"),
             new("相邻区别", "vs Badge / CodeText：具有真实键帽结构与 Separator 符号，使用 Mono 等宽字系。")
         ],
-        _ => []
+        _ => Phase1DCoreRules(id)
     };
 }

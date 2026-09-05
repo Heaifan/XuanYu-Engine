@@ -27,6 +27,12 @@ public static partial class XYUI1LiveExamplesFactory
         "XYUI-1-16" => CreateErrorTextExamples(),
         "XYUI-1-17" => CreateWarningTextExamples(),
         "XYUI-1-18" => CreateShortcutHintExamples(),
+        "XYUI-1-19" => CreateTooltipExamples(),
+        "XYUI-1-20" => CreateRichTextExamples(),
+        "XYUI-1-21" => CreateSelectableTextExamples(),
+        "XYUI-1-22" => CreateEmptyTextExamples(),
+        "XYUI-1-23" => CreateSearchHighlightExamples(),
+        "XYUI-1-24" => CreateTruncatedTextExamples(),
         _ => null
     };
 
@@ -74,24 +80,6 @@ public static partial class XYUI1LiveExamplesFactory
         Grid.SetColumn(l3, 0); Grid.SetColumn(v3, 1);
         g2.Children.AddRange(new[] { (Control)l3, v3 });
         s2.Children.Add(g2);
-        panel.Children.Add(s2);
-        return panel;
-    }
-
-    static Control CreateCaptionExamples()
-    {
-        var panel = new StackPanel { Spacing = 12 };
-        var s1 = new StackPanel { Spacing = 4 };
-        s1.Children.Add(new XYCaption { Text = "场景 1 · 时间戳与审计上下文" });
-        s1.Children.Add(new XYCaption { Text = "上次修改于 2026-09-04 23:50 · 提交者: LeadArchitect" });
-        panel.Children.Add(s1);
-
-        var s2 = new StackPanel { Spacing = 4 };
-        s2.Children.Add(new XYCaption { Text = "场景 2 · 表单字段下方辅助指引与度量单位" });
-        var unitStack = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        unitStack.Children.Add(new XYText { Text = "视口剔除距离: 2500" });
-        unitStack.Children.Add(new XYCaption { Text = "(以米为单位，超出范围将被裁切)" });
-        s2.Children.Add(unitStack);
         panel.Children.Add(s2);
         return panel;
     }

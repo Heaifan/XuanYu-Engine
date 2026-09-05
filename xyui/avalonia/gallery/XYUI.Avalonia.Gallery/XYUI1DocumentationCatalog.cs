@@ -36,6 +36,7 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-01" or "XYUI-1-02" or "XYUI-1-03" or "XYUI-1-04" or "XYUI-1-05" or "XYUI-1-06" => true,
         "XYUI-1-07" or "XYUI-1-08" or "XYUI-1-09" or "XYUI-1-10" or "XYUI-1-11" or "XYUI-1-12" or "XYUI-1-13" => true,
         "XYUI-1-14" or "XYUI-1-15" or "XYUI-1-16" or "XYUI-1-17" or "XYUI-1-18" => true,
+        "XYUI-1-19" or "XYUI-1-20" or "XYUI-1-21" or "XYUI-1-22" or "XYUI-1-23" or "XYUI-1-24" => true,
         _ => false
     };
 
@@ -59,6 +60,12 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-16" => "Canonical Stable · Feedback / ErrorText",
         "XYUI-1-17" => "Canonical Stable · Feedback / WarningText",
         "XYUI-1-18" => "Canonical Stable · Keyboard / ShortcutHint",
+        "XYUI-1-19" => "Canonical Stable · Feedback / Tooltip",
+        "XYUI-1-20" => "Canonical Stable · Typography / RichText",
+        "XYUI-1-21" => "Canonical Stable · Typography / SelectableText",
+        "XYUI-1-22" => "Canonical Stable · Feedback / EmptyText",
+        "XYUI-1-23" => "Canonical Stable · Indicator / SearchHighlight",
+        "XYUI-1-24" => "Canonical Stable · Typography / TruncatedText",
         _ => "Canonical Stable · Typography / Text"
     };
 

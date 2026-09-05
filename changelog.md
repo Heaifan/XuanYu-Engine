@@ -1,5 +1,20 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-1-19～24 · Phase 1D Gallery 与实机视觉验收 Closeout（2026-09-05 18:35:00 +08:00）
+
+- 目标：完成 XYUI-1-19～24（Tooltip、RichText、SelectableText、EmptyText、SearchHighlight、TruncatedText）Gallery 开发者文档与业务场景实装，通过 Light/Dark 实机验收并完成 Phase 1D 最终收口。
+- 变化：
+  - 19 Tooltip 完成 ToolTip.Tip 挂载与提示浮层外观展示，如实保留 GAP-004/005。
+  - 20 RichText 完成 Normal/Strong/Mono 三段内联排版流展示，保留 GAP-003。
+  - 21 SelectableText 完成只读划选、系统高亮选区与 8 DIP 拷贝角标点击复制演示，保留 GAP-004。
+  - 22 EmptyText 完成弱化次级灰色纯文本占位反馈，无图标与 CTA 干扰。
+  - 23 SearchHighlight 完成预计算搜索结果呈现与 8 DIP 浅灰放大镜角标规范呈现。
+  - 24 TruncatedText 完成 140/240 DIP 受限宿主截断与 Middle 模式 GAP-002 降级展示。
+  - 更新 `XYUI1DocumentationModels.cs`，19～24 状态转为 `USER VISUAL ACCEPTED`。
+- 验证：解决方案构建 0 警告 0 错误；XYUI.Avalonia.Tests 454/454 全部通过；Core 339/339；WarCore 22/22；World 1286/1286；合计 2101/2101 全部通过；`scripts/arch-a-guard.ps1` PASS；5+100 行硬门禁 PASS；`git diff --check` PASS；12 张 Light/Dark 实机截图通过用户人工视觉验收。
+- 状态：`XYUI-1 (01～24) FINAL CLOSED · USER VISUAL ACCEPTED`。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
+
 ## v0.2.28.77-rz · XYUI-1-19～24 · Phase 1D Runtime contracts（2026-09-05 18:20:54 +08:00）
 
 - 目标：完成 Tooltip/RichText 的既定 Runtime 修正，并完成 SelectableText、EmptyText、SearchHighlight、TruncatedText；Gallery 与 14+ 保持冻结。
