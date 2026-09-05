@@ -12,6 +12,7 @@
   - 业务实装：创建 XYUI2LiveExamplesFactory，为 01～06 编写主次操作排版、视口模式工具栏、视图模式持久开关、资产烘焙与工程发布、下拉格式选择、图层树状多选等真实场景，所有示例均消费真实运行时控件。
   - 新增契约测试：编写 XYUI2Phase2AContractTests，新增 4 个契约测试实例，全量通过。
 - 验证：解决方案构建 0 警告 0 错误；测试套件 2105/2105 全数通过（XYUI.Avalonia.Tests 458/458 PASS；Core 339/339；WarCore 22/22；World 1286/1286）；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS；Gallery 成功启动。
+- 提交：`dde65f13`（Phase 2A 实现）；`c9270234`（IconButton 无障碍文案纠偏）。
 - 状态：`XYUI-2 · Phase 2A (01～06) IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING`。
 - 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
 
