@@ -52,6 +52,7 @@ public sealed class XYUI1DocumentationTests : IClassFixture<XyuiHeadlessFixture>
         var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-07");
         var groups = preview.GetVisualDescendants().OfType<XYRadioButton>().GroupBy(x => x.GroupName).ToArray();
         Assert.Equal(2, groups.Length); Assert.Equal(new[] { 3, 2 }, groups.Select(x => x.Count()).OrderByDescending(x => x));
+        Assert.All(new[] { "XYUI-2-13", "XYUI-2-14", "XYUI-2-15", "XYUI-2-16", "XYUI-2-17", "XYUI-2-18" }, id => Assert.NotNull(XYUI2LiveExamplesFactory.Create(id)));
     });
 
     [Fact]

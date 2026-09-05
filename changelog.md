@@ -1,5 +1,21 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2C (13～18) 关键契约收敛与 Gallery 文档/示例闭环（2026-09-05 23:27:00 +08:00）
+
+- 目标：落实 XYUI-2-13～18（Select、TextArea、SearchField、PasswordField、DatePicker、TimePicker）真实 API 审计、交互契约加固、5+100 门禁、XYUI-1 风格文档与全量动态 Live Examples。
+- 变化：
+  - 13 Select：确立固定离散候选选择语义（区别于 ComboBox 的可编辑与模糊过滤），验证整钮点击切换、Enter/Space 展开提交、Up/Down 导航、Escape 关闭及窗口失活安全收起。
+  - 14 TextArea：确立首焦全选与二次 Caret 统一编辑协议，支持 Standard 与 Editor 模式（顶部元数据类型、行数与字符数计数器），支持 AutoGrow 自动增长与内部滚动。
+  - 15 SearchField：确认搜索输入语义，支持键入后内容清除按钮与 Escape 清空、Enter 触发 SearchRequested 事件，以及可选的高级 FilterContent 筛选面板浮层。
+  - 16 PasswordField：落实默认密文圆点掩码，支持按住眼睛图标 / Enter / Space 临时查看明文，松开、失焦或丢失捕获时立即掩码恢复；禁用态完全阻断明文查看。
+  - 17 DatePicker：确立 DateOnly 精确分段流转（年/月/日），支持左右换段、上下微调与数字精确覆盖；集成 Previous/Next 天数步进与日历面板 / 日期调节双 Popup。
+  - 18 TimePicker：确立 TimeOnly 时分秒流转与循环，支持水平按住拖拽连续微调（Scrubbing，4 DIP 一步长）与时钟调整弹层；支持 ShowSeconds 开关。
+  - Gallery 与 Live Examples：新增 Phase 2C 系列文档模型（QuickStart、CoreRules、Anatomy、Foundation/States、HowToUse），所有 Live Example 均为独立动态实例，避免静态缓存污染。
+  - 新增测试：编写 `XYUI2Phase2CContractTests.cs`，验证 13～18 核心交互与生命周期契约。
+- 验证：解决方案全量构建 0 警告 0 错误；测试套件 2118/2118 全数通过（XYUI 471/471 PASS；Core 339/339；WarCore 22/22；World 1286/1286）；scripts/arch-a-guard.ps1 PASS；5+100 硬门禁全绿；git diff --check PASS。
+- 状态：XYUI-2 · Phase 2C (13～18) IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
+
 ## v0.2.28.77-rz · XYUI-2 · Phase 2B 视觉收口与文档布局加固（2026-09-05 23:03:00 +08:00）
 
 - 目标：完成 XYUI-2-07～12 Phase 2B 最终视觉与文档收口（Visual Closeout），不改动 Runtime 逻辑，不推进 13～18。
