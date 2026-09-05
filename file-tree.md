@@ -2043,7 +2043,7 @@
    │  │     ├─ XYUI2Phase2DContractTests.cs  # 验证 Phase 2D (19～24) 复合属性控件复用契约与弹层生命周期安全关闭。
    │  │     ├─ XYUI2Phase2ARegressionTests.cs  # 验证 Gallery 文档导航重建、Live Example 独立实例与 DropDownButton 统一命中区。
    │  │     ├─ XYUI2PropertyControlsTests.cs  # 实现对应模块的 C# 职责。
-   │  │     ├─ XYUI2QuickStartNormalizationTests.cs  # 验证 Phase 2C (13～18) Quick Start 仅保留至多 2 个核心示例并剥离状态测试台。
+   │  │     ├─ XYUI2QuickStartNormalizationTests.cs  # 验证 Phase 2C/2D (13～24) Quick Start 仅保留至多 2 个核心示例并剥离状态测试台。
    │  │     ├─ XYUI2SearchFieldTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2SelectTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2SliderTests.cs  # 实现对应模块的 C# 职责。

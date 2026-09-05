@@ -1,6 +1,6 @@
 # changelog
 
-## v0.2.28.77-rz · XYUI-2 · Phase 2D (19～24) 全量实现闭环与收口交付（2026-09-06 00:35:00 +08:00）
+## v0.2.28.77-rz · XYUI-2 · Phase 2D (19～24) 全量实现闭环与收口交付（2026-09-06 00:40:00 +08:00）
 
 - 目标：一鼓作气完成 XYUI-2 最后一批 Phase 2D（19～24：XYColorPicker, XYBoolProperty, XYNumberProperty, XYVectorProperty, XYEnumProperty, XYReferenceProperty）真实 API 收敛、复合控件复用契约、Quick Start 极简规范化、XYUI-1 风格完整文档与真实业务 Live Examples。
 - 变化：
@@ -9,7 +9,7 @@
   - Gallery 文档体系补全：新增 `XYUI2DocumentationCatalog.Phase2D.*` 四件套（Content, Anatomy, Foundation, HowToUse），提供极简 XAML、核心规则、变体、属性、Token 映射与多场景指南。
   - 动态 Live Examples：新增 `XYUI2LiveExamplesFactory.Phase2D.*` 三组业务场景（ColorBool, Properties, EnumRef），覆盖半透明/色盘联动、整行点击/只读、标签 Scrubbing/单位后缀、宽中窄自适应多轴、离散枚举及引用状态机（Empty/Missing/Mismatch）。
   - 测试套件扩展：更新 `XYUI2QuickStartNormalizationTests.cs` 将 19～24 纳入样本数 ≤ 2 规则断言；更新 `XYUI1DocumentationTests.cs` 覆盖全量 13～24 LiveExamples；对齐 `XYUI2BoolPropertyTests.cs` 样本数断言。
-- 验证：解决方案构建 0 警告 0 错误；全仓测试 2128/2128 PASS；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS。
+- 验证：根解决方案与 UI 解决方案构建均 0 警告 0 错误；UI 487/487、Core 339/339、WarCore 22/22、World 1286/1286，全仓测试 2134/2134 PASS；scripts/arch-a-guard.ps1 PASS（含 5+100）；git diff --check PASS。
 - 状态：`XYUI-2 · Phase 2D (19～24) IMPLEMENTATION CLOSED · 24/24 CANONICAL CONTROLS IMPLEMENTED · USER VISUAL ACCEPTANCE PENDING`。
 
 ## v0.2.28.77-rz · XYUI-2 · Phase 2C Quick Start 规范化收敛与 Visual Closeout（2026-09-06 00:06:00 +08:00）
