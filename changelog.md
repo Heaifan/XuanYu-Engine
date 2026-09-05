@@ -1,5 +1,20 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-1-19～24 · Phase 1D Runtime contracts（2026-09-05 18:20:54 +08:00）
+
+- 目标：完成 Tooltip/RichText 的既定 Runtime 修正，并完成 SelectableText、EmptyText、SearchHighlight、TruncatedText；Gallery 与 14+ 保持冻结。
+- 变化：
+  - 19 Tooltip 保留现有 Foundation 表面与 GAP-005；未伪造 Open/Close、Hover 或 Leave 生命周期。
+  - 20 RichText 保留 Normal/Strong/Mono inline 结构，Disabled 使用共享状态资源；不扩展 Markdown、Link 或任意 Inline。
+  - 21 SelectableText 保留真实只读选择、Ctrl+C/复制目标、纯文本剪贴板与 Light/Dark selection 资源。
+  - 22 EmptyText 使用 Caption/Tertiary、居中且无装饰；23 SearchHighlight 只呈现传入结果与搜索 Vector Mark，不新增搜索引擎。
+  - 24 TruncatedText 保留 End 默认与 Middle API；Middle 继续登记 XYUI1-GAP-002 并使用 Avalonia EndEllipsis 映射。
+  - 新增 9 个 Runtime 测试实例并同步 `file-tree.md`。
+- 验证：解决方案构建 0 警告 0 错误；XYUI.Avalonia.Tests 454/454；Core 339/339；WarCore 22/22；World 1286/1286；合计 2101/2101 通过，0 失败 0 跳过；`scripts/arch-a-guard.ps1` PASS；5+100 行门禁 PASS；`git diff --check` PASS。
+- 提交：`e91998d4`（`feat(xyui): complete phase 1d text runtime contracts`）。
+- 状态：Runtime 自动门禁完成，等待用户对 19～24 进行真实 Gallery/真机视觉与交互验收；不宣告 `USER VISUAL ACCEPTED`。
+- 版本：沿用 `v0.2.28.77-rz`；本轮未修改 `run.bat`、`xyui.bat`、Gallery 或 Editor。
+
 ## v0.2.28.77-rz · XYUI-1-14～18 · Phase 1C Runtime 修正与测试补齐（2026-09-05 15:19:21 +08:00）
 
 - 目标：完成 Separator、HelpText、ErrorText、WarningText、ShortcutHint 的 Runtime/Foundation 收口；Gallery、`XuanYu.Editor.UI`、XYUI-1-19+ 与 XYUI-2+ 保持冻结。
