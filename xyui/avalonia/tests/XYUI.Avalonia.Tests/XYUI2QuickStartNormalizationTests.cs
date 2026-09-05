@@ -18,13 +18,19 @@ public sealed class XYUI2QuickStartNormalizationTests : IClassFixture<XyuiHeadle
     [InlineData("XYUI-2-16", 2)]
     [InlineData("XYUI-2-17", 2)]
     [InlineData("XYUI-2-18", 2)]
+    [InlineData("XYUI-2-19", 2)]
+    [InlineData("XYUI-2-20", 2)]
+    [InlineData("XYUI-2-21", 2)]
+    [InlineData("XYUI-2-22", 2)]
+    [InlineData("XYUI-2-23", 2)]
+    [InlineData("XYUI-2-24", 2)]
     public void Quick_start_has_at_most_two_core_previews(string id, int expectedCount) => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare();
         var document = XYUI2DocumentationCatalog.Build().Single(x => x.Id == id);
         var preview = document.PreviewFactory();
         var window = XyuiBatchTestHost.Show(preview);
-        var controls = preview.GetVisualDescendants().Count(x => x is XYSelect or XYTextArea or XYSearchField or XYPasswordField or XYDatePicker or XYTimePicker);
+        var controls = preview.GetVisualDescendants().Count(x => x.GetType().Name == document.AvaloniaType);
         Assert.Equal(expectedCount, controls);
         foreach (var text in new[] { "Disabled", "ReadOnly", "Error", "Boundary", "Keyboard Matrix", "Lifecycle" })
             Assert.DoesNotContain(text, document.QuickStartXaml, StringComparison.OrdinalIgnoreCase);

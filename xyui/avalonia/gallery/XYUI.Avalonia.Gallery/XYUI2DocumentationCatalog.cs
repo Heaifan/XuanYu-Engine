@@ -23,9 +23,9 @@ public static partial class XYUI2DocumentationCatalog
         var id = entry.SourceItemId;
         var type = entry.AvaloniaType.Split('.').Last();
         var name = ChineseName(entry);
-        var variants = Phase2AVariants(id) is { Count: > 0 } p2v ? p2v : Phase2BVariants(id) is { Count: > 0 } p2bv ? p2bv : Phase2CVariants(id) is { Count: > 0 } p2cv ? p2cv : Names(entry.Variants).Select(x => new XYUIDocVariant(x, "", "")).ToArray();
-        var states = Phase2AStates(id) is { Count: > 0 } p2s ? p2s : Phase2BStates(id) is { Count: > 0 } p2bs ? p2bs : Phase2CStates(id) is { Count: > 0 } p2cs ? p2cs : Names(entry.States).Select(x => new XYUIDocState(x, "")).ToArray();
-        var props = Phase2AProperties(id) is { Count: > 0 } p2p ? p2p : Phase2BProperties(id) is { Count: > 0 } p2bp ? p2bp : Phase2CProperties(id) is { Count: > 0 } p2cp ? p2cp : Properties(id);
+        var variants = Phase2AVariants(id) is { Count: > 0 } p2v ? p2v : Phase2BVariants(id) is { Count: > 0 } p2bv ? p2bv : Phase2CVariants(id) is { Count: > 0 } p2cv ? p2cv : Phase2DVariants(id) is { Count: > 0 } p2dv ? p2dv : Names(entry.Variants).Select(x => new XYUIDocVariant(x, "", "")).ToArray();
+        var states = Phase2AStates(id) is { Count: > 0 } p2s ? p2s : Phase2BStates(id) is { Count: > 0 } p2bs ? p2bs : Phase2CStates(id) is { Count: > 0 } p2cs ? p2cs : Phase2DStates(id) is { Count: > 0 } p2ds ? p2ds : Names(entry.States).Select(x => new XYUIDocState(x, "")).ToArray();
+        var props = Phase2AProperties(id) is { Count: > 0 } p2p ? p2p : Phase2BProperties(id) is { Count: > 0 } p2bp ? p2bp : Phase2CProperties(id) is { Count: > 0 } p2cp ? p2cp : Phase2DProperties(id) is { Count: > 0 } p2dp ? p2dp : Properties(id);
         return new(id, name, type, entry.Description,
             entry.Usage == "See canonical spec" ? entry.States : entry.Usage,
             () => XYUI2GalleryCatalog.CreatePreview(id),
@@ -34,10 +34,10 @@ public static partial class XYUI2DocumentationCatalog
             CanonicalIdentity = entry.CanonicalIdentity, KnownGap = entry.KnownGap,
             Category = "Canonical Stable · Buttons / Inputs",
             Acceptance = PendingAcceptance,
-            QuickStartXaml = Phase2AQuickStart(id) is { Length: > 0 } q2a ? q2a : Phase2BQuickStart(id) is { Length: > 0 } q2b ? q2b : Phase2CQuickStart(id),
-            CoreRules = Phase2ACoreRules(id) is { Count: > 0 } r2a ? r2a : Phase2BCoreRules(id) is { Count: > 0 } r2b ? r2b : Phase2CCoreRules(id),
-            FoundationMappings = Phase2AFoundationMappings(id) is { Count: > 0 } f2a ? f2a : Phase2BFoundationMappings(id) is { Count: > 0 } f2b ? f2b : Phase2CFoundationMappings(id),
-            HowToUse = Phase2AHowToUse(id) is { Count: > 0 } h2a ? h2a : Phase2BHowToUse(id) is { Count: > 0 } h2b ? h2b : Phase2CHowToUse(id),
+            QuickStartXaml = Phase2AQuickStart(id) is { Length: > 0 } q2a ? q2a : Phase2BQuickStart(id) is { Length: > 0 } q2b ? q2b : Phase2CQuickStart(id) is { Length: > 0 } q2c ? q2c : Phase2DQuickStart(id),
+            CoreRules = Phase2ACoreRules(id) is { Count: > 0 } r2a ? r2a : Phase2BCoreRules(id) is { Count: > 0 } r2b ? r2b : Phase2CCoreRules(id) is { Count: > 0 } r2c ? r2c : Phase2DCoreRules(id),
+            FoundationMappings = Phase2AFoundationMappings(id) is { Count: > 0 } f2a ? f2a : Phase2BFoundationMappings(id) is { Count: > 0 } f2b ? f2b : Phase2CFoundationMappings(id) is { Count: > 0 } f2c ? f2c : Phase2DFoundationMappings(id),
+            HowToUse = Phase2AHowToUse(id) is { Count: > 0 } h2a ? h2a : Phase2BHowToUse(id) is { Count: > 0 } h2b ? h2b : Phase2CHowToUse(id) is { Count: > 0 } h2c ? h2c : Phase2DHowToUse(id),
             LiveExamplesFactory = XYUI2LiveExamplesFactory.Supports(id)
                 ? () => XYUI2LiveExamplesFactory.Create(id)!
                 : null

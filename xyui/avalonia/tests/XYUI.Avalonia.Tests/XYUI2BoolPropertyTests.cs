@@ -19,6 +19,6 @@ public sealed class XYUI2BoolPropertyTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal(34, property.Bounds.Height); var sw = Assert.IsType<XYSwitch>(property.SwitchPart); Assert.Same(sw, property.GetVisualDescendants().OfType<XYSwitch>().Single());
         var changes = 0; property.ValueChanged += (_, _) => changes++; sw.IsChecked = true; Dispatcher.UIThread.RunJobs(); Assert.True(property.Value); Assert.Equal(1, changes);
         property.IsReadOnly = true; property.ToggleValue(); Assert.True(property.Value); Assert.False(sw.IsEnabled); property.IsEnabled = false; property.ToggleValue(); Assert.True(property.Value);
-        var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-20"); Assert.True(preview.GetVisualDescendants().OfType<XYBoolProperty>().Count() >= 5); window.Close();
+        var preview = XYUI2GalleryCatalog.CreatePreview("XYUI-2-20"); Assert.Equal(2, preview.GetVisualDescendants().OfType<XYBoolProperty>().Count()); window.Close();
     });
 }

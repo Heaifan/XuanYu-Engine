@@ -1,5 +1,17 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2D (19～24) 全量实现闭环与收口交付（2026-09-06 00:35:00 +08:00）
+
+- 目标：一鼓作气完成 XYUI-2 最后一批 Phase 2D（19～24：XYColorPicker, XYBoolProperty, XYNumberProperty, XYVectorProperty, XYEnumProperty, XYReferenceProperty）真实 API 收敛、复合控件复用契约、Quick Start 极简规范化、XYUI-1 风格完整文档与真实业务 Live Examples。
+- 变化：
+  - 复合控件复用契约：NumberProperty 严格复用 XYNumberField；VectorProperty 各轴严格复用 XYNumberField；EnumProperty 严格复用 XYSelect；BoolProperty 严格复用 XYSwitch；ReferenceProperty 严格复用 XYIconButton；新增 `XYUI2Phase2DContractTests.cs` 契约自动化守卫。
+  - Quick Start 极简规范化：贯彻“Quick Start ≠ State Showcase”原则；19～24 全部收敛为至多 2 个核心状态（ColorPicker: Default / Open；BoolProperty: Visible / Cast Shadow；NumberProperty: Mass / Opacity；VectorProperty: Position / UV；EnumProperty: Blend Mode / Quality；ReferenceProperty: Material / Texture）；状态测试台与长文本全部剥离下放。
+  - Gallery 文档体系补全：新增 `XYUI2DocumentationCatalog.Phase2D.*` 四件套（Content, Anatomy, Foundation, HowToUse），提供极简 XAML、核心规则、变体、属性、Token 映射与多场景指南。
+  - 动态 Live Examples：新增 `XYUI2LiveExamplesFactory.Phase2D.*` 三组业务场景（ColorBool, Properties, EnumRef），覆盖半透明/色盘联动、整行点击/只读、标签 Scrubbing/单位后缀、宽中窄自适应多轴、离散枚举及引用状态机（Empty/Missing/Mismatch）。
+  - 测试套件扩展：更新 `XYUI2QuickStartNormalizationTests.cs` 将 19～24 纳入样本数 ≤ 2 规则断言；更新 `XYUI1DocumentationTests.cs` 覆盖全量 13～24 LiveExamples；对齐 `XYUI2BoolPropertyTests.cs` 样本数断言。
+- 验证：解决方案构建 0 警告 0 错误；全仓测试 2128/2128 PASS；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS。
+- 状态：`XYUI-2 · Phase 2D (19～24) IMPLEMENTATION CLOSED · 24/24 CANONICAL CONTROLS IMPLEMENTED · USER VISUAL ACCEPTANCE PENDING`。
+
 ## v0.2.28.77-rz · XYUI-2 · Phase 2C Quick Start 规范化收敛与 Visual Closeout（2026-09-06 00:06:00 +08:00）
 
 - 目标：落实 Phase 2C（13～18）Quick Start 规范化收敛，贯彻“Quick Start ≠ State Showcase”原则；左侧保留最小可用 XAML，右侧收缩为至多 2 个核心示例（1 个 Default + 至多 1 个核心 Variant），纵向间距 12 DIP；P0 彻底解决 14 XYTextArea 顶部异常压扁问题；将状态测试矩阵与边缘场景全面剥离并下放至 Live Examples 与 How To Use。

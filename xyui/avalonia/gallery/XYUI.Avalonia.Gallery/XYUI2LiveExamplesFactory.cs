@@ -9,7 +9,8 @@ public static partial class XYUI2LiveExamplesFactory
     public static bool Supports(string id) => id is
         "XYUI-2-01" or "XYUI-2-02" or "XYUI-2-03" or "XYUI-2-04" or "XYUI-2-05" or "XYUI-2-06" or
         "XYUI-2-07" or "XYUI-2-08" or "XYUI-2-09" or "XYUI-2-10" or "XYUI-2-11" or "XYUI-2-12" or
-        "XYUI-2-13" or "XYUI-2-14" or "XYUI-2-15" or "XYUI-2-16" or "XYUI-2-17" or "XYUI-2-18";
+        "XYUI-2-13" or "XYUI-2-14" or "XYUI-2-15" or "XYUI-2-16" or "XYUI-2-17" or "XYUI-2-18" or
+        "XYUI-2-19" or "XYUI-2-20" or "XYUI-2-21" or "XYUI-2-22" or "XYUI-2-23" or "XYUI-2-24";
 
     public static Control? Create(string id) => id switch
     {
@@ -31,6 +32,12 @@ public static partial class XYUI2LiveExamplesFactory
         "XYUI-2-16" => PasswordFieldExamples(),
         "XYUI-2-17" => DatePickerExamples(),
         "XYUI-2-18" => TimePickerExamples(),
+        "XYUI-2-19" => ColorPickerExamples(),
+        "XYUI-2-20" => BoolPropertyExamples(),
+        "XYUI-2-21" => NumberPropertyExamples(),
+        "XYUI-2-22" => VectorPropertyExamples(),
+        "XYUI-2-23" => EnumPropertyExamples(),
+        "XYUI-2-24" => ReferencePropertyExamples(),
         _ => null
     };
 

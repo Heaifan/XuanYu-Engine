@@ -1531,6 +1531,10 @@
    │  │     ├─ XYUI2DocumentationCatalog.Phase2C.Content.cs  # 定义 Phase 2C (13～18) 控件极简 QuickStart 与核心规则文档。
    │  │     ├─ XYUI2DocumentationCatalog.Phase2C.Foundation.cs  # 定义 Phase 2C (13～18) Foundation Token 映射与状态伪类文档。
    │  │     ├─ XYUI2DocumentationCatalog.Phase2C.HowToUse.cs  # 定义 Phase 2C (13～18) 使用场景、禁用场景与交互规范。
+   │  │     ├─ XYUI2DocumentationCatalog.Phase2D.Anatomy.cs  # 定义 Phase 2D (19～24) 控件变体与属性文档模型。
+   │  │     ├─ XYUI2DocumentationCatalog.Phase2D.Content.cs  # 定义 Phase 2D (19～24) 控件极简 QuickStart 与核心规则文档。
+   │  │     ├─ XYUI2DocumentationCatalog.Phase2D.Foundation.cs  # 定义 Phase 2D (19～24) Foundation Token 映射与状态伪类文档。
+   │  │     ├─ XYUI2DocumentationCatalog.Phase2D.HowToUse.cs  # 定义 Phase 2D (19～24) 使用场景、禁用场景与交互规范。
    │  │     ├─ XYUI2DocumentationCatalog.Properties.cs  # 提供 Gallery 对应页面、数据或运行时预览。
    │  │     ├─ XYUI2DocumentationCatalog.Usages.cs  # 提供 Gallery 对应页面、数据或运行时预览。
    │  │     ├─ XYUI2LiveExamplesFactory.Actions.cs  # SplitButton、DropDownButton、Checkbox 真实业务场景 Live Examples。
@@ -1543,6 +1547,9 @@
    │  │     ├─ XYUI2LiveExamplesFactory.Phase2C.DateTime.cs  # DatePicker 与 TimePicker 真实业务场景 Live Examples。
    │  │     ├─ XYUI2LiveExamplesFactory.Phase2C.SearchPassword.cs  # SearchField 与 PasswordField 真实业务场景 Live Examples。
    │  │     ├─ XYUI2LiveExamplesFactory.Phase2C.SelectArea.cs  # Select 与 TextArea 真实业务场景 Live Examples。
+   │  │     ├─ XYUI2LiveExamplesFactory.Phase2D.ColorBool.cs  # ColorPicker 与 BoolProperty 真实业务场景 Live Examples。
+   │  │     ├─ XYUI2LiveExamplesFactory.Phase2D.EnumRef.cs  # EnumProperty 与 ReferenceProperty 真实业务场景 Live Examples。
+   │  │     ├─ XYUI2LiveExamplesFactory.Phase2D.Properties.cs  # NumberProperty 与 VectorProperty 真实业务场景 Live Examples。
    │  │     ├─ XYUI2GalleryCatalog.Buttons.cs  # 提供 Gallery 对应页面、数据或运行时预览。
    │  │     ├─ XYUI2GalleryCatalog.Choices.cs  # Checkbox、RadioButton、Switch 真实场景样例工厂。
    │  │     ├─ XYUI2GalleryCatalog.ColorBool.cs  # ColorPicker 与 BoolProperty 的中文真实场景样例工厂。
@@ -2033,6 +2040,7 @@
    │  │     ├─ XYUI2Phase2BContractTests.cs  # 验证 Phase 2B (07～12) 单选互斥、开关立即切换、首焦全选、数值微调与下拉过滤回归。
    │  │     ├─ XYUI2Phase2CContractTests.cs  # 验证 Phase 2C (13～18) 选择框固定候选、多行编辑、搜索清空、密码显隐与日期时间微调。
    │  │     ├─ XYUI2Phase2CIdentityTests.cs  # 验证 Phase 2C (13～18) 页面使用完整 Canonical identity 映射。
+   │  │     ├─ XYUI2Phase2DContractTests.cs  # 验证 Phase 2D (19～24) 复合属性控件复用契约与弹层生命周期安全关闭。
    │  │     ├─ XYUI2Phase2ARegressionTests.cs  # 验证 Gallery 文档导航重建、Live Example 独立实例与 DropDownButton 统一命中区。
    │  │     ├─ XYUI2PropertyControlsTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2QuickStartNormalizationTests.cs  # 验证 Phase 2C (13～18) Quick Start 仅保留至多 2 个核心示例并剥离状态测试台。

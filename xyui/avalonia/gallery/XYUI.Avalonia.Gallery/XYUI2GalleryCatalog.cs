@@ -26,12 +26,12 @@ public static partial class XYUI2GalleryCatalog
         "XYUI-2-16" => Host("密码输入框 · 按住显示", PasswordFields()),
         "XYUI-2-17" => Host("日期选择器 · 分段编辑 / 日历面板", DatePickers()),
         "XYUI-2-18" => Host("时间选择器 · 分段编辑 / 横向微调", TimePickers()),
-        "XYUI-2-19" => Host("颜色选择器 · RGB / RGBA / 透明度", ColorPickers()),
-        "XYUI-2-20" => Host("布尔属性 · 属性行 / 开关复用", BoolProperties()),
-        "XYUI-2-21" => Host("数值属性行 · 标签微调 / 数值输入", NumberProperties()),
+        "XYUI-2-19" => HostVertical("颜色选择器 · RGB / RGBA", ColorPickers()),
+        "XYUI-2-20" => HostVertical("布尔属性 · 属性行 / 开关复用", BoolProperties()),
+        "XYUI-2-21" => HostVertical("数值属性行 · 标签微调 / 数值输入", NumberProperties()),
         "XYUI-2-22" => HostVertical("向量属性控件 · 自适应轴布局", VectorProperties()),
-        "XYUI-2-23" => Host("枚举属性控件 · 选择框复用", EnumProperties()),
-        "XYUI-2-24" => Host("引用属性控件 · 身份 / 定位 / 浏览", ReferenceProperties()),
+        "XYUI-2-23" => HostVertical("枚举属性控件 · 选择框复用", EnumProperties()),
+        "XYUI-2-24" => HostVertical("引用属性控件 · 身份 / 定位 / 浏览", ReferenceProperties()),
         _ => new TextBlock { Text = "未实装组件（Batch 02+）" }
     };
     static StackPanel Host(string title, Control[] samples)
