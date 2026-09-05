@@ -56,4 +56,28 @@ public sealed class XYUI2Phase2DContractTests : IClassFixture<XyuiHeadlessFixtur
         Assert.False(refProperty.IsPickerOpen);
         window.Close();
     });
+
+    [Fact]
+    public void Vector_and_reference_property_visual_contracts() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare();
+        var vec = new XYVectorProperty { Width = 620, Dimension = XYVectorDimension.Vector3 };
+        var refer = new XYReferenceProperty { Width = 400 };
+        var host = new StackPanel { Children = { vec, refer } };
+        var window = XyuiBatchTestHost.Show(host);
+
+        Assert.True(vec.Classes.Contains("xyui-vector-wide"));
+        vec.Width = 420; vec.UpdateLayoutMode(); Assert.True(vec.Classes.Contains("xyui-vector-medium"));
+        vec.Width = 280; vec.UpdateLayoutMode(); Assert.True(vec.Classes.Contains("xyui-vector-compact"));
+
+        refer.ReferenceState = XYReferenceState.Missing; Dispatcher.UIThread.RunJobs();
+        var missingColor = XyuiBatchTestHost.ColorOf(refer.ReferenceFieldPart!.BorderBrush);
+        Assert.Equal(XyuiBatchTestHost.Token("XY.Semantic.Error.Border"), missingColor);
+
+        refer.ReferenceState = XYReferenceState.TypeMismatch; Dispatcher.UIThread.RunJobs();
+        var mismatchColor = XyuiBatchTestHost.ColorOf(refer.ReferenceFieldPart.BorderBrush);
+        Assert.Equal(XyuiBatchTestHost.Token("XY.Semantic.Warning.Border"), mismatchColor);
+        Assert.NotEqual(missingColor, mismatchColor);
+        window.Close();
+    });
 }

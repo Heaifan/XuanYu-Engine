@@ -37,8 +37,8 @@ public static partial class XYUI2DocumentationCatalog
         "XYUI-2-24" => [
             new("Reference Chrome", "XY.Brush.Surface.Input", "引用展示框底色与圆角"),
             new("Type Badge", "XY.Brush.Text.Secondary", "引用对象类型标识颜色"),
-            new("Missing Alert", "XY.Brush.Semantic.Danger", "引用丢失状态红边警告"),
-            new("Mismatch Alert", "XY.Brush.Semantic.Warning", "类型不匹配黄色警告")
+            new("Missing Alert", "XY.Brush.Semantic.Error.Border", "引用丢失状态 Danger 红边警告"),
+            new("Mismatch Alert", "XY.Brush.Semantic.Warning.Border", "类型不匹配 Warning 黄色警告")
         ],
         _ => []
     };

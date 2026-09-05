@@ -61,12 +61,12 @@
           <TextBlock Text="03 FOUNDATION &amp; STATES" Classes="xyui-text-section" FontWeight="Bold" />
           <ItemsControl ItemsSource="{Binding FoundationMappings}">
             <ItemsControl.ItemTemplate><DataTemplate x:DataType="g:XYUIDocFoundationItem">
-              <Grid ColumnDefinitions="120,200,*" Margin="0,2"><TextBlock Text="{Binding Concept}" Classes="xyui-text-label" FontWeight="SemiBold" /><TextBlock Grid.Column="1" Text="{Binding FoundationToken}" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /><TextBlock Grid.Column="2" Text="{Binding Description}" Classes="xyui-text-caption" TextWrapping="Wrap" /></Grid>
+              <Grid ColumnDefinitions="Auto,12,Auto,12,*" Margin="0,2"><TextBlock Text="{Binding Concept}" Classes="xyui-text-label" FontWeight="SemiBold" /><TextBlock Grid.Column="2" Text="{Binding FoundationToken}" Classes="xyui-text-code" Foreground="{DynamicResource XY.Brush.Accent.Strong}" /><TextBlock Grid.Column="4" Text="{Binding Description}" Classes="xyui-text-caption" TextWrapping="Wrap" /></Grid>
             </DataTemplate></ItemsControl.ItemTemplate>
           </ItemsControl>
           <ItemsControl ItemsSource="{Binding States}" Margin="0,4,0,0">
             <ItemsControl.ItemTemplate><DataTemplate x:DataType="g:XYUIDocState">
-              <Grid ColumnDefinitions="120,*" Margin="0,2"><TextBlock Text="{Binding Name}" Classes="xyui-text-code" FontWeight="SemiBold" /><TextBlock Grid.Column="1" Text="{Binding Description}" Classes="xyui-text-body" /></Grid>
+              <Grid ColumnDefinitions="Auto,12,*" Margin="0,2"><TextBlock Text="{Binding Name}" Classes="xyui-text-code" FontWeight="SemiBold" /><TextBlock Grid.Column="2" Text="{Binding Description}" Classes="xyui-text-body" TextWrapping="Wrap" /></Grid>
             </DataTemplate></ItemsControl.ItemTemplate>
           </ItemsControl>
         </StackPanel>

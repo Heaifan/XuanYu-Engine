@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · FINAL VISUAL FIX（2026-09-06 01:02:00 +08:00）
+
+- 目标：完成 Phase 2D 19～24 的最终视觉修补，保持 Public API、复合控件复用与 Popup 生命周期契约不变。
+- 变化：VectorProperty 改善宽/中/紧凑布局的标签完整性与 stacked 行间距；ReferenceProperty 将 Missing 保持 Error/Danger 语义、TypeMismatch 改为 Warning 语义；Foundation & States 使用自适应列；ColorPicker Quick Start 改为 `Default · RGB` 与 `RGBA · Alpha`，不再错误宣称 Popup 已展开。
+- 验证：根解决方案与 UI 解决方案构建均 0 警告 0 错误；UI 488/488、Core 339/339、WarCore 22/22、World 1286/1286，全仓测试 2135/2135 PASS；scripts/arch-a-guard.ps1 PASS（含 5+100）；git diff --check PASS。
+- 状态：`XYUI-2 · FINAL VISUAL FIX · IMPLEMENTATION CLOSED · 22 / 24 / GLOBAL STATES LAYOUT READY FOR USER VISUAL ACCEPTANCE · USER VISUAL ACCEPTANCE PENDING`。
+
 ## v0.2.28.77-rz · XYUI-2 · Phase 2D (19～24) 全量实现闭环与收口交付（2026-09-06 00:40:00 +08:00）
 
 - 目标：一鼓作气完成 XYUI-2 最后一批 Phase 2D（19～24：XYColorPicker, XYBoolProperty, XYNumberProperty, XYVectorProperty, XYEnumProperty, XYReferenceProperty）真实 API 收敛、复合控件复用契约、Quick Start 极简规范化、XYUI-1 风格完整文档与真实业务 Live Examples。

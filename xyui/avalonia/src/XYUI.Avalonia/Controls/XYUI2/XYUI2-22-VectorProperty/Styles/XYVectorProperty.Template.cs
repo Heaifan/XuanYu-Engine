@@ -11,7 +11,7 @@ public partial class XYVectorProperty
 {
     internal static FuncControlTemplate<XYVectorProperty> CreateTemplate() => new((control, scope) =>
     {
-        var label = new TextBlock { Name = "PART_Label", Text = control.Label, VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
+        var label = new TextBlock { Name = "PART_Label", Text = control.Label, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap };
         var axes = new Grid { Name = "PART_Axes", HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Center };
         var row = new Grid { Name = "PART_Row", Children = { label, axes } }; XYPropertyLayoutMetrics.ConfigureRow(row, label, axes, 0);
         control.LabelPart = label; control.AxisPanelPart = axes; control.RowPart = row;

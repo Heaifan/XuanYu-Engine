@@ -16,8 +16,8 @@ public static partial class XYUI2GalleryCatalog
 
     static Control[] VectorProperties() =>
     [
-        new XYVectorProperty { Width = 620, Label = "Position", Dimension = XYVectorDimension.Vector3, X = 12.0, Y = 4.0, Z = -8.0, Step = .1, DecimalPlaces = 1 },
-        new XYVectorProperty { Width = 620, Label = "UV", Dimension = XYVectorDimension.Vector2, X = 0.5, Y = 0.5, Step = .1, DecimalPlaces = 1 },
+        new XYVectorProperty { Label = "Position", Dimension = XYVectorDimension.Vector3, X = 12.0, Y = 4.0, Z = -8.0, Step = .1, DecimalPlaces = 1 },
+        new XYVectorProperty { Label = "UV", Dimension = XYVectorDimension.Vector2, X = 0.5, Y = 0.5, Step = .1, DecimalPlaces = 1 },
     ];
 
     static Control[] EnumProperties() =>

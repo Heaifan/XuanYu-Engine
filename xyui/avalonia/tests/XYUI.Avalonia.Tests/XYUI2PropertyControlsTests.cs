@@ -63,6 +63,8 @@ public sealed class XYUI2PropertyControlsTests : IClassFixture<XyuiHeadlessFixtu
         Assert.Equal(new Thickness(1), p.ReferenceFieldPart!.BorderThickness); Assert.NotNull(p.ReferenceFieldPart.BorderBrush);
         Assert.Equal(3, p.GetVisualDescendants().OfType<XYIconButton>().Count()); var located = 0; p.LocateRequested += (_, _) => located++; p.LocatePart!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(1, located);
         p.BrowsePart!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.True(p.IsPickerOpen); list.SelectedIndex = 0; Dispatcher.UIThread.RunJobs(); Assert.Equal("E2", p.ReferenceId); Assert.False(p.IsPickerOpen);
+        p.ReferenceState = XYReferenceState.Missing; Dispatcher.UIThread.RunJobs(); Assert.Equal(XyuiBatchTestHost.Token("XY.Semantic.Error.Border"), XyuiBatchTestHost.ColorOf(p.ReferenceFieldPart.BorderBrush));
+        p.ReferenceState = XYReferenceState.TypeMismatch; Dispatcher.UIThread.RunJobs(); Assert.Equal(XyuiBatchTestHost.Token("XY.Semantic.Warning.Border"), XyuiBatchTestHost.ColorOf(p.ReferenceFieldPart.BorderBrush));
         Assert.False(p.TryAssignReference(new("道路", "Dataset", "D1"))); Assert.Equal("E2", p.ReferenceId); p.ClearReference(); Assert.Equal(XYReferenceState.Empty, p.ReferenceState); w.Close();
     });
 

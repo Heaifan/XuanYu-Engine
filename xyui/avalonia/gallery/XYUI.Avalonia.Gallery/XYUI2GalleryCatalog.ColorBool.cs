@@ -9,8 +9,8 @@ public static partial class XYUI2GalleryCatalog
 {
     static Control[] ColorPickers() =>
     [
-        ColorSample("Default", new XYColorPicker { Width = 300, Color = Color.FromRgb(74, 120, 148), Mode = XYColorPickerMode.RGB }),
-        ColorSample("Open", OpenColor(Color.FromArgb(180, 74, 120, 148))),
+        ColorSample("Default · RGB", new XYColorPicker { Width = 300, Color = Color.FromRgb(74, 120, 148), Mode = XYColorPickerMode.RGB }),
+        ColorSample("RGBA · Alpha", new XYColorPicker { Width = 300, Color = Color.FromArgb(180, 74, 120, 148), Mode = XYColorPickerMode.RGBA }),
     ];
 
     static Control[] BoolProperties() =>
@@ -25,10 +25,4 @@ public static partial class XYUI2GalleryCatalog
     static Control BoolSample(string label, bool value) =>
         new XYBoolProperty { Width = 420, Label = label, Value = value };
 
-    static XYColorPicker OpenColor(Color color)
-    {
-        var picker = new XYColorPicker { Width = 300, Color = color, Mode = XYColorPickerMode.RGBA };
-        picker.AttachedToVisualTree += (_, _) => picker.IsOpen = true;
-        return picker;
-    }
 }

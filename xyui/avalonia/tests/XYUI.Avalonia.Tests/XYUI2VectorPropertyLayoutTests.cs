@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Threading;
 using XYUI.Avalonia.Controls;
 
@@ -24,7 +26,7 @@ public sealed class XYUI2VectorPropertyLayoutTests : IClassFixture<XyuiHeadlessF
     {
         XyuiBatchTestHost.Prepare(); var p = Show(420, XYVectorDimension.Vector3);
         Assert.Equal(2, p.RowPart!.RowDefinitions.Count); Assert.Equal(1, Grid.GetRow(p.AxisPanelPart!));
-        Assert.Equal(3, p.AxisPanelPart!.ColumnDefinitions.Count); AssertNoOverflow(p);
+        Assert.Equal(3, p.AxisPanelPart!.ColumnDefinitions.Count); Assert.Equal(6, p.AxisPanelPart.Margin.Top); Assert.Equal(TextWrapping.Wrap, p.LabelPart!.TextWrapping); Assert.Equal(TextTrimming.None, p.LabelPart.TextTrimming); AssertNoOverflow(p);
     });
 
     [Fact]
@@ -43,9 +45,25 @@ public sealed class XYUI2VectorPropertyLayoutTests : IClassFixture<XyuiHeadlessF
         Assert.Equal(12.5, p.X); Assert.Equal(8, p.Y); Assert.Equal(-4.8, p.Z); Assert.All(p.AxisFields, field => Assert.True(field.IsScrubEnabled));
     });
 
+    [Fact]
+    public void Vector4_reflows_wide_medium_compact_without_losing_label_or_values() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var p = Show(760, XYVectorDimension.Vector4); p.Label = "Position"; p.W = 4;
+        Assert.All(p.AxisHosts, host => Assert.True(host.IsVisible)); Assert.Equal(4, p.AxisPanelPart!.ColumnDefinitions.Count);
+        Resize(p, 420); Assert.Equal(2, p.RowPart!.RowDefinitions.Count); Assert.Equal(4, p.AxisPanelPart.RowDefinitions.Count);
+        Resize(p, 280); Assert.Equal(4, p.AxisPanelPart.RowDefinitions.Count); Assert.Equal(4, p.AxisFields.Count);
+        Assert.Equal("Position", p.LabelPart!.Text); Assert.Equal(4, p.W); Assert.All(p.AxisFields, field => Assert.IsType<XYNumberField>(field)); AssertNoOverflow(p);
+    });
+
     static XYVectorProperty Show(double width, XYVectorDimension dimension)
     {
         var p = new XYVectorProperty { Width = width, Dimension = dimension, X = 12.5, Y = 0, Z = -4.8, W = 1 }; XyuiBatchTestHost.Show(p); return p;
+    }
+
+    static void Resize(XYVectorProperty property, double width)
+    {
+        property.Width = width; property.Measure(new Size(width, double.PositiveInfinity)); property.Arrange(new Rect(0, 0, width, property.DesiredSize.Height));
+        property.UpdateLayoutMode();
     }
 
     static void AssertNoOverflow(XYVectorProperty property) => Assert.All(property.AxisHosts.Where(host => host.IsVisible), host => Assert.True(host.Bounds.Right <= property.Bounds.Width + 0.1));

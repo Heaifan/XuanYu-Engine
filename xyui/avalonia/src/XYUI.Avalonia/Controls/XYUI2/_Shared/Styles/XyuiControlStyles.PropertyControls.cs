@@ -37,7 +37,7 @@ public static partial class XyuiControlStyles
         var field = new Style(x => x.OfType<XYReferenceProperty>().Class("xyui-reference-property").Template().Name("PART_ReferenceField")); Set(field, Border.BackgroundProperty, "XY.Brush.Surface.Panel"); Set(field, Border.BorderBrushProperty, "XY.Brush.Border.Color.Default"); field.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(1))); Set(field, Border.CornerRadiusProperty, "XY.Radius.Input"); styles.Add(field);
         State(styles, typeof(XYReferenceProperty), "xyui-reference-property", ":disabled", TemplatedControl.ForegroundProperty, "XY.Brush.State.Disabled.Text");
         var missing = new Style(x => x.OfType<XYReferenceProperty>().Class("xyui-reference-missing").Template().Name("PART_ReferenceField")); Set(missing, Border.BorderBrushProperty, "XY.Brush.Semantic.Error.Border"); styles.Add(missing);
-        var mismatch = new Style(x => x.OfType<XYReferenceProperty>().Class("xyui-reference-mismatch").Template().Name("PART_ReferenceField")); Set(mismatch, Border.BorderBrushProperty, "XY.Brush.Semantic.Error.Border"); styles.Add(mismatch);
+        var mismatch = new Style(x => x.OfType<XYReferenceProperty>().Class("xyui-reference-mismatch").Template().Name("PART_ReferenceField")); Set(mismatch, Border.BorderBrushProperty, "XY.Brush.Semantic.Warning.Border"); styles.Add(mismatch);
     }
     static Style PropertyRoot<T>(Styles styles, string cls, IControlTemplate template, double height) where T : TemplatedControl
     {
