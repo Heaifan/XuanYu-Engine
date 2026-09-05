@@ -30,7 +30,9 @@ public static partial class XYUI2DocumentationCatalog
             CoreRules = Phase2ACoreRules(id),
             FoundationMappings = Phase2AFoundationMappings(id),
             HowToUse = Phase2AHowToUse(id),
-            LiveExamplesFactory = XYUI2LiveExamplesFactory.Create(id) is { } ex ? () => ex : null
+            LiveExamplesFactory = XYUI2LiveExamplesFactory.Supports(id)
+                ? () => XYUI2LiveExamplesFactory.Create(id)!
+                : null
         };
     }
     public const string PendingAcceptance = "READY FOR USER VISUAL ACCEPTANCE";

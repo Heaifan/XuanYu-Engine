@@ -46,34 +46,34 @@ public static partial class XYUI2DocumentationCatalog
     static IReadOnlyList<XYUIDocState> Phase2AStates(string id) => id switch
     {
         "XYUI-2-01" => [
-            new(":normal", "默认静止状态，展现对应变体底色与 Action Edge"),
+            new("Normal", "默认静止状态，展现对应变体底色与 Action Edge"),
             new(":pointerover", "指针悬停，Primary Edge 由 3 DIP 增厚至 4 DIP"),
             new(":pressed", "按压瞬态，底色加深反馈"),
             new(":disabled", "禁用态，背景透明度衰减，阻断点击")
         ],
         "XYUI-2-02" => [
-            new(":ghost", "透明基线状态，无背景与边框"),
+            new("Ghost", "透明基线状态，无背景与边框"),
             new(":pointerover", "悬停显露浅灰交互底色"),
             new(":selected", "外部状态驱动选中，显露 Surface.Selected 与 Action Edge"),
             new(":disabled", "禁用态，图标透明度衰减至 38%")
         ],
         "XYUI-2-03" => [
-            new(":unchecked", "未开启状态，无高亮 Edge"),
+            new("Unchecked", "未开启状态，无高亮 Edge"),
             new(":checked", "开启状态，持久显露 Persistent Edge 与高亮边框"),
             new(":disabled", "禁用态，状态冻结不可点击")
         ],
         "XYUI-2-04" => [
-            new(":main-hover", "主命中区悬停，仅主区底色变化"),
-            new(":menu-hover", "菜单槽悬停，仅右槽底色变化"),
+            new("Main Hover", "主命中区悬停，仅主区底色变化"),
+            new("Menu Hover", "菜单槽悬停，仅右槽底色变化"),
             new(":disabled", "双区同步禁用，Divider 衰减")
         ],
         "XYUI-2-05" => [
-            new(":normal", "默认常态，整钮平整"),
+            new("Normal", "默认常态，整钮平整"),
             new(":pointerover", "指针悬停，全钮与装饰槽同步变色"),
-            new(":ddb-off", "专用禁用伪类，装饰槽与 Chevron 同步衰减")
+            new("Disabled", "禁用态，整钮与 Chevron 同步衰减")
         ],
         "XYUI-2-06" => [
-            new(":unchecked", "未勾选态，空白方框"),
+            new("Unchecked", "未勾选态，空白方框"),
             new(":checked", "勾选态，呈现强色 Check 矢量"),
             new(":indeterminate", "混合态，呈现强色水平短横杠"),
             new(":disabled", "禁用态，方框与勾选标记同步弱化")

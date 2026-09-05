@@ -59,7 +59,9 @@ public partial class XYDropDownButton
         grid.AddHandler(InputElement.PointerReleasedEvent,
             (_, _) => control.PseudoClasses.Set(":pressed", false), RoutingStrategies.Tunnel);
 
-        grid.Children.Add(new XyuiActionEdge());
+        var edge = new XyuiActionEdge();
+        Grid.SetColumnSpan(edge, 2);
+        grid.Children.Add(edge);
         root.Child = grid;
         return root;
     });

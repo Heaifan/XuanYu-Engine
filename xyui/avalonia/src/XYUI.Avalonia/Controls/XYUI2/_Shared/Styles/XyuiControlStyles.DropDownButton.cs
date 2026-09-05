@@ -50,28 +50,13 @@ public static partial class XyuiControlStyles
         TemplateSurface(styles, typeof(Button), "xyui-ddb-zone", ":disabled", Brushes.Transparent);
     }
 
-    // ChevronTrack 与 chevron 色：默认 PanelAlt / Text.Secondary；hover/pressed 随控件态同步；
-    // chevron 仅 Disabled 时经控件 Foreground 衰减为 Disabled.Text（Canonical 05 未定义槽内 hover 换色）。
+    // ChevronTrack 仅保留装饰图标的布局槽；背景透明，所有状态由整钮统一表达。
     static void ChevronTrack(Styles styles, string cls)
     {
         var track = new Style(x => x.OfType<XYDropDownButton>().Class(cls).Descendant()
             .OfType<Border>().Class("xyui-ddb-track"));
-        Set(track, Border.BackgroundProperty, "XY.Brush.Surface.PanelAlt");
+        track.Setters.Add(new Setter(Border.BackgroundProperty, Brushes.Transparent));
         Set(track, Border.WidthProperty, "XY.DropDownButton.ChevronTrack.Width");
         styles.Add(track);
-        StateTrack(styles, cls, ":pointerover", "XY.Brush.State.Color.Hover");
-        StateTrack(styles, cls, ":pressed", "XY.Brush.State.Color.Pressed");
-        var disabled = new Style(x => x.OfType<XYDropDownButton>().Class(cls).Class(":disabled").Descendant()
-            .OfType<Border>().Class("xyui-ddb-track"));
-        Set(disabled, Border.BackgroundProperty, "XY.Brush.State.Disabled.Background");
-        styles.Add(disabled);
-    }
-
-    static void StateTrack(Styles styles, string cls, string state, string resource)
-    {
-        var style = new Style(x => x.OfType<XYDropDownButton>().Class(cls).Class(state).Descendant()
-            .OfType<Border>().Class("xyui-ddb-track"));
-        Set(style, Border.BackgroundProperty, resource);
-        styles.Add(style);
     }
 }

@@ -6,6 +6,9 @@ namespace XYUI.Avalonia.Gallery;
 
 public static partial class XYUI2LiveExamplesFactory
 {
+    public static bool Supports(string id) => id is
+        "XYUI-2-01" or "XYUI-2-02" or "XYUI-2-03" or "XYUI-2-04" or "XYUI-2-05" or "XYUI-2-06";
+
     public static Control? Create(string id) => id switch
     {
         "XYUI-2-01" => ButtonExamples(),

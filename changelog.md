@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2A Stability + XYUI-2-05 Final Patch（2026-09-05 21:28:45 +08:00）
+
+- 目标：修复 Gallery 左侧文档导航 CLR 崩溃，完成 XYUI-2-05 统一命中区视觉收口，并补齐连续导航回归门禁。
+- 根因：`XYUI2DocumentationCatalog` 在目录构建时缓存并重复返回同一个 Live Example `StackPanel`，返回 01 时触发 Avalonia `InvalidOperationException`（Visual parent 冲突）。
+- 变化：
+  - Live Examples 改为每次 `LiveExamplesFactory` 调用创建独立 Control；新增 Catalog 独立实例回归。
+  - DropDownButton Action Edge 跨满两列 Unified Zone；Chevron 槽保持透明、不可命中，不再拥有独立 Hover/Pressed 背景；示例文案调整为“导出格式：ASTC / 筛选：仅修改 / 配置：Release”。
+  - Phase 2A 文档移除不存在的 `:normal`、`:ghost`、`:unchecked`、`:main-hover`、`:menu-hover`、`:ddb-off` 伪类写法，仅保留真实 Runtime 伪类。
+  - 新增 Gallery 正向/反向/快速连续/Light-Dark 导航回归。
+- 验证：指定 SDK 根/UI 解决方案构建均 0 警告 0 错误；测试 2108/2108 全通过（UI 461/461；Core 339/339；WarCore 22/22；World 1286/1286）；真实 Gallery 01→08→01 导航未崩溃；ARCH-A PASS；5+100 PASS；git diff --check PASS。
+- 状态：`XYUI-2 · Phase 2A IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING`；不得推进 07～12。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
+
 ## v0.2.28.77-rz · XYUI-2 · Phase 2A (01～06) Runtime 契约加固与 Gallery 文档/示例闭环（2026-09-05 20:41:00 +08:00）
 
 - 目标：落实 XYUI-2-01～06（Button、IconButton、ToggleButton、SplitButton、DropDownButton、Checkbox）的 Runtime 契约加固、边界约束落实、5+100 行代码治理，并建立 XYUI-1 风格的开发者文档与真实业务场景 Live Examples。

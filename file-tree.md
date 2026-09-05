@@ -2015,6 +2015,7 @@
    │  │     ├─ XYUI2NumberFieldTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2PasswordFieldTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2Phase2AContractTests.cs  # 验证 Phase 2A (01～06) 触发器契约、双命令区、无障碍与三态回归。
+   │  │     ├─ XYUI2Phase2ARegressionTests.cs  # 验证 Gallery 文档导航重建、Live Example 独立实例与 DropDownButton 统一命中区。
    │  │     ├─ XYUI2PropertyControlsTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2SearchFieldTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2SelectTests.cs  # 实现对应模块的 C# 职责。

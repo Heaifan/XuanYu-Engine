@@ -23,7 +23,7 @@ public sealed partial class XYUI2DropDownButtonRuntimeTests
         Assert.Equal(4d, dropdown.CornerRadius.TopLeft);
         Assert.Equal(XyuiBatchTestHost.Token("XY.Surface.Raised"), XyuiBatchTestHost.ColorOf(dropdown.Background));
         Assert.Equal(XyuiBatchTestHost.Token("XY.Border.Color.Default"), XyuiBatchTestHost.ColorOf(dropdown.BorderBrush));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.Surface.PanelAlt"), XyuiBatchTestHost.ColorOf(Track(dropdown).Background));
+        Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(Track(dropdown).Background));
         Assert.Equal(XyuiBatchTestHost.Token("XY.Text.Secondary"),
             XyuiBatchTestHost.ColorOf(ChevronOf(dropdown).Stroke));
         window.Close();
@@ -38,7 +38,7 @@ public sealed partial class XYUI2DropDownButtonRuntimeTests
         var zone = OpenZone(dropdown);
         XyuiBatchTestHost.Hover(window, dropdown);
         Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Hover"), XyuiBatchTestHost.ColorOf(dropdown.Background));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Hover"), XyuiBatchTestHost.ColorOf(Track(dropdown).Background));
+        Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(Track(dropdown).Background));
         Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(zone.Background));
         Assert.Equal(XyuiBatchTestHost.Token("XY.Text.Secondary"), XyuiBatchTestHost.ColorOf(ChevronOf(dropdown).Stroke));
         window.Close();
@@ -57,7 +57,7 @@ public sealed partial class XYUI2DropDownButtonRuntimeTests
         window.MouseDown(point, MouseButton.Left);
         Dispatcher.UIThread.RunJobs();
         Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Pressed"), XyuiBatchTestHost.ColorOf(dropdown.Background));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Pressed"), XyuiBatchTestHost.ColorOf(Track(dropdown).Background));
+        Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(Track(dropdown).Background));
         window.MouseUp(point, MouseButton.Left);
         Dispatcher.UIThread.RunJobs();
         Assert.Equal(XyuiBatchTestHost.Token("XY.State.Color.Hover"), XyuiBatchTestHost.ColorOf(dropdown.Background));
@@ -71,7 +71,7 @@ public sealed partial class XYUI2DropDownButtonRuntimeTests
         var dropdown = new XYDropDownButton { Content = "保存", IsEnabled = false };
         var window = XyuiBatchTestHost.Show(dropdown);
         Assert.Equal(XyuiBatchTestHost.Token("XY.State.Disabled.Background"), XyuiBatchTestHost.ColorOf(dropdown.Background));
-        Assert.Equal(XyuiBatchTestHost.Token("XY.State.Disabled.Background"), XyuiBatchTestHost.ColorOf(Track(dropdown).Background));
+        Assert.Equal(Colors.Transparent, XyuiBatchTestHost.ColorOf(Track(dropdown).Background));
         Assert.Equal(XyuiBatchTestHost.Token("XY.State.Disabled.Text"), XyuiBatchTestHost.ColorOf(ChevronOf(dropdown).Stroke));
         Assert.Equal(XyuiBatchTestHost.Token("XY.State.Disabled.Border"),
             XyuiBatchTestHost.ColorOf(XyuiBatchTestHost.Edge(dropdown).Background));
