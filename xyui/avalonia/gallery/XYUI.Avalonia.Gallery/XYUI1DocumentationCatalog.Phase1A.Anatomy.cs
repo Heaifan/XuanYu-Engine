@@ -14,7 +14,8 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-02" => [
             new("Role", "表单属性与检查器键名", "Field / property key"),
             new("Alignment", "与右侧值列保持基准对齐", "Works with value column"),
-            new("Layout", "单行固定或自适应宽度列", "Key column (100~120 DIP)"),
+            new("Layout", "列宽由外层父布局决定", "Column width is owned by parent layout"),
+            new("Example", "典型属性检查器标签列宽", "Typical Inspector key column: 100~120 DIP"),
             new("Variants", "无额外变体，专用于键值布局", "None")
         ],
         "XYUI-1-03" => [

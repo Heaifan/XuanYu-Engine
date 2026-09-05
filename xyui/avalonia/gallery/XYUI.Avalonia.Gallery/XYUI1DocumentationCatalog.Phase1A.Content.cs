@@ -1,4 +1,4 @@
-﻿namespace XYUI.Avalonia.Gallery;
+namespace XYUI.Avalonia.Gallery;
 
 public static partial class XYUI1DocumentationCatalog
 {
@@ -10,7 +10,7 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-04" => "<xy:XYHeading Text=\"世界地图设置\" Variant=\"PanelTitle\" />",
         "XYUI-1-05" => "<xy:XYSectionTitle Text=\"变换属性 (Transform)\" />",
         "XYUI-1-06" => "<xy:XYLink Content=\"打开渲染管线配置手册\" />",
-        _ => Usages(id, type).FirstOrDefault() ?? $"<xy:{type} Text=\"示例内容\" />"
+        _ => Phase1BQuickStart(id, type) is { Length: > 0 } qs ? qs : (Usages(id, type).FirstOrDefault() ?? $"<xy:{type} Text=\"示例内容\" />")
     };
 
     static IReadOnlyList<XYUIDocRule> CoreRules(string id) => id switch
@@ -51,7 +51,7 @@ public static partial class XYUI1DocumentationCatalog
             new("禁用场景", "不要用于触发执行命令或破坏性操作（如保存、删除请使用 XYButton）；不要用于非交互文字。"),
             new("相邻区别", "vs XYButton：Link 呈现无边框下划线文本风格，表达“资源导航”，而非“触发命令动作”。")
         ],
-        _ => []
+        _ => Phase1BCoreRules(id)
     };
 
     static IReadOnlyList<XYUIDocGuideItem> HowToUse(string id) => id switch
@@ -86,6 +86,6 @@ public static partial class XYUI1DocumentationCatalog
             new("Advanced", "结合 ToolTip.Tip 提示完整的链接目标地址。"),
             new("Don't", "禁止将无点击动作的普通说明文字套用链接样式。")
         ],
-        _ => []
+        _ => Phase1BHowToUse(id)
     };
 }

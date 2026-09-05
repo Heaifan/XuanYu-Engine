@@ -22,9 +22,11 @@ public sealed record XYUI1ComponentDocument(
     public string KnownGap { get; init; } = "";
     public string Category { get; init; } = "Canonical Stable · Typography / Text";
     public string QuickStartXaml { get; init; } = "";
-    // 验收状态由目录注入：Phase 1A 基线已收口，处于审查中。
+    // 验收状态由目录注入：Phase 1A/1B 基线已收口，处于审查中。
     public string Acceptance { get; init; } = "BASELINE ACCEPTED · MIGRATION REVIEW";
     public string StatusText => string.IsNullOrEmpty(KnownGap) ? Acceptance : $"{Acceptance} · GAP RETAINED";
+    public string VisualStatus => int.TryParse(Id.Replace("XYUI-1-", ""), out var idx) && idx <= 13 ? "USER VISUAL ACCEPTED" : "PENDING REVIEW";
+    public bool HasKnownGap => !string.IsNullOrEmpty(KnownGap);
     public bool HasVariants => Variants.Count > 0;
     public bool HasStates => States.Count > 0;
     public bool HasInteractionGuide => Id == "XYUI-2-09";

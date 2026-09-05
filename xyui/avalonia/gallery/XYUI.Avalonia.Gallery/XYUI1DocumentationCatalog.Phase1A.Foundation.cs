@@ -1,4 +1,4 @@
-﻿namespace XYUI.Avalonia.Gallery;
+namespace XYUI.Avalonia.Gallery;
 
 public static partial class XYUI1DocumentationCatalog
 {
@@ -41,7 +41,7 @@ public static partial class XYUI1DocumentationCatalog
             new("焦点外框", "xyui-focusable", "支持键盘 Tab 导航并呈现统一无障碍焦点框"),
             new("禁用前景色", "XY.Brush.State.Disabled.Text", "禁用状态下自动降级为 Disabled 灰色")
         ],
-        _ => []
+        _ => Phase1BFoundationMappings(id)
     };
 
     static IReadOnlyList<XYUIDocState> Phase1AStates(string id) => id switch
@@ -57,6 +57,6 @@ public static partial class XYUI1DocumentationCatalog
             new("Normal", "常态可读，继承父级上下文排版与主题颜色"),
             new("Disabled", "控件或祖先处于禁用态时，前景色自动降级为禁用灰")
         ],
-        _ => States(id)
+        _ => Phase1BStates(id).Count > 0 ? Phase1BStates(id) : States(id)
     };
 }

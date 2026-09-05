@@ -31,7 +31,12 @@ public static partial class XYUI1DocumentationCatalog
         };
     }
 
-    static bool HasLiveExamples(string id) => id is "XYUI-1-01" or "XYUI-1-02" or "XYUI-1-03" or "XYUI-1-04" or "XYUI-1-05" or "XYUI-1-06";
+    static bool HasLiveExamples(string id) => id switch
+    {
+        "XYUI-1-01" or "XYUI-1-02" or "XYUI-1-03" or "XYUI-1-04" or "XYUI-1-05" or "XYUI-1-06" => true,
+        "XYUI-1-07" or "XYUI-1-08" or "XYUI-1-09" or "XYUI-1-10" or "XYUI-1-11" or "XYUI-1-12" or "XYUI-1-13" => true,
+        _ => false
+    };
 
     static string CategoryOf(string id) => id switch
     {
@@ -41,6 +46,13 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-04" => "Canonical Stable · Structure / Heading",
         "XYUI-1-05" => "Canonical Stable · Inspector / Group Header",
         "XYUI-1-06" => "Canonical Stable · Navigation / Interactive Link",
+        "XYUI-1-07" => "Canonical Stable · Typography / Code",
+        "XYUI-1-08" => "Canonical Stable · Data / Monospace",
+        "XYUI-1-09" => "Canonical Stable · Indicator / Badge",
+        "XYUI-1-10" => "Canonical Stable · Status / Badge",
+        "XYUI-1-11" => "Canonical Stable · Status / Dot",
+        "XYUI-1-12" => "Canonical Stable · Graphic / Icon",
+        "XYUI-1-13" => "Canonical Stable · Composite / IconLabel",
         _ => "Canonical Stable · Typography / Text"
     };
 
@@ -52,13 +64,13 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-04" => ("标题组件提供页面标题和面板标题两种明确层级。", "用于页面、面板和内容区域的标题表达。"),
         "XYUI-1-05" => ("S-05 Soft Header + Left Mark：用于 Inspector 内部区块标题，不承担页面主标题或 Divider 职责。", "用于属性面板、Inspector 和设置页中的字段分组。"),
         "XYUI-1-06" => ("超链接表达可被激活的文档、对象或外部资源入口。", "用于可导航文本；不要把普通说明文字做成链接。"),
-        "XYUI-1-07" => ("代码 / ID 使用等宽字体，右下角独立显示 8 DIP 的 Vector Code Mark，不进入正文排版。", "用于实体 ID、路径、短代码和诊断信息。"),
-        "XYUI-1-08" => ("M-05A Structured Mono Data 使用同一父 Grid 的 Label(Auto) | Value(Auto) | Unit(Auto) 共享列体系；最长 Label 决定标签列宽且不截断。", "用于完整显示字段名并稳定对齐坐标、尺寸、性能指标、调试值、帧时间、内存、数量和工程参数。"),
-        "XYUI-1-09" => ("Left Pointer Tag 高 22 DIP、左指针固定 11 DIP；单一 Background Geometry 随文本内容扩展，Badge 本体保持 Auto Width 与 Left Alignment。", "用于类型、筛选条件和轻量分类信息；不要把 Badge 拉伸为整行横条。"),
-        "XYUI-1-10" => ("状态标签把状态语义与短文本放在同一个可读单元中。", "用于保存、连接、校验和同步状态。"),
-        "XYUI-1-11" => ("状态圆点用最小面积传达状态，不承担完整状态文字。", "用于列表、树节点或状态标签旁的快速指示。"),
-        "XYUI-1-12" => ("图标由 XYUI Vector Icon Registry 提供真实 StreamGeometry，尺寸与 StrokeWidth 按 Tiny / Small / Default / Large 联动。", "用于动作提示、状态补充和紧凑工具栏。"),
-        "XYUI-1-13" => ("图标加文字把符号和可读名称组合成一个紧凑标签。", "用于导航项、对象类别和带图标的字段说明。"),
+        "XYUI-1-07" => ("代码 / ID 使用等宽字体，右下角包含 8 DIP 矢量角标（VERIFY-BASELINE）。", "用于实体 ID、资源路径、属性键名与诊断参数。"),
+        "XYUI-1-08" => ("等宽数据容器（Aligned Monospace Data）基于共享 Grid 列布局提供稳定的数字对齐。", "用于三维空间坐标、帧耗时、帧率、内存与工程统计数据。"),
+        "XYUI-1-09" => ("紧凑型标签具有 22 DIP 规范高度与 11 DIP 左指针（VERIFY-CANONICAL）。", "用于本地资产、只读状态、实验性功能与未保存标记。"),
+        "XYUI-1-10" => ("状态标签将 5 项语义状态与短文本集成在单一可读单元中，复用 Badge 骨架。", "用于编译、同步、校验等明确操作状态；禁用通过 IsEnabled 控制。"),
+        "XYUI-1-11" => ("状态圆点以最小面积呈现纯净状态信号，不包含文本内容，与 StatusBadge 共享色源。", "用于服务监控、树节点紧凑标记与管线健康指示。"),
+        "XYUI-1-12" => ("标准矢量图标控件支持 24×24 视口均匀居中缩放与尺寸阶梯联动，显式 Size 优先。", "用于工具栏动作、状态辅助符号与紧凑面板图标。"),
+        "XYUI-1-13" => ("图标标签由 XYIcon 与 Text 复合而成，间距固定为 4 DIP 并保持严格垂直居中。", "用于场景树节点、资产类别项与属性说明。"),
         "XYUI-1-14" => ("分割线为内容建立连续、分组或方向关系。", "用于区隔列表行、面板、标题区和垂直分栏。"),
         "XYUI-1-15" => ("帮助说明为当前操作提供低干扰的上下文提示。", "用于输入项下方或空闲区域的操作指导。"),
         "XYUI-1-16" => ("错误说明直接指出需要修复的问题，并保持与语义色一致。", "用于校验失败、无效输入和不可完成的操作结果。"),

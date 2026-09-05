@@ -16,7 +16,11 @@
             <TextBlock Text="{Binding ChineseName, StringFormat='· {0}'}" Classes="xyui-heading-page" FontSize="20" Foreground="{DynamicResource XY.Brush.Text.Secondary}" />
           </StackPanel>
           <TextBlock Text="{Binding Overview}" Classes="xyui-text-body" TextWrapping="Wrap" />
-          <TextBlock Text="{Binding StatusText}" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" Margin="0,2,0,0" />
+          <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2,0,0">
+            <TextBlock Text="{Binding StatusText}" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" />
+            <TextBlock Text="{Binding KnownGap, StringFormat='({0})'}" IsVisible="{Binding HasKnownGap}" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Accent.Strong}" FontWeight="Bold" />
+            <TextBlock Text="{Binding VisualStatus, StringFormat='· {0}'}" Classes="xyui-text-caption" Foreground="{DynamicResource XY.Brush.Semantic.Success.Text}" FontWeight="Bold" />
+          </StackPanel>
         </StackPanel>
       </Border>
       <Border Classes="xyui-surface-panel" Padding="16,12" CornerRadius="6">

@@ -25,6 +25,8 @@ public static partial class XYUI1DocumentationCatalog
     {
         var anatomy = Phase1AAnatomy(id);
         if (anatomy.Count > 0) return anatomy;
+        var anatomyB = Phase1BAnatomy(id);
+        if (anatomyB.Count > 0) return anatomyB;
         return id switch
         {
             "XYUI-1-09" => [new("Default", "普通标签", "草稿"), new("Accent", "强调标签", "已选中")],

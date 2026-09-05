@@ -15,6 +15,13 @@ public static partial class XYUI1LiveExamplesFactory
         "XYUI-1-04" => CreateHeadingExamples(),
         "XYUI-1-05" => CreateSectionTitleExamples(),
         "XYUI-1-06" => CreateLinkExamples(),
+        "XYUI-1-07" => CreateCodeTextExamples(),
+        "XYUI-1-08" => CreateMonoTextExamples(),
+        "XYUI-1-09" => CreateBadgeExamples(),
+        "XYUI-1-10" => CreateStatusBadgeExamples(),
+        "XYUI-1-11" => CreateStatusDotExamples(),
+        "XYUI-1-12" => CreateIconExamples(),
+        "XYUI-1-13" => CreateIconLabelExamples(),
         _ => null
     };
 
