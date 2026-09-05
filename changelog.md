@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2C Canonical identity 对账与最终门禁复核（2026-09-05 23:34:17 +08:00）
+
+- 目标：补齐 XYUI-2-15～18 的既有 Canonical identity 映射，确保 13～18 页面 Header 使用真实 canonical 名称；不修改 Runtime、Public API 或 Gallery 生命周期方案。
+- 变化：补充 `XY.SearchField`、`XY.PasswordField`、`XY.DatePicker`、`XY.TimePicker` 四条 identity 映射；新增 Phase 2C identity 对账测试，并登记到 `file-tree.md`。
+- 验证：Avalonia UI solution build 0 Warning / 0 Error；XYUI 472/472、Core 339/339、WarCore 22/22、World 1286/1286，总计 2119/2119 PASS；ARCH-A PASS；5+100 PASS；`git diff --check` PASS；Gallery 已按最终构建产物启动并显示 13～18 导航项，状态保持用户视觉验收待定。
+- 状态：`XYUI-2 · Phase 2C (13～18) IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING`。
+
 ## v0.2.28.77-rz · XYUI-2 · Phase 2C (13～18) 关键契约收敛与 Gallery 文档/示例闭环（2026-09-05 23:27:00 +08:00）
 
 - 目标：落实 XYUI-2-13～18（Select、TextArea、SearchField、PasswordField、DatePicker、TimePicker）真实 API 审计、交互契约加固、5+100 门禁、XYUI-1 风格文档与全量动态 Live Examples。

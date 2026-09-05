@@ -2032,6 +2032,7 @@
    │  │     ├─ XYUI2Phase2AContractTests.cs  # 验证 Phase 2A (01～06) 触发器契约、双命令区、无障碍与三态回归。
    │  │     ├─ XYUI2Phase2BContractTests.cs  # 验证 Phase 2B (07～12) 单选互斥、开关立即切换、首焦全选、数值微调与下拉过滤回归。
    │  │     ├─ XYUI2Phase2CContractTests.cs  # 验证 Phase 2C (13～18) 选择框固定候选、多行编辑、搜索清空、密码显隐与日期时间微调。
+   │  │     ├─ XYUI2Phase2CIdentityTests.cs  # 验证 Phase 2C (13～18) 页面使用完整 Canonical identity 映射。
    │  │     ├─ XYUI2Phase2ARegressionTests.cs  # 验证 Gallery 文档导航重建、Live Example 独立实例与 DropDownButton 统一命中区。
    │  │     ├─ XYUI2PropertyControlsTests.cs  # 实现对应模块的 C# 职责。
    │  │     ├─ XYUI2SearchFieldTests.cs  # 实现对应模块的 C# 职责。
