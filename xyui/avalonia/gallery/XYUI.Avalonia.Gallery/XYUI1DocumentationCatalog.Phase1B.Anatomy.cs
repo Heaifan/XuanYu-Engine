@@ -49,6 +49,6 @@ public static partial class XYUI1DocumentationCatalog
             new("Gap", "标准水平间距 Space1 (4 DIP)", "XyuiSpatialTokens.Space1"),
             new("Hierarchy", "文字主色 (Primary) 与图标次级色 (Secondary)", "Foreground hierarchy")
         ],
-        _ => []
+        _ => Phase1CAnatomy(id)
     };
 }

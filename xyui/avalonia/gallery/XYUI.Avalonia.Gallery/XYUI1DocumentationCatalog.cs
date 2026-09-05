@@ -35,6 +35,7 @@ public static partial class XYUI1DocumentationCatalog
     {
         "XYUI-1-01" or "XYUI-1-02" or "XYUI-1-03" or "XYUI-1-04" or "XYUI-1-05" or "XYUI-1-06" => true,
         "XYUI-1-07" or "XYUI-1-08" or "XYUI-1-09" or "XYUI-1-10" or "XYUI-1-11" or "XYUI-1-12" or "XYUI-1-13" => true,
+        "XYUI-1-14" or "XYUI-1-15" or "XYUI-1-16" or "XYUI-1-17" or "XYUI-1-18" => true,
         _ => false
     };
 
@@ -53,6 +54,11 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-11" => "Canonical Stable · Status / Dot",
         "XYUI-1-12" => "Canonical Stable · Graphic / Icon",
         "XYUI-1-13" => "Canonical Stable · Composite / IconLabel",
+        "XYUI-1-14" => "Canonical Stable · Structure / Separator",
+        "XYUI-1-15" => "Canonical Stable · Feedback / HelpText",
+        "XYUI-1-16" => "Canonical Stable · Feedback / ErrorText",
+        "XYUI-1-17" => "Canonical Stable · Feedback / WarningText",
+        "XYUI-1-18" => "Canonical Stable · Keyboard / ShortcutHint",
         _ => "Canonical Stable · Typography / Text"
     };
 

@@ -45,7 +45,7 @@ public static partial class XYUI1DocumentationCatalog
             new("间距规范", "Space1 (4 DIP)", "固定微水平间距"),
             new("禁用联动", "IsEnabled=\"False\"", "Text 与 Icon 统一切换 DisabledText")
         ],
-        _ => []
+        _ => Phase1CFoundationMappings(id)
     };
 
     static IReadOnlyList<XYUIDocState> Phase1BStates(string id) => id switch
@@ -84,6 +84,6 @@ public static partial class XYUI1DocumentationCatalog
             new("Normal", "常态：Text Primary / Icon Secondary"),
             new("Disabled", "禁用：Text 与 Icon 统一致灰")
         ],
-        _ => []
+        _ => Phase1CStates(id)
     };
 }

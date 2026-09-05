@@ -39,6 +39,6 @@ public static partial class XYUI1DocumentationCatalog
             new("Advanced", "文本默认 Primary 色，图标默认 Secondary 色，层级清晰。"),
             new("Don't", "不要在外部重复套 StackPanel 或手动加 Margin。")
         ],
-        _ => []
+        _ => Phase1CHowToUse(id)
     };
 }

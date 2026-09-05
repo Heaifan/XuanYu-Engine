@@ -11,7 +11,7 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-11" => "<xy:XYStatusDot State=\"Info\" />",
         "XYUI-1-12" => "<xy:XYIcon Icon=\"Search\" xy:XY.Size=\"Comfortable\" />",
         "XYUI-1-13" => "<xy:XYIconLabel Icon=\"Info\" Label=\"区域\" />",
-        _ => ""
+        _ => Phase1CQuickStart(id, type)
     };
 
     static IReadOnlyList<XYUIDocRule> Phase1BCoreRules(string id) => id switch
@@ -61,6 +61,6 @@ public static partial class XYUI1DocumentationCatalog
             new("禁用场景", "严禁复制独立图标绘制实现；不要忽略文本 Primary 与图标 Secondary 的层级差异。"),
             new("相邻区别", "vs XYIcon：IconLabel 为复合文本组件，内置垂直居中与规范间距，支持全状态联动。")
         ],
-        _ => []
+        _ => Phase1CCoreRules(id)
     };
 }

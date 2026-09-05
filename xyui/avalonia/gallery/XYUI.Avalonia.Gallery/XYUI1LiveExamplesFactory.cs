@@ -22,6 +22,11 @@ public static partial class XYUI1LiveExamplesFactory
         "XYUI-1-11" => CreateStatusDotExamples(),
         "XYUI-1-12" => CreateIconExamples(),
         "XYUI-1-13" => CreateIconLabelExamples(),
+        "XYUI-1-14" => CreateSeparatorExamples(),
+        "XYUI-1-15" => CreateHelpTextExamples(),
+        "XYUI-1-16" => CreateErrorTextExamples(),
+        "XYUI-1-17" => CreateWarningTextExamples(),
+        "XYUI-1-18" => CreateShortcutHintExamples(),
         _ => null
     };
 
