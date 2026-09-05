@@ -38,12 +38,14 @@ public sealed class XYUI2TextInputInteractionTests : IClassFixture<XyuiHeadlessF
     });
 
     [Fact]
-    public void ComboBox_text_host_selects_all_on_click() => _fx.Run(() =>
+    public void ComboBox_text_host_selects_on_first_focus_and_places_caret_afterward() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var combo = new XYComboBox { Width = 240, Text = "Northern Region" };
         var window = XyuiBatchTestHost.Show(combo); var field = combo.TextFieldPart!;
         var point = field.TranslatePoint(new Point(field.Bounds.Width / 2, field.Bounds.Height / 2), window)!.Value;
         window.MouseDown(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(point, MouseButton.Left); Dispatcher.UIThread.RunJobs();
-        Assert.Equal(0, field.SelectionStart); Assert.Equal(field.Text?.Length, field.SelectionEnd); window.Close();
+        Assert.Equal(0, field.SelectionStart); Assert.Equal(field.Text?.Length, field.SelectionEnd);
+        window.MouseDown(new Point(8, point.Y), MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(new Point(8, point.Y), MouseButton.Left); Dispatcher.UIThread.RunJobs();
+        Assert.Equal(field.SelectionStart, field.SelectionEnd); Assert.NotEqual(field.Text?.Length, field.SelectionEnd); window.Close();
     });
 }

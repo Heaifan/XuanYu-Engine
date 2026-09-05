@@ -28,4 +28,10 @@ public partial class XYSlider : TemplatedControl
     internal XYNumberField? NumberFieldPart { get; private set; }
     internal XYSliderTrack? TrackPart { get; private set; }
     public XYSlider() => Classes.Add("xyui-slider");
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == MinimumProperty || change.Property == MaximumProperty) Value = Math.Clamp(Value, Minimum, Maximum);
+    }
 }

@@ -28,7 +28,7 @@ public sealed class XYUI2NumberFieldTests : IClassFixture<XyuiHeadlessFixture>
     public void NumberField_keyboard_uses_modifier_steps_and_escape_reverts() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var field = new XYNumberField { Value = 10, Step = 2, LargeStep = 10, SmallStep = .5 };
-        var window = XyuiBatchTestHost.Show(field); field.Focus(); Raise(field, Key.Up); Assert.Equal(10.01, field.Value, 10); Raise(field, Key.Up, KeyModifiers.Shift); Assert.Equal(20.01, field.Value, 10); Raise(field, Key.Down, KeyModifiers.Control); Assert.Equal(19.51, field.Value, 10); field.Text = "bad"; Raise(field, Key.Enter); Assert.Equal("19.51", field.Text); field.Text = "99"; Raise(field, Key.Escape); Assert.Equal("10.00", field.Text); window.Close();
+        var window = XyuiBatchTestHost.Show(field); field.Focus(); Raise(field, Key.Up); Assert.Equal(12, field.Value); Raise(field, Key.Up, KeyModifiers.Shift); Assert.Equal(22, field.Value); Raise(field, Key.Down, KeyModifiers.Control); Assert.Equal(21.5, field.Value); field.Text = "bad"; Raise(field, Key.Enter); Assert.Equal("21.50", field.Text); field.Text = "99"; Raise(field, Key.Escape); Assert.Equal("10.00", field.Text); window.Close();
     });
 
     [Fact]
@@ -36,7 +36,7 @@ public sealed class XYUI2NumberFieldTests : IClassFixture<XyuiHeadlessFixture>
     {
         XyuiBatchTestHost.Prepare(); var field = new XYNumberField { Width = 200, Value = 10, Step = 2 }; var window = XyuiBatchTestHost.Show(field);
         var stepper = field.GetVisualDescendants().Single(x => x.Name == "PART_StepperCell"); Assert.Equal(0, stepper.Opacity); field.Focus(); Assert.Equal(1, stepper.Opacity);
-        var up = field.GetVisualDescendants().OfType<Button>().Single(x => x.Name == "PART_UpButton"); up.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(10.01, field.Value, 10); window.Close();
+        var up = field.GetVisualDescendants().OfType<Button>().Single(x => x.Name == "PART_UpButton"); up.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Assert.Equal(12, field.Value); window.Close();
     });
 
     [Fact]

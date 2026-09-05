@@ -6,8 +6,10 @@ public partial class XYComboBox
 {
     internal void OnComboKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Down) { IsKeyboardSelecting = true; if (!IsDropDownOpen) { RefreshItems(false); IsDropDownOpen = true; ListPart!.SelectedIndex = 0; } else ListPart!.SelectedIndex = Math.Min(ListPart.SelectedIndex + 1, ListPart.ItemCount - 1); IsKeyboardSelecting = false; e.Handled = true; }
+        if (e.Key == Key.Space) { if (IsDropDownOpen) IsDropDownOpen = false; else { ShowingAllItems = true; RefreshItems(false); IsDropDownOpen = true; } e.Handled = true; }
+        else if (e.Key == Key.Down) { IsKeyboardSelecting = true; if (!IsDropDownOpen) { RefreshItems(false); IsDropDownOpen = true; ListPart!.SelectedIndex = 0; } else ListPart!.SelectedIndex = Math.Min(ListPart.SelectedIndex + 1, ListPart.ItemCount - 1); IsKeyboardSelecting = false; e.Handled = true; }
         else if (e.Key == Key.Up && IsDropDownOpen) { IsKeyboardSelecting = true; ListPart!.SelectedIndex = Math.Max(ListPart.SelectedIndex - 1, 0); IsKeyboardSelecting = false; e.Handled = true; }
+        else if ((e.Key == Key.Home || e.Key == Key.End) && IsDropDownOpen && ListPart is { ItemCount: > 0 }) { IsKeyboardSelecting = true; ListPart.SelectedIndex = e.Key == Key.Home ? 0 : ListPart.ItemCount - 1; IsKeyboardSelecting = false; e.Handled = true; }
         else if (e.Key == Key.Enter) { if (IsDropDownOpen && ListPart?.SelectedItem is object item) SelectItem(item); else CommitText(); e.Handled = true; }
         else if (e.Key == Key.Escape && IsDropDownOpen) { IsDropDownOpen = false; e.Handled = true; }
     }

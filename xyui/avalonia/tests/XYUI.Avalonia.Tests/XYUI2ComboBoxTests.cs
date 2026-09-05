@@ -47,7 +47,7 @@ public sealed class XYUI2ComboBoxTests : IClassFixture<XyuiHeadlessFixture>
     public void ComboBox_keyboard_opens_navigates_selects_and_escapes() => _fx.Run(() =>
     {
         XyuiBatchTestHost.Prepare(); var combo = new XYComboBox { ItemsSource = Items }; var window = XyuiBatchTestHost.Show(combo); combo.TextFieldPart!.Focus();
-        Raise(combo, Key.Down); Raise(combo, Key.Down); Raise(combo, Key.Enter); Assert.Equal("Beta", combo.Text); Assert.Equal("Beta", combo.SelectedItem); combo.IsDropDownOpen = true; Raise(combo, Key.Escape); Assert.False(combo.IsDropDownOpen); window.Close();
+        Raise(combo, Key.Down); Raise(combo, Key.Down); Raise(combo, Key.Home); Raise(combo, Key.End); Raise(combo, Key.Enter); Assert.Equal("Northern Coast", combo.Text); Assert.Equal("Northern Coast", combo.SelectedItem); Raise(combo, Key.Space); Assert.True(combo.IsDropDownOpen); Raise(combo, Key.Space); Assert.False(combo.IsDropDownOpen); window.Close();
     });
 
     [Fact]

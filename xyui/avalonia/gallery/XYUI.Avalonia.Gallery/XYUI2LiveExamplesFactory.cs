@@ -7,7 +7,8 @@ namespace XYUI.Avalonia.Gallery;
 public static partial class XYUI2LiveExamplesFactory
 {
     public static bool Supports(string id) => id is
-        "XYUI-2-01" or "XYUI-2-02" or "XYUI-2-03" or "XYUI-2-04" or "XYUI-2-05" or "XYUI-2-06";
+        "XYUI-2-01" or "XYUI-2-02" or "XYUI-2-03" or "XYUI-2-04" or "XYUI-2-05" or "XYUI-2-06" or
+        "XYUI-2-07" or "XYUI-2-08" or "XYUI-2-09" or "XYUI-2-10" or "XYUI-2-11" or "XYUI-2-12";
 
     public static Control? Create(string id) => id switch
     {
@@ -17,6 +18,12 @@ public static partial class XYUI2LiveExamplesFactory
         "XYUI-2-04" => SplitButtonExamples(),
         "XYUI-2-05" => DropDownButtonExamples(),
         "XYUI-2-06" => CheckboxExamples(),
+        "XYUI-2-07" => RadioButtonExamples(),
+        "XYUI-2-08" => SwitchExamples(),
+        "XYUI-2-09" => TextFieldExamples(),
+        "XYUI-2-10" => NumberFieldExamples(),
+        "XYUI-2-11" => SliderExamples(),
+        "XYUI-2-12" => ComboBoxExamples(),
         _ => null
     };
 

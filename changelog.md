@@ -1,5 +1,21 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2B (07～12) 关键契约加固与 Gallery 文档/示例闭环（2026-09-05 22:31:00 +08:00）
+
+- 目标：落实 XYUI-2-07～12（RadioButton、Switch、TextField、NumberField、Slider、ComboBox）的真实只读审计、Runtime 关键契约加固、5+100 行硬门禁与 XYUI-1 风格开发者文档及无缓存 Live Examples。
+- 变化：
+  - 07 RadioButton：确认组内互斥依托原生 GroupName，Label 与圆点属于统一点击区，单选互斥与禁用态正常。
+  - 08 Switch：确立二元立即生效系统设置语义，区别于 Checkbox/ToggleButton，点击整行（含标签）平滑切换。
+  - 09 TextField：强化落实首次编辑焦点自动全选（SelectAll）、二次点击定位光标（Caret）、ReadOnly 与 Disabled 状态区分及 :error 伪类。
+  - 10 NumberField：落实高精度数值输入，按住拖拽连续微调（Scrubbing，4 DIP 一步长）、Shift/Ctrl 步长乘数、Escape 初始值回退与 Min/Max Clamp。
+  - 11 Slider：保证 0%、50%、100% 极限位置及负数区间数值与填充比例精确对齐，滑动轨道与右侧 104 DIP XYNumberField 双向实时同步单一 Value。
+  - 12 ComboBox：确认包含真实内置 Popup 浮层、实时模糊过滤（Filter，键入关键词即时过滤候选且不篡改源）、键盘 Down 展开 / Up-Down 移动 / Enter 选中 / Escape 安全收起及窗口失活生命周期自收起。
+  - Gallery 与 Live Examples：创建 Phase 2B 系列开发者文档模型（QuickStart、CoreRules、Anatomy、Foundation/States、HowToUse），所有 Live Example Control 均通过工厂动态创建，严禁缓存复用已附加树实例。
+  - 新增测试：编写 XYUI2Phase2BContractTests，新增 4 个契约测试实例，全量通过。
+- 验证：解决方案全量构建 0 警告 0 错误；测试套件 2113/2113 全数通过（XYUI.Avalonia.Tests 466/466 PASS；Core 339/339；WarCore 22/22；World 1286/1286）；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS；Gallery 启动正常。
+- 状态：XYUI-2 · Phase 2B (07～12) IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING。
+- 版本：沿用 0.2.28.77-rz；四处版本源保持一致。
+
 ## v0.2.28.77-rz · XYUI-2-05 · Chevron Track 固定右槽视觉修复（2026-09-05 22:18:59 +08:00）
 
 - 目标：只修复 DropDownButton Template 布局，保持 Gallery 生命周期、Public API、单一命中区与 XYUI-2-06 之后范围冻结。
