@@ -6,6 +6,7 @@ using Avalonia.Styling;
 using XYUI.Avalonia.Theme;
 using XYUI.Avalonia.Interaction;
 using XYUI.Avalonia.Typography;
+using XYUI.Avalonia.Sizing;
 using VectorPath = Avalonia.Controls.Shapes.Path;
 
 namespace XYUI.Avalonia.Controls;
@@ -58,15 +59,14 @@ public static partial class XyuiComponentStyles
         IconSize(styles, "tiny", XyuiIconSizeMetrics.For(XyuiIconSize.Tiny)); IconSize(styles, "small", XyuiIconSizeMetrics.For(XyuiIconSize.Small)); IconSize(styles, "medium", XyuiIconSizeMetrics.For(XyuiIconSize.Medium)); IconSize(styles, "large", XyuiIconSizeMetrics.For(XyuiIconSize.Large)); IconSize(styles, "touch", XyuiIconSizeMetrics.For(XyuiIconSize.Touch));
         Mark(styles, "xyui-code-text-mark", "XY.Brush.Icon.Mark", 8, false, 1.25);
         Mark(styles, "xyui-icon-label-mark", "XY.Brush.Text.Primary", 14, false);
-        Mark(styles, "xyui-help-text-mark", "XY.Brush.Semantic.Info.Text", 14, false);
-        Mark(styles, "xyui-error-text-mark", "XY.Brush.Semantic.Error.Text", 14, false);
-        Mark(styles, "xyui-warning-text-mark", "XY.Brush.Semantic.Warning.Text", 14, false);
+        var smallIcon = XyuiIconSizeMetrics.For(XyuiIconSize.Small);
+        Mark(styles, "xyui-help-text-mark", "XY.Brush.Semantic.Info.Text", smallIcon.SizeDip, false, smallIcon.StrokeWidth);
+        Mark(styles, "xyui-error-text-mark", "XY.Brush.Semantic.Error.Text", smallIcon.SizeDip, false, smallIcon.StrokeWidth);
+        Mark(styles, "xyui-warning-text-mark", "XY.Brush.Semantic.Warning.Text", smallIcon.SizeDip, false, smallIcon.StrokeWidth);
+        DisabledMark(styles, "xyui-help-text-mark"); DisabledMark(styles, "xyui-error-text-mark"); DisabledMark(styles, "xyui-warning-text-mark");
         Mark(styles, "xyui-search-highlight-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
-        Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
-
+         Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
     }
-
-
 
     static void IconSize(Styles styles, string name, XyuiIconSizeMetrics metrics)
     {
@@ -95,4 +95,5 @@ public static partial class XyuiComponentStyles
         var style = new Style(x => x.OfType<TextBlock>().Class(textClass).Class(":disabled"));
         Brush(style, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(style);
     }
+
 }

@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Styling;
+using XYUI.Avalonia.Spatial;
 using VectorPath = Avalonia.Controls.Shapes.Path;
 
 namespace XYUI.Avalonia.Controls;
@@ -33,13 +34,16 @@ public static partial class XyuiComponentStyles
         DisabledText(styles, "xyui-code-text-text"); DisabledText(styles, "xyui-mono-data-label");
         DisabledText(styles, "xyui-mono-data-value"); DisabledText(styles, "xyui-mono-data-unit");
         DisabledText(styles, "xyui-icon-label-text");
+        FeedbackDisabled(styles, typeof(XYHelpText), "xyui-help-text", "xyui-help-text-text", "xyui-help-text-mark");
+        FeedbackDisabled(styles, typeof(XYErrorText), "xyui-error-text", "xyui-error-text-text", "xyui-error-text-mark");
+        FeedbackDisabled(styles, typeof(XYWarningText), "xyui-warning-text", "xyui-warning-text-text", "xyui-warning-text-mark");
         var iconLabelTextDisabled = new Style(x => x.OfType<XYIconLabel>().Class("xyui-icon-label").Class(":disabled").Descendant().OfType<TextBlock>().Class("xyui-icon-label-text"));
         Brush(iconLabelTextDisabled, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(iconLabelTextDisabled);
         var iconLabelIconDisabled = new Style(x => x.OfType<XYIconLabel>().Class("xyui-icon-label").Class(":disabled").Descendant().OfType<XYIcon>().Class("xyui-icon-label-icon"));
         Brush(iconLabelIconDisabled, XYIcon.StrokeProperty, "XY.Brush.State.Disabled.Text"); styles.Add(iconLabelIconDisabled);
         var separator = new Style(x => x.OfType<XYSeparator>().Class("xyui-separator"));
-        Brush(separator, Border.BackgroundProperty, "XY.Brush.Divider.Default"); separator.Setters.Add(new Setter(Border.HeightProperty, 1d)); styles.Add(separator);
-        SeparatorVariant(styles, "header", 1, 0, 0); SeparatorVariant(styles, "panel", 1, 0, 0); SeparatorVariant(styles, "section", 1, 8, 8); SeparatorVariant(styles, "listrow", 1, 16, 16); SeparatorVariant(styles, "verticalsplit", 0, 0, 0);
+        Brush(separator, Border.BackgroundProperty, "XY.Brush.Divider.Default"); separator.Setters.Add(new Setter(Border.HeightProperty, XyuiSpatialTokens.BorderWidthDefault)); styles.Add(separator);
+        SeparatorVariant(styles, "header", false, 0); SeparatorVariant(styles, "panel", false, 0); SeparatorVariant(styles, "section", false, XyuiSpatialTokens.Space2); SeparatorVariant(styles, "listrow", false, XyuiSpatialTokens.Space4); SeparatorVariant(styles, "verticalsplit", true, 0);
         var tooltip = new Style(x => x.OfType<XYTooltip>().Class("xyui-tooltip"));
         Brush(tooltip, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Overlay");
         Brush(tooltip, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Subtle");
@@ -47,10 +51,12 @@ public static partial class XyuiComponentStyles
         tooltip.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 4))); styles.Add(tooltip);
     }
 
-    static void SeparatorVariant(Styles styles, string name, double height, double left, double right)
+    static void SeparatorVariant(Styles styles, string name, bool vertical, double inset)
     {
         var style = new Style(x => x.OfType<XYSeparator>().Class($"xyui-separator-{name}"));
-        style.Setters.Add(new Setter(Border.HeightProperty, height == 0 ? double.NaN : height)); style.Setters.Add(new Setter(Border.WidthProperty, height == 0 ? 1d : double.NaN)); style.Setters.Add(new Setter(Border.MarginProperty, new Thickness(left, 0, right, 0))); styles.Add(style);
+        style.Setters.Add(new Setter(Border.HeightProperty, vertical ? double.NaN : XyuiSpatialTokens.BorderWidthDefault));
+        style.Setters.Add(new Setter(Border.WidthProperty, vertical ? XyuiSpatialTokens.BorderWidthDefault : double.NaN));
+        style.Setters.Add(new Setter(Border.MarginProperty, new Thickness(inset, 0, inset, 0))); styles.Add(style);
     }
 
     static void State(Styles styles, Type type, string cls, string brush)
@@ -66,5 +72,19 @@ public static partial class XyuiComponentStyles
     static void StateMark(Styles styles, string cls, string brush)
     {
         var style = new Style(x => x.OfType<VectorPath>().Class(cls)); Brush(style, VectorPath.FillProperty, brush); styles.Add(style);
+    }
+
+    static void DisabledMark(Styles styles, string markClass)
+    {
+        var style = new Style(x => x.OfType<VectorPath>().Class(markClass).Class(":disabled"));
+        Brush(style, VectorPath.StrokeProperty, "XY.Brush.State.Disabled.Text"); styles.Add(style);
+    }
+
+    static void FeedbackDisabled(Styles styles, Type type, string controlClass, string textClass, string markClass)
+    {
+        var text = new Style(x => x.OfType(type).Class(controlClass).Class(":disabled").Descendant().OfType<TextBlock>().Class(textClass));
+        Brush(text, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(text);
+        var mark = new Style(x => x.OfType(type).Class(controlClass).Class(":disabled").Descendant().OfType<VectorPath>().Class(markClass));
+        Brush(mark, VectorPath.StrokeProperty, "XY.Brush.State.Disabled.Text"); styles.Add(mark);
     }
 }

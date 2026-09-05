@@ -4,8 +4,9 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Styling;
-using XYUI.Avalonia.Typography;
 using XYUI.Avalonia.Sizing;
+using XYUI.Avalonia.Spatial;
+using XYUI.Avalonia.Typography;
 using XYUI.Avalonia;
 using VectorPath = Avalonia.Controls.Shapes.Path;
 
@@ -35,12 +36,28 @@ public static partial class XyuiComponentStyles
     static void ShortcutSurface(Styles styles)
     {
         var parent = new Style(x => x.OfType<XYShortcutHint>().Class("xyui-shortcut-hint"));
-        Brush(parent, Border.BackgroundProperty, "XY.Brush.Surface.PanelAlt"); parent.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(0))); styles.Add(parent);
+        Brush(parent, Border.BackgroundProperty, "XY.Brush.Surface.PanelAlt"); parent.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(0))); parent.Setters.Add(new Setter(Border.HeightProperty, XyuiSizingMetrics.ControlExtraSmallHeight)); styles.Add(parent);
         var key = new Style(x => x.OfType<Border>().Class("xyui-shortcut-keycap"));
         Brush(key, Border.BackgroundProperty, "XY.Brush.Surface.PanelAlt"); Brush(key, Border.BorderBrushProperty, "XY.Brush.Border.Color.Subtle");
-        key.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(1))); key.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(4))); key.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(6, 2))); key.Setters.Add(new Setter(Border.HeightProperty, 22d)); styles.Add(key);
+        key.Setters.Add(new Setter(Border.BorderThicknessProperty, new Thickness(XyuiSpatialTokens.BorderWidthDefault)));
+        key.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(XyuiSpatialTokens.RadiusControl)));
+        key.Setters.Add(new Setter(Border.PaddingProperty, new Thickness(XyuiSpatialTokens.Space1 + XyuiSpatialTokens.BorderWidthDefault * 2, XyuiSpatialTokens.BorderWidthDefault * 2)));
+        key.Setters.Add(new Setter(Border.HeightProperty, XyuiSizingMetrics.ControlExtraSmallHeight)); styles.Add(key);
         styles.Add(Text(typeof(TextBlock), "xyui-shortcut-keycap-text", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
         styles.Add(Text(typeof(TextBlock), "xyui-shortcut-separator", XyuiTypographyTokens.FontMono, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
+        ShortcutDisabled(styles);
+    }
+
+    static void ShortcutDisabled(Styles styles)
+    {
+        var parent = new Style(x => x.OfType<XYShortcutHint>().Class("xyui-shortcut-hint").Class(":disabled"));
+        Brush(parent, Border.BackgroundProperty, "XY.Brush.State.Disabled.Background"); styles.Add(parent);
+        var key = new Style(x => x.OfType<XYShortcutHint>().Class("xyui-shortcut-hint").Class(":disabled").Descendant().OfType<Border>().Class("xyui-shortcut-keycap"));
+        Brush(key, Border.BackgroundProperty, "XY.Brush.State.Disabled.Background"); Brush(key, Border.BorderBrushProperty, "XY.Brush.State.Disabled.Border"); styles.Add(key);
+        var text = new Style(x => x.OfType<XYShortcutHint>().Class("xyui-shortcut-hint").Class(":disabled").Descendant().OfType<TextBlock>().Class("xyui-shortcut-keycap-text"));
+        Brush(text, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(text);
+        var separator = new Style(x => x.OfType<XYShortcutHint>().Class("xyui-shortcut-hint").Class(":disabled").Descendant().OfType<TextBlock>().Class("xyui-shortcut-separator"));
+        Brush(separator, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(separator);
     }
 
     static void InlineSurface(Styles styles, Type type, string cls)

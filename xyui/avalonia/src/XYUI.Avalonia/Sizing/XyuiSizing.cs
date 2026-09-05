@@ -5,6 +5,9 @@ namespace XYUI.Avalonia.Sizing;
 
 public readonly record struct XyuiSizingMetrics(double ControlHeight, double IconSize)
 {
+    // XY.Size.Control.XS：Foundation Control XS，供无 XYSize 枚举映射的紧凑控件消费。
+    public const double ControlExtraSmallHeight = 24;
+
     public static XyuiIconSize IconFor(XYSize size) => size switch
     {
         XYSize.Compact => XyuiIconSize.Compact,

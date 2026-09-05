@@ -1951,6 +1951,9 @@
    │  │     ├─ CanonicalAlignmentTests.cs  # token 表与 token-canonical-map.json 逐条对照。
    │  │     ├─ CatalogSourceTests.cs  # Catalog 注册数量与类型映射源同步合同。
    │  │     ├─ CodeTextRuntimeTests.cs  # CodeText 正文、右下 Vector Code Mark 与禁用态资源回归。
+   │  │     ├─ Phase1CFeedbackRuntimeTests.cs  # XYUI-1 15～17 反馈文本共用语义、标记结构与禁用态主题合同。
+   │  │     ├─ Phase1CSeparatorRuntimeTests.cs  # XYUI-1-14 Separator 六 Variant、方向、厚度、间距与双主题合同。
+   │  │     ├─ Phase1CShortcutHintRuntimeTests.cs  # XYUI-1-18 ShortcutHint 分离键帽结构、Foundation 几何、禁用态与双主题合同。
    │  │     ├─ ControlSurfaceTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ GalleryInteractionContractTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ GallerySmokeTests.cs  # App 资源、窗口标题、色板覆盖 Headless 冒烟。

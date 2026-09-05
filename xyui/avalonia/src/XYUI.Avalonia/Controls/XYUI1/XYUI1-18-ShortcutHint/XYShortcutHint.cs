@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using XYUI.Avalonia.Spatial;
 using XYUI.Avalonia.Typography;
 
 namespace XYUI.Avalonia.Controls;
@@ -11,7 +12,7 @@ public sealed class XYShortcutHint : Border
 {
     public static readonly StyledProperty<string> ShortcutProperty = AvaloniaProperty.Register<XYShortcutHint, string>(nameof(Shortcut), "");
     public static readonly StyledProperty<XyuiShortcutCombinationMode> CombinationModeProperty = AvaloniaProperty.Register<XYShortcutHint, XyuiShortcutCombinationMode>(nameof(CombinationMode), XyuiShortcutCombinationMode.SeparateKeycaps);
-    readonly StackPanel _keys = new() { Orientation = global::Avalonia.Layout.Orientation.Horizontal, Spacing = 4 };
+    readonly StackPanel _keys = new() { Orientation = global::Avalonia.Layout.Orientation.Horizontal, Spacing = XyuiSpatialTokens.Space1 };
     public XYShortcutHint() { Classes.Add("xyui-1-component"); Classes.Add("xyui-shortcut-hint"); Child = _keys; Rebuild(Shortcut); }
     public string CanonicalId => "XYUI-1-18";
     public string Shortcut { get => GetValue(ShortcutProperty); set => SetValue(ShortcutProperty, value); }
