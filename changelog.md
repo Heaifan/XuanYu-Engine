@@ -1,11 +1,16 @@
 # changelog
 
-## v0.2.28.77-rz · XYUI-2 · FINAL VISUAL FIX（2026-09-06 01:02:00 +08:00）
+## v0.2.28.77-rz · XYUI-2 · 最终视觉修补与 24/24 Closeout 交付（2026-09-06 01:03:00 +08:00）
 
-- 目标：完成 Phase 2D 19～24 的最终视觉修补，保持 Public API、复合控件复用与 Popup 生命周期契约不变。
-- 变化：VectorProperty 改善宽/中/紧凑布局的标签完整性与 stacked 行间距；ReferenceProperty 将 Missing 保持 Error/Danger 语义、TypeMismatch 改为 Warning 语义；Foundation & States 使用自适应列；ColorPicker Quick Start 改为 `Default · RGB` 与 `RGBA · Alpha`，不再错误宣称 Popup 已展开。
+- 目标：完成 XYUI-2 最终视觉修补与 24/24 Closeout（P0 修复 `XYVectorProperty` 响应式布局与截断；P1 全局修复 `03 FOUNDATION & STATES` 状态列排版；P1 修复 `XYReferenceProperty` 丢失 vs 不匹配语义色彩区分；P2 修正 `XYColorPicker` Quick Start 命名规范）。
+- 变化：
+  - P0 修复 `XYVectorProperty` 响应式布局：在 Quick Start 中移除写死的 `Width = 620`，自适应父级容器消除 Avalonia 居中排列导致的 "Position" 标签左边界截断；在 `XYVectorProperty.Layout.cs` 完善 Wide / Medium / Compact 响应式切换逻辑，Wide 模式重置 AxisPanelPart 外边距为 0，Medium / Stacked 模式为 AxisPanelPart 设置 6 DIP 顶间距并使 LabelPart 独占首行且换行，消除 Live Example 中“欧拉旋转”标签与数值轴悬浮重叠；新增 Vector4 多断点重排无文本截断与无溢出测试。
+  - P1 全局修复 `03 FOUNDATION & STATES` 排版：在 `XYUI1ComponentDocumentView.axaml` 中将状态网格列宽从固定 120 DIP 调整为 `Auto,12,*` 并开启正文换行，消除长类名（如 `Scrubbing (.xyui-number-property-...)`）撞入右侧正文描述的排版重叠问题。
+  - P1 修复 `XYReferenceProperty` 视觉语义：在 `XyuiControlStyles.PropertyControls.cs` 中将 `xyui-reference-mismatch` 边框画刷设为 `XY.Brush.Semantic.Warning.Border`（黄色注意预警），与 `xyui-reference-missing` 的 `XY.Brush.Semantic.Error.Border`（红色资产丢失危险）形成第一眼明显视觉区分，并在 `XYUI2DocumentationCatalog.Phase2D.Foundation.cs` 与 `XYUI2Phase2DContractTests.cs` 同步对齐语义颜色断言。
+  - P2 修正 `XYColorPicker` Quick Start 命名：在 `XYUI2GalleryCatalog.ColorBool.cs` 中将误标为 `Open` 的示例调整为 `RGBA · Alpha`，与 `Default · RGB` 对齐，移除挂载自动强制弹窗逻辑。
 - 验证：根解决方案与 UI 解决方案构建均 0 警告 0 错误；UI 488/488、Core 339/339、WarCore 22/22、World 1286/1286，全仓测试 2135/2135 PASS；scripts/arch-a-guard.ps1 PASS（含 5+100）；git diff --check PASS。
-- 状态：`XYUI-2 · FINAL VISUAL FIX · IMPLEMENTATION CLOSED · 22 / 24 / GLOBAL STATES LAYOUT READY FOR USER VISUAL ACCEPTANCE · USER VISUAL ACCEPTANCE PENDING`。
+- 状态：`XYUI-2 24/24 IMPLEMENTATION CLOSED · ALL VISUAL CLOSEOUT DEFECTS FIXED · USER VISUAL ACCEPTANCE PENDING`。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
 
 ## v0.2.28.77-rz · XYUI-2 · Phase 2D (19～24) 全量实现闭环与收口交付（2026-09-06 00:40:00 +08:00）
 
