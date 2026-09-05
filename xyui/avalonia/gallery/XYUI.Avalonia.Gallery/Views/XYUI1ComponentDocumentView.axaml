@@ -1,9 +1,9 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:g="using:XYUI.Avalonia.Gallery"
              x:Class="XYUI.Avalonia.Gallery.Views.XYUI1ComponentDocumentView"
              x:DataType="g:XYUI1ComponentDocument">
-  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+  <ScrollViewer x:Name="DocScrollViewer" HorizontalScrollBarVisibility="Disabled">
     <StackPanel Margin="24" Spacing="14">
       <Border Classes="xyui-surface-panel" Padding="16,12" CornerRadius="6">
         <StackPanel Spacing="4">

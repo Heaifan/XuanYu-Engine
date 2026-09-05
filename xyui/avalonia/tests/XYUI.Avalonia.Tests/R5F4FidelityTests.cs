@@ -65,7 +65,7 @@ public sealed class R5F4FidelityTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal(24, docs.Count);
         Assert.Equal("XY.Badge", docs.Single(x => x.Id == "XYUI-1-09").CanonicalIdentity);
         Assert.Equal("XYUI1-GAP-002", docs.Single(x => x.Id == "XYUI-1-24").KnownGap);
-        Assert.Equal("USER VISUAL ACCEPTED · GAP RETAINED", docs.Single(x => x.Id == "XYUI-1-24").StatusText);
+        Assert.Equal("BASELINE ACCEPTED · MIGRATION REVIEW · GAP RETAINED", docs.Single(x => x.Id == "XYUI-1-24").StatusText);
     });
 
     [Fact]

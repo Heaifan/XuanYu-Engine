@@ -60,17 +60,7 @@ public static partial class XyuiComponentStyles
         Mark(styles, "xyui-selectable-copy-mark", "XY.Brush.Text.Disabled", 8, false, 1.0);
     }
 
-    static void LinkStates(Styles styles)
-    {
-        var baseStyle = new Style(x => x.OfType<XYLink>().Class("xyui-link"));
-        baseStyle.Setters.Add(new Setter(Button.BackgroundProperty, Brushes.Transparent));
-        baseStyle.Setters.Add(new Setter(Button.BorderBrushProperty, Brushes.Transparent));
-        baseStyle.Setters.Add(new Setter(Button.BorderThicknessProperty, new Thickness(0)));
-        styles.Add(baseStyle);
-        styles.Add(XyuiInteractionState.Build("xyui-link", XyuiInteractionState.Hover, Button.ForegroundProperty, "XY.Brush.Accent.Strong"));
-        styles.Add(XyuiInteractionState.Build("xyui-link", XyuiInteractionState.Pressed, Button.ForegroundProperty, "XY.Brush.Accent.Strong"));
-        styles.Add(XyuiInteractionState.Build("xyui-link", XyuiInteractionState.Disabled, Button.ForegroundProperty, "XY.Brush.State.Disabled.Text"));
-    }
+
 
     static void IconSize(Styles styles, string name, XyuiIconSizeMetrics metrics)
     {

@@ -18,7 +18,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = new MainWindowModel(
-            PaletteCatalog.BuildSections(dark: false), XyuiCatalogSource.Load(), Array.Empty<XYUI1GalleryItem>());
+            PaletteCatalog.BuildSections(dark: Program.InitialThemeDark), XyuiCatalogSource.Load(), Array.Empty<XYUI1GalleryItem>());
         if (Program.InitialComponentId is { Length: > 0 } id &&
             DocumentationView.DataContext is XYUI1DocumentationViewModel documentation)
             documentation.Select(id);
@@ -35,6 +35,12 @@ public partial class MainWindow : Window
             {
                 Console.WriteLine($"[Gallery] Window opened, rendering screenshot to {shotPath}...");
                 await System.Threading.Tasks.Task.Delay(800);
+                if (Program.ScrollBottom)
+                {
+                    var doc = global::Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(this).OfType<Views.XYUI1ComponentDocumentView>().FirstOrDefault();
+                    doc?.ScrollToExamples();
+                    await System.Threading.Tasks.Task.Delay(400);
+                }
                 var rtb = new global::Avalonia.Media.Imaging.RenderTargetBitmap(new PixelSize(1450, 1024), new global::Avalonia.Vector(96, 96));
                 rtb.Render(this);
                 rtb.Save(shotPath);

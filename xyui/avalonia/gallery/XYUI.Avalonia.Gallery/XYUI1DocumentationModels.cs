@@ -22,8 +22,8 @@ public sealed record XYUI1ComponentDocument(
     public string KnownGap { get; init; } = "";
     public string Category { get; init; } = "Canonical Stable · Typography / Text";
     public string QuickStartXaml { get; init; } = "";
-    // 验收状态由目录注入：XYUI-1 已人工通过；XYUI-2 Batch 01 尚未人工通过，只能写"待验收"。
-    public string Acceptance { get; init; } = "USER VISUAL ACCEPTED";
+    // 验收状态由目录注入：Phase 1A 基线已收口，处于审查中。
+    public string Acceptance { get; init; } = "BASELINE ACCEPTED · MIGRATION REVIEW";
     public string StatusText => string.IsNullOrEmpty(KnownGap) ? Acceptance : $"{Acceptance} · GAP RETAINED";
     public bool HasVariants => Variants.Count > 0;
     public bool HasStates => States.Count > 0;

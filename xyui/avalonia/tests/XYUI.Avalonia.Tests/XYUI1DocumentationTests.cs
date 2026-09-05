@@ -18,7 +18,7 @@ public sealed class XYUI1DocumentationTests : IClassFixture<XyuiHeadlessFixture>
         Assert.Equal(25, model.Items.Count);
         Assert.Equal(24, model.Documents.Count);
         Assert.Equal(24, model.VisualAcceptedCount);
-        Assert.All(model.Documents, document => Assert.StartsWith("USER VISUAL ACCEPTED", document.StatusText));
+        Assert.All(model.Documents, document => Assert.StartsWith("BASELINE ACCEPTED · MIGRATION REVIEW", document.StatusText));
         Assert.Null(model.Items[0].Document);
         Assert.All(model.Documents, document =>
         {

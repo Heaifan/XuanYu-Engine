@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-1-01～06 · Phase 1A Review 治理与结构闭环（2026-09-05 12:18:00 +08:00）
+
+- 目标：落实 Phase 1A（01～06）审查意见：治理状态修正、补齐 02 Anatomy 消除跳号、统一 Live Examples 外围语法，并对 SectionTitle 固有几何与 Link 文本导航交互状态完成工程核验与样式加固。
+- 变化：
+  - 治理语义修正：将 01～06 头部状态统一定义为 `BASELINE ACCEPTED · MIGRATION REVIEW`，避免过度宣告。
+  - 编号消除跳号：新增 `Phase1AAnatomy`，为无变体组件补齐统一的 `02 ANATOMY` 结构（Content, Hit Area, Focus Visual, Layout, Variants: None），冻结 `01 → 02 → 03 → 04 → Live Examples` 永不跳号标准。
+  - 示例语法统一：Live Examples 全量标准化为 `场景 1 · [名称]` / `[真实组件]` / `场景 2 · [名称]` / `[真实组件]`，外围场景标题统领为 `XYCaption`。
+  - SectionTitle 几何核验：核实 S-05 Soft Header 的 28 DIP 高度与 3×16 DIP Left Mark 为 Inspector 分组专属的 Canonical Component Geometry，正交消费 Foundation 主题色而锁定骨架。
+  - Link 交互加固：拆分 `XyuiComponentStyles.Link.cs`，彻底禁止 PointerOver/Pressed/Disabled 下注入按钮底色，设置 Hand 光标与紧凑 `(2, 0)` 内边距，保持纯净内联文本导航体验。
+- 验证：解决方案构建 0 警告 0 错误；XYUI.Avalonia.Tests 423/423 全数通过；`scripts/arch-a-guard.ps1` 架构守卫 PASS；5+100 行硬门禁 PASS；`git diff --check` PASS；生成深色主题下 01 Text、05 SectionTitle、06 Link 页面及 Live Examples 渲染快照。
+- 状态：Phase 1A（01～06）审查意见整改完毕，等待用户最终确认后启动 Phase 1B（07～13）。
+- 版本：`v0.2.28.77-rz` 已同步到四处版本文件。
+
 ## v0.2.28.76-rz · XYUI-1-01～06 · Gallery 与开发者文档标准化（2026-09-04 23:55:00 +08:00）
 
 - 目标：落实 Phase 1A 01～06（Text, Label, Caption, Heading, SectionTitle, Link）统一 Gallery Developer Documentation 模板与真实业务场景 Live Examples。

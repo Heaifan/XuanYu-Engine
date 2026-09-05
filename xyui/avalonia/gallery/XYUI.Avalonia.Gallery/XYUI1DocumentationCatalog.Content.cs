@@ -21,16 +21,20 @@ public static partial class XYUI1DocumentationCatalog
         _ => [$"<xy:{type} Text=\"示例内容\" />"]
     };
 
-    static IReadOnlyList<XYUIDocVariant> Variants(string id) => id switch
+    static IReadOnlyList<XYUIDocVariant> Variants(string id)
     {
-        "XYUI-1-04" => [new("PanelTitle", "面板标题层级", "区域数据集"), new("PageTitle", "页面标题层级", "地图编辑")],
-        "XYUI-1-09" => [new("Default", "普通标签", "草稿"), new("Accent", "强调标签", "已选中")],
-        "XYUI-1-14" => [new("Section", "区块分割", "属性分组"), new("VerticalSplit", "垂直分割", "主区 / 侧栏")],
-        "XYUI-1-12" => [new("Tiny", "12 DIP / 1.0 DIP", "紧凑工具栏"), new("Small", "14 DIP / 1.25 DIP", "列表与内联"), new("Default", "16 DIP / 1.5 DIP", "默认图标"), new("Large", "20 DIP / 1.75 DIP", "强调入口")],
-        "XYUI-1-21" => [new("Default", "普通可选择文本", "可复制 ID"), new("Technical", "技术值等宽风格", "region-7ad21c")],
-        "XYUI-1-24" => [new("End", "末尾省略", "长对象名称..."), new("Middle", "中部省略", "region-...7ad21c")],
-        _ => []
-    };
+        var anatomy = Phase1AAnatomy(id);
+        if (anatomy.Count > 0) return anatomy;
+        return id switch
+        {
+            "XYUI-1-09" => [new("Default", "普通标签", "草稿"), new("Accent", "强调标签", "已选中")],
+            "XYUI-1-14" => [new("Section", "区块分割", "属性分组"), new("VerticalSplit", "垂直分割", "主区 / 侧栏")],
+            "XYUI-1-12" => [new("Tiny", "12 DIP / 1.0 DIP", "紧凑工具栏"), new("Small", "14 DIP / 1.25 DIP", "列表与内联"), new("Default", "16 DIP / 1.5 DIP", "默认图标"), new("Large", "20 DIP / 1.75 DIP", "强调入口")],
+            "XYUI-1-21" => [new("Default", "普通可选择文本", "可复制 ID"), new("Technical", "技术值等宽风格", "region-7ad21c")],
+            "XYUI-1-24" => [new("End", "末尾省略", "长对象名称..."), new("Middle", "中部省略", "region-...7ad21c")],
+            _ => []
+        };
+    }
 
     static IReadOnlyList<XYUIDocState> States(string id) => id switch
     {

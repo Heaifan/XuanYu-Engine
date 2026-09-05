@@ -12,11 +12,15 @@ internal static class Program
             .Split('=', 2)[1];
         ScreenshotPath = args.FirstOrDefault(x => x.StartsWith("--screenshot=", StringComparison.Ordinal))?
             .Split('=', 2)[1];
+        InitialThemeDark = args.Any(x => x.Equals("--theme=dark", StringComparison.OrdinalIgnoreCase));
+        ScrollBottom = args.Any(x => x.Equals("--scroll-bottom", StringComparison.OrdinalIgnoreCase));
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
     internal static string? InitialComponentId { get; private set; }
     internal static string? ScreenshotPath { get; private set; }
+    internal static bool InitialThemeDark { get; private set; }
+    internal static bool ScrollBottom { get; private set; }
 
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>().UsePlatformDetect();

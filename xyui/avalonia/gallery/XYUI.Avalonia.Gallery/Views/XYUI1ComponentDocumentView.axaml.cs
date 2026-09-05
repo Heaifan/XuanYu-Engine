@@ -23,4 +23,10 @@ public partial class XYUI1ComponentDocumentView : UserControl
             liveHost.Content = document.LiveExamplesFactory();
         }
     }
+
+    public void ScrollToExamples()
+    {
+        var sv = this.FindControl<ScrollViewer>("DocScrollViewer");
+        if (sv != null) sv.Offset = new global::Avalonia.Vector(0, 520);
+    }
 }

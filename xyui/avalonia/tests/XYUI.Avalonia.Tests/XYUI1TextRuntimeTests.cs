@@ -48,11 +48,18 @@ public sealed class XYUI1TextRuntimeTests : IClassFixture<XyuiHeadlessFixture>
         XyuiBatchTestHost.Prepare();
         var link = new XYLink { Content = "打开文档" };
         var window = XyuiBatchTestHost.Show(link);
+        Assert.Equal(Brushes.Transparent, link.Background);
+        Assert.Equal(0, link.MinHeight);
+        Assert.Equal(0, link.MinWidth);
+        Assert.Equal(new Thickness(2, 0), link.Padding);
+        Assert.NotNull(link.Cursor);
         XyuiBatchTestHost.Hover(window, link);
         Assert.Contains("xyui-focusable", link.Classes);
         Assert.Equal(XyuiBatchTestHost.Token("XY.Accent.Strong"), ColorOf(link.Foreground));
+        Assert.Equal(Brushes.Transparent, link.Background);
         link.IsEnabled = false; link.ApplyStyling();
         Assert.Equal(XyuiBatchTestHost.Token("XY.Text.Disabled"), ColorOf(link.Foreground));
+        Assert.Equal(Brushes.Transparent, link.Background);
         window.Close();
     });
 

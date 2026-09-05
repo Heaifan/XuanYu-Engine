@@ -17,7 +17,7 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        RequestedThemeVariant = ThemeVariant.Light;
+        RequestedThemeVariant = Program.InitialThemeDark ? ThemeVariant.Dark : ThemeVariant.Light;
         Resources.MergedDictionaries.Add(XyuiTheme.CreateThemeDictionaries());
         Resources.MergedDictionaries.Add(XyuiVectorIcons.CreateResources());
         Styles.Add(XyuiTextStyles.Create());

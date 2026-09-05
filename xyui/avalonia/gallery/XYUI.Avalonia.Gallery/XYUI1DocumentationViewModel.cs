@@ -70,7 +70,17 @@ public sealed partial class XYUI1DocumentationViewModel : INotifyPropertyChanged
     public void Select(string id)
     {
         var item = Items.FirstOrDefault(x => x.Id == id);
-        if (item is not null) SelectedItem = item;
+        if (item is not null)
+        {
+            IsXYUI1Expanded = true;
+            IsXYUI2Expanded = false;
+            IsXYUI3Expanded = false;
+            _selectedXYUI2 = null;
+            _selectedXYUI3 = null;
+            PropertyChanged?.Invoke(this, new(nameof(SelectedXYUI2Item)));
+            PropertyChanged?.Invoke(this, new(nameof(SelectedXYUI3Item)));
+            SelectedItem = item;
+        }
         else if (XYUI2Items.Any(x => x.Id == id)) SelectXYUI2(id);
         else if (XYUI3Items.Any(x => x.Id == id)) SelectXYUI3(id);
         else if (FoundationItems.Any(x => x.Id == id)) SelectFoundation(id);

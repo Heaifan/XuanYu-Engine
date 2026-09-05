@@ -27,9 +27,11 @@ public static partial class XYUI1DocumentationCatalog
             CoreRules = CoreRules(id),
             FoundationMappings = FoundationMappings(id),
             HowToUse = HowToUse(id),
-            LiveExamplesFactory = () => XYUI1LiveExamplesFactory.Create(id)
+            LiveExamplesFactory = HasLiveExamples(id) ? () => XYUI1LiveExamplesFactory.Create(id)! : null
         };
     }
+
+    static bool HasLiveExamples(string id) => id is "XYUI-1-01" or "XYUI-1-02" or "XYUI-1-03" or "XYUI-1-04" or "XYUI-1-05" or "XYUI-1-06";
 
     static string CategoryOf(string id) => id switch
     {
