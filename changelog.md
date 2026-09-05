@@ -6,7 +6,7 @@
 - 根因：`PART_OpenZone` 虽横跨 `*,28` 两列但同时承载 ContentPresenter，内容实际覆盖整钮并进入 Chevron 槽；固定列本身没有消失，内容承载位置错误。
 - 变化：命中 Button 继续横跨两列但不再承载内容；新增第 0 列 `PART_ContentPresenter`，绑定 Content/ContentTemplate/对齐/内距并设为不可命中；第 1 列继续由透明、不可命中的 `PART_ChevronTrack` 占据 `ChevronTrackWidth=28 DIP`；Live Example 三颗按钮统一 `MinWidth=156 DIP`。
 - 验证：UI 解决方案构建 0 警告 0 错误；XYUI.Avalonia.Tests 462/462；Core 339/339；WarCore 22/22；World 1286/1286；合计 2109/2109 全通过，0 失败 0 跳过；ARCH-A/5+100 PASS；Light normal/hover、Dark normal/hover Gallery 截图确认三颗示例文案完整且 Chevron 与文字保持右槽间距；`git diff --check` PASS。
-- 提交：待本轮 commit 后回填。
+- 提交：`07072e53`。
 - 状态：`XYUI-2-05 VISUAL PATCH IMPLEMENTED · USER VISUAL ACCEPTANCE PENDING`；不得推进 07～12。
 - 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
 
