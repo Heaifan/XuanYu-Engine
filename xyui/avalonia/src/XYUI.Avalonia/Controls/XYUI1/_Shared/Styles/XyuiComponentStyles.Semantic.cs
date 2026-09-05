@@ -5,6 +5,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Avalonia.Styling;
 using XYUI.Avalonia.Spatial;
+using XYUI.Avalonia.Typography;
 using VectorPath = Avalonia.Controls.Shapes.Path;
 
 namespace XYUI.Avalonia.Controls;
@@ -31,9 +32,12 @@ public static partial class XyuiComponentStyles
         Brush(badgeTextDisabled, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(badgeTextDisabled);
         var badgeMarkDisabled = new Style(x => x.OfType<XYStatusBadge>().Class("xyui-status-badge").Class(":disabled").Descendant().OfType<VectorPath>());
         Brush(badgeMarkDisabled, VectorPath.StrokeProperty, "XY.Brush.State.Disabled.Text"); Brush(badgeMarkDisabled, VectorPath.FillProperty, "XY.Brush.State.Disabled.Text"); styles.Add(badgeMarkDisabled);
-        DisabledText(styles, "xyui-code-text-text"); DisabledText(styles, "xyui-mono-data-label");
+        DisabledText(styles, "xyui-code-text-text"); DisabledText(styles, "xyui-empty-text");
+        DisabledText(styles, "xyui-search-highlight"); DisabledText(styles, "xyui-truncated-text"); DisabledText(styles, "xyui-mono-data-label");
         DisabledText(styles, "xyui-mono-data-value"); DisabledText(styles, "xyui-mono-data-unit");
         DisabledText(styles, "xyui-icon-label-text");
+        var richTextDisabled = new Style(x => x.OfType<XYRichText>().Class("xyui-rich-text").Class(":disabled"));
+        Brush(richTextDisabled, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(richTextDisabled);
         FeedbackDisabled(styles, typeof(XYHelpText), "xyui-help-text", "xyui-help-text-text", "xyui-help-text-mark");
         FeedbackDisabled(styles, typeof(XYErrorText), "xyui-error-text", "xyui-error-text-text", "xyui-error-text-mark");
         FeedbackDisabled(styles, typeof(XYWarningText), "xyui-warning-text", "xyui-warning-text-text", "xyui-warning-text-mark");
@@ -47,8 +51,12 @@ public static partial class XyuiComponentStyles
         var tooltip = new Style(x => x.OfType<XYTooltip>().Class("xyui-tooltip"));
         Brush(tooltip, TemplatedControl.BackgroundProperty, "XY.Brush.Surface.Overlay");
         Brush(tooltip, TemplatedControl.BorderBrushProperty, "XY.Brush.Border.Color.Subtle");
-        tooltip.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(2, 0, 0, 0)));
-        tooltip.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 4))); styles.Add(tooltip);
+        tooltip.Setters.Add(new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(XyuiSpatialTokens.BorderWidthStrong, 0, 0, 0)));
+        tooltip.Setters.Add(new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(XyuiSpatialTokens.RadiusPopup)));
+        tooltip.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(XyuiSpatialTokens.Space2, XyuiSpatialTokens.Space1)));
+        tooltip.Setters.Add(new Setter(TemplatedControl.FontFamilyProperty, new FontFamily(XyuiTypographyTokens.FontUi)));
+        tooltip.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, XyuiTypographyTokens.FontSizeCaption));
+        tooltip.Setters.Add(new Setter(TemplatedControl.FontWeightProperty, FontWeight.Normal)); styles.Add(tooltip);
     }
 
     static void SeparatorVariant(Styles styles, string name, bool vertical, double inset)

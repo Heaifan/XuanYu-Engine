@@ -1556,6 +1556,8 @@
    │  │     │  │  │  │  └─ XyuiBadgeTagPath.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
    │  │     │  │  │  ├─ Styles/  # 集中控件视觉构建与语义样式。
    │  │     │  │  │     ├─ XyuiComponentStyles.cs  # 实现对应 XYUI 控件的视觉、状态或交互职责。
+   │  │     │  │  │     ├─ XyuiComponentStyles.ResultText.cs  # 定义搜索结果与截断文本的禁用态语义样式。
+   │  │     │  │  │     ├─ XyuiComponentStyles.Selection.cs  # 定义可选择文本与空状态文本的禁用态语义样式。
    │  │     │  │  │     ├─ XyuiComponentStyles.Semantic.cs  # 定义状态点、状态徽章及禁用态语义样式。
    │  │     │  │  │     ├─ XyuiComponentStyles.Surfaces.cs  # 定义 CodeText/Badge 的 Foundation 表面几何与间距。
    │  │     │  │  │     └─ XyuiComponentStyles.Typography.cs  # 定义 XYUI-1 文本、图标和标记的排版样式。
@@ -1966,6 +1968,9 @@
    │  │     ├─ NavigationCollapseTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ R5F4F1AlignmentTests.cs  # 验证对应模块的自动化行为与回归合同。
    │  │     ├─ R5F4FidelityTests.cs  # 验证对应模块的自动化行为与回归合同。
+   │  │     ├─ Phase1DSearchTruncatedRuntimeTests.cs  # SearchHighlight 结果呈现与 TruncatedText 截断合同回归。
+   │  │     ├─ Phase1DSelectableEmptyRuntimeTests.cs  # SelectableText 复制选择与 EmptyText 语义回归。
+   │  │     ├─ Phase1DTooltipRichTextRuntimeTests.cs  # Tooltip Foundation 与 RichText 行结构、禁用态回归。
    │  │     ├─ SearchHighlightRuntimeTests.cs  # SearchHighlight 高亮正文与 8 DIP 搜索标记间距、色调和几何回归。
    │  │     ├─ SecondTruthTests.cs  # 防回潮：未登记 hex 扫描 + AXAML 资源引用可解析。
    │  │     ├─ SelectableTextRuntimeTests.cs  # SelectableText 选择能力、Technical 字体及独立 Copy Mark 回归。
