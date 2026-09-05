@@ -26,7 +26,7 @@
       <Border Classes="xyui-surface-panel" Padding="16,12" CornerRadius="6">
         <StackPanel Spacing="8">
           <TextBlock Text="DEVELOPER QUICK START" Classes="xyui-text-section" FontWeight="Bold" />
-          <Grid ColumnDefinitions="*,16,*" MinHeight="52">
+          <Grid ColumnDefinitions="48*,16,52*" MinHeight="52">
             <Border Grid.Column="0" Background="{DynamicResource XY.Brush.Surface.PanelAlt}" Padding="12,10" CornerRadius="4">
               <TextBlock Text="{Binding QuickStartXaml}" Classes="xyui-text-code" TextWrapping="Wrap" VerticalAlignment="Center" />
             </Border>

@@ -41,9 +41,9 @@ public static partial class XYUI2GalleryCatalog
     static Control[] Selects() => [
         SelectSample("Default · Language", new XYSelect { Width = 260, SelectedIndex = 0, ItemsSource = new[] { "English", "简体中文", "日本語" } }),
         SelectSample("Variant · Quality", new XYSelect { Width = 260, SelectedIndex = 2, ItemsSource = new[] { "Low", "Medium", "High", "Ultra" } })];
-    static Control SelectSample(string caption, XYSelect select) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, select } };
+    static Control SelectSample(string caption, XYSelect select) => new StackPanel { Spacing = 8, Margin = new Thickness(0, 0, 0, 12), Children = { new XYCaption { Text = caption }, select } };
     static Control[] TextAreas() => [
         TextAreaSample("Standard", new XYTextArea { Width = 300, Height = 104, Text = "第一行任务说明\n第二行补充说明\n第三行备注" }),
         TextAreaSample("Editor · JSON", new XYTextArea { Width = 324, Height = 148, Mode = XYTextAreaMode.Editor, EditorType = "JSON", Text = "{\n  \"engine\": \"XuanYu\",\n  \"mode\": \"balanced\"\n}" })];
-    static Control TextAreaSample(string caption, XYTextArea area) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, area } };
+    static Control TextAreaSample(string caption, XYTextArea area) => new StackPanel { Spacing = 8, Margin = new Thickness(0, 0, 0, 12), Children = { new XYCaption { Text = caption }, area } };
 }

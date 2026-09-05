@@ -10,7 +10,7 @@
   - 16 XYPasswordField：右侧预览保留 Masked 与 Reveal 2 个示例，移除长密码/禁用等冗余展示。
   - 17 XYDatePicker：右侧预览保留 Default 与 Calendar Open 2 个示例，日历面板展示一目了然。
   - 18 XYTimePicker：右侧预览保留 Standard (HMS) 与 Compact (HM) 2 个示例，时分秒与紧凑格式清晰区分。
-  - 布局与间距：统一采用 `HostVertical` 纵向 12 DIP 间距堆叠，各控件宽度限制在 240～320 DIP，防止挤占变形。
+  - 布局与间距：Quick Start 使用 48% / 52% 代码与预览分栏；样例按标签、8 DIP 间距、控件、12 DIP 底间距排列，各控件宽度限制在 240～320 DIP，防止挤占变形。
   - 测试套件：新增 `XYUI2QuickStartNormalizationTests.cs`（6 Theory 用例），在 `XYUI1DocumentationTests.cs` 中增加 Phase 2C 样本数 ≤ 2 规则断言；更新各控件既有 Gallery 示例数量断言。
 - 验证：解决方案全量构建 0 警告 0 错误；测试套件 2126/2126 全数通过（XYUI.Avalonia.Tests 479/479 PASS；Core 339/339；WarCore 22/22；World 1286/1286）；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS。
 - 状态：`XYUI-2 · Phase 2C (13～18) IMPLEMENTATION CLOSED · QUICK START NORMALIZATION PASS · XYTextArea QUICK START FIXED · GALLERY VISUAL CLOSEOUT PASS · USER VISUAL ACCEPTANCE PENDING`。

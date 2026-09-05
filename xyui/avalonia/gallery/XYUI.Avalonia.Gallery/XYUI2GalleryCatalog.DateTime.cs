@@ -18,7 +18,7 @@ public static partial class XYUI2GalleryCatalog
         TimeSample("Compact (HM)", new XYTimePicker { Width = 220, Time = new TimeOnly(9, 5), ShowSeconds = false }),
     ];
 
-    static Control DateSample(string caption, XYDatePicker picker) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, picker } };
-    static Control TimeSample(string caption, XYTimePicker picker) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, picker } };
+    static Control DateSample(string caption, XYDatePicker picker) => new StackPanel { Spacing = 8, Margin = new Thickness(0, 0, 0, 12), Children = { new XYCaption { Text = caption }, picker } };
+    static Control TimeSample(string caption, XYTimePicker picker) => new StackPanel { Spacing = 8, Margin = new Thickness(0, 0, 0, 12), Children = { new XYCaption { Text = caption }, picker } };
     static XYDatePicker OpenDate(DateOnly date) { var picker = new XYDatePicker { Width = 300, SelectedDate = date }; picker.AttachedToVisualTree += (_, _) => picker.OpenCalendar(); return picker; }
 }

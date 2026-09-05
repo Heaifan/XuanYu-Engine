@@ -18,6 +18,6 @@ public static partial class XYUI2GalleryCatalog
         PasswordSample("Reveal · 按住眼睛查看", new XYPasswordField { Width = 300, Password = "XuanYu_2026" }),
     ];
 
-    static Control SearchSample(string caption, XYSearchField field) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, field } };
-    static Control PasswordSample(string caption, XYPasswordField field) => new StackPanel { Spacing = 4, Children = { new XYCaption { Text = caption }, field } };
+    static Control SearchSample(string caption, XYSearchField field) => new StackPanel { Spacing = 8, Margin = new Thickness(0, 0, 0, 12), Children = { new XYCaption { Text = caption }, field } };
+    static Control PasswordSample(string caption, XYPasswordField field) => new StackPanel { Spacing = 8, Margin = new Thickness(0, 0, 0, 12), Children = { new XYCaption { Text = caption }, field } };
 }
