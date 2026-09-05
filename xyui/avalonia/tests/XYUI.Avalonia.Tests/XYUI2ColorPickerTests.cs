@@ -27,4 +27,15 @@ public sealed class XYUI2ColorPickerTests : IClassFixture<XyuiHeadlessFixture>
         picker.HexField.Text = "不是颜色"; picker.OnHexCommitted(); Assert.Equal(Color.FromArgb(128, 255, 0, 0), picker.Color); Assert.True(picker.ErrorPart!.IsVisible);
         Assert.IsType<StackPanel>(XYUI2GalleryCatalog.CreatePreview("XYUI-2-19")); window.Close();
     });
+
+    [Fact]
+    public void RGB_mode_hides_alpha_editors_until_RGBA_is_selected() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var picker = new XYColorPicker { Width = 300, Mode = XYColorPickerMode.RGB }; var window = XyuiBatchTestHost.Show(picker);
+        picker.IsOpen = true; Dispatcher.UIThread.RunJobs();
+        Assert.False(picker.AlphaSlider!.IsVisible); Assert.False(picker.AlphaFieldPanel!.IsVisible);
+        Assert.True(picker.RedField!.IsVisible); Assert.True(picker.GreenField!.IsVisible); Assert.True(picker.BlueField!.IsVisible);
+        picker.Mode = XYColorPickerMode.RGBA; Dispatcher.UIThread.RunJobs(); Assert.True(picker.AlphaSlider.IsVisible); Assert.True(picker.AlphaFieldPanel.IsVisible);
+        picker.Mode = XYColorPickerMode.RGB; Dispatcher.UIThread.RunJobs(); Assert.False(picker.AlphaSlider.IsVisible); Assert.False(picker.AlphaFieldPanel.IsVisible); window.Close();
+    });
 }

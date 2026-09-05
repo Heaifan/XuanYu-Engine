@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -66,9 +67,9 @@ public sealed class XYUI2Phase2DContractTests : IClassFixture<XyuiHeadlessFixtur
         var host = new StackPanel { Children = { vec, refer } };
         var window = XyuiBatchTestHost.Show(host);
 
-        Assert.True(vec.Classes.Contains("xyui-vector-wide"));
-        vec.Width = 420; vec.UpdateLayoutMode(); Assert.True(vec.Classes.Contains("xyui-vector-medium"));
-        vec.Width = 280; vec.UpdateLayoutMode(); Assert.True(vec.Classes.Contains("xyui-vector-compact"));
+        Assert.Contains("xyui-vector-wide", vec.Classes);
+        vec.Width = 420; vec.Measure(new Size(420, double.PositiveInfinity)); vec.Arrange(new Rect(0, 0, 420, vec.DesiredSize.Height)); vec.UpdateLayoutMode(); Assert.Contains("xyui-vector-medium", vec.Classes);
+        vec.Width = 280; vec.Measure(new Size(280, double.PositiveInfinity)); vec.Arrange(new Rect(0, 0, 280, vec.DesiredSize.Height)); vec.UpdateLayoutMode(); Assert.Contains("xyui-vector-compact", vec.Classes);
 
         refer.ReferenceState = XYReferenceState.Missing; Dispatcher.UIThread.RunJobs();
         var missingColor = XyuiBatchTestHost.ColorOf(refer.ReferenceFieldPart!.BorderBrush);

@@ -27,4 +27,12 @@ public partial class XYColorPicker
     {
         if (HueSlider is null) return; PanelRefreshing = true; HueSlider.Value = Hue; AlphaSlider!.Value = Color.A; HexField!.Text = HexValue(); RedField!.Value = Color.R; GreenField!.Value = Color.G; BlueField!.Value = Color.B; AlphaField!.Value = Color.A; if (ColorAreaBase is not null) ColorAreaBase.Background = new SolidColorBrush(HsvToColor(Hue, 1, 1, 255)); if (ColorAreaMarker is not null && ColorArea is not null) { Canvas.SetLeft(ColorAreaMarker, Saturation * ColorArea.Bounds.Width - 5); Canvas.SetTop(ColorAreaMarker, (1 - Value) * ColorArea.Bounds.Height - 5); } PanelRefreshing = false;
     }
+    void SyncModeVisibility()
+    {
+        var rgba = Mode == XYColorPickerMode.RGBA;
+        if (AlphaPanel is not null) AlphaPanel.IsVisible = rgba;
+        if (AlphaFieldPanel is not null) AlphaFieldPanel.IsVisible = rgba;
+        if (AlphaSlider is not null) AlphaSlider.IsVisible = rgba;
+        if (AlphaField is not null) AlphaField.IsVisible = rgba;
+    }
 }

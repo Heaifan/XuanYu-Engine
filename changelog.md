@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · ColorPicker RGB/RGBA 语义修补与最终冻结（2026-09-06 01:17:40 +08:00）
+
+- 目标：完成 `XYColorPicker` RGB/RGBA Popup 语义收口，冻结 XYUI-2 24/24。
+- 变化：`Mode=RGB` 隐藏透明度滑杆与 `A` 数值框；`Mode=RGBA` 恢复两项；新增 Runtime 回归测试，保持既有 Popup 视觉、公共 API 与控件交互契约不变。
+- 验证：根解决方案与 UI 解决方案构建均 0 警告 0 错误；UI 490/490、Core 339/339、WarCore 22/22、World 1286/1286，全仓测试 2137/2137 PASS；`scripts/arch-a-guard.ps1` PASS（含 5+100）；`git diff --check` PASS。
+- 状态：`XYUI-2 24/24 USER VISUAL ACCEPTED · FINAL CLOSEOUT · FROZEN`。
+- Hash：`88bf5e2e`。
+- 遗留：无；XYUI-2 后续不再推进 13～24。
+
 ## v0.2.28.77-rz · XYUI-2 · 最终视觉修补与 24/24 Closeout 交付（2026-09-06 01:03:00 +08:00）
 
 - 目标：完成 XYUI-2 最终视觉修补与 24/24 Closeout（P0 修复 `XYVectorProperty` 响应式布局与截断；P1 全局修复 `03 FOUNDATION & STATES` 状态列排版；P1 修复 `XYReferenceProperty` 丢失 vs 不匹配语义色彩区分；P2 修正 `XYColorPicker` Quick Start 命名规范）。
