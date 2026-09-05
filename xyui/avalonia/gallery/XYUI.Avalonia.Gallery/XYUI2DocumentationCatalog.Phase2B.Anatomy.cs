@@ -57,7 +57,7 @@ public static partial class XYUI2DocumentationCatalog
         "XYUI-2-10" => [
             new("Value", "double", "0", "数值真值，严格被 Clamp 在 Minimum 与 Maximum 之间"),
             new("Minimum / Maximum", "double", "0 / 100", "数值上下限约束区间"),
-            new("Step", "double", "1", "普通微调步长与精度步长"),
+            new("Step", "double", "1", "普通键盘与 Stepper 步长；Scrub 使用 DecimalPlaces 精度步进"),
             new("LargeStep / SmallStep", "double", "10 / 0.1", "Shift 加速步长与 Ctrl 精细微调步长"),
             new("DecimalPlaces", "int", "2", "显示格式化小数位数"),
             new("Suffix", "string?", "null", "数值尾部单位显示后缀（如 px, %, mm）"),
@@ -75,7 +75,8 @@ public static partial class XYUI2DocumentationCatalog
             new("Text", "string", "", "编辑文本框当前内容，键入触发即时动态过滤"),
             new("Placeholder", "string?", "null", "未选择且文本为空时的占位提示"),
             new("IsDropDownOpen", "bool", "false", "下拉 Popup 弹出层展开状态"),
-            new("IsCustomValueAllowed", "bool", "false", "是否允许键入不在列表内的自定义值")
+            new("IsCustomValueAllowed", "bool", "false", "是否允许键入不在列表内的自定义值"),
+            new("IsError", "bool", "false", "非法值且不允许自定义输入时的错误状态")
         ],
         _ => []
     };

@@ -6,13 +6,13 @@ public static partial class XYUI2DocumentationCatalog
     {
         "XYUI-2-07" => [
             new("Radio Halo", "XY.Brush.State.Color.Hover", "悬停时外环扩散光晕"),
-            new("Radio Circle", "XY.Brush.Border.Color.Default", "14 DIP 外圆圈边框"),
+            new("Radio Circle", "XY.Brush.Border.Color.Default", "16 DIP 外圆圈边框"),
             new("Active Dot", "XY.Brush.Accent.Strong", "6 DIP 实心强色中心圆点"),
             new("Focus Visual", "XY.Brush.Border.Color.Focus", "键盘导航焦点外圈")
         ],
         "XYUI-2-08" => [
-            new("Track Inactive", "XY.Brush.Surface.Input", "关闭态轨道底色"),
-            new("Track Active", "XY.Brush.Accent.Strong", "开启态轨道强调色"),
+            new("Track Inactive", "XY.Brush.Surface.PanelAlt", "关闭态轨道底色"),
+            new("Track Active", "XY.Brush.Accent.Soft", "开启态轨道底色"),
             new("Thumb Metric", "14×14 DIP", "圆形滑块几何尺寸"),
             new("Disabled", "XY.State.Disabled.*", "禁用态全色系衰减")
         ],
@@ -57,27 +57,27 @@ public static partial class XYUI2DocumentationCatalog
             new(":disabled", "禁用态，阻断点击")
         ],
         "XYUI-2-09" => [
-            new(":normal", "默认常态，呈现微弱边框"),
+            new("Default", "默认常态，呈现微弱边框"),
             new(":focus", "获得焦点态，底部强调线显露"),
             new(":readonly", "只读态，只读光标与选择能力"),
             new(":error", "错误态，红边警示")
         ],
         "XYUI-2-10" => [
-            new(":normal", "格式化数值展示"),
+            new("Default", "格式化数值展示"),
             new(":focus", "文本全选编辑态"),
-            new(":scrubbing", "鼠标拖拽连续无极微调态"),
+            new("Scrubbing (internal)", "鼠标拖拽连续微调的内部交互态；当前无公开 :scrubbing 伪类"),
             new(":error", "非法文本键入提示")
         ],
         "XYUI-2-11" => [
-            new(":normal", "滑块静止态"),
+            new("Default", "滑块静止态"),
             new(":pointerover", "滑块悬停微放大"),
-            new(":dragging", "滑块拖拽连续变化态"),
+            new("Dragging (internal)", "XYSliderTrack 的内部拖拽态；当前无公开 :dragging 伪类"),
             new(":disabled", "滑块禁用锁定")
         ],
         "XYUI-2-12" => [
-            new(":closed", "收起常态"),
+            new("Closed", "收起常态；当前无公开 :closed 伪类"),
             new(":open", "下拉 Popup 展开态"),
-            new(":filtering", "即时过滤筛选候选项中"),
+            new("Filtering (internal)", "即时过滤筛选候选项中；当前无公开 :filtering 伪类"),
             new(":error", "输入无效且不允许自定义值")
         ],
         _ => []

@@ -26,7 +26,7 @@ public static partial class XYUI2LiveExamplesFactory
     {
         var col1 = new StackPanel { Spacing = 8, Width = 320, HorizontalAlignment = HorizontalAlignment.Left };
         col1.Children.Add(new XYNumberField { Value = 12.50, Step = 0.5, DecimalPlaces = 2, Suffix = "m" });
-        col1.Children.Add(new XYNumberField { Value = -45.00, Step = 1.0, DecimalPlaces = 1, Suffix = "°" });
+        col1.Children.Add(new XYNumberField { Value = -45.00, Minimum = -180, Maximum = 180, Step = 1.0, DecimalPlaces = 1, Suffix = "°" });
         col1.Children.Add(new XYNumberField { Value = 1.00, Step = 0.1, DecimalPlaces = 2, Suffix = "x" });
 
         var col2 = new StackPanel { Spacing = 8, Width = 320, HorizontalAlignment = HorizontalAlignment.Left };

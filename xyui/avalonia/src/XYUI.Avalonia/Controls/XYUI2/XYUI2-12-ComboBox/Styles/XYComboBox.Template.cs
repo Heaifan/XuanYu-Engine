@@ -29,12 +29,12 @@ public partial class XYComboBox
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (TextFieldPart is not null) { TextFieldPart.PropertyChanged -= OnTextFieldChanged; TextFieldPart.KeyDown -= OnTextKeyDown; }
+        if (TextFieldPart is not null) { TextFieldPart.PropertyChanged -= OnTextFieldChanged; TextFieldPart.RemoveHandler(InputElement.KeyDownEvent, OnTextKeyDown); }
         if (ListPart is not null) ListPart.SelectionChanged -= OnListSelectionChanged;
         if (PopupPart is not null) PopupPart.Closed -= OnPopupClosed;
         base.OnApplyTemplate(e); TextFieldPart = e.NameScope.Find<XYTextField>("PART_TextField"); ChevronPart = e.NameScope.Find<Button>("PART_Chevron"); PopupPart = e.NameScope.Find<Popup>("PART_Popup"); ListPart = e.NameScope.Find<ListBox>("PART_List");
         if (TextFieldPart is null || ChevronPart is null || PopupPart is null || ListPart is null) return;
-        TextFieldPart.PropertyChanged += OnTextFieldChanged; TextFieldPart.KeyDown += OnTextKeyDown; ChevronPart.Click += OnChevronClick; ListPart.SelectionChanged += OnListSelectionChanged; PopupPart.Closed += OnPopupClosed; TextFieldPart.Placeholder = Placeholder; SyncText(); RefreshItems(false); if (IsDropDownOpen) OpenPopup();
+        TextFieldPart.PropertyChanged += OnTextFieldChanged; TextFieldPart.AddHandler(InputElement.KeyDownEvent, OnTextKeyDown, RoutingStrategies.Tunnel); ChevronPart.Click += OnChevronClick; ListPart.SelectionChanged += OnListSelectionChanged; PopupPart.Closed += OnPopupClosed; TextFieldPart.Placeholder = Placeholder; SyncText(); RefreshItems(false); if (IsDropDownOpen) OpenPopup();
     }
 
     void OnTextFieldChanged(object? sender, AvaloniaPropertyChangedEventArgs e) { if (e.Property == TextBox.TextProperty && !SyncingText) { Text = TextFieldPart!.Text; RefreshItems(true); } }

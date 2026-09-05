@@ -35,8 +35,8 @@ public static partial class XYUI2DocumentationCatalog
         ],
         "XYUI-2-10" => [
             new("组件定义", "高精度数值输入与微调控件，集成了直接键盘键入、微调步进器与按住鼠标拖拽微调。"),
-            new("Scrub 协议", "按住数值文本区域水平拖动（每 4 DIP 一步长）进行快速微调，松开提交，按 Escape 可取消回退。"),
-            new("键盘步长", "支持 Up/Down 键调节：普通按 PrecisionStep，按住 Shift 按 LargeStep，按住 Ctrl 按 SmallStep。"),
+            new("Scrub 协议", "按住数值文本区域水平拖动（每 4 DIP 按 DecimalPlaces 精度步进）进行快速微调，松开提交，按 Escape 可取消回退。"),
+            new("键盘步长", "支持 Up/Down 键调节：普通按 Step，按住 Shift 按 LargeStep，按住 Ctrl 按 SmallStep。"),
             new("数值约束", "严格遵循 Minimum 与 Maximum 边界 Clamp，支持小数位 DecimalPlaces 与单位 Suffix。")
         ],
         "XYUI-2-11" => [
@@ -49,7 +49,7 @@ public static partial class XYUI2DocumentationCatalog
             new("组件定义", "可编辑且支持实时模糊过滤的下拉组合框，内置真正的 Popup 弹出层与候选项列表。"),
             new("过滤契约", "在文本框中键入关键词时，下拉列表即时按照包含模式模糊筛选，保留原始 ItemsSource 不被破坏。"),
             new("键盘与弹层", "Down 展开并高亮首项，Up/Down 移动焦点，Enter 选中提交，Escape 立即关闭下拉层。"),
-            new("生命周期", "包含宿主窗口失活、焦点移出时自动安全收起 Popup 的完整生命周期防护。")
+            new("生命周期", "包含宿主窗口失活与 Visual Tree 脱离时自动安全收起 Popup 的生命周期防护。")
         ],
         _ => []
     };

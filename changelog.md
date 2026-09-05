@@ -1,5 +1,18 @@
 # changelog
 
+## v0.2.28.77-rz · XYUI-2 · Phase 2B 交互契约修正与最终门禁（2026-09-05 22:42:16 +08:00）
+
+- 目标：在已集成的 XYUI-2 Phase 2B（07～12）基础上，依据源码与 Canonical 收紧编辑、数值、滑块和组合框交互，不回改 01～06。
+- 变化：
+  - 09 TextField：共享编辑基类将首个编辑焦点的全选延续到首次鼠标释放，已有焦点的后续点击保留原生 Caret 定位；ComboBox 文本宿主移除强制每次点击全选。
+  - 10 NumberField：普通 Up/Down 与 Stepper 使用 `Step`，Shift/Ctrl 保留 `LargeStep/SmallStep`；Scrub 继续使用 DecimalPlaces 精度步进。
+  - 11 Slider：Minimum/Maximum 变化时同步 Clamp `Value`，补充范围变化回归测试。
+  - 12 ComboBox：键盘事件在文本框 Tunnel 阶段接入，补齐 Space、Home、End，并保持真实 Popup 生命周期与过滤源集合不变。
+  - Gallery/文档：修正 Radio/ Switch 实际 Token 与尺寸描述，补齐负角度示例范围，明确内部交互态不冒充公开伪类。
+- 验证：解决方案构建 0 警告 0 错误；XYUI.Avalonia 467/467、Core 339/339、WarCore 22/22、World 1286/1286；总计 2114/2114；ARCH-A PASS；5+100 PASS；git diff --check PASS。
+- 状态：XYUI-2 · Phase 2B 07～12 IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
+
 ## v0.2.28.77-rz · XYUI-2 · Phase 2B (07～12) 关键契约加固与 Gallery 文档/示例闭环（2026-09-05 22:31:00 +08:00）
 
 - 目标：落实 XYUI-2-07～12（RadioButton、Switch、TextField、NumberField、Slider、ComboBox）的真实只读审计、Runtime 关键契约加固、5+100 行硬门禁与 XYUI-1 风格开发者文档及无缓存 Live Examples。
@@ -14,7 +27,7 @@
   - 新增测试：编写 XYUI2Phase2BContractTests，新增 4 个契约测试实例，全量通过。
 - 验证：解决方案全量构建 0 警告 0 错误；测试套件 2113/2113 全数通过（XYUI.Avalonia.Tests 466/466 PASS；Core 339/339；WarCore 22/22；World 1286/1286）；scripts/arch-a-guard.ps1 PASS；5+100 行硬门禁全绿；git diff --check PASS；Gallery 启动正常。
 - 状态：XYUI-2 · Phase 2B (07～12) IMPLEMENTATION CLOSED · USER VISUAL ACCEPTANCE PENDING。
-- 版本：沿用 0.2.28.77-rz；四处版本源保持一致。
+- 版本：沿用 `v0.2.28.77-rz`；四处版本源保持一致。
 
 ## v0.2.28.77-rz · XYUI-2-05 · Chevron Track 固定右槽视觉修复（2026-09-05 22:18:59 +08:00）
 

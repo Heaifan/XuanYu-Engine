@@ -57,4 +57,11 @@ public sealed class XYUI2SliderTests : IClassFixture<XyuiHeadlessFixture>
         var numberField = slider.NumberFieldPart!; var host = numberField.GetVisualDescendants().OfType<Border>().Single(x => x.Name == "PART_ValueHost"); var suffix = numberField.GetVisualDescendants().OfType<Border>().Single(x => x.Name == "PART_SuffixHost");
         Assert.True(numberField.Bounds.Width >= 104); Assert.True(host.ClipToBounds); Assert.True(suffix.Bounds.Width >= 24); Assert.Equal(HorizontalAlignment.Stretch, suffix.HorizontalAlignment); window.Close();
     });
+
+    [Fact]
+    public void Slider_clamps_value_when_range_changes() => _fx.Run(() =>
+    {
+        XyuiBatchTestHost.Prepare(); var slider = new XYSlider { Value = 50 }; var window = XyuiBatchTestHost.Show(slider);
+        slider.Minimum = 60; Assert.Equal(60, slider.Value); slider.Maximum = 70; slider.Value = 100; Assert.Equal(70, slider.Value); window.Close();
+    });
 }

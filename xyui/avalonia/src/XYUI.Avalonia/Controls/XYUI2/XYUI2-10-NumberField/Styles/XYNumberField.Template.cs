@@ -41,6 +41,6 @@ public partial class XYNumberField
     {
         var icon = new XYIcon { Icon = XyuiVectorIcon.ChevronDown, Size = XyuiIconSize.Small, RenderTransform = up ? new RotateTransform(180) : null };
         var button = new RepeatButton { Name = up ? "PART_UpButton" : "PART_DownButton", Padding = new Thickness(0), BorderThickness = new Thickness(0), Background = Brushes.Transparent, Focusable = false, Content = icon };
-        icon[!XYIcon.StrokeProperty] = button[!TemplatedControl.ForegroundProperty]; button.Click += (_, _) => control.Adjust(direction * control.PrecisionStep); return button;
+        icon[!XYIcon.StrokeProperty] = button[!TemplatedControl.ForegroundProperty]; button.Click += (_, _) => control.Adjust(direction * control.Step); return button;
     }
 }

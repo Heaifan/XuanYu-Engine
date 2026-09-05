@@ -45,7 +45,8 @@ public sealed class XYUI2TextInputInteractionTests : IClassFixture<XyuiHeadlessF
         var point = field.TranslatePoint(new Point(field.Bounds.Width / 2, field.Bounds.Height / 2), window)!.Value;
         window.MouseDown(point, MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(point, MouseButton.Left); Dispatcher.UIThread.RunJobs();
         Assert.Equal(0, field.SelectionStart); Assert.Equal(field.Text?.Length, field.SelectionEnd);
-        window.MouseDown(new Point(8, point.Y), MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(new Point(8, point.Y), MouseButton.Left); Dispatcher.UIThread.RunJobs();
+        var leftPoint = field.TranslatePoint(new Point(12, field.Bounds.Height / 2), window)!.Value;
+        window.MouseDown(leftPoint, MouseButton.Left); Dispatcher.UIThread.RunJobs(); window.MouseUp(leftPoint, MouseButton.Left); Dispatcher.UIThread.RunJobs();
         Assert.Equal(field.SelectionStart, field.SelectionEnd); Assert.NotEqual(field.Text?.Length, field.SelectionEnd); window.Close();
     });
 }

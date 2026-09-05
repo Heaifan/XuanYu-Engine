@@ -43,6 +43,7 @@ public partial class XYSlider
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == MinimumProperty || change.Property == MaximumProperty) Value = Math.Clamp(Value, Minimum, Maximum);
         if (change.Property == ValueProperty || change.Property == MinimumProperty || change.Property == MaximumProperty || change.Property == StepProperty || change.Property == LargeStepProperty || change.Property == SmallStepProperty || change.Property == DecimalPlacesProperty || change.Property == SuffixProperty || change.Property == IsNumberFieldVisibleProperty)
             if (SliderPart is not null) SyncParts();
     }

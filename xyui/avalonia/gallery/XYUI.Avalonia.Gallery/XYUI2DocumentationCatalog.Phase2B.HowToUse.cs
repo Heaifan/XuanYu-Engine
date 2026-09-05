@@ -23,7 +23,7 @@ public static partial class XYUI2DocumentationCatalog
             new("校验反馈 (Validation)", "当键入非法内容时，置 IsError=true，边框立即呈现错误警示色。")
         ],
         "XYUI-2-10" => [
-            new("微调拖拽协议 (Scrubbing)", "按住数值文本区域水平拖动，值按设定的 Step 步长连续变化；按 Escape 可立即撤回初始值。"),
+            new("微调拖拽协议 (Scrubbing)", "按住数值文本区域水平拖动，值按 DecimalPlaces 精度步进；按 Escape 可立即撤回初始值。"),
             new("键盘加速 (Key Modifiers)", "按 Up/Down 微调；按住 Shift 加速为 LargeStep；按住 Ctrl 精细微调为 SmallStep。"),
             new("边界自愈 (Clamping)", "任何超出 [Minimum, Maximum] 区间的非法输入在失焦或 Enter 提交时自动被 Clamp。"),
             new("格式与单位 (Format)", "利用 DecimalPlaces 规范浮点精度，利用 Suffix 标注物理单位（如 %, px, rad）。")
