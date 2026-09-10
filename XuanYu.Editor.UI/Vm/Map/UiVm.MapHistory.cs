@@ -55,8 +55,8 @@ public sealed partial class UiVm
     public void SyncPropertyTexts()
     {
         var map = MapSession.CurrentMap;
-        MapWidthText = FormatMeters(map.SizeMeters.Width);
-        MapDepthText = FormatMeters(map.SizeMeters.Depth);
-        MapBaseHeightText = FormatMeters(map.Surface.BaseHeightMeters);
+        MapWidthDraft = map.SizeMeters.Width;
+        MapDepthDraft = map.SizeMeters.Depth;
+        MapBaseHeightDraft = map.Surface.BaseHeightMeters;
     }
 }

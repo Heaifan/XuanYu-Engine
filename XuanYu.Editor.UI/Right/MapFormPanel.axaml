@@ -20,7 +20,9 @@
     <Grid x:Name="PropsWide" ColumnDefinitions="96,*"
           RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="{StaticResource Space.4}">
       <xy:XYLabel Text="宽度（米）" VerticalAlignment="Center"/>
-      <xy:XYTextField x:Name="WidthBoxWide" Grid.Column="1" Text="{Binding MapWidthText}"
+      <xy:XYNumberField x:Name="WidthBoxWide" Grid.Column="1" Value="{Binding MapWidthDraft, Mode=TwoWay}"
+          Minimum="{Binding MapSizeMinimum}" Maximum="{Binding MapSizeMaximum}" Step="1" SmallStep="0.1" DecimalPlaces="4"
+          Suffix="m"
           xycore:XY.Size="Compact"
           Classes.error="{Binding MapWidthError}" LostFocus="Field_LostFocus"
           AutomationProperties.Name="地图宽度"
@@ -29,7 +31,9 @@
           Padding="{StaticResource Padding.Compact}"/>
       
       <xy:XYLabel Grid.Row="1" Text="深度（米）" VerticalAlignment="Center"/>
-      <xy:XYTextField x:Name="DepthBoxWide" Grid.Row="1" Grid.Column="1" Text="{Binding MapDepthText}"
+      <xy:XYNumberField x:Name="DepthBoxWide" Grid.Row="1" Grid.Column="1" Value="{Binding MapDepthDraft, Mode=TwoWay}"
+          Minimum="{Binding MapSizeMinimum}" Maximum="{Binding MapSizeMaximum}" Step="1" SmallStep="0.1" DecimalPlaces="4"
+          Suffix="m"
           xycore:XY.Size="Compact"
           Classes.error="{Binding MapDepthError}" LostFocus="Field_LostFocus"
           AutomationProperties.Name="地图深度"
@@ -38,7 +42,9 @@
           Padding="{StaticResource Padding.Compact}"/>
       
       <xy:XYLabel Grid.Row="2" Text="基础高度（米）" VerticalAlignment="Center"/>
-      <xy:XYTextField x:Name="HeightBoxWide" Grid.Row="2" Grid.Column="1" Text="{Binding MapBaseHeightText}"
+      <xy:XYNumberField x:Name="HeightBoxWide" Grid.Row="2" Grid.Column="1" Value="{Binding MapBaseHeightDraft, Mode=TwoWay}"
+          Minimum="{Binding MapHeightMinimum}" Maximum="{Binding MapHeightMaximum}" Step="1" SmallStep="0.1" DecimalPlaces="4"
+          Suffix="m"
           xycore:XY.Size="Compact"
           Classes.error="{Binding MapBaseHeightError}" LostFocus="Field_LostFocus"
           AutomationProperties.Name="基础高度"
@@ -53,7 +59,7 @@
     <!-- 地图属性操作按钮（纠偏 v2）：应用修改跨两列第一行；撤销/重做第二行等宽 -->
     <Grid x:Name="PropsButtons" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
           ColumnSpacing="{StaticResource Space.4}" RowSpacing="{StaticResource Space.4}">
-      <xy:XYButton Classes="uiTextButton" Variant="Secondary" Grid.ColumnSpan="2"
+      <xy:XYButton Classes="uiTextButton" Variant="Primary" Grid.ColumnSpan="2"
           Content="应用修改" Width="{StaticResource Size.Width.96}"
           Height="{StaticResource Control.Height.Compact}" MinHeight="0" MinWidth="0"
           HorizontalAlignment="Left" Padding="{StaticResource Padding.Compact}"

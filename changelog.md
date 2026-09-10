@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.57-rz · AREA-D-R2-FIX1（2026-09-10 14:57:19 +08:00）
+- 目标：完成 Area D 地图 Inspector 的 XYUI 控件收口、重复复制入口清理和紧凑密度修复。
+- 空白根因/修复：`InspectorPanel` 的实体 header 在 Map Edit 中无条件占位；改为 Map Edit 隐藏真实 header 宿主，未使用负 Margin、Transform 或魔法高度。
+- 地图导航：保留真实 `XYTabBar` 页面/滚动/溢出语义，消费 `XY.Size=Compact`、`XY.Density=Compact` 与 `Control.Height.Compact`，运行时高度由 38 DIP 收紧为 24 DIP；Inspector 纵向滚动与 LayerDock 保持不变。
+- 复制入口：移除 `MapPagePanel` 外层 `XYIconButton`，保留 `XYSelectableText` 的唯一内建 Copy 能力；Map ID Copy Action Count = 1。
+- 数值/按钮：宽度、深度、基础高度改为 `XYNumberField`，绑定 numeric draft，Apply 才进入既有 `UpdateMapProperties` history 链；宽/深沿用 100～1000000 米领域边界，基础高度沿用有限数字规则；Apply 使用 `Primary XYButton`，Undo/Redo 使用 `Secondary XYButton`。
+- 验证：FIX1 定向回归 46/46；World 全量 1466 通过、1 个用户延期弹窗失败、0 跳过；本轮新增失败 0。`UnsavedChangesConfirmationWindow.axaml` 保持 dirty、未暂存、未提交。
+- Hash：起始提交 `be10d968`。
+- 状态：`AREA-D-R2-FIX1 READY FOR USER VISUAL + INTERACTION ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.56-rz · AREA-D-R2-CORRECTION（2026-09-10 14:23:52 +08:00）
 - 目标：纠正 Area D R2 的 Right 结构，让 Inspector 成为 Map/Entity 内容的唯一动态宿主，并保持地图编辑时 LayerDock 持久可见。
 - 变化：Right 收敛为一个共享 `EditorRightTabs`；`InspectorPanel` 内互斥承载 `MapEditorPanel` 与 `EntityInspectorPanel`；移除 Right 级 Map sibling；`EditorLayerDock` 独立于 Entity owner 持续显示并保留折叠状态。Left/Right canonical `XYTabs`、地图 `XYTextField` 及草稿/校验/Apply 链保持不变。

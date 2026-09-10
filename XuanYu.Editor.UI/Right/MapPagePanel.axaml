@@ -10,12 +10,6 @@
       <Setter Property="MinHeight" Value="24"/>
       <Setter Property="Margin" Value="0,3"/>
     </Style>
-    <Style Selector="Button.copyBtn">
-      <Setter Property="MinHeight" Value="24"/>
-      <Setter Property="MinWidth" Value="0"/>
-      <Setter Property="Padding" Value="6,2"/>
-      <Setter Property="Margin" Value="0"/>
-    </Style>
   </UserControl.Styles>
 
   <StackPanel x:Name="Root" Spacing="8">
@@ -32,12 +26,9 @@
         <xy:XYLabel Text="路径" VerticalAlignment="Center"/>
         <xy:XYSelectableText Grid.Column="1" Text="{Binding MapPathDisplay}" Variant="Technical" ToolTip.Tip="{Binding MapPath}"/>
       </Grid>
-      <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
+      <Grid x:Name="MapIdRow" Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
         <xy:XYLabel Text="ID" VerticalAlignment="Center"/>
-        <Grid Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="6">
-          <xy:XYSelectableText Text="{Binding MapIdDisplay}" Variant="Technical" ToolTip.Tip="{Binding MapIdText}"/>
-          <xy:XYIconButton Grid.Column="1" Classes="copyBtn" Icon="Copy" Click="CopyMapId_Click" ToolTip.Tip="复制完整 MapId" AutomationProperties.Name="复制完整 MapId"/>
-        </Grid>
+        <xy:XYSelectableText Grid.Column="1" Text="{Binding MapIdDisplay}" Variant="Technical" ToolTip.Tip="{Binding MapIdText}"/>
       </Grid>
       <Grid Classes="summaryRow" ColumnDefinitions="72,*" ColumnSpacing="8">
         <xy:XYLabel Text="坐标系" VerticalAlignment="Center"/>

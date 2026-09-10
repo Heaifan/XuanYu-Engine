@@ -1,11 +1,7 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input.Platform;
-using Avalonia.Interactivity;
 
 namespace XuanYu.Editor.UI;
 
@@ -36,15 +32,4 @@ public partial class MapPagePanel : UserControl
             row.Margin = new Thickness(0, compact ? 2 : 3);
     }
 
-    async void CopyMapId_Click(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is not UiVm vm || string.IsNullOrEmpty(vm.MapIdText)) return;
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-        if (clipboard is null)
-        {
-            Debug.WriteLine("复制失败：剪贴板不可用");
-            return;
-        }
-        await clipboard.SetTextAsync(vm.MapIdText);
-    }
 }

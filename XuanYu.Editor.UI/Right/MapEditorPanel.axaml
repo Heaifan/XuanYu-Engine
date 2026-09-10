@@ -2,12 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
+             xmlns:xycore="using:XYUI.Avalonia"
              x:Class="XuanYu.Editor.UI.MapEditorPanel"
              x:DataType="local:UiVm">
   <Grid RowDefinitions="Auto,*">
     <xy:XYTabBar x:Name="MapTabs"
+                 xycore:XY.Size="Compact"
+                 xycore:XY.Density="Compact"
+                 Height="{StaticResource Control.Height.Compact}"
+                 ClipToBounds="True"
                  Grid.Row="0"
-                 Margin="0,4,0,0"
+                 Margin="0"
                  SelectionChanged="MapTabs_SelectionChanged">
       <xy:XYTab Id="base" Label="地图基础" ShowSelectedAccent="False"/>
       <xy:XYTab Id="environment" Label="地图环境" ShowSelectedAccent="False"/>

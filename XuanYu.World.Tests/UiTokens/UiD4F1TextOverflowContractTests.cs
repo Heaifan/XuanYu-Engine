@@ -69,7 +69,8 @@ public sealed class UiD4F1TextOverflowContractTests
     {
         Assert.Contains("MapIdDisplay", MapPage);
         Assert.Contains("ToolTip.Tip=\"{Binding MapIdText}\"", MapPage);
-        Assert.Contains("CopyMapId_Click", MapPage);
+        Assert.Contains("<xy:XYSelectableText", MapPage);
+        Assert.DoesNotContain("<xy:XYIconButton", MapPage);
     }
 
     [Fact]

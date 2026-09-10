@@ -40,6 +40,7 @@ public sealed partial class UiVm
             SetFieldError(field, RangeError(field));
             return;
         }
+        SetNumericDraft(field, value);
         SetFieldError(field, "");
     }
 
@@ -58,8 +59,16 @@ public sealed partial class UiVm
             SetFieldError(field, rangeError);
             return rangeError;
         }
+        SetNumericDraft(field, meters);
         SetFieldError(field, "");
         return "";
     }
     public string MapSurfaceTypeText => "Flat";
+
+    void SetNumericDraft(string field, double value)
+    {
+        if (field == "宽度") MapWidthDraft = value;
+        else if (field == "深度") MapDepthDraft = value;
+        else MapBaseHeightDraft = value;
+    }
 }

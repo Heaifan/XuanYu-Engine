@@ -26,15 +26,15 @@ public sealed class UiD4MapEditorContractTests
     {
         Assert.Contains("MapIdDisplay", Page);                 // 前 8…后 6 显示
         Assert.Contains("ToolTip.Tip=\"{Binding MapIdText}\"", Page); // 完整 ID Tooltip
-        Assert.Contains("CopyMapId_Click", Page);              // 复制按钮
-        Assert.Contains("复制完整 MapId", Page);               // Tooltip 说明
+        Assert.Contains("<xy:XYSelectableText", Page);         // XYUI 内建复制能力
+        Assert.DoesNotContain("<xy:XYIconButton", Page);       // 不再存在外层重复入口
     }
 
     [Fact]
     public void Map_id_never_wraps()
     {
         // MapId 使用 XYUI-1-21 Technical，保留技术文本语义并由组件负责展示策略。
-        Assert.Contains("<xy:XYSelectableText Text=\"{Binding MapIdDisplay}\"", Page);
+        Assert.Contains("Text=\"{Binding MapIdDisplay}\"", Page);
         Assert.Contains("Variant=\"Technical\"", Page);
         Assert.DoesNotContain("TextWrapping=\"NoWrap\"", Page);
         Assert.DoesNotContain("TextTrimming=\"CharacterEllipsis\"", Page);
@@ -82,11 +82,12 @@ public sealed class UiD4MapEditorContractTests
     }
 
     [Fact]
-    public void Map_id_copy_writes_full_untruncated_id()
+    public void Map_id_copy_is_owned_by_xyui_selectable_text()
     {
         var cs = Read("Right/MapPagePanel.axaml.cs");
-        Assert.Contains("SetTextAsync(vm.MapIdText)", cs); // 复制完整 MapId（非显示压缩值）
-        Assert.Contains("复制完整 MapId", Page);
+        Assert.DoesNotContain("SetTextAsync", cs);
+        Assert.Contains("<xy:XYSelectableText", Page);
+        Assert.DoesNotContain("<xy:XYIconButton", Page);
     }
 
     [Fact]
@@ -97,4 +98,3 @@ public sealed class UiD4MapEditorContractTests
                 Assert.DoesNotContain(forbidden, text);
     }
 }
-

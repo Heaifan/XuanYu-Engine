@@ -27,14 +27,15 @@ public sealed class XYUI2R2BContractTests
     }
 
     [Fact]
-    public void Map_inputs_are_xyui_text_fields_and_keep_validation_bindings()
+    public void Map_inputs_are_xyui_number_fields_and_keep_validation_bindings()
     {
         var source = Read("XuanYu.Editor.UI", "Right", "MapFormPanel.axaml");
-        Assert.Equal(3, Count(source, "<xy:XYTextField"));
+        Assert.Equal(3, Count(source, "<xy:XYNumberField"));
+        Assert.DoesNotContain("<xy:XYTextField", source);
         Assert.DoesNotContain("<TextBox", source);
-        Assert.Contains("MapWidthText", source);
-        Assert.Contains("MapDepthText", source);
-        Assert.Contains("MapBaseHeightText", source);
+        Assert.Contains("MapWidthDraft", source);
+        Assert.Contains("MapDepthDraft", source);
+        Assert.Contains("MapBaseHeightDraft", source);
         Assert.Contains("Field_LostFocus", source);
     }
 
@@ -65,12 +66,12 @@ public sealed class XYUI2R2BContractTests
             host.Show(root, 720, 900); root.UpdateLayout();
             return (MapButtons: UiRuntimeTestHost.Descendants<XYButton>(page).Count(),
                 MapIconButtons: UiRuntimeTestHost.Descendants<XYIconButton>(page).Count(),
-                MapFields: UiRuntimeTestHost.Descendants<XYTextField>(page).Count(),
+                MapFields: UiRuntimeTestHost.Descendants<XYNumberField>(page).Count(),
                 DebugButtons: UiRuntimeTestHost.Descendants<XYButton>(tabs).Count());
         });
 
         Assert.Equal(7, counts.MapButtons);
-        Assert.Equal(1, counts.MapIconButtons);
+        Assert.Equal(0, counts.MapIconButtons);
         Assert.Equal(3, counts.MapFields);
         Assert.Equal(4, counts.DebugButtons);
     }

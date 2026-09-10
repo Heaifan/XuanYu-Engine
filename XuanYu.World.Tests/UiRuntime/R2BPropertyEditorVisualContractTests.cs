@@ -18,7 +18,8 @@ public sealed class R2BPropertyEditorVisualContractTests
     public void Map_form_declares_compact_property_geometry()
     {
         var form = Read("XuanYu.Editor.UI", "Right", "MapFormPanel.axaml");
-        Assert.Equal(3, Count(form, "<xy:XYTextField"));
+        Assert.Equal(3, Count(form, "<xy:XYNumberField"));
+        Assert.DoesNotContain("<xy:XYTextField", form);
         Assert.Equal(3, Count(form, "Width=\"{StaticResource Size.Width.128}\""));
         Assert.Equal(6, Count(form, "Height=\"{StaticResource Control.Height.Compact}\""));
         Assert.Equal(4, Count(form, "xycore:XY.Size=\"Compact\""));
@@ -41,7 +42,7 @@ public sealed class R2BPropertyEditorVisualContractTests
         {
             var form = new MapFormPanel { DataContext = new UiVm(null, seedInitialScene: false) };
             host.Show(form, 720, 640); form.UpdateLayout();
-            var fields = UiRuntimeTestHost.Descendants<XYTextField>(form)
+            var fields = UiRuntimeTestHost.Descendants<XYNumberField>(form)
                 .Select(field => (field.Width, field.Height, field.HorizontalAlignment)).ToArray();
             var buttons = UiRuntimeTestHost.Descendants<XYButton>(form)
                 .Select(button => (button.Width, button.Height, button.HorizontalAlignment)).ToArray();
@@ -68,7 +69,7 @@ public sealed class R2BPropertyEditorVisualContractTests
     public void Map_form_business_wiring_is_preserved()
     {
         var form = Read("XuanYu.Editor.UI", "Right", "MapFormPanel.axaml");
-        foreach (var binding in new[] { "MapWidthText", "MapDepthText", "MapBaseHeightText" })
+        foreach (var binding in new[] { "MapWidthDraft", "MapDepthDraft", "MapBaseHeightDraft" })
             Assert.Contains(binding, form);
         Assert.Equal(3, Count(form, "LostFocus=\"Field_LostFocus\""));
         foreach (var command in new[] { "应用地图属性", "撤销地图修改", "重做地图修改" })

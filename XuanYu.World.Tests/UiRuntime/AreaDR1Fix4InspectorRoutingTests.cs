@@ -59,12 +59,12 @@ public sealed class AreaDR1Fix4InspectorRoutingTests
     }
 
     [Fact]
-    public void Map_form_keeps_existing_xyui_draft_bindings()
+    public void Map_form_uses_xyui_numeric_draft_bindings()
     {
         var source = Read("XuanYu.Editor.UI", "Right", "MapFormPanel.axaml");
-        Assert.Equal(3, Count(source, "<xy:XYTextField"));
-        Assert.DoesNotContain("<xy:XYNumberField", source);
-        foreach (var property in new[] { "MapWidthText", "MapDepthText", "MapBaseHeightText" })
+        Assert.Equal(3, Count(source, "<xy:XYNumberField"));
+        Assert.DoesNotContain("<xy:XYTextField", source);
+        foreach (var property in new[] { "MapWidthDraft", "MapDepthDraft", "MapBaseHeightDraft" })
             Assert.Contains(property, source);
     }
 

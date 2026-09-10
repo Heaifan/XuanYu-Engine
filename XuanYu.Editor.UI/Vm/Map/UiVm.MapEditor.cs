@@ -31,9 +31,9 @@ public sealed partial class UiVm
     // D5 纠偏：字段级校验（每字段独立错误）+ 提交定位第一处错误 + 校验失败不清空输入。
     public void ApplyMapProperties()
     {
-        var widthError = ValidateMapField("宽度", MapWidthText, out var width);
-        var depthError = ValidateMapField("深度", MapDepthText, out var depth);
-        var heightError = ValidateMapField("基础高度", MapBaseHeightText, out var height);
+        var widthError = ValidateMapField("宽度", MapWidthText, out _);
+        var depthError = ValidateMapField("深度", MapDepthText, out _);
+        var heightError = ValidateMapField("基础高度", MapBaseHeightText, out _);
         SetFieldError("宽度", widthError);
         SetFieldError("深度", depthError);
         SetFieldError("基础高度", heightError);
@@ -49,9 +49,9 @@ public sealed partial class UiVm
 
         var before = $"{MapSession.CurrentMap.SizeMeters.Width:0.####}×{MapSession.CurrentMap.SizeMeters.Depth:0.####}";
         LogMapPropertiesStarted(MapSession.CurrentMap.MapId.Value, before,
-            MapSession.CurrentMap.Surface.BaseHeightMeters, $"{width:0.####}×{depth:0.####}", height,
+            MapSession.CurrentMap.Surface.BaseHeightMeters, $"{MapWidthDraft:0.####}×{MapDepthDraft:0.####}", MapBaseHeightDraft,
             MapSession.CurrentStateId, MapSession.ChangeSequence);
-        var result = MapSession.UpdateMapProperties(width, depth, height);
+        var result = MapSession.UpdateMapProperties(MapWidthDraft, MapDepthDraft, MapBaseHeightDraft);
         if (!result.IsSuccess)
         {
             LogMapPropertiesFailed(result.Error?.Code ?? "Unknown", result.Error?.Message ?? "",

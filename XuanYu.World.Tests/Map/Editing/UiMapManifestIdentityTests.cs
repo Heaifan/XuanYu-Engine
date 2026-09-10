@@ -48,14 +48,15 @@ public sealed class UiMapManifestIdentityTests : IDisposable
     }
 
     [Fact]
-    public void Id_row_reserves_copy_button_width()
+    public void Id_row_uses_selectable_text_builtin_copy_only()
     {
         var path = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Right", "MapPagePanel.axaml");
         var text = File.ReadAllText(path);
 
-        Assert.Contains("ColumnDefinitions=\"*,Auto\"", text);
-        Assert.Contains("Grid.Column=\"1\" Classes=\"copyBtn\"", text);
+        Assert.Contains("x:Name=\"MapIdRow\"", text);
+        Assert.Contains("<xy:XYSelectableText Grid.Column=\"1\"", text);
+        Assert.DoesNotContain("<xy:XYIconButton", text);
         Assert.Contains("ToolTip.Tip=\"{Binding MapIdText}\"", text);
     }
 
