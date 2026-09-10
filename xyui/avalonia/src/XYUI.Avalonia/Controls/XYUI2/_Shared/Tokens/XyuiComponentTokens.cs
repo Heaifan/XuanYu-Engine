@@ -36,6 +36,9 @@ public static class XyuiComponentTokens
     public const double NavigationRailItemHeight = 40;
     public const double TabHeight = 34;
     public const double TabPaddingX = 10;
+    public const double TabIconTrackWidth = 20;
+    public const double TabModifiedTrackWidth = 12;
+    public const double TabCloseHitTargetSize = 28;
 
     public static ResourceDictionary CreateResources() => new()
     {

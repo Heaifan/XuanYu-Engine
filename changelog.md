@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.60-rz · AREA-D-R2-FIX5（2026-09-10 19:17:56 +08:00）
+- 目标：修复 XYTab Content sizing 的 optional slot 语义，并将 Engine 地图/区域固定页签明确收口为不可关闭。
+- XYUI canonical：XYTab 的图标、修改标记、关闭命中区改为按状态使用 0 或统一运行时 Token；可关闭页签保留关闭命中区，永久页签不产生关闭布局/可访问性槽位；XYTabs 的 Auto/Star sizing 合同保持不变。
+- Editor integration：MapTabs 的地图基础/地图环境/数据集与 AuthoringTabs 的区域面/道路/地图标记显式 `IsClosable="False"`；Left.ContentTabs 与 EditorRightTabs.SideTabs 保持既有永久页签和全部页签下拉行为。
+- 验证：方案构建 0 警告/0 错误；Core 339/339；WarCore 22/22；XYUI 607 通过、1 个既有 BottomNavigation 测试失败；World 1480 通过、1 个既有用户延期 Unsaved Dialog 词文测试失败；FIX5 XYUI sizing 8/8、Tabs 过滤 16/16、Editor integration 1/1；ARCH-A、JSON/XML、5+100、`git diff --check` PASS。
+- Hash：起始提交 `9289bb0c915c08ddc5e7154835ec5ef4b95bfed4`。
+- 状态：`AREA-D-R2-FIX5 / XYTAB CONTENT PURITY + EDITOR INTEGRATION / READY FOR USER VISUAL + INTERACTION ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.59-rz · AREA-D-R2-FIX4（2026-09-10 18:06:54 +08:00）
 - 目标：以实战反馈反哺 XYUI canonical，并收口 Region Inspector / LayerDock 结构。
 - XYUI：新增 `XyuiTabSizingMode`（默认 Equal，Engine Left/Right/Map/Region authoring 使用 Content）；保留 XYTabBar 的滚动、翻页、溢出与新增职责。共享 Button Chrome 修正 XYButton、XYToggleButton、XYIconButton 的实际内容居中；XYBadge Accent 改用 `XY.Text.Primary`，补齐禁用态视觉；Gallery 与运行时契约同步。

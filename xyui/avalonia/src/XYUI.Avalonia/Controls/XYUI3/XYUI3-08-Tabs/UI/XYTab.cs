@@ -37,9 +37,12 @@ public sealed partial class XYTab : Border
     void Build()
     {
         Classes.Set("xyui-tab-selected", IsSelected);
-        var close = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Clear, Size = XyuiIconSize.Tiny }, Classes = { "xyui-tab-close" }, IsHitTestVisible = IsClosable && IsSelected, Opacity = IsClosable && IsSelected ? 1 : 0 };
+        var close = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Clear, Size = XyuiIconSize.Tiny }, Classes = { "xyui-tab-close" }, IsVisible = IsClosable, IsHitTestVisible = IsClosable && IsSelected, Opacity = IsClosable && IsSelected ? 1 : 0 };
         close.AddHandler(InputElement.PointerPressedEvent, OnClosePointerPressed, RoutingStrategies.Tunnel); close.KeyDown += OnCloseKeyDown;
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("20,*,12,28,Auto") };
+        var iconTrack = Icon is null ? 0 : XyuiComponentTokens.TabIconTrackWidth;
+        var modifiedTrack = IsModified ? XyuiComponentTokens.TabModifiedTrackWidth : 0;
+        var closeTrack = IsClosable ? XyuiComponentTokens.TabCloseHitTargetSize : 0;
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions($"{iconTrack},*,{modifiedTrack},{closeTrack},Auto") };
         grid.Children.Add(new XYIcon { Icon = Icon ?? XyuiVectorIcon.Info, Size = XyuiIconSize.Tiny, IsVisible = Icon is not null, Classes = { "xyui-tab-icon" } });
         grid.Children.Add(new TextBlock { Text = Label, Classes = { "xyui-tab-label" }, VerticalAlignment = VerticalAlignment.Center, [Grid.ColumnProperty] = 1 });
         grid.Children.Add(new Border { Classes = { "xyui-tab-modified" }, IsVisible = IsModified, VerticalAlignment = VerticalAlignment.Center, [Grid.ColumnProperty] = 2 });

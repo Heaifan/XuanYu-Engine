@@ -18,9 +18,9 @@
                  Grid.Row="0"
                  Margin="0"
                  SelectionChanged="MapTabs_SelectionChanged">
-      <xy:XYTab Id="base" Label="地图基础" ShowSelectedAccent="False"/>
-      <xy:XYTab Id="environment" Label="地图环境" ShowSelectedAccent="False"/>
-      <xy:XYTab Id="dataset" Label="数据集" ShowSelectedAccent="False"/>
+      <xy:XYTab Id="base" Label="地图基础" IsClosable="False" ShowSelectedAccent="False"/>
+      <xy:XYTab Id="environment" Label="地图环境" IsClosable="False" ShowSelectedAccent="False"/>
+      <xy:XYTab Id="dataset" Label="数据集" IsClosable="False" ShowSelectedAccent="False"/>
     </xy:XYTabBar>
     <Grid Grid.Row="1">
       <ScrollViewer x:Name="MapPageHost" VerticalScrollBarVisibility="Auto">
