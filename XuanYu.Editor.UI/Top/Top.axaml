@@ -18,7 +18,8 @@
                                  HorizontalAlignment="Right"
                                  VerticalAlignment="Center"/>
     </Grid>
-    <ScrollViewer Grid.Row="1"
+    <ScrollViewer x:Name="ContextToolScrollHost"
+                  Grid.Row="1"
                   HorizontalScrollBarVisibility="Hidden"
                   VerticalScrollBarVisibility="Disabled">
       <StackPanel Orientation="Horizontal"

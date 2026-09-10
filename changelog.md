@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.71-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F4（2026-09-11 01:55:00 +08:00）
+- 目标：恢复 Top 第二行隐藏滚动条后的鼠标横向滚动能力。
+- 变化：为隐藏滚动条的 Top 第二行 `ScrollViewer` 接入滚轮隧道路由，将滚轮增量转换为水平偏移并消费事件。
+- 验证：Context Toolbar 合同/运行时 6/6；完整门禁结果见 Git closeout。
+- Hash：起始提交 `d8c2b302`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉验收。
+
 ## v0.2.28.70-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F3（2026-09-11 01:40:00 +08:00）
 - 目标：隐藏 Top 第二行滚动条 UI，同时保留鼠标滚动切换能力。
 - 变化：恢复水平 `ScrollViewer`，将水平滚动条设为 `Hidden`，取消工具组换行。
