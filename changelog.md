@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.70-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F3（2026-09-11 01:40:00 +08:00）
+- 目标：隐藏 Top 第二行滚动条 UI，同时保留鼠标滚动切换能力。
+- 变化：恢复水平 `ScrollViewer`，将水平滚动条设为 `Hidden`，取消工具组换行。
+- 验证：Context Toolbar 合同 4/4、运行时 1/1；其余正式门禁结果见 Git closeout。
+- Hash：起始提交 `cbb47866`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉验收。
+
 ## v0.2.28.69-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F2（2026-09-11 01:25:14 +08:00）
 - 目标：移除 Top 第二行导致截图中出现的灰色水平滚动条。
 - 变化：Top 第二行由水平 `ScrollViewer` 改为 `WrapPanel`，工具组可换行显示，不再创建水平滚动宿主。

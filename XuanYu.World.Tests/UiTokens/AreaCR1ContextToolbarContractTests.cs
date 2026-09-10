@@ -46,10 +46,11 @@ public sealed class AreaCR1ContextToolbarContractTests
     }
 
     [Fact]
-    public void Top_context_row_has_no_horizontal_scroll_host()
+    public void Top_context_row_keeps_hidden_horizontal_scroll_host()
     {
         var top = Read("Top/Top.axaml");
-        Assert.DoesNotContain("<ScrollViewer", top);
-        Assert.Contains("<WrapPanel", top);
+        Assert.Contains("<ScrollViewer Grid.Row=\"1\"", top);
+        Assert.Contains("HorizontalScrollBarVisibility=\"Hidden\"", top);
+        Assert.DoesNotContain("<WrapPanel", top);
     }
 }

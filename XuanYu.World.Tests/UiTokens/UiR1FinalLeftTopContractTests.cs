@@ -70,10 +70,10 @@ public sealed class UiR1FinalLeftTopContractTests
         Assert.Contains("<local:WorkspaceSelector Grid.Column=\"0\"", top);
         Assert.Contains("<local:FileModule Grid.Column=\"1\"", top);
         Assert.Contains("<local:RuntimeStatusModule Grid.Column=\"3\"", top);
-        Assert.Contains("<local:EditToolsModule Margin=\"0,0,8,8\"/>", top);
-        Assert.Contains("<local:ContextToolBar Margin=\"0,0,8,8\"/>", top);
-        Assert.Contains("<local:ViewModule Margin=\"0,0,8,8\"/>", top);
-        Assert.Contains("<local:SnapModule Margin=\"0,0,8,8\"/>", top);
+        Assert.Contains("<local:EditToolsModule/>", top);
+        Assert.Contains("<local:ContextToolBar/>", top);
+        Assert.Contains("<local:ViewModule/>", top);
+        Assert.Contains("<local:SnapModule/>", top);
         Assert.DoesNotContain("IsVisible", top);
         Assert.Contains("IsEnabled=\"{Binding IsEditMode}\"", tools);
         Assert.Contains("IsEnabled=\"False\"", tools);

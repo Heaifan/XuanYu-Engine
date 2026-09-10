@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
 using XuanYu.Editor.UI;
 
@@ -26,13 +27,16 @@ public sealed class AreaCR1ContextToolbarRuntimeTests
             var mapEdit = root.IsEffectivelyVisible;
             vm.SwitchWorkspaceCommand.Execute("RegionEditor");
             Dispatcher.UIThread.RunJobs(); top.UpdateLayout();
-            var scrollHosts = UiRuntimeTestHost.Descendants<ScrollViewer>(top).Count();
-            return (startup, mapEdit, regionEdit: root.IsEffectivelyVisible, scrollHosts);
+            var scroll = UiRuntimeTestHost.Descendants<ScrollViewer>(top).Single();
+            return (startup, mapEdit, regionEdit: root.IsEffectivelyVisible,
+                scrollHosts: UiRuntimeTestHost.Descendants<ScrollViewer>(top).Count(),
+                horizontalBar: scroll.HorizontalScrollBarVisibility);
         });
 
         Assert.False(state.startup);
         Assert.False(state.mapEdit);
         Assert.True(state.regionEdit);
-        Assert.Equal(0, state.scrollHosts);
+        Assert.Equal(1, state.scrollHosts);
+        Assert.Equal(ScrollBarVisibility.Hidden, state.horizontalBar);
     }
 }
