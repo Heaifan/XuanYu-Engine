@@ -56,18 +56,17 @@ public sealed class EditorModeUiCompositionTests
     public void Region_context_shows_the_current_drawing_target_and_old_right_map_tab_is_retired()
     {
         var rightShell = Read("XuanYu.Editor.UI", "Right", "Right.axaml");
-        var inspector = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
-        var region = Read("XuanYu.Editor.UI", "Left", "RegionPanel.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml");
+        var inspector = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
+        var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
+        var toolbar = Read("XuanYu.Editor.UI", "Top", "ContextToolBar.axaml");
         Assert.DoesNotContain("RegionalAuthoringPanel", rightShell);
-        Assert.Contains("<local:RegionalAuthoringPanel", inspector);
+        Assert.DoesNotContain("RegionalAuthoringPanel", inspector);
         Assert.Equal(1, Count(inspector, "<ScrollViewer"));
-        Assert.Contains("RegionPanel", Read("XuanYu.Editor.UI", "Right", "RegionalAuthoringPanel.axaml"));
-        Assert.Contains("当前绘制目标", region);
-        Assert.Contains("RegionDrawingTargetName", region);
-        Assert.Contains("RegionDrawingTargetStatus", region);
-        Assert.Contains("CanUndoRegionDrawingVertex", region);
-        Assert.DoesNotContain("Text=\"绘制区域\"", Read("XuanYu.Editor.UI", "Top", "Top.axaml"));
+        Assert.Contains("<local:ContextToolBar", top);
+        Assert.Contains("区域面", toolbar);
+        Assert.Contains("CanUndoRegionDrawingVertex", toolbar);
+        Assert.Contains("CanCompleteRegionDrawing", toolbar);
         Assert.DoesNotContain("Header=\"地图编辑器\"", right);
     }
 

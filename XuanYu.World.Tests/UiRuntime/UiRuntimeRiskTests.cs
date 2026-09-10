@@ -23,7 +23,8 @@ public sealed class UiRuntimeRiskTests
             var top = new Top { DataContext = vm };
             host.Show(top, 1200, 180);
             var toggle = UiRuntimeTestHost.Descendants<ToggleButton>(top)
-                .Single(x => x.IsChecked == true);
+                .Single(x => x.IsChecked == true &&
+                    UiRuntimeTestHost.Descendants<TextBlock>(x).Any(text => text.Text == "选择"));
             toggle.IsChecked = true;
             top.UpdateLayout();
             var text = UiRuntimeTestHost.Descendants<TextBlock>(toggle).Single(x => x.Text == "选择");

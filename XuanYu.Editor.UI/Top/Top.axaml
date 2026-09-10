@@ -25,6 +25,7 @@
                   Spacing="8"
                   VerticalAlignment="Center">
         <local:EditToolsModule/>
+        <local:ContextToolBar/>
         <local:ViewModule/>
         <local:SnapModule/>
       </StackPanel>

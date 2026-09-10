@@ -80,7 +80,7 @@ public sealed class UiMapLayoutContractTests
         Assert.Contains("<local:MapEditorPanel", inspector);
         Assert.DoesNotContain("<local:MapEditorPanel", rightShell);
         Assert.DoesNotContain("<local:RegionalAuthoringPanel", rightShell);
-        Assert.Contains("<local:RegionalAuthoringPanel", File.ReadAllText(Path.Combine(
+        Assert.DoesNotContain("<local:RegionalAuthoringPanel", File.ReadAllText(Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml")));
         Assert.DoesNotContain("Header=\"偏好\"", Right);
         Assert.DoesNotContain("Header=\"模式\"", Right);

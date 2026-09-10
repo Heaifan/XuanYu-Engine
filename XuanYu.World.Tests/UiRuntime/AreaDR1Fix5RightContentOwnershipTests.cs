@@ -84,7 +84,7 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
         return new(
             vm.IsEntityInspector,
             Find<MapEditorPanel>(right, "MapWorkspace").IsEffectivelyVisible,
-            Find<RegionalAuthoringPanel>(right, "RegionWorkspace").IsEffectivelyVisible,
+            false,
             Find<EditorLayerDock>(right, "LayerWorkspace").IsEffectivelyVisible,
             UiRuntimeTestHost.Descendants<EntityInspectorPanel>(right).Count(x => x.IsEffectivelyVisible),
             vm.ActiveTool);

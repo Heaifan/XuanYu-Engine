@@ -34,13 +34,13 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
         Assert.Equal("选择", vm.ActiveTool);
 
         using var host = new UiRuntimeTestHost(_fixture);
-        Right right = null!;
+        Top top = null!;
         var enabled = host.Run(() =>
         {
-            right = new Right { DataContext = vm };
-            host.Show(right, 360, 620);
-            var button = UiRuntimeTestHost.Descendants<Button>(right).Single(item =>
-                UiRuntimeTestHost.Descendants<TextBlock>(item).Any(text => text.Text == "绘制区域"));
+            top = new Top { DataContext = vm };
+            host.Show(top, 900, 160);
+            var button = UiRuntimeTestHost.Descendants<Button>(top).Single(item =>
+                UiRuntimeTestHost.Descendants<TextBlock>(item).Any(text => text.Text == "开始绘制"));
             var state = button.IsVisible && button.IsEnabled;
             button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             return state;
@@ -50,16 +50,16 @@ public sealed class RegionDrawingF1ActivationRuntimeTests : IDisposable
         for (var i = 0; i < 80 && !host.Run(() => vm.IsRegionDrawingTool); i++) await Task.Delay(25);
         var result = host.Run(() =>
         {
-            right.UpdateLayout();
-            var button = UiRuntimeTestHost.Descendants<Button>(right).Single(item =>
-                UiRuntimeTestHost.Descendants<TextBlock>(item).Any(text => text.Text == "绘制区域"));
+            top.UpdateLayout();
+            var button = UiRuntimeTestHost.Descendants<Button>(top).Single(item =>
+                UiRuntimeTestHost.Descendants<TextBlock>(item).Any(text => text.Text == "开始绘制"));
             var viewport = new ViewportState(0, 0, 800, 600, 800, 600, 1, 1);
             var hit = FindHit(vm, viewport);
             var handled = vm.RegionDrawingPointerPressed(hit.X, hit.Y, viewport);
             return (vm.IsRegionDrawingTool, button.IsEnabled, handled, vm.RegionDrawingDraftVertexCount);
         });
 
-        Assert.True(result.IsRegionDrawingTool);
+        Assert.True(result.IsRegionDrawingTool, $"active={vm.ActiveTool}, enabled={result.IsEnabled}, handled={result.handled}");
         Assert.True(result.IsEnabled);
         Assert.True(result.handled);
         Assert.Equal(1, result.RegionDrawingDraftVertexCount);

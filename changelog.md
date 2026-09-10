@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.67-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1（2026-09-11 00:58:34 +08:00）
+- 目标：建立 Top 第二行 Context Tool Bar，迁出 Region / Road / Marker 工具入口与 Region/Road Authoring 操作，使 Right Inspector 仅承担属性内容。
+- 变化：新增 `ContextToolBar`，复用 `UiVm` 现有 Tool / Authoring Mode / Drawing State / Command；Inspector 移除 `RegionalAuthoringPanel`，保留 `MapEditorPanel`、XYPager 和唯一属性滚动宿主；同步结构回归合同与 file-tree。
+- 验证：方案构建 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1489/1489、XYUI 617/617；ARCH-A 与 5+100 通过；AXAML XML 静态检查与 `git diff --check` 通过。
+- Hash：起始提交 `2837acd3`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉与交互验收。
+
 ## v0.2.28.66-rz · AREA-D-R3-INSPECTOR-PAGER（2026-09-11 00:33:37 +08:00）
 - 目标：将右侧地图/区域编辑导航切换为分页 Inspector，并让图层 Dock 支持自适应折叠。
 - 变化：新增 XYPager、XYInspectorSection、XYCollapsiblePane；地图页增加基础/环境/显示/数据/高级分页；图层区改为可折叠 Pane；同步运行时与源码 UI 合同测试。

@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
+             x:Class="XuanYu.Editor.UI.ContextToolBar"
+             x:DataType="local:UiVm">
+  <Border BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
+          CornerRadius="{StaticResource Radius.Standard}" Padding="8,4">
+    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+      <xy:XYCaption Text="地图要素" VerticalAlignment="Center"/>
+      <xy:XYToggleButton IsChecked="{Binding IsRegionSurfaceAuthoringMode, Mode=OneWay}"
+                         Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="区域面"
+                         IsEnabled="{Binding IsRegionEditMode}" ToolTip.Tip="区域面工具">
+        <TextBlock Text="区域面"/>
+      </xy:XYToggleButton>
+      <xy:XYToggleButton IsChecked="{Binding IsRoadAuthoringMode, Mode=OneWay}"
+                         Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="道路"
+                         IsEnabled="{Binding IsRegionEditMode}" ToolTip.Tip="道路工具">
+        <TextBlock Text="道路"/>
+      </xy:XYToggleButton>
+      <xy:XYToggleButton IsChecked="{Binding IsMarkerAuthoringMode, Mode=OneWay}"
+                         Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="地图标记"
+                         IsEnabled="{Binding IsRegionEditMode}" ToolTip.Tip="地图标记工具">
+        <TextBlock Text="地图标记"/>
+      </xy:XYToggleButton>
+      <xy:XYSeparator Variant="Section" IsVisible="{Binding IsRegionEditMode}"/>
+      <StackPanel IsVisible="{Binding IsRegionSurfaceAuthoringMode}" Orientation="Horizontal" Spacing="4">
+        <xy:XYButton Content="开始绘制" Click="BeginRegionDrawing_Click"
+                     IsEnabled="{Binding CanRequestRegionDrawing}"/>
+      </StackPanel>
+      <StackPanel IsVisible="{Binding IsRoadAuthoringMode}" Orientation="Horizontal" Spacing="4">
+        <xy:XYButton Content="绘制道路" Click="BeginRoadDrawing_Click"
+                     IsEnabled="{Binding CanRequestRoadDrawing}"/>
+      </StackPanel>
+      <StackPanel IsVisible="{Binding IsMarkerAuthoringMode}" Orientation="Horizontal" Spacing="4">
+        <xy:XYButton Content="放置地图标记" Click="BeginMarkerPlacement_Click"
+                     IsEnabled="{Binding CanRequestMarkerPlacement}"/>
+      </StackPanel>
+      <StackPanel IsVisible="{Binding IsRegionDrawingTool}" Orientation="Horizontal" Spacing="4">
+        <xy:XYCaption Text="区域绘制中"/>
+        <xy:XYText Text="{Binding RegionDrawingDraftVertexCount}"/>
+        <xy:XYButton Content="撤销顶点" Click="UndoRegionDrawingVertex_Click"
+                     IsEnabled="{Binding CanUndoRegionDrawingVertex}"/>
+        <xy:XYButton Content="完成闭合" Click="CompleteRegionDrawing_Click"
+                     IsEnabled="{Binding CanCompleteRegionDrawing}"/>
+        <xy:XYButton Content="取消" Click="CancelRegionDrawing_Click"
+                     IsEnabled="{Binding CanCancelRegionDrawing}"/>
+      </StackPanel>
+      <StackPanel IsVisible="{Binding IsRoadDrawingTool}" Orientation="Horizontal" Spacing="4">
+        <xy:XYCaption Text="道路绘制中"/>
+        <xy:XYText Text="{Binding RoadDrawingDraftPointCount}"/>
+        <xy:XYButton Content="撤销节点" Click="UndoRoadDrawingVertex_Click"
+                     IsEnabled="{Binding CanUndoRoadDrawingVertex}"/>
+        <xy:XYButton Content="完成道路" Click="CompleteRoadDrawing_Click"
+                     IsEnabled="{Binding CanCompleteRoadDrawing}"/>
+        <xy:XYButton Content="取消" Click="CancelRoadDrawing_Click"
+                     IsEnabled="{Binding CanCancelRoadDrawing}"/>
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>
