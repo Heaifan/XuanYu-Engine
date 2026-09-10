@@ -6,6 +6,7 @@
              x:DataType="local:UiVm">
   <ListBox x:Name="HierarchyList"
            Classes="treeList"
+           AutoScrollToSelectedItem="False"
            ItemsSource="{Binding HierarchyItems}"
            SelectedItem="{Binding SelectedHierarchyItem, Mode=TwoWay}"
            KeyDown="SelectionList_KeyDown">

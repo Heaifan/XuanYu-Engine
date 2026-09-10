@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.63-rz · XYENGINE-NAV-SCROLL-AUTHORITY-R1（2026-09-10 21:39:13 +08:00）
+- 目标：将 Gallery 已验证的导航滚动权修正实装到 XYengine 编辑器的项目树与层级树。
+- 修正：`ProjectList` 与 `HierarchyList` 显式关闭 `AutoScrollToSelectedItem`，保留两个树控件各自内部滚动宿主和滚轮交互；未改 XYUI canonical 控件或延期中的未保存对话框。
+- 回归：新增真实 Engine Headless 测试，覆盖左侧项目树与右侧层级树运行时属性；先红灯 2/2，修正后绿灯 2/2。
+- 验证：Engine 定向回归 2/2；此前 Gallery 定向回归 3/3、相关回归 11/11；此前方案构建 0 警告/0 错误；ARCH-A 与 `git diff --check` 通过；World 全量仍有 1 个既有用户延期 Unsaved Dialog 词文测试失败。
+- Hash：起始提交 `6d9f0608744721d68e3444b32b45e7bd5f78eb06`。
+- 状态：`XYENGINE-NAV-SCROLL-AUTHORITY-R1 / READY FOR USER VISUAL + WHEEL ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.62-rz · XYUI-GALLERY-NAV-SCROLL-JUMP-FIX-R1（2026-09-10 21:25:02 +08:00）
 - 目标：收口 Gallery 左侧导航的单一 Scroll Authority，消除程序化选中导航项时外层滚动位置被隐式改写的问题。
 - 修正：Gallery 左侧唯一外层 ScrollViewer 命名为 `NavigationScrollHost`；`nav-tree` 与 `nav-foundation` 的 ListBox 显式关闭 `AutoScrollToSelectedItem`；未改 XYTabs、右侧文档滚动或编辑器业务区。
