@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.65-rz · XYENGINE-NAV-LAYOUT-STABILITY-FIX-R2（2026-09-10 23:22:02 +08:00）
+- 目标：将已通过真机验收的 Gallery 导航测量稳定性修正实装到 XuanYu Engine 项目树与层级树。
+- 修正：为 `ProjectList` 与 `HierarchyList` 增加显式外层滚动宿主，并以内联非滚动 `StackPanel` ItemsHost 替换默认 ListBox 模板；保留选择、键盘、hover、重命名和树行交互。
+- 限制：未修改 XYUI canonical、滚轮事件处理、ScrollOffset 补偿或 FIX-R2 之外的行为。
+- 回归：新增 Engine Headless 合同，确认两棵树各自只有一个显式 ScrollViewer，ListBox 内部不再包含 ScrollViewer；定向回归 `2/2`。
+- 验证：方案构建 0 警告/0 错误；XYUI.Avalonia.Tests `614/614`、Core `339/339`、WarCore `22/22`、World `1485/1485`；ARCH-A 与 `git diff --check` 通过。
+- Hash：起始提交 `d1e6a34b`。
+- 状态：`XYENGINE-NAV-LAYOUT-STABILITY-FIX-R2 / READY FOR USER VISUAL + WHEEL ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.64-rz · XYUI-GALLERY-NAV-LAYOUT-STABILITY-FIX-R2（2026-09-10 23:07:27 +08:00）
 - 目标：收口 Gallery 左侧五个导航 ListBox 的内部测量/虚拟化导致的外层 Extent 跳变。
 - 根因证据：真实 Windows F1 时间线确认 XYUI-3 导航高度 `651.429 → 1285.714`、已实现容器 `1 → 6`，同步推动外层 Extent `2885.714 → 3520`（`+634.286 DIP`）；内部 `PART_ScrollViewer.Offset` 未变化。
