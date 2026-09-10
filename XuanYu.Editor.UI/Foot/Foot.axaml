@@ -1,87 +1,39 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:XuanYu.Editor.UI"
-             xmlns:av="using:Avalonia.Controls"
-             xmlns:xy="using:XYUI.Avalonia.Controls"
-             x:Class="XuanYu.Editor.UI.Foot"
-             x:DataType="local:UiVm">
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" xmlns:av="using:Avalonia.Controls" xmlns:xy="using:XYUI.Avalonia.Controls" x:Class="XuanYu.Editor.UI.Foot" x:DataType="local:UiVm">
   <UserControl.Styles>
     <StyleInclude Source="avares://XuanYu.Editor.UI/Foot/Foot.States.axaml"/>
-    <Style Selector="Button.logSummary"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="6,2"/><Setter Property="Margin" Value="0"/><Setter Property="HorizontalContentAlignment" Value="Left"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="CornerRadius" Value="4"/></Style>
-    <Style Selector="Button.logFilter"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="8,3"/><Setter Property="Margin" Value="0"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Secondary}"/></Style>
-    <Style Selector="Button.logFilter.selected"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="Foreground" Value="{StaticResource Color.Accent}"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+    <Style Selector="xy|XYToggleButton.logFilter"><Setter Property="MinWidth" Value="0"/><Setter Property="Padding" Value="8,3"/><Setter Property="Margin" Value="0"/></Style>
     <Style Selector="ListBox.logList ListBoxItem"><Setter Property="MinHeight" Value="28"/><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,1"/></Style>
-    <Style Selector="ListBox.logList ListBoxItem:selected"><Setter Property="Background" Value="{StaticResource Color.Selection.Bg}"/><Setter Property="Foreground" Value="{StaticResource Color.Text.Primary}"/></Style>
   </UserControl.Styles>
-
   <Grid RowDefinitions="Auto,*">
-    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16" MinHeight="28">
-      <Button Classes="legacyControl logSummary" Command="{Binding ToggleLogCommand}" AutomationProperties.Name="展开或折叠日志">
-        <xy:XYTruncatedText Mode="End" Text="{Binding LogSummary}" VerticalAlignment="Center"/>
-      </Button>
-      <xy:XYBadge Grid.Column="1" Text="{Binding FooterMode}" VerticalAlignment="Center"/>
-      <local:NotificationBar Grid.Column="2"/>
+    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="6" MinHeight="32" AutomationProperties.Name="展开或折叠日志">
+      <xy:XYHeading Text="日志" Variant="PanelTitle"/><xy:XYStatusBadge Grid.Column="1" Text="正常"/>
+      <xy:XYToggleButton Grid.Column="2" Classes="logFilter" IsChecked="{Binding IsLogFilterAll}" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部" Content="{Binding AllCount, StringFormat='全部 {0}'}" AutomationProperties.Name="筛选全部日志"/>
+      <xy:XYToggleButton Grid.Column="3" Classes="logFilter" IsChecked="{Binding IsLogFilterInfo}" Command="{Binding SelectLogFilterCommand}" CommandParameter="信息" Content="{Binding InfoCount, StringFormat='信息 {0}'}" AutomationProperties.Name="筛选信息日志"/>
+      <xy:XYToggleButton Grid.Column="4" Classes="logFilter" IsChecked="{Binding IsLogFilterWarning}" Command="{Binding SelectLogFilterCommand}" CommandParameter="警告" Content="{Binding WarningCount, StringFormat='警告 {0}'}" AutomationProperties.Name="筛选警告日志"/>
+      <xy:XYToggleButton Grid.Column="5" Classes="logFilter" IsChecked="{Binding IsLogFilterError}" Command="{Binding SelectLogFilterCommand}" CommandParameter="错误" Content="{Binding ErrorCount, StringFormat='错误 {0}'}" AutomationProperties.Name="筛选错误日志"/>
+      <xy:XYButton x:Name="SourceFilterButton" Grid.Column="6" Content="{Binding LogSourceFilterText}" Click="SourceFilter_Click" AutomationProperties.Name="打开日志来源筛选"/>
+      <Popup x:Name="SourceFilterPopup" Placement="Bottom" IsLightDismissEnabled="True"><xy:XYMenu x:Name="SourceMenu"/></Popup>
+      <xy:XYSearchField x:Name="LogSearch" Grid.Column="7" Text="{Binding LogSearchText, Mode=TwoWay}" Placeholder="搜索日志…" MinWidth="150" Width="220" MaxWidth="280" AutomationProperties.Name="搜索日志"/>
+      <xy:XYIconButton x:Name="ScrollToBottomButton" Grid.Column="8" IsVisible="False" Icon="ChevronDown" Click="ScrollToBottom_Click" ToolTip.Tip="回到底部" AutomationProperties.Name="回到底部"/>
+      <xy:XYIconButton Grid.Column="9" Icon="Clear" Command="{Binding ClearLogsCommand}" ToolTip.Tip="清空日志" AutomationProperties.Name="清空日志"/>
+      <xy:XYToggleButton Grid.Column="10" IsChecked="{Binding IsLogDetailsOpen}" Content="详情" ToolTip.Tip="显示或隐藏日志详情" AutomationProperties.Name="显示或隐藏日志详情"/>
     </Grid>
-
-    <Border Grid.Row="1" IsVisible="{Binding IsLogOpen}" MinHeight="0" Margin="0,8,0,0" BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1" CornerRadius="6" Background="{StaticResource Color.Bg.Panel}" Padding="8">
-      <Grid RowDefinitions="Auto,Auto,*">
-        <Grid ColumnDefinitions="*,220" Margin="0,0,0,6">
-          <StackPanel Orientation="Horizontal" Spacing="4">
-            <Button Classes="legacyControl logFilter" Classes.selected="{Binding IsLogFilterAll}" Content="全部" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部" AutomationProperties.Name="筛选全部日志"/><Button Classes="legacyControl logFilter" Classes.selected="{Binding IsLogFilterInfo}" Content="信息" Command="{Binding SelectLogFilterCommand}" CommandParameter="信息" AutomationProperties.Name="筛选信息日志"/><Button Classes="legacyControl logFilter" Classes.selected="{Binding IsLogFilterWarning}" Content="警告" Command="{Binding SelectLogFilterCommand}" CommandParameter="警告" AutomationProperties.Name="筛选警告日志"/><Button Classes="legacyControl logFilter" Classes.selected="{Binding IsLogFilterError}" Content="错误" Command="{Binding SelectLogFilterCommand}" CommandParameter="错误" AutomationProperties.Name="筛选错误日志"/>
-            <Button Classes="legacyControl logFilter" Classes.selected="{Binding IsLogFilterBuild}" Content="构建" Command="{Binding SelectLogFilterCommand}" CommandParameter="构建" AutomationProperties.Name="筛选构建日志"/><Button Classes="legacyControl logFilter" Classes.selected="{Binding IsLogFilterTask}" Content="任务" Command="{Binding SelectLogFilterCommand}" CommandParameter="任务" AutomationProperties.Name="筛选任务日志"/><Button Classes="legacyControl logFilter" Classes.selected="{Binding IsLogFilterInput}" Content="输入" Command="{Binding SelectLogFilterCommand}" CommandParameter="输入" AutomationProperties.Name="筛选输入日志"/><Button Classes="legacyControl logFilter" Classes.selected="{Binding IsLogFilterRender}" Content="渲染" Command="{Binding SelectLogFilterCommand}" CommandParameter="渲染" AutomationProperties.Name="筛选渲染日志"/>
-          </StackPanel>
-          <Border Grid.Column="1" Classes="chrome" Padding="8,4">
-            <Grid ColumnDefinitions="18,*">
-              <xy:XYIcon Icon="Search" Size="Small" VerticalAlignment="Center"/>
-              <xy:XYCaption Grid.Column="1" Text="搜索日志..." VerticalAlignment="Center"/>
-            </Grid>
-          </Border>
-        </Grid>
-
-        <Grid Grid.Row="1" ColumnDefinitions="4,72,56,72,92,*,82" ColumnSpacing="10" Margin="0,0,0,4">
-          <xy:XYLabel Grid.Column="1" Text="时间"/><xy:XYLabel Grid.Column="2" Text="级别"/><xy:XYLabel Grid.Column="3" Text="来源"/><xy:XYLabel Grid.Column="4" Text="模块"/><xy:XYLabel Grid.Column="5" Text="消息"/><xy:XYLabel Grid.Column="6" Text="折叠"/>
-        </Grid>
-
-        <Grid Grid.Row="2" ColumnDefinitions="*,280" ColumnSpacing="10">
+    <Border Grid.Row="1" IsVisible="{Binding IsLogOpen}" MinHeight="0" Margin="0,2,0,0" BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1" CornerRadius="0" Background="{StaticResource Color.Bg.Panel}" Padding="6">
+      <Grid RowDefinitions="Auto,*,Auto">
+        <Grid ColumnDefinitions="96,68,96,120,*" ColumnSpacing="10" Margin="0,0,0,4"><xy:XYLabel Text="时间"/><xy:XYLabel Grid.Column="1" Text="级别"/><xy:XYLabel Grid.Column="2" Text="来源"/><xy:XYLabel Grid.Column="3" Text="模块"/><xy:XYLabel Grid.Column="4" Text="消息"/></Grid>
+        <Grid Grid.Row="1" ColumnDefinitions="*,300" ColumnSpacing="8">
           <Grid>
-            <ListBox x:Name="LogList" Classes="logList" ItemsSource="{Binding LogItems}" SelectedItem="{Binding SelectedLogEntry}"
-                     SelectionMode="{x:Static av:SelectionMode.Multiple}" Background="Transparent" BorderThickness="0"
-                     SelectionChanged="LogList_SelectionChanged">
-              <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <VirtualizingStackPanel Margin="0,0,0,12"/>
-                </ItemsPanelTemplate>
-              </ListBox.ItemsPanel>
-              <ListBox.ItemTemplate>
-                <DataTemplate x:DataType="local:LogEntry">
-                  <Grid ColumnDefinitions="4,72,56,72,92,*,82" ColumnSpacing="10">
-                    <Border Background="{Binding Accent}" CornerRadius="2"/>
-                    <xy:XYCodeText Grid.Column="1" Text="{Binding Time}" VerticalAlignment="Center"/>
-                    <xy:XYStatusBadge Grid.Column="2" Text="{Binding LevelText}" VerticalAlignment="Center"/>
-                    <xy:XYText Grid.Column="3" Text="{Binding SourceText}" VerticalAlignment="Center"/>
-                    <xy:XYText Grid.Column="4" Text="{Binding ModuleText}" VerticalAlignment="Center"/>
-                    <xy:XYTruncatedText Grid.Column="5" Mode="End" Text="{Binding Message}" VerticalAlignment="Center"/>
-                    <xy:XYCaption Grid.Column="6" Text="{Binding RepeatText}" VerticalAlignment="Center"/>
-                  </Grid>
-                </DataTemplate>
-              </ListBox.ItemTemplate>
+            <ListBox x:Name="LogList" Classes="logList" ItemsSource="{Binding LogItems}" SelectedItem="{Binding SelectedLogEntry}" SelectionMode="{x:Static av:SelectionMode.Multiple}" Background="Transparent" BorderThickness="0" SelectionChanged="LogList_SelectionChanged">
+              <ListBox.ItemsPanel><ItemsPanelTemplate><VirtualizingStackPanel Margin="0,0,0,12"/></ItemsPanelTemplate></ListBox.ItemsPanel>
+              <ListBox.ItemTemplate><DataTemplate x:DataType="local:LogEntry"><Grid ColumnDefinitions="3,96,68,96,120,*" ColumnSpacing="10"><Border Background="{Binding Accent}"/><xy:XYCodeText Grid.Column="1" Text="{Binding Time}"/><xy:XYStatusBadge Grid.Column="2" Text="{Binding LevelText}"/><xy:XYText Grid.Column="3" Text="{Binding SourceText}"/><xy:XYText Grid.Column="4" Text="{Binding ModuleText}"/><xy:XYTruncatedText Grid.Column="5" Mode="End" Text="{Binding Message}"/></Grid></DataTemplate>
+            </ListBox.ItemTemplate>
             </ListBox>
-
-            <!-- D5：空状态区分（初次/无数据 与 筛选无结果；筛选空态提供清空入口） -->
-            <StackPanel IsVisible="{Binding ShowInitialLogEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center">
-              <xy:XYEmptyText Text="暂无日志" HorizontalAlignment="Center"/>
-              <xy:XYCaption Text="低频事实记录会显示在这里，调试快照和临时探针不进入普通日志。" TextWrapping="Wrap" HorizontalAlignment="Center"/>
-              <Button Classes="legacyControl" Content="清空筛选" IsVisible="{Binding ShowNoFilterResults}" Margin="0,8,0,0" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部" HorizontalAlignment="Center" AutomationProperties.Name="清空日志筛选"/>
-            </StackPanel>
-            <StackPanel IsVisible="{Binding ShowNoFilterResults}" HorizontalAlignment="Center" VerticalAlignment="Center">
-              <xy:XYEmptyText Text="没有匹配的日志" HorizontalAlignment="Center"/>
-              <xy:XYCaption Text="当前筛选条件下没有日志，可以清空筛选查看全部。" TextWrapping="Wrap" HorizontalAlignment="Center"/>
-            </StackPanel>
-            <!-- D5：用户离开底部时显示「回到底部」；点击恢复自动跟随 -->
-            <Button x:Name="ScrollToBottomButton" IsVisible="False" Click="ScrollToBottom_Click" Content="回到底部" Classes="legacyControl scrollToBottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6" AutomationProperties.Name="回到底部"/>
+            <StackPanel IsVisible="{Binding ShowInitialLogEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center"><xy:XYEmptyText Text="暂无日志"/><xy:XYCaption Text="低频事实记录会显示在这里。"/></StackPanel>
+            <StackPanel IsVisible="{Binding ShowNoFilterResults}" HorizontalAlignment="Center" VerticalAlignment="Center"><xy:XYEmptyText Text="没有匹配的日志"/><xy:XYButton Content="清空筛选" Command="{Binding SelectLogFilterCommand}" CommandParameter="清空筛选" AutomationProperties.Name="清空日志筛选"/></StackPanel>
           </Grid>
-          <local:LogDetailPanel Grid.Column="1"/>
+          <local:LogDetailPanel Grid.Column="1" IsVisible="{Binding IsLogDetailsOpen}"/>
         </Grid>
+        <xy:XYCaption Grid.Row="2" Text="{Binding AllCount} 条日志" HorizontalAlignment="Right" Margin="0,4,0,0"/>
       </Grid>
     </Border>
   </Grid>

@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.71-rz · EDITOR-BOTTOM-LOG-R1（2026-09-11 01:56:56 +08:00）
+- 目标：收口 Bottom Log 的 XYUI 工具条、组合筛选、搜索、详情切换与折叠布局。
+- 变化：严重级别改用 `XYToggleButton`；搜索改用 `XYSearchField`；来源收入口使用 `XYMenu/XYMenuItem`；详情默认隐藏；新增清空日志与组合过滤状态。
+- 验证：便携 SDK 完整 Build 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1497/1497、XYUI 617/617；ARCH-A 与 `git diff --check` 通过。
+- Hash：起始提交 `b77b67e6`；最终提交 `b4e77a30`。
+- 遗留：等待用户真机视觉验收；`file-tree.md` 因既有非 UTF-8 编码未改写。
+
 ## v0.2.28.71-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F4（2026-09-11 01:55:00 +08:00）
 - 目标：恢复 Top 第二行隐藏滚动条后的鼠标横向滚动能力。
 - 变化：为隐藏滚动条的 Top 第二行 `ScrollViewer` 接入滚轮隧道路由，将滚轮增量转换为水平偏移并消费事件。

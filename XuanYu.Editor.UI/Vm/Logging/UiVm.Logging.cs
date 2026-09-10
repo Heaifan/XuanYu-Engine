@@ -6,24 +6,16 @@ public sealed partial class UiVm
 {
     readonly EditorLogBuffer _logBuffer = new();
     EditorLogBus _logBus = null!;
-    EditorLogFilter _logFilter = EditorLogFilter.All;
+    EditorLogFilterState _logFilterState = EditorLogFilterState.CreateDefault();
     LogEntry? _selectedLogEntry;
     LogEntry[] _selectedEntries = [];
 
-    public IReadOnlyList<LogEntry> LogItems => _logBuffer.Filter(_logFilter);
+    public IReadOnlyList<LogEntry> LogItems => _logBuffer.All.Where(_logFilterState.Allows).ToArray();
     public IReadOnlyList<LogEntry> ProblemItems => _logBuffer.Filter(EditorLogFilter.Warning)
         .Concat(_logBuffer.Filter(EditorLogFilter.Error)).ToArray();
     public IReadOnlyList<LogEntry> BuildItems => _logBuffer.Filter(EditorLogFilter.Build);
     public IReadOnlyList<LogEntry> TaskItems => _logBuffer.Filter(EditorLogFilter.Task);
     public string LogSummary => EditorLogSummary.From(_logBuffer.All).Text;
-    public bool IsLogFilterAll => _logFilter == EditorLogFilter.All;
-    public bool IsLogFilterInfo => _logFilter == EditorLogFilter.Info;
-    public bool IsLogFilterWarning => _logFilter == EditorLogFilter.Warning;
-    public bool IsLogFilterError => _logFilter == EditorLogFilter.Error;
-    public bool IsLogFilterBuild => _logFilter == EditorLogFilter.Build;
-    public bool IsLogFilterTask => _logFilter == EditorLogFilter.Task;
-    public bool IsLogFilterInput => _logFilter == EditorLogFilter.Input;
-    public bool IsLogFilterRender => _logFilter == EditorLogFilter.Render;
     public LogEntry? SelectedLogEntry
     {
         get => _selectedLogEntry;
@@ -61,11 +53,6 @@ public sealed partial class UiVm
         RefreshLogBindings();
     }
 
-    void SetLogFilter(string name)
-    {
-        _logFilter = EditorLogFilterText.FromText(name);
-        RefreshLogBindings();
-    }
 
     void LogCommand(string name)
     {

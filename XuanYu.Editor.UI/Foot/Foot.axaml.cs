@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
+using XYUI.Avalonia.Controls;
 
 namespace XuanYu.Editor.UI;
 
@@ -25,6 +26,7 @@ public partial class Foot : UserControl
         _autoScroll.TailStateChanged += atTail => ScrollToBottomButton.IsVisible = !atTail; // D5
         DataContextChanged += (_, _) => HookVm();
         Unloaded += (_, _) => _autoScroll.Dispose();
+        BuildSourceMenu();
     }
 
     // D5：用户离开底部时按钮可见；点击恢复自动跟随并隐藏
@@ -32,6 +34,26 @@ public partial class Foot : UserControl
     {
         _autoScroll.ForceFollow();
         ScrollToBottomButton.IsVisible = false;
+    }
+
+    void SourceFilter_Click(object? sender, RoutedEventArgs e)
+    {
+        SourceFilterPopup.PlacementTarget = SourceFilterButton;
+        SourceFilterPopup.IsOpen = !SourceFilterPopup.IsOpen;
+    }
+
+    void BuildSourceMenu()
+    {
+        var items = new[] { ("全部", (EditorLogSource?)null), ("编辑器", (EditorLogSource?)EditorLogSource.Editor), ("项目", (EditorLogSource?)EditorLogSource.Project), ("构建", (EditorLogSource?)EditorLogSource.Build), ("任务", (EditorLogSource?)EditorLogSource.Task), ("输入", (EditorLogSource?)EditorLogSource.Input), ("渲染", (EditorLogSource?)EditorLogSource.Render) };
+        SourceMenu.Items = items.Select(item => new XYMenuItem { Label = item.Item1, IsChecked = item.Item2 is null, CheckKind = XyuiMenuCheckKind.Check }).ToArray();
+        foreach (var item in SourceMenu.Items.OfType<XYMenuItem>()) item.Invoked += (_, _) => SelectSource(item.Label);
+    }
+
+    void SelectSource(string label)
+    {
+        var source = label switch { "编辑器" => EditorLogSource.Editor, "项目" => EditorLogSource.Project, "构建" => EditorLogSource.Build, "任务" => EditorLogSource.Task, "输入" => EditorLogSource.Input, "渲染" => EditorLogSource.Render, _ => (EditorLogSource?)null };
+        if (DataContext is UiVm vm) vm.SetLogSource(source);
+        SourceFilterPopup.IsOpen = false;
     }
 
     void HookVm()

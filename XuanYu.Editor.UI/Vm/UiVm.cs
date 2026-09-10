@@ -44,6 +44,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
         InteractionCommand = new RelayCommand(name => RunInteraction(name?.ToString() ?? string.Empty));
         ToggleLogCommand = new RelayCommand(_ => IsLogOpen = !IsLogOpen);
         SelectLogFilterCommand = new RelayCommand(name => SetLogFilter(name?.ToString() ?? "全部"));
+        ClearLogsCommand = new RelayCommand(_ => ClearLogs());
         MapSession = new MapEditSession(isWriteThread: isWriteThread ?? (() => Dispatcher.UIThread.CheckAccess()));
         // D5 二次纠偏（用户方案）：默认地图建立内存基线——初始未修改不误判为有未保存修改
         MapSession.MarkBaseline();
@@ -57,6 +58,7 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public ICommand InteractionCommand { get; }
     public ICommand ToggleLogCommand { get; }
     public ICommand SelectLogFilterCommand { get; } public MapEditSession MapSession { get; }
+    public ICommand ClearLogsCommand { get; }
     public IReadOnlyList<EditorTreeNode> ProjectItems => BuildProjectItems();
     public IReadOnlyList<EditorTreeNode> HierarchyItems => BuildHierarchyItems();
     public IReadOnlyList<InspectorFieldRow> InspectorFields => BuildInspectorFields();
@@ -81,7 +83,6 @@ public sealed partial class UiVm : INotifyPropertyChanged, XuanYu.Core.Scene.ISc
     public string FooterMode => $"工具：{ActiveTool}";
     public string FooterState { get => _footerState; private set => SetFooterState(value); }
     public bool HasSelection => _editorState.Snapshot.HasSelection;
-    public bool IsLogOpen { get => _isLogOpen; set => Set(ref _isLogOpen, value); }
     public bool IsEmptySelection => !HasSelection;
     public EditorTreeNode? SelectedProjectItem { get => _selectedProjectItem; set => SetProjectSelection(value); }
     public EditorTreeNode? SelectedHierarchyItem { get => _selectedHierarchyItem; set => SetHierarchySelection(value); }
