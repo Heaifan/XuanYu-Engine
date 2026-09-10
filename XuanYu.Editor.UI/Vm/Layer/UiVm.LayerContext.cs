@@ -11,11 +11,14 @@ public sealed partial class UiVm
         ? _regionLayerProvider ??= new EditorLayerProviderAdapter(this, true)
         : IsMapEditMode ? _mapLayerProvider ??= new EditorLayerProviderAdapter(this, false) : null;
 
-    public IReadOnlyList<MapLayerRowViewModel> CurrentLayerItems => IsRegionEditMode
-        ? _layerItems.Where(item => item.IsRegion).ToArray() : Array.Empty<MapLayerRowViewModel>();
+    public IReadOnlyList<MapLayerRowViewModel> CurrentLayerItems => IsMapEditMode
+        ? _layerItems : IsRegionEditMode
+            ? _layerItems.Where(item => item.IsRegion).ToArray()
+            : Array.Empty<MapLayerRowViewModel>();
 
     public bool HasCurrentLayerItems => CurrentLayerItems.Count > 0;
-    public bool HasCurrentLayerSelection => IsEditMode && CurrentLayerItems.Contains(SelectedLayer);
+    public bool HasCurrentLayerSelection => IsRegionEditMode && CurrentLayerItems.Contains(SelectedLayer);
+    public bool IsRegionLayerReorderHintVisible => IsRegionEditMode && IsLayerReorderHintVisible;
     public string CurrentLayerEmptyTitle => CurrentLayerProvider?.EmptyStateTitle ?? "图层";
     public string CurrentLayerEmptyMessage => CurrentLayerProvider?.EmptyStateMessage ?? "当前编辑模式不显示图层栏";
 
@@ -25,6 +28,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(CurrentLayerItems));
         OnPropertyChanged(nameof(HasCurrentLayerItems));
         OnPropertyChanged(nameof(HasCurrentLayerSelection));
+        OnPropertyChanged(nameof(IsRegionLayerReorderHintVisible));
         OnPropertyChanged(nameof(CurrentLayerEmptyTitle));
         OnPropertyChanged(nameof(CurrentLayerEmptyMessage));
     }

@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.59-rz · AREA-D-R2-FIX3（2026-09-10 16:30:48 +08:00）
+- 目标：修复 Map Inspector 的 LayerDock 投影、空 EntityHeader 占位、Right Map/Region 紧凑字体与 LayerDock 展开空间。
+- 图层投影：Fresh Map 继续消费 MapDefaultDefinition 已有的“地面 / 边界 / 区域 1”，Map 模式共享 LayerPanel 展示真实 `LayerItems`；不新增默认 Layer，Eye/Lock 仍沿用现有 MapSession 链；Left Scene Tree 保持 Scene + Entity 合同。
+- Inspector 密度：EntityHeader 仅在 `IsEntityInspector` 时可见；Map/Region/no Entity 不参与 Measure；Map/Region/Layer authoring 消费 Engine compact typography tokens。
+- LayerDock：展开最小空间提高到 192 DIP，Map/Region 共用现有内部 ListBox 滚动；Region 专属添加/排序入口不投影到 Map 模式。
+- XYUI GAP：`XYTabs/XYTab content-sized tab sizing` 尚无 canonical Auto/Content sizing API；当前 `XYTab` 固定图标/修改标记/关闭槽导致地图二级 Tab 不能按内容收紧。本轮不扩张 XYUI layout architecture，导航与键盘能力保持不变。
+- 验证：FIX3 定向回归 6/6；Area D R2 定向集合 24/24；本轮新增失败 0；`UnsavedChangesConfirmationWindow.axaml` 保持用户延期 dirty、未暂存、未提交。
+- Hash：起始提交 `7262a162`。
+- 状态：`AREA-D-R2-FIX3 READY FOR USER VISUAL + INTERACTION ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.58-rz · AREA-D-R2-FIX2（2026-09-10 15:48:48 +08:00）
 - 目标：仅修复一级 Tabs 密度、地图整数米显示、LayerDock 默认空间和图层操作图标可见性。
 - 导航：Left/Right 真实 `XYTabs/XYTab` 统一消费 `XY.Size=Compact`、`XY.Density=Compact` 与 `Control.Height.Compact`；保留溢出动作、选择和键盘行为。

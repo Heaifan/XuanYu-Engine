@@ -1,0 +1,43 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:xy="using:XYUI.Avalonia.Controls">
+  <Style Selector="xy|XYLabel.xyui-label">
+    <Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/>
+    <Setter Property="LineHeight" Value="{StaticResource Font.Label.LineHeight}"/>
+  </Style>
+  <Style Selector="xy|XYText.xyui-text">
+    <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+    <Setter Property="LineHeight" Value="{StaticResource Font.Body.LineHeight}"/>
+  </Style>
+  <Style Selector="xy|XYTruncatedText.xyui-truncated-text">
+    <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+    <Setter Property="LineHeight" Value="{StaticResource Font.Body.LineHeight}"/>
+  </Style>
+  <Style Selector="TextBlock.xyui-selectable-text-content">
+    <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+    <Setter Property="LineHeight" Value="{StaticResource Font.Body.LineHeight}"/>
+  </Style>
+  <Style Selector="xy|XYCaption.xyui-caption">
+    <Setter Property="FontSize" Value="{StaticResource Font.Small.Size}"/>
+    <Setter Property="LineHeight" Value="{StaticResource Font.Small.LineHeight}"/>
+  </Style>
+  <Style Selector="xy|XYEmptyText.xyui-empty-text">
+    <Setter Property="FontSize" Value="{StaticResource Font.Small.Size}"/>
+    <Setter Property="LineHeight" Value="{StaticResource Font.Small.LineHeight}"/>
+  </Style>
+  <Style Selector="TextBlock.xyui-section-title-text">
+    <Setter Property="FontSize" Value="{StaticResource Font.Section.Size}"/>
+    <Setter Property="LineHeight" Value="{StaticResource Font.Section.LineHeight}"/>
+  </Style>
+  <Style Selector="xy|XYTextField.xyui-text-field">
+    <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+  </Style>
+  <Style Selector="xy|XYNumberField.xyui-number-field">
+    <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+  </Style>
+  <Style Selector="xy|XYButton.xyui-button">
+    <Setter Property="FontSize" Value="{StaticResource Font.Body.Size}"/>
+  </Style>
+  <Style Selector="TextBlock.xyui-tab-label">
+    <Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/>
+  </Style>
+</Styles>

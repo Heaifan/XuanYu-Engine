@@ -9,12 +9,12 @@ sealed class EditorLayerProviderAdapter : IEditorLayerProvider
 
     public EditorLayerProviderAdapter(UiVm owner, bool region) { _owner = owner; _region = region; }
 
-    public IReadOnlyList<EditorLayerItem> Items => _region
-        ? _owner.LayerItems.Where(x => x.IsRegion).Select(ToItem).ToArray()
-        : [];
+    public IReadOnlyList<EditorLayerItem> Items => (_region
+        ? _owner.LayerItems.Where(x => x.IsRegion)
+        : _owner.LayerItems).Select(ToItem).ToArray();
 
     public string EmptyStateTitle => "图层";
-    public string EmptyStateMessage => _region ? "当前没有可用区域图层" : "当前地图暂无独立可编辑图层\n地图级图层将在地图数据集架构接入";
+    public string EmptyStateMessage => _region ? "当前没有可用区域图层" : "当前没有可用图层";
 
     public EditorLayerCommandResult Add() => Execute(_owner.AddLayer);
     public EditorLayerCommandResult Delete(string id) => SelectAnd(id, _owner.DeleteLayer);
@@ -30,8 +30,7 @@ sealed class EditorLayerProviderAdapter : IEditorLayerProvider
 
     EditorLayerCommandResult SelectAnd(string id, Action action)
     {
-        if (!_region) return EditorLayerCommandResult.Failure("当前编辑器没有独立图层。");
-        var row = _owner.LayerItems.FirstOrDefault(x => x.LayerId.Value == id && x.IsRegion);
+        var row = _owner.LayerItems.FirstOrDefault(x => x.LayerId.Value == id && (!_region || x.IsRegion));
         if (row is null) return EditorLayerCommandResult.Failure("图层不存在。");
         _owner.SelectedLayer = row; action(); return EditorLayerCommandResult.Success();
     }

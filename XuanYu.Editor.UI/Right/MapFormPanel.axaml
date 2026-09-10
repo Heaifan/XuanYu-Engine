@@ -6,6 +6,7 @@
              x:Class="XuanYu.Editor.UI.MapFormPanel"
              x:DataType="local:UiVm">
   <UserControl.Styles>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/>
     <Style Selector="Border.inspectorRail">
       <Setter Property="BorderBrush" Value="{StaticResource Color.Border.Default}"/>
       <Setter Property="BorderThickness" Value="2,0,0,0"/>

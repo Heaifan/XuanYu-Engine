@@ -1,4 +1,5 @@
-<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" xmlns:xy="using:XYUI.Avalonia.Controls" x:Class="XuanYu.Editor.UI.RoadPanel" x:DataType="local:UiVm">
+  <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" xmlns:xy="using:XYUI.Avalonia.Controls" x:Class="XuanYu.Editor.UI.RoadPanel" x:DataType="local:UiVm">
+  <UserControl.Styles><StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/></UserControl.Styles>
   <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Spacing="8" Margin="2,8">
     <xy:XYSectionTitle Text="道路"/><xy:XYSectionTitle Text="当前绘制目标"/>
     <xy:XYText Text="{Binding RoadDrawingTargetName}"/><xy:XYSelectableText Text="{Binding RoadDrawingTargetId}" Variant="Technical"/><xy:XYCaption Text="{Binding RoadDrawingTargetStatus}" TextWrapping="Wrap"/>

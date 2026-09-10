@@ -26,7 +26,8 @@ public sealed class LayerARuntimeTests
             vm.ToggleEditorMode();
             right.UpdateLayout();
             var map = dock.IsEffectivelyVisible
-                && vm.CurrentLayerItems.Count == 0;
+                && UiRuntimeTestHost.Descendants<LayerPanel>(dock).Single().IsEffectivelyVisible
+                && vm.CurrentLayerItems.Count == 3;
             vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
             right.UpdateLayout();
             var region = vm.CurrentLayerItems.Count;

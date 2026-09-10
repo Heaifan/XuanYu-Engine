@@ -4,6 +4,9 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.RegionPanel"
              x:DataType="local:UiVm">
+  <UserControl.Styles>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/>
+  </UserControl.Styles>
   <ScrollViewer VerticalScrollBarVisibility="Auto">
     <StackPanel Spacing="8" Margin="2,8">
       <xy:XYSectionTitle Text="区域面"/>

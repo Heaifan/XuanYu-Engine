@@ -40,7 +40,10 @@ public sealed class LayerAUiCompositionTests
         var vm = new UiVm(null, isWriteThread: () => true, seedInitialScene: false);
         Assert.Null(vm.CurrentLayerProvider);
         vm.ToggleEditorMode();
-        Assert.Empty(vm.CurrentLayerProvider!.Items);
+        Assert.Equal(3, vm.CurrentLayerProvider!.Items.Count);
+        Assert.Contains(vm.CurrentLayerProvider.Items, item => item.Name == "地面");
+        Assert.Contains(vm.CurrentLayerProvider.Items, item => item.Name == "边界");
+        Assert.Contains(vm.CurrentLayerProvider.Items, item => item.Name == "区域 1");
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
         Assert.NotEmpty(vm.CurrentLayerProvider!.Items);
         Assert.All(vm.CurrentLayerProvider.Items, item => Assert.Equal("区域面", item.Kind));
@@ -49,7 +52,7 @@ public sealed class LayerAUiCompositionTests
         vm.SelectedLayer = vm.CurrentLayerItems[0];
         Assert.True(vm.HasCurrentLayerSelection);
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.MapEditor);
-        Assert.Empty(vm.CurrentLayerItems);
-        Assert.Null(vm.SelectedLayer);
+        Assert.Equal(3, vm.CurrentLayerItems.Count);
+        Assert.False(vm.HasCurrentLayerSelection);
     }
 }

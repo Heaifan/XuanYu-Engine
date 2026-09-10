@@ -1,3 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" xmlns:xy="using:XYUI.Avalonia.Controls" x:Class="XuanYu.Editor.UI.MarkerPanel" x:DataType="local:UiVm">
+  <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:XuanYu.Editor.UI" xmlns:xy="using:XYUI.Avalonia.Controls" x:Class="XuanYu.Editor.UI.MarkerPanel" x:DataType="local:UiVm">
+  <UserControl.Styles><StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/></UserControl.Styles>
   <StackPanel Spacing="8" Margin="2,8"><xy:XYSectionTitle Text="地图标记"/><xy:XYSectionTitle Text="当前放置目标"/><xy:XYText Text="{Binding MarkerPlacementTargetName}"/><xy:XYSelectableText Text="{Binding MarkerPlacementTargetId}" Variant="Technical"/><xy:XYButton Content="放置地图标记" Click="MarkerPlacement_Click" IsEnabled="{Binding CanRequestMarkerPlacement}" AutomationProperties.Name="放置地图标记"/><xy:XYCaption Text="点击视口地面完成一次放置，完成后自动回到选择。" TextWrapping="Wrap"/></StackPanel>
 </UserControl>

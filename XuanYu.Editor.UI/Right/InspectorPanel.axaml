@@ -12,7 +12,7 @@
   <Grid RowDefinitions="*">
   <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
   <StackPanel Spacing="8" Margin="0,6,0,0">
-    <Grid x:Name="EntityHeader" ColumnDefinitions="20,*" ColumnSpacing="8" IsVisible="{Binding !IsMapEditMode}">
+    <Grid x:Name="EntityHeader" ColumnDefinitions="20,*" ColumnSpacing="8" IsVisible="{Binding IsEntityInspector}">
       <xy:XYIcon Icon="Browse" Size="Small" VerticalAlignment="Center"/>
       <StackPanel Grid.Column="1" Spacing="1">
         <xy:XYHeading x:Name="EntityHeaderTitle" Text="{Binding InspectorSelectionTitle}" Variant="PanelTitle"/>

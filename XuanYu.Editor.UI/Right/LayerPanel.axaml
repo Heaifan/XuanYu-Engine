@@ -14,6 +14,7 @@
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/>
     <StyleInclude Source="avares://XuanYu.Editor.UI/Right/LayerPanel.States.axaml"/>
     <!-- ARCH-UI-SPEC-R1-D4（W50）：工具栏按钮 24 紧凑档 -->
     <Style Selector="Button.layerTool"><Setter Property="MinHeight" Value="{StaticResource Control.Height.Compact}"/><Setter Property="Padding" Value="6,2"/><Setter Property="FontSize" Value="{StaticResource Font.Label.Size}"/></Style>
@@ -26,11 +27,11 @@
     <Style Selector="ListBox.layerList ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style>
   </UserControl.Styles>
   <Grid RowDefinitions="Auto,Auto,*">
-    <UniformGrid Grid.Row="0" Columns="2" Margin="0,8,0,4" ColumnSpacing="4">
+    <UniformGrid Grid.Row="0" Columns="2" Margin="0,8,0,4" ColumnSpacing="4" IsVisible="{Binding IsRegionEditMode}">
       <xy:XYButton Classes="layerTool" Variant="Secondary" Content="添加" Command="{Binding RunCommand}" CommandParameter="添加图层" ToolTip.Tip="添加图层" AutomationProperties.Name="添加图层"/>
       <xy:XYButton Classes="layerTool" Variant="Secondary" Content="删除" Command="{Binding RunCommand}" CommandParameter="删除图层" IsEnabled="{Binding CanDeleteLayer}" AutomationProperties.Name="删除图层"/>
     </UniformGrid>
-    <xy:XYCaption Grid.Row="1" Text="添加至少 2 个用户图层后可拖拽排序" IsVisible="{Binding IsLayerReorderHintVisible}" Margin="0,0,0,4"/>
+    <xy:XYCaption Grid.Row="1" Text="添加至少 2 个用户图层后可拖拽排序" IsVisible="{Binding IsRegionLayerReorderHintVisible}" Margin="0,0,0,4"/>
     <!-- LAYER-A-R1：通用宿主只消费当前 Provider 的可见项目；拖动事件见 LayerPanel.DragDrop.cs -->
     <ListBox Grid.Row="2" x:Name="LayerList" Classes="layerList" ItemsSource="{Binding CurrentLayerItems}" SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
              Background="Transparent" BorderThickness="0" Margin="0,2,0,0" HorizontalAlignment="Stretch">

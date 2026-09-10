@@ -5,6 +5,7 @@
              x:Class="XuanYu.Editor.UI.MapPagePanel"
              x:DataType="local:UiVm">
   <UserControl.Styles>
+    <StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/>
     <!-- ARCH-UI-SPEC-R1-D4/D4-F1：只读资产摘要标签列 72（组件级例外 72~80）；值统一单行省略 -->
     <Style Selector="Grid.summaryRow">
       <Setter Property="MinHeight" Value="24"/>

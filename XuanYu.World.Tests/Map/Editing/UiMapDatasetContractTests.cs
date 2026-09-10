@@ -29,7 +29,7 @@ public sealed class UiMapDatasetContractTests : IDisposable
         Assert.Contains("CanUnregisterDataset", DatasetPanel);
         Assert.Contains("解除注册数据集", DatasetPanel);
         Assert.Contains("local:DatasetPanel", EditorPanel);
-        Assert.Contains("DatasetLayerPanel", LayerDock);
+        Assert.Contains("local:LayerPanel", LayerDock);
         Assert.Contains("DatasetLayerItems", DatasetLayerPanel);
         Assert.Contains("DatasetRow_Pressed", DatasetLayerPanel);
         Assert.Contains("DragHandleIcon", DatasetLayerPanel);

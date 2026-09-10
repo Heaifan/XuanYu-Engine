@@ -12,7 +12,7 @@
       <Setter Property="Margin" Value="0,8,0,4"/>
     </Style>
   </UserControl.Styles>
-  <Grid x:Name="Root" RowDefinitions="Auto,*" MinHeight="160">
+  <Grid x:Name="Root" RowDefinitions="Auto,*" MinHeight="192">
     <Border Classes="layerDockHeader">
       <Grid ColumnDefinitions="*,Auto">
         <xy:XYSectionTitle Text="{Binding CurrentLayerEmptyTitle}" VerticalAlignment="Center"/>
@@ -20,14 +20,11 @@
       </Grid>
     </Border>
     <Grid x:Name="LayerContent" Grid.Row="1">
-      <local:DatasetLayerPanel IsVisible="{Binding IsMapEditMode}"/>
-      <Grid IsVisible="{Binding IsRegionEditMode}">
-        <local:LayerPanel IsVisible="{Binding HasCurrentLayerItems}"/>
-        <StackPanel IsVisible="{Binding !HasCurrentLayerItems}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="240" Spacing="6">
-          <xy:XYEmptyText Text="{Binding CurrentLayerEmptyTitle}"/>
-          <xy:XYCaption Text="{Binding CurrentLayerEmptyMessage}" TextWrapping="Wrap"/>
-        </StackPanel>
-      </Grid>
+      <local:LayerPanel IsVisible="{Binding HasCurrentLayerItems}"/>
+      <StackPanel IsVisible="{Binding !HasCurrentLayerItems}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="240" Spacing="6">
+        <xy:XYEmptyText Text="{Binding CurrentLayerEmptyTitle}"/>
+        <xy:XYCaption Text="{Binding CurrentLayerEmptyMessage}" TextWrapping="Wrap"/>
+      </StackPanel>
     </Grid>
   </Grid>
 </UserControl>
