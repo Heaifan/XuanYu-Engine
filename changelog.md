@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.61-rz · AREA-D-R2-FIX5-F1（2026-09-10 19:59:32 +08:00）
+- 目标：移除截图中左侧与右侧固定导航页签之间的多余竖线。
+- 根因：`XYTab` 无条件创建 `xyui-tab-divider` 1 DIP Border，并为它保留独立 Auto 列；该 Border 被每个 Tab 渲染为竖线。
+- 修正：删除 divider visual child、空 Auto 列及对应 accent span，保留 Tab 内容、optional slots、选中态和关闭命中区语义；不改 `XYTabs`、`XYTabBar` 或导航 action。
+- 验证：divider Headless 回归 1/1；Tabs 相关回归 17/17；方案构建 0 警告/0 错误；Core 339/339；WarCore 22/22；XYUI 609/609；World 1480 通过、1 个既有用户延期 Unsaved Dialog 词文测试失败；ARCH-A、JSON/XML、5+100 与 `git diff --check` PASS。
+- Hash：起始提交 `14a2c290cede6f662e1ebc0ce59eb1a13e3b142f`。
+- 状态：`AREA-D-R2-FIX5-F1 / TAB DIVIDER REMOVED / READY FOR USER VISUAL ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.60-rz · AREA-D-R2-FIX5（2026-09-10 19:17:56 +08:00）
 - 目标：修复 XYTab Content sizing 的 optional slot 语义，并将 Engine 地图/区域固定页签明确收口为不可关闭。
 - XYUI canonical：XYTab 的图标、修改标记、关闭命中区改为按状态使用 0 或统一运行时 Token；可关闭页签保留关闭命中区，永久页签不产生关闭布局/可访问性槽位；XYTabs 的 Auto/Star sizing 合同保持不变。

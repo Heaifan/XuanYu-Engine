@@ -42,15 +42,13 @@ public sealed partial class XYTab : Border
         var iconTrack = Icon is null ? 0 : XyuiComponentTokens.TabIconTrackWidth;
         var modifiedTrack = IsModified ? XyuiComponentTokens.TabModifiedTrackWidth : 0;
         var closeTrack = IsClosable ? XyuiComponentTokens.TabCloseHitTargetSize : 0;
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions($"{iconTrack},*,{modifiedTrack},{closeTrack},Auto") };
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions($"{iconTrack},*,{modifiedTrack},{closeTrack}") };
         grid.Children.Add(new XYIcon { Icon = Icon ?? XyuiVectorIcon.Info, Size = XyuiIconSize.Tiny, IsVisible = Icon is not null, Classes = { "xyui-tab-icon" } });
         grid.Children.Add(new TextBlock { Text = Label, Classes = { "xyui-tab-label" }, VerticalAlignment = VerticalAlignment.Center, [Grid.ColumnProperty] = 1 });
         grid.Children.Add(new Border { Classes = { "xyui-tab-modified" }, IsVisible = IsModified, VerticalAlignment = VerticalAlignment.Center, [Grid.ColumnProperty] = 2 });
         grid.Children.Add(close); Grid.SetColumn(close, 3);
-        var divider = new Border { Classes = { "xyui-tab-divider" }, Height = 22, Width = 1, VerticalAlignment = VerticalAlignment.Center };
-        grid.Children.Add(divider); Grid.SetColumn(divider, 4);
         var accent = new Border { Classes = { "xyui-tab-accent" }, IsVisible = IsSelected && ShowSelectedAccent, IsHitTestVisible = false };
-        grid.Children.Add(accent); Grid.SetColumnSpan(accent, 5);
+        grid.Children.Add(accent); Grid.SetColumnSpan(accent, 4);
         Child = grid;
         if (!_pointerHooked) { PointerPressed += OnPointerPressed; _pointerHooked = true; }
     }
