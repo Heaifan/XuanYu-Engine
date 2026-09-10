@@ -18,17 +18,13 @@
                                  HorizontalAlignment="Right"
                                  VerticalAlignment="Center"/>
     </Grid>
-    <ScrollViewer Grid.Row="1"
-                  HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Disabled">
-      <StackPanel Orientation="Horizontal"
-                  Spacing="8"
-                  VerticalAlignment="Center">
-        <local:EditToolsModule/>
-        <local:ContextToolBar/>
-        <local:ViewModule/>
-        <local:SnapModule/>
-      </StackPanel>
-    </ScrollViewer>
+    <WrapPanel Grid.Row="1"
+               Orientation="Horizontal"
+               VerticalAlignment="Center">
+      <local:EditToolsModule Margin="0,0,8,8"/>
+      <local:ContextToolBar Margin="0,0,8,8"/>
+      <local:ViewModule Margin="0,0,8,8"/>
+      <local:SnapModule Margin="0,0,8,8"/>
+    </WrapPanel>
   </Grid>
 </UserControl>

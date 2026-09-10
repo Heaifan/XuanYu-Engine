@@ -26,11 +26,13 @@ public sealed class AreaCR1ContextToolbarRuntimeTests
             var mapEdit = root.IsEffectivelyVisible;
             vm.SwitchWorkspaceCommand.Execute("RegionEditor");
             Dispatcher.UIThread.RunJobs(); top.UpdateLayout();
-            return (startup, mapEdit, regionEdit: root.IsEffectivelyVisible);
+            var scrollHosts = UiRuntimeTestHost.Descendants<ScrollViewer>(top).Count();
+            return (startup, mapEdit, regionEdit: root.IsEffectivelyVisible, scrollHosts);
         });
 
         Assert.False(state.startup);
         Assert.False(state.mapEdit);
         Assert.True(state.regionEdit);
+        Assert.Equal(0, state.scrollHosts);
     }
 }

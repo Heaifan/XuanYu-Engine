@@ -44,4 +44,12 @@ public sealed class AreaCR1ContextToolbarContractTests
         var toolbar = Read("Top/ContextToolBar.axaml");
         Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsRegionEditMode}\"", toolbar);
     }
+
+    [Fact]
+    public void Top_context_row_has_no_horizontal_scroll_host()
+    {
+        var top = Read("Top/Top.axaml");
+        Assert.DoesNotContain("<ScrollViewer", top);
+        Assert.Contains("<WrapPanel", top);
+    }
 }

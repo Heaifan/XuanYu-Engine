@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.69-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F2（2026-09-11 01:25:14 +08:00）
+- 目标：移除 Top 第二行导致截图中出现的灰色水平滚动条。
+- 变化：Top 第二行由水平 `ScrollViewer` 改为 `WrapPanel`，工具组可换行显示，不再创建水平滚动宿主。
+- 验证：Context Toolbar 合同 4/4、运行时无滚动宿主 1/1；方案构建 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1492/1492、XYUI 617/617；ARCH-A、5+100 与 `git diff --check` 通过。
+- Hash：起始提交 `61555af2`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉验收。
+
 ## v0.2.28.68-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F1（2026-09-11 01:18:01 +08:00）
 - 目标：修正 Context Tool Bar 的编辑上下文可见性。
 - 变化：区域面、道路、地图标记及绘制操作仅在 `IsRegionEditMode` 下显示；启动态与地图编辑态完全隐藏区域专属工具，不再以禁用态暴露。
