@@ -3,12 +3,9 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.Right"
              x:DataType="local:UiVm">
-  <Grid RowDefinitions="*,Auto">
+  <Grid RowDefinitions="*,Auto,*">
     <local:EditorRightTabs Grid.Row="0"/>
-    <Grid Grid.Row="1" IsVisible="{Binding IsEditMode}" RowDefinitions="Auto,Auto,*">
-      <local:RegionalAuthoringPanel x:Name="RegionWorkspace" IsVisible="{Binding IsRegionEditMode}"/>
-      <GridSplitter Grid.Row="1" Height="4" Background="{StaticResource Color.Border.Default}" HorizontalAlignment="Stretch" VerticalAlignment="Center" ResizeDirection="Rows" IsVisible="{Binding IsRegionEditMode}"/>
-      <local:EditorLayerDock x:Name="LayerWorkspace" Grid.Row="2"/>
-    </Grid>
+    <GridSplitter Grid.Row="1" Height="4" Background="{StaticResource Color.Border.Default}" HorizontalAlignment="Stretch" VerticalAlignment="Center" ResizeDirection="Rows" IsVisible="{Binding IsEditMode}"/>
+    <local:EditorLayerDock x:Name="LayerWorkspace" Grid.Row="2" IsVisible="{Binding IsEditMode}"/>
   </Grid>
 </UserControl>

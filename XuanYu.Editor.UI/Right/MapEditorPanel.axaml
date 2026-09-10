@@ -10,7 +10,7 @@
     <StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/>
   </UserControl.Styles>
   <Grid RowDefinitions="Auto,*">
-    <xy:XYTabBar x:Name="MapTabs"
+    <xy:XYTabBar x:Name="MapTabs" SizingMode="Content"
                  xycore:XY.Size="Compact"
                  xycore:XY.Density="Compact"
                  Height="{StaticResource Control.Height.Compact}"

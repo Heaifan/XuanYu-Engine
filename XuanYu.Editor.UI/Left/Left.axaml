@@ -10,7 +10,7 @@
   </UserControl.Styles>
   <Grid RowDefinitions="24,28,*">
     <Grid Grid.Row="0" ColumnDefinitions="*,28">
-      <xy:XYTabs x:Name="ContentTabs" Grid.Column="0" SelectionChanged="ContentTabs_SelectionChanged"
+      <xy:XYTabs x:Name="ContentTabs" Grid.Column="0" SizingMode="Content" SelectionChanged="ContentTabs_SelectionChanged"
                  xycore:XY.Size="Compact" xycore:XY.Density="Compact"
                  Height="{StaticResource Control.Height.Compact}" ClipToBounds="True">
         <xy:XYTab Id="project" Label="项目" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>

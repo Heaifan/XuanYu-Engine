@@ -25,7 +25,7 @@ public sealed partial class AreaBLeftWorkspaceRuntimeTests
             var mapVisible = map.IsVisible;
             var layerVisible = layer.IsVisible;
             vm.SwitchWorkspaceCommand.Execute("RegionEditor"); Dispatcher.UIThread.RunJobs(); right.UpdateLayout();
-            var region = right.FindControl<RegionalAuthoringPanel>("RegionWorkspace")!;
+            var region = UiRuntimeTestHost.Descendants<RegionalAuthoringPanel>(inspector).Single();
             return (mapVisible, region.IsVisible, layerVisible, map.SelectedTabId, region.SelectedTabId,
                 vm.IsMapEditMode, vm.IsRegionEditMode);
         });

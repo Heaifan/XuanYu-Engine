@@ -56,9 +56,12 @@ public sealed class EditorModeUiCompositionTests
     public void Region_context_shows_the_current_drawing_target_and_old_right_map_tab_is_retired()
     {
         var rightShell = Read("XuanYu.Editor.UI", "Right", "Right.axaml");
+        var inspector = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
         var region = Read("XuanYu.Editor.UI", "Left", "RegionPanel.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "EditorRightTabs.axaml");
-        Assert.Contains("RegionalAuthoringPanel", rightShell);
+        Assert.DoesNotContain("RegionalAuthoringPanel", rightShell);
+        Assert.Contains("<local:RegionalAuthoringPanel", inspector);
+        Assert.Equal(1, Count(inspector, "<ScrollViewer"));
         Assert.Contains("RegionPanel", Read("XuanYu.Editor.UI", "Right", "RegionalAuthoringPanel.axaml"));
         Assert.Contains("当前绘制目标", region);
         Assert.Contains("RegionDrawingTargetName", region);

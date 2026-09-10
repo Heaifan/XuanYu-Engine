@@ -7,8 +7,7 @@
   <UserControl.Styles>
     <StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/>
   </UserControl.Styles>
-  <ScrollViewer VerticalScrollBarVisibility="Auto">
-    <StackPanel Spacing="8" Margin="2,8">
+  <StackPanel Spacing="8" Margin="2,8">
       <xy:XYSectionTitle Text="区域面"/>
       <xy:XYSectionTitle Text="当前绘制目标"/>
       <xy:XYText Text="{Binding RegionDrawingTargetName}"/>
@@ -33,6 +32,5 @@
       <xy:XYSeparator Variant="Section"/>
       <xy:XYSectionTitle Text="区域内容"/>
       <xy:XYText Text="已有区域：{Binding RegionContentCount}"/>
-    </StackPanel>
-  </ScrollViewer>
+  </StackPanel>
 </UserControl>

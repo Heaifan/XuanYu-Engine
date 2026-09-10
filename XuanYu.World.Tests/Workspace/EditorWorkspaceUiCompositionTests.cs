@@ -49,10 +49,9 @@ public sealed class EditorWorkspaceUiCompositionTests
     [Fact]
     public void Region_context_contains_the_drawing_target_and_declared_inspector_placeholder()
     {
-        var rightShell = Read("XuanYu.Editor.UI", "Right", "Right.axaml");
         var region = Read("XuanYu.Editor.UI", "Left", "RegionPanel.axaml");
         var right = Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml");
-        Assert.Contains("RegionalAuthoringPanel", rightShell);
+        Assert.Contains("RegionalAuthoringPanel", right);
         Assert.Contains("RegionPanel", Read("XuanYu.Editor.UI", "Right", "RegionalAuthoringPanel.axaml"));
         Assert.Contains("当前绘制目标", region);
         Assert.Contains("RegionDrawingTargetName", region);

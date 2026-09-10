@@ -11,7 +11,7 @@
   </UserControl.Styles>
   <Grid RowDefinitions="Auto,*">
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-      <xy:XYTabs x:Name="SideTabs" Grid.Column="0" SelectionChanged="SideTabs_SelectionChanged"
+      <xy:XYTabs x:Name="SideTabs" Grid.Column="0" SizingMode="Content" SelectionChanged="SideTabs_SelectionChanged"
                  xycore:XY.Size="Compact" xycore:XY.Density="Compact"
                  Height="{StaticResource Control.Height.Compact}" ClipToBounds="True">
         <xy:XYTab Id="inspector" Label="检查器" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>

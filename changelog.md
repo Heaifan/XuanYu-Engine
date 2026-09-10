@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.59-rz · AREA-D-R2-FIX4（2026-09-10 18:06:54 +08:00）
+- 目标：以实战反馈反哺 XYUI canonical，并收口 Region Inspector / LayerDock 结构。
+- XYUI：新增 `XyuiTabSizingMode`（默认 Equal，Engine Left/Right/Map/Region authoring 使用 Content）；保留 XYTabBar 的滚动、翻页、溢出与新增职责。共享 Button Chrome 修正 XYButton、XYToggleButton、XYIconButton 的实际内容居中；XYBadge Accent 改用 `XY.Text.Primary`，补齐禁用态视觉；Gallery 与运行时契约同步。
+- Area D：Region authoring 归入 Inspector 唯一滚动宿主，Region/Road 页面移除嵌套滚动；Right 仅保留 Inspector、Splitter、独立 LayerDock；LayerDock 展开最小空间由 192 提升至 260 DIP，图层 ListBox 内部滚动与折叠保留。
+- 验证：解决方案构建 0 警告/0 错误；Core 339/339；WarCore 22/22；XYUI 602/602；World 1479 通过、1 个既有用户延期 Unsaved Dialog 词文测试失败；ARCH-A PASS；5+100 PASS；JSON/XML 与 `git diff --check` PASS。
+- Hash：起始提交 `a954c6caaa34c9a64db54fc7913075f6c41c0e29`。
+- 状态：`AREA-D-R2-FIX4 / XYUI CANONICAL HARDENED / REGION INSPECTOR CONSOLIDATED / READY FOR USER VISUAL + INTERACTION ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.59-rz · AREA-D-R2-FIX3（2026-09-10 16:30:48 +08:00）
 - 目标：修复 Map Inspector 的 LayerDock 投影、空 EntityHeader 占位、Right Map/Region 紧凑字体与 LayerDock 展开空间。
 - 图层投影：Fresh Map 继续消费 MapDefaultDefinition 已有的“地面 / 边界 / 区域 1”，Map 模式共享 LayerPanel 展示真实 `LayerItems`；不新增默认 Layer，Eye/Lock 仍沿用现有 MapSession 链；Left Scene Tree 保持 Scene + Entity 合同。

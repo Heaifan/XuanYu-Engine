@@ -15,8 +15,10 @@ public sealed class UiD2F1RegionToolActivationContractTests
         var top = ReadTop(); var left = ReadLeft(); var region = ReadRegionPanel();
         Assert.DoesNotContain("Text=\"绘制区域\"", top);
         Assert.DoesNotContain("RegionWorkspace", left);
-        Assert.Contains("IsRegionEditMode", File.ReadAllText(Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "Right.axaml")));
+        var inspector = File.ReadAllText(Path.Combine(
+            AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+        Assert.Contains("IsRegionEditMode", inspector);
+        Assert.Contains("<local:RegionalAuthoringPanel", inspector);
         Assert.Contains("IsEnabled=\"{Binding CanRequestRegionDrawing}\"", region);
         Assert.Contains("Click=\"RegionDrawing_Click\"", region);
         Assert.Contains("Content=\"绘制区域\"", region);

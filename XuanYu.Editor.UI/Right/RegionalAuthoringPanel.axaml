@@ -11,7 +11,7 @@
   <Grid RowDefinitions="Auto,*">
     <StackPanel Grid.Row="0" Spacing="6" Margin="2,8,2,0">
       <xy:XYSectionTitle Text="内容类型"/>
-      <xy:XYTabBar x:Name="AuthoringTabs" SelectionChanged="AuthoringTabs_SelectionChanged">
+      <xy:XYTabBar x:Name="AuthoringTabs" SizingMode="Content" SelectionChanged="AuthoringTabs_SelectionChanged">
         <xy:XYTab Id="region" Label="区域面" ShowSelectedAccent="False"/>
         <xy:XYTab Id="road" Label="道路" ShowSelectedAccent="False"/>
         <xy:XYTab Id="marker" Label="地图标记" ShowSelectedAccent="False"/>

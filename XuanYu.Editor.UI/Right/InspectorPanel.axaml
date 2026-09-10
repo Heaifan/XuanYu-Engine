@@ -10,7 +10,7 @@
   </UserControl.Styles>
 
   <Grid RowDefinitions="*">
-  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+  <ScrollViewer x:Name="InspectorScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
   <StackPanel Spacing="8" Margin="0,6,0,0">
     <Grid x:Name="EntityHeader" ColumnDefinitions="20,*" ColumnSpacing="8" IsVisible="{Binding IsEntityInspector}">
       <xy:XYIcon Icon="Browse" Size="Small" VerticalAlignment="Center"/>
@@ -27,6 +27,7 @@
     <local:LayerInspectorPanel IsVisible="{Binding HasCurrentLayerSelection}"/>
 
     <StackPanel IsVisible="{Binding IsRegionEditMode}" Spacing="6">
+      <local:RegionalAuthoringPanel x:Name="RegionWorkspace"/>
       <StackPanel IsVisible="{Binding !HasCurrentLayerSelection}">
       <xy:XYSectionTitle Text="区域属性"/>
       <xy:XYEmptyText Text="当前未选择区域"/>

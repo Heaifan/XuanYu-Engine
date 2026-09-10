@@ -53,7 +53,7 @@ public sealed class AreaDR2Fix3ProjectionDensityRuntimeTests
             var dock = right.FindControl<EditorLayerDock>("LayerWorkspace")!;
             return (Height: dock.Bounds.Height, Rows: UiRuntimeTestHost.Descendants<XYTruncatedText>(dock).Count());
         });
-        Assert.True(state.Height >= 192); Assert.Equal(3, state.Rows);
+        Assert.True(state.Height >= 260); Assert.Equal(3, state.Rows);
     }
 
     [Fact]
