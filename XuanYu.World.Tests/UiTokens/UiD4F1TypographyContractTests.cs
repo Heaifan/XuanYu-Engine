@@ -73,8 +73,8 @@ public sealed class UiD4F1TypographyContractTests
     public void Page_level_fonts_reference_only_public_styles_or_tokens()
     {
         var mapEditor = Read("Right/MapEditorPanel.axaml");
-        Assert.Contains("<xy:XYTabBar", mapEditor);
-        Assert.Contains("ShowSelectedAccent=\"False\"", mapEditor);
+        Assert.Contains("<xy:XYPager", mapEditor);
+        Assert.Contains("Label=\"环境\"", mapEditor);
         var layerPanel = Read("Right/LayerPanel.axaml");
         Assert.Contains("<xy:XYTruncatedText", layerPanel); // 图层名 13（XYUI-1-04）
         Assert.Contains("<xy:XYBadge", layerPanel);         // 类型标签（XYUI-1-09）

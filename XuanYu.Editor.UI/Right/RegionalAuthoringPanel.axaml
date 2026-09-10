@@ -11,16 +11,13 @@
   <Grid RowDefinitions="Auto,*">
     <StackPanel Grid.Row="0" Spacing="6" Margin="2,8,2,0">
       <xy:XYSectionTitle Text="内容类型"/>
-      <xy:XYTabBar x:Name="AuthoringTabs" SizingMode="Content" SelectionChanged="AuthoringTabs_SelectionChanged">
-        <xy:XYTab Id="region" Label="区域面" IsClosable="False" ShowSelectedAccent="False"/>
-        <xy:XYTab Id="road" Label="道路" IsClosable="False" ShowSelectedAccent="False"/>
-        <xy:XYTab Id="marker" Label="地图标记" IsClosable="False" ShowSelectedAccent="False"/>
-      </xy:XYTabBar>
+      <xy:XYPager x:Name="AuthoringPager" SelectionChanged="AuthoringPager_SelectionChanged">
+        <xy:XYPagerPage Id="region" Label="区域面"><local:RegionPanel/></xy:XYPagerPage>
+        <xy:XYPagerPage Id="road" Label="道路"><local:RoadPanel/></xy:XYPagerPage>
+        <xy:XYPagerPage Id="marker" Label="地图标记"><local:MarkerPanel/></xy:XYPagerPage>
+      </xy:XYPager>
     </StackPanel>
     <Grid Grid.Row="1">
-      <local:RegionPanel IsVisible="{Binding IsRegionSurfaceAuthoringMode}"/>
-      <local:RoadPanel IsVisible="{Binding IsRoadAuthoringMode}"/>
-      <local:MarkerPanel IsVisible="{Binding IsMarkerAuthoringMode}"/>
     </Grid>
   </Grid>
 </UserControl>

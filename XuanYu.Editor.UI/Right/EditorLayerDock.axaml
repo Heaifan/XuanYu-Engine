@@ -12,19 +12,15 @@
       <Setter Property="Margin" Value="0,8,0,4"/>
     </Style>
   </UserControl.Styles>
-  <Grid x:Name="Root" RowDefinitions="Auto,*" MinHeight="260">
-    <Border Classes="layerDockHeader">
-      <Grid ColumnDefinitions="*,Auto">
-        <xy:XYSectionTitle Text="{Binding CurrentLayerEmptyTitle}" VerticalAlignment="Center"/>
-        <xy:XYButton x:Name="CollapseButton" Grid.Column="1" Content="收起" Click="CollapseButton_Click" Variant="Secondary" Padding="8,2" MinHeight="0" MinWidth="0" HorizontalAlignment="Right"/>
-      </Grid>
-    </Border>
-    <Grid x:Name="LayerContent" Grid.Row="1">
+  <xy:XYCollapsiblePane x:Name="Pane" Header="图层" MinHeight="260">
+    <xy:XYCollapsiblePane.Content>
+      <Grid x:Name="LayerContent">
       <local:LayerPanel IsVisible="{Binding HasCurrentLayerItems}"/>
       <StackPanel IsVisible="{Binding !HasCurrentLayerItems}" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="240" Spacing="6">
         <xy:XYEmptyText Text="{Binding CurrentLayerEmptyTitle}"/>
         <xy:XYCaption Text="{Binding CurrentLayerEmptyMessage}" TextWrapping="Wrap"/>
       </StackPanel>
-    </Grid>
-  </Grid>
+      </Grid>
+    </xy:XYCollapsiblePane.Content>
+  </xy:XYCollapsiblePane>
 </UserControl>

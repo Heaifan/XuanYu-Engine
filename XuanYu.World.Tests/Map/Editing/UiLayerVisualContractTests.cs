@@ -56,8 +56,8 @@ public sealed class UiLayerVisualContractTests
     public void V05_right_tabs_use_converged_font_sizes()
     {
         Assert.Contains("Font.Body.Size", Ui);            // D4-F1：顶层页签 13 走正式 Token
-        Assert.Contains("<xy:XYTabBar", MapEditor);
-        Assert.Contains("ShowSelectedAccent=\"False\"", MapEditor);
+        Assert.Contains("<xy:XYPager", MapEditor);
+        Assert.Contains("Label=\"基础\"", MapEditor);
     }
 
     [Fact]

@@ -24,7 +24,7 @@ public sealed class UiR1FinalLeftTopContractTests
         var panel = Read("Right/RegionalAuthoringPanel.axaml");
         var code = Read("Right/RegionalAuthoringPanel.axaml.cs");
         Assert.Contains("<xy:XYSectionTitle Text=\"内容类型\"", panel);
-        Assert.Contains("AuthoringTabs_SelectionChanged", panel);
+        Assert.Contains("AuthoringPager_SelectionChanged", panel);
         Assert.Contains("SelectRegionAuthoringMode", code);
     }
 

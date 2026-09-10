@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.66-rz · AREA-D-R3-INSPECTOR-PAGER（2026-09-11 00:33:37 +08:00）
+- 目标：将右侧地图/区域编辑导航切换为分页 Inspector，并让图层 Dock 支持自适应折叠。
+- 变化：新增 XYPager、XYInspectorSection、XYCollapsiblePane；地图页增加基础/环境/显示/数据/高级分页；图层区改为可折叠 Pane；同步运行时与源码 UI 合同测试。
+- 验证：专项 Runtime/UI 合同测试 25/25 通过；全量构建 0 警告/0 错误；World 1487/1487、Core 339/339、WarCore 22/22、XYUI 617/617 通过。
+- Hash：待提交。
+- 遗留：等待真机视觉与交互验收。
+
 ## v0.2.28.65-rz · XYENGINE-NAV-LAYOUT-STABILITY-FIX-R2（2026-09-10 23:22:02 +08:00）
 - 目标：将已通过真机验收的 Gallery 导航测量稳定性修正实装到 XuanYu Engine 项目树与层级树。
 - 修正：为 `ProjectList` 与 `HierarchyList` 增加显式外层滚动宿主，并以内联非滚动 `StackPanel` ItemsHost 替换默认 ListBox 模板；保留选择、键盘、hover、重命名和树行交互。
@@ -1836,3 +1843,9 @@ MAP-A-R1-D1 地图合同冻结（2026-08-02 17:42:55）
 - 治理：新里程碑 MAP-A（模块 24），新分支 feat/MAP-A-map；版本 v0.2.23.0-rz → v0.2.24.0-rz（五处同步）；基线 HEAD cbb694b = origin tip，ahead/behind 0/0；已知偏差 untracked `IDEA.md` 与残留 `XuanYu.Editor.Avalonia/` bin 目录未处理。
 - 状态：MAP-A-R1-D1 合同冻结完成，等待批准后进入 D1 域类型编码（MapId/MapDocument/MapSurfaceDefinition/字段验证）。
 
+## v0.2.28.66-rz · AREA-D-R3-INSPECTOR-PAGER（2026-09-11 00:00:00 +08:00）
+- 目标：将右侧地图/区域编辑导航切换为分页 Inspector，并让图层 Dock 支持自适应折叠。
+- 变化：新增 XYPager、XYInspectorSection、XYCollapsiblePane；地图页增加基础/环境/显示/数据/高级分页；图层区改为可折叠 Pane；同步运行时与源码 UI 合同测试。
+- 验证：专项 Runtime/UI 合同测试 25/25 通过；全量门禁待执行。
+- Hash：待提交。
+- 遗留：等待真机视觉与交互验收。

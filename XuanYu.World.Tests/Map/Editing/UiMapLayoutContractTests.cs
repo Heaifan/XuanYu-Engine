@@ -38,10 +38,10 @@ public sealed class UiMapLayoutContractTests
     [Fact]
     public void Map_editor_has_frozen_content_navigation_tabs()
     {
-        Assert.Contains("<xy:XYTabBar", MapEditor);
-        Assert.Contains("Id=\"base\" Label=\"地图基础\"", MapEditor);
-        Assert.Contains("Id=\"environment\" Label=\"地图环境\"", MapEditor);
-        Assert.Contains("Id=\"dataset\" Label=\"数据集\"", MapEditor);
+        Assert.Contains("<xy:XYPager", MapEditor);
+        Assert.Contains("Id=\"base\" Label=\"基础\"", MapEditor);
+        Assert.Contains("Id=\"environment\" Label=\"环境\"", MapEditor);
+        Assert.Contains("Id=\"data\" Label=\"数据\"", MapEditor);
     }
 
     [Fact]

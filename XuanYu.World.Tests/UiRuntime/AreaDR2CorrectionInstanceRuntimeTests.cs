@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
+using XYUI.Avalonia.Controls;
 using XuanYu.Editor.UI;
 
 namespace XuanYu.World.Tests.UiRuntime;
@@ -36,11 +36,12 @@ public sealed class AreaDR2CorrectionInstanceRuntimeTests
             var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
             var right = new Right { DataContext = vm }; host.Show(right, 480, 720); right.UpdateLayout();
             var dock = UiRuntimeTestHost.Descendants<EditorLayerDock>(right).Single();
-            dock.FindControl<Button>("CollapseButton")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            var pane = dock.FindControl<XYCollapsiblePane>("Pane")!;
+            pane.IsCollapsed = true;
             vm.AddCubeEntity(); right.UpdateLayout();
-            return (Content: dock.FindControl<Grid>("LayerContent")!.IsVisible, Button: dock.FindControl<Button>("CollapseButton")!.Content?.ToString());
+            return (Content: dock.FindControl<Grid>("LayerContent")!.IsVisible, Collapsed: pane.IsCollapsed);
         });
-        Assert.False(state.Content); Assert.Equal("展开", state.Button);
+        Assert.False(state.Content); Assert.True(state.Collapsed);
     }
 
     static int Count<T>(Right right) where T : Control => UiRuntimeTestHost.Descendants<T>(right).Count();

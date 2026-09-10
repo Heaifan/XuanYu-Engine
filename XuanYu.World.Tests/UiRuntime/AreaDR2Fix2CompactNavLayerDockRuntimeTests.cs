@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
-using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using XuanYu.Editor.UI;
 using XuanYu.Editor.Workspace;
@@ -73,10 +72,11 @@ public sealed class AreaDR2Fix2CompactNavLayerDockRuntimeTests
             var right = new Right { DataContext = vm }; host.Show(right, width, 720); right.UpdateLayout();
             var dock = right.FindControl<EditorLayerDock>("LayerWorkspace")!;
             var expanded = (dock.Bounds.Height, dock.FindControl<Grid>("LayerContent")!.IsEffectivelyVisible);
-            dock.FindControl<XYButton>("CollapseButton")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            var pane = dock.FindControl<XYCollapsiblePane>("Pane")!;
+            pane.IsCollapsed = true;
             right.UpdateLayout();
             return (ExpandedHeight: expanded.Item1, ExpandedVisible: expanded.Item2,
-                Collapsed: !dock.FindControl<Grid>("LayerContent")!.IsEffectivelyVisible);
+                Collapsed: pane.IsCollapsed && !dock.FindControl<Grid>("LayerContent")!.IsEffectivelyVisible);
         });
         Assert.True(state.ExpandedVisible); Assert.True(state.ExpandedHeight >= 160); Assert.True(state.Collapsed);
     }

@@ -33,12 +33,10 @@ public partial class RegionalAuthoringPanel : UserControl
             or nameof(UiVm.IsMarkerAuthoringMode)) SyncTab();
     }
 
-    void AuthoringTabs_SelectionChanged(object? sender, XYTab tab)
-    {
-        if (!_syncing && _viewModel is not null) SelectTab(tab.Id);
-    }
+    void AuthoringPager_SelectionChanged(object? sender, XYPagerPage page)
+    { if (!_syncing && _viewModel is not null) SelectTab(page.Id); }
 
-    public string SelectedTabId => AuthoringTabs.SelectedTabId ?? "region";
+    public string SelectedTabId => AuthoringPager.SelectedId ?? "region";
 
     public void SelectTab(string id)
     {
@@ -60,7 +58,7 @@ public partial class RegionalAuthoringPanel : UserControl
                 _ => "region"
             };
             var changed = SelectedTabId != id;
-            AuthoringTabs.SelectedTabId = id;
+            AuthoringPager.Select(id);
             if (changed) TabChanged?.Invoke(id);
         }
         finally { _syncing = false; }
