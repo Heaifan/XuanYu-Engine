@@ -49,4 +49,12 @@ public sealed class UiRootLogRowContractTests
     {
         Assert.Contains("MinHeight=\"0\"", FootAxaml);
     }
+
+    [Fact]
+    public void Bottom_toolbar_keeps_a_real_expand_toggle_without_log_heading()
+    {
+        Assert.Contains("Command=\"{Binding ToggleLogCommand}\"", FootAxaml);
+        Assert.Contains("Icon=\"ChevronDown\"", FootAxaml);
+        Assert.DoesNotContain("<xy:XYHeading Text=\"日志\"", FootAxaml);
+    }
 }

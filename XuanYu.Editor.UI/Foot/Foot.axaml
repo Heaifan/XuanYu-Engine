@@ -6,7 +6,8 @@
   </UserControl.Styles>
   <Grid RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="6" MinHeight="32" AutomationProperties.Name="展开或折叠日志">
-      <xy:XYHeading Text="日志" Variant="PanelTitle"/><xy:XYStatusBadge Grid.Column="1" Text="正常"/>
+      <xy:XYIconButton Grid.Column="0" Icon="ChevronDown" Command="{Binding ToggleLogCommand}" ToolTip.Tip="展开或折叠日志" AutomationProperties.Name="展开或折叠日志"/>
+      <xy:XYStatusBadge Grid.Column="1" Text="正常"/>
       <xy:XYToggleButton Grid.Column="2" Classes="logFilter" IsChecked="{Binding IsLogFilterAll}" Command="{Binding SelectLogFilterCommand}" CommandParameter="全部" Content="{Binding AllCount, StringFormat='全部 {0}'}" AutomationProperties.Name="筛选全部日志"/>
       <xy:XYToggleButton Grid.Column="3" Classes="logFilter" IsChecked="{Binding IsLogFilterInfo}" Command="{Binding SelectLogFilterCommand}" CommandParameter="信息" Content="{Binding InfoCount, StringFormat='信息 {0}'}" AutomationProperties.Name="筛选信息日志"/>
       <xy:XYToggleButton Grid.Column="4" Classes="logFilter" IsChecked="{Binding IsLogFilterWarning}" Command="{Binding SelectLogFilterCommand}" CommandParameter="警告" Content="{Binding WarningCount, StringFormat='警告 {0}'}" AutomationProperties.Name="筛选警告日志"/>
