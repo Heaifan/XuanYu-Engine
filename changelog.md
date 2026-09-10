@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.62-rz · XYUI-GALLERY-NAV-SCROLL-JUMP-FIX-R1（2026-09-10 21:25:02 +08:00）
+- 目标：收口 Gallery 左侧导航的单一 Scroll Authority，消除程序化选中导航项时外层滚动位置被隐式改写的问题。
+- 修正：Gallery 左侧唯一外层 ScrollViewer 命名为 `NavigationScrollHost`；`nav-tree` 与 `nav-foundation` 的 ListBox 显式关闭 `AutoScrollToSelectedItem`；未改 XYTabs、右侧文档滚动或编辑器业务区。
+- 回归：新增真实 Headless Gallery 运行时测试，覆盖 5 个导航 ListBox 的运行时属性、选中 `XYUI-3-3.10` 后外层 Offset 稳定性与单一显式滚动宿主。
+- 验证：红灯 3/3；修复后定向回归 3/3、相关 Gallery 回归 11/11；方案构建 0 警告/0 错误；XYUI 612/612；Core 339/339；WarCore 22/22；World 1480 通过、1 个既有用户延期 Unsaved Dialog 词文测试失败；ARCH-A 与 `git diff --check` PASS。
+- Hash：起始提交 `0e0d1daabd88f743741029e7ad7cdba08f9b3b3c`。
+- 状态：`XYUI-GALLERY-NAV-SCROLL-JUMP-FIX-R1 / READY FOR USER VISUAL + WHEEL ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.61-rz · AREA-D-R2-FIX5-F1（2026-09-10 19:59:32 +08:00）
 - 目标：移除截图中左侧与右侧固定导航页签之间的多余竖线。
 - 根因：`XYTab` 无条件创建 `xyui-tab-divider` 1 DIP Border，并为它保留独立 Auto 列；该 Border 被每个 Tab 渲染为竖线。

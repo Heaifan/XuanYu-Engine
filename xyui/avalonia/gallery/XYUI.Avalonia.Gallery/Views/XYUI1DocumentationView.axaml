@@ -19,7 +19,7 @@
   </UserControl.Resources>
   <Grid ColumnDefinitions="228,*">
     <Border Grid.Column="0" BorderBrush="{DynamicResource XY.Brush.Border.Color.Subtle}" BorderThickness="0,0,1,0" Background="{DynamicResource XY.Brush.Surface.Panel}">
-      <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <ScrollViewer x:Name="NavigationScrollHost" HorizontalScrollBarVisibility="Disabled">
         <StackPanel Margin="12,16">
           <TextBlock Text="文档导航" Classes="xyui-heading-panel" Margin="8,0,8,14" />
           <TextBlock Text="Foundation" Classes="xyui-text-section" Margin="8,0,8,5" />

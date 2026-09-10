@@ -26,6 +26,7 @@
       <Setter Property="Margin" Value="0,0,6,0" />
     </Style>
     <Style Selector="ListBox.nav-tree">
+      <Setter Property="AutoScrollToSelectedItem" Value="False" />
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="BorderThickness" Value="0" />
       <Setter Property="Margin" Value="0,0,0,8" />
@@ -45,6 +46,7 @@
       <Setter Property="BorderThickness" Value="3,0,0,0" />
     </Style>
     <Style Selector="ListBox.nav-foundation">
+      <Setter Property="AutoScrollToSelectedItem" Value="False" />
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="BorderThickness" Value="0" />
       <Setter Property="Margin" Value="0,0,0,14" />
