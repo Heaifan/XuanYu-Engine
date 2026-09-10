@@ -1,5 +1,15 @@
 # changelog
 
+## v0.2.28.58-rz · AREA-D-R2-FIX2（2026-09-10 15:48:48 +08:00）
+- 目标：仅修复一级 Tabs 密度、地图整数米显示、LayerDock 默认空间和图层操作图标可见性。
+- 导航：Left/Right 真实 `XYTabs/XYTab` 统一消费 `XY.Size=Compact`、`XY.Density=Compact` 与 `Control.Height.Compact`；保留溢出动作、选择和键盘行为。
+- 地图尺寸：三处 `XYNumberField` 使用 `DecimalPlaces=0`、`Step=1`、`SmallStep=1`；Map Inspector 显示整数米，但 CurrentMap 仍保留小数精度，显式 Apply 才提交。
+- LayerDock：展开态增加 160 DIP 合理最小空间，折叠时恢复仅标题高度；保留内部列表滚动与现有宿主结构。
+- 图标：修复 Layer 行 Path 的真实矢量几何缺少 Stroke 的根因；Visibility/Lock 操作、命令和现有图标资源保持不变。
+- 验证：FIX2 定向回归 6/6；本轮新增失败 0；`UnsavedChangesConfirmationWindow.axaml` 保持 dirty、未暂存、未提交。
+- Hash：起始提交 `0c352575`。
+- 状态：`AREA-D-R2-FIX2 READY FOR USER VISUAL + INTERACTION ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.57-rz · AREA-D-R2-FIX1（2026-09-10 14:57:19 +08:00）
 - 目标：完成 Area D 地图 Inspector 的 XYUI 控件收口、重复复制入口清理和紧凑密度修复。
 - 空白根因/修复：`InspectorPanel` 的实体 header 在 Map Edit 中无条件占位；改为 Map Edit 隐藏真实 header 宿主，未使用负 Margin、Transform 或魔法高度。

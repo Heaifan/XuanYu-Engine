@@ -2,16 +2,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
+             xmlns:xycore="using:XYUI.Avalonia"
              x:Class="XuanYu.Editor.UI.Left"
              x:DataType="local:UiVm">
   <UserControl.Styles>
     <StyleInclude Source="avares://XuanYu.Editor.UI/Left/Left.Styles.axaml"/>
   </UserControl.Styles>
-  <Grid RowDefinitions="34,28,*">
+  <Grid RowDefinitions="24,28,*">
     <Grid Grid.Row="0" ColumnDefinitions="*,28">
-      <xy:XYTabs x:Name="ContentTabs" Grid.Column="0" SelectionChanged="ContentTabs_SelectionChanged">
-        <xy:XYTab Id="project" Label="项目" IsClosable="False"/>
-        <xy:XYTab Id="file" Label="文件" IsClosable="False"/>
+      <xy:XYTabs x:Name="ContentTabs" Grid.Column="0" SelectionChanged="ContentTabs_SelectionChanged"
+                 xycore:XY.Size="Compact" xycore:XY.Density="Compact"
+                 Height="{StaticResource Control.Height.Compact}" ClipToBounds="True">
+        <xy:XYTab Id="project" Label="项目" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>
+        <xy:XYTab Id="file" Label="文件" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>
       </xy:XYTabs>
       <xy:XYIconButton x:Name="ProjectMoreButton" Grid.Column="1" Classes="left-action"
                        ToolTip.Tip="更多" AutomationProperties.Name="项目更多">

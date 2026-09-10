@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
+             xmlns:xycore="using:XYUI.Avalonia"
              x:Class="XuanYu.Editor.UI.EditorRightTabs"
              x:DataType="local:UiVm">
   <UserControl.Styles>
@@ -10,10 +11,12 @@
   </UserControl.Styles>
   <Grid RowDefinitions="Auto,*">
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-      <xy:XYTabs x:Name="SideTabs" Grid.Column="0" SelectionChanged="SideTabs_SelectionChanged">
-        <xy:XYTab Id="inspector" Label="检查器" IsClosable="False"/>
-        <xy:XYTab Id="hierarchy" Label="层级" IsClosable="False"/>
-        <xy:XYTab Id="debug" Label="调试" IsClosable="False"/>
+      <xy:XYTabs x:Name="SideTabs" Grid.Column="0" SelectionChanged="SideTabs_SelectionChanged"
+                 xycore:XY.Size="Compact" xycore:XY.Density="Compact"
+                 Height="{StaticResource Control.Height.Compact}" ClipToBounds="True">
+        <xy:XYTab Id="inspector" Label="检查器" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>
+        <xy:XYTab Id="hierarchy" Label="层级" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>
+        <xy:XYTab Id="debug" Label="调试" IsClosable="False" Height="{StaticResource Control.Height.Compact}"/>
       </xy:XYTabs>
       <xy:XYIconButton x:Name="AllTabsButton" Grid.Column="1" Classes="right-tab-action"
                        Icon="ChevronDown" Click="AllTabsButton_Click" ToolTip.Tip="全部页签"

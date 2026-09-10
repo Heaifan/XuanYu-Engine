@@ -10,7 +10,7 @@ public sealed partial class UiVm
     public string MapPath => CurrentMapManifestPath;
     public string MapIdText => CurrentMapManifest.Id;
     public string MapSizeText =>
-        $"{MapSession.CurrentMap.SizeMeters.Width:0.####} × {MapSession.CurrentMap.SizeMeters.Depth:0.####} 米";
+        $"{MapSession.CurrentMap.SizeMeters.Width:0} × {MapSession.CurrentMap.SizeMeters.Depth:0} 米";
     public bool HasMap => true; // D2 会话语义：编辑器恒有当前地图（初始默认 10 km）。
     public void NewMap()
     {

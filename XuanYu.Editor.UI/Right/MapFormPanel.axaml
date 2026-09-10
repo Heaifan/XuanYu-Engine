@@ -21,7 +21,7 @@
           RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="{StaticResource Space.4}">
       <xy:XYLabel Text="宽度（米）" VerticalAlignment="Center"/>
       <xy:XYNumberField x:Name="WidthBoxWide" Grid.Column="1" Value="{Binding MapWidthDraft, Mode=TwoWay}"
-          Minimum="{Binding MapSizeMinimum}" Maximum="{Binding MapSizeMaximum}" Step="1" SmallStep="0.1" DecimalPlaces="4"
+          Minimum="{Binding MapSizeMinimum}" Maximum="{Binding MapSizeMaximum}" Step="1" SmallStep="1" DecimalPlaces="0"
           Suffix="m"
           xycore:XY.Size="Compact"
           Classes.error="{Binding MapWidthError}" LostFocus="Field_LostFocus"
@@ -32,7 +32,7 @@
       
       <xy:XYLabel Grid.Row="1" Text="深度（米）" VerticalAlignment="Center"/>
       <xy:XYNumberField x:Name="DepthBoxWide" Grid.Row="1" Grid.Column="1" Value="{Binding MapDepthDraft, Mode=TwoWay}"
-          Minimum="{Binding MapSizeMinimum}" Maximum="{Binding MapSizeMaximum}" Step="1" SmallStep="0.1" DecimalPlaces="4"
+          Minimum="{Binding MapSizeMinimum}" Maximum="{Binding MapSizeMaximum}" Step="1" SmallStep="1" DecimalPlaces="0"
           Suffix="m"
           xycore:XY.Size="Compact"
           Classes.error="{Binding MapDepthError}" LostFocus="Field_LostFocus"
@@ -43,7 +43,7 @@
       
       <xy:XYLabel Grid.Row="2" Text="基础高度（米）" VerticalAlignment="Center"/>
       <xy:XYNumberField x:Name="HeightBoxWide" Grid.Row="2" Grid.Column="1" Value="{Binding MapBaseHeightDraft, Mode=TwoWay}"
-          Minimum="{Binding MapHeightMinimum}" Maximum="{Binding MapHeightMaximum}" Step="1" SmallStep="0.1" DecimalPlaces="4"
+          Minimum="{Binding MapHeightMinimum}" Maximum="{Binding MapHeightMaximum}" Step="1" SmallStep="1" DecimalPlaces="0"
           Suffix="m"
           xycore:XY.Size="Compact"
           Classes.error="{Binding MapBaseHeightError}" LostFocus="Field_LostFocus"
