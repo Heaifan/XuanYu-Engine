@@ -75,7 +75,13 @@ public static partial class XyuiComponentStyles
         surface.Setters.Add(new Setter(Border.HeightProperty, 22d));
         surface.Setters.Add(new Setter(Border.CornerRadiusProperty, new CornerRadius(0))); styles.Add(surface);
         styles.Add(Text(typeof(TextBlock), "xyui-badge-text", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Secondary"));
-        styles.Add(Text(typeof(TextBlock), "xyui-badge-text-accent", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Accent.Default"));
+        styles.Add(Text(typeof(TextBlock), "xyui-badge-text-accent", XyuiTypographyTokens.FontUi, XyuiTypographyTokens.FontSizeCaption, 500, XyuiTypographyTokens.LineHeightCaption, "XY.Brush.Text.Primary"));
+        var disabled = new Style(x => x.OfType<XYBadge>().Class("xyui-badge").Class(":disabled"));
+        Brush(disabled, Border.BackgroundProperty, "XY.Brush.State.Disabled.Background"); styles.Add(disabled);
+        var disabledText = new Style(x => x.OfType<XYBadge>().Class("xyui-badge").Class(":disabled").Descendant().OfType<TextBlock>());
+        Brush(disabledText, TextBlock.ForegroundProperty, "XY.Brush.State.Disabled.Text"); styles.Add(disabledText);
+        var disabledMark = new Style(x => x.OfType<XYBadge>().Class("xyui-badge").Class(":disabled").Descendant().OfType<XyuiBadgeTagPath>());
+        Brush(disabledMark, Shape.FillProperty, "XY.Brush.State.Disabled.Text"); styles.Add(disabledMark);
     }
 
     static void Surface(Styles styles, Type type, string cls, string family, double size, int weight, double line, string foreground, string background, double? height = null)

@@ -29,8 +29,9 @@ public static partial class XyuiControlStyles
     static void AddActionButton(Styles styles)
     {
         var button = new Style(x => x.OfType<XYButton>().Class("xyui-button"));
-        // 用户裁定：家族文字一律统一左对齐（图标 IconButton 除外，保持居中）。
-        button.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYButton>(HorizontalAlignment.Left)));
+        button.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYButton>(HorizontalAlignment.Stretch, HorizontalAlignment.Center)));
+        button.Setters.Add(new Setter(Button.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+        button.Setters.Add(new Setter(Button.VerticalContentAlignmentProperty, VerticalAlignment.Center));
         Chrome(button);
         styles.Add(button);
         State(styles, typeof(XYButton), "xyui-button", ":pointerover", TemplatedControl.BackgroundProperty, "XY.Brush.State.Color.Hover");

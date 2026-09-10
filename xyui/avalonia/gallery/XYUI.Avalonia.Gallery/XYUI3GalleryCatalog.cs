@@ -41,7 +41,7 @@ public static partial class XYUI3GalleryCatalog
         XYNavigationMenu.Group("", new XYNavigationItem { Id = "settings", Label = "设置", Icon = XyuiVectorIcon.Section })) { Width = 246, SelectedId = "map" };
     static Control SidebarPreview() { var sidebar = new XYSidebar { PrimaryItems = Primary(), ContextItems = Context() }; sidebar.Build(); return sidebar; }
     static Control RailPreview() => new XYNavigationRail(new XYNavigationState(Primary().Select(x => new XYNavigationEntry(x.Id, x.Label, x.Icon)), "map"), RailContexts()) { Width = 64 };
-    static Control TabsPreview() => new XYTabs(new XYTab { Label = "地图基础" }, new XYTab { Label = "地图环境", IsSelected = true }, new XYTab { Label = "数据集", IsModified = true }, new XYTab { Label = "区域编辑" });
+    static Control TabsPreview() => new XYTabs(new XYTab { Label = "地图基础" }, new XYTab { Label = "地图环境", IsSelected = true }, new XYTab { Label = "数据集", IsModified = true }, new XYTab { Label = "区域编辑" }) { SizingMode = XyuiTabSizingMode.Content };
     static IReadOnlyList<XYNavigationItem> Primary() => [new() { Id = "map", Label = "地图", Icon = XyuiVectorIcon.Locate, IsSelected = true }, new() { Id = "environment", Label = "环境", Icon = XyuiVectorIcon.Eye }, new() { Id = "data", Label = "数据", Icon = XyuiVectorIcon.Code }];
     static IReadOnlyList<XYNavigationItem> Context() => [new() { Id = "base", Label = "地图基础", Icon = XyuiVectorIcon.Section }, new() { Id = "world", Label = "地图环境", Icon = XyuiVectorIcon.Section }, new() { Id = "dataset", Label = "数据集", Icon = XyuiVectorIcon.Section }];
     static IReadOnlyDictionary<string, IReadOnlyList<XYNavigationEntry>> RailContexts() => new Dictionary<string, IReadOnlyList<XYNavigationEntry>>

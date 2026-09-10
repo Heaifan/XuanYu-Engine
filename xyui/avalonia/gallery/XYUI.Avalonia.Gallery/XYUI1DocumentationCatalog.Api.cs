@@ -28,7 +28,7 @@ public static partial class XYUI1DocumentationCatalog
         "XYUI-1-04" => [T("字体", "XY.Font.UI"), T("层级", "XY.FontSize.PanelTitle / PageTitle")],
         "XYUI-1-07" => [T("正文", "XY.Text.Tertiary"), T("Code Mark", "XY.Icon.Mark"), T("尺寸 / Stroke", "8 / 1.25 DIP"), T("字号", "XY.FontSize.Mono")],
         "XYUI-1-08" => [T("方案", "M-05A · Structured Mono Data"), T("列宽", "Label Auto / Value Auto / Unit Auto"), T("Label", "完整显示 / UI Semibold / Left"), T("Value", "XY.Font.Mono / Regular / Right"), T("Unit", "UI Semibold / Left"), T("列间距", "XY.Space.4 + XY.Space.1 / XY.Space.2（20 / 8 DIP）")],
-        "XYUI-1-09" => [T("方案", "Left Pointer Tag"), T("尺寸", "Auto Width / 22 DIP Height / 11 DIP Pointer"), T("Default", "XY.Surface.PanelAlt / XY.Text.Secondary"), T("Accent", "XY.Tag.Accent / XY.Accent.Default")],
+        "XYUI-1-09" => [T("方案", "Left Pointer Tag"), T("尺寸", "Auto Width / 22 DIP Height / 11 DIP Pointer"), T("Default", "XY.Surface.PanelAlt / XY.Text.Secondary"), T("Accent", "XY.Tag.Accent / XY.Text.Primary")],
         "XYUI-1-10" => [T("表面", "XY.Surface.PanelAlt"), T("语义色", "XY.Semantic.*.Text")],
         "XYUI-1-12" or "XYUI-1-13" => [T("字体", "XY.Font.UI"), T("尺寸", "XY.Icon.Size.*")],
         "XYUI-1-14" => [T("分割线", "XY.Divider.*"), T("间距", "XY.Panel.SectionGap")],

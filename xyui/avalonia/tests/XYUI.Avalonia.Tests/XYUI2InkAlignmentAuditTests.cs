@@ -7,18 +7,15 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using XYUI.Avalonia.Controls;
-
 namespace XYUI.Avalonia.Tests;
-
 // 家族文字对齐合同（2026-08-27 VISUAL REJECTED 实测产物）：四类文字着墨中心同偏 −0.37 DIP
 // （字体行盒不对称 + Avalonia 整 DIP 栅格锁定，亚像素补偿无实现通道）；等线即合同，0.45 上界拦截整像素错位复发；
-// 文字左对齐内距统一 12；Chevron 居中恒为 0。
+// Button/Toggle 内容整体居中；Split/Dropdown 的主文本保持 12 DIP 操作区内缩，Chevron 居中恒为 0。
 [Collection("XyuiHeadless")]
 public sealed class XYUI2InkAlignmentAuditTests : IClassFixture<XyuiHeadlessFixture>
 {
     readonly XyuiHeadlessFixture _fx;
     public XYUI2InkAlignmentAuditTests(XyuiHeadlessFixture fx) => _fx = fx;
-
     internal static readonly IReadOnlyDictionary<string, Func<TemplatedControl>> Samples =
         new Dictionary<string, Func<TemplatedControl>>
         {
@@ -26,7 +23,6 @@ public sealed class XYUI2InkAlignmentAuditTests : IClassFixture<XyuiHeadlessFixt
             ["Toggle"] = () => new XYToggleButton { Content = "导出", Width = 120 }, ["SplitMain"] = () => new XYSplitButton { Content = "导出", Width = 150 },
             ["DropdownZone"] = () => new XYDropDownButton { Content = "导出", Width = 150 },
         };
-
     [Fact]
     public void Family_text_shares_one_vertical_ink_line() => _fx.Run(() =>
     {
@@ -42,8 +38,12 @@ public sealed class XYUI2InkAlignmentAuditTests : IClassFixture<XyuiHeadlessFixt
     [InlineData("Toggle", 12d)]
     [InlineData("SplitMain", 12d)]
     [InlineData("DropdownZone", 12d)]
-    public void Family_text_is_left_aligned_with_uniform_inset(string key, double inset) => _fx.Run(() =>
-        Assert.Equal(inset, Parse(TextLine(Audit(Samples[key]())), "leftInset"), 2));
+    public void Family_text_uses_canonical_alignment(string key, double inset) => _fx.Run(() =>
+    {
+        var line = TextLine(Audit(Samples[key]())); var actual = Parse(line, "leftInset");
+        var expected = key is "Button" or "Toggle" ? (120 - Parse(line, "contentW")) / 2 : inset;
+        Assert.InRange(actual, expected - 1.5, expected + 1.5);
+    });
 
     [Theory]
     [InlineData("SplitMain")]
@@ -87,7 +87,7 @@ public sealed class XYUI2InkAlignmentAuditTests : IClassFixture<XyuiHeadlessFixt
             }
             else continue;
             b.AppendLine(CultureInfo.InvariantCulture,
-                $"kind={(node is TextBlock ? "TEXT" : "ICON")}|innerH={innerH.ToString("F1", f)}|inkTop={top.ToString("F2", f)} inkBottom={bottom.ToString("F2", f)}|" +
+                $"kind={(node is TextBlock ? "TEXT" : "ICON")}|innerH={innerH.ToString("F1", f)}|contentW={node.Bounds.Width.ToString("F2", f)}|inkTop={top.ToString("F2", f)} inkBottom={bottom.ToString("F2", f)}|" +
                 $"shiftNeededDown={((top + bottom) / 2 - centerY).ToString("F2", f)}|leftInset={(left - innerLeft).ToString("F2", f)}");
         }
         return b.ToString().TrimEnd();

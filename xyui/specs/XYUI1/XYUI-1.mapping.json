@@ -710,9 +710,9 @@
     },
     {
      "property": "XY.Badge.Accent.Foreground",
-     "value": "XY.Accent.Default",
+     "value": "XY.Text.Primary",
      "kind": "CANONICAL_REF",
-     "canonical_target": "XY.Accent.Default"
+     "canonical_target": "XY.Text.Primary"
     },
     {
      "property": "XY.Badge.Accent.Background",

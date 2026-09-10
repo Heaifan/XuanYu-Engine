@@ -234,7 +234,7 @@
         - XY.Link.Default.Foreground
             - Value = XY.Text.Link
         - XY.Link.Hover.Foreground
-            - Value = XY.Accent.Strong
+            - Value = XY.Text.Primary
         - XY.Link.Hover.Decoration
             - Value = Underline
         - XY.Link.Disabled.Foreground
@@ -406,7 +406,7 @@
         - XY.Badge.Default.TextAlignment
             - Value = Center
         - XY.Badge.Accent.Foreground
-            - Value = XY.Accent.Default
+            - Value = XY.Accent.Strong
         - XY.Badge.Accent.Background
             - Value = XY.Tag.Accent
 

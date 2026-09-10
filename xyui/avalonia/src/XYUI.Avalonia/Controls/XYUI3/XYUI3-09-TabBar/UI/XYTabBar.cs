@@ -17,6 +17,7 @@ public sealed partial class XYTabBar : Border
     public XYIconButton NewButton { get; }
     public Popup OverflowPopup => _overflowPopup;
     public double HorizontalOffset => _viewport.Offset.X;
+    public XyuiTabSizingMode SizingMode { get => Tabs.SizingMode; set => Tabs.SizingMode = value; }
     [Content] public IList<XYTab> Items => Tabs.Items;
     public string? SelectedTabId { get => Tabs.SelectedTabId; set => Tabs.SelectedTabId = value; }
     public event EventHandler<XYTab>? SelectionChanged;

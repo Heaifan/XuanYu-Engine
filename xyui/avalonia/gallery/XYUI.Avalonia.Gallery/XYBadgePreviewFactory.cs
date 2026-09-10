@@ -16,7 +16,8 @@ public static class XYBadgePreviewFactory
         {
             new XYBadge { Text = "草稿", Variant = XyuiBadgeVariant.Default },
             new XYBadge { Text = "已选中", Variant = XyuiBadgeVariant.Accent },
-            new XYBadge { Text = "待审核", Variant = XyuiBadgeVariant.Default }
+            new XYBadge { Text = "待审核", Variant = XyuiBadgeVariant.Default },
+            new XYBadge { Text = "不可用", Variant = XyuiBadgeVariant.Accent, IsEnabled = false }
         }
     };
 }

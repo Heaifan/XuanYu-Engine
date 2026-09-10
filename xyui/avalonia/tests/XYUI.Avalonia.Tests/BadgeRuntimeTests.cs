@@ -45,7 +45,7 @@ public sealed class BadgeRuntimeTests : IClassFixture<XyuiHeadlessFixture>
     {
         var preview = Assert.IsType<StackPanel>(XYUI1GalleryCatalog.CreatePreview("XYUI-1-09"));
         var badges = preview.Children.OfType<XYBadge>().ToArray();
-        Assert.Equal(3, badges.Length); Assert.All(badges, x => Assert.Equal(HorizontalAlignment.Left, x.HorizontalAlignment));
+        Assert.Equal(4, badges.Length); Assert.All(badges, x => Assert.Equal(HorizontalAlignment.Left, x.HorizontalAlignment));
         Assert.Contains(badges, x => x.Variant == XyuiBadgeVariant.Default);
         Assert.Contains(badges, x => x.Variant == XyuiBadgeVariant.Accent);
     });

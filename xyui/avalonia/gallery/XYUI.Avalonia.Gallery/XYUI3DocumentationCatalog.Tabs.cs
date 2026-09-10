@@ -7,7 +7,7 @@ public static partial class XYUI3DocumentationCatalog
         "平级文档与视口内容切换的基础标签组件，以文字、修改标记圆点、弱化关闭与底部 3 DIP Accent 构成稳定排版。",
         "用于地图基础、地图环境、数据集等同一编辑区域的平级多视口切换；不承担 TabBar 的横向滚动与溢出管理。",
         () => XYUI3GalleryCatalog.CreatePreview(id),
-        ["<c:XYTabs><c:XYTab Label=\"地图基础\" IsSelected=\"True\" /></c:XYTabs>"],
+        ["<c:XYTabs SizingMode=\"Content\"><c:XYTab Label=\"地图基础\" IsSelected=\"True\" /></c:XYTabs>"],
         [new("Compact V2", "34 DIP 高度，10 DIP 水平内边距，底部 3 DIP Accent", "Desktop Standard")],
         [new("Default", "浅色文字，透明背景"), new("Hover", "轻微悬浮背景"), new("Selected", "浅蓝背景 + 底部 Accent Line + 高亮文字"), new("Modified", "文字右侧呈现 3 DIP 未保存圆点"), new("Closable", "选中态浮现弱化关闭 × 按钮")],
         Properties(id),
@@ -18,7 +18,7 @@ public static partial class XYUI3DocumentationCatalog
         Category = "XYUI-3 · 导航与切换",
         Acceptance = "UI + INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE",
         QuickStartXaml = """
-<c:XYTabs>
+<c:XYTabs SizingMode="Content">
     <c:XYTab Label="地图基础" IsSelected="True" />
     <c:XYTab Label="地图环境" />
     <c:XYTab Label="数据集" IsModified="True" />

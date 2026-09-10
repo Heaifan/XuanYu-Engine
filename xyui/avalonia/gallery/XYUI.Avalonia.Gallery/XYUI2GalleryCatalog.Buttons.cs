@@ -14,7 +14,7 @@ public static partial class XYUI2GalleryCatalog
     static Control[] IconButtons()
     {
         var selected = GhostIcon(XyuiVectorIcon.Code, "查看代码"); selected.IsSelected = true;
-        return [GhostIcon(XyuiVectorIcon.Search, "搜索"), GhostIcon(XyuiVectorIcon.Copy, "复制"), selected, DisabledIcon(XyuiVectorIcon.Info)];
+        return [GhostIcon(XyuiVectorIcon.Search, "搜索"), GhostIcon(XyuiVectorIcon.Eye, "显示"), GhostIcon(XyuiVectorIcon.Copy, "复制"), selected, DisabledIcon(XyuiVectorIcon.Info)];
     }
     static XYIconButton GhostIcon(XyuiVectorIcon icon, string name) => new XYIconButton { Content = new XYIcon { Icon = icon, Size = XyuiIconSize.Medium } }.Named(name);
     static XYIconButton DisabledIcon(XyuiVectorIcon icon) => new XYIconButton { Content = new XYIcon { Icon = icon, Size = XyuiIconSize.Medium }, IsEnabled = false }.Named("信息（禁用）");

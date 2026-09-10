@@ -7,7 +7,7 @@ public static partial class XYUI3DocumentationCatalog
         "完整的多页签视口容器，高度 38 DIP，由横向平移区、翻页按钮、溢出菜单与新增页签槽组成。",
         "用于多文档与工作区页签的生命周期管理；支持横向滚轮平移、Previous/Next 翻页、溢出菜单选页与动态新增/关闭。",
         () => XYUI3GalleryCatalog.CreatePreview(id),
-        ["<c:XYTabBar><c:XYTab Label=\"Scene_01.map\" IsSelected=\"True\" /></c:XYTabBar>"],
+        ["<c:XYTabBar SizingMode=\"Content\"><c:XYTab Label=\"Scene_01.map\" IsSelected=\"True\" /></c:XYTabBar>"],
         [new("Compact SVG", "38 DIP Bar，32 DIP 翻页箭头，40 DIP 溢出槽，50 DIP 新增槽", "Desktop Multi-tab")],
         [new("Selected", "复用 XYTab 底部 3 DIP Accent，且底边保持单一"), new("Overflow Active", "溢出按钮激活并展开 Popup 列表"), new("Action Hover", "辅助操作按钮浅色轻量悬浮背景")],
         Properties(id),
@@ -18,7 +18,7 @@ public static partial class XYUI3DocumentationCatalog
         Category = "XYUI-3 · 导航与切换",
         Acceptance = "UI + INTERACTION IMPLEMENTED · AWAITING USER VISUAL ACCEPTANCE · AWAITING USER INTERACTION ACCEPTANCE",
         QuickStartXaml = """
-<c:XYTabBar x:Name="DocumentTabBar">
+<c:XYTabBar x:Name="DocumentTabBar" SizingMode="Content">
     <c:XYTab Label="Scene_01.map" IsSelected="True" />
     <c:XYTab Label="Terrain_02.data" IsModified="True" />
     <c:XYTab Label="Lighting.env" />

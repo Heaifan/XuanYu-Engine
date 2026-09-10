@@ -14,7 +14,7 @@ namespace XYUI.Avalonia.Controls;
 // −0.37 DIP 全家族一致（XYUI2InkAlignmentAuditTests 锁定），亚像素补偿会被栅格吞掉——禁止再加。
 internal static class XyuiButtonChrome
 {
-    internal static FuncControlTemplate<T> Create<T>(HorizontalAlignment horizontal) where T : Button =>
+    internal static FuncControlTemplate<T> Create<T>(HorizontalAlignment horizontal, HorizontalAlignment? contentAlignment = null) where T : Button =>
         new((control, scope) =>
         {
             // Padding 必须落在 ContentPresenter 而非 root Border：绑在 Border 上会把内容区
@@ -31,8 +31,9 @@ internal static class XyuiButtonChrome
             };
             presenter[!ContentPresenter.PaddingProperty] = control[!TemplatedControl.PaddingProperty];
             presenter[!ContentPresenter.ContentProperty] = control[!Button.ContentProperty];
-            presenter[!ContentPresenter.HorizontalContentAlignmentProperty] = control[!Button.HorizontalContentAlignmentProperty];
+            if (contentAlignment is null) presenter[!ContentPresenter.HorizontalContentAlignmentProperty] = control[!Button.HorizontalContentAlignmentProperty];
             presenter[!ContentPresenter.VerticalContentAlignmentProperty] = control[!Button.VerticalContentAlignmentProperty];
+            if (contentAlignment is { } alignment) presenter.HorizontalContentAlignment = alignment;
             presenter[!TextElement.ForegroundProperty] = control[!TemplatedControl.ForegroundProperty];
             var grid = new Grid();
             grid.Children.Add(presenter);

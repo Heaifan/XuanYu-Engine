@@ -15,7 +15,7 @@ public static partial class XYUI3LiveExamplesFactory
         var tab5 = new XYTab { Label = "Physics_Config.json" };
         var tab6 = new XYTab { Label = "Audio_BGM.bank" };
 
-        var tabBar = new XYTabBar(tab1, tab2, tab3, tab4, tab5, tab6) { Width = 520 };
+        var tabBar = new XYTabBar(tab1, tab2, tab3, tab4, tab5, tab6) { Width = 520, SizingMode = XyuiTabSizingMode.Content };
 
         var statusText = new TextBlock { Text = "当前活动文档：Scene_01.map", Classes = { "xyui-text-caption" } };
         var eventLog = new TextBlock { Text = "交互指南：点击 ◀ / ▶ 翻页，点击 ⋯ 弹出完整溢出清单，点击 ✚ 动态创建新文档。", Classes = { "xyui-text-caption" } };
@@ -39,7 +39,7 @@ public static partial class XYUI3LiveExamplesFactory
         var mockTabBar = new XYTabBar(
             new XYTab { Label = "MainScene.map", IsSelected = true },
             new XYTab { Label = "Hierarchy.view" },
-            new XYTab { Label = "Inspector.view" }) { Width = 480 };
+            new XYTab { Label = "Inspector.view" }) { Width = 480, SizingMode = XyuiTabSizingMode.Content };
 
         var workspace = new Border
         {

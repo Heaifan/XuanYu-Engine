@@ -17,7 +17,7 @@ public static partial class XyuiControlStyles
     static void AddGhostIconButton(Styles styles)
     {
         var icon = new Style(x => x.OfType<XYIconButton>().Class("xyui-icon-button"));
-        icon.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYIconButton>(HorizontalAlignment.Center)));
+        icon.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYIconButton>(HorizontalAlignment.Center, HorizontalAlignment.Center)));
         // Canonical Background.Default = Transparent（字面值，非 token）。
         icon.Setters.Add(new Setter(TemplatedControl.BackgroundProperty, Brushes.Transparent));
         Set(icon, TemplatedControl.ForegroundProperty, "XY.Brush.Text.Secondary");
@@ -45,7 +45,9 @@ public static partial class XyuiControlStyles
     static void AddActionToggleButton(Styles styles)
     {
         var toggle = new Style(x => x.OfType<XYToggleButton>().Class("xyui-toggle-button"));
-        toggle.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYToggleButton>(HorizontalAlignment.Stretch)));
+        toggle.Setters.Add(new Setter(TemplatedControl.TemplateProperty, XyuiButtonChrome.Create<XYToggleButton>(HorizontalAlignment.Stretch, HorizontalAlignment.Center)));
+        toggle.Setters.Add(new Setter(Button.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+        toggle.Setters.Add(new Setter(Button.VerticalContentAlignmentProperty, VerticalAlignment.Center));
         Chrome(toggle);
         styles.Add(toggle);
         State(styles, typeof(XYToggleButton), "xyui-toggle-button", ":checked", TemplatedControl.BackgroundProperty, "XY.Brush.State.Color.Active");

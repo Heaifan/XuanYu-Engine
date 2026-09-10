@@ -13,7 +13,7 @@ public static partial class XYUI3LiveExamplesFactory
         var tab3 = new XYTab { Label = "要素规则.json", IsClosable = true };
         var tab4 = new XYTab { Label = "系统只读.log", IsClosable = false };
 
-        var tabs = new XYTabs(tab1, tab2, tab3, tab4);
+        var tabs = new XYTabs(tab1, tab2, tab3, tab4) { SizingMode = XyuiTabSizingMode.Content };
 
         var statusText = new TextBlock { Text = "当前活动页签：地图基础.map", Classes = { "xyui-text-caption" } };
         var logText = new TextBlock { Text = "操作提示：点击各页签直接切换；选中有 × 的页签可点击关闭，邻项自动接替。", Classes = { "xyui-text-caption" } };

@@ -6,6 +6,8 @@ public static partial class XYUI3DocumentationCatalog
     {
         "XYUI-3-3.01" => MenuBarProperties(),
         "XYUI-3-3.02" => MenuProperties(),
+        "XYUI-3-3.08" => TabsProperties(),
+        "XYUI-3-3.09" => TabBarProperties(),
         "XYUI-3-3.07" => NavigationRailProperties(),
         "XYUI-3-3.23" => BottomNavProperties(),
         _ => []
@@ -42,6 +44,18 @@ public static partial class XYUI3DocumentationCatalog
         P("XYBottomNavigationItem.IsEnabled", "bool", "true", "false 时目的地不可点击。"),
         P("NavigationState", "XYNavigationState", "必填", "共享目的地与当前 SelectedId 的状态源。"),
         P("Items", "IReadOnlyList<XYBottomNavigationItem>", "state.Entries", "只读目的地集合，按等宽 Slot 渲染。")
+    ];
+
+    static IReadOnlyList<XYUIDocProperty> TabsProperties() =>
+    [
+        P("XYTabs.SizingMode", "XyuiTabSizingMode", "Equal", "Equal 保持等宽兼容布局；Content 按每个 Tab 的内容宽度排版。"),
+        P("XYTabs.Items", "ObservableCollection<XYTab>", "[]", "单组平级页签集合，不承担滚动、溢出与新增操作。")
+    ];
+
+    static IReadOnlyList<XYUIDocProperty> TabBarProperties() =>
+    [
+        P("XYTabBar.SizingMode", "XyuiTabSizingMode", "Equal", "转发到内部 XYTabs；Content 模式与翻页/溢出宿主协同。"),
+        P("XYTabBar.Items", "IList<XYTab>", "[]", "多文档页签集合，支持滚动、翻页、溢出与新增。")
     ];
 
     static IReadOnlyList<XYUIDocProperty> NavigationRailProperties() =>

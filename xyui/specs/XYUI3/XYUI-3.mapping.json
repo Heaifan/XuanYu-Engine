@@ -1237,12 +1237,17 @@
       "component_id": "XYUI-3-3.08",
       "name": "Tabs",
       "title": "Tabs / 页签",
-      "ref_count": 33,
+      "ref_count": 34,
       "refs": [
         {
           "property": "TabBar Background",
           "value": "XY.Surface.Panel",
           "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "XYTabs.SizingMode",
+          "value": "Equal / Content",
+          "kind": "API_CONTRACT"
         },
         {
           "property": "Default Text",
@@ -1410,12 +1415,17 @@
       "component_id": "XYUI-3-3.09",
       "name": "TabBar",
       "title": "TabBar / 页签栏",
-      "ref_count": 14,
+      "ref_count": 15,
       "refs": [
         {
           "property": "Background",
           "value": "XY.Surface.Panel",
           "kind": "CANONICAL_REF"
+        },
+        {
+          "property": "XYTabBar.SizingMode",
+          "value": "Equal / Content",
+          "kind": "API_CONTRACT"
         },
         {
           "property": "Border",

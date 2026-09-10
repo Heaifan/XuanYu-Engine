@@ -37,11 +37,15 @@ public static partial class XYUI2LiveExamplesFactory
         ToolTip.SetTip(btnSearch, "工程全局检索 (Ctrl+Shift+F)");
         var btnCopy = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Copy, Size = XyuiIconSize.Medium } };
         AutomationProperties.SetName(btnCopy, "复制引用路径");
+        var btnEye = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Eye, Size = XyuiIconSize.Small } };
+        AutomationProperties.SetName(btnEye, "显示图层");
+        var btnBrowse = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Browse, Size = XyuiIconSize.Large } };
+        AutomationProperties.SetName(btnBrowse, "浏览图层");
         ToolTip.SetTip(btnCopy, "复制引用路径 (Ctrl+C)");
         var btnDisabled = new XYIconButton { Content = new XYIcon { Icon = XyuiVectorIcon.Info, Size = XyuiIconSize.Medium }, IsEnabled = false };
         AutomationProperties.SetName(btnDisabled, "组件详细信息");
         ToolTip.SetTip(btnDisabled, "组件详细信息 (不可用)");
-        tb.Children.Add(btnSelect); tb.Children.Add(btnSearch); tb.Children.Add(btnCopy); tb.Children.Add(btnDisabled);
+        tb.Children.Add(btnSelect); tb.Children.Add(btnSearch); tb.Children.Add(btnCopy); tb.Children.Add(btnEye); tb.Children.Add(btnBrowse); tb.Children.Add(btnDisabled);
 
         return SceneHost(
             Scene("场景 1 · 视口单选模式工具栏 (外部驱动 IsSelected + 规范 AutomationProperties.Name)", tb),

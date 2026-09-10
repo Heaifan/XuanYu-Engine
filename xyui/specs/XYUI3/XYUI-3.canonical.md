@@ -3004,6 +3004,10 @@
             - 显示小型状态点
             - 表示存在未保存修改
     - 布局规范
+        - SizingMode
+            - Equal：默认兼容模式，组内 Tab 等宽
+            - Content：按各 Tab 内容宽度排版
+            - XYTabs 不负责滚动与溢出；该职责仍由 TabBar 承担
         - Tab 高度
             - 建议 36～42 DIP
         - 推荐基础值
