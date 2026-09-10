@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.68-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F1（2026-09-11 01:18:01 +08:00）
+- 目标：修正 Context Tool Bar 的编辑上下文可见性。
+- 变化：区域面、道路、地图标记及绘制操作仅在 `IsRegionEditMode` 下显示；启动态与地图编辑态完全隐藏区域专属工具，不再以禁用态暴露。
+- 验证：Context Toolbar 合同与运行时矩阵 4/4；方案构建 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1491/1491、XYUI 617/617；ARCH-A、5+100 与 `git diff --check` 通过。
+- Hash：起始提交 `9293e33e`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉与交互验收。
+
 ## v0.2.28.67-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1（2026-09-11 00:58:34 +08:00）
 - 目标：建立 Top 第二行 Context Tool Bar，迁出 Region / Road / Marker 工具入口与 Region/Road Authoring 操作，使 Right Inspector 仅承担属性内容。
 - 变化：新增 `ContextToolBar`，复用 `UiVm` 现有 Tool / Authoring Mode / Drawing State / Command；Inspector 移除 `RegionalAuthoringPanel`，保留 `MapEditorPanel`、XYPager 和唯一属性滚动宿主；同步结构回归合同与 file-tree。

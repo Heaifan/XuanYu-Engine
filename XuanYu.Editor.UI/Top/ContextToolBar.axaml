@@ -4,7 +4,8 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.ContextToolBar"
              x:DataType="local:UiVm">
-  <Border BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
+  <Border x:Name="ContextRoot" IsVisible="{Binding IsRegionEditMode}"
+          BorderBrush="{StaticResource Color.Border.Default}" BorderThickness="1"
           CornerRadius="{StaticResource Radius.Standard}" Padding="8,4">
     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
       <xy:XYCaption Text="地图要素" VerticalAlignment="Center"/>

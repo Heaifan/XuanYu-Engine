@@ -37,4 +37,11 @@ public sealed class AreaCR1ContextToolbarContractTests
         Assert.DoesNotContain("开始绘制", inspector);
         Assert.DoesNotContain("撤销顶点", inspector);
     }
+
+    [Fact]
+    public void Context_toolbar_is_present_only_in_region_edit_context()
+    {
+        var toolbar = Read("Top/ContextToolBar.axaml");
+        Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsRegionEditMode}\"", toolbar);
+    }
 }
