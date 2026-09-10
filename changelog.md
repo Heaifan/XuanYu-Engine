@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.71-rz · EDITOR-BOTTOM-LOG-R1-F1（2026-09-11 02:11:05 +08:00）
+- 目标：修复 Bottom Log 无法展开、列表不可见与多余标题问题。
+- 变化：恢复 `XYIconButton(ChevronDown) → ToggleLogCommand` 展开入口；移除工具条“日志”标题；保留展开后的逐条日志列表。
+- 验证：完整 Build 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1498/1498、XYUI 617/617；ARCH-A 与 `git diff --check` 通过。
+- Hash：`d423ba62`。
+- 遗留：等待用户真机视觉验收。
+
 ## v0.2.28.71-rz · EDITOR-BOTTOM-LOG-R1（2026-09-11 01:56:56 +08:00）
 - 目标：收口 Bottom Log 的 XYUI 工具条、组合筛选、搜索、详情切换与折叠布局。
 - 变化：严重级别改用 `XYToggleButton`；搜索改用 `XYSearchField`；来源收入口使用 `XYMenu/XYMenuItem`；详情默认隐藏；新增清空日志与组合过滤状态。
