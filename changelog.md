@@ -4,7 +4,7 @@
 - 目标：将右侧地图/区域编辑导航切换为分页 Inspector，并让图层 Dock 支持自适应折叠。
 - 变化：新增 XYPager、XYInspectorSection、XYCollapsiblePane；地图页增加基础/环境/显示/数据/高级分页；图层区改为可折叠 Pane；同步运行时与源码 UI 合同测试。
 - 验证：专项 Runtime/UI 合同测试 25/25 通过；全量构建 0 警告/0 错误；World 1487/1487、Core 339/339、WarCore 22/22、XYUI 617/617 通过。
-- Hash：待提交。
+- Hash：58d97422。
 - 遗留：等待真机视觉与交互验收。
 
 ## v0.2.28.65-rz · XYENGINE-NAV-LAYOUT-STABILITY-FIX-R2（2026-09-10 23:22:02 +08:00）
