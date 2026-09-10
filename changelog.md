@@ -1,5 +1,14 @@
 # changelog
 
+## v0.2.28.64-rz · XYUI-GALLERY-NAV-LAYOUT-STABILITY-FIX-R2（2026-09-10 23:07:27 +08:00）
+- 目标：收口 Gallery 左侧五个导航 ListBox 的内部测量/虚拟化导致的外层 Extent 跳变。
+- 根因证据：真实 Windows F1 时间线确认 XYUI-3 导航高度 `651.429 → 1285.714`、已实现容器 `1 → 6`，同步推动外层 Extent `2885.714 → 3520`（`+634.286 DIP`）；内部 `PART_ScrollViewer.Offset` 未变化。
+- 修正：仅为 Gallery 的 `nav-tree` / `nav-foundation` 提供无内部 ScrollViewer、StackPanel ItemsHost 的专用模板；保留 ListBox selection、键盘、hover 与选中态，继续关闭 `AutoScrollToSelectedItem`；未改全局 Avalonia ListBox、XYUI canonical 或滚轮事件处理。
+- 回归：新增 Gallery Headless 布局稳定性合同，验证五个导航列表无内部 ScrollViewer，外层滚动后 Extent 稳定；定向 Gallery 回归 `28/28`。
+- 验证：XYUI.Avalonia.Tests `614/614`、Core `339/339`、WarCore `22/22`、World `1483/1483`；方案构建 0 警告/0 错误；ARCH-A 与 `git diff --check` 通过。
+- Hash：起始提交 `13a0821c4354c4ce335d5d7945d1277e0c1c1665`。
+- 状态：`XYUI-GALLERY-NAV-LAYOUT-STABILITY-FIX-R2 / READY FOR USER WHEEL ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.63-rz · XYENGINE-NAV-SCROLL-AUTHORITY-R1（2026-09-10 21:39:13 +08:00）
 - 目标：将 Gallery 已验证的导航滚动权修正实装到 XYengine 编辑器的项目树与层级树。
 - 修正：`ProjectList` 与 `HierarchyList` 显式关闭 `AutoScrollToSelectedItem`，保留两个树控件各自内部滚动宿主和滚轮交互；未改 XYUI canonical 控件或延期中的未保存对话框。
