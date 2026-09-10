@@ -8,14 +8,12 @@ public partial class UiWin
 {
     void DialogCard_KeyDown(object? sender, KeyEventArgs e)
     {
-        CloseProbe("dialog-keydown", $"key={e.Key} modifiers={e.KeyModifiers} {CloseProbeState()}");
         if (TryHandleDialogKey(e)) e.Handled = true;
     }
 
     bool TryHandleDialogKey(KeyEventArgs e)
     {
         if (_dialogTcs is null) return false;
-        CloseProbe("dialog-key-routing", $"key={e.Key} {CloseProbeState()}");
         if (e.Key == Key.Tab)
         {
             var focusables = DialogButtons.Children.OfType<Avalonia.Controls.Button>()

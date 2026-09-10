@@ -18,7 +18,6 @@ public sealed class UiCloseLifecycleContractTests
         Assert.DoesNotContain("protected override async void OnClosing", code);
         Assert.Contains("e.Cancel = true;", code);
         Assert.Contains("if (_closePromptActive)", code);
-        Assert.Contains("closing-prompt-already-active", code);
         Assert.Contains("Dispatcher.UIThread.Post(() =>", code);
         Assert.Contains("_ = ConfirmCloseAsync(vm);", code);
         Assert.Contains("_allowClosing = true;", code);
@@ -31,27 +30,6 @@ public sealed class UiCloseLifecycleContractTests
         var axaml = Read("Win/UiWin.axaml");
         Assert.Contains("x:Name=\"DialogOverlay\" ZIndex=\"90\"", axaml);
         Assert.Contains("x:Name=\"DialogCard\" ZIndex=\"100\"", axaml);
-    }
-
-    [Fact]
-    public void Close_probe_writes_flushable_terminal_trace_for_each_lifecycle_boundary()
-    {
-        var probe = Read("Win/UiWin.CloseProbe.cs");
-        Assert.Contains("[CLOSE-PROBE]", probe);
-        Assert.Contains("Console.WriteLine(line);", probe);
-        Assert.Contains("Console.Out.Flush();", probe);
-        var close = Read("Win/UiWin.CloseLifecycle.cs");
-        Assert.Contains("closing-enter", close);
-        Assert.Contains("close-dispatch-enter", close);
-        Assert.Contains("confirm-after-await-choice", close);
-        Assert.Contains("close-before-final", close);
-        Assert.Contains("closed", probe);
-        Assert.Contains("activated", probe);
-        var modal = Read("Win/UnsavedChangesConfirmationWindow.axaml.cs");
-        Assert.Contains("ShowDialog<string>(owner)", modal);
-        Assert.Contains("SaveButton.Focus();", modal);
-        Assert.Contains("Key.Escape", modal);
-        Assert.Contains("Complete(\"discard\")", modal);
     }
 
     [Fact]

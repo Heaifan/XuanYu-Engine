@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.55-rz · CLOSE-PROBE REMOVAL（2026-09-10 14:01:58 +08:00）
+- 目标：移除已不再需要的窗口关闭探针及其专用契约测试。
+- 变化：删除 `UiWin.CloseProbe.cs`，移除窗口/弹窗生命周期的探针日志、序号、Flush 与调用点；保留关闭取消、未保存确认、焦点恢复、Deactivated/Closing 交互语义。
+- 验证：源码与 tracked 文件清单不再包含活动探针实现；本轮未修改 `UnsavedChangesConfirmationWindow.axaml` 的既有延期内容。
+- Hash：起始提交 `369e27ea`。
+- 状态：`CLOSE-PROBE REMOVED`。
+
 ## v0.2.28.54-rz · AREA-D-R2（2026-09-10 13:34:11 +08:00）
 - 目标：统一 Area D 左右面板导航到真实 `XYTabs/XYTab`，并消除 Map context 的重复地图属性、Map Asset 与 LayerDock 投影。
 - 变化：Left 项目/文件与 Right 检查器/层级/调试改用 canonical XYTabs；补充通用 XYTabs 的 Left/Right/Home/End 键盘导航；保留右侧“全部页签”为独立 XYUI Action；MapFormPanel 仅由 MapPagePanel 宿主承载。地图数值字段继续保持 `XYTextField` 与现有草稿/校验/Apply 链。

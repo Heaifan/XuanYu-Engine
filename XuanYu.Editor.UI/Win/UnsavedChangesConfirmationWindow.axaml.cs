@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -13,7 +12,7 @@ public sealed partial class UnsavedChangesConfirmationWindow : Window
     public UnsavedChangesConfirmationWindow()
     {
         InitializeComponent();
-        Opened += (_, _) => { Probe("modal-opened"); SaveButton.Focus(); };
+        Opened += (_, _) => SaveButton.Focus();
     }
 
     public static Task<string> ShowAsync(Window owner) =>
@@ -33,7 +32,6 @@ public sealed partial class UnsavedChangesConfirmationWindow : Window
     {
         if (_completed) return;
         _completed = true;
-        Probe("modal-choice", $"result={result}");
         Close(result);
     }
 
@@ -41,12 +39,5 @@ public sealed partial class UnsavedChangesConfirmationWindow : Window
     {
         if (!_completed) Complete("cancel");
         base.OnClosing(e);
-        Probe("modal-closed");
-    }
-
-    static void Probe(string stage, string details = "")
-    {
-        var line = $"[CLOSE-PROBE] {DateTimeOffset.Now:O} modal={stage} {details}";
-        Console.WriteLine(line); Console.Out.Flush(); Debug.WriteLine(line);
     }
 }

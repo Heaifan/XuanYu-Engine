@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -21,7 +20,6 @@ public partial class UiWin
     Task<string> ShowDialogCore(string title, string message,
         (string Text, bool Danger, string Value)[] buttons, string defaultValue, string iconKey = "")
     {
-        CloseProbe("dialog-show-enter", $"title={title} buttons={buttons.Length} default={defaultValue} {CloseProbeState()}");
         var tcs = _dialogTcs = new TaskCompletionSource<string>();
         _focusBeforeDialog = CurrentFocus(); // 打开前焦点（关闭后返回）
         DialogTitle.Text = title;
@@ -53,32 +51,25 @@ public partial class UiWin
         }
         DialogOverlay.IsVisible = true;
         DialogCard.IsVisible = true;
-        CloseProbe("dialog-shown", $"title={title} {CloseProbeState()}");
         // 默认焦点落在非危险默认按钮；危险弹窗的默认值必须是取消/非危险按钮
         Dispatcher.UIThread.Post(() =>
         {
-            CloseProbe("dialog-focus-before", CloseProbeState());
             _dialogDefault?.Focus();
-            CloseProbe("dialog-focus-after", CloseProbeState());
         });
         return tcs.Task;
     }
 
     void CompleteDialog(string value)
     {
-        CloseProbe("dialog-complete-enter", $"value={value} {CloseProbeState()}");
         var tcs = _dialogTcs;
         _dialogTcs = null;
         DialogOverlay.IsVisible = false;
         DialogCard.IsVisible = false;
-        var completed = tcs?.TrySetResult(value) ?? false;
-        CloseProbe("dialog-complete-result", $"value={value} completed={completed} {CloseProbeState()}");
+        tcs?.TrySetResult(value);
         // D5 纠偏：关闭后焦点返回原操作控件
         Dispatcher.UIThread.Post(() =>
         {
-            CloseProbe("dialog-restore-focus-before", CloseProbeState());
             _focusBeforeDialog?.Focus();
-            CloseProbe("dialog-restore-focus-after", CloseProbeState());
         });
     }
     public Task<string> ShowMessage(string title, string message) =>

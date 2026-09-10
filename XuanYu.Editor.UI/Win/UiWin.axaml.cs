@@ -19,8 +19,7 @@ public partial class UiWin : Window
         InitializeComponent();
         AddHandler(KeyDownEvent, Window_KeyDown, RoutingStrategies.Tunnel);
         DataContextChanged += (_, _) => AttachVm();
-        RegisterCloseProbes();
-        CloseProbe("constructed", CloseProbeState());
+        Deactivated += (_, _) => (DataContext as UiVm)?.CancelInteractionFromWindowDeactivated();
     }
 
     async Task<bool> CopySelectedLogs(UiVm vm)
@@ -41,7 +40,6 @@ public partial class UiWin : Window
             _attachedVm.DangerousCommandConfirmRequested -= OnDangerousCommandRequested;
         }
         _attachedVm = DataContext as UiVm;
-        CloseProbe("datacontext-attached", $"hasVm={_attachedVm is not null} {CloseProbeState()}");
         if (_attachedVm is null) return;
         _attachedVm.FileCommandRequested += OnFileCommandRequested;
         _attachedVm.DangerousCommandConfirmRequested += OnDangerousCommandRequested;
