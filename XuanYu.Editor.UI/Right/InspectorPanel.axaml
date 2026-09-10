@@ -20,6 +20,10 @@
       </StackPanel>
     </Grid>
 
+    <StackPanel IsVisible="{Binding IsMapEditMode}">
+      <local:MapEditorPanel x:Name="MapWorkspace" IsVisible="{Binding !IsEntityInspector}"/>
+    </StackPanel>
+
     <local:LayerInspectorPanel IsVisible="{Binding HasCurrentLayerSelection}"/>
 
     <StackPanel IsVisible="{Binding IsRegionEditMode}" Spacing="6">
@@ -60,12 +64,14 @@
 
     <!-- IsEmptySelection remains the editor-entity baseline; Dataset selection refines this panel state. -->
     <Grid IsVisible="{Binding IsInspectorEmpty}" MinHeight="220">
+      <Grid IsVisible="{Binding !IsMapEditMode}">
       <Grid IsVisible="{Binding !HasCurrentLayerSelection}">
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6" MaxWidth="220">
         <xy:XYText Text="—" HorizontalAlignment="Center"/>
         <xy:XYEmptyText Text="未选择对象" HorizontalAlignment="Center"/>
         <xy:XYCaption Text="选择场景对象后显示属性" HorizontalAlignment="Center"/>
       </StackPanel>
+      </Grid>
       </Grid>
     </Grid>
   </StackPanel>

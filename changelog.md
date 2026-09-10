@@ -1,5 +1,13 @@
 # changelog
 
+## v0.2.28.56-rz · AREA-D-R2-CORRECTION（2026-09-10 14:23:52 +08:00）
+- 目标：纠正 Area D R2 的 Right 结构，让 Inspector 成为 Map/Entity 内容的唯一动态宿主，并保持地图编辑时 LayerDock 持久可见。
+- 变化：Right 收敛为一个共享 `EditorRightTabs`；`InspectorPanel` 内互斥承载 `MapEditorPanel` 与 `EntityInspectorPanel`；移除 Right 级 Map sibling；`EditorLayerDock` 独立于 Entity owner 持续显示并保留折叠状态。Left/Right canonical `XYTabs`、地图 `XYTextField` 及草稿/校验/Apply 链保持不变。
+- XYUI GAP：Draft-preserving numeric editor semantics 继续延期，本轮不迁移 `XYTextField`，不修改地图业务链。
+- 验证：Area D/相关 World 定向回归 17/17；本轮新增失败 0。完整门禁中的既有未保存弹窗失败继续单独记录，不归因于本轮；`UnsavedChangesConfirmationWindow.axaml` 保持用户延期 dirty、未暂存、未提交。
+- Hash：起始提交 `67415977`。
+- 状态：`AREA-D-R2-CORRECTION READY FOR USER VISUAL + INTERACTION ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.55-rz · CLOSE-PROBE REMOVAL（2026-09-10 14:01:58 +08:00）
 - 目标：移除已不再需要的窗口关闭探针及其专用契约测试。
 - 变化：删除 `UiWin.CloseProbe.cs`，移除窗口/弹窗生命周期的探针日志、序号、Flush 与调用点；保留关闭取消、未保存确认、焦点恢复、Deactivated/Closing 交互语义。

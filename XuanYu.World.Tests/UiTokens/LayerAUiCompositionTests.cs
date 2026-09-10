@@ -16,6 +16,8 @@ public sealed class LayerAUiCompositionTests
         Assert.Contains("EditorLayerDock", right);
         Assert.Contains("IsVisible=\"{Binding IsEditMode}\"", right);
         Assert.Contains("GridSplitter", right);
+        Assert.DoesNotContain("<local:MapEditorPanel", right);
+        Assert.Contains("<local:MapEditorPanel", Read("Right/InspectorPanel.axaml"));
         Assert.DoesNotContain("Header=\"图层\"", map);
         Assert.DoesNotContain("LayerPanel", map);
     }

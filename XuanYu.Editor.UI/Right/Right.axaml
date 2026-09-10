@@ -3,21 +3,12 @@
              xmlns:local="using:XuanYu.Editor.UI"
              x:Class="XuanYu.Editor.UI.Right"
              x:DataType="local:UiVm">
-  <Grid>
-    <local:EditorRightTabs IsVisible="{Binding !IsEditMode}"/>
-    <Grid IsVisible="{Binding IsEditMode}" RowDefinitions="3*,Auto,*">
-      <local:EditorRightTabs Grid.Row="0"/>
-      <GridSplitter Grid.Row="1" Height="4" Background="{StaticResource Color.Border.Default}" HorizontalAlignment="Stretch" VerticalAlignment="Center" ResizeDirection="Rows"/>
-      <Grid Grid.Row="2">
-        <Grid RowDefinitions="2*,Auto,2*" IsVisible="{Binding !IsEntityInspector}">
-          <Grid Grid.Row="0">
-            <local:MapEditorPanel x:Name="MapWorkspace" IsVisible="{Binding IsMapEditMode}"/>
-            <local:RegionalAuthoringPanel x:Name="RegionWorkspace" IsVisible="{Binding IsRegionEditMode}"/>
-          </Grid>
-          <GridSplitter Grid.Row="1" Height="4" Background="{StaticResource Color.Border.Default}" HorizontalAlignment="Stretch" VerticalAlignment="Center" ResizeDirection="Rows"/>
-          <local:EditorLayerDock x:Name="LayerWorkspace" Grid.Row="2"/>
-        </Grid>
-      </Grid>
+  <Grid RowDefinitions="*,Auto">
+    <local:EditorRightTabs Grid.Row="0"/>
+    <Grid Grid.Row="1" IsVisible="{Binding IsEditMode}" RowDefinitions="Auto,Auto,*">
+      <local:RegionalAuthoringPanel x:Name="RegionWorkspace" IsVisible="{Binding IsRegionEditMode}"/>
+      <GridSplitter Grid.Row="1" Height="4" Background="{StaticResource Color.Border.Default}" HorizontalAlignment="Stretch" VerticalAlignment="Center" ResizeDirection="Rows" IsVisible="{Binding IsRegionEditMode}"/>
+      <local:EditorLayerDock x:Name="LayerWorkspace" Grid.Row="2"/>
     </Grid>
   </Grid>
 </UserControl>

@@ -18,7 +18,9 @@ public sealed partial class AreaBLeftWorkspaceRuntimeTests
             host.Show(right, 360, 860);
             right.UpdateLayout();
             vm.ToggleEditorMode(); Dispatcher.UIThread.RunJobs(); right.UpdateLayout();
-            var map = right.FindControl<MapEditorPanel>("MapWorkspace")!;
+            var inspector = UiRuntimeTestHost.Descendants<InspectorPanel>(right)
+                .Single(x => x.IsEffectivelyVisible);
+            var map = UiRuntimeTestHost.Descendants<MapEditorPanel>(inspector).Single();
             var layer = right.FindControl<EditorLayerDock>("LayerWorkspace")!;
             var mapVisible = map.IsVisible;
             var layerVisible = layer.IsVisible;

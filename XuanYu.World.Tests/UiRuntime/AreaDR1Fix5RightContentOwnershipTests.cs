@@ -17,7 +17,7 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
     [InlineData("移动")]
     [InlineData("旋转")]
     [InlineData("缩放")]
-    public void Entity_owner_hides_workspace_context_for_each_transform_tool(string tool)
+    public void Entity_owner_keeps_persistent_layer_dock_for_each_transform_tool(string tool)
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var state = host.Run(() =>
@@ -28,7 +28,7 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
         });
 
         Assert.True(state.EntityOwner);
-        Assert.False(state.MapVisible); Assert.False(state.RegionVisible); Assert.False(state.LayerVisible);
+        Assert.False(state.MapVisible); Assert.False(state.RegionVisible); Assert.True(state.LayerVisible);
         Assert.Equal(1, state.VisibleEntityPanels);
         Assert.Equal(tool, state.ActiveTool);
     }
@@ -48,7 +48,7 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
 
         Assert.True(state.IsEditMode); Assert.True(state.SelectionUnchanged);
         Assert.True(state.snapshot.EntityOwner); Assert.False(state.snapshot.MapVisible);
-        Assert.False(state.snapshot.RegionVisible); Assert.False(state.snapshot.LayerVisible);
+        Assert.False(state.snapshot.RegionVisible); Assert.True(state.snapshot.LayerVisible);
     }
 
     [Fact]
@@ -67,12 +67,15 @@ public sealed class AreaDR1Fix5RightContentOwnershipTests
     }
 
     [Fact]
-    public void Right_does_not_declare_a_second_entity_inspector()
+    public void Inspector_owns_map_content_and_right_owns_no_map_sibling()
     {
         var source = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
             "XuanYu.Editor.UI", "Right", "Right.axaml"));
-        Assert.Contains("!IsEntityInspector", source);
+        Assert.DoesNotContain("<local:MapEditorPanel", source);
         Assert.DoesNotContain("<local:EntityInspectorPanel", source);
+        var inspector = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+            "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+        Assert.Contains("<local:MapEditorPanel", inspector);
     }
 
     static SnapshotData Snapshot(UiRuntimeTestHost host, UiVm vm)

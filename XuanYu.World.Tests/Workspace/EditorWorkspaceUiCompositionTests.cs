@@ -40,7 +40,8 @@ public sealed class EditorWorkspaceUiCompositionTests
     {
         var left = Read("XuanYu.Editor.UI", "Left", "Left.axaml");
         Assert.DoesNotContain("XYNavigationRail", left);
-        Assert.Contains("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));
+        Assert.Contains("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+        Assert.DoesNotContain("<local:MapEditorPanel", Read("XuanYu.Editor.UI", "Right", "Right.axaml"));
         Assert.Contains("<local:MapPagePanel", Read("XuanYu.Editor.UI", "Right", "MapEditorPanel.axaml"));
         Assert.DoesNotContain("<local:MapFormPanel", Read("XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
     }

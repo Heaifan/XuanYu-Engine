@@ -67,7 +67,7 @@ public sealed class UiMapLayoutContractTests
         Assert.Contains("CommandParameter=\"添加立方体\"", FileModule);
     }
 
-    // EDITOR-A-R3：右侧顶层仅保留全局检查器与调试，地图 Context 不再替换整块右栏。
+    // AREA-D-R2：地图 Context 由 Inspector 内容宿主承载，不再作为 Right sibling。
     [Fact]
     public void Right_keeps_global_tabs_and_rehomes_edit_contexts()
     {
@@ -75,7 +75,10 @@ public sealed class UiMapLayoutContractTests
         Assert.Contains("Label=\"调试\"", Right);
         var rightShell = File.ReadAllText(Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "Right.axaml"));
-        Assert.Contains("<local:MapEditorPanel", rightShell);
+        var inspector = File.ReadAllText(Path.Combine(
+            AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", "Right", "InspectorPanel.axaml"));
+        Assert.Contains("<local:MapEditorPanel", inspector);
+        Assert.DoesNotContain("<local:MapEditorPanel", rightShell);
         Assert.Contains("<local:RegionalAuthoringPanel", rightShell);
         Assert.DoesNotContain("Header=\"偏好\"", Right);
         Assert.DoesNotContain("Header=\"模式\"", Right);
