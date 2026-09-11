@@ -4,7 +4,7 @@
 - 目标：解除真机验收中的 Marker 入口不可发现阻断。
 - 变化：在顶部工作区菜单增加“点要素编辑”入口；该入口仅投影到现有 RegionEditor、EditMode、Marker authoring 与 Marker placement 链，不新增 Workspace、MapMarker 数据结构或第二套放置逻辑；补齐编辑模式切换时 Marker 可用性通知。
 - 验证：完整解决方案 Build 0 警告/0 错误；Core 339/339、World 1508/1508、XYUI 617/617、WarCore 22/22；ARCH-A、版本一致性与 `git diff --check` 通过。
-- Hash：`24c6375e`（后续仅 amend 本条 Hash 回填）。
+- Hash：实现提交 `c449c455`；文档收口提交以最终 HEAD 为准。
 - 遗留：仅待用户真机确认顶部菜单可发现、进入后显示“地图标记/放置地图标记”，以及实际视口放置；未验收不得进入 WORLD-A。
 
 ## v0.2.28.72-rz · XYENGINE-MAINLINE-RESUME-R1（2026-09-11 10:34:59 +08:00）
