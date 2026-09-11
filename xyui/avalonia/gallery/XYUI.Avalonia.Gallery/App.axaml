@@ -3,6 +3,7 @@
              x:Class="XYUI.Avalonia.Gallery.App">
   <Application.Styles>
     <FluentTheme />
+    <StyleInclude Source="avares://XYUI.Avalonia.Gallery/GalleryNavigationListBoxStyles.axaml" />
 
     <!-- G0-R1 · 树形章节导航样式（非 Accordion 卡片） -->
     <Style Selector="Grid.nav-section-header">

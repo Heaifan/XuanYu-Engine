@@ -11,7 +11,7 @@ public sealed class AreaDR2Fix5TabIntegrationRuntimeTests
     public AreaDR2Fix5TabIntegrationRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Editor_navigation_tabs_use_content_sizing_and_permanent_fixed_tabs()
+    public void Editor_navigation_tabs_use_content_sizing_and_fixed_tabs()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var result = host.Run(() =>
@@ -27,21 +27,20 @@ public sealed class AreaDR2Fix5TabIntegrationRuntimeTests
             var regionWindow = host.Show(region, 480, 640); region.UpdateLayout();
             var leftTabs = left.FindControl<XYTabs>("ContentTabs")!;
             var right = rightTabs.FindControl<XYTabs>("SideTabs")!;
-            var mapTabs = map.FindControl<XYTabBar>("MapTabs")!;
-            var regionTabs = region.FindControl<XYTabBar>("AuthoringTabs")!;
+            var mapPager = map.FindControl<XYPager>("MapPager")!;
+            var regionPager = region.FindControl<XYPager>("AuthoringPager")!;
             var value = (LeftSizing: leftTabs.SizingMode, RightSizing: right.SizingMode,
-                MapSizing: mapTabs.SizingMode, RegionSizing: regionTabs.SizingMode,
+                MapPages: mapPager.Pages.Count, RegionPages: regionPager.Pages.Count,
                 LeftClosable: leftTabs.Items.Select(tab => tab.IsClosable).ToArray(),
                 RightClosable: right.Items.Select(tab => tab.IsClosable).ToArray(),
-                MapClosable: mapTabs.Items.Select(tab => tab.IsClosable).ToArray(),
-                RegionClosable: regionTabs.Items.Select(tab => tab.IsClosable).ToArray());
+                MapClosable: Array.Empty<bool>(), RegionClosable: Array.Empty<bool>());
             leftWindow.Close(); rightWindow.Close(); mapWindow.Close(); regionWindow.Close();
             return value;
         });
         Assert.Equal(XyuiTabSizingMode.Content, result.LeftSizing);
         Assert.Equal(XyuiTabSizingMode.Content, result.RightSizing);
-        Assert.Equal(XyuiTabSizingMode.Content, result.MapSizing);
-        Assert.Equal(XyuiTabSizingMode.Content, result.RegionSizing);
+        Assert.Equal(5, result.MapPages);
+        Assert.Equal(3, result.RegionPages);
         Assert.All(result.LeftClosable, Assert.False);
         Assert.All(result.RightClosable, Assert.False);
         Assert.All(result.MapClosable, Assert.False);

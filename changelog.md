@@ -1,5 +1,79 @@
 # changelog
 
+## v0.2.28.71-rz · EDITOR-BOTTOM-LOG-R1-F1（2026-09-11 02:11:05 +08:00）
+- 目标：修复 Bottom Log 无法展开、列表不可见与多余标题问题。
+- 变化：恢复 `XYIconButton(ChevronDown) → ToggleLogCommand` 展开入口；移除工具条“日志”标题；保留展开后的逐条日志列表。
+- 验证：完整 Build 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1498/1498、XYUI 617/617；ARCH-A 与 `git diff --check` 通过。
+- Hash：`d423ba62`。
+- 遗留：等待用户真机视觉验收。
+
+## v0.2.28.71-rz · EDITOR-BOTTOM-LOG-R1（2026-09-11 01:56:56 +08:00）
+- 目标：收口 Bottom Log 的 XYUI 工具条、组合筛选、搜索、详情切换与折叠布局。
+- 变化：严重级别改用 `XYToggleButton`；搜索改用 `XYSearchField`；来源收入口使用 `XYMenu/XYMenuItem`；详情默认隐藏；新增清空日志与组合过滤状态。
+- 验证：便携 SDK 完整 Build 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1497/1497、XYUI 617/617；ARCH-A 与 `git diff --check` 通过。
+- Hash：起始提交 `b77b67e6`；最终提交 `b4e77a30`。
+- 遗留：等待用户真机视觉验收；`file-tree.md` 因既有非 UTF-8 编码未改写。
+
+## v0.2.28.71-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F4（2026-09-11 01:55:00 +08:00）
+- 目标：恢复 Top 第二行隐藏滚动条后的鼠标横向滚动能力。
+- 变化：为隐藏滚动条的 Top 第二行 `ScrollViewer` 接入滚轮隧道路由，将滚轮增量转换为水平偏移并消费事件。
+- 验证：Context Toolbar 合同/运行时 6/6；完整门禁结果见 Git closeout。
+- Hash：起始提交 `d8c2b302`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉验收。
+
+## v0.2.28.70-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F3（2026-09-11 01:40:00 +08:00）
+- 目标：隐藏 Top 第二行滚动条 UI，同时保留鼠标滚动切换能力。
+- 变化：恢复水平 `ScrollViewer`，将水平滚动条设为 `Hidden`，取消工具组换行。
+- 验证：Context Toolbar 合同 4/4、运行时 1/1；其余正式门禁结果见 Git closeout。
+- Hash：起始提交 `cbb47866`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉验收。
+
+## v0.2.28.69-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F2（2026-09-11 01:25:14 +08:00）
+- 目标：移除 Top 第二行导致截图中出现的灰色水平滚动条。
+- 变化：Top 第二行由水平 `ScrollViewer` 改为 `WrapPanel`，工具组可换行显示，不再创建水平滚动宿主。
+- 验证：Context Toolbar 合同 4/4、运行时无滚动宿主 1/1；方案构建 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1492/1492、XYUI 617/617；ARCH-A、5+100 与 `git diff --check` 通过。
+- Hash：起始提交 `61555af2`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉验收。
+
+## v0.2.28.68-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1-F1（2026-09-11 01:18:01 +08:00）
+- 目标：修正 Context Tool Bar 的编辑上下文可见性。
+- 变化：区域面、道路、地图标记及绘制操作仅在 `IsRegionEditMode` 下显示；启动态与地图编辑态完全隐藏区域专属工具，不再以禁用态暴露。
+- 验证：Context Toolbar 合同与运行时矩阵 4/4；方案构建 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1491/1491、XYUI 617/617；ARCH-A、5+100 与 `git diff --check` 通过。
+- Hash：起始提交 `9293e33e`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉与交互验收。
+
+## v0.2.28.67-rz · XYENGINE-AREA-C-CONTEXT-TOOLBAR-R1（2026-09-11 00:58:34 +08:00）
+- 目标：建立 Top 第二行 Context Tool Bar，迁出 Region / Road / Marker 工具入口与 Region/Road Authoring 操作，使 Right Inspector 仅承担属性内容。
+- 变化：新增 `ContextToolBar`，复用 `UiVm` 现有 Tool / Authoring Mode / Drawing State / Command；Inspector 移除 `RegionalAuthoringPanel`，保留 `MapEditorPanel`、XYPager 和唯一属性滚动宿主；同步结构回归合同与 file-tree。
+- 验证：方案构建 0 警告/0 错误；Core 339/339、WarCore 22/22、World 1489/1489、XYUI 617/617；ARCH-A 与 5+100 通过；AXAML XML 静态检查与 `git diff --check` 通过。
+- Hash：起始提交 `2837acd3`；最终提交见 Git closeout。
+- 遗留：等待用户真机视觉与交互验收。
+
+## v0.2.28.66-rz · AREA-D-R3-INSPECTOR-PAGER（2026-09-11 00:33:37 +08:00）
+- 目标：将右侧地图/区域编辑导航切换为分页 Inspector，并让图层 Dock 支持自适应折叠。
+- 变化：新增 XYPager、XYInspectorSection、XYCollapsiblePane；地图页增加基础/环境/显示/数据/高级分页；图层区改为可折叠 Pane；同步运行时与源码 UI 合同测试。
+- 验证：专项 Runtime/UI 合同测试 25/25 通过；全量构建 0 警告/0 错误；World 1487/1487、Core 339/339、WarCore 22/22、XYUI 617/617 通过。
+- Hash：58d97422。
+- 遗留：等待真机视觉与交互验收。
+
+## v0.2.28.65-rz · XYENGINE-NAV-LAYOUT-STABILITY-FIX-R2（2026-09-10 23:22:02 +08:00）
+- 目标：将已通过真机验收的 Gallery 导航测量稳定性修正实装到 XuanYu Engine 项目树与层级树。
+- 修正：为 `ProjectList` 与 `HierarchyList` 增加显式外层滚动宿主，并以内联非滚动 `StackPanel` ItemsHost 替换默认 ListBox 模板；保留选择、键盘、hover、重命名和树行交互。
+- 限制：未修改 XYUI canonical、滚轮事件处理、ScrollOffset 补偿或 FIX-R2 之外的行为。
+- 回归：新增 Engine Headless 合同，确认两棵树各自只有一个显式 ScrollViewer，ListBox 内部不再包含 ScrollViewer；定向回归 `2/2`。
+- 验证：方案构建 0 警告/0 错误；XYUI.Avalonia.Tests `614/614`、Core `339/339`、WarCore `22/22`、World `1485/1485`；ARCH-A 与 `git diff --check` 通过。
+- Hash：起始提交 `d1e6a34b`。
+- 状态：`XYENGINE-NAV-LAYOUT-STABILITY-FIX-R2 / READY FOR USER VISUAL + WHEEL ACCEPTANCE / NOT CLOSED`。
+
+## v0.2.28.64-rz · XYUI-GALLERY-NAV-LAYOUT-STABILITY-FIX-R2（2026-09-10 23:07:27 +08:00）
+- 目标：收口 Gallery 左侧五个导航 ListBox 的内部测量/虚拟化导致的外层 Extent 跳变。
+- 根因证据：真实 Windows F1 时间线确认 XYUI-3 导航高度 `651.429 → 1285.714`、已实现容器 `1 → 6`，同步推动外层 Extent `2885.714 → 3520`（`+634.286 DIP`）；内部 `PART_ScrollViewer.Offset` 未变化。
+- 修正：仅为 Gallery 的 `nav-tree` / `nav-foundation` 提供无内部 ScrollViewer、StackPanel ItemsHost 的专用模板；保留 ListBox selection、键盘、hover 与选中态，继续关闭 `AutoScrollToSelectedItem`；未改全局 Avalonia ListBox、XYUI canonical 或滚轮事件处理。
+- 回归：新增 Gallery Headless 布局稳定性合同，验证五个导航列表无内部 ScrollViewer，外层滚动后 Extent 稳定；定向 Gallery 回归 `28/28`。
+- 验证：XYUI.Avalonia.Tests `614/614`、Core `339/339`、WarCore `22/22`、World `1483/1483`；方案构建 0 警告/0 错误；ARCH-A 与 `git diff --check` 通过。
+- Hash：起始提交 `13a0821c4354c4ce335d5d7945d1277e0c1c1665`。
+- 状态：`XYUI-GALLERY-NAV-LAYOUT-STABILITY-FIX-R2 / READY FOR USER WHEEL ACCEPTANCE / NOT CLOSED`。
+
 ## v0.2.28.63-rz · XYENGINE-NAV-SCROLL-AUTHORITY-R1（2026-09-10 21:39:13 +08:00）
 - 目标：将 Gallery 已验证的导航滚动权修正实装到 XYengine 编辑器的项目树与层级树。
 - 修正：`ProjectList` 与 `HierarchyList` 显式关闭 `AutoScrollToSelectedItem`，保留两个树控件各自内部滚动宿主和滚轮交互；未改 XYUI canonical 控件或延期中的未保存对话框。
@@ -1818,3 +1892,9 @@ MAP-A-R1-D1 地图合同冻结（2026-08-02 17:42:55）
 - 治理：新里程碑 MAP-A（模块 24），新分支 feat/MAP-A-map；版本 v0.2.23.0-rz → v0.2.24.0-rz（五处同步）；基线 HEAD cbb694b = origin tip，ahead/behind 0/0；已知偏差 untracked `IDEA.md` 与残留 `XuanYu.Editor.Avalonia/` bin 目录未处理。
 - 状态：MAP-A-R1-D1 合同冻结完成，等待批准后进入 D1 域类型编码（MapId/MapDocument/MapSurfaceDefinition/字段验证）。
 
+## v0.2.28.66-rz · AREA-D-R3-INSPECTOR-PAGER（2026-09-11 00:00:00 +08:00）
+- 目标：将右侧地图/区域编辑导航切换为分页 Inspector，并让图层 Dock 支持自适应折叠。
+- 变化：新增 XYPager、XYInspectorSection、XYCollapsiblePane；地图页增加基础/环境/显示/数据/高级分页；图层区改为可折叠 Pane；同步运行时与源码 UI 合同测试。
+- 验证：专项 Runtime/UI 合同测试 25/25 通过；全量门禁待执行。
+- Hash：待提交。
+- 遗留：等待真机视觉与交互验收。

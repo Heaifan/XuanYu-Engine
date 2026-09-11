@@ -7,6 +7,8 @@ public sealed class EditorLogBuffer
 
     public IReadOnlyList<LogEntry> All => _entries;
 
+    public void Clear() => _entries.Clear();
+
     public void Seed(IEnumerable<LogEntry> entries)
     {
         foreach (var entry in entries) Add(entry);

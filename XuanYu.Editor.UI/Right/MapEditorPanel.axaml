@@ -9,30 +9,53 @@
   <UserControl.Styles>
     <StyleInclude Source="avares://XuanYu.Editor.UI/Right/EditorCompactStyles.axaml"/>
   </UserControl.Styles>
-  <Grid RowDefinitions="Auto,*">
-    <xy:XYTabBar x:Name="MapTabs" SizingMode="Content"
-                 xycore:XY.Size="Compact"
-                 xycore:XY.Density="Compact"
-                 Height="{StaticResource Control.Height.Compact}"
-                 ClipToBounds="True"
-                 Grid.Row="0"
-                 Margin="0"
-                 SelectionChanged="MapTabs_SelectionChanged">
-      <xy:XYTab Id="base" Label="地图基础" IsClosable="False" ShowSelectedAccent="False"/>
-      <xy:XYTab Id="environment" Label="地图环境" IsClosable="False" ShowSelectedAccent="False"/>
-      <xy:XYTab Id="dataset" Label="数据集" IsClosable="False" ShowSelectedAccent="False"/>
-    </xy:XYTabBar>
-    <Grid Grid.Row="1">
+  <xy:XYPager x:Name="MapPager" SelectionChanged="MapPager_SelectionChanged">
+    <xy:XYPagerPage Id="base" Label="基础">
       <ScrollViewer x:Name="MapPageHost" VerticalScrollBarVisibility="Auto">
         <local:MapPagePanel/>
       </ScrollViewer>
+    </xy:XYPagerPage>
+    <xy:XYPagerPage Id="environment" Label="环境">
       <ScrollViewer x:Name="EnvironmentHost" VerticalScrollBarVisibility="Auto">
         <StackPanel Spacing="10" Margin="0,6,0,0">
-          <xy:XYSectionTitle Text="地图环境"/>
-          <xy:XYCaption Text="天空预设 / 天顶颜色 / 地平线颜色 / 太阳方向 / 太阳强度 / 环境光强度编辑将在 D5 后续补齐。" TextWrapping="Wrap"/>
+          <xy:XYInspectorSection Header="环境设置">
+            <xy:XYInspectorSection.Content>
+              <StackPanel Spacing="4">
+                <xy:XYSectionTitle Text="地图环境"/>
+                <xy:XYCaption Text="天空预设 / 天顶颜色 / 地平线颜色 / 太阳方向 / 太阳强度 / 环境光强度编辑将在 D5 后续补齐。" TextWrapping="Wrap"/>
+              </StackPanel>
+            </xy:XYInspectorSection.Content>
+          </xy:XYInspectorSection>
+          <xy:XYInspectorSection Header="雾效设置">
+            <xy:XYInspectorSection.Content>
+              <xy:XYCaption Text="雾效属性将在 D5 后续补齐。" TextWrapping="Wrap"/>
+            </xy:XYInspectorSection.Content>
+          </xy:XYInspectorSection>
         </StackPanel>
       </ScrollViewer>
-      <local:DatasetPanel x:Name="DatasetHost"/>
-    </Grid>
-  </Grid>
+    </xy:XYPagerPage>
+    <xy:XYPagerPage Id="display" Label="显示">
+      <StackPanel Spacing="6" Margin="0,6,0,0">
+        <xy:XYInspectorSection Header="显示设置">
+          <xy:XYInspectorSection.Content>
+            <xy:XYEmptyText Text="当前地图暂无显示属性。"/>
+          </xy:XYInspectorSection.Content>
+        </xy:XYInspectorSection>
+      </StackPanel>
+    </xy:XYPagerPage>
+    <xy:XYPagerPage Id="data" Label="数据">
+      <ScrollViewer x:Name="DatasetHost" VerticalScrollBarVisibility="Auto">
+        <local:DatasetPanel/>
+      </ScrollViewer>
+    </xy:XYPagerPage>
+    <xy:XYPagerPage Id="advanced" Label="高级">
+      <StackPanel Spacing="6" Margin="0,6,0,0">
+        <xy:XYInspectorSection Header="高级设置">
+          <xy:XYInspectorSection.Content>
+            <xy:XYEmptyText Text="高级地图属性将在后续阶段补齐。"/>
+          </xy:XYInspectorSection.Content>
+        </xy:XYInspectorSection>
+      </StackPanel>
+    </xy:XYPagerPage>
+  </xy:XYPager>
 </UserControl>

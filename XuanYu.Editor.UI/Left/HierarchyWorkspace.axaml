@@ -4,12 +4,30 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.HierarchyWorkspace"
              x:DataType="local:UiVm">
-  <ListBox x:Name="HierarchyList"
-           Classes="treeList"
-           AutoScrollToSelectedItem="False"
-           ItemsSource="{Binding HierarchyItems}"
-           SelectedItem="{Binding SelectedHierarchyItem, Mode=TwoWay}"
-           KeyDown="SelectionList_KeyDown">
+  <ScrollViewer x:Name="HierarchyScrollHost"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <ListBox x:Name="HierarchyList"
+             Classes="treeList"
+             AutoScrollToSelectedItem="False"
+             ItemsSource="{Binding HierarchyItems}"
+             SelectedItem="{Binding SelectedHierarchyItem, Mode=TwoWay}"
+             KeyDown="SelectionList_KeyDown">
+    <ListBox.ItemsPanel>
+      <ItemsPanelTemplate>
+        <StackPanel/>
+      </ItemsPanelTemplate>
+    </ListBox.ItemsPanel>
+    <ListBox.Template>
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}">
+          <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}"/>
+        </Border>
+      </ControlTemplate>
+    </ListBox.Template>
     <ListBox.ItemTemplate>
       <DataTemplate>
         <Border Classes="treeRow" PointerPressed="HierarchyRow_Pressed">
@@ -44,5 +62,6 @@
         </Border>
       </DataTemplate>
     </ListBox.ItemTemplate>
-  </ListBox>
+    </ListBox>
+  </ScrollViewer>
 </UserControl>

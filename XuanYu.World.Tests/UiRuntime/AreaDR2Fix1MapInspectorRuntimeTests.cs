@@ -79,15 +79,15 @@ public sealed class AreaDR2Fix1MapInspectorRuntimeTests
     }
 
     [Fact]
-    public void Map_navigation_materializes_in_bounded_compact_height()
+    public void Map_navigation_materializes_paged_navigation()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var height = host.Run(() =>
         {
             var panel = new MapEditorPanel { DataContext = new UiVm(null, seedInitialScene: false) };
             host.Show(panel, 480, 640); panel.UpdateLayout();
-            return panel.FindControl<XYTabBar>("MapTabs")?.Bounds.Height ?? 0;
+            return panel.FindControl<XYPager>("MapPager")?.Pages.Count ?? 0;
         });
-        Assert.InRange(height, 24, 32);
+        Assert.Equal(5, height);
     }
 }

@@ -10,6 +10,14 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(BuildItems));
         OnPropertyChanged(nameof(TaskItems));
         OnPropertyChanged(nameof(LogSummary));
+        OnPropertyChanged(nameof(AllCount));
+        OnPropertyChanged(nameof(InfoCount));
+        OnPropertyChanged(nameof(WarningCount));
+        OnPropertyChanged(nameof(ErrorCount));
+        OnPropertyChanged(nameof(LogSourceFilter));
+        OnPropertyChanged(nameof(LogSourceFilterText));
+        OnPropertyChanged(nameof(LogSearchText));
+        OnPropertyChanged(nameof(IsLogDetailsOpen));
         OnPropertyChanged(nameof(HasNoLogItems));
         OnPropertyChanged(nameof(ShowInitialLogEmpty));
         OnPropertyChanged(nameof(ShowNoFilterResults));
@@ -20,9 +28,5 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(IsLogFilterInfo));
         OnPropertyChanged(nameof(IsLogFilterWarning));
         OnPropertyChanged(nameof(IsLogFilterError));
-        OnPropertyChanged(nameof(IsLogFilterBuild));
-        OnPropertyChanged(nameof(IsLogFilterTask));
-        OnPropertyChanged(nameof(IsLogFilterInput));
-        OnPropertyChanged(nameof(IsLogFilterRender));
     }
 }

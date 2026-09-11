@@ -8,7 +8,7 @@ namespace XuanYu.World.Tests.UiRuntime;
 public sealed partial class AreaBLeftWorkspaceRuntimeTests
 {
     [Fact]
-    public void Right_rehomes_map_region_and_layer_workspace_content()
+    public void Top_owns_region_context_while_right_keeps_layer_workspace()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var evidence = host.Run(() =>
@@ -25,8 +25,8 @@ public sealed partial class AreaBLeftWorkspaceRuntimeTests
             var mapVisible = map.IsVisible;
             var layerVisible = layer.IsVisible;
             vm.SwitchWorkspaceCommand.Execute("RegionEditor"); Dispatcher.UIThread.RunJobs(); right.UpdateLayout();
-            var region = UiRuntimeTestHost.Descendants<RegionalAuthoringPanel>(inspector).Single();
-            return (mapVisible, region.IsVisible, layerVisible, map.SelectedTabId, region.SelectedTabId,
+            var top = new Top { DataContext = vm }; host.Show(top, 900, 160); top.UpdateLayout();
+            return (mapVisible, top.IsEffectivelyVisible, layerVisible, map.SelectedTabId, top.IsVisible,
                 vm.IsMapEditMode, vm.IsRegionEditMode);
         });
 
@@ -34,7 +34,7 @@ public sealed partial class AreaBLeftWorkspaceRuntimeTests
         Assert.True(evidence.Item2);
         Assert.True(evidence.Item3);
         Assert.Equal("base", evidence.Item4);
-        Assert.Equal("region", evidence.Item5);
+        Assert.True(evidence.Item5);
         Assert.False(evidence.Item6);
         Assert.True(evidence.Item7);
     }

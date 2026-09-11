@@ -4,12 +4,30 @@
              xmlns:xy="using:XYUI.Avalonia.Controls"
              x:Class="XuanYu.Editor.UI.ProjectWorkspace"
              x:DataType="local:UiVm">
-  <ListBox x:Name="ProjectList"
-           Classes="treeList"
-           AutoScrollToSelectedItem="False"
-           ItemsSource="{Binding ProjectItems}"
-           SelectedItem="{Binding SelectedProjectItem, Mode=TwoWay}"
-           KeyDown="SelectionList_KeyDown">
+  <ScrollViewer x:Name="ProjectScrollHost"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <ListBox x:Name="ProjectList"
+             Classes="treeList"
+             AutoScrollToSelectedItem="False"
+             ItemsSource="{Binding ProjectItems}"
+             SelectedItem="{Binding SelectedProjectItem, Mode=TwoWay}"
+             KeyDown="SelectionList_KeyDown">
+    <ListBox.ItemsPanel>
+      <ItemsPanelTemplate>
+        <StackPanel/>
+      </ItemsPanelTemplate>
+    </ListBox.ItemsPanel>
+    <ListBox.Template>
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}">
+          <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}"/>
+        </Border>
+      </ControlTemplate>
+    </ListBox.Template>
     <ListBox.ItemTemplate>
       <DataTemplate>
         <Border Classes="treeRow" PointerPressed="ProjectRow_Pressed">
@@ -37,5 +55,6 @@
         </Border>
       </DataTemplate>
     </ListBox.ItemTemplate>
-  </ListBox>
+    </ListBox>
+  </ScrollViewer>
 </UserControl>

@@ -11,7 +11,7 @@ public sealed class AreaDR2Fix4RegionInspectorRuntimeTests
     public AreaDR2Fix4RegionInspectorRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Region_authoring_is_materialized_in_the_single_inspector_scroll_surface()
+    public void Region_inspector_is_property_only_with_single_scroll_surface()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var state = host.Run(() =>
@@ -22,6 +22,6 @@ public sealed class AreaDR2Fix4RegionInspectorRuntimeTests
             return (Regions: UiRuntimeTestHost.Descendants<RegionalAuthoringPanel>(panel).Count(),
                 HasInspectorScroll: panel.FindControl<ScrollViewer>("InspectorScrollViewer") is not null);
         });
-        Assert.Equal(1, state.Regions); Assert.True(state.HasInspectorScroll);
+        Assert.Equal(0, state.Regions); Assert.True(state.HasInspectorScroll);
     }
 }

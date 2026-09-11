@@ -24,7 +24,7 @@ public sealed class UiR1FinalLeftTopContractTests
         var panel = Read("Right/RegionalAuthoringPanel.axaml");
         var code = Read("Right/RegionalAuthoringPanel.axaml.cs");
         Assert.Contains("<xy:XYSectionTitle Text=\"内容类型\"", panel);
-        Assert.Contains("AuthoringTabs_SelectionChanged", panel);
+        Assert.Contains("AuthoringPager_SelectionChanged", panel);
         Assert.Contains("SelectRegionAuthoringMode", code);
     }
 
@@ -71,6 +71,7 @@ public sealed class UiR1FinalLeftTopContractTests
         Assert.Contains("<local:FileModule Grid.Column=\"1\"", top);
         Assert.Contains("<local:RuntimeStatusModule Grid.Column=\"3\"", top);
         Assert.Contains("<local:EditToolsModule/>", top);
+        Assert.Contains("<local:ContextToolBar/>", top);
         Assert.Contains("<local:ViewModule/>", top);
         Assert.Contains("<local:SnapModule/>", top);
         Assert.DoesNotContain("IsVisible", top);
