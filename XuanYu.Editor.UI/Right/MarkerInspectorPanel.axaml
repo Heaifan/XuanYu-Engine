@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XuanYu.Editor.UI"
+             xmlns:xy="using:XYUI.Avalonia.Controls"
+             xmlns:xycore="using:XYUI.Avalonia"
+             x:Class="XuanYu.Editor.UI.MarkerInspectorPanel"
+             x:DataType="local:UiVm">
+  <StackPanel Spacing="8">
+    <xy:XYSectionTitle Text="地图标记"/>
+    <xy:XYSeparator Variant="Section"/>
+    <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="4">
+      <xy:XYLabel Text="ID"/><xy:XYSelectableText Grid.Column="1" Text="{Binding MarkerInspectorIdText}" Variant="Technical" ToolTip.Tip="{Binding MarkerInspectorIdText}"/>
+      <xy:XYLabel Grid.Row="1" Text="类型"/><xy:XYText Grid.Row="1" Grid.Column="1" Text="{Binding MarkerInspectorTypeText}"/>
+      <xy:XYLabel Grid.Row="2" Text="Dataset"/><xy:XYText Grid.Row="2" Grid.Column="1" Text="{Binding MarkerInspectorDatasetText}"/>
+      <xy:XYLabel Grid.Row="3" Text="状态"/><xy:XYText Grid.Row="3" Grid.Column="1" Text="{Binding MarkerInspectorStatusText}"/>
+    </Grid>
+    <xy:XYSectionTitle Text="位置"/>
+    <xy:XYVectorProperty x:Name="PositionProperty" Label="坐标" Dimension="Vector2" Layout="Inline"
+        xycore:XY.Density="Compact" X="{Binding MarkerInspectorPositionX, Mode=OneWay}"
+        Y="{Binding MarkerInspectorPositionY, Mode=OneWay}" IsReadOnly="{Binding IsMarkerInspectorReadOnly}"
+        DecimalPlaces="2" Step="0.1"/>
+    <xy:XYButton Content="应用位置" Variant="Primary" Click="ApplyPosition_Click"
+        HorizontalAlignment="Left" AutomationProperties.Name="应用地图标记位置"/>
+  </StackPanel>
+</UserControl>

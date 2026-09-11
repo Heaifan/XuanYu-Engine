@@ -90,11 +90,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(CanStartRoadDrawing));
         OnPropertyChanged(nameof(CanRequestMarkerPlacement)); OnPropertyChanged(nameof(CanStartMarkerPlacement));
         OnPropertyChanged(nameof(CanUnregisterDataset));
-        OnPropertyChanged(nameof(InspectorSelectionTitle));
-        OnPropertyChanged(nameof(InspectorSelectionSubtitle));
-        OnPropertyChanged(nameof(HasInspectorSelection));
-        OnPropertyChanged(nameof(IsInspectorEmpty)); OnPropertyChanged(nameof(IsEntityInspector));
-        OnPropertyChanged(nameof(InspectorSectionTitle));
-        OnPropertyChanged(nameof(InspectorFields));
+        OnPropertyChanged(nameof(IsEntityInspector));
+        RaiseMarkerInspectorBindings();
     }
 }

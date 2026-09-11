@@ -83,6 +83,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(IsInspectorEmpty)); OnPropertyChanged(nameof(IsEntityInspector));
         OnPropertyChanged(nameof(InspectorSectionTitle));
         OnPropertyChanged(nameof(InspectorFields));
+        RaiseMarkerInspectorBindings();
     }
 
     static string StatusText(MapDatasetStatus status) => status switch

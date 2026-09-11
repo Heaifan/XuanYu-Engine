@@ -13,7 +13,7 @@ public sealed partial class UiVm
     public bool TryGetDatasetIdForLayer(MapLayerId layerId, out string datasetId)
     {
         var row = _datasetItems.FirstOrDefault(item =>
-            item.Type is "region" or "road" && MapDatasetLayerIdProjection.Project(item.Id) == layerId);
+            item.Type is "region" or "road" or "marker" && MapDatasetLayerIdProjection.Project(item.Id) == layerId);
         datasetId = row?.Id ?? "";
         return row is not null;
     }

@@ -42,6 +42,7 @@ public sealed partial class MapEditSession
         if (!GuardWriteThread()) return Fail("NotOnWriteThread", "编辑地图标记必须在编辑写线程执行。");
         var marker = (MapSessionMarkers()).FirstOrDefault(item => item.MarkerId == markerId);
         if (marker is null) return Fail("UnknownMarker", "地图标记不存在。");
+        if (marker.IsLocked) return Fail("MarkerLocked", "地图标记已锁定。");
         if (MapLayerRules.Find(_currentMap.Layers, marker.LayerId)?.IsLocked == true)
             return Fail("MarkerLayerLocked", "地图标记所属图层已锁定。");
         return CommitMapChange(map => map with { Markers = map.Markers.Replace(marker, marker with { Position = position }) }, MapEditReason.MarkerGeometryEdited);

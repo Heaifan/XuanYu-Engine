@@ -4,7 +4,7 @@ namespace XuanYu.Editor.UI;
 
 public sealed partial class UiVm
 {
-    void ClearMapGeometrySelection()
+    public void ClearMapGeometrySelection()
     {
         if (_selectedMapGeometry is null && _selectedMapGeometryVertexIndex < 0) return;
         _selectedMapGeometry = null; _selectedMapGeometryVertexIndex = -1; _mapGeometryPreview = null;
@@ -16,9 +16,10 @@ public sealed partial class UiVm
     {
         OnPropertyChanged(nameof(SelectedMapGeometryText)); OnPropertyChanged(nameof(IsMapGeometryDragActive));
         OnPropertyChanged(nameof(SelectedMapGeometryVertexIndex));
+        RaiseMarkerInspectorBindings();
     }
 
-    void SelectMapGeometry(MapGeometrySelection selection)
+    public void SelectMapGeometry(MapGeometrySelection selection)
     {
         _selectedMapGeometry = selection; _selectedMapGeometryVertexIndex = -1;
         _mapGeometryPreview = DisplayGeometry(); RaiseMapGeometryBindings(); PublishSceneRenderSnapshot();

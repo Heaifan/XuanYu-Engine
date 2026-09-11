@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.72-rz · XYENGINE-MAINLINE-RESUME-R1（2026-09-11 10:34:59 +08:00）
+- 目标：恢复 MAP-DATA-A R3 点要素进入现行区域编辑器的 Inspector 工作流。
+- 变化：新增 MapMarker Inspector 身份/Dataset/状态投影与二维坐标提交；统一 Marker 选择、空选择、Viewport 拖动、Undo/Redo、Save/Reload 的同步；补齐 Marker 数据集图层反解与锁定提交守卫；复用现有 XYVectorProperty(Vector2)，未修改 MapMarker schema、WORLD-A 或 XYUI 控件。
+- 验证：完整解决方案构建 0 警告/0 错误；Core 339/339、World 1505/1505、XYUI 617/617、WarCore 22/22；定向 Marker Inspector 与既有 Marker 回归 12/12；ARCH-A/5+100、XML 与 `git diff --check` 通过。
+- Hash：本轮 Git 收口记录。
+- 遗留：等待用户真机视觉验收；本轮不进入 WORLD-A。
+
 ## v0.2.28.71-rz · EDITOR-BOTTOM-LOG-R1-F1（2026-09-11 02:11:05 +08:00）
 - 目标：修复 Bottom Log 无法展开、列表不可见与多余标题问题。
 - 变化：恢复 `XYIconButton(ChevronDown) → ToggleLogCommand` 展开入口；移除工具条“日志”标题；保留展开后的逐条日志列表。

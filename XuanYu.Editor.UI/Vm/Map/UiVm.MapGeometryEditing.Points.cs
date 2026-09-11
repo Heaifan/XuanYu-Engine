@@ -26,6 +26,7 @@ public sealed partial class UiVm
             : MapSession.CurrentMap.Markers.Any(r => r.MarkerId.ToString() == selection.FeatureId) && MapGeometryHitTester.IsEditable(MapSession.CurrentMap, selection);
         if (!exists) { _selectedMapGeometry = null; _selectedMapGeometryVertexIndex = -1; _mapGeometryPreview = null; RaiseMapGeometryBindings(); return; }
         _mapGeometryPreview = DisplayGeometry();
+        RaiseMapGeometryBindings();
     }
 
     static MapRegionId MapRegionIdFrom(MapGeometrySelection selection) => MapRegionId.TryParse(selection.FeatureId, out var id) ? id : default;
