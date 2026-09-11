@@ -61,7 +61,9 @@ public sealed class WorkspaceSelectorR2ContractTests
         var view = Read("XuanYu.Editor.UI", "Top", "ViewModule.axaml");
         var top = Read("XuanYu.Editor.UI", "Top", "Top.axaml");
 
-        Assert.Equal(2, Count(workspace, "CheckKind=\"Radio\""));
+        Assert.Equal(3, Count(workspace, "CheckKind=\"Radio\""));
+        Assert.Contains("点要素编辑", workspace);
+        Assert.Contains("OpenPointFeatureEditorCommand", workspace);
         Assert.DoesNotContain("ToggleType=", workspace);
         Assert.DoesNotContain("Header=", workspace + file + view);
         Assert.DoesNotContain("<Style Selector=\"Menu\"", top);

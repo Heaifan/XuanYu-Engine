@@ -1,3 +1,4 @@
+using System.Windows.Input;
 using XuanYu.Editor.Workspace;
 
 namespace XuanYu.Editor.UI;
@@ -6,11 +7,21 @@ namespace XuanYu.Editor.UI;
 public sealed partial class UiVm
 {
     readonly EditorWorkspaceManager _workspaceManager = new();
+    ICommand? _openPointFeatureEditorCommand;
 
     public EditorWorkspaceDefinition CurrentWorkspace => _workspaceManager.CurrentWorkspace;
     public string CurrentWorkspaceDisplayName => CurrentWorkspace.DisplayName;
     public bool IsMapWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.MapEditor;
     public bool IsRegionWorkspace => CurrentWorkspace.Id == EditorWorkspaceId.RegionEditor;
+    public ICommand OpenPointFeatureEditorCommand => _openPointFeatureEditorCommand ??=
+        new RelayCommand(OpenPointFeatureEditor);
+
+    void OpenPointFeatureEditor(object? value)
+    {
+        if (!IsRegionWorkspace) SwitchWorkspace(EditorWorkspaceId.RegionEditor);
+        if (!IsEditMode) ToggleEditorMode();
+        SelectRegionAuthoringMode("地图标记");
+    }
 
     void SwitchWorkspace(object? value)
     {

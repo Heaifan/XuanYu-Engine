@@ -44,6 +44,8 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(CurrentRegionAuthoringMode));
         OnPropertyChanged(nameof(IsRegionSurfaceAuthoringMode));
         OnPropertyChanged(nameof(IsRoadAuthoringMode));
+        OnPropertyChanged(nameof(CanRequestMarkerPlacement));
+        OnPropertyChanged(nameof(CanStartMarkerPlacement));
         OnPropertyChanged(nameof(CanStartRegionDrawing));
         OnPropertyChanged(nameof(CanRequestRegionDrawing));
         OnPropertyChanged(nameof(CanRequestRoadDrawing));

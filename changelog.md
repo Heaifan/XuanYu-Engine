@@ -1,5 +1,12 @@
 # changelog
 
+## v0.2.28.73-rz · XYENGINE-MAINLINE-RESUME-R1-FIX1（2026-09-11 11:35:09 +08:00）
+- 目标：解除真机验收中的 Marker 入口不可发现阻断。
+- 变化：在顶部工作区菜单增加“点要素编辑”入口；该入口仅投影到现有 RegionEditor、EditMode、Marker authoring 与 Marker placement 链，不新增 Workspace、MapMarker 数据结构或第二套放置逻辑；补齐编辑模式切换时 Marker 可用性通知。
+- 验证：完整解决方案 Build 0 警告/0 错误；Core 339/339、World 1508/1508、XYUI 617/617、WarCore 22/22；ARCH-A、版本一致性与 `git diff --check` 通过。
+- Hash：`24c6375e`（后续仅 amend 本条 Hash 回填）。
+- 遗留：仅待用户真机确认顶部菜单可发现、进入后显示“地图标记/放置地图标记”，以及实际视口放置；未验收不得进入 WORLD-A。
+
 ## v0.2.28.72-rz · XYENGINE-MAINLINE-RESUME-R1（2026-09-11 10:34:59 +08:00）
 - 目标：恢复 MAP-DATA-A R3 点要素进入现行区域编辑器的 Inspector 工作流。
 - 变化：新增 MapMarker Inspector 身份/Dataset/状态投影与二维坐标提交；统一 Marker 选择、空选择、Viewport 拖动、Undo/Redo、Save/Reload 的同步；补齐 Marker 数据集图层反解与锁定提交守卫；复用现有 XYVectorProperty(Vector2)，未修改 MapMarker schema、WORLD-A 或 XYUI 控件。
