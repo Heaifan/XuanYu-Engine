@@ -903,6 +903,26 @@ ENVIRONMENT CHANGE REQUIRED
 
 ---
 
+# 28.1 .NET Toolchain Resolution
+
+所有 Agent、Build/Test 门禁与 `run.bat` 必须共享仓库内唯一的 .NET SDK discovery authority：
+
+```text
+scripts/resolve-dotnet.ps1
+```
+
+需要执行 .NET 命令时优先通过：
+
+```text
+scripts/xuanyu-dotnet.ps1
+```
+
+Agent 在报告 `.NET SDK unavailable` 前，必须先调用 Resolver 或 Wrapper。禁止因直接执行 `dotnet --info` 失败就立即阻断；只有仓库 Resolver 确认没有有效 SDK 时，才允许报告 `DOTNET SDK BLOCKED`。
+
+`run.bat` 不得维护第二套 SDK 候选路径、盘符扫描或 PATH 搜索算法；Resolver 成功时 stdout 只能输出真实绝对路径，候选必须通过 `dotnet --list-sdks` 验证。
+
+---
+
 # 29. Implementation Understanding
 
 任何正式施工前，Owner 必须先输出简短理解：

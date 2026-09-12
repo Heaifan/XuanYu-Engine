@@ -10,18 +10,10 @@ if errorlevel 1 (
     exit /b 1
 )
 
-rem Each machine may point XUANYU_DOTNET at its own SDK executable (D:, E:, etc.).
-rem Example: setx XUANYU_DOTNET "X:\MyApp\sdk-dotnet\dotnet.exe"
 set "DOTNET_EXE="
-if defined XUANYU_DOTNET call :try_dotnet "%XUANYU_DOTNET%"
-if not defined DOTNET_EXE call :try_dotnet "%~dp0sdk-dotnet\dotnet.exe"
-if not defined DOTNET_EXE call :try_dotnet "%~dp0.dotnet\dotnet.exe"
-rem Probe the portable MyApp SDK layout without assuming D: or E:.
-if not defined DOTNET_EXE for %%R in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if not defined DOTNET_EXE call :try_dotnet "%%R:\MyApp\sdk-dotnet\dotnet.exe"
-if not defined DOTNET_EXE for /f "delims=" %%D in ('where dotnet 2^>nul') do if not defined DOTNET_EXE call :try_dotnet "%%D"
+for /f "usebackq delims=" %%D in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\resolve-dotnet.ps1"`) do if not defined DOTNET_EXE set "DOTNET_EXE=%%D"
 if not defined DOTNET_EXE (
     echo [ERROR] .NET SDK not found.
-    echo Set XUANYU_DOTNET to the machine's SDK dotnet.exe path, or add it to PATH.
     pause
     exit /b 1
 )
@@ -70,11 +62,3 @@ echo.
 echo [ERROR] Editor failed. Exit code: %exitCode%
 pause
 exit /b %exitCode%
-
-:try_dotnet
-if defined DOTNET_EXE exit /b 0
-if not exist "%~1" exit /b 0
-call "%~1" --list-sdks >nul 2>&1
-if errorlevel 1 exit /b 0
-set "DOTNET_EXE=%~1"
-exit /b 0
