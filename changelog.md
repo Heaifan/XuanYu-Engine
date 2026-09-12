@@ -3,7 +3,7 @@
 ## v0.2.28.73-rz · XUANYU-SYNC-SOP-BASELINE（2026-09-12 20:33:56 +08:00）
 - 目标：按首次同步 SOP 建立可追踪的同步规范基线。
 - 变化：新增 `docs/governance/sync-handoff-sop.md`，纳入附件《玄域引擎同步与交接规范 v1.0》原文；同步治理文档索引与文件树。
-- 验证：Git fetch 后安全快进 6 个提交；工作区在实施前干净；规范原文内容核对；`git diff --check` 待本轮提交前执行。
+- 验证：Git fetch 后安全快进 6 个提交；工作区在实施前干净；规范原文 1693 行逐行核对；ARCH-A guard PASS；`git diff --check` PASS。
 - Hash：以本轮最终提交为准。
 - 遗留：尚未执行完整构建/测试；本轮仅治理文档变更。
 
