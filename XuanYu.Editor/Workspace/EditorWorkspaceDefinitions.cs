@@ -14,7 +14,7 @@ public static class EditorWorkspaceDefinitions
 
     public static EditorWorkspaceDefinition RegionEditor { get; } = new(
         EditorWorkspaceId.RegionEditor,
-        "区域编辑",
+        "要素编辑",
         "region-editor-toolbar",
         "region-editor-left",
         "region-editor-main",

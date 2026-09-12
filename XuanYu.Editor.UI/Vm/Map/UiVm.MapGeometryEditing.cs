@@ -21,13 +21,13 @@ public sealed partial class UiVm
         if (!IsRegionEditMode || !IsSelectTool || IsRegionDrawingDraftActive || IsRoadDrawingDraftActive ||
             !IsInsideViewport(x, y, viewport)) return false;
         var projection = ViewProjectionState.Create(CurrentCamera(viewport.Revision), viewport);
-        if (_selectedMapGeometry is { } selected && MapGeometryHitTester.TryHitVertex(
+        if (_selectedMapGeometry is { } selected && IsGeometryEditingActive && MapGeometryHitTester.TryHitVertex(
                 MapSession.CurrentMap, selected, projection, x, y, 10, MapSession.CurrentMap.Surface.BaseHeightMeters, out var index))
         {
             var points = GeometryPoints(selected);
-        _mapGeometryDrag = new(selected, index, points);
-        _regionVertexSnap.Clear();
-        _geometrySnap.Clear();
+            _mapGeometryDrag = new(selected, index, points);
+            _regionVertexSnap.Clear();
+            _geometrySnap.Clear();
             _mapGeometryPreview = new(selected, points);
             FooterState = "状态：捕获中";
             FooterMessage = "顶点拖动预览中。释放鼠标提交，按 Esc 取消。";
@@ -48,6 +48,7 @@ public sealed partial class UiVm
         }
         _selectedMapGeometry = hit.Selection;
         _selectedMapGeometryVertexIndex = -1;
+        IsGeometryEditingActive = false;
         _mapGeometryPreview = new(hit.Selection, GeometryPoints(hit.Selection));
         RaiseMapGeometryBindings();
         PublishSceneRenderSnapshot();
