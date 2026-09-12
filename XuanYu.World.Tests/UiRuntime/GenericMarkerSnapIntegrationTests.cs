@@ -67,6 +67,8 @@ public sealed class GenericMarkerSnapIntegrationTests : IDisposable
             [new(2, 2), new(3, 2), new(3, 3)])).IsSuccess);
         Assert.True(vm.MapSession.CreateRoad(new MapRoad(MapRoadId.New(), layer, "道路", "generic",
             [new(5, -2), new(5, 2), new(5, 6)])).IsSuccess);
+        vm.SelectMapGeometry(new(MapGeometryFeatureKind.Marker, marker.MarkerId.ToString()));
+        vm.IsGeometryEditingActive = true;
         return (vm, marker);
     }
 

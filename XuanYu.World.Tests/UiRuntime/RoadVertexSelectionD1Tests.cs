@@ -25,6 +25,8 @@ public sealed partial class RoadVertexSelectionD1Tests : IDisposable
     public async Task Clicking_road_vertices_reports_the_dataset_index()
     {
         var (vm, road) = await CreateAsync();
+        vm.SelectMapGeometry(new(XuanYu.Editor.MapEditing.MapGeometryFeatureKind.Road, road.RoadId.ToString()));
+        vm.IsGeometryEditingActive = true;
         for (var i = 0; i < road.Points.Length; i++)
         {
             var screen = Screen(vm, road.Points[i]);
@@ -40,6 +42,8 @@ public sealed partial class RoadVertexSelectionD1Tests : IDisposable
         var second = new MapRoad(MapRoadId.New(), first.LayerId, "道路 2", "generic",
             [new(-2, 1), new(0, 1), new(2, 1)]);
         Assert.True(vm.MapSession.CreateRoad(second).IsSuccess);
+        vm.SelectMapGeometry(new(XuanYu.Editor.MapEditing.MapGeometryFeatureKind.Road, first.RoadId.ToString()));
+        vm.IsGeometryEditingActive = true;
         var firstScreen = Screen(vm, first.Points[0]);
         var secondScreen = Screen(vm, second.Points[1]);
 
@@ -50,10 +54,12 @@ public sealed partial class RoadVertexSelectionD1Tests : IDisposable
     }
 
     [Fact]
-    public async Task Switching_to_region_mode_clears_road_vertex_state()
+    public async Task Changing_authoring_mode_clears_geometry_selection()
     {
         var (vm, road) = await CreateAsync();
         var screen = Screen(vm, road.Points[0]);
+        vm.SelectMapGeometry(new(XuanYu.Editor.MapEditing.MapGeometryFeatureKind.Road, road.RoadId.ToString()));
+        vm.IsGeometryEditingActive = true;
         Assert.True(vm.TrySelectMapGeometryVertex(screen.X, screen.Y, Viewport));
 
         vm.SelectRegionAuthoringMode("区域面");

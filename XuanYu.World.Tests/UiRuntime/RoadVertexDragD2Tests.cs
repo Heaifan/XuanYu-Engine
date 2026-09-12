@@ -76,7 +76,9 @@ public sealed class RoadVertexDragD2Tests : IDisposable
         vm.SelectRegionAuthoringMode("道路"); vm.SelectToolCommand.Execute("选择");
         var road = new MapRoad(MapRoadId.New(), vm.MapSession.ActiveRegionLayerId, "道路", "generic",
             [new(-1, -1), new(0, 0), new(1, 1)]);
-        Assert.True(vm.MapSession.CreateRoad(road).IsSuccess); return (vm, road);
+        Assert.True(vm.MapSession.CreateRoad(road).IsSuccess);
+        vm.SelectMapGeometry(new(XuanYu.Editor.MapEditing.MapGeometryFeatureKind.Road, road.RoadId.ToString()));
+        vm.IsGeometryEditingActive = true; return (vm, road);
     }
 
     static (double X, double Y) Screen(UiVm vm, MapPoint point)

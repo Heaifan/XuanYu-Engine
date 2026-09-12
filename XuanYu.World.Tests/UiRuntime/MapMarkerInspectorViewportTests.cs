@@ -23,6 +23,7 @@ public sealed class MapMarkerInspectorViewportTests : IDisposable
         var marker = new MapMarker(MapMarkerId.New(), vm.MapSession.ActiveRegionLayerId, "拖动标记", new(0, 0));
         Assert.True(vm.MapSession.CreateMarker(marker).IsSuccess);
         vm.SelectMapGeometry(new(XuanYu.Editor.MapEditing.MapGeometryFeatureKind.Marker, marker.MarkerId.ToString()));
+        vm.IsGeometryEditingActive = true;
         var target = Screen(vm, new(6, 7));
 
         var source = Screen(vm, marker.Position);

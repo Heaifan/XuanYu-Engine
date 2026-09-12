@@ -57,6 +57,8 @@ public sealed class GenericRoadSnapIntegrationTests : IDisposable
             [new(0, 0), new(1, 0), new(2, 0)]);
         Assert.True(vm.MapSession.CreateRegion(region).IsSuccess);
         Assert.True(vm.MapSession.CreateRoad(road).IsSuccess);
+        vm.SelectMapGeometry(new(MapGeometryFeatureKind.Road, road.RoadId.ToString()));
+        vm.IsGeometryEditingActive = true;
         return (vm, road);
     }
 
