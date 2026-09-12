@@ -10,6 +10,7 @@
 - `docs/governance/版本号规范与历史映射.md`：版本格式与历史编号映射
 - `docs/governance/dev-rules-understanding.md`：dev-rules 解释
 - `docs/governance/diagnostic-safety.md`：诊断日志与 UI 调度安全规范
+- `docs/governance/sync-handoff-sop.md`：玄域引擎跨电脑/跨 Agent 同步与交接唯一正式流程
 - `docs/governance/NAMING_RULES.md`、`naming-XuanYu-Engine.md`：命名与品牌规范
 - `docs/governance/ui-spec.md`：UI 规范 1.0 讨论初稿（强约束 UI 默认标准与受控例外机制，待审订）
 - `docs/governance/debts/arch-world-debts.md`：受控债务登记
