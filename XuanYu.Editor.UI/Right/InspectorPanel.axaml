@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
+             xmlns:xyvec="using:XYUI.Avalonia.Vector"
              x:Class="XuanYu.Editor.UI.InspectorPanel"
              x:DataType="local:UiVm">
   <UserControl.Styles>
@@ -19,6 +20,18 @@
         <xy:XYCaption x:Name="EntityHeaderSubtitle" Text="{Binding InspectorSelectionSubtitle}"/>
       </StackPanel>
     </Grid>
+
+    <StackPanel IsVisible="{Binding IsMapGeometrySelected}">
+      <xy:XYToggleButton IsChecked="{Binding IsGeometryEditingActive}"
+                         Command="{Binding ToggleGeometryEditingCommand}"
+                         ToolTip.Tip="进入或退出几何编辑模式"
+                         HorizontalAlignment="Stretch" Margin="0,4,0,0">
+        <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+          <xy:XYIcon Icon="{x:Static xyvec:XyuiVectorIcon.Move}" Size="Small"/>
+          <TextBlock Text="编辑几何"/>
+        </StackPanel>
+      </xy:XYToggleButton>
+    </StackPanel>
 
     <StackPanel IsVisible="{Binding IsMapEditMode}">
       <local:MapEditorPanel x:Name="MapWorkspace" IsVisible="{Binding IsMapWorkspaceInspectorVisible}"/>

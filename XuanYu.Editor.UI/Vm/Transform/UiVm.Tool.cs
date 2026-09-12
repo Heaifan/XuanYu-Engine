@@ -25,12 +25,12 @@ public sealed partial class UiVm
         if (requestedTool == EditorToolId.RegionDrawing && !CanStartRegionDrawing)
         {
             FooterState = "状态：不可用";
-            FooterMessage = "请先选择一个正常且未锁定的区域数据集，并进入区域编辑。";
+            FooterMessage = "请先选择一个正常且未锁定的区域数据集，并进入要素编辑。";
             return;
         }
         if (requestedTool == EditorToolId.RoadDrawing && !CanStartRoadDrawing)
         {
-            FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的道路数据集，并进入区域编辑 → 道路。"; return;
+            FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的道路数据集，并进入要素编辑 → 道路。"; return;
         }
         if (requestedTool == EditorToolId.MarkerPlacement && !CanStartMarkerPlacement)
         { FooterState = "状态：不可用"; FooterMessage = "请先选择一个正常且未锁定的地图标记数据集。"; return; }

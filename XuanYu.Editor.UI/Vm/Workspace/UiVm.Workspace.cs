@@ -36,6 +36,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(CurrentWorkspaceDisplayName));
         OnPropertyChanged(nameof(IsMapWorkspace));
         OnPropertyChanged(nameof(IsRegionWorkspace));
+        OnPropertyChanged(nameof(IsFeatureEditingActive));
         RaiseLayerContextBindings();
         RaiseModeBindings();
         _logBus.Info(EditorLogSource.Editor, EditorLogCategory.Command,

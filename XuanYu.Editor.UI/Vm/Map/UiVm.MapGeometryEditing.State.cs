@@ -9,6 +9,8 @@ public sealed partial class UiVm
     ICommand? _toggleGeometryEditingCommand;
     ICommand? _toggleFeatureEditingCommand;
 
+    public bool IsMapGeometrySelected => _selectedMapGeometry is not null;
+
     public bool IsFeatureEditingActive
     {
         get => IsRegionWorkspace;

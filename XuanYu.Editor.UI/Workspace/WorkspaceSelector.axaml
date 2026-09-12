@@ -39,15 +39,11 @@
                            IsChecked="{Binding IsMapWorkspace, Mode=OneWay}"
                            Command="{Binding SwitchWorkspaceCommand}"
                            CommandParameter="MapEditor"/>
-            <xy:XYMenuItem Label="区域编辑"
+            <xy:XYMenuItem Label="要素编辑"
                             CheckKind="Radio"
                            IsChecked="{Binding IsRegionWorkspace, Mode=OneWay}"
                            Command="{Binding SwitchWorkspaceCommand}"
                            CommandParameter="RegionEditor"/>
-            <xy:XYMenuItem Label="点要素编辑"
-                            CheckKind="Radio"
-                            IsChecked="{Binding IsMarkerAuthoringMode, Mode=OneWay}"
-                            Command="{Binding OpenPointFeatureEditorCommand}"/>
           </xy:XYMenu>
         </xy:XYMenuBarItem>
       </xy:XYMenuBar>

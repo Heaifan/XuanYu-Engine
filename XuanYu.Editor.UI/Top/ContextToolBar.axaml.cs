@@ -15,4 +15,5 @@ public partial class ContextToolBar : UserControl
     void UndoRoadDrawingVertex_Click(object? s, RoutedEventArgs e) => (DataContext as UiVm)?.UndoRoadDrawingVertex();
     void CompleteRoadDrawing_Click(object? s, RoutedEventArgs e) => (DataContext as UiVm)?.CompleteRoadDrawing();
     void CancelRoadDrawing_Click(object? s, RoutedEventArgs e) => (DataContext as UiVm)?.CancelRoadDrawing();
+    void MapEditorBreadcrumb_Invoked(object? s, System.EventArgs e) => (DataContext as UiVm)?.SwitchWorkspaceCommand.Execute("MapEditor");
 }

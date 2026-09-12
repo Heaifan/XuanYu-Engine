@@ -12,8 +12,8 @@ public sealed class PointFeatureEntryContractTests
     {
         var selector = Read("Workspace/WorkspaceSelector.axaml");
 
-        Assert.Contains("点要素编辑", selector);
-        Assert.Contains("OpenPointFeatureEditorCommand", selector);
+        Assert.DoesNotContain("点要素编辑", selector);
+        Assert.DoesNotContain("OpenPointFeatureEditorCommand", selector);
     }
 
     [Fact]

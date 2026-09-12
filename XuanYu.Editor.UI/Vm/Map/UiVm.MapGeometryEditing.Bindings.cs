@@ -16,7 +16,7 @@ public sealed partial class UiVm
     void RaiseMapGeometryBindings()
     {
         OnPropertyChanged(nameof(SelectedMapGeometryText)); OnPropertyChanged(nameof(IsMapGeometryDragActive));
-        OnPropertyChanged(nameof(SelectedMapGeometryVertexIndex));
+        OnPropertyChanged(nameof(SelectedMapGeometryVertexIndex)); OnPropertyChanged(nameof(IsMapGeometrySelected));
         RaiseMarkerInspectorBindings();
     }
 

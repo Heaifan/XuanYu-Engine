@@ -42,7 +42,7 @@ public sealed class AreaCR1ContextToolbarContractTests
     public void Context_toolbar_is_present_only_in_region_edit_context()
     {
         var toolbar = Read("Top/ContextToolBar.axaml");
-        Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsRegionEditMode}\"", toolbar);
+        Assert.Contains("<Border x:Name=\"ContextRoot\" IsVisible=\"{Binding IsFeatureEditingActive}\"", toolbar);
     }
 
     [Fact]
