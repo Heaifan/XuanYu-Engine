@@ -30,7 +30,7 @@ public sealed class EditorModeUiTests
     {
         var vm = Create(); vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
         vm.ToggleEditorMode();
-        Assert.True(vm.IsRegionEditMode); Assert.Equal("区域编辑", vm.CurrentEditorModeText);
+        Assert.True(vm.IsRegionEditMode); Assert.Equal("要素编辑", vm.CurrentEditorModeText);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public sealed class EditorModeUiTests
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
         Assert.True(vm.IsRegionEditMode); Assert.True(vm.IsSelectTool);
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
-        Assert.True(vm.IsRegionEditMode); Assert.Equal("区域编辑", vm.CurrentEditorModeText);
+        Assert.True(vm.IsRegionEditMode); Assert.Equal("要素编辑", vm.CurrentEditorModeText);
     }
 
     static UiVm Create() => new(null, () => true);

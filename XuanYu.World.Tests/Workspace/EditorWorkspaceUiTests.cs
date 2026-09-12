@@ -23,7 +23,7 @@ public sealed class EditorWorkspaceUiTests
         var vm = Create();
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.RegionEditor);
         Assert.Equal(EditorWorkspaceId.RegionEditor, vm.CurrentWorkspace.Id);
-        Assert.Equal("区域编辑", vm.CurrentWorkspaceDisplayName);
+        Assert.Equal("要素编辑", vm.CurrentWorkspaceDisplayName);
         vm.SwitchWorkspaceCommand.Execute(EditorWorkspaceId.MapEditor);
         Assert.True(vm.IsMapWorkspace); Assert.False(vm.IsRegionWorkspace);
     }

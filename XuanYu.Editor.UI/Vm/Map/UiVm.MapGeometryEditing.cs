@@ -15,7 +15,6 @@ public sealed partial class UiVm
         selection.Kind switch { MapGeometryFeatureKind.Region => "已选择区域", MapGeometryFeatureKind.Road => "已选择道路", _ => "已选择地图标记" };
     public MapGeometryPreview? MapGeometryPreview => _mapGeometryPreview;
     public int SelectedMapGeometryVertexIndex => _selectedMapGeometryVertexIndex;
-
     public bool TryBeginMapGeometryPointer(double x, double y, ViewportState viewport)
     {
         if (!IsRegionEditMode || !IsSelectTool || IsRegionDrawingDraftActive || IsRoadDrawingDraftActive ||
@@ -54,7 +53,6 @@ public sealed partial class UiVm
         PublishSceneRenderSnapshot();
         return true;
     }
-
     public bool PreviewMapGeometryPointer(double x, double y, ViewportState viewport)
     {
         if (_mapGeometryDrag is not { } drag || !TryPickRegionPoint(x, y, viewport, out var point)) return false;
@@ -65,7 +63,6 @@ public sealed partial class UiVm
         PublishSceneRenderSnapshot();
         return true;
     }
-
     public bool CommitMapGeometryPointer(double x, double y, ViewportState viewport)
     {
         if (_mapGeometryDrag is null) return false;
@@ -86,7 +83,6 @@ public sealed partial class UiVm
         PublishSceneRenderSnapshot();
         return true;
     }
-
     public bool CancelMapGeometryPointer(string reason)
     {
         if (_mapGeometryDrag is null) return false;

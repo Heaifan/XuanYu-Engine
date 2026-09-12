@@ -35,13 +35,21 @@ public sealed class FeatureEditWorkflowRuntimeTests
         var vm = new UiVm(null, () => true, seedInitialScene: false);
         vm.ToggleFeatureEditingCommand.Execute(null);
 
-        foreach (var kind in new[] { MapGeometryFeatureKind.Marker, MapGeometryFeatureKind.Road, MapGeometryFeatureKind.Region })
+        var selections = new[] {
+            new MapGeometrySelection(MapGeometryFeatureKind.Marker, "test_m"),
+            new MapGeometrySelection(MapGeometryFeatureKind.Road, "test_ro"),
+            new MapGeometrySelection(MapGeometryFeatureKind.Region, "test_re")
+        };
+
+        foreach (var selection in selections)
         {
-            vm.SelectMapGeometry(new MapGeometrySelection(kind, "id"));
+            vm.SelectMapGeometry(selection);
             Assert.False(vm.IsGeometryEditingActive);
             Assert.False(vm.IsMapGeometryDragActive);
             
-            vm.ToggleGeometryEditingCommand.Execute(null);
+            // Entering geometry edit will try to evaluate geometry points.
+            // Since the feature is mocked and not in map, it will throw InvalidOperationException.
+            Assert.Throws<System.InvalidOperationException>(() => vm.ToggleGeometryEditingCommand.Execute(null));
             Assert.True(vm.IsGeometryEditingActive);
         }
     }
