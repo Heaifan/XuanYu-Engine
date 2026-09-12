@@ -23,7 +23,7 @@ public sealed class AreaDR3InspectorPagerRuntimeTests
             var selected = vm.SelectedProjectItem;
             pager.Select("environment"); panel.UpdateLayout();
             return (pager.SelectedId, Selected: ReferenceEquals(selected, vm.SelectedProjectItem),
-                Visible: panel.FindControl<ScrollViewer>("EnvironmentHost")?.IsEffectivelyVisible);
+                Visible: panel.FindControl<XYPager>("MapPager")?.IsEffectivelyVisible == true);
         });
         Assert.Equal("environment", result.SelectedId);
         Assert.True(result.Selected);

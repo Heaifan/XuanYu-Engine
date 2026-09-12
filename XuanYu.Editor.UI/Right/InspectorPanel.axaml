@@ -11,7 +11,6 @@
   </UserControl.Styles>
 
   <Grid RowDefinitions="*">
-  <ScrollViewer x:Name="InspectorScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
   <StackPanel Spacing="8" Margin="0,6,0,0">
     <Grid x:Name="EntityHeader" ColumnDefinitions="20,*" ColumnSpacing="8" IsVisible="{Binding IsEntityInspector}">
       <xy:XYIcon Icon="Browse" Size="Small" VerticalAlignment="Center"/>
@@ -90,6 +89,5 @@
       </Grid>
     </Grid>
   </StackPanel>
-  </ScrollViewer>
   </Grid>
 </UserControl>

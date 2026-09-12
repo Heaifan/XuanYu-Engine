@@ -29,10 +29,11 @@ public sealed class AreaCR1ContextToolbarContractTests
     }
 
     [Fact]
-    public void Inspector_keeps_property_pager_and_single_scroll_host()
+    public void Inspector_keeps_property_sections_without_total_scroll_host()
     {
         var inspector = Read("Right/InspectorPanel.axaml");
-        Assert.Contains("InspectorScrollViewer", inspector);
+        Assert.DoesNotContain("InspectorScrollViewer", inspector);
+        Assert.DoesNotContain("<ScrollViewer", inspector);
         Assert.Contains("MapEditorPanel", inspector);
         Assert.DoesNotContain("开始绘制", inspector);
         Assert.DoesNotContain("撤销顶点", inspector);

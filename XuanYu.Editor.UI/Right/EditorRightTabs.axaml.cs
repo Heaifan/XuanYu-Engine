@@ -57,6 +57,7 @@ public partial class EditorRightTabs : UserControl
     {
         InspectorWorkspace.IsVisible = id == "inspector";
         HierarchyWorkspace.IsVisible = id == "hierarchy";
+        RightWorkspaceHost.IsVisible = true;
         DebugWorkspace.IsVisible = id == "debug";
     }
 

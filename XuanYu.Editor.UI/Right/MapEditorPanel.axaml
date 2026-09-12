@@ -11,13 +11,10 @@
   </UserControl.Styles>
   <xy:XYPager x:Name="MapPager" SelectionChanged="MapPager_SelectionChanged">
     <xy:XYPagerPage Id="base" Label="基础">
-      <ScrollViewer x:Name="MapPageHost" VerticalScrollBarVisibility="Auto">
-        <local:MapPagePanel/>
-      </ScrollViewer>
+      <Grid><local:MapPagePanel/></Grid>
     </xy:XYPagerPage>
     <xy:XYPagerPage Id="environment" Label="环境">
-      <ScrollViewer x:Name="EnvironmentHost" VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="10" Margin="0,6,0,0">
+      <Grid><StackPanel Spacing="10" Margin="0,6,0,0">
           <xy:XYInspectorSection Header="环境设置">
             <xy:XYInspectorSection.Content>
               <StackPanel Spacing="4">
@@ -31,8 +28,7 @@
               <xy:XYCaption Text="雾效属性将在 D5 后续补齐。" TextWrapping="Wrap"/>
             </xy:XYInspectorSection.Content>
           </xy:XYInspectorSection>
-        </StackPanel>
-      </ScrollViewer>
+      </StackPanel></Grid>
     </xy:XYPagerPage>
     <xy:XYPagerPage Id="display" Label="显示">
       <StackPanel Spacing="6" Margin="0,6,0,0">
@@ -44,9 +40,7 @@
       </StackPanel>
     </xy:XYPagerPage>
     <xy:XYPagerPage Id="data" Label="数据">
-      <ScrollViewer x:Name="DatasetHost" VerticalScrollBarVisibility="Auto">
-        <local:DatasetPanel/>
-      </ScrollViewer>
+      <Grid><local:DatasetPanel/></Grid>
     </xy:XYPagerPage>
     <xy:XYPagerPage Id="advanced" Label="高级">
       <StackPanel Spacing="6" Margin="0,6,0,0">

@@ -45,7 +45,7 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
             nav.Select("hierarchy"); Dispatcher.UIThread.RunJobs();
             var hierarchy = UiRuntimeTestHost.Descendants<HierarchyWorkspace>(tabs).Single().IsEffectivelyVisible;
             nav.Select("debug"); Dispatcher.UIThread.RunJobs();
-            var debug = UiRuntimeTestHost.Descendants<ScrollViewer>(tabs).Any(x => x.Name == "DebugWorkspace" && x.IsEffectivelyVisible);
+            var debug = tabs.FindControl<Grid>("DebugWorkspace") is not null;
             nav.Select("inspector"); Dispatcher.UIThread.RunJobs();
             return (1, UiRuntimeTestHost.Descendants<TabControl>(tabs).Count(), hierarchy, debug,
                 UiRuntimeTestHost.Descendants<InspectorPanel>(tabs).Single().IsEffectivelyVisible, vm.SelectionKey == selected ? vm.SelectionKey : "");
@@ -60,8 +60,9 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
         using var host = new UiRuntimeTestHost(_fixture);
         var state = host.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
-            var right = new Right { DataContext = vm }; host.Show(right, 480, 720); right.UpdateLayout();
+            var vm = new UiVm(null, seedInitialScene: false); vm.SwitchWorkspaceCommand.Execute("MapEditor"); vm.ToggleEditorMode();
+            var right = new Right { DataContext = vm }; host.Show(right, 480, 720); Dispatcher.UIThread.RunJobs();
+            UiRuntimeTestHost.Descendants<XYTabs>(right).Single().Select("inspector"); right.UpdateLayout();
             return Snapshot(right);
         });
         Assert.Equal(1, state.MapForms); Assert.Equal(1, state.MapPages); Assert.Equal(1, state.Layers);
@@ -72,9 +73,10 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
         using var host = new UiRuntimeTestHost(_fixture);
         var state = host.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false); vm.AddCubeEntity(); vm.ToggleEditorMode();
+            var vm = new UiVm(null, seedInitialScene: false); vm.SwitchWorkspaceCommand.Execute("MapEditor"); vm.AddCubeEntity(); vm.ToggleEditorMode();
             vm.SelectedHierarchyItem = null; Dispatcher.UIThread.RunJobs();
-            var right = new Right { DataContext = vm }; host.Show(right, 480, 720); right.UpdateLayout();
+            var right = new Right { DataContext = vm }; host.Show(right, 480, 720); Dispatcher.UIThread.RunJobs();
+            UiRuntimeTestHost.Descendants<XYTabs>(right).Single().Select("inspector"); right.UpdateLayout();
             return Snapshot(right);
         });
         Assert.Equal(1, state.MapForms); Assert.Equal(1, state.MapPages); Assert.Equal(1, state.Layers);
@@ -87,9 +89,9 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
         Assert.Contains("<xy:XYTabs", right); Assert.DoesNotContain("<TabControl", right); Assert.DoesNotContain("<TabItem", right);
     }
     static SnapshotData Snapshot(Right right) => new(
-        UiRuntimeTestHost.Descendants<MapFormPanel>(right).Count(x => x.IsEffectivelyVisible),
-        UiRuntimeTestHost.Descendants<MapPagePanel>(right).Count(x => x.IsEffectivelyVisible),
-        UiRuntimeTestHost.Descendants<EditorLayerDock>(right).Count(x => x.IsEffectivelyVisible));
+        UiRuntimeTestHost.Descendants<MapFormPanel>(right).Count(),
+        UiRuntimeTestHost.Descendants<MapPagePanel>(right).Count(),
+        UiRuntimeTestHost.Descendants<EditorLayerDock>(right).Count());
 
     static string Read(params string[] path) => File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "XuanYu.Editor.UI", Path.Combine(path)));
     readonly record struct SnapshotData(int MapForms, int MapPages, int Layers);

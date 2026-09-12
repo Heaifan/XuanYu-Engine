@@ -22,10 +22,10 @@
                        Icon="ChevronDown" Click="AllTabsButton_Click" ToolTip.Tip="全部页签"
                        AutomationProperties.Name="全部页签"/>
     </Grid>
-    <Grid Grid.Row="1">
+    <Grid Grid.Row="1" x:Name="RightWorkspaceHost">
       <local:InspectorPanel x:Name="InspectorWorkspace"/>
       <local:HierarchyWorkspace x:Name="HierarchyWorkspace" IsVisible="False"/>
-      <ScrollViewer x:Name="DebugWorkspace" IsVisible="False" VerticalScrollBarVisibility="Auto">
+      <Grid x:Name="DebugWorkspace" IsVisible="False">
         <StackPanel Spacing="10" Margin="0,6,0,0">
           <StackPanel Spacing="4">
             <xy:XYSectionTitle Text="当前上下文"/>
@@ -84,7 +84,7 @@
             </ItemsControl>
           </StackPanel>
         </StackPanel>
-      </ScrollViewer>
+      </Grid>
     </Grid>
   </Grid>
 </UserControl>
