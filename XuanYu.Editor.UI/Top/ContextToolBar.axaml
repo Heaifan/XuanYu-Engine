@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:XuanYu.Editor.UI"
              xmlns:xy="using:XYUI.Avalonia.Controls"
@@ -23,34 +23,34 @@
       </xy:XYToggleButton>
       <xy:XYToggleButton IsChecked="{Binding IsBoxSelectTool, Mode=OneWay}"
                          Command="{Binding SelectToolCommand}"
-                         CommandParameter="框�?
-                         ToolTip.Tip="框�?>
-        <TextBlock Text="框�?/>
+                         CommandParameter="框选"
+                         ToolTip.Tip="框选">
+        <TextBlock Text="框选"/>
       </xy:XYToggleButton>
 
       <xy:XYSeparator Variant="Section" />
 
       <xy:XYMenuBar Classes="compact" ShowDivider="False" VerticalAlignment="Center">
-        <xy:XYMenuBarItem Classes="xyui-toolbar-menu-item" Label="�? ShowChevron="True">
+        <xy:XYMenuBarItem Classes="xyui-toolbar-menu-item" Label="点" ShowChevron="True">
           <xy:XYMenu>
-            <xy:XYMenuItem Label="点标�? Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="地图标记"/>
+            <xy:XYMenuItem Label="点标记" Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="地图标记"/>
           </xy:XYMenu>
         </xy:XYMenuBarItem>
-        <xy:XYMenuBarItem Classes="xyui-toolbar-menu-item" Label="�? ShowChevron="True">
+        <xy:XYMenuBarItem Classes="xyui-toolbar-menu-item" Label="线" ShowChevron="True">
           <xy:XYMenu>
             <xy:XYMenuItem Label="道路" Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="道路"/>
           </xy:XYMenu>
         </xy:XYMenuBarItem>
-        <xy:XYMenuBarItem Classes="xyui-toolbar-menu-item" Label="�? ShowChevron="True">
+        <xy:XYMenuBarItem Classes="xyui-toolbar-menu-item" Label="面" ShowChevron="True">
           <xy:XYMenu>
-            <xy:XYMenuItem Label="区域" Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="区域�?/>
+            <xy:XYMenuItem Label="区域" Command="{Binding SelectRegionAuthoringModeCommand}" CommandParameter="区域面"/>
           </xy:XYMenu>
         </xy:XYMenuBarItem>
       </xy:XYMenuBar>
 
       <StackPanel IsVisible="{Binding IsRegionSurfaceAuthoringMode}" Orientation="Horizontal" Spacing="4">
         <xy:XYSeparator Variant="Section" />
-        <xy:XYButton Content="开始绘�? Click="BeginRegionDrawing_Click"
+        <xy:XYButton Content="开始绘制" Click="BeginRegionDrawing_Click"
                      IsEnabled="{Binding CanRequestRegionDrawing}"/>
       </StackPanel>
       <StackPanel IsVisible="{Binding IsRoadAuthoringMode}" Orientation="Horizontal" Spacing="4">
@@ -64,7 +64,7 @@
                      IsEnabled="{Binding CanRequestMarkerPlacement}"/>
       </StackPanel>
       <StackPanel IsVisible="{Binding IsRegionDrawingTool}" Orientation="Horizontal" Spacing="4">
-        <xy:XYCaption Text="区域绘制�?/>
+        <xy:XYCaption Text="区域绘制中"/>
         <xy:XYText Text="{Binding RegionDrawingDraftVertexCount}"/>
         <xy:XYButton Content="撤销顶点" Click="UndoRegionDrawingVertex_Click"
                      IsEnabled="{Binding CanUndoRegionDrawingVertex}"/>
@@ -74,7 +74,7 @@
                      IsEnabled="{Binding CanCancelRegionDrawing}"/>
       </StackPanel>
       <StackPanel IsVisible="{Binding IsRoadDrawingTool}" Orientation="Horizontal" Spacing="4">
-        <xy:XYCaption Text="道路绘制�?/>
+        <xy:XYCaption Text="道路绘制中"/>
         <xy:XYText Text="{Binding RoadDrawingDraftPointCount}"/>
         <xy:XYButton Content="撤销节点" Click="UndoRoadDrawingVertex_Click"
                      IsEnabled="{Binding CanUndoRoadDrawingVertex}"/>
