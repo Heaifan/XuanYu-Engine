@@ -69,6 +69,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InspectorSelectionSubtitle));
         OnPropertyChanged(nameof(InspectorSectionTitle));
         OnPropertyChanged(nameof(InspectorFields));
+        RaiseInspectorSelectionBindings();
         OnPropertyChanged(nameof(CanTransformSelectedEntity));
         (SelectToolCommand as RelayCommand)?.RaiseCanExecuteChanged();
         PublishSceneRenderSnapshot();

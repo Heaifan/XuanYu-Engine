@@ -32,7 +32,7 @@
       </xy:XYToggleButton>
     </StackPanel>
 
-    <StackPanel IsVisible="{Binding IsMapEditMode}">
+    <StackPanel IsVisible="{Binding IsMapInspector}">
       <local:MapEditorPanel x:Name="MapWorkspace" IsVisible="{Binding IsMapWorkspaceInspectorVisible}"/>
     </StackPanel>
 
@@ -40,7 +40,7 @@
 
     <local:LayerInspectorPanel IsVisible="{Binding IsLayerInspectorVisible}"/>
 
-    <StackPanel IsVisible="{Binding IsRegionEditMode}" Spacing="6">
+    <StackPanel IsVisible="{Binding IsRegionInspector}" Spacing="6">
       <StackPanel IsVisible="{Binding IsRegionInspectorPlaceholderVisible}">
       <xy:XYSectionTitle Text="区域属性"/>
       <xy:XYEmptyText Text="当前未选择区域"/>
@@ -76,14 +76,14 @@
       </StackPanel>
     </StackPanel>
 
-    <!-- IsEmptySelection remains the editor-entity baseline; Dataset selection refines this panel state. -->
+    <!-- Inspector identity is selection-driven; mode must not provide an implicit map fallback. -->
     <Grid IsVisible="{Binding IsInspectorEmpty}" MinHeight="220">
-      <Grid IsVisible="{Binding !IsMapEditMode}">
+      <Grid>
       <Grid IsVisible="{Binding !HasCurrentLayerSelection}">
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6" MaxWidth="220">
         <xy:XYText Text="—" HorizontalAlignment="Center"/>
         <xy:XYEmptyText Text="未选择对象" HorizontalAlignment="Center"/>
-        <xy:XYCaption Text="选择场景对象后显示属性" HorizontalAlignment="Center"/>
+      <xy:XYCaption Text="选择地图、点、道路或区域以查看属性。" HorizontalAlignment="Center"/>
       </StackPanel>
       </Grid>
       </Grid>

@@ -7,10 +7,12 @@ public sealed partial class UiVm
     public void ClearMapGeometrySelection()
     {
         IsGeometryEditingActive = false;
-        if (_selectedMapGeometry is null && _selectedMapGeometryVertexIndex < 0) return;
+        var hadSelection = _selectedMapGeometry is not null || _selectedMapGeometryVertexIndex >= 0;
         _selectedMapGeometry = null; _selectedMapGeometryVertexIndex = -1; _mapGeometryPreview = null;
         _geometrySnap.Clear();
-        RaiseMapGeometryBindings(); PublishSceneRenderSnapshot();
+        MapSession.ClearSelection();
+        if (hadSelection) RaiseMapGeometryBindings();
+        PublishSceneRenderSnapshot();
     }
 
     void RaiseMapGeometryBindings()
@@ -23,6 +25,7 @@ public sealed partial class UiVm
     public void SelectMapGeometry(MapGeometrySelection selection)
     {
         _selectedMapGeometry = selection; _selectedMapGeometryVertexIndex = -1; IsGeometryEditingActive = false;
+        MapSession.ClearSelection();
         _mapGeometryPreview = DisplayGeometry(); RaiseMapGeometryBindings(); PublishSceneRenderSnapshot();
     }
 }

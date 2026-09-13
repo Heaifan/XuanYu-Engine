@@ -9,7 +9,7 @@ public sealed partial class UiVm
     public MapMarker? SelectedMarker => _selectedMapGeometry is { Kind: MapGeometryFeatureKind.Marker } selection &&
         MapMarkerId.TryParse(selection.FeatureId, out var id)
             ? MapSession.CurrentMap.Markers.FirstOrDefault(item => item.MarkerId == id) : null;
-    public bool IsMarkerInspector => SelectedMarker is not null;
+    public bool IsMarkerInspector => InspectorIdentity == InspectorObjectKind.Marker;
     public bool IsMarkerInspectorReadOnly => SelectedMarker is { } marker &&
         (marker.IsLocked || MapLayerRules.Find(MapSession.CurrentMap.Layers, marker.LayerId)?.IsLocked == true);
     public string MarkerInspectorIdText => SelectedMarker?.MarkerId.Value ?? "";
@@ -18,12 +18,11 @@ public sealed partial class UiVm
     public string MarkerInspectorStatusText => MarkerStatus();
     public double MarkerInspectorPositionX => SelectedMarker?.Position.X ?? 0;
     public double MarkerInspectorPositionY => SelectedMarker?.Position.Y ?? 0;
-    public bool IsRegionInspectorPlaceholderVisible => IsRegionEditMode && !IsMarkerInspector &&
-        !HasCurrentLayerSelection && _selectedMapGeometry is null;
-    public bool IsGenericInspectorVisible => HasInspectorSelection && !IsMarkerInspector &&
-        !HasCurrentLayerSelection && !IsEntityInspector && !IsRegionEditMode;
-    public bool IsMapWorkspaceInspectorVisible => !IsEntityInspector && !IsMarkerInspector;
-    public bool IsLayerInspectorVisible => HasCurrentLayerSelection && !IsMarkerInspector;
+    public bool IsRegionInspectorPlaceholderVisible => IsRegionInspector && !IsMarkerInspector;
+    public bool IsGenericInspectorVisible => HasInspectorSelection && InspectorIdentity == InspectorObjectKind.Entity;
+    public bool IsMapWorkspaceInspectorVisible => IsMapInspector;
+    public bool IsLayerInspectorVisible => HasCurrentLayerSelection &&
+        InspectorIdentity is not (InspectorObjectKind.Marker or InspectorObjectKind.Road or InspectorObjectKind.Region);
 
     public bool CommitMarkerPosition(double x, double y)
     {
@@ -47,6 +46,7 @@ public sealed partial class UiVm
         OnPropertyChanged(nameof(InspectorSelectionTitle)); OnPropertyChanged(nameof(InspectorSelectionSubtitle));
         OnPropertyChanged(nameof(HasInspectorSelection)); OnPropertyChanged(nameof(IsInspectorEmpty));
         OnPropertyChanged(nameof(InspectorSectionTitle)); OnPropertyChanged(nameof(InspectorFields));
+        RaiseInspectorSelectionBindings();
     }
 
     MapDatasetRow? MarkerDataset() => SelectedMarker is { } marker &&

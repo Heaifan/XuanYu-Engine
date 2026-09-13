@@ -29,7 +29,7 @@ public sealed class AreaDR1Fix4InspectorRoutingTests
     }
 
     [Fact]
-    public void Map_edit_without_entity_selection_keeps_map_form_route()
+    public void Map_edit_without_selection_keeps_inspector_empty()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var visible = host.Run(() =>
@@ -41,7 +41,7 @@ public sealed class AreaDR1Fix4InspectorRoutingTests
                 Entity: UiRuntimeTestHost.Descendants<EntityInspectorPanel>(right).Count(x => x.IsEffectivelyVisible));
         });
 
-        Assert.Equal(1, visible.Map);
+        Assert.Equal(0, visible.Map);
         Assert.Equal(0, visible.Entity);
     }
 

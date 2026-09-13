@@ -18,10 +18,22 @@ public sealed partial class UiVm
         _mapRenderSnapshot = MapRenderSnapshotProjection.Project(session.CurrentMap, session.ChangeSequence);
         _mapWorld.Load(WorldMapState.From(session.CurrentMap));
         session.ContentChanged += OnMapContentChanged;
+        session.SelectionChanged += OnMapSelectionChanged;
         session.HistoryAvailabilityChanged += OnMapHistoryAvailabilityChanged;
         session.ActiveRegionLayerChanged += OnActiveRegionLayerChanged; // D4：活动图层刷新
         session.DirtyChanged += OnMapDirtyChanged; // D5-FINAL：地图四态状态刷新（应用/图层/Undo/Redo/保存路径）
         RefreshLayerItems(); // D4：首次组装图层列表
+    }
+
+    void OnMapSelectionChanged(MapSelectionChangedEventArgs e)
+    {
+        if (e.Selection.Kind is MapSelectionKind.Map or MapSelectionKind.Region)
+        {
+            _selectedMapGeometry = null;
+            RaiseMapGeometryBindings();
+        }
+        RaiseInspectorSelectionBindings();
+        PublishSceneRenderSnapshot();
     }
 
     void OnMapDirtyChanged(MapDirtyChangedEventArgs e)
