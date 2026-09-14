@@ -62,7 +62,8 @@ public sealed class AreaDR2Fix3ProjectionDensityRuntimeTests
         using var host = new UiRuntimeTestHost(_fixture);
         var sizes = host.Run(() =>
         {
-            var form = new MapEditorPanel { DataContext = new UiVm(null, seedInitialScene: false) };
+            var vm = new UiVm(null, seedInitialScene: false); vm.ToggleInspectorSectionCommand.Execute(InspectorSectionId.Basic);
+            var form = new MapEditorPanel { DataContext = vm };
             host.Show(form, 480, 640); form.UpdateLayout();
             return (Labels: UiRuntimeTestHost.Descendants<XYLabel>(form).Select(x => x.FontSize).Distinct().ToArray(),
                 Body: UiRuntimeTestHost.Descendants<XYText>(form).Select(x => x.FontSize).Distinct().ToArray(),

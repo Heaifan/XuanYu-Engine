@@ -54,7 +54,7 @@ public sealed class EditorWorkspaceUiCompositionTests
         Assert.DoesNotContain("RegionalAuthoringPanel", right);
         Assert.Contains("区域面", region);
         Assert.Contains("CanRequestRegionDrawing", region);
-        Assert.Contains("REGION-A 接入后显示正式属性", right);
+        Assert.Contains("FeatureInspectorPanel", right);
         Assert.Contains("CanCompleteRegionDrawing", region);
     }
 

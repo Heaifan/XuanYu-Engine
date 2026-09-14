@@ -48,10 +48,10 @@ public sealed class UiD4InspectorContractTests
     [Fact]
     public void Inspector_group_uses_full_width_header_with_separator()
     {
-        Assert.Contains("基础信息", Entity);
-        Assert.Contains("Transform", Entity);
-        Assert.Contains("技术信息", Entity);
-        Assert.Contains("<xy:XYSectionTitle", Entity);
+        Assert.Contains("Content=\"基础\"", Entity);
+        Assert.Contains("Content=\"变换\"", Entity);
+        Assert.Contains("Content=\"技术信息\"", Entity);
+        Assert.Contains("ToggleInspectorSectionCommand", Entity);
     }
 
     [Fact]
@@ -74,8 +74,8 @@ public sealed class UiD4InspectorContractTests
     [Fact]
     public void Entity_inspector_uses_real_xyui_editors_and_section_rails()
     {
-        Assert.Contains("Classes=\"inspectorRail\"", Entity);
-        Assert.Contains("Classes=\"inspectorRail technicalRail\"", Entity);
+        Assert.Contains("IsInspectorBasicExpanded", Entity);
+        Assert.Contains("IsInspectorTechnicalExpanded", Entity);
         Assert.Contains("<xy:XYTextField", Entity);
         Assert.Equal(3, Count(Entity, "<xy:XYVectorProperty"));
         Assert.Contains("Mode=OneWay", Entity);

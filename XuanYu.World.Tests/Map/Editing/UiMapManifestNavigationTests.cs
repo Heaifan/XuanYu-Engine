@@ -13,9 +13,9 @@ public sealed class UiMapManifestNavigationTests
     [Fact]
     public void Navigator_has_base_environment_and_dataset_entries()
     {
-        Assert.Contains("Id=\"base\" Label=\"基础\"", MapEditor);
-        Assert.Contains("Id=\"environment\" Label=\"环境\"", MapEditor);
-        Assert.Contains("Id=\"data\" Label=\"数据\"", MapEditor);
+        Assert.Contains("CommandParameter=\"Basic\"", MapEditor);
+        Assert.Contains("CommandParameter=\"Environment\"", MapEditor);
+        Assert.Contains("CommandParameter=\"Assets\"", MapEditor);
         Assert.Contains("DatasetEmptyState", DatasetPanel);
     }
 

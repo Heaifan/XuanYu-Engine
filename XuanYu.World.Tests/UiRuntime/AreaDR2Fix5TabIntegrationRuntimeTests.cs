@@ -27,10 +27,9 @@ public sealed class AreaDR2Fix5TabIntegrationRuntimeTests
             var regionWindow = host.Show(region, 480, 640); region.UpdateLayout();
             var leftTabs = left.FindControl<XYTabs>("ContentTabs")!;
             var right = rightTabs.FindControl<XYTabs>("SideTabs")!;
-            var mapPager = map.FindControl<XYPager>("MapPager")!;
             var regionPager = region.FindControl<XYPager>("AuthoringPager")!;
             var value = (LeftSizing: leftTabs.SizingMode, RightSizing: right.SizingMode,
-                MapPages: mapPager.Pages.Count, RegionPages: regionPager.Pages.Count,
+                MapSections: UiRuntimeTestHost.Descendants<XYToggleButton>(map).Count(), RegionPages: regionPager.Pages.Count,
                 LeftClosable: leftTabs.Items.Select(tab => tab.IsClosable).ToArray(),
                 RightClosable: right.Items.Select(tab => tab.IsClosable).ToArray(),
                 MapClosable: Array.Empty<bool>(), RegionClosable: Array.Empty<bool>());
@@ -39,7 +38,7 @@ public sealed class AreaDR2Fix5TabIntegrationRuntimeTests
         });
         Assert.Equal(XyuiTabSizingMode.Content, result.LeftSizing);
         Assert.Equal(XyuiTabSizingMode.Content, result.RightSizing);
-        Assert.Equal(5, result.MapPages);
+        Assert.Equal(3, result.MapSections);
         Assert.Equal(3, result.RegionPages);
         Assert.All(result.LeftClosable, Assert.False);
         Assert.All(result.RightClosable, Assert.False);

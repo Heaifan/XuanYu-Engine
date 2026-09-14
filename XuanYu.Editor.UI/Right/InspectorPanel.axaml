@@ -40,13 +40,7 @@
 
     <local:LayerInspectorPanel IsVisible="{Binding IsLayerInspectorVisible}"/>
 
-    <StackPanel IsVisible="{Binding IsRegionInspector}" Spacing="6">
-      <StackPanel IsVisible="{Binding IsRegionInspectorPlaceholderVisible}">
-      <xy:XYSectionTitle Text="区域属性"/>
-      <xy:XYEmptyText Text="当前未选择区域"/>
-      <xy:XYCaption Text="REGION-A 接入后显示正式属性" TextWrapping="Wrap"/>
-      </StackPanel>
-    </StackPanel>
+    <local:FeatureInspectorPanel IsVisible="{Binding IsFeatureInspector}"/>
 
     <local:EntityInspectorPanel IsVisible="{Binding IsEntityInspector}"/>
 

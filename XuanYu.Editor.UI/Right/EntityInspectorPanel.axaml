@@ -17,19 +17,21 @@
     <Style Selector="Grid.entityField"><Setter Property="MinHeight" Value="28"/><Setter Property="Margin" Value="0,2"/></Style>
   </UserControl.Styles>
   <StackPanel Spacing="8">
-    <Border Classes="inspectorRail"><xy:XYSectionTitle Text="基础信息"/></Border>
-    <Grid x:Name="BaseInfoGrid" ColumnDefinitions="80,*" RowDefinitions="Auto,Auto" ColumnSpacing="8">
+    <xy:XYToggleButton Content="基础" IsChecked="{Binding IsInspectorBasicExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Basic" HorizontalAlignment="Stretch"/>
+    <Grid x:Name="BaseInfoGrid" IsVisible="{Binding IsInspectorBasicExpanded}" ColumnDefinitions="80,*" RowDefinitions="Auto,Auto" ColumnSpacing="8">
       <xy:XYLabel Text="名称" VerticalAlignment="Center"/>
       <xy:XYTextField x:Name="NameBox" Grid.Column="1" Text="{Binding InspectorEntityNameText, Mode=TwoWay}"/>
       <xy:XYLabel Grid.Row="1" Text="类型" VerticalAlignment="Center"/>
       <xy:XYText Grid.Row="1" Grid.Column="1" Text="Entity"/>
     </Grid>
-    <Border Classes="inspectorRail"><xy:XYSectionTitle Text="Transform"/></Border>
-    <xy:XYVectorProperty x:Name="PositionProperty" Label="位置" Layout="Inline" xycore:XY.Density="Compact" X="{Binding InspectorPositionX, Mode=OneWay}" Y="{Binding InspectorPositionY, Mode=OneWay}" Z="{Binding InspectorPositionZ, Mode=OneWay}" DecimalPlaces="2" Step="0.1"/>
-    <xy:XYVectorProperty x:Name="RotationProperty" Label="旋转" Layout="Inline" xycore:XY.Density="Compact" X="{Binding InspectorRotationX, Mode=OneWay}" Y="{Binding InspectorRotationY, Mode=OneWay}" Z="{Binding InspectorRotationZ, Mode=OneWay}" DecimalPlaces="2" Step="0.1"/>
-    <xy:XYVectorProperty x:Name="ScaleProperty" Label="缩放" Layout="Inline" xycore:XY.Density="Compact" X="{Binding InspectorScaleX, Mode=OneWay}" Y="{Binding InspectorScaleY, Mode=OneWay}" Z="{Binding InspectorScaleZ, Mode=OneWay}" DecimalPlaces="2" Step="0.1" Minimum="0.000001"/>
-    <Border Classes="inspectorRail technicalRail"><xy:XYSectionTitle Text="技术信息"/></Border>
-    <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
+    <xy:XYToggleButton Content="变换" IsChecked="{Binding IsInspectorPositionExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Position" HorizontalAlignment="Stretch"/>
+    <StackPanel IsVisible="{Binding IsInspectorPositionExpanded}">
+      <xy:XYVectorProperty x:Name="PositionProperty" Label="位置" Layout="Inline" xycore:XY.Density="Compact" X="{Binding InspectorPositionX, Mode=OneWay}" Y="{Binding InspectorPositionY, Mode=OneWay}" Z="{Binding InspectorPositionZ, Mode=OneWay}" DecimalPlaces="2" Step="0.1"/>
+      <xy:XYVectorProperty x:Name="RotationProperty" Label="旋转" Layout="Inline" xycore:XY.Density="Compact" X="{Binding InspectorRotationX, Mode=OneWay}" Y="{Binding InspectorRotationY, Mode=OneWay}" Z="{Binding InspectorRotationZ, Mode=OneWay}" DecimalPlaces="2" Step="0.1"/>
+      <xy:XYVectorProperty x:Name="ScaleProperty" Label="缩放" Layout="Inline" xycore:XY.Density="Compact" X="{Binding InspectorScaleX, Mode=OneWay}" Y="{Binding InspectorScaleY, Mode=OneWay}" Z="{Binding InspectorScaleZ, Mode=OneWay}" DecimalPlaces="2" Step="0.1" Minimum="0.000001"/>
+    </StackPanel>
+    <xy:XYToggleButton Content="技术信息" IsChecked="{Binding IsInspectorTechnicalExpanded}" Command="{Binding ToggleInspectorSectionCommand}" CommandParameter="Technical" HorizontalAlignment="Stretch"/>
+    <Grid IsVisible="{Binding IsInspectorTechnicalExpanded}" ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
       <xy:XYLabel Text="ID"/><xy:XYSelectableText Grid.Column="1" Text="{Binding SelectionKey}" Variant="Technical" ToolTip.Tip="{Binding SelectionKey}"/>
       <xy:XYLabel Grid.Row="1" Text="场景"/><xy:XYSelectableText Grid.Row="1" Grid.Column="1" Text="{Binding DocumentFileName}" Variant="Technical" ToolTip.Tip="{Binding DocumentFileName}"/>
       <xy:XYLabel Grid.Row="2" Text="路径"/><xy:XYSelectableText Grid.Row="2" Grid.Column="1" Text="{Binding SelectionPath}" Variant="Technical" ToolTip.Tip="{Binding SelectionPath}"/>

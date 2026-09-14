@@ -13,8 +13,8 @@ public sealed class EditorScrollAuditContractTests
         var map = File.ReadAllText(Path.Combine(Root, "Right", "MapEditorPanel.axaml"));
         Assert.DoesNotContain("InspectorScrollViewer", inspector);
         Assert.DoesNotContain("<ScrollViewer", inspector);
-        Assert.Contains("XYPager", map);
-        Assert.Contains("XYInspectorSection", map);
+        Assert.Contains("ToggleInspectorSectionCommand", map);
+        Assert.Contains("IsInspectorBasicExpanded", map);
     }
 
     [Fact]

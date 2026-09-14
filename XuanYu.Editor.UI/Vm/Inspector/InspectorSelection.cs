@@ -11,6 +11,7 @@ public sealed partial class UiVm
     public bool IsMapInspector => InspectorIdentity == InspectorObjectKind.Map;
     public bool IsRoadInspector => InspectorIdentity == InspectorObjectKind.Road;
     public bool IsRegionInspector => InspectorIdentity == InspectorObjectKind.Region;
+    public bool IsFeatureInspector => IsRoadInspector || IsRegionInspector;
 
     InspectorObjectKind ResolveInspectorSelection()
     {
@@ -29,9 +30,10 @@ public sealed partial class UiVm
 
     void RaiseInspectorSelectionBindings()
     {
+        ResetInspectorSectionsIfIdentityChanged();
         OnPropertyChanged(nameof(InspectorIdentity)); OnPropertyChanged(nameof(IsMapInspector));
         OnPropertyChanged(nameof(IsMarkerInspector)); OnPropertyChanged(nameof(IsRoadInspector));
-        OnPropertyChanged(nameof(IsRegionInspector)); OnPropertyChanged(nameof(IsInspectorEmpty));
+        OnPropertyChanged(nameof(IsRegionInspector)); OnPropertyChanged(nameof(IsFeatureInspector)); OnPropertyChanged(nameof(IsInspectorEmpty));
         OnPropertyChanged(nameof(HasInspectorSelection)); OnPropertyChanged(nameof(InspectorSelectionTitle));
         OnPropertyChanged(nameof(InspectorSelectionSubtitle)); OnPropertyChanged(nameof(InspectorSectionTitle));
         OnPropertyChanged(nameof(IsMapWorkspaceInspectorVisible)); OnPropertyChanged(nameof(IsLayerInspectorVisible));

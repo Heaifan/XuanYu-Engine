@@ -22,6 +22,8 @@ public sealed class InspectorSectionRailLayoutRuntimeTests
         var result = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false); vm.AddCubeEntity();
+            vm.ToggleInspectorSectionCommand.Execute(InspectorSectionId.Basic);
+            vm.ToggleInspectorSectionCommand.Execute(InspectorSectionId.Position);
             var tabs = new EditorRightTabs { DataContext = vm };
             host.Show(tabs, width, 420); tabs.UpdateLayout();
             var panel = UiRuntimeTestHost.Descendants<EntityInspectorPanel>(tabs).Single();

@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using XuanYu.Editor.UI;
 using XYUI.Avalonia.Controls;
 
@@ -79,15 +78,15 @@ public sealed class AreaDR2Fix1MapInspectorRuntimeTests
     }
 
     [Fact]
-    public void Map_navigation_materializes_paged_navigation()
+    public void Map_inspector_materializes_single_focus_sections()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var height = host.Run(() =>
         {
             var panel = new MapEditorPanel { DataContext = new UiVm(null, seedInitialScene: false) };
             host.Show(panel, 480, 640); panel.UpdateLayout();
-            return panel.FindControl<XYPager>("MapPager")?.Pages.Count ?? 0;
+            return UiRuntimeTestHost.Descendants<XYToggleButton>(panel).Count();
         });
-        Assert.Equal(5, height);
+        Assert.Equal(3, height);
     }
 }

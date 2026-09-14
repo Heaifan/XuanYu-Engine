@@ -11,7 +11,7 @@ public sealed class AreaDR3InspectorPagerRuntimeTests
     public AreaDR3InspectorPagerRuntimeTests(UiHeadlessFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public void Map_pager_switches_pages_without_replacing_selection()
+    public void Map_sections_switch_without_replacing_selection()
     {
         using var host = new UiRuntimeTestHost(_fixture);
         var result = host.Run(() =>
@@ -19,13 +19,12 @@ public sealed class AreaDR3InspectorPagerRuntimeTests
             var vm = new UiVm(null, seedInitialScene: false); vm.ToggleEditorMode();
             var panel = new MapEditorPanel { DataContext = vm };
             host.Show(panel, 480, 640); panel.UpdateLayout();
-            var pager = panel.FindControl<XYPager>("MapPager")!;
             var selected = vm.SelectedProjectItem;
-            pager.Select("environment"); panel.UpdateLayout();
-            return (pager.SelectedId, Selected: ReferenceEquals(selected, vm.SelectedProjectItem),
-                Visible: panel.FindControl<XYPager>("MapPager")?.IsEffectivelyVisible == true);
+            vm.ToggleInspectorSectionCommand.Execute(InspectorSectionId.Environment); panel.UpdateLayout();
+            return (Expanded: vm.ExpandedInspectorSection, Selected: ReferenceEquals(selected, vm.SelectedProjectItem),
+                Visible: panel.IsEffectivelyVisible);
         });
-        Assert.Equal("environment", result.SelectedId);
+        Assert.Equal(InspectorSectionId.Environment, result.Expanded);
         Assert.True(result.Selected);
         Assert.True(result.Visible);
     }
