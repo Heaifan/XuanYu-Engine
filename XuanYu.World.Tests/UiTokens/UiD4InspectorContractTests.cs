@@ -65,9 +65,9 @@ public sealed class UiD4InspectorContractTests
     public void Empty_state_keeps_single_primary_entry()
     {
         Assert.Contains("未选择对象", Panel);
-        Assert.Contains("IsEmptySelection", Panel);
+        Assert.Contains("IsInspectorEmpty", Panel);
         Assert.Contains("<xy:XYEmptyText", Panel);
-        Assert.Contains("选择场景对象后显示属性", Panel);
+        Assert.Contains("选择地图、点、道路或区域以查看属性。", Panel);
         Assert.DoesNotContain("uiMultiline", Panel);
     }
 

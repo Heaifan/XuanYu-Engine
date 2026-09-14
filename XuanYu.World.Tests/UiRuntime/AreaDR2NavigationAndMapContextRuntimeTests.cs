@@ -60,7 +60,7 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
         using var host = new UiRuntimeTestHost(_fixture);
         var state = host.Run(() =>
         {
-            var vm = new UiVm(null, seedInitialScene: false); vm.SwitchWorkspaceCommand.Execute("MapEditor"); vm.ToggleEditorMode();
+            var vm = new UiVm(null, seedInitialScene: false); vm.SwitchWorkspaceCommand.Execute("MapEditor"); vm.ToggleEditorMode(); vm.MapSession.SelectMap();
             var right = new Right { DataContext = vm }; host.Show(right, 480, 720); Dispatcher.UIThread.RunJobs();
             UiRuntimeTestHost.Descendants<XYTabs>(right).Single().Select("inspector"); right.UpdateLayout();
             return Snapshot(right);
@@ -74,7 +74,7 @@ public sealed class AreaDR2NavigationAndMapContextRuntimeTests
         var state = host.Run(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false); vm.SwitchWorkspaceCommand.Execute("MapEditor"); vm.AddCubeEntity(); vm.ToggleEditorMode();
-            vm.SelectedHierarchyItem = null; Dispatcher.UIThread.RunJobs();
+            vm.SelectedHierarchyItem = null; vm.MapSession.SelectMap(); Dispatcher.UIThread.RunJobs();
             var right = new Right { DataContext = vm }; host.Show(right, 480, 720); Dispatcher.UIThread.RunJobs();
             UiRuntimeTestHost.Descendants<XYTabs>(right).Single().Select("inspector"); right.UpdateLayout();
             return Snapshot(right);

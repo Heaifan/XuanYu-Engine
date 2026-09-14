@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using XuanYu.Editor.UI;
 using XYUI.Avalonia.Controls;
 
@@ -17,46 +16,38 @@ public sealed class InspectorSectionRailScrollRuntimeTests
     [InlineData(300)]
     [InlineData(360)]
     [InlineData(480)]
-    public void Entity_inspector_scrolls_without_moving_tab_header(double width)
+    public void Entity_inspector_has_no_deprecated_total_scroll_surface(double width)
     {
         using var host = new UiRuntimeTestHost(_fixture);
-        var result = host.Run(() =>
+        var result = host.Run<(int Count, Rect Before, Rect Bounds)>(() =>
         {
             var vm = new UiVm(null, seedInitialScene: false);
             vm.AddCubeEntity();
             var tabs = new EditorRightTabs { DataContext = vm };
             host.Show(tabs, width, 260); tabs.UpdateLayout();
             var inspector = tabs.FindControl<InspectorPanel>("InspectorWorkspace")!;
-            var scroll = UiRuntimeTestHost.Descendants<ScrollViewer>(inspector).Single(x =>
-                x.VerticalScrollBarVisibility == ScrollBarVisibility.Auto &&
-                x.HorizontalScrollBarVisibility == ScrollBarVisibility.Disabled);
             var header = tabs.FindControl<XYTabs>("SideTabs")!.SelectedItem!;
             var before = header.Bounds;
-            scroll.Offset = new Vector(0, scroll.Extent.Height - scroll.Viewport.Height);
             tabs.UpdateLayout();
-            return (scroll.Extent, scroll.Viewport, before, header.Bounds);
+            return (UiRuntimeTestHost.Descendants<ScrollViewer>(inspector).Count(), before, header.Bounds);
         });
 
-        Assert.True(result.Extent.Height > result.Viewport.Height);
-        Assert.True(result.Extent.Width <= result.Viewport.Width + 1);
-        Assert.Equal(result.before.Y, result.Bounds.Y);
+        Assert.Equal(0, result.Count);
+        Assert.Equal(result.Before.Y, result.Bounds.Y);
     }
 
     [Fact]
     public void Empty_inspector_keeps_auto_scroll_inactive_when_content_fits()
     {
         using var host = new UiRuntimeTestHost(_fixture);
-        var sizes = host.Run(() =>
+        var sizes = host.Run<int>(() =>
         {
             var tabs = new EditorRightTabs { DataContext = new UiVm(null, seedInitialScene: false) };
             host.Show(tabs, 300, 420); tabs.UpdateLayout();
             var inspector = tabs.FindControl<InspectorPanel>("InspectorWorkspace")!;
-            var scroll = UiRuntimeTestHost.Descendants<ScrollViewer>(inspector).Single(x =>
-                x.VerticalScrollBarVisibility == ScrollBarVisibility.Auto &&
-                x.HorizontalScrollBarVisibility == ScrollBarVisibility.Disabled);
-            return (scroll.Extent, scroll.Viewport);
+            return UiRuntimeTestHost.Descendants<ScrollViewer>(inspector).Count();
         });
 
-        Assert.True(sizes.Extent.Height <= sizes.Viewport.Height);
+        Assert.Equal(0, sizes);
     }
 }
